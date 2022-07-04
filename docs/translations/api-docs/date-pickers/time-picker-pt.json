@@ -47,5 +47,12 @@
     "views": "Array of views to show."
   },
   "classDescriptions": {},
-  "slotDescriptions": { "OpenPickerIcon": "" }
+  "slotDescriptions": {
+    "ActionBar": "",
+    "OpenPickerIcon": "",
+    "LeftArrowButton": "",
+    "LeftArrowIcon": "",
+    "RightArrowButton": "",
+    "RightArrowIcon": ""
+  }
 }

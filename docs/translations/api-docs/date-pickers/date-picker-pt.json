@@ -61,12 +61,13 @@
   },
   "classDescriptions": {},
   "slotDescriptions": {
+    "ActionBar": "",
+    "OpenPickerIcon": "",
     "SwitchViewButton": "",
     "SwitchViewIcon": "",
     "LeftArrowButton": "",
     "LeftArrowIcon": "",
     "RightArrowButton": "",
-    "RightArrowIcon": "",
-    "OpenPickerIcon": ""
+    "RightArrowIcon": ""
   }
 }

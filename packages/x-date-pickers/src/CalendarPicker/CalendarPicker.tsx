@@ -172,7 +172,7 @@ type CalendarPickerComponent = (<TDate>(
  *
  * - [CalendarPicker API](https://mui.com/x/api/date-pickers/calendar-picker/)
  */
-const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
+export const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
   inProps: CalendarPickerProps<TDate>,
   ref: React.Ref<HTMLDivElement>,
 ) {
@@ -610,5 +610,3 @@ CalendarPicker.propTypes = {
    */
   views: PropTypes.arrayOf(PropTypes.oneOf(['day', 'month', 'year']).isRequired),
 } as any;
-
-export { CalendarPicker };

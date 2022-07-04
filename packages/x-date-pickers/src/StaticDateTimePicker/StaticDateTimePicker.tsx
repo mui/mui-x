@@ -30,9 +30,9 @@ export interface StaticDateTimePickerSlotsComponentsProps
   extends PickersStaticWrapperSlotsComponentsProps,
     CalendarOrClockPickerSlotsComponentsProps {}
 
-export type StaticDateTimePickerProps<TInputDate, TDate> = StaticPickerProps<
+export interface StaticDateTimePickerProps<TInputDate, TDate> extends StaticPickerProps<
   BaseDateTimePickerProps<TInputDate, TDate>
-> & {
+> {
   /**
    * Overrideable components.
    * @default {}

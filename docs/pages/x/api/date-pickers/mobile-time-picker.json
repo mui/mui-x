@@ -69,7 +69,14 @@
       }
     }
   },
-  "slots": { "OpenPickerIcon": { "type": { "name": "elementType" } } },
+  "slots": {
+    "ActionBar": { "type": { "name": "elementType" } },
+    "LeftArrowButton": { "type": { "name": "elementType" } },
+    "LeftArrowIcon": { "type": { "name": "elementType" } },
+    "OpenPickerIcon": { "type": { "name": "elementType" } },
+    "RightArrowButton": { "type": { "name": "elementType" } },
+    "RightArrowIcon": { "type": { "name": "elementType" } }
+  },
   "name": "MobileTimePicker",
   "styles": { "classes": [], "globalClasses": {}, "name": "MuiMobileTimePicker" },
   "spread": false,

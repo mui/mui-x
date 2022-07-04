@@ -90,6 +90,7 @@
     }
   },
   "slots": {
+    "ActionBar": { "type": { "name": "elementType" } },
     "LeftArrowButton": { "type": { "name": "elementType" } },
     "LeftArrowIcon": { "type": { "name": "elementType" } },
     "OpenPickerIcon": { "type": { "name": "elementType" } },

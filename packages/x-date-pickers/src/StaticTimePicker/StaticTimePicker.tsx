@@ -30,9 +30,9 @@ export interface StaticTimePickerSlotsComponentsProps
   extends PickersStaticWrapperSlotsComponentsProps,
     ClockPickerSlotsComponentsProps {}
 
-export type StaticTimePickerProps<TInputDate, TDate> = StaticPickerProps<
+export interface StaticTimePickerProps<TInputDate, TDate> extends StaticPickerProps<
   BaseTimePickerProps<TInputDate, TDate>
-> & {
+> {
   /**
    * Overrideable components.
    * @default {}
