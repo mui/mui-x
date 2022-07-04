@@ -14,7 +14,7 @@ You can find the list of all the API methods on the [GridApi page](/x/api/data-g
 
 :::warning
 All the methods prefixed by `unstable_` are private.
-They should not be used by third party users and can be removed, renamed or reworked at any time.
+We don't recommend using them as they can be removed, renamed, or reworked at any time.
 
 If you need to use a private method, please open a GitHub issue describing your use case.
 We will help you to achieve the same goal with public methods, or we will discuss making this specific method public.
@@ -31,9 +31,11 @@ If you need to access the API object inside component slots or inside renders (e
 you can use the `useGridApiContext` hook.
 
 ```tsx
-const apiRef = useGridApiContext();
+const CustomFooter = () => {
+  const apiRef = useGridApiContext();
 
-<Button onClick={() => apiRef.current.setPage(1)}>Go to page 1</Button>;
+  return <Button onClick={() => apiRef.current.setPage(1)}>Go to page 1</Button>;
+};
 ```
 
 :::info
@@ -48,12 +50,16 @@ When using the API object outside the grid components, you need to initialize it
 You can then pass it to the `apiRef` prop of the grid.
 
 ```tsx
-const apiRef = useGridApiRef();
+const CustomDataGrid = (props) => {
+  const apiRef = useGridApiRef();
 
-<div>
-  <Button onClick={() => apiRef.current.setPage(1)}>Go to page 1</Button>
-  <DataGridPro apiRef={apiRef} {...other} />
-</div>;
+  return (
+    <div>
+      <Button onClick={() => apiRef.current.setPage(1)}>Go to page 1</Button>
+      <DataGridPro apiRef={apiRef} {...other} />
+    </div>
+  );
+};
 ```
 
 :::warning
