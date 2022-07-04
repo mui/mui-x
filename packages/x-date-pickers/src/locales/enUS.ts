@@ -34,6 +34,12 @@ const enUSPickers: PickersLocaleText<any> = {
   okButtonLabel: 'OK',
   todayButtonLabel: 'Today',
 
+  // Toolbar titles
+  datePickerDefaultToolbarTitle: 'Select date',
+  dateTimePickerDefaultToolbarTitle: 'Select date & time',
+  timePickerDefaultToolbarTitle: 'Select time',
+  dateRangePickerDefaultToolbarTitle: 'Select date range',
+
   // Clock labels
   clockLabelText: (view, time, adapter) =>
     `Select ${view}. ${

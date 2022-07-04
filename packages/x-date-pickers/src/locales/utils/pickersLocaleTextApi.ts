@@ -30,6 +30,10 @@ export interface PickersLocaleText<TDate> {
   openTimePickerDialogue: (date: TDate, utils: MuiPickersAdapter<TDate>) => string;
   timeTableLabel: string;
   dateTableLabel: string;
+  datePickerDefaultToolbarTitle: string;
+  dateTimePickerDefaultToolbarTitle: string;
+  timePickerDefaultToolbarTitle: string;
+  dateRangePickerDefaultToolbarTitle: string;
 }
 
 export type PickersTranslationKeys = keyof PickersLocaleText<any>;
