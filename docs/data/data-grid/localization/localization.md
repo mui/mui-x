@@ -117,6 +117,7 @@ import { DataGrid, nlNL } from '@mui/x-data-grid';
 | Persian                 | fa-IR               | `faIR`      |
 | Polish                  | pl-PL               | `plPL`      |
 | Portuguese (Brazil)     | pt-BR               | `ptBR`      |
+| Romanian                | ro-RO               | `roRO`      |
 | Russian                 | ru-RU               | `ruRU`      |
 | Slovak                  | sk-SK               | `skSK`      |
 | Spanish (Spain)         | es-ES               | `esES`      |
@@ -134,3 +135,4 @@ Note that these translations of the Data grid component depend on the [Localizat
 
 - [DataGrid](/x/api/data-grid/data-grid/)
 - [DataGridPro](/x/api/data-grid/data-grid-pro/)
+- [DataGridPremium](/x/api/data-grid/data-grid-premium/)
