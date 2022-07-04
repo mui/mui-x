@@ -59,7 +59,7 @@ The features exclusive to the Premium version are marked with the <span class="p
 ## Upgrading from Pro to Premium
 
 You can use your Pro license as a credit when purchasing MUI X Premium.
-We’ll provide you with a discount based on the remaining time that your current license is valid.
+We'll provide you with a discount based on the remaining time that your current license is valid.
 Please contact us at [sales@mui.com](mailto:sales@mui.com?subject=My%20upgrade%20discount%20to%20Premium) to upgrade.
 
 ## Evaluation (trial) licenses
@@ -117,7 +117,7 @@ You need to call `setLicenseKey` before React renders the first component.
 You only need to install the key once in your application.
 
 :::info
-When using NextJS, you should call `setLicenseKey` in [`_app.js`](https://nextjs.org/docs/advanced-features/custom-app):
+When using Next.js, you should call `setLicenseKey` in [`_app.js`](https://nextjs.org/docs/advanced-features/custom-app):
 
 ```tsx
 LicenseInfo.setLicenseKey('YOUR_LICENSE_KEY');
