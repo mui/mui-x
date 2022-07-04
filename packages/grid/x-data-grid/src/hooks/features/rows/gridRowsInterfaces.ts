@@ -70,15 +70,20 @@ export interface GridRowTreeCreationParams {
 
 export type GridRowTreeUpdateGroupAction = 'removeChildren' | 'insertChildren' | 'modifyChildren';
 
-export type GridRowTreeUpdatedGroups = {
+export type GridRowTreeUpdatedGroupsValue = {
   [groupId: GridRowId]: { [action in GridRowTreeUpdateGroupAction]?: boolean };
+};
+
+export type GridRowTreeUpdatedGroupsManager = {
+  value: GridRowTreeUpdatedGroupsValue;
+  addAction: (groupId: GridRowId, action: GridRowTreeUpdateGroupAction) => void;
 };
 
 export type GridRowTreeCreationValue = Pick<
   GridRowsState,
   'groupingName' | 'tree' | 'treeDepths' | 'dataRowIds'
 > & {
-  updatedGroups?: GridRowTreeUpdatedGroups;
+  updatedGroupsManager?: GridRowTreeUpdatedGroupsManager;
 };
 
 export type GridHydrateRowsValue = Pick<GridRowsState, 'tree' | 'treeDepths'>;

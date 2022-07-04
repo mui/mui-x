@@ -58,7 +58,7 @@ export type {
   GridRowsPartialUpdates,
   GridRowsPartialUpdateAction,
   GridTreeDepths,
-  GridRowTreeUpdatedGroups,
+  GridRowTreeUpdatedGroupsManager,
   GridRowTreeUpdateGroupAction,
 } from '../hooks/features/rows/gridRowsInterfaces';
 export { getTreeNodeDescendants, buildRootGroup } from '../hooks/features/rows/gridRowsUtils';
