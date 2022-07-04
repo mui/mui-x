@@ -33,9 +33,8 @@ export interface StaticDateRangePickersSlotsComponentsProps
   extends PickersStaticWrapperSlotsComponentsProps,
     DateRangePickerViewSlotsComponentsProps {}
 
-export interface StaticDateRangePickerProps<TInputDate, TDate> extends StaticPickerProps<
-  BaseDateRangePickerProps<TInputDate, TDate>
-> {
+export interface StaticDateRangePickerProps<TInputDate, TDate>
+  extends StaticPickerProps<BaseDateRangePickerProps<TInputDate, TDate>> {
   /**
    * Overrideable components.
    * @default {}
@@ -46,7 +45,7 @@ export interface StaticDateRangePickerProps<TInputDate, TDate> extends StaticPic
    * @default {}
    */
   componentsProps?: Partial<StaticDateRangePickersSlotsComponentsProps>;
-};
+}
 
 type StaticDateRangePickerComponent = (<TInputDate, TDate = TInputDate>(
   props: StaticDateRangePickerProps<TInputDate, TDate> & React.RefAttributes<HTMLDivElement>,
