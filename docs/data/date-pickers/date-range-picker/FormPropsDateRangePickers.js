@@ -1,8 +1,8 @@
 import * as React from 'react';
 import TextField from '@mui/material/TextField';
 import { DateRangePicker } from '@mui/x-date-pickers-pro/DateRangePicker';
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDateFns } from '@mui/x-date-pickers-pro/AdapterDateFns';
+import { LocalizationProvider } from '@mui/x-date-pickers-pro';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 
@@ -10,12 +10,13 @@ export default function FormPropsDateRangePickers() {
   const [value, setValue] = React.useState([null, null]);
 
   return (
-    <LocalizationProvider dateAdapter={AdapterDateFns}>
-      <Stack spacing={3}>
+    <Stack spacing={3}>
+      <LocalizationProvider
+        dateAdapter={AdapterDateFns}
+        localeText={{ start: 'Disabled start', end: 'Disabled end' }}
+      >
         <DateRangePicker
           disabled
-          startText="disabled start"
-          endText="disabled end"
           value={value}
           onChange={(newValue) => {
             setValue(newValue);
@@ -28,10 +29,13 @@ export default function FormPropsDateRangePickers() {
             </React.Fragment>
           )}
         />
+      </LocalizationProvider>
+      <LocalizationProvider
+        dateAdapter={AdapterDateFns}
+        localeText={{ start: 'Read-only start', end: 'Read-only end' }}
+      >
         <DateRangePicker
           readOnly
-          startText="read-only start"
-          endText="read-only end"
           value={value}
           onChange={(newValue) => {
             setValue(newValue);
@@ -44,7 +48,7 @@ export default function FormPropsDateRangePickers() {
             </React.Fragment>
           )}
         />
-      </Stack>
-    </LocalizationProvider>
+      </LocalizationProvider>
+    </Stack>
   );
 }

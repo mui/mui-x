@@ -25,7 +25,7 @@ export default function RowMarginGrid() {
         sx={{
           [`& .${gridClasses.row}`]: {
             bgcolor: (theme) =>
-              theme.palette.mode === 'light' ? grey[200] : grey[800],
+              theme.palette.mode === 'light' ? grey[200] : grey[900],
           },
         }}
       />

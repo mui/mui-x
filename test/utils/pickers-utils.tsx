@@ -1,34 +1,48 @@
 import * as React from 'react';
-import { parseISO } from 'date-fns';
 import { createRenderer, screen, RenderOptions, userEvent } from '@mui/monorepo/test/utils';
 import { CreateRendererOptions } from '@mui/monorepo/test/utils/createRenderer';
 import { TransitionProps } from '@mui/material/transitions';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon';
+import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 
-// TODO make possible to pass here any utils using cli
-/**
- * Wrapper around `@date-io/date-fns` that resolves https://github.com/dmtrKovalenko/date-io/issues/479.
- * We're not using `adapter.date` in the implementation which means the implementation is safe.
- * But we do use it in tests where usage of ISO dates without timezone is problematic
- */
-export class AdapterClassToUse extends AdapterDateFns {
-  // Inlined AdapterDateFns#date which is not an instance method but instance property
-  // eslint-disable-next-line class-methods-use-this
-  date = (value?: any): Date => {
-    if (typeof value === 'string') {
-      return parseISO(value);
+const availableAdapters = {
+  'date-fns': AdapterDateFns,
+  dayjs: AdapterDayjs,
+  luxon: AdapterLuxon,
+  moment: AdapterMoment,
+};
+
+let AdapterClassToExtend = availableAdapters['date-fns'];
+
+// Check if we are in unit tests
+if (/jsdom/.test(window.navigator.userAgent)) {
+  // Add parameter `--date-adapter luxon` to use AdapterLuxon for running tests
+  // adapter available : date-fns (default one), dayjs, luxon, moment
+  const args = process.argv.slice(2);
+  const flagIndex = args.findIndex((element) => element === '--date-adapter');
+  if (flagIndex !== -1 && flagIndex + 1 < args.length) {
+    const potentialAdapter = args[flagIndex + 1];
+    if (potentialAdapter) {
+      if (availableAdapters[potentialAdapter]) {
+        AdapterClassToExtend = availableAdapters[potentialAdapter];
+      } else {
+        const supportedAdapters = Object.keys(availableAdapters);
+        const message = `Error: Invalid --date-adapter value "${potentialAdapter}". Supported date adapters: ${supportedAdapters
+          .map((key) => `"${key}"`)
+          .join(', ')}`;
+        // eslint-disable-next-line no-console
+        console.log(message); // log message explicitly, because error message gets swallowed by mocha
+        throw new Error(message);
+      }
     }
-    if (typeof value === 'undefined') {
-      return new Date();
-    }
-    if (value === null) {
-      // @ts-expect-error AdapterDateFns#date says it returns NotNullable but that's not true
-      return null;
-    }
-    return new Date(value);
-  };
+  }
 }
+
+export class AdapterClassToUse extends AdapterClassToExtend {}
+
 export const adapterToUse = new AdapterClassToUse();
 
 export const FakeTransitionComponent = React.forwardRef<HTMLDivElement, TransitionProps>(
@@ -43,8 +57,8 @@ export const FakeTransitionComponent = React.forwardRef<HTMLDivElement, Transiti
 );
 
 interface CreatePickerRendererOptions extends CreateRendererOptions {
-  // object for date-fns, string for other adapters
-  locale?: string | object;
+  // Set-up locale with date-fns object. Other are deduced from `locale.code`
+  locale?: Locale;
 }
 
 export function wrapPickerMount(mount: (node: React.ReactNode) => import('enzyme').ReactWrapper) {
@@ -58,9 +72,14 @@ export function createPickerRenderer({
 }: CreatePickerRendererOptions = {}) {
   const { clock, render: clientRender } = createRenderer(createRendererOptions);
 
+  let adapterLocale = adapterToUse.lib === 'date-fns' ? locale : locale?.code;
+
+  if (typeof adapterLocale === 'string' && adapterLocale.length > 2) {
+    adapterLocale = adapterLocale.slice(0, 2);
+  }
   function Wrapper({ children }: { children?: React.ReactNode }) {
     return (
-      <LocalizationProvider adapterLocale={locale} dateAdapter={AdapterClassToUse}>
+      <LocalizationProvider adapterLocale={adapterLocale} dateAdapter={AdapterClassToUse}>
         {children}
       </LocalizationProvider>
     );

@@ -10,7 +10,7 @@ import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridStateCommunity } from '../../../models/gridStateCommunity';
 import { GridAggregatedFilterItemApplier } from './gridFilterState';
 import { buildWarning } from '../../../utils/warning';
-import { gridColumnFieldsSelector } from '../columns';
+import { gridColumnFieldsSelector, gridColumnLookupSelector } from '../columns';
 
 type GridFilterItemApplier = {
   fn: (rowId: GridRowId) => boolean;
@@ -35,8 +35,9 @@ export const cleanFilterItem = (
   }
 
   if (cleanItem.operatorValue == null) {
-    // we select a default operator
-    const column = apiRef.current.getColumn(cleanItem.columnField);
+    // Selects a default operator
+    // We don't use `apiRef.current.getColumn` because it is not ready during state initialization
+    const column = gridColumnLookupSelector(apiRef)[cleanItem.columnField];
     cleanItem.operatorValue = column && column!.filterOperators![0].value!;
   }
 
@@ -111,12 +112,9 @@ export const mergeStateWithFilterModel =
     disableMultipleColumnsFiltering: boolean,
     apiRef: React.MutableRefObject<GridApiCommunity>,
   ) =>
-  (state: GridStateCommunity): GridStateCommunity => ({
-    ...state,
-    filter: {
-      ...state.filter,
-      filterModel: sanitizeFilterModel(filterModel, disableMultipleColumnsFiltering, apiRef),
-    },
+  (filteringState: GridStateCommunity['filter']): GridStateCommunity['filter'] => ({
+    ...filteringState,
+    filterModel: sanitizeFilterModel(filterModel, disableMultipleColumnsFiltering, apiRef),
   });
 
 /**
@@ -243,17 +241,18 @@ export const buildAggregatedQuickFilterApplier = (
 
   return (rowId, shouldApplyFilter) => {
     const usedCellParams: { [field: string]: GridCellParams } = {};
+    const columnsFieldsToFilter: string[] = [];
 
     Object.keys(appliersPerColumnField).forEach((columnField) => {
       if (!shouldApplyFilter || shouldApplyFilter(columnField)) {
         usedCellParams[columnField] = apiRef.current.getCellParams(rowId, columnField);
+        columnsFieldsToFilter.push(columnField);
       }
     });
-
     // Return `false` as soon as we have a quick filter value that does not match any column
     if (quickFilterLogicOperator === GridLinkOperator.And) {
       return sanitizedQuickFilterValues.every((value, index) =>
-        Object.keys(appliersPerColumnField).some((field) => {
+        columnsFieldsToFilter.some((field) => {
           if (appliersPerColumnField[field][index] == null) {
             return false;
           }
@@ -264,7 +263,7 @@ export const buildAggregatedQuickFilterApplier = (
 
     // Return `true` as soon as we have have a quick filter value that match any column
     return sanitizedQuickFilterValues.some((value, index) =>
-      Object.keys(appliersPerColumnField).some((field) => {
+      columnsFieldsToFilter.some((field) => {
         if (appliersPerColumnField[field][index] == null) {
           return false;
         }

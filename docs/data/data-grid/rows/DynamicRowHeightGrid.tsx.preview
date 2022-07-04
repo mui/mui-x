@@ -3,8 +3,8 @@
   columns={columns}
   getRowHeight={() => 'auto'}
   sx={{
-    '& .MuiDataGrid-cell': {
-      py: '8px',
+    [`& .${gridClasses.cell}`]: {
+      py: 1,
     },
   }}
 />

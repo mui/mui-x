@@ -1,4 +1,4 @@
-<Box sx={{ width: '100%', height: 336, bgcolor: 'background.paper' }}>
+<Box sx={{ height: 336 }}>
   <DataGridPro
     {...data}
     loading={loading}
@@ -6,7 +6,7 @@
     componentsProps={{ toolbar: { syncState } }}
   />
 </Box>
-<Box sx={{ width: '100%', height: 300, bgcolor: 'background.paper' }}>
+<Box sx={{ height: 300 }}>
   <DataGridPro
     {...data}
     loading={loading}

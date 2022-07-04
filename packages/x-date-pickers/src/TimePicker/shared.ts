@@ -74,7 +74,6 @@ export function useTimePickerDefaultizedProps<
     openTo: 'hours',
     views: ['hours', 'minutes'],
     acceptRegex: ampm ? /[\dapAP]/gi : /\d/gi,
-    mask: ampm ? '__:__ _m' : '__:__',
     disableMaskedInput: false,
     getOpenDialogAriaText,
     inputFormat: ampm ? utils.formats.fullTime12h : utils.formats.fullTime24h,

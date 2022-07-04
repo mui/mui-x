@@ -191,9 +191,12 @@ const DEFAULT_DATASET_OPTIONS: UseDemoDataOptions = {
   maxColumns: 6,
 };
 
+declare const DISABLE_CHANCE_RANDOM: any;
+const disableDelay = typeof DISABLE_CHANCE_RANDOM !== 'undefined' && DISABLE_CHANCE_RANDOM;
+
 const DEFAULT_SERVER_OPTIONS: ServerOptions = {
-  minDelay: 100,
-  maxDelay: 300,
+  minDelay: disableDelay ? 0 : 100,
+  maxDelay: disableDelay ? 0 : 300,
   useCursorPagination: true,
 };
 

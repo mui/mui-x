@@ -55,7 +55,6 @@ export const useGridFilter = (
   apiRef: React.MutableRefObject<GridApiCommunity>,
   props: Pick<
     DataGridProcessedProps,
-    | 'initialState'
     | 'filterModel'
     | 'onFilterModelChange'
     | 'filterMode'
@@ -66,7 +65,7 @@ export const useGridFilter = (
 ): void => {
   const logger = useGridLogger(apiRef, 'useGridFilter');
 
-  apiRef.current.unstable_updateControlState({
+  apiRef.current.unstable_registerControlState({
     stateId: 'filter',
     propModel: props.filterModel,
     propOnChange: props.onFilterModelChange,
@@ -115,7 +114,24 @@ export const useGridFilter = (
       } else {
         items[itemIndex] = item;
       }
-      apiRef.current.setFilterModel({ ...filterModel, items });
+      apiRef.current.setFilterModel({ ...filterModel, items }, 'upsertFilterItem');
+    },
+    [apiRef],
+  );
+
+  const upsertFilterItems = React.useCallback<GridFilterApi['upsertFilterItems']>(
+    (items) => {
+      const filterModel = gridFilterModelSelector(apiRef);
+      const existingItems = [...filterModel.items];
+      items.forEach((item) => {
+        const itemIndex = items.findIndex((filterItem) => filterItem.id === item.id);
+        if (itemIndex === -1) {
+          existingItems.push(item);
+        } else {
+          existingItems[itemIndex] = item;
+        }
+      });
+      apiRef.current.setFilterModel({ ...filterModel, items }, 'upsertFilterItems');
     },
     [apiRef],
   );
@@ -129,7 +145,7 @@ export const useGridFilter = (
         return;
       }
 
-      apiRef.current.setFilterModel({ ...filterModel, items });
+      apiRef.current.setFilterModel({ ...filterModel, items }, 'deleteFilterItem');
     },
     [apiRef],
   );
@@ -178,10 +194,13 @@ export const useGridFilter = (
       if (filterModel.linkOperator === linkOperator) {
         return;
       }
-      apiRef.current.setFilterModel({
-        ...filterModel,
-        linkOperator,
-      });
+      apiRef.current.setFilterModel(
+        {
+          ...filterModel,
+          linkOperator,
+        },
+        'changeLogicOperator',
+      );
     },
     [apiRef],
   );
@@ -201,12 +220,14 @@ export const useGridFilter = (
   );
 
   const setFilterModel = React.useCallback<GridFilterApi['setFilterModel']>(
-    (model) => {
+    (model, reason) => {
       const currentModel = gridFilterModelSelector(apiRef);
       if (currentModel !== model) {
         logger.debug('Setting filter model');
-        apiRef.current.setState(
+        apiRef.current.unstable_updateControlState(
+          'filter',
           mergeStateWithFilterModel(model, props.disableMultipleColumnsFiltering, apiRef),
+          reason,
         );
         apiRef.current.unstable_applyFilters();
       }
@@ -224,6 +245,7 @@ export const useGridFilter = (
     unstable_applyFilters: applyFilters,
     deleteFilterItem,
     upsertFilterItem,
+    upsertFilterItems,
     setFilterModel,
     showFilterPanel,
     hideFilterPanel,
@@ -262,8 +284,10 @@ export const useGridFilter = (
       if (filterModel == null) {
         return params;
       }
-      apiRef.current.setState(
+      apiRef.current.unstable_updateControlState(
+        'filter',
         mergeStateWithFilterModel(filterModel, props.disableMultipleColumnsFiltering, apiRef),
+        'restoreState',
       );
 
       return {

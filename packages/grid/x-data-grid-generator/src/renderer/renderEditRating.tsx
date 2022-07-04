@@ -1,18 +1,20 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import Rating from '@mui/material/Rating';
-import { GridRenderEditCellParams } from '@mui/x-data-grid-premium';
+import { GridRenderEditCellParams, useGridApiContext } from '@mui/x-data-grid-premium';
 
 function EditRating(props: GridRenderEditCellParams<number>) {
-  const { id, value, api, field } = props;
+  const { id, value, field } = props;
+
+  const apiRef = useGridApiContext();
 
   const handleChange = (event: any) => {
-    api.setEditCellValue({ id, field, value: Number(event.target.value) }, event);
+    apiRef.current.setEditCellValue({ id, field, value: Number(event.target.value) }, event);
     // Check if the event is not from the keyboard
     // https://github.com/facebook/react/issues/7407
     if (event.nativeEvent.clientX !== 0 && event.nativeEvent.clientY !== 0) {
-      api.commitCellChange({ id, field });
-      api.setCellMode(id, field, 'view');
+      apiRef.current.commitCellChange({ id, field });
+      apiRef.current.setCellMode(id, field, 'view');
     }
   };
 

@@ -109,7 +109,6 @@ export function useDateTimePickerDefaultizedProps<
     openTo: 'day',
     views: ['year', 'day', 'hours', 'minutes'],
     ampmInClock: true,
-    mask: ampm ? '__/__/____ __:__ _m' : '__/__/____ __:__',
     acceptRegex: ampm ? /[\dap]/gi : /\d/gi,
     disableMaskedInput: false,
     inputFormat: ampm ? utils.formats.keyboardDateTime12h : utils.formats.keyboardDateTime24h,

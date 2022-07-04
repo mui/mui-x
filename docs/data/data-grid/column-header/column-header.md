@@ -2,7 +2,7 @@
 title: Data Grid - Column header
 ---
 
-# Data Grid - Column header
+# Data grid - Column header
 
 <p class="description">Customize your columns header.</p>
 
@@ -52,3 +52,4 @@ By default, each column header displays a column menu. The column menu allows ac
 
 - [DataGrid](/x/api/data-grid/data-grid/)
 - [DataGridPro](/x/api/data-grid/data-grid-pro/)
+- [DataGridPremium](/x/api/data-grid/data-grid-premium/)

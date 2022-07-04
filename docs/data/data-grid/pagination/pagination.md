@@ -2,7 +2,7 @@
 title: Data Grid - Pagination
 ---
 
-# Data Grid - Pagination
+# Data grid - Pagination
 
 <p class="description">Easily paginate your rows and only fetch what you need.</p>
 
@@ -17,7 +17,7 @@ The default pagination behavior depends on your plan.
 ## Size of the page
 
 The MIT `DataGrid` is limited to pages of up to 100 rows.
-If you want larger pages, you will need to migrate to the [Pro plan](https://mui.com/store/items/mui-x-pro/).
+If you want larger pages, you will need to upgrade to [Pro](https://mui.com/store/items/mui-x-pro/) or [Premium](https://mui.com/store/items/mui-x-premium/) plan.
 
 By default, each page contains 100 rows. The user can change the size of the page through the selector in the footer.
 
@@ -148,3 +148,4 @@ More information about the selectors and how to use them on the [dedicated page]
 
 - [DataGrid](/x/api/data-grid/data-grid/)
 - [DataGridPro](/x/api/data-grid/data-grid-pro/)
+- [DataGridPremium](/x/api/data-grid/data-grid-premium/)
