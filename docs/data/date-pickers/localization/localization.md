@@ -10,9 +10,9 @@ The default locale of MUI is English (United States). If you want to use other l
 
 Localization can impact pickers components rendering in two distincts ways: The date format, and the components attributes such as `aria-label`.
 
-## Date-engine locale
+## Date-library locale
 
-Use `LocalizationProvider` to change the date-engine locale that is used to render pickers. Here is an example of changing the locale for the `date-fns` adapter:
+Use `LocalizationProvider` to change the date-library locale that is used to render pickers. Here is an example of changing the locale for the `date-fns` adapter:
 
 {{"demo": "LocalizedDatePicker.js"}}
 
