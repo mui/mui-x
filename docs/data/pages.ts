@@ -75,6 +75,7 @@ const pages: MuiPage[] = [
           { pathname: '/x/api/data-grid/grid-api', title: 'GridApi' },
           { pathname: '/x/api/data-grid/grid-cell-params', title: 'GridCellParams' },
           { pathname: '/x/api/data-grid/grid-col-def', title: 'GridColDef' },
+          { pathname: '/x/api/data-grid/grid-export-state-params', title: 'GridExportStateParams' },
           { pathname: '/x/api/data-grid/grid-filter-form', title: 'GridFilterForm' },
           { pathname: '/x/api/data-grid/grid-filter-item', title: 'GridFilterItem' },
           { pathname: '/x/api/data-grid/grid-filter-model', title: 'GridFilterModel' },

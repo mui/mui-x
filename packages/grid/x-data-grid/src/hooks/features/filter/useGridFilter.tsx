@@ -55,6 +55,7 @@ export const useGridFilter = (
   apiRef: React.MutableRefObject<GridApiCommunity>,
   props: Pick<
     DataGridProcessedProps,
+    | 'initialState'
     | 'filterModel'
     | 'onFilterModelChange'
     | 'filterMode'
@@ -259,12 +260,20 @@ export const useGridFilter = (
    * PRE-PROCESSING
    */
   const stateExportPreProcessing = React.useCallback<GridPipeProcessor<'exportState'>>(
-    (prevState) => {
+    (prevState, context) => {
       const filterModelToExport = gridFilterModelSelector(apiRef);
-      if (
-        filterModelToExport.items.length === 0 &&
-        filterModelToExport.linkOperator === getDefaultGridFilterModel().linkOperator
-      ) {
+
+      const shouldExportFilterModel =
+        // Always export if the `shouldExportUnusedModels` property is activated
+        context.shouldExportUnusedModels ||
+        // Always export if the model is controlled
+        props.filterModel != null ||
+        // Always export if the model has been initialized
+        props.initialState?.filter?.filterModel != null ||
+        // Export if the model is not equal to the default value
+        !isDeepEqual(filterModelToExport, getDefaultGridFilterModel());
+
+      if (!shouldExportFilterModel) {
         return prevState;
       }
 
@@ -275,7 +284,7 @@ export const useGridFilter = (
         },
       };
     },
-    [apiRef],
+    [apiRef, props.filterModel, props.initialState?.filter?.filterModel],
   );
 
   const stateRestorePreProcessing = React.useCallback<GridPipeProcessor<'restoreState'>>(

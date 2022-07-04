@@ -62,6 +62,7 @@ const OTHER_GRID_INTERFACES_WITH_DEDICATED_PAGES = [
   'GridRowParams',
   'GridRowClassNameParams',
   'GridRowSpacingParams',
+  'GridExportStateParams',
 
   // Others
   'GridColDef',
