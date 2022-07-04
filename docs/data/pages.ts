@@ -4,7 +4,6 @@ const pages: MuiPage[] = [
   {
     pathname: '/x/introduction',
     scopePathnames: ['/x/introduction'],
-    title: 'Introduction',
     icon: 'DescriptionIcon',
     children: [
       { pathname: `/x/introduction`, title: 'Overview' },
