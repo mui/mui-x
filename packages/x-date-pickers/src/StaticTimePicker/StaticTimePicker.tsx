@@ -141,8 +141,9 @@ StaticTimePicker.propTypes = {
   closeOnSelect: PropTypes.bool,
   /**
    * Overrideable components.
+   * @default {}
    */
-  components: PropTypes.any,
+  components: PropTypes.object,
   /**
    * The props used for each component slot.
    * @default {}
