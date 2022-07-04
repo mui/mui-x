@@ -8,7 +8,7 @@ title: Data Grid - API object
 
 ## What is the API object ?
 
-The API object is an interface containing the state and all the methods needed to interact imperatively with the grid.
+The API object is an interface containing the state and all the methods available to programmatically interact with the grid.
 
 You can find the list of all the available API methods on the [GridApi page](/x/api/data-grid/grid-api/).
 
