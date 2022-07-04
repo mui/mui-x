@@ -1,6 +1,6 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
-import { GridRenderCellParams } from '@mui/x-data-grid-pro';
+import { GridRenderCellParams } from '@mui/x-data-grid-premium';
 import { CountryIsoOption } from '../services/static-data';
 
 interface CountryProps {
@@ -13,7 +13,7 @@ const Country = React.memo(function Country(props: CountryProps) {
   return (
     <Box
       sx={{
-        width: 1,
+        width: '100%',
         display: 'flex',
         alignItems: 'center',
         '&  > img': {

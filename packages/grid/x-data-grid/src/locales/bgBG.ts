@@ -26,11 +26,17 @@ const bgBGGrid: Partial<GridLocaleText> = {
   toolbarFiltersTooltipShow: 'Покажи Филтрите',
   toolbarFiltersTooltipActive: (count) => `${count} активни филтри`,
 
+  // Quick filter toolbar field
+  // toolbarQuickFilterPlaceholder: 'Search...',
+  // toolbarQuickFilterLabel: 'Search',
+  // toolbarQuickFilterDeleteIconLabel: 'Clear',
+
   // Export selector toolbar button text
   toolbarExport: 'Изтегли',
   toolbarExportLabel: 'Изтегли',
   toolbarExportCSV: 'Изтегли като CSV',
   toolbarExportPrint: 'Принтиране',
+  // toolbarExportExcel: 'Download as Excel',
 
   // Columns panel text
   columnsPanelTextFieldLabel: 'Намери колона',
@@ -129,6 +135,7 @@ const bgBGGrid: Partial<GridLocaleText> = {
   unGroupColumn: (name) => `Спри групиране по ${name}`,
 
   // Master/detail
+  // detailPanelToggle: 'Detail panel toggle',
   expandDetailPanel: 'Разгъване',
   collapseDetailPanel: 'Свиване',
 

@@ -1,13 +1,8 @@
 import { test as base, expect, Page } from '@playwright/test';
 import kebabCase from 'lodash/kebabCase';
-import FEATURE_TOGGLE from 'docs/src/featureToggle';
 import { TestFixture } from './playwright.config';
 
 const test = base.extend<TestFixture>({});
-
-test.beforeEach(async ({}) => {
-  test.skip(!FEATURE_TOGGLE.enable_product_scope, "Migration haven't started yet");
-});
 
 test.describe('DataGrid docs', () => {
   test('should have correct link with hash in the TOC', async ({ page }) => {
@@ -28,7 +23,7 @@ test.describe('DataGrid docs', () => {
     test('should have correct link for API section', async ({ page }) => {
       await page.goto(`/x/react-data-grid/`);
 
-      const anchors = page.locator('div > h2#heading-api ~ ul a');
+      const anchors = page.locator('div > h2#api ~ ul a');
 
       const firstAnchor = anchors.first();
       const textContent = await firstAnchor.textContent();
@@ -101,7 +96,7 @@ test.describe('DataGrid docs', () => {
 
   //     await page.type('input#docsearch-input', 'datagrid', { delay: 50 });
 
-  //     const anchor = page.locator('.DocSearch-Hits a:has-text("Data Grid - Components")').first();
+  //     const anchor = page.locator('.DocSearch-Hits a:has-text("Data grid - Components")').first();
   //     await anchor.waitFor();
 
   //     await expect(anchor).toHaveAttribute(

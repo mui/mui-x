@@ -1,5 +1,5 @@
 ---
-title: MUI X - Overview
+title: Overview
 ---
 
 # MUI X - Overview
@@ -46,8 +46,8 @@ Community Plan packages:
 The MUI X Pro Plan expands on the limitations of the Community Plan with more advanced features such as multi-filtering, multi-sorting, column resizing and column pinning.
 
 The Pro Plan is available under a commercial license—visit the [Pricing](https://mui.com/pricing/) page for details.
-This plan contains the features that are at the limit of what the open-source model can sustain. For instance, providing a very comprehensive set of components.
-The price of the plan is designed to be accessible to most professionals.
+This plan contains the features that are at the limit of what the open-source model can sustain.
+For instance, providing support for handling massive amounts of data, in a flexible data grid integrated with a comprehensive set of components.
 
 Pro Plan packages:
 
@@ -65,37 +65,50 @@ The features exclusive to the Pro Plan are marked with the <span class="plan-pro
 
 ### Premium Plan <span class="plan-premium"></span>
 
-The MUI X Premium Plan contains the most advanced features such as Row grouping, Excel export, Aggregation, as well as everything that's included in the Pro Plan.
+The MUI X Premium Plan contains the most advanced features such as Row grouping, Excel export, Aggregation (🚧), as well as everything that's included in the Pro Plan.
+
+The Premium Plan is available under a commercial license—visit the [Pricing](https://mui.com/pricing/) page for details.
+This plan contains highly complex features that can be useful to analyze and group data without the use of an external application.
+The price of the plan targets small to medium-size teams.
+
+Premium Plan package:
+
+- [`@mui/x-data-grid-premium`](https://www.npmjs.com/package/@mui/x-data-grid-premium)
 
 The features exclusive to the Premium Plan are marked with the <span class="plan-premium"></span> icon across our documentation.
-This plan contains the most advanced features, ones that we haven't seen any open-source libraries able to deliver well.
-
-The Premium Plan is not available yet (🚧) but will soon be available under a commercial license—visit the [Pricing](https://mui.com/pricing/) page for details.
 
 ## Evaluation (trial) licenses
 
-In accordance with our [End User License Agreement](https://mui.com/store/legal/mui-x-eula/#evaluation-trial-licenses), you can use our Pro and Premium components without a commercial license as long as they are not used for the **development** of a feature intended for production.
+In accordance with our [End User License Agreement](https://mui.com/store/legal/mui-x-eula/#evaluation-trial-licenses), you can use the Pro and Premium components without a commercial license for 30 days without restrictions.
 You do not need to contact us to use these components for evaluation purposes.
 
-You will need to purchase a commercial license in order to remove the watermarks and console warnings.
+You will need to purchase a commercial license in order to remove the watermarks and console warnings, or after the given 30 days period of evaluation.
 
 ## License key installation
 
 When you purchase a commercial license, you'll receive a license key by email.
 This key removes all watermarks and console warnings.
 
+:::warning
+Licenses purchased after **May 13, 2022** are only compatible with MUI X `v5.11.0` or later.
+
+Please update your packages if you are using an earlier version.
+
+If this is not a viable solution for your use case, please contact sales@mui.com.
+:::
+
+### How to install the key?
+
 ```jsx
 import { LicenseInfo } from '@mui/x-license-pro';
 
-LicenseInfo.setLicenseKey(
-  'x0jTPl0USVkVZV0SsMjM1kDNyADM5cjM2ETPZJVSQhVRsIDN0YTM6IVREJ1T0b9586ef25c9853decfa7709eee27a1e',
-);
+LicenseInfo.setLicenseKey('YOUR_LICENSE_KEY');
 ```
 
 ### Where to install the key?
 
 You must call `setLicenseKey` before React renders the first component.
-You only need to install the key once in your application.
+You only need to install the key **once** in your application.
 
 ### Does each developer need its own key?
 
@@ -108,7 +121,7 @@ The license key is checked without making any network requests—it's designed t
 In fact, it's expected for the license key to be exposed in a JavaScript bundle.
 We just ask our licensed users not to publicize their license keys.
 
-### Validation errors
+### Validation failures
 
 If the validation of the license key fails, the component displays a watermark and provides a console warning in both development and production.
 End users can still use the component.
@@ -130,23 +143,38 @@ If the license key is missing, the component will look something like this:
 
 #### License key expired
 
-Licenses are perpetual: the license key will work forever with the current version of the software.
+The license key will work **forever in a production environment** with any version released before your license term ends.
 
-But **access to updates and upgrades** is not perpetual.
-An expired license key will always work with the version of the component it was licensed to cover.
-But if you try to install a newer version of the component with an expired license, it will display a watermark and a console warning.
+However, when the term ends, you won't be licensed to access newer updates and upgrades, nor use the current or older versions in a **development environment**.
+In these cases, the component will display a watermark and a console warning, stating that the license is no longer valid.
+
 For example, if you purchase a one-year license today, you will be able to update to any version—including major versions—released in the next 12 months.
-But you will not be able to install a newer version released two years from now, unless you purchase a new license to cover it.
+Those versions will always be available for use in a deployed application.
+But you'll be required to renew your license if you need to update to a version released 18 months later or continue development with a version released in the first 12 months.
 
 #### Invalid license key
 
-This error indicates that your license key doesn't match what was issued by MUI—this is likely a typo.
+This error indicates that your license key doesn't match what was issued by MUI (this is likely a typo).
+
+#### Invalid license key (TypeError: extracting license expiry timestamp)
+
+The following JavaScript exception indicates that you may be trying to validate [the new license's key format on an older version of the npm package](#license-key-installation).
+
+:::error
+Error extracting license expiry timestamp.
+
+TypeError: Cannot read properties of null (reading '1') at verifyLicense.
+:::
+
+You can solve this error by updating MUI X to `v5.11.0` or later (assuming your license key is correct).
 
 ## Support
 
 ### GitHub
 
-We use GitHub issues as a bug and feature request tracker. If you think you have found a bug, or have a new feature idea, please start by making sure it hasn't already been [reported or fixed](https://github.com/mui/mui-x/issues?utf8=%E2%9C%93&q=is%3Aopen+is%3Aclosed). You can search through existing issues and pull requests to see if someone has reported one similar to yours.
+We use GitHub issues as a bug and feature request tracker.
+If you think you have found a bug, or have a new feature idea, please start by making sure it hasn't already been [reported or fixed](https://github.com/mui/mui-x/issues?utf8=%E2%9C%93&q=is%3Aopen+is%3Aclosed).
+You can search through existing issues and pull requests to see if someone has reported one similar to yours.
 
 [Open an issue](https://github.com/mui/mui-x/issues/new/choose) in the MUI X repo.
 
@@ -159,25 +187,25 @@ Visit Stack Overflow to ask questions and read crowdsourced answers from expert 
 ### Professional support
 
 When purchasing an MUI X Pro or Premium license you get access to professional support for a limited duration.
-Support is available on multiple channels, but the recommended channel is GitHub issues.
-You can also reach us by email at x@mui.com if you need to share private information.
+Support is available on multiple channels, but the recommended channels are:
 
-- **MUI X Pro**: No SLA is provided but MUI's maintainers give these issues more attention than the ones from the Community plan. The channels:
-  - GitHub: [Open a new issue](https://github.com/mui/mui-x/issues/new/choose) and leave your Order ID.
-  - Email (only to share private information): [Open a new issue](https://support.mui.com/hc/en-us/requests/new?tf_360023797420=mui_x) or send an email at x@mui.com.
-- **MUI X Premium**: Same as MUI X Pro, but with priority over Pro, and a 48 hour SLA for the first answer.
-  - GitHub: this plan is not available yet
-  - Emails: this plan is not available yet
-- **MUI X Premium Priority**: Same as MUI X Premium but with a 24 hours SLA for the first answer.
-  - GitHub: this plan is not available yet
-  - Emails: this plan is not available yet
+- GitHub: You can [open a new issue](https://github.com/mui/mui-x/issues/new/choose) and leave your Order ID, so we can prioritize accordingly.
+- Email (**only if your issue requires sharing private information**): You can [open a new issue](https://support.mui.com/hc/en-us/requests/new?tf_360023797420=mui_x) or send an email to x@mui.com.
+
+Your Order ID on the issue helps us prioritize the issues based on the following support levels:
+
+1. **MUI X Pro**: MUI's maintainers give these issues more attention than the ones from the Community plan.
+2. **MUI X Premium**: Same as MUI X Pro, but with priority over Pro.
+3. **MUI X Priority support add-on (not available yet)**: A provided SLA with 24h for the first answer.
 
 ## Roadmap
 
 To learn more about our plans and goals for the MUI X product line, visit our [public roadmap](https://github.com/mui/mui-x/projects/1).
 
-> ⚠️ **Disclaimer**: We operate in a dynamic environment, and things are subject to change.
-> The information provided is intended to outline the general framework direction, for informational purposes only.
-> We may decide to add or remove new items at any time, depending on our capability to deliver while meeting our quality standards.
-> The development, releases, and timing of any features or functionality remains at the sole discretion of MUI.
-> The roadmap does not represent a commitment, obligation, or promise to deliver at any time.
+:::warning
+**Disclaimer**: We operate in a dynamic environment, and things are subject to change.
+The information provided is intended to outline the general framework direction, for informational purposes only.
+We may decide to add or remove new items at any time, depending on our capability to deliver while meeting our quality standards.
+The development, releases, and timing of any features or functionality remains at the sole discretion of MUI.
+The roadmap does not represent a commitment, obligation, or promise to deliver at any time.
+:::

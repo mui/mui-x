@@ -1,0 +1,7 @@
+<LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={locale}>
+  <DataGrid
+    rows={rows}
+    columns={columns}
+    experimentalFeatures={{ newEditingApi: true }}
+  />
+</LocalizationProvider>

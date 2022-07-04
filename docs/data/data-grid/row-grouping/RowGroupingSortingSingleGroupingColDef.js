@@ -1,54 +1,15 @@
 import * as React from 'react';
 import {
-  DataGridPro,
-  gridColumnVisibilityModelSelector,
-  GridEvents,
+  DataGridPremium,
   useGridApiRef,
-} from '@mui/x-data-grid-pro';
+  useKeepGroupedColumnsHidden,
+} from '@mui/x-data-grid-premium';
 import { useMovieData } from '@mui/x-data-grid-generator';
-import Stack from '@mui/material/Stack';
+import Box from '@mui/material/Box';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
 import Select from '@mui/material/Select';
-
-const INITIAL_GROUPING_COLUMN_MODEL = ['company', 'director'];
-
-const useKeepGroupingColumnsHidden = (apiRef, columns, initialModel, leafField) => {
-  const prevModel = React.useRef(initialModel);
-
-  React.useEffect(() => {
-    apiRef.current.subscribeEvent(GridEvents.rowGroupingModelChange, (newModel) => {
-      const columnVisibilityModel = {
-        ...gridColumnVisibilityModelSelector(apiRef),
-      };
-
-      newModel.forEach((field) => {
-        if (!prevModel.current.includes(field)) {
-          columnVisibilityModel[field] = false;
-        }
-      });
-      prevModel.current.forEach((field) => {
-        if (!newModel.includes(field)) {
-          columnVisibilityModel[field] = true;
-        }
-      });
-      apiRef.current.setColumnVisibilityModel(columnVisibilityModel);
-      prevModel.current = newModel;
-    });
-  }, [apiRef]);
-
-  return React.useMemo(
-    () =>
-      columns.map((colDef) =>
-        initialModel.includes(colDef.field) ||
-        (leafField && colDef.field === leafField)
-          ? { ...colDef, hide: true }
-          : colDef,
-      ),
-    [columns, initialModel, leafField],
-  );
-};
 
 export default function RowGroupingSortingSingleGroupingColDef() {
   const data = useMovieData();
@@ -57,24 +18,27 @@ export default function RowGroupingSortingSingleGroupingColDef() {
 
   const apiRef = useGridApiRef();
 
-  const columns = useKeepGroupingColumnsHidden(
+  const initialState = useKeepGroupedColumnsHidden({
     apiRef,
-    data.columns,
-    INITIAL_GROUPING_COLUMN_MODEL,
-  );
+    initialState: {
+      rowGrouping: {
+        model: ['company', 'director'],
+      },
+    },
+  });
 
   return (
-    <Stack style={{ width: '100%' }} alignItems="flex-start" spacing={2}>
+    <Box sx={{ width: '100%' }}>
       <FormControl fullWidth>
         <InputLabel
           htmlFor="main-grouping-criteria"
-          id="ain-grouping-criteria-label"
+          id="main-grouping-criteria-label"
         >
-          Main Grouping Criteria
+          Main grouping criteria
         </InputLabel>
         <Select
-          label="Main Grouping Criteria"
-          onChange={(e) => setMainGroupingCriteria(e.target.value)}
+          label="Main grouping criteria"
+          onChange={(event) => setMainGroupingCriteria(event.target.value)}
           value={mainGroupingCriteria}
           id="main-grouping-criteria"
           labelId="main-grouping-criteria-label"
@@ -84,18 +48,13 @@ export default function RowGroupingSortingSingleGroupingColDef() {
           <MenuItem value="director">Director</MenuItem>
         </Select>
       </FormControl>
-      <div style={{ height: 400, width: '100%' }}>
-        <DataGridPro
+      <Box sx={{ height: 400, pt: 1 }}>
+        <DataGridPremium
           {...data}
           apiRef={apiRef}
-          columns={columns}
           disableSelectionOnClick
           defaultGroupingExpansionDepth={-1}
-          initialState={{
-            rowGrouping: {
-              model: INITIAL_GROUPING_COLUMN_MODEL,
-            },
-          }}
+          initialState={initialState}
           rowGroupingColumnMode="single"
           groupingColDef={{
             mainGroupingCriteria:
@@ -103,11 +62,8 @@ export default function RowGroupingSortingSingleGroupingColDef() {
                 ? undefined
                 : mainGroupingCriteria,
           }}
-          experimentalFeatures={{
-            rowGrouping: true,
-          }}
         />
-      </div>
-    </Stack>
+      </Box>
+    </Box>
   );
 }

@@ -9,18 +9,18 @@ import { adapterToUse, createPickerRenderer } from '../../../../test/utils/picke
 describe('<StaticDateTimePicker />', () => {
   const { render } = createPickerRenderer({ clock: 'fake' });
 
-  it('allows to select the same day and move to the next view', () => {
+  it('should allow to select the same day and move to the next view', () => {
     const onChangeMock = spy();
     render(
       <StaticDateTimePicker
         onChange={onChangeMock}
         renderInput={(params) => <TextField {...params} />}
-        value={adapterToUse.date('2018-01-01T00:00:00.000')}
+        value={adapterToUse.date(new Date(2018, 0, 1))}
       />,
     );
 
     fireEvent.click(screen.getByLabelText('Jan 1, 2018'));
-    expect(onChangeMock.callCount).to.equal(1);
+    expect(onChangeMock.callCount).to.equal(0);
 
     expect(screen.getByLabelText(/Selected time/)).toBeVisible();
   });

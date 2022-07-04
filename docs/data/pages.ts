@@ -1,4 +1,6 @@
-const pages = [
+import type { MuiPage } from '@mui/monorepo/docs/src/MuiPage';
+
+const pages: MuiPage[] = [
   {
     pathname: '/x/advanced-components',
     title: 'Overview',
@@ -7,7 +9,7 @@ const pages = [
   {
     pathname: '/x/react-data-grid',
     scopePathnames: ['/x/api/data-grid'],
-    title: 'Data Grid',
+    title: 'Data grid',
     icon: 'TableViewIcon',
     children: [
       { pathname: '/x/react-data-grid', title: 'Overview' },
@@ -15,7 +17,20 @@ const pages = [
       { pathname: '/x/react-data-grid/getting-started' },
       { pathname: '/x/react-data-grid/migration-v4', title: 'Migration from v4' },
       { pathname: '/x/react-data-grid/layout' },
-      { pathname: '/x/react-data-grid/columns' },
+      {
+        pathname: '/x/react-data-grid/columns',
+        scopePathnames: ['/x/react-data-grid/column-'],
+        children: [
+          { pathname: '/x/react-data-grid/column-definition' },
+          { pathname: '/x/react-data-grid/column-dimensions' },
+          { pathname: '/x/react-data-grid/column-visibility' },
+          { pathname: '/x/react-data-grid/column-header' },
+          { pathname: '/x/react-data-grid/column-ordering' },
+          { pathname: '/x/react-data-grid/column-pinning', plan: 'pro' },
+          { pathname: '/x/react-data-grid/column-spanning' },
+          { pathname: '/x/react-data-grid/column-groups', title: 'Column groups 🚧' },
+        ],
+      },
       { pathname: '/x/react-data-grid/rows' },
       { pathname: '/x/react-data-grid/editing' },
       { pathname: '/x/react-data-grid/sorting' },
@@ -42,9 +57,9 @@ const pages = [
           '/x/react-data-grid/pivoting',
         ],
         children: [
-          { pathname: '/x/react-data-grid/row-grouping', title: 'Row Grouping', plan: 'premium' },
-          { pathname: '/x/react-data-grid/tree-data', title: 'Tree Data', plan: 'pro' },
-          { pathname: '/x/react-data-grid/master-detail', title: 'Master Detail', plan: 'pro' },
+          { pathname: '/x/react-data-grid/row-grouping', plan: 'premium' },
+          { pathname: '/x/react-data-grid/tree-data', plan: 'pro' },
+          { pathname: '/x/react-data-grid/master-detail', plan: 'pro' },
           { pathname: '/x/react-data-grid/aggregation', title: 'Aggregation 🚧', plan: 'premium' },
           { pathname: '/x/react-data-grid/pivoting', title: 'Pivoting 🚧', plan: 'premium' },
         ],
@@ -56,22 +71,29 @@ const pages = [
           { pathname: '/x/api/data-grid', title: 'Index' },
           { pathname: '/x/api/data-grid/data-grid', title: 'DataGrid' },
           { pathname: '/x/api/data-grid/data-grid-pro', title: 'DataGridPro' },
+          { pathname: '/x/api/data-grid/data-grid-premium', title: 'DataGridPremium' },
           { pathname: '/x/api/data-grid/grid-api', title: 'GridApi' },
           { pathname: '/x/api/data-grid/grid-cell-params', title: 'GridCellParams' },
           { pathname: '/x/api/data-grid/grid-col-def', title: 'GridColDef' },
-          { pathname: '/x/api/data-grid/grid-csv-export-options', title: 'GridCsvExportOptions' },
+          { pathname: '/x/api/data-grid/grid-filter-form', title: 'GridFilterForm' },
           { pathname: '/x/api/data-grid/grid-filter-item', title: 'GridFilterItem' },
           { pathname: '/x/api/data-grid/grid-filter-model', title: 'GridFilterModel' },
           { pathname: '/x/api/data-grid/grid-filter-operator', title: 'GridFilterOperator' },
+          { pathname: '/x/api/data-grid/grid-filter-panel', title: 'GridFilterPanel' },
           {
             pathname: '/x/api/data-grid/grid-row-class-name-params',
             title: 'GridRowClassNameParams',
           },
           { pathname: '/x/api/data-grid/grid-row-params', title: 'GridRowParams' },
           { pathname: '/x/api/data-grid/grid-row-spacing-params', title: 'GridRowSpacingParams' },
+          { pathname: '/x/api/data-grid/grid-csv-export-options', title: 'GridCsvExportOptions' },
           {
             pathname: '/x/api/data-grid/grid-print-export-options',
             title: 'GridPrintExportOptions',
+          },
+          {
+            pathname: '/x/api/data-grid/grid-excel-export-options',
+            title: 'GridExcelExportOptions',
           },
         ],
       },
@@ -80,7 +102,7 @@ const pages = [
   {
     pathname: '/x/react-date-pickers',
     scopePathnames: ['/x/api/date-pickers'],
-    title: 'Date and Time Pickers',
+    title: 'Date and Time pickers',
     icon: 'DatePickerIcon',
     children: [
       { pathname: '/x/react-date-pickers/getting-started' },
@@ -92,6 +114,17 @@ const pages = [
       },
       { pathname: '/x/react-date-pickers/date-time-picker' },
       { pathname: '/x/react-date-pickers/time-picker' },
+      { pathname: '/x/react-date-pickers/localization' },
+      {
+        pathname: '/x/react-date-pickers/date-time-range-picker',
+        title: 'Date time range picker 🚧',
+        plan: 'pro',
+      },
+      {
+        pathname: '/x/react-date-pickers/time-range-picker',
+        title: 'Time range picker 🚧',
+        plan: 'pro',
+      },
       {
         pathname: '/x/api/date-pickers',
         title: 'API Reference',

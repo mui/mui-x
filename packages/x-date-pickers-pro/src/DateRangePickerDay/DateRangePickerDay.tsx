@@ -254,7 +254,6 @@ const DateRangePickerDayRaw = React.forwardRef(function DateRangePickerDay<TDate
           {...other}
           ref={ref}
           disableMargin
-          allowSameDateSelection
           day={day}
           selected={selected}
           outsideCurrentMonth={outsideCurrentMonth}
@@ -273,11 +272,6 @@ DateRangePickerDayRaw.propTypes = {
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
   /**
-   * If `true`, `onChange` is fired on click even if the same date is selected.
-   * @default false
-   */
-  allowSameDateSelection: PropTypes.bool,
-  /**
    * Override or extend the styles applied to the component.
    */
   classes: PropTypes.object,
@@ -291,7 +285,7 @@ DateRangePickerDayRaw.propTypes = {
    */
   disabled: PropTypes.bool,
   /**
-   * If `true`, todays date is rendering without highlighting with circle.
+   * If `true`, today's date is rendering without highlighting with circle.
    * @default false
    */
   disableHighlightToday: PropTypes.bool,

@@ -7,11 +7,10 @@ packageName: '@mui/x-date-pickers'
 materialDesign: https://material.io/components/time-pickers
 ---
 
-# Time Picker
+# Time picker
 
 <p class="description">Time pickers allow the user to select a single time.</p>
 
-Time pickers allow the user to select a single time (in the hours:minutes format).
 The selected time is indicated by the filled circle at the end of the clock hand.
 
 ## Basic usage
@@ -43,13 +42,6 @@ This can be customized with the `desktopModeMediaQuery` prop.
 The time picker component can be disabled or read-only.
 
 {{"demo": "FormPropsTimePickers.js"}}
-
-## Localization
-
-Use `LocalizationProvider` to change the date-engine locale that is used to render the time picker.
-The time picker will automatically adjust to the locale's time setting, i.e. the 12-hour or 24-hour format. This can be controlled with `ampm` prop.
-
-{{"demo": "LocalizedTimePicker.js"}}
 
 ## Time validation
 

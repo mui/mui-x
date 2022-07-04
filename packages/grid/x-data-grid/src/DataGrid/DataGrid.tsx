@@ -72,6 +72,10 @@ DataGridRaw.propTypes = {
    */
   autoPageSize: PropTypes.bool,
   /**
+   * Controls the modes of the cells.
+   */
+  cellModesModel: PropTypes.object,
+  /**
    * If `true`, the grid get a first column with a checkbox that allows to select rows.
    * @default false
    */
@@ -96,7 +100,7 @@ DataGridRaw.propTypes = {
           `MUI: \`column.resizable = true\` is not a valid prop.`,
           'Column resizing is not available in the MIT version.',
           '',
-          'You need to upgrade to the DataGridPro component to unlock this feature.',
+          'You need to upgrade to DataGridPro or DataGridPremium component to unlock this feature.',
         ].join('\n'),
       );
     }
@@ -205,6 +209,8 @@ DataGridRaw.propTypes = {
       }),
     ).isRequired,
     linkOperator: PropTypes.oneOf(['and', 'or']),
+    quickFilterLogicOperator: PropTypes.oneOf(['and', 'or']),
+    quickFilterValues: PropTypes.array,
   }),
   /**
    * Function that applies CSS classes dynamically on cells.
@@ -219,6 +225,14 @@ DataGridRaw.propTypes = {
    */
   getDetailPanelContent: PropTypes.func,
   /**
+   * Function that returns the estimated height for a row.
+   * Only works if dynamic row height is used.
+   * Once the row height is measured this value is discarded.
+   * @param {GridRowHeightParams} params With all properties from [[GridRowHeightParams]].
+   * @returns {number | null} The estimated row height value. If `null` or `undefined` then the default row height, based on the density, is applied.
+   */
+  getEstimatedRowHeight: PropTypes.func,
+  /**
    * Function that applies CSS classes dynamically on rows.
    * @param {GridRowClassNameParams} params With all properties from [[GridRowClassNameParams]].
    * @returns {string} The CSS class to apply to the row.
@@ -227,7 +241,7 @@ DataGridRaw.propTypes = {
   /**
    * Function that sets the row height per row.
    * @param {GridRowHeightParams} params With all properties from [[GridRowHeightParams]].
-   * @returns {GridRowHeightReturnValue} The row height value. If `null` or `undefined` then the default row height is applied.
+   * @returns {GridRowHeightReturnValue} The row height value. If `null` or `undefined` then the default row height is applied. If "auto" then the row height is calculated based on the content.
    */
   getRowHeight: PropTypes.func,
   /**
@@ -278,6 +292,13 @@ DataGridRaw.propTypes = {
    * @returns {boolean} A boolean indicating if the cell is selectable.
    */
   isRowSelectable: PropTypes.func,
+  /**
+   * If `true`, the selection model will retain selected rows that do not exist.
+   * Useful when using server side pagination and row selections need to be retained
+   * when changing pages.
+   * @default false
+   */
+  keepNonExistentRowsSelected: PropTypes.bool,
   /**
    * If `true`, a  loading overlay is displayed.
    */
@@ -353,6 +374,12 @@ DataGridRaw.propTypes = {
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onCellKeyDown: PropTypes.func,
+  /**
+   * Callback fired when the `cellModesModel` prop changes.
+   * @param {GridCellModesModel} cellModesModel Object containig which cells are in "edit" mode.
+   * @param {GridCallbackDetails} details Additional details for this callback.
+   */
+  onCellModesModelChange: PropTypes.func,
   /**
    * Callback fired when a click event comes from a column header element.
    * @param {GridColumnHeaderParams} params With all properties from [[GridColumnHeaderParams]].
@@ -445,6 +472,20 @@ DataGridRaw.propTypes = {
    */
   onFilterModelChange: PropTypes.func,
   /**
+   * Callback fired when the menu is closed.
+   * @param {GridMenuParams} params With all properties from [[GridMenuParams]].
+   * @param {MuiEvent<{}>} event The event object.
+   * @param {GridCallbackDetails} details Additional details for this callback.
+   */
+  onMenuClose: PropTypes.func,
+  /**
+   * Callback fired when the menu is opened.
+   * @param {GridMenuParams} params With all properties from [[GridMenuParams]].
+   * @param {MuiEvent<{}>} event The event object.
+   * @param {GridCallbackDetails} details Additional details for this callback.
+   */
+  onMenuOpen: PropTypes.func,
+  /**
    * Callback fired when the current page has changed.
    * @param {number} page Index of the page displayed on the Grid.
    * @param {GridCallbackDetails} details Additional details for this callback.
@@ -516,6 +557,12 @@ DataGridRaw.propTypes = {
    */
   onRowEditStop: PropTypes.func,
   /**
+   * Callback fired when the `rowModesModel` prop changes.
+   * @param {GridRowModesModel} rowModesModel Object containig which rows are in "edit" mode.
+   * @param {GridCallbackDetails} details Additional details for this callback.
+   */
+  onRowModesModelChange: PropTypes.func,
+  /**
    * Callback fired when the selection state of one or multiple rows changes.
    * @param {GridSelectionModel} selectionModel With all the row ids [[GridSelectionModel]].
    * @param {GridCallbackDetails} details Additional details for this callback.
@@ -552,7 +599,7 @@ DataGridRaw.propTypes = {
           `MUI: \`<DataGrid pageSize={${props.pageSize}} />\` is not a valid prop.`,
           `Only page size below ${MAX_PAGE_SIZE} is available in the MIT version.`,
           '',
-          'You need to upgrade to the DataGridPro component to unlock this feature.',
+          'You need to upgrade to DataGridPro or DataGridPremium component to unlock this feature.',
         ].join('\n'),
       );
     }
@@ -565,7 +612,7 @@ DataGridRaw.propTypes = {
           'MUI: `<DataGrid pagination={false} />` is not a valid prop.',
           'Infinite scrolling is not available in the MIT version.',
           '',
-          'You need to upgrade to the DataGridPro component to disable the pagination.',
+          'You need to upgrade to DataGridPro or DataGridPremium component to disable the pagination.',
         ].join('\n'),
       );
     }
@@ -602,6 +649,10 @@ DataGridRaw.propTypes = {
    * @default 52
    */
   rowHeight: PropTypes.number,
+  /**
+   * Controls the modes of the rows.
+   */
+  rowModesModel: PropTypes.object,
   /**
    * Set of rows of type [[GridRowsProp]].
    */
@@ -643,7 +694,7 @@ DataGridRaw.propTypes = {
             )}} />\` is not a valid prop.`,
             'selectionModel can only be of 1 item in DataGrid.',
             '',
-            'You need to upgrade to the DataGridPro component to unlock multiple selection.',
+            'You need to upgrade to DataGridPro or DataGridPremium component to unlock multiple selection.',
           ].join('\n'),
         );
       }

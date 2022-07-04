@@ -1,14 +1,19 @@
 {
   "props": {
     "onChange": { "type": { "name": "func" }, "required": true },
-    "allowSameDateSelection": { "type": { "name": "bool" } },
     "components": { "type": { "name": "object" }, "default": "{}" },
     "componentsProps": { "type": { "name": "object" }, "default": "{}" },
     "defaultCalendarMonth": { "type": { "name": "any" } },
     "disabled": { "type": { "name": "bool" } },
+    "disableFuture": { "type": { "name": "bool" } },
     "disableHighlightToday": { "type": { "name": "bool" } },
-    "getViewSwitchingButtonText": { "type": { "name": "func" } },
-    "leftArrowButtonText": { "type": { "name": "string" } },
+    "disablePast": { "type": { "name": "bool" } },
+    "getViewSwitchingButtonText": {
+      "type": { "name": "func" },
+      "deprecated": true,
+      "deprecationInfo": "Use the <code>localeText</code> prop of <code>LocalizationProvider</code> instead, see <a href=\"https://mui.com/x/react-date-pickers/localization\">https://mui.com/x/react-date-pickers/localization</a>"
+    },
+    "leftArrowButtonText": { "type": { "name": "string" }, "deprecated": true },
     "loading": { "type": { "name": "bool" } },
     "maxDate": { "type": { "name": "any" } },
     "minDate": { "type": { "name": "any" } },
@@ -32,8 +37,9 @@
       "type": { "name": "func" },
       "default": "() => <span data-mui-test=\"loading-progress\">...</span>"
     },
-    "rightArrowButtonText": { "type": { "name": "string" } },
+    "rightArrowButtonText": { "type": { "name": "string" }, "deprecated": true },
     "shouldDisableDate": { "type": { "name": "func" } },
+    "shouldDisableMonth": { "type": { "name": "func" } },
     "shouldDisableYear": { "type": { "name": "func" } },
     "showDaysOutsideCurrentMonth": { "type": { "name": "bool" } },
     "view": {
@@ -68,5 +74,6 @@
   "forwardsRefTo": "HTMLDivElement",
   "filename": "/packages/x-date-pickers/src/CalendarPicker/CalendarPicker.tsx",
   "inheritance": null,
-  "demos": "<ul></ul>"
+  "demos": "<ul></ul>",
+  "packages": ["@mui/x-date-pickers-pro", "@mui/x-date-pickers"]
 }

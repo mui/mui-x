@@ -10,37 +10,50 @@ import {
   ExportedTimeValidationProps,
 } from './useTimeValidation';
 
-export interface DateTimeValidationProps<TDate>
+export interface DateTimeValidationProps<TInputDate, TDate>
   extends ExportedDateValidationProps<TDate>,
     ExportedTimeValidationProps<TDate>,
-    ValidationProps<DateTimeValidationError, TDate> {}
+    ValidationProps<DateTimeValidationError, TInputDate | null> {}
 
-export const validateDateTime: Validator<any, DateTimeValidationProps<any>> = (
-  utils,
+export const validateDateTime: Validator<any, DateTimeValidationProps<any, any>> = ({
+  props,
   value,
-  { minDate, maxDate, disableFuture, shouldDisableDate, disablePast, ...timeValidationProps },
-) => {
-  const dateValidationResult = validateDate(utils, value, {
+  adapter,
+}) => {
+  const {
     minDate,
     maxDate,
     disableFuture,
     shouldDisableDate,
     disablePast,
+    ...timeValidationProps
+  } = props;
+
+  const dateValidationResult = validateDate({
+    adapter,
+    value,
+    props: {
+      minDate,
+      maxDate,
+      disableFuture,
+      shouldDisableDate,
+      disablePast,
+    },
   });
 
   if (dateValidationResult !== null) {
     return dateValidationResult;
   }
 
-  return validateTime(utils, value, timeValidationProps);
+  return validateTime({ adapter, value, props: timeValidationProps });
 };
 
 export type DateTimeValidationError = DateValidationError | TimeValidationError;
 
 const isSameDateTimeError = (a: DateTimeValidationError, b: DateTimeValidationError) => a === b;
 
-export function useDateTimeValidation<TDate>(
-  props: DateTimeValidationProps<TDate> & ValidationProps<DateTimeValidationError, TDate>,
+export function useDateTimeValidation<TInputDate, TDate>(
+  props: DateTimeValidationProps<TInputDate, TDate>,
 ): DateTimeValidationError {
   return useValidation(props, validateDateTime, isSameDateTimeError);
 }

@@ -2,10 +2,10 @@
 title: React Data Grid component
 githubLabel: 'component: data grid'
 packageName: '@mui/x-data-grid'
-waiAria: https://www.w3.org/TR/wai-aria-practices-1.1/#grid
+waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/grid/
 ---
 
-# Data Grid
+# Data grid
 
 <p class="description">A fast and extendable react data table and react data grid. It's a feature-rich component available in MIT or Commercial versions.</p>
 
@@ -33,8 +33,15 @@ import { DataGrid } from '@mui/x-data-grid';
 
 {{"demo": "DataGridDemo.js", "defaultCodeOpen": false, "bg": "inline"}}
 
-### Commercial version [<span class="plan-pro"></span>](https://mui.com/store/items/material-ui-pro/)
+### Commercial version
 
+The commercial version is available in the form of two plans: Pro and Premium.
+
+#### Pro Plan [<span class="plan-pro"></span>](https://mui.com/store/items/mui-x-pro/)
+
+The Pro version extends the features available in the MIT version, by allowing to sort and filter multiple columns at the same time.
+It also brings new features, e.g. column groups, column pinning, tree data, row and column reordering, etc.
+Finally, the Pro version leverages virtualization to handle bigger datasets.
 The following grid displays 31 columns and 100,000 rows - over 3 million cells in total.
 
 ```js
@@ -42,6 +49,20 @@ import { DataGridPro } from '@mui/x-data-grid-pro';
 ```
 
 {{"demo": "DataGridProDemo.js", "defaultCodeOpen": false, "disableAd": true, "bg": "inline"}}
+
+#### Premium Plan [<span class="plan-premium"></span>](https://mui.com/store/items/mui-x-premium/)
+
+The Premium version contains all features from Pro, as well as features for analyzing large datasets.
+The features available on the initial release are row grouping and the ability to export to Excel files.
+Aggregation is coming right next.
+In the following demo, the rows are grouped by commodity name, but you can experiment grouping other columns in the column menu.
+And since you're here, you may want to export the different views of your data to an Excel file.
+
+```js
+import { DataGridPremium } from '@mui/x-data-grid-premium';
+```
+
+{{"demo": "DataGridPremiumDemo.js", "defaultCodeOpen": false, "disableAd": true, "bg": "inline"}}
 
 ### MIT vs. commercial
 
@@ -57,14 +78,15 @@ import { DataGridPro } from '@mui/x-data-grid-pro';
 - [Sorting](/x/react-data-grid/sorting/) and [multi-sorting](/x/react-data-grid/sorting/#multi-sorting) <span class="plan-pro"></span>
 - [Selection](/x/react-data-grid/selection/)
 - [Column virtualization](/x/react-data-grid/virtualization/#column-virtualization) and [rows virtualization](/x/react-data-grid/virtualization/#row-virtualization) <span class="plan-pro"></span>
-- [Row grouping](/x/react-data-grid/row-grouping) <span class="plan-premium"></span>
-- [Tree data](/x/react-data-grid/tree-data) <span class="plan-pro"></span>
-- [Master detail](/x/react-data-grid/master-detail) <span class="plan-pro"></span>
-- [Resizable columns](/x/react-data-grid/columns/#resizing) <span class="plan-pro"></span>
+- [Row grouping](/x/react-data-grid/row-grouping/) <span class="plan-premium"></span>
+- [Excel export](/x/react-data-grid/export/#excel-export) <span class="plan-premium"></span>
+- [Tree data](/x/react-data-grid/tree-data/) <span class="plan-pro"></span>
+- [Master detail](/x/react-data-grid/master-detail/) <span class="plan-pro"></span>
+- [Resizable columns](/x/react-data-grid/column-dimensions/#resizing) <span class="plan-pro"></span>
 - [100% customizable](/x/react-data-grid/style/)
 - Server-side data
-- [Column hiding](/x/react-data-grid/columns/#column-visibility)
-- [Column pinning](/x/react-data-grid/columns/#column-pinning) <span class="plan-pro"></span>
+- [Column hiding](/x/react-data-grid/column-visibility/)
+- [Column pinning](/x/react-data-grid/column-pinning/) <span class="plan-pro"></span>
 - [Accessible](/x/react-data-grid/accessibility/)
 - [Localization](/x/react-data-grid/localization/)
 
@@ -73,7 +95,6 @@ import { DataGridPro } from '@mui/x-data-grid-pro';
 While development of the data grid component is moving fast, there are still many additional features that we plan to implement. Some of them:
 
 - Headless (hooks only)
-- [Excel export](/x/react-data-grid/export/) <span class="plan-premium"></span>
 - [Range selection](/x/react-data-grid/selection/#range-selection) <span class="plan-premium"></span>
 - [Aggregation](/x/react-data-grid/aggregation/) <span class="plan-premium"></span>
 - [Pivoting](/x/react-data-grid/pivoting/) <span class="plan-premium"></span>
@@ -85,12 +106,13 @@ You can find more details on, the [feature comparison](/x/react-data-grid/gettin
 Here are some resources you might be interested in to learn more about the grid:
 
 - The storybook used for [internal development](https://material-ui-x.netlify.app/storybook/)
-- The [source on GitHub](https://github.com/mui/mui-x/tree/master/packages/grid)
-- The [Material Design specification](https://material.io/design/components/data-tables.html) specification
-- The accessibility [WAI-ARIA authoring practices](https://www.w3.org/TR/wai-aria-practices/#grid)
+- The [source on GitHub](https://github.com/mui/mui-x/tree/master/packages/)
+- The [Material Design specification](https://material.io/components/data-tables) specification
+- The accessibility [WAI-ARIA authoring practices](https://www.w3.org/WAI/ARIA/apg/patterns/grid/)
 - The [Sketch](https://mui.com/store/items/sketch-react/) and [Figma](https://mui.com/store/items/figma-react/) design assets
 
 ## API
 
 - [DataGrid](/x/api/data-grid/data-grid/)
 - [DataGridPro](/x/api/data-grid/data-grid-pro/)
+- [DataGridPremium](/x/api/data-grid/data-grid-premium/)

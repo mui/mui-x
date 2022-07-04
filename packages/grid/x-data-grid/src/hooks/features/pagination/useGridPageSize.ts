@@ -3,7 +3,6 @@ import { GridStateCommunity } from '../../../models/gridStateCommunity';
 import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { GridPageSizeApi } from './gridPaginationInterfaces';
-import { GridEvents } from '../../../models/events';
 import {
   useGridLogger,
   useGridApiMethod,
@@ -39,12 +38,12 @@ export const useGridPageSize = (
   const logger = useGridLogger(apiRef, 'useGridPageSize');
   const rowHeight = useGridSelector(apiRef, gridDensityRowHeightSelector);
 
-  apiRef.current.unstable_updateControlState({
+  apiRef.current.unstable_registerControlState({
     stateId: 'pageSize',
     propModel: props.pageSize,
     propOnChange: props.onPageSizeChange,
     stateSelector: gridPageSizeSelector,
-    changeEvent: GridEvents.pageSizeChange,
+    changeEvent: 'pageSizeChange',
   });
 
   /**
@@ -132,7 +131,7 @@ export const useGridPageSize = (
     apiRef.current.setPageSize(maximumPageSizeWithoutScrollBar);
   }, [apiRef, props.autoPageSize, rowHeight]);
 
-  useGridApiEventHandler(apiRef, GridEvents.viewportInnerSizeChange, handleUpdateAutoPageSize);
+  useGridApiEventHandler(apiRef, 'viewportInnerSizeChange', handleUpdateAutoPageSize);
 
   /**
    * EFFECTS

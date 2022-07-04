@@ -2,7 +2,7 @@
 title: Data Grid - Styling
 ---
 
-# Data Grid - Styling
+# Data grid - Styling
 
 <p class="description">The grid CSS can be easily overwritten.</p>
 
@@ -115,7 +115,9 @@ It is also called with a `GridCellParams` object.
 Use the `align` property in `GridColDef` to change the alignment of content of the cells.
 Choose between one of the following values: 'left' | 'right' | 'center'.
 
-**Note**: You must use `headerAlign` to align the content of the header.
+:::info
+You must use `headerAlign` to align the content of the header.
+:::
 
 ## Striped rows
 
@@ -135,3 +137,4 @@ The following demo illustrates how this can be achieved.
 
 - [DataGrid](/x/api/data-grid/data-grid/)
 - [DataGridPro](/x/api/data-grid/data-grid-pro/)
+- [DataGridPremium](/x/api/data-grid/data-grid-premium/)

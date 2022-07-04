@@ -167,9 +167,6 @@ ViewListItem.propTypes = {
          */
         openedPanelValue: PropTypes.oneOf(['columns', 'filters']),
       }),
-      rowGrouping: PropTypes.shape({
-        model: PropTypes.arrayOf(PropTypes.string),
-      }),
       sorting: PropTypes.shape({
         sortModel: PropTypes.arrayOf(PropTypes.object),
       }),
@@ -233,7 +230,7 @@ NewViewListButton.propTypes = {
   onSubmit: PropTypes.func.isRequired,
 };
 
-const CustomToolbar = () => {
+function CustomToolbar() {
   const apiRef = useGridApiContext();
   const [state, dispatch] = React.useReducer(demoReducer, DEMO_INITIAL_STATE);
 
@@ -244,8 +241,8 @@ const CustomToolbar = () => {
     });
   };
 
-  const handleNewViewLabelChange = (e) => {
-    dispatch({ type: 'setNewViewLabel', label: e.target.value });
+  const handleNewViewLabelChange = (event) => {
+    dispatch({ type: 'setNewViewLabel', label: event.target.value });
   };
 
   const handleDeleteView = React.useCallback((viewId) => {
@@ -344,7 +341,7 @@ const CustomToolbar = () => {
       />
     </GridToolbarContainer>
   );
-};
+}
 
 export default function RestoreStateApiRef() {
   const apiRef = useGridApiRef();
@@ -354,7 +351,7 @@ export default function RestoreStateApiRef() {
   });
 
   return (
-    <Box sx={{ width: '100%', height: 400, bgcolor: 'background.paper' }}>
+    <Box sx={{ width: '100%', height: 400 }}>
       <DataGridPro
         components={{ Toolbar: CustomToolbar }}
         loading={loading}

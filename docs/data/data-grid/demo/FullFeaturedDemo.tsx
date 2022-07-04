@@ -1,6 +1,10 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
-import { DataGridPro, GridToolbar } from '@mui/x-data-grid-pro';
+import {
+  DataGridPro,
+  GRID_CHECKBOX_SELECTION_FIELD,
+  GridToolbar,
+} from '@mui/x-data-grid-pro';
 import { useDemoData } from '@mui/x-data-grid-generator';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import { styled } from '@mui/material/styles';
@@ -236,12 +240,7 @@ function SettingsPanel(props: GridToolbarContainerProps) {
           <MenuItem value="ant">Ant Design</MenuItem>
         </Select>
       </FormControl>
-      <Button
-        size="small"
-        variant="outlined"
-        color="primary"
-        onClick={handleApplyChanges}
-      >
+      <Button size="small" variant="outlined" onClick={handleApplyChanges}>
         <KeyboardArrowRightIcon fontSize="small" /> Apply
       </Button>
     </FormGroup>
@@ -326,13 +325,16 @@ export default function FullFeaturedDemo() {
         components={{
           Toolbar: GridToolbar,
         }}
+        componentsProps={{
+          toolbar: { showQuickFilter: true },
+        }}
         loading={loading}
         checkboxSelection
         disableSelectionOnClick
         rowThreshold={0}
         initialState={{
           ...data.initialState,
-          pinnedColumns: { left: ['__check__', 'desk'] },
+          pinnedColumns: { left: [GRID_CHECKBOX_SELECTION_FIELD, 'desk'] },
         }}
         {...pagination}
       />

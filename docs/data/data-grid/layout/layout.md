@@ -2,16 +2,20 @@
 title: Data Grid - Layout
 ---
 
-# Data Grid - Layout
+# Data grid - Layout
 
 <p class="description">The data grid offers multiple layout mode.</p>
 
-By default, the grid has no intrinsic dimensions. It occupies the space its parent leaves.
+:::error
+By default, the grid has **no intrinsic dimensions**. It occupies the space its parent leaves.
+The grid will raise an error in the console if its container has no intrinsic dimensions.
+:::
 
-> ⚠️ When using % (**percentage**) for your height or width.
-> You need to make sure the container you are putting the grid into also has an intrinsic dimension.
-> The browsers fit the element according to a percentage of the parent dimension.
-> If the parent has no dimensions, then the % will be zero.
+## Percentage dimensions
+
+When using % (percentage) for your height or width, you need to make sure the container you are putting the grid into also has an intrinsic dimension.
+The browsers fit the element according to a percentage of the parent dimension.
+If the parent has no dimensions, then the % will be zero.
 
 ## Flex layout
 
@@ -30,7 +34,9 @@ You can predefine dimensions for the parent of the grid.
 The `autoHeight` prop allows the grid to size according to its content.
 This means that the number of rows will drive the height of the grid and consequently, they will all be rendered and visible to the user at the same time.
 
-> ⚠️ This is not recommended for large datasets as row virtualization will not be able to improve performance by limiting the number of elements rendered in the DOM.
+:::warning
+This is not recommended for large datasets as row virtualization will not be able to improve performance by limiting the number of elements rendered in the DOM.
+:::
 
 {{"demo": "AutoHeightGrid.js", "bg": "inline"}}
 
@@ -38,3 +44,4 @@ This means that the number of rows will drive the height of the grid and consequ
 
 - [DataGrid](/x/api/data-grid/data-grid/)
 - [DataGridPro](/x/api/data-grid/data-grid-pro/)
+- [DataGridPremium](/x/api/data-grid/data-grid-premium/)

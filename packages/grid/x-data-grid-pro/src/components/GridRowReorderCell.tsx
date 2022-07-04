@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { unstable_composeClasses as composeClasses } from '@mui/material';
 import {
-  GridEvents,
   GridRenderCellParams,
   GridRowEventLookup,
   gridRowTreeDepthSelector,
@@ -40,11 +39,14 @@ const GridRowReorderCell = (params: GridRenderCellParams) => {
   const cellValue = params.row.__reorder__ || params.id;
 
   // TODO: remove sortModel and treeDepth checks once row reorder is compatible
-  const isDraggable =
-    !!(rootProps as DataGridProProcessedProps).rowReordering &&
-    !sortModel.length &&
-    treeDepth === 1 &&
-    Object.keys(editRowsState).length === 0;
+  const isDraggable = React.useMemo(
+    () =>
+      !!rootProps.rowReordering &&
+      !sortModel.length &&
+      treeDepth === 1 &&
+      Object.keys(editRowsState).length === 0,
+    [rootProps.rowReordering, sortModel, treeDepth, editRowsState],
+  );
 
   const ownerState = { isDraggable, classes: rootProps.classes };
   const classes = useUtilityClasses(ownerState);
@@ -66,24 +68,26 @@ const GridRowReorderCell = (params: GridRenderCellParams) => {
         }
 
         // The row might have been deleted
-        if (!apiRef.current.getRow(params.row.id)) {
+        if (!apiRef.current.getRow(params.id)) {
           return;
         }
 
-        apiRef.current.publishEvent(eventName, apiRef.current.getRowParams(params.row.id), event);
+        apiRef.current.publishEvent(eventName, apiRef.current.getRowParams(params.id), event);
 
         if (propHandler) {
           propHandler(event);
         }
       },
-    [apiRef, params.row.id],
+    [apiRef, params.id],
   );
 
-  const draggableEventHandlers = {
-    onDragStart: publish(GridEvents.rowDragStart),
-    onDragOver: publish(GridEvents.rowDragOver),
-    onDragEnd: publish(GridEvents.rowDragEnd),
-  };
+  const draggableEventHandlers = isDraggable
+    ? {
+        onDragStart: publish('rowDragStart'),
+        onDragOver: publish('rowDragOver'),
+        onDragEnd: publish('rowDragEnd'),
+      }
+    : null;
 
   return (
     <div className={classes.root} draggable={isDraggable} {...draggableEventHandlers}>

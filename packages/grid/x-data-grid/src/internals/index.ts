@@ -80,9 +80,13 @@ export type {
   DataGridPropsWithComplexDefaultValueBeforeProcessing,
 } from '../models/props/DataGridProps';
 
-export { createSelector } from '../utils/createSelector';
+export { getColumnsToExport, defaultGetRowsToExport } from '../hooks/features/export/utils';
+export { createSelector, unstable_resetCreateSelectorCache } from '../utils/createSelector';
 export { findParentElementFromClassName } from '../utils/domUtils';
 export { isNavigationKey } from '../utils/keyboardUtils';
 export { clamp, isDeepEqual } from '../utils/utils';
+export { buildWarning } from '../utils/warning';
+export { exportAs } from '../utils/exportAs';
 
 export type { GridApiCommunity } from '../models/api/gridApiCommunity';
+export type { GridApiCaches } from '../models/gridApiCaches';

@@ -50,6 +50,7 @@ const GRID_API_INTERFACES_WITH_DEDICATED_PAGES = [
   'GridDetailPanelApi',
   'GridPrintExportApi',
   'GridDisableVirtualizationApi',
+  'GridExcelExportApi',
 ];
 
 const OTHER_GRID_INTERFACES_WITH_DEDICATED_PAGES = [
@@ -66,6 +67,7 @@ const OTHER_GRID_INTERFACES_WITH_DEDICATED_PAGES = [
   'GridColDef',
   'GridCsvExportOptions',
   'GridPrintExportOptions',
+  'GridExcelExportOptions',
 
   // Filters
   'GridFilterModel',
@@ -185,7 +187,10 @@ function generateMarkdownFromProperties(
       planImg = '';
     } else if (property.projects.includes('x-data-grid-pro')) {
       planImg =
-        ' [<span class="plan-pro" title="Pro plan"></span>](https://mui.com/store/items/material-ui-pro/)';
+        ' [<span class="plan-pro" title="Pro plan"></span>](https://mui.com/store/items/mui-x-pro/)';
+    } else if (property.projects.includes('x-data-grid-premium')) {
+      planImg =
+        ' [<span class="plan-premium" title="Premium plan"></span>](https://mui.com/store/items/material-ui-premium/)';
     } else {
       throw new Error(`No valid plan found for ${property.name} property in ${object.name}`);
     }
@@ -221,7 +226,7 @@ function generateImportStatement(objects: ParsedObject[], projects: Projects) {
       const objectsInProject = objects.filter((object) => {
         // TODO: Remove after opening the apiRef on the community plan
         if (
-          ['GridApiCommunity', 'GridApiPro', 'GridApi'].includes(object.name) &&
+          ['GridApiCommunity', 'GridApi'].includes(object.name) &&
           project.name === 'x-data-grid'
         ) {
           return false;

@@ -9,7 +9,7 @@ import { Logger } from '../logger';
 import { GridSortDirection, GridSortModel } from '../gridSortModel';
 import { GridSlotsComponent } from '../gridSlotsComponent';
 import { GridRowIdGetter, GridRowsProp, GridValidRowModel } from '../gridRows';
-import { GridEventListener, GridEvents } from '../events';
+import { GridEventListener } from '../events';
 import { GridCallbackDetails, GridLocaleText } from '../api';
 import { GridApiCommunity } from '../api/gridApiCommunity';
 import type { GridColumnTypesRecord } from '../colDef';
@@ -29,6 +29,7 @@ import { GridInputSelectionModel, GridSelectionModel } from '../gridSelectionMod
 import { GridInitialStateCommunity } from '../gridStateCommunity';
 import { GridSlotsComponentsProps } from '../gridSlotsComponentsProps';
 import { GridColumnVisibilityModel } from '../../hooks/features/columns/gridColumnsInterfaces';
+import { GridCellModesModel, GridRowModesModel } from '../api/gridEditingApi';
 
 export interface GridExperimentalFeatures {
   /**
@@ -190,7 +191,7 @@ export interface DataGridPropsWithDefaultValues {
    */
   disableMultipleColumnsFiltering: boolean;
   /**
-   * If `true`, multiple selection using the CTRL or CMD key is disabled.
+   * If `true`, multiple selection using the Ctrl or CMD key is disabled.
    * @default false
    */
   disableMultipleSelection: boolean;
@@ -246,6 +247,13 @@ export interface DataGridPropsWithDefaultValues {
    * @default false
    */
   hideFooterSelectedRowCount: boolean;
+  /**
+   * If `true`, the selection model will retain selected rows that do not exist.
+   * Useful when using server side pagination and row selections need to be retained
+   * when changing pages.
+   * @default false
+   */
+  keepNonExistentRowsSelected: boolean;
   /**
    * Pass a custom logger in the components that implements the [[Logger]] interface.
    * @default console
@@ -372,9 +380,17 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
   /**
    * Function that sets the row height per row.
    * @param {GridRowHeightParams} params With all properties from [[GridRowHeightParams]].
-   * @returns {GridRowHeightReturnValue} The row height value. If `null` or `undefined` then the default row height is applied.
+   * @returns {GridRowHeightReturnValue} The row height value. If `null` or `undefined` then the default row height is applied. If "auto" then the row height is calculated based on the content.
    */
   getRowHeight?: (params: GridRowHeightParams) => GridRowHeightReturnValue;
+  /**
+   * Function that returns the estimated height for a row.
+   * Only works if dynamic row height is used.
+   * Once the row height is measured this value is discarded.
+   * @param {GridRowHeightParams} params With all properties from [[GridRowHeightParams]].
+   * @returns {number | null} The estimated row height value. If `null` or `undefined` then the default row height, based on the density, is applied.
+   */
+  getEstimatedRowHeight?: (params: GridRowHeightParams) => number | null;
   /**
    * Function that allows to specify the spacing between rows.
    * @param {GridRowSpacingParams} params With all properties from [[GridRowSpacingParams]].
@@ -406,128 +422,128 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
    * @param {GridCallbackDetails} details Additional details for this callback.
    * @deprecated use `preProcessEditCellProps` from the [`GridColDef`](/x/api/data-grid/grid-col-def/)
    */
-  onEditCellPropsChange?: GridEventListener<GridEvents.editCellPropsChange>;
+  onEditCellPropsChange?: GridEventListener<'editCellPropsChange'>;
   /**
    * Callback fired when the cell changes are committed.
    * @param {GridCellEditCommitParams} params With all properties from [[GridCellEditCommitParams]].
    * @param {MuiEvent<MuiBaseEvent>} event The event that caused this prop to be called.
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
-  onCellEditCommit?: GridEventListener<GridEvents.cellEditCommit>;
+  onCellEditCommit?: GridEventListener<'cellEditCommit'>;
   /**
    * Callback fired when the cell turns to edit mode.
    * @param {GridCellParams} params With all properties from [[GridCellParams]].
    * @param {MuiEvent<React.KeyboardEvent | React.MouseEvent>} event The event that caused this prop to be called.
    */
-  onCellEditStart?: GridEventListener<GridEvents.cellEditStart>;
+  onCellEditStart?: GridEventListener<'cellEditStart'>;
   /**
    * Callback fired when the cell turns to view mode.
    * @param {GridCellParams} params With all properties from [[GridCellParams]].
    * @param {MuiEvent<MuiBaseEvent>} event The event that caused this prop to be called.
    */
-  onCellEditStop?: GridEventListener<GridEvents.cellEditStop>;
+  onCellEditStop?: GridEventListener<'cellEditStop'>;
   /**
    * Callback fired when the row changes are committed.
    * @param {GridRowId} id The row id.
    * @param {MuiEvent<MuiBaseEvent>} event The event that caused this prop to be called.
    */
-  onRowEditCommit?: GridEventListener<GridEvents.rowEditCommit>;
+  onRowEditCommit?: GridEventListener<'rowEditCommit'>;
   /**
    * Callback fired when the row turns to edit mode.
    * @param {GridRowParams} params With all properties from [[GridRowParams]].
    * @param {MuiEvent<React.KeyboardEvent | React.MouseEvent>} event The event that caused this prop to be called.
    */
-  onRowEditStart?: GridEventListener<GridEvents.rowEditStart>;
+  onRowEditStart?: GridEventListener<'rowEditStart'>;
   /**
    * Callback fired when the row turns to view mode.
    * @param {GridRowParams} params With all properties from [[GridRowParams]].
    * @param {MuiEvent<MuiBaseEvent>} event The event that caused this prop to be called.
    */
-  onRowEditStop?: GridEventListener<GridEvents.rowEditStop>;
+  onRowEditStop?: GridEventListener<'rowEditStop'>;
   /**
    * Callback fired when an exception is thrown in the grid.
    * @param {any} args The arguments passed to the `showError` call.
    * @param {MuiEvent<{}>} event The event object.
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
-  onError?: GridEventListener<GridEvents.componentError>;
+  onError?: GridEventListener<'componentError'>;
   /**
    * Callback fired when any cell is clicked.
    * @param {GridCellParams} params With all properties from [[GridCellParams]].
    * @param {MuiEvent<React.MouseEvent>} event The event object.
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
-  onCellClick?: GridEventListener<GridEvents.cellClick>;
+  onCellClick?: GridEventListener<'cellClick'>;
   /**
    * Callback fired when a double click event comes from a cell element.
    * @param {GridCellParams} params With all properties from [[GridCellParams]].
    * @param {MuiEvent<React.MouseEvent>} event The event object.
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
-  onCellDoubleClick?: GridEventListener<GridEvents.cellDoubleClick>;
+  onCellDoubleClick?: GridEventListener<'cellDoubleClick'>;
   /**
    * Callback fired when a cell loses focus.
    * @param {GridCellParams} params With all properties from [[GridCellParams]].
    * @param {MuiEvent<MuiBaseEvent>} event The event object.
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
-  onCellFocusOut?: GridEventListener<GridEvents.cellFocusOut>;
+  onCellFocusOut?: GridEventListener<'cellFocusOut'>;
   /**
    * Callback fired when a keydown event comes from a cell element.
    * @param {GridCellParams} params With all properties from [[GridCellParams]].
    * @param {MuiEvent<React.KeyboardEvent>} event The event object.
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
-  onCellKeyDown?: GridEventListener<GridEvents.cellKeyDown>;
+  onCellKeyDown?: GridEventListener<'cellKeyDown'>;
   /**
    * Callback fired when a click event comes from a column header element.
    * @param {GridColumnHeaderParams} params With all properties from [[GridColumnHeaderParams]].
    * @param {MuiEvent<React.MouseEvent>} event The event object.
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
-  onColumnHeaderClick?: GridEventListener<GridEvents.columnHeaderClick>;
+  onColumnHeaderClick?: GridEventListener<'columnHeaderClick'>;
   /**
    * Callback fired when a double click event comes from a column header element.
    * @param {GridColumnHeaderParams} params With all properties from [[GridColumnHeaderParams]].
    * @param {MuiEvent<React.MouseEvent>} event The event object.
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
-  onColumnHeaderDoubleClick?: GridEventListener<GridEvents.columnHeaderDoubleClick>;
+  onColumnHeaderDoubleClick?: GridEventListener<'columnHeaderDoubleClick'>;
   /**
    * Callback fired when a mouseover event comes from a column header element.
    * @param {GridColumnHeaderParams} params With all properties from [[GridColumnHeaderParams]].
    * @param {MuiEvent<React.MouseEvent>} event The event object.
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
-  onColumnHeaderOver?: GridEventListener<GridEvents.columnHeaderOver>;
+  onColumnHeaderOver?: GridEventListener<'columnHeaderOver'>;
   /**
    * Callback fired when a mouseout event comes from a column header element.
    * @param {GridColumnHeaderParams} params With all properties from [[GridColumnHeaderParams]].
    * @param {MuiEvent<React.MouseEvent>} event The event object.
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
-  onColumnHeaderOut?: GridEventListener<GridEvents.columnHeaderOut>;
+  onColumnHeaderOut?: GridEventListener<'columnHeaderOut'>;
   /**
    * Callback fired when a mouse enter event comes from a column header element.
    * @param {GridColumnHeaderParams} params With all properties from [[GridColumnHeaderParams]].
    * @param {MuiEvent<React.MouseEvent>} event The event object.
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
-  onColumnHeaderEnter?: GridEventListener<GridEvents.columnHeaderEnter>;
+  onColumnHeaderEnter?: GridEventListener<'columnHeaderEnter'>;
   /**
    * Callback fired when a mouse leave event comes from a column header element.
    * @param {GridColumnHeaderParams} params With all properties from [[GridColumnHeaderParams]].
    * @param {MuiEvent<React.MouseEvent>} event The event object.
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
-  onColumnHeaderLeave?: GridEventListener<GridEvents.columnHeaderLeave>;
+  onColumnHeaderLeave?: GridEventListener<'columnHeaderLeave'>;
   /**
    * Callback fired when a column is reordered.
    * @param {GridColumnOrderChangeParams} params With all properties from [[GridColumnOrderChangeParams]].
    * @param {MuiEvent<{}>} event The event object.
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
-  onColumnOrderChange?: GridEventListener<GridEvents.columnOrderChange>;
+  onColumnOrderChange?: GridEventListener<'columnOrderChange'>;
   /**
    * Callback fired when a column visibility changes.
    * Only works when no `columnVisibilityModel` is provided and if we change the visibility of a single column at a time.
@@ -536,7 +552,7 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
    * @param {GridCallbackDetails} details Additional details for this callback.
    * @deprecated Use `onColumnVisibilityModelChange` instead.
    */
-  onColumnVisibilityChange?: GridEventListener<GridEvents.columnVisibilityChange>;
+  onColumnVisibilityChange?: GridEventListener<'columnVisibilityChange'>;
   /**
    * Callback fired when a row is clicked.
    * Not called if the target clicked is an interactive element added by the built-in columns.
@@ -544,21 +560,21 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
    * @param {MuiEvent<React.MouseEvent>} event The event object.
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
-  onRowClick?: GridEventListener<GridEvents.rowClick>;
+  onRowClick?: GridEventListener<'rowClick'>;
   /**
    * Callback fired when a double click event comes from a row container element.
    * @param {GridRowParams} params With all properties from [[RowParams]].
    * @param {MuiEvent<React.MouseEvent>} event The event object.
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
-  onRowDoubleClick?: GridEventListener<GridEvents.rowDoubleClick>;
+  onRowDoubleClick?: GridEventListener<'rowDoubleClick'>;
   /**
    * Callback fired when the grid is resized.
    * @param {ElementSize} containerSize With all properties from [[ElementSize]].
    * @param {MuiEvent<{}>} event The event object.
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
-  onResize?: GridEventListener<GridEvents.debouncedResize>;
+  onResize?: GridEventListener<'debouncedResize'>;
   /**
    * Callback fired when the state of the grid is updated.
    * @param {GridState} state The new state.
@@ -566,7 +582,7 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
    * @param {GridCallbackDetails} details Additional details for this callback.
    * @internal
    */
-  onStateChange?: GridEventListener<GridEvents.stateChange>;
+  onStateChange?: GridEventListener<'stateChange'>;
   /**
    * The zero-based index of the current page.
    * @default 0
@@ -596,14 +612,28 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
    * @param {MuiEvent<{}>} event The event object.
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
-  onPreferencePanelClose?: GridEventListener<GridEvents.preferencePanelClose>;
+  onPreferencePanelClose?: GridEventListener<'preferencePanelClose'>;
   /**
    * Callback fired when the preferences panel is opened.
    * @param {GridPreferencePanelParams} params With all properties from [[GridPreferencePanelParams]].
    * @param {MuiEvent<{}>} event The event object.
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
-  onPreferencePanelOpen?: GridEventListener<GridEvents.preferencePanelOpen>;
+  onPreferencePanelOpen?: GridEventListener<'preferencePanelOpen'>;
+  /**
+   * Callback fired when the menu is opened.
+   * @param {GridMenuParams} params With all properties from [[GridMenuParams]].
+   * @param {MuiEvent<{}>} event The event object.
+   * @param {GridCallbackDetails} details Additional details for this callback.
+   */
+  onMenuOpen?: GridEventListener<'menuOpen'>;
+  /**
+   * Callback fired when the menu is closed.
+   * @param {GridMenuParams} params With all properties from [[GridMenuParams]].
+   * @param {MuiEvent<{}>} event The event object.
+   * @param {GridCallbackDetails} details Additional details for this callback.
+   */
+  onMenuClose?: GridEventListener<'menuClose'>;
   /**
    * Set the edit rows model of the grid.
    */
@@ -615,6 +645,29 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
    */
   onEditRowsModelChange?: (editRowsModel: GridEditRowsModel, details: GridCallbackDetails) => void;
   /**
+   * Controls the modes of the cells.
+   */
+  cellModesModel?: GridCellModesModel;
+  /**
+   * Callback fired when the `cellModesModel` prop changes.
+   * @param {GridCellModesModel} cellModesModel Object containig which cells are in "edit" mode.
+   * @param {GridCallbackDetails} details Additional details for this callback.
+   */
+  onCellModesModelChange?: (
+    cellModesModel: GridCellModesModel,
+    details: GridCallbackDetails,
+  ) => void;
+  /**
+   * Controls the modes of the rows.
+   */
+  rowModesModel?: GridRowModesModel;
+  /**
+   * Callback fired when the `rowModesModel` prop changes.
+   * @param {GridRowModesModel} rowModesModel Object containig which rows are in "edit" mode.
+   * @param {GridCallbackDetails} details Additional details for this callback.
+   */
+  onRowModesModelChange?: (rowModesModel: GridRowModesModel, details: GridCallbackDetails) => void;
+  /**
    * Set the filter model of the grid.
    */
   filterModel?: GridFilterModel;
@@ -623,7 +676,7 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
    * @param {GridFilterModel} model With all properties from [[GridFilterModel]].
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
-  onFilterModelChange?: (model: GridFilterModel, details: GridCallbackDetails) => void;
+  onFilterModelChange?: (model: GridFilterModel, details: GridCallbackDetails<'filter'>) => void;
   /**
    * Set the selection model of the grid.
    */

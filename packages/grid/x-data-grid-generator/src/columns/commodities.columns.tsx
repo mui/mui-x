@@ -1,4 +1,4 @@
-import { GridColDef, gridStringOrNumberComparator } from '@mui/x-data-grid-pro';
+import { GridColDef, gridStringOrNumberComparator } from '@mui/x-data-grid-premium';
 import {
   randomCommodity,
   randomDesk,
@@ -51,7 +51,6 @@ import {
   STATUS_OPTIONS,
   TAXCODE_OPTIONS,
 } from '../services/static-data';
-
 import { GridColDefGenerator } from '../services/gridColDefGenerator';
 
 export const getCommodityColumns = (editable = false): GridColDefGenerator[] => [

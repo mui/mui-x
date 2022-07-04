@@ -1,13 +1,13 @@
 import * as React from 'react';
 import { unstable_composeClasses as composeClasses } from '@mui/material';
 import { styled, alpha } from '@mui/material/styles';
+import { useEventCallback } from '@mui/material/utils';
 import {
   getDataGridUtilityClass,
   gridClasses,
   useGridSelector,
   useGridApiEventHandler,
   gridVisibleColumnFieldsSelector,
-  GridEvents,
   GridColumnHeaderSeparatorSides,
 } from '@mui/x-data-grid';
 import {
@@ -103,21 +103,19 @@ export const DataGridProColumnHeaders = React.forwardRef<
   const visibleColumnFields = useGridSelector(apiRef, gridVisibleColumnFieldsSelector);
   const [scrollbarSize, setScrollbarSize] = React.useState(0);
 
-  const handleContentSizeChange = React.useCallback(() => {
-    if (!apiRef.current.windowRef?.current) {
+  const handleContentSizeChange = useEventCallback(() => {
+    const rootDimensions = apiRef.current.getRootDimensions();
+    if (!rootDimensions) {
       return;
     }
-    // TODO expose scrollbar size on getRootDimensions
-    const newScrollbarSize =
-      apiRef.current.windowRef.current.offsetWidth - apiRef.current.windowRef.current.clientWidth;
-    setScrollbarSize(newScrollbarSize);
-  }, [apiRef]);
 
-  useGridApiEventHandler(
-    apiRef,
-    GridEvents.virtualScrollerContentSizeChange,
-    handleContentSizeChange,
-  );
+    const newScrollbarSize = rootDimensions.hasScrollY ? rootDimensions.scrollBarSize : 0;
+    if (scrollbarSize !== newScrollbarSize) {
+      setScrollbarSize(newScrollbarSize);
+    }
+  });
+
+  useGridApiEventHandler(apiRef, 'virtualScrollerContentSizeChange', handleContentSizeChange);
 
   const pinnedColumns = useGridSelector(apiRef, gridPinnedColumnsSelector);
   const [leftPinnedColumns, rightPinnedColumns] = filterColumns(pinnedColumns, visibleColumnFields);

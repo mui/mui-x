@@ -14,8 +14,8 @@ describe('<MonthPicker />', () => {
 
   describeConformance(
     <MonthPicker
-      minDate={adapterToUse.date('2019-01-01T00:00:00.000')}
-      maxDate={adapterToUse.date('2029-01-01T00:00:00.000')}
+      minDate={adapterToUse.date(new Date(2019, 0, 1))}
+      maxDate={adapterToUse.date(new Date(2029, 0, 1))}
       date={adapterToUse.date()}
       onChange={() => {}}
     />,
@@ -37,13 +37,13 @@ describe('<MonthPicker />', () => {
     }),
   );
 
-  it('allows to pick year standalone', () => {
+  it('allows to pick month standalone', () => {
     const onChangeMock = spy();
     render(
       <MonthPicker
-        minDate={adapterToUse.date('2019-01-01T00:00:00.000')}
-        maxDate={adapterToUse.date('2029-01-01T00:00:00.000')}
-        date={adapterToUse.date('2019-02-02T00:00:00.000')}
+        minDate={adapterToUse.date(new Date(2019, 0, 1))}
+        maxDate={adapterToUse.date(new Date(2029, 0, 1))}
+        date={adapterToUse.date(new Date(2019, 1, 2))}
         onChange={onChangeMock}
       />,
     );
@@ -52,59 +52,15 @@ describe('<MonthPicker />', () => {
     expect((onChangeMock.args[0][0] as Date).getMonth()).to.equal(4); // month index starting from 0
   });
 
-  it('does not allow to pick months out of range', () => {
-    const onChangeMock = spy();
-    render(
-      <MonthPicker
-        minDate={adapterToUse.date('2020-04-01T00:00:00.000')}
-        maxDate={adapterToUse.date('2020-06-01T00:00:00.000')}
-        date={adapterToUse.date('2020-04-02T00:00:00.000')}
-        onChange={onChangeMock}
-      />,
-    );
-
-    fireEvent.click(screen.getByText('Mar', { selector: 'button' }));
-    expect(onChangeMock.callCount).to.equal(0);
-
-    fireEvent.click(screen.getByText('Apr', { selector: 'button' }));
-    expect(onChangeMock.callCount).to.equal(1);
-    expect((onChangeMock.args[0][0] as Date).getMonth()).to.equal(3); // month index starting from 0
-
-    fireEvent.click(screen.getByText('Jul', { selector: 'button' }));
-    expect(onChangeMock.callCount).to.equal(1);
-  });
-
   it('does not allow to pick months if readOnly prop is passed', () => {
     const onChangeMock = spy();
     render(
       <MonthPicker
-        minDate={adapterToUse.date('2019-01-01T00:00:00.000')}
-        maxDate={adapterToUse.date('2029-01-01T00:00:00.000')}
-        date={adapterToUse.date('2019-02-02T00:00:00.000')}
+        minDate={adapterToUse.date(new Date(2019, 0, 1))}
+        maxDate={adapterToUse.date(new Date(2029, 0, 1))}
+        date={adapterToUse.date(new Date(2019, 1, 2))}
         onChange={onChangeMock}
         readOnly
-      />,
-    );
-
-    fireEvent.click(screen.getByText('Mar', { selector: 'button' }));
-    expect(onChangeMock.callCount).to.equal(0);
-
-    fireEvent.click(screen.getByText('Apr', { selector: 'button' }));
-    expect(onChangeMock.callCount).to.equal(0);
-
-    fireEvent.click(screen.getByText('Jul', { selector: 'button' }));
-    expect(onChangeMock.callCount).to.equal(0);
-  });
-
-  it('does not allow to pick months if disabled prop is passed', () => {
-    const onChangeMock = spy();
-    render(
-      <MonthPicker
-        minDate={adapterToUse.date('2019-01-01T00:00:00.000')}
-        maxDate={adapterToUse.date('2029-01-01T00:00:00.000')}
-        date={adapterToUse.date('2019-02-02T00:00:00.000')}
-        onChange={onChangeMock}
-        disabled
       />,
     );
 
@@ -123,9 +79,9 @@ describe('<MonthPicker />', () => {
     render(
       <form onSubmit={onSubmitMock}>
         <MonthPicker
-          minDate={adapterToUse.date('2019-01-01T00:00:00.000')}
-          maxDate={adapterToUse.date('2029-01-01T00:00:00.000')}
-          date={adapterToUse.date('2019-02-02T00:00:00.000')}
+          minDate={adapterToUse.date(new Date(2019, 0, 1))}
+          maxDate={adapterToUse.date(new Date(2029, 0, 1))}
+          date={adapterToUse.date(new Date(2019, 1, 2))}
           onChange={() => {}}
         />
       </form>,
@@ -133,5 +89,93 @@ describe('<MonthPicker />', () => {
 
     fireEvent.click(screen.getByText('Mar', { selector: 'button' }));
     expect(onSubmitMock.callCount).to.equal(0);
+  });
+
+  describe('Disabled', () => {
+    it('should disable all months if props.disabled = true', () => {
+      const onChange = spy();
+      render(
+        <MonthPicker
+          date={adapterToUse.date(new Date(2019, 1, 15))}
+          onChange={onChange}
+          disabled
+        />,
+      );
+
+      screen.getAllByRole('button').forEach((monthButton) => {
+        expect(monthButton).to.have.attribute('disabled');
+        fireEvent.click(monthButton);
+        expect(onChange.callCount).to.equal(0);
+      });
+    });
+
+    it('should disable months before props.minDate but not the month in which props.minDate is', () => {
+      const onChange = spy();
+      render(
+        <MonthPicker
+          date={adapterToUse.date(new Date(2019, 1, 15))}
+          onChange={onChange}
+          minDate={adapterToUse.date(new Date(2019, 1, 12))}
+        />,
+      );
+
+      const january = screen.getByText('Jan', { selector: 'button' });
+      const february = screen.getByText('Feb', { selector: 'button' });
+
+      expect(january).to.have.attribute('disabled');
+      expect(february).not.to.have.attribute('disabled');
+
+      fireEvent.click(january);
+      expect(onChange.callCount).to.equal(0);
+
+      fireEvent.click(february);
+      expect(onChange.callCount).to.equal(1);
+    });
+
+    it('should disable months after props.maxDate but not the month in which props.maxDate is', () => {
+      const onChange = spy();
+      render(
+        <MonthPicker
+          date={adapterToUse.date(new Date(2019, 1, 15))}
+          onChange={onChange}
+          maxDate={adapterToUse.date(new Date(2019, 3, 12))}
+        />,
+      );
+
+      const may = screen.getByText('May', { selector: 'button' });
+      const april = screen.getByText('Apr', { selector: 'button' });
+
+      expect(may).to.have.attribute('disabled');
+      expect(april).not.to.have.attribute('disabled');
+
+      fireEvent.click(may);
+      expect(onChange.callCount).to.equal(0);
+
+      fireEvent.click(april);
+      expect(onChange.callCount).to.equal(1);
+    });
+
+    it('should disable months if props.shouldDisableMonth returns true', () => {
+      const onChange = spy();
+      render(
+        <MonthPicker
+          date={adapterToUse.date(new Date(2019, 1, 2))}
+          onChange={onChange}
+          shouldDisableMonth={(month) => adapterToUse.getMonth(month) === 3}
+        />,
+      );
+
+      const april = screen.getByText('Apr', { selector: 'button' });
+      const jun = screen.getByText('Jun', { selector: 'button' });
+
+      expect(april).to.have.attribute('disabled');
+      expect(jun).not.to.have.attribute('disabled');
+
+      fireEvent.click(april);
+      expect(onChange.callCount).to.equal(0);
+
+      fireEvent.click(jun);
+      expect(onChange.callCount).to.equal(1);
+    });
   });
 });

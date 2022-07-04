@@ -77,8 +77,20 @@ export function GridColumnsPanel(props: GridColumnsPanelProps) {
 
   const toggleAllColumns = React.useCallback(
     (isVisible: boolean) => {
-      // TODO v6: call `setColumnVisibilityModel` directly
-      apiRef.current.updateColumns(
+      if (apiRef.current.unstable_caches.columns.isUsingColumnVisibilityModel) {
+        if (isVisible) {
+          return apiRef.current.setColumnVisibilityModel({});
+        }
+
+        return apiRef.current.setColumnVisibilityModel(
+          Object.fromEntries(
+            columns.filter((col) => col.hideable !== false).map((col) => [col.field, false]),
+          ),
+        );
+      }
+
+      // TODO v6: Remove
+      return apiRef.current.updateColumns(
         columns.map((col) => {
           if (col.hideable !== false) {
             return { field: col.field, hide: !isVisible };
@@ -135,7 +147,6 @@ export function GridColumnsPanel(props: GridColumnsPanelProps) {
                     checked={columnVisibilityModel[column.field] !== false}
                     onClick={toggleColumn}
                     name={column.field}
-                    color="primary"
                     size="small"
                     {...rootProps.componentsProps?.baseSwitch}
                   />
@@ -160,14 +171,12 @@ export function GridColumnsPanel(props: GridColumnsPanelProps) {
       <GridPanelFooter>
         <rootProps.components.BaseButton
           onClick={() => toggleAllColumns(false)}
-          color="primary"
           {...rootProps.componentsProps?.baseButton}
         >
           {apiRef.current.getLocaleText('columnsPanelHideAllButton')}
         </rootProps.components.BaseButton>
         <rootProps.components.BaseButton
           onClick={() => toggleAllColumns(true)}
-          color="primary"
           {...rootProps.componentsProps?.baseButton}
         >
           {apiRef.current.getLocaleText('columnsPanelShowAllButton')}

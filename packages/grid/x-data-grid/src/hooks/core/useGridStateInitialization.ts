@@ -4,7 +4,6 @@ import { GridApiCommon } from '../../models/api/gridApiCommon';
 import { GridStateApi } from '../../models/api/gridStateApi';
 import { GridControlStateItem } from '../../models/controlStateItem';
 import { GridSignature } from '../utils/useGridApiEventHandler';
-import { GridEvents } from '../../models/events';
 import { useGridApiMethod } from '../utils';
 import { isFunction } from '../../utils/utils';
 
@@ -17,8 +16,8 @@ export const useGridStateInitialization = <Api extends GridApiCommon>(
   );
   const [, rawForceUpdate] = React.useState<Api['state']>();
 
-  const updateControlState = React.useCallback<
-    GridStateApi<Api['state']>['unstable_updateControlState']
+  const registerControlState = React.useCallback<
+    GridStateApi<Api['state']>['unstable_registerControlState']
   >((controlStateItem) => {
     const { stateId, ...others } = controlStateItem;
 
@@ -29,7 +28,7 @@ export const useGridStateInitialization = <Api extends GridApiCommon>(
   }, []);
 
   const setState = React.useCallback<GridStateApi<Api['state']>['setState']>(
-    (state) => {
+    (state, reason) => {
       let newState: Api['state'];
       if (isFunction(state)) {
         newState = state(apiRef.current.state);
@@ -86,7 +85,7 @@ export const useGridStateInitialization = <Api extends GridApiCommon>(
         apiRef.current.state = newState;
 
         if (apiRef.current.publishEvent) {
-          apiRef.current.publishEvent(GridEvents.stateChange, newState);
+          apiRef.current.publishEvent('stateChange', newState);
         }
       }
 
@@ -97,12 +96,14 @@ export const useGridStateInitialization = <Api extends GridApiCommon>(
 
         if (controlState.propOnChange && hasPropChanged) {
           const details =
-            props.signature === GridSignature.DataGridPro ? { api: apiRef.current } : {};
+            props.signature === GridSignature.DataGridPro
+              ? { api: apiRef.current, reason }
+              : { reason };
           controlState.propOnChange(model, details);
         }
 
         if (!ignoreSetState) {
-          apiRef.current.publishEvent(controlState.changeEvent, model);
+          apiRef.current.publishEvent(controlState.changeEvent, model, { reason });
         }
       }
 
@@ -111,12 +112,24 @@ export const useGridStateInitialization = <Api extends GridApiCommon>(
     [apiRef, props.signature],
   );
 
+  const updateControlState = React.useCallback<
+    GridStateApi<Api['state']>['unstable_updateControlState']
+  >(
+    (key, state, reason) => {
+      return apiRef.current.setState((previousState: Api['state']) => {
+        return { ...previousState, [key]: state(previousState[key]) };
+      }, reason);
+    },
+    [apiRef],
+  );
+
   const forceUpdate = React.useCallback(() => rawForceUpdate(() => apiRef.current.state), [apiRef]);
 
   const stateApi: any = {
     setState,
     forceUpdate,
     unstable_updateControlState: updateControlState,
+    unstable_registerControlState: registerControlState,
   };
 
   useGridApiMethod(apiRef, stateApi, 'GridStateApi');

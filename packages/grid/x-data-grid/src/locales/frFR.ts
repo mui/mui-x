@@ -27,11 +27,17 @@ const frFRGrid: Partial<GridLocaleText> = {
   toolbarFiltersTooltipActive: (count) =>
     count > 1 ? `${count} filtres actifs` : `${count} filtre actif`,
 
+  // Quick filter toolbar field
+  toolbarQuickFilterPlaceholder: 'Recherche...',
+  toolbarQuickFilterLabel: 'Recherche',
+  toolbarQuickFilterDeleteIconLabel: 'Supprimer',
+
   // Export selector toolbar button text
   toolbarExport: 'Exporter',
   toolbarExportLabel: 'Exporter',
   toolbarExportCSV: 'Télécharger en CSV',
   toolbarExportPrint: 'Imprimer',
+  // toolbarExportExcel: 'Download as Excel',
 
   // Columns panel text
   columnsPanelTextFieldLabel: 'Chercher colonne',
@@ -131,6 +137,7 @@ const frFRGrid: Partial<GridLocaleText> = {
   unGroupColumn: (name) => `Arrêter de grouper par ${name}`,
 
   // Master/detail
+  // detailPanelToggle: 'Detail panel toggle',
   // expandDetailPanel: 'Expand',
   // collapseDetailPanel: 'Collapse',
 

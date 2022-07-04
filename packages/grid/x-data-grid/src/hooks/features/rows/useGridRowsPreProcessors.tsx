@@ -1,5 +1,4 @@
 import * as React from 'react';
-
 import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridRowTreeConfig } from '../../../models';
 import {
@@ -11,13 +10,19 @@ import {
 const flatRowTreeCreationMethod: GridStrategyProcessor<'rowTreeCreation'> = ({
   ids,
   idRowsLookup,
+  idToIdLookup,
   previousTree,
 }) => {
   const tree: GridRowTreeConfig = {};
   for (let i = 0; i < ids.length; i += 1) {
     const rowId = ids[i];
 
-    if (previousTree && previousTree[rowId]) {
+    if (
+      previousTree &&
+      previousTree[rowId] &&
+      previousTree[rowId].depth === 0 &&
+      previousTree[rowId].parent == null
+    ) {
       tree[rowId] = previousTree[rowId];
     } else {
       tree[rowId] = { id: rowId, depth: 0, parent: null, groupingKey: '', groupingField: null };
@@ -29,6 +34,7 @@ const flatRowTreeCreationMethod: GridStrategyProcessor<'rowTreeCreation'> = ({
     tree,
     treeDepth: 1,
     idRowsLookup,
+    idToIdLookup,
     ids,
   };
 };

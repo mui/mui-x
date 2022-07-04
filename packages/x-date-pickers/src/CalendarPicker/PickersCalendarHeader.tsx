@@ -3,7 +3,7 @@ import Fade from '@mui/material/Fade';
 import { styled } from '@mui/material/styles';
 import IconButton from '@mui/material/IconButton';
 import { SlideDirection } from './PickersSlideTransition';
-import { useUtils } from '../internals/hooks/useUtils';
+import { useLocaleText, useUtils } from '../internals/hooks/useUtils';
 import { PickersFadeTransitionGroup } from './PickersFadeTransitionGroup';
 import { ExportedDateValidationProps } from '../internals/hooks/validation/useDateValidation';
 import { ArrowDropDown } from '../internals/components/icons';
@@ -18,6 +18,7 @@ import {
   useNextMonthDisabled,
 } from '../internals/hooks/date-helpers-hooks';
 import { CalendarPickerView } from '../internals/models';
+import { buildDeprecatedPropsWarning } from '../internals/utils/warning';
 
 export type ExportedCalendarHeaderProps<TDate> = Pick<
   PickersCalendarHeaderProps<TDate>,
@@ -42,13 +43,12 @@ export interface PickersCalendarHeaderProps<TDate>
   extends ExportedArrowSwitcherProps,
     Omit<ExportedDateValidationProps<TDate>, 'shouldDisableDate'> {
   /**
-   * The components used for each slot.
-   * Either a string to use an HTML element or a component.
+   * Overrideable components.
    * @default {}
    */
   components?: Partial<PickersCalendarHeaderSlotsComponent>;
   /**
-   * The props used for each slot inside.
+   * The props used for each component slot.
    * @default {}
    */
   componentsProps?: Partial<PickersCalendarHeaderSlotsComponentsProps>;
@@ -59,6 +59,7 @@ export interface PickersCalendarHeaderProps<TDate>
    * Get aria-label text for switching between views button.
    * @param {CalendarPickerView} currentView The view from which we want to get the button text.
    * @returns {string} The label of the view.
+   * @deprecated Use the `localeText` prop of `LocalizationProvider` instead, see https://mui.com/x/react-date-pickers/localization
    */
   getViewSwitchingButtonText?: (currentView: CalendarPickerView) => string;
   onMonthChange: (date: TDate, slideDirection: SlideDirection) => void;
@@ -115,11 +116,9 @@ const PickersCalendarHeaderSwitchView = styled(ArrowDropDown)<{
   }),
 }));
 
-function getSwitchingViewAriaText(view: CalendarPickerView) {
-  return view === 'year'
-    ? 'year view is open, switch to calendar view'
-    : 'calendar view is open, switch to year view';
-}
+const deprecatedPropsWarning = buildDeprecatedPropsWarning(
+  'Props for translation are deprecated. See https://mui.com/x/react-date-pickers/localization for more information.',
+);
 
 /**
  * @ignore - do not document.
@@ -132,17 +131,30 @@ export function PickersCalendarHeader<TDate>(props: PickersCalendarHeaderProps<T
     disabled,
     disableFuture,
     disablePast,
-    getViewSwitchingButtonText = getSwitchingViewAriaText,
-    leftArrowButtonText = 'Previous month',
+    getViewSwitchingButtonText: getViewSwitchingButtonTextProp,
+    leftArrowButtonText: leftArrowButtonTextProp,
     maxDate,
     minDate,
     onMonthChange,
     onViewChange,
     openView: currentView,
     reduceAnimations,
-    rightArrowButtonText = 'Next month',
+    rightArrowButtonText: rightArrowButtonTextProp,
     views,
   } = props;
+
+  deprecatedPropsWarning({
+    leftArrowButtonText: leftArrowButtonTextProp,
+    rightArrowButtonText: rightArrowButtonTextProp,
+    getViewSwitchingButtonText: getViewSwitchingButtonTextProp,
+  });
+
+  const localeText = useLocaleText();
+
+  const leftArrowButtonText = leftArrowButtonTextProp ?? localeText.previousMonth;
+  const rightArrowButtonText = rightArrowButtonTextProp ?? localeText.nextMonth;
+  const getViewSwitchingButtonText =
+    getViewSwitchingButtonTextProp ?? localeText.calendarViewSwitchingButtonAriaLabel;
 
   const utils = useUtils<TDate>();
 
@@ -152,11 +164,11 @@ export function PickersCalendarHeader<TDate>(props: PickersCalendarHeaderProps<T
   const selectPreviousMonth = () => onMonthChange(utils.getPreviousMonth(month), 'right');
 
   const isNextMonthDisabled = useNextMonthDisabled(month, {
-    disableFuture: disableFuture || disabled,
+    disableFuture,
     maxDate,
   });
   const isPreviousMonthDisabled = usePreviousMonthDisabled(month, {
-    disablePast: disablePast || disabled,
+    disablePast,
     minDate,
   });
 
@@ -190,26 +202,14 @@ export function PickersCalendarHeader<TDate>(props: PickersCalendarHeaderProps<T
       >
         <PickersFadeTransitionGroup
           reduceAnimations={reduceAnimations}
-          transKey={utils.format(month, 'month')}
+          transKey={utils.format(month, 'monthAndYear')}
         >
           <PickersCalendarHeaderLabelItem
             aria-live="polite"
-            data-mui-test="calendar-month-text"
+            data-mui-test="calendar-month-and-year-text"
             ownerState={ownerState}
           >
-            {utils.format(month, 'month')}
-          </PickersCalendarHeaderLabelItem>
-        </PickersFadeTransitionGroup>
-        <PickersFadeTransitionGroup
-          reduceAnimations={reduceAnimations}
-          transKey={utils.format(month, 'year')}
-        >
-          <PickersCalendarHeaderLabelItem
-            aria-live="polite"
-            data-mui-test="calendar-year-text"
-            ownerState={ownerState}
-          >
-            {utils.format(month, 'year')}
+            {utils.format(month, 'monthAndYear')}
           </PickersCalendarHeaderLabelItem>
         </PickersFadeTransitionGroup>
         {views.length > 1 && !disabled && (

@@ -17,7 +17,6 @@ import {
   GridToolbarContainer,
   GridActionsCellItem,
   GridEventListener,
-  GridEvents,
   GridRowId,
 } from '@mui/x-data-grid-pro';
 import {
@@ -87,7 +86,7 @@ function EditToolbar(props: EditToolbarProps) {
 
   return (
     <GridToolbarContainer>
-      <Button color="primary" startIcon={<AddIcon />} onClick={handleClick}>
+      <Button startIcon={<AddIcon />} onClick={handleClick}>
         Add record
       </Button>
     </GridToolbarContainer>
@@ -104,17 +103,11 @@ export default function FullFeaturedCrudGrid() {
     event.defaultMuiPrevented = true;
   };
 
-  const handleRowEditStop: GridEventListener<GridEvents.rowEditStop> = (
-    params,
-    event,
-  ) => {
+  const handleRowEditStop: GridEventListener<'rowEditStop'> = (params, event) => {
     event.defaultMuiPrevented = true;
   };
 
-  const handleCellFocusOut: GridEventListener<GridEvents.cellFocusOut> = (
-    params,
-    event,
-  ) => {
+  const handleCellFocusOut: GridEventListener<'cellFocusOut'> = (params, event) => {
     event.defaultMuiPrevented = true;
   };
 
@@ -181,7 +174,6 @@ export default function FullFeaturedCrudGrid() {
               icon={<SaveIcon />}
               label="Save"
               onClick={handleSaveClick(id)}
-              color="primary"
             />,
             <GridActionsCellItem
               icon={<CancelIcon />}

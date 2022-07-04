@@ -2,22 +2,50 @@ import * as React from 'react';
 import { useThemeProps } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import PropTypes from 'prop-types';
-import { DesktopDatePicker, DesktopDatePickerProps } from '../DesktopDatePicker';
-import { MobileDatePicker, MobileDatePickerProps } from '../MobileDatePicker';
+import {
+  DesktopDatePicker,
+  DesktopDatePickerProps,
+  DesktopDatePickerSlotsComponent,
+  DesktopDatePickerSlotsComponentsProps,
+} from '../DesktopDatePicker';
+import {
+  MobileDatePicker,
+  MobileDatePickerProps,
+  MobileDatePickerSlotsComponent,
+  MobileDatePickerSlotsComponentsProps,
+} from '../MobileDatePicker';
 
-export interface DatePickerProps<TDate = unknown>
-  extends DesktopDatePickerProps<TDate>,
-    MobileDatePickerProps<TDate> {
+export interface DatePickerSlotsComponent
+  extends MobileDatePickerSlotsComponent,
+    DesktopDatePickerSlotsComponent {}
+
+export interface DatePickerSlotsComponentsProps
+  extends MobileDatePickerSlotsComponentsProps,
+    DesktopDatePickerSlotsComponentsProps {}
+
+export interface DatePickerProps<TInputDate, TDate>
+  extends Omit<DesktopDatePickerProps<TInputDate, TDate>, 'components' | 'componentsProps'>,
+    Omit<MobileDatePickerProps<TInputDate, TDate>, 'components' | 'componentsProps'> {
   /**
    * CSS media query when `Mobile` mode will be changed to `Desktop`.
    * @default '@media (pointer: fine)'
    * @example '@media (min-width: 720px)' or theme.breakpoints.up("sm")
    */
   desktopModeMediaQuery?: string;
+  /**
+   * Overrideable components.
+   * @default {}
+   */
+  components?: Partial<DatePickerSlotsComponent>;
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  componentsProps?: Partial<DatePickerSlotsComponentsProps>;
 }
 
-type DatePickerComponent = (<TDate>(
-  props: DatePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
+type DatePickerComponent = (<TInputDate, TDate = TInputDate>(
+  props: DatePickerProps<TInputDate, TDate> & React.RefAttributes<HTMLDivElement>,
 ) => JSX.Element) & { propTypes?: any };
 
 /**
@@ -31,19 +59,15 @@ type DatePickerComponent = (<TDate>(
  *
  * - [DatePicker API](https://mui.com/x/api/date-pickers/date-picker/)
  */
-export const DatePicker = React.forwardRef(function DatePicker<TDate>(
-  inProps: DatePickerProps<TDate>,
+export const DatePicker = React.forwardRef(function DatePicker<TInputDate, TDate = TInputDate>(
+  inProps: DatePickerProps<TInputDate, TDate>,
   ref: React.Ref<HTMLDivElement>,
 ) {
   const props = useThemeProps({ props: inProps, name: 'MuiDatePicker' });
   const {
-    cancelText,
     desktopModeMediaQuery = '@media (pointer: fine)',
     DialogProps,
-    okText,
     PopperProps,
-    showTodayButton,
-    todayText,
     TransitionComponent,
     ...other
   } = props;
@@ -61,17 +85,7 @@ export const DatePicker = React.forwardRef(function DatePicker<TDate>(
     );
   }
 
-  return (
-    <MobileDatePicker
-      ref={ref}
-      cancelText={cancelText}
-      DialogProps={DialogProps}
-      okText={okText}
-      showTodayButton={showTodayButton}
-      todayText={todayText}
-      {...other}
-    />
-  );
+  return <MobileDatePicker ref={ref} DialogProps={DialogProps} {...other} />;
 }) as DatePickerComponent;
 
 DatePicker.propTypes = {
@@ -84,40 +98,24 @@ DatePicker.propTypes = {
    * @default /\dap/gi
    */
   acceptRegex: PropTypes.instanceOf(RegExp),
-  /**
-   * If `true`, `onChange` is fired on click even if the same date is selected.
-   * @default false
-   */
-  allowSameDateSelection: PropTypes.bool,
   autoFocus: PropTypes.bool,
-  /**
-   * Cancel text message.
-   * @default 'Cancel'
-   */
-  cancelText: PropTypes.node,
   children: PropTypes.node,
   /**
    * className applied to the root component.
    */
   className: PropTypes.string,
   /**
-   * If `true`, it shows the clear action in the picker dialog.
-   * @default false
+   * If `true` the popup or dialog will immediately close after submitting full date.
+   * @default `true` for Desktop, `false` for Mobile (based on the chosen wrapper and `desktopModeMediaQuery` prop).
    */
-  clearable: PropTypes.bool,
+  closeOnSelect: PropTypes.bool,
   /**
-   * Clear text message.
-   * @default 'Clear'
-   */
-  clearText: PropTypes.node,
-  /**
-   * The components used for each slot.
-   * Either a string to use an HTML element or a component.
+   * Overrideable components.
    * @default {}
    */
   components: PropTypes.object,
   /**
-   * The props used for each slot inside.
+   * The props used for each component slot.
    * @default {}
    */
   componentsProps: PropTypes.object,
@@ -136,21 +134,17 @@ DatePicker.propTypes = {
    */
   DialogProps: PropTypes.object,
   /**
-   * If `true` the popup or dialog will immediately close after submitting full date.
-   * @default `true` for Desktop, `false` for Mobile (based on the chosen wrapper and `desktopModeMediaQuery` prop).
-   */
-  disableCloseOnSelect: PropTypes.bool,
-  /**
    * If `true`, the picker and text field are disabled.
    * @default false
    */
   disabled: PropTypes.bool,
   /**
+   * If `true` future days are disabled.
    * @default false
    */
   disableFuture: PropTypes.bool,
   /**
-   * If `true`, todays date is rendering without highlighting with circle.
+   * If `true`, today's date is rendering without highlighting with circle.
    * @default false
    */
   disableHighlightToday: PropTypes.bool,
@@ -165,22 +159,24 @@ DatePicker.propTypes = {
    */
   disableOpenPicker: PropTypes.bool,
   /**
+   * If `true` past days are disabled.
    * @default false
    */
   disablePast: PropTypes.bool,
   /**
    * Get aria-label text for control that opens picker dialog. Aria-label text must include selected date. @DateIOType
-   * @template TDateValue
-   * @param {ParseableDate<TDateValue>} value The date from which we want to add an aria-text.
-   * @param {MuiPickersAdapter<TDateValue>} utils The utils to manipulate the date.
+   * @template TInputDate, TDate
+   * @param {TInputDate} date The date from which we want to add an aria-text.
+   * @param {MuiPickersAdapter<TDate>} utils The utils to manipulate the date.
    * @returns {string} The aria-text to render inside the dialog.
-   * @default (value, utils) => `Choose date, selected date is ${utils.format(utils.date(value), 'fullDate')}`
+   * @default (date, utils) => `Choose date, selected date is ${utils.format(utils.date(date), 'fullDate')}`
    */
   getOpenDialogAriaText: PropTypes.func,
   /**
    * Get aria-label text for switching between views button.
    * @param {CalendarPickerView} currentView The view from which we want to get the button text.
    * @returns {string} The label of the view.
+   * @deprecated Use the `localeText` prop of `LocalizationProvider` instead, see https://mui.com/x/react-date-pickers/localization
    */
   getViewSwitchingButtonText: PropTypes.func,
   ignoreInvalidInputs: PropTypes.bool,
@@ -205,6 +201,7 @@ DatePicker.propTypes = {
   label: PropTypes.node,
   /**
    * Left arrow icon aria-label text.
+   * @deprecated
    */
   leftArrowButtonText: PropTypes.string,
   /**
@@ -218,28 +215,23 @@ DatePicker.propTypes = {
    */
   mask: PropTypes.string,
   /**
-   * Max selectable date. @DateIOType
+   * Maximal selectable date. @DateIOType
    */
   maxDate: PropTypes.any,
   /**
-   * Min selectable date. @DateIOType
+   * Minimal selectable date. @DateIOType
    */
   minDate: PropTypes.any,
   /**
-   * Ok button text.
-   * @default 'OK'
-   */
-  okText: PropTypes.node,
-  /**
    * Callback fired when date is accepted @DateIOType.
-   * @template TDateValue
-   * @param {TDateValue} date The date that was just accepted.
+   * @template TValue
+   * @param {TValue} value The value that was just accepted.
    */
   onAccept: PropTypes.func,
   /**
    * Callback fired when the value (the selected date) changes @DateIOType.
-   * @template TDate
-   * @param {DateRange<TDate>} date The new parsed date.
+   * @template TValue
+   * @param {TValue} value The new parsed value.
    * @param {string} keyboardInputValue The current value of the keyboard input.
    */
   onChange: PropTypes.func.isRequired,
@@ -256,15 +248,16 @@ DatePicker.propTypes = {
    * [Read the guide](https://next.material-ui-pickers.dev/guides/forms) about form integration and error displaying.
    * @DateIOType
    *
-   * @template TError, TDateValue
+   * @template TError, TInputValue
    * @param {TError} reason The reason why the current value is not valid.
-   * @param {TDateValue} value The invalid value.
+   * @param {TInputValue} value The invalid value.
    */
   onError: PropTypes.func,
   /**
-   * Callback firing on month change. @DateIOType
+   * Callback firing on month change @DateIOType.
    * @template TDate
    * @param {TDate} month The new month.
+   * @returns {void|Promise} -
    */
   onMonthChange: PropTypes.func,
   /**
@@ -321,7 +314,7 @@ DatePicker.propTypes = {
    * Custom renderer for day. Check the [PickersDay](https://mui.com/x/api/date-pickers/pickers-day/) component.
    * @template TDate
    * @param {TDate} day The day to render.
-   * @param {Array<TDate | null>} selectedDates The dates currently selected.
+   * @param {Array<TDate | null>} selectedDays The days currently selected.
    * @param {PickersDayProps<TDate>} pickersDayProps The props of the day to render.
    * @returns {JSX.Element} The element representing the day.
    */
@@ -351,21 +344,30 @@ DatePicker.propTypes = {
   rifmFormatter: PropTypes.func,
   /**
    * Right arrow icon aria-label text.
+   * @deprecated
    */
   rightArrowButtonText: PropTypes.string,
   /**
    * Disable specific date. @DateIOType
    * @template TDate
-   * @param {TDate} day The date to check.
-   * @returns {boolean} If `true` the day will be disabled.
+   * @param {TDate} day The date to test.
+   * @returns {boolean} Returns `true` if the date should be disabled.
    */
   shouldDisableDate: PropTypes.func,
+  /**
+   * Disable specific months dynamically.
+   * Works like `shouldDisableDate` but for month selection view @DateIOType.
+   * @template TDate
+   * @param {TDate} month The month to check.
+   * @returns {boolean} If `true` the month will be disabled.
+   */
+  shouldDisableMonth: PropTypes.func,
   /**
    * Disable specific years dynamically.
    * Works like `shouldDisableDate` but for year selection view @DateIOType.
    * @template TDate
    * @param {TDate} year The year to test.
-   * @returns {boolean} Return `true` if the year should be disabled.
+   * @returns {boolean} Returns `true` if the year should be disabled.
    */
   shouldDisableYear: PropTypes.func,
   /**
@@ -374,19 +376,9 @@ DatePicker.propTypes = {
    */
   showDaysOutsideCurrentMonth: PropTypes.bool,
   /**
-   * If `true`, the today button is displayed. **Note** that `showClearButton` has a higher priority.
-   * @default false
-   */
-  showTodayButton: PropTypes.bool,
-  /**
    * If `true`, show the toolbar even in desktop mode.
    */
   showToolbar: PropTypes.bool,
-  /**
-   * Today text message.
-   * @default 'Today'
-   */
-  todayText: PropTypes.node,
   /**
    * Component that will replace default toolbar renderer.
    * @default DatePickerToolbar
@@ -413,12 +405,7 @@ DatePicker.propTypes = {
   /**
    * The value of the picker.
    */
-  value: PropTypes.oneOfType([
-    PropTypes.any,
-    PropTypes.instanceOf(Date),
-    PropTypes.number,
-    PropTypes.string,
-  ]),
+  value: PropTypes.any,
   /**
    * Array of views to show.
    */

@@ -21,8 +21,6 @@ export default function CustomDateTimePicker() {
         <DateTimePicker
           disableFuture
           hideTabs
-          showTodayButton
-          todayText="now"
           openTo="hours"
           value={value}
           onChange={(newValue) => {
@@ -34,8 +32,6 @@ export default function CustomDateTimePicker() {
             RightArrowIcon: SnoozeIcon,
             OpenPickerIcon: ClockIcon,
           }}
-          leftArrowButtonText="Open previous month"
-          rightArrowButtonText="Open next month"
           minTime={new Date(0, 0, 0, 9)}
           maxTime={new Date(0, 0, 0, 20)}
           renderInput={(params) => (
@@ -55,7 +51,6 @@ export default function CustomDateTimePicker() {
           renderInput={(params) => <TextField {...params} />}
         />
         <DateTimePicker
-          clearable
           value={clearedDate}
           onChange={(newValue) => setClearedDate(newValue)}
           renderInput={(params) => (

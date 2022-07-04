@@ -26,11 +26,17 @@ const koKRGrid: Partial<GridLocaleText> = {
   toolbarFiltersTooltipShow: '필터 표시',
   toolbarFiltersTooltipActive: (count) => `${count}건의 필터를 적용중`,
 
+  // Quick filter toolbar field
+  // toolbarQuickFilterPlaceholder: 'Search...',
+  // toolbarQuickFilterLabel: 'Search',
+  // toolbarQuickFilterDeleteIconLabel: 'Clear',
+
   // Export selector toolbar button text
   toolbarExport: '내보내기',
   toolbarExportLabel: '내보내기',
   toolbarExportCSV: 'CSV다운로드',
   toolbarExportPrint: '프린트',
+  // toolbarExportExcel: 'Download as Excel',
 
   // Columns panel text
   columnsPanelTextFieldLabel: '열 검색',
@@ -126,6 +132,7 @@ const koKRGrid: Partial<GridLocaleText> = {
   // unGroupColumn: name => `Stop grouping by ${name}`,
 
   // Master/detail
+  // detailPanelToggle: 'Detail panel toggle',
   // expandDetailPanel: 'Expand',
   // collapseDetailPanel: 'Collapse',
 

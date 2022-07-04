@@ -7,7 +7,7 @@ import { ownerDocument, capitalize } from '@mui/material/utils';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import {
   GridCellEventLookup,
-  GridEvents,
+  GridEventsStr,
   GridCellMode,
   GridCellModes,
   GridRowId,
@@ -27,7 +27,7 @@ export interface GridCellProps<V = any, F = V> {
   rowId: GridRowId;
   formattedValue?: F;
   hasFocus?: boolean;
-  height: number;
+  height: number | 'auto';
   isEditable?: boolean;
   showRightBorder?: boolean;
   value?: V;
@@ -36,6 +36,7 @@ export interface GridCellProps<V = any, F = V> {
   children: React.ReactNode;
   tabIndex: 0 | -1;
   colSpan?: number;
+  disableDragEvents?: boolean;
   onClick?: React.MouseEventHandler<HTMLDivElement>;
   onDoubleClick?: React.MouseEventHandler<HTMLDivElement>;
   onMouseDown?: React.MouseEventHandler<HTMLDivElement>;
@@ -103,6 +104,7 @@ function GridCell(props: GridCellProps) {
     extendRowFullWidth,
     row,
     colSpan,
+    disableDragEvents,
     onClick,
     onDoubleClick,
     onMouseDown,
@@ -123,7 +125,7 @@ function GridCell(props: GridCellProps) {
   const classes = useUtilityClasses(ownerState);
 
   const publishMouseUp = React.useCallback(
-    (eventName: GridEvents) => (event: React.MouseEvent<HTMLDivElement>) => {
+    (eventName: GridEventsStr) => (event: React.MouseEvent<HTMLDivElement>) => {
       const params = apiRef.current.getCellParams(rowId, field || '');
       apiRef.current.publishEvent(eventName as any, params as any, event);
 
@@ -161,7 +163,7 @@ function GridCell(props: GridCellProps) {
     minWidth: width,
     maxWidth: width,
     minHeight: height,
-    maxHeight: height,
+    maxHeight: height === 'auto' ? 'none' : height, // max-height doesn't support "auto"
   };
 
   React.useLayoutEffect(() => {
@@ -230,6 +232,13 @@ function GridCell(props: GridCellProps) {
     return children;
   };
 
+  const draggableEventHandlers = disableDragEvents
+    ? null
+    : {
+        onDragEnter: publish('cellDragEnter', onDragEnter),
+        onDragOver: publish('cellDragOver', onDragOver),
+      };
+
   return (
     <div
       ref={cellRef}
@@ -241,13 +250,12 @@ function GridCell(props: GridCellProps) {
       aria-colspan={colSpan}
       style={style}
       tabIndex={(cellMode === 'view' || !isEditable) && !managesOwnFocus ? tabIndex : -1}
-      onClick={publish(GridEvents.cellClick, onClick)}
-      onDoubleClick={publish(GridEvents.cellDoubleClick, onDoubleClick)}
-      onMouseDown={publish(GridEvents.cellMouseDown, onMouseDown)}
-      onMouseUp={publishMouseUp(GridEvents.cellMouseUp)}
-      onKeyDown={publish(GridEvents.cellKeyDown, onKeyDown)}
-      onDragEnter={publish(GridEvents.cellDragEnter, onDragEnter)}
-      onDragOver={publish(GridEvents.cellDragOver, onDragOver)}
+      onClick={publish('cellClick', onClick)}
+      onDoubleClick={publish('cellDoubleClick', onDoubleClick)}
+      onMouseDown={publish('cellMouseDown', onMouseDown)}
+      onMouseUp={publishMouseUp('cellMouseUp')}
+      onKeyDown={publish('cellKeyDown', onKeyDown)}
+      {...draggableEventHandlers}
       {...other}
       onFocus={handleFocus}
     >
@@ -267,10 +275,11 @@ GridCell.propTypes = {
   className: PropTypes.string,
   colIndex: PropTypes.number.isRequired,
   colSpan: PropTypes.number,
+  disableDragEvents: PropTypes.bool,
   field: PropTypes.string.isRequired,
   formattedValue: PropTypes.any,
   hasFocus: PropTypes.bool,
-  height: PropTypes.number.isRequired,
+  height: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.number]).isRequired,
   isEditable: PropTypes.bool,
   onClick: PropTypes.func,
   onDoubleClick: PropTypes.func,

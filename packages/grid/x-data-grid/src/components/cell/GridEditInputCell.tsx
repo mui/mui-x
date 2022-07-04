@@ -10,7 +10,7 @@ import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { GridLoadIcon } from '../icons/index';
 import { SUBMIT_FILTER_STROKE_TIME } from '../panel/filterPanel/GridFilterInputValue';
-import { GridColDef } from '../../models/colDef/gridColDef';
+import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 
 type OwnerState = { classes: DataGridProcessedProps['classes'] };
 
@@ -37,13 +37,23 @@ const GridEditInputCellRoot = styled(InputBase, {
   },
 }));
 
-interface GridEditInputCellProps {
+export interface GridEditInputCellProps
+  extends GridRenderEditCellParams,
+    Omit<InputBaseProps, 'id' | 'value' | 'tabIndex'> {
   debounceMs?: number;
+  /**
+   * Callback called when the value is changed by the user.
+   * @param {React.ChangeEvent<HTMLInputElement>} event The event source of the callback.
+   * @param {Date | null} newValue The value that is going to be passed to `apiRef.current.setEditCellValue`.
+   * @returns {Promise<void> | void} A promise to be awaited before calling `apiRef.current.setEditCellValue`
+   */
+  onValueChange?: (
+    event: React.ChangeEvent<HTMLInputElement>,
+    newValue: string,
+  ) => Promise<void> | void;
 }
 
-function GridEditInputCell(
-  props: GridEditInputCellProps & GridRenderEditCellParams & Omit<InputBaseProps, 'id'>,
-) {
+function GridEditInputCell(props: GridEditInputCellProps) {
   const rootProps = useGridRootProps();
 
   const {
@@ -63,21 +73,28 @@ function GridEditInputCell(
     isValidating,
     debounceMs = rootProps.experimentalFeatures?.newEditingApi ? 200 : SUBMIT_FILTER_STROKE_TIME,
     isProcessingProps,
+    onValueChange,
     ...other
   } = props;
 
+  const apiRef = useGridApiContext();
   const inputRef = React.useRef<HTMLInputElement>();
   const [valueState, setValueState] = React.useState(value);
   const ownerState = { classes: rootProps.classes };
   const classes = useUtilityClasses(ownerState);
 
   const handleChange = React.useCallback(
-    (event) => {
+    async (event) => {
       const newValue = event.target.value;
+
+      if (onValueChange) {
+        await onValueChange(event, newValue);
+      }
+
       setValueState(newValue);
-      api.setEditCellValue({ id, field, value: newValue, debounceMs }, event);
+      apiRef.current.setEditCellValue({ id, field, value: newValue, debounceMs }, event);
     },
-    [api, debounceMs, field, id],
+    [apiRef, debounceMs, field, id, onValueChange],
   );
 
   React.useEffect(() => {
@@ -154,6 +171,13 @@ GridEditInputCell.propTypes = {
   isProcessingProps: PropTypes.bool,
   isValidating: PropTypes.bool,
   /**
+   * Callback called when the value is changed by the user.
+   * @param {React.ChangeEvent<HTMLInputElement>} event The event source of the callback.
+   * @param {Date | null} newValue The value that is going to be passed to `apiRef.current.setEditCellValue`.
+   * @returns {Promise<void> | void} A promise to be awaited before calling `apiRef.current.setEditCellValue`
+   */
+  onValueChange: PropTypes.func,
+  /**
    * The row model of the row that the current cell belongs to.
    */
   row: PropTypes.object.isRequired,
@@ -161,10 +185,18 @@ GridEditInputCell.propTypes = {
    * The node of the row that the current cell belongs to.
    */
   rowNode: PropTypes.object.isRequired,
+  /**
+   * the tabIndex value.
+   */
+  tabIndex: PropTypes.oneOf([-1, 0]).isRequired,
+  /**
+   * The cell value, but if the column has valueGetter, use getValue.
+   */
+  value: PropTypes.any,
 } as any;
 
 export { GridEditInputCell };
 
-export const renderEditInputCell: GridColDef['renderEditCell'] = (params) => (
+export const renderEditInputCell = (params: GridEditInputCellProps) => (
   <GridEditInputCell {...params} />
 );

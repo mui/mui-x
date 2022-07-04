@@ -20,15 +20,9 @@ import {
 
 export interface PickersDayProps<TDate> extends ExtendMui<ButtonBaseProps> {
   /**
-   * If `true`, `onChange` is fired on click even if the same date is selected.
-   * @default false
-   */
-  allowSameDateSelection?: boolean;
-  /**
    * Override or extend the styles applied to the component.
    */
   classes?: Partial<PickersDayClasses>;
-
   /**
    * The date to show.
    */
@@ -39,7 +33,7 @@ export interface PickersDayProps<TDate> extends ExtendMui<ButtonBaseProps> {
    */
   disabled?: boolean;
   /**
-   * If `true`, todays date is rendering without highlighting with circle.
+   * If `true`, today's date is rendering without highlighting with circle.
    * @default false
    */
   disableHighlightToday?: boolean;
@@ -201,7 +195,6 @@ const PickersDayRaw = React.forwardRef(function PickersDay<TDate>(
   });
 
   const {
-    allowSameDateSelection = false,
     autoFocus = false,
     className,
     day,
@@ -224,7 +217,6 @@ const PickersDayRaw = React.forwardRef(function PickersDay<TDate>(
   } = props;
   const ownerState = {
     ...props,
-    allowSameDateSelection,
     autoFocus,
     disabled,
     disableHighlightToday,
@@ -260,10 +252,6 @@ const PickersDayRaw = React.forwardRef(function PickersDay<TDate>(
   };
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-    if (!allowSameDateSelection && selected) {
-      return;
-    }
-
     if (!disabled) {
       onDaySelect(day, 'finish');
     }
@@ -373,11 +361,6 @@ PickersDayRaw.propTypes = {
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
   /**
-   * If `true`, `onChange` is fired on click even if the same date is selected.
-   * @default false
-   */
-  allowSameDateSelection: PropTypes.bool,
-  /**
    * Override or extend the styles applied to the component.
    */
   classes: PropTypes.object,
@@ -391,7 +374,7 @@ PickersDayRaw.propTypes = {
    */
   disabled: PropTypes.bool,
   /**
-   * If `true`, todays date is rendering without highlighting with circle.
+   * If `true`, today's date is rendering without highlighting with circle.
    * @default false
    */
   disableHighlightToday: PropTypes.bool,

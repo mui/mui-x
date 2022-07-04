@@ -9,18 +9,22 @@ import { adapterToUse, createPickerRenderer } from '../../../../test/utils/picke
 import { MakeOptional } from '../internals/models/helpers';
 
 function TestKeyboardDatePicker(
-  PickerProps: MakeOptional<DesktopDatePickerProps, 'value' | 'onChange' | 'renderInput'>,
+  PickerProps: MakeOptional<DesktopDatePickerProps<any, any>, 'value' | 'onChange' | 'renderInput'>,
 ) {
+  const { onChange: propsOnChange, value: propsValue, ...other } = PickerProps;
   const [value, setValue] = React.useState<unknown>(
-    PickerProps.value ?? adapterToUse.date('2019-01-01T00:00:00.000'),
+    propsValue ?? adapterToUse.date(new Date(2019, 0, 1)),
   );
 
   return (
     <DesktopDatePicker
       value={value}
-      onChange={(newDate) => setValue(newDate)}
+      onChange={(newDate) => {
+        propsOnChange?.(newDate);
+        setValue(newDate);
+      }}
       renderInput={(props) => <TextField placeholder="10/10/2018" {...props} />}
-      {...PickerProps}
+      {...other}
     />
   );
 }
@@ -46,10 +50,15 @@ describe('<DesktopDatePicker /> keyboard interactions', () => {
     expect(handleClose.callCount).to.equal(1);
   });
 
-  context('input', () => {
+  describe('input', () => {
     it('allows to change selected date from the input according to `format`', () => {
       const onChangeMock = spy();
-      render(<TestKeyboardDatePicker onChange={onChangeMock} inputFormat="dd/MM/yyyy" />);
+      render(
+        <TestKeyboardDatePicker
+          onChange={onChangeMock}
+          inputFormat={['moment', 'dayjs'].includes(adapterToUse.lib) ? 'DD/MM/YYYY' : 'dd/MM/yyyy'}
+        />,
+      );
 
       fireEvent.change(screen.getByRole('textbox'), {
         target: { value: '10/11/2018' },
@@ -140,19 +149,19 @@ describe('<DesktopDatePicker /> keyboard interactions', () => {
     });
   });
 
-  context('input validaiton', () => {
+  describe('input validation', () => {
     [
-      { expectedError: 'invalidDate', props: {}, input: 'invalidText' },
+      { expectedError: 'invalidDate', props: { disableMaskedInput: true }, input: 'invalidText' },
       { expectedError: 'disablePast', props: { disablePast: true }, input: '01/01/1900' },
       { expectedError: 'disableFuture', props: { disableFuture: true }, input: '01/01/2050' },
       {
         expectedError: 'minDate',
-        props: { minDate: adapterToUse.date('2000-01-01') },
+        props: { minDate: adapterToUse.date(new Date(2000, 0, 1)) },
         input: '01/01/1990',
       },
       {
         expectedError: 'maxDate',
-        props: { maxDate: adapterToUse.date('2000-01-01') },
+        props: { maxDate: adapterToUse.date(new Date(2000, 0, 1)) },
         input: '01/01/2010',
       },
       {
@@ -165,10 +174,10 @@ describe('<DesktopDatePicker /> keyboard interactions', () => {
         const onErrorMock = spy();
         // we are running validation on value change
         function DatePickerInput() {
-          const [date, setDate] = React.useState<Date | null>(null);
+          const [date, setDate] = React.useState<number | Date | null>(null);
 
           return (
-            <DesktopDatePicker<Date>
+            <DesktopDatePicker
               value={date}
               onError={onErrorMock}
               onChange={(newDate) => setDate(newDate)}

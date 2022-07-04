@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { styled, alpha } from '@mui/material/styles';
-import Box from '@mui/material/Box';
 import { unstable_composeClasses as composeClasses } from '@mui/material';
 import {
   useGridSelector,
@@ -9,7 +8,6 @@ import {
   gridVisibleColumnFieldsSelector,
   gridRowsMetaSelector,
   useGridApiEventHandler,
-  GridEvents,
   GridRowId,
 } from '@mui/x-data-grid';
 import {
@@ -31,8 +29,12 @@ import {
   gridDetailPanelExpandedRowsHeightCacheSelector,
   gridDetailPanelExpandedRowIdsSelector,
 } from '../hooks/features/detailPanel';
+import { GridDetailPanel } from './GridDetailPanel';
 
-export const filterColumns = (pinnedColumns: GridPinnedColumns, columns: string[]) => {
+export const filterColumns = (
+  pinnedColumns: GridPinnedColumns,
+  columns: string[],
+): [string[], string[]] => {
   if (!Array.isArray(pinnedColumns.left) && !Array.isArray(pinnedColumns.right)) {
     return [[], []];
   }
@@ -101,18 +103,9 @@ const VirtualScrollerDetailPanels = styled('div', {
   name: 'MuiDataGrid',
   slot: 'DetailPanels',
   overridesResolver: (props, styles) => styles.detailPanels,
-})({});
-
-const VirtualScrollerDetailPanel = styled(Box, {
-  name: 'MuiDataGrid',
-  slot: 'DetailPanel',
-  overridesResolver: (props, styles) => styles.detailPanel,
-})(({ theme }) => ({
-  zIndex: 2,
-  width: '100%',
-  position: 'absolute',
-  backgroundColor: theme.palette.background.default,
-}));
+})({
+  position: 'relative',
+});
 
 const VirtualScrollerPinnedColumns = styled('div', {
   name: 'MuiDataGrid',
@@ -207,9 +200,9 @@ const DataGridProVirtualScroller = React.forwardRef<
     }
   }, [renderContext, updateRenderZonePosition]);
 
-  useGridApiEventHandler(apiRef, GridEvents.columnWidthChange, refreshRenderZonePosition);
-  useGridApiEventHandler(apiRef, GridEvents.columnOrderChange, refreshRenderZonePosition);
-  useGridApiEventHandler(apiRef, GridEvents.rowOrderChange, refreshRenderZonePosition);
+  useGridApiEventHandler(apiRef, 'columnWidthChange', refreshRenderZonePosition);
+  useGridApiEventHandler(apiRef, 'columnOrderChange', refreshRenderZonePosition);
+  useGridApiEventHandler(apiRef, 'rowOrderChange', refreshRenderZonePosition);
 
   const leftRenderContext =
     renderContext && leftPinnedColumns.length > 0
@@ -254,20 +247,24 @@ const DataGridProVirtualScroller = React.forwardRef<
       const exists = rowIndex !== undefined;
 
       if (React.isValidElement(content) && exists) {
-        const height = detailPanelsHeights[id];
+        const hasAutoHeight = apiRef.current.unstable_detailPanelHasAutoHeight(id);
+        const height = hasAutoHeight ? 'auto' : detailPanelsHeights[id];
+
         const sizes = apiRef.current.unstable_getRowInternalSizes(id);
         const spacingTop = sizes?.spacingTop || 0;
         const top =
           rowsMeta.positions[rowIndex] + apiRef.current.unstable_getRowHeight(id) + spacingTop;
 
         panels.push(
-          <VirtualScrollerDetailPanel
+          <GridDetailPanel
             key={i}
-            style={{ top, height }}
+            rowId={id}
+            style={{ top }}
+            height={height}
             className={classes.detailPanel}
           >
             {content}
-          </VirtualScrollerDetailPanel>,
+          </GridDetailPanel>,
         );
       }
     }
@@ -292,6 +289,7 @@ const DataGridProVirtualScroller = React.forwardRef<
               minFirstColumn: leftRenderContext.firstColumnIndex,
               maxLastColumn: leftRenderContext.lastColumnIndex,
               availableSpace: 0,
+              ignoreAutoHeight: true,
             })}
           </VirtualScrollerPinnedColumns>
         )}
@@ -310,6 +308,7 @@ const DataGridProVirtualScroller = React.forwardRef<
               minFirstColumn: rightRenderContext.firstColumnIndex,
               maxLastColumn: rightRenderContext.lastColumnIndex,
               availableSpace: 0,
+              ignoreAutoHeight: true,
             })}
           </VirtualScrollerPinnedColumns>
         )}

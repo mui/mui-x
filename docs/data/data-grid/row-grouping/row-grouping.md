@@ -1,8 +1,8 @@
 ---
-title: Data Grid - Row Grouping
+title: Data Grid - Row grouping
 ---
 
-# Data Grid - Row grouping [<span class="plan-premium"></span>](https://mui.com/store/items/material-ui-pro/)
+# Data grid - Row grouping [<span class="plan-premium"></span>](https://mui.com/store/items/mui-x-premium/)
 
 <p class="description">Group your rows according to some column values.</p>
 
@@ -10,16 +10,6 @@ For when you need to group rows based on repeated column values, and/or custom f
 In the following example, we're grouping all movies based on their production `company`
 
 {{"demo": "RowGroupingBasicExample.js", "bg": "inline", "defaultCodeOpen": false}}
-
-> ⚠️ This feature is temporarily available on the Pro plan until the release of the Premium plan.
->
-> To avoid future regression for users of the Pro plan, the feature needs to be explicitly activated using the `rowGrouping` experimental feature flag.
->
-> ```tsx
-> <DataGridPro experimentalFeatures={{ rowGrouping: true }} {...otherProps} />
-> ```
->
-> The feature is stable in its current form, and we encourage users willing to migrate to the Premium plan once available to start using it.
 
 ## Set grouping criteria
 
@@ -43,7 +33,7 @@ In this example, we want to group all the movies matching the same company name,
 ### Controlled row grouping
 
 If you need to control the state of the criteria used for grouping, use the `rowGroupingModel` prop.
-You can use the `onRowGroupingModelChange` prop to listen to changes to the page size and update the prop accordingly.
+You can use the `onRowGroupingModelChange` prop to listen to changes to the grouping criteria and update the prop accordingly.
 
 {{"demo": "RowGroupingControlled.js", "bg": "inline", "defaultCodeOpen": false}}
 
@@ -51,8 +41,8 @@ You can use the `onRowGroupingModelChange` prop to listen to changes to the page
 
 ### Single grouping column
 
-By default, the grid will display a single column holding all grouped columns.
-If you have multiple grouped columns, this column name will be set to "Group".
+By default, the grid will display a single column holding all grouping columns.
+If you have multiple grouping criteria, this column name will be set to "Group".
 
 {{"demo": "RowGroupingSingleGroupingCol.js", "bg": "inline", "defaultCodeOpen": false}}
 
@@ -90,6 +80,75 @@ Use the `hideDescendantCount` property of the `groupingColDef` to hide the numbe
 
 {{"demo": "RowGroupingHideDescendantCount.js", "bg": "inline", "defaultCodeOpen": false}}
 
+### Hide the grouped columns
+
+By default, the columns used to group the rows remains visible.
+For instance if you group by `"director"`, you will have two columns titled _Director_:
+
+- The grouped column (the column from which you grouped the rows)
+- The grouping column on which you can toggle the groups
+
+To automatically hide the grouped columns, use the `useKeepGroupedColumnsHidden` utility hook.
+The hook will automatically hide the columns when added to the model and show them back when removed from it.
+
+```tsx
+// Usage with the initial state
+const apiRef = useGridApiRef();
+
+const initialState = useKeepGroupedColumnsHidden({
+  apiRef,
+  initialState: {
+    rowGrouping: {
+      model: ['company'],
+    },
+    columns: {
+      // Other hidden columns
+      columnVisibilityModel: { gross: false },
+    },
+  },
+});
+
+return <DataGridPremium {...data} apiRef={apiRef} initialState={initialState} />;
+```
+
+```tsx
+// Usage with the controlled model
+const apiRef = useGridApiRef();
+
+const [rowGroupingModel, setRowGroupingModel] = React.useState([
+  'company',
+  'director',
+]);
+
+const initialState = useKeepGroupedColumnsHidden({
+  apiRef,
+  rowGroupingModel,
+  initialState: {
+    columns: {
+      // Other hidden columns
+      columnVisibilityModel: { gross: false },
+    },
+  },
+});
+
+return (
+  <DataGridPremium
+    {...data}
+    apiRef={apiRef}
+    initialState={initialState}
+    rowGroupingModel={rowGroupingModel}
+  />
+);
+```
+
+:::warning
+This hook is only compatible with the deprecated column property `hide` or with the controlled `columnVisibilityModel` prop.
+
+You must use the `columnVisibilityModel` in the `initialState` instead.
+:::
+
+{{"demo": "RowGroupingUseKeepGroupedColumnsHidden.js", "bg": "inline", "defaultCodeOpen": false}}
+
 ## Disable the row grouping
 
 ### For all columns
@@ -124,7 +183,9 @@ const columns: GridColumns = [
 
 {{"demo": "RowGroupingGroupingValueGetter.js", "bg": "inline", "defaultCodeOpen": false}}
 
-**Note**: If your column also has a `valueGetter` property, the value passed to the `groupingValueGetter` method will still be the row value from the `row[field]`.
+:::info
+If your column also has a `valueGetter` property, the value passed to the `groupingValueGetter` method will still be the row value from the `row[field]`.
+:::
 
 ## Rows with missing groups
 
@@ -164,7 +225,9 @@ If you are rendering leaves with the `leafField` property of `groupColDef`, the 
 
 In both cases, you can force the sorting and filtering to be applied on another grouping criteria with the `mainGroupingCriteria` property of `groupColDef`
 
-> ⚠️ This feature is not yet compatible with `sortingMode = "server"` and `filteringMode = "server"`
+:::warning
+This feature is not yet compatible with `sortingMode = "server"` and `filteringMode = "server"`
+:::
 
 {{"demo": "RowGroupingSortingSingleGroupingColDef.js", "bg": "inline", "defaultCodeOpen": false}}
 
@@ -183,13 +246,52 @@ In the example below:
 
 {{"demo": "RowGroupingSortingMultipleGroupingColDef.js", "bg": "inline", "defaultCodeOpen": false}}
 
-> ⚠️ If you are dynamically switching the `leafField` or `mainGroupingCriteria`, the sorting and filtering models will not automatically be cleaned-up and the sorting/filtering will not be re-applied.
+:::warning
+If you are dynamically switching the `leafField` or `mainGroupingCriteria`, the sorting and filtering models will not automatically be cleaned-up and the sorting/filtering will not be re-applied.
+:::
+
+## Get the rows in a group
+
+You can use the `apiRef.current.getRowGroupChildren` method to get the id of all rows contained in a group.
+It will not contain the autogenerated rows (i.e. the subgroup rows or the aggregation footers).
+
+```ts
+const rows: GridRowId[] = apiRef.current.getRowGroupChildren({
+  groupId: params.id,
+
+  // If true, the rows will be in the order displayed on screen
+  applySorting: true,
+
+  // If true, only the rows matching the current filters will be returned
+  applyFiltering: true,
+});
+```
+
+If you want to get the row ids of a group given its grouping criteria, use `getGroupRowIdFromPath`
+
+```ts
+const rows = apiRef.current.getRowGroupChildren({
+  groupId: getGroupRowIdFromPath([{ field: 'company', key: 'Disney Studios' }]),
+});
+```
+
+{{"demo": "RowGroupingGetRowGroupChildren.js", "bg": "inline", "defaultCodeOpen": false}}
+
+## 🚧 Row group panel
+
+:::warning
+This feature isn't implemented yet. It's coming.
+
+👍 Upvote [issue #5235](https://github.com/mui/mui-x/issues/5235) if you want to see it land faster.
+:::
+
+With this panel, your users will be able to control which columns are used for grouping just by dragging them inside the panel.
 
 ## Full example
 
 {{"demo": "RowGroupingFullExample.js", "bg": "inline", "defaultCodeOpen": false}}
 
-## apiRef [<span class="plan-pro"></span>](https://mui.com/store/items/material-ui-pro/)
+## apiRef [<span class="plan-pro"></span>](https://mui.com/store/items/mui-x-pro/)
 
 {{"demo": "RowGroupingApiNoSnap.js", "bg": "inline", "hideToolbar": true}}
 
@@ -197,3 +299,4 @@ In the example below:
 
 - [DataGrid](/x/api/data-grid/data-grid/)
 - [DataGridPro](/x/api/data-grid/data-grid-pro/)
+- [DataGridPremium](/x/api/data-grid/data-grid-premium/)

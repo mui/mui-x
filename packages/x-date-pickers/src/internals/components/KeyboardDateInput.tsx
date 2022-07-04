@@ -2,20 +2,19 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import IconButton from '@mui/material/IconButton';
 import InputAdornment from '@mui/material/InputAdornment';
-import { useUtils } from '../hooks/useUtils';
+import { useLocaleText, useUtils } from '../hooks/useUtils';
 import { Calendar } from './icons';
 import { useMaskedInput } from '../hooks/useMaskedInput';
 import { DateInputProps } from './PureDateInput';
-import { getTextFieldAriaText } from '../utils/text-field-helper';
 
-export const KeyboardDateInput = React.forwardRef(function KeyboardDateInput(
-  props: DateInputProps,
+export const KeyboardDateInput = React.forwardRef(function KeyboardDateInput<TInputDate, TDate>(
+  props: DateInputProps<TInputDate, TDate>,
   ref: React.Ref<HTMLDivElement>,
 ) {
   const {
     components = {},
     disableOpenPicker,
-    getOpenDialogAriaText = getTextFieldAriaText,
+    getOpenDialogAriaText: getOpenDialogAriaTextProp,
     InputAdornmentProps,
     InputProps,
     inputRef,
@@ -24,7 +23,12 @@ export const KeyboardDateInput = React.forwardRef(function KeyboardDateInput(
     renderInput,
     ...other
   } = props;
-  const utils = useUtils();
+
+  const localeText = useLocaleText();
+
+  const getOpenDialogAriaText = getOpenDialogAriaTextProp ?? localeText.openDatePickerDialogue;
+
+  const utils = useUtils<TDate>();
   const textFieldProps = useMaskedInput(other);
   const adornmentPosition = InputAdornmentProps?.position || 'end';
   const OpenPickerIcon = components.OpenPickerIcon || Calendar;

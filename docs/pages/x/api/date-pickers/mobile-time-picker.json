@@ -6,29 +6,29 @@
       "type": { "name": "instanceOf", "description": "RegExp" },
       "default": "/\\dap/gi"
     },
-    "ampm": { "type": { "name": "bool" } },
+    "ampm": { "type": { "name": "bool" }, "default": "`utils.is12HourCycleInCurrentLocale()`" },
     "ampmInClock": { "type": { "name": "bool" } },
-    "cancelText": { "type": { "name": "node" }, "default": "'Cancel'" },
     "className": { "type": { "name": "string" } },
-    "clearable": { "type": { "name": "bool" } },
-    "clearText": { "type": { "name": "node" }, "default": "'Clear'" },
-    "components": { "type": { "name": "object" } },
-    "DialogProps": { "type": { "name": "object" } },
-    "disableCloseOnSelect": {
+    "closeOnSelect": {
       "type": { "name": "bool" },
       "default": "`true` for Desktop, `false` for Mobile (based on the chosen wrapper and `desktopModeMediaQuery` prop)."
     },
+    "components": { "type": { "name": "object" }, "default": "{}" },
+    "componentsProps": { "type": { "name": "object" }, "default": "{}" },
+    "DialogProps": { "type": { "name": "object" } },
     "disabled": { "type": { "name": "bool" } },
     "disableIgnoringDatePartForTimeValidation": { "type": { "name": "bool" } },
     "disableMaskedInput": { "type": { "name": "bool" } },
     "disableOpenPicker": { "type": { "name": "bool" } },
     "getClockLabelText": {
       "type": { "name": "func" },
-      "default": "<TDate extends any>(\n  view: ClockView,\n  time: TDate | null,\n  adapter: MuiPickersAdapter<TDate>,\n) =>\n  `Select ${view}. ${\n    time === null ? 'No time selected' : `Selected time is ${adapter.format(time, 'fullTime')}`\n  }`"
+      "default": "<TDate extends any>(\n  view: ClockView,\n  time: TDate | null,\n  adapter: MuiPickersAdapter<TDate>,\n) =>\n  `Select ${view}. ${\n    time === null ? 'No time selected' : `Selected time is ${adapter.format(time, 'fullTime')}`\n  }`",
+      "deprecated": true,
+      "deprecationInfo": "Use the <code>localeText</code> prop of <code>LocalizationProvider</code> instead, see <a href=\"https://mui.com/x/react-date-pickers/localization\">https://mui.com/x/react-date-pickers/localization</a>"
     },
     "getOpenDialogAriaText": {
       "type": { "name": "func" },
-      "default": "(value, utils) => `Choose date, selected date is ${utils.format(utils.date(value), 'fullDate')}`"
+      "default": "(date, utils) => `Choose date, selected date is ${utils.format(utils.date(date), 'fullDate')}`"
     },
     "InputAdornmentProps": { "type": { "name": "object" } },
     "inputFormat": { "type": { "name": "string" } },
@@ -39,7 +39,6 @@
     "maxTime": { "type": { "name": "any" } },
     "minTime": { "type": { "name": "any" } },
     "minutesStep": { "type": { "name": "number" }, "default": "1" },
-    "okText": { "type": { "name": "node" }, "default": "'OK'" },
     "onAccept": { "type": { "name": "func" } },
     "onClose": { "type": { "name": "func" } },
     "onError": { "type": { "name": "func" } },
@@ -59,19 +58,10 @@
     "readOnly": { "type": { "name": "bool" } },
     "rifmFormatter": { "type": { "name": "func" } },
     "shouldDisableTime": { "type": { "name": "func" } },
-    "showTodayButton": { "type": { "name": "bool" } },
     "showToolbar": { "type": { "name": "bool" } },
-    "todayText": { "type": { "name": "node" }, "default": "'Today'" },
     "ToolbarComponent": { "type": { "name": "elementType" }, "default": "TimePickerToolbar" },
-    "toolbarFormat": { "type": { "name": "string" } },
-    "toolbarPlaceholder": { "type": { "name": "node" }, "default": "'–'" },
     "toolbarTitle": { "type": { "name": "node" }, "default": "'Select time'" },
-    "value": {
-      "type": {
-        "name": "union",
-        "description": "any<br>&#124;&nbsp;Date<br>&#124;&nbsp;number<br>&#124;&nbsp;string"
-      }
-    },
+    "value": { "type": { "name": "any" } },
     "views": {
       "type": {
         "name": "arrayOf",
@@ -86,5 +76,6 @@
   "forwardsRefTo": "HTMLDivElement",
   "filename": "/packages/x-date-pickers/src/MobileTimePicker/MobileTimePicker.tsx",
   "inheritance": null,
-  "demos": "<ul></ul>"
+  "demos": "<ul></ul>",
+  "packages": ["@mui/x-date-pickers-pro", "@mui/x-date-pickers"]
 }

@@ -7,11 +7,11 @@ packageName: '@mui/x-date-pickers'
 materialDesign: https://material.io/components/date-pickers
 ---
 
-# Date Picker
+# Date picker
 
-<p class="description">Date pickers let the user select a date.</p>
+<p class="description">The date picker let the user select a date.</p>
 
-Date pickers let the user select a date. Date pickers are displayed with:
+Date pickers are displayed with:
 
 - Dialogs on mobile
 - Text field dropdowns on desktop
@@ -49,8 +49,6 @@ The date picker component can be disabled or read-only.
 ## Localization
 
 Use `LocalizationProvider` to change the date-engine locale that is used to render the date picker. Here is an example of changing the locale for the `date-fns` adapter:
-
-{{"demo": "LocalizedDatePicker.js"}}
 
 ## Jalali calendar system
 

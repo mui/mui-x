@@ -2,9 +2,9 @@
 title: Data Grid - Localization
 ---
 
-# Data Grid - Localization
+# Data grid - Localization
 
-<p class="description">The Data Grid allows to support users from different locales, with formatting, RTL, and localized strings.</p>
+<p class="description">The data grid allows to support users from different locales, with formatting, RTL, and localized strings.</p>
 
 The default locale of MUI is English (United States). If you want to use other locales, follow the instructions below.
 
@@ -16,6 +16,25 @@ in the GitHub repository.
 In the following example, the labels of the density selector are customized.
 
 {{"demo": "CustomLocaleTextGrid.js", "bg": "inline"}}
+
+:::warning
+It's important to note that because the data grid uses components from the Material UI library some translation keys need to be accessed using that component key.
+
+One example is the table pagination component used in the grid footer when pagination is enabled. All the keys provided to the `MuiTablePagination` object are applied as props directly to the [`TablePagination`](/material-ui/api/table-pagination/) component.
+
+```jsx
+<DataGrid
+  {...data}
+  localeText={{
+    MuiTablePagination: {
+      labelDisplayedRows: ({ from, to, count }) =>
+        `${from} - ${to} of more than ${count}`,
+    },
+  }}
+/>
+```
+
+:::
 
 ## Locale text
 
@@ -48,6 +67,7 @@ The same import works for `DataGridPro` as it's an extension of `DataGrid`.
 ```jsx
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { DataGrid, bgBG } from '@mui/x-data-grid';
+import { bgBG as pickersBgBG } from '@mui/x-date-pickers';
 import { bgBG as coreBgBG } from '@mui/material/locale';
 
 const theme = createTheme(
@@ -56,8 +76,9 @@ const theme = createTheme(
       primary: { main: '#1976d2' },
     },
   },
-  bgBG,
-  coreBgBG,
+  bgBG, // x-data-grid translations
+  pickersBgBG, // x-date-pickers translations
+  coreBgBG, // core translations
 );
 
 <ThemeProvider theme={theme}>
@@ -92,12 +113,15 @@ import { DataGrid, nlNL } from '@mui/x-data-grid';
 | Italian                 | it-IT               | `itIT`      |
 | Japanese                | ja-JP               | `jaJP`      |
 | Korean                  | ko-KR               | `koKR`      |
+| Norwegian (Bokmål)      | nb-NO               | `nbNO`      |
 | Persian                 | fa-IR               | `faIR`      |
 | Polish                  | pl-PL               | `plPL`      |
 | Portuguese (Brazil)     | pt-BR               | `ptBR`      |
+| Romanian                | ro-RO               | `roRO`      |
 | Russian                 | ru-RU               | `ruRU`      |
 | Slovak                  | sk-SK               | `skSK`      |
 | Spanish (Spain)         | es-ES               | `esES`      |
+| Swedish                 | sv-SE               | `svSE`      |
 | Turkish                 | tr-TR               | `trTR`      |
 | Ukraine                 | uk-UA               | `ukUA`      |
 | Simplified Chinese      | zh-CN               | `zhCN`      |
@@ -111,3 +135,4 @@ Note that these translations of the Data grid component depend on the [Localizat
 
 - [DataGrid](/x/api/data-grid/data-grid/)
 - [DataGridPro](/x/api/data-grid/data-grid-pro/)
+- [DataGridPremium](/x/api/data-grid/data-grid-premium/)

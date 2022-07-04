@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { GridEvents } from '../../models/events';
 import { GridApiCommunity } from '../../models/api/gridApiCommunity';
 import { useGridApiEventHandler } from '../utils/useGridApiEventHandler';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
@@ -20,5 +19,5 @@ export function useGridErrorHandler(
     handleError(props.error);
   }, [handleError, props.error]);
 
-  useGridApiEventHandler(apiRef, GridEvents.componentError, handleError);
+  useGridApiEventHandler(apiRef, 'componentError', handleError);
 }

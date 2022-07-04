@@ -6,7 +6,6 @@ import {
   DataGridForcedPropsKey,
   DataGridPropsWithDefaultValues,
 } from '../models/props/DataGridProps';
-
 import { DATA_GRID_DEFAULT_SLOTS_COMPONENTS, GRID_DEFAULT_LOCALE_TEXT } from '../constants';
 import {
   GridDensityTypes,
@@ -76,6 +75,7 @@ export const DATA_GRID_PROPS_DEFAULT_VALUES: DataGridPropsWithDefaultValues = {
   throttleRowsMs: 0,
   disableColumnReorder: false,
   disableColumnResize: false,
+  keepNonExistentRowsSelected: false,
 };
 
 export const useDataGridProps = <R extends GridValidRowModel>(inProps: DataGridProps<R>) => {

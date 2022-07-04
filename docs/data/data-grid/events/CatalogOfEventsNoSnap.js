@@ -32,19 +32,32 @@ const EventRow = ({ event }) => {
     }
 
     return `
-const onEvent: GridEventListener<GridEvents.${event.name}> = (
+const onEvent: GridEventListener<'${event.name}'> = (
   ${args.join('\n  ')}
 ) => {...}    
   
 // Imperative subscription    
 apiRef.current.subscribeEvent(
-  GridEvents.${event.name},
+  '${event.name}',
   onEvent,
 );
 
 // Hook subscription (only available inside the scope of the grid)
-useGridApiEventHandler(GridEvents.${event.name}, onEvent);    
+useGridApiEventHandler('${event.name}', onEvent);    
 `;
+  }, [event]);
+
+  const planBadge = React.useMemo(() => {
+    if (event.projects.includes('x-data-grid')) {
+      return null;
+    }
+    if (event.projects.includes('x-data-grid-pro')) {
+      return <span className="plan-pro" title="Pro plan" />;
+    }
+    if (event.projects.includes('x-data-grid-premium')) {
+      return <span className="plan-premium" title="Premium plan" />;
+    }
+    return null;
   }, [event]);
 
   return (
@@ -61,6 +74,7 @@ useGridApiEventHandler(GridEvents.${event.name}, onEvent);
         </TableCell>
         <TableCell style={{ borderBottom: 'unset' }}>
           <code>{event.name}</code>
+          {planBadge}
         </TableCell>
         <TableCell style={{ borderBottom: 'unset' }}>
           <div

@@ -1,86 +1,88 @@
 import * as ts from 'typescript';
 import path from 'path';
 import { renderInline as renderMarkdownInline } from '@mui/monorepo/docs/packages/markdown';
-import FEATURE_TOGGLE from 'docs/src/featureToggle';
-
 import {
   DocumentedInterfaces,
   getSymbolDescription,
   getSymbolJSDocTags,
   linkify,
-  resolveExportSpecifier,
   stringifySymbol,
   writePrettifiedFile,
 } from './utils';
-import { Project } from '../getTypeScriptProjects';
+import { ProjectNames, Projects } from '../getTypeScriptProjects';
 
 interface BuildEventsDocumentationOptions {
-  project: Project;
+  projects: Projects;
   documentedInterfaces: DocumentedInterfaces;
 }
 
+const GRID_PROJECTS: ProjectNames[] = ['x-data-grid', 'x-data-grid-pro', 'x-data-grid-premium'];
+
 export default function buildGridEventsDocumentation(options: BuildEventsDocumentationOptions) {
-  const { project, documentedInterfaces } = options;
+  const { projects, documentedInterfaces } = options;
 
-  const gridEventsSymbol = resolveExportSpecifier(project.exports.GridEvents, project);
-  const gridEventsDeclaration = gridEventsSymbol.declarations![0] as ts.EnumDeclaration;
+  const events: {
+    [eventName: string]: {
+      name: string;
+      description: string;
+      params?: string;
+      event?: string;
+      projects: ProjectNames[];
+    };
+  } = {};
 
-  const gridEventLookupSymbol = project.exports.GridEventLookup;
-  const gridEventLookupType = project.checker.getTypeAtLocation(
-    (gridEventLookupSymbol.declarations![0] as ts.InterfaceDeclaration).name,
-  ) as ts.EnumType;
+  GRID_PROJECTS.forEach((projectName) => {
+    const project = projects.get(projectName)!;
+    const gridEventLookupSymbol = project.exports.GridEventLookup;
+    const gridEventLookupType = project.checker.getTypeAtLocation(
+      (gridEventLookupSymbol.declarations![0] as ts.InterfaceDeclaration).name,
+    ) as ts.EnumType;
 
-  const events: { name: string; description: string; params?: string; event?: string }[] = [];
-  const eventLookup: { [eventName: string]: any } = {};
+    gridEventLookupType.getProperties().forEach((event) => {
+      const tags = getSymbolJSDocTags(event);
 
-  gridEventLookupType.getProperties().forEach((event) => {
-    const eventParams = {};
-    const declaration = event.declarations?.find(ts.isPropertySignature);
-    if (declaration) {
-      const symbol = project.checker.getTypeAtLocation(declaration.name).symbol;
-      symbol.members?.forEach((member, memberName) => {
-        eventParams[memberName.toString()] = stringifySymbol(member, project);
-      });
-    }
-    eventLookup[event.name] = eventParams;
-  });
+      if (tags.ignore) {
+        return;
+      }
 
-  gridEventsDeclaration.members.forEach((member) => {
-    const eventSymbol = project.checker.getTypeAtLocation(member).symbol;
-    const tags = getSymbolJSDocTags(eventSymbol);
+      if (events[event.name]) {
+        events[event.name].projects.push(project.name);
+      } else {
+        const declaration = event.declarations?.find(ts.isPropertySignature);
+        if (!declaration) {
+          return;
+        }
 
-    if (tags.ignore) {
-      return;
-    }
+        const description = linkify(
+          getSymbolDescription(event, project),
+          documentedInterfaces,
+          'html',
+        );
 
-    const name = member.name.getText();
-    const description = linkify(
-      getSymbolDescription(eventSymbol, project),
-      documentedInterfaces,
-      'html',
-    );
-    const eventProperties = eventLookup[name];
+        const eventParams: { [key: string]: any } = {};
+        const symbol = project.checker.getTypeAtLocation(declaration.name).symbol;
+        symbol.members?.forEach((member, memberName) => {
+          eventParams[memberName.toString()] = stringifySymbol(member, project);
+        });
 
-    events.push({
-      name,
-      description: renderMarkdownInline(description),
-      params: linkify(eventProperties.params, documentedInterfaces, 'html'),
-      event: `MuiEvent<${eventProperties.event ?? '{}'}>`,
+        events[event.name] = {
+          projects: [project.name],
+          name: event.name,
+          description: renderMarkdownInline(description),
+          params: linkify(eventParams.params, documentedInterfaces, 'html'),
+          event: `MuiEvent<${eventParams.event ?? '{}'}>`,
+        };
+      }
     });
   });
 
-  const sortedEvents = events.sort((a, b) => a.name.localeCompare(b.name));
-  if (!FEATURE_TOGGLE.enable_redirects) {
-    writePrettifiedFile(
-      path.resolve(project.workspaceRoot, 'docs/src/pages/components/data-grid/events/events.json'),
-      JSON.stringify(sortedEvents),
-      project,
-    );
-  }
+  const sortedEvents = Object.values(events).sort((a, b) => a.name.localeCompare(b.name));
+  const defaultProject = projects.get('x-data-grid')!;
+
   writePrettifiedFile(
-    path.resolve(project.workspaceRoot, 'docs/data/data-grid/events/events.json'),
+    path.resolve(defaultProject.workspaceRoot, 'docs/data/data-grid/events/events.json'),
     JSON.stringify(sortedEvents),
-    project,
+    defaultProject,
   );
 
   // eslint-disable-next-line no-console

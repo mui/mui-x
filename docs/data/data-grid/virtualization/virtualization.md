@@ -2,7 +2,7 @@
 title: Data Grid - Virtualization
 ---
 
-# Data Grid - Virtualization
+# Data grid - Virtualization
 
 <p class="description">The grid is high performing thanks to its rows and columns virtualization engine.</p>
 
@@ -11,7 +11,7 @@ This is a built-in feature of the rendering engine and greatly improves renderin
 
 _\*unlimited: Browsers set a limit on the number of pixels a scroll container can host: 17.5 million pixels on Firefox, 33.5 million pixels on Chrome, Edge, and Safari. A [reproduction](https://codesandbox.io/s/beautiful-silence-1yifo?file=/src/App.js)._
 
-## Row virtualization [<span class="plan-pro"></span>](https://mui.com/store/items/material-ui-pro/)
+## Row virtualization [<span class="plan-pro"></span>](https://mui.com/store/items/mui-x-pro/)
 
 Row virtualization is the insertion and removal of rows as the grid scrolls vertically.
 
@@ -42,9 +42,13 @@ You may want to turn it off to be able to test the grid with a headless browser,
 <DataGrid {...data} disableVirtualization />
 ```
 
-**Note**: Disabling the virtualization will increase the size of the DOM and drastically reduce the performance. Use it only for testing purposes or on small datasets.
+:::info
+Disabling the virtualization will increase the size of the DOM and drastically reduce the performance.
+Use it only for testing purposes or on small datasets.
+:::
 
 ## API
 
 - [DataGrid](/x/api/data-grid/data-grid/)
 - [DataGridPro](/x/api/data-grid/data-grid-pro/)
+- [DataGridPremium](/x/api/data-grid/data-grid-premium/)

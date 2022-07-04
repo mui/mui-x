@@ -11,12 +11,12 @@ import {
   SlideDirection,
   SlideTransitionProps,
 } from './PickersSlideTransition';
+import { DayValidationProps } from '../internals/hooks/validation/models';
+import { useIsDayDisabled } from '../internals/hooks/validation/useDateValidation';
 
-export interface ExportedCalendarProps<TDate>
-  extends Pick<
-    PickersDayProps<TDate>,
-    'disableHighlightToday' | 'showDaysOutsideCurrentMonth' | 'allowSameDateSelection'
-  > {
+export interface ExportedDayPickerProps<TDate>
+  extends DayValidationProps<TDate>,
+    Pick<PickersDayProps<TDate>, 'disableHighlightToday' | 'showDaysOutsideCurrentMonth'> {
   autoFocus?: boolean;
   /**
    * If `true` renders `LoadingComponent` in calendar instead of calendar view.
@@ -25,20 +25,16 @@ export interface ExportedCalendarProps<TDate>
    */
   loading?: boolean;
   /**
-   * Calendar onChange.
-   */
-  onChange: PickerOnChangeFn<TDate>;
-  /**
    * Custom renderer for day. Check the [PickersDay](https://mui.com/x/api/date-pickers/pickers-day/) component.
    * @template TDate
    * @param {TDate} day The day to render.
-   * @param {Array<TDate | null>} selectedDates The dates currently selected.
+   * @param {Array<TDate | null>} selectedDays The days currently selected.
    * @param {PickersDayProps<TDate>} pickersDayProps The props of the day to render.
    * @returns {JSX.Element} The element representing the day.
    */
   renderDay?: (
     day: TDate,
-    selectedDates: Array<TDate | null>,
+    selectedDays: TDate[],
     pickersDayProps: PickersDayProps<TDate>,
   ) => JSX.Element;
   /**
@@ -49,14 +45,14 @@ export interface ExportedCalendarProps<TDate>
   renderLoading?: () => React.ReactNode;
 }
 
-export interface PickersCalendarProps<TDate> extends ExportedCalendarProps<TDate> {
+export interface DayPickerProps<TDate> extends ExportedDayPickerProps<TDate> {
   autoFocus?: boolean;
   className?: string;
   currentMonth: TDate;
-  date: TDate | [TDate | null, TDate | null] | null;
+  selectedDays: (TDate | null)[];
+  onSelectedDaysChange: PickerOnChangeFn<TDate>;
   disabled?: boolean;
   focusedDay: TDate | null;
-  isDateDisabled: (day: TDate) => boolean;
   isMonthSwitchingAnimating: boolean;
   onFocusedDayChange: (newFocusedDay: TDate) => void;
   onMonthSwitchingAnimationEnd: () => void;
@@ -66,7 +62,7 @@ export interface PickersCalendarProps<TDate> extends ExportedCalendarProps<TDate
   TransitionProps?: Partial<SlideTransitionProps>;
 }
 
-const weeksContainerHeight = (DAY_SIZE + DAY_MARGIN * 4) * 6;
+const weeksContainerHeight = (DAY_SIZE + DAY_MARGIN * 2) * 6;
 
 const PickersCalendarDayHeader = styled('div')({
   display: 'flex',
@@ -107,21 +103,21 @@ const PickersCalendarWeek = styled('div')({
 /**
  * @ignore - do not document.
  */
-export function DayPicker<TDate>(props: PickersCalendarProps<TDate>) {
+export function DayPicker<TDate>(props: DayPickerProps<TDate>) {
+  const now = useNow<TDate>();
+  const utils = useUtils<TDate>();
   const {
-    allowSameDateSelection,
     autoFocus,
-    onFocusedDayChange: changeFocusedDay,
+    onFocusedDayChange,
     className,
     currentMonth,
-    date,
+    selectedDays,
     disabled,
     disableHighlightToday,
     focusedDay,
-    isDateDisabled,
     isMonthSwitchingAnimating,
     loading,
-    onChange,
+    onSelectedDaysChange,
     onMonthSwitchingAnimationEnd,
     readOnly,
     reduceAnimations,
@@ -130,27 +126,36 @@ export function DayPicker<TDate>(props: PickersCalendarProps<TDate>) {
     showDaysOutsideCurrentMonth,
     slideDirection,
     TransitionProps,
+    disablePast,
+    disableFuture,
+    minDate,
+    maxDate,
+    shouldDisableDate,
   } = props;
 
-  const now = useNow<TDate>();
-  const utils = useUtils<TDate>();
+  const isDateDisabled = useIsDayDisabled({
+    shouldDisableDate,
+    minDate,
+    maxDate,
+    disablePast,
+    disableFuture,
+  });
+
   const handleDaySelect = React.useCallback(
     (day: TDate, isFinish: PickerSelectionState = 'finish') => {
       if (readOnly) {
         return;
       }
-      // TODO possibly buggy line figure out and add tests
-      const finalDate = Array.isArray(date) ? day : utils.mergeDateAndTime(day, date || now);
 
-      onChange(finalDate, isFinish);
+      onSelectedDaysChange(day, isFinish);
     },
-    [date, now, onChange, readOnly, utils],
+    [onSelectedDaysChange, readOnly],
   );
 
   const currentMonthNumber = utils.getMonth(currentMonth);
-  const selectedDates = (Array.isArray(date) ? date : [date])
-    .filter(Boolean)
-    .map((selectedDateItem) => selectedDateItem && utils.startOfDay(selectedDateItem));
+  const validSelectedDays = selectedDays
+    .filter((day): day is TDate => !!day)
+    .map((day) => utils.startOfDay(day));
 
   // need a new ref whenever the `key` of the transition changes: http://reactcommunity.org/react-transition-group/transition/#Transition-prop-nodeRef.
   const transitionKey = currentMonthNumber;
@@ -192,21 +197,20 @@ export function DayPicker<TDate>(props: PickersCalendarProps<TDate>) {
                     day,
                     isAnimating: isMonthSwitchingAnimating,
                     disabled: disabled || isDateDisabled(day),
-                    allowSameDateSelection,
                     autoFocus: autoFocus && focusedDay !== null && utils.isSameDay(day, focusedDay),
                     today: utils.isSameDay(day, now),
                     outsideCurrentMonth: utils.getMonth(day) !== currentMonthNumber,
-                    selected: selectedDates.some(
-                      (selectedDate) => selectedDate && utils.isSameDay(selectedDate, day),
+                    selected: validSelectedDays.some((selectedDay) =>
+                      utils.isSameDay(selectedDay, day),
                     ),
                     disableHighlightToday,
                     showDaysOutsideCurrentMonth,
-                    onDayFocus: changeFocusedDay,
+                    onDayFocus: onFocusedDayChange,
                     onDaySelect: handleDaySelect,
                   };
 
                   return renderDay ? (
-                    renderDay(day, selectedDates, pickersDayProps)
+                    renderDay(day, validSelectedDays, pickersDayProps)
                   ) : (
                     <div role="cell" key={pickersDayProps.key}>
                       <PickersDay {...pickersDayProps} />

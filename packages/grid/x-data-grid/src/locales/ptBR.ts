@@ -27,11 +27,17 @@ const ptBRGrid: Partial<GridLocaleText> = {
   toolbarFiltersTooltipActive: (count) =>
     `${count} ${count !== 1 ? 'filtros' : 'filtro'} ${count !== 1 ? 'ativos' : 'ativo'}`,
 
+  // Quick filter toolbar field
+  // toolbarQuickFilterPlaceholder: 'Search...',
+  // toolbarQuickFilterLabel: 'Search',
+  // toolbarQuickFilterDeleteIconLabel: 'Clear',
+
   // Export selector toolbar button text
   toolbarExport: 'Exportar',
   toolbarExportLabel: 'Exportar',
   toolbarExportCSV: 'Baixar como CSV',
   toolbarExportPrint: 'Print',
+  toolbarExportExcel: 'Baixar como Excel',
 
   // Columns panel text
   columnsPanelTextFieldLabel: 'Localizar coluna',
@@ -131,6 +137,7 @@ const ptBRGrid: Partial<GridLocaleText> = {
   unGroupColumn: (name) => `Parar agrupamento por ${name}`,
 
   // Master/detail
+  detailPanelToggle: 'Painel de detalhes',
   expandDetailPanel: 'Expandir',
   collapseDetailPanel: 'Esconder',
 

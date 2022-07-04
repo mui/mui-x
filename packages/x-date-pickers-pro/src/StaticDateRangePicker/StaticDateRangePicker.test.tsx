@@ -50,13 +50,10 @@ describe('<StaticDateRangePicker />', () => {
     render(
       <StaticDateRangePicker
         renderInput={defaultRangeRenderInput}
-        minDate={adapterToUse.date('2005-01-01T00:00:00.000')}
+        minDate={adapterToUse.date(new Date(2005, 0, 1))}
         shouldDisableDate={isWeekend}
         onChange={() => {}}
-        value={[
-          adapterToUse.date('2018-01-01T00:00:00.000'),
-          adapterToUse.date('2018-01-31T00:00:00.000'),
-        ]}
+        value={[adapterToUse.date(new Date(2018, 0, 1)), adapterToUse.date(new Date(2018, 0, 31))]}
       />,
     );
 
@@ -72,14 +69,11 @@ describe('<StaticDateRangePicker />', () => {
       <StaticDateRangePicker
         renderInput={defaultRangeRenderInput}
         onChange={() => {}}
-        value={[
-          adapterToUse.date('2018-01-01T00:00:00.000'),
-          adapterToUse.date('2018-01-31T00:00:00.000'),
-        ]}
+        value={[adapterToUse.date(new Date(2018, 0, 1)), adapterToUse.date(new Date(2018, 0, 31))]}
       />,
     );
 
-    // It should follow https://www.w3.org/TR/wai-aria-practices/examples/dialog-modal/datepicker-dialog.html
+    // It should follow https://www.w3.org/WAI/ARIA/apg/example-index/dialog-modal/datepicker-dialog.html
     expect(
       document.querySelector('[role="grid"] > [role="row"] [role="cell"] > button'),
     ).to.have.text('1');

@@ -4,7 +4,7 @@ import {
   ownerDocument,
   unstable_useEnhancedEffect as useEnhancedEffect,
 } from '@mui/material/utils';
-import { GridEvents, GridEventListener } from '../../../models/events';
+import { GridEventListener } from '../../../models/events';
 import { ElementSize } from '../../../models';
 import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 import {
@@ -54,17 +54,11 @@ export function useGridDimensions(
   apiRef: React.MutableRefObject<GridApiCommunity>,
   props: Pick<
     DataGridProcessedProps,
-    | 'rows'
-    | 'onResize'
-    | 'scrollbarSize'
-    | 'pagination'
-    | 'paginationMode'
-    | 'autoHeight'
-    | 'getRowHeight'
+    'onResize' | 'scrollbarSize' | 'pagination' | 'paginationMode' | 'autoHeight' | 'getRowHeight'
   >,
 ) {
   const logger = useGridLogger(apiRef, 'useResizeContainer');
-  const warningShown = React.useRef(false);
+  const errorShown = React.useRef(false);
   const rootDimensionsRef = React.useRef<ElementSize | null>(null);
   const fullDimensionsRef = React.useRef<GridDimensions | null>(null);
   const rowsMeta = useGridSelector(apiRef, gridRowsMetaSelector);
@@ -119,6 +113,7 @@ export function useGridDimensions(
       viewportInnerSize,
       hasScrollX,
       hasScrollY,
+      scrollBarSize,
     };
 
     const prevDimensions = fullDimensionsRef.current;
@@ -128,10 +123,7 @@ export function useGridDimensions(
       newFullDimensions.viewportInnerSize.width !== prevDimensions?.viewportInnerSize.width ||
       newFullDimensions.viewportInnerSize.height !== prevDimensions?.viewportInnerSize.height
     ) {
-      apiRef.current.publishEvent(
-        GridEvents.viewportInnerSizeChange,
-        newFullDimensions.viewportInnerSize,
-      );
+      apiRef.current.publishEvent('viewportInnerSizeChange', newFullDimensions.viewportInnerSize);
     }
   }, [
     apiRef,
@@ -143,7 +135,7 @@ export function useGridDimensions(
 
   const resize = React.useCallback<GridDimensionsApi['resize']>(() => {
     updateGridDimensionsRef();
-    apiRef.current.publishEvent(GridEvents.debouncedResize, rootDimensionsRef.current!);
+    apiRef.current.publishEvent('debouncedResize', rootDimensionsRef.current!);
   }, [apiRef, updateGridDimensionsRef]);
 
   const getRootDimensions = React.useCallback<GridDimensionsApi['getRootDimensions']>(
@@ -192,38 +184,36 @@ export function useGridDimensions(
 
   const isFirstSizing = React.useRef(true);
 
-  const handleResize = React.useCallback<GridEventListener<GridEvents.resize>>(
+  const handleResize = React.useCallback<GridEventListener<'resize'>>(
     (size) => {
       rootDimensionsRef.current = size;
 
       // jsdom has no layout capabilities
       const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
-      if (size.height === 0 && !warningShown.current && !props.autoHeight && !isJSDOM) {
-        logger.warn(
+      if (size.height === 0 && !errorShown.current && !props.autoHeight && !isJSDOM) {
+        logger.error(
           [
-            'The parent of the grid has an empty height.',
-            'You need to make sure the container has an intrinsic height.',
+            'The parent DOM element of the data grid has an empty height.',
+            'Please make sure that this element has an intrinsic height.',
             'The grid displays with a height of 0px.',
             '',
-            'You can find a solution in the docs:',
-            'https://mui.com/x/react-data-grid/layout/',
+            'More details: https://mui.com/r/x-data-grid-no-dimensions.',
           ].join('\n'),
         );
-        warningShown.current = true;
+        errorShown.current = true;
       }
-      if (size.width === 0 && !warningShown.current && !isJSDOM) {
-        logger.warn(
+      if (size.width === 0 && !errorShown.current && !isJSDOM) {
+        logger.error(
           [
-            'The parent of the grid has an empty width.',
-            'You need to make sure the container has an intrinsic width.',
+            'The parent DOM element of the data grid has an empty width.',
+            'Please make sure that this element has an intrinsic width.',
             'The grid displays with a width of 0px.',
             '',
-            'You can find a solution in the docs:',
-            'https://mui.com/x/react-data-grid/layout/',
+            'More details: https://mui.com/r/x-data-grid-no-dimensions.',
           ].join('\n'),
         );
-        warningShown.current = true;
+        errorShown.current = true;
       }
 
       if (isTestEnvironment) {
@@ -247,10 +237,10 @@ export function useGridDimensions(
 
   useEnhancedEffect(() => updateGridDimensionsRef(), [updateGridDimensionsRef]);
 
-  useGridApiOptionHandler(apiRef, GridEvents.sortedRowsSet, updateGridDimensionsRef);
-  useGridApiOptionHandler(apiRef, GridEvents.pageChange, updateGridDimensionsRef);
-  useGridApiOptionHandler(apiRef, GridEvents.pageSizeChange, updateGridDimensionsRef);
-  useGridApiOptionHandler(apiRef, GridEvents.columnsChange, updateGridDimensionsRef);
-  useGridApiEventHandler(apiRef, GridEvents.resize, handleResize);
-  useGridApiOptionHandler(apiRef, GridEvents.debouncedResize, props.onResize);
+  useGridApiOptionHandler(apiRef, 'sortedRowsSet', updateGridDimensionsRef);
+  useGridApiOptionHandler(apiRef, 'pageChange', updateGridDimensionsRef);
+  useGridApiOptionHandler(apiRef, 'pageSizeChange', updateGridDimensionsRef);
+  useGridApiOptionHandler(apiRef, 'columnsChange', updateGridDimensionsRef);
+  useGridApiEventHandler(apiRef, 'resize', handleResize);
+  useGridApiOptionHandler(apiRef, 'debouncedResize', props.onResize);
 }

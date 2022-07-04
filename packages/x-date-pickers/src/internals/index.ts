@@ -1,13 +1,24 @@
 export { DesktopTooltipWrapper } from './components/wrappers/DesktopTooltipWrapper';
-export type { DesktopWrapperProps } from './components/wrappers/DesktopWrapper';
+export type {
+  DesktopWrapperProps,
+  DesktopWrapperSlotsComponent,
+  DesktopWrapperSlotsComponentsProps,
+} from './components/wrappers/DesktopWrapper';
 export { MobileWrapper } from './components/wrappers/MobileWrapper';
-export type { MobileWrapperProps } from './components/wrappers/MobileWrapper';
+export type {
+  MobileWrapperProps,
+  MobileWrapperSlotsComponent,
+  MobileWrapperSlotsComponentsProps,
+} from './components/wrappers/MobileWrapper';
 export { MobileKeyboardInputView } from './components/CalendarOrClockPicker/CalendarOrClockPicker';
 export { PickersArrowSwitcher } from './components/PickersArrowSwitcher';
 export type { ExportedArrowSwitcherProps } from './components/PickersArrowSwitcher';
 export { PickerStaticWrapper } from './components/PickerStaticWrapper/PickerStaticWrapper';
-export type { PickerStaticWrapperProps } from './components/PickerStaticWrapper/PickerStaticWrapper';
-export { PickersToolbar } from './components/PickersToolbar';
+export type {
+  PickersStaticWrapperSlotsComponent,
+  PickersStaticWrapperSlotsComponentsProps,
+} from './components/PickerStaticWrapper/PickerStaticWrapper';
+export { PickersToolbar, pickersToolbarClasses } from './components/PickersToolbar';
 export { PickersToolbarButton } from './components/PickersToolbarButton';
 export type {
   DateInputProps,
@@ -23,8 +34,9 @@ export { DAY_MARGIN } from './constants/dimensions';
 
 export { useMaskedInput } from './hooks/useMaskedInput';
 export { usePickerState } from './hooks/usePickerState';
+export type { PickerStateProps, PickerStatePickerProps } from './hooks/usePickerState';
 export type { PickerStateValueManager, PickerSelectionState } from './hooks/usePickerState';
-export { useDefaultDates, useUtils } from './hooks/useUtils';
+export { useDefaultDates, useUtils, useLocaleText } from './hooks/useUtils';
 export { useValidation } from './hooks/validation/useValidation';
 export type { ValidationProps, Validator } from './hooks/validation/useValidation';
 export { validateDate } from './hooks/validation/useDateValidation';
@@ -36,12 +48,13 @@ export type {
 export { usePreviousMonthDisabled, useNextMonthDisabled } from './hooks/date-helpers-hooks';
 
 export type { BasePickerProps } from './models/props/basePickerProps';
+export type { StaticPickerProps } from './models/props/staticPickerProps';
 export type { BaseToolbarProps } from './models/props/baseToolbarProps';
-export type { ParseableDate } from './models/parseableDate';
 export type { MuiPickersAdapter } from './models/muiPickersAdapter';
 
-export { executeInTheNextEventLoopTick } from './utils/utils';
+export { executeInTheNextEventLoopTick, onSpaceOrEnter } from './utils/utils';
 export { defaultReduceAnimations } from './utils/defaultReduceAnimations';
+export { buildDeprecatedPropsWarning } from './utils/warning';
 
 export { PickersCalendarHeader } from '../CalendarPicker/PickersCalendarHeader';
 export type {
@@ -51,7 +64,7 @@ export type {
 } from '../CalendarPicker/PickersCalendarHeader';
 
 export { DayPicker } from '../CalendarPicker/DayPicker';
-export type { PickersCalendarProps } from '../CalendarPicker/DayPicker';
+export type { DayPickerProps } from '../CalendarPicker/DayPicker';
 
 export { areDayPropsEqual } from '../PickersDay/PickersDay';
 

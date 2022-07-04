@@ -96,24 +96,6 @@
     "supportsApiRef": true
   },
   {
-    "name": "gridDetailPanelExpandedRowIdsSelector",
-    "returnType": "GridRowId[]",
-    "description": "",
-    "supportsApiRef": false
-  },
-  {
-    "name": "gridDetailPanelExpandedRowsContentCacheSelector",
-    "returnType": "Record<GridRowId, ReactNode>",
-    "description": "",
-    "supportsApiRef": false
-  },
-  {
-    "name": "gridDetailPanelExpandedRowsHeightCacheSelector",
-    "returnType": "Record<GridRowId, number>",
-    "description": "",
-    "supportsApiRef": false
-  },
-  {
     "name": "gridEditRowsStateSelector",
     "returnType": "GridEditRowsModel",
     "description": "",
@@ -234,6 +216,13 @@
     "supportsApiRef": false
   },
   {
+    "name": "gridQuickFilterValuesSelector",
+    "returnType": "any[] | undefined",
+    "category": "Filtering",
+    "description": "Get the current quick filter values.",
+    "supportsApiRef": true
+  },
+  {
     "name": "gridResizingColumnFieldSelector",
     "returnType": "string",
     "description": "",
@@ -264,12 +253,6 @@
     "supportsApiRef": true
   },
   {
-    "name": "gridRowGroupingStateSelector",
-    "returnType": "GridRowGroupingState",
-    "description": "",
-    "supportsApiRef": false
-  },
-  {
     "name": "gridRowIdsSelector",
     "returnType": "GridRowId[]",
     "description": "",
@@ -284,6 +267,12 @@
   {
     "name": "gridRowTreeSelector",
     "returnType": "GridRowTreeConfig",
+    "description": "",
+    "supportsApiRef": true
+  },
+  {
+    "name": "gridRowsIdToIdLookupSelector",
+    "returnType": "Record<string, GridRowId>",
     "description": "",
     "supportsApiRef": true
   },

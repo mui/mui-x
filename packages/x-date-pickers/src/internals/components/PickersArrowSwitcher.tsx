@@ -1,5 +1,7 @@
 import * as React from 'react';
+import clsx from 'clsx';
 import Typography from '@mui/material/Typography';
+import { generateUtilityClasses } from '@mui/material';
 import { useTheme, styled } from '@mui/material/styles';
 import IconButton from '@mui/material/IconButton';
 import { ArrowLeft, ArrowRight } from './icons';
@@ -18,22 +20,23 @@ export interface PickersArrowSwitcherSlotsComponentsProps {
 
 export interface ExportedArrowSwitcherProps {
   /**
-   * The components used for each slot.
-   * Either a string to use an HTML element or a component.
+   * Overrideable components.
    * @default {}
    */
   components?: Partial<PickersArrowSwitcherSlotsComponent>;
   /**
-   * The props used for each slot inside.
+   * The props used for each component slot.
    * @default {}
    */
   componentsProps?: Partial<PickersArrowSwitcherSlotsComponentsProps>;
   /**
    * Left arrow icon aria-label text.
+   * @deprecated
    */
   leftArrowButtonText?: string;
   /**
    * Right arrow icon aria-label text.
+   * @deprecated
    */
   rightArrowButtonText?: string;
 }
@@ -50,19 +53,33 @@ interface ArrowSwitcherProps
   onRightClick: () => void;
 }
 
-const PickersArrowSwitcherRoot = styled('div')<{
+const classes = generateUtilityClasses('MuiPickersArrowSwitcher', ['root', 'spacer', 'button']);
+
+const PickersArrowSwitcherRoot = styled('div', {
+  name: 'MuiPickersArrowSwitcher',
+  slot: 'Root',
+  overridesResolver: (props, styles) => styles.root,
+})<{
   ownerState: ArrowSwitcherProps;
 }>({
   display: 'flex',
 });
 
-const PickersArrowSwitcherSpacer = styled('div')<{
+const PickersArrowSwitcherSpacer = styled('div', {
+  name: 'MuiPickersArrowSwitcher',
+  slot: 'Spacer',
+  overridesResolver: (props, styles) => styles.spacer,
+})<{
   ownerState: ArrowSwitcherProps;
 }>(({ theme }) => ({
   width: theme.spacing(3),
 }));
 
-const PickersArrowSwitcherButton = styled(IconButton)<{
+const PickersArrowSwitcherButton = styled(IconButton, {
+  name: 'MuiPickersArrowSwitcher',
+  slot: 'Button',
+  overridesResolver: (props, styles) => styles.button,
+})<{
   ownerState: ArrowSwitcherProps;
 }>(({ ownerState }) => ({
   ...(ownerState.hidden && {
@@ -77,8 +94,8 @@ export const PickersArrowSwitcher = React.forwardRef(function PickersArrowSwitch
   const {
     children,
     className,
-    components = {},
-    componentsProps = {},
+    components,
+    componentsProps,
     isLeftDisabled,
     isLeftHidden,
     isRightDisabled,
@@ -92,18 +109,23 @@ export const PickersArrowSwitcher = React.forwardRef(function PickersArrowSwitch
   const theme = useTheme();
   const isRtl = theme.direction === 'rtl';
 
-  const leftArrowButtonProps = componentsProps.leftArrowButton || {};
-  const LeftArrowIcon = components.LeftArrowIcon || ArrowLeft;
+  const leftArrowButtonProps = componentsProps?.leftArrowButton || {};
+  const LeftArrowIcon = components?.LeftArrowIcon || ArrowLeft;
 
-  const rightArrowButtonProps = componentsProps.rightArrowButton || {};
-  const RightArrowIcon = components.RightArrowIcon || ArrowRight;
+  const rightArrowButtonProps = componentsProps?.rightArrowButton || {};
+  const RightArrowIcon = components?.RightArrowIcon || ArrowRight;
 
   const ownerState = props;
 
   return (
-    <PickersArrowSwitcherRoot ref={ref} className={className} ownerState={ownerState} {...other}>
+    <PickersArrowSwitcherRoot
+      ref={ref}
+      className={clsx(classes.root, className)}
+      ownerState={ownerState}
+      {...other}
+    >
       <PickersArrowSwitcherButton
-        as={components.LeftArrowButton}
+        as={components?.LeftArrowButton}
         size="small"
         aria-label={leftArrowButtonText}
         title={leftArrowButtonText}
@@ -111,7 +133,7 @@ export const PickersArrowSwitcher = React.forwardRef(function PickersArrowSwitch
         edge="end"
         onClick={onLeftClick}
         {...leftArrowButtonProps}
-        className={leftArrowButtonProps.className}
+        className={clsx(classes.button, leftArrowButtonProps.className)}
         ownerState={{ ...ownerState, ...leftArrowButtonProps, hidden: isLeftHidden }}
       >
         {isRtl ? <RightArrowIcon /> : <LeftArrowIcon />}
@@ -121,10 +143,10 @@ export const PickersArrowSwitcher = React.forwardRef(function PickersArrowSwitch
           {children}
         </Typography>
       ) : (
-        <PickersArrowSwitcherSpacer ownerState={ownerState} />
+        <PickersArrowSwitcherSpacer className={classes.spacer} ownerState={ownerState} />
       )}
       <PickersArrowSwitcherButton
-        as={components.RightArrowButton}
+        as={components?.RightArrowButton}
         size="small"
         aria-label={rightArrowButtonText}
         title={rightArrowButtonText}
@@ -132,7 +154,7 @@ export const PickersArrowSwitcher = React.forwardRef(function PickersArrowSwitch
         disabled={isRightDisabled}
         onClick={onRightClick}
         {...rightArrowButtonProps}
-        className={rightArrowButtonProps.className}
+        className={clsx(classes.button, rightArrowButtonProps.className)}
         ownerState={{ ...ownerState, ...rightArrowButtonProps, hidden: isRightHidden }}
       >
         {isRtl ? <LeftArrowIcon /> : <RightArrowIcon />}

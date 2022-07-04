@@ -8,7 +8,6 @@ import {
   DataGridPro,
   useGridApiContext,
   GRID_DETAIL_PANEL_TOGGLE_FIELD,
-  GridEvents,
 } from '@mui/x-data-grid-pro';
 import {
   randomCreatedDate,
@@ -36,7 +35,7 @@ function DetailPanelContent({ row: rowProp }) {
 
   React.useEffect(() => {
     return apiRef.current.subscribeEvent(
-      GridEvents.viewportInnerSizeChange,
+      'viewportInnerSizeChange',
       handleViewportInnerSizeChange,
     );
   }, [apiRef, handleViewportInnerSizeChange]);
@@ -45,7 +44,7 @@ function DetailPanelContent({ row: rowProp }) {
     <Stack
       sx={{
         py: 2,
-        height: 1,
+        height: '100%',
         boxSizing: 'border-box',
         position: 'sticky',
         left: 0,
@@ -204,7 +203,7 @@ export default function FullWidthDetailPanel() {
   const getDetailPanelHeight = React.useCallback(() => 400, []);
 
   return (
-    <Box sx={{ width: 1, height: 400 }}>
+    <Box sx={{ width: '100%', height: 400 }}>
       <DataGridPro
         columns={columns}
         rows={rows}

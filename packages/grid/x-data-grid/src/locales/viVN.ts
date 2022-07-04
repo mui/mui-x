@@ -27,11 +27,17 @@ const viVNGrid: Partial<GridLocaleText> = {
   toolbarFiltersTooltipActive: (count) =>
     count > 1 ? `${count} bộ lọc hoạt động` : `${count} bộ lọc hoạt động`,
 
+  // Quick filter toolbar field
+  // toolbarQuickFilterPlaceholder: 'Search...',
+  // toolbarQuickFilterLabel: 'Search',
+  // toolbarQuickFilterDeleteIconLabel: 'Clear',
+
   // Export selector toolbar button text
   toolbarExport: 'Xuất',
   toolbarExportLabel: 'Xuất',
   toolbarExportCSV: 'Xuất CSV',
   toolbarExportPrint: 'In',
+  // toolbarExportExcel: 'Download as Excel',
 
   // Columns panel text
   columnsPanelTextFieldLabel: 'Tìm kiếm',
@@ -129,6 +135,7 @@ const viVNGrid: Partial<GridLocaleText> = {
   // unGroupColumn: name => `Stop grouping by ${name}`,
 
   // Master/detail
+  // detailPanelToggle: 'Detail panel toggle',
   // expandDetailPanel: 'Expand',
   // collapseDetailPanel: 'Collapse',
 

@@ -26,11 +26,17 @@ const zhCNGrid: Partial<GridLocaleText> = {
   toolbarFiltersTooltipShow: '显示筛选器',
   toolbarFiltersTooltipActive: (count) => `${count} 个筛选器`,
 
+  // Quick filter toolbar field
+  // toolbarQuickFilterPlaceholder: 'Search...',
+  // toolbarQuickFilterLabel: 'Search',
+  // toolbarQuickFilterDeleteIconLabel: 'Clear',
+
   // Export selector toolbar button text
   toolbarExport: '导出',
   toolbarExportLabel: '导出',
   toolbarExportCSV: '导出至CSV',
   // toolbarExportPrint: 'Print',
+  // toolbarExportExcel: 'Download as Excel',
 
   // Columns panel text
   columnsPanelTextFieldLabel: '搜索列',
@@ -127,6 +133,7 @@ const zhCNGrid: Partial<GridLocaleText> = {
   // unGroupColumn: name => `Stop grouping by ${name}`,
 
   // Master/detail
+  // detailPanelToggle: 'Detail panel toggle',
   // expandDetailPanel: 'Expand',
   // collapseDetailPanel: 'Collapse',
 

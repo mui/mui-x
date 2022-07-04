@@ -1,10 +1,9 @@
-import React from 'react';
+import * as React from 'react';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { GridColumnIndex, GridCellColSpanInfo } from '../../../models/gridColumnSpanning';
 import { GridRowId } from '../../../models/gridRows';
 import { GridColumnSpanningApi } from '../../../models/api/gridColumnSpanning';
 import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
-import { GridEvents } from '../../../models/events/gridEvents';
 import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 
 /**
@@ -118,5 +117,5 @@ export const useGridColumnSpanning = (apiRef: React.MutableRefObject<GridApiComm
     lookup.current = {};
   }, []);
 
-  useGridApiEventHandler(apiRef, GridEvents.columnOrderChange, handleColumnReorderChange);
+  useGridApiEventHandler(apiRef, 'columnOrderChange', handleColumnReorderChange);
 };

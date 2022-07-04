@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { GridEventListener, GridEvents } from '../../../models/events';
+import { GridEventListener } from '../../../models/events';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridFilterApi } from '../../../models/api/gridFilterApi';
@@ -25,8 +25,10 @@ import {
   buildAggregatedFilterApplier,
   sanitizeFilterModel,
   mergeStateWithFilterModel,
+  cleanFilterItem,
 } from './gridFilterUtils';
 import { GridStateInitializer } from '../../utils/useGridInitializeState';
+import { isDeepEqual } from '../../../utils/utils';
 
 export const filterStateInitializer: GridStateInitializer<
   Pick<DataGridProcessedProps, 'filterModel' | 'initialState' | 'disableMultipleColumnsFiltering'>
@@ -53,7 +55,6 @@ export const useGridFilter = (
   apiRef: React.MutableRefObject<GridApiCommunity>,
   props: Pick<
     DataGridProcessedProps,
-    | 'initialState'
     | 'filterModel'
     | 'onFilterModelChange'
     | 'filterMode'
@@ -64,12 +65,12 @@ export const useGridFilter = (
 ): void => {
   const logger = useGridLogger(apiRef, 'useGridFilter');
 
-  apiRef.current.unstable_updateControlState({
+  apiRef.current.unstable_registerControlState({
     stateId: 'filter',
     propModel: props.filterModel,
     propOnChange: props.onFilterModelChange,
     stateSelector: gridFilterModelSelector,
-    changeEvent: GridEvents.filterModelChange,
+    changeEvent: 'filterModelChange',
   });
 
   const updateFilteredRows = React.useCallback(() => {
@@ -92,7 +93,7 @@ export const useGridFilter = (
         },
       };
     });
-    apiRef.current.publishEvent(GridEvents.filteredRowsSet);
+    apiRef.current.publishEvent('filteredRowsSet');
   }, [props.filterMode, apiRef]);
 
   /**
@@ -113,7 +114,24 @@ export const useGridFilter = (
       } else {
         items[itemIndex] = item;
       }
-      apiRef.current.setFilterModel({ ...filterModel, items });
+      apiRef.current.setFilterModel({ ...filterModel, items }, 'upsertFilterItem');
+    },
+    [apiRef],
+  );
+
+  const upsertFilterItems = React.useCallback<GridFilterApi['upsertFilterItems']>(
+    (items) => {
+      const filterModel = gridFilterModelSelector(apiRef);
+      const existingItems = [...filterModel.items];
+      items.forEach((item) => {
+        const itemIndex = items.findIndex((filterItem) => filterItem.id === item.id);
+        if (itemIndex === -1) {
+          existingItems.push(item);
+        } else {
+          existingItems[itemIndex] = item;
+        }
+      });
+      apiRef.current.setFilterModel({ ...filterModel, items }, 'upsertFilterItems');
     },
     [apiRef],
   );
@@ -127,7 +145,7 @@ export const useGridFilter = (
         return;
       }
 
-      apiRef.current.setFilterModel({ ...filterModel, items });
+      apiRef.current.setFilterModel({ ...filterModel, items }, 'deleteFilterItem');
     },
     [apiRef],
   );
@@ -147,9 +165,12 @@ export const useGridFilter = (
         if (filterItemOnTarget) {
           newFilterItems = filterItemsWithValue;
         } else if (props.disableMultipleColumnsFiltering) {
-          newFilterItems = [{ columnField: targetColumnField }];
+          newFilterItems = [cleanFilterItem({ columnField: targetColumnField }, apiRef)];
         } else {
-          newFilterItems = [...filterItemsWithValue, { columnField: targetColumnField }];
+          newFilterItems = [
+            ...filterItemsWithValue,
+            cleanFilterItem({ columnField: targetColumnField }, apiRef),
+          ];
         }
 
         apiRef.current.setFilterModel({
@@ -173,21 +194,40 @@ export const useGridFilter = (
       if (filterModel.linkOperator === linkOperator) {
         return;
       }
+      apiRef.current.setFilterModel(
+        {
+          ...filterModel,
+          linkOperator,
+        },
+        'changeLogicOperator',
+      );
+    },
+    [apiRef],
+  );
+
+  const setQuickFilterValues = React.useCallback<GridFilterApi['setQuickFilterValues']>(
+    (values) => {
+      const filterModel = gridFilterModelSelector(apiRef);
+      if (isDeepEqual(filterModel.quickFilterValues, values)) {
+        return;
+      }
       apiRef.current.setFilterModel({
         ...filterModel,
-        linkOperator,
+        quickFilterValues: [...values],
       });
     },
     [apiRef],
   );
 
   const setFilterModel = React.useCallback<GridFilterApi['setFilterModel']>(
-    (model) => {
+    (model, reason) => {
       const currentModel = gridFilterModelSelector(apiRef);
       if (currentModel !== model) {
         logger.debug('Setting filter model');
-        apiRef.current.setState(
+        apiRef.current.unstable_updateControlState(
+          'filter',
           mergeStateWithFilterModel(model, props.disableMultipleColumnsFiltering, apiRef),
+          reason,
         );
         apiRef.current.unstable_applyFilters();
       }
@@ -205,10 +245,12 @@ export const useGridFilter = (
     unstable_applyFilters: applyFilters,
     deleteFilterItem,
     upsertFilterItem,
+    upsertFilterItems,
     setFilterModel,
     showFilterPanel,
     hideFilterPanel,
     getVisibleRowModels,
+    setQuickFilterValues,
   };
 
   useGridApiMethod(apiRef, filterApi, 'GridFilterApi');
@@ -242,8 +284,10 @@ export const useGridFilter = (
       if (filterModel == null) {
         return params;
       }
-      apiRef.current.setState(
+      apiRef.current.unstable_updateControlState(
+        'filter',
         mergeStateWithFilterModel(filterModel, props.disableMultipleColumnsFiltering, apiRef),
+        'restoreState',
       );
 
       return {
@@ -300,7 +344,7 @@ export const useGridFilter = (
   /**
    * EVENTS
    */
-  const handleColumnsChange = React.useCallback<GridEventListener<GridEvents.columnsChange>>(() => {
+  const handleColumnsChange = React.useCallback<GridEventListener<'columnsChange'>>(() => {
     logger.debug('onColUpdated - GridColumns changed, applying filters');
     const filterModel = gridFilterModelSelector(apiRef);
     const filterableColumnsLookup = gridFilterableColumnLookupSelector(apiRef);
@@ -313,7 +357,7 @@ export const useGridFilter = (
   }, [apiRef, logger]);
 
   const handleStrategyProcessorChange = React.useCallback<
-    GridEventListener<GridEvents.activeStrategyProcessorChange>
+    GridEventListener<'activeStrategyProcessorChange'>
   >(
     (methodName) => {
       if (methodName === 'filtering') {
@@ -325,18 +369,10 @@ export const useGridFilter = (
 
   // Do not call `apiRef.current.forceUpdate` to avoid re-render before updating the sorted rows.
   // Otherwise, the state is not consistent during the render
-  useGridApiEventHandler(apiRef, GridEvents.rowsSet, updateFilteredRows);
-  useGridApiEventHandler(
-    apiRef,
-    GridEvents.rowExpansionChange,
-    apiRef.current.unstable_applyFilters,
-  );
-  useGridApiEventHandler(apiRef, GridEvents.columnsChange, handleColumnsChange);
-  useGridApiEventHandler(
-    apiRef,
-    GridEvents.activeStrategyProcessorChange,
-    handleStrategyProcessorChange,
-  );
+  useGridApiEventHandler(apiRef, 'rowsSet', updateFilteredRows);
+  useGridApiEventHandler(apiRef, 'rowExpansionChange', apiRef.current.unstable_applyFilters);
+  useGridApiEventHandler(apiRef, 'columnsChange', handleColumnsChange);
+  useGridApiEventHandler(apiRef, 'activeStrategyProcessorChange', handleStrategyProcessorChange);
 
   /**
    * 1ST RENDER

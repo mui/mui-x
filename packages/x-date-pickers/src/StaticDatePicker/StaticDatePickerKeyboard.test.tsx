@@ -14,7 +14,7 @@ describe('<StaticDatePicker /> keyboard interactions', () => {
         <StaticDatePicker
           autoFocus
           displayStaticWrapperAs="desktop"
-          value={adapterToUse.date('2020-08-13T00:00:00.000')}
+          value={adapterToUse.date(new Date(2020, 7, 13))}
           onChange={() => {}}
           renderInput={(params) => <TextField placeholder="10/10/2018" {...params} />}
         />,
@@ -36,7 +36,7 @@ describe('<StaticDatePicker /> keyboard interactions', () => {
           <StaticDatePicker
             autoFocus
             displayStaticWrapperAs="desktop"
-            value={adapterToUse.date('2020-08-13T00:00:00.000')}
+            value={adapterToUse.date(new Date(2020, 7, 13))}
             onChange={() => {}}
             renderInput={(params) => <TextField placeholder="10/10/2018" {...params} />}
           />,
@@ -56,8 +56,8 @@ describe('<StaticDatePicker /> keyboard interactions', () => {
       <StaticDatePicker
         autoFocus
         displayStaticWrapperAs="desktop"
-        value={adapterToUse.date('2020-08-13T00:00:00.000')}
-        minDate={adapterToUse.date('2020-08-13T00:00:00.000')}
+        value={adapterToUse.date(new Date(2020, 7, 13))}
+        minDate={adapterToUse.date(new Date(2020, 7, 13))}
         onChange={() => {}}
         renderInput={(params) => <TextField {...params} />}
       />,
@@ -75,7 +75,7 @@ describe('<StaticDatePicker /> keyboard interactions', () => {
     expect(document.activeElement).toHaveAccessibleName('Aug 13, 2020');
   });
 
-  context('YearPicker keyboard navigation', () => {
+  describe('YearPicker keyboard navigation', () => {
     [
       { keyCode: 37, key: 'ArrowLeft', expectFocusedYear: '2019' },
       { keyCode: 38, key: 'ArrowUp', expectFocusedYear: '2016' },
@@ -86,12 +86,10 @@ describe('<StaticDatePicker /> keyboard interactions', () => {
         render(
           <StaticDatePicker
             autoFocus
-            // TODO: This prop does not make sense on the static variant
-            open
             openTo="year"
             reduceAnimations
             displayStaticWrapperAs="desktop"
-            value={adapterToUse.date('2020-08-13T00:00:00.000')}
+            value={adapterToUse.date(new Date(2020, 7, 13))}
             onChange={() => {}}
             renderInput={(params) => <TextField {...params} />}
           />,

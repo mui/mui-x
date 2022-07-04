@@ -1,17 +1,14 @@
 import * as React from 'react';
-import {
-  useGridApiEventHandler,
-  gridRowIdsSelector,
-  GridEvents,
-  GridRowId,
-} from '@mui/x-data-grid';
+import { useGridApiEventHandler, gridRowIdsSelector, GridRowId } from '@mui/x-data-grid';
 import { GridApiPro } from '../../../models/gridApiPro';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
+import { GridDetailPanelState } from './gridDetailPanelInterface';
 
 function cacheContentAndHeight(
   apiRef: React.MutableRefObject<GridApiPro>,
   getDetailPanelContent: DataGridProProcessedProps['getDetailPanelContent'],
   getDetailPanelHeight: DataGridProProcessedProps['getDetailPanelHeight'],
+  previousHeightCache: GridDetailPanelState['heightCache'],
 ) {
   if (typeof getDetailPanelContent !== 'function') {
     return {};
@@ -29,17 +26,16 @@ function cacheContentAndHeight(
     {},
   );
 
-  const heightCache = rowIds.reduce<Record<GridRowId, ReturnType<typeof getDetailPanelHeight>>>(
-    (acc, id) => {
-      if (contentCache[id] == null) {
-        return acc;
-      }
-      const params = apiRef.current.getRowParams(id);
-      acc[id] = getDetailPanelHeight(params);
+  const heightCache = rowIds.reduce<GridDetailPanelState['heightCache']>((acc, id) => {
+    if (contentCache[id] == null) {
       return acc;
-    },
-    {},
-  );
+    }
+    const params = apiRef.current.getRowParams(id);
+    const height = getDetailPanelHeight(params);
+    const autoHeight = height === 'auto';
+    acc[id] = { autoHeight, height: !autoHeight ? height : previousHeightCache[id]?.height };
+    return acc;
+  }, {});
 
   return { contentCache, heightCache };
 }
@@ -54,14 +50,19 @@ export const useGridDetailPanelCache = (
         ...state,
         detailPanel: {
           ...state.detailPanel,
-          ...cacheContentAndHeight(apiRef, props.getDetailPanelContent, props.getDetailPanelHeight),
+          ...cacheContentAndHeight(
+            apiRef,
+            props.getDetailPanelContent,
+            props.getDetailPanelHeight,
+            state.detailPanel.heightCache,
+          ),
         },
       };
     });
     apiRef.current.forceUpdate();
   }, [apiRef, props.getDetailPanelContent, props.getDetailPanelHeight]);
 
-  useGridApiEventHandler(apiRef, GridEvents.sortedRowsSet, updateCaches);
+  useGridApiEventHandler(apiRef, 'sortedRowsSet', updateCaches);
 
   const isFirstRender = React.useRef(true);
   if (isFirstRender.current) {

@@ -473,21 +473,8 @@ describe('<DataGrid /> - Keyboard', () => {
   it('should call preventDefault when using keyboard navigation', () => {
     const handleKeyDown = spy((event) => event.defaultPrevented);
 
-    const columns = [
-      {
-        field: 'id',
-      },
-      {
-        field: 'name',
-      },
-    ];
-
-    const rows = [
-      {
-        id: 1,
-        name: 'John',
-      },
-    ];
+    const columns = [{ field: 'id' }, { field: 'name' }];
+    const rows = [{ id: 1, name: 'John' }];
 
     render(
       <div style={{ width: 300, height: 300 }} onKeyDown={handleKeyDown}>
@@ -561,5 +548,27 @@ describe('<DataGrid /> - Keyboard', () => {
     expect(renderCell.callCount).to.equal(4);
     fireEvent.keyDown(input, { key: 'b' });
     expect(renderCell.callCount).to.equal(4);
+  });
+
+  it('should not scroll horizontally when cell is wider than viewport', () => {
+    const columns = [{ field: 'id', width: 400 }, { field: 'name' }];
+    const rows = [
+      { id: 1, name: 'John' },
+      { id: 2, name: 'Doe' },
+    ];
+
+    render(
+      <div style={{ width: 300, height: 300 }}>
+        <DataGrid rows={rows} columns={columns} />
+      </div>,
+    );
+    const virtualScroller = document.querySelector<HTMLElement>('.MuiDataGrid-virtualScroller')!;
+
+    const firstCell = getCell(0, 0);
+    fireClickEvent(firstCell);
+    expect(virtualScroller.scrollLeft).to.equal(0);
+
+    fireEvent.keyDown(firstCell, { key: 'ArrowDown' });
+    expect(virtualScroller.scrollLeft).to.equal(0);
   });
 });

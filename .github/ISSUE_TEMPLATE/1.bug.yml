@@ -59,7 +59,7 @@ body:
       description: Run `npx @mui/envinfo` and post the results. If you encounter issues with TypeScript please include the used tsconfig.
       value: |
         <details>
-          <summary>`npx @mui/envinfo`</summary>
+          <summary><code>npx @mui/envinfo</code></summary>
 
         ```
           Don't forget to mention which browser you used.
@@ -71,4 +71,4 @@ body:
     attributes:
       label: Order ID 💳 (optional)
       description: The [Pro plan](https://mui.com/pricing/) comes with priority over the Community plan. Providing your order ID might give your problem more attention.
-      placeholder: 'ex. #11111'
+      placeholder: 'e.g. 11111'

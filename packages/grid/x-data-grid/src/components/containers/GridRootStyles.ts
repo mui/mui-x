@@ -131,7 +131,7 @@ export const GridRootStyles = styled('div', {
       minWidth: 0,
       flex: 1,
       whiteSpace: 'nowrap',
-      overflow: 'hidden',
+      overflowX: 'hidden',
     },
     [`& .${gridClasses.columnHeaderTitleContainerContent}`]: {
       overflow: 'hidden',
@@ -191,6 +191,9 @@ export const GridRootStyles = styled('div', {
       [`&.${gridClasses['columnSeparator--resizing']}`]: {
         color: theme.palette.text.primary,
       },
+      '& svg': {
+        pointerEvents: 'none',
+      },
     },
     [`& .${gridClasses.iconSeparator}`]: {
       color: 'inherit',
@@ -248,9 +251,11 @@ export const GridRootStyles = styled('div', {
     [`& .${gridClasses.cell}`]: {
       display: 'flex',
       alignItems: 'center',
+      borderBottom: `1px solid ${borderColor}`,
+    },
+    [`& .${gridClasses.row}:not(.${gridClasses['row--dynamicHeight']}) > .${gridClasses.cell}`]: {
       overflow: 'hidden',
       whiteSpace: 'nowrap',
-      borderBottom: `1px solid ${borderColor}`,
     },
     [`& .${gridClasses.cellContent}`]: {
       overflow: 'hidden',

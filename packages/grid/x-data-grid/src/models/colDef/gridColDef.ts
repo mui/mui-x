@@ -19,6 +19,7 @@ import { GridValueOptionsParams } from '../params/gridValueOptionsParams';
 import { GridActionsCellItemProps } from '../../components/cell/GridActionsCellItem';
 import { GridEditCellProps } from '../gridEditRowModel';
 import type { GridValidRowModel } from '../gridRows';
+import { GridApiCommunity } from '../api/gridApiCommunity';
 
 /**
  * Alignment used in position elements in Cells.
@@ -99,12 +100,15 @@ export interface GridColDef<R extends GridValidRowModel = any, V = any, F = V> {
   editable?: boolean;
   /**
    * If `true`, the rows can be grouped based on this column values (pro-plan only).
+   * Only available in DataGridPremium.
+   * TODO: Use module augmentation to move it to `@mui/x-data-grid-premium` (need to modify how we handle column types default values).
    * @default true
    */
   groupable?: boolean;
   /**
    * If `false`, the menu items for column pinning menu will not be rendered.
    * Only available in DataGridPro.
+   * TODO: Use module augmentation to move it to `@mui/x-data-grid-pro` (need to modify how we handle column types default values).
    * @default true
    */
   pinnable?: boolean;
@@ -216,6 +220,19 @@ export interface GridColDef<R extends GridValidRowModel = any, V = any, F = V> {
    */
   filterOperators?: GridFilterOperator<R, V, F>[];
   /**
+   * The callback that generates a filtering function for a given quick filter value.
+   * This function can return `null` to skip filtering for this value and column.
+   * @param {any} value The value with which we want to filter the column.
+   * @param {GridStateColDef} colDef The column from which we want to filter the rows.
+   * @param {React.MutableRefObject<GridApiCommunity>} apiRef Deprecated: The API of the grid.
+   * @returns {null | ((params: GridCellParams) => boolean)} The function to call to check if a row pass this filter value or not.
+   */
+  getApplyQuickFilterFn?: (
+    value: any,
+    colDef: GridStateColDef,
+    apiRef: React.MutableRefObject<GridApiCommunity>,
+  ) => null | ((params: GridCellParams<V, R, F>) => boolean);
+  /**
    * If `true`, this column cannot be reordered.
    * @default false
    */
@@ -232,7 +249,8 @@ export interface GridColDef<R extends GridValidRowModel = any, V = any, F = V> {
   colSpan?: number | ((params: GridCellParams<V, R, F>) => number | undefined);
 }
 
-export interface GridActionsColDef extends GridColDef {
+export interface GridActionsColDef<R extends GridValidRowModel = any, V = any, F = V>
+  extends GridColDef<R, V, F> {
   /**
    * Type allows to merge this object with a default definition [[GridColDef]].
    * @default 'actions'
@@ -243,16 +261,16 @@ export interface GridActionsColDef extends GridColDef {
    * @param {GridRowParams} params The params for each row.
    * @returns {React.ReactElement<GridActionsCellItemProps>[]} An array of [[GridActionsCell]] elements.
    */
-  getActions: (params: GridRowParams) => React.ReactElement<GridActionsCellItemProps>[];
+  getActions: (params: GridRowParams<R>) => React.ReactElement<GridActionsCellItemProps>[];
 }
 
 export type GridEnrichedColDef<R extends GridValidRowModel = any, V = any, F = V> =
   | GridColDef<R, V, F>
-  | GridActionsColDef;
+  | GridActionsColDef<R, V, F>;
 
 export type GridColumns<R extends GridValidRowModel = any> = GridEnrichedColDef<R>[];
 
-export type GridColTypeDef<V = any, F = V> = Omit<GridColDef<V, any, F>, 'field'> & {
+export type GridColTypeDef<V = any, F = V> = Omit<GridColDef<any, V, F>, 'field'> & {
   extendType?: GridNativeColTypes;
 };
 

@@ -27,11 +27,17 @@ const nlNLGrid: Partial<GridLocaleText> = {
   toolbarFiltersTooltipActive: (count) =>
     count > 1 ? `${count} actieve filters` : `${count} filter actief`,
 
+  // Quick filter toolbar field
+  // toolbarQuickFilterPlaceholder: 'Search...',
+  // toolbarQuickFilterLabel: 'Search',
+  // toolbarQuickFilterDeleteIconLabel: 'Clear',
+
   // Export selector toolbar button text
   toolbarExport: 'Exporteren',
   toolbarExportLabel: 'Exporteren',
   toolbarExportCSV: 'Exporteer naar CSV',
   toolbarExportPrint: 'Print',
+  // toolbarExportExcel: 'Download as Excel',
 
   // Columns panel text
   columnsPanelTextFieldLabel: 'Zoek kolom',
@@ -131,6 +137,7 @@ const nlNLGrid: Partial<GridLocaleText> = {
   unGroupColumn: (name) => `Stop groeperen op ${name}`,
 
   // Master/detail
+  // detailPanelToggle: 'Detail panel toggle',
   // expandDetailPanel: 'Expand',
   // collapseDetailPanel: 'Collapse',
 

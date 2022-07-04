@@ -12,7 +12,7 @@ import {
   GridValidRowModel,
 } from '@mui/x-data-grid';
 import { useDataGridProComponent } from './useDataGridProComponent';
-import { DataGridProProps } from '../models';
+import { DataGridProProps } from '../models/dataGridProProps';
 import { useDataGridProProps } from './useDataGridProProps';
 import { DataGridProVirtualScroller } from '../components/DataGridProVirtualScroller';
 import { DataGridProColumnHeaders } from '../components/DataGridProColumnHeaders';
@@ -84,6 +84,10 @@ DataGridProRaw.propTypes = {
    * @default false
    */
   autoPageSize: PropTypes.bool,
+  /**
+   * Controls the modes of the cells.
+   */
+  cellModesModel: PropTypes.object,
   /**
    * If `true`, the grid get a first column with a checkbox that allows to select rows.
    * @default false
@@ -215,15 +219,10 @@ DataGridProRaw.propTypes = {
    */
   disableMultipleColumnsSorting: PropTypes.bool,
   /**
-   * If `true`, multiple selection using the CTRL or CMD key is disabled.
+   * If `true`, multiple selection using the Ctrl or CMD key is disabled.
    * @default false
    */
   disableMultipleSelection: PropTypes.bool,
-  /**
-   * If `true`, the row grouping is disabled.
-   * @default false
-   */
-  disableRowGrouping: PropTypes.bool,
   /**
    * If `true`, the selection on click on a row or cell is disabled.
    * @default false
@@ -254,7 +253,6 @@ DataGridProRaw.propTypes = {
   experimentalFeatures: PropTypes.shape({
     newEditingApi: PropTypes.bool,
     preventCommitWhileValidating: PropTypes.bool,
-    rowGrouping: PropTypes.bool,
     warnIfFocusStateIsNotSynced: PropTypes.bool,
   }),
   /**
@@ -283,6 +281,8 @@ DataGridProRaw.propTypes = {
       }),
     ).isRequired,
     linkOperator: PropTypes.oneOf(['and', 'or']),
+    quickFilterLogicOperator: PropTypes.oneOf(['and', 'or']),
+    quickFilterValues: PropTypes.array,
   }),
   /**
    * Function that applies CSS classes dynamically on cells.
@@ -299,10 +299,18 @@ DataGridProRaw.propTypes = {
   /**
    * Function that returns the height of the row detail panel.
    * @param {GridRowParams} params With all properties from [[GridRowParams]].
-   * @returns {number} The height in pixels.
+   * @returns {number | string} The height in pixels or "auto" to use the content height.
    * @default "() => 500"
    */
   getDetailPanelHeight: PropTypes.func,
+  /**
+   * Function that returns the estimated height for a row.
+   * Only works if dynamic row height is used.
+   * Once the row height is measured this value is discarded.
+   * @param {GridRowHeightParams} params With all properties from [[GridRowHeightParams]].
+   * @returns {number | null} The estimated row height value. If `null` or `undefined` then the default row height, based on the density, is applied.
+   */
+  getEstimatedRowHeight: PropTypes.func,
   /**
    * Function that applies CSS classes dynamically on rows.
    * @param {GridRowClassNameParams} params With all properties from [[GridRowClassNameParams]].
@@ -312,7 +320,7 @@ DataGridProRaw.propTypes = {
   /**
    * Function that sets the row height per row.
    * @param {GridRowHeightParams} params With all properties from [[GridRowHeightParams]].
-   * @returns {GridRowHeightReturnValue} The row height value. If `null` or `undefined` then the default row height is applied.
+   * @returns {GridRowHeightReturnValue} The row height value. If `null` or `undefined` then the default row height is applied. If "auto" then the row height is calculated based on the content.
    */
   getRowHeight: PropTypes.func,
   /**
@@ -397,6 +405,13 @@ DataGridProRaw.propTypes = {
    */
   isRowSelectable: PropTypes.func,
   /**
+   * If `true`, the selection model will retain selected rows that do not exist.
+   * Useful when using server side pagination and row selections need to be retained
+   * when changing pages.
+   * @default false
+   */
+  keepNonExistentRowsSelected: PropTypes.bool,
+  /**
    * If `true`, a  loading overlay is displayed.
    */
   loading: PropTypes.bool,
@@ -471,6 +486,12 @@ DataGridProRaw.propTypes = {
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onCellKeyDown: PropTypes.func,
+  /**
+   * Callback fired when the `cellModesModel` prop changes.
+   * @param {GridCellModesModel} cellModesModel Object containig which cells are in "edit" mode.
+   * @param {GridCallbackDetails} details Additional details for this callback.
+   */
+  onCellModesModelChange: PropTypes.func,
   /**
    * Callback fired when a click event comes from a column header element.
    * @param {GridColumnHeaderParams} params With all properties from [[GridColumnHeaderParams]].
@@ -583,6 +604,20 @@ DataGridProRaw.propTypes = {
    */
   onFilterModelChange: PropTypes.func,
   /**
+   * Callback fired when the menu is closed.
+   * @param {GridMenuParams} params With all properties from [[GridMenuParams]].
+   * @param {MuiEvent<{}>} event The event object.
+   * @param {GridCallbackDetails} details Additional details for this callback.
+   */
+  onMenuClose: PropTypes.func,
+  /**
+   * Callback fired when the menu is opened.
+   * @param {GridMenuParams} params With all properties from [[GridMenuParams]].
+   * @param {MuiEvent<{}>} event The event object.
+   * @param {GridCallbackDetails} details Additional details for this callback.
+   */
+  onMenuOpen: PropTypes.func,
+  /**
    * Callback fired when the current page has changed.
    * @param {number} page Index of the page displayed on the Grid.
    * @param {GridCallbackDetails} details Additional details for this callback.
@@ -660,11 +695,11 @@ DataGridProRaw.propTypes = {
    */
   onRowEditStop: PropTypes.func,
   /**
-   * Callback fired when the row grouping model changes.
-   * @param {GridRowGroupingModel} model Columns used as grouping criteria.
+   * Callback fired when the `rowModesModel` prop changes.
+   * @param {GridRowModesModel} rowModesModel Object containig which rows are in "edit" mode.
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
-  onRowGroupingModelChange: PropTypes.func,
+  onRowModesModelChange: PropTypes.func,
   /**
    * Callback fired when a row is being reordered.
    * @param {GridRowOrderChangeParams} params With all properties from [[GridRowOrderChangeParams]].
@@ -749,20 +784,14 @@ DataGridProRaw.propTypes = {
    */
   rowCount: PropTypes.number,
   /**
-   * If `single`, all column we are grouping by will be represented in the same grouping the same column.
-   * If `multiple`, each column we are grouping by will be represented in its own column.
-   * @default 'single'
-   */
-  rowGroupingColumnMode: PropTypes.oneOf(['multiple', 'single']),
-  /**
-   * Set the row grouping model of the grid.
-   */
-  rowGroupingModel: PropTypes.arrayOf(PropTypes.string),
-  /**
    * Set the height in pixel of a row in the grid.
    * @default 52
    */
   rowHeight: PropTypes.number,
+  /**
+   * Controls the modes of the rows.
+   */
+  rowModesModel: PropTypes.object,
   /**
    * If `true`, the reordering of rows is enabled.
    * @default false

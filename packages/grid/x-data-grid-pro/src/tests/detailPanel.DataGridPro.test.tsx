@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {
   DataGridPro,
-  GridApiRef,
+  GridApi,
   useGridApiRef,
   DataGridProProps,
   GridRowParams,
@@ -10,7 +10,7 @@ import {
 import { expect } from 'chai';
 import { spy } from 'sinon';
 // @ts-ignore Remove once the test utils are typed
-import { createRenderer, fireEvent, screen } from '@mui/monorepo/test/utils';
+import { createRenderer, fireEvent, screen, waitFor } from '@mui/monorepo/test/utils';
 import { getRow, getCell, getColumnValues } from 'test/utils/helperFn';
 import { useData } from 'storybook/src/hooks/useData';
 
@@ -19,7 +19,7 @@ const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 describe('<DataGridPro /> - Detail panel', () => {
   const { render } = createRenderer({ clock: 'fake' });
 
-  let apiRef: GridApiRef;
+  let apiRef: React.MutableRefObject<GridApi>;
 
   const TestCase = ({ nbRows = 20, ...other }: Partial<DataGridProProps> & { nbRows?: number }) => {
     apiRef = useGridApiRef();
@@ -73,9 +73,100 @@ describe('<DataGridPro /> - Detail panel', () => {
     );
     expect(getColumnValues(1)[0]).to.equal('0');
     const virtualScroller = document.querySelector('.MuiDataGrid-virtualScroller')!;
-    virtualScroller.scrollTop = 250;
+    virtualScroller.scrollTop = 250; // 50 + 50 (detail panel) + 50 + 100 (detail panel * 2)
     virtualScroller.dispatchEvent(new Event('scroll'));
     expect(getColumnValues(1)[0]).to.equal('2'); // If there was no expanded row, the first rendered would be 5
+  });
+
+  it('should derive the height from the content if getDetailPanelHeight returns "auto"', async function test() {
+    if (isJSDOM) {
+      this.skip(); // Needs layout
+    }
+    const rowHeight = 50;
+    const detailPanelHeight = 100;
+    render(
+      <TestCase
+        nbRows={1}
+        rowHeight={rowHeight}
+        getDetailPanelContent={() => <div style={{ height: detailPanelHeight }} />}
+        getDetailPanelHeight={() => 'auto'}
+      />,
+    );
+    fireEvent.click(screen.getAllByRole('button', { name: 'Expand' })[0]);
+
+    await waitFor(() => {
+      expect(getRow(0)).toHaveComputedStyle({ marginBottom: `${detailPanelHeight}px` });
+    });
+
+    const virtualScrollerContent = document.querySelector('.MuiDataGrid-virtualScrollerContent')!;
+    expect(virtualScrollerContent).toHaveInlineStyle({
+      width: 'auto',
+      height: `${rowHeight + detailPanelHeight}px`,
+    });
+
+    const detailPanels = document.querySelector('.MuiDataGrid-detailPanels');
+    expect(detailPanels!.children[0]).toHaveComputedStyle({
+      top: `${rowHeight}px`,
+      height: `${detailPanelHeight}px`,
+    });
+  });
+
+  it('should update the detail panel height if the content height changes when getDetailPanelHeight returns "auto"', async function test() {
+    if (isJSDOM) {
+      this.skip(); // Needs layout
+    }
+    function ExpandableCell() {
+      const [expanded, setExpanded] = React.useState(false);
+      return (
+        <div style={{ height: expanded ? 200 : 100 }}>
+          <button onClick={() => setExpanded(!expanded)}>
+            {expanded ? 'Decrease' : 'Increase'}
+          </button>
+        </div>
+      );
+    }
+    const rowHeight = 50;
+    render(
+      <TestCase
+        nbRows={1}
+        rowHeight={rowHeight}
+        getDetailPanelContent={() => <ExpandableCell />}
+        getDetailPanelHeight={() => 'auto'}
+      />,
+    );
+    const virtualScrollerContent = document.querySelector('.MuiDataGrid-virtualScrollerContent')!;
+    fireEvent.click(screen.getByRole('button', { name: 'Expand' }));
+
+    await waitFor(() => {
+      expect(getRow(0)).toHaveComputedStyle({ marginBottom: '100px' });
+    });
+
+    expect(virtualScrollerContent).toHaveInlineStyle({
+      width: 'auto',
+      height: `${rowHeight + 100}px`,
+    });
+
+    const detailPanels = document.querySelector('.MuiDataGrid-detailPanels');
+    expect(detailPanels!.children[0]).toHaveComputedStyle({
+      top: `${rowHeight}px`,
+      height: `100px`,
+    });
+
+    fireEvent.click(screen.getByRole('button', { name: 'Increase' }));
+
+    await waitFor(() => {
+      expect(getRow(0)).toHaveComputedStyle({ marginBottom: '200px' });
+    });
+
+    expect(virtualScrollerContent).toHaveInlineStyle({
+      width: 'auto',
+      height: `${rowHeight + 200}px`,
+    });
+
+    expect(detailPanels!.children[0]).toHaveComputedStyle({
+      top: `${rowHeight}px`,
+      height: `200px`,
+    });
   });
 
   it('should position correctly the detail panels', function test() {
@@ -155,6 +246,46 @@ describe('<DataGridPro /> - Detail panel', () => {
     expect(virtualScroller.scrollTop).to.equal(50);
   });
 
+  it('should not scroll vertically when navigating expanded row cells', function test() {
+    if (isJSDOM) {
+      this.skip(); // Needs layout
+    }
+    function Component() {
+      const data = useData(10, 4);
+      return (
+        <TestCase
+          {...data}
+          getDetailPanelContent={() => <div />}
+          initialState={{
+            detailPanel: {
+              expandedRowIds: [0],
+            },
+          }}
+          hideFooter
+        />
+      );
+    }
+    render(<Component />);
+    const virtualScroller = document.querySelector('.MuiDataGrid-virtualScroller')!;
+
+    const cell = getCell(0, 0);
+
+    fireEvent.mouseUp(cell);
+    fireEvent.click(cell);
+
+    fireEvent.keyDown(cell, { key: 'ArrowRight' });
+    virtualScroller.dispatchEvent(new Event('scroll'));
+    expect(virtualScroller.scrollTop).to.equal(0);
+
+    fireEvent.keyDown(getCell(0, 1), { key: 'ArrowRight' });
+    virtualScroller.dispatchEvent(new Event('scroll'));
+    expect(virtualScroller.scrollTop).to.equal(0);
+
+    fireEvent.keyDown(getCell(0, 2), { key: 'ArrowRight' });
+    virtualScroller.dispatchEvent(new Event('scroll'));
+    expect(virtualScroller.scrollTop).to.equal(0);
+  });
+
   it('should toggle the detail panel when pressing Ctrl/Cmd+Enter', () => {
     render(<TestCase getDetailPanelContent={() => <div>Detail</div>} />);
     expect(screen.queryByText('Detail')).to.equal(null);
@@ -214,17 +345,17 @@ describe('<DataGridPro /> - Detail panel', () => {
     //   2x during state initialization
     // + 2x during state initialization (StrictMode)
     // + 2x when sortedRowsSet is fired
-    // + 2x when sortedRowsSet is fired (StrictMode)
-    // + 2x when the effect runs for the first time = 10x
-    expect(getDetailPanelContent.callCount).to.equal(10);
+    // + 2x when sortedRowsSet is fired (StrictMode) = 8x
+    expect(getDetailPanelContent.callCount).to.equal(8);
     fireEvent.click(screen.getByRole('button', { name: 'Expand' }));
-    expect(getDetailPanelContent.callCount).to.equal(10);
+    expect(getDetailPanelContent.callCount).to.equal(8);
 
     fireEvent.click(screen.getByRole('button', { name: /next page/i }));
-    expect(getDetailPanelContent.callCount).to.equal(10);
+    expect(getDetailPanelContent.callCount).to.equal(8);
 
     const getDetailPanelContent2 = spy(() => <div>Detail</div>);
     setProps({ getDetailPanelContent: getDetailPanelContent2 });
+    fireEvent.click(screen.getByRole('button', { name: 'Expand' }));
     expect(getDetailPanelContent2.callCount).to.equal(2); // Called 2x by the effect
     fireEvent.click(screen.getByRole('button', { name: /previous page/i }));
     expect(getDetailPanelContent2.callCount).to.equal(2);
@@ -249,20 +380,54 @@ describe('<DataGridPro /> - Detail panel', () => {
     //   2x during state initialization
     // + 2x during state initialization (StrictMode)
     // + 2x when sortedRowsSet is fired
-    // + 2x when sortedRowsSet is fired (StrictMode)
-    // + 2x when the effect runs for the first time = 10x
-    expect(getDetailPanelHeight.callCount).to.equal(10);
+    // + 2x when sortedRowsSet is fired (StrictMode) = 8x
+    expect(getDetailPanelHeight.callCount).to.equal(8);
     fireEvent.click(screen.getByRole('button', { name: 'Expand' }));
-    expect(getDetailPanelHeight.callCount).to.equal(10);
+    expect(getDetailPanelHeight.callCount).to.equal(8);
 
     fireEvent.click(screen.getByRole('button', { name: /next page/i }));
-    expect(getDetailPanelHeight.callCount).to.equal(10);
+    expect(getDetailPanelHeight.callCount).to.equal(8);
 
     const getDetailPanelHeight2 = spy(() => 200);
     setProps({ getDetailPanelHeight: getDetailPanelHeight2 });
+    fireEvent.click(screen.getByRole('button', { name: 'Expand' }));
     expect(getDetailPanelHeight2.callCount).to.equal(2); // Called 2x by the effect
     fireEvent.click(screen.getByRole('button', { name: /previous page/i }));
     expect(getDetailPanelHeight2.callCount).to.equal(2);
+  });
+
+  it('should update the panel height if getDetailPanelHeight is changed while the panel is open', function test() {
+    if (isJSDOM) {
+      this.skip(); // Doesn't work with mocked window.getComputedStyle
+    }
+
+    const getDetailPanelHeight = spy(() => 100);
+    const { setProps } = render(
+      <TestCase
+        columns={[{ field: 'brand' }]}
+        rows={[
+          { id: 0, brand: 'Nike' },
+          { id: 1, brand: 'Adidas' },
+        ]}
+        getDetailPanelContent={() => <div>Detail</div>}
+        getDetailPanelHeight={getDetailPanelHeight}
+        rowsPerPageOptions={[1]}
+        pageSize={1}
+        pagination
+        autoHeight
+      />,
+    );
+
+    fireEvent.click(screen.getByRole('button', { name: 'Expand' }));
+    const detailPanel = document.querySelector('.MuiDataGrid-detailPanels')!.firstChild;
+    expect(detailPanel).toHaveComputedStyle({ top: `52px`, height: `100px` });
+    const virtualScroller = document.querySelector('.MuiDataGrid-virtualScroller')!;
+    expect(virtualScroller.scrollHeight).to.equal(100 + 52);
+
+    const getDetailPanelHeight2 = spy(() => 200);
+    setProps({ getDetailPanelHeight: getDetailPanelHeight2 });
+    expect(detailPanel).toHaveComputedStyle({ top: `52px`, height: `200px` });
+    expect(virtualScroller.scrollHeight).to.equal(200 + 52);
   });
 
   it('should only call getDetailPanelHeight on the rows that have detail content', () => {
@@ -281,9 +446,8 @@ describe('<DataGridPro /> - Detail panel', () => {
     //   1x during state initialization
     // + 1x during state initialization (StrictMode)
     // + 1x when sortedRowsSet is fired
-    // + 1x when sortedRowsSet is fired (StrictMode)
-    // + 1x when the effect runs for the first time = 5x
-    expect(getDetailPanelHeight.callCount).to.equal(5);
+    // + 1x when sortedRowsSet is fired (StrictMode) = 4x
+    expect(getDetailPanelHeight.callCount).to.equal(4);
     expect(getDetailPanelHeight.lastCall.args[0].id).to.equal(0);
   });
 
@@ -301,6 +465,26 @@ describe('<DataGridPro /> - Detail panel', () => {
     fireEvent.mouseUp(cell);
     fireEvent.click(cell);
     expect(handleSelectionModelChange.callCount).to.equal(0);
+  });
+
+  // See https://github.com/mui/mui-x/issues/4607
+  it('should make detail panel to take full width of the content', function test() {
+    if (isJSDOM) {
+      this.skip(); // Needs layout
+    }
+    render(
+      <TestCase
+        getDetailPanelContent={() => <div>Detail</div>}
+        columns={[{ field: 'id', width: 400 }]}
+      />,
+    );
+    fireEvent.click(getCell(1, 0).querySelector('button'));
+    expect(screen.queryByText('Detail').offsetWidth).to.equal(50 + 400);
+  });
+
+  it('should add an accessible name to the toggle column', () => {
+    render(<TestCase getDetailPanelContent={() => <div />} />);
+    expect(screen.queryByRole('columnheader', { name: /detail panel toggle/i })).not.to.equal(null);
   });
 
   describe('prop: onDetailPanelsExpandedRowIds', () => {

@@ -2,7 +2,6 @@ import * as React from 'react';
 import { unstable_composeClasses as composeClasses } from '@mui/material';
 import {
   useGridLogger,
-  GridEvents,
   useGridApiEventHandler,
   GridEventListener,
   getDataGridUtilityClass,
@@ -59,7 +58,7 @@ export const useGridRowReorder = (
     return !props.rowReordering || !!sortModel.length || treeDepth !== 1;
   }, [props.rowReordering, sortModel, treeDepth]);
 
-  const handleDragStart = React.useCallback<GridEventListener<GridEvents.rowDragStart>>(
+  const handleDragStart = React.useCallback<GridEventListener<'rowDragStart'>>(
     (params, event) => {
       // Call the gridEditRowsStateSelector directly to avoid infnite loop
       const editRowsState = gridEditRowsStateSelector(apiRef.current.state);
@@ -86,10 +85,12 @@ export const useGridRowReorder = (
     [isRowReorderDisabled, classes.rowDragging, logger, apiRef],
   );
 
-  const handleDragOver = React.useCallback<
-    GridEventListener<GridEvents.cellDragOver | GridEvents.rowDragOver>
-  >(
+  const handleDragOver = React.useCallback<GridEventListener<'cellDragOver' | 'rowDragOver'>>(
     (params, event) => {
+      if (dragRowId === '') {
+        return;
+      }
+
       logger.debug(`Dragging over row ${params.id}`);
       event.preventDefault();
       // Prevent drag events propagation.
@@ -104,11 +105,11 @@ export const useGridRowReorder = (
     [apiRef, logger, dragRowId],
   );
 
-  const handleDragEnd = React.useCallback<GridEventListener<GridEvents.rowDragEnd>>(
+  const handleDragEnd = React.useCallback<GridEventListener<'rowDragEnd'>>(
     (params, event): void => {
       // Call the gridEditRowsStateSelector directly to avoid infnite loop
       const editRowsState = gridEditRowsStateSelector(apiRef.current.state);
-      if (isRowReorderDisabled || Object.keys(editRowsState).length !== 0) {
+      if (dragRowId === '' || isRowReorderDisabled || Object.keys(editRowsState).length !== 0) {
         return;
       }
 
@@ -134,7 +135,7 @@ export const useGridRowReorder = (
           oldIndex: originRowIndex.current!,
         };
 
-        apiRef.current.publishEvent(GridEvents.rowOrderChange, rowOrderChangeParams);
+        apiRef.current.publishEvent('rowOrderChange', rowOrderChangeParams);
       }
 
       setDragRowId('');
@@ -142,9 +143,9 @@ export const useGridRowReorder = (
     [isRowReorderDisabled, logger, apiRef, dragRowId],
   );
 
-  useGridApiEventHandler(apiRef, GridEvents.rowDragStart, handleDragStart);
-  useGridApiEventHandler(apiRef, GridEvents.rowDragOver, handleDragOver);
-  useGridApiEventHandler(apiRef, GridEvents.rowDragEnd, handleDragEnd);
-  useGridApiEventHandler(apiRef, GridEvents.cellDragOver, handleDragOver);
-  useGridApiOptionHandler(apiRef, GridEvents.rowOrderChange, props.onRowOrderChange);
+  useGridApiEventHandler(apiRef, 'rowDragStart', handleDragStart);
+  useGridApiEventHandler(apiRef, 'rowDragOver', handleDragOver);
+  useGridApiEventHandler(apiRef, 'rowDragEnd', handleDragEnd);
+  useGridApiEventHandler(apiRef, 'cellDragOver', handleDragOver);
+  useGridApiOptionHandler(apiRef, 'rowOrderChange', props.onRowOrderChange);
 };
