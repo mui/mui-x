@@ -121,7 +121,7 @@ export const PickersToolbar = React.forwardRef(function PickersToolbar<TDate, TV
           ownerState={ownerState}
           color="inherit"
           data-mui-test="toggle-mobile-keyboard-view"
-          aria-label={localeText.toolbarInputTypeSwitchingButtonAriaLabel(
+          aria-label={localeText.toolbarInterfaceModifierButtonAriaLabel(
             isMobileKeyboardViewOpen,
             viewType,
           )}

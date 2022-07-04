@@ -16,7 +16,7 @@ const enUSPickers: PickersLocaleText<any> = {
     view === 'year'
       ? 'year view is open, switch to calendar view'
       : 'calendar view is open, switch to year view',
-  toolbarInputTypeSwitchingButtonAriaLabel: (
+  toolbarInterfaceModifierButtonAriaLabel: (
     isKeyboardInputOpen: boolean,
     viewType: 'calendar' | 'clock',
   ) =>
