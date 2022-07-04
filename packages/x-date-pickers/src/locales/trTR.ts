@@ -24,6 +24,12 @@ const trTRPickers: Partial<PickersLocaleText<any>> = {
   okButtonLabel: 'Tamam',
   todayButtonLabel: 'Bugün',
 
+  // Toolbar titles
+  // datePickerDefaultToolbarTitle: 'Select date',
+  // dateTimePickerDefaultToolbarTitle: 'Select date & time',
+  // timePickerDefaultToolbarTitle: 'Select time',
+  // dateRangePickerDefaultToolbarTitle: 'Select date range',
+
   // Clock labels
   // clockLabelText: (view, time, adapter) => `Select ${view}. ${time === null ? 'No time selected' : `Selected time is ${adapter.format(time, 'fullTime')}`}`,
   // hoursClockNumberText: hours => `${hours} hours`,

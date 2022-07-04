@@ -26,6 +26,12 @@ const ptBRPickers: Partial<PickersLocaleText<any>> = {
   okButtonLabel: 'OK',
   todayButtonLabel: 'Hoje',
 
+  // Toolbar titles
+  // datePickerDefaultToolbarTitle: 'Select date',
+  // dateTimePickerDefaultToolbarTitle: 'Select date & time',
+  // timePickerDefaultToolbarTitle: 'Select time',
+  // dateRangePickerDefaultToolbarTitle: 'Select date range',
+
   // Clock labels
   clockLabelText: (view, time, adapter) =>
     `Selecione ${view}. ${
