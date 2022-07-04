@@ -4,7 +4,7 @@ title: Data Grid - API object
 
 # Data grid - API object
 
-<p class="description">Interact with the grid using its api.</p>
+<p class="description">Interact with the grid using its API.</p>
 
 ## What is the API object ?
 
