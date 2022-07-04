@@ -6,7 +6,7 @@ import MenuItem from '@mui/material/MenuItem';
 import DialogActions from '@mui/material/DialogActions';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
-import { StaticDateTimePicker } from '@mui/x-date-pickers/StaticDateTimePicker';
+import { StaticDatePicker } from '@mui/x-date-pickers/StaticDatePicker';
 import { PickersActionBarProps } from '@mui/x-date-pickers/PickersActionBar';
 import { useLocaleText, WrapperVariantContext } from '@mui/x-date-pickers/internals';
 import useId from '@mui/utils/useId';
@@ -115,7 +115,7 @@ export default function ActionBarComponent() {
   );
   return (
     <LocalizationProvider dateAdapter={AdapterDateFns}>
-      <StaticDateTimePicker
+      <StaticDatePicker
         onChange={(newValue) => setValue(newValue)}
         value={value}
         renderInput={(params) => <TextField {...params} />}
