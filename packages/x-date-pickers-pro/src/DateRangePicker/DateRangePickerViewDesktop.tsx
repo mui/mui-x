@@ -12,6 +12,7 @@ import {
   DayPicker,
   buildDeprecatedPropsWarning,
   DayPickerProps,
+  DAY_MARGIN,
 } from '@mui/x-date-pickers/internals';
 import { calculateRangePreview } from './date-range-manager';
 import { DateRange } from '../internal/models';
@@ -58,9 +59,13 @@ const DateRangePickerViewDesktopContainer = styled('div')(({ theme }) => ({
   },
 }));
 
+const DAY_RANGE_SIZE = 40;
+
+const weeksContainerHeight = (DAY_RANGE_SIZE + DAY_MARGIN * 2) * 6;
+
 const DateRangePickerViewDesktopCalendar = styled(DayPicker)({
   minWidth: 312,
-  minHeight: 288,
+  minHeight: weeksContainerHeight,
 }) as typeof DayPicker;
 
 const DateRangePickerViewDesktopArrowSwitcher = styled(PickersArrowSwitcher)({

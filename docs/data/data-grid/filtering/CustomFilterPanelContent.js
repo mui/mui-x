@@ -69,6 +69,12 @@ export default function CustomFilterPanelContent() {
                 size: 'small',
                 sx: { mt: 'auto' },
               },
+              valueInputProps: {
+                InputComponentProps: {
+                  variant: 'outlined',
+                  size: 'small',
+                },
+              },
               deleteIconProps: {
                 sx: {
                   '& .MuiSvgIcon-root': { color: '#d32f2f' },
