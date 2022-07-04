@@ -18,6 +18,7 @@ export * from './koKR';
 export * from './nlNL';
 export * from './plPL';
 export * from './ptBR';
+export * from './roRO';
 export * from './ruRU';
 export * from './skSK';
 export * from './svSE';
