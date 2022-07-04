@@ -7,7 +7,7 @@
     }}
     renderInput={(params) => <TextField {...params} />}
     headerDayFormatter={(day) => `${day}.`}
-    toolbarFormat="eee	dd MMMM"
+    toolbarFormat="eee dd MMMM"
     showToolbar
   />
 </LocalizationProvider>

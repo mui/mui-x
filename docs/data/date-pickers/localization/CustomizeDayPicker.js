@@ -17,7 +17,7 @@ export default function CustomizeDayPicker() {
         }}
         renderInput={(params) => <TextField {...params} />}
         headerDayFormatter={(day) => `${day}.`}
-        toolbarFormat="ee edd MMMM"
+        toolbarFormat="eee dd MMMM"
         showToolbar
       />
     </LocalizationProvider>
