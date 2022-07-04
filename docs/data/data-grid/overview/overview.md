@@ -18,7 +18,7 @@ The component leverages the power of React and TypeScript, to provide the best U
 > Visit the [installation guide](/x/react-data-grid/getting-started/#installation) to learn how to install the correct package version and dependencies.
 
 Data tables display information in a grid-like format of rows and columns.
-They organize information in a way that’s easy to scan so that users can look for patterns and insights.
+They organize information in a way that's easy to scan so that users can look for patterns and insights.
 
 The data grid comes in two different versions:
 

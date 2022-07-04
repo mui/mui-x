@@ -35,7 +35,7 @@ Most of MUI X's components are available for free, but more advanced features re
 
 MUI Core focuses on empowering the creation of great design systems with React.
 It comes with two themes (Material Design and a in-house one).
-It’s about solving design problems.
+It's about solving design problems.
 It contains foundational UI component libraries like Material UI and MUI Base.
 These libraries are open source, MIT-licensed, and free forever.
 
