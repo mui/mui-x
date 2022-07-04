@@ -14,7 +14,7 @@ You can find the list of all the available API methods on the [GridApi page](/x/
 
 :::warning
 All the methods prefixed by `unstable_` are private.
-They should not be used by third party user and can be removed / renamed / reworked at any time.
+They should not be used by third party users and can be removed, renamed or reworked at any time.
 
 If you need to use a private method, please open a GitHub issue describing your use case.
 We will help you to achieve the same goal with public methods, or we will discuss making this specific method public.
