@@ -60,3 +60,4 @@ The following example changes this behavior by also requiring <kbd class="key">C
 
 - [DataGrid](/x/api/data-grid/data-grid/)
 - [DataGridPro](/x/api/data-grid/data-grid-pro/)
+- [DataGridPremium](/x/api/data-grid/data-grid-premium/)

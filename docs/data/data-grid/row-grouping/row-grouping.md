@@ -277,6 +277,16 @@ const rows = apiRef.current.getRowGroupChildren({
 
 {{"demo": "RowGroupingGetRowGroupChildren.js", "bg": "inline", "defaultCodeOpen": false}}
 
+## 🚧 Row group panel
+
+:::warning
+This feature isn't implemented yet. It's coming.
+
+👍 Upvote [issue #5235](https://github.com/mui/mui-x/issues/5235) if you want to see it land faster.
+:::
+
+With this panel, your users will be able to control which columns are used for grouping just by dragging them inside the panel.
+
 ## Full example
 
 {{"demo": "RowGroupingFullExample.js", "bg": "inline", "defaultCodeOpen": false}}
@@ -289,3 +299,4 @@ const rows = apiRef.current.getRowGroupChildren({
 
 - [DataGrid](/x/api/data-grid/data-grid/)
 - [DataGridPro](/x/api/data-grid/data-grid-pro/)
+- [DataGridPremium](/x/api/data-grid/data-grid-premium/)

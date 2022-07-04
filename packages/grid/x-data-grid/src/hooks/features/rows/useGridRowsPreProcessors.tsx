@@ -1,5 +1,4 @@
 import * as React from 'react';
-
 import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridRowTreeConfig } from '../../../models';
 import {
