@@ -27,7 +27,7 @@ Depending on where you are trying to access this variable, you will have to use 
 
 ### Use it inside the grid
 
-If you need to access the api object inside component slots or inside renders (e.g: `renderCell`, `renderHeader`),
+If you need to access the API object inside component slots or inside renders (e.g: `renderCell`, `renderHeader`),
 you can use the `useGridApiContext` hook.
 
 ```tsx
