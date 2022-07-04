@@ -2,23 +2,41 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import Autocomplete, { AutocompleteProps } from '@mui/material/Autocomplete';
 import Chip from '@mui/material/Chip';
-import TextField from '@mui/material/TextField';
 import { unstable_useId as useId } from '@mui/material/utils';
-import { GridFilterItem } from '../../../models/gridFilterItem';
+import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
+import { GridFilterInputValueProps } from './GridFilterInputValueProps';
 
 export type GridFilterInputMultipleValueProps = {
-  item: GridFilterItem;
-  applyValue: (value: GridFilterItem) => void;
-  // Is any because if typed as GridApiRef a dep cycle occurs. Same happens if ApiContext is used.
-  apiRef: any;
-  focusElementRef?: React.Ref<any>;
   type?: 'text' | 'number';
-} & Omit<AutocompleteProps<any[], true, false, true>, 'options' | 'renderInput'>;
+} & GridFilterInputValueProps &
+  Omit<AutocompleteProps<any[], true, false, true>, 'options' | 'renderInput'>;
 
 function GridFilterInputMultipleValue(props: GridFilterInputMultipleValueProps) {
-  const { item, applyValue, type, apiRef, focusElementRef, ...other } = props;
+  const {
+    item,
+    applyValue,
+    type,
+    apiRef,
+    focusElementRef,
+    color,
+    error,
+    helperText,
+    size,
+    variant,
+    ...other
+  } = props;
+  const TextFieldProps = {
+    color,
+    error,
+    helperText,
+    size,
+    variant,
+  };
+
   const [filterValueState, setFilterValueState] = React.useState(item.value || []);
   const id = useId();
+
+  const rootProps = useGridRootProps();
 
   React.useEffect(() => {
     const itemValue = item.value ?? [];
@@ -52,7 +70,7 @@ function GridFilterInputMultipleValue(props: GridFilterInputMultipleValueProps) 
         ))
       }
       renderInput={(params) => (
-        <TextField
+        <rootProps.components.BaseTextField
           {...params}
           label={apiRef.current.getLocaleText('filterPanelInputLabel')}
           placeholder={apiRef.current.getLocaleText('filterPanelInputPlaceholder')}
@@ -62,7 +80,8 @@ function GridFilterInputMultipleValue(props: GridFilterInputMultipleValueProps) 
           }}
           inputRef={focusElementRef}
           type={type || 'text'}
-          variant="standard"
+          {...TextFieldProps}
+          {...rootProps.componentsProps?.baseTextField}
         />
       )}
       {...other}
@@ -75,7 +94,9 @@ GridFilterInputMultipleValue.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
-  apiRef: PropTypes.any.isRequired,
+  apiRef: PropTypes.shape({
+    current: PropTypes.object.isRequired,
+  }).isRequired,
   applyValue: PropTypes.func.isRequired,
   focusElementRef: PropTypes /* @typescript-to-proptypes-ignore */.oneOfType([
     PropTypes.func,
