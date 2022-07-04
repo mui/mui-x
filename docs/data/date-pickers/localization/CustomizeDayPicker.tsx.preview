@@ -1,0 +1,13 @@
+<LocalizationProvider dateAdapter={AdapterDateFns}>
+  <DatePicker
+    label="Basic example"
+    value={value}
+    onChange={(newValue) => {
+      setValue(newValue);
+    }}
+    renderInput={(params) => <TextField {...params} />}
+    headerDayFormatter={(day) => `${day}.`}
+    toolbarFormat="eee	dd MMMM"
+    showToolbar
+  />
+</LocalizationProvider>

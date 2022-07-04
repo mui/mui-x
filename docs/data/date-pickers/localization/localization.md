@@ -23,6 +23,17 @@ This can be overridden by using the `ampm` prop.
 
 {{"demo": "LocalizedTimePicker.js"}}
 
+### Advanced customization
+
+To customize the date format used in the toolbar, you can use prop `toolbarFormat`.
+
+To customize day names in calendar header, you can use `headerDayFormatter` which takes as an input the short name of the day provided by the date-library and returns it's formatted version.
+The default formatter only keeps the first letter and capitalises it.
+
+In the example bellow, we add a dot at the end of each day in the calendar header, and use `eee dd MMMM` format for the toolbar.
+
+{{"demo": "CustomizeDayPicker.js"}}
+
 ## Translation keys
 
 As the rest of MUI components, you can modify text and translations.
