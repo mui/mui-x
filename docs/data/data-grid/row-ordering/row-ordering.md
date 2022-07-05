@@ -6,7 +6,7 @@ title: Data Grid - Row ordering
 
 <p class="description">Drag and drop your rows to reorder them.</p>
 
-Row reordering allows to rearrange rows by dragging the special reordering cell.
+Row reordering lets users rearrange rows by dragging the special reordering cell.
 
 By default, row reordering is disabled.
 To enable it, you need to add the `rowReordering` prop.
