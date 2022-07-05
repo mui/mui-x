@@ -20,6 +20,7 @@ import {
   useGridApiRef,
   GridGroupingColDefOverrideParams,
   getGroupRowIdFromPath,
+  GridLinkOperator,
 } from '@mui/x-data-grid-premium';
 import { spy } from 'sinon';
 
@@ -2137,7 +2138,7 @@ describe('<DataGridPremium /> - Group Rows By Column', () => {
         expect(getColumnValues(1)).to.deep.equal(['', '0', '', '4']);
       });
 
-      it('should let group appears when a rows pass quick filter base don both grouping and leaf values', () => {
+      it('should let group appears when a rows pass quick filter based on both grouping and leaf values', () => {
         render(
           <Test
             initialState={{
@@ -2176,6 +2177,66 @@ describe('<DataGridPremium /> - Group Rows By Column', () => {
         );
 
         expect(getColumnValues(1)).to.deep.equal(['', '0', '1', '2']);
+      });
+
+      it('should let group appears when a leaf rows pass filterModel', () => {
+        render(
+          <Test
+            initialState={{
+              rowGrouping: { model: ['category1'] },
+              filter: {
+                filterModel: {
+                  items: [
+                    {
+                      columnField: 'category2',
+                      operatorValue: 'equals',
+                      value: 'Cat 1',
+                    },
+                  ],
+                },
+              },
+            }}
+            rowGroupingColumnMode="single"
+            defaultGroupingExpansionDepth={-1}
+          />,
+        );
+
+        // Corresponds to rows id 0 an 4 (respectively "cat A cat 1" and "cat B cat 1")
+        expect(getColumnValues(1)).to.deep.equal(['', '0', '', '4']);
+      });
+
+      it('should manage link operator OR accros group and leaf columns', () => {
+        render(
+          <Test
+            initialState={{
+              rowGrouping: { model: ['category1'] },
+              filter: {
+                filterModel: {
+                  items: [
+                    {
+                      id: 2,
+                      columnField: 'category2',
+                      operatorValue: 'equals',
+                      value: 'Cat 1',
+                    },
+                    {
+                      id: 1,
+                      columnField: 'category1',
+                      operatorValue: 'equals',
+                      value: 'Cat A',
+                    },
+                  ],
+                  linkOperator: GridLinkOperator.Or,
+                },
+              },
+            }}
+            rowGroupingColumnMode="single"
+            defaultGroupingExpansionDepth={-1}
+          />,
+        );
+
+        // Corresponds to rows id 0, 1, 2 because of Cat A, ann id 4 because of Cat 1
+        expect(getColumnValues(1)).to.deep.equal(['', '0', '1', '2', '', '4']);
       });
     });
 

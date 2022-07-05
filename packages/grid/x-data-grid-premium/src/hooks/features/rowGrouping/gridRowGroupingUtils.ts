@@ -4,6 +4,8 @@ import {
   GridRowTreeConfig,
   GridRowTreeNodeConfig,
   GridFilterState,
+  GridFilterModel,
+  GridLinkOperator,
 } from '@mui/x-data-grid-pro';
 import { GridAggregatedFilterItemApplier } from '@mui/x-data-grid-pro/internals';
 import { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
@@ -41,6 +43,7 @@ export const isGroupingColumn = (field: string) =>
 interface FilterRowTreeFromTreeDataParams {
   rowTree: GridRowTreeConfig;
   isRowMatchingFilters: GridAggregatedFilterItemApplier | null;
+  linkOperator: GridFilterModel['linkOperator'];
 }
 
 /**
@@ -65,7 +68,7 @@ const shouldApplyFilterItemOnGroup = (columnField: string, node: GridRowTreeNode
 export const filterRowTreeFromGroupingColumns = (
   params: FilterRowTreeFromTreeDataParams,
 ): Omit<GridFilterState, 'filterModel'> => {
-  const { rowTree, isRowMatchingFilters } = params;
+  const { rowTree, isRowMatchingFilters, linkOperator } = params;
   const visibleRowsLookup: Record<GridRowId, boolean> = {};
   const filteredRowsLookup: Record<GridRowId, boolean> = {};
   const filteredDescendantCountLookup: Record<GridRowId, number> = {};
@@ -104,13 +107,15 @@ export const filterRowTreeFromGroupingColumns = (
       filteredDescendantCount += childSubTreeSize;
     });
 
-    let shouldPassFilters: boolean;
-    if (!areAncestorsPassingChildren) {
-      shouldPassFilters = false;
+    let shouldPassFilters = isMatchingFilters;
+    if (linkOperator === GridLinkOperator.And) {
+      if (!areAncestorsPassingChildren) {
+        shouldPassFilters = false;
+      } else if (node.children?.length) {
+        shouldPassFilters = isMatchingFilterItems && filteredDescendantCount > 0;
+      }
     } else if (node.children?.length) {
-      shouldPassFilters = isMatchingFilterItems && filteredDescendantCount > 0;
-    } else {
-      shouldPassFilters = isMatchingFilters;
+      shouldPassFilters = filteredDescendantCount > 0;
     }
 
     visibleRowsLookup[node.id] = shouldPassFilters && areAncestorsExpanded;

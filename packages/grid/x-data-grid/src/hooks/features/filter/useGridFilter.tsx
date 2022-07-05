@@ -83,6 +83,7 @@ export const useGridFilter = (
 
       const filteringResult = apiRef.current.unstable_applyStrategyProcessor('filtering', {
         isRowMatchingFilters,
+        linkOperator: filterModel.linkOperator ?? getDefaultGridFilterModel().linkOperator,
       });
 
       return {

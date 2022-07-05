@@ -51,6 +51,7 @@ export type GridAggregatedFilterItemApplier = (
 
 export interface GridFilteringMethodParams {
   isRowMatchingFilters: GridAggregatedFilterItemApplier | null;
+  linkOperator: GridFilterModel['linkOperator'];
 }
 
 export type GridFilteringMethodValue = Omit<GridFilterState, 'filterModel'>;

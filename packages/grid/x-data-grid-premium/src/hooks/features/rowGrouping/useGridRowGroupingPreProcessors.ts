@@ -219,6 +219,7 @@ export const useGridRowGroupingPreProcessors = (
       return filterRowTreeFromGroupingColumns({
         rowTree,
         isRowMatchingFilters: params.isRowMatchingFilters,
+        linkOperator: params.linkOperator,
       });
     },
     [apiRef],
