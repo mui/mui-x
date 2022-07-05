@@ -91,6 +91,16 @@ For instance if you group by `"director"`, you will have two columns titled _Dir
 To automatically hide the grouped columns, use the `useKeepGroupedColumnsHidden` utility hook.
 The hook will automatically hide the columns when added to the model and show them back when removed from it.
 
+:::warning
+This hook is not compatible with the deprecated column property `hide`.
+
+You can manage column visibility with `columnVisibilityModel`, `initialState`, or both together.
+To do so, pass them to the hook parameters.
+:::
+
+Bellow are two examples about how to use `columnVisibilityModel` or `initialState` with `useKeepGroupedColumnsHidden` hook.
+You can mix the two examples to support both at the same time.
+
 ```tsx
 // Usage with the initial state
 const apiRef = useGridApiRef();
@@ -123,12 +133,6 @@ const [rowGroupingModel, setRowGroupingModel] = React.useState([
 const initialState = useKeepGroupedColumnsHidden({
   apiRef,
   rowGroupingModel,
-  initialState: {
-    columns: {
-      // Other hidden columns
-      columnVisibilityModel: { gross: false },
-    },
-  },
 });
 
 return (
@@ -140,21 +144,6 @@ return (
   />
 );
 ```
-
-:::warning
-This hook is not compatible with the deprecated column property `hide`.
-It can be used with controlled `columnVisibilityModel` and `initialState`.
-To do so, provide the controlled value and the initial state to the hook as follow:
-
-```jsx
-const initialState = useKeepGroupedColumnsHidden({
-  apiRef,
-  rowGroupingModel,
-  initialState,
-});
-```
-
-:::
 
 {{"demo": "RowGroupingUseKeepGroupedColumnsHidden.js", "bg": "inline", "defaultCodeOpen": false}}
 
