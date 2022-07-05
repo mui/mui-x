@@ -142,9 +142,9 @@ return (
 ```
 
 :::warning
-This hook is only compatible with the deprecated column property `hide` or with the controlled `columnVisibilityModel` prop.
+This hook is not compatible with the deprecated column property `hide`, and you should not control the `columnVisibilityModel`.
 
-You must use the `columnVisibilityModel` in the `initialState` instead.
+To hide some columns, use the `columnVisibilityModel` in the `initialState` instead.
 :::
 
 {{"demo": "RowGroupingUseKeepGroupedColumnsHidden.js", "bg": "inline", "defaultCodeOpen": false}}
