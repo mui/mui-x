@@ -13,8 +13,7 @@ This feature isn't implemented yet. It's coming.
 :::
 
 Each cell takes up the width of one row.
-Row spanning allows to change this default behavior.
-It allows cells to span multiple rows.
+Row spanning lets you change this default behavior, so cells can span multiple rows.
 This is very close to the "row spanning" in an HTML `<table>`.
 
 ## API
