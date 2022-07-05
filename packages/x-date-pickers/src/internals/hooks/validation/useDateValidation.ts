@@ -2,6 +2,7 @@ import * as React from 'react';
 import { useValidation, ValidationProps, Validator } from './useValidation';
 import { DayValidationProps } from './models';
 import { useLocalizationContext } from '../useUtils';
+import { parsePickerInputValueWithDefault } from '../../utils/date-utils';
 
 export interface ExportedDateValidationProps<TDate> extends DayValidationProps<TDate> {}
 
@@ -25,14 +26,16 @@ export const validateDate: Validator<any, DateValidationProps<any, any>> = ({
 }): DateValidationError => {
   const now = adapter.utils.date()!;
   const date = adapter.utils.date(value);
-
-  const {
-    shouldDisableDate,
-    minDate = adapter.defaultDates.minDate,
-    maxDate = adapter.defaultDates.maxDate,
-    disableFuture,
-    disablePast,
-  } = props;
+  const minDate = parsePickerInputValueWithDefault(
+    adapter.utils,
+    props.minDate,
+    adapter.defaultDates.minDate,
+  );
+  const maxDate = parsePickerInputValueWithDefault(
+    adapter.utils,
+    props.maxDate,
+    adapter.defaultDates.maxDate,
+  );
 
   if (date === null) {
     return null;
@@ -42,13 +45,13 @@ export const validateDate: Validator<any, DateValidationProps<any, any>> = ({
     case !adapter.utils.isValid(value):
       return 'invalidDate';
 
-    case Boolean(shouldDisableDate && shouldDisableDate(date)):
+    case Boolean(props.shouldDisableDate && props.shouldDisableDate(date)):
       return 'shouldDisableDate';
 
-    case Boolean(disableFuture && adapter.utils.isAfterDay(date, now)):
+    case Boolean(props.disableFuture && adapter.utils.isAfterDay(date, now)):
       return 'disableFuture';
 
-    case Boolean(disablePast && adapter.utils.isBeforeDay(date, now)):
+    case Boolean(props.disablePast && adapter.utils.isBeforeDay(date, now)):
       return 'disablePast';
 
     case Boolean(minDate && adapter.utils.isBeforeDay(date, minDate)):

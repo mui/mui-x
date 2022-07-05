@@ -10,6 +10,7 @@ import { BasePickerProps } from '../internals/models/props/basePickerProps';
 import { PickerStateValueManager } from '../internals/hooks/usePickerState';
 import { parsePickerInputValue } from '../internals/utils/date-utils';
 import { BaseToolbarProps } from '../internals/models/props/baseToolbarProps';
+import { DefaultizedProps } from '../internals/models/helpers';
 
 export interface BaseDatePickerProps<TInputDate, TDate>
   extends ExportedCalendarPickerProps<TDate>,
@@ -81,8 +82,6 @@ const getFormatAndMaskByViews = <TDate>(
   };
 };
 
-export type DefaultizedProps<Props> = Props & { inputFormat: string };
-
 export function useDatePickerDefaultizedProps<
   TInputDate,
   TDate,
@@ -90,10 +89,9 @@ export function useDatePickerDefaultizedProps<
 >(
   props: Props,
   name: string,
-): DefaultizedProps<Props> &
-  Required<Pick<BaseDatePickerProps<TInputDate, TDate>, 'openTo' | 'views'>> {
+): DefaultizedProps<Props, 'openTo' | 'views', { inputFormat: string }> {
   const utils = useUtils<TDate>();
-  const defaultDates = useDefaultDates();
+  const defaultDates = useDefaultDates<TDate>();
 
   // This is technically unsound if the type parameters appear in optional props.
   // Optional props can be filled by `useThemeProps` with types that don't match the type parameters.

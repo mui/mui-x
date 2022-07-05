@@ -16,7 +16,10 @@ import {
   PickersCalendarHeaderSlotsComponentsProps,
 } from './PickersCalendarHeader';
 import { YearPicker, YearPickerProps } from '../YearPicker/YearPicker';
-import { findClosestEnabledDate } from '../internals/utils/date-utils';
+import {
+  findClosestEnabledDate,
+  parsePickerInputValueWithDefault,
+} from '../internals/utils/date-utils';
 import { CalendarPickerView } from '../internals/models';
 import { PickerViewRoot } from '../internals/components/PickerViewRoot';
 import { defaultReduceAnimations } from '../internals/utils/defaultReduceAnimations';
@@ -26,6 +29,7 @@ import {
   MonthValidationProps,
   YearValidationProps,
 } from '../internals/hooks/validation/models';
+import { DefaultizedProps } from '../internals/models/helpers';
 
 export interface CalendarPickerSlotsComponent extends PickersCalendarHeaderSlotsComponent {}
 
@@ -141,6 +145,32 @@ const useUtilityClasses = (
   return composeClasses(slots, getCalendarPickerUtilityClass, classes);
 };
 
+export function useCalendarPickerDefaultizedProps<TDate>(
+  props: CalendarPickerProps<TDate>,
+  name: string,
+): DefaultizedProps<
+  CalendarPickerProps<TDate>,
+  'views' | 'openTo' | 'loading' | 'reduceAnimations' | 'renderLoading' | 'minDate' | 'maxDate'
+> {
+  const utils = useUtils<TDate>();
+  const defaultDates = useDefaultDates<TDate>();
+  const themeProps = useThemeProps({
+    props,
+    name,
+  });
+
+  return {
+    loading: false,
+    openTo: 'day',
+    views: ['year', 'day'],
+    reduceAnimations: defaultReduceAnimations,
+    renderLoading: () => <span data-mui-test="loading-progress">...</span>,
+    ...themeProps,
+    minDate: parsePickerInputValueWithDefault(utils, themeProps.minDate, defaultDates.minDate),
+    maxDate: parsePickerInputValueWithDefault(utils, themeProps.maxDate, defaultDates.maxDate),
+  };
+}
+
 const CalendarPickerRoot = styled(PickerViewRoot, {
   name: 'MuiCalendarPicker',
   slot: 'Root',
@@ -177,12 +207,7 @@ const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
   ref: React.Ref<HTMLDivElement>,
 ) {
   const utils = useUtils<TDate>();
-  const defaultDates = useDefaultDates<TDate>();
-
-  const props = useThemeProps({
-    props: inProps,
-    name: 'MuiCalendarPicker',
-  });
+  const props = useCalendarPickerDefaultizedProps(inProps, 'MuiCalendarPicker');
 
   const {
     autoFocus,
@@ -191,23 +216,22 @@ const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
     disableFuture,
     disablePast,
     defaultCalendarMonth,
-    loading = false,
     onChange,
     onYearChange,
     onMonthChange,
-    reduceAnimations = defaultReduceAnimations,
-    renderLoading = () => <span data-mui-test="loading-progress">...</span>,
+    reduceAnimations,
+    renderLoading,
     shouldDisableDate,
     shouldDisableMonth,
     shouldDisableYear,
     view,
-    views = ['year', 'day'],
-    openTo = 'day',
+    views,
+    openTo,
     className,
     disabled,
     readOnly,
-    minDate = defaultDates.minDate,
-    maxDate = defaultDates.maxDate,
+    minDate,
+    maxDate,
     ...other
   } = props;
 
@@ -433,7 +457,6 @@ const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
               reduceAnimations={reduceAnimations}
               selectedDays={[date]}
               onSelectedDaysChange={onSelectedDayChange}
-              loading={loading}
               renderLoading={renderLoading}
               disabled={disabled}
               readOnly={readOnly}

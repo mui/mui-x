@@ -1,6 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { useTheme, styled, useThemeProps as useThemProps } from '@mui/material/styles';
+import { useTheme, styled, useThemeProps } from '@mui/material/styles';
 import { unstable_composeClasses as composeClasses } from '@mui/material';
 import clsx from 'clsx';
 import { PickersYear } from './PickersYear';
@@ -10,6 +10,8 @@ import { PickerSelectionState } from '../internals/hooks/usePickerState';
 import { WrapperVariantContext } from '../internals/components/wrappers/WrapperVariantContext';
 import { YearPickerClasses, getYearPickerUtilityClass } from './yearPickerClasses';
 import { YearValidationProps } from '../internals/hooks/validation/models';
+import { DefaultizedProps } from '../internals/models/helpers';
+import { parsePickerInputValueWithDefault } from '../internals/utils/date-utils';
 
 const useUtilityClasses = (ownerState: any) => {
   const { classes } = ownerState;
@@ -20,6 +22,24 @@ const useUtilityClasses = (ownerState: any) => {
 
   return composeClasses(slots, getYearPickerUtilityClass, classes);
 };
+
+function useYearPickerDefaultizedProps<TDate>(
+  props: YearPickerProps<TDate>,
+  name: string,
+): DefaultizedProps<YearPickerProps<TDate>, 'minDate' | 'maxDate'> {
+  const utils = useUtils<TDate>();
+  const defaultDates = useDefaultDates<TDate>();
+  const themeProps = useThemeProps({
+    props,
+    name,
+  });
+
+  return {
+    ...themeProps,
+    minDate: parsePickerInputValueWithDefault(utils, themeProps.minDate, defaultDates.minDate),
+    maxDate: parsePickerInputValueWithDefault(utils, themeProps.maxDate, defaultDates.maxDate),
+  };
+}
 
 const YearPickerRoot = styled('div', {
   name: 'MuiYearPicker',
@@ -56,9 +76,8 @@ export const YearPicker = React.forwardRef(function YearPicker<TDate>(
   const now = useNow<TDate>();
   const theme = useTheme();
   const utils = useUtils<TDate>();
-  const defaultProps = useDefaultDates<TDate>();
 
-  const props = useThemProps({ props: inProps, name: 'MuiYearPicker' });
+  const props = useYearPickerDefaultizedProps(inProps, 'MuiYearPicker');
   const {
     autoFocus,
     className,
@@ -66,8 +85,8 @@ export const YearPicker = React.forwardRef(function YearPicker<TDate>(
     disabled,
     disableFuture,
     disablePast,
-    maxDate = defaultProps.maxDate,
-    minDate = defaultProps.minDate,
+    maxDate,
+    minDate,
     onChange,
     readOnly,
     shouldDisableYear,

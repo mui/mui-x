@@ -7,6 +7,8 @@ import {
   useLocaleText,
   useUtils,
   ValidationProps,
+  DefaultizedProps,
+  parsePickerInputValueWithDefault,
 } from '@mui/x-date-pickers/internals';
 import { useThemeProps } from '@mui/material/styles';
 import { ExportedDateRangePickerViewProps } from './DateRangePickerView';
@@ -46,8 +48,6 @@ export interface BaseDateRangePickerProps<TInputDate, TDate>
   startText?: React.ReactNode;
 }
 
-export type DefaultizedProps<Props> = Props & { inputFormat: string };
-
 const deprecatedPropsWarning = buildDeprecatedPropsWarning(
   'Props for translation are deprecated. See https://mui.com/x/react-date-pickers/localization for more information.',
 );
@@ -59,12 +59,13 @@ export function useDateRangePickerDefaultizedProps<
 >(
   props: Props,
   name: string,
-): DefaultizedProps<Props> &
-  Required<
-    Pick<BaseDateRangePickerProps<TInputDate, TDate>, 'calendars' | 'startText' | 'endText'>
-  > {
+): DefaultizedProps<
+  Props,
+  'calendars' | 'startText' | 'endText' | 'minDate' | 'maxDate',
+  { inputFormat: string }
+> {
   const utils = useUtils<TDate>();
-  const defaultDates = useDefaultDates();
+  const defaultDates = useDefaultDates<TDate>();
 
   // This is technically unsound if the type parameters appear in optional props.
   // Optional props can be filled by `useThemeProps` with types that don't match the type parameters.
@@ -86,11 +87,11 @@ export function useDateRangePickerDefaultizedProps<
   return {
     calendars: 2,
     inputFormat: utils.formats.keyboardDate,
-    minDate: defaultDates.minDate,
-    maxDate: defaultDates.maxDate,
     ...themeProps,
     endText,
     startText,
+    minDate: parsePickerInputValueWithDefault(utils, themeProps.minDate, defaultDates.minDate),
+    maxDate: parsePickerInputValueWithDefault(utils, themeProps.maxDate, defaultDates.maxDate),
   };
 }
 

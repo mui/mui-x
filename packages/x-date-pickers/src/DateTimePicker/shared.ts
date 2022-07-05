@@ -9,8 +9,12 @@ import { BasePickerProps } from '../internals/models/props/basePickerProps';
 import { ExportedDateInputProps } from '../internals/components/PureDateInput';
 import { CalendarOrClockPickerView } from '../internals/models';
 import { PickerStateValueManager } from '../internals/hooks/usePickerState';
-import { parsePickerInputValue } from '../internals/utils/date-utils';
+import {
+  parsePickerInputValue,
+  parsePickerInputValueWithDefault,
+} from '../internals/utils/date-utils';
 import { BaseToolbarProps } from '../internals/models/props/baseToolbarProps';
+import { DefaultizedProps } from '../internals/models/helpers';
 
 export interface BaseDateTimePickerProps<TInputDate, TDate>
   extends ExportedClockPickerProps<TDate>,
@@ -77,8 +81,6 @@ export interface BaseDateTimePickerProps<TInputDate, TDate>
   views?: readonly CalendarOrClockPickerView[];
 }
 
-type DefaultizedProps<Props> = Props & { inputFormat: string };
-
 export function useDateTimePickerDefaultizedProps<
   TInputDate,
   TDate,
@@ -86,8 +88,7 @@ export function useDateTimePickerDefaultizedProps<
 >(
   props: Props,
   name: string,
-): DefaultizedProps<Props> &
-  Required<Pick<BaseDateTimePickerProps<TInputDate, TDate>, 'openTo' | 'views'>> {
+): DefaultizedProps<Props, 'openTo' | 'views' | 'maxDate' | 'minDate', { inputFormat: string }> {
   // This is technically unsound if the type parameters appear in optional props.
   // Optional props can be filled by `useThemeProps` with types that don't match the type parameters.
   const themeProps = useThemeProps({
@@ -116,8 +117,16 @@ export function useDateTimePickerDefaultizedProps<
       themeProps.minDateTime || themeProps.maxDateTime,
     ),
     ...themeProps,
-    minDate: themeProps.minDateTime ?? themeProps.minDate ?? defaultDates.minDate,
-    maxDate: themeProps.maxDateTime ?? themeProps.maxDate ?? defaultDates.maxDate,
+    minDate: parsePickerInputValueWithDefault(
+      utils,
+      themeProps.minDateTime ?? themeProps.minDate,
+      defaultDates.minDate,
+    ),
+    maxDate: parsePickerInputValueWithDefault(
+      utils,
+      themeProps.maxDateTime ?? themeProps.maxDate,
+      defaultDates.maxDate,
+    ),
     minTime: themeProps.minDateTime ?? themeProps.minTime,
     maxTime: themeProps.maxDateTime ?? themeProps.maxTime,
   };

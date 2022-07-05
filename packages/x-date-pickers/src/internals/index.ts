@@ -51,7 +51,9 @@ export type { BasePickerProps } from './models/props/basePickerProps';
 export type { StaticPickerProps } from './models/props/staticPickerProps';
 export type { BaseToolbarProps } from './models/props/baseToolbarProps';
 export type { MuiPickersAdapter } from './models/muiPickersAdapter';
+export type { DefaultizedProps } from './models/helpers';
 
+export { parsePickerInputValueWithDefault } from './utils/date-utils';
 export { executeInTheNextEventLoopTick, onSpaceOrEnter } from './utils/utils';
 export { defaultReduceAnimations } from './utils/defaultReduceAnimations';
 export { buildDeprecatedPropsWarning } from './utils/warning';
