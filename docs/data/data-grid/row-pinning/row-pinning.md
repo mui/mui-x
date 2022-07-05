@@ -4,7 +4,7 @@ title: Data Grid - Row pinning
 
 # Data grid - Row pinning [<span class="plan-pro"></span>](https://mui.com/store/items/mui-x-pro/)
 
-<p class="description">Pin rows to keep them visible at all time.</p>
+<p class="description">Pin rows to keep them visible at all times.</p>
 
 :::warning
 This feature isn't implemented yet. It's coming.
