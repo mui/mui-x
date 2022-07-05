@@ -13,7 +13,7 @@ This matches the normal height in the [Material Design guidelines](https://mater
 
 If you want to create a more / less compact grid and not only set the row height, take a look at our [Density documentation](/x/react-data-grid/accessibility/#density-selector)
 
-To change the row height for the whole grid, set the `rowHeight` prop:
+Use the the `rowHeight` prop to change this default value, as shown below:
 
 {{"demo": "DenseHeightGrid.js", "bg": "inline"}}
 
