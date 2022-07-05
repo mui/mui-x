@@ -11,7 +11,6 @@ title: Data Grid - Row dimensions
 By default, the rows have a height of 52 pixels.
 This matches the normal height in the [Material Design guidelines](https://material.io/components/data-tables).
 
-
 Use the the `rowHeight` prop to change this default value, as shown below:
 
 {{"demo": "DenseHeightGrid.js", "bg": "inline"}}
@@ -85,7 +84,7 @@ Add padding to the cells to increase the space between the content and the cell 
 
 ## Row density
 
-Give your users the option to change the default row density to match their preferences—compact, standard, or comfortable. 
+Give your users the option to change the default row density to match their preferences—compact, standard, or comfortable.
 Density is calculated based on the `rowHeight` and/or `headerHeight` props, when present.
 See [Density](https://mui.com/x/react-data-grid/accessibility/#density) for details.
 
