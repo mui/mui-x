@@ -45,11 +45,13 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.17.2",
+    "@date-io/core": "^2.14.0",
     "@date-io/date-fns": "^2.14.0",
     "@date-io/dayjs": "^2.14.0",
     "@date-io/luxon": "^2.14.0",
     "@date-io/moment": "^2.14.0",
     "@mui/utils": "^5.4.1",
+    "@types/react-transition-group": "^4.4.4",
     "clsx": "^1.1.1",
     "prop-types": "^15.7.2",
     "react-transition-group": "^4.4.2",
