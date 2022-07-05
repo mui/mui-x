@@ -27,19 +27,22 @@ const hasScroll = ({
   content,
   container,
   scrollBarSize,
+  autoHeight,
 }: {
   content: ElementSize;
   container: ElementSize;
   scrollBarSize: number;
+  autoHeight: boolean;
 }) => {
   const hasScrollXIfNoYScrollBar = content.width > container.width;
-  const hasScrollYIfNoXScrollBar = content.height > container.height;
+  const hasScrollYIfNoXScrollBar = !autoHeight && content.height > container.height;
 
   let hasScrollX = false;
   let hasScrollY = false;
   if (hasScrollXIfNoYScrollBar || hasScrollYIfNoXScrollBar) {
     hasScrollX = hasScrollXIfNoYScrollBar;
-    hasScrollY = content.height + (hasScrollX ? scrollBarSize : 0) > container.height;
+    hasScrollY =
+      !autoHeight && content.height + (hasScrollX ? scrollBarSize : 0) > container.height;
 
     // We recalculate the scroll x to consider the size of the y scrollbar.
     if (hasScrollY) {
@@ -101,7 +104,12 @@ export function useGridDimensions(
       content: { width: Math.round(columnsTotalWidth), height: rowsMeta.currentPageTotalHeight },
       container: viewportOuterSize,
       scrollBarSize,
+      autoHeight: props.autoHeight,
     });
+
+    if (hasScrollX && props.autoHeight) {
+      viewportOuterSize.height += scrollBarSize;
+    }
 
     const viewportInnerSize: ElementSize = {
       width: viewportOuterSize.width - (hasScrollY ? scrollBarSize : 0),
