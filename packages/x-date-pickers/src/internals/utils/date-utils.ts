@@ -84,6 +84,10 @@ export const parsePickerInputValueWithDefault = <TDate>(
   value: TDate | null | undefined,
   defaultValue: TDate,
 ): TDate => {
+  if (value == null) {
+    return defaultValue;
+  }
+
   const parsedValue = utils.date(value);
   const isDateValid = utils.isValid(parsedValue);
 
