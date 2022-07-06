@@ -8,9 +8,13 @@ import { ValidationProps } from '../internals/hooks/validation/useValidation';
 import { ExportedDateInputProps } from '../internals/components/PureDateInput';
 import { BasePickerProps } from '../internals/models/props/basePickerProps';
 import { PickerStateValueManager } from '../internals/hooks/usePickerState';
-import { parsePickerInputValue } from '../internals/utils/date-utils';
+import {
+  parsePickerInputValue,
+  parsePickerInputValueWithDefault,
+} from '../internals/utils/date-utils';
 import { BaseToolbarProps } from '../internals/models/props/baseToolbarProps';
 import { DefaultizedProps } from '../internals/models/helpers';
+import { BaseDateValidationProps } from '../internals/hooks/validation/models';
 
 export interface BaseDatePickerProps<TInputDate, TDate>
   extends ExportedCalendarPickerProps<TDate>,
@@ -89,7 +93,11 @@ export function useDatePickerDefaultizedProps<
 >(
   props: Props,
   name: string,
-): DefaultizedProps<Props, 'openTo' | 'views', { inputFormat: string }> {
+): DefaultizedProps<
+  Props,
+  'openTo' | 'views' | keyof BaseDateValidationProps<TDate>,
+  { inputFormat: string }
+> {
   const utils = useUtils<TDate>();
   const defaultDates = useDefaultDates<TDate>();
 
@@ -104,11 +112,13 @@ export function useDatePickerDefaultizedProps<
 
   return {
     openTo: 'day',
-    minDate: defaultDates.minDate,
-    maxDate: defaultDates.maxDate,
+    disableFuture: false,
+    disablePast: false,
     ...getFormatAndMaskByViews(views, utils),
     ...themeProps,
     views,
+    minDate: parsePickerInputValueWithDefault(utils, themeProps.minDate, defaultDates.minDate),
+    maxDate: parsePickerInputValueWithDefault(utils, themeProps.maxDate, defaultDates.maxDate),
   };
 }
 

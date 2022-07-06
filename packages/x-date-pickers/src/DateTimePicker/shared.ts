@@ -15,6 +15,7 @@ import {
 } from '../internals/utils/date-utils';
 import { BaseToolbarProps } from '../internals/models/props/baseToolbarProps';
 import { DefaultizedProps } from '../internals/models/helpers';
+import { BaseDateValidationProps } from '../internals/hooks/validation/models';
 
 export interface BaseDateTimePickerProps<TInputDate, TDate>
   extends ExportedClockPickerProps<TDate>,
@@ -88,7 +89,11 @@ export function useDateTimePickerDefaultizedProps<
 >(
   props: Props,
   name: string,
-): DefaultizedProps<Props, 'openTo' | 'views' | 'maxDate' | 'minDate', { inputFormat: string }> {
+): DefaultizedProps<
+  Props,
+  'openTo' | 'views' | keyof BaseDateValidationProps<TDate>,
+  { inputFormat: string }
+> {
   // This is technically unsound if the type parameters appear in optional props.
   // Optional props can be filled by `useThemeProps` with types that don't match the type parameters.
   const themeProps = useThemeProps({
@@ -116,6 +121,8 @@ export function useDateTimePickerDefaultizedProps<
     disableIgnoringDatePartForTimeValidation: Boolean(
       themeProps.minDateTime || themeProps.maxDateTime,
     ),
+    disablePast: false,
+    disableFuture: false,
     ...themeProps,
     minDate: parsePickerInputValueWithDefault(
       utils,

@@ -8,11 +8,16 @@ import { PickersMonth } from './PickersMonth';
 import { useUtils, useNow, useDefaultDates } from '../internals/hooks/useUtils';
 import { NonNullablePickerChangeHandler } from '../internals/hooks/useViews';
 import { MonthPickerClasses, getMonthPickerUtilityClass } from './monthPickerClasses';
-import { MonthValidationProps } from '../internals/hooks/validation/models';
+import {
+  BaseDateValidationProps,
+  MonthValidationProps,
+} from '../internals/hooks/validation/models';
 import { parsePickerInputValueWithDefault } from '../internals/utils/date-utils';
 import { DefaultizedProps } from '../internals/models/helpers';
 
-export interface MonthPickerProps<TDate> extends MonthValidationProps<TDate> {
+export interface MonthPickerProps<TDate>
+  extends MonthValidationProps<TDate>,
+    BaseDateValidationProps<TDate> {
   /**
    * className applied to the root element.
    */

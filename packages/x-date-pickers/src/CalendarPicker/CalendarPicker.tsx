@@ -26,6 +26,7 @@ import { defaultReduceAnimations } from '../internals/utils/defaultReduceAnimati
 import { CalendarPickerClasses, getCalendarPickerUtilityClass } from './calendarPickerClasses';
 import {
   BaseDateValidationProps,
+  DayValidationProps,
   MonthValidationProps,
   YearValidationProps,
 } from '../internals/hooks/validation/models';
@@ -38,6 +39,8 @@ export interface CalendarPickerSlotsComponentsProps
 
 export interface CalendarPickerProps<TDate>
   extends ExportedDayPickerProps<TDate>,
+    BaseDateValidationProps<TDate>,
+    DayValidationProps<TDate>,
     YearValidationProps<TDate>,
     MonthValidationProps<TDate>,
     ExportedCalendarHeaderProps<TDate> {
@@ -133,6 +136,16 @@ export type ExportedCalendarPickerProps<TDate> = Omit<
   | 'componentsProps'
 >;
 
+export type CalendarPickerDefaultizedProps<TDate> = DefaultizedProps<
+  CalendarPickerProps<TDate>,
+  | 'views'
+  | 'openTo'
+  | 'loading'
+  | 'reduceAnimations'
+  | 'renderLoading'
+  | keyof BaseDateValidationProps<TDate>
+>;
+
 const useUtilityClasses = (
   ownerState: CalendarPickerProps<any> & { classes?: Partial<CalendarPickerClasses> },
 ) => {
@@ -145,13 +158,10 @@ const useUtilityClasses = (
   return composeClasses(slots, getCalendarPickerUtilityClass, classes);
 };
 
-export function useCalendarPickerDefaultizedProps<TDate>(
+function useCalendarPickerDefaultizedProps<TDate>(
   props: CalendarPickerProps<TDate>,
   name: string,
-): DefaultizedProps<
-  CalendarPickerProps<TDate>,
-  'views' | 'openTo' | 'loading' | 'reduceAnimations' | 'renderLoading' | 'minDate' | 'maxDate'
-> {
+): CalendarPickerDefaultizedProps<TDate> {
   const utils = useUtils<TDate>();
   const defaultDates = useDefaultDates<TDate>();
   const themeProps = useThemeProps({
@@ -161,6 +171,8 @@ export function useCalendarPickerDefaultizedProps<TDate>(
 
   return {
     loading: false,
+    disablePast: false,
+    disableFuture: false,
     openTo: 'day',
     views: ['year', 'day'],
     reduceAnimations: defaultReduceAnimations,
@@ -387,7 +399,7 @@ const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
   const ownerState = props;
   const classes = useUtilityClasses(ownerState);
 
-  const baseDateValidationProps: BaseDateValidationProps<TDate> = {
+  const baseDateValidationProps: Required<BaseDateValidationProps<TDate>> = {
     disablePast,
     disableFuture,
     maxDate,

@@ -9,7 +9,7 @@ import { NonNullablePickerChangeHandler } from '../internals/hooks/useViews';
 import { PickerSelectionState } from '../internals/hooks/usePickerState';
 import { WrapperVariantContext } from '../internals/components/wrappers/WrapperVariantContext';
 import { YearPickerClasses, getYearPickerUtilityClass } from './yearPickerClasses';
-import { YearValidationProps } from '../internals/hooks/validation/models';
+import { BaseDateValidationProps, YearValidationProps } from '../internals/hooks/validation/models';
 import { DefaultizedProps } from '../internals/models/helpers';
 import { parsePickerInputValueWithDefault } from '../internals/utils/date-utils';
 
@@ -54,7 +54,9 @@ const YearPickerRoot = styled('div', {
   margin: '0 4px',
 });
 
-export interface YearPickerProps<TDate> extends YearValidationProps<TDate> {
+export interface YearPickerProps<TDate>
+  extends YearValidationProps<TDate>,
+    BaseDateValidationProps<TDate> {
   autoFocus?: boolean;
   className?: string;
   classes?: YearPickerClasses;

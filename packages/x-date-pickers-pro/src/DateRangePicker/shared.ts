@@ -9,6 +9,7 @@ import {
   ValidationProps,
   DefaultizedProps,
   parsePickerInputValueWithDefault,
+  BaseDateValidationProps,
 } from '@mui/x-date-pickers/internals';
 import { useThemeProps } from '@mui/material/styles';
 import { ExportedDateRangePickerViewProps } from './DateRangePickerView';
@@ -20,6 +21,7 @@ import { ExportedDateRangePickerInputProps } from './DateRangePickerInput';
 export interface BaseDateRangePickerProps<TInputDate, TDate>
   extends Omit<BasePickerProps<DateRange<TInputDate>, DateRange<TDate>>, 'orientation'>,
     ExportedDateRangePickerViewProps<TDate>,
+    BaseDateValidationProps<TDate>,
     ValidationProps<DateRangeValidationError, DateRange<TInputDate>>,
     ExportedDateRangePickerInputProps<TInputDate, TDate> {
   /**
@@ -61,7 +63,7 @@ export function useDateRangePickerDefaultizedProps<
   name: string,
 ): DefaultizedProps<
   Props,
-  'calendars' | 'startText' | 'endText' | 'minDate' | 'maxDate',
+  'calendars' | 'startText' | 'endText' | keyof BaseDateValidationProps<TDate>,
   { inputFormat: string }
 > {
   const utils = useUtils<TDate>();
@@ -85,6 +87,8 @@ export function useDateRangePickerDefaultizedProps<
   const endText = themeProps.endText ?? localeText.end;
 
   return {
+    disableFuture: false,
+    disablePast: false,
     calendars: 2,
     inputFormat: utils.formats.keyboardDate,
     ...themeProps,

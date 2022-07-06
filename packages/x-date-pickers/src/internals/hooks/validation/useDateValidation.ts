@@ -1,14 +1,17 @@
 import * as React from 'react';
 import { useValidation, ValidationProps, Validator } from './useValidation';
-import { DayValidationProps } from './models';
+import { BaseDateValidationProps, DayValidationProps } from './models';
 import { useLocalizationContext } from '../useUtils';
 import { parsePickerInputValueWithDefault } from '../../utils/date-utils';
 
-export interface ExportedDateValidationProps<TDate> extends DayValidationProps<TDate> {}
+export interface ExportedDateValidationProps<TDate>
+  extends DayValidationProps<TDate>,
+    BaseDateValidationProps<TDate> {}
 
 export interface DateValidationProps<TInputDate, TDate>
   extends ValidationProps<DateValidationError, TInputDate | null>,
-    ExportedDateValidationProps<TDate> {}
+    DayValidationProps<TDate>,
+    Required<BaseDateValidationProps<TDate>> {}
 
 export type DateValidationError =
   | 'invalidDate'
@@ -71,7 +74,7 @@ export const useIsDayDisabled = <TDate>({
   maxDate,
   disableFuture,
   disablePast,
-}: DayValidationProps<TDate>) => {
+}: DayValidationProps<TDate> & Required<BaseDateValidationProps<TDate>>) => {
   const adapter = useLocalizationContext<TDate>();
 
   return React.useCallback(
