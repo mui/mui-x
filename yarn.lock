@@ -6168,10 +6168,10 @@ babel-plugin-react-remove-properties@^0.3.0:
   resolved "https://registry.yarnpkg.com/babel-plugin-react-remove-properties/-/babel-plugin-react-remove-properties-0.3.0.tgz#7b623fb3c424b6efb4edc9b1ae4cc50e7154b87f"
   integrity sha512-vbxegtXGyVcUkCvayLzftU95vuvpYFV85pRpeMpohMHeEY46Qe0VNWfkVVcCbaZ12CXHzDFOj0esumATcW83ng==
 
-babel-plugin-search-and-replace@^1.1.0:
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/babel-plugin-search-and-replace/-/babel-plugin-search-and-replace-1.1.0.tgz#ad26f2037a80034613dae61b913902d9aa58ed2c"
-  integrity sha512-qo3E08GmT43/IgfbEiAZoauYW3SILLTyt79QPZc2ME3sHvuBuRA01nQl7WnJRKZTnqUCimXSMOU+LBHxe+HTUw==
+babel-plugin-search-and-replace@^1.1.1:
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/babel-plugin-search-and-replace/-/babel-plugin-search-and-replace-1.1.1.tgz#2e5b4488e41d9eba1c220651b1a9b350fdf10915"
+  integrity sha512-fjP2VTF3mxxOUnc96mdK22llH92A6gu7A5AFapJmgnqsQi3bqLduIRP0FpA2r5vRZOYPpnX4rE5izQlpsMBjSA==
 
 "babel-plugin-styled-components@>= 1.12.0":
   version "1.13.2"
