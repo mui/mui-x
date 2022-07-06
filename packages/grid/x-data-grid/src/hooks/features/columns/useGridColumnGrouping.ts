@@ -64,7 +64,7 @@ export const unwrapGroupingColumnModel = (
       if (rep[key] !== undefined) {
         throw new Error(
           [
-            `MUI DataGrid - column grouping: duplicated field`,
+            `MUI: column grouping has duplicated field.`,
             `column field ${key} occurres two times in the grouping model:`,
             `- ${rep[key].join(' > ')}`,
             `- ${value.join(' > ')}`,
@@ -97,7 +97,7 @@ const createGroupLookup = (columnGroupingModel: GridColumnNode[]): GridColumnGro
     const groupParam = { ...other, groupId };
     const subTreeLookup = createGroupLookup(children);
     if (subTreeLookup[groupId] !== undefined || groupLookup[groupId] !== undefined) {
-      throw new Error(`The groupId ${groupId} is used multiple times`);
+      throw new Error(`MUI: The groupId ${groupId} is used multiple times`);
     }
     groupLookup = { ...groupLookup, ...subTreeLookup, [groupId]: groupParam };
   });
