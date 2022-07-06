@@ -452,6 +452,7 @@
   { "name": "MAX_PAGE_SIZE", "kind": "Variable" },
   { "name": "MuiBaseEvent", "kind": "TypeAlias" },
   { "name": "MuiEvent", "kind": "TypeAlias" },
+  { "name": "nbNO", "kind": "Variable" },
   { "name": "nlNL", "kind": "Variable" },
   { "name": "OutputSelector", "kind": "Interface" },
   { "name": "plPL", "kind": "Variable" },
