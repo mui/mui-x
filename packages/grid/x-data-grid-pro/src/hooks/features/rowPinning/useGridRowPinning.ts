@@ -1,41 +1,18 @@
 import * as React from 'react';
 import { useGridApiMethod } from '@mui/x-data-grid';
-import {
-  GridStateInitializer,
-  GridHydrateRowsValue,
-  GridPinnedRowsState,
-  getRowIdFromRowModel,
-} from '@mui/x-data-grid/internals';
+import { GridStateInitializer } from '@mui/x-data-grid/internals';
 
 import { GridApiPro } from '../../../models/gridApiPro';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 import { GridRowPinningApi } from './gridRowPinningInterface';
 
-function getPinnedRowsStateFromProp({
-  pinnedRows,
-  getRowId,
-}: Pick<DataGridProProcessedProps, 'pinnedRows' | 'getRowId'>) {
-  return {
-    top: (pinnedRows?.top || []).map((row) => ({
-      id: getRowIdFromRowModel(row, getRowId),
-      model: row,
-    })),
-    bottom: (pinnedRows?.bottom || []).map((row) => ({
-      id: getRowIdFromRowModel(row, getRowId),
-      model: row,
-    })),
-  };
-}
-
 export const rowPinningStateInitializer: GridStateInitializer<
   Pick<DataGridProProcessedProps, 'pinnedRows' | 'getRowId'>
-> = (state, props) => {
-  let model: GridPinnedRowsState;
-  if (props.pinnedRows) {
-    model = getPinnedRowsStateFromProp({ pinnedRows: props.pinnedRows, getRowId: props.getRowId });
-  } else {
-    model = { top: [], bottom: [] };
-  }
+> = (state, props, apiRef) => {
+  apiRef.current.unstable_caches.pinnedRows = {
+    top: [],
+    bottom: [],
+  };
 
   return {
     ...state,
@@ -43,22 +20,11 @@ export const rowPinningStateInitializer: GridStateInitializer<
       ...state.rows,
       additionalRowGroups: {
         ...state.rows?.additionalRowGroups,
-        pinnedRows: model,
+        pinnedRows: { top: [], bottom: [] },
       },
     },
   };
 };
-
-export const mergeRowsStateWithPinnedRows = <R extends GridHydrateRowsValue = GridHydrateRowsValue>(
-  rowsState: R,
-  pinnedRows: GridPinnedRowsState,
-): R => ({
-  ...rowsState,
-  additionalRowGroups: {
-    ...rowsState.additionalRowGroups,
-    pinnedRows,
-  },
-});
 
 export const useGridRowPinning = (
   apiRef: React.MutableRefObject<GridApiPro>,
@@ -73,22 +39,14 @@ export const useGridRowPinning = (
 
   const setPinnedRows = React.useCallback<GridRowPinningApi['unstable_setPinnedRows']>(
     (newPinnedRows) => {
-      apiRef.current.setState((prevState) => {
-        const newState = {
-          ...prevState,
-          rows: mergeRowsStateWithPinnedRows(
-            prevState.rows,
-            getPinnedRowsStateFromProp({
-              pinnedRows: newPinnedRows,
-              getRowId: props.getRowId,
-            }),
-          ),
-        };
-        return newState;
-      });
-      apiRef.current.forceUpdate();
+      apiRef.current.unstable_caches.pinnedRows = {
+        top: newPinnedRows.top || [],
+        bottom: newPinnedRows.bottom || [],
+      };
+
+      apiRef.current.unstable_requestPipeProcessorsApplication('hydrateRows');
     },
-    [apiRef, props.getRowId],
+    [apiRef],
   );
 
   useGridApiMethod(

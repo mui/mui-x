@@ -31,7 +31,10 @@ export {
   useGridRowPinning,
   rowPinningStateInitializer,
 } from '../hooks/features/rowPinning/useGridRowPinning';
-export { useGridRowPinningPreProcessors } from '../hooks/features/rowPinning/useGridRowPinningPreProcessors';
+export {
+  useGridRowPinningPreProcessors,
+  addPinnedRow,
+} from '../hooks/features/rowPinning/useGridRowPinningPreProcessors';
 
 export type {
   GridExperimentalProFeatures,
