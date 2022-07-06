@@ -1,5 +1,6 @@
 <DataGridPro
   {...data}
+  apiRef={apiRef}
   hideFooterPagination
   rowCount={50}
   sortingMode="server"

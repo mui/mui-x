@@ -1,4 +1,5 @@
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import { Skeleton, styled } from '@mui/material';
 
 export interface GridSkeletonCellProps {
@@ -24,5 +25,16 @@ function GridSkeletonCell(props: React.HTMLAttributes<HTMLDivElement> & GridSkel
     </SkeletonCell>
   );
 }
+
+GridSkeletonCell.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // ----------------------------------------------------------------------
+  align: PropTypes.string.isRequired,
+  contentWidth: PropTypes.number.isRequired,
+  field: PropTypes.string.isRequired,
+  width: PropTypes.number.isRequired,
+} as any;
 
 export { GridSkeletonCell };
