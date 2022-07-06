@@ -89,8 +89,8 @@ export const useDataGridProComponent = (
   // The column pinning `hydrateColumns` pre-processor must be after every other `hydrateColumns` pre-processors
   // Because it changes the order of the columns.
   useGridColumnPinningPreProcessors(apiRef, props);
-  useGridRowsPreProcessors(apiRef);
   useGridRowPinningPreProcessors(apiRef, props);
+  useGridRowsPreProcessors(apiRef);
 
   /**
    * Register all state initializers here.
@@ -99,6 +99,7 @@ export const useDataGridProComponent = (
   useGridInitializeState(detailPanelStateInitializer, apiRef, props);
   useGridInitializeState(columnPinningStateInitializer, apiRef, props);
   useGridInitializeState(columnsStateInitializer, apiRef, props);
+  useGridInitializeState(rowPinningStateInitializer, apiRef, props);
   useGridInitializeState(rowsStateInitializer, apiRef, props);
   useGridInitializeState(
     props.experimentalFeatures?.newEditingApi
@@ -117,7 +118,6 @@ export const useDataGridProComponent = (
   useGridInitializeState(paginationStateInitializer, apiRef, props);
   useGridInitializeState(rowsMetaStateInitializer, apiRef, props);
   useGridInitializeState(columnMenuStateInitializer, apiRef, props);
-  useGridInitializeState(rowPinningStateInitializer, apiRef, props);
 
   useGridTreeData(apiRef);
   useGridKeyboardNavigation(apiRef, props);
