@@ -62,7 +62,7 @@ export interface DayPickerProps<TDate> extends ExportedDayPickerProps<TDate> {
   TransitionProps?: Partial<SlideTransitionProps>;
 }
 
-const weeksContainerHeight = (DAY_SIZE + DAY_MARGIN * 4) * 6;
+const weeksContainerHeight = (DAY_SIZE + DAY_MARGIN * 2) * 6;
 
 const PickersCalendarDayHeader = styled('div')({
   display: 'flex',

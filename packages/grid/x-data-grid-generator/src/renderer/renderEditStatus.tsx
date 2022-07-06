@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { GridRenderEditCellParams } from '@mui/x-data-grid-premium';
+import { GridRenderEditCellParams, useGridApiContext } from '@mui/x-data-grid-premium';
 import Select, { SelectProps } from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import { MenuProps } from '@mui/material/Menu';
@@ -12,17 +12,19 @@ import DoneIcon from '@mui/icons-material/Done';
 import { STATUS_OPTIONS } from '../services/static-data';
 
 function EditStatus(props: GridRenderEditCellParams<string>) {
-  const { id, value, api, field } = props;
+  const { id, value, field } = props;
+
+  const apiRef = useGridApiContext();
 
   const handleChange: SelectProps['onChange'] = (event) => {
-    api.setEditCellValue({ id, field, value: event.target.value as any }, event);
-    api.commitCellChange({ id, field });
-    api.setCellMode(id, field, 'view');
+    apiRef.current.setEditCellValue({ id, field, value: event.target.value as any }, event);
+    apiRef.current.commitCellChange({ id, field });
+    apiRef.current.setCellMode(id, field, 'view');
 
     if ((event as any).key) {
       // TODO v6: remove once we stop ignoring events fired from portals
-      const params = api.getCellParams(id, field);
-      api.publishEvent(
+      const params = apiRef.current.getCellParams(id, field);
+      apiRef.current.publishEvent(
         'cellNavigationKeyDown',
         params,
         event as any as React.KeyboardEvent<HTMLElement>,
@@ -32,7 +34,7 @@ function EditStatus(props: GridRenderEditCellParams<string>) {
 
   const handleClose: MenuProps['onClose'] = (event, reason) => {
     if (reason === 'backdropClick') {
-      api.setCellMode(id, field, 'view');
+      apiRef.current.setCellMode(id, field, 'view');
     }
   };
 
