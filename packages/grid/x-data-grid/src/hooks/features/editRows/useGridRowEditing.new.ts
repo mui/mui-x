@@ -212,7 +212,7 @@ export const useGridRowEditing = (
         let reason: GridRowEditStartReasons | undefined;
 
         if (isPrintableKey(event.key)) {
-          if (event.shiftKey || event.ctrlKey || event.metaKey || event.altKey) {
+          if ((event.ctrlKey && event.key !== 'v') || event.metaKey || event.altKey) {
             return;
           }
           reason = GridRowEditStartReasons.printableKeyDown;

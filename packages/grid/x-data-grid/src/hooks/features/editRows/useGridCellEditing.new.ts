@@ -152,7 +152,7 @@ export const useGridCellEditing = (
         let reason: GridCellEditStartReasons | undefined;
 
         if (isPrintableKey(event.key)) {
-          if (event.shiftKey || event.ctrlKey || event.metaKey || event.altKey) {
+          if ((event.ctrlKey && event.key !== 'v') || event.metaKey || event.altKey) {
             return;
           }
           reason = GridCellEditStartReasons.printableKeyDown;
