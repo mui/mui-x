@@ -145,7 +145,7 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
       // Fallback for IE
       apiRef.current.unstable_storeRowHeightMeasurement(rowId, ref.current.clientHeight);
     }
-  });
+  }, [apiRef, rowHeight, rowId]);
 
   React.useLayoutEffect(() => {
     if (currentPage.range) {
