@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { DataGridPro } from '@mui/x-data-grid-pro';
+import { DataGridPro, useGridApiRef } from '@mui/x-data-grid-pro';
 import {
   useDemoData,
   getRealGridData,
@@ -23,18 +23,19 @@ const loadServerRows = async (newRowLength) => {
 };
 
 export default function LazyLoadingGrid() {
+  const apiRef = useGridApiRef();
   const { data } = useDemoData({
     dataSet: 'Commodity',
     rowLength: 10,
     maxColumns: 6,
   });
 
-  const handleFetchRows = async (params, event, details) => {
+  const handleFetchRows = async (params) => {
     const newRowsBatch = await loadServerRows(
       params.lastRowToRender - params.firstRowToRender,
     );
 
-    details.api.replaceRows(
+    apiRef.current.replaceRows(
       params.firstRowToRender,
       params.lastRowToRender,
       newRowsBatch,
@@ -45,6 +46,7 @@ export default function LazyLoadingGrid() {
     <div style={{ height: 400, width: '100%' }}>
       <DataGridPro
         {...data}
+        apiRef={apiRef}
         hideFooterPagination
         rowCount={50}
         sortingMode="server"

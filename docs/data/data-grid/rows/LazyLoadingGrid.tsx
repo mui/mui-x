@@ -2,8 +2,7 @@ import * as React from 'react';
 import {
   GridFetchRowsParams,
   DataGridPro,
-  GridCallbackDetails,
-  MuiEvent,
+  useGridApiRef,
 } from '@mui/x-data-grid-pro';
 import {
   useDemoData,
@@ -28,22 +27,19 @@ const loadServerRows = async (newRowLength: number) => {
 };
 
 export default function LazyLoadingGrid() {
+  const apiRef = useGridApiRef();
   const { data } = useDemoData({
     dataSet: 'Commodity',
     rowLength: 10,
     maxColumns: 6,
   });
 
-  const handleFetchRows = async (
-    params: GridFetchRowsParams,
-    event: MuiEvent,
-    details: GridCallbackDetails,
-  ) => {
+  const handleFetchRows = async (params: GridFetchRowsParams) => {
     const newRowsBatch = await loadServerRows(
       params.lastRowToRender - params.firstRowToRender,
     );
 
-    details.api.replaceRows(
+    apiRef.current.replaceRows(
       params.firstRowToRender,
       params.lastRowToRender,
       newRowsBatch,
@@ -54,6 +50,7 @@ export default function LazyLoadingGrid() {
     <div style={{ height: 400, width: '100%' }}>
       <DataGridPro
         {...data}
+        apiRef={apiRef}
         hideFooterPagination
         rowCount={50}
         sortingMode="server"

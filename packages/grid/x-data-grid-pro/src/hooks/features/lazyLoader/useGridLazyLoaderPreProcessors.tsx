@@ -25,7 +25,7 @@ export const useGridLazyLoaderPreProcessors = (
         props.rowCount &&
         props.rows.length < props.rowCount
       ) {
-        const newRowsIds: Array<GridRowId> = [...groupingParams.ids];
+        const newRowsIds: GridRowId[] = [...groupingParams.ids];
 
         for (let i = 0; i < props.rowCount - groupingParams.ids.length; i += 1) {
           const skeletonId = getSkeletonRowId(i);

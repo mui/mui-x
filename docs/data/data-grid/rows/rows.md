@@ -84,15 +84,15 @@ In addition, the area in which `onRowsScrollEnd` is called can be changed using 
 
 ### Lazy loading [<span class="plan-pro"></span>](https://mui.com/store/items/mui-x-pro/)
 
-By default, infinite loading works on the client-side.
-
-To switch it to server-side, set `rowsLoadingMode="server"`.
+To allow the grid to lazy load data, set `rowsLoadingMode="server"`.
 Then the `rowCount` needs to be set and the number of initially loaded rows needs to be less than the `rowCount` value.
 In addition, you need to handle the `onFetchRows` callback to fetch the rows for the corresponding index.
 Finally, you need to use the `apiRef.current.insertRows()` to tell the DataGrid where to insert the newly fetched rows.
 
-**Note**: in order for the filtering and sorting to work you need to set their modes to `server`.
+:::info
+In order for the filtering and sorting to work you need to set their modes to `server`.
 You can find out more information about how to do that on the [server-side filter page](/components/data-grid/filtering/#server-side-filter) and on the [server-side sorting page](/components/data-grid/sorting/#server-side-sorting).
+:::
 
 {{"demo": "LazyLoadingGrid.js", "bg": "inline", "disableAd": true}}
 

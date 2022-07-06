@@ -349,32 +349,26 @@ export const useGridRows = (
       const updatedIdToIdLookup = { ...idToIdLookup };
       const updatedTree = { ...tree };
       const rowIdsToBeReplaced = allRows.slice(firstRowToRender, lastRowToRender);
+
       rowIdsToBeReplaced.forEach((id) => {
         delete updatedIdRowsLookup[id];
         delete updatedIdToIdLookup[id];
         delete updatedTree[id];
       });
 
-      const newIdRowsLookup = newRows.reduce(
-        (acc, row) => Object.assign(acc, { [row.id]: row }),
-        updatedIdRowsLookup,
-      );
-      const newIdToIdLookup = newRows.reduce(
-        (acc, row) => Object.assign(acc, { [row.id]: row.id }),
-        updatedIdToIdLookup,
-      );
-      const newTree = newRows.reduce(
-        (acc, row) => Object.assign(acc, { [row.id]: row }),
-        updatedTree,
-      );
+      newRows.forEach((row) => {
+        updatedIdRowsLookup[row.id] = row;
+        updatedIdToIdLookup[row.id] = row.id;
+        updatedTree[row.id] = row;
+      });
 
       apiRef.current.setState((state) => ({
         ...state,
         rows: {
           ...state.rows,
-          idRowsLookup: newIdRowsLookup,
-          idToIdLookup: newIdToIdLookup,
-          tree: newTree,
+          idRowsLookup: updatedIdRowsLookup,
+          idToIdLookup: updatedIdToIdLookup,
+          tree: updatedTree,
           ids: updatedRows,
         },
       }));

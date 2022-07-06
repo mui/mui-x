@@ -47,8 +47,8 @@ export const useGridLazyLoader = (
       if (
         !dimensions ||
         props.rowsLoadingMode !== GridFeatureModeConstant.server ||
-        renderedRowsIntervalCache.current.firstRowToRender === params.firstRowToRender ||
-        renderedRowsIntervalCache.current.lastRowToRender === params.lastRowToRender
+        (renderedRowsIntervalCache.current.firstRowToRender === params.firstRowToRender &&
+          renderedRowsIntervalCache.current.lastRowToRender === params.lastRowToRender)
       ) {
         return;
       }
