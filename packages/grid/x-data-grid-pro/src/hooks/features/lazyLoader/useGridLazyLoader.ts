@@ -10,6 +10,7 @@ import {
   gridFilterModelSelector,
   useGridApiOptionHandler,
   GridEventListener,
+  GridRowEntry,
 } from '@mui/x-data-grid';
 import { useGridVisibleRows } from '@mui/x-data-grid/internals';
 import { getRenderableIndexes } from '@mui/x-data-grid/hooks/features/virtualization/useGridVirtualScroller';
@@ -17,6 +18,39 @@ import { GridApiPro } from '../../../models/gridApiPro';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 import { GRID_SKELETON_ROW_ROOT_ID } from './useGridLazyLoaderPreProcessors';
 import { GridFetchRowsParams } from '../../../models/gridFetchRowsParams';
+
+function findSkeletonRowsSection(
+  visibleRows: GridRowEntry<any>[],
+  range: { firstRowIndex: number; lastRowIndex: number },
+): { firstRowIndex: number; lastRowIndex: number } {
+  const visibleRowsSection = visibleRows.slice(range.firstRowIndex, range.lastRowIndex);
+  let firstRowIndex = range.firstRowIndex;
+  let lastRowIndex = range.lastRowIndex;
+  let startIndex = 0;
+  let endIndex = visibleRowsSection.length - 1;
+  let isSkeletonSectionFound = false;
+
+  while (!isSkeletonSectionFound) {
+    if (!visibleRowsSection[startIndex].model && !visibleRowsSection[endIndex].model) {
+      isSkeletonSectionFound = true;
+    }
+
+    if (visibleRowsSection[startIndex].model) {
+      startIndex += 1;
+      firstRowIndex += 1;
+    }
+
+    if (visibleRowsSection[endIndex].model) {
+      endIndex -= 1;
+      lastRowIndex -= 1;
+    }
+  }
+
+  return {
+    firstRowIndex,
+    lastRowIndex,
+  };
+}
 
 /**
  * @requires useGridRows (state)
@@ -65,16 +99,21 @@ export const useGridLazyLoader = (
         return;
       }
 
+      const { firstRowIndex, lastRowIndex } = findSkeletonRowsSection(visibleRows.rows, {
+        firstRowIndex: params.firstRowToRender,
+        lastRowIndex: params.lastRowToRender,
+      });
+
       renderedRowsIntervalCache.current = params;
       const fetchRowsParams: GridFetchRowsParams = {
-        firstRowToRender: params.firstRowToRender,
-        lastRowToRender: params.lastRowToRender,
+        firstRowToRender: firstRowIndex,
+        lastRowToRender: lastRowIndex,
         sortModel,
         filterModel,
       };
       apiRef.current.publishEvent('fetchRows', fetchRowsParams);
     },
-    [apiRef, props.rowsLoadingMode, rowIds, sortModel, filterModel],
+    [apiRef, props.rowsLoadingMode, rowIds, sortModel, filterModel, visibleRows],
   );
 
   const handleGridSortModelChange = React.useCallback<GridEventListener<'sortModelChange'>>(
