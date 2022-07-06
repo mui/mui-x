@@ -224,8 +224,8 @@ export const useGridSorting = (
       const sortModelToExport = gridSortModelSelector(apiRef);
 
       const shouldExportSortModel =
-        // Always export if the `shouldExportUnusedModels` property is activated
-        context.shouldExportUnusedModels ||
+        // Always export if the `exportOnlyUsedModels` property is activated
+        !context.exportOnlyUsedModels ||
         // Always export if the model is controlled
         props.sortModel != null ||
         // Always export if the model has been initialized

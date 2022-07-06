@@ -69,26 +69,50 @@ describe('<DataGridPremium /> - State Persistence', () => {
   };
 
   describe('apiRef: exportState', () => {
-    // We always export the `orderedFields`,
-    // If it's something problematic we could introduce an `hasBeenReordered` property and only export if at least one column has been reordered.
-    it('should not return the default values of the models', () => {
+    it('should export the initial values of the models', () => {
+      render(<TestCase initialState={FULL_INITIAL_STATE} />);
+
+      const exportedState = apiRef.current.exportState();
+      expect(exportedState.rowGrouping).to.deep.equal(FULL_INITIAL_STATE.rowGrouping);
+    });
+
+    it('should not export the default values of the models when using exportOnlyUsedModels', () => {
       render(<TestCase />);
-      expect(apiRef.current.exportState()).to.deep.equal({
+      expect(apiRef.current.exportState({ exportOnlyUsedModels: true })).to.deep.equal({
         columns: {
           orderedFields: ['id', 'category'],
         },
       });
     });
 
-    it('should export the initial values of the models', () => {
-      render(<TestCase initialState={FULL_INITIAL_STATE} />);
-      expect(apiRef.current.exportState()).to.deep.equal(FULL_INITIAL_STATE);
-    });
-
     it('should export the current version of the exportable state', () => {
       render(<TestCase />);
       apiRef.current.setRowGroupingModel(['category']);
-      expect(apiRef.current.exportState()).to.deep.equal(FULL_INITIAL_STATE);
+
+      const exportedState = apiRef.current.exportState();
+      expect(exportedState.rowGrouping).to.deep.equal(FULL_INITIAL_STATE.rowGrouping);
+    });
+
+    it('should export the current version of the exportable state when using exportOnlyUsedModels', () => {
+      render(<TestCase />);
+      apiRef.current.setRowGroupingModel(['category']);
+
+      const exportedState = apiRef.current.exportState({ exportOnlyUsedModels: true });
+      expect(exportedState.rowGrouping).to.deep.equal(FULL_INITIAL_STATE.rowGrouping);
+    });
+
+    it('should export the controlled values of the models', () => {
+      render(<TestCase rowGroupingModel={FULL_INITIAL_STATE.rowGrouping?.model} />);
+      expect(apiRef.current.exportState().rowGrouping).to.deep.equal(
+        FULL_INITIAL_STATE.rowGrouping,
+      );
+    });
+
+    it('should export the controlled values of the models when using exportOnlyUsedModels', () => {
+      render(<TestCase rowGroupingModel={FULL_INITIAL_STATE.rowGrouping?.model} />);
+      expect(apiRef.current.exportState().rowGrouping).to.deep.equal(
+        FULL_INITIAL_STATE.rowGrouping,
+      );
     });
   });
 

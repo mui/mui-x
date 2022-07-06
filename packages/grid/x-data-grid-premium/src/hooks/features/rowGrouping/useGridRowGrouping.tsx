@@ -181,8 +181,8 @@ export const useGridRowGrouping = (
       const rowGroupingModelToExport = gridRowGroupingModelSelector(apiRef);
 
       const shouldExportRowGroupingModel =
-        // Always export if the `shouldExportUnusedModels` property is activated
-        context.shouldExportUnusedModels ||
+        // Always export if the `exportOnlyUsedModels` property is activated
+        !context.exportOnlyUsedModels ||
         // Always export if the model is controlled
         props.rowGroupingModel != null ||
         // Always export if the model has been initialized

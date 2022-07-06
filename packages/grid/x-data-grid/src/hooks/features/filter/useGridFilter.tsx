@@ -264,8 +264,8 @@ export const useGridFilter = (
       const filterModelToExport = gridFilterModelSelector(apiRef);
 
       const shouldExportFilterModel =
-        // Always export if the `shouldExportUnusedModels` property is activated
-        context.shouldExportUnusedModels ||
+        // Always export if the `exportOnlyUsedModels` property is activated
+        !context.exportOnlyUsedModels ||
         // Always export if the model is controlled
         props.filterModel != null ||
         // Always export if the model has been initialized

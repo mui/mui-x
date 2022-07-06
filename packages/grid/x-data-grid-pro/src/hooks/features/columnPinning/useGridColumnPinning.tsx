@@ -217,8 +217,8 @@ export const useGridColumnPinning = (
       const pinnedColumnsToExport = gridPinnedColumnsSelector(apiRef.current.state);
 
       const shouldExportPinnedColumns =
-        // Always export if the `shouldExportUnusedModels` property is activated
-        context.shouldExportUnusedModels ||
+        // Always export if the `exportOnlyUsedModels` property is activated
+        !context.exportOnlyUsedModels ||
         // Always export if the model is controlled
         props.pinnedColumns != null ||
         // Always export if the model has been initialized

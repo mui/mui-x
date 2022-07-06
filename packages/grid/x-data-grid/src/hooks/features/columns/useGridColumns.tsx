@@ -306,8 +306,8 @@ export function useGridColumns(
       if (apiRef.current.unstable_caches.columns.isUsingColumnVisibilityModel) {
         const columnVisibilityModelToExport = gridColumnVisibilityModelSelector(apiRef);
         const shouldExportColumnVisibilityModel =
-          // Always export if the `shouldExportUnusedModels` property is activated
-          context.shouldExportUnusedModels ||
+          // Always export if the `exportOnlyUsedModels` property is activated
+          !context.exportOnlyUsedModels ||
           // Always export if the model is controlled
           props.columnVisibilityModel != null ||
           // Always export if the model has been initialized
