@@ -52,7 +52,7 @@
     "@date-io/moment": "^2.14.0",
     "@mui/utils": "^5.4.1",
     "@types/react-transition-group": "^4.4.4",
-    "clsx": "^1.1.1",
+    "clsx": "^1.2.1",
     "prop-types": "^15.7.2",
     "react-transition-group": "^4.4.2",
     "rifm": "^0.12.1"
