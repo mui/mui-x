@@ -166,7 +166,7 @@ describe('<DataGridPro /> - Tree Data', () => {
       expect(getColumnValues(1)).to.deep.equal(['1', '2']);
     });
 
-    it('should keep children expansion when changing some of the rows', () => {
+    it.only('should keep children expansion when changing some of the rows', () => {
       const { setProps } = render(
         <Test disableVirtualization rows={[{ name: 'A' }, { name: 'A.A' }]} />,
       );

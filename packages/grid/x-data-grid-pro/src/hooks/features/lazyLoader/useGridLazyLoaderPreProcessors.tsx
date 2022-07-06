@@ -2,7 +2,7 @@ import * as React from 'react';
 import { DataGridProProcessedProps } from '@mui/x-data-grid-pro/models/dataGridProProps';
 import { GridApiPro } from '@mui/x-data-grid-pro/models/gridApiPro';
 import { GridPipeProcessor, useGridRegisterPipeProcessor } from '@mui/x-data-grid/internals';
-import { GridRowId } from '@mui/x-data-grid';
+import { GridFeatureModeConstant, GridRowId } from '@mui/x-data-grid';
 
 export const GRID_SKELETON_ROW_ROOT_ID = 'auto-generated-skeleton-row-root';
 
@@ -21,7 +21,7 @@ export const useGridLazyLoaderPreProcessors = (
   const addSkeletonRows = React.useCallback<GridPipeProcessor<'hydrateRows'>>(
     (groupingParams) => {
       if (
-        props.rowsLoadingMode === 'server' &&
+        props.rowsLoadingMode === GridFeatureModeConstant.server &&
         props.rowCount &&
         props.rows.length < props.rowCount
       ) {

@@ -415,13 +415,13 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
   const emptyCellWidth = containerWidth - columnsTotalWidth;
 
   const eventHandlers = row
-    ? null
-    : {
+    ? {
         onClick: publishClick,
         onDoubleClick: publish('rowDoubleClick', onDoubleClick),
         onMouseEnter: publish('rowMouseEnter', onMouseEnter),
         onMouseLeave: publish('rowMouseLeave', onMouseLeave),
-      };
+      }
+    : null;
 
   return (
     <div
