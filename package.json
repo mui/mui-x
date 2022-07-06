@@ -98,7 +98,7 @@
     "@types/react": "^17.0.47",
     "@types/react-dom": "^18.0.5",
     "@types/requestidlecallback": "^0.3.4",
-    "@types/sinon": "^10.0.11",
+    "@types/sinon": "^10.0.12",
     "@types/yargs": "^17.0.10",
     "@typescript-eslint/eslint-plugin": "^5.29.0",
     "@typescript-eslint/parser": "^5.29.0",
