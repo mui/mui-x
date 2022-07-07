@@ -90,6 +90,8 @@ The following example changes this behavior by also requiring <kbd class="key">C
 
 ## Catalog of events
 
+Expend the rows to see how to use each event.
+
 {{"demo": "CatalogOfEventsNoSnap.js", "bg": "inline", "hideToolbar": true}}
 
 ## API

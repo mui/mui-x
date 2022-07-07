@@ -7,6 +7,7 @@ import {
   GridToolbarQuickFilter,
 } from '@mui/x-data-grid-pro';
 import events from './events.json';
+import Box from '@mui/material/Box';
 
 function getDataGridComponentNameFromProjectName(project) {
   switch (project) {
@@ -66,12 +67,13 @@ const COLUMNS = [
   {
     field: 'name',
     headerName: 'Name',
-    width: 200,
+    width: 240,
   },
   {
     field: 'plan',
     headerName: 'Plan',
-    width: 70,
+    width: 100,
+    align: 'center',
     valueGetter: ({ row }) => {
       if (row.projects.includes('x-data-grid')) {
         return 'x-data-grid';
@@ -98,13 +100,17 @@ const COLUMNS = [
     field: 'description',
     headerName: 'Description',
     flex: 1,
-    renderCell: ({ value }) => (
-      <div
-        dangerouslySetInnerHTML={{
-          __html: value,
-        }}
-      />
-    ),
+    renderCell: ({ value, colDef }) => {
+      const width = colDef.computedWidth - 20;
+      return (
+        <div
+          style={{ minWidth: width, maxWidth: width, width, whiteSpace: 'normal' }}
+          dangerouslySetInnerHTML={{
+            __html: value,
+          }}
+        />
+      );
+    },
   },
 ];
 
@@ -116,18 +122,20 @@ const Toolbar = () => (
 
 export default function CatalogOfEventsNoSnap() {
   return (
-    <DataGridPro
-      autoHeight
-      rows={events}
-      columns={COLUMNS}
-      density="comfortable"
-      getRowId={(row) => row.name}
-      getDetailPanelContent={({ row }) => <EventRow event={row} />}
-      disableRowSelection
-      hideFooter
-      components={{
-        Toolbar,
-      }}
-    />
+    <Box sx={{ width: '100%', height: 600 }}>
+      <DataGridPro
+        rows={events}
+        columns={COLUMNS}
+        density="comfortable"
+        getRowId={(row) => row.name}
+        getDetailPanelContent={({ row }) => <EventRow event={row} />}
+        getDetailPanelHeight={() => 'auto'}
+        disableRowSelection
+        hideFooter
+        components={{
+          Toolbar,
+        }}
+      />
+    </Box>
   );
 }
