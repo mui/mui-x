@@ -2,9 +2,16 @@ import type { MuiPage } from '@mui/monorepo/docs/src/MuiPage';
 
 const pages: MuiPage[] = [
   {
-    pathname: '/x/advanced-components',
-    title: 'Overview',
+    pathname: '/x/introduction',
+    scopePathnames: ['/x/introduction'],
     icon: 'DescriptionIcon',
+    children: [
+      { pathname: `/x/introduction`, title: 'Overview' },
+      { pathname: `/x/introduction/installation` },
+      { pathname: `/x/introduction/licensing` },
+      { pathname: `/x/introduction/support` },
+      { pathname: `/x/introduction/roadmap` },
+    ],
   },
   {
     pathname: '/x/react-data-grid',
