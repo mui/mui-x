@@ -40,6 +40,8 @@ We'd like to offer a big thanks to the 9 contributors who made this release poss
 
 #### `@mui/x-date-pickers@v5.0.0-beta.0` / `@mui/x-date-picker-pro@5.0.0-beta.0`
 
+#### Changes
+
 - [DateRangePicker] Fix keyboard selection (#5265) @alexfauquette
 - [DayPicker] Remove empty space at the bottom of the day view (#5073) @flaviendelangle
 - [pickers] Add missing type dependencies (#5331) @Methuselah96
