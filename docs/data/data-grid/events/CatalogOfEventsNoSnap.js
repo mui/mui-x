@@ -122,7 +122,7 @@ const Toolbar = () => (
 
 export default function CatalogOfEventsNoSnap() {
   return (
-    <Box sx={{ width: '100%', height: 600 }}>
+    <Box sx={{ width: '100%', height: 800 }}>
       <DataGridPro
         rows={events}
         columns={COLUMNS}
