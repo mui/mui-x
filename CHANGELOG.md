@@ -9,7 +9,7 @@ _Jul 7, 2022_
 
 We'd like to offer a big thanks to the 9 contributors who made this release possible. Here are some highlights ✨:
 
-- 🎁 `@mui/x-date-pickers` and `@mui/x-date-pickers-pro` are moving to beta
+- 🎁 `@mui/x-date-pickers` and `@mui/x-date-pickers-pro` are now in beta!
 
 - ✨ Allow to infer detail panel height from content (#5163) @m4theushw
 
