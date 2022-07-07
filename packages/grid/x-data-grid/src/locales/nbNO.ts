@@ -1,5 +1,5 @@
 import { nbNO as nbNOCore } from '@mui/material/locale';
-import { GridLocaleText } from '@mui/x-data-grid';
+import { GridLocaleText } from '../models/api/gridLocaleTextApi';
 import { getGridLocalization, Localization } from '../utils/getGridLocalization';
 
 const nbNOGrid: Partial<GridLocaleText> = {

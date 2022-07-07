@@ -152,7 +152,7 @@ export const useGridRows = (
         throw new Error(
           [
             "MUI: You can't update several rows at once in `apiRef.current.updateRows` on the DataGrid.",
-            'You need to upgrade to the DataGridPro component to unlock this feature.',
+            'You need to upgrade to DataGridPro or DataGridPremium component to unlock this feature.',
           ].join('\n'),
         );
       }

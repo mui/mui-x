@@ -1,5 +1,4 @@
 import * as React from 'react';
-import PropTypes from 'prop-types';
 import { TextFieldProps as MuiTextFieldPropsType } from '@mui/material/TextField';
 import { IconButtonProps } from '@mui/material/IconButton';
 import { InputAdornmentProps } from '@mui/material/InputAdornment';
@@ -166,8 +165,3 @@ export const PureDateInput = React.forwardRef(function PureDateInput<TInputDate,
     ...TextFieldProps,
   });
 });
-
-PureDateInput.propTypes = {
-  getOpenDialogAriaText: PropTypes.func,
-  renderInput: PropTypes.func.isRequired,
-};
