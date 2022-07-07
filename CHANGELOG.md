@@ -7,11 +7,11 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 _Jul 7, 2022_
 
-We'd like to offer a big thanks to the 9 contributors who made this release possible. Here are some highlights ✨:
+We'd like to offer a big thanks to the 10 contributors who made this release possible. Here are some highlights ✨:
 
 - 🎁 `@mui/x-date-pickers` and `@mui/x-date-pickers-pro` are now in beta!
 
-- ✨ Allow to infer detail panel height from content (#5163) @m4theushw
+- ✨ Allow detail panel's height to match its content (#5163) @m4theushw
 
   ```tsx
   <DataGridPro getDetailPanelHeight={() => 'auto'} />
@@ -28,6 +28,7 @@ We'd like to offer a big thanks to the 9 contributors who made this release poss
 - [DataGrid] Allows to customize variant of value input in filter panel (#4826) @alexfauquette
 - [DataGrid] Add Romanian (ro-RO) locale (#5345) @rolule
 - [DataGrid] Export Norwegian (nb-NO) locale (#5407) @cherniavskii
+- [DataGrid] Fix broken "start editing" integration with Japanese (#5414) @mnajdova
 - [DataGrid] Fix "stop editing" integration with IME e.g. Japanese (#5257) @Gumichocopengin8
 - [DataGrid] Fix dimensions computation with `autoHeight` and scroll x (#5401) @flaviendelangle
 - [DataGrid] Improve Slovak (sk-SK) locale (#5332) @msidlo
