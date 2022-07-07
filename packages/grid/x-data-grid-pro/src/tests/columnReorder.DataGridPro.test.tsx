@@ -595,5 +595,139 @@ describe('<DataGridPro /> - Columns reorder', () => {
         'col3',
       ]);
     });
+
+    it('should allow to split a group with freeReordering in another group', () => {
+      const rows = [{ id: 0 }];
+      const columns = [{ field: 'col1' }, { field: 'col2' }, { field: 'col3' }];
+
+      const columnGroupingModel = [
+        {
+          groupId: 'col123',
+          children: [
+            { field: 'col1' },
+            {
+              groupId: 'col23',
+              children: [{ field: 'col2' }, { field: 'col3' }],
+              freeReordering: true,
+            },
+          ],
+        },
+      ];
+
+      const Test = () => {
+        return (
+          <div style={{ width: 300, height: 300 }}>
+            <DataGridPro rows={rows} columns={columns} columnGroupingModel={columnGroupingModel} />
+          </div>
+        );
+      };
+
+      render(<Test />);
+      expect(getColumnHeadersTextContent()).to.deep.equal([
+        'col123',
+        '',
+        'col23',
+        'col1',
+        'col2',
+        'col3',
+      ]);
+      const dragCol = getColumnHeaderCell(0, 1).firstChild!;
+      const targetCol = getColumnHeaderCell(1, 1).firstChild!;
+
+      fireEvent.dragStart(dragCol);
+      fireEvent.dragEnter(targetCol);
+      const dragOverEvent2 = createDragOverEvent(targetCol);
+      fireEvent(targetCol, dragOverEvent2);
+      expect(getColumnHeadersTextContent()).to.deep.equal([
+        'col123',
+        'col23',
+        '',
+        'col23',
+        'col2',
+        'col1',
+        'col3',
+      ]);
+
+      const dragEndEvent = createDragEndEvent(dragCol);
+      fireEvent(dragCol, dragEndEvent);
+      expect(getColumnHeadersTextContent()).to.deep.equal([
+        'col123',
+        'col23',
+        '',
+        'col23',
+        'col2',
+        'col1',
+        'col3',
+      ]);
+    });
+
+    it('should block dragging outside ot a group even at deeper level', () => {
+      const rows = [{ id: 0 }];
+      const columns = [{ field: 'col1' }, { field: 'col2' }, { field: 'col3' }];
+
+      const columnGroupingModel = [
+        {
+          groupId: 'col12',
+          children: [
+            { field: 'col1' },
+            {
+              groupId: 'col2',
+              children: [{ field: 'col2' }],
+              freeReordering: true,
+            },
+          ],
+        },
+      ];
+
+      const Test = () => {
+        return (
+          <div style={{ width: 300, height: 300 }}>
+            <DataGridPro rows={rows} columns={columns} columnGroupingModel={columnGroupingModel} />
+          </div>
+        );
+      };
+
+      render(<Test />);
+      expect(getColumnHeadersTextContent()).to.deep.equal([
+        'col12',
+        '',
+        '',
+        'col2',
+        '',
+        'col1',
+        'col2',
+        'col3',
+      ]);
+      const dragCol = getColumnHeaderCell(0, 1).firstChild!;
+      const targetCol = getColumnHeaderCell(2, 1).firstChild!;
+
+      fireEvent.dragStart(dragCol);
+      fireEvent.dragEnter(targetCol);
+      const dragOverEvent2 = createDragOverEvent(targetCol);
+      fireEvent(targetCol, dragOverEvent2);
+      expect(getColumnHeadersTextContent()).to.deep.equal([
+        'col12',
+        '',
+        '',
+        'col2',
+        '',
+        'col1',
+        'col2',
+        'col3',
+      ]);
+
+      const dragEndEvent = createDragEndEvent(dragCol);
+      fireEvent(dragCol, dragEndEvent);
+      expect(getColumnHeadersTextContent()).to.deep.equal([
+        'col12',
+        '',
+        '',
+        'col2',
+        '',
+        'col1',
+        'col2',
+        'col3',
+      ]);
+    });
   });
 });
