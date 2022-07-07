@@ -49,8 +49,8 @@ We'd like to offer a big thanks to the 9 contributors who made this release poss
 
 - [docs] Explain how to use hooks inside a cell renderer (#5158) @flaviendelangle
 - [docs] Fix server-side pagination demo (#5361) @cherniavskii
-- [docs] Fix typo in quickFilter doc (#5313) @alexfauquette
-- [docs] Improve getting-started page (#5293) @alexfauquette
+- [docs] Fix typo in the quick filter docs (#5313) @alexfauquette
+- [docs] Improve the "Getting started" page (#5293) @alexfauquette
 - [docs] Use `useKeepGroupedColumnsHiddren` from the grid package on remaining demo (#5382) @flaviendelangle
 
 ## v5.12.3
