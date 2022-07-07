@@ -16,14 +16,14 @@ const getSkeletonRowId = (index: GridRowId | null) => {
 
 export const useGridLazyLoaderPreProcessors = (
   apiRef: React.MutableRefObject<GridApiPro>,
-  props: Pick<DataGridProProcessedProps, 'rows' | 'rowCount' | 'rowsLoadingMode'>,
+  props: Pick<DataGridProProcessedProps, 'rowCount' | 'rowsLoadingMode'>,
 ) => {
   const addSkeletonRows = React.useCallback<GridPipeProcessor<'hydrateRows'>>(
     (groupingParams) => {
       if (
         props.rowsLoadingMode === GridFeatureModeConstant.server &&
         props.rowCount &&
-        props.rows.length < props.rowCount
+        groupingParams.ids.length < props.rowCount
       ) {
         const newRowsIds: GridRowId[] = [...groupingParams.ids];
 
@@ -40,7 +40,7 @@ export const useGridLazyLoaderPreProcessors = (
 
       return groupingParams;
     },
-    [props.rows.length, props.rowCount, props.rowsLoadingMode],
+    [props.rowCount, props.rowsLoadingMode],
   );
 
   useGridRegisterPipeProcessor(apiRef, 'hydrateRows', addSkeletonRows);
