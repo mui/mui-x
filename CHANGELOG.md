@@ -51,6 +51,7 @@ We'd like to offer a big thanks to the 9 contributors who made this release poss
 - [docs] Fix server-side pagination demo (#5361) @cherniavskii
 - [docs] Fix typo in the quick filter docs (#5313) @alexfauquette
 - [docs] Improve the "Getting started" page (#5293) @alexfauquette
+- [docs] New page for the pickers action bar customization (#5267) @flaviendelangle
 - [docs] Use `useKeepGroupedColumnsHiddren` from the grid package on remaining demo (#5382) @flaviendelangle
 
 ## v5.12.3
