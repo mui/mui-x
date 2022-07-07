@@ -21,8 +21,6 @@ We'd like to offer a big thanks to the 9 contributors who made this release poss
 - 📚 Documentation improvements
 - 🐞 Bugfixes
 
--
-
 ### `@mui/x-data-grid@v5.13.0` / `@mui/x-data-grid-pro@v5.13.0` / `@mui/x-data-grid-premium@v5.13.0`
 
 #### Changes
