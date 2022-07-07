@@ -147,6 +147,15 @@ const serializeRow = (
         row[column.field] = utcDate;
         break;
       }
+      case 'time': {
+        const date = api.getCellParams(id, column.field).value;
+        // value may be `undefined` in auto-generated grouping rows
+        if (!date) {
+          break;
+        }
+        row[column.field] = date.toLocaleTimeString();
+        break;
+      }
       case 'actions':
         break;
       default:

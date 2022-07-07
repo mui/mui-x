@@ -63,7 +63,16 @@ function GridEditDateCell(props: GridEditDateCellProps) {
     ...other
   } = props;
 
+  const isTime = colDef.type === 'time';
   const isDateTime = colDef.type === 'dateTime';
+  let inputType = isDateTime ? 'datetime-local' : 'date';
+  if (isTime) {
+    inputType = 'time';
+  }
+  let inputMax = isDateTime ? '9999-12-31T23:59' : '9999-12-31';
+  if (isTime) {
+    inputMax = '23:59';
+  }
   const apiRef = useGridApiContext();
   const inputRef = React.useRef<HTMLInputElement>();
 
@@ -83,14 +92,19 @@ function GridEditDateCell(props: GridEditDateCellProps) {
       formattedDate = '';
     } else {
       const localDate = new Date(parsedDate.getTime() - parsedDate.getTimezoneOffset() * 60 * 1000);
-      formattedDate = localDate.toISOString().substr(0, isDateTime ? 16 : 10);
+      let dateEndPosition = isDateTime ? 16 : 10;
+      if (isTime) {
+        dateEndPosition = 5;
+      }
+    
+      formattedDate = localDate.toISOString().substr(isTime ? 11 : 0, dateEndPosition);
     }
 
     return {
       parsed: parsedDate,
       formatted: formattedDate,
     };
-  }, [valueProp, isDateTime]);
+  }, [valueProp, isDateTime, isTime]);
 
   const [valueState, setValueState] = React.useState(valueTransformed);
   const rootProps = useGridRootProps();
@@ -149,9 +163,9 @@ function GridEditDateCell(props: GridEditDateCellProps) {
       inputRef={inputRef}
       fullWidth
       className={classes.root}
-      type={isDateTime ? 'datetime-local' : 'date'}
+      type={inputType}
       inputProps={{
-        max: isDateTime ? '9999-12-31T23:59' : '9999-12-31',
+        max: inputMax,
         ...inputProps,
       }}
       value={valueState.formatted}

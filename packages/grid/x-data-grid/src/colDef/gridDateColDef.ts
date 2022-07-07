@@ -12,6 +12,13 @@ export function gridDateFormatter({ value }: GridValueFormatterParams<Date | str
   return value ?? '';
 }
 
+export function gridTimeFormatter({ value }: GridValueFormatterParams<Date | string>) {
+  if (value instanceof Date) {
+    return value.toLocaleTimeString();
+  }
+  return value ?? '';
+}
+
 export function gridDateTimeFormatter({ value }: GridValueFormatterParams<Date | string>) {
   if (value instanceof Date) {
     return value.toLocaleString();
@@ -24,7 +31,17 @@ export const GRID_DATE_COL_DEF: GridColTypeDef<Date | string, string> = {
   type: 'date',
   sortComparator: gridDateComparator,
   valueFormatter: gridDateFormatter,
-  filterOperators: getGridDateOperators(),
+  filterOperators: getGridDateOperators('date'),
+  renderEditCell: renderEditDateCell,
+  getApplyQuickFilterFn: undefined,
+};
+
+export const GRID_TIME_COL_DEF: GridColTypeDef<Date | string, string> = {
+  ...GRID_STRING_COL_DEF,
+  type: 'time',
+  sortComparator: gridDateComparator,
+  valueFormatter: gridTimeFormatter,
+  filterOperators: getGridDateOperators('time'),
   renderEditCell: renderEditDateCell,
   getApplyQuickFilterFn: undefined,
 };
@@ -34,7 +51,7 @@ export const GRID_DATETIME_COL_DEF: GridColTypeDef<Date | string, string> = {
   type: 'dateTime',
   sortComparator: gridDateComparator,
   valueFormatter: gridDateTimeFormatter,
-  filterOperators: getGridDateOperators(true),
+  filterOperators: getGridDateOperators('dateTime'),
   renderEditCell: renderEditDateCell,
   getApplyQuickFilterFn: undefined,
 };

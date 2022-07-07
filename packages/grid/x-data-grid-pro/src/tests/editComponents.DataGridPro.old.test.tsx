@@ -641,6 +641,133 @@ describe('<DataGridPro /> - Edit Components', () => {
     });
   });
 
+  describe('column type: time', () => {
+    it('should call onEditCellPropsChange with the value entered as a Date', () => {
+      const onEditCellPropsChange = spy();
+      render(
+        <TestCase
+          rows={[{ id: 0, time: new Date(2021, 6, 5, 14, 30) }]}
+          columns={[{ field: 'time', type: 'time', editable: true }]}
+          onEditCellPropsChange={onEditCellPropsChange}
+        />,
+      );
+      const cell = getCell(0, 0);
+      fireEvent.mouseUp(cell);
+      fireEvent.doubleClick(cell);
+      const input = cell.querySelector('input')!;
+      fireEvent.change(input, { target: { value: '2022-05-07T15:30:00' } });
+      expect(onEditCellPropsChange.args[0][0].props.value.toISOString()).to.equal(
+        new Date(2022, 4, 7, 15, 30).toISOString(),
+      );
+    });
+
+    it('should call onEditCellPropsChange with null when entered an empty value', () => {
+      const onEditCellPropsChange = spy();
+      render(
+        <TestCase
+          rows={[{ id: 0, time: new Date(2021, 6, 5, 14, 30) }]}
+          columns={[{ field: 'time', type: 'time', editable: true }]}
+          onEditCellPropsChange={onEditCellPropsChange}
+        />,
+      );
+      const cell = getCell(0, 0);
+      fireEvent.mouseUp(cell);
+      fireEvent.doubleClick(cell);
+      const input = cell.querySelector('input')!;
+      fireEvent.change(input, { target: { value: '' } });
+      expect(onEditCellPropsChange.args[0][0].props.value).to.equal(null);
+    });
+
+    it('should set the focus correctly', () => {
+      render(
+        <TestCase
+          rows={[{ id: 0, time: new Date(2021, 6, 5, 14, 30) }]}
+          columns={[{ field: 'time', type: 'time', editable: true }]}
+        />,
+      );
+      const cell = getCell(0, 0);
+      fireEvent.mouseUp(cell);
+      fireEvent.doubleClick(cell);
+      expect(screen.getByRole('cell').querySelector('input')).toHaveFocus();
+    });
+
+    it('should allow external value updates as date', async () => {
+      const onEditCellPropsChange = spy();
+      render(
+        <TestCase
+          rows={[{ id: 0, time: new Date(2021, 6, 5, 14, 30) }]}
+          columns={[{ field: 'time', type: 'time', editable: true }]}
+          onEditCellPropsChange={onEditCellPropsChange}
+        />,
+      );
+      const cell = getCell(0, 0);
+      fireEvent.mouseUp(cell);
+      fireEvent.doubleClick(cell);
+      const newValue = new Date(2021, 6, 4, 17, 30);
+      act(() => {
+        apiRef.current.setEditCellValue({ id: 0, field: 'time', value: newValue });
+      });
+      const input = cell.querySelector('input')!;
+      await waitFor(() => {
+        expect(input.value).to.equal('2021-07-04T17:30');
+      });
+    });
+
+    it('should handle all the intermediate dates while editing the value', () => {
+      const onEditCellPropsChange = spy();
+      render(
+        <TestCase
+          rows={[{ id: 0, time: new Date(2021, 6, 5, 14, 30) }]}
+          columns={[{ field: 'time', type: 'time', editable: true }]}
+          onEditCellPropsChange={onEditCellPropsChange}
+        />,
+      );
+
+      const cell = getCell(0, 0);
+      fireEvent.mouseUp(cell);
+      fireEvent.doubleClick(cell);
+      const input = cell.querySelector('input')!;
+      fireEvent.change(input, { target: { value: '' } });
+      expect(onEditCellPropsChange.lastCall.args[0].props.value).to.equal(null);
+      fireEvent.change(input, { target: { value: '2021-01-05T14:30' } });
+      expect(onEditCellPropsChange.lastCall.args[0].props.value.getTime()).to.equal(
+        generateDate(2021, 0, 5, 14, 30),
+      );
+      fireEvent.change(input, { target: { value: '2021-01-01T14:30' } });
+      expect(onEditCellPropsChange.lastCall.args[0].props.value.getTime()).to.equal(
+        generateDate(2021, 0, 1, 14, 30),
+      );
+      fireEvent.change(input, { target: { value: '0001-01-01T14:30' } });
+      expect(onEditCellPropsChange.lastCall.args[0].props.value.getTime()).to.equal(
+        generateDate(1, 0, 1, 14, 30),
+      );
+      fireEvent.change(input, { target: { value: '0019-01-01T14:30' } });
+      expect(onEditCellPropsChange.lastCall.args[0].props.value.getTime()).to.equal(
+        generateDate(19, 0, 1, 14, 30),
+      );
+      fireEvent.change(input, { target: { value: '0199-01-01T14:30' } });
+      expect(onEditCellPropsChange.lastCall.args[0].props.value.getTime()).to.equal(
+        generateDate(199, 0, 1, 14, 30),
+      );
+      fireEvent.change(input, { target: { value: '1999-01-01T14:30' } });
+      expect(onEditCellPropsChange.lastCall.args[0].props.value.getTime()).to.equal(
+        generateDate(1999, 0, 1, 14, 30),
+      );
+      fireEvent.change(input, { target: { value: '1999-01-01T20:30' } });
+      expect(onEditCellPropsChange.lastCall.args[0].props.value.getTime()).to.equal(
+        generateDate(1999, 0, 1, 20, 30),
+      );
+      fireEvent.change(input, { target: { value: '1999-01-01T20:02' } });
+      expect(onEditCellPropsChange.lastCall.args[0].props.value.getTime()).to.equal(
+        generateDate(1999, 0, 1, 20, 2),
+      );
+      fireEvent.change(input, { target: { value: '1999-01-01T20:25' } });
+      expect(onEditCellPropsChange.lastCall.args[0].props.value.getTime()).to.equal(
+        generateDate(1999, 0, 1, 20, 25),
+      );
+    });
+  });
+
   describe('column type: dateTime', () => {
     it('should call onEditCellPropsChange with the value entered as a Date', () => {
       const onEditCellPropsChange = spy();

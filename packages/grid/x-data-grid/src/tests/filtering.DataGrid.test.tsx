@@ -703,6 +703,143 @@ describe('<DataGrid /> - Filter', () => {
       ]);
     });
   });
+  describe('column type: time', () => {
+    const getRows = (item: Omit<GridFilterItem, 'columnField'>) => {
+      const { unmount } = render(
+        <TestCase
+          filterModel={{
+            items: [{ columnField: 'time', ...item }],
+          }}
+          rows={[
+            {
+              id: 0,
+              time: undefined,
+            },
+            {
+              id: 1,
+              time: null,
+            },
+            {
+              id: 2,
+              time: '',
+            },
+            {
+              id: 3,
+              time: new Date(2001, 0, 1, 6, 30),
+            },
+            {
+              id: 4,
+              time: new Date(2001, 0, 1, 7, 30),
+            },
+            {
+              id: 5,
+              time: new Date(2001, 0, 1, 8, 30),
+            },
+          ]}
+          columns={[
+            {
+              field: 'time',
+              type: 'time',
+              // Avoid the localization of the date to simplify the checks
+              valueFormatter: ({ value }) => {
+                if (value === null) {
+                  return 'null';
+                }
+
+                if (value === undefined) {
+                  return 'undefined';
+                }
+
+                if (value === '') {
+                  return '';
+                }
+
+                return value.toLocaleString('en-US');
+              },
+            } as GridColDef<any, Date | null | undefined | string>,
+          ]}
+        />,
+      );
+
+      const values = getColumnValues(0);
+      unmount();
+      return values;
+    };
+
+    const ALL_ROWS = [
+      'undefined',
+      'null',
+      '',
+      '1/1/2001, 6:30:00 AM',
+      '1/1/2001, 7:30:00 AM',
+      '1/1/2001, 8:30:00 AM',
+    ];
+
+    it('should filter with operator "is"', () => {
+      expect(getRows({ operatorValue: 'is', value: '2001-01-01T07:30' })).to.deep.equal([
+        '1/1/2001, 7:30:00 AM',
+      ]);
+      expect(getRows({ operatorValue: 'is', value: undefined })).to.deep.equal(ALL_ROWS);
+      expect(getRows({ operatorValue: 'is', value: '' })).to.deep.equal(ALL_ROWS);
+    });
+
+    it('should filter with operator "not"', () => {
+      // TODO: Should this filter return the invalid dates like for the numeric filters ?
+      expect(getRows({ operatorValue: 'not', value: '2001-01-01T07:30' })).to.deep.equal([
+        '1/1/2001, 6:30:00 AM',
+        '1/1/2001, 8:30:00 AM',
+      ]);
+      expect(getRows({ operatorValue: 'not', value: undefined })).to.deep.equal(ALL_ROWS);
+      expect(getRows({ operatorValue: 'not', value: '' })).to.deep.equal(ALL_ROWS);
+    });
+
+    it('should filter with operator "before"', () => {
+      expect(getRows({ operatorValue: 'before', value: '2001-01-01T07:30' })).to.deep.equal([
+        '1/1/2001, 6:30:00 AM',
+      ]);
+      expect(getRows({ operatorValue: 'before', value: undefined })).to.deep.equal(ALL_ROWS);
+      expect(getRows({ operatorValue: 'before', value: '' })).to.deep.equal(ALL_ROWS);
+    });
+
+    it('should filter with operator "onOrBefore"', () => {
+      expect(getRows({ operatorValue: 'onOrBefore', value: '2001-01-01T07:30' })).to.deep.equal([
+        '1/1/2001, 6:30:00 AM',
+        '1/1/2001, 7:30:00 AM',
+      ]);
+      expect(getRows({ operatorValue: 'onOrBefore', value: undefined })).to.deep.equal(ALL_ROWS);
+      expect(getRows({ operatorValue: 'onOrBefore', value: '' })).to.deep.equal(ALL_ROWS);
+    });
+
+    it('should filter with operator "after"', () => {
+      expect(getRows({ operatorValue: 'after', value: '2001-01-01T07:30' })).to.deep.equal([
+        '1/1/2001, 8:30:00 AM',
+      ]);
+      expect(getRows({ operatorValue: 'after', value: undefined })).to.deep.equal(ALL_ROWS);
+      expect(getRows({ operatorValue: 'after', value: '' })).to.deep.equal(ALL_ROWS);
+    });
+
+    it('should filter with operator "onOrAfter"', () => {
+      expect(getRows({ operatorValue: 'onOrAfter', value: '2001-01-01T07:30' })).to.deep.equal([
+        '1/1/2001, 7:30:00 AM',
+        '1/1/2001, 8:30:00 AM',
+      ]);
+      expect(getRows({ operatorValue: 'onOrAfter', value: undefined })).to.deep.equal(ALL_ROWS);
+      expect(getRows({ operatorValue: 'onOrAfter', value: '' })).to.deep.equal(ALL_ROWS);
+    });
+
+    it('should filter with operator "isEmpty"', () => {
+      expect(getRows({ operatorValue: 'isEmpty' })).to.deep.equal(['undefined', 'null']);
+    });
+
+    it('should filter with operator "isNotEmpty"', () => {
+      expect(getRows({ operatorValue: 'isNotEmpty' })).to.deep.equal([
+        '',
+        '1/1/2001, 6:30:00 AM',
+        '1/1/2001, 7:30:00 AM',
+        '1/1/2001, 8:30:00 AM',
+      ]);
+    });
+  });
 
   describe('column type: dateTime', () => {
     const getRows = (item: Omit<GridFilterItem, 'columnField'>) => {

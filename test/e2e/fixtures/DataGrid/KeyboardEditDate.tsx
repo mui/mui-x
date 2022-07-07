@@ -6,11 +6,13 @@ const baselineProps = {
     {
       id: 0,
       birthday: new Date(1984, 1, 29),
+      lastUpdateTime: new Date(2022, 1, 20, 6, 50, 0),
       lastConnection: new Date(2022, 1, 20, 6, 50, 0),
     },
   ],
   columns: [
     { field: 'birthday', type: 'date', editable: true, width: 100 },
+    { field: 'lastUpdateTime', type: 'time', editable: true, width: 100 },
     { field: 'lastConnection', type: 'dateTime', editable: true, width: 100 },
   ],
 };

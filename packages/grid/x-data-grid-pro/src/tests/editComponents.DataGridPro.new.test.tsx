@@ -347,6 +347,121 @@ describe('<DataGridPro /> - Edit Components', () => {
     });
   });
 
+  describe('column type: time', () => {
+    beforeEach(() => {
+      defaultData.rows = [{ id: 0, updateTime: new Date(2022, 1, 18, 14, 30) }];
+      defaultData.columns = [{ field: 'updateTime', type: 'time', editable: true }];
+    });
+
+    it('should call setEditCellValue with the value converted to Date', () => {
+      render(<TestCase />);
+      const spiedSetEditCellValue = spy(apiRef.current, 'setEditCellValue');
+
+      const cell = getCell(0, 0);
+      fireEvent.doubleClick(cell);
+
+      const input = cell.querySelector('input')!;
+      expect(input.value).to.equal('2022-02-18T14:30');
+
+      fireEvent.change(input, { target: { value: '2022-02-10T15:30:00' } });
+
+      expect(spiedSetEditCellValue.lastCall.args[0].id).to.equal(0);
+      expect(spiedSetEditCellValue.lastCall.args[0].field).to.equal('updateTime');
+      expect(spiedSetEditCellValue.lastCall.args[0].debounceMs).to.equal(undefined);
+      expect((spiedSetEditCellValue.lastCall.args[0].value! as Date).toISOString()).to.equal(
+        new Date(2022, 1, 10, 15, 30, 0).toISOString(),
+      );
+    });
+
+    it('should call setEditCellValue with null when entered an empty value', () => {
+      render(<TestCase />);
+      const spiedSetEditCellValue = spy(apiRef.current, 'setEditCellValue');
+
+      const cell = getCell(0, 0);
+      fireEvent.doubleClick(cell);
+
+      const input = cell.querySelector('input')!;
+      fireEvent.change(input, { target: { value: '' } });
+      expect(spiedSetEditCellValue.lastCall.args[0].value).to.equal(null);
+    });
+
+    it('should pass the value prop to the input', async () => {
+      render(<TestCase />);
+
+      const cell = getCell(0, 0);
+      fireEvent.doubleClick(cell);
+
+      const input = cell.querySelector('input')!;
+      expect(input.value).to.equal('2022-02-18T14:30');
+      await act(async () => {
+        await apiRef.current.setEditCellValue({
+          id: 0,
+          field: 'updateTime',
+          value: new Date(2022, 1, 10, 15, 10, 0),
+        });
+      });
+      expect(input.value).to.equal('2022-02-10T15:10');
+    });
+
+    it('should handle correctly dates with partial years', () => {
+      render(<TestCase />);
+      const spiedSetEditCellValue = spy(apiRef.current, 'setEditCellValue') as SinonSpy<
+        [GridEditCellValueParams & { value: Date }]
+      >;
+
+      const cell = getCell(0, 0);
+      fireEvent.doubleClick(cell);
+
+      const input = cell.querySelector('input')!;
+      expect(input.value).to.equal('2022-02-18T14:30');
+
+      fireEvent.change(input, { target: { value: '2021-01-05T14:30' } });
+      expect(spiedSetEditCellValue.lastCall.args[0].value.getTime()).to.equal(
+        generateDate(2021, 0, 5, 14, 30),
+      );
+
+      fireEvent.change(input, { target: { value: '2021-01-01T14:30' } });
+      expect(spiedSetEditCellValue.lastCall.args[0].value.getTime()).to.equal(
+        generateDate(2021, 0, 1, 14, 30),
+      );
+
+      fireEvent.change(input, { target: { value: '0001-01-01T14:30' } });
+      expect(spiedSetEditCellValue.lastCall.args[0].value.getTime()).to.equal(
+        generateDate(1, 0, 1, 14, 30),
+      );
+
+      fireEvent.change(input, { target: { value: '0019-01-01T14:30' } });
+      expect(spiedSetEditCellValue.lastCall.args[0].value.getTime()).to.equal(
+        generateDate(19, 0, 1, 14, 30),
+      );
+
+      fireEvent.change(input, { target: { value: '0199-01-01T14:30' } });
+      expect(spiedSetEditCellValue.lastCall.args[0].value.getTime()).to.equal(
+        generateDate(199, 0, 1, 14, 30),
+      );
+
+      fireEvent.change(input, { target: { value: '1999-01-01T14:30' } });
+      expect(spiedSetEditCellValue.lastCall.args[0].value.getTime()).to.equal(
+        generateDate(1999, 0, 1, 14, 30),
+      );
+
+      fireEvent.change(input, { target: { value: '1999-01-01T20:30' } });
+      expect(spiedSetEditCellValue.lastCall.args[0].value.getTime()).to.equal(
+        generateDate(1999, 0, 1, 20, 30),
+      );
+
+      fireEvent.change(input, { target: { value: '1999-01-01T20:02' } });
+      expect(spiedSetEditCellValue.lastCall.args[0].value.getTime()).to.equal(
+        generateDate(1999, 0, 1, 20, 2),
+      );
+
+      fireEvent.change(input, { target: { value: '1999-01-01T20:25' } });
+      expect(spiedSetEditCellValue.lastCall.args[0].value.getTime()).to.equal(
+        generateDate(1999, 0, 1, 20, 25),
+      );
+    });
+  });
+
   describe('column type: dateTime', () => {
     beforeEach(() => {
       defaultData.rows = [{ id: 0, createdAt: new Date(2022, 1, 18, 14, 30) }];

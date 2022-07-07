@@ -147,14 +147,15 @@ The candidate value used by the operator is the one corresponding to the `field`
 Each column type comes with a default array of operators.
 You can get them by importing the following functions:
 
-| Column type    | Function                         |
-| -------------- | -------------------------------- |
-| `string`       | `getGridStringOperators()`       |
-| `number`       | `getGridNumericOperators()`      |
-| `boolean`      | `getGridBooleanOperators()`      |
-| `date`         | `getGridDateOperators()`         |
-| `dateTime`     | `getGridDateOperators(true)`     |
-| `singleSelect` | `getGridSingleSelectOperators()` |
+| Column type    | Function                          |
+| -------------- | --------------------------------- |
+| `string`       | `getGridStringOperators()`        |
+| `number`       | `getGridNumericOperators()`       |
+| `boolean`      | `getGridBooleanOperators()`       |
+| `date`         | `getGridDateOperators('date')`    |
+| `time`         | `getGridDateOperators('time')`    |
+| `dateTime`     | `getGridDateOperators('dateTime')`|
+| `singleSelect` | `getGridSingleSelectOperators()`  |
 
 You can find more information about the supported column types in the [columns section](/x/react-data-grid/column-definition/#column-types).
 

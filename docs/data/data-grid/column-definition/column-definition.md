@@ -196,6 +196,7 @@ The following are the native column types:
 - `'string'` (default)
 - `'number'`
 - `'date'`
+- `'time'`
 - `'dateTime'`
 - `'boolean'`
 - `'singleSelect'`
