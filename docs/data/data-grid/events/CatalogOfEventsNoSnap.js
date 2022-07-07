@@ -1,13 +1,13 @@
 /* eslint-disable react/no-danger */
 import * as React from 'react';
 import HighlightedCode from 'docs/src/modules/components/HighlightedCode';
+import Box from '@mui/material/Box';
 import {
   DataGridPro,
   GridToolbarContainer,
   GridToolbarQuickFilter,
 } from '@mui/x-data-grid-pro';
 import events from './events.json';
-import Box from '@mui/material/Box';
 
 function getDataGridComponentNameFromProjectName(project) {
   switch (project) {

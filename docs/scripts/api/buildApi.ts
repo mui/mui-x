@@ -23,11 +23,11 @@ async function run() {
         documentationRoot,
       });
 
-      // await buildComponentsDocumentation({
-      //   documentationRoot,
-      //   documentedInterfaces,
-      //   projects,
-      // });
+      await buildComponentsDocumentation({
+        documentationRoot,
+        documentedInterfaces,
+        projects,
+      });
 
       buildGridEventsDocumentation({
         projects,
