@@ -38,7 +38,7 @@ We'd like to offer a big thanks to the 9 contributors who made this release poss
 - [DataGridPro] Allow to infer detail panel height from content (#5163) @m4theushw
 - [DataGridPro] Fix the depth of nodes when switching from a non-flat tree to a flat tree (#5362) @flaviendelangle
 
-#### `@mui/x-date-pickers@v5.0.0-beta.0` / `@mui/x-date-picker-pro@5.0.0-beta.0`
+### `@mui/x-date-pickers@v5.0.0-beta.0` / `@mui/x-date-picker-pro@5.0.0-beta.0`
 
 #### Changes
 
