@@ -40,7 +40,7 @@ export const useGridLazyLoaderPreProcessors = (
 
       return groupingParams;
     },
-    [props.rows, props.rowCount, props.rowsLoadingMode],
+    [props.rows.length, props.rowCount, props.rowsLoadingMode],
   );
 
   useGridRegisterPipeProcessor(apiRef, 'hydrateRows', addSkeletonRows);

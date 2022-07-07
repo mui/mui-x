@@ -82,12 +82,12 @@ export const useDataGridProComponent = (
   useGridSelectionPreProcessors(apiRef, props);
   useGridRowReorderPreProcessors(apiRef, props);
   useGridTreeDataPreProcessors(apiRef, props);
+  useGridLazyLoaderPreProcessors(apiRef, props);
   useGridDetailPanelPreProcessors(apiRef, props);
   // The column pinning `hydrateColumns` pre-processor must be after every other `hydrateColumns` pre-processors
   // Because it changes the order of the columns.
   useGridColumnPinningPreProcessors(apiRef, props);
   useGridRowsPreProcessors(apiRef);
-  useGridLazyLoaderPreProcessors(apiRef, props);
 
   /**
    * Register all state initializers here.
