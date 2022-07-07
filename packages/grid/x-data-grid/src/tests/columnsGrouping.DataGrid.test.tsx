@@ -2,12 +2,7 @@ import * as React from 'react';
 import { expect } from 'chai';
 // @ts-ignore Remove once the test utils are typed
 import { createRenderer, ErrorBoundary, screen } from '@mui/monorepo/test/utils';
-import {
-  DataGrid,
-  DataGridProps,
-  GridRowModel,
-  GridColumns,
-} from '@mui/x-data-grid';
+import { DataGrid, DataGridProps, GridRowModel, GridColumns } from '@mui/x-data-grid';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
@@ -192,7 +187,6 @@ describe('<DataGrid /> - Column grouping', () => {
       // remove the top group
       setProps({ columnGroupingModel: [{ groupId: 'col2', children: [{ field: 'col2' }] }] });
       expect(screen.queryAllByRole('row')).to.have.length(3);
-
     });
   });
 
@@ -200,7 +194,7 @@ describe('<DataGrid /> - Column grouping', () => {
   // eslint-disable-next-line mocha/no-skipped-tests
   describe.skip('error messages', () => {
     const TestWithError = (props: TestDataGridProps) => (
-      <ErrorBoundary logger={console} >
+      <ErrorBoundary logger={console}>
         <TestDataGrid {...props} />
       </ErrorBoundary>
     );
@@ -213,15 +207,12 @@ describe('<DataGrid /> - Column grouping', () => {
             columnGroupingModel={[
               {
                 groupId: 'col12',
-                children: [
-                  { field: 'col1' },
-                  { groupId: 'col12', children: [{ field: 'col2' }] }
-                ],
+                children: [{ field: 'col1' }, { groupId: 'col12', children: [{ field: 'col2' }] }],
               },
             ]}
           />,
         );
-      }).toErrorDev()
+      }).toErrorDev();
     });
 
     it('should log an error if a columns is referenced in two groups', function test() {
@@ -232,22 +223,16 @@ describe('<DataGrid /> - Column grouping', () => {
             columnGroupingModel={[
               {
                 groupId: 'col12',
-                children: [
-                  { field: 'col1' },
-                  { field: 'col2' },
-                ],
+                children: [{ field: 'col1' }, { field: 'col2' }],
               },
               {
                 groupId: 'col23',
-                children: [
-                  { field: 'col2' },
-                  { field: 'col3' },
-                ],
+                children: [{ field: 'col2' }, { field: 'col3' }],
               },
             ]}
           />,
         );
-      }).toErrorDev()
+      }).toErrorDev();
     });
 
     it('should log an error if a group have no id', function test() {

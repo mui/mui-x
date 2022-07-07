@@ -100,14 +100,12 @@ export const useGridColumnReorder = (
       originColumnIndex.current = apiRef.current.getColumnIndex(params.field, false);
 
       const draggingColumnGroupPath = apiRef.current.getColumnGroupPath(params.field);
-      if (draggingColumnGroupPath.length === 0) {
-        forbiddenIndexes.current = {};
-        return;
-      }
+
       const visibleColumnIndex = apiRef.current.getColumnIndex(params.field, true);
       const visibleColumns = apiRef.current.getVisibleColumns();
       const groupsLookup = apiRef.current.getAllGroupDetails();
 
+      // The limitingGroupId is the id of the group from which the dragged column should ne escape
       let limitingGroupId: string | null = null;
 
       draggingColumnGroupPath.forEach((groupId) => {

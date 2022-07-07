@@ -426,4 +426,174 @@ describe('<DataGridPro /> - Columns reorder', () => {
     expect(handleDragOver.callCount).to.equal(0);
     expect(handleDragEnd.callCount).to.equal(0);
   });
+
+  describe('reorder with column grouping', () => {
+    it('should not allow to drag column outside of its group', () => {
+      const rows = [{ id: 0 }];
+      const columns = [{ field: 'col1' }, { field: 'col2' }, { field: 'col3' }];
+
+      const columnGroupingModel = [
+        { groupId: 'col12', children: [{ field: 'col1' }, { field: 'col2' }] },
+      ];
+
+      const Test = () => {
+        return (
+          <div style={{ width: 300, height: 300 }}>
+            <DataGridPro rows={rows} columns={columns} columnGroupingModel={columnGroupingModel} />
+          </div>
+        );
+      };
+
+      render(<Test />);
+      expect(getColumnHeadersTextContent()).to.deep.equal(['col12', '', 'col1', 'col2', 'col3']);
+      const dragCol = getColumnHeaderCell(0, 1).firstChild!;
+      const targetCol = getColumnHeaderCell(2, 1).firstChild!;
+
+      fireEvent.dragStart(dragCol);
+      fireEvent.dragEnter(targetCol);
+      const dragOverEvent2 = createDragOverEvent(targetCol);
+      fireEvent(targetCol, dragOverEvent2);
+      expect(getColumnHeadersTextContent()).to.deep.equal(['col12', '', 'col1', 'col2', 'col3']);
+
+      const dragEndEvent = createDragEndEvent(dragCol);
+      fireEvent(dragCol, dragEndEvent);
+      expect(getColumnHeadersTextContent()).to.deep.equal(['col12', '', 'col1', 'col2', 'col3']);
+    });
+
+    it('should not allow to drag column inside a group', () => {
+      const rows = [{ id: 0 }];
+      const columns = [{ field: 'col1' }, { field: 'col2' }, { field: 'col3' }];
+
+      const columnGroupingModel = [
+        { groupId: 'col12', children: [{ field: 'col1' }, { field: 'col2' }] },
+      ];
+
+      const Test = () => {
+        return (
+          <div style={{ width: 300, height: 300 }}>
+            <DataGridPro rows={rows} columns={columns} columnGroupingModel={columnGroupingModel} />
+          </div>
+        );
+      };
+
+      render(<Test />);
+      expect(getColumnHeadersTextContent()).to.deep.equal(['col12', '', 'col1', 'col2', 'col3']);
+      const dragCol = getColumnHeaderCell(2, 1).firstChild!;
+      const targetCol = getColumnHeaderCell(1, 1).firstChild!;
+
+      fireEvent.dragStart(dragCol);
+      fireEvent.dragEnter(targetCol);
+      const dragOverEvent2 = createDragOverEvent(targetCol);
+      fireEvent(targetCol, dragOverEvent2);
+      expect(getColumnHeadersTextContent()).to.deep.equal(['col12', '', 'col1', 'col2', 'col3']);
+
+      const dragEndEvent = createDragEndEvent(dragCol);
+      fireEvent(dragCol, dragEndEvent);
+      expect(getColumnHeadersTextContent()).to.deep.equal(['col12', '', 'col1', 'col2', 'col3']);
+    });
+
+    it('should allow to drag column outside of its group if it allows freeReordering', () => {
+      const rows = [{ id: 0 }];
+      const columns = [{ field: 'col1' }, { field: 'col2' }, { field: 'col3' }];
+
+      const columnGroupingModel = [
+        {
+          groupId: 'col12',
+          children: [{ field: 'col1' }, { field: 'col2' }],
+          freeReordering: true,
+        },
+      ];
+
+      const Test = () => {
+        return (
+          <div style={{ width: 300, height: 300 }}>
+            <DataGridPro rows={rows} columns={columns} columnGroupingModel={columnGroupingModel} />
+          </div>
+        );
+      };
+
+      render(<Test />);
+      expect(getColumnHeadersTextContent()).to.deep.equal(['col12', '', 'col1', 'col2', 'col3']);
+      const dragCol = getColumnHeaderCell(0, 1).firstChild!;
+      const targetCol = getColumnHeaderCell(2, 1).firstChild!;
+
+      fireEvent.dragStart(dragCol);
+      fireEvent.dragEnter(targetCol);
+      const dragOverEvent2 = createDragOverEvent(targetCol);
+      fireEvent(targetCol, dragOverEvent2);
+      expect(getColumnHeadersTextContent()).to.deep.equal([
+        'col12',
+        '',
+        'col12',
+        'col2',
+        'col3',
+        'col1',
+      ]);
+
+      const dragEndEvent = createDragEndEvent(dragCol);
+      fireEvent(dragCol, dragEndEvent);
+      expect(getColumnHeadersTextContent()).to.deep.equal([
+        'col12',
+        '',
+        'col12',
+        'col2',
+        'col3',
+        'col1',
+      ]);
+    });
+
+    it('should allow to drag column inside a group if it allows freeReordering', () => {
+      // TODO: I observed columns are always moved from left to right
+      // The reason being that is:
+      // - when event.clientX does not change we consider that column is moving to the right
+      // - fireEvent.dragStart always set event.clientX = 1 (did not managed to modify this behavior)
+      const rows = [{ id: 0 }];
+      const columns = [{ field: 'col1' }, { field: 'col2' }, { field: 'col3' }];
+
+      const columnGroupingModel = [
+        {
+          groupId: 'col23',
+          children: [{ field: 'col2' }, { field: 'col3' }],
+          freeReordering: true,
+        },
+      ];
+
+      const Test = () => {
+        return (
+          <div style={{ width: 300, height: 300 }}>
+            <DataGridPro rows={rows} columns={columns} columnGroupingModel={columnGroupingModel} />
+          </div>
+        );
+      };
+
+      render(<Test />);
+      expect(getColumnHeadersTextContent()).to.deep.equal(['', 'col23', 'col1', 'col2', 'col3']);
+      const dragCol = getColumnHeaderCell(0, 1).firstChild!;
+      const targetCol = getColumnHeaderCell(1, 1).firstChild!;
+
+      fireEvent.dragStart(dragCol);
+      fireEvent.dragEnter(targetCol);
+      const dragOverEvent2 = createDragOverEvent(targetCol);
+      fireEvent(targetCol, dragOverEvent2);
+      expect(getColumnHeadersTextContent()).to.deep.equal([
+        'col23',
+        '',
+        'col23',
+        'col2',
+        'col1',
+        'col3',
+      ]);
+
+      const dragEndEvent = createDragEndEvent(dragCol);
+      fireEvent(dragCol, dragEndEvent);
+      expect(getColumnHeadersTextContent()).to.deep.equal([
+        'col23',
+        '',
+        'col23',
+        'col2',
+        'col1',
+        'col3',
+      ]);
+    });
+  });
 });
