@@ -44,7 +44,7 @@
     "directory": "packages/x-date-pickers"
   },
   "dependencies": {
-    "@babel/runtime": "^7.17.2",
+    "@babel/runtime": "^7.18.6",
     "@date-io/core": "^2.14.0",
     "@date-io/date-fns": "^2.14.0",
     "@date-io/dayjs": "^2.14.0",
