@@ -21,7 +21,7 @@ Visit Stack Overflow to ask questions and read crowdsourced answers from expert 
 :::info
 The professional support covers only MUI X components.
 
-Support for MUI Core is provided by the community.
+Support for MUI Core is provided by [the community](https://mui.com/material-ui/getting-started/support/).
 :::
 
 When purchasing a MUI X Pro or Premium license you get access to professional support until the end of your subscription.
