@@ -137,6 +137,7 @@ const GridGenericColumnHeaderItem = React.forwardRef(function GridGenericColumnH
       ref={handleRef}
       className={clsx(classes.root, headerClassName)}
       style={{
+        height,
         width,
         minWidth: width,
         maxWidth: width,

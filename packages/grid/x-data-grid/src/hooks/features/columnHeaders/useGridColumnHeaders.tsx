@@ -465,7 +465,6 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
       columns.push(
         <GridColumnHeaderRow
           style={{
-            height: `${headerGroupingRowHeight}px`,
             lineHeight: `${headerGroupingRowHeight}px`,
             transform: `translateX(-${depthInfo.leftOverflow}px)`,
           }}
