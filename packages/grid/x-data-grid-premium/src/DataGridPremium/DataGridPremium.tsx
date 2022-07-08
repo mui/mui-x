@@ -131,6 +131,7 @@ DataGridPremiumRaw.propTypes = {
       description: PropTypes.string,
       freeReordering: PropTypes.bool,
       groupId: PropTypes.string.isRequired,
+      headerAlign: PropTypes.oneOf(['center', 'left', 'right']),
       headerName: PropTypes.string,
       renderHeaderGroup: PropTypes.func,
     }),

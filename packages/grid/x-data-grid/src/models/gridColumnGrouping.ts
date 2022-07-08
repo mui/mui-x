@@ -1,4 +1,4 @@
-import { GridColDef } from './colDef';
+import { GridAlignment, GridColDef } from './colDef';
 
 export type LeafColumn = {
   field: GridColDef['field'];
@@ -43,6 +43,10 @@ export type GridColumnGroup = {
    * @default false
    */
   freeReordering?: boolean;
+  /**
+   * Header cell element alignment.
+   */
+  headerAlign?: GridAlignment;
   /**
    * Allows to render a component in the column group header cell.
    * @param {GridColumnGroupHeaderParams} params Object containing parameters for the renderer.

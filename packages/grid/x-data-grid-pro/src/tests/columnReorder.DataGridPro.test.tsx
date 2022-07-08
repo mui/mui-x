@@ -631,8 +631,8 @@ describe('<DataGridPro /> - Columns reorder', () => {
         'col2',
         'col3',
       ]);
-      const dragCol = getColumnHeaderCell(0, 1).firstChild!;
-      const targetCol = getColumnHeaderCell(1, 1).firstChild!;
+      const dragCol = getColumnHeaderCell(0, 2).firstChild!;
+      const targetCol = getColumnHeaderCell(1, 2).firstChild!;
 
       fireEvent.dragStart(dragCol);
       fireEvent.dragEnter(targetCol);

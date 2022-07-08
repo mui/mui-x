@@ -485,6 +485,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
                 isLastColumn={colIndex === visibleColumns.length - fields.length}
                 extendRowFullWidth={!rootProps.disableExtendRowFullWidth}
                 maxDepth={headerToRender.length}
+                height={headerGroupingRowHeight}
               />
             );
           })}
