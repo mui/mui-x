@@ -142,7 +142,7 @@ const frFRGrid: Partial<GridLocaleText> = {
   collapseDetailPanel: 'Masquer',
 
   // Row reordering text
-  rowReorderingHeaderName: 'Réorganisation de ligne',
+  rowReorderingHeaderName: 'Positionnement des lignes',
 };
 
 export const frFR: Localization = getGridLocalization(frFRGrid, frFRCore);
