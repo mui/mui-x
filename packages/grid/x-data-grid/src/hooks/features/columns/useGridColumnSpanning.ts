@@ -44,6 +44,12 @@ export const useGridColumnSpanning = (apiRef: React.MutableRefObject<GridApiComm
       const columnsLength = visibleColumns.length;
       const column = visibleColumns[columnIndex];
 
+      // Column may be hidden, but requested for the export (e.g. Excel)
+      // See https://github.com/mui/mui-x/issues/5353
+      if (!column) {
+        return { colSpan: 1 };
+      }
+
       const colSpan =
         typeof column.colSpan === 'function'
           ? column.colSpan(apiRef.current.getCellParams(rowId, column.field))
