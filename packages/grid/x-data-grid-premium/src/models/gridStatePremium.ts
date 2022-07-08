@@ -14,7 +14,7 @@ import type {
  */
 export interface GridStatePremium extends GridStatePro {
   rowGrouping: GridRowGroupingState;
-  aggregation: GridAggregationState;
+  private_aggregation: GridAggregationState;
 }
 
 /**
@@ -22,5 +22,5 @@ export interface GridStatePremium extends GridStatePro {
  */
 export interface GridInitialStatePremium extends GridInitialStatePro {
   rowGrouping?: GridRowGroupingInitialState;
-  aggregation?: GridAggregationInitialState;
+  private_aggregation?: GridAggregationInitialState;
 }

@@ -30,12 +30,12 @@ export interface GridColDefPremium<R extends GridValidRowModel = any, V = any, F
    * If `true`, the cells of the column can be aggregated based.
    * @default true
    */
-  aggregable?: boolean;
+  private_aggregable?: boolean;
   /**
    * Limit the aggregation function usable on this column.
    * By default, the column will have all the aggregation functions that are compatible with its type.
    */
-  availableAggregationFunctions?: string[];
+  private_availableAggregationFunctions?: string[];
   /**
    * Function that transforms a complex cell value into a key that be used for grouping the rows.
    * @param {GridGroupingValueGetterParams} params Object containing parameters for the getter.

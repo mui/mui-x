@@ -81,7 +81,7 @@ const sizeAgg: GridAggregationFunction<number> = {
   hasCellUnit: false,
 };
 
-export const GRID_AGGREGATION_FUNCTIONS = {
+export const PRIVATE_GRID_AGGREGATION_FUNCTIONS = {
   sum: sumAgg,
   avg: avgAgg,
   min: minAgg,

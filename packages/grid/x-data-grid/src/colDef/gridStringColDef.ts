@@ -18,7 +18,7 @@ export const GRID_STRING_COL_DEF: GridColTypeDef<any, any> = {
   groupable: true,
   pinnable: true,
   // @ts-ignore
-  aggregable: true,
+  private_aggregable: true,
   editable: false,
   sortComparator: gridStringOrNumberComparator,
   type: 'string',

@@ -4,13 +4,13 @@
   autoHeight
   columns={COLUMNS}
   initialState={{
-    aggregation: {
+    private_aggregation: {
       model: {
         imdbRating: 'avg',
       },
     },
   }}
   experimentalFeatures={{
-    aggregation: true,
+    private_aggregation: true,
   }}
 />

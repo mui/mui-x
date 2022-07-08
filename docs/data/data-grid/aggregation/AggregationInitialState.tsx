@@ -36,14 +36,14 @@ export default function AggregationInitialState() {
       autoHeight
       columns={COLUMNS}
       initialState={{
-        aggregation: {
+        private_aggregation: {
           model: {
             gross: 'sum',
           },
         },
       }}
       experimentalFeatures={{
-        aggregation: true,
+        private_aggregation: true,
       }}
     />
   );

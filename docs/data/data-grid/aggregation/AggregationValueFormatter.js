@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {
   DataGridPremium,
-  GRID_AGGREGATION_FUNCTIONS,
+  PRIVATE_GRID_AGGREGATION_FUNCTIONS,
 } from '@mui/x-data-grid-premium';
 import { useMovieData } from '@mui/x-data-grid-generator';
 
@@ -57,19 +57,19 @@ export default function AggregationValueFormatter() {
       rows={data.rows.slice(0, 3)}
       autoHeight
       columns={COLUMNS}
-      aggregationFunctions={{
-        ...GRID_AGGREGATION_FUNCTIONS,
+      private_aggregationFunctions={{
+        ...PRIVATE_GRID_AGGREGATION_FUNCTIONS,
         firstAlphabetical: firstAlphabeticalAggregation,
       }}
       initialState={{
-        aggregation: {
+        private_aggregation: {
           model: {
             director: 'firstAlphabetical',
           },
         },
       }}
       experimentalFeatures={{
-        aggregation: true,
+        private_aggregation: true,
       }}
     />
   );

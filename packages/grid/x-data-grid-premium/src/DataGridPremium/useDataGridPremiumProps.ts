@@ -11,19 +11,19 @@ import {
   DataGridPremiumProcessedProps,
   DataGridPremiumPropsWithDefaultValue,
 } from '../models/dataGridPremiumProps';
-import { GRID_AGGREGATION_FUNCTIONS } from '../hooks/features/aggregation';
+import { PRIVATE_GRID_AGGREGATION_FUNCTIONS } from '../hooks/features/aggregation';
 
 /**
  * The default values of `DataGridPremiumPropsWithDefaultValue` to inject in the props of DataGridPremium.
  */
 export const DATA_GRID_PREMIUM_PROPS_DEFAULT_VALUES: DataGridPremiumPropsWithDefaultValue = {
   ...DATA_GRID_PRO_PROPS_DEFAULT_VALUES,
-  disableAggregation: false,
+  private_disableAggregation: false,
   disableRowGrouping: false,
   rowGroupingColumnMode: 'single',
-  aggregationFunctions: GRID_AGGREGATION_FUNCTIONS,
-  aggregationRowsScope: 'filtered',
-  getAggregationPosition: (groupNode) => (groupNode == null ? 'footer' : 'inline'),
+  private_aggregationFunctions: PRIVATE_GRID_AGGREGATION_FUNCTIONS,
+  private_aggregationRowsScope: 'filtered',
+  private_getAggregationPosition: (groupNode) => (groupNode == null ? 'footer' : 'inline'),
 };
 
 export const useDataGridPremiumProps = (inProps: DataGridPremiumProps) => {
@@ -56,8 +56,9 @@ export const useDataGridPremiumProps = (inProps: DataGridPremiumProps) => {
     () => ({
       ...DATA_GRID_PREMIUM_PROPS_DEFAULT_VALUES,
       ...themedProps,
-      disableAggregation:
-        themedProps.disableAggregation || !themedProps.experimentalFeatures?.aggregation,
+      private_disableAggregation:
+        themedProps.private_disableAggregation ||
+        !themedProps.experimentalFeatures?.private_aggregation,
       localeText,
       components,
       signature: 'DataGridPremium',

@@ -10,7 +10,7 @@ const COLUMNS = [
     headerName: 'Rating',
     type: 'number',
     width: 180,
-    availableAggregationFunctions: ['min', 'max', 'avg', 'size'],
+    private_availableAggregationFunctions: ['min', 'max', 'avg', 'size'],
     // Imdb rating is on a scale from 0 to 10, the MUI rating component is on a scale from 0 to 5
     renderCell: (params) => {
       if (params.aggregation && !params.aggregation.hasCellUnit) {
@@ -46,14 +46,14 @@ export default function AggregationRenderCell() {
       autoHeight
       columns={COLUMNS}
       initialState={{
-        aggregation: {
+        private_aggregation: {
           model: {
             imdbRating: 'avg',
           },
         },
       }}
       experimentalFeatures={{
-        aggregation: true,
+        private_aggregation: true,
       }}
     />
   );

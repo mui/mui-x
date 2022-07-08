@@ -48,7 +48,7 @@ const COLUMNS: GridColumns = [
     field: 'year',
     headerName: 'Year',
     type: 'number',
-    availableAggregationFunctions: ['max', 'min'],
+    private_availableAggregationFunctions: ['max', 'min'],
   },
   {
     field: 'cinematicUniverse',
