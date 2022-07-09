@@ -5,10 +5,10 @@ export interface DataGridProComponentsPropsList {
   MuiDataGrid: DataGridProProps;
 }
 
-export interface DataGridProComponents {
+export interface DataGridProComponents<Theme = unknown> {
   MuiDataGrid?: {
     defaultProps?: ComponentsProps['MuiDataGrid'];
-    styleOverrides?: ComponentsOverrides['MuiDataGrid'];
+    styleOverrides?: ComponentsOverrides<Theme>['MuiDataGrid'];
   };
 }
 
@@ -17,5 +17,5 @@ declare module '@mui/material/styles' {
 }
 
 declare module '@mui/material/styles/components' {
-  interface Components extends DataGridProComponents {}
+  interface Components<Theme = unknown> extends DataGridProComponents<Theme> {}
 }
