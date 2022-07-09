@@ -223,18 +223,8 @@ const DataGridProVirtualScroller = React.forwardRef<
   const [leftPinnedColumns, rightPinnedColumns] = filterColumns(pinnedColumns, visibleColumnFields);
 
   const pinnedRows = useGridSelector(apiRef, gridPinnedRowsSelector);
-
-  const filterPinnedRows = React.useCallback(
-    (row) => {
-      // This is a workaround for the issue when grid tries to render pinned row,
-      // but pinned rows preprocessing is not done yet and row is missing in `idRowsLookup`
-      return apiRef.current.unstable_isRowPinned(row.id);
-    },
-    [apiRef],
-  );
-
-  const topPinnedRowsData = (pinnedRows?.top || []).filter(filterPinnedRows);
-  const bottomPinnedRowsData = (pinnedRows?.bottom || []).filter(filterPinnedRows);
+  const topPinnedRowsData = pinnedRows?.top || [];
+  const bottomPinnedRowsData = pinnedRows?.bottom || [];
 
   const ownerState = {
     classes: rootProps.classes,
