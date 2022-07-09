@@ -19,10 +19,6 @@ This feature is experimental, it needs to be explicitly activated using the `agg
 
 :::
 
-:::warning
-The footer row will be pinned at the bottom of the grid once [#1251](https://github.com/mui/mui-x/issues/1251) is ready.
-:::
-
 {{"demo": "AggregationInitialState.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ## Pass aggregation to the grid
