@@ -1,6 +1,6 @@
 import { PickersLocaleText } from './utils/pickersLocaleTextApi';
 import { getPickersLocalization } from './utils/getPickersLocalization';
-// import { CalendarPickerView } from '../internals/models';
+import { CalendarPickerView } from '../internals/models';
 
 const deDEPickers: Partial<PickersLocaleText<any>> = {
   // Calendar navigation
