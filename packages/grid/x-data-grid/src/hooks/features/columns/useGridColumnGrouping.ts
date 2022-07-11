@@ -21,6 +21,7 @@ export function hasGroupPath(
 
 type UnwrappedGroupingModel = { [key: string]: string[] };
 
+// The is the recurrence function that help writing `unwrapGroupingColumnModel()`
 const recurrentUnwrapGroupingColumnModel = (
   columnGroupNode: GridColumnNode,
   parents: any,
@@ -36,7 +37,7 @@ const recurrentUnwrapGroupingColumnModel = (
       if (rep[key] !== undefined) {
         throw new Error(
           [
-            `MUI DataGrid - column grouping: duplicated field`,
+            `MUI: columnGroupingModel contains duplicated field`,
             `column field ${key} occurrs two times in the grouping model:`,
             `- ${rep[key].join(' > ')}`,
             `- ${value.join(' > ')}`,
@@ -49,6 +50,12 @@ const recurrentUnwrapGroupingColumnModel = (
   return rep;
 };
 
+/**
+ * This is a function that provide for each column the array of its parents.
+ * Parents are ordered from the root to the leaf.
+ * @param columnGroupingModel The model such as provided in DataGrid props
+ * @returns An object `{[field]: groupIds}` where `groupIds` is the parents of the column `field`
+ */
 export const unwrapGroupingColumnModel = (
   columnGroupingModel?: GridColumnGroupingModel,
 ): UnwrappedGroupingModel => {
@@ -64,7 +71,7 @@ export const unwrapGroupingColumnModel = (
       if (rep[key] !== undefined) {
         throw new Error(
           [
-            `MUI: column grouping has duplicated field.`,
+            `MUI: columnGroupingModel has duplicated field.`,
             `column field ${key} occurres two times in the grouping model:`,
             `- ${rep[key].join(' > ')}`,
             `- ${value.join(' > ')}`,
@@ -88,16 +95,18 @@ const createGroupLookup = (columnGroupingModel: GridColumnNode[]): GridColumnGro
     const { groupId, children, ...other } = node;
     if (!groupId) {
       throw new Error(
-        'MUI-DataGrid: an element of the columnGroupingModel does not have either `field` or `groupId`',
+        'MUI: An element of the columnGroupingModel does not have either `field` or `groupId`',
       );
     }
     if (!children) {
-      console.warn(`MUI-DataGrid: group groupId=${groupId} has no children. `);
+      console.warn(`MUI: group groupId=${groupId} has no children. `);
     }
     const groupParam = { ...other, groupId };
     const subTreeLookup = createGroupLookup(children);
     if (subTreeLookup[groupId] !== undefined || groupLookup[groupId] !== undefined) {
-      throw new Error(`MUI: The groupId ${groupId} is used multiple times`);
+      throw new Error(
+        `MUI: The groupId ${groupId} is used multiple times in the columnGroupingModel`,
+      );
     }
     groupLookup = { ...groupLookup, ...subTreeLookup, [groupId]: groupParam };
   });
