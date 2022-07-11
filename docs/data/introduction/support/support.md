@@ -1,6 +1,6 @@
 # Support
 
-<p class="description">How to get support for MUI X components, including feature requests, bug fixes, answers to how-to questions, and professional support from the team.</p>
+<p class="description">How to get support for MUI X components, including feature requests, bug fixes, answers to how-to questions, and technical support from the team.</p>
 
 ## GitHub
 
