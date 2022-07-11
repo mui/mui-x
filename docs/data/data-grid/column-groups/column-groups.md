@@ -24,7 +24,7 @@ The children can contains two types of objects:
 - other column groups which allows you to have nested groups.
 
 :::warning
-Since this is a tree structure, a column can be associated to only one group.
+A column can only be associated with one group.
 :::
 
 ```jsx
@@ -88,7 +88,7 @@ This feature isn't implemented yet. It's coming.
 
 The column group should allow to switch between an extended/collapsed view which hide/show some columns
 
-## Reordering groups 🚧
+## Reordering groups 🚧[<span class="plan-pro"></span>](https://mui.com/store/items/mui-x-pro/)
 
 :::warning
 This feature isn't implemented yet. It's coming.
