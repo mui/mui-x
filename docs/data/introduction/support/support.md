@@ -23,7 +23,7 @@ The technical support covers only MUI X components.
 
 :::
 
-When purchasing a MUI X Pro or Premium license you get access to professional support until the end of your subscription.
+When purchasing a MUI X Pro or Premium license you get access to technical support until the end of your subscription.
 Support is available on multiple channels, but the recommended channels are:
 
 - GitHub: You can [open a new issue](https://github.com/mui/mui-x/issues/new/choose) and leave your Order ID, so we can prioritize accordingly.
