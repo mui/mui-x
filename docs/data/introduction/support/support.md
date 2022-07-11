@@ -16,12 +16,11 @@ Visit Stack Overflow to ask questions and read crowdsourced answers from expert 
 
 [Post a question about MUI X](https://stackoverflow.com/questions/tagged/mui) on Stack Overflow.
 
-## Professional support
+## Technical support
 
 :::info
-The professional support covers only MUI X components.
+The technical support covers only MUI X components.
 
-Support for MUI Core is provided by [the community](https://mui.com/material-ui/getting-started/support/).
 :::
 
 When purchasing a MUI X Pro or Premium license you get access to professional support until the end of your subscription.
