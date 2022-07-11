@@ -1,0 +1,12 @@
+<DataGridPro
+  {...data}
+  rows={rowsData.rows}
+  pinnedRows={rowsData.pinnedRows}
+  initialState={{
+    pagination: {
+      pageSize: 25,
+    },
+  }}
+  pagination
+  rowsPerPageOptions={[5, 10, 25, 50, 100]}
+/>

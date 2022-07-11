@@ -3,192 +3,65 @@ import { DataGridPro, GridActionsCellItem } from '@mui/x-data-grid-pro';
 import ArrowUpIcon from '@mui/icons-material/ArrowUpward';
 import ArrowDownIcon from '@mui/icons-material/ArrowDownward';
 import Tooltip from '@mui/material/Tooltip';
+import {
+  randomId,
+  randomTraderName,
+  randomCity,
+  randomUserName,
+  randomEmail,
+} from '@mui/x-data-grid-generator';
 
-const data = [
-  {
-    id: 1,
-    firstName: 'Walter',
-    lastName: 'White',
-    occupation: 'Chemistry teacher',
-    birthday: '09-07-1958',
-  },
-  {
-    id: 2,
-    firstName: 'Jesse',
-    lastName: 'Pinkman',
-    occupation: 'Dealer',
-    birthday: '09-24-1984',
-  },
-  {
-    id: 3,
-    firstName: 'Skyler',
-    lastName: 'White',
-    occupation: 'Bookkeeper',
-    birthday: '08-11-1970',
-  },
-  {
-    id: 4,
-    firstName: 'Saul',
-    lastName: 'Goodman',
-    occupation: 'Lawyer',
-    birthday: '',
-  },
-  {
-    id: 5,
-    firstName: 'Hank',
-    lastName: 'Schrader',
-    occupation: 'DEA Agent',
-    birthday: '',
-  },
-  {
-    id: 6,
-    firstName: 'Gus',
-    lastName: 'Fring',
-    occupation: 'Restaurant owner',
-    birthday: '',
-  },
-  {
-    id: 7,
-    firstName: 'Mike',
-    lastName: 'Ehrmantraut',
-    occupation: 'Private Investigator',
-    birthday: '',
-  },
-  {
-    id: 8,
-    firstName: 'Walter',
-    lastName: 'White',
-    occupation: 'Chemistry teacher',
-    birthday: '09-07-1958',
-  },
-  {
-    id: 9,
-    firstName: 'Jesse',
-    lastName: 'Pinkman',
-    occupation: 'Dealer',
-    birthday: '09-24-1984',
-  },
-  {
-    id: 10,
-    firstName: 'Skyler',
-    lastName: 'White',
-    occupation: 'Bookkeeper',
-    birthday: '08-11-1970',
-  },
-  {
-    id: 11,
-    firstName: 'Saul',
-    lastName: 'Goodman',
-    occupation: 'Lawyer',
-    birthday: '',
-  },
-  {
-    id: 12,
-    firstName: 'Hank',
-    lastName: 'Schrader',
-    occupation: 'DEA Agent',
-    birthday: '',
-  },
-  {
-    id: 13,
-    firstName: 'Gus',
-    lastName: 'Fring',
-    occupation: 'Restaurant owner',
-    birthday: '',
-  },
-  {
-    id: 14,
-    firstName: 'Mike',
-    lastName: 'Ehrmantraut',
-    occupation: 'Private Investigator',
-    birthday: '',
-  },
-  {
-    id: 15,
-    firstName: 'Walter',
-    lastName: 'White',
-    occupation: 'Chemistry teacher',
-    birthday: '09-07-1958',
-  },
-  {
-    id: 16,
-    firstName: 'Jesse',
-    lastName: 'Pinkman',
-    occupation: 'Dealer',
-    birthday: '09-24-1984',
-  },
-  {
-    id: 17,
-    firstName: 'Skyler',
-    lastName: 'White',
-    occupation: 'Bookkeeper',
-    birthday: '08-11-1970',
-  },
-  {
-    id: 18,
-    firstName: 'Saul',
-    lastName: 'Goodman',
-    occupation: 'Lawyer',
-    birthday: '',
-  },
-  {
-    id: 19,
-    firstName: 'Hank',
-    lastName: 'Schrader',
-    occupation: 'DEA Agent',
-    birthday: '',
-  },
-  {
-    id: 20,
-    firstName: 'Gus',
-    lastName: 'Fring',
-    occupation: 'Restaurant owner',
-    birthday: '',
-  },
-  {
-    id: 21,
-    firstName: 'Mike',
-    lastName: 'Ehrmantraut',
-    occupation: 'Private Investigator',
-    birthday: '',
-  },
-];
+const data = [];
+
+function getRow() {
+  return {
+    id: randomId(),
+    name: randomTraderName(),
+    city: randomCity(),
+    username: randomUserName(),
+    email: randomEmail(),
+  };
+}
+
+for (let i = 0; i < 20; i += 1) {
+  data.push(getRow());
+}
 
 export default function RowPinningWithActions() {
   const [pinnedRowsIds, setPinnedRowsIds] = React.useState({
-    top: [20],
-    bottom: [3, 2],
-  });
-
-  const pinnedRowsTop = pinnedRowsIds.top;
-  const pinnedRowsBottom = pinnedRowsIds.bottom;
-
-  const rows = [];
-  const pinnedRows = {
     top: [],
     bottom: [],
-  };
-
-  data.forEach((row) => {
-    if (pinnedRowsTop.includes(row.id)) {
-      pinnedRows.top.push(row);
-    } else if (pinnedRowsBottom.includes(row.id)) {
-      pinnedRows.bottom.push(row);
-    } else {
-      rows.push(row);
-    }
   });
+
+  const { rows, pinnedRows } = React.useMemo(() => {
+    const rowsData = [];
+    const pinnedRowsData = {
+      top: [],
+      bottom: [],
+    };
+
+    data.forEach((row) => {
+      if (pinnedRowsIds.top.includes(row.id)) {
+        pinnedRowsData.top.push(row);
+      } else if (pinnedRowsIds.bottom.includes(row.id)) {
+        pinnedRowsData.bottom.push(row);
+      } else {
+        rowsData.push(row);
+      }
+    });
+
+    return {
+      rows: rowsData,
+      pinnedRows: pinnedRowsData,
+    };
+  }, [pinnedRowsIds]);
 
   const columns = React.useMemo(
     () => [
-      { field: 'id', headerName: 'ID', flex: 1 },
-      { field: 'firstName', headerName: 'First name', flex: 1 },
-      { field: 'lastName', headerName: 'Last name', flex: 1 },
-      { field: 'occupation', headerName: 'Occupation', flex: 1 },
-      { field: 'birthday', headerName: 'Birthday', flex: 1, type: 'date' },
       {
         field: 'actions',
         type: 'actions',
+        width: 100,
         getActions: (params) => {
           const isPinnedTop = pinnedRowsIds.top.includes(params.id);
           const isPinnedBottom = pinnedRowsIds.bottom.includes(params.id);
@@ -246,6 +119,10 @@ export default function RowPinningWithActions() {
           ];
         },
       },
+      { field: 'name', headerName: 'Name', width: 150 },
+      { field: 'city', headerName: 'City', width: 150 },
+      { field: 'username', headerName: 'Username' },
+      { field: 'email', headerName: 'Email', width: 200 },
     ],
     [pinnedRowsIds],
   );

@@ -281,17 +281,47 @@ In addition, if row grouping or tree data is being used, the row reordering is a
 
 ## Row pinning [<span class="plan-pro"></span>](https://mui.com/store/items/material-ui-pro/)
 
-Pinned (or frozen, locked, or sticky) rows are rows that are visible at all times while the user scrolls the grid vertically.
+Pinned (or frozen, locked or floating) rows are rows that are visible at all times while the user scrolls the grid vertically.
+Pinned rows are not affected by sorting or filtering.
+
+You can pin rows at the top or bottom of the grid by passing pinned rows data through the `pinnedRows` prop:
+
+```tsx
+const pinnedRows: GridPinnedRowsProp = {
+  top: [{ id: 0, brand: 'Nike' }],
+  bottom: [
+    { id: 1, brand: 'Adidas' },
+    { id: 2, brand: 'Puma' },
+  ],
+};
+
+<DataGridPro pinnedRows={pinnedRows} />;
+```
+
+:::warning
+Just like the `rows` prop, `pinnedRows` prop should keep the same reference between two renders.
+Otherwise, the grid will re-apply heavy work like sorting and filtering.
+:::
+
+The data format for pinned rows is the same as for the `rows` prop (see [Feeding data](/x/react-data-grid/rows/#feeding-data)).
+
+Pinned rows data should also meet [Row identifier](/x/react-data-grid/rows/#row-identifier) requirements.
 
 {{"demo": "RowPinning.js", "disableAd": true, "bg": "inline"}}
 
-Interactive demo with row pinning `actions` column:
+### Controlling pinned rows
+
+You can control which rows are pinned by changing `pinnedRows`.
+
+In the demo below we use `actions` column type to add buttons to pin a row either at the top or bottom and change `pinnedRows` prop dynamically.
 
 {{"demo": "RowPinningWithActions.js", "disableAd": true, "bg": "inline", "defaultCodeOpen": false}}
 
-With virtualization:
+### Usage with pagination
 
-{{"demo": "RowPinningWithVirtualization.js", "disableAd": true, "bg": "inline", "defaultCodeOpen": false}}
+Pagination does not impact pinned rows - they stay pinned regardless the page number or page size.
+
+{{"demo": "RowPinningWithPagination.js", "disableAd": true, "bg": "inline", "defaultCodeOpen": false}}
 
 ## 🚧 Row spanning
 
