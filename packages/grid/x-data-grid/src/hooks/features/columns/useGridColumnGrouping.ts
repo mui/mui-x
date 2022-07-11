@@ -37,7 +37,7 @@ const recurrentUnwrapGroupingColumnModel = (
         throw new Error(
           [
             `MUI DataGrid - column grouping: duplicated field`,
-            `column field ${key} occurres two times in the grouping model:`,
+            `column field ${key} occurrs two times in the grouping model:`,
             `- ${rep[key].join(' > ')}`,
             `- ${value.join(' > ')}`,
           ].join('\n'),

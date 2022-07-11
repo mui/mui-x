@@ -27,7 +27,7 @@ export type GridColumnGroup = {
    */
   groupId: string;
   /**
-   * The array of groups and columns included in this group
+   * The groups and columns included in this group
    */
   children: GridColumnNode[];
   /**

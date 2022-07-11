@@ -64,7 +64,7 @@ export const densityStateInitializer: GridStateInitializer<
   >
 > = (state, props) => {
   // TODO: think about improving this initialization. Could it be done in the useColumn initializer?
-  // TODO: ma,age to remove ts-ignore
+  // TODO: manage to remove ts-ignore
   let maxDepth: number;
   if (props.columnGroupingModel == null || Object.keys(props.columnGroupingModel).length === 0) {
     maxDepth = 0;
