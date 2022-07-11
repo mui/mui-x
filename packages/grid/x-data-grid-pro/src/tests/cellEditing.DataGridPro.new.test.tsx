@@ -583,6 +583,32 @@ describe('<DataGridPro /> - Cell Editing', () => {
       });
     });
 
+    describe('by pressing a special character', () => {
+      it(`should publish 'cellEditStart' with reason=printableKeyDown`, () => {
+        render(<TestCase />);
+        const listener = spy();
+        apiRef.current.subscribeEvent('cellEditStart', listener);
+        const cell = getCell(0, 1);
+        fireEvent.mouseUp(cell);
+        fireEvent.click(cell);
+        fireEvent.keyDown(cell, { key: '$' });
+        expect(listener.lastCall.args[0].reason).to.equal('printableKeyDown');
+      });
+    });
+
+    describe('by pressing a number', () => {
+      it(`should publish 'cellEditStart' with reason=printableKeyDown`, () => {
+        render(<TestCase />);
+        const listener = spy();
+        apiRef.current.subscribeEvent('cellEditStart', listener);
+        const cell = getCell(0, 1);
+        fireEvent.mouseUp(cell);
+        fireEvent.click(cell);
+        fireEvent.keyDown(cell, { key: '1' });
+        expect(listener.lastCall.args[0].reason).to.equal('printableKeyDown');
+      });
+    });
+
     describe('by pressing Enter', () => {
       it(`should publish 'cellEditStart' with reason=enterKeyDown`, () => {
         render(<TestCase />);
@@ -604,6 +630,16 @@ describe('<DataGridPro /> - Cell Editing', () => {
         fireEvent.click(cell);
         fireEvent.keyDown(cell, { key: 'Enter' });
         expect(listener.callCount).to.equal(0);
+      });
+
+      it('should call startCellEditMode', () => {
+        render(<TestCase />);
+        const spiedStartCellEditMode = spy(apiRef.current, 'startCellEditMode');
+        const cell = getCell(0, 1);
+        fireEvent.mouseUp(cell);
+        fireEvent.click(cell);
+        fireEvent.keyDown(cell, { key: 'Enter' });
+        expect(spiedStartCellEditMode.callCount).to.equal(1);
       });
 
       it('should call startCellEditMode', () => {
