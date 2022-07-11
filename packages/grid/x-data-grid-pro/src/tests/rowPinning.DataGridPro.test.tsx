@@ -4,7 +4,12 @@ import { expect } from 'chai';
 // @ts-expect-error Remove once the test utils are typed
 import { createRenderer, waitFor, fireEvent } from '@mui/monorepo/test/utils';
 import { getData } from 'storybook/src/data/data-service';
-import { getActiveColumnHeader, getCell, getColumnHeaderCell } from 'test/utils/helperFn';
+import {
+  getActiveCell,
+  getActiveColumnHeader,
+  getCell,
+  getColumnHeaderCell,
+} from 'test/utils/helperFn';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
@@ -426,6 +431,74 @@ describe('<DataGridPro /> - Row pinning', () => {
 
       fireEvent.keyDown(getCell(3, 0), { key: 'ArrowDown' });
       expect(getActiveCellRowId()).to.equal('1');
+    });
+
+    it('should work with pinned columns', function test() {
+      if (isJSDOM) {
+        // Need layouting
+        this.skip();
+      }
+
+      const TestCase = () => {
+        const data = getData(5, 7);
+        const [pinnedRow0, pinnedRow1, ...rows] = data.rows;
+
+        return (
+          <div style={{ width: 502, height: 300 }}>
+            <DataGridPro
+              {...data}
+              rows={rows}
+              pinnedRows={{
+                top: [pinnedRow1],
+                bottom: [pinnedRow0],
+              }}
+              initialState={{
+                pinnedColumns: {
+                  left: ['id'],
+                  right: ['price2M'],
+                },
+              }}
+            />
+          </div>
+        );
+      };
+
+      render(<TestCase />);
+
+      expect(isRowPinned(getRowById(1), 'top')).to.equal(true, '#1 pinned top');
+      expect(isRowPinned(getRowById(0), 'bottom')).to.equal(true, '#0 pinned bottom');
+
+      // top-pinned row
+      fireClickEvent(getCell(0, 3));
+      expect(getActiveCell()).to.equal('0-3');
+      expect(getActiveCellRowId()).to.equal('1');
+
+      fireEvent.keyDown(getCell(0, 3), { key: 'ArrowRight' });
+      expect(getActiveCell()).to.equal('0-4');
+
+      fireEvent.keyDown(getCell(0, 4), { key: 'ArrowRight' });
+      expect(getActiveCell()).to.equal('0-5');
+
+      // right-pinned column cell
+      fireEvent.keyDown(getCell(0, 5), { key: 'ArrowRight' });
+      expect(getActiveCell()).to.equal('0-6');
+
+      // go through the right-pinned column all way down to bottom-pinned row
+      fireEvent.keyDown(getCell(0, 6), { key: 'ArrowDown' });
+      expect(getActiveCell()).to.equal('1-6');
+      expect(getActiveCellRowId()).to.equal('2');
+
+      fireEvent.keyDown(getCell(1, 6), { key: 'ArrowDown' });
+      expect(getActiveCell()).to.equal('2-6');
+      expect(getActiveCellRowId()).to.equal('3');
+
+      fireEvent.keyDown(getCell(2, 6), { key: 'ArrowDown' });
+      expect(getActiveCell()).to.equal('3-6');
+      expect(getActiveCellRowId()).to.equal('4');
+
+      fireEvent.keyDown(getCell(3, 6), { key: 'ArrowDown' });
+      expect(getActiveCell()).to.equal('4-6');
+      expect(getActiveCellRowId()).to.equal('0');
     });
   });
 
