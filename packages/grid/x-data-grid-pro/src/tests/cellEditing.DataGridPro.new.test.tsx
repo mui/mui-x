@@ -641,16 +641,6 @@ describe('<DataGridPro /> - Cell Editing', () => {
         fireEvent.keyDown(cell, { key: 'Enter' });
         expect(spiedStartCellEditMode.callCount).to.equal(1);
       });
-
-      it('should call startCellEditMode', () => {
-        render(<TestCase />);
-        const spiedStartCellEditMode = spy(apiRef.current, 'startCellEditMode');
-        const cell = getCell(0, 1);
-        fireEvent.mouseUp(cell);
-        fireEvent.click(cell);
-        fireEvent.keyDown(cell, { key: 'Enter' });
-        expect(spiedStartCellEditMode.callCount).to.equal(1);
-      });
     });
 
     describe('by pressing Delete', () => {
