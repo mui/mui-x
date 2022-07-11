@@ -28,9 +28,9 @@ const roROGrid: Partial<GridLocaleText> = {
     count !== 1 ? `${count} filtru activ` : `${count} filtru activ`,
 
   // Quick filter toolbar field
-  // toolbarQuickFilterPlaceholder: 'Search...',
-  // toolbarQuickFilterLabel: 'Search',
-  // toolbarQuickFilterDeleteIconLabel: 'Clear',
+  toolbarQuickFilterPlaceholder: 'Căutare...',
+  toolbarQuickFilterLabel: 'Căutare',
+  toolbarQuickFilterDeleteIconLabel: 'Ștergere',
 
   // Export selector toolbar button text
   toolbarExport: 'Export',
@@ -137,7 +137,7 @@ const roROGrid: Partial<GridLocaleText> = {
   unGroupColumn: (name) => `Anulare Grupare după ${name}`,
 
   // Master/detail
-  // detailPanelToggle: 'Detail panel toggle',
+  detailPanelToggle: 'Comutare panou detalii',
   expandDetailPanel: 'Extindere',
   collapseDetailPanel: 'Restrângere',
 
