@@ -93,7 +93,7 @@
     "date-fns": "^2.28.0",
     "dayjs": "^1.11.3",
     "luxon": "^1.21.3 || ^2.x",
-    "moment": "^2.29.3"
+    "moment": "^2.29.4"
   },
   "setupFiles": [
     "<rootDir>/src/setupTests.js"
