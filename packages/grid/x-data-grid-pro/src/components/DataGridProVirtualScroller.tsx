@@ -223,8 +223,8 @@ const DataGridProVirtualScroller = React.forwardRef<
   const [leftPinnedColumns, rightPinnedColumns] = filterColumns(pinnedColumns, visibleColumnFields);
 
   const pinnedRows = useGridSelector(apiRef, gridPinnedRowsSelector);
-  const topPinnedRowsData = pinnedRows?.top || [];
-  const bottomPinnedRowsData = pinnedRows?.bottom || [];
+  const topPinnedRowsData = React.useMemo(() => pinnedRows?.top || [], [pinnedRows?.top]);
+  const bottomPinnedRowsData = React.useMemo(() => pinnedRows?.bottom || [], [pinnedRows?.bottom]);
 
   const ownerState = {
     classes: rootProps.classes,
