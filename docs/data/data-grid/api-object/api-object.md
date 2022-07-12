@@ -64,7 +64,7 @@ const CustomDataGrid = (props) => {
 
 :::warning
 The API object will be populated by the various plugins of the grid during the first render of the component.
-If you try to use it in the 1st render of your component, it will crash since all methods are not registered yet.
+If you try to use it in the first render of the component, it will crash since all methods are not registered yet.
 :::
 
 {{"demo": "UseGridApiRef.js", "bg": "inline", "defaultCodeOpen": false}}
