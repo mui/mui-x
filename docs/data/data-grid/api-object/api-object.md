@@ -20,7 +20,7 @@ If you need to use a private method, please open a GitHub issue describing your 
 We will help you to achieve the same goal with public methods, or we will discuss making this specific method public.
 :::
 
-## How to use the API object ?
+## How to use the API object
 
 The API object is accessible through the `apiRef` variable.
 Depending on where you are trying to access this variable, you will have to use either `useGridApiContext` or `useGridApiRef`.
