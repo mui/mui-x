@@ -23,7 +23,9 @@ import {
 } from './gridGroupingColDefOverride';
 import { GridInitialStatePro } from './gridStatePro';
 
-export interface GridExperimentalProFeatures extends GridExperimentalFeatures {}
+export interface GridExperimentalProFeatures extends GridExperimentalFeatures {
+  rowPinning: boolean;
+}
 
 /**
  * The props users can give to the `DataGridProProps` component.
@@ -57,8 +59,7 @@ export type DataGridProForcedPropsKey = 'signature';
  * None of the entry of this interface should be optional, they all have default values and `DataGridProps` already applies a `Partial<DataGridSimpleOptions>` for the public interface
  * The controlled model do not have a default value at the prop processing level, so they must be defined in `DataGridOtherProps`
  */
-export interface DataGridProPropsWithDefaultValue<R extends GridValidRowModel = any>
-  extends DataGridPropsWithDefaultValues {
+export interface DataGridProPropsWithDefaultValue extends DataGridPropsWithDefaultValues {
   /**
    * Set the area in `px` at the bottom of the grid viewport where onRowsScrollEnd is called.
    * @default 80
@@ -109,7 +110,6 @@ export interface DataGridProPropsWithDefaultValue<R extends GridValidRowModel = 
    * @default false
    */
   rowReordering: boolean;
-  pinnedRows?: GridPinnedRowsProp<R>;
 }
 
 export interface DataGridProPropsWithoutDefaultValue<R extends GridValidRowModel = any>
@@ -195,4 +195,8 @@ export interface DataGridProPropsWithoutDefaultValue<R extends GridValidRowModel
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onRowOrderChange?: GridEventListener<'rowOrderChange'>;
+  /**
+   * Rows data to pin on top or bottom.
+   */
+  pinnedRows?: GridPinnedRowsProp<R>;
 }
