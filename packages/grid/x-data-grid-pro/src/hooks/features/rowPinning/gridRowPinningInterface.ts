@@ -10,11 +10,13 @@ export interface GridRowPinningApi {
    * Returns a boolean value determining if the row is pinned.
    * @param {GridRowId} rowId The id of the row.
    * @returns {boolean} A boolean value determining if the row is pinned.
+   * @ignore - do not document.
    */
   unstable_isRowPinned: (rowId: GridRowId) => boolean;
   /**
    * Changes the pinned rows.
    * @param {GridPinnedRowsProp} pinnedRows An object containing the rows to pin.
+   * @ignore - do not document.
    */
   unstable_setPinnedRows: (pinnedRows: GridPinnedRowsProp) => void;
 }
