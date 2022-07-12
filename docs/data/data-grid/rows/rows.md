@@ -284,6 +284,15 @@ In addition, if row grouping or tree data is being used, the row reordering is a
 Pinned (or frozen, locked or floating) rows are rows that are visible at all times while the user scrolls the grid vertically.
 Pinned rows are not affected by sorting or filtering.
 
+:::warning
+This feature is experimental, it needs to be explicitly activated using the `rowPinning` experimental feature flag.
+
+```tsx
+<DataGridPro experimentalFeatures={{ rowPinning: true }} {...otherProps} />
+```
+
+:::
+
 You can pin rows at the top or bottom of the grid by passing pinned rows data through the `pinnedRows` prop:
 
 ```tsx

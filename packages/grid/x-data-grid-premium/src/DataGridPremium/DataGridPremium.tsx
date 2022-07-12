@@ -779,6 +779,9 @@ DataGridPremiumRaw.propTypes = {
     left: PropTypes.arrayOf(PropTypes.string),
     right: PropTypes.arrayOf(PropTypes.string),
   }),
+  /**
+   * Rows data to pin on top or bottom.
+   */
   pinnedRows: PropTypes.shape({
     bottom: PropTypes.array,
     top: PropTypes.array,

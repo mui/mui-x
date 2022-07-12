@@ -253,6 +253,7 @@ DataGridProRaw.propTypes = {
   experimentalFeatures: PropTypes.shape({
     newEditingApi: PropTypes.bool,
     preventCommitWhileValidating: PropTypes.bool,
+    rowPinning: PropTypes.bool,
     warnIfFocusStateIsNotSynced: PropTypes.bool,
   }),
   /**
@@ -764,6 +765,9 @@ DataGridProRaw.propTypes = {
     left: PropTypes.arrayOf(PropTypes.string),
     right: PropTypes.arrayOf(PropTypes.string),
   }),
+  /**
+   * Rows data to pin on top or bottom.
+   */
   pinnedRows: PropTypes.shape({
     bottom: PropTypes.array,
     top: PropTypes.array,

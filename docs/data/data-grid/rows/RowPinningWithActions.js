@@ -129,7 +129,12 @@ export default function RowPinningWithActions() {
 
   return (
     <div style={{ height: 500, width: '100%' }}>
-      <DataGridPro columns={columns} pinnedRows={pinnedRows} rows={rows} />
+      <DataGridPro
+        columns={columns}
+        pinnedRows={pinnedRows}
+        rows={rows}
+        experimentalFeatures={{ rowPinning: true }}
+      />
     </div>
   );
 }

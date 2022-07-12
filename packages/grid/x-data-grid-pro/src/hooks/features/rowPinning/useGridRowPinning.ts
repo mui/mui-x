@@ -28,7 +28,7 @@ export const rowPinningStateInitializer: GridStateInitializer<
 
 export const useGridRowPinning = (
   apiRef: React.MutableRefObject<GridApiPro>,
-  props: Pick<DataGridProProcessedProps, 'pinnedRows' | 'getRowId'>,
+  props: Pick<DataGridProProcessedProps, 'pinnedRows' | 'getRowId' | 'experimentalFeatures'>,
 ): void => {
   const isRowPinned = React.useCallback<GridRowPinningApi['unstable_isRowPinned']>(
     (rowId) => {
@@ -39,6 +39,9 @@ export const useGridRowPinning = (
 
   const setPinnedRows = React.useCallback<GridRowPinningApi['unstable_setPinnedRows']>(
     (newPinnedRows) => {
+      if (!props.experimentalFeatures?.rowPinning) {
+        return;
+      }
       apiRef.current.unstable_caches.pinnedRows = {
         top: newPinnedRows.top || [],
         bottom: newPinnedRows.bottom || [],
@@ -46,7 +49,7 @@ export const useGridRowPinning = (
 
       apiRef.current.unstable_requestPipeProcessorsApplication('hydrateRows');
     },
-    [apiRef],
+    [apiRef, props.experimentalFeatures?.rowPinning],
   );
 
   useGridApiMethod(
