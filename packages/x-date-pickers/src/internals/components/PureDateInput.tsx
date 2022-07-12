@@ -21,6 +21,7 @@ export interface DateInputProps<TInputDate, TDate> {
    * @default /\dap/gi
    */
   acceptRegex?: RegExp;
+  className?: string;
   /**
    * Overrideable components.
    * @default {}
