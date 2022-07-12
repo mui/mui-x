@@ -39,7 +39,7 @@ const CustomFooter = () => {
 ```
 
 :::info
-It's not needed to initialize the API object using `useGridApiRef` to be able to use it inside the grid components.
+You don't need to initialize the API object using `useGridApiRef` to be able to use it inside the grid components.
 :::
 
 {{"demo": "UseGridApiContext.js", "bg": "inline", "defaultCodeOpen": false}}
