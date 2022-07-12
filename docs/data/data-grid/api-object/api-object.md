@@ -6,7 +6,7 @@ title: Data Grid - API object
 
 <p class="description">Interact with the grid using its API.</p>
 
-## What is the API object ?
+## What is the API object
 
 The API object is an interface containing the state and all the methods available to programmatically interact with the grid.
 
