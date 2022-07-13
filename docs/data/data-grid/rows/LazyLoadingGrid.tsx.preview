@@ -7,4 +7,7 @@
   filterMode="server"
   rowsLoadingMode="server"
   onFetchRows={handleFetchRows}
+  experimentalFeatures={{
+    lazyLoading: true,
+  }}
 />
