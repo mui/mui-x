@@ -48,6 +48,7 @@ const firstAlphabeticalAggregation: GridAggregationFunction<string, string | nul
       return sortedValue[0];
     },
     label: 'first alphabetical',
+    valueFormatter: (params) => `Agg: ${params.value}`,
     columnTypes: ['string'],
   };
 
