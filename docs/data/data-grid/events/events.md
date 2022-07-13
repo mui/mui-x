@@ -41,7 +41,7 @@ Not all events have a dedicated prop.
 Check out the examples in the [Catalog of events](#catalog-of-events) below to determine if a given event has a dedicated prop.
 :::
 
-The following demo shows how to subscribe to the `rowClick` event using the `onRowClick` prop. Try it by clicking on any row.
+The following demo shows how to subscribe to the `rowClick` event using the `onRowClick` prop—try it out by clicking on any row:
 
 {{"demo": "SubscribeToEventsProp.js", "bg": "inline", "defaultCodeOpen": false}}
 
