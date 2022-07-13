@@ -38,7 +38,7 @@ You can provide this event handler to the grid in several ways:
 
 :::info
 Not all events have a dedicated prop.
-You can find if the event you want to use has one by looking at its example in the catalog below.
+Check out the examples in the [Catalog of events](#catalog-of-events) below to determine if a given event has a dedicated prop.
 :::
 
 The following demo shows how to subscribe to the `rowClick` event using the `onRowClick` prop. Try it by clicking on any row.
