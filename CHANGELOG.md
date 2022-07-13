@@ -3,6 +3,59 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 5.13.0
+
+_Jul 7, 2022_
+
+We'd like to offer a big thanks to the 10 contributors who made this release possible. Here are some highlights ✨:
+
+- 🎁 `@mui/x-date-pickers` and `@mui/x-date-pickers-pro` are now in beta!
+
+- ✨ Allow detail panel's height to match its content (#5163) @m4theushw
+
+  ```tsx
+  <DataGridPro getDetailPanelHeight={() => 'auto'} />
+  ```
+
+- 🌍 Add Romanian (ro-RO) locale on the data grid (#5345) @rolule
+- 📚 Documentation improvements
+- 🐞 Bugfixes
+
+### `@mui/x-data-grid@v5.13.0` / `@mui/x-data-grid-pro@v5.13.0` / `@mui/x-data-grid-premium@v5.13.0`
+
+#### Changes
+
+- [DataGrid] Allows to customize variant of value input in filter panel (#4826) @alexfauquette
+- [DataGrid] Add Romanian (ro-RO) locale (#5345) @rolule
+- [DataGrid] Export Norwegian (nb-NO) locale (#5407) @cherniavskii
+- [DataGrid] Fix broken "start editing" integration with Japanese (#5414) @mnajdova
+- [DataGrid] Fix "stop editing" integration with IME e.g. Japanese (#5257) @Gumichocopengin8
+- [DataGrid] Fix dimensions computation with `autoHeight` and scroll x (#5401) @flaviendelangle
+- [DataGrid] Improve Slovak (sk-SK) locale (#5332) @msidlo
+- [DataGrid] Mention Premium plan in error messages and docs warnings (#5328) @cherniavskii
+- [DataGrid] Remove trailing spaces in filter input (#5279) @alexfauquette
+- [DataGridPro] Allow to infer detail panel height from content (#5163) @m4theushw
+- [DataGridPro] Fix the depth of nodes when switching from a non-flat tree to a flat tree (#5362) @flaviendelangle
+
+### `@mui/x-date-pickers@v5.0.0-beta.0` / `@mui/x-date-picker-pro@5.0.0-beta.0`
+
+#### Changes
+
+- [DateRangePicker] Fix keyboard selection (#5265) @alexfauquette
+- [DayPicker] Remove empty space at the bottom of the day view (#5073) @flaviendelangle
+- [pickers] Add missing type dependencies (#5331) @Methuselah96
+- [pickers] Pass the generics to the components in the theme augmentation (#5199) @toruticas
+
+### Docs
+
+- [docs] Explain how to use hooks inside a cell renderer (#5158) @flaviendelangle
+- [docs] Fix server-side pagination demo (#5361) @cherniavskii
+- [docs] Fix typo in the quick filter docs (#5313) @alexfauquette
+- [docs] Improve the "Getting started" page (#5293) @alexfauquette
+- [docs] New page for the pickers action bar customization (#5267) @flaviendelangle
+- [docs] Revise and split up "Overview" page into "Introduction" (#4692) @samuelsycamore
+- [docs] Use `useKeepGroupedColumnsHiddren` from the grid package on remaining demo (#5382) @flaviendelangle
+
 ## v5.12.3
 
 _Jun 23, 2022_
