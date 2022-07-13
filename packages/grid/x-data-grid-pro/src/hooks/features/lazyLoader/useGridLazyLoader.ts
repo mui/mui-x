@@ -33,7 +33,7 @@ function findSkeletonRowsSection(
   let endIndex = visibleRowsSection.length - 1;
   let isSkeletonSectionFound = false;
 
-  while (!isSkeletonSectionFound) {
+  while (!isSkeletonSectionFound && firstRowIndex < lastRowIndex) {
     if (!visibleRowsSection[startIndex].model && !visibleRowsSection[endIndex].model) {
       isSkeletonSectionFound = true;
     }
