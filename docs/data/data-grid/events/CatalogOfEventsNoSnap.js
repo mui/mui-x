@@ -129,27 +129,25 @@ const Toolbar = () => (
 
 export default function CatalogOfEventsNoSnap() {
   return (
-    <Box sx={{ width: '100%', height: 800 }}>
-      <DataGridPro
-        disableColumnReorder
-        autoHeight
-        rows={events}
-        columns={COLUMNS}
-        getRowId={(row) => row.name}
-        getDetailPanelContent={({ row }) => <EventRow event={row} />}
-        getDetailPanelHeight={() => 'auto'}
-        getRowHeight={() => 'auto'}
-        disableRowSelection
-        hideFooter
-        components={{
-          Toolbar,
-        }}
-        sx={{
-          '&.MuiDataGrid-root--densityCompact .MuiDataGrid-cell': { py: '8px' },
-          '&.MuiDataGrid-root--densityStandard .MuiDataGrid-cell': { py: '15px' },
-          '&.MuiDataGrid-root--densityComfortable .MuiDataGrid-cell': { py: '22px' },
-        }}
-      />
-    </Box>
+    <DataGridPro
+      disableColumnReorder
+      autoHeight
+      rows={events}
+      columns={COLUMNS}
+      getRowId={(row) => row.name}
+      getDetailPanelContent={({ row }) => <EventRow event={row} />}
+      getDetailPanelHeight={() => 'auto'}
+      getRowHeight={() => 'auto'}
+      disableRowSelection
+      hideFooter
+      components={{
+        Toolbar,
+      }}
+      sx={{
+        '&.MuiDataGrid-root--densityCompact .MuiDataGrid-cell': { py: '8px' },
+        '&.MuiDataGrid-root--densityStandard .MuiDataGrid-cell': { py: '15px' },
+        '&.MuiDataGrid-root--densityComfortable .MuiDataGrid-cell': { py: '22px' },
+      }}
+    />
   );
 }
