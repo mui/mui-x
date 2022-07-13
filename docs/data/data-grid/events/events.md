@@ -52,7 +52,7 @@ useGridApiEventHandler('rowClick', onEvent);
 ```
 
 :::warning
-This hook can only be used inside the scope of the grid (inside component slots or cell renderers for instance).
+This hook can only be used inside the scope of the grid (i.e. inside component slots or cell renderers).
 :::
 
 The following demo shows how to subscribe to the `rowClick` event using `useGridApiEventHandler`. Try it by clicking on any row.
