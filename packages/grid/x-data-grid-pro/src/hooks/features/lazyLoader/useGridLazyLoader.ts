@@ -101,7 +101,7 @@ export const useGridLazyLoader = (
         params.lastRowToRender - params.firstRowToRender,
       );
       const hasSkeletonRowIds = renderedRowsIds.some(
-        (rowId) => `${rowId}`.indexOf(GRID_SKELETON_ROW_ROOT_ID) >= 0,
+        (rowId) => `${rowId}`.includes(GRID_SKELETON_ROW_ROOT_ID),
       );
 
       if (!hasSkeletonRowIds) {
