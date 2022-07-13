@@ -326,12 +326,12 @@ export const useGridRows = (
     [apiRef, logger],
   );
 
-  const replaceRows = React.useCallback<GridRowApi['replaceRows']>(
+  const replaceRows = React.useCallback<GridRowApi['unstable_replaceRows']>(
     (firstRowToRender, lastRowToRender, newRows) => {
       if (props.signature === GridSignature.DataGrid) {
         throw new Error(
           [
-            "MUI: You can't replace rows using `apiRef.current.replaceRows` on the DataGrid.",
+            "MUI: You can't replace rows using `apiRef.current.unstable_replaceRows` on the DataGrid.",
             'You need to upgrade to the DataGridPro component to unlock this feature.',
           ].join('\n'),
         );
@@ -389,7 +389,7 @@ export const useGridRows = (
     getRowNode,
     getRowIndexRelativeToVisibleRows,
     getRowGroupChildren,
-    replaceRows,
+    unstable_replaceRows: replaceRows,
   };
 
   /**

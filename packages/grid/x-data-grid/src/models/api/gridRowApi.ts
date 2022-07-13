@@ -100,7 +100,7 @@ export interface GridRowApi {
    * @param {number} lastRowToReplace The index of the last row to be replaced.
    * @param {GridRowModel[]} newRows The new rows.
    */
-  replaceRows: (
+  unstable_replaceRows: (
     firstRowToReplace: number,
     lastRowToReplace: number,
     newRows: GridRowModel[],

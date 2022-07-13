@@ -333,6 +333,21 @@ describe('<DataGridPro /> - Events Params', () => {
     expect(handleRowsScrollEnd.callCount).to.equal(1);
   });
 
+  it('publishing GRID_ROWS_SCROLL should call onFetchRows callback when rows lazy loading is enabled', () => {
+    const handleFetchRows = spy();
+    render(
+      <TestEvents
+        onFetchRows={handleFetchRows}
+        sortingMode="server"
+        filterMode="server"
+        rowsLoadingMode="server"
+        rowCount={50}
+      />,
+    );
+    apiRef.current.publishEvent('rowsScroll', { left: 0, top: 3 * 52 });
+    expect(handleFetchRows.callCount).to.equal(1);
+  });
+
   it('call onRowsScrollEnd when viewport scroll reaches the bottom', function test() {
     if (isJSDOM) {
       this.skip(); // Needs layout

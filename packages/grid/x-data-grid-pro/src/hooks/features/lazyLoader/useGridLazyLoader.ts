@@ -15,7 +15,10 @@ import {
 import { useGridVisibleRows } from '@mui/x-data-grid/internals';
 import { getRenderableIndexes } from '@mui/x-data-grid/hooks/features/virtualization/useGridVirtualScroller';
 import { GridApiPro } from '../../../models/gridApiPro';
-import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
+import {
+  DataGridProProcessedProps,
+  GridExperimentalProFeatures,
+} from '../../../models/dataGridProProps';
 import { GRID_SKELETON_ROW_ROOT_ID } from './useGridLazyLoaderPreProcessors';
 import { GridFetchRowsParams } from '../../../models/gridFetchRowsParams';
 
@@ -62,7 +65,12 @@ export const useGridLazyLoader = (
   apiRef: React.MutableRefObject<GridApiPro>,
   props: Pick<
     DataGridProProcessedProps,
-    'onFetchRows' | 'rowsLoadingMode' | 'pagination' | 'paginationMode' | 'rowBuffer'
+    | 'onFetchRows'
+    | 'rowsLoadingMode'
+    | 'pagination'
+    | 'paginationMode'
+    | 'rowBuffer'
+    | 'experimentalFeatures'
   >,
 ): void => {
   const visibleRows = useGridVisibleRows(apiRef, props);
@@ -79,6 +87,7 @@ export const useGridLazyLoader = (
       const dimensions = apiRef.current.getRootDimensions();
 
       if (
+        !(props.experimentalFeatures as GridExperimentalProFeatures)?.lazyLoading ||
         !dimensions ||
         props.rowsLoadingMode !== GridFeatureModeConstant.server ||
         (renderedRowsIntervalCache.current.firstRowToRender === params.firstRowToRender &&
@@ -105,22 +114,36 @@ export const useGridLazyLoader = (
       });
 
       renderedRowsIntervalCache.current = params;
+
       const fetchRowsParams: GridFetchRowsParams = {
         firstRowToRender: firstRowIndex,
         lastRowToRender: lastRowIndex,
         sortModel,
         filterModel,
       };
+
       apiRef.current.publishEvent('fetchRows', fetchRowsParams);
     },
-    [apiRef, props.rowsLoadingMode, rowIds, sortModel, filterModel, visibleRows],
+    [
+      apiRef,
+      props.rowsLoadingMode,
+      rowIds,
+      sortModel,
+      filterModel,
+      visibleRows,
+      props.experimentalFeatures,
+    ],
   );
 
   const handleGridSortModelChange = React.useCallback<GridEventListener<'sortModelChange'>>(
     (newSortModel) => {
       const dimensions = apiRef.current.getRootDimensions();
 
-      if (!dimensions || props.rowsLoadingMode !== GridFeatureModeConstant.server) {
+      if (
+        !(props.experimentalFeatures as GridExperimentalProFeatures)?.lazyLoading ||
+        !dimensions ||
+        props.rowsLoadingMode !== GridFeatureModeConstant.server
+      ) {
         return;
       }
 
@@ -141,14 +164,25 @@ export const useGridLazyLoader = (
 
       apiRef.current.publishEvent('fetchRows', fetchRowsParams);
     },
-    [apiRef, props.rowsLoadingMode, props.rowBuffer, visibleRows.rows, filterModel],
+    [
+      apiRef,
+      props.rowsLoadingMode,
+      props.rowBuffer,
+      visibleRows.rows,
+      filterModel,
+      props.experimentalFeatures,
+    ],
   );
 
   const handleGridFilterModelChange = React.useCallback<GridEventListener<'filterModelChange'>>(
     (newFilterModel) => {
       const dimensions = apiRef.current.getRootDimensions();
 
-      if (!dimensions || props.rowsLoadingMode !== GridFeatureModeConstant.server) {
+      if (
+        !(props.experimentalFeatures as GridExperimentalProFeatures)?.lazyLoading ||
+        !dimensions ||
+        props.rowsLoadingMode !== GridFeatureModeConstant.server
+      ) {
         return;
       }
 
@@ -169,7 +203,14 @@ export const useGridLazyLoader = (
 
       apiRef.current.publishEvent('fetchRows', fetchRowsParams);
     },
-    [apiRef, props.rowsLoadingMode, props.rowBuffer, visibleRows.rows, sortModel],
+    [
+      apiRef,
+      props.rowsLoadingMode,
+      props.rowBuffer,
+      visibleRows.rows,
+      sortModel,
+      props.experimentalFeatures,
+    ],
   );
 
   useGridApiEventHandler(apiRef, 'renderedRowsIntervalChange', handleRenderedRowsIntervalChange);

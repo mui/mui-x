@@ -1,5 +1,8 @@
 import * as React from 'react';
-import { DataGridProProcessedProps } from '@mui/x-data-grid-pro/models/dataGridProProps';
+import {
+  DataGridProProcessedProps,
+  GridExperimentalProFeatures,
+} from '@mui/x-data-grid-pro/models/dataGridProProps';
 import { GridApiPro } from '@mui/x-data-grid-pro/models/gridApiPro';
 import { GridPipeProcessor, useGridRegisterPipeProcessor } from '@mui/x-data-grid/internals';
 import { GridFeatureModeConstant, GridRowId } from '@mui/x-data-grid';
@@ -16,11 +19,12 @@ const getSkeletonRowId = (index: GridRowId | null) => {
 
 export const useGridLazyLoaderPreProcessors = (
   apiRef: React.MutableRefObject<GridApiPro>,
-  props: Pick<DataGridProProcessedProps, 'rowCount' | 'rowsLoadingMode'>,
+  props: Pick<DataGridProProcessedProps, 'rowCount' | 'rowsLoadingMode' | 'experimentalFeatures'>,
 ) => {
   const addSkeletonRows = React.useCallback<GridPipeProcessor<'hydrateRows'>>(
     (groupingParams) => {
       if (
+        (props.experimentalFeatures as GridExperimentalProFeatures)?.lazyLoading &&
         props.rowsLoadingMode === GridFeatureModeConstant.server &&
         props.rowCount &&
         groupingParams.ids.length < props.rowCount
@@ -40,7 +44,7 @@ export const useGridLazyLoaderPreProcessors = (
 
       return groupingParams;
     },
-    [props.rowCount, props.rowsLoadingMode],
+    [props.rowCount, props.rowsLoadingMode, props.experimentalFeatures],
   );
 
   useGridRegisterPipeProcessor(apiRef, 'hydrateRows', addSkeletonRows);

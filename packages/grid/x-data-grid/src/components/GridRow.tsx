@@ -39,7 +39,6 @@ export interface GridRowProps {
   index: number;
   rowHeight: number | 'auto';
   containerWidth: number;
-  row: GridRowModel;
   firstColumnToRender: number;
   lastColumnToRender: number;
   visibleColumns: GridStateColDef[];
@@ -47,6 +46,7 @@ export interface GridRowProps {
   cellFocus: GridCellIdentifier | null;
   cellTabIndex: GridCellIdentifier | null;
   editRowsState: GridEditRowsModel;
+  row?: GridRowModel;
   isLastVisible?: boolean;
   onClick?: React.MouseEventHandler<HTMLDivElement>;
   onDoubleClick?: React.MouseEventHandler<HTMLDivElement>;
@@ -460,7 +460,7 @@ GridRow.propTypes = {
   isLastVisible: PropTypes.bool,
   lastColumnToRender: PropTypes.number.isRequired,
   renderedColumns: PropTypes.arrayOf(PropTypes.object).isRequired,
-  row: PropTypes.any.isRequired,
+  row: PropTypes.any,
   rowHeight: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.number]).isRequired,
   rowId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
   selected: PropTypes.bool.isRequired,

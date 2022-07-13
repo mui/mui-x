@@ -23,7 +23,12 @@ import {
 } from './gridGroupingColDefOverride';
 import { GridInitialStatePro } from './gridStatePro';
 
-export interface GridExperimentalProFeatures extends GridExperimentalFeatures {}
+export interface GridExperimentalProFeatures extends GridExperimentalFeatures {
+  /**
+   * Enables the data grid to lazy load rows while scrolling.
+   */
+  lazyLoading: boolean;
+}
 
 /**
  * The props users can give to the `DataGridProProps` component.
