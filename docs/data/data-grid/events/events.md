@@ -37,7 +37,7 @@ You can provide this event handler to the grid in several ways:
 ```
 
 :::info
-Not all the event have a dedicated prop.
+Not all events have a dedicated prop.
 You can find if the event you want to use has one by looking at its example in the catalog below.
 :::
 
