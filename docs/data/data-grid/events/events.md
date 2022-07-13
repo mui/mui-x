@@ -65,7 +65,7 @@ The following demo shows how to subscribe to the `rowClick` event using `useGrid
 apiRef.current.subscribeEvent('rowClick', onEvent);
 ```
 
-The following demo shows how to subscribe to the `rowClick` event using `apiRef.current.subscribeEvent`. Try it by clicking on any row.
+The following demo shows how to subscribe to the `rowClick` event using `apiRef.current.subscribeEvent`—try it out by clicking on any row:
 
 {{"demo": "SubscribeToEventsApiRef.js", "bg": "inline", "defaultCodeOpen": false}}
 
