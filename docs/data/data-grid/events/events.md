@@ -12,9 +12,9 @@ You can subscribe to one of the [events emitted](/x/react-data-grid/events/#cata
 
 The handler is a method that will be called with three arguments:
 
-1. the parameters containing the information related to the event.
-2. the `MuiEvent` containing the DOM event or the React synthetic event, when available.
-3. the `GridCallbackDetails` containing the `GridApi` only if `DataGridPro` or `DataGridPremium` is being used.
+1. the parameters containing the information related to the event
+2. the `MuiEvent` containing the DOM event or the React synthetic event, when available
+3. the `GridCallbackDetails` containing the `GridApi` only if `DataGridPro` or `DataGridPremium` is being used
 
 For instance here is an event handler for the `rowClick` event:
 
