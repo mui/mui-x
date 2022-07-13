@@ -1,4 +1,5 @@
 import * as React from 'react';
+import dayjs from 'dayjs';
 import TextField from '@mui/material/TextField';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -18,7 +19,7 @@ export default function DateTimeValidation() {
           onChange={(newValue) => {
             setValue(newValue);
           }}
-          minDateTime={new Date()}
+          minDateTime={dayjs()}
         />
         <DateTimePicker
           renderInput={(params) => <TextField {...params} />}
@@ -27,9 +28,9 @@ export default function DateTimeValidation() {
           onChange={(newValue) => {
             setValue(newValue);
           }}
-          minDate={new Date('2020-02-14')}
-          minTime={new Date(0, 0, 0, 8)}
-          maxTime={new Date(0, 0, 0, 18, 45)}
+          minDate={dayjs('2020-02-14')}
+          minTime={dayjs('2020-02-14T08:00')}
+          maxTime={dayjs('2020-02-14T18:45')}
         />
       </Stack>
     </LocalizationProvider>
