@@ -2,9 +2,7 @@ import { PickersLocaleText } from './utils/pickersLocaleTextApi';
 import { getPickersLocalization } from './utils/getPickersLocalization';
 import { CalendarPickerView } from '../internals/models';
 
-// This object is not Partial<PickersLocaleText> because it is the default values
-
-const nbNOPickers: PickersLocaleText<any> = {
+const nbNOPickers: Partial<PickersLocaleText<any>> = {
   // Calendar navigation
   previousMonth: 'Forrige måned',
   nextMonth: 'Neste måned',
@@ -23,7 +21,7 @@ const nbNOPickers: PickersLocaleText<any> = {
 
   // Action bar
   cancelButtonLabel: 'Avbryt',
-  clearButtonLabel: 'Nullstill',
+  clearButtonLabel: 'Fjern',
   okButtonLabel: 'OK',
   todayButtonLabel: 'I dag',
 
