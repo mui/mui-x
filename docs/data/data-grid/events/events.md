@@ -55,7 +55,7 @@ useGridApiEventHandler('rowClick', onEvent);
 This hook can only be used inside the scope of the grid (i.e. inside component slots or cell renderers).
 :::
 
-The following demo shows how to subscribe to the `rowClick` event using `useGridApiEventHandler`. Try it by clicking on any row.
+The following demo shows how to subscribe to the `rowClick` event using `useGridApiEventHandler`—try it out by clicking on any row:
 
 {{"demo": "SubscribeToEventsHook.js", "bg": "inline", "defaultCodeOpen": false}}
 
