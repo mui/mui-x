@@ -51,6 +51,4 @@ const nbNOPickers: PickersLocaleText<any> = {
   dateTableLabel: 'velg dato',
 };
 
-export const DEFAULT_LOCALE = nbNOPickers;
-
 export const nbNO = getPickersLocalization(nbNOPickers);
