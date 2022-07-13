@@ -131,6 +131,8 @@ export default function CatalogOfEventsNoSnap() {
   return (
     <Box sx={{ width: '100%', height: 800 }}>
       <DataGridPro
+        disableColumnReorder
+        autoHeight
         rows={events}
         columns={COLUMNS}
         getRowId={(row) => row.name}
