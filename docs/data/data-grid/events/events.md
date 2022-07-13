@@ -4,7 +4,7 @@ title: Data Grid - Events
 
 # Data grid - Events
 
-<p class="description">Subscribe to the events emitted by the data grid to trigger custom behavior.</p>
+<p class="description">You can subscribe to the events emitted by the data grid to trigger custom behavior.</p>
 
 ## Subscribing to events
 
