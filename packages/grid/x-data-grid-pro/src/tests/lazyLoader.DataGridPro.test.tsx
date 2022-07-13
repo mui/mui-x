@@ -61,8 +61,8 @@ describe('<DataGridPro /> - Lazy Loader', () => {
     render(<TestLazyLoader onFetchRows={handleFetchRows} rowCount={50} />);
 
     fireEvent.click(getColumnHeaderCell(0));
-    // Unsure why it's 2, should be 1. It's 1 when done in the browser.
-    expect(handleFetchRows.callCount).to.equal(2);
+    // When run locally this fails but it works on the CI
+    expect(handleFetchRows.callCount).to.equal(1);
   });
 
   it('should render skeleton cell if rowCount is bigger than the number of rows', () => {
