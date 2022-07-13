@@ -164,7 +164,6 @@
     "onRowsScrollEnd": { "type": { "name": "func" } },
     "onSelectionModelChange": { "type": { "name": "func" } },
     "onSortModelChange": { "type": { "name": "func" } },
-    "onStateChange": { "type": { "name": "func" } },
     "page": { "type": { "name": "number" }, "default": "0" },
     "pageSize": { "type": { "name": "number" }, "default": "100" },
     "pagination": { "type": { "name": "bool" } },

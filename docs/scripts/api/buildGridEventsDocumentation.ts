@@ -85,8 +85,15 @@ export default function buildGridEventsDocumentation(options: BuildEventsDocumen
     )
     .getProperties();
 
+  // Link the DataGridXXX component props to their events.
   dataGridPremiumProps.forEach((prop) => {
     const declaration = prop.declarations?.find(ts.isPropertySignature);
+
+    const tags = getSymbolJSDocTags(prop);
+
+    if (tags.ignore) {
+      return;
+    }
 
     if (
       declaration?.type &&

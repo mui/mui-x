@@ -2,6 +2,8 @@
 import * as React from 'react';
 import HighlightedCode from 'docs/src/modules/components/HighlightedCode';
 import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import { styled } from '@mui/material/styles';
 import {
   DataGridPro,
   GridToolbarContainer,
@@ -21,6 +23,8 @@ function getDataGridComponentNameFromProjectName(project) {
       throw new Error('Invalid grid project name');
   }
 }
+
+const Description = styled(Typography)({ whiteSpace: 'nowrap' });
 
 const EventRow = ({ event }) => {
   const example = React.useMemo(() => {
@@ -60,7 +64,11 @@ ${propExample}
 `;
   }, [event]);
 
-  return <HighlightedCode code={example} language="tsx" />;
+  return (
+    <Box sx={{ px: 1 }}>
+      <HighlightedCode code={example} language="tsx" />
+    </Box>
+  );
 };
 
 const COLUMNS = [
@@ -103,7 +111,7 @@ const COLUMNS = [
     renderCell: ({ value, colDef }) => {
       const width = colDef.computedWidth - 20;
       return (
-        <div
+        <Description
           style={{ minWidth: width, maxWidth: width, width, whiteSpace: 'normal' }}
           dangerouslySetInnerHTML={{
             __html: value,
@@ -126,14 +134,19 @@ export default function CatalogOfEventsNoSnap() {
       <DataGridPro
         rows={events}
         columns={COLUMNS}
-        density="comfortable"
         getRowId={(row) => row.name}
         getDetailPanelContent={({ row }) => <EventRow event={row} />}
         getDetailPanelHeight={() => 'auto'}
+        getRowHeight={() => 'auto'}
         disableRowSelection
         hideFooter
         components={{
           Toolbar,
+        }}
+        sx={{
+          '&.MuiDataGrid-root--densityCompact .MuiDataGrid-cell': { py: '8px' },
+          '&.MuiDataGrid-root--densityStandard .MuiDataGrid-cell': { py: '15px' },
+          '&.MuiDataGrid-root--densityComfortable .MuiDataGrid-cell': { py: '22px' },
         }}
       />
     </Box>

@@ -381,8 +381,7 @@
     "name": "stateChange",
     "description": "Fired when the state of the grid is updated.",
     "params": "any",
-    "event": "MuiEvent<{}>",
-    "componentProp": "onStateChange"
+    "event": "MuiEvent<{}>"
   },
   {
     "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
