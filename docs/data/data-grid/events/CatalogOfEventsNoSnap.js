@@ -1,4 +1,3 @@
-/* eslint-disable react/no-danger */
 import * as React from 'react';
 import HighlightedCode from 'docs/src/modules/components/HighlightedCode';
 import Box from '@mui/material/Box';
