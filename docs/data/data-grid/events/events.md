@@ -16,7 +16,7 @@ The handler is a method that will be called with three arguments:
 2. the `MuiEvent` containing the DOM event or the React synthetic event, when available
 3. the `GridCallbackDetails` containing the `GridApi` only if `DataGridPro` or `DataGridPremium` is being used
 
-For instance here is an event handler for the `rowClick` event:
+For example, here is an event handler for the `rowClick` event:
 
 ```tsx
 const onEvent: GridEventListener<'rowClick'> = (
