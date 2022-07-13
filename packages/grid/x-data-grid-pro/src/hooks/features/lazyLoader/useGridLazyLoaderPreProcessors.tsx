@@ -14,7 +14,7 @@ const getSkeletonRowId = (index: GridRowId | null) => {
     return GRID_SKELETON_ROW_ROOT_ID;
   }
 
-  return `auto-generated-skeleton-row-root-${index}`;
+  return `${GRID_SKELETON_ROW_ROOT_ID}-${index}`;
 };
 
 export const useGridLazyLoaderPreProcessors = (
