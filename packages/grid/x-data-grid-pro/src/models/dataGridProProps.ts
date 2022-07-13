@@ -115,8 +115,8 @@ export interface DataGridProPropsWithDefaultValue extends DataGridPropsWithDefau
   rowReordering: boolean;
   /**
    * Loading rows can be processed on the server or client-side.
-   * Set it to 'client' if you would like to handle the infnite loading on the client-side.
-   * Set it to 'server' if you would like to handle the infnite loading on the server-side.
+   * Set it to 'client' if you would like enable infnite loading.
+   * Set it to 'server' if you would like to enable lazy loading.
    * * @default "client"
    */
   rowsLoadingMode: GridFeatureMode;
