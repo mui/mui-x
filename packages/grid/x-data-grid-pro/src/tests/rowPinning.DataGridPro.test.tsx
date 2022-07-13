@@ -552,4 +552,53 @@ describe('<DataGridPro /> - Row pinning', () => {
     expect(getRowById(0)?.clientHeight).to.equal(100);
     expect(getRowById(1)?.clientHeight).to.equal(20);
   });
+
+  it('should always update on `rowHeight` change', function test() {
+    if (isJSDOM) {
+      // Need layouting
+      this.skip();
+    }
+
+    const defaultRowHeight = 52;
+
+    const TestCase = ({ rowHeight = defaultRowHeight }) => {
+      const data = getData(10, 5);
+
+      const [pinnedRow0, pinnedRow1, ...rows] = data.rows;
+      return (
+        <div style={{ width: 302, height: 300 }}>
+          <DataGridPro
+            {...data}
+            rows={rows}
+            pinnedRows={{
+              top: [pinnedRow0],
+              bottom: [pinnedRow1],
+            }}
+            rowHeight={rowHeight}
+            experimentalFeatures={{ rowPinning: true }}
+          />
+        </div>
+      );
+    };
+
+    const { setProps } = render(<TestCase />);
+
+    expect(getRowById(0)?.clientHeight).to.equal(defaultRowHeight);
+    expect(document.querySelector(`.${gridClasses['pinnedRows--top']}`)?.clientHeight).to.equal(
+      defaultRowHeight,
+    );
+    expect(getRowById(1)?.clientHeight).to.equal(defaultRowHeight);
+    expect(document.querySelector(`.${gridClasses['pinnedRows--bottom']}`)?.clientHeight).to.equal(
+      defaultRowHeight,
+    );
+
+    setProps({ rowHeight: 36 });
+
+    expect(getRowById(0)?.clientHeight).to.equal(36);
+    expect(document.querySelector(`.${gridClasses['pinnedRows--top']}`)?.clientHeight).to.equal(36);
+    expect(getRowById(1)?.clientHeight).to.equal(36);
+    expect(document.querySelector(`.${gridClasses['pinnedRows--bottom']}`)?.clientHeight).to.equal(
+      36,
+    );
+  });
 });
