@@ -70,7 +70,10 @@ describe('<DataGridPro /> - Lazy Loader', () => {
     expect(handleFetchRows.callCount).to.equal(2);
   });
 
-  it('should render skeleton cell if rowCount is bigger than the number of rows', () => {
+  it('should render skeleton cell if rowCount is bigger than the number of rows', function test() {
+    if (isJSDOM) {
+      this.skip(); // Needs layout
+    }
     const handleFetchRows = spy();
     render(<TestLazyLoader onFetchRows={handleFetchRows} rowCount={10} />);
 
