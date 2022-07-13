@@ -83,7 +83,7 @@ In addition, the area in which `onRowsScrollEnd` is called can be changed using 
 ### Lazy loading [<span class="plan-pro"></span>](https://mui.com/store/items/mui-x-pro/)
 
 To allow the grid to lazy load data, set `rowsLoadingMode="server"`.
-Then the `rowCount` needs to be set and the number of initially loaded rows needs to be less than the `rowCount` value.
+Then the `rowCount` needs to be set to the number of available rows on the server
 In addition, you need to handle the `onFetchRows` callback to fetch the rows for the corresponding index.
 Finally, you need to use the `apiRef.current.insertRows()` to tell the DataGrid where to insert the newly fetched rows.
 
