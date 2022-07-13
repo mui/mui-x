@@ -37,7 +37,7 @@ const deDEPickers: Partial<PickersLocaleText<any>> = {
     `${views[view] ?? view} auswählen. ${
       time === null
         ? 'Keine Uhrzeit ausgewählt'
-        : `Ausgewählte Uhrzeit ist ${adapter.format(time, 'fullTime')}`
+        : `Gewählte Uhrzeit ist ${adapter.format(time, 'fullTime')}`
     }`,
   hoursClockNumberText: (hours) => `${hours} ${views.hours}`,
   minutesClockNumberText: (minutes) => `${minutes} ${views.minutes}`,
@@ -46,17 +46,11 @@ const deDEPickers: Partial<PickersLocaleText<any>> = {
   // Open picker labels
   openDatePickerDialogue: (rawValue, utils) =>
     rawValue && utils.isValid(utils.date(rawValue))
-      ? `Datum auswählen, das selektierte Datum ist ${utils.format(
-          utils.date(rawValue)!,
-          'fullDate',
-        )}`
+      ? `Datum auswählen, gewähltes Datum ist ${utils.format(utils.date(rawValue)!, 'fullDate')}`
       : 'Datum auswählen',
   openTimePickerDialogue: (rawValue, utils) =>
     rawValue && utils.isValid(utils.date(rawValue))
-      ? `Uhrzeit auswählen, die selektierte Uhrzeit ist ${utils.format(
-          utils.date(rawValue)!,
-          'fullTime',
-        )}`
+      ? `Uhrzeit auswählen, gewählte Uhrzeit ist ${utils.format(utils.date(rawValue)!, 'fullTime')}`
       : 'Uhrzeit auswählen',
 
   // Table labels
