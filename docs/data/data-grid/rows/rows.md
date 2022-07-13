@@ -33,8 +33,6 @@ The following demo shows how to use `getRowId` to grab the unique identifier fro
 <DataGrid getRowId={(row) => row.internalId} />
 ```
 
-:::
-
 {{"demo": "RowsGridWithGetRowId.js", "bg": "inline", "defaultCodeOpen": false}}
 
 If no such unique identifier exists in the data set, then you must create it by some other means, but this scenario should be avoided because it leads to issues with other features of the grid.
