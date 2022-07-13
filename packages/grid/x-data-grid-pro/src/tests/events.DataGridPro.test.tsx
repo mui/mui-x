@@ -337,6 +337,9 @@ describe('<DataGridPro /> - Events Params', () => {
     const handleFetchRows = spy();
     render(
       <TestEvents
+        experimentalFeatures={{
+          lazyLoading: true,
+        }}
         onFetchRows={handleFetchRows}
         sortingMode="server"
         filterMode="server"
