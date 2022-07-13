@@ -14,6 +14,8 @@ import {
 } from '@mui/x-data-grid-pro';
 import { spy } from 'sinon';
 
+const isJSDOM = /jsdom/.test(window.navigator.userAgent);
+
 describe('<DataGridPro /> - Lazy Loader', () => {
   const { render } = createRenderer();
 
@@ -56,7 +58,10 @@ describe('<DataGridPro /> - Lazy Loader', () => {
     );
   };
 
-  it('should call onFetchRows when sorting is applied', () => {
+  it('should call onFetchRows when sorting is applied', function test() {
+    if (isJSDOM) {
+      this.skip(); // Needs layout
+    }
     const handleFetchRows = spy();
     render(<TestLazyLoader onFetchRows={handleFetchRows} rowCount={50} />);
 
