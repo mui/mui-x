@@ -37,7 +37,7 @@ const frFRGrid: Partial<GridLocaleText> = {
   toolbarExportLabel: 'Exporter',
   toolbarExportCSV: 'Télécharger en CSV',
   toolbarExportPrint: 'Imprimer',
-  // toolbarExportExcel: 'Download as Excel',
+  toolbarExportExcel: 'Télécharger pour Excel',
 
   // Columns panel text
   columnsPanelTextFieldLabel: 'Chercher colonne',
@@ -109,10 +109,10 @@ const frFRGrid: Partial<GridLocaleText> = {
 
   // Checkbox selection text
   checkboxSelectionHeaderName: 'Sélection',
-  // checkboxSelectionSelectAllRows: 'Select all rows',
-  // checkboxSelectionUnselectAllRows: 'Unselect all rows',
-  // checkboxSelectionSelectRow: 'Select row',
-  // checkboxSelectionUnselectRow: 'Unselect row',
+  checkboxSelectionSelectAllRows: 'Sélectionner toutes les lignes',
+  checkboxSelectionUnselectAllRows: 'Désélectionner toutes les lignes',
+  checkboxSelectionSelectRow: 'Sélectionner la ligne',
+  checkboxSelectionUnselectRow: 'Désélectionner la ligne',
 
   // Boolean cell text
   booleanCellTrueLabel: 'vrai',
@@ -137,12 +137,12 @@ const frFRGrid: Partial<GridLocaleText> = {
   unGroupColumn: (name) => `Arrêter de grouper par ${name}`,
 
   // Master/detail
-  // detailPanelToggle: 'Detail panel toggle',
-  // expandDetailPanel: 'Expand',
-  // collapseDetailPanel: 'Collapse',
+  detailPanelToggle: 'Afficher/masquer les détails',
+  expandDetailPanel: 'Afficher',
+  collapseDetailPanel: 'Masquer',
 
   // Row reordering text
-  // rowReorderingHeaderName: 'Row reordering',
+  rowReorderingHeaderName: 'Positionnement des lignes',
 
   // Aggregation
   // aggregationMenuItemHeader: 'Aggregation',
