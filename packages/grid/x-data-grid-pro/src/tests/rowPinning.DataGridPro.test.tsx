@@ -601,4 +601,45 @@ describe('<DataGridPro /> - Row pinning', () => {
       36,
     );
   });
+
+  it('should work with `autoHeight`', function test() {
+    if (isJSDOM) {
+      // Need layouting
+      this.skip();
+    }
+
+    const headerHeight = 56;
+    const rowHeight = 52;
+    const rowsCount = 10;
+
+    const TestCase = () => {
+      const data = getData(rowsCount, 2);
+
+      const [pinnedRow0, pinnedRow1, ...rows] = data.rows;
+
+      return (
+        <div style={{ width: 500 }}>
+          <DataGridPro
+            {...data}
+            rows={rows}
+            pinnedRows={{
+              top: [pinnedRow0],
+              bottom: [pinnedRow1],
+            }}
+            rowHeight={rowHeight}
+            experimentalFeatures={{ rowPinning: true }}
+            headerHeight={headerHeight}
+            hideFooter
+            autoHeight
+          />
+        </div>
+      );
+    };
+
+    render(<TestCase />);
+
+    expect(document.querySelector('.MuiDataGrid-main')!.clientHeight).to.equal(
+      headerHeight + rowHeight * rowsCount,
+    );
+  });
 });
