@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { styled, alpha } from '@mui/material/styles';
+import { styled, alpha, Theme } from '@mui/material/styles';
 import { unstable_composeClasses as composeClasses } from '@mui/material';
 import {
   useGridSelector,
@@ -95,6 +95,10 @@ const getOverlayAlpha = (elevation: number) => {
   return alphaValue / 100;
 };
 
+const getBoxShadowColor = (theme: Theme) => {
+  return alpha(theme.palette.common.black, 0.21);
+};
+
 const VirtualScrollerDetailPanels = styled('div', {
   name: 'MuiDataGrid',
   slot: 'DetailPanels',
@@ -116,23 +120,26 @@ const VirtualScrollerPinnedColumns = styled('div', {
     { [`&.${gridClasses['pinnedColumns--right']}`]: styles['pinnedColumns--right'] },
     styles.pinnedColumns,
   ],
-})<{ ownerState: VirtualScrollerPinnedColumnsProps }>(({ theme, ownerState }) => ({
-  position: 'sticky',
-  overflow: 'hidden',
-  zIndex: 1,
-  backgroundColor: theme.palette.background.default,
-  ...(theme.palette.mode === 'dark' && { backgroundImage: darkModeBackgroundImage }),
-  ...(ownerState.side === GridPinnedPosition.left && {
-    left: 0,
-    float: 'left',
-    boxShadow: '2px 0px 4px -2px rgb(0 0 0 / 20%)',
-  }),
-  ...(ownerState.side === GridPinnedPosition.right && {
-    right: 0,
-    float: 'right',
-    boxShadow: '-2px 0px 4px -2px rgb(0 0 0 / 20%)',
-  }),
-}));
+})<{ ownerState: VirtualScrollerPinnedColumnsProps }>(({ theme, ownerState }) => {
+  const boxShadowColor = getBoxShadowColor(theme);
+  return {
+    position: 'sticky',
+    overflow: 'hidden',
+    zIndex: 1,
+    backgroundColor: theme.palette.background.default,
+    ...(theme.palette.mode === 'dark' && { backgroundImage: darkModeBackgroundImage }),
+    ...(ownerState.side === GridPinnedPosition.left && {
+      left: 0,
+      float: 'left',
+      boxShadow: `2px 0px 4px -2px ${boxShadowColor}`,
+    }),
+    ...(ownerState.side === GridPinnedPosition.right && {
+      right: 0,
+      float: 'right',
+      boxShadow: `-2px 0px 4px -2px ${boxShadowColor}`,
+    }),
+  };
+});
 
 const VirtualScrollerPinnedRows = styled('div', {
   name: 'MuiDataGrid',
@@ -142,21 +149,24 @@ const VirtualScrollerPinnedRows = styled('div', {
     { [`&.${gridClasses['pinnedRows--bottom']}`]: styles['pinnedRows--bottom'] },
     styles.pinnedRows,
   ],
-})<{ ownerState: { position: 'top' | 'bottom' } }>(({ theme, ownerState }) => ({
-  position: 'sticky',
-  // should be above the detail panel
-  zIndex: 3,
-  backgroundColor: theme.palette.background.default,
-  ...(theme.palette.mode === 'dark' && { backgroundImage: darkModeBackgroundImage }),
-  ...(ownerState.position === 'top' && {
-    top: 0,
-    boxShadow: '0px 3px 4px -2px rgb(0 0 0 / 20%)',
-  }),
-  ...(ownerState.position === 'bottom' && {
-    boxShadow: '0px -3px 4px -2px rgb(0 0 0 / 20%)',
-    bottom: 0,
-  }),
-}));
+})<{ ownerState: { position: 'top' | 'bottom' } }>(({ theme, ownerState }) => {
+  const boxShadowColor = getBoxShadowColor(theme);
+  return {
+    position: 'sticky',
+    // should be above the detail panel
+    zIndex: 3,
+    backgroundColor: theme.palette.background.default,
+    ...(theme.palette.mode === 'dark' && { backgroundImage: darkModeBackgroundImage }),
+    ...(ownerState.position === 'top' && {
+      top: 0,
+      boxShadow: `0px 3px 4px -2px ${boxShadowColor}`,
+    }),
+    ...(ownerState.position === 'bottom' && {
+      boxShadow: `0px -3px 4px -2px ${boxShadowColor}`,
+      bottom: 0,
+    }),
+  };
+});
 
 const VirtualScrollerPinnedRowsRenderZone = styled('div')({
   position: 'absolute',
