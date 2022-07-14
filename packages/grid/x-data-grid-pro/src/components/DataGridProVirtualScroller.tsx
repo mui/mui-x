@@ -342,11 +342,11 @@ const DataGridProVirtualScroller = React.forwardRef<
 
   const contentProps = getContentProps();
 
+  const pinnedColumnsStyle = { minHeight: contentProps.style.minHeight };
+
   if (contentProps.style.minHeight && contentProps.style.minHeight === '100%') {
     contentProps.style.minHeight = `calc(100% - ${topPinnedRowsHeight}px - ${bottomPinnedRowsHeight}px)`;
   }
-
-  const pinnedColumnsStyle = { minHeight: contentProps.style.minHeight };
 
   return (
     <GridVirtualScroller {...getRootProps(other)}>
