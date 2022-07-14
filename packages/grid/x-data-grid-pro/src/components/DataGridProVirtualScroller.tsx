@@ -62,32 +62,16 @@ export const filterColumns = (
 
 type OwnerState = {
   classes: DataGridProProcessedProps['classes'];
-  leftPinnedColumns: GridPinnedColumns['left'];
-  rightPinnedColumns: GridPinnedColumns['right'];
-  topPinnedRowsCount: number;
-  bottomPinnedRowsCount: number;
 };
 
 const useUtilityClasses = (ownerState: OwnerState) => {
-  const {
-    classes,
-    leftPinnedColumns,
-    rightPinnedColumns,
-    topPinnedRowsCount,
-    bottomPinnedRowsCount,
-  } = ownerState;
+  const { classes } = ownerState;
 
   const slots = {
-    leftPinnedColumns: [
-      'pinnedColumns',
-      leftPinnedColumns && leftPinnedColumns.length > 0 && 'pinnedColumns--left',
-    ],
-    rightPinnedColumns: [
-      'pinnedColumns',
-      rightPinnedColumns && rightPinnedColumns.length > 0 && 'pinnedColumns--right',
-    ],
-    topPinnedRows: ['pinnedRows', topPinnedRowsCount > 0 && 'pinnedRows--top'],
-    bottomPinnedRows: ['pinnedRows', bottomPinnedRowsCount > 0 && 'pinnedRows--bottom'],
+    leftPinnedColumns: ['pinnedColumns', 'pinnedColumns--left'],
+    rightPinnedColumns: ['pinnedColumns', 'pinnedColumns--right'],
+    topPinnedRows: ['pinnedRows', 'pinnedRows--top'],
+    bottomPinnedRows: ['pinnedRows', 'pinnedRows--bottom'],
     pinnedRowsRenderZone: ['pinnedRowsRenderZone'],
     detailPanels: ['detailPanels'],
     detailPanel: ['detailPanel'],

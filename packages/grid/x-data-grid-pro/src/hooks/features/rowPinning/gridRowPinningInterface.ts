@@ -16,7 +16,6 @@ export interface GridRowPinningApi {
   /**
    * Changes the pinned rows.
    * @param {GridPinnedRowsProp} pinnedRows An object containing the rows to pin.
-   * @ignore - do not document.
    */
   unstable_setPinnedRows: (pinnedRows: GridPinnedRowsProp) => void;
 }

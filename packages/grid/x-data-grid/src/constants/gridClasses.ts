@@ -458,6 +458,9 @@ export interface GridClasses {
    * Styles applied to the bottom pinned rows container.
    */
   'pinnedRows--bottom': string;
+  /**
+   * Styles applied to pinned rows render zones.
+   */
   pinnedRowsRenderZone: string;
 }
 

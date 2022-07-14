@@ -153,7 +153,7 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
       // compatible with the index used by the virtualization.
       const rowIndex = apiRef.current.getRowIndexRelativeToVisibleRows(rowId);
       // pinned rows are not part of the visible rows
-      if (typeof rowIndex != null) {
+      if (rowIndex != null) {
         apiRef.current.unstable_setLastMeasuredRowIndex(rowIndex);
       }
     }

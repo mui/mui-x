@@ -577,6 +577,10 @@
     "pinnedRows--bottom": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the bottom pinned rows container"
+    },
+    "pinnedRowsRenderZone": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "pinned rows render zones"
     }
   },
   "slotDescriptions": {
