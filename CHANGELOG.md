@@ -9,7 +9,7 @@ _Jul 14, 2022_
 
 We'd like to offer a big thanks to the 13 contributors who made this release possible. Here are some highlights ✨:
 
-- ✏️ Enter edit mode when pasting in a cell with Ctrl+V (#5405) @alexfauquette
+- ✏️ Enter edit mode when pasting in a cell with Ctrl+V (Cmd+V on macOS) (#5405) @alexfauquette
 - 🌍 Many improvements to the locales
 - 📚 Documentation improvements
 - 🐞 Bugfixes
@@ -42,6 +42,7 @@ We'd like to offer a big thanks to the 13 contributors who made this release pos
 - [docs] Fix description for "Striped rows" example (#5432) @lindapaiste
 - [docs] Make a clear difference between the license and license key (#5316) @oliviertassinari
 - [docs] Update pickers README files (#5456) @cherniavskii
+- [docs] Clarify the scope of support for MUI X (#5423) @joserodolfofreitas 
 
 ### Core
 
