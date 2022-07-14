@@ -42,7 +42,7 @@ We'd like to offer a big thanks to the 13 contributors who made this release pos
 - [docs] Fix description for "Striped rows" example (#5432) @lindapaiste
 - [docs] Make a clear difference between the license and license key (#5316) @oliviertassinari
 - [docs] Update pickers README files (#5456) @cherniavskii
-- [docs] Clarify the scope of support for MUI X (#5423) @joserodolfofreitas 
+- [docs] Clarify the scope of support for MUI X (#5423) @joserodolfofreitas
 
 ### Core
 
