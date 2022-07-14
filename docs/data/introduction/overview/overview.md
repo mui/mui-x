@@ -26,7 +26,7 @@ Throughout the documentation, Pro- and Premium-only features are denoted with th
 - **Expand on the power of MUI Core**: MUI X components work seamlessly with MUI Core libraries like Material UI, delivering more advanced functionality, but can also be used standalone.
 - **Grow with us:** You can start for free with the MIT-licensed packages, and upgrade to Pro or Premium when you need more advanced features or technical support.
 - **Dedicated maintenance:** MUI X is maintained by a full-time staff of engineers, so you can rest assured that any issues will be addressed in a timely manner.
-- **Technical support:** Pro and Premium users get access to technical support from our team as well as priority for bug fixes and requests.
+- **Technical support:** Pro and Premium users get access to technical support from our team as well as priority for bug fixes and features requests.
 
 ## MUI X vs. MUI Core
 
