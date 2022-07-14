@@ -38,7 +38,7 @@ We'd like to offer a big thanks to the 13 contributors who made this release pos
 
 ### Docs
 
-- [docs] FIx typo in the sorting page (#5431) @JosephMarinier
+- [docs] Fix typo in the sorting page (#5431) @JosephMarinier
 - [docs] Fix description for "Striped rows" example (#5432) @lindapaiste
 - [docs] Make a clear difference between the license and license key (#5316) @oliviertassinari
 - [docs] Update pickers README files (#5456) @cherniavskii
