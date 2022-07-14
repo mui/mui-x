@@ -9,6 +9,7 @@ import {
   getActiveColumnHeader,
   getCell,
   getColumnHeaderCell,
+  getRows,
 } from 'test/utils/helperFn';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
@@ -641,5 +642,42 @@ describe('<DataGridPro /> - Row pinning', () => {
     expect(document.querySelector('.MuiDataGrid-main')!.clientHeight).to.equal(
       headerHeight + rowHeight * rowsCount,
     );
+  });
+
+  it('should work with `autoPageSize`', function test() {
+    if (isJSDOM) {
+      // Need layouting
+      this.skip();
+    }
+
+    const TestCase = () => {
+      const data = getData(10, 5);
+
+      const [pinnedRow0, pinnedRow1, ...rows] = data.rows;
+      return (
+        <div style={{ width: 302, height: 300 }}>
+          <DataGridPro
+            {...data}
+            rows={rows}
+            pinnedRows={{
+              top: [pinnedRow0],
+              bottom: [pinnedRow1],
+            }}
+            rowHeight={52}
+            pagination
+            autoPageSize
+            experimentalFeatures={{ rowPinning: true }}
+            headerHeight={56}
+            hideFooter
+          />
+        </div>
+      );
+    };
+
+    render(<TestCase />);
+
+    // 300px grid height - 56px header = 244px available for rows
+    // 244px / 52px = 4 rows = 2 rows + 1 top-pinned row + 1 bottom-pinned row
+    expect(getRows().length).to.equal(4);
   });
 });
