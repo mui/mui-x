@@ -29,6 +29,11 @@ subscribeEvent: (
 ) => () => void;
 ```
 
+:::warning
+The call to `apiRef.current.subscribeEvent` returns a callback that **unsubscribes** the given handler.
+For instance, if the `useEffect` hook is used for event subscription, not returning the unsubscribe callback may cause multiple registrations of the same event handler.
+:::
+
 The following demo shows how to subscribe to the `columnResize` event. Try it by resizing the columns.
 
 {{"demo": "SubscribeToEvents.js", "bg": "inline"}}
