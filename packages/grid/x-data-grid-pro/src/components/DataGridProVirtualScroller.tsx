@@ -30,7 +30,7 @@ import {
   gridDetailPanelExpandedRowIdsSelector,
 } from '../hooks/features/detailPanel';
 import { GridDetailPanel } from './GridDetailPanel';
-import { gridPinnedRowsSelector } from '../hooks/features/rowPinning';
+import { gridPinnedRowsSelector } from '../hooks/features/rowPinning/gridRowPinningSelector';
 
 export const filterColumns = (
   pinnedColumns: GridPinnedColumns,
