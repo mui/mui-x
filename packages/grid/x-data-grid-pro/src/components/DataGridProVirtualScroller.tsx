@@ -15,6 +15,7 @@ import {
   GridVirtualScrollerContent,
   GridVirtualScrollerRenderZone,
   useGridVirtualScroller,
+  calculatePinnedRowsHeight,
 } from '@mui/x-data-grid/internals';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
@@ -329,15 +330,7 @@ const DataGridProVirtualScroller = React.forwardRef<
 
   const topPinnedRows = getRows({ renderContext, rows: topPinnedRowsData });
 
-  const topPinnedRowsHeight = topPinnedRowsData.reduce((acc, value) => {
-    acc += apiRef.current.unstable_getRowHeight(value.id);
-    return acc;
-  }, 0);
-
-  const bottomPinnedRowsHeight = bottomPinnedRowsData.reduce((acc, value) => {
-    acc += apiRef.current.unstable_getRowHeight(value.id);
-    return acc;
-  }, 0);
+  const pinnedRowsHeight = calculatePinnedRowsHeight(apiRef);
 
   const mainRows = getRows({
     renderContext,
@@ -355,7 +348,7 @@ const DataGridProVirtualScroller = React.forwardRef<
   const pinnedColumnsStyle = { minHeight: contentProps.style.minHeight };
 
   if (contentProps.style.minHeight && contentProps.style.minHeight === '100%') {
-    contentProps.style.minHeight = `calc(100% - ${topPinnedRowsHeight}px - ${bottomPinnedRowsHeight}px)`;
+    contentProps.style.minHeight = `calc(100% - ${pinnedRowsHeight.top}px - ${pinnedRowsHeight.bottom}px)`;
   }
 
   return (
@@ -364,7 +357,7 @@ const DataGridProVirtualScroller = React.forwardRef<
         <VirtualScrollerPinnedRows
           className={classes.topPinnedRows}
           ownerState={{ position: 'top' }}
-          style={{ width: contentProps.style.width, height: topPinnedRowsHeight }}
+          style={{ width: contentProps.style.width, height: pinnedRowsHeight.top }}
         >
           {leftRenderContext && (
             <VirtualScrollerPinnedColumns
@@ -452,7 +445,7 @@ const DataGridProVirtualScroller = React.forwardRef<
         <VirtualScrollerPinnedRows
           className={classes.bottomPinnedRows}
           ownerState={{ position: 'bottom' }}
-          style={{ width: contentProps.style.width, height: bottomPinnedRowsHeight }}
+          style={{ width: contentProps.style.width, height: pinnedRowsHeight.bottom }}
         >
           {leftRenderContext && (
             <VirtualScrollerPinnedColumns

@@ -64,6 +64,7 @@ export {
   gridAdditionalRowGroupsSelector,
   gridPinnedRowsSelector,
 } from '../hooks/features/rows/gridRowsSelector';
+export { calculatePinnedRowsHeight } from '../hooks/features/rows/gridRowsUtils';
 export {
   useGridSelection,
   selectionStateInitializer,
