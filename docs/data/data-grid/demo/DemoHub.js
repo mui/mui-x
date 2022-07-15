@@ -68,7 +68,7 @@ export const featuresSet = [
   {
     id: 7,
     name: 'Quick filter',
-    description: 'One filter to rule them all',
+    description: 'Use a single text input to filter multiple fields',
     plan: 'Community',
     detailPage: '/filtering/#quick-filter',
     demo: <QuickFilteringGrid />,
@@ -101,7 +101,7 @@ export const featuresSet = [
   {
     id: 11,
     name: 'Column Virtualization',
-    description: 'Wanna try the grid with 1000 columns?',
+    description: 'High performance support for thousands of columns',
     plan: 'Community',
     detailPage: '/virtualization/#column-virtualization',
     demo: <ColumnVirtualizationGrid />,
@@ -109,7 +109,7 @@ export const featuresSet = [
   {
     id: 12,
     name: 'Row Virtualization',
-    description: 'To support vast volumes of data',
+    description: 'High performance support for vast volume of data',
     plan: 'Pro',
     detailPage: '/virtualization/#row-virtualization',
     demo: <FullFeaturedDemo />,
@@ -117,7 +117,7 @@ export const featuresSet = [
   {
     id: 13,
     name: 'Tree data',
-    description: 'support rows with parent / child relationship',
+    description: 'Support rows with parent / child relationship',
     plan: 'Pro',
     detailPage: '/tree-data/',
     demo: <TreeDataFullExample />,

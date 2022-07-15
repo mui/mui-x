@@ -45,6 +45,7 @@ function OneMasterDemo() {
       field: 'name',
       headerName: 'Feature name',
       width: 160,
+      groupable: false,
       renderCell: (params) => {
         if (!params.value) {
           return <React.Fragment />;
@@ -61,6 +62,7 @@ function OneMasterDemo() {
     {
       field: 'description',
       headerName: 'Brief description',
+      groupable: false,
       flex: 0.5,
     },
     {
@@ -107,6 +109,19 @@ function OneMasterDemo() {
         }}
         rows={featuresSet}
         columns={columns}
+        groupingColDef={(params) => {
+          return {
+              headerName: 'Grouped by Plan',
+              width: 200,
+              valueFormatter: (valueFormatterParams) => {
+                console.log(valueFormatterParams);
+                if (!valueFormatterParams.value) {
+                  return <React.Fragment />;
+                }
+                return <PlanTag plan={valueFormatterParams.value} />;
+              }
+          };
+        }}
       />
     </div>
   );
