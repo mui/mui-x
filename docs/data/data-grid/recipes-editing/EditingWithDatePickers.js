@@ -39,8 +39,8 @@ function buildApplyDateFilterFn(filterItem, compareFn, dateType) {
     // Make a copy of the date to not reset the hours in the original object
     const dateCopy = new Date(value);
     dateCopy.setHours(
-      (dateType === 'time' || dateType === 'dateTime') ? value.getHours() : 0,
-      (dateType === 'time' || dateType === 'dateTime') ? value.getMinutes() : 0,
+      dateType === 'time' || dateType === 'dateTime' ? value.getHours() : 0,
+      dateType === 'time' || dateType === 'dateTime' ? value.getMinutes() : 0,
       0,
       0,
     );
@@ -281,11 +281,7 @@ const timeColumnType = {
   },
 };
 
-function GridEditTimeCell({
-  id,
-  field,
-  value,
-}) {
+function GridEditTimeCell({ id, field, value }) {
   const apiRef = useGridApiContext();
 
   const handleChange = (newValue) => {

@@ -96,7 +96,7 @@ function GridEditDateCell(props: GridEditDateCellProps) {
       if (isTime) {
         dateEndPosition = 5;
       }
-    
+
       formattedDate = localDate.toISOString().substr(isTime ? 11 : 0, dateEndPosition);
     }
 

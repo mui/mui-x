@@ -50,8 +50,8 @@ function buildApplyDateFilterFn(
     // Make a copy of the date to not reset the hours in the original object
     const dateCopy = new Date(value);
     dateCopy.setHours(
-      (dateType === 'time' || dateType === 'dateTime') ? value.getHours() : 0,
-      (dateType === 'time' || dateType === 'dateTime') ? value.getMinutes() : 0,
+      dateType === 'time' || dateType === 'dateTime' ? value.getHours() : 0,
+      dateType === 'time' || dateType === 'dateTime' ? value.getMinutes() : 0,
       0,
       0,
     );
@@ -225,7 +225,8 @@ function GridFilterDateInput(
 ) {
   const { item, dateType, applyValue, apiRef } = props;
 
-  let Component: typeof DatePicker | typeof TimePicker | typeof DateTimePicker = DatePicker;
+  let Component: typeof DatePicker | typeof TimePicker | typeof DateTimePicker =
+    DatePicker;
   if (dateType === 'time') {
     Component = TimePicker;
   } else if (dateType === 'dateTime') {

@@ -4,7 +4,6 @@ import { GridFilterItem } from '../../../models/gridFilterItem';
 import type { GridApiCommon } from '../../../models/api/gridApiCommon';
 import type { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 
-
 export type GridFilterInputValueProps<Api extends GridApiCommon = GridApiCommunity> = {
   item: GridFilterItem;
   applyValue: (value: GridFilterItem) => void;
