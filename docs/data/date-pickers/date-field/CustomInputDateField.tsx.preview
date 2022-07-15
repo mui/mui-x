@@ -1,0 +1,12 @@
+<LocalizationProvider dateAdapter={AdapterDateFns}>
+  <Stack spacing={2}>
+    <DateField
+      label="Custom variant"
+      value={value}
+      onChange={(newValue) => {
+        setValue(newValue);
+      }}
+      variant="filled"
+    />
+  </Stack>
+</LocalizationProvider>

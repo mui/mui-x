@@ -1,0 +1,12 @@
+<LocalizationProvider dateAdapter={AdapterDateFns}>
+  <Stack spacing={2}>
+    <DateField
+      label="Custom format"
+      value={value}
+      onChange={(newValue) => {
+        setValue(newValue);
+      }}
+      format="dd MMMM yyyy"
+    />
+  </Stack>
+</LocalizationProvider>

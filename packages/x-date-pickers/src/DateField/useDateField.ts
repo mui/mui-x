@@ -11,15 +11,15 @@ import {
 } from './DateField.interfaces';
 import { datePickerValueManager } from '../DatePicker/shared';
 import {
+  createDateStrFromSections,
   focusInputSection,
   getDateSectionNameFromFormat,
   getInputSectionIndexFromCursorPosition,
-  incrementDatePart,
+  incrementDatePartValue,
   splitStringIntoSections,
+  updateSectionValue,
 } from './DateField.utils';
 import { useUtils } from '../internals/hooks/useUtils';
-
-const FORMAT = 'dd/MM/yyyy';
 
 export const useDateField = <TInputDate, TDate = TInputDate>(
   inProps: UseDateFieldProps<TInputDate, TDate>,
@@ -28,36 +28,38 @@ export const useDateField = <TInputDate, TDate = TInputDate>(
   const inputRef = React.useRef<HTMLInputElement>(null);
   const dateSectionToSelect = React.useRef<DateSectionName | null>(null);
 
-  const { value, onChange } = inProps;
+  const { value, onChange, format = 'dd/MM/yyyy' } = inProps;
 
   const parsedValue = React.useMemo(
     () => datePickerValueManager.parseInput(utils, value),
     [utils, value],
   );
 
-  const inputValueStr = React.useMemo(
-    () => utils.formatByString(parsedValue, FORMAT),
-    [utils, parsedValue],
+  const [inputValue, setInputValue] = React.useState(() =>
+    utils.formatByString(parsedValue, format),
   );
 
-  const inputSections = React.useMemo<DateFieldInputSection[]>(() => {
-    const formatSections = splitStringIntoSections(FORMAT);
-    const tempInputSections = splitStringIntoSections(inputValueStr);
+  const formatSections = React.useMemo(() => splitStringIntoSections(format), [format]);
 
-    return tempInputSections.map((el, index) => {
-      return {
+  const inputSections = React.useMemo<DateFieldInputSection[]>(
+    () =>
+      splitStringIntoSections(inputValue).map((el, index) => ({
         ...el,
         dateSectionName: getDateSectionNameFromFormat(formatSections[index].value),
-      };
-    });
-  }, [inputValueStr]);
+      })),
+    [inputValue, formatSections],
+  );
 
   const handleInputClick = useEventCallback(() => {
     if (inputSections.length === 0) {
       return;
     }
 
-    focusInputSection(inputRef, inputSections[0]);
+    const sectionIndex = getInputSectionIndexFromCursorPosition(
+      inputSections,
+      inputRef.current!.selectionStart ?? 0,
+    );
+    focusInputSection(inputRef, inputSections[sectionIndex]);
   });
 
   const handleInputKeyDown = useEventCallback((event: React.KeyboardEvent<HTMLInputElement>) => {
@@ -75,49 +77,46 @@ export const useDateField = <TInputDate, TDate = TInputDate>(
       inputSections,
       inputRef.current.selectionEnd ?? 0,
     );
+    const startSection = inputSections[startSectionIndex];
 
-    switch (event.key) {
-      case 'ArrowRight': {
-        if (startSectionIndex !== endSectionIndex) {
-          focusInputSection(inputRef, inputSections[0]);
-        }
-
-        if (startSectionIndex < inputSections.length - 1) {
-          focusInputSection(inputRef, inputSections[startSectionIndex + 1]);
-        }
-
-        break;
+    if (event.key === 'ArrowRight') {
+      if (startSectionIndex !== endSectionIndex) {
+        focusInputSection(inputRef, inputSections[0]);
       }
-
-      case 'ArrowLeft': {
-        if (startSectionIndex !== endSectionIndex) {
-          focusInputSection(inputRef, inputSections[inputSections.length - 1]);
-        }
-
-        if (startSectionIndex > 0) {
-          focusInputSection(inputRef, inputSections[startSectionIndex - 1]);
-        }
-
-        break;
+      if (startSectionIndex < inputSections.length - 1) {
+        focusInputSection(inputRef, inputSections[startSectionIndex + 1]);
       }
-
-      case 'ArrowUp':
-      case 'ArrowDown': {
-        const dateSectionName = inputSections[startSectionIndex].dateSectionName;
-        const newDate = incrementDatePart(
-          utils,
-          parsedValue,
-          dateSectionName,
-          event.key === 'ArrowDown' ? -1 : 1,
-        );
-        dateSectionToSelect.current = dateSectionName;
-        onChange(newDate);
-
-        break;
+    } else if (event.key === 'ArrowLeft') {
+      if (startSectionIndex !== endSectionIndex) {
+        focusInputSection(inputRef, inputSections[inputSections.length - 1]);
       }
-
-      default: {
+      if (startSectionIndex > 0) {
+        focusInputSection(inputRef, inputSections[startSectionIndex - 1]);
+      }
+    } else if (event.key === 'ArrowUp' || event.key === 'ArrowDown') {
+      const dateSectionName = startSection.dateSectionName;
+      const newDate = incrementDatePartValue(
+        utils,
+        parsedValue,
+        dateSectionName,
+        event.key === 'ArrowDown' ? -1 : 1,
+      );
+      dateSectionToSelect.current = dateSectionName;
+      onChange(newDate);
+    } else if (event.key === 'Backspace') {
+      const newSections = updateSectionValue(inputSections, startSectionIndex, '');
+      setInputValue(createDateStrFromSections(newSections));
+    } else {
+      const numericKey = Number(event.key);
+      if (Number.isNaN(numericKey)) {
         shouldPreventDefault = false;
+      } else {
+        // TODO: Reset based on the current section value
+        const shouldReset = false;
+        const newSectionValue = shouldReset ? event.key : `${startSection.value}${event.key}`;
+        const newSections = updateSectionValue(inputSections, startSectionIndex, newSectionValue);
+        setInputValue(createDateStrFromSections(newSections));
+        dateSectionToSelect.current = startSection.dateSectionName;
       }
     }
 
@@ -125,6 +124,10 @@ export const useDateField = <TInputDate, TDate = TInputDate>(
       event.preventDefault();
     }
   });
+
+  React.useEffect(() => {
+    setInputValue(utils.formatByString(parsedValue, format));
+  }, [utils, parsedValue, format]);
 
   useEnhancedEffect(() => {
     if (dateSectionToSelect.current != null) {
@@ -134,11 +137,11 @@ export const useDateField = <TInputDate, TDate = TInputDate>(
       );
       dateSectionToSelect.current = null;
     }
-  }, [parsedValue]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [inputValue]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return {
     inputProps: {
-      value: inputValueStr,
+      value: inputValue,
       onClick: handleInputClick,
       onKeyDown: handleInputKeyDown,
     },

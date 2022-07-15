@@ -10,9 +10,13 @@ title: React Date Field component
 
 {{"demo": "BasicDateField.js"}}
 
-## Custom usage
+## Customize the input props
 
-{{"demo": "CustomDateField.js"}}
+{{"demo": "CustomInputDateField.js"}}
+
+## Customize the date management props
+
+{{"demo": "CustomDateManagementDateField.js"}}
 
 ## Headless usage
 

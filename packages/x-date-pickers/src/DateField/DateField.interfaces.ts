@@ -6,6 +6,10 @@ export type DateSectionName = 'day' | 'month' | 'year';
 export interface UseDateFieldProps<TInputDate, TDate> {
   value: TInputDate | null;
   onChange: (value: TDate) => void;
+  /**
+   * @default "dd/MM/yyyy"
+   */
+  format?: string;
 }
 
 export interface DateFieldProps<TInputDate, TDate>
@@ -20,5 +24,6 @@ export interface UseDateFieldResponse {
 export type DateFieldInputSection = {
   start: number;
   value: string;
+  separator: string | null;
   dateSectionName: DateSectionName;
 };
