@@ -104,7 +104,7 @@ function OneMasterDemo() {
           toolbar: { showQuickFilter: true, quickFilterProps: { debounceMs: 500 } },
         }}
         getDetailPanelContent={({ row }) => DemoHub(row)}
-        getDetailPanelHeight={({ row }) => 'auto'}
+        getDetailPanelHeight={() => 'auto'}
         getRowHeight={() => 'auto'}
         sx={{
           [`& .${gridClasses.cell}`]: {
@@ -117,7 +117,7 @@ function OneMasterDemo() {
         }}
         rows={featuresSet}
         columns={columns}
-        groupingColDef={(params) => {
+        groupingColDef={() => {
           return {
             headerName: 'Grouped by Plan',
             width: 200,

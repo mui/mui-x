@@ -42,7 +42,8 @@ export const featuresSet = [
   {
     id: 4,
     name: 'Save and Restore state',
-    description: 'Save and Restore internal state and configurations like active filters and sorting',
+    description:
+      'Save and Restore internal state and configurations like active filters and sorting',
     plan: 'Community',
     detailPage: '/state/#save-and-restore-the-state',
     demo: <RestoreStateInitialState />,
@@ -58,7 +59,8 @@ export const featuresSet = [
   {
     id: 6,
     name: 'Excel export',
-    description: 'Easily export the rows in various file formats such as CSV, PDF or Excel',
+    description:
+      'Easily export the rows in various file formats such as CSV, PDF or Excel',
     plan: 'Premium',
     detailPage: '/export/#excel-export',
     demo: <ExcelExport />,
@@ -91,7 +93,7 @@ export const featuresSet = [
     id: 10,
     name: 'Column Visibility',
     description:
-      "Display different columns in different use cases, by defining which columns are visible.",
+      'Display different columns in different use cases, by defining which columns are visible.',
     plan: 'Community',
     detailPage: '"/column-visibility/',
     demo: <ColumnSelectorGrid />,

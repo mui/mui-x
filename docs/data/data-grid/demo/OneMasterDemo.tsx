@@ -4,7 +4,6 @@ import {
   gridClasses,
   GridColDef,
   GridRenderCellParams,
-  GridRowHeightParams,
   GridToolbarContainer,
   GridToolbarQuickFilter,
 } from '@mui/x-data-grid-premium';
@@ -52,8 +51,11 @@ function OneMasterDemo() {
         }
         return (
           <Typography sx={{ fontSize: '1rem', fontWeight: '500' }}>
-            <Link href={`/x/react-data-grid${params.row.detailPage}`} target="_blank">
-            {params.value}
+            <Link
+              href={`/x/react-data-grid${params.row.detailPage}`}
+              target="_blank"
+            >
+              {params.value}
             </Link>
           </Typography>
         );
@@ -96,8 +98,8 @@ function OneMasterDemo() {
           toolbar: { showQuickFilter: true, quickFilterProps: { debounceMs: 500 } },
         }}
         getDetailPanelContent={({ row }) => DemoHub(row)}
-        getDetailPanelHeight={({ row }) => 'auto'}
-        getRowHeight={() => 'auto'} 
+        getDetailPanelHeight={() => 'auto'}
+        getRowHeight={() => 'auto'}
         sx={{
           [`& .${gridClasses.cell}`]: {
             py: 2,
@@ -109,17 +111,17 @@ function OneMasterDemo() {
         }}
         rows={featuresSet}
         columns={columns}
-        groupingColDef={(params) => {
+        groupingColDef={() => {
           return {
-              headerName: 'Grouped by Plan',
-              width: 200,
-              valueFormatter: (valueFormatterParams) => {
-                console.log(valueFormatterParams);
-                if (!valueFormatterParams.value) {
-                  return <React.Fragment />;
-                }
-                return <PlanTag plan={valueFormatterParams.value} />;
+            headerName: 'Grouped by Plan',
+            width: 200,
+            valueFormatter: (valueFormatterParams) => {
+              console.log(valueFormatterParams);
+              if (!valueFormatterParams.value) {
+                return <React.Fragment />;
               }
+              return <PlanTag plan={valueFormatterParams.value} />;
+            },
           };
         }}
       />
