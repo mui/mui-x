@@ -20,6 +20,7 @@ We'd like to offer a big thanks to the 13 contributors who made this release pos
 
 - [DataGrid] Fix blank space when using dynamic row height with pagination (#5315) @m4theushw
 - [DataGrid] Start editing with uppercase letter and Ctrl+V (#5405) @alexfauquette
+- [DataGrid] Fix some filters being removed from filter model on filter panel open (#5403) @cherniavskii
 - [DataGridPro] Improve pinned column headers accessibility (#5370) @cherniavskii
 - [l10n] Improve Dutch (nl-NL) locale (#5464) @developenguin
 - [l10n] Improve French (fr-FR) locale (#3211) (#5420) @Zenoo
@@ -46,7 +47,7 @@ We'd like to offer a big thanks to the 13 contributors who made this release pos
 
 ### Core
 
-- [core] Add technical support link to _redirects (#5428) @joserodolfofreitas
+- [core] Add technical support link to \_redirects (#5428) @joserodolfofreitas
 - [core] Improve GitHub bug reproduction template (#5067) @joserodolfofreitas
 - [core] Include playground pages in tsconfig (#5367) @cherniavskii
 - [core] Sort keys like in material-ui @oliviertassinari
