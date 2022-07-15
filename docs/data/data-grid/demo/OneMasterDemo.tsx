@@ -104,7 +104,7 @@ function OneMasterDemo() {
         }}
         getDetailPanelContent={({ row }) => DemoHub(row)}
         getDetailPanelHeight={({ row }) =>
-          row.name === 'Virtualization' ? 500 : 300
+         'auto'
         }
         sx={{
           '& .MuiDataGrid-columnHeaderTitle': {
