@@ -2,7 +2,7 @@ import * as React from 'react';
 import { DataGridPro, gridClasses, useGridApiRef, GridApi } from '@mui/x-data-grid-pro';
 import { expect } from 'chai';
 // @ts-expect-error Remove once the test utils are typed
-import { createRenderer, waitFor, fireEvent } from '@mui/monorepo/test/utils';
+import { createRenderer, waitFor, fireEvent, screen } from '@mui/monorepo/test/utils';
 import { getData } from 'storybook/src/data/data-service';
 import {
   getActiveCell,
@@ -639,7 +639,7 @@ describe('<DataGridPro /> - Row pinning', () => {
 
     render(<TestCase />);
 
-    expect(document.querySelector('.MuiDataGrid-main')!.clientHeight).to.equal(
+    expect(document.querySelector(`.${gridClasses.main}`)!.clientHeight).to.equal(
       headerHeight + rowHeight * rowsCount,
     );
   });
@@ -679,5 +679,128 @@ describe('<DataGridPro /> - Row pinning', () => {
     // 300px grid height - 56px header = 244px available for rows
     // 244px / 52px = 4 rows = 2 rows + 1 top-pinned row + 1 bottom-pinned row
     expect(getRows().length).to.equal(4);
+  });
+
+  it('should not allow to expand detail panel of pinned row', () => {
+    const TestCase = () => {
+      const data = getData(10, 5);
+
+      const [pinnedRow0, pinnedRow1, ...rows] = data.rows;
+      return (
+        <div style={{ width: 302, height: 500 }}>
+          <DataGridPro
+            {...data}
+            rows={rows}
+            pinnedRows={{
+              top: [pinnedRow0],
+              bottom: [pinnedRow1],
+            }}
+            experimentalFeatures={{ rowPinning: true }}
+            getDetailPanelContent={({ row }) => <div>{row.id}</div>}
+          />
+        </div>
+      );
+    };
+
+    render(<TestCase />);
+
+    const cell = getCell(0, 0);
+    expect(cell.querySelector('[aria-label="Expand"]')).to.have.attribute('disabled');
+  });
+
+  it('should not allow to reorder pinned rows', () => {
+    const TestCase = () => {
+      const data = getData(10, 5);
+
+      const [pinnedRow0, pinnedRow1, ...rows] = data.rows;
+      return (
+        <div style={{ width: 302, height: 500 }}>
+          <DataGridPro
+            {...data}
+            rows={rows}
+            pinnedRows={{
+              top: [pinnedRow0],
+              bottom: [pinnedRow1],
+            }}
+            experimentalFeatures={{ rowPinning: true }}
+            rowReordering
+          />
+        </div>
+      );
+    };
+
+    render(<TestCase />);
+
+    const cell = getCell(0, 0);
+    expect(cell.querySelector(`.${gridClasses.rowReorderCell}`)).to.equal(null);
+  });
+
+  it('should keep pinned rows on page change', () => {
+    const TestCase = () => {
+      const data = getData(20, 5);
+
+      const [pinnedRow0, pinnedRow1, ...rows] = data.rows;
+      return (
+        <div style={{ width: 302, height: 500 }}>
+          <DataGridPro
+            {...data}
+            rows={rows}
+            pinnedRows={{
+              top: [pinnedRow0],
+              bottom: [pinnedRow1],
+            }}
+            experimentalFeatures={{ rowPinning: true }}
+            pagination
+            pageSize={5}
+            rowsPerPageOptions={[5]}
+          />
+        </div>
+      );
+    };
+
+    render(<TestCase />);
+
+    expect(isRowPinned(getRowById(0), 'top')).to.equal(true, '#0 pinned top');
+    expect(isRowPinned(getRowById(1), 'bottom')).to.equal(true, '#1 pinned bottom');
+
+    fireEvent.click(screen.getByRole('button', { name: /next page/i }));
+
+    expect(isRowPinned(getRowById(0), 'top')).to.equal(true, '#0 pinned top');
+    expect(isRowPinned(getRowById(1), 'bottom')).to.equal(true, '#1 pinned bottom');
+
+    fireEvent.click(screen.getByRole('button', { name: /next page/i }));
+
+    expect(isRowPinned(getRowById(0), 'top')).to.equal(true, '#0 pinned top');
+    expect(isRowPinned(getRowById(1), 'bottom')).to.equal(true, '#1 pinned bottom');
+  });
+
+  it('should not count pinned rows as part of the page', () => {
+    const pageSize = 3;
+
+    const TestCase = () => {
+      const data = getData(20, 5);
+
+      const [pinnedRow0, pinnedRow1, ...rows] = data.rows;
+      return (
+        <div style={{ width: 302, height: 500 }}>
+          <DataGridPro
+            {...data}
+            rows={rows}
+            pinnedRows={{
+              top: [pinnedRow0],
+              bottom: [pinnedRow1],
+            }}
+            experimentalFeatures={{ rowPinning: true }}
+            pagination
+            pageSize={pageSize}
+            rowsPerPageOptions={[pageSize]}
+          />
+        </div>
+      );
+    };
+
+    render(<TestCase />);
+
+    expect(getRows().length).to.equal(pageSize + 2); // + 2 pinned rows
   });
 });
