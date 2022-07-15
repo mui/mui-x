@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {
   DataGridPremium,
+  gridClasses,
   GridToolbarContainer,
   GridToolbarQuickFilter,
 } from '@mui/x-data-grid-premium';
@@ -48,21 +49,26 @@ function OneMasterDemo() {
     {
       field: 'name',
       headerName: 'Feature name',
-      width: 130,
+      width: 160,
       renderCell: (params) => {
         if (!params.value) {
           return <React.Fragment />;
         }
         return (
           <Typography sx={{ fontSize: '1rem', fontWeight: '500' }}>
-            {params.value}
+            <Link
+              href={`/x/react-data-grid${params.row.detailPage}`}
+              target="_blank"
+            >
+              {params.value}
+            </Link>
           </Typography>
         );
       },
     },
     {
       field: 'description',
-      headerName: 'Description',
+      headerName: 'Brief description',
       flex: 0.5,
     },
     {
@@ -76,21 +82,6 @@ function OneMasterDemo() {
           return <React.Fragment />;
         }
         return <PlanTag plan={params.value} />;
-      },
-    },
-    {
-      field: 'detailPage',
-      headerName: 'Details',
-      width: 150,
-      renderCell: (params) => {
-        if (!params.value) {
-          return <React.Fragment />;
-        }
-        return (
-          <Link href={`/x/react-data-grid${params.value}`} target="_blank">
-            Docs
-          </Link>
-        );
       },
     },
   ];
@@ -112,8 +103,12 @@ function OneMasterDemo() {
         }}
         getDetailPanelContent={({ row }) => DemoHub(row)}
         getDetailPanelHeight={({ row }) => 'auto'}
+        getRowHeight={() => 'auto'}
         sx={{
-          '& .MuiDataGrid-columnHeaderTitle': {
+          [`& .${gridClasses.cell}`]: {
+            py: 2,
+          },
+          [`& .${gridClasses.columnHeaderTitle}`]: {
             fontWeight: 400,
           },
           borderRadius: 2,

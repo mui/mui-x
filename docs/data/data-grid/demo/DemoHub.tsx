@@ -12,6 +12,7 @@ import CursorPaginationGrid from '../pagination/CursorPaginationGrid';
 import ColumnSelectorGrid from '../column-visibility/ColumnSelectorGrid';
 import RowOrderingGrid from '../rows/RowOrderingGrid';
 import TreeDataFullExample from '../tree-data/TreeDataFullExample';
+import RestoreStateInitialState from '../state/RestoreStateInitialState';
 
 export const featuresSet = [
   {
@@ -25,7 +26,7 @@ export const featuresSet = [
   {
     id: 2,
     name: 'Editing inline',
-    description: 'Edit your data inside the grid.´',
+    description: 'Edit your data inside the grid',
     plan: 'Community',
     detailPage: '/editing/',
     demo: <EditingWithDatePickers />,
@@ -33,13 +34,21 @@ export const featuresSet = [
   {
     id: 3,
     name: 'Pagination',
-    description: 'Quickly setup pagination',
+    description: 'Easily paginate your rows and only fetch what you need',
     plan: 'Community',
     detailPage: '/pagination/',
     demo: <CursorPaginationGrid />,
   },
   {
     id: 4,
+    name: 'Save and Restore state',
+    description: 'Save and Restore internal state and configurations like active filters and sorting',
+    plan: 'Community',
+    detailPage: '/state/#save-and-restore-the-state',
+    demo: <RestoreStateInitialState />,
+  },
+  {
+    id: 5,
     name: 'Row Grouping',
     description: 'Group rows with repeating column values',
     plan: 'Premium',
@@ -47,15 +56,15 @@ export const featuresSet = [
     demo: <RowGroupingInitialState />,
   },
   {
-    id: 5,
+    id: 6,
     name: 'Excel export',
-    description: 'Export your custom view to excel',
+    description: 'Easily export the rows in various file formats such as CSV, PDF or Excel',
     plan: 'Premium',
     detailPage: '/export/#excel-export',
     demo: <ExcelExport />,
   },
   {
-    id: 6,
+    id: 7,
     name: 'Quick filter',
     description: 'One filter to rule them all',
     plan: 'Community',
@@ -63,7 +72,7 @@ export const featuresSet = [
     demo: <QuickFilteringGrid />,
   },
   {
-    id: 7,
+    id: 8,
     name: 'Row reorder',
     description: 'Drag and drop to reorder your data',
     plan: 'Pro',
@@ -71,7 +80,7 @@ export const featuresSet = [
     demo: <RowOrderingGrid />,
   },
   {
-    id: 8,
+    id: 9,
     name: 'Column Pinning',
     description: 'Pin your columns to the left or right',
     plan: 'Pro',
@@ -79,16 +88,16 @@ export const featuresSet = [
     demo: <ControlPinnedColumns />,
   },
   {
-    id: 9,
+    id: 10,
     name: 'Column Visibility',
     description:
-      "Display different columns, and let your user choose pick what's important",
+      "Display different columns in different use cases, by defining which columns are visible.",
     plan: 'Community',
     detailPage: '"/column-visibility/',
     demo: <ColumnSelectorGrid />,
   },
   {
-    id: 10,
+    id: 11,
     name: 'Column Virtualization',
     description: 'Wanna try the grid with 1000 columns?',
     plan: 'Community',
@@ -96,7 +105,7 @@ export const featuresSet = [
     demo: <ColumnVirtualizationGrid />,
   },
   {
-    id: 11,
+    id: 12,
     name: 'Row Virtualization',
     description: 'To support vast volumes of data',
     plan: 'Pro',
@@ -104,7 +113,7 @@ export const featuresSet = [
     demo: <FullFeaturedDemo />,
   },
   {
-    id: 12,
+    id: 13,
     name: 'Tree data',
     description: 'support rows with parent / child relationship',
     plan: 'Pro',
