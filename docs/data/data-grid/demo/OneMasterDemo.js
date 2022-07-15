@@ -115,6 +115,22 @@ function OneMasterDemo() {
         }}
         rows={featuresSet}
         columns={columns}
+        groupingColDef={(params) => {
+          const override = {};
+          if (params.fields.includes('plan')) {
+            return {
+              headerName: 'Plan',
+              renderCell: (params) => {
+                if (!params.value) {
+                  return <React.Fragment />;
+                }
+                return <PlanTag plan={params.value} />;
+              },
+            };
+          }
+
+          return override;
+        }}
       />
     </div>
   );
