@@ -81,7 +81,7 @@ function OneMasterDemo() {
           return <React.Fragment />;
         }
         return (
-          <Link href={`/x/react-data-grid${params.value}`}>{params.value}</Link>
+          <Link href={`/x/react-data-grid${params.value}`} target="_blank">Docs</Link>
         );
       },
     },
