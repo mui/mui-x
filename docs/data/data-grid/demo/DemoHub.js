@@ -11,6 +11,7 @@ import ColumnVirtualizationGrid from '../virtualization/ColumnVirtualizationGrid
 import CursorPaginationGrid from '../pagination/CursorPaginationGrid';
 import ColumnSelectorGrid from '../column-visibility/ColumnSelectorGrid';
 import RowOrderingGrid from '../rows/RowOrderingGrid';
+import TreeDataFullExample from '../tree-data/TreeDataFullExample';
 
 export const featuresSet = [
   {
@@ -101,6 +102,14 @@ export const featuresSet = [
     plan: 'Pro',
     detailPage: '/virtualization/#row-virtualization',
     demo: <FullFeaturedDemo />,
+  },
+  {
+    id: 12,
+    name: 'Tree data',
+    description: 'support rows with parent / child relationship',
+    plan: 'Pro',
+    detailPage: '/tree-data/',
+    demo: <TreeDataFullExample />,
   },
 ];
 

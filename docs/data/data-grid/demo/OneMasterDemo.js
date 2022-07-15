@@ -87,7 +87,9 @@ function OneMasterDemo() {
           return <React.Fragment />;
         }
         return (
-          <Link href={`/x/react-data-grid${params.value}`} target="_blank">Docs</Link>
+          <Link href={`/x/react-data-grid${params.value}`} target="_blank">
+            Docs
+          </Link>
         );
       },
     },
@@ -105,10 +107,11 @@ function OneMasterDemo() {
     <div style={{ height: 600, width: '100%' }}>
       <DataGridPremium
         components={{ Toolbar: CustomToolbar }}
+        componentsProps={{
+          toolbar: { showQuickFilter: true, quickFilterProps: { debounceMs: 500 } },
+        }}
         getDetailPanelContent={({ row }) => DemoHub(row)}
-        getDetailPanelHeight={({ row }) =>
-         'auto'
-        }
+        getDetailPanelHeight={({ row }) => 'auto'}
         sx={{
           '& .MuiDataGrid-columnHeaderTitle': {
             fontWeight: 400,
