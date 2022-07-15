@@ -50,14 +50,18 @@ export const splitStringIntoSections = (value: string) => {
   for (let i = 0; i < value.length; i += 1) {
     const char = value[i];
     if (SECTION_SEPARATOR_KEYS.includes(char)) {
-      temp.push({
-        start: i - currentSectionValue.length,
-        value: currentSectionValue,
-        separator: char,
-      });
-      currentSectionValue = '';
+      if (currentSectionValue === '') {
+        temp[temp.length - 1].separator += char;
+      } else {
+        temp.push({
+          start: i - currentSectionValue.length,
+          value: currentSectionValue,
+          separator: char,
+        });
+        currentSectionValue = '';
+      }
     } else {
-      currentSectionValue = `${currentSectionValue}${char}`;
+      currentSectionValue += char;
     }
 
     if (i === value.length - 1) {

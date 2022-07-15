@@ -28,7 +28,7 @@ export const useDateField = <TInputDate, TDate = TInputDate>(
   const inputRef = React.useRef<HTMLInputElement>(null);
   const dateSectionToSelect = React.useRef<DateSectionName | null>(null);
 
-  const { value, onChange, format = 'dd/MM/yyyy' } = inProps;
+  const { value, onChange, format = 'dd / MM / yyyy' } = inProps;
 
   const parsedValue = React.useMemo(
     () => datePickerValueManager.parseInput(utils, value),
