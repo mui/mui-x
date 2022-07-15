@@ -22,7 +22,7 @@ export const GridToolbarExportContainer = React.forwardRef<HTMLButtonElement, Bu
     const handleRef = useForkRef(ref, buttonRef);
 
     const handleMenuOpen = (event: React.MouseEvent<HTMLButtonElement>) => {
-      setOpen(true);
+      setOpen((prevOpen) => !prevOpen);
       onClick?.(event);
     };
 

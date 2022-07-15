@@ -57,7 +57,7 @@ export const GridToolbarDensitySelector = React.forwardRef<HTMLButtonElement, Bu
     }, [densityValue, rootProps]);
 
     const handleDensitySelectorOpen = (event: React.MouseEvent<HTMLButtonElement>) => {
-      setOpen(true);
+      setOpen((prevOpen) => !prevOpen);
       onClick?.(event);
     };
     const handleDensitySelectorClose = () => setOpen(false);
