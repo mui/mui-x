@@ -2,8 +2,6 @@ import * as React from 'react';
 import { DateFieldInputSection, DateSectionName } from './DateField.interfaces';
 import { MuiPickersAdapter } from '../internals/models/muiPickersAdapter';
 
-export const SECTION_SEPARATOR_KEYS = ['/', ' '];
-
 // TODO: Improve and test with different calendars (move to date-io ?)
 export const getDateSectionNameFromFormat = (format: string): DateSectionName => {
   if (['MMMM', 'MM'].includes(format)) {
@@ -16,6 +14,14 @@ export const getDateSectionNameFromFormat = (format: string): DateSectionName =>
 
   if (['dd'].includes(format)) {
     return 'day';
+  }
+
+  if (['hh'].includes(format)) {
+    return 'hour';
+  }
+
+  if (['mm'].includes(format)) {
+    return 'minute';
   }
 
   throw new Error(`getDatePartNameFromFormat don't understand the format ${format}`);
@@ -43,37 +49,60 @@ export const incrementDatePartValue = <TDate>(
   }
 };
 
-export const splitStringIntoSections = (value: string) => {
-  let currentSectionValue = '';
-  const temp: Omit<DateFieldInputSection, 'dateSectionName'>[] = [];
+export const splitFormatIntoSections = <TDate>(
+  utils: MuiPickersAdapter<TDate>,
+  format: string,
+  date: TDate,
+) => {
+  let currentTokenValue = '';
+  const temp: DateFieldInputSection[] = [];
 
-  for (let i = 0; i < value.length; i += 1) {
-    const char = value[i];
-    if (SECTION_SEPARATOR_KEYS.includes(char)) {
-      if (currentSectionValue === '') {
+  for (let i = 0; i < format.length; i += 1) {
+    const char = format[i];
+    if (!char.match(/([A-zÀ-ú]+)/g)) {
+      if (currentTokenValue === '') {
         temp[temp.length - 1].separator += char;
       } else {
-        temp.push({
-          start: i - currentSectionValue.length,
-          value: currentSectionValue,
-          separator: char,
-        });
-        currentSectionValue = '';
+        const dateForCurrentToken = utils.formatByString(date, currentTokenValue);
+        if (dateForCurrentToken === currentTokenValue) {
+          temp[temp.length - 1].separator += currentTokenValue;
+          currentTokenValue = '';
+        } else {
+          temp.push({
+            start: i - currentTokenValue.length,
+            formatValue: currentTokenValue,
+            value: dateForCurrentToken,
+            dateSectionName: getDateSectionNameFromFormat(currentTokenValue),
+            separator: char,
+          });
+          currentTokenValue = '';
+        }
       }
     } else {
-      currentSectionValue += char;
+      currentTokenValue += char;
     }
 
-    if (i === value.length - 1) {
+    if (i === format.length - 1) {
       const previousSection = temp[temp.length - 1];
-      temp.push({
-        start:
-          previousSection.start +
+
+      const start = previousSection
+        ? previousSection.start +
           previousSection.value.length +
-          (previousSection.separator?.length ?? 0),
-        value: currentSectionValue,
-        separator: null,
-      });
+          (previousSection.separator?.length ?? 0)
+        : 0;
+
+      const dateForCurrentToken = utils.formatByString(date, currentTokenValue);
+      if (dateForCurrentToken === currentTokenValue) {
+        temp[temp.length - 1].separator += currentTokenValue;
+      } else {
+        temp.push({
+          start,
+          formatValue: currentTokenValue,
+          value: dateForCurrentToken,
+          dateSectionName: getDateSectionNameFromFormat(currentTokenValue),
+          separator: null,
+        });
+      }
     }
   }
 

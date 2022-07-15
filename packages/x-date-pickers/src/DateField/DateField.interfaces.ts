@@ -1,11 +1,11 @@
 import * as React from 'react';
 import { TextFieldProps } from '@mui/material/TextField';
 
-export type DateSectionName = 'day' | 'month' | 'year';
+export type DateSectionName = 'day' | 'month' | 'year' | 'hour' | 'minute' | 'second';
 
 export interface UseDateFieldProps<TInputDate, TDate> {
   value: TInputDate | null;
-  onChange: (value: TDate) => void;
+  onChange: (value: TDate | null) => void;
   /**
    * @default "dd/MM/yyyy"
    */
@@ -21,9 +21,15 @@ export interface UseDateFieldResponse {
   inputRef: React.RefObject<HTMLInputElement>;
 }
 
-export type DateFieldInputSection = {
+export interface DateFieldInputSection {
   start: number;
   value: string;
   separator: string | null;
   dateSectionName: DateSectionName;
-};
+  formatValue: string;
+}
+
+export interface DateFieldState {
+  inputValue: string;
+  inputSections: DateFieldInputSection[];
+}

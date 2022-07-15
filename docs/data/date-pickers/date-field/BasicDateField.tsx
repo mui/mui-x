@@ -8,12 +8,7 @@ export default function BasicDateField() {
 
   return (
     <LocalizationProvider dateAdapter={AdapterDateFns}>
-      <DateField
-        value={value}
-        onChange={(newValue) => {
-          setValue(newValue);
-        }}
-      />
+      <DateField value={value} onChange={(newValue) => setValue(newValue)} />
     </LocalizationProvider>
   );
 }

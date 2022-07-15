@@ -27,9 +27,7 @@ export default function JoyDateField() {
       <LocalizationProvider dateAdapter={AdapterDateFns}>
         <InnerJoyDateField
           value={value}
-          onChange={(newValue) => {
-            setValue(newValue);
-          }}
+          onChange={(newValue) => setValue(newValue)}
         />
       </LocalizationProvider>
     </CssVarsProvider>

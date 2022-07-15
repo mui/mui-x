@@ -4,19 +4,29 @@ import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { Unstable_DateField as DateField } from '@mui/x-date-pickers/DateField';
 import Stack from '@mui/material/Stack';
 
-export default function CustomInputDateField() {
+export default function CustomDateManagementDateField() {
   const [value, setValue] = React.useState<Date | null>(new Date());
 
   return (
     <LocalizationProvider dateAdapter={AdapterDateFns}>
       <Stack spacing={2}>
         <DateField
-          label="Custom format"
+          label="Full letter month"
           value={value}
-          onChange={(newValue) => {
-            setValue(newValue);
-          }}
+          onChange={(newValue) => setValue(newValue)}
           format="dd MMMM yyyy"
+        />
+        <DateField
+          label="Dash separator"
+          value={value}
+          onChange={(newValue) => setValue(newValue)}
+          format="dd-MM-yyyy"
+        />
+        <DateField
+          label="Dash and white space separator"
+          value={value}
+          onChange={(newValue) => setValue(newValue)}
+          format="dd / MM / yyyy"
         />
       </Stack>
     </LocalizationProvider>
