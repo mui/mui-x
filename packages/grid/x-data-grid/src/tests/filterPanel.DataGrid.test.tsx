@@ -10,7 +10,7 @@ import {
 } from '@mui/x-data-grid';
 // @ts-ignore Remove once the test utils are typed
 import { createRenderer, fireEvent, screen, waitFor } from '@mui/monorepo/test/utils';
-import { getColumnValues } from '../../../../../test/utils/helperFn';
+import { getColumnHeaderCell, getColumnValues } from 'test/utils/helperFn';
 
 function setColumnValue(columnValue: string) {
   fireEvent.change(screen.getByRole('combobox', { name: 'Columns' }), {
@@ -474,5 +474,30 @@ describe('<DataGrid /> - Filter panel', () => {
     await waitFor(() => {
       expect(screen.queryAllByRole('tooltip').length).to.deep.equal(0);
     });
+  });
+
+  // See https://github.com/mui/mui-x/issues/5402
+  it('should not remove `isEmpty` filter from model when filter panel is opened through column menu', () => {
+    render(
+      <TestCase
+        initialState={{
+          filter: {
+            filterModel: {
+              items: [{ columnField: 'brand', operatorValue: 'isEmpty' }],
+            },
+          },
+        }}
+      />,
+    );
+
+    // open filter panel
+    const columnCell = getColumnHeaderCell(0);
+    const menuIconButton = columnCell.querySelector('button[aria-label="Menu"]');
+    fireEvent.click(menuIconButton);
+    fireEvent.click(screen.queryByRole('menuitem', { name: 'Filter' }));
+
+    // check that the filter is still in the model
+    expect(screen.getByRole('combobox', { name: 'Columns' }).value).to.equal('brand');
+    expect(screen.getByRole('combobox', { name: 'Operator' }).value).to.equal('isEmpty');
   });
 });
