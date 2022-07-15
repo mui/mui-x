@@ -18,7 +18,7 @@ export const featuresSet = [
   {
     id: 1,
     name: 'Master detail',
-    description: 'A parent row, with a collapsible child panel.',
+    description: 'A parent row, with a collapsible child panel',
     plan: 'Pro',
     detailPage: '/master-detail/',
     demo: <BasicDetailPanels />,
@@ -93,7 +93,7 @@ export const featuresSet = [
     id: 10,
     name: 'Column Visibility',
     description:
-      'Display different columns in different use cases, by defining which columns are visible.',
+      'Display different columns in different use cases, by defining which columns are visible',
     plan: 'Community',
     detailPage: '"/column-visibility/',
     demo: <ColumnSelectorGrid />,
