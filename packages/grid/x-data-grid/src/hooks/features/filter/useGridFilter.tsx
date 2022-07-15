@@ -164,11 +164,15 @@ export const useGridFilter = (
           const filterOperator = column.filterOperators?.find(
             (operator) => operator.value === item.operatorValue,
           );
-          // Operators like `isEmpty` always have `undefined` `item.value` and don't have `InputComponent`.
-          // We don't want to remove them from the filter model, because they are meant to work without `item.value`.
+          const requiresFilterValue =
+            typeof filterOperator?.requiresFilterValue === 'undefined'
+              ? true
+              : filterOperator?.requiresFilterValue;
+
+          // Operators like `isEmpty` don't have and don't require `item.value`.
+          // So we don't want to remove them from the filter model if `item.value === undefined`.
           // See https://github.com/mui/mui-x/issues/5402
-          const hasInputComponent = filterOperator?.InputComponent !== undefined;
-          if (hasInputComponent) {
+          if (requiresFilterValue) {
             return false;
           }
           return true;
