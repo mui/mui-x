@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { DateFieldInputSection, DateSectionName } from './DateField.interfaces';
 import { MuiPickersAdapter } from '../internals/models/muiPickersAdapter';
 
@@ -49,31 +48,44 @@ export const incrementDatePartValue = <TDate>(
   }
 };
 
+const addStartPropertyToSections = (sections: Omit<DateFieldInputSection, 'start'>[]) => {
+  let position = 0;
+  const newSections: DateFieldInputSection[] = [];
+
+  for (let i = 0; i < sections.length; i += 1) {
+    const section = sections[i];
+    newSections.push({ ...section, start: position });
+    position += section.value.length + (section.separator?.length ?? 0);
+  }
+
+  return newSections;
+};
+
 export const splitFormatIntoSections = <TDate>(
   utils: MuiPickersAdapter<TDate>,
   format: string,
   date: TDate,
 ) => {
   let currentTokenValue = '';
-  const temp: DateFieldInputSection[] = [];
+  const sections: Omit<DateFieldInputSection, 'start'>[] = [];
 
   for (let i = 0; i < format.length; i += 1) {
     const char = format[i];
     if (!char.match(/([A-zÀ-ú]+)/g)) {
       if (currentTokenValue === '') {
-        temp[temp.length - 1].separator += char;
+        sections[sections.length - 1].separator += char;
       } else {
         const dateForCurrentToken = utils.formatByString(date, currentTokenValue);
         if (dateForCurrentToken === currentTokenValue) {
-          temp[temp.length - 1].separator += currentTokenValue;
+          sections[sections.length - 1].separator += currentTokenValue;
           currentTokenValue = '';
         } else {
-          temp.push({
-            start: i - currentTokenValue.length,
+          sections.push({
             formatValue: currentTokenValue,
             value: dateForCurrentToken,
             dateSectionName: getDateSectionNameFromFormat(currentTokenValue),
             separator: char,
+            query: null,
           });
           currentTokenValue = '';
         }
@@ -83,30 +95,22 @@ export const splitFormatIntoSections = <TDate>(
     }
 
     if (i === format.length - 1) {
-      const previousSection = temp[temp.length - 1];
-
-      const start = previousSection
-        ? previousSection.start +
-          previousSection.value.length +
-          (previousSection.separator?.length ?? 0)
-        : 0;
-
       const dateForCurrentToken = utils.formatByString(date, currentTokenValue);
       if (dateForCurrentToken === currentTokenValue) {
-        temp[temp.length - 1].separator += currentTokenValue;
+        sections[sections.length - 1].separator += currentTokenValue;
       } else {
-        temp.push({
-          start,
+        sections.push({
           formatValue: currentTokenValue,
           value: dateForCurrentToken,
           dateSectionName: getDateSectionNameFromFormat(currentTokenValue),
           separator: null,
+          query: null,
         });
       }
     }
   }
 
-  return temp;
+  return addStartPropertyToSections(sections);
 };
 
 export const createDateStrFromSections = (sections: DateFieldInputSection[]) =>
@@ -133,14 +137,19 @@ export const updateSectionValue = (
   sections: DateFieldInputSection[],
   currentSectionIndex: number,
   newSectionValue: string,
-) =>
-  sections.map((section, index) => {
+  newSectionQuery: string | null = null,
+) => {
+  const newSections = sections.map((section, index) => {
     if (index === currentSectionIndex) {
       return {
         ...section,
         value: newSectionValue,
+        query: newSectionQuery,
       };
     }
 
     return section;
   });
+
+  return addStartPropertyToSections(newSections);
+};

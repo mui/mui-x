@@ -23,7 +23,6 @@ interface UseDateFieldState<TDate> {
   valueParsed: TDate;
   sections: DateFieldInputSection[];
   selectedSectionIndex: number | 'all' | null;
-  selectedSectionQuery: string | null;
 }
 
 export const useDateField = <TInputDate, TDate = TInputDate>(
@@ -44,7 +43,6 @@ export const useDateField = <TInputDate, TDate = TInputDate>(
     valueParsed: parsedValue,
     sections: splitFormatIntoSections(utils, format, parsedValue),
     selectedSectionIndex: null,
-    selectedSectionQuery: null,
   }));
 
   const updateSections = (sections: DateFieldInputSection[]) => {
@@ -162,15 +160,47 @@ export const useDateField = <TInputDate, TDate = TInputDate>(
         sectionLength === startSection.value.length
           ? event.key
           : `${startSection.value}${event.key}`;
-      const newSections = updateSectionValue(state.sections, startSectionIndex, newSectionValue);
-      updateSections(newSections);
+      updateSections(updateSectionValue(state.sections, startSectionIndex, newSectionValue));
       event.preventDefault();
       return;
     }
 
-    if (event.key.match(/([A-zÀ-ÿ])/)) {
-      console.log('TODO: Implement letter edition');
-      event.preventDefault();
+    const getMatchingMonths = (query: string) =>
+      utils
+        .getMonthArray(utils.date()!)
+        .map((month) => utils.formatByString(month, startSection.formatValue))
+        .filter((month) => month.toLowerCase().startsWith(query));
+
+    if (event.key.length === 1) {
+      if (startSection.formatValue === 'MMMM') {
+        const newQuery = event.key.toLowerCase();
+        const concatenatedQuery = `${startSection.query ?? ''}${newQuery}`;
+        const matchingMonthsWithConcatenatedQuery = getMatchingMonths(concatenatedQuery);
+        if (matchingMonthsWithConcatenatedQuery.length > 0) {
+          updateSections(
+            updateSectionValue(
+              state.sections,
+              startSectionIndex,
+              matchingMonthsWithConcatenatedQuery[0],
+              concatenatedQuery,
+            ),
+          );
+        } else {
+          const matchingMonthsWithNewQuery = getMatchingMonths(newQuery);
+          if (matchingMonthsWithNewQuery.length > 0) {
+            updateSections(
+              updateSectionValue(
+                state.sections,
+                startSectionIndex,
+                matchingMonthsWithNewQuery[0],
+                newQuery,
+              ),
+            );
+          }
+        }
+
+        event.preventDefault();
+      }
     }
   });
 

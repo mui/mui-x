@@ -27,4 +27,5 @@ export interface DateFieldInputSection {
   separator: string | null;
   dateSectionName: DateSectionName;
   formatValue: string;
+  query: string | null;
 }
