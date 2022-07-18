@@ -3,6 +3,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { Unstable_DateField as DateField } from '@mui/x-date-pickers/DateField';
 import Stack from '@mui/material/Stack';
+import frFR from 'date-fns/locale/fr'
 
 export default function CustomDateManagementDateField() {
   const [value, setValue] = React.useState<Date | null>(new Date());
@@ -28,6 +29,14 @@ export default function CustomDateManagementDateField() {
           onChange={(newValue) => setValue(newValue)}
           format="dd / MM / yyyy"
         />
+        <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={frFR}>
+          <DateField
+              label="French locale"
+              value={value}
+              onChange={(newValue) => setValue(newValue)}
+              format="dd MMMM yyyy"
+          />
+        </LocalizationProvider>
       </Stack>
     </LocalizationProvider>
   );

@@ -13,10 +13,14 @@ export default function CustomInputDateField() {
         <DateField
           label="Custom variant"
           value={value}
-          onChange={(newValue) => {
-            setValue(newValue);
-          }}
+          onChange={(newValue) => setValue(newValue)}
           variant="filled"
+        />
+        <DateField
+          label="Disabled"
+          value={value}
+          onChange={(newValue) => setValue(newValue)}
+          disabled
         />
       </Stack>
     </LocalizationProvider>
