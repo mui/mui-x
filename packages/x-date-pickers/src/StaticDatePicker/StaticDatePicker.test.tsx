@@ -11,7 +11,7 @@ describe('<StaticDatePicker />', () => {
   it('render proper month', () => {
     render(
       <StaticDatePicker
-        value={adapterToUse.date('2019-01-01T00:00:00.000')}
+        value={adapterToUse.date(new Date(2019, 0, 1))}
         onChange={() => {}}
         renderInput={(params) => <TextField {...params} />}
       />,
@@ -25,7 +25,7 @@ describe('<StaticDatePicker />', () => {
     render(
       <StaticDatePicker
         reduceAnimations
-        value={adapterToUse.date('2019-01-01T00:00:00.000')}
+        value={adapterToUse.date(new Date(2019, 0, 1))}
         onChange={() => {}}
         renderInput={(params) => <TextField {...params} />}
       />,
@@ -52,9 +52,9 @@ describe('<StaticDatePicker />', () => {
         openTo="year"
         onChange={() => {}}
         // getByRole() with name attribute is too slow, so restrict the number of rendered years
-        minDate={adapterToUse.date('2025-01-01T00:00:00.000')}
-        maxDate={adapterToUse.date('2035-01-01T00:00:00.000')}
-        value={adapterToUse.date('2018-01-01T00:00:00.000')}
+        minDate={adapterToUse.date(new Date(2025, 0, 1))}
+        maxDate={adapterToUse.date(new Date(2035, 0, 1))}
+        value={adapterToUse.date(new Date(2018, 0, 1))}
         shouldDisableYear={(year) => adapterToUse.getYear(year) === 2030}
       />,
     );
@@ -74,9 +74,9 @@ describe('<StaticDatePicker />', () => {
         views={['year', 'month']}
         openTo="month"
         onChange={() => {}}
-        minDate={adapterToUse.date('2021-01-01T00:00:00.000')}
-        maxDate={adapterToUse.date('2022-01-01T00:00:00.000')}
-        value={adapterToUse.date('2021-05-01T00:00:00.000')}
+        minDate={adapterToUse.date(new Date(2021, 0, 1))}
+        maxDate={adapterToUse.date(new Date(2022, 0, 1))}
+        value={adapterToUse.date(new Date(2021, 4, 1))}
         shouldDisableMonth={(month) => {
           return adapterToUse.getYear(month) === 2021 && adapterToUse.getMonth(month) === 2;
         }}

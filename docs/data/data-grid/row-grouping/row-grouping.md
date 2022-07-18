@@ -153,7 +153,7 @@ You must use the `columnVisibilityModel` in the `initialState` instead.
 
 ### For all columns
 
-You can disable row grouping by setting `disableRowGrouping` prop to true.
+You can disable row grouping by setting the `disableRowGrouping` prop to true.
 
 It will disable all the features related to the row grouping, even if a model is provided.
 
@@ -276,6 +276,16 @@ const rows = apiRef.current.getRowGroupChildren({
 ```
 
 {{"demo": "RowGroupingGetRowGroupChildren.js", "bg": "inline", "defaultCodeOpen": false}}
+
+## 🚧 Row group panel
+
+:::warning
+This feature isn't implemented yet. It's coming.
+
+👍 Upvote [issue #5235](https://github.com/mui/mui-x/issues/5235) if you want to see it land faster.
+:::
+
+With this panel, your users will be able to control which columns are used for grouping just by dragging them inside the panel.
 
 ## Full example
 

@@ -13,7 +13,7 @@ describe('<MobileDatePicker /> localization', () => {
     render(
       <MobileDatePicker
         renderInput={(params) => <TextField {...params} />}
-        value={adapterToUse.date('2018-01-01T00:00:00.000')}
+        value={adapterToUse.date(new Date(2018, 0, 1))}
         onChange={() => {}}
         views={['year']}
       />,
@@ -47,7 +47,7 @@ describe('<MobileDatePicker /> localization', () => {
       <MobileDatePicker
         onChange={() => {}}
         renderInput={(params) => <TextField {...params} />}
-        value={adapterToUse.date('2018-01-01T00:00:00.000')}
+        value={adapterToUse.date(new Date(2018, 0, 1))}
         views={['year', 'month', 'day']}
       />,
     );

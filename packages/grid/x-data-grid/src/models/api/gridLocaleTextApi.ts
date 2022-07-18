@@ -1,3 +1,4 @@
+import * as React from 'react';
 import { ComponentsPropsList } from '@mui/material/styles';
 
 /**
@@ -134,14 +135,22 @@ export interface GridLocaleText {
   expandDetailPanel: string;
   collapseDetailPanel: string;
 
+  // Row reordering text
+  rowReorderingHeaderName: string;
+
+  // Aggregation
+  aggregationMenuItemHeader: string;
+  aggregationFunctionLabelSum: string;
+  aggregationFunctionLabelAvg: string;
+  aggregationFunctionLabelMin: string;
+  aggregationFunctionLabelMax: string;
+  aggregationFunctionLabelSize: string;
+
   // Used core components translation keys
   MuiTablePagination: Omit<
     ComponentsPropsList['MuiTablePagination'],
     'page' | 'count' | 'onChangePage' | 'rowsPerPage' | 'onPageChange'
   >;
-
-  // Row reordering text
-  rowReorderingHeaderName: string;
 }
 
 export type GridTranslationKeys = keyof GridLocaleText;

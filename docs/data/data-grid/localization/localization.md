@@ -117,6 +117,7 @@ import { DataGrid, nlNL } from '@mui/x-data-grid';
 | Persian                 | fa-IR               | `faIR`      |
 | Polish                  | pl-PL               | `plPL`      |
 | Portuguese (Brazil)     | pt-BR               | `ptBR`      |
+| Romanian                | ro-RO               | `roRO`      |
 | Russian                 | ru-RU               | `ruRU`      |
 | Slovak                  | sk-SK               | `skSK`      |
 | Spanish (Spain)         | es-ES               | `esES`      |

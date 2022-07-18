@@ -1,0 +1,13 @@
+<DataGridPremium
+  {...data}
+  apiRef={apiRef}
+  columns={COLUMNS}
+  disableSelectionOnClick
+  initialState={initialState}
+  private_getAggregationPosition={(groupNode) =>
+    groupNode == null ? null : 'footer'
+  }
+  experimentalFeatures={{
+    private_aggregation: true,
+  }}
+/>

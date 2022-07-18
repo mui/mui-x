@@ -128,6 +128,7 @@ function getDateFilterOperators(showTime = false) {
           return value == null;
         };
       },
+      requiresFilterValue: false,
     },
     {
       value: 'isNotEmpty',
@@ -136,6 +137,7 @@ function getDateFilterOperators(showTime = false) {
           return value != null;
         };
       },
+      requiresFilterValue: false,
     },
   ];
 }
@@ -231,7 +233,9 @@ function GridFilterDateInput(props) {
  */
 
 GridFilterDateInput.propTypes = {
-  apiRef: PropTypes.any.isRequired,
+  apiRef: PropTypes.shape({
+    current: PropTypes.object.isRequired,
+  }).isRequired,
   applyValue: PropTypes.func.isRequired,
   item: PropTypes.shape({
     /**
