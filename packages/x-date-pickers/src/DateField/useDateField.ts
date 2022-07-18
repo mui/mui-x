@@ -14,7 +14,8 @@ import {
   getSectionIndexFromCursorPosition,
   incrementDatePartValue,
   splitFormatIntoSections,
-  updateSectionValue,
+  setSectionValue,
+  getMonthsMatchingQuery,
 } from './DateField.utils';
 import { useUtils } from '../internals/hooks/useUtils';
 
@@ -148,37 +149,55 @@ export const useDateField = <TInputDate, TDate = TInputDate>(
     }
 
     if (event.key === 'Backspace') {
-      updateSections(updateSectionValue(state.sections, startSectionIndex, ''));
+      updateSections(setSectionValue(state.sections, startSectionIndex, ''));
       event.preventDefault();
       return;
     }
     const numericKey = Number(event.key);
 
     if (!Number.isNaN(numericKey)) {
-      const sectionLength = utils.formatByString(utils.date()!, startSection.formatValue).length;
+      let maximumValue: number;
+      switch (startSection.dateSectionName) {
+        case 'day':
+          maximumValue = utils.getDaysInMonth(parsedValue);
+          break;
+
+        case 'month': {
+          maximumValue = utils.getMonthArray(parsedValue).length;
+          break;
+        }
+
+        case 'year':
+          // TODO: Make generic
+          maximumValue = 9999;
+          break;
+
+        default: {
+          maximumValue = 0;
+        }
+      }
+
+      const concatenatedSectionValue = `${startSection.value}${event.key}`;
       const newSectionValue =
-        sectionLength === startSection.value.length
-          ? event.key
-          : `${startSection.value}${event.key}`;
-      updateSections(updateSectionValue(state.sections, startSectionIndex, newSectionValue));
+        Number(concatenatedSectionValue) > maximumValue ? event.key : concatenatedSectionValue;
+      updateSections(setSectionValue(state.sections, startSectionIndex, newSectionValue));
       event.preventDefault();
       return;
     }
 
-    const getMatchingMonths = (query: string) =>
-      utils
-        .getMonthArray(utils.date()!)
-        .map((month) => utils.formatByString(month, startSection.formatValue))
-        .filter((month) => month.toLowerCase().startsWith(query));
-
     if (event.key.length === 1) {
+      // TODO: Make generic
       if (startSection.formatValue === 'MMMM') {
         const newQuery = event.key.toLowerCase();
         const concatenatedQuery = `${startSection.query ?? ''}${newQuery}`;
-        const matchingMonthsWithConcatenatedQuery = getMatchingMonths(concatenatedQuery);
+        const matchingMonthsWithConcatenatedQuery = getMonthsMatchingQuery(
+          utils,
+          startSection.formatValue,
+          concatenatedQuery,
+        );
         if (matchingMonthsWithConcatenatedQuery.length > 0) {
           updateSections(
-            updateSectionValue(
+            setSectionValue(
               state.sections,
               startSectionIndex,
               matchingMonthsWithConcatenatedQuery[0],
@@ -186,10 +205,14 @@ export const useDateField = <TInputDate, TDate = TInputDate>(
             ),
           );
         } else {
-          const matchingMonthsWithNewQuery = getMatchingMonths(newQuery);
+          const matchingMonthsWithNewQuery = getMonthsMatchingQuery(
+            utils,
+            startSection.formatValue,
+            newQuery,
+          );
           if (matchingMonthsWithNewQuery.length > 0) {
             updateSections(
-              updateSectionValue(
+              setSectionValue(
                 state.sections,
                 startSectionIndex,
                 matchingMonthsWithNewQuery[0],

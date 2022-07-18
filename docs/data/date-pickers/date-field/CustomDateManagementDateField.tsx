@@ -29,6 +29,18 @@ export default function CustomDateManagementDateField() {
           onChange={(newValue) => setValue(newValue)}
           format="dd / MM / yyyy"
         />
+        <DateField
+          label="Date and time format"
+          value={value}
+          onChange={(newValue) => setValue(newValue)}
+          format="dd / MM / yyyy HH:mm:ss"
+        />
+        <DateField
+          label="Date and time format (am-pm)"
+          value={value}
+          onChange={(newValue) => setValue(newValue)}
+          format="dd / MM / yyyy hh:mm:ss aa"
+        />
         <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={frFR}>
           <DateField
             label="French locale"

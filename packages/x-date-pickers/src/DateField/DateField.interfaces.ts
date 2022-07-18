@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { TextFieldProps } from '@mui/material/TextField';
 
-export type DateSectionName = 'day' | 'month' | 'year' | 'hour' | 'minute' | 'second';
+export type DateSectionName = 'day' | 'month' | 'year' | 'hour' | 'minute' | 'second' | 'am-pm';
 
 export interface UseDateFieldProps<TInputDate, TDate> {
   value: TInputDate | null;

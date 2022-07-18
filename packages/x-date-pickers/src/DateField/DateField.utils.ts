@@ -15,12 +15,20 @@ export const getDateSectionNameFromFormat = (format: string): DateSectionName =>
     return 'day';
   }
 
-  if (['hh'].includes(format)) {
+  if (['hh', 'HH'].includes(format)) {
     return 'hour';
   }
 
   if (['mm'].includes(format)) {
     return 'minute';
+  }
+
+  if (['ss'].includes(format)) {
+    return 'second';
+  }
+
+  if (['aa'].includes(format)) {
+    return 'am-pm';
   }
 
   throw new Error(`getDatePartNameFromFormat don't understand the format ${format}`);
@@ -41,6 +49,18 @@ export const incrementDatePartValue = <TDate>(
     }
     case 'year': {
       throw new Error('addYear is not supported by date-io');
+    }
+    case 'am-pm': {
+      return utils.addHours(date, datePartValue * 12);
+    }
+    case 'hour': {
+      return utils.addHours(date, datePartValue);
+    }
+    case 'minute': {
+      return utils.addMinutes(date, datePartValue);
+    }
+    case 'second': {
+      return utils.addSeconds(date, datePartValue);
     }
     default: {
       return date;
@@ -133,7 +153,7 @@ export const getSectionIndexFromCursorPosition = (
   return nextSectionIndex - 1;
 };
 
-export const updateSectionValue = (
+export const setSectionValue = (
   sections: DateFieldInputSection[],
   currentSectionIndex: number,
   newSectionValue: string,
@@ -153,3 +173,13 @@ export const updateSectionValue = (
 
   return addStartPropertyToSections(newSections);
 };
+
+export const getMonthsMatchingQuery = <TDate>(
+  utils: MuiPickersAdapter<TDate>,
+  format: string,
+  query: string,
+) =>
+  utils
+    .getMonthArray(utils.date()!)
+    .map((month) => utils.formatByString(month, format))
+    .filter((month) => month.toLowerCase().startsWith(query));
