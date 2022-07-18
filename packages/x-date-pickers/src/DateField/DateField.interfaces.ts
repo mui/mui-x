@@ -28,8 +28,3 @@ export interface DateFieldInputSection {
   dateSectionName: DateSectionName;
   formatValue: string;
 }
-
-export interface DateFieldState {
-  inputValue: string;
-  inputSections: DateFieldInputSection[];
-}

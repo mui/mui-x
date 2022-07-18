@@ -6,26 +6,31 @@ import {
 import {
   UseDateFieldProps,
   UseDateFieldResponse,
-  DateSectionName,
-  DateFieldState,
+  DateFieldInputSection,
 } from './DateField.interfaces';
 import { datePickerValueManager } from '../DatePicker/shared';
 import {
   createDateStrFromSections,
-  focusInputSection,
-  getInputSectionIndexFromCursorPosition,
+  getSectionIndexFromCursorPosition,
   incrementDatePartValue,
   splitFormatIntoSections,
   updateSectionValue,
 } from './DateField.utils';
 import { useUtils } from '../internals/hooks/useUtils';
 
+interface UseDateFieldState<TDate> {
+  valueStr: string;
+  valueParsed: TDate;
+  sections: DateFieldInputSection[];
+  selectedSectionIndex: number | 'all' | null;
+  selectedSectionQuery: string | null;
+}
+
 export const useDateField = <TInputDate, TDate = TInputDate>(
   inProps: UseDateFieldProps<TInputDate, TDate>,
 ): UseDateFieldResponse => {
   const utils = useUtils<TDate>();
   const inputRef = React.useRef<HTMLInputElement>(null);
-  const dateSectionToSelect = React.useRef<DateSectionName | null>(null);
 
   const { value, onChange, format = 'dd/MM/yyyy' } = inProps;
 
@@ -34,123 +39,167 @@ export const useDateField = <TInputDate, TDate = TInputDate>(
     [utils, value],
   );
 
-  const [state, setState] = React.useState<DateFieldState>(() => ({
-    inputValue: utils.formatByString(parsedValue, format),
-    inputSections: splitFormatIntoSections(utils, format, parsedValue),
+  const [state, setState] = React.useState<UseDateFieldState<TDate>>(() => ({
+    valueStr: utils.formatByString(parsedValue, format),
+    valueParsed: parsedValue,
+    sections: splitFormatIntoSections(utils, format, parsedValue),
+    selectedSectionIndex: null,
+    selectedSectionQuery: null,
   }));
 
+  const updateSections = (sections: DateFieldInputSection[]) => {
+    const newValueStr = createDateStrFromSections(sections);
+    const newValueParsed = utils.parse(newValueStr, format)!;
+    const isNewDateValid = utils.isValid(newValueParsed);
+
+    setState((prevState) => {
+      return {
+        ...prevState,
+        sections,
+        valueStr: newValueStr,
+        valueParsed: isNewDateValid ? newValueParsed : prevState.valueParsed,
+      };
+    });
+
+    if (isNewDateValid) {
+      onChange(newValueParsed);
+    }
+  };
+
+  const updateSelectedSection = (selectedSectionIndex: number | 'all' | null) => {
+    setState((prevState) => ({
+      ...prevState,
+      selectedSectionIndex,
+      selectedSectionQuery: null,
+    }));
+  };
+
+  if (!utils.isEqual(state.valueParsed, parsedValue)) {
+    setState((prevState) => ({
+      ...prevState,
+      valueStr: utils.formatByString(parsedValue, format),
+      valueParsed: parsedValue,
+      sections: splitFormatIntoSections(utils, format, parsedValue),
+    }));
+  }
+
   const handleInputClick = useEventCallback(() => {
-    if (state.inputSections.length === 0) {
+    if (state.sections.length === 0) {
       return;
     }
 
-    const sectionIndex = getInputSectionIndexFromCursorPosition(
-      state.inputSections,
-      inputRef.current!.selectionStart ?? 0,
+    const sectionIndex = getSectionIndexFromCursorPosition(
+      state.sections,
+      inputRef.current!.selectionStart,
     );
-    focusInputSection(inputRef, state.inputSections[sectionIndex]);
+    updateSelectedSection(sectionIndex);
   });
 
   const handleInputKeyDown = useEventCallback((event: React.KeyboardEvent<HTMLInputElement>) => {
-    if (!inputRef.current || state.inputSections.length === 0) {
+    if (!inputRef.current || state.sections.length === 0) {
       return;
     }
 
-    const startSectionIndex = getInputSectionIndexFromCursorPosition(
-      state.inputSections,
-      inputRef.current.selectionStart ?? 0,
+    const startSectionIndex = getSectionIndexFromCursorPosition(
+      state.sections,
+      inputRef.current.selectionStart,
     );
-    const endSectionIndex = getInputSectionIndexFromCursorPosition(
-      state.inputSections,
-      inputRef.current.selectionEnd ?? 0,
+    const endSectionIndex = getSectionIndexFromCursorPosition(
+      state.sections,
+      inputRef.current.selectionEnd,
     );
-    const startSection = state.inputSections[startSectionIndex];
-    let shouldPreventDefault = true;
+    const startSection = state.sections[startSectionIndex];
 
     if (event.key === 'ArrowRight') {
       if (startSectionIndex !== endSectionIndex) {
-        focusInputSection(inputRef, state.inputSections[0]);
-      } else if (startSectionIndex < state.inputSections.length - 1) {
-        focusInputSection(inputRef, state.inputSections[startSectionIndex + 1]);
+        updateSelectedSection(0);
+      } else if (startSectionIndex < state.sections.length - 1) {
+        updateSelectedSection(startSectionIndex + 1);
       }
-    } else if (event.key === 'ArrowLeft') {
+
+      event.preventDefault();
+      return;
+    }
+
+    if (event.key === 'ArrowLeft') {
       if (startSectionIndex !== endSectionIndex) {
-        focusInputSection(inputRef, state.inputSections[0]);
+        updateSelectedSection(0);
       } else if (startSectionIndex > 0) {
-        focusInputSection(inputRef, state.inputSections[startSectionIndex - 1]);
+        updateSelectedSection(startSectionIndex - 1);
       }
-    } else if (event.key === 'ArrowUp' || event.key === 'ArrowDown') {
-      const dateSectionName = startSection.dateSectionName;
+      event.preventDefault();
+      return;
+    }
+
+    if (event.key === 'ArrowUp' || event.key === 'ArrowDown') {
       const newDate = incrementDatePartValue(
         utils,
         parsedValue,
-        dateSectionName,
+        startSection.dateSectionName,
         event.key === 'ArrowDown' ? -1 : 1,
       );
-      dateSectionToSelect.current = dateSectionName;
       onChange(newDate);
-    } else if (event.key === 'Backspace') {
-      const newSections = updateSectionValue(state.inputSections, startSectionIndex, '');
-      setState({
-        inputValue: createDateStrFromSections(newSections),
-        inputSections: newSections,
-      });
-    } else {
-      const numericKey = Number(event.key);
-      if (Number.isNaN(numericKey)) {
-        shouldPreventDefault = false;
-      } else {
-        const sectionLength = utils.formatByString(utils.date()!, startSection.formatValue).length;
-        const newSectionValue =
-          sectionLength === startSection.value.length
-            ? event.key
-            : `${startSection.value}${event.key}`;
-        const newSections = updateSectionValue(
-          state.inputSections,
-          startSectionIndex,
-          newSectionValue,
-        );
-        const newInputValue = createDateStrFromSections(newSections);
-        setState({
-          inputValue: newInputValue,
-          inputSections: newSections,
-        });
-        dateSectionToSelect.current = startSection.dateSectionName;
-
-        const newParsedValue = utils.parse(newInputValue, format);
-        if (utils.isValid(newParsedValue)) {
-          onChange(newParsedValue);
-        }
-      }
+      event.preventDefault();
+      return;
     }
 
-    if (shouldPreventDefault) {
+    if (event.key === 'a' && event.ctrlKey) {
+      updateSelectedSection('all');
+      event.preventDefault();
+      return;
+    }
+
+    if (event.key === 'Backspace') {
+      updateSections(updateSectionValue(state.sections, startSectionIndex, ''));
+      event.preventDefault();
+      return;
+    }
+    const numericKey = Number(event.key);
+
+    if (!Number.isNaN(numericKey)) {
+      const sectionLength = utils.formatByString(utils.date()!, startSection.formatValue).length;
+      const newSectionValue =
+        sectionLength === startSection.value.length
+          ? event.key
+          : `${startSection.value}${event.key}`;
+      const newSections = updateSectionValue(state.sections, startSectionIndex, newSectionValue);
+      updateSections(newSections);
+      event.preventDefault();
+      return;
+    }
+
+    if (event.key.match(/([A-zÀ-ÿ])/)) {
+      console.log('TODO: Implement letter edition');
       event.preventDefault();
     }
   });
 
-  React.useEffect(() => {
-    setState({
-      inputValue: utils.formatByString(parsedValue, format),
-      inputSections: splitFormatIntoSections(utils, format, parsedValue),
-    });
-  }, [utils, parsedValue, format]);
-
   useEnhancedEffect(() => {
-    if (dateSectionToSelect.current != null) {
-      focusInputSection(
-        inputRef,
-        state.inputSections.find(
-          (section) => section.dateSectionName === dateSectionToSelect.current,
-        )!,
-      );
-      dateSectionToSelect.current = null;
+    if (!inputRef.current || state.selectedSectionIndex == null) {
+      return;
     }
-  }, [state]); // eslint-disable-line react-hooks/exhaustive-deps
+
+    const updateSelectionRangeIfChanged = (selectionStart: number, selectionEnd: number) => {
+      if (
+        selectionStart !== inputRef.current!.selectionStart ||
+        selectionEnd !== inputRef.current!.selectionEnd
+      ) {
+        inputRef.current!.setSelectionRange(selectionStart, selectionEnd);
+      }
+    };
+
+    if (state.selectedSectionIndex === 'all') {
+      updateSelectionRangeIfChanged(0, inputRef.current.value.length);
+      return;
+    }
+
+    const section = state.sections[state.selectedSectionIndex];
+    updateSelectionRangeIfChanged(section.start, section.start + section.value.length);
+  });
 
   return {
     inputProps: {
-      value: state.inputValue,
+      value: state.valueStr,
       onClick: handleInputClick,
       onKeyDown: handleInputKeyDown,
     },

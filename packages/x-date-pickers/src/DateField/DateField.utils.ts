@@ -116,24 +116,17 @@ export const createDateStrFromSections = (sections: DateFieldInputSection[]) =>
     )
     .join('');
 
-export const getInputSectionIndexFromCursorPosition = (
+export const getSectionIndexFromCursorPosition = (
   sections: DateFieldInputSection[],
-  position: number,
+  position: number | null,
 ) => {
-  const nextSectionIndex = sections.findIndex((section) => section.start > position);
+  const nextSectionIndex = sections.findIndex((section) => section.start > (position ?? 0));
 
   if (nextSectionIndex === -1) {
     return sections.length - 1;
   }
 
   return nextSectionIndex - 1;
-};
-
-export const focusInputSection = (
-  inputRef: React.RefObject<HTMLInputElement>,
-  section: DateFieldInputSection,
-) => {
-  inputRef.current!.setSelectionRange(section.start, section.start + section.value.length);
 };
 
 export const updateSectionValue = (
