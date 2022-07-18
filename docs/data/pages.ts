@@ -67,7 +67,7 @@ const pages: MuiPage[] = [
           { pathname: '/x/react-data-grid/row-grouping', plan: 'premium' },
           { pathname: '/x/react-data-grid/tree-data', plan: 'pro' },
           { pathname: '/x/react-data-grid/master-detail', plan: 'pro' },
-          { pathname: '/x/react-data-grid/aggregation', title: 'Aggregation 🚧', plan: 'premium' },
+          { pathname: '/x/react-data-grid/aggregation', title: 'Aggregation', plan: 'premium' },
           { pathname: '/x/react-data-grid/pivoting', title: 'Pivoting 🚧', plan: 'premium' },
         ],
       },
@@ -93,6 +93,10 @@ const pages: MuiPage[] = [
           },
           { pathname: '/x/api/data-grid/grid-row-params', title: 'GridRowParams' },
           { pathname: '/x/api/data-grid/grid-row-spacing-params', title: 'GridRowSpacingParams' },
+          {
+            pathname: '/x/api/data-grid/grid-aggregation-function',
+            title: 'GridAggregationFunction',
+          },
           { pathname: '/x/api/data-grid/grid-csv-export-options', title: 'GridCsvExportOptions' },
           {
             pathname: '/x/api/data-grid/grid-print-export-options',

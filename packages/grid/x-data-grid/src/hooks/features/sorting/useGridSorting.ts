@@ -5,6 +5,7 @@ import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridSortApi } from '../../../models/api/gridSortApi';
 import { GridColDef } from '../../../models/colDef/gridColDef';
 import { GridFeatureModeConstant } from '../../../models/gridFeatureMode';
+import { GridRowId, GridRowTreeNodeConfig } from '../../../models/gridRows';
 import { GridSortItem, GridSortModel, GridSortDirection } from '../../../models/gridSortModel';
 import { isEnterKey } from '../../../utils/keyboardUtils';
 import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
@@ -255,12 +256,35 @@ export const useGridSorting = (
 
   const flatSortingMethod = React.useCallback<GridStrategyProcessor<'sorting'>>(
     (params) => {
+      const rowTree = gridRowTreeSelector(apiRef);
+
       if (!params.sortRowList) {
-        return gridRowIdsSelector(apiRef);
+        const bodyRowIds: GridRowId[] = [];
+        const footerRowIds: GridRowId[] = [];
+
+        gridRowIdsSelector(apiRef).forEach((rowId) => {
+          if (rowTree[rowId].position === 'footer') {
+            footerRowIds.push(rowId);
+          } else {
+            bodyRowIds.push(rowId);
+          }
+        });
+
+        return [...bodyRowIds, ...footerRowIds];
       }
 
-      const rowTree = gridRowTreeSelector(apiRef);
-      return params.sortRowList(Object.values(rowTree));
+      const bodyRows: GridRowTreeNodeConfig[] = [];
+      const footerRowIds: GridRowId[] = [];
+
+      Object.values(rowTree).forEach((rowNode) => {
+        if (rowNode.position === 'footer') {
+          footerRowIds.push(rowNode.id);
+        } else {
+          bodyRows.push(rowNode);
+        }
+      });
+
+      return [...params.sortRowList(bodyRows), ...footerRowIds];
     },
     [apiRef],
   );

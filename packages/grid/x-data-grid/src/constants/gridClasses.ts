@@ -2,9 +2,29 @@ import { generateUtilityClasses, generateUtilityClass } from '@mui/material';
 
 export interface GridClasses {
   /**
-   * Styles applied to the root element of the cell with type="actions"
+   * Styles applied to the root element of the cell with type="actions".
    */
   actionsCell: string;
+  /**
+   * Styles applied to the root element of the column header when aggregated.
+   */
+  aggregationColumnHeader: string;
+  /**
+   * Styles applied to the root element of the header when aggregation if `headerAlign="left"`.
+   */
+  'aggregationColumnHeader--alignLeft': string;
+  /**
+   * Styles applied to the root element of the header when aggregation if `headerAlign="center"`.
+   */
+  'aggregationColumnHeader--alignCenter': string;
+  /**
+   * Styles applied to the root element of the header when aggregation if `headerAlign="right"`.
+   */
+  'aggregationColumnHeader--alignRight': string;
+  /**
+   * Styles applied to the aggregation label in the column header when aggregated.
+   */
+  aggregationColumnHeaderLabel: string;
   /**
    * Styles applied to the root element if `autoHeight={true}`.
    */
@@ -177,6 +197,10 @@ export interface GridClasses {
    * Styles applied to the detail panel toggle cell element if expanded.
    */
   'detailPanelToggleCell--expanded': string;
+  /**
+   * Styles applied to the root element of the cell inside a footer row.
+   */
+  footerCell: string;
   /**
    * Styles applied to the panel element.
    */
@@ -432,6 +456,10 @@ export function getDataGridUtilityClass(slot: string): string {
 
 export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'actionsCell',
+  'aggregationColumnHeader',
+  'aggregationColumnHeader--alignLeft',
+  'aggregationColumnHeader--alignCenter',
+  'aggregationColumnHeader--alignRight',
   'autoHeight',
   'booleanCell',
   'cell--editable',
@@ -474,6 +502,7 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'detailPanels',
   'detailPanelToggleCell',
   'detailPanelToggleCell--expanded',
+  'footerCell',
   'panel',
   'panelHeader',
   'panelWrapper',
