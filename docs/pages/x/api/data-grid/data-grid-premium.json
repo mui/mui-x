@@ -59,7 +59,7 @@
     "experimentalFeatures": {
       "type": {
         "name": "shape",
-        "description": "{ newEditingApi?: bool, preventCommitWhileValidating?: bool, private_aggregation?: bool, warnIfFocusStateIsNotSynced?: bool }"
+        "description": "{ newEditingApi?: bool, preventCommitWhileValidating?: bool, private_aggregation?: bool, rowPinning?: bool, warnIfFocusStateIsNotSynced?: bool }"
       }
     },
     "filterMode": {

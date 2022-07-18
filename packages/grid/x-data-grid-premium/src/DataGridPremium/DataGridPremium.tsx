@@ -262,6 +262,7 @@ DataGridPremiumRaw.propTypes = {
     newEditingApi: PropTypes.bool,
     preventCommitWhileValidating: PropTypes.bool,
     private_aggregation: PropTypes.bool,
+    rowPinning: PropTypes.bool,
     warnIfFocusStateIsNotSynced: PropTypes.bool,
   }),
   /**

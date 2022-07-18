@@ -34,27 +34,25 @@ export default function AggregationRenderCell() {
 
   // We take movies with the highest and lowest rating to have a visual difference
   const rows = React.useMemo(() => {
-    const sortedRows = [...data.rows].sort((a, b) => b.imdbRating - a.imdbRating);
-
-    return [...sortedRows.slice(0, 2), ...sortedRows.slice(-1)];
+    return [...data.rows].sort((a, b) => b.imdbRating - a.imdbRating);
   }, [data.rows]);
 
   return (
-    <DataGridPremium
-      // The 2 following props are here to avoid scroll in the demo while we don't have pinned rows
-      rows={rows}
-      autoHeight
-      columns={COLUMNS}
-      initialState={{
-        private_aggregation: {
-          model: {
-            imdbRating: 'avg',
+    <div style={{ height: 400, width: '100%' }}>
+      <DataGridPremium
+        rows={rows}
+        columns={COLUMNS}
+        initialState={{
+          private_aggregation: {
+            model: {
+              imdbRating: 'avg',
+            },
           },
-        },
-      }}
-      experimentalFeatures={{
-        private_aggregation: true,
-      }}
-    />
+        }}
+        experimentalFeatures={{
+          private_aggregation: true,
+        }}
+      />
+    </div>
   );
 }

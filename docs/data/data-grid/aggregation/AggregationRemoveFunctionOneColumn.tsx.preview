@@ -1,10 +1,11 @@
 <DataGridPremium
-  rows={rows}
+  rows={data.rows}
   columns={COLUMNS}
   initialState={{
     private_aggregation: {
       model: {
-        imdbRating: 'avg',
+        year: 'max',
+        gross: 'max',
       },
     },
   }}
