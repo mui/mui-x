@@ -9,6 +9,7 @@ import {
   getActiveColumnHeader,
   getCell,
   getColumnHeaderCell,
+  getColumnValues,
   getRows,
 } from 'test/utils/helperFn';
 
@@ -241,7 +242,7 @@ describe('<DataGridPro /> - Row pinning', () => {
 
   it('should not be impacted by sorting', () => {
     const TestCase = () => {
-      const data = getData(20, 5);
+      const data = getData(5, 5);
 
       const [pinnedRow0, pinnedRow1, ...rows] = data.rows;
       return (
@@ -263,16 +264,19 @@ describe('<DataGridPro /> - Row pinning', () => {
 
     expect(isRowPinned(getRowById(0), 'top')).to.equal(true, '#0 pinned top');
     expect(isRowPinned(getRowById(1), 'bottom')).to.equal(true, '#1 pinned bottom');
+    expect(getColumnValues(0)).to.deep.equal(['0', '2', '3', '4', '1']);
 
-    fireEvent.click(getColumnHeaderCell(1));
-
-    expect(isRowPinned(getRowById(0), 'top')).to.equal(true, '#0 pinned top');
-    expect(isRowPinned(getRowById(1), 'bottom')).to.equal(true, '#1 pinned bottom');
-
-    fireEvent.click(getColumnHeaderCell(1));
+    fireEvent.click(getColumnHeaderCell(0));
 
     expect(isRowPinned(getRowById(0), 'top')).to.equal(true, '#0 pinned top');
     expect(isRowPinned(getRowById(1), 'bottom')).to.equal(true, '#1 pinned bottom');
+    expect(getColumnValues(0)).to.deep.equal(['0', '2', '3', '4', '1']);
+
+    fireEvent.click(getColumnHeaderCell(0));
+
+    expect(isRowPinned(getRowById(0), 'top')).to.equal(true, '#0 pinned top');
+    expect(isRowPinned(getRowById(1), 'bottom')).to.equal(true, '#1 pinned bottom');
+    expect(getColumnValues(0)).to.deep.equal(['0', '4', '3', '2', '1']);
   });
 
   it('should not be impacted by filtering', () => {
