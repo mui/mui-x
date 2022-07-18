@@ -156,7 +156,8 @@ export const useGridSelection = (
         return false;
       }
 
-      if (apiRef.current.getRowNode(id)?.position === 'footer') {
+      const rowNode = apiRef.current.getRowNode(id);
+      if (rowNode?.position === 'footer' || rowNode?.isPinned) {
         return false;
       }
 
