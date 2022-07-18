@@ -597,9 +597,7 @@ describe('<DataGridPremium /> - Aggregation', () => {
         />,
       );
 
-      const callForAggCell = renderCell
-        .getCalls()
-        .find((call) => call.firstArg.rowNode.position === 'footer');
+      const callForAggCell = renderCell.getCalls().find((call) => call.firstArg.rowNode.isPinned);
       expect(callForAggCell!.firstArg.aggregation.hasCellUnit).to.equal(true);
     });
 
@@ -625,9 +623,7 @@ describe('<DataGridPremium /> - Aggregation', () => {
         />,
       );
 
-      const callForAggCell = renderCell
-        .getCalls()
-        .find((call) => call.firstArg.rowNode.position === 'footer');
+      const callForAggCell = renderCell.getCalls().find((call) => call.firstArg.rowNode.isPinned);
       expect(callForAggCell!.firstArg.aggregation.hasCellUnit).to.equal(false);
     });
   });
