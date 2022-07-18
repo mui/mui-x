@@ -61,11 +61,6 @@ export const useGridRows = (
     | 'loading'
   >,
 ): void => {
-  if (process.env.NODE_ENV !== 'production') {
-    // Freeze rows for immutability
-    Object.freeze(props.rows);
-  }
-
   const logger = useGridLogger(apiRef, 'useGridRows');
   const currentPage = useGridVisibleRows(apiRef, props);
 
