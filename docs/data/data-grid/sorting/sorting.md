@@ -82,7 +82,7 @@ A comparator determines how two cell values should be sorted.
 Each column type comes with a default comparator method.
 You can re-use them by importing the following functions:
 
-- `gridStringNumberComparator` (used by the `string` and `singleSelect` columns)
+- `gridStringOrNumberComparator` (used by the `string` and `singleSelect` columns)
 - `gridNumberComparator` (used by the `number` and `boolean` columns)
 - `gridDateComparator` (used by the `date` and `date-time` columns)
 

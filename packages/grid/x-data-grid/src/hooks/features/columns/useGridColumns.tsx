@@ -188,7 +188,7 @@ export function useGridColumns(
       const columnsState = createColumnsState({
         apiRef,
         columnTypes,
-        columnsToUpsert: columns as any,
+        columnsToUpsert: columns,
         initialState: undefined,
         shouldRegenColumnVisibilityModelFromColumns: true,
         keepOnlyColumnsToUpsert: false,

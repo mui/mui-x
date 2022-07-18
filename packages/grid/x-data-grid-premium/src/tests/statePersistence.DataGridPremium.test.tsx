@@ -41,6 +41,11 @@ const FULL_INITIAL_STATE: GridInitialState = {
   rowGrouping: {
     model: ['category'],
   },
+  private_aggregation: {
+    model: {
+      id: 'size',
+    },
+  },
 };
 
 describe('<DataGridPremium /> - State Persistence', () => {
@@ -63,6 +68,9 @@ describe('<DataGridPremium /> - State Persistence', () => {
           {...props}
           defaultGroupingExpansionDepth={-1}
           groupingColDef={{ headerName: 'Group' }}
+          experimentalFeatures={{
+            private_aggregation: true,
+          }}
         />
       </div>
     );
@@ -74,6 +82,9 @@ describe('<DataGridPremium /> - State Persistence', () => {
 
       const exportedState = apiRef.current.exportState();
       expect(exportedState.rowGrouping).to.deep.equal(FULL_INITIAL_STATE.rowGrouping);
+      expect(exportedState.private_aggregation).to.deep.equal(
+        FULL_INITIAL_STATE.private_aggregation,
+      );
     });
 
     it('should not export the default values of the models when using exportOnlyUsedModels', () => {
@@ -88,30 +99,58 @@ describe('<DataGridPremium /> - State Persistence', () => {
     it('should export the current version of the exportable state', () => {
       render(<TestCase />);
       apiRef.current.setRowGroupingModel(['category']);
+      apiRef.current.private_setAggregationModel({
+        id: 'size',
+      });
 
       const exportedState = apiRef.current.exportState();
       expect(exportedState.rowGrouping).to.deep.equal(FULL_INITIAL_STATE.rowGrouping);
+      expect(exportedState.private_aggregation).to.deep.equal(
+        FULL_INITIAL_STATE.private_aggregation,
+      );
     });
 
     it('should export the current version of the exportable state when using exportOnlyUsedModels', () => {
       render(<TestCase />);
       apiRef.current.setRowGroupingModel(['category']);
+      apiRef.current.private_setAggregationModel({
+        id: 'size',
+      });
 
       const exportedState = apiRef.current.exportState({ exportOnlyUsedModels: true });
       expect(exportedState.rowGrouping).to.deep.equal(FULL_INITIAL_STATE.rowGrouping);
+      expect(exportedState.private_aggregation).to.deep.equal(
+        FULL_INITIAL_STATE.private_aggregation,
+      );
     });
 
     it('should export the controlled values of the models', () => {
-      render(<TestCase rowGroupingModel={FULL_INITIAL_STATE.rowGrouping?.model} />);
+      render(
+        <TestCase
+          rowGroupingModel={FULL_INITIAL_STATE.rowGrouping?.model}
+          private_aggregationModel={FULL_INITIAL_STATE.private_aggregation?.model}
+        />,
+      );
       expect(apiRef.current.exportState().rowGrouping).to.deep.equal(
         FULL_INITIAL_STATE.rowGrouping,
+      );
+      expect(apiRef.current.exportState().private_aggregation).to.deep.equal(
+        FULL_INITIAL_STATE.private_aggregation,
       );
     });
 
     it('should export the controlled values of the models when using exportOnlyUsedModels', () => {
-      render(<TestCase rowGroupingModel={FULL_INITIAL_STATE.rowGrouping?.model} />);
+      render(
+        <TestCase
+          rowGroupingModel={FULL_INITIAL_STATE.rowGrouping?.model}
+          private_aggregationModel={FULL_INITIAL_STATE.private_aggregation?.model}
+        />,
+      );
       expect(apiRef.current.exportState().rowGrouping).to.deep.equal(
         FULL_INITIAL_STATE.rowGrouping,
+      );
+      expect(apiRef.current.exportState().private_aggregation).to.deep.equal(
+        FULL_INITIAL_STATE.private_aggregation,
       );
     });
   });
@@ -121,7 +160,28 @@ describe('<DataGridPremium /> - State Persistence', () => {
       render(<TestCase />);
 
       apiRef.current.restoreState(FULL_INITIAL_STATE);
-      expect(getColumnValues(0)).to.deep.equal(['Cat A (3)', '', '', '', 'Cat B (3)', '', '', '']);
+      expect(getColumnValues(0)).to.deep.equal([
+        'Cat A (3)',
+        '',
+        '',
+        '',
+        'Cat B (3)',
+        '',
+        '',
+        '',
+        '',
+      ]);
+      expect(getColumnValues(1)).to.deep.equal([
+        '3' /* Agg */,
+        '0',
+        '1',
+        '2',
+        '3',
+        '3' /* Agg */,
+        '4',
+        '5',
+        '6' /* Agg */,
+      ]);
     });
   });
 });

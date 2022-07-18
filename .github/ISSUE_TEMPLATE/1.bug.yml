@@ -34,17 +34,17 @@ body:
     attributes:
       label: Steps to reproduce 🕹
       description: |
-        Provide a link to a live example (you can use codesandbox.io) and an unambiguous set of steps to reproduce this bug.
-        Include code to reproduce, if relevant (which it most likely is).
+        Please provide a link to a live example and an unambiguous set of steps to reproduce this bug.
+             
+        As a starting point, we recommend you browse our [documentation](https://mui.com/x/advanced-components/), and [select](https://mui.com/static/docs/forking-an-example.png) the closest example to your use case.
 
-        You can use the official codesandbox template of the [DataGrid](https://codesandbox.io/s/datagrid-v5-quick-start-54iz1) or [DataGridPro](https://codesandbox.io/s/datagridpro-v5-quick-start-5pjhc) as a starting point.
-
-        If you have an issue concerning TypeScript please start from this TypeScript playground: https://mui.com/r/ts-issue-template.
+        Or you can use a [basic template](https://mui.com/r/x-issue-template) to build your reproduction case.
 
         Issues that we can't reproduce will be closed.
       value: |
+        Link to live example:
+        
         Steps:
-
         1.
         2.
         3.

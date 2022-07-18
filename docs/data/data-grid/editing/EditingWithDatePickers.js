@@ -128,6 +128,7 @@ function getDateFilterOperators(showTime = false) {
           return value == null;
         };
       },
+      requiresFilterValue: false,
     },
     {
       value: 'isNotEmpty',
@@ -136,6 +137,7 @@ function getDateFilterOperators(showTime = false) {
           return value != null;
         };
       },
+      requiresFilterValue: false,
     },
   ];
 }

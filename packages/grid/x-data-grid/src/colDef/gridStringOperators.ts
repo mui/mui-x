@@ -85,6 +85,7 @@ export const getGridStringOperators = (
         return value === '' || value == null;
       };
     },
+    requiresFilterValue: false,
   },
   {
     value: 'isNotEmpty',
@@ -93,6 +94,7 @@ export const getGridStringOperators = (
         return value !== '' && value != null;
       };
     },
+    requiresFilterValue: false,
   },
   {
     value: 'isAnyOf',
