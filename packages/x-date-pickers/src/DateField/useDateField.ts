@@ -16,7 +16,6 @@ import {
   splitFormatIntoSections,
   setSectionValue,
   getMonthsMatchingQuery,
-  formatDateWithPlaceholder,
   getSectionVisibleValue,
   getMonthList,
   getSectionValueNumericBoundaries,
@@ -38,17 +37,13 @@ export const useDateField = <TInputDate, TDate = TInputDate>(
 
   const { value, onChange, format = 'dd/MM/yyyy' } = inProps;
 
-  const parsedValue = React.useMemo<TDate | null>(
-    () => datePickerValueManager.parseInput(utils, value),
-    [utils, value],
-  );
-
   const [state, setState] = React.useState<UseDateFieldState<TDate>>(() => {
-    const sections = splitFormatIntoSections(utils, format, parsedValue);
+    const valueParsed = datePickerValueManager.parseInput(utils, value);
+    const sections = splitFormatIntoSections(utils, format, valueParsed);
     return {
-      valueStr: createDateStrFromSections(sections),
-      valueParsed: parsedValue,
       sections,
+      valueParsed,
+      valueStr: createDateStrFromSections(sections),
       selectedSectionIndex: null,
     };
   });
@@ -58,14 +53,12 @@ export const useDateField = <TInputDate, TDate = TInputDate>(
     const newValueParsed = utils.parse(newValueStr, format)!;
     const isNewDateValid = utils.isValid(newValueParsed);
 
-    setState((prevState) => {
-      return {
-        ...prevState,
-        sections,
-        valueStr: newValueStr,
-        valueParsed: isNewDateValid ? newValueParsed : prevState.valueParsed,
-      };
-    });
+    setState((prevState) => ({
+      ...prevState,
+      sections,
+      valueStr: newValueStr,
+      valueParsed: isNewDateValid ? newValueParsed : prevState.valueParsed,
+    }));
 
     if (isNewDateValid) {
       onChange(newValueParsed);
@@ -80,15 +73,18 @@ export const useDateField = <TInputDate, TDate = TInputDate>(
     }));
   };
 
-  if (!utils.isEqual(state.valueParsed, parsedValue)) {
-    const sections = splitFormatIntoSections(utils, format, parsedValue);
-    setState((prevState) => ({
-      ...prevState,
-      valueStr: createDateStrFromSections(sections),
-      valueParsed: parsedValue,
-      sections,
-    }));
-  }
+  React.useEffect(() => {
+    const valueParsed = datePickerValueManager.parseInput(utils, value);
+    if (!utils.isEqual(state.valueParsed, valueParsed)) {
+      const sections = splitFormatIntoSections(utils, format, valueParsed);
+      setState((prevState) => ({
+        ...prevState,
+        valueParsed,
+        valueStr: createDateStrFromSections(sections),
+        sections,
+      }));
+    }
+  }, [value]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleInputClick = useEventCallback(() => {
     if (state.sections.length === 0) {
@@ -143,29 +139,42 @@ export const useDateField = <TInputDate, TDate = TInputDate>(
       if (state.sections.some((section) => section.value === '')) {
         const boundaries = getSectionValueNumericBoundaries(
           utils,
-          parsedValue ?? utils.date()!,
+          state.valueParsed ?? utils.date()!,
           startSection.dateSectionName,
         );
+
+        let newSectionNumericValue: number;
         if (startSection.value === '') {
-          const newNumericSectionValue =
+          newSectionNumericValue =
             event.key === 'ArrowDown' ? boundaries.minimum : boundaries.maximum;
-          // TODO: Make generic
-          const newSectionValue =
-            startSection.formatValue === 'MMMM'
-              ? getMonthList(utils, startSection.formatValue)[newNumericSectionValue]
-              : newNumericSectionValue.toString();
-          updateSections(setSectionValue(state.sections, startSectionIndex, newSectionValue));
         } else {
-          throw new Error('MUI: Not implemented yet');
+          const currentNumericValue =
+            startSection.formatValue === 'MMMM'
+              ? getMonthList(utils, startSection.formatValue).indexOf(startSection.value)
+              : Number(startSection.value);
+          newSectionNumericValue = currentNumericValue + (event.key === 'ArrowDown' ? -1 : 1);
+          if (newSectionNumericValue < boundaries.minimum) {
+            newSectionNumericValue = boundaries.maximum;
+          } else if (newSectionNumericValue > boundaries.maximum) {
+            newSectionNumericValue = boundaries.minimum;
+          }
         }
+
+        // TODO: Make generic
+        const newSectionValue =
+          startSection.formatValue === 'MMMM'
+            ? getMonthList(utils, startSection.formatValue)[newSectionNumericValue]
+            : newSectionNumericValue.toString();
+        updateSections(setSectionValue(state.sections, startSectionIndex, newSectionValue));
       } else {
         const newDate = incrementDatePartValue(
           utils,
-          parsedValue,
+          state.valueParsed,
           startSection.dateSectionName,
           event.key === 'ArrowDown' ? -1 : 1,
         );
-        onChange(newDate);
+
+        updateSections(splitFormatIntoSections(utils, format, newDate));
       }
 
       event.preventDefault();
@@ -188,7 +197,7 @@ export const useDateField = <TInputDate, TDate = TInputDate>(
     if (!Number.isNaN(numericKey)) {
       const boundaries = getSectionValueNumericBoundaries(
         utils,
-        parsedValue ?? utils.date()!,
+        state.valueParsed ?? utils.date()!,
         startSection.dateSectionName,
       );
 

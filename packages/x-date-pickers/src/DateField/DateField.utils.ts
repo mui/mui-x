@@ -238,7 +238,8 @@ export const getSectionValueNumericBoundaries = <TDate>(
   }
 
   return {
-    minimum: 0,
+    // TODO: Make generic
+    minimum: 1,
     maximum,
   };
 };
