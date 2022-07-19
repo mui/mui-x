@@ -17,7 +17,7 @@ export default function UseGridApiRef() {
   const handleGoToPage1 = () => apiRef.current.setPage(1);
 
   return (
-    <Stack spacing={2} sx={{ width: '100%' }} alignItems="flex-start">
+    <Stack spacing={1} sx={{ width: '100%' }} alignItems="flex-start">
       <Button onClick={handleGoToPage1}>Go to page 1</Button>
       <Box sx={{ height: 400, width: '100%' }}>
         <DataGridPro {...data} apiRef={apiRef} pagination pageSize={10} />
