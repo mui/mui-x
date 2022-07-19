@@ -23,14 +23,14 @@ export default function MaterialUIPickers() {
       <Stack spacing={3}>
         <DesktopDatePicker
           label="Date desktop"
-          inputFormat="MM/dd/yyyy"
+          inputFormat="MM/DD/YYYY"
           value={value}
           onChange={handleChange}
           renderInput={(params) => <TextField {...params} />}
         />
         <MobileDatePicker
           label="Date mobile"
-          inputFormat="MM/dd/yyyy"
+          inputFormat="MM/DD/YYYY"
           value={value}
           onChange={handleChange}
           renderInput={(params) => <TextField {...params} />}

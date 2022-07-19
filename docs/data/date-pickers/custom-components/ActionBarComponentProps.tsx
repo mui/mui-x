@@ -7,7 +7,7 @@ import { StaticDatePicker } from '@mui/x-date-pickers/StaticDatePicker';
 
 export default function ActionBarComponentProps() {
   const [value, setValue] = React.useState<Date | Dayjs | null>(() =>
-    dayjs('2022-01-01T00:00'),
+    dayjs('2022-02-01T00:00'),
   );
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>

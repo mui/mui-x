@@ -112,7 +112,7 @@ const CustomActionBar = (props: PickersActionBarProps) => {
 
 export default function ActionBarComponent() {
   const [value, setValue] = React.useState<Dayjs | null>(() =>
-    dayjs('2022-01-01T00:00'),
+    dayjs('2022-02-01T00:00'),
   );
 
   return (
