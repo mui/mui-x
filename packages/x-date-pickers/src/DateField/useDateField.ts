@@ -73,8 +73,6 @@ export const useDateField = <TInputDate, TDate = TInputDate>(
     }));
   };
 
-  console.log(utils.getFormatHelperText('PPP'))
-
   React.useEffect(() => {
     const valueParsed = datePickerValueManager.parseInput(utils, value);
     if (!utils.isEqual(state.valueParsed, valueParsed)) {
