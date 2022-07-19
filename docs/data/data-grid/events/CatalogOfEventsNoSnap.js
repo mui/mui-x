@@ -122,7 +122,7 @@ const COLUMNS = [
 ];
 
 const Toolbar = () => (
-  <GridToolbarContainer>
+  <GridToolbarContainer sx={{ p: 1 }}>
     <GridToolbarQuickFilter />
   </GridToolbarContainer>
 );
