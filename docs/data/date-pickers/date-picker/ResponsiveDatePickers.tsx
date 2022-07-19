@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Dayjs } from 'dayjs';
+import dayjs, { Dayjs } from 'dayjs';
 import TextField from '@mui/material/TextField';
 import Stack from '@mui/material/Stack';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -25,7 +25,7 @@ export default function ResponsiveDatePickers() {
         <DesktopDatePicker
           label="For desktop"
           value={value}
-          minDate={new Date('2017-01-01')}
+          minDate={dayjs('2017-01-01')}
           onChange={(newValue) => {
             setValue(newValue);
           }}
