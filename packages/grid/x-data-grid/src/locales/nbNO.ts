@@ -141,6 +141,14 @@ const nbNOGrid: Partial<GridLocaleText> = {
 
   // Row reordering text
   rowReorderingHeaderName: 'Rad reorganisering',
+
+  // Aggregation
+  // aggregationMenuItemHeader: 'Aggregation',
+  // aggregationFunctionLabelSum: 'sum',
+  // aggregationFunctionLabelAvg: 'avg',
+  // aggregationFunctionLabelMin: 'min',
+  // aggregationFunctionLabelMax: 'max',
+  // aggregationFunctionLabelSize: 'size',
 };
 
 export const nbNO: Localization = getGridLocalization(nbNOGrid, nbNOCore);

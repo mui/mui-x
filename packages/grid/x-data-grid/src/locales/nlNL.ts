@@ -143,6 +143,14 @@ const nlNLGrid: Partial<GridLocaleText> = {
 
   // Row reordering text
   rowReorderingHeaderName: 'Rijen hersorteren',
+
+  // Aggregation
+  // aggregationMenuItemHeader: 'Aggregation',
+  // aggregationFunctionLabelSum: 'sum',
+  // aggregationFunctionLabelAvg: 'avg',
+  // aggregationFunctionLabelMin: 'min',
+  // aggregationFunctionLabelMax: 'max',
+  // aggregationFunctionLabelSize: 'size',
 };
 
 export const nlNL: Localization = getGridLocalization(nlNLGrid, nlNLCore);

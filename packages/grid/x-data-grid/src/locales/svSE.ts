@@ -143,6 +143,14 @@ const svSEGrid: Partial<GridLocaleText> = {
 
   // Row reordering text
   rowReorderingHeaderName: 'Ordna om rader',
+
+  // Aggregation
+  // aggregationMenuItemHeader: 'Aggregation',
+  // aggregationFunctionLabelSum: 'sum',
+  // aggregationFunctionLabelAvg: 'avg',
+  // aggregationFunctionLabelMin: 'min',
+  // aggregationFunctionLabelMax: 'max',
+  // aggregationFunctionLabelSize: 'size',
 };
 
 export const svSE: Localization = getGridLocalization(svSEGrid, svSECore);
