@@ -143,6 +143,14 @@ const ptBRGrid: Partial<GridLocaleText> = {
 
   // Row reordering text
   rowReorderingHeaderName: 'Reorganizar linhas',
+
+  // Aggregation
+  // aggregationMenuItemHeader: 'Aggregation',
+  // aggregationFunctionLabelSum: 'sum',
+  // aggregationFunctionLabelAvg: 'avg',
+  // aggregationFunctionLabelMin: 'min',
+  // aggregationFunctionLabelMax: 'max',
+  // aggregationFunctionLabelSize: 'size',
 };
 
 export const ptBR: Localization = getGridLocalization(ptBRGrid, ptBRCore);

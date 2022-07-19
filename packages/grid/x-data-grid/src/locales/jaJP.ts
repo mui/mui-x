@@ -138,6 +138,14 @@ const jaJPGrid: Partial<GridLocaleText> = {
 
   // Row reordering text
   rowReorderingHeaderName: '行並び替え',
+
+  // Aggregation
+  // aggregationMenuItemHeader: 'Aggregation',
+  // aggregationFunctionLabelSum: 'sum',
+  // aggregationFunctionLabelAvg: 'avg',
+  // aggregationFunctionLabelMin: 'min',
+  // aggregationFunctionLabelMax: 'max',
+  // aggregationFunctionLabelSize: 'size',
 };
 
 export const jaJP: Localization = getGridLocalization(jaJPGrid, jaJPCore);
