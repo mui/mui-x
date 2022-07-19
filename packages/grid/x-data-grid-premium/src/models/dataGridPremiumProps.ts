@@ -20,7 +20,7 @@ export interface GridExperimentalPremiumFeatures extends GridExperimentalProFeat
   /**
    * Enables the aggregation feature.
    */
-  aggregation: boolean;
+  private_aggregation: boolean;
 }
 
 /**
@@ -59,8 +59,9 @@ export interface DataGridPremiumPropsWithDefaultValue extends DataGridProPropsWi
   /**
    * If `true`, aggregation is disabled.
    * @default false
+   * @ignore - do not document.
    */
-  disableAggregation: boolean;
+  private_disableAggregation: boolean;
   /**
    * If `true`, the row grouping is disabled.
    * @default false
@@ -75,22 +76,25 @@ export interface DataGridPremiumPropsWithDefaultValue extends DataGridProPropsWi
   /**
    * Aggregation functions available on the grid.
    * @default GRID_AGGREGATION_FUNCTIONS
+   * @ignore - do not document.
    */
-  aggregationFunctions: Record<string, GridAggregationFunction>;
+  private_aggregationFunctions: Record<string, GridAggregationFunction>;
   /**
    * Rows used to generate the aggregated value.
    * If `filtered`, the aggregated values will be generated using only the rows currently passing the filtering process.
    * If `all`, the aggregated values will be generated using all the rows.
    * @default "filtered"
+   * @ignore - do not document.
    */
-  aggregationRowsScope: 'filtered' | 'all';
+  private_aggregationRowsScope: 'filtered' | 'all';
   /**
    * Determines the position of an aggregated value.
    * @param {GridGroupNode} groupNode The current group.
    * @returns {GridAggregationPosition | null} Position of the aggregated value (if `null`, the group will not be aggregated).
    * @default `(groupNode) => groupNode == null ? 'footer' : 'inline'`
+   * @ignore - do not document.
    */
-  getAggregationPosition: (groupNode: GridGroupNode) => GridAggregationPosition | null;
+  private_getAggregationPosition: (groupNode: GridGroupNode) => GridAggregationPosition | null;
 }
 
 export interface DataGridPremiumPropsWithoutDefaultValue<R extends GridValidRowModel = any>
@@ -117,12 +121,17 @@ export interface DataGridPremiumPropsWithoutDefaultValue<R extends GridValidRowM
   onRowGroupingModelChange?: (model: GridRowGroupingModel, details: GridCallbackDetails) => void;
   /**
    * Set the aggregation model of the grid.
+   * @ignore - do not document.
    */
-  aggregationModel?: GridAggregationModel;
+  private_aggregationModel?: GridAggregationModel;
   /**
    * Callback fired when the row grouping model changes.
    * @param {GridAggregationModel} model The aggregated columns.
    * @param {GridCallbackDetails} details Additional details for this callback.
+   * @ignore - do not document.
    */
-  onAggregationModelChange?: (model: GridAggregationModel, details: GridCallbackDetails) => void;
+  private_onAggregationModelChange?: (
+    model: GridAggregationModel,
+    details: GridCallbackDetails,
+  ) => void;
 }

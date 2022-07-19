@@ -41,7 +41,7 @@ const FULL_INITIAL_STATE: GridInitialState = {
   rowGrouping: {
     model: ['category'],
   },
-  aggregation: {
+  private_aggregation: {
     model: {
       id: 'size',
     },
@@ -69,7 +69,7 @@ describe('<DataGridPremium /> - State Persistence', () => {
           defaultGroupingExpansionDepth={-1}
           groupingColDef={{ headerName: 'Group' }}
           experimentalFeatures={{
-            aggregation: true,
+            private_aggregation: true,
           }}
         />
       </div>
@@ -96,7 +96,7 @@ describe('<DataGridPremium /> - State Persistence', () => {
     it('should export the current version of the exportable state', () => {
       render(<TestCase />);
       apiRef.current.setRowGroupingModel(['category']);
-      apiRef.current.setAggregationModel({ id: 'size' });
+      apiRef.current.private_setAggregationModel({ id: 'size' });
       expect(apiRef.current.exportState()).to.deep.equal(FULL_INITIAL_STATE);
     });
   });

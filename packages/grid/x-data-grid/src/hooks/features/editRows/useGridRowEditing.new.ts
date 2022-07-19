@@ -167,6 +167,12 @@ export const useGridRowEditing = (
   const handleCellKeyDown = React.useCallback<GridEventListener<'cellKeyDown'>>(
     (params, event) => {
       if (params.cellMode === GridRowModes.Edit) {
+        // Wait until IME is settled for Asian languages like Japanese and Chinese
+        // TODO: `event.which` is depricated but this is a temporary workaround
+        if (event.which === 229) {
+          return;
+        }
+
         let reason: GridRowEditStopReasons | undefined;
 
         if (event.key === 'Escape') {
@@ -206,7 +212,11 @@ export const useGridRowEditing = (
         let reason: GridRowEditStartReasons | undefined;
 
         if (isPrintableKey(event.key)) {
-          if (event.shiftKey || event.ctrlKey || event.metaKey || event.altKey) {
+          if (
+            (event.ctrlKey && event.key !== 'v') ||
+            (event.metaKey && event.key !== 'v') ||
+            event.altKey
+          ) {
             return;
           }
           reason = GridRowEditStartReasons.printableKeyDown;

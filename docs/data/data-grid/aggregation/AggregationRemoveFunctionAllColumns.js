@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {
   DataGridPremium,
-  GRID_AGGREGATION_FUNCTIONS,
+  PRIVATE_GRID_AGGREGATION_FUNCTIONS,
 } from '@mui/x-data-grid-premium';
 import { useMovieData } from '@mui/x-data-grid-generator';
 
@@ -38,20 +38,20 @@ export default function AggregationRemoveFunctionAllColumns() {
       rows={data.rows.slice(0, 3)}
       autoHeight
       columns={COLUMNS}
-      aggregationFunctions={Object.fromEntries(
-        Object.entries(GRID_AGGREGATION_FUNCTIONS).filter(
+      private_aggregationFunctions={Object.fromEntries(
+        Object.entries(PRIVATE_GRID_AGGREGATION_FUNCTIONS).filter(
           ([name]) => name !== 'sum',
         ),
       )}
       initialState={{
-        aggregation: {
+        private_aggregation: {
           model: {
             gross: 'max',
           },
         },
       }}
       experimentalFeatures={{
-        aggregation: true,
+        private_aggregation: true,
       }}
     />
   );

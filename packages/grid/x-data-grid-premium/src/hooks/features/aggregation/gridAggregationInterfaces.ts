@@ -18,8 +18,9 @@ export interface GridAggregationApi {
   /**
    * Sets the aggregation model to the one given by `model`.
    * @param {GridAggregationModel} model The aggregation model.
+   * @ignore - do not document.
    */
-  setAggregationModel: (model: GridAggregationModel) => void;
+  private_setAggregationModel: (model: GridAggregationModel) => void;
 }
 
 /**
@@ -111,8 +112,3 @@ export interface GridAggregationRule {
  * - items for non-available aggregation function on the column (GridColDef.availableAggregationFunctions)
  */
 export type GridAggregationRules = { [field: string]: GridAggregationRule };
-
-export interface AggregationFooterLabelColumn {
-  groupingCriteria?: string[];
-  field: string;
-}

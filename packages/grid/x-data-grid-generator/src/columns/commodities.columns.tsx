@@ -102,7 +102,7 @@ export const getCommodityColumns = (editable = false): GridColDefGenerator[] => 
     generateData: generateFilledQuantity,
     renderCell: renderProgress,
     renderEditCell: renderEditProgress,
-    availableAggregationFunctions: ['min', 'max', 'avg', 'size'],
+    private_availableAggregationFunctions: ['min', 'max', 'avg', 'size'],
     type: 'number',
     width: 120,
     editable,

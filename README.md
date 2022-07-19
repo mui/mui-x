@@ -30,7 +30,7 @@ The community isn't contributing improvements as fast as the problems deserved t
 We are using a commercial license to forward the development of the most advanced features, where the MIT model can't sustain it.
 A feature should only be commercial if it has no great MIT alternatives.
 
-Find more details [on the docs](https://mui.com/x/advanced-components/#licenses).
+Find more details [in the docs](https://mui.com/x/introduction/licensing/).
 
 - [DataGrid](https://mui.com/components/data-grid/), published under `@mui/x-data-grid`, MIT licensed.
 - [DataGridPro](https://mui.com/components/data-grid/#commercial-version), published under `@mui/x-data-grid-pro`, commercially licensed.

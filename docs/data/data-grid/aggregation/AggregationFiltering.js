@@ -36,7 +36,7 @@ export default function AggregationFiltering() {
       autoHeight
       columns={COLUMNS}
       initialState={{
-        aggregation: {
+        private_aggregation: {
           model: {
             gross: 'max',
           },
@@ -49,9 +49,9 @@ export default function AggregationFiltering() {
           },
         },
       }}
-      aggregationRowsScope="all"
+      private_aggregationRowsScope="all"
       experimentalFeatures={{
-        aggregation: true,
+        private_aggregation: true,
       }}
     />
   );

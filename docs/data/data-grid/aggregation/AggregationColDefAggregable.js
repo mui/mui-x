@@ -15,7 +15,7 @@ const COLUMNS = [
     headerName: 'Title',
     width: 200,
     groupable: false,
-    aggregable: false,
+    private_aggregable: false,
   },
   {
     field: 'gross',
@@ -34,7 +34,7 @@ const COLUMNS = [
     field: 'year',
     headerName: 'Year',
     type: 'number',
-    aggregable: false,
+    private_aggregable: false,
   },
 ];
 
@@ -48,7 +48,7 @@ export default function AggregationColDefAggregable() {
       autoHeight
       columns={COLUMNS}
       initialState={{
-        aggregation: {
+        private_aggregation: {
           model: {
             gross: 'sum',
             year: 'sum',
@@ -56,7 +56,7 @@ export default function AggregationColDefAggregable() {
         },
       }}
       experimentalFeatures={{
-        aggregation: true,
+        private_aggregation: true,
       }}
     />
   );

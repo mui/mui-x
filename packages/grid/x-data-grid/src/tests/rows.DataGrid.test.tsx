@@ -738,6 +738,69 @@ describe('<DataGrid /> - Rows', () => {
           height: `${Math.floor(expectedHeight)}px`,
         });
       });
+
+      it('should position correctly the render zone when the 2nd page has less rows than the 1st page', async () => {
+        const data = getData(120, 3);
+        const headerHeight = 50;
+        const measuredRowHeight = 100;
+        render(
+          <TestCase
+            getBioContentHeight={() => measuredRowHeight}
+            getRowHeight={() => 'auto'}
+            rowBuffer={0}
+            rowThreshold={0}
+            headerHeight={headerHeight}
+            getRowId={(row) => row.id}
+            hideFooter={false}
+            {...data}
+          />,
+        );
+        const virtualScroller = document.querySelector('.MuiDataGrid-virtualScroller')!;
+        virtualScroller.scrollTop = 10e6; // Scroll to measure all cells
+        virtualScroller.dispatchEvent(new Event('scroll'));
+        await new Promise((resolve) => nativeSetTimeout(resolve));
+        clock.runToLast();
+        const virtualScrollerRenderZone = document.querySelector(
+          '.MuiDataGrid-virtualScrollerRenderZone',
+        )!;
+        fireEvent.click(screen.getByRole('button', { name: /next page/i }));
+        await new Promise((resolve) => nativeSetTimeout(resolve));
+        clock.runToLast();
+        expect(virtualScrollerRenderZone).toHaveInlineStyle({
+          transform: 'translate3d(0px, 0px, 0px)',
+        });
+      });
+
+      it('should position correctly the render zone when changing pageSize to a lower value', async () => {
+        const data = getData(120, 3);
+        const headerHeight = 50;
+        const measuredRowHeight = 100;
+        const { setProps } = render(
+          <TestCase
+            getBioContentHeight={() => measuredRowHeight}
+            getRowHeight={() => 'auto'}
+            rowBuffer={0}
+            rowThreshold={0}
+            headerHeight={headerHeight}
+            getRowId={(row) => row.id}
+            hideFooter={false}
+            pageSize={10}
+            rowsPerPageOptions={[5, 10]}
+            height={headerHeight + 10 * measuredRowHeight}
+            {...data}
+          />,
+        );
+        const virtualScrollerRenderZone = document.querySelector(
+          '.MuiDataGrid-virtualScrollerRenderZone',
+        )!;
+        expect(virtualScrollerRenderZone).toHaveInlineStyle({
+          transform: 'translate3d(0px, 0px, 0px)',
+        });
+        setProps({ pageSize: 5 });
+        expect(virtualScrollerRenderZone).toHaveInlineStyle({
+          transform: 'translate3d(0px, 0px, 0px)',
+        });
+      });
     });
   });
 

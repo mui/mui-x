@@ -1,14 +1,16 @@
 import { createSelector } from '@mui/x-data-grid-pro/internals';
 import { GridStatePremium } from '../../../models/gridStatePremium';
 
-export const gridAggregationStateSelector = (state: GridStatePremium) => state.aggregation;
+// eslint-disable-next-line @typescript-eslint/naming-convention
+export const private_gridAggregationStateSelector = (state: GridStatePremium) =>
+  state.private_aggregation;
 
 export const gridAggregationModelSelector = createSelector(
-  gridAggregationStateSelector,
+  private_gridAggregationStateSelector,
   (aggregationState) => aggregationState.model,
 );
 
 export const gridAggregationLookupSelector = createSelector(
-  gridAggregationStateSelector,
+  private_gridAggregationStateSelector,
   (aggregationState) => aggregationState.lookup,
 );

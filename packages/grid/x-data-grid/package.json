@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-data-grid",
-  "version": "5.12.3",
+  "version": "5.13.0",
   "description": "The community edition of the data grid component (MUI X).",
   "author": "MUI Team",
   "main": "src/index.ts",
@@ -46,9 +46,9 @@
     "directory": "packages/grid/x-data-grid"
   },
   "dependencies": {
-    "@babel/runtime": "^7.17.2",
+    "@babel/runtime": "^7.18.6",
     "@mui/utils": "^5.4.1",
-    "clsx": "^1.1.1",
+    "clsx": "^1.2.1",
     "prop-types": "^15.8.1",
     "reselect": "^4.1.6"
   },

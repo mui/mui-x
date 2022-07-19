@@ -1,6 +1,6 @@
 {
   "name": "storybook",
-  "version": "5.12.3",
+  "version": "5.13.0",
   "description": "Storybook components",
   "author": "MUI Team",
   "private": true,
@@ -18,10 +18,10 @@
   "dependencies": {
     "@mui/icons-material": "^5.8.0",
     "@mui/material": "^5.8.0",
-    "@mui/x-data-grid": "5.12.3",
-    "@mui/x-data-grid-generator": "5.12.3",
-    "@mui/x-data-grid-premium": "5.12.3",
-    "@mui/x-data-grid-pro": "5.12.3",
+    "@mui/x-data-grid": "5.13.0",
+    "@mui/x-data-grid-generator": "5.13.0",
+    "@mui/x-data-grid-premium": "5.13.0",
+    "@mui/x-data-grid-pro": "5.13.0",
     "@mui/x-license-pro": "5.12.3",
     "@storybook/builder-webpack5": "^6.5.9",
     "@storybook/manager-webpack5": "^6.5.9",
@@ -31,7 +31,7 @@
     "webpack": "^5.73.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.17.9",
+    "@babel/core": "^7.18.6",
     "@storybook/addon-a11y": "^6.5.9",
     "@storybook/addon-actions": "^6.5.9",
     "@storybook/addon-console": "^1.2.3",
@@ -46,7 +46,7 @@
     "react-docgen-typescript-loader": "^3.7.2",
     "source-map-loader": "^3.0.1",
     "string-replace-loader": "^3.1.0",
-    "ts-loader": "^9.3.0"
+    "ts-loader": "^9.3.1"
   },
   "browserslist": [
     ">0.3%",

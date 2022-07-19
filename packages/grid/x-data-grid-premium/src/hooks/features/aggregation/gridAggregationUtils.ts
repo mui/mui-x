@@ -24,11 +24,12 @@ import { GridStatePremium } from '../../../models/gridStatePremium';
 import { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
 import { GridApiPremium } from '../../../models/gridApiPremium';
 
-export const GRID_AGGREGATION_ROOT_FOOTER_ROW_ID = 'auto-generated-group-footer-root';
+export const PRIVATE_GRID_AGGREGATION_ROOT_FOOTER_ROW_ID = 'auto-generated-group-footer-root';
 
-export const getAggregationFooterRowIdFromGroupId = (groupId: GridRowId | null) => {
+// eslint-disable-next-line @typescript-eslint/naming-convention
+export const private_getAggregationFooterRowIdFromGroupId = (groupId: GridRowId | null) => {
   if (groupId == null) {
-    return GRID_AGGREGATION_ROOT_FOOTER_ROW_ID;
+    return PRIVATE_GRID_AGGREGATION_ROOT_FOOTER_ROW_ID;
   }
 
   return `auto-generated-group-footer-${groupId}`;
@@ -43,7 +44,7 @@ export const canColumnHaveAggregationFunction = ({
   aggregationFunctionName: string;
   aggregationFunction: GridAggregationFunction | undefined;
 }): boolean => {
-  if (!column || !column.aggregable) {
+  if (!column || !column.private_aggregable) {
     return false;
   }
 
@@ -51,8 +52,8 @@ export const canColumnHaveAggregationFunction = ({
     return false;
   }
 
-  if (column.availableAggregationFunctions != null) {
-    return column.availableAggregationFunctions.includes(aggregationFunctionName);
+  if (column.private_availableAggregationFunctions != null) {
+    return column.private_availableAggregationFunctions.includes(aggregationFunctionName);
   }
 
   if (!aggregationFunction.columnTypes) {
@@ -81,7 +82,7 @@ export const mergeStateWithAggregationModel =
   (aggregationModel: GridAggregationModel) =>
   (state: GridStatePremium): GridStatePremium => ({
     ...state,
-    aggregation: { ...state.aggregation, model: aggregationModel },
+    private_aggregation: { ...state.private_aggregation, model: aggregationModel },
   });
 
 export const getAggregationRules = ({
@@ -115,7 +116,7 @@ export const getAggregationRules = ({
 };
 
 interface AddFooterRowsParams extends GridHydrateRowsValue {
-  getAggregationPosition: DataGridPremiumProcessedProps['getAggregationPosition'];
+  getAggregationPosition: DataGridPremiumProcessedProps['private_getAggregationPosition'];
   /**
    * If `true`, there are some aggregation rules to apply
    */
@@ -131,7 +132,7 @@ export const addFooterRows = (params: AddFooterRowsParams) => {
 
   const addGroupFooter = (groupNode: GridGroupNode) => {
     if (params.hasAggregationRule && params.getAggregationPosition(groupNode) === 'footer') {
-      const footerId = getAggregationFooterRowIdFromGroupId(groupNode.id);
+      const footerId = private_getAggregationFooterRowIdFromGroupId(groupNode.id);
       if (groupNode.footerId !== footerId) {
         if (groupNode.footerId != null) {
           removeNodeFromTree({ node: tree[groupNode.footerId], tree, treeDepths });

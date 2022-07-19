@@ -5,6 +5,6 @@
   disableSelectionOnClick
   initialState={initialState}
   experimentalFeatures={{
-    aggregation: true,
+    private_aggregation: true,
   }}
 />

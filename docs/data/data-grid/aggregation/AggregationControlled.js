@@ -39,10 +39,10 @@ export default function AggregationControlled() {
       rows={data.rows.slice(0, 3)}
       autoHeight
       columns={COLUMNS}
-      aggregationModel={aggregationModel}
-      onAggregationModelChange={(newModel) => setAggregationModel(newModel)}
+      private_aggregationModel={aggregationModel}
+      private_onAggregationModelChange={(newModel) => setAggregationModel(newModel)}
       experimentalFeatures={{
-        aggregation: true,
+        private_aggregation: true,
       }}
     />
   );

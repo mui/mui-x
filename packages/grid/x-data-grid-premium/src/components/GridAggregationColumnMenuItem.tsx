@@ -37,14 +37,14 @@ export const GridAggregationColumnMenuItem = (props: GridAggregationColumnMenuIt
       canColumnHaveAggregationFunction({
         column,
         aggregationFunctionName,
-        aggregationFunction: rootProps.aggregationFunctions[aggregationFunctionName],
+        aggregationFunction: rootProps.private_aggregationFunctions[aggregationFunctionName],
       })
     ) {
       return aggregationFunctionName;
     }
 
     return '';
-  }, [rootProps.aggregationFunctions, aggregationModel, column]);
+  }, [rootProps.private_aggregationFunctions, aggregationModel, column]);
 
   const handleAggregationItemChange = (event: SelectChangeEvent<string | undefined>) => {
     const newAggregationItem = event.target.value || undefined;
@@ -55,7 +55,7 @@ export const GridAggregationColumnMenuItem = (props: GridAggregationColumnMenuIt
         ? otherColumnItems
         : { ...otherColumnItems, [column.field]: newAggregationItem };
 
-    apiRef.current.setAggregationModel(newModel);
+    apiRef.current.private_setAggregationModel(newModel);
     apiRef.current.hideColumnMenu();
   };
 
@@ -79,7 +79,7 @@ export const GridAggregationColumnMenuItem = (props: GridAggregationColumnMenuIt
                 apiRef,
                 aggregationRule: {
                   aggregationFunctionName: aggFunc,
-                  aggregationFunction: rootProps.aggregationFunctions[aggFunc],
+                  aggregationFunction: rootProps.private_aggregationFunctions[aggFunc],
                 },
               })}
             </MenuItem>
