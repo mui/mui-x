@@ -11,12 +11,10 @@ import { MobileDateTimePicker } from '@mui/x-date-pickers/MobileDateTimePicker';
 import Stack from '@mui/material/Stack';
 
 export default function CustomDateTimePicker() {
-  const [dateWithNoInitialValue, setDateWithNoInitialValue] = React.useState<
-    Dayjs | Date | null
-  >(null);
-  const [dateWithInitialValue, setDateWithInitialValue] = React.useState<
-    Dayjs | Date | null
-  >(new Date('2019-01-01T18:54'));
+  const [dateWithNoInitialValue, setDateWithNoInitialValue] =
+    React.useState<Dayjs | null>(null);
+  const [dateWithInitialValue, setDateWithInitialValue] =
+    React.useState<Dayjs | null>(dayjs('2019-01-01T18:54'));
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>

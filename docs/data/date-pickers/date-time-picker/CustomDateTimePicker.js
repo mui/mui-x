@@ -13,7 +13,7 @@ import Stack from '@mui/material/Stack';
 export default function CustomDateTimePicker() {
   const [dateWithNoInitialValue, setDateWithNoInitialValue] = React.useState(null);
   const [dateWithInitialValue, setDateWithInitialValue] = React.useState(
-    new Date('2019-01-01T18:54'),
+    dayjs('2019-01-01T18:54'),
   );
 
   return (

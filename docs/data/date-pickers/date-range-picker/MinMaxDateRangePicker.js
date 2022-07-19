@@ -1,20 +1,20 @@
 import * as React from 'react';
-import addWeeks from 'date-fns/addWeeks';
+
 import TextField from '@mui/material/TextField';
 import { LocalizationProvider } from '@mui/x-date-pickers-pro';
-import { AdapterDateFns } from '@mui/x-date-pickers-pro/AdapterDateFns';
+import { AdapterDayjs } from '@mui/x-date-pickers-pro/AdapterDayjs';
 import { DateRangePicker } from '@mui/x-date-pickers-pro/DateRangePicker';
 import Box from '@mui/material/Box';
 
 function getWeeksAfter(date, amount) {
-  return date ? addWeeks(date, amount) : undefined;
+  return date ? date.add(amount, 'week') : undefined;
 }
 
 export default function MinMaxDateRangePicker() {
   const [value, setValue] = React.useState([null, null]);
 
   return (
-    <LocalizationProvider dateAdapter={AdapterDateFns}>
+    <LocalizationProvider dateAdapter={AdapterDayjs}>
       <DateRangePicker
         disablePast
         value={value}

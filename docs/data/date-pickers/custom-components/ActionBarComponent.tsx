@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Dayjs } from 'dayjs';
+import dayjs, { Dayjs } from 'dayjs';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Menu from '@mui/material/Menu';
@@ -111,8 +111,8 @@ const CustomActionBar = (props: PickersActionBarProps) => {
 };
 
 export default function ActionBarComponent() {
-  const [value, setValue] = React.useState<Date | Dayjs | null>(
-    () => new Date(2022, 1, 1, 1, 1),
+  const [value, setValue] = React.useState<Dayjs | null>(() =>
+    dayjs('2022-01-01T00:00'),
   );
 
   return (

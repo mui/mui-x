@@ -7,7 +7,7 @@ import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import Stack from '@mui/material/Stack';
 
 export default function FormPropsDateTimePickers() {
-  const [value, setValue] = React.useState<Dayjs | Date | null>(null);
+  const [value, setValue] = React.useState<Dayjs | null>(null);
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>

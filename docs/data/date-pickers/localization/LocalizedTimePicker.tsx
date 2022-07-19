@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Dayjs } from 'dayjs';
+import dayjs, { Dayjs } from 'dayjs';
 import ruLocale from 'dayjs/locale/ru';
 import arSaLocale from 'dayjs/locale/ar-sa';
 import Stack from '@mui/material/Stack';
@@ -30,7 +30,7 @@ const ampmOptions: { [key: string]: undefined | boolean } = {
 
 export default function LocalizedTimePicker() {
   const [locale, setLocale] = React.useState<keyof typeof localeMap>('ru');
-  const [value, setValue] = React.useState<Date | Dayjs | null>(new Date());
+  const [value, setValue] = React.useState<Dayjs | null>(dayjs());
 
   const [ampm, setAmpm] = React.useState<boolean | undefined>(undefined);
   const [ampmOption, setAmpmOption] = React.useState<string>('undefined');

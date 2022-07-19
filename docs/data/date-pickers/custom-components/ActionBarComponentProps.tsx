@@ -1,13 +1,13 @@
 import * as React from 'react';
-import { Dayjs } from 'dayjs';
+import dayjs, { Dayjs } from 'dayjs';
 import TextField from '@mui/material/TextField';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { StaticDatePicker } from '@mui/x-date-pickers/StaticDatePicker';
 
 export default function ActionBarComponentProps() {
-  const [value, setValue] = React.useState<Date | Dayjs | null>(
-    () => new Date(2022, 1, 1, 1, 1),
+  const [value, setValue] = React.useState<Date | Dayjs | null>(() =>
+    dayjs('2022-01-01T00:00'),
   );
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>

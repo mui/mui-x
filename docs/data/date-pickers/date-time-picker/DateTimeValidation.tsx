@@ -7,7 +7,7 @@ import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import Stack from '@mui/material/Stack';
 
 export default function DateTimeValidation() {
-  const [value, setValue] = React.useState<Dayjs | Date | null>(new Date());
+  const [value, setValue] = React.useState<Dayjs | null>(dayjs());
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>

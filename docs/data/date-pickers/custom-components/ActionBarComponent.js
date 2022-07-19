@@ -1,6 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-
+import dayjs from 'dayjs';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Menu from '@mui/material/Menu';
@@ -132,7 +132,7 @@ CustomActionBar.propTypes = {
 };
 
 export default function ActionBarComponent() {
-  const [value, setValue] = React.useState(() => new Date(2022, 1, 1, 1, 1));
+  const [value, setValue] = React.useState(() => dayjs('2022-01-01T00:00'));
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>

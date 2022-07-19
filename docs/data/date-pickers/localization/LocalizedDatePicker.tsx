@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Dayjs } from 'dayjs';
+import dayjs, { Dayjs } from 'dayjs';
 import frLocale from 'dayjs/locale/fr';
 import ruLocale from 'dayjs/locale/ru';
 import deLocale from 'dayjs/locale/de';
@@ -23,11 +23,11 @@ const localeMap = {
 
 export default function LocalizedDatePicker() {
   const [locale, setLocale] = React.useState<keyof typeof localeMap>('ru');
-  const [datePickerValue, setDatePickerValue] = React.useState<Dayjs | Date | null>(
-    new Date(),
+  const [datePickerValue, setDatePickerValue] = React.useState<Dayjs | null>(
+    dayjs(),
   );
-  const [timePickerValue, setTimePickerValue] = React.useState<Dayjs | Date | null>(
-    new Date(),
+  const [timePickerValue, setTimePickerValue] = React.useState<Dayjs | null>(
+    dayjs(),
   );
 
   const selectLocale = (newLocale: any) => {

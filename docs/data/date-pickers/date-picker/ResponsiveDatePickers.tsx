@@ -9,7 +9,7 @@ import { MobileDatePicker } from '@mui/x-date-pickers/MobileDatePicker';
 import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
 
 export default function ResponsiveDatePickers() {
-  const [value, setValue] = React.useState<Date | Dayjs | null>(new Date());
+  const [value, setValue] = React.useState<Dayjs | null>(dayjs());
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
