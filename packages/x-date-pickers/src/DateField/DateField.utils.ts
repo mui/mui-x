@@ -68,6 +68,9 @@ export const incrementDatePartValue = <TDate>(
   }
 };
 
+export const getSectionVisibleValue = (section: Omit<DateFieldInputSection, 'start'>) =>
+  section.value || section.emptyValue;
+
 const addStartPropertyToSections = (sections: Omit<DateFieldInputSection, 'start'>[]) => {
   let position = 0;
   const newSections: DateFieldInputSection[] = [];
@@ -75,10 +78,23 @@ const addStartPropertyToSections = (sections: Omit<DateFieldInputSection, 'start
   for (let i = 0; i < sections.length; i += 1) {
     const section = sections[i];
     newSections.push({ ...section, start: position });
-    position += section.value.length + (section.separator?.length ?? 0);
+
+    position += getSectionVisibleValue(section).length + (section.separator?.length ?? 0);
   }
 
   return newSections;
+};
+
+export const formatDateWithPlaceholder = <TDate>(
+  utils: MuiPickersAdapter<TDate>,
+  date: TDate | null,
+  format: string,
+) => {
+  if (date == null) {
+    return '';
+  }
+
+  return utils.formatByString(date, format);
 };
 
 export const splitFormatIntoSections = <TDate>(
@@ -95,15 +111,18 @@ export const splitFormatIntoSections = <TDate>(
       if (currentTokenValue === '') {
         sections[sections.length - 1].separator += char;
       } else {
-        const dateForCurrentToken = utils.formatByString(date, currentTokenValue);
+        const dateForCurrentToken = formatDateWithPlaceholder(utils, date, currentTokenValue);
         if (dateForCurrentToken === currentTokenValue) {
           sections[sections.length - 1].separator += currentTokenValue;
           currentTokenValue = '';
         } else {
+          const dateSectionName = getDateSectionNameFromFormat(currentTokenValue);
+
           sections.push({
             formatValue: currentTokenValue,
             value: dateForCurrentToken,
-            dateSectionName: getDateSectionNameFromFormat(currentTokenValue),
+            emptyValue: dateSectionName,
+            dateSectionName,
             separator: char,
             query: null,
           });
@@ -115,14 +134,17 @@ export const splitFormatIntoSections = <TDate>(
     }
 
     if (i === format.length - 1) {
-      const dateForCurrentToken = utils.formatByString(date, currentTokenValue);
+      const dateForCurrentToken = formatDateWithPlaceholder(utils, date, currentTokenValue);
       if (dateForCurrentToken === currentTokenValue) {
         sections[sections.length - 1].separator += currentTokenValue;
       } else {
+        const dateSectionName = getDateSectionNameFromFormat(currentTokenValue);
+
         sections.push({
           formatValue: currentTokenValue,
           value: dateForCurrentToken,
-          dateSectionName: getDateSectionNameFromFormat(currentTokenValue),
+          emptyValue: dateSectionName,
+          dateSectionName,
           separator: null,
           query: null,
         });
@@ -135,9 +157,15 @@ export const splitFormatIntoSections = <TDate>(
 
 export const createDateStrFromSections = (sections: DateFieldInputSection[]) =>
   sections
-    .map((section) =>
-      section.separator == null ? section.value : `${section.value}${section.separator}`,
-    )
+    .map((section) => {
+      let sectionValueStr = getSectionVisibleValue(section);
+
+      if (section.separator != null) {
+        sectionValueStr += section.separator;
+      }
+
+      return sectionValueStr;
+    })
     .join('');
 
 export const getSectionIndexFromCursorPosition = (
@@ -174,12 +202,43 @@ export const setSectionValue = (
   return addStartPropertyToSections(newSections);
 };
 
+export const getMonthList = <TDate>(utils: MuiPickersAdapter<TDate>, format: string) =>
+  utils.getMonthArray(utils.date()!).map((month) => utils.formatByString(month, format));
+
 export const getMonthsMatchingQuery = <TDate>(
   utils: MuiPickersAdapter<TDate>,
   format: string,
   query: string,
-) =>
-  utils
-    .getMonthArray(utils.date()!)
-    .map((month) => utils.formatByString(month, format))
-    .filter((month) => month.toLowerCase().startsWith(query));
+) => getMonthList(utils, format).filter((month) => month.toLowerCase().startsWith(query));
+
+export const getSectionValueNumericBoundaries = <TDate>(
+  utils: MuiPickersAdapter<TDate>,
+  date: TDate,
+  dateSectionName: DateSectionName,
+) => {
+  let maximum: number;
+  switch (dateSectionName) {
+    case 'day':
+      maximum = utils.getDaysInMonth(date);
+      break;
+
+    case 'month': {
+      maximum = utils.getMonthArray(date).length;
+      break;
+    }
+
+    case 'year':
+      // TODO: Make generic
+      maximum = 9999;
+      break;
+
+    default: {
+      maximum = 0;
+    }
+  }
+
+  return {
+    minimum: 0,
+    maximum,
+  };
+};

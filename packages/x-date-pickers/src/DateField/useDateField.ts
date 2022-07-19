@@ -16,12 +16,16 @@ import {
   splitFormatIntoSections,
   setSectionValue,
   getMonthsMatchingQuery,
+  formatDateWithPlaceholder,
+  getSectionVisibleValue,
+  getMonthList,
+  getSectionValueNumericBoundaries,
 } from './DateField.utils';
 import { useUtils } from '../internals/hooks/useUtils';
 
 interface UseDateFieldState<TDate> {
   valueStr: string;
-  valueParsed: TDate;
+  valueParsed: TDate | null;
   sections: DateFieldInputSection[];
   selectedSectionIndex: number | 'all' | null;
 }
@@ -34,17 +38,20 @@ export const useDateField = <TInputDate, TDate = TInputDate>(
 
   const { value, onChange, format = 'dd/MM/yyyy' } = inProps;
 
-  const parsedValue = React.useMemo(
+  const parsedValue = React.useMemo<TDate | null>(
     () => datePickerValueManager.parseInput(utils, value),
     [utils, value],
   );
 
-  const [state, setState] = React.useState<UseDateFieldState<TDate>>(() => ({
-    valueStr: utils.formatByString(parsedValue, format),
-    valueParsed: parsedValue,
-    sections: splitFormatIntoSections(utils, format, parsedValue),
-    selectedSectionIndex: null,
-  }));
+  const [state, setState] = React.useState<UseDateFieldState<TDate>>(() => {
+    const sections = splitFormatIntoSections(utils, format, parsedValue);
+    return {
+      valueStr: createDateStrFromSections(sections),
+      valueParsed: parsedValue,
+      sections,
+      selectedSectionIndex: null,
+    };
+  });
 
   const updateSections = (sections: DateFieldInputSection[]) => {
     const newValueStr = createDateStrFromSections(sections);
@@ -74,11 +81,12 @@ export const useDateField = <TInputDate, TDate = TInputDate>(
   };
 
   if (!utils.isEqual(state.valueParsed, parsedValue)) {
+    const sections = splitFormatIntoSections(utils, format, parsedValue);
     setState((prevState) => ({
       ...prevState,
-      valueStr: utils.formatByString(parsedValue, format),
+      valueStr: createDateStrFromSections(sections),
       valueParsed: parsedValue,
-      sections: splitFormatIntoSections(utils, format, parsedValue),
+      sections,
     }));
   }
 
@@ -131,13 +139,35 @@ export const useDateField = <TInputDate, TDate = TInputDate>(
     }
 
     if (event.key === 'ArrowUp' || event.key === 'ArrowDown') {
-      const newDate = incrementDatePartValue(
-        utils,
-        parsedValue,
-        startSection.dateSectionName,
-        event.key === 'ArrowDown' ? -1 : 1,
-      );
-      onChange(newDate);
+      // Some sections are empty, we can't use the date format
+      if (state.sections.some((section) => section.value === '')) {
+        const boundaries = getSectionValueNumericBoundaries(
+          utils,
+          parsedValue ?? utils.date()!,
+          startSection.dateSectionName,
+        );
+        if (startSection.value === '') {
+          const newNumericSectionValue =
+            event.key === 'ArrowDown' ? boundaries.minimum : boundaries.maximum;
+          // TODO: Make generic
+          const newSectionValue =
+            startSection.formatValue === 'MMMM'
+              ? getMonthList(utils, startSection.formatValue)[newNumericSectionValue]
+              : newNumericSectionValue.toString();
+          updateSections(setSectionValue(state.sections, startSectionIndex, newSectionValue));
+        } else {
+          throw new Error('MUI: Not implemented yet');
+        }
+      } else {
+        const newDate = incrementDatePartValue(
+          utils,
+          parsedValue,
+          startSection.dateSectionName,
+          event.key === 'ArrowDown' ? -1 : 1,
+        );
+        onChange(newDate);
+      }
+
       event.preventDefault();
       return;
     }
@@ -156,30 +186,17 @@ export const useDateField = <TInputDate, TDate = TInputDate>(
     const numericKey = Number(event.key);
 
     if (!Number.isNaN(numericKey)) {
-      let maximumValue: number;
-      switch (startSection.dateSectionName) {
-        case 'day':
-          maximumValue = utils.getDaysInMonth(parsedValue);
-          break;
-
-        case 'month': {
-          maximumValue = utils.getMonthArray(parsedValue).length;
-          break;
-        }
-
-        case 'year':
-          // TODO: Make generic
-          maximumValue = 9999;
-          break;
-
-        default: {
-          maximumValue = 0;
-        }
-      }
+      const boundaries = getSectionValueNumericBoundaries(
+        utils,
+        parsedValue ?? utils.date()!,
+        startSection.dateSectionName,
+      );
 
       const concatenatedSectionValue = `${startSection.value}${event.key}`;
       const newSectionValue =
-        Number(concatenatedSectionValue) > maximumValue ? event.key : concatenatedSectionValue;
+        Number(concatenatedSectionValue) > boundaries.maximum
+          ? event.key
+          : concatenatedSectionValue;
       updateSections(setSectionValue(state.sections, startSectionIndex, newSectionValue));
       event.preventDefault();
       return;
@@ -247,7 +264,10 @@ export const useDateField = <TInputDate, TDate = TInputDate>(
     }
 
     const section = state.sections[state.selectedSectionIndex];
-    updateSelectionRangeIfChanged(section.start, section.start + section.value.length);
+    updateSelectionRangeIfChanged(
+      section.start,
+      section.start + getSectionVisibleValue(section).length,
+    );
   });
 
   return {

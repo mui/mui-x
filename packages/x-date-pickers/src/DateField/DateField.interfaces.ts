@@ -24,6 +24,7 @@ export interface UseDateFieldResponse {
 export interface DateFieldInputSection {
   start: number;
   value: string;
+  emptyValue: string;
   separator: string | null;
   dateSectionName: DateSectionName;
   formatValue: string;
