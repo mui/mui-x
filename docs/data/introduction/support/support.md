@@ -1,6 +1,6 @@
 # Support
 
-<p class="description">How to get support for MUI X components, including feature requests, bug fixes, answers to how-to questions, and professional support from the team.</p>
+<p class="description">How to get support for MUI X components, including feature requests, bug fixes, answers to how-to questions, and technical support from the team.</p>
 
 ## GitHub
 
@@ -16,9 +16,13 @@ Visit Stack Overflow to ask questions and read crowdsourced answers from expert 
 
 [Post a question about MUI X](https://stackoverflow.com/questions/tagged/mui) on Stack Overflow.
 
-## Professional support
+## Technical support
 
-When purchasing a MUI X Pro or Premium license you get access to professional support until the end of your subscription.
+:::info
+The technical support covers only MUI X components.
+:::
+
+When purchasing a MUI X Pro or Premium license you get access to technical support until the end of your subscription.
 Support is available on multiple channels, but the recommended channels are:
 
 - GitHub: You can [open a new issue](https://github.com/mui/mui-x/issues/new/choose) and leave your Order ID, so we can prioritize accordingly.

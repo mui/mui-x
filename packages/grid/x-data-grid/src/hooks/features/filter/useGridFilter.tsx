@@ -155,7 +155,28 @@ export const useGridFilter = (
       logger.debug('Displaying filter panel');
       if (targetColumnField) {
         const filterModel = gridFilterModelSelector(apiRef);
-        const filterItemsWithValue = filterModel.items.filter((item) => item.value !== undefined);
+        const filterItemsWithValue = filterModel.items.filter((item) => {
+          if (item.value !== undefined) {
+            return true;
+          }
+
+          const column = apiRef.current.getColumn(item.columnField);
+          const filterOperator = column.filterOperators?.find(
+            (operator) => operator.value === item.operatorValue,
+          );
+          const requiresFilterValue =
+            typeof filterOperator?.requiresFilterValue === 'undefined'
+              ? true
+              : filterOperator?.requiresFilterValue;
+
+          // Operators like `isEmpty` don't have and don't require `item.value`.
+          // So we don't want to remove them from the filter model if `item.value === undefined`.
+          // See https://github.com/mui/mui-x/issues/5402
+          if (requiresFilterValue) {
+            return false;
+          }
+          return true;
+        });
 
         let newFilterItems: GridFilterItem[];
         const filterItemOnTarget = filterItemsWithValue.find(

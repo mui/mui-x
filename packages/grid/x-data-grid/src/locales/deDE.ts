@@ -28,9 +28,9 @@ const deDEGrid: Partial<GridLocaleText> = {
     count !== 1 ? `${count} aktive Filter` : `${count} aktiver Filter`,
 
   // Quick filter toolbar field
-  // toolbarQuickFilterPlaceholder: 'Search...',
-  // toolbarQuickFilterLabel: 'Search',
-  // toolbarQuickFilterDeleteIconLabel: 'Clear',
+  toolbarQuickFilterPlaceholder: 'Suchen...',
+  toolbarQuickFilterLabel: 'Suchen',
+  toolbarQuickFilterDeleteIconLabel: 'Löschen',
 
   // Export selector toolbar button text
   toolbarExport: 'Exportieren',
@@ -137,7 +137,7 @@ const deDEGrid: Partial<GridLocaleText> = {
   unGroupColumn: (name) => `Gruppierung nach ${name} aufheben`,
 
   // Master/detail
-  // detailPanelToggle: 'Detail panel toggle',
+  detailPanelToggle: 'Detailansicht Kippschalter',
   expandDetailPanel: 'Aufklappen',
   collapseDetailPanel: 'Zuklappen',
 

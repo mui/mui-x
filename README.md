@@ -39,8 +39,8 @@ Find more details [in the docs](https://mui.com/x/introduction/licensing/).
 ## Questions
 
 For _how-to_ questions and other non-issues,
-please use [StackOverflow](https://stackoverflow.com/questions/tagged/mui) instead of GitHub issues.
-There is a StackOverflow tag called "mui" that you can use to tag your questions.
+please use [Stack Overflow](https://stackoverflow.com/questions/tagged/mui) instead of GitHub issues.
+There is a Stack Overflow tag called "mui" that you can use to tag your questions.
 
 ## Bugs or feature request
 
