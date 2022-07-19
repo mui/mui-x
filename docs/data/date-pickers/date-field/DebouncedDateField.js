@@ -5,10 +5,14 @@ import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { Unstable_DateField as DateField } from '@mui/x-date-pickers/DateField';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import { format } from 'date-fns';
+import Button from '@mui/material/Button';
+import format from 'date-fns/format';
+import isEqual from 'date-fns/isEqual';
+
+const today = new Date();
 
 export default function DebouncedDateField() {
-  const [value, setValue] = React.useState(new Date());
+  const [value, setValue] = React.useState(today);
 
   const debounceSetValue = React.useMemo(() => debounce(setValue, 500), []);
 
@@ -24,6 +28,12 @@ export default function DebouncedDateField() {
           onChange={(newValue) => debounceSetValue(newValue)}
         />
       </LocalizationProvider>
+      <Button
+        onClick={() => setValue(today)}
+        disabled={!!value && isEqual(value, today)}
+      >
+        Set to today
+      </Button>
     </Stack>
   );
 }

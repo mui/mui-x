@@ -1,4 +1,16 @@
-<Typography>Value outside the field: {value == null ? 'null' : format(value, 'dd/MM/yyyy')}</Typography>
+<Typography>
+  Value outside the field:{' '}
+  {value == null ? 'null' : format(value, 'dd/MM/yyyy')}
+</Typography>
 <LocalizationProvider dateAdapter={AdapterDateFns}>
-<DateField value={value} onChange={(newValue) => debounceSetValue(newValue)} />
+  <DateField
+    value={value}
+    onChange={(newValue) => debounceSetValue(newValue)}
+  />
 </LocalizationProvider>
+<Button
+  onClick={() => setValue(today)}
+  disabled={!!value && isEqual(value, today)}
+>
+  Set to today
+</Button>
