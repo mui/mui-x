@@ -447,4 +447,26 @@ describe('<DataGridPro /> - Row Editing', () => {
     clock.runToLast();
     expect(getRow(1)).not.to.have.class('MuiDataGrid-row--editing');
   });
+
+  it(`should ignore keydown event until the IME is confirmed`, () => {
+    const valueSetter = spy(({ row }) => row);
+    render(
+      <TestCase
+        editMode="row"
+        rows={[{ id: 0, text: 'こんにちは' }]}
+        columns={[{ field: 'text', editable: true, valueSetter }]}
+      />,
+    );
+
+    const cell = getCell(0, 0);
+    fireEvent.doubleClick(cell);
+    const input = cell.querySelector('input')!;
+    expect(input!.value).to.equal('こんにちは');
+    fireEvent.change(input, { target: { value: 'あ' } });
+    fireEvent.keyDown(input, { key: 'Enter', keyCode: 229 });
+    expect(valueSetter.callCount).to.equal(0);
+    fireEvent.keyDown(input, { key: 'Enter', keyCode: 13 });
+    expect(valueSetter.callCount).to.equal(1);
+    expect(input!.value).to.equal('あ');
+  });
 });

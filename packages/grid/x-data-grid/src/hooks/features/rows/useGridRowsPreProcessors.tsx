@@ -17,7 +17,12 @@ const flatRowTreeCreationMethod: GridStrategyProcessor<'rowTreeCreation'> = ({
   for (let i = 0; i < ids.length; i += 1) {
     const rowId = ids[i];
 
-    if (previousTree && previousTree[rowId]) {
+    if (
+      previousTree &&
+      previousTree[rowId] &&
+      previousTree[rowId].depth === 0 &&
+      previousTree[rowId].parent == null
+    ) {
       tree[rowId] = previousTree[rowId];
     } else {
       tree[rowId] = { id: rowId, depth: 0, parent: null, groupingKey: '', groupingField: null };

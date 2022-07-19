@@ -41,6 +41,11 @@ const FULL_INITIAL_STATE: GridInitialState = {
   rowGrouping: {
     model: ['category'],
   },
+  private_aggregation: {
+    model: {
+      id: 'size',
+    },
+  },
 };
 
 describe('<DataGridPremium /> - State Persistence', () => {
@@ -63,6 +68,9 @@ describe('<DataGridPremium /> - State Persistence', () => {
           {...props}
           defaultGroupingExpansionDepth={-1}
           groupingColDef={{ headerName: 'Group' }}
+          experimentalFeatures={{
+            private_aggregation: true,
+          }}
         />
       </div>
     );
@@ -88,6 +96,7 @@ describe('<DataGridPremium /> - State Persistence', () => {
     it('should export the current version of the exportable state', () => {
       render(<TestCase />);
       apiRef.current.setRowGroupingModel(['category']);
+      apiRef.current.private_setAggregationModel({ id: 'size' });
       expect(apiRef.current.exportState()).to.deep.equal(FULL_INITIAL_STATE);
     });
   });
@@ -97,7 +106,28 @@ describe('<DataGridPremium /> - State Persistence', () => {
       render(<TestCase />);
 
       apiRef.current.restoreState(FULL_INITIAL_STATE);
-      expect(getColumnValues(0)).to.deep.equal(['Cat A (3)', '', '', '', 'Cat B (3)', '', '', '']);
+      expect(getColumnValues(0)).to.deep.equal([
+        'Cat A (3)',
+        '',
+        '',
+        '',
+        'Cat B (3)',
+        '',
+        '',
+        '',
+        '',
+      ]);
+      expect(getColumnValues(1)).to.deep.equal([
+        '3' /* Agg */,
+        '0',
+        '1',
+        '2',
+        '3',
+        '3' /* Agg */,
+        '4',
+        '5',
+        '6' /* Agg */,
+      ]);
     });
   });
 });
