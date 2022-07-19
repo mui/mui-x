@@ -37,10 +37,14 @@ const enUSPickers: PickersLocaleText<any> = {
   secondsClockNumberText: (seconds) => `${seconds} seconds`,
 
   // Open picker labels
-  openDatePickerDialogue: (rawValue, utils) =>
-    rawValue && utils.isValid(utils.date(rawValue))
+  openDatePickerDialogue: (rawValue, utils) => {
+    if (rawValue && utils.isValid(utils.date(rawValue))) {
+      console.log(utils.formatByString(utils.date(rawValue), 'dddd, LL'));
+    }
+    return rawValue && utils.isValid(utils.date(rawValue))
       ? `Choose date, selected date is ${utils.format(utils.date(rawValue)!, 'fullDate')}`
-      : 'Choose date',
+      : 'Choose date';
+  },
   openTimePickerDialogue: (rawValue, utils) =>
     rawValue && utils.isValid(utils.date(rawValue))
       ? `Choose time, selected time is ${utils.format(utils.date(rawValue)!, 'fullTime')}`

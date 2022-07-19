@@ -1,14 +1,14 @@
 import * as React from 'react';
-import ruLocale from 'date-fns/locale/ru';
-import enLocale from 'date-fns/locale/en-US';
-import arSaLocale from 'date-fns/locale/ar-SA';
+import { Dayjs } from 'dayjs';
+import ruLocale from 'dayjs/locale/ru';
+import arSaLocale from 'dayjs/locale/ar-sa';
 import Stack from '@mui/material/Stack';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { TimePicker } from '@mui/x-date-pickers/TimePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -16,7 +16,7 @@ import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
 
 const localeMap = {
-  en: enLocale,
+  en: undefined,
   ru: ruLocale,
   ar: arSaLocale,
 };
@@ -30,7 +30,7 @@ const ampmOptions: { [key: string]: undefined | boolean } = {
 
 export default function LocalizedTimePicker() {
   const [locale, setLocale] = React.useState<keyof typeof localeMap>('ru');
-  const [value, setValue] = React.useState<Date | null>(new Date());
+  const [value, setValue] = React.useState<Date | Dayjs | null>(new Date());
 
   const [ampm, setAmpm] = React.useState<boolean | undefined>(undefined);
   const [ampmOption, setAmpmOption] = React.useState<string>('undefined');
@@ -46,7 +46,7 @@ export default function LocalizedTimePicker() {
 
   return (
     <LocalizationProvider
-      dateAdapter={AdapterDateFns}
+      dateAdapter={AdapterDayjs}
       adapterLocale={localeMap[locale]}
     >
       <Stack spacing={3}>

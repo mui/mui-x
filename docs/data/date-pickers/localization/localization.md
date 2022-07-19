@@ -12,7 +12,7 @@ Localization can impact pickers components rendering in two distincts ways: The 
 
 ## Date-engine locale
 
-Use `LocalizationProvider` to change the date-engine locale that is used to render pickers. Here is an example of changing the locale for the `date-fns` adapter:
+Use `LocalizationProvider` to change the date-engine locale that is used to render pickers. Here is an example of changing the locale for the `dayjs` adapter:
 
 {{"demo": "LocalizedDatePicker.js"}}
 

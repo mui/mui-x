@@ -1,15 +1,16 @@
 import * as React from 'react';
+import { Dayjs } from 'dayjs';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import DialogActions from '@mui/material/DialogActions';
+import useId from '@mui/utils/useId';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { StaticDatePicker } from '@mui/x-date-pickers/StaticDatePicker';
 import { PickersActionBarProps } from '@mui/x-date-pickers/PickersActionBar';
 import { useLocaleText, WrapperVariantContext } from '@mui/x-date-pickers/internals';
-import useId from '@mui/utils/useId';
 
 const CustomActionBar = (props: PickersActionBarProps) => {
   const { onAccept, onClear, onCancel, onSetToday, actions } = props;
@@ -110,11 +111,12 @@ const CustomActionBar = (props: PickersActionBarProps) => {
 };
 
 export default function ActionBarComponent() {
-  const [value, setValue] = React.useState<Date | null>(
+  const [value, setValue] = React.useState<Date | Dayjs | null>(
     () => new Date(2022, 1, 1, 1, 1),
   );
+
   return (
-    <LocalizationProvider dateAdapter={AdapterDateFns}>
+    <LocalizationProvider dateAdapter={AdapterDayjs}>
       <StaticDatePicker
         onChange={(newValue) => setValue(newValue)}
         value={value}
