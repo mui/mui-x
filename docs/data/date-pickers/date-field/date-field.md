@@ -18,6 +18,16 @@ title: React Date Field component
 
 {{"demo": "CustomDateManagementDateField.js"}}
 
+## When is `onChange` called
+
+The `DateField` component has an internal state to update the visible date.
+It will only call the `onChange` callback when the modified date is valid.
+
+In the demo below, you can see that the component reacts to an external date update (when pressing "Set to today").
+And that when debouncing the state (for instance if you have a server side persistence) do not affect the rendering of the field.
+
+{{"demo": "DebouncedDateField.js"}}
+
 ## Headless usage
 
 Usage with Joy

@@ -1,0 +1,4 @@
+<Typography>Value outside the field: {value == null ? 'null' : format(value, 'dd/MM/yyyy')}</Typography>
+<LocalizationProvider dateAdapter={AdapterDateFns}>
+<DateField value={value} onChange={(newValue) => debounceSetValue(newValue)} />
+</LocalizationProvider>
