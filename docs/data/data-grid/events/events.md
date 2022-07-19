@@ -19,7 +19,7 @@ The handler is a method that will be called with three arguments:
 For example, here is an event handler for the `rowClick` event:
 
 ```tsx
-const onEvent: GridEventListener<'rowClick'> = (
+const handleEvent: GridEventListener<'rowClick'> = (
   params, // GridRowParams
   event, // MuiEvent<React.MouseEvent<HTMLElement>>
   details, // GridCallbackDetails
@@ -33,7 +33,7 @@ You can provide this event handler to the grid in several ways:
 ### With the prop of the event
 
 ```tsx
-<DataGrid onRowClick={onEvent} {...other} />
+<DataGrid onRowClick={handleEvent} {...other} />
 ```
 
 :::info
@@ -48,7 +48,7 @@ The following demo shows how to subscribe to the `rowClick` event using the `onR
 ### With `useGridApiEventHandler`
 
 ```tsx
-useGridApiEventHandler('rowClick', onEvent);
+useGridApiEventHandler('rowClick', handleEvent);
 ```
 
 :::warning
@@ -62,7 +62,7 @@ The following demo shows how to subscribe to the `rowClick` event using `useGrid
 ### With `apiRef.current.subscribeEvent` [<span class="plan-pro"></span>](https://mui.com/store/items/mui-x-pro/)
 
 ```tsx
-apiRef.current.subscribeEvent('rowClick', onEvent);
+apiRef.current.subscribeEvent('rowClick', handleEvent);
 ```
 
 The following demo shows how to subscribe to the `rowClick` event using `apiRef.current.subscribeEvent`—try it out by clicking on any row:
