@@ -69,6 +69,13 @@ The following demo shows how to subscribe to the `rowClick` event using `apiRef.
 
 {{"demo": "SubscribeToEventsApiRef.js", "bg": "inline", "defaultCodeOpen": false}}
 
+:::warning
+The `apiRef.current.subscribeEvent` method returns a cleaning callback that **unsubscribes** the given handler when called.
+
+For instance, when used inside a `useEffect` hook, you should always return the cleaning callback.
+Otherwise, you will have multiple registrations of the same event handler.
+:::
+
 ## Disabling the default behavior
 
 Depending on the use case, it might be necessary to disable the default action taken by an event.
