@@ -25,7 +25,7 @@ interface GridBooleanCellProps
   extends GridRenderCellParams,
     Omit<SvgIconProps, 'tabIndex' | 'id'> {}
 
-const GridBooleanCell = React.memo((props: GridBooleanCellProps) => {
+const GridBooleanCellRaw = (props: GridBooleanCellProps) => {
   const {
     id,
     value,
@@ -65,9 +65,9 @@ const GridBooleanCell = React.memo((props: GridBooleanCellProps) => {
       {...other}
     />
   );
-});
+};
 
-GridBooleanCell.propTypes = {
+GridBooleanCellRaw.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
@@ -143,6 +143,8 @@ GridBooleanCell.propTypes = {
    */
   value: PropTypes.any,
 } as any;
+
+const GridBooleanCell = React.memo(GridBooleanCellRaw);
 
 export { GridBooleanCell };
 
