@@ -6,7 +6,7 @@ import QuickFilteringGrid from '../filtering/QuickFilteringGrid';
 import BasicDetailPanels from '../master-detail/BasicDetailPanels';
 import RowGroupingInitialState from '../row-grouping/RowGroupingInitialState';
 import FullFeaturedDemo from './FullFeaturedDemo';
-import ControlPinnedColumns from '../column-pinning/ControlPinnedColumns';
+import BasicColumnPinning from '../column-pinning/BasicColumnPinning';
 import ColumnVirtualizationGrid from '../virtualization/ColumnVirtualizationGrid';
 import CursorPaginationGrid from '../pagination/CursorPaginationGrid';
 import ColumnSelectorGrid from '../column-visibility/ColumnSelectorGrid';
@@ -25,8 +25,8 @@ export const featuresSet = [
   },
   {
     id: 2,
-    name: 'Editing inline',
-    description: 'Edit your data inside the grid',
+    name: 'Inline editing',
+    description: 'Edit your data inside the cells by double-clicking or pressing Enter',
     plan: 'Community',
     detailPage: '/editing/',
     demo: <EditingWithDatePickers />,
@@ -41,9 +41,9 @@ export const featuresSet = [
   },
   {
     id: 4,
-    name: 'Save and Restore state',
+    name: 'Save and restore state',
     description:
-      'Save and Restore internal state and configurations like active filters and sorting',
+      'Save and restore internal state and configurations like active filters and sorting',
     plan: 'Community',
     detailPage: '/state/#save-and-restore-the-state',
     demo: <RestoreStateInitialState />,

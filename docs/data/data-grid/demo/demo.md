@@ -6,7 +6,7 @@ title: Data Grid - Demo
 
 <p class="description">Use the demo below to explore the available features.</p>
 
-{{"demo": "OneMasterDemo.js", "defaultCodeOpen": false, "bg": "inline"}}
+{{"demo": "OneMasterDemo.js", "defaultCodeOpen": false, "bg": "inline", "hideToolbar": true}}
 
 ## API
 

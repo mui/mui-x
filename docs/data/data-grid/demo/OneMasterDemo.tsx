@@ -13,7 +13,7 @@ import Avatar from '@mui/material/Avatar';
 import Typography from '@mui/material/Typography';
 import DemoHub, { featuresSet } from './DemoHub';
 
-export const PlanTag = (props: { plan: string }) => {
+const PlanTag = (props: { plan: string }) => {
   function getChipProperties(plan: string) {
     switch (plan.toLowerCase()) {
       case 'premium':
