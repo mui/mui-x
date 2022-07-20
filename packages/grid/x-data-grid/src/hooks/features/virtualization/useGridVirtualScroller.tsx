@@ -400,7 +400,12 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
       const row = currentPage.rows[i];
       renderedRows.push(row);
 
-      apiRef.current.unstable_calculateColSpan({ rowId: row.id, minFirstColumn, maxLastColumn });
+      apiRef.current.unstable_calculateColSpan({
+        rowId: row.id,
+        minFirstColumn,
+        maxLastColumn,
+        columns: visibleColumns,
+      });
     }
 
     const [initialFirstColumnToRender, lastColumnToRender] = getRenderableIndexes({
