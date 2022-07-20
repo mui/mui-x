@@ -30,13 +30,6 @@ export const useGridRowPinning = (
   apiRef: React.MutableRefObject<GridApiPro>,
   props: Pick<DataGridProProcessedProps, 'pinnedRows' | 'getRowId' | 'experimentalFeatures'>,
 ): void => {
-  const isRowPinned = React.useCallback<GridRowPinningApi['unstable_isRowPinned']>(
-    (rowId) => {
-      return apiRef.current.getRowNode(rowId)?.isPinned || false;
-    },
-    [apiRef],
-  );
-
   const setPinnedRows = React.useCallback<GridRowPinningApi['unstable_setPinnedRows']>(
     (newPinnedRows) => {
       if (!props.experimentalFeatures?.rowPinning) {
@@ -55,7 +48,6 @@ export const useGridRowPinning = (
   useGridApiMethod(
     apiRef,
     {
-      unstable_isRowPinned: isRowPinned,
       unstable_setPinnedRows: setPinnedRows,
     },
     'rowPinningApi',

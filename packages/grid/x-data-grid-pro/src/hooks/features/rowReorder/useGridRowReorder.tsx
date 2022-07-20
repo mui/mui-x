@@ -91,7 +91,7 @@ export const useGridRowReorder = (
         return;
       }
 
-      if (apiRef.current.unstable_isRowPinned(params.id)) {
+      if (apiRef.current.getRowNode(params.id)?.isPinned) {
         return;
       }
 
