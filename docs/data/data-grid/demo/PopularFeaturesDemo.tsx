@@ -1,8 +1,9 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import {
   DataGridPremium,
   gridClasses,
+  GridColDef,
+  GridRenderCellParams,
   GridToolbarContainer,
   GridToolbarQuickFilter,
 } from '@mui/x-data-grid-premium';
@@ -10,25 +11,25 @@ import Link from '@mui/material/Link';
 import Chip from '@mui/material/Chip';
 import Avatar from '@mui/material/Avatar';
 import Typography from '@mui/material/Typography';
-import DemoHub, { featuresSet } from './DemoHub';
+import { featuresSet } from './features';
+import Box from '@mui/material/Box';
 
-const PlanTag = (props) => {
-  function getChipProperties(plan) {
-    switch (plan.toLowerCase()) {
-      case 'premium':
-        return { avatarLink: '/static/x/premium.svg', color: '#ffecc8' };
-      case 'pro':
-        return { avatarLink: '/static/x/pro.svg', color: '#c8e9ff' };
-      default:
-        return { avatarLink: undefined, color: '#c8ffdb' };
-    }
+function getChipProperties(plan: string) {
+  switch (plan.toLowerCase()) {
+    case 'premium':
+      return { avatarLink: '/static/x/premium.svg', color: '#ffecc8' };
+    case 'pro':
+      return { avatarLink: '/static/x/pro.svg', color: '#c8e9ff' };
+    default:
+      return { avatarLink: undefined, color: '#c8ffdb' };
   }
+}
 
+const PlanTag = (props: { plan: string }) => {
   const chipPropperties = getChipProperties(props.plan);
   const avatar = !chipPropperties.avatarLink ? undefined : (
     <Avatar src={chipPropperties.avatarLink} />
   );
-
   return (
     <Chip
       avatar={avatar}
@@ -38,14 +39,21 @@ const PlanTag = (props) => {
   );
 };
 
-PlanTag.propTypes = {
-  plan: PropTypes.string.isRequired,
+
+function CustomToolbar() {
+  return (
+    <GridToolbarContainer sx={{ p: 1 }}>
+      <GridToolbarQuickFilter />
+    </GridToolbarContainer>
+  );
+}
+
+const renderFeatures = (row: any) => {
+  return <Box sx={{ width: '80%', margin: 'auto', py: 2 }}>{row.demo}</Box>;
 };
 
-export { PlanTag };
-
 function OneMasterDemo() {
-  const columns = [
+  const columns: GridColDef[] = [
     {
       field: 'name',
       headerName: 'Feature name',
@@ -79,7 +87,7 @@ function OneMasterDemo() {
       width: 130,
       type: 'singleSelect',
       valueOptions: ['Premium', 'Pro', 'Community'],
-      renderCell: (params) => {
+      renderCell: (params: GridRenderCellParams<string>) => {
         if (!params.value) {
           return <React.Fragment />;
         }
@@ -88,14 +96,6 @@ function OneMasterDemo() {
     },
   ];
 
-  function CustomToolbar() {
-    return (
-      <GridToolbarContainer sx={{ p: 1 }}>
-        <GridToolbarQuickFilter />
-      </GridToolbarContainer>
-    );
-  }
-
   return (
     <div style={{ height: 600, width: '100%' }}>
       <DataGridPremium
@@ -103,7 +103,7 @@ function OneMasterDemo() {
         componentsProps={{
           toolbar: { showQuickFilter: true, quickFilterProps: { debounceMs: 500 } },
         }}
-        getDetailPanelContent={({ row }) => DemoHub(row)}
+        getDetailPanelContent={({ row }) => renderFeatures(row)}
         getDetailPanelHeight={() => 'auto'}
         getRowHeight={() => 'auto'}
         sx={{

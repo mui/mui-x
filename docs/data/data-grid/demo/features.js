@@ -1,5 +1,4 @@
 import React from 'react';
-import { Box } from '@mui/material';
 import EditingWithDatePickers from '../editing/EditingWithDatePickers';
 import ExcelExport from '../export/ExcelExport';
 import QuickFilteringGrid from '../filtering/QuickFilteringGrid';
@@ -26,7 +25,8 @@ export const featuresSet = [
   {
     id: 2,
     name: 'Inline editing',
-    description: 'Edit your data inside the cells by double-clicking or pressing Enter',
+    description:
+      'Edit your data inside the cells by double-clicking or pressing Enter',
     plan: 'Community',
     detailPage: '/editing/',
     demo: <EditingWithDatePickers />,
@@ -87,7 +87,7 @@ export const featuresSet = [
     description: 'Pin your columns to the left or right',
     plan: 'Pro',
     detailPage: '/column-pinning/',
-    demo: <ControlPinnedColumns />,
+    demo: <BasicColumnPinning />,
   },
   {
     id: 10,
@@ -123,9 +123,3 @@ export const featuresSet = [
     demo: <TreeDataFullExample />,
   },
 ];
-
-const DemoHub = (row: any) => {
-  return <Box sx={{ width: '80%', margin: 'auto', py: 2 }}>{row.demo}</Box>;
-};
-
-export default DemoHub;
