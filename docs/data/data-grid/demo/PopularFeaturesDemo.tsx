@@ -14,7 +14,7 @@ import Typography from '@mui/material/Typography';
 import { featuresSet } from './features';
 import Box from '@mui/material/Box';
 
-function getChipProperties(plan: string) {
+const getChipProperties = (plan: string) => {
   switch (plan.toLowerCase()) {
     case 'premium':
       return { avatarLink: '/static/x/premium.svg', color: '#ffecc8' };
@@ -39,8 +39,7 @@ const PlanTag = (props: { plan: string }) => {
   );
 };
 
-
-function CustomToolbar() {
+const CustomToolbar = () => {
   return (
     <GridToolbarContainer sx={{ p: 1 }}>
       <GridToolbarQuickFilter />
@@ -52,7 +51,7 @@ const renderFeatures = (row: any) => {
   return <Box sx={{ width: '80%', margin: 'auto', py: 2 }}>{row.demo}</Box>;
 };
 
-function OneMasterDemo() {
+function PopularFeaturesDemo() {
   const columns: GridColDef[] = [
     {
       field: 'name',
@@ -135,4 +134,4 @@ function OneMasterDemo() {
   );
 }
 
-export default OneMasterDemo;
+export default PopularFeaturesDemo;
