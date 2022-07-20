@@ -87,9 +87,9 @@ describe('<DataGridPremium /> - State Persistence', () => {
       );
     });
 
-    it('should not export the default values of the models when using exportOnlyUsedModels', () => {
+    it('should not export the default values of the models when using exportOnlyDirtyModels', () => {
       render(<TestCase />);
-      expect(apiRef.current.exportState({ exportOnlyUsedModels: true })).to.deep.equal({
+      expect(apiRef.current.exportState({ exportOnlyDirtyModels: true })).to.deep.equal({
         columns: {
           orderedFields: ['id', 'category'],
         },
@@ -110,14 +110,14 @@ describe('<DataGridPremium /> - State Persistence', () => {
       );
     });
 
-    it('should export the current version of the exportable state when using exportOnlyUsedModels', () => {
+    it('should export the current version of the exportable state when using exportOnlyDirtyModels', () => {
       render(<TestCase />);
       apiRef.current.setRowGroupingModel(['category']);
       apiRef.current.private_setAggregationModel({
         id: 'size',
       });
 
-      const exportedState = apiRef.current.exportState({ exportOnlyUsedModels: true });
+      const exportedState = apiRef.current.exportState({ exportOnlyDirtyModels: true });
       expect(exportedState.rowGrouping).to.deep.equal(FULL_INITIAL_STATE.rowGrouping);
       expect(exportedState.private_aggregation).to.deep.equal(
         FULL_INITIAL_STATE.private_aggregation,
@@ -139,7 +139,7 @@ describe('<DataGridPremium /> - State Persistence', () => {
       );
     });
 
-    it('should export the controlled values of the models when using exportOnlyUsedModels', () => {
+    it('should export the controlled values of the models when using exportOnlyDirtyModels', () => {
       render(
         <TestCase
           rowGroupingModel={FULL_INITIAL_STATE.rowGrouping?.model}

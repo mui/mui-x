@@ -77,8 +77,8 @@ export const useGridPageSize = (
       const pageSizeToExport = gridPageSizeSelector(apiRef);
 
       const shouldExportPageSize =
-        // Always export if the `exportOnlyUsedModels` property is activated
-        !context.exportOnlyUsedModels ||
+        // Always export if the `exportOnlyDirtyModels` property is activated
+        !context.exportOnlyDirtyModels ||
         // Always export if the page size is controlled
         props.pageSize != null ||
         // Always export if the page size has been initialized

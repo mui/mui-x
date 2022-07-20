@@ -28,10 +28,10 @@ export interface GridExportStateParams {
    * By default, the grid exports all the models.
    * You can switch this property to `true` to only exports models that are either controlled, initialized or modified.
    * For instance, with this property, if you don't control or initialize the `filterModel` and you did not apply any filter, the model won't be exported.
-   * Note that the column dimensions are not a model. The grid only exports the dimensions of the modified columns even when `exportOnlyUsedModels` is false.
+   * Note that the column dimensions are not a model. The grid only exports the dimensions of the modified columns even when `exportOnlyDirtyModels` is false.
    * @default false
    */
-  exportOnlyUsedModels?: boolean;
+  exportOnlyDirtyModels?: boolean;
 }
 
 export interface GridRestoreStatePreProcessingContext<I extends GridInitialStateCommunity> {

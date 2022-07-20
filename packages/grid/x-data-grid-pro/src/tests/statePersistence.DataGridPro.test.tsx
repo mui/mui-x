@@ -137,9 +137,9 @@ describe('<DataGridPro /> - State Persistence', () => {
       });
     });
 
-    it('should export not the default values of the models when using exportOnlyUsedModels', () => {
+    it('should not export the default values of the models when using exportOnlyDirtyModels', () => {
       render(<TestCase />);
-      expect(apiRef.current.exportState({ exportOnlyUsedModels: true })).to.deep.equal({
+      expect(apiRef.current.exportState({ exportOnlyDirtyModels: true })).to.deep.equal({
         columns: {
           orderedFields: ['id', 'idBis', 'category'],
         },
@@ -173,7 +173,7 @@ describe('<DataGridPro /> - State Persistence', () => {
       expect(apiRef.current.exportState()).to.deep.equal(FULL_INITIAL_STATE);
     });
 
-    it('should export the controlled values of the models when using exportOnlyUsedModels', () => {
+    it('should export the controlled values of the models when using exportOnlyDirtyModels', () => {
       render(
         <TestCase
           filterModel={FULL_INITIAL_STATE.filter?.filterModel}
@@ -192,12 +192,14 @@ describe('<DataGridPro /> - State Persistence', () => {
           }}
         />,
       );
-      expect(apiRef.current.exportState()).to.deep.equal(FULL_INITIAL_STATE);
+      expect(apiRef.current.exportState({ exportOnlyDirtyModels: true })).to.deep.equal(
+        FULL_INITIAL_STATE,
+      );
     });
 
     it('should export the initial values of the models when using exportOnlyUserModels', () => {
       render(<TestCase initialState={FULL_INITIAL_STATE} />);
-      expect(apiRef.current.exportState({ exportOnlyUsedModels: true })).to.deep.equal(
+      expect(apiRef.current.exportState({ exportOnlyDirtyModels: true })).to.deep.equal(
         FULL_INITIAL_STATE,
       );
     });

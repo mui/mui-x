@@ -100,8 +100,8 @@ export const useGridPage = (
       const pageToExport = gridPageSelector(apiRef);
 
       const shouldExportPage =
-        // Always export if the `exportOnlyUsedModels` property is activated
-        !context.exportOnlyUsedModels ||
+        // Always export if the `exportOnlyDirtyModels` property is activated
+        !context.exportOnlyDirtyModels ||
         // Always export if the page is controlled
         props.page != null ||
         // Always export if the page has been initialized
