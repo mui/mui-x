@@ -25,7 +25,8 @@ export const featuresSet = [
   {
     id: 2,
     name: 'Inline editing',
-    description: 'Edit your data inside the cells by double-clicking or pressing Enter',
+    description:
+      'Edit your data inside the cells by double-clicking or pressing Enter',
     plan: 'Community',
     detailPage: '/editing/',
     demo: <EditingWithDatePickers />,
@@ -122,4 +123,3 @@ export const featuresSet = [
     demo: <TreeDataFullExample />,
   },
 ];
-

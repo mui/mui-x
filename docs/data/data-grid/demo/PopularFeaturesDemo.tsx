@@ -23,7 +23,7 @@ const getChipProperties = (plan: string) => {
     default:
       return { avatarLink: undefined, color: '#c8ffdb' };
   }
-}
+};
 
 const PlanTag = (props: { plan: string }) => {
   const chipPropperties = getChipProperties(props.plan);
@@ -45,56 +45,53 @@ const CustomToolbar = () => {
       <GridToolbarQuickFilter />
     </GridToolbarContainer>
   );
-}
+};
 
 const renderFeatures = (row: any) => {
   return <Box sx={{ width: '80%', margin: 'auto', py: 2 }}>{row.demo}</Box>;
 };
 
-function PopularFeaturesDemo() {
-  const columns: GridColDef[] = [
-    {
-      field: 'name',
-      headerName: 'Feature name',
-      width: 160,
-      groupable: false,
-      renderCell: (params) => {
-        if (!params.value) {
-          return <React.Fragment />;
-        }
-        return (
-          <Typography sx={{ fontSize: '1rem', fontWeight: '500' }}>
-            <Link
-              href={`/x/react-data-grid${params.row.detailPage}`}
-              target="_blank"
-            >
-              {params.value}
-            </Link>
-          </Typography>
-        );
-      },
+const columns: GridColDef[] = [
+  {
+    field: 'name',
+    headerName: 'Feature name',
+    width: 160,
+    groupable: false,
+    renderCell: (params) => {
+      if (!params.value) {
+        return <React.Fragment />;
+      }
+      return (
+        <Typography sx={{ fontSize: '1rem', fontWeight: '500' }}>
+          <Link href={`/x/react-data-grid${params.row.detailPage}`} target="_blank">
+            {params.value}
+          </Link>
+        </Typography>
+      );
     },
-    {
-      field: 'description',
-      headerName: 'Brief description',
-      groupable: false,
-      flex: 0.5,
+  },
+  {
+    field: 'description',
+    headerName: 'Brief description',
+    groupable: false,
+    flex: 0.5,
+  },
+  {
+    field: 'plan',
+    headerName: 'Plan',
+    width: 130,
+    type: 'singleSelect',
+    valueOptions: ['Premium', 'Pro', 'Community'],
+    renderCell: (params: GridRenderCellParams<string>) => {
+      if (!params.value) {
+        return <React.Fragment />;
+      }
+      return <PlanTag plan={params.value} />;
     },
-    {
-      field: 'plan',
-      headerName: 'Plan',
-      width: 130,
-      type: 'singleSelect',
-      valueOptions: ['Premium', 'Pro', 'Community'],
-      renderCell: (params: GridRenderCellParams<string>) => {
-        if (!params.value) {
-          return <React.Fragment />;
-        }
-        return <PlanTag plan={params.value} />;
-      },
-    },
-  ];
+  },
+];
 
+function PopularFeaturesDemo() {
   return (
     <div style={{ height: 600, width: '100%' }}>
       <DataGridPremium
