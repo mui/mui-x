@@ -20,7 +20,6 @@ Visit Stack Overflow to ask questions and read crowdsourced answers from expert 
 
 :::info
 The technical support covers only MUI X components.
-
 :::
 
 When purchasing a MUI X Pro or Premium license you get access to technical support until the end of your subscription.

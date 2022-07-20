@@ -9,7 +9,7 @@ export type GridExcelExportMenuItemProps = GridExportMenuItemProps<GridExcelExpo
 
 const GridExcelExportMenuItem = (props: GridExcelExportMenuItemProps) => {
   const apiRef = useGridApiContext();
-  const { hideMenu, options } = props;
+  const { hideMenu, options, ...other } = props;
 
   return (
     <MenuItem
@@ -17,6 +17,7 @@ const GridExcelExportMenuItem = (props: GridExcelExportMenuItemProps) => {
         apiRef.current.exportDataAsExcel(options);
         hideMenu?.();
       }}
+      {...other}
     >
       {apiRef.current.getLocaleText('toolbarExportExcel')}
     </MenuItem>
