@@ -21,7 +21,6 @@ import { selectedIdsLookupSelector } from '../selection/gridSelectionSelector';
 import { gridRowsMetaSelector } from '../rows/gridRowsMetaSelector';
 import { GridRowId, GridRowModel } from '../../../models/gridRows';
 import { getFirstNonSpannedColumnToRender } from '../columns/gridColumnsUtils';
-import { gridRowsLookupSelector } from '../rows/gridRowsSelector';
 import { gridClasses } from '../../../constants/gridClasses';
 
 // Uses binary search to avoid looping through all possible positions
@@ -116,7 +115,6 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
   const scrollPosition = React.useRef({ top: 0, left: 0 });
   const [containerWidth, setContainerWidth] = React.useState<number | null>(null);
   const prevTotalWidth = React.useRef(columnsTotalWidth);
-  const idRowsLookup = gridRowsLookupSelector(apiRef);
 
   const getNearestIndexToRender = React.useCallback(
     (offset) => {
@@ -411,14 +409,13 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
 
     if (params.rows) {
       params.rows.forEach((row) => {
-        const rowId = row.id;
+        renderedRows.push(row);
         apiRef.current.unstable_calculateColSpan({
-          rowId,
+          rowId: row.id,
           minFirstColumn,
           maxLastColumn,
           columns: visibleColumns,
         });
-        renderedRows.push({ id: rowId, model: idRowsLookup[rowId] });
       });
     } else {
       if (!currentPage.range) {
