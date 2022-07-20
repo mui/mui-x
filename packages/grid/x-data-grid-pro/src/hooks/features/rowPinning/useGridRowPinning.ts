@@ -7,11 +7,15 @@ import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 import { GridRowPinningApi } from './gridRowPinningInterface';
 
 export const rowPinningStateInitializer: GridStateInitializer<
-  Pick<DataGridProProcessedProps, 'pinnedRows' | 'getRowId'>
+  Pick<DataGridProProcessedProps, 'pinnedRows' | 'getRowId' | 'experimentalFeatures'>
 > = (state, props, apiRef) => {
+  if (!props.experimentalFeatures?.rowPinning) {
+    return state;
+  }
+
   apiRef.current.unstable_caches.pinnedRows = {
-    top: [],
-    bottom: [],
+    top: props.pinnedRows?.top || [],
+    bottom: props.pinnedRows?.bottom || [],
   };
 
   return {
@@ -53,7 +57,13 @@ export const useGridRowPinning = (
     'rowPinningApi',
   );
 
+  const isFirstRender = React.useRef(true);
+
   React.useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
     if (props.pinnedRows) {
       apiRef.current.unstable_setPinnedRows(props.pinnedRows);
     }
