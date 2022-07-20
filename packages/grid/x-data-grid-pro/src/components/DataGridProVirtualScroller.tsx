@@ -201,13 +201,21 @@ const DataGridProVirtualScroller = React.forwardRef<
   );
   const leftColumns = React.useRef<HTMLDivElement>(null);
   const rightColumns = React.useRef<HTMLDivElement>(null);
+  const topPinnedRowsRenderZoneRef = React.useRef<HTMLDivElement>(null);
+  const bottomPinnedRowsRenderZoneRef = React.useRef<HTMLDivElement>(null);
 
-  const handleRenderZonePositioning = React.useCallback(({ top }) => {
+  const handleRenderZonePositioning = React.useCallback(({ top, left }) => {
     if (leftColumns.current) {
       leftColumns.current!.style.transform = `translate3d(0px, ${top}px, 0px)`;
     }
     if (rightColumns.current) {
       rightColumns.current!.style.transform = `translate3d(0px, ${top}px, 0px)`;
+    }
+    if (topPinnedRowsRenderZoneRef.current) {
+      topPinnedRowsRenderZoneRef.current!.style.transform = `translate3d(${left}px, 0px, 0px)`;
+    }
+    if (bottomPinnedRowsRenderZoneRef.current) {
+      bottomPinnedRowsRenderZoneRef.current!.style.transform = `translate3d(${left}px, 0px, 0px)`;
     }
   }, []);
 
@@ -379,7 +387,10 @@ const DataGridProVirtualScroller = React.forwardRef<
               })}
             </VirtualScrollerPinnedColumns>
           )}
-          <VirtualScrollerPinnedRowsRenderZone className={classes.pinnedRowsRenderZone}>
+          <VirtualScrollerPinnedRowsRenderZone
+            className={classes.pinnedRowsRenderZone}
+            ref={topPinnedRowsRenderZoneRef}
+          >
             {topPinnedRows}
           </VirtualScrollerPinnedRowsRenderZone>
           {rightRenderContext && (
@@ -465,7 +476,10 @@ const DataGridProVirtualScroller = React.forwardRef<
               })}
             </VirtualScrollerPinnedColumns>
           )}
-          <VirtualScrollerPinnedRowsRenderZone className={classes.pinnedRowsRenderZone}>
+          <VirtualScrollerPinnedRowsRenderZone
+            className={classes.pinnedRowsRenderZone}
+            ref={bottomPinnedRowsRenderZoneRef}
+          >
             {bottomPinnedRows}
           </VirtualScrollerPinnedRowsRenderZone>
           {rightRenderContext && (
