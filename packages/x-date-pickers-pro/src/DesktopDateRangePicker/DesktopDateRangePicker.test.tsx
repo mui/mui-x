@@ -29,7 +29,7 @@ const WrappedDesktopDateRangePicker = withPickerControls(DesktopDateRangePicker)
 describe('<DesktopDateRangePicker />', () => {
   const { render, clock } = createPickerRenderer({
     clock: 'fake',
-    clockConfig: new Date('2018-01-10T00:00:00.000'),
+    clockConfig: new Date(2018, 0, 10),
   });
 
   describeConformance(
@@ -62,8 +62,8 @@ describe('<DesktopDateRangePicker />', () => {
       render(
         <WrappedDesktopDateRangePicker
           initialValue={[
-            adapterToUse.date('2018-01-01T00:00:00.000'),
-            adapterToUse.date('2018-01-01T00:00:00.000'),
+            adapterToUse.date(new Date(2018, 0, 1)),
+            adapterToUse.date(new Date(2018, 0, 1)),
           ]}
         />,
       );
@@ -76,8 +76,8 @@ describe('<DesktopDateRangePicker />', () => {
       render(
         <WrappedDesktopDateRangePicker
           initialValue={[
-            adapterToUse.date('2018-01-02T00:00:00.000'),
-            adapterToUse.date('2018-01-01T00:00:00.000'),
+            adapterToUse.date(new Date(2018, 0, 2)),
+            adapterToUse.date(new Date(2018, 0, 1)),
           ]}
         />,
       );
@@ -91,8 +91,8 @@ describe('<DesktopDateRangePicker />', () => {
     render(
       <WrappedDesktopDateRangePicker
         initialValue={[
-          adapterToUse.date('2018-01-01T00:00:00.000'),
-          adapterToUse.date('2018-01-31T00:00:00.000'),
+          adapterToUse.date(new Date(2018, 0, 1)),
+          adapterToUse.date(new Date(2018, 0, 31)),
         ]}
       />,
     );
@@ -110,7 +110,7 @@ describe('<DesktopDateRangePicker />', () => {
       render(
         <WrappedDesktopDateRangePicker
           onChange={handleChange}
-          initialValue={[adapterToUse.date('2019-01-01T00:00:00.000'), null]}
+          initialValue={[adapterToUse.date(new Date(2019, 0, 1)), null]}
         />,
       );
 
@@ -127,8 +127,8 @@ describe('<DesktopDateRangePicker />', () => {
 
       expect(handleChange.callCount).to.equal(1);
       const [changedRange] = handleChange.lastCall.args;
-      expect(changedRange[0]).to.toEqualDateTime(adapterToUse.date('2019-01-01T00:00:00.000'));
-      expect(changedRange[1]).to.toEqualDateTime(adapterToUse.date('2019-03-19T00:00:00.000'));
+      expect(changedRange[0]).to.toEqualDateTime(new Date(2019, 0, 1));
+      expect(changedRange[1]).to.toEqualDateTime(new Date(2019, 2, 19));
     });
 
     it('should continue start selection if selected "end" date is before start', () => {
@@ -136,7 +136,7 @@ describe('<DesktopDateRangePicker />', () => {
       render(
         <WrappedDesktopDateRangePicker
           onChange={handleChange}
-          defaultCalendarMonth={adapterToUse.date('2019-01-01T00:00:00.000')}
+          defaultCalendarMonth={adapterToUse.date(new Date(2019, 0, 1))}
           initialValue={[null, null]}
         />,
       );
@@ -152,14 +152,12 @@ describe('<DesktopDateRangePicker />', () => {
 
       expect(handleChange.callCount).to.equal(3);
       const [changedRange] = handleChange.lastCall.args;
-      expect(changedRange[0]).to.toEqualDateTime(adapterToUse.date('2019-01-19T00:00:00.000'));
-      expect(changedRange[1]).to.toEqualDateTime(adapterToUse.date('2019-01-30T00:00:00.000'));
+      expect(changedRange[0]).to.toEqualDateTime(new Date(2019, 0, 19));
+      expect(changedRange[1]).to.toEqualDateTime(new Date(2019, 0, 30));
     });
   });
 
-  // TODO
-  // eslint-disable-next-line mocha/no-skipped-tests
-  it.skip('should allow pure keyboard selection of range', () => {
+  it('should allow pure keyboard selection of range', () => {
     const handleChange = spy();
     render(
       <WrappedDesktopDateRangePicker
@@ -177,15 +175,82 @@ describe('<DesktopDateRangePicker />', () => {
       },
     });
 
+    // TODO: remove, the `onChange` should be called immediately
+    clock.runToLast();
+
     fireEvent.change(screen.getAllByRole('textbox')[1], {
       target: {
         value: '08/08/2019',
       },
     });
 
+    // TODO: remove, the `onChange` should be called immediately
+    clock.runToLast();
+
+    expect(handleChange.callCount).to.equal(2);
+    const firstChangeValues = handleChange.args[0][0];
+
+    expect(firstChangeValues[0]).toEqualDateTime(new Date(2019, 5, 6));
+    expect(firstChangeValues[1]).to.equal(null);
+
+    const secondChangeValues = handleChange.args[1][0];
+    expect(secondChangeValues[0]).toEqualDateTime(new Date(2019, 5, 6));
+    expect(secondChangeValues[1]).toEqualDateTime(new Date(2019, 7, 8));
+  });
+
+  it('should allow partial date enter', () => {
+    const handleChange = spy();
+    render(
+      <WrappedDesktopDateRangePicker
+        reduceAnimations
+        initialValue={[null, null]}
+        onChange={handleChange}
+      />,
+    );
+
+    openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'start' });
+
+    fireEvent.change(screen.getAllByRole('textbox')[0], {
+      target: {
+        value: '0',
+      },
+    });
+
+    // TODO: remove, the `onChange` should be called immediately
+    clock.runToLast();
+
     expect(handleChange.callCount).to.equal(1);
-    expect(handleChange.args[0][0]).toEqualDateTime(adapterToUse.date('2019-06-06T00:00:00.000'));
-    expect(handleChange.args[0][1]).toEqualDateTime(adapterToUse.date('2019-06-06T00:00:00.000'));
+
+    expect(screen.getAllByRole('textbox')[0].value).to.equal('0');
+
+    const firstChangeValues = handleChange.args[0][0];
+    expect(adapterToUse.isValid(firstChangeValues[0])).to.equal(false);
+    expect(firstChangeValues[1]).to.equal(null);
+  });
+
+  it('should allow partial year without adding zeros', () => {
+    const handleChange = spy();
+    render(
+      <WrappedDesktopDateRangePicker
+        reduceAnimations
+        initialValue={[null, null]}
+        onChange={handleChange}
+      />,
+    );
+
+    openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'start' });
+
+    fireEvent.change(screen.getAllByRole('textbox')[0], {
+      target: {
+        value: '01/01/19',
+      },
+    });
+
+    // TODO: remove, the `onChange` should be called immediately
+    clock.runToLast();
+
+    expect(handleChange.callCount).to.equal(1);
+    expect(screen.getAllByRole('textbox')[0].value).to.equal('01/01/19');
   });
 
   it('should scroll current month to the active selection when focusing appropriate field', () => {
@@ -193,8 +258,8 @@ describe('<DesktopDateRangePicker />', () => {
       <WrappedDesktopDateRangePicker
         reduceAnimations
         initialValue={[
-          adapterToUse.date('2019-05-19T00:00:00.000'),
-          adapterToUse.date('2019-10-30T00:00:00.000'),
+          adapterToUse.date(new Date(2019, 4, 19)),
+          adapterToUse.date(new Date(2019, 9, 30)),
         ]}
       />,
     );
@@ -213,7 +278,7 @@ describe('<DesktopDateRangePicker />', () => {
   it(`should not crash when opening picker with invalid date value`, async () => {
     render(
       <WrappedDesktopDateRangePicker
-        initialValue={[adapterToUse.date(NaN), adapterToUse.date('2018-01-31T00:00:00.000')]}
+        initialValue={[new Date(NaN), adapterToUse.date(new Date(2019, 0, 31))]}
       />,
     );
 
@@ -280,8 +345,8 @@ describe('<DesktopDateRangePicker />', () => {
       return (
         <WrappedDesktopDateRangePicker
           initialValue={[
-            adapterToUse.date('2018-01-01T00:00:00.000'),
-            adapterToUse.date('2018-01-31T00:00:00.000'),
+            adapterToUse.date(new Date(2018, 0, 1)),
+            adapterToUse.date(new Date(2018, 0, 31)),
           ]}
           componentsProps={{ actionBar: { actions: ['clear'] } }}
         />
@@ -387,8 +452,8 @@ describe('<DesktopDateRangePicker />', () => {
       const onAccept = spy();
       const onClose = spy();
       const initialValue = [
-        adapterToUse.date('2018-01-01T00:00:00.000'),
-        adapterToUse.date('2018-01-06T00:00:00.000'),
+        adapterToUse.date(new Date(2018, 0, 1)),
+        adapterToUse.date(new Date(2018, 0, 6)),
       ];
 
       render(
@@ -409,28 +474,18 @@ describe('<DesktopDateRangePicker />', () => {
       // Change the start date
       userEvent.mousePress(screen.getByLabelText('Jan 3, 2018'));
       expect(onChange.callCount).to.equal(1);
-      expect(onChange.lastCall.args[0][0]).toEqualDateTime(
-        adapterToUse.date('2018-01-03T00:00:00.000'),
-      );
+      expect(onChange.lastCall.args[0][0]).toEqualDateTime(new Date(2018, 0, 3));
       expect(onChange.lastCall.args[0][1]).toEqualDateTime(initialValue[1]);
 
       // Change the end date
       userEvent.mousePress(screen.getByLabelText('Jan 5, 2018'));
       expect(onChange.callCount).to.equal(2);
-      expect(onChange.lastCall.args[0][0]).toEqualDateTime(
-        adapterToUse.date('2018-01-03T00:00:00.000'),
-      );
-      expect(onChange.lastCall.args[0][1]).toEqualDateTime(
-        adapterToUse.date('2018-01-05T00:00:00.000'),
-      );
+      expect(onChange.lastCall.args[0][0]).toEqualDateTime(new Date(2018, 0, 3));
+      expect(onChange.lastCall.args[0][1]).toEqualDateTime(new Date(2018, 0, 5));
 
       expect(onAccept.callCount).to.equal(1);
-      expect(onAccept.lastCall.args[0][0]).toEqualDateTime(
-        adapterToUse.date('2018-01-03T00:00:00.000'),
-      );
-      expect(onAccept.lastCall.args[0][1]).toEqualDateTime(
-        adapterToUse.date('2018-01-05T00:00:00.000'),
-      );
+      expect(onAccept.lastCall.args[0][0]).toEqualDateTime(new Date(2018, 0, 3));
+      expect(onAccept.lastCall.args[0][1]).toEqualDateTime(new Date(2018, 0, 5));
       expect(onClose.callCount).to.equal(1);
     });
 
@@ -439,8 +494,8 @@ describe('<DesktopDateRangePicker />', () => {
       const onAccept = spy();
       const onClose = spy();
       const initialValue = [
-        adapterToUse.date('2018-01-01T00:00:00.000'),
-        adapterToUse.date('2018-01-06T00:00:00.000'),
+        adapterToUse.date(new Date(2018, 0, 1)),
+        adapterToUse.date(new Date(2018, 0, 6)),
       ];
 
       render(
@@ -462,14 +517,10 @@ describe('<DesktopDateRangePicker />', () => {
       userEvent.mousePress(screen.getByLabelText('Jan 3, 2018'));
       expect(onChange.callCount).to.equal(1);
       expect(onChange.lastCall.args[0][0]).toEqualDateTime(initialValue[0]);
-      expect(onChange.lastCall.args[0][1]).toEqualDateTime(
-        adapterToUse.date('2018-01-03T00:00:00.000'),
-      );
+      expect(onChange.lastCall.args[0][1]).toEqualDateTime(new Date(2018, 0, 3));
       expect(onAccept.callCount).to.equal(1);
       expect(onAccept.lastCall.args[0][0]).toEqualDateTime(initialValue[0]);
-      expect(onAccept.lastCall.args[0][1]).toEqualDateTime(
-        adapterToUse.date('2018-01-03T00:00:00.000'),
-      );
+      expect(onAccept.lastCall.args[0][1]).toEqualDateTime(new Date(2018, 0, 3));
       expect(onClose.callCount).to.equal(1);
     });
 
@@ -477,8 +528,8 @@ describe('<DesktopDateRangePicker />', () => {
       const onAccept = spy();
       const onClose = spy();
       const initialValue = [
-        adapterToUse.date('2018-01-01T00:00:00.000'),
-        adapterToUse.date('2018-01-06T00:00:00.000'),
+        adapterToUse.date(new Date(2018, 0, 1)),
+        adapterToUse.date(new Date(2018, 0, 6)),
       ];
 
       render(
@@ -504,8 +555,8 @@ describe('<DesktopDateRangePicker />', () => {
       const onAccept = spy();
       const onClose = spy();
       const initialValue = [
-        adapterToUse.date('2018-01-01T00:00:00.000'),
-        adapterToUse.date('2018-01-06T00:00:00.000'),
+        adapterToUse.date(new Date(2018, 0, 1)),
+        adapterToUse.date(new Date(2018, 0, 6)),
       ];
 
       render(
@@ -527,9 +578,7 @@ describe('<DesktopDateRangePicker />', () => {
       fireEvent.keyDown(document.activeElement!, { key: 'Escape' });
       expect(onChange.callCount).to.equal(1); // Start date change
       expect(onAccept.callCount).to.equal(1);
-      expect(onAccept.lastCall.args[0][0]).toEqualDateTime(
-        adapterToUse.date('2018-01-03T00:00:00.000'),
-      );
+      expect(onAccept.lastCall.args[0][0]).toEqualDateTime(new Date(2018, 0, 3));
       expect(onAccept.lastCall.args[0][1]).toEqualDateTime(initialValue[1]);
       expect(onClose.callCount).to.equal(1);
     });
@@ -564,8 +613,8 @@ describe('<DesktopDateRangePicker />', () => {
       const onAccept = spy();
       const onClose = spy();
       const initialValue = [
-        adapterToUse.date('2018-01-01T00:00:00.000'),
-        adapterToUse.date('2018-01-06T00:00:00.000'),
+        adapterToUse.date(new Date(2018, 0, 1)),
+        adapterToUse.date(new Date(2018, 0, 6)),
       ];
 
       render(
@@ -588,9 +637,7 @@ describe('<DesktopDateRangePicker />', () => {
 
       expect(onChange.callCount).to.equal(1); // Start date change
       expect(onAccept.callCount).to.equal(1);
-      expect(onAccept.lastCall.args[0][0]).toEqualDateTime(
-        adapterToUse.date('2018-01-03T00:00:00.000'),
-      );
+      expect(onAccept.lastCall.args[0][0]).toEqualDateTime(new Date(2018, 0, 3));
       expect(onAccept.lastCall.args[0][1]).toEqualDateTime(initialValue[1]);
       expect(onClose.callCount).to.equal(1);
     });
@@ -649,8 +696,8 @@ describe('<DesktopDateRangePicker />', () => {
       const onAccept = spy();
       const onClose = spy();
       const initialValue = [
-        adapterToUse.date('2018-01-01T00:00:00.000'),
-        adapterToUse.date('2018-01-06T00:00:00.000'),
+        adapterToUse.date(new Date(2018, 0, 1)),
+        adapterToUse.date(new Date(2018, 0, 6)),
       ];
 
       render(
@@ -673,9 +720,7 @@ describe('<DesktopDateRangePicker />', () => {
 
       expect(onChange.callCount).to.equal(1); // Start date change
       expect(onAccept.callCount).to.equal(1);
-      expect(onAccept.lastCall.args[0][0]).toEqualDateTime(
-        adapterToUse.date('2018-01-03T00:00:00.000'),
-      );
+      expect(onAccept.lastCall.args[0][0]).toEqualDateTime(new Date(2018, 0, 3));
       expect(onAccept.lastCall.args[0][1]).toEqualDateTime(initialValue[1]);
       expect(onClose.callCount).to.equal(1);
     });
@@ -685,8 +730,8 @@ describe('<DesktopDateRangePicker />', () => {
       const onAccept = spy();
       const onClose = spy();
       const initialValue = [
-        adapterToUse.date('2018-01-01T00:00:00.000'),
-        adapterToUse.date('2018-01-06T00:00:00.000'),
+        adapterToUse.date(new Date(2018, 0, 1)),
+        adapterToUse.date(new Date(2018, 0, 6)),
       ];
 
       render(
@@ -749,8 +794,8 @@ describe('<DesktopDateRangePicker />', () => {
           onAccept={onAccept}
           onClose={onClose}
           initialValue={[
-            adapterToUse.date('2018-01-01T00:00:00.000'),
-            adapterToUse.date('2018-01-06T00:00:00.000'),
+            adapterToUse.date(new Date(2018, 0, 1)),
+            adapterToUse.date(new Date(2018, 0, 6)),
           ]}
         />,
       );
@@ -776,8 +821,8 @@ describe('<DesktopDateRangePicker />', () => {
           onAccept={onAccept}
           onClose={onClose}
           initialValue={[
-            adapterToUse.date('2018-01-01T00:00:00.000'),
-            adapterToUse.date('2018-01-06T00:00:00.000'),
+            adapterToUse.date(new Date(2018, 0, 1)),
+            adapterToUse.date(new Date(2018, 0, 6)),
           ]}
         />,
       );
@@ -822,7 +867,7 @@ describe('<DesktopDateRangePicker />', () => {
       render(
         <WrappedDesktopDateRangePicker
           initialValue={[null, null]}
-          minDate={adapterToUse.date('2018-01-15T00:00:00.000')}
+          minDate={adapterToUse.date(new Date(2018, 0, 15))}
         />,
       );
 
@@ -839,7 +884,7 @@ describe('<DesktopDateRangePicker />', () => {
       render(
         <WrappedDesktopDateRangePicker
           initialValue={[null, null]}
-          maxDate={adapterToUse.date('2018-01-15T00:00:00.000')}
+          maxDate={adapterToUse.date(new Date(2018, 0, 15))}
         />,
       );
 

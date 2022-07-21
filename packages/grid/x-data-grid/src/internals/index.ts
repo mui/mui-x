@@ -6,7 +6,10 @@ export { GridColumnHeadersInner } from '../components/columnHeaders/GridColumnHe
 
 export { useGridRegisterPipeProcessor } from '../hooks/core/pipeProcessing';
 export type { GridPipeProcessor } from '../hooks/core/pipeProcessing';
-export { useGridRegisterStrategyProcessor } from '../hooks/core/strategyProcessing';
+export {
+  useGridRegisterStrategyProcessor,
+  GRID_DEFAULT_STRATEGY,
+} from '../hooks/core/strategyProcessing';
 export type { GridStrategyProcessor } from '../hooks/core/strategyProcessing';
 export { useGridInitialization } from '../hooks/core/useGridInitialization';
 
@@ -84,7 +87,7 @@ export { getColumnsToExport, defaultGetRowsToExport } from '../hooks/features/ex
 export { createSelector, unstable_resetCreateSelectorCache } from '../utils/createSelector';
 export { findParentElementFromClassName } from '../utils/domUtils';
 export { isNavigationKey } from '../utils/keyboardUtils';
-export { clamp, isDeepEqual } from '../utils/utils';
+export { clamp, isDeepEqual, isNumber, isFunction } from '../utils/utils';
 export { buildWarning } from '../utils/warning';
 export { exportAs } from '../utils/exportAs';
 

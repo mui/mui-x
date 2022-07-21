@@ -73,15 +73,17 @@ export const useGridPageSize = (
    * PRE-PROCESSING
    */
   const stateExportPreProcessing = React.useCallback<GridPipeProcessor<'exportState'>>(
-    (prevState) => {
+    (prevState, context) => {
       const pageSizeToExport = gridPageSizeSelector(apiRef);
 
       const shouldExportPageSize =
+        // Always export if the `exportOnlyDirtyModels` property is activated
+        !context.exportOnlyDirtyModels ||
         // Always export if the page size is controlled
         props.pageSize != null ||
         // Always export if the page size has been initialized
         props.initialState?.pagination?.pageSize != null ||
-        // Export if the page size value is not equal to the default value
+        // Export if the page size is not equal to the default value
         pageSizeToExport !== defaultPageSize(props.autoPageSize);
 
       if (!shouldExportPageSize) {

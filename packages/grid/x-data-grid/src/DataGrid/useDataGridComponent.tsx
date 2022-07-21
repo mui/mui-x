@@ -1,9 +1,7 @@
 import { DataGridProcessedProps } from '../models/props/DataGridProps';
 import { GridApiCommunity } from '../models/api/gridApiCommunity';
-
 import { useGridInitialization } from '../hooks/core/useGridInitialization';
 import { useGridInitializeState } from '../hooks/utils/useGridInitializeState';
-
 import { useGridClipboard } from '../hooks/features/clipboard/useGridClipboard';
 import {
   columnMenuStateInitializer,
@@ -92,7 +90,7 @@ export const useDataGridComponent = (props: DataGridProcessedProps) => {
   useGridEditing(apiRef, props);
 
   useGridFocus(apiRef, props);
-  useGridPreferencesPanel(apiRef);
+  useGridPreferencesPanel(apiRef, props);
   useGridFilter(apiRef, props);
   useGridSorting(apiRef, props);
   useGridDensity(apiRef, props);

@@ -25,6 +25,7 @@ import {
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import TextField from '@mui/material/TextField';
 import locale from 'date-fns/locale/en-US';
+import { styled } from '@mui/material/styles';
 
 function buildApplyDateFilterFn(
   filterItem: GridFilterItem,
@@ -139,6 +140,7 @@ function getDateFilterOperators(
           return value == null;
         };
       },
+      requiresFilterValue: false,
     },
     {
       value: 'isNotEmpty',
@@ -147,6 +149,7 @@ function getDateFilterOperators(
           return value != null;
         };
       },
+      requiresFilterValue: false,
     },
   ];
 }
@@ -175,21 +178,30 @@ const dateColumnType: GridColTypeDef<Date | string, string> = {
   },
 };
 
+const GridEditDateTextField = styled(TextField)({
+  '& .MuiInputBase-root': {
+    fontSize: 'inherit',
+  },
+});
+
 function GridEditDateCell({
   id,
   field,
   value,
+  colDef,
 }: GridRenderEditCellParams<Date | string | null>) {
   const apiRef = useGridApiContext();
+
+  const Component = colDef.type === 'dateTime' ? DateTimePicker : DatePicker;
 
   const handleChange = (newValue: unknown) => {
     apiRef.current.setEditCellValue({ id, field, value: newValue });
   };
 
   return (
-    <DatePicker
+    <Component
       value={value}
-      renderInput={(params) => <TextField {...params} />}
+      renderInput={(params) => <GridEditDateTextField fullWidth {...params} />}
       onChange={handleChange}
     />
   );
@@ -236,7 +248,7 @@ const dateTimeColumnType: GridColTypeDef<Date | string, string> = {
   ...GRID_DATETIME_COL_DEF,
   resizable: false,
   renderEditCell: (params) => {
-    return <GridEditDateTimeCell {...params} />;
+    return <GridEditDateCell {...params} />;
   },
   filterOperators: getDateFilterOperators(true),
   valueFormatter: (params) => {
@@ -249,26 +261,6 @@ const dateTimeColumnType: GridColTypeDef<Date | string, string> = {
     return '';
   },
 };
-
-function GridEditDateTimeCell({
-  id,
-  field,
-  value,
-}: GridRenderEditCellParams<Date | string | null>) {
-  const apiRef = useGridApiContext();
-
-  const handleChange = (newValue: unknown) => {
-    apiRef.current.setEditCellValue({ id, field, value: newValue });
-  };
-
-  return (
-    <DateTimePicker
-      value={value}
-      renderInput={(params) => <TextField {...params} />}
-      onChange={handleChange}
-    />
-  );
-}
 
 const columns: GridColumns = [
   { field: 'name', headerName: 'Name', width: 180, editable: true },

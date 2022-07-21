@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { styled, alpha } from '@mui/material/styles';
-import Box from '@mui/material/Box';
 import { unstable_composeClasses as composeClasses } from '@mui/material';
 import {
   useGridSelector,
@@ -30,6 +29,7 @@ import {
   gridDetailPanelExpandedRowsHeightCacheSelector,
   gridDetailPanelExpandedRowIdsSelector,
 } from '../hooks/features/detailPanel';
+import { GridDetailPanel } from './GridDetailPanel';
 
 export const filterColumns = (
   pinnedColumns: GridPinnedColumns,
@@ -106,18 +106,6 @@ const VirtualScrollerDetailPanels = styled('div', {
 })({
   position: 'relative',
 });
-
-const VirtualScrollerDetailPanel = styled(Box, {
-  name: 'MuiDataGrid',
-  slot: 'DetailPanel',
-  overridesResolver: (props, styles) => styles.detailPanel,
-})(({ theme }) => ({
-  zIndex: 2,
-  width: '100%',
-  position: 'absolute',
-  backgroundColor: theme.palette.background.default,
-  overflow: 'auto',
-}));
 
 const VirtualScrollerPinnedColumns = styled('div', {
   name: 'MuiDataGrid',
@@ -259,20 +247,24 @@ const DataGridProVirtualScroller = React.forwardRef<
       const exists = rowIndex !== undefined;
 
       if (React.isValidElement(content) && exists) {
-        const height = detailPanelsHeights[id];
+        const hasAutoHeight = apiRef.current.unstable_detailPanelHasAutoHeight(id);
+        const height = hasAutoHeight ? 'auto' : detailPanelsHeights[id];
+
         const sizes = apiRef.current.unstable_getRowInternalSizes(id);
         const spacingTop = sizes?.spacingTop || 0;
         const top =
           rowsMeta.positions[rowIndex] + apiRef.current.unstable_getRowHeight(id) + spacingTop;
 
         panels.push(
-          <VirtualScrollerDetailPanel
+          <GridDetailPanel
             key={i}
-            style={{ top, height }}
+            rowId={id}
+            style={{ top }}
+            height={height}
             className={classes.detailPanel}
           >
             {content}
-          </VirtualScrollerDetailPanel>,
+          </GridDetailPanel>,
         );
       }
     }

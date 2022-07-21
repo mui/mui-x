@@ -151,7 +151,7 @@ The component comes [in different plans](https://mui.com/pricing/):
 - **Pro** Plan: [`@mui/x-data-grid-pro`](https://www.npmjs.com/package/@mui/x-data-grid-pro) published under a [Commercial license](https://mui.com/store/legal/mui-x-eula/).
 - **Premium** Plan: [`@mui/x-data-grid-premium`](https://www.npmjs.com/package/@mui/x-data-grid-premium) published under a [Commercial license](https://mui.com/store/legal/mui-x-eula/).
 
-More information about the various plans on [the dedicated section](/x/advanced-components/#plans)
+You can find more information about the plans in [the Licensing page](/x/introduction/licensing/).
 
 ### Feature comparison
 
@@ -203,7 +203,7 @@ The enterprise components come in two plans: Pro and Premium.
 | [Tree data](/x/react-data-grid/tree-data/)                                             |    ❌     |                 ✅                 |                     ✅                     |
 | [Master detail](/x/react-data-grid/master-detail/)                                     |    ❌     |                 ✅                 |                     ✅                     |
 | [Row grouping](/x/react-data-grid/row-grouping/)                                       |    ❌     |                 ❌                 |                     ✅                     |
-| [Aggregation](/x/react-data-grid/aggregation/)                                         |    ❌     |                 ❌                 |                     🚧                     |
+| [Aggregation](/x/react-data-grid/aggregation/)                                         |    ❌     |                 ❌                 |                     ✅                     |
 | [Pivoting](/x/react-data-grid/pivoting/)                                               |    ❌     |                 ❌                 |                     🚧                     |
 | **Misc**                                                                               |           |                                    |                                            |
 | [Accessibility](/x/react-data-grid/accessibility/)                                     |    ✅     |                 ✅                 |                     ✅                     |
@@ -214,3 +214,4 @@ The enterprise components come in two plans: Pro and Premium.
 
 - [DataGrid](/x/api/data-grid/data-grid/)
 - [DataGridPro](/x/api/data-grid/data-grid-pro/)
+- [DataGridPremium](/x/api/data-grid/data-grid-premium/)

@@ -98,7 +98,7 @@ The print export always prints rows in their current state.
 :::
 
 By default, the grid exports the selected rows if there are any.
-If not, it exports all rows (filtered and sorted rows, according to active rules), including the collapsed ones.
+If not, it exports all rows except the footers (filtered and sorted rows, according to active rules), including the collapsed ones.
 
 Alternatively, you can set the `getRowsToExport` function and export any rows you want, as in the following example.
 The grid exports a few [selectors](/x/react-data-grid/state/#access-the-state) that can help you get the rows for the most common use-cases:
@@ -344,3 +344,4 @@ Only use this API as the last option. Give preference to the props to control th
 - [excelOptions](/x/api/data-grid/grid-excel-export-options/)
 - [DataGrid](/x/api/data-grid/data-grid/)
 - [DataGridPro](/x/api/data-grid/data-grid-pro/)
+- [DataGridPremium](/x/api/data-grid/data-grid-premium/)

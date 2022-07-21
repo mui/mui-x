@@ -208,6 +208,12 @@ export const useCellEditing = (
 
   const handleCellKeyDown = React.useCallback<GridEventListener<'cellKeyDown'>>(
     async (params, event) => {
+      // Wait until IME is settled for Asian languages like Japanese and Chinese
+      // TODO: `event.which` is depricated but this is a temporary workaround
+      if (event.which === 229) {
+        return;
+      }
+
       const { id, field, cellMode, isEditable } = params;
       if (!isEditable) {
         return;

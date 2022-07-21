@@ -41,10 +41,8 @@ import {
   rowsMetaStateInitializer,
   selectionStateInitializer,
 } from '@mui/x-data-grid/internals';
-
 import { GridApiPro } from '../models/gridApiPro';
 import { DataGridProProcessedProps } from '../models/dataGridProProps';
-
 // Pro-only features
 import { useGridInfiniteLoader } from '../hooks/features/infiniteLoader/useGridInfiniteLoader';
 import {
@@ -130,7 +128,7 @@ export const useDataGridProComponent = (
   useGridEditing(apiRef, props);
 
   useGridFocus(apiRef, props);
-  useGridPreferencesPanel(apiRef);
+  useGridPreferencesPanel(apiRef, props);
   useGridFilter(apiRef, props);
   useGridSorting(apiRef, props);
   useGridDensity(apiRef, props);

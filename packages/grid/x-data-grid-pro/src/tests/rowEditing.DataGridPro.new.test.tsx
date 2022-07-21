@@ -701,7 +701,7 @@ describe('<DataGridPro /> - Row Editing', () => {
         expect(listener.callCount).to.equal(0);
       });
 
-      ['shiftKey', 'ctrlKey', 'metaKey', 'altKey'].forEach((key) => {
+      ['ctrlKey', 'metaKey', 'altKey'].forEach((key) => {
         it(`should not publish 'rowEditStart' if ${key} is pressed`, () => {
           render(<TestCase />);
           const listener = spy();
@@ -712,6 +712,39 @@ describe('<DataGridPro /> - Row Editing', () => {
           fireEvent.keyDown(cell, { key: 'a', [key]: true });
           expect(listener.callCount).to.equal(0);
         });
+      });
+
+      it(`should call startRowEditMode if shiftKey is pressed with a letter`, () => {
+        render(<TestCase />);
+        const listener = spy();
+        apiRef.current.subscribeEvent('rowEditStart', listener);
+        const cell = getCell(0, 1);
+        fireEvent.mouseUp(cell);
+        fireEvent.click(cell);
+        fireEvent.keyDown(cell, { key: 'a', shiftKey: true });
+        expect(listener.callCount).to.equal(1);
+      });
+
+      it(`should call startRowEditMode if ctrl+V is pressed`, () => {
+        render(<TestCase />);
+        const listener = spy();
+        apiRef.current.subscribeEvent('rowEditStart', listener);
+        const cell = getCell(0, 1);
+        fireEvent.mouseUp(cell);
+        fireEvent.click(cell);
+        fireEvent.keyDown(cell, { key: 'v', ctrlKey: true });
+        expect(listener.callCount).to.equal(1);
+      });
+
+      it(`should call startRowEditMode if meta+V is pressed`, () => {
+        render(<TestCase />);
+        const listener = spy();
+        apiRef.current.subscribeEvent('rowEditStart', listener);
+        const cell = getCell(0, 1);
+        fireEvent.mouseUp(cell);
+        fireEvent.click(cell);
+        fireEvent.keyDown(cell, { key: 'v', metaKey: true });
+        expect(listener.callCount).to.equal(1);
       });
 
       it('should call startRowEditMode passing fieldToFocus and deleteValue', () => {
@@ -727,6 +760,38 @@ describe('<DataGridPro /> - Row Editing', () => {
           fieldToFocus: 'currencyPair',
           deleteValue: true,
         });
+      });
+
+      it(`should ignore keydown event until the IME is confirmed with a letter`, () => {
+        render(<TestCase />);
+        const listener = spy();
+        apiRef.current.subscribeEvent('rowEditStop', listener);
+        const cell = getCell(0, 1);
+        fireEvent.doubleClick(cell);
+        const input = cell.querySelector('input')!;
+        fireEvent.change(input, { target: { value: 'あ' } });
+        fireEvent.keyDown(input, { key: 'Enter', keyCode: 229 });
+        expect(listener.callCount).to.equal(0);
+        fireEvent.keyDown(input, { key: 'Enter', keyCode: 13 });
+        expect(listener.callCount).to.equal(1);
+        expect(input.value).to.equal('あ');
+        expect(listener.lastCall.args[0].reason).to.equal('enterKeyDown');
+      });
+
+      it(`should ignore keydown event until the IME is confirmed with multiple letters`, () => {
+        render(<TestCase />);
+        const listener = spy();
+        apiRef.current.subscribeEvent('rowEditStop', listener);
+        const cell = getCell(0, 1);
+        fireEvent.doubleClick(cell);
+        const input = cell.querySelector('input')!;
+        fireEvent.change(input, { target: { value: 'ありがとう' } });
+        fireEvent.keyDown(input, { key: 'Enter', keyCode: 229 });
+        expect(listener.callCount).to.equal(0);
+        fireEvent.keyDown(input, { key: 'Enter', keyCode: 13 });
+        expect(listener.callCount).to.equal(1);
+        expect(input.value).to.equal('ありがとう');
+        expect(listener.lastCall.args[0].reason).to.equal('enterKeyDown');
       });
     });
   });
