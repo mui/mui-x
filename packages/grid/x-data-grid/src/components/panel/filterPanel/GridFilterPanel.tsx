@@ -31,6 +31,7 @@ export interface GridFilterPanelProps
     | 'columnInputProps'
     | 'valueInputProps'
   >;
+
   /**
    * @ignore - do not document.
    */
