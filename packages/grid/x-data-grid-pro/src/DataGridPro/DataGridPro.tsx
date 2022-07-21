@@ -764,6 +764,10 @@ DataGridProRaw.propTypes = {
     left: PropTypes.arrayOf(PropTypes.string),
     right: PropTypes.arrayOf(PropTypes.string),
   }),
+  pinnedRows: PropTypes.shape({
+    bottom: PropTypes.array,
+    top: PropTypes.array,
+  }),
   /**
    * Callback called before updating a row with new values in the row and cell editing.
    * Only applied if `props.experimentalFeatures.newEditingApi: true`.

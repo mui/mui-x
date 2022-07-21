@@ -32,6 +32,7 @@ import {
 } from './gridSortingUtils';
 import { GridPipeProcessor, useGridRegisterPipeProcessor } from '../../core/pipeProcessing';
 import { GridStateInitializer } from '../../utils/useGridInitializeState';
+import { GridRowTreeNodeConfig } from '../../../models/gridRows';
 
 export const sortingStateInitializer: GridStateInitializer<
   Pick<DataGridProcessedProps, 'sortModel' | 'initialState' | 'disableMultipleColumnsSorting'>
@@ -291,7 +292,7 @@ export const useGridSorting = (
       Object.values(rowTree).forEach((rowNode) => {
         if (rowNode.position === 'footer') {
           footerRowIds.push(rowNode.id);
-        } else {
+        } else if (!rowNode.isPinned) {
           bodyRows.push(rowNode);
         }
       });

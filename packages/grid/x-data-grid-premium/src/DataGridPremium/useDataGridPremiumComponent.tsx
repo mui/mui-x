@@ -55,6 +55,9 @@ import {
   useGridColumnSpanning,
   useGridRowReorder,
   useGridRowReorderPreProcessors,
+  useGridRowPinning,
+  useGridRowPinningPreProcessors,
+  rowPinningStateInitializer,
 } from '@mui/x-data-grid-pro/internals';
 import { GridApiPremium } from '../models/gridApiPremium';
 import { DataGridPremiumProcessedProps } from '../models/dataGridPremiumProps';
@@ -90,6 +93,7 @@ export const useDataGridPremiumComponent = (
   // Because it changes the order of the columns.
   useGridColumnPinningPreProcessors(apiRef, props);
   useGridRowsPreProcessors(apiRef);
+  useGridRowPinningPreProcessors(apiRef, props);
 
   /**
    * Register all state initializers here.
@@ -118,6 +122,7 @@ export const useDataGridPremiumComponent = (
   useGridInitializeState(paginationStateInitializer, apiRef, props);
   useGridInitializeState(rowsMetaStateInitializer, apiRef, props);
   useGridInitializeState(columnMenuStateInitializer, apiRef, props);
+  useGridInitializeState(rowPinningStateInitializer, apiRef, props);
 
   useGridRowGrouping(apiRef, props);
   useGridTreeData(apiRef);
@@ -146,6 +151,7 @@ export const useDataGridPremiumComponent = (
   useGridPagination(apiRef, props);
   useGridRowsMeta(apiRef, props);
   useGridRowReorder(apiRef, props);
+  useGridRowPinning(apiRef, props);
   useGridScroll(apiRef, props);
   useGridInfiniteLoader(apiRef, props);
   useGridColumnMenu(apiRef);

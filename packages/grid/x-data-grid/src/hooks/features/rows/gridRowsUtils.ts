@@ -88,7 +88,10 @@ export const getRowsStateFromCache = ({
   const dataTopLevelRowCount =
     processedGroupingResponse.treeDepth === 1
       ? processedGroupingResponse.ids.length
-      : Object.values(processedGroupingResponse.tree).filter((node) => node.parent == null).length;
+      : Object.values(processedGroupingResponse.tree).filter(
+          // TODO: count pinned rows as well?
+          (node) => node.parent == null && !node.isPinned,
+        ).length;
 
   return {
     ...processedGroupingResponse,

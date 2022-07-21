@@ -279,6 +279,20 @@ For now, row reordering is disabled if sorting is applied to the grid.
 In addition, if row grouping or tree data is being used, the row reordering is also disabled.
 :::
 
+## Row pinning [<span class="plan-pro"></span>](https://mui.com/store/items/material-ui-pro/)
+
+Pinned (or frozen, locked, or sticky) rows are rows that are visible at all times while the user scrolls the grid vertically.
+
+{{"demo": "RowPinning.js", "disableAd": true, "bg": "inline"}}
+
+Interactive demo with row pinning `actions` column:
+
+{{"demo": "RowPinningWithActions.js", "disableAd": true, "bg": "inline", "defaultCodeOpen": false}}
+
+With virtualization:
+
+{{"demo": "RowPinningWithVirtualization.js", "disableAd": true, "bg": "inline", "defaultCodeOpen": false}}
+
 ## 🚧 Row spanning
 
 :::warning
@@ -291,16 +305,6 @@ Each cell takes up the width of one row.
 Row spanning allows to change this default behavior.
 It allows cells to span multiple rows.
 This is very close to the "row spanning" in an HTML `<table>`.
-
-## 🚧 Row pinning [<span class="plan-pro"></span>](https://mui.com/store/items/mui-x-pro/)
-
-:::warning
-This feature isn't implemented yet. It's coming.
-
-👍 Upvote [issue #1251](https://github.com/mui/mui-x/issues/1251) if you want to see it land faster.
-:::
-
-Pinned (or frozen, locked, or sticky) rows are rows that are visible at all times while the user scrolls the grid vertically.
 
 ## API
 

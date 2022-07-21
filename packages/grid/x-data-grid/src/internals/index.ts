@@ -54,9 +54,16 @@ export { useGridRowsPreProcessors } from '../hooks/features/rows/useGridRowsPreP
 export type {
   GridRowTreeCreationParams,
   GridRowTreeCreationValue,
+  GridHydrateRowsValue,
+  GridPinnedRowsState,
 } from '../hooks/features/rows/gridRowsState';
 export { useGridRowsMeta, rowsMetaStateInitializer } from '../hooks/features/rows/useGridRowsMeta';
 export { useGridParamsApi } from '../hooks/features/rows/useGridParamsApi';
+export { getRowIdFromRowModel } from '../hooks/features/rows/gridRowsUtils';
+export {
+  gridAdditionalRowGroupsSelector,
+  gridPinnedRowsSelector,
+} from '../hooks/features/rows/gridRowsSelector';
 export {
   useGridSelection,
   selectionStateInitializer,

@@ -151,7 +151,11 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
       // doesn't care about pagination and considers the rows from the current page only, so the
       // first row always has index=0. We need to subtract the index of the first row to make it
       // compatible with the index used by the virtualization.
-      apiRef.current.unstable_setLastMeasuredRowIndex(index - currentPage.range.firstRowIndex);
+      const rowIndex = apiRef.current.getRowIndexRelativeToVisibleRows(rowId);
+      // pinned rows are not part of the visible rows
+      if (typeof rowIndex != null) {
+        apiRef.current.unstable_setLastMeasuredRowIndex(rowIndex);
+      }
     }
 
     const rootElement = ref.current;

@@ -67,6 +67,11 @@ import {
 import { useGridDetailPanelPreProcessors } from '../hooks/features/detailPanel/useGridDetailPanelPreProcessors';
 import { useGridRowReorder } from '../hooks/features/rowReorder/useGridRowReorder';
 import { useGridRowReorderPreProcessors } from '../hooks/features/rowReorder/useGridRowReorderPreProcessors';
+import {
+  useGridRowPinning,
+  rowPinningStateInitializer,
+} from '../hooks/features/rowPinning/useGridRowPinning';
+import { useGridRowPinningPreProcessors } from '../hooks/features/rowPinning/useGridRowPinningPreProcessors';
 
 export const useDataGridProComponent = (
   inputApiRef: React.MutableRefObject<GridApiPro> | undefined,
@@ -85,6 +90,7 @@ export const useDataGridProComponent = (
   // Because it changes the order of the columns.
   useGridColumnPinningPreProcessors(apiRef, props);
   useGridRowsPreProcessors(apiRef);
+  useGridRowPinningPreProcessors(apiRef, props);
 
   /**
    * Register all state initializers here.
@@ -111,6 +117,7 @@ export const useDataGridProComponent = (
   useGridInitializeState(paginationStateInitializer, apiRef, props);
   useGridInitializeState(rowsMetaStateInitializer, apiRef, props);
   useGridInitializeState(columnMenuStateInitializer, apiRef, props);
+  useGridInitializeState(rowPinningStateInitializer, apiRef, props);
 
   useGridTreeData(apiRef);
   useGridKeyboardNavigation(apiRef, props);
@@ -137,6 +144,7 @@ export const useDataGridProComponent = (
   useGridPagination(apiRef, props);
   useGridRowsMeta(apiRef, props);
   useGridRowReorder(apiRef, props);
+  useGridRowPinning(apiRef, props);
   useGridScroll(apiRef, props);
   useGridInfiniteLoader(apiRef, props);
   useGridColumnMenu(apiRef);

@@ -91,6 +91,10 @@ export const useGridRowReorder = (
         return;
       }
 
+      if (apiRef.current.unstable_isRowPinned(params.id)) {
+        return;
+      }
+
       logger.debug(`Dragging over row ${params.id}`);
       event.preventDefault();
       // Prevent drag events propagation.

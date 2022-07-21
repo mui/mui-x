@@ -1,0 +1,13 @@
+<DataGridPro
+  columns={columns}
+  pinnedRows={pinnedRows}
+  rows={rows}
+  initialState={{
+    pinnedColumns: { left: ['id'], right: ['birthday'] },
+    pagination: {
+      pageSize: 10,
+    },
+  }}
+  pagination
+  rowsPerPageOptions={[5, 10]}
+/>

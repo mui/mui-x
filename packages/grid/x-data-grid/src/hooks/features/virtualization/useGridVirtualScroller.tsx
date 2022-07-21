@@ -21,6 +21,8 @@ import { selectedIdsLookupSelector } from '../selection/gridSelectionSelector';
 import { gridRowsMetaSelector } from '../rows/gridRowsMetaSelector';
 import { GridRowId, GridRowModel } from '../../../models/gridRows';
 import { getFirstNonSpannedColumnToRender } from '../columns/gridColumnsUtils';
+import { gridRowsLookupSelector } from '../rows/gridRowsSelector';
+import { gridClasses } from '../../../constants/gridClasses';
 
 // Uses binary search to avoid looping through all possible positions
 export function binarySearch(
@@ -114,6 +116,7 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
   const scrollPosition = React.useRef({ top: 0, left: 0 });
   const [containerWidth, setContainerWidth] = React.useState<number | null>(null);
   const prevTotalWidth = React.useRef(columnsTotalWidth);
+  const idRowsLookup = gridRowsLookupSelector(apiRef);
 
   const getNearestIndexToRender = React.useCallback(
     (offset) => {
@@ -254,6 +257,15 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
       const left = gridColumnPositionsSelector(apiRef)[firstColumnToRender]; // Call directly the selector because it might be outdated when this method is called
       renderZoneRef.current!.style.transform = `translate3d(${left}px, ${top}px, 0px)`;
 
+      // update pinned rows render zones
+      apiRef.current
+        .rootElementRef!.current!.querySelectorAll<HTMLElement>(
+          `.${gridClasses.pinnedRowsRenderZone}`,
+        )
+        .forEach((element) => {
+          element.style.transform = `translate3d(${left}px, 0px, 0px)`;
+        });
+
       if (typeof onRenderZonePositioning === 'function') {
         onRenderZonePositioning({ top, left });
       }
@@ -367,6 +379,8 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
       maxLastColumn?: number;
       availableSpace?: number | null;
       ignoreAutoHeight?: boolean;
+      rows?: GridRowEntry[];
+      rowIndexOffset?: number;
     } = { renderContext },
   ) => {
     const {
@@ -375,9 +389,10 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
       maxLastColumn = renderZoneMaxColumnIndex,
       availableSpace = containerWidth,
       ignoreAutoHeight,
+      rowIndexOffset = 0,
     } = params;
 
-    if (!currentPage.range || !nextRenderContext || availableSpace == null) {
+    if (!nextRenderContext || availableSpace == null) {
       return null;
     }
 
@@ -394,16 +409,32 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
 
     const renderedRows: GridRowEntry[] = [];
 
-    for (let i = firstRowToRender; i < lastRowToRender; i += 1) {
-      const row = currentPage.rows[i];
-      renderedRows.push(row);
-
-      apiRef.current.unstable_calculateColSpan({
-        rowId: row.id,
-        minFirstColumn,
-        maxLastColumn,
-        columns: visibleColumns,
+    if (params.rows) {
+      params.rows.forEach((row) => {
+        const rowId = row.id;
+        apiRef.current.unstable_calculateColSpan({
+          rowId,
+          minFirstColumn,
+          maxLastColumn,
+          columns: visibleColumns,
+        });
+        renderedRows.push({ id: rowId, model: idRowsLookup[rowId] });
       });
+    } else {
+      if (!currentPage.range) {
+        return null;
+      }
+
+      for (let i = firstRowToRender; i < lastRowToRender; i += 1) {
+        const row = currentPage.rows[i];
+        renderedRows.push(row);
+        apiRef.current.unstable_calculateColSpan({
+          rowId: row.id,
+          minFirstColumn,
+          maxLastColumn,
+          columns: visibleColumns,
+        });
+      }
     }
 
     const [initialFirstColumnToRender, lastColumnToRender] = getRenderableIndexes({
@@ -455,7 +486,7 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
           firstColumnToRender={firstColumnToRender}
           lastColumnToRender={lastColumnToRender}
           selected={isSelected}
-          index={currentPage.range.firstRowIndex + firstRowToRender + i}
+          index={rowIndexOffset + (currentPage?.range?.firstRowIndex || 0) + firstRowToRender + i}
           containerWidth={availableSpace}
           isLastVisible={lastVisibleRowIndex}
           {...(typeof getRowProps === 'function' ? getRowProps(id, model) : {})}

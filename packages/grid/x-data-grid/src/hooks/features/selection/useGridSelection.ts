@@ -350,6 +350,10 @@ export const useGridSelection = (
         }
       }
 
+      if (params.rowNode.isPinned) {
+        return;
+      }
+
       if (event.shiftKey && (canHaveMultipleSelection || checkboxSelection)) {
         expandMouseRowRangeSelection(params.id);
       } else {

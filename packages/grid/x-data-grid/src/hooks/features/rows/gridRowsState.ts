@@ -1,4 +1,9 @@
-import { GridRowId, GridRowsLookup, GridRowTreeConfig } from '../../../models/gridRows';
+import {
+  GridRowId,
+  GridRowsLookup,
+  GridRowTreeConfig,
+  GridRowEntry,
+} from '../../../models/gridRows';
 import type { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 
 export interface GridRowTreeCreationParams {
@@ -19,6 +24,9 @@ export interface GridRowTreeCreationValue {
   ids: GridRowId[];
   idRowsLookup: GridRowsLookup;
   idToIdLookup: Record<string, GridRowId>;
+  additionalRowGroups?: {
+    pinnedRows?: GridPinnedRowsState;
+  };
 }
 
 export interface GridRowsInternalCache extends Omit<GridRowTreeCreationParams, 'previousTree'> {
@@ -56,3 +64,8 @@ export interface GridRowsState extends GridRowTreeCreationValue {
 }
 
 export type GridHydrateRowsValue = GridRowTreeCreationValue;
+
+export interface GridPinnedRowsState {
+  top?: GridRowEntry[];
+  bottom?: GridRowEntry[];
+}

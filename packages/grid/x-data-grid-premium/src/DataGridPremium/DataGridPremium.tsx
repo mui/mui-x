@@ -779,6 +779,10 @@ DataGridPremiumRaw.propTypes = {
     left: PropTypes.arrayOf(PropTypes.string),
     right: PropTypes.arrayOf(PropTypes.string),
   }),
+  pinnedRows: PropTypes.shape({
+    bottom: PropTypes.array,
+    top: PropTypes.array,
+  }),
   /**
    * Aggregation functions available on the grid.
    * @default GRID_AGGREGATION_FUNCTIONS
