@@ -208,6 +208,7 @@ const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
     readOnly,
     minDate = defaultDates.minDate,
     maxDate = defaultDates.maxDate,
+    disableHighlightToday,
     ...other
   } = props;
 
@@ -374,6 +375,12 @@ const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
   const minDateWithDisabled = (disabled && date) || minDate;
   const maxDateWithDisabled = (disabled && date) || maxDate;
 
+  const commonViewProps = {
+    disableHighlightToday,
+    readOnly,
+    disabled,
+  };
+
   return (
     <CalendarPickerRoot ref={ref} className={clsx(classes.root, className)} ownerState={ownerState}>
       <PickersCalendarHeader
@@ -401,23 +408,21 @@ const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
             <YearPicker
               {...other}
               {...baseDateValidationProps}
+              {...commonViewProps}
               autoFocus={autoFocus}
               date={date}
               onChange={handleDateYearChange}
               shouldDisableYear={shouldDisableYear}
-              disabled={disabled}
-              readOnly={readOnly}
             />
           )}
 
           {openView === 'month' && (
             <MonthPicker
               {...baseDateValidationProps}
+              {...commonViewProps}
               className={className}
               date={date}
               onChange={handleDateMonthChange}
-              disabled={disabled}
-              readOnly={readOnly}
               shouldDisableMonth={shouldDisableMonth}
             />
           )}
@@ -427,6 +432,7 @@ const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
               {...other}
               {...calendarState}
               {...baseDateValidationProps}
+              {...commonViewProps}
               autoFocus={autoFocus}
               onMonthSwitchingAnimationEnd={onMonthSwitchingAnimationEnd}
               onFocusedDayChange={changeFocusedDay}
@@ -435,8 +441,6 @@ const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
               onSelectedDaysChange={onSelectedDayChange}
               loading={loading}
               renderLoading={renderLoading}
-              disabled={disabled}
-              readOnly={readOnly}
               shouldDisableDate={shouldDisableDate}
             />
           )}
