@@ -26,7 +26,7 @@ We'd like to offer a big thanks to the 10 contributors who made this release pos
 - [DataGrid] Improve accessibility of the Export menu in the toolbar (#5486) @nogalpaulina
 - [DataGridPremium] Implement Aggregation - not publicly released (#4208) @flaviendelangle
 - [DataGridPremium] Fix crash when exporting all columns to Excel (#5425) @cherniavskii
-- [DataGrid] Add Traditional Chinese (zh-TW) locale (#5498) @happyincent
+- [l10n] Add Traditional Chinese (zh-TW) locale (#5498) @happyincent
 
 ### `@mui/x-date-pickers@v5.0.0-beta.2` / `@mui/x-date-picker-pro@5.0.0-beta.2`
 
