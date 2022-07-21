@@ -14,7 +14,7 @@ The handler is a method that will be called with three arguments:
 
 1. the parameters containing the information related to the event
 2. the `MuiEvent` containing the DOM event or the React synthetic event, when available
-3. the `GridCallbackDetails` containing the `GridApi` only if `DataGridPro` or `DataGridPremium` is being used
+3. the `GridCallbackDetails` containing the `GridApi`, only if `DataGridPro` or `DataGridPremium` is being used
 
 For example, here is an event handler for the `rowClick` event:
 
@@ -71,7 +71,6 @@ The following demo shows how to subscribe to the `rowClick` event using `apiRef.
 
 :::warning
 The `apiRef.current.subscribeEvent` method returns a cleaning callback that **unsubscribes** the given handler when called.
-
 For instance, when used inside a `useEffect` hook, you should always return the cleaning callback.
 Otherwise, you will have multiple registrations of the same event handler.
 :::

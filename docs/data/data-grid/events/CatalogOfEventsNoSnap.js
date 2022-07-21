@@ -74,11 +74,12 @@ const COLUMNS = [
   {
     field: 'name',
     headerName: 'Name',
-    width: 240,
+    width: 200,
+    renderCell: ({ value }) => <code>{value}</code>,
   },
   {
     field: 'plan',
-    headerName: 'Plan',
+    headerName: 'Available on',
     width: 100,
     align: 'center',
     valueGetter: ({ row }) => {
@@ -107,17 +108,15 @@ const COLUMNS = [
     field: 'description',
     headerName: 'Description',
     flex: 1,
-    renderCell: ({ value, colDef }) => {
-      const width = colDef.computedWidth - 20;
-      return (
-        <Description
-          style={{ minWidth: width, maxWidth: width, width, whiteSpace: 'normal' }}
-          dangerouslySetInnerHTML={{
-            __html: value,
-          }}
-        />
-      );
-    },
+    renderCell: ({ value }) => (
+      <Description
+        variant="body2"
+        style={{ whiteSpace: 'normal' }}
+        dangerouslySetInnerHTML={{
+          __html: value,
+        }}
+      />
+    ),
   },
 ];
 
