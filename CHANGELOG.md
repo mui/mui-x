@@ -9,7 +9,7 @@ _Jul 21, 2022_
 
 We'd like to offer a big thanks to the 10 contributors who made this release possible. Here are some highlights ✨:
 
-- 🧪 Export previously accessible components
+- 🧪 Export `GridBooleanCell` component from data grid (#5537) @cliedeman
 - 🌍 Different locales improvements
 - 📚 Documentation improvements
 - 🐞 Bugfixes
@@ -28,6 +28,12 @@ We'd like to offer a big thanks to the 10 contributors who made this release pos
 - [DataGridPremium] Fix crash when exporting all columns to Excel (#5425) @cherniavskii
 - [DataGrid] Add Traditional Chinese (zh-TW) locale (#5498) @happyincent
 
+### `@mui/x-date-pickers@v5.0.0-beta.2` / `@mui/x-date-picker-pro@5.0.0-beta.2`
+
+#### Changes
+
+- [pickers] Add Norwegian (nb-NO) locale (#5475) @elkebab
+
 ### Docs
 
 - [docs] New page presenting the `apiRef` (#5273) @flaviendelangle
@@ -38,12 +44,6 @@ We'd like to offer a big thanks to the 10 contributors who made this release pos
 - [core] Add missing comments on zh-TW translation (#5559) @flaviendelangle
 - [core] Polish on the bug issue template (#5525) @oliviertassinari
 - [test] Add more tests related to `isPrintableKey` (#5458) @mnajdova
-
-### `@mui/x-date-pickers@v5.0.0-beta.2` / `@mui/x-date-picker-pro@5.0.0-beta.2`
-
-#### Changes
-
-- [pickers] Add Norwegian (nb-NO) locale (#5475) @elkebab
 
 ## 5.13.1
 
