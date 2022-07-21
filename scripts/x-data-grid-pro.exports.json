@@ -225,6 +225,7 @@
   { "name": "GridExportFormat", "kind": "TypeAlias" },
   { "name": "GridExportMenuItemProps", "kind": "Interface" },
   { "name": "GridExportOptions", "kind": "Interface" },
+  { "name": "GridExportStateParams", "kind": "Interface" },
   { "name": "GridFeatureMode", "kind": "TypeAlias" },
   { "name": "GridFeatureModeConstant", "kind": "Variable" },
   { "name": "GridFileExportOptions", "kind": "Interface" },
