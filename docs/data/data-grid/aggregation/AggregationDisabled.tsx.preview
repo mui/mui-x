@@ -1,0 +1,8 @@
+<DataGridPremium
+  {...data}
+  private_disableAggregation
+  initialState={{ private_aggregation: { model: { gross: 'sum' } } }}
+  experimentalFeatures={{
+    private_aggregation: true,
+  }}
+/>

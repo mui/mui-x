@@ -1,5 +1,17 @@
 [
   {
+    "name": "gridAggregationLookupSelector",
+    "returnType": "GridAggregationLookup",
+    "description": "",
+    "supportsApiRef": true
+  },
+  {
+    "name": "gridAggregationModelSelector",
+    "returnType": "GridAggregationModel",
+    "description": "",
+    "supportsApiRef": true
+  },
+  {
     "name": "gridColumnDefinitionsSelector",
     "returnType": "GridStateColDef<any, any, any>[]",
     "category": "Columns",

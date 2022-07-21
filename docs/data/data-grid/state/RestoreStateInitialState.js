@@ -46,7 +46,7 @@ export default function RestoreStateInitialState() {
 
   const [savedState, setSavedState] = React.useState({
     count: 0,
-    initialState: undefined,
+    initialState: data.initialState,
   });
 
   const syncState = React.useCallback((newInitialState) => {

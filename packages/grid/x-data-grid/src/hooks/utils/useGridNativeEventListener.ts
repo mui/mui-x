@@ -31,7 +31,7 @@ export const useGridNativeEventListener = <Api extends GridApiCommon, E extends 
       targetElement = ref && ref.current ? ref.current : null;
     }
 
-    if (targetElement && wrapHandler && eventName && !added) {
+    if (targetElement && eventName && !added) {
       logger.debug(`Binding native ${eventName} event`);
       targetElement.addEventListener(eventName, wrapHandler, options);
       const boundElem = targetElement;

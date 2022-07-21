@@ -400,7 +400,12 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
       const row = currentPage.rows[i];
       renderedRows.push(row);
 
-      apiRef.current.unstable_calculateColSpan({ rowId: row.id, minFirstColumn, maxLastColumn });
+      apiRef.current.unstable_calculateColSpan({
+        rowId: row.id,
+        minFirstColumn,
+        maxLastColumn,
+        columns: visibleColumns,
+      });
     }
 
     const [initialFirstColumnToRender, lastColumnToRender] = getRenderableIndexes({
@@ -434,10 +439,8 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
       let isSelected: boolean;
       if (selectedRowsLookup[id] == null) {
         isSelected = false;
-      } else if (typeof rootProps.isRowSelectable === 'function') {
-        isSelected = rootProps.isRowSelectable(apiRef.current.getRowParams(id));
       } else {
-        isSelected = true;
+        isSelected = apiRef.current.isRowSelectable(id);
       }
 
       rows.push(
