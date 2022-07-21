@@ -10,7 +10,7 @@ _Jul 21, 2022_
 We'd like to offer a big thanks to the 10 contributors who made this release possible. Here are some highlights ✨:
 
 - 🧪 Export `GridBooleanCell` component from data grid (#5537) @cliedeman
-- 🌍 Different locales improvements
+- 🌍 Improvements to different locales
 - 📚 Documentation improvements
 - 🐞 Bugfixes
 
