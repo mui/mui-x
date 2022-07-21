@@ -11,8 +11,8 @@ import Link from '@mui/material/Link';
 import Chip from '@mui/material/Chip';
 import Avatar from '@mui/material/Avatar';
 import Typography from '@mui/material/Typography';
-import { featuresSet } from './features';
 import Box from '@mui/material/Box';
+import { featuresSet } from './features';
 
 const getChipProperties = (plan: string) => {
   switch (plan.toLowerCase()) {
