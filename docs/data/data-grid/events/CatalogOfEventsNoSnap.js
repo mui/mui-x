@@ -41,24 +41,24 @@ const EventRow = ({ event }) => {
           .map(getDataGridComponentNameFromProjectName)
           .join(', ')})
 <DataGrid
-  ${event.componentProp}={onEvent}
+  ${event.componentProp}={handleEvent}
   {...other} 
 />`
       : '';
 
     return `
-const onEvent: GridEventListener<'${event.name}'> = (
+const handleEvent: GridEventListener<'${event.name}'> = (
   ${args.join('\n  ')}
 ) => {...}    
   
 // Imperative subscription    
 apiRef.current.subscribeEvent(
   '${event.name}',
-  onEvent,
+  handleEvent,
 );
 
 // Hook subscription (only available inside the scope of the grid)
-useGridApiEventHandler('${event.name}', onEvent);
+useGridApiEventHandler('${event.name}', handleEvent);
 ${propExample}
 `;
   }, [event]);
