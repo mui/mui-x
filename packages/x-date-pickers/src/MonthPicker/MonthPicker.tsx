@@ -193,6 +193,10 @@ MonthPicker.propTypes = {
    * @default false
    */
   disableFuture: PropTypes.bool,
+  /**
+   * If `true`, today's date is rendering without highlighting with circle.
+   * @default false
+   */
   disableHighlightToday: PropTypes.bool,
   /**
    * If `true` past days are disabled.
