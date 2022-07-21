@@ -32,7 +32,7 @@ We'd like to offer a big thanks to the 10 contributors who made this release pos
 
 #### Changes
 
-- [pickers] Add Norwegian (nb-NO) locale (#5475) @elkebab
+- [l10n] Add Norwegian (nb-NO) locale (#5475) @elkebab
 
 ### Docs
 
