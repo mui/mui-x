@@ -92,6 +92,9 @@ const columns: GridColDef[] = [
 ];
 
 function PopularFeaturesDemo() {
+  
+  const getDetailPanelContent = React.useCallback(({row}) => renderFeatures(row), [])
+
   return (
     <div style={{ height: 600, width: '100%' }}>
       <DataGridPremium
@@ -99,7 +102,7 @@ function PopularFeaturesDemo() {
         componentsProps={{
           toolbar: { showQuickFilter: true, quickFilterProps: { debounceMs: 500 } },
         }}
-        getDetailPanelContent={({ row }) => renderFeatures(row)}
+        getDetailPanelContent={getDetailPanelContent}
         getDetailPanelHeight={() => 'auto'}
         getRowHeight={() => 'auto'}
         sx={{
@@ -113,8 +116,7 @@ function PopularFeaturesDemo() {
         }}
         rows={featuresSet}
         columns={columns}
-        groupingColDef={() => {
-          return {
+        groupingColDef={{
             headerName: 'Grouped by Plan',
             width: 200,
             valueFormatter: (valueFormatterParams) => {
@@ -123,9 +125,8 @@ function PopularFeaturesDemo() {
                 return <React.Fragment />;
               }
               return <PlanTag plan={valueFormatterParams.value} />;
-            },
-          };
-        }}
+            }
+          }}
       />
     </div>
   );
