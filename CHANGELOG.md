@@ -24,7 +24,7 @@ We'd like to offer a big thanks to the 10 contributors who made this release pos
 - [DataGrid] Fix `date`/`dateTime` edit input font size to match view mode (#5304) @cherniavskii
 - [DataGrid] Fix grid loading overlays position (#5558) @DanailH
 - [DataGrid] Improve accessibility of Export menu in the toolbar (#5486) @nogalpaulina
-- [DataGridPremium] Implement Aggregation (#4208) @flaviendelangle
+- [DataGridPremium] Implement Aggregation - not publicly released (#4208) @flaviendelangle
 - [DataGridPremium] Fix crash when exporting all columns to Excel (#5425) @cherniavskii
 - [DataGrid] Add Traditional Chinese (zh-TW) locale (#5498) @happyincent
 
