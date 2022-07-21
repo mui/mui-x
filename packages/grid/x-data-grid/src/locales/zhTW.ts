@@ -138,6 +138,14 @@ const zhTWGrid: Partial<GridLocaleText> = {
 
   // Row reordering text
   rowReorderingHeaderName: '排序',
+
+  // Aggregation
+  // aggregationMenuItemHeader: 'Aggregation',
+  // aggregationFunctionLabelSum: 'sum',
+  // aggregationFunctionLabelAvg: 'avg',
+  // aggregationFunctionLabelMin: 'min',
+  // aggregationFunctionLabelMax: 'max',
+  // aggregationFunctionLabelSize: 'size',
 };
 
 export const zhTW: Localization = getGridLocalization(zhTWGrid, zhTWCore);
