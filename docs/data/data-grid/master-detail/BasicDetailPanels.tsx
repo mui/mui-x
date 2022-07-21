@@ -4,7 +4,7 @@ import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
-import { DataGridPro, GridColumns, DataGridProProps } from '@mui/x-data-grid-pro';
+import { DataGridPro, GridColumns, GridRowParams } from '@mui/x-data-grid-pro';
 import {
   randomCreatedDate,
   randomPrice,
@@ -166,8 +166,10 @@ const rows = [
 type Customer = typeof rows[number];
 
 export default function BasicDetailPanels() {
-  const getDetailPanelContent: DataGridProProps['getDetailPanelContent'] =
-    React.useCallback(({ row }) => <DetailPanelContent row={row} />, []);
+  const getDetailPanelContent = React.useCallback(
+    ({ row }: GridRowParams) => <DetailPanelContent row={row} />,
+    [],
+  );
 
   const getDetailPanelHeight = React.useCallback(() => 400, []);
 

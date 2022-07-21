@@ -12,6 +12,7 @@ import {
   DataGridProProps,
   useGridApiContext,
   GridActionsCellItem,
+  GridRowParams,
 } from '@mui/x-data-grid-pro';
 import {
   randomId,
@@ -221,8 +222,10 @@ const rows = [
 type Customer = typeof rows[number];
 
 export default function DetailPanelAutoHeight() {
-  const getDetailPanelContent: DataGridProProps['getDetailPanelContent'] =
-    React.useCallback(({ row }) => <DetailPanelContent row={row} />, []);
+  const getDetailPanelContent = React.useCallback(
+    ({ row }: GridRowParams) => <DetailPanelContent row={row} />,
+    [],
+  );
 
   const getDetailPanelHeight: DataGridProProps['getDetailPanelHeight'] =
     React.useCallback(() => 'auto' as const, []);

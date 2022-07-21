@@ -155,14 +155,17 @@ const DataGridProVirtualScroller = React.forwardRef<
   const leftColumns = React.useRef<HTMLDivElement>(null);
   const rightColumns = React.useRef<HTMLDivElement>(null);
 
-  const handleRenderZonePositioning = React.useCallback(({ top }) => {
-    if (leftColumns.current) {
-      leftColumns.current!.style.transform = `translate3d(0px, ${top}px, 0px)`;
-    }
-    if (rightColumns.current) {
-      rightColumns.current!.style.transform = `translate3d(0px, ${top}px, 0px)`;
-    }
-  }, []);
+  const handleRenderZonePositioning = React.useCallback(
+    ({ top }: { top: number; left: number }) => {
+      if (leftColumns.current) {
+        leftColumns.current!.style.transform = `translate3d(0px, ${top}px, 0px)`;
+      }
+      if (rightColumns.current) {
+        rightColumns.current!.style.transform = `translate3d(0px, ${top}px, 0px)`;
+      }
+    },
+    [],
+  );
 
   const getRowProps = (id: GridRowId) => {
     if (!expandedRowIds.includes(id)) {

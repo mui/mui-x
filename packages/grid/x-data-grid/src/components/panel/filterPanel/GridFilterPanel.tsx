@@ -31,6 +31,10 @@ export interface GridFilterPanelProps
     | 'columnInputProps'
     | 'valueInputProps'
   >;
+  /**
+   * @ignore - do not document.
+   */
+  children?: React.ReactNode;
 }
 
 const GridFilterPanel = React.forwardRef<HTMLDivElement, GridFilterPanelProps>(
