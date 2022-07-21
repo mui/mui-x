@@ -2,7 +2,7 @@
 title: Data Grid - Column ordering
 ---
 
-# Data Grid - Column ordering [<span class="plan-pro"></span>](https://mui.com/store/items/mui-x-pro/)
+# Data grid - Column ordering [<span class="plan-pro"></span>](https://mui.com/store/items/mui-x-pro/)
 
 <p class="description">Drag and drop your columns to reorder them.</p>
 
@@ -29,3 +29,4 @@ In addition, column reordering emits the following events that can be imported:
 
 - [DataGrid](/x/api/data-grid/data-grid/)
 - [DataGridPro](/x/api/data-grid/data-grid-pro/)
+- [DataGridPremium](/x/api/data-grid/data-grid-premium/)

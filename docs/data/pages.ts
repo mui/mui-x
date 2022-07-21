@@ -2,14 +2,21 @@ import type { MuiPage } from '@mui/monorepo/docs/src/MuiPage';
 
 const pages: MuiPage[] = [
   {
-    pathname: '/x/advanced-components',
-    title: 'Overview',
+    pathname: '/x/introduction',
+    scopePathnames: ['/x/introduction'],
     icon: 'DescriptionIcon',
+    children: [
+      { pathname: `/x/introduction`, title: 'Overview' },
+      { pathname: `/x/introduction/installation` },
+      { pathname: `/x/introduction/licensing` },
+      { pathname: `/x/introduction/support` },
+      { pathname: `/x/introduction/roadmap` },
+    ],
   },
   {
     pathname: '/x/react-data-grid',
     scopePathnames: ['/x/api/data-grid'],
-    title: 'Data Grid',
+    title: 'Data grid',
     icon: 'TableViewIcon',
     children: [
       { pathname: '/x/react-data-grid', title: 'Overview' },
@@ -37,8 +44,6 @@ const pages: MuiPage[] = [
       { pathname: '/x/react-data-grid/filtering' },
       { pathname: '/x/react-data-grid/pagination' },
       { pathname: '/x/react-data-grid/selection' },
-      { pathname: '/x/react-data-grid/events' },
-      { pathname: '/x/react-data-grid/state' },
       { pathname: '/x/react-data-grid/export' },
       { pathname: '/x/react-data-grid/components' },
       { pathname: '/x/react-data-grid/style' },
@@ -57,11 +62,25 @@ const pages: MuiPage[] = [
           '/x/react-data-grid/pivoting',
         ],
         children: [
-          { pathname: '/x/react-data-grid/row-grouping', title: 'Row Grouping', plan: 'premium' },
-          { pathname: '/x/react-data-grid/tree-data', title: 'Tree Data', plan: 'pro' },
-          { pathname: '/x/react-data-grid/master-detail', title: 'Master Detail', plan: 'pro' },
-          { pathname: '/x/react-data-grid/aggregation', title: 'Aggregation 🚧', plan: 'premium' },
+          { pathname: '/x/react-data-grid/row-grouping', plan: 'premium' },
+          { pathname: '/x/react-data-grid/tree-data', plan: 'pro' },
+          { pathname: '/x/react-data-grid/master-detail', plan: 'pro' },
+          { pathname: '/x/react-data-grid/aggregation', title: 'Aggregation', plan: 'premium' },
           { pathname: '/x/react-data-grid/pivoting', title: 'Pivoting 🚧', plan: 'premium' },
+        ],
+      },
+      {
+        title: 'Advanced',
+        pathname: '/x/react-data-grid/api-object',
+        scopePathnames: [
+          '/x/react-data-grid/api-object',
+          '/x/react-data-grid/events',
+          '/x/react-data-grid/state',
+        ],
+        children: [
+          { pathname: '/x/react-data-grid/api-object', title: 'API object' },
+          { pathname: '/x/react-data-grid/events' },
+          { pathname: '/x/react-data-grid/state' },
         ],
       },
       {
@@ -75,6 +94,7 @@ const pages: MuiPage[] = [
           { pathname: '/x/api/data-grid/grid-api', title: 'GridApi' },
           { pathname: '/x/api/data-grid/grid-cell-params', title: 'GridCellParams' },
           { pathname: '/x/api/data-grid/grid-col-def', title: 'GridColDef' },
+          { pathname: '/x/api/data-grid/grid-export-state-params', title: 'GridExportStateParams' },
           { pathname: '/x/api/data-grid/grid-filter-form', title: 'GridFilterForm' },
           { pathname: '/x/api/data-grid/grid-filter-item', title: 'GridFilterItem' },
           { pathname: '/x/api/data-grid/grid-filter-model', title: 'GridFilterModel' },
@@ -86,6 +106,10 @@ const pages: MuiPage[] = [
           },
           { pathname: '/x/api/data-grid/grid-row-params', title: 'GridRowParams' },
           { pathname: '/x/api/data-grid/grid-row-spacing-params', title: 'GridRowSpacingParams' },
+          {
+            pathname: '/x/api/data-grid/grid-aggregation-function',
+            title: 'GridAggregationFunction',
+          },
           { pathname: '/x/api/data-grid/grid-csv-export-options', title: 'GridCsvExportOptions' },
           {
             pathname: '/x/api/data-grid/grid-print-export-options',
@@ -102,7 +126,7 @@ const pages: MuiPage[] = [
   {
     pathname: '/x/react-date-pickers',
     scopePathnames: ['/x/api/date-pickers'],
-    title: 'Date and Time Pickers',
+    title: 'Date and Time pickers',
     icon: 'DatePickerIcon',
     children: [
       { pathname: '/x/react-date-pickers/getting-started' },
@@ -115,6 +139,7 @@ const pages: MuiPage[] = [
       { pathname: '/x/react-date-pickers/date-time-picker' },
       { pathname: '/x/react-date-pickers/time-picker' },
       { pathname: '/x/react-date-pickers/localization' },
+      { pathname: '/x/react-date-pickers/custom-components' },
       {
         pathname: '/x/react-date-pickers/date-time-range-picker',
         title: 'Date time range picker 🚧',

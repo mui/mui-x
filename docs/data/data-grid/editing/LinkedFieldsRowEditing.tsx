@@ -94,7 +94,7 @@ export default function LinkedFieldsRowEditing() {
   ];
 
   return (
-    <Box sx={{ width: 1, height: 300 }}>
+    <Box sx={{ width: '100%', height: 300 }}>
       <DataGrid
         rows={rows}
         columns={columns}

@@ -32,7 +32,10 @@ function DetailPanelContent({ row }: { row: Customer }) {
   };
 
   return (
-    <Stack sx={{ py: 2, height: 1, boxSizing: 'border-box' }} direction="column">
+    <Stack
+      sx={{ py: 2, height: '100%', boxSizing: 'border-box' }}
+      direction="column"
+    >
       <Paper sx={{ flex: 1, mx: 'auto', width: '90%', p: 1 }}>
         <Stack
           component="form"
@@ -130,7 +133,7 @@ export default function FormDetailPanel() {
   const getDetailPanelHeight = React.useCallback(() => 240, []);
 
   return (
-    <Box sx={{ width: 1, height: 400 }}>
+    <Box sx={{ width: '100%', height: 400 }}>
       <DataGridPro
         columns={columns}
         rows={rows}

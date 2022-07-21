@@ -50,18 +50,20 @@ import {
   useGridColumnPinningPreProcessors,
   useGridDetailPanel,
   detailPanelStateInitializer,
-  useGridDetailPanelCache,
   useGridDetailPanelPreProcessors,
   useGridInfiniteLoader,
   useGridColumnSpanning,
   useGridRowReorder,
   useGridRowReorderPreProcessors,
 } from '@mui/x-data-grid-pro/internals';
-
 import { GridApiPremium } from '../models/gridApiPremium';
 import { DataGridPremiumProcessedProps } from '../models/dataGridPremiumProps';
-
 // Premium-only features
+import {
+  useGridAggregation,
+  aggregationStateInitializer,
+} from '../hooks/features/aggregation/useGridAggregation';
+import { useGridAggregationPreProcessors } from '../hooks/features/aggregation/useGridAggregationPreProcessors';
 import {
   useGridRowGrouping,
   rowGroupingStateInitializer,
@@ -82,6 +84,7 @@ export const useDataGridPremiumComponent = (
   useGridRowReorderPreProcessors(apiRef, props);
   useGridRowGroupingPreProcessors(apiRef, props);
   useGridTreeDataPreProcessors(apiRef, props);
+  useGridAggregationPreProcessors(apiRef, props);
   useGridDetailPanelPreProcessors(apiRef, props);
   // The column pinning `hydrateColumns` pre-processor must be after every other `hydrateColumns` pre-processors
   // Because it changes the order of the columns.
@@ -92,6 +95,7 @@ export const useDataGridPremiumComponent = (
    * Register all state initializers here.
    */
   useGridInitializeState(rowGroupingStateInitializer, apiRef, props);
+  useGridInitializeState(aggregationStateInitializer, apiRef, props);
   useGridInitializeState(selectionStateInitializer, apiRef, props);
   useGridInitializeState(detailPanelStateInitializer, apiRef, props);
   useGridInitializeState(columnPinningStateInitializer, apiRef, props);
@@ -117,15 +121,15 @@ export const useDataGridPremiumComponent = (
 
   useGridRowGrouping(apiRef, props);
   useGridTreeData(apiRef);
+  useGridAggregation(apiRef, props);
   useGridKeyboardNavigation(apiRef, props);
   useGridSelection(apiRef, props);
-  useGridDetailPanel(apiRef, props);
   useGridColumnPinning(apiRef, props);
   useGridColumns(apiRef, props);
   useGridRows(apiRef, props);
   useGridParamsApi(apiRef);
+  useGridDetailPanel(apiRef, props);
   useGridColumnSpanning(apiRef);
-  useGridDetailPanelCache(apiRef, props);
 
   const useGridEditing = props.experimentalFeatures?.newEditingApi
     ? useGridEditing_new
@@ -133,7 +137,7 @@ export const useDataGridPremiumComponent = (
   useGridEditing(apiRef, props);
 
   useGridFocus(apiRef, props);
-  useGridPreferencesPanel(apiRef);
+  useGridPreferencesPanel(apiRef, props);
   useGridFilter(apiRef, props);
   useGridSorting(apiRef, props);
   useGridDensity(apiRef, props);

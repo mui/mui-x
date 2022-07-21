@@ -1,5 +1,5 @@
 import { nbNO as nbNOCore } from '@mui/material/locale';
-import { GridLocaleText } from '@mui/x-data-grid';
+import { GridLocaleText } from '../models/api/gridLocaleTextApi';
 import { getGridLocalization, Localization } from '../utils/getGridLocalization';
 
 const nbNOGrid: Partial<GridLocaleText> = {
@@ -135,11 +135,20 @@ const nbNOGrid: Partial<GridLocaleText> = {
   unGroupColumn: (name) => `Stopp å grupper på ${name}`,
 
   // Master/detail
+  // detailPanelToggle: 'Detail panel toggle',
   expandDetailPanel: 'Utvid',
   collapseDetailPanel: 'Kollaps',
 
   // Row reordering text
   rowReorderingHeaderName: 'Rad reorganisering',
+
+  // Aggregation
+  // aggregationMenuItemHeader: 'Aggregation',
+  // aggregationFunctionLabelSum: 'sum',
+  // aggregationFunctionLabelAvg: 'avg',
+  // aggregationFunctionLabelMin: 'min',
+  // aggregationFunctionLabelMax: 'max',
+  // aggregationFunctionLabelSize: 'size',
 };
 
 export const nbNO: Localization = getGridLocalization(nbNOGrid, nbNOCore);

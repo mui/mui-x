@@ -132,11 +132,20 @@ const huHUGrid: Partial<GridLocaleText> = {
   unGroupColumn: (name) => `${name} szerinti csoportosítás törlése`,
 
   // Master/detail
+  // detailPanelToggle: 'Detail panel toggle',
   expandDetailPanel: 'Kibontás',
   collapseDetailPanel: 'Összecsukás',
 
   // Row reordering text
   // rowReorderingHeaderName: 'Row reordering',
+
+  // Aggregation
+  // aggregationMenuItemHeader: 'Aggregation',
+  // aggregationFunctionLabelSum: 'sum',
+  // aggregationFunctionLabelAvg: 'avg',
+  // aggregationFunctionLabelMin: 'min',
+  // aggregationFunctionLabelMax: 'max',
+  // aggregationFunctionLabelSize: 'size',
 };
 
 export const huHU: Localization = getGridLocalization(huHUGrid, huHUCore);

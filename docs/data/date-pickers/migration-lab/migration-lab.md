@@ -1,10 +1,6 @@
----
-title: MUI X - Migration from the lab
----
+# Migration from the lab
 
-# MUI X - Migration from the lab
-
-<p class="description">MUI date and time pickers are now available on X!</p>
+<p class="description">MUI date and time pickers are now available on MUI X!</p>
 
 ## Introduction
 
@@ -59,7 +55,7 @@ import { LicenseInfo } from '@mui/x-license-pro';
 LicenseInfo.setLicenseKey('YOUR_LICENSE_KEY');
 ```
 
-More information [here](/x/advanced-components/#license-key-installation)
+Learn more on [the Licensing page](/x/introduction/licensing/#license-key-installation).
 
 ### 2. Run the code mod
 

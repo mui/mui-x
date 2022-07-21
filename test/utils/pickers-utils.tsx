@@ -8,39 +8,39 @@ import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon';
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 
-const availableAdapters = ['date-fns', 'day-js', 'luxon', 'moment'];
-let adapter = 'date-fns';
+const availableAdapters = {
+  'date-fns': AdapterDateFns,
+  dayjs: AdapterDayjs,
+  luxon: AdapterLuxon,
+  moment: AdapterMoment,
+};
+
+let AdapterClassToExtend = availableAdapters['date-fns'];
 
 // Check if we are in unit tests
 if (/jsdom/.test(window.navigator.userAgent)) {
   // Add parameter `--date-adapter luxon` to use AdapterLuxon for running tests
-  // adapter available : date-fns (default one), day-js, luxon, moment
+  // adapter available : date-fns (default one), dayjs, luxon, moment
   const args = process.argv.slice(2);
   const flagIndex = args.findIndex((element) => element === '--date-adapter');
-  const potentialAdapter = flagIndex + 1 < args.length ? args[flagIndex + 1] : null;
-  if (potentialAdapter && availableAdapters.includes(potentialAdapter)) {
-    adapter = potentialAdapter;
+  if (flagIndex !== -1 && flagIndex + 1 < args.length) {
+    const potentialAdapter = args[flagIndex + 1];
+    if (potentialAdapter) {
+      if (availableAdapters[potentialAdapter]) {
+        AdapterClassToExtend = availableAdapters[potentialAdapter];
+      } else {
+        const supportedAdapters = Object.keys(availableAdapters);
+        const message = `Error: Invalid --date-adapter value "${potentialAdapter}". Supported date adapters: ${supportedAdapters
+          .map((key) => `"${key}"`)
+          .join(', ')}`;
+        // eslint-disable-next-line no-console
+        console.log(message); // log message explicitly, because error message gets swallowed by mocha
+        throw new Error(message);
+      }
+    }
   }
 }
 
-let AdapterClassToExtend;
-switch (adapter) {
-  case 'day-js':
-    AdapterClassToExtend = AdapterDayjs;
-    break;
-
-  case 'luxon':
-    AdapterClassToExtend = AdapterLuxon;
-    break;
-
-  case 'moment':
-    AdapterClassToExtend = AdapterMoment;
-    break;
-
-  default:
-    AdapterClassToExtend = AdapterDateFns;
-    break;
-}
 export class AdapterClassToUse extends AdapterClassToExtend {}
 
 export const adapterToUse = new AdapterClassToUse();

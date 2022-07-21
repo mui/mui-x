@@ -51,7 +51,6 @@ import {
   STATUS_OPTIONS,
   TAXCODE_OPTIONS,
 } from '../services/static-data';
-
 import { GridColDefGenerator } from '../services/gridColDefGenerator';
 
 export const getCommodityColumns = (editable = false): GridColDefGenerator[] => [
@@ -103,6 +102,7 @@ export const getCommodityColumns = (editable = false): GridColDefGenerator[] => 
     generateData: generateFilledQuantity,
     renderCell: renderProgress,
     renderEditCell: renderEditProgress,
+    private_availableAggregationFunctions: ['min', 'max', 'avg', 'size'],
     type: 'number',
     width: 120,
     editable,

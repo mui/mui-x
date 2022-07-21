@@ -1,4 +1,4 @@
-/ /x/advanced-components/
+/ /x/introduction/ 301
 
 # For links that we can't edit later on, e.g. hosted in the code published on npm or sent by email
 # should all be prefixed with x-
@@ -6,7 +6,10 @@
 /r/x-get-license scope=premium https://mui.com/store/items/mui-x-premium/ 302
 /r/x-get-license https://mui.com/pricing/ 302
 /r/x-license-eula https://mui.com/store/legal/mui-x-eula/ 302
-/r/x-license-key-installation https://mui.com/x/advanced-components/#license-key-installation 302
+/r/x-license-key-installation https://mui.com/x/introduction/licensing/#license-key-installation 302
+/r/x-data-grid-no-dimensions https://mui.com/x/react-data-grid/layout/ 302
+/r/x-technical-support https://mui.com/x/introduction/support/#technical-support 302
+/r/x-issue-template https://codesandbox.io/s/mui-x-issue-template-qtf00h 302
 
 # Legacy redirection
 # 2021
@@ -19,6 +22,8 @@
 /:lang/x/react-data-grid/group-pivot/ /:lang/x/react-data-grid/tree-data/ 301
 /x/react-data-grid/columns/ /x/react-data-grid/column-definition/ 301
 /:lang/x/react-data-grid/columns/ /:lang/x/react-data-grid/column-definition/ 301
+/x/advanced-components/ /x/introduction/ 301
+/:lang/x/advanced-components/ /:lang/x/introduction/ 301
 # 2023
 
 # Proxies

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { GridRenderEditCellParams } from '@mui/x-data-grid-premium';
+import { GridRenderEditCellParams, useGridApiContext } from '@mui/x-data-grid-premium';
 import Autocomplete, { autocompleteClasses } from '@mui/material/Autocomplete';
 import InputBase from '@mui/material/InputBase';
 import Box from '@mui/material/Box';
@@ -20,17 +20,19 @@ const StyledAutocomplete = styled(Autocomplete)(({ theme }) => ({
 }));
 
 function EditCountry(props: GridRenderEditCellParams<CountryIsoOption>) {
-  const { id, value, api, field } = props;
+  const { id, value, field } = props;
+
+  const apiRef = useGridApiContext();
 
   const handleChange = React.useCallback(
     (event, newValue) => {
-      api.setEditCellValue({ id, field, value: newValue }, event);
+      apiRef.current.setEditCellValue({ id, field, value: newValue }, event);
       if (!event.key) {
-        api.commitCellChange({ id, field });
-        api.setCellMode(id, field, 'view');
+        apiRef.current.commitCellChange({ id, field });
+        apiRef.current.setCellMode(id, field, 'view');
       }
     },
-    [api, field, id],
+    [apiRef, field, id],
   );
 
   return (

@@ -1,0 +1,14 @@
+<DataGrid
+  columns={[
+    { field: 'username', colSpan: 2, hideable: false },
+    {
+      field: 'organization',
+      sortable: false,
+      filterable: false,
+      hideable: false,
+    },
+    { field: 'age', hideable: false },
+  ]}
+  rows={rows}
+  {...other}
+/>

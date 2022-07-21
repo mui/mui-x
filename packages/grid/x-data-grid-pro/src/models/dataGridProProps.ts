@@ -98,10 +98,10 @@ export interface DataGridProPropsWithDefaultValue extends DataGridPropsWithDefau
   /**
    * Function that returns the height of the row detail panel.
    * @param {GridRowParams} params With all properties from [[GridRowParams]].
-   * @returns {number} The height in pixels.
+   * @returns {number | string} The height in pixels or "auto" to use the content height.
    * @default "() => 500"
    */
-  getDetailPanelHeight: (params: GridRowParams) => number;
+  getDetailPanelHeight: (params: GridRowParams) => number | 'auto';
   /**
    * If `true`, the reordering of rows is enabled.
    * @default false

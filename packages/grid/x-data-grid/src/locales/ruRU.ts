@@ -165,11 +165,20 @@ const ruRUGrid: Partial<GridLocaleText> = {
   unGroupColumn: (name) => `Разгруппировать по ${name}`,
 
   // Master/detail
+  // detailPanelToggle: 'Detail panel toggle',
   expandDetailPanel: 'Развернуть',
   collapseDetailPanel: 'Свернуть',
 
   // Row reordering text
   // rowReorderingHeaderName: 'Row reordering',
+
+  // Aggregation
+  // aggregationMenuItemHeader: 'Aggregation',
+  // aggregationFunctionLabelSum: 'sum',
+  // aggregationFunctionLabelAvg: 'avg',
+  // aggregationFunctionLabelMin: 'min',
+  // aggregationFunctionLabelMax: 'max',
+  // aggregationFunctionLabelSize: 'size',
 };
 
 export const ruRU: Localization = getGridLocalization(ruRUGrid, ruRUCore);

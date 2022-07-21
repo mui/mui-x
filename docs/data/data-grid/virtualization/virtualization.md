@@ -2,7 +2,7 @@
 title: Data Grid - Virtualization
 ---
 
-# Data Grid - Virtualization
+# Data grid - Virtualization
 
 <p class="description">The grid is high performing thanks to its rows and columns virtualization engine.</p>
 
@@ -51,3 +51,4 @@ Use it only for testing purposes or on small datasets.
 
 - [DataGrid](/x/api/data-grid/data-grid/)
 - [DataGridPro](/x/api/data-grid/data-grid-pro/)
+- [DataGridPremium](/x/api/data-grid/data-grid-premium/)

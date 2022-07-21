@@ -31,8 +31,8 @@ export function GridFilterInputBoolean(props: GridFilterInputValueProps & TextFi
       label={apiRef.current.getLocaleText('filterPanelInputLabel')}
       value={filterValueState}
       onChange={onFilterChange}
-      variant="standard"
       select
+      variant="standard"
       SelectProps={{
         native: isSelectNative,
         displayEmpty: true,

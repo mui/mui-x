@@ -12,7 +12,10 @@ import {
 import { buildWarning } from '@mui/x-data-grid/internals';
 import { GridExceljsProcessInput, ColumnsStylesInterface } from '../gridExcelExportInterface';
 
-const getExcelJs = () => import('exceljs');
+const getExcelJs = async () => {
+  const { default: excelJsDefault } = await import('exceljs');
+  return excelJsDefault;
+};
 
 const warnInvalidFormattedValue = buildWarning([
   'MUI: When the value of a field is an object or a `renderCell` is provided, the Excel export might not display the value correctly.',
@@ -61,7 +64,8 @@ const serializeRow = (
   api.unstable_calculateColSpan({
     rowId: id,
     minFirstColumn: 0,
-    maxLastColumn: columns.length - 1,
+    maxLastColumn: columns.length,
+    columns,
   });
 
   columns.forEach((column, colIndex) => {

@@ -2,7 +2,7 @@
 title: Data Grid - Selection
 ---
 
-# Data Grid - Selection
+# Data grid - Selection
 
 <p class="description">Selection allows the user to select and highlight a number of rows that they can then take action on.</p>
 
@@ -112,3 +112,4 @@ With this feature, you will be able to select ranges of cells across the Grid.
 
 - [DataGrid](/x/api/data-grid/data-grid/)
 - [DataGridPro](/x/api/data-grid/data-grid-pro/)
+- [DataGridPremium](/x/api/data-grid/data-grid-premium/)

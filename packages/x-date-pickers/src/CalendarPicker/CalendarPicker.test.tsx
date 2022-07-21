@@ -46,7 +46,7 @@ describe('<CalendarPicker />', () => {
     const handleViewChange = spy();
     render(
       <CalendarPicker
-        date={adapterToUse.date('2019-01-01T00:00:00.000')}
+        date={adapterToUse.date(new Date(2019, 0, 1))}
         onChange={() => {}}
         onViewChange={handleViewChange}
       />,
@@ -64,7 +64,7 @@ describe('<CalendarPicker />', () => {
     const onMonthChangeMock = spy();
     render(
       <CalendarPicker
-        date={adapterToUse.date('2019-01-01T00:00:00.000')}
+        date={adapterToUse.date(new Date(2019, 0, 1))}
         onChange={onChangeMock}
         onMonthChange={onMonthChangeMock}
         readOnly
@@ -89,7 +89,7 @@ describe('<CalendarPicker />', () => {
     const onMonthChangeMock = spy();
     render(
       <CalendarPicker
-        date={adapterToUse.date('2019-01-01T00:00:00.000')}
+        date={adapterToUse.date(new Date(2019, 0, 1))}
         onChange={onChangeMock}
         onMonthChange={onMonthChangeMock}
         disabled
@@ -115,7 +115,7 @@ describe('<CalendarPicker />', () => {
     const onMonthChangeMock = spy();
     render(
       <CalendarPicker
-        date={adapterToUse.date('2019-01-01T00:00:00.000')}
+        date={adapterToUse.date(new Date(2019, 0, 1))}
         onChange={onChangeMock}
         onMonthChange={onMonthChangeMock}
         disabled
@@ -137,7 +137,7 @@ describe('<CalendarPicker />', () => {
         dateAdapter={AdapterClassToUse}
         dateFormats={{ monthAndYear: 'yyyy/MM' }}
       >
-        <CalendarPicker date={adapterToUse.date('2019-01-01T00:00:00.000')} onChange={() => {}} />,
+        <CalendarPicker date={adapterToUse.date(new Date(2019, 0, 1))} onChange={() => {}} />,
       </LocalizationProvider>,
     );
 
@@ -149,22 +149,20 @@ describe('<CalendarPicker />', () => {
 
     render(
       <CalendarPicker
-        date={adapterToUse.date('2019-01-01T00:00:00.000')}
+        date={adapterToUse.date(new Date(2019, 0, 1))}
         onChange={onChange}
-        maxDate={adapterToUse.date('2018-01-01T00:00:00.000')}
+        maxDate={adapterToUse.date(new Date(2018, 0, 1))}
       />,
     );
 
     // onChange must be dispatched with newly selected date
     expect(onChange.callCount).to.equal(React.version.startsWith('18') ? 2 : 1); // Strict Effects run mount effects twice
-    expect(onChange.lastCall.args[0]).toEqualDateTime(adapterToUse.date('2018-01-01T00:00:00.000'));
+    expect(onChange.lastCall.args[0]).toEqualDateTime(new Date(2018, 0, 1));
   });
 
   describe('view: day', () => {
     it('renders day calendar standalone', () => {
-      render(
-        <CalendarPicker date={adapterToUse.date('2019-01-01T00:00:00.000')} onChange={() => {}} />,
-      );
+      render(<CalendarPicker date={adapterToUse.date(new Date(2019, 0, 1))} onChange={() => {}} />);
 
       expect(screen.getByText('January 2019')).toBeVisible();
       expect(screen.getAllByMuiTest('day')).to.have.length(31);
@@ -181,16 +179,14 @@ describe('<CalendarPicker />', () => {
         <CalendarPicker
           date={null}
           onChange={onChange}
-          defaultCalendarMonth={adapterToUse.date('2018-01-01T00:00:00.000')}
+          defaultCalendarMonth={adapterToUse.date(new Date(2018, 0, 1))}
           view="day"
         />,
       );
 
       userEvent.mousePress(screen.getByLabelText('Jan 2, 2018'));
       expect(onChange.callCount).to.equal(1);
-      expect(onChange.lastCall.args[0]).toEqualDateTime(
-        adapterToUse.date('2018-01-02T00:00:00.000'),
-      );
+      expect(onChange.lastCall.args[0]).toEqualDateTime(new Date(2018, 0, 2));
     });
 
     it('should keep the time of the currently provided date', () => {
@@ -198,9 +194,9 @@ describe('<CalendarPicker />', () => {
 
       render(
         <CalendarPicker
-          date={adapterToUse.date('2018-01-03T11:11:11.111')}
+          date={adapterToUse.date(new Date(2018, 0, 3, 11, 11, 11, 111))}
           onChange={onChange}
-          defaultCalendarMonth={adapterToUse.date('2018-01-01T00:00:00.000')}
+          defaultCalendarMonth={adapterToUse.date(new Date(2018, 0, 1))}
           view="day"
         />,
       );
@@ -208,7 +204,7 @@ describe('<CalendarPicker />', () => {
       userEvent.mousePress(screen.getByLabelText('Jan 2, 2018'));
       expect(onChange.callCount).to.equal(1);
       expect(onChange.lastCall.args[0]).toEqualDateTime(
-        adapterToUse.date('2018-01-02T11:11:11.000'),
+        adapterToUse.date(new Date(2018, 0, 2, 11, 11, 11)),
       );
     });
   });
@@ -219,7 +215,7 @@ describe('<CalendarPicker />', () => {
 
       render(
         <CalendarPicker
-          date={adapterToUse.date('2019-01-01T00:00:00.000')}
+          date={adapterToUse.date(new Date(2019, 0, 1))}
           onChange={onChange}
           shouldDisableDate={(date) => {
             // Missing `getDate` in adapters
@@ -238,9 +234,7 @@ describe('<CalendarPicker />', () => {
       fireEvent.click(april);
 
       expect(onChange.callCount).to.equal(1);
-      expect(onChange.lastCall.args[0]).toEqualDateTime(
-        adapterToUse.date('2019-04-06T00:00:00.000'),
-      );
+      expect(onChange.lastCall.args[0]).toEqualDateTime(new Date(2019, 3, 6));
     });
 
     it('should respect minDate when selecting closest enabled date', () => {
@@ -248,8 +242,8 @@ describe('<CalendarPicker />', () => {
 
       render(
         <CalendarPicker
-          date={adapterToUse.date('2019-06-01T00:00:00.000')}
-          minDate={adapterToUse.date('2019-04-07T00:00:00.000')}
+          date={adapterToUse.date(new Date(2019, 5, 1))}
+          minDate={adapterToUse.date(new Date(2019, 3, 7))}
           onChange={onChange}
           views={['month', 'day']}
           openTo="month"
@@ -260,9 +254,7 @@ describe('<CalendarPicker />', () => {
       fireEvent.click(april);
 
       expect(onChange.callCount).to.equal(1);
-      expect(onChange.lastCall.args[0]).toEqualDateTime(
-        adapterToUse.date('2019-04-07T00:00:00.000'),
-      );
+      expect(onChange.lastCall.args[0]).toEqualDateTime(new Date(2019, 3, 7));
     });
 
     it('should respect maxDate when selecting closest enabled date', () => {
@@ -270,8 +262,8 @@ describe('<CalendarPicker />', () => {
 
       render(
         <CalendarPicker
-          date={adapterToUse.date('2019-01-29T00:00:00.000')}
-          maxDate={adapterToUse.date('2019-04-22T00:00:00.000')}
+          date={adapterToUse.date(new Date(2019, 0, 29))}
+          maxDate={adapterToUse.date(new Date(2019, 3, 22))}
           onChange={onChange}
           views={['month', 'day']}
           openTo="month"
@@ -282,9 +274,7 @@ describe('<CalendarPicker />', () => {
       fireEvent.click(april);
 
       expect(onChange.callCount).to.equal(1);
-      expect(onChange.lastCall.args[0]).toEqualDateTime(
-        adapterToUse.date('2019-04-22T00:00:00.000'),
-      );
+      expect(onChange.lastCall.args[0]).toEqualDateTime(new Date(2019, 3, 22));
     });
 
     it('should go to next view without changing the date when no date of the new month is enabled', () => {
@@ -292,7 +282,7 @@ describe('<CalendarPicker />', () => {
 
       render(
         <CalendarPicker
-          date={adapterToUse.date('2019-01-29T00:00:00.000')}
+          date={adapterToUse.date(new Date(2019, 0, 29))}
           onChange={onChange}
           shouldDisableDate={(date) => adapterToUse.getMonth(date) === 3}
           views={['month', 'day']}
@@ -313,7 +303,7 @@ describe('<CalendarPicker />', () => {
     it('renders year selection standalone', () => {
       render(
         <CalendarPicker
-          date={adapterToUse.date('2019-01-01T00:00:00.000')}
+          date={adapterToUse.date(new Date(2019, 0, 1))}
           openTo="year"
           onChange={() => {}}
         />,
@@ -327,7 +317,7 @@ describe('<CalendarPicker />', () => {
 
       render(
         <CalendarPicker
-          date={adapterToUse.date('2019-04-29T00:00:00.000')}
+          date={adapterToUse.date(new Date(2019, 3, 29))}
           onChange={onChange}
           shouldDisableDate={(date) =>
             adapterToUse.getYear(date) === 2022 && adapterToUse.getMonth(date) === 3
@@ -341,9 +331,7 @@ describe('<CalendarPicker />', () => {
       fireEvent.click(year2022);
 
       expect(onChange.callCount).to.equal(1);
-      expect(onChange.lastCall.args[0]).toEqualDateTime(
-        adapterToUse.date('2022-05-01T00:00:00.000'),
-      );
+      expect(onChange.lastCall.args[0]).toEqualDateTime(new Date(2022, 4, 1));
     });
 
     it('should respect minDate when selecting closest enabled date', () => {
@@ -351,8 +339,8 @@ describe('<CalendarPicker />', () => {
 
       render(
         <CalendarPicker
-          date={adapterToUse.date('2019-04-29T00:00:00.000')}
-          minDate={adapterToUse.date('2017-05-12T00:00:00.000')}
+          date={adapterToUse.date(new Date(2019, 3, 29))}
+          minDate={adapterToUse.date(new Date(2017, 4, 12))}
           onChange={onChange}
           views={['year', 'day']}
           openTo="year"
@@ -363,9 +351,7 @@ describe('<CalendarPicker />', () => {
       fireEvent.click(year2017);
 
       expect(onChange.callCount).to.equal(1);
-      expect(onChange.lastCall.args[0]).toEqualDateTime(
-        adapterToUse.date('2017-05-12T00:00:00.000'),
-      );
+      expect(onChange.lastCall.args[0]).toEqualDateTime(new Date(2017, 4, 12));
     });
 
     it('should respect maxDate when selecting closest enabled date', () => {
@@ -373,8 +359,8 @@ describe('<CalendarPicker />', () => {
 
       render(
         <CalendarPicker
-          date={adapterToUse.date('2019-04-29T00:00:00.000')}
-          maxDate={adapterToUse.date('2022-03-31T00:00:00.000')}
+          date={adapterToUse.date(new Date(2019, 3, 29))}
+          maxDate={adapterToUse.date(new Date(2022, 2, 31))}
           onChange={onChange}
           views={['year', 'day']}
           openTo="year"
@@ -385,9 +371,7 @@ describe('<CalendarPicker />', () => {
       fireEvent.click(year2022);
 
       expect(onChange.callCount).to.equal(1);
-      expect(onChange.lastCall.args[0]).toEqualDateTime(
-        adapterToUse.date('2022-03-31T00:00:00.000'),
-      );
+      expect(onChange.lastCall.args[0]).toEqualDateTime(new Date(2022, 2, 31));
     });
 
     it('should go to next view without changing the date when no date of the new year is enabled', () => {
@@ -395,7 +379,7 @@ describe('<CalendarPicker />', () => {
 
       render(
         <CalendarPicker
-          date={adapterToUse.date('2019-04-29T00:00:00.000')}
+          date={adapterToUse.date(new Date(2019, 3, 29))}
           onChange={onChange}
           shouldDisableDate={(date) => adapterToUse.getYear(date) === 2022}
           views={['year', 'day']}

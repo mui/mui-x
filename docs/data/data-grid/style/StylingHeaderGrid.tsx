@@ -40,7 +40,7 @@ export default function StylingHeaderGrid() {
     <Box
       sx={{
         height: 300,
-        width: 1,
+        width: '100%',
         '& .super-app-theme--header': {
           backgroundColor: 'rgba(255, 7, 0, 0.55)',
         },

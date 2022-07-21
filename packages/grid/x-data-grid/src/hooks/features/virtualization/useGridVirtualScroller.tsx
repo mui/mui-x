@@ -23,7 +23,7 @@ import { GridRowId, GridRowModel } from '../../../models/gridRows';
 import { getFirstNonSpannedColumnToRender } from '../columns/gridColumnsUtils';
 
 // Uses binary search to avoid looping through all possible positions
-export function getIndexFromScroll(
+export function binarySearch(
   offset: number,
   positions: number[],
   sliceStart = 0,
@@ -40,8 +40,19 @@ export function getIndexFromScroll(
   const pivot = sliceStart + Math.floor((sliceEnd - sliceStart) / 2);
   const itemOffset = positions[pivot];
   return offset <= itemOffset
-    ? getIndexFromScroll(offset, positions, sliceStart, pivot)
-    : getIndexFromScroll(offset, positions, pivot + 1, sliceEnd);
+    ? binarySearch(offset, positions, sliceStart, pivot)
+    : binarySearch(offset, positions, pivot + 1, sliceEnd);
+}
+
+function exponentialSearch(offset: number, positions: number[], index: number): number {
+  let interval = 1;
+
+  while (index < positions.length && positions[index] < offset) {
+    index += interval;
+    interval *= 2;
+  }
+
+  return binarySearch(offset, positions, Math.floor(index / 2), Math.min(index, positions.length));
 }
 
 export const getRenderableIndexes = ({
@@ -104,6 +115,34 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
   const [containerWidth, setContainerWidth] = React.useState<number | null>(null);
   const prevTotalWidth = React.useRef(columnsTotalWidth);
 
+  const getNearestIndexToRender = React.useCallback(
+    (offset) => {
+      const lastMeasuredIndexRelativeToAllRows = apiRef.current.unstable_getLastMeasuredRowIndex();
+      const lastMeasuredIndexRelativeToCurrentPage =
+        lastMeasuredIndexRelativeToAllRows - (currentPage.range?.firstRowIndex || 0);
+      const lastMeasuredIndex = Math.max(0, lastMeasuredIndexRelativeToCurrentPage);
+
+      let allRowsMeasured = lastMeasuredIndex === Infinity;
+      if (currentPage.range?.lastRowIndex && !allRowsMeasured) {
+        // Check if all rows in this page are already measured
+        allRowsMeasured = lastMeasuredIndex >= currentPage.range.lastRowIndex;
+      }
+
+      if (allRowsMeasured || rowsMeta.positions[lastMeasuredIndex] >= offset) {
+        // If all rows were measured (when no row has "auto" as height) or all rows before the offset
+        // were measured, then use a binary search because it's faster.
+        return binarySearch(offset, rowsMeta.positions);
+      }
+
+      // Otherwise, use an exponential search.
+      // If rows have "auto" as height, their positions will be based on estimated heights.
+      // In this case, we can skip several steps until we find a position higher than the offset.
+      // Inspired by https://github.com/bvaughn/react-virtualized/blob/master/source/Grid/utils/CellSizeAndPositionManager.js
+      return exponentialSearch(offset, rowsMeta.positions, lastMeasuredIndex);
+    },
+    [apiRef, currentPage.range?.firstRowIndex, currentPage.range?.lastRowIndex, rowsMeta.positions],
+  );
+
   const computeRenderContext = React.useCallback(() => {
     if (disableVirtualization) {
       return {
@@ -116,13 +155,13 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
 
     const { top, left } = scrollPosition.current!;
 
-    const firstRowIndex = Math.min(
-      Math.max(0, apiRef.current.unstable_getLastMeasuredRowIndex()),
-      getIndexFromScroll(top, rowsMeta.positions),
-    );
+    // Clamp the value because the search may return an index out of bounds.
+    // In the last index, this is not needed because Array.slice doesn't include it.
+    const firstRowIndex = Math.min(getNearestIndexToRender(top), rowsMeta.positions.length - 1);
+
     const lastRowIndex = rootProps.autoHeight
       ? firstRowIndex + currentPage.rows.length
-      : getIndexFromScroll(top + rootRef.current!.clientHeight!, rowsMeta.positions);
+      : getNearestIndexToRender(top + rootRef.current!.clientHeight!);
 
     let hasRowWithAutoHeight = false;
     let firstColumnIndex = 0;
@@ -142,8 +181,8 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
     }
 
     if (!hasRowWithAutoHeight) {
-      firstColumnIndex = getIndexFromScroll(left, columnPositions);
-      lastColumnIndex = getIndexFromScroll(left + containerWidth!, columnPositions);
+      firstColumnIndex = binarySearch(left, columnPositions);
+      lastColumnIndex = binarySearch(left + containerWidth!, columnPositions);
     }
 
     return {
@@ -154,7 +193,8 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
     };
   }, [
     disableVirtualization,
-    rowsMeta.positions,
+    getNearestIndexToRender,
+    rowsMeta.positions.length,
     rootProps.autoHeight,
     rootProps.rowBuffer,
     currentPage.rows,
@@ -360,7 +400,12 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
       const row = currentPage.rows[i];
       renderedRows.push(row);
 
-      apiRef.current.unstable_calculateColSpan({ rowId: row.id, minFirstColumn, maxLastColumn });
+      apiRef.current.unstable_calculateColSpan({
+        rowId: row.id,
+        minFirstColumn,
+        maxLastColumn,
+        columns: visibleColumns,
+      });
     }
 
     const [initialFirstColumnToRender, lastColumnToRender] = getRenderableIndexes({
@@ -394,10 +439,8 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
       let isSelected: boolean;
       if (selectedRowsLookup[id] == null) {
         isSelected = false;
-      } else if (typeof rootProps.isRowSelectable === 'function') {
-        isSelected = rootProps.isRowSelectable(apiRef.current.getRowParams(id));
       } else {
-        isSelected = true;
+        isSelected = apiRef.current.isRowSelectable(id);
       }
 
       rows.push(
@@ -471,6 +514,9 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
   const rootStyle = {} as React.CSSProperties;
   if (!needsHorizontalScrollbar) {
     rootStyle.overflowX = 'hidden';
+  }
+  if (rootProps.autoHeight) {
+    rootStyle.overflowY = 'hidden';
   }
 
   const getRenderContext = React.useCallback((): GridRenderContext => {

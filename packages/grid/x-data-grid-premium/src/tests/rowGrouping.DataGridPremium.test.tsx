@@ -1,3 +1,4 @@
+import * as React from 'react';
 // @ts-ignore Remove once the test utils are typed
 import { createRenderer, fireEvent, screen, act } from '@mui/monorepo/test/utils';
 import {
@@ -5,7 +6,6 @@ import {
   getColumnHeadersTextContent,
   getColumnValues,
 } from 'test/utils/helperFn';
-import * as React from 'react';
 import { expect } from 'chai';
 import {
   DataGridPremium,
@@ -60,7 +60,7 @@ const baselineProps: DataGridPremiumProps = {
   ],
 };
 
-describe('<DataGridPremium /> - Group Rows By Column', () => {
+describe('<DataGridPremium /> - Row Grouping', () => {
   const { render, clock } = createRenderer({ clock: 'fake' });
 
   let apiRef: React.MutableRefObject<GridApi>;
@@ -2094,6 +2094,27 @@ describe('<DataGridPremium /> - Group Rows By Column', () => {
 
         // "Cat A" & "Cat 2" groups are not tested against the "id" filter item
         expect(getColumnValues(0)).to.deep.equal(['Cat A (1)', 'Cat 2 (1)', '']);
+      });
+
+      it('should apply quick filter without throwing error', () => {
+        render(
+          <Test
+            initialState={{
+              rowGrouping: { model: ['category1'] },
+              filter: {
+                filterModel: {
+                  items: [],
+                  quickFilterValues: ['B'],
+                },
+              },
+            }}
+            rowGroupingColumnMode="single"
+            defaultGroupingExpansionDepth={-1}
+          />,
+        );
+
+        // TODO: allows grouping filter to be more flexible when it is quick filter
+        expect(getColumnValues(1)).to.deep.equal(['', '3', '4']);
       });
     });
 

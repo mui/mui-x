@@ -220,6 +220,8 @@ const GridFilterForm = React.forwardRef<HTMLDivElement, GridFilterFormProps>(
     const isBaseSelectNative = baseSelectProps.native ?? true;
     const OptionComponent = isBaseSelectNative ? 'option' : MenuItem;
 
+    const { InputComponentProps, ...valueInputPropsOther } = valueInputProps;
+
     const sortedFilterableColumns = React.useMemo(() => {
       switch (columnsSort) {
         case 'asc':
@@ -462,11 +464,11 @@ const GridFilterForm = React.forwardRef<HTMLDivElement, GridFilterFormProps>(
           variant="standard"
           as={rootProps.components.BaseFormControl}
           {...baseFormControlProps}
-          {...valueInputProps}
+          {...valueInputPropsOther}
           className={clsx(
             classes.valueInput,
             baseFormControlProps.className,
-            valueInputProps.className,
+            valueInputPropsOther.className,
           )}
         >
           {currentOperator?.InputComponent ? (
@@ -476,6 +478,7 @@ const GridFilterForm = React.forwardRef<HTMLDivElement, GridFilterFormProps>(
               applyValue={applyFilterChanges}
               focusElementRef={valueRef}
               {...currentOperator.InputComponentProps}
+              {...InputComponentProps}
             />
           ) : null}
         </FilterFormValueInput>

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import Divider from '@mui/material/Divider';
+import MuiDivider from '@mui/material/Divider';
 import {
   GridEventListener,
   useGridApiEventHandler,
@@ -30,6 +30,8 @@ import { GridRowGroupingApi } from './gridRowGroupingInterfaces';
 import { GridRowGroupableColumnMenuItems } from '../../../components/GridRowGroupableColumnMenuItems';
 import { GridRowGroupingColumnMenuItems } from '../../../components/GridRowGroupingColumnMenuItems';
 import { GridInitialStatePremium } from '../../../models/gridStatePremium';
+
+const Divider = () => <MuiDivider onClick={(event) => event.stopPropagation()} />;
 
 export const rowGroupingStateInitializer: GridStateInitializer<
   Pick<DataGridPremiumProcessedProps, 'rowGroupingModel' | 'initialState'>
@@ -153,15 +155,15 @@ export const useGridRowGrouping = (
    * PRE-PROCESSING
    */
   const addColumnMenuButtons = React.useCallback<GridPipeProcessor<'columnMenu'>>(
-    (initialValue, columns) => {
+    (initialValue, column) => {
       if (props.disableRowGrouping) {
         return initialValue;
       }
 
       let menuItems: React.ReactNode;
-      if (isGroupingColumn(columns.field)) {
+      if (isGroupingColumn(column.field)) {
         menuItems = <GridRowGroupingColumnMenuItems />;
-      } else if (columns.groupable) {
+      } else if (column.groupable) {
         menuItems = <GridRowGroupableColumnMenuItems />;
       } else {
         menuItems = null;
@@ -177,13 +179,20 @@ export const useGridRowGrouping = (
   );
 
   const stateExportPreProcessing = React.useCallback<GridPipeProcessor<'exportState'>>(
-    (prevState) => {
-      if (props.disableRowGrouping) {
-        return prevState;
-      }
-
+    (prevState, context) => {
       const rowGroupingModelToExport = gridRowGroupingModelSelector(apiRef);
-      if (rowGroupingModelToExport.length === 0) {
+
+      const shouldExportRowGroupingModel =
+        // Always export if the `exportOnlyDirtyModels` property is activated
+        !context.exportOnlyDirtyModels ||
+        // Always export if the model is controlled
+        props.rowGroupingModel != null ||
+        // Always export if the model has been initialized
+        props.initialState?.rowGrouping?.model != null ||
+        // Export if the model is not empty
+        Object.keys(rowGroupingModelToExport).length > 0;
+
+      if (!shouldExportRowGroupingModel) {
         return prevState;
       }
 
@@ -194,7 +203,7 @@ export const useGridRowGrouping = (
         },
       };
     },
-    [apiRef, props.disableRowGrouping],
+    [apiRef, props.rowGroupingModel, props.initialState?.rowGrouping?.model],
   );
 
   const stateRestorePreProcessing = React.useCallback<GridPipeProcessor<'restoreState'>>(

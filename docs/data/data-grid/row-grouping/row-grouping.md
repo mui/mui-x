@@ -1,8 +1,8 @@
 ---
-title: Data Grid - Row Grouping
+title: Data Grid - Row grouping
 ---
 
-# Data Grid - Row grouping [<span class="plan-premium"></span>](https://mui.com/store/items/mui-x-premium/)
+# Data grid - Row grouping [<span class="plan-premium"></span>](https://mui.com/store/items/mui-x-premium/)
 
 <p class="description">Group your rows according to some column values.</p>
 
@@ -153,7 +153,7 @@ You must use the `columnVisibilityModel` in the `initialState` instead.
 
 ### For all columns
 
-You can disable row grouping by setting `disableRowGrouping` prop to true.
+You can disable row grouping by setting the `disableRowGrouping` prop to true.
 
 It will disable all the features related to the row grouping, even if a model is provided.
 
@@ -277,6 +277,16 @@ const rows = apiRef.current.getRowGroupChildren({
 
 {{"demo": "RowGroupingGetRowGroupChildren.js", "bg": "inline", "defaultCodeOpen": false}}
 
+## 🚧 Row group panel
+
+:::warning
+This feature isn't implemented yet. It's coming.
+
+👍 Upvote [issue #5235](https://github.com/mui/mui-x/issues/5235) if you want to see it land faster.
+:::
+
+With this panel, your users will be able to control which columns are used for grouping just by dragging them inside the panel.
+
 ## Full example
 
 {{"demo": "RowGroupingFullExample.js", "bg": "inline", "defaultCodeOpen": false}}
@@ -289,3 +299,4 @@ const rows = apiRef.current.getRowGroupChildren({
 
 - [DataGrid](/x/api/data-grid/data-grid/)
 - [DataGridPro](/x/api/data-grid/data-grid-pro/)
+- [DataGridPremium](/x/api/data-grid/data-grid-premium/)
