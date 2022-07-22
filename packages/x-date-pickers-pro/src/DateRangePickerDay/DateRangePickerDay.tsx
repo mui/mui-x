@@ -336,7 +336,6 @@ DateRangePickerDayRaw.propTypes = {
    */
   selected: PropTypes.bool,
   /**
-   * /**
    * If `true`, days that have `outsideCurrentMonth={true}` are displayed.
    * @default false
    */

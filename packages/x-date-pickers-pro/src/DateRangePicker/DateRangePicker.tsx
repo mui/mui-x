@@ -395,7 +395,6 @@ DateRangePicker.propTypes = {
    */
   shouldDisableYear: PropTypes.func,
   /**
-   * /**
    * If `true`, days that have `outsideCurrentMonth={true}` are displayed.
    * @default false
    */

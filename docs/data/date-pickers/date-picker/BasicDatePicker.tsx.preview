@@ -2,7 +2,6 @@
   <DatePicker
     label="Basic example"
     value={value}
-    preventDaysWeekTruncate
     onChange={(newValue) => {
       setValue(newValue);
     }}
