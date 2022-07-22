@@ -1,5 +1,11 @@
 import * as React from 'react';
-import { DataGridPro, gridClasses, useGridApiRef, GridApi } from '@mui/x-data-grid-pro';
+import {
+  DataGridPro,
+  gridClasses,
+  useGridApiRef,
+  GridApi,
+  GridRowsProp,
+} from '@mui/x-data-grid-pro';
 import { expect } from 'chai';
 // @ts-expect-error Remove once the test utils are typed
 import { createRenderer, waitFor, fireEvent, screen } from '@mui/monorepo/test/utils';
@@ -806,5 +812,42 @@ describe('<DataGridPro /> - Row pinning', () => {
     render(<TestCase />);
 
     expect(getRows().length).to.equal(pageSize + 2); // + 2 pinned rows
+  });
+
+  it('should render pinned rows outside of the tree data', () => {
+    const rows: GridRowsProp = [
+      { id: 0, name: 'A' },
+      { id: 1, name: 'A.B' },
+      { id: 2, name: 'A.A' },
+      { id: 3, name: 'B.A' },
+      { id: 4, name: 'B.B' },
+    ];
+
+    const columns = [{ field: 'name', width: 200 }];
+
+    const Test = () => {
+      const [pinnedRow0, pinnedRow1, ...rowsData] = rows;
+
+      return (
+        <div style={{ width: 300, height: 400 }}>
+          <DataGridPro
+            treeData
+            getTreeDataPath={(row) => row.name.split('.')}
+            rows={rowsData}
+            columns={columns}
+            pinnedRows={{
+              top: [pinnedRow0],
+              bottom: [pinnedRow1],
+            }}
+            experimentalFeatures={{ rowPinning: true }}
+          />
+        </div>
+      );
+    };
+
+    render(<Test />);
+
+    expect(isRowPinned(getRowById(0), 'top')).to.equal(true, '#0 pinned top');
+    expect(isRowPinned(getRowById(1), 'bottom')).to.equal(true, '#1 pinned bottom');
   });
 });
