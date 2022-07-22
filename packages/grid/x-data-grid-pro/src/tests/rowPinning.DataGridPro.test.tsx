@@ -850,4 +850,35 @@ describe('<DataGridPro /> - Row pinning', () => {
     expect(isRowPinned(getRowById(0), 'top')).to.equal(true, '#0 pinned top');
     expect(isRowPinned(getRowById(1), 'bottom')).to.equal(true, '#1 pinned bottom');
   });
+
+  it('should not be selectable', () => {
+    let apiRef: React.MutableRefObject<GridApi>;
+
+    const TestCase = () => {
+      const data = getData(20, 5);
+      const [pinnedRow0, pinnedRow1, ...rows] = data.rows;
+
+      apiRef = useGridApiRef();
+
+      return (
+        <div style={{ width: 302, height: 300 }}>
+          <DataGridPro
+            {...data}
+            apiRef={apiRef}
+            rows={rows}
+            pinnedRows={{
+              top: [pinnedRow0],
+              bottom: [pinnedRow1],
+            }}
+            experimentalFeatures={{ rowPinning: true }}
+          />
+        </div>
+      );
+    };
+
+    render(<TestCase />);
+
+    fireEvent.click(getCell(0, 0));
+    expect(apiRef!.current.isRowSelected(0)).to.equal(false);
+  });
 });
