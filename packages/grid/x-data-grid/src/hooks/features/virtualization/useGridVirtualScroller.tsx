@@ -218,10 +218,8 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
     setContainerWidth(rootRef.current!.clientWidth);
   }, [rowsMeta.currentPageTotalHeight]);
 
-  const handleResize = React.useCallback<GridEventListener<'resize'>>(() => {
-    if (rootRef.current) {
-      setContainerWidth(rootRef.current.clientWidth);
-    }
+  const handleResize = React.useCallback<GridEventListener<'resize'>>((params) => {
+    setContainerWidth(params.width);
   }, []);
 
   useGridApiEventHandler(apiRef, 'resize', handleResize);
