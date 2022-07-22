@@ -1,6 +1,10 @@
 import * as React from 'react';
-// @ts-ignore Remove once the test utils are typed
-import { createRenderer, fireEvent, screen } from '@mui/monorepo/test/utils';
+import {
+  createRenderer,
+  fireEvent,
+  screen,
+  // @ts-ignore Remove once the test utils are typed
+} from '@mui/monorepo/test/utils';
 import clsx from 'clsx';
 import { expect } from 'chai';
 import { spy, stub } from 'sinon';
@@ -182,11 +186,14 @@ describe('<DataGrid /> - Rows', () => {
       }
       expect(() => {
         render(<TestCase />);
-      }).toErrorDev([
-        'MUI: Missing the `getActions` property in the `GridColDef`.',
-        'The above error occurred in the <GridActionsCell> component',
-        'MUI: GridErrorHandler - An unexpected error occurred.',
-      ]);
+      }).toErrorDev(
+        [
+          'MUI: Missing the `getActions` property in the `GridColDef`.',
+          'MUI: Missing the `getActions` property in the `GridColDef`.',
+          'The above error occurred in the <GridActionsCell> component',
+          'MUI: GridErrorHandler - An unexpected error occurred.',
+        ].filter((message): message is string => typeof message === 'string'),
+      );
     });
 
     it('should call getActions with the row params', () => {

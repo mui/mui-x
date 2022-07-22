@@ -9,7 +9,7 @@ import {
   useGridApiRef,
 } from '@mui/x-data-grid-premium';
 // @ts-ignore Remove once the test utils are typed
-import { createRenderer } from '@mui/monorepo/test/utils';
+import { createRenderer, act } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
 import { getColumnValues } from '../../../../../test/utils/helperFn';
 
@@ -98,10 +98,12 @@ describe('<DataGridPremium /> - State Persistence', () => {
 
     it('should export the current version of the exportable state', () => {
       render(<TestCase />);
-      apiRef.current.setRowGroupingModel(['category']);
-      apiRef.current.private_setAggregationModel({
-        id: 'size',
-      });
+      act(() => apiRef.current.setRowGroupingModel(['category']));
+      act(() =>
+        apiRef.current.private_setAggregationModel({
+          id: 'size',
+        }),
+      );
 
       const exportedState = apiRef.current.exportState();
       expect(exportedState.rowGrouping).to.deep.equal(FULL_INITIAL_STATE.rowGrouping);
@@ -112,10 +114,12 @@ describe('<DataGridPremium /> - State Persistence', () => {
 
     it('should export the current version of the exportable state when using exportOnlyDirtyModels', () => {
       render(<TestCase />);
-      apiRef.current.setRowGroupingModel(['category']);
-      apiRef.current.private_setAggregationModel({
-        id: 'size',
-      });
+      act(() => apiRef.current.setRowGroupingModel(['category']));
+      act(() =>
+        apiRef.current.private_setAggregationModel({
+          id: 'size',
+        }),
+      );
 
       const exportedState = apiRef.current.exportState({ exportOnlyDirtyModels: true });
       expect(exportedState.rowGrouping).to.deep.equal(FULL_INITIAL_STATE.rowGrouping);
@@ -159,7 +163,7 @@ describe('<DataGridPremium /> - State Persistence', () => {
     it('should restore the whole exportable state', () => {
       render(<TestCase />);
 
-      apiRef.current.restoreState(FULL_INITIAL_STATE);
+      act(() => apiRef.current.restoreState(FULL_INITIAL_STATE));
       expect(getColumnValues(0)).to.deep.equal([
         'Cat A (3)',
         '',

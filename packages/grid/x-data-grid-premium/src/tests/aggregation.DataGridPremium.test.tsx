@@ -1,6 +1,6 @@
 import * as React from 'react';
 // @ts-ignore Remove once the test utils are typed
-import { createRenderer, screen, userEvent, within } from '@mui/monorepo/test/utils';
+import { createRenderer, screen, userEvent, within, act } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
 import { getColumnValues } from 'test/utils/helperFn';
 import { SinonSpy, spy } from 'sinon';
@@ -286,7 +286,7 @@ describe('<DataGridPremium /> - Aggregation', () => {
     it('should render select on aggregable column', () => {
       render(<Test />);
 
-      apiRef.current.showColumnMenu('id');
+      act(() => apiRef.current.showColumnMenu('id'));
       clock.runToLast();
 
       expect(screen.queryByLabelText('Aggregation')).not.to.equal(null);
@@ -297,7 +297,7 @@ describe('<DataGridPremium /> - Aggregation', () => {
 
       expect(getColumnValues(0)).to.deep.equal(['0', '1', '2', '3', '4', '5']);
 
-      apiRef.current.showColumnMenu('id');
+      act(() => apiRef.current.showColumnMenu('id'));
       clock.runToLast();
       userEvent.mousePress(screen.queryByLabelText('Aggregation'));
       userEvent.mousePress(
@@ -439,7 +439,7 @@ describe('<DataGridPremium /> - Aggregation', () => {
         />,
       );
 
-      apiRef.current.showColumnMenu('id');
+      act(() => apiRef.current.showColumnMenu('id'));
       clock.runToLast();
 
       expect(screen.queryAllByLabelText('Aggregation')).to.have.length(0);
@@ -478,9 +478,11 @@ describe('<DataGridPremium /> - Aggregation', () => {
       );
       expect(getColumnValues(0)).to.deep.equal(['0', '1', '2', '3', '4', '5']);
 
-      apiRef.current.updateColumns([
-        { field: 'id', private_availableAggregationFunctions: ['min', 'max'] },
-      ]);
+      act(() =>
+        apiRef.current.updateColumns([
+          { field: 'id', private_availableAggregationFunctions: ['min', 'max'] },
+        ]),
+      );
       expect(getColumnValues(0)).to.deep.equal(['0', '1', '2', '3', '4', '5', '5' /* Agg */]);
     });
   });

@@ -118,11 +118,11 @@ describe('<DataGridPro /> - Edit Components', () => {
 
       expect(screen.queryByTestId('LoadIcon')).to.equal(null);
       fireEvent.change(input, { target: { value: 'Puma' } });
-      clock.tick(200);
+      act(() => clock.tick(200));
       expect(screen.queryByTestId('LoadIcon')).not.to.equal(null);
 
       clock.tick(500);
-      await new Promise((resolve) => nativeSetTimeout(resolve));
+      await act(() => new Promise((resolve) => nativeSetTimeout(resolve)));
       expect(screen.queryByTestId('LoadIcon')).to.equal(null);
     });
 
@@ -139,7 +139,7 @@ describe('<DataGridPro /> - Edit Components', () => {
 
       const input = cell.querySelector('input')!;
       fireEvent.change(input, { target: { value: 'Puma' } });
-      await new Promise((resolve) => nativeSetTimeout(resolve));
+      await act(() => new Promise((resolve) => nativeSetTimeout(resolve)));
 
       expect(onValueChange.callCount).to.equal(1);
       expect(onValueChange.lastCall.args[1]).to.equal('Puma');
@@ -199,9 +199,9 @@ describe('<DataGridPro /> - Edit Components', () => {
       expect(input.value).to.equal('100');
 
       fireEvent.change(input, { target: { value: '110' } });
-      clock.tick(200);
+      act(() => clock.tick(200));
       expect(preProcessEditCellPropsSpy.lastCall.args[0].props.value).to.equal(110);
-      await new Promise((resolve) => nativeSetTimeout(resolve)); // To avoid mutating the state after unmount
+      await act(() => new Promise((resolve) => nativeSetTimeout(resolve))); // To avoid mutating the state after unmount
     });
 
     it('should display a indicator while processing the props', async () => {
@@ -223,7 +223,7 @@ describe('<DataGridPro /> - Edit Components', () => {
       expect(screen.queryByTestId('LoadIcon')).not.to.equal(null);
 
       clock.tick(500);
-      await new Promise((resolve) => nativeSetTimeout(resolve));
+      await act(() => new Promise((resolve) => nativeSetTimeout(resolve)));
       expect(screen.queryByTestId('LoadIcon')).to.equal(null);
     });
   });
@@ -340,7 +340,7 @@ describe('<DataGridPro /> - Edit Components', () => {
 
       const input = cell.querySelector('input')!;
       fireEvent.change(input, { target: { value: '2022-02-10' } });
-      await new Promise((resolve) => nativeSetTimeout(resolve));
+      await act(() => new Promise((resolve) => nativeSetTimeout(resolve)));
 
       expect(onValueChange.callCount).to.equal(1);
       expect((onValueChange.lastCall.args[1]! as Date).toISOString()).to.equal(
@@ -548,14 +548,14 @@ describe('<DataGridPro /> - Edit Components', () => {
       expect(screen.queryAllByRole('option')[1]).to.have.text('adidas');
     });
 
-    it('should pass the value prop to the select', () => {
+    it('should pass the value prop to the select', async () => {
       render(<TestCase />);
 
       const cell = getCell(0, 0);
       fireEvent.doubleClick(cell);
 
       expect(cell.textContent!.replace(/[\W]+/, '')).to.equal('Nike'); // We use .replace to remove &ZeroWidthSpace;
-      apiRef.current.setEditCellValue({ id: 0, field: 'brand', value: 'Adidas' });
+      await act(() => apiRef.current.setEditCellValue({ id: 0, field: 'brand', value: 'Adidas' }));
       expect(cell.textContent!.replace(/[\W]+/, '')).to.equal('Adidas');
     });
 
@@ -614,7 +614,7 @@ describe('<DataGridPro /> - Edit Components', () => {
 
       const input = cell.querySelector('input')!;
       fireEvent.click(input);
-      await new Promise((resolve) => nativeSetTimeout(resolve));
+      await act(() => new Promise((resolve) => nativeSetTimeout(resolve)));
 
       expect(onValueChange.callCount).to.equal(1);
       expect(onValueChange.lastCall.args[1]).to.equal(true);

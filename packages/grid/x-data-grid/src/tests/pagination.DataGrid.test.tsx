@@ -1,6 +1,11 @@
 import * as React from 'react';
-// @ts-ignore Remove once the test utils are typed
-import { createRenderer, fireEvent, screen, waitFor } from '@mui/monorepo/test/utils';
+import {
+  createRenderer,
+  fireEvent,
+  screen,
+  waitFor,
+  // @ts-ignore Remove once the test utils are typed
+} from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
 import {
   DataGrid,
@@ -359,9 +364,12 @@ describe('<DataGrid /> - Pagination', () => {
 
       expect(() => {
         render(<BaselineTestCase pageSize={pageSize} rowsPerPageOptions={[25, 50, 100]} />);
-      }).toWarnDev([
-        `MUI: The page size \`${pageSize}\` is not preset in the \`rowsPerPageOptions\``,
-      ]);
+      }).toWarnDev(
+        [
+          `MUI: The page size \`${pageSize}\` is not preset in the \`rowsPerPageOptions\``,
+          `MUI: The page size \`${pageSize}\` is not preset in the \`rowsPerPageOptions\``,
+        ].filter((message): message is string => typeof message === 'string'),
+      );
     });
 
     it('should display a warning if the prop pageSize is not in the default rowsPerPageOptions', () => {
@@ -369,15 +377,23 @@ describe('<DataGrid /> - Pagination', () => {
 
       expect(() => {
         render(<BaselineTestCase pageSize={pageSize} />);
-      }).toWarnDev([
-        `MUI: The page size \`${pageSize}\` is not preset in the \`rowsPerPageOptions\``,
-      ]);
+      }).toWarnDev(
+        [
+          `MUI: The page size \`${pageSize}\` is not preset in the \`rowsPerPageOptions\``,
+          `MUI: The page size \`${pageSize}\` is not preset in the \`rowsPerPageOptions\``,
+        ].filter((message): message is string => typeof message === 'string'),
+      );
     });
 
     it('should display a warning if the default pageSize given as props is not in the prop rowsPerPageOptions', () => {
       expect(() => {
         render(<BaselineTestCase rowsPerPageOptions={[25, 50]} />);
-      }).toWarnDev([`MUI: The page size \`100\` is not preset in the \`rowsPerPageOptions\``]);
+      }).toWarnDev(
+        [
+          `MUI: The page size \`100\` is not preset in the \`rowsPerPageOptions\``,
+          `MUI: The page size \`100\` is not preset in the \`rowsPerPageOptions\``,
+        ].filter((message): message is string => typeof message === 'string'),
+      );
     });
 
     it('should update the pageCount state when updating the pageSize prop with a lower value', () => {

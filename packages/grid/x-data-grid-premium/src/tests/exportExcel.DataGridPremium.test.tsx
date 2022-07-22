@@ -9,14 +9,14 @@ import {
   GridActionsCellItem,
 } from '@mui/x-data-grid-premium';
 // @ts-ignore Remove once the test utils are typed
-import { createRenderer, screen, fireEvent } from '@mui/monorepo/test/utils';
+import { createRenderer, screen, fireEvent, act } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
 import Excel from 'exceljs';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
 describe('<DataGridPremium /> - Export Excel', () => {
-  const { render } = createRenderer();
+  const { render } = createRenderer({ clock: 'fake' });
 
   let apiRef: React.MutableRefObject<GridApi>;
 
@@ -51,9 +51,9 @@ describe('<DataGridPremium /> - Export Excel', () => {
   };
 
   describe('export interface', () => {
-    it('should generate a file', () => {
+    it('should generate a file', async () => {
       render(<TestCaseExcelExport />);
-      expect(apiRef.current.getDataAsExcel()).not.to.equal(null);
+      expect(await act(() => apiRef.current.getDataAsExcel())).not.to.equal(null);
     });
 
     it('should display export option', () => {
@@ -98,7 +98,7 @@ describe('<DataGridPremium /> - Export Excel', () => {
       };
       render(<Test />);
 
-      const workbook = await apiRef.current.getDataAsExcel();
+      const workbook = await act(() => apiRef.current.getDataAsExcel());
       const worksheet = workbook!.worksheets[0];
 
       expect(worksheet.getCell('A1').value).to.equal('str');
@@ -142,7 +142,7 @@ describe('<DataGridPremium /> - Export Excel', () => {
       };
       render(<Test />);
 
-      const workbook = await apiRef.current.getDataAsExcel();
+      const workbook = await act(() => apiRef.current.getDataAsExcel());
       const worksheet = workbook!.worksheets[0];
 
       expect(worksheet.getCell('A1').value).to.equal('option');
@@ -180,7 +180,7 @@ describe('<DataGridPremium /> - Export Excel', () => {
       };
       render(<Test />);
 
-      const workbook = await apiRef.current.getDataAsExcel();
+      const workbook = await act(() => apiRef.current.getDataAsExcel());
       const worksheet = workbook!.worksheets[0];
 
       expect(worksheet.getCell('A1').value).to.equal('str');
@@ -218,7 +218,7 @@ describe('<DataGridPremium /> - Export Excel', () => {
       };
       render(<Test />);
 
-      const workbook = await apiRef.current.getDataAsExcel();
+      const workbook = await act(() => apiRef.current.getDataAsExcel());
       const worksheet = workbook!.worksheets[0];
 
       // 1-based index + 1 for column header row

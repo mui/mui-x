@@ -1,6 +1,6 @@
 import * as React from 'react';
 // @ts-ignore Remove once the test utils are typed
-import { createRenderer, fireEvent } from '@mui/monorepo/test/utils';
+import { createRenderer, fireEvent, act } from '@mui/monorepo/test/utils';
 import { spy } from 'sinon';
 import { expect } from 'chai';
 import {
@@ -79,13 +79,13 @@ describe('<DataGridPro /> - Rows', () => {
         );
       };
       render(<Test />);
-      apiRef!.current.setCellMode('c2', 'first', 'edit');
+      act(() => apiRef!.current.setCellMode('c2', 'first', 'edit'));
       const cell = getCell(1, 1);
 
       expect(cell).to.have.class('MuiDataGrid-cell--editable');
       expect(cell).to.have.class('MuiDataGrid-cell--editing');
       expect(cell.querySelector('input')!.value).to.equal('Jack');
-      apiRef!.current.setCellMode('c2', 'first', 'view');
+      act(() => apiRef!.current.setCellMode('c2', 'first', 'view'));
 
       expect(cell).to.have.class('MuiDataGrid-cell--editable');
       expect(cell).not.to.have.class('MuiDataGrid-cell--editing');
@@ -168,14 +168,14 @@ describe('<DataGridPro /> - Rows', () => {
     it('should not throttle by default', () => {
       render(<TestCase />);
       expect(getColumnValues(0)).to.deep.equal(['Nike', 'Adidas', 'Puma']);
-      apiRef.current.updateRows([{ id: 1, brand: 'Fila' }]);
+      act(() => apiRef.current.updateRows([{ id: 1, brand: 'Fila' }]));
       expect(getColumnValues(0)).to.deep.equal(['Nike', 'Fila', 'Puma']);
     });
 
     it('should allow to enable throttle', () => {
       render(<TestCase throttleRowsMs={100} />);
       expect(getColumnValues(0)).to.deep.equal(['Nike', 'Adidas', 'Puma']);
-      apiRef.current.updateRows([{ id: 1, brand: 'Fila' }]);
+      act(() => apiRef.current.updateRows([{ id: 1, brand: 'Fila' }]));
       clock.tick(50);
       expect(getColumnValues(0)).to.deep.equal(['Nike', 'Adidas', 'Puma']);
       clock.tick(50);
@@ -184,49 +184,53 @@ describe('<DataGridPro /> - Rows', () => {
 
     it('should allow to update row data', () => {
       render(<TestCase />);
-      apiRef.current.updateRows([{ id: 1, brand: 'Fila' }]);
-      apiRef.current.updateRows([{ id: 0, brand: 'Pata' }]);
-      apiRef.current.updateRows([{ id: 2, brand: 'Pum' }]);
+      act(() => apiRef.current.updateRows([{ id: 1, brand: 'Fila' }]));
+      act(() => apiRef.current.updateRows([{ id: 0, brand: 'Pata' }]));
+      act(() => apiRef.current.updateRows([{ id: 2, brand: 'Pum' }]));
       expect(getColumnValues(0)).to.deep.equal(['Pata', 'Fila', 'Pum']);
     });
 
     it('update row data can also add rows', () => {
       render(<TestCase />);
-      apiRef.current.updateRows([{ id: 1, brand: 'Fila' }]);
-      apiRef.current.updateRows([{ id: 0, brand: 'Pata' }]);
-      apiRef.current.updateRows([{ id: 2, brand: 'Pum' }]);
-      apiRef.current.updateRows([{ id: 3, brand: 'Jordan' }]);
+      act(() => apiRef.current.updateRows([{ id: 1, brand: 'Fila' }]));
+      act(() => apiRef.current.updateRows([{ id: 0, brand: 'Pata' }]));
+      act(() => apiRef.current.updateRows([{ id: 2, brand: 'Pum' }]));
+      act(() => apiRef.current.updateRows([{ id: 3, brand: 'Jordan' }]));
       expect(getColumnValues(0)).to.deep.equal(['Pata', 'Fila', 'Pum', 'Jordan']);
     });
 
     it('update row data can also add rows in bulk', () => {
       render(<TestCase />);
-      apiRef.current.updateRows([
-        { id: 1, brand: 'Fila' },
-        { id: 0, brand: 'Pata' },
-        { id: 2, brand: 'Pum' },
-        { id: 3, brand: 'Jordan' },
-      ]);
+      act(() =>
+        apiRef.current.updateRows([
+          { id: 1, brand: 'Fila' },
+          { id: 0, brand: 'Pata' },
+          { id: 2, brand: 'Pum' },
+          { id: 3, brand: 'Jordan' },
+        ]),
+      );
       expect(getColumnValues(0)).to.deep.equal(['Pata', 'Fila', 'Pum', 'Jordan']);
     });
 
     it('update row data can also delete rows', () => {
       render(<TestCase />);
-      apiRef.current.updateRows([{ id: 1, _action: 'delete' }]);
-      apiRef.current.updateRows([{ id: 0, brand: 'Apple' }]);
-      apiRef.current.updateRows([{ id: 2, _action: 'delete' }]);
-      apiRef.current.updateRows([{ id: 5, brand: 'Atari' }]);
+      act(() => apiRef.current.updateRows([{ id: 1, _action: 'delete' }]));
+      act(() => apiRef.current.updateRows([{ id: 0, brand: 'Apple' }]));
+      act(() => apiRef.current.updateRows([{ id: 2, _action: 'delete' }]));
+      act(() => apiRef.current.updateRows([{ id: 5, brand: 'Atari' }]));
       expect(getColumnValues(0)).to.deep.equal(['Apple', 'Atari']);
     });
 
     it('update row data can also delete rows in bulk', () => {
       render(<TestCase />);
-      apiRef.current.updateRows([
-        { id: 1, _action: 'delete' },
-        { id: 0, brand: 'Apple' },
-        { id: 2, _action: 'delete' },
-        { id: 5, brand: 'Atari' },
-      ]);
+      act(() =>
+        apiRef.current.updateRows([
+          { id: 1, _action: 'delete' },
+          { id: 0, brand: 'Apple' },
+          { id: 2, _action: 'delete' },
+          { id: 5, brand: 'Atari' },
+        ]),
+      );
       expect(getColumnValues(0)).to.deep.equal(['Apple', 'Atari']);
     });
 
@@ -248,32 +252,15 @@ describe('<DataGridPro /> - Rows', () => {
 
       render(<TestCaseGetRowId />);
       expect(getColumnValues(0)).to.deep.equal(['Nike', 'Adidas', 'Puma']);
-      apiRef.current.updateRows([
-        { idField: 1, _action: 'delete' },
-        { idField: 0, brand: 'Apple' },
-        { idField: 2, _action: 'delete' },
-        { idField: 5, brand: 'Atari' },
-      ]);
+      act(() =>
+        apiRef.current.updateRows([
+          { idField: 1, _action: 'delete' },
+          { idField: 0, brand: 'Apple' },
+          { idField: 2, _action: 'delete' },
+          { idField: 5, brand: 'Atari' },
+        ]),
+      );
       expect(getColumnValues(0)).to.deep.equal(['Apple', 'Atari']);
-    });
-
-    it('should not loose partial updates after a props.loading switch', () => {
-      const Test = (props: Partial<DataGridProProps>) => {
-        apiRef = useGridApiRef();
-        return (
-          <div style={{ width: 300, height: 300 }}>
-            <DataGridPro {...baselineProps} apiRef={apiRef} {...props} />
-          </div>
-        );
-      };
-
-      const { setProps } = render(<Test />);
-      expect(getColumnValues(0)).to.deep.equal(['Nike', 'Adidas', 'Puma']);
-
-      setProps({ loading: true });
-      apiRef.current.updateRows([{ id: 0, brand: 'Nike 2' }]);
-      setProps({ loading: false });
-      expect(getColumnValues(0)).to.deep.equal(['Nike 2', 'Adidas', 'Puma']);
     });
   });
 
@@ -319,7 +306,7 @@ describe('<DataGridPro /> - Rows', () => {
           brand: 'Asics',
         },
       ];
-      apiRef.current.setRows(newRows);
+      act(() => apiRef.current.setRows(newRows));
 
       expect(getColumnValues(0)).to.deep.equal(['Asics']);
     });
@@ -333,7 +320,7 @@ describe('<DataGridPro /> - Rows', () => {
           brand: 'Asics',
         },
       ];
-      apiRef.current.setRows(newRows);
+      act(() => apiRef.current.setRows(newRows));
 
       clock.tick(50);
       expect(getColumnValues(0)).to.deep.equal(['Nike', 'Adidas', 'Puma']);
@@ -390,7 +377,7 @@ describe('<DataGridPro /> - Rows', () => {
         '.MuiDataGrid-virtualScrollerRenderZone',
       )!;
       virtualScroller.scrollTop = 10e6; // scroll to the bottom
-      virtualScroller.dispatchEvent(new Event('scroll'));
+      act(() => virtualScroller.dispatchEvent(new Event('scroll')));
 
       const lastCell = document.querySelector('[role="row"]:last-child [role="cell"]:first-child')!;
       expect(lastCell).to.have.text('995');
@@ -424,7 +411,7 @@ describe('<DataGridPro /> - Rows', () => {
       expect(firstRow.children).to.have.length(Math.floor(width / columnWidth) + columnBuffer);
       const virtualScroller = document.querySelector('.MuiDataGrid-virtualScroller')!;
       virtualScroller.scrollLeft = 301;
-      virtualScroller.dispatchEvent(new Event('scroll'));
+      act(() => virtualScroller.dispatchEvent(new Event('scroll')));
       expect(firstRow.children).to.have.length(
         columnBuffer + Math.floor(width / columnWidth) + columnBuffer,
       );
@@ -441,7 +428,7 @@ describe('<DataGridPro /> - Rows', () => {
       let firstRow = renderingZone.firstChild;
       expect(firstRow).to.have.attr('data-rowindex', '0');
       virtualScroller.scrollTop = rowThreshold * rowHeight;
-      virtualScroller.dispatchEvent(new Event('scroll'));
+      act(() => virtualScroller.dispatchEvent(new Event('scroll')));
       firstRow = renderingZone.firstChild;
       expect(firstRow).to.have.attr('data-rowindex', '3');
     });
@@ -458,7 +445,7 @@ describe('<DataGridPro /> - Rows', () => {
       let firstColumn = firstRow.firstChild!;
       expect(firstColumn).to.have.attr('data-colindex', '0');
       virtualScroller.scrollLeft = columnThreshold * columnWidth;
-      virtualScroller.dispatchEvent(new Event('scroll'));
+      act(() => virtualScroller.dispatchEvent(new Event('scroll')));
       firstRow = renderingZone.querySelector('[role="row"]:first-child')!;
       firstColumn = firstRow.firstChild!;
       expect(firstColumn).to.have.attr('data-colindex', '3');
@@ -478,7 +465,7 @@ describe('<DataGridPro /> - Rows', () => {
         );
         const virtualScroller = document.querySelector('.MuiDataGrid-virtualScroller')!;
         virtualScroller.scrollTop = 10e6; // scroll to the bottom
-        virtualScroller.dispatchEvent(new Event('scroll'));
+        act(() => virtualScroller.dispatchEvent(new Event('scroll')));
 
         const lastCell = document.querySelector(
           '[role="row"]:last-child [role="cell"]:first-child',
@@ -549,7 +536,7 @@ describe('<DataGridPro /> - Rows', () => {
           />,
         );
         const virtualScroller = document.querySelector('.MuiDataGrid-virtualScroller')!;
-        apiRef.current.scrollToIndexes({ rowIndex: 4, colIndex: 0 });
+        act(() => apiRef.current.scrollToIndexes({ rowIndex: 4, colIndex: 0 }));
         expect(virtualScroller.scrollTop).to.equal(rowHeight - offset);
       });
 
@@ -570,11 +557,11 @@ describe('<DataGridPro /> - Rows', () => {
         const virtualScroller = document.querySelector('.MuiDataGrid-virtualScroller')!;
         virtualScroller.scrollTop = offset;
         virtualScroller.dispatchEvent(new Event('scroll')); // Simulate browser behavior
-        apiRef.current.scrollToIndexes({ rowIndex: 2, colIndex: 0 });
+        act(() => apiRef.current.scrollToIndexes({ rowIndex: 2, colIndex: 0 }));
         expect(virtualScroller.scrollTop).to.equal(offset);
-        apiRef.current.scrollToIndexes({ rowIndex: 1, colIndex: 0 });
+        act(() => apiRef.current.scrollToIndexes({ rowIndex: 1, colIndex: 0 }));
         expect(virtualScroller.scrollTop).to.equal(offset);
-        apiRef.current.scrollToIndexes({ rowIndex: 0, colIndex: 0 });
+        act(() => apiRef.current.scrollToIndexes({ rowIndex: 0, colIndex: 0 }));
         expect(virtualScroller.scrollTop).to.equal(0);
       });
 
@@ -592,7 +579,7 @@ describe('<DataGridPro /> - Rows', () => {
         render(<TestCaseVirtualization width={width + border * 2} rows={rows} columns={columns} />);
         const virtualScroller = document.querySelector('.MuiDataGrid-virtualScroller')!;
         expect(virtualScroller.scrollLeft).to.equal(0);
-        apiRef.current.scrollToIndexes({ rowIndex: 0, colIndex: 2 });
+        act(() => apiRef.current.scrollToIndexes({ rowIndex: 0, colIndex: 2 }));
         expect(virtualScroller.scrollLeft).to.equal(columnWidth * 3 - width);
       });
 
@@ -610,10 +597,10 @@ describe('<DataGridPro /> - Rows', () => {
         render(<TestCaseVirtualization width={width + border * 2} rows={rows} columns={columns} />);
         const virtualScroller = document.querySelector('.MuiDataGrid-virtualScroller')!;
         expect(virtualScroller.scrollLeft).to.equal(0);
-        apiRef.current.scrollToIndexes({ rowIndex: 0, colIndex: 2 });
+        act(() => apiRef.current.scrollToIndexes({ rowIndex: 0, colIndex: 2 }));
         virtualScroller.dispatchEvent(new Event('scroll')); // Simulate browser behavior
         expect(virtualScroller.scrollLeft).to.equal(columnWidth * 3 - width);
-        apiRef.current.scrollToIndexes({ rowIndex: 0, colIndex: 1 });
+        act(() => apiRef.current.scrollToIndexes({ rowIndex: 0, colIndex: 1 }));
         expect(virtualScroller.scrollLeft).to.equal(columnWidth * 3 - width);
       });
     });
@@ -647,7 +634,7 @@ describe('<DataGridPro /> - Rows', () => {
     it('should render the correct rows when changing pages', () => {
       render(<TestCase pageSize={6} rowsPerPageOptions={[6]} pagination />);
       expect(document.querySelectorAll('[role="row"][data-rowindex]')).to.have.length(6);
-      apiRef.current.setPage(1);
+      act(() => apiRef.current.setPage(1));
       expect(document.querySelectorAll('[role="row"][data-rowindex]')).to.have.length(4);
     });
   });
@@ -789,6 +776,7 @@ describe('<DataGridPro /> - Rows', () => {
         const cell = getCell(0, 0);
         fireEvent.mouseUp(cell);
         fireEvent.click(cell);
+        act(() => apiRef.current.updateRows([{ id: 1, _action: 'delete' }]));
       }).not.to.throw();
     });
 
@@ -797,7 +785,7 @@ describe('<DataGridPro /> - Rows', () => {
         render(<TestCase rows={baselineProps.rows} />);
         const cell = getCell(0, 0);
         fireEvent.mouseEnter(cell);
-        apiRef.current.updateRows([{ id: 1, _action: 'delete' }]);
+        act(() => apiRef.current.updateRows([{ id: 1, _action: 'delete' }]));
         fireEvent.mouseLeave(cell);
       }).not.to.throw();
     });
@@ -850,7 +838,7 @@ describe('<DataGridPro /> - Rows', () => {
 
       expect(getRow(1).clientHeight).to.equal(ROW_HEIGHT);
 
-      apiRef.current.unstable_setRowHeight(resizedRowId, 100);
+      act(() => apiRef.current.unstable_setRowHeight(resizedRowId, 100));
       expect(getRow(resizedRowId).clientHeight).to.equal(100);
     });
 
@@ -863,7 +851,7 @@ describe('<DataGridPro /> - Rows', () => {
       expect(row.clientHeight).to.equal(ROW_HEIGHT);
 
       getRowHeight.resetHistory();
-      apiRef.current.unstable_setRowHeight(resizedRowId, 100);
+      act(() => apiRef.current.unstable_setRowHeight(resizedRowId, 100));
       expect(row.clientHeight).to.equal(100);
 
       // sort

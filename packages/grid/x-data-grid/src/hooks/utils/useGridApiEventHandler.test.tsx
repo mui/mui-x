@@ -47,14 +47,14 @@ describe('useGridApiEventHandler', () => {
       // which makes 2 event listeners to be registered. Since the second render is never
       // committed (to simulate a trashed render in React 18), the effects also don't run, so we're
       // unable to unsubscribe the last listener using the cleanup function.
-      expect(apiRef.current.subscribeEvent.callCount).to.equal(2);
+      expect(apiRef.current.subscribeEvent.callCount).to.equal(3);
 
       unmount();
       global.gc!(); // Triggers garbage collector
       await sleep(50);
 
       // Ensure that both event listeners were unsubscribed
-      expect(unsubscribe.callCount).to.equal(2);
+      expect(unsubscribe.callCount).to.equal(3);
     });
   });
 
@@ -79,13 +79,13 @@ describe('useGridApiEventHandler', () => {
       // which makes 2 event listeners to be registered. Since the second render is never
       // committed (to simulate a trashed render in React 18), the effects also don't run, so we're
       // unable to unsubscribe the last listener using the cleanup function.
-      expect(apiRef.current.subscribeEvent.callCount).to.equal(2);
+      expect(apiRef.current.subscribeEvent.callCount).to.equal(3);
 
       unmount();
       await sleep(60);
 
       // Ensure that both event listeners were unsubscribed
-      expect(unsubscribe.callCount).to.equal(2);
+      expect(unsubscribe.callCount).to.equal(3);
     });
   });
 });

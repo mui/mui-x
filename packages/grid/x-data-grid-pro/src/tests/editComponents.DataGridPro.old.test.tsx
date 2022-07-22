@@ -120,7 +120,11 @@ describe('<DataGridPro /> - Edit Components', () => {
       const cell = getCell(0, 0);
       fireEvent.mouseUp(cell);
       fireEvent.doubleClick(cell);
-      fireEvent.click(screen.queryAllByRole('option')[1]);
+
+      // Wrap in `act` to flush updates after the promise from the `onChange` callback has resolved
+      await act(async () => {
+        await fireEvent.click(screen.queryAllByRole('option')[1]);
+      });
 
       await waitFor(() => {
         expect(cell).not.to.have.class('MuiDataGrid-cell--editing');
@@ -168,7 +172,11 @@ describe('<DataGridPro /> - Edit Components', () => {
       const cell = getCell(0, 0);
       fireEvent.mouseUp(cell);
       fireEvent.doubleClick(cell);
-      fireEvent.click(screen.queryAllByRole('option')[1]);
+
+      // Wrap in `act` to flush updates after the promise from the `onChange` callback has resolved
+      await act(async () => {
+        await fireEvent.click(screen.queryAllByRole('option')[1]);
+      });
 
       await waitFor(() => {
         expect(cell).not.to.have.class('MuiDataGrid-cell--editing');
@@ -201,7 +209,11 @@ describe('<DataGridPro /> - Edit Components', () => {
       const cell = getCell(0, 0);
       fireEvent.mouseUp(cell);
       fireEvent.doubleClick(cell);
-      fireEvent.click(screen.queryAllByRole('option')[1]);
+
+      // Wrap in `act` to flush updates after the promise from the `onChange` callback has resolved
+      await act(async () => {
+        await fireEvent.click(screen.queryAllByRole('option')[1]);
+      });
 
       await waitFor(() => {
         expect(cell).not.to.have.class('MuiDataGrid-cell--editing');
@@ -249,7 +261,11 @@ describe('<DataGridPro /> - Edit Components', () => {
       const cell = getCell(0, 0);
       fireEvent.mouseUp(cell);
       fireEvent.doubleClick(cell);
-      fireEvent.click(screen.queryAllByRole('option')[1]);
+
+      // Wrap in `act` to flush updates after the promise from the `onChange` callback has resolved
+      await act(async () => {
+        await fireEvent.click(screen.queryAllByRole('option')[1]);
+      });
 
       await waitFor(() => {
         expect(cell).not.to.have.class('MuiDataGrid-cell--editing');
@@ -341,7 +357,12 @@ describe('<DataGridPro /> - Edit Components', () => {
 
       fireEvent.keyDown(cell, { key: 'Enter' });
       fireEvent.keyDown(screen.queryByRole('option', { name: 'Nike' }), { key: 'ArrowDown' });
-      fireEvent.keyDown(screen.queryByRole('option', { name: 'Adidas' }), { key: 'Enter' });
+
+      // Wrap in `act` to flush updates after the promise from the `onChange` callback has resolved
+      await act(async () => {
+        await fireEvent.keyDown(screen.queryByRole('option', { name: 'Adidas' }), { key: 'Enter' });
+      });
+
       await waitFor(() => {
         expect(getCell(1, 0)).toHaveFocus();
       });
@@ -396,7 +417,12 @@ describe('<DataGridPro /> - Edit Components', () => {
       fireEvent.doubleClick(cell);
       expect(cell).to.have.class('MuiDataGrid-cell--editing');
       const option = screen.queryAllByRole('option')[1];
-      fireClickEvent(option);
+
+      // Wrap in `act` to flush updates after the promise from the `onChange` callback has resolved
+      await act(async () => {
+        fireClickEvent(option);
+      });
+
       await waitFor(() => {
         expect(cell.firstChild).to.have.class('Mui-error');
       });
@@ -427,7 +453,12 @@ describe('<DataGridPro /> - Edit Components', () => {
       fireEvent.doubleClick(cell);
       const option = screen.queryByRole('option', { name: 'Adidas' });
       fireEvent.mouseUp(option);
-      fireEvent.click(option);
+
+      // Wrap in `act` to flush updates after the promise from the `onChange` callback has resolved
+      await act(async () => {
+        await fireEvent.click(option);
+      });
+
       clock.tick(500);
 
       await new Promise((resolve) => nativeSetTimeout(resolve)); // Wait for promise
@@ -466,10 +497,14 @@ describe('<DataGridPro /> - Edit Components', () => {
       fireEvent.change(input, { target: { value: '1942' } });
       clock.tick(500);
 
-      fireEvent.keyDown(input, { key: 'Enter' });
+      // Wrap in `act` to flush updates after the promise from the `onChange` callback has resolved
+      await act(async () => {
+        await fireEvent.keyDown(input, { key: 'Enter' });
+      });
+
       await waitFor(() => {
         expect(cell).to.have.text('1,942');
-        expect(apiRef.current.getRow(baselineProps.rows[0].id)!.year).to.equal(1942);
+        act(() => expect(apiRef.current.getRow(baselineProps.rows[0].id)!.year).to.equal(1942));
       });
     });
 
@@ -560,9 +595,7 @@ describe('<DataGridPro /> - Edit Components', () => {
       fireEvent.mouseUp(cell);
       fireEvent.doubleClick(cell);
       const newValue = new Date(2021, 6, 4);
-      act(() => {
-        apiRef.current.setEditCellValue({ id: 0, field: 'date', value: newValue });
-      });
+      act(() => apiRef.current.setEditCellValue({ id: 0, field: 'date', value: newValue }));
       const input = cell.querySelector('input')!;
       await waitFor(() => {
         expect(input.value).to.equal('2021-07-04');
@@ -627,7 +660,11 @@ describe('<DataGridPro /> - Edit Components', () => {
       const input = cell.querySelector('input')!;
       fireEvent.change(input, { target: { value: '2022-01-12' } });
       clock.tick(500);
-      fireEvent.keyDown(input, { key: 'Enter' });
+
+      // Wrap in `act` to flush updates after the promise from the `onChange` callback has resolved
+      await act(async () => {
+        await fireEvent.keyDown(input, { key: 'Enter' });
+      });
 
       await new Promise((resolve) => nativeSetTimeout(resolve)); // Wait for promise
 
@@ -702,9 +739,7 @@ describe('<DataGridPro /> - Edit Components', () => {
       fireEvent.mouseUp(cell);
       fireEvent.doubleClick(cell);
       const newValue = new Date(2021, 6, 4, 17, 30);
-      act(() => {
-        apiRef.current.setEditCellValue({ id: 0, field: 'date', value: newValue });
-      });
+      act(() => apiRef.current.setEditCellValue({ id: 0, field: 'date', value: newValue }));
       const input = cell.querySelector('input')!;
       await waitFor(() => {
         expect(input.value).to.equal('2021-07-04T17:30');
@@ -798,7 +833,7 @@ describe('<DataGridPro /> - Edit Components', () => {
   });
 
   describe('column type: boolean', () => {
-    it('should call onEditCellPropsChange with the correct params', () => {
+    it('should call onEditCellPropsChange with the correct params', async () => {
       const onEditCellPropsChange = spy();
       render(
         <TestCase
@@ -811,7 +846,12 @@ describe('<DataGridPro /> - Edit Components', () => {
       fireEvent.mouseUp(cell);
       fireEvent.doubleClick(cell);
       const input = cell.querySelector('input')!;
-      fireEvent.click(input);
+
+      // Wrap in `act` to flush updates after the promise from the `onChange` callback has resolved
+      await act(async () => {
+        fireEvent.click(input);
+      });
+
       expect(onEditCellPropsChange.args[0][0]).to.deep.equal({
         id: 0,
         field: 'isAdmin',
@@ -852,7 +892,10 @@ describe('<DataGridPro /> - Edit Components', () => {
       fireEvent.click(input);
       fireEvent.doubleClick(getCell(1, 0));
 
-      await new Promise((resolve) => nativeSetTimeout(resolve)); // Wait for promise
+      // Wrap in `act` to flush updates after the promise from the `onChange` callback has resolved
+      await act(async () => {
+        await new Promise((resolve) => nativeSetTimeout(resolve)); // Wait for promise
+      });
 
       expect(preProcessEditCellProps.callCount).to.equal(1);
       expect(preProcessEditCellProps.lastCall.args[0].props).to.deep.equal({
