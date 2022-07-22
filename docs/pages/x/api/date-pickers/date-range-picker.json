@@ -66,6 +66,7 @@
     "OpenPickerButtonProps": { "type": { "name": "object" } },
     "PaperProps": { "type": { "name": "object" } },
     "PopperProps": { "type": { "name": "object" } },
+    "preventDaysWeekTransformation": { "type": { "name": "bool" } },
     "readOnly": { "type": { "name": "bool" } },
     "reduceAnimations": {
       "type": { "name": "bool" },

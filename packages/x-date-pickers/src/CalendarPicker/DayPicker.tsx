@@ -16,7 +16,10 @@ import { useIsDayDisabled } from '../internals/hooks/validation/useDateValidatio
 
 export interface ExportedDayPickerProps<TDate>
   extends DayValidationProps<TDate>,
-    Pick<PickersDayProps<TDate>, 'disableHighlightToday' | 'showDaysOutsideCurrentMonth'> {
+    Pick<
+      PickersDayProps<TDate>,
+      'disableHighlightToday' | 'showDaysOutsideCurrentMonth' | 'preventDaysWeekTransformation'
+    > {
   autoFocus?: boolean;
   /**
    * If `true` renders `LoadingComponent` in calendar instead of calendar view.
@@ -123,6 +126,7 @@ export function DayPicker<TDate>(props: DayPickerProps<TDate>) {
     reduceAnimations,
     renderDay,
     renderLoading = () => <span data-mui-test="loading-progress">...</span>,
+    preventDaysWeekTransformation,
     showDaysOutsideCurrentMonth,
     slideDirection,
     TransitionProps,
@@ -167,7 +171,7 @@ export function DayPicker<TDate>(props: DayPickerProps<TDate>) {
       <PickersCalendarDayHeader>
         {utils.getWeekdays().map((day, i) => (
           <PickersCalendarWeekDayLabel aria-hidden key={day + i.toString()} variant="caption">
-            {day.charAt(0).toUpperCase()}
+            {preventDaysWeekTransformation ? day : day.charAt(0).toUpperCase()}
           </PickersCalendarWeekDayLabel>
         ))}
       </PickersCalendarDayHeader>
@@ -204,6 +208,7 @@ export function DayPicker<TDate>(props: DayPickerProps<TDate>) {
                       utils.isSameDay(selectedDay, day),
                     ),
                     disableHighlightToday,
+                    preventDaysWeekTransformation,
                     showDaysOutsideCurrentMonth,
                     onDayFocus: onFocusedDayChange,
                     onDaySelect: handleDaySelect,

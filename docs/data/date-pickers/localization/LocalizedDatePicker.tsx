@@ -53,6 +53,7 @@ export default function LocalizedDatePicker() {
         </ToggleButtonGroup>
         <DatePicker
           value={datePickerValue}
+          preventDaysWeekTransformation
           onChange={(newValue) => setDatePickerValue(newValue)}
           renderInput={(params) => <TextField {...params} />}
         />

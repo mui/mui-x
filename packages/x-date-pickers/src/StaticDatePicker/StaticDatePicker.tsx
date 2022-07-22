@@ -291,6 +291,11 @@ StaticDatePicker.propTypes = {
    */
   orientation: PropTypes.oneOf(['landscape', 'portrait']),
   /**
+   * If `true`, the name of the days of the week is not transformed.
+   * @default false
+   */
+  preventDaysWeekTransformation: PropTypes.bool,
+  /**
    * Make picker read only.
    * @default false
    */
@@ -361,6 +366,7 @@ StaticDatePicker.propTypes = {
    */
   shouldDisableYear: PropTypes.func,
   /**
+   * /**
    * If `true`, days that have `outsideCurrentMonth={true}` are displayed.
    * @default false
    */

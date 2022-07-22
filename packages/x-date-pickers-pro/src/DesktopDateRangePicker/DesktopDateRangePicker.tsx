@@ -339,6 +339,11 @@ DesktopDateRangePicker.propTypes = {
    */
   PopperProps: PropTypes.object,
   /**
+   * If `true`, the name of the days of the week is not transformed.
+   * @default false
+   */
+  preventDaysWeekTransformation: PropTypes.bool,
+  /**
    * Make picker read only.
    * @default false
    */
@@ -420,6 +425,7 @@ DesktopDateRangePicker.propTypes = {
    */
   shouldDisableYear: PropTypes.func,
   /**
+   * /**
    * If `true`, days that have `outsideCurrentMonth={true}` are displayed.
    * @default false
    */

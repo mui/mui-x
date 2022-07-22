@@ -60,6 +60,7 @@
     "onMonthChange": { "type": { "name": "func" } },
     "onViewChange": { "type": { "name": "func" } },
     "OpenPickerButtonProps": { "type": { "name": "object" } },
+    "preventDaysWeekTransformation": { "type": { "name": "bool" } },
     "readOnly": { "type": { "name": "bool" } },
     "reduceAnimations": {
       "type": { "name": "bool" },

@@ -55,6 +55,12 @@ export interface PickersDayProps<TDate> extends ExtendMui<ButtonBaseProps> {
    */
   selected?: boolean;
   /**
+   * If `true`, the name of the days of the week is not transformed.
+   * @default false
+   */
+  preventDaysWeekTransformation?: boolean;
+  /**
+  /**
    * If `true`, days that have `outsideCurrentMonth={true}` are displayed.
    * @default false
    */
@@ -210,6 +216,7 @@ const PickersDayRaw = React.forwardRef(function PickersDay<TDate>(
     onKeyDown,
     outsideCurrentMonth,
     selected = false,
+    preventDaysWeekTransformation = false,
     showDaysOutsideCurrentMonth = false,
     children,
     today: isToday = false,
@@ -222,6 +229,7 @@ const PickersDayRaw = React.forwardRef(function PickersDay<TDate>(
     disableHighlightToday,
     disableMargin,
     selected,
+    preventDaysWeekTransformation,
     showDaysOutsideCurrentMonth,
     today: isToday,
   };
@@ -391,11 +399,17 @@ PickersDayRaw.propTypes = {
    */
   outsideCurrentMonth: PropTypes.bool.isRequired,
   /**
+   * If `true`, the name of the days of the week is not transformed.
+   * @default false
+   */
+  preventDaysWeekTransformation: PropTypes.bool,
+  /**
    * If `true`, renders as selected.
    * @default false
    */
   selected: PropTypes.bool,
   /**
+   * /**
    * If `true`, days that have `outsideCurrentMonth={true}` are displayed.
    * @default false
    */
