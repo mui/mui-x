@@ -157,7 +157,7 @@ export interface GridValueFormatterParams<V = any> {
 /**
  * Object passed as parameter in the column [[GridColDef]] edit cell props change callback.
  */
-export interface GridPreProcessEditCellProps {
+export interface GridPreProcessEditCellProps<V = any, R extends GridValidRowModel = any> {
   /**
    * The grid row id.
    */
@@ -165,11 +165,11 @@ export interface GridPreProcessEditCellProps {
   /**
    * The row that is being edited.
    */
-  row: GridRowModel;
+  row: GridRowModel<R>;
   /**
    * The edit cell props.
    */
-  props: GridEditCellProps;
+  props: GridEditCellProps<V>;
   /**
    * Whether the new value is different from the stored value or not.
    */
@@ -178,5 +178,5 @@ export interface GridPreProcessEditCellProps {
    * Object containing the props of the other fields.
    * Only available for row editing and when using the new editing API.
    */
-  otherFieldsProps?: Record<string, GridEditCellProps>;
+  otherFieldsProps?: Record<string, GridEditCellProps<V>>;
 }

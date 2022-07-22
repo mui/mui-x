@@ -583,6 +583,32 @@ describe('<DataGridPro /> - Cell Editing', () => {
       });
     });
 
+    describe('by pressing a special character', () => {
+      it(`should publish 'cellEditStart' with reason=printableKeyDown`, () => {
+        render(<TestCase />);
+        const listener = spy();
+        apiRef.current.subscribeEvent('cellEditStart', listener);
+        const cell = getCell(0, 1);
+        fireEvent.mouseUp(cell);
+        fireEvent.click(cell);
+        fireEvent.keyDown(cell, { key: '$' });
+        expect(listener.lastCall.args[0].reason).to.equal('printableKeyDown');
+      });
+    });
+
+    describe('by pressing a number', () => {
+      it(`should publish 'cellEditStart' with reason=printableKeyDown`, () => {
+        render(<TestCase />);
+        const listener = spy();
+        apiRef.current.subscribeEvent('cellEditStart', listener);
+        const cell = getCell(0, 1);
+        fireEvent.mouseUp(cell);
+        fireEvent.click(cell);
+        fireEvent.keyDown(cell, { key: '1' });
+        expect(listener.lastCall.args[0].reason).to.equal('printableKeyDown');
+      });
+    });
+
     describe('by pressing Enter', () => {
       it(`should publish 'cellEditStart' with reason=enterKeyDown`, () => {
         render(<TestCase />);

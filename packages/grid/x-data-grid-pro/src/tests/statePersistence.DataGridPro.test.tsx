@@ -2,6 +2,7 @@ import * as React from 'react';
 import {
   DataGridPro,
   DataGridProProps,
+  getDefaultGridFilterModel,
   GridApi,
   GridColDef,
   GridInitialState,
@@ -112,11 +113,33 @@ describe('<DataGridPro /> - State Persistence', () => {
   };
 
   describe('apiRef: exportState', () => {
-    // We always export the `orderedFields`,
-    // If it's something problematic we could introduce an `hasBeenReordered` property and only export if at least one column has been reordered.
-    it('should not return the default values of the models', () => {
+    it('should export the default values of the models', () => {
       render(<TestCase />);
       expect(apiRef.current.exportState()).to.deep.equal({
+        columns: {
+          columnVisibilityModel: {},
+          orderedFields: ['id', 'idBis', 'category'],
+        },
+        filter: {
+          filterModel: getDefaultGridFilterModel(),
+        },
+        pagination: {
+          page: 0,
+          pageSize: 100,
+        },
+        pinnedColumns: {},
+        preferencePanel: {
+          open: false,
+        },
+        sorting: {
+          sortModel: [],
+        },
+      });
+    });
+
+    it('should not export the default values of the models when using exportOnlyDirtyModels', () => {
+      render(<TestCase />);
+      expect(apiRef.current.exportState({ exportOnlyDirtyModels: true })).to.deep.equal({
         columns: {
           orderedFields: ['id', 'idBis', 'category'],
         },
@@ -126,6 +149,59 @@ describe('<DataGridPro /> - State Persistence', () => {
     it('should export the initial values of the models', () => {
       render(<TestCase initialState={FULL_INITIAL_STATE} />);
       expect(apiRef.current.exportState()).to.deep.equal(FULL_INITIAL_STATE);
+    });
+
+    it('should export the controlled values of the models', () => {
+      render(
+        <TestCase
+          filterModel={FULL_INITIAL_STATE.filter?.filterModel}
+          sortModel={FULL_INITIAL_STATE.sorting?.sortModel}
+          columnVisibilityModel={FULL_INITIAL_STATE.columns?.columnVisibilityModel}
+          page={FULL_INITIAL_STATE.pagination?.page}
+          pageSize={FULL_INITIAL_STATE.pagination?.pageSize}
+          pinnedColumns={FULL_INITIAL_STATE.pinnedColumns}
+          // Some portable states don't have a controllable model
+          initialState={{
+            columns: {
+              orderedFields: FULL_INITIAL_STATE.columns?.orderedFields,
+              dimensions: FULL_INITIAL_STATE.columns?.dimensions,
+            },
+            preferencePanel: FULL_INITIAL_STATE.preferencePanel,
+          }}
+        />,
+      );
+      expect(apiRef.current.exportState()).to.deep.equal(FULL_INITIAL_STATE);
+    });
+
+    it('should export the controlled values of the models when using exportOnlyDirtyModels', () => {
+      render(
+        <TestCase
+          filterModel={FULL_INITIAL_STATE.filter?.filterModel}
+          sortModel={FULL_INITIAL_STATE.sorting?.sortModel}
+          columnVisibilityModel={FULL_INITIAL_STATE.columns?.columnVisibilityModel}
+          page={FULL_INITIAL_STATE.pagination?.page}
+          pageSize={FULL_INITIAL_STATE.pagination?.pageSize}
+          pinnedColumns={FULL_INITIAL_STATE.pinnedColumns}
+          // Some portable states don't have a controllable model
+          initialState={{
+            columns: {
+              orderedFields: FULL_INITIAL_STATE.columns?.orderedFields,
+              dimensions: FULL_INITIAL_STATE.columns?.dimensions,
+            },
+            preferencePanel: FULL_INITIAL_STATE.preferencePanel,
+          }}
+        />,
+      );
+      expect(apiRef.current.exportState({ exportOnlyDirtyModels: true })).to.deep.equal(
+        FULL_INITIAL_STATE,
+      );
+    });
+
+    it('should export the initial values of the models when using exportOnlyUserModels', () => {
+      render(<TestCase initialState={FULL_INITIAL_STATE} />);
+      expect(apiRef.current.exportState({ exportOnlyDirtyModels: true })).to.deep.equal(
+        FULL_INITIAL_STATE,
+      );
     });
 
     it('should export the current version of the exportable state', () => {
