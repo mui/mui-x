@@ -881,4 +881,31 @@ describe('<DataGridPro /> - Row pinning', () => {
     fireEvent.click(getCell(0, 0));
     expect(apiRef!.current.isRowSelected(0)).to.equal(false);
   });
+
+  it('should not render selection checkbox for pinned rows', () => {
+    const TestCase = () => {
+      const data = getData(20, 5);
+      const [pinnedRow0, pinnedRow1, ...rows] = data.rows;
+
+      return (
+        <div style={{ width: 302, height: 300 }}>
+          <DataGridPro
+            {...data}
+            rows={rows}
+            pinnedRows={{
+              top: [pinnedRow0],
+              bottom: [pinnedRow1],
+            }}
+            experimentalFeatures={{ rowPinning: true }}
+            checkboxSelection
+          />
+        </div>
+      );
+    };
+
+    render(<TestCase />);
+
+    expect(getRowById(0)!.querySelector('input[type="checkbox"]')).to.equal(null);
+    expect(getRowById(1)!.querySelector('input[type="checkbox"]')).to.equal(null);
+  });
 });
