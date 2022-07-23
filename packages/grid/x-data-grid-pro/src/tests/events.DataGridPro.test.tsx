@@ -230,11 +230,7 @@ describe('<DataGridPro /> - Events Params', () => {
 
       clock.tick(500);
       expect(handleEditCellPropsChange.callCount).to.equal(1);
-
-      // Wrap in `act` to flush updates after the promise has resolved
-      await act(async () => {
-        fireEvent.keyDown(input, { key: 'Enter' });
-      });
+      fireEvent.keyDown(input, { key: 'Enter' });
 
       await waitFor(() => {
         expect(cell).to.have.text('Jack');

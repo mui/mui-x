@@ -17,8 +17,6 @@ import { spy } from 'sinon';
 import { getData } from 'storybook/src/data/data-service';
 import { GridCellModes } from '@mui/x-data-grid';
 
-const nativeSetTimeout = setTimeout;
-
 describe('<DataGridPro /> - Cell Editing', () => {
   const { render, clock } = createRenderer({ clock: 'fake' });
 
@@ -442,7 +440,7 @@ describe('<DataGridPro /> - Cell Editing', () => {
           apiRef.current.setEditCellValue({ id: 0, field: 'currencyPair', value: 'USD GBP' }),
         );
         act(() => apiRef.current.stopCellEditMode({ id: 0, field: 'currencyPair' }));
-        await act(() => new Promise((resolve) => nativeSetTimeout(resolve)));
+        await act(() => Promise.resolve());
         expect(processRowUpdate.callCount).to.equal(1);
         expect(getCell(0, 1).textContent).to.equal('USD-GBP');
       });
@@ -455,7 +453,7 @@ describe('<DataGridPro /> - Cell Editing', () => {
           apiRef.current.setEditCellValue({ id: 0, field: 'currencyPair', value: 'USD GBP' }),
         );
         act(() => apiRef.current.stopCellEditMode({ id: 0, field: 'currencyPair' }));
-        await act(() => new Promise((resolve) => nativeSetTimeout(resolve)));
+        await act(() => Promise.resolve());
         expect(processRowUpdate.lastCall.args[0]).to.deep.equal({
           ...defaultData.rows[0],
           currencyPair: 'USD GBP',
@@ -508,7 +506,7 @@ describe('<DataGridPro /> - Cell Editing', () => {
         );
         act(() => apiRef.current.startCellEditMode({ id: 0, field: 'currencyPair' }));
         act(() => apiRef.current.stopCellEditMode({ id: 0, field: 'currencyPair' }));
-        await new Promise((resolve) => nativeSetTimeout(resolve));
+        await act(() => Promise.resolve());
         expect(onProcessRowUpdateError.lastCall.args[0]).to.equal(error);
       });
 

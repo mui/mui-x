@@ -19,8 +19,6 @@ function fireClickEvent(cell: HTMLElement) {
   fireEvent.click(cell);
 }
 
-const nativeSetTimeout = setTimeout;
-
 describe('<DataGridPro /> - Row Editing', () => {
   let baselineProps: Pick<
     DataGridProProps,
@@ -126,11 +124,7 @@ describe('<DataGridPro /> - Row Editing', () => {
     fireEvent.change(input, { target: { value: 'ADIDAS' } });
     clock.tick(500);
     expect(input!.value).to.equal('ADIDAS');
-
-    // Wrap in `act` to flush updates after the promise has resolved
-    await act(async () => {
-      fireEvent.keyDown(input, { key: 'Enter' });
-    });
+    fireEvent.keyDown(input, { key: 'Enter' });
 
     await waitFor(() => {
       expect(cell).to.have.text('ADIDAS');
@@ -144,11 +138,7 @@ describe('<DataGridPro /> - Row Editing', () => {
     const input = cell.querySelector('input');
     fireEvent.change(input, { target: { value: 'ADIDAS' } });
     expect(input!.value).to.equal('ADIDAS');
-
-    // Wrap in `act` to flush updates after the promise has resolved
-    await act(async () => {
-      fireEvent.keyDown(input, { key: 'Enter' });
-    });
+    fireEvent.keyDown(input, { key: 'Enter' });
 
     await waitFor(() => {
       expect(getCell(2, 0)).toHaveFocus();
@@ -163,11 +153,7 @@ describe('<DataGridPro /> - Row Editing', () => {
     fireEvent.change(input, { target: { value: 'ADIDAS' } });
     clock.tick(500);
     expect(input!.value).to.equal('ADIDAS');
-
-    // Wrap in `act` to flush updates after the promise has resolved
-    await act(async () => {
-      fireClickEvent(getCell(2, 0));
-    });
+    fireClickEvent(getCell(2, 0));
 
     await act(async () => clock.tick(0));
 
@@ -214,11 +200,8 @@ describe('<DataGridPro /> - Row Editing', () => {
     const input = firstCell.querySelector('input')!;
     fireEvent.change(input, { target: { value: 'Peter Smith' } });
     clock.tick(500);
-
-    // Wrap in `act` to flush updates after the promise has resolved
-    await act(async () => {
-      fireEvent.keyDown(input, { key: 'Enter' });
-    });
+    fireEvent.keyDown(input, { key: 'Enter' });
+    await act(() => Promise.resolve());
 
     expect(valueSetter.callCount).to.equal(1);
     expect(valueSetter.lastCall.args[0]).to.deep.equal({
@@ -251,11 +234,8 @@ describe('<DataGridPro /> - Row Editing', () => {
     fireEvent.doubleClick(firstCell);
     const secondInput = secondCell.querySelector('input');
     const firstInput = firstCell.querySelector('input');
-
-    // Wrap in `act` to flush updates after the promise has resolved
-    await act(async () => {
-      fireEvent.change(firstInput, { target: { value: 'ADIDAS' } });
-    });
+    fireEvent.change(firstInput, { target: { value: 'ADIDAS' } });
+    await act(() => Promise.resolve());
 
     await act(async () => clock.tick(500));
 
@@ -282,11 +262,8 @@ describe('<DataGridPro /> - Row Editing', () => {
     fireEvent.doubleClick(firstCell);
     const firstInput = firstCell.querySelector('input');
     const secondInput = secondCell.querySelector('input');
-
-    // Wrap in `act` to flush updates after the promise has resolved
-    await act(async () => {
-      fireEvent.change(firstInput, { target: { value: 'ADIDAS' } });
-    });
+    fireEvent.change(firstInput, { target: { value: 'ADIDAS' } });
+    await act(() => Promise.resolve());
 
     await act(async () => clock.tick(500));
 
@@ -314,23 +291,17 @@ describe('<DataGridPro /> - Row Editing', () => {
     fireEvent.mouseUp(cell);
     fireEvent.doubleClick(cell);
     const input = cell.querySelector('input')!;
-
-    // Wrap in `act` to flush updates after the promise has resolved
-    await act(async () => {
-      fireEvent.change(input, { target: { value: 'Adidas' } });
-    });
+    fireEvent.change(input, { target: { value: 'Adidas' } });
+    await act(() => Promise.resolve());
 
     await act(async () => clock.runToLast());
 
-    await new Promise((resolve) => nativeSetTimeout(resolve));
+    await Promise.resolve();
     expect(apiRef.current.getEditRowsModel()[0].brand.value).to.equal('Adidas');
+    fireEvent.keyDown(input, { key: 'Enter' });
+    await act(() => Promise.resolve());
 
-    // Wrap in `act` to flush updates after the promise has resolved
-    await act(async () => {
-      fireEvent.keyDown(input, { key: 'Enter' });
-    });
-
-    await new Promise((resolve) => nativeSetTimeout(resolve));
+    await Promise.resolve();
     expect(cell).not.to.have.class('MuiDataGrid-cell--editing');
     expect(cell).to.have.text('Adidas');
   });
@@ -366,13 +337,10 @@ describe('<DataGridPro /> - Row Editing', () => {
     const input = cell.querySelector('input')!;
     fireEvent.change(input, { target: { value: 'Adidas' } });
     clock.tick(500);
+    fireEvent.keyDown(input, { key: 'Enter' });
+    await act(() => Promise.resolve());
 
-    // Wrap in `act` to flush updates after the promise has resolved
-    await act(async () => {
-      fireEvent.keyDown(input, { key: 'Enter' });
-    });
-
-    await new Promise((resolve) => nativeSetTimeout(resolve)); // Wait for promise
+    await Promise.resolve(); // Wait for promise
 
     expect(brandPreProcessEditCellProps.callCount).to.equal(2);
     expect(brandPreProcessEditCellProps.args[0][0].props).to.deep.equal({ value: 'Adidas' });
@@ -415,13 +383,10 @@ describe('<DataGridPro /> - Row Editing', () => {
     const input = cell.querySelector('input')!;
     fireEvent.change(input, { target: { value: 'Adidas' } });
     clock.tick(500);
+    fireEvent.keyDown(input, { key: 'Enter' });
+    await act(() => Promise.resolve());
 
-    // Wrap in `act` to flush updates after the promise has resolved
-    await act(async () => {
-      fireEvent.keyDown(input, { key: 'Enter' });
-    });
-
-    await new Promise((resolve) => nativeSetTimeout(resolve)); // Wait for promise
+    await Promise.resolve(); // Wait for promise
 
     expect(brandPreProcessEditCellProps.callCount).to.equal(1);
     expect(brandPreProcessEditCellProps.lastCall.args[0].props).to.deep.equal({
@@ -461,13 +426,8 @@ describe('<DataGridPro /> - Row Editing', () => {
     const input = cell.querySelector('input')!;
     fireEvent.change(input, { target: { value: 'Adidas' } });
     clock.tick(500);
-
-    // Wrap in `act` to flush updates after the promise has resolved
-    await act(async () => {
-      fireEvent.keyDown(input, { key: 'Enter' });
-    });
-
-    await new Promise((resolve) => nativeSetTimeout(resolve)); // Wait for promise
+    fireEvent.keyDown(input, { key: 'Enter' });
+    await act(() => Promise.resolve());
 
     expect(preProcessEditCellProps.callCount).to.equal(1);
     expect(preProcessEditCellProps.lastCall.args[0].props).to.deep.equal({
@@ -499,7 +459,7 @@ describe('<DataGridPro /> - Row Editing', () => {
     const input = cell.querySelector('input')!;
     fireEvent.change(input, { target: { value: 'Adidas' } });
     fireEvent.keyDown(input, { key: 'Enter' });
-    await new Promise((resolve) => nativeSetTimeout(resolve)); // Wait for promise
+    await Promise.resolve(); // Wait for promise
     clock.runToLast();
     expect(getRow(1)).not.to.have.class('MuiDataGrid-row--editing');
   });
@@ -522,7 +482,7 @@ describe('<DataGridPro /> - Row Editing', () => {
     fireEvent.keyDown(input, { key: 'Enter', keyCode: 229 });
     expect(valueSetter.callCount).to.equal(0);
     fireEvent.keyDown(input, { key: 'Enter', keyCode: 13 });
-    await act(() => new Promise((resolve) => nativeSetTimeout(resolve)));
+    await act(() => Promise.resolve());
     expect(valueSetter.callCount).to.equal(1);
     expect(input!.value).to.equal('あ');
   });

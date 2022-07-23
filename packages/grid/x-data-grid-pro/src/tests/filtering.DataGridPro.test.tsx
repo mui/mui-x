@@ -512,10 +512,8 @@ describe('<DataGridPro /> - Filter', () => {
         );
       }
 
-      // Wrap in `act` to flush updates after the promise has resolved
-      await act(async () => {
-        render(<AddServerFilterGrid />);
-      });
+      render(<AddServerFilterGrid />);
+      await act(() => Promise.resolve()); // Wait for the server to send rows
 
       const addButton = screen.getByRole('button', { name: /Add Filter/i });
       fireEvent.click(addButton);

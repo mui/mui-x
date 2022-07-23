@@ -16,8 +16,6 @@ import { getCell, getRow } from 'test/utils/helperFn';
 import { spy } from 'sinon';
 import { getData } from 'storybook/src/data/data-service';
 
-const nativeSetTimeout = setTimeout;
-
 describe('<DataGridPro /> - Row Editing', () => {
   const { render, clock } = createRenderer();
 
@@ -506,7 +504,7 @@ describe('<DataGridPro /> - Row Editing', () => {
           apiRef.current.setEditCellValue({ id: 0, field: 'currencyPair', value: 'USD GBP' }),
         );
         act(() => apiRef.current.stopRowEditMode({ id: 0 }));
-        await act(() => new Promise((resolve) => nativeSetTimeout(resolve)));
+        await act(() => Promise.resolve());
         expect(processRowUpdate.callCount).to.equal(1);
         expect(getCell(0, 1).textContent).to.equal('USD-GBP');
       });
@@ -519,7 +517,7 @@ describe('<DataGridPro /> - Row Editing', () => {
           apiRef.current.setEditCellValue({ id: 0, field: 'currencyPair', value: 'USD GBP' }),
         );
         act(() => apiRef.current.stopRowEditMode({ id: 0 }));
-        await act(() => new Promise((resolve) => nativeSetTimeout(resolve)));
+        await act(() => Promise.resolve());
         expect(processRowUpdate.lastCall.args[0]).to.deep.equal({
           ...defaultData.rows[0],
           currencyPair: 'USD GBP',
@@ -570,7 +568,7 @@ describe('<DataGridPro /> - Row Editing', () => {
         );
         act(() => apiRef.current.startRowEditMode({ id: 0 }));
         act(() => apiRef.current.stopRowEditMode({ id: 0 }));
-        await new Promise((resolve) => nativeSetTimeout(resolve));
+        await Promise.resolve();
         expect(onProcessRowUpdateError.lastCall.args[0]).to.equal(error);
       });
 
@@ -584,7 +582,7 @@ describe('<DataGridPro /> - Row Editing', () => {
           apiRef.current.setEditCellValue({ id: 0, field: 'currencyPair', value: 'USD GBP' }),
         );
         act(() => apiRef.current.stopRowEditMode({ id: 0 }));
-        await act(() => new Promise((resolve) => nativeSetTimeout(resolve)));
+        await act(() => Promise.resolve());
         expect(processRowUpdate.lastCall.args[0]).to.deep.equal({
           ...defaultData.rows[0],
           currencyPair: 'USDGBP',
@@ -656,7 +654,7 @@ describe('<DataGridPro /> - Row Editing', () => {
             });
           });
           act(() => apiRef.current.stopRowEditMode({ id: 0 }));
-          await act(() => new Promise((resolve) => nativeSetTimeout(resolve)));
+          await act(() => Promise.resolve());
           expect(renderEditCell1.lastCall.args[0].value).to.equal('USD GBP');
           expect(processRowUpdate.lastCall.args[0].currencyPair).to.equal('USD GBP');
         });
