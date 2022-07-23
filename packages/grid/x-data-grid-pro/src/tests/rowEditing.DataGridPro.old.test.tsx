@@ -292,11 +292,8 @@ describe('<DataGridPro /> - Row Editing', () => {
     fireEvent.doubleClick(cell);
     const input = cell.querySelector('input')!;
     fireEvent.change(input, { target: { value: 'Adidas' } });
+    act(() => clock.runToLast());
     await act(() => Promise.resolve());
-
-    await act(async () => clock.runToLast());
-
-    await Promise.resolve();
     expect(apiRef.current.getEditRowsModel()[0].brand.value).to.equal('Adidas');
     fireEvent.keyDown(input, { key: 'Enter' });
     await act(() => Promise.resolve());
