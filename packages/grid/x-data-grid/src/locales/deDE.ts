@@ -145,12 +145,12 @@ const deDEGrid: Partial<GridLocaleText> = {
   rowReorderingHeaderName: 'Reihen neu ordnen',
 
   // Aggregation
-  // aggregationMenuItemHeader: 'Aggregation',
-  // aggregationFunctionLabelSum: 'sum',
-  // aggregationFunctionLabelAvg: 'avg',
-  // aggregationFunctionLabelMin: 'min',
-  // aggregationFunctionLabelMax: 'max',
-  // aggregationFunctionLabelSize: 'size',
+  aggregationMenuItemHeader: 'Aggregation',
+  aggregationFunctionLabelSum: 'Summe',
+  aggregationFunctionLabelAvg: 'Mittelwert',
+  aggregationFunctionLabelMin: 'Minimum',
+  aggregationFunctionLabelMax: 'Maximum',
+  aggregationFunctionLabelSize: 'Anzahl',
 };
 
 export const deDE: Localization = getGridLocalization(deDEGrid, deDECore);
