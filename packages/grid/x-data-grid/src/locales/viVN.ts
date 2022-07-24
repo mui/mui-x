@@ -28,7 +28,7 @@ const viVNGrid: Partial<GridLocaleText> = {
     count > 1 ? `${count} bộ lọc hoạt động` : `${count} bộ lọc hoạt động`,
 
   // Quick filter toolbar field
-  // toolbarQuickFilterPlaceholder: 'Search...',
+  // toolbarQuickFilterPlaceholder: 'Search…',
   // toolbarQuickFilterLabel: 'Search',
   // toolbarQuickFilterDeleteIconLabel: 'Clear',
 

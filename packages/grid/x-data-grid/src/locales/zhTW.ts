@@ -27,7 +27,7 @@ const zhTWGrid: Partial<GridLocaleText> = {
   toolbarFiltersTooltipActive: (count) => `${count} 個篩選器`,
 
   // Quick filter toolbar field
-  toolbarQuickFilterPlaceholder: '搜尋...',
+  toolbarQuickFilterPlaceholder: '搜尋…',
   toolbarQuickFilterLabel: '搜尋',
   toolbarQuickFilterDeleteIconLabel: '清除',
 
