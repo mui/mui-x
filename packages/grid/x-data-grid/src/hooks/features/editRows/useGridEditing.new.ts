@@ -41,6 +41,9 @@ export const useGridEditing = (
       if (isCellEditableProp) {
         return isCellEditableProp(params);
       }
+      if (params.rowNode.isPinned) {
+        return false;
+      }
       return true;
     },
     [isCellEditableProp],
