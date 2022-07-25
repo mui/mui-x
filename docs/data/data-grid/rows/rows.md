@@ -281,8 +281,8 @@ In addition, if row grouping or tree data is being used, the row reordering is a
 
 ## Row pinning [<span class="plan-pro"></span>](https://mui.com/store/items/material-ui-pro/)
 
-Pinned (or frozen, locked or floating) rows are rows that are visible at all times while the user scrolls the grid vertically.
-Pinned rows are not affected by sorting or filtering.
+Pinned (or frozen, locked or floating) rows are those visible at all times while the user scrolls the grid vertically.
+Pinned rows are not affected by sorting, filtering or pagination.
 
 :::warning
 This feature is experimental, it needs to be explicitly activated using the `rowPinning` experimental feature flag.
@@ -315,6 +315,17 @@ Otherwise, the grid will re-apply heavy work like sorting and filtering.
 The data format for pinned rows is the same as for the `rows` prop (see [Feeding data](/x/react-data-grid/rows/#feeding-data)).
 
 Pinned rows data should also meet [Row identifier](/x/react-data-grid/rows/#row-identifier) requirements.
+
+:::info
+Note that pinned rows do not support following features:
+
+- editing
+- selection
+- row grouping
+- tree data
+- row reordering
+- master detail
+  :::
 
 {{"demo": "RowPinning.js", "disableAd": true, "bg": "inline"}}
 
