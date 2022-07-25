@@ -27,7 +27,7 @@ const trTRGrid: Partial<GridLocaleText> = {
   toolbarFiltersTooltipActive: (count) => `${count} aktif filtre`,
 
   // Quick filter toolbar field
-  toolbarQuickFilterPlaceholder: 'Ara...',
+  toolbarQuickFilterPlaceholder: 'Ara…',
   toolbarQuickFilterLabel: 'Ara',
   toolbarQuickFilterDeleteIconLabel: 'Temizle',
 

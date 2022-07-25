@@ -28,7 +28,7 @@ const ptBRGrid: Partial<GridLocaleText> = {
     `${count} ${count !== 1 ? 'filtros' : 'filtro'} ${count !== 1 ? 'ativos' : 'ativo'}`,
 
   // Quick filter toolbar field
-  toolbarQuickFilterPlaceholder: 'Procurar...',
+  toolbarQuickFilterPlaceholder: 'Procurar…',
   toolbarQuickFilterLabel: 'Procurar',
   toolbarQuickFilterDeleteIconLabel: 'Limpar',
 

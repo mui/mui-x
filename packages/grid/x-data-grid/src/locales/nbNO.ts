@@ -28,7 +28,7 @@ const nbNOGrid: Partial<GridLocaleText> = {
     count !== 1 ? `${count} aktive filter` : `${count} aktivt filter`,
 
   // Quick filter toolbar field
-  toolbarQuickFilterPlaceholder: 'Søk...',
+  toolbarQuickFilterPlaceholder: 'Søk…',
   toolbarQuickFilterLabel: 'Søk',
   toolbarQuickFilterDeleteIconLabel: 'Slett',
 
