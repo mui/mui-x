@@ -27,7 +27,7 @@ const bgBGGrid: Partial<GridLocaleText> = {
   toolbarFiltersTooltipActive: (count) => `${count} активни филтри`,
 
   // Quick filter toolbar field
-  // toolbarQuickFilterPlaceholder: 'Search...',
+  // toolbarQuickFilterPlaceholder: 'Search…',
   // toolbarQuickFilterLabel: 'Search',
   // toolbarQuickFilterDeleteIconLabel: 'Clear',
 
