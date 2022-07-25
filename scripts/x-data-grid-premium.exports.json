@@ -412,6 +412,7 @@
   { "name": "GridRowOrderChangeParams", "kind": "Interface" },
   { "name": "GridRowParams", "kind": "Interface" },
   { "name": "GridRowPinningApi", "kind": "Interface" },
+  { "name": "GridRowPinningInternalCache", "kind": "Interface" },
   { "name": "GridRowProps", "kind": "Interface" },
   { "name": "GridRowScrollEndParams", "kind": "Interface" },
   { "name": "GridRowSelectionCheckboxParams", "kind": "Interface" },
