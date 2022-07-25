@@ -241,7 +241,7 @@ const buildComponentDocumentation = async (options: {
   reactApi.styles = await parseStyles(reactApi, project.program as any);
   reactApi.styles.name = reactApi.name.startsWith('Grid')
     ? 'MuiDataGrid' // TODO: Read from @slot annotation
-    : `Mui${reactApi.name.replace(/((Pro)|(Premium))$/, '')}`;
+    : `Mui${reactApi.name.replace(/(Pro|Premium)$/, '')}`;
   reactApi.styles.classes.forEach((key) => {
     const globalClass = generateUtilityClass(reactApi.styles.name!, key);
     reactApi.styles.globalClasses[key] = globalClass;
