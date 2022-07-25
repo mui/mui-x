@@ -19,9 +19,7 @@ const zhCNPickers: PickersLocaleText<any> = {
   openPreviousView: '前一个视图',
   openNextView: '下一个视图',
   calendarViewSwitchingButtonAriaLabel: (view: CalendarPickerView) =>
-    view === 'year'
-      ? '年视图已打开，切换为日历视图'
-      : '日历视图已打开，切换为年视图',
+    view === 'year' ? '年视图已打开，切换为日历视图' : '日历视图已打开，切换为年视图',
 
   // DateRange placeholders
   start: '开始',
