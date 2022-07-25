@@ -1,10 +1,39 @@
 import * as React from 'react';
 import { useGridApiMethod } from '@mui/x-data-grid';
-import { GridStateInitializer } from '@mui/x-data-grid/internals';
+import { getRowIdFromRowModel, GridStateInitializer } from '@mui/x-data-grid/internals';
 
 import { GridApiPro } from '../../../models/gridApiPro';
-import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
-import { GridRowPinningApi } from './gridRowPinningInterface';
+import { DataGridProProcessedProps, DataGridProProps } from '../../../models/dataGridProProps';
+import {
+  GridPinnedRowsProp,
+  GridRowPinningApi,
+  GridRowPinningInternalCache,
+} from './gridRowPinningInterface';
+
+function createPinnedRowsInternalCache(
+  pinnedRows: GridPinnedRowsProp,
+  getRowId: DataGridProProps['getRowId'],
+) {
+  const cache: GridRowPinningInternalCache = {
+    topIds: [],
+    bottomIds: [],
+    idLookup: {},
+  };
+
+  pinnedRows.top?.forEach((rowModel) => {
+    const id = getRowIdFromRowModel(rowModel, getRowId);
+    cache.topIds.push(id);
+    cache.idLookup[id] = rowModel;
+  });
+
+  pinnedRows.bottom?.forEach((rowModel) => {
+    const id = getRowIdFromRowModel(rowModel, getRowId);
+    cache.bottomIds.push(id);
+    cache.idLookup[id] = rowModel;
+  });
+
+  return cache;
+}
 
 export const rowPinningStateInitializer: GridStateInitializer<
   Pick<DataGridProProcessedProps, 'pinnedRows' | 'getRowId' | 'experimentalFeatures'>
@@ -13,10 +42,10 @@ export const rowPinningStateInitializer: GridStateInitializer<
     return state;
   }
 
-  apiRef.current.unstable_caches.pinnedRows = {
-    top: props.pinnedRows?.top || [],
-    bottom: props.pinnedRows?.bottom || [],
-  };
+  apiRef.current.unstable_caches.pinnedRows = createPinnedRowsInternalCache(
+    props.pinnedRows || {},
+    props.getRowId,
+  );
 
   return {
     ...state,
@@ -39,14 +68,15 @@ export const useGridRowPinning = (
       if (!props.experimentalFeatures?.rowPinning) {
         return;
       }
-      apiRef.current.unstable_caches.pinnedRows = {
-        top: newPinnedRows.top || [],
-        bottom: newPinnedRows.bottom || [],
-      };
+
+      apiRef.current.unstable_caches.pinnedRows = createPinnedRowsInternalCache(
+        newPinnedRows,
+        props.getRowId,
+      );
 
       apiRef.current.unstable_requestPipeProcessorsApplication('hydrateRows');
     },
-    [apiRef, props.experimentalFeatures?.rowPinning],
+    [apiRef, props.experimentalFeatures?.rowPinning, props.getRowId],
   );
 
   useGridApiMethod(

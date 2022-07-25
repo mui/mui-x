@@ -5,7 +5,7 @@ import type {
   GridPinnedColumns,
 } from '../hooks/features/columnPinning/gridColumnPinningInterface';
 import type { GridCanBeReorderedPreProcessingContext } from '../hooks/features/columnReorder/columnReorderInterfaces';
-import { GridPinnedRowsProp } from '../hooks/features/rowPinning/gridRowPinningInterface';
+import { GridRowPinningInternalCache } from '../hooks/features/rowPinning/gridRowPinningInterface';
 
 export interface GridControlledStateEventLookupPro {
   /**
@@ -40,7 +40,7 @@ export interface GridPipeProcessingLookupPro {
 
 export interface GridApiCachesPro {
   columnPinning: GridColumnPinningInternalCache;
-  pinnedRows: GridPinnedRowsProp;
+  pinnedRows: GridRowPinningInternalCache;
 }
 
 declare module '@mui/x-data-grid' {

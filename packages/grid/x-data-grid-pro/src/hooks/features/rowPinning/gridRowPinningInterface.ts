@@ -1,4 +1,4 @@
-import { GridRowsProp } from '@mui/x-data-grid';
+import { GridRowId, GridRowsLookup, GridRowsProp } from '@mui/x-data-grid';
 
 export interface GridPinnedRowsProp<R = any> {
   top?: GridRowsProp<R>;
@@ -11,4 +11,10 @@ export interface GridRowPinningApi {
    * @param {GridPinnedRowsProp} pinnedRows An object containing the rows to pin.
    */
   unstable_setPinnedRows: (pinnedRows: GridPinnedRowsProp) => void;
+}
+
+export interface GridRowPinningInternalCache {
+  topIds: GridRowId[];
+  bottomIds: GridRowId[];
+  idLookup: GridRowsLookup;
 }

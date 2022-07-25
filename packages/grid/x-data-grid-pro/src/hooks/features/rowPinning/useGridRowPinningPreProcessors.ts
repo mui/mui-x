@@ -1,13 +1,11 @@
 import * as React from 'react';
 import {
-  getRowIdFromRowModel,
   GridHydrateRowsValue,
   GridPipeProcessor,
   useGridRegisterPipeProcessor,
 } from '@mui/x-data-grid/internals';
 import { GridRowEntry, GridRowId, GridRowModel } from '@mui/x-data-grid';
 import { GridApiPro } from '../../../models/gridApiPro';
-import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 import { GridPinnedRowsProp } from './gridRowPinningInterface';
 
 type GridPinnedRowPosition = keyof GridPinnedRowsProp;
@@ -63,15 +61,10 @@ export function addPinnedRow({
   };
 }
 
-export const useGridRowPinningPreProcessors = (
-  apiRef: React.MutableRefObject<GridApiPro>,
-  props: Pick<DataGridProProcessedProps, 'pinnedRows' | 'getRowId'>,
-) => {
+export const useGridRowPinningPreProcessors = (apiRef: React.MutableRefObject<GridApiPro>) => {
   const addPinnedRows = React.useCallback<GridPipeProcessor<'hydrateRows'>>(
     (groupingParams) => {
-      const pinnedRows = apiRef.current.unstable_caches.pinnedRows;
-      const pinnedRowsTop = pinnedRows?.top || [];
-      const pinnedRowsBottom = pinnedRows?.bottom || [];
+      const pinnedRowsCache = apiRef.current.unstable_caches.pinnedRows || {};
 
       let newGroupingParams = {
         ...groupingParams,
@@ -82,21 +75,19 @@ export const useGridRowPinningPreProcessors = (
         },
       };
 
-      pinnedRowsTop.forEach((row) => {
-        const rowId = getRowIdFromRowModel(row, props.getRowId);
+      pinnedRowsCache.topIds?.forEach((rowId) => {
         newGroupingParams = addPinnedRow({
           groupingParams: newGroupingParams,
-          rowModel: row,
+          rowModel: pinnedRowsCache.idLookup[rowId],
           rowId,
           position: 'top',
           apiRef,
         });
       });
-      pinnedRowsBottom.forEach((row) => {
-        const rowId = getRowIdFromRowModel(row, props.getRowId);
+      pinnedRowsCache.bottomIds?.forEach((rowId) => {
         newGroupingParams = addPinnedRow({
           groupingParams: newGroupingParams,
-          rowModel: row,
+          rowModel: pinnedRowsCache.idLookup[rowId],
           rowId,
           position: 'bottom',
           apiRef,
@@ -105,7 +96,7 @@ export const useGridRowPinningPreProcessors = (
 
       return newGroupingParams;
     },
-    [apiRef, props.getRowId],
+    [apiRef],
   );
 
   useGridRegisterPipeProcessor(apiRef, 'hydrateRows', addPinnedRows);
