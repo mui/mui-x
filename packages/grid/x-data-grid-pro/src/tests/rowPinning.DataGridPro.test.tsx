@@ -908,4 +908,40 @@ describe('<DataGridPro /> - Row pinning', () => {
     expect(getRowById(0)!.querySelector('input[type="checkbox"]')).to.equal(null);
     expect(getRowById(1)!.querySelector('input[type="checkbox"]')).to.equal(null);
   });
+
+  it('should export pinned rows to CSV', () => {
+    let apiRef: React.MutableRefObject<GridApi>;
+
+    const TestCase = () => {
+      const data = getData(20, 1);
+      const [pinnedRow0, pinnedRow1, ...rows] = data.rows;
+
+      apiRef = useGridApiRef();
+
+      return (
+        <div style={{ width: 302, height: 300 }}>
+          <DataGridPro
+            {...data}
+            apiRef={apiRef}
+            rows={rows}
+            pinnedRows={{
+              top: [pinnedRow0],
+              bottom: [pinnedRow1],
+            }}
+            experimentalFeatures={{ rowPinning: true }}
+          />
+        </div>
+      );
+    };
+
+    render(<TestCase />);
+
+    const csv = apiRef!.current.getDataAsCsv({
+      includeHeaders: false,
+    });
+
+    const csvRows = csv.split('\r\n');
+    expect(csvRows[0]).to.equal('0');
+    expect(csvRows[csvRows.length - 1]).to.equal('1');
+  });
 });
