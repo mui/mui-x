@@ -66,11 +66,36 @@ const columns = [
         return <React.Fragment />;
       }
       return (
-        <Typography sx={{ fontSize: '1rem', fontWeight: '500' }}>
-          <Link href={`/x/react-data-grid${params.row.detailPage}`} target="_blank">
-            {params.value}
-          </Link>
-        </Typography>
+        <Box sx={{ width: '100%', height: '100%', position: 'relative' }}>
+          <Typography sx={{ fontSize: '1rem', fontWeight: '500' }}>
+            <Link
+              href={`/x/react-data-grid${params.row.detailPage}`}
+              target="_blank"
+            >
+              {params.value}
+            </Link>
+          </Typography>
+          {params.row.newBadge && (
+            <Box
+              sx={{
+                width: 'fit-content',
+                height: 'fit-content',
+                fontSize: '0.8em',
+                fontWeight: 600,
+                position: 'absolute',
+                textAlign: 'center',
+                top: -13,
+                left: -20,
+                background: '#fcf0a0',
+                color: '#af5b00',
+                px: 1,
+                borderRadius: 10,
+              }}
+            >
+              New
+            </Box>
+          )}
+        </Box>
       );
     },
   },

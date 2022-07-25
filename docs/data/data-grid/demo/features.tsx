@@ -12,6 +12,7 @@ import ColumnSelectorGrid from '../column-visibility/ColumnSelectorGrid';
 import RowOrderingGrid from '../rows/RowOrderingGrid';
 import TreeDataFullExample from '../tree-data/TreeDataFullExample';
 import RestoreStateInitialState from '../state/RestoreStateInitialState';
+import AggregationRowGrouping from '../aggregation/AggregationRowGrouping';
 
 export const featuresSet = [
   {
@@ -91,6 +92,24 @@ export const featuresSet = [
   },
   {
     id: 10,
+    name: 'Row Pinning',
+    description: 'Pin your rows up or down',
+    plan: 'Pro',
+    detailPage: '/row-pinning/',
+    demo: <div>Waiting for row pinning branch to merge to master</div>,
+    newBadge: true,
+  },
+  {
+    id: 11,
+    name: 'Aggretation and Summary rows',
+    description: 'Set summary footer rows or inline summaries with row grouping',
+    plan: 'Premium',
+    detailPage: '/aggregation/',
+    demo: <AggregationRowGrouping />,
+    newBadge: true,
+  },
+  {
+    id: 12,
     name: 'Column Visibility',
     description:
       'Display different columns in different use cases, by defining which columns are visible',
@@ -99,7 +118,7 @@ export const featuresSet = [
     demo: <ColumnSelectorGrid />,
   },
   {
-    id: 11,
+    id: 13,
     name: 'Column Virtualization',
     description: 'High performance support for thousands of columns',
     plan: 'Community',
@@ -107,7 +126,7 @@ export const featuresSet = [
     demo: <ColumnVirtualizationGrid />,
   },
   {
-    id: 12,
+    id: 14,
     name: 'Row Virtualization',
     description: 'High performance support for vast volume of data',
     plan: 'Pro',
@@ -115,7 +134,7 @@ export const featuresSet = [
     demo: <FullFeaturedDemo />,
   },
   {
-    id: 13,
+    id: 15,
     name: 'Tree data',
     description: 'Support rows with parent / child relationship',
     plan: 'Pro',
