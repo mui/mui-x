@@ -157,9 +157,7 @@ describe('<DesktopDateRangePicker />', () => {
     });
   });
 
-  // TODO
-  // eslint-disable-next-line mocha/no-skipped-tests
-  it.skip('should allow pure keyboard selection of range', () => {
+  it('should allow pure keyboard selection of range', () => {
     const handleChange = spy();
     render(
       <WrappedDesktopDateRangePicker
@@ -177,15 +175,82 @@ describe('<DesktopDateRangePicker />', () => {
       },
     });
 
+    // TODO: remove, the `onChange` should be called immediately
+    clock.runToLast();
+
     fireEvent.change(screen.getAllByRole('textbox')[1], {
       target: {
         value: '08/08/2019',
       },
     });
 
+    // TODO: remove, the `onChange` should be called immediately
+    clock.runToLast();
+
+    expect(handleChange.callCount).to.equal(2);
+    const firstChangeValues = handleChange.args[0][0];
+
+    expect(firstChangeValues[0]).toEqualDateTime(new Date(2019, 5, 6));
+    expect(firstChangeValues[1]).to.equal(null);
+
+    const secondChangeValues = handleChange.args[1][0];
+    expect(secondChangeValues[0]).toEqualDateTime(new Date(2019, 5, 6));
+    expect(secondChangeValues[1]).toEqualDateTime(new Date(2019, 7, 8));
+  });
+
+  it('should allow partial date enter', () => {
+    const handleChange = spy();
+    render(
+      <WrappedDesktopDateRangePicker
+        reduceAnimations
+        initialValue={[null, null]}
+        onChange={handleChange}
+      />,
+    );
+
+    openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'start' });
+
+    fireEvent.change(screen.getAllByRole('textbox')[0], {
+      target: {
+        value: '0',
+      },
+    });
+
+    // TODO: remove, the `onChange` should be called immediately
+    clock.runToLast();
+
     expect(handleChange.callCount).to.equal(1);
-    expect(handleChange.args[0][0]).toEqualDateTime(new Date(2019, 5, 6));
-    expect(handleChange.args[0][1]).toEqualDateTime(new Date(2019, 5, 6));
+
+    expect(screen.getAllByRole('textbox')[0].value).to.equal('0');
+
+    const firstChangeValues = handleChange.args[0][0];
+    expect(adapterToUse.isValid(firstChangeValues[0])).to.equal(false);
+    expect(firstChangeValues[1]).to.equal(null);
+  });
+
+  it('should allow partial year without adding zeros', () => {
+    const handleChange = spy();
+    render(
+      <WrappedDesktopDateRangePicker
+        reduceAnimations
+        initialValue={[null, null]}
+        onChange={handleChange}
+      />,
+    );
+
+    openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'start' });
+
+    fireEvent.change(screen.getAllByRole('textbox')[0], {
+      target: {
+        value: '01/01/19',
+      },
+    });
+
+    // TODO: remove, the `onChange` should be called immediately
+    clock.runToLast();
+
+    expect(handleChange.callCount).to.equal(1);
+    expect(screen.getAllByRole('textbox')[0].value).to.equal('01/01/19');
   });
 
   it('should scroll current month to the active selection when focusing appropriate field', () => {

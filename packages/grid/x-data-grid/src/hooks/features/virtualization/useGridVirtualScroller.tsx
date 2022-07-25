@@ -117,8 +117,16 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
 
   const getNearestIndexToRender = React.useCallback(
     (offset) => {
-      const lastMeasuredIndex = Math.max(0, apiRef.current.unstable_getLastMeasuredRowIndex());
-      const allRowsMeasured = lastMeasuredIndex === Infinity;
+      const lastMeasuredIndexRelativeToAllRows = apiRef.current.unstable_getLastMeasuredRowIndex();
+      const lastMeasuredIndexRelativeToCurrentPage =
+        lastMeasuredIndexRelativeToAllRows - (currentPage.range?.firstRowIndex || 0);
+      const lastMeasuredIndex = Math.max(0, lastMeasuredIndexRelativeToCurrentPage);
+
+      let allRowsMeasured = lastMeasuredIndex === Infinity;
+      if (currentPage.range?.lastRowIndex && !allRowsMeasured) {
+        // Check if all rows in this page are already measured
+        allRowsMeasured = lastMeasuredIndex >= currentPage.range.lastRowIndex;
+      }
 
       if (allRowsMeasured || rowsMeta.positions[lastMeasuredIndex] >= offset) {
         // If all rows were measured (when no row has "auto" as height) or all rows before the offset
@@ -132,7 +140,7 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
       // Inspired by https://github.com/bvaughn/react-virtualized/blob/master/source/Grid/utils/CellSizeAndPositionManager.js
       return exponentialSearch(offset, rowsMeta.positions, lastMeasuredIndex);
     },
-    [apiRef, rowsMeta.positions],
+    [apiRef, currentPage.range?.firstRowIndex, currentPage.range?.lastRowIndex, rowsMeta.positions],
   );
 
   const computeRenderContext = React.useCallback(() => {
@@ -210,10 +218,8 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
     setContainerWidth(rootRef.current!.clientWidth);
   }, [rowsMeta.currentPageTotalHeight]);
 
-  const handleResize = React.useCallback<GridEventListener<'resize'>>(() => {
-    if (rootRef.current) {
-      setContainerWidth(rootRef.current.clientWidth);
-    }
+  const handleResize = React.useCallback<GridEventListener<'resize'>>((params) => {
+    setContainerWidth(params.width);
   }, []);
 
   useGridApiEventHandler(apiRef, 'resize', handleResize);
@@ -392,7 +398,12 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
       const row = currentPage.rows[i];
       renderedRows.push(row);
 
-      apiRef.current.unstable_calculateColSpan({ rowId: row.id, minFirstColumn, maxLastColumn });
+      apiRef.current.unstable_calculateColSpan({
+        rowId: row.id,
+        minFirstColumn,
+        maxLastColumn,
+        columns: visibleColumns,
+      });
     }
 
     const [initialFirstColumnToRender, lastColumnToRender] = getRenderableIndexes({
@@ -426,10 +437,8 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
       let isSelected: boolean;
       if (selectedRowsLookup[id] == null) {
         isSelected = false;
-      } else if (typeof rootProps.isRowSelectable === 'function') {
-        isSelected = rootProps.isRowSelectable(apiRef.current.getRowParams(id));
       } else {
-        isSelected = true;
+        isSelected = apiRef.current.isRowSelectable(id);
       }
 
       rows.push(

@@ -11,6 +11,7 @@ import { GridStateCommunity } from '../../../models/gridStateCommunity';
 import { GridAggregatedFilterItemApplier } from './gridFilterState';
 import { buildWarning } from '../../../utils/warning';
 import { gridColumnFieldsSelector, gridColumnLookupSelector } from '../columns';
+import { gridRowTreeSelector } from '../rows/gridRowsSelector';
 
 type GridFilterItemApplier = {
   fn: (rowId: GridRowId) => boolean;
@@ -133,6 +134,7 @@ export const buildAggregatedFilterItemsApplier = (
   apiRef: React.MutableRefObject<GridApiCommunity>,
 ): GridFilterItemApplierNotAggregated | null => {
   const { items, linkOperator = GridLinkOperator.And } = filterModel;
+  const tree = gridRowTreeSelector(apiRef);
 
   const getFilterCallbackFromItem = (filterItem: GridFilterItem): GridFilterItemApplier | null => {
     if (!filterItem.columnField || !filterItem.operatorValue) {
@@ -192,6 +194,10 @@ export const buildAggregatedFilterItemsApplier = (
   }
 
   return (rowId, shouldApplyFilter) => {
+    if (tree[rowId].position === 'footer') {
+      return true;
+    }
+
     const filteredAppliers = shouldApplyFilter
       ? appliers.filter((applier) => shouldApplyFilter(applier.item.columnField))
       : appliers;

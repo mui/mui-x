@@ -75,11 +75,21 @@ export const filterRowTreeFromTreeData = (
     visibleRowsLookup[node.id] = shouldPassFilters && areAncestorsExpanded;
     filteredRowsLookup[node.id] = shouldPassFilters;
 
+    if (node.footerId != null) {
+      visibleRowsLookup[node.footerId] =
+        shouldPassFilters && areAncestorsExpanded && !!node.childrenExpanded;
+    }
+
     if (!shouldPassFilters) {
       return 0;
     }
 
     filteredDescendantCountLookup[node.id] = filteredDescendantCount;
+
+    if (node.position === 'footer') {
+      return filteredDescendantCount;
+    }
+
     return filteredDescendantCount + 1;
   };
 

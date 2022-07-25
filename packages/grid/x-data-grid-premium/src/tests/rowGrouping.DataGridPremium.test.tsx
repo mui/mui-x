@@ -1,3 +1,4 @@
+import * as React from 'react';
 // @ts-ignore Remove once the test utils are typed
 import { createRenderer, fireEvent, screen, act } from '@mui/monorepo/test/utils';
 import {
@@ -5,7 +6,6 @@ import {
   getColumnHeadersTextContent,
   getColumnValues,
 } from 'test/utils/helperFn';
-import * as React from 'react';
 import { expect } from 'chai';
 import {
   DataGridPremium,
@@ -61,7 +61,7 @@ const baselineProps: DataGridPremiumProps = {
   ],
 };
 
-describe('<DataGridPremium /> - Group Rows By Column', () => {
+describe('<DataGridPremium /> - Row Grouping', () => {
   const { render, clock } = createRenderer({ clock: 'fake' });
 
   let apiRef: React.MutableRefObject<GridApi>;

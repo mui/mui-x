@@ -240,5 +240,47 @@ describe('<DataGridPremium /> - Export Excel', () => {
       expect(lastRow.getCell(5).type).to.equal(Excel.ValueType.Merge);
       expect(lastRow.getCell(6).type).to.equal(Excel.ValueType.Merge);
     });
+
+    it('should export hidden columns when `allColumns=true`', async () => {
+      const Test = () => {
+        apiRef = useGridApiRef();
+        return (
+          <div style={{ width: 300, height: 200 }}>
+            <DataGridPremium
+              columns={[{ field: 'id' }, { field: 'col1' }, { field: 'col2' }, { field: 'col3' }]}
+              rows={[
+                { id: 1, col1: '1-1', col2: '1-2', col3: '1-3' },
+                { id: 2, col1: '2-1', col2: '2-2', col3: '2-3' },
+                { id: 3, col1: '3-1', col2: '3-2', col3: '3-3' },
+                { id: 4, col1: '4-1', col2: '4-2', col3: '4-3' },
+                { id: 5, col1: '5-1', col2: '5-2', col3: '5-3' },
+                { id: 6, col1: '6-1', col2: '6-2', col3: '6-3' },
+              ]}
+              apiRef={apiRef}
+              initialState={{
+                columns: {
+                  columnVisibilityModel: {
+                    col2: false,
+                    col3: false,
+                  },
+                },
+              }}
+            />
+          </div>
+        );
+      };
+      render(<Test />);
+
+      const workbook = await apiRef.current.getDataAsExcel({
+        allColumns: true,
+      });
+      const worksheet = workbook!.worksheets[0];
+
+      const headerRow = worksheet.getRow(1);
+      expect(headerRow.getCell(1).value).to.equal('id');
+      expect(headerRow.getCell(2).value).to.equal('col1');
+      expect(headerRow.getCell(3).value).to.equal('col2');
+      expect(headerRow.getCell(4).value).to.equal('col3');
+    });
   });
 });
