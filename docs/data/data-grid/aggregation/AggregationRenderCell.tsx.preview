@@ -2,13 +2,11 @@
   rows={rows}
   columns={COLUMNS}
   initialState={{
-    private_aggregation: {
+    aggregation: {
       model: {
         imdbRating: 'avg',
       },
     },
   }}
-  experimentalFeatures={{
-    private_aggregation: true,
-  }}
+  experimentalFeatures={{ aggregation: true }}
 />

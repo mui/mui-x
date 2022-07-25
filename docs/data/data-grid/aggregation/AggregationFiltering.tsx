@@ -35,7 +35,7 @@ export default function AggregationFiltering() {
         rows={data.rows}
         columns={COLUMNS}
         initialState={{
-          private_aggregation: {
+          aggregation: {
             model: {
               gross: 'max',
             },
@@ -48,9 +48,9 @@ export default function AggregationFiltering() {
             },
           },
         }}
-        private_aggregationRowsScope="all"
+        aggregationRowsScope="all"
         experimentalFeatures={{
-          private_aggregation: true,
+          aggregation: true,
         }}
       />
     </div>

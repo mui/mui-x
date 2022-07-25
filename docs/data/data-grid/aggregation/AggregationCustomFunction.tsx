@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {
   DataGridPremium,
-  PRIVATE_GRID_AGGREGATION_FUNCTIONS,
+  GRID_AGGREGATION_FUNCTIONS,
   GridAggregationFunction,
   GridColDef,
 } from '@mui/x-data-grid-premium';
@@ -20,7 +20,7 @@ const COLUMNS: GridColDef[] = [
     headerName: 'Title',
     width: 200,
     groupable: false,
-    private_aggregable: false,
+    aggregable: false,
   },
   {
     field: 'director',
@@ -79,21 +79,19 @@ export default function AggregationCustomFunction() {
       <DataGridPremium
         rows={data.rows}
         columns={COLUMNS}
-        private_aggregationFunctions={{
-          ...PRIVATE_GRID_AGGREGATION_FUNCTIONS,
+        aggregationFunctions={{
+          ...GRID_AGGREGATION_FUNCTIONS,
           firstAlphabetical: firstAlphabeticalAggregation,
           lastAlphabetical: lastAlphabeticalAggregation,
         }}
         initialState={{
-          private_aggregation: {
+          aggregation: {
             model: {
               director: 'firstAlphabetical',
             },
           },
         }}
-        experimentalFeatures={{
-          private_aggregation: true,
-        }}
+        experimentalFeatures={{ aggregation: true }}
       />
     </div>
   );
