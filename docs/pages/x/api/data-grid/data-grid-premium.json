@@ -348,7 +348,7 @@
       "groupingCriteriaCellToggle"
     ],
     "globalClasses": {},
-    "name": "MuiDataGridPremium"
+    "name": "MuiDataGrid"
   },
   "forwardsRefTo": "GridRoot",
   "filename": "/packages/grid/x-data-grid-premium/src/DataGridPremium/DataGridPremium.tsx",
