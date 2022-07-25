@@ -119,16 +119,16 @@ export const filterRowTreeFromGroupingColumns = (
     });
 
     // By default row pass filter if it' matching with both filter model and quick filter
-    let shouldPassFilters = isMatchingFilters;
+    let isPassingFiltering = isMatchingFilters;
     if (node.children?.length) {
       // If it has a tree structure, parent pass filter if they have at least one children passing
-      shouldPassFilters = filteredDescendantCount > 0;
+      isPassingFiltering = filteredDescendantCount > 0;
     }
 
-    visibleRowsLookup[node.id] = shouldPassFilters && areAncestorsExpanded;
-    filteredRowsLookup[node.id] = shouldPassFilters;
+    visibleRowsLookup[node.id] = isPassingFiltering && areAncestorsExpanded;
+    filteredRowsLookup[node.id] = isPassingFiltering;
 
-    if (!shouldPassFilters) {
+    if (!isPassingFiltering) {
       return 0;
     }
 
