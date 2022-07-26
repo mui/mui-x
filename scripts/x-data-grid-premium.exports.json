@@ -20,7 +20,6 @@
   { "name": "DEFAULT_GRID_COL_TYPE_KEY", "kind": "Variable" },
   { "name": "ElementSize", "kind": "Interface" },
   { "name": "elGR", "kind": "Variable" },
-  { "name": "EmptyCell", "kind": "Variable" },
   { "name": "enUS", "kind": "Variable" },
   { "name": "esES", "kind": "Variable" },
   { "name": "faIR", "kind": "Variable" },

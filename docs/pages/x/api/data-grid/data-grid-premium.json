@@ -256,6 +256,7 @@
       "cell",
       "cellContent",
       "cellCheckbox",
+      "cellSkeleton",
       "checkboxInput",
       "columnHeader--alignCenter",
       "columnHeader--alignLeft",
