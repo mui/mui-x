@@ -177,6 +177,32 @@ describe('<CalendarPicker />', () => {
     expect(onChange.lastCall.args[0]).toEqualDateTime(new Date(2018, 0, 1));
   });
 
+  it('should select the closest enabled date in the month if the current date is disabled', () => {
+    // Check that onChange is triggered on mouseDown to avoid bug related to animation such as in https://github.com/mui/mui-x/issues/5570
+    const onChange = spy();
+    const Test = () => {
+      const [date, setDate] = React.useState<Date | null>(adapterToUse.date(new Date(2018, 6, 29)));
+
+      return (
+        <CalendarPicker
+          date={date}
+          onChange={(newDate) => {
+            onChange(newDate);
+            setDate(newDate);
+          }}
+          showDaysOutsideCurrentMonth
+          views={['day']}
+          openTo="day"
+        />
+      );
+    };
+
+    render(<Test />);
+    fireEvent.mouseDown(screen.getByLabelText('Aug 4, 2018'));
+    expect(onChange.callCount).to.equal(1);
+    expect(onChange.lastCall.args[0]).toEqualDateTime(new Date(2018, 7, 4));
+  });
+
   describe('view: day', () => {
     it('renders day calendar standalone', () => {
       render(<CalendarPicker date={adapterToUse.date(new Date(2019, 0, 1))} onChange={() => {}} />);
