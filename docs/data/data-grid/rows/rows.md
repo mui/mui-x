@@ -334,7 +334,7 @@ Pagination does not impact pinned rows as well - they stay pinned regardless the
 {{"demo": "RowPinningWithPagination.js", "disableAd": true, "bg": "inline", "defaultCodeOpen": false}}
 
 :::info
-Note that pinned rows do not support following features:
+Pinned rows do not support the following features:
 
 - editing ([issue #5591](https://github.com/mui/mui-x/issues/5591))
 - selection
