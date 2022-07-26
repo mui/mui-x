@@ -11,7 +11,7 @@ import {
 } from './gridRowPinningInterface';
 
 function createPinnedRowsInternalCache(
-  pinnedRows: GridPinnedRowsProp,
+  pinnedRows: GridPinnedRowsProp | undefined,
   getRowId: DataGridProProps['getRowId'],
 ) {
   const cache: GridRowPinningInternalCache = {
@@ -20,13 +20,13 @@ function createPinnedRowsInternalCache(
     idLookup: {},
   };
 
-  pinnedRows.top?.forEach((rowModel) => {
+  pinnedRows?.top?.forEach((rowModel) => {
     const id = getRowIdFromRowModel(rowModel, getRowId);
     cache.topIds.push(id);
     cache.idLookup[id] = rowModel;
   });
 
-  pinnedRows.bottom?.forEach((rowModel) => {
+  pinnedRows?.bottom?.forEach((rowModel) => {
     const id = getRowIdFromRowModel(rowModel, getRowId);
     cache.bottomIds.push(id);
     cache.idLookup[id] = rowModel;
@@ -43,7 +43,7 @@ export const rowPinningStateInitializer: GridStateInitializer<
   }
 
   apiRef.current.unstable_caches.pinnedRows = createPinnedRowsInternalCache(
-    props.pinnedRows || {},
+    props.pinnedRows,
     props.getRowId,
   );
 
@@ -94,8 +94,6 @@ export const useGridRowPinning = (
       isFirstRender.current = false;
       return;
     }
-    if (props.pinnedRows) {
-      apiRef.current.unstable_setPinnedRows(props.pinnedRows);
-    }
+    apiRef.current.unstable_setPinnedRows(props.pinnedRows);
   }, [apiRef, props.pinnedRows]);
 };

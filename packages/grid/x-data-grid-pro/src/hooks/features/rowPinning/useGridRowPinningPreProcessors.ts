@@ -94,6 +94,14 @@ export const useGridRowPinningPreProcessors = (apiRef: React.MutableRefObject<Gr
         });
       });
 
+      // If row with the same `id` is present both in `rows` and `pinnedRows` - remove it from `ids`
+      newGroupingParams.ids = newGroupingParams.ids.filter((rowId) => {
+        if (newGroupingParams.tree[rowId] && newGroupingParams.tree[rowId].isPinned) {
+          return false;
+        }
+        return true;
+      });
+
       return newGroupingParams;
     },
     [apiRef],

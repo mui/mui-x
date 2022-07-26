@@ -70,6 +70,55 @@ describe('<DataGridPro /> - Row pinning', () => {
     expect(isRowPinned(getRowById(1), 'bottom')).to.equal(true, '#1 pinned bottom');
   });
 
+  it('should treat row as pinned even if row with the same id is present in `rows` prop', () => {
+    const rowCount = 5;
+
+    const TestCase = ({ pinRows = true }) => {
+      const data = getData(rowCount, 5);
+
+      const pinnedRows = React.useMemo(() => {
+        if (pinRows) {
+          return {
+            top: [data.rows[0]],
+            bottom: [data.rows[1]],
+          };
+        }
+        return undefined;
+      }, [pinRows, data.rows]);
+
+      return (
+        <div style={{ width: 302, height: 300 }}>
+          <DataGridPro
+            {...data}
+            pinnedRows={pinnedRows}
+            experimentalFeatures={{ rowPinning: true }}
+          />
+        </div>
+      );
+    };
+
+    const { setProps } = render(<TestCase />);
+
+    expect(isRowPinned(getRowById(0), 'top')).to.equal(true, '#0 pinned top');
+    expect(isRowPinned(getRowById(1), 'bottom')).to.equal(true, '#1 pinned bottom');
+    expect(getColumnValues(0)).to.deep.equal(['0', '2', '3', '4', '1']);
+    expect(screen.getByText(`Total Rows: ${rowCount - 2}`)).not.to.equal(null);
+
+    setProps({ pinRows: false });
+
+    expect(isRowPinned(getRowById(0), 'top')).to.equal(false, '#0 not pinned');
+    expect(isRowPinned(getRowById(1), 'bottom')).to.equal(false, '#1 not pinned');
+    expect(getColumnValues(0)).to.deep.equal(['0', '1', '2', '3', '4']);
+    expect(screen.getByText(`Total Rows: ${rowCount}`)).not.to.equal(null);
+
+    setProps({ pinRows: true });
+
+    expect(isRowPinned(getRowById(0), 'top')).to.equal(true, '#0 pinned top');
+    expect(isRowPinned(getRowById(1), 'bottom')).to.equal(true, '#1 pinned bottom');
+    expect(getColumnValues(0)).to.deep.equal(['0', '2', '3', '4', '1']);
+    expect(screen.getByText(`Total Rows: ${rowCount - 2}`)).not.to.equal(null);
+  });
+
   it('should keep rows pinned on rows scroll', function test() {
     if (isJSDOM) {
       // Need layouting
