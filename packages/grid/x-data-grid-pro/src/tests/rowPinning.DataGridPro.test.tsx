@@ -5,6 +5,7 @@ import {
   useGridApiRef,
   GridApi,
   GridRowsProp,
+  DataGridProProps,
 } from '@mui/x-data-grid-pro';
 import { expect } from 'chai';
 // @ts-expect-error Remove once the test utils are typed
@@ -44,27 +45,37 @@ describe('<DataGridPro /> - Row pinning', () => {
     return container.contains(row);
   }
 
+  const BaselineTestCase = ({
+    rowCount,
+    colCount,
+    height = 300,
+    ...props
+  }: {
+    rowCount: number;
+    colCount: number;
+    height?: number | string;
+  } & Partial<DataGridProProps>) => {
+    const data = getData(rowCount, colCount);
+    const [pinnedRow0, pinnedRow1, ...rows] = data.rows;
+
+    return (
+      <div style={{ width: 302, height }}>
+        <DataGridPro
+          {...data}
+          rows={rows}
+          pinnedRows={{
+            top: [pinnedRow0],
+            bottom: [pinnedRow1],
+          }}
+          experimentalFeatures={{ rowPinning: true }}
+          {...props}
+        />
+      </div>
+    );
+  };
+
   it('should render pinned rows in pinned containers', () => {
-    const TestCase = () => {
-      const data = getData(20, 5);
-
-      const [pinnedRow0, pinnedRow1, ...rows] = data.rows;
-      return (
-        <div style={{ width: 302, height: 300 }}>
-          <DataGridPro
-            {...data}
-            rows={rows}
-            pinnedRows={{
-              top: [pinnedRow0],
-              bottom: [pinnedRow1],
-            }}
-            experimentalFeatures={{ rowPinning: true }}
-          />
-        </div>
-      );
-    };
-
-    render(<TestCase />);
+    render(<BaselineTestCase rowCount={20} colCount={5} />);
 
     expect(isRowPinned(getRowById(0), 'top')).to.equal(true, '#0 pinned top');
     expect(isRowPinned(getRowById(1), 'bottom')).to.equal(true, '#1 pinned bottom');
@@ -126,26 +137,7 @@ describe('<DataGridPro /> - Row pinning', () => {
       this.skip();
     }
 
-    const TestCase = () => {
-      const data = getData(20, 5);
-
-      const [pinnedRow0, pinnedRow1, ...rows] = data.rows;
-      return (
-        <div style={{ width: 302, height: 300 }}>
-          <DataGridPro
-            {...data}
-            rows={rows}
-            pinnedRows={{
-              top: [pinnedRow0],
-              bottom: [pinnedRow1],
-            }}
-            experimentalFeatures={{ rowPinning: true }}
-          />
-        </div>
-      );
-    };
-
-    render(<TestCase />);
+    render(<BaselineTestCase rowCount={20} colCount={5} />);
 
     const virtualScroller = document.querySelector(`.${gridClasses.virtualScroller}`)!;
     expect(virtualScroller.scrollTop).to.equal(0);
@@ -297,26 +289,7 @@ describe('<DataGridPro /> - Row pinning', () => {
   });
 
   it('should not be impacted by sorting', () => {
-    const TestCase = () => {
-      const data = getData(5, 5);
-
-      const [pinnedRow0, pinnedRow1, ...rows] = data.rows;
-      return (
-        <div style={{ width: 302, height: 300 }}>
-          <DataGridPro
-            {...data}
-            rows={rows}
-            pinnedRows={{
-              top: [pinnedRow0],
-              bottom: [pinnedRow1],
-            }}
-            experimentalFeatures={{ rowPinning: true }}
-          />
-        </div>
-      );
-    };
-
-    render(<TestCase />);
+    render(<BaselineTestCase rowCount={5} colCount={5} />);
 
     expect(isRowPinned(getRowById(0), 'top')).to.equal(true, '#0 pinned top');
     expect(isRowPinned(getRowById(1), 'bottom')).to.equal(true, '#1 pinned bottom');
@@ -336,27 +309,7 @@ describe('<DataGridPro /> - Row pinning', () => {
   });
 
   it('should not be impacted by filtering', () => {
-    const TestCase = (props: any) => {
-      const data = getData(20, 5);
-
-      const [pinnedRow0, pinnedRow1, ...rows] = data.rows;
-      return (
-        <div style={{ width: 302, height: 300 }}>
-          <DataGridPro
-            {...data}
-            rows={rows}
-            pinnedRows={{
-              top: [pinnedRow0],
-              bottom: [pinnedRow1],
-            }}
-            {...props}
-            experimentalFeatures={{ rowPinning: true }}
-          />
-        </div>
-      );
-    };
-
-    const { setProps } = render(<TestCase />);
+    const { setProps } = render(<BaselineTestCase rowCount={20} colCount={5} />);
 
     expect(isRowPinned(getRowById(0), 'top')).to.equal(true, '#0 pinned top');
     expect(isRowPinned(getRowById(1), 'bottom')).to.equal(true, '#1 pinned bottom');
@@ -382,26 +335,7 @@ describe('<DataGridPro /> - Row pinning', () => {
   });
 
   it('should work when there is no rows data', () => {
-    const TestCase = () => {
-      const data = getData(20, 5);
-      const [pinnedRow0, pinnedRow1] = data.rows;
-
-      return (
-        <div style={{ width: 302, height: 300 }}>
-          <DataGridPro
-            {...data}
-            rows={[]}
-            pinnedRows={{
-              top: [pinnedRow0],
-              bottom: [pinnedRow1],
-            }}
-            experimentalFeatures={{ rowPinning: true }}
-          />
-        </div>
-      );
-    };
-
-    render(<TestCase />);
+    render(<BaselineTestCase rowCount={20} colCount={5} />);
 
     expect(isRowPinned(getRowById(0), 'top')).to.equal(true, '#0 pinned top');
     expect(isRowPinned(getRowById(1), 'bottom')).to.equal(true, '#1 pinned bottom');
@@ -580,35 +514,21 @@ describe('<DataGridPro /> - Row pinning', () => {
       this.skip();
     }
 
-    const TestCase = () => {
-      const data = getData(20, 5);
-
-      const [pinnedRow0, pinnedRow1, ...rows] = data.rows;
-      return (
-        <div style={{ width: 302, height: 300 }}>
-          <DataGridPro
-            {...data}
-            rows={rows}
-            pinnedRows={{
-              top: [pinnedRow0],
-              bottom: [pinnedRow1],
-            }}
-            getRowHeight={(row) => {
-              if (row.id === 0) {
-                return 100;
-              }
-              if (row.id === 1) {
-                return 20;
-              }
-              return undefined;
-            }}
-            experimentalFeatures={{ rowPinning: true }}
-          />
-        </div>
-      );
-    };
-
-    render(<TestCase />);
+    render(
+      <BaselineTestCase
+        rowCount={20}
+        colCount={5}
+        getRowHeight={(row) => {
+          if (row.id === 0) {
+            return 100;
+          }
+          if (row.id === 1) {
+            return 20;
+          }
+          return undefined;
+        }}
+      />,
+    );
 
     expect(getRowById(0)?.clientHeight).to.equal(100);
     expect(getRowById(1)?.clientHeight).to.equal(20);
@@ -622,27 +542,9 @@ describe('<DataGridPro /> - Row pinning', () => {
 
     const defaultRowHeight = 52;
 
-    const TestCase = ({ rowHeight = defaultRowHeight }) => {
-      const data = getData(10, 5);
-
-      const [pinnedRow0, pinnedRow1, ...rows] = data.rows;
-      return (
-        <div style={{ width: 302, height: 300 }}>
-          <DataGridPro
-            {...data}
-            rows={rows}
-            pinnedRows={{
-              top: [pinnedRow0],
-              bottom: [pinnedRow1],
-            }}
-            rowHeight={rowHeight}
-            experimentalFeatures={{ rowPinning: true }}
-          />
-        </div>
-      );
-    };
-
-    const { setProps } = render(<TestCase />);
+    const { setProps } = render(
+      <BaselineTestCase rowCount={10} colCount={5} rowHeight={defaultRowHeight} />,
+    );
 
     expect(getRowById(0)?.clientHeight).to.equal(defaultRowHeight);
     expect(document.querySelector(`.${gridClasses['pinnedRows--top']}`)?.clientHeight).to.equal(
@@ -671,36 +573,21 @@ describe('<DataGridPro /> - Row pinning', () => {
 
     const headerHeight = 56;
     const rowHeight = 52;
-    const rowsCount = 10;
+    const rowCount = 10;
 
-    const TestCase = () => {
-      const data = getData(rowsCount, 2);
-
-      const [pinnedRow0, pinnedRow1, ...rows] = data.rows;
-
-      return (
-        <div style={{ width: 500 }}>
-          <DataGridPro
-            {...data}
-            rows={rows}
-            pinnedRows={{
-              top: [pinnedRow0],
-              bottom: [pinnedRow1],
-            }}
-            rowHeight={rowHeight}
-            experimentalFeatures={{ rowPinning: true }}
-            headerHeight={headerHeight}
-            hideFooter
-            autoHeight
-          />
-        </div>
-      );
-    };
-
-    render(<TestCase />);
+    render(
+      <BaselineTestCase
+        rowCount={rowCount}
+        colCount={2}
+        rowHeight={rowHeight}
+        headerHeight={headerHeight}
+        hideFooter
+        autoHeight
+      />,
+    );
 
     expect(document.querySelector(`.${gridClasses.main}`)!.clientHeight).to.equal(
-      headerHeight + rowHeight * rowsCount,
+      headerHeight + rowHeight * rowCount,
     );
   });
 
@@ -710,31 +597,17 @@ describe('<DataGridPro /> - Row pinning', () => {
       this.skip();
     }
 
-    const TestCase = () => {
-      const data = getData(10, 5);
-
-      const [pinnedRow0, pinnedRow1, ...rows] = data.rows;
-      return (
-        <div style={{ width: 302, height: 300 }}>
-          <DataGridPro
-            {...data}
-            rows={rows}
-            pinnedRows={{
-              top: [pinnedRow0],
-              bottom: [pinnedRow1],
-            }}
-            rowHeight={52}
-            pagination
-            autoPageSize
-            experimentalFeatures={{ rowPinning: true }}
-            headerHeight={56}
-            hideFooter
-          />
-        </div>
-      );
-    };
-
-    render(<TestCase />);
+    render(
+      <BaselineTestCase
+        rowCount={10}
+        colCount={5}
+        rowHeight={52}
+        pagination
+        autoPageSize
+        headerHeight={56}
+        hideFooter
+      />,
+    );
 
     // 300px grid height - 56px header = 244px available for rows
     // 244px / 52px = 4 rows = 2 rows + 1 top-pinned row + 1 bottom-pinned row
@@ -742,83 +615,37 @@ describe('<DataGridPro /> - Row pinning', () => {
   });
 
   it('should not allow to expand detail panel of pinned row', () => {
-    const TestCase = () => {
-      const data = getData(10, 5);
-
-      const [pinnedRow0, pinnedRow1, ...rows] = data.rows;
-      return (
-        <div style={{ width: 302, height: 500 }}>
-          <DataGridPro
-            {...data}
-            rows={rows}
-            pinnedRows={{
-              top: [pinnedRow0],
-              bottom: [pinnedRow1],
-            }}
-            experimentalFeatures={{ rowPinning: true }}
-            getDetailPanelContent={({ row }) => <div>{row.id}</div>}
-          />
-        </div>
-      );
-    };
-
-    render(<TestCase />);
+    render(
+      <BaselineTestCase
+        rowCount={10}
+        colCount={5}
+        height={500}
+        getDetailPanelContent={({ row }) => <div>{row.id}</div>}
+      />,
+    );
 
     const cell = getCell(0, 0);
     expect(cell.querySelector('[aria-label="Expand"]')).to.have.attribute('disabled');
   });
 
   it('should not allow to reorder pinned rows', () => {
-    const TestCase = () => {
-      const data = getData(10, 5);
-
-      const [pinnedRow0, pinnedRow1, ...rows] = data.rows;
-      return (
-        <div style={{ width: 302, height: 500 }}>
-          <DataGridPro
-            {...data}
-            rows={rows}
-            pinnedRows={{
-              top: [pinnedRow0],
-              bottom: [pinnedRow1],
-            }}
-            experimentalFeatures={{ rowPinning: true }}
-            rowReordering
-          />
-        </div>
-      );
-    };
-
-    render(<TestCase />);
+    render(<BaselineTestCase rowCount={10} colCount={5} rowReordering />);
 
     const cell = getCell(0, 0);
     expect(cell.querySelector(`.${gridClasses.rowReorderCell}`)).to.equal(null);
   });
 
   it('should keep pinned rows on page change', () => {
-    const TestCase = () => {
-      const data = getData(20, 5);
-
-      const [pinnedRow0, pinnedRow1, ...rows] = data.rows;
-      return (
-        <div style={{ width: 302, height: 500 }}>
-          <DataGridPro
-            {...data}
-            rows={rows}
-            pinnedRows={{
-              top: [pinnedRow0],
-              bottom: [pinnedRow1],
-            }}
-            experimentalFeatures={{ rowPinning: true }}
-            pagination
-            pageSize={5}
-            rowsPerPageOptions={[5]}
-          />
-        </div>
-      );
-    };
-
-    render(<TestCase />);
+    render(
+      <BaselineTestCase
+        rowCount={20}
+        colCount={5}
+        height={500}
+        pagination
+        pageSize={5}
+        rowsPerPageOptions={[5]}
+      />,
+    );
 
     expect(isRowPinned(getRowById(0), 'top')).to.equal(true, '#0 pinned top');
     expect(isRowPinned(getRowById(1), 'bottom')).to.equal(true, '#1 pinned bottom');
@@ -837,29 +664,16 @@ describe('<DataGridPro /> - Row pinning', () => {
   it('should not count pinned rows as part of the page', () => {
     const pageSize = 3;
 
-    const TestCase = () => {
-      const data = getData(20, 5);
-
-      const [pinnedRow0, pinnedRow1, ...rows] = data.rows;
-      return (
-        <div style={{ width: 302, height: 500 }}>
-          <DataGridPro
-            {...data}
-            rows={rows}
-            pinnedRows={{
-              top: [pinnedRow0],
-              bottom: [pinnedRow1],
-            }}
-            experimentalFeatures={{ rowPinning: true }}
-            pagination
-            pageSize={pageSize}
-            rowsPerPageOptions={[pageSize]}
-          />
-        </div>
-      );
-    };
-
-    render(<TestCase />);
+    render(
+      <BaselineTestCase
+        rowCount={20}
+        colCount={5}
+        height={500}
+        pagination
+        pageSize={pageSize}
+        rowsPerPageOptions={[pageSize]}
+      />,
+    );
 
     expect(getRows().length).to.equal(pageSize + 2); // + 2 pinned rows
   });
@@ -905,25 +719,8 @@ describe('<DataGridPro /> - Row pinning', () => {
     let apiRef: React.MutableRefObject<GridApi>;
 
     const TestCase = () => {
-      const data = getData(20, 5);
-      const [pinnedRow0, pinnedRow1, ...rows] = data.rows;
-
       apiRef = useGridApiRef();
-
-      return (
-        <div style={{ width: 302, height: 300 }}>
-          <DataGridPro
-            {...data}
-            apiRef={apiRef}
-            rows={rows}
-            pinnedRows={{
-              top: [pinnedRow0],
-              bottom: [pinnedRow1],
-            }}
-            experimentalFeatures={{ rowPinning: true }}
-          />
-        </div>
-      );
+      return <BaselineTestCase rowCount={20} colCount={5} apiRef={apiRef} />;
     };
 
     render(<TestCase />);
@@ -933,27 +730,7 @@ describe('<DataGridPro /> - Row pinning', () => {
   });
 
   it('should not render selection checkbox for pinned rows', () => {
-    const TestCase = () => {
-      const data = getData(20, 5);
-      const [pinnedRow0, pinnedRow1, ...rows] = data.rows;
-
-      return (
-        <div style={{ width: 302, height: 300 }}>
-          <DataGridPro
-            {...data}
-            rows={rows}
-            pinnedRows={{
-              top: [pinnedRow0],
-              bottom: [pinnedRow1],
-            }}
-            experimentalFeatures={{ rowPinning: true }}
-            checkboxSelection
-          />
-        </div>
-      );
-    };
-
-    render(<TestCase />);
+    render(<BaselineTestCase rowCount={20} colCount={5} checkboxSelection />);
 
     expect(getRowById(0)!.querySelector('input[type="checkbox"]')).to.equal(null);
     expect(getRowById(1)!.querySelector('input[type="checkbox"]')).to.equal(null);
@@ -963,25 +740,8 @@ describe('<DataGridPro /> - Row pinning', () => {
     let apiRef: React.MutableRefObject<GridApi>;
 
     const TestCase = () => {
-      const data = getData(20, 1);
-      const [pinnedRow0, pinnedRow1, ...rows] = data.rows;
-
       apiRef = useGridApiRef();
-
-      return (
-        <div style={{ width: 302, height: 300 }}>
-          <DataGridPro
-            {...data}
-            apiRef={apiRef}
-            rows={rows}
-            pinnedRows={{
-              top: [pinnedRow0],
-              bottom: [pinnedRow1],
-            }}
-            experimentalFeatures={{ rowPinning: true }}
-          />
-        </div>
-      );
+      return <BaselineTestCase rowCount={20} colCount={1} apiRef={apiRef} />;
     };
 
     render(<TestCase />);
@@ -998,26 +758,7 @@ describe('<DataGridPro /> - Row pinning', () => {
   it('should include pinned rows in `aria-rowcount` attribute', () => {
     const rowCount = 10;
 
-    const TestCase = () => {
-      const data = getData(rowCount, 1);
-      const [pinnedRow0, pinnedRow1, ...rows] = data.rows;
-
-      return (
-        <div style={{ width: 302, height: 300 }}>
-          <DataGridPro
-            {...data}
-            rows={rows}
-            pinnedRows={{
-              top: [pinnedRow0],
-              bottom: [pinnedRow1],
-            }}
-            experimentalFeatures={{ rowPinning: true }}
-          />
-        </div>
-      );
-    };
-
-    render(<TestCase />);
+    render(<BaselineTestCase rowCount={rowCount} colCount={1} />);
 
     expect(screen.getByRole('grid').getAttribute('aria-rowcount')).to.equal(`${rowCount + 1}`); // +1 for header row
   });
