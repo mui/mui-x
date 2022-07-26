@@ -16,6 +16,10 @@
     "components": { "type": { "name": "object" }, "default": "{}" },
     "componentsProps": { "type": { "name": "object" }, "default": "{}" },
     "dateRangeIcon": { "type": { "name": "node" } },
+    "dayOfWeekFormatter": {
+      "type": { "name": "func" },
+      "default": "(day) => day.charAt(0).toUpperCase()"
+    },
     "defaultCalendarMonth": { "type": { "name": "any" } },
     "desktopModeMediaQuery": {
       "type": { "name": "string" },
@@ -43,10 +47,6 @@
       "type": { "name": "func" },
       "deprecated": true,
       "deprecationInfo": "Use the <code>localeText</code> prop of <code>LocalizationProvider</code> instead, see <a href=\"https://mui.com/x/react-date-pickers/localization\">https://mui.com/x/react-date-pickers/localization</a>"
-    },
-    "headerDayFormatter": {
-      "type": { "name": "func" },
-      "default": "(day) => day.charAt(0).toUpperCase()"
     },
     "hideTabs": { "type": { "name": "bool" } },
     "InputAdornmentProps": { "type": { "name": "object" } },
