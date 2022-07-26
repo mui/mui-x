@@ -144,13 +144,13 @@ describe('<CalendarPicker />', () => {
     expect(screen.getByText('2019/01')).toBeVisible();
   });
 
-  it('should render column header according to headerDayFormatter', () => {
+  it('should render column header according to dayOfWeekFormatter', () => {
     render(
       <LocalizationProvider dateAdapter={AdapterClassToUse}>
         <CalendarPicker
           date={adapterToUse.date(new Date(2019, 0, 1))}
           onChange={() => {}}
-          headerDayFormatter={(day) => `${day}.`}
+          dayOfWeekFormatter={(day) => `${day}.`}
         />
         ,
       </LocalizationProvider>,

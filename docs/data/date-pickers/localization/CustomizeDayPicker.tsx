@@ -16,7 +16,7 @@ export default function CustomizeDayPicker() {
           setValue(newValue);
         }}
         renderInput={(params) => <TextField {...params} />}
-        headerDayFormatter={(day) => `${day}.`}
+        dayOfWeekFormatter={(day) => `${day}.`}
         toolbarFormat="eee dd MMMM"
         showToolbar
       />
