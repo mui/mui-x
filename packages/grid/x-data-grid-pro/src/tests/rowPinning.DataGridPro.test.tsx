@@ -994,4 +994,31 @@ describe('<DataGridPro /> - Row pinning', () => {
     expect(csvRows[0]).to.equal('0');
     expect(csvRows[csvRows.length - 1]).to.equal('1');
   });
+
+  it('should include pinned rows in `aria-rowcount` attribute', () => {
+    const rowCount = 10;
+
+    const TestCase = () => {
+      const data = getData(rowCount, 1);
+      const [pinnedRow0, pinnedRow1, ...rows] = data.rows;
+
+      return (
+        <div style={{ width: 302, height: 300 }}>
+          <DataGridPro
+            {...data}
+            rows={rows}
+            pinnedRows={{
+              top: [pinnedRow0],
+              bottom: [pinnedRow1],
+            }}
+            experimentalFeatures={{ rowPinning: true }}
+          />
+        </div>
+      );
+    };
+
+    render(<TestCase />);
+
+    expect(screen.getByRole('grid').getAttribute('aria-rowcount')).to.equal(`${rowCount + 1}`); // +1 for header row
+  });
 });

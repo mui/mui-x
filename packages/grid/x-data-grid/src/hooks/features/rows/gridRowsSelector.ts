@@ -57,3 +57,10 @@ export const gridPinnedRowsSelector = createSelector(
   gridAdditionalRowGroupsSelector,
   (additionalRowGroups) => additionalRowGroups?.pinnedRows,
 );
+
+/**
+ * @ignore - do not document.
+ */
+export const gridPinnedRowsCountSelector = createSelector(gridPinnedRowsSelector, (pinnedRows) => {
+  return (pinnedRows?.top?.length || 0) + (pinnedRows?.bottom?.length || 0);
+});
