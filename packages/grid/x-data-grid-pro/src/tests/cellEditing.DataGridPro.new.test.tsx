@@ -775,7 +775,7 @@ describe('<DataGridPro /> - Cell Editing', () => {
         fireEvent.doubleClick(getCell(0, 1));
         apiRef.current.setEditCellValue({ id: 0, field: 'currencyPair', value: 'USD GBP' });
         fireEvent.click(getCell(1, 1));
-        await new Promise((resolve) => nativeSetTimeout(resolve));
+        await Promise.resolve();
         expect(spiedStopCellEditMode.callCount).to.equal(1);
         expect(spiedStopCellEditMode.lastCall.args[0].ignoreModifications).to.equal(false);
       });
