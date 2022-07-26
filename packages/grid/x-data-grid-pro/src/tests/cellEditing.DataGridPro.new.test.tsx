@@ -730,7 +730,7 @@ describe('<DataGridPro /> - Cell Editing', () => {
         const cell = getCell(0, 1);
         fireEvent.mouseUp(cell);
         fireEvent.click(cell);
-        fireEvent.keyDown(cell, { key: 'v', ctrlKey: true }); // Ctrl+V / ⌘ Command+V
+        fireEvent.keyDown(cell, { key: 'v', ctrlKey: true }); // Ctrl+V
         expect(listener.callCount).to.equal(1);
       });
 
