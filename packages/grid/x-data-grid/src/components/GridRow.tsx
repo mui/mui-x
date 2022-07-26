@@ -78,7 +78,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   return composeClasses(slots, getDataGridUtilityClass, classes);
 };
 
-export const EmptyCell = ({ width }: { width: number }) => {
+const EmptyCell = ({ width }: { width: number }) => {
   if (!width) {
     return null;
   }
@@ -243,52 +243,8 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
     [apiRef, onClick, publish, rowId],
   );
 
-  const style = {
-    ...styleProp,
-    maxHeight: rowHeight === 'auto' ? 'none' : rowHeight, // max-height doesn't support "auto"
-    minHeight: rowHeight,
-  };
-
-  const sizes = apiRef.current.unstable_getRowInternalSizes(rowId);
-
-  if (sizes?.spacingTop) {
-    const property = rootProps.rowSpacingType === 'border' ? 'borderTopWidth' : 'marginTop';
-    style[property] = sizes.spacingTop;
-  }
-
-  if (sizes?.spacingBottom) {
-    const property = rootProps.rowSpacingType === 'border' ? 'borderBottomWidth' : 'marginBottom';
-    style[property] = sizes.spacingBottom;
-  }
-
-  let rowClassName: string | null = null;
-
-  if (typeof rootProps.getRowClassName === 'function') {
-    const indexRelativeToCurrentPage = index - currentPage.range!.firstRowIndex;
-    const rowParams: GridRowClassNameParams = {
-      ...apiRef.current.getRowParams(rowId),
-      isFirstVisible: indexRelativeToCurrentPage === 0,
-      isLastVisible: indexRelativeToCurrentPage === currentPage.rows.length - 1,
-      indexRelativeToCurrentPage,
-    };
-
-    rowClassName = rootProps.getRowClassName(rowParams);
-  }
-
-  const randomNumber = randomNumberBetween(10000, 20, 80);
-  const cells: JSX.Element[] = [];
-
-  for (let i = 0; i < renderedColumns.length; i += 1) {
-    const column = renderedColumns[i];
-    const indexRelativeToAllColumns = firstColumnToRender + i;
-
-    const isLastColumn = indexRelativeToAllColumns === visibleColumns.length - 1;
-    const removeLastBorderRight = isLastColumn && hasScrollX && !hasScrollY;
-    const showRightBorder = !isLastColumn
-      ? rootProps.showCellRightBorder
-      : !removeLastBorderRight && rootProps.disableExtendRowFullWidth;
-
-    if (row) {
+  const getCell = React.useCallback(
+    (column, cellProps) => {
       const cellParams = apiRef.current.getCellParams(rowId, column.field);
 
       const classNames: string[] = [];
@@ -356,6 +312,91 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
           ? 0
           : -1;
 
+      return (
+        <rootProps.components.Cell
+          key={column.field}
+          value={cellParams.value}
+          field={column.field}
+          width={cellProps.width}
+          rowId={rowId}
+          height={rowHeight}
+          showRightBorder={cellProps.showRightBorder}
+          formattedValue={cellParams.formattedValue}
+          align={column.align || 'left'}
+          cellMode={cellParams.cellMode}
+          colIndex={cellProps.indexRelativeToAllColumns}
+          isEditable={cellParams.isEditable}
+          hasFocus={hasFocus}
+          tabIndex={tabIndex}
+          className={clsx(classNames)}
+          colSpan={cellProps.colSpan}
+          disableDragEvents={disableDragEvents}
+          {...rootProps.componentsProps?.cell}
+        >
+          {content}
+        </rootProps.components.Cell>
+      );
+    },
+    [
+      apiRef,
+      cellTabIndex,
+      editRowsState,
+      cellFocus,
+      rootProps,
+      row,
+      rowHeight,
+      rowId,
+      treeDepth,
+      sortModel.length,
+    ],
+  );
+
+  const style = {
+    ...styleProp,
+    maxHeight: rowHeight === 'auto' ? 'none' : rowHeight, // max-height doesn't support "auto"
+    minHeight: rowHeight,
+  };
+
+  const sizes = apiRef.current.unstable_getRowInternalSizes(rowId);
+
+  if (sizes?.spacingTop) {
+    const property = rootProps.rowSpacingType === 'border' ? 'borderTopWidth' : 'marginTop';
+    style[property] = sizes.spacingTop;
+  }
+
+  if (sizes?.spacingBottom) {
+    const property = rootProps.rowSpacingType === 'border' ? 'borderBottomWidth' : 'marginBottom';
+    style[property] = sizes.spacingBottom;
+  }
+
+  let rowClassName: string | null = null;
+
+  if (typeof rootProps.getRowClassName === 'function') {
+    const indexRelativeToCurrentPage = index - currentPage.range!.firstRowIndex;
+    const rowParams: GridRowClassNameParams = {
+      ...apiRef.current.getRowParams(rowId),
+      isFirstVisible: indexRelativeToCurrentPage === 0,
+      isLastVisible: indexRelativeToCurrentPage === currentPage.rows.length - 1,
+      indexRelativeToCurrentPage,
+    };
+
+    rowClassName = rootProps.getRowClassName(rowParams);
+  }
+
+  const randomNumber = randomNumberBetween(10000, 20, 80);
+  const cells: JSX.Element[] = [];
+
+  for (let i = 0; i < renderedColumns.length; i += 1) {
+    const column = renderedColumns[i];
+    const indexRelativeToAllColumns = firstColumnToRender + i;
+
+    const isLastColumn = indexRelativeToAllColumns === visibleColumns.length - 1;
+    const removeLastBorderRight = isLastColumn && hasScrollX && !hasScrollY;
+    const showRightBorder = !isLastColumn
+      ? rootProps.showCellRightBorder
+      : !removeLastBorderRight && rootProps.disableExtendRowFullWidth;
+
+    if (row) {
       const cellColSpanInfo = apiRef.current.unstable_getCellColSpanInfo(
         rowId,
         indexRelativeToAllColumns,
@@ -363,31 +404,8 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
 
       if (cellColSpanInfo && !cellColSpanInfo.spannedByColSpan) {
         const { colSpan, width } = cellColSpanInfo.cellProps;
-
-        cells.push(
-          <rootProps.components.Cell
-            key={column.field}
-            value={cellParams.value}
-            field={column.field}
-            width={width}
-            rowId={rowId}
-            height={rowHeight}
-            showRightBorder={showRightBorder}
-            formattedValue={cellParams.formattedValue}
-            align={column.align || 'left'}
-            cellMode={cellParams.cellMode}
-            colIndex={indexRelativeToAllColumns}
-            isEditable={cellParams.isEditable}
-            hasFocus={hasFocus}
-            tabIndex={tabIndex}
-            className={clsx(classNames)}
-            colSpan={colSpan}
-            disableDragEvents={disableDragEvents}
-            {...rootProps.componentsProps?.cell}
-          >
-            {content}
-          </rootProps.components.Cell>,
-        );
+        const cellProps = { width, colSpan, showRightBorder, indexRelativeToAllColumns };
+        cells.push(getCell(column, cellProps));
       }
     } else {
       const cellColSpanInfo = apiRef.current.unstable_getCellColSpanInfo(

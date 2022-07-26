@@ -30,7 +30,7 @@ export default function LazyLoadingGrid() {
   const apiRef = useGridApiRef();
   const { data } = useDemoData({
     dataSet: 'Commodity',
-    rowLength: 10,
+    rowLength: 0,
     maxColumns: 6,
   });
 

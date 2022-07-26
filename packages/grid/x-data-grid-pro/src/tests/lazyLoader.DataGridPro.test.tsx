@@ -1,7 +1,7 @@
+import * as React from 'react';
 // @ts-ignore Remove once the test utils are typed
 import { createRenderer, fireEvent } from '@mui/monorepo/test/utils';
 import { getColumnHeaderCell, getRow } from 'test/utils/helperFn';
-import * as React from 'react';
 import { expect } from 'chai';
 import {
   DataGridPro,
