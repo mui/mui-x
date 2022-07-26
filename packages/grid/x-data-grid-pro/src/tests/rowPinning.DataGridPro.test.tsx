@@ -90,6 +90,7 @@ describe('<DataGridPro /> - Row pinning', () => {
         <div style={{ width: 302, height: 300 }}>
           <DataGridPro
             {...data}
+            autoHeight
             pinnedRows={pinnedRows}
             experimentalFeatures={{ rowPinning: true }}
           />
