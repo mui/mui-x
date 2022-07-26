@@ -96,17 +96,6 @@ export const filterRowTreeFromGroupingColumns = (
       isMatchingFilters = isMatchingFilterItems && isMatchingQuickFilter;
     }
 
-    if (
-      linkOperator === GridLinkOperator.And &&
-      (!areAncestorsPassingChildren || !isMatchingFilterItems)
-    ) {
-      // If operator is AND and this row or its ancestor have invalid values, we can do an early return
-      // Avoid to loop on children rows
-      visibleRowsLookup[node.id] = false;
-      filteredRowsLookup[node.id] = false;
-      return 0;
-    }
-
     let filteredDescendantCount = 0;
     node.children?.forEach((childId) => {
       const childNode = rowTree[childId];
@@ -123,6 +112,10 @@ export const filterRowTreeFromGroupingColumns = (
     if (node.children?.length) {
       // If it has a tree structure, parent pass filter if they have at least one children passing
       isPassingFiltering = filteredDescendantCount > 0;
+    }
+    if (linkOperator === GridLinkOperator.And && !areAncestorsPassingChildren) {
+      // If the link operator is AND and an ancestor did not pass, all children should be removed
+      isPassingFiltering = false;
     }
 
     visibleRowsLookup[node.id] = isPassingFiltering && areAncestorsExpanded;
