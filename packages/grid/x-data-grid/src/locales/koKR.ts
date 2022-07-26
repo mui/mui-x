@@ -27,7 +27,7 @@ const koKRGrid: Partial<GridLocaleText> = {
   toolbarFiltersTooltipActive: (count) => `${count}건의 필터를 적용중`,
 
   // Quick filter toolbar field
-  // toolbarQuickFilterPlaceholder: 'Search...',
+  // toolbarQuickFilterPlaceholder: 'Search…',
   // toolbarQuickFilterLabel: 'Search',
   // toolbarQuickFilterDeleteIconLabel: 'Clear',
 
@@ -138,6 +138,14 @@ const koKRGrid: Partial<GridLocaleText> = {
 
   // Row reordering text
   // rowReorderingHeaderName: 'Row reordering',
+
+  // Aggregation
+  // aggregationMenuItemHeader: 'Aggregation',
+  // aggregationFunctionLabelSum: 'sum',
+  // aggregationFunctionLabelAvg: 'avg',
+  // aggregationFunctionLabelMin: 'min',
+  // aggregationFunctionLabelMax: 'max',
+  // aggregationFunctionLabelSize: 'size',
 };
 
 export const koKR: Localization = getGridLocalization(koKRGrid, koKRCore);

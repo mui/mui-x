@@ -1,5 +1,12 @@
 [
   {
+    "projects": ["x-data-grid-premium"],
+    "name": "aggregationModelChange",
+    "description": "Fired when the aggregation model changes.",
+    "params": "GridAggregationModel",
+    "event": "MuiEvent<{}>"
+  },
+  {
     "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
     "name": "cellClick",
     "description": "Fired when a cell is clicked.",

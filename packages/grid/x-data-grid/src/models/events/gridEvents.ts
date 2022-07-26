@@ -54,6 +54,7 @@ enum GridEvents {
   pageChange = 'pageChange',
   pageSizeChange = 'pageSizeChange',
   rowGroupingModelChange = 'rowGroupingModelChange',
+  aggregationModelChange = 'aggregationModelChange',
   rowsScroll = 'rowsScroll',
   rowsScrollEnd = 'rowsScrollEnd',
   columnSeparatorMouseDown = 'columnSeparatorMouseDown',

@@ -159,7 +159,7 @@ module.exports = {
   redirects: async () => [
     {
       source: '/',
-      destination: '/x/react-data-grid/',
+      destination: '/x/introduction/',
       permanent: false,
     },
   ],

@@ -125,7 +125,7 @@ PropsTable.propTypes = {
 };
 
 function ClassesTable(props) {
-  const { componentName, componentStyles, classDescriptions } = props;
+  const { componentStyles, classDescriptions } = props;
   const t = useTranslate();
 
   return (
@@ -145,7 +145,8 @@ function ClassesTable(props) {
             </td>
             <td align="left">
               <span className="prop-name">
-                .{componentStyles.globalClasses[className] || `Mui${componentName}-${className}`}
+                .
+                {componentStyles.globalClasses[className] || `${componentStyles.name}-${className}`}
               </span>
             </td>
             <td
@@ -167,7 +168,6 @@ function ClassesTable(props) {
 
 ClassesTable.propTypes = {
   classDescriptions: PropTypes.object.isRequired,
-  componentName: PropTypes.string.isRequired,
   componentStyles: PropTypes.object.isRequired,
 };
 

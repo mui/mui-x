@@ -59,7 +59,7 @@
     "experimentalFeatures": {
       "type": {
         "name": "shape",
-        "description": "{ lazyLoading?: bool, newEditingApi?: bool, preventCommitWhileValidating?: bool, warnIfFocusStateIsNotSynced?: bool }"
+        "description": "{ lazyLoading?: bool, newEditingApi?: bool, preventCommitWhileValidating?: bool, private_aggregation?: bool, warnIfFocusStateIsNotSynced?: bool }"
       }
     },
     "filterMode": {
@@ -240,6 +240,11 @@
   "styles": {
     "classes": [
       "actionsCell",
+      "aggregationColumnHeader",
+      "aggregationColumnHeader--alignLeft",
+      "aggregationColumnHeader--alignCenter",
+      "aggregationColumnHeader--alignRight",
+      "aggregationColumnHeaderLabel",
       "autoHeight",
       "booleanCell",
       "cell--editable",
@@ -283,6 +288,7 @@
       "detailPanels",
       "detailPanelToggleCell",
       "detailPanelToggleCell--expanded",
+      "footerCell",
       "panel",
       "panelHeader",
       "panelWrapper",
@@ -346,7 +352,7 @@
       "groupingCriteriaCellToggle"
     ],
     "globalClasses": {},
-    "name": "MuiDataGridPremium"
+    "name": "MuiDataGrid"
   },
   "forwardsRefTo": "GridRoot",
   "filename": "/packages/grid/x-data-grid-premium/src/DataGridPremium/DataGridPremium.tsx",

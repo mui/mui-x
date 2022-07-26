@@ -262,6 +262,7 @@ DataGridPremiumRaw.propTypes = {
     lazyLoading: PropTypes.bool,
     newEditingApi: PropTypes.bool,
     preventCommitWhileValidating: PropTypes.bool,
+    private_aggregation: PropTypes.bool,
     warnIfFocusStateIsNotSynced: PropTypes.bool,
   }),
   /**
@@ -786,6 +787,46 @@ DataGridPremiumRaw.propTypes = {
     left: PropTypes.arrayOf(PropTypes.string),
     right: PropTypes.arrayOf(PropTypes.string),
   }),
+  /**
+   * Aggregation functions available on the grid.
+   * @default GRID_AGGREGATION_FUNCTIONS
+   * @ignore - do not document.
+   */
+  private_aggregationFunctions: PropTypes.object,
+  /**
+   * Set the aggregation model of the grid.
+   * @ignore - do not document.
+   */
+  private_aggregationModel: PropTypes.object,
+  /**
+   * Rows used to generate the aggregated value.
+   * If `filtered`, the aggregated values will be generated using only the rows currently passing the filtering process.
+   * If `all`, the aggregated values will be generated using all the rows.
+   * @default "filtered"
+   * @ignore - do not document.
+   */
+  private_aggregationRowsScope: PropTypes.oneOf(['all', 'filtered']),
+  /**
+   * If `true`, aggregation is disabled.
+   * @default false
+   * @ignore - do not document.
+   */
+  private_disableAggregation: PropTypes.bool,
+  /**
+   * Determines the position of an aggregated value.
+   * @param {GridRowTreeNodeConfig | null} groupNode The current group (`null` being the top level group).
+   * @returns {GridAggregationPosition | null} Position of the aggregated value (if `null`, the group will not be aggregated).
+   * @default `(groupNode) => groupNode == null ? 'footer' : 'inline'`
+   * @ignore - do not document.
+   */
+  private_getAggregationPosition: PropTypes.func,
+  /**
+   * Callback fired when the row grouping model changes.
+   * @param {GridAggregationModel} model The aggregated columns.
+   * @param {GridCallbackDetails} details Additional details for this callback.
+   * @ignore - do not document.
+   */
+  private_onAggregationModelChange: PropTypes.func,
   /**
    * Callback called before updating a row with new values in the row and cell editing.
    * Only applied if `props.experimentalFeatures.newEditingApi: true`.
