@@ -282,7 +282,6 @@ In addition, if row grouping or tree data is being used, the row reordering is a
 ## Row pinning [<span class="plan-pro"></span>](https://mui.com/store/items/material-ui-pro/)
 
 Pinned (or frozen, locked or floating) rows are those visible at all times while the user scrolls the grid vertically.
-Pinned rows are not affected by sorting, filtering or pagination.
 
 :::warning
 This feature is experimental, it needs to be explicitly activated using the `rowPinning` experimental feature flag.
@@ -307,27 +306,16 @@ const pinnedRows: GridPinnedRowsProp = {
 <DataGridPro pinnedRows={pinnedRows} />;
 ```
 
-:::warning
-Just like the `rows` prop, `pinnedRows` prop should keep the same reference between two renders.
-Otherwise, the grid will re-apply heavy work like sorting and filtering.
-:::
-
 The data format for pinned rows is the same as for the `rows` prop (see [Feeding data](/x/react-data-grid/rows/#feeding-data)).
 
 Pinned rows data should also meet [Row identifier](/x/react-data-grid/rows/#row-identifier) requirements.
 
-:::info
-Note that pinned rows do not support following features:
-
-- editing
-- selection
-- row grouping
-- tree data
-- row reordering
-- master detail
-  :::
-
 {{"demo": "RowPinning.js", "disableAd": true, "bg": "inline"}}
+
+:::warning
+Just like the `rows` prop, `pinnedRows` prop should keep the same reference between two renders.
+Otherwise, the grid will re-apply heavy work like sorting and filtering.
+:::
 
 ### Controlling pinned rows
 
@@ -337,11 +325,24 @@ In the demo below we use `actions` column type to add buttons to pin a row eithe
 
 {{"demo": "RowPinningWithActions.js", "disableAd": true, "bg": "inline", "defaultCodeOpen": false}}
 
-### Usage with pagination
+### Usage with other features
 
-Pagination does not impact pinned rows - they stay pinned regardless the page number or page size.
+Pinned rows are not affected by sorting and filtering.
+
+Pagination does not impact pinned rows as well - they stay pinned regardless the page number or page size.
 
 {{"demo": "RowPinningWithPagination.js", "disableAd": true, "bg": "inline", "defaultCodeOpen": false}}
+
+:::info
+Note that pinned rows do not support following features:
+
+- editing ([issue #5591](https://github.com/mui/mui-x/issues/5591))
+- selection
+- row grouping
+- tree data
+- row reordering
+- master detail
+  :::
 
 ## 🚧 Row spanning
 
