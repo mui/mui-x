@@ -34,6 +34,10 @@ export const createCalendarStateReducer =
   ): CalendarState<TDate> => {
     switch (action.type) {
       case 'changeMonth':
+        if (state.currentMonth === action.newMonth) {
+          return state;
+        }
+
         return {
           ...state,
           slideDirection: action.direction,
@@ -64,14 +68,19 @@ export const createCalendarStateReducer =
         return {
           ...state,
           focusedDay: action.focusedDay,
-          isMonthSwitchingAnimating: needMonthSwitch && !reduceAnimations,
-          currentMonth: needMonthSwitch
-            ? utils.startOfMonth(action.focusedDay!)
-            : state.currentMonth,
-          slideDirection:
-            action.focusedDay != null && utils.isAfterDay(action.focusedDay, state.currentMonth)
-              ? 'left'
-              : 'right',
+          ...(needMonthSwitch
+            ? {
+                isMonthSwitchingAnimating: needMonthSwitch && !reduceAnimations,
+                currentMonth: needMonthSwitch
+                  ? utils.startOfMonth(action.focusedDay!)
+                  : state.currentMonth,
+                slideDirection:
+                  action.focusedDay != null &&
+                  utils.isAfterDay(action.focusedDay, state.currentMonth)
+                    ? 'left'
+                    : 'right',
+              }
+            : {}),
         };
       }
 

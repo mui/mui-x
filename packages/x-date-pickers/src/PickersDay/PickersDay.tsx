@@ -251,7 +251,7 @@ const PickersDayRaw = React.forwardRef(function PickersDay<TDate>(
     }
   };
 
-  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+  const handleMouseDown = (event: React.MouseEvent<HTMLButtonElement>) => {
     if (!disabled) {
       onDaySelect(day, 'finish');
     }
@@ -327,7 +327,7 @@ const PickersDayRaw = React.forwardRef(function PickersDay<TDate>(
       tabIndex={selected ? 0 : -1}
       onFocus={handleFocus}
       onKeyDown={handleKeyDown}
-      onClick={handleClick}
+      onMouseDown={handleMouseDown}
       {...other}
     >
       {!children ? utils.format(day, 'dayOfMonth') : children}
