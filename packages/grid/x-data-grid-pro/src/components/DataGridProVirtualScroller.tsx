@@ -358,6 +358,7 @@ const DataGridProVirtualScroller = React.forwardRef<
           className={classes.topPinnedRows}
           ownerState={{ position: 'top' }}
           style={{ width: contentProps.style.width, height: pinnedRowsHeight.top }}
+          role="rowgroup"
         >
           {leftRenderContext && (
             <VirtualScrollerPinnedColumns
@@ -377,6 +378,7 @@ const DataGridProVirtualScroller = React.forwardRef<
           <VirtualScrollerPinnedRowsRenderZone
             className={classes.pinnedRowsRenderZone}
             ref={topPinnedRowsRenderZoneRef}
+            role="presentation"
           >
             {topPinnedRows}
           </VirtualScrollerPinnedRowsRenderZone>
@@ -446,6 +448,7 @@ const DataGridProVirtualScroller = React.forwardRef<
           className={classes.bottomPinnedRows}
           ownerState={{ position: 'bottom' }}
           style={{ width: contentProps.style.width, height: pinnedRowsHeight.bottom }}
+          role="rowgroup"
         >
           {leftRenderContext && (
             <VirtualScrollerPinnedColumns
@@ -466,6 +469,7 @@ const DataGridProVirtualScroller = React.forwardRef<
           <VirtualScrollerPinnedRowsRenderZone
             className={classes.pinnedRowsRenderZone}
             ref={bottomPinnedRowsRenderZoneRef}
+            role="presentation"
           >
             {bottomPinnedRows}
           </VirtualScrollerPinnedRowsRenderZone>
