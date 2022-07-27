@@ -53,73 +53,76 @@ export interface GridEditInputCellProps
   ) => Promise<void> | void;
 }
 
-function GridEditInputCell(props: GridEditInputCellProps) {
-  const rootProps = useGridRootProps();
+const GridEditInputCell = React.forwardRef<HTMLInputElement, GridEditInputCellProps>(
+  (props: GridEditInputCellProps, ref) => {
+    const rootProps = useGridRootProps();
 
-  const {
-    id,
-    value,
-    formattedValue,
-    api,
-    field,
-    row,
-    rowNode,
-    colDef,
-    cellMode,
-    isEditable,
-    tabIndex,
-    hasFocus,
-    getValue,
-    isValidating,
-    debounceMs = rootProps.experimentalFeatures?.newEditingApi ? 200 : SUBMIT_FILTER_STROKE_TIME,
-    isProcessingProps,
-    onValueChange,
-    ...other
-  } = props;
+    const {
+      id,
+      value,
+      formattedValue,
+      api,
+      field,
+      row,
+      rowNode,
+      colDef,
+      cellMode,
+      isEditable,
+      tabIndex,
+      hasFocus,
+      getValue,
+      isValidating,
+      debounceMs = rootProps.experimentalFeatures?.newEditingApi ? 200 : SUBMIT_FILTER_STROKE_TIME,
+      isProcessingProps,
+      onValueChange,
+      ...other
+    } = props;
 
-  const apiRef = useGridApiContext();
-  const inputRef = React.useRef<HTMLInputElement>();
-  const [valueState, setValueState] = React.useState(value);
-  const ownerState = { classes: rootProps.classes };
-  const classes = useUtilityClasses(ownerState);
+    const apiRef = useGridApiContext();
+    const inputRef = React.useRef<HTMLInputElement>();
+    const [valueState, setValueState] = React.useState(value);
+    const ownerState = { classes: rootProps.classes };
+    const classes = useUtilityClasses(ownerState);
 
-  const handleChange = React.useCallback(
-    async (event) => {
-      const newValue = event.target.value;
+    const handleChange = React.useCallback(
+      async (event) => {
+        const newValue = event.target.value;
 
-      if (onValueChange) {
-        await onValueChange(event, newValue);
+        if (onValueChange) {
+          await onValueChange(event, newValue);
+        }
+
+        setValueState(newValue);
+        apiRef.current.setEditCellValue({ id, field, value: newValue, debounceMs }, event);
+      },
+      [apiRef, debounceMs, field, id, onValueChange],
+    );
+
+    React.useEffect(() => {
+      setValueState(value);
+    }, [value]);
+
+    useEnhancedEffect(() => {
+      if (hasFocus) {
+        inputRef.current!.focus();
       }
+    }, [hasFocus]);
 
-      setValueState(newValue);
-      apiRef.current.setEditCellValue({ id, field, value: newValue, debounceMs }, event);
-    },
-    [apiRef, debounceMs, field, id, onValueChange],
-  );
-
-  React.useEffect(() => {
-    setValueState(value);
-  }, [value]);
-
-  useEnhancedEffect(() => {
-    if (hasFocus) {
-      inputRef.current!.focus();
-    }
-  }, [hasFocus]);
-
-  return (
-    <GridEditInputCellRoot
-      inputRef={inputRef}
-      className={classes.root}
-      fullWidth
-      type={colDef.type === 'number' ? colDef.type : 'text'}
-      value={valueState ?? ''}
-      onChange={handleChange}
-      endAdornment={isProcessingProps ? <GridLoadIcon /> : undefined}
-      {...other}
-    />
-  );
-}
+    return (
+      <GridEditInputCellRoot
+        ref={ref}
+        inputRef={inputRef}
+        className={classes.root}
+        fullWidth
+        type={colDef.type === 'number' ? colDef.type : 'text'}
+        value={valueState ?? ''}
+        onChange={handleChange}
+        endAdornment={isProcessingProps ? <GridLoadIcon /> : undefined}
+        {...other}
+      />
+    );
+  },
+);
 
 GridEditInputCell.propTypes = {
   // ----------------------------- Warning --------------------------------
@@ -197,6 +200,6 @@ GridEditInputCell.propTypes = {
 
 export { GridEditInputCell };
 
-export const renderEditInputCell = (params: GridEditInputCellProps) => (
-  <GridEditInputCell {...params} />
+export const renderEditInputCell = React.forwardRef<HTMLInputElement, GridEditInputCellProps>(
+  (params, ref) => <GridEditInputCell {...params} ref={ref} />,
 );
