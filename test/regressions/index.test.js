@@ -101,9 +101,17 @@ async function main() {
         // Move cursor offscreen to not trigger unwanted hover effects.
         page.mouse.move(0, 0);
 
+        const pathsToNotWaitForFlagCDN = [
+          '/docs-data-grid-filtering/ServerFilterGrid', // No content rendered
+          '/docs-data-grid-filtering/CustomMultiValueOperator', // No content rendered
+          '/docs-data-grid-sorting/ExtendedSortComparator', // No flag column
+          '/docs-data-grid-sorting/FullyCustomSortComparator', // No flag column
+          '/docs-data-grid-sorting/ServerSortingGrid', // No flag column
+        ];
+
         if (
-          pathURL.startsWith('/docs-data-grid-filtering') &&
-          !/(ServerFilterGrid|CustomMultiValueOperator)$/.test(pathURL) // These cases don't render content
+          /^\/docs-data-grid-(filtering|sorting)/.test(pathURL) &&
+          !pathsToNotWaitForFlagCDN.includes(pathURL)
         ) {
           // Wait for the flags to load
           await page.waitForResponse((response) =>

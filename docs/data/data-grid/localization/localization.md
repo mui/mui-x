@@ -117,6 +117,7 @@ import { DataGrid, nlNL } from '@mui/x-data-grid';
 | Persian                 | fa-IR               | `faIR`      |
 | Polish                  | pl-PL               | `plPL`      |
 | Portuguese (Brazil)     | pt-BR               | `ptBR`      |
+| Romanian                | ro-RO               | `roRO`      |
 | Russian                 | ru-RU               | `ruRU`      |
 | Slovak                  | sk-SK               | `skSK`      |
 | Spanish (Spain)         | es-ES               | `esES`      |
@@ -124,6 +125,7 @@ import { DataGrid, nlNL } from '@mui/x-data-grid';
 | Turkish                 | tr-TR               | `trTR`      |
 | Ukraine                 | uk-UA               | `ukUA`      |
 | Simplified Chinese      | zh-CN               | `zhCN`      |
+| Traditional Chinese     | zh-TW               | `zhTW`      |
 
 You can [find the source](https://github.com/mui/mui-x/tree/HEAD/packages/grid/x-data-grid/src/locales) in the GitHub repository.
 

@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { unstable_composeClasses as composeClasses } from '@mui/material';
 import { unstable_useEnhancedEffect as useEnhancedEffect } from '@mui/material/utils';
 import InputBase, { InputBaseProps } from '@mui/material/InputBase';
+import { styled } from '@mui/material/styles';
 import { GridRenderEditCellParams } from '../../models/params/gridCellParams';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
@@ -10,6 +11,10 @@ import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 
 type OwnerState = { classes: DataGridProcessedProps['classes'] };
+
+const StyledInputBase = styled(InputBase)({
+  fontSize: 'inherit',
+});
 
 const useUtilityClasses = (ownerState: OwnerState) => {
   const { classes } = ownerState;
@@ -140,7 +145,7 @@ function GridEditDateCell(props: GridEditDateCellProps) {
   }, [hasFocus]);
 
   return (
-    <InputBase
+    <StyledInputBase
       inputRef={inputRef}
       fullWidth
       className={classes.root}

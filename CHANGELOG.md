@@ -3,6 +3,203 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 5.14.0
+
+_Jul 21, 2022_
+
+We'd like to offer a big thanks to the 10 contributors who made this release possible. Here are some highlights ✨:
+
+- 🧪 Export `GridBooleanCell` component from data grid (#5537) @cliedeman
+- ⚙️ Improve accessibility of the Export menu (#5486) @nogalpaulina
+- 🌍 Improvements to different locales
+- 📚 Documentation improvements
+- 🐞 Bugfixes
+
+### `@mui/x-data-grid@5.14.0` / `@mui/x-data-grid-pro@5.14.0` / `@mui/x-data-grid-premium@5.14.0`
+
+#### Changes
+
+- [DataGrid] Add generics to `GridPreProcessEditCellProps` (#5510) @YunosukeY
+- [DataGrid] Avoid inconsistent state export (#5390) @flaviendelangle
+- [DataGrid] Export `GridBooleanCell` component (#5537) @cliedeman
+- [DataGrid] Fix `date`/`dateTime` edit input font size to match view mode (#5304) @cherniavskii
+- [DataGrid] Fix loading overlay position (#5558) @DanailH
+- [DataGrid] Improve accessibility of the Export menu in the toolbar (#5486) @nogalpaulina
+- [DataGridPremium] Implement Aggregation - not publicly released (#4208) @flaviendelangle
+- [DataGridPremium] Fix crash when exporting all columns to Excel (#5425) @cherniavskii
+- [l10n] Add Traditional Chinese (zh-TW) locale (#5498) @happyincent
+
+### `@mui/x-date-pickers@v5.0.0-beta.2` / `@mui/x-date-picker-pro@5.0.0-beta.2`
+
+#### Changes
+
+- [l10n] Add Norwegian (nb-NO) locale (#5475) @elkebab
+
+### Docs
+
+- [docs] New page presenting the `apiRef` (#5273) @flaviendelangle
+- [docs] Remove blank line @oliviertassinari
+
+### Core
+
+- [core] Add missing comments on zh-TW translation (#5559) @flaviendelangle
+- [core] Polish on the bug issue template (#5525) @oliviertassinari
+- [test] Add more tests related to `isPrintableKey` (#5458) @mnajdova
+
+## 5.13.1
+
+_Jul 15, 2022_
+
+We'd like to offer a big thanks to the 13 contributors who made this release possible. Here are some highlights ✨:
+
+- ✏️ Enter edit mode when pasting in a cell with Ctrl+V (Cmd+V on macOS) (#5405) @alexfauquette
+- 🌍 Many improvements to the locales
+- 📚 Documentation improvements
+- 🐞 Bugfixes
+
+### `@mui/x-data-grid@v5.13.1` / `@mui/x-data-grid-pro@v5.13.1` / `@mui/x-data-grid-premium@v5.13.1`
+
+#### Changes
+
+- [DataGrid] Fix blank space when using dynamic row height with pagination (#5315) @m4theushw
+- [DataGrid] Start editing with uppercase letter and Ctrl+V (#5405) @alexfauquette
+- [DataGrid] Fix some filters being removed from filter model on filter panel open (#5403) @cherniavskii
+- [DataGridPro] Improve pinned column headers accessibility (#5370) @cherniavskii
+- [l10n] Improve Dutch (nl-NL) locale (#5464) @developenguin
+- [l10n] Improve French (fr-FR) locale (#3211) (#5420) @Zenoo
+- [l10n] Improve German (de-DE) locale (#5448) @sebastianfrey
+- [l10n] Improve Brazilian Portuguese (pt-BR) locale (#5394) @andrepxa
+- [l10n] Improve Romanian (ro-RO) locale (#5449) @rolule
+
+### `@mui/x-date-pickers@v5.0.0-beta.1` / `@mui/x-date-picker-pro@5.0.0-beta.1`
+
+#### Changes
+
+- [pickers] Add Italian (it-IT) locale (#5467) @felixh10r
+- [pickers] Add Spanish (es-ES) locale (#5468) @felixh10r
+- [pickers] Improve French (fr-FR) locale (#5446) @Zenoo
+- [pickers] Improve German (de-DE) locale (#5447) @sebastianfrey
+
+### Docs
+
+- [docs] Fix typo in the sorting page (#5431) @JosephMarinier
+- [docs] Fix description for "Striped rows" example (#5432) @lindapaiste
+- [docs] Make a clear difference between the license and license key (#5316) @oliviertassinari
+- [docs] Update pickers README files (#5456) @cherniavskii
+- [docs] Clarify the scope of support for MUI X (#5423) @joserodolfofreitas
+
+### Core
+
+- [core] Add technical support link to \_redirects (#5428) @joserodolfofreitas
+- [core] Improve GitHub bug reproduction template (#5067) @joserodolfofreitas
+- [core] Include playground pages in tsconfig (#5367) @cherniavskii
+- [core] Sort keys like in material-ui @oliviertassinari
+- [test] Wait for flags to load on regression tests (#5473) @m4theushw
+
+## 5.13.0
+
+_Jul 7, 2022_
+
+We'd like to offer a big thanks to the 10 contributors who made this release possible. Here are some highlights ✨:
+
+- 🎁 `@mui/x-date-pickers` and `@mui/x-date-pickers-pro` are now in beta!
+
+- ✨ Allow detail panel's height to match its content (#5163) @m4theushw
+
+  ```tsx
+  <DataGridPro getDetailPanelHeight={() => 'auto'} />
+  ```
+
+- 🌍 Add Romanian (ro-RO) locale on the data grid (#5345) @rolule
+- 📚 Documentation improvements
+- 🐞 Bugfixes
+
+### `@mui/x-data-grid@v5.13.0` / `@mui/x-data-grid-pro@v5.13.0` / `@mui/x-data-grid-premium@v5.13.0`
+
+#### Changes
+
+- [DataGrid] Allows to customize variant of value input in filter panel (#4826) @alexfauquette
+- [DataGrid] Add Romanian (ro-RO) locale (#5345) @rolule
+- [DataGrid] Export Norwegian (nb-NO) locale (#5407) @cherniavskii
+- [DataGrid] Fix broken "start editing" integration with Japanese (#5414) @mnajdova
+- [DataGrid] Fix "stop editing" integration with IME e.g. Japanese (#5257) @Gumichocopengin8
+- [DataGrid] Fix dimensions computation with `autoHeight` and scroll x (#5401) @flaviendelangle
+- [DataGrid] Improve Slovak (sk-SK) locale (#5332) @msidlo
+- [DataGrid] Mention Premium plan in error messages and docs warnings (#5328) @cherniavskii
+- [DataGrid] Remove trailing spaces in filter input (#5279) @alexfauquette
+- [DataGridPro] Allow to infer detail panel height from content (#5163) @m4theushw
+- [DataGridPro] Fix the depth of nodes when switching from a non-flat tree to a flat tree (#5362) @flaviendelangle
+
+### `@mui/x-date-pickers@v5.0.0-beta.0` / `@mui/x-date-picker-pro@5.0.0-beta.0`
+
+#### Changes
+
+- [DateRangePicker] Fix keyboard selection (#5265) @alexfauquette
+- [DayPicker] Remove empty space at the bottom of the day view (#5073) @flaviendelangle
+- [pickers] Add missing type dependencies (#5331) @Methuselah96
+- [pickers] Pass the generics to the components in the theme augmentation (#5199) @toruticas
+
+### Docs
+
+- [docs] Explain how to use hooks inside a cell renderer (#5158) @flaviendelangle
+- [docs] Fix server-side pagination demo (#5361) @cherniavskii
+- [docs] Fix typo in the quick filter docs (#5313) @alexfauquette
+- [docs] Improve the "Getting started" page (#5293) @alexfauquette
+- [docs] New page for the pickers action bar customization (#5267) @flaviendelangle
+- [docs] Revise and split up "Overview" page into "Introduction" (#4692) @samuelsycamore
+- [docs] Use `useKeepGroupedColumnsHiddren` from the grid package on remaining demo (#5382) @flaviendelangle
+
+## v5.12.3
+
+_Jun 23, 2022_
+
+We'd like to offer a big thanks to the 8 contributors who made this release possible. Here are some highlights ✨:
+
+- 🌍 Add Swedish (sv-SE) locale on the data grid and the pickers (#5210) @mrxdst
+- 🌍 Add Dutch (nl-NL) locale on the pickers (#5237) @DDukers
+- 📚 Documentation improvements
+- 🐞 Bugfixes
+
+### `@mui/x-data-grid@v5.12.3` / `@mui/x-data-grid-pro@v5.12.3` / `@mui/x-data-grid-premium@v5.12.3`
+
+#### Changes
+
+- [DataGrid] Do not hide non-hideable column when pressing Hide All button (#5298) @flaviendelangle
+- [DataGrid] Do not regenerate the row tree when the `loading` prop changes (#5213) @flaviendelangle
+- [DataGrid] Fix the default filter operator fallback on state initialization (#5266) @flaviendelangle
+- [DataGrid] Stop using the deprecated `api` prop in the grid components (#5205) @flaviendelangle
+- [DataGrid] Add Swedish (sv-SE) locale (#5210) @mrxdst
+- [DataGridPremium] Fix detail panel on `DataGridPremium` (#5264) @flaviendelangle
+- [DataGridPremium] Fix Excel import with Remix / Vite (#5207) @alexfauquette
+- [DataGridPremium] Fix error with quick filter and grouping rows (#5238) @alexfauquette
+
+### `@mui/x-date-pickers@v5.0.0-alpha.7` / `@mui/x-date-pickers-pro@v5.0.0-alpha.7`
+
+#### Changes
+
+- [pickers] Export adapters from both `@mui/x-date-pickers` and `@mui/x-date-pickers-pro` (#5204) @flaviendelangle
+- [pickers] Add Dutch (nl-NL) locale (#5237) @DDukers
+
+### Docs
+
+- [docs] Add `DataGridPremium` to all API sections (#5196) @flaviendelangle
+- [docs] Add plan badge next to event name in the Events page (#5200) @flaviendelangle
+- [docs] Add section for theme augmentation in the picker docs (#5276) @flaviendelangle
+- [docs] Add waiting for upvote section for row group panel (#5271) @flaviendelangle
+- [docs] Disable ad on main demo page (#5301) @joserodolfofreitas
+- [docs] Fix typo in the `DateRangePicker` documentation (#5259) @flaviendelangle
+
+### Core
+
+- [core] Allow having multiple playgrounds (#5288) @alexfauquette
+- [core] Improve typing of `GridFilterInputMultipleSingleSelect` (#5206) @flaviendelangle
+- [core] Remove arbitrary new lines (#5245) @oliviertassinari
+- [core] Remove dead logic (#5282) @oliviertassinari
+- [test] Fix `inputFormat` when testing with different date adapters (#5291) @cherniavskii
+- [test] Fix date assertion in Safari 13 (#5221) @m4theushw
+- [test] Throw if date adapter is not found (#5289) @cherniavskii
+- [test] Use mock for `ResizeObserver` (#5215) @m4theushw
+
 ## v5.12.2
 
 _Jun 16, 2022_
@@ -71,7 +268,7 @@ We'd like to offer a big thanks to the 10 contributors who made this release pos
 - [l10n] Update Japanese (ja-JP) locale (#5122) @hikotq
 - [l10n] Update Russian (ru-RU) locale (#5069) @Artboomy
 
-### `@mui/x-date-pickers@5.0.0-alpha.6` / `@mui/x-date-pickers-pro@5.0.0-alpha.6`
+### `@mui/x-date-pickers@v5.0.0-alpha.6` / `@mui/x-date-pickers-pro@v5.0.0-alpha.6`
 
 #### Changes
 
@@ -138,7 +335,7 @@ We'd like to offer a big thanks to the 15 contributors who made this release pos
 - [l10n] Add Norwegian (Bokmål) (nb-NO) locale (#5001) @spiftire
 - [l10n] Add Turkish (tr-TR) locale (#5026) @Rassilion
 
-### `@mui/x-date-pickers@5.0.0-alpha.5` / `@mui/x-date-pickers-pro@5.0.0-alpha.5`
+### `@mui/x-date-pickers@v5.0.0-alpha.5` / `@mui/x-date-pickers-pro@v5.0.0-alpha.5`
 
 #### Breaking changes
 
@@ -211,7 +408,7 @@ We'd like to offer a big thanks to the 6 contributors who made this release poss
 - [DataGridPremium] Support column spanning in the Excel export (#4830) @cherniavskii
 - [l10n] Improve Russian (ru-RU) locale (#4864) @arvkonstantin
 
-### `@mui/x-date-pickers@5.0.0-alpha.4` / `@mui/x-date-pickers-pro@5.0.0-alpha.4`
+### `@mui/x-date-pickers@v5.0.0-alpha.4` / `@mui/x-date-pickers-pro@v5.0.0-alpha.4`
 
 #### Breaking changes
 
@@ -336,7 +533,7 @@ We'd like to offer a big thanks to the 15 contributors who made this release pos
 - [l10n] Improve German (de-DE) locale (#4748) @sebastianfrey
 - [l10n] Improve German (de-DE) locale (#4668) @izu-co
 
-### `@mui/x-date-pickers@5.0.0-alpha.3` / `@mui/x-date-pickers-pro@5.0.0-alpha.3`
+### `@mui/x-date-pickers@v5.0.0-alpha.3` / `@mui/x-date-pickers-pro@v5.0.0-alpha.3`
 
 #### Breaking changes
 
@@ -437,7 +634,7 @@ We'd like to offer a big thanks to the 6 contributors who made this release poss
 - [DataGrid] Don't close column menu when updating rows (#4498) @m4theushw
 - [DataGridPro] Introduce row reorder (#4034) @DanailH
 
-### `@mui/x-date-pickers@5.0.0-alpha.2` / `@mui/x-date-pickers-pro@5.0.0-alpha.2`
+### `@mui/x-date-pickers@v5.0.0-alpha.2` / `@mui/x-date-pickers-pro@v5.0.0-alpha.2`
 
 - [pickers] Pass `PaperProps` to `DesktopWrapper` component (#4584) @alexfauquette
 - [TimePicker] Fix bug when time picker clear value (#4582) @alexfauquette
@@ -498,7 +695,7 @@ We'd like to offer a big thanks to the 9 contributors who made this release poss
 - [DataGridPro] Fix toggling detail panel using keyboard (#4409) @cherniavskii
 - [l10n] Add Hungarian (hu-HU) locale (#4458) @x22tri
 
-### `@mui/x-date-pickers@5.0.0-alpha.1` / `@mui/x-date-pickers-pro@5.0.0-alpha.1`
+### `@mui/x-date-pickers@v5.0.0-alpha.1` / `@mui/x-date-pickers-pro@v5.0.0-alpha.1`
 
 - [ClockPicker] Should call `shouldDisableTime` with the hours with meridiem (#4404) @flaviendelangle
 - [MonthPicker] Clicking on a `PickersMonth` button should not trigger the form submit (#4402) @flaviendelangle
@@ -1312,7 +1509,7 @@ A big thanks to the 5 contributors who made this release possible. Here are some
 - [core] Fix `yarn prettier` script (#3292) @oliviertassinari
 - [core] Improve tests for Tree Data (#3366) @flaviendelangle
 - [core] Never import directly from the `__modules__` folder in the `x-data-grid-generator` package (#3379) @flaviendelangle
-- [core] Transition to a new StackOverflow tag (#3308) @oliviertassinari
+- [core] Transition to a new Stack Overflow tag (#3308) @oliviertassinari
 - [core] Update monorepo (#3370) @flaviendelangle
 - [core] Use pre-processors for sorting and filtering (#3318) @flaviendelangle
 - [test] Replace `useFakeTimers` (#3323) @m4theushw

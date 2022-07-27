@@ -1,5 +1,17 @@
 [
   {
+    "name": "gridAggregationLookupSelector",
+    "returnType": "GridAggregationLookup",
+    "description": "",
+    "supportsApiRef": true
+  },
+  {
+    "name": "gridAggregationModelSelector",
+    "returnType": "GridAggregationModel",
+    "description": "",
+    "supportsApiRef": true
+  },
+  {
     "name": "gridColumnDefinitionsSelector",
     "returnType": "GridStateColDef<any, any, any>[]",
     "category": "Columns",
@@ -94,24 +106,6 @@
     "returnType": "GridDensity",
     "description": "",
     "supportsApiRef": true
-  },
-  {
-    "name": "gridDetailPanelExpandedRowIdsSelector",
-    "returnType": "GridRowId[]",
-    "description": "",
-    "supportsApiRef": false
-  },
-  {
-    "name": "gridDetailPanelExpandedRowsContentCacheSelector",
-    "returnType": "Record<GridRowId, ReactNode>",
-    "description": "",
-    "supportsApiRef": false
-  },
-  {
-    "name": "gridDetailPanelExpandedRowsHeightCacheSelector",
-    "returnType": "Record<GridRowId, number>",
-    "description": "",
-    "supportsApiRef": false
   },
   {
     "name": "gridEditRowsStateSelector",

@@ -90,18 +90,33 @@ export function useGridDimensions(
       rootElement.removeChild(scrollDiv);
     }
 
-    const viewportOuterSize: ElementSize = {
-      width: rootDimensionsRef.current.width,
-      height: props.autoHeight
-        ? rowsMeta.currentPageTotalHeight
-        : rootDimensionsRef.current.height - headerHeight,
-    };
+    let viewportOuterSize: ElementSize;
+    let hasScrollX: boolean;
+    let hasScrollY: boolean;
 
-    const { hasScrollX, hasScrollY } = hasScroll({
-      content: { width: Math.round(columnsTotalWidth), height: rowsMeta.currentPageTotalHeight },
-      container: viewportOuterSize,
-      scrollBarSize,
-    });
+    if (props.autoHeight) {
+      hasScrollY = false;
+      hasScrollX = Math.round(columnsTotalWidth) > rootDimensionsRef.current.width;
+
+      viewportOuterSize = {
+        width: rootDimensionsRef.current.width,
+        height: rowsMeta.currentPageTotalHeight + (hasScrollX ? scrollBarSize : 0),
+      };
+    } else {
+      viewportOuterSize = {
+        width: rootDimensionsRef.current.width,
+        height: rootDimensionsRef.current.height - headerHeight,
+      };
+
+      const scrollInformation = hasScroll({
+        content: { width: Math.round(columnsTotalWidth), height: rowsMeta.currentPageTotalHeight },
+        container: viewportOuterSize,
+        scrollBarSize,
+      });
+
+      hasScrollY = scrollInformation.hasScrollY;
+      hasScrollX = scrollInformation.hasScrollX;
+    }
 
     const viewportInnerSize: ElementSize = {
       width: viewportOuterSize.width - (hasScrollY ? scrollBarSize : 0),
