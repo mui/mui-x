@@ -1,24 +1,24 @@
 ---
-title: Data Grid - Column groups
+title: Data grid - Column groups
 ---
 
-# Data Grid - Column groups
+# Data grid - Column groups
 
 <p class="description">Group your columns.</p>
 
-Grouping columns allows you to have multiple levels of columns in your header and the ability, if needed, to 'open and close' column groups to show and hide additional columns.
+Grouping columns allows you to have multiple levels of columns in your header and the ability, if needed, to toggle column groups to show and hide additional columns.
 
 ## Define column grouping
 
-You can define the column grouping structure by providing `columnGroupingModel` prop to the data grid.
+You can define the column grouping structure by providing the `columnGroupingModel` prop to the grid.
 This prop receives an array of column group.
 
-A column group is defined by at least two variables:
+A column group is defined by at least two attributes:
 
-- `groupId` a string used to identify the group
-- `children` an array containing the children of the group
+- `groupId`: a string used to identify the group
+- `children`: an array containing the children of the group
 
-The children can contains two types of objects:
+The `children` attribute can contain two types of objects:
 
 - leafs with type `{ field: string }`, which add the column with the corresponding `field` to this group.
 - other column groups which allows you to have nested groups.
