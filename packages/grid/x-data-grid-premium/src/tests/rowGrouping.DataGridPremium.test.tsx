@@ -2221,7 +2221,7 @@ describe('<DataGridPremium /> - Row Grouping', () => {
                     },
                     {
                       id: 1,
-                      columnField: 'category1',
+                      columnField: GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD,
                       operatorValue: 'equals',
                       value: 'Cat A',
                     },
