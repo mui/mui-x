@@ -857,6 +857,19 @@ describe('<DataGridPro /> - Cell Editing', () => {
         expect(spiedStopCellEditMode.callCount).to.equal(1);
         expect(spiedStopCellEditMode.lastCall.args[0].ignoreModifications).to.equal(true);
       });
+
+      it('should call stopCellEditMode with ignoreModifications=false if the props are being processed and disableIgnoreModificationsIfProcessingProps is true', async () => {
+        columnProps.preProcessEditCellProps = ({ props }: GridPreProcessEditCellProps) =>
+          new Promise((resolve) => resolve(props));
+        render(<TestCase disableIgnoreModificationsIfProcessingProps />);
+        const spiedStopCellEditMode = spy(apiRef.current, 'stopCellEditMode');
+        fireEvent.doubleClick(getCell(0, 1));
+        apiRef.current.setEditCellValue({ id: 0, field: 'currencyPair', value: 'USD GBP' });
+        fireEvent.click(getCell(1, 1));
+        await Promise.resolve();
+        expect(spiedStopCellEditMode.callCount).to.equal(1);
+        expect(spiedStopCellEditMode.lastCall.args[0].ignoreModifications).to.equal(false);
+      });
     });
 
     describe('by pressing Escape', () => {

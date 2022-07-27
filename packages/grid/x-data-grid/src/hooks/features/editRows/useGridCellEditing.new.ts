@@ -55,6 +55,7 @@ export const useGridCellEditing = (
     | 'onCellModesModelChange'
     | 'onProcessRowUpdateError'
     | 'signature'
+    | 'disableIgnoreModificationsIfProcessingProps'
   >,
 ) => {
   const [cellModesModel, setCellModesModel] = React.useState<GridCellModesModel>({});
@@ -197,6 +198,8 @@ export const useGridCellEditing = (
     (params) => {
       const { id, field, reason } = params;
 
+      apiRef.current.unstable_runPendingEditCellValueMutation(id, field);
+
       let cellToFocusAfter: GridStopCellEditModeParams['cellToFocusAfter'];
       if (reason === GridCellEditStopReasons.enterKeyDown) {
         cellToFocusAfter = 'below';
@@ -208,7 +211,10 @@ export const useGridCellEditing = (
 
       let ignoreModifications = reason === 'escapeKeyDown';
       const editingState = gridEditRowsStateSelector(apiRef.current.state);
-      if (editingState[id][field].isProcessingProps) {
+      if (
+        editingState[id][field].isProcessingProps &&
+        !props.disableIgnoreModificationsIfProcessingProps
+      ) {
         // The user wants to stop editing the cell but we can't wait for the props to be processed.
         // In this case, discard the modifications.
         ignoreModifications = true;
@@ -221,7 +227,7 @@ export const useGridCellEditing = (
         cellToFocusAfter,
       });
     },
-    [apiRef],
+    [apiRef, props.disableIgnoreModificationsIfProcessingProps],
   );
 
   useGridApiEventHandler(apiRef, 'cellDoubleClick', runIfEditModeIsCell(handleCellDoubleClick));
@@ -462,7 +468,7 @@ export const useGridCellEditing = (
       updateOrDeleteFieldState(id, field, newProps);
 
       editingState = gridEditRowsStateSelector(apiRef.current.state);
-      return !editingState[id][field].error;
+      return !editingState[id]?.[field]?.error;
     },
     [apiRef, throwIfNotEditable, throwIfNotInMode, updateOrDeleteFieldState],
   );
