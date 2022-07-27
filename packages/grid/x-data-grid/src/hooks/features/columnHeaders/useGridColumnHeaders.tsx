@@ -219,7 +219,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
 
   useGridApiEventHandler(apiRef, 'rowsScroll', handleScroll);
 
-  const getColumnsHeader = (
+  const getColumnHeaders = (
     params?: {
       renderContext: GridRenderContext | null;
       minFirstColumn?: number;
@@ -307,7 +307,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
     );
   };
 
-  const getColumnsHeaderGroups = (params?: {
+  const getColumnGroupHeaders = (params?: {
     renderContext: GridRenderContext | null;
     minFirstColumn?: number;
     maxLastColumn?: number;
@@ -502,8 +502,8 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
 
   return {
     renderContext,
-    getColumnsHeader,
-    getColumnsHeaderGroups,
+    getColumnHeaders,
+    getColumnGroupHeaders,
     isDragging: !!dragCol,
     getRootProps: (other = {}) => ({ style: rootStyle, ...other }),
     getInnerProps: () => ({

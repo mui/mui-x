@@ -21,7 +21,7 @@ export function hasGroupPath(
 
 type UnwrappedGroupingModel = { [key: string]: string[] };
 
-// The is the recurrence function that help writing `unwrapGroupingColumnModel()`
+// This is the recurrence function that help writing `unwrapGroupingColumnModel()`
 const recurrentUnwrapGroupingColumnModel = (
   columnGroupNode: GridColumnNode,
   parents: any,

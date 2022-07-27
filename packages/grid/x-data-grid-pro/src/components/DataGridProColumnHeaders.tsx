@@ -126,8 +126,8 @@ export const DataGridProColumnHeaders = React.forwardRef<
     renderContext,
     getRootProps,
     getInnerProps,
-    getColumnsHeader,
-    getColumnsHeaderGroups,
+    getColumnHeaders,
+    getColumnGroupHeaders,
   } = useGridColumnHeaders({
     innerRef,
     minColumnIndex: leftPinnedColumns.length,
@@ -161,12 +161,12 @@ export const DataGridProColumnHeaders = React.forwardRef<
           className={classes.leftPinnedColumns}
           ownerState={{ side: GridPinnedPosition.left }}
         >
-          {getColumnsHeaderGroups({
+          {getColumnGroupHeaders({
             renderContext: leftRenderContext,
             minFirstColumn: leftRenderContext.firstColumnIndex,
             maxLastColumn: leftRenderContext.lastColumnIndex,
           })}
-          {getColumnsHeader(
+          {getColumnHeaders(
             {
               renderContext: leftRenderContext,
               minFirstColumn: leftRenderContext.firstColumnIndex,
@@ -177,12 +177,12 @@ export const DataGridProColumnHeaders = React.forwardRef<
         </GridColumnHeadersPinnedColumnHeaders>
       )}
       <GridColumnHeadersInner isDragging={isDragging} {...getInnerProps()}>
-        {getColumnsHeaderGroups({
+        {getColumnGroupHeaders({
           renderContext,
           minFirstColumn: leftPinnedColumns.length,
           maxLastColumn: visibleColumnFields.length - rightPinnedColumns.length,
         })}
-        {getColumnsHeader({
+        {getColumnHeaders({
           renderContext,
           minFirstColumn: leftPinnedColumns.length,
           maxLastColumn: visibleColumnFields.length - rightPinnedColumns.length,
@@ -194,12 +194,12 @@ export const DataGridProColumnHeaders = React.forwardRef<
           className={classes.rightPinnedColumns}
           style={{ paddingRight: scrollbarSize }}
         >
-          {getColumnsHeaderGroups({
+          {getColumnGroupHeaders({
             renderContext: rightRenderContext,
             minFirstColumn: rightRenderContext.firstColumnIndex,
             maxLastColumn: rightRenderContext.lastColumnIndex,
           })}
-          {getColumnsHeader(
+          {getColumnHeaders(
             {
               renderContext: rightRenderContext,
               minFirstColumn: rightRenderContext.firstColumnIndex,

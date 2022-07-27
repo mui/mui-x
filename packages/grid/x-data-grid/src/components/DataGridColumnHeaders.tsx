@@ -12,7 +12,7 @@ export const DataGridColumnHeaders = React.forwardRef<HTMLDivElement, DataGridCo
   function GridColumnsHeader(props, ref) {
     const { innerRef, className, ...other } = props;
 
-    const { isDragging, getRootProps, getInnerProps, getColumnsHeader, getColumnsHeaderGroups } =
+    const { isDragging, getRootProps, getInnerProps, getColumnHeaders, getColumnGroupHeaders } =
       useGridColumnHeaders({
         innerRef,
       });
@@ -21,8 +21,8 @@ export const DataGridColumnHeaders = React.forwardRef<HTMLDivElement, DataGridCo
       <GridColumnHeaders ref={ref} {...getRootProps(other)}>
         <GridScrollArea scrollDirection="left" />
         <GridColumnHeadersInner isDragging={isDragging} {...getInnerProps()}>
-          {getColumnsHeaderGroups()}
-          {getColumnsHeader()}
+          {getColumnGroupHeaders()}
+          {getColumnHeaders()}
         </GridColumnHeadersInner>
         <GridScrollArea scrollDirection="right" />
       </GridColumnHeaders>

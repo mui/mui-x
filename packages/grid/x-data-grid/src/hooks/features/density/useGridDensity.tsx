@@ -71,18 +71,15 @@ export const densityStateInitializer: GridStateInitializer<
   } else {
     const unwrappedGroupingColumnModel = unwrapGroupingColumnModel(props.columnGroupingModel);
 
-    // @ts-ignore
-    const visibleColumns = state.columns.all.filter(
-      // @ts-ignore
-      (field) => state.columns.columnVisibilityModel[field] !== false,
+    const visibleColumns = state.columns!.all!.filter(
+      (field) => state.columns!.columnVisibilityModel![field!] !== false,
     );
 
     if (visibleColumns.length === 0) {
       maxDepth = 0;
     } else {
       maxDepth = Math.max(
-        // @ts-ignore
-        ...visibleColumns.map((field) => unwrappedGroupingColumnModel[field]?.length ?? 0),
+        ...visibleColumns.map((field) => unwrappedGroupingColumnModel[field!]?.length ?? 0),
       );
     }
   }

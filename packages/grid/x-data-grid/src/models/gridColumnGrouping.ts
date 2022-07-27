@@ -1,13 +1,13 @@
 import { GridAlignment, GridColDef } from './colDef';
 
-export interface LeafColumn {
+export interface GridLeafColumn {
   field: GridColDef['field'];
 }
 
-export type GridColumnNode = GridColumnGroup | LeafColumn;
+export type GridColumnNode = GridColumnGroup | GridLeafColumn;
 
-export function isLeaf(node: GridColumnNode): node is LeafColumn {
-  return (<LeafColumn>node).field !== undefined;
+export function isLeaf(node: GridColumnNode): node is GridLeafColumn {
+  return (<GridLeafColumn>node).field !== undefined;
 }
 
 export interface GridColumnGroupHeaderParams
