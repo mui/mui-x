@@ -99,11 +99,11 @@ export const useGridColumnReorder = (
 
       originColumnIndex.current = apiRef.current.getColumnIndex(params.field, false);
 
-      const draggingColumnGroupPath = apiRef.current.getColumnGroupPath(params.field);
+      const draggingColumnGroupPath = apiRef.current.unstable_getColumnGroupPath(params.field);
 
       const visibleColumnIndex = apiRef.current.getColumnIndex(params.field, true);
       const visibleColumns = apiRef.current.getVisibleColumns();
-      const groupsLookup = apiRef.current.getAllGroupDetails();
+      const groupsLookup = apiRef.current.unstable_getAllGroupDetails();
 
       // The limitingGroupId is the id of the group from which the dragged column should not escape
       let limitingGroupId: string | null = null;

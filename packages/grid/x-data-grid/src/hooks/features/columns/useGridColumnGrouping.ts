@@ -134,7 +134,9 @@ export const useGridColumnGrouping = (
   /**
    * API METHODS
    */
-  const getColumnGroupPath = React.useCallback<GridColumnGroupingApi['getColumnGroupPath']>(
+  const getColumnGroupPath = React.useCallback<
+    GridColumnGroupingApi['unstable_getColumnGroupPath']
+  >(
     (field) => {
       const columnLookup = gridColumnLookupSelector(apiRef);
 
@@ -143,24 +145,16 @@ export const useGridColumnGrouping = (
     [apiRef],
   );
 
-  const getAllGroupDetails = React.useCallback<GridColumnGroupingApi['getAllGroupDetails']>(() => {
+  const getAllGroupDetails = React.useCallback<
+    GridColumnGroupingApi['unstable_getAllGroupDetails']
+  >(() => {
     const columnGroupLookup = gridColumnGroupsLookupSelector(apiRef);
     return columnGroupLookup;
   }, [apiRef]);
 
-  const getGroupDetails = React.useCallback<GridColumnGroupingApi['getGroupDetails']>(
-    (groupId) => {
-      const columnGroupLookup = gridColumnGroupsLookupSelector(apiRef);
-
-      return columnGroupLookup[groupId] ?? null;
-    },
-    [apiRef],
-  );
-
   const columnGroupingApi: GridColumnGroupingApi = {
-    getColumnGroupPath,
-    getGroupDetails,
-    getAllGroupDetails,
+    unstable_getColumnGroupPath: getColumnGroupPath,
+    unstable_getAllGroupDetails: getAllGroupDetails,
   };
 
   useGridApiMethod(apiRef, columnGroupingApi, 'GridColumnGroupingApi');
