@@ -111,8 +111,3 @@ export interface GridAggregationRule {
  * - items for non-available aggregation function on the column (GridColDef.availableAggregationFunctions)
  */
 export type GridAggregationRules = { [field: string]: GridAggregationRule };
-
-export interface AggregationFooterLabelColumn {
-  groupingCriteria?: string[];
-  field: string;
-}

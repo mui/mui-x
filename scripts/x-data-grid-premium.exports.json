@@ -1,5 +1,4 @@
 [
-  { "name": "AggregationFooterLabelColumn", "kind": "Interface" },
   { "name": "allGridColumnsFieldsSelector", "kind": "Variable" },
   { "name": "allGridColumnsSelector", "kind": "Variable" },
   { "name": "arSD", "kind": "Variable" },
