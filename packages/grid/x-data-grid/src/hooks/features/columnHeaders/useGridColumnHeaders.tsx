@@ -27,6 +27,7 @@ import { useGridRootProps } from '../../utils/useGridRootProps';
 import { GridRenderContext } from '../../../models/params/gridScrollParams';
 import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 import { GridEventListener } from '../../../models/events';
+import { GridStateColDef } from '../../../models/colDef';
 import { GridColumnHeaderItem } from '../../../components/columnHeaders/GridColumnHeaderItem';
 import { getFirstColumnIndexToRender } from '../columns/gridColumnsUtils';
 import { useGridVisibleRows } from '../../utils/useGridVisibleRows';
@@ -55,6 +56,12 @@ interface HeaderInfo {
 interface UseGridColumnHeadersProps {
   innerRef?: React.Ref<HTMLDivElement>;
   minColumnIndex?: number;
+}
+
+interface GetHeadersParams {
+  renderContext: GridRenderContext | null;
+  minFirstColumn?: number;
+  maxLastColumn?: number;
 }
 
 function isUIEvent(event: any): event is React.UIEvent {
@@ -219,14 +226,16 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
 
   useGridApiEventHandler(apiRef, 'rowsScroll', handleScroll);
 
-  const getColumnHeaders = (
-    params?: {
-      renderContext: GridRenderContext | null;
-      minFirstColumn?: number;
-      maxLastColumn?: number;
-    },
-    other = {},
-  ) => {
+  // Helper for computation common between getColumnHeaders and getColumnGroupHeaders
+  const getColumnsToRender = (
+    params?: GetHeadersParams,
+  ): null | {
+    renderedColumns: GridStateColDef<any, any, any>[];
+    firstColumnToRender: number;
+    lastColumnToRender: number;
+    minFirstColumn: number;
+    maxLastColumn: number;
+  } => {
     const {
       renderContext: nextRenderContext = renderContext,
       minFirstColumn = minColumnIndex,
@@ -236,8 +245,6 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
     if (!nextRenderContext) {
       return null;
     }
-
-    const columns: JSX.Element[] = [];
 
     const [firstRowToRender, lastRowToRender] = getRenderableIndexes({
       firstIndex: nextRenderContext.firstRowIndex,
@@ -264,6 +271,25 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
 
     const renderedColumns = visibleColumns.slice(firstColumnToRender, lastColumnToRender);
 
+    return {
+      renderedColumns,
+      firstColumnToRender,
+      lastColumnToRender,
+      minFirstColumn,
+      maxLastColumn,
+    };
+  };
+
+  const getColumnHeaders = (params?: GetHeadersParams, other = {}) => {
+    const columnsToRender = getColumnsToRender(params);
+
+    if (columnsToRender == null) {
+      return null;
+    }
+
+    const { renderedColumns, firstColumnToRender } = columnsToRender;
+
+    const columns: JSX.Element[] = [];
     for (let i = 0; i < renderedColumns.length; i += 1) {
       const column = renderedColumns[i];
 
@@ -307,51 +333,20 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
     );
   };
 
-  const getColumnGroupHeaders = (params?: {
-    renderContext: GridRenderContext | null;
-    minFirstColumn?: number;
-    maxLastColumn?: number;
-  }) => {
+  const getColumnGroupHeaders = (params?: GetHeadersParams) => {
     if (headerGroupingMaxDepth === 0) {
       return null;
     }
+    const columnsToRender = getColumnsToRender(params);
 
-    const {
-      renderContext: nextRenderContext = renderContext,
-      minFirstColumn = minColumnIndex,
-      maxLastColumn = visibleColumns.length,
-    } = params || {};
-
-    if (!nextRenderContext) {
+    if (columnsToRender == null) {
       return null;
     }
 
+    const { renderedColumns, firstColumnToRender, lastColumnToRender, maxLastColumn } =
+      columnsToRender;
+
     const columns: JSX.Element[] = [];
-
-    const [firstRowToRender, lastRowToRender] = getRenderableIndexes({
-      firstIndex: nextRenderContext.firstRowIndex,
-      lastIndex: nextRenderContext.lastRowIndex,
-      minFirstIndex: 0,
-      maxLastIndex: currentPage.rows.length,
-      buffer: rootProps.rowBuffer,
-    });
-
-    const firstColumnToRender = getFirstColumnIndexToRenderRef.current({
-      firstColumnIndex: nextRenderContext!.firstColumnIndex,
-      minColumnIndex: minFirstColumn,
-      columnBuffer: rootProps.columnBuffer,
-      apiRef,
-      firstRowToRender,
-      lastRowToRender,
-      visibleRows: currentPage.rows,
-    });
-
-    const lastColumnToRender = Math.min(
-      nextRenderContext.lastColumnIndex! + rootProps.columnBuffer,
-      maxLastColumn,
-    );
-
-    const renderedColumns = visibleColumns.slice(firstColumnToRender, lastColumnToRender);
 
     const headerToRender: {
       leftOverflow: number;
