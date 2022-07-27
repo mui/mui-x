@@ -267,6 +267,7 @@ DataGridPremiumRaw.propTypes = {
     newEditingApi: PropTypes.bool,
     preventCommitWhileValidating: PropTypes.bool,
     private_aggregation: PropTypes.bool,
+    rowPinning: PropTypes.bool,
     warnIfFocusStateIsNotSynced: PropTypes.bool,
   }),
   /**
@@ -783,6 +784,13 @@ DataGridPremiumRaw.propTypes = {
   pinnedColumns: PropTypes.shape({
     left: PropTypes.arrayOf(PropTypes.string),
     right: PropTypes.arrayOf(PropTypes.string),
+  }),
+  /**
+   * Rows data to pin on top or bottom.
+   */
+  pinnedRows: PropTypes.shape({
+    bottom: PropTypes.array,
+    top: PropTypes.array,
   }),
   /**
    * Aggregation functions available on the grid.

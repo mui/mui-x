@@ -30,29 +30,29 @@ export default function AggregationFiltering() {
   const data = useMovieData();
 
   return (
-    <DataGridPremium
-      // The 2 following props are here to avoid scroll in the demo while we don't have pinned rows
-      rows={data.rows.slice(0, 3)}
-      autoHeight
-      columns={COLUMNS}
-      initialState={{
-        private_aggregation: {
-          model: {
-            gross: 'max',
+    <div style={{ height: 400, width: '100%' }}>
+      <DataGridPremium
+        rows={data.rows}
+        columns={COLUMNS}
+        initialState={{
+          private_aggregation: {
+            model: {
+              gross: 'max',
+            },
           },
-        },
-        filter: {
-          filterModel: {
-            items: [
-              { columnField: 'title', operatorValue: 'equals', value: 'Titanic' },
-            ],
+          filter: {
+            filterModel: {
+              items: [
+                { columnField: 'title', operatorValue: 'equals', value: 'Titanic' },
+              ],
+            },
           },
-        },
-      }}
-      private_aggregationRowsScope="all"
-      experimentalFeatures={{
-        private_aggregation: true,
-      }}
-    />
+        }}
+        private_aggregationRowsScope="all"
+        experimentalFeatures={{
+          private_aggregation: true,
+        }}
+      />
+    </div>
   );
 }

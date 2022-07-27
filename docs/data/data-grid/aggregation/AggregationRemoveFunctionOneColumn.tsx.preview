@@ -1,0 +1,15 @@
+<DataGridPremium
+  rows={data.rows}
+  columns={COLUMNS}
+  initialState={{
+    private_aggregation: {
+      model: {
+        year: 'max',
+        gross: 'max',
+      },
+    },
+  }}
+  experimentalFeatures={{
+    private_aggregation: true,
+  }}
+/>

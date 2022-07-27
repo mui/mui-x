@@ -1,7 +1,5 @@
 <DataGridPremium
-  // The 2 following props are here to avoid scroll in the demo while we don't have pinned rows
   rows={rows}
-  autoHeight
   columns={COLUMNS}
   initialState={{
     private_aggregation: {

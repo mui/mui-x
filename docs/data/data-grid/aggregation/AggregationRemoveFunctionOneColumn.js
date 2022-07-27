@@ -36,22 +36,22 @@ export default function AggregationRemoveFunctionOneColumn() {
   const data = useMovieData();
 
   return (
-    <DataGridPremium
-      // The 2 following props are here to avoid scroll in the demo while we don't have pinned rows
-      rows={data.rows.slice(0, 3)}
-      autoHeight
-      columns={COLUMNS}
-      initialState={{
-        private_aggregation: {
-          model: {
-            year: 'max',
-            gross: 'max',
+    <div style={{ height: 400, width: '100%' }}>
+      <DataGridPremium
+        rows={data.rows}
+        columns={COLUMNS}
+        initialState={{
+          private_aggregation: {
+            model: {
+              year: 'max',
+              gross: 'max',
+            },
           },
-        },
-      }}
-      experimentalFeatures={{
-        private_aggregation: true,
-      }}
-    />
+        }}
+        experimentalFeatures={{
+          private_aggregation: true,
+        }}
+      />
+    </div>
   );
 }
