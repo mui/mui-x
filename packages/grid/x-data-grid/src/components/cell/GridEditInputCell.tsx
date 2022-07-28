@@ -54,7 +54,7 @@ export interface GridEditInputCellProps
 }
 
 const GridEditInputCell = React.forwardRef<HTMLInputElement, GridEditInputCellProps>(
-  (props: GridEditInputCellProps, ref) => {
+  (props, ref) => {
     const rootProps = useGridRootProps();
 
     const {
