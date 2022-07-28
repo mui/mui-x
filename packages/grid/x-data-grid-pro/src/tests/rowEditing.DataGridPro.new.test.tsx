@@ -221,6 +221,7 @@ describe('<DataGridPro /> - Row Editing', () => {
           value: 'USD GBP',
           error: false,
           isProcessingProps: true,
+          changeReason: 'setEditCellValue',
         });
 
         const args2 = column2Props.preProcessEditCellProps.lastCall.args[0];

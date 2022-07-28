@@ -79,7 +79,7 @@ function GridEditInputCell(props: GridEditInputCellProps) {
 
   const apiRef = useGridApiContext();
   const inputRef = React.useRef<HTMLInputElement>();
-  const [valueState, setValueState] = React.useState(value);
+  const [valueState, setValueState] = React.useState<any>(value);
   const ownerState = { classes: rootProps.classes };
   const classes = useUtilityClasses(ownerState);
 
@@ -91,15 +91,31 @@ function GridEditInputCell(props: GridEditInputCellProps) {
         await onValueChange(event, newValue);
       }
 
-      setValueState(newValue);
-      apiRef.current.setEditCellValue({ id, field, value: newValue, debounceMs }, event);
+      const column = apiRef.current.getColumn(field);
+
+      let parsedValue = newValue;
+      if (column.valueParser && rootProps.experimentalFeatures?.newEditingApi) {
+        parsedValue = column.valueParser(newValue, apiRef.current.getCellParams(id, field));
+      }
+
+      setValueState(parsedValue);
+      apiRef.current.setEditCellValue(
+        { id, field, value: parsedValue, debounceMs, unstable_skipValueParser: true },
+        event,
+      );
     },
-    [apiRef, debounceMs, field, id, onValueChange],
+    [apiRef, debounceMs, field, id, onValueChange, rootProps.experimentalFeatures?.newEditingApi],
   );
 
+  const meta = apiRef.current.unstable_getEditCellMeta
+    ? apiRef.current.unstable_getEditCellMeta(id, field)
+    : {};
+
   React.useEffect(() => {
-    setValueState(value);
-  }, [value]);
+    if (meta.changeReason !== 'debouncedSetEditCellValue') {
+      setValueState(value);
+    }
+  }, [meta.changeReason, value]);
 
   useEnhancedEffect(() => {
     if (hasFocus) {
@@ -135,6 +151,7 @@ GridEditInputCell.propTypes = {
    * The mode of the cell.
    */
   cellMode: PropTypes.oneOf(['edit', 'view']).isRequired,
+  changeReason: PropTypes.oneOf(['debouncedSetEditCellValue', 'setEditCellValue']),
   /**
    * The column of the row that the current cell belongs to.
    */

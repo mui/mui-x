@@ -125,6 +125,7 @@ GridEditBooleanCell.propTypes = {
    * The mode of the cell.
    */
   cellMode: PropTypes.oneOf(['edit', 'view']).isRequired,
+  changeReason: PropTypes.oneOf(['debouncedSetEditCellValue', 'setEditCellValue']),
   /**
    * The column of the row that the current cell belongs to.
    */

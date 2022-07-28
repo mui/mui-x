@@ -83,10 +83,11 @@ describe('<DataGridPro /> - Edit Components', () => {
         field: 'brand',
         value: 'Puma',
         debounceMs: 200,
+        unstable_skipValueParser: true,
       });
     });
 
-    it('should the value prop to the input', () => {
+    it('should pass the value prop to the input', () => {
       defaultData.columns[0].valueParser = (value) => (value as string).toUpperCase();
       render(<TestCase />);
 
@@ -97,7 +98,7 @@ describe('<DataGridPro /> - Edit Components', () => {
       expect(input.value).to.equal('Nike');
 
       fireEvent.change(input, { target: { value: 'Puma' } });
-      expect(input.value).to.equal('Puma');
+      expect(input.value).to.equal('PUMA');
 
       clock.tick(200);
       expect(input.value).to.equal('PUMA');
@@ -166,8 +167,9 @@ describe('<DataGridPro /> - Edit Components', () => {
       expect(spiedSetEditCellValue.lastCall.args[0]).to.deep.equal({
         id: 0,
         field: 'quantity',
-        value: '110',
+        value: 110,
         debounceMs: 200,
+        unstable_skipValueParser: true,
       });
     });
 
