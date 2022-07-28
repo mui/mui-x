@@ -39,7 +39,7 @@ const GridEditInputCellRoot = styled(InputBase, {
 
 export interface GridEditInputCellProps
   extends GridRenderEditCellParams,
-    Omit<InputBaseProps, 'id' | 'value' | 'tabIndex'> {
+    Omit<InputBaseProps, 'id' | 'value' | 'tabIndex' | 'ref'> {
   debounceMs?: number;
   /**
    * Callback called when the value is changed by the user.
@@ -200,6 +200,6 @@ GridEditInputCell.propTypes = {
 
 export { GridEditInputCell };
 
-export const renderEditInputCell = React.forwardRef<HTMLInputElement, GridEditInputCellProps>(
-  (params, ref) => <GridEditInputCell {...params} ref={ref} />,
+export const renderEditInputCell = (params: GridEditInputCellProps) => (
+  <GridEditInputCell {...params} />
 );
