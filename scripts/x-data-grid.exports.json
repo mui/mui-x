@@ -66,6 +66,7 @@
   { "name": "GridArrowUpwardIcon", "kind": "Variable" },
   { "name": "GridAutoSizer", "kind": "Variable" },
   { "name": "GridBody", "kind": "Function" },
+  { "name": "GridBooleanCell", "kind": "Variable" },
   { "name": "GridCallbackDetails", "kind": "Interface" },
   { "name": "GridCell", "kind": "Function" },
   { "name": "GridCellCheckboxForwardRef", "kind": "Variable" },
@@ -203,6 +204,7 @@
   { "name": "GridExportFormat", "kind": "TypeAlias" },
   { "name": "GridExportMenuItemProps", "kind": "Interface" },
   { "name": "GridExportOptions", "kind": "Interface" },
+  { "name": "GridExportStateParams", "kind": "Interface" },
   { "name": "GridFeatureMode", "kind": "TypeAlias" },
   { "name": "GridFeatureModeConstant", "kind": "Variable" },
   { "name": "GridFileExportOptions", "kind": "Interface" },
@@ -458,6 +460,7 @@
   { "name": "plPL", "kind": "Variable" },
   { "name": "ptBR", "kind": "Variable" },
   { "name": "renderActionsCell", "kind": "Variable" },
+  { "name": "renderBooleanCell", "kind": "Variable" },
   { "name": "renderEditBooleanCell", "kind": "Variable" },
   { "name": "renderEditDateCell", "kind": "Variable" },
   { "name": "renderEditInputCell", "kind": "Variable" },
@@ -492,5 +495,6 @@
   { "name": "visibleGridColumnsLengthSelector", "kind": "Variable" },
   { "name": "visibleGridColumnsSelector", "kind": "Variable" },
   { "name": "viVN", "kind": "Variable" },
-  { "name": "zhCN", "kind": "Variable" }
+  { "name": "zhCN", "kind": "Variable" },
+  { "name": "zhTW", "kind": "Variable" }
 ]

@@ -27,7 +27,7 @@ const koKRGrid: Partial<GridLocaleText> = {
   toolbarFiltersTooltipActive: (count) => `${count}건의 필터를 적용중`,
 
   // Quick filter toolbar field
-  // toolbarQuickFilterPlaceholder: 'Search...',
+  // toolbarQuickFilterPlaceholder: 'Search…',
   // toolbarQuickFilterLabel: 'Search',
   // toolbarQuickFilterDeleteIconLabel: 'Clear',
 

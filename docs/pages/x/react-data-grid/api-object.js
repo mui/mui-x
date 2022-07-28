@@ -4,7 +4,7 @@ import {
   demos,
   docs,
   demoComponents,
-} from 'docsx/data/data-grid/aggregation/aggregation-next.md?@mui/markdown';
+} from 'docsx/data/data-grid/api-object/api-object.md?@mui/markdown';
 
 export default function Page() {
   return <MarkdownDocs demos={demos} docs={docs} demoComponents={demoComponents} disableAd />;

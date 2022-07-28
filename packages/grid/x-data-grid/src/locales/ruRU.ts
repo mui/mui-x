@@ -38,7 +38,7 @@ const ruRUGrid: Partial<GridLocaleText> = {
   },
 
   // Quick filter toolbar field
-  toolbarQuickFilterPlaceholder: 'Поиск...',
+  toolbarQuickFilterPlaceholder: 'Поиск…',
   toolbarQuickFilterLabel: 'Поиск',
   toolbarQuickFilterDeleteIconLabel: 'Очистить',
 

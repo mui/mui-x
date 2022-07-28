@@ -28,7 +28,7 @@ const deDEGrid: Partial<GridLocaleText> = {
     count !== 1 ? `${count} aktive Filter` : `${count} aktiver Filter`,
 
   // Quick filter toolbar field
-  toolbarQuickFilterPlaceholder: 'Suchen...',
+  toolbarQuickFilterPlaceholder: 'Suchen…',
   toolbarQuickFilterLabel: 'Suchen',
   toolbarQuickFilterDeleteIconLabel: 'Löschen',
 

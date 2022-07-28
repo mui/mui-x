@@ -55,6 +55,7 @@ export const useGridSorting = (
   apiRef: React.MutableRefObject<GridApiCommunity>,
   props: Pick<
     DataGridProcessedProps,
+    | 'initialState'
     | 'sortModel'
     | 'onSortModelChange'
     | 'sortingOrder'
@@ -220,9 +221,20 @@ export const useGridSorting = (
    * PRE-PROCESSING
    */
   const stateExportPreProcessing = React.useCallback<GridPipeProcessor<'exportState'>>(
-    (prevState) => {
+    (prevState, context) => {
       const sortModelToExport = gridSortModelSelector(apiRef);
-      if (sortModelToExport.length === 0) {
+
+      const shouldExportSortModel =
+        // Always export if the `exportOnlyDirtyModels` property is activated
+        !context.exportOnlyDirtyModels ||
+        // Always export if the model is controlled
+        props.sortModel != null ||
+        // Always export if the model has been initialized
+        props.initialState?.sorting?.sortModel != null ||
+        // Export if the model is not empty
+        sortModelToExport.length > 0;
+
+      if (!shouldExportSortModel) {
         return prevState;
       }
 
@@ -233,7 +245,7 @@ export const useGridSorting = (
         },
       };
     },
-    [apiRef],
+    [apiRef, props.sortModel, props.initialState?.sorting?.sortModel],
   );
 
   const stateRestorePreProcessing = React.useCallback<GridPipeProcessor<'restoreState'>>(
@@ -263,6 +275,9 @@ export const useGridSorting = (
         const footerRowIds: GridRowId[] = [];
 
         gridRowIdsSelector(apiRef).forEach((rowId) => {
+          if (rowTree[rowId].isPinned) {
+            return;
+          }
           if (rowTree[rowId].position === 'footer') {
             footerRowIds.push(rowId);
           } else {
@@ -277,6 +292,9 @@ export const useGridSorting = (
       const footerRowIds: GridRowId[] = [];
 
       Object.values(rowTree).forEach((rowNode) => {
+        if (rowNode.isPinned) {
+          return;
+        }
         if (rowNode.position === 'footer') {
           footerRowIds.push(rowNode.id);
         } else {

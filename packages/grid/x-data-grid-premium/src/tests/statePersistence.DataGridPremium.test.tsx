@@ -41,7 +41,7 @@ const FULL_INITIAL_STATE: GridInitialState = {
   rowGrouping: {
     model: ['category'],
   },
-  private_aggregation: {
+  aggregation: {
     model: {
       id: 'size',
     },
@@ -69,7 +69,7 @@ describe('<DataGridPremium /> - State Persistence', () => {
           defaultGroupingExpansionDepth={-1}
           groupingColDef={{ headerName: 'Group' }}
           experimentalFeatures={{
-            private_aggregation: true,
+            aggregation: true,
           }}
         />
       </div>
@@ -77,27 +77,75 @@ describe('<DataGridPremium /> - State Persistence', () => {
   };
 
   describe('apiRef: exportState', () => {
-    // We always export the `orderedFields`,
-    // If it's something problematic we could introduce an `hasBeenReordered` property and only export if at least one column has been reordered.
-    it('should not return the default values of the models', () => {
+    it('should export the initial values of the models', () => {
+      render(<TestCase initialState={FULL_INITIAL_STATE} />);
+
+      const exportedState = apiRef.current.exportState();
+      expect(exportedState.rowGrouping).to.deep.equal(FULL_INITIAL_STATE.rowGrouping);
+      expect(exportedState.aggregation).to.deep.equal(FULL_INITIAL_STATE.aggregation);
+    });
+
+    it('should not export the default values of the models when using exportOnlyDirtyModels', () => {
       render(<TestCase />);
-      expect(apiRef.current.exportState()).to.deep.equal({
+      expect(apiRef.current.exportState({ exportOnlyDirtyModels: true })).to.deep.equal({
         columns: {
           orderedFields: ['id', 'category'],
         },
       });
     });
 
-    it('should export the initial values of the models', () => {
-      render(<TestCase initialState={FULL_INITIAL_STATE} />);
-      expect(apiRef.current.exportState()).to.deep.equal(FULL_INITIAL_STATE);
-    });
-
     it('should export the current version of the exportable state', () => {
       render(<TestCase />);
       apiRef.current.setRowGroupingModel(['category']);
-      apiRef.current.private_setAggregationModel({ id: 'size' });
-      expect(apiRef.current.exportState()).to.deep.equal(FULL_INITIAL_STATE);
+      apiRef.current.setAggregationModel({
+        id: 'size',
+      });
+
+      const exportedState = apiRef.current.exportState();
+      expect(exportedState.rowGrouping).to.deep.equal(FULL_INITIAL_STATE.rowGrouping);
+      expect(exportedState.aggregation).to.deep.equal(FULL_INITIAL_STATE.aggregation);
+    });
+
+    it('should export the current version of the exportable state when using exportOnlyDirtyModels', () => {
+      render(<TestCase />);
+      apiRef.current.setRowGroupingModel(['category']);
+      apiRef.current.setAggregationModel({
+        id: 'size',
+      });
+
+      const exportedState = apiRef.current.exportState({ exportOnlyDirtyModels: true });
+      expect(exportedState.rowGrouping).to.deep.equal(FULL_INITIAL_STATE.rowGrouping);
+      expect(exportedState.aggregation).to.deep.equal(FULL_INITIAL_STATE.aggregation);
+    });
+
+    it('should export the controlled values of the models', () => {
+      render(
+        <TestCase
+          rowGroupingModel={FULL_INITIAL_STATE.rowGrouping?.model}
+          aggregationModel={FULL_INITIAL_STATE.aggregation?.model}
+        />,
+      );
+      expect(apiRef.current.exportState().rowGrouping).to.deep.equal(
+        FULL_INITIAL_STATE.rowGrouping,
+      );
+      expect(apiRef.current.exportState().aggregation).to.deep.equal(
+        FULL_INITIAL_STATE.aggregation,
+      );
+    });
+
+    it('should export the controlled values of the models when using exportOnlyDirtyModels', () => {
+      render(
+        <TestCase
+          rowGroupingModel={FULL_INITIAL_STATE.rowGrouping?.model}
+          aggregationModel={FULL_INITIAL_STATE.aggregation?.model}
+        />,
+      );
+      expect(apiRef.current.exportState().rowGrouping).to.deep.equal(
+        FULL_INITIAL_STATE.rowGrouping,
+      );
+      expect(apiRef.current.exportState().aggregation).to.deep.equal(
+        FULL_INITIAL_STATE.aggregation,
+      );
     });
   });
 

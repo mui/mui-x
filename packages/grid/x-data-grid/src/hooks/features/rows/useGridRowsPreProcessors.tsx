@@ -21,7 +21,9 @@ const flatRowTreeCreationMethod: GridStrategyProcessor<'rowTreeCreation'> = ({
       previousTree &&
       previousTree[rowId] &&
       previousTree[rowId].depth === 0 &&
-      previousTree[rowId].parent == null
+      previousTree[rowId].parent == null &&
+      // pinned row can be unpinned
+      !previousTree[rowId].isPinned
     ) {
       tree[rowId] = previousTree[rowId];
     } else {

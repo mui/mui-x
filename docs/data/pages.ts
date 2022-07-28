@@ -55,7 +55,7 @@ const pages: MuiPage[] = [
           { pathname: '/x/react-data-grid/row-dimensions' },
           { pathname: '/x/react-data-grid/row-ordering', plan: 'pro' },
           { pathname: '/x/react-data-grid/master-detail', plan: 'pro' },
-          { pathname: '/x/react-data-grid/row-pinning', plan: 'pro', title: 'Row pinning 🚧' },
+          { pathname: '/x/react-data-grid/row-pinning', plan: 'pro' },
           { pathname: '/x/react-data-grid/row-spanning', title: 'Row spanning 🚧' },
         ],
       },
@@ -64,8 +64,6 @@ const pages: MuiPage[] = [
       { pathname: '/x/react-data-grid/filtering' },
       { pathname: '/x/react-data-grid/pagination' },
       { pathname: '/x/react-data-grid/selection' },
-      { pathname: '/x/react-data-grid/events' },
-      { pathname: '/x/react-data-grid/state' },
       { pathname: '/x/react-data-grid/export' },
       { pathname: '/x/react-data-grid/components' },
       { pathname: '/x/react-data-grid/style' },
@@ -90,6 +88,20 @@ const pages: MuiPage[] = [
         ],
       },
       {
+        title: 'Advanced',
+        pathname: '/x/react-data-grid/api-object',
+        scopePathnames: [
+          '/x/react-data-grid/api-object',
+          '/x/react-data-grid/events',
+          '/x/react-data-grid/state',
+        ],
+        children: [
+          { pathname: '/x/react-data-grid/api-object', title: 'API object' },
+          { pathname: '/x/react-data-grid/events' },
+          { pathname: '/x/react-data-grid/state' },
+        ],
+      },
+      {
         pathname: '/x/api/data-grid',
         title: 'API Reference',
         children: [
@@ -100,6 +112,7 @@ const pages: MuiPage[] = [
           { pathname: '/x/api/data-grid/grid-api', title: 'GridApi' },
           { pathname: '/x/api/data-grid/grid-cell-params', title: 'GridCellParams' },
           { pathname: '/x/api/data-grid/grid-col-def', title: 'GridColDef' },
+          { pathname: '/x/api/data-grid/grid-export-state-params', title: 'GridExportStateParams' },
           { pathname: '/x/api/data-grid/grid-filter-form', title: 'GridFilterForm' },
           { pathname: '/x/api/data-grid/grid-filter-item', title: 'GridFilterItem' },
           { pathname: '/x/api/data-grid/grid-filter-model', title: 'GridFilterModel' },

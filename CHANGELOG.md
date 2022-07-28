@@ -3,6 +3,49 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 5.14.0
+
+_Jul 21, 2022_
+
+We'd like to offer a big thanks to the 10 contributors who made this release possible. Here are some highlights ✨:
+
+- 🧪 Export `GridBooleanCell` component from data grid (#5537) @cliedeman
+- ⚙️ Improve accessibility of the Export menu (#5486) @nogalpaulina
+- 🌍 Improvements to different locales
+- 📚 Documentation improvements
+- 🐞 Bugfixes
+
+### `@mui/x-data-grid@5.14.0` / `@mui/x-data-grid-pro@5.14.0` / `@mui/x-data-grid-premium@5.14.0`
+
+#### Changes
+
+- [DataGrid] Add generics to `GridPreProcessEditCellProps` (#5510) @YunosukeY
+- [DataGrid] Avoid inconsistent state export (#5390) @flaviendelangle
+- [DataGrid] Export `GridBooleanCell` component (#5537) @cliedeman
+- [DataGrid] Fix `date`/`dateTime` edit input font size to match view mode (#5304) @cherniavskii
+- [DataGrid] Fix loading overlay position (#5558) @DanailH
+- [DataGrid] Improve accessibility of the Export menu in the toolbar (#5486) @nogalpaulina
+- [DataGridPremium] Implement Aggregation - not publicly released (#4208) @flaviendelangle
+- [DataGridPremium] Fix crash when exporting all columns to Excel (#5425) @cherniavskii
+- [l10n] Add Traditional Chinese (zh-TW) locale (#5498) @happyincent
+
+### `@mui/x-date-pickers@v5.0.0-beta.2` / `@mui/x-date-picker-pro@5.0.0-beta.2`
+
+#### Changes
+
+- [l10n] Add Norwegian (nb-NO) locale (#5475) @elkebab
+
+### Docs
+
+- [docs] New page presenting the `apiRef` (#5273) @flaviendelangle
+- [docs] Remove blank line @oliviertassinari
+
+### Core
+
+- [core] Add missing comments on zh-TW translation (#5559) @flaviendelangle
+- [core] Polish on the bug issue template (#5525) @oliviertassinari
+- [test] Add more tests related to `isPrintableKey` (#5458) @mnajdova
+
 ## 5.13.1
 
 _Jul 15, 2022_
@@ -1466,7 +1509,7 @@ A big thanks to the 5 contributors who made this release possible. Here are some
 - [core] Fix `yarn prettier` script (#3292) @oliviertassinari
 - [core] Improve tests for Tree Data (#3366) @flaviendelangle
 - [core] Never import directly from the `__modules__` folder in the `x-data-grid-generator` package (#3379) @flaviendelangle
-- [core] Transition to a new StackOverflow tag (#3308) @oliviertassinari
+- [core] Transition to a new Stack Overflow tag (#3308) @oliviertassinari
 - [core] Update monorepo (#3370) @flaviendelangle
 - [core] Use pre-processors for sorting and filtering (#3318) @flaviendelangle
 - [test] Replace `useFakeTimers` (#3323) @m4theushw
