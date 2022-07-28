@@ -40,15 +40,7 @@ const pages: MuiPage[] = [
       },
       {
         pathname: '/x/react-data-grid/rows',
-        scopePathnames: [
-          '/x/react-data-grid/row-definition',
-          '/x/react-data-grid/row-updates',
-          '/x/react-data-grid/row-dimensions',
-          '/x/react-data-grid/row-ordering',
-          '/x/react-data-grid/master-detail',
-          '/x/react-data-grid/row-pinning',
-          '/x/react-data-grid/row-spanning',
-        ],
+        scopePathnames: ['/x/react-data-grid/row-', '/x/react-data-grid/master-detail'],
         children: [
           { pathname: '/x/react-data-grid/row-definition' },
           { pathname: '/x/react-data-grid/row-updates' },
