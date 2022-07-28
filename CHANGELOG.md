@@ -306,7 +306,7 @@ _May 31, 2022_
 
 We'd like to offer a big thanks to the 15 contributors who made this release possible. Here are some highlights ✨:
 
-- 🎁 Introduce support for [dynamic row height](https://mui.com/x/react-data-grid/rows/#dynamic-row-height) (#4859) @m4theushw
+- 🎁 Introduce support for [dynamic row height](https://mui.com/x/react-data-grid/row-height/#dynamic-row-height) (#4859) @m4theushw
 
   <img src="https://user-images.githubusercontent.com/42154031/171183167-718d7bcd-ec0f-459e-97fe-0f650abb4a99.gif" width="800">
 
@@ -623,7 +623,7 @@ _Apr 25, 2022_
 
 We'd like to offer a big thanks to the 6 contributors who made this release possible. Here are some highlights ✨:
 
-- 🎁 Introduce [Row reorder](https://mui.com/x/react-data-grid/rows/#row-reorder) (#4034) @DanailH
+- 🎁 Introduce [Row reorder](https://mui.com/x/react-data-grid/row-ordering/) (#4034) @DanailH
 
   <img src="https://user-images.githubusercontent.com/5858539/165091263-23472fbb-a989-44b8-849a-d2185adfe13b.gif" width="800">
 
@@ -887,7 +887,7 @@ We'd like to offer a big thanks to the 8 contributors who made this release poss
   <DataGrid getRowSpacing={() => ({ top: 10, bottom: 10 })} />
   ```
 
-  Check the [documentation](https://mui.com/x/react-data-grid/rows/#row-spacing) for more information.
+  Check the [documentation](https://mui.com/x/react-data-grid/row-height/#row-spacing) for more information.
 
 ### `@mui/x-data-grid@v5.6.1` / `@mui/x-data-grid-pro@v5.6.1`
 
@@ -1141,7 +1141,7 @@ _Jan 28, 2022_
 
 A big thanks to the 9 contributors who made this release possible. Here are some highlights ✨:
 
-- 🚣 Introduce [variable row height](https://mui.com/x/react-data-grid/rows/#variable-row-height) (#438) @DanailH
+- 🚣 Introduce [variable row height](https://mui.com/x/react-data-grid/row-height/#variable-row-height) (#438) @DanailH
 
   Allows for setting a row-specific height.
   By default, all rows have the same height, but now you can set the height on a per-row basis.
@@ -3793,7 +3793,7 @@ Big thanks to the 7 contributors who made this release possible. Here are some h
 - 🎁 Add `onRowsScrollEnd` to support infinite loading (#1199) @DanailH
   This is an XGrid feature. Provides the ability to tap into the `onRowsScrollEnd` which is called when the scroll reaches the bottom of the grid viewport allowing developers to load additional data. It can be used with a combination of `scrollBottomThreshold` to control the area in which the `onRowsScrollEnd` is called.
 
-  See the documentation for [more details](https://mui.com/x/react-data-grid/rows/#infinite-loading).
+  See the documentation for [more details](https://mui.com/x/react-data-grid/row-updates/#infinite-loading).
 
 - 🕹 Provide the ability to sort by multiple columns using Shift+click (#1203) @dtassone
 - 🇵🇱 Added pl-PL locale (#1117) @LarsKumbier

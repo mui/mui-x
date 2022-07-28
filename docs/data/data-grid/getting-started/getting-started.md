@@ -168,10 +168,10 @@ The enterprise components come in two plans: Pro and Premium.
 | [Column reorder](/x/react-data-grid/column-ordering/)                                  |    ❌     |                 ✅                 |                     ✅                     |
 | [Column pinning](/x/react-data-grid/column-pinning/)                                   |    ❌     |                 ✅                 |                     ✅                     |
 | **Row**                                                                                |           |                                    |                                            |
-| [Row height](/x/react-data-grid/rows/#row-height)                                      |    ✅     |                 ✅                 |                     ✅                     |
-| [Row spanning](/x/react-data-grid/rows/#row-spanning)                                  |    🚧     |                 🚧                 |                     🚧                     |
-| [Row reordering](/x/react-data-grid/rows/#row-reorder)                                 |    ❌     |                 ✅                 |                     ✅                     |
-| [Row pinning](/x/react-data-grid/rows/#row-pinning)                                    |    ❌     |                 ✅                 |                     ✅                     |
+| [Row height](/x/react-data-grid/row-height/)                                           |    ✅     |                 ✅                 |                     ✅                     |
+| [Row spanning](/x/react-data-grid/row-spanning/)                                       |    🚧     |                 🚧                 |                     🚧                     |
+| [Row reordering](/x/react-data-grid/row-ordering/)                                     |    ❌     |                 ✅                 |                     ✅                     |
+| [Row pinning](/x/react-data-grid/row-pinning/)                                         |    ❌     |                 ✅                 |                     ✅                     |
 | **Selection**                                                                          |           |                                    |                                            |
 | [Single row selection](/x/react-data-grid/selection/#single-row-selection)             |    ✅     |                 ✅                 |                     ✅                     |
 | [Checkbox selection](/x/react-data-grid/selection/#checkbox-selection)                 |    ✅     |                 ✅                 |                     ✅                     |
