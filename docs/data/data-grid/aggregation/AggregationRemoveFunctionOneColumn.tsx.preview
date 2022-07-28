@@ -2,14 +2,12 @@
   rows={data.rows}
   columns={COLUMNS}
   initialState={{
-    private_aggregation: {
+    aggregation: {
       model: {
         year: 'max',
         gross: 'max',
       },
     },
   }}
-  experimentalFeatures={{
-    private_aggregation: true,
-  }}
+  experimentalFeatures={{ aggregation: true }}
 />
