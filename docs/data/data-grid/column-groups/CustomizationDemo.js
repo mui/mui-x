@@ -63,8 +63,14 @@ const HeaderWithIcon = (props) => {
 };
 
 HeaderWithIcon.propTypes = {
+  /**
+   * A unique string identifying the group.
+   */
   groupId: PropTypes.string.isRequired,
-  headerName: PropTypes.string.isRequired,
+  /**
+   * The name to display in the group header.
+   */
+  headerName: PropTypes.string,
   icon: PropTypes.node,
 };
 

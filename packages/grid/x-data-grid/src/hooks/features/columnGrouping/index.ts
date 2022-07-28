@@ -1,4 +1,2 @@
 export * from './gridColumnGroupsSelector';
-export type {
-  GridColumnsGroupingState,
-} from './gridColumnGroupsInterfaces';
+export type { GridColumnsGroupingState } from './gridColumnGroupsInterfaces';

@@ -128,7 +128,6 @@ export const gridFilterableColumnLookupSelector = createSelector(
     }, {}),
 );
 
-
 /**
  * @category Columns
  * @deprecated Use `gridColumnFieldsSelector` instead.
