@@ -3,6 +3,48 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 5.15.0
+
+_Jul 28, 2022_
+
+We'd like to offer a big thanks to the 5 contributors who made this release possible. Here are some highlights ✨:
+
+- 🚀 Implement row pinning (#4863) @cherniavskii
+
+  Pro users can now [pin rows](https://mui.com/x/react-data-grid/rows/#row-pinning) on top or bottom of the grid.
+  To do so, enable the feature with `experimentalFeatures={{ rowPinning: true }}` and provide the row to pin with the `pinnedRows` prop.
+  For more details see the [documentation](https://mui.com/x/react-data-grid/rows/#row-pinning).
+
+- 🌍 Add simplified Chinese (zh-CN) locale to pickers (#5584) @gamecss
+- 📚 Documentation improvements
+
+### `@mui/x-data-grid@v5.15.0` / `@mui/x-data-grid-pro@v5.15.0` / `@mui/x-data-grid-premium@v5.15.0`
+
+#### Changes
+
+- [DataGrid] Add prop to keep modifications while processing props (#5309) @m4theushw
+- [DataGrid] Fix container width change on React 18 (#5566) @m4theushw
+- [DataGrid] Fix ellipsis style convention (#5587) @oliviertassinari
+- [DataGridPro] Implement row pinning (#4863) @cherniavskii
+- [DataGridPremium] Make aggregation public (#5592) @cherniavskii
+- [l10n] Improve simplified Chinese (zh-CN) locale (#5584) @gamecss
+
+### `@mui/x-date-pickers@v5.0.0-beta.3` / `@mui/x-date-picker-pro@5.0.0-beta.3`
+
+#### Changes
+
+- [l10n] Add simplified Chinese (zh-CN) locale (#5584) @gamecss
+
+### Docs
+
+- [docs] Add warning clarifications (#5399) @alexfauquette
+- [docs] Correct slot CSS classes for Pro and Premium components (#5452) @alexfauquette
+- [docs] Fix internal link to `valueParser` (#5450) @alexfauquette
+
+### Core
+
+- [core] Upgrade monorepo (#5560) @m4theushw
+
 ## 5.14.0
 
 _Jul 21, 2022_
