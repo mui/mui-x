@@ -64,7 +64,8 @@ const serializeRow = (
   api.unstable_calculateColSpan({
     rowId: id,
     minFirstColumn: 0,
-    maxLastColumn: columns.length - 1,
+    maxLastColumn: columns.length,
+    columns,
   });
 
   columns.forEach((column, colIndex) => {

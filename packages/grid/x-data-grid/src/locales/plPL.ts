@@ -27,7 +27,7 @@ const plPLGrid: Partial<GridLocaleText> = {
   toolbarFiltersTooltipActive: (count) => `Liczba aktywnych filtrów: ${count}`,
 
   // Quick filter toolbar field
-  // toolbarQuickFilterPlaceholder: 'Search...',
+  // toolbarQuickFilterPlaceholder: 'Search…',
   // toolbarQuickFilterLabel: 'Search',
   // toolbarQuickFilterDeleteIconLabel: 'Clear',
 
@@ -138,6 +138,14 @@ const plPLGrid: Partial<GridLocaleText> = {
 
   // Row reordering text
   // rowReorderingHeaderName: 'Row reordering',
+
+  // Aggregation
+  // aggregationMenuItemHeader: 'Aggregation',
+  // aggregationFunctionLabelSum: 'sum',
+  // aggregationFunctionLabelAvg: 'avg',
+  // aggregationFunctionLabelMin: 'min',
+  // aggregationFunctionLabelMax: 'max',
+  // aggregationFunctionLabelSize: 'size',
 };
 
 export const plPL: Localization = getGridLocalization(plPLGrid, plPLCore);

@@ -28,7 +28,7 @@ const faIRGrid: Partial<GridLocaleText> = {
     count !== 1 ? `${count} فیلترهای فعال` : `${count} فیلتر فعال`,
 
   // Quick filter toolbar field
-  // toolbarQuickFilterPlaceholder: 'Search...',
+  // toolbarQuickFilterPlaceholder: 'Search…',
   // toolbarQuickFilterLabel: 'Search',
   // toolbarQuickFilterDeleteIconLabel: 'Clear',
 
@@ -143,6 +143,14 @@ const faIRGrid: Partial<GridLocaleText> = {
 
   // Row reordering text
   // rowReorderingHeaderName: 'Row reordering',
+
+  // Aggregation
+  // aggregationMenuItemHeader: 'Aggregation',
+  // aggregationFunctionLabelSum: 'sum',
+  // aggregationFunctionLabelAvg: 'avg',
+  // aggregationFunctionLabelMin: 'min',
+  // aggregationFunctionLabelMax: 'max',
+  // aggregationFunctionLabelSize: 'size',
 };
 
 export const faIR: Localization = getGridLocalization(faIRGrid, faIRCore);

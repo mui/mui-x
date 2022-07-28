@@ -30,7 +30,7 @@ The community isn't contributing improvements as fast as the problems deserved t
 We are using a commercial license to forward the development of the most advanced features, where the MIT model can't sustain it.
 A feature should only be commercial if it has no great MIT alternatives.
 
-Find more details [on the docs](https://mui.com/x/advanced-components/#licenses).
+Find more details [in the docs](https://mui.com/x/introduction/licensing/).
 
 - [DataGrid](https://mui.com/components/data-grid/), published under `@mui/x-data-grid`, MIT licensed.
 - [DataGridPro](https://mui.com/components/data-grid/#commercial-version), published under `@mui/x-data-grid-pro`, commercially licensed.
@@ -39,8 +39,8 @@ Find more details [on the docs](https://mui.com/x/advanced-components/#licenses)
 ## Questions
 
 For _how-to_ questions and other non-issues,
-please use [StackOverflow](https://stackoverflow.com/questions/tagged/mui) instead of GitHub issues.
-There is a StackOverflow tag called "mui" that you can use to tag your questions.
+please use [Stack Overflow](https://stackoverflow.com/questions/tagged/mui) instead of GitHub issues.
+There is a Stack Overflow tag called "mui" that you can use to tag your questions.
 
 ## Bugs or feature request
 

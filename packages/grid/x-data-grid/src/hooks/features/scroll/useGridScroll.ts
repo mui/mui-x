@@ -15,6 +15,7 @@ import { GridScrollParams } from '../../../models/params/gridScrollParams';
 import { GridScrollApi } from '../../../models/api/gridScrollApi';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { gridVisibleSortedRowEntriesSelector } from '../filter/gridFilterSelector';
+import { gridClasses } from '../../../constants/gridClasses';
 
 // Logic copied from https://www.w3.org/TR/wai-aria-practices/examples/listbox/js/listbox.js
 // Similar to https://developer.mozilla.org/en-US/docs/Web/API/Element/scrollIntoView
@@ -111,8 +112,15 @@ export const useGridScroll = (
           ? rowsMeta.positions[elementIndex + 1] - rowsMeta.positions[elementIndex]
           : rowsMeta.currentPageTotalHeight - rowsMeta.positions[elementIndex];
 
+        const topPinnedRowsHeight =
+          windowRef.current!.querySelector(`.${gridClasses['pinnedRows--top']}`)?.clientHeight || 0;
+        const bottomPinnedRowsHeight =
+          windowRef.current!.querySelector(`.${gridClasses['pinnedRows--bottom']}`)?.clientHeight ||
+          0;
+
         scrollCoordinates.top = scrollIntoView({
-          clientHeight: windowRef.current!.clientHeight,
+          clientHeight:
+            windowRef.current!.clientHeight - topPinnedRowsHeight - bottomPinnedRowsHeight,
           scrollTop: windowRef.current!.scrollTop,
           offsetHeight: targetOffsetHeight,
           offsetTop: rowsMeta.positions[elementIndex],

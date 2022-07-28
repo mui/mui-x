@@ -177,6 +177,11 @@ DataGridRaw.propTypes = {
    */
   disableExtendRowFullWidth: PropTypes.bool,
   /**
+   * If `true`, modification to a cell will not be discarded if the mode is changed from "edit" to "view" while processing props.
+   * @default false
+   */
+  disableIgnoreModificationsIfProcessingProps: PropTypes.bool,
+  /**
    * If `true`, the selection on click on a row or cell is disabled.
    * @default false
    */

@@ -27,6 +27,7 @@
     "disableColumnSelector": { "type": { "name": "bool" } },
     "disableDensitySelector": { "type": { "name": "bool" } },
     "disableExtendRowFullWidth": { "type": { "name": "bool" } },
+    "disableIgnoreModificationsIfProcessingProps": { "type": { "name": "bool" } },
     "disableSelectionOnClick": { "type": { "name": "bool" } },
     "disableVirtualization": { "type": { "name": "bool" } },
     "editMode": {
@@ -259,6 +260,11 @@
   "styles": {
     "classes": [
       "actionsCell",
+      "aggregationColumnHeader",
+      "aggregationColumnHeader--alignLeft",
+      "aggregationColumnHeader--alignCenter",
+      "aggregationColumnHeader--alignRight",
+      "aggregationColumnHeaderLabel",
       "autoHeight",
       "booleanCell",
       "cell--editable",
@@ -305,6 +311,7 @@
       "detailPanels",
       "detailPanelToggleCell",
       "detailPanelToggleCell--expanded",
+      "footerCell",
       "panel",
       "panelHeader",
       "panelWrapper",
@@ -365,7 +372,11 @@
       "treeDataGroupingCell",
       "treeDataGroupingCellToggle",
       "groupingCriteriaCell",
-      "groupingCriteriaCellToggle"
+      "groupingCriteriaCellToggle",
+      "pinnedRows",
+      "pinnedRows--top",
+      "pinnedRows--bottom",
+      "pinnedRowsRenderZone"
     ],
     "globalClasses": {},
     "name": "MuiDataGrid"
