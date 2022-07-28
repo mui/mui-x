@@ -6,6 +6,8 @@ title: Data Grid - Row definition
 
 <p class="description">Define your rows.</p>
 
+## Feeding data
+
 The rows can be defined with the `rows` prop, which expects an array of objects.
 
 :::warning
