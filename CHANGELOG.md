@@ -13,18 +13,21 @@ We'd like to offer a big thanks to the 6 contributors who made this release poss
 
   Premium users can now aggregate data in the grid.
   Extract information like sum, average, count, and others with a couple of clicks.
+  
+  <img src="https://user-images.githubusercontent.com/45398769/181478185-142f87b0-c8de-4585-b381-cf4fdc62d99f.gif" width="600">
 
-  ![modify aggregation](https://user-images.githubusercontent.com/45398769/181478185-142f87b0-c8de-4585-b381-cf4fdc62d99f.gif)
-
-  To enable the feature, add `experimentalFeatures={{ aggregation: true }}`.
+  To enable this feature, add `experimentalFeatures={{ aggregation: true }}`.
   Aggregation functions are customizable and they combine well with row grouping.
   See the [documentation](https://mui.com/x/react-data-grid/aggregation/) to explore everything it has to offer.
 
 - 🚀 Introduce row pinning (#4863) @cherniavskii
 
-  Pro users can now [pin rows](https://mui.com/x/react-data-grid/row-pinning/) on top or bottom of the grid.
+  Pro users can now pin rows on top or bottom of the grid.
+
+  <img src="https://user-images.githubusercontent.com/45398769/181592995-8d35974e-ac54-43f3-bb9f-12522a198814.gif" width="700">
+
   To do so, enable the feature with `experimentalFeatures={{ rowPinning: true }}` and provide the pinned rows data to the `pinnedRows` prop.
-  For more details see the [documentation](https://mui.com/x/react-data-grid/row-pinning/).
+  For more details, see the [documentation](https://mui.com/x/react-data-grid/row-pinning/).
 
 - 🌍 Add simplified Chinese (zh-CN) locale to pickers (#5584) @gamecss
 - 📚 Documentation improvements
@@ -48,7 +51,7 @@ We'd like to offer a big thanks to the 6 contributors who made this release poss
 
 ### Docs
 
-- [docs] Split Rows doc page (#5195) @flaviendelangle
+- [docs] Split docs page about rows (#5195) @flaviendelangle
 - [docs] Add warning clarifications (#5399) @alexfauquette
 - [docs] Correct slot CSS classes for Pro and Premium components (#5452) @alexfauquette
 - [docs] Fix internal link to `valueParser` (#5450) @alexfauquette
