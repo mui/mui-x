@@ -11,7 +11,7 @@ import { isDeepEqual } from '../../../utils/utils';
 import { GridStateInitializer } from '../../utils/useGridInitializeState';
 import { useGridSelector } from '../../utils/useGridSelector';
 import { gridVisibleColumnDefinitionsSelector } from '../columns';
-import { unwrapGroupingColumnModel } from '../columns/useGridColumnGrouping';
+import { unwrapGroupingColumnModel } from '../columnGrouping/useGridColumnGrouping';
 
 export const COMPACT_DENSITY_FACTOR = 0.7;
 export const COMFORTABLE_DENSITY_FACTOR = 1.3;

@@ -48,8 +48,8 @@ import { useGridColumnSpanning } from '../hooks/features/columns/useGridColumnSp
 import {
   useGridColumnGrouping,
   columnGroupsStateInitializer,
-} from '../hooks/features/columns/useGridColumnGrouping';
-import { useGridColumnGroupingPreProcessors } from '../hooks/features/columns/useGridColumnGroupingPreProcessors';
+} from '../hooks/features/columnGrouping/useGridColumnGrouping';
+import { useGridColumnGroupingPreProcessors } from '../hooks/features/columnGrouping/useGridColumnGroupingPreProcessors';
 
 export const useDataGridComponent = (props: DataGridProcessedProps) => {
   const apiRef = useGridInitialization<GridApiCommunity>(undefined, props);

@@ -1,4 +1,4 @@
-import { GridColumnGroupLookup } from '@mui/x-data-grid/hooks/features/columns/gridColumnsInterfaces';
+import { GridColumnGroupLookup } from '../../hooks/features/columnGrouping/gridColumnGroupsInterfaces';
 import { GridColumnGroup } from '../gridColumnGrouping';
 
 /**

@@ -7,8 +7,9 @@ import {
   GridColumnNode,
   isLeaf,
 } from '../../../models/gridColumnGrouping';
-import { gridColumnGroupsLookupSelector, gridColumnLookupSelector } from './gridColumnsSelector';
-import { GridColumnGroupLookup } from './gridColumnsInterfaces';
+import { gridColumnGroupsLookupSelector } from './gridColumnGroupsSelector';
+import { gridColumnLookupSelector } from '../columns/gridColumnsSelector'
+import { GridColumnGroupLookup } from './gridColumnGroupsInterfaces';
 import { GridColumnGroupingApi } from '../../../models/api/gridColumnGroupingApi';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { GridStateColDef, GridColDef } from '../../../models/colDef';

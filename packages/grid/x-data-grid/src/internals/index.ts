@@ -21,8 +21,8 @@ export { useGridColumnSpanning } from '../hooks/features/columns/useGridColumnSp
 export {
   useGridColumnGrouping,
   columnGroupsStateInitializer,
-} from '../hooks/features/columns/useGridColumnGrouping';
-export { useGridColumnGroupingPreProcessors } from '../hooks/features/columns/useGridColumnGroupingPreProcessors';
+} from '../hooks/features/columnGrouping/useGridColumnGrouping';
+export { useGridColumnGroupingPreProcessors } from '../hooks/features/columnGrouping/useGridColumnGroupingPreProcessors';
 export type {
   GridColumnRawLookup,
   GridColumnsRawState,
