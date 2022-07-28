@@ -31,9 +31,9 @@ const pinnedRows: GridPinnedRowsProp = {
 <DataGridPro pinnedRows={pinnedRows} />;
 ```
 
-The data format for pinned rows is the same as for the `rows` prop (see [Feeding data](/x/react-data-grid/rows/#feeding-data)).
+The data format for pinned rows is the same as for the `rows` prop (see [Feeding data](/x/react-data-grid/row-definition/#feeding-data)).
 
-Pinned rows data should also meet [Row identifier](/x/react-data-grid/rows/#row-identifier) requirements.
+Pinned rows data should also meet [Row identifier](/x/react-data-grid/row-definition/#row-identifier) requirements.
 
 {{"demo": "RowPinning.js", "disableAd": true, "bg": "inline"}}
 
