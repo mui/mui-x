@@ -22,9 +22,9 @@ We'd like to offer a big thanks to the 5 contributors who made this release poss
 
 - 🚀 Row pinning (#4863) @cherniavskii
 
-  Pro users can now [pin rows](https://mui.com/x/react-data-grid/rows/#row-pinning) on top or bottom of the grid.
+  Pro users can now [pin rows](https://mui.com/x/react-data-grid/row-pinning/) on top or bottom of the grid.
   To do so, enable the feature with `experimentalFeatures={{ rowPinning: true }}` and provide the pinned rows data to the `pinnedRows` prop.
-  For more details see the [documentation](https://mui.com/x/react-data-grid/rows/#row-pinning).
+  For more details see the [documentation](https://mui.com/x/react-data-grid/row-pinning/).
 
 - 🌍 Add simplified Chinese (zh-CN) locale to pickers (#5584) @gamecss
 - 📚 Documentation improvements
