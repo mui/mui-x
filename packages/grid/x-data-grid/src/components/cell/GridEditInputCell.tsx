@@ -133,20 +133,20 @@ GridEditInputCell.propTypes = {
    * GridApi that let you manipulate the grid.
    * @deprecated Use the `apiRef` returned by `useGridApiContext` or `useGridApiRef` (only available in `@mui/x-data-grid-pro`)
    */
-  api: PropTypes.any.isRequired,
+  api: PropTypes.any,
   /**
    * The mode of the cell.
    */
-  cellMode: PropTypes.oneOf(['edit', 'view']).isRequired,
+  cellMode: PropTypes.oneOf(['edit', 'view']),
   /**
    * The column of the row that the current cell belongs to.
    */
-  colDef: PropTypes.object.isRequired,
+  colDef: PropTypes.object,
   debounceMs: PropTypes.number,
   /**
    * The column field of the cell that triggered the event.
    */
-  field: PropTypes.string.isRequired,
+  field: PropTypes.string,
   /**
    * The cell value formatted with the column valueFormatter.
    */
@@ -158,15 +158,15 @@ GridEditInputCell.propTypes = {
    * @returns {any} The cell value.
    * @deprecated Use `params.row` to directly access the fields you want instead.
    */
-  getValue: PropTypes.func.isRequired,
+  getValue: PropTypes.func,
   /**
    * If true, the cell is the active element.
    */
-  hasFocus: PropTypes.bool.isRequired,
+  hasFocus: PropTypes.bool,
   /**
    * The grid row id.
    */
-  id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+  id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   /**
    * If true, the cell is editable.
    */
@@ -183,15 +183,15 @@ GridEditInputCell.propTypes = {
   /**
    * The row model of the row that the current cell belongs to.
    */
-  row: PropTypes.object.isRequired,
+  row: PropTypes.object,
   /**
    * The node of the row that the current cell belongs to.
    */
-  rowNode: PropTypes.object.isRequired,
+  rowNode: PropTypes.object,
   /**
    * the tabIndex value.
    */
-  tabIndex: PropTypes.oneOf([-1, 0]).isRequired,
+  tabIndex: PropTypes.oneOf([-1, 0]),
   /**
    * The cell value, but if the column has valueGetter, use getValue.
    */
