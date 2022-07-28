@@ -4,7 +4,7 @@ import {
   demos,
   docs,
   demoComponents,
-} from 'docsx/data/data-grid/row-dimensions/row-dimensions.md?@mui/markdown';
+} from 'docsx/data/data-grid/row-height/row-height.md?@mui/markdown';
 
 export default function Page() {
   return <MarkdownDocs demos={demos} docs={docs} demoComponents={demoComponents} />;

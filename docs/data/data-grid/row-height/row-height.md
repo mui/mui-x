@@ -1,10 +1,10 @@
 ---
-title: Data Grid - Row dimensions
+title: Data Grid - Row height
 ---
 
-# Data grid - Row dimensions
+# Data grid - Row height
 
-<p class="description">Customize the dimensions of your rows.</p>
+<p class="description">Customize the height of your rows.</p>
 
 ## Static row height
 
