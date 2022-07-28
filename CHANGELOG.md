@@ -15,6 +15,17 @@ We'd like to offer a big thanks to the 5 contributors who made this release poss
   To do so, enable the feature with `experimentalFeatures={{ rowPinning: true }}` and provide the row to pin with the `pinnedRows` prop.
   For more details see the [documentation](https://mui.com/x/react-data-grid/rows/#row-pinning).
 
+- 🎁 Make aggregation public (#5592) @cherniavskii
+
+  Premium users can now add aggregated data in the grid.
+  Your user will be able to compute the average, sum, min, and other data with a single click.
+
+  ![modify aggregation](https://user-images.githubusercontent.com/45398769/181478185-142f87b0-c8de-4585-b381-cf4fdc62d99f.gif)
+
+  To enable the feature, add `experimentalFeatures={{ rowPinning: true }}`.
+  Aggregation function can be customized, and interact with row aggregation.
+  See the [documentation](https://mui.com/x/react-data-grid/aggregation/) to explore all the customization options.
+
 - 🌍 Add simplified Chinese (zh-CN) locale to pickers (#5584) @gamecss
 - 📚 Documentation improvements
 
