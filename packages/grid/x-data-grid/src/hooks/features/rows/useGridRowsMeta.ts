@@ -5,7 +5,7 @@ import { GridRowsMetaApi } from '../../../models/api/gridRowsMetaApi';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { useGridVisibleRows } from '../../utils/useGridVisibleRows';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
-import { GridRowId } from '../../../models/gridRows';
+import { GridRowEntry, GridRowId } from '../../../models/gridRows';
 import { useGridSelector } from '../../utils/useGridSelector';
 import {
   gridDensityRowHeightSelector,
@@ -16,6 +16,7 @@ import { gridPaginationSelector } from '../pagination/gridPaginationSelector';
 import { gridSortingStateSelector } from '../sorting/gridSortingSelector';
 import { GridStateInitializer } from '../../utils/useGridInitializeState';
 import { useGridRegisterPipeApplier } from '../../core/pipeProcessing';
+import { gridPinnedRowsSelector } from './gridRowsSelector';
 
 export const rowsMetaStateInitializer: GridStateInitializer = (state) => ({
   ...state,
@@ -55,6 +56,8 @@ export const useGridRowsMeta = (
   const sortingState = useGridSelector(apiRef, gridSortingStateSelector);
   const currentPage = useGridVisibleRows(apiRef, props);
 
+  const pinnedRows = useGridSelector(apiRef, gridPinnedRowsSelector);
+
   const hydrateRowsMeta = React.useCallback(() => {
     hasRowWithAutoHeight.current = false;
 
@@ -63,10 +66,7 @@ export const useGridRowsMeta = (
       apiRef.current.instanceId,
     );
 
-    const positions: number[] = [];
-    const currentPageTotalHeight = currentPage.rows.reduce((acc, row) => {
-      positions.push(acc);
-
+    const calculateRowProcessedSizes = (row: GridRowEntry) => {
       if (!rowsHeightLookup.current[row.id]) {
         rowsHeightLookup.current[row.id] = {
           sizes: { base: rowHeightFromDensity },
@@ -135,9 +135,26 @@ export const useGridRowsMeta = (
 
       rowsHeightLookup.current[row.id].sizes = processedSizes;
 
+      return processedSizes;
+    };
+
+    const positions: number[] = [];
+    const currentPageTotalHeight = currentPage.rows.reduce((acc, row) => {
+      positions.push(acc);
+
+      const processedSizes = calculateRowProcessedSizes(row);
+
       const finalRowHeight = Object.values(processedSizes).reduce((acc2, value) => acc2 + value, 0);
       return acc + finalRowHeight;
     }, 0);
+
+    pinnedRows?.top?.forEach((row) => {
+      calculateRowProcessedSizes(row);
+    });
+
+    pinnedRows?.bottom?.forEach((row) => {
+      calculateRowProcessedSizes(row);
+    });
 
     apiRef.current.setState((state) => {
       return {
@@ -162,6 +179,7 @@ export const useGridRowsMeta = (
     getRowHeightProp,
     getRowSpacing,
     getEstimatedRowHeight,
+    pinnedRows,
   ]);
 
   const getRowHeight = React.useCallback<GridRowsMetaApi['unstable_getRowHeight']>(

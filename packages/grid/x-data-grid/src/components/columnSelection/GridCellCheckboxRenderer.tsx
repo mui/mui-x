@@ -87,12 +87,19 @@ const GridCellCheckboxForwardRef = React.forwardRef<HTMLInputElement, GridRender
       [apiRef, props],
     );
 
-    const isSelectable =
-      !rootProps.isRowSelectable || rootProps.isRowSelectable(apiRef.current.getRowParams(id));
+    if (rowNode.position === 'footer') {
+      return null;
+    }
+
+    const isSelectable = apiRef.current.isRowSelectable(id);
 
     const label = apiRef.current.getLocaleText(
       isChecked ? 'checkboxSelectionUnselectRow' : 'checkboxSelectionSelectRow',
     );
+
+    if (rowNode.isPinned) {
+      return null;
+    }
 
     return (
       <rootProps.components.BaseCheckbox

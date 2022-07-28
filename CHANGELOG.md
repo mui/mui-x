@@ -3,6 +3,99 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 5.14.0
+
+_Jul 21, 2022_
+
+We'd like to offer a big thanks to the 10 contributors who made this release possible. Here are some highlights ✨:
+
+- 🧪 Export `GridBooleanCell` component from data grid (#5537) @cliedeman
+- ⚙️ Improve accessibility of the Export menu (#5486) @nogalpaulina
+- 🌍 Improvements to different locales
+- 📚 Documentation improvements
+- 🐞 Bugfixes
+
+### `@mui/x-data-grid@5.14.0` / `@mui/x-data-grid-pro@5.14.0` / `@mui/x-data-grid-premium@5.14.0`
+
+#### Changes
+
+- [DataGrid] Add generics to `GridPreProcessEditCellProps` (#5510) @YunosukeY
+- [DataGrid] Avoid inconsistent state export (#5390) @flaviendelangle
+- [DataGrid] Export `GridBooleanCell` component (#5537) @cliedeman
+- [DataGrid] Fix `date`/`dateTime` edit input font size to match view mode (#5304) @cherniavskii
+- [DataGrid] Fix loading overlay position (#5558) @DanailH
+- [DataGrid] Improve accessibility of the Export menu in the toolbar (#5486) @nogalpaulina
+- [DataGridPremium] Implement Aggregation - not publicly released (#4208) @flaviendelangle
+- [DataGridPremium] Fix crash when exporting all columns to Excel (#5425) @cherniavskii
+- [l10n] Add Traditional Chinese (zh-TW) locale (#5498) @happyincent
+
+### `@mui/x-date-pickers@v5.0.0-beta.2` / `@mui/x-date-picker-pro@5.0.0-beta.2`
+
+#### Changes
+
+- [l10n] Add Norwegian (nb-NO) locale (#5475) @elkebab
+
+### Docs
+
+- [docs] New page presenting the `apiRef` (#5273) @flaviendelangle
+- [docs] Remove blank line @oliviertassinari
+
+### Core
+
+- [core] Add missing comments on zh-TW translation (#5559) @flaviendelangle
+- [core] Polish on the bug issue template (#5525) @oliviertassinari
+- [test] Add more tests related to `isPrintableKey` (#5458) @mnajdova
+
+## 5.13.1
+
+_Jul 15, 2022_
+
+We'd like to offer a big thanks to the 13 contributors who made this release possible. Here are some highlights ✨:
+
+- ✏️ Enter edit mode when pasting in a cell with Ctrl+V (Cmd+V on macOS) (#5405) @alexfauquette
+- 🌍 Many improvements to the locales
+- 📚 Documentation improvements
+- 🐞 Bugfixes
+
+### `@mui/x-data-grid@v5.13.1` / `@mui/x-data-grid-pro@v5.13.1` / `@mui/x-data-grid-premium@v5.13.1`
+
+#### Changes
+
+- [DataGrid] Fix blank space when using dynamic row height with pagination (#5315) @m4theushw
+- [DataGrid] Start editing with uppercase letter and Ctrl+V (#5405) @alexfauquette
+- [DataGrid] Fix some filters being removed from filter model on filter panel open (#5403) @cherniavskii
+- [DataGridPro] Improve pinned column headers accessibility (#5370) @cherniavskii
+- [l10n] Improve Dutch (nl-NL) locale (#5464) @developenguin
+- [l10n] Improve French (fr-FR) locale (#3211) (#5420) @Zenoo
+- [l10n] Improve German (de-DE) locale (#5448) @sebastianfrey
+- [l10n] Improve Brazilian Portuguese (pt-BR) locale (#5394) @andrepxa
+- [l10n] Improve Romanian (ro-RO) locale (#5449) @rolule
+
+### `@mui/x-date-pickers@v5.0.0-beta.1` / `@mui/x-date-picker-pro@5.0.0-beta.1`
+
+#### Changes
+
+- [pickers] Add Italian (it-IT) locale (#5467) @felixh10r
+- [pickers] Add Spanish (es-ES) locale (#5468) @felixh10r
+- [pickers] Improve French (fr-FR) locale (#5446) @Zenoo
+- [pickers] Improve German (de-DE) locale (#5447) @sebastianfrey
+
+### Docs
+
+- [docs] Fix typo in the sorting page (#5431) @JosephMarinier
+- [docs] Fix description for "Striped rows" example (#5432) @lindapaiste
+- [docs] Make a clear difference between the license and license key (#5316) @oliviertassinari
+- [docs] Update pickers README files (#5456) @cherniavskii
+- [docs] Clarify the scope of support for MUI X (#5423) @joserodolfofreitas
+
+### Core
+
+- [core] Add technical support link to \_redirects (#5428) @joserodolfofreitas
+- [core] Improve GitHub bug reproduction template (#5067) @joserodolfofreitas
+- [core] Include playground pages in tsconfig (#5367) @cherniavskii
+- [core] Sort keys like in material-ui @oliviertassinari
+- [test] Wait for flags to load on regression tests (#5473) @m4theushw
+
 ## 5.13.0
 
 _Jul 7, 2022_
@@ -1416,7 +1509,7 @@ A big thanks to the 5 contributors who made this release possible. Here are some
 - [core] Fix `yarn prettier` script (#3292) @oliviertassinari
 - [core] Improve tests for Tree Data (#3366) @flaviendelangle
 - [core] Never import directly from the `__modules__` folder in the `x-data-grid-generator` package (#3379) @flaviendelangle
-- [core] Transition to a new StackOverflow tag (#3308) @oliviertassinari
+- [core] Transition to a new Stack Overflow tag (#3308) @oliviertassinari
 - [core] Update monorepo (#3370) @flaviendelangle
 - [core] Use pre-processors for sorting and filtering (#3318) @flaviendelangle
 - [test] Replace `useFakeTimers` (#3323) @m4theushw
