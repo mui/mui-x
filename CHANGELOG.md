@@ -7,7 +7,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 _Jul 28, 2022_
 
-We'd like to offer a big thanks to the 5 contributors who made this release possible. Here are some highlights ✨:
+We'd like to offer a big thanks to the 6 contributors who made this release possible. Here are some highlights ✨:
 
 - 🎁 Aggregation (#5592) @flaviendelangle
 
@@ -48,6 +48,7 @@ We'd like to offer a big thanks to the 5 contributors who made this release poss
 
 ### Docs
 
+- [docs] Split Rows doc page (#5195) @flaviendelangle
 - [docs] Add warning clarifications (#5399) @alexfauquette
 - [docs] Correct slot CSS classes for Pro and Premium components (#5452) @alexfauquette
 - [docs] Fix internal link to `valueParser` (#5450) @alexfauquette
