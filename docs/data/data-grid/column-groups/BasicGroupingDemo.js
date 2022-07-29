@@ -56,7 +56,7 @@ const columnGroupingModel = [
 
 export default function BasicGroupingDemo() {
   return (
-    <div style={{ marginTop: '20px', height: 400, width: '100%' }}>
+    <div style={{ height: 400, width: '100%' }}>
       <DataGridPro
         experimentalFeatures={{ columnGrouping: true }}
         rows={rows}

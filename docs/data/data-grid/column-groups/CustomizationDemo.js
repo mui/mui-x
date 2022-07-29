@@ -85,7 +85,7 @@ const columnGroupingModel = [
     children: [{ field: 'id' }],
   },
   {
-    groupId: 'perso',
+    groupId: 'character',
     description: 'Information about the character',
     headerName: 'Character',
     renderHeaderGroup: (params) => (
@@ -104,7 +104,7 @@ const columnGroupingModel = [
 
 export default function CustomizationDemo() {
   return (
-    <div style={{ marginTop: '20px', height: 400, width: '100%' }}>
+    <div style={{ height: 400, width: '100%' }}>
       <DataGridPro
         rows={rows}
         columns={columns}

@@ -13,7 +13,7 @@ Grouping columns allows you to have multiple levels of columns in your header an
 You can define the column grouping structure by providing the `columnGroupingModel` prop to the grid.
 This prop receives an array of column groups.
 
-A column group is defined by at least two attributes:
+A column group is defined by at least two properties:
 
 - `groupId`: a string used to identify the group
 - `children`: an array containing the children of the group
@@ -28,23 +28,13 @@ A column can only be associated with one group.
 :::
 
 ```jsx
-/*
-The grouping model of
-- internal
-    * id
-- perso
-    - naming
-        * last name
-        * first name
-    * age
-*/
 columnGroupingModel={[
     {
         groupId: "internal",
         children: [{ field: "id" }]
     },
     {
-        groupId: "perso",
+        groupId: "character",
         children: [
             {
                 groupId: "naming",

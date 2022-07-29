@@ -48,6 +48,7 @@ const rows = [
 interface HeaderWithIconProps extends GridColumnGroupHeaderParams {
   icon: React.ReactNode;
 }
+
 const HeaderWithIconRoot = styled('div')(({ theme }) => ({
   overflow: 'hidden',
   display: 'flex',
@@ -58,6 +59,7 @@ const HeaderWithIconRoot = styled('div')(({ theme }) => ({
     marginRight: theme.spacing(0.5),
   },
 }));
+
 const HeaderWithIcon = (props: HeaderWithIconProps) => {
   const { icon, ...params } = props;
 
@@ -67,6 +69,7 @@ const HeaderWithIcon = (props: HeaderWithIconProps) => {
     </HeaderWithIconRoot>
   );
 };
+
 const columnGroupingModel: GridColumnGroupingModel = [
   {
     groupId: 'internal_data',
@@ -78,7 +81,7 @@ const columnGroupingModel: GridColumnGroupingModel = [
     children: [{ field: 'id' }],
   },
   {
-    groupId: 'perso',
+    groupId: 'character',
     description: 'Information about the character',
     headerName: 'Character',
     renderHeaderGroup: (params) => (
@@ -96,7 +99,7 @@ const columnGroupingModel: GridColumnGroupingModel = [
 ];
 export default function CustomizationDemo() {
   return (
-    <div style={{ marginTop: '20px', height: 400, width: '100%' }}>
+    <div style={{ height: 400, width: '100%' }}>
       <DataGridPro
         rows={rows}
         columns={columns}

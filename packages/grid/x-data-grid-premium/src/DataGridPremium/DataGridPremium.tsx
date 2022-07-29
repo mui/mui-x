@@ -304,6 +304,7 @@ DataGridPremiumRaw.propTypes = {
    */
   experimentalFeatures: PropTypes.shape({
     aggregation: PropTypes.bool,
+    columnGrouping: PropTypes.bool,
     newEditingApi: PropTypes.bool,
     preventCommitWhileValidating: PropTypes.bool,
     rowPinning: PropTypes.bool,

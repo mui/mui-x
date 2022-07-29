@@ -54,7 +54,7 @@ const columnGroupingModel: GridColumnGroupingModel = [
 ];
 export default function BreakingGroupDemo() {
   return (
-    <div style={{ marginTop: '20px', height: 400, width: '100%' }}>
+    <div style={{ height: 400, width: '100%' }}>
       <DataGridPro
         rows={rows}
         columns={columns}

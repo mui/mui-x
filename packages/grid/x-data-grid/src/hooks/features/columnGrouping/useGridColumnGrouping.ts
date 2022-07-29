@@ -172,7 +172,7 @@ export const useGridColumnGrouping = (
       return;
     }
     if (!props.experimentalFeatures?.columnGrouping) {
-      return
+      return;
     }
     const groupLookup = createGroupLookup(props.columnGroupingModel ?? []);
     apiRef.current.setState((state) => ({
