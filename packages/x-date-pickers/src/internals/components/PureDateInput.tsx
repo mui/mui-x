@@ -140,6 +140,10 @@ export const PureDateInput = React.forwardRef(function PureDateInput<TInputDate,
     () => ({
       ...InputProps,
       readOnly: true,
+      // explicit `z-index` on input makes sure the input is above label in the stacking context
+      // `filled` and `outlined` variants of `InputLabel` having explicit `z-index: 1` forces an override here
+      // this solves a bug uncovered only in Mobile (touch input) Chrome
+      sx: { zIndex: 1 },
     }),
     [InputProps],
   );
