@@ -39,12 +39,12 @@ const rows = [
 
 const columnGroupingModel: GridColumnGroupingModel = [
   {
-    groupId: 'internal_data',
+    groupId: 'internal data',
     description: '',
     children: [{ field: 'id' }],
   },
   {
-    groupId: 'perso',
+    groupId: 'character',
     children: [
       {
         groupId: 'naming',
@@ -58,10 +58,9 @@ export default function BasicGroupingDemo() {
   return (
     <div style={{ marginTop: '20px', height: 400, width: '100%' }}>
       <DataGridPro
+        experimentalFeatures={{ columnGrouping: true }}
         rows={rows}
         columns={columns}
-        pageSize={5}
-        rowsPerPageOptions={[5]}
         checkboxSelection
         disableSelectionOnClick
         columnGroupingModel={columnGroupingModel}

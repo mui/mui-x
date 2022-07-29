@@ -42,6 +42,10 @@ export interface GridExperimentalFeatures {
    */
   newEditingApi: boolean;
   /**
+   * Enables the column grouping.
+   */
+  columnGrouping: boolean;
+  /**
    * Emits a warning if the cell receives focus without also syncing the focus state.
    * Only works if NODE_ENV=test.
    */
@@ -53,8 +57,8 @@ export interface GridExperimentalFeatures {
  */
 export type DataGridProps<R extends GridValidRowModel = any> = Omit<
   Partial<DataGridPropsWithDefaultValues> &
-    DataGridPropsWithComplexDefaultValueBeforeProcessing &
-    DataGridPropsWithoutDefaultValue<R>,
+  DataGridPropsWithComplexDefaultValueBeforeProcessing &
+  DataGridPropsWithoutDefaultValue<R>,
   DataGridForcedPropsKey
 > & {
   pagination?: true;
@@ -65,8 +69,8 @@ export type DataGridProps<R extends GridValidRowModel = any> = Omit<
  */
 export interface DataGridProcessedProps<R extends GridValidRowModel = any>
   extends DataGridPropsWithDefaultValues,
-    DataGridPropsWithComplexDefaultValueAfterProcessing,
-    DataGridPropsWithoutDefaultValue<R> {}
+  DataGridPropsWithComplexDefaultValueAfterProcessing,
+  DataGridPropsWithoutDefaultValue<R> { }
 
 /**
  * The props of the `DataGrid` component after the pre-processing phase that the user should not be able to override.

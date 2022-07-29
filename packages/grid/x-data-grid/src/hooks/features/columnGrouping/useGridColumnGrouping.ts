@@ -130,7 +130,7 @@ export const columnGroupsStateInitializer: GridStateInitializer<
  */
 export const useGridColumnGrouping = (
   apiRef: React.MutableRefObject<GridApiCommunity>,
-  props: Pick<DataGridProcessedProps, 'columnGroupingModel'>,
+  props: Pick<DataGridProcessedProps, 'columnGroupingModel' | 'experimentalFeatures'>,
 ) => {
   /**
    * API METHODS
@@ -171,11 +171,13 @@ export const useGridColumnGrouping = (
       isFirstRender.current = false;
       return;
     }
-
+    if (!props.experimentalFeatures?.columnGrouping) {
+      return
+    }
     const groupLookup = createGroupLookup(props.columnGroupingModel ?? []);
     apiRef.current.setState((state) => ({
       ...state,
       columnGrouping: { ...state.columnGrouping, lookup: groupLookup },
     }));
-  }, [apiRef, props.columnGroupingModel]);
+  }, [apiRef, props.columnGroupingModel, props.experimentalFeatures?.columnGrouping]);
 };

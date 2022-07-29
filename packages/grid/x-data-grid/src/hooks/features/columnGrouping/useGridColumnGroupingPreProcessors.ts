@@ -11,7 +11,7 @@ export const useGridColumnGroupingPreProcessors = (
 ) => {
   const addHeaderGroups = React.useCallback<GridPipeProcessor<'hydrateColumns'>>(
     (columnsState) => {
-      if (!props.columnGroupingModel) {
+      if (!props.experimentalFeatures?.columnGrouping || !props.columnGroupingModel) {
         return columnsState;
       }
       const unwrappedGroupingModel = unwrapGroupingColumnModel(props.columnGroupingModel);
@@ -34,7 +34,7 @@ export const useGridColumnGroupingPreProcessors = (
       });
       return columnsState;
     },
-    [props.columnGroupingModel],
+    [props.columnGroupingModel, props.experimentalFeatures?.columnGrouping],
   );
 
   useGridRegisterPipeProcessor(apiRef, 'hydrateColumns', addHeaderGroups);

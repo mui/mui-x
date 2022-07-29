@@ -439,7 +439,7 @@ describe('<DataGridPro /> - Columns reorder', () => {
       const Test = () => {
         return (
           <div style={{ width: 300, height: 300 }}>
-            <DataGridPro rows={rows} columns={columns} columnGroupingModel={columnGroupingModel} />
+            <DataGridPro experimentalFeatures={{ columnGrouping: true }} rows={rows} columns={columns} columnGroupingModel={columnGroupingModel} />
           </div>
         );
       };
@@ -471,7 +471,7 @@ describe('<DataGridPro /> - Columns reorder', () => {
       const Test = () => {
         return (
           <div style={{ width: 300, height: 300 }}>
-            <DataGridPro rows={rows} columns={columns} columnGroupingModel={columnGroupingModel} />
+            <DataGridPro experimentalFeatures={{ columnGrouping: true }} rows={rows} columns={columns} columnGroupingModel={columnGroupingModel} />
           </div>
         );
       };
@@ -507,7 +507,7 @@ describe('<DataGridPro /> - Columns reorder', () => {
       const Test = () => {
         return (
           <div style={{ width: 300, height: 300 }}>
-            <DataGridPro rows={rows} columns={columns} columnGroupingModel={columnGroupingModel} />
+            <DataGridPro experimentalFeatures={{ columnGrouping: true }} rows={rows} columns={columns} columnGroupingModel={columnGroupingModel} />
           </div>
         );
       };
@@ -561,7 +561,7 @@ describe('<DataGridPro /> - Columns reorder', () => {
       const Test = () => {
         return (
           <div style={{ width: 300, height: 300 }}>
-            <DataGridPro rows={rows} columns={columns} columnGroupingModel={columnGroupingModel} />
+            <DataGridPro experimentalFeatures={{ columnGrouping: true }} rows={rows} columns={columns} columnGroupingModel={columnGroupingModel} />
           </div>
         );
       };
@@ -617,7 +617,7 @@ describe('<DataGridPro /> - Columns reorder', () => {
       const Test = () => {
         return (
           <div style={{ width: 300, height: 300 }}>
-            <DataGridPro rows={rows} columns={columns} columnGroupingModel={columnGroupingModel} />
+            <DataGridPro experimentalFeatures={{ columnGrouping: true }} rows={rows} columns={columns} columnGroupingModel={columnGroupingModel} />
           </div>
         );
       };
@@ -661,7 +661,7 @@ describe('<DataGridPro /> - Columns reorder', () => {
       ]);
     });
 
-    it('should block dragging outside ot a group even at deeper level', () => {
+    it('should block dragging outside of a group even at deeper level', () => {
       const rows = [{ id: 0 }];
       const columns = [{ field: 'col1' }, { field: 'col2' }, { field: 'col3' }];
 
@@ -682,7 +682,7 @@ describe('<DataGridPro /> - Columns reorder', () => {
       const Test = () => {
         return (
           <div style={{ width: 300, height: 300 }}>
-            <DataGridPro rows={rows} columns={columns} columnGroupingModel={columnGroupingModel} />
+            <DataGridPro experimentalFeatures={{ columnGrouping: true }} rows={rows} columns={columns} columnGroupingModel={columnGroupingModel} />
           </div>
         );
       };

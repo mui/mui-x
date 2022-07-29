@@ -100,8 +100,7 @@ export default function CustomizationDemo() {
       <DataGridPro
         rows={rows}
         columns={columns}
-        pageSize={5}
-        rowsPerPageOptions={[5]}
+        experimentalFeatures={{ columnGrouping: true }}
         checkboxSelection
         disableSelectionOnClick
         columnGroupingModel={columnGroupingModel}
