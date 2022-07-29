@@ -64,7 +64,7 @@ Please contact us at [sales@mui.com](mailto:sales@mui.com?subject=My%20upgrade%2
 
 ## Evaluation (trial) licenses
 
-In accordance with our [End User License Agreement](https://mui.com/store/legal/mui-x-eula/#evaluation-trial-licenses), you can use the Pro and Premium components without a commercial license for 30 days without restrictions.
+In accordance with our [End User License Agreement](https://mui.com/legal/mui-x-eula/#evaluation-trial-licenses), you can use the Pro and Premium components without a commercial license for 30 days without restrictions.
 You don't need to contact us to use these components for evaluation purposes.
 
 You will need to purchase a commercial license in order to remove the watermarks and console warnings, and after the 30-day evaluation period.
@@ -88,7 +88,7 @@ The team working on 'AppA' uses the new library and so does the team working on 
 There are two front-end developers on the UI development team.
 Company 'B' purchases ten licenses.
 
-This is [the relevant clause in the EULA.](https://mui.com/store/legal/mui-x-eula/#required-quantity-of-licenses)
+This is [the relevant clause in the EULA.](https://mui.com/legal/mui-x-eula/#required-quantity-of-licenses)
 
 ## License key installation
 
@@ -133,7 +133,7 @@ export default MyApp;
 
 ### What is the key for?
 
-The license key is meant to help you [stay compliant](https://mui.com/store/legal/mui-x-eula/#license-key) with the EULA of the commercial licenses.
+The license key is meant to help you [stay compliant](https://mui.com/legal/mui-x-eula/#license-key) with the EULA of the commercial licenses.
 While each developer needs to be licensed, the license key is set once per project, where the components are used.
 
 ### Security
