@@ -62,7 +62,7 @@ function GridEditSingleSelectCell(props: GridEditSingleSelectCellProps) {
     isProcessingProps,
     error,
     onValueChange,
-    initialOpen = rootProps.editMode === 'cell',
+    initialOpen = rootProps.editMode === GridEditModes.Cell,
     ...other
   } = props;
 
@@ -225,9 +225,6 @@ GridEditSingleSelectCell.propTypes = {
    * The grid row id.
    */
   id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
-  /**
-   * If true, the select opens by default.
-   */
   initialOpen: PropTypes.bool,
   /**
    * If true, the cell is editable.
