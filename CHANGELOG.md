@@ -5,7 +5,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ## 5.15.0
 
-_Jul 28, 2022_
+_Jul 29, 2022_
 
 We'd like to offer a big thanks to the 6 contributors who made this release possible. Here are some highlights ✨:
 
@@ -14,7 +14,7 @@ We'd like to offer a big thanks to the 6 contributors who made this release poss
   Premium users can now aggregate data in the grid.
   Extract information like sum, average, count, and others with a couple of clicks.
   
-  <img src="https://user-images.githubusercontent.com/45398769/181478185-142f87b0-c8de-4585-b381-cf4fdc62d99f.gif" width="600">
+  https://user-images.githubusercontent.com/45398769/181581503-77cc412e-9d9e-4de1-8bc3-c3bccc54cdaa.mp4
 
   To enable this feature, add `experimentalFeatures={{ aggregation: true }}`.
   Aggregation functions are customizable and they combine well with row grouping.
@@ -24,7 +24,7 @@ We'd like to offer a big thanks to the 6 contributors who made this release poss
 
   Pro users can now pin rows on top or bottom of the grid.
 
-  <img src="https://user-images.githubusercontent.com/45398769/181592995-8d35974e-ac54-43f3-bb9f-12522a198814.gif" width="700">
+  https://user-images.githubusercontent.com/45398769/181581493-56c733a3-6dd5-4546-bf8d-3f2dff72b14a.mp4
 
   To do so, enable the feature with `experimentalFeatures={{ rowPinning: true }}` and provide the pinned rows data to the `pinnedRows` prop.
   For more details, see the [documentation](https://mui.com/x/react-data-grid/row-pinning/).
