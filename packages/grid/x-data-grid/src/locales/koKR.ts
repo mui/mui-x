@@ -34,9 +34,9 @@ const koKRGrid: Partial<GridLocaleText> = {
   // Export selector toolbar button text
   toolbarExport: '내보내기',
   toolbarExportLabel: '내보내기',
-  toolbarExportCSV: 'CSV다운로드',
+  toolbarExportCSV: 'CSV로 내보내기',
   toolbarExportPrint: '프린트',
-  // toolbarExportExcel: 'Download as Excel',
+  toolbarExportExcel: 'Excel로 내보내기',
 
   // Columns panel text
   columnsPanelTextFieldLabel: '열 검색',
