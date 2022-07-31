@@ -104,10 +104,10 @@ const koKRGrid: Partial<GridLocaleText> = {
 
   // Checkbox selection text
   checkboxSelectionHeaderName: '선택',
-  // checkboxSelectionSelectAllRows: 'Select all rows',
-  // checkboxSelectionUnselectAllRows: 'Unselect all rows',
-  // checkboxSelectionSelectRow: 'Select row',
-  // checkboxSelectionUnselectRow: 'Unselect row',
+  checkboxSelectionSelectAllRows: '모든 행 선택',
+  checkboxSelectionUnselectAllRows: '모든 행 선택 해제',
+  checkboxSelectionSelectRow: '행 선택',
+  checkboxSelectionUnselectRow: '행 선택 해제',
 
   // Boolean cell text
   booleanCellTrueLabel: '참',
