@@ -127,9 +127,9 @@ const koKRGrid: Partial<GridLocaleText> = {
   treeDataCollapse: '하위노드 접기',
 
   // Grouping columns
-  // groupingColumnHeaderName: 'Group',
-  // groupColumn: name => `Group by ${name}`,
-  // unGroupColumn: name => `Stop grouping by ${name}`,
+  groupingColumnHeaderName: '그룹',
+  groupColumn: name => `${name} 값으로 그룹 생성`,
+  unGroupColumn: name => `${name} 값으로 그룹 해제`,
 
   // Master/detail
   // detailPanelToggle: 'Detail panel toggle',
