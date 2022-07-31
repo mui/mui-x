@@ -137,7 +137,7 @@ const koKRGrid: Partial<GridLocaleText> = {
   collapseDetailPanel: '접기',
 
   // Row reordering text
-  // rowReorderingHeaderName: 'Row reordering',
+  rowReorderingHeaderName: '행 재배치',
 
   // Aggregation
   // aggregationMenuItemHeader: 'Aggregation',
