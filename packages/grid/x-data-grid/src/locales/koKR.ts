@@ -117,9 +117,9 @@ const koKRGrid: Partial<GridLocaleText> = {
   actionsCellMore: '더보기',
 
   // Column pinning text
-  // pinToLeft: 'Pin to left',
-  // pinToRight: 'Pin to right',
-  // unpin: 'Unpin',
+  pinToLeft: '왼쪽에 고정',
+  pinToRight: '오른쪽에 고정',
+  unpin: '고정 해제',
 
   // Tree Data
   treeDataGroupingHeaderName: '그룹',
