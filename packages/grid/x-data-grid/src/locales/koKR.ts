@@ -132,9 +132,9 @@ const koKRGrid: Partial<GridLocaleText> = {
   unGroupColumn: name => `${name} 값으로 그룹 해제`,
 
   // Master/detail
-  // detailPanelToggle: 'Detail panel toggle',
-  // expandDetailPanel: 'Expand',
-  // collapseDetailPanel: 'Collapse',
+  detailPanelToggle: '상세 패널 토글',
+  expandDetailPanel: '열기',
+  collapseDetailPanel: '접기',
 
   // Row reordering text
   // rowReorderingHeaderName: 'Row reordering',
