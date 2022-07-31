@@ -22,13 +22,13 @@ let experimentalEnabled = false;
 
 if (
   typeof process !== 'undefined' &&
-  process.env.GRID_EXPERIMENTAL_ENABLED !== undefined &&
+  process.env?.GRID_EXPERIMENTAL_ENABLED !== undefined &&
   localStorageAvailable() &&
   window.localStorage.getItem('GRID_EXPERIMENTAL_ENABLED')
 ) {
   experimentalEnabled = window.localStorage.getItem('GRID_EXPERIMENTAL_ENABLED') === 'true';
 } else if (typeof process !== 'undefined') {
-  experimentalEnabled = process.env.GRID_EXPERIMENTAL_ENABLED === 'true';
+  experimentalEnabled = process.env?.GRID_EXPERIMENTAL_ENABLED === 'true';
 }
 
 export const GRID_EXPERIMENTAL_ENABLED = experimentalEnabled as boolean;
