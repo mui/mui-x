@@ -9,8 +9,8 @@ const koKRGrid: Partial<GridLocaleText> = {
   errorOverlayDefaultLabel: '오류가 발생했습니다.',
 
   // Density selector toolbar button text
-  toolbarDensity: '라인 간격',
-  toolbarDensityLabel: '라인 간격',
+  toolbarDensity: '행 간격',
+  toolbarDensityLabel: '행 간격',
   toolbarDensityCompact: '좁게',
   toolbarDensityStandard: '기본',
   toolbarDensityComfortable: '넓게',
