@@ -134,11 +134,11 @@ export const useGridColumnReorder = (
         if (limitingGroupId !== null) {
           // verify this indexToForbid will be linked to the limiting group. Otherwise forbid it
           let allowIndex = false;
-          if (leftIndex >= 0 && visibleColumns[leftIndex].groupPath?.includes(limitingGroupId!)) {
+          if (leftIndex >= 0 && visibleColumns[leftIndex].groupPath?.includes(limitingGroupId)) {
             allowIndex = true;
           } else if (
             rightIndex < visibleColumns.length &&
-            visibleColumns[rightIndex].groupPath?.includes(limitingGroupId!)
+            visibleColumns[rightIndex].groupPath?.includes(limitingGroupId)
           ) {
             allowIndex = true;
           }
