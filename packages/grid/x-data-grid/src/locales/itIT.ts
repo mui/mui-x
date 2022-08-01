@@ -138,11 +138,19 @@ const itITGrid: Partial<GridLocaleText> = {
 
   // Master/detail
   detailPanelToggle: 'Abilita pannello dettagli',
-   expandDetailPanel: 'Espandi',
-   collapseDetailPanel: 'Comprimi',
+  expandDetailPanel: 'Espandi',
+  collapseDetailPanel: 'Comprimi',
 
-  //Row reordering text
+  // Row reordering text
   rowReorderingHeaderName: 'Riordinamento righe',
+
+  // Aggregation
+  // aggregationMenuItemHeader: 'Aggregation',
+  // aggregationFunctionLabelSum: 'sum',
+  // aggregationFunctionLabelAvg: 'avg',
+  // aggregationFunctionLabelMin: 'min',
+  // aggregationFunctionLabelMax: 'max',
+  // aggregationFunctionLabelSize: 'size',
 };
 
 export const itIT: Localization = getGridLocalization(itITGrid, itITCore);

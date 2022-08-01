@@ -28,7 +28,7 @@ const roROGrid: Partial<GridLocaleText> = {
     count !== 1 ? `${count} filtru activ` : `${count} filtru activ`,
 
   // Quick filter toolbar field
-  toolbarQuickFilterPlaceholder: 'Căutare...',
+  toolbarQuickFilterPlaceholder: 'Căutare…',
   toolbarQuickFilterLabel: 'Căutare',
   toolbarQuickFilterDeleteIconLabel: 'Ștergere',
 
@@ -143,6 +143,14 @@ const roROGrid: Partial<GridLocaleText> = {
 
   // Row reordering text
   rowReorderingHeaderName: 'Reordonare rânduri',
+
+  // Aggregation
+  // aggregationMenuItemHeader: 'Aggregation',
+  // aggregationFunctionLabelSum: 'sum',
+  // aggregationFunctionLabelAvg: 'avg',
+  // aggregationFunctionLabelMin: 'min',
+  // aggregationFunctionLabelMax: 'max',
+  // aggregationFunctionLabelSize: 'size',
 };
 
 export const roRO: Localization = getGridLocalization(roROGrid, roROCore);

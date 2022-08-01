@@ -28,7 +28,7 @@ const nlNLGrid: Partial<GridLocaleText> = {
     count > 1 ? `${count} actieve filters` : `${count} filter actief`,
 
   // Quick filter toolbar field
-  toolbarQuickFilterPlaceholder: 'Zoeken...',
+  toolbarQuickFilterPlaceholder: 'Zoeken…',
   toolbarQuickFilterLabel: 'Zoeken',
   toolbarQuickFilterDeleteIconLabel: 'Wissen',
 
@@ -143,6 +143,14 @@ const nlNLGrid: Partial<GridLocaleText> = {
 
   // Row reordering text
   rowReorderingHeaderName: 'Rijen hersorteren',
+
+  // Aggregation
+  // aggregationMenuItemHeader: 'Aggregation',
+  // aggregationFunctionLabelSum: 'sum',
+  // aggregationFunctionLabelAvg: 'avg',
+  // aggregationFunctionLabelMin: 'min',
+  // aggregationFunctionLabelMax: 'max',
+  // aggregationFunctionLabelSize: 'size',
 };
 
 export const nlNL: Localization = getGridLocalization(nlNLGrid, nlNLCore);

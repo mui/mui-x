@@ -583,6 +583,32 @@ describe('<DataGridPro /> - Cell Editing', () => {
       });
     });
 
+    describe('by pressing a special character', () => {
+      it(`should publish 'cellEditStart' with reason=printableKeyDown`, () => {
+        render(<TestCase />);
+        const listener = spy();
+        apiRef.current.subscribeEvent('cellEditStart', listener);
+        const cell = getCell(0, 1);
+        fireEvent.mouseUp(cell);
+        fireEvent.click(cell);
+        fireEvent.keyDown(cell, { key: '$' });
+        expect(listener.lastCall.args[0].reason).to.equal('printableKeyDown');
+      });
+    });
+
+    describe('by pressing a number', () => {
+      it(`should publish 'cellEditStart' with reason=printableKeyDown`, () => {
+        render(<TestCase />);
+        const listener = spy();
+        apiRef.current.subscribeEvent('cellEditStart', listener);
+        const cell = getCell(0, 1);
+        fireEvent.mouseUp(cell);
+        fireEvent.click(cell);
+        fireEvent.keyDown(cell, { key: '1' });
+        expect(listener.lastCall.args[0].reason).to.equal('printableKeyDown');
+      });
+    });
+
     describe('by pressing Enter', () => {
       it(`should publish 'cellEditStart' with reason=enterKeyDown`, () => {
         render(<TestCase />);
@@ -830,6 +856,19 @@ describe('<DataGridPro /> - Cell Editing', () => {
         fireEvent.click(getCell(1, 1));
         expect(spiedStopCellEditMode.callCount).to.equal(1);
         expect(spiedStopCellEditMode.lastCall.args[0].ignoreModifications).to.equal(true);
+      });
+
+      it('should call stopCellEditMode with ignoreModifications=false if the props are being processed and disableIgnoreModificationsIfProcessingProps is true', async () => {
+        columnProps.preProcessEditCellProps = ({ props }: GridPreProcessEditCellProps) =>
+          new Promise((resolve) => resolve(props));
+        render(<TestCase disableIgnoreModificationsIfProcessingProps />);
+        const spiedStopCellEditMode = spy(apiRef.current, 'stopCellEditMode');
+        fireEvent.doubleClick(getCell(0, 1));
+        apiRef.current.setEditCellValue({ id: 0, field: 'currencyPair', value: 'USD GBP' });
+        fireEvent.click(getCell(1, 1));
+        await Promise.resolve();
+        expect(spiedStopCellEditMode.callCount).to.equal(1);
+        expect(spiedStopCellEditMode.lastCall.args[0].ignoreModifications).to.equal(false);
       });
     });
 

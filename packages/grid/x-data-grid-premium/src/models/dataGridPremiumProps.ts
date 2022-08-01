@@ -1,5 +1,9 @@
 import * as React from 'react';
-import { GridCallbackDetails, GridValidRowModel } from '@mui/x-data-grid-pro';
+import {
+  GridCallbackDetails,
+  GridValidRowModel,
+  GridRowTreeNodeConfig,
+} from '@mui/x-data-grid-pro';
 import {
   GridExperimentalProFeatures,
   DataGridProPropsWithDefaultValue,
@@ -8,10 +12,20 @@ import {
   DataGridPropsWithComplexDefaultValueBeforeProcessing,
 } from '@mui/x-data-grid-pro/internals';
 import type { GridRowGroupingModel } from '../hooks/features/rowGrouping';
+import type {
+  GridAggregationModel,
+  GridAggregationFunction,
+  GridAggregationPosition,
+} from '../hooks/features/aggregation';
 import { GridInitialStatePremium } from './gridStatePremium';
 import { GridApiPremium } from './gridApiPremium';
 
-export interface GridExperimentalPremiumFeatures extends GridExperimentalProFeatures {}
+export interface GridExperimentalPremiumFeatures extends GridExperimentalProFeatures {
+  /**
+   * Enables the aggregation feature.
+   */
+  aggregation: boolean;
+}
 
 /**
  * The props users can give to the `DataGridProProps` component.
@@ -47,6 +61,11 @@ export type DataGridPremiumForcedPropsKey = 'signature';
  */
 export interface DataGridPremiumPropsWithDefaultValue extends DataGridProPropsWithDefaultValue {
   /**
+   * If `true`, aggregation is disabled.
+   * @default false
+   */
+  disableAggregation: boolean;
+  /**
    * If `true`, the row grouping is disabled.
    * @default false
    */
@@ -57,6 +76,27 @@ export interface DataGridPremiumPropsWithDefaultValue extends DataGridProPropsWi
    * @default 'single'
    */
   rowGroupingColumnMode: 'single' | 'multiple';
+  /**
+   * Aggregation functions available on the grid.
+   * @default GRID_AGGREGATION_FUNCTIONS
+   */
+  aggregationFunctions: Record<string, GridAggregationFunction>;
+  /**
+   * Rows used to generate the aggregated value.
+   * If `filtered`, the aggregated values will be generated using only the rows currently passing the filtering process.
+   * If `all`, the aggregated values will be generated using all the rows.
+   * @default "filtered"
+   */
+  aggregationRowsScope: 'filtered' | 'all';
+  /**
+   * Determines the position of an aggregated value.
+   * @param {GridRowTreeNodeConfig | null} groupNode The current group (`null` being the top level group).
+   * @returns {GridAggregationPosition | null} Position of the aggregated value (if `null`, the group will not be aggregated).
+   * @default `(groupNode) => groupNode == null ? 'footer' : 'inline'`
+   */
+  getAggregationPosition: (
+    groupNode: GridRowTreeNodeConfig | null,
+  ) => GridAggregationPosition | null;
 }
 
 export interface DataGridPremiumPropsWithoutDefaultValue<R extends GridValidRowModel = any>
@@ -81,4 +121,14 @@ export interface DataGridPremiumPropsWithoutDefaultValue<R extends GridValidRowM
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onRowGroupingModelChange?: (model: GridRowGroupingModel, details: GridCallbackDetails) => void;
+  /**
+   * Set the aggregation model of the grid.
+   */
+  aggregationModel?: GridAggregationModel;
+  /**
+   * Callback fired when the row grouping model changes.
+   * @param {GridAggregationModel} model The aggregated columns.
+   * @param {GridCallbackDetails} details Additional details for this callback.
+   */
+  onAggregationModelChange?: (model: GridAggregationModel, details: GridCallbackDetails) => void;
 }

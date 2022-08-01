@@ -1,36 +1,44 @@
-import { PickersLocaleText } from "./utils/pickersLocaleTextApi";
-import { getPickersLocalization } from "./utils/getPickersLocalization";
-import { CalendarPickerView } from "../internals/models";
+import { PickersLocaleText } from './utils/pickersLocaleTextApi';
+import { getPickersLocalization } from './utils/getPickersLocalization';
+import { CalendarPickerView } from '../internals/models';
 
-const itITPickers: Partial<PickersLocaleText<any>> = {
+const views = {
+  hours: 'le ore',
+  minutes: 'i minuti',
+  seconds: 'i secondi',
+};
+
+// This object is not Partial<PickersLocaleText> because it is the default values
+
+const itITPickers: PickersLocaleText<any> = {
   // Calendar navigation
-  previousMonth: "Mese precedente",
-  nextMonth: "Mese successivo",
+  previousMonth: 'Mese precedente',
+  nextMonth: 'Mese successivo',
 
   // View navigation
-  openPreviousView: "Apri vista precedente",
-  openNextView: "Apri vista successiva",
+  openPreviousView: 'apri la vista precedente',
+  openNextView: 'apri la vista successiva',
   calendarViewSwitchingButtonAriaLabel: (view: CalendarPickerView) =>
-    view === "year"
-      ? "La vista anno è aperta, apri quella a calendario"
-      : "La vista calendario è aperta, apri quella ad anno",
+    view === 'year'
+      ? "la vista dell'anno è aperta, passare alla vista del calendario"
+      : "la vista dell'calendario è aperta, passare alla vista dell'anno",
 
   // DateRange placeholders
-  start: "Inizio",
-  end: "Fine",
+  start: 'Inizio',
+  end: 'Fine',
 
   // Action bar
-  cancelButtonLabel: "Annula",
-  clearButtonLabel: "Resetta",
-  okButtonLabel: "OK",
-  todayButtonLabel: "Oggi",
+  cancelButtonLabel: 'Cancellare',
+  clearButtonLabel: 'Sgomberare',
+  okButtonLabel: 'OK',
+  todayButtonLabel: 'Oggi',
 
   // Clock labels
   clockLabelText: (view, time, adapter) =>
-    `Seleziona ${view}. ${
+    `Seleziona ${views[view]}. ${
       time === null
-        ? "Nessun orario selezionato"
-        : `L'orario selezionato è ${adapter.format(time, "fullTime")}`
+        ? 'Nessun orario selezionato'
+        : `L'ora selezionata è ${adapter.format(time, 'fullTime')}`
     }`,
   hoursClockNumberText: (hours) => `${hours} ore`,
   minutesClockNumberText: (minutes) => `${minutes} minuti`,
@@ -39,16 +47,16 @@ const itITPickers: Partial<PickersLocaleText<any>> = {
   // Open picker labels
   openDatePickerDialogue: (rawValue, utils) =>
     rawValue && utils.isValid(utils.date(rawValue))
-      ? `Scegli la data, la data selezionata è${utils.format(utils.date(rawValue)!, "fullDate")}`
-      : "Scegli la data",
+      ? `Scegli la data, la data selezionata è ${utils.format(utils.date(rawValue)!, 'fullDate')}`
+      : 'Scegli la data',
   openTimePickerDialogue: (rawValue, utils) =>
     rawValue && utils.isValid(utils.date(rawValue))
-      ? `Scegli l'ora, l'ora selezionata è ${utils.format(utils.date(rawValue)!, "fullTime")}`
+      ? `Scegli l'ora, l'ora selezionata è ${utils.format(utils.date(rawValue)!, 'fullTime')}`
       : "Scegli l'ora",
 
   // Table labels
-  timeTableLabel: "Seleziona ora",
-  dateTableLabel: "Seleziona data",
+  timeTableLabel: 'scegli un ora',
+  dateTableLabel: 'scegli una data',
 };
 
 export const itIT = getPickersLocalization(itITPickers);
