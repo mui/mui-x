@@ -13,6 +13,7 @@ import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { GridGenericColumnHeaderItem } from './GridGenericColumnHeaderItem';
+import { GridColumnHeaderEventLookup } from '../../models/events';
 
 interface GridColumnHeaderItemProps {
   colIndex: number;
@@ -119,6 +120,55 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
 
   const classes = useUtilityClasses(ownerState);
 
+  const publish = React.useCallback(
+    (eventName: keyof GridColumnHeaderEventLookup) => (event: React.SyntheticEvent) => {
+      // Ignore portal
+      // See https://github.com/mui/mui-x/issues/1721
+      if (!event.currentTarget.contains(event.target as Element)) {
+        return;
+      }
+      apiRef.current.publishEvent(
+        eventName,
+        apiRef.current.getColumnHeaderParams(column.field),
+        event as any,
+      );
+    },
+    [apiRef, column.field],
+  );
+
+  const mouseEventsHandlers = React.useMemo(
+    () => ({
+      onClick: publish('columnHeaderClick'),
+      onDoubleClick: publish('columnHeaderDoubleClick'),
+      onMouseOver: publish('columnHeaderOver'), // TODO remove as it's not used
+      onMouseOut: publish('columnHeaderOut'), // TODO remove as it's not used
+      onMouseEnter: publish('columnHeaderEnter'), // TODO remove as it's not used
+      onMouseLeave: publish('columnHeaderLeave'), // TODO remove as it's not used
+      onKeyDown: publish('columnHeaderKeyDown'),
+      onFocus: publish('columnHeaderFocus'),
+      onBlur: publish('columnHeaderBlur'),
+    }),
+    [publish],
+  );
+
+  const draggableEventHandlers = React.useMemo(
+    () =>
+      isDraggable
+        ? {
+            onDragStart: publish('columnHeaderDragStart'),
+            onDragEnter: publish('columnHeaderDragEnter'),
+            onDragOver: publish('columnHeaderDragOver'),
+            onDragEnd: publish('columnHeaderDragEnd'),
+          }
+        : {},
+    [isDraggable, publish],
+  );
+
+  const columnHeaderSeparatorProps = React.useMemo(
+    () => ({ onMouseDown: publish('columnSeparatorMouseDown') }),
+    [publish],
+  );
+
   React.useEffect(() => {
     if (!showColumnMenuIcon) {
       setShowColumnMenuIcon(columnMenuOpen);
@@ -215,6 +265,9 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
       resizable={!rootProps.disableColumnResize && !!column.resizable}
       data-field={column.field}
       columnMenu={columnMenu}
+      draggableContainerProps={draggableEventHandlers}
+      columnHeaderSeparatorProps={columnHeaderSeparatorProps}
+      {...mouseEventsHandlers}
     />
   );
 }

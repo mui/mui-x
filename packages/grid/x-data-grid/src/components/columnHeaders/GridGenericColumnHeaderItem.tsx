@@ -1,7 +1,6 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import { useForkRef } from '@mui/material/utils';
-import { GridColumnHeaderEventLookup } from '../../models/events';
 import { GridStateColDef } from '../../models/colDef/gridColDef';
 import { GridSortDirection } from '../../models/gridSortModel';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
@@ -38,6 +37,8 @@ interface GridGenericColumnHeaderItemProps
   columnMenu?: React.ReactNode;
   columnTitleIconButtons?: React.ReactNode;
   label: string;
+  draggableContainerProps?: Partial<React.HTMLProps<HTMLDivElement>>;
+  columnHeaderSeparatorProps?: Partial<GridColumnHeaderSeparatorProps>;
 }
 
 const GridGenericColumnHeaderItem = React.forwardRef(function GridGenericColumnHeaderItem(
@@ -65,6 +66,8 @@ const GridGenericColumnHeaderItem = React.forwardRef(function GridGenericColumnH
     headerClassName,
     label,
     resizable,
+    draggableContainerProps,
+    columnHeaderSeparatorProps,
     ...other
   } = props;
 
@@ -74,42 +77,6 @@ const GridGenericColumnHeaderItem = React.forwardRef(function GridGenericColumnH
   const [showColumnMenuIcon, setShowColumnMenuIcon] = React.useState(columnMenuOpen);
 
   const handleRef = useForkRef(headerCellRef, ref);
-  const publish = React.useCallback(
-    (eventName: keyof GridColumnHeaderEventLookup) => (event: React.SyntheticEvent) => {
-      // Ignore portal
-      // See https://github.com/mui/mui-x/issues/1721
-      if (!event.currentTarget.contains(event.target as Element)) {
-        return;
-      }
-      apiRef.current.publishEvent(
-        eventName,
-        apiRef.current.getColumnHeaderParams(elementId),
-        event as any,
-      );
-    },
-    [apiRef, elementId],
-  );
-
-  const mouseEventsHandlers = {
-    onClick: publish('columnHeaderClick'),
-    onDoubleClick: publish('columnHeaderDoubleClick'),
-    onMouseOver: publish('columnHeaderOver'), // TODO remove as it's not used
-    onMouseOut: publish('columnHeaderOut'), // TODO remove as it's not used
-    onMouseEnter: publish('columnHeaderEnter'), // TODO remove as it's not used
-    onMouseLeave: publish('columnHeaderLeave'), // TODO remove as it's not used
-    onKeyDown: publish('columnHeaderKeyDown'),
-    onFocus: publish('columnHeaderFocus'),
-    onBlur: publish('columnHeaderBlur'),
-  };
-
-  const draggableEventHandlers = isDraggable
-    ? {
-        onDragStart: publish('columnHeaderDragStart'),
-        onDragEnter: publish('columnHeaderDragEnter'),
-        onDragOver: publish('columnHeaderDragOver'),
-        onDragEnd: publish('columnHeaderDragEnd'),
-      }
-    : null;
 
   let ariaSort: 'ascending' | 'descending' | 'none' = 'none';
   if (sortDirection != null) {
@@ -147,13 +114,12 @@ const GridGenericColumnHeaderItem = React.forwardRef(function GridGenericColumnH
       aria-colindex={colIndex + 1}
       aria-sort={ariaSort}
       aria-label={headerComponent == null ? label : undefined}
-      {...mouseEventsHandlers}
       {...other}
     >
       <div
         className={classes.draggableContainer}
         draggable={isDraggable}
-        {...draggableEventHandlers}
+        {...draggableContainerProps}
       >
         <div className={classes.titleContainer}>
           <div className={classes.titleContainerContent}>
@@ -171,8 +137,8 @@ const GridGenericColumnHeaderItem = React.forwardRef(function GridGenericColumnH
         resizable={!rootProps.disableColumnResize && !!resizable}
         resizing={isResizing}
         height={height}
-        onMouseDown={publish('columnSeparatorMouseDown')}
         side={separatorSide}
+        {...columnHeaderSeparatorProps}
       />
       {columnMenu}
     </div>
