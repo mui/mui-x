@@ -24,10 +24,14 @@ if (reactStrictMode) {
   console.log(`Using React.StrictMode.`);
 }
 
+const isDeployment = process.env.NETLIFY === 'true';
+
 module.exports = {
   eslint: {
     ignoreDuringBuilds: true,
   },
+  // Avoid conflicts with the other Next.js apps hosted under https://mui.com/
+  assetPrefix: isDeployment ? '/x' : '',
   typescript: {
     // Motivated by https://github.com/zeit/next.js/issues/7687
     ignoreDevErrors: true,

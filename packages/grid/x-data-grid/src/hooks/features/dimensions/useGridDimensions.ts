@@ -20,6 +20,7 @@ import { gridDensityHeaderHeightSelector, gridDensityRowHeightSelector } from '.
 import { useGridSelector } from '../../utils';
 import { getVisibleRows } from '../../utils/useGridVisibleRows';
 import { gridRowsMetaSelector } from '../rows/gridRowsMetaSelector';
+import { calculatePinnedRowsHeight } from '../rows/gridRowsUtils';
 
 const isTestEnvironment = process.env.NODE_ENV === 'test';
 
@@ -67,6 +68,7 @@ export function useGridDimensions(
   const updateGridDimensionsRef = React.useCallback(() => {
     const rootElement = apiRef.current.rootElementRef?.current;
     const columnsTotalWidth = gridColumnsTotalWidthSelector(apiRef);
+    const pinnedRowsHeight = calculatePinnedRowsHeight(apiRef);
 
     if (!rootDimensionsRef.current) {
       return;
@@ -110,7 +112,10 @@ export function useGridDimensions(
 
       const scrollInformation = hasScroll({
         content: { width: Math.round(columnsTotalWidth), height: rowsMeta.currentPageTotalHeight },
-        container: viewportOuterSize,
+        container: {
+          width: viewportOuterSize.width,
+          height: viewportOuterSize.height - pinnedRowsHeight.top - pinnedRowsHeight.bottom,
+        },
         scrollBarSize,
       });
 
