@@ -1,4 +1,4 @@
-import { GridAlignment, GridColDef } from './colDef';
+import { GridColDef } from './colDef';
 
 export interface GridLeafColumn {
   field: GridColDef['field'];
@@ -34,7 +34,8 @@ export interface GridColumnGroupHeaderParams
   isLastColumn: boolean;
 }
 
-export type GridColumnGroup = {
+export interface GridColumnGroup
+  extends Pick<GridColDef, 'headerName' | 'description' | 'headerAlign'> {
   /**
    * A unique string identifying the group.
    */
@@ -44,28 +45,16 @@ export type GridColumnGroup = {
    */
   children: GridColumnNode[];
   /**
-   * The name to display in the group header.
-   */
-  headerName?: string;
-  /**
-   * The description displayed in the header tooltip.
-   */
-  description?: string;
-  /**
    * If `true` allows to reorder columns outside of the group.
    * @default false
    */
   freeReordering?: boolean;
-  /**
-   * Header cell element alignment.
-   */
-  headerAlign?: GridAlignment;
   /**
    * Allows to render a component in the column group header cell.
    * @param {GridColumnGroupHeaderParams} params Object containing parameters for the renderer.
    * @returns {React.ReactNode} The element to be rendered.
    */
   renderHeaderGroup?: (params: GridColumnGroupHeaderParams) => React.ReactNode;
-};
+}
 
 export type GridColumnGroupingModel = GridColumnGroup[];

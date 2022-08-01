@@ -68,7 +68,7 @@ HeaderWithIcon.propTypes = {
    */
   groupId: PropTypes.string.isRequired,
   /**
-   * The name to display in the group header.
+   * The title of the column rendered in the column header cell.
    */
   headerName: PropTypes.string,
   icon: PropTypes.node,
