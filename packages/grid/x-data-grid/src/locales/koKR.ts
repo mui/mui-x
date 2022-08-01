@@ -128,8 +128,8 @@ const koKRGrid: Partial<GridLocaleText> = {
 
   // Grouping columns
   groupingColumnHeaderName: '그룹',
-  groupColumn: name => `${name} 값으로 그룹 생성`,
-  unGroupColumn: name => `${name} 값으로 그룹 해제`,
+  groupColumn: (name) => `${name} 값으로 그룹 생성`,
+  unGroupColumn: (name) => `${name} 값으로 그룹 해제`,
 
   // Master/detail
   detailPanelToggle: '상세 패널 토글',
