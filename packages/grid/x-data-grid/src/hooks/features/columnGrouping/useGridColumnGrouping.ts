@@ -5,6 +5,7 @@ import { GridStateInitializer } from '../../utils/useGridInitializeState';
 import {
   GridColumnGroupingModel,
   GridColumnNode,
+  GridColumnGroup,
   isLeaf,
 } from '../../../models/gridColumnGrouping';
 import { gridColumnGroupsLookupSelector } from './gridColumnGroupsSelector';
@@ -20,35 +21,37 @@ export function hasGroupPath(
   return (<GridStateColDef>lookupElement).groupPath !== undefined;
 }
 
-type UnwrappedGroupingModel = { [key: string]: string[] };
+type UnwrappedGroupingModel = { [key: GridColDef['field']]: GridColumnGroup['groupId'][] };
 
 // This is the recurrence function that help writing `unwrapGroupingColumnModel()`
 const recurrentUnwrapGroupingColumnModel = (
   columnGroupNode: GridColumnNode,
-  parents: any,
-): UnwrappedGroupingModel => {
+  parents: GridColumnGroup['groupId'][],
+  unwrappedGroupingModelToComplet: UnwrappedGroupingModel,
+): void => {
   if (isLeaf(columnGroupNode)) {
-    return { [columnGroupNode.field]: parents };
+    if (unwrappedGroupingModelToComplet[columnGroupNode.field] !== undefined) {
+      throw new Error(
+        [
+          `MUI: columnGroupingModel contains duplicated field`,
+          `column field ${columnGroupNode.field} occurrs two times in the grouping model:`,
+          `- ${unwrappedGroupingModelToComplet[columnGroupNode.field].join(' > ')}`,
+          `- ${parents.join(' > ')}`,
+        ].join('\n'),
+      );
+    }
+    unwrappedGroupingModelToComplet[columnGroupNode.field] = parents;
+    return;
   }
-  const rep: UnwrappedGroupingModel = {};
+
   const { groupId, children } = columnGroupNode;
   children.forEach((child) => {
-    const unwrappedSubTree = recurrentUnwrapGroupingColumnModel(child, [...parents, groupId]);
-    Object.entries(unwrappedSubTree).forEach(([key, value]) => {
-      if (rep[key] !== undefined) {
-        throw new Error(
-          [
-            `MUI: columnGroupingModel contains duplicated field`,
-            `column field ${key} occurrs two times in the grouping model:`,
-            `- ${rep[key].join(' > ')}`,
-            `- ${value.join(' > ')}`,
-          ].join('\n'),
-        );
-      }
-      rep[key] = value;
-    });
+    recurrentUnwrapGroupingColumnModel(
+      child,
+      [...parents, groupId],
+      unwrappedGroupingModelToComplet,
+    );
   });
-  return rep;
 };
 
 /**
@@ -67,7 +70,8 @@ export const unwrapGroupingColumnModel = (
   const rep: UnwrappedGroupingModel = {};
 
   columnGroupingModel.forEach((columnGroupNode) => {
-    const unwrappedSubTree = recurrentUnwrapGroupingColumnModel(columnGroupNode, []);
+    const unwrappedSubTree: UnwrappedGroupingModel = {};
+    recurrentUnwrapGroupingColumnModel(columnGroupNode, [], unwrappedSubTree);
     Object.entries(unwrappedSubTree).forEach(([key, value]) => {
       if (rep[key] !== undefined) {
         throw new Error(
