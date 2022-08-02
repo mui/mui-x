@@ -71,7 +71,7 @@ You can upgrade the dependency on `@mui/x-data-grid` to the respective package o
 +import { DataGridPro } from '@mui/x-data-grid-pro';
 ```
 
-For more details on how to install the packages, please check our [package installation guide](/x/introduction/installation/).
+For more details on how to install the packages, please check out our [package installation guide](/x/introduction/installation/).
 
 ## Upgrading from Pro to Premium
 
