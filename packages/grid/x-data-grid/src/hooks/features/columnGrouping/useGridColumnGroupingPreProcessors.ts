@@ -11,13 +11,10 @@ export const useGridColumnGroupingPreProcessors = (
 ) => {
   const addHeaderGroups = React.useCallback<GridPipeProcessor<'hydrateColumns'>>(
     (columnsState) => {
-      if (!props.experimentalFeatures?.columnGrouping || !props.columnGroupingModel) {
+      if (!props.experimentalFeatures?.columnGrouping) {
         return columnsState;
       }
       const unwrappedGroupingModel = unwrapGroupingColumnModel(props.columnGroupingModel);
-      if (Object.keys(unwrappedGroupingModel).length === 0) {
-        return columnsState;
-      }
 
       columnsState.all.forEach((field) => {
         const newGroupPath = unwrappedGroupingModel[field] ?? [];
