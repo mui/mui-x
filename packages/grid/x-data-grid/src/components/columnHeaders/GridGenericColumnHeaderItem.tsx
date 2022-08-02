@@ -39,6 +39,7 @@ interface GridGenericColumnHeaderItemProps
   label: string;
   draggableContainerProps?: Partial<React.HTMLProps<HTMLDivElement>>;
   columnHeaderSeparatorProps?: Partial<GridColumnHeaderSeparatorProps>;
+  disableHeaderSeparator?: boolean;
 }
 
 const GridGenericColumnHeaderItem = React.forwardRef(function GridGenericColumnHeaderItem(
@@ -68,6 +69,7 @@ const GridGenericColumnHeaderItem = React.forwardRef(function GridGenericColumnH
     resizable,
     draggableContainerProps,
     columnHeaderSeparatorProps,
+    disableHeaderSeparator,
     ...other
   } = props;
 
@@ -133,13 +135,15 @@ const GridGenericColumnHeaderItem = React.forwardRef(function GridGenericColumnH
         </div>
         {columnMenuIconButton}
       </div>
-      <GridColumnHeaderSeparator
-        resizable={!rootProps.disableColumnResize && !!resizable}
-        resizing={isResizing}
-        height={height}
-        side={separatorSide}
-        {...columnHeaderSeparatorProps}
-      />
+      {!disableHeaderSeparator && (
+        <GridColumnHeaderSeparator
+          resizable={!rootProps.disableColumnResize && !!resizable}
+          resizing={isResizing}
+          height={height}
+          side={separatorSide}
+          {...columnHeaderSeparatorProps}
+        />
+      )}
       {columnMenu}
     </div>
   );

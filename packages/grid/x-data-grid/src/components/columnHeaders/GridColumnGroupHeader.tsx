@@ -23,14 +23,17 @@ interface GridColumnGroupHeaderProps {
 }
 
 type OwnerState = {
+  groupId: GridColumnGroupHeaderProps['groupId'];
   showRightBorder: boolean;
+  showColumnBorder: boolean;
   isDragging: boolean;
   headerAlign?: GridAlignment;
   classes?: DataGridProcessedProps['classes'];
 };
 
 const useUtilityClasses = (ownerState: OwnerState) => {
-  const { classes, headerAlign, isDragging, showRightBorder } = ownerState;
+  const { classes, headerAlign, isDragging, showRightBorder, showColumnBorder, groupId } =
+    ownerState;
 
   const slots = {
     root: [
@@ -40,6 +43,8 @@ const useUtilityClasses = (ownerState: OwnerState) => {
       headerAlign === 'right' && 'columnHeader--alignRight',
       isDragging && 'columnHeader--moving',
       showRightBorder && 'withBorder',
+      showColumnBorder && 'columnHeader--showColumnBorder',
+      groupId === null ? 'columnHeader--emptyGroup' : 'columnHeader--filledGroup',
     ],
     draggableContainer: ['columnHeaderDraggableContainer'],
     titleContainer: ['columnHeaderTitleContainer'],
@@ -98,10 +103,13 @@ function GridColumnGroupHeader(props: GridColumnGroupHeaderProps) {
     ? rootProps.showColumnRightBorder
     : !removeLastBorderRight && !extendRowFullWidth;
 
+  const showColumnBorder = rootProps.showColumnRightBorder;
+
   const ownerState = {
     ...props,
     classes: rootProps.classes,
     showRightBorder,
+    showColumnBorder,
     headerAlign,
     depth,
     isDragging: false,
@@ -134,6 +142,7 @@ function GridColumnGroupHeader(props: GridColumnGroupHeaderProps) {
       label={label}
       aria-colspan={fields.length}
       data-fields={fields.join(' ')}
+      disableHeaderSeparator
     />
   );
 }

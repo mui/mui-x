@@ -146,13 +146,17 @@ export interface GridClasses {
    */
   columnHeaderTitleContainerContent: string;
   /**
-   * Styles applied to the column group header's title excepted buttons.
-   */
-  columnGroupHeaderTitleContainerContent: string;
-  /**
    * Styles applied to the column group header cell if not empty.
    */
-  'columnGroupHeader--withName': string;
+  'columnHeader--filledGroup': string;
+  /**
+   * Styles applied to the empty column group header cell.
+   */
+  'columnHeader--emptyGroup': string;
+  /**
+   * Styles applied to the column group header cell when show column border.
+   */
+  'columnHeader--showColumnBorder': string;
   /**
    * Styles applied to the column headers.
    */
@@ -516,9 +520,9 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'columnHeaderTitle',
   'columnHeaderTitleContainer',
   'columnGroupHeader',
-  'columnGroupHeader--withName',
-  'columnHeaderTitleContainerContent',
-  'columnGroupHeaderTitleContainerContent',
+  'columnHeader--filledGroup',
+  'columnHeader--emptyGroup',
+  'columnHeader--showColumnBorder',
   'columnHeaders',
   'columnHeadersInner',
   'columnHeadersInner--scrollable',

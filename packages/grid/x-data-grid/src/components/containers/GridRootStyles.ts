@@ -99,13 +99,12 @@ export const GridRootStyles = styled('div', {
       {
         borderBottomColor: 'transparent',
       },
-    [`& .${gridClasses.columnHeader}, & .${gridClasses.columnGroupHeader}, & .${gridClasses.cell}`]:
-      {
-        WebkitTapHighlightColor: 'transparent',
-        lineHeight: null,
-        padding: '0 10px',
-        boxSizing: 'border-box',
-      },
+    [`& .${gridClasses.columnHeader}, & .${gridClasses.cell}`]: {
+      WebkitTapHighlightColor: 'transparent',
+      lineHeight: null,
+      padding: '0 10px',
+      boxSizing: 'border-box',
+    },
     [`& .${gridClasses.columnHeader}:focus-within, & .${gridClasses.cell}:focus-within`]: {
       outline: `solid ${alpha(theme.palette.primary.main, 0.5)} 1px`,
       outlineWidth: 1,
@@ -148,21 +147,17 @@ export const GridRootStyles = styled('div', {
       whiteSpace: 'nowrap',
       overflowX: 'hidden',
     },
-    [`& .${gridClasses.columnHeaderTitleContainerContent}`]: {
-      overflow: 'hidden',
-      display: 'flex',
-      alignItems: 'center',
+    [`& .${gridClasses['columnHeader--filledGroup']} .${gridClasses.columnHeaderTitleContainer}`]: {
+      borderBottom: `solid ${borderColor} 1px`,
     },
-    [`& .${gridClasses['columnGroupHeader--withName']} .${gridClasses.columnGroupHeaderTitleContainerContent}`]:
+    [`& .${gridClasses['columnHeader--filledGroup']}.${gridClasses['columnHeader--showColumnBorder']} .${gridClasses.columnHeaderTitleContainer}`]:
+      {
+        borderBottom: `none`,
+      },
+    [`& .${gridClasses['columnHeader--filledGroup']}.${gridClasses['columnHeader--showColumnBorder']}`]:
       {
         borderBottom: `solid ${borderColor} 1px`,
       },
-    [`& .${gridClasses.withBorder} .${gridClasses.columnGroupHeaderTitleContainerContent}`]: {
-      borderBottom: `none`,
-    },
-    [`& .${gridClasses.withBorder}.${gridClasses.columnGroupHeader}`]: {
-      borderBottom: `solid ${borderColor} 1px`,
-    },
     [`& .${gridClasses.sortIcon}, & .${gridClasses.filterIcon}`]: {
       fontSize: 'inherit',
     },
