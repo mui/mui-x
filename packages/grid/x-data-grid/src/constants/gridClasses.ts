@@ -519,6 +519,7 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'columnHeaderDropZone',
   'columnHeaderTitle',
   'columnHeaderTitleContainer',
+  'columnHeaderTitleContainerContent',
   'columnGroupHeader',
   'columnHeader--filledGroup',
   'columnHeader--emptyGroup',
