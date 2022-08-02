@@ -100,7 +100,7 @@
   { "name": "GridColumnApi", "kind": "Interface" },
   { "name": "gridColumnDefinitionsSelector", "kind": "Variable" },
   { "name": "gridColumnFieldsSelector", "kind": "Variable" },
-  { "name": "GridColumnGroup", "kind": "TypeAlias" },
+  { "name": "GridColumnGroup", "kind": "Interface" },
   { "name": "GridColumnGroupHeaderParams", "kind": "Interface" },
   { "name": "GridColumnGroupingModel", "kind": "TypeAlias" },
   { "name": "gridColumnGroupingSelector", "kind": "Variable" },
