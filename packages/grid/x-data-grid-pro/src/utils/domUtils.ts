@@ -11,7 +11,7 @@ export function findHeaderElementFromField(elem: Element, field: string): Elemen
 }
 
 export function findGroupHeaderElementsFromField(elem: Element, field: string): Element[] {
-  return Array.from(elem.querySelectorAll<HTMLDivElement>(`[data-fields~="${field}"]`) ?? []);
+  return Array.from(elem.querySelectorAll<HTMLDivElement>(`[data-fields~="|-${field}-|"]`) ?? []);
 }
 
 export function findGridCellElementsFromCol(col: HTMLElement, api: GridApiPro) {

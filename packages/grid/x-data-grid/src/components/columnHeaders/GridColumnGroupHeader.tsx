@@ -141,7 +141,8 @@ function GridColumnGroupHeader(props: GridColumnGroupHeaderProps) {
       resizable={false}
       label={label}
       aria-colspan={fields.length}
-      data-fields={fields.join(' ')}
+      // The fields are wrapped between |-...-| to avoid confusion between fields "id" and "id2" when using selector data-fields~=
+      data-fields={`|-${fields.join('-|-')}-|`}
       disableHeaderSeparator
     />
   );
