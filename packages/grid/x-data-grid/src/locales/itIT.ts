@@ -28,7 +28,7 @@ const itITGrid: Partial<GridLocaleText> = {
     count > 1 ? `${count} filtri attivi` : `${count} filtro attivo`,
 
   // Quick filter toolbar field
-  toolbarQuickFilterPlaceholder: 'Cerca...',
+  toolbarQuickFilterPlaceholder: 'Cerca…',
   toolbarQuickFilterLabel: 'Cerca',
   toolbarQuickFilterDeleteIconLabel: 'Resetta',
 
