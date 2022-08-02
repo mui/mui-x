@@ -183,6 +183,8 @@ export interface QueryOptions {
   // TODO: implement the behavior liked to following models
   filterModel?: GridFilterModel;
   sortModel?: GridSortModel;
+  firstRowToRender?: number;
+  lastRowToRender?: number;
 }
 
 const DEFAULT_DATASET_OPTIONS: UseDemoDataOptions = {
@@ -273,8 +275,40 @@ export const createFakeServer = (
     // We use queryOptions pointer to be sure that isLoading===true as soon as the options change
     const effectShouldStart = queryOptionsRef.current !== queryOptions;
 
+    const loadServerRowsInterval = (
+      query: Pick<
+        QueryOptions,
+        'filterModel' | 'sortModel' | 'firstRowToRender' | 'lastRowToRender'
+      >,
+      server = serverOptionsWithDefault,
+    ): Promise<FakeServerResponse> => {
+      const { minDelay = 100, maxDelay = 300 } = server;
+
+      if (maxDelay < minDelay) {
+        throw new Error('serverOptions.minDelay is larger than serverOptions.maxDelay ');
+      }
+
+      const delay = Math.random() * (maxDelay - minDelay) + minDelay;
+      const { firstRowToRender, lastRowToRender } = query;
+      let filteredRows = getFilteredRows(rows, query.filterModel, columnsWithDefaultColDef);
+      const rowComparator = getRowComparator(query.sortModel, columnsWithDefaultColDef);
+      filteredRows = [...filteredRows].sort(rowComparator);
+      const totalRowCount = filteredRows.length;
+      const res: FakeServerResponse = {
+        returnedRows: filteredRows.slice(firstRowToRender, lastRowToRender),
+        totalRowCount,
+      };
+
+      return new Promise<FakeServerResponse>((resolve) => {
+        setTimeout(() => {
+          resolve(res);
+        }, delay); // simulate network latency
+      });
+    };
+
     return {
       isLoading: isLoading || effectShouldStart,
+      loadServerRowsInterval,
       ...response,
     };
   };

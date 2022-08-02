@@ -1,8 +1,9 @@
 <DataGridPro
-  {...data}
+  columns={cachedColumns}
+  rows={cachedRows}
   apiRef={apiRef}
   hideFooterPagination
-  rowCount={50}
+  rowCount={ROW_COUNT}
   sortingMode="server"
   filterMode="server"
   rowsLoadingMode="server"

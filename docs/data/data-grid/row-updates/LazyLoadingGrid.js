@@ -1,54 +1,40 @@
 import * as React from 'react';
 import { DataGridPro, useGridApiRef } from '@mui/x-data-grid-pro';
-import {
-  useDemoData,
-  getRealGridData,
-  getCommodityColumns,
-} from '@mui/x-data-grid-generator';
+import { createFakeServer } from '@mui/x-data-grid-generator';
 
-async function sleep(duration) {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve();
-    }, duration);
-  });
-}
-
-const loadServerRows = async (newRowLength) => {
-  const newData = await getRealGridData(newRowLength, getCommodityColumns());
-  // Simulate network throttle
-  await sleep(Math.random() * 100 + 100);
-
-  return newData.rows;
+const ROW_COUNT = 10000;
+const DATASET_OPTION = {
+  dataSet: 'Employee',
+  rowLength: ROW_COUNT,
 };
+
+const { columns, useQuery } = createFakeServer(DATASET_OPTION);
 
 export default function LazyLoadingGrid() {
   const apiRef = useGridApiRef();
-  const { data } = useDemoData({
-    dataSet: 'Commodity',
-    rowLength: 0,
-    maxColumns: 6,
-  });
+  const cachedQuery = React.useMemo(() => ({}), []);
+  const { data, loadServerRowsInterval } = useQuery(cachedQuery);
+  const cachedRows = React.useMemo(() => data.slice(0, 10), [data]);
+  const cachedColumns = React.useMemo(() => columns, []);
 
   const handleFetchRows = async (params) => {
-    const newRowsBatch = await loadServerRows(
-      params.lastRowToRender - params.firstRowToRender,
-    );
+    const newRowsBatch = await loadServerRowsInterval(params);
 
     apiRef.current.unstable_replaceRows(
       params.firstRowToRender,
       params.lastRowToRender,
-      newRowsBatch,
+      newRowsBatch.returnedRows,
     );
   };
 
   return (
     <div style={{ height: 400, width: '100%' }}>
       <DataGridPro
-        {...data}
+        columns={cachedColumns}
+        rows={cachedRows}
         apiRef={apiRef}
         hideFooterPagination
-        rowCount={50}
+        rowCount={ROW_COUNT}
         sortingMode="server"
         filterMode="server"
         rowsLoadingMode="server"
