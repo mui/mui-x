@@ -138,6 +138,8 @@ They include a dependency called `@mui/x-license-pro`, used to validate the lice
 
 If you're upgrading from community, you may want to check the [upgrading](#upgrading-from-community) section.
 
+With a commercial packaged installed, use `LicenseInfo` to set your licence key as in the code snippet below.
+
 ```jsx
 import { LicenseInfo } from '@mui/x-license-pro';
 
