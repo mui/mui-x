@@ -9,10 +9,11 @@ import BasicColumnPinning from '../column-pinning/BasicColumnPinning';
 import ColumnVirtualizationGrid from '../virtualization/ColumnVirtualizationGrid';
 import CursorPaginationGrid from '../pagination/CursorPaginationGrid';
 import ColumnSelectorGrid from '../column-visibility/ColumnSelectorGrid';
-import RowOrderingGrid from '../rows/RowOrderingGrid';
 import TreeDataFullExample from '../tree-data/TreeDataFullExample';
 import RestoreStateInitialState from '../state/RestoreStateInitialState';
 import AggregationRowGrouping from '../aggregation/AggregationRowGrouping';
+import RowPinningWithPagination from '../row-pinning/RowPinningWithPagination';
+import RowOrderingGrid from '../row-ordering/RowOrderingGrid';
 
 export const featuresSet = [
   {
@@ -96,7 +97,7 @@ export const featuresSet = [
     description: 'Pin your rows up or down',
     plan: 'Pro',
     detailPage: '/row-pinning/',
-    demo: <div>Waiting for row pinning branch to merge to master</div>,
+    demo: <RowPinningWithPagination />,
     newBadge: true,
   },
   {
