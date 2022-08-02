@@ -832,7 +832,7 @@ describe('<DataGridPro /> - Edit Components', () => {
       expect(screen.getByRole('checkbox')).toHaveFocus();
     });
 
-    it.only('should call preProcessEditCellProps once if it resolves with an error and preventCommitWhileValidating=true', async () => {
+    it('should call preProcessEditCellProps once if it resolves with an error and preventCommitWhileValidating=true', async () => {
       const preProcessEditCellProps = spy(({ props }) =>
         Promise.resolve({ ...props, error: true }),
       );
