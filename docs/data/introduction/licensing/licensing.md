@@ -64,7 +64,6 @@ If you're using the data grid, the commercial npm packages (`@mui/x-data-grid-pr
 
 You can upgrade the dependency on `@mui/x-data-grid` to the respective package of your plan, and replace all your imports.
 
-
 ```diff
 //diff when upgrading to Pro
 
@@ -72,7 +71,7 @@ You can upgrade the dependency on `@mui/x-data-grid` to the respective package o
 +import { DataGridPro } from '@mui/x-data-grid-pro';
 ```
 
-For more details on how to install the packages, please check our [package installation guide](/x/introduction/installation/).  
+For more details on how to install the packages, please check our [package installation guide](/x/introduction/installation/).
 
 ## Upgrading from Pro to Premium
 
@@ -134,10 +133,10 @@ If this isn't possible, please contact sales@mui.com to request a compatible lic
 
 ### How to install the key
 
-First, make sure you have [any](#plans) of the commercial packages installed. 
+First, make sure you have [any](#plans) of the commercial packages installed.
 They include a dependency called `@mui/x-license-pro`, used to validate the license.
 
-If you're upgrading from community, you may want to check the [upgrading](#upgrading-from-community) section. 
+If you're upgrading from community, you may want to check the [upgrading](#upgrading-from-community) section.
 
 ```jsx
 import { LicenseInfo } from '@mui/x-license-pro';
