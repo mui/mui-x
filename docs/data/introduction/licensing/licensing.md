@@ -56,11 +56,40 @@ Premium package:
 The features exclusive to the Premium version are marked with the <span class="plan-premium"></span> icon throughout the documentation.
 :::
 
+## Upgrading from Community
+
+When you purchase a license for MUI X (Pro or Premium), it will unlock new [packages](#plans) you can use on your project.
+
+If you're using the data grid, the commercial npm packages (`@mui/x-data-grid-pro` and `@mui/x-data-grid-premium`) are a superset of the community.
+
+You can upgrade the dependency on `@mui/x-data-grid` to the respective package of your plan, and replace all your imports.
+
+
+```diff
+//diff when upgrading to Pro
+
+-import { DataGrid } from '@mui/x-data-grid';
++import { DataGridPro } from '@mui/x-data-grid-pro';
+```
+
+For more details on how to install the packages, please check our [package installation guide](/x/introduction/installation/).  
+
 ## Upgrading from Pro to Premium
 
-You can use your Pro license as a credit when purchasing MUI X Premium.
+When upgrading from Pro, you can upgrade the dependency on `@mui/x-data-grid-pro` to `@mui/x-data-grid-premium` and replace all your data grid imports.
+
+```diff
+//diff when upgrading from Pro to Premium
+
+-import { DataGridPro } from '@mui/x-data-grid-pro';
++import { DataGridPremium } from '@mui/x-data-grid-premium';
+```
+
+:::info
+**Note:** You can use your Pro license as a credit when purchasing MUI X Premium.
 We'll provide you with a discount based on the remaining time that your current license is valid.
 Please contact us at [sales@mui.com](mailto:sales@mui.com?subject=My%20upgrade%20discount%20to%20Premium) to upgrade.
+:::
 
 ## Evaluation (trial) licenses
 
@@ -104,6 +133,11 @@ If this isn't possible, please contact sales@mui.com to request a compatible lic
 :::
 
 ### How to install the key
+
+First, make sure you have [any](#plans) of the commercial packages installed. 
+They include a dependency called `@mui/x-license-pro`, used to validate the license.
+
+If you're upgrading from community, you may want to check the [upgrading](#upgrading-from-community) section. 
 
 ```jsx
 import { LicenseInfo } from '@mui/x-license-pro';
