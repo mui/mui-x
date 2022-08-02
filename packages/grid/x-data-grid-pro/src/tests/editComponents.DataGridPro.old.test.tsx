@@ -850,8 +850,10 @@ describe('<DataGridPro /> - Edit Components', () => {
       fireEvent.doubleClick(cell);
       const input = cell.querySelector('input')!;
       fireEvent.click(input);
+      fireEvent.click(getCell(1, 0)); // Trigger cellFocusOut event
       fireEvent.doubleClick(getCell(1, 0));
 
+      expect(cell).to.have.class('MuiDataGrid-cell--editing');
       await new Promise((resolve) => nativeSetTimeout(resolve)); // Wait for promise
 
       expect(preProcessEditCellProps.callCount).to.equal(1);
@@ -859,7 +861,7 @@ describe('<DataGridPro /> - Edit Components', () => {
         value: true,
         isValidating: true,
       });
-      expect(cell).to.have.class('MuiDataGrid-cell--editing');
+      expect(cell).not.to.have.class('MuiDataGrid-cell--editing');
     });
   });
 });

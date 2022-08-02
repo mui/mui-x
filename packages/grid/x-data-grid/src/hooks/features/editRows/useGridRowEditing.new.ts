@@ -62,6 +62,7 @@ export const useGridRowEditing = (
   >,
 ) => {
   const [rowModesModel, setRowModesModel] = React.useState<GridRowModesModel>({});
+  const rowModesModelRef = React.useRef(rowModesModel);
   const prevRowModesModel = React.useRef<GridRowModesModel>({});
   const focusTimeout = React.useRef<any>(null);
   const nextFocusedCell = React.useRef<GridCellParams | null>(null);
@@ -143,6 +144,11 @@ export const useGridRowEditing = (
         if (nextFocusedCell.current?.id !== params.id) {
           // The row might have been deleted during the click
           if (!apiRef.current.getRow(params.id)) {
+            return;
+          }
+
+          // The row may already changed its mode
+          if (apiRef.current.getRowMode(params.id) === GridRowModes.View) {
             return;
           }
 
@@ -322,6 +328,7 @@ export const useGridRowEditing = (
       }
 
       setRowModesModel(newModel);
+      rowModesModelRef.current = newModel;
       apiRef.current.publishEvent('rowModesModelChange', newModel);
     },
     [apiRef, onRowModesModelChange, props.rowModesModel, signature],
@@ -329,7 +336,7 @@ export const useGridRowEditing = (
 
   const updateRowInRowModesModel = React.useCallback(
     (id: GridRowId, newProps: GridRowModesModelProps | null) => {
-      const newModel = { ...rowModesModel };
+      const newModel = { ...rowModesModelRef.current };
 
       if (newProps !== null) {
         newModel[id] = { ...newProps };
@@ -339,7 +346,7 @@ export const useGridRowEditing = (
 
       updateRowModesModel(newModel);
     },
-    [rowModesModel, updateRowModesModel],
+    [updateRowModesModel],
   );
 
   const updateOrDeleteRowState = React.useCallback(

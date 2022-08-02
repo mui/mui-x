@@ -551,6 +551,41 @@ describe('<DataGridPro /> - Row Editing', () => {
         expect(getCell(0, 1)).toHaveFocus();
       });
 
+      it('should keep in edit mode the cells that entered edit mode while processRowUpdate is called', async () => {
+        const onRowModesModelChange = spy();
+        let resolveCallback: () => void;
+        const processRowUpdate = (newRow: any) =>
+          new Promise((resolve) => {
+            resolveCallback = () => resolve(newRow);
+          });
+        render(
+          <TestCase
+            processRowUpdate={processRowUpdate}
+            onRowModesModelChange={onRowModesModelChange}
+          />,
+        );
+
+        act(() => apiRef.current.startRowEditMode({ id: 0, fieldToFocus: 'price1M' }));
+        await apiRef.current.setEditCellValue({ id: 0, field: 'currencyPair', value: 'USD GBP' });
+        act(() => apiRef.current.stopRowEditMode({ id: 0, field: 'price1M' }));
+        expect(onRowModesModelChange.lastCall.args[0]).to.deep.equal({
+          0: { mode: 'view', field: 'price1M' },
+        });
+
+        act(() => apiRef.current.startRowEditMode({ id: 1, fieldToFocus: 'price1M' }));
+        expect(onRowModesModelChange.lastCall.args[0]).to.have.keys('0', '1');
+        expect(onRowModesModelChange.lastCall.args[0][1]).to.deep.equal({
+          mode: 'edit',
+          fieldToFocus: 'price1M',
+        });
+
+        resolveCallback!();
+        await Promise.resolve();
+        expect(onRowModesModelChange.lastCall.args[0]).to.deep.equal({
+          1: { mode: 'edit', fieldToFocus: 'price1M' },
+        });
+      });
+
       describe('with pending value mutation', () => {
         clock.withFakeTimers();
 
