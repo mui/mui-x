@@ -8,9 +8,9 @@ title: Data grid - Column groups
 
 Grouping columns allows you to have multiple levels of columns in your header and to toggle column groups to show and hide additional columns.
 
-## Define column grouping
+## Define column groups
 
-You can define the column grouping structure by providing the `columnGroupingModel` prop to the grid.
+You can define column groups with the `columnGroupingModel` prop.
 This prop receives an array of column groups.
 
 A column group is defined by at least two properties:
@@ -30,7 +30,7 @@ A column can only be associated with one group.
 ```jsx
 columnGroupingModel={[
     {
-        groupId: "internal",
+        groupId: "internal data",
         children: [{ field: "id" }]
     },
     {
@@ -53,10 +53,10 @@ columnGroupingModel={[
 
 ## Customize column group
 
-In addition to the required `groupId` and `children`, you can add extra properties to a column group object to customize it:
+In addition to the required `groupId` and `children`, you can use the following optional properties to customize a column group:
 
-- `headerName`: the sting displayed instead of `groupId`.
-- `description`: a longer string displayed in a tooltip.
+- `headerName`: the string displayed as the column's name (instead of `groupId`).
+- `description`: a text for the tooltip.
 - `renderHeaderGroup`: a function returning custom React component.
 
 {{"demo": "CustomizationDemo.js", "bg": "inline"}}
@@ -64,9 +64,9 @@ In addition to the required `groupId` and `children`, you can add extra properti
 ## Column reordering [<span class="plan-pro"></span>](https://mui.com/store/items/mui-x-pro/)
 
 By default, column groups can not be divided when reordering columns.
-This default behavior can be removed on specific group by setting `freeReordering: true` in the column group object.
+You can customize this behavior on specific groups by setting `freeReordering: true` in a column group object.
 
-In the example bellow the `Character` column group can be divided, but not other column groups
+In the example below, the `Names` column group can be divided, but not other column groups
 
 {{"demo": "BreakingGroupDemo.js", "disableAd": true, "bg": "inline"}}
 
