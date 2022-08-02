@@ -1,6 +1,4 @@
-import { localStorageAvailable } from '../utils/utils';
-
-// A guide to feature toggling.
+// A guide to feature toggling (deprecated)
 //
 // The feature toggle is:
 // - independent from the NODE_ENV
