@@ -67,27 +67,12 @@ export const unwrapGroupingColumnModel = (
     return {};
   }
 
-  const rep: UnwrappedGroupingModel = {};
-
+  const unwrappedSubTree: UnwrappedGroupingModel = {};
   columnGroupingModel.forEach((columnGroupNode) => {
-    const unwrappedSubTree: UnwrappedGroupingModel = {};
     recurrentUnwrapGroupingColumnModel(columnGroupNode, [], unwrappedSubTree);
-    Object.entries(unwrappedSubTree).forEach(([key, value]) => {
-      if (rep[key] !== undefined) {
-        throw new Error(
-          [
-            `MUI: columnGroupingModel has duplicated field.`,
-            `column field ${key} occurres two times in the grouping model:`,
-            `- ${rep[key].join(' > ')}`,
-            `- ${value.join(' > ')}`,
-          ].join('\n'),
-        );
-      }
-      rep[key] = value;
-    });
   });
 
-  return rep;
+  return unwrappedSubTree;
 };
 
 const createGroupLookup = (columnGroupingModel: GridColumnNode[]): GridColumnGroupLookup => {
