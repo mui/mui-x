@@ -44,6 +44,7 @@
     "disableColumnSelector": { "type": { "name": "bool" } },
     "disableDensitySelector": { "type": { "name": "bool" } },
     "disableExtendRowFullWidth": { "type": { "name": "bool" } },
+    "disableIgnoreModificationsIfProcessingProps": { "type": { "name": "bool" } },
     "disableMultipleColumnsFiltering": { "type": { "name": "bool" } },
     "disableMultipleColumnsSorting": { "type": { "name": "bool" } },
     "disableMultipleSelection": { "type": { "name": "bool" } },
@@ -58,7 +59,7 @@
     "experimentalFeatures": {
       "type": {
         "name": "shape",
-        "description": "{ lazyLoading?: bool, newEditingApi?: bool, preventCommitWhileValidating?: bool, warnIfFocusStateIsNotSynced?: bool }"
+        "description": "{ lazyLoading?: bool, newEditingApi?: bool, preventCommitWhileValidating?: bool, rowPinning?: bool, warnIfFocusStateIsNotSynced?: bool }"
       }
     },
     "filterMode": {
@@ -177,6 +178,7 @@
         "description": "{ left?: Array&lt;string&gt;, right?: Array&lt;string&gt; }"
       }
     },
+    "pinnedRows": { "type": { "name": "shape", "description": "{ bottom?: array, top?: array }" } },
     "processRowUpdate": { "type": { "name": "func" } },
     "rowBuffer": { "type": { "name": "number" }, "default": "3" },
     "rowCount": { "type": { "name": "number" } },
@@ -418,7 +420,11 @@
       "treeDataGroupingCell",
       "treeDataGroupingCellToggle",
       "groupingCriteriaCell",
-      "groupingCriteriaCellToggle"
+      "groupingCriteriaCellToggle",
+      "pinnedRows",
+      "pinnedRows--top",
+      "pinnedRows--bottom",
+      "pinnedRowsRenderZone"
     ],
     "globalClasses": {},
     "name": "MuiDataGrid"

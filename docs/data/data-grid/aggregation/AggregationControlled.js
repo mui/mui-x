@@ -34,16 +34,14 @@ export default function AggregationControlled() {
   });
 
   return (
-    <DataGridPremium
-      // The 2 following props are here to avoid scroll in the demo while we don't have pinned rows
-      rows={data.rows.slice(0, 3)}
-      autoHeight
-      columns={COLUMNS}
-      private_aggregationModel={aggregationModel}
-      private_onAggregationModelChange={(newModel) => setAggregationModel(newModel)}
-      experimentalFeatures={{
-        private_aggregation: true,
-      }}
-    />
+    <div style={{ height: 400, width: '100%' }}>
+      <DataGridPremium
+        rows={data.rows}
+        columns={COLUMNS}
+        aggregationModel={aggregationModel}
+        onAggregationModelChange={(newModel) => setAggregationModel(newModel)}
+        experimentalFeatures={{ aggregation: true }}
+      />
+    </div>
   );
 }

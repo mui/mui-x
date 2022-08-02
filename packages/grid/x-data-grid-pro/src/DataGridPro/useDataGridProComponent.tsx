@@ -69,6 +69,11 @@ import { useGridRowReorder } from '../hooks/features/rowReorder/useGridRowReorde
 import { useGridRowReorderPreProcessors } from '../hooks/features/rowReorder/useGridRowReorderPreProcessors';
 import { useGridLazyLoader } from '../hooks/features/lazyLoader/useGridLazyLoader';
 import { useGridLazyLoaderPreProcessors } from '../hooks/features/lazyLoader/useGridLazyLoaderPreProcessors';
+import {
+  useGridRowPinning,
+  rowPinningStateInitializer,
+} from '../hooks/features/rowPinning/useGridRowPinning';
+import { useGridRowPinningPreProcessors } from '../hooks/features/rowPinning/useGridRowPinningPreProcessors';
 
 export const useDataGridProComponent = (
   inputApiRef: React.MutableRefObject<GridApiPro> | undefined,
@@ -83,6 +88,7 @@ export const useDataGridProComponent = (
   useGridRowReorderPreProcessors(apiRef, props);
   useGridTreeDataPreProcessors(apiRef, props);
   useGridLazyLoaderPreProcessors(apiRef, props);
+  useGridRowPinningPreProcessors(apiRef);
   useGridDetailPanelPreProcessors(apiRef, props);
   // The column pinning `hydrateColumns` pre-processor must be after every other `hydrateColumns` pre-processors
   // Because it changes the order of the columns.
@@ -96,6 +102,7 @@ export const useDataGridProComponent = (
   useGridInitializeState(detailPanelStateInitializer, apiRef, props);
   useGridInitializeState(columnPinningStateInitializer, apiRef, props);
   useGridInitializeState(columnsStateInitializer, apiRef, props);
+  useGridInitializeState(rowPinningStateInitializer, apiRef, props);
   useGridInitializeState(rowsStateInitializer, apiRef, props);
   useGridInitializeState(
     props.experimentalFeatures?.newEditingApi
@@ -119,6 +126,7 @@ export const useDataGridProComponent = (
   useGridKeyboardNavigation(apiRef, props);
   useGridSelection(apiRef, props);
   useGridColumnPinning(apiRef, props);
+  useGridRowPinning(apiRef, props);
   useGridColumns(apiRef, props);
   useGridRows(apiRef, props);
   useGridParamsApi(apiRef);

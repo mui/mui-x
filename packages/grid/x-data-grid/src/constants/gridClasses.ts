@@ -450,6 +450,22 @@ export interface GridClasses {
    * Styles applied to the toggle of the grouping criteria cell
    */
   groupingCriteriaCellToggle: string;
+  /**
+   * Styles applied to the pinned rows container.
+   */
+  pinnedRows: string;
+  /**
+   * Styles applied to the top pinned rows container.
+   */
+  'pinnedRows--top': string;
+  /**
+   * Styles applied to the bottom pinned rows container.
+   */
+  'pinnedRows--bottom': string;
+  /**
+   * Styles applied to pinned rows render zones.
+   */
+  pinnedRowsRenderZone: string;
 }
 
 export type GridClassKey = keyof GridClasses;
@@ -570,4 +586,8 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'treeDataGroupingCellToggle',
   'groupingCriteriaCell',
   'groupingCriteriaCellToggle',
+  'pinnedRows',
+  'pinnedRows--top',
+  'pinnedRows--bottom',
+  'pinnedRowsRenderZone',
 ]);

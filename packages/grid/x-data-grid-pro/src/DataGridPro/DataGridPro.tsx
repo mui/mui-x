@@ -209,6 +209,11 @@ DataGridProRaw.propTypes = {
    */
   disableExtendRowFullWidth: PropTypes.bool,
   /**
+   * If `true`, modification to a cell will not be discarded if the mode is changed from "edit" to "view" while processing props.
+   * @default false
+   */
+  disableIgnoreModificationsIfProcessingProps: PropTypes.bool,
+  /**
    * If `true`, filtering with multiple columns is disabled.
    * @default false
    */
@@ -254,6 +259,7 @@ DataGridProRaw.propTypes = {
     lazyLoading: PropTypes.bool,
     newEditingApi: PropTypes.bool,
     preventCommitWhileValidating: PropTypes.bool,
+    rowPinning: PropTypes.bool,
     warnIfFocusStateIsNotSynced: PropTypes.bool,
   }),
   /**
@@ -771,6 +777,13 @@ DataGridProRaw.propTypes = {
   pinnedColumns: PropTypes.shape({
     left: PropTypes.arrayOf(PropTypes.string),
     right: PropTypes.arrayOf(PropTypes.string),
+  }),
+  /**
+   * Rows data to pin on top or bottom.
+   */
+  pinnedRows: PropTypes.shape({
+    bottom: PropTypes.array,
+    top: PropTypes.array,
   }),
   /**
    * Callback called before updating a row with new values in the row and cell editing.

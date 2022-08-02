@@ -16,6 +16,7 @@ import {
   DataGridPropsWithComplexDefaultValueBeforeProcessing,
 } from '@mui/x-data-grid/internals';
 import type { GridPinnedColumns } from '../hooks/features/columnPinning';
+import type { GridPinnedRowsProp } from '../hooks/features/rowPinning';
 import { GridApiPro } from './gridApiPro';
 import {
   GridGroupingColDefOverride,
@@ -28,6 +29,10 @@ export interface GridExperimentalProFeatures extends GridExperimentalFeatures {
    * Enables the data grid to lazy load rows while scrolling.
    */
   lazyLoading: boolean;
+  /**
+   * Enables the the ability for rows to be pinned in data grid.
+   */
+  rowPinning: boolean;
 }
 
 /**
@@ -39,13 +44,7 @@ export interface DataGridProProps<R extends GridValidRowModel = any>
       DataGridPropsWithComplexDefaultValueBeforeProcessing &
       DataGridProPropsWithoutDefaultValue<R>,
     DataGridProForcedPropsKey
-  > {
-  /**
-   * Features under development.
-   * For each feature, if the flag is not explicitly set to `true`, the feature will be fully disabled and any property / method call will not have any effect.
-   */
-  experimentalFeatures?: Partial<GridExperimentalProFeatures>;
-}
+  > {}
 
 /**
  * The props of the `DataGridPro` component after the pre-processing phase.
@@ -135,6 +134,11 @@ export interface DataGridProPropsWithoutDefaultValue<R extends GridValidRowModel
    */
   initialState?: GridInitialStatePro;
   /**
+   * Features under development.
+   * For each feature, if the flag is not explicitly set to `true`, the feature will be fully disabled and any property / method call will not have any effect.
+   */
+  experimentalFeatures?: Partial<GridExperimentalProFeatures>;
+  /**
    * Determines the path of a row in the tree data.
    * For instance, a row with the path ["A", "B"] is the child of the row with the path ["A"].
    * Note that all paths must contain at least one element.
@@ -212,4 +216,8 @@ export interface DataGridProPropsWithoutDefaultValue<R extends GridValidRowModel
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onFetchRows?: GridEventListener<'fetchRows'>;
+  /**
+   * Rows data to pin on top or bottom.
+   */
+  pinnedRows?: GridPinnedRowsProp<R>;
 }
