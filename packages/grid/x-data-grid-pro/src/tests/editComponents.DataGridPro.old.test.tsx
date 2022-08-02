@@ -832,7 +832,7 @@ describe('<DataGridPro /> - Edit Components', () => {
       expect(screen.getByRole('checkbox')).toHaveFocus();
     });
 
-    it('should call preProcessEditCellProps once if it resolves with an error and preventCommitWhileValidating=true', async () => {
+    it.only('should call preProcessEditCellProps once if it resolves with an error and preventCommitWhileValidating=true', async () => {
       const preProcessEditCellProps = spy(({ props }) =>
         Promise.resolve({ ...props, error: true }),
       );
@@ -850,7 +850,6 @@ describe('<DataGridPro /> - Edit Components', () => {
       fireEvent.doubleClick(cell);
       const input = cell.querySelector('input')!;
       fireEvent.click(input);
-      fireEvent.click(getCell(1, 0)); // Trigger cellFocusOut event
       fireEvent.doubleClick(getCell(1, 0));
 
       expect(cell).to.have.class('MuiDataGrid-cell--editing');
