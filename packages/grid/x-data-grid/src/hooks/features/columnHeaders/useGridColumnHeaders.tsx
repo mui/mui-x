@@ -33,6 +33,8 @@ import { getFirstColumnIndexToRender } from '../columns/gridColumnsUtils';
 import { useGridVisibleRows } from '../../utils/useGridVisibleRows';
 import { getRenderableIndexes } from '../virtualization/useGridVirtualScroller';
 import { GridColumnGroupHeader } from '../../../components/columnHeaders/GridColumnGroupHeader';
+import { GridColumnGroup } from '../../../models/gridColumnGrouping';
+import { isDeepEqual } from '../../../utils/utils';
 
 // TODO: add the possibility to switch this value if needed for customization
 const MERGE_EMPTY_CELLS = true;
@@ -46,7 +48,8 @@ const GridColumnHeaderRow = styled('div', {
 }));
 
 interface HeaderInfo {
-  groupId: string | null;
+  groupId: GridColumnGroup['groupId'] | null;
+  groupParents: GridColumnGroup['groupId'][];
   width: number;
   fields: string[];
   colIndex: number;
@@ -333,6 +336,8 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
     );
   };
 
+  const getParents = (path: string[] = [], depth: number) => path.slice(0, depth + 1);
+
   const getColumnGroupHeaders = (params?: GetHeadersParams) => {
     if (headerGroupingMaxDepth === 0) {
       return null;
@@ -360,11 +365,21 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
 
       let columnIndex = firstColumnToRender - 1;
       const firstColumnToRenderGroup = visibleColumns[firstColumnToRender]?.groupPath?.[depth]!;
+
+      // The array of parent is used to manage empty grouping cell
+      // When two empty grouping cell are next to each other, we merge them if the belong to the same group.
+      const firstColumnToRenderGroupParents = getParents(
+        visibleColumns[firstColumnToRender]?.groupPath,
+        depth,
+      );
       while (
         firstColumnToRenderGroup !== null &&
         columnIndex >= minColumnIndex &&
         visibleColumns[columnIndex]?.groupPath &&
-        visibleColumns[columnIndex]?.groupPath?.[depth] === firstColumnToRenderGroup
+        isDeepEqual(
+          getParents(visibleColumns[columnIndex]?.groupPath, depth),
+          firstColumnToRenderGroupParents,
+        )
       ) {
         const column = visibleColumns[columnIndex];
 
@@ -375,6 +390,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
             width: column.width ?? 0,
             fields: [column.field],
             groupId: firstColumnToRenderGroup,
+            groupParents: firstColumnToRenderGroupParents,
             colIndex: columnIndex,
           });
         } else {
@@ -406,6 +422,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
             ...aggregated,
             {
               groupId: column.groupPath[depth],
+              groupParents: getParents(column.groupPath, depth),
               width: column.width ?? 0,
               fields: [column.field],
               colIndex: firstColumnToRender + i,
@@ -413,8 +430,12 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
           ];
         }
 
-        // It is the first level for which their is no group
-        if (MERGE_EMPTY_CELLS && lastItem && lastItem.groupId === null) {
+        if (
+          MERGE_EMPTY_CELLS &&
+          lastItem &&
+          lastItem.groupId === null &&
+          isDeepEqual(getParents(column.groupPath, depth), lastItem.groupParents)
+        ) {
           // We merge with previous column
           return [
             ...aggregated.slice(0, aggregated.length - 1),
@@ -430,6 +451,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
           ...aggregated,
           {
             groupId: null,
+            groupParents: getParents(column.groupPath, depth),
             width: column.width ?? 0,
             fields: [column.field],
             colIndex: firstColumnToRender + i,

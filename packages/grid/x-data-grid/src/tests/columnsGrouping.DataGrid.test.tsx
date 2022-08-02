@@ -189,6 +189,78 @@ describe('<DataGrid /> - Column grouping', () => {
       setProps({ columnGroupingModel: [{ groupId: 'col2', children: [{ field: 'col2' }] }] });
       expect(screen.queryAllByRole('row')).to.have.length(3);
     });
+
+    it('should split empty group cell if they are children of different group', () => {
+      render(
+        <TestDataGrid
+          nbColumns={3}
+          columnGroupingModel={[
+            {
+              groupId: 'col1',
+              children: [{ field: 'col1' }],
+            },
+            {
+              groupId: 'col2',
+              children: [{ field: 'col2' }],
+            },
+            {
+              groupId: 'col3',
+              children: [
+                {
+                  groupId: 'col3bis',
+                  children: [{ field: 'col3' }],
+                },
+              ],
+            },
+          ]}
+        />,
+      );
+
+      const row2Headers = document.querySelectorAll<HTMLElement>(
+        '[aria-rowindex="2"] [role="columnheader"]',
+      );
+
+      expect(
+        Array.from(row2Headers).map((header) => header.getAttribute('aria-colspan')),
+      ).to.deep.equal(['1', '1', '1']);
+      expect(
+        Array.from(row2Headers).map((header) => header.getAttribute('aria-colindex')),
+      ).to.deep.equal(['1', '2', '3']);
+    });
+
+    it('should merge empty group cell if they are children of the group', () => {
+      render(
+        <TestDataGrid
+          nbColumns={3}
+          columnGroupingModel={[
+            {
+              groupId: 'col12',
+              children: [{ field: 'col1' }, { field: 'col2' }],
+            },
+            {
+              groupId: 'col3',
+              children: [
+                {
+                  groupId: 'col3bis',
+                  children: [{ field: 'col3' }],
+                },
+              ],
+            },
+          ]}
+        />,
+      );
+
+      const row2Headers = document.querySelectorAll<HTMLElement>(
+        '[aria-rowindex="2"] [role="columnheader"]',
+      );
+
+      expect(
+        Array.from(row2Headers).map((header) => header.getAttribute('aria-colspan')),
+      ).to.deep.equal(['2', '1']);
+      expect(
+        Array.from(row2Headers).map((header) => header.getAttribute('aria-colindex')),
+      ).to.deep.equal(['1', '3']);
+    });
   });
 
   // TODO: remove the skip. I failed to test if an error is thrown
