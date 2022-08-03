@@ -15,7 +15,12 @@ export const isDeleteKeys = (key: string) => key === 'Delete' || key === 'Backsp
 
 // Non printable keys have a name, e.g. "ArrowRight", see the whole list:
 // https://developer.mozilla.org/en-US/docs/Web/API/UI_Events/Keyboard_event_key_values
-export const isPrintableKey = (key: string) => key.length === 1;
+// We need to ignore shortcuts, for example: select all:
+// - Windows: Ctrl+A, event.ctrlKey is true
+// - macOS: ⌘ Command+A, event.metaKey is true
+export function isPrintableKey(event: React.KeyboardEvent<HTMLElement>): boolean {
+  return event.key.length === 1 && event.ctrlKey === false && event.metaKey === false;
+}
 
 export const GRID_MULTIPLE_SELECTION_KEYS = ['Meta', 'Control', 'Shift'];
 export const GRID_CELL_EXIT_EDIT_MODE_KEYS = ['Enter', 'Escape', 'Tab'];
@@ -24,8 +29,8 @@ export const GRID_CELL_EDIT_COMMIT_KEYS = ['Enter', 'Tab'];
 export const isMultipleKey = (key: string): boolean =>
   GRID_MULTIPLE_SELECTION_KEYS.indexOf(key) > -1;
 
-export const isCellEnterEditModeKeys = (key: string): boolean =>
-  isEnterKey(key) || isDeleteKeys(key) || isPrintableKey(key);
+export const isCellEnterEditModeKeys = (event: React.KeyboardEvent<HTMLElement>): boolean =>
+  isEnterKey(event.key) || isDeleteKeys(event.key) || isPrintableKey(event);
 
 export const isCellExitEditModeKeys = (key: string): boolean =>
   GRID_CELL_EXIT_EDIT_MODE_KEYS.indexOf(key) > -1;

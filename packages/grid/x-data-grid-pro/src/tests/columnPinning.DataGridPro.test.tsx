@@ -43,7 +43,11 @@ describe('<DataGridPro /> - Column pinning', () => {
     );
   };
 
-  it('should scroll when the next cell to focus is covered by the left pinned columns', () => {
+  it('should scroll when the next cell to focus is covered by the left pinned columns', function test() {
+    if (isJSDOM) {
+      // Need layouting
+      this.skip();
+    }
     render(<TestCase initialState={{ pinnedColumns: { left: ['id'] } }} />);
     const virtualScroller = document.querySelector(`.${gridClasses.virtualScroller}`)!;
     virtualScroller.scrollLeft = 100;
@@ -56,7 +60,7 @@ describe('<DataGridPro /> - Column pinning', () => {
   });
 
   it('should scroll when the next cell to focus is covered by the right pinned columns', function test() {
-    if (/jsdom/.test(window.navigator.userAgent)) {
+    if (isJSDOM) {
       // Need layouting
       this.skip();
     }

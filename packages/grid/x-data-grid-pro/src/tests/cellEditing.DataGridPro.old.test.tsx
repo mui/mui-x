@@ -336,11 +336,13 @@ describe('<DataGridPro /> - Cell Editing', () => {
     expect(cell).to.have.text('Adidas');
     act(() => {
       const params = apiRef.current.getCellParams(1, 'brand');
-      return apiRef.current.publishEvent('cellKeyDown', params, {
+      apiRef.current.publishEvent('cellKeyDown', params, {
         key: 'a',
         code: 1,
         target: cell,
         currentTarget: cell,
+        ctrlKey: false,
+        metaKey: false,
         isPropagationStopped: () => false,
       } as any);
     });
