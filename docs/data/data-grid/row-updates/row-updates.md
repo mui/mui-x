@@ -42,13 +42,13 @@ In addition, the area in which `onRowsScrollEnd` is called can be changed using 
 ## Lazy loading [<span class="plan-pro"></span>](https://mui.com/store/items/mui-x-pro/)
 
 To allow the grid to lazy load data, set `rowsLoadingMode="server"`.
-Then the `rowCount` needs to be set to the number of available rows on the server
+Then the `rowCount` needs to be set to the number of available rows on the server.
 In addition, you need to handle the `onFetchRows` callback to fetch the rows for the corresponding index.
 Finally, you need to use the `apiRef.current.insertRows()` to tell the DataGrid where to insert the newly fetched rows.
 
 :::info
-In order for the filtering and sorting to work you need to set their modes to `server`.
-You can find out more information about how to do that on the [server-side filter page](/components/data-grid/filtering/#server-side-filter) and on the [server-side sorting page](/components/data-grid/sorting/#server-side-sorting).
+In order for filtering and sorting to work you need to set their modes to `server`.
+You can find out more information about how to do that on the [server-side filter page](/x/react-data-grid/filtering/#server-side-filter) and on the [server-side sorting page](/x/react-data-grid/sorting/#server-side-sorting).
 :::
 
 {{"demo": "LazyLoadingGrid.js", "bg": "inline", "disableAd": true}}
