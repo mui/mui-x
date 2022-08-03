@@ -1,6 +1,6 @@
 <LocalizationProvider dateAdapter={AdapterDateFns}>
-  <DatePicker
-    label="Basic example"
+  <StaticDatePicker
+    displayStaticWrapperAs="desktop"
     value={value}
     onChange={(newValue) => {
       setValue(newValue);
