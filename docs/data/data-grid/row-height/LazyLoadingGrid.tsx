@@ -39,7 +39,7 @@ export default function LazyLoadingGrid() {
       params.lastRowToRender - params.firstRowToRender,
     );
 
-    apiRef.current.unstable_replaceRows(
+    apiRef.current.replaceRows(
       params.firstRowToRender,
       params.lastRowToRender,
       newRowsBatch,

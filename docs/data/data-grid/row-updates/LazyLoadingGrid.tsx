@@ -24,7 +24,7 @@ export default function LazyLoadingGrid() {
   const handleFetchRows = async (params: GridFetchRowsParams) => {
     const newRowsBatch = await loadServerRowsInterval(params);
 
-    apiRef.current.unstable_replaceRows(
+    apiRef.current.replaceRows(
       params.firstRowToRender,
       params.lastRowToRender,
       newRowsBatch.returnedRows,
