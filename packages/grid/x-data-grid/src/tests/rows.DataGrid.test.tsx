@@ -187,14 +187,12 @@ describe('<DataGrid /> - Rows', () => {
       }
       expect(() => {
         render(<TestCase />);
-      }).toErrorDev(
-        [
-          'MUI: Missing the `getActions` property in the `GridColDef`.',
-          'MUI: Missing the `getActions` property in the `GridColDef`.',
-          'The above error occurred in the <GridActionsCell> component',
-          'MUI: GridErrorHandler - An unexpected error occurred.',
-        ].filter((message): message is string => typeof message === 'string'),
-      );
+      }).toErrorDev([
+        'MUI: Missing the `getActions` property in the `GridColDef`.',
+        'MUI: Missing the `getActions` property in the `GridColDef`.',
+        'The above error occurred in the <GridActionsCell> component',
+        'MUI: GridErrorHandler - An unexpected error occurred.',
+      ]);
     });
 
     it('should call getActions with the row params', () => {
