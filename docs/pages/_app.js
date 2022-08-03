@@ -41,8 +41,6 @@ ponyfillGlobal.muiDocConfig = {
     const newDeps = { ...deps };
 
     if (newDeps['@mui/x-data-grid-premium']) {
-      newDeps['@mui/material'] = versions['@mui/material'];
-      newDeps['@mui/x-data-grid'] = versions['@mui/x-data-grid'];
       newDeps['@mui/x-data-grid-pro'] = versions['@mui/x-data-grid-pro'];
       // TODO: remove when https://github.com/mui/material-ui/pull/32492 is released
       // use `import 'exceljs'` in demonstrations instead
@@ -50,7 +48,6 @@ ponyfillGlobal.muiDocConfig = {
     }
 
     if (newDeps['@mui/x-data-grid-pro']) {
-      newDeps['@mui/material'] = versions['@mui/material'];
       newDeps['@mui/x-data-grid'] = versions['@mui/x-data-grid'];
     }
 
@@ -66,7 +63,6 @@ ponyfillGlobal.muiDocConfig = {
     }
 
     if (newDeps['@mui/x-date-pickers-pro']) {
-      newDeps['@mui/material'] = versions['@mui/material'];
       newDeps['@mui/x-date-pickers'] = versions['@mui/x-date-pickers'];
     }
 
