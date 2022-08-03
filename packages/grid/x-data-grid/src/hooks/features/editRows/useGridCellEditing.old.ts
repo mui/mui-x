@@ -224,7 +224,7 @@ export const useCellEditing = (
 
       if (
         !isEditMode &&
-        isCellEnterEditModeKeys(event.key) &&
+        isCellEnterEditModeKeys(event) &&
         !isModifierKeyPressed &&
         !(event.key === ' ' && event.shiftKey)
       ) {
@@ -292,7 +292,7 @@ export const useCellEditing = (
 
       apiRef.current.setCellMode(params.id, params.field, GridCellModes.Edit);
 
-      if (isKeyboardEvent(event) && isPrintableKey(event.key)) {
+      if (isKeyboardEvent(event) && isPrintableKey(event)) {
         apiRef.current.unstable_setEditCellProps({
           id: params.id,
           field: params.field,

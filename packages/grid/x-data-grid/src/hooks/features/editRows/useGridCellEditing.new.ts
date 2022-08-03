@@ -152,18 +152,14 @@ export const useGridCellEditing = (
       } else if (params.isEditable) {
         let reason: GridCellEditStartReasons | undefined;
 
-        if (isPrintableKey(event.key)) {
-          if (
-            (event.ctrlKey && event.key !== 'v') ||
-            (event.metaKey && event.key !== 'v') ||
-            event.altKey
-          ) {
-            return;
-          }
+        if (isPrintableKey(event)) {
+          reason = GridCellEditStartReasons.printableKeyDown;
+        } else if ((event.ctrlKey || event.metaKey) && event.key === 'v') {
           reason = GridCellEditStartReasons.printableKeyDown;
         } else if (event.key === 'Enter') {
           reason = GridCellEditStartReasons.enterKeyDown;
-        } else if (event.key === 'Delete') {
+        } else if (event.key === 'Delete' || event.key === 'Backspace') {
+          // Delete on Windows, Backspace on macOS
           reason = GridCellEditStartReasons.deleteKeyDown;
         }
 
