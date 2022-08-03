@@ -262,6 +262,25 @@ describe('<DataGridPro /> - Rows', () => {
       );
       expect(getColumnValues(0)).to.deep.equal(['Apple', 'Atari']);
     });
+
+    it('should not loose partial updates after a props.loading switch', () => {
+      const Test = (props: Partial<DataGridProProps>) => {
+        apiRef = useGridApiRef();
+        return (
+          <div style={{ width: 300, height: 300 }}>
+            <DataGridPro {...baselineProps} apiRef={apiRef} {...props} />
+          </div>
+        );
+      };
+
+      const { setProps } = render(<Test />);
+      expect(getColumnValues(0)).to.deep.equal(['Nike', 'Adidas', 'Puma']);
+
+      setProps({ loading: true });
+      act(() => apiRef.current.updateRows([{ id: 0, brand: 'Nike 2' }]));
+      setProps({ loading: false });
+      expect(getColumnValues(0)).to.deep.equal(['Nike 2', 'Adidas', 'Puma']);
+    });
   });
 
   describe('apiRef: setRows', () => {
