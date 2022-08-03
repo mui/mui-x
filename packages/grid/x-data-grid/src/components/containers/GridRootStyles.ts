@@ -147,6 +147,11 @@ export const GridRootStyles = styled('div', {
       whiteSpace: 'nowrap',
       overflowX: 'hidden',
     },
+    [`& .${gridClasses.columnHeaderTitleContainerContent}`]: {
+      overflow: 'hidden',
+      display: 'flex',
+      alignItems: 'center',
+    },
     [`& .${gridClasses['columnHeader--filledGroup']} .${gridClasses.columnHeaderTitleContainer}`]: {
       borderBottom: `solid ${borderColor} 1px`,
     },
