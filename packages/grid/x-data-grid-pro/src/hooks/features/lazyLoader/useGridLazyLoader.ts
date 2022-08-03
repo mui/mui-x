@@ -103,11 +103,30 @@ export const useGridLazyLoader = (
     firstRowToRender: 0,
     lastRowToRender: 0,
   });
+  const { lazyLoading } = (props.experimentalFeatures ?? {}) as GridExperimentalProFeatures;
+
+  const getCurrentIntervalToRender = React.useCallback((): {
+    firstRowToRender: number;
+    lastRowToRender: number;
+  } => {
+    const currentRenderContext = apiRef.current.unstable_getRenderContext();
+    const [firstRowToRender, lastRowToRender] = getRenderableIndexes({
+      firstIndex: currentRenderContext.firstRowIndex,
+      lastIndex: currentRenderContext.lastRowIndex,
+      minFirstIndex: 0,
+      maxLastIndex: visibleRows.rows.length,
+      buffer: props.rowBuffer,
+    });
+
+    return {
+      firstRowToRender,
+      lastRowToRender,
+    };
+  }, [apiRef, props.rowBuffer, visibleRows.rows.length]);
 
   const handleRenderedRowsIntervalChange = React.useCallback(
     (params: GridRenderedRowsIntervalChangeParams) => {
       const dimensions = apiRef.current.getRootDimensions();
-      const { lazyLoading } = (props.experimentalFeatures ?? {}) as GridExperimentalProFeatures;
 
       if (
         isLazyLoadingDisabled({
@@ -154,21 +173,12 @@ export const useGridLazyLoader = (
 
       apiRef.current.publishEvent('fetchRows', fetchRowsParams);
     },
-    [
-      apiRef,
-      props.rowsLoadingMode,
-      rowIds,
-      sortModel,
-      filterModel,
-      visibleRows.rows,
-      props.experimentalFeatures,
-    ],
+    [apiRef, props.rowsLoadingMode, rowIds, sortModel, filterModel, visibleRows.rows, lazyLoading],
   );
 
   const handleGridSortModelChange = React.useCallback<GridEventListener<'sortModelChange'>>(
     (newSortModel) => {
       const dimensions = apiRef.current.getRootDimensions();
-      const { lazyLoading } = (props.experimentalFeatures ?? {}) as GridExperimentalProFeatures;
 
       if (
         isLazyLoadingDisabled({
@@ -180,14 +190,7 @@ export const useGridLazyLoader = (
         return;
       }
 
-      const currentRenderContext = apiRef.current.unstable_getRenderContext();
-      const [firstRowToRender, lastRowToRender] = getRenderableIndexes({
-        firstIndex: currentRenderContext.firstRowIndex,
-        lastIndex: currentRenderContext.lastRowIndex,
-        minFirstIndex: 0,
-        maxLastIndex: visibleRows.rows.length,
-        buffer: props.rowBuffer,
-      });
+      const { firstRowToRender, lastRowToRender } = getCurrentIntervalToRender();
       const fetchRowsParams: GridFetchRowsParams = {
         firstRowToRender,
         lastRowToRender,
@@ -197,20 +200,12 @@ export const useGridLazyLoader = (
 
       apiRef.current.publishEvent('fetchRows', fetchRowsParams);
     },
-    [
-      apiRef,
-      props.rowsLoadingMode,
-      props.rowBuffer,
-      visibleRows.rows,
-      filterModel,
-      props.experimentalFeatures,
-    ],
+    [apiRef, props.rowsLoadingMode, filterModel, lazyLoading, getCurrentIntervalToRender],
   );
 
   const handleGridFilterModelChange = React.useCallback<GridEventListener<'filterModelChange'>>(
     (newFilterModel) => {
       const dimensions = apiRef.current.getRootDimensions();
-      const { lazyLoading } = (props.experimentalFeatures ?? {}) as GridExperimentalProFeatures;
 
       if (
         isLazyLoadingDisabled({
@@ -222,14 +217,7 @@ export const useGridLazyLoader = (
         return;
       }
 
-      const currentRenderContext = apiRef.current.unstable_getRenderContext();
-      const [firstRowToRender, lastRowToRender] = getRenderableIndexes({
-        firstIndex: currentRenderContext.firstRowIndex,
-        lastIndex: currentRenderContext.lastRowIndex,
-        minFirstIndex: 0,
-        maxLastIndex: visibleRows.rows.length,
-        buffer: props.rowBuffer,
-      });
+      const { firstRowToRender, lastRowToRender } = getCurrentIntervalToRender();
       const fetchRowsParams: GridFetchRowsParams = {
         firstRowToRender,
         lastRowToRender,
@@ -239,14 +227,7 @@ export const useGridLazyLoader = (
 
       apiRef.current.publishEvent('fetchRows', fetchRowsParams);
     },
-    [
-      apiRef,
-      props.rowsLoadingMode,
-      props.rowBuffer,
-      visibleRows.rows,
-      sortModel,
-      props.experimentalFeatures,
-    ],
+    [apiRef, props.rowsLoadingMode, sortModel, lazyLoading, getCurrentIntervalToRender],
   );
 
   useGridApiEventHandler(apiRef, 'renderedRowsIntervalChange', handleRenderedRowsIntervalChange);
