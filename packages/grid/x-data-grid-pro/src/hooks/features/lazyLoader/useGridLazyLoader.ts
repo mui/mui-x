@@ -160,7 +160,7 @@ export const useGridLazyLoader = (
       rowIds,
       sortModel,
       filterModel,
-      visibleRows,
+      visibleRows.rows,
       props.experimentalFeatures,
     ],
   );
