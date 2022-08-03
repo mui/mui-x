@@ -172,7 +172,7 @@ export function isDeepEqual(a: any, b: any) {
 }
 
 // Pseudo random number. See https://stackoverflow.com/a/47593316
-export function mulberry32(a: number): () => number {
+function mulberry32(a: number): () => number {
   return () => {
     /* eslint-disable */
     let t = (a += 0x6d2b79f5);
