@@ -8,6 +8,15 @@ title: Data grid - Column groups
 
 Grouping columns allows you to have multiple levels of columns in your header and to toggle column groups to show and hide additional columns.
 
+:::warning
+This feature is experimental, it needs to be explicitly activated using the `columnGrouping` experimental feature flag.
+
+```tsx
+<DataGrid experimentalFeatures={{ columnGrouping: true }} {...otherProps} />
+```
+
+:::
+
 ## Define column groups
 
 You can define column groups with the `columnGroupingModel` prop.
