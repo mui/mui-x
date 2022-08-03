@@ -22,7 +22,8 @@ describe('useGridApiEventHandler', () => {
     it('should unsubscribe event listeners registered by uncommitted components', async function test() {
       if (
         !/jsdom/.test(window.navigator.userAgent) ||
-        typeof FinalizationRegistry === 'undefined'
+        typeof FinalizationRegistry === 'undefined' ||
+        typeof global.gc === 'undefined'
       ) {
         // Needs ability to trigger the garbage collector and support for FinalizationRegistry (added in node 14)
         this.skip();
@@ -50,7 +51,7 @@ describe('useGridApiEventHandler', () => {
       expect(apiRef.current.subscribeEvent.callCount).to.equal(2);
 
       unmount();
-      global.gc!(); // Triggers garbage collector
+      global.gc(); // Triggers garbage collector
       await sleep(50);
 
       // Ensure that both event listeners were unsubscribed
