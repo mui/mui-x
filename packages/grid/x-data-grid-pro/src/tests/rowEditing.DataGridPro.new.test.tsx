@@ -701,7 +701,7 @@ describe('<DataGridPro /> - Row Editing', () => {
         expect(listener.callCount).to.equal(0);
       });
 
-      ['ctrlKey', 'metaKey', 'altKey'].forEach((key) => {
+      ['ctrlKey', 'metaKey'].forEach((key) => {
         it(`should not publish 'rowEditStart' if ${key} is pressed`, () => {
           render(<TestCase />);
           const listener = spy();
@@ -733,17 +733,6 @@ describe('<DataGridPro /> - Row Editing', () => {
         fireEvent.mouseUp(cell);
         fireEvent.click(cell);
         fireEvent.keyDown(cell, { key: 'v', ctrlKey: true });
-        expect(listener.callCount).to.equal(1);
-      });
-
-      it(`should call startRowEditMode if meta+V is pressed`, () => {
-        render(<TestCase />);
-        const listener = spy();
-        apiRef.current.subscribeEvent('rowEditStart', listener);
-        const cell = getCell(0, 1);
-        fireEvent.mouseUp(cell);
-        fireEvent.click(cell);
-        fireEvent.keyDown(cell, { key: 'v', metaKey: true });
         expect(listener.callCount).to.equal(1);
       });
 
@@ -837,6 +826,20 @@ describe('<DataGridPro /> - Row Editing', () => {
         clock.runToLast();
         expect(spiedStopRowEditMode.callCount).to.equal(1);
         expect(spiedStopRowEditMode.lastCall.args[0].ignoreModifications).to.equal(true);
+      });
+
+      it('should call stopRowEditMode with ignoreModifications=false if the props are being processed and disableIgnoreModificationsIfProcessingProps is true', async () => {
+        column1Props.preProcessEditCellProps = ({ props }: GridPreProcessEditCellProps) =>
+          new Promise((resolve) => resolve(props));
+        render(<TestCase disableIgnoreModificationsIfProcessingProps />);
+        const spiedStopRowEditMode = spy(apiRef.current, 'stopRowEditMode');
+        fireEvent.doubleClick(getCell(0, 1));
+        apiRef.current.setEditCellValue({ id: 0, field: 'currencyPair', value: 'USD GBP' });
+        fireEvent.click(getCell(1, 1));
+        clock.runToLast();
+        await Promise.resolve();
+        expect(spiedStopRowEditMode.callCount).to.equal(1);
+        expect(spiedStopRowEditMode.lastCall.args[0].ignoreModifications).to.equal(false);
       });
     });
 

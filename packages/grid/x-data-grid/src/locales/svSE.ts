@@ -28,7 +28,7 @@ const svSEGrid: Partial<GridLocaleText> = {
     count !== 1 ? `${count} aktiva filter` : `${count} aktivt filter`,
 
   // Quick filter toolbar field
-  toolbarQuickFilterPlaceholder: 'Sök...',
+  toolbarQuickFilterPlaceholder: 'Sök…',
   toolbarQuickFilterLabel: 'Sök',
   toolbarQuickFilterDeleteIconLabel: 'Rensa',
 

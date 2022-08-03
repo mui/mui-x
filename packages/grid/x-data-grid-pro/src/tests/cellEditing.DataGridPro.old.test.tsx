@@ -337,6 +337,8 @@ describe('<DataGridPro /> - Cell Editing', () => {
       code: 1,
       target: cell,
       currentTarget: cell,
+      ctrlKey: false,
+      metaKey: false,
       isPropagationStopped: () => false,
     } as any);
     // fireEvent.keyDown(cell, { key: 'a', code: 1, target: cell });
