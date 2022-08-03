@@ -1,14 +1,23 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import CircularProgress from '@mui/material/CircularProgress';
+import { styled } from '@mui/material/styles';
 import { GridOverlay, GridOverlayProps } from './containers/GridOverlay';
+
+const GridLoadingOverlayRoot = styled(GridOverlay)({
+  position: 'absolute',
+  top: 0,
+  zIndex: 4, // should be above pinned columns, pinned rows and detail panel
+  width: '100%',
+  pointerEvents: 'none',
+});
 
 const GridLoadingOverlay = React.forwardRef<HTMLDivElement, GridOverlayProps>(
   function GridLoadingOverlay(props, ref) {
     return (
-      <GridOverlay ref={ref} {...props}>
+      <GridLoadingOverlayRoot ref={ref} {...props}>
         <CircularProgress />
-      </GridOverlay>
+      </GridLoadingOverlayRoot>
     );
   },
 );
