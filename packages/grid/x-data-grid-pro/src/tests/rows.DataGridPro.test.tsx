@@ -795,7 +795,6 @@ describe('<DataGridPro /> - Rows', () => {
         const cell = getCell(0, 0);
         fireEvent.mouseUp(cell);
         fireEvent.click(cell);
-        act(() => apiRef.current.updateRows([{ id: 1, _action: 'delete' }]));
       }).not.to.throw();
     });
 
