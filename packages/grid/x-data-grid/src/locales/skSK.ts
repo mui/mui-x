@@ -37,7 +37,7 @@ const skSKGrid: Partial<GridLocaleText> = {
   },
 
   // Quick filter toolbar field
-  toolbarQuickFilterPlaceholder: 'Vyhľadať...',
+  toolbarQuickFilterPlaceholder: 'Vyhľadať…',
   toolbarQuickFilterLabel: 'Vyhľadať',
   toolbarQuickFilterDeleteIconLabel: 'Vymazať',
 
@@ -175,6 +175,14 @@ const skSKGrid: Partial<GridLocaleText> = {
 
   // Row reordering text
   rowReorderingHeaderName: 'Preusporiadávanie riadkov',
+
+  // Aggregation
+  // aggregationMenuItemHeader: 'Aggregation',
+  // aggregationFunctionLabelSum: 'sum',
+  // aggregationFunctionLabelAvg: 'avg',
+  // aggregationFunctionLabelMin: 'min',
+  // aggregationFunctionLabelMax: 'max',
+  // aggregationFunctionLabelSize: 'size',
 };
 
 export const skSK: Localization = getGridLocalization(skSKGrid, skSKCore);

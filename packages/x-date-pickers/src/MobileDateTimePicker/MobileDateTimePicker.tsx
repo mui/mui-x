@@ -290,7 +290,7 @@ MobileDateTimePicker.propTypes = {
    */
   maxDate: PropTypes.any,
   /**
-   * Minimal selectable moment of time with binding to date, to set max time in each day use `maxTime`.
+   * Maximal selectable moment of time with binding to date, to set max time in each day use `maxTime`.
    */
   maxDateTime: PropTypes.any,
   /**

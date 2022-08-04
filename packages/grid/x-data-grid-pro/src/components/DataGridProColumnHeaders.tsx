@@ -147,12 +147,20 @@ export const DataGridProColumnHeaders = React.forwardRef<
         }
       : null;
 
+  const innerProps = getInnerProps();
+
+  const pinnedColumnHeadersProps = {
+    role: innerProps.role,
+    'aria-rowindex': innerProps['aria-rowindex'],
+  };
+
   return (
     <GridColumnHeaders ref={ref} className={className} {...getRootProps(other)}>
       {leftRenderContext && (
         <GridColumnHeadersPinnedColumnHeaders
           className={classes.leftPinnedColumns}
           ownerState={{ side: GridPinnedPosition.left }}
+          {...pinnedColumnHeadersProps}
         >
           {getColumns(
             {
@@ -164,7 +172,7 @@ export const DataGridProColumnHeaders = React.forwardRef<
           )}
         </GridColumnHeadersPinnedColumnHeaders>
       )}
-      <GridColumnHeadersInner isDragging={isDragging} {...getInnerProps()}>
+      <GridColumnHeadersInner isDragging={isDragging} {...innerProps}>
         {getColumns({
           renderContext,
           minFirstColumn: leftPinnedColumns.length,
@@ -176,6 +184,7 @@ export const DataGridProColumnHeaders = React.forwardRef<
           ownerState={{ side: GridPinnedPosition.right }}
           className={classes.rightPinnedColumns}
           style={{ paddingRight: scrollbarSize }}
+          {...pinnedColumnHeadersProps}
         >
           {getColumns(
             {
