@@ -17,7 +17,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { getColumnHeaderCell, getColumnValues, getCell, getRow } from 'test/utils/helperFn';
 
 describe('<DataGrid /> - Layout & Warnings', () => {
-  const { clock, render } = createRenderer({ clock: 'real' });
+  const { clock, render } = createRenderer();
 
   const baselineProps = {
     rows: [
@@ -987,6 +987,7 @@ describe('<DataGrid /> - Layout & Warnings', () => {
           </ErrorBoundary>,
         );
       }).toErrorDev([
+        'The data grid component requires all rows to have a unique `id` property',
         'The data grid component requires all rows to have a unique `id` property',
         'The above error occurred in the <ForwardRef(DataGrid)> component',
       ]);
