@@ -30,7 +30,11 @@ export { useGridDensity, densityStateInitializer } from '../hooks/features/densi
 export { useGridCsvExport } from '../hooks/features/export/useGridCsvExport';
 export { useGridPrintExport } from '../hooks/features/export/useGridPrintExport';
 export { useGridFilter, filterStateInitializer } from '../hooks/features/filter/useGridFilter';
-export type { GridAggregatedFilterItemApplier } from '../hooks/features/filter/gridFilterState';
+export { passFilterLogic } from '../hooks/features/filter/gridFilterUtils';
+export type {
+  GridAggregatedFilterItemApplier,
+  GridFilterResult,
+} from '../hooks/features/filter/gridFilterState';
 export { useGridFocus, focusStateInitializer } from '../hooks/features/focus/useGridFocus';
 export { useGridKeyboardNavigation } from '../hooks/features/keyboardNavigation/useGridKeyboardNavigation';
 export {

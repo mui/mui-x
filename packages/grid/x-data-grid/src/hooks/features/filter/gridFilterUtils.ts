@@ -8,10 +8,13 @@ import {
 } from '../../../models';
 import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridStateCommunity } from '../../../models/gridStateCommunity';
-import { GridAggregatedFilterItemApplier } from './gridFilterState';
+import {
+  getDefaultGridFilterModel,
+  GridAggregatedFilterItemApplier,
+  GridFilterResult,
+} from './gridFilterState';
 import { buildWarning } from '../../../utils/warning';
 import { gridColumnFieldsSelector, gridColumnLookupSelector } from '../columns';
-import { gridRowTreeSelector } from '../rows/gridRowsSelector';
 
 type GridFilterItemApplier = {
   fn: (rowId: GridRowId) => boolean;
@@ -21,7 +24,7 @@ type GridFilterItemApplier = {
 type GridFilterItemApplierNotAggregated = (
   rowId: GridRowId,
   shouldApplyItem?: (columnField: string) => boolean,
-) => boolean;
+) => GridFilterResult;
 
 /**
  * Adds default values to the optional fields of a filter items.
@@ -133,8 +136,7 @@ export const buildAggregatedFilterItemsApplier = (
   filterModel: GridFilterModel,
   apiRef: React.MutableRefObject<GridApiCommunity>,
 ): GridFilterItemApplierNotAggregated | null => {
-  const { items, linkOperator = GridLinkOperator.And } = filterModel;
-  const tree = gridRowTreeSelector(apiRef);
+  const { items } = filterModel;
 
   const getFilterCallbackFromItem = (filterItem: GridFilterItem): GridFilterItemApplier | null => {
     if (!filterItem.columnField || !filterItem.operatorValue) {
@@ -194,21 +196,17 @@ export const buildAggregatedFilterItemsApplier = (
   }
 
   return (rowId, shouldApplyFilter) => {
-    if (tree[rowId].position === 'footer') {
-      return true;
-    }
+    const resultPerItemId: { [key: string]: boolean } = {};
 
     const filteredAppliers = shouldApplyFilter
       ? appliers.filter((applier) => shouldApplyFilter(applier.item.columnField))
       : appliers;
 
-    // Return `false` as soon as we have a failing filter
-    if (linkOperator === GridLinkOperator.And) {
-      return filteredAppliers.every((applier) => applier.fn(rowId));
-    }
+    filteredAppliers.forEach((applier) => {
+      resultPerItemId[applier.item.id as string] = applier.fn(rowId);
+    });
 
-    // Return `true` as soon as we have a passing filter
-    return filteredAppliers.some((applier) => applier.fn(rowId));
+    return resultPerItemId;
   };
 };
 
@@ -222,7 +220,7 @@ export const buildAggregatedQuickFilterApplier = (
   filterModel: GridFilterModel,
   apiRef: React.MutableRefObject<GridApiCommunity>,
 ): GridFilterItemApplierNotAggregated | null => {
-  const { quickFilterValues = [], quickFilterLogicOperator = GridLinkOperator.And } = filterModel;
+  const { quickFilterValues = [] } = filterModel;
   if (quickFilterValues.length === 0) {
     return null;
   }
@@ -250,6 +248,10 @@ export const buildAggregatedQuickFilterApplier = (
     ),
   );
 
+  if (sanitizedQuickFilterValues.length === 0) {
+    return null;
+  }
+
   return (rowId, shouldApplyFilter) => {
     const usedCellParams: { [field: string]: GridCellParams } = {};
     const columnsFieldsToFilter: string[] = [];
@@ -260,44 +262,116 @@ export const buildAggregatedQuickFilterApplier = (
         columnsFieldsToFilter.push(columnField);
       }
     });
-    // Return `false` as soon as we have a quick filter value that does not match any column
-    if (quickFilterLogicOperator === GridLinkOperator.And) {
-      return sanitizedQuickFilterValues.every((value, index) =>
-        columnsFieldsToFilter.some((field) => {
-          if (appliersPerColumnField[field][index] == null) {
-            return false;
-          }
-          return appliersPerColumnField[field][index]?.(usedCellParams[field]);
-        }),
-      );
-    }
 
-    // Return `true` as soon as we have have a quick filter value that match any column
-    return sanitizedQuickFilterValues.some((value, index) =>
-      columnsFieldsToFilter.some((field) => {
+    const quickFilterValueResult: GridFilterResult = {};
+    sanitizedQuickFilterValues.forEach((value, index) => {
+      const isPassing = columnsFieldsToFilter.some((field) => {
         if (appliersPerColumnField[field][index] == null) {
           return false;
         }
         return appliersPerColumnField[field][index]?.(usedCellParams[field]);
-      }),
-    );
+      });
+      quickFilterValueResult[value] = isPassing;
+    });
+
+    return quickFilterValueResult;
   };
 };
 
 export const buildAggregatedFilterApplier = (
   filterModel: GridFilterModel,
   apiRef: React.MutableRefObject<GridApiCommunity>,
-): GridAggregatedFilterItemApplier | null => {
+): GridAggregatedFilterItemApplier => {
   const isRowMatchingFilterItems = buildAggregatedFilterItemsApplier(filterModel, apiRef);
   const isRowMatchingQuickFilter = buildAggregatedQuickFilterApplier(filterModel, apiRef);
 
-  if (isRowMatchingFilterItems === null && isRowMatchingQuickFilter === null) {
-    return null;
-  }
   return (rowId, shouldApplyFilter) => ({
-    passFilterItems:
-      isRowMatchingFilterItems === null || isRowMatchingFilterItems(rowId, shouldApplyFilter),
-    passQuickFilter:
-      isRowMatchingQuickFilter === null || isRowMatchingQuickFilter(rowId, shouldApplyFilter),
+    passFilterItems: isRowMatchingFilterItems && isRowMatchingFilterItems(rowId, shouldApplyFilter),
+    passQuickFilter: isRowMatchingQuickFilter && isRowMatchingQuickFilter(rowId, shouldApplyFilter),
   });
+};
+
+type FilterResult = null | GridFilterResult;
+
+export const passFilterLogic = (
+  allFilterItemResults: FilterResult[],
+  allQuickFilterResults: FilterResult[],
+  filterModel: GridFilterModel,
+): boolean => {
+  const cleanedAllFilterItemResults = allFilterItemResults.filter(
+    (result) => result != null,
+  ) as GridFilterResult[];
+  const cleanedAllQuickFilterResults = allQuickFilterResults.filter(
+    (result) => result != null,
+  ) as GridFilterResult[];
+
+  // Defaultize operators
+  const quickFilterLogicOperator =
+    filterModel.quickFilterLogicOperator ?? getDefaultGridFilterModel().quickFilterLogicOperator;
+  const linkOperator = filterModel.linkOperator ?? getDefaultGridFilterModel().linkOperator;
+
+  // get result for filter items model
+  if (cleanedAllFilterItemResults.length > 0) {
+    if (linkOperator === GridLinkOperator.And) {
+      let itemIndex = 0;
+      while (itemIndex < filterModel.items.length) {
+        const item = filterModel.items[itemIndex];
+        if (!cleanedAllFilterItemResults.some((filterItemResult) => filterItemResult[item.id!])) {
+          // If we do not find a result for which item is passing
+          return false;
+        }
+        itemIndex += 1;
+      }
+    } else {
+      let isMatchingFilterItems = false;
+      let itemIndex = 0;
+      while (!isMatchingFilterItems && itemIndex < filterModel.items.length) {
+        const item = filterModel.items[itemIndex];
+        if (cleanedAllFilterItemResults.some((filterItemResult) => filterItemResult[item.id!])) {
+          // If we find a result for which item is passing
+          isMatchingFilterItems = true;
+        }
+        itemIndex += 1;
+      }
+      if (!isMatchingFilterItems) {
+        return false;
+      }
+    }
+  }
+
+  // get result for quick filter model
+  if (cleanedAllQuickFilterResults.length > 0) {
+    if (filterModel.quickFilterValues != null) {
+      if (quickFilterLogicOperator === GridLinkOperator.And) {
+        let quickFilterValueIndex = 0;
+        while (quickFilterValueIndex < filterModel.quickFilterValues.length) {
+          const value = filterModel.quickFilterValues[quickFilterValueIndex];
+          if (!cleanedAllQuickFilterResults.some((quickFilterResult) => quickFilterResult[value])) {
+            // If we do not find a result for which item is passing
+            return false;
+          }
+          quickFilterValueIndex += 1;
+        }
+      } else {
+        let isMatchingQuickFilter = false;
+        let quickFilterValueIndex = 0;
+        while (
+          !isMatchingQuickFilter &&
+          quickFilterValueIndex < filterModel.quickFilterValues.length
+        ) {
+          const value = filterModel.quickFilterValues[quickFilterValueIndex];
+          if (cleanedAllQuickFilterResults.some((quickFilterResult) => quickFilterResult[value])) {
+            // If we find a result for which item is passing
+            isMatchingQuickFilter = true;
+          }
+          quickFilterValueIndex += 1;
+        }
+        if (!isMatchingQuickFilter) {
+          return false;
+        }
+      }
+    }
+  }
+
+  return true;
 };

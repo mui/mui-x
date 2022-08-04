@@ -26,6 +26,7 @@ import {
   sanitizeFilterModel,
   mergeStateWithFilterModel,
   cleanFilterItem,
+  passFilterLogic,
 } from './gridFilterUtils';
 import { GridStateInitializer } from '../../utils/useGridInitializeState';
 import { isDeepEqual } from '../../../utils/utils';
@@ -84,7 +85,7 @@ export const useGridFilter = (
 
       const filteringResult = apiRef.current.unstable_applyStrategyProcessor('filtering', {
         isRowMatchingFilters,
-        linkOperator: filterModel.linkOperator ?? getDefaultGridFilterModel().linkOperator,
+        filterModel: filterModel ?? getDefaultGridFilterModel(),
       });
 
       return {
@@ -348,8 +349,18 @@ export const useGridFilter = (
         const filteredRowsLookup: Record<GridRowId, boolean> = {};
         for (let i = 0; i < rowIds.length; i += 1) {
           const rowId = rowIds[i];
-          const { passFilterItems, passQuickFilter } = params.isRowMatchingFilters(rowId);
-          filteredRowsLookup[rowId] = passFilterItems && passQuickFilter;
+          let isRowPassing;
+          if (typeof rowId === 'string' && rowId.startsWith('auto-generated-group-footer')) {
+            isRowPassing = true;
+          } else {
+            const { passFilterItems, passQuickFilter } = params.isRowMatchingFilters(rowId);
+            isRowPassing = passFilterLogic(
+              [passFilterItems],
+              [passQuickFilter],
+              params.filterModel,
+            );
+          }
+          filteredRowsLookup[rowId] = isRowPassing;
         }
         return {
           filteredRowsLookup,

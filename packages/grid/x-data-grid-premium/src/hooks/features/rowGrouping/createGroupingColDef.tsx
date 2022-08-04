@@ -74,10 +74,6 @@ const getLeafProperties = (leafColDef: GridColDef): Partial<GridColDef> => ({
       }
 
       return (params) => {
-        // We only want to filter leaves
-        if (params.rowNode.groupingField != null) {
-          return true;
-        }
 
         return originalFn(params);
       };
@@ -120,10 +116,6 @@ const getGroupingCriteriaProperties = (
         }
 
         return (params) => {
-          // We only want to filter the groups of the current grouping criteria
-          if (params.rowNode.groupingField !== groupedByColDef.field) {
-            return true;
-          }
 
           return originalFn(params);
         };
