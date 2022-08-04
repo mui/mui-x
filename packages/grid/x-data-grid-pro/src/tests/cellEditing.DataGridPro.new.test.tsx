@@ -693,6 +693,16 @@ describe('<DataGridPro /> - Cell Editing', () => {
     });
 
     describe('by pressing a printable character', () => {
+      it('should call startCellEditMode', () => {
+        render(<TestCase />);
+        const spiedStartCellEditMode = spy(apiRef.current, 'startCellEditMode');
+        const cell = getCell(0, 1);
+        fireEvent.mouseUp(cell);
+        fireEvent.click(cell);
+        fireEvent.keyDown(cell, { key: 'a' }); // A
+        expect(spiedStartCellEditMode.callCount).to.equal(1);
+      });
+
       it(`should publish 'cellEditStart' with reason=printableKeyDown`, () => {
         render(<TestCase />);
         const listener = spy();
@@ -700,7 +710,7 @@ describe('<DataGridPro /> - Cell Editing', () => {
         const cell = getCell(0, 1);
         fireEvent.mouseUp(cell);
         fireEvent.click(cell);
-        fireEvent.keyDown(cell, { key: 'a' });
+        fireEvent.keyDown(cell, { key: 'a' }); // A
         expect(listener.lastCall.args[0].reason).to.equal('printableKeyDown');
       });
 
@@ -711,11 +721,11 @@ describe('<DataGridPro /> - Cell Editing', () => {
         const cell = getCell(0, 0);
         fireEvent.mouseUp(cell);
         fireEvent.click(cell);
-        fireEvent.keyDown(cell, { key: 'a' });
+        fireEvent.keyDown(cell, { key: 'a' }); // A
         expect(listener.callCount).to.equal(0);
       });
 
-      ['ctrlKey', 'metaKey', 'altKey'].forEach((key) => {
+      ['ctrlKey', 'metaKey'].forEach((key) => {
         it(`should not publish 'cellEditStart' if ${key} is pressed`, () => {
           render(<TestCase />);
           const listener = spy();
@@ -723,52 +733,42 @@ describe('<DataGridPro /> - Cell Editing', () => {
           const cell = getCell(0, 1);
           fireEvent.mouseUp(cell);
           fireEvent.click(cell);
-          fireEvent.keyDown(cell, { key: 'a', [key]: true });
+          fireEvent.keyDown(cell, { key: 'a', [key]: true }); // e.g. Ctrl + A, copy
           expect(listener.callCount).to.equal(0);
         });
       });
 
-      it(`should call startCellEditMod if shiftKey is pressed with a letter`, () => {
+      it(`should call startCellEditMode if shiftKey is pressed with a letter`, () => {
         render(<TestCase />);
         const listener = spy();
         apiRef.current.subscribeEvent('cellEditStart', listener);
         const cell = getCell(0, 1);
         fireEvent.mouseUp(cell);
         fireEvent.click(cell);
-        fireEvent.keyDown(cell, { key: 'a', shiftKey: true });
+        fireEvent.keyDown(cell, { key: 'a', shiftKey: true }); // Print A in uppercase
         expect(listener.callCount).to.equal(1);
       });
 
-      it(`should call startCellEditMod if ctrl+V is pressed`, () => {
+      it(`should call startCellEditMode if the paste shortcut is pressed`, () => {
         render(<TestCase />);
         const listener = spy();
         apiRef.current.subscribeEvent('cellEditStart', listener);
         const cell = getCell(0, 1);
         fireEvent.mouseUp(cell);
         fireEvent.click(cell);
-        fireEvent.keyDown(cell, { key: 'v', ctrlKey: true });
+        fireEvent.keyDown(cell, { key: 'v', ctrlKey: true }); // Ctrl+V
         expect(listener.callCount).to.equal(1);
       });
 
-      it(`should call startCellEditMod if meta+V is pressed`, () => {
+      it(`should call startCellEditMode if a special character on macOS is pressed`, () => {
         render(<TestCase />);
         const listener = spy();
         apiRef.current.subscribeEvent('cellEditStart', listener);
         const cell = getCell(0, 1);
         fireEvent.mouseUp(cell);
         fireEvent.click(cell);
-        fireEvent.keyDown(cell, { key: 'v', metaKey: true });
+        fireEvent.keyDown(cell, { key: 'π', altKey: true }); // ⌥ Option + P
         expect(listener.callCount).to.equal(1);
-      });
-
-      it('should call startCellEditMode', () => {
-        render(<TestCase />);
-        const spiedStartCellEditMode = spy(apiRef.current, 'startCellEditMode');
-        const cell = getCell(0, 1);
-        fireEvent.mouseUp(cell);
-        fireEvent.click(cell);
-        fireEvent.keyDown(cell, { key: 'a' });
-        expect(spiedStartCellEditMode.callCount).to.equal(1);
       });
 
       it('should empty the cell', () => {
