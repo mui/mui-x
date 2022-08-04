@@ -83,11 +83,11 @@ export const filterRowTreeFromGroupingColumns = (
   ): number => {
     let isPassingFiltering: boolean | undefined;
     let filterResults: {
-      passFilterItems: null | GridFilterResult;
-      passQuickFilter: null | GridFilterResult;
+      passingFilterItems: null | GridFilterResult;
+      passingQuickFilterValues: null | GridFilterResult;
     } = {
-      passFilterItems: null,
-      passQuickFilter: null,
+      passingFilterItems: null,
+      passingQuickFilterValues: null,
     };
 
     if (isRowMatchingFilters && node.position !== 'footer') {
@@ -118,8 +118,8 @@ export const filterRowTreeFromGroupingColumns = (
       } else {
         const allResults = [...ancestorsResults, filterResults];
         isPassingFiltering = passFilterLogic(
-          allResults.map((result) => result.passFilterItems),
-          allResults.map((result) => result.passQuickFilter),
+          allResults.map((result) => result.passingFilterItems),
+          allResults.map((result) => result.passingQuickFilterValues),
           filterModel,
         );
       }
@@ -177,10 +177,10 @@ export const getColDefOverrides = (
 
 export const mergeStateWithRowGroupingModel =
   (rowGroupingModel: GridRowGroupingModel) =>
-  (state: GridStatePremium): GridStatePremium => ({
-    ...state,
-    rowGrouping: { ...state.rowGrouping, model: rowGroupingModel },
-  });
+    (state: GridStatePremium): GridStatePremium => ({
+      ...state,
+      rowGrouping: { ...state.rowGrouping, model: rowGroupingModel },
+    });
 
 export const setStrategyAvailability = (
   apiRef: React.MutableRefObject<GridApiPremium>,

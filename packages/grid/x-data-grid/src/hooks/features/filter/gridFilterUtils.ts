@@ -121,10 +121,10 @@ export const mergeStateWithFilterModel =
     disableMultipleColumnsFiltering: boolean,
     apiRef: React.MutableRefObject<GridApiCommunity>,
   ) =>
-  (filteringState: GridStateCommunity['filter']): GridStateCommunity['filter'] => ({
-    ...filteringState,
-    filterModel: sanitizeFilterModel(filterModel, disableMultipleColumnsFiltering, apiRef),
-  });
+    (filteringState: GridStateCommunity['filter']): GridStateCommunity['filter'] => ({
+      ...filteringState,
+      filterModel: sanitizeFilterModel(filterModel, disableMultipleColumnsFiltering, apiRef),
+    });
 
 /**
  * Generates a method to easily check if a row is matching the current filter model.
@@ -286,8 +286,8 @@ export const buildAggregatedFilterApplier = (
   const isRowMatchingQuickFilter = buildAggregatedQuickFilterApplier(filterModel, apiRef);
 
   return (rowId, shouldApplyFilter) => ({
-    passFilterItems: isRowMatchingFilterItems && isRowMatchingFilterItems(rowId, shouldApplyFilter),
-    passQuickFilter: isRowMatchingQuickFilter && isRowMatchingQuickFilter(rowId, shouldApplyFilter),
+    passingFilterItems: isRowMatchingFilterItems && isRowMatchingFilterItems(rowId, shouldApplyFilter),
+    passingQuickFilterValues: isRowMatchingQuickFilter && isRowMatchingQuickFilter(rowId, shouldApplyFilter),
   });
 };
 

@@ -49,7 +49,7 @@ export interface GridFilterInitialState {
 export type GridAggregatedFilterItemApplier = (
   rowId: GridRowId,
   shouldApplyItem?: (columnField: string) => boolean,
-) => { passFilterItems: null | GridFilterResult; passQuickFilter: null | GridFilterResult };
+) => { passingFilterItems: null | GridFilterResult; passingQuickFilterValues: null | GridFilterResult };
 
 export interface GridFilteringMethodParams {
   isRowMatchingFilters: GridAggregatedFilterItemApplier | null;

@@ -42,8 +42,8 @@ export const filterRowTreeFromTreeData = (
     } else if (!isRowMatchingFilters || node.position === 'footer') {
       isMatchingFilters = true;
     } else {
-      const { passFilterItems, passQuickFilter } = isRowMatchingFilters(node.id);
-      isMatchingFilters = passFilterLogic([passFilterItems], [passQuickFilter], params.filterModel);
+      const { passingFilterItems, passingQuickFilterValues } = isRowMatchingFilters(node.id);
+      isMatchingFilters = passFilterLogic([passingFilterItems], [passingQuickFilterValues], params.filterModel);
     }
 
     let filteredDescendantCount = 0;
