@@ -3,6 +3,47 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 5.15.1
+
+_Aug 4, 2022_
+
+We'd like to offer a big thanks to the 10 contributors who made this release possible. Here are some highlights ✨:
+
+- 📚 New [page presenting the `apiRef`](https://mui.com/x/react-data-grid/api-object/) (#5273) @flaviendelangle
+- ✨ Better keyboard support for start editing cells (#5511) @oliviertassinari
+- 🌍 Improvements to different locales
+- 🐞 Bugfixes
+
+### `@mui/x-data-grid@v5.15.1` / `@mui/x-data-grid-pro@v5.15.1` / `@mui/x-data-grid-premium@v5.15.1`
+
+#### Changes
+
+- [DataGrid] Improve start edit UX (#5511) @oliviertassinari
+- [DataGrid] Add `initialOpen` prop to `GridEditSingleSelectCell` to allow overriding initial open state (#5645) @shapaaa
+- [DataGrid] Forward `ref` to root element in `GridEditInputCell` (#5631) @Zenoo
+- [DataGrid] Toggle open state when clicking on buttons in the `GridToolbar` (#5503) @cherniavskii
+- [DataGrid] Improve German (de-DE) locale (#5586) @sebastianfrey
+- [DataGrid] Improve Korean (ko-KR) locale (#5668) @Einere
+- [DataGrid] Complete Italian (it-IT) locale (#5487) @mamodev
+
+### `@mui/x-date-pickers@v5.0.0-beta.4` / `@mui/x-date-picker-pro@5.0.0-beta.4`
+
+#### Changes
+
+- [DatePicker] Customize day formatter in the calendar (#5373) @alexfauquette
+
+### Docs
+
+- [docs] New location for the legal content (#5595) @oliviertassinari
+- [docs] Update description of `maxDateTime` prop (#5639) @jurecuhalev
+- [docs] Add missing `date-fns` dependency when opening Codesandbox demo (#5692) @cherniavskii
+
+### Core
+
+- [core] Drop usage of `GRID_EXPERIMENTAL_ENABLED` env variable (#5669) @ar7casper
+- [core] Isolate asset loading under /x/ (#5594) @oliviertassinari
+- [core] Upgrade node to v14 (#4999) @cherniavskii
+
 ## 5.15.0
 
 _Jul 29, 2022_
@@ -13,7 +54,7 @@ We'd like to offer a big thanks to the 6 contributors who made this release poss
 
   Premium users can now aggregate data in the grid.
   Extract information like sum, average, count, and others with a couple of clicks.
-  
+
   https://user-images.githubusercontent.com/45398769/181581503-77cc412e-9d9e-4de1-8bc3-c3bccc54cdaa.mp4
 
   To enable this feature, add `experimentalFeatures={{ aggregation: true }}`.
