@@ -7,10 +7,10 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 _Aug 4, 2022_
 
-We'd like to offer a big thanks to the 9 contributors who made this release possible. Here are some highlights ✨:
+We'd like to offer a big thanks to the 10 contributors who made this release possible. Here are some highlights ✨:
 
 - 📚 New [page presenting the `apiRef`](https://mui.com/x/react-data-grid/api-object/) (#5273) @flaviendelangle
-- ✨ Improve start edit UX (#5511) @oliviertassinari
+- ✨ Better keyboard support for start editing cells (#5511) @oliviertassinari
 - 🌍 Improvements to different locales
 - 🐞 Bugfixes
 
@@ -19,12 +19,18 @@ We'd like to offer a big thanks to the 9 contributors who made this release poss
 #### Changes
 
 - [DataGrid] Improve start edit UX (#5511) @oliviertassinari
-- [DataGrid] Add `initialOpen` prop to `GridEditSingleSelectCell` to allow overriding default behavior on cell edit mode (#5645) @shapaaa
+- [DataGrid] Add `initialOpen` prop to `GridEditSingleSelectCell` to allow overriding initial open state (#5645) @shapaaa
 - [DataGrid] Forward `ref` to root element in `GridEditInputCell` (#5631) @Zenoo
-- [DataGrid] Toggle open state when clicking on buttons in `GridToolbar` (#5503) @cherniavskii
+- [DataGrid] Toggle open state when clicking on buttons in the `GridToolbar` (#5503) @cherniavskii
 - [DataGrid] Improve German (de-DE) locale (#5586) @sebastianfrey
 - [DataGrid] Improve Korean (ko-KR) locale (#5668) @Einere
 - [DataGrid] Complete Italian (it-IT) locale (#5487) @mamodev
+
+### `@mui/x-date-pickers@v5.0.0-beta.4` / `@mui/x-date-picker-pro@5.0.0-beta.4`
+
+#### Changes
+
+- [DatePicker] Customize day formatter in the calendar (#5373) @alexfauquette
 
 ### Docs
 
