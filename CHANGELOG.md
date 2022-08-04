@@ -36,6 +36,7 @@ We'd like to offer a big thanks to the 10 contributors who made this release pos
 
 - [docs] New location for the legal content (#5595) @oliviertassinari
 - [docs] Update description of `maxDateTime` prop (#5639) @jurecuhalev
+- [docs] Add missing `date-fns` dependency when opening Codesandbox demo (#5692) @cherniavskii
 
 ### Core
 
