@@ -37,25 +37,24 @@ A column can only be associated with one group.
 :::
 
 ```jsx
-columnGroupingModel={[
+<DataGrid
+  columnGroupingModel={[
     {
-        groupId: "internal data",
-        children: [{ field: "id" }]
+      groupId: 'internal data',
+      children: [{ field: 'id' }],
     },
     {
-        groupId: "character",
-        children: [
-            {
-                groupId: "naming",
-                children: [
-                    { field: "lastName" },
-                    { field: "firstName" },
-                ]
-            },
-            { field: "age" }
-        ]
-    }
-]}
+      groupId: 'character',
+      children: [
+        {
+          groupId: 'naming',
+          children: [{ field: 'lastName' }, { field: 'firstName' }],
+        },
+        { field: 'age' },
+      ],
+    },
+  ]}
+/>
 ```
 
 {{"demo": "BasicGroupingDemo.js", "bg": "inline"}}
