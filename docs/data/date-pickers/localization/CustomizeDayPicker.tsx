@@ -4,7 +4,7 @@ import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { StaticDatePicker } from '@mui/x-date-pickers/StaticDatePicker';
 
-const adapter = new AdapterDateFns()
+const adapter = new AdapterDateFns();
 export default function CustomizeDayPicker() {
   const [value, setValue] = React.useState<Date | null>(adapter.date());
 
