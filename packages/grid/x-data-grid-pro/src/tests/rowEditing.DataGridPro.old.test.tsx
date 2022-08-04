@@ -125,7 +125,6 @@ describe('<DataGridPro /> - Row Editing', () => {
     clock.tick(500);
     expect(input!.value).to.equal('ADIDAS');
     fireEvent.keyDown(input, { key: 'Enter' });
-
     await waitFor(() => {
       expect(cell).to.have.text('ADIDAS');
     });
@@ -139,7 +138,6 @@ describe('<DataGridPro /> - Row Editing', () => {
     fireEvent.change(input, { target: { value: 'ADIDAS' } });
     expect(input!.value).to.equal('ADIDAS');
     fireEvent.keyDown(input, { key: 'Enter' });
-
     await waitFor(() => {
       expect(getCell(2, 0)).toHaveFocus();
     });
@@ -154,9 +152,7 @@ describe('<DataGridPro /> - Row Editing', () => {
     clock.tick(500);
     expect(input!.value).to.equal('ADIDAS');
     fireClickEvent(getCell(2, 0));
-
-    await act(async () => clock.tick(0));
-
+    clock.tick(0);
     await waitFor(() => {
       // Wait for promise
       expect(cell).not.to.have.class('MuiDataGrid-cell--editing');
@@ -202,7 +198,6 @@ describe('<DataGridPro /> - Row Editing', () => {
     clock.tick(500);
     fireEvent.keyDown(input, { key: 'Enter' });
     await act(() => Promise.resolve());
-
     expect(valueSetter.callCount).to.equal(1);
     expect(valueSetter.lastCall.args[0]).to.deep.equal({
       row: { id: 0, firstName: 'John', lastName: 'Doe' },
@@ -235,10 +230,7 @@ describe('<DataGridPro /> - Row Editing', () => {
     const secondInput = secondCell.querySelector('input');
     const firstInput = firstCell.querySelector('input');
     fireEvent.change(firstInput, { target: { value: 'ADIDAS' } });
-    await act(() => Promise.resolve());
-
-    await act(async () => clock.tick(500));
-
+    clock.tick(500);
     await waitFor(() => {
       expect(firstInput).to.have.attribute('aria-invalid', 'true');
       expect(secondInput).to.have.attribute('aria-invalid', 'true');
@@ -263,10 +255,7 @@ describe('<DataGridPro /> - Row Editing', () => {
     const firstInput = firstCell.querySelector('input');
     const secondInput = secondCell.querySelector('input');
     fireEvent.change(firstInput, { target: { value: 'ADIDAS' } });
-    await act(() => Promise.resolve());
-
-    await act(async () => clock.tick(500));
-
+    clock.tick(500);
     await waitFor(() => {
       expect(firstInput).to.have.attribute('aria-invalid', 'true');
       expect(secondInput).to.have.attribute('aria-invalid', 'true');
@@ -297,8 +286,6 @@ describe('<DataGridPro /> - Row Editing', () => {
     expect(apiRef.current.getEditRowsModel()[0].brand.value).to.equal('Adidas');
     fireEvent.keyDown(input, { key: 'Enter' });
     await act(() => Promise.resolve());
-
-    await Promise.resolve();
     expect(cell).not.to.have.class('MuiDataGrid-cell--editing');
     expect(cell).to.have.text('Adidas');
   });
@@ -336,9 +323,6 @@ describe('<DataGridPro /> - Row Editing', () => {
     clock.tick(500);
     fireEvent.keyDown(input, { key: 'Enter' });
     await act(() => Promise.resolve());
-
-    await Promise.resolve(); // Wait for promise
-
     expect(brandPreProcessEditCellProps.callCount).to.equal(2);
     expect(brandPreProcessEditCellProps.args[0][0].props).to.deep.equal({ value: 'Adidas' });
     expect(brandPreProcessEditCellProps.args[1][0].props).to.deep.equal({ value: 'Nike' });
@@ -382,9 +366,6 @@ describe('<DataGridPro /> - Row Editing', () => {
     clock.tick(500);
     fireEvent.keyDown(input, { key: 'Enter' });
     await act(() => Promise.resolve());
-
-    await Promise.resolve(); // Wait for promise
-
     expect(brandPreProcessEditCellProps.callCount).to.equal(1);
     expect(brandPreProcessEditCellProps.lastCall.args[0].props).to.deep.equal({
       value: 'Adidas',
@@ -425,7 +406,6 @@ describe('<DataGridPro /> - Row Editing', () => {
     clock.tick(500);
     fireEvent.keyDown(input, { key: 'Enter' });
     await act(() => Promise.resolve());
-
     expect(preProcessEditCellProps.callCount).to.equal(1);
     expect(preProcessEditCellProps.lastCall.args[0].props).to.deep.equal({
       value: 'ADIDAS',
@@ -456,7 +436,6 @@ describe('<DataGridPro /> - Row Editing', () => {
     const input = cell.querySelector('input')!;
     fireEvent.change(input, { target: { value: 'Adidas' } });
     fireEvent.keyDown(input, { key: 'Enter' });
-    await Promise.resolve(); // Wait for promise
     clock.runToLast();
     expect(getRow(1)).not.to.have.class('MuiDataGrid-row--editing');
   });
