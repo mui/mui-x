@@ -85,7 +85,7 @@ When upgrading from Pro, you can upgrade the dependency on `@mui/x-data-grid-pro
 ```
 
 :::info
-**Note:** You can use your Pro license as a credit when purchasing MUI X Premium.
+You can use your Pro license as a credit when purchasing MUI X Premium.
 We'll provide you with a discount based on the remaining time that your current license is valid.
 Please contact us at [sales@mui.com](mailto:sales@mui.com?subject=My%20upgrade%20discount%20to%20Premium) to upgrade.
 :::
