@@ -74,7 +74,6 @@ const getLeafProperties = (leafColDef: GridColDef): Partial<GridColDef> => ({
       }
 
       return (params) => {
-
         return originalFn(params);
       };
     },
@@ -116,7 +115,6 @@ const getGroupingCriteriaProperties = (
         }
 
         return (params) => {
-
           return originalFn(params);
         };
       },

@@ -177,10 +177,10 @@ export const getColDefOverrides = (
 
 export const mergeStateWithRowGroupingModel =
   (rowGroupingModel: GridRowGroupingModel) =>
-    (state: GridStatePremium): GridStatePremium => ({
-      ...state,
-      rowGrouping: { ...state.rowGrouping, model: rowGroupingModel },
-    });
+  (state: GridStatePremium): GridStatePremium => ({
+    ...state,
+    rowGrouping: { ...state.rowGrouping, model: rowGroupingModel },
+  });
 
 export const setStrategyAvailability = (
   apiRef: React.MutableRefObject<GridApiPremium>,

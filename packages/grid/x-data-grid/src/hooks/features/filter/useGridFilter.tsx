@@ -353,7 +353,8 @@ export const useGridFilter = (
           if (typeof rowId === 'string' && rowId.startsWith('auto-generated-group-footer')) {
             isRowPassing = true;
           } else {
-            const { passingFilterItems, passingQuickFilterValues } = params.isRowMatchingFilters(rowId);
+            const { passingFilterItems, passingQuickFilterValues } =
+              params.isRowMatchingFilters(rowId);
             isRowPassing = passFilterLogic(
               [passingFilterItems],
               [passingQuickFilterValues],
