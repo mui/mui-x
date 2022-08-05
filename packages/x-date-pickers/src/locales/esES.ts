@@ -8,9 +8,7 @@ const views = {
   seconds: 'los segundos',
 };
 
-// This object is not Partial<PickersLocaleText> because it is the default values
-
-const esESPickers: PickersLocaleText<any> = {
+const esESPickers: Partial<PickersLocaleText<any>> = {
   // Calendar navigation
   previousMonth: 'Último mes',
   nextMonth: 'Próximo mes',

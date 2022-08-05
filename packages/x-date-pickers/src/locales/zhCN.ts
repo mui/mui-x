@@ -8,9 +8,7 @@ const views = {
   seconds: '秒',
 };
 
-// This object is not Partial<PickersLocaleText> because it is the default values
-
-const zhCNPickers: PickersLocaleText<any> = {
+const zhCNPickers: Partial<PickersLocaleText<any>> = {
   // Calendar navigation
   previousMonth: '上个月',
   nextMonth: '下个月',

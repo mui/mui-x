@@ -8,9 +8,7 @@ const views = {
   seconds: 'i secondi',
 };
 
-// This object is not Partial<PickersLocaleText> because it is the default values
-
-const itITPickers: PickersLocaleText<any> = {
+const itITPickers: Partial<PickersLocaleText<any>> = {
   // Calendar navigation
   previousMonth: 'Mese precedente',
   nextMonth: 'Mese successivo',
@@ -35,10 +33,10 @@ const itITPickers: PickersLocaleText<any> = {
   todayButtonLabel: 'Oggi',
 
   // Toolbar titles
-  // datePickerDefaultToolbarTitle: 'Select date',
-  // dateTimePickerDefaultToolbarTitle: 'Select date & time',
-  // timePickerDefaultToolbarTitle: 'Select time',
-  // dateRangePickerDefaultToolbarTitle: 'Select date range',
+  datePickerDefaultToolbarTitle: '',
+  dateTimePickerDefaultToolbarTitle: '',
+  timePickerDefaultToolbarTitle: '',
+  dateRangePickerDefaultToolbarTitle: '',
 
   // Clock labels
   clockLabelText: (view, time, adapter) =>
