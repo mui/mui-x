@@ -116,14 +116,14 @@ describe('<DesktopDateRangePicker />', () => {
 
       openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'start' });
 
-      fireEvent.click(screen.getByLabelText('Jan 1, 2019'));
+      fireEvent.mouseDown(screen.getByLabelText('Jan 1, 2019'));
       // FIXME use `getByRole(role, {hidden: false})` and skip JSDOM once this suite can run in JSDOM
       const [visibleButton] = screen.getAllByRole('button', {
         hidden: true,
         name: 'Next month',
       });
       fireEvent.click(visibleButton);
-      fireEvent.click(screen.getByLabelText('Mar 19, 2019'));
+      fireEvent.mouseDown(screen.getByLabelText('Mar 19, 2019'));
 
       expect(handleChange.callCount).to.equal(1);
       const [changedRange] = handleChange.lastCall.args;
@@ -143,12 +143,12 @@ describe('<DesktopDateRangePicker />', () => {
 
       openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'start' });
 
-      fireEvent.click(screen.getByLabelText('Jan 30, 2019'));
-      fireEvent.click(screen.getByLabelText('Jan 19, 2019'));
+      fireEvent.mouseDown(screen.getByLabelText('Jan 30, 2019'));
+      fireEvent.mouseDown(screen.getByLabelText('Jan 19, 2019'));
 
       expect(screen.queryByMuiTest('DateRangeHighlight')).to.equal(null);
 
-      fireEvent.click(screen.getByLabelText('Jan 30, 2019'));
+      fireEvent.mouseDown(screen.getByLabelText('Jan 30, 2019'));
 
       expect(handleChange.callCount).to.equal(3);
       const [changedRange] = handleChange.lastCall.args;

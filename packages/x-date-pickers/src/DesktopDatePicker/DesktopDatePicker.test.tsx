@@ -313,7 +313,7 @@ describe('<DesktopDatePicker />', () => {
       expect(onClose.callCount).to.equal(0);
 
       // Change the date
-      fireEvent.click(screen.getByLabelText('Jan 8, 2018'));
+      fireEvent.mouseDown(screen.getByLabelText('Jan 8, 2018'));
       expect(onChange.callCount).to.equal(1);
       expect(onChange.lastCall.args[0]).toEqualDateTime(new Date(2018, 0, 8));
       expect(onAccept.callCount).to.equal(1);

@@ -47,7 +47,7 @@ describe('<PickersDay />', () => {
     // - fireEvent.keyUp(targetDay, { key: 'Space' })
     expect(targetDay.tagName).to.equal('BUTTON');
 
-    fireEvent.click(targetDay);
+    fireEvent.mouseDown(targetDay);
 
     expect(handleDaySelect.callCount).to.equal(1);
     expect(handleDaySelect.args[0][0]).toEqualDateTime(day);

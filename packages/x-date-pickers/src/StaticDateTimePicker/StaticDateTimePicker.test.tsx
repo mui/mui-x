@@ -19,7 +19,7 @@ describe('<StaticDateTimePicker />', () => {
       />,
     );
 
-    fireEvent.click(screen.getByLabelText('Jan 1, 2018'));
+    fireEvent.mouseDown(screen.getByLabelText('Jan 1, 2018'));
     expect(onChangeMock.callCount).to.equal(0);
 
     expect(screen.getByLabelText(/Selected time/)).toBeVisible();
