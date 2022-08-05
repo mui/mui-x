@@ -94,7 +94,7 @@
     "@types/enzyme": "^3.10.12",
     "@types/mocha": "^9.1.1",
     "@types/node": "^18.0.6",
-    "@types/prettier": "^2.6.3",
+    "@types/prettier": "^2.7.0",
     "@types/react": "^17.0.47",
     "@types/react-dom": "^18.0.6",
     "@types/requestidlecallback": "^0.3.4",
