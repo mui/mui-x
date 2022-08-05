@@ -66,7 +66,7 @@ describe('<DateRangePicker />', () => {
     );
     fireEvent.click(screen.getByRole('textbox'));
     clock.runToLast();
-    
+
     expect(screen.getByRole('dialog')).not.to.equal(null);
     expect(screen.queryByRole('tooltip')).to.equal(null);
 
