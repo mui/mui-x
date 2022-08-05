@@ -194,8 +194,6 @@ jobs:
       - run:
           name: Tests real browsers
           command: yarn test:karma
-          environment:
-            BROWSERSTACK_FORCE: "true"
       - store_artifacts:
           # hardcoded in karma-webpack
           path: /tmp/_karma_webpack_
