@@ -22,6 +22,7 @@ const itITPickers: PickersLocaleText<any> = {
     view === 'year'
       ? "la vista dell'anno è aperta, passare alla vista del calendario"
       : "la vista dell'calendario è aperta, passare alla vista dell'anno",
+  // toolbarInterfaceModifierButtonAriaLabel: (isKeyboardInputOpen: boolean, viewType: 'calendar' | 'clock') => isKeyboardInputOpen ? `text input view is open, go to ${viewType} view` : `${viewType} view is open, go to text input view`,
 
   // DateRange placeholders
   start: 'Inizio',
@@ -32,6 +33,12 @@ const itITPickers: PickersLocaleText<any> = {
   clearButtonLabel: 'Sgomberare',
   okButtonLabel: 'OK',
   todayButtonLabel: 'Oggi',
+
+  // Toolbar titles
+  // datePickerDefaultToolbarTitle: 'Select date',
+  // dateTimePickerDefaultToolbarTitle: 'Select date & time',
+  // timePickerDefaultToolbarTitle: 'Select time',
+  // dateRangePickerDefaultToolbarTitle: 'Select date range',
 
   // Clock labels
   clockLabelText: (view, time, adapter) =>

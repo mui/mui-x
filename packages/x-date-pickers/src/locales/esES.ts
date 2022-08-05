@@ -22,6 +22,7 @@ const esESPickers: PickersLocaleText<any> = {
     view === 'year'
       ? 'la vista del año está abierta, cambie a la vista de calendario'
       : 'la vista de calendario está abierta, cambie a la vista del año',
+  // toolbarInterfaceModifierButtonAriaLabel: (isKeyboardInputOpen: boolean, viewType: 'calendar' | 'clock') => isKeyboardInputOpen ? `text input view is open, go to ${viewType} view` : `${viewType} view is open, go to text input view`,
 
   // DateRange placeholders
   start: 'Empezar',
@@ -32,6 +33,12 @@ const esESPickers: PickersLocaleText<any> = {
   clearButtonLabel: 'Limpia',
   okButtonLabel: 'OK',
   todayButtonLabel: 'Hoy',
+
+  // Toolbar titles
+  // datePickerDefaultToolbarTitle: 'Select date',
+  // dateTimePickerDefaultToolbarTitle: 'Select date & time',
+  // timePickerDefaultToolbarTitle: 'Select time',
+  // dateRangePickerDefaultToolbarTitle: 'Select date range',
 
   // Clock labels
   clockLabelText: (view, time, adapter) =>

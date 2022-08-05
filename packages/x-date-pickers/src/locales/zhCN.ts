@@ -20,6 +20,7 @@ const zhCNPickers: PickersLocaleText<any> = {
   openNextView: '下一个视图',
   calendarViewSwitchingButtonAriaLabel: (view: CalendarPickerView) =>
     view === 'year' ? '年视图已打开，切换为日历视图' : '日历视图已打开，切换为年视图',
+  // toolbarInterfaceModifierButtonAriaLabel: (isKeyboardInputOpen: boolean, viewType: 'calendar' | 'clock') => isKeyboardInputOpen ? `text input view is open, go to ${viewType} view` : `${viewType} view is open, go to text input view`,
 
   // DateRange placeholders
   start: '开始',
@@ -30,6 +31,12 @@ const zhCNPickers: PickersLocaleText<any> = {
   clearButtonLabel: '清除',
   okButtonLabel: '确认',
   todayButtonLabel: '今天',
+
+  // Toolbar titles
+  // datePickerDefaultToolbarTitle: 'Select date',
+  // dateTimePickerDefaultToolbarTitle: 'Select date & time',
+  // timePickerDefaultToolbarTitle: 'Select time',
+  // dateRangePickerDefaultToolbarTitle: 'Select date range',
 
   // Clock labels
   clockLabelText: (view, time, adapter) =>
