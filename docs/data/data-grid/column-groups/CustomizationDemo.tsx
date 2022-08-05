@@ -6,7 +6,6 @@ import {
   GridColumnGroupHeaderParams,
   GridColumnGroupingModel,
 } from '@mui/x-data-grid-pro';
-
 import BuildIcon from '@mui/icons-material/Build';
 import PersonIcon from '@mui/icons-material/Person';
 

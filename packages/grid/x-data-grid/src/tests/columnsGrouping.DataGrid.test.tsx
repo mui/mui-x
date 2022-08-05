@@ -272,7 +272,7 @@ describe('<DataGrid /> - Column grouping', () => {
       </ErrorBoundary>
     );
 
-    it('should log an error if two groups have the same id', function test() {
+    it('should log an error if two groups have the same id', () => {
       expect(() => {
         render(
           <TestWithError
@@ -288,7 +288,7 @@ describe('<DataGrid /> - Column grouping', () => {
       }).toErrorDev();
     });
 
-    it('should log an error if a columns is referenced in two groups', function test() {
+    it('should log an error if a columns is referenced in two groups', () => {
       expect(() => {
         render(
           <TestWithError
@@ -308,7 +308,7 @@ describe('<DataGrid /> - Column grouping', () => {
       }).toErrorDev();
     });
 
-    it('should log an error if a group have no id', function test() {
+    it('should log an error if a group have no id', () => {
       expect(() => {
         try {
           render(
@@ -334,7 +334,7 @@ describe('<DataGrid /> - Column grouping', () => {
       );
     });
 
-    it('should log an warning if a group have no children', function test() {
+    it('should log a warning if a group has no children', () => {
       expect(() => {
         render(
           <TestWithError

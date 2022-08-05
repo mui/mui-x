@@ -45,7 +45,7 @@ export interface GridColumnGroup
    */
   children: GridColumnNode[];
   /**
-   * If `true` allows to reorder columns outside of the group.
+   * If `true`, allows reordering columns outside of the group.
    * @default false
    */
   freeReordering?: boolean;

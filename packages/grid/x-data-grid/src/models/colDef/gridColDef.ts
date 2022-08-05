@@ -287,7 +287,7 @@ export type GridStateColDef<R extends GridValidRowModel = any, V = any, F = V> =
   /**
    * The id of the groups leading to the column.
    * The array is ordered by increasing depth (the last element is the direct parent of the column).
-   * If not defined, the column is in no group (equivalent to a path equal to `[]`)
+   * If not defined, the column is in no group (equivalent to a path equal to `[]`).
    * This parameter is computed from the `columnGroupingModel` prop.
    */
   groupPath?: string[];
