@@ -11,7 +11,7 @@ import {
 } from '../../../../test/utils/pickers-utils';
 
 describe('<DateRangePicker />', () => {
-  const { render } = createPickerRenderer();
+  const { render, clock } = createPickerRenderer({ clock: 'fake' });
 
   describeConformance(
     <DateRangePicker
@@ -47,6 +47,9 @@ describe('<DateRangePicker />', () => {
       />,
     );
     fireEvent.click(screen.getByRole('textbox'));
+    clock.runToLast();
+
+    expect(screen.queryByRole('tooltip')).not.to.equal(null);
     expect(screen.queryByRole('dialog')).to.equal(null);
   });
 
@@ -62,7 +65,10 @@ describe('<DateRangePicker />', () => {
       />,
     );
     fireEvent.click(screen.getByRole('textbox'));
-    expect(screen.getByRole('dialog')).to.not.equal(null);
+    clock.runToLast();
+    
+    expect(screen.getByRole('dialog')).not.to.equal(null);
+    expect(screen.queryByRole('tooltip')).to.equal(null);
 
     window.matchMedia = originalMatchMedia;
   });
