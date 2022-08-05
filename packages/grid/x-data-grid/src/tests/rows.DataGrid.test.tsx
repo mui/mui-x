@@ -1,6 +1,11 @@
 import * as React from 'react';
-// @ts-ignore Remove once the test utils are typed
-import { createRenderer, fireEvent, screen } from '@mui/monorepo/test/utils';
+import {
+  createRenderer,
+  fireEvent,
+  screen,
+  act,
+  // @ts-ignore Remove once the test utils are typed
+} from '@mui/monorepo/test/utils';
 import clsx from 'clsx';
 import { expect } from 'chai';
 import { spy, stub } from 'sinon';
@@ -183,6 +188,7 @@ describe('<DataGrid /> - Rows', () => {
       expect(() => {
         render(<TestCase />);
       }).toErrorDev([
+        'MUI: Missing the `getActions` property in the `GridColDef`.',
         'MUI: Missing the `getActions` property in the `GridColDef`.',
         'The above error occurred in the <GridActionsCell> component',
         'MUI: GridErrorHandler - An unexpected error occurred.',
@@ -561,7 +567,7 @@ describe('<DataGrid /> - Rows', () => {
           '.MuiDataGrid-virtualScrollerContent',
         );
         const expectedHeight = baselineProps.rows.length * (contentHeight + border);
-        await new Promise((resolve) => nativeSetTimeout(resolve));
+        await act(() => Promise.resolve());
         clock.runToLast();
         expect(virtualScrollerContent).toHaveInlineStyle({
           width: 'auto',
@@ -590,7 +596,7 @@ describe('<DataGrid /> - Rows', () => {
           measuredRowHeight +
           border + // Measured rows also include the border
           (baselineProps.rows.length - 1) * defaultRowHeight;
-        await new Promise((resolve) => nativeSetTimeout(resolve));
+        await act(() => Promise.resolve());
         clock.runToLast();
         expect(virtualScrollerContent).toHaveInlineStyle({
           width: 'auto',
@@ -619,7 +625,7 @@ describe('<DataGrid /> - Rows', () => {
         const firstRowHeight = measuredRowHeight + border; // Measured rows also include the border
         const expectedHeight =
           firstRowHeight + (baselineProps.rows.length - 1) * estimatedRowHeight;
-        await new Promise((resolve) => nativeSetTimeout(resolve));
+        await act(() => Promise.resolve());
         clock.runToLast();
         expect(virtualScrollerContent).toHaveInlineStyle({
           width: 'auto',
@@ -639,14 +645,14 @@ describe('<DataGrid /> - Rows', () => {
         const virtualScrollerContent = document.querySelector(
           '.MuiDataGrid-virtualScrollerContent',
         );
-        await new Promise((resolve) => nativeSetTimeout(resolve)); // Wait for ResizeObserver to send dimensions
+        await act(() => Promise.resolve()); // Wait for ResizeObserver to send dimensions
         clock.runToLast();
         expect(virtualScrollerContent).toHaveInlineStyle({
           width: 'auto',
           height: '101px',
         });
         setProps({ rows: [{ clientId: 'c1', expanded: true }] });
-        await new Promise((resolve) => nativeSetTimeout(resolve)); // Wait for ResizeObserver to send dimensions
+        await act(() => Promise.resolve()); // Wait for ResizeObserver to send dimensions
         clock.runToLast();
         expect(virtualScrollerContent).toHaveInlineStyle({
           width: 'auto',
@@ -695,17 +701,17 @@ describe('<DataGrid /> - Rows', () => {
           />,
         );
         const virtualScroller = document.querySelector('.MuiDataGrid-virtualScroller')!;
-        await new Promise((resolve) => nativeSetTimeout(resolve));
+        await act(() => Promise.resolve());
         clock.runToLast();
         expect(virtualScroller.scrollHeight).to.equal(101 + 52 + 52);
         virtualScroller.scrollTop = 101; // Scroll to measure the 2nd cell
         virtualScroller.dispatchEvent(new Event('scroll'));
-        await new Promise((resolve) => nativeSetTimeout(resolve));
+        await act(() => Promise.resolve());
         clock.runToLast();
         expect(virtualScroller.scrollHeight).to.equal(101 + 101 + 52);
         virtualScroller.scrollTop = 10e6; // Scroll to measure all cells
         virtualScroller.dispatchEvent(new Event('scroll'));
-        await new Promise((resolve) => nativeSetTimeout(resolve));
+        await act(() => Promise.resolve());
         clock.runToLast();
         expect(virtualScroller.scrollHeight).to.equal(101 + 101 + 101); // Ensure that all rows before the last were measured
       });
@@ -731,11 +737,74 @@ describe('<DataGrid /> - Rows', () => {
         const virtualScrollerContent = document.querySelector(
           '.MuiDataGrid-virtualScrollerContent',
         )!;
-        await new Promise((resolve) => nativeSetTimeout(resolve));
+        await act(() => Promise.resolve());
         clock.runToLast();
         expect(virtualScrollerContent).toHaveInlineStyle({
           width: 'auto',
           height: `${Math.floor(expectedHeight)}px`,
+        });
+      });
+
+      it('should position correctly the render zone when the 2nd page has less rows than the 1st page', async () => {
+        const data = getData(120, 3);
+        const headerHeight = 50;
+        const measuredRowHeight = 100;
+        render(
+          <TestCase
+            getBioContentHeight={() => measuredRowHeight}
+            getRowHeight={() => 'auto'}
+            rowBuffer={0}
+            rowThreshold={0}
+            headerHeight={headerHeight}
+            getRowId={(row) => row.id}
+            hideFooter={false}
+            {...data}
+          />,
+        );
+        const virtualScroller = document.querySelector('.MuiDataGrid-virtualScroller')!;
+        virtualScroller.scrollTop = 10e6; // Scroll to measure all cells
+        virtualScroller.dispatchEvent(new Event('scroll'));
+        await act(() => Promise.resolve());
+        clock.runToLast();
+        const virtualScrollerRenderZone = document.querySelector(
+          '.MuiDataGrid-virtualScrollerRenderZone',
+        )!;
+        fireEvent.click(screen.getByRole('button', { name: /next page/i }));
+        await act(() => Promise.resolve());
+        clock.runToLast();
+        expect(virtualScrollerRenderZone).toHaveInlineStyle({
+          transform: 'translate3d(0px, 0px, 0px)',
+        });
+      });
+
+      it('should position correctly the render zone when changing pageSize to a lower value', async () => {
+        const data = getData(120, 3);
+        const headerHeight = 50;
+        const measuredRowHeight = 100;
+        const { setProps } = render(
+          <TestCase
+            getBioContentHeight={() => measuredRowHeight}
+            getRowHeight={() => 'auto'}
+            rowBuffer={0}
+            rowThreshold={0}
+            headerHeight={headerHeight}
+            getRowId={(row) => row.id}
+            hideFooter={false}
+            pageSize={10}
+            rowsPerPageOptions={[5, 10]}
+            height={headerHeight + 10 * measuredRowHeight}
+            {...data}
+          />,
+        );
+        const virtualScrollerRenderZone = document.querySelector(
+          '.MuiDataGrid-virtualScrollerRenderZone',
+        )!;
+        expect(virtualScrollerRenderZone).toHaveInlineStyle({
+          transform: 'translate3d(0px, 0px, 0px)',
+        });
+        setProps({ pageSize: 5 });
+        expect(virtualScrollerRenderZone).toHaveInlineStyle({
+          transform: 'translate3d(0px, 0px, 0px)',
         });
       });
     });

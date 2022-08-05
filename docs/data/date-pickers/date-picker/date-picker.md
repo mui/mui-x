@@ -48,7 +48,8 @@ The date picker component can be disabled or read-only.
 
 ## Localization
 
-Use `LocalizationProvider` to change the date-engine locale that is used to render the date picker. Here is an example of changing the locale for the `date-fns` adapter:
+Use `LocalizationProvider` to change the date-library locale that is used to render the date picker.
+See the documentation page [about localization](/x/react-date-pickers/date-picker/#localization) for more details.
 
 ## Jalali calendar system
 

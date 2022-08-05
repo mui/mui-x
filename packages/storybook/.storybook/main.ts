@@ -62,17 +62,6 @@ const config: StorybookConfig = {
       },
     });
 
-    config.plugins.push(
-      new webpack.DefinePlugin({
-        'process.env': {
-          GRID_EXPERIMENTAL_ENABLED: JSON.stringify(
-            // Set by Netlify
-            process.env.PULL_REQUEST === 'false' ? 'false' : 'true',
-          ),
-        },
-      }),
-    );
-
     config.optimization = {
       splitChunks: {
         chunks: 'all',

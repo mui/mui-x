@@ -1,6 +1,6 @@
 import * as React from 'react';
 // @ts-ignore Remove once the test utils are typed
-import { createRenderer, fireEvent, screen } from '@mui/monorepo/test/utils';
+import { createRenderer, fireEvent, screen, act } from '@mui/monorepo/test/utils';
 import { getColumnHeadersTextContent } from 'test/utils/helperFn';
 import { expect } from 'chai';
 import { DataGrid, DataGridProps, GridToolbar, gridClasses } from '@mui/x-data-grid';
@@ -12,7 +12,7 @@ import {
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
 describe('<DataGrid /> - Toolbar', () => {
-  const { render } = createRenderer();
+  const { render, clock } = createRenderer({ clock: 'fake' });
 
   const baselineProps = {
     autoHeight: isJSDOM,
@@ -56,6 +56,7 @@ describe('<DataGrid /> - Toolbar', () => {
       );
 
       fireEvent.click(getByText('Density'));
+      clock.tick(100);
       fireEvent.click(getByText('Compact'));
 
       expect(screen.getAllByRole('row')[1]).toHaveInlineStyle({
@@ -259,11 +260,11 @@ describe('<DataGrid /> - Toolbar', () => {
       );
 
       const button = screen.getByRole('button', { name: 'Select columns' });
-      button.focus();
+      act(() => button.focus());
       fireEvent.click(button);
 
       const column: HTMLElement | null = document.querySelector('[role="tooltip"] [name="id"]');
-      column!.focus();
+      act(() => column!.focus());
       fireEvent.click(column);
 
       expect(column).toHaveFocus();

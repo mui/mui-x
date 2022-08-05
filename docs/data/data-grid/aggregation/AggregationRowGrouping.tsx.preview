@@ -1,0 +1,8 @@
+<DataGridPremium
+  {...data}
+  apiRef={apiRef}
+  columns={COLUMNS}
+  disableSelectionOnClick
+  initialState={initialState}
+  experimentalFeatures={{ aggregation: true }}
+/>
