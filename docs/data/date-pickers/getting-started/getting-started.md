@@ -21,31 +21,38 @@ packageName: '@mui/x-date-pickers'
 
 ### Setup
 
-You need to provide a date-library that is used by the pickers by setting the `dateAdapter` to an adapter of your choosing.
+#### Package installation
+
+You need to install 3 different types of package to make the pickers work:
+
+1. **The component** (`@mui/x-date-pickers` or `@mui/x-date-pickers-pro`) manages the rendering.
+2. **The date-library** ([`moment`](https://momentjs.com/), [`dayjs`](https://day.js.org/), ...) manages the date manipulation.
+3. **The adapter** ([`@date-io`](https://github.com/dmtrKovalenko/date-io#projects)) exposes your favorite **date-library** under a unified api used by **component**.
+
+First you have to install the date-library you want to use to manage dates, and the component package:
+
+{{"demo": "InstructionsNoSnap.js", "bg": "inline", "hideToolbar": true, "disableAd": true}}
 
 We currently support 4 different date-libraries:
 
-- [date-fns](https://date-fns.org/)
-- [Day.js](https://day.js.org/)
-- [Luxon](https://moment.github.io/luxon/#/)
-- [Moment.js](https://momentjs.com/)
+- [date-fns](https://date-fns.org/) adapted by `@date-io/date-fns`.
+- [Day.js](https://day.js.org/) adapted by `@date-io/dayjs`.
+- [Luxon](https://moment.github.io/luxon/#/) adapted by `@date-io/luxon`.
+- [Moment.js](https://momentjs.com/) adapted by `@date-io/moment`.
 
-If you need to use `js-joda`, `date-fns-jalali`, `jalaali`, or `hijri` library, you should be able to find the corresponding date-library from [`@date-io`](https://github.com/dmtrKovalenko/date-io#projects).
+If you need to use `js-joda`, `date-fns-jalali`, `moment-jalaali`, or `moment-hijri` library, you should be able to find the corresponding date-library from [`@date-io`](https://github.com/dmtrKovalenko/date-io#projects).
+In such a case, you will have to install both the _date-library_ and the corresponding `@date-io` adapter.
 
-First you have to install the adapter package for the date-library you want to use:
-
-```sh
-// date-fns
-npm install @date-io/date-fns
-// or for Day.js
-npm install @date-io/dayjs
-// or for Luxon
-npm install @date-io/luxon
-// or for Moment.js
-npm install @date-io/moment
+```jsx
+// To use moment-jalaali
+yarn add moment-jalaali
+yarn add @date-io/jalaali
 ```
 
-Then you have to set the `dateAdapter` prop of the `LocalizationProvider` accordingly:
+#### Code setup
+
+After installation completed, you have to set the `dateAdapter` prop of the `LocalizationProvider` accordingly.
+The supported adapters are exported from both the `@mui/x-date-pickers` and `@mui/x-date-pickers-pro`.
 
 ```js
 // date-fns
@@ -65,6 +72,28 @@ function App({ children }) {
   );
 }
 ```
+
+If you use another library you should import the adapter directly from the `@date-io` package as follow.
+
+```jsx
+import AdapterJalaali from '@date-io/jalaali';
+
+function App({ children }) {
+  return (
+    <LocalizationProvider dateAdapter={AdapterJalaali}>
+      {children}
+    </LocalizationProvider>
+  );
+}
+```
+
+### Unsupported libraries
+
+To use a date-library that is not supported yet by `@date-io`, you will have to write an adapter.
+Which means writing a file containing the default formats, and the methods.
+As an example, you can look to the [`dayjs` adapter](https://github.com/dmtrKovalenko/date-io/blob/master/packages/dayjs/src/dayjs-utils.ts).
+
+In such a case, don't hesitate to open a PR to get some help.
 
 ## TypeScript
 

@@ -15,6 +15,7 @@ import {
   DataGridPropsWithComplexDefaultValueBeforeProcessing,
 } from '@mui/x-data-grid/internals';
 import type { GridPinnedColumns } from '../hooks/features/columnPinning';
+import type { GridPinnedRowsProp } from '../hooks/features/rowPinning';
 import { GridApiPro } from './gridApiPro';
 import {
   GridGroupingColDefOverride,
@@ -22,7 +23,9 @@ import {
 } from './gridGroupingColDefOverride';
 import { GridInitialStatePro } from './gridStatePro';
 
-export interface GridExperimentalProFeatures extends GridExperimentalFeatures {}
+export interface GridExperimentalProFeatures extends GridExperimentalFeatures {
+  rowPinning: boolean;
+}
 
 /**
  * The props users can give to the `DataGridProProps` component.
@@ -33,13 +36,7 @@ export interface DataGridProProps<R extends GridValidRowModel = any>
       DataGridPropsWithComplexDefaultValueBeforeProcessing &
       DataGridProPropsWithoutDefaultValue<R>,
     DataGridProForcedPropsKey
-  > {
-  /**
-   * Features under development.
-   * For each feature, if the flag is not explicitly set to `true`, the feature will be fully disabled and any property / method call will not have any effect.
-   */
-  experimentalFeatures?: Partial<GridExperimentalProFeatures>;
-}
+  > {}
 
 /**
  * The props of the `DataGridPro` component after the pre-processing phase.
@@ -98,10 +95,10 @@ export interface DataGridProPropsWithDefaultValue extends DataGridPropsWithDefau
   /**
    * Function that returns the height of the row detail panel.
    * @param {GridRowParams} params With all properties from [[GridRowParams]].
-   * @returns {number} The height in pixels.
+   * @returns {number | string} The height in pixels or "auto" to use the content height.
    * @default "() => 500"
    */
-  getDetailPanelHeight: (params: GridRowParams) => number;
+  getDetailPanelHeight: (params: GridRowParams) => number | 'auto';
   /**
    * If `true`, the reordering of rows is enabled.
    * @default false
@@ -121,6 +118,11 @@ export interface DataGridProPropsWithoutDefaultValue<R extends GridValidRowModel
    * If one of the data in `initialState` is also being controlled, then the control state wins.
    */
   initialState?: GridInitialStatePro;
+  /**
+   * Features under development.
+   * For each feature, if the flag is not explicitly set to `true`, the feature will be fully disabled and any property / method call will not have any effect.
+   */
+  experimentalFeatures?: Partial<GridExperimentalProFeatures>;
   /**
    * Determines the path of a row in the tree data.
    * For instance, a row with the path ["A", "B"] is the child of the row with the path ["A"].
@@ -192,4 +194,8 @@ export interface DataGridProPropsWithoutDefaultValue<R extends GridValidRowModel
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onRowOrderChange?: GridEventListener<'rowOrderChange'>;
+  /**
+   * Rows data to pin on top or bottom.
+   */
+  pinnedRows?: GridPinnedRowsProp<R>;
 }

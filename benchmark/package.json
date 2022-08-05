@@ -1,6 +1,6 @@
 {
   "name": "benchmark",
-  "version": "5.12.2",
+  "version": "5.15.0",
   "private": true,
   "scripts": {
     "browser": "webpack --config browser/webpack.config.js && node browser/scripts/benchmark.js"
@@ -12,15 +12,15 @@
     "@material-ui/icons": "^5.0.0-beta.5",
     "@mui/material": "^5.8.0",
     "@mui/x-data-grid": "^4.0.0",
-    "@visx/xychart": "^2.10.0",
-    "ag-grid-community": "^27.3.0",
-    "ag-grid-react": "^27.3.0",
+    "@visx/xychart": "^2.11.1",
+    "ag-grid-community": "^28.0.2",
+    "ag-grid-react": "^28.0.0",
     "css-loader": "^6.7.1",
     "html-webpack-plugin": "^5.5.0",
     "mui-plus": "^0.0.15",
     "playwright": "^1.21.1",
-    "react": "^17.0.2",
-    "react-dom": "^17.0.2",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
     "react-spring": "^9.2.4",
     "react-virtualized": "^9.22.3",
     "serve-handler": "^6.1.3",

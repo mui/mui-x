@@ -42,4 +42,10 @@ export interface GridFilterOperator<R extends GridValidRowModel = any, V = any, 
    * The props to pass to the input component in the filter panel for this filter operator.
    */
   InputComponentProps?: Record<string, any>;
+  /**
+   * If `false`, filter operator doesn't require user-entered value to work.
+   * Usually should be set to `false` for filter operators that don't have `InputComponent` (for example `isEmpty`)
+   * @default true
+   */
+  requiresFilterValue?: boolean;
 }

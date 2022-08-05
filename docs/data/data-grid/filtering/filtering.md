@@ -23,7 +23,7 @@ _See [the dedicated section](#customize-the-operators) to learn how to create yo
 :::warning
 The `DataGrid` can only filter the rows according to one criterion at the time.
 
-To use multi-filtering, you need to upgrade to the [Pro plan](https://mui.com/store/items/mui-x-pro/).
+To use multi-filtering, you need to upgrade to [Pro](https://mui.com/store/items/mui-x-pro/) or [Premium](https://mui.com/store/items/mui-x-premium/) plan.
 :::
 
 ## Multi-filtering [<span class="plan-pro"></span>](https://mui.com/store/items/mui-x-pro/)
@@ -299,6 +299,9 @@ More details are available in the demo.
 | `operatorInputProps`     | `MuiDataGrid-filterFormOperatorInput`     |
 | `valueInputProps`        | `MuiDataGrid-filterFormValueInput`        |
 
+The value input is a special case, because it can contain a wide variety of components (the one we provide or [your custom `InputComponent`](#create-a-custom-operator)).
+To pass props directly to the `InputComponent` and not its wrapper, you can use `valueInputProps.InputComponentProps`.
+
 {{"demo": "CustomFilterPanelContent.js", "bg": "inline"}}
 
 ### Customize the filter panel position
@@ -353,7 +356,7 @@ This function takes as an input a value of the quick filter and returns another 
 In the example below, a custom filter is created for the `date` column to check if it contains the correct year.
 
 ```ts
-getApplyFilterFn: (value: string) => {
+getApplyQuickFilterFn: (value: string) => {
   if (!value || value.length !== 4 || !/\d{4}/.test(value)) {
     // If the value is not a 4 digit string, it can not be a year so applying this filter is useless
     return null;
@@ -364,7 +367,7 @@ getApplyFilterFn: (value: string) => {
 };
 ```
 
-To remove the quick filtering on a given column set `getApplyFilterFn: undefined`.
+To remove the quick filtering on a given column set `getApplyQuickFilterFn: undefined`.
 
 In the demo bellow, the column "Name" is not searchable with the quick filter, and 4 digits figures will be compared to the year of column "Created on".
 

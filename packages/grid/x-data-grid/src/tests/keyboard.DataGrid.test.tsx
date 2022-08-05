@@ -1,6 +1,6 @@
 import * as React from 'react';
 // @ts-ignore Remove once the test utils are typed
-import { createRenderer, fireEvent, screen } from '@mui/monorepo/test/utils';
+import { createRenderer, fireEvent, screen, act } from '@mui/monorepo/test/utils';
 import Portal from '@mui/material/Portal';
 import { spy } from 'sinon';
 import { expect } from 'chai';
@@ -336,7 +336,7 @@ describe('<DataGrid /> - Keyboard', () => {
 
     it('should move to the first row when pressing "ArrowDown" on a column header on the 1st page', () => {
       render(<NavigationTestCaseNoScrollX />);
-      getColumnHeaderCell(1).focus();
+      act(() => getColumnHeaderCell(1).focus());
       expect(getActiveColumnHeader()).to.equal('1');
       fireEvent.keyDown(document.activeElement!, { key: 'ArrowDown' });
       expect(getActiveCell()).to.equal('0-1');
@@ -344,7 +344,7 @@ describe('<DataGrid /> - Keyboard', () => {
 
     it('should move to the first row when pressing "ArrowDown" on a column header on the 2nd page', () => {
       render(<NavigationTestCaseNoScrollX page={1} />);
-      getColumnHeaderCell(1).focus();
+      act(() => getColumnHeaderCell(1).focus());
       expect(getActiveColumnHeader()).to.equal('1');
       fireEvent.keyDown(document.activeElement!, { key: 'ArrowDown' });
       expect(getActiveCell()).to.equal('10-1');
@@ -352,7 +352,7 @@ describe('<DataGrid /> - Keyboard', () => {
 
     it('should move to the column header right when pressing "ArrowRight" on a column header', () => {
       render(<NavigationTestCaseNoScrollX />);
-      getColumnHeaderCell(1).focus();
+      act(() => getColumnHeaderCell(1).focus());
       expect(getActiveColumnHeader()).to.equal('1');
       fireEvent.keyDown(document.activeElement!, { key: 'ArrowRight' });
       expect(getActiveColumnHeader()).to.equal('2');
@@ -362,7 +362,7 @@ describe('<DataGrid /> - Keyboard', () => {
 
     it('should move to the column header left when pressing "ArrowLeft" on a column header', () => {
       render(<NavigationTestCaseNoScrollX />);
-      getColumnHeaderCell(1).focus();
+      act(() => getColumnHeaderCell(1).focus());
       expect(getActiveColumnHeader()).to.equal('1');
       fireEvent.keyDown(document.activeElement!, { key: 'ArrowLeft' });
       expect(getActiveColumnHeader()).to.equal('0');
@@ -514,7 +514,7 @@ describe('<DataGrid /> - Keyboard', () => {
       </div>,
     );
 
-    getColumnHeaderCell(0).focus();
+    act(() => getColumnHeaderCell(0).focus());
     expect(getActiveColumnHeader()).to.equal('0');
     expect(getColumnValues(1)).to.deep.equal(['John', 'Doe']);
     fireEvent.keyDown(getColumnHeaderCell(0), { key: 'Enter' });

@@ -19,9 +19,10 @@ import {
   gridDetailPanelExpandedRowIdsSelector,
   gridDetailPanelExpandedRowsContentCacheSelector,
   gridDetailPanelExpandedRowsHeightCacheSelector,
+  gridDetailPanelRawHeightCacheSelector,
 } from './gridDetailPanelSelector';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
-import { GridDetailPanelApi } from './gridDetailPanelInterface';
+import { GridDetailPanelApi, GridDetailPanelState } from './gridDetailPanelInterface';
 
 export const detailPanelStateInitializer: GridStateInitializer<
   Pick<DataGridProProcessedProps, 'initialState' | 'detailPanelExpandedRowIds'>
@@ -29,6 +30,7 @@ export const detailPanelStateInitializer: GridStateInitializer<
   return {
     ...state,
     detailPanel: {
+      heightCache: {},
       expandedRowIds:
         props.detailPanelExpandedRowIds ?? props.initialState?.detailPanel?.expandedRowIds ?? [],
     },
@@ -39,6 +41,7 @@ function cacheContentAndHeight(
   apiRef: React.MutableRefObject<GridApiPro>,
   getDetailPanelContent: DataGridProProcessedProps['getDetailPanelContent'],
   getDetailPanelHeight: DataGridProProcessedProps['getDetailPanelHeight'],
+  previousHeightCache: GridDetailPanelState['heightCache'],
 ) {
   if (typeof getDetailPanelContent !== 'function') {
     return {};
@@ -56,17 +59,16 @@ function cacheContentAndHeight(
     {},
   );
 
-  const heightCache = rowIds.reduce<Record<GridRowId, ReturnType<typeof getDetailPanelHeight>>>(
-    (acc, id) => {
-      if (contentCache[id] == null) {
-        return acc;
-      }
-      const params = apiRef.current.getRowParams(id);
-      acc[id] = getDetailPanelHeight(params);
+  const heightCache = rowIds.reduce<GridDetailPanelState['heightCache']>((acc, id) => {
+    if (contentCache[id] == null) {
       return acc;
-    },
-    {},
-  );
+    }
+    const params = apiRef.current.getRowParams(id);
+    const height = getDetailPanelHeight(params);
+    const autoHeight = height === 'auto';
+    acc[id] = { autoHeight, height: autoHeight ? previousHeightCache[id]?.height : height };
+    return acc;
+  }, {});
 
   return { contentCache, heightCache };
 }
@@ -175,10 +177,45 @@ export const useGridDetailPanel = (
     [apiRef],
   );
 
+  const storeDetailPanelHeight = React.useCallback<
+    GridDetailPanelApi['unstable_storeDetailPanelHeight']
+  >(
+    (id, height) => {
+      const heightCache = gridDetailPanelRawHeightCacheSelector(apiRef.current.state);
+
+      if (!heightCache[id] || heightCache[id].height === height) {
+        return;
+      }
+
+      apiRef.current.setState((state) => {
+        return {
+          ...state,
+          detailPanel: {
+            ...state.detailPanel,
+            heightCache: { ...heightCache, [id]: { ...heightCache[id], height } },
+          },
+        };
+      });
+
+      apiRef.current.unstable_requestPipeProcessorsApplication('rowHeight');
+    },
+    [apiRef],
+  );
+
+  const detailPanelHasAutoHeight = React.useCallback(
+    (id) => {
+      const heightCache = gridDetailPanelRawHeightCacheSelector(apiRef.current.state);
+      return heightCache[id] ? heightCache[id].autoHeight : false;
+    },
+    [apiRef],
+  );
+
   const detailPanelApi: GridDetailPanelApi = {
     toggleDetailPanel,
     getExpandedDetailPanels,
     setExpandedDetailPanels,
+    unstable_storeDetailPanelHeight: storeDetailPanelHeight,
+    unstable_detailPanelHasAutoHeight: detailPanelHasAutoHeight,
   };
   useGridApiMethod(apiRef, detailPanelApi, 'detailPanelApi');
 
@@ -197,7 +234,12 @@ export const useGridDetailPanel = (
         ...state,
         detailPanel: {
           ...state.detailPanel,
-          ...cacheContentAndHeight(apiRef, props.getDetailPanelContent, props.getDetailPanelHeight),
+          ...cacheContentAndHeight(
+            apiRef,
+            props.getDetailPanelContent,
+            props.getDetailPanelHeight,
+            state.detailPanel.heightCache,
+          ),
         },
       };
     });
@@ -224,7 +266,12 @@ export const useGridDetailPanel = (
         ...state,
         detailPanel: {
           ...state.detailPanel,
-          ...cacheContentAndHeight(apiRef, props.getDetailPanelContent, props.getDetailPanelHeight),
+          ...cacheContentAndHeight(
+            apiRef,
+            props.getDetailPanelContent,
+            props.getDetailPanelHeight,
+            state.detailPanel.heightCache,
+          ),
         },
       };
     });
@@ -241,7 +288,7 @@ export const useGridDetailPanel = (
 
       updateCachesIfNeeded();
 
-      const heightCache = gridDetailPanelExpandedRowsHeightCacheSelector(apiRef.current.state);
+      const heightCache = gridDetailPanelExpandedRowsHeightCacheSelector(apiRef);
 
       return {
         ...initialValue,

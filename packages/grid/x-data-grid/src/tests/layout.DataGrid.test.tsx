@@ -1,7 +1,7 @@
 import * as React from 'react';
 // @ts-ignore Remove once the test utils are typed
 import { createRenderer, screen, ErrorBoundary, waitFor } from '@mui/monorepo/test/utils';
-import { SinonStub, stub, spy } from 'sinon';
+import { stub, spy } from 'sinon';
 import { expect } from 'chai';
 import {
   DataGrid,
@@ -17,7 +17,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { getColumnHeaderCell, getColumnValues, getCell, getRow } from 'test/utils/helperFn';
 
 describe('<DataGrid /> - Layout & Warnings', () => {
-  const { clock, render } = createRenderer({ clock: 'fake' });
+  const { clock, render } = createRenderer();
 
   const baselineProps = {
     rows: [
@@ -59,14 +59,10 @@ describe('<DataGrid /> - Layout & Warnings', () => {
     });
 
     it('should resize the width of the columns', async () => {
-      // Using a fake clock also affects `requestAnimationFrame`.
-      // Calling clock.tick() should call the callback passed, but it doesn't work.
-      stub(window, 'requestAnimationFrame').callsFake((fn: any) => fn());
-      stub(window, 'cancelAnimationFrame');
-
       interface TestCaseProps {
         width?: number;
       }
+
       const TestCase = (props: TestCaseProps) => {
         const { width = 300 } = props;
         return (
@@ -87,9 +83,6 @@ describe('<DataGrid /> - Layout & Warnings', () => {
         rect = container.querySelector('[role="row"][data-rowindex="0"]').getBoundingClientRect();
         expect(rect.width).to.equal(400 - 2);
       });
-
-      (window.requestAnimationFrame as SinonStub).restore();
-      (window.cancelAnimationFrame as SinonStub).restore();
     });
 
     // Adaptation of describeConformance()
@@ -203,6 +196,8 @@ describe('<DataGrid /> - Layout & Warnings', () => {
     });
 
     describe('warnings', () => {
+      clock.withFakeTimers();
+
       it('should error if the container has no intrinsic height', () => {
         expect(() => {
           render(
@@ -257,6 +252,8 @@ describe('<DataGrid /> - Layout & Warnings', () => {
     });
 
     describe('swallow warnings', () => {
+      clock.withFakeTimers();
+
       beforeEach(() => {
         stub(console, 'error');
       });
@@ -990,6 +987,7 @@ describe('<DataGrid /> - Layout & Warnings', () => {
           </ErrorBoundary>,
         );
       }).toErrorDev([
+        'The data grid component requires all rows to have a unique `id` property',
         'The data grid component requires all rows to have a unique `id` property',
         'The above error occurred in the <ForwardRef(DataGrid)> component',
       ]);
