@@ -131,7 +131,7 @@ describe('<CalendarPicker />', () => {
     expect(disabledDays.length).to.equal(31);
   });
 
-  it('renders header label text according to monthAndYear format', () => {
+  it('should render header label text according to monthAndYear format', () => {
     render(
       <LocalizationProvider
         dateAdapter={AdapterClassToUse}
@@ -142,6 +142,23 @@ describe('<CalendarPicker />', () => {
     );
 
     expect(screen.getByText('2019/01')).toBeVisible();
+  });
+
+  it('should render column header according to dayOfWeekFormatter', () => {
+    render(
+      <LocalizationProvider dateAdapter={AdapterClassToUse}>
+        <CalendarPicker
+          date={adapterToUse.date(new Date(2019, 0, 1))}
+          onChange={() => {}}
+          dayOfWeekFormatter={(day) => `${day}.`}
+        />
+        ,
+      </LocalizationProvider>,
+    );
+
+    ['Su.', 'Mo.', 'Tu.', 'We.', 'Th.', 'Fr.', 'Sa.'].forEach((formattedDay) => {
+      expect(screen.getByText(formattedDay)).toBeVisible();
+    });
   });
 
   it('should select the closest enabled date if the prop.date contains a disabled date', () => {

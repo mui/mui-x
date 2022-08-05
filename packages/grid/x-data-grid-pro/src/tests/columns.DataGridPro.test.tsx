@@ -1,6 +1,6 @@
 import * as React from 'react';
 // @ts-ignore Remove once the test utils are typed
-import { createRenderer, fireEvent, screen, waitFor } from '@mui/monorepo/test/utils';
+import { createRenderer, fireEvent, screen, act } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
 import { spy } from 'sinon';
 import {
@@ -53,19 +53,18 @@ describe('<DataGridPro /> - Columns', () => {
     it('should open the column menu', async () => {
       render(<Test />);
       expect(screen.queryByRole('menu')).to.equal(null);
-      apiRef.current.showColumnMenu('brand');
-      await waitFor(() => expect(screen.queryByRole('menu')).not.to.equal(null));
+      act(() => apiRef.current.showColumnMenu('brand'));
+      expect(screen.queryByRole('menu')).not.to.equal(null);
     });
 
     it('should set the correct id and aria-labelledby', async () => {
       render(<Test />);
       expect(screen.queryByRole('menu')).to.equal(null);
-      apiRef.current.showColumnMenu('brand');
-      await waitFor(() => {
-        const menu = screen.queryByRole('menu');
-        expect(menu.id).to.match(/^mui-[0-9]+/);
-        expect(menu.getAttribute('aria-labelledby')).to.match(/^mui-[0-9]+/);
-      });
+      act(() => apiRef.current.showColumnMenu('brand'));
+      clock.runToLast();
+      const menu = screen.queryByRole('menu');
+      expect(menu.id).to.match(/:r[0-9a-z]+:/);
+      expect(menu.getAttribute('aria-labelledby')).to.match(/:r[0-9a-z]+:/);
     });
   });
 
@@ -73,10 +72,10 @@ describe('<DataGridPro /> - Columns', () => {
     it('should toggle the column menu', async () => {
       render(<Test />);
       expect(screen.queryByRole('menu')).to.equal(null);
-      apiRef.current.toggleColumnMenu('brand');
+      act(() => apiRef.current.toggleColumnMenu('brand'));
       clock.runToLast();
       expect(screen.queryByRole('menu')).not.to.equal(null);
-      apiRef.current.toggleColumnMenu('brand');
+      act(() => apiRef.current.toggleColumnMenu('brand'));
       clock.runToLast();
       expect(screen.queryByRole('menu')).to.equal(null);
     });
@@ -169,7 +168,7 @@ describe('<DataGridPro /> - Columns', () => {
         expect(getColumnHeaderCell(0)).toHaveInlineStyle({ width: '198px' });
         expect(getColumnHeaderCell(1)).toHaveInlineStyle({ width: '100px' });
 
-        apiRef.current.setColumnWidth('brand', 150);
+        act(() => apiRef.current.setColumnWidth('brand', 150));
 
         expect(getColumnHeaderCell(0)).toHaveInlineStyle({ width: '148px' });
         expect(getColumnHeaderCell(1)).toHaveInlineStyle({ width: '150px' });
@@ -209,7 +208,7 @@ describe('<DataGridPro /> - Columns', () => {
         expect(getColumnHeaderCell(0)).toHaveInlineStyle({ width: '198px' });
         expect(getColumnHeaderCell(1)).toHaveInlineStyle({ width: '100px' });
 
-        apiRef.current.setColumnWidth('brand', 150);
+        act(() => apiRef.current.setColumnWidth('brand', 150));
 
         expect(getColumnHeaderCell(0)).toHaveInlineStyle({ width: '175px' });
         expect(getColumnHeaderCell(1)).toHaveInlineStyle({ width: '150px' });
@@ -226,7 +225,7 @@ describe('<DataGridPro /> - Columns', () => {
         expect(getColumnHeaderCell(0)).toHaveInlineStyle({ width: '98px' });
         expect(getColumnHeaderCell(1)).toHaveInlineStyle({ width: '200px' });
 
-        apiRef.current.setColumnWidth('brand', 150);
+        act(() => apiRef.current.setColumnWidth('brand', 150));
 
         expect(getColumnHeaderCell(0)).toHaveInlineStyle({ width: '125px' });
         expect(getColumnHeaderCell(1)).toHaveInlineStyle({ width: '150px' });
@@ -289,7 +288,7 @@ describe('<DataGridPro /> - Columns', () => {
         expect(getColumnHeaderCell(0)).toHaveInlineStyle({ width: '198px' });
         expect(getColumnHeaderCell(1)).toHaveInlineStyle({ width: '100px' });
 
-        apiRef.current.setColumnWidth('brand', 150);
+        act(() => apiRef.current.setColumnWidth('brand', 150));
 
         expect(getColumnHeaderCell(0)).toHaveInlineStyle({ width: '148px' });
         expect(getColumnHeaderCell(1)).toHaveInlineStyle({ width: '150px' });
@@ -350,26 +349,26 @@ describe('<DataGridPro /> - Columns', () => {
   describe('column pipe processing', () => {
     it('should not loose column width when re-applying pipe processing', () => {
       render(<Test checkboxSelection />);
-      apiRef.current.setColumnWidth('brand', 300);
+      act(() => apiRef.current.setColumnWidth('brand', 300));
       expect(gridColumnLookupSelector(apiRef).brand.computedWidth).to.equal(300);
-      apiRef.current.unstable_requestPipeProcessorsApplication('hydrateColumns');
+      act(() => apiRef.current.unstable_requestPipeProcessorsApplication('hydrateColumns'));
       expect(gridColumnLookupSelector(apiRef).brand.computedWidth).to.equal(300);
     });
 
     it('should not loose column index when re-applying pipe processing', () => {
       render(<Test checkboxSelection columns={[{ field: 'id' }, { field: 'brand' }]} />);
       expect(gridColumnFieldsSelector(apiRef).indexOf('brand')).to.equal(2);
-      apiRef.current.setColumnIndex('brand', 1);
+      act(() => apiRef.current.setColumnIndex('brand', 1));
       expect(gridColumnFieldsSelector(apiRef).indexOf('brand')).to.equal(1);
-      apiRef.current.unstable_requestPipeProcessorsApplication('hydrateColumns');
+      act(() => apiRef.current.unstable_requestPipeProcessorsApplication('hydrateColumns'));
       expect(gridColumnFieldsSelector(apiRef).indexOf('brand')).to.equal(1);
     });
 
     it('should not loose imperatively added columns when re-applying pipe processing', () => {
       render(<Test checkboxSelection />);
-      apiRef.current.updateColumn({ field: 'id' });
+      act(() => apiRef.current.updateColumn({ field: 'id' }));
       expect(gridColumnFieldsSelector(apiRef)).to.deep.equal(['__check__', 'brand', 'id']);
-      apiRef.current.unstable_requestPipeProcessorsApplication('hydrateColumns');
+      act(() => apiRef.current.unstable_requestPipeProcessorsApplication('hydrateColumns'));
       expect(gridColumnFieldsSelector(apiRef)).to.deep.equal(['__check__', 'brand', 'id']);
     });
   });

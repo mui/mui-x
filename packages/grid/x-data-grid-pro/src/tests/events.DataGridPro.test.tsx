@@ -1,6 +1,6 @@
 import * as React from 'react';
 // @ts-ignore Remove once the test utils are typed
-import { createRenderer, fireEvent, screen, waitFor } from '@mui/monorepo/test/utils';
+import { createRenderer, fireEvent, screen, waitFor, act } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
 import {
   DataGridPro,
@@ -225,10 +225,13 @@ describe('<DataGridPro /> - Events Params', () => {
       const cell = getCell(1, 1);
       fireEvent.doubleClick(cell);
       const input = cell.querySelector('input')!;
+
       fireEvent.change(input, { target: { value: 'Lisa' } });
+
       clock.tick(500);
       expect(handleEditCellPropsChange.callCount).to.equal(1);
       fireEvent.keyDown(input, { key: 'Enter' });
+
       await waitFor(() => {
         expect(cell).to.have.text('Jack');
       });
@@ -329,7 +332,7 @@ describe('<DataGridPro /> - Events Params', () => {
   it('publishing GRID_ROWS_SCROLL should call onRowsScrollEnd callback', () => {
     const handleRowsScrollEnd = spy();
     render(<TestEvents onRowsScrollEnd={handleRowsScrollEnd} />);
-    apiRef.current.publishEvent('rowsScroll', { left: 0, top: 3 * 52 });
+    act(() => apiRef.current.publishEvent('rowsScroll', { left: 0, top: 3 * 52 }));
     expect(handleRowsScrollEnd.callCount).to.equal(1);
   });
 
@@ -383,7 +386,7 @@ describe('<DataGridPro /> - Events Params', () => {
 
     const { unmount } = render(<TestEvents />);
 
-    apiRef.current.subscribeEvent('unmount', onUnmount);
+    act(() => apiRef.current.subscribeEvent('unmount', onUnmount));
     unmount();
     expect(onUnmount.calledOnce).to.equal(true);
   });

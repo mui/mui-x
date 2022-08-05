@@ -46,7 +46,7 @@ The date picker component can be disabled or read-only.
 
 ## Localização
 
-Use `LocalizationProvider` para alterar a date-engine de localização que é usada para renderizar o seletor de data. Aqui esta um exemplo de alteração da localidade com o adaptador `date-fns`:
+Use `LocalizationProvider` para alterar a date-library de localização que é usada para renderizar o seletor de data. Aqui esta um exemplo de alteração da localidade com o adaptador `date-fns`:
 
 {{"demo": "LocalizedDatePicker.js"}}
 

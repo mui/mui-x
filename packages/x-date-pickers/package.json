@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-date-pickers",
-  "version": "5.0.0-beta.3",
+  "version": "5.0.0-beta.4",
   "description": "The community edition of the date picker components (MUI X).",
   "author": "MUI Team",
   "main": "./src/index.js",
@@ -89,7 +89,7 @@
     }
   },
   "devDependencies": {
-    "@types/luxon": "^2.3.2",
+    "@types/luxon": "^3.0.0",
     "date-fns": "^2.29.1",
     "dayjs": "^1.11.4",
     "luxon": "^1.21.3 || ^2.x || ^3.0.0",
