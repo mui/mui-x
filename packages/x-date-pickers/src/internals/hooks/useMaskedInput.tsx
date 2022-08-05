@@ -128,11 +128,11 @@ export const useMaskedInput = <TInputDate, TDate>({
   const inputStateArgs = shouldUseMaskedInput
     ? rifmProps
     : {
-      value: innerDisplayedInputValue,
-      onChange: (event: React.ChangeEvent<HTMLInputElement>) => {
-        handleChange(event.currentTarget.value);
-      },
-    };
+        value: innerDisplayedInputValue,
+        onChange: (event: React.ChangeEvent<HTMLInputElement>) => {
+          handleChange(event.currentTarget.value);
+        },
+      };
 
   return {
     label,
