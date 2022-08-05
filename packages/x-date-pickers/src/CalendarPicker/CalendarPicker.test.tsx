@@ -177,7 +177,7 @@ describe('<CalendarPicker />', () => {
     expect(onChange.lastCall.args[0]).toEqualDateTime(new Date(2018, 0, 1));
   });
 
-  it('should select the closest enabled date in the month if the current date is disabled', () => {
+  it('should select day outside of month if `showDaysOutsideCurrentMonth`', () => {
     // Check that onChange is triggered on mouseDown to avoid bug related to animation such as in https://github.com/mui/mui-x/issues/5570
     const onChange = spy();
     const Test = () => {
