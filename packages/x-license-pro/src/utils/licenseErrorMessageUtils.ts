@@ -33,7 +33,7 @@ export function showNotFoundLicenseError({
     `MUI: License key not found for ${packageName}.`,
     '',
     `This is a trial-only version of MUI X ${plan}.`,
-    'See the conditons here: https://mui.com/r/x-license-eula#evaluation-trial-licenses.',
+    'See the conditons here: https://mui.com/r/x-license-trial.',
     '',
     'To purchase a license, please visit https://mui.com/r/x-get-license.',
   ]);
