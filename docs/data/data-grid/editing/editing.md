@@ -560,7 +560,7 @@ You can change date format by importing different locale (`en-US` locale is used
 See [Localization](/x/react-date-pickers/localization/) for more information.
 :::
 
-## apiRef [<span class="plan-pro"></span>](https://mui.com/store/items/mui-x-pro/)
+## apiRef [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
 
 {{"demo": "EditApiNoSnap.js", "bg": "inline", "hideToolbar": true}}
 
