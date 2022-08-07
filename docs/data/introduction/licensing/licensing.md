@@ -22,7 +22,7 @@ See the [Pricing](https://mui.com/pricing/) page for a detailed feature comparis
 The free version of MUI X is [published under an MIT license](https://tldrlegal.com/license/mit-license) and is [free forever](https://mui-org.notion.site/Stewardship-542a2226043d4f4a96dfb429d16cf5bd#20f609acab4441cf9346614119fbbac1).
 This version contains features that we believe are maintainable by contributions from the open-source community.
 
-MIT licensed packages:
+MIT licensed npm packages:
 
 - [`@mui/x-data-grid`](https://www.npmjs.com/package/@mui/x-data-grid)
 - [`@mui/x-date-pickers`](https://www.npmjs.com/package/@mui/x-date-pickers)
@@ -33,7 +33,7 @@ The Pro version of MUI X expands on the features of the free version with more a
 
 The Pro version is available under a commercial license—visit [the Pricing page](https://mui.com/pricing/) for details.
 
-Pro packages:
+Pro npm packages:
 
 - [`@mui/x-data-grid-pro`](https://www.npmjs.com/package/@mui/x-data-grid-pro)
 - [`@mui/x-date-pickers-pro`](https://www.npmjs.com/package/@mui/x-date-pickers-pro)
@@ -48,7 +48,7 @@ The Premium version of MUI X covers the most advanced features of the data grid,
 
 The Premium version is available under a commercial license—visit [the Pricing page](https://mui.com/pricing/) for details.
 
-Premium package:
+Premium npm package:
 
 - [`@mui/x-data-grid-premium`](https://www.npmjs.com/package/@mui/x-data-grid-premium)
 
@@ -98,7 +98,7 @@ This key removes all watermarks and console warnings.
 :::warning
 The orders placed after **May 13, 2022** come with a license key by default that is only compatible with MUI X from `v5.11.0` and upwards.
 
-Please update your package if you're using an earlier version.
+Please update your npm package if you're using an earlier version.
 
 If this isn't possible, please contact sales@mui.com to request a compatible license key.
 :::
