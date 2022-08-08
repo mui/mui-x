@@ -27,3 +27,4 @@ export * from './trTR';
 export * from './ukUA';
 export * from './viVN';
 export * from './zhCN';
+export * from './zhTW';

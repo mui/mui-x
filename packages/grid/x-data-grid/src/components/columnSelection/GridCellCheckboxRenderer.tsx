@@ -97,6 +97,10 @@ const GridCellCheckboxForwardRef = React.forwardRef<HTMLInputElement, GridRender
       isChecked ? 'checkboxSelectionUnselectRow' : 'checkboxSelectionSelectRow',
     );
 
+    if (rowNode.isPinned) {
+      return null;
+    }
+
     return (
       <rootProps.components.BaseCheckbox
         ref={handleRef}

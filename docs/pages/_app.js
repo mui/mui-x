@@ -40,22 +40,19 @@ ponyfillGlobal.muiDocConfig = {
   csbIncludePeerDependencies: (deps, { versions }) => {
     const newDeps = { ...deps };
 
-    if (newDeps['@mui/x-data-grid']) {
-      newDeps['@mui/material'] = versions['@mui/material'];
-    }
-
-    if (newDeps['@mui/x-data-grid-pro']) {
-      newDeps['@mui/material'] = versions['@mui/material'];
-      newDeps['@mui/x-data-grid'] = versions['@mui/x-data-grid'];
-    }
-
     if (newDeps['@mui/x-data-grid-premium']) {
-      newDeps['@mui/material'] = versions['@mui/material'];
-      newDeps['@mui/x-data-grid'] = versions['@mui/x-data-grid'];
       newDeps['@mui/x-data-grid-pro'] = versions['@mui/x-data-grid-pro'];
       // TODO: remove when https://github.com/mui/material-ui/pull/32492 is released
       // use `import 'exceljs'` in demonstrations instead
       newDeps.exceljs = versions.exceljs;
+    }
+
+    if (newDeps['@mui/x-data-grid-pro']) {
+      newDeps['@mui/x-data-grid'] = versions['@mui/x-data-grid'];
+    }
+
+    if (newDeps['@mui/x-data-grid']) {
+      newDeps['@mui/material'] = versions['@mui/material'];
     }
 
     if (newDeps['@mui/x-data-grid-generator']) {
@@ -65,14 +62,13 @@ ponyfillGlobal.muiDocConfig = {
       newDeps['@mui/x-data-grid-pro'] = versions['@mui/x-data-grid-pro']; // Some TS types are imported from @mui/x-data-grid-pro
     }
 
+    if (newDeps['@mui/x-date-pickers-pro']) {
+      newDeps['@mui/x-date-pickers'] = versions['@mui/x-date-pickers'];
+    }
+
     if (newDeps['@mui/x-date-pickers']) {
       newDeps['@mui/material'] = versions['@mui/material'];
       newDeps['date-fns'] = versions['date-fns'];
-    }
-
-    if (newDeps['@mui/x-date-pickers-pro']) {
-      newDeps['@mui/material'] = versions['@mui/material'];
-      newDeps['@mui/x-date-pickers'] = versions['@mui/x-date-pickers'];
     }
 
     return newDeps;

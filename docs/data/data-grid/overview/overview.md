@@ -88,6 +88,7 @@ Please see [the Licensing page](/x/introduction/licensing/) for details.
 - Server-side data
 - [Column hiding](/x/react-data-grid/column-visibility/)
 - [Column pinning](/x/react-data-grid/column-pinning/) <span class="plan-pro"></span>
+- [Row pinning](/x/react-data-grid/row-pinning/) <span class="plan-pro"></span>
 - [Accessible](/x/react-data-grid/accessibility/)
 - [Localization](/x/react-data-grid/localization/)
 

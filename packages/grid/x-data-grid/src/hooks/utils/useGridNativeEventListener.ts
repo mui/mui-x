@@ -34,7 +34,7 @@ export const useGridNativeEventListener = <
       targetElement = ref && ref.current ? ref.current : null;
     }
 
-    if (targetElement && wrapHandler && eventName && !added) {
+    if (targetElement && eventName && !added) {
       logger.debug(`Binding native ${eventName} event`);
       targetElement.addEventListener(eventName, wrapHandler, options);
       const boundElem = targetElement;

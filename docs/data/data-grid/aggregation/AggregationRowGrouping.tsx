@@ -46,7 +46,7 @@ export default function AggregationRowGrouping() {
       rowGrouping: {
         model: ['company'],
       },
-      private_aggregation: {
+      aggregation: {
         model: {
           gross: 'sum',
         },
@@ -62,9 +62,7 @@ export default function AggregationRowGrouping() {
         columns={COLUMNS}
         disableSelectionOnClick
         initialState={initialState}
-        experimentalFeatures={{
-          private_aggregation: true,
-        }}
+        experimentalFeatures={{ aggregation: true }}
       />
     </div>
   );

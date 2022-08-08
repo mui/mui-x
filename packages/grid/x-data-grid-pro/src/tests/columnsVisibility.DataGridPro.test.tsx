@@ -2,7 +2,7 @@ import * as React from 'react';
 import { spy } from 'sinon';
 import { expect } from 'chai';
 // @ts-ignore Remove once the test utils are typed
-import { createRenderer, fireEvent } from '@mui/monorepo/test/utils';
+import { createRenderer, fireEvent, act } from '@mui/monorepo/test/utils';
 import {
   DataGridPro,
   DataGridProProps,
@@ -27,7 +27,7 @@ const columns: GridColumns = [{ field: 'id' }, { field: 'idBis' }];
  * TODO v6: Remove deprecated tests
  */
 describe('<DataGridPro /> - Columns Visibility', () => {
-  const { render } = createRenderer();
+  const { render } = createRenderer({ clock: 'fake' });
 
   let apiRef: React.MutableRefObject<GridApi>;
 
@@ -60,7 +60,7 @@ describe('<DataGridPro /> - Columns Visibility', () => {
         />,
       );
 
-      apiRef.current.updateColumns([{ field: 'id', width: 300 }]);
+      act(() => apiRef.current.updateColumns([{ field: 'id', width: 300 }]));
       expect(onColumnVisibilityModelChange.callCount).to.equal(0);
     });
 
@@ -73,7 +73,7 @@ describe('<DataGridPro /> - Columns Visibility', () => {
         />,
       );
 
-      apiRef.current.updateColumns([{ field: 'id', hide: true }]);
+      act(() => apiRef.current.updateColumns([{ field: 'id', hide: true }]));
       expect(onColumnVisibilityModelChange.callCount).to.equal(1);
       expect(onColumnVisibilityModelChange.lastCall.firstArg).to.deep.equal({
         id: false,
@@ -90,14 +90,14 @@ describe('<DataGridPro /> - Columns Visibility', () => {
             initialState={{ columns: { columnVisibilityModel: { idBis: false } } }}
           />,
         );
-        apiRef.current.setColumnVisibility('id', false);
+        act(() => apiRef.current.setColumnVisibility('id', false));
         expect(gridColumnLookupSelector(apiRef).id.hide).to.equal(false);
         expect(gridColumnVisibilityModelSelector(apiRef)).to.deep.equal({
           id: false,
           idBis: false,
         });
 
-        apiRef.current.setColumnVisibility('id', true);
+        act(() => apiRef.current.setColumnVisibility('id', true));
         expect(gridColumnLookupSelector(apiRef).id.hide).to.equal(false);
         expect(gridColumnVisibilityModelSelector(apiRef)).to.deep.equal({
           id: true,
@@ -115,14 +115,14 @@ describe('<DataGridPro /> - Columns Visibility', () => {
           />,
         );
 
-        apiRef.current.setColumnVisibility('id', false);
+        act(() => apiRef.current.setColumnVisibility('id', false));
         expect(onColumnVisibilityModelChange.callCount).to.equal(1);
         expect(onColumnVisibilityModelChange.lastCall.firstArg).to.deep.equal({
           id: false,
           idBis: false,
         });
 
-        apiRef.current.setColumnVisibility('id', true);
+        act(() => apiRef.current.setColumnVisibility('id', true));
         expect(onColumnVisibilityModelChange.callCount).to.equal(2);
         expect(onColumnVisibilityModelChange.lastCall.firstArg).to.deep.equal({
           idBis: false,
@@ -140,10 +140,10 @@ describe('<DataGridPro /> - Columns Visibility', () => {
           />,
         );
 
-        apiRef.current.setColumnVisibility('id', false);
+        act(() => apiRef.current.setColumnVisibility('id', false));
         expect(onColumnVisibilityChange.callCount).to.equal(0);
 
-        apiRef.current.setColumnVisibility('id', true);
+        act(() => apiRef.current.setColumnVisibility('id', true));
         expect(onColumnVisibilityChange.callCount).to.equal(0);
       });
     });
@@ -152,14 +152,14 @@ describe('<DataGridPro /> - Columns Visibility', () => {
       it('should update `columnVisibilityModel` and `GridColDef.hide` in state', () => {
         render(<TestDataGridPro />);
 
-        apiRef.current.setColumnVisibility('id', false);
+        act(() => apiRef.current.setColumnVisibility('id', false));
         expect(gridColumnLookupSelector(apiRef).id.hide).to.equal(true);
         expect(gridColumnVisibilityModelSelector(apiRef)).to.deep.equal({
           id: false,
           idBis: true,
         });
 
-        apiRef.current.setColumnVisibility('id', true);
+        act(() => apiRef.current.setColumnVisibility('id', true));
         expect(gridColumnLookupSelector(apiRef).id.hide).to.equal(false);
         expect(gridColumnVisibilityModelSelector(apiRef)).to.deep.equal({
           id: true,
@@ -172,14 +172,14 @@ describe('<DataGridPro /> - Columns Visibility', () => {
 
         render(<TestDataGridPro onColumnVisibilityModelChange={onColumnVisibilityModelChange} />);
 
-        apiRef.current.setColumnVisibility('id', false);
+        act(() => apiRef.current.setColumnVisibility('id', false));
         expect(onColumnVisibilityModelChange.callCount).to.equal(1);
         expect(onColumnVisibilityModelChange.lastCall.firstArg).to.deep.equal({
           id: false,
           idBis: true,
         });
 
-        apiRef.current.setColumnVisibility('id', true);
+        act(() => apiRef.current.setColumnVisibility('id', true));
         expect(onColumnVisibilityModelChange.callCount).to.equal(2);
         expect(onColumnVisibilityModelChange.lastCall.firstArg).to.deep.equal({
           id: true,
@@ -192,12 +192,12 @@ describe('<DataGridPro /> - Columns Visibility', () => {
 
         render(<TestDataGridPro onColumnVisibilityChange={onColumnVisibilityChange} />);
 
-        apiRef.current.setColumnVisibility('id', false);
+        act(() => apiRef.current.setColumnVisibility('id', false));
         expect(onColumnVisibilityChange.callCount).to.equal(1);
         expect(onColumnVisibilityChange.lastCall.firstArg).to.have.property('isVisible', false);
         expect(onColumnVisibilityChange.lastCall.firstArg).to.have.property('field', 'id');
 
-        apiRef.current.setColumnVisibility('id', true);
+        act(() => apiRef.current.setColumnVisibility('id', true));
         expect(onColumnVisibilityChange.callCount).to.equal(2);
         expect(onColumnVisibilityChange.lastCall.firstArg).to.have.property('isVisible', true);
         expect(onColumnVisibilityChange.lastCall.firstArg).to.have.property('field', 'id');
@@ -215,13 +215,13 @@ describe('<DataGridPro /> - Columns Visibility', () => {
           onColumnVisibilityModelChange={onColumnVisibilityModelChange}
         />,
       );
-      apiRef.current.setColumnVisibilityModel({});
+      act(() => apiRef.current.setColumnVisibilityModel({}));
       expect(onColumnVisibilityModelChange.callCount).to.equal(1);
       expect(onColumnVisibilityModelChange.lastCall.firstArg).to.deep.equal({});
     });
   });
 
-  it('should not hide column when resizing a column after hiding it and showing it again ', () => {
+  it('should not hide column when resizing a column after hiding it and showing it again', () => {
     const { getByText } = render(
       <TestDataGridPro
         initialState={{

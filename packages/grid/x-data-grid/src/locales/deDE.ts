@@ -28,7 +28,7 @@ const deDEGrid: Partial<GridLocaleText> = {
     count !== 1 ? `${count} aktive Filter` : `${count} aktiver Filter`,
 
   // Quick filter toolbar field
-  toolbarQuickFilterPlaceholder: 'Suchen...',
+  toolbarQuickFilterPlaceholder: 'Suchen…',
   toolbarQuickFilterLabel: 'Suchen',
   toolbarQuickFilterDeleteIconLabel: 'Löschen',
 
@@ -145,12 +145,12 @@ const deDEGrid: Partial<GridLocaleText> = {
   rowReorderingHeaderName: 'Reihen neu ordnen',
 
   // Aggregation
-  // aggregationMenuItemHeader: 'Aggregation',
-  // aggregationFunctionLabelSum: 'sum',
-  // aggregationFunctionLabelAvg: 'avg',
-  // aggregationFunctionLabelMin: 'min',
-  // aggregationFunctionLabelMax: 'max',
-  // aggregationFunctionLabelSize: 'size',
+  aggregationMenuItemHeader: 'Aggregation',
+  aggregationFunctionLabelSum: 'Summe',
+  aggregationFunctionLabelAvg: 'Mittelwert',
+  aggregationFunctionLabelMin: 'Minimum',
+  aggregationFunctionLabelMax: 'Maximum',
+  aggregationFunctionLabelSize: 'Anzahl',
 };
 
 export const deDE: Localization = getGridLocalization(deDEGrid, deDECore);

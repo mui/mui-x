@@ -10,7 +10,7 @@ import {
 import { spy } from 'sinon';
 import { expect } from 'chai';
 // @ts-ignore Remove once the test utils are typed
-import { createRenderer, fireEvent, screen, createEvent } from '@mui/monorepo/test/utils';
+import { createRenderer, fireEvent, screen, createEvent, act } from '@mui/monorepo/test/utils';
 import { getCell, getColumnHeaderCell, getColumnHeadersTextContent } from 'test/utils/helperFn';
 import { useData } from 'storybook/src/hooks/useData';
 
@@ -43,11 +43,15 @@ describe('<DataGridPro /> - Column pinning', () => {
     );
   };
 
-  it('should scroll when the next cell to focus is covered by the left pinned columns', () => {
+  it('should scroll when the next cell to focus is covered by the left pinned columns', function test() {
+    if (isJSDOM) {
+      // Need layouting
+      this.skip();
+    }
     render(<TestCase initialState={{ pinnedColumns: { left: ['id'] } }} />);
     const virtualScroller = document.querySelector(`.${gridClasses.virtualScroller}`)!;
     virtualScroller.scrollLeft = 100;
-    virtualScroller.dispatchEvent(new Event('scroll'));
+    act(() => virtualScroller.dispatchEvent(new Event('scroll')));
     const cell = getCell(0, 2);
     fireEvent.mouseUp(cell);
     fireEvent.click(cell);
@@ -56,7 +60,7 @@ describe('<DataGridPro /> - Column pinning', () => {
   });
 
   it('should scroll when the next cell to focus is covered by the right pinned columns', function test() {
-    if (/jsdom/.test(window.navigator.userAgent)) {
+    if (isJSDOM) {
       // Need layouting
       this.skip();
     }
@@ -224,12 +228,12 @@ describe('<DataGridPro /> - Column pinning', () => {
     it('should call when a column is pinned', () => {
       const handlePinnedColumnsChange = spy();
       render(<TestCase onPinnedColumnsChange={handlePinnedColumnsChange} />);
-      apiRef.current.pinColumn('currencyPair', GridPinnedPosition.left);
+      act(() => apiRef.current.pinColumn('currencyPair', GridPinnedPosition.left));
       expect(handlePinnedColumnsChange.lastCall.args[0]).to.deep.equal({
         left: ['currencyPair'],
         right: [],
       });
-      apiRef.current.pinColumn('price17M', GridPinnedPosition.right);
+      act(() => apiRef.current.pinColumn('price17M', GridPinnedPosition.right));
       expect(handlePinnedColumnsChange.lastCall.args[0]).to.deep.equal({
         left: ['currencyPair'],
         right: ['price17M'],
@@ -247,7 +251,7 @@ describe('<DataGridPro /> - Column pinning', () => {
       expect(
         document.querySelectorAll(`.${gridClasses['pinnedColumns--left']} [role="cell"]`),
       ).to.have.length(1);
-      apiRef.current.pinColumn('price17M', GridPinnedPosition.left);
+      act(() => apiRef.current.pinColumn('price17M', GridPinnedPosition.left));
       expect(
         document.querySelectorAll(`.${gridClasses['pinnedColumns--left']} [role="cell"]`),
       ).to.have.length(1);
@@ -274,7 +278,7 @@ describe('<DataGridPro /> - Column pinning', () => {
           `.${gridClasses['pinnedColumns--left']} [data-field="currencyPair"]`,
         ),
       ).not.to.equal(null);
-      apiRef.current.pinColumn('price17M', GridPinnedPosition.left);
+      act(() => apiRef.current.pinColumn('price17M', GridPinnedPosition.left));
       expect(
         document.querySelector(
           `.${gridClasses['pinnedColumns--left']} [data-field="currencyPair"]`,
@@ -371,7 +375,7 @@ describe('<DataGridPro /> - Column pinning', () => {
           `.${gridClasses.virtualScrollerRenderZone}`,
         )!;
         expect(renderZone.querySelector('[data-field="currencyPair"]')).not.to.equal(null);
-        apiRef.current.pinColumn('currencyPair', GridPinnedPosition.left);
+        act(() => apiRef.current.pinColumn('currencyPair', GridPinnedPosition.left));
         const leftColumns = document.querySelector<HTMLDivElement>(
           `.${gridClasses['pinnedColumns--left']}`,
         )!;
@@ -387,14 +391,14 @@ describe('<DataGridPro /> - Column pinning', () => {
         expect(renderZone.querySelector('[data-field="currencyPair"]')).not.to.equal(null);
         expect(renderZone.querySelector('[data-field="currencyPair"]')).not.to.equal(null);
 
-        apiRef.current.pinColumn('currencyPair', GridPinnedPosition.left);
+        act(() => apiRef.current.pinColumn('currencyPair', GridPinnedPosition.left));
         const leftColumns = document.querySelector<HTMLDivElement>(
           `.${gridClasses['pinnedColumns--left']}`,
         )!;
         expect(leftColumns.querySelector('[data-field="currencyPair"]')).not.to.equal(null);
         expect(renderZone.querySelector('[data-field="currencyPair"]')).to.equal(null);
 
-        apiRef.current.pinColumn('currencyPair', GridPinnedPosition.right);
+        act(() => apiRef.current.pinColumn('currencyPair', GridPinnedPosition.right));
         const rightColumns = document.querySelector<HTMLDivElement>(
           `.${gridClasses['pinnedColumns--right']}`,
         )!;
@@ -404,12 +408,12 @@ describe('<DataGridPro /> - Column pinning', () => {
 
       it('should not change the columns when called on a pinned column with the same side ', () => {
         render(<TestCase />);
-        apiRef.current.pinColumn('currencyPair', GridPinnedPosition.left);
+        act(() => apiRef.current.pinColumn('currencyPair', GridPinnedPosition.left));
         const leftColumns = document.querySelector<HTMLDivElement>(
           `.${gridClasses['pinnedColumns--left']}`,
         )!;
         expect(leftColumns.querySelector('[data-id="0"]')?.children).to.have.length(1);
-        apiRef.current.pinColumn('currencyPair', GridPinnedPosition.left);
+        act(() => apiRef.current.pinColumn('currencyPair', GridPinnedPosition.left));
         expect(leftColumns.querySelector('[data-id="0"]')?.children).to.have.length(1);
       });
     });
@@ -417,9 +421,9 @@ describe('<DataGridPro /> - Column pinning', () => {
     describe('unpinColumn', () => {
       it('should unpin the given column', () => {
         render(<TestCase />);
-        apiRef.current.pinColumn('currencyPair', GridPinnedPosition.left);
+        act(() => apiRef.current.pinColumn('currencyPair', GridPinnedPosition.left));
         expect(document.querySelector(`.${gridClasses['pinnedColumns--left']}`)).not.to.equal(null);
-        apiRef.current.unpinColumn('currencyPair');
+        act(() => apiRef.current.unpinColumn('currencyPair'));
         expect(document.querySelector(`.${gridClasses['pinnedColumns--left']}`)).to.equal(null);
         const renderZone = document.querySelector<HTMLDivElement>(
           `.${gridClasses.virtualScrollerRenderZone}`,
@@ -543,7 +547,7 @@ describe('<DataGridPro /> - Column pinning', () => {
       expect(getColumnHeadersTextContent()).to.deep.equal(['id', 'Currency Pair']);
       setProps({ pinnedColumns: { left: ['currencyPair'] } });
       expect(getColumnHeadersTextContent()).to.deep.equal(['Currency Pair', 'id']);
-      apiRef.current.updateColumns([{ field: 'foo' }, { field: 'bar' }]);
+      act(() => apiRef.current.updateColumns([{ field: 'foo' }, { field: 'bar' }]));
       expect(getColumnHeadersTextContent()).to.deep.equal(['Currency Pair', 'id', 'foo', 'bar']);
       setProps({ pinnedColumns: { left: ['currencyPair', 'foo'] } });
       expect(getColumnHeadersTextContent()).to.deep.equal(['Currency Pair', 'foo', 'id', 'bar']);
@@ -556,7 +560,7 @@ describe('<DataGridPro /> - Column pinning', () => {
         <TestCase nbCols={2} pinnedColumns={{ left: ['foo'] }} disableVirtualization />,
       );
       expect(getColumnHeadersTextContent()).to.deep.equal(['id', 'Currency Pair']);
-      apiRef.current.updateColumns([{ field: 'foo' }, { field: 'bar' }]);
+      act(() => apiRef.current.updateColumns([{ field: 'foo' }, { field: 'bar' }]));
       expect(getColumnHeadersTextContent()).to.deep.equal(['foo', 'id', 'Currency Pair', 'bar']);
       setProps({ pinnedColumns: {} });
       expect(getColumnHeadersTextContent()).to.deep.equal(['id', 'Currency Pair', 'foo', 'bar']);
@@ -583,7 +587,7 @@ describe('<DataGridPro /> - Column pinning', () => {
       expect(getColumnHeadersTextContent()).to.deep.equal(['id', 'Currency Pair', '1M', '2M']); // price1M's index = 2
       setProps({ pinnedColumns: { left: ['price1M'] } });
       expect(getColumnHeadersTextContent()).to.deep.equal(['1M', 'id', 'Currency Pair', '2M']);
-      apiRef.current.setColumnIndex('id', 2);
+      act(() => apiRef.current.setColumnIndex('id', 2));
       expect(getColumnHeadersTextContent()).to.deep.equal(['1M', 'Currency Pair', 'id', '2M']);
       setProps({ pinnedColumns: {} });
       expect(getColumnHeadersTextContent()).to.deep.equal(['Currency Pair', 'id', '1M', '2M']); // price1M's index = 2
