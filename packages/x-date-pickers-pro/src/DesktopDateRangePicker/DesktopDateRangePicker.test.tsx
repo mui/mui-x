@@ -633,6 +633,14 @@ describe('<DesktopDateRangePicker />', () => {
 
       // Dismiss the picker
       userEvent.mousePress(document.body);
+
+      // Force blurring the element because mousePress does not do it
+      act(() => {
+        if (document.activeElement instanceof HTMLElement) {
+          document.activeElement.blur();
+        }
+      });
+
       clock.runToLast();
 
       expect(onChange.callCount).to.equal(1); // Start date change

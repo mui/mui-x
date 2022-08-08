@@ -10,7 +10,6 @@ import {
   PickersCalendarHeaderSlotsComponent,
   PickersCalendarHeaderSlotsComponentsProps,
 } from '@mui/x-date-pickers/internals';
-import { doNothing } from '../internal/utils/utils';
 import { DateRange } from '../internal/models/dateRange';
 import { DateRangePickerDay } from '../DateRangePickerDay';
 import { ExportedDesktopDateRangeCalendarProps } from './DateRangePickerViewDesktop';
@@ -27,7 +26,7 @@ export interface ExportedMobileDateRangeCalendarProps<TDate>
 
 interface DesktopDateRangeCalendarProps<TDate>
   extends ExportedMobileDateRangeCalendarProps<TDate>,
-    Omit<DayPickerProps<TDate>, 'selectedDays' | 'renderDay' | 'onFocusedDayChange'>,
+    Omit<DayPickerProps<TDate>, 'selectedDays' | 'renderDay' | 'onDayFocus'>,
     ExportedDateValidationProps<TDate>,
     ExportedCalendarHeaderProps<TDate> {
   /**
@@ -63,6 +62,8 @@ export function DateRangePickerViewMobile<TDate>(props: DesktopDateRangeCalendar
     rightArrowButtonText,
     disabled,
     readOnly,
+    onDayBlur,
+    setFocusedDay,
     ...other
   } = props;
 
@@ -99,7 +100,8 @@ export function DateRangePickerViewMobile<TDate>(props: DesktopDateRangeCalendar
         readOnly={readOnly}
         selectedDays={parsedValue}
         onSelectedDaysChange={onSelectedDaysChange}
-        onFocusedDayChange={doNothing}
+        onDayBlur={onDayBlur}
+        setFocusedDay={setFocusedDay}
         renderDay={(day, _, DayProps) =>
           renderDay(day, {
             isPreviewing: false,

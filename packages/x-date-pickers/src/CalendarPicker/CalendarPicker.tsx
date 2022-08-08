@@ -223,6 +223,7 @@ const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
   const {
     calendarState,
     changeFocusedDay,
+    handleDayBlur,
     changeMonth,
     handleChangeMonth,
     isDateDisabled,
@@ -435,7 +436,8 @@ const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
               {...commonViewProps}
               autoFocus={autoFocus}
               onMonthSwitchingAnimationEnd={onMonthSwitchingAnimationEnd}
-              onFocusedDayChange={changeFocusedDay}
+              setFocusedDay={changeFocusedDay}
+              onDayBlur={handleDayBlur}
               reduceAnimations={reduceAnimations}
               selectedDays={[date]}
               onSelectedDaysChange={onSelectedDayChange}

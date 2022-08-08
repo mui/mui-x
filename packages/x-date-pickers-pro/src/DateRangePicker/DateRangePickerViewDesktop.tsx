@@ -18,7 +18,6 @@ import { calculateRangePreview } from './date-range-manager';
 import { DateRange } from '../internal/models';
 import { DateRangePickerDay, DateRangePickerDayProps } from '../DateRangePickerDay';
 import { isWithinRange, isStartOfRange, isEndOfRange } from '../internal/utils/date-utils';
-import { doNothing } from '../internal/utils/utils';
 
 export interface ExportedDesktopDateRangeCalendarProps<TDate> {
   /**
@@ -39,7 +38,7 @@ export interface ExportedDesktopDateRangeCalendarProps<TDate> {
 
 interface DesktopDateRangeCalendarProps<TDate>
   extends ExportedDesktopDateRangeCalendarProps<TDate>,
-    Omit<DayPickerProps<TDate>, 'selectedDays' | 'renderDay' | 'onFocusedDayChange'>,
+    Omit<DayPickerProps<TDate>, 'selectedDays' | 'renderDay'>,
     ExportedDateValidationProps<TDate>,
     ExportedArrowSwitcherProps {
   calendars: 1 | 2 | 3;
@@ -203,12 +202,11 @@ export function DateRangePickerViewDesktop<TDate>(props: DesktopDateRangeCalenda
               disableFuture={disableFuture}
               key={index}
               selectedDays={parsedValue}
-              onFocusedDayChange={doNothing}
               onSelectedDaysChange={handleSelectedDayChange}
               currentMonth={monthOnIteration}
               TransitionProps={CalendarTransitionProps}
-              renderDay={(day, __, DayProps) =>
-                renderDay(day, {
+              renderDay={(day, __, DayProps) => {
+                return renderDay(day, {
                   isPreviewing: isWithinRange(utils, day, previewingRange),
                   isStartOfPreviewing: isStartOfRange(utils, day, previewingRange),
                   isEndOfPreviewing: isEndOfRange(utils, day, previewingRange),
@@ -217,8 +215,8 @@ export function DateRangePickerViewDesktop<TDate>(props: DesktopDateRangeCalenda
                   isEndOfHighlighting: isEndOfRange(utils, day, parsedValue),
                   onMouseEnter: () => handlePreviewDayChange(day),
                   ...DayProps,
-                })
-              }
+                });
+              }}
             />
           </DateRangePickerViewDesktopContainer>
         );

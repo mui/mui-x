@@ -60,8 +60,10 @@ export interface DayPickerProps<TDate> extends ExportedDayPickerProps<TDate> {
   onSelectedDaysChange: PickerOnChangeFn<TDate>;
   disabled?: boolean;
   focusedDay: TDate | null;
+  tabIndexDay: TDate;
   isMonthSwitchingAnimating: boolean;
-  onFocusedDayChange: (newFocusedDay: TDate) => void;
+  setFocusedDay: (newFocusedDay: TDate) => void;
+  onDayBlur: (blurredDay: TDate) => void;
   onMonthSwitchingAnimationEnd: () => void;
   readOnly?: boolean;
   reduceAnimations: boolean;
@@ -116,14 +118,15 @@ export function DayPicker<TDate>(props: DayPickerProps<TDate>) {
   const now = useNow<TDate>();
   const utils = useUtils<TDate>();
   const {
-    autoFocus,
-    onFocusedDayChange,
+    setFocusedDay,
+    onDayBlur,
     className,
     currentMonth,
     selectedDays,
     disabled,
     disableHighlightToday,
     focusedDay,
+    tabIndexDay,
     isMonthSwitchingAnimating,
     loading,
     onSelectedDaysChange,
@@ -202,20 +205,27 @@ export function DayPicker<TDate>(props: DayPickerProps<TDate>) {
             {utils.getWeekArray(currentMonth).map((week) => (
               <PickersCalendarWeek role="row" key={`week-${week[0]}`}>
                 {week.map((day) => {
+                  const selected = validSelectedDays.some((selectedDay) =>
+                    utils.isSameDay(selectedDay, day),
+                  );
+                  const hasFocus = utils.isSameDay(tabIndexDay, day);
+
                   const pickersDayProps: PickersDayProps<TDate> = {
                     key: (day as any)?.toString(),
                     day,
                     isAnimating: isMonthSwitchingAnimating,
                     disabled: disabled || isDateDisabled(day),
-                    autoFocus: autoFocus && focusedDay !== null && utils.isSameDay(day, focusedDay),
+                    autoFocus: focusedDay !== null && utils.isSameDay(day, focusedDay),
                     today: utils.isSameDay(day, now),
                     outsideCurrentMonth: utils.getMonth(day) !== currentMonthNumber,
-                    selected: validSelectedDays.some((selectedDay) =>
-                      utils.isSameDay(selectedDay, day),
-                    ),
+                    selected,
+                    tabIndex: selected || hasFocus ? 0 : -1,
                     disableHighlightToday,
                     showDaysOutsideCurrentMonth,
-                    onDayFocus: onFocusedDayChange,
+                    setFocusedDay,
+                    onDayBlur,
+                    onFocus: () => setFocusedDay(day),
+                    onBlur: () => onDayBlur(day),
                     onDaySelect: handleDaySelect,
                   };
 

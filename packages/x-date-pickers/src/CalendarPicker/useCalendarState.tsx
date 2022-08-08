@@ -8,6 +8,7 @@ import type { CalendarPickerProps } from './CalendarPicker';
 interface CalendarState<TDate> {
   currentMonth: TDate;
   focusedDay: TDate | null;
+  tabIndexDay: TDate;
   isMonthSwitchingAnimating: boolean;
   slideDirection: SlideDirection;
 }
@@ -30,7 +31,8 @@ export const createCalendarStateReducer =
     action:
       | ReducerAction<'finishMonthSwitchingAnimation'>
       | ReducerAction<'changeMonth', ChangeMonthPayload<TDate>>
-      | ReducerAction<'changeFocusedDay', { focusedDay: TDate | null }>,
+      | ReducerAction<'changeFocusedDay', { focusedDay: TDate | null }>
+      | ReducerAction<'dayBlurred', { blurredDate: TDate }>,
   ): CalendarState<TDate> => {
     switch (action.type) {
       case 'changeMonth':
@@ -46,7 +48,14 @@ export const createCalendarStateReducer =
           ...state,
           isMonthSwitchingAnimating: false,
         };
-
+      case 'dayBlurred':
+        if (state.focusedDay == null) {
+          return state;
+        }
+        if (utils.isSameDay(action.blurredDate, state.focusedDay)) {
+          return { ...state, focusedDay: null };
+        }
+        return state;
       case 'changeFocusedDay': {
         if (
           state.focusedDay != null &&
@@ -64,6 +73,7 @@ export const createCalendarStateReducer =
         return {
           ...state,
           focusedDay: action.focusedDay,
+          tabIndexDay: action.focusedDay === null ? state.tabIndexDay : action.focusedDay,
           isMonthSwitchingAnimating: needMonthSwitch && !reduceAnimations,
           currentMonth: needMonthSwitch
             ? utils.startOfMonth(action.focusedDay!)
@@ -121,7 +131,8 @@ export const useCalendarState = <TDate extends unknown>({
 
   const [calendarState, dispatch] = React.useReducer(reducerFn, {
     isMonthSwitchingAnimating: false,
-    focusedDay: date || now,
+    focusedDay: date || null,
+    tabIndexDay: date || now,
     currentMonth: utils.startOfMonth(date ?? defaultCalendarMonth ?? now),
     slideDirection: 'left',
   });
@@ -178,10 +189,15 @@ export const useCalendarState = <TDate extends unknown>({
     [isDateDisabled],
   );
 
+  const handleDayBlur = React.useCallback((blurredDate: TDate) => {
+    dispatch({ type: 'dayBlurred', blurredDate });
+  }, []);
+
   return {
     calendarState,
     changeMonth,
     changeFocusedDay,
+    handleDayBlur,
     isDateDisabled,
     onMonthSwitchingAnimationEnd,
     handleChangeMonth,

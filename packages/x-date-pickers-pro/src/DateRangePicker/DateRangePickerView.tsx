@@ -26,6 +26,7 @@ import {
   ExportedDesktopDateRangeCalendarProps,
 } from './DateRangePickerViewDesktop';
 import { getReleaseInfo } from '../internal/utils/releaseInfo';
+import { doNothing } from '../internal/utils/utils';
 
 const releaseInfo = getReleaseInfo();
 
@@ -126,24 +127,19 @@ function DateRangePickerViewRaw<TInputDate, TDate>(
   const wrapperVariant = React.useContext(WrapperVariantContext);
 
   const [start, end] = parsedValue;
-  const {
-    changeMonth,
-    calendarState,
-    isDateDisabled,
-    onMonthSwitchingAnimationEnd,
-    changeFocusedDay,
-  } = useCalendarState({
-    date: start || end,
-    defaultCalendarMonth,
-    disableFuture,
-    disablePast,
-    disableSwitchToMonthOnDayFocus: true,
-    maxDate,
-    minDate,
-    onMonthChange,
-    reduceAnimations,
-    shouldDisableDate,
-  });
+  const { changeMonth, calendarState, isDateDisabled, onMonthSwitchingAnimationEnd } =
+    useCalendarState({
+      date: start || end,
+      defaultCalendarMonth,
+      disableFuture,
+      disablePast,
+      disableSwitchToMonthOnDayFocus: true,
+      maxDate,
+      minDate,
+      onMonthChange,
+      reduceAnimations,
+      shouldDisableDate,
+    });
 
   const toShowToolbar = showToolbar ?? wrapperVariant !== 'desktop';
 
@@ -218,7 +214,9 @@ function DateRangePickerViewRaw<TInputDate, TDate>(
   const renderView = () => {
     const sharedCalendarProps = {
       parsedValue,
-      changeFocusedDay,
+      changeFocusedDay: doNothing,
+      setFocusedDay: doNothing,
+      onDayBlur: doNothing,
       onSelectedDaysChange: handleSelectedDayChange,
       reduceAnimations,
       disableHighlightToday,

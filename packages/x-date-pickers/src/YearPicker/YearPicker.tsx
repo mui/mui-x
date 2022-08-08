@@ -41,7 +41,6 @@ export interface YearPickerProps<TDate> extends YearValidationProps<TDate> {
   date: TDate | null;
   disabled?: boolean;
   onChange: NonNullablePickerChangeHandler<TDate>;
-  onFocusedDayChange?: (day: TDate) => void;
   readOnly?: boolean;
   /**
    * If `true`, today's date is rendering without highlighting with circle.
@@ -228,7 +227,6 @@ YearPicker.propTypes = {
    */
   minDate: PropTypes.any,
   onChange: PropTypes.func.isRequired,
-  onFocusedDayChange: PropTypes.func,
   readOnly: PropTypes.bool,
   /**
    * Disable specific years dynamically.
