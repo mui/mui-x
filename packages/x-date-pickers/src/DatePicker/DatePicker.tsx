@@ -186,6 +186,10 @@ DatePicker.propTypes = {
    * @deprecated Use the `localeText` prop of `LocalizationProvider` instead, see https://mui.com/x/react-date-pickers/localization
    */
   getViewSwitchingButtonText: PropTypes.func,
+  /**
+   * Do not fire onChange for Invalid Date
+   * @default false
+   */
   ignoreInvalidInputs: PropTypes.bool,
   /**
    * Props to pass to keyboard input adornment.
