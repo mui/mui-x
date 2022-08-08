@@ -44,6 +44,7 @@
     "disableColumnSelector": { "type": { "name": "bool" } },
     "disableDensitySelector": { "type": { "name": "bool" } },
     "disableExtendRowFullWidth": { "type": { "name": "bool" } },
+    "disableIgnoreModificationsIfProcessingProps": { "type": { "name": "bool" } },
     "disableMultipleColumnsFiltering": { "type": { "name": "bool" } },
     "disableMultipleColumnsSorting": { "type": { "name": "bool" } },
     "disableMultipleSelection": { "type": { "name": "bool" } },
@@ -58,7 +59,7 @@
     "experimentalFeatures": {
       "type": {
         "name": "shape",
-        "description": "{ newEditingApi?: bool, preventCommitWhileValidating?: bool, warnIfFocusStateIsNotSynced?: bool }"
+        "description": "{ newEditingApi?: bool, preventCommitWhileValidating?: bool, rowPinning?: bool, warnIfFocusStateIsNotSynced?: bool }"
       }
     },
     "filterMode": {
@@ -162,7 +163,6 @@
     "onRowsScrollEnd": { "type": { "name": "func" } },
     "onSelectionModelChange": { "type": { "name": "func" } },
     "onSortModelChange": { "type": { "name": "func" } },
-    "onStateChange": { "type": { "name": "func" } },
     "page": { "type": { "name": "number" }, "default": "0" },
     "pageSize": { "type": { "name": "number" }, "default": "100" },
     "pagination": { "type": { "name": "bool" } },
@@ -176,6 +176,7 @@
         "description": "{ left?: Array&lt;string&gt;, right?: Array&lt;string&gt; }"
       }
     },
+    "pinnedRows": { "type": { "name": "shape", "description": "{ bottom?: array, top?: array }" } },
     "processRowUpdate": { "type": { "name": "func" } },
     "rowBuffer": { "type": { "name": "number" }, "default": "3" },
     "rowCount": { "type": { "name": "number" } },
@@ -303,6 +304,11 @@
   "styles": {
     "classes": [
       "actionsCell",
+      "aggregationColumnHeader",
+      "aggregationColumnHeader--alignLeft",
+      "aggregationColumnHeader--alignCenter",
+      "aggregationColumnHeader--alignRight",
+      "aggregationColumnHeaderLabel",
       "autoHeight",
       "booleanCell",
       "cell--editable",
@@ -346,6 +352,7 @@
       "detailPanels",
       "detailPanelToggleCell",
       "detailPanelToggleCell--expanded",
+      "footerCell",
       "panel",
       "panelHeader",
       "panelWrapper",
@@ -406,7 +413,11 @@
       "treeDataGroupingCell",
       "treeDataGroupingCellToggle",
       "groupingCriteriaCell",
-      "groupingCriteriaCellToggle"
+      "groupingCriteriaCellToggle",
+      "pinnedRows",
+      "pinnedRows--top",
+      "pinnedRows--bottom",
+      "pinnedRowsRenderZone"
     ],
     "globalClasses": {},
     "name": "MuiDataGrid"

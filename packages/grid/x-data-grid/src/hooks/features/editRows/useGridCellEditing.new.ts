@@ -55,6 +55,7 @@ export const useGridCellEditing = (
     | 'onCellModesModelChange'
     | 'onProcessRowUpdateError'
     | 'signature'
+    | 'disableIgnoreModificationsIfProcessingProps'
   >,
 ) => {
   const [cellModesModel, setCellModesModel] = React.useState<GridCellModesModel>({});
@@ -125,6 +126,12 @@ export const useGridCellEditing = (
   const handleCellKeyDown = React.useCallback<GridEventListener<'cellKeyDown'>>(
     (params, event) => {
       if (params.cellMode === GridCellModes.Edit) {
+        // Wait until IME is settled for Asian languages like Japanese and Chinese
+        // TODO: `event.which` is depricated but this is a temporary workaround
+        if (event.which === 229) {
+          return;
+        }
+
         let reason: GridCellEditStopReasons | undefined;
 
         if (event.key === 'Escape') {
@@ -145,14 +152,14 @@ export const useGridCellEditing = (
       } else if (params.isEditable) {
         let reason: GridCellEditStartReasons | undefined;
 
-        if (isPrintableKey(event.key)) {
-          if (event.shiftKey || event.ctrlKey || event.metaKey || event.altKey) {
-            return;
-          }
+        if (isPrintableKey(event)) {
+          reason = GridCellEditStartReasons.printableKeyDown;
+        } else if ((event.ctrlKey || event.metaKey) && event.key === 'v') {
           reason = GridCellEditStartReasons.printableKeyDown;
         } else if (event.key === 'Enter') {
           reason = GridCellEditStartReasons.enterKeyDown;
-        } else if (event.key === 'Delete') {
+        } else if (event.key === 'Delete' || event.key === 'Backspace') {
+          // Delete on Windows, Backspace on macOS
           reason = GridCellEditStartReasons.deleteKeyDown;
         }
 
@@ -187,6 +194,8 @@ export const useGridCellEditing = (
     (params) => {
       const { id, field, reason } = params;
 
+      apiRef.current.unstable_runPendingEditCellValueMutation(id, field);
+
       let cellToFocusAfter: GridStopCellEditModeParams['cellToFocusAfter'];
       if (reason === GridCellEditStopReasons.enterKeyDown) {
         cellToFocusAfter = 'below';
@@ -198,7 +207,10 @@ export const useGridCellEditing = (
 
       let ignoreModifications = reason === 'escapeKeyDown';
       const editingState = gridEditRowsStateSelector(apiRef.current.state);
-      if (editingState[id][field].isProcessingProps) {
+      if (
+        editingState[id][field].isProcessingProps &&
+        !props.disableIgnoreModificationsIfProcessingProps
+      ) {
         // The user wants to stop editing the cell but we can't wait for the props to be processed.
         // In this case, discard the modifications.
         ignoreModifications = true;
@@ -211,7 +223,7 @@ export const useGridCellEditing = (
         cellToFocusAfter,
       });
     },
-    [apiRef],
+    [apiRef, props.disableIgnoreModificationsIfProcessingProps],
   );
 
   useGridApiEventHandler(apiRef, 'cellDoubleClick', runIfEditModeIsCell(handleCellDoubleClick));
@@ -454,7 +466,7 @@ export const useGridCellEditing = (
       updateOrDeleteFieldState(id, field, newProps);
 
       editingState = gridEditRowsStateSelector(apiRef.current.state);
-      return !editingState[id][field].error;
+      return !editingState[id]?.[field]?.error;
     },
     [apiRef, throwIfNotEditable, throwIfNotInMode, updateOrDeleteFieldState],
   );

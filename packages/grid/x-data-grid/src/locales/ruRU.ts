@@ -38,7 +38,7 @@ const ruRUGrid: Partial<GridLocaleText> = {
   },
 
   // Quick filter toolbar field
-  toolbarQuickFilterPlaceholder: 'Поиск...',
+  toolbarQuickFilterPlaceholder: 'Поиск…',
   toolbarQuickFilterLabel: 'Поиск',
   toolbarQuickFilterDeleteIconLabel: 'Очистить',
 
@@ -171,6 +171,14 @@ const ruRUGrid: Partial<GridLocaleText> = {
 
   // Row reordering text
   // rowReorderingHeaderName: 'Row reordering',
+
+  // Aggregation
+  // aggregationMenuItemHeader: 'Aggregation',
+  // aggregationFunctionLabelSum: 'sum',
+  // aggregationFunctionLabelAvg: 'avg',
+  // aggregationFunctionLabelMin: 'min',
+  // aggregationFunctionLabelMax: 'max',
+  // aggregationFunctionLabelSize: 'size',
 };
 
 export const ruRU: Localization = getGridLocalization(ruRUGrid, ruRUCore);

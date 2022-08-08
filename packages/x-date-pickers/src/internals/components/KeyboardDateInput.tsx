@@ -1,5 +1,4 @@
 import * as React from 'react';
-import PropTypes from 'prop-types';
 import IconButton from '@mui/material/IconButton';
 import InputAdornment from '@mui/material/InputAdornment';
 import { useLocaleText, useUtils } from '../hooks/useUtils';
@@ -56,12 +55,3 @@ export const KeyboardDateInput = React.forwardRef(function KeyboardDateInput<TIn
     },
   });
 });
-
-KeyboardDateInput.propTypes = {
-  acceptRegex: PropTypes.instanceOf(RegExp),
-  getOpenDialogAriaText: PropTypes.func,
-  mask: PropTypes.string,
-  OpenPickerButtonProps: PropTypes.object,
-  renderInput: PropTypes.func.isRequired,
-  rifmFormatter: PropTypes.func,
-};

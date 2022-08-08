@@ -62,6 +62,7 @@ const OTHER_GRID_INTERFACES_WITH_DEDICATED_PAGES = [
   'GridRowParams',
   'GridRowClassNameParams',
   'GridRowSpacingParams',
+  'GridExportStateParams',
 
   // Others
   'GridColDef',
@@ -73,6 +74,9 @@ const OTHER_GRID_INTERFACES_WITH_DEDICATED_PAGES = [
   'GridFilterModel',
   'GridFilterItem',
   'GridFilterOperator',
+
+  // Aggregation
+  'GridAggregationFunction',
 ];
 
 const parseProperty = (propertySymbol: ts.Symbol, project: Project): ParsedProperty => ({

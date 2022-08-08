@@ -1,6 +1,11 @@
 import * as React from 'react';
-// @ts-ignore Remove once the test utils are typed
-import { createRenderer, ErrorBoundary, fireEvent, screen } from '@mui/monorepo/test/utils';
+import {
+  createRenderer,
+  ErrorBoundary,
+  fireEvent,
+  screen,
+  // @ts-ignore Remove once the test utils are typed
+} from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
 import { spy } from 'sinon';
 import { DataGrid, GridOverlay } from '@mui/x-data-grid';
@@ -149,7 +154,8 @@ describe('<DataGrid /> - Components', () => {
         </ErrorBoundary>,
       );
     }).toErrorDev([
-      'MUI: useGridRootProps should only be used inside the DataGrid/DataGridPro component.',
+      'MUI: useGridRootProps should only be used inside the DataGrid, DataGridPro or DataGridPremium component.',
+      'MUI: useGridRootProps should only be used inside the DataGrid, DataGridPro or DataGridPremium component.',
       'The above error occurred in the <ForwardRef(GridOverlay)> component',
     ]);
   });
