@@ -28,7 +28,7 @@ const faIRGrid: Partial<GridLocaleText> = {
     count !== 1 ? `${count} فیلترهای فعال` : `${count} فیلتر فعال`,
 
   // Quick filter toolbar field
-  // toolbarQuickFilterPlaceholder: 'Search...',
+  // toolbarQuickFilterPlaceholder: 'Search…',
   // toolbarQuickFilterLabel: 'Search',
   // toolbarQuickFilterDeleteIconLabel: 'Clear',
 

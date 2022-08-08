@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
-import { describeConformance, screen, fireEvent, userEvent } from '@mui/monorepo/test/utils';
+import { describeConformance, screen, fireEvent, userEvent, act } from '@mui/monorepo/test/utils';
 import TextField from '@mui/material/TextField';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { DesktopDateRangePicker } from '@mui/x-date-pickers-pro/DesktopDateRangePicker';
@@ -424,7 +424,7 @@ describe('<DesktopDateRangePicker />', () => {
         render(<WrappedDesktopDateRangePicker onOpen={onOpen} initialValue={[null, null]} />);
 
         const startInput = screen.getAllByRole('textbox')[0];
-        startInput.focus();
+        act(() => startInput.focus());
         fireEvent.keyDown(startInput, { key });
 
         expect(onOpen.callCount).to.equal(1);
@@ -439,7 +439,7 @@ describe('<DesktopDateRangePicker />', () => {
         render(<WrappedDesktopDateRangePicker onOpen={onOpen} initialValue={[null, null]} />);
 
         const endInput = screen.getAllByRole('textbox')[1];
-        endInput.focus();
+        act(() => endInput.focus());
         fireEvent.keyDown(endInput, { key });
 
         expect(onOpen.callCount).to.equal(1);
