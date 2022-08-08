@@ -66,6 +66,11 @@ export interface GridRowTreeNodeConfig {
    * @default 'body'
    */
   position?: 'body' | 'footer';
+  /**
+   * If `true`, this row is pinned.
+   * @default false
+   */
+  isPinned?: boolean;
 }
 
 /**

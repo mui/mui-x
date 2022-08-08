@@ -28,7 +28,7 @@ const roROGrid: Partial<GridLocaleText> = {
     count !== 1 ? `${count} filtru activ` : `${count} filtru activ`,
 
   // Quick filter toolbar field
-  toolbarQuickFilterPlaceholder: 'Căutare...',
+  toolbarQuickFilterPlaceholder: 'Căutare…',
   toolbarQuickFilterLabel: 'Căutare',
   toolbarQuickFilterDeleteIconLabel: 'Ștergere',
 

@@ -9,11 +9,9 @@ export default function AggregationDisabled() {
     <div style={{ height: 400, width: '100%' }}>
       <DataGridPremium
         {...data}
-        private_disableAggregation
-        initialState={{ private_aggregation: { model: { gross: 'sum' } } }}
-        experimentalFeatures={{
-          private_aggregation: true,
-        }}
+        disableAggregation
+        initialState={{ aggregation: { model: { gross: 'sum' } } }}
+        experimentalFeatures={{ aggregation: true }}
       />
     </div>
   );

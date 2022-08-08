@@ -5,6 +5,15 @@
       "required": true
     },
     "rows": { "type": { "name": "array" }, "required": true },
+    "aggregationFunctions": {
+      "type": { "name": "object" },
+      "default": "GRID_AGGREGATION_FUNCTIONS"
+    },
+    "aggregationModel": { "type": { "name": "object" } },
+    "aggregationRowsScope": {
+      "type": { "name": "enum", "description": "'all'<br>&#124;&nbsp;'filtered'" },
+      "default": "\"filtered\""
+    },
     "apiRef": { "type": { "name": "shape", "description": "{ current: object }" } },
     "aria-label": { "type": { "name": "string" } },
     "aria-labelledby": { "type": { "name": "string" } },
@@ -34,6 +43,7 @@
     "detailPanelExpandedRowIds": {
       "type": { "name": "arrayOf", "description": "Array&lt;number<br>&#124;&nbsp;string&gt;" }
     },
+    "disableAggregation": { "type": { "name": "bool" } },
     "disableChildrenFiltering": { "type": { "name": "bool" } },
     "disableChildrenSorting": { "type": { "name": "bool" } },
     "disableColumnFilter": { "type": { "name": "bool" } },
@@ -44,6 +54,7 @@
     "disableColumnSelector": { "type": { "name": "bool" } },
     "disableDensitySelector": { "type": { "name": "bool" } },
     "disableExtendRowFullWidth": { "type": { "name": "bool" } },
+    "disableIgnoreModificationsIfProcessingProps": { "type": { "name": "bool" } },
     "disableMultipleColumnsFiltering": { "type": { "name": "bool" } },
     "disableMultipleColumnsSorting": { "type": { "name": "bool" } },
     "disableMultipleSelection": { "type": { "name": "bool" } },
@@ -59,7 +70,7 @@
     "experimentalFeatures": {
       "type": {
         "name": "shape",
-        "description": "{ newEditingApi?: bool, preventCommitWhileValidating?: bool, private_aggregation?: bool, warnIfFocusStateIsNotSynced?: bool }"
+        "description": "{ aggregation?: bool, newEditingApi?: bool, preventCommitWhileValidating?: bool, rowPinning?: bool, warnIfFocusStateIsNotSynced?: bool }"
       }
     },
     "filterMode": {
@@ -71,6 +82,10 @@
         "name": "shape",
         "description": "{ items: Array&lt;{ columnField: string, id?: number<br>&#124;&nbsp;string, operatorValue?: string, value?: any }&gt;, linkOperator?: 'and'<br>&#124;&nbsp;'or', quickFilterLogicOperator?: 'and'<br>&#124;&nbsp;'or', quickFilterValues?: array }"
       }
+    },
+    "getAggregationPosition": {
+      "type": { "name": "func" },
+      "default": "`(groupNode) => groupNode == null ? 'footer' : 'inline'`"
     },
     "getCellClassName": { "type": { "name": "func" } },
     "getDetailPanelContent": { "type": { "name": "func" } },
@@ -112,6 +127,7 @@
       "default": "\"debug\""
     },
     "nonce": { "type": { "name": "string" } },
+    "onAggregationModelChange": { "type": { "name": "func" } },
     "onCellClick": { "type": { "name": "func" } },
     "onCellDoubleClick": { "type": { "name": "func" } },
     "onCellEditCommit": { "type": { "name": "func" } },
@@ -177,6 +193,7 @@
         "description": "{ left?: Array&lt;string&gt;, right?: Array&lt;string&gt; }"
       }
     },
+    "pinnedRows": { "type": { "name": "shape", "description": "{ bottom?: array, top?: array }" } },
     "processRowUpdate": { "type": { "name": "func" } },
     "rowBuffer": { "type": { "name": "number" }, "default": "3" },
     "rowCount": { "type": { "name": "number" } },
@@ -344,10 +361,14 @@
       "treeDataGroupingCell",
       "treeDataGroupingCellToggle",
       "groupingCriteriaCell",
-      "groupingCriteriaCellToggle"
+      "groupingCriteriaCellToggle",
+      "pinnedRows",
+      "pinnedRows--top",
+      "pinnedRows--bottom",
+      "pinnedRowsRenderZone"
     ],
     "globalClasses": {},
-    "name": "MuiDataGridPremium"
+    "name": "MuiDataGrid"
   },
   "forwardsRefTo": "GridRoot",
   "filename": "/packages/grid/x-data-grid-premium/src/DataGridPremium/DataGridPremium.tsx",

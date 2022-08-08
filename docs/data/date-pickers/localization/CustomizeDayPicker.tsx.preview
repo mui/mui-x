@@ -1,0 +1,13 @@
+<LocalizationProvider dateAdapter={AdapterDateFns}>
+  <StaticDatePicker
+    displayStaticWrapperAs="desktop"
+    value={value}
+    onChange={(newValue) => {
+      setValue(newValue);
+    }}
+    renderInput={(params) => <TextField {...params} />}
+    dayOfWeekFormatter={(day) => `${day}.`}
+    toolbarFormat="eee dd MMMM"
+    showToolbar
+  />
+</LocalizationProvider>
