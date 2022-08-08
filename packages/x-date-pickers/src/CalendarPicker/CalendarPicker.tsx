@@ -244,6 +244,7 @@ const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
     readOnly,
     minDate,
     maxDate,
+    disableHighlightToday,
     ...other
   } = props;
 
@@ -410,6 +411,12 @@ const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
   const minDateWithDisabled = (disabled && date) || minDate;
   const maxDateWithDisabled = (disabled && date) || maxDate;
 
+  const commonViewProps = {
+    disableHighlightToday,
+    readOnly,
+    disabled,
+  };
+
   return (
     <CalendarPickerRoot ref={ref} className={clsx(classes.root, className)} ownerState={ownerState}>
       <PickersCalendarHeader
@@ -437,23 +444,21 @@ const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
             <YearPicker
               {...other}
               {...baseDateValidationProps}
+              {...commonViewProps}
               autoFocus={autoFocus}
               date={date}
               onChange={handleDateYearChange}
               shouldDisableYear={shouldDisableYear}
-              disabled={disabled}
-              readOnly={readOnly}
             />
           )}
 
           {openView === 'month' && (
             <MonthPicker
               {...baseDateValidationProps}
+              {...commonViewProps}
               className={className}
               date={date}
               onChange={handleDateMonthChange}
-              disabled={disabled}
-              readOnly={readOnly}
               shouldDisableMonth={shouldDisableMonth}
             />
           )}
@@ -463,6 +468,7 @@ const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
               {...other}
               {...calendarState}
               {...baseDateValidationProps}
+              {...commonViewProps}
               autoFocus={autoFocus}
               onMonthSwitchingAnimationEnd={onMonthSwitchingAnimationEnd}
               onFocusedDayChange={changeFocusedDay}
@@ -470,8 +476,6 @@ const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
               selectedDays={[date]}
               onSelectedDaysChange={onSelectedDayChange}
               renderLoading={renderLoading}
-              disabled={disabled}
-              readOnly={readOnly}
               shouldDisableDate={shouldDisableDate}
             />
           )}
@@ -500,6 +504,13 @@ CalendarPicker.propTypes = {
    */
   componentsProps: PropTypes.object,
   date: PropTypes.any,
+  /**
+   * Formats the day of week displayed in the calendar header.
+   * @param {string} day The day of week provided by the adapter's method `getWeekdays`.
+   * @returns {string} The name to display.
+   * @default (day) => day.charAt(0).toUpperCase()
+   */
+  dayOfWeekFormatter: PropTypes.func,
   /**
    * Default calendar month displayed when `value={null}`.
    */

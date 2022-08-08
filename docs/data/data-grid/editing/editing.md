@@ -254,9 +254,14 @@ While the promise is not resolved, the edit component will receive an `isProcess
 {{"demo": "ValidateServerNameGrid.js", "bg": "inline", "defaultCodeOpen": false}}
 
 :::warning
-If the user performs an action that saves changes and exits edit mode (e.g. pressing <kbd class="key">Enter</kbd>) while the props are still being processed, the changes will be discarded upon exit.
-To avoid this, it is important to communicate to users when the processing is still occurring.
-You can use the `isProcessingProps` prop to show a loader while waiting for the server to respond.
+If the user performs an action that saves the changes and exits the edit mode (e.g. pressing <kbd class="key">Enter</kbd>) while the props are still being processed, the changes will be discarded upon exit.
+To avoid this, use the `disableIgnoreModificationsIfProcessingProps` prop to keep the cell or row in edit mode while props are processed:
+
+```tsx
+<DataGrid disableIgnoreModificationsIfProcessingProps />
+```
+
+In v6, this prop will be removed and the editing API will behave, by default, like if it was enabled.
 :::
 
 ## Persistence

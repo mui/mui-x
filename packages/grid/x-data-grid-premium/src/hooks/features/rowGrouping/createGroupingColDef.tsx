@@ -9,6 +9,7 @@ import {
 } from '@mui/x-data-grid-pro';
 import { GridColumnRawLookup } from '@mui/x-data-grid-pro/internals';
 import { GridApiPremium } from '../../../models/gridApiPremium';
+import { GridGroupingColumnFooterCell } from '../../../components/GridGroupingColumnFooterCell';
 import { GridGroupingCriteriaCell } from '../../../components/GridGroupingCriteriaCell';
 import { GridGroupingColumnLeafCell } from '../../../components/GridGroupingColumnLeafCell';
 import {
@@ -174,6 +175,11 @@ export const createGroupingColDefForOneGroupingCriteria = ({
       leafColDef?.width ?? 0,
     ),
     renderCell: (params) => {
+      // Render footer
+      if (params.rowNode.position === 'footer') {
+        return <GridGroupingColumnFooterCell {...params} />;
+      }
+
       // Render leaves
       if (params.rowNode.groupingField == null) {
         if (leafColDef) {
@@ -290,6 +296,11 @@ export const createGroupingColDefForAllGroupingCriteria = ({
       leafColDef?.width ?? 0,
     ),
     renderCell: (params) => {
+      // Render footer
+      if (params.rowNode.position === 'footer') {
+        return <GridGroupingColumnFooterCell {...params} />;
+      }
+
       // Render the leaves
       if (params.rowNode.groupingField == null) {
         if (leafColDef) {

@@ -65,6 +65,11 @@ export interface YearPickerProps<TDate>
   onChange: NonNullablePickerChangeHandler<TDate>;
   onFocusedDayChange?: (day: TDate) => void;
   readOnly?: boolean;
+  /**
+   * If `true`, today's date is rendering without highlighting with circle.
+   * @default false
+   */
+  disableHighlightToday?: boolean;
 }
 
 type YearPickerComponent = (<TDate>(props: YearPickerProps<TDate>) => JSX.Element) & {
@@ -92,13 +97,25 @@ export const YearPicker = React.forwardRef(function YearPicker<TDate>(
     onChange,
     readOnly,
     shouldDisableYear,
+    disableHighlightToday,
   } = props;
 
   const ownerState = props;
   const classes = useUtilityClasses(ownerState);
 
-  const selectedDate = date || now;
-  const currentYear = utils.getYear(selectedDate);
+  const selectedDateOrToday = date ?? now;
+  const currentYear = React.useMemo(() => {
+    if (date != null) {
+      return utils.getYear(date);
+    }
+
+    if (disableHighlightToday) {
+      return null;
+    }
+
+    return utils.getYear(now);
+  }, [now, date, utils, disableHighlightToday]);
+
   const wrapperVariant = React.useContext(WrapperVariantContext);
   const selectedYearRef = React.useRef<HTMLButtonElement>(null);
   const [focusedYear, setFocusedYear] = React.useState<number | null>(currentYear);
@@ -134,18 +151,18 @@ export const YearPicker = React.forwardRef(function YearPicker<TDate>(
       return;
     }
 
-    const newDate = utils.setYear(selectedDate, year);
+    const newDate = utils.setYear(selectedDateOrToday, year);
 
     onChange(newDate, isFinish);
   };
 
   const focusYear = React.useCallback(
     (year: number) => {
-      if (!isYearDisabled(utils.setYear(selectedDate, year))) {
+      if (!isYearDisabled(utils.setYear(selectedDateOrToday, year))) {
         setFocusedYear(year);
       }
     },
-    [selectedDate, isYearDisabled, utils],
+    [selectedDateOrToday, isYearDisabled, utils],
   );
 
   const yearsInRow = wrapperVariant === 'desktop' ? 4 : 3;
@@ -213,6 +230,11 @@ YearPicker.propTypes = {
    * @default false
    */
   disableFuture: PropTypes.bool,
+  /**
+   * If `true`, today's date is rendering without highlighting with circle.
+   * @default false
+   */
+  disableHighlightToday: PropTypes.bool,
   /**
    * If `true` past days are disabled.
    * @default false

@@ -21,6 +21,7 @@
     "disableColumnSelector": "If <code>true</code>, hiding/showing columns is disabled.",
     "disableDensitySelector": "If <code>true</code>, the density selector is disabled.",
     "disableExtendRowFullWidth": "If <code>true</code>, rows will not be extended to fill the full width of the grid container.",
+    "disableIgnoreModificationsIfProcessingProps": "If <code>true</code>, modification to a cell will not be discarded if the mode is changed from &quot;edit&quot; to &quot;view&quot; while processing props.",
     "disableSelectionOnClick": "If <code>true</code>, the selection on click on a row or cell is disabled.",
     "disableVirtualization": "If <code>true</code>, the virtualization is disabled.",
     "editMode": "Controls whether to use the cell or row editing.",
@@ -110,7 +111,33 @@
   },
   "classDescriptions": {
     "actionsCell": {
-      "description": "Styles applied to the root element of the cell with type=\"actions\""
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the root element of the cell with type=\"actions\""
+    },
+    "aggregationColumnHeader": {
+      "description": "Styles applied to {{nodeName}} when {{conditions}}.",
+      "nodeName": "the root element of the column header",
+      "conditions": "aggregated"
+    },
+    "aggregationColumnHeader--alignLeft": {
+      "description": "Styles applied to {{nodeName}} when {{conditions}}.",
+      "nodeName": "the root element of the header",
+      "conditions": "aggregation if <code>headerAlign=\"left\"</code>"
+    },
+    "aggregationColumnHeader--alignCenter": {
+      "description": "Styles applied to {{nodeName}} when {{conditions}}.",
+      "nodeName": "the root element of the header",
+      "conditions": "aggregation if <code>headerAlign=\"center\"</code>"
+    },
+    "aggregationColumnHeader--alignRight": {
+      "description": "Styles applied to {{nodeName}} when {{conditions}}.",
+      "nodeName": "the root element of the header",
+      "conditions": "aggregation if <code>headerAlign=\"right\"</code>"
+    },
+    "aggregationColumnHeaderLabel": {
+      "description": "Styles applied to {{nodeName}} when {{conditions}}.",
+      "nodeName": "the aggregation label in the column header",
+      "conditions": "aggregated"
     },
     "autoHeight": {
       "description": "Styles applied to {{nodeName}} if {{conditions}}.",
@@ -300,6 +327,10 @@
       "description": "Styles applied to {{nodeName}} if {{conditions}}.",
       "nodeName": "the detail panel toggle cell element",
       "conditions": "expanded"
+    },
+    "footerCell": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the root element of the cell inside a footer row"
     },
     "panel": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the panel element" },
     "panelHeader": {
@@ -535,6 +566,22 @@
     },
     "groupingCriteriaCellToggle": {
       "description": "Styles applied to the toggle of the grouping criteria cell"
+    },
+    "pinnedRows": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the pinned rows container"
+    },
+    "pinnedRows--top": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the top pinned rows container"
+    },
+    "pinnedRows--bottom": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the bottom pinned rows container"
+    },
+    "pinnedRowsRenderZone": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "pinned rows render zones"
     }
   },
   "slotDescriptions": {

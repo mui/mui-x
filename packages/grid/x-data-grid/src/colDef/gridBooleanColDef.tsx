@@ -23,4 +23,6 @@ export const GRID_BOOLEAN_COL_DEF: GridColTypeDef<boolean | null, any> = {
   valueFormatter: gridBooleanFormatter,
   filterOperators: getGridBooleanOperators(),
   getApplyQuickFilterFn: undefined,
+  // @ts-ignore
+  aggregable: false,
 };

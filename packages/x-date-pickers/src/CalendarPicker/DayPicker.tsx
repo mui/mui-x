@@ -42,6 +42,13 @@ export interface ExportedDayPickerProps<TDate>
    * @default () => "..."
    */
   renderLoading?: () => React.ReactNode;
+  /**
+   * Formats the day of week displayed in the calendar header.
+   * @param {string} day The day of week provided by the adapter's method `getWeekdays`.
+   * @returns {string} The name to display.
+   * @default (day) => day.charAt(0).toUpperCase()
+   */
+  dayOfWeekFormatter?: (day: string) => string;
 }
 
 export interface DayPickerProps<TDate>
@@ -63,6 +70,8 @@ export interface DayPickerProps<TDate>
   slideDirection: SlideDirection;
   TransitionProps?: Partial<SlideTransitionProps>;
 }
+
+const defaultDayOfWeekFormatter = (day: string) => day.charAt(0).toUpperCase();
 
 const weeksContainerHeight = (DAY_SIZE + DAY_MARGIN * 2) * 6;
 
@@ -133,6 +142,7 @@ export function DayPicker<TDate>(props: DayPickerProps<TDate>) {
     minDate,
     maxDate,
     shouldDisableDate,
+    dayOfWeekFormatter = defaultDayOfWeekFormatter,
   } = props;
 
   const isDateDisabled = useIsDayDisabled({
@@ -169,7 +179,7 @@ export function DayPicker<TDate>(props: DayPickerProps<TDate>) {
       <PickersCalendarDayHeader>
         {utils.getWeekdays().map((day, i) => (
           <PickersCalendarWeekDayLabel aria-hidden key={day + i.toString()} variant="caption">
-            {day.charAt(0).toUpperCase()}
+            {dayOfWeekFormatter?.(day) ?? day}
           </PickersCalendarWeekDayLabel>
         ))}
       </PickersCalendarDayHeader>
