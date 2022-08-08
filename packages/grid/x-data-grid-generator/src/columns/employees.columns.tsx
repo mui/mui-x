@@ -47,7 +47,7 @@ export const getEmployeeColumns = (): GridColDefGenerator[] => [
     sortable: false,
     filterable: false,
     groupable: false,
-    private_aggregable: false,
+    aggregable: false,
     disableExport: true,
   } as GridColDef<any, { color: string; name: string }>,
   {
@@ -58,7 +58,7 @@ export const getEmployeeColumns = (): GridColDefGenerator[] => [
     width: 120,
     editable: true,
     groupable: false,
-    private_aggregable: false,
+    aggregable: false,
   },
   {
     field: 'website',
@@ -68,7 +68,7 @@ export const getEmployeeColumns = (): GridColDefGenerator[] => [
     width: 160,
     editable: true,
     groupable: false,
-    private_aggregable: false,
+    aggregable: false,
   },
   {
     field: 'rating',
@@ -79,7 +79,7 @@ export const getEmployeeColumns = (): GridColDefGenerator[] => [
     width: 180,
     type: 'number',
     editable: true,
-    private_availableAggregationFunctions: ['avg', 'min', 'max', 'size'],
+    availableAggregationFunctions: ['avg', 'min', 'max', 'size'],
   },
   {
     field: 'email',

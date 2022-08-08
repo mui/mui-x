@@ -19,6 +19,7 @@ import {
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import TextField from '@mui/material/TextField';
 import locale from 'date-fns/locale/en-US';
+import { styled } from '@mui/material/styles';
 
 function buildApplyDateFilterFn(filterItem, compareFn, showTime = false) {
   if (!filterItem.value) {
@@ -166,23 +167,35 @@ const dateColumnType = {
   },
 };
 
-function GridEditDateCell({ id, field, value }) {
+const GridEditDateTextField = styled(TextField)({
+  '& .MuiInputBase-root': {
+    fontSize: 'inherit',
+  },
+});
+
+function GridEditDateCell({ id, field, value, colDef }) {
   const apiRef = useGridApiContext();
+
+  const Component = colDef.type === 'dateTime' ? DateTimePicker : DatePicker;
 
   const handleChange = (newValue) => {
     apiRef.current.setEditCellValue({ id, field, value: newValue });
   };
 
   return (
-    <DatePicker
+    <Component
       value={value}
-      renderInput={(params) => <TextField {...params} />}
+      renderInput={(params) => <GridEditDateTextField fullWidth {...params} />}
       onChange={handleChange}
     />
   );
 }
 
 GridEditDateCell.propTypes = {
+  /**
+   * The column of the row that the current cell belongs to.
+   */
+  colDef: PropTypes.object.isRequired,
   /**
    * The column field of the cell that triggered the event.
    */
@@ -265,7 +278,7 @@ const dateTimeColumnType = {
   ...GRID_DATETIME_COL_DEF,
   resizable: false,
   renderEditCell: (params) => {
-    return <GridEditDateTimeCell {...params} />;
+    return <GridEditDateCell {...params} />;
   },
   filterOperators: getDateFilterOperators(true),
   valueFormatter: (params) => {
@@ -277,37 +290,6 @@ const dateTimeColumnType = {
     }
     return '';
   },
-};
-
-function GridEditDateTimeCell({ id, field, value }) {
-  const apiRef = useGridApiContext();
-
-  const handleChange = (newValue) => {
-    apiRef.current.setEditCellValue({ id, field, value: newValue });
-  };
-
-  return (
-    <DateTimePicker
-      value={value}
-      renderInput={(params) => <TextField {...params} />}
-      onChange={handleChange}
-    />
-  );
-}
-
-GridEditDateTimeCell.propTypes = {
-  /**
-   * The column field of the cell that triggered the event.
-   */
-  field: PropTypes.string.isRequired,
-  /**
-   * The grid row id.
-   */
-  id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
-  /**
-   * The cell value, but if the column has valueGetter, use getValue.
-   */
-  value: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.string]),
 };
 
 const columns = [

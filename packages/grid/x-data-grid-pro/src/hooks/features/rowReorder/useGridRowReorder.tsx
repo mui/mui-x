@@ -91,6 +91,12 @@ export const useGridRowReorder = (
         return;
       }
 
+      const rowNode = apiRef.current.getRowNode(params.id);
+
+      if (!rowNode || rowNode.type === 'footer' || rowNode.type === 'pinnedRow') {
+        return;
+      }
+
       logger.debug(`Dragging over row ${params.id}`);
       event.preventDefault();
       // Prevent drag events propagation.

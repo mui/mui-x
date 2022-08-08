@@ -2,12 +2,13 @@ import * as React from 'react';
 import { capitalize } from '@mui/material';
 import {
   GridColDef,
+  GridFooterNode,
   GridRowId,
   GRID_ROOT_GROUP_ID,
-  GridFooterNode,
   GridGroupNode,
 } from '@mui/x-data-grid-pro';
 import {
+  addPinnedRow,
   GridColumnRawLookup,
   GridHydrateRowsValue,
   isDeepEqual,
@@ -24,12 +25,11 @@ import { GridStatePremium } from '../../../models/gridStatePremium';
 import { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
 import { GridApiPremium } from '../../../models/gridApiPremium';
 
-export const PRIVATE_GRID_AGGREGATION_ROOT_FOOTER_ROW_ID = 'auto-generated-group-footer-root';
+export const GRID_AGGREGATION_ROOT_FOOTER_ROW_ID = 'auto-generated-group-footer-root';
 
-// eslint-disable-next-line @typescript-eslint/naming-convention
-export const private_getAggregationFooterRowIdFromGroupId = (groupId: GridRowId | null) => {
+export const getAggregationFooterRowIdFromGroupId = (groupId: GridRowId | null) => {
   if (groupId == null) {
-    return PRIVATE_GRID_AGGREGATION_ROOT_FOOTER_ROW_ID;
+    return GRID_AGGREGATION_ROOT_FOOTER_ROW_ID;
   }
 
   return `auto-generated-group-footer-${groupId}`;
@@ -44,7 +44,7 @@ export const canColumnHaveAggregationFunction = ({
   aggregationFunctionName: string;
   aggregationFunction: GridAggregationFunction | undefined;
 }): boolean => {
-  if (!column || !column.private_aggregable) {
+  if (!column || !column.aggregable) {
     return false;
   }
 
@@ -52,8 +52,8 @@ export const canColumnHaveAggregationFunction = ({
     return false;
   }
 
-  if (column.private_availableAggregationFunctions != null) {
-    return column.private_availableAggregationFunctions.includes(aggregationFunctionName);
+  if (column.availableAggregationFunctions != null) {
+    return column.availableAggregationFunctions.includes(aggregationFunctionName);
   }
 
   if (!aggregationFunction.columnTypes) {
@@ -82,7 +82,7 @@ export const mergeStateWithAggregationModel =
   (aggregationModel: GridAggregationModel) =>
   (state: GridStatePremium): GridStatePremium => ({
     ...state,
-    private_aggregation: { ...state.private_aggregation, model: aggregationModel },
+    aggregation: { ...state.aggregation, model: aggregationModel },
   });
 
 export const getAggregationRules = ({
@@ -115,27 +115,43 @@ export const getAggregationRules = ({
   return aggregationRules;
 };
 
-interface AddFooterRowsParams extends GridHydrateRowsValue {
-  getAggregationPosition: DataGridPremiumProcessedProps['private_getAggregationPosition'];
+interface AddFooterRowsParams {
+  groupingParams: GridHydrateRowsValue;
+  getAggregationPosition: DataGridPremiumProcessedProps['getAggregationPosition'];
   /**
    * If `true`, there are some aggregation rules to apply
    */
   hasAggregationRule: boolean;
+  apiRef: React.MutableRefObject<GridApiPremium>;
 }
 
 /**
  * Add a footer for each group that has at least one column with an aggregated value.
  */
-export const addFooterRows = (params: AddFooterRowsParams) => {
-  const tree = { ...params.tree };
-  const treeDepths = { ...params.treeDepths };
+export const addFooterRows = ({
+  groupingParams,
+  apiRef,
+  getAggregationPosition,
+  hasAggregationRule,
+}: AddFooterRowsParams) => {
+  let newGroupingParams: GridHydrateRowsValue = {
+    ...groupingParams,
+    tree: { ...groupingParams.tree },
+    treeDepths: { ...groupingParams.treeDepths },
+  };
 
-  const addGroupFooter = (groupNode: GridGroupNode) => {
-    if (params.hasAggregationRule && params.getAggregationPosition(groupNode) === 'footer') {
-      const footerId = private_getAggregationFooterRowIdFromGroupId(groupNode.id);
+  const updateChildGroupFooter = (groupNode: GridGroupNode) => {
+    const shouldHaveFooter = hasAggregationRule && getAggregationPosition(groupNode) === 'footer';
+
+    if (shouldHaveFooter) {
+      const footerId = getAggregationFooterRowIdFromGroupId(groupNode.id);
       if (groupNode.footerId !== footerId) {
         if (groupNode.footerId != null) {
-          removeNodeFromTree({ node: tree[groupNode.footerId], tree, treeDepths });
+          removeNodeFromTree({
+            node: newGroupingParams.tree[groupNode.footerId],
+            tree: newGroupingParams.tree,
+            treeDepths: newGroupingParams.treeDepths,
+          });
         }
 
         const footerNode: GridFooterNode = {
@@ -147,33 +163,56 @@ export const addFooterRows = (params: AddFooterRowsParams) => {
 
         insertNodeInTree({
           node: footerNode,
-          tree,
-          treeDepths,
+          tree: newGroupingParams.tree,
+          treeDepths: newGroupingParams.treeDepths,
         });
       }
     } else if (groupNode.footerId != null) {
-      removeNodeFromTree({ node: tree[groupNode.footerId], tree, treeDepths });
+      removeNodeFromTree({
+        node: newGroupingParams.tree[groupNode.footerId],
+        tree: newGroupingParams.tree,
+        treeDepths: newGroupingParams.treeDepths,
+      });
 
-      tree[groupNode.id] = {
-        ...(tree[groupNode.id] as GridGroupNode),
+      newGroupingParams.tree[groupNode.id] = {
+        ...(newGroupingParams.tree[groupNode.id] as GridGroupNode),
         footerId: null,
       };
     }
+  };
+
+  const updateRootGroupFooter = (groupNode: GridGroupNode) => {
+    const shouldHaveFooter = hasAggregationRule && getAggregationPosition(groupNode) === 'footer';
+
+    if (shouldHaveFooter) {
+      newGroupingParams = addPinnedRow({
+        groupingParams: newGroupingParams,
+        rowModel: {},
+        rowId: getAggregationFooterRowIdFromGroupId(null),
+        position: 'bottom',
+        apiRef,
+      });
+    }
+  };
+
+  const updateGroupFooter = (groupNode: GridGroupNode) => {
+    if (groupNode.id === GRID_ROOT_GROUP_ID) {
+      updateRootGroupFooter(groupNode);
+    } else {
+      updateChildGroupFooter(groupNode);
+    }
 
     groupNode.children.forEach((childId) => {
-      const childNode = tree[childId];
+      const childNode = newGroupingParams.tree[childId];
       if (childNode.type === 'group') {
-        addGroupFooter(childNode);
+        updateGroupFooter(childNode);
       }
     });
   };
 
-  addGroupFooter(tree[GRID_ROOT_GROUP_ID] as GridGroupNode);
+  updateGroupFooter(newGroupingParams.tree[GRID_ROOT_GROUP_ID] as GridGroupNode);
 
-  return {
-    tree,
-    treeDepths,
-  };
+  return newGroupingParams;
 };
 
 /**

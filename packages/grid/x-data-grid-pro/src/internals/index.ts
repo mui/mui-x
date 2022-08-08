@@ -27,6 +27,14 @@ export { useGridRowReorderPreProcessors } from '../hooks/features/rowReorder/use
 export { useGridTreeData } from '../hooks/features/treeData/useGridTreeData';
 export { useGridTreeDataPreProcessors } from '../hooks/features/treeData/useGridTreeDataPreProcessors';
 export { TREE_DATA_STRATEGY } from '../hooks/features/treeData/gridTreeDataUtils';
+export {
+  useGridRowPinning,
+  rowPinningStateInitializer,
+} from '../hooks/features/rowPinning/useGridRowPinning';
+export {
+  useGridRowPinningPreProcessors,
+  addPinnedRow,
+} from '../hooks/features/rowPinning/useGridRowPinningPreProcessors';
 
 export type {
   GridExperimentalProFeatures,

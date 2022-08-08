@@ -64,6 +64,8 @@ const updateFlatRowTree = ({
     };
   }
 
+  // TODO rows v6: Support row unpinning
+
   const rootGroup = tree[GRID_ROOT_GROUP_ID] as GridGroupNode;
   let rootGroupChildren = [...rootGroup.children, ...actions.insert];
   if (Object.values(idsToRemoveFromRootGroup).length) {

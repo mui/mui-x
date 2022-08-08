@@ -64,6 +64,22 @@ DataGridPremiumRaw.propTypes = {
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
   /**
+   * Aggregation functions available on the grid.
+   * @default GRID_AGGREGATION_FUNCTIONS
+   */
+  aggregationFunctions: PropTypes.object,
+  /**
+   * Set the aggregation model of the grid.
+   */
+  aggregationModel: PropTypes.object,
+  /**
+   * Rows used to generate the aggregated value.
+   * If `filtered`, the aggregated values will be generated using only the rows currently passing the filtering process.
+   * If `all`, the aggregated values will be generated using all the rows.
+   * @default "filtered"
+   */
+  aggregationRowsScope: PropTypes.oneOf(['all', 'filtered']),
+  /**
    * The ref object that allows grid manipulation. Can be instantiated with [[useGridApiRef()]].
    */
   apiRef: PropTypes.shape({
@@ -162,6 +178,11 @@ DataGridPremiumRaw.propTypes = {
     PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
   ),
   /**
+   * If `true`, aggregation is disabled.
+   * @default false
+   */
+  disableAggregation: PropTypes.bool,
+  /**
    * If `true`, the filtering will only be applied to the top level rows when grouping rows with the `treeData` prop.
    * @default false
    */
@@ -212,6 +233,11 @@ DataGridPremiumRaw.propTypes = {
    */
   disableExtendRowFullWidth: PropTypes.bool,
   /**
+   * If `true`, modification to a cell will not be discarded if the mode is changed from "edit" to "view" while processing props.
+   * @default false
+   */
+  disableIgnoreModificationsIfProcessingProps: PropTypes.bool,
+  /**
    * If `true`, filtering with multiple columns is disabled.
    * @default false
    */
@@ -259,9 +285,10 @@ DataGridPremiumRaw.propTypes = {
    * For each feature, if the flag is not explicitly set to `true`, the feature will be fully disabled and any property / method call will not have any effect.
    */
   experimentalFeatures: PropTypes.shape({
+    aggregation: PropTypes.bool,
     newEditingApi: PropTypes.bool,
     preventCommitWhileValidating: PropTypes.bool,
-    private_aggregation: PropTypes.bool,
+    rowPinning: PropTypes.bool,
     warnIfFocusStateIsNotSynced: PropTypes.bool,
   }),
   /**
@@ -293,6 +320,13 @@ DataGridPremiumRaw.propTypes = {
     quickFilterLogicOperator: PropTypes.oneOf(['and', 'or']),
     quickFilterValues: PropTypes.array,
   }),
+  /**
+   * Determines the position of an aggregated value.
+   * @param {GridGroupNode} groupNode The current group.
+   * @returns {GridAggregationPosition | null} Position of the aggregated value (if `null`, the group will not be aggregated).
+   * @default `(groupNode) => groupNode == null ? 'footer' : 'inline'`
+   */
+  getAggregationPosition: PropTypes.func,
   /**
    * Function that applies CSS classes dynamically on cells.
    * @param {GridCellParams} params With all properties from [[GridCellParams]].
@@ -448,6 +482,12 @@ DataGridPremiumRaw.propTypes = {
    * Nonce of the inline styles for [Content Security Policy](https://www.w3.org/TR/2016/REC-CSP2-20161215/#script-src-the-nonce-attribute).
    */
   nonce: PropTypes.string,
+  /**
+   * Callback fired when the row grouping model changes.
+   * @param {GridAggregationModel} model The aggregated columns.
+   * @param {GridCallbackDetails} details Additional details for this callback.
+   */
+  onAggregationModelChange: PropTypes.func,
   /**
    * Callback fired when any cell is clicked.
    * @param {GridCellParams} params With all properties from [[GridCellParams]].
@@ -780,45 +820,12 @@ DataGridPremiumRaw.propTypes = {
     right: PropTypes.arrayOf(PropTypes.string),
   }),
   /**
-   * Aggregation functions available on the grid.
-   * @default GRID_AGGREGATION_FUNCTIONS
-   * @ignore - do not document.
+   * Rows data to pin on top or bottom.
    */
-  private_aggregationFunctions: PropTypes.object,
-  /**
-   * Set the aggregation model of the grid.
-   * @ignore - do not document.
-   */
-  private_aggregationModel: PropTypes.object,
-  /**
-   * Rows used to generate the aggregated value.
-   * If `filtered`, the aggregated values will be generated using only the rows currently passing the filtering process.
-   * If `all`, the aggregated values will be generated using all the rows.
-   * @default "filtered"
-   * @ignore - do not document.
-   */
-  private_aggregationRowsScope: PropTypes.oneOf(['all', 'filtered']),
-  /**
-   * If `true`, aggregation is disabled.
-   * @default false
-   * @ignore - do not document.
-   */
-  private_disableAggregation: PropTypes.bool,
-  /**
-   * Determines the position of an aggregated value.
-   * @param {GridGroupNode} groupNode The current group.
-   * @returns {GridAggregationPosition | null} Position of the aggregated value (if `null`, the group will not be aggregated).
-   * @default `(groupNode) => groupNode == null ? 'footer' : 'inline'`
-   * @ignore - do not document.
-   */
-  private_getAggregationPosition: PropTypes.func,
-  /**
-   * Callback fired when the row grouping model changes.
-   * @param {GridAggregationModel} model The aggregated columns.
-   * @param {GridCallbackDetails} details Additional details for this callback.
-   * @ignore - do not document.
-   */
-  private_onAggregationModelChange: PropTypes.func,
+  pinnedRows: PropTypes.shape({
+    bottom: PropTypes.array,
+    top: PropTypes.array,
+  }),
   /**
    * Callback called before updating a row with new values in the row and cell editing.
    * Only applied if `props.experimentalFeatures.newEditingApi: true`.

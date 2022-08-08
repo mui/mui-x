@@ -1,13 +1,13 @@
 import * as React from 'react';
 // @ts-ignore Remove once the test utils are typed
-import { createRenderer, screen, userEvent, within } from '@mui/monorepo/test/utils';
+import { createRenderer, screen, userEvent, within, act } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
 import { getColumnValues } from 'test/utils/helperFn';
 import { SinonSpy, spy } from 'sinon';
 import {
   DataGridPremium,
   DataGridPremiumProps,
-  PRIVATE_GRID_AGGREGATION_FUNCTIONS,
+  GRID_AGGREGATION_FUNCTIONS,
   GridAggregationFunction,
   GridApi,
   GridRenderCellParams,
@@ -57,7 +57,7 @@ describe('<DataGridPremium /> - Aggregation', () => {
           apiRef={apiRef}
           {...props}
           experimentalFeatures={{
-            private_aggregation: true,
+            aggregation: true,
           }}
         />
       </div>
@@ -67,17 +67,17 @@ describe('<DataGridPremium /> - Aggregation', () => {
   describe('Setting aggregation model', () => {
     describe('initialState: aggregation.model', () => {
       it('should allow to initialize aggregation', () => {
-        render(<Test initialState={{ private_aggregation: { model: { id: 'max' } } }} />);
+        render(<Test initialState={{ aggregation: { model: { id: 'max' } } }} />);
         expect(getColumnValues(0)).to.deep.equal(['0', '1', '2', '3', '4', '5', '5' /* Agg */]);
       });
 
       it('should not react to initial state updates', () => {
         const { setProps } = render(
-          <Test initialState={{ private_aggregation: { model: { id: 'max' } } }} />,
+          <Test initialState={{ aggregation: { model: { id: 'max' } } }} />,
         );
         expect(getColumnValues(0)).to.deep.equal(['0', '1', '2', '3', '4', '5', '5' /* Agg */]);
 
-        setProps({ initialState: { private_aggregation: { model: { id: 'min' } } } });
+        setProps({ initialState: { aggregation: { model: { id: 'min' } } } });
         expect(getColumnValues(0)).to.deep.equal(['0', '1', '2', '3', '4', '5', '5' /* Agg */]);
       });
     });
@@ -88,8 +88,8 @@ describe('<DataGridPremium /> - Aggregation', () => {
 
         const { setProps } = render(
           <Test
-            private_aggregationModel={{ id: 'max' }}
-            private_onAggregationModelChange={onAggregationModelChange}
+            aggregationModel={{ id: 'max' }}
+            onAggregationModelChange={onAggregationModelChange}
           />,
         );
 
@@ -100,11 +100,11 @@ describe('<DataGridPremium /> - Aggregation', () => {
       });
 
       it('should allow to update the aggregation model from the outside', () => {
-        const { setProps } = render(<Test private_aggregationModel={{ id: 'max' }} />);
+        const { setProps } = render(<Test aggregationModel={{ id: 'max' }} />);
         expect(getColumnValues(0)).to.deep.equal(['0', '1', '2', '3', '4', '5', '5' /* Agg */]);
-        setProps({ private_aggregationModel: { id: 'min' } });
+        setProps({ aggregationModel: { id: 'min' } });
         expect(getColumnValues(0)).to.deep.equal(['0', '1', '2', '3', '4', '5', '0' /* Agg */]);
-        setProps({ private_aggregationModel: {} });
+        setProps({ aggregationModel: {} });
         expect(getColumnValues(0)).to.deep.equal(['0', '1', '2', '3', '4', '5']);
       });
 
@@ -112,7 +112,7 @@ describe('<DataGridPremium /> - Aggregation', () => {
         render(
           <Test
             initialState={{
-              private_aggregation: { model: { id: 'max', idBis: 'max' } },
+              aggregation: { model: { id: 'max', idBis: 'max' } },
             }}
           />,
         );
@@ -131,11 +131,11 @@ describe('<DataGridPremium /> - Aggregation', () => {
                 field: 'idBis',
                 type: 'number',
                 valueGetter: (params) => params.row.id,
-                private_aggregable: false,
+                aggregable: false,
               },
             ]}
             initialState={{
-              private_aggregation: { model: { id: 'max', idBis: 'max' } },
+              aggregation: { model: { id: 'max', idBis: 'max' } },
             }}
           />,
         );
@@ -144,7 +144,7 @@ describe('<DataGridPremium /> - Aggregation', () => {
       });
 
       it('should ignore aggregation rules with invalid aggregation functions', () => {
-        render(<Test initialState={{ private_aggregation: { model: { id: 'mux' } } }} />);
+        render(<Test initialState={{ aggregation: { model: { id: 'mux' } } }} />);
         expect(getColumnValues(0)).to.deep.equal(['0', '1', '2', '3', '4', '5']);
       });
     });
@@ -156,7 +156,7 @@ describe('<DataGridPremium /> - Aggregation', () => {
         <Test
           initialState={{
             rowGrouping: { model: ['category1'] },
-            private_aggregation: { model: { id: 'max' } },
+            aggregation: { model: { id: 'max' } },
           }}
           defaultGroupingExpansionDepth={-1}
         />,
@@ -180,12 +180,10 @@ describe('<DataGridPremium /> - Aggregation', () => {
           <Test
             initialState={{
               rowGrouping: { model: ['category1'] },
-              private_aggregation: { model: { id: 'max' } },
+              aggregation: { model: { id: 'max' } },
             }}
             defaultGroupingExpansionDepth={-1}
-            private_getAggregationPosition={(group) =>
-              group?.groupingKey === 'Cat A' ? 'inline' : null
-            }
+            getAggregationPosition={(group) => (group?.groupingKey === 'Cat A' ? 'inline' : null)}
           />,
         );
         expect(getColumnValues(1)).to.deep.equal([
@@ -205,13 +203,11 @@ describe('<DataGridPremium /> - Aggregation', () => {
           <Test
             initialState={{
               rowGrouping: { model: ['category1'] },
-              private_aggregation: { model: { id: 'max' } },
+              aggregation: { model: { id: 'max' } },
             }}
             defaultGroupingExpansionDepth={-1}
             // Only group "Cat A" aggregated inline
-            private_getAggregationPosition={(group) =>
-              group?.groupingKey === 'Cat A' ? 'inline' : null
-            }
+            getAggregationPosition={(group) => (group?.groupingKey === 'Cat A' ? 'inline' : null)}
           />,
         );
         expect(getColumnValues(1)).to.deep.equal([
@@ -227,8 +223,7 @@ describe('<DataGridPremium /> - Aggregation', () => {
 
         // All groups aggregated inline except the root
         setProps({
-          private_getAggregationPosition: (group: GridGroupNode) =>
-            group.depth === -1 ? null : 'inline',
+          getAggregationPosition: (group: GridGroupNode) => (group.depth === -1 ? null : 'inline'),
         });
         expect(getColumnValues(1)).to.deep.equal([
           '4' /* Agg "Cat A" */,
@@ -243,8 +238,7 @@ describe('<DataGridPremium /> - Aggregation', () => {
 
         // All groups aggregated in footer except the root
         setProps({
-          private_getAggregationPosition: (group: GridGroupNode) =>
-            group.depth === -1 ? null : 'footer',
+          getAggregationPosition: (group: GridGroupNode) => (group.depth === -1 ? null : 'footer'),
         });
         expect(getColumnValues(1)).to.deep.equal([
           '',
@@ -260,7 +254,7 @@ describe('<DataGridPremium /> - Aggregation', () => {
         ]);
 
         // All groups aggregated on footer
-        setProps({ private_getAggregationPosition: () => 'footer' });
+        setProps({ getAggregationPosition: () => 'footer' });
         expect(getColumnValues(1)).to.deep.equal([
           '',
           '0',
@@ -276,7 +270,7 @@ describe('<DataGridPremium /> - Aggregation', () => {
         ]);
 
         // 0 group aggregated
-        setProps({ private_getAggregationPosition: () => null });
+        setProps({ getAggregationPosition: () => null });
         expect(getColumnValues(1)).to.deep.equal(['', '0', '1', '2', '3', '4', '', '5']);
       });
     });
@@ -286,7 +280,7 @@ describe('<DataGridPremium /> - Aggregation', () => {
     it('should render select on aggregable column', () => {
       render(<Test />);
 
-      apiRef.current.showColumnMenu('id');
+      act(() => apiRef.current.showColumnMenu('id'));
       clock.runToLast();
 
       expect(screen.queryByLabelText('Aggregation')).not.to.equal(null);
@@ -297,7 +291,7 @@ describe('<DataGridPremium /> - Aggregation', () => {
 
       expect(getColumnValues(0)).to.deep.equal(['0', '1', '2', '3', '4', '5']);
 
-      apiRef.current.showColumnMenu('id');
+      act(() => apiRef.current.showColumnMenu('id'));
       clock.runToLast();
       userEvent.mousePress(screen.queryByLabelText('Aggregation'));
       userEvent.mousePress(
@@ -320,7 +314,7 @@ describe('<DataGridPremium /> - Aggregation', () => {
             filter: {
               filterModel: { items: [{ columnField: 'id', operatorValue: '<', value: 4 }] },
             },
-            private_aggregation: { model: { id: 'max' } },
+            aggregation: { model: { id: 'max' } },
           }}
         />,
       );
@@ -334,9 +328,9 @@ describe('<DataGridPremium /> - Aggregation', () => {
             filter: {
               filterModel: { items: [{ columnField: 'id', operatorValue: '<', value: 4 }] },
             },
-            private_aggregation: { model: { id: 'max' } },
+            aggregation: { model: { id: 'max' } },
           }}
-          private_aggregationRowsScope="filtered"
+          aggregationRowsScope="filtered"
         />,
       );
       expect(getColumnValues(0)).to.deep.equal(['0', '1', '2', '3', '3' /* Agg */]);
@@ -349,9 +343,9 @@ describe('<DataGridPremium /> - Aggregation', () => {
             filter: {
               filterModel: { items: [{ columnField: 'id', operatorValue: '<', value: 4 }] },
             },
-            private_aggregation: { model: { id: 'max' } },
+            aggregation: { model: { id: 'max' } },
           }}
-          private_aggregationRowsScope="all"
+          aggregationRowsScope="all"
         />,
       );
       expect(getColumnValues(0)).to.deep.equal(['0', '1', '2', '3', '5' /* Agg */]);
@@ -362,9 +356,9 @@ describe('<DataGridPremium /> - Aggregation', () => {
     it('should ignore aggregation rules not present in props.aggregationFunctions', () => {
       render(
         <Test
-          initialState={{ private_aggregation: { model: { id: 'max' } } }}
-          private_aggregationFunctions={{
-            min: PRIVATE_GRID_AGGREGATION_FUNCTIONS.min,
+          initialState={{ aggregation: { model: { id: 'max' } } }}
+          aggregationFunctions={{
+            min: GRID_AGGREGATION_FUNCTIONS.min,
           }}
         />,
       );
@@ -374,9 +368,9 @@ describe('<DataGridPremium /> - Aggregation', () => {
     it('should react to props.aggregationFunctions update', () => {
       const { setProps } = render(
         <Test
-          initialState={{ private_aggregation: { model: { id: 'max' } } }}
-          private_aggregationFunctions={{
-            min: PRIVATE_GRID_AGGREGATION_FUNCTIONS.min,
+          initialState={{ aggregation: { model: { id: 'max' } } }}
+          aggregationFunctions={{
+            min: GRID_AGGREGATION_FUNCTIONS.min,
           }}
         />,
       );
@@ -385,24 +379,19 @@ describe('<DataGridPremium /> - Aggregation', () => {
       expect(getColumnValues(0)).to.deep.equal(['0', '1', '2', '3', '4', '5']);
 
       setProps({
-        private_aggregationFunctions: {
-          min: PRIVATE_GRID_AGGREGATION_FUNCTIONS.min,
-          max: PRIVATE_GRID_AGGREGATION_FUNCTIONS.max,
+        aggregationFunctions: {
+          min: GRID_AGGREGATION_FUNCTIONS.min,
+          max: GRID_AGGREGATION_FUNCTIONS.max,
         },
       });
       // 'max' is in props.aggregationFunctions
       expect(getColumnValues(0)).to.deep.equal(['0', '1', '2', '3', '4', '5', '5' /* Agg */]);
 
       const customMax: GridAggregationFunction = {
-        ...PRIVATE_GRID_AGGREGATION_FUNCTIONS.max,
-        apply: (params) => `Agg: ${PRIVATE_GRID_AGGREGATION_FUNCTIONS.max.apply(params) as number}`,
+        ...GRID_AGGREGATION_FUNCTIONS.max,
+        apply: (params) => `Agg: ${GRID_AGGREGATION_FUNCTIONS.max.apply(params) as number}`,
       };
-      setProps({
-        private_aggregationFunctions: {
-          min: PRIVATE_GRID_AGGREGATION_FUNCTIONS.min,
-          max: customMax,
-        },
-      });
+      setProps({ aggregationFunctions: { min: GRID_AGGREGATION_FUNCTIONS.min, max: customMax } });
       // 'max' is in props.aggregationFunctions but has changed
       expect(getColumnValues(0)).to.deep.equal(['0', '1', '2', '3', '4', '5', 'Agg: 5' /* Agg */]);
     });
@@ -412,12 +401,12 @@ describe('<DataGridPremium /> - Aggregation', () => {
     it('should not aggregate if colDef.aggregable = false', () => {
       render(
         <Test
-          initialState={{ private_aggregation: { model: { id: 'max' } } }}
+          initialState={{ aggregation: { model: { id: 'max' } } }}
           columns={[
             {
               field: 'id',
               type: 'number',
-              private_aggregable: false,
+              aggregable: false,
             },
           ]}
         />,
@@ -428,18 +417,18 @@ describe('<DataGridPremium /> - Aggregation', () => {
     it('should not render column menu select if colDef.aggregable = false', () => {
       render(
         <Test
-          initialState={{ private_aggregation: { model: { id: 'max' } } }}
+          initialState={{ aggregation: { model: { id: 'max' } } }}
           columns={[
             {
               field: 'id',
               type: 'number',
-              private_aggregable: false,
+              aggregable: false,
             },
           ]}
         />,
       );
 
-      apiRef.current.showColumnMenu('id');
+      act(() => apiRef.current.showColumnMenu('id'));
       clock.runToLast();
 
       expect(screen.queryAllByLabelText('Aggregation')).to.have.length(0);
@@ -450,12 +439,12 @@ describe('<DataGridPremium /> - Aggregation', () => {
     it('should ignore aggregation rules not present in props.aggregationFunctions', () => {
       render(
         <Test
-          initialState={{ private_aggregation: { model: { id: 'max' } } }}
+          initialState={{ aggregation: { model: { id: 'max' } } }}
           columns={[
             {
               field: 'id',
               type: 'number',
-              private_availableAggregationFunctions: ['min'],
+              availableAggregationFunctions: ['min'],
             },
           ]}
         />,
@@ -466,21 +455,23 @@ describe('<DataGridPremium /> - Aggregation', () => {
     it('should react to colDef.availableAggregationFunctions update', () => {
       render(
         <Test
-          initialState={{ private_aggregation: { model: { id: 'max' } } }}
+          initialState={{ aggregation: { model: { id: 'max' } } }}
           columns={[
             {
               field: 'id',
               type: 'number',
-              private_availableAggregationFunctions: ['min'],
+              availableAggregationFunctions: ['min'],
             },
           ]}
         />,
       );
       expect(getColumnValues(0)).to.deep.equal(['0', '1', '2', '3', '4', '5']);
 
-      apiRef.current.updateColumns([
-        { field: 'id', private_availableAggregationFunctions: ['min', 'max'] },
-      ]);
+      act(() =>
+        apiRef.current.updateColumns([
+          { field: 'id', availableAggregationFunctions: ['min', 'max'] },
+        ]),
+      );
       expect(getColumnValues(0)).to.deep.equal(['0', '1', '2', '3', '4', '5', '5' /* Agg */]);
     });
   });
@@ -493,8 +484,8 @@ describe('<DataGridPremium /> - Aggregation', () => {
 
       render(
         <Test
-          initialState={{ private_aggregation: { model: { id: 'custom' } } }}
-          private_aggregationFunctions={{ custom: customAggregationFunction }}
+          initialState={{ aggregation: { model: { id: 'custom' } } }}
+          aggregationFunctions={{ custom: customAggregationFunction }}
           columns={[
             {
               field: 'id',
@@ -523,8 +514,8 @@ describe('<DataGridPremium /> - Aggregation', () => {
 
       render(
         <Test
-          initialState={{ private_aggregation: { model: { id: 'custom' } } }}
-          private_aggregationFunctions={{ custom: customAggregationFunction }}
+          initialState={{ aggregation: { model: { id: 'custom' } } }}
+          aggregationFunctions={{ custom: customAggregationFunction }}
           columns={[
             {
               field: 'id',
@@ -554,8 +545,8 @@ describe('<DataGridPremium /> - Aggregation', () => {
 
       render(
         <Test
-          initialState={{ private_aggregation: { model: { id: 'custom' } } }}
-          private_aggregationFunctions={{ custom: customAggregationFunction }}
+          initialState={{ aggregation: { model: { id: 'custom' } } }}
+          aggregationFunctions={{ custom: customAggregationFunction }}
           columns={[
             {
               field: 'id',
@@ -585,8 +576,8 @@ describe('<DataGridPremium /> - Aggregation', () => {
 
       render(
         <Test
-          initialState={{ private_aggregation: { model: { id: 'custom' } } }}
-          private_aggregationFunctions={{ custom: customAggregationFunction }}
+          initialState={{ aggregation: { model: { id: 'custom' } } }}
+          aggregationFunctions={{ custom: customAggregationFunction }}
           columns={[
             {
               field: 'id',
@@ -599,7 +590,7 @@ describe('<DataGridPremium /> - Aggregation', () => {
 
       const callForAggCell = renderCell
         .getCalls()
-        .find((call) => call.firstArg.rowNode.type === 'footer');
+        .find((call) => call.firstArg.rowNode.type === 'pinnedRow');
       expect(callForAggCell!.firstArg.aggregation.hasCellUnit).to.equal(true);
     });
 
@@ -613,8 +604,8 @@ describe('<DataGridPremium /> - Aggregation', () => {
 
       render(
         <Test
-          initialState={{ private_aggregation: { model: { id: 'custom' } } }}
-          private_aggregationFunctions={{ custom: customAggregationFunction }}
+          initialState={{ aggregation: { model: { id: 'custom' } } }}
+          aggregationFunctions={{ custom: customAggregationFunction }}
           columns={[
             {
               field: 'id',
@@ -627,7 +618,7 @@ describe('<DataGridPremium /> - Aggregation', () => {
 
       const callForAggCell = renderCell
         .getCalls()
-        .find((call) => call.firstArg.rowNode.type === 'footer');
+        .find((call) => call.firstArg.rowNode.type === 'pinnedRow');
       expect(callForAggCell!.firstArg.aggregation.hasCellUnit).to.equal(false);
     });
   });
@@ -637,7 +628,7 @@ describe('<DataGridPremium /> - Aggregation', () => {
       render(
         <Test
           initialState={{
-            private_aggregation: { model: { id: 'sum' } },
+            aggregation: { model: { id: 'sum' } },
             filter: {
               filterModel: {
                 items: [{ columnField: 'id', operatorValue: '!=', value: 15 }],
@@ -656,7 +647,7 @@ describe('<DataGridPremium /> - Aggregation', () => {
       render(
         <Test
           initialState={{
-            private_aggregation: { model: { id: 'sum' } },
+            aggregation: { model: { id: 'sum' } },
             sorting: {
               sortModel: [{ field: 'id', sort: 'desc' }],
             },
@@ -672,13 +663,13 @@ describe('<DataGridPremium /> - Aggregation', () => {
         <Test
           initialState={{
             rowGrouping: { model: ['category1'] },
-            private_aggregation: { model: { id: 'max' } },
+            aggregation: { model: { id: 'max' } },
             sorting: {
               sortModel: [{ field: 'id', sort: 'desc' }],
             },
           }}
           defaultGroupingExpansionDepth={-1}
-          private_getAggregationPosition={(group) => (group.depth === -1 ? null : 'footer')}
+          getAggregationPosition={(group) => (group.depth === -1 ? null : 'footer')}
         />,
       );
       expect(getColumnValues(1)).to.deep.equal([

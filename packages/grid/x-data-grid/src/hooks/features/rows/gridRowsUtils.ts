@@ -21,6 +21,7 @@ import {
   GridRowIdToIdLookup,
   GridRowsPartialUpdateAction,
 } from './gridRowsInterfaces';
+import { gridPinnedRowsSelector } from './gridRowsSelector';
 
 export const GRID_ROOT_GROUP_ID: GridRowId = `auto-generated-group-node-root`;
 
@@ -132,8 +133,8 @@ export const getRowsStateFromCache = ({
   const {
     tree: unProcessedTree,
     treeDepths: unProcessedTreeDepths,
+    dataRowIds: unProcessedDataRowIds,
     groupingName,
-    dataRowIds,
   } = apiRef.current.unstable_applyStrategyProcessor('rowTreeCreation', {
     previousTree,
     previousTreeDepths,
@@ -142,10 +143,13 @@ export const getRowsStateFromCache = ({
     dataRowIdToModelLookup: cache.dataRowIdToModelLookup,
   });
 
-  // 2. Apply the "hydrateRows" pipe-processing on the tree / treeDepths.
-  const { tree, treeDepths } = apiRef.current.unstable_applyPipeProcessors('hydrateRows', {
+  // 2. Apply the "hydrateRows" pipe-processing.
+  const groupingParamsWithHydrateRows = apiRef.current.unstable_applyPipeProcessors('hydrateRows', {
     tree: unProcessedTree,
     treeDepths: unProcessedTreeDepths,
+    dataRowIdToIdLookup: cache.dataRowIdToIdLookup,
+    dataRowIds: unProcessedDataRowIds,
+    dataRowIdToModelLookup: cache.dataRowIdToModelLookup,
   });
 
   // 3. Reset the cache updates
@@ -160,15 +164,14 @@ export const getRowsStateFromCache = ({
   };
 
   return {
-    tree,
-    treeDepths,
-    totalRowCount: Math.max(rowCountProp, dataRowIds.length),
-    totalTopLevelRowCount: getTopLevelRowCount({ tree, rowCountProp }),
+    ...groupingParamsWithHydrateRows,
+    totalRowCount: Math.max(rowCountProp, groupingParamsWithHydrateRows.dataRowIds.length),
+    totalTopLevelRowCount: getTopLevelRowCount({
+      tree: groupingParamsWithHydrateRows.tree,
+      rowCountProp,
+    }),
     groupingName,
-    dataRowIds,
     loading: loadingProp,
-    dataRowIdToIdLookup: cache.dataRowIdToIdLookup,
-    dataRowIdToModelLookup: cache.dataRowIdToModelLookup,
   };
 };
 
@@ -342,3 +345,23 @@ export const updateCacheWithNewRows = ({
     loadingPropBeforePartialUpdates: previousCache.loadingPropBeforePartialUpdates,
   };
 };
+
+export function calculatePinnedRowsHeight(apiRef: React.MutableRefObject<GridApiCommunity>) {
+  const pinnedRows = gridPinnedRowsSelector(apiRef);
+  const topPinnedRowsHeight =
+    pinnedRows?.top?.reduce((acc, value) => {
+      acc += apiRef.current.unstable_getRowHeight(value.id);
+      return acc;
+    }, 0) || 0;
+
+  const bottomPinnedRowsHeight =
+    pinnedRows?.bottom?.reduce((acc, value) => {
+      acc += apiRef.current.unstable_getRowHeight(value.id);
+      return acc;
+    }, 0) || 0;
+
+  return {
+    top: topPinnedRowsHeight,
+    bottom: bottomPinnedRowsHeight,
+  };
+}

@@ -62,7 +62,7 @@ Note that this may reduce the performance.
 
 ## Infer height from the content
 
-Like [dynamic row height](/x/react-data-grid/rows/#dynamic-row-height), you can also derive the detail panel height from its content.
+Like [dynamic row height](/x/react-data-grid/row-height/#dynamic-row-height), you can also derive the detail panel height from its content.
 For this, pass a function to the `getDetailPanelHeight` prop returning `"auto"`, as below:
 
 ```tsx

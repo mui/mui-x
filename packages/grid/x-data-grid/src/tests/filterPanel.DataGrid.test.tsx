@@ -9,7 +9,7 @@ import {
   GridPreferencePanelsValue,
 } from '@mui/x-data-grid';
 // @ts-ignore Remove once the test utils are typed
-import { createRenderer, fireEvent, screen, waitFor } from '@mui/monorepo/test/utils';
+import { createRenderer, fireEvent, screen } from '@mui/monorepo/test/utils';
 import { getColumnHeaderCell, getColumnValues } from 'test/utils/helperFn';
 
 function setColumnValue(columnValue: string) {
@@ -49,7 +49,7 @@ function CustomInputValue(props: GridFilterInputValueProps) {
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
 describe('<DataGrid /> - Filter panel', () => {
-  const { render } = createRenderer();
+  const { render, clock } = createRenderer({ clock: 'fake' });
 
   const baselineProps: DataGridProps = {
     autoHeight: isJSDOM,
@@ -471,9 +471,8 @@ describe('<DataGrid /> - Filter panel', () => {
     expect(onFilterModelChange.lastCall.args[0].items[0].value).to.equal(undefined);
 
     deleteFilterForm();
-    await waitFor(() => {
-      expect(screen.queryAllByRole('tooltip').length).to.deep.equal(0);
-    });
+    clock.tick(100);
+    expect(screen.queryAllByRole('tooltip').length).to.deep.equal(0);
   });
 
   // See https://github.com/mui/mui-x/issues/5402

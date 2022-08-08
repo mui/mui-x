@@ -156,7 +156,8 @@ export const useGridSelection = (
         return false;
       }
 
-      if (apiRef.current.getRowNode(id)?.type === 'footer') {
+      const rowNode = apiRef.current.getRowNode(id);
+      if (rowNode?.type === 'footer' || rowNode?.type === 'pinnedRow') {
         return false;
       }
 
@@ -348,6 +349,10 @@ export const useGridSelection = (
         if (column.type === GRID_ACTIONS_COLUMN_TYPE) {
           return;
         }
+      }
+
+      if (params.rowNode.type === 'pinnedRow') {
+        return;
       }
 
       if (event.shiftKey && (canHaveMultipleSelection || checkboxSelection)) {

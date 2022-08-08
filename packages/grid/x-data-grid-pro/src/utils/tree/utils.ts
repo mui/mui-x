@@ -101,7 +101,7 @@ export const insertNodeInTree = ({
     // For groups and leaves,
     // Register the node from its parents `children` and `childrenFromPath` properties.
     const groupingField = (node as GridGroupNode).groupingField ?? '__no_field__';
-    const groupingKey = node.groupingKey ?? '__no_key__';
+    const groupingKey = (node as GridGroupNode).groupingKey ?? '__no_key__';
 
     tree[node.parent!] = {
       ...parentNode,
@@ -155,7 +155,7 @@ export const removeNodeFromTree = ({
   // Unregister the node from its parents `children` and `childrenFromPath` properties.
   else {
     const groupingField = (node as GridGroupNode).groupingField ?? '__no_field__';
-    const groupingKey = node.groupingKey ?? '__no_key__';
+    const groupingKey = (node as GridGroupNode).groupingKey ?? '__no_key__';
     const { [groupingKey.toString()]: childrenToRemove, ...newChildrenFromPathWithField } =
       parentNode.childrenFromPath?.[groupingField] ?? {};
 

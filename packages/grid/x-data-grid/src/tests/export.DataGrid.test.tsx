@@ -6,7 +6,7 @@ import { useData } from 'storybook/src/hooks/useData';
 import { expect } from 'chai';
 import { spy, SinonSpy } from 'sinon';
 
-describe('<DataGridPro /> - Export', () => {
+describe('<DataGrid /> - Export', () => {
   const { render, clock } = createRenderer({ clock: 'fake' });
 
   const TestCase = (props: Omit<DataGridProps, 'rows' | 'columns'>) => {

@@ -138,7 +138,7 @@ export default function AggregationTreeData() {
         getRowId={getRowId}
         groupingColDef={{ headerName: 'Files', width: 350 }}
         initialState={{
-          private_aggregation: {
+          aggregation: {
             model: {
               size: 'sum',
               updatedAt: 'max',
@@ -146,7 +146,7 @@ export default function AggregationTreeData() {
           },
         }}
         experimentalFeatures={{
-          private_aggregation: true,
+          aggregation: true,
         }}
       />
     </div>

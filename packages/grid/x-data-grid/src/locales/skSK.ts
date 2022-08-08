@@ -37,7 +37,7 @@ const skSKGrid: Partial<GridLocaleText> = {
   },
 
   // Quick filter toolbar field
-  toolbarQuickFilterPlaceholder: 'Vyhľadať...',
+  toolbarQuickFilterPlaceholder: 'Vyhľadať…',
   toolbarQuickFilterLabel: 'Vyhľadať',
   toolbarQuickFilterDeleteIconLabel: 'Vymazať',
 

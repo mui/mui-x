@@ -103,6 +103,9 @@ const GridRowReorderCell = (params: GridRenderCellParams) => {
 
 export { GridRowReorderCell };
 
-export const renderRowReorderCell = (params: GridRenderCellParams) => (
-  <GridRowReorderCell {...params} />
-);
+export const renderRowReorderCell = (params: GridRenderCellParams) => {
+  if (params.rowNode.type === 'footer' || params.rowNode.type === 'pinnedRow') {
+    return null;
+  }
+  return <GridRowReorderCell {...params} />;
+};

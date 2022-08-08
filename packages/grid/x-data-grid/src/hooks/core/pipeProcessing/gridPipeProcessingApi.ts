@@ -2,6 +2,7 @@ import * as React from 'react';
 import { GridCellIndexCoordinates, GridScrollParams, GridColDef } from '../../../models';
 import { GridInitialStateCommunity } from '../../../models/gridStateCommunity';
 import {
+  GridExportStateParams,
   GridRestoreStatePreProcessingContext,
   GridRestoreStatePreProcessingValue,
 } from '../../features/statePersistence/gridStatePersistenceInterface';
@@ -14,7 +15,7 @@ export type GridPipeProcessorGroup = keyof GridPipeProcessingLookup;
 
 export interface GridPipeProcessingLookup {
   columnMenu: { value: React.ReactNode[]; context: GridColDef };
-  exportState: { value: GridInitialStateCommunity };
+  exportState: { value: GridInitialStateCommunity; context: GridExportStateParams };
   hydrateColumns: {
     value: GridHydrateColumnsValue;
   };

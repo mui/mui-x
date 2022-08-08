@@ -183,7 +183,7 @@ export const createGroupingColDefForOneGroupingCriteria = ({
     ),
     renderCell: (params) => {
       // Render footer
-      if (params.rowNode.type === 'footer') {
+      if (params.rowNode.type === 'footer' || params.rowNode.type === 'pinnedRow') {
         return <GridGroupingColumnFooterCell {...params} />;
       }
 
@@ -217,7 +217,11 @@ export const createGroupingColDefForOneGroupingCriteria = ({
       return '';
     },
     valueGetter: (params) => {
-      if (!params.rowNode || params.rowNode.type === 'footer') {
+      if (
+        !params.rowNode ||
+        params.rowNode.type === 'footer' ||
+        params.rowNode.type === 'pinnedRow'
+      ) {
         return undefined;
       }
 
@@ -309,7 +313,7 @@ export const createGroupingColDefForAllGroupingCriteria = ({
     ),
     renderCell: (params) => {
       // Render footer
-      if (params.rowNode.type === 'footer') {
+      if (params.rowNode.type === 'footer' || params.rowNode.type === 'pinnedRow') {
         return <GridGroupingColumnFooterCell {...params} />;
       }
 
@@ -339,7 +343,11 @@ export const createGroupingColDefForAllGroupingCriteria = ({
       );
     },
     valueGetter: (params) => {
-      if (!params.rowNode || params.rowNode.type === 'footer') {
+      if (
+        !params.rowNode ||
+        params.rowNode.type === 'footer' ||
+        params.rowNode.type === 'pinnedRow'
+      ) {
         return undefined;
       }
 

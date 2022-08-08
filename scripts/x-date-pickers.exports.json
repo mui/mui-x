@@ -66,6 +66,7 @@
   { "name": "MonthPickerClassKey", "kind": "TypeAlias" },
   { "name": "MonthPickerProps", "kind": "Interface" },
   { "name": "MuiPickersAdapterContext", "kind": "Variable" },
+  { "name": "nbNO", "kind": "Variable" },
   { "name": "nlNL", "kind": "Variable" },
   { "name": "PickersDay", "kind": "Variable" },
   { "name": "pickersDayClasses", "kind": "Variable" },
@@ -90,5 +91,6 @@
   { "name": "yearPickerClasses", "kind": "Variable" },
   { "name": "YearPickerClasses", "kind": "Interface" },
   { "name": "YearPickerClassKey", "kind": "TypeAlias" },
-  { "name": "YearPickerProps", "kind": "Interface" }
+  { "name": "YearPickerProps", "kind": "Interface" },
+  { "name": "zhCN", "kind": "Variable" }
 ]

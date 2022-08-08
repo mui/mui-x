@@ -13,6 +13,7 @@ import {
   gridRowGroupingNameSelector,
   gridRowTreeDepthsSelector,
   gridDataRowIdsSelector,
+  gridRowsDataRowIdToIdLookupSelector,
 } from './gridRowsSelector';
 import { GridSignature, useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 import { GridStateInitializer } from '../../utils/useGridInitializeState';
@@ -408,6 +409,9 @@ export const useGridRows = (
       const response = apiRef.current.unstable_applyPipeProcessors('hydrateRows', {
         tree: gridRowTreeSelector(state, apiRef.current.instanceId),
         treeDepths: gridRowTreeDepthsSelector(state, apiRef.current.instanceId),
+        dataRowIds: gridDataRowIdsSelector(state, apiRef.current.instanceId),
+        dataRowIdToModelLookup: gridRowsLookupSelector(state, apiRef.current.instanceId),
+        dataRowIdToIdLookup: gridRowsDataRowIdToIdLookupSelector(state, apiRef.current.instanceId),
       });
 
       return {
