@@ -34,7 +34,6 @@ module.exports = {
   assetPrefix: isDeployment ? '/x' : '',
   typescript: {
     // Motivated by https://github.com/zeit/next.js/issues/7687
-    ignoreDevErrors: true,
     ignoreBuildErrors: true,
   },
   env: {
@@ -52,7 +51,6 @@ module.exports = {
     SOURCE_CODE_ROOT_URL: 'https://github.com/mui/mui-x/blob/master',
     SOURCE_CODE_REPO: 'https://github.com/mui/mui-x',
   },
-  webpack5: true,
   webpack: (config, options) => {
     const plugins = config.plugins.slice();
 
