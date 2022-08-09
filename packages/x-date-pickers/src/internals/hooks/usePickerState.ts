@@ -98,6 +98,12 @@ interface DateStateAction<DraftValue> {
    * @default false
    */
   skipOnChangeCall?: boolean;
+  /**
+   * If `true`, force firing the `onChange` callback
+   * This field takes precedence over `skipOnChangeCall`
+   * @default false
+   */
+  forceOnChangeCall?: boolean;
 }
 
 export interface PickerStateProps<TInputValue, TValue> {
@@ -215,8 +221,9 @@ export const usePickerState = <TInputValue, TValue, TDate>(
       });
 
       if (
-        !params.skipOnChangeCall &&
-        !valueManager.areValuesEqual(utils, dateState.committed, params.value)
+        params.forceOnChangeCall ||
+        (!params.skipOnChangeCall &&
+          !valueManager.areValuesEqual(utils, dateState.committed, params.value))
       ) {
         onChange(params.value);
       }
@@ -257,7 +264,16 @@ export const usePickerState = <TInputValue, TValue, TDate>(
       open: isOpen,
       onClear: () => {
         // Reset all date in state to the empty value and close picker.
-        setDate({ value: valueManager.emptyValue, action: 'acceptAndClose' });
+        setDate({
+          value: valueManager.emptyValue,
+          action: 'acceptAndClose',
+          // force `onChange` in cases like input (value) === `Invalid date`
+          forceOnChangeCall: !valueManager.areValuesEqual(
+            utils,
+            value as any,
+            valueManager.emptyValue,
+          ),
+        });
       },
       onAccept: () => {
         // Set all date in state to equal the current draft value and close picker.
@@ -278,7 +294,16 @@ export const usePickerState = <TInputValue, TValue, TDate>(
         setDate({ value: valueManager.getTodayValue(utils), action: 'acceptAndClose' });
       },
     }),
-    [setDate, isOpen, utils, dateState, valueManager],
+    [
+      isOpen,
+      setDate,
+      valueManager,
+      value,
+      dateState.draft,
+      dateState.committed,
+      dateState.resetFallback,
+      utils,
+    ],
   );
 
   // Mobile keyboard view is a special case.
