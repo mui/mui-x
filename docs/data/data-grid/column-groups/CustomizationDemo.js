@@ -1,6 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
+import Box from '@mui/material/Box';
 import { DataGridPro } from '@mui/x-data-grid-pro';
 import BuildIcon from '@mui/icons-material/Build';
 import PersonIcon from '@mui/icons-material/Person';
@@ -62,7 +63,8 @@ HeaderWithIcon.propTypes = {
   /**
    * A unique string identifying the group.
    */
-  groupId: PropTypes.string.isRequired,
+  groupId: PropTypes.oneOfType([PropTypes.oneOf([null]), PropTypes.string])
+    .isRequired,
   /**
    * The title of the column rendered in the column header cell.
    */
@@ -91,6 +93,7 @@ const columnGroupingModel = [
       {
         groupId: 'naming',
         headerName: 'Names',
+        headerClassName: 'my-super-theme--character-group',
         children: [{ field: 'lastName' }, { field: 'firstName' }],
       },
       { field: 'age' },
@@ -100,7 +103,15 @@ const columnGroupingModel = [
 
 export default function CustomizationDemo() {
   return (
-    <div style={{ height: 400, width: '100%' }}>
+    <Box
+      sx={{
+        height: 400,
+        width: '100%',
+        '& .my-super-theme--character-group': {
+          backgroundColor: 'rgba(255, 7, 0, 0.55)',
+        },
+      }}
+    >
       <DataGridPro
         rows={rows}
         columns={columns}
@@ -109,6 +120,6 @@ export default function CustomizationDemo() {
         disableSelectionOnClick
         columnGroupingModel={columnGroupingModel}
       />
-    </div>
+    </Box>
   );
 }

@@ -10,8 +10,22 @@ export function isLeaf(node: GridColumnNode): node is GridLeafColumn {
   return (<GridLeafColumn>node).field !== undefined;
 }
 
+/**
+ * A function used to process headerClassName params.
+ */
+export type GridColumnGroupHeaderClassFn = (params: GridColumnGroupHeaderParams) => string;
+
+/**
+ * The union type representing the [[GridColDef]] column header class type.
+ */
+export type GridColumnGroupHeaderClassNamePropType = string | GridColumnGroupHeaderClassFn;
+
 export interface GridColumnGroupHeaderParams
-  extends Pick<GridColumnGroup, 'groupId' | 'headerName' | 'description'> {
+  extends Pick<GridColumnGroup, 'headerName' | 'description'> {
+  /**
+   * A unique string identifying the group.
+   */
+  groupId: GridColumnGroup['groupId'] | null;
   /**
    * The number parent the group have.
    */
@@ -55,6 +69,10 @@ export interface GridColumnGroup
    * @returns {React.ReactNode} The element to be rendered.
    */
   renderHeaderGroup?: (params: GridColumnGroupHeaderParams) => React.ReactNode;
+  /**
+   * Class name that will be added in the column group header cell.
+   */
+  headerClassName?: GridColumnGroupHeaderClassNamePropType;
 }
 
 export type GridColumnGroupingModel = GridColumnGroup[];

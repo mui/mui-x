@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
+import Box from '@mui/material/Box';
 import {
   DataGridPro,
   GridColDef,
@@ -87,6 +88,7 @@ const columnGroupingModel: GridColumnGroupingModel = [
       {
         groupId: 'naming',
         headerName: 'Names',
+        headerClassName: 'my-super-theme--character-group',
         children: [{ field: 'lastName' }, { field: 'firstName' }],
       },
       { field: 'age' },
@@ -95,7 +97,15 @@ const columnGroupingModel: GridColumnGroupingModel = [
 ];
 export default function CustomizationDemo() {
   return (
-    <div style={{ height: 400, width: '100%' }}>
+    <Box
+      sx={{
+        height: 400,
+        width: '100%',
+        '& .my-super-theme--character-group': {
+          backgroundColor: 'rgba(255, 7, 0, 0.55)',
+        },
+      }}
+    >
       <DataGridPro
         rows={rows}
         columns={columns}
@@ -104,6 +114,6 @@ export default function CustomizationDemo() {
         disableSelectionOnClick
         columnGroupingModel={columnGroupingModel}
       />
-    </div>
+    </Box>
   );
 }

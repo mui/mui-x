@@ -9,6 +9,7 @@ import { gridColumnGroupsLookupSelector } from '../../hooks/features/columnGroup
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridSelector } from '../../hooks/utils/useGridSelector';
 import { GridGenericColumnHeaderItem } from './GridGenericColumnHeaderItem';
+import { GridColumnGroup, GridColumnGroupHeaderParams } from '../../models/gridColumnGrouping';
 
 interface GridColumnGroupHeaderProps {
   groupId: string | null;
@@ -76,26 +77,25 @@ function GridColumnGroupHeader(props: GridColumnGroupHeaderProps) {
     hasScrollY: false,
   };
 
-  const {
-    headerName = groupId ?? '',
-    description = '',
-    headerAlign = undefined,
-  } = groupId ? columnGroupsLookup[groupId] : {};
+  const group: Partial<GridColumnGroup> = groupId ? columnGroupsLookup[groupId] : {};
+
+  const { headerName = groupId ?? '', description = '', headerAlign = undefined } = group;
 
   let headerComponent: React.ReactNode;
 
   const render = groupId && columnGroupsLookup[groupId]?.renderHeaderGroup;
+  const renderParams = {
+    groupId,
+    headerName,
+    description,
+    depth,
+    maxDepth,
+    fields,
+    colIndex,
+    isLastColumn,
+  };
   if (groupId && render) {
-    headerComponent = render({
-      groupId,
-      headerName,
-      description,
-      depth,
-      maxDepth,
-      fields,
-      colIndex,
-      isLastColumn,
-    });
+    headerComponent = render(renderParams as GridColumnGroupHeaderParams);
   }
 
   const removeLastBorderRight = isLastColumn && hasScrollX && !hasScrollY;
@@ -121,6 +121,11 @@ function GridColumnGroupHeader(props: GridColumnGroupHeaderProps) {
   const elementId = groupId === null ? `empty-group-cell-${id}` : groupId;
   const classes = useUtilityClasses(ownerState);
 
+  const headerClassName =
+    typeof group.headerClassName === 'function'
+      ? group.headerClassName(renderParams)
+      : group.headerClassName;
+
   return (
     <GridGenericColumnHeaderItem
       classes={classes}
@@ -133,6 +138,7 @@ function GridColumnGroupHeader(props: GridColumnGroupHeaderProps) {
       tabIndex={0}
       isDraggable={false}
       headerComponent={headerComponent}
+      headerClassName={headerClassName}
       description={description}
       elementId={elementId}
       width={width}
