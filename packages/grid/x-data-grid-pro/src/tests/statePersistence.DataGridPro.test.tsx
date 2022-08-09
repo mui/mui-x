@@ -11,7 +11,7 @@ import {
   useGridApiRef,
 } from '@mui/x-data-grid-pro';
 // @ts-ignore Remove once the test utils are typed
-import { createRenderer, screen } from '@mui/monorepo/test/utils';
+import { createRenderer, screen, act } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
 import {
   getColumnHeaderCell,
@@ -206,17 +206,19 @@ describe('<DataGridPro /> - State Persistence', () => {
 
     it('should export the current version of the exportable state', () => {
       render(<TestCase />);
-      apiRef.current.setPageSize(2);
-      apiRef.current.setPage(1);
-      apiRef.current.setPinnedColumns({ left: ['id'] });
-      apiRef.current.showPreferences(GridPreferencePanelsValue.filters);
-      apiRef.current.setSortModel([{ field: 'id', sort: 'desc' }]);
-      apiRef.current.setFilterModel({
-        items: [{ columnField: 'id', operatorValue: '<', value: '5' }],
+      act(() => {
+        apiRef.current.setPageSize(2);
+        apiRef.current.setPage(1);
+        apiRef.current.setPinnedColumns({ left: ['id'] });
+        apiRef.current.showPreferences(GridPreferencePanelsValue.filters);
+        apiRef.current.setSortModel([{ field: 'id', sort: 'desc' }]);
+        apiRef.current.setFilterModel({
+          items: [{ columnField: 'id', operatorValue: '<', value: '5' }],
+        });
+        apiRef.current.setColumnIndex('category', 1);
+        apiRef.current.setColumnWidth('category', 75);
+        apiRef.current.setColumnVisibilityModel({ idBis: false });
       });
-      apiRef.current.setColumnIndex('category', 1);
-      apiRef.current.setColumnWidth('category', 75);
-      apiRef.current.setColumnVisibilityModel({ idBis: false });
       expect(apiRef.current.exportState()).to.deep.equal(FULL_INITIAL_STATE);
     });
   });
@@ -225,7 +227,7 @@ describe('<DataGridPro /> - State Persistence', () => {
     it('should restore the whole exportable state', () => {
       render(<TestCase />);
 
-      apiRef.current.restoreState(FULL_INITIAL_STATE);
+      act(() => apiRef.current.restoreState(FULL_INITIAL_STATE));
 
       // Pinning, pagination, sorting and filtering
       expect(getColumnValues(0)).to.deep.equal(['2', '1']);
@@ -243,12 +245,14 @@ describe('<DataGridPro /> - State Persistence', () => {
     it('should restore partial exportable state', () => {
       render(<TestCase />);
 
-      apiRef.current.restoreState({
-        pagination: {
-          page: 1,
-          pageSize: 2,
-        },
-      });
+      act(() =>
+        apiRef.current.restoreState({
+          pagination: {
+            page: 1,
+            pageSize: 2,
+          },
+        }),
+      );
 
       expect(getColumnValues(0)).to.deep.equal(['2', '3']);
     });
@@ -268,12 +272,14 @@ describe('<DataGridPro /> - State Persistence', () => {
       };
 
       render(<ControlledTest />);
-      apiRef.current.restoreState({
-        pagination: {
-          page: 1,
-          pageSize: 2,
-        },
-      });
+      act(() =>
+        apiRef.current.restoreState({
+          pagination: {
+            page: 1,
+            pageSize: 2,
+          },
+        }),
+      );
       clock.runToLast();
       expect(getColumnValues(0)).to.deep.equal(['2', '3']);
     });
@@ -305,13 +311,15 @@ describe('<DataGridPro /> - State Persistence', () => {
 
       render(<TestCaseLegacyColumnVisibility />);
 
-      apiRef.current.restoreState({
-        columns: {
-          columnVisibilityModel: {
-            category: false,
+      act(() =>
+        apiRef.current.restoreState({
+          columns: {
+            columnVisibilityModel: {
+              category: false,
+            },
           },
-        },
-      });
+        }),
+      );
 
       expect(getColumnHeadersTextContent()).to.deep.equal(['category']);
     });

@@ -211,6 +211,11 @@ export interface DataGridPropsWithDefaultValues {
    */
   disableVirtualization: boolean;
   /**
+   * If `true`, modification to a cell will not be discarded if the mode is changed from "edit" to "view" while processing props.
+   * @default false
+   */
+  disableIgnoreModificationsIfProcessingProps: boolean; // TODO v6: remove prop and make its `true` behavior the default
+  /**
    * Controls whether to use the cell or row editing.
    * @default "cell"
    */
@@ -339,13 +344,13 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
   /**
    * The ref object that allows grid manipulation. Can be instantiated with [[useGridApiRef()]].
    * TODO: Remove `@internal` when opening `apiRef` to Community plan
-   * @internal
+   * @ignore - do not document.
    */
   apiRef?: React.MutableRefObject<GridApiCommunity>;
   /**
    * Signal to the underlying logic what version of the public component API
    * of the data grid is exposed [[GridSignature]].
-   * @internal
+   * @ignore - do not document.
    */
   signature?: string;
   /**
@@ -580,7 +585,7 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
    * @param {GridState} state The new state.
    * @param {MuiEvent<{}>} event The event object.
    * @param {GridCallbackDetails} details Additional details for this callback.
-   * @internal
+   * @ignore - do not document.
    */
   onStateChange?: GridEventListener<'stateChange'>;
   /**

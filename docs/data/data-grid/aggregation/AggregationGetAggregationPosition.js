@@ -50,7 +50,7 @@ export default function AggregationGetAggregationPosition() {
       rowGrouping: {
         model: ['company', 'director'],
       },
-      private_aggregation: {
+      aggregation: {
         model: {
           gross: 'sum',
         },
@@ -66,12 +66,8 @@ export default function AggregationGetAggregationPosition() {
         columns={COLUMNS}
         disableSelectionOnClick
         initialState={initialState}
-        private_getAggregationPosition={(groupNode) =>
-          groupNode == null ? null : 'footer'
-        }
-        experimentalFeatures={{
-          private_aggregation: true,
-        }}
+        getAggregationPosition={(groupNode) => (groupNode == null ? null : 'footer')}
+        experimentalFeatures={{ aggregation: true }}
       />
     </div>
   );

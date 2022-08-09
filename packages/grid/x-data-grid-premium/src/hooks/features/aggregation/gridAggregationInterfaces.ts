@@ -18,9 +18,8 @@ export interface GridAggregationApi {
   /**
    * Sets the aggregation model to the one given by `model`.
    * @param {GridAggregationModel} model The aggregation model.
-   * @ignore - do not document.
    */
-  private_setAggregationModel: (model: GridAggregationModel) => void;
+  setAggregationModel: (model: GridAggregationModel) => void;
 }
 
 /**
