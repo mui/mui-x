@@ -41,21 +41,18 @@ A column can only be associated with one group.
   columnGroupingModel={[
     {
       groupId: 'internal data',
-      children: [{ field: 'id' }]
+      children: [{ field: 'id' }],
     },
     {
       groupId: 'character',
       children: [
         {
           groupId: 'naming',
-          children: [
-            { field: 'lastName' },
-            { field: 'firstName' },
-          ]
+          children: [{ field: 'lastName' }, { field: 'firstName' }],
         },
-        { field: 'age' }
-      ]
-    }
+        { field: 'age' },
+      ],
+    },
   ]}
 />
 ```
