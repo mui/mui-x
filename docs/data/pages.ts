@@ -94,6 +94,9 @@ const pages: MuiPage[] = [
         ],
       },
       {
+        pathname: '/x/react-data-grid/recipes',
+      },
+      {
         pathname: '/x/api/data-grid',
         title: 'API Reference',
         children: [
