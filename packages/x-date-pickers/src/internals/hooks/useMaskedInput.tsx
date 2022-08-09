@@ -83,19 +83,19 @@ export const useMaskedInput = <TInputDate, TDate>({
   const prevLocale = React.useRef<Locale | string>(utils.locale);
 
   React.useEffect(() => {
-    const rawValueChange = rawValue !== prevRawValue.current;
-    const localeChange = utils.locale !== prevLocale.current;
+    const rawValueHasChanged = rawValue !== prevRawValue.current;
+    const localeHasChanged = utils.locale !== prevLocale.current;
     prevRawValue.current = rawValue;
     prevLocale.current = utils.locale;
 
-    if (!rawValueChange && !localeChange) {
+    if (!rawValueHasChanged && !localeHasChanged) {
       return;
     }
 
     const newParsedValue = rawValue === null ? null : utils.date(rawValue);
     const isAcceptedValue = rawValue === null || utils.isValid(newParsedValue);
 
-    if (!localeChange && (!isAcceptedValue || utils.isEqual(innerInputValue, newParsedValue))) {
+    if (!localeHasChanged && (!isAcceptedValue || utils.isEqual(innerInputValue, newParsedValue))) {
       return;
     }
 
