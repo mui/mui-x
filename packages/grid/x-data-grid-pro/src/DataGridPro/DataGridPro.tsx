@@ -115,24 +115,7 @@ DataGridProRaw.propTypes = {
    * @default 3
    */
   columnBuffer: PropTypes.number,
-  columnGroupingModel: PropTypes.arrayOf(
-    PropTypes.shape({
-      children: PropTypes.arrayOf(
-        PropTypes.oneOfType([
-          PropTypes.object,
-          PropTypes.shape({
-            field: PropTypes.string.isRequired,
-          }),
-        ]).isRequired,
-      ).isRequired,
-      description: PropTypes.string,
-      freeReordering: PropTypes.bool,
-      groupId: PropTypes.string.isRequired,
-      headerAlign: PropTypes.oneOf(['center', 'left', 'right']),
-      headerName: PropTypes.string,
-      renderHeaderGroup: PropTypes.func,
-    }),
-  ),
+  columnGroupingModel: PropTypes.arrayOf(PropTypes.object),
   /**
    * Set of columns of type [[GridColumns]].
    */

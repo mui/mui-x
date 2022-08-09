@@ -74,7 +74,7 @@ In addition to the required `groupId` and `children`, you can use the following 
 
 ## Column reordering [<span class="plan-pro"></span>](https://mui.com/store/items/mui-x-pro/)
 
-By default, column groups can not be divided when reordering columns.
+By default, the columns that are part of a group cannot be dragged to outside their group.
 You can customize this behavior on specific groups by setting `freeReordering: true` in a column group object.
 
 In the example below, the `Names` column group can be divided, but not other column groups
