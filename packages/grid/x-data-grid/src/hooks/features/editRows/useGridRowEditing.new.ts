@@ -218,18 +218,14 @@ export const useGridRowEditing = (
       } else if (params.isEditable) {
         let reason: GridRowEditStartReasons | undefined;
 
-        if (isPrintableKey(event.key)) {
-          if (
-            (event.ctrlKey && event.key !== 'v') ||
-            (event.metaKey && event.key !== 'v') ||
-            event.altKey
-          ) {
-            return;
-          }
+        if (isPrintableKey(event)) {
+          reason = GridRowEditStartReasons.printableKeyDown;
+        } else if ((event.ctrlKey || event.metaKey) && event.key === 'v') {
           reason = GridRowEditStartReasons.printableKeyDown;
         } else if (event.key === 'Enter') {
           reason = GridRowEditStartReasons.enterKeyDown;
-        } else if (event.key === 'Delete') {
+        } else if (event.key === 'Delete' || event.key === 'Backspace') {
+          // Delete on Windows, Backspace on macOS
           reason = GridRowEditStartReasons.deleteKeyDown;
         }
 

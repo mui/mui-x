@@ -8,6 +8,10 @@ require('@babel/register')({
   ignore: [/node_modules\/(?!@mui\/(monorepo|unstyled))/],
 });
 
+// Enable missing act warnings: https://github.com/reactwg/react-18/discussions/102
+global.jest = null;
+global.IS_REACT_ACT_ENVIRONMENT = true;
+
 createDOM();
 
 const { mochaHooks: otherMochaHooks } = require('./init');
@@ -25,6 +29,15 @@ function throwOnUnexpectedConsoleMessages(methodName, expectedMatcher) {
     const message = formatUtil(format, ...args);
     // Safe stack so that test dev can track where the unexpected console message was created.
     const { stack } = new Error();
+
+    // Ignore legacy root deprecation warnings
+    // TODO: Remove once we no longer use legacy roots.
+    if (
+      message.indexOf('Use createRoot instead.') !== -1 ||
+      message.indexOf('Use hydrateRoot instead.') !== -1
+    ) {
+      return;
+    }
 
     unexpectedCalls.push([
       // first line includes the (empty) error message

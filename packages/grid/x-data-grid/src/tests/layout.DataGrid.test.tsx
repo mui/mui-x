@@ -17,7 +17,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { getColumnHeaderCell, getColumnValues, getCell, getRow } from 'test/utils/helperFn';
 
 describe('<DataGrid /> - Layout & Warnings', () => {
-  const { clock, render } = createRenderer({ clock: 'real' });
+  const { clock, render } = createRenderer();
 
   const baselineProps = {
     rows: [
@@ -37,17 +37,38 @@ describe('<DataGrid /> - Layout & Warnings', () => {
     columns: [{ field: 'brand' }],
   };
 
-  it('should throw an error if rows props is being mutated', () => {
-    expect(() => {
-      // We don't want to freeze baselineProps.rows
-      const rows = [...baselineProps.rows];
-      render(
-        <div style={{ width: 300, height: 300 }}>
-          <DataGrid {...baselineProps} rows={rows} />
-        </div>,
-      );
-      rows.push({ id: 3, brand: 'Louis Vuitton' });
-    }).to.throw();
+  describe('immutable rows', () => {
+    it('should throw an error if rows props is being mutated', () => {
+      expect(() => {
+        // We don't want to freeze baselineProps.rows
+        const rows = [...baselineProps.rows];
+        render(
+          <div style={{ width: 300, height: 300 }}>
+            <DataGrid {...baselineProps} rows={rows} />
+          </div>,
+        );
+        rows.push({ id: 3, brand: 'Louis Vuitton' });
+      }).to.throw();
+    });
+
+    // See https://github.com/mui/mui-x/issues/5411
+    it('should fail silently if not possible to freeze', () => {
+      expect(() => {
+        // For example, MobX
+        // https://github.com/mobxjs/mobx/blob/e60b36c9c78ff9871be1bd324831343c279dd69f/packages/mobx/src/types/observablearray.ts#L115
+        const rows = new Proxy(baselineProps.rows, {
+          preventExtensions() {
+            throw new Error('Freezing is not supported');
+          },
+        });
+
+        render(
+          <div style={{ width: 300, height: 300 }}>
+            <DataGrid {...baselineProps} rows={rows} />
+          </div>,
+        );
+      }).not.to.throw();
+    });
   });
 
   describe('Layout', () => {
@@ -987,6 +1008,7 @@ describe('<DataGrid /> - Layout & Warnings', () => {
           </ErrorBoundary>,
         );
       }).toErrorDev([
+        'The data grid component requires all rows to have a unique `id` property',
         'The data grid component requires all rows to have a unique `id` property',
         'The above error occurred in the <ForwardRef(DataGrid)> component',
       ]);
