@@ -314,63 +314,47 @@ export const passFilterLogic = (
 
   // get result for filter items model
   if (cleanedAllFilterItemResults.length > 0) {
+
+    // Return true if the item pass with one of the rows
+    const filterItemPredicate = (item: GridFilterItem) => {
+      if (cleanedAllFilterItemResults.some((filterItemResult) => filterItemResult[item.id!])) {
+        return true;
+      }
+      return false;
+    };
+
     if (linkOperator === GridLinkOperator.And) {
-      let itemIndex = 0;
-      while (itemIndex < filterModel.items.length) {
-        const item = filterModel.items[itemIndex];
-        if (!cleanedAllFilterItemResults.some((filterItemResult) => filterItemResult[item.id!])) {
-          // If we do not find a result for which item is passing
-          return false;
-        }
-        itemIndex += 1;
+      const passesAllFilters = filterModel.items.every(filterItemPredicate);
+      if (!passesAllFilters) {
+        return false;
       }
     } else {
-      let isMatchingFilterItems = false;
-      let itemIndex = 0;
-      while (!isMatchingFilterItems && itemIndex < filterModel.items.length) {
-        const item = filterModel.items[itemIndex];
-        if (cleanedAllFilterItemResults.some((filterItemResult) => filterItemResult[item.id!])) {
-          // If we find a result for which item is passing
-          isMatchingFilterItems = true;
-        }
-        itemIndex += 1;
-      }
-      if (!isMatchingFilterItems) {
+      const passesSomeFilters = filterModel.items.some(filterItemPredicate);
+      if (!passesSomeFilters) {
         return false;
       }
     }
   }
 
   // get result for quick filter model
-  if (cleanedAllQuickFilterResults.length > 0) {
-    if (filterModel.quickFilterValues != null) {
-      if (quickFilterLogicOperator === GridLinkOperator.And) {
-        let quickFilterValueIndex = 0;
-        while (quickFilterValueIndex < filterModel.quickFilterValues.length) {
-          const value = filterModel.quickFilterValues[quickFilterValueIndex];
-          if (!cleanedAllQuickFilterResults.some((quickFilterResult) => quickFilterResult[value])) {
-            // If we do not find a result for which item is passing
-            return false;
-          }
-          quickFilterValueIndex += 1;
-        }
-      } else {
-        let isMatchingQuickFilter = false;
-        let quickFilterValueIndex = 0;
-        while (
-          !isMatchingQuickFilter &&
-          quickFilterValueIndex < filterModel.quickFilterValues.length
-        ) {
-          const value = filterModel.quickFilterValues[quickFilterValueIndex];
-          if (cleanedAllQuickFilterResults.some((quickFilterResult) => quickFilterResult[value])) {
-            // If we find a result for which item is passing
-            isMatchingQuickFilter = true;
-          }
-          quickFilterValueIndex += 1;
-        }
-        if (!isMatchingQuickFilter) {
-          return false;
-        }
+  if (cleanedAllQuickFilterResults.length > 0 && filterModel.quickFilterValues != null) {
+    // Return true if the item pass with one of the rows
+    const quickFilterValuePredicate = (value: any) => {
+      if (cleanedAllQuickFilterResults.some((quickFilterValueResult) => quickFilterValueResult[value])) {
+        return true;
+      }
+      return false;
+    };
+
+    if (quickFilterLogicOperator === GridLinkOperator.And) {
+      const passesAllQuickFilterValues = filterModel.quickFilterValues.every(quickFilterValuePredicate);
+      if (!passesAllQuickFilterValues) {
+        return false;
+      }
+    } else {
+      const passesSomeQuickFilterValues = filterModel.quickFilterValues.some(quickFilterValuePredicate);
+      if (!passesSomeQuickFilterValues) {
+        return false;
       }
     }
   }
