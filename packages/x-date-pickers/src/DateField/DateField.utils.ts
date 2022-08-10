@@ -51,7 +51,7 @@ export const incrementDatePartValue = <TDate>(
       return utils.addMonths(date, datePartValue);
     }
     case 'year': {
-      throw new Error('addYear is not supported by date-io');
+      return utils.addYears(date, datePartValue);
     }
     case 'am-pm': {
       return utils.addHours(date, datePartValue * 12);
