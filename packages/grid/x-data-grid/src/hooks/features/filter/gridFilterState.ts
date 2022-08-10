@@ -1,8 +1,10 @@
-import { GridLinkOperator } from '../../../models/gridFilterItem';
+import { GridFilterItem, GridLinkOperator } from '../../../models/gridFilterItem';
 import { GridFilterModel } from '../../../models/gridFilterModel';
 import { GridRowId } from '../../../models/gridRows';
 
-export type GridFilterResult = { [key: string]: boolean };
+export type GridFilterItemResult = { [key: Required<GridFilterItem>['id']]: boolean };
+export type GridQuickFilterValueResult = { [key: string]: boolean };
+export type GridFilterResult = GridFilterItemResult | GridQuickFilterValueResult
 
 export const getDefaultGridFilterModel: () => GridFilterModel = () => ({
   items: [],
@@ -50,8 +52,8 @@ export type GridAggregatedFilterItemApplier = (
   rowId: GridRowId,
   shouldApplyItem?: (columnField: string) => boolean,
 ) => {
-  passingFilterItems: null | GridFilterResult;
-  passingQuickFilterValues: null | GridFilterResult;
+  passingFilterItems: null | GridFilterItemResult;
+  passingQuickFilterValues: null | GridQuickFilterValueResult;
 };
 
 export interface GridFilteringMethodParams {

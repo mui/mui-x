@@ -121,10 +121,10 @@ export const mergeStateWithFilterModel =
     disableMultipleColumnsFiltering: boolean,
     apiRef: React.MutableRefObject<GridApiCommunity>,
   ) =>
-  (filteringState: GridStateCommunity['filter']): GridStateCommunity['filter'] => ({
-    ...filteringState,
-    filterModel: sanitizeFilterModel(filterModel, disableMultipleColumnsFiltering, apiRef),
-  });
+    (filteringState: GridStateCommunity['filter']): GridStateCommunity['filter'] => ({
+      ...filteringState,
+      filterModel: sanitizeFilterModel(filterModel, disableMultipleColumnsFiltering, apiRef),
+    });
 
 /**
  * Generates a method to easily check if a row is matching the current filter model.
@@ -196,14 +196,14 @@ export const buildAggregatedFilterItemsApplier = (
   }
 
   return (rowId, shouldApplyFilter) => {
-    const resultPerItemId: { [key: string]: boolean } = {};
+    const resultPerItemId: GridFilterResult = {};
 
     const filteredAppliers = shouldApplyFilter
       ? appliers.filter((applier) => shouldApplyFilter(applier.item.columnField))
       : appliers;
 
     filteredAppliers.forEach((applier) => {
-      resultPerItemId[applier.item.id as string] = applier.fn(rowId);
+      resultPerItemId[applier.item.id!] = applier.fn(rowId);
     });
 
     return resultPerItemId;
@@ -301,10 +301,10 @@ export const passFilterLogic = (
   filterModel: GridFilterModel,
 ): boolean => {
   const cleanedAllFilterItemResults = allFilterItemResults.filter(
-    (result) => result != null,
+    (result): result is GridFilterResult => result != null,
   ) as GridFilterResult[];
   const cleanedAllQuickFilterResults = allQuickFilterResults.filter(
-    (result) => result != null,
+    (result): result is GridFilterResult => result != null,
   ) as GridFilterResult[];
 
   // Defaultize operators

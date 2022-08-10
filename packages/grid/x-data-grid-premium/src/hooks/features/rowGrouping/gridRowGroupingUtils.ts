@@ -8,7 +8,6 @@ import {
 } from '@mui/x-data-grid-pro';
 import {
   passFilterLogic,
-  GridFilterResult,
   GridAggregatedFilterItemApplier,
 } from '@mui/x-data-grid-pro/internals';
 import { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
@@ -79,13 +78,10 @@ export const filterRowTreeFromGroupingColumns = (
   const filterTreeNode = (
     node: GridRowTreeNodeConfig,
     areAncestorsExpanded: boolean,
-    ancestorsResults: any[],
+    ancestorsResults: ReturnType<GridAggregatedFilterItemApplier>[],
   ): number => {
-    let isPassingFiltering: boolean | undefined;
-    let filterResults: {
-      passingFilterItems: null | GridFilterResult;
-      passingQuickFilterValues: null | GridFilterResult;
-    } = {
+    let isPassingFiltering = false;
+    let filterResults: ReturnType<GridAggregatedFilterItemApplier> = {
       passingFilterItems: null,
       passingQuickFilterValues: null,
     };
@@ -111,10 +107,9 @@ export const filterRowTreeFromGroupingColumns = (
       filteredDescendantCount += childSubTreeSize;
     });
 
-    if (isPassingFiltering === undefined) {
+    if (isPassingFiltering === false) {
       if (node.children?.length) {
-        // If it has a tree structure, parent pass filter if they have at least one children passing
-        isPassingFiltering = filteredDescendantCount > 0;
+        // If node has children - it's passing if at least one child passes filters        isPassingFiltering = filteredDescendantCount > 0;
       } else {
         const allResults = [...ancestorsResults, filterResults];
         isPassingFiltering = passFilterLogic(
@@ -177,10 +172,10 @@ export const getColDefOverrides = (
 
 export const mergeStateWithRowGroupingModel =
   (rowGroupingModel: GridRowGroupingModel) =>
-  (state: GridStatePremium): GridStatePremium => ({
-    ...state,
-    rowGrouping: { ...state.rowGrouping, model: rowGroupingModel },
-  });
+    (state: GridStatePremium): GridStatePremium => ({
+      ...state,
+      rowGrouping: { ...state.rowGrouping, model: rowGroupingModel },
+    });
 
 export const setStrategyAvailability = (
   apiRef: React.MutableRefObject<GridApiPremium>,
