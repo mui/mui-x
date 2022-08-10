@@ -465,6 +465,94 @@ describe('<DataGridPro /> - Columns reorder', () => {
       expect(getColumnHeadersTextContent()).to.deep.equal(['col12', '', 'col1', 'col2', 'col3']);
     });
 
+    describe('column - hidden', () => {
+      it('should use the correct start and end index', () => {
+        const rows = [{ id: 0 }];
+        const columns = [
+          { field: 'col1' },
+          { field: 'col2' },
+          { field: 'col3' },
+          { field: 'col4' },
+        ];
+
+        const columnGroupingModel = [
+          { groupId: 'col23', children: [{ field: 'col2' }, { field: 'col3' }] },
+        ];
+
+        const Test = () => {
+          return (
+            <div style={{ width: 300, height: 300 }}>
+              <DataGridPro
+                experimentalFeatures={{ columnGrouping: true }}
+                rows={rows}
+                columns={columns}
+                columnGroupingModel={columnGroupingModel}
+                columnVisibilityModel={{ col1: false }}
+              />
+            </div>
+          );
+        };
+
+        render(<Test />);
+        expect(getColumnHeadersTextContent()).to.deep.equal(['col23', '', 'col2', 'col3', 'col4']);
+        const dragCol = getColumnHeaderCell(0, 1).firstChild!;
+        const col3 = getColumnHeaderCell(1, 1).firstChild!;
+        const col4 = getColumnHeaderCell(2, 1).firstChild!;
+
+        // Do not allow to move col2 after col4
+        fireEvent.dragStart(dragCol);
+        fireEvent.dragEnter(col3);
+        const dragOverEvent1 = createDragOverEvent(col3);
+        fireEvent(col3, dragOverEvent1);
+        expect(getColumnHeadersTextContent()).to.deep.equal(['col23', '', 'col3', 'col2', 'col4']);
+
+        // Allow to move col2 after col3
+        fireEvent.dragEnter(col4);
+        const dragOverEvent2 = createDragOverEvent(col4);
+        fireEvent(col4, dragOverEvent2);
+        expect(getColumnHeadersTextContent()).to.deep.equal(['col23', '', 'col3', 'col2', 'col4']);
+      });
+
+      it('should consider moving the column between hidden columns if it respect group constraint and visible behavior', () => {
+        const rows = [{ id: 0 }];
+        const columns = [{ field: 'col1' }, { field: 'col2' }, { field: 'col3' }];
+
+        const columnGroupingModel = [
+          { groupId: 'col23', children: [{ field: 'col2' }, { field: 'col3' }] },
+        ];
+
+        const Test = (props: any) => {
+          return (
+            <div style={{ width: 300, height: 300 }}>
+              <DataGridPro
+                experimentalFeatures={{ columnGrouping: true }}
+                rows={rows}
+                columns={columns}
+                columnGroupingModel={columnGroupingModel}
+                columnVisibilityModel={{ col3: false }}
+                {...props}
+              />
+            </div>
+          );
+        };
+
+        const { setProps } = render(<Test />);
+        expect(getColumnHeadersTextContent()).to.deep.equal(['', 'col23', 'col1', 'col2']);
+        const dragCol = getColumnHeaderCell(0, 1).firstChild!;
+        const targetCol = getColumnHeaderCell(1, 1).firstChild!;
+
+        // Move col 1 after col 3 to respect column grouping consistency even if col3 is hidden
+        fireEvent.dragStart(dragCol);
+        fireEvent.dragEnter(targetCol);
+        const dragOverEvent = createDragOverEvent(targetCol);
+        fireEvent(targetCol, dragOverEvent);
+        expect(getColumnHeadersTextContent()).to.deep.equal(['col23', '', 'col2', 'col1']);
+
+        setProps({ columnVisibilityModel: {} });
+        expect(getColumnHeadersTextContent()).to.deep.equal(['col23', '', 'col2', 'col3', 'col1']);
+      });
+    });
+
     it('should not allow to drag column inside a group', () => {
       const rows = [{ id: 0 }];
       const columns = [{ field: 'col1' }, { field: 'col2' }, { field: 'col3' }];
