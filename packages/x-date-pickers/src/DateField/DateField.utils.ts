@@ -10,7 +10,7 @@ export const getDateSectionNameFromFormat = (format: string): DateSectionName =>
     return 'month';
   }
 
-  if (['yyyy'].includes(format)) {
+  if (['y', 'yy', 'yyy', 'yyyy'].includes(format)) {
     return 'year';
   }
 

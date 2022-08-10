@@ -1,6 +1,6 @@
 <CssVarsProvider>
   <LocalizationProvider dateAdapter={AdapterDateFns}>
-    <InnerJoyDateField
+    <JoyDateField
       value={value}
       onChange={(newValue) => setValue(newValue)}
     />

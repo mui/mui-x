@@ -10,7 +10,7 @@ export default function CustomDateManagementDateField() {
 
   return (
     <LocalizationProvider dateAdapter={AdapterDateFns}>
-      <Stack spacing={2}>
+      <Stack spacing={2} sx={(theme) => ({ width: theme.spacing(48) })}>
         <DateField
           label="Full letter month"
           value={value}
@@ -43,7 +43,12 @@ export default function CustomDateManagementDateField() {
         />
         <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={frFR}>
           <DateField
-            label="French locale"
+            label="French locale (default format)"
+            value={value}
+            onChange={(newValue) => setValue(newValue)}
+          />
+          <DateField
+            label="French locale (full letter month)"
             value={value}
             onChange={(newValue) => setValue(newValue)}
             format="dd MMMM yyyy"

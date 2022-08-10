@@ -17,7 +17,13 @@ export interface DateFieldProps<TInputDate, TDate>
     UseDateFieldProps<TInputDate, TDate> {}
 
 export interface UseDateFieldResponse {
-  inputProps: Pick<TextFieldProps, 'value' | 'onClick' | 'onKeyDown' | 'onFocus' | 'onBlur'>;
+  inputProps: {
+    value: string;
+    onClick: React.MouseEventHandler<HTMLInputElement>;
+    onKeyDown: React.KeyboardEventHandler<HTMLInputElement>;
+    onFocus: () => void;
+    onBlur: () => void;
+  };
   inputRef: React.RefObject<HTMLInputElement>;
 }
 

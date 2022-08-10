@@ -11,7 +11,7 @@ export default function CustomInputDateField() {
 
   return (
     <LocalizationProvider dateAdapter={AdapterDateFns}>
-      <Stack spacing={2}>
+      <Stack spacing={2} sx={(theme) => ({ width: theme.spacing(48) })}>
         <DateField
           label="Custom variant"
           value={value}

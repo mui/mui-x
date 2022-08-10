@@ -1,0 +1,8 @@
+<CssVarsProvider>
+    <LocalizationProvider dateAdapter={AdapterDateFns}>
+        <BrowserInputDateField
+            value={value}
+            onChange={(newValue) => setValue(newValue)}
+        />
+    </LocalizationProvider>
+</CssVarsProvider>

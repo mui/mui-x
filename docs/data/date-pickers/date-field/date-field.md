@@ -30,19 +30,10 @@ And that when debouncing the state (for instance if you have a server side persi
 
 ## Headless usage
 
-Usage with Joy
+### With browser input
 
-```tsx
-const { inputRef, inputProps } = useDateField(props);
+{{"demo": "CustomUIDateFieldBrowserInput.js", "defaultCodeOpen": false }}
 
-return (
-  <TextField
-    {...inputProps}
-    componentsProps={{
-      input: { componentsProps: { input: { ref: inputRef } } },
-    }}
-  />
-);
-```
+### With `@mui/joy/TextField`
 
-{{"demo": "JoyDateField.js", "defaultCodeOpen": false }}
+{{"demo": "CustomUIDateFieldJoy.js", "defaultCodeOpen": false }}

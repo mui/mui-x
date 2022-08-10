@@ -20,8 +20,7 @@ export default function DebouncedDateField() {
   return (
     <Stack spacing={2}>
       <Typography>
-        Value outside the field:{' '}
-        {value == null ? 'null' : format(value, 'dd/MM/yyyy')}
+        Value outside the field: {value == null ? 'null' : format(value, 'P')}
       </Typography>
       <LocalizationProvider dateAdapter={AdapterDateFns}>
         <DateField
