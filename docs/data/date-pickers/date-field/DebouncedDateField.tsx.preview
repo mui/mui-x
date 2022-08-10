@@ -1,6 +1,5 @@
 <Typography>
-  Value outside the field:{' '}
-  {value == null ? 'null' : format(value, 'P')}
+  Value outside the field: {value == null ? 'null' : format(value, 'P')}
 </Typography>
 <LocalizationProvider dateAdapter={AdapterDateFns}>
   <DateField

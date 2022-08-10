@@ -30,10 +30,4 @@ And that when debouncing the state (for instance if you have a server side persi
 
 ## Headless usage
 
-### With browser input
-
-{{"demo": "CustomUIDateFieldBrowserInput.js", "defaultCodeOpen": false }}
-
-### With `@mui/joy/TextField`
-
-{{"demo": "CustomUIDateFieldJoy.js", "defaultCodeOpen": false }}
+{{"demo": "CustomUIDateField.js", "defaultCodeOpen": false }}
