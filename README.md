@@ -108,7 +108,7 @@ There are many other ways to [support MUI](https://mui.com/material-ui/getting-s
 
 ## Changelog
 
-The [changelog](https://github.com/mui/material-ui/releases) is regularly updated to reflect what's changed in each new release.
+The [changelog](https://github.com/mui/mui-x/releases) is regularly updated to reflect what's changed in each new release.
 
 ## Roadmap
 
