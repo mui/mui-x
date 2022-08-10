@@ -158,6 +158,7 @@ export const useInternalDateField = <
       startSection,
     );
 
+    // eslint-disable-next-line default-case
     switch (true) {
       // Select all
       case event.key === 'a' && event.ctrlKey: {
