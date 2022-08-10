@@ -92,7 +92,7 @@ export const addPositionPropertiesToSections = <TSection extends DateFieldInputS
   return newSections;
 };
 
-export const formatDateWithPlaceholder = <TDate>(
+const formatDateWithPlaceholder = <TDate>(
   utils: MuiPickersAdapter<TDate>,
   date: TDate | null,
   format: string,
@@ -193,21 +193,17 @@ export const createDateStrFromSections = (sections: DateFieldInputSection[]) =>
 
 export const setSectionValue = <TSection extends DateFieldInputSection>(
   sections: TSection[],
-  currentSectionIndex: number,
-  newSectionValue: string,
-  newSectionQuery: string | null = null,
+  sectionIndex: number,
+  sectionNewValue: string,
+  sectionNewQuery?: string | null,
 ) => {
-  const newSections = sections.map((section, index) => {
-    if (index === currentSectionIndex) {
-      return {
-        ...section,
-        value: newSectionValue,
-        query: newSectionQuery,
-      };
-    }
+  const newSections = [...sections];
+  const modifiedSection = { ...newSections[sectionIndex], value: sectionNewValue };
+  if (sectionNewQuery !== undefined) {
+    modifiedSection.query = sectionNewQuery;
+  }
 
-    return section;
-  });
+  newSections[sectionIndex] = modifiedSection;
 
   return addPositionPropertiesToSections<TSection>(newSections);
 };

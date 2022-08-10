@@ -177,12 +177,26 @@ export const useInternalDateField = <
 
       // Reset the value of the selected section
       case event.key === 'Backspace': {
-        // TODO: Allow to reset all the selected sections
-        updateSections(
-          setSectionValue(state.sections, state.selectedSectionIndexes?.start ?? 0, ''),
-        );
+        const resetSections = (startIndex: number, endIndex: number) => {
+          let sections = state.sections;
+
+          for (let i = startIndex; i <= endIndex; i += 1) {
+            sections = setSectionValue(sections, i, '');
+          }
+
+          return sections;
+        };
+
+        if (state.selectedSectionIndexes == null) {
+          updateSections(resetSections(0, state.sections.length));
+        } else {
+          updateSections(
+            resetSections(state.selectedSectionIndexes.start, state.selectedSectionIndexes.end),
+          );
+        }
+
         event.preventDefault();
-        return;
+        break;
       }
 
       // Increment / decrement the selected section value
