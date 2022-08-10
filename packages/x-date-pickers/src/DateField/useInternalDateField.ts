@@ -55,7 +55,7 @@ interface UseDateFieldState<TValue, TSections> {
   valueStr: string;
   valueParsed: TValue;
   sections: TSections;
-  selectedSectionIndex: number | 'all' | null;
+  selectedSectionIndexes: { start: number; end: number } | null;
 }
 
 export const useInternalDateField = <
@@ -85,7 +85,7 @@ export const useInternalDateField = <
       sections,
       valueParsed,
       valueStr: fieldValueManager.getValueStrFromSections(sections),
-      selectedSectionIndex: null,
+      selectedSectionIndexes: null,
     };
   });
 
@@ -109,10 +109,15 @@ export const useInternalDateField = <
     }
   };
 
-  const updateSelectedSection = (selectedSectionIndex: number | 'all' | null) => {
+  const updateSelectedSections = (
+    selectedSectionIndexes: UseDateFieldState<TDate, TSection>['selectedSectionIndexes'] | number,
+  ) => {
     setState((prevState) => ({
       ...prevState,
-      selectedSectionIndex,
+      selectedSectionIndexes:
+        typeof selectedSectionIndexes === 'number'
+          ? { start: selectedSectionIndexes, end: selectedSectionIndexes }
+          : selectedSectionIndexes,
       selectedSectionQuery: null,
     }));
   };
@@ -126,7 +131,7 @@ export const useInternalDateField = <
       state.sections,
       inputRef.current!.selectionStart,
     );
-    updateSelectedSection(sectionIndex);
+    updateSelectedSections(sectionIndex);
   });
 
   const handleInputKeyDown = useEventCallback((event: React.KeyboardEvent<HTMLInputElement>) => {
@@ -134,79 +139,81 @@ export const useInternalDateField = <
       return;
     }
 
-    const startSectionIndex = getSectionIndexFromCursorPosition(
-      state.sections,
-      inputRef.current.selectionStart,
-    );
-    const endSectionIndex = getSectionIndexFromCursorPosition(
-      state.sections,
-      inputRef.current.selectionEnd,
-    );
-    const startSection = state.sections[startSectionIndex];
-
-    const activeDate = fieldValueManager.getActiveDateFromActiveSection(
-      state.valueParsed,
-      startSection,
-    );
-
     // eslint-disable-next-line default-case
     switch (true) {
       // Select all
       case event.key === 'a' && event.ctrlKey: {
-        updateSelectedSection('all');
+        updateSelectedSections({ start: 0, end: state.sections.length - 1 });
         event.preventDefault();
-        break;
+        return;
       }
 
       // Move selection to next section
       case event.key === 'ArrowRight': {
-        if (startSectionIndex !== endSectionIndex) {
-          updateSelectedSection(0);
-        } else if (startSectionIndex < state.sections.length - 1) {
-          updateSelectedSection(startSectionIndex + 1);
+        if (state.selectedSectionIndexes == null) {
+          updateSelectedSections(0);
+        } else if (state.selectedSectionIndexes.start !== state.selectedSectionIndexes.end) {
+          updateSelectedSections(state.selectedSectionIndexes.end);
+        } else if (state.selectedSectionIndexes.start < state.sections.length - 1) {
+          updateSelectedSections(state.selectedSectionIndexes.start + 1);
         }
 
         event.preventDefault();
-        break;
+        return;
       }
 
       // Move selection to previous section
       case event.key === 'ArrowLeft': {
-        if (startSectionIndex !== endSectionIndex) {
-          updateSelectedSection(0);
-        } else if (startSectionIndex > 0) {
-          updateSelectedSection(startSectionIndex - 1);
+        if (state.selectedSectionIndexes == null) {
+          updateSelectedSections(state.sections.length - 1);
+        } else if (state.selectedSectionIndexes.start !== state.selectedSectionIndexes.end) {
+          updateSelectedSections(state.selectedSectionIndexes.start);
+        } else if (state.selectedSectionIndexes.start > 0) {
+          updateSelectedSections(state.selectedSectionIndexes.start - 1);
         }
         event.preventDefault();
-        break;
+        return;
       }
 
       // Reset the value of the selected section
       case event.key === 'Backspace': {
-        updateSections(setSectionValue(state.sections, startSectionIndex, ''));
+        // TODO: Allow to reset all the selected sections
+        updateSections(
+          setSectionValue(state.sections, state.selectedSectionIndexes?.start ?? 0, ''),
+        );
         event.preventDefault();
-        break;
+        return;
       }
 
       // Increment / decrement the selected section value
       case event.key === 'ArrowUp' || event.key === 'ArrowDown': {
+        if (state.selectedSectionIndexes == null) {
+          return;
+        }
+
+        const activeSection = state.sections[state.selectedSectionIndexes.start];
+        const activeDate = fieldValueManager.getActiveDateFromActiveSection(
+          state.valueParsed,
+          activeSection,
+        );
+
         // The date is not valid, we have to increment the section value rather than the date
         if (!utils.isValid(activeDate.value)) {
           const boundaries = getSectionValueNumericBoundaries(
             utils,
             utils.date(),
-            startSection.dateSectionName,
+            activeSection.dateSectionName,
           );
 
           let newSectionNumericValue: number;
-          if (startSection.value === '') {
+          if (activeSection.value === '') {
             newSectionNumericValue =
               event.key === 'ArrowDown' ? boundaries.minimum : boundaries.maximum;
           } else {
             const currentNumericValue =
-              startSection.formatValue === 'MMMM'
-                ? getMonthList(utils, startSection.formatValue).indexOf(startSection.value)
-                : Number(startSection.value);
+              activeSection.formatValue === 'MMMM'
+                ? getMonthList(utils, activeSection.formatValue).indexOf(activeSection.value)
+                : Number(activeSection.value);
             newSectionNumericValue = currentNumericValue + (event.key === 'ArrowDown' ? -1 : 1);
             if (newSectionNumericValue < boundaries.minimum) {
               newSectionNumericValue = boundaries.maximum;
@@ -217,18 +224,20 @@ export const useInternalDateField = <
 
           // TODO: Make generic
           const newSectionValue =
-            startSection.formatValue === 'MMMM'
-              ? getMonthList(utils, startSection.formatValue)[newSectionNumericValue]
+            activeSection.formatValue === 'MMMM'
+              ? getMonthList(utils, activeSection.formatValue)[newSectionNumericValue]
               : cleanTrailingZeroInNumericSectionValue(
                   newSectionNumericValue.toString(),
                   boundaries.maximum,
                 );
-          updateSections(setSectionValue(state.sections, startSectionIndex, newSectionValue));
+          updateSections(
+            setSectionValue(state.sections, state.selectedSectionIndexes.start, newSectionValue),
+          );
         } else {
           const newDate = incrementDatePartValue(
             utils,
             activeDate.value,
-            startSection.dateSectionName,
+            activeSection.dateSectionName,
             event.key === 'ArrowDown' ? -1 : 1,
           );
 
@@ -244,18 +253,28 @@ export const useInternalDateField = <
         }
 
         event.preventDefault();
-        break;
+        return;
       }
 
       // Apply numeric editing on the selected section value
       case !Number.isNaN(Number(event.key)): {
+        if (state.selectedSectionIndexes == null) {
+          return;
+        }
+
+        const activeSection = state.sections[state.selectedSectionIndexes.start];
+        const activeDate = fieldValueManager.getActiveDateFromActiveSection(
+          state.valueParsed,
+          activeSection,
+        );
+
         const boundaries = getSectionValueNumericBoundaries(
           utils,
           activeDate.value ?? utils.date()!,
-          startSection.dateSectionName,
+          activeSection.dateSectionName,
         );
 
-        const concatenatedSectionValue = `${startSection.value}${event.key}`;
+        const concatenatedSectionValue = `${activeSection.value}${event.key}`;
         const newSectionValue =
           Number(concatenatedSectionValue) > boundaries.maximum
             ? event.key
@@ -264,29 +283,39 @@ export const useInternalDateField = <
         updateSections(
           setSectionValue(
             state.sections,
-            startSectionIndex,
+            state.selectedSectionIndexes.start,
             cleanTrailingZeroInNumericSectionValue(newSectionValue, boundaries.maximum),
           ),
         );
         event.preventDefault();
-        break;
+        return;
       }
 
       // Apply full letter editing on the selected section value
-      // TODO: Do not hardcode the compatible formatValue
-      case event.key.length === 1 && startSection.formatValue === 'MMMM': {
+      case event.key.length === 1: {
+        if (state.selectedSectionIndexes == null) {
+          return;
+        }
+
+        const activeSection = state.sections[state.selectedSectionIndexes.start];
+
+        // TODO: Do not hardcode the compatible formatValue
+        if (activeSection.formatValue !== 'MMMM') {
+          return;
+        }
+
         const newQuery = event.key.toLowerCase();
-        const concatenatedQuery = `${startSection.query ?? ''}${newQuery}`;
+        const concatenatedQuery = `${activeSection.query ?? ''}${newQuery}`;
         const matchingMonthsWithConcatenatedQuery = getMonthsMatchingQuery(
           utils,
-          startSection.formatValue,
+          activeSection.formatValue,
           concatenatedQuery,
         );
         if (matchingMonthsWithConcatenatedQuery.length > 0) {
           updateSections(
             setSectionValue(
               state.sections,
-              startSectionIndex,
+              state.selectedSectionIndexes.start,
               matchingMonthsWithConcatenatedQuery[0],
               concatenatedQuery,
             ),
@@ -294,14 +323,14 @@ export const useInternalDateField = <
         } else {
           const matchingMonthsWithNewQuery = getMonthsMatchingQuery(
             utils,
-            startSection.formatValue,
+            activeSection.formatValue,
             newQuery,
           );
           if (matchingMonthsWithNewQuery.length > 0) {
             updateSections(
               setSectionValue(
                 state.sections,
-                startSectionIndex,
+                state.selectedSectionIndexes.start,
                 matchingMonthsWithNewQuery[0],
                 newQuery,
               ),
@@ -315,7 +344,7 @@ export const useInternalDateField = <
   });
 
   useEnhancedEffect(() => {
-    if (!inputRef.current || state.selectedSectionIndex == null) {
+    if (!inputRef.current || state.selectedSectionIndexes == null) {
       return;
     }
 
@@ -328,15 +357,11 @@ export const useInternalDateField = <
       }
     };
 
-    if (state.selectedSectionIndex === 'all') {
-      updateSelectionRangeIfChanged(0, inputRef.current.value.length);
-      return;
-    }
-
-    const section = state.sections[state.selectedSectionIndex];
+    const firstSelectedSection = state.sections[state.selectedSectionIndexes.start];
+    const lastSelectedSection = state.sections[state.selectedSectionIndexes.end];
     updateSelectionRangeIfChanged(
-      section.start,
-      section.start + getSectionVisibleValue(section).length,
+      firstSelectedSection.start,
+      lastSelectedSection.start + getSectionVisibleValue(lastSelectedSection).length,
     );
   });
 
