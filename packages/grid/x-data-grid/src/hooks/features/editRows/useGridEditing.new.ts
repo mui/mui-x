@@ -161,6 +161,9 @@ export const useGridEditing = (
     GridNewEditingSharedApi['ensurePreProcessEditCellPropsRanOnce']
   >(
     async ({ id, field }) => {
+      if (apiRef.current.getCellMode(id, field) === GridCellModes.View) {
+        return false;
+      }
       const editingState = gridEditRowsStateSelector(apiRef.current.state);
       const { hasPreProcessedPropsOnce, value } = editingState[id][field];
       if (!hasPreProcessedPropsOnce) {
