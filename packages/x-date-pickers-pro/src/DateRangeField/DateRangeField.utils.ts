@@ -1,10 +1,6 @@
-import { createDateStrFromSections } from '@mui/x-date-pickers/DateField/DateField.utils';
 import { DateRangeFieldInputSection } from './DateRangeField.interfaces';
 
-export const getDateRangeStrFromSections = (
-  sections: DateRangeFieldInputSection[],
-  shouldRemoveSeparatorBetweenDates: boolean,
-): [string, string] => {
+export const splitDateRangeSections = (sections: DateRangeFieldInputSection[]) => {
   const startDateSections: DateRangeFieldInputSection[] = [];
   const endDateSections: DateRangeFieldInputSection[] = [];
   sections.forEach((section) => {
@@ -15,12 +11,5 @@ export const getDateRangeStrFromSections = (
     }
   });
 
-  if (shouldRemoveSeparatorBetweenDates) {
-    startDateSections[startDateSections.length - 1].separator = null;
-  }
-
-  const startDateStr = createDateStrFromSections(startDateSections);
-  const endDateStr = createDateStrFromSections(endDateSections);
-
-  return [startDateStr, endDateStr];
+  return { startDate: startDateSections, endDate: endDateSections };
 };

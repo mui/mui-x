@@ -107,7 +107,7 @@ export const formatDateWithPlaceholder = <TDate>(
 export const splitFormatIntoSections = <TDate>(
   utils: MuiPickersAdapter<TDate>,
   format: string,
-  date: TDate,
+  date: TDate | null,
 ) => {
   let currentTokenValue = '';
   const sections: Omit<DateFieldInputSection, 'start' | 'end'>[] = [];

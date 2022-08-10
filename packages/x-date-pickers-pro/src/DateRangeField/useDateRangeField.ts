@@ -5,19 +5,40 @@ import {
 import {
   splitFormatIntoSections,
   addPositionPropertiesToSections,
+  createDateStrFromSections,
 } from '@mui/x-date-pickers/DateField/DateField.utils';
 import { DateRangeFieldInputSection, UseDateRangeFieldProps } from './DateRangeField.interfaces';
 import { dateRangePickerValueManager } from '../DateRangePicker/shared';
 import { DateRange } from '../internal/models/dateRange';
-import { getDateRangeStrFromSections } from './DateRangeField.utils';
+import { splitDateRangeSections } from './DateRangeField.utils';
 
 const dateRangeFieldValueManager: PickerFieldValueManager<
   DateRange<any>,
   any,
   DateRangeFieldInputSection
 > = {
-  getSectionsFromValue: (utils, [start, end], format) => {
-    const rawSectionsOfStartDate = splitFormatIntoSections(utils, format, start);
+  getSectionsFromValue: (utils, prevSections, [start, end], format) => {
+    const prevDateRangeSections =
+      prevSections == null
+        ? { startDate: null, endDate: null }
+        : splitDateRangeSections(prevSections);
+
+    const getSections = (
+      newDate: any | null,
+      prevDateSections: DateRangeFieldInputSection[] | null,
+    ) => {
+      const shouldReUsePrevDateSections = !utils.isValid(newDate) && !!prevDateSections;
+
+      if (shouldReUsePrevDateSections) {
+        return prevDateSections;
+      }
+
+      return splitFormatIntoSections(utils, format, newDate);
+    };
+
+    const rawSectionsOfStartDate = getSections(start, prevDateRangeSections.startDate);
+    const rawSectionsOfEndDate = getSections(end, prevDateRangeSections.endDate);
+
     const sectionsOfStartDate = rawSectionsOfStartDate.map((section, sectionIndex) => {
       if (sectionIndex === rawSectionsOfStartDate.length - 1) {
         return {
@@ -33,7 +54,7 @@ const dateRangeFieldValueManager: PickerFieldValueManager<
       };
     });
 
-    const sectionsOfEndDate = splitFormatIntoSections(utils, format, end).map((section) => ({
+    const sectionsOfEndDate = rawSectionsOfEndDate.map((section) => ({
       ...section,
       dateName: 'end' as const,
     }));
@@ -41,18 +62,43 @@ const dateRangeFieldValueManager: PickerFieldValueManager<
     return addPositionPropertiesToSections([...sectionsOfStartDate, ...sectionsOfEndDate]);
   },
   getValueStrFromSections: (sections) => {
-    const dateRangeStr = getDateRangeStrFromSections(sections, false);
+    const dateRangeSections = splitDateRangeSections(sections);
+    const startDateStr = createDateStrFromSections(dateRangeSections.startDate);
+    const endDateStr = createDateStrFromSections(dateRangeSections.endDate);
 
-    return dateRangeStr.join('');
+    return `${startDateStr}${endDateStr}`;
   },
-  getValueFromSections: (utils, sections, format) => {
-    const dateRangeStr = getDateRangeStrFromSections(sections, true);
-    const dateRange = dateRangeStr.map((dateStr) => utils.parse(dateStr, format)) as DateRange<any>;
+  getValueFromSections: (utils, prevSections, newSections, format) => {
+    const removeLastSeparator = (sections: DateRangeFieldInputSection[]) =>
+      sections.map((section, sectionIndex) => {
+        if (sectionIndex === sections.length - 1) {
+          return { ...section, separator: null };
+        }
+
+        return section;
+      });
+
+    const prevDateRangeSections = splitDateRangeSections(prevSections);
+    const dateRangeSections = splitDateRangeSections(newSections);
+
+    const startDateStr = createDateStrFromSections(
+      removeLastSeparator(dateRangeSections.startDate),
+    );
+    const endDateStr = createDateStrFromSections(dateRangeSections.endDate);
+
+    const startDate = utils.parse(startDateStr, format);
+    const endDate = utils.parse(endDateStr, format);
+
+    const shouldPublish =
+      (startDateStr !==
+        createDateStrFromSections(removeLastSeparator(prevDateRangeSections.startDate)) &&
+        utils.isValid(startDate)) ||
+      (endDateStr !== createDateStrFromSections(prevDateRangeSections.endDate) &&
+        utils.isValid(endDate));
 
     return {
-      value: dateRange,
-      // TODO: Only publish when the date currently being edited is valid
-      shouldPublish: utils.isValid(dateRange[0]) || utils.isValid(dateRange[1]),
+      value: [startDate, endDate] as DateRange<any>,
+      shouldPublish,
     };
   },
   getActiveDateFromActiveSection: (value, activeSection) => {

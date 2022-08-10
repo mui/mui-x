@@ -21,12 +21,14 @@ import {
 export interface PickerFieldValueManager<TValue, TDate, TSection> {
   getSectionsFromValue: (
     utils: MuiPickersAdapter<TDate>,
+    prevSections: TSection[] | null,
     value: TValue,
     format: string,
   ) => TSection[];
   getValueStrFromSections: (sections: TSection[]) => string;
   getValueFromSections: (
     utils: MuiPickersAdapter<TDate>,
+    prevSections: TSection[],
     sections: TSection[],
     format: string,
   ) => { value: TValue; shouldPublish: boolean };
@@ -77,7 +79,7 @@ export const useInternalDateField = <
 
   const [state, setState] = React.useState<UseDateFieldState<TValue, TSection[]>>(() => {
     const valueParsed = valueManager.parseInput(utils, value);
-    const sections = fieldValueManager.getSectionsFromValue(utils, valueParsed, format);
+    const sections = fieldValueManager.getSectionsFromValue(utils, null, valueParsed, format);
 
     return {
       sections,
@@ -90,6 +92,7 @@ export const useInternalDateField = <
   const updateSections = (sections: TSection[]) => {
     const { value: newValueParsed, shouldPublish } = fieldValueManager.getValueFromSections(
       utils,
+      state.sections,
       sections,
       format,
     );
@@ -113,19 +116,6 @@ export const useInternalDateField = <
       selectedSectionQuery: null,
     }));
   };
-
-  React.useEffect(() => {
-    const valueParsed = valueManager.parseInput(utils, value);
-    if (!valueManager.areValuesEqual(utils, state.valueParsed, valueParsed)) {
-      const sections = fieldValueManager.getSectionsFromValue(utils, valueParsed, format);
-      setState((prevState) => ({
-        ...prevState,
-        valueParsed,
-        valueStr: fieldValueManager.getValueStrFromSections(sections),
-        sections,
-      }));
-    }
-  }, [value]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleInputClick = useEventCallback(() => {
     if (state.sections.length === 0) {
@@ -243,7 +233,12 @@ export const useInternalDateField = <
           );
 
           const newValue = activeDate.update(newDate);
-          const sections = fieldValueManager.getSectionsFromValue(utils, newValue, format);
+          const sections = fieldValueManager.getSectionsFromValue(
+            utils,
+            state.sections,
+            newValue,
+            format,
+          );
 
           updateSections(sections);
         }
@@ -344,6 +339,24 @@ export const useInternalDateField = <
       section.start + getSectionVisibleValue(section).length,
     );
   });
+
+  React.useEffect(() => {
+    const valueParsed = valueManager.parseInput(utils, value);
+    if (!valueManager.areValuesEqual(utils, state.valueParsed, valueParsed)) {
+      const sections = fieldValueManager.getSectionsFromValue(
+        utils,
+        state.sections,
+        valueParsed,
+        format,
+      );
+      setState((prevState) => ({
+        ...prevState,
+        valueParsed,
+        valueStr: fieldValueManager.getValueStrFromSections(sections),
+        sections,
+      }));
+    }
+  }, [value]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return {
     inputProps: {

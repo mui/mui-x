@@ -8,10 +8,10 @@ import {
 import { PickerFieldValueManager, useInternalDateField } from './useInternalDateField';
 
 const dateRangeFieldValueManager: PickerFieldValueManager<any, any, DateFieldInputSection> = {
-  getSectionsFromValue: (utils, date, format) =>
+  getSectionsFromValue: (utils, prevSections, date, format) =>
     addPositionPropertiesToSections(splitFormatIntoSections(utils, format, date)),
   getValueStrFromSections: (sections) => createDateStrFromSections(sections),
-  getValueFromSections: (utils, sections, format) => {
+  getValueFromSections: (utils, prevSections, sections, format) => {
     const dateStr = createDateStrFromSections(sections);
     const value = utils.parse(dateStr, format);
 
@@ -20,12 +20,10 @@ const dateRangeFieldValueManager: PickerFieldValueManager<any, any, DateFieldInp
       shouldPublish: utils.isValid(value),
     };
   },
-  getActiveDateFromActiveSection: (value) => {
-    return {
-      value,
-      update: (newActiveDate) => newActiveDate,
-    };
-  },
+  getActiveDateFromActiveSection: (value) => ({
+    value,
+    update: (newActiveDate) => newActiveDate,
+  }),
 };
 
 export const useDateField = <TInputDate, TDate = TInputDate>(
