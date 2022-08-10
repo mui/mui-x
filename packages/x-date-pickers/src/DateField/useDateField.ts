@@ -1,13 +1,15 @@
-import { UseDateFieldProps, DateFieldInputSection } from './DateField.interfaces';
 import { datePickerValueManager } from '../DatePicker/shared';
 import {
+  useField,
+  FieldValueManager,
+  FieldSection,
   splitFormatIntoSections,
   addPositionPropertiesToSections,
   createDateStrFromSections,
-} from './DateField.utils';
-import { PickerFieldValueManager, useInternalDateField } from './useInternalDateField';
+} from '../internals/hooks/useField';
+import { UseDateFieldProps } from './DateField.interfaces';
 
-const dateRangeFieldValueManager: PickerFieldValueManager<any, any, DateFieldInputSection> = {
+const dateRangeFieldValueManager: FieldValueManager<any, any, FieldSection> = {
   getSectionsFromValue: (utils, prevSections, date, format) =>
     addPositionPropertiesToSections(splitFormatIntoSections(utils, format, date)),
   getValueStrFromSections: (sections) => createDateStrFromSections(sections),
@@ -29,7 +31,7 @@ const dateRangeFieldValueManager: PickerFieldValueManager<any, any, DateFieldInp
 export const useDateField = <TInputDate, TDate = TInputDate>(
   inProps: UseDateFieldProps<TInputDate, TDate>,
 ) => {
-  return useInternalDateField({
+  return useField({
     value: inProps.value,
     onChange: inProps.onChange,
     format: inProps.format,

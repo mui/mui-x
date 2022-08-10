@@ -3,10 +3,13 @@ import {
   unstable_useEnhancedEffect as useEnhancedEffect,
   useEventCallback,
 } from '@mui/material/utils';
-import { PickerStateValueManager } from '../internals/hooks/usePickerState';
-import { useUtils } from '../internals/hooks/useUtils';
-import { MuiPickersAdapter } from '../internals/models/muiPickersAdapter';
-import { DateFieldInputSection, UseDateFieldResponse } from './DateField.interfaces';
+import { useUtils } from '../useUtils';
+import {
+  FieldSection,
+  UseFieldProps,
+  UseFieldResponse,
+  UseFieldState,
+} from './useField.interfaces';
 import {
   cleanTrailingZeroInNumericSectionValue,
   getMonthList,
@@ -15,56 +18,11 @@ import {
   getSectionVisibleValue,
   incrementDatePartValue,
   setSectionValue,
-} from './DateField.utils';
+} from './useField.utils';
 
-export interface PickerFieldValueManager<TValue, TDate, TSection> {
-  getSectionsFromValue: (
-    utils: MuiPickersAdapter<TDate>,
-    prevSections: TSection[] | null,
-    value: TValue,
-    format: string,
-  ) => TSection[];
-  getValueStrFromSections: (sections: TSection[]) => string;
-  getValueFromSections: (
-    utils: MuiPickersAdapter<TDate>,
-    prevSections: TSection[],
-    sections: TSection[],
-    format: string,
-  ) => { value: TValue; shouldPublish: boolean };
-  getActiveDateFromActiveSection: (
-    value: TValue,
-    activeSection: TSection,
-  ) => { value: TDate | null; update: (newActiveDate: TDate | null) => TValue };
-}
-
-export interface UseInternalDateFieldProps<
-  TInputValue,
-  TValue,
-  TDate,
-  TSection extends DateFieldInputSection,
-> {
-  value: TInputValue;
-  onChange: (value: TValue) => void;
-  format?: string;
-  valueManager: PickerStateValueManager<TInputValue, TValue, TDate>;
-  fieldValueManager: PickerFieldValueManager<TValue, TDate, TSection>;
-}
-
-interface UseDateFieldState<TValue, TSections> {
-  valueStr: string;
-  valueParsed: TValue;
-  sections: TSections;
-  selectedSectionIndexes: { start: number; end: number } | null;
-}
-
-export const useInternalDateField = <
-  TInputValue,
-  TValue,
-  TDate,
-  TSection extends DateFieldInputSection,
->(
-  inProps: UseInternalDateFieldProps<TInputValue, TValue, TDate, TSection>,
-): UseDateFieldResponse => {
+export const useField = <TInputValue, TValue, TDate, TSection extends FieldSection>(
+  inProps: UseFieldProps<TInputValue, TValue, TDate, TSection>,
+): UseFieldResponse => {
   const utils = useUtils<TDate>();
   const inputRef = React.useRef<HTMLInputElement>(null);
 
@@ -76,7 +34,7 @@ export const useInternalDateField = <
     format = utils.formats.keyboardDate,
   } = inProps;
 
-  const [state, setState] = React.useState<UseDateFieldState<TValue, TSection[]>>(() => {
+  const [state, setState] = React.useState<UseFieldState<TValue, TSection[]>>(() => {
     const valueParsed = valueManager.parseInput(utils, value);
     const sections = fieldValueManager.getSectionsFromValue(utils, null, valueParsed, format);
 

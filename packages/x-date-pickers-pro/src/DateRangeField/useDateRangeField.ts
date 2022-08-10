@@ -1,32 +1,23 @@
 import {
-  PickerFieldValueManager,
-  useInternalDateField,
-} from '@mui/x-date-pickers/DateField/useInternalDateField';
-import {
+  useField,
+  FieldValueManager,
   splitFormatIntoSections,
   addPositionPropertiesToSections,
   createDateStrFromSections,
-} from '@mui/x-date-pickers/DateField/DateField.utils';
-import { DateRangeFieldInputSection, UseDateRangeFieldProps } from './DateRangeField.interfaces';
+} from '@mui/x-date-pickers/internals';
+import { DateRangeFieldSection, UseDateRangeFieldProps } from './DateRangeField.interfaces';
 import { dateRangePickerValueManager } from '../DateRangePicker/shared';
-import { DateRange } from '../internal/models/dateRange';
+import { DateRange } from '../internal/models';
 import { splitDateRangeSections } from './DateRangeField.utils';
 
-const dateRangeFieldValueManager: PickerFieldValueManager<
-  DateRange<any>,
-  any,
-  DateRangeFieldInputSection
-> = {
+const dateRangeFieldValueManager: FieldValueManager<DateRange<any>, any, DateRangeFieldSection> = {
   getSectionsFromValue: (utils, prevSections, [start, end], format) => {
     const prevDateRangeSections =
       prevSections == null
         ? { startDate: null, endDate: null }
         : splitDateRangeSections(prevSections);
 
-    const getSections = (
-      newDate: any | null,
-      prevDateSections: DateRangeFieldInputSection[] | null,
-    ) => {
+    const getSections = (newDate: any | null, prevDateSections: DateRangeFieldSection[] | null) => {
       const shouldReUsePrevDateSections = !utils.isValid(newDate) && !!prevDateSections;
 
       if (shouldReUsePrevDateSections) {
@@ -69,7 +60,7 @@ const dateRangeFieldValueManager: PickerFieldValueManager<
     return `${startDateStr}${endDateStr}`;
   },
   getValueFromSections: (utils, prevSections, newSections, format) => {
-    const removeLastSeparator = (sections: DateRangeFieldInputSection[]) =>
+    const removeLastSeparator = (sections: DateRangeFieldSection[]) =>
       sections.map((section, sectionIndex) => {
         if (sectionIndex === sections.length - 1) {
           return { ...section, separator: null };
@@ -127,7 +118,7 @@ const dateRangeFieldValueManager: PickerFieldValueManager<
 export const useDateRangeField = <TInputDate, TDate = TInputDate>(
   inProps: UseDateRangeFieldProps<TInputDate, TDate>,
 ) => {
-  return useInternalDateField({
+  return useField({
     value: inProps.value,
     onChange: inProps.onChange,
     format: inProps.format,

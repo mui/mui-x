@@ -1,8 +1,8 @@
-import { DateRangeFieldInputSection } from './DateRangeField.interfaces';
+import { DateRangeFieldSection } from './DateRangeField.interfaces';
 
-export const splitDateRangeSections = (sections: DateRangeFieldInputSection[]) => {
-  const startDateSections: DateRangeFieldInputSection[] = [];
-  const endDateSections: DateRangeFieldInputSection[] = [];
+export const splitDateRangeSections = (sections: DateRangeFieldSection[]) => {
+  const startDateSections: DateRangeFieldSection[] = [];
+  const endDateSections: DateRangeFieldSection[] = [];
   sections.forEach((section) => {
     if (section.dateName === 'start') {
       startDateSections.push(section);

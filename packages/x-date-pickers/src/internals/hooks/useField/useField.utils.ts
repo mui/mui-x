@@ -1,8 +1,8 @@
 import defaultLocale from 'date-fns/locale/en-US';
 // @ts-ignore
 import longFormatters from 'date-fns/_lib/format/longFormatters';
-import { DateFieldInputSection, DateSectionName } from './DateField.interfaces';
-import { MuiPickersAdapter } from '../internals/models/muiPickersAdapter';
+import { FieldSection, DateSectionName } from './useField.interfaces';
+import { MuiPickersAdapter } from '../../models';
 
 // TODO: Improve and test with different calendars (move to date-io ?)
 export const getDateSectionNameFromFormat = (format: string): DateSectionName => {
@@ -71,10 +71,10 @@ export const incrementDatePartValue = <TDate>(
   }
 };
 
-export const getSectionVisibleValue = (section: Omit<DateFieldInputSection, 'start' | 'end'>) =>
+export const getSectionVisibleValue = (section: Omit<FieldSection, 'start' | 'end'>) =>
   section.value || section.emptyValue;
 
-export const addPositionPropertiesToSections = <TSection extends DateFieldInputSection>(
+export const addPositionPropertiesToSections = <TSection extends FieldSection>(
   sections: Omit<TSection, 'start' | 'end'>[],
 ): TSection[] => {
   let position = 0;
@@ -110,7 +110,7 @@ export const splitFormatIntoSections = <TDate>(
   date: TDate | null,
 ) => {
   let currentTokenValue = '';
-  const sections: Omit<DateFieldInputSection, 'start' | 'end'>[] = [];
+  const sections: Omit<FieldSection, 'start' | 'end'>[] = [];
 
   // Copy pasted from the `getFormatHelperText` in the date-fns adapter
   // Would need to be turned into an adapter method
@@ -178,7 +178,7 @@ export const splitFormatIntoSections = <TDate>(
   return sections;
 };
 
-export const createDateStrFromSections = (sections: DateFieldInputSection[]) =>
+export const createDateStrFromSections = (sections: FieldSection[]) =>
   sections
     .map((section) => {
       let sectionValueStr = getSectionVisibleValue(section);
@@ -191,7 +191,7 @@ export const createDateStrFromSections = (sections: DateFieldInputSection[]) =>
     })
     .join('');
 
-export const setSectionValue = <TSection extends DateFieldInputSection>(
+export const setSectionValue = <TSection extends FieldSection>(
   sections: TSection[],
   sectionIndex: number,
   sectionNewValue: string,
