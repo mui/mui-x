@@ -30,7 +30,7 @@ export const getDateSectionNameFromFormat = (format: string): DateSectionName =>
     return 'second';
   }
 
-  if (['aa'].includes(format)) {
+  if (['aa', 'aaa'].includes(format)) {
     return 'am-pm';
   }
 
