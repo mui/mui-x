@@ -11,7 +11,6 @@ import {
   cleanTrailingZeroInNumericSectionValue,
   getMonthList,
   getMonthsMatchingQuery,
-  getSectionIndexFromCursorPosition,
   getSectionValueNumericBoundaries,
   getSectionVisibleValue,
   incrementDatePartValue,
@@ -127,10 +126,11 @@ export const useInternalDateField = <
       return;
     }
 
-    const sectionIndex = getSectionIndexFromCursorPosition(
-      state.sections,
-      inputRef.current!.selectionStart,
+    const nextSectionIndex = state.sections.findIndex(
+      (section) => section.start > (inputRef.current?.selectionStart ?? 0),
     );
+    const sectionIndex = nextSectionIndex === -1 ? state.sections.length - 1 : nextSectionIndex - 1;
+
     updateSelectedSections(sectionIndex);
   });
 

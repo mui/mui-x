@@ -191,19 +191,6 @@ export const createDateStrFromSections = (sections: DateFieldInputSection[]) =>
     })
     .join('');
 
-export const getSectionIndexFromCursorPosition = (
-  sections: DateFieldInputSection[],
-  position: number | null,
-) => {
-  const nextSectionIndex = sections.findIndex((section) => section.start > (position ?? 0));
-
-  if (nextSectionIndex === -1) {
-    return sections.length - 1;
-  }
-
-  return nextSectionIndex - 1;
-};
-
 export const setSectionValue = <TSection extends DateFieldInputSection>(
   sections: TSection[],
   currentSectionIndex: number,
