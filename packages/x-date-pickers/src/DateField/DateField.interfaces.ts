@@ -7,7 +7,7 @@ export interface UseDateFieldProps<TInputDate, TDate> {
   value: TInputDate | null;
   onChange: (value: TDate | null) => void;
   /**
-   * @default "dd/MM/yyyy"
+   * @default `adapter.formats.keyboardDate`
    */
   format?: string;
 }
@@ -17,7 +17,7 @@ export interface DateFieldProps<TInputDate, TDate>
     UseDateFieldProps<TInputDate, TDate> {}
 
 export interface UseDateFieldResponse {
-  inputProps: Pick<TextFieldProps, 'value' | 'onClick' | 'onKeyDown'>;
+  inputProps: Pick<TextFieldProps, 'value' | 'onClick' | 'onKeyDown' | 'onFocus' | 'onBlur'>;
   inputRef: React.RefObject<HTMLInputElement>;
 }
 

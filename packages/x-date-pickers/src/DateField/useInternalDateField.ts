@@ -6,7 +6,7 @@ import {
 import { PickerStateValueManager } from '../internals/hooks/usePickerState';
 import { useUtils } from '../internals/hooks/useUtils';
 import { MuiPickersAdapter } from '../internals/models/muiPickersAdapter';
-import { DateFieldInputSection } from './DateField.interfaces';
+import { DateFieldInputSection, UseDateFieldResponse } from './DateField.interfaces';
 import {
   cleanTrailingZeroInNumericSectionValue,
   getMonthList,
@@ -64,7 +64,7 @@ export const useInternalDateField = <
   TSection extends DateFieldInputSection,
 >(
   inProps: UseInternalDateFieldProps<TInputValue, TValue, TDate, TSection>,
-) => {
+): UseDateFieldResponse => {
   const utils = useUtils<TDate>();
   const inputRef = React.useRef<HTMLInputElement>(null);
 
@@ -108,15 +108,10 @@ export const useInternalDateField = <
     }
   };
 
-  const updateSelectedSections = (
-    selectedSectionIndexes: UseDateFieldState<TDate, TSection>['selectedSectionIndexes'] | number,
-  ) => {
+  const updateSelectedSections = (start?: number, end?: number) => {
     setState((prevState) => ({
       ...prevState,
-      selectedSectionIndexes:
-        typeof selectedSectionIndexes === 'number'
-          ? { start: selectedSectionIndexes, end: selectedSectionIndexes }
-          : selectedSectionIndexes,
+      selectedSectionIndexes: start == null ? null : { start, end: end ?? start },
       selectedSectionQuery: null,
     }));
   };
@@ -143,7 +138,7 @@ export const useInternalDateField = <
     switch (true) {
       // Select all
       case event.key === 'a' && event.ctrlKey: {
-        updateSelectedSections({ start: 0, end: state.sections.length - 1 });
+        updateSelectedSections(0, state.sections.length - 1);
         event.preventDefault();
         return;
       }
@@ -357,6 +352,13 @@ export const useInternalDateField = <
     }
   });
 
+  const handleInputFocus = useEventCallback(() => {
+    // TODO: Avoid applying focus when focus is caused by a click
+    updateSelectedSections(0, state.sections.length - 1);
+  });
+
+  const handleInputBlur = useEventCallback(() => updateSelectedSections());
+
   useEnhancedEffect(() => {
     if (!inputRef.current || state.selectedSectionIndexes == null) {
       return;
@@ -402,6 +404,8 @@ export const useInternalDateField = <
       value: state.valueStr,
       onClick: handleInputClick,
       onKeyDown: handleInputKeyDown,
+      onFocus: handleInputFocus,
+      onBlur: handleInputBlur,
     },
     inputRef,
   };
