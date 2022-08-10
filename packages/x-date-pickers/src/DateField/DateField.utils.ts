@@ -266,3 +266,18 @@ export const getSectionValueNumericBoundaries = <TDate>(
     maximum,
   };
 };
+
+export const cleanTrailingZeroInNumericSectionValue = (value: string, maximum: number) => {
+  const maximumStr = maximum.toString();
+  let cleanValue = value;
+
+  // We remove the trailing zeros
+  cleanValue = Number(cleanValue).toString();
+
+  // We add enough trailing zeros to fill the section
+  while (cleanValue.length < maximumStr.length) {
+    cleanValue = `0${cleanValue}`;
+  }
+
+  return cleanValue;
+};

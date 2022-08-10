@@ -8,6 +8,7 @@ import { useUtils } from '../internals/hooks/useUtils';
 import { MuiPickersAdapter } from '../internals/models/muiPickersAdapter';
 import { DateFieldInputSection } from './DateField.interfaces';
 import {
+  cleanTrailingZeroInNumericSectionValue,
   getMonthList,
   getMonthsMatchingQuery,
   getSectionIndexFromCursorPosition,
@@ -199,11 +200,11 @@ export const useInternalDateField = <
 
       // Increment / decrement the selected section value
       case event.key === 'ArrowUp' || event.key === 'ArrowDown': {
-        // Some sections are empty, we can't use the date format
-        if (state.sections.some((section) => section.value === '')) {
+        // The date is not valid, we have to increment the section value rather than the date
+        if (!utils.isValid(activeDate.value)) {
           const boundaries = getSectionValueNumericBoundaries(
             utils,
-            activeDate.value ?? utils.date()!,
+            utils.date(),
             startSection.dateSectionName,
           );
 
@@ -228,7 +229,10 @@ export const useInternalDateField = <
           const newSectionValue =
             startSection.formatValue === 'MMMM'
               ? getMonthList(utils, startSection.formatValue)[newSectionNumericValue]
-              : newSectionNumericValue.toString();
+              : cleanTrailingZeroInNumericSectionValue(
+                  newSectionNumericValue.toString(),
+                  boundaries.maximum,
+                );
           updateSections(setSectionValue(state.sections, startSectionIndex, newSectionValue));
         } else {
           const newDate = incrementDatePartValue(
@@ -257,20 +261,18 @@ export const useInternalDateField = <
         );
 
         const concatenatedSectionValue = `${startSection.value}${event.key}`;
-        let newSectionValue =
+        const newSectionValue =
           Number(concatenatedSectionValue) > boundaries.maximum
             ? event.key
             : concatenatedSectionValue;
 
-        // We remove the trailing zeros
-        newSectionValue = Number(newSectionValue).toString();
-
-        // We add enough trailing zeros to fill the section
-        while (newSectionValue.length < boundaries.maximum.toString().length) {
-          newSectionValue = `0${newSectionValue}`;
-        }
-
-        updateSections(setSectionValue(state.sections, startSectionIndex, newSectionValue));
+        updateSections(
+          setSectionValue(
+            state.sections,
+            startSectionIndex,
+            cleanTrailingZeroInNumericSectionValue(newSectionValue, boundaries.maximum),
+          ),
+        );
         event.preventDefault();
         break;
       }
