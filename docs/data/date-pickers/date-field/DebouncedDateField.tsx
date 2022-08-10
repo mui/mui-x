@@ -1,4 +1,5 @@
 import * as React from 'react';
+import addWeeks from 'date-fns/addWeeks';
 import { debounce } from '@mui/material/utils';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
@@ -12,7 +13,7 @@ import isEqual from 'date-fns/isEqual';
 const today = new Date();
 
 export default function DebouncedDateField() {
-  const [value, setValue] = React.useState<Date | null>(today);
+  const [value, setValue] = React.useState<Date | null>(() => addWeeks(today, 1));
 
   const debounceSetValue = React.useMemo(() => debounce(setValue, 500), []);
 

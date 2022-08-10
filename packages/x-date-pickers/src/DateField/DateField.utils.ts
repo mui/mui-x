@@ -1,3 +1,5 @@
+import defaultLocale from 'date-fns/locale/en-US';
+import longFormatters from 'date-fns/_lib/format/longFormatters';
 import { DateFieldInputSection, DateSectionName } from './DateField.interfaces';
 import { MuiPickersAdapter } from '../internals/models/muiPickersAdapter';
 
@@ -68,18 +70,22 @@ export const incrementDatePartValue = <TDate>(
   }
 };
 
-export const getSectionVisibleValue = (section: Omit<DateFieldInputSection, 'start'>) =>
+export const getSectionVisibleValue = (section: Omit<DateFieldInputSection, 'start' | 'end'>) =>
   section.value || section.emptyValue;
 
-const addStartPropertyToSections = (sections: Omit<DateFieldInputSection, 'start'>[]) => {
+export const addPositionPropertiesToSections = <TSection extends DateFieldInputSection>(
+  sections: Omit<TSection, 'start' | 'end'>[],
+): TSection[] => {
   let position = 0;
-  const newSections: DateFieldInputSection[] = [];
+  const newSections: TSection[] = [];
 
   for (let i = 0; i < sections.length; i += 1) {
     const section = sections[i];
-    newSections.push({ ...section, start: position });
+    const end =
+      position + getSectionVisibleValue(section).length + (section.separator?.length ?? 0);
 
-    position += getSectionVisibleValue(section).length + (section.separator?.length ?? 0);
+    newSections.push({ ...section, start: position, end } as TSection);
+    position = end;
   }
 
   return newSections;
@@ -103,10 +109,26 @@ export const splitFormatIntoSections = <TDate>(
   date: TDate,
 ) => {
   let currentTokenValue = '';
-  const sections: Omit<DateFieldInputSection, 'start'>[] = [];
+  const sections: Omit<DateFieldInputSection, 'start' | 'end'>[] = [];
 
-  for (let i = 0; i < format.length; i += 1) {
-    const char = format[i];
+  // Copy pasted from the `getFormatHelperText` in the date-fns adapter
+  // Would need to be turned into an adapter method
+  const longFormatRegexp = /P+p+|P+|p+|''|'(''|[^'])+('|$)|./g;
+  const locale = utils.locale || defaultLocale;
+  const cleanFormat = format
+    .match(longFormatRegexp)!
+    .map((token) => {
+      const firstCharacter = token[0];
+      if (firstCharacter === 'p' || firstCharacter === 'P') {
+        const longFormatter = longFormatters[firstCharacter];
+        return longFormatter(token, locale.formatLong, {});
+      }
+      return token;
+    })
+    .join('');
+
+  for (let i = 0; i < cleanFormat.length; i += 1) {
+    const char = cleanFormat[i];
     if (!char.match(/([A-zÀ-ú]+)/g)) {
       if (currentTokenValue === '') {
         sections[sections.length - 1].separator += char;
@@ -133,7 +155,7 @@ export const splitFormatIntoSections = <TDate>(
       currentTokenValue += char;
     }
 
-    if (i === format.length - 1) {
+    if (i === cleanFormat.length - 1) {
       const dateForCurrentToken = formatDateWithPlaceholder(utils, date, currentTokenValue);
       if (dateForCurrentToken === currentTokenValue) {
         sections[sections.length - 1].separator += currentTokenValue;
@@ -152,7 +174,7 @@ export const splitFormatIntoSections = <TDate>(
     }
   }
 
-  return addStartPropertyToSections(sections);
+  return sections;
 };
 
 export const createDateStrFromSections = (sections: DateFieldInputSection[]) =>
@@ -181,8 +203,8 @@ export const getSectionIndexFromCursorPosition = (
   return nextSectionIndex - 1;
 };
 
-export const setSectionValue = (
-  sections: DateFieldInputSection[],
+export const setSectionValue = <TSection extends DateFieldInputSection>(
+  sections: TSection[],
   currentSectionIndex: number,
   newSectionValue: string,
   newSectionQuery: string | null = null,
@@ -199,7 +221,7 @@ export const setSectionValue = (
     return section;
   });
 
-  return addStartPropertyToSections(newSections);
+  return addPositionPropertiesToSections<TSection>(newSections);
 };
 
 export const getMonthList = <TDate>(utils: MuiPickersAdapter<TDate>, format: string) =>
