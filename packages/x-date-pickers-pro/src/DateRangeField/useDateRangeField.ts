@@ -23,7 +23,7 @@ const dateRangeFieldValueManager: PickerFieldValueManager<
         return {
           ...section,
           dateName: 'start' as const,
-          separator: ' - ',
+          separator: ' – ',
         };
       }
 
