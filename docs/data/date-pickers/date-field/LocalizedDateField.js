@@ -5,42 +5,12 @@ import { Unstable_DateField as DateField } from '@mui/x-date-pickers/DateField';
 import Stack from '@mui/material/Stack';
 import frFR from 'date-fns/locale/fr';
 
-export default function CustomDateManagementDateField() {
+export default function LocalizedDateField() {
   const [value, setValue] = React.useState(new Date());
 
   return (
     <LocalizationProvider dateAdapter={AdapterDateFns}>
       <Stack spacing={2} sx={(theme) => ({ width: theme.spacing(48) })}>
-        <DateField
-          label="Full letter month"
-          value={value}
-          onChange={(newValue) => setValue(newValue)}
-          format="dd MMMM yyyy"
-        />
-        <DateField
-          label="Dash separator"
-          value={value}
-          onChange={(newValue) => setValue(newValue)}
-          format="dd-MM-yyyy"
-        />
-        <DateField
-          label="Dash and white space separator"
-          value={value}
-          onChange={(newValue) => setValue(newValue)}
-          format="dd / MM / yyyy"
-        />
-        <DateField
-          label="Date and time format"
-          value={value}
-          onChange={(newValue) => setValue(newValue)}
-          format="dd / MM / yyyy HH:mm:ss"
-        />
-        <DateField
-          label="Date and time format (am-pm)"
-          value={value}
-          onChange={(newValue) => setValue(newValue)}
-          format="dd / MM / yyyy hh:mm:ss aa"
-        />
         <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={frFR}>
           <DateField
             label="French locale (default format)"

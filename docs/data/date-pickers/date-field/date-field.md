@@ -14,9 +14,13 @@ title: React Date Field component
 
 {{"demo": "CustomInputDateField.js"}}
 
-## Customize the date management props
+## Customize the date format
 
-{{"demo": "CustomDateManagementDateField.js"}}
+{{"demo": "CustomDateFormat.js"}}
+
+## Localization
+
+{{"demo": "LocalizedDateField.js"}}
 
 ## When is `onChange` called
 

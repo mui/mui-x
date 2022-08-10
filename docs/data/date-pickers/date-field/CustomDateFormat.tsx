@@ -3,20 +3,13 @@ import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { Unstable_DateField as DateField } from '@mui/x-date-pickers/DateField';
 import Stack from '@mui/material/Stack';
-import frFR from 'date-fns/locale/fr';
 
-export default function CustomDateManagementDateField() {
+export default function CustomDateFormat() {
   const [value, setValue] = React.useState<Date | null>(new Date());
 
   return (
     <LocalizationProvider dateAdapter={AdapterDateFns}>
       <Stack spacing={2} sx={(theme) => ({ width: theme.spacing(48) })}>
-        <DateField
-          label="Full letter month"
-          value={value}
-          onChange={(newValue) => setValue(newValue)}
-          format="dd MMMM yyyy"
-        />
         <DateField
           label="Dash separator"
           value={value}
@@ -30,30 +23,23 @@ export default function CustomDateManagementDateField() {
           format="dd / MM / yyyy"
         />
         <DateField
+          label="Full letter month"
+          value={value}
+          onChange={(newValue) => setValue(newValue)}
+          format="dd MMMM yyyy"
+        />
+        <DateField
           label="Date and time format"
           value={value}
           onChange={(newValue) => setValue(newValue)}
-          format="dd / MM / yyyy HH:mm:ss"
+          format="Pp"
         />
         <DateField
-          label="Date and time format (am-pm)"
+          label="Time format"
           value={value}
           onChange={(newValue) => setValue(newValue)}
-          format="dd / MM / yyyy hh:mm:ss aa"
+          format="p"
         />
-        <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={frFR}>
-          <DateField
-            label="French locale (default format)"
-            value={value}
-            onChange={(newValue) => setValue(newValue)}
-          />
-          <DateField
-            label="French locale (full letter month)"
-            value={value}
-            onChange={(newValue) => setValue(newValue)}
-            format="dd MMMM yyyy"
-          />
-        </LocalizationProvider>
       </Stack>
     </LocalizationProvider>
   );
