@@ -447,7 +447,7 @@ describe('<DesktopDateRangePicker />', () => {
       }),
     );
 
-    it('should call onChange with updated start date then call onChange with updated end date, onClose and onAccept with update date range when opening from start input', () => {
+    it.only('should call onChange with updated start date then call onChange with updated end date, onClose and onAccept with update date range when opening from start input', () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();

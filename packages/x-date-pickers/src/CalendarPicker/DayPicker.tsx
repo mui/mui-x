@@ -1,6 +1,6 @@
 import * as React from 'react';
 import Typography from '@mui/material/Typography';
-import { styled } from '@mui/material/styles';
+import { useTheme, styled } from '@mui/material/styles';
 import { PickersDay, PickersDayProps } from '../PickersDay/PickersDay';
 import { useUtils, useNow } from '../internals/hooks/useUtils';
 import { PickerOnChangeFn } from '../internals/hooks/useViews';
@@ -13,6 +13,7 @@ import {
 } from './PickersSlideTransition';
 import { DayValidationProps } from '../internals/hooks/validation/models';
 import { useIsDayDisabled } from '../internals/hooks/validation/useDateValidation';
+import { doNothing } from '../internals/utils/utils';
 
 export interface ExportedDayPickerProps<TDate>
   extends DayValidationProps<TDate>,
@@ -60,7 +61,7 @@ export interface DayPickerProps<TDate> extends ExportedDayPickerProps<TDate> {
   onSelectedDaysChange: PickerOnChangeFn<TDate>;
   disabled?: boolean;
   focusedDay: TDate | null;
-  tabIndexDay: TDate;
+  tabIndexDay?: TDate;
   isMonthSwitchingAnimating: boolean;
   setFocusedDay: (newFocusedDay: TDate) => void;
   onDayBlur: (blurredDay: TDate) => void;
@@ -145,6 +146,7 @@ export function DayPicker<TDate>(props: DayPickerProps<TDate>) {
     shouldDisableDate,
     dayOfWeekFormatter = defaultDayOfWeekFormatter,
   } = props;
+  const theme = useTheme();
 
   const isDateDisabled = useIsDayDisabled({
     shouldDisableDate,
@@ -164,6 +166,45 @@ export function DayPicker<TDate>(props: DayPickerProps<TDate>) {
     },
     [onSelectedDaysChange, readOnly],
   );
+
+  const handleDayKeyDown = (day: TDate) => (event: React.KeyboardEvent<HTMLButtonElement>) => {
+    switch (event.key) {
+      case 'ArrowUp':
+        setFocusedDay(utils.addDays(day, -7));
+        event.preventDefault();
+        break;
+      case 'ArrowDown':
+        setFocusedDay(utils.addDays(day, 7));
+        event.preventDefault();
+        break;
+      case 'ArrowLeft':
+        setFocusedDay(utils.addDays(day, theme.direction === 'ltr' ? -1 : 1));
+        event.preventDefault();
+        break;
+      case 'ArrowRight':
+        setFocusedDay(utils.addDays(day, theme.direction === 'ltr' ? 1 : -1));
+        event.preventDefault();
+        break;
+      case 'Home':
+        setFocusedDay(utils.startOfWeek(day));
+        event.preventDefault();
+        break;
+      case 'End':
+        setFocusedDay(utils.endOfWeek(day));
+        event.preventDefault();
+        break;
+      case 'PageUp':
+        setFocusedDay(utils.getNextMonth(day));
+        event.preventDefault();
+        break;
+      case 'PageDown':
+        setFocusedDay(utils.getPreviousMonth(day));
+        event.preventDefault();
+        break;
+      default:
+        break;
+    }
+  };
 
   const currentMonthNumber = utils.getMonth(currentMonth);
   const validSelectedDays = selectedDays
@@ -205,16 +246,17 @@ export function DayPicker<TDate>(props: DayPickerProps<TDate>) {
             {utils.getWeekArray(currentMonth).map((week) => (
               <PickersCalendarWeek role="row" key={`week-${week[0]}`}>
                 {week.map((day) => {
+                  const hasFocus = tabIndexDay && utils.isSameDay(tabIndexDay, day);
+                  const isDisabled = disabled || isDateDisabled(day);
                   const selected = validSelectedDays.some((selectedDay) =>
                     utils.isSameDay(selectedDay, day),
                   );
-                  const hasFocus = utils.isSameDay(tabIndexDay, day);
 
                   const pickersDayProps: PickersDayProps<TDate> = {
                     key: (day as any)?.toString(),
                     day,
                     isAnimating: isMonthSwitchingAnimating,
-                    disabled: disabled || isDateDisabled(day),
+                    disabled: isDisabled,
                     autoFocus: focusedDay !== null && utils.isSameDay(day, focusedDay),
                     today: utils.isSameDay(day, now),
                     outsideCurrentMonth: utils.getMonth(day) !== currentMonthNumber,
@@ -222,11 +264,10 @@ export function DayPicker<TDate>(props: DayPickerProps<TDate>) {
                     tabIndex: selected || hasFocus ? 0 : -1,
                     disableHighlightToday,
                     showDaysOutsideCurrentMonth,
-                    setFocusedDay,
-                    onDayBlur,
                     onFocus: () => setFocusedDay(day),
                     onBlur: () => onDayBlur(day),
-                    onDaySelect: handleDaySelect,
+                    onKeyDown: handleDayKeyDown(day),
+                    onClick: disabled ? doNothing : () => handleDaySelect(day, 'finish'),
                   };
 
                   return renderDay ? (

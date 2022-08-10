@@ -5,12 +5,11 @@ import { CSSInterpolation, SxProps } from '@mui/system';
 import ButtonBase, { ButtonBaseProps } from '@mui/material/ButtonBase';
 import { unstable_useEnhancedEffect as useEnhancedEffect } from '@mui/utils';
 import { unstable_composeClasses as composeClasses } from '@mui/material';
-import { useTheme, alpha, styled, useThemeProps, Theme } from '@mui/material/styles';
+import { alpha, styled, useThemeProps, Theme } from '@mui/material/styles';
 import { useForkRef } from '@mui/material/utils';
 import { ExtendMui } from '../internals/models/helpers';
 import { useUtils } from '../internals/hooks/useUtils';
 import { DAY_SIZE, DAY_MARGIN } from '../internals/constants/dimensions';
-import { PickerSelectionState } from '../internals/hooks/usePickerState';
 import {
   PickersDayClasses,
   PickersDayClassKey,
@@ -43,9 +42,6 @@ export interface PickersDayProps<TDate> extends ExtendMui<ButtonBaseProps> {
    */
   disableMargin?: boolean;
   isAnimating?: boolean;
-  setFocusedDay: (day: TDate) => void;
-  onDayBlur: (day: TDate) => void;
-  onDaySelect: (day: TDate, isFinish: PickerSelectionState) => void;
   /**
    * If `true`, day is outside of month and will be hidden.
    */
@@ -202,13 +198,6 @@ const PickersDayRaw = React.forwardRef(function PickersDay<TDate>(
     disableMargin = false,
     hidden,
     isAnimating,
-    onClick,
-    onDaySelect,
-    setFocusedDay,
-    onDayBlur,
-    onFocus,
-    onBlur,
-    onKeyDown,
     outsideCurrentMonth,
     selected = false,
     showDaysOutsideCurrentMonth = false,
@@ -243,61 +232,6 @@ const PickersDayRaw = React.forwardRef(function PickersDay<TDate>(
     }
   }, [autoFocus, disabled, isAnimating, outsideCurrentMonth]);
 
-  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-    if (!disabled) {
-      onDaySelect(day, 'finish');
-    }
-
-    if (onClick) {
-      onClick(event);
-    }
-  };
-
-  const theme = useTheme();
-
-  function handleKeyDown(event: React.KeyboardEvent<HTMLButtonElement>) {
-    if (onKeyDown !== undefined) {
-      onKeyDown(event);
-    }
-
-    switch (event.key) {
-      case 'ArrowUp':
-        setFocusedDay(utils.addDays(day, -7));
-        event.preventDefault();
-        break;
-      case 'ArrowDown':
-        setFocusedDay(utils.addDays(day, 7));
-        event.preventDefault();
-        break;
-      case 'ArrowLeft':
-        setFocusedDay(utils.addDays(day, theme.direction === 'ltr' ? -1 : 1));
-        event.preventDefault();
-        break;
-      case 'ArrowRight':
-        setFocusedDay(utils.addDays(day, theme.direction === 'ltr' ? 1 : -1));
-        event.preventDefault();
-        break;
-      case 'Home':
-        setFocusedDay(utils.startOfWeek(day));
-        event.preventDefault();
-        break;
-      case 'End':
-        setFocusedDay(utils.endOfWeek(day));
-        event.preventDefault();
-        break;
-      case 'PageUp':
-        setFocusedDay(utils.getNextMonth(day));
-        event.preventDefault();
-        break;
-      case 'PageDown':
-        setFocusedDay(utils.getPreviousMonth(day));
-        event.preventDefault();
-        break;
-      default:
-        break;
-    }
-  }
-
   if (outsideCurrentMonth && !showDaysOutsideCurrentMonth) {
     return (
       <PickersDayFiller
@@ -317,10 +251,6 @@ const PickersDayRaw = React.forwardRef(function PickersDay<TDate>(
       disabled={disabled}
       aria-label={!children ? utils.format(day, 'fullDate') : undefined}
       tabIndex={tabIndex}
-      onKeyDown={handleKeyDown}
-      onClick={handleClick}
-      onFocus={onFocus}
-      onBlur={onBlur}
       {...other}
     >
       {!children ? utils.format(day, 'dayOfMonth') : children}
@@ -342,10 +272,7 @@ export const areDayPropsEqual = (
     prevProps.showDaysOutsideCurrentMonth === nextProps.showDaysOutsideCurrentMonth &&
     prevProps.disableHighlightToday === nextProps.disableHighlightToday &&
     prevProps.className === nextProps.className &&
-    prevProps.outsideCurrentMonth === nextProps.outsideCurrentMonth &&
-    prevProps.setFocusedDay === nextProps.setFocusedDay &&
-    prevProps.onDayBlur === nextProps.onDayBlur &&
-    prevProps.onDaySelect === nextProps.onDaySelect
+    prevProps.outsideCurrentMonth === nextProps.outsideCurrentMonth
   );
 };
 
@@ -378,8 +305,6 @@ PickersDayRaw.propTypes = {
    */
   disableMargin: PropTypes.bool,
   isAnimating: PropTypes.bool,
-  onDayBlur: PropTypes.func.isRequired,
-  onDaySelect: PropTypes.func.isRequired,
   /**
    * If `true`, day is outside of month and will be hidden.
    */
@@ -389,7 +314,6 @@ PickersDayRaw.propTypes = {
    * @default false
    */
   selected: PropTypes.bool,
-  setFocusedDay: PropTypes.func.isRequired,
   /**
    * If `true`, days that have `outsideCurrentMonth={true}` are displayed.
    * @default false

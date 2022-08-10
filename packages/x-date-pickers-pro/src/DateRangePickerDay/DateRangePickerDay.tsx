@@ -320,8 +320,6 @@ DateRangePickerDayRaw.propTypes = {
    * Set to `true` if the `day` is the end of a highlighted date range.
    */
   isStartOfPreviewing: PropTypes.bool.isRequired,
-  onDayBlur: PropTypes.func.isRequired,
-  onDaySelect: PropTypes.func.isRequired,
   /**
    * If `true`, day is outside of month and will be hidden.
    */
@@ -331,7 +329,6 @@ DateRangePickerDayRaw.propTypes = {
    * @default false
    */
   selected: PropTypes.bool,
-  setFocusedDay: PropTypes.func.isRequired,
   /**
    * If `true`, days that have `outsideCurrentMonth={true}` are displayed.
    * @default false

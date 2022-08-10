@@ -18,7 +18,6 @@ describe('<DateRangePickerDay />', () => {
       day={adapterToUse.date()}
       outsideCurrentMonth={false}
       selected
-      onDaySelect={() => {}}
       isHighlighting
       isPreviewing
       isStartOfPreviewing

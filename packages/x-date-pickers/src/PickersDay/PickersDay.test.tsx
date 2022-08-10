@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { expect } from 'chai';
-import { spy } from 'sinon';
-import { describeConformance, fireEvent, screen } from '@mui/monorepo/test/utils';
+import { describeConformance, screen } from '@mui/monorepo/test/utils';
 import { PickersDay, pickersDayClasses as classes } from '@mui/x-date-pickers/PickersDay';
 import {
   adapterToUse,
@@ -13,12 +12,7 @@ describe('<PickersDay />', () => {
   const { render } = createPickerRenderer();
 
   describeConformance(
-    <PickersDay
-      day={adapterToUse.date()}
-      outsideCurrentMonth={false}
-      selected
-      onDaySelect={() => {}}
-    />,
+    <PickersDay day={adapterToUse.date()} outsideCurrentMonth={false} selected />,
     () => ({
       classes,
       inheritComponent: 'button',
@@ -32,34 +26,31 @@ describe('<PickersDay />', () => {
     }),
   );
 
-  it('selects the date on click, Enter and Space', () => {
-    const handleDaySelect = spy();
-    const day = adapterToUse.date();
-    render(<PickersDay day={day} outsideCurrentMonth={false} onDaySelect={handleDaySelect} />);
-    const targetDay = screen.getByRole('button', {
-      name: `${adapterToUse.format(day, 'fullDate')}`,
-    });
+  // TODO: move to DayPicker Test
+  // it('selects the date on click, Enter and Space', () => {
+  //   const handleDaySelect = spy();
+  //   const day = adapterToUse.date();
+  //   render(<PickersDay day={day} outsideCurrentMonth={false} onDaySelect={handleDaySelect} />);
+  //   const targetDay = screen.getByRole('button', {
+  //     name: `${adapterToUse.format(day, 'fullDate')}`,
+  //   });
 
-    // A native button implies Enter and Space keydown behavior
-    // These keydown events only trigger click behavior if they're trusted (programmatically dispatched events aren't trusted).
-    // If this breaks, make sure to add tests for
-    // - fireEvent.keyDown(targetDay, { key: 'Enter' })
-    // - fireEvent.keyUp(targetDay, { key: 'Space' })
-    expect(targetDay.tagName).to.equal('BUTTON');
+  //   // A native button implies Enter and Space keydown behavior
+  //   // These keydown events only trigger click behavior if they're trusted (programmatically dispatched events aren't trusted).
+  //   // If this breaks, make sure to add tests for
+  //   // - fireEvent.keyDown(targetDay, { key: 'Enter' })
+  //   // - fireEvent.keyUp(targetDay, { key: 'Space' })
+  //   expect(targetDay.tagName).to.equal('BUTTON');
 
-    fireEvent.click(targetDay);
+  //   fireEvent.click(targetDay);
 
-    expect(handleDaySelect.callCount).to.equal(1);
-    expect(handleDaySelect.args[0][0]).toEqualDateTime(day);
-  });
+  //   expect(handleDaySelect.callCount).to.equal(1);
+  //   expect(handleDaySelect.args[0][0]).toEqualDateTime(day);
+  // });
 
   it('renders the day of the month by default', () => {
     render(
-      <PickersDay
-        day={adapterToUse.date('2020-02-02T02:02:02.000')}
-        onDaySelect={() => {}}
-        outsideCurrentMonth={false}
-      />,
+      <PickersDay day={adapterToUse.date('2020-02-02T02:02:02.000')} outsideCurrentMonth={false} />,
     );
 
     const day = screen.getByRole('button');
@@ -71,11 +62,7 @@ describe('<PickersDay />', () => {
 
   it('should render children instead of the day of the month when children prop is present', () => {
     render(
-      <PickersDay
-        day={adapterToUse.date('2020-02-02T02:02:02.000')}
-        outsideCurrentMonth={false}
-        onDaySelect={() => {}}
-      >
+      <PickersDay day={adapterToUse.date('2020-02-02T02:02:02.000')} outsideCurrentMonth={false}>
         2 (free)
       </PickersDay>,
     );
