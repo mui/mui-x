@@ -35,15 +35,15 @@ const rows = [
 
 const columnGroupingModel = [
   {
-    groupId: 'internal data',
+    groupId: 'Internal',
     description: '',
     children: [{ field: 'id' }],
   },
   {
-    groupId: 'character',
+    groupId: 'Basic info',
     children: [
       {
-        groupId: 'naming',
+        groupId: 'Full name',
         children: [{ field: 'lastName' }, { field: 'firstName' }],
       },
       { field: 'age' },

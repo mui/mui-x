@@ -39,21 +39,22 @@ const rows = [
 
 const columnGroupingModel: GridColumnGroupingModel = [
   {
-    groupId: 'internal data',
+    groupId: 'Internal',
     description: '',
     children: [{ field: 'id' }],
   },
   {
-    groupId: 'character',
+    groupId: 'Basic info',
     children: [
       {
-        groupId: 'naming',
+        groupId: 'Full name',
         children: [{ field: 'lastName' }, { field: 'firstName' }],
       },
       { field: 'age' },
     ],
   },
 ];
+
 export default function BasicGroupingDemo() {
   return (
     <div style={{ height: 400, width: '100%' }}>

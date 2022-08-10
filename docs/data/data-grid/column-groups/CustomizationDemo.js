@@ -93,7 +93,7 @@ const columnGroupingModel = [
       {
         groupId: 'naming',
         headerName: 'Names',
-        headerClassName: 'my-super-theme--character-group',
+        headerClassName: 'my-super-theme--naming-group',
         children: [{ field: 'lastName' }, { field: 'firstName' }],
       },
       { field: 'age' },
@@ -107,7 +107,7 @@ export default function CustomizationDemo() {
       sx={{
         height: 400,
         width: '100%',
-        '& .my-super-theme--character-group': {
+        '& .my-super-theme--naming-group': {
           backgroundColor: 'rgba(255, 7, 0, 0.55)',
         },
       }}

@@ -43,7 +43,7 @@ const columnGroupingModel = [
   },
   {
     groupId: 'naming',
-    headerName: 'Names (freeReordering)',
+    headerName: 'Full name (freeReordering)',
     freeReordering: true,
     children: [{ field: 'lastName' }, { field: 'firstName' }],
   },

@@ -47,11 +47,12 @@ const columnGroupingModel: GridColumnGroupingModel = [
   },
   {
     groupId: 'naming',
-    headerName: 'Names (freeReordering)',
+    headerName: 'Full name (freeReordering)',
     freeReordering: true,
     children: [{ field: 'lastName' }, { field: 'firstName' }],
   },
 ];
+
 export default function BreakingGroupDemo() {
   return (
     <div style={{ height: 400, width: '100%' }}>
