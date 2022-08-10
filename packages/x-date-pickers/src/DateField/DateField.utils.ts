@@ -1,4 +1,5 @@
 import defaultLocale from 'date-fns/locale/en-US';
+// @ts-ignore
 import longFormatters from 'date-fns/_lib/format/longFormatters';
 import { DateFieldInputSection, DateSectionName } from './DateField.interfaces';
 import { MuiPickersAdapter } from '../internals/models/muiPickersAdapter';

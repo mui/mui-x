@@ -43,9 +43,6 @@ export interface UseInternalDateFieldProps<
 > {
   value: TInputValue;
   onChange: (value: TValue) => void;
-  /**
-   * @default "dd/MM/yyyy"
-   */
   format?: string;
   valueManager: PickerStateValueManager<TInputValue, TValue, TDate>;
   fieldValueManager: PickerFieldValueManager<TValue, TDate, TSection>;
@@ -96,12 +93,10 @@ export const useInternalDateField = <
       format,
     );
 
-    const cleanSections = fieldValueManager.getSectionsFromValue(utils, newValueParsed, format);
-
     setState((prevState) => ({
       ...prevState,
-      sections: cleanSections,
-      valueStr: fieldValueManager.getValueStrFromSections(cleanSections),
+      sections,
+      valueStr: fieldValueManager.getValueStrFromSections(sections),
       valueParsed: newValueParsed,
     }));
 
@@ -163,113 +158,125 @@ export const useInternalDateField = <
       startSection,
     );
 
-    if (event.key === 'ArrowRight') {
-      if (startSectionIndex !== endSectionIndex) {
-        updateSelectedSection(0);
-      } else if (startSectionIndex < state.sections.length - 1) {
-        updateSelectedSection(startSectionIndex + 1);
+    switch (true) {
+      // Select all
+      case event.key === 'a' && event.ctrlKey: {
+        updateSelectedSection('all');
+        event.preventDefault();
+        break;
       }
 
-      event.preventDefault();
-      return;
-    }
+      // Move selection to next section
+      case event.key === 'ArrowRight': {
+        if (startSectionIndex !== endSectionIndex) {
+          updateSelectedSection(0);
+        } else if (startSectionIndex < state.sections.length - 1) {
+          updateSelectedSection(startSectionIndex + 1);
+        }
 
-    if (event.key === 'ArrowLeft') {
-      if (startSectionIndex !== endSectionIndex) {
-        updateSelectedSection(0);
-      } else if (startSectionIndex > 0) {
-        updateSelectedSection(startSectionIndex - 1);
+        event.preventDefault();
+        break;
       }
-      event.preventDefault();
-      return;
-    }
 
-    if (event.key === 'ArrowUp' || event.key === 'ArrowDown') {
-      // Some sections are empty, we can't use the date format
-      if (state.sections.some((section) => section.value === '')) {
+      // Move selection to previous section
+      case event.key === 'ArrowLeft': {
+        if (startSectionIndex !== endSectionIndex) {
+          updateSelectedSection(0);
+        } else if (startSectionIndex > 0) {
+          updateSelectedSection(startSectionIndex - 1);
+        }
+        event.preventDefault();
+        break;
+      }
+
+      // Reset the value of the selected section
+      case event.key === 'Backspace': {
+        updateSections(setSectionValue(state.sections, startSectionIndex, ''));
+        event.preventDefault();
+        break;
+      }
+
+      // Increment / decrement the selected section value
+      case event.key === 'ArrowUp' || event.key === 'ArrowDown': {
+        // Some sections are empty, we can't use the date format
+        if (state.sections.some((section) => section.value === '')) {
+          const boundaries = getSectionValueNumericBoundaries(
+            utils,
+            activeDate.value ?? utils.date()!,
+            startSection.dateSectionName,
+          );
+
+          let newSectionNumericValue: number;
+          if (startSection.value === '') {
+            newSectionNumericValue =
+              event.key === 'ArrowDown' ? boundaries.minimum : boundaries.maximum;
+          } else {
+            const currentNumericValue =
+              startSection.formatValue === 'MMMM'
+                ? getMonthList(utils, startSection.formatValue).indexOf(startSection.value)
+                : Number(startSection.value);
+            newSectionNumericValue = currentNumericValue + (event.key === 'ArrowDown' ? -1 : 1);
+            if (newSectionNumericValue < boundaries.minimum) {
+              newSectionNumericValue = boundaries.maximum;
+            } else if (newSectionNumericValue > boundaries.maximum) {
+              newSectionNumericValue = boundaries.minimum;
+            }
+          }
+
+          // TODO: Make generic
+          const newSectionValue =
+            startSection.formatValue === 'MMMM'
+              ? getMonthList(utils, startSection.formatValue)[newSectionNumericValue]
+              : newSectionNumericValue.toString();
+          updateSections(setSectionValue(state.sections, startSectionIndex, newSectionValue));
+        } else {
+          const newDate = incrementDatePartValue(
+            utils,
+            activeDate.value,
+            startSection.dateSectionName,
+            event.key === 'ArrowDown' ? -1 : 1,
+          );
+
+          const newValue = activeDate.update(newDate);
+          const sections = fieldValueManager.getSectionsFromValue(utils, newValue, format);
+
+          updateSections(sections);
+        }
+
+        event.preventDefault();
+        break;
+      }
+
+      // Apply numeric editing on the selected section value
+      case !Number.isNaN(Number(event.key)): {
         const boundaries = getSectionValueNumericBoundaries(
           utils,
           activeDate.value ?? utils.date()!,
           startSection.dateSectionName,
         );
 
-        let newSectionNumericValue: number;
-        if (startSection.value === '') {
-          newSectionNumericValue =
-            event.key === 'ArrowDown' ? boundaries.minimum : boundaries.maximum;
-        } else {
-          const currentNumericValue =
-            startSection.formatValue === 'MMMM'
-              ? getMonthList(utils, startSection.formatValue).indexOf(startSection.value)
-              : Number(startSection.value);
-          newSectionNumericValue = currentNumericValue + (event.key === 'ArrowDown' ? -1 : 1);
-          if (newSectionNumericValue < boundaries.minimum) {
-            newSectionNumericValue = boundaries.maximum;
-          } else if (newSectionNumericValue > boundaries.maximum) {
-            newSectionNumericValue = boundaries.minimum;
-          }
+        const concatenatedSectionValue = `${startSection.value}${event.key}`;
+        let newSectionValue =
+          Number(concatenatedSectionValue) > boundaries.maximum
+            ? event.key
+            : concatenatedSectionValue;
+
+        // We remove the trailing zeros
+        newSectionValue = Number(newSectionValue).toString();
+
+        // We add enough trailing zeros to fill the section
+        while (newSectionValue.length < boundaries.maximum.toString().length) {
+          newSectionValue = `0${newSectionValue}`;
         }
 
-        // TODO: Make generic
-        const newSectionValue =
-          startSection.formatValue === 'MMMM'
-            ? getMonthList(utils, startSection.formatValue)[newSectionNumericValue]
-            : newSectionNumericValue.toString();
         updateSections(setSectionValue(state.sections, startSectionIndex, newSectionValue));
-      } else {
-        const newDate = incrementDatePartValue(
-          utils,
-          activeDate.value,
-          startSection.dateSectionName,
-          event.key === 'ArrowDown' ? -1 : 1,
-        );
-
-        const newValue = activeDate.update(newDate);
-        const sections = fieldValueManager.getSectionsFromValue(utils, newValue, format);
-
-        updateSections(sections);
+        event.preventDefault();
+        break;
       }
 
-      event.preventDefault();
-      return;
-    }
-
-    if (event.key === 'a' && event.ctrlKey) {
-      updateSelectedSection('all');
-      event.preventDefault();
-      return;
-    }
-
-    if (event.key === 'Backspace') {
-      updateSections(setSectionValue(state.sections, startSectionIndex, ''));
-      event.preventDefault();
-      return;
-    }
-    const numericKey = Number(event.key);
-
-    if (!Number.isNaN(numericKey)) {
-      const boundaries = getSectionValueNumericBoundaries(
-        utils,
-        activeDate.value ?? utils.date()!,
-        startSection.dateSectionName,
-      );
-
-      const concatenatedSectionValue = `${startSection.value}${event.key}`;
-      const newSectionValue =
-        Number(concatenatedSectionValue) > boundaries.maximum
-          ? event.key
-          : concatenatedSectionValue;
-
-      updateSections(
-        setSectionValue(state.sections, startSectionIndex, Number(newSectionValue).toString()),
-      );
-      event.preventDefault();
-      return;
-    }
-
-    if (event.key.length === 1) {
-      // TODO: Make generic
-      if (startSection.formatValue === 'MMMM') {
+      // Apply full letter editing on the selected section value
+      // TODO: Do not hardcode the compatible formatValue
+      case event.key.length === 1 && startSection.formatValue === 'MMMM': {
         const newQuery = event.key.toLowerCase();
         const concatenatedQuery = `${startSection.query ?? ''}${newQuery}`;
         const matchingMonthsWithConcatenatedQuery = getMonthsMatchingQuery(
