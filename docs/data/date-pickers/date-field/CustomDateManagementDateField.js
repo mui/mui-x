@@ -33,13 +33,13 @@ export default function CustomDateManagementDateField() {
           label="Date and time format"
           value={value}
           onChange={(newValue) => setValue(newValue)}
-          format="dd / MM / yyyy HH:mm:ss"
+          format="P HH:mm"
         />
         <DateField
           label="Date and time format (am-pm)"
           value={value}
           onChange={(newValue) => setValue(newValue)}
-          format="dd / MM / yyyy hh:mm:ss aa"
+          format="P hh:mm aaa"
         />
         <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={frFR}>
           <DateField
