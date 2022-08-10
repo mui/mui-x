@@ -22,11 +22,11 @@ See the [Licensing page](https://mui.com/x/introduction/licensing/) for details.
 
 ### Data Grid
 
-Read the Data Grid [Installation insctructions](https://mui.com/x/react-data-grid/getting-started/#installation) in the MUI X docs.
+Read the Data Grid [Installation instructions](https://mui.com/x/react-data-grid/getting-started/#installation) in the MUI X docs.
 
 ### Date and Time Pickers
 
-Read the Date and Time Pickers [Installation insctructions](https://mui.com/x/react-date-pickers/getting-started/#setup) in the MUI X docs.
+Read the Date and Time Pickers [Installation instructions](https://mui.com/x/react-date-pickers/getting-started/#setup) in the MUI X docs.
 
 ## MIT vs. commercial licenses
 
