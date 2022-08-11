@@ -3,7 +3,7 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-## 5.16.0
+## 5.15.2
 _Aug 11, 2022_
 
 We'd like to offer a big thanks to the 7 contributors who made this release possible. Here are some highlights ✨:
@@ -12,11 +12,11 @@ We'd like to offer a big thanks to the 7 contributors who made this release poss
 - 📚 Documentation improvements
 - 🐞 Bugfixes
 
-### `@mui/x-data-grid@5.16.0` / `@mui/x-data-grid-pro@5.16.0` / `@mui/x-data-grid-premium@5.16.0`
+### `@mui/x-data-grid@5.15.2` / `@mui/x-data-grid-pro@5.15.2` / `@mui/x-data-grid-premium@5.15.2`
 
 #### Changes
 
-- [DataGrid] Catch error if rows freezing is not supported (#5711) @cherniavskii
+- [DataGrid] Catch errors if rows freezing is not supported (#5711) @cherniavskii
 - [DataGrid] Preserve cell mode when entering edit mode while commiting (#5686) @m4theushw
 - [DataGridPremium] Let quick filter search in row grouping children (#5701) @alexfauquette
 
@@ -24,23 +24,23 @@ We'd like to offer a big thanks to the 7 contributors who made this release poss
 
 #### Changes
 
-- [time picker] set clock focus outline to `none` (#5758) @LukasTy
-- [pickers] Fix theme augmentation with typescript (#5596) @alexfauquette
+- [TimePicker] Set clock focus outline to `none` (#5758) @LukasTy
+- [pickers] Fix theme augmentation with TypeScript (#5596) @alexfauquette
 - [pickers] Reset input value when locale is modified (#5310) @alexfauquette
-- [pickers] Support `disableHighlightToday` on MonthPicker and YearPicker (#5562) @flaviendelangle
-- [pickers] fix to default to desktop mode when matchMedia is unavailable (#5684) @LukasTy
-- [pickers] fix to trigger `onChange` when clearing or accepting `Invalid date` (#5740) @LukasTy
+- [pickers] Support `disableHighlightToday` on `MonthPicker` and `YearPicker` (#5562) @flaviendelangle
+- [pickers] Fallback to desktop mode when `matchMedia` is unavailable (#5684) @LukasTy
+- [pickers] Trigger `onChange` when clearing or accepting `Invalid date` (#5740) @LukasTy
 
 ### Docs
 
 - [docs] Add RFC GH issue template (#5739) @bytasv
-- [docs] Add description to the GridExportStateParams page (#5654) @oliviertassinari
-- [docs] Improve the Events doc page (#5413) @flaviendelangle
-- [docs] Use new edit API in the introduction demos (#5728) @oliviertassinari
+- [docs] Add description to the `GridExportStateParams` page (#5654) @oliviertassinari
+- [docs] Improve the Events page (#5413) @flaviendelangle
+- [docs] Use new editing API in the introduction demos (#5728) @oliviertassinari
 
 ### Core
 
-- [core] Remove duplicated FUNDING.yml file (#5656) @oliviertassinari
+- [core] Remove duplicated `FUNDING.yml` file (#5656) @oliviertassinari
 - [core] Remove outdated Next.js options (#5727) @oliviertassinari
 - [core] Update tooling to run with React 18 (#4155) @m4theushw
 - [test] Fix failing dynamic row height tests on Edge (#5707) @m4theushw
