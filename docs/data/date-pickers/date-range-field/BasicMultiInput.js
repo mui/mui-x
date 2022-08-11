@@ -10,7 +10,6 @@ export default function BasicMultiInput() {
   return (
     <LocalizationProvider dateAdapter={AdapterDateFns}>
       <MultiInputDateRangeField
-        label="Multi input"
         value={value}
         onChange={(newValue) => setValue(newValue)}
       />

@@ -13,11 +13,7 @@ export default function BasicDateRangeField() {
 
   return (
     <LocalizationProvider dateAdapter={AdapterDateFns}>
-      <DateRangeField
-        label="Single input"
-        value={value}
-        onChange={(newValue) => setValue(newValue)}
-      />
+      <DateRangeField value={value} onChange={(newValue) => setValue(newValue)} />
     </LocalizationProvider>
   );
 }
