@@ -277,7 +277,12 @@ export const usePickerState = <TInputValue, TValue, TDate>(
       },
       onAccept: () => {
         // Set all date in state to equal the current draft value and close picker.
-        setDate({ value: dateState.draft, action: 'acceptAndClose' });
+        setDate({
+          value: dateState.draft,
+          action: 'acceptAndClose',
+          // force `onChange` in cases like input (value) === `Invalid date`
+          forceOnChangeCall: !valueManager.areValuesEqual(utils, value as any, parsedDateValue),
+        });
       },
       onDismiss: () => {
         // Set all dates in state to equal the last committed date.
@@ -294,16 +299,7 @@ export const usePickerState = <TInputValue, TValue, TDate>(
         setDate({ value: valueManager.getTodayValue(utils), action: 'acceptAndClose' });
       },
     }),
-    [
-      isOpen,
-      setDate,
-      valueManager,
-      value,
-      dateState.draft,
-      dateState.committed,
-      dateState.resetFallback,
-      utils,
-    ],
+    [setDate, isOpen, utils, dateState, valueManager, value, parsedDateValue],
   );
 
   // Mobile keyboard view is a special case.

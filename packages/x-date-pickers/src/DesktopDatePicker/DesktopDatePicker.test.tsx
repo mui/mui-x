@@ -536,6 +536,31 @@ describe('<DesktopDatePicker />', () => {
       expect(onChange.callCount).to.equal(2);
     });
 
+    it('should call onChange only once with empty value and reset input value when pressing the "OK" (accept) button after entering invalid date manually', () => {
+      const onChange = spy();
+      const initialValue = adapterToUse.date(new Date(2018, 0, 1));
+
+      render(
+        <WrappedDesktopDatePicker
+          onChange={onChange}
+          initialValue={initialValue}
+          componentsProps={{ actionBar: { actions: ['accept'] } }}
+        />,
+      );
+
+      fireEvent.change(screen.getByRole('textbox'), { target: { value: '13/01/2018' } });
+
+      openPicker({ type: 'date', variant: 'desktop' });
+      fireEvent.click(screen.getByText(/ok/i));
+      expect(onChange.callCount).to.equal(2);
+      expect(onChange.lastCall.args[0]).to.equal(null);
+      expect(screen.getByRole('textbox')).to.have.value('');
+
+      openPicker({ type: 'date', variant: 'desktop' });
+      fireEvent.click(screen.getByText(/ok/i));
+      expect(onChange.callCount).to.equal(2);
+    });
+
     it('should not call onChange or onAccept when pressing "Clear" button with an already null value', () => {
       const onChange = spy();
       const onAccept = spy();
