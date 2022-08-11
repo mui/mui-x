@@ -1,3 +1,7 @@
 <LocalizationProvider dateAdapter={AdapterDateFns}>
-        <DateRangeField label="Single input" value={value} onChange={(newValue) => setValue(newValue)} />
+  <DateRangeField
+    label="Single input"
+    value={value}
+    onChange={(newValue) => setValue(newValue)}
+  />
 </LocalizationProvider>
