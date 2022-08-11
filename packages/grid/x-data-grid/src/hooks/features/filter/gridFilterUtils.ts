@@ -11,7 +11,8 @@ import { GridStateCommunity } from '../../../models/gridStateCommunity';
 import {
   getDefaultGridFilterModel,
   GridAggregatedFilterItemApplier,
-  GridFilterResult,
+  GridFilterItemResult,
+  GridQuickFilterValueResult,
 } from './gridFilterState';
 import { buildWarning } from '../../../utils/warning';
 import { gridColumnFieldsSelector, gridColumnLookupSelector } from '../columns';
@@ -24,7 +25,7 @@ type GridFilterItemApplier = {
 type GridFilterItemApplierNotAggregated = (
   rowId: GridRowId,
   shouldApplyItem?: (columnField: string) => boolean,
-) => GridFilterResult;
+) => GridFilterItemResult;
 
 /**
  * Adds default values to the optional fields of a filter items.
@@ -196,7 +197,7 @@ export const buildAggregatedFilterItemsApplier = (
   }
 
   return (rowId, shouldApplyFilter) => {
-    const resultPerItemId: GridFilterResult = {};
+    const resultPerItemId: GridFilterItemResult = {};
 
     const filteredAppliers = shouldApplyFilter
       ? appliers.filter((applier) => shouldApplyFilter(applier.item.columnField))
@@ -263,7 +264,7 @@ export const buildAggregatedQuickFilterApplier = (
       }
     });
 
-    const quickFilterValueResult: GridFilterResult = {};
+    const quickFilterValueResult: GridQuickFilterValueResult = {};
     sanitizedQuickFilterValues.forEach((value, index) => {
       const isPassing = columnsFieldsToFilter.some((field) => {
         if (appliersPerColumnField[field][index] == null) {
@@ -293,19 +294,17 @@ export const buildAggregatedFilterApplier = (
   });
 };
 
-type FilterResult = null | GridFilterResult;
-
 export const passFilterLogic = (
-  allFilterItemResults: FilterResult[],
-  allQuickFilterResults: FilterResult[],
+  allFilterItemResults: (null | GridFilterItemResult)[],
+  allQuickFilterResults: (null | GridQuickFilterValueResult)[],
   filterModel: GridFilterModel,
 ): boolean => {
   const cleanedAllFilterItemResults = allFilterItemResults.filter(
-    (result): result is GridFilterResult => result != null,
-  ) as GridFilterResult[];
+    (result): result is GridFilterItemResult => result != null,
+  );
   const cleanedAllQuickFilterResults = allQuickFilterResults.filter(
-    (result): result is GridFilterResult => result != null,
-  ) as GridFilterResult[];
+    (result): result is GridQuickFilterValueResult => result != null,
+  );
 
   // Defaultize operators
   const quickFilterLogicOperator =
@@ -317,10 +316,7 @@ export const passFilterLogic = (
 
     // Return true if the item pass with one of the rows
     const filterItemPredicate = (item: GridFilterItem) => {
-      if (cleanedAllFilterItemResults.some((filterItemResult) => filterItemResult[item.id!])) {
-        return true;
-      }
-      return false;
+      return cleanedAllFilterItemResults.some((filterItemResult) => filterItemResult[item.id!])
     };
 
     if (linkOperator === GridLinkOperator.And) {
@@ -339,11 +335,8 @@ export const passFilterLogic = (
   // get result for quick filter model
   if (cleanedAllQuickFilterResults.length > 0 && filterModel.quickFilterValues != null) {
     // Return true if the item pass with one of the rows
-    const quickFilterValuePredicate = (value: any) => {
-      if (cleanedAllQuickFilterResults.some((quickFilterValueResult) => quickFilterValueResult[value])) {
-        return true;
-      }
-      return false;
+    const quickFilterValuePredicate = (value: string) => {
+      return cleanedAllQuickFilterResults.some((quickFilterValueResult) => quickFilterValueResult[value])
     };
 
     if (quickFilterLogicOperator === GridLinkOperator.And) {
