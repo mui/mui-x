@@ -2,4 +2,8 @@
 /* eslint-disable */
 require = require('esm')(module);
 
-require('../build/node/cli/license-cli').licenseDecodeCli();
+if (process.env.NODE_ENV === 'dev') {
+  require('../build/node/cli/license-cli').licenseDecodeCli();
+} else {
+  require('../node/cli/license-cli').licenseDecodeCli();
+}
