@@ -1,5 +1,4 @@
 import * as React from 'react';
-import PropTypes from 'prop-types';
 import { CssVarsProvider } from '@mui/joy/styles';
 import Stack from '@mui/material/Stack';
 import FormControlLabel from '@mui/material/FormControlLabel';
@@ -11,69 +10,31 @@ import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { unstable_useDateField as useDateField } from '@mui/x-date-pickers/DateField';
 
 const JoyDateField = (props) => {
-  const { value, onChange, format, ...other } = props;
-
-  const { inputRef, inputProps } = useDateField({ value, onChange, format });
+  const { inputRef, inputProps } = useDateField(props);
 
   return (
     <JoyTextField
-      {...other}
       {...inputProps}
       componentsProps={{ input: { componentsProps: { input: { ref: inputRef } } } }}
     />
   );
 };
 
-JoyDateField.propTypes = {
-  /**
-   * @default `adapter.formats.keyboardDate`
-   */
-  format: PropTypes.string,
-  onChange: PropTypes.func.isRequired,
-  value: PropTypes.oneOfType([PropTypes.oneOf([null]), PropTypes.instanceOf(Date)])
-    .isRequired,
-};
-
 const UnstyledDateField = (props) => {
-  const { value, onChange, format, ...other } = props;
-
-  const { inputRef, inputProps } = useDateField({ value, onChange, format });
+  const { inputRef, inputProps } = useDateField(props);
 
   return (
     <InputUnstyled
-      {...other}
       {...inputProps}
       componentsProps={{ input: { ref: inputRef, style: { width: '100%' } } }}
     />
   );
 };
 
-UnstyledDateField.propTypes = {
-  /**
-   * @default `adapter.formats.keyboardDate`
-   */
-  format: PropTypes.string,
-  onChange: PropTypes.func.isRequired,
-  value: PropTypes.oneOfType([PropTypes.oneOf([null]), PropTypes.instanceOf(Date)])
-    .isRequired,
-};
-
 const BrowserInputDateField = (props) => {
-  const { value, onChange, format, ...other } = props;
+  const { inputRef, inputProps } = useDateField(props);
 
-  const { inputRef, inputProps } = useDateField({ value, onChange, format });
-
-  return <input {...other} {...inputProps} ref={inputRef} />;
-};
-
-BrowserInputDateField.propTypes = {
-  /**
-   * @default `adapter.formats.keyboardDate`
-   */
-  format: PropTypes.string,
-  onChange: PropTypes.func.isRequired,
-  value: PropTypes.oneOfType([PropTypes.oneOf([null]), PropTypes.instanceOf(Date)])
-    .isRequired,
+  return <input {...inputProps} ref={inputRef} />;
 };
 
 export default function CustomUIDateField() {

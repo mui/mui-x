@@ -4,16 +4,30 @@ import { PickerStateValueManager } from '../usePickerState';
 
 export type DateSectionName = 'day' | 'month' | 'year' | 'hour' | 'minute' | 'second' | 'am-pm';
 
-export interface UseFieldProps<TInputValue, TValue, TDate, TSection extends FieldSection> {
-  value: TInputValue;
-  onChange: (value: TValue) => void;
-  format?: string;
+export interface UseFieldParams<
+  TInputValue,
+  TValue,
+  TDate,
+  TSection extends FieldSection,
+  TProps extends UseFieldProps<TInputValue, TValue>,
+> {
+  props: TProps;
   valueManager: PickerStateValueManager<TInputValue, TValue, TDate>;
   fieldValueManager: FieldValueManager<TValue, TDate, TSection>;
 }
 
-export interface UseFieldResponse {
-  inputProps: {
+export interface UseFieldProps<TInputValue, TValue> {
+  value?: TInputValue;
+  onChange?: (value: TValue) => void;
+  /**
+   * The default value. Use when the component is not controlled.
+   */
+  defaultValue?: TInputValue;
+  format?: string;
+}
+
+export interface UseFieldResponse<TProps> {
+  inputProps: Omit<TProps, keyof UseFieldProps<any, any>> & {
     value: string;
     onClick: React.MouseEventHandler<HTMLInputElement>;
     onKeyDown: React.KeyboardEventHandler<HTMLInputElement>;

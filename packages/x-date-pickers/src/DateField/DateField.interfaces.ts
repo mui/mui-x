@@ -1,12 +1,8 @@
 import { TextFieldProps } from '@mui/material/TextField';
-import { FieldSection, UseFieldProps } from '../internals/hooks/useField';
+import { UseFieldProps } from '../internals/hooks/useField';
 
-export interface UseDateFieldProps<TInputDate, TDate>
-  extends Pick<
-    UseFieldProps<TInputDate | null, TDate | null, TDate, FieldSection>,
-    'value' | 'onChange' | 'format'
-  > {}
+export type UseDateFieldProps<TInputDate, TDate> = UseFieldProps<TInputDate | null, TDate | null>;
 
 export interface DateFieldProps<TInputDate, TDate>
-  extends Omit<TextFieldProps, 'onChange' | 'value'>,
+  extends Omit<TextFieldProps, 'value' | 'defaultValue' | 'onChange'>,
     UseDateFieldProps<TInputDate, TDate> {}

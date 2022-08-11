@@ -15,17 +15,16 @@ import {
 } from '@mui/x-date-pickers/DateField';
 
 interface JoyDateFieldProps
-  extends Omit<JoyTextFieldProps, 'value' | 'onChange'>,
+  extends Omit<JoyTextFieldProps, 'value' | 'defaultValue' | 'onChange'>,
     UseDateFieldProps<Date, Date> {}
 
 const JoyDateField = (props: JoyDateFieldProps) => {
-  const { value, onChange, format, ...other } = props;
-
-  const { inputRef, inputProps } = useDateField({ value, onChange, format });
+  const { inputRef, inputProps } = useDateField<Date, Date, JoyDateFieldProps>(
+    props,
+  );
 
   return (
     <JoyTextField
-      {...other}
       {...inputProps}
       componentsProps={{ input: { componentsProps: { input: { ref: inputRef } } } }}
     />
@@ -33,17 +32,16 @@ const JoyDateField = (props: JoyDateFieldProps) => {
 };
 
 interface UnstyledDateFieldProps
-  extends Omit<InputUnstyledProps, 'value' | 'onChange'>,
+  extends Omit<InputUnstyledProps, 'value' | 'defaultValue' | 'onChange'>,
     UseDateFieldProps<Date, Date> {}
 
 const UnstyledDateField = (props: UnstyledDateFieldProps) => {
-  const { value, onChange, format, ...other } = props;
-
-  const { inputRef, inputProps } = useDateField({ value, onChange, format });
+  const { inputRef, inputProps } = useDateField<Date, Date, UnstyledDateFieldProps>(
+    props,
+  );
 
   return (
     <InputUnstyled
-      {...other}
       {...inputProps}
       componentsProps={{ input: { ref: inputRef, style: { width: '100%' } } }}
     />
@@ -51,15 +49,20 @@ const UnstyledDateField = (props: UnstyledDateFieldProps) => {
 };
 
 interface BrowserInputDateFieldProps
-  extends Omit<React.HTMLAttributes<HTMLInputElement>, 'value' | 'onChange'>,
+  extends Omit<
+      React.HTMLAttributes<HTMLInputElement>,
+      'value' | 'defaultValue' | 'onChange'
+    >,
     UseDateFieldProps<Date, Date> {}
 
 const BrowserInputDateField = (props: BrowserInputDateFieldProps) => {
-  const { value, onChange, format, ...other } = props;
+  const { inputRef, inputProps } = useDateField<
+    Date,
+    Date,
+    BrowserInputDateFieldProps
+  >(props);
 
-  const { inputRef, inputProps } = useDateField({ value, onChange, format });
-
-  return <input {...other} {...inputProps} ref={inputRef} />;
+  return <input {...inputProps} ref={inputRef} />;
 };
 
 export default function CustomUIDateField() {

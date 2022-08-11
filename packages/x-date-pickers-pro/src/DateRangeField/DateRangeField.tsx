@@ -11,12 +11,11 @@ export const DateRangeField = React.forwardRef(function DateField<TInputDate, TD
   inProps: DateRangeFieldProps<TInputDate, TDate>,
   ref: React.Ref<HTMLInputElement>,
 ) {
-  const { onChange, value, format, ...other } = inProps;
-  const { inputRef, inputProps } = useDateRangeField<TInputDate, TDate>({
-    onChange,
-    value,
-    format,
-  });
+  const { inputRef, inputProps } = useDateRangeField<
+    TInputDate,
+    TDate,
+    DateRangeFieldProps<TInputDate, TDate>
+  >(inProps);
 
-  return <TextField ref={ref} inputRef={inputRef} {...other} {...inputProps} />;
+  return <TextField ref={ref} inputRef={inputRef} {...inputProps} />;
 }) as DateRangeFieldComponent;

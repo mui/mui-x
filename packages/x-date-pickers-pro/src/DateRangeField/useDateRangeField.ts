@@ -115,13 +115,15 @@ const dateRangeFieldValueManager: FieldValueManager<DateRange<any>, any, DateRan
   },
 };
 
-export const useDateRangeField = <TInputDate, TDate = TInputDate>(
-  inProps: UseDateRangeFieldProps<TInputDate, TDate>,
+export const useDateRangeField = <
+  TInputDate,
+  TDate,
+  TProps extends UseDateRangeFieldProps<TInputDate, TDate>,
+>(
+  inProps: TProps,
 ) => {
   return useField({
-    value: inProps.value,
-    onChange: inProps.onChange,
-    format: inProps.format,
+    props: inProps,
     valueManager: dateRangePickerValueManager,
     fieldValueManager: dateRangeFieldValueManager,
   });

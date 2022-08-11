@@ -38,7 +38,12 @@ export {
   addPositionPropertiesToSections,
   splitFormatIntoSections,
 } from './hooks/useField';
-export type { UseFieldProps, FieldValueManager, FieldSection } from './hooks/useField';
+export type {
+  UseFieldProps,
+  UseFieldParams,
+  FieldValueManager,
+  FieldSection,
+} from './hooks/useField';
 export { useMaskedInput } from './hooks/useMaskedInput';
 export { usePickerState } from './hooks/usePickerState';
 export type { PickerStateProps, PickerStatePickerProps } from './hooks/usePickerState';

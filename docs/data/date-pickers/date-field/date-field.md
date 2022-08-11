@@ -10,6 +10,12 @@ title: React Date Field component
 
 {{"demo": "BasicDateField.js"}}
 
+## Uncontrolled vs. Controlled
+
+The component can be controlled or uncontrolled
+
+{{"demo": "DateFieldValue.js"}}
+
 ## Customize the input props
 
 {{"demo": "CustomInputDateField.js"}}

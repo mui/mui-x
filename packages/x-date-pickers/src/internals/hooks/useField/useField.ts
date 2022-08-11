@@ -1,11 +1,10 @@
 import * as React from 'react';
-import {
-  unstable_useEnhancedEffect as useEnhancedEffect,
-  useEventCallback,
-} from '@mui/material/utils';
+import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
+import useEventCallback from '@mui/utils/useEventCallback';
 import { useUtils } from '../useUtils';
 import {
   FieldSection,
+  UseFieldParams,
   UseFieldProps,
   UseFieldResponse,
   UseFieldState,
@@ -20,22 +19,43 @@ import {
   setSectionValue,
 } from './useField.utils';
 
-export const useField = <TInputValue, TValue, TDate, TSection extends FieldSection>(
-  inProps: UseFieldProps<TInputValue, TValue, TDate, TSection>,
-): UseFieldResponse => {
+export const useField = <
+  TInputValue,
+  TValue,
+  TDate,
+  TSection extends FieldSection,
+  TProps extends UseFieldProps<TInputValue, TValue>,
+>(
+  params: UseFieldParams<TInputValue, TValue, TDate, TSection, TProps>,
+): UseFieldResponse<TProps> => {
   const utils = useUtils<TDate>();
   const inputRef = React.useRef<HTMLInputElement>(null);
 
   const {
-    value,
-    onChange,
+    props: {
+      value: valueProp,
+      defaultValue,
+      onChange,
+      format = utils.formats.keyboardDate,
+      ...otherProps
+    },
     valueManager,
     fieldValueManager,
-    format = utils.formats.keyboardDate,
-  } = inProps;
+  } = params;
+
+  const firstDefaultValue = React.useRef(defaultValue);
+
+  const valueParsed = React.useMemo(() => {
+    if (valueProp !== undefined) {
+      return valueManager.parseInput(utils, valueProp);
+    }
+    if (firstDefaultValue.current !== undefined) {
+      return valueManager.parseInput(utils, firstDefaultValue.current);
+    }
+    return valueManager.emptyValue;
+  }, [valueProp, valueManager, utils]);
 
   const [state, setState] = React.useState<UseFieldState<TValue, TSection[]>>(() => {
-    const valueParsed = valueManager.parseInput(utils, value);
     const sections = fieldValueManager.getSectionsFromValue(utils, null, valueParsed, format);
 
     return {
@@ -61,7 +81,7 @@ export const useField = <TInputValue, TValue, TDate, TSection extends FieldSecti
       valueParsed: newValueParsed,
     }));
 
-    if (shouldPublish) {
+    if (onChange && shouldPublish) {
       onChange(newValueParsed);
     }
   };
@@ -340,7 +360,6 @@ export const useField = <TInputValue, TValue, TDate, TSection extends FieldSecti
   });
 
   React.useEffect(() => {
-    const valueParsed = valueManager.parseInput(utils, value);
     if (!valueManager.areValuesEqual(utils, state.valueParsed, valueParsed)) {
       const sections = fieldValueManager.getSectionsFromValue(
         utils,
@@ -355,7 +374,7 @@ export const useField = <TInputValue, TValue, TDate, TSection extends FieldSecti
         sections,
       }));
     }
-  }, [value]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [valueParsed]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return {
     inputProps: {
@@ -364,6 +383,7 @@ export const useField = <TInputValue, TValue, TDate, TSection extends FieldSecti
       onKeyDown: handleInputKeyDown,
       onFocus: handleInputFocus,
       onBlur: handleInputBlur,
+      ...otherProps,
     },
     inputRef,
   };

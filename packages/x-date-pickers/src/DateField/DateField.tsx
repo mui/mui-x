@@ -12,8 +12,11 @@ export const DateField = React.forwardRef(function DateField<TInputDate, TDate =
   inProps: DateFieldProps<TInputDate, TDate>,
   ref: React.Ref<HTMLInputElement>,
 ) {
-  const { onChange, value, format, ...other } = inProps;
-  const { inputRef, inputProps } = useDateField<TInputDate, TDate>({ onChange, value, format });
+  const { inputRef, inputProps } = useDateField<
+    TInputDate,
+    TDate,
+    DateFieldProps<TInputDate, TDate>
+  >(inProps);
 
-  return <TextField ref={ref} inputRef={inputRef} {...other} {...inputProps} />;
+  return <TextField ref={ref} inputRef={inputRef} {...inputProps} />;
 }) as DateFieldComponent;
