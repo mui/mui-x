@@ -6,10 +6,7 @@ import {
   GridFilterState,
   GridFilterModel,
 } from '@mui/x-data-grid-pro';
-import {
-  passFilterLogic,
-  GridAggregatedFilterItemApplier,
-} from '@mui/x-data-grid-pro/internals';
+import { passFilterLogic, GridAggregatedFilterItemApplier } from '@mui/x-data-grid-pro/internals';
 import { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
 import { GridRowGroupingModel } from './gridRowGroupingInterfaces';
 import { GridStatePremium } from '../../../models/gridStatePremium';
@@ -109,7 +106,7 @@ export const filterRowTreeFromGroupingColumns = (
 
     if (isPassingFiltering === false) {
       if (node.children?.length) {
-        // If node has children - it's passing if at least one child passes filters       
+        // If node has children - it's passing if at least one child passes filters
         isPassingFiltering = filteredDescendantCount > 0;
       } else {
         const allResults = [...ancestorsResults, filterResults];
@@ -173,10 +170,10 @@ export const getColDefOverrides = (
 
 export const mergeStateWithRowGroupingModel =
   (rowGroupingModel: GridRowGroupingModel) =>
-    (state: GridStatePremium): GridStatePremium => ({
-      ...state,
-      rowGrouping: { ...state.rowGrouping, model: rowGroupingModel },
-    });
+  (state: GridStatePremium): GridStatePremium => ({
+    ...state,
+    rowGrouping: { ...state.rowGrouping, model: rowGroupingModel },
+  });
 
 export const setStrategyAvailability = (
   apiRef: React.MutableRefObject<GridApiPremium>,

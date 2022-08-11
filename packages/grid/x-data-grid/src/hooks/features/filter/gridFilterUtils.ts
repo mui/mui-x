@@ -122,10 +122,10 @@ export const mergeStateWithFilterModel =
     disableMultipleColumnsFiltering: boolean,
     apiRef: React.MutableRefObject<GridApiCommunity>,
   ) =>
-    (filteringState: GridStateCommunity['filter']): GridStateCommunity['filter'] => ({
-      ...filteringState,
-      filterModel: sanitizeFilterModel(filterModel, disableMultipleColumnsFiltering, apiRef),
-    });
+  (filteringState: GridStateCommunity['filter']): GridStateCommunity['filter'] => ({
+    ...filteringState,
+    filterModel: sanitizeFilterModel(filterModel, disableMultipleColumnsFiltering, apiRef),
+  });
 
 /**
  * Generates a method to easily check if a row is matching the current filter model.
@@ -313,10 +313,9 @@ export const passFilterLogic = (
 
   // get result for filter items model
   if (cleanedAllFilterItemResults.length > 0) {
-
     // Return true if the item pass with one of the rows
     const filterItemPredicate = (item: GridFilterItem) => {
-      return cleanedAllFilterItemResults.some((filterItemResult) => filterItemResult[item.id!])
+      return cleanedAllFilterItemResults.some((filterItemResult) => filterItemResult[item.id!]);
     };
 
     if (linkOperator === GridLinkOperator.And) {
@@ -336,16 +335,20 @@ export const passFilterLogic = (
   if (cleanedAllQuickFilterResults.length > 0 && filterModel.quickFilterValues != null) {
     // Return true if the item pass with one of the rows
     const quickFilterValuePredicate = (value: string) => {
-      return cleanedAllQuickFilterResults.some((quickFilterValueResult) => quickFilterValueResult[value])
+      return cleanedAllQuickFilterResults.some(
+        (quickFilterValueResult) => quickFilterValueResult[value],
+      );
     };
 
     if (quickFilterLogicOperator === GridLinkOperator.And) {
-      const passesAllQuickFilterValues = filterModel.quickFilterValues.every(quickFilterValuePredicate);
+      const passesAllQuickFilterValues =
+        filterModel.quickFilterValues.every(quickFilterValuePredicate);
       if (!passesAllQuickFilterValues) {
         return false;
       }
     } else {
-      const passesSomeQuickFilterValues = filterModel.quickFilterValues.some(quickFilterValuePredicate);
+      const passesSomeQuickFilterValues =
+        filterModel.quickFilterValues.some(quickFilterValuePredicate);
       if (!passesSomeQuickFilterValues) {
         return false;
       }
