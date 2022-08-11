@@ -6,8 +6,8 @@ import Stack from '@mui/material/Stack';
 import IconButton from '@mui/material/IconButton';
 import CancelIcon from '@mui/icons-material/Close';
 
-export default function CustomInputDateField() {
-  const [value, setValue] = React.useState<Date | null>(new Date());
+export default function CustomInputProps() {
+  const [value, setValue] = React.useState(new Date());
 
   return (
     <LocalizationProvider dateAdapter={AdapterDateFns}>
@@ -23,6 +23,12 @@ export default function CustomInputDateField() {
           value={value}
           onChange={(newValue) => setValue(newValue)}
           disabled
+        />
+        <DateField
+          label="Read only"
+          value={value}
+          onChange={(newValue) => setValue(newValue)}
+          readOnly
         />
         <DateField
           label="Clearable"

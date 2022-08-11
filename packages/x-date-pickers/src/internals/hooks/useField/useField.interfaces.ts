@@ -24,6 +24,12 @@ export interface UseFieldProps<TInputValue, TValue> {
    */
   defaultValue?: TInputValue;
   format?: string;
+  /**
+   * It prevents the user from changing the value of the field
+   * (not from interacting with the field).
+   * @default false
+   */
+  readOnly?: boolean;
 }
 
 export interface UseFieldResponse<TProps> {

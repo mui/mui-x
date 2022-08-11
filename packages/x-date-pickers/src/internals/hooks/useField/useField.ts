@@ -37,6 +37,7 @@ export const useField = <
       defaultValue,
       onChange,
       format = utils.formats.keyboardDate,
+      readOnly = false,
       ...otherProps
     },
     valueManager,
@@ -116,13 +117,15 @@ export const useField = <
     switch (true) {
       // Select all
       case event.key === 'a' && event.ctrlKey: {
-        updateSelectedSections(0, state.sections.length - 1);
         event.preventDefault();
+        updateSelectedSections(0, state.sections.length - 1);
         return;
       }
 
       // Move selection to next section
       case event.key === 'ArrowRight': {
+        event.preventDefault();
+
         if (state.selectedSectionIndexes == null) {
           updateSelectedSections(0);
         } else if (state.selectedSectionIndexes.start !== state.selectedSectionIndexes.end) {
@@ -131,12 +134,13 @@ export const useField = <
           updateSelectedSections(state.selectedSectionIndexes.start + 1);
         }
 
-        event.preventDefault();
         return;
       }
 
       // Move selection to previous section
       case event.key === 'ArrowLeft': {
+        event.preventDefault();
+
         if (state.selectedSectionIndexes == null) {
           updateSelectedSections(state.sections.length - 1);
         } else if (state.selectedSectionIndexes.start !== state.selectedSectionIndexes.end) {
@@ -144,12 +148,17 @@ export const useField = <
         } else if (state.selectedSectionIndexes.start > 0) {
           updateSelectedSections(state.selectedSectionIndexes.start - 1);
         }
-        event.preventDefault();
         return;
       }
 
       // Reset the value of the selected section
       case event.key === 'Backspace': {
+        event.preventDefault();
+
+        if (readOnly) {
+          return;
+        }
+
         const resetSections = (startIndex: number, endIndex: number) => {
           let sections = state.sections;
 
@@ -167,14 +176,14 @@ export const useField = <
             resetSections(state.selectedSectionIndexes.start, state.selectedSectionIndexes.end),
           );
         }
-
-        event.preventDefault();
         break;
       }
 
       // Increment / decrement the selected section value
       case event.key === 'ArrowUp' || event.key === 'ArrowDown': {
-        if (state.selectedSectionIndexes == null) {
+        event.preventDefault();
+
+        if (readOnly || state.selectedSectionIndexes == null) {
           return;
         }
 
@@ -194,6 +203,8 @@ export const useField = <
 
           let newSectionNumericValue: number;
           if (activeSection.value === '') {
+            // TODO: Respect date validation
+            // TODO: For year, set to current year instead of 0000 and 9999
             newSectionNumericValue =
               event.key === 'ArrowDown' ? boundaries.minimum : boundaries.maximum;
           } else {
@@ -239,13 +250,14 @@ export const useField = <
           updateSections(sections);
         }
 
-        event.preventDefault();
         return;
       }
 
       // Apply numeric editing on the selected section value
       case !Number.isNaN(Number(event.key)): {
-        if (state.selectedSectionIndexes == null) {
+        event.preventDefault();
+
+        if (readOnly || state.selectedSectionIndexes == null) {
           return;
         }
 
@@ -274,13 +286,14 @@ export const useField = <
             cleanTrailingZeroInNumericSectionValue(newSectionValue, boundaries.maximum),
           ),
         );
-        event.preventDefault();
         return;
       }
 
       // Apply full letter editing on the selected section value
       case event.key.length === 1: {
-        if (state.selectedSectionIndexes == null) {
+        event.preventDefault();
+
+        if (readOnly || state.selectedSectionIndexes == null) {
           return;
         }
 
@@ -324,8 +337,6 @@ export const useField = <
             );
           }
         }
-
-        event.preventDefault();
       }
     }
   });

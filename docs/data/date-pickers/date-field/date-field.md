@@ -18,7 +18,7 @@ The component can be controlled or uncontrolled
 
 ## Customize the input props
 
-{{"demo": "CustomInputDateField.js"}}
+{{"demo": "CustomInputProps.js"}}
 
 ## Customize the date format
 
