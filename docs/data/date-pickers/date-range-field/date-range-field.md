@@ -9,3 +9,10 @@ title: React Date Range Field component
 ## Basic usage
 
 {{"demo": "BasicDateRangeField.js"}}
+
+## Multi input
+
+You can render the start and end date in standalone inputs using `MultiInputDateRangeField`.
+All the topics covered below are also applicable to this component unless explicitly mentioned.
+
+{{"demo": "BasicMultiInput.js"}}
