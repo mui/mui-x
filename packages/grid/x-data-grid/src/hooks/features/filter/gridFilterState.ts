@@ -4,7 +4,6 @@ import { GridRowId } from '../../../models/gridRows';
 
 export type GridFilterItemResult = { [key: Required<GridFilterItem>['id']]: boolean };
 export type GridQuickFilterValueResult = { [key: string]: boolean };
-export type GridFilterResult = GridFilterItemResult | GridQuickFilterValueResult;
 
 export const getDefaultGridFilterModel: () => GridFilterModel = () => ({
   items: [],
