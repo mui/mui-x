@@ -1,3 +1,4 @@
+import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
 import {
   unstable_useDateField as useDateField,
@@ -7,7 +8,6 @@ import { useUtils } from '@mui/x-date-pickers/internals';
 import { UseMultiInputDateRangeFieldProps } from './MultiInputDateRangeField.interfaces';
 import { DateRange } from '../internal/models';
 import { dateRangePickerValueManager } from '../DateRangePicker/shared';
-import * as React from 'react';
 
 export const useMultiInputDateRangeField = <TInputDate, TDate>(
   inProps: UseMultiInputDateRangeFieldProps<TInputDate, TDate>,
