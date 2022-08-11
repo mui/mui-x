@@ -109,7 +109,8 @@ export const filterRowTreeFromGroupingColumns = (
 
     if (isPassingFiltering === false) {
       if (node.children?.length) {
-        // If node has children - it's passing if at least one child passes filters        isPassingFiltering = filteredDescendantCount > 0;
+        // If node has children - it's passing if at least one child passes filters       
+        isPassingFiltering = filteredDescendantCount > 0;
       } else {
         const allResults = [...ancestorsResults, filterResults];
         isPassingFiltering = passFilterLogic(
