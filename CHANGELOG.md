@@ -25,6 +25,7 @@ We'd like to offer a big thanks to the 7 contributors who made this release poss
 
 #### Changes
 
+- [pickers] Add `react-dom` to peerDependencies (#5752) @cherniavskii
 - [TimePicker] Set clock focus outline to `none` (#5758) @LukasTy
 - [pickers] Fix theme augmentation with TypeScript (#5596) @alexfauquette
 - [pickers] Reset input value when locale is modified (#5310) @alexfauquette
