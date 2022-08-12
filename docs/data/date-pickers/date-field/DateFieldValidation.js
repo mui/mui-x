@@ -1,5 +1,6 @@
 import * as React from 'react';
 import addDays from 'date-fns/addDays';
+import isWeekend from 'date-fns/isWeekend';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { Unstable_DateField as DateField } from '@mui/x-date-pickers/DateField';
@@ -10,26 +11,31 @@ const today = new Date();
 export default function DateFieldValidation() {
   return (
     <LocalizationProvider dateAdapter={AdapterDateFns}>
-      <Stack spacing={2} sx={(theme) => ({ width: theme.spacing(48) })}>
+      <Stack spacing={2}>
         <DateField
-          label="Min date (today)"
+          label="props.minDate = today"
           defaultValue={addDays(today, -1)}
           minDate={today}
         />
         <DateField
-          label="Max date (today)"
+          label="props.maxDate = today"
           defaultValue={addDays(today, 1)}
           maxDate={today}
         />
         <DateField
-          label="Disable past"
+          label="props.disablePast = true"
           defaultValue={addDays(today, -1)}
           disablePast
         />
         <DateField
-          label="Disable future"
+          label="props.disableFuture = true"
           defaultValue={addDays(today, 1)}
           disableFuture
+        />
+        <DateField
+          label="shouldDisableDate = isWeekend"
+          defaultValue={addDays(today, 1)}
+          shouldDisableDate={isWeekend}
         />
       </Stack>
     </LocalizationProvider>
