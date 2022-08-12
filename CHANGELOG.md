@@ -3,6 +3,91 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 5.15.2
+
+_Aug 11, 2022_
+
+We'd like to offer a big thanks to the 7 contributors who made this release possible. Here are some highlights ✨:
+
+- ✨ Improve quick filtering with row grouping (#5701) @alexfauquette
+- 📚 Documentation improvements
+- 🐞 Bugfixes
+
+### `@mui/x-data-grid@5.15.2` / `@mui/x-data-grid-pro@5.15.2` / `@mui/x-data-grid-premium@5.15.2`
+
+#### Changes
+
+- [DataGrid] Catch errors if rows freezing is not supported (#5711) @cherniavskii
+- [DataGrid] Preserve cell mode when entering edit mode while commiting (#5686) @m4theushw
+- [DataGridPremium] Let quick filter search in row grouping children (#5701) @alexfauquette
+
+### `@mui/x-date-pickers@v5.0.0-beta.5` / `@mui/x-date-picker-pro@5.0.0-beta.5`
+
+#### Changes
+
+- [pickers] Add `react-dom` to peerDependencies (#5752) @cherniavskii
+- [TimePicker] Set clock focus outline to `none` (#5758) @LukasTy
+- [pickers] Fix theme augmentation with TypeScript (#5596) @alexfauquette
+- [pickers] Reset input value when locale is modified (#5310) @alexfauquette
+- [pickers] Support `disableHighlightToday` on `MonthPicker` and `YearPicker` (#5562) @flaviendelangle
+- [pickers] Fallback to desktop mode when `matchMedia` is unavailable (#5684) @LukasTy
+- [pickers] Trigger `onChange` when clearing or accepting `Invalid date` (#5740) @LukasTy
+
+### Docs
+
+- [docs] Add RFC GH issue template (#5739) @bytasv
+- [docs] Add description to the `GridExportStateParams` page (#5654) @oliviertassinari
+- [docs] Improve the Events page (#5413) @flaviendelangle
+- [docs] Use new editing API in the introduction demos (#5728) @oliviertassinari
+
+### Core
+
+- [core] Remove duplicated `FUNDING.yml` file (#5656) @oliviertassinari
+- [core] Remove outdated Next.js options (#5727) @oliviertassinari
+- [core] Update tooling to run with React 18 (#4155) @m4theushw
+- [test] Fix failing dynamic row height tests on Edge (#5707) @m4theushw
+
+## 5.15.1
+
+_Aug 4, 2022_
+
+We'd like to offer a big thanks to the 10 contributors who made this release possible. Here are some highlights ✨:
+
+- 📚 New [page presenting the `apiRef`](https://mui.com/x/react-data-grid/api-object/) (#5273) @flaviendelangle
+- ✨ Better keyboard support for start editing cells (#5511) @oliviertassinari
+- 🌍 Improvements to different locales
+- 🐞 Bugfixes
+
+### `@mui/x-data-grid@v5.15.1` / `@mui/x-data-grid-pro@v5.15.1` / `@mui/x-data-grid-premium@v5.15.1`
+
+#### Changes
+
+- [DataGrid] Improve start edit UX (#5511) @oliviertassinari
+- [DataGrid] Add `initialOpen` prop to `GridEditSingleSelectCell` to allow overriding initial open state (#5645) @shapaaa
+- [DataGrid] Forward `ref` to root element in `GridEditInputCell` (#5631) @Zenoo
+- [DataGrid] Toggle open state when clicking on buttons in the `GridToolbar` (#5503) @cherniavskii
+- [DataGrid] Improve German (de-DE) locale (#5586) @sebastianfrey
+- [DataGrid] Improve Korean (ko-KR) locale (#5668) @Einere
+- [DataGrid] Complete Italian (it-IT) locale (#5487) @mamodev
+
+### `@mui/x-date-pickers@v5.0.0-beta.4` / `@mui/x-date-picker-pro@5.0.0-beta.4`
+
+#### Changes
+
+- [DatePicker] Customize day formatter in the calendar (#5373) @alexfauquette
+
+### Docs
+
+- [docs] New location for the legal content (#5595) @oliviertassinari
+- [docs] Update description of `maxDateTime` prop (#5639) @jurecuhalev
+- [docs] Add missing `date-fns` dependency when opening Codesandbox demo (#5692) @cherniavskii
+
+### Core
+
+- [core] Drop usage of `GRID_EXPERIMENTAL_ENABLED` env variable (#5669) @ar7casper
+- [core] Isolate asset loading under /x/ (#5594) @oliviertassinari
+- [core] Upgrade node to v14 (#4999) @cherniavskii
+
 ## 5.15.0
 
 _Jul 29, 2022_
@@ -13,7 +98,7 @@ We'd like to offer a big thanks to the 6 contributors who made this release poss
 
   Premium users can now aggregate data in the grid.
   Extract information like sum, average, count, and others with a couple of clicks.
-  
+
   https://user-images.githubusercontent.com/45398769/181581503-77cc412e-9d9e-4de1-8bc3-c3bccc54cdaa.mp4
 
   To enable this feature, add `experimentalFeatures={{ aggregation: true }}`.

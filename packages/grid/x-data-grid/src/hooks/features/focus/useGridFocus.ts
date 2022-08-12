@@ -56,6 +56,15 @@ export const useGridFocus = (
         return;
       }
 
+      if (focusedCell) {
+        // There's a focused cell but another cell was clicked
+        // Publishes an event to notify that the focus was lost
+        apiRef.current.publishEvent(
+          'cellFocusOut',
+          apiRef.current.getCellParams(focusedCell.id, focusedCell.field),
+        );
+      }
+
       apiRef.current.publishEvent('cellFocusIn', apiRef.current.getCellParams(id, field));
     },
     [apiRef, logger],
@@ -203,14 +212,6 @@ export const useGridFocus = (
         return;
       }
 
-      // There's a focused cell but another cell was clicked
-      // Publishes an event to notify that the focus was lost
-      apiRef.current.publishEvent(
-        'cellFocusOut',
-        apiRef.current.getCellParams(focusedCell.id, focusedCell.field),
-        event,
-      );
-
       if (cellParams) {
         apiRef.current.setCellFocus(cellParams.id, cellParams.field);
       } else {
@@ -219,6 +220,14 @@ export const useGridFocus = (
           focus: { cell: null, columnHeader: null },
         }));
         apiRef.current.forceUpdate();
+
+        // There's a focused cell but another element (not a cell) was clicked
+        // Publishes an event to notify that the focus was lost
+        apiRef.current.publishEvent(
+          'cellFocusOut',
+          apiRef.current.getCellParams(focusedCell.id, focusedCell.field),
+          event,
+        );
       }
     },
     [apiRef],
