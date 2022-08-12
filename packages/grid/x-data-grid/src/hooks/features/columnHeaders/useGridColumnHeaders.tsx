@@ -383,18 +383,18 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
       ) {
         const column = visibleColumns[columnIndex];
 
-        leftOverflow += column.width ?? 0;
+        leftOverflow += column.computedWidth ?? 0;
 
         if (initialHeader.length === 0) {
           initialHeader.push({
-            width: column.width ?? 0,
+            width: column.computedWidth ?? 0,
             fields: [column.field],
             groupId: firstColumnToRenderGroup,
             groupParents: firstColumnToRenderGroupParents,
             colIndex: columnIndex,
           });
         } else {
-          initialHeader[0].width += column.width ?? 0;
+          initialHeader[0].width += column.computedWidth ?? 0;
           initialHeader[0].fields.push(column.field);
           initialHeader[0].colIndex = columnIndex;
         }
@@ -412,7 +412,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
               ...aggregated.slice(0, aggregated.length - 1),
               {
                 ...lastItem,
-                width: lastItem.width + (column.width ?? 0),
+                width: lastItem.width + (column.computedWidth ?? 0),
                 fields: [...lastItem.fields, column.field],
               },
             ];
@@ -423,7 +423,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
             {
               groupId: column.groupPath[depth],
               groupParents: getParents(column.groupPath, depth),
-              width: column.width ?? 0,
+              width: column.computedWidth ?? 0,
               fields: [column.field],
               colIndex: firstColumnToRender + i,
             },
@@ -441,7 +441,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
             ...aggregated.slice(0, aggregated.length - 1),
             {
               ...lastItem,
-              width: lastItem.width + (column.width ?? 0),
+              width: lastItem.width + (column.computedWidth ?? 0),
               fields: [...lastItem.fields, column.field],
             },
           ];
@@ -452,7 +452,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
           {
             groupId: null,
             groupParents: getParents(column.groupPath, depth),
-            width: column.width ?? 0,
+            width: column.computedWidth ?? 0,
             fields: [column.field],
             colIndex: firstColumnToRender + i,
           },
@@ -470,7 +470,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
       ) {
         const column = visibleColumns[columnIndex];
 
-        depthInfo[depthInfo.length - 1].width += column.width ?? 0;
+        depthInfo[depthInfo.length - 1].width += column.computedWidth ?? 0;
         depthInfo[depthInfo.length - 1].fields.push(column.field);
         columnIndex += 1;
       }
