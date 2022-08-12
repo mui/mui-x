@@ -275,6 +275,9 @@ export const useGridSorting = (
         const footerRowIds: GridRowId[] = [];
 
         gridRowIdsSelector(apiRef).forEach((rowId) => {
+          if (rowTree[rowId].isPinned) {
+            return;
+          }
           if (rowTree[rowId].position === 'footer') {
             footerRowIds.push(rowId);
           } else {
@@ -289,6 +292,9 @@ export const useGridSorting = (
       const footerRowIds: GridRowId[] = [];
 
       Object.values(rowTree).forEach((rowNode) => {
+        if (rowNode.isPinned) {
+          return;
+        }
         if (rowNode.position === 'footer') {
           footerRowIds.push(rowNode.id);
         } else {

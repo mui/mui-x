@@ -41,3 +41,26 @@ export const gridRowTreeDepthSelector = createSelector(
 );
 
 export const gridRowIdsSelector = createSelector(gridRowsStateSelector, (rows) => rows.ids);
+
+/**
+ * @ignore - do not document.
+ */
+export const gridAdditionalRowGroupsSelector = createSelector(
+  gridRowsStateSelector,
+  (rows) => rows?.additionalRowGroups,
+);
+
+/**
+ * @ignore - do not document.
+ */
+export const gridPinnedRowsSelector = createSelector(
+  gridAdditionalRowGroupsSelector,
+  (additionalRowGroups) => additionalRowGroups?.pinnedRows,
+);
+
+/**
+ * @ignore - do not document.
+ */
+export const gridPinnedRowsCountSelector = createSelector(gridPinnedRowsSelector, (pinnedRows) => {
+  return (pinnedRows?.top?.length || 0) + (pinnedRows?.bottom?.length || 0);
+});

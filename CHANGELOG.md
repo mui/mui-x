@@ -3,6 +3,148 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 5.15.2
+
+_Aug 11, 2022_
+
+We'd like to offer a big thanks to the 7 contributors who made this release possible. Here are some highlights ✨:
+
+- ✨ Improve quick filtering with row grouping (#5701) @alexfauquette
+- 📚 Documentation improvements
+- 🐞 Bugfixes
+
+### `@mui/x-data-grid@5.15.2` / `@mui/x-data-grid-pro@5.15.2` / `@mui/x-data-grid-premium@5.15.2`
+
+#### Changes
+
+- [DataGrid] Catch errors if rows freezing is not supported (#5711) @cherniavskii
+- [DataGrid] Preserve cell mode when entering edit mode while commiting (#5686) @m4theushw
+- [DataGridPremium] Let quick filter search in row grouping children (#5701) @alexfauquette
+
+### `@mui/x-date-pickers@v5.0.0-beta.5` / `@mui/x-date-picker-pro@5.0.0-beta.5`
+
+#### Changes
+
+- [pickers] Add `react-dom` to peerDependencies (#5752) @cherniavskii
+- [TimePicker] Set clock focus outline to `none` (#5758) @LukasTy
+- [pickers] Fix theme augmentation with TypeScript (#5596) @alexfauquette
+- [pickers] Reset input value when locale is modified (#5310) @alexfauquette
+- [pickers] Support `disableHighlightToday` on `MonthPicker` and `YearPicker` (#5562) @flaviendelangle
+- [pickers] Fallback to desktop mode when `matchMedia` is unavailable (#5684) @LukasTy
+- [pickers] Trigger `onChange` when clearing or accepting `Invalid date` (#5740) @LukasTy
+
+### Docs
+
+- [docs] Add RFC GH issue template (#5739) @bytasv
+- [docs] Add description to the `GridExportStateParams` page (#5654) @oliviertassinari
+- [docs] Improve the Events page (#5413) @flaviendelangle
+- [docs] Use new editing API in the introduction demos (#5728) @oliviertassinari
+
+### Core
+
+- [core] Remove duplicated `FUNDING.yml` file (#5656) @oliviertassinari
+- [core] Remove outdated Next.js options (#5727) @oliviertassinari
+- [core] Update tooling to run with React 18 (#4155) @m4theushw
+- [test] Fix failing dynamic row height tests on Edge (#5707) @m4theushw
+
+## 5.15.1
+
+_Aug 4, 2022_
+
+We'd like to offer a big thanks to the 10 contributors who made this release possible. Here are some highlights ✨:
+
+- 📚 New [page presenting the `apiRef`](https://mui.com/x/react-data-grid/api-object/) (#5273) @flaviendelangle
+- ✨ Better keyboard support for start editing cells (#5511) @oliviertassinari
+- 🌍 Improvements to different locales
+- 🐞 Bugfixes
+
+### `@mui/x-data-grid@v5.15.1` / `@mui/x-data-grid-pro@v5.15.1` / `@mui/x-data-grid-premium@v5.15.1`
+
+#### Changes
+
+- [DataGrid] Improve start edit UX (#5511) @oliviertassinari
+- [DataGrid] Add `initialOpen` prop to `GridEditSingleSelectCell` to allow overriding initial open state (#5645) @shapaaa
+- [DataGrid] Forward `ref` to root element in `GridEditInputCell` (#5631) @Zenoo
+- [DataGrid] Toggle open state when clicking on buttons in the `GridToolbar` (#5503) @cherniavskii
+- [DataGrid] Improve German (de-DE) locale (#5586) @sebastianfrey
+- [DataGrid] Improve Korean (ko-KR) locale (#5668) @Einere
+- [DataGrid] Complete Italian (it-IT) locale (#5487) @mamodev
+
+### `@mui/x-date-pickers@v5.0.0-beta.4` / `@mui/x-date-picker-pro@5.0.0-beta.4`
+
+#### Changes
+
+- [DatePicker] Customize day formatter in the calendar (#5373) @alexfauquette
+
+### Docs
+
+- [docs] New location for the legal content (#5595) @oliviertassinari
+- [docs] Update description of `maxDateTime` prop (#5639) @jurecuhalev
+- [docs] Add missing `date-fns` dependency when opening Codesandbox demo (#5692) @cherniavskii
+
+### Core
+
+- [core] Drop usage of `GRID_EXPERIMENTAL_ENABLED` env variable (#5669) @ar7casper
+- [core] Isolate asset loading under /x/ (#5594) @oliviertassinari
+- [core] Upgrade node to v14 (#4999) @cherniavskii
+
+## 5.15.0
+
+_Jul 29, 2022_
+
+We'd like to offer a big thanks to the 6 contributors who made this release possible. Here are some highlights ✨:
+
+- 🎁 Introduce aggregation (#5592) @flaviendelangle
+
+  Premium users can now aggregate data in the grid.
+  Extract information like sum, average, count, and others with a couple of clicks.
+
+  https://user-images.githubusercontent.com/45398769/181581503-77cc412e-9d9e-4de1-8bc3-c3bccc54cdaa.mp4
+
+  To enable this feature, add `experimentalFeatures={{ aggregation: true }}`.
+  Aggregation functions are customizable and they combine well with row grouping.
+  See the [documentation](https://mui.com/x/react-data-grid/aggregation/) to explore everything it has to offer.
+
+- 🚀 Introduce row pinning (#4863) @cherniavskii
+
+  Pro users can now pin rows on top or bottom of the grid.
+
+  https://user-images.githubusercontent.com/45398769/181581493-56c733a3-6dd5-4546-bf8d-3f2dff72b14a.mp4
+
+  To do so, enable the feature with `experimentalFeatures={{ rowPinning: true }}` and provide the pinned rows data to the `pinnedRows` prop.
+  For more details, see the [documentation](https://mui.com/x/react-data-grid/row-pinning/).
+
+- 🌍 Add simplified Chinese (zh-CN) locale to pickers (#5584) @gamecss
+- 📚 Documentation improvements
+
+### `@mui/x-data-grid@v5.15.0` / `@mui/x-data-grid-pro@v5.15.0` / `@mui/x-data-grid-premium@v5.15.0`
+
+#### Changes
+
+- [DataGrid] Add prop to keep modifications while processing props (#5309) @m4theushw
+- [DataGrid] Fix container width change on React 18 (#5566) @m4theushw
+- [DataGrid] Fix ellipsis style convention (#5587) @oliviertassinari
+- [DataGridPro] Implement row pinning (#4863) @cherniavskii
+- [DataGridPremium] Make aggregation public (#5592) @cherniavskii
+- [l10n] Improve simplified Chinese (zh-CN) locale (#5584) @gamecss
+
+### `@mui/x-date-pickers@v5.0.0-beta.3` / `@mui/x-date-picker-pro@5.0.0-beta.3`
+
+#### Changes
+
+- [l10n] Add simplified Chinese (zh-CN) locale (#5584) @gamecss
+
+### Docs
+
+- [docs] Split docs page about rows (#5195) @flaviendelangle
+- [docs] Add warning clarifications (#5399) @alexfauquette
+- [docs] Correct slot CSS classes for Pro and Premium components (#5452) @alexfauquette
+- [docs] Fix internal link to `valueParser` (#5450) @alexfauquette
+
+### Core
+
+- [core] Upgrade monorepo (#5560) @m4theushw
+
 ## 5.14.0
 
 _Jul 21, 2022_
@@ -306,7 +448,7 @@ _May 31, 2022_
 
 We'd like to offer a big thanks to the 15 contributors who made this release possible. Here are some highlights ✨:
 
-- 🎁 Introduce support for [dynamic row height](https://mui.com/x/react-data-grid/rows/#dynamic-row-height) (#4859) @m4theushw
+- 🎁 Introduce support for [dynamic row height](https://mui.com/x/react-data-grid/row-height/#dynamic-row-height) (#4859) @m4theushw
 
   <img src="https://user-images.githubusercontent.com/42154031/171183167-718d7bcd-ec0f-459e-97fe-0f650abb4a99.gif" width="800">
 
@@ -623,7 +765,7 @@ _Apr 25, 2022_
 
 We'd like to offer a big thanks to the 6 contributors who made this release possible. Here are some highlights ✨:
 
-- 🎁 Introduce [Row reorder](https://mui.com/x/react-data-grid/rows/#row-reorder) (#4034) @DanailH
+- 🎁 Introduce [Row reorder](https://mui.com/x/react-data-grid/row-ordering/) (#4034) @DanailH
 
   <img src="https://user-images.githubusercontent.com/5858539/165091263-23472fbb-a989-44b8-849a-d2185adfe13b.gif" width="800">
 
@@ -887,7 +1029,7 @@ We'd like to offer a big thanks to the 8 contributors who made this release poss
   <DataGrid getRowSpacing={() => ({ top: 10, bottom: 10 })} />
   ```
 
-  Check the [documentation](https://mui.com/x/react-data-grid/rows/#row-spacing) for more information.
+  Check the [documentation](https://mui.com/x/react-data-grid/row-height/#row-spacing) for more information.
 
 ### `@mui/x-data-grid@v5.6.1` / `@mui/x-data-grid-pro@v5.6.1`
 
@@ -1141,7 +1283,7 @@ _Jan 28, 2022_
 
 A big thanks to the 9 contributors who made this release possible. Here are some highlights ✨:
 
-- 🚣 Introduce [variable row height](https://mui.com/x/react-data-grid/rows/#variable-row-height) (#438) @DanailH
+- 🚣 Introduce [variable row height](https://mui.com/x/react-data-grid/row-height/#variable-row-height) (#438) @DanailH
 
   Allows for setting a row-specific height.
   By default, all rows have the same height, but now you can set the height on a per-row basis.
@@ -3793,7 +3935,7 @@ Big thanks to the 7 contributors who made this release possible. Here are some h
 - 🎁 Add `onRowsScrollEnd` to support infinite loading (#1199) @DanailH
   This is an XGrid feature. Provides the ability to tap into the `onRowsScrollEnd` which is called when the scroll reaches the bottom of the grid viewport allowing developers to load additional data. It can be used with a combination of `scrollBottomThreshold` to control the area in which the `onRowsScrollEnd` is called.
 
-  See the documentation for [more details](https://mui.com/x/react-data-grid/rows/#infinite-loading).
+  See the documentation for [more details](https://mui.com/x/react-data-grid/row-updates/#infinite-loading).
 
 - 🕹 Provide the ability to sort by multiple columns using Shift+click (#1203) @dtassone
 - 🇵🇱 Added pl-PL locale (#1117) @LarsKumbier

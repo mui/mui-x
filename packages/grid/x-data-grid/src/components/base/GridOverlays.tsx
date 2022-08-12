@@ -44,8 +44,6 @@ function GridOverlayWrapper(props: React.PropsWithChildren<{}>) {
         position: 'absolute',
         top: headerHeight,
         bottom: height === 'auto' ? 0 : undefined,
-        zIndex: 3, // should be above pinned columns and detail panel
-        pointerEvents: 'none',
       }}
       {...props}
     />

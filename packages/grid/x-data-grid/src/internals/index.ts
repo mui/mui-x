@@ -30,6 +30,7 @@ export { useGridDensity, densityStateInitializer } from '../hooks/features/densi
 export { useGridCsvExport } from '../hooks/features/export/useGridCsvExport';
 export { useGridPrintExport } from '../hooks/features/export/useGridPrintExport';
 export { useGridFilter, filterStateInitializer } from '../hooks/features/filter/useGridFilter';
+export { passFilterLogic } from '../hooks/features/filter/gridFilterUtils';
 export type { GridAggregatedFilterItemApplier } from '../hooks/features/filter/gridFilterState';
 export { useGridFocus, focusStateInitializer } from '../hooks/features/focus/useGridFocus';
 export { useGridKeyboardNavigation } from '../hooks/features/keyboardNavigation/useGridKeyboardNavigation';
@@ -54,9 +55,17 @@ export { useGridRowsPreProcessors } from '../hooks/features/rows/useGridRowsPreP
 export type {
   GridRowTreeCreationParams,
   GridRowTreeCreationValue,
+  GridHydrateRowsValue,
+  GridPinnedRowsState,
 } from '../hooks/features/rows/gridRowsState';
 export { useGridRowsMeta, rowsMetaStateInitializer } from '../hooks/features/rows/useGridRowsMeta';
 export { useGridParamsApi } from '../hooks/features/rows/useGridParamsApi';
+export { getRowIdFromRowModel } from '../hooks/features/rows/gridRowsUtils';
+export {
+  gridAdditionalRowGroupsSelector,
+  gridPinnedRowsSelector,
+} from '../hooks/features/rows/gridRowsSelector';
+export { calculatePinnedRowsHeight } from '../hooks/features/rows/gridRowsUtils';
 export {
   useGridSelection,
   selectionStateInitializer,

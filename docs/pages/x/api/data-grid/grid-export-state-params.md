@@ -1,6 +1,6 @@
 # GridExportStateParams Interface
 
-<p class="description"></p>
+<p class="description">Object passed as parameter in the `exportState()` grid API method.</p>
 
 ## Import
 
