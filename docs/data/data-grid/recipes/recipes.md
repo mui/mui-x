@@ -12,4 +12,7 @@ title: Data Grid - Recipes
 
 Creating custom component for inline editing of multiline text.
 
+In the demo below, the **Bio** column is composed of multiple lines.
+To persist the changes, use <kbd><kbd class="key">Ctrl</kbd>+<kbd class="key">Enter</kbd></kbd> (or <kbd><kbd class="key">⌘ Command</kbd>+<kbd class="key">Enter</kbd></kbd> on macOS).
+
 {{"demo": "MultilineEditing.js", "bg": "inline"}}

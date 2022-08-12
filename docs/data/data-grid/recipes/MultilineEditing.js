@@ -27,7 +27,7 @@ const lines = [
 ];
 
 const EditTextarea = (props) => {
-  const { id, field, value, colDef, api } = props;
+  const { id, field, value, colDef } = props;
   const [valueState, setValueState] = React.useState(value);
   const [anchorEl, setAnchorEl] = React.useState();
   const apiRef = useGridApiContext();
@@ -40,9 +40,12 @@ const EditTextarea = (props) => {
     (event) => {
       const newValue = event.target.value;
       setValueState(newValue);
-      api.setEditCellValue({ id, field, value: newValue }, event);
+      apiRef.current.setEditCellValue(
+        { id, field, value: newValue, debounceMs: 200 },
+        event,
+      );
     },
-    [api, field, id],
+    [apiRef, field, id],
   );
 
   const handleKeyDown = React.useCallback(
@@ -53,7 +56,6 @@ const EditTextarea = (props) => {
           !event.shiftKey &&
           (event.ctrlKey || event.metaKey))
       ) {
-        console.log('publish events');
         const params = apiRef.current.getCellParams(id, field);
         apiRef.current.publishEvent('cellKeyDown', params, event);
       }
@@ -94,11 +96,6 @@ const EditTextarea = (props) => {
 
 EditTextarea.propTypes = {
   /**
-   * GridApi that let you manipulate the grid.
-   * @deprecated Use the `apiRef` returned by `useGridApiContext` or `useGridApiRef` (only available in `@mui/x-data-grid-pro`)
-   */
-  api: PropTypes.any.isRequired,
-  /**
    * The column of the row that the current cell belongs to.
    */
   colDef: PropTypes.object.isRequired,
@@ -122,11 +119,12 @@ const multilineColumn = {
 };
 
 const columns = [
-  { field: 'id' },
-  { field: 'username', width: 150 },
-  { field: 'age', width: 80, type: 'number' },
+  { field: 'id', headerName: 'ID' },
+  { field: 'username', headerName: 'Name', width: 150 },
+  { field: 'age', headerName: 'Age', width: 80, type: 'number' },
   {
     field: 'bio',
+    headerName: 'Bio',
     width: 400,
     editable: true,
     ...multilineColumn,

@@ -33,7 +33,7 @@ const lines = [
 ];
 
 const EditTextarea = (props: GridRenderEditCellParams<string>) => {
-  const { id, field, value, colDef, api } = props;
+  const { id, field, value, colDef } = props;
   const [valueState, setValueState] = React.useState(value);
   const [anchorEl, setAnchorEl] = React.useState<HTMLDivElement | null>();
   const apiRef = useGridApiContext();
@@ -46,9 +46,12 @@ const EditTextarea = (props: GridRenderEditCellParams<string>) => {
     (event) => {
       const newValue = event.target.value;
       setValueState(newValue);
-      api.setEditCellValue({ id, field, value: newValue }, event);
+      apiRef.current.setEditCellValue(
+        { id, field, value: newValue, debounceMs: 200 },
+        event,
+      );
     },
-    [api, field, id],
+    [apiRef, field, id],
   );
 
   const handleKeyDown = React.useCallback(
@@ -59,7 +62,6 @@ const EditTextarea = (props: GridRenderEditCellParams<string>) => {
           !event.shiftKey &&
           (event.ctrlKey || event.metaKey))
       ) {
-        console.log('publish events');
         const params = apiRef.current.getCellParams(id, field);
         apiRef.current.publishEvent('cellKeyDown', params, event);
       }
@@ -104,11 +106,12 @@ const multilineColumn: GridColTypeDef = {
 };
 
 const columns: GridColDef[] = [
-  { field: 'id' },
-  { field: 'username', width: 150 },
-  { field: 'age', width: 80, type: 'number' },
+  { field: 'id', headerName: 'ID' },
+  { field: 'username', headerName: 'Name', width: 150 },
+  { field: 'age', headerName: 'Age', width: 80, type: 'number' },
   {
     field: 'bio',
+    headerName: 'Bio',
     width: 400,
     editable: true,
     ...multilineColumn,
