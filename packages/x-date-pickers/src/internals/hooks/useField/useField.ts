@@ -49,14 +49,12 @@ export const useField = <
 
   const firstDefaultValue = React.useRef(defaultValue);
 
-  // TODO: Avoid the type casting.
-  const value =
-    valueProp ?? firstDefaultValue.current ?? (valueManager.emptyValue as unknown as TInputValue);
+  const valueParsed = React.useMemo(() => {
+    // TODO: Avoid this type casting, the emptyValues are both valid TDate and TInputDate
+    const value = firstDefaultValue.current ?? (valueManager.emptyValue as unknown as TInputValue);
 
-  const valueParsed = React.useMemo(
-    () => valueManager.parseInput(utils, value),
-    [valueManager, utils, value],
-  );
+    return valueManager.parseInput(utils, value);
+  }, [valueManager, utils]);
 
   const [state, setState] = React.useState<UseFieldState<TValue, TSection[]>>(() => {
     const sections = fieldValueManager.getSectionsFromValue(utils, null, valueParsed, format);
@@ -390,7 +388,12 @@ export const useField = <
   }, [valueParsed]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // TODO: Support `isSameError`.
-  const validationError = useValidation({ ...params.props, value }, validator, () => true);
+  // TODO: Make validation work with TDate instead of TInputDate
+  const validationError = useValidation(
+    { ...params.props, value: state.valueParsed as unknown as TInputValue },
+    validator,
+    () => true,
+  );
 
   const inputError = React.useMemo(
     () => fieldValueManager.hasError(validationError),

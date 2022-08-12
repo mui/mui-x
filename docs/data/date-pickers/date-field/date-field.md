@@ -28,6 +28,16 @@ The component can be controlled or uncontrolled
 
 {{"demo": "LocalizedDateField.js"}}
 
+## Date validation
+
+The `DateField` component supports all the date validation props described in the _validation page_
+
+_TODO: Add link to the future standalone validation doc page_
+
+_TODO: Add time validation examples when supported_
+
+{{"demo": "DateFieldValidation.js"}}
+
 ## When is `onChange` called
 
 The `DateField` component has an internal state to update the visible date.
