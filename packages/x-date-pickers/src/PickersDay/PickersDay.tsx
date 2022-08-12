@@ -209,7 +209,6 @@ const PickersDayRaw = React.forwardRef(function PickersDay<TDate>(
     onFocus,
     onKeyDown,
     onMouseDown,
-    onMouseUp,
     outsideCurrentMonth,
     selected = false,
     showDaysOutsideCurrentMonth = false,
@@ -256,6 +255,10 @@ const PickersDayRaw = React.forwardRef(function PickersDay<TDate>(
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     if (!disabled) {
       onDaySelect(day, 'finish');
+    }
+
+    if (outsideCurrentMonth) {
+      event.currentTarget.focus();
     }
 
     if (onClick) {
@@ -327,14 +330,6 @@ const PickersDayRaw = React.forwardRef(function PickersDay<TDate>(
       event.preventDefault();
     }
   };
-  const handleMouseUp = (event) => {
-    if (onMouseUp) {
-      onMouseUp(event);
-    }
-    if (outsideCurrentMonth) {
-      event.target.focus();
-    }
-  };
 
   return (
     <PickersDayRoot
@@ -350,7 +345,6 @@ const PickersDayRaw = React.forwardRef(function PickersDay<TDate>(
       onKeyDown={handleKeyDown}
       onClick={handleClick}
       onMouseDown={handleMouseDown}
-      onMouseUp={handleMouseUp}
       {...other}
     >
       {!children ? utils.format(day, 'dayOfMonth') : children}
