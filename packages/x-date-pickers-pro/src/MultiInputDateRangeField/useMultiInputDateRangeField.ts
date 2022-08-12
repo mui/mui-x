@@ -4,10 +4,12 @@ import {
   unstable_useDateField as useDateField,
   UseDateFieldProps,
 } from '@mui/x-date-pickers/DateField';
-import { useUtils } from '@mui/x-date-pickers/internals';
+import { useUtils, useValidation, UseFieldResponse } from '@mui/x-date-pickers/internals';
 import { UseMultiInputDateRangeFieldProps } from './MultiInputDateRangeField.interfaces';
 import { DateRange } from '../internal/models';
+import { validateDateRange } from '../internal/hooks/validation/useDateRangeValidation';
 import { dateRangePickerValueManager } from '../DateRangePicker/shared';
+import { dateRangeFieldValueManager } from '../DateRangeField/useDateRangeField';
 
 export const useMultiInputDateRangeField = <TInputDate, TDate>(
   inProps: UseMultiInputDateRangeFieldProps<TInputDate, TDate>,
@@ -57,8 +59,36 @@ export const useMultiInputDateRangeField = <TInputDate, TDate>(
     onChange: handleEndDateChange,
   };
 
-  const startDateResponse = useDateField<TInputDate, TDate, {}>(startInputProps);
-  const endDateResponse = useDateField<TInputDate, TDate, {}>(endInputProps);
+  const rawStartDateResponse = useDateField<TInputDate, TDate, {}>(startInputProps);
+  const rawEndDateResponse = useDateField<TInputDate, TDate, {}>(endInputProps);
+
+  // TODO: Avoid the type casting.
+  const value =
+    valueProp ??
+    firstDefaultValue.current ??
+    (dateRangePickerValueManager.emptyValue as unknown as DateRange<TInputDate>);
+
+  const validationError = useValidation({ ...inProps, value }, validateDateRange, () => true);
+  const inputError = React.useMemo(
+    () => dateRangeFieldValueManager.hasError(validationError),
+    [validationError],
+  );
+
+  const startDateResponse: UseFieldResponse<{}> = {
+    ...rawStartDateResponse,
+    inputProps: {
+      ...rawStartDateResponse.inputProps,
+      error: inputError,
+    },
+  };
+
+  const endDateResponse: UseFieldResponse<{}> = {
+    ...rawEndDateResponse,
+    inputProps: {
+      ...rawEndDateResponse.inputProps,
+      error: inputError,
+    },
+  };
 
   return { startDate: startDateResponse, endDate: endDateResponse };
 };

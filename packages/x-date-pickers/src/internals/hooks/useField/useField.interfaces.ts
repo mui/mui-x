@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { MuiPickersAdapter } from '../../models';
 import { PickerStateValueManager } from '../usePickerState';
+import { InferError, Validator } from '../validation/useValidation';
 
 export type DateSectionName = 'day' | 'month' | 'year' | 'hour' | 'minute' | 'second' | 'am-pm';
 
@@ -9,16 +10,18 @@ export interface UseFieldParams<
   TValue,
   TDate,
   TSection extends FieldSection,
-  TProps extends UseFieldProps<TInputValue, TValue>,
+  TProps extends UseFieldProps<TInputValue, TValue, InferError<TProps>>,
 > {
   props: TProps;
   valueManager: PickerStateValueManager<TInputValue, TValue, TDate>;
-  fieldValueManager: FieldValueManager<TValue, TDate, TSection>;
+  fieldValueManager: FieldValueManager<TValue, TDate, TSection, InferError<TProps>>;
+  validator: Validator<TDate, UseFieldValidationProps<TInputValue, TValue, TProps>>;
 }
 
-export interface UseFieldProps<TInputValue, TValue> {
+export interface UseFieldProps<TInputValue, TValue, TError> {
   value?: TInputValue;
   onChange?: (value: TValue) => void;
+  onError?: (error: TError, value: TInputValue) => void;
   /**
    * The default value. Use when the component is not controlled.
    */
@@ -33,12 +36,13 @@ export interface UseFieldProps<TInputValue, TValue> {
 }
 
 export interface UseFieldResponse<TProps> {
-  inputProps: Omit<TProps, keyof UseFieldProps<any, any>> & {
+  inputProps: Omit<TProps, keyof UseFieldProps<any, any, any>> & {
     value: string;
     onClick: React.MouseEventHandler<HTMLInputElement>;
     onKeyDown: React.KeyboardEventHandler<HTMLInputElement>;
     onFocus: () => void;
     onBlur: () => void;
+    error: boolean;
   };
   inputRef: React.RefObject<HTMLInputElement>;
 }
@@ -54,7 +58,7 @@ export interface FieldSection {
   query: string | null;
 }
 
-export interface FieldValueManager<TValue, TDate, TSection extends FieldSection> {
+export interface FieldValueManager<TValue, TDate, TSection extends FieldSection, TError> {
   getSectionsFromValue: (
     utils: MuiPickersAdapter<TDate>,
     prevSections: TSection[] | null,
@@ -72,6 +76,7 @@ export interface FieldValueManager<TValue, TDate, TSection extends FieldSection>
     value: TValue,
     activeSection: TSection,
   ) => { value: TDate | null; update: (newActiveDate: TDate | null) => TValue };
+  hasError: (error: TError) => boolean;
 }
 
 export interface UseFieldState<TValue, TSections> {
@@ -80,3 +85,9 @@ export interface UseFieldState<TValue, TSections> {
   sections: TSections;
   selectedSectionIndexes: { start: number; end: number } | null;
 }
+
+export type UseFieldValidationProps<
+  TInputValue,
+  TValue,
+  TProps extends UseFieldProps<TInputValue, TValue, InferError<TProps>>,
+> = Omit<TProps, 'value' | 'defaultValue'> & { value: TInputValue };

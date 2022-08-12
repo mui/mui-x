@@ -15,7 +15,7 @@ import {
 } from '@mui/x-date-pickers/DateField';
 
 interface JoyDateFieldProps
-  extends Omit<JoyTextFieldProps, 'value' | 'defaultValue' | 'onChange'>,
+  extends Omit<JoyTextFieldProps, 'value' | 'defaultValue' | 'onChange' | 'onError'>,
     UseDateFieldProps<Date, Date> {}
 
 const JoyDateField = (props: JoyDateFieldProps) => {
@@ -32,7 +32,10 @@ const JoyDateField = (props: JoyDateFieldProps) => {
 };
 
 interface UnstyledDateFieldProps
-  extends Omit<InputUnstyledProps, 'value' | 'defaultValue' | 'onChange'>,
+  extends Omit<
+      InputUnstyledProps,
+      'value' | 'defaultValue' | 'onChange' | 'onError'
+    >,
     UseDateFieldProps<Date, Date> {}
 
 const UnstyledDateField = (props: UnstyledDateFieldProps) => {
@@ -51,7 +54,7 @@ const UnstyledDateField = (props: UnstyledDateFieldProps) => {
 interface BrowserInputDateFieldProps
   extends Omit<
       React.HTMLAttributes<HTMLInputElement>,
-      'value' | 'defaultValue' | 'onChange'
+      'value' | 'defaultValue' | 'onChange' | 'onError'
     >,
     UseDateFieldProps<Date, Date> {}
 

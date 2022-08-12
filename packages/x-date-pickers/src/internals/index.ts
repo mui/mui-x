@@ -41,6 +41,7 @@ export {
 export type {
   UseFieldProps,
   UseFieldParams,
+  UseFieldResponse,
   FieldValueManager,
   FieldSection,
 } from './hooks/useField';

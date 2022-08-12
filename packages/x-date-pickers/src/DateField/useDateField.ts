@@ -7,9 +7,10 @@ import {
   addPositionPropertiesToSections,
   createDateStrFromSections,
 } from '../internals/hooks/useField';
+import { DateValidationError, validateDate } from '../internals/hooks/validation/useDateValidation';
 import { UseDateFieldProps } from './DateField.interfaces';
 
-const dateRangeFieldValueManager: FieldValueManager<any, any, FieldSection> = {
+const dateRangeFieldValueManager: FieldValueManager<any, any, FieldSection, DateValidationError> = {
   getSectionsFromValue: (utils, prevSections, date, format) =>
     addPositionPropertiesToSections(splitFormatIntoSections(utils, format, date)),
   getValueStrFromSections: (sections) => createDateStrFromSections(sections),
@@ -26,6 +27,7 @@ const dateRangeFieldValueManager: FieldValueManager<any, any, FieldSection> = {
     value,
     update: (newActiveDate) => newActiveDate,
   }),
+  hasError: (error) => error != null,
 };
 
 export const useDateField = <
@@ -39,5 +41,7 @@ export const useDateField = <
     props: inProps,
     valueManager: datePickerValueManager,
     fieldValueManager: dateRangeFieldValueManager,
+    // TODO: Support time validation.
+    validator: validateDate,
   });
 };

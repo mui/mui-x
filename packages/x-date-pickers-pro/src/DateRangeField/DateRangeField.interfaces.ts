@@ -1,15 +1,20 @@
 import { TextFieldProps } from '@mui/material/TextField';
 import { UseFieldProps, FieldSection } from '@mui/x-date-pickers/internals';
 import { DateRange } from '../internal/models';
+import {
+  DateRangeValidationError,
+  DateRangeValidationProps,
+} from '../internal/hooks/validation/useDateRangeValidation';
 
-export type UseDateRangeFieldProps<TInputDate, TDate> = UseFieldProps<
-  DateRange<TInputDate>,
-  DateRange<TDate>
->;
+export interface UseDateRangeFieldProps<TInputDate, TDate>
+  extends UseFieldProps<DateRange<TInputDate>, DateRange<TDate>, DateRangeValidationError>,
+    Omit<DateRangeValidationProps<TInputDate, TDate>, 'value'> {}
 
-export interface DateRangeFieldProps<TInputDate, TDate>
-  extends Omit<TextFieldProps, 'value' | 'defaultValue' | 'onChange'>,
-    UseDateRangeFieldProps<TInputDate, TDate> {}
+export type DateRangeFieldProps<TInputDate, TDate> = Omit<
+  TextFieldProps,
+  'value' | 'defaultValue' | 'onChange' | 'onError'
+> &
+  UseDateRangeFieldProps<TInputDate, TDate>;
 
 export interface DateRangeFieldSection extends FieldSection {
   dateName: 'start' | 'end';

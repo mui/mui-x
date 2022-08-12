@@ -9,8 +9,17 @@ import { DateRangeFieldSection, UseDateRangeFieldProps } from './DateRangeField.
 import { dateRangePickerValueManager } from '../DateRangePicker/shared';
 import { DateRange } from '../internal/models';
 import { splitDateRangeSections } from './DateRangeField.utils';
+import {
+  DateRangeValidationError,
+  validateDateRange,
+} from '../internal/hooks/validation/useDateRangeValidation';
 
-const dateRangeFieldValueManager: FieldValueManager<DateRange<any>, any, DateRangeFieldSection> = {
+export const dateRangeFieldValueManager: FieldValueManager<
+  DateRange<any>,
+  any,
+  DateRangeFieldSection,
+  DateRangeValidationError
+> = {
   getSectionsFromValue: (utils, prevSections, [start, end], format) => {
     const prevDateRangeSections =
       prevSections == null
@@ -113,6 +122,7 @@ const dateRangeFieldValueManager: FieldValueManager<DateRange<any>, any, DateRan
       update: updateActiveDate('end'),
     };
   },
+  hasError: (error) => error[0] != null || error[1] != null,
 };
 
 export const useDateRangeField = <
@@ -126,5 +136,6 @@ export const useDateRangeField = <
     props: inProps,
     valueManager: dateRangePickerValueManager,
     fieldValueManager: dateRangeFieldValueManager,
+    validator: validateDateRange,
   });
 };

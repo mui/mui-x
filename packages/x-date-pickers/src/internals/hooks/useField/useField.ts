@@ -1,6 +1,7 @@
 import * as React from 'react';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import useEventCallback from '@mui/utils/useEventCallback';
+import { InferError, useValidation } from '../validation/useValidation';
 import { useUtils } from '../useUtils';
 import {
   FieldSection,
@@ -24,7 +25,7 @@ export const useField = <
   TValue,
   TDate,
   TSection extends FieldSection,
-  TProps extends UseFieldProps<TInputValue, TValue>,
+  TProps extends UseFieldProps<TInputValue, TValue, InferError<TProps>>,
 >(
   params: UseFieldParams<TInputValue, TValue, TDate, TSection, TProps>,
 ): UseFieldResponse<TProps> => {
@@ -36,25 +37,26 @@ export const useField = <
       value: valueProp,
       defaultValue,
       onChange,
+      onError,
       format = utils.formats.keyboardDate,
       readOnly = false,
       ...otherProps
     },
     valueManager,
     fieldValueManager,
+    validator,
   } = params;
 
   const firstDefaultValue = React.useRef(defaultValue);
 
-  const valueParsed = React.useMemo(() => {
-    if (valueProp !== undefined) {
-      return valueManager.parseInput(utils, valueProp);
-    }
-    if (firstDefaultValue.current !== undefined) {
-      return valueManager.parseInput(utils, firstDefaultValue.current);
-    }
-    return valueManager.emptyValue;
-  }, [valueProp, valueManager, utils]);
+  // TODO: Avoid the type casting.
+  const value =
+    valueProp ?? firstDefaultValue.current ?? (valueManager.emptyValue as unknown as TInputValue);
+
+  const valueParsed = React.useMemo(
+    () => valueManager.parseInput(utils, value),
+    [valueManager, utils, value],
+  );
 
   const [state, setState] = React.useState<UseFieldState<TValue, TSection[]>>(() => {
     const sections = fieldValueManager.getSectionsFromValue(utils, null, valueParsed, format);
@@ -387,6 +389,14 @@ export const useField = <
     }
   }, [valueParsed]); // eslint-disable-line react-hooks/exhaustive-deps
 
+  // TODO: Support `isSameError`.
+  const validationError = useValidation({ ...params.props, value }, validator, () => true);
+
+  const inputError = React.useMemo(
+    () => fieldValueManager.hasError(validationError),
+    [fieldValueManager, validationError],
+  );
+
   return {
     inputProps: {
       value: state.valueStr,
@@ -394,6 +404,7 @@ export const useField = <
       onKeyDown: handleInputKeyDown,
       onFocus: handleInputFocus,
       onBlur: handleInputBlur,
+      error: inputError,
       ...otherProps,
     },
     inputRef,

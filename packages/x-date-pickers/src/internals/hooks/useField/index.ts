@@ -4,6 +4,7 @@ export type {
   FieldSection,
   UseFieldProps,
   UseFieldParams,
+  UseFieldResponse,
 } from './useField.interfaces';
 export {
   splitFormatIntoSections,
