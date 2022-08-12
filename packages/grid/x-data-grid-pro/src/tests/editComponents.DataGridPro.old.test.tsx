@@ -860,6 +860,7 @@ describe('<DataGridPro /> - Edit Components', () => {
       fireEvent.click(input);
       fireEvent.doubleClick(getCell(1, 0));
 
+      expect(cell).to.have.class('MuiDataGrid-cell--editing');
       await act(() => Promise.resolve());
 
       expect(preProcessEditCellProps.callCount).to.equal(1);
@@ -867,7 +868,7 @@ describe('<DataGridPro /> - Edit Components', () => {
         value: true,
         isValidating: true,
       });
-      expect(cell).to.have.class('MuiDataGrid-cell--editing');
+      expect(cell).not.to.have.class('MuiDataGrid-cell--editing');
     });
   });
 });
