@@ -34,7 +34,7 @@ export default function DateFieldValidation() {
         />
         <DateField
           label="shouldDisableDate = isWeekend"
-          defaultValue={addDays(today, 1)}
+          defaultValue={today}
           shouldDisableDate={isWeekend}
         />
       </Stack>
