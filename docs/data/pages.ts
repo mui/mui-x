@@ -141,18 +141,6 @@ const pages: MuiPage[] = [
     children: [
       { pathname: '/x/react-date-pickers/getting-started' },
       { pathname: '/x/react-date-pickers/migration-lab', title: 'Migration from the lab' },
-      {
-        title: 'Fields',
-        pathname: '/x/react-date-pickers/date-field',
-        scopePathnames: [
-          '/x/react-date-pickers/date-field',
-          '/x/react-date-pickers/date-range-field',
-        ],
-        children: [
-          { pathname: '/x/react-date-pickers/date-field' },
-          { pathname: '/x/react-date-pickers/date-range-field', plan: 'pro' },
-        ],
-      },
       { pathname: '/x/react-date-pickers/date-picker' },
       {
         pathname: '/x/react-date-pickers/date-range-picker',
