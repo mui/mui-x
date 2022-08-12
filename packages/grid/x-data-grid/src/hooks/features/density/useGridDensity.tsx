@@ -12,6 +12,7 @@ import { GridStateInitializer } from '../../utils/useGridInitializeState';
 import { useGridSelector } from '../../utils/useGridSelector';
 import { gridVisibleColumnDefinitionsSelector } from '../columns';
 import { unwrapGroupingColumnModel } from '../columnGrouping/useGridColumnGrouping';
+import { GridStateCommunity } from '../../../models/gridStateCommunity';
 
 export const COMPACT_DENSITY_FACTOR = 0.7;
 export const COMFORTABLE_DENSITY_FACTOR = 1.3;
@@ -71,8 +72,9 @@ export const densityStateInitializer: GridStateInitializer<
   } else {
     const unwrappedGroupingColumnModel = unwrapGroupingColumnModel(props.columnGroupingModel);
 
-    const visibleColumns = state.columns!.all!.filter(
-      (field) => state.columns!.columnVisibilityModel![field!] !== false,
+    const columnsState = state.columns as GridStateCommunity['columns'];
+    const visibleColumns = columnsState.all.filter(
+      (field) => columnsState.columnVisibilityModel[field] !== false,
     );
 
     if (visibleColumns.length === 0) {

@@ -20,7 +20,7 @@ import { GridActionsCellItemProps } from '../../components/cell/GridActionsCellI
 import { GridEditCellProps } from '../gridEditRowModel';
 import type { GridValidRowModel } from '../gridRows';
 import { GridApiCommunity } from '../api/gridApiCommunity';
-
+import type { GridColumnGroup } from '../gridColumnGrouping';
 /**
  * Alignment used in position elements in Cells.
  */
@@ -290,7 +290,7 @@ export type GridStateColDef<R extends GridValidRowModel = any, V = any, F = V> =
    * If not defined, the column is in no group (equivalent to a path equal to `[]`).
    * This parameter is computed from the `columnGroupingModel` prop.
    */
-  groupPath?: string[];
+  groupPath?: GridColumnGroup['groupId'][];
 };
 
 /**

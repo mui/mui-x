@@ -9,7 +9,7 @@ import { gridColumnGroupsLookupSelector } from '../../hooks/features/columnGroup
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridSelector } from '../../hooks/utils/useGridSelector';
 import { GridGenericColumnHeaderItem } from './GridGenericColumnHeaderItem';
-import { GridColumnGroup, GridColumnGroupHeaderParams } from '../../models/gridColumnGrouping';
+import { GridColumnGroup } from '../../models/gridColumnGrouping';
 
 interface GridColumnGroupHeaderProps {
   groupId: string | null;
@@ -95,7 +95,7 @@ function GridColumnGroupHeader(props: GridColumnGroupHeaderProps) {
     isLastColumn,
   };
   if (groupId && render) {
-    headerComponent = render(renderParams as GridColumnGroupHeaderParams);
+    headerComponent = render(renderParams);
   }
 
   const removeLastBorderRight = isLastColumn && hasScrollX && !hasScrollY;

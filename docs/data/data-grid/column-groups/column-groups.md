@@ -1,5 +1,5 @@
 ---
-title: Data grid - Column groups
+title: Data Grid - Column groups
 ---
 
 # Data grid - Column groups

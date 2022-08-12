@@ -101,7 +101,7 @@ export const useGridColumnReorder = (
 
       const draggingColumnGroupPath = apiRef.current.unstable_getColumnGroupPath(params.field);
 
-      const columnIndex = originColumnIndex.current as number;
+      const columnIndex = originColumnIndex.current;
       const allColumns = apiRef.current.getAllColumns();
       const groupsLookup = apiRef.current.unstable_getAllGroupDetails();
 

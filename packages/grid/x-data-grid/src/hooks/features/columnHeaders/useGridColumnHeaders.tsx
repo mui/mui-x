@@ -27,7 +27,6 @@ import { useGridRootProps } from '../../utils/useGridRootProps';
 import { GridRenderContext } from '../../../models/params/gridScrollParams';
 import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 import { GridEventListener } from '../../../models/events';
-import { GridStateColDef } from '../../../models/colDef';
 import { GridColumnHeaderItem } from '../../../components/columnHeaders/GridColumnHeaderItem';
 import { getFirstColumnIndexToRender } from '../columns/gridColumnsUtils';
 import { useGridVisibleRows } from '../../utils/useGridVisibleRows';
@@ -230,15 +229,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
   useGridApiEventHandler(apiRef, 'rowsScroll', handleScroll);
 
   // Helper for computation common between getColumnHeaders and getColumnGroupHeaders
-  const getColumnsToRender = (
-    params?: GetHeadersParams,
-  ): null | {
-    renderedColumns: GridStateColDef<any, any, any>[];
-    firstColumnToRender: number;
-    lastColumnToRender: number;
-    minFirstColumn: number;
-    maxLastColumn: number;
-  } => {
+  const getColumnsToRender = (params?: GetHeadersParams) => {
     const {
       renderContext: nextRenderContext = renderContext,
       minFirstColumn = minColumnIndex,
