@@ -98,7 +98,7 @@ function GridToolbarQuickFilter(props: GridToolbarQuickFilterProps) {
   }, [prevQuickFilterValues, quickFilterValues, quickFilterFormatter, quickFilterParser]);
 
   const updateSearchValue = React.useCallback(
-    (newSearchValue) => {
+    (newSearchValue: string) => {
       apiRef.current.setQuickFilterValues(quickFilterParser(newSearchValue));
     },
     [apiRef, quickFilterParser],
@@ -110,7 +110,7 @@ function GridToolbarQuickFilter(props: GridToolbarQuickFilterProps) {
   );
 
   const handleSearchValueChange = React.useCallback(
-    (event) => {
+    (event: React.ChangeEvent<HTMLInputElement>) => {
       const newSearchValue = event.target.value;
       setSearchValue(newSearchValue);
       debouncedUpdateSearchValue(newSearchValue);
