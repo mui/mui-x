@@ -205,8 +205,8 @@ export function DateRangePickerViewDesktop<TDate>(props: DesktopDateRangeCalenda
               onSelectedDaysChange={handleSelectedDayChange}
               currentMonth={monthOnIteration}
               TransitionProps={CalendarTransitionProps}
-              renderDay={(day, __, DayProps) => {
-                return renderDay(day, {
+              renderDay={(day, __, DayProps) =>
+                renderDay(day, {
                   isPreviewing: isWithinRange(utils, day, previewingRange),
                   isStartOfPreviewing: isStartOfRange(utils, day, previewingRange),
                   isEndOfPreviewing: isEndOfRange(utils, day, previewingRange),
@@ -215,8 +215,8 @@ export function DateRangePickerViewDesktop<TDate>(props: DesktopDateRangeCalenda
                   isEndOfHighlighting: isEndOfRange(utils, day, parsedValue),
                   onMouseEnter: () => handlePreviewDayChange(day),
                   ...DayProps,
-                });
-              }}
+                })
+              }
             />
           </DateRangePickerViewDesktopContainer>
         );

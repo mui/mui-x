@@ -272,7 +272,8 @@ export const areDayPropsEqual = (
     prevProps.showDaysOutsideCurrentMonth === nextProps.showDaysOutsideCurrentMonth &&
     prevProps.disableHighlightToday === nextProps.disableHighlightToday &&
     prevProps.className === nextProps.className &&
-    prevProps.outsideCurrentMonth === nextProps.outsideCurrentMonth
+    prevProps.outsideCurrentMonth === nextProps.outsideCurrentMonth &&
+    prevProps.onClick === nextProps.onClick
   );
 };
 

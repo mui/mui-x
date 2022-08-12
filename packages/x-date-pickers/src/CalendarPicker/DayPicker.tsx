@@ -267,7 +267,7 @@ export function DayPicker<TDate>(props: DayPickerProps<TDate>) {
                     onFocus: () => setFocusedDay(day),
                     onBlur: () => onDayBlur(day),
                     onKeyDown: handleDayKeyDown(day),
-                    onClick: disabled ? doNothing : () => handleDaySelect(day, 'finish'),
+                    onClick: isDisabled ? doNothing : () => handleDaySelect(day, 'finish'),
                   };
 
                   return renderDay ? (
