@@ -6,6 +6,11 @@ title: React Date Field component
 
 <p class="description">The date field let the user select a date with the keyboard.</p>
 
+:::warning
+This component is in a very early stage.
+It should not be used in a production setup.
+:::
+
 ## Basic usage
 
 {{"demo": "BasicDateField.js"}}
