@@ -573,6 +573,30 @@ describe('<DataGridPro /> - Edit Components', () => {
       expect(onValueChange.callCount).to.equal(1);
       expect(onValueChange.lastCall.args[1]).to.equal('Adidas');
     });
+
+    it('should not open the suggestions when Enter is pressed', async () => {
+      let resolveCallback: () => void;
+      const processRowUpdate = (newRow: any) =>
+        new Promise((resolve) => {
+          resolveCallback = () => resolve(newRow);
+        });
+
+      defaultData.columns[0].renderEditCell = (params) => renderEditSingleSelectCell(params);
+
+      render(<TestCase processRowUpdate={processRowUpdate} />);
+
+      const cell = getCell(0, 0);
+      fireEvent.doubleClick(cell);
+      fireEvent.mouseUp(screen.queryAllByRole('option')[1]);
+      fireEvent.click(screen.queryAllByRole('option')[1]);
+      clock.runToLast();
+      expect(screen.queryByRole('listbox')).to.equal(null);
+      fireEvent.keyDown(screen.queryByRole('button', { name: 'Adidas' }), { key: 'Enter' });
+      expect(screen.queryByRole('listbox')).to.equal(null);
+
+      resolveCallback!();
+      await act(() => Promise.resolve());
+    });
   });
 
   describe('column type: boolean', () => {

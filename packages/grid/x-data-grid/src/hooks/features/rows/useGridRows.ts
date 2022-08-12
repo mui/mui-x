@@ -62,8 +62,12 @@ export const useGridRows = (
   >,
 ): void => {
   if (process.env.NODE_ENV !== 'production') {
-    // Freeze rows for immutability
-    Object.freeze(props.rows);
+    try {
+      // Freeze the `rows` prop so developers have a fast failure if they try to use Array.prototype.push().
+      Object.freeze(props.rows);
+    } catch (error) {
+      // Sometimes, it's impossible to freeze, so we give up on it.
+    }
   }
 
   const logger = useGridLogger(apiRef, 'useGridRows');
