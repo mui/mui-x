@@ -7,12 +7,14 @@ import {
 import {
   GRID_ROOT_GROUP_ID,
   GridGroupNode,
+  GridPinnedRowNode,
   GridRowEntry,
   GridRowId,
   GridRowModel,
 } from '@mui/x-data-grid';
 import { GridApiPro } from '../../../models/gridApiPro';
 import { GridPinnedRowsProp } from './gridRowPinningInterface';
+import { insertNodeInTree } from '@mui/x-data-grid-pro/utils/tree/utils';
 
 type GridPinnedRowPosition = keyof GridPinnedRowsProp;
 
@@ -31,17 +33,19 @@ export function addPinnedRow({
 }) {
   const dataRowIdToModelLookup = { ...groupingParams.dataRowIdToModelLookup };
   const tree = { ...groupingParams.tree };
+  const treeDepths = { ...groupingParams.treeDepths };
 
   // TODO: warn if id is already present in `props.rows`
-  dataRowIdToModelLookup[rowId] = rowModel;
   // Do not push it to ids list so that pagination is not affected by pinned rows
-  // ids.push(rowId);
-  tree[rowId] = {
+
+  const node: GridPinnedRowNode = {
     type: 'pinnedRow',
     id: rowId,
     depth: 0,
     parent: GRID_ROOT_GROUP_ID,
   };
+
+  insertNodeInTree({ node, tree, treeDepths });
 
   apiRef.current.unstable_caches.rows.dataRowIdToModelLookup[rowId] = { ...rowModel };
   apiRef.current.unstable_caches.rows.dataRowIdToIdLookup[rowId] = rowId;
@@ -55,6 +59,7 @@ export function addPinnedRow({
       ...groupingParams,
       dataRowIdToModelLookup,
       tree,
+      treeDepths,
     };
   }
 
@@ -62,6 +67,7 @@ export function addPinnedRow({
     ...groupingParams,
     dataRowIdToModelLookup,
     tree,
+    treeDepths,
     additionalRowGroups: {
       ...groupingParams.additionalRowGroups,
       pinnedRows: {

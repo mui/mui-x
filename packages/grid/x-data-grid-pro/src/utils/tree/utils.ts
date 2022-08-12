@@ -97,7 +97,7 @@ export const insertNodeInTree = ({
       ...parentNode,
       footerId: node.id,
     };
-  } else {
+  } else if (node.type === 'group' || node.type === 'leaf') {
     // For groups and leaves,
     // Register the node from its parents `children` and `childrenFromPath` properties.
     const groupingField = (node as GridGroupNode).groupingField ?? '__no_field__';
