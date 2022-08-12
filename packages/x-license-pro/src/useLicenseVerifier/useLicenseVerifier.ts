@@ -32,6 +32,7 @@ export function useLicenseVerifier(
       ? ['premium']
       : ['pro', 'premium'];
 
+    const plan = packageName.includes('premium') ? 'Premium' : 'Pro';
     const licenseStatus = verifyLicense({
       releaseInfo,
       licenseKey,
@@ -44,7 +45,7 @@ export function useLicenseVerifier(
     if (licenseStatus === LicenseStatus.Invalid) {
       showInvalidLicenseError();
     } else if (licenseStatus === LicenseStatus.NotFound) {
-      showNotFoundLicenseError();
+      showNotFoundLicenseError({ plan, packageName: `@mui/${packageName}` });
     } else if (licenseStatus === LicenseStatus.Expired) {
       showExpiredLicenseError();
     }
