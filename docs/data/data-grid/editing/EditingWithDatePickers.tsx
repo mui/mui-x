@@ -204,6 +204,7 @@ function GridEditDateCell({
       renderInput={({ inputRef, inputProps, InputProps, disabled, error }) => (
         <GridEditDateInput
           fullWidth
+          autoFocus
           ref={inputRef}
           {...InputProps}
           disabled={disabled}
