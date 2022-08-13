@@ -67,7 +67,7 @@ Please contact us at [sales@mui.com](mailto:sales@mui.com?subject=My%20upgrade%2
 In accordance with the [End User License Agreement](https://mui.com/legal/mui-x-eula/#evaluation-trial-licenses), you can use the Pro and Premium components without a commercial license for 30 days for non-production environments.
 You can also use it for the development of code not intended for production (for example the reproduction of an issue, doing a benchmark).
 
-You don't need to contact us to use these components for evaluation purposes.
+You don't need to contact us to use these components for the above cases.
 You will need to purchase a commercial license in order to remove the watermarks and console warnings.
 
 ## How many developer seats do I need?
