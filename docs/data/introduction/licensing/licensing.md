@@ -19,7 +19,7 @@ See the [Pricing](https://mui.com/pricing/) page for a detailed feature comparis
 
 ### Community Plan
 
-The free version of MUI X is [published under an MIT license](https://tldrlegal.com/license/mit-license) and is [free forever](https://mui-org.notion.site/Stewardship-542a2226043d4f4a96dfb429d16cf5bd#20f609acab4441cf9346614119fbbac1).
+The community version of MUI X is [published under an MIT license](https://tldrlegal.com/license/mit-license) and is [free forever](https://mui-org.notion.site/Stewardship-542a2226043d4f4a96dfb429d16cf5bd#20f609acab4441cf9346614119fbbac1).
 This version contains features that we believe are maintainable by contributions from the open-source community.
 
 MIT licensed npm packages:
@@ -29,7 +29,7 @@ MIT licensed npm packages:
 
 ### Pro Plan<span class="plan-pro"></span>
 
-The Pro version of MUI X expands on the features of the free version with more advanced capabilities such as multi-filtering, multi-sorting, column resizing and column pinning for the data grid; as well as the date range picker component.
+The Pro version of MUI X expands on the features of the community version with more advanced capabilities such as multi-filtering, multi-sorting, column resizing and column pinning for the data grid; as well as the date range picker component.
 
 The Pro version is available under a commercial license—visit [the Pricing page](https://mui.com/pricing/) for details.
 
