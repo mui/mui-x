@@ -6,8 +6,6 @@
 
 # should all be prefixed with x-
 
-/r/x-get-license scope=pro https://mui.com/store/items/mui-x-pro/ 302
-/r/x-get-license scope=premium https://mui.com/store/items/mui-x-premium/ 302
 /r/x-get-license https://mui.com/pricing/ 302
 /r/x-license-eula https://mui.com/legal/mui-x-eula/ 302
 /r/x-license-key-installation https://mui.com/x/introduction/licensing/#license-key-installation 302
