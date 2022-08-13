@@ -335,6 +335,7 @@ const DataGridProVirtualScroller = React.forwardRef<
   const mainRows = getRows({
     renderContext,
     rowIndexOffset: topPinnedRowsData.length,
+    position: 'center',
   });
 
   const bottomPinnedRows = getRows({
@@ -412,8 +413,8 @@ const DataGridProVirtualScroller = React.forwardRef<
               minFirstColumn: leftRenderContext.firstColumnIndex,
               maxLastColumn: leftRenderContext.lastColumnIndex,
               availableSpace: 0,
-              ignoreAutoHeight: true,
               rowIndexOffset: topPinnedRowsData.length,
+              position: 'left',
             })}
           </VirtualScrollerPinnedColumns>
         )}
@@ -432,8 +433,8 @@ const DataGridProVirtualScroller = React.forwardRef<
               minFirstColumn: rightRenderContext.firstColumnIndex,
               maxLastColumn: rightRenderContext.lastColumnIndex,
               availableSpace: 0,
-              ignoreAutoHeight: true,
               rowIndexOffset: topPinnedRowsData.length,
+              position: 'right',
             })}
           </VirtualScrollerPinnedColumns>
         )}

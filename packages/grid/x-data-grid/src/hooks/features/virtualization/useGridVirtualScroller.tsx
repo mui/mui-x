@@ -363,6 +363,7 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
   const getRows = (
     params: {
       renderContext: GridRenderContext | null;
+      position?: string;
       minFirstColumn?: number;
       maxLastColumn?: number;
       availableSpace?: number | null;
@@ -378,6 +379,7 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
       availableSpace = containerWidth,
       ignoreAutoHeight,
       rowIndexOffset = 0,
+      position = 'center',
     } = params;
 
     if (!nextRenderContext || availableSpace == null) {
@@ -476,6 +478,7 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
           index={rowIndexOffset + (currentPage?.range?.firstRowIndex || 0) + firstRowToRender + i}
           containerWidth={availableSpace}
           isLastVisible={lastVisibleRowIndex}
+          position={position}
           {...(typeof getRowProps === 'function' ? getRowProps(id, model) : {})}
           {...rootProps.componentsProps?.row}
         />,

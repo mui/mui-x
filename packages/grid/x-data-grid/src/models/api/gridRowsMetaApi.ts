@@ -29,9 +29,10 @@ export interface GridRowsMetaApi {
    * Stores the row height measurement and triggers an hydration, if needed.
    * @param {GridRowId} id The id of the row.
    * @param {number} height The new height.
+   * @param {string} position The ID of the render zone which this row belongs to.
    * @ignore - do not document.
    */
-  unstable_storeRowHeightMeasurement: (id: GridRowId, height: number) => void;
+  unstable_storeRowHeightMeasurement: (id: GridRowId, height: number, position: string) => void;
   /**
    * Determines if the height of a row is "auto".
    * @ignore - do not document.
@@ -49,4 +50,8 @@ export interface GridRowsMetaApi {
    * @ignore - do not document.
    */
   unstable_setLastMeasuredRowIndex: (index: number) => void;
+  /**
+   * Forces the recalculation of the heights of all rows.
+   */
+  resetRowHeights: () => void;
 }
