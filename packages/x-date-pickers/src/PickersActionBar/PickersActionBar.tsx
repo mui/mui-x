@@ -22,10 +22,11 @@ export interface PickersActionBarProps {
   onClear: () => void;
   onCancel: () => void;
   onSetToday: () => void;
+  className?: string;
 }
 
 export const PickersActionBar = (props: PickersActionBarProps) => {
-  const { onAccept, onClear, onCancel, onSetToday, actions } = props;
+  const { onAccept, onClear, onCancel, onSetToday, actions, className } = props;
   const wrapperVariant = React.useContext(WrapperVariantContext);
 
   const localeText = useLocaleText();
@@ -67,5 +68,5 @@ export const PickersActionBar = (props: PickersActionBarProps) => {
     }
   });
 
-  return <DialogActions>{buttons}</DialogActions>;
+  return <DialogActions className={className}>{buttons}</DialogActions>;
 };
