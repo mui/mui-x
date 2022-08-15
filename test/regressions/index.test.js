@@ -184,7 +184,7 @@ async function main() {
         printButton.click();
       });
 
-      await sleep(6000);
+      await sleep(5000);
 
       return new Promise((resolve, reject) => {
         // See https://ffmpeg.org/ffmpeg-devices.html#x11grab
