@@ -80,3 +80,10 @@ This can be used in combination with `componentsProps`.
 In the example below, the actions are the same as in the section above, but they are rendered inside a menu:
 
 {{"demo": "ActionBarComponent.js"}}
+
+## Top bar
+
+The top bar is available on all picker components. It is located at the top of the picker's views.  
+You can provide any custom component to this slot. By default, it is empty.
+
+{{"demo": "TopBarComponent.js"}}
