@@ -16,6 +16,7 @@ const CustomTopBar = () => (
 
 export default function TopBarComponent() {
   const [value, setValue] = React.useState(() => new Date(2022, 1, 1, 1, 1));
+
   return (
     <LocalizationProvider dateAdapter={AdapterDateFns}>
       <StaticDatePicker
