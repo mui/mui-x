@@ -27,7 +27,9 @@ import {
   YearValidationProps,
 } from '../internals/hooks/validation/models';
 
-export interface CalendarPickerSlotsComponent extends PickersCalendarHeaderSlotsComponent {}
+export interface CalendarPickerSlotsComponent extends PickersCalendarHeaderSlotsComponent {
+  TopBar?: React.ElementType;
+}
 
 export interface CalendarPickerSlotsComponentsProps
   extends PickersCalendarHeaderSlotsComponentsProps {}
