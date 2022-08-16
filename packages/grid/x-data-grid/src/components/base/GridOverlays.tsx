@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { unstable_useEnhancedEffect as useEnhancedEffect } from '@mui/material/utils';
+import { styled } from '@mui/material/styles';
 import { useGridSelector } from '../../hooks/utils/useGridSelector';
 import { gridVisibleRowCountSelector } from '../../hooks/features/filter/gridFilterSelector';
 import {
@@ -8,6 +9,14 @@ import {
 } from '../../hooks/features/rows/gridRowsSelector';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
+
+const GridOverlayWrapperRoot = styled('div')({
+  position: 'sticky',
+  float: 'left',
+  top: 0,
+  left: 0,
+  zIndex: 4, // should be above pinned columns, pinned rows and detail panel
+});
 
 function GridOverlayWrapper(props: React.PropsWithChildren<{}>) {
   const apiRef = useGridApiContext();
@@ -35,20 +44,20 @@ function GridOverlayWrapper(props: React.PropsWithChildren<{}>) {
   }
 
   return (
-    <div
-      style={{
-        height,
-        width: viewportInnerSize?.width ?? 0,
-        position: 'sticky',
-        float: 'left',
-        top: 0,
-        left: 0,
-        right: 0,
-        zIndex: 4, // should be above pinned columns, pinned rows and detail panel
-        bottom: height === 'auto' ? 0 : undefined,
-      }}
-      {...props}
-    />
+    <GridOverlayWrapperRoot>
+      <div
+        style={{
+          height,
+          width: viewportInnerSize?.width ?? 0,
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: height === 'auto' ? 0 : undefined,
+        }}
+        {...props}
+      />
+    </GridOverlayWrapperRoot>
   );
 }
 
