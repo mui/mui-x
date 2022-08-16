@@ -506,6 +506,10 @@ GridFilterForm.propTypes = {
    */
   applyMultiFilterOperatorChanges: PropTypes.func.isRequired,
   /**
+   * @ignore - do not document.
+   */
+  children: PropTypes.node,
+  /**
    * Props passed to the column input component.
    * @default {}
    */
