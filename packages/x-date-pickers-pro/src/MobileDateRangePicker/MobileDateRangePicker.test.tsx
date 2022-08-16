@@ -24,7 +24,7 @@ const WrappedMobileDateRangePicker = withPickerControls(MobileDateRangePicker)({
 });
 
 describe('<MobileDateRangePicker />', () => {
-  const { render } = createPickerRenderer();
+  const { render } = createPickerRenderer({ clock: 'fake' });
 
   describeConformance(
     <MobileDateRangePicker

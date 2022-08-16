@@ -9,6 +9,7 @@ export interface ErrorBoundaryProps {
   api: React.MutableRefObject<GridApiCommunity>;
   hasError: boolean;
   componentProps?: any[];
+  children?: React.ReactNode;
 }
 
 export class ErrorBoundary extends React.Component<ErrorBoundaryProps, any> {

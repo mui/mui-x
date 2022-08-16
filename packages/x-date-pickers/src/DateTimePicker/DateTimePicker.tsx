@@ -72,7 +72,8 @@ const DateTimePicker = React.forwardRef(function DateTimePicker<TInputDate, TDat
     ...other
   } = props;
 
-  const isDesktop = useMediaQuery(desktopModeMediaQuery);
+  // defaults to `true` in environments where `window.matchMedia` would not be available (i.e. test/jsdom)
+  const isDesktop = useMediaQuery(desktopModeMediaQuery, { defaultMatches: true });
 
   if (isDesktop) {
     return (
@@ -133,6 +134,13 @@ DateTimePicker.propTypes = {
    * Date tab icon.
    */
   dateRangeIcon: PropTypes.node,
+  /**
+   * Formats the day of week displayed in the calendar header.
+   * @param {string} day The day of week provided by the adapter's method `getWeekdays`.
+   * @returns {string} The name to display.
+   * @default (day) => day.charAt(0).toUpperCase()
+   */
+  dayOfWeekFormatter: PropTypes.func,
   /**
    * Default calendar month displayed when `value={null}`.
    */
@@ -260,7 +268,7 @@ DateTimePicker.propTypes = {
    */
   maxDate: PropTypes.any,
   /**
-   * Minimal selectable moment of time with binding to date, to set max time in each day use `maxTime`.
+   * Maximal selectable moment of time with binding to date, to set max time in each day use `maxTime`.
    */
   maxDateTime: PropTypes.any,
   /**

@@ -28,6 +28,7 @@ export default function buildGridEventsDocumentation(options: BuildEventsDocumen
       params?: string;
       event?: string;
       projects: ProjectNames[];
+      componentProp?: string;
     };
   } = {};
 
@@ -76,8 +77,42 @@ export default function buildGridEventsDocumentation(options: BuildEventsDocumen
     });
   });
 
+  const defaultProject = projects.get('x-data-grid-premium')!;
+
+  const dataGridPremiumProps = defaultProject.checker
+    .getTypeAtLocation(
+      (defaultProject.exports.DataGridPremiumProps.declarations![0] as ts.ExportSpecifier).name,
+    )
+    .getProperties();
+
+  // Link the DataGridXXX component props to their events.
+  dataGridPremiumProps.forEach((prop) => {
+    const declaration = prop.declarations?.find(ts.isPropertySignature);
+
+    const tags = getSymbolJSDocTags(prop);
+
+    if (tags.ignore) {
+      return;
+    }
+
+    if (
+      declaration?.type &&
+      ts.isTypeReferenceNode(declaration.type) &&
+      ts.isIdentifier(declaration.type.typeName) &&
+      declaration.type.typeName.escapedText === 'GridEventListener'
+    ) {
+      const literalTypeNode = declaration.type.typeArguments?.find(ts.isLiteralTypeNode);
+      if (literalTypeNode) {
+        const eventName = literalTypeNode.literal.getText().replace(/'/g, '');
+
+        if (events[eventName]) {
+          events[eventName].componentProp = prop.escapedName.toString();
+        }
+      }
+    }
+  });
+
   const sortedEvents = Object.values(events).sort((a, b) => a.name.localeCompare(b.name));
-  const defaultProject = projects.get('x-data-grid')!;
 
   writePrettifiedFile(
     path.resolve(defaultProject.workspaceRoot, 'docs/data/data-grid/events/events.json'),

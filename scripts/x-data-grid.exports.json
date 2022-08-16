@@ -192,7 +192,7 @@
   { "name": "GridEditDateCellProps", "kind": "Interface" },
   { "name": "GridEditingApi", "kind": "Interface" },
   { "name": "GridEditingState", "kind": "TypeAlias" },
-  { "name": "GridEditInputCell", "kind": "Function" },
+  { "name": "GridEditInputCell", "kind": "Variable" },
   { "name": "GridEditInputCellProps", "kind": "Interface" },
   { "name": "GridEditMode", "kind": "TypeAlias" },
   { "name": "GridEditModes", "kind": "Enum" },

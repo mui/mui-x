@@ -67,9 +67,7 @@ describe('<DataGridPro /> - Columns reorder', () => {
     const { setProps } = render(<TestCase width={300} />);
 
     expect(getColumnHeadersTextContent()).to.deep.equal(['id', 'brand']);
-    act(() => {
-      apiRef.current.setColumnIndex('id', 1);
-    });
+    act(() => apiRef.current.setColumnIndex('id', 1));
     setProps({ width: 200 });
     await raf();
     expect(getColumnHeadersTextContent()).to.deep.equal(['brand', 'id']);
@@ -92,7 +90,7 @@ describe('<DataGridPro /> - Columns reorder', () => {
 
     const { forceUpdate } = render(<Test />);
     expect(getColumnHeadersTextContent()).to.deep.equal(['brand', 'desc', 'type']);
-    apiRef!.current.setColumnIndex('brand', 2);
+    act(() => apiRef.current.setColumnIndex('brand', 2));
     expect(getColumnHeadersTextContent()).to.deep.equal(['desc', 'type', 'brand']);
     forceUpdate(); // test stability
     expect(getColumnHeadersTextContent()).to.deep.equal(['desc', 'type', 'brand']);

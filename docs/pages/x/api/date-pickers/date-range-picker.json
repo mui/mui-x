@@ -18,6 +18,10 @@
     },
     "components": { "type": { "name": "object" }, "default": "{}" },
     "componentsProps": { "type": { "name": "object" }, "default": "{}" },
+    "dayOfWeekFormatter": {
+      "type": { "name": "func" },
+      "default": "(day) => day.charAt(0).toUpperCase()"
+    },
     "defaultCalendarMonth": { "type": { "name": "any" } },
     "desktopModeMediaQuery": {
       "type": { "name": "string" },
