@@ -4,6 +4,7 @@ import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridRowsInternalCache, GridRowsState } from './gridRowsState';
 import { gridPinnedRowsSelector } from './gridRowsSelector';
+import { gridDensityRowHeightSelector } from '../density/densitySelector';
 
 /**
  * A helper function to check if the id provided is valid.
@@ -143,4 +144,9 @@ export function calculatePinnedRowsHeight(apiRef: React.MutableRefObject<GridApi
     top: topPinnedRowsHeight,
     bottom: bottomPinnedRowsHeight,
   };
+}
+
+export function getMinimalContentHeight(apiRef: React.MutableRefObject<GridApiCommunity>) {
+  const rowHeight = gridDensityRowHeightSelector(apiRef);
+  return 2 * rowHeight;
 }

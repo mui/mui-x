@@ -9,6 +9,7 @@ import {
 } from '../../hooks/features/rows/gridRowsSelector';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
+import { getMinimalContentHeight } from '../../hooks/features/rows/gridRowsUtils';
 
 const GridOverlayWrapperRoot = styled('div')({
   position: 'sticky',
@@ -36,7 +37,7 @@ function GridOverlayWrapper(props: React.PropsWithChildren<{}>) {
 
   let height: React.CSSProperties['height'] = viewportInnerSize?.height ?? 0;
   if (rootProps.autoHeight && height === 0) {
-    height = 'auto';
+    height = getMinimalContentHeight(apiRef); // Give room to show the overlay when there no rows.
   }
 
   if (!viewportInnerSize) {
@@ -53,7 +54,6 @@ function GridOverlayWrapper(props: React.PropsWithChildren<{}>) {
           top: 0,
           left: 0,
           right: 0,
-          bottom: height === 'auto' ? 0 : undefined,
         }}
         {...props}
       />
