@@ -26,6 +26,8 @@ export const GridPreferencesPanel = React.forwardRef<
       ref={ref}
       as={rootProps.components.BasePopper}
       open={columns.length > 0 && preferencePanelState.open}
+      id={preferencePanelState.ids?.panelId}
+      aria-labelledby={preferencePanelState.ids?.buttonId}
       {...rootProps.componentsProps?.panel}
       {...props}
       {...rootProps.componentsProps?.basePopper}

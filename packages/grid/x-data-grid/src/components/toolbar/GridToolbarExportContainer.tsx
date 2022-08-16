@@ -58,11 +58,10 @@ export const GridToolbarExportContainer = React.forwardRef<HTMLButtonElement, Bu
           ref={handleRef}
           size="small"
           startIcon={<rootProps.components.ExportIcon />}
-          aria-expanded={open ? 'true' : undefined}
+          aria-expanded={open}
           aria-label={apiRef.current.getLocaleText('toolbarExportLabel')}
           aria-haspopup="menu"
-          aria-labelledby={menuId}
-          aria-controls={open ? menuId: undefined}
+          aria-controls={open ? menuId : undefined}
           id={buttonId}
           {...other}
           onClick={handleMenuOpen}

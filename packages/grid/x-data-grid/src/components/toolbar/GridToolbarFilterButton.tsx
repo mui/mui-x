@@ -6,6 +6,7 @@ import Badge from '@mui/material/Badge';
 import { ButtonProps } from '@mui/material/Button';
 import { TooltipProps } from '@mui/material/Tooltip';
 import { capitalize } from '@mui/material/utils';
+import { useId } from 'react';
 import { gridColumnLookupSelector } from '../../hooks/features/columns/gridColumnsSelector';
 import { useGridSelector } from '../../hooks/utils/useGridSelector';
 import { gridFilterActiveItemsSelector } from '../../hooks/features/filter/gridFilterSelector';
@@ -59,6 +60,8 @@ const GridToolbarFilterButton = React.forwardRef<HTMLButtonElement, GridToolbarF
     const preferencePanel = useGridSelector(apiRef, gridPreferencePanelStateSelector);
     const ownerState = { classes: rootProps.classes };
     const classes = useUtilityClasses(ownerState);
+    const buttonId = useId();
+    const panelId = useId();
 
     const tooltipContentNode = React.useMemo(() => {
       if (preferencePanel.open) {
@@ -97,9 +100,9 @@ const GridToolbarFilterButton = React.forwardRef<HTMLButtonElement, GridToolbarF
     const toggleFilter = (event: React.MouseEvent<HTMLButtonElement>) => {
       const { open, openedPanelValue } = preferencePanel;
       if (open && openedPanelValue === GridPreferencePanelsValue.filters) {
-        apiRef.current.hideFilterPanel();
+        apiRef.current.hidePreferences();
       } else {
-        apiRef.current.showFilterPanel();
+        apiRef.current.showPreferences(GridPreferencePanelsValue.filters, { panelId, buttonId });
       }
       buttonProps.onClick?.(event);
     };
@@ -109,6 +112,7 @@ const GridToolbarFilterButton = React.forwardRef<HTMLButtonElement, GridToolbarF
       return null;
     }
 
+    const isOpen = preferencePanel.open && preferencePanel.ids?.panelId === panelId;
     return (
       <rootProps.components.BaseTooltip
         title={tooltipContentNode}
@@ -118,8 +122,12 @@ const GridToolbarFilterButton = React.forwardRef<HTMLButtonElement, GridToolbarF
       >
         <rootProps.components.BaseButton
           ref={ref}
+          id={buttonId}
           size="small"
           aria-label={apiRef.current.getLocaleText('toolbarFiltersLabel')}
+          aria-controls={isOpen ? panelId : undefined}
+          aria-expanded={isOpen}
+          aria-haspopup
           startIcon={
             <Badge badgeContent={activeFilters.length} color="primary">
               <rootProps.components.OpenFilterButtonIcon />
