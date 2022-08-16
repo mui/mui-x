@@ -256,7 +256,13 @@ export const PickersPopper = (props: PickerPopperProps) => {
       lastFocusedElementRef.current &&
       lastFocusedElementRef.current instanceof HTMLElement
     ) {
-      lastFocusedElementRef.current.focus();
+      // make sure the button is flushed with updated label, before returning focus to it
+      // avoids issue, where screen reader could fail to announce selected date after selection
+      setTimeout(() => {
+        if (lastFocusedElementRef.current instanceof HTMLElement) {
+          lastFocusedElementRef.current.focus();
+        }
+      });
     }
   }, [open, role]);
 
