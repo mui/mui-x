@@ -5668,15 +5668,15 @@ address@^1.0.1, address@^1.2.0:
   resolved "https://registry.yarnpkg.com/address/-/address-1.2.0.tgz#d352a62c92fee90f89a693eccd2a8b2139ab02d9"
   integrity sha512-tNEZYz5G/zYunxFm7sfhAxkXEuLj3K6BKwv6ZURlsF6yiUQ65z0Q2wZW9L5cPUl9ocofGvXOdFYbFHp0+6MOig==
 
-ag-grid-community@^28.0.2:
-  version "28.0.2"
-  resolved "https://registry.yarnpkg.com/ag-grid-community/-/ag-grid-community-28.0.2.tgz#72ec5e47793f5fcb657be2c79bd94be57a75bd87"
-  integrity sha512-yMcDf6QhoKsuUBNklVOS2pAPzG697aNwffaCYr6HKCqEDBqhW7fTtX2iQPD4SZ7/fk/sNX8RSFAI+nTrrjDKFw==
+ag-grid-community@^28.1.0:
+  version "28.1.0"
+  resolved "https://registry.yarnpkg.com/ag-grid-community/-/ag-grid-community-28.1.0.tgz#a7b6f1c219d6fb7f777aaf39dd04639eb94f4bea"
+  integrity sha512-iCrdRWImvj6pOKaRQXdaPfZ0EI4fCQgTVv5PiCP9otbDPQBxyxjFVn+jEoV0umOqpqPAMoDIbG9poKyWuHl/EA==
 
-ag-grid-react@^28.0.0:
-  version "28.0.0"
-  resolved "https://registry.yarnpkg.com/ag-grid-react/-/ag-grid-react-28.0.0.tgz#f8774cbc8aeb20abbc507bc23fbdaaa987a52175"
-  integrity sha512-voKc4Q44YAVRZXUQeOPXfO049ak67t5AOy8RTjf1sIv9eZ9O6liVZzNjkWY3pel1cGgTMTqNPWSpQYxBhOe0UA==
+ag-grid-react@^28.1.0:
+  version "28.1.0"
+  resolved "https://registry.yarnpkg.com/ag-grid-react/-/ag-grid-react-28.1.0.tgz#4119e236af63a0ded5f87714cfec1b6635c7d2e9"
+  integrity sha512-4Z/7T5kYKWqUhDrSY6bgseiKLiuMwjG4zHYIVtZwGwma7hb5e2CYwDdnfoWKArR6a7TzF86JiRpzd2WlLaARdQ==
   dependencies:
     prop-types "^15.8.1"
 
