@@ -135,7 +135,7 @@ function GridColumnGroupHeader(props: GridColumnGroupHeaderProps) {
       isResizing={false}
       sortDirection={null}
       hasFocus={false}
-      tabIndex={0}
+      tabIndex={-1}
       isDraggable={false}
       headerComponent={headerComponent}
       headerClassName={headerClassName}

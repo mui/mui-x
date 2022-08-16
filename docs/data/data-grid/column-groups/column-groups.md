@@ -6,7 +6,7 @@ title: Data Grid - Column groups
 
 <p class="description">Group your columns.</p>
 
-Grouping columns allows you to have multiple levels of columns in your header and to toggle column groups to show and hide additional columns.
+Grouping columns allows you to have a multi-level hierarchy of columns in your header.
 
 :::warning
 This feature is experimental, it needs to be explicitly activated using the `columnGrouping` experimental feature flag.
@@ -65,6 +65,7 @@ In addition to the required `groupId` and `children`, you can use the following 
 
 - `headerName`: the string displayed as the column's name (instead of `groupId`).
 - `description`: a text for the tooltip.
+- `headerClassName`: a CSS class for styling customization.
 - `renderHeaderGroup`: a function returning custom React component.
 
 {{"demo": "CustomizationDemo.js", "bg": "inline"}}
@@ -74,7 +75,7 @@ In addition to the required `groupId` and `children`, you can use the following 
 By default, the columns that are part of a group cannot be dragged to outside their group.
 You can customize this behavior on specific groups by setting `freeReordering: true` in a column group object.
 
-In the example below, the `Names` column group can be divided, but not other column groups
+In the example below, the `Full name` column group can be divided, but not other column groups.
 
 {{"demo": "BreakingGroupDemo.js", "disableAd": true, "bg": "inline"}}
 

@@ -85,7 +85,7 @@ const columnGroupingModel = [
   {
     groupId: 'character',
     description: 'Information about the character',
-    headerName: 'Character',
+    headerName: 'Basic info',
     renderHeaderGroup: (params) => (
       <HeaderWithIcon {...params} icon={<PersonIcon fontSize="small" />} />
     ),
