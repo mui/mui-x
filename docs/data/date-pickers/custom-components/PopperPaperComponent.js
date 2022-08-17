@@ -21,16 +21,14 @@ import {
   endOfMonth,
   addMonths,
 } from 'date-fns';
-
-let RangeShortcut;
-// eslint-disable-next-line func-names, @typescript-eslint/no-shadow
+var RangeShortcut;
 (function (RangeShortcut) {
-  RangeShortcut.thisWeek = 'THIS_WEEK';
-  RangeShortcut.lastWeek = 'LAST_WEEK';
-  RangeShortcut.last7Days = 'LAST_7_DAYS';
-  RangeShortcut.currentMonth = 'CURRENT_MONTH';
-  RangeShortcut.nextMonth = 'NEXT_MONTH';
-  RangeShortcut.reset = 'RESET';
+  RangeShortcut['thisWeek'] = 'THIS_WEEK';
+  RangeShortcut['lastWeek'] = 'LAST_WEEK';
+  RangeShortcut['last7Days'] = 'LAST_7_DAYS';
+  RangeShortcut['currentMonth'] = 'CURRENT_MONTH';
+  RangeShortcut['nextMonth'] = 'NEXT_MONTH';
+  RangeShortcut['reset'] = 'RESET';
 })(RangeShortcut || (RangeShortcut = {}));
 
 const rangeShortcuts = [
