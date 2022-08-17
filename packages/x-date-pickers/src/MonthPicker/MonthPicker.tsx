@@ -111,6 +111,7 @@ export const MonthPicker = React.forwardRef(function MonthPicker<TDate>(
   const [focusedMonth, setFocusedMonth] = React.useState<number>(
     () => selectedMonth || utils.getMonth(now),
   );
+
   const [hasFocus, setHasFocus] = React.useState<boolean>(!!autoFocus);
 
   const isMonthDisabled = React.useCallback(
@@ -176,12 +177,14 @@ export const MonthPicker = React.forwardRef(function MonthPicker<TDate>(
         focusMonth(
           (monthsInYear + focusedMonth + (theme.direction === 'ltr' ? -1 : 1)) % monthsInYear,
         );
+
         event.preventDefault();
         break;
       case 'ArrowRight':
         focusMonth(
           (monthsInYear + focusedMonth + (theme.direction === 'ltr' ? 1 : -1)) % monthsInYear,
         );
+
         event.preventDefault();
         break;
       default:
@@ -226,6 +229,7 @@ MonthPicker.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
+  autoFocus: PropTypes.bool,
   /**
    * Override or extend the styles applied to the component.
    */

@@ -100,6 +100,7 @@ export const YearPicker = React.forwardRef(function YearPicker<TDate>(
   const [focusedYear, setFocusedYear] = React.useState<number>(
     () => currentYear || utils.getYear(now),
   );
+
   const [hasFocus, setHasFocus] = React.useState<boolean>(!!autoFocus);
 
   const isYearDisabled = React.useCallback(
