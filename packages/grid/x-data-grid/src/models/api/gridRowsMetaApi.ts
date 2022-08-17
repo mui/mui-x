@@ -29,7 +29,7 @@ export interface GridRowsMetaApi {
    * Stores the row height measurement and triggers an hydration, if needed.
    * @param {GridRowId} id The id of the row.
    * @param {number} height The new height.
-   * @param {string} position The ID of the render zone which this row belongs to.
+   * @param {string} position The position to it the row belongs to.
    * @ignore - do not document.
    */
   unstable_storeRowHeightMeasurement: (id: GridRowId, height: number, position: string) => void;
