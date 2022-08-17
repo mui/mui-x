@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import TextField from '@mui/material/TextField';
-import { fireEvent, screen } from '@mui/monorepo/test/utils';
+import { act, fireEvent, screen } from '@mui/monorepo/test/utils';
 import { StaticDatePicker } from '@mui/x-date-pickers/StaticDatePicker';
 import { adapterToUse, createPickerRenderer } from '../../../../test/utils/pickers-utils';
 import { CalendarPickerView } from '../internals/models/views';
@@ -96,7 +96,7 @@ describe('<StaticDatePicker /> keyboard interactions', () => {
         );
 
         const year = screen.getByText('2020', { selector: 'button' });
-        year.focus();
+        act(() => year.focus());
         fireEvent.keyDown(year, { keyCode, key });
 
         expect(document.activeElement).to.have.text(expectFocusedYear);
@@ -124,7 +124,7 @@ describe('<StaticDatePicker /> keyboard interactions', () => {
         );
 
         const aug = screen.getByText('Aug', { selector: 'button' });
-        aug.focus();
+        act(() => aug.focus());
         fireEvent.keyDown(aug, { keyCode, key });
 
         expect(document.activeElement).to.have.text(expectFocusedMonth);
@@ -154,7 +154,7 @@ describe('<StaticDatePicker /> keyboard interactions', () => {
         // Don't care about what's focused.
         // eslint-disable-next-line material-ui/disallow-active-element-as-key-event-target
         const startDay = screen.getByText('13', { selector: 'button' });
-        startDay.focus();
+        act(() => startDay.focus());
         fireEvent.keyDown(startDay, { keyCode, key });
 
         expect(document.activeElement).to.have.text(expectFocusedDay);
