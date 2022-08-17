@@ -20,73 +20,40 @@ import {
   endOfMonth,
   addMonths,
 } from 'date-fns';
+import { RangeShortcut, rangeShortcuts } from './rangeShortcut';
 
-enum RangeShortcutEnum {
-  thisWeek = 'THIS_WEEK',
-  lastWeek = 'LAST_WEEK',
-  last7Days = 'LAST_7_DAYS',
-  currentMonth = 'CURRENT_MONTH',
-  nextMonth = 'NEXT_MONTH',
-  reset = 'RESET',
-}
-
-const rangeShortcuts = [
-  {
-    range: RangeShortcutEnum.thisWeek,
-    label: 'This week',
-  },
-  {
-    range: RangeShortcutEnum.lastWeek,
-    label: 'Last week',
-  },
-  {
-    range: RangeShortcutEnum.last7Days,
-    label: 'Last 7 days',
-  },
-  {
-    range: RangeShortcutEnum.currentMonth,
-    label: 'Current month',
-  },
-  {
-    range: RangeShortcutEnum.nextMonth,
-    label: 'Next month',
-  },
-  {
-    range: RangeShortcutEnum.reset,
-    label: 'Reset',
-  },
-] as const;
+type RangeShortcutType = keyof typeof RangeShortcut;
 
 const RangeShortcutsPanel: React.FC<{
   setValue: React.Dispatch<React.SetStateAction<DateRange<Date>>>;
   children: React.ReactNode;
 }> = ({ setValue, children }) => {
   const handleRangeClick = React.useCallback(
-    (range: RangeShortcutEnum) => {
+    (range: RangeShortcutType) => {
       const today = new Date();
       switch (range) {
-        case RangeShortcutEnum.thisWeek:
+        case RangeShortcut.thisWeek:
           setValue([startOfWeek(today), endOfWeek(today)]);
           break;
-        case RangeShortcutEnum.lastWeek:
+        case RangeShortcut.lastWeek:
           setValue([
             addWeeks(startOfWeek(today), -1),
             addWeeks(endOfWeek(today), -1),
           ]);
           break;
-        case RangeShortcutEnum.last7Days:
+        case RangeShortcut.last7Days:
           setValue([addWeeks(today, -1), today]);
           break;
-        case RangeShortcutEnum.currentMonth:
+        case RangeShortcut.currentMonth:
           setValue([startOfMonth(today), endOfMonth(today)]);
           break;
-        case RangeShortcutEnum.nextMonth:
+        case RangeShortcut.nextMonth:
           setValue([
             addMonths(startOfMonth(today), 1),
             addMonths(endOfMonth(today), 1),
           ]);
           break;
-        case RangeShortcutEnum.reset:
+        case RangeShortcut.reset:
           setValue([null, null]);
           break;
         default:
@@ -103,7 +70,7 @@ const RangeShortcutsPanel: React.FC<{
           <List>
             {rangeShortcuts.map(({ range, label }) => (
               <ListItem key={range} disablePadding>
-                <ListItemButton onClick={() => handleRangeClick(range)}>
+                <ListItemButton onClick={() => handleRangeClick(range as RangeShortcutType)}>
                   <ListItemText primary={label} />
                 </ListItemButton>
               </ListItem>

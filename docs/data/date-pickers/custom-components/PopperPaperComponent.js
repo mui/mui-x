@@ -1,4 +1,5 @@
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { DateRangePicker } from '@mui/x-date-pickers-pro';
@@ -20,70 +21,37 @@ import {
   endOfMonth,
   addMonths,
 } from 'date-fns';
-
-const RangeShortcutEnum = {
-  thisWeek: 'THIS_WEEK',
-  lastWeek: 'LAST_WEEK',
-  last7Days: 'LAST_7_DAYS',
-  currentMonth: 'CURRENT_MONTH',
-  nextMonth: 'NEXT_MONTH',
-  reset: 'RESET',
-};
-
-const rangeShortcuts = [
-  {
-    range: RangeShortcutEnum.thisWeek,
-    label: 'This week',
-  },
-  {
-    range: RangeShortcutEnum.lastWeek,
-    label: 'Last week',
-  },
-  {
-    range: RangeShortcutEnum.last7Days,
-    label: 'Last 7 days',
-  },
-  {
-    range: RangeShortcutEnum.currentMonth,
-    label: 'Current month',
-  },
-  {
-    range: RangeShortcutEnum.nextMonth,
-    label: 'Next month',
-  },
-  {
-    range: RangeShortcutEnum.reset,
-    label: 'Reset',
-  },
-];
+import { RangeShortcut, rangeShortcuts } from './rangeShortcut';
 
 const RangeShortcutsPanel = ({ setValue, children }) => {
   const handleRangeClick = React.useCallback(
     (range) => {
       const today = new Date();
       switch (range) {
-        case RangeShortcutEnum.thisWeek:
+        case RangeShortcut.thisWeek:
           setValue([startOfWeek(today), endOfWeek(today)]);
           break;
-        case RangeShortcutEnum.lastWeek:
+        case RangeShortcut.lastWeek:
           setValue([
             addWeeks(startOfWeek(today), -1),
             addWeeks(endOfWeek(today), -1),
           ]);
+
           break;
-        case RangeShortcutEnum.last7Days:
+        case RangeShortcut.last7Days:
           setValue([addWeeks(today, -1), today]);
           break;
-        case RangeShortcutEnum.currentMonth:
+        case RangeShortcut.currentMonth:
           setValue([startOfMonth(today), endOfMonth(today)]);
           break;
-        case RangeShortcutEnum.nextMonth:
+        case RangeShortcut.nextMonth:
           setValue([
             addMonths(startOfMonth(today), 1),
             addMonths(endOfMonth(today), 1),
           ]);
+
           break;
-        case RangeShortcutEnum.reset:
+        case RangeShortcut.reset:
           setValue([null, null]);
           break;
         default:
@@ -92,6 +60,7 @@ const RangeShortcutsPanel = ({ setValue, children }) => {
     },
     [setValue],
   );
+
   return (
     <React.Fragment>
       <Box sx={{ m: 2 }} display="flex" gap={2}>
@@ -114,14 +83,20 @@ const RangeShortcutsPanel = ({ setValue, children }) => {
   );
 };
 
+RangeShortcutsPanel.propTypes = {
+  children: PropTypes.node,
+  setValue: PropTypes.func.isRequired,
+};
+
 export default function PopperPaperComponent() {
   const [value, setValue] = React.useState([null, null]);
   const WrappedPopperPaper = React.useCallback(
     ({ children }) => (
       <RangeShortcutsPanel setValue={setValue}>{children}</RangeShortcutsPanel>
     ),
-    [setValue],
+    [],
   );
+
   return (
     <LocalizationProvider dateAdapter={AdapterDateFns}>
       <DateRangePicker
