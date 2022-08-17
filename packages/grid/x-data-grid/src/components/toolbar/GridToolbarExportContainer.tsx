@@ -14,8 +14,8 @@ export const GridToolbarExportContainer = React.forwardRef<HTMLButtonElement, Bu
 
     const apiRef = useGridApiContext();
     const rootProps = useGridRootProps();
-    const buttonId = useId();
-    const menuId = useId();
+    const exportButtonId = useId();
+    const exportMenuId = useId();
 
     const [open, setOpen] = React.useState(false);
     const buttonRef = React.useRef<HTMLButtonElement>(null);
@@ -61,8 +61,8 @@ export const GridToolbarExportContainer = React.forwardRef<HTMLButtonElement, Bu
           aria-expanded={open}
           aria-label={apiRef.current.getLocaleText('toolbarExportLabel')}
           aria-haspopup="menu"
-          aria-controls={open ? menuId : undefined}
-          id={buttonId}
+          aria-controls={open ? exportMenuId : undefined}
+          id={exportButtonId}
           {...other}
           onClick={handleMenuOpen}
           {...rootProps.componentsProps?.baseButton}
@@ -76,9 +76,9 @@ export const GridToolbarExportContainer = React.forwardRef<HTMLButtonElement, Bu
           position="bottom-start"
         >
           <MenuList
-            id={menuId}
+            id={exportMenuId}
             className={gridClasses.menuList}
-            aria-labelledby={buttonId}
+            aria-labelledby={exportButtonId}
             onKeyDown={handleListKeyDown}
             autoFocusItem={open}
           >

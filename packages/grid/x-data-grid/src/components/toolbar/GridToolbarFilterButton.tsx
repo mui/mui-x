@@ -5,8 +5,7 @@ import { unstable_composeClasses as composeClasses } from '@mui/material';
 import Badge from '@mui/material/Badge';
 import { ButtonProps } from '@mui/material/Button';
 import { TooltipProps } from '@mui/material/Tooltip';
-import { capitalize } from '@mui/material/utils';
-import { useId } from 'react';
+import { capitalize, unstable_useId as useId } from '@mui/material/utils';
 import { gridColumnLookupSelector } from '../../hooks/features/columns/gridColumnsSelector';
 import { useGridSelector } from '../../hooks/utils/useGridSelector';
 import { gridFilterActiveItemsSelector } from '../../hooks/features/filter/gridFilterSelector';
@@ -60,8 +59,8 @@ const GridToolbarFilterButton = React.forwardRef<HTMLButtonElement, GridToolbarF
     const preferencePanel = useGridSelector(apiRef, gridPreferencePanelStateSelector);
     const ownerState = { classes: rootProps.classes };
     const classes = useUtilityClasses(ownerState);
-    const buttonId = useId();
-    const panelId = useId();
+    const filterButtonId = useId();
+    const filterPanelId = useId();
 
     const tooltipContentNode = React.useMemo(() => {
       if (preferencePanel.open) {
@@ -102,7 +101,10 @@ const GridToolbarFilterButton = React.forwardRef<HTMLButtonElement, GridToolbarF
       if (open && openedPanelValue === GridPreferencePanelsValue.filters) {
         apiRef.current.hidePreferences();
       } else {
-        apiRef.current.showPreferences(GridPreferencePanelsValue.filters, { panelId, buttonId });
+        apiRef.current.showPreferences(GridPreferencePanelsValue.filters, {
+          panelId: filterPanelId,
+          buttonId: filterButtonId,
+        });
       }
       buttonProps.onClick?.(event);
     };
@@ -112,7 +114,7 @@ const GridToolbarFilterButton = React.forwardRef<HTMLButtonElement, GridToolbarF
       return null;
     }
 
-    const isOpen = preferencePanel.open && preferencePanel.ids?.panelId === panelId;
+    const isOpen = preferencePanel.open && preferencePanel.ids?.panelId === filterPanelId;
     return (
       <rootProps.components.BaseTooltip
         title={tooltipContentNode}
@@ -122,10 +124,10 @@ const GridToolbarFilterButton = React.forwardRef<HTMLButtonElement, GridToolbarF
       >
         <rootProps.components.BaseButton
           ref={ref}
-          id={buttonId}
+          id={filterButtonId}
           size="small"
           aria-label={apiRef.current.getLocaleText('toolbarFiltersLabel')}
-          aria-controls={isOpen ? panelId : undefined}
+          aria-controls={isOpen ? filterPanelId : undefined}
           aria-expanded={isOpen}
           aria-haspopup
           startIcon={
