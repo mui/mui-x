@@ -266,7 +266,7 @@ export const useGridColumnPinning = (
   });
 
   const checkIfEnabled = React.useCallback(
-    (methodName) => {
+    (methodName: keyof GridColumnPinningApi) => {
       if (props.disableColumnPinning) {
         throw new Error(
           `MUI: You cannot call \`apiRef.current.${methodName}\` when \`disableColumnPinning\` is true.`,

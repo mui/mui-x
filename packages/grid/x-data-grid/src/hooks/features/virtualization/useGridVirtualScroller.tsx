@@ -116,7 +116,7 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
   const prevTotalWidth = React.useRef(columnsTotalWidth);
 
   const getNearestIndexToRender = React.useCallback(
-    (offset) => {
+    (offset: number) => {
       const lastMeasuredIndexRelativeToAllRows = apiRef.current.unstable_getLastMeasuredRowIndex();
       const lastMeasuredIndexRelativeToCurrentPage =
         lastMeasuredIndexRelativeToAllRows - (currentPage.range?.firstRowIndex || 0);
@@ -276,7 +276,7 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
   }, [renderContext, updateRenderZonePosition]);
 
   const updateRenderContext = React.useCallback(
-    (nextRenderContext) => {
+    (nextRenderContext: GridRenderContext) => {
       setRenderContext(nextRenderContext);
       prevRenderContext.current = nextRenderContext;
     },

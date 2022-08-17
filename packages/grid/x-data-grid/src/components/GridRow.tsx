@@ -211,8 +211,8 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
   );
 
   const publishClick = React.useCallback(
-    (event) => {
-      const cell = findParentElementFromClassName(event.target, gridClasses.cell);
+    (event: React.MouseEvent<HTMLDivElement>) => {
+      const cell = findParentElementFromClassName(event.target as HTMLDivElement, gridClasses.cell);
       const field = cell?.getAttribute('data-field');
 
       // Check if the field is available because the cell that fills the empty

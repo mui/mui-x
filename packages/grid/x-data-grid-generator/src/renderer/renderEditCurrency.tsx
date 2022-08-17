@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { GridRenderEditCellParams, useGridApiContext } from '@mui/x-data-grid-premium';
-import Autocomplete, { autocompleteClasses } from '@mui/material/Autocomplete';
+import Autocomplete, { autocompleteClasses, AutocompleteProps } from '@mui/material/Autocomplete';
 import InputBase from '@mui/material/InputBase';
 import Box from '@mui/material/Box';
 import { styled } from '@mui/material/styles';
@@ -17,17 +17,19 @@ const StyledAutocomplete = styled(Autocomplete)(({ theme }) => ({
       height: '100%',
     },
   },
-}));
+})) as typeof Autocomplete;
 
 function EditCurrency(props: GridRenderEditCellParams<string>) {
   const { id, value, field } = props;
 
   const apiRef = useGridApiContext();
 
-  const handleChange = React.useCallback(
+  const handleChange = React.useCallback<
+    NonNullable<AutocompleteProps<string, false, true, false>['onChange']>
+  >(
     (event, newValue) => {
       apiRef.current.setEditCellValue({ id, field, value: newValue.toUpperCase() }, event);
-      if (!event.key) {
+      if (!(event as any).key) {
         apiRef.current.commitCellChange({ id, field });
         apiRef.current.setCellMode(id, field, 'view');
       }
@@ -36,7 +38,7 @@ function EditCurrency(props: GridRenderEditCellParams<string>) {
   );
 
   return (
-    <StyledAutocomplete
+    <StyledAutocomplete<string, false, true, false>
       value={value}
       onChange={handleChange}
       options={CURRENCY_OPTIONS}

@@ -199,20 +199,23 @@ const DataGridProVirtualScroller = React.forwardRef<
   const topPinnedRowsRenderZoneRef = React.useRef<HTMLDivElement>(null);
   const bottomPinnedRowsRenderZoneRef = React.useRef<HTMLDivElement>(null);
 
-  const handleRenderZonePositioning = React.useCallback(({ top, left }) => {
-    if (leftColumns.current) {
-      leftColumns.current!.style.transform = `translate3d(0px, ${top}px, 0px)`;
-    }
-    if (rightColumns.current) {
-      rightColumns.current!.style.transform = `translate3d(0px, ${top}px, 0px)`;
-    }
-    if (topPinnedRowsRenderZoneRef.current) {
-      topPinnedRowsRenderZoneRef.current!.style.transform = `translate3d(${left}px, 0px, 0px)`;
-    }
-    if (bottomPinnedRowsRenderZoneRef.current) {
-      bottomPinnedRowsRenderZoneRef.current!.style.transform = `translate3d(${left}px, 0px, 0px)`;
-    }
-  }, []);
+  const handleRenderZonePositioning = React.useCallback(
+    ({ top, left }: { top: number; left: number }) => {
+      if (leftColumns.current) {
+        leftColumns.current!.style.transform = `translate3d(0px, ${top}px, 0px)`;
+      }
+      if (rightColumns.current) {
+        rightColumns.current!.style.transform = `translate3d(0px, ${top}px, 0px)`;
+      }
+      if (topPinnedRowsRenderZoneRef.current) {
+        topPinnedRowsRenderZoneRef.current!.style.transform = `translate3d(${left}px, 0px, 0px)`;
+      }
+      if (bottomPinnedRowsRenderZoneRef.current) {
+        bottomPinnedRowsRenderZoneRef.current!.style.transform = `translate3d(${left}px, 0px, 0px)`;
+      }
+    },
+    [],
+  );
 
   const getRowProps = (id: GridRowId) => {
     if (!expandedRowIds.includes(id)) {
