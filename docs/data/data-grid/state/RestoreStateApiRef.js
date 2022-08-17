@@ -159,6 +159,7 @@ ViewListItem.propTypes = {
         right: PropTypes.arrayOf(PropTypes.string),
       }),
       preferencePanel: PropTypes.shape({
+        ids: PropTypes.object,
         open: PropTypes.bool.isRequired,
         /**
          * Tab currently opened.
