@@ -131,4 +131,4 @@ import bgLocale from 'date-fns/locale/bg';
 You can [find the source](https://github.com/mui/mui-x/tree/HEAD/packages/x-date-pickers/src/locales) in the GitHub repository.
 
 To create your own translation or to customize the English text, copy this file to your project, make any changes needed and import the locale from there.
-Note that these translations of the Data grid component depend on the [Localization strategy](/material-ui/guides/localization/) of the whole library.
+Note that these translations of the date and time picker components depend on the [Localization strategy](/material-ui/guides/localization/) of the whole library.

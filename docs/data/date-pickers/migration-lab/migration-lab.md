@@ -108,7 +108,7 @@ The props of `MonthPicker`, `YearPicker` and `DayPicker` have been reworked to m
 #### Translation
 
 Props for translation have been either deprecated or removed in favor of a [global localization](/x/react-date-pickers/localization/) similar to the one used by the data grid.
-We already have nine translations provided by the community.
+We already have nine locales provided by the community.
 
 #### Use slot for `ActionBar`
 
