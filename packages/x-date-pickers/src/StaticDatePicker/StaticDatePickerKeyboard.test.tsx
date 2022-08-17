@@ -151,8 +151,6 @@ describe('<StaticDatePicker /> keyboard interactions', () => {
           />,
         );
 
-        // Don't care about what's focused.
-        // eslint-disable-next-line material-ui/disallow-active-element-as-key-event-target
         const startDay = screen.getByText('13', { selector: 'button' });
         act(() => startDay.focus());
         fireEvent.keyDown(startDay, { keyCode, key });
