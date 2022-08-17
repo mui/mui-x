@@ -29,6 +29,7 @@ export interface YearProps {
   onKeyDown: (event: React.KeyboardEvent, value: number) => void;
   selected: boolean;
   value: number;
+  tabIndex: number;
 }
 
 export function getPickersYearUtilityClass(slot: string) {
@@ -100,7 +101,7 @@ export const PickersYear = React.forwardRef<HTMLButtonElement, YearProps>(functi
   props,
   forwardedRef,
 ) {
-  const { autoFocus, className, children, disabled, onClick, onKeyDown, selected, value } = props;
+  const { autoFocus, className, children, disabled, onClick, onKeyDown, value, tabIndex } = props;
   const ref = React.useRef<HTMLButtonElement>(null);
   const refHandle = useForkRef(ref, forwardedRef as React.Ref<HTMLButtonElement>);
   const wrapperVariant = React.useContext(WrapperVariantContext);
@@ -131,7 +132,7 @@ export const PickersYear = React.forwardRef<HTMLButtonElement, YearProps>(functi
         disabled={disabled}
         type="button"
         data-mui-test={`year-${children}`}
-        tabIndex={selected ? 0 : -1}
+        tabIndex={disabled ? -1 : tabIndex}
         onClick={(event) => onClick(event, value)}
         onKeyDown={(event) => onKeyDown(event, value)}
         className={classes.yearButton}

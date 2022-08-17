@@ -4,6 +4,7 @@ import Typography, { TypographyTypeMap } from '@mui/material/Typography';
 import { styled, alpha } from '@mui/material/styles';
 import { OverridableComponent } from '@mui/material/OverridableComponent';
 import { generateUtilityClasses } from '@mui/material';
+import { unstable_useEnhancedEffect as useEnhancedEffect } from '@mui/material/utils';
 import { onSpaceOrEnter } from '../internals/utils/utils';
 
 const classes = generateUtilityClasses('PrivatePickersMonth', ['root', 'selected']);
@@ -12,8 +13,11 @@ export interface MonthProps {
   children: React.ReactNode;
   disabled?: boolean;
   onSelect: (value: any) => void;
+  onFocus: () => void;
   selected?: boolean;
   value: any;
+  hasFocus: boolean;
+  tabIndex: number;
 }
 
 export type PickersMonthClassKey = keyof typeof classes;
@@ -54,26 +58,35 @@ const PickersMonthRoot = styled<
  * @ignore - do not document.
  */
 export const PickersMonth: React.FC<MonthProps> = (props) => {
-  const { disabled, onSelect, selected, value, ...other } = props;
+  const { disabled, onSelect, selected, value, tabIndex, hasFocus, onFocus, ...other } = props;
 
   const handleSelection = () => {
     onSelect(value);
   };
 
+  const ref = React.useRef<HTMLButtonElement>(null);
+  useEnhancedEffect(() => {
+    if (hasFocus) {
+      ref.current?.focus();
+    }
+  }, [hasFocus]);
+
   return (
     <PickersMonthRoot
+      ref={ref}
       data-mui-test="month"
       component="button"
       type="button"
       className={clsx(classes.root, {
         [classes.selected]: selected,
       })}
-      tabIndex={disabled ? -1 : 0}
+      tabIndex={tabIndex}
       onClick={handleSelection}
       onKeyDown={onSpaceOrEnter(handleSelection)}
       color={selected ? 'primary' : undefined}
       variant={selected ? 'h5' : 'subtitle1'}
       disabled={disabled}
+      onFocus={onFocus}
       {...other}
     />
   );

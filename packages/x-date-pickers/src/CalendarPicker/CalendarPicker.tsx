@@ -420,6 +420,7 @@ const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
             <MonthPicker
               {...baseDateValidationProps}
               {...commonViewProps}
+              autoFocus={autoFocus}
               className={className}
               date={date}
               onChange={handleDateMonthChange}

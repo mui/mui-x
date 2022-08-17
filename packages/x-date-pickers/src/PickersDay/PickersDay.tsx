@@ -44,6 +44,7 @@ export interface PickersDayProps<TDate> extends ExtendMui<ButtonBaseProps> {
   disableMargin?: boolean;
   isAnimating?: boolean;
   onDayFocus?: (day: TDate) => void;
+  onDayBlur?: (day: TDate) => void;
   onDaySelect: (day: TDate, isFinish: PickerSelectionState) => void;
   /**
    * If `true`, day is outside of month and will be hidden.
@@ -205,8 +206,10 @@ const PickersDayRaw = React.forwardRef(function PickersDay<TDate>(
     isAnimating,
     onClick,
     onDayFocus = noop,
+    onDayBlur = noop,
     onDaySelect,
     onFocus,
+    onBlur,
     onKeyDown,
     onMouseDown,
     outsideCurrentMonth,
@@ -249,6 +252,15 @@ const PickersDayRaw = React.forwardRef(function PickersDay<TDate>(
 
     if (onFocus) {
       onFocus(event);
+    }
+  };
+  const handleBlur = (event: React.FocusEvent<HTMLButtonElement>) => {
+    if (onDayBlur) {
+      onDayBlur(day);
+    }
+
+    if (onBlur) {
+      onBlur(event);
     }
   };
 
@@ -342,6 +354,7 @@ const PickersDayRaw = React.forwardRef(function PickersDay<TDate>(
       aria-label={!children ? utils.format(day, 'fullDate') : undefined}
       tabIndex={selected ? 0 : -1}
       onFocus={handleFocus}
+      onBlur={handleBlur}
       onKeyDown={handleKeyDown}
       onClick={handleClick}
       onMouseDown={handleMouseDown}
@@ -368,6 +381,7 @@ export const areDayPropsEqual = (
     prevProps.className === nextProps.className &&
     prevProps.outsideCurrentMonth === nextProps.outsideCurrentMonth &&
     prevProps.onDayFocus === nextProps.onDayFocus &&
+    prevProps.onDayBlur === nextProps.onDayBlur &&
     prevProps.onDaySelect === nextProps.onDaySelect
   );
 };
@@ -401,6 +415,7 @@ PickersDayRaw.propTypes = {
    */
   disableMargin: PropTypes.bool,
   isAnimating: PropTypes.bool,
+  onDayBlur: PropTypes.func,
   onDayFocus: PropTypes.func,
   onDaySelect: PropTypes.func.isRequired,
   /**

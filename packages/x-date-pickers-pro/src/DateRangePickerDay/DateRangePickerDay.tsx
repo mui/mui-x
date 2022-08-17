@@ -319,6 +319,7 @@ DateRangePickerDayRaw.propTypes = {
    * Set to `true` if the `day` is the end of a highlighted date range.
    */
   isStartOfPreviewing: PropTypes.bool.isRequired,
+  onDayBlur: PropTypes.func,
   onDayFocus: PropTypes.func,
   onDaySelect: PropTypes.func.isRequired,
   /**

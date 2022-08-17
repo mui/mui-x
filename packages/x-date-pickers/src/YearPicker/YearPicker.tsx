@@ -97,7 +97,10 @@ export const YearPicker = React.forwardRef(function YearPicker<TDate>(
 
   const wrapperVariant = React.useContext(WrapperVariantContext);
   const selectedYearRef = React.useRef<HTMLButtonElement>(null);
-  const [focusedYear, setFocusedYear] = React.useState<number | null>(currentYear);
+  const [focusedYear, setFocusedYear] = React.useState<number>(
+    () => currentYear || utils.getYear(now),
+  );
+  const [hasFocus, setHasFocus] = React.useState<boolean>(!!autoFocus);
 
   const isYearDisabled = React.useCallback(
     (dateToValidate: TDate) => {
@@ -139,6 +142,7 @@ export const YearPicker = React.forwardRef(function YearPicker<TDate>(
     (year: number) => {
       if (!isYearDisabled(utils.setYear(selectedDateOrToday, year))) {
         setFocusedYear(year);
+        setHasFocus(true);
       }
     },
     [selectedDateOrToday, isYearDisabled, utils],
@@ -182,9 +186,10 @@ export const YearPicker = React.forwardRef(function YearPicker<TDate>(
             value={yearNumber}
             onClick={handleYearSelection}
             onKeyDown={handleKeyDown}
-            autoFocus={autoFocus && yearNumber === focusedYear}
+            autoFocus={hasFocus && yearNumber === focusedYear}
             ref={selected ? selectedYearRef : undefined}
             disabled={disabled || isYearDisabled(year)}
+            tabIndex={yearNumber === focusedYear ? 0 : -1}
           >
             {utils.format(year, 'year')}
           </PickersYear>
