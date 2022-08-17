@@ -12,11 +12,12 @@ import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { getMinimalContentHeight } from '../../hooks/features/rows/gridRowsUtils';
 
 const GridOverlayWrapperRoot = styled('div')({
-  position: 'sticky',
-  float: 'left',
+  position: 'sticky', // To stay in place while scrolling
   top: 0,
   left: 0,
-  zIndex: 4, // should be above pinned columns, pinned rows and detail panel
+  width: 0, // To stay above the content instead of shifting it down
+  height: 0, // To stay above the content instead of shifting it down
+  zIndex: 4, // Should be above pinned columns, pinned rows and detail panel
 });
 
 function GridOverlayWrapper(props: React.PropsWithChildren<{}>) {
@@ -50,10 +51,6 @@ function GridOverlayWrapper(props: React.PropsWithChildren<{}>) {
         style={{
           height,
           width: viewportInnerSize?.width ?? 0,
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          right: 0,
         }}
         {...props}
       />
