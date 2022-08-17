@@ -10,6 +10,7 @@ import { PickersActionBar, PickersActionBarProps } from '../../PickersActionBar'
 
 export interface PickersPopperSlotsComponent {
   ActionBar: React.ElementType<PickersActionBarProps>;
+  PopperPaper?: React.ElementType<{ children: React.ReactNode }>;
 }
 export interface PickersPopperSlotsComponentsProps {
   actionBar: Omit<PickersActionBarProps, 'onAccept' | 'onClear' | 'onCancel' | 'onSetToday'>;
@@ -284,6 +285,7 @@ export const PickersPopper = (props: PickerPopperProps) => {
   };
 
   const ActionBar = components?.ActionBar ?? PickersActionBar;
+  const PopperPaperContent = components?.PopperPaper || React.Fragment;
 
   return (
     <PickersPopperRoot
@@ -323,15 +325,17 @@ export const PickersPopper = (props: PickerPopperProps) => {
               ownerState={{ ...ownerState, placement }}
               {...otherPaperProps}
             >
-              {children}
-              <ActionBar
-                onAccept={onAccept}
-                onClear={onClear}
-                onCancel={onCancel}
-                onSetToday={onSetToday}
-                actions={[]}
-                {...componentsProps?.actionBar}
-              />
+              <PopperPaperContent>
+                {children}
+                <ActionBar
+                  onAccept={onAccept}
+                  onClear={onClear}
+                  onCancel={onCancel}
+                  onSetToday={onSetToday}
+                  actions={[]}
+                  {...componentsProps?.actionBar}
+                />
+              </PopperPaperContent>
             </PickersPopperPaper>
           </TransitionComponent>
         </TrapFocus>

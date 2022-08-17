@@ -81,9 +81,10 @@ In the example below, the actions are the same as in the section above, but they
 
 {{"demo": "ActionBarComponent.js"}}
 
-## Top bar
+## Popper paper
 
-The top bar is available on all picker components. It is located at the top of the picker's views.  
-You can provide any custom component to this slot. By default, it is empty.
+The popper paper is available on all picker components except `Static`. It adds a flexible way to extend what is rendered in the picker paper.  
+You can provide any custom component to this slot as long as it passes `children` down maintaining original picker behavior.  
+In the example below we provide an example of implementing date range shortcuts using this slot.
 
-{{"demo": "TopBarComponent.js"}}
+{{"demo": "PopperPaperComponent.js"}}

@@ -46,6 +46,32 @@ describe('<DesktopDatePicker />', () => {
     expect(getByTestId('component-test')).not.to.equal(null);
   });
 
+  it('prop: components.PopperPaper', () => {
+    function CustomPopperPaper({ children }) {
+      return (
+        <div>
+          <p>test custom content</p>
+          {children}
+        </div>
+      );
+    }
+    render(
+      <DesktopDatePicker
+        renderInput={(params) => <TextField {...params} />}
+        onChange={() => {}}
+        value={null}
+        components={{
+          PopperPaper: CustomPopperPaper,
+        }}
+      />,
+    );
+
+    openPicker({ type: 'date', variant: 'desktop' });
+
+    expect(screen.getByText('test custom content')).not.equal(null);
+    expect(screen.getByText('January 1970')).not.equal(null);
+  });
+
   ['readOnly', 'disabled'].forEach((prop) => {
     it(`cannot be opened when "Choose date" is clicked when ${prop}={true}`, () => {
       const handleOpen = spy();

@@ -89,19 +89,4 @@ describe('<StaticDatePicker />', () => {
     expect(getMonthButton('Mar')).to.have.attribute('disabled');
     expect(getMonthButton('Apr')).not.to.have.attribute('disabled');
   });
-
-  it('should render `TopBar` custom component', () => {
-    render(
-      <StaticDatePicker
-        renderInput={(params) => <TextField {...params} />}
-        onChange={() => {}}
-        value={adapterToUse.date(new Date(2021, 4, 1))}
-        components={{
-          TopBar: () => <div>test top bar</div>,
-        }}
-      />,
-    );
-
-    expect(screen.getByText('test top bar')).not.equal(null);
-  });
 });

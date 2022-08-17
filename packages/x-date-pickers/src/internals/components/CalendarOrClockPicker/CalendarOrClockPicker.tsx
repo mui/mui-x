@@ -106,12 +106,10 @@ export function CalendarOrClockPicker<TDate, View extends CalendarOrClockPickerV
     toolbarPlaceholder,
     toolbarTitle,
     views,
-    components,
     ...other
   } = props;
   const isLandscape = useIsLandscape(views, orientation);
   const wrapperVariant = React.useContext(WrapperVariantContext);
-  const TopBar = components?.TopBar;
   const toShowToolbar = showToolbar ?? wrapperVariant !== 'desktop';
 
   const handleDateChange = React.useCallback<PickerOnChangeFn<TDate>>(
@@ -143,7 +141,6 @@ export function CalendarOrClockPicker<TDate, View extends CalendarOrClockPickerV
 
   return (
     <PickerRoot ownerState={{ isLandscape }}>
-      {TopBar && <TopBar />}
       {toShowToolbar && (
         <ToolbarComponent
           {...other}
@@ -182,7 +179,6 @@ export function CalendarOrClockPicker<TDate, View extends CalendarOrClockPickerV
                 view={openView}
                 // Unclear why the predicate `isDatePickerView` does not imply the casted type
                 views={views.filter(isDatePickerView) as CalendarPickerView[]}
-                components={components}
                 {...other}
               />
             )}
@@ -198,7 +194,6 @@ export function CalendarOrClockPicker<TDate, View extends CalendarOrClockPickerV
                 onChange={handleChangeAndOpenNext}
                 onViewChange={setOpenView as (view: ClockPickerView) => void}
                 showViewSwitcher={wrapperVariant === 'desktop'}
-                components={components}
               />
             )}
           </React.Fragment>

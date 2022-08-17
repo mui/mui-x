@@ -1,0 +1,15 @@
+<LocalizationProvider dateAdapter={AdapterDateFns}>
+  <DateRangePicker
+    onChange={(newValue) => setValue(newValue)}
+    value={value}
+    components={{
+      PopperPaper: WrappedPopperPaper,
+    }}
+    PaperProps={{
+      sx: {
+        display: 'flex',
+        flexDirection: 'row',
+      },
+    }}
+  />
+</LocalizationProvider>
