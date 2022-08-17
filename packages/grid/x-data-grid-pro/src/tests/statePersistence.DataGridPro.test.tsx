@@ -73,6 +73,10 @@ const FULL_INITIAL_STATE: GridInitialState = {
   preferencePanel: {
     open: true,
     openedPanelValue: GridPreferencePanelsValue.filters,
+    ids: {
+      buttonId: 'buttonId',
+      panelId: 'panelId',
+    },
   },
   sorting: {
     sortModel: [{ field: 'id', sort: 'desc' }],
@@ -210,7 +214,10 @@ describe('<DataGridPro /> - State Persistence', () => {
         apiRef.current.setPageSize(2);
         apiRef.current.setPage(1);
         apiRef.current.setPinnedColumns({ left: ['id'] });
-        apiRef.current.showPreferences(GridPreferencePanelsValue.filters);
+        apiRef.current.showPreferences(GridPreferencePanelsValue.filters, {
+          panelId: 'panelId',
+          buttonId: 'buttonId',
+        });
         apiRef.current.setSortModel([{ field: 'id', sort: 'desc' }]);
         apiRef.current.setFilterModel({
           items: [{ columnField: 'id', operatorValue: '<', value: '5' }],

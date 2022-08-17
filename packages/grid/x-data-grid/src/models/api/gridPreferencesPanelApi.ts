@@ -8,13 +8,13 @@ export interface GridPreferencesPanelApi {
    * Displays the preferences panel. The `newValue` argument controls the content of the panel.
    * @param {GridPreferencePanelsValue} newValue The panel to open. Use `"filters"` or `"columns"`.
 
-   * @param {Object} ids Object containing button and panel ids
-   * @param {string} ids.panelId The unique panel id
-   * @param {string} ids.buttonId The unique button id
+   * @param {Object?} ids Object containing button and panel ids
+   * @param {string?} ids.panelId The unique panel id
+   * @param {string?} ids.buttonId The unique button id
    */
   showPreferences: (
     newValue: GridPreferencePanelsValue,
-    ids: {
+    ids?: {
       panelId?: string;
       buttonId?: string;
     },
