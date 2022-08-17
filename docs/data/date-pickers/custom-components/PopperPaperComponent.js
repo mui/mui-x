@@ -21,7 +21,44 @@ import {
   endOfMonth,
   addMonths,
 } from 'date-fns';
-import { RangeShortcut, rangeShortcuts } from './rangeShortcut';
+
+let RangeShortcut;
+// eslint-disable-next-line func-names, @typescript-eslint/no-shadow
+(function (RangeShortcut) {
+  RangeShortcut.thisWeek = 'THIS_WEEK';
+  RangeShortcut.lastWeek = 'LAST_WEEK';
+  RangeShortcut.last7Days = 'LAST_7_DAYS';
+  RangeShortcut.currentMonth = 'CURRENT_MONTH';
+  RangeShortcut.nextMonth = 'NEXT_MONTH';
+  RangeShortcut.reset = 'RESET';
+})(RangeShortcut || (RangeShortcut = {}));
+
+const rangeShortcuts = [
+  {
+    range: RangeShortcut.thisWeek,
+    label: 'This week',
+  },
+  {
+    range: RangeShortcut.lastWeek,
+    label: 'Last week',
+  },
+  {
+    range: RangeShortcut.last7Days,
+    label: 'Last 7 days',
+  },
+  {
+    range: RangeShortcut.currentMonth,
+    label: 'Current month',
+  },
+  {
+    range: RangeShortcut.nextMonth,
+    label: 'Next month',
+  },
+  {
+    range: RangeShortcut.reset,
+    label: 'Reset',
+  },
+];
 
 const RangeShortcutsPanel = ({ setValue, children }) => {
   const handleRangeClick = React.useCallback(
