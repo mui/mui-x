@@ -110,6 +110,7 @@ export function CalendarOrClockPicker<TDate, View extends CalendarOrClockPickerV
   } = props;
   const isLandscape = useIsLandscape(views, orientation);
   const wrapperVariant = React.useContext(WrapperVariantContext);
+
   const toShowToolbar = showToolbar ?? wrapperVariant !== 'desktop';
 
   const handleDateChange = React.useCallback<PickerOnChangeFn<TDate>>(
