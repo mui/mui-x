@@ -3,6 +3,46 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 5.15.3
+
+_Aug 18, 2022_
+
+We'd like to offer a big thanks to the 9 contributors who made this release possible. Here are some highlights ✨:
+
+- 📚 Documentation improvements
+- 🐞 Bugfixes
+
+### `@mui/x-data-grid@5.15.3` / `@mui/x-data-grid-pro@5.15.3` / `@mui/x-data-grid-premium@5.15.3`
+
+#### Changes
+
+- [DataGrid] Fix <kbd>Enter</kbd> causing Select to re-open when commiting value (#5756) @m4theushw
+- [DataGrid] Fix `GridOverlays` bypassing pointer events (#5674) @philjones88
+
+### `@mui/x-date-pickers@v5.0.0-beta.6` / `@mui/x-date-picker-pro@5.0.0-beta.6`
+
+- [DatePicker] Support click on day outside of current month (#5768) @alexfauquette
+- [pickers] Extend `PickersActionBarProps` with `DialogActionProps` (#5798) @LukasTy
+
+### Docs
+
+- [docs] Fix API anchor link scroll top (#5795) @oliviertassinari
+- [docs] Fix contradiction in the free trial clause (#5732) @oliviertassinari
+- [docs] Fix default value of the DataGrid `logLevel` prop to false (#5784) @HwangTaehyun
+- [docs] Fix typo on the row height page (#5772) @flaviendelangle
+- [docs] Improve "upgrading plans" documentation. (#5683) @joserodolfofreitas
+- [docs] Link the license docs before pricing (#5726) @oliviertassinari
+- [docs] Update packages README files (#5835) @cherniavskii
+- [docs] Use `InputBase` for pickers inputs (#5597) @cherniavskii
+
+### Core
+
+- [core] Upgrade monorepo (#5771, #5797) @cherniavskii
+- [core] Various TS improvements (#5556) @flaviendelangle
+- [license] Give more context in the missing license (#5731) @oliviertassinari
+- [license] Only log an error type once (#5730) @oliviertassinari
+- [test] Increase timeout to take print screenshot (#5799) @m4theushw
+
 ## 5.15.2
 
 _Aug 11, 2022_
