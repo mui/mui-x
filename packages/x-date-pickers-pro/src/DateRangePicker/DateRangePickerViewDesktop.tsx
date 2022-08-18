@@ -180,10 +180,7 @@ export function DateRangePickerViewDesktop<TDate>(props: DesktopDateRangeCalenda
         const monthOnIteration = utils.setMonth(currentMonth, utils.getMonth(currentMonth) + index);
 
         return (
-          <DateRangePickerViewDesktopContainer
-            key={index}
-            data-mui-test={`date-range-picker-${index}`}
-          >
+          <DateRangePickerViewDesktopContainer key={index}>
             <DateRangePickerViewDesktopArrowSwitcher
               onLeftClick={selectPreviousMonth}
               onRightClick={selectNextMonth}

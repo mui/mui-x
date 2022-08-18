@@ -33,8 +33,8 @@ const WrappedDesktopDateRangePicker = withPickerControls(DesktopDateRangePicker)
   ),
 });
 
-const getPickerDay = (name: string, picker = '0') =>
-  getByRole(screen.getByMuiTest(`date-range-picker-${picker}`), 'gridcell', { name });
+const getPickerDay = (name: string, picker = 'January 2018') =>
+  getByRole(screen.getByText(picker)?.parentElement?.parentElement, 'gridcell', { name });
 
 describe('<DesktopDateRangePicker />', () => {
   const { render, clock } = createPickerRenderer({
@@ -126,7 +126,7 @@ describe('<DesktopDateRangePicker />', () => {
 
       openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'start' });
 
-      fireEvent.click(getPickerDay('1'));
+      fireEvent.click(getPickerDay('1', 'January 2019'));
       // FIXME use `getByRole(role, {hidden: false})` and skip JSDOM once this suite can run in JSDOM
       const [visibleButton] = screen.getAllByRole('button', {
         hidden: true,
@@ -134,7 +134,7 @@ describe('<DesktopDateRangePicker />', () => {
       });
       fireEvent.click(visibleButton);
       clock.runToLast();
-      fireEvent.click(getPickerDay('19', '1'));
+      fireEvent.click(getPickerDay('19', 'March 2019'));
 
       expect(handleChange.callCount).to.equal(1);
       const [changedRange] = handleChange.lastCall.args;
@@ -154,12 +154,12 @@ describe('<DesktopDateRangePicker />', () => {
 
       openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'start' });
 
-      fireEvent.click(getPickerDay('30'));
-      fireEvent.click(getPickerDay('19'));
+      fireEvent.click(getPickerDay('30', 'January 2019'));
+      fireEvent.click(getPickerDay('19', 'January 2019'));
 
       expect(screen.queryByMuiTest('DateRangeHighlight')).to.equal(null);
 
-      fireEvent.click(getPickerDay('30'));
+      fireEvent.click(getPickerDay('30', 'January 2019'));
 
       expect(handleChange.callCount).to.equal(3);
       const [changedRange] = handleChange.lastCall.args;
