@@ -160,6 +160,14 @@ export const MonthPicker = React.forwardRef(function MonthPicker<TDate>(
     [selectedDateOrToday, isMonthDisabled, utils],
   );
 
+  React.useEffect(() => {
+    setFocusedMonth((prevFocusedMonth) =>
+      selectedMonth !== null && prevFocusedMonth !== selectedMonth
+        ? selectedMonth
+        : prevFocusedMonth,
+    );
+  }, [selectedMonth]);
+
   const handleKeyDown = (event: React.KeyboardEvent) => {
     const monthsInYear = 12;
     const monthsInRow = 3;

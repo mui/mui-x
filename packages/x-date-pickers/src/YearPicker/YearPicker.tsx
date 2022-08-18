@@ -149,6 +149,12 @@ export const YearPicker = React.forwardRef(function YearPicker<TDate>(
     [selectedDateOrToday, isYearDisabled, utils],
   );
 
+  React.useEffect(() => {
+    setFocusedYear((prevFocusedYear) =>
+      currentYear !== null && prevFocusedYear !== currentYear ? currentYear : prevFocusedYear,
+    );
+  }, [currentYear]);
+
   const yearsInRow = wrapperVariant === 'desktop' ? 4 : 3;
 
   const handleKeyDown = (event: React.KeyboardEvent, year: number) => {
@@ -191,6 +197,9 @@ export const YearPicker = React.forwardRef(function YearPicker<TDate>(
             ref={selected ? selectedYearRef : undefined}
             disabled={disabled || isYearDisabled(year)}
             tabIndex={yearNumber === focusedYear ? 0 : -1}
+            onFocus={() => {
+              focusYear(yearNumber);
+            }}
           >
             {utils.format(year, 'year')}
           </PickersYear>
