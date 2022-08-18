@@ -21,16 +21,18 @@ import {
   addMonths,
 } from 'date-fns';
 
-enum RangeShortcut {
-  thisWeek = 'THIS_WEEK',
-  lastWeek = 'LAST_WEEK',
-  last7Days = 'LAST_7_DAYS',
-  currentMonth = 'CURRENT_MONTH',
-  nextMonth = 'NEXT_MONTH',
-  reset = 'RESET',
-}
+const RangeShortcut = {
+  thisWeek: 'THIS_WEEK',
+  lastWeek: 'LAST_WEEK',
+  last7Days: 'LAST_7_DAYS',
+  currentMonth: 'CURRENT_MONTH',
+  nextMonth: 'NEXT_MONTH',
+  reset: 'RESET',
+};
 
-const rangeShortcuts: { range: RangeShortcut; label: string }[] = [
+type RangeShortcutType = keyof typeof RangeShortcut;
+
+const rangeShortcuts = [
   {
     range: RangeShortcut.thisWeek,
     label: 'This week',
@@ -62,7 +64,7 @@ const RangeShortcutsPanel: React.FC<{
   children: React.ReactNode;
 }> = ({ setValue, children }) => {
   const handleRangeClick = React.useCallback(
-    (range: RangeShortcut) => {
+    (range: RangeShortcutType) => {
       const today = new Date();
       switch (range) {
         case RangeShortcut.thisWeek:
@@ -103,7 +105,9 @@ const RangeShortcutsPanel: React.FC<{
           <List>
             {rangeShortcuts.map(({ range, label }) => (
               <ListItem key={range} disablePadding>
-                <ListItemButton onClick={() => handleRangeClick(range)}>
+                <ListItemButton
+                  onClick={() => handleRangeClick(range as RangeShortcutType)}
+                >
                   <ListItemText primary={label} />
                 </ListItemButton>
               </ListItem>
@@ -137,15 +141,8 @@ export default function PopperPaperComponent() {
             <TextField {...endProps} />
           </React.Fragment>
         )}
-        components={{
-          PopperPaper: WrappedPopperPaper,
-        }}
-        PaperProps={{
-          sx: {
-            display: 'flex',
-            flexDirection: 'row',
-          },
-        }}
+        components={{ PopperPaper: WrappedPopperPaper }}
+        PaperProps={{ sx: { display: 'flex', flexDirection: 'row' } }}
       />
     </LocalizationProvider>
   );

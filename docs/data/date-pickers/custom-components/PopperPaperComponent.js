@@ -21,15 +21,15 @@ import {
   endOfMonth,
   addMonths,
 } from 'date-fns';
-var RangeShortcut;
-(function (RangeShortcut) {
-  RangeShortcut['thisWeek'] = 'THIS_WEEK';
-  RangeShortcut['lastWeek'] = 'LAST_WEEK';
-  RangeShortcut['last7Days'] = 'LAST_7_DAYS';
-  RangeShortcut['currentMonth'] = 'CURRENT_MONTH';
-  RangeShortcut['nextMonth'] = 'NEXT_MONTH';
-  RangeShortcut['reset'] = 'RESET';
-})(RangeShortcut || (RangeShortcut = {}));
+
+const RangeShortcut = {
+  thisWeek: 'THIS_WEEK',
+  lastWeek: 'LAST_WEEK',
+  last7Days: 'LAST_7_DAYS',
+  currentMonth: 'CURRENT_MONTH',
+  nextMonth: 'NEXT_MONTH',
+  reset: 'RESET',
+};
 
 const rangeShortcuts = [
   {
@@ -144,15 +144,8 @@ export default function PopperPaperComponent() {
             <TextField {...endProps} />
           </React.Fragment>
         )}
-        components={{
-          PopperPaper: WrappedPopperPaper,
-        }}
-        PaperProps={{
-          sx: {
-            display: 'flex',
-            flexDirection: 'row',
-          },
-        }}
+        components={{ PopperPaper: WrappedPopperPaper }}
+        PaperProps={{ sx: { display: 'flex', flexDirection: 'row' } }}
       />
     </LocalizationProvider>
   );

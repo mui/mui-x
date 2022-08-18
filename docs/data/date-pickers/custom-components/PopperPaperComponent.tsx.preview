@@ -2,14 +2,14 @@
   <DateRangePicker
     onChange={(newValue) => setValue(newValue)}
     value={value}
-    components={{
-      PopperPaper: WrappedPopperPaper,
-    }}
-    PaperProps={{
-      sx: {
-        display: 'flex',
-        flexDirection: 'row',
-      },
-    }}
+    renderInput={(startProps, endProps) => (
+      <React.Fragment>
+        <TextField {...startProps} />
+        <Box sx={{ mx: 2 }}> to </Box>
+        <TextField {...endProps} />
+      </React.Fragment>
+    )}
+    components={{ PopperPaper: WrappedPopperPaper }}
+    PaperProps={{ sx: { display: 'flex', flexDirection: 'row' } }}
   />
 </LocalizationProvider>
