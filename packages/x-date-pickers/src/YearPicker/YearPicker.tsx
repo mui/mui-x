@@ -48,6 +48,8 @@ export interface YearPickerProps<TDate> extends YearValidationProps<TDate> {
    * @default false
    */
   disableHighlightToday?: boolean;
+  onYearFocus?: (year: number) => void;
+  onYearBlur?: (year: number) => void;
 }
 
 type YearPickerComponent = (<TDate>(props: YearPickerProps<TDate>) => JSX.Element) & {
@@ -77,6 +79,8 @@ export const YearPicker = React.forwardRef(function YearPicker<TDate>(
     readOnly,
     shouldDisableYear,
     disableHighlightToday,
+    onYearFocus,
+    onYearBlur,
   } = props;
 
   const ownerState = props;
@@ -100,8 +104,6 @@ export const YearPicker = React.forwardRef(function YearPicker<TDate>(
   const [focusedYear, setFocusedYear] = React.useState<number>(
     () => currentYear || utils.getYear(now),
   );
-
-  const [hasFocus, setHasFocus] = React.useState<boolean>(!!autoFocus);
 
   const isYearDisabled = React.useCallback(
     (dateToValidate: TDate) => {
@@ -143,10 +145,10 @@ export const YearPicker = React.forwardRef(function YearPicker<TDate>(
     (year: number) => {
       if (!isYearDisabled(utils.setYear(selectedDateOrToday, year))) {
         setFocusedYear(year);
-        setHasFocus(true);
+        onYearFocus?.(year);
       }
     },
-    [selectedDateOrToday, isYearDisabled, utils],
+    [selectedDateOrToday, isYearDisabled, utils, onYearFocus],
   );
 
   React.useEffect(() => {
@@ -193,12 +195,15 @@ export const YearPicker = React.forwardRef(function YearPicker<TDate>(
             value={yearNumber}
             onClick={handleYearSelection}
             onKeyDown={handleKeyDown}
-            autoFocus={hasFocus && yearNumber === focusedYear}
+            autoFocus={autoFocus && yearNumber === focusedYear}
             ref={selected ? selectedYearRef : undefined}
             disabled={disabled || isYearDisabled(year)}
             tabIndex={yearNumber === focusedYear ? 0 : -1}
             onFocus={() => {
               focusYear(yearNumber);
+            }}
+            onBlur={() => {
+              onYearBlur?.(yearNumber);
             }}
           >
             {utils.format(year, 'year')}
@@ -244,6 +249,8 @@ YearPicker.propTypes = {
   minDate: PropTypes.any,
   onChange: PropTypes.func.isRequired,
   onFocusedDayChange: PropTypes.func,
+  onYearBlur: PropTypes.func,
+  onYearFocus: PropTypes.func,
   readOnly: PropTypes.bool,
   /**
    * Disable specific years dynamically.

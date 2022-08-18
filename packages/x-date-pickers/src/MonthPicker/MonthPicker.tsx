@@ -37,6 +37,8 @@ export interface MonthPickerProps<TDate> extends MonthValidationProps<TDate> {
    */
   disableHighlightToday?: boolean;
   autoFocus?: boolean;
+  onMonthFocus?: (month: number) => void;
+  onMonthBlur?: (month: number) => void;
 }
 
 const useUtilityClasses = (ownerState: MonthPickerProps<any>) => {
@@ -91,6 +93,8 @@ export const MonthPicker = React.forwardRef(function MonthPicker<TDate>(
     readOnly,
     disableHighlightToday,
     autoFocus,
+    onMonthFocus,
+    onMonthBlur,
     ...other
   } = props;
   const ownerState = props;
@@ -111,8 +115,6 @@ export const MonthPicker = React.forwardRef(function MonthPicker<TDate>(
   const [focusedMonth, setFocusedMonth] = React.useState<number>(
     () => selectedMonth || utils.getMonth(now),
   );
-
-  const [hasFocus, setHasFocus] = React.useState<boolean>(!!autoFocus);
 
   const isMonthDisabled = React.useCallback(
     (month: TDate) => {
@@ -154,10 +156,10 @@ export const MonthPicker = React.forwardRef(function MonthPicker<TDate>(
     (month: number) => {
       if (!isMonthDisabled(utils.setMonth(selectedDateOrToday, month))) {
         setFocusedMonth(month);
-        setHasFocus(true);
+        onMonthFocus?.(month);
       }
     },
-    [selectedDateOrToday, isMonthDisabled, utils],
+    [selectedDateOrToday, isMonthDisabled, utils, onMonthFocus],
   );
 
   React.useEffect(() => {
@@ -219,9 +221,10 @@ export const MonthPicker = React.forwardRef(function MonthPicker<TDate>(
             value={monthNumber}
             selected={monthNumber === selectedMonth}
             tabIndex={monthNumber === focusedMonth && !isDisabled ? 0 : -1}
-            hasFocus={hasFocus && monthNumber === focusedMonth}
+            hasFocus={!!autoFocus && monthNumber === focusedMonth}
             onSelect={onMonthSelect}
             onFocus={() => focusMonth(monthNumber)}
+            onBlur={() => onMonthBlur?.(monthNumber)}
             disabled={isDisabled}
           >
             {monthText}
@@ -281,6 +284,8 @@ MonthPicker.propTypes = {
    * Callback fired on date change.
    */
   onChange: PropTypes.func.isRequired,
+  onMonthBlur: PropTypes.func,
+  onMonthFocus: PropTypes.func,
   /**
    * If `true` picker is readonly
    */

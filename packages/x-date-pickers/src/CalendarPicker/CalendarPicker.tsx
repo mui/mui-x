@@ -111,6 +111,12 @@ export interface CalendarPickerProps<TDate>
    * @returns {void|Promise} -
    */
   onMonthChange?: (month: TDate) => void | Promise<void>;
+  onDayFocus?: (day: TDate) => void;
+  onDayBlur?: (day: TDate) => void;
+  onMonthFocus?: (month: number) => void;
+  onMonthBlur?: (month: number) => void;
+  onYearFocus?: (year: number) => void;
+  onYearBlur?: (year: number) => void;
 }
 
 export type ExportedCalendarPickerProps<TDate> = Omit<
@@ -209,6 +215,12 @@ const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
     minDate = defaultDates.minDate,
     maxDate = defaultDates.maxDate,
     disableHighlightToday,
+    onDayFocus,
+    onDayBlur,
+    onMonthFocus,
+    onMonthBlur,
+    onYearFocus,
+    onYearBlur,
     ...other
   } = props;
 
@@ -264,7 +276,7 @@ const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
         changeMonth(startOfMonth);
       }
 
-      changeFocusedDay(closestEnabledDate);
+      changeFocusedDay(closestEnabledDate, true);
     },
     [
       changeFocusedDay,
@@ -308,7 +320,7 @@ const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
         changeMonth(startOfYear);
       }
 
-      changeFocusedDay(closestEnabledDate);
+      changeFocusedDay(closestEnabledDate, true);
     },
     [
       changeFocusedDay,
@@ -413,6 +425,8 @@ const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
               date={date}
               onChange={handleDateYearChange}
               shouldDisableYear={shouldDisableYear}
+              onYearFocus={onYearFocus}
+              onYearBlur={onYearBlur}
             />
           )}
 
@@ -425,6 +439,8 @@ const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
               date={date}
               onChange={handleDateMonthChange}
               shouldDisableMonth={shouldDisableMonth}
+              onMonthFocus={onMonthFocus}
+              onMonthBlur={onMonthBlur}
             />
           )}
 
@@ -436,13 +452,17 @@ const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
               {...commonViewProps}
               autoFocus={autoFocus}
               onMonthSwitchingAnimationEnd={onMonthSwitchingAnimationEnd}
-              onFocusedDayChange={changeFocusedDay}
+              onFocusedDayChange={(day) => {
+                changeFocusedDay(day);
+                onDayFocus?.(day);
+              }}
               reduceAnimations={reduceAnimations}
               selectedDays={[date]}
               onSelectedDaysChange={onSelectedDayChange}
               loading={loading}
               renderLoading={renderLoading}
               shouldDisableDate={shouldDisableDate}
+              onDayBlur={onDayBlur}
             />
           )}
         </div>
@@ -531,6 +551,9 @@ CalendarPicker.propTypes = {
    * Callback fired on date change
    */
   onChange: PropTypes.func.isRequired,
+  onDayBlur: PropTypes.func,
+  onDayFocus: PropTypes.func,
+  onMonthBlur: PropTypes.func,
   /**
    * Callback firing on month change @DateIOType.
    * @template TDate
@@ -538,17 +561,20 @@ CalendarPicker.propTypes = {
    * @returns {void|Promise} -
    */
   onMonthChange: PropTypes.func,
+  onMonthFocus: PropTypes.func,
   /**
    * Callback fired on view change.
    * @param {CalendarPickerView} view The new view.
    */
   onViewChange: PropTypes.func,
+  onYearBlur: PropTypes.func,
   /**
    * Callback firing on year change @DateIOType.
    * @template TDate
    * @param {TDate} year The new year.
    */
   onYearChange: PropTypes.func,
+  onYearFocus: PropTypes.func,
   /**
    * Initially open view.
    * @default 'day'
