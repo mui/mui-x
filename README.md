@@ -93,11 +93,10 @@ Visit Stack Overflow to ask questions and read crowdsourced answers from expert 
 ### Bugs or feature request
 
 You can create an [issue](https://github.com/mui/mui-x/issues) on this repository.
-Please always provide a reproduction case. The following Data Grid templates can be a good start:
+Please always provide a reproduction case.
+As a starting point, we recommend you [browse the documentation](https://mui.com/x/introduction/), and [select](https://mui.com/static/docs/forking-an-example.png) the closest example to your use case.
+Or you can use a [basic template](https://mui.com/r/x-issue-template) to build your reproduction case.
 
-- [DataGrid community version](https://codesandbox.io/s/datagrid-v5-quick-start-54iz1)
-- [DataGridPro commercial version](https://codesandbox.io/s/datagridpro-v5-quick-start-5pjhc)
-- [DataGridPremium commercial version](https://codesandbox.io/s/datagridpremium-v5-quick-start-h2ztp2)
 
 ## Contributing
 
@@ -112,4 +111,4 @@ The [changelog](https://github.com/mui/mui-x/releases) is regularly updated to r
 
 ## Roadmap
 
-Future plans and high-priority features and enhancements can be found in our [roadmap](https://mui.com/material-ui/discover-more/roadmap/).
+Future plans and high-priority features and enhancements can be found in our [roadmap](https://mui.com/x/introduction/roadmap/).
