@@ -12,7 +12,7 @@ We'd like to offer a big thanks to the 9 contributors who made this release poss
 - 📚 Documentation improvements
 - 🐞 Bugfixes
 
-### `@mui/x-data-grid@5.15.3` / `@mui/x-data-grid-pro@5.15.3` / `@mui/x-data-grid-premium@5.15.3`
+### `@mui/x-data-grid@v5.15.3` / `@mui/x-data-grid-pro@v5.15.3` / `@mui/x-data-grid-premium@v5.15.3`
 
 #### Changes
 
@@ -55,7 +55,7 @@ We'd like to offer a big thanks to the 7 contributors who made this release poss
 - 📚 Documentation improvements
 - 🐞 Bugfixes
 
-### `@mui/x-data-grid@5.15.2` / `@mui/x-data-grid-pro@5.15.2` / `@mui/x-data-grid-premium@5.15.2`
+### `@mui/x-data-grid@v5.15.2` / `@mui/x-data-grid-pro@v5.15.2` / `@mui/x-data-grid-premium@v5.15.2`
 
 #### Changes
 
