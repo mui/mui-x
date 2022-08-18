@@ -123,6 +123,7 @@ import bgLocale from 'date-fns/locale/bg';
 | German                  | de-DE               | `deDE`      |
 | Italian                 | it-IT               | `itIT`      |
 | Norwegian (Bokmål)      | nb-NO               | `nbNO`      |
+| Polish                  | pl-PL               | `plPL`      |
 | Spanish                 | es-ES               | `esES`      |
 | Swedish                 | sv-SE               | `svSE`      |
 | Turkish                 | tr-TR               | `trTr`      |
