@@ -19,7 +19,7 @@ We'd like to offer a big thanks to the 9 contributors who made this release poss
 - [DataGrid] Fix <kbd>Enter</kbd> causing Select to re-open when commiting value (#5756) @m4theushw
 - [DataGrid] Fix `GridOverlays` bypassing pointer events (#5674) @philjones88
 
-### `@mui/x-date-pickers@v5.0.0-beta.6` / `@mui/x-date-picker-pro@5.0.0-beta.6`
+### `@mui/x-date-pickers@v5.0.0-beta.6` / `@mui/x-date-picker-pro@v5.0.0-beta.6`
 
 #### Changes
 
