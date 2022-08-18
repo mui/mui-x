@@ -1,4 +1,4 @@
-# @mui/x-data-grid-pro
+# @mui/x-data-grid-premium
 
 This package is the Premium plan edition of the data grid component.
 It's part of MUI X, an open core extension of MUI, with advanced components.
