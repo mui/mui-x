@@ -46,8 +46,8 @@ describe('<DesktopDatePicker />', () => {
     expect(getByTestId('component-test')).not.to.equal(null);
   });
 
-  it('prop: components.PopperPaper', () => {
-    function CustomPopperPaper({ children }) {
+  it('prop: components.PaperContent', () => {
+    function CustomPaperContent({ children }) {
       return (
         <div>
           <p>test custom content</p>
@@ -61,7 +61,7 @@ describe('<DesktopDatePicker />', () => {
         onChange={() => {}}
         value={null}
         components={{
-          PopperPaper: CustomPopperPaper,
+          PaperContent: CustomPaperContent,
         }}
       />,
     );

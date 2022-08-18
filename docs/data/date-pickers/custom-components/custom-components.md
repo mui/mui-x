@@ -81,10 +81,13 @@ In the example below, the actions are the same as in the section above, but they
 
 {{"demo": "ActionBarComponent.js"}}
 
-## Popper paper
+## Paper content
 
-The popper paper is available on all picker components except `Static`. It adds a flexible way to extend what is rendered in the picker paper.  
+The paper content is available on all desktop picker components.  
+It adds a flexible way to extend what is rendered in the picker paper.  
 You can provide any custom component to this slot as long as it passes `children` down maintaining original picker behavior.  
-In the example below we provide an example of implementing date range shortcuts using this slot.
+In the examples below we provide ways of implementing date range shortcuts using this slot.
 
-{{"demo": "PopperPaperComponent.js"}}
+{{"demo": "PaperContentComponent.js"}}
+
+{{"demo": "StaticPaperContentComponent.js"}}

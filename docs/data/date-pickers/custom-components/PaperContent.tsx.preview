@@ -9,7 +9,7 @@
         <TextField {...endProps} />
       </React.Fragment>
     )}
-    components={{ PopperPaper: WrappedPopperPaper }}
+    components={{ PaperContent: WrappedPaperContent }}
     PaperProps={{ sx: { display: 'flex', flexDirection: 'row' } }}
   />
 </LocalizationProvider>

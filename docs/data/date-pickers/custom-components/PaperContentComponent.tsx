@@ -121,9 +121,9 @@ const RangeShortcutsPanel: React.FC<{
   );
 };
 
-export default function PopperPaperComponent() {
+export default function PaperContentComponent() {
   const [value, setValue] = React.useState<DateRange<Date>>([null, null]);
-  const WrappedPopperPaper = React.useCallback(
+  const WrappedPaperContent = React.useCallback(
     ({ children }: { children: React.ReactNode }) => (
       <RangeShortcutsPanel setValue={setValue}>{children}</RangeShortcutsPanel>
     ),
@@ -141,7 +141,7 @@ export default function PopperPaperComponent() {
             <TextField {...endProps} />
           </React.Fragment>
         )}
-        components={{ PopperPaper: WrappedPopperPaper }}
+        components={{ PaperContent: WrappedPaperContent }}
         PaperProps={{ sx: { display: 'flex', flexDirection: 'row' } }}
       />
     </LocalizationProvider>

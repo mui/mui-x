@@ -2,17 +2,8 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
-import { DateRangePicker } from '@mui/x-date-pickers-pro';
-import {
-  TextField,
-  Box,
-  Typography,
-  Divider,
-  List,
-  ListItem,
-  ListItemButton,
-  ListItemText,
-} from '@mui/material';
+import { StaticDateRangePicker } from '@mui/x-date-pickers-pro';
+import { Box, Typography, Divider, Button } from '@mui/material';
 import {
   startOfWeek,
   endOfWeek,
@@ -98,20 +89,22 @@ const RangeShortcutsPanel = ({ setValue, children }) => {
 
   return (
     <React.Fragment>
-      <Box sx={{ m: 2 }} display="flex" gap={2}>
-        <div>
-          <Typography variant="overline">Date range shortcuts</Typography>
-          <List>
-            {rangeShortcuts.map(({ range, label }) => (
-              <ListItem key={range} disablePadding>
-                <ListItemButton onClick={() => handleRangeClick(range)}>
-                  <ListItemText primary={label} />
-                </ListItemButton>
-              </ListItem>
-            ))}
-          </List>
-        </div>
-        <Divider orientation="vertical" />
+      <Box sx={{ m: 2 }}>
+        <Typography variant="overline">Date range shortcuts</Typography>
+        <Box display="flex" gap={2} my={2}>
+          {rangeShortcuts.map(({ range, label }) => (
+            <Button
+              key={range}
+              onClick={() => handleRangeClick(range)}
+              variant="text"
+              color="inherit"
+              size="small"
+            >
+              {label}
+            </Button>
+          ))}
+        </Box>
+        <Divider />
       </Box>
       {children}
     </React.Fragment>
@@ -123,9 +116,9 @@ RangeShortcutsPanel.propTypes = {
   setValue: PropTypes.func.isRequired,
 };
 
-export default function PopperPaperComponent() {
+export default function StaticPaperContentComponent() {
   const [value, setValue] = React.useState([null, null]);
-  const WrappedPopperPaper = React.useCallback(
+  const WrappedPaperContent = React.useCallback(
     ({ children }) => (
       <RangeShortcutsPanel setValue={setValue}>{children}</RangeShortcutsPanel>
     ),
@@ -134,18 +127,12 @@ export default function PopperPaperComponent() {
 
   return (
     <LocalizationProvider dateAdapter={AdapterDateFns}>
-      <DateRangePicker
+      <StaticDateRangePicker
+        displayStaticWrapperAs="desktop"
         onChange={(newValue) => setValue(newValue)}
         value={value}
-        renderInput={(startProps, endProps) => (
-          <React.Fragment>
-            <TextField {...startProps} />
-            <Box sx={{ mx: 2 }}> to </Box>
-            <TextField {...endProps} />
-          </React.Fragment>
-        )}
-        components={{ PopperPaper: WrappedPopperPaper }}
-        PaperProps={{ sx: { display: 'flex', flexDirection: 'row' } }}
+        renderInput={() => <div />}
+        components={{ PaperContent: WrappedPaperContent }}
       />
     </LocalizationProvider>
   );

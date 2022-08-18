@@ -7,11 +7,10 @@ import { useForkRef, useEventCallback, ownerDocument } from '@mui/material/utils
 import { styled } from '@mui/material/styles';
 import { TransitionProps as MuiTransitionProps } from '@mui/material/transitions';
 import { PickersActionBar, PickersActionBarProps } from '../../PickersActionBar';
+import { PickersSlotsComponent } from './wrappers/WrapperProps';
 
-export interface PickersPopperSlotsComponent {
-  ActionBar: React.ElementType<PickersActionBarProps>;
-  PopperPaper?: React.ElementType<{ children: React.ReactNode }>;
-}
+export interface PickersPopperSlotsComponent extends PickersSlotsComponent {}
+
 export interface PickersPopperSlotsComponentsProps {
   actionBar: Omit<PickersActionBarProps, 'onAccept' | 'onClear' | 'onCancel' | 'onSetToday'>;
 }
@@ -285,7 +284,7 @@ export const PickersPopper = (props: PickerPopperProps) => {
   };
 
   const ActionBar = components?.ActionBar ?? PickersActionBar;
-  const PopperPaperContent = components?.PopperPaper || React.Fragment;
+  const PaperContent = components?.PaperContent || React.Fragment;
 
   return (
     <PickersPopperRoot
@@ -325,7 +324,7 @@ export const PickersPopper = (props: PickerPopperProps) => {
               ownerState={{ ...ownerState, placement }}
               {...otherPaperProps}
             >
-              <PopperPaperContent>
+              <PaperContent>
                 {children}
                 <ActionBar
                   onAccept={onAccept}
@@ -335,7 +334,7 @@ export const PickersPopper = (props: PickerPopperProps) => {
                   actions={[]}
                   {...componentsProps?.actionBar}
                 />
-              </PopperPaperContent>
+              </PaperContent>
             </PickersPopperPaper>
           </TransitionComponent>
         </TrapFocus>
