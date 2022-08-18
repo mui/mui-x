@@ -21,6 +21,8 @@ We'd like to offer a big thanks to the 9 contributors who made this release poss
 
 ### `@mui/x-date-pickers@v5.0.0-beta.6` / `@mui/x-date-picker-pro@5.0.0-beta.6`
 
+#### Changes
+
 - [DatePicker] Support click on day outside of current month (#5768) @alexfauquette
 - [pickers] Extend `PickersActionBarProps` with `DialogActionProps` (#5798) @LukasTy
 
