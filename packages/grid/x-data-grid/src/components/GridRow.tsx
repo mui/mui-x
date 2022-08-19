@@ -272,7 +272,7 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
   let rowClassName: string | null = null;
 
   if (typeof rootProps.getRowClassName === 'function') {
-    const indexRelativeToCurrentPage = index - currentPage.range!.firstRowIndex;
+    const indexRelativeToCurrentPage = index - (currentPage.range?.firstRowIndex || 0);
     const rowParams: GridRowClassNameParams = {
       ...apiRef.current.getRowParams(rowId),
       isFirstVisible: indexRelativeToCurrentPage === 0,
