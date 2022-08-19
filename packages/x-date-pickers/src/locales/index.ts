@@ -1,4 +1,5 @@
 export * from './nlNL';
+export * from './plPL';
 export * from './ptBR';
 export * from './trTR';
 export * from './deDE';
