@@ -213,13 +213,14 @@ export function DayPicker<TDate>(props: DayPickerProps<TDate>) {
                   const isSelected = validSelectedDays.some((selectedDay) =>
                     utils.isSameDay(selectedDay, day),
                   );
+                  const isToday = utils.isSameDay(day, now);
                   const pickersDayProps: PickersDayProps<TDate> = {
                     key: (day as any)?.toString(),
                     day,
                     isAnimating: isMonthSwitchingAnimating,
                     disabled: disabled || isDateDisabled(day),
                     autoFocus: autoFocus && focusedDay !== null && utils.isSameDay(day, focusedDay),
-                    today: utils.isSameDay(day, now),
+                    today: isToday,
                     outsideCurrentMonth: utils.getMonth(day) !== currentMonthNumber,
                     selected: isSelected,
                     disableHighlightToday,
@@ -229,6 +230,9 @@ export function DayPicker<TDate>(props: DayPickerProps<TDate>) {
                     role: 'gridcell',
                     'aria-selected': isSelected,
                   };
+                  if (isToday) {
+                    pickersDayProps['aria-current'] = 'date';
+                  }
 
                   return renderDay ? (
                     renderDay(day, validSelectedDays, pickersDayProps)
