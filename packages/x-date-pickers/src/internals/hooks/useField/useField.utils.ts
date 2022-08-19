@@ -225,7 +225,7 @@ export const getSectionValueNumericBoundaries = <TDate>(
   let maximum: number;
   switch (dateSectionName) {
     case 'day':
-      maximum = utils.getDaysInMonth(date);
+      maximum = utils.isValid(date) ? utils.getDaysInMonth(date) : 31;
       break;
 
     case 'month': {
