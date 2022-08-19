@@ -84,6 +84,11 @@ Only [date adapters](/x/react-date-pickers/getting-started/#setup) such as `Adap
 
 ### 3. Handle breaking changes introduced in alpha
 
+During the migration from `@mui/lab` to MUI X, we've focused on enhancing stability and developer experience.
+Some APIs were improved to be more coherent and customizable.
+
+Please check the complete list of the API changes before migrating from `@mui/x-date-pickers` 5.0.0-alpha.0 to the last v5.0.0.
+
 #### Props renaming
 
 The `disableCloseOnSelect` prop has been replaced by a new `closeOnSelect` prop which has the opposite behavior.
@@ -108,7 +113,7 @@ The props of `MonthPicker`, `YearPicker` and `DayPicker` have been reworked to m
 #### Translation
 
 Props for translation have been either deprecated or removed in favor of a [global localization](/x/react-date-pickers/localization/) similar to the one used by the data grid.
-We already have nine locales provided by the community.
+We already have ten locales provided by the community. (Thank you!)
 
 #### Use slot for `ActionBar`
 
