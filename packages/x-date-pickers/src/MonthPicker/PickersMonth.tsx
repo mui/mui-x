@@ -69,6 +69,7 @@ export const PickersMonth: React.FC<MonthProps> = (props) => {
     hasFocus,
     onFocus = noop,
     onBlur = noop,
+    ...other
   } = props;
 
   const handleSelection = () => {
@@ -99,6 +100,7 @@ export const PickersMonth: React.FC<MonthProps> = (props) => {
       disabled={disabled}
       onFocus={(event) => onFocus(event, value)}
       onBlur={(event) => onBlur(event, value)}
+      {...other}
     />
   );
 };
