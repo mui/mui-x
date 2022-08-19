@@ -2,7 +2,7 @@ import { PickersLocaleText } from './utils/pickersLocaleTextApi';
 import { getPickersLocalization } from './utils/getPickersLocalization';
 import { CalendarPickerView } from '../internals/models';
 
-const plPLPickers: PickersLocaleText<any> = {
+const plPLPickers: Partial<PickersLocaleText<any>> = {
   // Calendar navigation
   previousMonth: 'Poprzedni miesiąc',
   nextMonth: 'Następny miesiąc',
