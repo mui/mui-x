@@ -30,8 +30,8 @@ export interface YearProps {
   selected: boolean;
   value: number;
   tabIndex: number;
-  onFocus: (event: React.FocusEvent) => void;
-  onBlur: (event: React.FocusEvent) => void;
+  onFocus: (event: React.FocusEvent, year: number) => void;
+  onBlur: (event: React.FocusEvent, year: number) => void;
 }
 
 export function getPickersYearUtilityClass(slot: string) {
@@ -96,6 +96,7 @@ const PickersYearButton = styled('button')<{
   },
 }));
 
+const noop = () => {};
 /**
  * @ignore - internal component.
  */
@@ -112,8 +113,8 @@ export const PickersYear = React.forwardRef<HTMLButtonElement, YearProps>(functi
     onKeyDown,
     value,
     tabIndex,
-    onFocus,
-    onBlur,
+    onFocus = noop,
+    onBlur = noop,
   } = props;
   const ref = React.useRef<HTMLButtonElement>(null);
   const refHandle = useForkRef(ref, forwardedRef as React.Ref<HTMLButtonElement>);
@@ -148,8 +149,8 @@ export const PickersYear = React.forwardRef<HTMLButtonElement, YearProps>(functi
         tabIndex={disabled ? -1 : tabIndex}
         onClick={(event) => onClick(event, value)}
         onKeyDown={(event) => onKeyDown(event, value)}
-        onFocus={onFocus}
-        onBlur={onBlur}
+        onFocus={(event) => onFocus(event, value)}
+        onBlur={(event) => onBlur(event, value)}
         className={classes.yearButton}
         ownerState={ownerState}
       >

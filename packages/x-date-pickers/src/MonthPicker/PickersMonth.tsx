@@ -9,13 +9,16 @@ import { onSpaceOrEnter } from '../internals/utils/utils';
 
 const classes = generateUtilityClasses('PrivatePickersMonth', ['root', 'selected']);
 
-export interface MonthProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+export interface MonthProps {
   children: React.ReactNode;
   disabled?: boolean;
-  onSelect: (value: any) => void;
+  onSelect: (value: number) => void;
   selected?: boolean;
-  value: any;
+  value: number;
   hasFocus: boolean;
+  onBlur: (event: React.FocusEvent, month: number) => void;
+  onFocus: (event: React.FocusEvent, month: number) => void;
+  tabIndex: number;
 }
 
 export type PickersMonthClassKey = keyof typeof classes;
@@ -52,11 +55,21 @@ const PickersMonthRoot = styled<
   },
 })) as typeof Typography;
 
+const noop = () => {};
 /**
  * @ignore - do not document.
  */
 export const PickersMonth: React.FC<MonthProps> = (props) => {
-  const { disabled, onSelect, selected, value, tabIndex, hasFocus, ...other } = props;
+  const {
+    disabled,
+    onSelect,
+    selected,
+    value,
+    tabIndex,
+    hasFocus,
+    onFocus = noop,
+    onBlur = noop,
+  } = props;
 
   const handleSelection = () => {
     onSelect(value);
@@ -84,7 +97,8 @@ export const PickersMonth: React.FC<MonthProps> = (props) => {
       color={selected ? 'primary' : undefined}
       variant={selected ? 'h5' : 'subtitle1'}
       disabled={disabled}
-      {...other}
+      onFocus={(event) => onFocus(event, value)}
+      onBlur={(event) => onBlur(event, value)}
     />
   );
 };

@@ -159,28 +159,49 @@ export const YearPicker = React.forwardRef(function YearPicker<TDate>(
 
   const yearsInRow = wrapperVariant === 'desktop' ? 4 : 3;
 
-  const handleKeyDown = (event: React.KeyboardEvent, year: number) => {
-    switch (event.key) {
-      case 'ArrowUp':
-        focusYear(year - yearsInRow);
-        event.preventDefault();
-        break;
-      case 'ArrowDown':
-        focusYear(year + yearsInRow);
-        event.preventDefault();
-        break;
-      case 'ArrowLeft':
-        focusYear(year + (theme.direction === 'ltr' ? -1 : 1));
-        event.preventDefault();
-        break;
-      case 'ArrowRight':
-        focusYear(year + (theme.direction === 'ltr' ? 1 : -1));
-        event.preventDefault();
-        break;
-      default:
-        break;
-    }
-  };
+  const handleKeyDown = React.useCallback(
+    (event: React.KeyboardEvent, year: number) => {
+      switch (event.key) {
+        case 'ArrowUp':
+          focusYear(year - yearsInRow);
+          event.preventDefault();
+          break;
+        case 'ArrowDown':
+          focusYear(year + yearsInRow);
+          event.preventDefault();
+          break;
+        case 'ArrowLeft':
+          focusYear(year + (theme.direction === 'ltr' ? -1 : 1));
+          event.preventDefault();
+          break;
+        case 'ArrowRight':
+          focusYear(year + (theme.direction === 'ltr' ? 1 : -1));
+          event.preventDefault();
+          break;
+        default:
+          break;
+      }
+    },
+    [focusYear, theme.direction, yearsInRow],
+  );
+
+  const handleFocus = React.useCallback(
+    (event: React.FocusEvent, year: number) => {
+      if (onYearFocus) {
+        onYearFocus(year);
+      }
+    },
+    [onYearFocus],
+  );
+
+  const handleBlur = React.useCallback(
+    (event: React.FocusEvent, year: number) => {
+      if (onYearBlur) {
+        onYearBlur(year);
+      }
+    },
+    [onYearBlur],
+  );
 
   return (
     <YearPickerRoot ref={ref} className={clsx(classes.root, className)} ownerState={ownerState}>
@@ -199,12 +220,8 @@ export const YearPicker = React.forwardRef(function YearPicker<TDate>(
             ref={selected ? selectedYearRef : undefined}
             disabled={disabled || isYearDisabled(year)}
             tabIndex={yearNumber === focusedYear ? 0 : -1}
-            onFocus={() => {
-              focusYear(yearNumber);
-            }}
-            onBlur={() => {
-              onYearBlur?.(yearNumber);
-            }}
+            onFocus={handleFocus}
+            onBlur={handleBlur}
           >
             {utils.format(year, 'year')}
           </PickersYear>

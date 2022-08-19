@@ -202,6 +202,22 @@ export const MonthPicker = React.forwardRef(function MonthPicker<TDate>(
     }
   };
 
+  const handleMonthFocus = React.useCallback(
+    (event: React.FocusEvent, month: number) => {
+      focusMonth(month);
+    },
+    [focusMonth],
+  );
+
+  const handleMonthBlur = React.useCallback(
+    (event: React.FocusEvent, month: number) => {
+      if (onMonthBlur) {
+        onMonthBlur(month);
+      }
+    },
+    [onMonthBlur],
+  );
+
   return (
     <MonthPickerRoot
       ref={ref}
@@ -223,8 +239,8 @@ export const MonthPicker = React.forwardRef(function MonthPicker<TDate>(
             tabIndex={monthNumber === focusedMonth && !isDisabled ? 0 : -1}
             hasFocus={!!autoFocus && monthNumber === focusedMonth}
             onSelect={onMonthSelect}
-            onFocus={() => focusMonth(monthNumber)}
-            onBlur={() => onMonthBlur?.(monthNumber)}
+            onFocus={handleMonthFocus}
+            onBlur={handleMonthBlur}
             disabled={isDisabled}
           >
             {monthText}

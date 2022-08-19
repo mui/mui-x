@@ -1,6 +1,6 @@
 import * as React from 'react';
 import Typography from '@mui/material/Typography';
-import { styled } from '@mui/material/styles';
+import { styled, useTheme } from '@mui/material/styles';
 import { PickersDay, PickersDayProps } from '../PickersDay/PickersDay';
 import { useUtils, useNow } from '../internals/hooks/useUtils';
 import { PickerOnChangeFn } from '../internals/hooks/useViews';
@@ -169,10 +169,65 @@ export function DayPicker<TDate>(props: DayPickerProps<TDate>) {
     [onSelectedDaysChange, readOnly],
   );
 
-  const handleDayFocus = (day: TDate) => {
-    onFocusedDayChange(day);
-    setInternalFocusedDay(day);
-  };
+  const focusDay = React.useCallback(
+    (day: TDate) => {
+      if (!isDateDisabled(day)) {
+        onFocusedDayChange(day);
+        setInternalFocusedDay(day);
+      }
+    },
+    [isDateDisabled, onFocusedDayChange],
+  );
+
+  const theme = useTheme();
+
+  function handleKeyDown(event: React.KeyboardEvent<HTMLButtonElement>, day: TDate) {
+    switch (event.key) {
+      case 'ArrowUp':
+        focusDay(utils.addDays(day, -7));
+        event.preventDefault();
+        break;
+      case 'ArrowDown':
+        focusDay(utils.addDays(day, 7));
+        event.preventDefault();
+        break;
+      case 'ArrowLeft':
+        focusDay(utils.addDays(day, theme.direction === 'ltr' ? -1 : 1));
+        event.preventDefault();
+        break;
+      case 'ArrowRight':
+        focusDay(utils.addDays(day, theme.direction === 'ltr' ? 1 : -1));
+        event.preventDefault();
+        break;
+      case 'Home':
+        focusDay(utils.startOfWeek(day));
+        event.preventDefault();
+        break;
+      case 'End':
+        focusDay(utils.endOfWeek(day));
+        event.preventDefault();
+        break;
+      case 'PageUp':
+        focusDay(utils.getNextMonth(day));
+        event.preventDefault();
+        break;
+      case 'PageDown':
+        focusDay(utils.getPreviousMonth(day));
+        event.preventDefault();
+        break;
+      default:
+        break;
+    }
+  }
+
+  function handleFocus(event: React.FocusEvent<HTMLButtonElement>, day: TDate) {
+    focusDay(day);
+  }
+  function handleBlur(event: React.FocusEvent<HTMLButtonElement>, day: TDate) {
+    if (onDayBlur) {
+      onDayBlur(day);
+    }
+  }
 
   const currentMonthNumber = utils.getMonth(currentMonth);
   const validSelectedDays = selectedDays
@@ -247,10 +302,9 @@ export function DayPicker<TDate>(props: DayPickerProps<TDate>) {
                     ),
                     disableHighlightToday,
                     showDaysOutsideCurrentMonth,
-                    onDayFocus: handleDayFocus,
-                    onBlur: () => {
-                      onDayBlur?.(day);
-                    },
+                    onKeyDown: handleKeyDown,
+                    onFocus: handleFocus,
+                    onBlur: handleBlur,
                     onDaySelect: handleDaySelect,
                     tabIndex: isFocusableDay ? 0 : -1,
                   };
