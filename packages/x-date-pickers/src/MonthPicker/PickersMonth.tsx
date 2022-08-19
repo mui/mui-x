@@ -98,8 +98,8 @@ export const PickersMonth: React.FC<MonthProps> = (props) => {
       color={selected ? 'primary' : undefined}
       variant={selected ? 'h5' : 'subtitle1'}
       disabled={disabled}
-      onFocus={(event) => onFocus(event, value)}
-      onBlur={(event) => onBlur(event, value)}
+      onFocus={(event: React.FocusEvent) => onFocus(event, value)}
+      onBlur={(event: React.FocusEvent) => onBlur(event, value)}
       {...other}
     />
   );
