@@ -125,7 +125,7 @@ GridDetailPanelToggleCell.propTypes = {
    */
   tabIndex: PropTypes.oneOf([-1, 0]).isRequired,
   /**
-   * The cell value, but if the column has valueGetter, use getValue.
+   * The cell value. If the column has `valueGetter` - use `params.row` to directly access the fields.
    */
   value: PropTypes.any,
 } as any;
