@@ -305,6 +305,10 @@ export const PickersPopper = (props: PickerPopperProps) => {
         <TrapFocus
           open={open}
           disableAutoFocus
+          // pickers are managing focus position manually
+          // without this prop the focus is returned to the button before `aria-label` is updated
+          // which would force screen readers to read too old label
+          disableRestoreFocus
           disableEnforceFocus={role === 'tooltip'}
           isEnabled={() => true}
           {...TrapFocusProps}

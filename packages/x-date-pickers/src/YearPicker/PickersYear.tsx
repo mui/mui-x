@@ -100,7 +100,17 @@ export const PickersYear = React.forwardRef<HTMLButtonElement, YearProps>(functi
   props,
   forwardedRef,
 ) {
-  const { autoFocus, className, children, disabled, onClick, onKeyDown, selected, value, ...other } = props;
+  const {
+    autoFocus,
+    className,
+    children,
+    disabled,
+    onClick,
+    onKeyDown,
+    selected,
+    value,
+    ...other
+  } = props;
   const ref = React.useRef<HTMLButtonElement>(null);
   const refHandle = useForkRef(ref, forwardedRef as React.Ref<HTMLButtonElement>);
   const wrapperVariant = React.useContext(WrapperVariantContext);
