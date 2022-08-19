@@ -106,6 +106,10 @@ export interface GridValueGetterParams<V = any, R = any>
    * @deprecated Use the `apiRef` returned by `useGridApiContext` or `useGridApiRef` (only available in `@mui/x-data-grid-pro`)
    */
   api: any;
+  /**
+   * The default value for the cell that the `valueGetter` is overriding.
+   */
+  value: GridCellParams<V, R, any>['value'];
 }
 
 /**
