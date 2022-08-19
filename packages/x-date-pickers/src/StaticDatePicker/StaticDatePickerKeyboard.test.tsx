@@ -25,13 +25,13 @@ describe('<StaticDatePicker /> keyboard interactions', () => {
     });
 
     [
-      { keyCode: 35, key: 'End', expectFocusedDay: 'Aug 15, 2020' },
-      { keyCode: 36, key: 'Home', expectFocusedDay: 'Aug 9, 2020' },
-      { keyCode: 37, key: 'ArrowLeft', expectFocusedDay: 'Aug 12, 2020' },
-      { keyCode: 38, key: 'ArrowUp', expectFocusedDay: 'Aug 6, 2020' },
-      { keyCode: 39, key: 'ArrowRight', expectFocusedDay: 'Aug 14, 2020' },
-      { keyCode: 40, key: 'ArrowDown', expectFocusedDay: 'Aug 20, 2020' },
-    ].forEach(({ key, keyCode, expectFocusedDay }) => {
+      { key: 'End', expectFocusedDay: 'Aug 15, 2020' },
+      { key: 'Home', expectFocusedDay: 'Aug 9, 2020' },
+      { key: 'ArrowLeft', expectFocusedDay: 'Aug 12, 2020' },
+      { key: 'ArrowUp', expectFocusedDay: 'Aug 6, 2020' },
+      { key: 'ArrowRight', expectFocusedDay: 'Aug 14, 2020' },
+      { key: 'ArrowDown', expectFocusedDay: 'Aug 20, 2020' },
+    ].forEach(({ key, expectFocusedDay }) => {
       it(key, () => {
         render(
           <StaticDatePicker
@@ -45,7 +45,7 @@ describe('<StaticDatePicker /> keyboard interactions', () => {
 
         // Don't care about what's focused.
         // eslint-disable-next-line material-ui/disallow-active-element-as-key-event-target
-        fireEvent.keyDown(document.activeElement!, { keyCode, key });
+        fireEvent.keyDown(document.activeElement!, { key });
 
         expect(document.activeElement).toHaveAccessibleName(expectFocusedDay);
       });
@@ -69,7 +69,7 @@ describe('<StaticDatePicker /> keyboard interactions', () => {
     for (let i = 0; i < 3; i += 1) {
       // Don't care about what's focused.
       // eslint-disable-next-line material-ui/disallow-active-element-as-key-event-target
-      fireEvent.keyDown(document.activeElement!, { keyCode: 37, key: 'ArrowLeft' });
+      fireEvent.keyDown(document.activeElement!, { key: 'ArrowLeft' });
     }
 
     // leaves focus on the same date
@@ -78,11 +78,11 @@ describe('<StaticDatePicker /> keyboard interactions', () => {
 
   describe('YearPicker keyboard navigation', () => {
     [
-      { keyCode: 37, key: 'ArrowLeft', expectFocusedYear: '2019' },
-      { keyCode: 38, key: 'ArrowUp', expectFocusedYear: '2016' },
-      { keyCode: 39, key: 'ArrowRight', expectFocusedYear: '2021' },
-      { keyCode: 40, key: 'ArrowDown', expectFocusedYear: '2024' },
-    ].forEach(({ key, keyCode, expectFocusedYear }) => {
+      { key: 'ArrowLeft', expectFocusedYear: '2019' },
+      { key: 'ArrowUp', expectFocusedYear: '2016' },
+      { key: 'ArrowRight', expectFocusedYear: '2021' },
+      { key: 'ArrowDown', expectFocusedYear: '2024' },
+    ].forEach(({ key, expectFocusedYear }) => {
       it(key, () => {
         render(
           <StaticDatePicker
@@ -97,7 +97,7 @@ describe('<StaticDatePicker /> keyboard interactions', () => {
 
         const year = screen.getByText('2020', { selector: 'button' });
         act(() => year.focus());
-        fireEvent.keyDown(year, { keyCode, key });
+        fireEvent.keyDown(year, { key });
 
         expect(document.activeElement).to.have.text(expectFocusedYear);
       });
@@ -105,11 +105,11 @@ describe('<StaticDatePicker /> keyboard interactions', () => {
   });
   describe('MonthPicker keyboard navigation', () => {
     [
-      { keyCode: 37, key: 'ArrowLeft', expectFocusedMonth: 'Jul' },
-      { keyCode: 38, key: 'ArrowUp', expectFocusedMonth: 'May' },
-      { keyCode: 39, key: 'ArrowRight', expectFocusedMonth: 'Sep' },
-      { keyCode: 40, key: 'ArrowDown', expectFocusedMonth: 'Nov' },
-    ].forEach(({ key, keyCode, expectFocusedMonth }) => {
+      { key: 'ArrowLeft', expectFocusedMonth: 'Jul' },
+      { key: 'ArrowUp', expectFocusedMonth: 'May' },
+      { key: 'ArrowRight', expectFocusedMonth: 'Sep' },
+      { key: 'ArrowDown', expectFocusedMonth: 'Nov' },
+    ].forEach(({ key, expectFocusedMonth }) => {
       it(key, () => {
         render(
           <StaticDatePicker
@@ -125,7 +125,7 @@ describe('<StaticDatePicker /> keyboard interactions', () => {
 
         const aug = screen.getByText('Aug', { selector: 'button' });
         act(() => aug.focus());
-        fireEvent.keyDown(aug, { keyCode, key });
+        fireEvent.keyDown(aug, { key });
 
         expect(document.activeElement).to.have.text(expectFocusedMonth);
       });
@@ -134,11 +134,11 @@ describe('<StaticDatePicker /> keyboard interactions', () => {
 
   describe('DayPicker keyboard navigation', () => {
     [
-      { keyCode: 37, key: 'ArrowLeft', expectFocusedDay: '12' },
-      { keyCode: 38, key: 'ArrowUp', expectFocusedDay: '6' },
-      { keyCode: 39, key: 'ArrowRight', expectFocusedDay: '14' },
-      { keyCode: 40, key: 'ArrowDown', expectFocusedDay: '20' },
-    ].forEach(({ key, keyCode, expectFocusedDay }) => {
+      { key: 'ArrowLeft', expectFocusedDay: '12' },
+      { key: 'ArrowUp', expectFocusedDay: '6' },
+      { key: 'ArrowRight', expectFocusedDay: '14' },
+      { key: 'ArrowDown', expectFocusedDay: '20' },
+    ].forEach(({ key, expectFocusedDay }) => {
       it(key, () => {
         render(
           <StaticDatePicker
@@ -153,7 +153,7 @@ describe('<StaticDatePicker /> keyboard interactions', () => {
 
         const startDay = screen.getByText('13', { selector: 'button' });
         act(() => startDay.focus());
-        fireEvent.keyDown(startDay, { keyCode, key });
+        fireEvent.keyDown(startDay, { key });
 
         expect(document.activeElement).to.have.text(expectFocusedDay);
       });
