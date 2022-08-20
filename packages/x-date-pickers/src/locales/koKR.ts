@@ -36,7 +36,9 @@ const koKRPickers: PickersLocaleText<any> = {
   // Clock labels
   clockLabelText: (view, time, adapter) =>
     `${views[view]} 선택하세요. ${
-      time === null ? '시간을 선택하지 않았습니다.' : `현재 선택된 시간은 ${adapter.format(time, 'fullTime')}입니다.`
+      time === null
+        ? '시간을 선택하지 않았습니다.'
+        : `현재 선택된 시간은 ${adapter.format(time, 'fullTime')}입니다.`
     }`,
   hoursClockNumberText: (hours) => `${hours}시간`,
   minutesClockNumberText: (minutes) => `${minutes}분`,
@@ -45,11 +47,17 @@ const koKRPickers: PickersLocaleText<any> = {
   // Open picker labels
   openDatePickerDialogue: (rawValue, utils) =>
     rawValue && utils.isValid(utils.date(rawValue))
-      ? `날짜를 선택하세요. 현재 선택된 날짜는 ${utils.format(utils.date(rawValue)!, 'fullDate')}입니다.`
+      ? `날짜를 선택하세요. 현재 선택된 날짜는 ${utils.format(
+          utils.date(rawValue)!,
+          'fullDate',
+        )}입니다.`
       : '날짜를 선택하세요',
   openTimePickerDialogue: (rawValue, utils) =>
     rawValue && utils.isValid(utils.date(rawValue))
-      ? `시간을 선택하세요. 현재 선택된 시간은 ${utils.format(utils.date(rawValue)!, 'fullTime')}입니다.`
+      ? `시간을 선택하세요. 현재 선택된 시간은 ${utils.format(
+          utils.date(rawValue)!,
+          'fullTime',
+        )}입니다.`
       : '시간을 선택하세요',
 
   // Table labels
