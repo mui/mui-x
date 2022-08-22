@@ -112,16 +112,6 @@ export function CalendarOrClockPicker<TDate, View extends CalendarOrClockPickerV
   const isLandscape = useIsLandscape(views, orientation);
   const wrapperVariant = React.useContext(WrapperVariantContext);
 
-  const {
-    viewFocusState: { hasFocus },
-    onDayFocus,
-    onDayBlur,
-    onMonthFocus,
-    onMonthBlur,
-    onYearFocus,
-    onYearBlur,
-  } = useFocusManagement({ autoFocus });
-
   const toShowToolbar = showToolbar ?? wrapperVariant !== 'desktop';
 
   const handleDateChange = React.useCallback<PickerOnChangeFn<TDate>>(
@@ -150,6 +140,11 @@ export function CalendarOrClockPicker<TDate, View extends CalendarOrClockPickerV
     onChange: handleDateChange,
     onViewChange: handleViewChange,
   });
+
+  const {
+    viewFocusState: { hasFocus },
+    setPickerHasFocus,
+  } = useFocusManagement({ autoFocus, openView });
 
   return (
     <PickerRoot ownerState={{ isLandscape }}>
@@ -184,19 +179,15 @@ export function CalendarOrClockPicker<TDate, View extends CalendarOrClockPickerV
           <React.Fragment>
             {isDatePickerView(openView) && (
               <CalendarPicker
-                autoFocus={hasFocus}
+                autoFocus={autoFocus}
+                hasFocus={hasFocus}
                 date={parsedValue}
                 onViewChange={setOpenView as (view: CalendarPickerView) => void}
                 onChange={handleChangeAndOpenNext}
                 view={openView}
                 // Unclear why the predicate `isDatePickerView` does not imply the casted type
                 views={views.filter(isDatePickerView) as CalendarPickerView[]}
-                onDayFocus={onDayFocus}
-                onDayBlur={onDayBlur}
-                onMonthFocus={onMonthFocus}
-                onMonthBlur={onMonthBlur}
-                onYearFocus={onYearFocus}
-                onYearBlur={onYearBlur}
+                onPickerHasFocusChange={setPickerHasFocus}
                 {...other}
               />
             )}

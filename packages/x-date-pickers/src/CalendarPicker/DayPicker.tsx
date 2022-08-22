@@ -1,6 +1,7 @@
 import * as React from 'react';
 import Typography from '@mui/material/Typography';
 import { styled, useTheme } from '@mui/material/styles';
+import { useControlled } from '@mui/material/utils';
 import { PickersDay, PickersDayProps } from '../PickersDay/PickersDay';
 import { useUtils, useNow } from '../internals/hooks/useUtils';
 import { PickerOnChangeFn } from '../internals/hooks/useViews';
@@ -68,7 +69,8 @@ export interface DayPickerProps<TDate> extends ExportedDayPickerProps<TDate> {
   reduceAnimations: boolean;
   slideDirection: SlideDirection;
   TransitionProps?: Partial<SlideTransitionProps>;
-  onDayBlur?: (day: TDate) => void;
+  hasFocus?: boolean;
+  onHasFocusChange?: (newHasFocus: boolean) => void;
 }
 
 const defaultDayOfWeekFormatter = (day: string) => day.charAt(0).toUpperCase();
@@ -143,7 +145,8 @@ export function DayPicker<TDate>(props: DayPickerProps<TDate>) {
     maxDate,
     shouldDisableDate,
     dayOfWeekFormatter = defaultDayOfWeekFormatter,
-    onDayBlur,
+    hasFocus,
+    onHasFocusChange,
   } = props;
 
   const isDateDisabled = useIsDayDisabled({
@@ -156,6 +159,24 @@ export function DayPicker<TDate>(props: DayPickerProps<TDate>) {
 
   const [internalFocusedDay, setInternalFocusedDay] = React.useState<TDate>(
     () => focusedDay || now,
+  );
+
+  const [internalHasFocus, setInternalHasFocus] = useControlled<boolean>({
+    name: 'DayPicker',
+    state: 'hasFocus',
+    controlled: hasFocus,
+    default: autoFocus,
+  });
+
+  const changeHasFocus = React.useCallback(
+    (newHasFocus: boolean) => {
+      setInternalHasFocus(newHasFocus);
+
+      if (onHasFocusChange) {
+        onHasFocusChange(newHasFocus);
+      }
+    },
+    [setInternalHasFocus, onHasFocusChange],
   );
 
   const handleDaySelect = React.useCallback(
@@ -174,9 +195,10 @@ export function DayPicker<TDate>(props: DayPickerProps<TDate>) {
       if (!isDateDisabled(day)) {
         onFocusedDayChange(day);
         setInternalFocusedDay(day);
+        changeHasFocus(true);
       }
     },
-    [isDateDisabled, onFocusedDayChange],
+    [isDateDisabled, onFocusedDayChange, changeHasFocus],
   );
 
   const theme = useTheme();
@@ -224,8 +246,8 @@ export function DayPicker<TDate>(props: DayPickerProps<TDate>) {
     focusDay(day);
   }
   function handleBlur(event: React.FocusEvent<HTMLButtonElement>, day: TDate) {
-    if (onDayBlur) {
-      onDayBlur(day);
+    if (internalHasFocus && utils.isSameDay(internalFocusedDay, day)) {
+      changeHasFocus(false);
     }
   }
 
@@ -294,7 +316,7 @@ export function DayPicker<TDate>(props: DayPickerProps<TDate>) {
                     day,
                     isAnimating: isMonthSwitchingAnimating,
                     disabled: disabled || isDateDisabled(day),
-                    autoFocus: autoFocus && isFocusableDay,
+                    autoFocus: internalHasFocus && isFocusableDay,
                     today: utils.isSameDay(day, now),
                     outsideCurrentMonth: utils.getMonth(day) !== currentMonthNumber,
                     selected: validSelectedDays.some((selectedDay) =>

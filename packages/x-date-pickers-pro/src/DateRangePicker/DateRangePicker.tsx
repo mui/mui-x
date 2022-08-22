@@ -270,8 +270,6 @@ DateRangePicker.propTypes = {
    * Use in controlled mode (see open).
    */
   onClose: PropTypes.func,
-  onDayBlur: PropTypes.func,
-  onDayFocus: PropTypes.func,
   /**
    * Callback that fired when input value or new `value` prop validation returns **new** validation error (or value is valid after error).
    * In case of validation error detected `reason` prop return non-null value and `TextField` must be displayed in `error` state.
@@ -285,7 +283,6 @@ DateRangePicker.propTypes = {
    * @param {TInputValue} value The invalid value.
    */
   onError: PropTypes.func,
-  onMonthBlur: PropTypes.func,
   /**
    * Callback firing on month change @DateIOType.
    * @template TDate
@@ -293,7 +290,6 @@ DateRangePicker.propTypes = {
    * @returns {void|Promise} -
    */
   onMonthChange: PropTypes.func,
-  onMonthFocus: PropTypes.func,
   /**
    * Callback fired when the popup requests to be opened.
    * Use in controlled mode (see open).
@@ -304,8 +300,6 @@ DateRangePicker.propTypes = {
    * @param {CalendarPickerView} view The new view.
    */
   onViewChange: PropTypes.func,
-  onYearBlur: PropTypes.func,
-  onYearFocus: PropTypes.func,
   /**
    * Control the popup or dialog open state.
    */

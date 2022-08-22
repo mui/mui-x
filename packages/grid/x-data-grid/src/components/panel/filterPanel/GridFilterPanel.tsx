@@ -174,10 +174,6 @@ GridFilterPanel.propTypes = {
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
   /**
-   * @ignore - do not document.
-   */
-  children: PropTypes.node,
-  /**
    * Changes how the options in the columns selector should be ordered.
    * If not specified, the order is derived from the `columns` prop.
    */

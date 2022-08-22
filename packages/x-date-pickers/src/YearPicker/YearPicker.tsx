@@ -2,6 +2,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useTheme, styled, useThemeProps as useThemProps } from '@mui/material/styles';
 import { unstable_composeClasses as composeClasses } from '@mui/material';
+import { useControlled } from '@mui/material/utils';
 import clsx from 'clsx';
 import { PickersYear } from './PickersYear';
 import { useUtils, useNow, useDefaultDates } from '../internals/hooks/useUtils';
@@ -49,7 +50,8 @@ export interface YearPickerProps<TDate> extends YearValidationProps<TDate> {
    */
   disableHighlightToday?: boolean;
   onYearFocus?: (year: number) => void;
-  onYearBlur?: (year: number) => void;
+  hasFocus?: boolean;
+  onHasFocusChange?: (nawHasFocus: boolean) => void;
 }
 
 type YearPickerComponent = (<TDate>(props: YearPickerProps<TDate>) => JSX.Element) & {
@@ -80,7 +82,8 @@ export const YearPicker = React.forwardRef(function YearPicker<TDate>(
     shouldDisableYear,
     disableHighlightToday,
     onYearFocus,
-    onYearBlur,
+    hasFocus,
+    onHasFocusChange,
   } = props;
 
   const ownerState = props;
@@ -103,6 +106,24 @@ export const YearPicker = React.forwardRef(function YearPicker<TDate>(
   const selectedYearRef = React.useRef<HTMLButtonElement>(null);
   const [focusedYear, setFocusedYear] = React.useState<number>(
     () => currentYear || utils.getYear(now),
+  );
+
+  const [internalHasFocus, setInternalHasFocus] = useControlled<boolean>({
+    name: 'YearPicker',
+    state: 'hasFocus',
+    controlled: hasFocus,
+    default: autoFocus,
+  });
+
+  const changeHasFocus = React.useCallback(
+    (newHasFocus: boolean) => {
+      setInternalHasFocus(newHasFocus);
+
+      if (onHasFocusChange) {
+        onHasFocusChange(newHasFocus);
+      }
+    },
+    [setInternalHasFocus, onHasFocusChange],
   );
 
   const isYearDisabled = React.useCallback(
@@ -145,10 +166,11 @@ export const YearPicker = React.forwardRef(function YearPicker<TDate>(
     (year: number) => {
       if (!isYearDisabled(utils.setYear(selectedDateOrToday, year))) {
         setFocusedYear(year);
+        changeHasFocus(true);
         onYearFocus?.(year);
       }
     },
-    [selectedDateOrToday, isYearDisabled, utils, onYearFocus],
+    [isYearDisabled, utils, selectedDateOrToday, changeHasFocus, onYearFocus],
   );
 
   React.useEffect(() => {
@@ -187,20 +209,18 @@ export const YearPicker = React.forwardRef(function YearPicker<TDate>(
 
   const handleFocus = React.useCallback(
     (event: React.FocusEvent, year: number) => {
-      if (onYearFocus) {
-        onYearFocus(year);
-      }
+      focusYear(year);
     },
-    [onYearFocus],
+    [focusYear],
   );
 
   const handleBlur = React.useCallback(
     (event: React.FocusEvent, year: number) => {
-      if (onYearBlur) {
-        onYearBlur(year);
+      if (focusedYear === year) {
+        changeHasFocus(false);
       }
     },
-    [onYearBlur],
+    [focusedYear, changeHasFocus],
   );
 
   return (
@@ -216,7 +236,7 @@ export const YearPicker = React.forwardRef(function YearPicker<TDate>(
             value={yearNumber}
             onClick={handleYearSelection}
             onKeyDown={handleKeyDown}
-            autoFocus={autoFocus && yearNumber === focusedYear}
+            autoFocus={internalHasFocus && yearNumber === focusedYear}
             ref={selected ? selectedYearRef : undefined}
             disabled={disabled || isYearDisabled(year)}
             tabIndex={yearNumber === focusedYear ? 0 : -1}
@@ -256,6 +276,7 @@ YearPicker.propTypes = {
    * @default false
    */
   disablePast: PropTypes.bool,
+  hasFocus: PropTypes.bool,
   /**
    * Maximal selectable date. @DateIOType
    */
@@ -266,7 +287,7 @@ YearPicker.propTypes = {
   minDate: PropTypes.any,
   onChange: PropTypes.func.isRequired,
   onFocusedDayChange: PropTypes.func,
-  onYearBlur: PropTypes.func,
+  onHasFocusChange: PropTypes.func,
   onYearFocus: PropTypes.func,
   readOnly: PropTypes.bool,
   /**

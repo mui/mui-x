@@ -111,12 +111,8 @@ export interface CalendarPickerProps<TDate>
    * @returns {void|Promise} -
    */
   onMonthChange?: (month: TDate) => void | Promise<void>;
-  onDayFocus?: (day: TDate) => void;
-  onDayBlur?: (day: TDate) => void;
-  onMonthFocus?: (month: number) => void;
-  onMonthBlur?: (month: number) => void;
-  onYearFocus?: (year: number) => void;
-  onYearBlur?: (year: number) => void;
+  hasFocus?: boolean;
+  onPickerHasFocusChange: (picker: CalendarPickerView) => (newHasFocus: boolean) => void;
 }
 
 export type ExportedCalendarPickerProps<TDate> = Omit<
@@ -133,6 +129,8 @@ export type ExportedCalendarPickerProps<TDate> = Omit<
   | 'classes'
   | 'components'
   | 'componentsProps'
+  | 'onPickerHasFocusChange'
+  | 'hasFocus'
 >;
 
 const useUtilityClasses = (
@@ -215,12 +213,8 @@ const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
     minDate = defaultDates.minDate,
     maxDate = defaultDates.maxDate,
     disableHighlightToday,
-    onDayFocus,
-    onDayBlur,
-    onMonthFocus,
-    onMonthBlur,
-    onYearFocus,
-    onYearBlur,
+    hasFocus,
+    onPickerHasFocusChange,
     ...other
   } = props;
 
@@ -425,8 +419,8 @@ const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
               date={date}
               onChange={handleDateYearChange}
               shouldDisableYear={shouldDisableYear}
-              onYearFocus={onYearFocus}
-              onYearBlur={onYearBlur}
+              hasFocus={hasFocus}
+              onHasFocusChange={onPickerHasFocusChange && onPickerHasFocusChange('year')}
             />
           )}
 
@@ -435,12 +429,12 @@ const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
               {...baseDateValidationProps}
               {...commonViewProps}
               autoFocus={autoFocus}
+              hasFocus={hasFocus}
               className={className}
               date={date}
               onChange={handleDateMonthChange}
               shouldDisableMonth={shouldDisableMonth}
-              onMonthFocus={onMonthFocus}
-              onMonthBlur={onMonthBlur}
+              onHasFocusChange={onPickerHasFocusChange && onPickerHasFocusChange('month')}
             />
           )}
 
@@ -452,17 +446,15 @@ const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
               {...commonViewProps}
               autoFocus={autoFocus}
               onMonthSwitchingAnimationEnd={onMonthSwitchingAnimationEnd}
-              onFocusedDayChange={(day) => {
-                changeFocusedDay(day);
-                onDayFocus?.(day);
-              }}
+              onFocusedDayChange={changeFocusedDay}
               reduceAnimations={reduceAnimations}
               selectedDays={[date]}
               onSelectedDaysChange={onSelectedDayChange}
               loading={loading}
               renderLoading={renderLoading}
               shouldDisableDate={shouldDisableDate}
-              onDayBlur={onDayBlur}
+              hasFocus={hasFocus}
+              onHasFocusChange={onPickerHasFocusChange && onPickerHasFocusChange('day')}
             />
           )}
         </div>
@@ -528,6 +520,7 @@ CalendarPicker.propTypes = {
    * @deprecated Use the `localeText` prop of `LocalizationProvider` instead, see https://mui.com/x/react-date-pickers/localization
    */
   getViewSwitchingButtonText: PropTypes.func,
+  hasFocus: PropTypes.bool,
   /**
    * Left arrow icon aria-label text.
    * @deprecated
@@ -551,9 +544,6 @@ CalendarPicker.propTypes = {
    * Callback fired on date change
    */
   onChange: PropTypes.func.isRequired,
-  onDayBlur: PropTypes.func,
-  onDayFocus: PropTypes.func,
-  onMonthBlur: PropTypes.func,
   /**
    * Callback firing on month change @DateIOType.
    * @template TDate
@@ -561,20 +551,18 @@ CalendarPicker.propTypes = {
    * @returns {void|Promise} -
    */
   onMonthChange: PropTypes.func,
-  onMonthFocus: PropTypes.func,
+  onPickerHasFocusChange: PropTypes.func.isRequired,
   /**
    * Callback fired on view change.
    * @param {CalendarPickerView} view The new view.
    */
   onViewChange: PropTypes.func,
-  onYearBlur: PropTypes.func,
   /**
    * Callback firing on year change @DateIOType.
    * @template TDate
    * @param {TDate} year The new year.
    */
   onYearChange: PropTypes.func,
-  onYearFocus: PropTypes.func,
   /**
    * Initially open view.
    * @default 'day'
