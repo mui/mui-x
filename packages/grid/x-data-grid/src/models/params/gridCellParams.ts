@@ -99,7 +99,7 @@ export interface GridRenderEditCellParams<V = any, R extends GridValidRowModel =
 /**
  * Parameters passed to `colDef.valueGetter`.
  */
-export interface GridValueGetterParams<V = any, R = any>
+export interface GridValueGetterParams<V = any, R extends GridValidRowModel = GridValidRowModel>
   extends Omit<GridCellParams<V, R, any>, 'formattedValue' | 'isEditable'> {
   /**
    * GridApi that let you manipulate the grid.
