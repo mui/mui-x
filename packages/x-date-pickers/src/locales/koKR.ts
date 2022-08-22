@@ -8,9 +8,7 @@ const views = {
   seconds: '초를',
 };
 
-// This object is not Partial<PickersLocaleText> because it is the default values
-
-const koKRPickers: PickersLocaleText<any> = {
+const koKRPickers: Partial<PickersLocaleText<any>> = {
   // Calendar navigation
   previousMonth: '이전 달',
   nextMonth: '다음 달',
