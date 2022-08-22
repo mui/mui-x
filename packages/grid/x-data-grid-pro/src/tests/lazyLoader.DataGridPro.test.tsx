@@ -66,7 +66,7 @@ describe('<DataGridPro /> - Lazy Loader', () => {
     render(<TestLazyLoader onFetchRows={handleFetchRows} rowCount={50} />);
 
     fireEvent.click(getColumnHeaderCell(0));
-    // Should be 1. When tested in the browser it's called onlt 1 time
+    // Should be 1. When tested in the browser it's called only 1 time
     expect(handleFetchRows.callCount).to.equal(2);
   });
 
@@ -81,7 +81,7 @@ describe('<DataGridPro /> - Lazy Loader', () => {
     expect(getRow(3).dataset.id).to.equal('auto-generated-skeleton-row-root-0');
   });
 
-  it('should update allRows accordingly when apiRef.current.insertRows is called', () => {
+  it('should update all rows accordingly when `apiRef.current.replaceRows` is called', () => {
     render(<TestLazyLoader rowCount={6} />);
 
     const newRows: GridRowModel[] = [
