@@ -25,7 +25,7 @@ import { GRID_SKELETON_ROW_ROOT_ID } from './useGridLazyLoaderPreProcessors';
 import { GridFetchRowsParams } from '../../../models/gridFetchRowsParams';
 
 function findSkeletonRowsSection(
-  visibleRows: GridRowEntry<any>[],
+  visibleRows: GridRowEntry[],
   range: { firstRowIndex: number; lastRowIndex: number },
 ): { firstRowIndex: number; lastRowIndex: number } {
   let { firstRowIndex, lastRowIndex } = range;
