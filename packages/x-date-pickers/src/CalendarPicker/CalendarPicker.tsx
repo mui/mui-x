@@ -112,7 +112,7 @@ export interface CalendarPickerProps<TDate>
    */
   onMonthChange?: (month: TDate) => void | Promise<void>;
   hasFocus?: boolean;
-  onPickerHasFocusChange: (picker: CalendarPickerView) => (newHasFocus: boolean) => void;
+  onPickerHasFocusChange?: (picker: CalendarPickerView) => (newHasFocus: boolean) => void;
 }
 
 export type ExportedCalendarPickerProps<TDate> = Omit<
@@ -551,7 +551,7 @@ CalendarPicker.propTypes = {
    * @returns {void|Promise} -
    */
   onMonthChange: PropTypes.func,
-  onPickerHasFocusChange: PropTypes.func.isRequired,
+  onPickerHasFocusChange: PropTypes.func,
   /**
    * Callback fired on view change.
    * @param {CalendarPickerView} view The new view.
