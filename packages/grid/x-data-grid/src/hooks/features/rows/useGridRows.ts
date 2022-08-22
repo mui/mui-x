@@ -337,23 +337,35 @@ export const useGridRows = (
         );
       }
 
-      const newRowsIds = newRows.map((row) => row.id);
+      if (newRows.length && newRows.length !== lastRowToRender - firstRowToRender) {
+        throw new Error(
+          [
+            'MUI: The number of rows you want update is more than what was indicated',
+            'You need to pass rows which number is equal to the difference between the `firstRowToRender` and `lastRowToRender`.',
+          ].join('\n'),
+        );
+      }
+
       const allRows = gridRowIdsSelector(apiRef);
       const updatedRows = [...allRows];
-      updatedRows.splice(firstRowToRender, lastRowToRender - firstRowToRender, ...newRowsIds);
-
       const idRowsLookup = gridRowsLookupSelector(apiRef);
       const idToIdLookup = gridRowsIdToIdLookupSelector(apiRef);
       const tree = gridRowTreeSelector(apiRef);
       const updatedIdRowsLookup = { ...idRowsLookup };
       const updatedIdToIdLookup = { ...idToIdLookup };
       const updatedTree = { ...tree };
-      const rowIdsToBeReplaced = allRows.slice(firstRowToRender, lastRowToRender);
 
-      rowIdsToBeReplaced.forEach((id) => {
-        delete updatedIdRowsLookup[id];
-        delete updatedIdToIdLookup[id];
-        delete updatedTree[id];
+      newRows.forEach((row, index) => {
+        const rowId = getRowIdFromRowModel(
+          row,
+          props.getRowId,
+          'A row was provided without id when calling replaceRows().',
+        );
+        const [replacedRowId] = updatedRows.splice(firstRowToRender + index, 1, rowId);
+
+        delete updatedIdRowsLookup[replacedRowId];
+        delete updatedIdToIdLookup[replacedRowId];
+        delete updatedTree[replacedRowId];
       });
 
       newRows.forEach((row) => {
@@ -374,7 +386,7 @@ export const useGridRows = (
       }));
       apiRef.current.applySorting();
     },
-    [apiRef, props.signature],
+    [apiRef, props.signature, props.getRowId],
   );
 
   const rowApi: GridRowApi = {
