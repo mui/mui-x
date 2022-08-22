@@ -57,7 +57,7 @@ The data grid builds the vertical scroll as if all the rows are already there, a
 To enable lazy loading, there are a few steps you need to follow:
 
 First, set `rowsLoadingMode="server"`.
-Then the `rowCount` needs to be set to the number of available rows on the server.
+Then, set `rowCount` to reflect the number of available rows on the server.
 Third, set a callback function on `onFetchRows` to load the data corresponding to the row indices passed within `GridFetchRowsParams`.
 Finally, replace the empty rows with the newly fetched ones using `apiRef.current.replaceRows()` like in the demo below.
 
