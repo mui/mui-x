@@ -14,7 +14,7 @@ import {
 } from '@mui/x-data-grid';
 import { GridApiPro } from '../../../models/gridApiPro';
 import { GridPinnedRowsProp } from './gridRowPinningInterface';
-import { insertNodeInTree } from '@mui/x-data-grid-pro/utils/tree/utils';
+import { insertNodeInTree } from '../../../utils/tree/utils';
 
 type GridPinnedRowPosition = keyof GridPinnedRowsProp;
 
