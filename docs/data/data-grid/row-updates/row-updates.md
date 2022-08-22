@@ -50,8 +50,14 @@ This feature is experimental, it needs to be explicitly activated using the `laz
 
 :::
 
-To allow the grid to lazy load data, set `rowsLoadingMode="server"`.
-Then the `rowCount` needs to be set to the number of available rows on the server.
+Lazy Loading works like a pagination system, but instead of loading new rows based on pages, it loads them as the user scroll through the grid and reveals empty rows. 
+
+The data grid builds the vertical scroll as if all the rows are already there, and displays empty (skeleton) rows while loading the data. Only rows that are displayed get fetched.
+
+To enable lazy loading, there are a few steps you need to follow:
+
+First, set `rowsLoadingMode="server"`.
+Then, set `rowCount` to reflect the number of available rows on the server.
 Third, set a callback function on `onFetchRows` to load the data corresponding to the row indices passed within `GridFetchRowsParams`.
 Finally, replace the empty rows with the newly fetched ones using `apiRef.current.replaceRows()` like in the demo below.
 
