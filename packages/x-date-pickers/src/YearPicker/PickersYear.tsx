@@ -15,7 +15,6 @@ import {
 export interface YearProps {
   autoFocus?: boolean;
   children: React.ReactNode;
-  // eslint-disable-next-line react/no-unused-prop-types
   classes?: {
     root?: string;
     modeDesktop?: string;
