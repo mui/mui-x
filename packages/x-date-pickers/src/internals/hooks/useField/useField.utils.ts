@@ -363,7 +363,7 @@ export const incrementOrDecrementInvalidDateSection = <TDate, TSection extends F
     case 'minute': {
       let newDate: TDate;
       if (section.value === '') {
-        // TODO: Add startOfHour and endOfHours to adapters
+        // TODO: Add startOfHour and endOfHours to adapters to avoid hard-coding those values
         const newNumericValue = type === 'increment' ? 59 : 0;
         newDate = utils.setMinutes(today, newNumericValue);
       } else {
@@ -376,7 +376,7 @@ export const incrementOrDecrementInvalidDateSection = <TDate, TSection extends F
     case 'second': {
       let newDate: TDate;
       if (section.value === '') {
-        // TODO: Add startOfMinute and endOfMinute to adapters
+        // TODO: Add startOfMinute and endOfMinute to adapters to avoid hard-coding those values
         const newNumericValue = type === 'increment' ? 59 : 0;
         newDate = utils.setSeconds(today, newNumericValue);
       } else {

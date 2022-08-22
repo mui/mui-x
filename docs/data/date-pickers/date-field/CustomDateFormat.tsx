@@ -5,7 +5,7 @@ import { Unstable_DateField as DateField } from '@mui/x-date-pickers/DateField';
 import Stack from '@mui/material/Stack';
 
 export default function CustomDateFormat() {
-  const [value, setValue] = React.useState<Date | null>(null);
+  const [value, setValue] = React.useState<Date | null>(new Date());
 
   return (
     <LocalizationProvider dateAdapter={AdapterDateFns}>
