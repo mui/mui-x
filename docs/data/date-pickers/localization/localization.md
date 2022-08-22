@@ -10,9 +10,9 @@ The default locale of MUI is English (United States). If you want to use other l
 
 Localization can impact pickers components rendering in two distincts ways: The date format, and the components attributes such as `aria-label`.
 
-## Date-engine locale
+## Date-library locale
 
-Use `LocalizationProvider` to change the date-engine locale that is used to render pickers. Here is an example of changing the locale for the `date-fns` adapter:
+Use `LocalizationProvider` to change the date-library locale that is used to render pickers. Here is an example of changing the locale for the `date-fns` adapter:
 
 {{"demo": "LocalizedDatePicker.js"}}
 
@@ -22,6 +22,17 @@ The time picker will automatically adjust to the locale's time setting, i.e. the
 This can be overridden by using the `ampm` prop.
 
 {{"demo": "LocalizedTimePicker.js"}}
+
+### Advanced customization
+
+To customize the date format used in the toolbar, you can use prop `toolbarFormat`.
+
+To customize day names in calendar header, you can use `dayOfWeekFormatter` which takes as an input the short name of the day provided by the date-library and returns it's formatted version.
+The default formatter only keeps the first letter and capitalises it.
+
+In the example bellow, we add a dot at the end of each day in the calendar header, and use `eee dd MMMM` format for the toolbar.
+
+{{"demo": "CustomizeDayPicker.js"}}
 
 ## Translation keys
 
@@ -65,7 +76,6 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { DataGrid, bgBG as dataGridBgBG } from '@mui/x-data-grid';
 import { bgBG as coreBgBG } from '@mui/material/locale';
 import bgLocale from 'date-fns/locale/bg';
-
 import { CalendarPicker, LocalizationProvider, bgBG } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 
@@ -111,6 +121,10 @@ import bgLocale from 'date-fns/locale/bg';
 | English (United States) | en-US               | `enUS`      |
 | French                  | fr-FR               | `frFR`      |
 | German                  | de-DE               | `deDE`      |
+| Italian                 | it-IT               | `itIT`      |
+| Norwegian (Bokmål)      | nb-NO               | `nbNO`      |
+| Polish                  | pl-PL               | `plPL`      |
+| Spanish                 | es-ES               | `esES`      |
 | Swedish                 | sv-SE               | `svSE`      |
 | Turkish                 | tr-TR               | `trTr`      |
 | Dutch                   | nl-NL               | `nlNL`      |

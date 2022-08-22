@@ -142,7 +142,7 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
       // Fallback for IE
       apiRef.current.unstable_storeRowHeightMeasurement(rowId, ref.current.clientHeight);
     }
-  });
+  }, [apiRef, rowHeight, rowId]);
 
   React.useLayoutEffect(() => {
     if (currentPage.range) {
@@ -151,7 +151,11 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
       // doesn't care about pagination and considers the rows from the current page only, so the
       // first row always has index=0. We need to subtract the index of the first row to make it
       // compatible with the index used by the virtualization.
-      apiRef.current.unstable_setLastMeasuredRowIndex(index - currentPage.range.firstRowIndex);
+      const rowIndex = apiRef.current.getRowIndexRelativeToVisibleRows(rowId);
+      // pinned rows are not part of the visible rows
+      if (rowIndex != null) {
+        apiRef.current.unstable_setLastMeasuredRowIndex(rowIndex);
+      }
     }
 
     const rootElement = ref.current;
@@ -205,8 +209,8 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
   );
 
   const publishClick = React.useCallback(
-    (event) => {
-      const cell = findParentElementFromClassName(event.target, gridClasses.cell);
+    (event: React.MouseEvent<HTMLDivElement>) => {
+      const cell = findParentElementFromClassName(event.target as HTMLDivElement, gridClasses.cell);
       const field = cell?.getAttribute('data-field');
 
       // Check if the field is available because the cell that fills the empty

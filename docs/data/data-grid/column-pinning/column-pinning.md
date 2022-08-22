@@ -2,7 +2,7 @@
 title: Data Grid - Column pinning
 ---
 
-# Data grid - Column pinning [<span class="plan-pro"></span>](https://mui.com/store/items/mui-x-pro/)
+# Data grid - Column pinning [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
 
 <p class="description">Pin columns to keep them visible at all time.</p>
 
@@ -85,3 +85,4 @@ To pin the checkbox column added when using `checkboxSelection`, add `GRID_CHECK
 
 - [DataGrid](/x/api/data-grid/data-grid/)
 - [DataGridPro](/x/api/data-grid/data-grid-pro/)
+- [DataGridPremium](/x/api/data-grid/data-grid-premium/)

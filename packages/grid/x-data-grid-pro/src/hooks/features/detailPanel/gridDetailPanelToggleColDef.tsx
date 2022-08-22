@@ -13,6 +13,8 @@ export const GRID_DETAIL_PANEL_TOGGLE_COL_DEF: GridColDef = {
   sortable: false,
   filterable: false,
   resizable: false,
+  // @ts-ignore
+  aggregable: false,
   disableColumnMenu: true,
   disableReorder: true,
   disableExport: true,

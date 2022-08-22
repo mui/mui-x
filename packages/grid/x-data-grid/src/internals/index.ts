@@ -6,7 +6,10 @@ export { GridColumnHeadersInner } from '../components/columnHeaders/GridColumnHe
 
 export { useGridRegisterPipeProcessor } from '../hooks/core/pipeProcessing';
 export type { GridPipeProcessor } from '../hooks/core/pipeProcessing';
-export { useGridRegisterStrategyProcessor } from '../hooks/core/strategyProcessing';
+export {
+  useGridRegisterStrategyProcessor,
+  GRID_DEFAULT_STRATEGY,
+} from '../hooks/core/strategyProcessing';
 export type { GridStrategyProcessor } from '../hooks/core/strategyProcessing';
 export { useGridInitialization } from '../hooks/core/useGridInitialization';
 
@@ -27,6 +30,7 @@ export { useGridDensity, densityStateInitializer } from '../hooks/features/densi
 export { useGridCsvExport } from '../hooks/features/export/useGridCsvExport';
 export { useGridPrintExport } from '../hooks/features/export/useGridPrintExport';
 export { useGridFilter, filterStateInitializer } from '../hooks/features/filter/useGridFilter';
+export { passFilterLogic } from '../hooks/features/filter/gridFilterUtils';
 export type { GridAggregatedFilterItemApplier } from '../hooks/features/filter/gridFilterState';
 export { useGridFocus, focusStateInitializer } from '../hooks/features/focus/useGridFocus';
 export { useGridKeyboardNavigation } from '../hooks/features/keyboardNavigation/useGridKeyboardNavigation';
@@ -51,9 +55,17 @@ export { useGridRowsPreProcessors } from '../hooks/features/rows/useGridRowsPreP
 export type {
   GridRowTreeCreationParams,
   GridRowTreeCreationValue,
+  GridHydrateRowsValue,
+  GridPinnedRowsState,
 } from '../hooks/features/rows/gridRowsState';
 export { useGridRowsMeta, rowsMetaStateInitializer } from '../hooks/features/rows/useGridRowsMeta';
 export { useGridParamsApi } from '../hooks/features/rows/useGridParamsApi';
+export { getRowIdFromRowModel } from '../hooks/features/rows/gridRowsUtils';
+export {
+  gridAdditionalRowGroupsSelector,
+  gridPinnedRowsSelector,
+} from '../hooks/features/rows/gridRowsSelector';
+export { calculatePinnedRowsHeight } from '../hooks/features/rows/gridRowsUtils';
 export {
   useGridSelection,
   selectionStateInitializer,
@@ -84,7 +96,7 @@ export { getColumnsToExport, defaultGetRowsToExport } from '../hooks/features/ex
 export { createSelector, unstable_resetCreateSelectorCache } from '../utils/createSelector';
 export { findParentElementFromClassName } from '../utils/domUtils';
 export { isNavigationKey } from '../utils/keyboardUtils';
-export { clamp, isDeepEqual } from '../utils/utils';
+export { clamp, isDeepEqual, isNumber, isFunction } from '../utils/utils';
 export { buildWarning } from '../utils/warning';
 export { exportAs } from '../utils/exportAs';
 

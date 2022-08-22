@@ -27,6 +27,7 @@
     "disableColumnSelector": { "type": { "name": "bool" } },
     "disableDensitySelector": { "type": { "name": "bool" } },
     "disableExtendRowFullWidth": { "type": { "name": "bool" } },
+    "disableIgnoreModificationsIfProcessingProps": { "type": { "name": "bool" } },
     "disableSelectionOnClick": { "type": { "name": "bool" } },
     "disableVirtualization": { "type": { "name": "bool" } },
     "editMode": {
@@ -80,7 +81,7 @@
         "name": "enum",
         "description": "'debug'<br>&#124;&nbsp;'error'<br>&#124;&nbsp;'info'<br>&#124;&nbsp;'warn'<br>&#124;&nbsp;false"
       },
-      "default": "\"debug\""
+      "default": "\"error\" (\"warn\" in dev mode)"
     },
     "nonce": { "type": { "name": "string" } },
     "onCellClick": { "type": { "name": "func" } },
@@ -128,7 +129,6 @@
     "onRowModesModelChange": { "type": { "name": "func" } },
     "onSelectionModelChange": { "type": { "name": "func" } },
     "onSortModelChange": { "type": { "name": "func" } },
-    "onStateChange": { "type": { "name": "func" } },
     "page": { "type": { "name": "number" }, "default": "0" },
     "pageSize": { "type": { "name": "custom", "description": "number" }, "default": "100" },
     "paginationMode": {
@@ -258,6 +258,11 @@
   "styles": {
     "classes": [
       "actionsCell",
+      "aggregationColumnHeader",
+      "aggregationColumnHeader--alignLeft",
+      "aggregationColumnHeader--alignCenter",
+      "aggregationColumnHeader--alignRight",
+      "aggregationColumnHeaderLabel",
       "autoHeight",
       "booleanCell",
       "cell--editable",
@@ -301,6 +306,7 @@
       "detailPanels",
       "detailPanelToggleCell",
       "detailPanelToggleCell--expanded",
+      "footerCell",
       "panel",
       "panelHeader",
       "panelWrapper",
@@ -361,7 +367,11 @@
       "treeDataGroupingCell",
       "treeDataGroupingCellToggle",
       "groupingCriteriaCell",
-      "groupingCriteriaCellToggle"
+      "groupingCriteriaCellToggle",
+      "pinnedRows",
+      "pinnedRows--top",
+      "pinnedRows--bottom",
+      "pinnedRowsRenderZone"
     ],
     "globalClasses": {},
     "name": "MuiDataGrid"

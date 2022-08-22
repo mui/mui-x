@@ -41,10 +41,8 @@ import {
   rowsMetaStateInitializer,
   selectionStateInitializer,
 } from '@mui/x-data-grid/internals';
-
 import { GridApiPro } from '../models/gridApiPro';
 import { DataGridProProcessedProps } from '../models/dataGridProProps';
-
 // Pro-only features
 import { useGridInfiniteLoader } from '../hooks/features/infiniteLoader/useGridInfiniteLoader';
 import {
@@ -69,6 +67,11 @@ import {
 import { useGridDetailPanelPreProcessors } from '../hooks/features/detailPanel/useGridDetailPanelPreProcessors';
 import { useGridRowReorder } from '../hooks/features/rowReorder/useGridRowReorder';
 import { useGridRowReorderPreProcessors } from '../hooks/features/rowReorder/useGridRowReorderPreProcessors';
+import {
+  useGridRowPinning,
+  rowPinningStateInitializer,
+} from '../hooks/features/rowPinning/useGridRowPinning';
+import { useGridRowPinningPreProcessors } from '../hooks/features/rowPinning/useGridRowPinningPreProcessors';
 
 export const useDataGridProComponent = (
   inputApiRef: React.MutableRefObject<GridApiPro> | undefined,
@@ -82,6 +85,7 @@ export const useDataGridProComponent = (
   useGridSelectionPreProcessors(apiRef, props);
   useGridRowReorderPreProcessors(apiRef, props);
   useGridTreeDataPreProcessors(apiRef, props);
+  useGridRowPinningPreProcessors(apiRef);
   useGridDetailPanelPreProcessors(apiRef, props);
   // The column pinning `hydrateColumns` pre-processor must be after every other `hydrateColumns` pre-processors
   // Because it changes the order of the columns.
@@ -95,6 +99,7 @@ export const useDataGridProComponent = (
   useGridInitializeState(detailPanelStateInitializer, apiRef, props);
   useGridInitializeState(columnPinningStateInitializer, apiRef, props);
   useGridInitializeState(columnsStateInitializer, apiRef, props);
+  useGridInitializeState(rowPinningStateInitializer, apiRef, props);
   useGridInitializeState(rowsStateInitializer, apiRef, props);
   useGridInitializeState(
     props.experimentalFeatures?.newEditingApi
@@ -118,6 +123,7 @@ export const useDataGridProComponent = (
   useGridKeyboardNavigation(apiRef, props);
   useGridSelection(apiRef, props);
   useGridColumnPinning(apiRef, props);
+  useGridRowPinning(apiRef, props);
   useGridColumns(apiRef, props);
   useGridRows(apiRef, props);
   useGridParamsApi(apiRef);
@@ -130,7 +136,7 @@ export const useDataGridProComponent = (
   useGridEditing(apiRef, props);
 
   useGridFocus(apiRef, props);
-  useGridPreferencesPanel(apiRef);
+  useGridPreferencesPanel(apiRef, props);
   useGridFilter(apiRef, props);
   useGridSorting(apiRef, props);
   useGridDensity(apiRef, props);

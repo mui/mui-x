@@ -2,7 +2,7 @@
 title: Data Grid - Tree data
 ---
 
-# Data grid - Tree data [<span class="plan-pro"></span>](https://mui.com/store/items/mui-x-pro/)
+# Data grid - Tree data [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
 
 <p class="description">Use Tree data to handle rows with parent / child relationship.</p>
 
@@ -137,3 +137,4 @@ To do so, we need to override both the `renderCell` of the grouping column and t
 
 - [DataGrid](/x/api/data-grid/data-grid/)
 - [DataGridPro](/x/api/data-grid/data-grid-pro/)
+- [DataGridPremium](/x/api/data-grid/data-grid-premium/)

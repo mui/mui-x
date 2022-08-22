@@ -52,6 +52,9 @@ function GridFilterInputSingleSelect(props: GridFilterInputSingleSelectProps) {
   const currentColumn = item.columnField ? apiRef.current.getColumn(item.columnField) : null;
 
   const currentValueOptions = React.useMemo(() => {
+    if (currentColumn === null) {
+      return undefined;
+    }
     return typeof currentColumn.valueOptions === 'function'
       ? currentColumn.valueOptions({ field: currentColumn.field })
       : currentColumn.valueOptions;
@@ -96,8 +99,8 @@ function GridFilterInputSingleSelect(props: GridFilterInputSingleSelectProps) {
       placeholder={apiRef.current.getLocaleText('filterPanelInputPlaceholder')}
       value={filterValueState}
       onChange={onFilterChange}
-      type={type || 'text'}
       variant="standard"
+      type={type || 'text'}
       InputLabelProps={{
         shrink: true,
       }}
@@ -124,7 +127,9 @@ GridFilterInputSingleSelect.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
-  apiRef: PropTypes.any.isRequired,
+  apiRef: PropTypes.shape({
+    current: PropTypes.object.isRequired,
+  }).isRequired,
   applyValue: PropTypes.func.isRequired,
   focusElementRef: PropTypes /* @typescript-to-proptypes-ignore */.oneOfType([
     PropTypes.func,

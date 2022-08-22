@@ -83,7 +83,9 @@ export function GridColumnsPanel(props: GridColumnsPanelProps) {
         }
 
         return apiRef.current.setColumnVisibilityModel(
-          Object.fromEntries(columns.map((col) => [col.field, false])),
+          Object.fromEntries(
+            columns.filter((col) => col.hideable !== false).map((col) => [col.field, false]),
+          ),
         );
       }
 
@@ -101,9 +103,12 @@ export function GridColumnsPanel(props: GridColumnsPanelProps) {
     [apiRef, columns],
   );
 
-  const handleSearchValueChange = React.useCallback((event) => {
-    setSearchValue(event.target.value);
-  }, []);
+  const handleSearchValueChange = React.useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      setSearchValue(event.target.value);
+    },
+    [],
+  );
 
   const currentColumns = React.useMemo(() => {
     if (!searchValue) {

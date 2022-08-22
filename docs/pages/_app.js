@@ -1,9 +1,3 @@
-/* eslint-disable import/first */
-import { LicenseInfo } from '@mui/x-data-grid-pro';
-
-// Remove the license warning from demonstration purposes
-LicenseInfo.setLicenseKey(process.env.NEXT_PUBLIC_MUI_LICENSE);
-
 import 'docs/src/modules/components/bootstrap';
 // --- Post bootstrap -----
 import pages from 'docsx/data/pages'; // DO NOT REMOVE
@@ -29,6 +23,10 @@ import {
 import DocsStyledEngineProvider from 'docs/src/modules/utils/StyledEngineProvider';
 import createEmotionCache from 'docs/src/createEmotionCache';
 import findActivePage from 'docs/src/modules/utils/findActivePage';
+import { LicenseInfo } from '@mui/x-data-grid-pro';
+
+// Remove the license warning from demonstration purposes
+LicenseInfo.setLicenseKey(process.env.NEXT_PUBLIC_MUI_LICENSE);
 
 function getMuiPackageVersion(packageName, commitRef) {
   if (commitRef === undefined) {
@@ -42,22 +40,19 @@ ponyfillGlobal.muiDocConfig = {
   csbIncludePeerDependencies: (deps, { versions }) => {
     const newDeps = { ...deps };
 
-    if (newDeps['@mui/x-data-grid']) {
-      newDeps['@mui/material'] = versions['@mui/material'];
-    }
-
-    if (newDeps['@mui/x-data-grid-pro']) {
-      newDeps['@mui/material'] = versions['@mui/material'];
-      newDeps['@mui/x-data-grid'] = versions['@mui/x-data-grid'];
-    }
-
     if (newDeps['@mui/x-data-grid-premium']) {
-      newDeps['@mui/material'] = versions['@mui/material'];
-      newDeps['@mui/x-data-grid'] = versions['@mui/x-data-grid'];
       newDeps['@mui/x-data-grid-pro'] = versions['@mui/x-data-grid-pro'];
       // TODO: remove when https://github.com/mui/material-ui/pull/32492 is released
       // use `import 'exceljs'` in demonstrations instead
       newDeps.exceljs = versions.exceljs;
+    }
+
+    if (newDeps['@mui/x-data-grid-pro']) {
+      newDeps['@mui/x-data-grid'] = versions['@mui/x-data-grid'];
+    }
+
+    if (newDeps['@mui/x-data-grid']) {
+      newDeps['@mui/material'] = versions['@mui/material'];
     }
 
     if (newDeps['@mui/x-data-grid-generator']) {
@@ -67,14 +62,13 @@ ponyfillGlobal.muiDocConfig = {
       newDeps['@mui/x-data-grid-pro'] = versions['@mui/x-data-grid-pro']; // Some TS types are imported from @mui/x-data-grid-pro
     }
 
+    if (newDeps['@mui/x-date-pickers-pro']) {
+      newDeps['@mui/x-date-pickers'] = versions['@mui/x-date-pickers'];
+    }
+
     if (newDeps['@mui/x-date-pickers']) {
       newDeps['@mui/material'] = versions['@mui/material'];
       newDeps['date-fns'] = versions['date-fns'];
-    }
-
-    if (newDeps['@mui/x-date-pickers-pro']) {
-      newDeps['@mui/material'] = versions['@mui/material'];
-      newDeps['@mui/x-date-pickers'] = versions['@mui/x-date-pickers'];
     }
 
     return newDeps;

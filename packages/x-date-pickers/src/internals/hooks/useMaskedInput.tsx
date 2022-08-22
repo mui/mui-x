@@ -78,13 +78,33 @@ export const useMaskedInput = <TInputDate, TDate>({
     getDisplayDate(utils, rawValue, inputFormat),
   );
 
-  const isAcceptedValue = rawValue === null || utils.isValid(parsedValue);
-  if (isAcceptedValue && !utils.isEqual(innerInputValue, parsedValue)) {
+  // Inspired from autocomplete: https://github.com/mui/material-ui/blob/2c89d036dc2e16f100528f161600dffc83241768/packages/mui-base/src/AutocompleteUnstyled/useAutocomplete.js#L185:L201
+  const prevRawValue = React.useRef<TInputDate>();
+  const prevLocale = React.useRef<Locale | string>(utils.locale);
+
+  React.useEffect(() => {
+    const rawValueHasChanged = rawValue !== prevRawValue.current;
+    const localeHasChanged = utils.locale !== prevLocale.current;
+    prevRawValue.current = rawValue;
+    prevLocale.current = utils.locale;
+
+    if (!rawValueHasChanged && !localeHasChanged) {
+      return;
+    }
+
+    const newParsedValue = rawValue === null ? null : utils.date(rawValue);
+    const isAcceptedValue = rawValue === null || utils.isValid(newParsedValue);
+
+    if (!localeHasChanged && (!isAcceptedValue || utils.isEqual(innerInputValue, newParsedValue))) {
+      return;
+    }
+
     // When dev set a new valid value, we trust them
     const newDisplayDate = getDisplayDate(utils, rawValue, inputFormat);
-    setInnerInputValue(parsedValue);
+
+    setInnerInputValue(newParsedValue);
     setInnerDisplayedInputValue(newDisplayDate);
-  }
+  }, [utils, rawValue, inputFormat, innerInputValue]);
 
   const handleChange = (text: string) => {
     const finalString = text === '' || text === mask ? '' : text;

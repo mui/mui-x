@@ -14,7 +14,7 @@ export function GridFilterInputBoolean(props: GridFilterInputValueProps & TextFi
   const OptionComponent = isSelectNative ? 'option' : MenuItem;
 
   const onFilterChange = React.useCallback(
-    (event) => {
+    (event: React.ChangeEvent<HTMLInputElement>) => {
       const value = event.target.value;
       setFilterValueState(value);
       applyValue({ ...item, value });
@@ -31,8 +31,8 @@ export function GridFilterInputBoolean(props: GridFilterInputValueProps & TextFi
       label={apiRef.current.getLocaleText('filterPanelInputLabel')}
       value={filterValueState}
       onChange={onFilterChange}
-      variant="standard"
       select
+      variant="standard"
       SelectProps={{
         native: isSelectNative,
         displayEmpty: true,

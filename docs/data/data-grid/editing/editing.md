@@ -17,7 +17,7 @@ To use it, add the following flag:
 This additional step is required because the default editing API has a couple of issues that can only be fixed with breaking changes, that will only be possible in v6.
 To avoid having to wait for the next major release window, all breaking changes needed were included inside this flag.
 
-If you are looking for the documentation for the default editing API, visit [this page](/x/react-data-grid/editing-legacy/).
+If you are looking for the documentation for the default editing API, visit [the docs of the legacy API](/x/react-data-grid/editing-legacy/).
 Note that it is encouraged to migrate to the new editing API since it will be enabled by default in v6.
 Although it says "experimental," you can consider it stable.
 :::
@@ -254,9 +254,14 @@ While the promise is not resolved, the edit component will receive an `isProcess
 {{"demo": "ValidateServerNameGrid.js", "bg": "inline", "defaultCodeOpen": false}}
 
 :::warning
-If the user performs an action that saves changes and exits edit mode (e.g. pressing <kbd class="key">Enter</kbd>) while the props are still being processed, the changes will be discarded upon exit.
-To avoid this, it is important to communicate to users when the processing is still occurring.
-You can use the `isProcessingProps` prop to show a loader while waiting for the server to respond.
+If the user performs an action that saves the changes and exits the edit mode (e.g. pressing <kbd class="key">Enter</kbd>) while the props are still being processed, the changes will be discarded upon exit.
+To avoid this, use the `disableIgnoreModificationsIfProcessingProps` prop to keep the cell or row in edit mode while props are processed:
+
+```tsx
+<DataGrid disableIgnoreModificationsIfProcessingProps />
+```
+
+In v6, this prop will be removed and the editing API will behave, by default, like if it was enabled.
 :::
 
 ## Persistence
@@ -555,7 +560,7 @@ You can change date format by importing different locale (`en-US` locale is used
 See [Localization](/x/react-date-pickers/localization/) for more information.
 :::
 
-## apiRef [<span class="plan-pro"></span>](https://mui.com/store/items/mui-x-pro/)
+## apiRef [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
 
 {{"demo": "EditApiNoSnap.js", "bg": "inline", "hideToolbar": true}}
 
@@ -563,3 +568,4 @@ See [Localization](/x/react-date-pickers/localization/) for more information.
 
 - [DataGrid](/x/api/data-grid/data-grid/)
 - [DataGridPro](/x/api/data-grid/data-grid-pro/)
+- [DataGridPremium](/x/api/data-grid/data-grid-premium/)

@@ -62,8 +62,12 @@ export const useGridRows = (
   >,
 ): void => {
   if (process.env.NODE_ENV !== 'production') {
-    // Freeze rows for immutability
-    Object.freeze(props.rows);
+    try {
+      // Freeze the `rows` prop so developers have a fast failure if they try to use Array.prototype.push().
+      Object.freeze(props.rows);
+    } catch (error) {
+      // Sometimes, it's impossible to freeze, so we give up on it.
+    }
   }
 
   const logger = useGridLogger(apiRef, 'useGridRows');
@@ -152,7 +156,7 @@ export const useGridRows = (
         throw new Error(
           [
             "MUI: You can't update several rows at once in `apiRef.current.updateRows` on the DataGrid.",
-            'You need to upgrade to the DataGridPro component to unlock this feature.',
+            'You need to upgrade to DataGridPro or DataGridPremium component to unlock this feature.',
           ].join('\n'),
         );
       }
@@ -231,7 +235,9 @@ export const useGridRows = (
     [apiRef],
   );
 
-  const getRowIndexRelativeToVisibleRows = React.useCallback((id) => lookup[id], [lookup]);
+  const getRowIndexRelativeToVisibleRows = React.useCallback<
+    GridRowApi['getRowIndexRelativeToVisibleRows']
+  >((id) => lookup[id], [lookup]);
 
   const setRowChildrenExpansion = React.useCallback<GridRowApi['setRowChildrenExpansion']>(
     (id, isExpanded) => {

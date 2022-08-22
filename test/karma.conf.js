@@ -120,7 +120,14 @@ module.exports = function setKarmaConfig(config) {
     customLaunchers: {
       chromeHeadless: {
         base: 'ChromeHeadless',
-        flags: ['--no-sandbox'],
+        flags: [
+          '--no-sandbox',
+          // running headless chrome in a virtualized environment forces pointer type to default to `NONE`
+          // to mimic "desktop" environment more correctly we force blink to have `pointer: fine` support
+          // this allows correct pickers behavior, where their rendering depends on this condition
+          // https://github.com/microsoft/playwright/issues/7769#issuecomment-1205106311
+          '--blink-settings=primaryPointerType=4',
+        ],
       },
     },
     singleRun: CI,

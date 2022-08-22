@@ -118,7 +118,7 @@ describe('<DataGridPro /> - Tree Data', () => {
         'B.B.A.A',
         'C',
       ]);
-      apiRef.current.updateRows([{ name: 'A.A', _action: 'delete' }]);
+      act(() => apiRef.current.updateRows([{ name: 'A.A', _action: 'delete' }]));
       expect(getColumnValues(0)).to.deep.equal([
         'A',
         'A.B',
@@ -171,7 +171,7 @@ describe('<DataGridPro /> - Tree Data', () => {
         <Test disableVirtualization rows={[{ name: 'A' }, { name: 'A.A' }]} />,
       );
       expect(getColumnValues(1)).to.deep.equal(['A']);
-      apiRef.current.setRowChildrenExpansion('A', true);
+      act(() => apiRef.current.setRowChildrenExpansion('A', true));
       clock.runToLast();
       expect(getColumnValues(1)).to.deep.equal(['A', 'A.A']);
       setProps({
@@ -276,9 +276,7 @@ describe('<DataGridPro /> - Tree Data', () => {
     it('should not re-apply default expansion on rerender after expansion manually toggled', () => {
       const { setProps } = render(<Test />);
       expect(getColumnValues(1)).to.deep.equal(['A', 'B', 'C']);
-      act(() => {
-        apiRef.current.setRowChildrenExpansion('B', true);
-      });
+      act(() => apiRef.current.setRowChildrenExpansion('B', true));
       expect(getColumnValues(1)).to.deep.equal(['A', 'B', 'B.A', 'B.B', 'C']);
       setProps({ sortModel: [{ field: 'name', sort: 'desc' }] });
       expect(getColumnValues(1)).to.deep.equal(['C', 'B', 'B.B', 'B.A', 'A']);
@@ -399,14 +397,18 @@ describe('<DataGridPro /> - Tree Data', () => {
     it('should keep the grouping column width between generations', () => {
       render(<Test groupingColDef={{ width: 200 }} />);
       expect(getColumnHeaderCell(0)).toHaveInlineStyle({ width: '200px' });
-      apiRef.current.updateColumns([{ field: GRID_TREE_DATA_GROUPING_FIELD, width: 100 }]);
+      act(() =>
+        apiRef.current.updateColumns([{ field: GRID_TREE_DATA_GROUPING_FIELD, width: 100 }]),
+      );
       expect(getColumnHeaderCell(0)).toHaveInlineStyle({ width: '100px' });
-      apiRef.current.updateColumns([
-        {
-          field: 'name',
-          headerName: 'New name',
-        },
-      ]);
+      act(() =>
+        apiRef.current.updateColumns([
+          {
+            field: 'name',
+            headerName: 'New name',
+          },
+        ]),
+      );
       expect(getColumnHeaderCell(0)).toHaveInlineStyle({ width: '100px' });
     });
   });
@@ -524,6 +526,43 @@ describe('<DataGridPro /> - Tree Data', () => {
       // A has A.A but not A.B
       // B has B.A (match filter), B.B (has matching children), B.B.A (match filters), B.B.A.A (match filters)
       expect(getColumnValues(0)).to.deep.equal(['A (1)', 'B (4)']);
+    });
+
+    it('should apply quick filter without throwing error', () => {
+      render(
+        <Test
+          initialState={{
+            filter: {
+              filterModel: {
+                items: [],
+                quickFilterValues: ['A', 'B'],
+              },
+            },
+          }}
+        />,
+      );
+
+      // A has A.A but not A.B
+      // B has B.A (match filter), B.B (has matching children), B.B.A (match filters), B.B.A.A (match filters)
+      expect(getColumnValues(0)).to.deep.equal(['A (1)', 'B (4)']);
+    });
+
+    it('should remove generated rows when they and their children do not pass quick filter', () => {
+      render(
+        <Test
+          rows={[
+            { name: 'A.B' },
+            { name: 'A.C' },
+            { name: 'B.C' },
+            { name: 'B.D' },
+            { name: 'D.A' },
+          ]}
+          filterModel={{ items: [], quickFilterValues: ['D'] }}
+          defaultGroupingExpansionDepth={-1}
+        />,
+      );
+
+      expect(getColumnValues(0)).to.deep.equal(['B (1)', 'D', 'D (1)', 'A']);
     });
   });
 
