@@ -37,7 +37,7 @@ import { DataGrid } from '@mui/x-data-grid';
 
 The commercial version is available in the form of two plans: Pro and Premium.
 
-#### Pro Plan [<span class="plan-pro"></span>](https://mui.com/store/items/mui-x-pro/)
+#### Pro Plan [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
 
 The Pro version extends the features available in the MIT version, by allowing to sort and filter multiple columns at the same time.
 It also brings new features, e.g. column groups, column pinning, tree data, row and column reordering, etc.
@@ -50,7 +50,7 @@ import { DataGridPro } from '@mui/x-data-grid-pro';
 
 {{"demo": "DataGridProDemo.js", "defaultCodeOpen": false, "disableAd": true, "bg": "inline"}}
 
-#### Premium Plan [<span class="plan-premium"></span>](https://mui.com/store/items/mui-x-premium/)
+#### Premium Plan [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan)
 
 The Premium version contains all features from Pro, as well as features for analyzing large datasets.
 The features available on the initial release are row grouping and the ability to export to Excel files.

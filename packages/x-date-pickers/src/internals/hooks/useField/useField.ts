@@ -132,7 +132,7 @@ export const useField = <
           updateSelectedSections(state.selectedSectionIndexes.start + 1);
         } else if (state.selectedSectionIndexes.start !== state.selectedSectionIndexes.end) {
           updateSelectedSections(state.selectedSectionIndexes.end);
-        } 
+        }
 
         return;
       }

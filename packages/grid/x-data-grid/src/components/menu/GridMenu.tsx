@@ -51,12 +51,13 @@ const GridMenuRoot = styled(Popper, {
   },
 }));
 
-export interface GridMenuProps extends Omit<PopperProps, 'onKeyDown'> {
+export interface GridMenuProps extends Omit<PopperProps, 'onKeyDown' | 'children'> {
   open: boolean;
-  target: React.ReactNode;
+  target: HTMLElement | null;
   onClickAway: ClickAwayListenerProps['onClickAway'];
   position?: MenuPosition;
   onExited?: GrowProps['onExited'];
+  children: React.ReactNode;
 }
 
 const transformOrigin = {
@@ -127,6 +128,7 @@ GridMenu.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
+  children: PropTypes.node,
   onClickAway: PropTypes.func.isRequired,
   onExited: PropTypes.func,
   /**
