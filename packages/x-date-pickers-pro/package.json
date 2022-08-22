@@ -81,7 +81,7 @@
   "devDependencies": {
     "@types/luxon": "^3.0.0",
     "date-fns": "^2.29.2",
-    "dayjs": "^1.11.4",
+    "dayjs": "^1.11.5",
     "luxon": "^1.21.3 || ^2.x || ^3.0.0",
     "moment": "^2.29.4"
   },
