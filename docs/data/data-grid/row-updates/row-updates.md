@@ -55,12 +55,12 @@ Then the `rowCount` needs to be set to the number of available rows on the serve
 Third, set a callback function on `onFetchRows` to load the data corresponding to the row indices passed within `GridFetchRowsParams`.
 Finally, replace the empty rows with the newly fetched ones using `apiRef.current.replaceRows()` like in the demo below.
 
+{{"demo": "LazyLoadingGrid.js", "bg": "inline", "disableAd": true}}
+
 :::info
 In order for filtering and sorting to work you need to set their modes to `server`.
 You can find out more information about how to do that on the [server-side filter page](/x/react-data-grid/filtering/#server-side-filter) and on the [server-side sorting page](/x/react-data-grid/sorting/#server-side-sorting).
 :::
-
-{{"demo": "LazyLoadingGrid.js", "bg": "inline", "disableAd": true}}
 
 ## High frequency [<span class="plan-pro"></span>](https://mui.com/store/items/mui-x-pro/)
 
