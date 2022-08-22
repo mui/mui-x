@@ -117,7 +117,7 @@ export const useField = <
     // eslint-disable-next-line default-case
     switch (true) {
       // Select all
-      case event.key === 'a' && event.ctrlKey: {
+      case event.key === 'a' && (event.ctrlKey || event.metaKey): {
         event.preventDefault();
         updateSelectedSections(0, state.sections.length - 1);
         return;
