@@ -194,7 +194,7 @@ async function main(argv) {
 
   const changelog = `
 ## __VERSION__
-
+<!-- generated comparing ${lastRelease}..${release} -->
 _${nowFormatted}_
 
 We'd like to offer a big thanks to the ${
