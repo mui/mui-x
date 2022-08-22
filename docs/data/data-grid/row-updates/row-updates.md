@@ -41,6 +41,15 @@ In addition, the area in which `onRowsScrollEnd` is called can be changed using 
 
 ## Lazy loading [<span class="plan-pro"></span>](https://mui.com/store/items/mui-x-pro/)
 
+:::warning
+This feature is experimental, it needs to be explicitly activated using the `lazyLoading` experimental feature flag.
+
+```tsx
+<DataGridPro experimentalFeatures={{ lazyLoading: true }} {...otherProps} />
+```
+
+:::
+
 To allow the grid to lazy load data, set `rowsLoadingMode="server"`.
 Then the `rowCount` needs to be set to the number of available rows on the server.
 In addition, you need to handle the `onFetchRows` callback to fetch the rows for the corresponding indices.
