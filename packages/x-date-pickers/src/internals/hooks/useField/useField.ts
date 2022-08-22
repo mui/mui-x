@@ -128,11 +128,11 @@ export const useField = <
 
         if (state.selectedSectionIndexes == null) {
           updateSelectedSections(0);
-        } else if (state.selectedSectionIndexes.start !== state.selectedSectionIndexes.end) {
-          updateSelectedSections(state.selectedSectionIndexes.end);
         } else if (state.selectedSectionIndexes.start < state.sections.length - 1) {
           updateSelectedSections(state.selectedSectionIndexes.start + 1);
-        }
+        } else if (state.selectedSectionIndexes.start !== state.selectedSectionIndexes.end) {
+          updateSelectedSections(state.selectedSectionIndexes.end);
+        } 
 
         return;
       }
