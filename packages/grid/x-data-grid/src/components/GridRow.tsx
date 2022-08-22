@@ -400,24 +400,17 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
       ? rootProps.showCellRightBorder
       : !removeLastBorderRight && rootProps.disableExtendRowFullWidth;
 
-    if (row) {
-      const cellColSpanInfo = apiRef.current.unstable_getCellColSpanInfo(
-        rowId,
-        indexRelativeToAllColumns,
-      );
+    const cellColSpanInfo = apiRef.current.unstable_getCellColSpanInfo(
+      rowId,
+      indexRelativeToAllColumns,
+    );
 
-      if (cellColSpanInfo && !cellColSpanInfo.spannedByColSpan) {
+    if (cellColSpanInfo && !cellColSpanInfo.spannedByColSpan) {
+      if (row) {
         const { colSpan, width } = cellColSpanInfo.cellProps;
         const cellProps = { width, colSpan, showRightBorder, indexRelativeToAllColumns };
         cells.push(getCell(column, cellProps));
-      }
-    } else {
-      const cellColSpanInfo = apiRef.current.unstable_getCellColSpanInfo(
-        rowId,
-        indexRelativeToAllColumns,
-      );
-
-      if (cellColSpanInfo && !cellColSpanInfo.spannedByColSpan) {
+      } else {
         const { width } = cellColSpanInfo.cellProps;
         const contentWidth = Math.round(randomNumber());
 

@@ -28,25 +28,19 @@ function findSkeletonRowsSection(
   visibleRows: GridRowEntry<any>[],
   range: { firstRowIndex: number; lastRowIndex: number },
 ): { firstRowIndex: number; lastRowIndex: number } {
-  const visibleRowsSection = visibleRows.slice(range.firstRowIndex, range.lastRowIndex);
-  let firstRowIndex = range.firstRowIndex;
-  let lastRowIndex = range.lastRowIndex;
-  let startIndex = 0;
-  let endIndex = visibleRowsSection.length - 1;
+  let { firstRowIndex, lastRowIndex } = range;
   let isSkeletonSectionFound = false;
 
   while (!isSkeletonSectionFound && firstRowIndex < lastRowIndex) {
-    if (!visibleRowsSection[startIndex].model && !visibleRowsSection[endIndex].model) {
+    if (!visibleRows[firstRowIndex].model && !visibleRows[lastRowIndex].model) {
       isSkeletonSectionFound = true;
     }
 
-    if (visibleRowsSection[startIndex].model) {
-      startIndex += 1;
+    if (visibleRows[firstRowIndex].model) {
       firstRowIndex += 1;
     }
 
-    if (visibleRowsSection[endIndex].model) {
-      endIndex -= 1;
+    if (visibleRows[lastRowIndex].model) {
       lastRowIndex -= 1;
     }
   }
@@ -124,8 +118,10 @@ export const useGridLazyLoader = (
     };
   }, [apiRef, props.rowBuffer, visibleRows.rows.length]);
 
-  const handleRenderedRowsIntervalChange = React.useCallback(
-    (params: GridRenderedRowsIntervalChangeParams) => {
+  const handleRenderedRowsIntervalChange = React.useCallback<
+    GridEventListener<'renderedRowsIntervalChange'>
+  >(
+    (params) => {
       const dimensions = apiRef.current.getRootDimensions();
 
       if (
