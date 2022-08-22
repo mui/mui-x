@@ -2,7 +2,7 @@
 title: Data Grid - Aggregation
 ---
 
-# Data grid - Aggregation [<span class="plan-premium"></span>](https://mui.com/store/items/mui-x-premium/)
+# Data grid - Aggregation [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan)
 
 <p class="description">Use aggregation functions to combine your row values.</p>
 
@@ -114,7 +114,7 @@ As with row grouping, you can display the aggregated values either in the footer
 :::info
 If the aggregated value is displayed in the grouping row, it will always have priority over the row data.
 
-This means that the data from groups explicitly provided in your dataset will be ignored in favor of their aggregated values.  
+This means that the data from groups explicitly provided in your dataset will be ignored in favor of their aggregated values.
 :::
 
 The demo below shows the _sum_ aggregation on the **Size** column and the _max_ aggregation on the **Last modification** column.

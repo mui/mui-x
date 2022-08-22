@@ -266,7 +266,7 @@ export interface DataGridPropsWithDefaultValues {
   logger: Logger;
   /**
    * Allows to pass the logging level or false to turn off logging.
-   * @default "debug"
+   * @default "error" ("warn" in dev mode)
    */
   logLevel: keyof Logger | false;
   /**
