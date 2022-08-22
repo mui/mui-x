@@ -27,7 +27,7 @@ import { GridFetchRowsParams } from '../../../models/gridFetchRowsParams';
 function findSkeletonRowsSection(
   visibleRows: GridRowEntry<any>[],
   range: { firstRowIndex: number; lastRowIndex: number },
-): { firstRowIndex: number; lastRowIndex: number } {
+) {
   let { firstRowIndex, lastRowIndex } = range;
   let isSkeletonSectionFound = false;
 
@@ -99,10 +99,7 @@ export const useGridLazyLoader = (
   });
   const { lazyLoading } = (props.experimentalFeatures ?? {}) as GridExperimentalProFeatures;
 
-  const getCurrentIntervalToRender = React.useCallback((): {
-    firstRowToRender: number;
-    lastRowToRender: number;
-  } => {
+  const getCurrentIntervalToRender = React.useCallback(() => {
     const currentRenderContext = apiRef.current.unstable_getRenderContext();
     const [firstRowToRender, lastRowToRender] = getRenderableIndexes({
       firstIndex: currentRenderContext.firstRowIndex,
