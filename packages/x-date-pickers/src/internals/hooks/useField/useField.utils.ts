@@ -37,7 +37,7 @@ export const getDateSectionNameFromFormat = (format: string): DateSectionName =>
   throw new Error(`getDatePartNameFromFormat don't understand the format ${format}`);
 };
 
-export const incrementDatePartValue = <TDate>(
+export const incrementDateSectionValue = <TDate>(
   utils: MuiPickersAdapter<TDate>,
   date: TDate,
   datePartName: DateSectionName,
@@ -208,46 +208,188 @@ export const setSectionValue = <TSection extends FieldSection>(
   return addPositionPropertiesToSections<TSection>(newSections);
 };
 
-export const getMonthList = <TDate>(utils: MuiPickersAdapter<TDate>, format: string) =>
-  utils.getMonthArray(utils.date()!).map((month) => utils.formatByString(month, format));
-
 export const getMonthsMatchingQuery = <TDate>(
   utils: MuiPickersAdapter<TDate>,
   format: string,
   query: string,
-) => getMonthList(utils, format).filter((month) => month.toLowerCase().startsWith(query));
+) => {
+  const monthList = utils
+    .getMonthArray(utils.date()!)
+    .map((month) => utils.formatByString(month, format));
+  return monthList.filter((month) => month.toLowerCase().startsWith(query));
+};
 
 export const getSectionValueNumericBoundaries = <TDate>(
   utils: MuiPickersAdapter<TDate>,
   date: TDate,
   dateSectionName: DateSectionName,
 ) => {
-  let maximum: number;
+  const dateWithFallback = utils.isValid(date) ? date : utils.date()!;
+  const endOfYear = utils.endOfYear(dateWithFallback);
+
   switch (dateSectionName) {
     case 'day':
-      maximum = utils.isValid(date) ? utils.getDaysInMonth(date) : 31;
-      break;
+      return {
+        minimum: 1,
+        maximum: utils.getDaysInMonth(dateWithFallback),
+      };
 
     case 'month': {
-      maximum = utils.getMonthArray(date).length;
-      break;
+      return {
+        minimum: 1,
+        maximum: utils.getMonth(endOfYear) + 1,
+      };
     }
 
     case 'year':
-      // TODO: Make generic
-      maximum = 9999;
-      break;
+      return {
+        minimum: 1,
+        maximum: 9999,
+      };
+
+    case 'hour': {
+      return {
+        minimum: 0,
+        maximum: utils.getHours(endOfYear),
+      };
+    }
+
+    case 'minute': {
+      return {
+        minimum: 0,
+        maximum: utils.getMinutes(endOfYear),
+      };
+    }
+
+    case 'second': {
+      return {
+        minimum: 0,
+        maximum: utils.getSeconds(endOfYear),
+      };
+    }
 
     default: {
-      maximum = 0;
+      return {
+        minimum: 0,
+        maximum: 0,
+      };
     }
   }
+};
 
-  return {
-    // TODO: Make generic
-    minimum: 1,
-    maximum,
-  };
+export const incrementOrDecrementInvalidDateSection = <TDate, TSection extends FieldSection>(
+  utils: MuiPickersAdapter<TDate>,
+  section: TSection,
+  type: 'increment' | 'decrement',
+) => {
+  const today = utils.date()!;
+  const delta = type === 'increment' ? 1 : -1;
+
+  switch (section.dateSectionName) {
+    case 'year': {
+      if (section.value === '') {
+        return utils.formatByString(today, section.formatValue);
+      }
+
+      return utils.formatByString(
+        utils.setYear(today, Number(section.value) + delta),
+        section.formatValue,
+      );
+    }
+
+    case 'month': {
+      let newDate: TDate;
+      if (section.value === '') {
+        if (type === 'increment') {
+          newDate = utils.endOfYear(today);
+        } else {
+          newDate = utils.startOfYear(today);
+        }
+      } else {
+        newDate = utils.addMonths(utils.parse(section.value, section.formatValue)!, delta);
+      }
+
+      return utils.formatByString(newDate, section.formatValue);
+    }
+
+    case 'day': {
+      let newDate: TDate;
+      if (section.value === '') {
+        if (type === 'increment') {
+          newDate = utils.endOfMonth(today);
+        } else {
+          newDate = utils.startOfMonth(today);
+        }
+      } else {
+        newDate = utils.addDays(utils.parse(section.value, section.formatValue)!, delta);
+      }
+
+      return utils.formatByString(newDate, section.formatValue);
+    }
+
+    case 'am-pm': {
+      const am = utils.formatByString(utils.startOfDay(today), section.formatValue);
+      const pm = utils.formatByString(utils.endOfDay(today), section.formatValue);
+
+      if (section.value === '') {
+        if (type === 'increment') {
+          return pm;
+        }
+        return am;
+      }
+
+      if (section.value === am) {
+        return pm;
+      }
+
+      return am;
+    }
+
+    case 'hour': {
+      let newDate: TDate;
+      if (section.value === '') {
+        if (type === 'increment') {
+          newDate = utils.endOfDay(today);
+        } else {
+          newDate = utils.startOfDay(today);
+        }
+      } else {
+        newDate = utils.addHours(utils.setHours(today, Number(section.value)), delta);
+      }
+
+      return utils.formatByString(newDate, section.formatValue);
+    }
+
+    case 'minute': {
+      let newDate: TDate;
+      if (section.value === '') {
+        // TODO: Add startOfHour and endOfHours to adapters
+        const newNumericValue = type === 'increment' ? 59 : 0;
+        newDate = utils.setMinutes(today, newNumericValue);
+      } else {
+        newDate = utils.addMinutes(utils.setMinutes(today, Number(section.value)), delta);
+      }
+
+      return utils.formatByString(newDate, section.formatValue);
+    }
+
+    case 'second': {
+      let newDate: TDate;
+      if (section.value === '') {
+        // TODO: Add startOfMinute and endOfMinute to adapters
+        const newNumericValue = type === 'increment' ? 59 : 0;
+        newDate = utils.setSeconds(today, newNumericValue);
+      } else {
+        newDate = utils.addSeconds(utils.setSeconds(today, Number(section.value)), delta);
+      }
+
+      return utils.formatByString(newDate, section.formatValue);
+    }
+
+    default: {
+      throw new Error(`Invalid date section name`);
+    }
+  }
 };
 
 export const cleanTrailingZeroInNumericSectionValue = (value: string, maximum: number) => {

@@ -12,11 +12,11 @@ import {
 } from './useField.interfaces';
 import {
   cleanTrailingZeroInNumericSectionValue,
-  getMonthList,
   getMonthsMatchingQuery,
   getSectionValueNumericBoundaries,
   getSectionVisibleValue,
-  incrementDatePartValue,
+  incrementDateSectionValue,
+  incrementOrDecrementInvalidDateSection,
   setSectionValue,
 } from './useField.utils';
 
@@ -51,10 +51,11 @@ export const useField = <
 
   const valueParsed = React.useMemo(() => {
     // TODO: Avoid this type casting, the emptyValues are both valid TDate and TInputDate
-    const value = firstDefaultValue.current ?? (valueManager.emptyValue as unknown as TInputValue);
+    const value =
+      firstDefaultValue.current ?? valueProp ?? (valueManager.emptyValue as unknown as TInputValue);
 
     return valueManager.parseInput(utils, value);
-  }, [valueManager, utils]);
+  }, [valueProp, valueManager, utils]);
 
   const [state, setState] = React.useState<UseFieldState<TValue, TSection[]>>(() => {
     const sections = fieldValueManager.getSectionsFromValue(utils, null, valueParsed, format);
@@ -195,44 +196,17 @@ export const useField = <
 
         // The date is not valid, we have to increment the section value rather than the date
         if (!utils.isValid(activeDate.value)) {
-          const boundaries = getSectionValueNumericBoundaries(
+          const newSectionValue = incrementOrDecrementInvalidDateSection(
             utils,
-            utils.date(),
-            activeSection.dateSectionName,
+            activeSection,
+            event.key === 'ArrowUp' ? 'increment' : 'decrement',
           );
 
-          let newSectionNumericValue: number;
-          if (activeSection.value === '') {
-            // TODO: Respect date validation
-            // TODO: For year, set to current year instead of 0000 and 9999
-            newSectionNumericValue =
-              event.key === 'ArrowDown' ? boundaries.minimum : boundaries.maximum;
-          } else {
-            const currentNumericValue =
-              activeSection.formatValue === 'MMMM'
-                ? getMonthList(utils, activeSection.formatValue).indexOf(activeSection.value)
-                : Number(activeSection.value);
-            newSectionNumericValue = currentNumericValue + (event.key === 'ArrowDown' ? -1 : 1);
-            if (newSectionNumericValue < boundaries.minimum) {
-              newSectionNumericValue = boundaries.maximum;
-            } else if (newSectionNumericValue > boundaries.maximum) {
-              newSectionNumericValue = boundaries.minimum;
-            }
-          }
-
-          // TODO: Make generic
-          const newSectionValue =
-            activeSection.formatValue === 'MMMM'
-              ? getMonthList(utils, activeSection.formatValue)[newSectionNumericValue]
-              : cleanTrailingZeroInNumericSectionValue(
-                  newSectionNumericValue.toString(),
-                  boundaries.maximum,
-                );
           updateSections(
             setSectionValue(state.sections, state.selectedSectionIndexes.start, newSectionValue),
           );
         } else {
-          const newDate = incrementDatePartValue(
+          const newDate = incrementDateSectionValue(
             utils,
             activeDate.value,
             activeSection.dateSectionName,

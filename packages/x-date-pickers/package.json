@@ -50,7 +50,7 @@
     "@date-io/dayjs": "^2.15.0",
     "@date-io/luxon": "^2.15.0",
     "@date-io/moment": "^2.15.0",
-    "@mui/utils": "^5.4.1",
+    "@mui/utils": "^5.9.3",
     "@types/react-transition-group": "^4.4.5",
     "clsx": "^1.2.1",
     "prop-types": "^15.7.2",
