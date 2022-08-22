@@ -28,6 +28,7 @@ import { GRID_DETAIL_PANEL_TOGGLE_FIELD } from '../constants/gridDetailPanelTogg
 import { gridSortModelSelector } from '../hooks/features/sorting/gridSortingSelector';
 import { gridRowTreeDepthSelector } from '../hooks/features/rows/gridRowsSelector';
 import { randomNumberBetween } from '../utils/utils';
+import { GridCellProps } from './cell/GridCell';
 
 export interface GridRowProps {
   rowId: GridRowId;
@@ -248,7 +249,13 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
   );
 
   const getCell = React.useCallback(
-    (column, cellProps) => {
+    (
+      column: GridStateColDef,
+      cellProps: Pick<
+        GridCellProps,
+        'width' | 'colSpan' | 'showRightBorder' | 'indexRelativeToAllColumns'
+      >,
+    ) => {
       const cellParams = apiRef.current.getCellParams(rowId, column.field);
 
       const classNames: string[] = [];
