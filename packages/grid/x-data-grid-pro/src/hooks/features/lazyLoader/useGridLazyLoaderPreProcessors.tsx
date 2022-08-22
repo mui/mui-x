@@ -9,13 +9,7 @@ import { GridFeatureModeConstant, GridRowId } from '@mui/x-data-grid';
 
 export const GRID_SKELETON_ROW_ROOT_ID = 'auto-generated-skeleton-row-root';
 
-const getSkeletonRowId = (index: GridRowId | null) => {
-  if (index == null) {
-    return GRID_SKELETON_ROW_ROOT_ID;
-  }
-
-  return `${GRID_SKELETON_ROW_ROOT_ID}-${index}`;
-};
+const getSkeletonRowId = (index: number) => `${GRID_SKELETON_ROW_ROOT_ID}-${index}`;
 
 export const useGridLazyLoaderPreProcessors = (
   apiRef: React.MutableRefObject<GridApiPro>,
