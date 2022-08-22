@@ -346,7 +346,7 @@ export const useGridRows = (
       if (newRows.length && newRows.length !== lastRowToRender - firstRowToRender) {
         throw new Error(
           [
-            'MUI: The number of rows you want update is more than what was indicated',
+            'MUI: The number of rows you want update is different than what was indicated',
             'You need to pass rows which number is equal to the difference between the `firstRowToRender` and `lastRowToRender`.',
           ].join('\n'),
         );
