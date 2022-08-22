@@ -43,7 +43,7 @@ In addition, the area in which `onRowsScrollEnd` is called can be changed using 
 
 To allow the grid to lazy load data, set `rowsLoadingMode="server"`.
 Then the `rowCount` needs to be set to the number of available rows on the server.
-In addition, you need to handle the `onFetchRows` callback to fetch the rows for the corresponding indices.
+Third, set a callback function on `onFetchRows` to load the data corresponding to the row indices passed within `GridFetchRowsParams`.
 Finally, you need to use the `apiRef.current.replaceRows()` to tell the DataGrid where to insert the newly fetched rows.
 
 :::info
