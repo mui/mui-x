@@ -111,8 +111,8 @@ export interface CalendarPickerProps<TDate>
    * @returns {void|Promise} -
    */
   onMonthChange?: (month: TDate) => void | Promise<void>;
-  hasFocus?: boolean;
-  onPickerHasFocusChange?: (picker: CalendarPickerView) => (newHasFocus: boolean) => void;
+  focusedPicker?: CalendarPickerView | null;
+  onFocusedPickerChange?: (picker: CalendarPickerView) => (newHasFocus: boolean) => void;
 }
 
 export type ExportedCalendarPickerProps<TDate> = Omit<
@@ -129,8 +129,8 @@ export type ExportedCalendarPickerProps<TDate> = Omit<
   | 'classes'
   | 'components'
   | 'componentsProps'
-  | 'onPickerHasFocusChange'
-  | 'hasFocus'
+  | 'onFocusedPickerChange'
+  | 'focusedPicker'
 >;
 
 const useUtilityClasses = (
@@ -213,8 +213,8 @@ const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
     minDate = defaultDates.minDate,
     maxDate = defaultDates.maxDate,
     disableHighlightToday,
-    hasFocus,
-    onPickerHasFocusChange,
+    focusedPicker,
+    onFocusedPickerChange,
     ...other
   } = props;
 
@@ -419,8 +419,8 @@ const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
               date={date}
               onChange={handleDateYearChange}
               shouldDisableYear={shouldDisableYear}
-              hasFocus={hasFocus}
-              onHasFocusChange={onPickerHasFocusChange && onPickerHasFocusChange('year')}
+              hasFocus={focusedPicker !== undefined ? focusedPicker === 'year' : undefined}
+              onHasFocusChange={onFocusedPickerChange && onFocusedPickerChange('year')}
             />
           )}
 
@@ -429,12 +429,12 @@ const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
               {...baseDateValidationProps}
               {...commonViewProps}
               autoFocus={autoFocus}
-              hasFocus={hasFocus}
+              hasFocus={focusedPicker !== undefined ? focusedPicker === 'month' : undefined}
               className={className}
               date={date}
               onChange={handleDateMonthChange}
               shouldDisableMonth={shouldDisableMonth}
-              onHasFocusChange={onPickerHasFocusChange && onPickerHasFocusChange('month')}
+              onHasFocusChange={onFocusedPickerChange && onFocusedPickerChange('month')}
             />
           )}
 
@@ -453,8 +453,8 @@ const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
               loading={loading}
               renderLoading={renderLoading}
               shouldDisableDate={shouldDisableDate}
-              hasFocus={hasFocus}
-              onHasFocusChange={onPickerHasFocusChange && onPickerHasFocusChange('day')}
+              hasFocus={focusedPicker !== undefined ? focusedPicker === 'day' : undefined}
+              onHasFocusChange={onFocusedPickerChange && onFocusedPickerChange('day')}
             />
           )}
         </div>
@@ -513,6 +513,7 @@ CalendarPicker.propTypes = {
    * @default false
    */
   disablePast: PropTypes.bool,
+  focusedPicker: PropTypes.oneOf(['day', 'month', 'year']),
   /**
    * Get aria-label text for switching between views button.
    * @param {CalendarPickerView} currentView The view from which we want to get the button text.
@@ -520,7 +521,6 @@ CalendarPicker.propTypes = {
    * @deprecated Use the `localeText` prop of `LocalizationProvider` instead, see https://mui.com/x/react-date-pickers/localization
    */
   getViewSwitchingButtonText: PropTypes.func,
-  hasFocus: PropTypes.bool,
   /**
    * Left arrow icon aria-label text.
    * @deprecated
@@ -544,6 +544,7 @@ CalendarPicker.propTypes = {
    * Callback fired on date change
    */
   onChange: PropTypes.func.isRequired,
+  onFocusedPickerChange: PropTypes.func,
   /**
    * Callback firing on month change @DateIOType.
    * @template TDate
@@ -551,7 +552,6 @@ CalendarPicker.propTypes = {
    * @returns {void|Promise} -
    */
   onMonthChange: PropTypes.func,
-  onPickerHasFocusChange: PropTypes.func,
   /**
    * Callback fired on view change.
    * @param {CalendarPickerView} view The new view.
