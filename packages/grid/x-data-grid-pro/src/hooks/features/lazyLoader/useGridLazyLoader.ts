@@ -4,8 +4,6 @@ import {
   GridFeatureModeConstant,
   GridRenderedRowsIntervalChangeParams,
   useGridSelector,
-  GridRowId,
-  gridVisibleSortedRowIdsSelector,
   gridSortModelSelector,
   gridFilterModelSelector,
   useGridApiOptionHandler,
@@ -21,7 +19,6 @@ import {
   DataGridProProcessedProps,
   GridExperimentalProFeatures,
 } from '../../../models/dataGridProProps';
-import { GRID_SKELETON_ROW_ROOT_ID } from './useGridLazyLoaderPreProcessors';
 import { GridFetchRowsParams } from '../../../models/gridFetchRowsParams';
 
 function findSkeletonRowsSection(
@@ -45,10 +42,12 @@ function findSkeletonRowsSection(
     }
   }
 
-  return {
-    firstRowIndex,
-    lastRowIndex,
-  };
+  return isSkeletonSectionFound
+    ? {
+        firstRowIndex,
+        lastRowIndex,
+      }
+    : undefined;
 }
 
 function isLazyLoadingDisabled({
@@ -90,7 +89,6 @@ export const useGridLazyLoader = (
   >,
 ): void => {
   const visibleRows = useGridVisibleRows(apiRef, props);
-  const rowIds = useGridSelector(apiRef, gridVisibleSortedRowIdsSelector);
   const sortModel = useGridSelector(apiRef, gridSortModelSelector);
   const filterModel = useGridSelector(apiRef, gridFilterModelSelector);
   const renderedRowsIntervalCache = React.useRef<GridRenderedRowsIntervalChangeParams>({
@@ -138,35 +136,27 @@ export const useGridLazyLoader = (
         return;
       }
 
-      const renderedRowsIds: Array<GridRowId | null> = [...rowIds].splice(
-        params.firstRowToRender,
-        params.lastRowToRender - params.firstRowToRender,
-      );
-      const hasSkeletonRowIds = renderedRowsIds.some((rowId) =>
-        `${rowId}`.includes(GRID_SKELETON_ROW_ROOT_ID),
-      );
-
-      if (!hasSkeletonRowIds) {
-        return;
-      }
-
-      const { firstRowIndex, lastRowIndex } = findSkeletonRowsSection(visibleRows.rows, {
+      const skeletonRowsSection = findSkeletonRowsSection(visibleRows.rows, {
         firstRowIndex: params.firstRowToRender,
         lastRowIndex: params.lastRowToRender,
       });
 
+      if (!skeletonRowsSection) {
+        return;
+      }
+
       renderedRowsIntervalCache.current = params;
 
       const fetchRowsParams: GridFetchRowsParams = {
-        firstRowToRender: firstRowIndex,
-        lastRowToRender: lastRowIndex,
+        firstRowToRender: skeletonRowsSection.firstRowIndex,
+        lastRowToRender: skeletonRowsSection.lastRowIndex,
         sortModel,
         filterModel,
       };
 
       apiRef.current.publishEvent('fetchRows', fetchRowsParams);
     },
-    [apiRef, props.rowsLoadingMode, rowIds, sortModel, filterModel, visibleRows.rows, lazyLoading],
+    [apiRef, props.rowsLoadingMode, sortModel, filterModel, visibleRows.rows, lazyLoading],
   );
 
   const handleGridSortModelChange = React.useCallback<GridEventListener<'sortModelChange'>>(
