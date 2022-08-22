@@ -81,7 +81,7 @@ describe('<DataGridPro /> - Lazy Loader', () => {
     expect(getRow(3).dataset.id).to.equal('auto-generated-skeleton-row-root-0');
   });
 
-  it('should update allRows accordingly when apiRef.current.insertRows is called', () => {
+  it('should update all rows accordingly when `apiRef.current.replaceRows` is called', () => {
     render(<TestLazyLoader rowCount={6} />);
 
     const newRows: GridRowModel[] = [
