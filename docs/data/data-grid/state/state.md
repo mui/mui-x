@@ -20,7 +20,7 @@ You can find more information on the corresponding feature documentation page.
 
 {{"demo": "InitialState.js", "bg": "inline"}}
 
-## Access the state [<span class="plan-pro"></span>](https://mui.com/store/items/mui-x-pro/)
+## Access the state [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
 
 The state is exposed on the `apiRef` object.
 It is strongly advised not to access the state values directly because the state itself is not considered a public API and its structure can change.
@@ -107,7 +107,7 @@ If you restore the page using `initialState` before the data is fetched, the gri
 
 {{"demo": "RestoreStateInitialState.js", "bg": "inline", "defaultCodeOpen": false}}
 
-### Restore the state with `apiRef` [<span class="plan-pro"></span>](https://mui.com/store/items/mui-x-pro/)
+### Restore the state with `apiRef` [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
 
 You can pass the state returned by `apiRef.current.exportState()` to the `apiRef.current.restoreState` method.
 In the demo below, clicking on **Save current view** will create a snapshot of the changes made in the state, considering the initial state.

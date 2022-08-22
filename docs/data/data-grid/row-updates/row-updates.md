@@ -16,7 +16,7 @@ It replaces the previous values. This approach has some drawbacks:
 
 {{"demo": "UpdateRowsProp.js", "bg": "inline", "disableAd": true}}
 
-## The `updateRows` method [<span class="plan-pro"></span>](https://mui.com/store/items/mui-x-pro/)
+## The `updateRows` method [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
 
 If you want to only update part of the rows, you can use the `apiRef.current.updateRows` method.
 
@@ -31,7 +31,7 @@ Alternatively, if you would like to delete a row, you would need to pass an extr
 apiRef.current.updateRows([{ id: 1, _action: 'delete' }]);
 ```
 
-## Infinite loading [<span class="plan-pro"></span>](https://mui.com/store/items/mui-x-pro/)
+## Infinite loading [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
 
 The grid provides a `onRowsScrollEnd` prop that can be used to load additional rows when the scroll reaches the bottom of the viewport area.
 
@@ -39,7 +39,7 @@ In addition, the area in which `onRowsScrollEnd` is called can be changed using 
 
 {{"demo": "InfiniteLoadingGrid.js", "bg": "inline", "disableAd": true}}
 
-## Lazy loading [<span class="plan-pro"></span>](https://mui.com/store/items/mui-x-pro/)
+## Lazy loading [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
 
 :::warning
 This feature is experimental, it needs to be explicitly activated using the `lazyLoading` experimental feature flag.
@@ -50,7 +50,7 @@ This feature is experimental, it needs to be explicitly activated using the `laz
 
 :::
 
-Lazy Loading works like a pagination system, but instead of loading new rows based on pages, it loads them as the user scroll through the grid and reveals empty rows. 
+Lazy Loading works like a pagination system, but instead of loading new rows based on pages, it loads them as the user scroll through the grid and reveals empty rows.
 
 The data grid builds the vertical scroll as if all the rows are already there, and displays empty (skeleton) rows while loading the data. Only rows that are displayed get fetched.
 
@@ -68,7 +68,7 @@ In order for filtering and sorting to work you need to set their modes to `serve
 You can find out more information about how to do that on the [server-side filter page](/x/react-data-grid/filtering/#server-side-filter) and on the [server-side sorting page](/x/react-data-grid/sorting/#server-side-sorting).
 :::
 
-## High frequency [<span class="plan-pro"></span>](https://mui.com/store/items/mui-x-pro/)
+## High frequency [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
 
 Whenever the rows are updated, the grid has to apply the sorting and filters. This can be a problem if you have high frequency updates. To maintain good performances, the grid allows to batch the updates and only apply them after a period of time. The `throttleRowsMs` prop can be used to define the frequency (in milliseconds) at which rows updates are applied.
 

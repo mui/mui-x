@@ -31,10 +31,9 @@ module.exports = {
     ignoreDuringBuilds: true,
   },
   // Avoid conflicts with the other Next.js apps hosted under https://mui.com/
-  assetPrefix: isDeployment ? '/x' : '',
+  assetPrefix: isDeployment ? '/x' : undefined,
   typescript: {
     // Motivated by https://github.com/zeit/next.js/issues/7687
-    ignoreDevErrors: true,
     ignoreBuildErrors: true,
   },
   env: {
@@ -48,13 +47,10 @@ module.exports = {
     PULL_REQUEST: process.env.PULL_REQUEST === 'true',
     REACT_STRICT_MODE: reactStrictMode,
     FEEDBACK_URL: process.env.FEEDBACK_URL,
-    // Set by Netlify
-    GRID_EXPERIMENTAL_ENABLED: process.env.PULL_REQUEST === 'false' ? 'false' : 'true',
     // #default-branch-switch
     SOURCE_CODE_ROOT_URL: 'https://github.com/mui/mui-x/blob/master',
     SOURCE_CODE_REPO: 'https://github.com/mui/mui-x',
   },
-  webpack5: true,
   webpack: (config, options) => {
     const plugins = config.plugins.slice();
 
