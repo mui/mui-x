@@ -66,7 +66,7 @@ describe('<DataGridPro /> - Lazy Loader', () => {
     render(<TestLazyLoader onFetchRows={handleFetchRows} rowCount={50} />);
 
     fireEvent.click(getColumnHeaderCell(0));
-    // Should be 1. When tested in the browser it's called onlt 1 time
+    // Should be 1. When tested in the browser it's called only 1 time
     expect(handleFetchRows.callCount).to.equal(2);
   });
 
