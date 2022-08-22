@@ -1,6 +1,6 @@
 {
   "name": "docs",
-  "version": "5.15.2",
+  "version": "5.15.3",
   "private": true,
   "author": "MUI Team",
   "license": "MIT",
@@ -20,7 +20,7 @@
     "@babel/core": "^7.18.6",
     "@babel/plugin-transform-object-assign": "^7.18.6",
     "@babel/runtime-corejs2": "^7.18.6",
-    "@date-io/date-fns-jalali": "^2.14.0",
+    "@date-io/date-fns-jalali": "^2.15.0",
     "@docsearch/react": "^3.2.0",
     "@emotion/cache": "^11.10.1",
     "@emotion/react": "^11.10.0",

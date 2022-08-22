@@ -1,4 +1,5 @@
 export * from './nlNL';
+export * from './plPL';
 export * from './ptBR';
 export * from './trTR';
 export * from './deDE';
@@ -9,4 +10,5 @@ export * from './nbNO';
 export * from './svSE';
 export * from './itIT';
 export * from './zhCN';
+export * from './koKR';
 export * from './utils/pickersLocaleTextApi';
