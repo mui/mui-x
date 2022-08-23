@@ -74,7 +74,20 @@ export const gridAdditionalRowGroupsSelector = createSelector(
  */
 export const gridPinnedRowsSelector = createSelector(
   gridAdditionalRowGroupsSelector,
-  (additionalRowGroups) => additionalRowGroups?.pinnedRows,
+  (additionalRowGroups) => {
+    const rawPinnedRows = additionalRowGroups?.pinnedRows;
+
+    return {
+      bottom: rawPinnedRows?.bottom?.map((rowEntry) => ({
+        id: rowEntry.id,
+        model: rowEntry.model ?? {},
+      })),
+      top: rawPinnedRows?.top?.map((rowEntry) => ({
+        id: rowEntry.id,
+        model: rowEntry.model ?? {},
+      })),
+    };
+  },
 );
 
 /**
