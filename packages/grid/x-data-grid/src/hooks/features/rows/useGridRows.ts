@@ -235,7 +235,9 @@ export const useGridRows = (
     [apiRef],
   );
 
-  const getRowIndexRelativeToVisibleRows = React.useCallback((id) => lookup[id], [lookup]);
+  const getRowIndexRelativeToVisibleRows = React.useCallback<
+    GridRowApi['getRowIndexRelativeToVisibleRows']
+  >((id) => lookup[id], [lookup]);
 
   const setRowChildrenExpansion = React.useCallback<GridRowApi['setRowChildrenExpansion']>(
     (id, isExpanded) => {

@@ -616,6 +616,42 @@ describe('<DataGridPro /> - Cell Editing', () => {
         expect(renderEditCell.lastCall.args[0].value).to.equal('USD GBP');
         expect(processRowUpdate.lastCall.args[0].currencyPair).to.equal('USD GBP');
       });
+
+      it('should keep in edit mode the cells that entered edit mode while processRowUpdate is called', async () => {
+        const onCellModesModelChange = spy();
+        let resolveCallback: () => void;
+        const processRowUpdate = (newRow: any) =>
+          new Promise((resolve) => {
+            resolveCallback = () => resolve(newRow);
+          });
+        render(
+          <TestCase
+            processRowUpdate={processRowUpdate}
+            onCellModesModelChange={onCellModesModelChange}
+          />,
+        );
+
+        act(() => apiRef.current.startCellEditMode({ id: 0, field: 'currencyPair' }));
+        await act(() =>
+          apiRef.current.setEditCellValue({ id: 0, field: 'currencyPair', value: 'USD GBP' }),
+        );
+        act(() => apiRef.current.stopCellEditMode({ id: 0, field: 'currencyPair' }));
+        expect(onCellModesModelChange.lastCall.args[0]).to.deep.equal({
+          0: { currencyPair: { mode: 'view' } },
+        });
+
+        act(() => apiRef.current.startCellEditMode({ id: 1, field: 'currencyPair' }));
+        expect(onCellModesModelChange.lastCall.args[0]).to.have.keys('0', '1');
+        expect(onCellModesModelChange.lastCall.args[0][1]).to.deep.equal({
+          currencyPair: { mode: 'edit' },
+        });
+
+        resolveCallback!();
+        await act(() => Promise.resolve());
+        expect(onCellModesModelChange.lastCall.args[0]).to.deep.equal({
+          1: { currencyPair: { mode: 'edit' } },
+        });
+      });
     });
 
     describe('ensurePreProcessEditCellPropsRanOnce', () => {

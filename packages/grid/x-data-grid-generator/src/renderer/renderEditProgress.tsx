@@ -60,7 +60,7 @@ function EditProgress(props: GridRenderEditCellParams<number>) {
   const apiRef = useGridApiContext();
 
   const updateCellEditProps = React.useCallback(
-    (newValue) => {
+    (newValue: number) => {
       apiRef.current.setEditCellValue({ id, field, value: newValue });
     },
     [apiRef, field, id],
@@ -73,7 +73,7 @@ function EditProgress(props: GridRenderEditCellParams<number>) {
 
   const handleChange = (event: Event, newValue: number | number[]) => {
     setValueState(newValue as number);
-    debouncedUpdateCellEditProps(newValue);
+    debouncedUpdateCellEditProps(newValue as number);
   };
 
   React.useEffect(() => {

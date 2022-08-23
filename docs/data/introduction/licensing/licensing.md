@@ -19,21 +19,21 @@ See the [Pricing](https://mui.com/pricing/) page for a detailed feature comparis
 
 ### Community Plan
 
-The free version of MUI X is [published under an MIT license](https://tldrlegal.com/license/mit-license) and is [free forever](https://mui-org.notion.site/Stewardship-542a2226043d4f4a96dfb429d16cf5bd#20f609acab4441cf9346614119fbbac1).
+The community version of MUI X is [published under an MIT license](https://tldrlegal.com/license/mit-license) and is [free forever](https://mui-org.notion.site/Stewardship-542a2226043d4f4a96dfb429d16cf5bd#20f609acab4441cf9346614119fbbac1).
 This version contains features that we believe are maintainable by contributions from the open-source community.
 
-MIT licensed packages:
+MIT licensed npm packages:
 
 - [`@mui/x-data-grid`](https://www.npmjs.com/package/@mui/x-data-grid)
 - [`@mui/x-date-pickers`](https://www.npmjs.com/package/@mui/x-date-pickers)
 
 ### Pro Plan<span class="plan-pro"></span>
 
-The Pro version of MUI X expands on the features of the free version with more advanced capabilities such as multi-filtering, multi-sorting, column resizing and column pinning for the data grid; as well as the date range picker component.
+The Pro version of MUI X expands on the features of the community version with more advanced capabilities such as multi-filtering, multi-sorting, column resizing and column pinning for the data grid; as well as the date range picker component.
 
 The Pro version is available under a commercial license—visit [the Pricing page](https://mui.com/pricing/) for details.
 
-Pro packages:
+Pro npm packages:
 
 - [`@mui/x-data-grid-pro`](https://www.npmjs.com/package/@mui/x-data-grid-pro)
 - [`@mui/x-date-pickers-pro`](https://www.npmjs.com/package/@mui/x-date-pickers-pro)
@@ -48,7 +48,7 @@ The Premium version of MUI X covers the most advanced features of the data grid,
 
 The Premium version is available under a commercial license—visit [the Pricing page](https://mui.com/pricing/) for details.
 
-Premium package:
+Premium npm package:
 
 - [`@mui/x-data-grid-premium`](https://www.npmjs.com/package/@mui/x-data-grid-premium)
 
@@ -56,18 +56,47 @@ Premium package:
 The features exclusive to the Premium version are marked with the <span class="plan-premium"></span> icon throughout the documentation.
 :::
 
+## Upgrading from Community
+
+When you purchase a license for MUI X (Pro or Premium), it will unlock new [packages](#plans) you can use on your project.
+
+If you're using the data grid, the commercial npm packages (`@mui/x-data-grid-pro` and `@mui/x-data-grid-premium`) are a superset of the community.
+
+You can upgrade the dependency on `@mui/x-data-grid` to the respective package of your plan, and replace all your imports.
+
+```diff
+//diff when upgrading to Pro
+
+-import { DataGrid } from '@mui/x-data-grid';
++import { DataGridPro } from '@mui/x-data-grid-pro';
+```
+
+For more details on how to install the packages, please check out our [package installation guide](/x/introduction/installation/).
+
 ## Upgrading from Pro to Premium
 
+When upgrading from Pro, you can upgrade the dependency on `@mui/x-data-grid-pro` to `@mui/x-data-grid-premium` and replace all your data grid imports.
+
+```diff
+//diff when upgrading from Pro to Premium
+
+-import { DataGridPro } from '@mui/x-data-grid-pro';
++import { DataGridPremium } from '@mui/x-data-grid-premium';
+```
+
+:::info
 You can use your Pro license as a credit when purchasing MUI X Premium.
 We'll provide you with a discount based on the remaining time that your current license is valid.
 Please contact us at [sales@mui.com](mailto:sales@mui.com?subject=My%20upgrade%20discount%20to%20Premium) to upgrade.
+:::
 
 ## Evaluation (trial) licenses
 
-In accordance with our [End User License Agreement](https://mui.com/legal/mui-x-eula/#evaluation-trial-licenses), you can use the Pro and Premium components without a commercial license for 30 days without restrictions.
-You don't need to contact us to use these components for evaluation purposes.
+In accordance with the [End User License Agreement](https://mui.com/legal/mui-x-eula/#evaluation-trial-licenses), you can use the Pro and Premium components without a commercial license for 30 days for non-production environments.
+You can also use it for the development of code not intended for production (for example the reproduction of an issue, doing a benchmark).
 
-You will need to purchase a commercial license in order to remove the watermarks and console warnings, and after the 30-day evaluation period.
+You don't need to contact us to use these components for the above cases.
+You will need to purchase a commercial license in order to remove the watermarks and console warnings.
 
 ## How many developer seats do I need?
 
@@ -98,12 +127,19 @@ This key removes all watermarks and console warnings.
 :::warning
 The orders placed after **May 13, 2022** come with a license key by default that is only compatible with MUI X from `v5.11.0` and upwards.
 
-Please update your package if you're using an earlier version.
+Please update your npm package if you're using an earlier version.
 
 If this isn't possible, please contact sales@mui.com to request a compatible license key.
 :::
 
 ### How to install the key
+
+First, make sure you have [any](#plans) of the commercial packages installed.
+They include a dependency called `@mui/x-license-pro`, used to validate the license.
+
+If you're upgrading from community, you may want to check the [upgrading](#upgrading-from-community) section.
+
+With a commercial packaged installed, use `LicenseInfo` to set your licence key as in the code snippet below.
 
 ```jsx
 import { LicenseInfo } from '@mui/x-license-pro';

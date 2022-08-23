@@ -99,7 +99,7 @@ function GridEditDateCell(props: GridEditDateCellProps) {
   const classes = useUtilityClasses(ownerState);
 
   const handleChange = React.useCallback(
-    async (event) => {
+    async (event: React.ChangeEvent<HTMLInputElement>) => {
       const newFormattedDate = event.target.value;
       let newParsedDate: Date | null;
 
@@ -109,7 +109,7 @@ function GridEditDateCell(props: GridEditDateCellProps) {
         const [date, time] = newFormattedDate.split('T');
         const [year, month, day] = date.split('-');
         newParsedDate = new Date();
-        newParsedDate.setFullYear(year, Number(month) - 1, day);
+        newParsedDate.setFullYear(Number(year), Number(month) - 1, Number(day));
         newParsedDate.setHours(0, 0, 0, 0);
         if (time) {
           const [hours, minutes] = time.split(':');

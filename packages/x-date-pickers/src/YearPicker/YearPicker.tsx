@@ -169,6 +169,8 @@ export const YearPicker = React.forwardRef(function YearPicker<TDate>(
     }
   };
 
+  const nowYear = utils.getYear(now);
+
   return (
     <YearPickerRoot ref={ref} className={clsx(classes.root, className)} ownerState={ownerState}>
       {utils.getYearRange(minDate, maxDate).map((year) => {
@@ -185,6 +187,7 @@ export const YearPicker = React.forwardRef(function YearPicker<TDate>(
             autoFocus={autoFocus && yearNumber === focusedYear}
             ref={selected ? selectedYearRef : undefined}
             disabled={disabled || isYearDisabled(year)}
+            aria-current={nowYear === yearNumber ? 'date' : undefined}
           >
             {utils.format(year, 'year')}
           </PickersYear>

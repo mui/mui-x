@@ -53,6 +53,12 @@ const ClockClock = styled('div')({
   pointerEvents: 'none',
 });
 
+const ClockWrapper = styled('div')({
+  '&:focus': {
+    outline: 'none',
+  },
+});
+
 type ClockSquareMaskOwnerState = {
   disabled?: ClockProps<any>['disabled'];
 };
@@ -285,7 +291,7 @@ export function Clock<TDate>(props: ClockProps<TDate>) {
             )}
           </React.Fragment>
         )}
-        <div
+        <ClockWrapper
           aria-activedescendant={selectedId}
           aria-label={getClockLabelText(type, date, utils)}
           ref={listboxRef}
@@ -294,7 +300,7 @@ export function Clock<TDate>(props: ClockProps<TDate>) {
           tabIndex={0}
         >
           {children}
-        </div>
+        </ClockWrapper>
       </ClockClock>
       {ampm && (wrapperVariant === 'desktop' || ampmInClock) && (
         <React.Fragment>

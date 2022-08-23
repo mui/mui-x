@@ -86,7 +86,7 @@ const GridEditInputCell = React.forwardRef<HTMLInputElement, GridEditInputCellPr
     const classes = useUtilityClasses(ownerState);
 
     const handleChange = React.useCallback(
-      async (event) => {
+      async (event: React.ChangeEvent<HTMLInputElement>) => {
         const newValue = event.target.value;
 
         if (onValueChange) {

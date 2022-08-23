@@ -13,7 +13,7 @@ import FormGroup from '@mui/material/FormGroup';
 import Button from '@mui/material/Button';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
-import Select from '@mui/material/Select';
+import Select, { SelectProps } from '@mui/material/Select';
 
 const AntDesignStyledDataGridPro = styled(DataGridPro)(({ theme }) => ({
   border: `1px solid ${theme.palette.mode === 'light' ? '#f0f0f0' : '#303030'}`,
@@ -180,20 +180,28 @@ function SettingsPanel(props: GridToolbarContainerProps) {
     React.useState<number>(-1);
   const [activeTheme, setActiveTheme] = React.useState<GridDataThemeOption>(theme);
 
-  const handleSizeChange = React.useCallback((event) => {
+  const handleSizeChange = React.useCallback<
+    NonNullable<SelectProps<number>['onChange']>
+  >((event) => {
     setSize(Number(event.target.value));
   }, []);
 
-  const handleDatasetChange = React.useCallback((event) => {
-    setType(event.target.value);
+  const handleDatasetChange = React.useCallback<
+    NonNullable<SelectProps<GridDataType>['onChange']>
+  >((event) => {
+    setType(event.target.value as GridDataType);
   }, []);
 
-  const handlePaginationChange = React.useCallback((event) => {
-    setSelectedPaginationValue(event.target.value);
+  const handlePaginationChange = React.useCallback<
+    NonNullable<SelectProps<number>['onChange']>
+  >((event) => {
+    setSelectedPaginationValue(Number(event.target.value));
   }, []);
 
-  const handleThemeChange = React.useCallback((event) => {
-    setActiveTheme(event.target.value);
+  const handleThemeChange = React.useCallback<
+    NonNullable<SelectProps<GridDataThemeOption>['onChange']>
+  >((event) => {
+    setActiveTheme(event.target.value as GridDataThemeOption);
   }, []);
 
   const handleApplyChanges = React.useCallback(() => {
@@ -209,14 +217,14 @@ function SettingsPanel(props: GridToolbarContainerProps) {
     <FormGroup className="MuiFormGroup-options" row>
       <FormControl variant="standard">
         <InputLabel>Dataset</InputLabel>
-        <Select value={typeState} onChange={handleDatasetChange}>
+        <Select<GridDataType> value={typeState} onChange={handleDatasetChange}>
           <MenuItem value="Employee">Employee</MenuItem>
           <MenuItem value="Commodity">Commodity</MenuItem>
         </Select>
       </FormControl>
       <FormControl variant="standard">
         <InputLabel>Rows</InputLabel>
-        <Select value={sizeState} onChange={handleSizeChange}>
+        <Select<number> value={sizeState} onChange={handleSizeChange}>
           <MenuItem value={100}>100</MenuItem>
           <MenuItem value={1000}>{Number(1000).toLocaleString()}</MenuItem>
           <MenuItem value={10000}>{Number(10000).toLocaleString()}</MenuItem>
@@ -225,7 +233,10 @@ function SettingsPanel(props: GridToolbarContainerProps) {
       </FormControl>
       <FormControl variant="standard">
         <InputLabel>Page Size</InputLabel>
-        <Select value={selectedPaginationValue} onChange={handlePaginationChange}>
+        <Select<number>
+          value={selectedPaginationValue}
+          onChange={handlePaginationChange}
+        >
           <MenuItem value={-1}>off</MenuItem>
           <MenuItem value={0}>auto</MenuItem>
           <MenuItem value={25}>25</MenuItem>
@@ -332,6 +343,7 @@ export default function FullFeaturedDemo() {
         checkboxSelection
         disableSelectionOnClick
         rowThreshold={0}
+        experimentalFeatures={{ newEditingApi: true }}
         initialState={{
           ...data.initialState,
           pinnedColumns: { left: [GRID_CHECKBOX_SELECTION_FIELD, 'desk'] },

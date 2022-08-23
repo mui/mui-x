@@ -36,8 +36,8 @@ By default, the export menu displays all the available export formats, according
 
 - [Print](#print-export)
 - [CSV](#csv-export)
-- [Excel](#excel-export) [<span class="plan-premium"></span>](https://mui.com/store/items/mui-x-premium/)
-- [Clipboard](#clipboard) [<span class="plan-premium"></span>](https://mui.com/store/items/mui-x-premium/) (🚧 Not delivered yet)
+- [Excel](#excel-export) [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan)
+- [Clipboard](#clipboard) [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan) (🚧 Not delivered yet)
 
 You can customize their respective behavior by passing an options object either to the `GridToolbar` or to the `GridToolbarExport` as a prop.
 
@@ -229,7 +229,7 @@ The demo below shows how to add a JSON export.
 
 {{"demo": "CustomExport.js", "bg": "inline", "defaultCodeOpen": false}}
 
-## Excel export [<span class="plan-premium"></span>](https://mui.com/store/items/mui-x-premium/)
+## Excel export [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan)
 
 This feature relies on [exceljs](https://github.com/exceljs/exceljs).
 The Excel export allows translating columns' type and tree structure of a DataGrid to an Excel file.
@@ -310,7 +310,7 @@ In the following demo, both methods are used to set a custom header and a custom
 
 {{"demo": "ExcelCustomExport.js", "bg": "inline", "defaultCodeOpen": false}}
 
-## 🚧 Clipboard [<span class="plan-premium"></span>](https://mui.com/store/items/mui-x-premium/)
+## 🚧 Clipboard [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan)
 
 :::warning
 This feature isn't implemented yet. It's coming.
@@ -319,7 +319,7 @@ This feature isn't implemented yet. It's coming.
 You will be able to copy and paste items to and from the grid using the system clipboard.
 :::
 
-## apiRef [<span class="plan-pro"></span>](https://mui.com/store/items/mui-x-pro/)
+## apiRef [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
 
 :::warning
 Only use this API as the last option. Give preference to the props to control the grid.
@@ -333,7 +333,7 @@ Only use this API as the last option. Give preference to the props to control th
 
 {{"demo": "PrintExportApiNoSnap.js", "bg": "inline", "hideToolbar": true}}
 
-### Excel [<span class="plan-premium"></span>](https://mui.com/store/items/mui-x-premium/)
+### Excel [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan)
 
 {{"demo": "ExcelExportApiNoSnap.js", "bg": "inline", "hideToolbar": true}}
 
