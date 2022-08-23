@@ -1,8 +1,9 @@
 import * as React from 'react';
+
 import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
 import { LocalizationProvider } from '@mui/x-date-pickers-pro';
-import { AdapterDateFns } from '@mui/x-date-pickers-pro/AdapterDateFns';
+import { AdapterDayjs } from '@mui/x-date-pickers-pro/AdapterDayjs';
 import { DateRangePicker } from '@mui/x-date-pickers-pro/DateRangePicker';
 import Box from '@mui/material/Box';
 
@@ -10,7 +11,7 @@ export default function CalendarsDateRangePicker() {
   const [value, setValue] = React.useState([null, null]);
 
   return (
-    <LocalizationProvider dateAdapter={AdapterDateFns}>
+    <LocalizationProvider dateAdapter={AdapterDayjs}>
       <div>
         <Typography sx={{ mt: 2, mb: 1 }}>1 calendar </Typography>
         <DateRangePicker
