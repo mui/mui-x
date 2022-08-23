@@ -46,6 +46,7 @@
   { "name": "getPickersDayUtilityClass", "kind": "Function" },
   { "name": "getYearPickerUtilityClass", "kind": "Function" },
   { "name": "itIT", "kind": "Variable" },
+  { "name": "koKR", "kind": "Variable" },
   { "name": "LocalizationProvider", "kind": "Function" },
   { "name": "LocalizationProviderProps", "kind": "Interface" },
   { "name": "MobileDatePicker", "kind": "Variable" },
