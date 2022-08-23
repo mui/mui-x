@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-date-pickers-pro",
-  "version": "5.0.0-beta.5",
+  "version": "5.0.0-beta.6",
   "description": "The commercial edition of the date picker components (MUI X).",
   "author": "MUI Team",
   "main": "./src/index.js",
@@ -42,16 +42,16 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.18.6",
-    "@date-io/date-fns": "^2.14.0",
-    "@date-io/dayjs": "^2.14.0",
-    "@date-io/luxon": "^2.14.0",
-    "@date-io/moment": "^2.14.0",
+    "@date-io/date-fns": "^2.15.0",
+    "@date-io/dayjs": "^2.15.0",
+    "@date-io/luxon": "^2.15.0",
+    "@date-io/moment": "^2.15.0",
     "@mui/utils": "^5.4.1",
-    "@mui/x-date-pickers": "5.0.0-beta.5",
+    "@mui/x-date-pickers": "5.0.0-beta.6",
     "@mui/x-license-pro": "5.12.1",
     "clsx": "^1.2.1",
     "prop-types": "^15.7.2",
-    "react-transition-group": "^4.4.2",
+    "react-transition-group": "^4.4.5",
     "rifm": "^0.12.1"
   },
   "peerDependencies": {
@@ -80,7 +80,7 @@
   },
   "devDependencies": {
     "@types/luxon": "^3.0.0",
-    "date-fns": "^2.29.1",
+    "date-fns": "^2.29.2",
     "dayjs": "^1.11.4",
     "luxon": "^1.21.3 || ^2.x || ^3.0.0",
     "moment": "^2.29.4"

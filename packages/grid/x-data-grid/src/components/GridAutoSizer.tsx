@@ -168,6 +168,12 @@ GridAutoSizer.propTypes = {
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
   /**
+   * Function responsible for rendering children.
+   * @param {AutoSizerSize} size The grid's size.
+   * @returns {React.ReactNode} The children to render.
+   */
+  children: PropTypes.func.isRequired,
+  /**
    * Default height to use for initial render; useful for SSR.
    * @default null
    */

@@ -163,7 +163,7 @@ async function main() {
     });
 
     it('should take a screenshot of the print preview', async function test() {
-      this.timeout(10000);
+      this.timeout(20000);
 
       const route = `${baseUrl}/stories-grid-toolbar/PrintExportSnap`;
       const screenshotPath = path.resolve(screenshotDir, `${route.replace(baseUrl, '.')}Print.png`);
@@ -184,7 +184,7 @@ async function main() {
         printButton.click();
       });
 
-      await sleep(2000);
+      await sleep(6000);
 
       return new Promise((resolve, reject) => {
         // See https://ffmpeg.org/ffmpeg-devices.html#x11grab

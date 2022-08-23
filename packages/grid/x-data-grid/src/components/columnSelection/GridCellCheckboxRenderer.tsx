@@ -76,7 +76,7 @@ const GridCellCheckboxForwardRef = React.forwardRef<HTMLInputElement, GridRender
     }, [hasFocus]);
 
     const handleKeyDown = React.useCallback(
-      (event) => {
+      (event: React.KeyboardEvent<HTMLInputElement>) => {
         if (isSpaceKey(event.key)) {
           event.stopPropagation();
         }
