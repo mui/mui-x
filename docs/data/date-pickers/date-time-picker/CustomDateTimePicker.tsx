@@ -48,7 +48,7 @@ export default function CustomDateTimePicker() {
           onError={console.log}
           minDate={dayjs('2018-01-01T00:00')}
           inputFormat="YYYY/MM/DD hh:mm a"
-          mask="___/__/__ __:__ _M"
+          mask="____/__/__ __:__ _M"
           renderInput={(params) => <TextField {...params} />}
         />
         <DateTimePicker
