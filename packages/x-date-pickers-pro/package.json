@@ -41,7 +41,7 @@
     "directory": "packages/x-date-pickers-pro"
   },
   "dependencies": {
-    "@babel/runtime": "^7.18.6",
+    "@babel/runtime": "^7.18.9",
     "@date-io/date-fns": "^2.15.0",
     "@date-io/dayjs": "^2.15.0",
     "@date-io/luxon": "^2.15.0",

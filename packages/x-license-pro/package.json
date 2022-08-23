@@ -34,7 +34,7 @@
     "directory": "packages/x-license-pro"
   },
   "dependencies": {
-    "@babel/runtime": "^7.18.6",
+    "@babel/runtime": "^7.18.9",
     "@mui/utils": "^5.4.1",
     "esm": "^3.2.25",
     "yargs": "^17.5.1"
