@@ -387,6 +387,8 @@ const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
     disabled,
   };
 
+  const hasFocus = focusedPicker != null;
+
   return (
     <CalendarPickerRoot ref={ref} className={clsx(classes.root, className)} ownerState={ownerState}>
       <PickersCalendarHeader
@@ -419,7 +421,7 @@ const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
               date={date}
               onChange={handleDateYearChange}
               shouldDisableYear={shouldDisableYear}
-              hasFocus={focusedPicker !== undefined ? focusedPicker === 'year' : undefined}
+              hasFocus={hasFocus}
               onHasFocusChange={onFocusedPickerChange && onFocusedPickerChange('year')}
             />
           )}
@@ -429,7 +431,7 @@ const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
               {...baseDateValidationProps}
               {...commonViewProps}
               autoFocus={autoFocus}
-              hasFocus={focusedPicker !== undefined ? focusedPicker === 'month' : undefined}
+              hasFocus={hasFocus}
               className={className}
               date={date}
               onChange={handleDateMonthChange}
@@ -453,7 +455,7 @@ const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
               loading={loading}
               renderLoading={renderLoading}
               shouldDisableDate={shouldDisableDate}
-              hasFocus={focusedPicker !== undefined ? focusedPicker === 'day' : undefined}
+              hasFocus={hasFocus}
               onHasFocusChange={onFocusedPickerChange && onFocusedPickerChange('day')}
             />
           )}
