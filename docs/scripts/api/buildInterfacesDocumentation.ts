@@ -191,7 +191,7 @@ function generateMarkdownFromProperties(
       planImg = '';
     } else if (property.projects.includes('x-data-grid-pro')) {
       planImg =
-        ' [<span class="plan-pro" title="Pro plan"></span>](https://mui.com/store/items/mui-x-pro/)';
+        ' [<span class="plan-pro" title="Pro plan"></span>](/x/introduction/licensing/#pro-plan)';
     } else if (property.projects.includes('x-data-grid-premium')) {
       planImg =
         ' [<span class="plan-premium" title="Premium plan"></span>](https://mui.com/store/items/material-ui-premium/)';

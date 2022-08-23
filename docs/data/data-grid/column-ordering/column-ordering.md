@@ -2,7 +2,7 @@
 title: Data Grid - Column ordering
 ---
 
-# Data grid - Column ordering [<span class="plan-pro"></span>](https://mui.com/store/items/mui-x-pro/)
+# Data grid - Column ordering [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
 
 <p class="description">Drag and drop your columns to reorder them.</p>
 

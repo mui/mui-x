@@ -208,6 +208,7 @@ const PickersDayRaw = React.forwardRef(function PickersDay<TDate>(
     onDaySelect,
     onFocus,
     onKeyDown,
+    onMouseDown,
     outsideCurrentMonth,
     selected = false,
     showDaysOutsideCurrentMonth = false,
@@ -251,9 +252,24 @@ const PickersDayRaw = React.forwardRef(function PickersDay<TDate>(
     }
   };
 
+  // For day outside of current month, move focus from mouseDown to mouseUp
+  // Goal: have the onClick ends before sliding to the new month
+  const handleMouseDown = (event: React.MouseEvent<HTMLButtonElement>) => {
+    if (onMouseDown) {
+      onMouseDown(event);
+    }
+    if (outsideCurrentMonth) {
+      event.preventDefault();
+    }
+  };
+
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     if (!disabled) {
       onDaySelect(day, 'finish');
+    }
+
+    if (outsideCurrentMonth) {
+      event.currentTarget.focus();
     }
 
     if (onClick) {
@@ -328,6 +344,7 @@ const PickersDayRaw = React.forwardRef(function PickersDay<TDate>(
       onFocus={handleFocus}
       onKeyDown={handleKeyDown}
       onClick={handleClick}
+      onMouseDown={handleMouseDown}
       {...other}
     >
       {!children ? utils.format(day, 'dayOfMonth') : children}

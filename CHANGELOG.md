@@ -3,6 +3,92 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 5.15.3
+
+_Aug 18, 2022_
+
+We'd like to offer a big thanks to the 9 contributors who made this release possible. Here are some highlights ✨:
+
+- 📚 Documentation improvements
+- 🐞 Bugfixes
+
+### `@mui/x-data-grid@v5.15.3` / `@mui/x-data-grid-pro@v5.15.3` / `@mui/x-data-grid-premium@v5.15.3`
+
+#### Changes
+
+- [DataGrid] Fix <kbd>Enter</kbd> causing Select to re-open when commiting value (#5756) @m4theushw
+- [DataGrid] Fix `GridOverlays` bypassing pointer events (#5674) @philjones88
+
+### `@mui/x-date-pickers@v5.0.0-beta.6` / `@mui/x-date-picker-pro@v5.0.0-beta.6`
+
+#### Changes
+
+- [DatePicker] Support click on day outside of current month (#5768) @alexfauquette
+- [pickers] Extend `PickersActionBarProps` with `DialogActionProps` (#5798) @LukasTy
+
+### Docs
+
+- [docs] Fix API anchor link scroll top (#5795) @oliviertassinari
+- [docs] Fix contradiction in the free trial clause (#5732) @oliviertassinari
+- [docs] Fix default value of the DataGrid `logLevel` prop to false (#5784) @HwangTaehyun
+- [docs] Fix typo on the row height page (#5772) @flaviendelangle
+- [docs] Improve "upgrading plans" documentation. (#5683) @joserodolfofreitas
+- [docs] Link the license docs before pricing (#5726) @oliviertassinari
+- [docs] Update packages README files (#5835) @cherniavskii
+- [docs] Use `InputBase` for pickers inputs (#5597) @cherniavskii
+
+### Core
+
+- [core] Upgrade monorepo (#5771, #5797) @cherniavskii
+- [core] Various TS improvements (#5556) @flaviendelangle
+- [license] Give more context in the missing license (#5731) @oliviertassinari
+- [license] Only log an error type once (#5730) @oliviertassinari
+- [test] Increase timeout to take print screenshot (#5799) @m4theushw
+
+## 5.15.2
+
+_Aug 11, 2022_
+
+We'd like to offer a big thanks to the 7 contributors who made this release possible. Here are some highlights ✨:
+
+- ✨ Improve quick filtering with row grouping (#5701) @alexfauquette
+- 📚 Documentation improvements
+- 🐞 Bugfixes
+
+### `@mui/x-data-grid@v5.15.2` / `@mui/x-data-grid-pro@v5.15.2` / `@mui/x-data-grid-premium@v5.15.2`
+
+#### Changes
+
+- [DataGrid] Catch errors if rows freezing is not supported (#5711) @cherniavskii
+- [DataGrid] Preserve cell mode when entering edit mode while commiting (#5686) @m4theushw
+- [DataGridPremium] Let quick filter search in row grouping children (#5701) @alexfauquette
+
+### `@mui/x-date-pickers@v5.0.0-beta.5` / `@mui/x-date-picker-pro@5.0.0-beta.5`
+
+#### Changes
+
+- [pickers] Add `react-dom` to peerDependencies (#5752) @cherniavskii
+- [TimePicker] Set clock focus outline to `none` (#5758) @LukasTy
+- [pickers] Fix theme augmentation with TypeScript (#5596) @alexfauquette
+- [pickers] Reset input value when locale is modified (#5310) @alexfauquette
+- [pickers] Support `disableHighlightToday` on `MonthPicker` and `YearPicker` (#5562) @flaviendelangle
+- [pickers] Fallback to desktop mode when `matchMedia` is unavailable (#5684) @LukasTy
+- [pickers] Trigger `onChange` when clearing or accepting `Invalid date` (#5740) @LukasTy
+
+### Docs
+
+- [docs] Add RFC GH issue template (#5739) @bytasv
+- [docs] Add description to the `GridExportStateParams` page (#5654) @oliviertassinari
+- [docs] Improve the Events page (#5413) @flaviendelangle
+- [docs] Use new editing API in the introduction demos (#5728) @oliviertassinari
+
+### Core
+
+- [core] Remove duplicated `FUNDING.yml` file (#5656) @oliviertassinari
+- [core] Remove outdated Next.js options (#5727) @oliviertassinari
+- [core] Update tooling to run with React 18 (#4155) @m4theushw
+- [test] Fix failing dynamic row height tests on Edge (#5707) @m4theushw
+
 ## 5.15.1
 
 _Aug 4, 2022_
