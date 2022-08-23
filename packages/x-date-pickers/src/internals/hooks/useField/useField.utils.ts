@@ -85,7 +85,7 @@ export const adjustDateSectionValue = <TDate>(
       return utils.addYears(date, delta);
     }
     case 'am-pm': {
-      return utils.addHours(date, delta ? 1 : 1 * 12);
+      return utils.addHours(date, (delta > 0 ? 1 : -1) * 12);
     }
     case 'hour': {
       if (isStart) {
