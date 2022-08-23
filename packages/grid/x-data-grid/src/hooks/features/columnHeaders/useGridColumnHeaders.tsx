@@ -17,7 +17,6 @@ import {
 import {
   gridDensityHeaderHeightSelector,
   gridDensityHeaderGroupingMaxDepthSelector,
-  gridDensityHeaderGroupingRowHeightSelector,
   gridDensityTotalHeaderHeightSelector,
 } from '../density/densitySelector';
 import { gridFilterActiveItemsLookupSelector } from '../filter/gridFilterSelector';
@@ -84,10 +83,6 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
   const columnHeaderFocus = useGridSelector(apiRef, gridFocusColumnHeaderSelector);
   const headerHeight = useGridSelector(apiRef, gridDensityHeaderHeightSelector);
   const headerGroupingMaxDepth = useGridSelector(apiRef, gridDensityHeaderGroupingMaxDepthSelector);
-  const headerGroupingRowHeight = useGridSelector(
-    apiRef,
-    gridDensityHeaderGroupingRowHeightSelector,
-  );
   const totalHeaderHeight = useGridSelector(apiRef, gridDensityTotalHeaderHeightSelector);
   const filterColumnLookup = useGridSelector(apiRef, gridFilterActiveItemsLookupSelector);
   const sortColumnLookup = useGridSelector(apiRef, gridSortColumnLookupSelector);
@@ -473,7 +468,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
       columns.push(
         <GridColumnHeaderRow
           style={{
-            lineHeight: `${headerGroupingRowHeight}px`,
+            height: `${headerHeight}px`,
             transform: `translateX(-${depthInfo.leftOverflow}px)`,
           }}
           key={depthIndex}
@@ -492,7 +487,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
                 isLastColumn={colIndex === visibleColumns.length - fields.length}
                 extendRowFullWidth={!rootProps.disableExtendRowFullWidth}
                 maxDepth={headerToRender.length}
-                height={headerGroupingRowHeight}
+                height={headerHeight}
               />
             );
           })}

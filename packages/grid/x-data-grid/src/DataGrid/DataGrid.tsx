@@ -262,12 +262,6 @@ DataGridRaw.propTypes = {
    */
   getRowSpacing: PropTypes.func,
   /**
-   * The height of a row of grouping column headers.
-   * TODO: choose correctly this value
-   * @default 32
-   */
-  headerGroupingRowHeight: PropTypes.number,
-  /**
    * Set the height in pixel of the column headers in the grid.
    * @default 56
    */

@@ -59,7 +59,6 @@
     "getRowHeight": { "type": { "name": "func" } },
     "getRowId": { "type": { "name": "func" } },
     "getRowSpacing": { "type": { "name": "func" } },
-    "headerGroupingRowHeight": { "type": { "name": "number" }, "default": "32" },
     "headerHeight": { "type": { "name": "number" }, "default": "56" },
     "hideFooter": { "type": { "name": "bool" } },
     "hideFooterPagination": { "type": { "name": "bool" } },

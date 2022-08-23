@@ -170,7 +170,6 @@
   { "name": "GridDensityApi", "kind": "Interface" },
   { "name": "gridDensityFactorSelector", "kind": "Variable" },
   { "name": "gridDensityHeaderGroupingMaxDepthSelector", "kind": "Variable" },
-  { "name": "gridDensityHeaderGroupingRowHeightSelector", "kind": "Variable" },
   { "name": "gridDensityHeaderHeightSelector", "kind": "Variable" },
   { "name": "GridDensityOption", "kind": "Interface" },
   { "name": "gridDensityRowHeightSelector", "kind": "Variable" },

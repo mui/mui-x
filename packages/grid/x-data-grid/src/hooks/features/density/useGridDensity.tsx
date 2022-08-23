@@ -23,7 +23,6 @@ const getUpdatedDensityState = (
   newHeaderHeight: number,
   newRowHeight: number,
   newMaxDepth: number,
-  newHeaderGroupingRowHeight: number,
 ): GridDensityState => {
   switch (newDensity) {
     case GridDensityTypes.Compact:
@@ -31,7 +30,6 @@ const getUpdatedDensityState = (
         value: newDensity,
         headerHeight: Math.floor(newHeaderHeight * COMPACT_DENSITY_FACTOR),
         rowHeight: Math.floor(newRowHeight * COMPACT_DENSITY_FACTOR),
-        headerGroupingRowHeight: Math.floor(newHeaderGroupingRowHeight * COMPACT_DENSITY_FACTOR),
         headerGroupingMaxDepth: newMaxDepth,
         factor: COMPACT_DENSITY_FACTOR,
       };
@@ -40,9 +38,6 @@ const getUpdatedDensityState = (
         value: newDensity,
         headerHeight: Math.floor(newHeaderHeight * COMFORTABLE_DENSITY_FACTOR),
         rowHeight: Math.floor(newRowHeight * COMFORTABLE_DENSITY_FACTOR),
-        headerGroupingRowHeight: Math.floor(
-          newHeaderGroupingRowHeight * COMFORTABLE_DENSITY_FACTOR,
-        ),
         headerGroupingMaxDepth: newMaxDepth,
         factor: COMFORTABLE_DENSITY_FACTOR,
       };
@@ -51,7 +46,6 @@ const getUpdatedDensityState = (
         value: newDensity,
         headerHeight: newHeaderHeight,
         rowHeight: newRowHeight,
-        headerGroupingRowHeight: newHeaderGroupingRowHeight,
         headerGroupingMaxDepth: newMaxDepth,
         factor: 1,
       };
@@ -59,10 +53,7 @@ const getUpdatedDensityState = (
 };
 
 export const densityStateInitializer: GridStateInitializer<
-  Pick<
-    DataGridProcessedProps,
-    'density' | 'headerHeight' | 'rowHeight' | 'headerGroupingRowHeight' | 'columnGroupingModel'
-  >
+  Pick<DataGridProcessedProps, 'density' | 'headerHeight' | 'rowHeight' | 'columnGroupingModel'>
 > = (state, props) => {
   // TODO: think about improving this initialization. Could it be done in the useColumn initializer?
   // TODO: manage to remove ts-ignore
@@ -87,22 +78,13 @@ export const densityStateInitializer: GridStateInitializer<
   }
   return {
     ...state,
-    density: getUpdatedDensityState(
-      props.density,
-      props.headerHeight,
-      props.rowHeight,
-      maxDepth,
-      props.headerGroupingRowHeight,
-    ),
+    density: getUpdatedDensityState(props.density, props.headerHeight, props.rowHeight, maxDepth),
   };
 };
 
 export const useGridDensity = (
   apiRef: React.MutableRefObject<GridApiCommunity>,
-  props: Pick<
-    DataGridProcessedProps,
-    'headerHeight' | 'rowHeight' | 'density' | 'headerGroupingRowHeight'
-  >,
+  props: Pick<DataGridProcessedProps, 'headerHeight' | 'rowHeight' | 'density'>,
 ): void => {
   const visibleColumns = useGridSelector(apiRef, gridVisibleColumnDefinitionsSelector);
 
@@ -119,7 +101,6 @@ export const useGridDensity = (
       newHeaderHeight = props.headerHeight,
       newRowHeight = props.rowHeight,
       newMaxDepth = maxDepth,
-      newHeaderGroupingRowHeight = props.headerGroupingRowHeight,
     ): void => {
       logger.debug(`Set grid density to ${newDensity}`);
       apiRef.current.setState((state) => {
@@ -129,7 +110,6 @@ export const useGridDensity = (
           newHeaderHeight,
           newRowHeight,
           newMaxDepth,
-          newHeaderGroupingRowHeight,
         );
 
         if (isDeepEqual(currentDensityState, newDensityState)) {
@@ -143,25 +123,12 @@ export const useGridDensity = (
       });
       apiRef.current.forceUpdate();
     },
-    [logger, apiRef, props.headerHeight, props.rowHeight, maxDepth, props.headerGroupingRowHeight],
+    [logger, apiRef, props.headerHeight, props.rowHeight, maxDepth],
   );
 
   React.useEffect(() => {
-    apiRef.current.setDensity(
-      props.density,
-      props.headerHeight,
-      props.rowHeight,
-      maxDepth,
-      props.headerGroupingRowHeight,
-    );
-  }, [
-    apiRef,
-    props.density,
-    props.rowHeight,
-    props.headerHeight,
-    maxDepth,
-    props.headerGroupingRowHeight,
-  ]);
+    apiRef.current.setDensity(props.density, props.headerHeight, props.rowHeight, maxDepth);
+  }, [apiRef, props.density, props.rowHeight, props.headerHeight, maxDepth]);
 
   const densityApi: GridDensityApi = {
     setDensity,

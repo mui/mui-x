@@ -18,13 +18,11 @@ export interface GridDensityApi {
    * @param {number} headerHeight The new header height.
    * @param {number} rowHeight The new row height.
    * @param {number} maxDepth The depth of maximal depth column header grouping tree.
-   * @param {number} headerGroupingRowHeight The height of a header grouping line.
    */
   setDensity: (
     density: GridDensity,
     headerHeight?: number,
     rowHeight?: number,
     maxDepth?: number,
-    headerGroupingRowHeight?: number,
   ) => void;
 }

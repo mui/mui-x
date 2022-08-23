@@ -96,12 +96,6 @@
     "supportsApiRef": true
   },
   {
-    "name": "gridDensityHeaderGroupingRowHeightSelector",
-    "returnType": "number",
-    "description": "",
-    "supportsApiRef": true
-  },
-  {
     "name": "gridDensityHeaderHeightSelector",
     "returnType": "number",
     "description": "",

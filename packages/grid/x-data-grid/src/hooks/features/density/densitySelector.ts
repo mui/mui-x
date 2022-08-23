@@ -23,11 +23,6 @@ export const gridDensityHeaderGroupingMaxDepthSelector = createSelector(
   (density) => density.headerGroupingMaxDepth,
 );
 
-export const gridDensityHeaderGroupingRowHeightSelector = createSelector(
-  gridDensitySelector,
-  (density) => density.headerGroupingRowHeight,
-);
-
 export const gridDensityFactorSelector = createSelector(
   gridDensitySelector,
   (density) => density.factor,
@@ -35,6 +30,5 @@ export const gridDensityFactorSelector = createSelector(
 
 export const gridDensityTotalHeaderHeightSelector = createSelector(
   gridDensitySelector,
-  (density) =>
-    density.headerHeight + density.headerGroupingMaxDepth * density.headerGroupingRowHeight,
+  (density) => density.headerHeight * (1 + density.headerGroupingMaxDepth),
 );

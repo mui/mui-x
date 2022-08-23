@@ -339,12 +339,6 @@ export interface DataGridPropsWithDefaultValues {
    * @default false
    */
   disableColumnResize: boolean;
-  /**
-   * The height of a row of grouping column headers.
-   * TODO: choose correctly this value
-   * @default 32
-   */
-  headerGroupingRowHeight: number;
 }
 
 /**
