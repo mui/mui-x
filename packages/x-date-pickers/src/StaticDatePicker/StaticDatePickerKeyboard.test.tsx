@@ -46,8 +46,8 @@ describe('<StaticDatePicker /> keyboard interactions', () => {
         // eslint-disable-next-line material-ui/disallow-active-element-as-key-event-target
         fireEvent.keyDown(document.activeElement!, { keyCode, key });
 
-        // static analysis can't calculate the final grid cell label connected with day of week `columnheader`
-        // resulting in `<Week day> <number>` being the actual accessible name for each picker day
+        // Based on column header, screen reader should pronounce <Day Number> <Week Day>
+        // But `toHaveAccessibleName` does not do the link between column header and cell value, so we only get <day number> in test
         expect(document.activeElement).toHaveAccessibleName(expectFocusedDay);
       });
     });
