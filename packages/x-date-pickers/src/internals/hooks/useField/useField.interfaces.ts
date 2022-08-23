@@ -91,3 +91,11 @@ export type UseFieldValidationProps<
   TValue,
   TProps extends UseFieldProps<TInputValue, TValue, InferError<TProps>>,
 > = Omit<TProps, 'value' | 'defaultValue'> & { value: TInputValue };
+
+export type AvailableAdjustKeyCode =
+  | 'ArrowUp'
+  | 'ArrowDown'
+  | 'PageUp'
+  | 'PageDown'
+  | 'Home'
+  | 'End';

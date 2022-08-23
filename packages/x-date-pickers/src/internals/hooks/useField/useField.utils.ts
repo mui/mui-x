@@ -1,7 +1,7 @@
 import defaultLocale from 'date-fns/locale/en-US';
 // @ts-ignore
 import longFormatters from 'date-fns/_lib/format/longFormatters';
-import { FieldSection, DateSectionName } from './useField.interfaces';
+import { FieldSection, DateSectionName, AvailableAdjustKeyCode } from './useField.interfaces';
 import { MuiPickersAdapter } from '../../models';
 
 // TODO: Improve and test with different calendars (move to date-io ?)
@@ -37,36 +37,203 @@ export const getDateSectionNameFromFormat = (format: string): DateSectionName =>
   throw new Error(`getDatePartNameFromFormat don't understand the format ${format}`);
 };
 
-export const incrementDateSectionValue = <TDate>(
+const getDeltaFromKeyCode = (keyCode: Omit<AvailableAdjustKeyCode, 'Home' | 'End'>) => {
+  switch (keyCode) {
+    case 'ArrowUp':
+      return 1;
+    case 'ArrowDown':
+      return -1;
+    case 'PageUp':
+      return 5;
+    case 'PageDown':
+      return -5;
+    default:
+      return 0;
+  }
+};
+
+export const adjustDateSectionValue = <TDate>(
   utils: MuiPickersAdapter<TDate>,
   date: TDate,
   datePartName: DateSectionName,
-  datePartValue: 1 | -1,
+  keyCode: AvailableAdjustKeyCode,
 ) => {
+  const delta = getDeltaFromKeyCode(keyCode);
+  const isStart = keyCode === 'Home';
+  const isEnd = keyCode === 'End';
+
   switch (datePartName) {
     case 'day': {
-      return utils.addDays(date, datePartValue);
+      if (isStart) {
+        return utils.startOfMonth(date);
+      }
+      if (isEnd) {
+        return utils.endOfMonth(date);
+      }
+      return utils.addDays(date, delta);
     }
     case 'month': {
-      return utils.addMonths(date, datePartValue);
+      if (isStart) {
+        return utils.startOfYear(date);
+      }
+      if (isEnd) {
+        return utils.endOfYear(date);
+      }
+      return utils.addMonths(date, delta);
     }
     case 'year': {
-      return utils.addYears(date, datePartValue);
+      return utils.addYears(date, delta);
     }
     case 'am-pm': {
-      return utils.addHours(date, datePartValue * 12);
+      return utils.addHours(date, delta ? 1 : 1 * 12);
     }
     case 'hour': {
-      return utils.addHours(date, datePartValue);
+      if (isStart) {
+        return utils.startOfDay(date);
+      }
+      if (isEnd) {
+        return utils.endOfDay(date);
+      }
+      return utils.addHours(date, delta);
     }
     case 'minute': {
-      return utils.addMinutes(date, datePartValue);
+      if (isStart) {
+        return utils.setMinutes(date, 0);
+      }
+      if (isEnd) {
+        return utils.setMinutes(date, 59);
+      }
+      return utils.addMinutes(date, delta);
     }
     case 'second': {
-      return utils.addSeconds(date, datePartValue);
+      if (isStart) {
+        return utils.setSeconds(date, 0);
+      }
+      if (isEnd) {
+        return utils.setSeconds(date, 59);
+      }
+      return utils.addSeconds(date, delta);
     }
     default: {
       return date;
+    }
+  }
+};
+
+export const adjustInvalidDateSectionValue = <TDate, TSection extends FieldSection>(
+  utils: MuiPickersAdapter<TDate>,
+  section: TSection,
+  keyCode: AvailableAdjustKeyCode,
+) => {
+  const today = utils.date()!;
+  const delta = getDeltaFromKeyCode(keyCode);
+  const isStart = keyCode === 'Home';
+  const isEnd = keyCode === 'End';
+  const shouldSetAbsolute = section.value === '' || isStart || isEnd;
+
+  switch (section.dateSectionName) {
+    case 'year': {
+      if (section.value === '') {
+        return utils.formatByString(today, section.formatValue);
+      }
+
+      return utils.formatByString(
+        utils.setYear(today, Number(section.value) + delta),
+        section.formatValue,
+      );
+    }
+
+    case 'month': {
+      let newDate: TDate;
+      if (shouldSetAbsolute) {
+        if (delta > 0 || isEnd) {
+          newDate = utils.endOfYear(today);
+        } else {
+          newDate = utils.startOfYear(today);
+        }
+      } else {
+        newDate = utils.addMonths(utils.parse(section.value, section.formatValue)!, delta);
+      }
+
+      return utils.formatByString(newDate, section.formatValue);
+    }
+
+    case 'day': {
+      let newDate: TDate;
+      if (shouldSetAbsolute) {
+        if (delta > 0 || isEnd) {
+          newDate = utils.endOfMonth(today);
+        } else {
+          newDate = utils.startOfMonth(today);
+        }
+      } else {
+        newDate = utils.addDays(utils.parse(section.value, section.formatValue)!, delta);
+      }
+
+      return utils.formatByString(newDate, section.formatValue);
+    }
+
+    case 'am-pm': {
+      const am = utils.formatByString(utils.startOfDay(today), section.formatValue);
+      const pm = utils.formatByString(utils.endOfDay(today), section.formatValue);
+
+      if (section.value === '') {
+        if (delta > 0 || isEnd) {
+          return pm;
+        }
+        return am;
+      }
+
+      if (section.value === am) {
+        return pm;
+      }
+
+      return am;
+    }
+
+    case 'hour': {
+      let newDate: TDate;
+      if (shouldSetAbsolute) {
+        if (delta > 0 || isEnd) {
+          newDate = utils.endOfDay(today);
+        } else {
+          newDate = utils.startOfDay(today);
+        }
+      } else {
+        newDate = utils.addHours(utils.setHours(today, Number(section.value)), delta);
+      }
+
+      return utils.formatByString(newDate, section.formatValue);
+    }
+
+    case 'minute': {
+      let newDate: TDate;
+      if (section.value === '') {
+        // TODO: Add startOfHour and endOfHours to adapters to avoid hard-coding those values
+        const newNumericValue = delta > 0 || isEnd ? 59 : 0;
+        newDate = utils.setMinutes(today, newNumericValue);
+      } else {
+        newDate = utils.addMinutes(utils.setMinutes(today, Number(section.value)), delta);
+      }
+
+      return utils.formatByString(newDate, section.formatValue);
+    }
+
+    case 'second': {
+      let newDate: TDate;
+      if (section.value === '') {
+        // TODO: Add startOfMinute and endOfMinute to adapters to avoid hard-coding those values
+        const newNumericValue = delta > 0 || isEnd ? 59 : 0;
+        newDate = utils.setSeconds(today, newNumericValue);
+      } else {
+        newDate = utils.addSeconds(utils.setSeconds(today, Number(section.value)), delta);
+      }
+
+      return utils.formatByString(newDate, section.formatValue);
+    }
+
+    default: {
+      throw new Error(`Invalid date section name`);
     }
   }
 };
@@ -273,121 +440,6 @@ export const getSectionValueNumericBoundaries = <TDate>(
         minimum: 0,
         maximum: 0,
       };
-    }
-  }
-};
-
-export const incrementOrDecrementInvalidDateSection = <TDate, TSection extends FieldSection>(
-  utils: MuiPickersAdapter<TDate>,
-  section: TSection,
-  type: 'increment' | 'decrement',
-) => {
-  const today = utils.date()!;
-  const delta = type === 'increment' ? 1 : -1;
-
-  switch (section.dateSectionName) {
-    case 'year': {
-      if (section.value === '') {
-        return utils.formatByString(today, section.formatValue);
-      }
-
-      return utils.formatByString(
-        utils.setYear(today, Number(section.value) + delta),
-        section.formatValue,
-      );
-    }
-
-    case 'month': {
-      let newDate: TDate;
-      if (section.value === '') {
-        if (type === 'increment') {
-          newDate = utils.endOfYear(today);
-        } else {
-          newDate = utils.startOfYear(today);
-        }
-      } else {
-        newDate = utils.addMonths(utils.parse(section.value, section.formatValue)!, delta);
-      }
-
-      return utils.formatByString(newDate, section.formatValue);
-    }
-
-    case 'day': {
-      let newDate: TDate;
-      if (section.value === '') {
-        if (type === 'increment') {
-          newDate = utils.endOfMonth(today);
-        } else {
-          newDate = utils.startOfMonth(today);
-        }
-      } else {
-        newDate = utils.addDays(utils.parse(section.value, section.formatValue)!, delta);
-      }
-
-      return utils.formatByString(newDate, section.formatValue);
-    }
-
-    case 'am-pm': {
-      const am = utils.formatByString(utils.startOfDay(today), section.formatValue);
-      const pm = utils.formatByString(utils.endOfDay(today), section.formatValue);
-
-      if (section.value === '') {
-        if (type === 'increment') {
-          return pm;
-        }
-        return am;
-      }
-
-      if (section.value === am) {
-        return pm;
-      }
-
-      return am;
-    }
-
-    case 'hour': {
-      let newDate: TDate;
-      if (section.value === '') {
-        if (type === 'increment') {
-          newDate = utils.endOfDay(today);
-        } else {
-          newDate = utils.startOfDay(today);
-        }
-      } else {
-        newDate = utils.addHours(utils.setHours(today, Number(section.value)), delta);
-      }
-
-      return utils.formatByString(newDate, section.formatValue);
-    }
-
-    case 'minute': {
-      let newDate: TDate;
-      if (section.value === '') {
-        // TODO: Add startOfHour and endOfHours to adapters to avoid hard-coding those values
-        const newNumericValue = type === 'increment' ? 59 : 0;
-        newDate = utils.setMinutes(today, newNumericValue);
-      } else {
-        newDate = utils.addMinutes(utils.setMinutes(today, Number(section.value)), delta);
-      }
-
-      return utils.formatByString(newDate, section.formatValue);
-    }
-
-    case 'second': {
-      let newDate: TDate;
-      if (section.value === '') {
-        // TODO: Add startOfMinute and endOfMinute to adapters to avoid hard-coding those values
-        const newNumericValue = type === 'increment' ? 59 : 0;
-        newDate = utils.setSeconds(today, newNumericValue);
-      } else {
-        newDate = utils.addSeconds(utils.setSeconds(today, Number(section.value)), delta);
-      }
-
-      return utils.formatByString(newDate, section.formatValue);
-    }
-
-    default: {
-      throw new Error(`Invalid date section name`);
     }
   }
 };

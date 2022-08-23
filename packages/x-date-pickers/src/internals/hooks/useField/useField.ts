@@ -9,14 +9,15 @@ import {
   UseFieldProps,
   UseFieldResponse,
   UseFieldState,
+  AvailableAdjustKeyCode,
 } from './useField.interfaces';
 import {
   cleanTrailingZeroInNumericSectionValue,
   getMonthsMatchingQuery,
   getSectionValueNumericBoundaries,
   getSectionVisibleValue,
-  incrementDateSectionValue,
-  incrementOrDecrementInvalidDateSection,
+  adjustDateSectionValue,
+  adjustInvalidDateSectionValue,
   setSectionValue,
 } from './useField.utils';
 
@@ -153,7 +154,7 @@ export const useField = <
       }
 
       // Reset the value of the selected section
-      case event.key === 'Backspace': {
+      case ['Backspace', 'Delete'].includes(event.key): {
         event.preventDefault();
 
         if (readOnly) {
@@ -181,7 +182,7 @@ export const useField = <
       }
 
       // Increment / decrement the selected section value
-      case event.key === 'ArrowUp' || event.key === 'ArrowDown': {
+      case ['ArrowUp', 'ArrowDown', 'Home', 'End', 'PageUp', 'PageDown'].includes(event.key): {
         event.preventDefault();
 
         if (readOnly || state.selectedSectionIndexes == null) {
@@ -196,21 +197,21 @@ export const useField = <
 
         // The date is not valid, we have to increment the section value rather than the date
         if (!utils.isValid(activeDate.value)) {
-          const newSectionValue = incrementOrDecrementInvalidDateSection(
+          const newSectionValue = adjustInvalidDateSectionValue(
             utils,
             activeSection,
-            event.key === 'ArrowUp' ? 'increment' : 'decrement',
+            event.key as AvailableAdjustKeyCode,
           );
 
           updateSections(
             setSectionValue(state.sections, state.selectedSectionIndexes.start, newSectionValue),
           );
         } else {
-          const newDate = incrementDateSectionValue(
+          const newDate = adjustDateSectionValue(
             utils,
             activeDate.value,
             activeSection.dateSectionName,
-            event.key === 'ArrowDown' ? -1 : 1,
+            event.key as AvailableAdjustKeyCode,
           );
 
           const newValue = activeDate.update(newDate);
