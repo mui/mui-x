@@ -10,4 +10,5 @@ export * from './nbNO';
 export * from './svSE';
 export * from './itIT';
 export * from './zhCN';
+export * from './koKR';
 export * from './utils/pickersLocaleTextApi';

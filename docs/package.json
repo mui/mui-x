@@ -32,7 +32,7 @@
     "@mui/styles": "^5.9.3",
     "@mui/utils": "^5.9.3",
     "@trendmicro/react-interpolate": "^0.5.5",
-    "@types/lodash": "^4.14.182",
+    "@types/lodash": "^4.14.184",
     "@types/react-dom": "^18.0.6",
     "@types/react-router-dom": "^5.3.3",
     "accept-language": "^3.0.18",
@@ -80,7 +80,7 @@
     "stylis": "^4.1.1",
     "stylis-plugin-rtl": "^2.1.1",
     "stylis-plugin-rtl-sc": "npm:stylis-plugin-rtl@^2.1.1",
-    "webpack-bundle-analyzer": "^4.5.0"
+    "webpack-bundle-analyzer": "^4.6.1"
   },
   "devDependencies": {
     "@babel/plugin-transform-react-constant-elements": "^7.18.6",
