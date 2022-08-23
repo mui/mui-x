@@ -93,6 +93,7 @@
     "initialState": { "type": { "name": "object" } },
     "isCellEditable": { "type": { "name": "func" } },
     "isGroupExpandedByDefault": { "type": { "name": "func" } },
+    "isRowDraggable": { "type": { "name": "func" }, "default": "\"() => true\"" },
     "isRowSelectable": { "type": { "name": "func" } },
     "keepNonExistentRowsSelected": { "type": { "name": "bool" } },
     "loading": { "type": { "name": "bool" } },
