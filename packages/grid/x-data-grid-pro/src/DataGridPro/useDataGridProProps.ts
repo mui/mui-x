@@ -26,6 +26,7 @@ export const DATA_GRID_PRO_PROPS_DEFAULT_VALUES: DataGridProPropsWithDefaultValu
   disableChildrenSorting: false,
   rowReordering: false,
   getDetailPanelHeight: () => 500,
+  isRowDraggable: () => true,
 };
 
 export const useDataGridProProps = <R extends GridValidRowModel>(inProps: DataGridProProps<R>) => {

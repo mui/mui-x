@@ -203,4 +203,43 @@ describe('<DataGridPro /> - Row reorder', () => {
     expect(handleDragOver.callCount).to.equal(0);
     expect(handleDragEnd.callCount).to.equal(0);
   });
+
+  it('should prevent row dragging when isRowDraggable is used', () => {
+    let apiRef: React.MutableRefObject<GridApi>;
+    const Test = () => {
+      apiRef = useGridApiRef();
+      const rows = [
+        { id: 0, brand: 'Nike' },
+        { id: 1, brand: 'Adidas' },
+        { id: 2, brand: 'Puma' },
+      ];
+      const columns = [{ field: 'brand' }];
+
+      return (
+        <div style={{ width: 300, height: 300 }}>
+          <DataGridPro
+            apiRef={apiRef}
+            rows={rows}
+            columns={columns}
+            isRowDraggable={(rowParams) => rowParams.id !== 0}
+            rowReordering
+          />
+        </div>
+      );
+    };
+
+    render(<Test />);
+
+    const firstCell = getCell(0, 0).firstChild!;
+    fireEvent.dragStart(firstCell);
+    expect((firstCell as HTMLElement).classList.contains(gridClasses['row--dragging'])).to.equal(
+      false,
+    );
+
+    const secondSell = getCell(1, 0).firstChild!;
+    fireEvent.dragStart(secondSell);
+    expect((secondSell as HTMLElement).classList.contains(gridClasses['row--dragging'])).to.equal(
+      true,
+    );
+  });
 });

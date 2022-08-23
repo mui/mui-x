@@ -405,6 +405,13 @@ DataGridProRaw.propTypes = {
    */
   isGroupExpandedByDefault: PropTypes.func,
   /**
+   * Function that indicates if a row can be reordered or not.
+   * @param {GridRowParams} params With all properties from [[GridRowParams]].
+   * @returns {boolean} If `false`, the reordering of the target row is disabled.
+   * @default "() => true"
+   */
+  isRowDraggable: PropTypes.func,
+  /**
    * Determines if a row can be selected.
    * @param {GridRowParams} params With all properties from [[GridRowParams]].
    * @returns {boolean} A boolean indicating if the cell is selectable.

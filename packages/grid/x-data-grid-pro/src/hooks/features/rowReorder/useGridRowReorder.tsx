@@ -11,6 +11,7 @@ import {
   useGridApiOptionHandler,
   GridRowId,
   gridEditRowsStateSelector,
+  GridRowParams,
 } from '@mui/x-data-grid';
 import { GridRowOrderChangeParams } from '../../../models/gridRowOrderChangeParams';
 import { GridApiPro } from '../../../models/gridApiPro';
@@ -34,8 +35,12 @@ const useUtilityClasses = (ownerState: OwnerState) => {
  */
 export const useGridRowReorder = (
   apiRef: React.MutableRefObject<GridApiPro>,
-  props: Pick<DataGridProProcessedProps, 'rowReordering' | 'onRowOrderChange' | 'classes'>,
+  props: Pick<
+    DataGridProProcessedProps,
+    'rowReordering' | 'onRowOrderChange' | 'isRowDraggable' | 'classes'
+  >,
 ): void => {
+  const { rowReordering, isRowDraggable } = props;
   const logger = useGridLogger(apiRef, 'useGridRowReorder');
   const sortModel = useGridSelector(apiRef, gridSortModelSelector);
   const treeDepth = useGridSelector(apiRef, gridRowTreeDepthSelector);
@@ -54,15 +59,18 @@ export const useGridRowReorder = (
 
   // TODO: remove sortModel check once row reorder is sorting compatible
   // remove treeDepth once row reorder is tree compatible
-  const isRowReorderDisabled = React.useMemo((): boolean => {
-    return !props.rowReordering || !!sortModel.length || treeDepth !== 1;
-  }, [props.rowReordering, sortModel, treeDepth]);
+  const isRowReorderDisabled = React.useCallback(
+    (rowParams: GridRowParams): boolean => {
+      return !rowReordering || !!sortModel.length || treeDepth !== 1 || !isRowDraggable(rowParams);
+    },
+    [rowReordering, isRowDraggable, sortModel, treeDepth],
+  );
 
   const handleDragStart = React.useCallback<GridEventListener<'rowDragStart'>>(
     (params, event) => {
       // Call the gridEditRowsStateSelector directly to avoid infnite loop
       const editRowsState = gridEditRowsStateSelector(apiRef.current.state);
-      if (isRowReorderDisabled || Object.keys(editRowsState).length !== 0) {
+      if (isRowReorderDisabled(params) || Object.keys(editRowsState).length !== 0) {
         return;
       }
 
@@ -113,7 +121,11 @@ export const useGridRowReorder = (
     (params, event): void => {
       // Call the gridEditRowsStateSelector directly to avoid infnite loop
       const editRowsState = gridEditRowsStateSelector(apiRef.current.state);
-      if (dragRowId === '' || isRowReorderDisabled || Object.keys(editRowsState).length !== 0) {
+      if (
+        dragRowId === '' ||
+        isRowReorderDisabled(params) ||
+        Object.keys(editRowsState).length !== 0
+      ) {
         return;
       }
 

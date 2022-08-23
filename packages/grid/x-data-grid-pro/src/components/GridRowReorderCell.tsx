@@ -32,6 +32,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 const GridRowReorderCell = (params: GridRenderCellParams) => {
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
+  const { rowReordering, isRowDraggable } = rootProps;
   const sortModel = useGridSelector(apiRef, gridSortModelSelector);
   const treeDepth = useGridSelector(apiRef, gridRowTreeDepthSelector);
   const editRowsState = useGridSelector(apiRef, gridEditRowsStateSelector);
@@ -41,11 +42,12 @@ const GridRowReorderCell = (params: GridRenderCellParams) => {
   // TODO: remove sortModel and treeDepth checks once row reorder is compatible
   const isDraggable = React.useMemo(
     () =>
-      !!rootProps.rowReordering &&
+      !!rowReordering &&
       !sortModel.length &&
       treeDepth === 1 &&
-      Object.keys(editRowsState).length === 0,
-    [rootProps.rowReordering, sortModel, treeDepth, editRowsState],
+      Object.keys(editRowsState).length === 0 &&
+      isRowDraggable(apiRef.current.getRowParams(params.id)),
+    [apiRef, rowReordering, isRowDraggable, sortModel, treeDepth, editRowsState, params.id],
   );
 
   const ownerState = { isDraggable, classes: rootProps.classes };

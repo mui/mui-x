@@ -104,6 +104,13 @@ export interface DataGridProPropsWithDefaultValue extends DataGridPropsWithDefau
    * @default false
    */
   rowReordering: boolean;
+  /**
+   * Function that indicates if a row can be reordered or not.
+   * @param {GridRowParams} params With all properties from [[GridRowParams]].
+   * @returns {boolean} If `false`, the reordering of the target row is disabled.
+   * @default "() => true"
+   */
+  isRowDraggable: (params: GridRowParams) => boolean;
 }
 
 export interface DataGridProPropsWithoutDefaultValue<R extends GridValidRowModel = any>
