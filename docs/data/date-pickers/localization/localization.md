@@ -12,7 +12,7 @@ Localization can impact pickers components rendering in two distincts ways: The 
 
 ## Date-library locale
 
-Use `LocalizationProvider` to change the date-library locale that is used to render pickers. Here is an example of changing the locale for the `date-fns` adapter:
+Use `LocalizationProvider` to change the date-library locale that is used to render pickers. Here is an example of changing the locale for the `dayjs` adapter:
 
 {{"demo": "LocalizedDatePicker.js"}}
 
@@ -45,7 +45,7 @@ You can set the locale text by using the theme provider.
 ```jsx
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { CalendarPicker, LocalizationProvider, bgBG } from '@mui/x-date-pickers';
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import bgLocale from 'date-fns/locale/bg';
 
 const theme = createTheme(
@@ -59,7 +59,7 @@ const theme = createTheme(
 
 <ThemeProvider theme={theme}>
   <LocalizationProvider
-    dateAdapter={AdapterDateFns}
+    dateAdapter={AdapterDayjs}
     adapterLocale={bgLocale} // use 'bg' locale for date parser/formatter
   >
     <CalendarPicker />
@@ -77,7 +77,7 @@ import { DataGrid, bgBG as dataGridBgBG } from '@mui/x-data-grid';
 import { bgBG as coreBgBG } from '@mui/material/locale';
 import bgLocale from 'date-fns/locale/bg';
 import { CalendarPicker, LocalizationProvider, bgBG } from '@mui/x-date-pickers';
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 
 const theme = createTheme(
   {
@@ -91,7 +91,7 @@ const theme = createTheme(
 );
 
 <ThemeProvider theme={theme}>
-  <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={bgLocale}>
+  <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale={bgLocale}>
     <CalendarPicker />
     <DataGrid />
   </LocalizationProvider>
@@ -101,12 +101,12 @@ const theme = createTheme(
 If you want to pass language translations without using `createTheme` and `ThemeProvider`, you can directly load the language translations from the `@mui/x-date-pickers` or `@mui/x-date-pickers-pro` package and pass them to the `LocalizationProvider`.
 
 ```jsx
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { CalendarPicker, LocalizationProvider, bgBG } from '@mui/x-date-pickers';
 import bgLocale from 'date-fns/locale/bg';
 
 <LocalizationProvider
-  dateAdapter={AdapterDateFns}
+  dateAdapter={AdapterDayjs}
   adapterLocale={bgLocale}
   localeText={bgBG.components.MuiLocalizationProvider.defaultProps.localeText}
 >
