@@ -1,9 +1,0 @@
-<LocalizationProvider dateAdapter={AdapterDateFns}>
-  <StaticDateRangePicker
-    displayStaticWrapperAs="desktop"
-    onChange={(newValue) => setValue(newValue)}
-    value={value}
-    renderInput={() => <div />}
-    components={{ PaperContent: WrappedPaperContent }}
-  />
-</LocalizationProvider>
