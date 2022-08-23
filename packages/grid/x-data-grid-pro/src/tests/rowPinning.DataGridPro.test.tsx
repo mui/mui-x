@@ -9,7 +9,7 @@ import {
 } from '@mui/x-data-grid-pro';
 import { expect } from 'chai';
 // @ts-expect-error Remove once the test utils are typed
-import { createRenderer, waitFor, fireEvent, screen } from '@mui/monorepo/test/utils';
+import { createRenderer, waitFor, fireEvent, screen, act } from '@mui/monorepo/test/utils';
 import { getData } from 'storybook/src/data/data-service';
 import {
   getActiveCell,
@@ -223,8 +223,8 @@ describe('<DataGridPro /> - Row pinning', () => {
     let rows = data.rows.filter((row) => row.id !== 11 && row.id !== 3);
 
     // should work when calling `setPinnedRows` before `setRows`
-    apiRef.current.unstable_setPinnedRows(pinnedRows);
-    apiRef.current.setRows(rows);
+    act(() => apiRef.current.unstable_setPinnedRows(pinnedRows));
+    act(() => apiRef.current.setRows(rows));
 
     await waitFor(() => {
       expect(isRowPinned(getRowById(0), 'top')).to.equal(false, '#0 pinned top');
@@ -238,8 +238,8 @@ describe('<DataGridPro /> - Row pinning', () => {
     rows = data.rows.filter((row) => row.id !== 8 && row.id !== 5);
 
     // should work when calling `setPinnedRows` after `setRows`
-    apiRef.current.setRows(rows);
-    apiRef.current.unstable_setPinnedRows(pinnedRows);
+    act(() => apiRef.current.setRows(rows));
+    act(() => apiRef.current.unstable_setPinnedRows(pinnedRows));
 
     await waitFor(() => {
       expect(isRowPinned(getRowById(11), 'top')).to.equal(false, '#11 pinned top');
@@ -264,7 +264,10 @@ describe('<DataGridPro /> - Row pinning', () => {
 
       const [pinnedRow0, pinnedRow1, ...rows] = rowsData;
 
-      const getRowId = React.useCallback((row) => row.productId, []);
+      const getRowId = React.useCallback<NonNullable<DataGridProProps['getRowId']>>(
+        (row) => row.productId,
+        [],
+      );
 
       return (
         <div style={{ width: 302, height: 300 }}>

@@ -44,7 +44,7 @@ Before using fluid width, note that:
 
 {{"demo": "ColumnFluidWidthGrid.js", "bg": "inline"}}
 
-## Resizing [<span class="plan-pro"></span>](https://mui.com/store/items/mui-x-pro/)
+## Resizing [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
 
 By default, `DataGridPro` allows all columns to be resized by dragging the right portion of the column separator.
 

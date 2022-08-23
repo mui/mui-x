@@ -166,7 +166,7 @@ function SettingsPanel(props) {
   }, []);
 
   const handlePaginationChange = React.useCallback((event) => {
-    setSelectedPaginationValue(event.target.value);
+    setSelectedPaginationValue(Number(event.target.value));
   }, []);
 
   const handleThemeChange = React.useCallback((event) => {
@@ -311,6 +311,7 @@ export default function FullFeaturedDemo() {
         checkboxSelection
         disableSelectionOnClick
         rowThreshold={0}
+        experimentalFeatures={{ newEditingApi: true }}
         initialState={{
           ...data.initialState,
           pinnedColumns: { left: [GRID_CHECKBOX_SELECTION_FIELD, 'desk'] },
