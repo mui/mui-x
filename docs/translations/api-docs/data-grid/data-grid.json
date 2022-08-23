@@ -243,6 +243,10 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the column header element"
     },
+    "columnGroupHeader": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the column group header element"
+    },
     "columnHeaderCheckbox": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the header checkbox cell element"
@@ -268,6 +272,20 @@
     "columnHeaderTitleContainerContent": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the column header's title excepted buttons"
+    },
+    "columnHeader--filledGroup": {
+      "description": "Styles applied to {{nodeName}} if {{conditions}}.",
+      "nodeName": "the column group header cell",
+      "conditions": "not empty"
+    },
+    "columnHeader--emptyGroup": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the empty column group header cell"
+    },
+    "columnHeader--showColumnBorder": {
+      "description": "Styles applied to {{nodeName}} when {{conditions}}.",
+      "nodeName": "the column group header cell",
+      "conditions": "show column border"
     },
     "columnHeaders": {
       "description": "Styles applied to {{nodeName}}.",

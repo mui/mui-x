@@ -40,6 +40,9 @@ import {
   preferencePanelStateInitializer,
   rowsMetaStateInitializer,
   selectionStateInitializer,
+  useGridColumnGrouping,
+  columnGroupsStateInitializer,
+  useGridColumnGroupingPreProcessors,
 } from '@mui/x-data-grid/internals';
 import { GridApiPro } from '../models/gridApiPro';
 import { DataGridProProcessedProps } from '../models/dataGridProProps';
@@ -84,6 +87,7 @@ export const useDataGridProComponent = (
   /**
    * Register all pre-processors called during state initialization here.
    */
+  useGridColumnGroupingPreProcessors(apiRef, props);
   useGridSelectionPreProcessors(apiRef, props);
   useGridRowReorderPreProcessors(apiRef, props);
   useGridTreeDataPreProcessors(apiRef, props);
@@ -121,6 +125,7 @@ export const useDataGridProComponent = (
   useGridInitializeState(paginationStateInitializer, apiRef, props);
   useGridInitializeState(rowsMetaStateInitializer, apiRef, props);
   useGridInitializeState(columnMenuStateInitializer, apiRef, props);
+  useGridInitializeState(columnGroupsStateInitializer, apiRef, props);
 
   useGridTreeData(apiRef);
   useGridKeyboardNavigation(apiRef, props);
@@ -132,6 +137,7 @@ export const useDataGridProComponent = (
   useGridParamsApi(apiRef);
   useGridDetailPanel(apiRef, props);
   useGridColumnSpanning(apiRef);
+  useGridColumnGrouping(apiRef, props);
 
   const useGridEditing = props.experimentalFeatures?.newEditingApi
     ? useGridEditing_new

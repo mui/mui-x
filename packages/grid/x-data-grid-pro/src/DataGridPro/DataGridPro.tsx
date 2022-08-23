@@ -115,6 +115,7 @@ DataGridProRaw.propTypes = {
    * @default 3
    */
   columnBuffer: PropTypes.number,
+  columnGroupingModel: PropTypes.arrayOf(PropTypes.object),
   /**
    * Set of columns of type [[GridColumns]].
    */
@@ -256,6 +257,7 @@ DataGridProRaw.propTypes = {
    * For each feature, if the flag is not explicitly set to `true`, the feature will be fully disabled and any property / method call will not have any effect.
    */
   experimentalFeatures: PropTypes.shape({
+    columnGrouping: PropTypes.bool,
     lazyLoading: PropTypes.bool,
     newEditingApi: PropTypes.bool,
     preventCommitWhileValidating: PropTypes.bool,

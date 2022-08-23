@@ -30,6 +30,7 @@ import { GridInitialStateCommunity } from '../gridStateCommunity';
 import { GridSlotsComponentsProps } from '../gridSlotsComponentsProps';
 import { GridColumnVisibilityModel } from '../../hooks/features/columns/gridColumnsInterfaces';
 import { GridCellModesModel, GridRowModesModel } from '../api/gridEditingApi';
+import { GridColumnGroupingModel } from '../gridColumnGrouping';
 
 export interface GridExperimentalFeatures {
   /**
@@ -40,6 +41,10 @@ export interface GridExperimentalFeatures {
    * Enables the new API for cell editing and row editing.
    */
   newEditingApi: boolean;
+  /**
+   * Enables the column grouping.
+   */
+  columnGrouping: boolean;
   /**
    * Emits a warning if the cell receives focus without also syncing the focus state.
    * Only works if NODE_ENV=test.
@@ -784,4 +789,5 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
    * @param {any} error The error thrown.
    */
   onProcessRowUpdateError?: (error: any) => void;
+  columnGroupingModel?: GridColumnGroupingModel;
 }

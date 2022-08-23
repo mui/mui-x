@@ -39,7 +39,7 @@
     "experimentalFeatures": {
       "type": {
         "name": "shape",
-        "description": "{ newEditingApi?: bool, preventCommitWhileValidating?: bool, warnIfFocusStateIsNotSynced?: bool }"
+        "description": "{ columnGrouping?: bool, newEditingApi?: bool, preventCommitWhileValidating?: bool, warnIfFocusStateIsNotSynced?: bool }"
       }
     },
     "filterMode": {
@@ -287,6 +287,7 @@
       "columnHeader--sorted",
       "columnHeader--filtered",
       "columnHeader",
+      "columnGroupHeader",
       "columnHeaderCheckbox",
       "columnHeaderDraggableContainer",
       "rowReorderCellPlaceholder",
@@ -294,6 +295,9 @@
       "columnHeaderTitle",
       "columnHeaderTitleContainer",
       "columnHeaderTitleContainerContent",
+      "columnHeader--filledGroup",
+      "columnHeader--emptyGroup",
+      "columnHeader--showColumnBorder",
       "columnHeaders",
       "columnHeadersInner",
       "columnHeadersInner--scrollable",
