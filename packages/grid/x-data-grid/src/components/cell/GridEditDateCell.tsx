@@ -128,7 +128,7 @@ function GridEditDateCell(props: GridEditDateCellProps) {
   );
 
   const handleBlur = React.useCallback(
-    (event) => {
+    (event: React.FocusEvent<HTMLInputElement>) => {
       if (apiRef.current.ensurePreProcessEditCellPropsRanOnce) {
         apiRef.current.ensurePreProcessEditCellPropsRanOnce({ id, field });
       }

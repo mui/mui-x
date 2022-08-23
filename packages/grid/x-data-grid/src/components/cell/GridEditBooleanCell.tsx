@@ -28,8 +28,9 @@ export interface GridEditBooleanCellProps
   extends GridRenderEditCellParams,
     Omit<
       React.DetailedHTMLProps<React.LabelHTMLAttributes<HTMLLabelElement>, HTMLLabelElement>,
-      'id' | 'tabIndex'
-    > {
+      'id' | 'tabIndex' | 'onBlur'
+    >,
+    Pick<React.InputHTMLAttributes<HTMLInputElement>, 'onBlur'> {
   /**
    * Callback called when the value is changed by the user.
    * @param {React.ChangeEvent<HTMLInputElement>} event The event source of the callback.
@@ -89,7 +90,7 @@ function GridEditBooleanCell(props: GridEditBooleanCellProps) {
   );
 
   const handleBlur = React.useCallback(
-    (event) => {
+    (event: React.FocusEvent<HTMLInputElement>) => {
       if (apiRef.current.ensurePreProcessEditCellPropsRanOnce) {
         apiRef.current.ensurePreProcessEditCellPropsRanOnce({ id: idProp, field });
       }

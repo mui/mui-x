@@ -144,7 +144,7 @@ function GridEditSingleSelectCell(props: GridEditSingleSelectCellProps) {
   };
 
   const handleBlur: SelectProps['onBlur'] = React.useCallback(
-    (event) => {
+    (event: React.FocusEvent<HTMLInputElement>) => {
       if (apiRef.current.ensurePreProcessEditCellPropsRanOnce) {
         apiRef.current.ensurePreProcessEditCellPropsRanOnce({ id, field });
       }
