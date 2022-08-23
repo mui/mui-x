@@ -2,7 +2,7 @@ import * as React from 'react';
 import { GridApi, DataGridProProps, useGridApiRef, DataGridPro } from '@mui/x-data-grid-pro';
 import Portal from '@mui/base/Portal';
 // @ts-ignore Remove once the test utils are typed
-import { createRenderer, fireEvent, screen, waitFor } from '@mui/monorepo/test/utils';
+import { createRenderer, fireEvent, screen, waitFor, act } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
 import { getActiveCell, getCell, getColumnHeaderCell } from 'test/utils/helperFn';
 import { stub, spy } from 'sinon';
@@ -13,8 +13,6 @@ function fireClickEvent(cell: HTMLElement) {
   fireEvent.mouseUp(cell);
   fireEvent.click(cell);
 }
-
-const nativeSetTimeout = setTimeout;
 
 describe('<DataGridPro /> - Cell Editing', () => {
   let baselineProps: Pick<DataGridProProps, 'autoHeight' | 'rows' | 'columns' | 'throttleRowsMs'>;
@@ -73,7 +71,7 @@ describe('<DataGridPro /> - Cell Editing', () => {
       const cellAdidas = getCell(1, 0);
       expect(cellAdidas).to.have.class('MuiDataGrid-cell--editable');
 
-      apiRef.current.setCellMode(0, 'brand', 'edit');
+      act(() => apiRef.current.setCellMode(0, 'brand', 'edit'));
       expect(cellNike).to.have.class('MuiDataGrid-cell--editing');
     });
 
@@ -109,7 +107,7 @@ describe('<DataGridPro /> - Cell Editing', () => {
       expect(input).not.to.have.attribute('aria-invalid');
       fireEvent.change(input, { target: { value: 'n' } });
       clock.runToLast();
-      apiRef.current.setEditRowsModel({ 1: { brand: { error: true, value: 'n' } } });
+      act(() => apiRef.current.setEditRowsModel({ 1: { brand: { error: true, value: 'n' } } }));
       fireEvent.keyDown(input, { key: 'Enter' });
       await waitFor(() => {
         expect(input).to.have.attribute('aria-invalid', 'true');
@@ -125,9 +123,11 @@ describe('<DataGridPro /> - Cell Editing', () => {
       expect(input).not.to.have.attribute('aria-invalid');
       fireEvent.change(input, { target: { value: 'n' } });
       clock.runToLast();
-      apiRef.current.setEditRowsModel({ 1: { brand: { error: true, value: 'n' } } });
-      apiRef.current.commitCellChange({ id: 1, field: 'brand' });
-      apiRef.current.setCellMode(1, 'brand', 'view');
+      act(() => {
+        apiRef.current.setEditRowsModel({ 1: { brand: { error: true, value: 'n' } } });
+        apiRef.current.commitCellChange({ id: 1, field: 'brand' });
+        apiRef.current.setCellMode(1, 'brand', 'view');
+      });
       expect(cell).to.have.text('Adidas');
     });
 
@@ -140,9 +140,11 @@ describe('<DataGridPro /> - Cell Editing', () => {
       expect(input).not.to.have.attribute('aria-invalid');
       fireEvent.change(input, { target: { value: 'n' } });
       clock.runToLast();
-      apiRef.current.setEditRowsModel({ 1: { brand: { error: true, value: 'n' } } });
-      apiRef.current.commitCellChange({ id: 1, field: 'brand' });
-      apiRef.current.setCellMode(1, 'brand', 'view');
+      act(() => {
+        apiRef.current.setEditRowsModel({ 1: { brand: { error: true, value: 'n' } } });
+        apiRef.current.commitCellChange({ id: 1, field: 'brand' });
+        apiRef.current.setCellMode(1, 'brand', 'view');
+      });
       expect(onCellEditCommit.callCount).to.equal(0);
     });
   });
@@ -172,6 +174,7 @@ describe('<DataGridPro /> - Cell Editing', () => {
       fireEvent.change(input, { target: { value: '1970' } });
       clock.tick(500);
       fireEvent.keyDown(input, { key: 'Enter' });
+      await act(() => Promise.resolve());
       await waitFor(() => {
         expect(cell.querySelector('input')).not.to.equal(null);
       });
@@ -230,14 +233,14 @@ describe('<DataGridPro /> - Cell Editing', () => {
 
   it('should allow to switch between cell mode', () => {
     render(<TestCase />);
-    apiRef.current.setCellMode(1, 'brand', 'edit');
+    act(() => apiRef.current.setCellMode(1, 'brand', 'edit'));
     const cell = getCell(1, 0);
 
     expect(cell).to.have.class('MuiDataGrid-cell--editable');
     expect(cell).to.have.class('MuiDataGrid-cell--editing');
     expect(cell.querySelector('input')!.value).to.equal('Adidas');
 
-    apiRef.current.setCellMode(1, 'brand', 'view');
+    act(() => apiRef.current.setCellMode(1, 'brand', 'view'));
     expect(cell).to.have.class('MuiDataGrid-cell--editable');
     expect(cell).not.to.have.class('MuiDataGrid-cell--editing');
     expect(cell.querySelector('input')).to.equal(null);
@@ -331,16 +334,18 @@ describe('<DataGridPro /> - Cell Editing', () => {
     const cell = getCell(1, 0);
     fireClickEvent(cell);
     expect(cell).to.have.text('Adidas');
-    const params = apiRef.current.getCellParams(1, 'brand');
-    apiRef.current.publishEvent('cellKeyDown', params, {
-      key: 'a',
-      code: 1,
-      target: cell,
-      currentTarget: cell,
-      ctrlKey: false,
-      metaKey: false,
-      isPropagationStopped: () => false,
-    } as any);
+    act(() => {
+      const params = apiRef.current.getCellParams(1, 'brand');
+      apiRef.current.publishEvent('cellKeyDown', params, {
+        key: 'a',
+        code: 1,
+        target: cell,
+        currentTarget: cell,
+        ctrlKey: false,
+        metaKey: false,
+        isPropagationStopped: () => false,
+      } as any);
+    });
     // fireEvent.keyDown(cell, { key: 'a', code: 1, target: cell });
 
     expect(cell).to.have.class('MuiDataGrid-cell--editable');
@@ -374,8 +379,8 @@ describe('<DataGridPro /> - Cell Editing', () => {
     fireEvent.change(input, { target: { value: 'n' } });
     expect(cell.querySelector('input')!.value).to.equal('n');
     clock.tick(500);
-
     fireEvent.keyDown(input, { key: 'Enter' });
+
     await waitFor(() => {
       expect(cell).to.have.class('MuiDataGrid-cell--editable');
       expect(cell).not.to.have.class('MuiDataGrid-cell--editing');
@@ -394,8 +399,8 @@ describe('<DataGridPro /> - Cell Editing', () => {
     fireEvent.change(input, { target: { value: 'n' } });
     expect(cell.querySelector('input')!.value).to.equal('n');
     clock.tick(500);
-
     fireEvent.keyDown(input, { key: 'Tab' });
+
     await waitFor(() => {
       expect(cell).to.have.class('MuiDataGrid-cell--editable');
       expect(cell).not.to.have.class('MuiDataGrid-cell--editing');
@@ -414,8 +419,8 @@ describe('<DataGridPro /> - Cell Editing', () => {
     fireEvent.change(input, { target: { value: '1970' } });
     clock.tick(500);
     expect(cell.querySelector('input')!.value).to.equal('1970');
-
     fireEvent.keyDown(input, { key: 'Tab', shiftKey: true });
+
     await waitFor(() => {
       expect(cell).to.have.class('MuiDataGrid-cell--editable');
       expect(cell).not.to.have.class('MuiDataGrid-cell--editing');
@@ -436,9 +441,9 @@ describe('<DataGridPro /> - Cell Editing', () => {
     fireEvent.change(input, { target: { value: '1970' } });
     clock.tick(500);
     expect(cell.querySelector('input')!.value).to.equal('1970');
-
     const otherCell = getCell(2, 1);
     fireClickEvent(otherCell);
+
     await waitFor(() => {
       expect(cell).not.to.have.class('MuiDataGrid-cell--editing');
       expect(cell).to.have.text('1970');
@@ -458,9 +463,9 @@ describe('<DataGridPro /> - Cell Editing', () => {
     fireEvent.change(input, { target: { value: '1970' } });
     clock.tick(500);
     expect(cell.querySelector('input')!.value).to.equal('1970');
-
     const columnHeader = getColumnHeaderCell(0);
     fireEvent.dragStart(columnHeader.firstChild);
+
     await waitFor(() => {
       expect(cell).not.to.have.class('MuiDataGrid-cell--editing');
       expect(cell).to.have.text('1970');
@@ -479,8 +484,8 @@ describe('<DataGridPro /> - Cell Editing', () => {
     fireEvent.change(input, { target: { value: '1970' } });
     clock.tick(500);
     expect(cell.querySelector('input')!.value).to.equal('1970');
-
     fireEvent.focus(getColumnHeaderCell(1));
+
     await waitFor(() => {
       expect(cell).not.to.have.class('MuiDataGrid-cell--editing');
       expect(cell).to.have.text('1970');
@@ -489,7 +494,7 @@ describe('<DataGridPro /> - Cell Editing', () => {
 
   it('should work correctly when the cell editing was initiated programmatically', async () => {
     render(<TestCase />);
-    apiRef.current.setCellMode(1, 'year', 'edit');
+    act(() => apiRef.current.setCellMode(1, 'year', 'edit'));
     const cell = getCell(1, 1);
     fireClickEvent(cell);
     expect(getActiveCell()).to.equal('1-1');
@@ -499,7 +504,6 @@ describe('<DataGridPro /> - Cell Editing', () => {
     fireEvent.change(input, { target: { value: '1970' } });
     clock.tick(500);
     expect(cell.querySelector('input')!.value).to.equal('1970');
-
     const otherCell = getCell(2, 1);
     fireClickEvent(otherCell);
 
@@ -513,16 +517,13 @@ describe('<DataGridPro /> - Cell Editing', () => {
   it('should move the focus to the new field', async () => {
     render(<TestCase />);
     // Turn first cell into edit mode
-    apiRef.current.setCellMode(0, 'brand', 'edit');
-
-    // Turn second cell into edit mode
-    fireClickEvent(getCell(1, 0));
-    apiRef.current.setCellMode(1, 'brand', 'edit');
+    act(() => apiRef.current.setCellMode(0, 'brand', 'edit'));
+    act(() => apiRef.current.setCellMode(1, 'brand', 'edit'));
     expect(document.querySelectorAll('input').length).to.equal(2);
-
     // Try to focus the first cell's input
     const input0 = getCell(0, 0).querySelector('input');
     fireClickEvent(input0!);
+
     await waitFor(() => {
       expect(document.activeElement).to.have.property('value', 'Nike');
     });
@@ -549,11 +550,12 @@ describe('<DataGridPro /> - Cell Editing', () => {
     fireEvent.change(input, { target: { value: '62' } });
     clock.tick(500);
     expect(cell.querySelector('input')!.value).to.equal('1962');
-
     fireEvent.keyDown(input, { key: 'Enter' });
+
     await waitFor(() => {
       expect(cell).not.to.have.class('MuiDataGrid-cell--editing');
     });
+
     expect(cell).to.have.text('1962');
     expect(valueParser.callCount).to.equal(1);
     expect(valueParser.args[0][0]).to.equal('62');
@@ -656,8 +658,8 @@ describe('<DataGridPro /> - Cell Editing', () => {
     fireEvent.change(input, { target: { value: 'n' } });
     clock.tick(500);
     expect(cell.querySelector('input')!.value).to.equal('n');
-
     fireEvent.keyDown(input, { key: 'Enter' });
+
     await waitFor(() => {
       expect(cell).to.have.class('MuiDataGrid-cell--editable');
       expect(cell).not.to.have.class('MuiDataGrid-cell--editing');
@@ -697,6 +699,7 @@ describe('<DataGridPro /> - Cell Editing', () => {
     fireEvent.change(input, { target: { value: 'n' } });
     clock.tick(500);
     fireEvent.keyDown(input, { key: 'Enter' });
+
     await waitFor(() => {
       expect(onCellEditCommit.callCount).to.equal(1);
       expect(onCellEditCommit.lastCall.args[0]).to.deep.equal({
@@ -730,6 +733,7 @@ describe('<DataGridPro /> - Cell Editing', () => {
     fireEvent.change(input, { target: { value: 'Peter Smith' } });
     clock.tick(500);
     fireEvent.keyDown(input, { key: 'Enter' });
+
     await waitFor(() => {
       expect(apiRef.current.getRowModels().get(0)).to.deep.equal({
         id: 0,
@@ -758,6 +762,7 @@ describe('<DataGridPro /> - Cell Editing', () => {
     fireEvent.change(input, { target: { value: 'n' } });
     clock.tick(500);
     fireEvent.keyDown(input, { key: 'Enter' });
+
     await waitFor(() => {
       expect(preProcessEditCellProps.lastCall.args[0]).to.deep.equal({
         id: baselineProps.rows[1].id,
@@ -786,6 +791,7 @@ describe('<DataGridPro /> - Cell Editing', () => {
     fireEvent.change(input, { target: { value: 'n' } });
     clock.tick(500);
     fireEvent.keyDown(input, { key: 'Enter' });
+
     await waitFor(() => {
       expect(input).to.have.attribute('aria-invalid', 'true');
       expect(cell).to.have.class('MuiDataGrid-cell--editing');
@@ -811,6 +817,7 @@ describe('<DataGridPro /> - Cell Editing', () => {
     fireEvent.change(input, { target: { value: 'n' } });
     clock.tick(500);
     fireEvent.keyDown(input, { key: 'Enter' });
+
     await waitFor(() => {
       expect(input).to.have.attribute('aria-invalid', 'true');
       expect(cell).to.have.class('MuiDataGrid-cell--editing');
@@ -843,7 +850,7 @@ describe('<DataGridPro /> - Cell Editing', () => {
     clock.tick(500);
     fireEvent.keyDown(input, { key: 'Enter' });
 
-    await new Promise((resolve) => nativeSetTimeout(resolve)); // Wait for promise
+    await act(() => Promise.resolve());
 
     expect(preProcessEditCellProps.callCount).to.equal(2);
     expect(preProcessEditCellProps.args[0][0].props).to.deep.equal({ value: 'Adidas' });
@@ -875,7 +882,7 @@ describe('<DataGridPro /> - Cell Editing', () => {
     clock.tick(500);
     fireEvent.keyDown(input, { key: 'Enter' });
 
-    await new Promise((resolve) => nativeSetTimeout(resolve)); // Wait for promise
+    await act(() => Promise.resolve());
 
     expect(preProcessEditCellProps.callCount).to.equal(1);
     expect(preProcessEditCellProps.lastCall.args[0].props).to.deep.equal({
@@ -905,12 +912,11 @@ describe('<DataGridPro /> - Cell Editing', () => {
     );
     const cell = getCell(0, 0);
     fireEvent.doubleClick(cell);
-
     const input = cell.querySelector('input')!;
     fireEvent.change(input, { target: { value: 'Adidas' } });
     clock.tick(500);
 
-    await new Promise((resolve) => nativeSetTimeout(resolve)); // Wait for promise
+    await act(() => Promise.resolve());
 
     expect(preProcessEditCellProps.callCount).to.equal(1);
     expect(preProcessEditCellProps.lastCall.args[0].props).to.deep.equal({
@@ -927,7 +933,8 @@ describe('<DataGridPro /> - Cell Editing', () => {
     fireEvent.change(input, { target: { value: 'Adidas' } });
     expect(cell).to.have.class('MuiDataGrid-cell--editing');
     fireClickEvent(getCell(1, 0));
-    await new Promise((resolve) => nativeSetTimeout(resolve)); // Wait for promise
+
+    await act(() => Promise.resolve());
     expect(cell).not.to.have.class('MuiDataGrid-cell--editing');
     clock.runToLast();
     expect(cell).not.to.have.class('MuiDataGrid-cell--editing');
@@ -941,7 +948,8 @@ describe('<DataGridPro /> - Cell Editing', () => {
     const input = cell.querySelector('input')!;
     fireEvent.change(input, { target: { value: 'Adidas' } });
     fireClickEvent(getCell(1, 0));
-    await new Promise((resolve) => nativeSetTimeout(resolve)); // Wait for promise
+
+    await act(() => Promise.resolve());
     // We don't need to wait for debounce when commiting
     expect(onCellEditCommit.lastCall.args[0].value).to.equal('Adidas');
   });

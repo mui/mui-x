@@ -1,6 +1,6 @@
 import * as React from 'react';
 import Button from '@mui/material/Button';
-import DialogActions from '@mui/material/DialogActions';
+import DialogActions, { DialogActionsProps } from '@mui/material/DialogActions';
 import { useLocaleText } from '../internals/hooks/useUtils';
 import {
   WrapperVariant,
@@ -9,7 +9,7 @@ import {
 
 export type PickersActionBarAction = 'clear' | 'cancel' | 'accept' | 'today';
 
-export interface PickersActionBarProps {
+export interface PickersActionBarProps extends DialogActionsProps {
   /**
    * Ordered array of actions to display.
    * If empty, does not display that action bar.
@@ -25,7 +25,7 @@ export interface PickersActionBarProps {
 }
 
 export const PickersActionBar = (props: PickersActionBarProps) => {
-  const { onAccept, onClear, onCancel, onSetToday, actions } = props;
+  const { onAccept, onClear, onCancel, onSetToday, actions, ...other } = props;
   const wrapperVariant = React.useContext(WrapperVariantContext);
 
   const localeText = useLocaleText();
@@ -67,5 +67,5 @@ export const PickersActionBar = (props: PickersActionBarProps) => {
     }
   });
 
-  return <DialogActions>{buttons}</DialogActions>;
+  return <DialogActions {...other}>{buttons}</DialogActions>;
 };
