@@ -66,7 +66,7 @@ import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
 
 function App({ children }) {
   return (
-    <LocalizationProvider dateAdapter={AdapterDateFns}>
+    <LocalizationProvider dateAdapter={AdapterDayjs}>
       {children}
     </LocalizationProvider>
   );

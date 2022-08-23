@@ -1,15 +1,15 @@
 import * as React from 'react';
+import dayjs from 'dayjs';
 import TextField from '@mui/material/TextField';
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { StaticDatePicker } from '@mui/x-date-pickers/StaticDatePicker';
 
-const adapter = new AdapterDateFns();
 export default function CustomizeDayPicker() {
-  const [value, setValue] = React.useState(adapter.date());
+  const [value, setValue] = React.useState(dayjs());
 
   return (
-    <LocalizationProvider dateAdapter={AdapterDateFns}>
+    <LocalizationProvider dateAdapter={AdapterDayjs}>
       <StaticDatePicker
         displayStaticWrapperAs="desktop"
         value={value}
