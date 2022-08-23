@@ -2,7 +2,7 @@ import * as React from 'react';
 import { useValidation, ValidationProps, Validator } from './useValidation';
 import { BaseDateValidationProps, DayValidationProps } from './models';
 import { useLocalizationContext } from '../useUtils';
-import { parsePickerInputValueWithDefault } from '../../utils/date-utils';
+import { parseNonNullablePickerDate } from '../../utils/date-utils';
 
 export interface ExportedDateValidationProps<TDate>
   extends DayValidationProps<TDate>,
@@ -29,12 +29,12 @@ export const validateDate: Validator<any, DateValidationProps<any, any>> = ({
 }): DateValidationError => {
   const now = adapter.utils.date()!;
   const date = adapter.utils.date(value);
-  const minDate = parsePickerInputValueWithDefault(
+  const minDate = parseNonNullablePickerDate(
     adapter.utils,
     props.minDate,
     adapter.defaultDates.minDate,
   );
-  const maxDate = parsePickerInputValueWithDefault(
+  const maxDate = parseNonNullablePickerDate(
     adapter.utils,
     props.maxDate,
     adapter.defaultDates.maxDate,

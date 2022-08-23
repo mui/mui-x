@@ -8,10 +8,7 @@ import { ValidationProps } from '../internals/hooks/validation/useValidation';
 import { ExportedDateInputProps } from '../internals/components/PureDateInput';
 import { BasePickerProps } from '../internals/models/props/basePickerProps';
 import { PickerStateValueManager } from '../internals/hooks/usePickerState';
-import {
-  parsePickerInputValue,
-  parsePickerInputValueWithDefault,
-} from '../internals/utils/date-utils';
+import { parsePickerInputValue, parseNonNullablePickerDate } from '../internals/utils/date-utils';
 import { BaseToolbarProps } from '../internals/models/props/baseToolbarProps';
 import { DefaultizedProps } from '../internals/models/helpers';
 import { BaseDateValidationProps } from '../internals/hooks/validation/models';
@@ -117,8 +114,8 @@ export function useDatePickerDefaultizedProps<
     ...getFormatAndMaskByViews(views, utils),
     ...themeProps,
     views,
-    minDate: parsePickerInputValueWithDefault(utils, themeProps.minDate, defaultDates.minDate),
-    maxDate: parsePickerInputValueWithDefault(utils, themeProps.maxDate, defaultDates.maxDate),
+    minDate: parseNonNullablePickerDate(utils, themeProps.minDate, defaultDates.minDate),
+    maxDate: parseNonNullablePickerDate(utils, themeProps.maxDate, defaultDates.maxDate),
   };
 }
 

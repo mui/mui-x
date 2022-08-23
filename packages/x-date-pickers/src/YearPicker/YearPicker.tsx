@@ -11,7 +11,7 @@ import { WrapperVariantContext } from '../internals/components/wrappers/WrapperV
 import { YearPickerClasses, getYearPickerUtilityClass } from './yearPickerClasses';
 import { BaseDateValidationProps, YearValidationProps } from '../internals/hooks/validation/models';
 import { DefaultizedProps } from '../internals/models/helpers';
-import { parsePickerInputValueWithDefault } from '../internals/utils/date-utils';
+import { parseNonNullablePickerDate } from '../internals/utils/date-utils';
 
 const useUtilityClasses = (ownerState: any) => {
   const { classes } = ownerState;
@@ -36,8 +36,8 @@ function useYearPickerDefaultizedProps<TDate>(
 
   return {
     ...themeProps,
-    minDate: parsePickerInputValueWithDefault(utils, themeProps.minDate, defaultDates.minDate),
-    maxDate: parsePickerInputValueWithDefault(utils, themeProps.maxDate, defaultDates.maxDate),
+    minDate: parseNonNullablePickerDate(utils, themeProps.minDate, defaultDates.minDate),
+    maxDate: parseNonNullablePickerDate(utils, themeProps.maxDate, defaultDates.maxDate),
   };
 }
 

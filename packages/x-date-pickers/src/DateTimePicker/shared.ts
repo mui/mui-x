@@ -9,10 +9,7 @@ import { BasePickerProps } from '../internals/models/props/basePickerProps';
 import { ExportedDateInputProps } from '../internals/components/PureDateInput';
 import { CalendarOrClockPickerView } from '../internals/models';
 import { PickerStateValueManager } from '../internals/hooks/usePickerState';
-import {
-  parsePickerInputValue,
-  parsePickerInputValueWithDefault,
-} from '../internals/utils/date-utils';
+import { parsePickerInputValue, parseNonNullablePickerDate } from '../internals/utils/date-utils';
 import { BaseToolbarProps } from '../internals/models/props/baseToolbarProps';
 import { DefaultizedProps } from '../internals/models/helpers';
 import { BaseDateValidationProps } from '../internals/hooks/validation/models';
@@ -124,12 +121,12 @@ export function useDateTimePickerDefaultizedProps<
     disablePast: false,
     disableFuture: false,
     ...themeProps,
-    minDate: parsePickerInputValueWithDefault(
+    minDate: parseNonNullablePickerDate(
       utils,
       themeProps.minDateTime ?? themeProps.minDate,
       defaultDates.minDate,
     ),
-    maxDate: parsePickerInputValueWithDefault(
+    maxDate: parseNonNullablePickerDate(
       utils,
       themeProps.maxDateTime ?? themeProps.maxDate,
       defaultDates.maxDate,

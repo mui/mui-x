@@ -79,7 +79,7 @@ export const parsePickerInputValue = <TDate>(
   return utils.isValid(parsedValue) ? parsedValue : null;
 };
 
-export const parsePickerInputValueWithDefault = <TDate>(
+export const parseNonNullablePickerDate = <TDate>(
   utils: MuiPickersAdapter<TDate>,
   value: TDate | null | undefined,
   defaultValue: TDate,

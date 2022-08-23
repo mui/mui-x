@@ -16,10 +16,7 @@ import {
   PickersCalendarHeaderSlotsComponentsProps,
 } from './PickersCalendarHeader';
 import { YearPicker, YearPickerProps } from '../YearPicker/YearPicker';
-import {
-  findClosestEnabledDate,
-  parsePickerInputValueWithDefault,
-} from '../internals/utils/date-utils';
+import { findClosestEnabledDate, parseNonNullablePickerDate } from '../internals/utils/date-utils';
 import { CalendarPickerView } from '../internals/models';
 import { PickerViewRoot } from '../internals/components/PickerViewRoot';
 import { defaultReduceAnimations } from '../internals/utils/defaultReduceAnimations';
@@ -178,8 +175,8 @@ function useCalendarPickerDefaultizedProps<TDate>(
     reduceAnimations: defaultReduceAnimations,
     renderLoading: () => <span data-mui-test="loading-progress">...</span>,
     ...themeProps,
-    minDate: parsePickerInputValueWithDefault(utils, themeProps.minDate, defaultDates.minDate),
-    maxDate: parsePickerInputValueWithDefault(utils, themeProps.maxDate, defaultDates.maxDate),
+    minDate: parseNonNullablePickerDate(utils, themeProps.minDate, defaultDates.minDate),
+    maxDate: parseNonNullablePickerDate(utils, themeProps.maxDate, defaultDates.maxDate),
   };
 }
 
