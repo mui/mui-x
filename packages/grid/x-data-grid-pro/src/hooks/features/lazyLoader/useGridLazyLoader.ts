@@ -26,18 +26,23 @@ function findSkeletonRowsSection(
   range: { firstRowIndex: number; lastRowIndex: number },
 ) {
   let { firstRowIndex, lastRowIndex } = range;
+  const visibleRowsSection = visibleRows.slice(range.firstRowIndex, range.lastRowIndex);
+  let startIndex = 0;
+  let endIndex = visibleRowsSection.length - 1;
   let isSkeletonSectionFound = false;
 
   while (!isSkeletonSectionFound && firstRowIndex < lastRowIndex) {
-    if (!visibleRows[firstRowIndex].model && !visibleRows[lastRowIndex].model) {
+    if (!visibleRowsSection[startIndex].model && !visibleRowsSection[endIndex].model) {
       isSkeletonSectionFound = true;
     }
 
-    if (visibleRows[firstRowIndex].model) {
+    if (visibleRowsSection[startIndex].model) {
+      startIndex += 1;
       firstRowIndex += 1;
     }
 
-    if (visibleRows[lastRowIndex].model) {
+    if (visibleRowsSection[endIndex].model) {
+      endIndex -= 1;
       lastRowIndex -= 1;
     }
   }
