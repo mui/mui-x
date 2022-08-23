@@ -271,7 +271,7 @@ const usdPrice: GridColTypeDef = {
 If an unsupported column type is used, the `string` column type will be used instead.
 :::
 
-## Selectors [<span class="plan-pro"></span>](https://mui.com/store/items/mui-x-pro/)
+## Selectors [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
 
 ### Visible columns
 

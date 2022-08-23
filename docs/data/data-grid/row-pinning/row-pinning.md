@@ -2,7 +2,7 @@
 title: Data Grid - Row pinning
 ---
 
-# Data grid - Row pinning [<span class="plan-pro"></span>](https://mui.com/store/items/mui-x-pro/)
+# Data grid - Row pinning [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
 
 <p class="description">Pin rows to keep them visible at all times.</p>
 

@@ -1,5 +1,5 @@
-import PropTypes from 'prop-types';
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import { useThemeProps } from '@mui/material/styles';
 import { useLicenseVerifier } from '@mui/x-license-pro';
 import useMediaQuery from '@mui/material/useMediaQuery';
@@ -77,7 +77,8 @@ export const DateRangePicker = React.forwardRef(function DateRangePicker<
     ...other
   } = props;
 
-  const isDesktop = useMediaQuery(desktopModeMediaQuery);
+  // defaults to `true` in environments where `window.matchMedia` would not be available (i.e. test/jsdom)
+  const isDesktop = useMediaQuery(desktopModeMediaQuery, { defaultMatches: true });
 
   if (isDesktop) {
     return (

@@ -18,6 +18,7 @@ export default function DataGridProDemo() {
         rowHeight={38}
         checkboxSelection
         disableSelectionOnClick
+        experimentalFeatures={{ newEditingApi: true }}
       />
     </Box>
   );

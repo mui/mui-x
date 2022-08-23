@@ -13,7 +13,6 @@ import { gridFilterableColumnDefinitionsSelector } from '../../../hooks/features
 import { useGridSelector } from '../../../hooks/utils/useGridSelector';
 import { GridFilterItem, GridLinkOperator } from '../../../models/gridFilterItem';
 import { useGridApiContext } from '../../../hooks/utils/useGridApiContext';
-import { GridTranslationKeys } from '../../../models/api/gridLocaleTextApi';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { getDataGridUtilityClass } from '../../../constants/gridClasses';
@@ -96,6 +95,10 @@ export interface GridFilterFormProps {
    * @default {}
    */
   valueInputProps?: any;
+  /**
+   * @ignore - do not document.
+   */
+  children?: React.ReactNode;
 }
 
 type OwnerState = { classes: DataGridProcessedProps['classes'] };
@@ -454,7 +457,7 @@ const GridFilterForm = React.forwardRef<HTMLDivElement, GridFilterFormProps>(
               <OptionComponent key={operator.value} value={operator.value}>
                 {operator.label ||
                   apiRef.current.getLocaleText(
-                    `filterOperator${capitalize(operator.value)}` as GridTranslationKeys,
+                    `filterOperator${capitalize(operator.value)}` as 'filterOperatorContains',
                   )}
               </OptionComponent>
             ))}
@@ -502,6 +505,10 @@ GridFilterForm.propTypes = {
    * @param {GridLinkOperator} operator The new logic operator.
    */
   applyMultiFilterOperatorChanges: PropTypes.func.isRequired,
+  /**
+   * @ignore - do not document.
+   */
+  children: PropTypes.node,
   /**
    * Props passed to the column input component.
    * @default {}

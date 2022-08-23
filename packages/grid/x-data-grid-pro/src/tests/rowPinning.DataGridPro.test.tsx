@@ -264,7 +264,10 @@ describe('<DataGridPro /> - Row pinning', () => {
 
       const [pinnedRow0, pinnedRow1, ...rows] = rowsData;
 
-      const getRowId = React.useCallback((row) => row.productId, []);
+      const getRowId = React.useCallback<NonNullable<DataGridProProps['getRowId']>>(
+        (row) => row.productId,
+        [],
+      );
 
       return (
         <div style={{ width: 302, height: 300 }}>
