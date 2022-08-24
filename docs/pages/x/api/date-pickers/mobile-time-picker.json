@@ -70,12 +70,12 @@
     }
   },
   "slots": {
-    "ActionBar": { "type": { "name": "elementType" } },
-    "LeftArrowButton": { "type": { "name": "elementType" } },
-    "LeftArrowIcon": { "type": { "name": "elementType" } },
-    "OpenPickerIcon": { "type": { "name": "elementType" } },
-    "RightArrowButton": { "type": { "name": "elementType" } },
-    "RightArrowIcon": { "type": { "name": "elementType" } }
+    "ActionBar": { "default": "PickersActionBar", "type": { "name": "elementType" } },
+    "LeftArrowButton": { "default": "IconButton", "type": { "name": "elementType" } },
+    "LeftArrowIcon": { "default": "ArrowLeft", "type": { "name": "elementType" } },
+    "OpenPickerIcon": { "default": "Calendar or `Clock`.", "type": { "name": "elementType" } },
+    "RightArrowButton": { "default": "IconButton", "type": { "name": "elementType" } },
+    "RightArrowIcon": { "default": "ArrowRight", "type": { "name": "elementType" } }
   },
   "name": "MobileTimePicker",
   "styles": { "classes": [], "globalClasses": {}, "name": "MuiMobileTimePicker" },
