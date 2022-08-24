@@ -68,7 +68,11 @@ export const useMultiInputDateRangeField = <TInputDate, TDate>(
     firstDefaultValue.current ??
     (dateRangePickerValueManager.emptyValue as unknown as DateRange<TInputDate>);
 
-  const validationError = useValidation({ ...inProps as any, value }, validateDateRange, () => true);
+  const validationError = useValidation(
+    { ...(inProps as any), value },
+    validateDateRange,
+    () => true,
+  );
   const inputError = React.useMemo(
     () => dateRangeFieldValueManager.hasError(validationError),
     [validationError],
