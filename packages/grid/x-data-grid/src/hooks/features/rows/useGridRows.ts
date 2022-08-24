@@ -327,7 +327,7 @@ export const useGridRows = (
           ids: updatedRows,
         },
       }));
-      apiRef.current.applySorting();
+      apiRef.current.publishEvent('rowsSet');
     },
     [apiRef, logger],
   );
@@ -346,8 +346,10 @@ export const useGridRows = (
       if (newRows.length && newRows.length !== lastRowToRender - firstRowToRender) {
         throw new Error(
           [
-            'MUI: The number of rows you want update is different than what was indicated',
-            'You need to pass rows which number is equal to the difference between the `firstRowToRender` and `lastRowToRender`.',
+            `MUI: The number of rows you want update is different than what was indicated.`,
+            `Based on the provided first and last indexes the number of rows provided should be ${
+              lastRowToRender - firstRowToRender
+            }}`,
           ].join('\n'),
         );
       }
@@ -375,9 +377,17 @@ export const useGridRows = (
       });
 
       newRows.forEach((row) => {
+        const rowTreeNodeConfig: GridRowTreeNodeConfig = {
+          ...row,
+          id: row.id,
+          parent: null,
+          depth: 0,
+          groupingKey: null,
+          groupingField: null,
+        };
         updatedIdRowsLookup[row.id] = row;
         updatedIdToIdLookup[row.id] = row.id;
-        updatedTree[row.id] = row as GridRowTreeNodeConfig;
+        updatedTree[row.id] = rowTreeNodeConfig;
       });
 
       apiRef.current.setState((state) => ({
@@ -390,7 +400,7 @@ export const useGridRows = (
           ids: updatedRows,
         },
       }));
-      apiRef.current.applySorting();
+      apiRef.current.publishEvent('rowsSet');
     },
     [apiRef, props.signature, props.getRowId],
   );

@@ -74,8 +74,8 @@ describe('<DataGridPro /> - Lazy Loader', () => {
     if (isJSDOM) {
       this.skip(); // Needs layout
     }
-    const handleFetchRows = spy();
-    render(<TestLazyLoader onFetchRows={handleFetchRows} rowCount={10} />);
+
+    render(<TestLazyLoader rowCount={10} />);
 
     // The 4th row should be a skeleton one
     expect(getRow(3).dataset.id).to.equal('auto-generated-skeleton-row-root-0');
