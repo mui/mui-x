@@ -6,7 +6,6 @@ import {
 } from '@mui/x-data-grid-pro';
 import {
   createFakeServer,
-  QueryOptions,
   loadServerRows,
   UseDemoDataOptions,
 } from '@mui/x-data-grid-generator';
@@ -19,51 +18,74 @@ const DATASET_OPTION: UseDemoDataOptions = {
 const { columns, columnsWithDefaultColDef, useQuery } =
   createFakeServer(DATASET_OPTION);
 
-export default function LazyLoadingGrid() {
-  const apiRef = useGridApiRef();
-  const [queryOptions, setQueryOptions] = React.useState<QueryOptions>({});
-  const { data } = useQuery(queryOptions);
-  const initialRows = React.useMemo(() => data.slice(0, 10), [data]);
+const emptyObject = {};
 
-  const handleFetchRows = async (params: GridFetchRowsParams) => {
-    // Bug, it shouldn't be triggered for the initial rendering
-    if (data.length === 0) {
+export default function LazyLoadingGrid() {
+  // dataServerSide simulates your database.
+  const { data: dataServerSide } = useQuery(emptyObject);
+
+  const apiRef = useGridApiRef();
+  const [initialRows, setInitialRows] = React.useState<typeof dataServerSide>([]);
+  const [rowCount, setRowCount] = React.useState(0);
+
+  const fetchRow = React.useCallback(
+    async (params: GridFetchRowsParams) => {
+      const serverRows = await loadServerRows(
+        dataServerSide,
+        {
+          filterModel: params.filterModel,
+          sortModel: params.sortModel,
+        },
+        {
+          minDelay: 300,
+          maxDelay: 800,
+          useCursorPagination: false,
+        },
+        columnsWithDefaultColDef,
+      );
+
+      return {
+        slice: serverRows.returnedRows.slice(
+          params.firstRowToRender,
+          params.lastRowToRender,
+        ),
+        total: serverRows.returnedRows.length,
+      };
+    },
+    [dataServerSide],
+  );
+
+  // The initial fetch request of the viewport.
+  React.useEffect(() => {
+    if (dataServerSide.length === 0) {
       return;
     }
 
-    setQueryOptions((prev) => {
-      if (
-        prev.filterModel === params.filterModel &&
-        prev.sortModel === params.sortModel
-      ) {
-        return prev;
-      }
+    (async () => {
+      const { slice, total } = await fetchRow({
+        firstRowToRender: 0,
+        lastRowToRender: 10,
+        sortModel: [],
+        filterModel: {
+          items: [],
+        },
+      });
 
-      return {
-        filterModel: params.filterModel,
-        sortModel: params.sortModel,
-      };
-    });
+      setInitialRows(slice);
+      setRowCount(total);
+    })();
+  }, [dataServerSide, fetchRow]);
 
-    const serverRows = await loadServerRows(
-      data,
-      {
-        filterModel: params.filterModel,
-        sortModel: params.sortModel,
-      },
-      {
-        minDelay: 300,
-        maxDelay: 800,
-        useCursorPagination: false,
-      },
-      columnsWithDefaultColDef,
-    );
+  // Fetch rows as they become visible in the viewport
+  const handleFetchRows = async (params: GridFetchRowsParams) => {
+    const { slice, total } = await fetchRow(params);
 
     apiRef.current.replaceRows(
       params.firstRowToRender,
       params.lastRowToRender,
-      serverRows.returnedRows.slice(params.firstRowToRender, params.lastRowToRender),
+      slice,
     );
+    setRowCount(total);
   };
 
   return (
@@ -73,7 +95,7 @@ export default function LazyLoadingGrid() {
         rows={initialRows}
         apiRef={apiRef}
         hideFooterPagination
-        rowCount={data.length}
+        rowCount={rowCount}
         sortingMode="server"
         filterMode="server"
         rowsLoadingMode="server"

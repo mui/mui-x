@@ -63,15 +63,7 @@ describe('<DataGridPro /> - Lazy loader', () => {
       this.skip(); // Needs layout
     }
     const handleFetchRows = spy();
-    const rows = [
-      { id: 1 },
-      { id: 2 },
-      { id: 3 },
-      { id: 4 },
-      { id: 5 },
-      { id: 6 },
-      { id: 7 },
-    ];
+    const rows = [{ id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }, { id: 5 }, { id: 6 }, { id: 7 }];
     render(<TestLazyLoader onFetchRows={handleFetchRows} rowCount={50} rows={rows} />);
     expect(handleFetchRows.callCount).to.equal(0);
   });
