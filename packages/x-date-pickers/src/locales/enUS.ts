@@ -16,6 +16,10 @@ const enUSPickers: PickersLocaleText<any> = {
     view === 'year'
       ? 'year view is open, switch to calendar view'
       : 'calendar view is open, switch to year view',
+  inputModeToggleButtonAriaLabel: (isKeyboardInputOpen: boolean, viewType: 'calendar' | 'clock') =>
+    isKeyboardInputOpen
+      ? `text input view is open, go to ${viewType} view`
+      : `${viewType} view is open, go to text input view`,
 
   // DateRange placeholders
   start: 'Start',
@@ -26,6 +30,12 @@ const enUSPickers: PickersLocaleText<any> = {
   clearButtonLabel: 'Clear',
   okButtonLabel: 'OK',
   todayButtonLabel: 'Today',
+
+  // Toolbar titles
+  datePickerDefaultToolbarTitle: 'Select date',
+  dateTimePickerDefaultToolbarTitle: 'Select date & time',
+  timePickerDefaultToolbarTitle: 'Select time',
+  dateRangePickerDefaultToolbarTitle: 'Select date range',
 
   // Clock labels
   clockLabelText: (view, time, adapter) =>
