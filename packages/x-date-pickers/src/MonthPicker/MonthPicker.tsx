@@ -58,7 +58,10 @@ const useUtilityClasses = (ownerState: MonthPickerProps<any>) => {
 export function useMonthPickerDefaultizedProps<TDate>(
   props: MonthPickerProps<TDate>,
   name: string,
-): DefaultizedProps<MonthPickerProps<TDate>, 'minDate' | 'maxDate'> {
+): DefaultizedProps<
+  MonthPickerProps<TDate>,
+  'minDate' | 'maxDate' | 'disableFuture' | 'disablePast'
+> {
   const utils = useUtils<TDate>();
   const defaultDates = useDefaultDates<TDate>();
   const themeProps = useThemeProps({
@@ -67,6 +70,8 @@ export function useMonthPickerDefaultizedProps<TDate>(
   });
 
   return {
+    disableFuture: true,
+    disablePast: true,
     ...themeProps,
     minDate: parseNonNullablePickerDate(utils, themeProps.minDate, defaultDates.minDate),
     maxDate: parseNonNullablePickerDate(utils, themeProps.maxDate, defaultDates.maxDate),

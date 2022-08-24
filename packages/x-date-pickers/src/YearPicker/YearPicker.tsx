@@ -26,7 +26,10 @@ const useUtilityClasses = (ownerState: any) => {
 function useYearPickerDefaultizedProps<TDate>(
   props: YearPickerProps<TDate>,
   name: string,
-): DefaultizedProps<YearPickerProps<TDate>, 'minDate' | 'maxDate'> {
+): DefaultizedProps<
+  YearPickerProps<TDate>,
+  'minDate' | 'maxDate' | 'disableFuture' | 'disablePast'
+> {
   const utils = useUtils<TDate>();
   const defaultDates = useDefaultDates<TDate>();
   const themeProps = useThemeProps({
@@ -35,11 +38,11 @@ function useYearPickerDefaultizedProps<TDate>(
   });
 
   return {
+    disablePast: false,
+    disableFuture: false,
     ...themeProps,
     minDate: parseNonNullablePickerDate(utils, themeProps.minDate, defaultDates.minDate),
     maxDate: parseNonNullablePickerDate(utils, themeProps.maxDate, defaultDates.maxDate),
-    disablePast: false,
-    disableFuture: false,
   };
 }
 

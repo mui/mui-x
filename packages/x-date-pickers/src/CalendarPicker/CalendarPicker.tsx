@@ -231,7 +231,6 @@ const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
     onYearChange,
     onMonthChange,
     reduceAnimations,
-    renderLoading,
     shouldDisableDate,
     shouldDisableMonth,
     shouldDisableYear,
@@ -477,7 +476,6 @@ const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
               reduceAnimations={reduceAnimations}
               selectedDays={[date]}
               onSelectedDaysChange={onSelectedDayChange}
-              renderLoading={renderLoading}
               shouldDisableDate={shouldDisableDate}
               gridLabelId={gridLabelId}
             />
