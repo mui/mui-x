@@ -1,5 +1,5 @@
 <DataGridPro
-  columns={cachedColumns}
+  columns={columns}
   rows={cachedRows}
   apiRef={apiRef}
   hideFooterPagination

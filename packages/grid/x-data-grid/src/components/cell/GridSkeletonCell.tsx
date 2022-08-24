@@ -36,7 +36,7 @@ function GridSkeletonCell(props: React.HTMLAttributes<HTMLDivElement> & GridSkel
 
   return (
     <div className={classes.root} style={{ width }} {...other}>
-      <Skeleton sx={{ mx: 1 }} width={`${contentWidth}%`} />
+      <Skeleton width={`${contentWidth}%`} />
     </div>
   );
 }

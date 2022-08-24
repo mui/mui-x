@@ -19,7 +19,6 @@ export default function LazyLoadingGrid() {
   const cachedQuery = React.useMemo(() => ({}), []);
   const { data, loadServerRowsInterval } = useQuery(cachedQuery);
   const cachedRows = React.useMemo(() => data.slice(0, 10), [data]);
-  const cachedColumns = React.useMemo(() => columns, []);
 
   const handleFetchRows = async (params: GridFetchRowsParams) => {
     const newRowsBatch = await loadServerRowsInterval(params);
@@ -34,7 +33,7 @@ export default function LazyLoadingGrid() {
   return (
     <div style={{ height: 400, width: '100%' }}>
       <DataGridPro
-        columns={cachedColumns}
+        columns={columns}
         rows={cachedRows}
         apiRef={apiRef}
         hideFooterPagination
