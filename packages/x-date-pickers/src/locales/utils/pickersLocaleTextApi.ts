@@ -14,6 +14,10 @@ export interface PickersLocaleText<TDate> {
   start: string;
   end: string;
   calendarViewSwitchingButtonAriaLabel: (currentView: CalendarPickerView) => string;
+  inputModeToggleButtonAriaLabel: (
+    isKeyboardInputOpen: boolean,
+    viewType: 'calendar' | 'clock',
+  ) => string;
   clockLabelText: (
     view: ClockPickerView,
     time: TDate | null,
@@ -26,6 +30,10 @@ export interface PickersLocaleText<TDate> {
   openTimePickerDialogue: (date: TDate, utils: MuiPickersAdapter<TDate>) => string;
   timeTableLabel: string;
   dateTableLabel: string;
+  datePickerDefaultToolbarTitle: string;
+  dateTimePickerDefaultToolbarTitle: string;
+  timePickerDefaultToolbarTitle: string;
+  dateRangePickerDefaultToolbarTitle: string;
 }
 
 export type PickersTranslationKeys = keyof PickersLocaleText<any>;

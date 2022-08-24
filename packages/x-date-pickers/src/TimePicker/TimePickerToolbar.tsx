@@ -5,7 +5,7 @@ import { PickersToolbarText } from '../internals/components/PickersToolbarText';
 import { PickersToolbarButton } from '../internals/components/PickersToolbarButton';
 import { PickersToolbar, pickersToolbarClasses } from '../internals/components/PickersToolbar';
 import { arrayIncludes } from '../internals/utils/utils';
-import { useUtils } from '../internals/hooks/useUtils';
+import { useLocaleText, useUtils } from '../internals/hooks/useUtils';
 import { useMeridiemMode } from '../internals/hooks/date-helpers-hooks';
 import { BaseToolbarProps } from '../internals/models/props/baseToolbarProps';
 import {
@@ -114,13 +114,16 @@ export const TimePickerToolbar = <TDate extends unknown>(
     openView,
     setOpenView,
     toggleMobileKeyboardView,
-    toolbarTitle = 'Select time',
+    toolbarTitle: toolbarTitleProp,
     views,
     disabled,
     readOnly,
     ...other
   } = props;
   const utils = useUtils<TDate>();
+  const localeText = useLocaleText();
+
+  const toolbarTitle = toolbarTitleProp ?? localeText.timePickerDefaultToolbarTitle;
   const theme = useTheme();
   const showAmPmControl = Boolean(ampm && !ampmInClock);
   const { meridiemMode, handleMeridiemChange } = useMeridiemMode(parsedValue, ampm, onChange);
