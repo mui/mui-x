@@ -4,7 +4,6 @@ import {
   useDefaultDates,
   useUtils,
   useLocaleText,
-  ExportedDateValidationProps,
   PickersArrowSwitcher,
   usePreviousMonthDisabled,
   useNextMonthDisabled,
@@ -12,6 +11,7 @@ import {
   buildDeprecatedPropsWarning,
   DayPickerProps,
   DAY_MARGIN,
+  DayValidationProps,
   ExportedPickersArrowSwitcherProps,
   PickersArrowSwitcherSlotsComponent,
   PickersArrowSwitcherSlotsComponentsProps,
@@ -48,7 +48,7 @@ export interface DesktopDateRangeCalendarSlotsComponentsProps
 interface DateRangePickerViewDesktopProps<TDate>
   extends ExportedDateRangePickerViewDesktopProps<TDate>,
     Omit<DayPickerProps<TDate>, 'selectedDays' | 'renderDay' | 'onFocusedDayChange'>,
-    ExportedDateValidationProps<TDate>,
+    DayValidationProps<TDate>,
     ExportedPickersArrowSwitcherProps {
   /**
    * Overrideable components.

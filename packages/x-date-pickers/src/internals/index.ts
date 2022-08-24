@@ -54,6 +54,7 @@ export { usePickerState } from './hooks/usePickerState';
 export type { PickerStateProps, PickerStatePickerProps } from './hooks/usePickerState';
 export type { PickerStateValueManager, PickerSelectionState } from './hooks/usePickerState';
 export { useDefaultDates, useUtils, useLocaleText } from './hooks/useUtils';
+export type { BaseDateValidationProps, DayValidationProps } from './hooks/validation/models';
 export { useValidation } from './hooks/validation/useValidation';
 export type { ValidationProps, Validator } from './hooks/validation/useValidation';
 export { validateDate } from './hooks/validation/useDateValidation';
@@ -68,7 +69,9 @@ export type { BasePickerProps } from './models/props/basePickerProps';
 export type { StaticPickerProps } from './models/props/staticPickerProps';
 export type { BaseToolbarProps } from './models/props/baseToolbarProps';
 export type { MuiPickersAdapter } from './models/muiPickersAdapter';
+export type { DefaultizedProps } from './models/helpers';
 
+export { parseNonNullablePickerDate } from './utils/date-utils';
 export { executeInTheNextEventLoopTick, onSpaceOrEnter } from './utils/utils';
 export { defaultReduceAnimations } from './utils/defaultReduceAnimations';
 export { buildDeprecatedPropsWarning } from './utils/warning';

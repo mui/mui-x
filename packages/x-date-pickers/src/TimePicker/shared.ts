@@ -11,6 +11,7 @@ import { ClockPickerView } from '../internals/models';
 import { PickerStateValueManager } from '../internals/hooks/usePickerState';
 import { parsePickerInputValue } from '../internals/utils/date-utils';
 import { BaseToolbarProps } from '../internals/models/props/baseToolbarProps';
+import { DefaultizedProps } from '../internals/models/helpers';
 
 export interface BaseTimePickerProps<TInputDate, TDate>
   extends ExportedClockPickerProps<TDate>,
@@ -48,7 +49,6 @@ export interface BaseTimePickerProps<TInputDate, TDate>
   components?: any;
 }
 
-type DefaultizedProps<Props> = Props & { inputFormat: string };
 export function useTimePickerDefaultizedProps<
   TInputDate,
   TDate,
@@ -56,8 +56,7 @@ export function useTimePickerDefaultizedProps<
 >(
   props: Props,
   name: string,
-): DefaultizedProps<Props> &
-  Required<Pick<BaseTimePickerProps<TInputDate, TDate>, 'openTo' | 'views'>> {
+): DefaultizedProps<Props, 'openTo' | 'views', { inputFormat: string }> {
   // This is technically unsound if the type parameters appear in optional props.
   // Optional props can be filled by `useThemeProps` with types that don't match the type parameters.
   const themeProps = useThemeProps({ props, name });
