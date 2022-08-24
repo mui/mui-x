@@ -1,4 +1,5 @@
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import { unstable_composeClasses as composeClasses } from '@mui/material';
 import IconButton from '@mui/material/IconButton';
 import { switchClasses } from '@mui/material/Switch';
@@ -59,7 +60,7 @@ const GridIconButtonRoot = styled(IconButton)({
 });
 
 export interface GridColumnsPanelProps extends GridPanelWrapperProps {
-  /**
+  /*
    * Changes how the options in the columns selector should be ordered.
    * If not specified, the order is derived from the `columns` prop.
    */
@@ -68,7 +69,7 @@ export interface GridColumnsPanelProps extends GridPanelWrapperProps {
 
 const collator = new Intl.Collator();
 
-export function GridColumnsPanel(props: GridColumnsPanelProps) {
+function GridColumnsPanel(props: GridColumnsPanelProps) {
   const apiRef = useGridApiContext();
   const searchInputRef = React.useRef<HTMLInputElement>(null);
   const columns = useGridSelector(apiRef, gridColumnDefinitionsSelector);
@@ -85,10 +86,12 @@ export function GridColumnsPanel(props: GridColumnsPanelProps) {
         return [...columns].sort((a, b) =>
           collator.compare(a.headerName || a.field, b.headerName || b.field),
         );
+
       case 'desc':
         return [...columns].sort(
           (a, b) => -collator.compare(a.headerName || a.field, b.headerName || b.field),
         );
+
       default:
         return columns;
     }
@@ -212,3 +215,13 @@ export function GridColumnsPanel(props: GridColumnsPanelProps) {
     </GridPanelWrapper>
   );
 }
+
+GridColumnsPanel.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // ----------------------------------------------------------------------
+  sort: PropTypes.oneOf(['asc', 'desc']),
+} as any;
+
+export { GridColumnsPanel };
