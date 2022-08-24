@@ -7,7 +7,7 @@ import { adapterToUse, createPickerRenderer } from '../../../../test/utils/picke
 import { CalendarPickerView } from '../internals/models/views';
 
 describe('<StaticDatePicker /> keyboard interactions', () => {
-  const { render } = createPickerRenderer({ clock: 'fake' });
+  const { render, clock } = createPickerRenderer({ clock: 'fake' });
 
   describe('Calendar keyboard navigation', () => {
     it('can autofocus selected day on mount', () => {
@@ -47,6 +47,38 @@ describe('<StaticDatePicker /> keyboard interactions', () => {
         // eslint-disable-next-line material-ui/disallow-active-element-as-key-event-target
         fireEvent.keyDown(document.activeElement!, { key });
 
+        // Based on column header, screen reader should pronounce <Day Number> <Week Day>
+        // But `toHaveAccessibleName` does not do the link between column header and cell value, so we only get <day number> in test
+        expect(document.activeElement).toHaveAccessibleName(expectFocusedDay);
+      });
+    });
+
+    [
+      // Switch between months
+      { initialDay: 1, key: 'ArrowLeft', expectFocusedDay: '31' },
+      { initialDay: 5, key: 'ArrowUp', expectFocusedDay: '29' },
+      { initialDay: 31, key: 'ArrowRight', expectFocusedDay: '1' },
+      { initialDay: 30, key: 'ArrowDown', expectFocusedDay: '6' },
+      // Switch between weeks
+      { initialDay: 10, key: 'ArrowLeft', expectFocusedDay: '9' },
+      { initialDay: 9, key: 'ArrowRight', expectFocusedDay: '10' },
+    ].forEach(({ initialDay, key, expectFocusedDay }) => {
+      it(key, () => {
+        render(
+          <StaticDatePicker
+            autoFocus
+            displayStaticWrapperAs="desktop"
+            value={adapterToUse.date(new Date(2020, 7, initialDay))}
+            onChange={() => {}}
+            renderInput={(params) => <TextField placeholder="10/10/2018" {...params} />}
+          />,
+        );
+
+        // Don't care about what's focused.
+        // eslint-disable-next-line material-ui/disallow-active-element-as-key-event-target
+        fireEvent.keyDown(document.activeElement!, { key });
+
+        clock.runToLast();
         // Based on column header, screen reader should pronounce <Day Number> <Week Day>
         // But `toHaveAccessibleName` does not do the link between column header and cell value, so we only get <day number> in test
         expect(document.activeElement).toHaveAccessibleName(expectFocusedDay);
