@@ -58,6 +58,24 @@ describe('<DataGridPro /> - Lazy loader', () => {
     );
   };
 
+  it('should not call onFetchRows if the viewport is fully loaded', function test() {
+    if (isJSDOM) {
+      this.skip(); // Needs layout
+    }
+    const handleFetchRows = spy();
+    const rows = [
+      { id: 1 },
+      { id: 2 },
+      { id: 3 },
+      { id: 4 },
+      { id: 5 },
+      { id: 6 },
+      { id: 7 },
+    ];
+    render(<TestLazyLoader onFetchRows={handleFetchRows} rowCount={50} rows={rows} />);
+    expect(handleFetchRows.callCount).to.equal(0);
+  });
+
   it('should call onFetchRows when sorting is applied', function test() {
     if (isJSDOM) {
       this.skip(); // Needs layout
@@ -65,8 +83,9 @@ describe('<DataGridPro /> - Lazy loader', () => {
     const handleFetchRows = spy();
     render(<TestLazyLoader onFetchRows={handleFetchRows} rowCount={50} />);
 
-    fireEvent.click(getColumnHeaderCell(0));
+    expect(handleFetchRows.callCount).to.equal(1);
     // Should be 2. When tested in the browser it's called only 2 time
+    fireEvent.click(getColumnHeaderCell(0));
     expect(handleFetchRows.callCount).to.equal(3);
   });
 
