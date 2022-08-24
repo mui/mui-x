@@ -5,11 +5,11 @@ import { GridFilterModel, GridSortModel } from '@mui/x-data-grid/models';
  */
 export interface GridFetchRowsParams {
   /**
-   * The index of the first row to render
+   * The index of the first row to render.
    */
   firstRowToRender: number;
   /**
-   * The index of the last row to render
+   * The index of the last row to render.
    */
   lastRowToRender: number;
   /**
