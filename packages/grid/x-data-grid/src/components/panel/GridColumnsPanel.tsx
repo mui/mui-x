@@ -70,6 +70,20 @@ export function GridColumnsPanel(props: GridColumnsPanelProps) {
   const ownerState = { classes: rootProps.classes };
   const classes = useUtilityClasses(ownerState);
 
+  const sortedColumns = React.useMemo(() => {
+        if (rootProps.componentsProps?.columnsPanel.sort === 'asc') {
+          return [...columns].sort((a, b) =>
+            (a.headerName || a.field) > (b.headerName || b.field) ? 1 : -1,
+         );
+        } else if (rootProps.componentsProps?.columnsPanel.sort === 'desc') {
+          return [...columns].sort((a, b) =>
+            (a.headerName || a.field) < (b.headerName || b.field) ? 1 : -1,
+          );
+        } else {
+          return columns;
+        }
+      }, [columns, rootProps.componentsProps?.columnsPanel.sort]);
+
   const toggleColumn = (event: React.MouseEvent<HTMLButtonElement>) => {
     const { name: field } = event.target as HTMLInputElement;
     apiRef.current.setColumnVisibility(field, columnVisibilityModel[field] === false);
@@ -112,14 +126,14 @@ export function GridColumnsPanel(props: GridColumnsPanelProps) {
 
   const currentColumns = React.useMemo(() => {
     if (!searchValue) {
-      return columns;
+      return sortedColumns;
     }
     const searchValueToCheck = searchValue.toLowerCase();
-    return columns.filter(
+    return sortedColumns.filter(
       (column) =>
         (column.headerName || column.field).toLowerCase().indexOf(searchValueToCheck) > -1,
     );
-  }, [columns, searchValue]);
+  }, [sortedColumns, searchValue]);
 
   React.useEffect(() => {
     searchInputRef.current!.focus();
