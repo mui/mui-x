@@ -2,6 +2,7 @@ import type {
   GridColumnMenuState,
   GridColumnsInitialState,
   GridColumnsState,
+  GridColumnsGroupingState,
   GridDensityState,
   GridFilterInitialState,
   GridFilterState,
@@ -28,6 +29,7 @@ export interface GridStateCommunity {
   editRows: GridEditRowsModel;
   pagination: GridPaginationState;
   columns: GridColumnsState;
+  columnGrouping: GridColumnsGroupingState;
   columnMenu: GridColumnMenuState;
   sorting: GridSortingState;
   focus: GridFocusState;

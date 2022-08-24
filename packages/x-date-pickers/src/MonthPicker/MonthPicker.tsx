@@ -160,6 +160,8 @@ export const MonthPicker = React.forwardRef(function MonthPicker<TDate>(
     onChange(newDate, 'finish');
   };
 
+  const currentMonthNumber = utils.getMonth(now);
+
   return (
     <MonthPickerRoot
       ref={ref}
@@ -178,6 +180,7 @@ export const MonthPicker = React.forwardRef(function MonthPicker<TDate>(
             selected={monthNumber === focusedMonth}
             onSelect={onMonthSelect}
             disabled={disabled || isMonthDisabled(month)}
+            aria-current={currentMonthNumber === monthNumber ? 'date' : undefined}
           >
             {monthText}
           </PickersMonth>

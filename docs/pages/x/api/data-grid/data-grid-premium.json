@@ -70,7 +70,7 @@
     "experimentalFeatures": {
       "type": {
         "name": "shape",
-        "description": "{ aggregation?: bool, newEditingApi?: bool, preventCommitWhileValidating?: bool, rowPinning?: bool, warnIfFocusStateIsNotSynced?: bool }"
+        "description": "{ aggregation?: bool, columnGrouping?: bool, newEditingApi?: bool, preventCommitWhileValidating?: bool, rowPinning?: bool, warnIfFocusStateIsNotSynced?: bool }"
       }
     },
     "filterMode": {
@@ -279,6 +279,7 @@
       "columnHeader--sorted",
       "columnHeader--filtered",
       "columnHeader",
+      "columnGroupHeader",
       "columnHeaderCheckbox",
       "columnHeaderDraggableContainer",
       "rowReorderCellPlaceholder",
@@ -286,6 +287,9 @@
       "columnHeaderTitle",
       "columnHeaderTitleContainer",
       "columnHeaderTitleContainerContent",
+      "columnHeader--filledGroup",
+      "columnHeader--emptyGroup",
+      "columnHeader--showColumnBorder",
       "columnHeaders",
       "columnHeadersInner",
       "columnHeadersInner--scrollable",
