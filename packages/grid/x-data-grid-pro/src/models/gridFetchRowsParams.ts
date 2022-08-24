@@ -9,7 +9,7 @@ export interface GridFetchRowsParams {
    */
   firstRowToRender: number;
   /**
-   * The index of the last row to render
+   * The index of the last row to render.
    */
   lastRowToRender: number;
   /**
