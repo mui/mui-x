@@ -16,7 +16,7 @@ import { spy } from 'sinon';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
-describe('<DataGridPro /> - Lazy Loader', () => {
+describe('<DataGridPro /> - Lazy loader', () => {
   const { render } = createRenderer();
 
   const baselineProps: { rows: GridRowsProp; columns: GridColumns } = {
