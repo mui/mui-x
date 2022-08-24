@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { styled, useThemeProps } from '@mui/material/styles';
 import { unstable_composeClasses as composeClasses } from '@mui/material';
+import { unstable_useId as useId } from '@mui/material/utils';
 import { MonthPicker, MonthPickerProps } from '../MonthPicker/MonthPicker';
 import { useCalendarState } from './useCalendarState';
 import { useDefaultDates, useUtils } from '../internals/hooks/useUtils';
@@ -177,6 +178,7 @@ const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
   ref: React.Ref<HTMLDivElement>,
 ) {
   const utils = useUtils<TDate>();
+  const id = useId();
   const defaultDates = useDefaultDates<TDate>();
 
   const props = useThemeProps({
@@ -381,6 +383,8 @@ const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
     disabled,
   };
 
+  const gridLabelId = `${id}-grid-label`;
+
   return (
     <CalendarPickerRoot ref={ref} className={clsx(classes.root, className)} ownerState={ownerState}>
       <PickersCalendarHeader
@@ -396,6 +400,7 @@ const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
         disablePast={disablePast}
         disableFuture={disableFuture}
         reduceAnimations={reduceAnimations}
+        labelId={gridLabelId}
       />
       <CalendarPickerViewTransitionContainer
         reduceAnimations={reduceAnimations}
@@ -442,6 +447,7 @@ const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
               loading={loading}
               renderLoading={renderLoading}
               shouldDisableDate={shouldDisableDate}
+              gridLabelId={gridLabelId}
             />
           )}
         </div>

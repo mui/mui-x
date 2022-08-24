@@ -110,6 +110,7 @@ export const PickersSlideTransition = ({
           classNames: transitionClasses,
         })
       }
+      role="presentation"
     >
       <CSSTransition
         mountOnEnter
