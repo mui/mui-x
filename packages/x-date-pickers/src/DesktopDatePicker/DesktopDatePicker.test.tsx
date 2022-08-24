@@ -46,6 +46,32 @@ describe('<DesktopDatePicker />', () => {
     expect(getByTestId('component-test')).not.to.equal(null);
   });
 
+  it('prop: components.PaperContent', () => {
+    function CustomPaperContent({ children }) {
+      return (
+        <div>
+          <p>test custom content</p>
+          {children}
+        </div>
+      );
+    }
+    render(
+      <DesktopDatePicker
+        renderInput={(params) => <TextField {...params} />}
+        onChange={() => {}}
+        value={null}
+        components={{
+          PaperContent: CustomPaperContent,
+        }}
+      />,
+    );
+
+    openPicker({ type: 'date', variant: 'desktop' });
+
+    expect(screen.getByText('test custom content')).not.equal(null);
+    expect(screen.getByText('January 1970')).not.equal(null);
+  });
+
   ['readOnly', 'disabled'].forEach((prop) => {
     it(`cannot be opened when "Choose date" is clicked when ${prop}={true}`, () => {
       const handleOpen = spy();
@@ -638,6 +664,69 @@ describe('<DesktopDatePicker />', () => {
       expect(onAccept.callCount).to.equal(1);
       expect(onAccept.lastCall.args[0]).toEqualDateTime(new Date(2025, 0, 1));
       expect(onClose.callCount).to.equal(1);
+    });
+  });
+
+  describe('Month navigation', () => {
+    it('should not allow to navigate to previous month if props.minDate is after the last date of the previous month', () => {
+      render(
+        <WrappedDesktopDatePicker
+          initialValue={adapterToUse.date(new Date(2018, 1, 10))}
+          minDate={adapterToUse.date(new Date(2018, 1, 5))}
+        />,
+      );
+
+      openPicker({ type: 'date', variant: 'desktop' });
+
+      expect(screen.getByLabelText('Previous month')).to.have.attribute('disabled');
+    });
+
+    it('should allow to navigate to previous month if props.minDate is the last date of the previous month', () => {
+      render(
+        <WrappedDesktopDatePicker
+          initialValue={adapterToUse.date(new Date(2018, 1, 10))}
+          minDate={adapterToUse.date(new Date(2018, 0, 31))}
+        />,
+      );
+
+      openPicker({ type: 'date', variant: 'desktop' });
+
+      expect(screen.getByLabelText('Previous month')).not.to.have.attribute('disabled');
+    });
+
+    it('should not allow to navigate to previous month if props.maxDate is before the last date of the next month', () => {
+      render(
+        <WrappedDesktopDatePicker
+          initialValue={adapterToUse.date(new Date(2018, 1, 10))}
+          maxDate={adapterToUse.date(new Date(2018, 1, 20))}
+        />,
+      );
+
+      openPicker({ type: 'date', variant: 'desktop' });
+
+      expect(screen.getByLabelText('Next month')).to.have.attribute('disabled');
+    });
+
+    it('should allow to navigate to next month if props.maxDate is the first date of the next month', () => {
+      render(
+        <WrappedDesktopDatePicker
+          initialValue={adapterToUse.date(new Date(2018, 1, 10))}
+          minDate={adapterToUse.date(new Date(2018, 0, 1))}
+        />,
+      );
+
+      openPicker({ type: 'date', variant: 'desktop' });
+
+      expect(screen.getByLabelText('Next month')).not.to.have.attribute('disabled');
+    });
+
+    it('should allow to navigate to previous and next month if props.minDate == null', () => {
+      render(<WrappedDesktopDatePicker initialValue={null} minDate={null} />);
+
+      openPicker({ type: 'date', variant: 'desktop' });
+
+      expect(screen.getByLabelText('Previous month')).not.to.have.attribute('disabled');
+      expect(screen.getByLabelText('Next month')).not.to.have.attribute('disabled');
     });
   });
 });
