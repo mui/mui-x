@@ -14,7 +14,7 @@ export interface PickersLocaleText<TDate> {
   start: string;
   end: string;
   calendarViewSwitchingButtonAriaLabel: (currentView: CalendarPickerView) => string;
-  toolbarInterfaceModifierButtonAriaLabel: (
+  inputModeToggleButtonAriaLabel: (
     isKeyboardInputOpen: boolean,
     viewType: 'calendar' | 'clock',
   ) => string;
