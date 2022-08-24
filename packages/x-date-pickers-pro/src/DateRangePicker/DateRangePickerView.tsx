@@ -10,6 +10,7 @@ import {
   useCalendarState,
   PickerStatePickerProps,
   DayPickerProps,
+  BaseDateValidationProps,
 } from '@mui/x-date-pickers/internals';
 import { DateRange, CurrentlySelectingRangeEndProps } from '../internal/models/dateRange';
 import { isRangeValid } from '../internal/utils/date-utils';
@@ -37,7 +38,10 @@ export interface DateRangePickerViewSlotsComponentsProps
 
 export interface ExportedDateRangePickerViewProps<TDate>
   extends ExportedDesktopDateRangeCalendarProps<TDate>,
-    Omit<ExportedCalendarPickerProps<TDate>, 'onYearChange' | 'renderDay'> {
+    Omit<
+      ExportedCalendarPickerProps<TDate>,
+      'onYearChange' | 'renderDay' | keyof BaseDateValidationProps<TDate>
+    > {
   /**
    * Overrideable components.
    * @default {}
@@ -75,7 +79,8 @@ export interface ExportedDateRangePickerViewProps<TDate>
 interface DateRangePickerViewProps<TInputDate, TDate>
   extends CurrentlySelectingRangeEndProps,
     ExportedDateRangePickerViewProps<TDate>,
-    PickerStatePickerProps<DateRange<TDate>> {
+    PickerStatePickerProps<DateRange<TDate>>,
+    Required<BaseDateValidationProps<TDate>> {
   calendars: 1 | 2 | 3;
   open: boolean;
   startText: React.ReactNode;
