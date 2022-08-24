@@ -12,7 +12,11 @@ export type {
 } from './components/wrappers/MobileWrapper';
 export { MobileKeyboardInputView } from './components/CalendarOrClockPicker/CalendarOrClockPicker';
 export { PickersArrowSwitcher } from './components/PickersArrowSwitcher/PickersArrowSwitcher';
-export type { ExportedPickersArrowSwitcherProps } from './components/PickersArrowSwitcher';
+export type {
+  ExportedPickersArrowSwitcherProps,
+  PickersArrowSwitcherSlotsComponent,
+  PickersArrowSwitcherSlotsComponentsProps,
+} from './components/PickersArrowSwitcher';
 export { PickerStaticWrapper } from './components/PickerStaticWrapper/PickerStaticWrapper';
 export type {
   PickersStaticWrapperSlotsComponent,

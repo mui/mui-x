@@ -82,10 +82,10 @@ export const PickersArrowSwitcher = React.forwardRef(function PickersArrowSwitch
   });
 
   const LeftArrowIcon = components?.LeftArrowIcon ?? ArrowLeft;
-  const leftArrowIconProps = useSlotProps({
+  const { ownerState: leftArrowIconOwnerState, ...leftArrowIconProps } = useSlotProps({
     elementType: LeftArrowIcon,
     externalSlotProps: componentsProps.leftArrowIcon,
-    ownerState,
+    ownerState: undefined,
   });
 
   const RightArrowButton = components.RightArrowButton ?? PickersArrowSwitcherButton;
@@ -105,10 +105,10 @@ export const PickersArrowSwitcher = React.forwardRef(function PickersArrowSwitch
   });
 
   const RightArrowIcon = components?.RightArrowIcon ?? ArrowRight;
-  const rightArrowIconProps = useSlotProps({
+  const { ownerState: rightArrowIconOwnerState, ...rightArrowIconProps } = useSlotProps({
     elementType: RightArrowIcon,
     externalSlotProps: componentsProps.rightArrowIcon,
-    ownerState,
+    ownerState: undefined,
   });
 
   return (

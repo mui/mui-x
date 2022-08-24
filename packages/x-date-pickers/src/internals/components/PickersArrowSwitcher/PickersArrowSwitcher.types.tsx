@@ -53,11 +53,7 @@ export interface PickersArrowSwitcherSlotsComponentsProps {
     PickersArrowSwitcherComponentsPropsOverrides,
     PickersArrowSwitcherOwnerState & { hidden?: boolean }
   >;
-  leftArrowIcon: SlotComponentProps<
-    'svg',
-    PickersArrowSwitcherComponentsPropsOverrides,
-    PickersArrowSwitcherOwnerState
-  >;
+  leftArrowIcon: SlotComponentProps<'svg', PickersArrowSwitcherComponentsPropsOverrides, undefined>;
   rightArrowButton: SlotComponentProps<
     'button',
     PickersArrowSwitcherComponentsPropsOverrides,
@@ -66,6 +62,6 @@ export interface PickersArrowSwitcherSlotsComponentsProps {
   rightArrowIcon: SlotComponentProps<
     'svg',
     PickersArrowSwitcherComponentsPropsOverrides,
-    PickersArrowSwitcherOwnerState
+    undefined
   >;
 }

@@ -6,13 +6,15 @@ import {
   useLocaleText,
   ExportedDateValidationProps,
   PickersArrowSwitcher,
-  ExportedPickersArrowSwitcherProps,
   usePreviousMonthDisabled,
   useNextMonthDisabled,
   DayPicker,
   buildDeprecatedPropsWarning,
   DayPickerProps,
   DAY_MARGIN,
+  ExportedPickersArrowSwitcherProps,
+  PickersArrowSwitcherSlotsComponent,
+  PickersArrowSwitcherSlotsComponentsProps,
 } from '@mui/x-date-pickers/internals';
 import { calculateRangePreview } from './date-range-manager';
 import { DateRange } from '../internal/models';
@@ -20,7 +22,7 @@ import { DateRangePickerDay, DateRangePickerDayProps } from '../DateRangePickerD
 import { isWithinRange, isStartOfRange, isEndOfRange } from '../internal/utils/date-utils';
 import { doNothing } from '../internal/utils/utils';
 
-export interface ExportedDesktopDateRangeCalendarProps<TDate> {
+export interface ExportedDateRangePickerViewDesktopProps<TDate> {
   /**
    * The number of calendars that render on **desktop**.
    * @default 2
@@ -37,11 +39,27 @@ export interface ExportedDesktopDateRangeCalendarProps<TDate> {
   renderDay?: (day: TDate, dateRangePickerDayProps: DateRangePickerDayProps<TDate>) => JSX.Element;
 }
 
-interface DesktopDateRangeCalendarProps<TDate>
-  extends ExportedDesktopDateRangeCalendarProps<TDate>,
+export interface DesktopDateRangeCalendarSlotsComponent
+  extends PickersArrowSwitcherSlotsComponent {}
+
+export interface DesktopDateRangeCalendarSlotsComponentsProps
+  extends PickersArrowSwitcherSlotsComponentsProps {}
+
+interface DateRangePickerViewDesktopProps<TDate>
+  extends ExportedDateRangePickerViewDesktopProps<TDate>,
     Omit<DayPickerProps<TDate>, 'selectedDays' | 'renderDay' | 'onFocusedDayChange'>,
     ExportedDateValidationProps<TDate>,
     ExportedPickersArrowSwitcherProps {
+  /**
+   * Overrideable components.
+   * @default {}
+   */
+  components?: Partial<DesktopDateRangeCalendarSlotsComponent>;
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  componentsProps?: Partial<DesktopDateRangeCalendarSlotsComponentsProps>;
   calendars: 1 | 2 | 3;
   parsedValue: DateRange<TDate>;
   changeMonth: (date: TDate) => void;
@@ -75,7 +93,9 @@ const DateRangePickerViewDesktopArrowSwitcher = styled(PickersArrowSwitcher)({
   justifyContent: 'space-between',
 });
 
-function getCalendarsArray(calendars: ExportedDesktopDateRangeCalendarProps<unknown>['calendars']) {
+function getCalendarsArray(
+  calendars: ExportedDateRangePickerViewDesktopProps<unknown>['calendars'],
+) {
   switch (calendars) {
     case 1:
       return [0];
@@ -96,7 +116,7 @@ const deprecatedPropsWarning = buildDeprecatedPropsWarning(
 /**
  * @ignore - internal component.
  */
-export function DateRangePickerViewDesktop<TDate>(props: DesktopDateRangeCalendarProps<TDate>) {
+export function DateRangePickerViewDesktop<TDate>(props: DateRangePickerViewDesktopProps<TDate>) {
   const {
     calendars,
     changeMonth,

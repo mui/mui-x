@@ -13,7 +13,7 @@ import {
 import { doNothing } from '../internal/utils/utils';
 import { DateRange } from '../internal/models/dateRange';
 import { DateRangePickerDay } from '../DateRangePickerDay';
-import { ExportedDesktopDateRangeCalendarProps } from './DateRangePickerViewDesktop';
+import { ExportedDateRangePickerViewDesktopProps } from './DateRangePickerViewDesktop';
 import { isWithinRange, isStartOfRange, isEndOfRange } from '../internal/utils/date-utils';
 
 export interface DateRangePickerViewMobileSlotsComponent
@@ -23,7 +23,7 @@ export interface DateRangePickerViewMobileSlotsComponentsProps
   extends PickersCalendarHeaderSlotsComponentsProps {}
 
 export interface ExportedMobileDateRangeCalendarProps<TDate>
-  extends Pick<ExportedDesktopDateRangeCalendarProps<TDate>, 'renderDay'> {}
+  extends Pick<ExportedDateRangePickerViewDesktopProps<TDate>, 'renderDay'> {}
 
 interface DesktopDateRangeCalendarProps<TDate>
   extends ExportedMobileDateRangeCalendarProps<TDate>,

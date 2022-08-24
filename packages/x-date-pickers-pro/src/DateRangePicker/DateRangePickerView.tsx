@@ -23,7 +23,7 @@ import {
 import { DateRangePickerInput, DateRangeInputProps } from './DateRangePickerInput';
 import {
   DateRangePickerViewDesktop,
-  ExportedDesktopDateRangeCalendarProps,
+  ExportedDateRangePickerViewDesktopProps,
 } from './DateRangePickerViewDesktop';
 import { getReleaseInfo } from '../internal/utils/releaseInfo';
 
@@ -36,7 +36,7 @@ export interface DateRangePickerViewSlotsComponentsProps
   extends DateRangePickerViewMobileSlotsComponentsProps {}
 
 export interface ExportedDateRangePickerViewProps<TDate>
-  extends ExportedDesktopDateRangeCalendarProps<TDate>,
+  extends ExportedDateRangePickerViewDesktopProps<TDate>,
     Omit<ExportedCalendarPickerProps<TDate>, 'onYearChange' | 'renderDay'> {
   /**
    * Overrideable components.
