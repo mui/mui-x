@@ -21,16 +21,16 @@ describe('<StaticDatePicker /> keyboard interactions', () => {
         />,
       );
 
-      expect(screen.getByLabelText('Aug 13, 2020')).toHaveFocus();
+      expect(screen.getByRole('gridcell', { name: '13' })).toHaveFocus();
     });
 
     [
-      { key: 'End', expectFocusedDay: 'Aug 15, 2020' },
-      { key: 'Home', expectFocusedDay: 'Aug 9, 2020' },
-      { key: 'ArrowLeft', expectFocusedDay: 'Aug 12, 2020' },
-      { key: 'ArrowUp', expectFocusedDay: 'Aug 6, 2020' },
-      { key: 'ArrowRight', expectFocusedDay: 'Aug 14, 2020' },
-      { key: 'ArrowDown', expectFocusedDay: 'Aug 20, 2020' },
+      { key: 'End', expectFocusedDay: '15' },
+      { key: 'Home', expectFocusedDay: '9' },
+      { key: 'ArrowLeft', expectFocusedDay: '12' },
+      { key: 'ArrowUp', expectFocusedDay: '6' },
+      { key: 'ArrowRight', expectFocusedDay: '14' },
+      { key: 'ArrowDown', expectFocusedDay: '20' },
     ].forEach(({ key, expectFocusedDay }) => {
       it(key, () => {
         render(
@@ -47,6 +47,8 @@ describe('<StaticDatePicker /> keyboard interactions', () => {
         // eslint-disable-next-line material-ui/disallow-active-element-as-key-event-target
         fireEvent.keyDown(document.activeElement!, { key });
 
+        // Based on column header, screen reader should pronounce <Day Number> <Week Day>
+        // But `toHaveAccessibleName` does not do the link between column header and cell value, so we only get <day number> in test
         expect(document.activeElement).toHaveAccessibleName(expectFocusedDay);
       });
     });
@@ -64,7 +66,7 @@ describe('<StaticDatePicker /> keyboard interactions', () => {
       />,
     );
 
-    expect(document.activeElement).toHaveAccessibleName('Aug 13, 2020');
+    expect(document.activeElement).toHaveAccessibleName('13');
 
     for (let i = 0; i < 3; i += 1) {
       // Don't care about what's focused.
@@ -73,7 +75,7 @@ describe('<StaticDatePicker /> keyboard interactions', () => {
     }
 
     // leaves focus on the same date
-    expect(document.activeElement).toHaveAccessibleName('Aug 13, 2020');
+    expect(document.activeElement).toHaveAccessibleName('13');
   });
 
   describe('YearPicker keyboard navigation', () => {

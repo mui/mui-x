@@ -1,7 +1,14 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
-import { describeConformance, screen, fireEvent, userEvent, act } from '@mui/monorepo/test/utils';
+import {
+  describeConformance,
+  screen,
+  fireEvent,
+  userEvent,
+  act,
+  getByRole,
+} from '@mui/monorepo/test/utils';
 import TextField from '@mui/material/TextField';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { DesktopDateRangePicker } from '@mui/x-date-pickers-pro/DesktopDateRangePicker';
@@ -25,6 +32,9 @@ const WrappedDesktopDateRangePicker = withPickerControls(DesktopDateRangePicker)
     </React.Fragment>
   ),
 });
+
+const getPickerDay = (name: string, picker = 'January 2018') =>
+  getByRole(screen.getByText(picker)?.parentElement?.parentElement, 'gridcell', { name });
 
 describe('<DesktopDateRangePicker />', () => {
   const { render, clock } = createPickerRenderer({
@@ -116,14 +126,15 @@ describe('<DesktopDateRangePicker />', () => {
 
       openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'start' });
 
-      fireEvent.click(screen.getByLabelText('Jan 1, 2019'));
+      fireEvent.click(getPickerDay('1', 'January 2019'));
       // FIXME use `getByRole(role, {hidden: false})` and skip JSDOM once this suite can run in JSDOM
       const [visibleButton] = screen.getAllByRole('button', {
         hidden: true,
         name: 'Next month',
       });
       fireEvent.click(visibleButton);
-      fireEvent.click(screen.getByLabelText('Mar 19, 2019'));
+      clock.runToLast();
+      fireEvent.click(getPickerDay('19', 'March 2019'));
 
       expect(handleChange.callCount).to.equal(1);
       const [changedRange] = handleChange.lastCall.args;
@@ -143,12 +154,12 @@ describe('<DesktopDateRangePicker />', () => {
 
       openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'start' });
 
-      fireEvent.click(screen.getByLabelText('Jan 30, 2019'));
-      fireEvent.click(screen.getByLabelText('Jan 19, 2019'));
+      fireEvent.click(getPickerDay('30', 'January 2019'));
+      fireEvent.click(getPickerDay('19', 'January 2019'));
 
       expect(screen.queryByMuiTest('DateRangeHighlight')).to.equal(null);
 
-      fireEvent.click(screen.getByLabelText('Jan 30, 2019'));
+      fireEvent.click(getPickerDay('30', 'January 2019'));
 
       expect(handleChange.callCount).to.equal(3);
       const [changedRange] = handleChange.lastCall.args;
@@ -472,13 +483,13 @@ describe('<DesktopDateRangePicker />', () => {
       expect(onClose.callCount).to.equal(0);
 
       // Change the start date
-      userEvent.mousePress(screen.getByLabelText('Jan 3, 2018'));
+      userEvent.mousePress(getPickerDay('3'));
       expect(onChange.callCount).to.equal(1);
       expect(onChange.lastCall.args[0][0]).toEqualDateTime(new Date(2018, 0, 3));
       expect(onChange.lastCall.args[0][1]).toEqualDateTime(initialValue[1]);
 
       // Change the end date
-      userEvent.mousePress(screen.getByLabelText('Jan 5, 2018'));
+      userEvent.mousePress(getPickerDay('5'));
       expect(onChange.callCount).to.equal(2);
       expect(onChange.lastCall.args[0][0]).toEqualDateTime(new Date(2018, 0, 3));
       expect(onChange.lastCall.args[0][1]).toEqualDateTime(new Date(2018, 0, 5));
@@ -514,7 +525,7 @@ describe('<DesktopDateRangePicker />', () => {
       expect(onClose.callCount).to.equal(0);
 
       // Change the end date
-      userEvent.mousePress(screen.getByLabelText('Jan 3, 2018'));
+      userEvent.mousePress(getPickerDay('3'));
       expect(onChange.callCount).to.equal(1);
       expect(onChange.lastCall.args[0][0]).toEqualDateTime(initialValue[0]);
       expect(onChange.lastCall.args[0][1]).toEqualDateTime(new Date(2018, 0, 3));
@@ -544,7 +555,7 @@ describe('<DesktopDateRangePicker />', () => {
       openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'end' });
 
       // Change the end date
-      userEvent.mousePress(screen.getByLabelText('Jan 3, 2018'));
+      userEvent.mousePress(getPickerDay('3'));
 
       expect(onAccept.callCount).to.equal(0);
       expect(onClose.callCount).to.equal(0);
@@ -571,7 +582,7 @@ describe('<DesktopDateRangePicker />', () => {
       openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'start' });
 
       // Change the start date (already tested)
-      userEvent.mousePress(screen.getByLabelText('Jan 3, 2018'));
+      userEvent.mousePress(getPickerDay('3'));
 
       // Dismiss the picker
       // eslint-disable-next-line material-ui/disallow-active-element-as-key-event-target -- don't care
@@ -629,7 +640,7 @@ describe('<DesktopDateRangePicker />', () => {
       openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'start' });
 
       // Change the start date (already tested)
-      userEvent.mousePress(screen.getByLabelText('Jan 3, 2018'));
+      userEvent.mousePress(getPickerDay('3'));
 
       // Dismiss the picker
       userEvent.mousePress(document.body);
@@ -713,7 +724,7 @@ describe('<DesktopDateRangePicker />', () => {
       expect(screen.getByRole('tooltip')).toBeVisible();
 
       // Change the start date (already tested)
-      userEvent.mousePress(screen.getByLabelText('Jan 3, 2018'));
+      userEvent.mousePress(getPickerDay('3'));
 
       fireEvent.blur(screen.getAllByRole('textbox')[0]);
       clock.runToLast();
@@ -844,11 +855,11 @@ describe('<DesktopDateRangePicker />', () => {
 
       openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'start' });
 
-      expect(screen.getByLabelText('Jan 8, 2018')).to.have.attribute('disabled');
-      expect(screen.getByLabelText('Jan 9, 2018')).to.have.attribute('disabled');
-      expect(screen.getByLabelText('Jan 10, 2018')).not.to.have.attribute('disabled');
-      expect(screen.getByLabelText('Jan 11, 2018')).not.to.have.attribute('disabled');
-      expect(screen.getByLabelText('Jan 11, 2018')).not.to.have.attribute('disabled');
+      expect(getPickerDay('8')).to.have.attribute('disabled');
+      expect(getPickerDay('9')).to.have.attribute('disabled');
+      expect(getPickerDay('10')).not.to.have.attribute('disabled');
+      expect(getPickerDay('11')).not.to.have.attribute('disabled');
+      expect(getPickerDay('12')).not.to.have.attribute('disabled');
     });
 
     it('should respect the disableFuture prop', () => {
@@ -856,11 +867,11 @@ describe('<DesktopDateRangePicker />', () => {
 
       openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'start' });
 
-      expect(screen.getByLabelText('Jan 8, 2018')).not.to.have.attribute('disabled');
-      expect(screen.getByLabelText('Jan 9, 2018')).not.to.have.attribute('disabled');
-      expect(screen.getByLabelText('Jan 10, 2018')).not.to.have.attribute('disabled');
-      expect(screen.getByLabelText('Jan 11, 2018')).to.have.attribute('disabled');
-      expect(screen.getByLabelText('Jan 12, 2018')).to.have.attribute('disabled');
+      expect(getPickerDay('8')).not.to.have.attribute('disabled');
+      expect(getPickerDay('9')).not.to.have.attribute('disabled');
+      expect(getPickerDay('10')).not.to.have.attribute('disabled');
+      expect(getPickerDay('11')).to.have.attribute('disabled');
+      expect(getPickerDay('12')).to.have.attribute('disabled');
     });
 
     it('should respect the minDate prop', () => {
@@ -873,11 +884,11 @@ describe('<DesktopDateRangePicker />', () => {
 
       openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'start' });
 
-      expect(screen.getByLabelText('Jan 13, 2018')).to.have.attribute('disabled');
-      expect(screen.getByLabelText('Jan 14, 2018')).to.have.attribute('disabled');
-      expect(screen.getByLabelText('Jan 15, 2018')).not.to.have.attribute('disabled');
-      expect(screen.getByLabelText('Jan 16, 2018')).not.to.have.attribute('disabled');
-      expect(screen.getByLabelText('Jan 17, 2018')).not.to.have.attribute('disabled');
+      expect(getPickerDay('13')).to.have.attribute('disabled');
+      expect(getPickerDay('14')).to.have.attribute('disabled');
+      expect(getPickerDay('15')).not.to.have.attribute('disabled');
+      expect(getPickerDay('16')).not.to.have.attribute('disabled');
+      expect(getPickerDay('17')).not.to.have.attribute('disabled');
     });
 
     it('should respect the maxDate prop', () => {
@@ -890,11 +901,11 @@ describe('<DesktopDateRangePicker />', () => {
 
       openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'start' });
 
-      expect(screen.getByLabelText('Jan 13, 2018')).not.to.have.attribute('disabled');
-      expect(screen.getByLabelText('Jan 14, 2018')).not.to.have.attribute('disabled');
-      expect(screen.getByLabelText('Jan 15, 2018')).not.to.have.attribute('disabled');
-      expect(screen.getByLabelText('Jan 16, 2018')).to.have.attribute('disabled');
-      expect(screen.getByLabelText('Jan 17, 2018')).to.have.attribute('disabled');
+      expect(getPickerDay('13')).not.to.have.attribute('disabled');
+      expect(getPickerDay('14')).not.to.have.attribute('disabled');
+      expect(getPickerDay('15')).not.to.have.attribute('disabled');
+      expect(getPickerDay('16')).to.have.attribute('disabled');
+      expect(getPickerDay('17')).to.have.attribute('disabled');
     });
   });
 });

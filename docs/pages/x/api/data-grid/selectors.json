@@ -26,6 +26,12 @@
     "supportsApiRef": true
   },
   {
+    "name": "gridColumnGroupsLookupSelector",
+    "returnType": "GridColumnGroupLookup",
+    "description": "",
+    "supportsApiRef": true
+  },
+  {
     "name": "gridColumnLookupSelector",
     "returnType": "GridColumnLookup",
     "category": "Columns",
@@ -84,6 +90,12 @@
     "supportsApiRef": true
   },
   {
+    "name": "gridDensityHeaderGroupingMaxDepthSelector",
+    "returnType": "number",
+    "description": "",
+    "supportsApiRef": true
+  },
+  {
     "name": "gridDensityHeaderHeightSelector",
     "returnType": "number",
     "description": "",
@@ -100,6 +112,12 @@
     "returnType": "GridDensityState",
     "description": "",
     "supportsApiRef": false
+  },
+  {
+    "name": "gridDensityTotalHeaderHeightSelector",
+    "returnType": "number",
+    "description": "",
+    "supportsApiRef": true
   },
   {
     "name": "gridDensityValueSelector",

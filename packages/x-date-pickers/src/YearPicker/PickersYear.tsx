@@ -115,6 +115,7 @@ export const PickersYear = React.forwardRef<HTMLButtonElement, YearProps>(functi
     tabIndex,
     onFocus = noop,
     onBlur = noop,
+    ...other
   } = props;
   const ref = React.useRef<HTMLButtonElement>(null);
   const refHandle = useForkRef(ref, forwardedRef as React.Ref<HTMLButtonElement>);
@@ -153,6 +154,7 @@ export const PickersYear = React.forwardRef<HTMLButtonElement, YearProps>(functi
         onBlur={(event) => onBlur(event, value)}
         className={classes.yearButton}
         ownerState={ownerState}
+        {...other}
       >
         {children}
       </PickersYearButton>

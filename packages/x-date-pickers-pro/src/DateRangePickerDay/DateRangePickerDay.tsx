@@ -246,7 +246,6 @@ const DateRangePickerDayRaw = React.forwardRef(function DateRangePickerDay<TDate
       ownerState={ownerState}
     >
       <DateRangePickerDayRangeIntervalPreview
-        role="cell"
         data-mui-test={shouldRenderPreview ? 'DateRangePreview' : undefined}
         className={classes.rangeIntervalPreview}
         ownerState={ownerState}
