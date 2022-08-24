@@ -61,7 +61,7 @@ export function addPinnedRow({
 
   const previousPinnedRows = groupingParams.additionalRowGroups?.pinnedRows || {};
 
-  const newPinnedRow: GridRowEntry = { id: rowId, model: rowModel };
+  const newPinnedRow: GridRowEntry = { id: rowId, model: rowModel! };
 
   if (groupingParams.additionalRowGroups?.pinnedRows?.[position]?.includes(newPinnedRow)) {
     return {
