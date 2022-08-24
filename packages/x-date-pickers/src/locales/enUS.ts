@@ -16,10 +16,7 @@ const enUSPickers: PickersLocaleText<any> = {
     view === 'year'
       ? 'year view is open, switch to calendar view'
       : 'calendar view is open, switch to year view',
-  inputModeToggleButtonAriaLabel: (
-    isKeyboardInputOpen: boolean,
-    viewType: 'calendar' | 'clock',
-  ) =>
+  inputModeToggleButtonAriaLabel: (isKeyboardInputOpen: boolean, viewType: 'calendar' | 'clock') =>
     isKeyboardInputOpen
       ? `text input view is open, go to ${viewType} view`
       : `${viewType} view is open, go to text input view`,
@@ -42,7 +39,8 @@ const enUSPickers: PickersLocaleText<any> = {
 
   // Clock labels
   clockLabelText: (view, time, adapter) =>
-    `Select ${view}. ${time === null ? 'No time selected' : `Selected time is ${adapter.format(time, 'fullTime')}`
+    `Select ${view}. ${
+      time === null ? 'No time selected' : `Selected time is ${adapter.format(time, 'fullTime')}`
     }`,
   hoursClockNumberText: (hours) => `${hours} hours`,
   minutesClockNumberText: (minutes) => `${minutes} minutes`,
