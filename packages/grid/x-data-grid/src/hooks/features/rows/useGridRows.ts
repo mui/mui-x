@@ -377,7 +377,7 @@ export const useGridRows = (
       newRows.forEach((row) => {
         updatedIdRowsLookup[row.id] = row;
         updatedIdToIdLookup[row.id] = row.id;
-        updatedTree[row.id] = row;
+        updatedTree[row.id] = row as GridRowTreeNodeConfig;
       });
 
       apiRef.current.setState((state) => ({
