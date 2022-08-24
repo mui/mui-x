@@ -1,4 +1,4 @@
-<LocalizationProvider dateAdapter={AdapterDateFns}>
+<LocalizationProvider dateAdapter={AdapterDayjs}>
   <StaticDatePicker
     onChange={(newValue) => setValue(newValue)}
     value={value}

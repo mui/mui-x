@@ -31,6 +31,11 @@ export interface MonthPickerProps<TDate> extends MonthValidationProps<TDate> {
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */
   sx?: SxProps<Theme>;
+  /**
+   * If `true`, today's date is rendering without highlighting with circle.
+   * @default false
+   */
+  disableHighlightToday?: boolean;
 }
 
 const useUtilityClasses = (ownerState: MonthPickerProps<any>) => {
@@ -74,7 +79,7 @@ export const MonthPicker = React.forwardRef(function MonthPicker<TDate>(
 
   const {
     className,
-    date: propDate,
+    date,
     disabled,
     disableFuture,
     disablePast,
@@ -83,13 +88,24 @@ export const MonthPicker = React.forwardRef(function MonthPicker<TDate>(
     onChange,
     shouldDisableMonth,
     readOnly,
+    disableHighlightToday,
     ...other
   } = props;
   const ownerState = props;
   const classes = useUtilityClasses(ownerState);
 
-  const currentDate = propDate ?? now;
-  const currentMonth = utils.getMonth(currentDate);
+  const selectedDateOrToday = date ?? now;
+  const focusedMonth = React.useMemo(() => {
+    if (date != null) {
+      return utils.getMonth(date);
+    }
+
+    if (disableHighlightToday) {
+      return null;
+    }
+
+    return utils.getMonth(now);
+  }, [now, date, utils, disableHighlightToday]);
 
   const isMonthDisabled = (month: TDate) => {
     const firstEnabledMonth = utils.startOfMonth(
@@ -120,9 +136,11 @@ export const MonthPicker = React.forwardRef(function MonthPicker<TDate>(
       return;
     }
 
-    const newDate = utils.setMonth(currentDate, month);
+    const newDate = utils.setMonth(selectedDateOrToday, month);
     onChange(newDate, 'finish');
   };
+
+  const currentMonthNumber = utils.getMonth(now);
 
   return (
     <MonthPickerRoot
@@ -131,7 +149,7 @@ export const MonthPicker = React.forwardRef(function MonthPicker<TDate>(
       ownerState={ownerState}
       {...other}
     >
-      {utils.getMonthArray(currentDate).map((month) => {
+      {utils.getMonthArray(selectedDateOrToday).map((month) => {
         const monthNumber = utils.getMonth(month);
         const monthText = utils.format(month, 'monthShort');
 
@@ -139,9 +157,10 @@ export const MonthPicker = React.forwardRef(function MonthPicker<TDate>(
           <PickersMonth
             key={monthText}
             value={monthNumber}
-            selected={monthNumber === currentMonth}
+            selected={monthNumber === focusedMonth}
             onSelect={onMonthSelect}
             disabled={disabled || isMonthDisabled(month)}
+            aria-current={currentMonthNumber === monthNumber ? 'date' : undefined}
           >
             {monthText}
           </PickersMonth>
@@ -177,6 +196,11 @@ MonthPicker.propTypes = {
    * @default false
    */
   disableFuture: PropTypes.bool,
+  /**
+   * If `true`, today's date is rendering without highlighting with circle.
+   * @default false
+   */
+  disableHighlightToday: PropTypes.bool,
   /**
    * If `true` past days are disabled.
    * @default false

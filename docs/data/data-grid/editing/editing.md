@@ -17,7 +17,7 @@ To use it, add the following flag:
 This additional step is required because the default editing API has a couple of issues that can only be fixed with breaking changes, that will only be possible in v6.
 To avoid having to wait for the next major release window, all breaking changes needed were included inside this flag.
 
-If you are looking for the documentation for the default editing API, visit [this page](/x/react-data-grid/editing-legacy/).
+If you are looking for the documentation for the default editing API, visit [the docs of the legacy API](/x/react-data-grid/editing-legacy/).
 Note that it is encouraged to migrate to the new editing API since it will be enabled by default in v6.
 Although it says "experimental," you can consider it stable.
 :::
@@ -560,7 +560,7 @@ You can change date format by importing different locale (`en-US` locale is used
 See [Localization](/x/react-date-pickers/localization/) for more information.
 :::
 
-## apiRef [<span class="plan-pro"></span>](https://mui.com/store/items/mui-x-pro/)
+## apiRef [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
 
 {{"demo": "EditApiNoSnap.js", "bg": "inline", "hideToolbar": true}}
 
