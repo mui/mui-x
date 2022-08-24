@@ -8,7 +8,10 @@
     "components": { "type": { "name": "object" }, "default": "{}" },
     "componentsProps": { "type": { "name": "object" }, "default": "{}" }
   },
-  "slots": { "ActionBar": { "type": { "name": "elementType" } } },
+  "slots": {
+    "ActionBar": { "type": { "name": "elementType" } },
+    "PaperContent": { "type": { "name": "elementType" } }
+  },
   "name": "PickerStaticWrapper",
   "styles": {
     "classes": ["root", "content"],

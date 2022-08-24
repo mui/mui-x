@@ -7,13 +7,13 @@ import { useForkRef, useEventCallback, ownerDocument } from '@mui/material/utils
 import { styled } from '@mui/material/styles';
 import { TransitionProps as MuiTransitionProps } from '@mui/material/transitions';
 import { PickersActionBar, PickersActionBarProps } from '../../PickersActionBar';
+import { PickersSlotsComponent } from './wrappers/WrapperProps';
 
-export interface PickersPopperSlotsComponent {
-  ActionBar: React.ElementType<PickersActionBarProps>;
-}
+export interface PickersPopperSlotsComponent extends PickersSlotsComponent {}
 
 export interface PickersPopperSlotsComponentsProps {
   actionBar: Omit<PickersActionBarProps, 'onAccept' | 'onClear' | 'onCancel' | 'onSetToday'>;
+  paperContent: Record<string, any>;
 }
 
 export interface ExportedPickerPaperProps {
@@ -291,6 +291,7 @@ export const PickersPopper = (props: PickerPopperProps) => {
   };
 
   const ActionBar = components?.ActionBar ?? PickersActionBar;
+  const PaperContent = components?.PaperContent || React.Fragment;
 
   return (
     <PickersPopperRoot
@@ -334,15 +335,17 @@ export const PickersPopper = (props: PickerPopperProps) => {
               ownerState={{ ...ownerState, placement }}
               {...otherPaperProps}
             >
-              {children}
-              <ActionBar
-                onAccept={onAccept}
-                onClear={onClear}
-                onCancel={onCancel}
-                onSetToday={onSetToday}
-                actions={[]}
-                {...componentsProps?.actionBar}
-              />
+              <PaperContent {...componentsProps?.paperContent}>
+                {children}
+                <ActionBar
+                  onAccept={onAccept}
+                  onClear={onClear}
+                  onCancel={onCancel}
+                  onSetToday={onSetToday}
+                  actions={[]}
+                  {...componentsProps?.actionBar}
+                />
+              </PaperContent>
             </PickersPopperPaper>
           </TransitionComponent>
         </TrapFocus>

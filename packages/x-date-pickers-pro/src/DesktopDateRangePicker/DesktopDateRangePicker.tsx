@@ -93,6 +93,7 @@ export const DesktopDateRangePicker = React.forwardRef(function DesktopDateRange
     value,
     onChange,
     PopperProps,
+    PaperProps,
     TransitionComponent,
     components,
     componentsProps,
@@ -115,6 +116,7 @@ export const DesktopDateRangePicker = React.forwardRef(function DesktopDateRange
       DateInputProps={DateInputProps}
       KeyboardDateInputComponent={KeyboardDateInputComponent}
       PopperProps={PopperProps}
+      PaperProps={PaperProps}
       TransitionComponent={TransitionComponent}
       components={components}
       componentsProps={componentsProps}
