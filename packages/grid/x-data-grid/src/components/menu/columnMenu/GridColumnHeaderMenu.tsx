@@ -11,7 +11,7 @@ export interface GridColumnHeaderMenuProps {
   contentComponentProps?: any;
   field: string;
   open: boolean;
-  target: Element | null;
+  target: HTMLElement | null;
   onExited?: GridMenuProps['onExited'];
 }
 

@@ -77,6 +77,7 @@ const GridColumnHeadersPinnedColumnHeaders = styled('div', {
   height: '100%',
   zIndex: 1,
   display: 'flex',
+  flexDirection: 'column',
   boxShadow: theme.shadows[2],
   backgroundColor: theme.palette.background.default,
   ...(theme.palette.mode === 'dark' && {
@@ -120,11 +121,17 @@ export const DataGridProColumnHeaders = React.forwardRef<
   const pinnedColumns = useGridSelector(apiRef, gridPinnedColumnsSelector);
   const [leftPinnedColumns, rightPinnedColumns] = filterColumns(pinnedColumns, visibleColumnFields);
 
-  const { isDragging, renderContext, getRootProps, getInnerProps, getColumns } =
-    useGridColumnHeaders({
-      innerRef,
-      minColumnIndex: leftPinnedColumns.length,
-    });
+  const {
+    isDragging,
+    renderContext,
+    getRootProps,
+    getInnerProps,
+    getColumnHeaders,
+    getColumnGroupHeaders,
+  } = useGridColumnHeaders({
+    innerRef,
+    minColumnIndex: leftPinnedColumns.length,
+  });
 
   const ownerState = { leftPinnedColumns, rightPinnedColumns, classes: rootProps.classes };
   const classes = useUtilityClasses(ownerState);
@@ -147,14 +154,26 @@ export const DataGridProColumnHeaders = React.forwardRef<
         }
       : null;
 
+  const innerProps = getInnerProps();
+
+  const pinnedColumnHeadersProps = {
+    role: innerProps.role,
+  };
+
   return (
     <GridColumnHeaders ref={ref} className={className} {...getRootProps(other)}>
       {leftRenderContext && (
         <GridColumnHeadersPinnedColumnHeaders
           className={classes.leftPinnedColumns}
           ownerState={{ side: GridPinnedPosition.left }}
+          {...pinnedColumnHeadersProps}
         >
-          {getColumns(
+          {getColumnGroupHeaders({
+            renderContext: leftRenderContext,
+            minFirstColumn: leftRenderContext.firstColumnIndex,
+            maxLastColumn: leftRenderContext.lastColumnIndex,
+          })}
+          {getColumnHeaders(
             {
               renderContext: leftRenderContext,
               minFirstColumn: leftRenderContext.firstColumnIndex,
@@ -164,8 +183,13 @@ export const DataGridProColumnHeaders = React.forwardRef<
           )}
         </GridColumnHeadersPinnedColumnHeaders>
       )}
-      <GridColumnHeadersInner isDragging={isDragging} {...getInnerProps()}>
-        {getColumns({
+      <GridColumnHeadersInner isDragging={isDragging} {...innerProps}>
+        {getColumnGroupHeaders({
+          renderContext,
+          minFirstColumn: leftPinnedColumns.length,
+          maxLastColumn: visibleColumnFields.length - rightPinnedColumns.length,
+        })}
+        {getColumnHeaders({
           renderContext,
           minFirstColumn: leftPinnedColumns.length,
           maxLastColumn: visibleColumnFields.length - rightPinnedColumns.length,
@@ -176,8 +200,14 @@ export const DataGridProColumnHeaders = React.forwardRef<
           ownerState={{ side: GridPinnedPosition.right }}
           className={classes.rightPinnedColumns}
           style={{ paddingRight: scrollbarSize }}
+          {...pinnedColumnHeadersProps}
         >
-          {getColumns(
+          {getColumnGroupHeaders({
+            renderContext: rightRenderContext,
+            minFirstColumn: rightRenderContext.firstColumnIndex,
+            maxLastColumn: rightRenderContext.lastColumnIndex,
+          })}
+          {getColumnHeaders(
             {
               renderContext: rightRenderContext,
               minFirstColumn: rightRenderContext.firstColumnIndex,

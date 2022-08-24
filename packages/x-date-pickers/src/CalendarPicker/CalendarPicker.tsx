@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { styled, useThemeProps } from '@mui/material/styles';
 import { unstable_composeClasses as composeClasses } from '@mui/material';
+import { unstable_useId as useId } from '@mui/material/utils';
 import { MonthPicker, MonthPickerProps } from '../MonthPicker/MonthPicker';
 import { useCalendarState } from './useCalendarState';
 import { useDefaultDates, useUtils } from '../internals/hooks/useUtils';
@@ -177,6 +178,7 @@ export const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
   ref: React.Ref<HTMLDivElement>,
 ) {
   const utils = useUtils<TDate>();
+  const id = useId();
   const defaultDates = useDefaultDates<TDate>();
 
   const props = useThemeProps({
@@ -208,6 +210,7 @@ export const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
     readOnly,
     minDate = defaultDates.minDate,
     maxDate = defaultDates.maxDate,
+    disableHighlightToday,
     ...other
   } = props;
 
@@ -374,6 +377,14 @@ export const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
   const minDateWithDisabled = (disabled && date) || minDate;
   const maxDateWithDisabled = (disabled && date) || maxDate;
 
+  const commonViewProps = {
+    disableHighlightToday,
+    readOnly,
+    disabled,
+  };
+
+  const gridLabelId = `${id}-grid-label`;
+
   return (
     <CalendarPickerRoot ref={ref} className={clsx(classes.root, className)} ownerState={ownerState}>
       <PickersCalendarHeader
@@ -389,6 +400,7 @@ export const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
         disablePast={disablePast}
         disableFuture={disableFuture}
         reduceAnimations={reduceAnimations}
+        labelId={gridLabelId}
       />
       <CalendarPickerViewTransitionContainer
         reduceAnimations={reduceAnimations}
@@ -401,23 +413,21 @@ export const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
             <YearPicker
               {...other}
               {...baseDateValidationProps}
+              {...commonViewProps}
               autoFocus={autoFocus}
               date={date}
               onChange={handleDateYearChange}
               shouldDisableYear={shouldDisableYear}
-              disabled={disabled}
-              readOnly={readOnly}
             />
           )}
 
           {openView === 'month' && (
             <MonthPicker
               {...baseDateValidationProps}
+              {...commonViewProps}
               className={className}
               date={date}
               onChange={handleDateMonthChange}
-              disabled={disabled}
-              readOnly={readOnly}
               shouldDisableMonth={shouldDisableMonth}
             />
           )}
@@ -427,6 +437,7 @@ export const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
               {...other}
               {...calendarState}
               {...baseDateValidationProps}
+              {...commonViewProps}
               autoFocus={autoFocus}
               onMonthSwitchingAnimationEnd={onMonthSwitchingAnimationEnd}
               onFocusedDayChange={changeFocusedDay}
@@ -435,9 +446,8 @@ export const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
               onSelectedDaysChange={onSelectedDayChange}
               loading={loading}
               renderLoading={renderLoading}
-              disabled={disabled}
-              readOnly={readOnly}
               shouldDisableDate={shouldDisableDate}
+              gridLabelId={gridLabelId}
             />
           )}
         </div>
@@ -465,6 +475,13 @@ CalendarPicker.propTypes = {
    */
   componentsProps: PropTypes.object,
   date: PropTypes.any,
+  /**
+   * Formats the day of week displayed in the calendar header.
+   * @param {string} day The day of week provided by the adapter's method `getWeekdays`.
+   * @returns {string} The name to display.
+   * @default (day) => day.charAt(0).toUpperCase()
+   */
+  dayOfWeekFormatter: PropTypes.func,
   /**
    * Default calendar month displayed when `value={null}`.
    */

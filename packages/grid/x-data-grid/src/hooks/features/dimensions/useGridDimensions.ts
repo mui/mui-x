@@ -16,10 +16,11 @@ import { useGridLogger } from '../../utils/useGridLogger';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { GridDimensions, GridDimensionsApi } from './gridDimensionsApi';
 import { gridColumnsTotalWidthSelector } from '../columns';
-import { gridDensityHeaderHeightSelector, gridDensityRowHeightSelector } from '../density';
+import { gridDensityTotalHeaderHeightSelector, gridDensityRowHeightSelector } from '../density';
 import { useGridSelector } from '../../utils';
 import { getVisibleRows } from '../../utils/useGridVisibleRows';
 import { gridRowsMetaSelector } from '../rows/gridRowsMetaSelector';
+import { calculatePinnedRowsHeight } from '../rows/gridRowsUtils';
 
 const isTestEnvironment = process.env.NODE_ENV === 'test';
 
@@ -62,11 +63,12 @@ export function useGridDimensions(
   const rootDimensionsRef = React.useRef<ElementSize | null>(null);
   const fullDimensionsRef = React.useRef<GridDimensions | null>(null);
   const rowsMeta = useGridSelector(apiRef, gridRowsMetaSelector);
-  const headerHeight = useGridSelector(apiRef, gridDensityHeaderHeightSelector);
+  const totalHeaderHeight = useGridSelector(apiRef, gridDensityTotalHeaderHeightSelector);
 
   const updateGridDimensionsRef = React.useCallback(() => {
     const rootElement = apiRef.current.rootElementRef?.current;
     const columnsTotalWidth = gridColumnsTotalWidthSelector(apiRef);
+    const pinnedRowsHeight = calculatePinnedRowsHeight(apiRef);
 
     if (!rootDimensionsRef.current) {
       return;
@@ -90,18 +92,36 @@ export function useGridDimensions(
       rootElement.removeChild(scrollDiv);
     }
 
-    const viewportOuterSize: ElementSize = {
-      width: rootDimensionsRef.current.width,
-      height: props.autoHeight
-        ? rowsMeta.currentPageTotalHeight
-        : rootDimensionsRef.current.height - headerHeight,
-    };
+    let viewportOuterSize: ElementSize;
+    let hasScrollX: boolean;
+    let hasScrollY: boolean;
 
-    const { hasScrollX, hasScrollY } = hasScroll({
-      content: { width: Math.round(columnsTotalWidth), height: rowsMeta.currentPageTotalHeight },
-      container: viewportOuterSize,
-      scrollBarSize,
-    });
+    if (props.autoHeight) {
+      hasScrollY = false;
+      hasScrollX = Math.round(columnsTotalWidth) > rootDimensionsRef.current.width;
+
+      viewportOuterSize = {
+        width: rootDimensionsRef.current.width,
+        height: rowsMeta.currentPageTotalHeight + (hasScrollX ? scrollBarSize : 0),
+      };
+    } else {
+      viewportOuterSize = {
+        width: rootDimensionsRef.current.width,
+        height: rootDimensionsRef.current.height - totalHeaderHeight,
+      };
+
+      const scrollInformation = hasScroll({
+        content: { width: Math.round(columnsTotalWidth), height: rowsMeta.currentPageTotalHeight },
+        container: {
+          width: viewportOuterSize.width,
+          height: viewportOuterSize.height - pinnedRowsHeight.top - pinnedRowsHeight.bottom,
+        },
+        scrollBarSize,
+      });
+
+      hasScrollY = scrollInformation.hasScrollY;
+      hasScrollX = scrollInformation.hasScrollX;
+    }
 
     const viewportInnerSize: ElementSize = {
       width: viewportOuterSize.width - (hasScrollY ? scrollBarSize : 0),
@@ -129,7 +149,7 @@ export function useGridDimensions(
     apiRef,
     props.scrollbarSize,
     props.autoHeight,
-    headerHeight,
+    totalHeaderHeight,
     rowsMeta.currentPageTotalHeight,
   ]);
 

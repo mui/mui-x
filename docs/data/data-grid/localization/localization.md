@@ -125,6 +125,7 @@ import { DataGrid, nlNL } from '@mui/x-data-grid';
 | Turkish                 | tr-TR               | `trTR`      |
 | Ukraine                 | uk-UA               | `ukUA`      |
 | Simplified Chinese      | zh-CN               | `zhCN`      |
+| Traditional Chinese     | zh-TW               | `zhTW`      |
 
 You can [find the source](https://github.com/mui/mui-x/tree/HEAD/packages/grid/x-data-grid/src/locales) in the GitHub repository.
 

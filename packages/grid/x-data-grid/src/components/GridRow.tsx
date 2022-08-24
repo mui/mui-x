@@ -29,6 +29,7 @@ import { GridRenderEditCellParams } from '../models/params/gridCellParams';
 import { GRID_DETAIL_PANEL_TOGGLE_FIELD } from '../constants/gridDetailPanelToggleField';
 import { gridSortModelSelector } from '../hooks/features/sorting/gridSortingSelector';
 import { gridRowTreeDepthSelector } from '../hooks/features/rows/gridRowsSelector';
+import { gridDensityHeaderGroupingMaxDepthSelector } from '../hooks/features/density/densitySelector';
 
 export interface GridRowProps {
   rowId: GridRowId;
@@ -113,7 +114,6 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
     onMouseLeave,
     ...other
   } = props;
-  const ariaRowIndex = index + 2; // 1 for the header row and 1 as it's 1-based
   const apiRef = useGridApiContext();
   const ref = React.useRef<HTMLDivElement>(null);
   const rootProps = useGridRootProps();
@@ -121,6 +121,9 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
   const columnsTotalWidth = useGridSelector(apiRef, gridColumnsTotalWidthSelector);
   const sortModel = useGridSelector(apiRef, gridSortModelSelector);
   const treeDepth = useGridSelector(apiRef, gridRowTreeDepthSelector);
+  const headerGroupingMaxDepth = useGridSelector(apiRef, gridDensityHeaderGroupingMaxDepthSelector);
+
+  const ariaRowIndex = index + headerGroupingMaxDepth + 2; // 1 for the header row and 1 as it's 1-based
   const { hasScrollX, hasScrollY } = apiRef.current.getRootDimensions() ?? {
     hasScrollX: false,
     hasScrollY: false,
@@ -151,7 +154,11 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
       // doesn't care about pagination and considers the rows from the current page only, so the
       // first row always has index=0. We need to subtract the index of the first row to make it
       // compatible with the index used by the virtualization.
-      apiRef.current.unstable_setLastMeasuredRowIndex(index - currentPage.range.firstRowIndex);
+      const rowIndex = apiRef.current.getRowIndexRelativeToVisibleRows(rowId);
+      // pinned rows are not part of the visible rows
+      if (rowIndex != null) {
+        apiRef.current.unstable_setLastMeasuredRowIndex(rowIndex);
+      }
     }
 
     const rootElement = ref.current;
@@ -205,8 +212,8 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
   );
 
   const publishClick = React.useCallback(
-    (event) => {
-      const cell = findParentElementFromClassName(event.target, gridClasses.cell);
+    (event: React.MouseEvent<HTMLDivElement>) => {
+      const cell = findParentElementFromClassName(event.target as HTMLDivElement, gridClasses.cell);
       const field = cell?.getAttribute('data-field');
 
       // Check if the field is available because the cell that fills the empty

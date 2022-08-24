@@ -49,6 +49,7 @@
   { "name": "DesktopTimePickerSlotsComponent", "kind": "Interface" },
   { "name": "DesktopTimePickerSlotsComponentsProps", "kind": "Interface" },
   { "name": "enUS", "kind": "Variable" },
+  { "name": "esES", "kind": "Variable" },
   { "name": "frFR", "kind": "Variable" },
   { "name": "getCalendarPickerSkeletonUtilityClass", "kind": "Variable" },
   { "name": "getCalendarPickerUtilityClass", "kind": "Variable" },
@@ -57,6 +58,8 @@
   { "name": "getMonthPickerUtilityClass", "kind": "Function" },
   { "name": "getPickersDayUtilityClass", "kind": "Function" },
   { "name": "getYearPickerUtilityClass", "kind": "Function" },
+  { "name": "itIT", "kind": "Variable" },
+  { "name": "koKR", "kind": "Variable" },
   { "name": "LicenseInfo", "kind": "Class" },
   { "name": "LocalizationProvider", "kind": "Function" },
   { "name": "LocalizationProviderProps", "kind": "Interface" },
@@ -82,6 +85,7 @@
   { "name": "MonthPickerClassKey", "kind": "TypeAlias" },
   { "name": "MonthPickerProps", "kind": "Interface" },
   { "name": "MuiPickersAdapterContext", "kind": "Variable" },
+  { "name": "nbNO", "kind": "Variable" },
   { "name": "nlNL", "kind": "Variable" },
   { "name": "PickersDay", "kind": "Variable" },
   { "name": "pickersDayClasses", "kind": "Variable" },
@@ -91,6 +95,7 @@
   { "name": "PickersLocaleText", "kind": "Interface" },
   { "name": "PickerStaticWrapper", "kind": "Function" },
   { "name": "PickersTranslationKeys", "kind": "TypeAlias" },
+  { "name": "plPL", "kind": "Variable" },
   { "name": "ptBR", "kind": "Variable" },
   { "name": "StaticDatePicker", "kind": "Variable" },
   { "name": "StaticDatePickerProps", "kind": "Interface" },
@@ -108,5 +113,6 @@
   { "name": "yearPickerClasses", "kind": "Variable" },
   { "name": "YearPickerClasses", "kind": "Interface" },
   { "name": "YearPickerClassKey", "kind": "TypeAlias" },
-  { "name": "YearPickerProps", "kind": "Interface" }
+  { "name": "YearPickerProps", "kind": "Interface" },
+  { "name": "zhCN", "kind": "Variable" }
 ]

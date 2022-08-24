@@ -12,6 +12,7 @@ import {
 import { gridPageSizeSelector } from './gridPaginationSelector';
 import { gridDensityRowHeightSelector } from '../density';
 import { GridPipeProcessor, useGridRegisterPipeProcessor } from '../../core/pipeProcessing';
+import { calculatePinnedRowsHeight } from '../rows/gridRowsUtils';
 
 export const defaultPageSize = (autoPageSize: boolean) => (autoPageSize ? 0 : 100);
 
@@ -73,15 +74,17 @@ export const useGridPageSize = (
    * PRE-PROCESSING
    */
   const stateExportPreProcessing = React.useCallback<GridPipeProcessor<'exportState'>>(
-    (prevState) => {
+    (prevState, context) => {
       const pageSizeToExport = gridPageSizeSelector(apiRef);
 
       const shouldExportPageSize =
+        // Always export if the `exportOnlyDirtyModels` property is activated
+        !context.exportOnlyDirtyModels ||
         // Always export if the page size is controlled
         props.pageSize != null ||
         // Always export if the page size has been initialized
         props.initialState?.pagination?.pageSize != null ||
-        // Export if the page size value is not equal to the default value
+        // Export if the page size is not equal to the default value
         pageSizeToExport !== defaultPageSize(props.autoPageSize);
 
       if (!shouldExportPageSize) {
@@ -125,8 +128,11 @@ export const useGridPageSize = (
       return;
     }
 
+    const pinnedRowsHeight = calculatePinnedRowsHeight(apiRef);
+
     const maximumPageSizeWithoutScrollBar = Math.floor(
-      dimensions.viewportInnerSize.height / rowHeight,
+      (dimensions.viewportInnerSize.height - pinnedRowsHeight.top - pinnedRowsHeight.bottom) /
+        rowHeight,
     );
     apiRef.current.setPageSize(maximumPageSizeWithoutScrollBar);
   }, [apiRef, props.autoPageSize, rowHeight]);

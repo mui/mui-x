@@ -1,6 +1,9 @@
 {
   "componentDescription": "",
   "propDescriptions": {
+    "aggregationFunctions": "Aggregation functions available on the grid.",
+    "aggregationModel": "Set the aggregation model of the grid.",
+    "aggregationRowsScope": "Rows used to generate the aggregated value. If <code>filtered</code>, the aggregated values will be generated using only the rows currently passing the filtering process. If <code>all</code>, the aggregated values will be generated using all the rows.",
     "apiRef": "The ref object that allows grid manipulation. Can be instantiated with useGridApiRef().",
     "aria-label": "The label of the grid.",
     "aria-labelledby": "The id of the element containing a label for the grid.",
@@ -20,6 +23,7 @@
     "defaultGroupingExpansionDepth": "If above 0, the row children will be expanded up to this depth. If equal to -1, all the row children will be expanded.",
     "density": "Set the density of the grid.",
     "detailPanelExpandedRowIds": "The row ids to show the detail panel.",
+    "disableAggregation": "If <code>true</code>, aggregation is disabled.",
     "disableChildrenFiltering": "If <code>true</code>, the filtering will only be applied to the top level rows when grouping rows with the <code>treeData</code> prop.",
     "disableChildrenSorting": "If <code>true</code>, the sorting will only be applied to the top level rows when grouping rows with the <code>treeData</code> prop.",
     "disableColumnFilter": "If <code>true</code>, column filters are disabled.",
@@ -30,6 +34,7 @@
     "disableColumnSelector": "If <code>true</code>, hiding/showing columns is disabled.",
     "disableDensitySelector": "If <code>true</code>, the density selector is disabled.",
     "disableExtendRowFullWidth": "If <code>true</code>, rows will not be extended to fill the full width of the grid container.",
+    "disableIgnoreModificationsIfProcessingProps": "If <code>true</code>, modification to a cell will not be discarded if the mode is changed from &quot;edit&quot; to &quot;view&quot; while processing props.",
     "disableMultipleColumnsFiltering": "If <code>true</code>, filtering with multiple columns is disabled.",
     "disableMultipleColumnsSorting": "If <code>true</code>, sorting with multiple columns is disabled.",
     "disableMultipleSelection": "If <code>true</code>, multiple selection using the Ctrl or CMD key is disabled.",
@@ -42,6 +47,7 @@
     "experimentalFeatures": "Features under development. For each feature, if the flag is not explicitly set to <code>true</code>, the feature will be fully disabled and any property / method call will not have any effect.",
     "filterMode": "Filtering can be processed on the server or client-side. Set it to &#39;server&#39; if you would like to handle filtering on the server-side.",
     "filterModel": "Set the filter model of the grid.",
+    "getAggregationPosition": "Determines the position of an aggregated value.<br><br><strong>Signature:</strong><br><code>function(groupNode: GridRowTreeNodeConfig | null) =&gt; GridAggregationPosition | null</code><br><em>groupNode:</em> The current group (<code>null</code> being the top level group).<br> <em>returns</em> (GridAggregationPosition | null): Position of the aggregated value (if <code>null</code>, the group will not be aggregated).",
     "getCellClassName": "Function that applies CSS classes dynamically on cells.<br><br><strong>Signature:</strong><br><code>function(params: GridCellParams) =&gt; string</code><br><em>params:</em> With all properties from <a href=\"/x/api/data-grid/grid-cell-params/\">GridCellParams</a>.<br> <em>returns</em> (string): The CSS class to apply to the cell.",
     "getDetailPanelContent": "Function that returns the element to render in row detail.<br><br><strong>Signature:</strong><br><code>function(params: GridRowParams) =&gt; JSX.Element</code><br><em>params:</em> With all properties from <a href=\"/x/api/data-grid/grid-row-params/\">GridRowParams</a>.<br> <em>returns</em> (JSX.Element): The row detail element.",
     "getDetailPanelHeight": "Function that returns the height of the row detail panel.<br><br><strong>Signature:</strong><br><code>function(params: GridRowParams) =&gt; number | string</code><br><em>params:</em> With all properties from <a href=\"/x/api/data-grid/grid-row-params/\">GridRowParams</a>.<br> <em>returns</em> (number | string): The height in pixels or &quot;auto&quot; to use the content height.",
@@ -67,6 +73,7 @@
     "logger": "Pass a custom logger in the components that implements the Logger interface.",
     "logLevel": "Allows to pass the logging level or false to turn off logging.",
     "nonce": "Nonce of the inline styles for <a href=\"https://www.w3.org/TR/2016/REC-CSP2-20161215/#script-src-the-nonce-attribute\">Content Security Policy</a>.",
+    "onAggregationModelChange": "Callback fired when the row grouping model changes.<br><br><strong>Signature:</strong><br><code>function(model: GridAggregationModel, details: GridCallbackDetails) =&gt; void</code><br><em>model:</em> The aggregated columns.<br><em>details:</em> Additional details for this callback.",
     "onCellClick": "Callback fired when any cell is clicked.<br><br><strong>Signature:</strong><br><code>function(params: GridCellParams, event: MuiEvent&lt;React.MouseEvent&gt;, details: GridCallbackDetails) =&gt; void</code><br><em>params:</em> With all properties from <a href=\"/x/api/data-grid/grid-cell-params/\">GridCellParams</a>.<br><em>event:</em> The event object.<br><em>details:</em> Additional details for this callback.",
     "onCellDoubleClick": "Callback fired when a double click event comes from a cell element.<br><br><strong>Signature:</strong><br><code>function(params: GridCellParams, event: MuiEvent&lt;React.MouseEvent&gt;, details: GridCallbackDetails) =&gt; void</code><br><em>params:</em> With all properties from <a href=\"/x/api/data-grid/grid-cell-params/\">GridCellParams</a>.<br><em>event:</em> The event object.<br><em>details:</em> Additional details for this callback.",
     "onCellEditCommit": "Callback fired when the cell changes are committed.<br><br><strong>Signature:</strong><br><code>function(params: GridCellEditCommitParams, event: MuiEvent&lt;MuiBaseEvent&gt;, details: GridCallbackDetails) =&gt; void</code><br><em>params:</em> With all properties from GridCellEditCommitParams.<br><em>event:</em> The event that caused this prop to be called.<br><em>details:</em> Additional details for this callback.",
@@ -111,12 +118,12 @@
     "onRowsScrollEnd": "Callback fired when scrolling to the bottom of the grid viewport.<br><br><strong>Signature:</strong><br><code>function(params: GridRowScrollEndParams, event: MuiEvent&lt;{}&gt;, details: GridCallbackDetails) =&gt; void</code><br><em>params:</em> With all properties from GridRowScrollEndParams.<br><em>event:</em> The event object.<br><em>details:</em> Additional details for this callback.",
     "onSelectionModelChange": "Callback fired when the selection state of one or multiple rows changes.<br><br><strong>Signature:</strong><br><code>function(selectionModel: GridSelectionModel, details: GridCallbackDetails) =&gt; void</code><br><em>selectionModel:</em> With all the row ids GridSelectionModel.<br><em>details:</em> Additional details for this callback.",
     "onSortModelChange": "Callback fired when the sort model changes before a column is sorted.<br><br><strong>Signature:</strong><br><code>function(model: GridSortModel, details: GridCallbackDetails) =&gt; void</code><br><em>model:</em> With all properties from GridSortModel.<br><em>details:</em> Additional details for this callback.",
-    "onStateChange": "Callback fired when the state of the grid is updated.<br><br><strong>Signature:</strong><br><code>function(state: GridState, event: MuiEvent&lt;{}&gt;, details: GridCallbackDetails) =&gt; void</code><br><em>state:</em> The new state.<br><em>event:</em> The event object.<br><em>details:</em> Additional details for this callback.",
     "page": "The zero-based index of the current page.",
     "pageSize": "Set the number of rows in one page. If some of the rows have children (for instance in the tree data), this number represents the amount of top level rows wanted on each page.",
     "pagination": "If <code>true</code>, pagination is enabled.",
     "paginationMode": "Pagination can be processed on the server or client-side. Set it to &#39;client&#39; if you would like to handle the pagination on the client-side. Set it to &#39;server&#39; if you would like to handle the pagination on the server-side.",
     "pinnedColumns": "The column fields to display pinned to left or right.",
+    "pinnedRows": "Rows data to pin on top or bottom.",
     "processRowUpdate": "Callback called before updating a row with new values in the row and cell editing. Only applied if <code>props.experimentalFeatures.newEditingApi: true</code>.<br><br><strong>Signature:</strong><br><code>function(newRow: R, oldRow: R) =&gt; Promise&lt;R&gt; | R</code><br><em>newRow:</em> Row object with the new values.<br><em>oldRow:</em> Row object with the old values.<br> <em>returns</em> (Promise<R> | R): The final values to update the row.",
     "rowBuffer": "Number of extra rows to be rendered before/after the visible slice.",
     "rowCount": "Set the total number of rows, if it is different from the length of the value <code>rows</code> prop. If some rows have children (for instance in the tree data), this number represents the amount of top level rows.",
@@ -143,7 +150,33 @@
   },
   "classDescriptions": {
     "actionsCell": {
-      "description": "Styles applied to the root element of the cell with type=\"actions\""
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the root element of the cell with type=\"actions\""
+    },
+    "aggregationColumnHeader": {
+      "description": "Styles applied to {{nodeName}} when {{conditions}}.",
+      "nodeName": "the root element of the column header",
+      "conditions": "aggregated"
+    },
+    "aggregationColumnHeader--alignLeft": {
+      "description": "Styles applied to {{nodeName}} when {{conditions}}.",
+      "nodeName": "the root element of the header",
+      "conditions": "aggregation if <code>headerAlign=\"left\"</code>"
+    },
+    "aggregationColumnHeader--alignCenter": {
+      "description": "Styles applied to {{nodeName}} when {{conditions}}.",
+      "nodeName": "the root element of the header",
+      "conditions": "aggregation if <code>headerAlign=\"center\"</code>"
+    },
+    "aggregationColumnHeader--alignRight": {
+      "description": "Styles applied to {{nodeName}} when {{conditions}}.",
+      "nodeName": "the root element of the header",
+      "conditions": "aggregation if <code>headerAlign=\"right\"</code>"
+    },
+    "aggregationColumnHeaderLabel": {
+      "description": "Styles applied to {{nodeName}} when {{conditions}}.",
+      "nodeName": "the aggregation label in the column header",
+      "conditions": "aggregated"
     },
     "autoHeight": {
       "description": "Styles applied to {{nodeName}} if {{conditions}}.",
@@ -246,6 +279,10 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the column header element"
     },
+    "columnGroupHeader": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the column group header element"
+    },
     "columnHeaderCheckbox": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the header checkbox cell element"
@@ -271,6 +308,20 @@
     "columnHeaderTitleContainerContent": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the column header's title excepted buttons"
+    },
+    "columnHeader--filledGroup": {
+      "description": "Styles applied to {{nodeName}} if {{conditions}}.",
+      "nodeName": "the column group header cell",
+      "conditions": "not empty"
+    },
+    "columnHeader--emptyGroup": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the empty column group header cell"
+    },
+    "columnHeader--showColumnBorder": {
+      "description": "Styles applied to {{nodeName}} when {{conditions}}.",
+      "nodeName": "the column group header cell",
+      "conditions": "show column border"
     },
     "columnHeaders": {
       "description": "Styles applied to {{nodeName}}.",
@@ -333,6 +384,10 @@
       "description": "Styles applied to {{nodeName}} if {{conditions}}.",
       "nodeName": "the detail panel toggle cell element",
       "conditions": "expanded"
+    },
+    "footerCell": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the root element of the cell inside a footer row"
     },
     "panel": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the panel element" },
     "panelHeader": {
@@ -568,6 +623,22 @@
     },
     "groupingCriteriaCellToggle": {
       "description": "Styles applied to the toggle of the grouping criteria cell"
+    },
+    "pinnedRows": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the pinned rows container"
+    },
+    "pinnedRows--top": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the top pinned rows container"
+    },
+    "pinnedRows--bottom": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the bottom pinned rows container"
+    },
+    "pinnedRowsRenderZone": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "pinned rows render zones"
     }
   },
   "slotDescriptions": {

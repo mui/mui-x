@@ -58,9 +58,11 @@ export const useGridRowEditing = (
     | 'rowModesModel'
     | 'onRowModesModelChange'
     | 'signature'
+    | 'disableIgnoreModificationsIfProcessingProps'
   >,
 ) => {
   const [rowModesModel, setRowModesModel] = React.useState<GridRowModesModel>({});
+  const rowModesModelRef = React.useRef(rowModesModel);
   const prevRowModesModel = React.useRef<GridRowModesModel>({});
   const focusTimeout = React.useRef<any>(null);
   const nextFocusedCell = React.useRef<GridCellParams | null>(null);
@@ -145,6 +147,11 @@ export const useGridRowEditing = (
             return;
           }
 
+          // The row may already changed its mode
+          if (apiRef.current.getRowMode(params.id) === GridRowModes.View) {
+            return;
+          }
+
           const rowParams = apiRef.current.getRowParams(params.id);
           const newParams = {
             ...rowParams,
@@ -167,6 +174,12 @@ export const useGridRowEditing = (
   const handleCellKeyDown = React.useCallback<GridEventListener<'cellKeyDown'>>(
     (params, event) => {
       if (params.cellMode === GridRowModes.Edit) {
+        // Wait until IME is settled for Asian languages like Japanese and Chinese
+        // TODO: `event.which` is depricated but this is a temporary workaround
+        if (event.which === 229) {
+          return;
+        }
+
         let reason: GridRowEditStopReasons | undefined;
 
         if (event.key === 'Escape') {
@@ -205,14 +218,14 @@ export const useGridRowEditing = (
       } else if (params.isEditable) {
         let reason: GridRowEditStartReasons | undefined;
 
-        if (isPrintableKey(event.key)) {
-          if (event.shiftKey || event.ctrlKey || event.metaKey || event.altKey) {
-            return;
-          }
+        if (isPrintableKey(event)) {
+          reason = GridRowEditStartReasons.printableKeyDown;
+        } else if ((event.ctrlKey || event.metaKey) && event.key === 'v') {
           reason = GridRowEditStartReasons.printableKeyDown;
         } else if (event.key === 'Enter') {
           reason = GridRowEditStartReasons.enterKeyDown;
-        } else if (event.key === 'Delete') {
+        } else if (event.key === 'Delete' || event.key === 'Backspace') {
+          // Delete on Windows, Backspace on macOS
           reason = GridRowEditStartReasons.deleteKeyDown;
         }
 
@@ -261,7 +274,7 @@ export const useGridRowEditing = (
 
       let ignoreModifications = reason === 'escapeKeyDown';
       const editingState = gridEditRowsStateSelector(apiRef.current.state);
-      if (!ignoreModifications) {
+      if (!ignoreModifications && !props.disableIgnoreModificationsIfProcessingProps) {
         // The user wants to stop editing the cell but we can't wait for the props to be processed.
         // In this case, discard the modifications if any field is processing its props.
         ignoreModifications = Object.values(editingState[id]).some((fieldProps) => {
@@ -271,7 +284,7 @@ export const useGridRowEditing = (
 
       apiRef.current.stopRowEditMode({ id, ignoreModifications, field, cellToFocusAfter });
     },
-    [apiRef],
+    [apiRef, props.disableIgnoreModificationsIfProcessingProps],
   );
 
   useGridApiEventHandler(apiRef, 'cellDoubleClick', runIfEditModeIsRow(handleCellDoubleClick));
@@ -311,6 +324,7 @@ export const useGridRowEditing = (
       }
 
       setRowModesModel(newModel);
+      rowModesModelRef.current = newModel;
       apiRef.current.publishEvent('rowModesModelChange', newModel);
     },
     [apiRef, onRowModesModelChange, props.rowModesModel, signature],
@@ -318,7 +332,7 @@ export const useGridRowEditing = (
 
   const updateRowInRowModesModel = React.useCallback(
     (id: GridRowId, newProps: GridRowModesModelProps | null) => {
-      const newModel = { ...rowModesModel };
+      const newModel = { ...rowModesModelRef.current };
 
       if (newProps !== null) {
         newModel[id] = { ...newProps };
@@ -328,7 +342,7 @@ export const useGridRowEditing = (
 
       updateRowModesModel(newModel);
     },
-    [rowModesModel, updateRowModesModel],
+    [updateRowModesModel],
   );
 
   const updateOrDeleteRowState = React.useCallback(

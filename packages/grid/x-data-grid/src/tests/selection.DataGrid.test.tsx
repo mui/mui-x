@@ -1,6 +1,6 @@
 import * as React from 'react';
 // @ts-expect-error Remove once the test utils are typed
-import { createRenderer, fireEvent, screen } from '@mui/monorepo/test/utils';
+import { createRenderer, fireEvent, screen, act } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
 import { DataGrid, DataGridProps, GridInputSelectionModel, GridRowId } from '@mui/x-data-grid';
 import {
@@ -456,7 +456,7 @@ describe('<DataGrid /> - Selection', () => {
       const selectAllCell = document.querySelector<HTMLElement>(
         '[role="columnheader"][data-field="__check__"] input',
       )!;
-      selectAllCell.focus();
+      act(() => selectAllCell.focus());
 
       fireEvent.keyDown(selectAllCell, {
         key: ' ',

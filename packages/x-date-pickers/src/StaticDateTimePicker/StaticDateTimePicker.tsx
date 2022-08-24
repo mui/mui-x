@@ -161,6 +161,13 @@ StaticDateTimePicker.propTypes = {
    */
   dateRangeIcon: PropTypes.node,
   /**
+   * Formats the day of week displayed in the calendar header.
+   * @param {string} day The day of week provided by the adapter's method `getWeekdays`.
+   * @returns {string} The name to display.
+   * @default (day) => day.charAt(0).toUpperCase()
+   */
+  dayOfWeekFormatter: PropTypes.func,
+  /**
    * Default calendar month displayed when `value={null}`.
    */
   defaultCalendarMonth: PropTypes.any,
@@ -282,7 +289,7 @@ StaticDateTimePicker.propTypes = {
    */
   maxDate: PropTypes.any,
   /**
-   * Minimal selectable moment of time with binding to date, to set max time in each day use `maxTime`.
+   * Maximal selectable moment of time with binding to date, to set max time in each day use `maxTime`.
    */
   maxDateTime: PropTypes.any,
   /**
