@@ -8,9 +8,7 @@ const views = {
   seconds: '秒',
 };
 
-// This object is not Partial<PickersLocaleText> because it is the default values
-
-const zhCNPickers: PickersLocaleText<any> = {
+const zhCNPickers: Partial<PickersLocaleText<any>> = {
   // Calendar navigation
   previousMonth: '上个月',
   nextMonth: '下个月',
@@ -20,6 +18,7 @@ const zhCNPickers: PickersLocaleText<any> = {
   openNextView: '下一个视图',
   calendarViewSwitchingButtonAriaLabel: (view: CalendarPickerView) =>
     view === 'year' ? '年视图已打开，切换为日历视图' : '日历视图已打开，切换为年视图',
+  // inputModeToggleButtonAriaLabel: (isKeyboardInputOpen: boolean, viewType: 'calendar' | 'clock') => isKeyboardInputOpen ? `text input view is open, go to ${viewType} view` : `${viewType} view is open, go to text input view`,
 
   // DateRange placeholders
   start: '开始',
@@ -30,6 +29,12 @@ const zhCNPickers: PickersLocaleText<any> = {
   clearButtonLabel: '清除',
   okButtonLabel: '确认',
   todayButtonLabel: '今天',
+
+  // Toolbar titles
+  // datePickerDefaultToolbarTitle: 'Select date',
+  // dateTimePickerDefaultToolbarTitle: 'Select date & time',
+  // timePickerDefaultToolbarTitle: 'Select time',
+  // dateRangePickerDefaultToolbarTitle: 'Select date range',
 
   // Clock labels
   clockLabelText: (view, time, adapter) =>
