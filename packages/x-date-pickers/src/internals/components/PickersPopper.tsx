@@ -11,6 +11,7 @@ import { PickersActionBar, PickersActionBarProps } from '../../PickersActionBar'
 export interface PickersPopperSlotsComponent {
   ActionBar: React.ElementType<PickersActionBarProps>;
 }
+
 export interface PickersPopperSlotsComponentsProps {
   actionBar: Omit<PickersActionBarProps, 'onAccept' | 'onClear' | 'onCancel' | 'onSetToday'>;
 }

@@ -6,7 +6,7 @@ import {
   useLocaleText,
   ExportedDateValidationProps,
   PickersArrowSwitcher,
-  ExportedArrowSwitcherProps,
+  ExportedPickersArrowSwitcherProps,
   usePreviousMonthDisabled,
   useNextMonthDisabled,
   DayPicker,
@@ -41,7 +41,7 @@ interface DesktopDateRangeCalendarProps<TDate>
   extends ExportedDesktopDateRangeCalendarProps<TDate>,
     Omit<DayPickerProps<TDate>, 'selectedDays' | 'renderDay' | 'onFocusedDayChange'>,
     ExportedDateValidationProps<TDate>,
-    ExportedArrowSwitcherProps {
+      ExportedPickersArrowSwitcherProps {
   calendars: 1 | 2 | 3;
   parsedValue: DateRange<TDate>;
   changeMonth: (date: TDate) => void;

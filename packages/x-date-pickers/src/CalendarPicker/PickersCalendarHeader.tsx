@@ -9,7 +9,7 @@ import { ExportedDateValidationProps } from '../internals/hooks/validation/useDa
 import { ArrowDropDown } from '../internals/components/icons';
 import {
   PickersArrowSwitcher,
-  ExportedArrowSwitcherProps,
+  ExportedPickersArrowSwitcherProps,
   PickersArrowSwitcherSlotsComponent,
   PickersArrowSwitcherSlotsComponentsProps,
 } from '../internals/components/PickersArrowSwitcher';
@@ -40,7 +40,7 @@ export interface PickersCalendarHeaderSlotsComponentsProps
 }
 
 export interface PickersCalendarHeaderProps<TDate>
-  extends ExportedArrowSwitcherProps,
+  extends ExportedPickersArrowSwitcherProps,
     Omit<ExportedDateValidationProps<TDate>, 'shouldDisableDate'> {
   /**
    * Overrideable components.

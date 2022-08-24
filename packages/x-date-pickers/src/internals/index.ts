@@ -11,8 +11,8 @@ export type {
   MobileWrapperSlotsComponentsProps,
 } from './components/wrappers/MobileWrapper';
 export { MobileKeyboardInputView } from './components/CalendarOrClockPicker/CalendarOrClockPicker';
-export { PickersArrowSwitcher } from './components/PickersArrowSwitcher';
-export type { ExportedArrowSwitcherProps } from './components/PickersArrowSwitcher';
+export { PickersArrowSwitcher } from './components/PickersArrowSwitcher/PickersArrowSwitcher';
+export type { ExportedPickersArrowSwitcherProps } from './components/PickersArrowSwitcher';
 export { PickerStaticWrapper } from './components/PickerStaticWrapper/PickerStaticWrapper';
 export type {
   PickersStaticWrapperSlotsComponent,
