@@ -4,29 +4,65 @@ import {
   GridFetchRowsParams,
   useGridApiRef,
 } from '@mui/x-data-grid-pro';
-import { createFakeServer, UseDemoDataOptions } from '@mui/x-data-grid-generator';
+import {
+  createFakeServer,
+  QueryOptions,
+  loadServerRows,
+  UseDemoDataOptions,
+} from '@mui/x-data-grid-generator';
 
-const ROW_COUNT = 10000;
 const DATASET_OPTION: UseDemoDataOptions = {
   dataSet: 'Employee',
-  rowLength: ROW_COUNT,
+  rowLength: 10000,
 };
 
-const { columns, useQuery } = createFakeServer(DATASET_OPTION);
+const { columns, columnsWithDefaultColDef, useQuery } =
+  createFakeServer(DATASET_OPTION);
 
 export default function LazyLoadingGrid() {
   const apiRef = useGridApiRef();
-  const cachedQuery = React.useMemo(() => ({}), []);
-  const { data, loadServerRowsInterval } = useQuery(cachedQuery);
-  const cachedRows = React.useMemo(() => data.slice(0, 10), [data]);
+  const [queryOptions, setQueryOptions] = React.useState<QueryOptions>({});
+  const { data } = useQuery(queryOptions);
+  const initialRows = React.useMemo(() => data.slice(0, 10), [data]);
 
   const handleFetchRows = async (params: GridFetchRowsParams) => {
-    const newRowsBatch = await loadServerRowsInterval(params);
+    // Bug, it shouldn't be triggered for the initial rendering
+    if (data.length === 0) {
+      return;
+    }
+
+    setQueryOptions((prev) => {
+      if (
+        prev.filterModel === params.filterModel &&
+        prev.sortModel === params.sortModel
+      ) {
+        return prev;
+      }
+
+      return {
+        filterModel: params.filterModel,
+        sortModel: params.sortModel,
+      };
+    });
+
+    const serverRows = await loadServerRows(
+      data,
+      {
+        filterModel: params.filterModel,
+        sortModel: params.sortModel,
+      },
+      {
+        minDelay: 300,
+        maxDelay: 800,
+        useCursorPagination: false,
+      },
+      columnsWithDefaultColDef,
+    );
 
     apiRef.current.replaceRows(
       params.firstRowToRender,
       params.lastRowToRender,
-      newRowsBatch.returnedRows,
+      serverRows.returnedRows.slice(params.firstRowToRender, params.lastRowToRender),
     );
   };
 
@@ -34,10 +70,10 @@ export default function LazyLoadingGrid() {
     <div style={{ height: 400, width: '100%' }}>
       <DataGridPro
         columns={columns}
-        rows={cachedRows}
+        rows={initialRows}
         apiRef={apiRef}
         hideFooterPagination
-        rowCount={ROW_COUNT}
+        rowCount={data.length}
         sortingMode="server"
         filterMode="server"
         rowsLoadingMode="server"

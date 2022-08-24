@@ -107,7 +107,7 @@ const getFilteredRows = (
 /**
  * Simulates server data loading
  */
-const loadServerRows = (
+export const loadServerRows = (
   rows: GridRowModel[],
   queryOptions: QueryOptions,
   serverOptions: ServerOptions,
@@ -170,11 +170,13 @@ interface PageInfo {
   pageSize?: number;
 }
 
-export interface ServerOptions {
+interface DefaultServerOptions {
   minDelay: number;
   maxDelay: number;
   useCursorPagination?: boolean;
 }
+
+type ServerOptions = Partial<DefaultServerOptions>;
 
 export interface QueryOptions {
   cursor?: GridRowId;
@@ -196,7 +198,7 @@ const DEFAULT_DATASET_OPTIONS: UseDemoDataOptions = {
 declare const DISABLE_CHANCE_RANDOM: any;
 const disableDelay = typeof DISABLE_CHANCE_RANDOM !== 'undefined' && DISABLE_CHANCE_RANDOM;
 
-const DEFAULT_SERVER_OPTIONS: ServerOptions = {
+const DEFAULT_SERVER_OPTIONS: DefaultServerOptions = {
   minDelay: disableDelay ? 0 : 100,
   maxDelay: disableDelay ? 0 : 300,
   useCursorPagination: true,
@@ -204,7 +206,7 @@ const DEFAULT_SERVER_OPTIONS: ServerOptions = {
 
 export const createFakeServer = (
   dataSetOptions?: Partial<UseDemoDataOptions>,
-  serverOptions?: Partial<ServerOptions>,
+  serverOptions?: ServerOptions,
 ) => {
   const dataSetOptionsWithDefault = { ...DEFAULT_DATASET_OPTIONS, ...dataSetOptions };
   const serverOptionsWithDefault = { ...DEFAULT_SERVER_OPTIONS, ...serverOptions };
@@ -275,43 +277,11 @@ export const createFakeServer = (
     // We use queryOptions pointer to be sure that isLoading===true as soon as the options change
     const effectShouldStart = queryOptionsRef.current !== queryOptions;
 
-    const loadServerRowsInterval = (
-      query: Pick<
-        QueryOptions,
-        'filterModel' | 'sortModel' | 'firstRowToRender' | 'lastRowToRender'
-      >,
-      server = serverOptionsWithDefault,
-    ): Promise<FakeServerResponse> => {
-      const { minDelay = 100, maxDelay = 300 } = server;
-
-      if (maxDelay < minDelay) {
-        throw new Error('serverOptions.minDelay is larger than serverOptions.maxDelay ');
-      }
-
-      const delay = Math.random() * (maxDelay - minDelay) + minDelay;
-      const { firstRowToRender, lastRowToRender } = query;
-      let filteredRows = getFilteredRows(rows, query.filterModel, columnsWithDefaultColDef);
-      const rowComparator = getRowComparator(query.sortModel, columnsWithDefaultColDef);
-      filteredRows = [...filteredRows].sort(rowComparator);
-      const totalRowCount = filteredRows.length;
-      const res: FakeServerResponse = {
-        returnedRows: filteredRows.slice(firstRowToRender, lastRowToRender),
-        totalRowCount,
-      };
-
-      return new Promise<FakeServerResponse>((resolve) => {
-        setTimeout(() => {
-          resolve(res);
-        }, delay); // simulate network latency
-      });
-    };
-
     return {
       isLoading: isLoading || effectShouldStart,
-      loadServerRowsInterval,
       ...response,
     };
   };
 
-  return { columns, initialState, useQuery };
+  return { columns, columnsWithDefaultColDef, initialState, useQuery };
 };
