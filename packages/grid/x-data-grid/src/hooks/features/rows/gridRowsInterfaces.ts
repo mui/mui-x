@@ -108,7 +108,7 @@ export type GridRowsPartialUpdateAction = 'insert' | 'modify' | 'remove';
 
 export type GridRowIdToModelLookup<R extends GridValidRowModel = GridValidRowModel> = Record<
   string,
-  R
+  R | undefined
 >;
 
 export type GridRowIdToIdLookup = Record<string, GridRowId>;
