@@ -8,7 +8,7 @@
     "components": { "type": { "name": "object" }, "default": "{}" },
     "componentsProps": { "type": { "name": "object" }, "default": "{}" }
   },
-  "slots": {},
+  "slots": { "ActionBar": { "type": { "name": "elementType" } } },
   "name": "PickerStaticWrapper",
   "styles": {
     "classes": ["root", "content"],
