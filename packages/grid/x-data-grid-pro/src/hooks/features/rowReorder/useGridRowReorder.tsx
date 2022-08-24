@@ -136,7 +136,7 @@ export const useGridRowReorder = (
       } else {
         // Emit the rowOrderChange event only once when the reordering stops.
         const rowOrderChangeParams: GridRowOrderChangeParams = {
-          row: apiRef.current.getRow(dragRowId),
+          row: apiRef.current.getRow(dragRowId)!,
           targetIndex: apiRef.current.getRowIndex(params.id),
           oldIndex: originRowIndex.current!,
         };

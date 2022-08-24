@@ -106,7 +106,10 @@ export type GridHydrateRowsValue = Pick<
 
 export type GridRowsPartialUpdateAction = 'insert' | 'modify' | 'remove';
 
-export type GridRowIdToModelLookup<R extends GridValidRowModel = any> = Record<string, R>;
+export type GridRowIdToModelLookup<R extends GridValidRowModel = GridValidRowModel> = Record<
+  string,
+  R
+>;
 
 export type GridRowIdToIdLookup = Record<string, GridRowId>;
 

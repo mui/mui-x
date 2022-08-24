@@ -70,7 +70,13 @@ export interface GridColDef<R extends GridValidRowModel = any, V = any, F = V> {
   maxWidth?: number;
   /**
    * If `true`, hide the column.
-   * @deprecated Use the `columnVisibility` prop instead.
+   * @deprecated Use the `initialState` prop to hide columns:
+   * ```jsx
+   * // Hide `id` column, the other columns will remain visible
+   * <DataGrid initialState={{ columns: { columnVisibilityModel: { id: false } } }} />
+   * ```
+   * Or use `columnVisibilityModel` prop to fully control column visibility.
+   * @link https://mui.com/x/react-data-grid/column-visibility/
    * @default false
    */
   hide?: boolean;
