@@ -58,7 +58,13 @@ const GridIconButtonRoot = styled(IconButton)({
   justifyContent: 'flex-end',
 });
 
-export interface GridColumnsPanelProps extends GridPanelWrapperProps {}
+export interface GridColumnsPanelProps extends GridPanelWrapperProps {
+  /**
+   * Changes how the options in the columns selector should be ordered.
+   * If not specified, the order is derived from the `columns` prop.
+   */
+  sort?: 'asc' | 'desc';
+}
 
 export function GridColumnsPanel(props: GridColumnsPanelProps) {
   const apiRef = useGridApiContext();
@@ -70,18 +76,21 @@ export function GridColumnsPanel(props: GridColumnsPanelProps) {
   const ownerState = { classes: rootProps.classes };
   const classes = useUtilityClasses(ownerState);
 
+  const { sort } = props;
   const sortedColumns = React.useMemo(() => {
-    if (rootProps.componentsProps?.columnsPanel.sort === 'asc') {
-      return [...columns].sort((a, b) =>
-        (a.headerName || a.field) > (b.headerName || b.field) ? 1 : -1,
-      );
-    } else if (rootProps.componentsProps?.columnsPanel.sort === 'desc') {
-      return [...columns].sort((a, b) =>
-        (a.headerName || a.field) < (b.headerName || b.field) ? 1 : -1,
-      );
+    switch (sort) {
+      case 'asc':
+        return [...columns].sort((a, b) =>
+          (a.headerName || a.field) > (b.headerName || b.field) ? 1 : -1,
+        );
+      case 'desc':
+        return [...columns].sort((a, b) =>
+          (a.headerName || a.field) < (b.headerName || b.field) ? 1 : -1,
+        );
+      default:
+        return columns;
     }
-    return columns;
-  }, [columns, rootProps.componentsProps?.columnsPanel.sort]);
+  }, [columns, sort]);
 
   const toggleColumn = (event: React.MouseEvent<HTMLButtonElement>) => {
     const { name: field } = event.target as HTMLInputElement;
