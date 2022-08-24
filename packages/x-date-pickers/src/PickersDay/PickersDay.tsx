@@ -176,7 +176,8 @@ const PickersDayFiller = styled('div', {
   overridesResolver,
 })<{ ownerState: OwnerState }>(({ theme, ownerState }) => ({
   ...styleArg({ theme, ownerState }),
-  visibility: 'hidden',
+  // visibility: 'hidden' does not work here as it hides the element from screen readers as well
+  opacity: 0,
 }));
 
 const noop = () => {};
@@ -327,6 +328,7 @@ const PickersDayRaw = React.forwardRef(function PickersDay<TDate>(
       <PickersDayFiller
         className={clsx(classes.root, classes.hiddenDaySpacingFiller, className)}
         ownerState={ownerState}
+        role={other.role}
       />
     );
   }
@@ -339,7 +341,6 @@ const PickersDayRaw = React.forwardRef(function PickersDay<TDate>(
       centerRipple
       data-mui-test="day"
       disabled={disabled}
-      aria-label={!children ? utils.format(day, 'fullDate') : undefined}
       tabIndex={selected ? 0 : -1}
       onFocus={handleFocus}
       onKeyDown={handleKeyDown}

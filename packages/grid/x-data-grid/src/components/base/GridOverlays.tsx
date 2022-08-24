@@ -8,12 +8,12 @@ import {
 } from '../../hooks/features/rows/gridRowsSelector';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
-import { gridDensityHeaderHeightSelector } from '../../hooks/features/density/densitySelector';
+import { gridDensityTotalHeaderHeightSelector } from '../../hooks/features/density/densitySelector';
 
 function GridOverlayWrapper(props: React.PropsWithChildren<{}>) {
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
-  const headerHeight = useGridSelector(apiRef, gridDensityHeaderHeightSelector);
+  const totalHeaderHeight = useGridSelector(apiRef, gridDensityTotalHeaderHeightSelector);
 
   const [viewportInnerSize, setViewportInnerSize] = React.useState(
     () => apiRef.current.getRootDimensions()?.viewportInnerSize ?? null,
@@ -42,7 +42,7 @@ function GridOverlayWrapper(props: React.PropsWithChildren<{}>) {
         height,
         width: viewportInnerSize?.width ?? 0,
         position: 'absolute',
-        top: headerHeight,
+        top: totalHeaderHeight,
         bottom: height === 'auto' ? 0 : undefined,
       }}
       {...props}
