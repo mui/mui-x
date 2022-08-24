@@ -71,7 +71,14 @@
       }
     }
   },
-  "slots": {},
+  "slots": {
+    "ActionBar": { "type": { "name": "elementType" } },
+    "LeftArrowButton": { "type": { "name": "elementType" } },
+    "LeftArrowIcon": { "type": { "name": "elementType" } },
+    "OpenPickerIcon": { "type": { "name": "elementType" } },
+    "RightArrowButton": { "type": { "name": "elementType" } },
+    "RightArrowIcon": { "type": { "name": "elementType" } }
+  },
   "name": "DesktopTimePicker",
   "styles": { "classes": [], "globalClasses": {}, "name": "MuiDesktopTimePicker" },
   "spread": false,
