@@ -68,6 +68,6 @@
     "LeftArrowIcon": "Icon displayed in the left view switch button",
     "RightArrowButton": "Button allowing to switch to the right view.",
     "RightArrowIcon": "Icon displayed in the right view switch button",
-    "PaperContent": ""
+    "PaperContent": "The content of the Paper wrapping views"
   }
 }

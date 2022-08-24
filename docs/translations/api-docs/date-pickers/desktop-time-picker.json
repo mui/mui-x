@@ -46,8 +46,8 @@
   },
   "classDescriptions": {},
   "slotDescriptions": {
-    "ActionBar": "",
-    "PaperContent": "",
+    "ActionBar": "The action bar placed bellow picker views.",
+    "PaperContent": "The content of the Paper wrapping views",
     "OpenPickerIcon": "Icon displaying for open picker button.",
     "LeftArrowButton": "Button allowing to switch to the left view.",
     "LeftArrowIcon": "Icon displayed in the left view switch button",

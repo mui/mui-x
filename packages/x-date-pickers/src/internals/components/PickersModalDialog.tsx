@@ -8,8 +8,8 @@ import { PickerStateWrapperProps } from '../hooks/usePickerState';
 import { PickersSlotsComponent } from './wrappers/WrapperProps';
 
 export interface PickersModalDialogSlotsComponent
-  extends Omit<PickersSlotsComponent, 'PaperContent'> { }
-  
+  extends Omit<PickersSlotsComponent, 'PaperContent'> {}
+
 export interface PickersModalDialogSlotsComponentsProps {
   actionBar: Omit<PickersActionBarProps, 'onAccept' | 'onClear' | 'onCancel' | 'onSetToday'>;
 }
