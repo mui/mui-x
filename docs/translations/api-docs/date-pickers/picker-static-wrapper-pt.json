@@ -13,5 +13,5 @@
       "nodeName": "the content element"
     }
   },
-  "slotDescriptions": { "ActionBar": "" }
+  "slotDescriptions": { "ActionBar": "", "PaperContent": "" }
 }
