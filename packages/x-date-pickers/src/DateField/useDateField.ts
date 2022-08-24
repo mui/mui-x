@@ -42,6 +42,6 @@ export const useDateField = <
     valueManager: datePickerValueManager,
     fieldValueManager: dateRangeFieldValueManager,
     // TODO: Support time validation.
-    validator: validateDate,
+    validator: validateDate as any,
   });
 };
