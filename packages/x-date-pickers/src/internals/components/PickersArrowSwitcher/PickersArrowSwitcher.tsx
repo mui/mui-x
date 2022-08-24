@@ -81,6 +81,13 @@ export const PickersArrowSwitcher = React.forwardRef(function PickersArrowSwitch
     className: classes.button,
   });
 
+  const LeftArrowIcon = components?.LeftArrowIcon ?? ArrowLeft;
+  const leftArrowIconProps = useSlotProps({
+    elementType: LeftArrowIcon,
+    externalSlotProps: componentsProps.leftArrowIcon,
+    ownerState,
+  });
+
   const RightArrowButton = components.RightArrowButton ?? PickersArrowSwitcherButton;
   const rightArrowButtonProps = useSlotProps({
     elementType: LeftArrowButton,
@@ -97,9 +104,12 @@ export const PickersArrowSwitcher = React.forwardRef(function PickersArrowSwitch
     className: classes.button,
   });
 
-  const LeftArrowIcon = components?.LeftArrowIcon || ArrowLeft;
-
-  const RightArrowIcon = components?.RightArrowIcon || ArrowRight;
+  const RightArrowIcon = components?.RightArrowIcon ?? ArrowRight;
+  const rightArrowIconProps = useSlotProps({
+    elementType: RightArrowIcon,
+    externalSlotProps: componentsProps.rightArrowIcon,
+    ownerState,
+  });
 
   return (
     <PickersArrowSwitcherRoot
@@ -109,7 +119,11 @@ export const PickersArrowSwitcher = React.forwardRef(function PickersArrowSwitch
       {...other}
     >
       <LeftArrowButton {...leftArrowButtonProps}>
-        {isRtl ? <RightArrowIcon /> : <LeftArrowIcon />}
+        {isRtl ? (
+          <RightArrowIcon {...rightArrowIconProps} />
+        ) : (
+          <LeftArrowIcon {...leftArrowIconProps} />
+        )}
       </LeftArrowButton>
       {children ? (
         <Typography variant="subtitle1" component="span">
@@ -119,7 +133,11 @@ export const PickersArrowSwitcher = React.forwardRef(function PickersArrowSwitch
         <PickersArrowSwitcherSpacer className={classes.spacer} ownerState={ownerState} />
       )}
       <RightArrowButton {...rightArrowButtonProps}>
-        {isRtl ? <LeftArrowIcon /> : <RightArrowIcon />}
+        {isRtl ? (
+          <LeftArrowIcon {...leftArrowIconProps} />
+        ) : (
+          <RightArrowIcon {...rightArrowIconProps} />
+        )}
       </RightArrowButton>
     </PickersArrowSwitcherRoot>
   );

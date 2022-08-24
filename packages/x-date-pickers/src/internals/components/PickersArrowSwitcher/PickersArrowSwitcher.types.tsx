@@ -36,7 +36,9 @@ export interface PickersArrowSwitcherProps
   onRightClick: () => void;
 }
 
-export interface PickersArrowSwitchComponentsPropsOverrides {}
+export type PickersArrowSwitcherOwnerState = PickersArrowSwitcherProps;
+
+export interface PickersArrowSwitcherComponentsPropsOverrides {}
 
 export interface PickersArrowSwitcherSlotsComponent {
   LeftArrowButton: React.ElementType;
@@ -48,12 +50,22 @@ export interface PickersArrowSwitcherSlotsComponent {
 export interface PickersArrowSwitcherSlotsComponentsProps {
   leftArrowButton: SlotComponentProps<
     'button',
-    PickersArrowSwitchComponentsPropsOverrides,
-    PickersArrowSwitcherProps
+    PickersArrowSwitcherComponentsPropsOverrides,
+    PickersArrowSwitcherOwnerState & { hidden?: boolean }
+  >;
+  leftArrowIcon: SlotComponentProps<
+    'svg',
+    PickersArrowSwitcherComponentsPropsOverrides,
+    PickersArrowSwitcherOwnerState
   >;
   rightArrowButton: SlotComponentProps<
     'button',
-    PickersArrowSwitchComponentsPropsOverrides,
-    PickersArrowSwitcherProps
+    PickersArrowSwitcherComponentsPropsOverrides,
+    PickersArrowSwitcherOwnerState & { hidden?: boolean }
+  >;
+  rightArrowIcon: SlotComponentProps<
+    'svg',
+    PickersArrowSwitcherComponentsPropsOverrides,
+    PickersArrowSwitcherOwnerState
   >;
 }
