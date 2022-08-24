@@ -66,6 +66,8 @@ export interface GridColumnsPanelProps extends GridPanelWrapperProps {
   sort?: 'asc' | 'desc';
 }
 
+const collator = new Intl.Collator();
+
 export function GridColumnsPanel(props: GridColumnsPanelProps) {
   const apiRef = useGridApiContext();
   const searchInputRef = React.useRef<HTMLInputElement>(null);
@@ -81,11 +83,11 @@ export function GridColumnsPanel(props: GridColumnsPanelProps) {
     switch (sort) {
       case 'asc':
         return [...columns].sort((a, b) =>
-          (a.headerName || a.field) > (b.headerName || b.field) ? 1 : -1,
+          collator.compare(a.headerName || a.field, b.headerName || b.field),
         );
       case 'desc':
-        return [...columns].sort((a, b) =>
-          (a.headerName || a.field) < (b.headerName || b.field) ? 1 : -1,
+        return [...columns].sort(
+          (a, b) => -collator.compare(a.headerName || a.field, b.headerName || b.field),
         );
       default:
         return columns;
