@@ -9,6 +9,7 @@ import ArrowLeft from '@mui/icons-material/ArrowLeft';
 import ArrowRight from '@mui/icons-material/ArrowRight';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+
 import { StaticDatePicker } from '@mui/x-date-pickers/StaticDatePicker';
 import { StaticTimePicker } from '@mui/x-date-pickers/StaticTimePicker';
 import { StaticDateRangePicker } from '@mui/x-date-pickers-pro/StaticDateRangePicker';
@@ -22,6 +23,26 @@ export default function ArrowSwitcherComponent() {
   ]);
 
   const [currentComponent, setCurrentComponent] = React.useState('date');
+
+  const components = {
+    LeftArrowIcon: ArrowLeft,
+    RightArrowIcon: ArrowRight,
+  };
+
+  const componentsProps = {
+    leftArrowButton: {
+      size: 'medium',
+    },
+    rightArrowButton: {
+      size: 'medium',
+    },
+    leftArrowIcon: {
+      fontSize: 'large',
+    },
+    rightArrowIcon: {
+      fontSize: 'large',
+    },
+  };
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -43,10 +64,8 @@ export default function ArrowSwitcherComponent() {
             onChange={(newValue) => setDate(newValue)}
             value={date}
             renderInput={(params) => <TextField {...params} />}
-            components={{
-              LeftArrowIcon: ArrowLeft,
-              RightArrowIcon: ArrowRight,
-            }}
+            components={components}
+            componentsProps={componentsProps}
           />
         )}
 
@@ -57,10 +76,8 @@ export default function ArrowSwitcherComponent() {
               onChange={(newValue) => setTime(newValue)}
               value={time}
               renderInput={(params) => <TextField {...params} />}
-              components={{
-                LeftArrowIcon: ArrowLeft,
-                RightArrowIcon: ArrowRight,
-              }}
+              components={components}
+              componentsProps={componentsProps}
             />
           </Box>
         )}
@@ -71,10 +88,8 @@ export default function ArrowSwitcherComponent() {
             onChange={(newValue) => setDateRange(newValue)}
             value={dateRange}
             renderInput={(params) => <TextField {...params} />}
-            components={{
-              LeftArrowIcon: ArrowLeft,
-              RightArrowIcon: ArrowRight,
-            }}
+            components={components}
+            componentsProps={componentsProps}
           />
         )}
       </Stack>
