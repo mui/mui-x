@@ -70,8 +70,8 @@ export function useMonthPickerDefaultizedProps<TDate>(
   });
 
   return {
-    disableFuture: true,
-    disablePast: true,
+    disableFuture: false,
+    disablePast: false,
     ...themeProps,
     minDate: parseNonNullablePickerDate(utils, themeProps.minDate, defaultDates.minDate),
     maxDate: parseNonNullablePickerDate(utils, themeProps.maxDate, defaultDates.maxDate),
