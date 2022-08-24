@@ -7,6 +7,10 @@ import { PickersActionBar, PickersActionBarProps } from '../../PickersActionBar'
 import { PickerStateWrapperProps } from '../hooks/usePickerState';
 
 export interface PickersModalDialogSlotsComponent {
+  /**
+   * The action bar placed bellow picker views.
+   * @default PickersActionBar
+   */
   ActionBar: React.ElementType<PickersActionBarProps>;
 }
 export interface PickersModalDialogSlotsComponentsProps {
