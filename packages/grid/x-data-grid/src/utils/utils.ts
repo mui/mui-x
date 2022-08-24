@@ -170,3 +170,10 @@ export function isDeepEqual(a: any, b: any) {
   // eslint-disable-next-line no-self-compare
   return a !== a && b !== b;
 }
+
+export function deepClone(obj: Record<string, any>) {
+  if (typeof structuredClone === 'function') {
+    return structuredClone(obj);
+  }
+  return JSON.parse(JSON.stringify(obj));
+}

@@ -400,6 +400,23 @@ describe('<DataGridPro /> - Cell Editing', () => {
         expect(getCell(0, 1).className).to.contain('MuiDataGrid-cell--editing');
       });
 
+      it('should keep mode=edit if props of any column contains error=true', async () => {
+        columnProps.preProcessEditCellProps = ({ props }: GridPreProcessEditCellProps) => ({
+          ...props,
+          error: true,
+        });
+        const onCellModesModelChange = spy();
+        render(<TestCase onCellModesModelChange={onCellModesModelChange} />);
+        act(() => apiRef.current.startCellEditMode({ id: 0, field: 'currencyPair' }));
+        await act(() =>
+          apiRef.current.setEditCellValue({ id: 0, field: 'currencyPair', value: 'USD GBP' }),
+        );
+        act(() => apiRef.current.stopCellEditMode({ id: 0, field: 'currencyPair' }));
+        expect(onCellModesModelChange.lastCall.args[0]).to.deep.equal({
+          0: { currencyPair: { mode: 'edit' } },
+        });
+      });
+
       it('should allow a 2nd call if the first call was when error=true', async () => {
         columnProps.preProcessEditCellProps = ({ props }: GridPreProcessEditCellProps) => ({
           ...props,
@@ -1197,6 +1214,26 @@ describe('<DataGridPro /> - Cell Editing', () => {
       const cell = getCell(0, 1);
       fireEvent.doubleClick(cell);
       expect(listener.callCount).to.equal(0);
+    });
+
+    it('should not mutate the cellModesModel prop if props of any column contains error=true', async () => {
+      columnProps.preProcessEditCellProps = ({ props }: GridPreProcessEditCellProps) => ({
+        ...props,
+        error: true,
+      });
+      const { setProps } = render(<TestCase />);
+      const cell = getCell(0, 1);
+      fireEvent.mouseUp(cell);
+      fireEvent.click(cell);
+      fireEvent.doubleClick(cell);
+
+      await act(() =>
+        apiRef.current.setEditCellValue({ id: 0, field: 'currencyPair', value: 'USD GBP' }),
+      );
+
+      const cellModesModel = { 0: { currencyPair: { mode: 'view' } } };
+      setProps({ cellModesModel });
+      expect(cellModesModel).to.deep.equal({ 0: { currencyPair: { mode: 'view' } } });
     });
   });
 
