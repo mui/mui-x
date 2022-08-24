@@ -93,11 +93,11 @@ const buildHandleRangeClick =
   };
 
 const RangeShortcutsPanel: React.FC<{
-  setValue: React.Dispatch<React.SetStateAction<DateRange<Dayjs>>>;
+  setValue?: React.Dispatch<React.SetStateAction<DateRange<Dayjs>>>;
   children: React.ReactNode;
 }> = ({ setValue, children }) => {
   const handleRangeClick = React.useCallback(
-    (range: RangeShortcutType) => buildHandleRangeClick(setValue)(range),
+    (range: RangeShortcutType) => setValue && buildHandleRangeClick(setValue)(range),
     [setValue],
   );
   return (
@@ -124,12 +124,12 @@ const RangeShortcutsPanel: React.FC<{
   );
 };
 
-const StaticRangeShortcutsPanel: React.FC<{
-  setValue: React.Dispatch<React.SetStateAction<DateRange<Dayjs>>>;
+const StaticRangeShortcutsPanel: React.FunctionComponent<{
+  setValue?: React.Dispatch<React.SetStateAction<DateRange<Dayjs>>>;
   children: React.ReactNode;
 }> = ({ setValue, children, ...other }) => {
   const handleRangeClick = React.useCallback(
-    (range: RangeShortcutType) => buildHandleRangeClick(setValue)(range),
+    (range: RangeShortcutType) => setValue && buildHandleRangeClick(setValue)(range),
     [setValue],
   );
   return (
@@ -158,20 +158,6 @@ const StaticRangeShortcutsPanel: React.FC<{
 
 export default function PaperContentComponent() {
   const [value, setValue] = React.useState<DateRange<Dayjs>>([null, null]);
-  const WrappedPaperContent = React.useCallback(
-    ({ children }: { children: React.ReactNode }) => (
-      <RangeShortcutsPanel setValue={setValue}>{children}</RangeShortcutsPanel>
-    ),
-    [],
-  );
-  const WrappedStaticPaperContent = React.useCallback(
-    ({ children, ...other }: { children: React.ReactNode }) => (
-      <StaticRangeShortcutsPanel setValue={setValue} {...other}>
-        {children}
-      </StaticRangeShortcutsPanel>
-    ),
-    [],
-  );
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <Stack spacing={4} alignItems="center">
@@ -185,16 +171,17 @@ export default function PaperContentComponent() {
               <TextField {...endProps} />
             </React.Fragment>
           )}
-          components={{ PaperContent: WrappedPaperContent }}
+          components={{ PaperContent: RangeShortcutsPanel }}
           PaperProps={{ sx: { display: 'flex', flexDirection: 'row' } }}
+          componentsProps={{ paperContent: { setValue } }}
         />
         <StaticDateRangePicker
           displayStaticWrapperAs="desktop"
           onChange={(newValue) => setValue(newValue)}
           value={value}
           renderInput={() => <div />}
-          components={{ PaperContent: WrappedStaticPaperContent }}
-          componentsProps={{ paperContent: { sx: { m: 2 } } }}
+          components={{ PaperContent: StaticRangeShortcutsPanel }}
+          componentsProps={{ paperContent: { sx: { m: 2 }, setValue } }}
         />
       </Stack>
     </LocalizationProvider>

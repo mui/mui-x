@@ -89,7 +89,7 @@ const buildHandleRangeClick = (setValue) => (range) => {
 
 const RangeShortcutsPanel = ({ setValue, children }) => {
   const handleRangeClick = React.useCallback(
-    (range) => buildHandleRangeClick(setValue)(range),
+    (range) => setValue && buildHandleRangeClick(setValue)(range),
     [setValue],
   );
 
@@ -117,12 +117,12 @@ const RangeShortcutsPanel = ({ setValue, children }) => {
 
 RangeShortcutsPanel.propTypes = {
   children: PropTypes.node,
-  setValue: PropTypes.func.isRequired,
+  setValue: PropTypes.func,
 };
 
 const StaticRangeShortcutsPanel = ({ setValue, children, ...other }) => {
   const handleRangeClick = React.useCallback(
-    (range) => buildHandleRangeClick(setValue)(range),
+    (range) => setValue && buildHandleRangeClick(setValue)(range),
     [setValue],
   );
 
@@ -152,27 +152,11 @@ const StaticRangeShortcutsPanel = ({ setValue, children, ...other }) => {
 
 StaticRangeShortcutsPanel.propTypes = {
   children: PropTypes.node,
-  setValue: PropTypes.func.isRequired,
+  setValue: PropTypes.func,
 };
 
 export default function PaperContentComponent() {
   const [value, setValue] = React.useState([null, null]);
-  const WrappedPaperContent = React.useCallback(
-    ({ children }) => (
-      <RangeShortcutsPanel setValue={setValue}>{children}</RangeShortcutsPanel>
-    ),
-    [],
-  );
-
-  const WrappedStaticPaperContent = React.useCallback(
-    ({ children, ...other }) => (
-      <StaticRangeShortcutsPanel setValue={setValue} {...other}>
-        {children}
-      </StaticRangeShortcutsPanel>
-    ),
-    [],
-  );
-
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <Stack spacing={4} alignItems="center">
@@ -186,16 +170,17 @@ export default function PaperContentComponent() {
               <TextField {...endProps} />
             </React.Fragment>
           )}
-          components={{ PaperContent: WrappedPaperContent }}
+          components={{ PaperContent: RangeShortcutsPanel }}
           PaperProps={{ sx: { display: 'flex', flexDirection: 'row' } }}
+          componentsProps={{ paperContent: { setValue } }}
         />
         <StaticDateRangePicker
           displayStaticWrapperAs="desktop"
           onChange={(newValue) => setValue(newValue)}
           value={value}
           renderInput={() => <div />}
-          components={{ PaperContent: WrappedStaticPaperContent }}
-          componentsProps={{ paperContent: { sx: { m: 2 } } }}
+          components={{ PaperContent: StaticRangeShortcutsPanel }}
+          componentsProps={{ paperContent: { sx: { m: 2 }, setValue } }}
         />
       </Stack>
     </LocalizationProvider>
