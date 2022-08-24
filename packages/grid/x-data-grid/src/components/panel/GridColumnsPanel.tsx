@@ -58,7 +58,7 @@ const GridIconButtonRoot = styled(IconButton)({
   justifyContent: 'flex-end',
 });
 
-export interface GridColumnsPanelProps extends GridPanelWrapperProps { }
+export interface GridColumnsPanelProps extends GridPanelWrapperProps {}
 
 export function GridColumnsPanel(props: GridColumnsPanelProps) {
   const apiRef = useGridApiContext();
