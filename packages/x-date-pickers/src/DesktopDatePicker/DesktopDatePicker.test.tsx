@@ -339,7 +339,7 @@ describe('<DesktopDatePicker />', () => {
       expect(onClose.callCount).to.equal(0);
 
       // Change the date
-      fireEvent.click(screen.getByLabelText('Jan 8, 2018'));
+      fireEvent.click(screen.getByRole('gridcell', { name: '8' }));
       expect(onChange.callCount).to.equal(1);
       expect(onChange.lastCall.args[0]).toEqualDateTime(new Date(2018, 0, 8));
       expect(onAccept.callCount).to.equal(1);
@@ -365,14 +365,14 @@ describe('<DesktopDatePicker />', () => {
       openPicker({ type: 'date', variant: 'desktop' });
 
       // Change the date
-      userEvent.mousePress(screen.getByLabelText('Jan 8, 2018'));
+      userEvent.mousePress(screen.getByRole('gridcell', { name: '8' }));
       expect(onChange.callCount).to.equal(1);
       expect(onChange.lastCall.args[0]).toEqualDateTime(new Date(2018, 0, 8));
       expect(onAccept.callCount).to.equal(0);
       expect(onClose.callCount).to.equal(0);
 
       // Change the date
-      userEvent.mousePress(screen.getByLabelText('Jan 6, 2018'));
+      userEvent.mousePress(screen.getByRole('gridcell', { name: '6' }));
       expect(onChange.callCount).to.equal(2);
       expect(onChange.lastCall.args[0]).toEqualDateTime(new Date(2018, 0, 6));
       expect(onAccept.callCount).to.equal(0);
@@ -398,7 +398,7 @@ describe('<DesktopDatePicker />', () => {
       openPicker({ type: 'date', variant: 'desktop' });
 
       // Change the date (already tested)
-      userEvent.mousePress(screen.getByLabelText('Jan 8, 2018'));
+      userEvent.mousePress(screen.getByRole('gridcell', { name: '8' }));
 
       // Dismiss the picker
       // eslint-disable-next-line material-ui/disallow-active-element-as-key-event-target -- don't care
@@ -453,7 +453,7 @@ describe('<DesktopDatePicker />', () => {
       openPicker({ type: 'date', variant: 'desktop' });
 
       // Change the date (already tested)
-      userEvent.mousePress(screen.getByLabelText('Jan 8, 2018'));
+      userEvent.mousePress(screen.getByRole('gridcell', { name: '8' }));
 
       // Dismiss the picker
       userEvent.mousePress(document.body);
@@ -628,7 +628,7 @@ describe('<DesktopDatePicker />', () => {
       openPicker({ type: 'date', variant: 'desktop' });
 
       // Change the date (same value)
-      userEvent.mousePress(screen.getByLabelText('Jan 1, 2018'));
+      userEvent.mousePress(screen.getByRole('gridcell', { name: '1' }));
       expect(onChange.callCount).to.equal(0); // Don't call onChange since the value did not change
       expect(onAccept.callCount).to.equal(0);
       expect(onClose.callCount).to.equal(1);
@@ -659,7 +659,7 @@ describe('<DesktopDatePicker />', () => {
       expect(onClose.callCount).to.equal(0);
 
       // Change the date (same value)
-      userEvent.mousePress(screen.getByLabelText('Jan 1, 2025'));
+      userEvent.mousePress(screen.getByRole('gridcell', { name: '1' }));
       expect(onChange.callCount).to.equal(1); // Don't call onChange again since the value did not change
       expect(onAccept.callCount).to.equal(1);
       expect(onAccept.lastCall.args[0]).toEqualDateTime(new Date(2025, 0, 1));
