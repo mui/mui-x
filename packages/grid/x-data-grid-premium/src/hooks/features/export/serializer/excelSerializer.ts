@@ -185,6 +185,51 @@ const serializeColumn = (column: GridStateColDef, columnsStyles: ColumnsStylesIn
   };
 };
 
+const addColumnGroupingHeaders = (worksheet: Excel.Worksheet, columns: GridStateColDef[], api: GridApi) => {
+  const maxDepth = Math.max(
+    ...columns.map(({ field }) => api.unstable_getColumnGroupPath(field)?.length ?? 0),
+  );
+  if (maxDepth === 0) {
+    return
+  }
+
+  const columnGroupDetails = api.unstable_getAllGroupDetails()
+
+  for (let rowIndex = 0; rowIndex < maxDepth; rowIndex += 1) {
+    const row = columns.map(({ field }) => {
+      const groupingPath = api.unstable_getColumnGroupPath(field);
+      if (groupingPath.length <= rowIndex) {
+        return { groupId: null }
+      }
+      return columnGroupDetails[groupingPath[rowIndex]]
+    })
+
+    const newRow = worksheet.addRow(row.map((group) => group.groupId === null ? null : group?.headerName || group.groupId));
+
+    // use `rowCount`, since worksheet can have additional rows added in `exceljsPreProcess`
+    const lastRowIndex = newRow.worksheet.rowCount;
+    let leftIndex = 0
+    let rightIndex = 1;
+    while (rightIndex < columns.length) {
+      if (
+        row[leftIndex].groupId === row[rightIndex].groupId
+      ) {
+        rightIndex += 1
+      } else {
+        if (rightIndex - leftIndex > 1) {
+          worksheet.mergeCells(lastRowIndex, leftIndex + 1, lastRowIndex, rightIndex);
+        }
+        leftIndex = rightIndex
+        rightIndex += 1
+      }
+    }
+    if (rightIndex - leftIndex > 1) {
+      worksheet.mergeCells(lastRowIndex, leftIndex + 1, lastRowIndex, rightIndex);
+    }
+  }
+}
+
+
 interface BuildExcelOptions {
   columns: GridStateColDef[];
   rowIds: GridRowId[];
@@ -222,6 +267,8 @@ export async function buildExcel(
     });
   }
 
+  addColumnGroupingHeaders(worksheet, columns, api)
+
   if (includeHeaders) {
     worksheet.addRow(columns.map((column) => column.headerName || column.field));
   }
@@ -254,8 +301,7 @@ export async function buildExcel(
       const columnLetter = valueOptionsWorksheet.getColumn(column.field).letter;
       defaultValueOptionsFormulae[
         column.field
-      ] = `${valueOptionsSheetName}!$${columnLetter}$2:$${columnLetter}$${
-        1 + formattedValueOptions.length
+      ] = `${valueOptionsSheetName}!$${columnLetter}$2:$${columnLetter}$${1 + formattedValueOptions.length
       }`;
     });
   }
