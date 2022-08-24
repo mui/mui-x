@@ -1,6 +1,6 @@
 export interface GridRenderedRowsIntervalChangeParams {
   /**
-   * The index of the first row to render
+   * The index of the first row to render.
    */
   firstRowToRender: number;
   /**
