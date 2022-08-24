@@ -50,7 +50,8 @@ This feature is experimental, it needs to be explicitly activated using the `laz
 
 :::
 
-Lazy Loading works like a pagination system, but instead of loading new rows based on pages, it loads them as the user scrolls through the grid and reveals empty rows.
+Lazy Loading works like a pagination system, but instead of loading new rows based on pages, it loads them based on the viewport.
+It loads new rows in chunks, as the user scrolls through the grid and reveals empty rows.
 
 The data grid builds the vertical scroll as if all the rows are already there, and displays empty (skeleton) rows while loading the data. Only rows that are displayed get fetched.
 
