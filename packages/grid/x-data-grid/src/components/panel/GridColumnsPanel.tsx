@@ -79,7 +79,7 @@ export function GridColumnsPanel(props: GridColumnsPanelProps) {
       return [...columns].sort((a, b) =>
         (a.headerName || a.field) < (b.headerName || b.field) ? 1 : -1,
       );
-    } 
+    }
     return columns;
   }, [columns, rootProps.componentsProps?.columnsPanel.sort]);
 
