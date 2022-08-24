@@ -38,6 +38,8 @@ function useYearPickerDefaultizedProps<TDate>(
     ...themeProps,
     minDate: parseNonNullablePickerDate(utils, themeProps.minDate, defaultDates.minDate),
     maxDate: parseNonNullablePickerDate(utils, themeProps.maxDate, defaultDates.maxDate),
+    disablePast: false,
+    disableFuture: false,
   };
 }
 
