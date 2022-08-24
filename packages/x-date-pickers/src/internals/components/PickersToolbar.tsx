@@ -19,7 +19,7 @@ export const pickersToolbarClasses = generateUtilityClasses('MuiPickersToolbar',
 export interface PickersToolbarProps<TDate, TValue>
   extends Pick<
     BaseToolbarProps<TDate, TValue>,
-    'isMobileKeyboardViewOpen' | 'toggleMobileKeyboardView'
+    'getMobileKeyboardInputViewButtonText' | 'isMobileKeyboardViewOpen' | 'toggleMobileKeyboardView'
   > {
   className?: string;
   viewType?: 'calendar' | 'clock';
@@ -82,6 +82,7 @@ export const PickersToolbar = React.forwardRef(function PickersToolbar<TDate, TV
   const {
     children,
     className,
+    getMobileKeyboardInputViewButtonText,
     isLandscape,
     isMobileKeyboardViewOpen,
     landscapeDirection = 'column',
@@ -121,7 +122,11 @@ export const PickersToolbar = React.forwardRef(function PickersToolbar<TDate, TV
           ownerState={ownerState}
           color="inherit"
           data-mui-test="toggle-mobile-keyboard-view"
-          aria-label={localeText.inputModeToggleButtonAriaLabel(isMobileKeyboardViewOpen, viewType)}
+          aria-label={
+            getMobileKeyboardInputViewButtonText
+              ? getMobileKeyboardInputViewButtonText(isMobileKeyboardViewOpen, viewType)
+              : localeText.inputModeToggleButtonAriaLabel(isMobileKeyboardViewOpen, viewType)
+          }
         >
           {isMobileKeyboardViewOpen ? getViewTypeIcon(viewType) : <Pen color="inherit" />}
         </PickersToolbarPenIconButton>
