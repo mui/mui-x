@@ -30,9 +30,10 @@ export interface DayValidationProps<TDate> {
    * Disable specific date. @DateIOType
    * @template TDate
    * @param {TDate} day The date to test.
+   * @param {'start' | 'end'} position The date to test.
    * @returns {boolean} Returns `true` if the date should be disabled.
    */
-  shouldDisableDate?: (day: TDate) => boolean;
+  shouldDisableDate?: (day: TDate, position?: 'start' | 'end') => boolean;
 }
 
 /**
