@@ -136,6 +136,6 @@ export const useDateRangeField = <
     props: inProps,
     valueManager: dateRangePickerValueManager,
     fieldValueManager: dateRangeFieldValueManager,
-    validator: validateDateRange,
+    validator: validateDateRange as any,
   });
 };

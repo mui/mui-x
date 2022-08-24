@@ -14,6 +14,7 @@ const nbNOPickers: Partial<PickersLocaleText<any>> = {
     view === 'year'
       ? 'årsvisning er åpen, bytt til kalendervisning'
       : 'kalendervisning er åpen, bytt til årsvisning',
+  // inputModeToggleButtonAriaLabel: (isKeyboardInputOpen: boolean, viewType: 'calendar' | 'clock') => isKeyboardInputOpen ? `text input view is open, go to ${viewType} view` : `${viewType} view is open, go to text input view`,
 
   // DateRange placeholders
   start: 'Start',
@@ -24,6 +25,12 @@ const nbNOPickers: Partial<PickersLocaleText<any>> = {
   clearButtonLabel: 'Fjern',
   okButtonLabel: 'OK',
   todayButtonLabel: 'I dag',
+
+  // Toolbar titles
+  // datePickerDefaultToolbarTitle: 'Select date',
+  // dateTimePickerDefaultToolbarTitle: 'Select date & time',
+  // timePickerDefaultToolbarTitle: 'Select time',
+  // dateRangePickerDefaultToolbarTitle: 'Select date range',
 
   // Clock labels
   clockLabelText: (view, time, adapter) =>

@@ -8,7 +8,7 @@ import {
 
 export interface UseDateRangeFieldProps<TInputDate, TDate>
   extends UseFieldProps<DateRange<TInputDate>, DateRange<TDate>, DateRangeValidationError>,
-    Omit<DateRangeValidationProps<TInputDate, TDate>, 'value'> {}
+    Partial<Omit<DateRangeValidationProps<TInputDate, TDate>, 'value'>> {}
 
 export type DateRangeFieldProps<TInputDate, TDate> = Omit<
   TextFieldProps,
