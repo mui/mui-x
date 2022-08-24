@@ -131,14 +131,14 @@ const RangeShortcutsPanel: React.FC<{
 const StaticRangeShortcutsPanel: React.FC<{
   setValue: React.Dispatch<React.SetStateAction<DateRange<Date>>>;
   children: React.ReactNode;
-}> = ({ setValue, children }) => {
+}> = ({ setValue, children, ...other }) => {
   const handleRangeClick = React.useCallback(
     (range: RangeShortcutType) => buildHandleRangeClick(setValue)(range),
     [setValue],
   );
   return (
     <React.Fragment>
-      <Box sx={{ m: 2 }}>
+      <Box {...other}>
         <Typography variant="overline">Date range shortcuts</Typography>
         <Box display="flex" gap={2} my={2}>
           {rangeShortcuts.map(({ range, label }) => (
@@ -169,8 +169,8 @@ export default function PaperContentComponent() {
     [],
   );
   const WrappedStaticPaperContent = React.useCallback(
-    ({ children }: { children: React.ReactNode }) => (
-      <StaticRangeShortcutsPanel setValue={setValue}>
+    ({ children, ...other }: { children: React.ReactNode }) => (
+      <StaticRangeShortcutsPanel setValue={setValue} {...other}>
         {children}
       </StaticRangeShortcutsPanel>
     ),
@@ -198,6 +198,7 @@ export default function PaperContentComponent() {
           value={value}
           renderInput={() => <div />}
           components={{ PaperContent: WrappedStaticPaperContent }}
+          componentsProps={{ paperContent: { sx: { m: 2 } } }}
         />
       </Stack>
     </LocalizationProvider>

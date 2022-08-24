@@ -26,6 +26,7 @@ export interface PickersStaticWrapperSlotsComponent extends PickersSlotsComponen
 
 export interface PickersStaticWrapperSlotsComponentsProps {
   actionBar: Omit<PickersActionBarProps, 'onAccept' | 'onClear' | 'onCancel' | 'onSetToday'>;
+  paperContent: Record<string, any>;
 }
 
 export interface PickerStaticWrapperProps extends PickerStateWrapperProps {
@@ -95,7 +96,7 @@ function PickerStaticWrapper(inProps: PickerStaticWrapperProps) {
     <WrapperVariantContext.Provider value={displayStaticWrapperAs}>
       <PickerStaticWrapperRoot className={classes.root} {...other}>
         <PickerStaticWrapperContent className={classes.content}>
-          <PaperContent>{children}</PaperContent>
+          <PaperContent {...componentsProps?.paperContent}>{children}</PaperContent>
         </PickerStaticWrapperContent>
         <ActionBar
           onAccept={onAccept}

@@ -13,6 +13,7 @@ export interface PickersPopperSlotsComponent extends PickersSlotsComponent {}
 
 export interface PickersPopperSlotsComponentsProps {
   actionBar: Omit<PickersActionBarProps, 'onAccept' | 'onClear' | 'onCancel' | 'onSetToday'>;
+  paperContent: Record<string, any>;
 }
 
 export interface ExportedPickerPaperProps {
@@ -324,7 +325,7 @@ export const PickersPopper = (props: PickerPopperProps) => {
               ownerState={{ ...ownerState, placement }}
               {...otherPaperProps}
             >
-              <PaperContent>
+              <PaperContent {...componentsProps?.paperContent}>
                 {children}
                 <ActionBar
                   onAccept={onAccept}
