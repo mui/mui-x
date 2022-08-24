@@ -1,6 +1,7 @@
 import * as React from 'react';
+import dayjs, { Dayjs } from 'dayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import {
   DateRange,
   DateRangePicker,
@@ -18,14 +19,6 @@ import {
   Stack,
   Button,
 } from '@mui/material';
-import {
-  startOfWeek,
-  endOfWeek,
-  addWeeks,
-  startOfMonth,
-  endOfMonth,
-  addMonths,
-} from 'date-fns';
 
 const RangeShortcut = {
   thisWeek: 'THIS_WEEK',
@@ -66,26 +59,29 @@ const rangeShortcuts = [
 ];
 
 const buildHandleRangeClick =
-  (setValue: React.Dispatch<React.SetStateAction<DateRange<Date>>>) =>
+  (setValue: React.Dispatch<React.SetStateAction<DateRange<Dayjs>>>) =>
   (range: RangeShortcutType) => {
-    const today = new Date();
+    const today = dayjs();
     switch (range) {
       case RangeShortcut.thisWeek:
-        setValue([startOfWeek(today), endOfWeek(today)]);
+        setValue([today.startOf('week'), today.endOf('week')]);
         break;
       case RangeShortcut.lastWeek:
-        setValue([addWeeks(startOfWeek(today), -1), addWeeks(endOfWeek(today), -1)]);
+        setValue([
+          today.startOf('week').subtract(1, 'week'),
+          today.endOf('week').subtract(1, 'week'),
+        ]);
         break;
       case RangeShortcut.last7Days:
-        setValue([addWeeks(today, -1), today]);
+        setValue([today.subtract(1, 'week'), today]);
         break;
       case RangeShortcut.currentMonth:
-        setValue([startOfMonth(today), endOfMonth(today)]);
+        setValue([today.startOf('month'), today.endOf('month')]);
         break;
       case RangeShortcut.nextMonth:
         setValue([
-          addMonths(startOfMonth(today), 1),
-          addMonths(endOfMonth(today), 1),
+          today.startOf('month').add(1, 'month'),
+          today.endOf('month').add(1, 'month'),
         ]);
         break;
       case RangeShortcut.reset:
@@ -97,7 +93,7 @@ const buildHandleRangeClick =
   };
 
 const RangeShortcutsPanel: React.FC<{
-  setValue: React.Dispatch<React.SetStateAction<DateRange<Date>>>;
+  setValue: React.Dispatch<React.SetStateAction<DateRange<Dayjs>>>;
   children: React.ReactNode;
 }> = ({ setValue, children }) => {
   const handleRangeClick = React.useCallback(
@@ -129,7 +125,7 @@ const RangeShortcutsPanel: React.FC<{
 };
 
 const StaticRangeShortcutsPanel: React.FC<{
-  setValue: React.Dispatch<React.SetStateAction<DateRange<Date>>>;
+  setValue: React.Dispatch<React.SetStateAction<DateRange<Dayjs>>>;
   children: React.ReactNode;
 }> = ({ setValue, children, ...other }) => {
   const handleRangeClick = React.useCallback(
@@ -161,7 +157,7 @@ const StaticRangeShortcutsPanel: React.FC<{
 };
 
 export default function PaperContentComponent() {
-  const [value, setValue] = React.useState<DateRange<Date>>([null, null]);
+  const [value, setValue] = React.useState<DateRange<Dayjs>>([null, null]);
   const WrappedPaperContent = React.useCallback(
     ({ children }: { children: React.ReactNode }) => (
       <RangeShortcutsPanel setValue={setValue}>{children}</RangeShortcutsPanel>
@@ -177,7 +173,7 @@ export default function PaperContentComponent() {
     [],
   );
   return (
-    <LocalizationProvider dateAdapter={AdapterDateFns}>
+    <LocalizationProvider dateAdapter={AdapterDayjs}>
       <Stack spacing={4} alignItems="center">
         <DateRangePicker
           onChange={(newValue) => setValue(newValue)}
