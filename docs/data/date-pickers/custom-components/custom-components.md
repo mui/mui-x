@@ -90,3 +90,9 @@ You can provide any custom component to this slot as long as it passes `children
 In the examples below we provide ways of implementing date range shortcuts using this slot.
 
 {{"demo": "PaperContentComponent.js", "defaultCodeOpen": false, "disableAd": true}}
+
+## Arrow switcher buttons and icons
+
+The following slots allows you to customize how to render the buttons and icons for an arrow switcher component (the component to navigate to the "Previous" and "Next" step of the picker)
+
+{{"demo": "ArrowSwitcherComponent.js", "defaultCodeOpen": false, "disableAd": true}}
