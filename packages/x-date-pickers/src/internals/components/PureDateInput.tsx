@@ -128,6 +128,7 @@ export const PureDateInput = React.forwardRef(function PureDateInput<TInputDate,
     renderInput,
     TextFieldProps = {},
     validationError,
+    className,
   } = props;
 
   const localeText = useLocaleText();
@@ -154,6 +155,7 @@ export const PureDateInput = React.forwardRef(function PureDateInput<TInputDate,
     inputRef,
     error: validationError,
     InputProps: PureDateInputProps,
+    className,
     inputProps: {
       disabled,
       readOnly: true,
