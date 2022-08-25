@@ -343,6 +343,10 @@ export const useGridRows = (
         );
       }
 
+      if (newRows.length === 0) {
+        return;
+      }
+
       const allRows = gridRowIdsSelector(apiRef);
       const updatedRows = [...allRows];
       const idRowsLookup = gridRowsLookupSelector(apiRef);
