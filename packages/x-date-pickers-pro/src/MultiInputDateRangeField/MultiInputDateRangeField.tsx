@@ -13,7 +13,11 @@ export const MultiInputDateRangeField = React.forwardRef(function MultiInputDate
   TInputDate,
   TDate = TInputDate,
 >(inProps: MultiInputDateRangeFieldProps<TInputDate, TDate>, ref: React.Ref<HTMLInputElement>) {
-  const { startDate, endDate } = useMultiInputDateRangeField<TInputDate, TDate>(inProps);
+  const { startDate, endDate } = useMultiInputDateRangeField<
+    TInputDate,
+    TDate,
+    MultiInputDateRangeFieldProps<TInputDate, TDate>
+  >(inProps);
 
   return (
     <Stack spacing={2} direction="row" alignItems="center" ref={ref}>
