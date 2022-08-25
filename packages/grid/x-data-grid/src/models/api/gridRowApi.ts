@@ -97,12 +97,7 @@ export interface GridRowApi {
   /**
    * Replace a set of rows with new rows.
    * @param {number} firstRowToReplace The index of the first row to be replaced.
-   * @param {number} lastRowToReplace The index of the last row to be replaced.
    * @param {GridRowModel[]} newRows The new rows.
    */
-  replaceRows: (
-    firstRowToReplace: number,
-    lastRowToReplace: number,
-    newRows: GridRowModel[],
-  ) => void;
+  replaceRows: (firstRowToReplace: number, newRows: GridRowModel[]) => void;
 }

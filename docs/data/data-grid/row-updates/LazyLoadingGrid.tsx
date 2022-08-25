@@ -47,7 +47,7 @@ export default function LazyLoadingGrid() {
       return {
         slice: serverRows.returnedRows.slice(
           params.firstRowToRender,
-          params.lastRowToRender + 1,
+          params.lastRowToRender,
         ),
         total: serverRows.returnedRows.length,
       };
@@ -80,11 +80,7 @@ export default function LazyLoadingGrid() {
   const handleFetchRows = async (params: GridFetchRowsParams) => {
     const { slice, total } = await fetchRow(params);
 
-    apiRef.current.replaceRows(
-      params.firstRowToRender,
-      params.lastRowToRender,
-      slice,
-    );
+    apiRef.current.replaceRows(params.firstRowToRender, slice);
     setRowCount(total);
   };
 

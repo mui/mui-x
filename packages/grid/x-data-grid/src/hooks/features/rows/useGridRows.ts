@@ -333,23 +333,12 @@ export const useGridRows = (
   );
 
   const replaceRows = React.useCallback<GridRowApi['replaceRows']>(
-    (firstRowToRender, lastRowToRender, newRows) => {
-      if (props.signature === GridSignature.DataGrid) {
+    (firstRowToRender, newRows) => {
+      if (props.signature === GridSignature.DataGrid && newRows.length > 1) {
         throw new Error(
           [
             "MUI: You can't replace rows using `apiRef.current.replaceRows` on the DataGrid.",
             'You need to upgrade to DataGridPro or DataGridPremium component to unlock this feature.',
-          ].join('\n'),
-        );
-      }
-
-      if (newRows.length && newRows.length !== lastRowToRender - firstRowToRender + 1) {
-        throw new Error(
-          [
-            `MUI: The number of rows you want update is different than what was indicated.`,
-            `Based on the provided first and last indexes the number of rows provided should be ${
-              lastRowToRender - firstRowToRender + 1
-            }}`,
           ].join('\n'),
         );
       }

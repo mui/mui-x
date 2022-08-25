@@ -106,7 +106,7 @@ describe('<DataGridPro /> - Lazy loader', () => {
       'auto-generated-skeleton-row-root-1',
       'auto-generated-skeleton-row-root-2',
     ]);
-    act(() => apiRef.current.replaceRows(4, 6, newRows));
+    act(() => apiRef.current.replaceRows(4, newRows));
 
     const updatedAllRows = apiRef.current.state.rows.ids;
     expect(updatedAllRows.slice(4, 6)).to.deep.equal([4, 5]);
