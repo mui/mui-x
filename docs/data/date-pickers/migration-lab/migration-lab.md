@@ -5,9 +5,8 @@
 ## Introduction
 
 This is a reference for migrating your site's pickers from `@mui/lab` to `@mui/x-date-pickers` or `@mui/x-date-pickers-pro`.
-This migration only concerns packages and should do not affect the behavior of the components in your app.
-
-We explored the reasons of this migration in a [blog post](/blog/lab-date-pickers-to-mui-x/)
+This migration is about the npm packages used, it **does not** affect the behavior of the components in your application.
+You can find why we are moving in this direction in the [announcement blog post](/blog/lab-date-pickers-to-mui-x/).
 
 ## License
 
