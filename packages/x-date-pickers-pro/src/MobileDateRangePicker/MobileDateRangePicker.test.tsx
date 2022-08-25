@@ -28,7 +28,7 @@ describe('<MobileDateRangePicker />', () => {
 
   describeConformance(
     <MobileDateRangePicker
-      onChange={() => { }}
+      onChange={() => {}}
       renderInput={(props) => <TextField {...props} />}
       value={[null, null]}
     />,

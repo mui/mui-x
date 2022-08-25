@@ -39,9 +39,9 @@ export interface ExportedDesktopDateRangeCalendarProps<TDate> {
 
 interface DesktopDateRangeCalendarProps<TDate>
   extends ExportedDesktopDateRangeCalendarProps<TDate>,
-  Omit<DayPickerProps<TDate>, 'selectedDays' | 'renderDay' | 'onFocusedDayChange'>,
-  DayValidationProps<TDate>,
-  ExportedArrowSwitcherProps {
+    Omit<DayPickerProps<TDate>, 'selectedDays' | 'renderDay' | 'onFocusedDayChange'>,
+    DayValidationProps<TDate>,
+    ExportedArrowSwitcherProps {
   calendars: 1 | 2 | 3;
   parsedValue: DateRange<TDate>;
   changeMonth: (date: TDate) => void;
