@@ -11,12 +11,11 @@ import {
   SlideDirection,
   SlideTransitionProps,
 } from './PickersSlideTransition';
-import { DayValidationProps } from '../internals/hooks/validation/models';
+import { BaseDateValidationProps, DayValidationProps } from '../internals/hooks/validation/models';
 import { useIsDayDisabled } from '../internals/hooks/validation/useDateValidation';
 
 export interface ExportedDayPickerProps<TDate>
-  extends DayValidationProps<TDate>,
-    Pick<PickersDayProps<TDate>, 'disableHighlightToday' | 'showDaysOutsideCurrentMonth'> {
+  extends Pick<PickersDayProps<TDate>, 'disableHighlightToday' | 'showDaysOutsideCurrentMonth'> {
   autoFocus?: boolean;
   /**
    * If `true` renders `LoadingComponent` in calendar instead of calendar view.
@@ -52,7 +51,10 @@ export interface ExportedDayPickerProps<TDate>
   dayOfWeekFormatter?: (day: string) => string;
 }
 
-export interface DayPickerProps<TDate> extends ExportedDayPickerProps<TDate> {
+export interface DayPickerProps<TDate>
+  extends ExportedDayPickerProps<TDate>,
+    DayValidationProps<TDate>,
+    Required<BaseDateValidationProps<TDate>> {
   autoFocus?: boolean;
   className?: string;
   currentMonth: TDate;
@@ -67,6 +69,7 @@ export interface DayPickerProps<TDate> extends ExportedDayPickerProps<TDate> {
   reduceAnimations: boolean;
   slideDirection: SlideDirection;
   TransitionProps?: Partial<SlideTransitionProps>;
+  gridLabelId?: string;
 }
 
 const defaultDayOfWeekFormatter = (day: string) => day.charAt(0).toUpperCase();
@@ -141,6 +144,7 @@ export function DayPicker<TDate>(props: DayPickerProps<TDate>) {
     maxDate,
     shouldDisableDate,
     dayOfWeekFormatter = defaultDayOfWeekFormatter,
+    gridLabelId,
   } = props;
 
   const isDateDisabled = useIsDayDisabled({
@@ -171,12 +175,18 @@ export function DayPicker<TDate>(props: DayPickerProps<TDate>) {
   const transitionKey = currentMonthNumber;
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const slideNodeRef = React.useMemo(() => React.createRef<HTMLDivElement>(), [transitionKey]);
+  const startOfCurrentWeek = utils.startOfWeek(now);
 
   return (
-    <React.Fragment>
-      <PickersCalendarDayHeader>
+    <div role="grid" aria-labelledby={gridLabelId}>
+      <PickersCalendarDayHeader role="row">
         {utils.getWeekdays().map((day, i) => (
-          <PickersCalendarWeekDayLabel aria-hidden key={day + i.toString()} variant="caption">
+          <PickersCalendarWeekDayLabel
+            key={day + i.toString()}
+            variant="caption"
+            role="columnheader"
+            aria-label={utils.format(utils.addDays(startOfCurrentWeek, i), 'weekday')}
+          >
             {dayOfWeekFormatter?.(day) ?? day}
           </PickersCalendarWeekDayLabel>
         ))}
@@ -197,34 +207,39 @@ export function DayPicker<TDate>(props: DayPickerProps<TDate>) {
           <PickersCalendarWeekContainer
             data-mui-test="pickers-calendar"
             ref={slideNodeRef}
-            role="grid"
+            role="rowgroup"
           >
             {utils.getWeekArray(currentMonth).map((week) => (
               <PickersCalendarWeek role="row" key={`week-${week[0]}`}>
                 {week.map((day) => {
+                  const isSelected = validSelectedDays.some((selectedDay) =>
+                    utils.isSameDay(selectedDay, day),
+                  );
+                  const isToday = utils.isSameDay(day, now);
                   const pickersDayProps: PickersDayProps<TDate> = {
                     key: (day as any)?.toString(),
                     day,
                     isAnimating: isMonthSwitchingAnimating,
                     disabled: disabled || isDateDisabled(day),
                     autoFocus: autoFocus && focusedDay !== null && utils.isSameDay(day, focusedDay),
-                    today: utils.isSameDay(day, now),
+                    today: isToday,
                     outsideCurrentMonth: utils.getMonth(day) !== currentMonthNumber,
-                    selected: validSelectedDays.some((selectedDay) =>
-                      utils.isSameDay(selectedDay, day),
-                    ),
+                    selected: isSelected,
                     disableHighlightToday,
                     showDaysOutsideCurrentMonth,
                     onDayFocus: onFocusedDayChange,
                     onDaySelect: handleDaySelect,
+                    role: 'gridcell',
+                    'aria-selected': isSelected,
                   };
+                  if (isToday) {
+                    pickersDayProps['aria-current'] = 'date';
+                  }
 
                   return renderDay ? (
                     renderDay(day, validSelectedDays, pickersDayProps)
                   ) : (
-                    <div role="cell" key={pickersDayProps.key}>
-                      <PickersDay {...pickersDayProps} />
-                    </div>
+                    <PickersDay key={pickersDayProps.key} {...pickersDayProps} />
                   );
                 })}
               </PickersCalendarWeek>
@@ -232,6 +247,6 @@ export function DayPicker<TDate>(props: DayPickerProps<TDate>) {
           </PickersCalendarWeekContainer>
         </PickersCalendarSlideTransition>
       )}
-    </React.Fragment>
+    </div>
   );
 }

@@ -1,5 +1,5 @@
-import PropTypes from 'prop-types';
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import { useThemeProps } from '@mui/material/styles';
 import { useLicenseVerifier } from '@mui/x-license-pro';
 import useMediaQuery from '@mui/material/useMediaQuery';
@@ -73,6 +73,7 @@ export const DateRangePicker = React.forwardRef(function DateRangePicker<
     desktopModeMediaQuery = '@media (pointer: fine)',
     DialogProps,
     PopperProps,
+    PaperProps,
     TransitionComponent,
     ...other
   } = props;
@@ -85,6 +86,7 @@ export const DateRangePicker = React.forwardRef(function DateRangePicker<
       <DesktopDateRangePicker
         ref={ref}
         PopperProps={PopperProps}
+        PaperProps={PaperProps}
         TransitionComponent={TransitionComponent}
         {...other}
       />

@@ -73,7 +73,12 @@
       "default": "['hours', 'minutes']"
     }
   },
-  "slots": {},
+  "slots": {
+    "LeftArrowButton": { "type": { "name": "elementType" } },
+    "LeftArrowIcon": { "type": { "name": "elementType" } },
+    "RightArrowButton": { "type": { "name": "elementType" } },
+    "RightArrowIcon": { "type": { "name": "elementType" } }
+  },
   "name": "ClockPicker",
   "styles": { "classes": ["root", "arrowSwitcher"], "globalClasses": {}, "name": "MuiClockPicker" },
   "spread": false,

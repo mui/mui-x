@@ -35,7 +35,7 @@ const pages: MuiPage[] = [
           { pathname: '/x/react-data-grid/column-ordering' },
           { pathname: '/x/react-data-grid/column-pinning', plan: 'pro' },
           { pathname: '/x/react-data-grid/column-spanning' },
-          { pathname: '/x/react-data-grid/column-groups', title: 'Column groups 🚧' },
+          { pathname: '/x/react-data-grid/column-groups' },
         ],
       },
       {

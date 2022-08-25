@@ -56,7 +56,7 @@ const CustomTypeEditComponent = (props: CustomTypeEditComponentProps) => {
 };
 
 export default function LinkedFieldsCellEditing() {
-  const editingRow = React.useRef<GridRowModel>(null);
+  const editingRow = React.useRef<GridRowModel | null>(null);
   const [rows, setRows] = React.useState(initialRows);
 
   const columns: GridColumns = [
@@ -106,15 +106,15 @@ export default function LinkedFieldsCellEditing() {
   ];
 
   const handleCellEditStart: DataGridProps['onCellEditStart'] = (params) => {
-    editingRow.current = rows.find((row) => row.id === params.id);
+    editingRow.current = rows.find((row) => row.id === params.id) || null;
   };
 
   const handleCellEditStop: DataGridProps['onCellEditStop'] = (params) => {
     if (params.reason === GridCellEditStopReasons.escapeKeyDown) {
       setRows((prevRows) =>
         prevRows.map((row) =>
-          row.id === editingRow.current.id
-            ? { ...row, account: editingRow.current.account }
+          row.id === editingRow.current?.id
+            ? { ...row, account: editingRow.current?.account }
             : row,
         ),
       );
@@ -123,7 +123,7 @@ export default function LinkedFieldsCellEditing() {
 
   const processRowUpdate: DataGridProps['processRowUpdate'] = (newRow) => {
     setRows((prevRows) =>
-      prevRows.map((row) => (row.id === editingRow.current.id ? newRow : row)),
+      prevRows.map((row) => (row.id === editingRow.current?.id ? newRow : row)),
     );
     return newRow;
   };

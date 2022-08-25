@@ -3,6 +3,104 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 5.16.0
+
+_Aug 25, 2022_
+
+We'd like to offer a big thanks to the 11 contributors who made this release possible. Here are some highlights ✨:
+
+- 🎁 Introduce column grouping for data grid (#5133) @alexfauquette
+
+  You can now group columns using the `columnGroupingModel` prop. This lets you to display more structured data.
+
+  <img src="https://user-images.githubusercontent.com/45398769/186178366-4fba66b2-bf90-4c7a-9d83-940a7fc78704.png" width="800" />
+
+  To enable this feature, add `experimentalFeatures={{ columnGrouping: true }}`.
+  The grouping header can be fully customized.
+  See the [documentation](https://mui.com/x/react-data-grid/column-groups/) to explore everything it has to offer.
+
+- 🐞 Bugfixes
+- 🌏 New locales for pickers thanks to @tesseractjh and @drastus
+
+### `@mui/x-data-grid@v5.16.0` / `@mui/x-data-grid-pro@v5.16.0` / `@mui/x-data-grid-premium@v5.16.0`
+
+#### Changes
+
+- [DataGrid] Implement column grouping (#5133) @alexfauquette
+- [DataGrid] Handle `disableVirtualization` prop change (#5889) @cherniavskii
+- [DataGrid] Improve `GridRowModel` typing (#5734) @cherniavskii
+- [DataGrid] Update deprecation note for `GridColDef` `hide` property (#5886) @cherniavskii
+
+### `@mui/x-date-pickers@v5.0.0-beta.7` / `@mui/x-date-pickers-pro@v5.0.0-beta.7`
+
+#### Changes
+
+- [DatePicker] Fix to pass down `className` prop provided on DatePicker to `renderInput` (#5471) @CruseCtrl
+- [DatePicker] Improve `a11y` support (#5809) @LukasTy
+- [pickers] Add `PaperContent` component slot (#5801) @LukasTy
+- [pickers] Add a breaking change section in the migration guide (#5805) @alexfauquette
+- [pickers] Add new translations to `localeText` (#5143) @alexfauquette
+- [pickers] Document components slots (#4657) @flaviendelangle
+- [pickers] Add new unstable field components (#5504) @flaviendelangle
+- [pickers] Fallback to default `minDate` / `maxDate` when `null` value is passed (#5397) @flaviendelangle
+- [l10n] Add Korean (ko-KR) locale (#5854) @tesseractjh
+- [l10n] Add Polish (pl-PL) locale (#5833) @drastus
+
+### Docs
+
+- [docs] Fix typo in `migration from lab` (#5277) @chuckwired
+- [docs] Use `dayjs` instead of `date-fns` in doc examples (#5481) @flaviendelangle
+
+### Core
+
+- [core] Clarify the scope of the license key used for tests and documentation (#5824) @oliviertassinari
+- [core] Fix Typescript error on field hooks (#5892) @flaviendelangle
+- [core] Memoize `columns` in `useDemoData` hook (#5848) @cherniavskii
+- [core] Remove Firefox from the BrowserStack list (#5874) @DanailH
+- [core] Small changes to the release script (#5840) @m4theushw
+
+## 5.15.3
+
+_Aug 18, 2022_
+
+We'd like to offer a big thanks to the 9 contributors who made this release possible. Here are some highlights ✨:
+
+- 📚 Documentation improvements
+- 🐞 Bugfixes
+
+### `@mui/x-data-grid@v5.15.3` / `@mui/x-data-grid-pro@v5.15.3` / `@mui/x-data-grid-premium@v5.15.3`
+
+#### Changes
+
+- [DataGrid] Fix <kbd>Enter</kbd> causing Select to re-open when commiting value (#5756) @m4theushw
+- [DataGrid] Fix `GridOverlays` bypassing pointer events (#5674) @philjones88
+
+### `@mui/x-date-pickers@v5.0.0-beta.6` / `@mui/x-date-picker-pro@v5.0.0-beta.6`
+
+#### Changes
+
+- [DatePicker] Support click on day outside of current month (#5768) @alexfauquette
+- [pickers] Extend `PickersActionBarProps` with `DialogActionProps` (#5798) @LukasTy
+
+### Docs
+
+- [docs] Fix API anchor link scroll top (#5795) @oliviertassinari
+- [docs] Fix contradiction in the free trial clause (#5732) @oliviertassinari
+- [docs] Fix default value of the DataGrid `logLevel` prop to false (#5784) @HwangTaehyun
+- [docs] Fix typo on the row height page (#5772) @flaviendelangle
+- [docs] Improve "upgrading plans" documentation. (#5683) @joserodolfofreitas
+- [docs] Link the license docs before pricing (#5726) @oliviertassinari
+- [docs] Update packages README files (#5835) @cherniavskii
+- [docs] Use `InputBase` for pickers inputs (#5597) @cherniavskii
+
+### Core
+
+- [core] Upgrade monorepo (#5771, #5797) @cherniavskii
+- [core] Various TS improvements (#5556) @flaviendelangle
+- [license] Give more context in the missing license (#5731) @oliviertassinari
+- [license] Only log an error type once (#5730) @oliviertassinari
+- [test] Increase timeout to take print screenshot (#5799) @m4theushw
+
 ## 5.15.2
 
 _Aug 11, 2022_
@@ -13,7 +111,7 @@ We'd like to offer a big thanks to the 7 contributors who made this release poss
 - 📚 Documentation improvements
 - 🐞 Bugfixes
 
-### `@mui/x-data-grid@5.15.2` / `@mui/x-data-grid-pro@5.15.2` / `@mui/x-data-grid-premium@5.15.2`
+### `@mui/x-data-grid@v5.15.2` / `@mui/x-data-grid-pro@v5.15.2` / `@mui/x-data-grid-premium@v5.15.2`
 
 #### Changes
 

@@ -5,7 +5,7 @@ import { PickersToolbarText } from '../internals/components/PickersToolbarText';
 import { PickersToolbar, pickersToolbarClasses } from '../internals/components/PickersToolbar';
 import { PickersToolbarButton } from '../internals/components/PickersToolbarButton';
 import { DateTimePickerTabs } from './DateTimePickerTabs';
-import { useUtils } from '../internals/hooks/useUtils';
+import { useLocaleText, useUtils } from '../internals/hooks/useUtils';
 import { WrapperVariantContext } from '../internals/components/wrappers/WrapperVariantContext';
 import { BaseToolbarProps } from '../internals/models/props/baseToolbarProps';
 
@@ -79,11 +79,15 @@ export const DateTimePickerToolbar = <TDate extends unknown>(
     toggleMobileKeyboardView,
     toolbarFormat,
     toolbarPlaceholder = '––',
-    toolbarTitle = 'Select date & time',
+    toolbarTitle: toolbarTitleProp,
     views,
     ...other
   } = props;
   const utils = useUtils<TDate>();
+  const localeText = useLocaleText();
+
+  const toolbarTitle = toolbarTitleProp ?? localeText.dateTimePickerDefaultToolbarTitle;
+
   const wrapperVariant = React.useContext(WrapperVariantContext);
   const showTabs =
     wrapperVariant === 'desktop'
