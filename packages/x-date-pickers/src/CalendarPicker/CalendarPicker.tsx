@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { styled, useThemeProps } from '@mui/material/styles';
 import { unstable_composeClasses as composeClasses } from '@mui/material';
-import { unstable_useId as useId } from '@mui/material/utils';
+import { useControlled, unstable_useId as useId } from '@mui/material/utils';
 import { MonthPicker, MonthPickerProps } from '../MonthPicker/MonthPicker';
 import { useCalendarState } from './useCalendarState';
 import { useDefaultDates, useUtils } from '../internals/hooks/useUtils';
@@ -42,6 +42,7 @@ export interface CalendarPickerProps<TDate>
     YearValidationProps<TDate>,
     MonthValidationProps<TDate>,
     ExportedCalendarHeaderProps<TDate> {
+  autoFocus?: boolean;
   className?: string;
   classes?: Partial<CalendarPickerClasses>;
   /**
@@ -423,7 +424,32 @@ export const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
 
   const gridLabelId = `${id}-grid-label`;
 
-  const hasFocus = focusedPicker != null;
+  const [internalFocusedPicker, setInternalFocusedPicker] =
+    useControlled<CalendarPickerView | null>({
+      name: 'DayPicker',
+      state: 'focusedPicker',
+      controlled: focusedPicker,
+      default: openView,
+    });
+
+  const hasFocus = internalFocusedPicker !== null;
+
+  const handleFocusedPickerChange = React.useCallback(
+    (eventView: CalendarPickerView) => (newHasFocus: boolean) => {
+      if (onFocusedPickerChange) {
+        // Use the calendar or clock logic
+        onFocusedPickerChange(eventView)(newHasFocus);
+        return;
+      }
+      // If alone, do the local modifications
+      if (newHasFocus) {
+        setInternalFocusedPicker(eventView);
+      } else {
+        setInternalFocusedPicker((prevView) => (prevView === eventView ? null : prevView));
+      }
+    },
+    [onFocusedPickerChange, setInternalFocusedPicker],
+  );
 
   return (
     <CalendarPickerRoot ref={ref} className={clsx(classes.root, className)} ownerState={ownerState}>
@@ -459,7 +485,7 @@ export const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
               onChange={handleDateYearChange}
               shouldDisableYear={shouldDisableYear}
               hasFocus={hasFocus}
-              onHasFocusChange={onFocusedPickerChange && onFocusedPickerChange('year')}
+              onFocusedPickerChange={handleFocusedPickerChange('year')}
             />
           )}
 
@@ -473,7 +499,7 @@ export const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
               date={date}
               onChange={handleDateMonthChange}
               shouldDisableMonth={shouldDisableMonth}
-              onHasFocusChange={onFocusedPickerChange && onFocusedPickerChange('month')}
+              onFocusedPickerChange={handleFocusedPickerChange('month')}
             />
           )}
 
@@ -491,7 +517,7 @@ export const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
               onSelectedDaysChange={onSelectedDayChange}
               shouldDisableDate={shouldDisableDate}
               hasFocus={hasFocus}
-              onHasFocusChange={onFocusedPickerChange && onFocusedPickerChange('day')}
+              onFocusedPickerChange={handleFocusedPickerChange('day')}
               gridLabelId={gridLabelId}
             />
           )}
