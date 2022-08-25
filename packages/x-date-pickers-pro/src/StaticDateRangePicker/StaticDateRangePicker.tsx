@@ -26,12 +26,12 @@ const releaseInfo = getReleaseInfo();
 
 export interface StaticDateRangePickerSlotsComponent
   extends PickersStaticWrapperSlotsComponent,
-  DateRangePickerViewSlotsComponent,
-  DateInputSlotsComponent { }
+    DateRangePickerViewSlotsComponent,
+    DateInputSlotsComponent {}
 
 export interface StaticDateRangePickersSlotsComponentsProps
   extends PickersStaticWrapperSlotsComponentsProps,
-  DateRangePickerViewSlotsComponentsProps { }
+    DateRangePickerViewSlotsComponentsProps {}
 
 export interface StaticDateRangePickerProps<TInputDate, TDate>
   extends StaticPickerProps<BaseDateRangePickerProps<TInputDate, TDate>> {
@@ -64,7 +64,7 @@ type StaticDateRangePickerComponent = (<TInputDate, TDate = TInputDate>(
 export const StaticDateRangePicker = React.forwardRef(function StaticDateRangePicker<
   TInputDate,
   TDate = TInputDate,
-  >(inProps: StaticDateRangePickerProps<TInputDate, TDate>, ref: React.Ref<HTMLDivElement>) {
+>(inProps: StaticDateRangePickerProps<TInputDate, TDate>, ref: React.Ref<HTMLDivElement>) {
   useLicenseVerifier('x-date-pickers-pro', releaseInfo);
 
   const props = useDateRangePickerDefaultizedProps<
@@ -73,8 +73,9 @@ export const StaticDateRangePicker = React.forwardRef(function StaticDateRangePi
     StaticDateRangePickerProps<TInputDate, TDate>
   >(inProps, 'MuiStaticDateRangePicker');
 
-  const [currentlySelectingRangeEnd, setCurrentlySelectingRangeEnd] =
-    React.useState<'start' | 'end'>('start');
+  const [currentlySelectingRangeEnd, setCurrentlySelectingRangeEnd] = React.useState<
+    'start' | 'end'
+  >('start');
 
   const validationError = useDateRangeValidation(props);
 

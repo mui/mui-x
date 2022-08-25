@@ -6,7 +6,7 @@ import {
   GridColDef,
   GridColumnGroupHeaderParams,
   GridColumnGroupingModel,
-  GridToolbar
+  GridToolbar,
 } from '@mui/x-data-grid-premium';
 import BuildIcon from '@mui/icons-material/Build';
 import PersonIcon from '@mui/icons-material/Person';
