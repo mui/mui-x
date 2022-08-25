@@ -78,7 +78,7 @@ export interface YearPickerProps<TDate>
   disableHighlightToday?: boolean;
   onYearFocus?: (year: number) => void;
   hasFocus?: boolean;
-  onFocusedPickerChange?: (nawHasFocus: boolean) => void;
+  onFocusedViewChange?: (newHasFocus: boolean) => void;
 }
 
 type YearPickerComponent = (<TDate>(props: YearPickerProps<TDate>) => JSX.Element) & {
@@ -109,7 +109,7 @@ export const YearPicker = React.forwardRef(function YearPicker<TDate>(
     disableHighlightToday,
     onYearFocus,
     hasFocus,
-    onFocusedPickerChange,
+    onFocusedViewChange,
   } = props;
 
   const ownerState = props;
@@ -145,11 +145,11 @@ export const YearPicker = React.forwardRef(function YearPicker<TDate>(
     (newHasFocus: boolean) => {
       setInternalHasFocus(newHasFocus);
 
-      if (onFocusedPickerChange) {
-        onFocusedPickerChange(newHasFocus);
+      if (onFocusedViewChange) {
+        onFocusedViewChange(newHasFocus);
       }
     },
-    [setInternalHasFocus, onFocusedPickerChange],
+    [setInternalHasFocus, onFocusedViewChange],
   );
 
   const isYearDisabled = React.useCallback(
@@ -316,7 +316,7 @@ YearPicker.propTypes = {
   minDate: PropTypes.any,
   onChange: PropTypes.func.isRequired,
   onFocusedDayChange: PropTypes.func,
-  onFocusedPickerChange: PropTypes.func,
+  onFocusedViewChange: PropTypes.func,
   onYearFocus: PropTypes.func,
   readOnly: PropTypes.bool,
   /**

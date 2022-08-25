@@ -5,7 +5,7 @@ interface FocusState {
   focusedView: CalendarPickerView | null;
 }
 
-type FocusModificationPayload = { picker: CalendarPickerView };
+type FocusModificationPayload = { view: CalendarPickerView };
 
 type ReducerAction<TType, TAdditional = {}> = { type: TType } & TAdditional;
 
@@ -17,14 +17,14 @@ export const createCalendarStateReducer =
       | ReducerAction<'focus', FocusModificationPayload>
       | ReducerAction<'blur', FocusModificationPayload>,
   ): FocusState => {
-    const { type, picker } = action;
+    const { type, view } = action;
     switch (type) {
       case 'focus':
         return {
-          focusedView: picker,
+          focusedView: view,
         };
       case 'blur':
-        if (picker === state.focusedView) {
+        if (view === state.focusedView) {
           return { focusedView: null };
         }
         return state;
@@ -46,15 +46,15 @@ export const useFocusManagement = ({ autoFocus, openView }: FocusStateInput) => 
     focusedView: autoFocus ? openView : null,
   });
 
-  const setPickerHasFocus = React.useCallback(
-    (picker: CalendarPickerView) => (newHasFocus: boolean) => {
-      dispatch({ type: newHasFocus ? 'focus' : 'blur', picker });
+  const setFocusedView = React.useCallback(
+    (view: CalendarPickerView) => (newHasFocus: boolean) => {
+      dispatch({ type: newHasFocus ? 'focus' : 'blur', view });
     },
     [],
   );
 
   return {
     focusedView: viewFocusState.focusedView,
-    setPickerHasFocus,
+    setFocusedView,
   };
 };

@@ -46,7 +46,7 @@ export interface MonthPickerProps<TDate>
   autoFocus?: boolean;
   onMonthFocus?: (month: number) => void;
   hasFocus?: boolean;
-  onFocusedPickerChange?: (newHasFocus: boolean) => void;
+  onFocusedViewChange?: (newHasFocus: boolean) => void;
 }
 
 const useUtilityClasses = (ownerState: MonthPickerProps<any>) => {
@@ -121,7 +121,7 @@ export const MonthPicker = React.forwardRef(function MonthPicker<TDate>(
     autoFocus = false,
     onMonthFocus,
     hasFocus,
-    onFocusedPickerChange,
+    onFocusedViewChange,
     ...other
   } = props;
   const ownerState = props;
@@ -190,11 +190,11 @@ export const MonthPicker = React.forwardRef(function MonthPicker<TDate>(
     (newHasFocus: boolean) => {
       setInternalHasFocus(newHasFocus);
 
-      if (onFocusedPickerChange) {
-        onFocusedPickerChange(newHasFocus);
+      if (onFocusedViewChange) {
+        onFocusedViewChange(newHasFocus);
       }
     },
-    [setInternalHasFocus, onFocusedPickerChange],
+    [setInternalHasFocus, onFocusedViewChange],
   );
 
   const focusMonth = React.useCallback(
@@ -347,7 +347,7 @@ MonthPicker.propTypes = {
    * Callback fired on date change.
    */
   onChange: PropTypes.func.isRequired,
-  onFocusedPickerChange: PropTypes.func,
+  onFocusedViewChange: PropTypes.func,
   onMonthFocus: PropTypes.func,
   /**
    * If `true` picker is readonly

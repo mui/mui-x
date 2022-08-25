@@ -70,7 +70,7 @@ export interface DayPickerProps<TDate>
   slideDirection: SlideDirection;
   TransitionProps?: Partial<SlideTransitionProps>;
   hasFocus?: boolean;
-  onFocusedPickerChange?: (newHasFocus: boolean) => void;
+  onFocusedViewChange?: (newHasFocus: boolean) => void;
   gridLabelId?: string;
 }
 
@@ -146,7 +146,7 @@ export function DayPicker<TDate>(props: DayPickerProps<TDate>) {
     shouldDisableDate,
     dayOfWeekFormatter = defaultDayOfWeekFormatter,
     hasFocus,
-    onFocusedPickerChange,
+    onFocusedViewChange,
     gridLabelId,
   } = props;
 
@@ -164,11 +164,11 @@ export function DayPicker<TDate>(props: DayPickerProps<TDate>) {
 
   const changeHasFocus = React.useCallback(
     (newHasFocus: boolean) => {
-      if (onFocusedPickerChange) {
-        onFocusedPickerChange(newHasFocus);
+      if (onFocusedViewChange) {
+        onFocusedViewChange(newHasFocus);
       }
     },
-    [onFocusedPickerChange],
+    [onFocusedViewChange],
   );
 
   const handleDaySelect = React.useCallback(

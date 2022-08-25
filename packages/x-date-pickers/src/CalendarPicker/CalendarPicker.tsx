@@ -118,7 +118,7 @@ export interface CalendarPickerProps<TDate>
    */
   onMonthChange?: (month: TDate) => void | Promise<void>;
   focusedView?: CalendarPickerView | null;
-  onFocusedPickerChange?: (picker: CalendarPickerView) => (newHasFocus: boolean) => void;
+  onFocusedViewChange?: (view: CalendarPickerView) => (newHasFocus: boolean) => void;
 }
 
 export type ExportedCalendarPickerProps<TDate> = Omit<
@@ -135,7 +135,7 @@ export type ExportedCalendarPickerProps<TDate> = Omit<
   | 'classes'
   | 'components'
   | 'componentsProps'
-  | 'onFocusedPickerChange'
+  | 'onFocusedViewChange'
   | 'focusedView'
 >;
 
@@ -249,7 +249,7 @@ export const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
     maxDate,
     disableHighlightToday,
     focusedView,
-    onFocusedPickerChange,
+    onFocusedViewChange,
     ...other
   } = props;
 
@@ -435,9 +435,9 @@ export const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
 
   const handleFocusedPickerChange = React.useCallback(
     (eventView: CalendarPickerView) => (newHasFocus: boolean) => {
-      if (onFocusedPickerChange) {
+      if (onFocusedViewChange) {
         // Use the calendar or clock logic
-        onFocusedPickerChange(eventView)(newHasFocus);
+        onFocusedViewChange(eventView)(newHasFocus);
         return;
       }
       // If alone, do the local modifications
@@ -447,7 +447,7 @@ export const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
         setInternalFocusedView((prevView) => (prevView === eventView ? null : prevView));
       }
     },
-    [onFocusedPickerChange, setInternalFocusedView],
+    [onFocusedViewChange, setInternalFocusedView],
   );
 
   return (
@@ -484,7 +484,7 @@ export const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
               onChange={handleDateYearChange}
               shouldDisableYear={shouldDisableYear}
               hasFocus={hasFocus}
-              onFocusedPickerChange={handleFocusedPickerChange('year')}
+              onFocusedViewChange={handleFocusedPickerChange('year')}
             />
           )}
 
@@ -498,7 +498,7 @@ export const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
               date={date}
               onChange={handleDateMonthChange}
               shouldDisableMonth={shouldDisableMonth}
-              onFocusedPickerChange={handleFocusedPickerChange('month')}
+              onFocusedViewChange={handleFocusedPickerChange('month')}
             />
           )}
 
@@ -516,7 +516,7 @@ export const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
               onSelectedDaysChange={onSelectedDayChange}
               shouldDisableDate={shouldDisableDate}
               hasFocus={hasFocus}
-              onFocusedPickerChange={handleFocusedPickerChange('day')}
+              onFocusedViewChange={handleFocusedPickerChange('day')}
               gridLabelId={gridLabelId}
             />
           )}
@@ -607,7 +607,7 @@ CalendarPicker.propTypes = {
    * Callback fired on date change
    */
   onChange: PropTypes.func.isRequired,
-  onFocusedPickerChange: PropTypes.func,
+  onFocusedViewChange: PropTypes.func,
   /**
    * Callback firing on month change @DateIOType.
    * @template TDate
