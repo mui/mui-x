@@ -19,10 +19,10 @@ export interface ValidationProps<TError, TInputValue> {
   value: TInputValue;
 }
 
-export type InferError<TProps> = TProps extends ValidationProps<any, any>
+export type InferError<TProps> = TProps extends Pick<ValidationProps<any, any>, 'onError'>
   ? Parameters<Exclude<TProps['onError'], undefined>>[0]
   : never;
-type InferInputValue<TProps> = TProps extends ValidationProps<any, any> ? TProps['value'] : never;
+type InferInputValue<TProps> = TProps extends { value: any } ? TProps['value'] : never;
 
 export type Validator<TDate, TProps> = (params: {
   adapter: MuiPickersAdapterContextValue<TDate>;
