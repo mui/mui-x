@@ -39,6 +39,11 @@ export const useField = <
       defaultValue,
       onChange,
       onError,
+      onClick,
+      onKeyDown,
+      onMouseDown,
+      onFocus,
+      onBlur,
       format = utils.formats.keyboardDate,
       readOnly = false,
       ...otherProps
@@ -49,6 +54,7 @@ export const useField = <
   } = params;
 
   const firstDefaultValue = React.useRef(defaultValue);
+  const currentlyClickingTimeout = React.useRef<number | undefined>(undefined);
 
   const valueParsed = React.useMemo(() => {
     // TODO: Avoid this type casting, the emptyValues are both valid TDate and TInputDate
@@ -97,7 +103,15 @@ export const useField = <
     }));
   };
 
-  const handleInputClick = useEventCallback(() => {
+  const handleInputMouseDown = useEventCallback((...args) => {
+    onMouseDown?.(...(args as []));
+    currentlyClickingTimeout.current = window.setTimeout(() => {}, 200);
+  });
+
+  const handleInputClick = useEventCallback((...args) => {
+    onClick?.(...(args as []));
+    window.clearTimeout(currentlyClickingTimeout.current);
+
     if (state.sections.length === 0) {
       return;
     }
@@ -110,7 +124,20 @@ export const useField = <
     updateSelectedSections(sectionIndex);
   });
 
-  const handleInputKeyDown = useEventCallback((event: React.KeyboardEvent<HTMLInputElement>) => {
+  const handleInputFocus = useEventCallback((...args) => {
+    onFocus?.(...(args as []));
+    if (currentlyClickingTimeout.current == null) {
+      updateSelectedSections(0, state.sections.length - 1);
+    }
+  });
+
+  const handleInputBlur = useEventCallback((...args) => {
+    onBlur?.(...(args as []));
+    updateSelectedSections();
+  });
+
+  const handleInputKeyDown = useEventCallback((event: React.KeyboardEvent) => {
+    onKeyDown?.(event);
     if (!inputRef.current || state.sections.length === 0) {
       return;
     }
@@ -316,13 +343,6 @@ export const useField = <
     }
   });
 
-  const handleInputFocus = useEventCallback(() => {
-    // TODO: Avoid applying focus when focus is caused by a click
-    updateSelectedSections(0, state.sections.length - 1);
-  });
-
-  const handleInputBlur = useEventCallback(() => updateSelectedSections());
-
   useEnhancedEffect(() => {
     if (!inputRef.current || state.selectedSectionIndexes == null) {
       return;
@@ -375,15 +395,20 @@ export const useField = <
     [fieldValueManager, validationError],
   );
 
+  React.useEffect(() => {
+    return () => window.clearTimeout(currentlyClickingTimeout.current);
+  }, []);
+
   return {
     inputProps: {
+      ...otherProps,
       value: state.valueStr,
       onClick: handleInputClick,
-      onKeyDown: handleInputKeyDown,
       onFocus: handleInputFocus,
       onBlur: handleInputBlur,
+      onMouseDown: handleInputMouseDown,
+      onKeyDown: handleInputKeyDown,
       error: inputError,
-      ...otherProps,
     },
     inputRef,
   };
