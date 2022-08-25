@@ -44,7 +44,7 @@ describe('<DesktopDateRangePicker />', () => {
 
   describeConformance(
     <DesktopDateRangePicker
-      onChange={() => {}}
+      onChange={() => { }}
       renderInput={(props) => <TextField {...props} />}
       value={[null, null]}
     />,
@@ -94,6 +94,35 @@ describe('<DesktopDateRangePicker />', () => {
       const textboxes = screen.getAllByRole('textbox');
       expect(textboxes[0]).to.have.attribute('aria-invalid', 'true');
       expect(textboxes[1]).to.have.attribute('aria-invalid', 'true');
+    });
+
+    it('should allow `shouldDisableDate` to depends on start or end date', () => {
+      render(
+        <WrappedDesktopDateRangePicker
+          initialValue={[
+            adapterToUse.date(new Date(2018, 0, 12)),
+            adapterToUse.date(new Date(2018, 0, 10)),
+          ]}
+          shouldDisableDate={(date, position) => {
+            if (position === 'start') {
+              return adapterToUse.isAfter(date as any, adapterToUse.date(new Date(2018, 0, 15)));
+            }
+            return adapterToUse.isBefore(date as any, adapterToUse.date(new Date(2018, 0, 15)));
+          }}
+        />,
+      );
+
+      openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'start' });
+
+      const firstPicker = getPickerDay('5', 'January 2018');
+      const secondPicker = getPickerDay('25', 'January 2018');
+
+      expect(firstPicker).not.to.have.attribute('disabled');
+      expect(secondPicker).to.have.attribute('disabled');
+      fireEvent.click(firstPicker);
+
+      expect(firstPicker).to.have.attribute('disabled');
+      expect(secondPicker).not.to.have.attribute('disabled');
     });
   });
 
@@ -318,7 +347,7 @@ describe('<DesktopDateRangePicker />', () => {
                 <TextField {...endProps} variant="standard" />
               </React.Fragment>
             )}
-            onChange={() => {}}
+            onChange={() => { }}
             TransitionComponent={FakeTransitionComponent}
             value={[null, null]}
           />
@@ -384,7 +413,7 @@ describe('<DesktopDateRangePicker />', () => {
       render(
         <DesktopDateRangePicker
           open
-          onChange={() => {}}
+          onChange={() => { }}
           PopperProps={{
             onClick: handleClick,
             onTouchStart: handleTouchStart,
