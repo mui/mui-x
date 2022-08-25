@@ -13,13 +13,13 @@ We'd like to offer a big thanks to the 11 contributors who made this release pos
 
   You can now group columns using the `columnGroupingModel` prop. This lets you to display more structured data.
 
-  ![image](https://user-images.githubusercontent.com/45398769/186178366-4fba66b2-bf90-4c7a-9d83-940a7fc78704.png)
+  <img src="https://user-images.githubusercontent.com/45398769/186178366-4fba66b2-bf90-4c7a-9d83-940a7fc78704.png" width="800" />
 
   To enable this feature, add `experimentalFeatures={{ columnGrouping: true }}`.
   The grouping header can be fully customized.
   See the [documentation](https://mui.com/x/react-data-grid/column-groups/) to explore everything it has to offer.
 
-- 🧪 Add new unstable [`DateField`](https://mui.com/x/react-date-pickers/date-field/) and [`DateRangeField`](https://mui.com/x/react-date-pickers/date-range-field/) components for date pickers (#5504) @flaviendelangle
+- 🐞 Bugfixes
 
 ### `@mui/x-data-grid@v5.16.0` / `@mui/x-data-grid-pro@v5.16.0` / `@mui/x-data-grid-premium@v5.16.0`
 
@@ -38,8 +38,8 @@ We'd like to offer a big thanks to the 11 contributors who made this release pos
 - [DatePicker] Improve `a11y` support (#5809) @LukasTy
 - [pickers] Add `PaperContent` component slot (#5801) @LukasTy
 - [pickers] Add a breaking change section in the migration guide (#5805) @alexfauquette
-- [pickers] Add key in the `localeText` (#5143) @alexfauquette
-- [pickers] Document components slots like for the data grid (#4657) @flaviendelangle
+- [pickers] Add new translations to `localeText` (#5143) @alexfauquette
+- [pickers] Document components slots (#4657) @flaviendelangle
 - [pickers] Add new unstable field components (#5504) @flaviendelangle
 - [pickers] Fallback to default `minDate` / `maxDate` when `null` value is passed (#5397) @flaviendelangle
 - [l10n] Add Korean (ko-KR) locale (#5854) @tesseractjh
@@ -52,7 +52,7 @@ We'd like to offer a big thanks to the 11 contributors who made this release pos
 
 ### Core
 
-- [core] Clarify the scope of this license key (#5824) @oliviertassinari
+- [core] Clarify the scope of the license key used for tests and documentation (#5824) @oliviertassinari
 - [core] Fix Typescript error on field hooks (#5892) @flaviendelangle
 - [core] Memoize `columns` in `useDemoData` hook (#5848) @cherniavskii
 - [core] Remove Firefox from the BrowserStack list (#5874) @DanailH
