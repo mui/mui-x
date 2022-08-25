@@ -64,6 +64,10 @@ Finally, replace the empty rows with the newly fetched ones using `apiRef.curren
 
 {{"demo": "LazyLoadingGrid.js", "bg": "inline", "disableAd": true}}
 
+:::warning
+The `onFetchRows` callback is called every time a new row is in the viewport, so when you scroll, you can easily send multiple requests to your backend. We recommend developers limit those by implementing throttling.
+:::
+
 :::info
 In order for filtering and sorting to work you need to set their modes to `server`.
 You can find out more information about how to do that on the [server-side filter page](/x/react-data-grid/filtering/#server-side-filter) and on the [server-side sorting page](/x/react-data-grid/sorting/#server-side-sorting).
