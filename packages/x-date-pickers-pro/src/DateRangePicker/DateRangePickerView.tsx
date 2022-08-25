@@ -130,6 +130,10 @@ function DateRangePickerViewRaw<TInputDate, TDate>(
   const utils = useUtils<TDate>();
   const wrapperVariant = React.useContext(WrapperVariantContext);
 
+  const wrappedShouldDisableDate =
+    shouldDisableDate &&
+    ((dayToTest: TDate) => shouldDisableDate?.(dayToTest, currentlySelectingRangeEnd));
+
   const [start, end] = parsedValue;
   const {
     changeMonth,
@@ -147,7 +151,7 @@ function DateRangePickerViewRaw<TInputDate, TDate>(
     minDate,
     onMonthChange,
     reduceAnimations,
-    shouldDisableDate,
+    shouldDisableDate: wrappedShouldDisableDate,
   });
 
   const toShowToolbar = showToolbar ?? wrapperVariant !== 'desktop';
@@ -234,7 +238,7 @@ function DateRangePickerViewRaw<TInputDate, TDate>(
       disablePast,
       minDate,
       maxDate,
-      shouldDisableDate,
+      shouldDisableDate: wrappedShouldDisableDate,
       ...calendarState,
       ...other,
     };

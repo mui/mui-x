@@ -39,9 +39,9 @@ export interface ExportedDesktopDateRangeCalendarProps<TDate> {
 
 interface DesktopDateRangeCalendarProps<TDate>
   extends ExportedDesktopDateRangeCalendarProps<TDate>,
-    Omit<DayPickerProps<TDate>, 'selectedDays' | 'renderDay' | 'onFocusedDayChange'>,
-    DayValidationProps<TDate>,
-    ExportedArrowSwitcherProps {
+  Omit<DayPickerProps<TDate>, 'selectedDays' | 'renderDay' | 'onFocusedDayChange'>,
+  DayValidationProps<TDate>,
+  ExportedArrowSwitcherProps {
   calendars: 1 | 2 | 3;
   parsedValue: DateRange<TDate>;
   changeMonth: (date: TDate) => void;
@@ -113,7 +113,6 @@ export function DateRangePickerViewDesktop<TDate>(props: DesktopDateRangeCalenda
     onSelectedDaysChange,
     renderDay = (_, dateRangeProps) => <DateRangePickerDay {...dateRangeProps} />,
     rightArrowButtonText: rightArrowButtonTextProp,
-    shouldDisableDate,
     ...other
   } = props;
 
@@ -175,10 +174,6 @@ export function DateRangePickerViewDesktop<TDate>(props: DesktopDateRangeCalenda
     changeMonth(utils.getPreviousMonth(currentMonth));
   }, [changeMonth, currentMonth, utils]);
 
-  const wrappedShouldDisableDate =
-    shouldDisableDate &&
-    ((dayToTest: TDate) => shouldDisableDate?.(dayToTest, currentlySelectingRangeEnd));
-
   return (
     <DateRangePickerViewDesktopRoot>
       {getCalendarsArray(calendars).map((_, index) => {
@@ -202,7 +197,6 @@ export function DateRangePickerViewDesktop<TDate>(props: DesktopDateRangeCalenda
             </DateRangePickerViewDesktopArrowSwitcher>
             <DateRangePickerViewDesktopCalendar<TDate>
               {...other}
-              shouldDisableDate={wrappedShouldDisableDate}
               minDate={minDate}
               maxDate={maxDate}
               disablePast={disablePast}
