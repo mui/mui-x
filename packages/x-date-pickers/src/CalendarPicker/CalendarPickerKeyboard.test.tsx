@@ -10,7 +10,11 @@ describe('<CalendarPicker /> keyboard interactions', () => {
   describe('Calendar keyboard navigation', () => {
     it('can autofocus selected day on mount', () => {
       render(
-        <CalendarPicker date={adapterToUse.date(new Date(2020, 7, 13))} onChange={() => {}} />,
+        <CalendarPicker
+          date={adapterToUse.date(new Date(2020, 7, 13))}
+          autoFocus
+          onChange={() => {}}
+        />,
       );
 
       expect(screen.getByRole('gridcell', { name: '13' })).toHaveFocus();
