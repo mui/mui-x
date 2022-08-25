@@ -3,7 +3,7 @@
   rows={initialRows}
   apiRef={apiRef}
   hideFooterPagination
-  rowCount={data.length}
+  rowCount={rowCount}
   sortingMode="server"
   filterMode="server"
   rowsLoadingMode="server"

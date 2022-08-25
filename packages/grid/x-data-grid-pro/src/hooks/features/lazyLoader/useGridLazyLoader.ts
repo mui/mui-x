@@ -137,8 +137,8 @@ export const useGridLazyLoader = (
       if (
         renderedRowsIntervalCache.current.firstRowToRender === params.firstRowToRender &&
         renderedRowsIntervalCache.current.lastRowToRender === params.lastRowToRender &&
-        !sortModel.length &&
-        !filterModel.items.length
+        sortModel.length === 0 &&
+        filterModel.items.length === 0
       ) {
         return;
       }
