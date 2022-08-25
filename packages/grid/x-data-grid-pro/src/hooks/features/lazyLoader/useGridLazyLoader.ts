@@ -134,32 +134,35 @@ export const useGridLazyLoader = (
         return;
       }
 
+      const fetchRowsParams: GridFetchRowsParams = {
+        firstRowToRender: params.firstRowToRender,
+        lastRowToRender: params.lastRowToRender,
+        sortModel,
+        filterModel,
+      };
+
       if (
         renderedRowsIntervalCache.current.firstRowToRender === params.firstRowToRender &&
-        renderedRowsIntervalCache.current.lastRowToRender === params.lastRowToRender &&
-        sortModel.length === 0 &&
-        filterModel.items.length === 0
+        renderedRowsIntervalCache.current.lastRowToRender === params.lastRowToRender
       ) {
         return;
       }
 
-      const skeletonRowsSection = findSkeletonRowsSection(visibleRows.rows, {
-        firstRowIndex: params.firstRowToRender,
-        lastRowIndex: params.lastRowToRender,
-      });
+      if (sortModel.length === 0 && filterModel.items.length === 0) {
+        const skeletonRowsSection = findSkeletonRowsSection(visibleRows.rows, {
+          firstRowIndex: params.firstRowToRender,
+          lastRowIndex: params.lastRowToRender,
+        });
 
-      if (!skeletonRowsSection) {
-        return;
+        if (!skeletonRowsSection) {
+          return;
+        }
+
+        fetchRowsParams.firstRowToRender = skeletonRowsSection.firstRowIndex;
+        fetchRowsParams.lastRowToRender = skeletonRowsSection.lastRowIndex;
       }
 
       renderedRowsIntervalCache.current = params;
-
-      const fetchRowsParams: GridFetchRowsParams = {
-        firstRowToRender: skeletonRowsSection.firstRowIndex,
-        lastRowToRender: skeletonRowsSection.lastRowIndex,
-        sortModel,
-        filterModel,
-      };
 
       apiRef.current.publishEvent('fetchRows', fetchRowsParams);
     },
@@ -169,7 +172,6 @@ export const useGridLazyLoader = (
   const handleGridSortModelChange = React.useCallback<GridEventListener<'sortModelChange'>>(
     (newSortModel) => {
       const dimensions = apiRef.current.getRootDimensions();
-
       if (
         isLazyLoadingDisabled({
           lazyLoadingFeatureFlag: lazyLoading,
@@ -179,6 +181,8 @@ export const useGridLazyLoader = (
       ) {
         return;
       }
+
+      apiRef.current.unstable_requestPipeProcessorsApplication('hydrateRows');
 
       const { firstRowToRender, lastRowToRender } = getCurrentIntervalToRender();
       const fetchRowsParams: GridFetchRowsParams = {
@@ -206,6 +210,8 @@ export const useGridLazyLoader = (
       ) {
         return;
       }
+
+      apiRef.current.unstable_requestPipeProcessorsApplication('hydrateRows');
 
       const { firstRowToRender, lastRowToRender } = getCurrentIntervalToRender();
       const fetchRowsParams: GridFetchRowsParams = {
