@@ -17,16 +17,18 @@ import {
   PickersCalendarHeaderSlotsComponentsProps,
 } from './PickersCalendarHeader';
 import { YearPicker, YearPickerProps } from '../YearPicker/YearPicker';
-import { findClosestEnabledDate } from '../internals/utils/date-utils';
+import { findClosestEnabledDate, parseNonNullablePickerDate } from '../internals/utils/date-utils';
 import { CalendarPickerView } from '../internals/models';
 import { PickerViewRoot } from '../internals/components/PickerViewRoot';
 import { defaultReduceAnimations } from '../internals/utils/defaultReduceAnimations';
 import { CalendarPickerClasses, getCalendarPickerUtilityClass } from './calendarPickerClasses';
 import {
   BaseDateValidationProps,
+  DayValidationProps,
   MonthValidationProps,
   YearValidationProps,
 } from '../internals/hooks/validation/models';
+import { DefaultizedProps } from '../internals/models/helpers';
 
 export interface CalendarPickerSlotsComponent extends PickersCalendarHeaderSlotsComponent {}
 
@@ -35,6 +37,8 @@ export interface CalendarPickerSlotsComponentsProps
 
 export interface CalendarPickerProps<TDate>
   extends ExportedDayPickerProps<TDate>,
+    BaseDateValidationProps<TDate>,
+    DayValidationProps<TDate>,
     YearValidationProps<TDate>,
     MonthValidationProps<TDate>,
     ExportedCalendarHeaderProps<TDate> {
@@ -134,6 +138,16 @@ export type ExportedCalendarPickerProps<TDate> = Omit<
   | 'focusedPicker'
 >;
 
+export type CalendarPickerDefaultizedProps<TDate> = DefaultizedProps<
+  CalendarPickerProps<TDate>,
+  | 'views'
+  | 'openTo'
+  | 'loading'
+  | 'reduceAnimations'
+  | 'renderLoading'
+  | keyof BaseDateValidationProps<TDate>
+>;
+
 const useUtilityClasses = (
   ownerState: CalendarPickerProps<any> & { classes?: Partial<CalendarPickerClasses> },
 ) => {
@@ -145,6 +159,31 @@ const useUtilityClasses = (
 
   return composeClasses(slots, getCalendarPickerUtilityClass, classes);
 };
+
+function useCalendarPickerDefaultizedProps<TDate>(
+  props: CalendarPickerProps<TDate>,
+  name: string,
+): CalendarPickerDefaultizedProps<TDate> {
+  const utils = useUtils<TDate>();
+  const defaultDates = useDefaultDates<TDate>();
+  const themeProps = useThemeProps({
+    props,
+    name,
+  });
+
+  return {
+    loading: false,
+    disablePast: false,
+    disableFuture: false,
+    openTo: 'day',
+    views: ['year', 'day'],
+    reduceAnimations: defaultReduceAnimations,
+    renderLoading: () => <span data-mui-test="loading-progress">...</span>,
+    ...themeProps,
+    minDate: parseNonNullablePickerDate(utils, themeProps.minDate, defaultDates.minDate),
+    maxDate: parseNonNullablePickerDate(utils, themeProps.maxDate, defaultDates.maxDate),
+  };
+}
 
 const CalendarPickerRoot = styled(PickerViewRoot, {
   name: 'MuiCalendarPicker',
@@ -177,18 +216,13 @@ type CalendarPickerComponent = (<TDate>(
  *
  * - [CalendarPicker API](https://mui.com/x/api/date-pickers/calendar-picker/)
  */
-const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
+export const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
   inProps: CalendarPickerProps<TDate>,
   ref: React.Ref<HTMLDivElement>,
 ) {
   const utils = useUtils<TDate>();
   const id = useId();
-  const defaultDates = useDefaultDates<TDate>();
-
-  const props = useThemeProps({
-    props: inProps,
-    name: 'MuiCalendarPicker',
-  });
+  const props = useCalendarPickerDefaultizedProps(inProps, 'MuiCalendarPicker');
 
   const {
     autoFocus,
@@ -197,23 +231,21 @@ const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
     disableFuture,
     disablePast,
     defaultCalendarMonth,
-    loading = false,
     onChange,
     onYearChange,
     onMonthChange,
-    reduceAnimations = defaultReduceAnimations,
-    renderLoading = () => <span data-mui-test="loading-progress">...</span>,
+    reduceAnimations,
     shouldDisableDate,
     shouldDisableMonth,
     shouldDisableYear,
     view,
-    views = ['year', 'day'],
-    openTo = 'day',
+    views,
+    openTo,
     className,
     disabled,
     readOnly,
-    minDate = defaultDates.minDate,
-    maxDate = defaultDates.maxDate,
+    minDate,
+    maxDate,
     disableHighlightToday,
     focusedPicker,
     onFocusedPickerChange,
@@ -372,7 +404,7 @@ const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
   const ownerState = props;
   const classes = useUtilityClasses(ownerState);
 
-  const baseDateValidationProps: BaseDateValidationProps<TDate> = {
+  const baseDateValidationProps: Required<BaseDateValidationProps<TDate>> = {
     disablePast,
     disableFuture,
     maxDate,
@@ -457,8 +489,6 @@ const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
               reduceAnimations={reduceAnimations}
               selectedDays={[date]}
               onSelectedDaysChange={onSelectedDayChange}
-              loading={loading}
-              renderLoading={renderLoading}
               shouldDisableDate={shouldDisableDate}
               hasFocus={hasFocus}
               onHasFocusChange={onFocusedPickerChange && onFocusedPickerChange('day')}
@@ -644,5 +674,3 @@ CalendarPicker.propTypes = {
    */
   views: PropTypes.arrayOf(PropTypes.oneOf(['day', 'month', 'year']).isRequired),
 } as any;
-
-export { CalendarPicker };

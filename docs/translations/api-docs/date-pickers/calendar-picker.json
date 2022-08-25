@@ -38,5 +38,12 @@
       "nodeName": "the transition group element"
     }
   },
-  "slotDescriptions": {}
+  "slotDescriptions": {
+    "SwitchViewButton": "",
+    "SwitchViewIcon": "",
+    "LeftArrowButton": "",
+    "LeftArrowIcon": "",
+    "RightArrowButton": "",
+    "RightArrowIcon": ""
+  }
 }

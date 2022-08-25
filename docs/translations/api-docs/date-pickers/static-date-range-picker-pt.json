@@ -52,5 +52,15 @@
     "value": "The value of the picker."
   },
   "classDescriptions": {},
-  "slotDescriptions": {}
+  "slotDescriptions": {
+    "ActionBar": "",
+    "PaperContent": "",
+    "SwitchViewButton": "",
+    "SwitchViewIcon": "",
+    "LeftArrowButton": "",
+    "LeftArrowIcon": "",
+    "RightArrowButton": "",
+    "RightArrowIcon": "",
+    "OpenPickerIcon": ""
+  }
 }
