@@ -3,7 +3,7 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-## 5.14.0
+## 5.16.0
 
 _Aug 25, 2022_
 
@@ -21,7 +21,7 @@ We'd like to offer a big thanks to the 11 contributors who made this release pos
 
 - 🧪 Add new unstable [`DateField`](https://mui.com/x/react-date-pickers/date-field/) and [`DateRangeField`](https://mui.com/x/react-date-pickers/date-range-field/) components for date pickers (#5504) @flaviendelangle
 
-### `@mui/x-data-grid@v5.14.0` / `@mui/x-data-grid-pro@v5.14.0` / `@mui/x-data-grid-premium@v5.14.0`
+### `@mui/x-data-grid@v5.16.0` / `@mui/x-data-grid-pro@v5.16.0` / `@mui/x-data-grid-premium@v5.16.0`
 
 #### Changes
 
