@@ -20,6 +20,7 @@ We'd like to offer a big thanks to the 11 contributors who made this release pos
   See the [documentation](https://mui.com/x/react-data-grid/column-groups/) to explore everything it has to offer.
 
 - 🐞 Bugfixes
+- 🌏 New locales for pickers thanks to @tesseractjh and @drastus
 
 ### `@mui/x-data-grid@v5.16.0` / `@mui/x-data-grid-pro@v5.16.0` / `@mui/x-data-grid-premium@v5.16.0`
 
