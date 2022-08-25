@@ -117,7 +117,7 @@ export interface CalendarPickerProps<TDate>
    * @returns {void|Promise} -
    */
   onMonthChange?: (month: TDate) => void | Promise<void>;
-  focusedPicker?: CalendarPickerView | null;
+  focusedView?: CalendarPickerView | null;
   onFocusedPickerChange?: (picker: CalendarPickerView) => (newHasFocus: boolean) => void;
 }
 
@@ -136,7 +136,7 @@ export type ExportedCalendarPickerProps<TDate> = Omit<
   | 'components'
   | 'componentsProps'
   | 'onFocusedPickerChange'
-  | 'focusedPicker'
+  | 'focusedView'
 >;
 
 export type CalendarPickerDefaultizedProps<TDate> = DefaultizedProps<
@@ -248,7 +248,7 @@ export const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
     minDate,
     maxDate,
     disableHighlightToday,
-    focusedPicker,
+    focusedView,
     onFocusedPickerChange,
     ...other
   } = props;
@@ -424,13 +424,12 @@ export const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
 
   const gridLabelId = `${id}-grid-label`;
 
-  const [internalFocusedPicker, setInternalFocusedPicker] =
-    useControlled<CalendarPickerView | null>({
-      name: 'DayPicker',
-      state: 'focusedPicker',
-      controlled: focusedPicker,
-      default: openView,
-    });
+  const [internalFocusedPicker, setInternalFocusedView] = useControlled<CalendarPickerView | null>({
+    name: 'DayPicker',
+    state: 'focusedView',
+    controlled: focusedView,
+    default: autoFocus ? openView : null,
+  });
 
   const hasFocus = internalFocusedPicker !== null;
 
@@ -443,12 +442,12 @@ export const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
       }
       // If alone, do the local modifications
       if (newHasFocus) {
-        setInternalFocusedPicker(eventView);
+        setInternalFocusedView(eventView);
       } else {
-        setInternalFocusedPicker((prevView) => (prevView === eventView ? null : prevView));
+        setInternalFocusedView((prevView) => (prevView === eventView ? null : prevView));
       }
     },
-    [onFocusedPickerChange, setInternalFocusedPicker],
+    [onFocusedPickerChange, setInternalFocusedView],
   );
 
   return (
@@ -577,7 +576,7 @@ CalendarPicker.propTypes = {
    * @default false
    */
   disablePast: PropTypes.bool,
-  focusedPicker: PropTypes.oneOf(['day', 'month', 'year']),
+  focusedView: PropTypes.oneOf(['day', 'month', 'year']),
   /**
    * Get aria-label text for switching between views button.
    * @param {CalendarPickerView} currentView The view from which we want to get the button text.

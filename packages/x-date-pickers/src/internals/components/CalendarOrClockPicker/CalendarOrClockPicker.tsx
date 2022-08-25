@@ -141,7 +141,7 @@ export function CalendarOrClockPicker<TDate, View extends CalendarOrClockPickerV
     onViewChange: handleViewChange,
   });
 
-  const { focusedPicker, setPickerHasFocus } = useFocusManagement({ autoFocus, openView });
+  const { focusedView, setPickerHasFocus } = useFocusManagement({ autoFocus, openView });
 
   return (
     <PickerRoot ownerState={{ isLandscape }}>
@@ -183,7 +183,7 @@ export function CalendarOrClockPicker<TDate, View extends CalendarOrClockPickerV
                 view={openView}
                 // Unclear why the predicate `isDatePickerView` does not imply the casted type
                 views={views.filter(isDatePickerView) as CalendarPickerView[]}
-                focusedPicker={focusedPicker}
+                focusedView={focusedView}
                 onFocusedPickerChange={setPickerHasFocus}
                 {...other}
               />

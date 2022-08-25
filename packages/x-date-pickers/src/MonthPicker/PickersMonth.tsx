@@ -55,7 +55,7 @@ const PickersMonthRoot = styled<
   },
 })) as typeof Typography;
 
-const noop = () => { };
+const noop = () => {};
 /**
  * @ignore - do not document.
  */

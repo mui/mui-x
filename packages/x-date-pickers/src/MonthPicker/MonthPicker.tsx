@@ -17,7 +17,7 @@ import { DefaultizedProps } from '../internals/models/helpers';
 
 export interface MonthPickerProps<TDate>
   extends MonthValidationProps<TDate>,
-  BaseDateValidationProps<TDate> {
+    BaseDateValidationProps<TDate> {
   /**
    * className applied to the root element.
    */

@@ -2,7 +2,7 @@ import * as React from 'react';
 import { CalendarPickerView } from '../../models/views';
 
 interface FocusState {
-  focusedPicker: CalendarPickerView | null;
+  focusedView: CalendarPickerView | null;
 }
 
 type FocusModificationPayload = { picker: CalendarPickerView };
@@ -21,11 +21,11 @@ export const createCalendarStateReducer =
     switch (type) {
       case 'focus':
         return {
-          focusedPicker: picker,
+          focusedView: picker,
         };
       case 'blur':
-        if (picker === state.focusedPicker) {
-          return { focusedPicker: null };
+        if (picker === state.focusedView) {
+          return { focusedView: null };
         }
         return state;
 
@@ -43,7 +43,7 @@ export const useFocusManagement = ({ autoFocus, openView }: FocusStateInput) => 
   const reducerFn = React.useRef(createCalendarStateReducer()).current;
 
   const [viewFocusState, dispatch] = React.useReducer(reducerFn, {
-    focusedPicker: autoFocus ? openView : null,
+    focusedView: autoFocus ? openView : null,
   });
 
   const setPickerHasFocus = React.useCallback(
@@ -54,7 +54,7 @@ export const useFocusManagement = ({ autoFocus, openView }: FocusStateInput) => 
   );
 
   return {
-    focusedPicker: viewFocusState.focusedPicker,
+    focusedView: viewFocusState.focusedView,
     setPickerHasFocus,
   };
 };
