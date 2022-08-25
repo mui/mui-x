@@ -343,12 +343,12 @@ export const useGridRows = (
         );
       }
 
-      if (newRows.length && newRows.length !== lastRowToRender - firstRowToRender) {
+      if (newRows.length && newRows.length !== lastRowToRender - firstRowToRender + 1) {
         throw new Error(
           [
             `MUI: The number of rows you want update is different than what was indicated.`,
             `Based on the provided first and last indexes the number of rows provided should be ${
-              lastRowToRender - firstRowToRender
+              lastRowToRender - firstRowToRender + 1
             }}`,
           ].join('\n'),
         );
@@ -378,7 +378,6 @@ export const useGridRows = (
 
       newRows.forEach((row) => {
         const rowTreeNodeConfig: GridRowTreeNodeConfig = {
-          ...row,
           id: row.id,
           parent: null,
           depth: 0,

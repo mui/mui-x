@@ -426,7 +426,7 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
 
         cells.push(
           <rootProps.components.SkeletonCell
-            key={`col-${column.field}-${i}`}
+            key={column.field}
             width={width}
             contentWidth={contentWidth}
             field={column.field}

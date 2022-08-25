@@ -53,7 +53,10 @@ export default function LazyLoadingGrid() {
     apiRef.current.replaceRows(
       params.firstRowToRender,
       params.lastRowToRender,
-      serverRows.returnedRows.slice(params.firstRowToRender, params.lastRowToRender),
+      serverRows.returnedRows.slice(
+        params.firstRowToRender,
+        params.lastRowToRender + 1,
+      ),
     );
   };
 
