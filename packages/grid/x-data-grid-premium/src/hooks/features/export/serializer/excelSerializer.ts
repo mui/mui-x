@@ -237,6 +237,7 @@ interface BuildExcelOptions {
   columns: GridStateColDef[];
   rowIds: GridRowId[];
   includeHeaders: boolean;
+  includeColumnGroupsHeaders: boolean;
   valueOptionsSheetName: string;
   exceljsPreProcess?: (processInput: GridExceljsProcessInput) => Promise<void>;
   exceljsPostProcess?: (processInput: GridExceljsProcessInput) => Promise<void>;
@@ -251,6 +252,7 @@ export async function buildExcel(
     columns,
     rowIds,
     includeHeaders,
+    includeColumnGroupsHeaders,
     valueOptionsSheetName,
     exceljsPreProcess,
     exceljsPostProcess,
@@ -270,7 +272,9 @@ export async function buildExcel(
     });
   }
 
-  addColumnGroupingHeaders(worksheet, columns, api)
+  if (includeColumnGroupsHeaders) {
+    addColumnGroupingHeaders(worksheet, columns, api);
+  }
 
   if (includeHeaders) {
     worksheet.addRow(columns.map((column) => column.headerName || column.field));
@@ -304,7 +308,8 @@ export async function buildExcel(
       const columnLetter = valueOptionsWorksheet.getColumn(column.field).letter;
       defaultValueOptionsFormulae[
         column.field
-      ] = `${valueOptionsSheetName}!$${columnLetter}$2:$${columnLetter}$${1 + formattedValueOptions.length
+      ] = `${valueOptionsSheetName}!$${columnLetter}$2:$${columnLetter}$${
+        1 + formattedValueOptions.length
       }`;
     });
   }
