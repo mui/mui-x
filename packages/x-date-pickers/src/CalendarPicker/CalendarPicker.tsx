@@ -424,16 +424,16 @@ export const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
 
   const gridLabelId = `${id}-grid-label`;
 
-  const [internalFocusedPicker, setInternalFocusedView] = useControlled<CalendarPickerView | null>({
+  const [internalFocusedView, setInternalFocusedView] = useControlled<CalendarPickerView | null>({
     name: 'DayPicker',
     state: 'focusedView',
     controlled: focusedView,
     default: autoFocus ? openView : null,
   });
 
-  const hasFocus = internalFocusedPicker !== null;
+  const hasFocus = internalFocusedView !== null;
 
-  const handleFocusedPickerChange = React.useCallback(
+  const handleFocusedViewChange = React.useCallback(
     (eventView: CalendarPickerView) => (newHasFocus: boolean) => {
       if (onFocusedViewChange) {
         // Use the calendar or clock logic
@@ -484,7 +484,7 @@ export const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
               onChange={handleDateYearChange}
               shouldDisableYear={shouldDisableYear}
               hasFocus={hasFocus}
-              onFocusedViewChange={handleFocusedPickerChange('year')}
+              onFocusedViewChange={handleFocusedViewChange('year')}
             />
           )}
 
@@ -498,7 +498,7 @@ export const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
               date={date}
               onChange={handleDateMonthChange}
               shouldDisableMonth={shouldDisableMonth}
-              onFocusedViewChange={handleFocusedPickerChange('month')}
+              onFocusedViewChange={handleFocusedViewChange('month')}
             />
           )}
 
@@ -516,7 +516,7 @@ export const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
               onSelectedDaysChange={onSelectedDayChange}
               shouldDisableDate={shouldDisableDate}
               hasFocus={hasFocus}
-              onFocusedViewChange={handleFocusedPickerChange('day')}
+              onFocusedViewChange={handleFocusedViewChange('day')}
               gridLabelId={gridLabelId}
             />
           )}
