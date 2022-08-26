@@ -41,7 +41,6 @@ export const useField = <
       onError,
       onClick,
       onKeyDown,
-      onMouseDown,
       onFocus,
       onBlur,
       format = utils.formats.keyboardDate,
@@ -54,7 +53,7 @@ export const useField = <
   } = params;
 
   const firstDefaultValue = React.useRef(defaultValue);
-  const currentlyClickingTimeout = React.useRef<number | undefined>(undefined);
+  const focusTimeoutRef = React.useRef<NodeJS.Timeout | undefined>(undefined);
 
   const valueParsed = React.useMemo(() => {
     // TODO: Avoid this type casting, the emptyValues are both valid TDate and TInputDate
@@ -103,14 +102,8 @@ export const useField = <
     }));
   };
 
-  const handleInputMouseDown = useEventCallback((...args) => {
-    onMouseDown?.(...(args as []));
-    currentlyClickingTimeout.current = window.setTimeout(() => {}, 200);
-  });
-
   const handleInputClick = useEventCallback((...args) => {
     onClick?.(...(args as []));
-    window.clearTimeout(currentlyClickingTimeout.current);
 
     if (state.sections.length === 0) {
       return;
@@ -126,9 +119,13 @@ export const useField = <
 
   const handleInputFocus = useEventCallback((...args) => {
     onFocus?.(...(args as []));
-    if (currentlyClickingTimeout.current == null) {
-      updateSelectedSections(0, state.sections.length - 1);
-    }
+    focusTimeoutRef.current = setTimeout(() => {
+      if (inputRef.current!.selectionEnd - inputRef.current!.selectionStart === 0) {
+        handleInputClick();
+      } else {
+        updateSelectedSections(0, state.sections.length - 1);
+      }
+    });
   });
 
   const handleInputBlur = useEventCallback((...args) => {
@@ -396,7 +393,7 @@ export const useField = <
   );
 
   React.useEffect(() => {
-    return () => window.clearTimeout(currentlyClickingTimeout.current);
+    return () => window.clearTimeout(focusTimeoutRef.current);
   }, []);
 
   return {
@@ -406,7 +403,7 @@ export const useField = <
       onClick: handleInputClick,
       onFocus: handleInputFocus,
       onBlur: handleInputBlur,
-      onMouseDown: handleInputMouseDown,
+
       onKeyDown: handleInputKeyDown,
       error: inputError,
     },

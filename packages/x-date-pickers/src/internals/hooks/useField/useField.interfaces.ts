@@ -35,7 +35,6 @@ export interface UseFieldProps<TInputValue, TValue, TError> {
   readOnly?: boolean;
   onKeyDown?: React.KeyboardEventHandler;
   onClick?: () => void;
-  onMouseDown?: () => void;
   onFocus?: () => void;
   onBlur?: () => void;
 }
@@ -45,7 +44,6 @@ export interface UseFieldResponse<TProps> {
     value: string;
     onKeyDown: React.KeyboardEventHandler<HTMLInputElement>;
     onClick: () => void;
-    onMouseDown: () => void;
     onFocus: () => void;
     onBlur: () => void;
     error: boolean;
