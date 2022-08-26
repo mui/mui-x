@@ -2,7 +2,7 @@ import * as React from 'react';
 import { spy } from 'sinon';
 import { expect } from 'chai';
 import TextField from '@mui/material/TextField';
-import { describeConformance, screen, userEvent } from '@mui/monorepo/test/utils';
+import { describeConformance, screen, userEvent, fireEvent } from '@mui/monorepo/test/utils';
 import { MobileDateRangePicker } from '@mui/x-date-pickers-pro/MobileDateRangePicker';
 import {
   wrapPickerMount,
@@ -295,8 +295,37 @@ describe('<MobileDateRangePicker />', () => {
       expect(onClose.callCount).to.equal(1);
     });
 
-    // TODO: Write test
-    // it('should call onClose and onAccept with the live value when clicking outside of the picker', () => {
-    // })
+    it('should allow `shouldDisableDate` to depends on start or end date', () => {
+      render(
+        <WrappedMobileDateRangePicker
+          initialValue={[
+            adapterToUse.date(new Date(2018, 0, 12)),
+            adapterToUse.date(new Date(2018, 0, 10)),
+          ]}
+          shouldDisableDate={(date, position) => {
+            if (position === 'start') {
+              return adapterToUse.isAfter(date as any, adapterToUse.date(new Date(2018, 0, 15)));
+            }
+            return adapterToUse.isBefore(date as any, adapterToUse.date(new Date(2018, 0, 15)));
+          }}
+        />,
+      );
+
+      openPicker({ type: 'date-range', variant: 'mobile', initialFocus: 'start' });
+
+      const firstPicker = screen.getByText('5');
+      const secondPicker = screen.getByText('25');
+
+      expect(firstPicker).not.to.have.attribute('disabled');
+      expect(secondPicker).to.have.attribute('disabled');
+      fireEvent.click(firstPicker);
+
+      expect(firstPicker).to.have.attribute('disabled');
+      expect(secondPicker).not.to.have.attribute('disabled');
+    });
   });
+
+  // TODO: Write test
+  // it('should call onClose and onAccept with the live value when clicking outside of the picker', () => {
+  // })
 });
