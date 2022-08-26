@@ -20,7 +20,7 @@ import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
 
-type OwnerState = { classes: DataGridProcessedProps['classes'] };
+type OwnerState = DataGridProcessedProps;
 
 const useUtilityClasses = (ownerState: OwnerState) => {
   const { classes } = ownerState;
@@ -37,7 +37,7 @@ const GridColumnsPanelRoot = styled('div', {
   name: 'MuiDataGrid',
   slot: 'ColumnsPanel',
   overridesResolver: (props, styles) => styles.columnsPanel,
-})(() => ({
+})<{ ownerState: OwnerState }>(() => ({
   padding: '8px 0px 8px 8px',
 }));
 
@@ -45,7 +45,7 @@ const GridColumnsPanelRowRoot = styled('div', {
   name: 'MuiDataGrid',
   slot: 'ColumnsPanelRow',
   overridesResolver: (props, styles) => styles.columnsPanelRow,
-})(({ theme }) => ({
+})<{ ownerState: OwnerState }>(({ theme }) => ({
   display: 'flex',
   justifyContent: 'space-between',
   padding: '1px 8px 1px 7px',
@@ -67,7 +67,7 @@ export function GridColumnsPanel(props: GridColumnsPanelProps) {
   const columnVisibilityModel = useGridSelector(apiRef, gridColumnVisibilityModelSelector);
   const rootProps = useGridRootProps();
   const [searchValue, setSearchValue] = React.useState('');
-  const ownerState = { classes: rootProps.classes };
+  const ownerState = rootProps;
   const classes = useUtilityClasses(ownerState);
 
   const toggleColumn = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -140,9 +140,13 @@ export function GridColumnsPanel(props: GridColumnsPanelProps) {
         />
       </GridPanelHeader>
       <GridPanelContent>
-        <GridColumnsPanelRoot className={classes.root}>
+        <GridColumnsPanelRoot className={classes.root} ownerState={ownerState}>
           {currentColumns.map((column) => (
-            <GridColumnsPanelRowRoot className={classes.columnsPanelRow} key={column.field}>
+            <GridColumnsPanelRowRoot
+              className={classes.columnsPanelRow}
+              ownerState={ownerState}
+              key={column.field}
+            >
               <FormControlLabel
                 control={
                   <rootProps.components.BaseSwitch

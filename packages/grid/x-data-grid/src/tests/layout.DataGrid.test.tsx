@@ -1132,6 +1132,31 @@ describe('<DataGrid /> - Layout & Warnings', () => {
     });
   });
 
+  it('should have ownerState in the theme style overrides', () => {
+    expect(() =>
+      render(
+        <ThemeProvider
+          theme={createTheme({
+            components: {
+              MuiDataGrid: {
+                styleOverrides: {
+                  root: ({ ownerState }) => ({
+                    // test that ownerState is not undefined
+                    ...(ownerState.columns && {}),
+                  }),
+                },
+              },
+            },
+          })}
+        >
+          <div style={{ width: 300, height: 300 }}>
+            <DataGrid {...baselineProps} />
+          </div>
+        </ThemeProvider>,
+      ),
+    ).not.to.throw();
+  });
+
   it('should not render the "no rows" overlay when transitioning the loading prop from false to true', () => {
     const NoRowsOverlay = spy(() => null);
     const TestCase = (props: Partial<DataGridProps>) => (

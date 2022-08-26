@@ -7,7 +7,7 @@ import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 
-type OwnerState = { classes: DataGridProcessedProps['classes'] };
+type OwnerState = DataGridProcessedProps;
 
 const useUtilityClasses = (ownerState: OwnerState) => {
   const { classes } = ownerState;
@@ -23,7 +23,7 @@ const GridPanelFooterRoot = styled('div', {
   name: 'MuiDataGrid',
   slot: 'PanelFooter',
   overridesResolver: (props, styles) => styles.panelFooter,
-})(({ theme }) => ({
+})<{ ownerState: OwnerState }>(({ theme }) => ({
   padding: theme.spacing(0.5),
   display: 'flex',
   justifyContent: 'space-between',
@@ -32,10 +32,16 @@ const GridPanelFooterRoot = styled('div', {
 function GridPanelFooter(props: React.HTMLAttributes<HTMLDivElement> & { sx?: SxProps<Theme> }) {
   const { className, ...other } = props;
   const rootProps = useGridRootProps();
-  const ownerState = { classes: rootProps.classes };
+  const ownerState = rootProps;
   const classes = useUtilityClasses(ownerState);
 
-  return <GridPanelFooterRoot className={clsx(className, classes.root)} {...other} />;
+  return (
+    <GridPanelFooterRoot
+      className={clsx(className, classes.root)}
+      ownerState={ownerState}
+      {...other}
+    />
+  );
 }
 
 GridPanelFooter.propTypes = {

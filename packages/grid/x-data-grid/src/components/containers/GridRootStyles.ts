@@ -1,6 +1,7 @@
 import { CSSInterpolation } from '@mui/system';
 import { darken, lighten, alpha, styled } from '@mui/material/styles';
 import { gridClasses } from '../../constants/gridClasses';
+import { OwnerState } from './GridRoot';
 
 export const GridRootStyles = styled('div', {
   name: 'MuiDataGrid',
@@ -71,7 +72,7 @@ export const GridRootStyles = styled('div', {
     },
     styles.root,
   ],
-})(({ theme }) => {
+})<{ ownerState: OwnerState }>(({ theme }) => {
   const borderColor =
     theme.palette.mode === 'light'
       ? lighten(alpha(theme.palette.divider, 1), 0.88)

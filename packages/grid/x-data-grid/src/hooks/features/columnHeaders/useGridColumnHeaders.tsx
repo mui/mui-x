@@ -32,16 +32,19 @@ import { useGridVisibleRows } from '../../utils/useGridVisibleRows';
 import { getRenderableIndexes } from '../virtualization/useGridVirtualScroller';
 import { GridColumnGroupHeader } from '../../../components/columnHeaders/GridColumnGroupHeader';
 import { GridColumnGroup } from '../../../models/gridColumnGrouping';
+import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { isDeepEqual } from '../../../utils/utils';
 
 // TODO: add the possibility to switch this value if needed for customization
 const MERGE_EMPTY_CELLS = true;
 
+type OwnerState = DataGridProcessedProps;
+
 const GridColumnHeaderRow = styled('div', {
   name: 'MuiDataGrid',
   slot: 'ColumnHeaderRow',
   overridesResolver: (props, styles) => styles.columnHeaderRow,
-})(() => ({
+})<{ ownerState: OwnerState }>(() => ({
   display: 'flex',
 }));
 
@@ -88,6 +91,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
   const sortColumnLookup = useGridSelector(apiRef, gridSortColumnLookupSelector);
   const columnMenuState = useGridSelector(apiRef, gridColumnMenuSelector);
   const rootProps = useGridRootProps();
+  const ownerState = rootProps;
   const innerRef = React.useRef<HTMLDivElement>(null);
   const handleInnerRef = useForkRef(innerRefProp, innerRef);
   const [renderContext, setRenderContext] = React.useState<GridRenderContext | null>(null);
@@ -316,7 +320,11 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
     }
 
     return (
-      <GridColumnHeaderRow role="row" aria-rowindex={headerGroupingMaxDepth + 1}>
+      <GridColumnHeaderRow
+        ownerState={ownerState}
+        role="row"
+        aria-rowindex={headerGroupingMaxDepth + 1}
+      >
         {columns}
       </GridColumnHeaderRow>
     );
@@ -467,6 +475,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
     headerToRender.forEach((depthInfo, depthIndex) => {
       columns.push(
         <GridColumnHeaderRow
+          ownerState={ownerState}
           style={{
             height: `${headerHeight}px`,
             transform: `translateX(-${depthInfo.leftOverflow}px)`,
