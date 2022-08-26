@@ -1,3 +1,5 @@
+import { fireEvent } from '@mui/monorepo/test/utils';
+
 export async function raf() {
   return new Promise<void>((resolve) => {
     // Chrome and Safari have a bug where calling rAF once returns the current
@@ -109,4 +111,9 @@ export function getRow(rowIndex: number): HTMLElement {
     throw new Error(`Row ${rowIndex} not found`);
   }
   return row;
+}
+
+export function fireClickEvent(cell: HTMLElement, event?: Partial<KeyboardEvent>) {
+  fireEvent.mouseUp(cell, event);
+  fireEvent.click(cell, event);
 }

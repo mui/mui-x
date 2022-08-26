@@ -19,7 +19,13 @@ import {
   GridRowModel,
   GridRenderCellParams,
 } from '@mui/x-data-grid';
-import { getColumnValues, getRow, getActiveCell, getCell } from 'test/utils/helperFn';
+import {
+  getColumnValues,
+  getRow,
+  getActiveCell,
+  getCell,
+  fireClickEvent,
+} from 'test/utils/helperFn';
 import { getData } from 'storybook/src/data/data-service';
 import { COMPACT_DENSITY_FACTOR } from '../hooks/features/density/useGridDensity';
 
@@ -296,8 +302,7 @@ describe('<DataGrid /> - Rows', () => {
         />,
       );
       const moreButton = screen.getByRole('menuitem', { name: 'more' });
-      fireEvent.mouseUp(moreButton);
-      fireEvent.click(moreButton);
+      fireClickEvent(moreButton);
 
       const printButton = screen.queryByRole('menuitem', { name: 'print' });
       expect(printButton).toHaveFocus();

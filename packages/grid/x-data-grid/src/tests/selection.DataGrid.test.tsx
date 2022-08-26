@@ -10,6 +10,7 @@ import {
   getColumnHeaderCell,
   getColumnHeadersTextContent,
   getActiveCell,
+  fireClickEvent,
 } from 'test/utils/helperFn';
 import { getData } from 'storybook/src/data/data-service';
 import { spy } from 'sinon';
@@ -25,11 +26,6 @@ function getSelectedRowIds() {
         row.querySelector(`[role="cell"][data-colindex="${hasCheckbox ? 1 : 0}"]`)!.textContent,
       ),
     );
-}
-
-function fireClickEvent(cell: HTMLElement, event?: Partial<KeyboardEvent>) {
-  fireEvent.mouseUp(cell, event);
-  fireEvent.click(cell, event);
 }
 
 describe('<DataGrid /> - Selection', () => {
@@ -100,14 +96,12 @@ describe('<DataGrid /> - Selection', () => {
       render(<TestDataGridSelection disableSelectionOnClick />);
 
       const cell0 = getCell(0, 0);
-      fireEvent.mouseUp(cell0);
-      fireEvent.click(cell0);
+      fireClickEvent(cell0);
       fireEvent.keyDown(cell0, { key: ' ', shiftKey: true });
       expect(getSelectedRowIds()).to.deep.equal([0]);
 
       const cell1 = getCell(1, 0);
-      fireEvent.mouseUp(cell1);
-      fireEvent.click(cell1);
+      fireClickEvent(cell1);
       fireEvent.keyDown(cell1, { key: ' ', shiftKey: true });
       expect(getSelectedRowIds()).to.deep.equal([1]);
     });
@@ -220,8 +214,7 @@ describe('<DataGrid /> - Selection', () => {
       // simulate click
       const checkboxInput = getCell(0, 0).querySelector('input');
 
-      fireEvent.mouseUp(checkboxInput);
-      fireEvent.click(checkboxInput);
+      fireClickEvent(checkboxInput!);
 
       expect(getActiveCell()).to.equal('0-0');
     });
@@ -439,8 +432,7 @@ describe('<DataGrid /> - Selection', () => {
       expect(checkboxCell).to.have.attribute('tabindex', '-1');
       expect(secondCell).to.have.attribute('tabindex', '-1');
 
-      fireEvent.mouseUp(secondCell);
-      fireEvent.click(secondCell);
+      fireClickEvent(secondCell);
       expect(secondCell).to.have.attribute('tabindex', '0');
 
       fireEvent.keyDown(secondCell, { key: 'ArrowLeft' });
@@ -481,8 +473,7 @@ describe('<DataGrid /> - Selection', () => {
         }
         render(<TestDataGridSelection checkboxSelection />);
         const cell = getCell(1, 1);
-        fireEvent.mouseUp(cell);
-        fireEvent.click(cell);
+        fireClickEvent(cell);
         fireEvent.keyDown(cell, { key: 'ArrowLeft' });
         fireEvent.keyDown(getCell(1, 0).querySelector('input'), { key: 'ArrowUp' });
         clock.runToLast(); // Wait for transition

@@ -3,14 +3,9 @@ import * as React from 'react';
 import { createRenderer, fireEvent, act } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
 import { DataGridPro, GridApi, useGridApiRef, GridColDef, gridClasses } from '@mui/x-data-grid-pro';
-import { getActiveCell, getCell, getColumnHeaderCell } from 'test/utils/helperFn';
+import { getActiveCell, getCell, getColumnHeaderCell, fireClickEvent } from 'test/utils/helperFn';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
-
-function fireClickEvent(cell: HTMLElement) {
-  fireEvent.mouseUp(cell);
-  fireEvent.click(cell);
-}
 
 describe('<DataGridPro /> - Column Spanning', () => {
   const { render } = createRenderer({ clock: 'fake' });

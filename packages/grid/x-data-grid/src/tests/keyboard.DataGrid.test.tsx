@@ -11,6 +11,7 @@ import {
   getColumnHeaderCell,
   getColumnValues,
   getRow,
+  fireClickEvent,
 } from 'test/utils/helperFn';
 import { DataGrid, DataGridProps, GridColumns } from '@mui/x-data-grid';
 import { useData } from 'storybook/src/hooks/useData';
@@ -22,11 +23,6 @@ const PAGE_SIZE = 10;
 const ROW_HEIGHT = 52;
 const HEADER_HEIGHT = 56;
 const HEIGHT = 360;
-
-function fireClickEvent(cell: HTMLElement) {
-  fireEvent.mouseUp(cell);
-  fireEvent.click(cell);
-}
 
 describe('<DataGrid /> - Keyboard', () => {
   const { render } = createRenderer({ clock: 'fake' });
@@ -396,8 +392,7 @@ describe('<DataGrid /> - Keyboard', () => {
         getColumnHeaderCell(1).querySelector<HTMLElement>(`button[title="Sort"]`)!;
 
       // Simulate click on this button
-      fireEvent.mouseUp(columnMenuButton);
-      fireEvent.click(columnMenuButton);
+      fireClickEvent(columnMenuButton);
       columnMenuButton.focus();
 
       fireEvent.keyDown(document.activeElement!, { key: 'ArrowDown' });
@@ -427,8 +422,7 @@ describe('<DataGrid /> - Keyboard', () => {
         </div>,
       );
       const input = screen.getByTestId('custom-input');
-      fireEvent.mouseUp(input);
-      fireEvent.click(input);
+      fireClickEvent(input);
       input.focus();
 
       // Verify that the event is not prevented during the bubbling.
@@ -461,8 +455,7 @@ describe('<DataGrid /> - Keyboard', () => {
         />
       </div>,
     );
-    fireEvent.mouseUp(getCell(0, 1));
-    fireEvent.click(getCell(0, 1));
+    fireClickEvent(getCell(0, 1));
     expect(handleCellKeyDown.callCount).to.equal(0);
     const input = document.querySelector<HTMLInputElement>('input[name="custom-input"]')!;
     input.focus();

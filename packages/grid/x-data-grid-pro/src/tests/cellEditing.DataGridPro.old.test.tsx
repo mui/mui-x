@@ -4,15 +4,10 @@ import Portal from '@mui/base/Portal';
 // @ts-ignore Remove once the test utils are typed
 import { createRenderer, fireEvent, screen, waitFor, act } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
-import { getActiveCell, getCell, getColumnHeaderCell } from 'test/utils/helperFn';
+import { getActiveCell, getCell, getColumnHeaderCell, fireClickEvent } from 'test/utils/helperFn';
 import { stub, spy } from 'sinon';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
-
-function fireClickEvent(cell: HTMLElement) {
-  fireEvent.mouseUp(cell);
-  fireEvent.click(cell);
-}
 
 describe('<DataGridPro /> - Cell Editing', () => {
   let baselineProps: Pick<DataGridProProps, 'autoHeight' | 'rows' | 'columns' | 'throttleRowsMs'>;

@@ -10,15 +10,10 @@ import {
 // @ts-ignore Remove once the test utils are typed
 import { createRenderer, fireEvent, screen, waitFor, act } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
-import { getCell } from 'test/utils/helperFn';
+import { getCell, fireClickEvent } from 'test/utils/helperFn';
 import { spy } from 'sinon';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
-
-function fireClickEvent(cell: HTMLElement) {
-  fireEvent.mouseUp(cell);
-  fireEvent.click(cell);
-}
 
 /**
  * Creates a date that is compatible with years before 1901
@@ -436,8 +431,7 @@ describe('<DataGridPro /> - Edit Components', () => {
       const cell = getCell(0, 0);
       fireEvent.doubleClick(cell);
       const option = screen.queryByRole('option', { name: 'Adidas' });
-      fireEvent.mouseUp(option);
-      fireEvent.click(option);
+      fireClickEvent(option);
 
       clock.tick(500);
 

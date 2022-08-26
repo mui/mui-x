@@ -18,6 +18,7 @@ import {
   getColumnHeaderCell,
   getColumnValues,
   getRows,
+  fireClickEvent,
 } from 'test/utils/helperFn';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
@@ -345,11 +346,6 @@ describe('<DataGridPro /> - Row pinning', () => {
   });
 
   describe('keyboard navigation', () => {
-    function fireClickEvent(cell: HTMLElement) {
-      fireEvent.mouseUp(cell);
-      fireEvent.click(cell);
-    }
-
     function getActiveCellRowId() {
       const cell = document.activeElement;
       if (!cell || cell.getAttribute('role') !== 'cell') {

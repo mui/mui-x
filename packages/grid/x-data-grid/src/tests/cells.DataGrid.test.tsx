@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { spy } from 'sinon';
 // @ts-ignore Remove once the test utils are typed
-import { createRenderer, fireEvent } from '@mui/monorepo/test/utils';
+import { createRenderer } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
 import { DataGrid, gridClasses } from '@mui/x-data-grid';
-import { getCell } from 'test/utils/helperFn';
+import { getCell, fireClickEvent } from 'test/utils/helperFn';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
@@ -172,8 +172,7 @@ describe('<DataGrid /> - Cells', () => {
       </div>,
     );
 
-    fireEvent.mouseUp(getCell(0, 0));
-    fireEvent.click(getCell(0, 0));
+    fireClickEvent(getCell(0, 0));
 
     expect(() => {
       getCell(1, 0).focus();

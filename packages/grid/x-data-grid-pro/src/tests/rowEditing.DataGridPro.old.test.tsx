@@ -9,15 +9,10 @@ import {
 // @ts-ignore Remove once the test utils are typed
 import { createRenderer, fireEvent, waitFor, act } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
-import { getCell, getRow } from 'test/utils/helperFn';
+import { getCell, getRow, fireClickEvent } from 'test/utils/helperFn';
 import { spy } from 'sinon';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
-
-function fireClickEvent(cell: HTMLElement) {
-  fireEvent.mouseUp(cell);
-  fireEvent.click(cell);
-}
 
 describe('<DataGridPro /> - Row Editing', () => {
   let baselineProps: Pick<
