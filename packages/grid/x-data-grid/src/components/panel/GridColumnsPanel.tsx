@@ -1,4 +1,5 @@
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import { unstable_composeClasses as composeClasses } from '@mui/material';
 import IconButton from '@mui/material/IconButton';
 import { switchClasses } from '@mui/material/Switch';
@@ -41,6 +42,14 @@ const GridColumnsPanelRoot = styled('div', {
   padding: '8px 0px 8px 8px',
 }));
 
+GridColumnsPanelRoot.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // ----------------------------------------------------------------------
+  ownerState: PropTypes.object.isRequired,
+} as any;
+
 const GridColumnsPanelRowRoot = styled('div', {
   name: 'MuiDataGrid',
   slot: 'ColumnsPanelRow',
@@ -53,6 +62,14 @@ const GridColumnsPanelRowRoot = styled('div', {
     marginRight: theme.spacing(0.5),
   },
 }));
+
+GridColumnsPanelRowRoot.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // ----------------------------------------------------------------------
+  ownerState: PropTypes.object.isRequired,
+} as any;
 
 const GridIconButtonRoot = styled(IconButton)({
   justifyContent: 'flex-end',
