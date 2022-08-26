@@ -120,7 +120,7 @@ export const useField = <
   const handleInputFocus = useEventCallback((...args) => {
     onFocus?.(...(args as []));
     focusTimeoutRef.current = setTimeout(() => {
-      if (inputRef.current!.selectionEnd - inputRef.current!.selectionStart === 0) {
+      if ((inputRef.current?.selectionEnd ?? 0) - (inputRef.current?.selectionStart ?? 0) === 0) {
         handleInputClick();
       } else {
         updateSelectedSections(0, state.sections.length - 1);
