@@ -16,7 +16,8 @@ export interface GridCellParams<V = any, R extends GridValidRowModel = any, F = 
    */
   field: string;
   /**
-   * The cell value, but if the column has valueGetter, use getValue.
+   * The cell value.
+   * If the column has `valueGetter`, use `params.row` to directly access the fields.
    */
   value?: V | undefined;
   /**
@@ -106,6 +107,10 @@ export interface GridValueGetterParams<V = any, R = any>
    * @deprecated Use the `apiRef` returned by `useGridApiContext` or `useGridApiRef` (only available in `@mui/x-data-grid-pro`)
    */
   api: any;
+  /**
+   * The default value for the cell that the `valueGetter` is overriding.
+   */
+  value: GridCellParams<V, R, any>['value'];
 }
 
 /**
