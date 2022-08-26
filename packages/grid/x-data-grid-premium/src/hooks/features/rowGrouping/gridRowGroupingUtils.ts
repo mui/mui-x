@@ -6,12 +6,18 @@ import {
   GridFilterState,
   GridFilterModel,
 } from '@mui/x-data-grid-pro';
-import { passFilterLogic, GridAggregatedFilterItemApplier } from '@mui/x-data-grid-pro/internals';
+import {
+  passFilterLogic,
+  GridAggregatedFilterItemApplier,
+  isDeepEqual,
+  GridColumnRawLookup,
+} from '@mui/x-data-grid-pro/internals';
 import { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
-import { GridRowGroupingModel } from './gridRowGroupingInterfaces';
+import { GridGroupingRules, GridRowGroupingModel } from './gridRowGroupingInterfaces';
 import { GridStatePremium } from '../../../models/gridStatePremium';
 import { gridRowGroupingSanitizedModelSelector } from './gridRowGroupingSelector';
 import { GridApiPremium } from '../../../models/gridApiPremium';
+import { GridAggregationRules } from '@mui/x-data-grid-premium/hooks';
 
 export const GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD = '__row_group_by_columns_group__';
 
@@ -190,4 +196,42 @@ export const setStrategyAvailability = (
   }
 
   apiRef.current.unstable_setStrategyAvailability('rowTree', ROW_GROUPING_STRATEGY, isAvailable);
+};
+
+export const getGroupingRules = ({
+  sanitizedRowGroupingModel,
+  columnsLookup,
+}: {
+  sanitizedRowGroupingModel: GridRowGroupingModel;
+  columnsLookup: GridColumnRawLookup;
+}): GridGroupingRules =>
+  sanitizedRowGroupingModel.map((field) => ({
+    field,
+    groupingValueGetter: columnsLookup[field]?.groupingValueGetter,
+  }));
+
+/**
+ * Compares two sets of grouping rules to determine if they are equal or not.
+ */
+export const hasGroupingRulesChanged = (
+  previousValue: GridGroupingRules | undefined = [],
+  newValue: GridGroupingRules,
+) => {
+  if (previousValue.length !== newValue.length) {
+    return true;
+  }
+
+  return newValue.some((newRule, newRuleIndex) => {
+    const previousRule = previousValue?.[newRuleIndex];
+
+    if (previousRule?.groupingValueGetter !== newRule?.groupingValueGetter) {
+      return true;
+    }
+
+    if (previousRule?.field !== newRule?.field) {
+      return true;
+    }
+
+    return false;
+  });
 };
