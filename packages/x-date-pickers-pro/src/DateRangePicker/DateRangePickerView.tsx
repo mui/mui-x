@@ -74,6 +74,14 @@ export interface ExportedDateRangePickerViewProps<TDate>
    * className applied to the root component.
    */
   className?: string;
+  /**
+   * Disable specific date. @DateIOType
+   * @template TDate
+   * @param {TDate} day The date to test.
+   * @param {string} position The date to test, 'start' or 'end'.
+   * @returns {boolean} Returns `true` if the date should be disabled.
+   */
+  shouldDisableDate?: (day: TDate, position?: 'start' | 'end') => boolean;
 }
 
 interface DateRangePickerViewProps<TInputDate, TDate>

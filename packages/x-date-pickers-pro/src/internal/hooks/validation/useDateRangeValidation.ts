@@ -13,7 +13,16 @@ import { DateRange } from '../../models';
 export interface DateRangeValidationProps<TInputDate, TDate>
   extends DayValidationProps<TDate>,
     Required<BaseDateValidationProps<TDate>>,
-    ValidationProps<DateRangeValidationError, DateRange<TInputDate>> {}
+    ValidationProps<DateRangeValidationError, DateRange<TInputDate>> {
+  /**
+   * Disable specific date. @DateIOType
+   * @template TDate
+   * @param {TDate} day The date to test.
+   * @param {string} position The date to test, 'start' or 'end'.
+   * @returns {boolean} Returns `true` if the date should be disabled.
+   */
+  shouldDisableDate?: (day: TDate, position?: 'start' | 'end') => boolean;
+}
 
 export const validateDateRange: Validator<any, DateRangeValidationProps<any, any>> = ({
   props,
