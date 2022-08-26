@@ -1,7 +1,9 @@
 import { CSSInterpolation } from '@mui/system';
 import { darken, lighten, alpha, styled } from '@mui/material/styles';
 import { gridClasses } from '../../constants/gridClasses';
-import { OwnerState } from './GridRoot';
+import { DataGridProcessedProps } from '../../models/props/DataGridProps';
+
+export type OwnerState = DataGridProcessedProps;
 
 export const GridRootStyles = styled('div', {
   name: 'MuiDataGrid',

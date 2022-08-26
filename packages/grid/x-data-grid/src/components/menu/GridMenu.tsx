@@ -44,7 +44,7 @@ const GridMenuRoot = styled(Popper, {
   name: 'MuiDataGrid',
   slot: 'Menu',
   overridesResolver: (props, styles) => styles.menu,
-})<{ ownerState: OwnerState }>(({ theme, ownerState }) => ({
+})<{ ownerState: OwnerState }>(({ theme }) => ({
   zIndex: theme.zIndex.modal,
   [`& .${gridClasses.menuList}`]: {
     outline: 0,

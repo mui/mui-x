@@ -10,7 +10,7 @@ import { SxProps } from '@mui/system';
 import { Theme } from '@mui/material/styles';
 import { unstable_composeClasses as composeClasses } from '@mui/material';
 import { GridRootContainerRef } from '../../models/gridRootContainerRef';
-import { GridRootStyles } from './GridRootStyles';
+import { GridRootStyles, OwnerState } from './GridRootStyles';
 import { gridVisibleColumnDefinitionsSelector } from '../../hooks/features/columns/gridColumnsSelector';
 import { useGridSelector } from '../../hooks/utils/useGridSelector';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
@@ -21,7 +21,6 @@ import {
   gridPinnedRowsCountSelector,
   gridRowCountSelector,
 } from '../../hooks/features/rows/gridRowsSelector';
-import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 
 export interface GridRootProps extends React.HTMLAttributes<HTMLDivElement> {
   /**
@@ -29,8 +28,6 @@ export interface GridRootProps extends React.HTMLAttributes<HTMLDivElement> {
    */
   sx?: SxProps<Theme>;
 }
-
-export type OwnerState = DataGridProcessedProps;
 
 const useUtilityClasses = (ownerState: OwnerState) => {
   const { autoHeight, density, classes } = ownerState;

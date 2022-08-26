@@ -92,7 +92,7 @@ const GridToolbarFilterButton = React.forwardRef<HTMLButtonElement, GridToolbarF
           </GridToolbarFilterListRoot>
         </div>
       );
-    }, [apiRef, preferencePanel.open, activeFilters, lookup, classes]);
+    }, [apiRef, ownerState, preferencePanel.open, activeFilters, lookup, classes]);
 
     const toggleFilter = (event: React.MouseEvent<HTMLButtonElement>) => {
       const { open, openedPanelValue } = preferencePanel;
