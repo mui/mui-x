@@ -79,7 +79,7 @@ function GridColumnsPanel(props: GridColumnsPanelProps) {
   const ownerState = { classes: rootProps.classes };
   const classes = useUtilityClasses(ownerState);
 
-  const { sort } = props;
+  const { sort, ...other } = props;
 
   const sortedColumns = React.useMemo(() => {
     switch (sort) {
@@ -154,7 +154,7 @@ function GridColumnsPanel(props: GridColumnsPanelProps) {
   }, []);
 
   return (
-    <GridPanelWrapper {...props}>
+    <GridPanelWrapper {...other}>
       <GridPanelHeader>
         <rootProps.components.BaseTextField
           label={apiRef.current.getLocaleText('columnsPanelTextFieldLabel')}
