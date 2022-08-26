@@ -90,7 +90,17 @@
     "toolbarFormat": { "type": { "name": "string" } },
     "toolbarTitle": { "type": { "name": "node" }, "default": "'Select date range'" }
   },
-  "slots": {},
+  "slots": {
+    "ActionBar": { "type": { "name": "elementType" } },
+    "LeftArrowButton": { "type": { "name": "elementType" } },
+    "LeftArrowIcon": { "type": { "name": "elementType" } },
+    "OpenPickerIcon": { "type": { "name": "elementType" } },
+    "PaperContent": { "type": { "name": "elementType" } },
+    "RightArrowButton": { "type": { "name": "elementType" } },
+    "RightArrowIcon": { "type": { "name": "elementType" } },
+    "SwitchViewButton": { "type": { "name": "elementType" } },
+    "SwitchViewIcon": { "type": { "name": "elementType" } }
+  },
   "name": "StaticDateRangePicker",
   "styles": { "classes": [], "globalClasses": {}, "name": "MuiStaticDateRangePicker" },
   "spread": false,

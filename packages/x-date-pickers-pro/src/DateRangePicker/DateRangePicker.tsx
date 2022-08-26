@@ -73,6 +73,7 @@ export const DateRangePicker = React.forwardRef(function DateRangePicker<
     desktopModeMediaQuery = '@media (pointer: fine)',
     DialogProps,
     PopperProps,
+    PaperProps,
     TransitionComponent,
     ...other
   } = props;
@@ -85,6 +86,7 @@ export const DateRangePicker = React.forwardRef(function DateRangePicker<
       <DesktopDateRangePicker
         ref={ref}
         PopperProps={PopperProps}
+        PaperProps={PaperProps}
         TransitionComponent={TransitionComponent}
         {...other}
       />

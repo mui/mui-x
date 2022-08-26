@@ -11,6 +11,7 @@ export const KeyboardDateInput = React.forwardRef(function KeyboardDateInput<TIn
   ref: React.Ref<HTMLDivElement>,
 ) {
   const {
+    className,
     components = {},
     disableOpenPicker,
     getOpenDialogAriaText: getOpenDialogAriaTextProp,
@@ -35,6 +36,7 @@ export const KeyboardDateInput = React.forwardRef(function KeyboardDateInput<TIn
   return renderInput({
     ref,
     inputRef,
+    className,
     ...textFieldProps,
     InputProps: {
       ...InputProps,
