@@ -13,7 +13,7 @@ export interface PickersArrowSwitcherSlotsComponent {
    */
   LeftArrowButton: React.ElementType;
   /**
-   * Icon displayed in the left view switch button
+   * Icon displayed in the left view switch button.
    * @default ArrowLeft
    */
   LeftArrowIcon: React.ElementType;
@@ -23,7 +23,7 @@ export interface PickersArrowSwitcherSlotsComponent {
    */
   RightArrowButton: React.ElementType;
   /**
-   * Icon displayed in the right view switch button
+   * Icon displayed in the right view switch button.
    * @default ArrowRight
    */
   RightArrowIcon: React.ElementType;

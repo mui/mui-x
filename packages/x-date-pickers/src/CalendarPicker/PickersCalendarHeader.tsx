@@ -27,7 +27,7 @@ export type ExportedCalendarHeaderProps<TDate> = Pick<
 
 export interface PickersCalendarHeaderSlotsComponent extends PickersArrowSwitcherSlotsComponent {
   /**
-   * Button displayed to switch between different calendar views
+   * Button displayed to switch between different calendar views.
    * @default IconButton
    */
   SwitchViewButton: React.ElementType;

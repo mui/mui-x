@@ -13,7 +13,7 @@ export type MuiTextFieldProps = MuiTextFieldPropsType | Omit<MuiTextFieldPropsTy
 export interface DateInputSlotsComponent {
   /**
    * Icon displaying for open picker button.
-   * @default Calendar or `Clock`.
+   * @default Calendar or Clock
    */
   OpenPickerIcon: React.ElementType;
 }

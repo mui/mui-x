@@ -14,7 +14,7 @@ export interface PickersSlotsComponent {
    */
   ActionBar: React.ElementType<PickersActionBarProps>;
   /**
-   * The content of the Paper wrapping views
+   * The content of the Paper wrapping views.
    * @default React.Fragment
    */
   PaperContent: React.ElementType<{ children: React.ReactNode }>;
