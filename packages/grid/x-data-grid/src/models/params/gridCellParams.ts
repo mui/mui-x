@@ -16,7 +16,8 @@ export interface GridCellParams<V = any, R extends GridValidRowModel = any, F = 
    */
   field: string;
   /**
-   * The cell value. If the column has `valueGetter` - use `params.row` to directly access the fields.
+   * The cell value.
+   * If the column has `valueGetter`, use `params.row` to directly access the fields.
    */
   value?: V | undefined;
   /**
