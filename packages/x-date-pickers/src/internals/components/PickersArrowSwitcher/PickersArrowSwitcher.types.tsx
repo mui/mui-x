@@ -43,9 +43,25 @@ export type PickersArrowSwitcherOwnerState = PickersArrowSwitcherProps;
 export interface PickersArrowSwitcherComponentsPropsOverrides {}
 
 export interface PickersArrowSwitcherSlotsComponent {
+  /**
+   * Button allowing to switch to the left view.
+   * @default IconButton
+   */
   LeftArrowButton: React.ElementType;
+  /**
+   * Icon displayed in the left view switch button.
+   * @default ArrowLeft
+   */
   LeftArrowIcon: React.ElementType;
+  /**
+   * Button allowing to switch to the right view.
+   * @default IconButton
+   */
   RightArrowButton: React.ElementType;
+  /**
+   * Icon displayed in the right view switch button.
+   * @default ArrowRight
+   */
   RightArrowIcon: React.ElementType;
 }
 
