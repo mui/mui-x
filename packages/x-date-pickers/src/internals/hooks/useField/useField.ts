@@ -1,7 +1,7 @@
 import * as React from 'react';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import useEventCallback from '@mui/utils/useEventCallback';
-import { InferError, useValidation } from '../validation/useValidation';
+import { useValidation } from '../validation/useValidation';
 import { useUtils } from '../useUtils';
 import {
   FieldSection,
@@ -26,7 +26,7 @@ export const useField = <
   TValue,
   TDate,
   TSection extends FieldSection,
-  TProps extends UseFieldProps<TInputValue, TValue, InferError<TProps>>,
+  TProps extends UseFieldProps<any, any, any>,
 >(
   params: UseFieldParams<TInputValue, TValue, TDate, TSection, TProps>,
 ): UseFieldResponse<TProps> => {
