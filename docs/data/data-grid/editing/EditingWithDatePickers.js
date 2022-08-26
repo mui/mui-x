@@ -215,7 +215,8 @@ GridEditDateCell.propTypes = {
    */
   id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
   /**
-   * The cell value. If the column has `valueGetter` - use `params.row` to directly access the fields.
+   * The cell value.
+   * If the column has `valueGetter`, use `params.row` to directly access the fields.
    */
   value: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.string]),
 };
