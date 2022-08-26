@@ -11,8 +11,13 @@ import {
   PickerStatePickerProps,
   DayPickerProps,
   BaseDateValidationProps,
+  DayValidationProps,
 } from '@mui/x-date-pickers/internals';
-import { DateRange, CurrentlySelectingRangeEndProps } from '../internal/models/dateRange';
+import {
+  DateRange,
+  CurrentlySelectingRangeEndProps,
+  DayRangeValidationProps,
+} from '../internal/models/dateRange';
 import { isRangeValid } from '../internal/utils/date-utils';
 import { calculateRangeChange } from './date-range-manager';
 import { DateRangePickerToolbar } from './DateRangePickerToolbar';
@@ -38,9 +43,13 @@ export interface DateRangePickerViewSlotsComponentsProps
 
 export interface ExportedDateRangePickerViewProps<TDate>
   extends ExportedDesktopDateRangeCalendarProps<TDate>,
+    DayRangeValidationProps<TDate>,
     Omit<
       ExportedCalendarPickerProps<TDate>,
-      'onYearChange' | 'renderDay' | keyof BaseDateValidationProps<TDate>
+      | 'onYearChange'
+      | 'renderDay'
+      | keyof BaseDateValidationProps<TDate>
+      | keyof DayValidationProps<TDate>
     > {
   /**
    * Overrideable components.
@@ -130,6 +139,10 @@ function DateRangePickerViewRaw<TInputDate, TDate>(
   const utils = useUtils<TDate>();
   const wrapperVariant = React.useContext(WrapperVariantContext);
 
+  const wrappedShouldDisableDate =
+    shouldDisableDate &&
+    ((dayToTest: TDate) => shouldDisableDate?.(dayToTest, currentlySelectingRangeEnd));
+
   const [start, end] = parsedValue;
   const {
     changeMonth,
@@ -147,7 +160,7 @@ function DateRangePickerViewRaw<TInputDate, TDate>(
     minDate,
     onMonthChange,
     reduceAnimations,
-    shouldDisableDate,
+    shouldDisableDate: wrappedShouldDisableDate,
   });
 
   const toShowToolbar = showToolbar ?? wrapperVariant !== 'desktop';
@@ -234,7 +247,7 @@ function DateRangePickerViewRaw<TInputDate, TDate>(
       disablePast,
       minDate,
       maxDate,
-      shouldDisableDate,
+      shouldDisableDate: wrappedShouldDisableDate,
       ...calendarState,
       ...other,
     };
