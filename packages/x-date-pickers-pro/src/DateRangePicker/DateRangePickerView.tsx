@@ -11,8 +11,13 @@ import {
   PickerStatePickerProps,
   DayPickerProps,
   BaseDateValidationProps,
+  DayValidationProps,
 } from '@mui/x-date-pickers/internals';
-import { DateRange, CurrentlySelectingRangeEndProps } from '../internal/models/dateRange';
+import {
+  DateRange,
+  CurrentlySelectingRangeEndProps,
+  DayRangeValidationProps,
+} from '../internal/models/dateRange';
 import { isRangeValid } from '../internal/utils/date-utils';
 import { calculateRangeChange } from './date-range-manager';
 import { DateRangePickerToolbar } from './DateRangePickerToolbar';
@@ -38,9 +43,13 @@ export interface DateRangePickerViewSlotsComponentsProps
 
 export interface ExportedDateRangePickerViewProps<TDate>
   extends ExportedDesktopDateRangeCalendarProps<TDate>,
+    DayRangeValidationProps<TDate>,
     Omit<
       ExportedCalendarPickerProps<TDate>,
-      'onYearChange' | 'renderDay' | keyof BaseDateValidationProps<TDate>
+      | 'onYearChange'
+      | 'renderDay'
+      | keyof BaseDateValidationProps<TDate>
+      | keyof DayValidationProps<TDate>
     > {
   /**
    * Overrideable components.
@@ -74,14 +83,6 @@ export interface ExportedDateRangePickerViewProps<TDate>
    * className applied to the root component.
    */
   className?: string;
-  /**
-   * Disable specific date. @DateIOType
-   * @template TDate
-   * @param {TDate} day The date to test.
-   * @param {string} position The date to test, 'start' or 'end'.
-   * @returns {boolean} Returns `true` if the date should be disabled.
-   */
-  shouldDisableDate?: (day: TDate, position?: 'start' | 'end') => boolean;
 }
 
 interface DateRangePickerViewProps<TInputDate, TDate>
