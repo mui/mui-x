@@ -1464,7 +1464,7 @@ describe('<DataGridPremium /> - Row Grouping', () => {
       expect(getColumnValues(1)).to.deep.equal(['', '0', '1', '2', '', '3', '4']);
     });
 
-    it.only('should react to groupingValueGetter update', () => {
+    it('should react to groupingValueGetter update', () => {
       render(
         <Test
           columns={[
