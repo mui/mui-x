@@ -380,7 +380,7 @@ DateRangePicker.propTypes = {
    * Disable specific date. @DateIOType
    * @template TDate
    * @param {TDate} day The date to test.
-   * @param {string} position The date to test, 'start' or 'end' for range pickers.
+   * @param {string} position The date to test, 'start' or 'end'.
    * @returns {boolean} Returns `true` if the date should be disabled.
    */
   shouldDisableDate: PropTypes.func,
