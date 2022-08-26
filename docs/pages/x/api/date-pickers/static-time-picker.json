@@ -73,7 +73,7 @@
     "ActionBar": { "default": "PickersActionBar", "type": { "name": "elementType" } },
     "LeftArrowButton": { "default": "IconButton", "type": { "name": "elementType" } },
     "LeftArrowIcon": { "default": "ArrowLeft", "type": { "name": "elementType" } },
-    "OpenPickerIcon": { "default": "Calendar or `Clock`.", "type": { "name": "elementType" } },
+    "OpenPickerIcon": { "default": "Calendar or Clock", "type": { "name": "elementType" } },
     "PaperContent": { "default": "React.Fragment", "type": { "name": "elementType" } },
     "RightArrowButton": { "default": "IconButton", "type": { "name": "elementType" } },
     "RightArrowIcon": { "default": "ArrowRight", "type": { "name": "elementType" } }

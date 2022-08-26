@@ -15,6 +15,6 @@
   },
   "slotDescriptions": {
     "ActionBar": "The action bar placed bellow picker views.",
-    "PaperContent": "The content of the Paper wrapping views"
+    "PaperContent": "The content of the Paper wrapping views."
   }
 }
