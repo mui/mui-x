@@ -11,7 +11,7 @@ import { expect } from 'chai';
 import { spy } from 'sinon';
 // @ts-ignore Remove once the test utils are typed
 import { createRenderer, fireEvent, screen, waitFor, act } from '@mui/monorepo/test/utils';
-import { getRow, getCell, getColumnValues } from 'test/utils/helperFn';
+import { getRow, getCell, getColumnValues, fireClickEvent } from 'test/utils/helperFn';
 import { useData } from 'storybook/src/hooks/useData';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
@@ -238,8 +238,7 @@ describe('<DataGridPro /> - Detail panel', () => {
       />,
     );
     const virtualScroller = document.querySelector('.MuiDataGrid-virtualScroller')!;
-    fireEvent.mouseUp(getCell(2, 1));
-    fireEvent.click(getCell(2, 1));
+    fireClickEvent(getCell(2, 1));
     fireEvent.keyDown(getCell(2, 1), { key: 'ArrowDown' });
     expect(virtualScroller.scrollTop).to.equal(0);
     fireEvent.keyDown(getCell(3, 1), { key: 'ArrowDown' });
@@ -270,8 +269,7 @@ describe('<DataGridPro /> - Detail panel', () => {
 
     const cell = getCell(0, 0);
 
-    fireEvent.mouseUp(cell);
-    fireEvent.click(cell);
+    fireClickEvent(cell);
 
     fireEvent.keyDown(cell, { key: 'ArrowRight' });
     virtualScroller.dispatchEvent(new Event('scroll'));
@@ -290,8 +288,7 @@ describe('<DataGridPro /> - Detail panel', () => {
     render(<TestCase getDetailPanelContent={() => <div>Detail</div>} />);
     expect(screen.queryByText('Detail')).to.equal(null);
     const cell = getCell(1, 1);
-    fireEvent.mouseUp(cell);
-    fireEvent.click(cell);
+    fireClickEvent(cell);
     fireEvent.keyDown(cell, { ctrlKey: true, key: 'Enter' });
     expect(screen.queryByText('Detail')).not.to.equal(null);
     fireEvent.keyDown(cell, { metaKey: true, key: 'Enter' });
@@ -302,8 +299,7 @@ describe('<DataGridPro /> - Detail panel', () => {
     render(<TestCase getDetailPanelContent={() => <div>Detail</div>} />);
     expect(screen.queryByText('Detail')).to.equal(null);
     const cell = getCell(0, 0);
-    fireEvent.mouseUp(cell);
-    fireEvent.click(cell);
+    fireClickEvent(cell);
     fireEvent.keyDown(cell, { key: ' ' });
     expect(screen.queryByText('Detail')).not.to.equal(null);
     fireEvent.keyDown(cell, { key: ' ' });
@@ -462,8 +458,7 @@ describe('<DataGridPro /> - Detail panel', () => {
     );
     expect(screen.queryByText('Detail')).to.equal(null);
     const cell = getCell(1, 0);
-    fireEvent.mouseUp(cell);
-    fireEvent.click(cell);
+    fireClickEvent(cell);
     expect(handleSelectionModelChange.callCount).to.equal(0);
   });
 

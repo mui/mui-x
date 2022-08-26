@@ -13,7 +13,7 @@ import {
 // @ts-ignore Remove once the test utils are typed
 import { act, createRenderer, fireEvent, screen } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
-import { getCell } from 'test/utils/helperFn';
+import { fireClickEvent, getCell } from 'test/utils/helperFn';
 import { spy, SinonSpy } from 'sinon';
 
 /**
@@ -587,8 +587,7 @@ describe('<DataGridPro /> - Edit Components', () => {
 
       const cell = getCell(0, 0);
       fireEvent.doubleClick(cell);
-      fireEvent.mouseUp(screen.queryAllByRole('option')[1]);
-      fireEvent.click(screen.queryAllByRole('option')[1]);
+      fireClickEvent(screen.queryAllByRole('option')[1]);
       clock.runToLast();
       expect(screen.queryByRole('listbox')).to.equal(null);
       fireEvent.keyDown(screen.queryByRole('button', { name: 'Adidas' }), { key: 'Enter' });

@@ -9,6 +9,7 @@ import {
   getColumnValues,
   getRows,
   getColumnHeaderCell,
+  fireClickEvent,
 } from 'test/utils/helperFn';
 import {
   GridRowModel,
@@ -701,8 +702,7 @@ describe('<DataGridPro /> - Rows', () => {
     it('should focus the clicked cell in the state', () => {
       render(<TestCase rows={baselineProps.rows} />);
 
-      fireEvent.mouseUp(getCell(0, 0));
-      fireEvent.click(getCell(0, 0));
+      fireClickEvent(getCell(0, 0));
       expect(apiRef.current.state.focus.cell).to.deep.equal({
         id: baselineProps.rows[0].id,
         field: baselineProps.columns[0].field,
@@ -720,8 +720,7 @@ describe('<DataGridPro /> - Rows', () => {
     it('should not reset focus when removing a row not containing the focus cell', () => {
       const { setProps } = render(<TestCase rows={baselineProps.rows} />);
 
-      fireEvent.mouseUp(getCell(1, 0));
-      fireEvent.click(getCell(1, 0));
+      fireClickEvent(getCell(1, 0));
       setProps({ rows: baselineProps.rows.slice(1) });
       expect(gridFocusCellSelector(apiRef)).to.deep.equal({
         id: baselineProps.rows[1].id,
@@ -732,8 +731,7 @@ describe('<DataGridPro /> - Rows', () => {
     it('should set the focus when pressing a key inside a cell', () => {
       render(<TestCase rows={baselineProps.rows} />);
       const cell = getCell(1, 0);
-      fireEvent.mouseUp(cell);
-      fireEvent.click(cell);
+      fireClickEvent(cell);
       fireEvent.keyDown(cell, { key: 'a' });
       expect(gridFocusCellSelector(apiRef)).to.deep.equal({
         id: baselineProps.rows[1].id,
@@ -743,14 +741,12 @@ describe('<DataGridPro /> - Rows', () => {
 
     it('should update the focus when clicking from one cell to another', () => {
       render(<TestCase rows={baselineProps.rows} />);
-      fireEvent.mouseUp(getCell(1, 0));
-      fireEvent.click(getCell(1, 0));
+      fireClickEvent(getCell(1, 0));
       expect(gridFocusCellSelector(apiRef)).to.deep.equal({
         id: baselineProps.rows[1].id,
         field: baselineProps.columns[0].field,
       });
-      fireEvent.mouseUp(getCell(2, 1));
-      fireEvent.click(getCell(2, 1));
+      fireClickEvent(getCell(2, 1));
       expect(gridFocusCellSelector(apiRef)).to.deep.equal({
         id: baselineProps.rows[2].id,
         field: baselineProps.columns[1].field,
@@ -759,8 +755,7 @@ describe('<DataGridPro /> - Rows', () => {
 
     it('should reset focus when clicking outside the focused cell', () => {
       render(<TestCase rows={baselineProps.rows} />);
-      fireEvent.mouseUp(getCell(1, 0));
-      fireEvent.click(getCell(1, 0));
+      fireClickEvent(getCell(1, 0));
       expect(gridFocusCellSelector(apiRef)).to.deep.equal({
         id: baselineProps.rows[1].id,
         field: baselineProps.columns[0].field,
@@ -773,8 +768,7 @@ describe('<DataGridPro /> - Rows', () => {
       const handleCellFocusOut = spy();
       render(<TestCase rows={baselineProps.rows} />);
       apiRef.current.subscribeEvent('cellFocusOut', handleCellFocusOut);
-      fireEvent.mouseUp(getCell(1, 0));
-      fireEvent.click(getCell(1, 0));
+      fireClickEvent(getCell(1, 0));
       expect(handleCellFocusOut.callCount).to.equal(0);
       fireEvent.click(document.body);
       expect(handleCellFocusOut.callCount).to.equal(1);
@@ -793,8 +787,7 @@ describe('<DataGridPro /> - Rows', () => {
           />,
         );
         const cell = getCell(0, 0);
-        fireEvent.mouseUp(cell);
-        fireEvent.click(cell);
+        fireClickEvent(cell);
       }).not.to.throw();
     });
 

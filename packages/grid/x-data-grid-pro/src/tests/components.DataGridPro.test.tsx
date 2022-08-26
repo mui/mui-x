@@ -11,7 +11,7 @@ import {
   GridApi,
 } from '@mui/x-data-grid-pro';
 import { useData } from 'packages/storybook/src/hooks/useData';
-import { getCell, getRow } from 'test/utils/helperFn';
+import { fireClickEvent, getCell, getRow } from 'test/utils/helperFn';
 
 describe('<DataGridPro/> - Components', () => {
   const { render } = createRenderer();
@@ -85,8 +85,7 @@ describe('<DataGridPro/> - Components', () => {
       expect(propHandler.callCount).to.equal(0);
       expect(eventHandler.callCount).to.equal(0);
 
-      fireEvent.mouseUp(getCell(0, 0));
-      fireEvent.click(getCell(0, 0));
+      fireClickEvent(getCell(0, 0));
       fireEvent.keyDown(getCell(0, 0));
 
       expect(propHandler.callCount).to.equal(1);
