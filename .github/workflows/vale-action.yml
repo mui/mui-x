@@ -10,8 +10,8 @@ jobs:
       - uses: errata-ai/vale-action@reviewdog
         with:
           reporter: github-pr-review
+          files: docs/data
         env:
           # Required, set by GitHub actions automatically:
           # https://docs.github.com/en/actions/security-guides/automatic-token-authentication#about-the-github_token-secret
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
-          
