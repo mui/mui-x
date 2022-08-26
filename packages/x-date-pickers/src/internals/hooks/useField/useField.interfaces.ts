@@ -33,13 +33,17 @@ export interface UseFieldProps<TInputValue, TValue, TError> {
    * @default false
    */
   readOnly?: boolean;
+  onKeyDown?: React.KeyboardEventHandler;
+  onClick?: () => void;
+  onFocus?: () => void;
+  onBlur?: () => void;
 }
 
 export interface UseFieldResponse<TProps> {
   inputProps: Omit<TProps, keyof UseFieldProps<any, any, any>> & {
     value: string;
-    onClick: React.MouseEventHandler<HTMLInputElement>;
     onKeyDown: React.KeyboardEventHandler<HTMLInputElement>;
+    onClick: () => void;
     onFocus: () => void;
     onBlur: () => void;
     error: boolean;

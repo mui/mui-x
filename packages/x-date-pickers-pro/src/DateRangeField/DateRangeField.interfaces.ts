@@ -15,11 +15,17 @@ export type UseDateRangeFieldDefaultizedProps<TInputDate, TDate> = DefaultizedPr
   'minDate' | 'maxDate' | 'disableFuture' | 'disablePast'
 >;
 
-export type DateRangeFieldProps<TInputDate, TDate> = Omit<
-  TextFieldProps,
+export type UseDateRangeFieldComponentProps<TInputDate, TDate, ChildProps extends {}> = Omit<
+  ChildProps,
   'value' | 'defaultValue' | 'onChange' | 'onError'
 > &
   UseDateRangeFieldProps<TInputDate, TDate>;
+
+export type DateRangeFieldProps<TInputDate, TDate> = UseDateRangeFieldComponentProps<
+  TInputDate,
+  TDate,
+  TextFieldProps
+>;
 
 export interface DateRangeFieldSection extends FieldSection {
   dateName: 'start' | 'end';
