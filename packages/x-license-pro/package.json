@@ -13,10 +13,6 @@
   "publishConfig": {
     "access": "public"
   },
-  "bin": {
-    "licensegen": "./bin/license-gen-script.js",
-    "licensedecode": "./bin/license-decode-script.js"
-  },
   "scripts": {
     "typescript": "tsc -p tsconfig.json",
     "build": "yarn build:legacy && yarn build:modern && yarn build:node && yarn build:stable && yarn build:types && yarn build:copy-files ",
