@@ -80,6 +80,7 @@ function GridColumnsPanel(props: GridColumnsPanelProps) {
   const classes = useUtilityClasses(ownerState);
 
   const { sort } = props;
+
   const sortedColumns = React.useMemo(() => {
     switch (sort) {
       case 'asc':
