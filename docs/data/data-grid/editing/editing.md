@@ -421,7 +421,7 @@ The following demo implements an edit component with auto-stop, based on a nativ
 {{"demo": "AutoStopEditComponent.js", "bg": "inline", "defaultCodeOpen": false}}
 
 :::warning
-We don't recommend using edit components with auto-stop in columns that use long-running `preProcessEditCellProps` because the UI will freeze while waiting for `apiRef.current.setEditCellValue`.
+Avoid using edit components with auto-stop in columns that use long-running `preProcessEditCellProps` because the UI will freeze while waiting for `apiRef.current.setEditCellValue`.
 Instead, use the provided interactions to exit edit mode.
 :::
 

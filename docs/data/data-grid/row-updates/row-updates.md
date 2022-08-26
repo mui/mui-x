@@ -45,7 +45,7 @@ Whenever the rows are updated, the grid has to apply the sorting and filters. Th
 
 When receiving updates more frequently than this threshold, the grid will wait before updating the rows.
 
-The following demo updates the rows every 10ms, but they are only applied every 2 seconds.
+The following demo updates the rows every 10 ms, but they are only applied every 2 seconds.
 
 {{"demo": "ThrottledRowsGrid.js", "bg": "inline"}}
 

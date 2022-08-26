@@ -40,7 +40,7 @@ The commercial version is available in the form of two plans: Pro and Premium.
 #### Pro Plan [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
 
 The Pro version extends the features available in the MIT version, by allowing to sort and filter multiple columns at the same time.
-It also brings new features, e.g. column groups, column pinning, tree data, row and column reordering, etc.
+It also brings new features, e.g. column groups, column pinning, tree data, row, and column reordering, etc.
 Finally, the Pro version leverages virtualization to handle bigger datasets.
 The following grid displays 31 columns and 100,000 rows - over 3 million cells in total.
 
