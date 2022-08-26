@@ -46,6 +46,21 @@ export interface PickerComponents<Theme = unknown> {
     styleOverrides?: ComponentsOverrides<Theme>['MuiPickerStaticWrapper'];
     variants?: ComponentsVariants['MuiPickerStaticWrapper'];
   };
+  MuiStaticDatePicker?: {
+    defaultProps?: ComponentsProps['MuiStaticDatePicker'];
+    styleOverrides?: ComponentsOverrides<Theme>['MuiStaticDatePicker'];
+    variants?: ComponentsVariants['MuiStaticDatePicker'];
+  };
+  MuiStaticDateTimePicker?: {
+    defaultProps?: ComponentsProps['MuiStaticDateTimePicker'];
+    styleOverrides?: ComponentsOverrides<Theme>['MuiStaticDateTimePicker'];
+    variants?: ComponentsVariants['MuiStaticDateTimePicker'];
+  };
+  MuiStaticTimePicker?: {
+    defaultProps?: ComponentsProps['MuiStaticTimePicker'];
+    styleOverrides?: ComponentsOverrides<Theme>['MuiStaticTimePicker'];
+    variants?: ComponentsVariants['MuiStaticTimePicker'];
+  };
 }
 
 declare module '@mui/material/styles' {

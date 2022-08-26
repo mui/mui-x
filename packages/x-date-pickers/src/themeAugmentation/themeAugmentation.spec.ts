@@ -53,7 +53,22 @@ createTheme({
     },
     MuiStaticDatePicker: {
       defaultProps: {
-        open: true,
+        disabled: true,
+        // @ts-expect-error invalid MuiStaticDatePicker prop
+        someRandomProp: true,
+      },
+    },
+    MuiStaticDateTimePicker: {
+      defaultProps: {
+        disabled: true,
+        // @ts-expect-error invalid MuiStaticDatePicker prop
+        someRandomProp: true,
+      },
+    },
+    MuiStaticTimePicker: {
+      defaultProps: {
+        disabled: true,
+        // @ts-expect-error invalid MuiStaticDatePicker prop
         someRandomProp: true,
       },
     },
