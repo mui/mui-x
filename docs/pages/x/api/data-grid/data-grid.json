@@ -355,6 +355,7 @@
       "row--dragging",
       "row--lastVisible",
       "row--dynamicHeight",
+      "row--expanded",
       "row",
       "rowCount",
       "rowReorderCellContainer",

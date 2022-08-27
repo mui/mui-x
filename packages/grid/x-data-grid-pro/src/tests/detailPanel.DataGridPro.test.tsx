@@ -13,6 +13,7 @@ import { spy } from 'sinon';
 import { createRenderer, fireEvent, screen, waitFor, act } from '@mui/monorepo/test/utils';
 import { getRow, getCell, getColumnValues } from 'test/utils/helperFn';
 import { useData } from 'storybook/src/hooks/useData';
+import { gridClasses } from '../../../x-data-grid/src/constants/gridClasses';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
@@ -485,6 +486,13 @@ describe('<DataGridPro /> - Detail panel', () => {
   it('should add an accessible name to the toggle column', () => {
     render(<TestCase getDetailPanelContent={() => <div />} />);
     expect(screen.queryByRole('columnheader', { name: /detail panel toggle/i })).not.to.equal(null);
+  });
+
+  it('should add the MuiDataGrid-row--expanded class to the expanded row', () => {
+    render(<TestCase getDetailPanelContent={({ id }) => (id === 0 ? <div /> : null)} />);
+    expect(getRow(0)).not.to.have.class(gridClasses['row--expanded']);
+    fireEvent.click(screen.getAllByRole('button', { name: 'Expand' })[0]);
+    expect(getRow(0)).to.have.class(gridClasses['row--expanded']);
   });
 
   describe('prop: onDetailPanelsExpandedRowIds', () => {

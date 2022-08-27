@@ -552,6 +552,11 @@
       "nodeName": "the row",
       "conditions": "it has dynamic row height"
     },
+    "row--expanded": {
+      "description": "Styles applied to {{nodeName}} if {{conditions}}.",
+      "nodeName": "the row",
+      "conditions": "its detail panel is open"
+    },
     "row": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the row element" },
     "rowCount": {
       "description": "Styles applied to {{nodeName}}.\nOnly works when pagination is disabled.",
