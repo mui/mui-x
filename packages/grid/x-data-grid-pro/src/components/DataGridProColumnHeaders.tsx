@@ -25,8 +25,7 @@ import {
 } from '../hooks/features/columnPinning';
 import { filterColumns } from './DataGridProVirtualScroller';
 
-type OwnerState = {
-  classes?: DataGridProProcessedProps['classes'];
+type OwnerState = DataGridProProcessedProps & {
   leftPinnedColumns: GridPinnedColumns['left'];
   rightPinnedColumns: GridPinnedColumns['right'];
 };
@@ -48,10 +47,6 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   return composeClasses(slots, getDataGridUtilityClass, classes);
 };
 
-interface GridColumnHeadersPinnedColumnHeadersProps {
-  side: GridPinnedPosition;
-}
-
 // Inspired by https://github.com/material-components/material-components-ios/blob/bca36107405594d5b7b16265a5b0ed698f85a5ee/components/Elevation/src/UIColor%2BMaterialElevation.m#L61
 const getOverlayAlpha = (elevation: number) => {
   let alphaValue;
@@ -71,7 +66,7 @@ const GridColumnHeadersPinnedColumnHeaders = styled('div', {
     { [`&.${gridClasses['pinnedColumnHeaders--right']}`]: styles['pinnedColumnHeaders--right'] },
     styles.pinnedColumnHeaders,
   ],
-})<{ ownerState: GridColumnHeadersPinnedColumnHeadersProps }>(({ theme, ownerState }) => ({
+})<{ ownerState: OwnerState & { side: GridPinnedPosition } }>(({ theme, ownerState }) => ({
   position: 'absolute',
   overflow: 'hidden',
   height: '100%',
@@ -133,7 +128,7 @@ export const DataGridProColumnHeaders = React.forwardRef<
     minColumnIndex: leftPinnedColumns.length,
   });
 
-  const ownerState = { leftPinnedColumns, rightPinnedColumns, classes: rootProps.classes };
+  const ownerState = { ...rootProps, leftPinnedColumns, rightPinnedColumns };
   const classes = useUtilityClasses(ownerState);
 
   const leftRenderContext =
@@ -165,7 +160,7 @@ export const DataGridProColumnHeaders = React.forwardRef<
       {leftRenderContext && (
         <GridColumnHeadersPinnedColumnHeaders
           className={classes.leftPinnedColumns}
-          ownerState={{ side: GridPinnedPosition.left }}
+          ownerState={{ ...ownerState, side: GridPinnedPosition.left }}
           {...pinnedColumnHeadersProps}
         >
           {getColumnGroupHeaders({
@@ -197,7 +192,7 @@ export const DataGridProColumnHeaders = React.forwardRef<
       </GridColumnHeadersInner>
       {rightRenderContext && (
         <GridColumnHeadersPinnedColumnHeaders
-          ownerState={{ side: GridPinnedPosition.right }}
+          ownerState={{ ...ownerState, side: GridPinnedPosition.right }}
           className={classes.rightPinnedColumns}
           style={{ paddingRight: scrollbarSize }}
           {...pinnedColumnHeadersProps}
