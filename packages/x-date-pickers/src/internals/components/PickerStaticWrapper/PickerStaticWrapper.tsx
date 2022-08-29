@@ -86,9 +86,11 @@ function PickerStaticWrapper(inProps: PickerStaticWrapperProps) {
     onCancel,
     onSetToday,
     children,
+    onDismiss,
+    open,
     components,
     componentsProps,
-    sx,
+    ...other
   } = props;
 
   const classes = useUtilityClasses(props);
@@ -97,7 +99,7 @@ function PickerStaticWrapper(inProps: PickerStaticWrapperProps) {
 
   return (
     <WrapperVariantContext.Provider value={displayStaticWrapperAs}>
-      <PickerStaticWrapperRoot className={classes.root} sx={sx}>
+      <PickerStaticWrapperRoot className={classes.root} {...other}>
         <PickerStaticWrapperContent className={classes.content}>
           <PaperContent {...componentsProps?.paperContent}>{children}</PaperContent>
         </PickerStaticWrapperContent>

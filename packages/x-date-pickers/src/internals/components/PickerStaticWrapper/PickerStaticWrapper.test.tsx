@@ -4,7 +4,7 @@ import { PickerStaticWrapper } from '@mui/x-date-pickers';
 import { pickerStaticWrapperClasses as classes } from './pickerStaticWrapperClasses';
 import { createPickerRenderer, wrapPickerMount } from '../../../../../../test/utils/pickers-utils';
 
-describe('<PickerStaticWrapper />', () => {
+describe.only('<PickerStaticWrapper />', () => {
   const { render } = createPickerRenderer();
 
   describeConformance(

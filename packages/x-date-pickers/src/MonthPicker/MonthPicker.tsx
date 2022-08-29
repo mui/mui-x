@@ -114,7 +114,7 @@ export const MonthPicker = React.forwardRef(function MonthPicker<TDate>(
     shouldDisableMonth,
     readOnly,
     disableHighlightToday,
-    sx,
+    ...other
   } = props;
   const ownerState = props;
   const classes = useUtilityClasses(ownerState);
@@ -172,7 +172,7 @@ export const MonthPicker = React.forwardRef(function MonthPicker<TDate>(
       ref={ref}
       className={clsx(classes.root, className)}
       ownerState={ownerState}
-      sx={sx}
+      {...other}
     >
       {utils.getMonthArray(selectedDateOrToday).map((month) => {
         const monthNumber = utils.getMonth(month);
