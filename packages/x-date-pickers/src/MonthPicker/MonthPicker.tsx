@@ -3,7 +3,11 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { SxProps, useTheme } from '@mui/system';
 import { styled, useThemeProps, Theme } from '@mui/material/styles';
-import { unstable_composeClasses as composeClasses, useControlled } from '@mui/material';
+import {
+  unstable_composeClasses as composeClasses,
+  useControlled,
+  useEventCallback,
+} from '@mui/material';
 import { PickersMonth } from './PickersMonth';
 import { useUtils, useNow, useDefaultDates } from '../internals/hooks/useUtils';
 import { NonNullablePickerChangeHandler } from '../internals/hooks/useViews';
@@ -218,7 +222,7 @@ export const MonthPicker = React.forwardRef(function MonthPicker<TDate>(
     );
   }, [selectedMonth]);
 
-  const handleKeyDown = (event: React.KeyboardEvent) => {
+  const handleKeyDown = useEventCallback((event: React.KeyboardEvent) => {
     const monthsInYear = 12;
     const monthsInRow = 3;
 
@@ -248,7 +252,7 @@ export const MonthPicker = React.forwardRef(function MonthPicker<TDate>(
       default:
         break;
     }
-  };
+  });
 
   const handleMonthFocus = React.useCallback(
     (event: React.FocusEvent, month: number) => {
