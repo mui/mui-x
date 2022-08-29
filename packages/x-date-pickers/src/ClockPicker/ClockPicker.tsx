@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import { unstable_useId as useId } from '@mui/material/utils';
 import { styled, Theme, useThemeProps } from '@mui/material/styles';
 import { unstable_composeClasses as composeClasses } from '@mui/material';
+import { SxProps } from '@mui/system';
 import { Clock } from './Clock';
 import { useUtils, useNow, useLocaleText } from '../internals/hooks/useUtils';
 import { buildDeprecatedPropsWarning } from '../internals/utils/warning';
@@ -21,7 +22,6 @@ import { useMeridiemMode } from '../internals/hooks/date-helpers-hooks';
 import { ClockPickerView, MuiPickersAdapter } from '../internals/models';
 import { getClockPickerUtilityClass, ClockPickerClasses } from './clockPickerClasses';
 import { PickerViewRoot } from '../internals/components/PickerViewRoot';
-import { SxProps } from '@mui/system';
 
 const useUtilityClasses = (ownerState: ClockPickerProps<any>) => {
   const { classes } = ownerState;
