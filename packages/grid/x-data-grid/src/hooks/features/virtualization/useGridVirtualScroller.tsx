@@ -218,11 +218,11 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
     setContainerWidth(rootRef.current!.clientWidth);
   }, [rowsMeta.currentPageTotalHeight]);
 
-  const handleResize = React.useCallback<GridEventListener<'resize'>>((params) => {
+  const handleResize = React.useCallback<GridEventListener<'debouncedResize'>>((params) => {
     setContainerWidth(params.width);
   }, []);
 
-  useGridApiEventHandler(apiRef, 'resize', handleResize);
+  useGridApiEventHandler(apiRef, 'debouncedResize', handleResize);
 
   const updateRenderZonePosition = React.useCallback(
     (nextRenderContext: GridRenderContext) => {
