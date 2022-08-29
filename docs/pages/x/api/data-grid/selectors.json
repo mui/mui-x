@@ -387,5 +387,17 @@
     "returnType": "Record<GridRowId, GridRowId>",
     "description": "",
     "supportsApiRef": true
+  },
+  {
+    "name": "unstable_gridFocusColumnGroupHeaderSelector",
+    "returnType": "GridColumnGroupIdentifier | null",
+    "description": "",
+    "supportsApiRef": true
+  },
+  {
+    "name": "unstable_gridTabIndexColumnGroupHeaderSelector",
+    "returnType": "GridColumnGroupIdentifier | null",
+    "description": "",
+    "supportsApiRef": true
   }
 ]

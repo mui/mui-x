@@ -9,7 +9,10 @@ import { useGridLogger } from '../../utils/useGridLogger';
 import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { isNavigationKey } from '../../../utils/keyboardUtils';
-import { gridFocusCellSelector, unstable_gridFocusColumnGroupHeaderSelector } from './gridFocusStateSelector';
+import {
+  gridFocusCellSelector,
+  unstable_gridFocusColumnGroupHeaderSelector,
+} from './gridFocusStateSelector';
 import { GridStateInitializer } from '../../utils/useGridInitializeState';
 import { gridVisibleColumnDefinitionsSelector } from '../columns/gridColumnsSelector';
 import { getVisibleRows } from '../../utils/useGridVisibleRows';
@@ -96,7 +99,9 @@ export const useGridFocus = (
     [apiRef, logger],
   );
 
-  const setColumnGroupHeaderFocus = React.useCallback<GridFocusApi['unstable_setColumnGroupHeaderFocus']>(
+  const setColumnGroupHeaderFocus = React.useCallback<
+    GridFocusApi['unstable_setColumnGroupHeaderFocus']
+  >(
     (field, depth, event = {}) => {
       const cell = gridFocusCellSelector(apiRef);
       if (cell) {
@@ -120,10 +125,9 @@ export const useGridFocus = (
     [apiRef],
   );
 
-  const getColumnGroupHeaderFocus = React.useCallback<GridFocusApi['unstable_getColumnGroupHeaderFocus']>(
-    () => unstable_gridFocusColumnGroupHeaderSelector(apiRef),
-    [apiRef],
-  );
+  const getColumnGroupHeaderFocus = React.useCallback<
+    GridFocusApi['unstable_getColumnGroupHeaderFocus']
+  >(() => unstable_gridFocusColumnGroupHeaderSelector(apiRef), [apiRef]);
 
   const moveFocusToRelativeCell = React.useCallback<
     GridFocusApi['unstable_moveFocusToRelativeCell']
@@ -201,16 +205,22 @@ export const useGridFocus = (
     [apiRef],
   );
 
-  const focussedColumnGroup = unstable_gridFocusColumnGroupHeaderSelector(apiRef)
+  const focussedColumnGroup = unstable_gridFocusColumnGroupHeaderSelector(apiRef);
 
-  const handleColumnGroupHeaderFocus = React.useCallback<GridEventListener<'columnGroupHeaderFocus'>>(
+  const handleColumnGroupHeaderFocus = React.useCallback<
+    GridEventListener<'columnGroupHeaderFocus'>
+  >(
     ({ fields, depth }, event) => {
       if (event.target !== event.currentTarget) {
         return;
       }
-      if (focussedColumnGroup !== null && focussedColumnGroup.depth === depth && fields.includes(focussedColumnGroup.field)) {
+      if (
+        focussedColumnGroup !== null &&
+        focussedColumnGroup.depth === depth &&
+        fields.includes(focussedColumnGroup.field)
+      ) {
         // This group cell has already been focused
-        return
+        return;
       }
       apiRef.current.unstable_setColumnGroupHeaderFocus(fields[0], depth, event);
     },

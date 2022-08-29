@@ -12,7 +12,7 @@ import type {
   GridRowParams,
   GridRowSelectionCheckboxParams,
   GridScrollParams,
-  GridColumnGroupHeaderParams
+  GridColumnGroupHeaderParams,
 } from '../params';
 import { GridCellEditStartParams, GridCellEditStopParams } from '../params/gridEditCellParams';
 import { GridCellParams } from '../params/gridCellParams';
@@ -300,19 +300,19 @@ export interface GridControlledStateEventLookup {
 
 export interface GridControlledStateReasonLookup {
   filter:
-  | 'upsertFilterItem'
-  | 'upsertFilterItems'
-  | 'deleteFilterItem'
-  | 'changeLogicOperator'
-  | 'restoreState';
+    | 'upsertFilterItem'
+    | 'upsertFilterItems'
+    | 'deleteFilterItem'
+    | 'changeLogicOperator'
+    | 'restoreState';
 }
 
 export interface GridEventLookup
   extends GridRowEventLookup,
-  GridColumnHeaderEventLookup,
-  GridColumnGroupHeaderEventLookup,
-  GridCellEventLookup,
-  GridControlledStateEventLookup {
+    GridColumnHeaderEventLookup,
+    GridColumnGroupHeaderEventLookup,
+    GridCellEventLookup,
+    GridControlledStateEventLookup {
   /**
    * Fired when the grid is unmounted.
    */

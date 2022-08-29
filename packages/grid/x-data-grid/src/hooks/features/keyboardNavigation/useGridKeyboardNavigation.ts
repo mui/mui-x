@@ -15,7 +15,7 @@ import { isNavigationKey } from '../../../utils/keyboardUtils';
 import { GRID_DETAIL_PANEL_TOGGLE_FIELD } from '../../../constants/gridDetailPanelToggleField';
 import { GridRowEntry, GridRowId } from '../../../models';
 import { gridPinnedRowsSelector } from '../rows/gridRowsSelector';
-import { unstable_gridFocusColumnGroupHeaderSelector } from '../focus'
+import { unstable_gridFocusColumnGroupHeaderSelector } from '../focus';
 import { gridDensityHeaderGroupingMaxDepthSelector } from '../density';
 
 function enrichPageRowsWithPinnedRows(
@@ -339,9 +339,10 @@ export const useGridKeyboardNavigation = (
     [apiRef, currentPageRows.length, goToCell, getRowIdFromIndex, goToHeader, goToGroupHeader],
   );
 
-
-  const focusedColumnGroup = unstable_gridFocusColumnGroupHeaderSelector(apiRef)
-  const handleColumnGroupHeaderKeyDown = React.useCallback<GridEventListener<'columnGroupHeaderKeyDown'>>(
+  const focusedColumnGroup = unstable_gridFocusColumnGroupHeaderSelector(apiRef);
+  const handleColumnGroupHeaderKeyDown = React.useCallback<
+    GridEventListener<'columnGroupHeaderKeyDown'>
+  >(
     (params, event) => {
       const dimensions = apiRef.current.getRootDimensions();
       if (!dimensions) {
@@ -349,14 +350,14 @@ export const useGridKeyboardNavigation = (
       }
 
       if (focusedColumnGroup === null) {
-        return
+        return;
       }
       const { field: currentField, depth: currentDepth } = focusedColumnGroup;
 
-      const { fields, depth, maxDepth } = params
+      const { fields, depth, maxDepth } = params;
 
       const viewportPageSize = apiRef.current.unstable_getViewportPageSize();
-      const currentColIndex = apiRef.current.getColumnIndex(currentField)
+      const currentColIndex = apiRef.current.getColumnIndex(currentField);
       const colIndexBefore = currentField ? apiRef.current.getColumnIndex(currentField) : 0;
       const firstRowIndexInPage = 0;
       const lastRowIndexInPage = currentPageRows.length - 1;
@@ -370,14 +371,14 @@ export const useGridKeyboardNavigation = (
           if (depth === maxDepth - 1) {
             goToHeader(currentColIndex, event);
           } else {
-            goToGroupHeader(currentColIndex, currentDepth + 1, event)
+            goToGroupHeader(currentColIndex, currentDepth + 1, event);
           }
           break;
         }
 
         case 'ArrowUp': {
           if (depth > 0) {
-            goToGroupHeader(currentColIndex, currentDepth - 1, event)
+            goToGroupHeader(currentColIndex, currentDepth - 1, event);
           }
           break;
         }
@@ -385,7 +386,7 @@ export const useGridKeyboardNavigation = (
         case 'ArrowRight': {
           const remainingRightColumns = fields.length - fields.indexOf(currentField) - 1;
           if (currentColIndex + remainingRightColumns + 1 <= lastColIndex) {
-            goToGroupHeader(currentColIndex + remainingRightColumns + 1, currentDepth, event)
+            goToGroupHeader(currentColIndex + remainingRightColumns + 1, currentDepth, event);
           }
           break;
         }
@@ -393,7 +394,7 @@ export const useGridKeyboardNavigation = (
         case 'ArrowLeft': {
           const remainingLeftColumns = fields.indexOf(currentField);
           if (currentColIndex - remainingLeftColumns - 1 >= firstColIndex) {
-            goToGroupHeader(currentColIndex - remainingLeftColumns - 1, currentDepth, event)
+            goToGroupHeader(currentColIndex - remainingLeftColumns - 1, currentDepth, event);
           }
           break;
         }
@@ -434,7 +435,15 @@ export const useGridKeyboardNavigation = (
         event.preventDefault();
       }
     },
-    [apiRef, focusedColumnGroup, currentPageRows.length, goToHeader, goToGroupHeader, goToCell, getRowIdFromIndex],
+    [
+      apiRef,
+      focusedColumnGroup,
+      currentPageRows.length,
+      goToHeader,
+      goToGroupHeader,
+      goToCell,
+      getRowIdFromIndex,
+    ],
   );
 
   const handleCellKeyDown = React.useCallback<GridEventListener<'cellKeyDown'>>(

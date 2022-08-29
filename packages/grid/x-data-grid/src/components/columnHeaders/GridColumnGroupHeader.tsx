@@ -91,23 +91,19 @@ function GridColumnGroupHeader(props: GridColumnGroupHeaderProps) {
   let headerComponent: React.ReactNode;
 
   const render = groupId && columnGroupsLookup[groupId]?.renderHeaderGroup;
-  const renderParams: GridColumnGroupHeaderParams = React.useMemo(() => ({
-    groupId,
-    headerName,
-    description,
-    depth,
-    maxDepth,
-    fields,
-    colIndex,
-    isLastColumn,
-  }), [groupId,
-    headerName,
-    description,
-    depth,
-    maxDepth,
-    fields,
-    colIndex,
-    isLastColumn,]);
+  const renderParams: GridColumnGroupHeaderParams = React.useMemo(
+    () => ({
+      groupId,
+      headerName,
+      description,
+      depth,
+      maxDepth,
+      fields,
+      colIndex,
+      isLastColumn,
+    }),
+    [groupId, headerName, description, depth, maxDepth, fields, colIndex, isLastColumn],
+  );
   if (groupId && render) {
     headerComponent = render(renderParams);
   }
@@ -150,11 +146,7 @@ function GridColumnGroupHeader(props: GridColumnGroupHeaderProps) {
       if (!event.currentTarget.contains(event.target as Element)) {
         return;
       }
-      apiRef.current.publishEvent(
-        eventName,
-        renderParams,
-        event as any,
-      );
+      apiRef.current.publishEvent(eventName, renderParams, event as any);
     },
     // For now this is stupid, because renderParams change all the time.
     // Need to move it's computation in the api, such that for a given depth+columnField, I can get the group parameters
