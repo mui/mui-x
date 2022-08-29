@@ -3,7 +3,7 @@ import { SlideDirection } from './PickersSlideTransition';
 import { useIsDayDisabled } from '../internals/hooks/validation/useDateValidation';
 import { useUtils, useNow } from '../internals/hooks/useUtils';
 import { MuiPickersAdapter } from '../internals/models';
-import type { CalendarPickerProps } from './CalendarPicker';
+import type { CalendarPickerDefaultizedProps } from './CalendarPicker';
 
 interface CalendarState<TDate> {
   currentMonth: TDate;
@@ -82,7 +82,7 @@ export const createCalendarStateReducer =
 
 interface CalendarStateInput<TDate>
   extends Pick<
-    CalendarPickerProps<TDate>,
+    CalendarPickerDefaultizedProps<TDate>,
     | 'date'
     | 'defaultCalendarMonth'
     | 'disableFuture'

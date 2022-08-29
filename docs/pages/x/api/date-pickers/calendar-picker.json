@@ -60,7 +60,14 @@
       "default": "['year', 'day']"
     }
   },
-  "slots": {},
+  "slots": {
+    "LeftArrowButton": { "default": "IconButton", "type": { "name": "elementType" } },
+    "LeftArrowIcon": { "default": "ArrowLeft", "type": { "name": "elementType" } },
+    "RightArrowButton": { "default": "IconButton", "type": { "name": "elementType" } },
+    "RightArrowIcon": { "default": "ArrowRight", "type": { "name": "elementType" } },
+    "SwitchViewButton": { "default": "IconButton", "type": { "name": "elementType" } },
+    "SwitchViewIcon": { "default": "ArrowDropDown", "type": { "name": "elementType" } }
+  },
   "name": "CalendarPicker",
   "styles": {
     "classes": ["root", "viewTransitionContainer"],

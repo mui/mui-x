@@ -8,9 +8,16 @@ import { PickersMonth } from './PickersMonth';
 import { useUtils, useNow, useDefaultDates } from '../internals/hooks/useUtils';
 import { NonNullablePickerChangeHandler } from '../internals/hooks/useViews';
 import { MonthPickerClasses, getMonthPickerUtilityClass } from './monthPickerClasses';
-import { MonthValidationProps } from '../internals/hooks/validation/models';
+import {
+  BaseDateValidationProps,
+  MonthValidationProps,
+} from '../internals/hooks/validation/models';
+import { parseNonNullablePickerDate } from '../internals/utils/date-utils';
+import { DefaultizedProps } from '../internals/models/helpers';
 
-export interface MonthPickerProps<TDate> extends MonthValidationProps<TDate> {
+export interface MonthPickerProps<TDate>
+  extends MonthValidationProps<TDate>,
+    BaseDateValidationProps<TDate> {
   /**
    * className applied to the root element.
    */
@@ -48,6 +55,29 @@ const useUtilityClasses = (ownerState: MonthPickerProps<any>) => {
   return composeClasses(slots, getMonthPickerUtilityClass, classes);
 };
 
+export function useMonthPickerDefaultizedProps<TDate>(
+  props: MonthPickerProps<TDate>,
+  name: string,
+): DefaultizedProps<
+  MonthPickerProps<TDate>,
+  'minDate' | 'maxDate' | 'disableFuture' | 'disablePast'
+> {
+  const utils = useUtils<TDate>();
+  const defaultDates = useDefaultDates<TDate>();
+  const themeProps = useThemeProps({
+    props,
+    name,
+  });
+
+  return {
+    disableFuture: false,
+    disablePast: false,
+    ...themeProps,
+    minDate: parseNonNullablePickerDate(utils, themeProps.minDate, defaultDates.minDate),
+    maxDate: parseNonNullablePickerDate(utils, themeProps.maxDate, defaultDates.maxDate),
+  };
+}
+
 const MonthPickerRoot = styled('div', {
   name: 'MuiMonthPicker',
   slot: 'Root',
@@ -70,12 +100,7 @@ export const MonthPicker = React.forwardRef(function MonthPicker<TDate>(
 ) {
   const utils = useUtils<TDate>();
   const now = useNow<TDate>();
-  const defaultDates = useDefaultDates<TDate>();
-
-  const props = useThemeProps<Theme, MonthPickerProps<TDate>, 'MuiMonthPicker'>({
-    props: inProps,
-    name: 'MuiMonthPicker',
-  });
+  const props = useMonthPickerDefaultizedProps(inProps, 'MuiMonthPicker');
 
   const {
     className,
@@ -83,8 +108,8 @@ export const MonthPicker = React.forwardRef(function MonthPicker<TDate>(
     disabled,
     disableFuture,
     disablePast,
-    maxDate = defaultDates.maxDate,
-    minDate = defaultDates.minDate,
+    maxDate,
+    minDate,
     onChange,
     shouldDisableMonth,
     readOnly,
@@ -140,6 +165,8 @@ export const MonthPicker = React.forwardRef(function MonthPicker<TDate>(
     onChange(newDate, 'finish');
   };
 
+  const currentMonthNumber = utils.getMonth(now);
+
   return (
     <MonthPickerRoot
       ref={ref}
@@ -158,6 +185,7 @@ export const MonthPicker = React.forwardRef(function MonthPicker<TDate>(
             selected={monthNumber === focusedMonth}
             onSelect={onMonthSelect}
             disabled={disabled || isMonthDisabled(month)}
+            aria-current={currentMonthNumber === monthNumber ? 'date' : undefined}
           >
             {monthText}
           </PickersMonth>

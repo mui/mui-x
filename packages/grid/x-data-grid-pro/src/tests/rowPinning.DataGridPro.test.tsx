@@ -765,4 +765,15 @@ describe('<DataGridPro /> - Row pinning', () => {
 
     expect(screen.getByRole('grid').getAttribute('aria-rowcount')).to.equal(`${rowCount + 1}`); // +1 for header row
   });
+
+  // https://github.com/mui/mui-x/issues/5845
+  it('should work with `getCellClassName` when `rows=[]`', () => {
+    const className = 'test-class-name';
+    render(
+      <BaselineTestCase rowCount={2} colCount={1} rows={[]} getRowClassName={() => className} />,
+    );
+
+    expect(getRowById(0)!.classList.contains(className)).to.equal(true);
+    expect(getRowById(1)!.classList.contains(className)).to.equal(true);
+  });
 });

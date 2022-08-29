@@ -11,7 +11,10 @@ import { MuiPickersAdapter } from '../models';
 export type MuiTextFieldProps = MuiTextFieldPropsType | Omit<MuiTextFieldPropsType, 'variant'>;
 
 export interface DateInputSlotsComponent {
-  // Icon displaying for open picker button.
+  /**
+   * Icon displayed in the open picker button.
+   * @default Calendar or Clock
+   */
   OpenPickerIcon: React.ElementType;
 }
 
@@ -21,6 +24,7 @@ export interface DateInputProps<TInputDate, TDate> {
    * @default /\dap/gi
    */
   acceptRegex?: RegExp;
+  className?: string;
   /**
    * Overrideable components.
    * @default {}
@@ -127,6 +131,7 @@ export const PureDateInput = React.forwardRef(function PureDateInput<TInputDate,
     renderInput,
     TextFieldProps = {},
     validationError,
+    className,
   } = props;
 
   const localeText = useLocaleText();
@@ -153,6 +158,7 @@ export const PureDateInput = React.forwardRef(function PureDateInput<TInputDate,
     inputRef,
     error: validationError,
     InputProps: PureDateInputProps,
+    className,
     inputProps: {
       disabled,
       readOnly: true,
