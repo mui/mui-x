@@ -9,7 +9,7 @@ import { useGridLogger } from '../../utils/useGridLogger';
 import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { isNavigationKey } from '../../../utils/keyboardUtils';
-import { gridFocusCellSelector } from './gridFocusStateSelector';
+import { gridFocusCellSelector, unstable_gridFocusColumnGroupHeaderSelector } from './gridFocusStateSelector';
 import { GridStateInitializer } from '../../utils/useGridInitializeState';
 import { gridVisibleColumnDefinitionsSelector } from '../columns/gridColumnsSelector';
 import { getVisibleRows } from '../../utils/useGridVisibleRows';
@@ -17,8 +17,8 @@ import { clamp } from '../../../utils/utils';
 
 export const focusStateInitializer: GridStateInitializer = (state) => ({
   ...state,
-  focus: { cell: null, columnHeader: null },
-  tabIndex: { cell: null, columnHeader: null },
+  focus: { cell: null, columnHeader: null, columnGroupHeader: null },
+  tabIndex: { cell: null, columnHeader: null, columnGroupHeader: null },
 });
 
 /**
@@ -45,8 +45,8 @@ export const useGridFocus = (
         logger.debug(`Focusing on cell with id=${id} and field=${field}`);
         return {
           ...state,
-          tabIndex: { cell: { id, field }, columnHeader: null },
-          focus: { cell: { id, field }, columnHeader: null },
+          tabIndex: { cell: { id, field }, columnHeader: null, columnGroupHeader: null },
+          focus: { cell: { id, field }, columnHeader: null, columnGroupHeader: null },
         };
       });
       apiRef.current.forceUpdate();
@@ -86,14 +86,43 @@ export const useGridFocus = (
 
         return {
           ...state,
-          tabIndex: { columnHeader: { field }, cell: null },
-          focus: { columnHeader: { field }, cell: null },
+          tabIndex: { columnHeader: { field }, cell: null, columnGroupHeader: null },
+          focus: { columnHeader: { field }, cell: null, columnGroupHeader: null },
         };
       });
 
       apiRef.current.forceUpdate();
     },
     [apiRef, logger],
+  );
+
+  const setColumnGroupHeaderFocus = React.useCallback<GridFocusApi['unstable_setColumnGroupHeaderFocus']>(
+    (field, depth, event = {}) => {
+      const cell = gridFocusCellSelector(apiRef);
+      if (cell) {
+        apiRef.current.publishEvent(
+          'cellFocusOut',
+          apiRef.current.getCellParams(cell.id, cell.field),
+          event,
+        );
+      }
+
+      apiRef.current.setState((state) => {
+        return {
+          ...state,
+          tabIndex: { columnGroupHeader: { field, depth }, columnHeader: null, cell: null },
+          focus: { columnGroupHeader: { field, depth }, columnHeader: null, cell: null },
+        };
+      });
+
+      apiRef.current.forceUpdate();
+    },
+    [apiRef],
+  );
+
+  const getColumnGroupHeaderFocus = React.useCallback<GridFocusApi['unstable_getColumnGroupHeaderFocus']>(
+    () => unstable_gridFocusColumnGroupHeaderSelector(apiRef),
+    [apiRef],
   );
 
   const moveFocusToRelativeCell = React.useCallback<
@@ -172,11 +201,27 @@ export const useGridFocus = (
     [apiRef],
   );
 
+  const focussedColumnGroup = unstable_gridFocusColumnGroupHeaderSelector(apiRef)
+
+  const handleColumnGroupHeaderFocus = React.useCallback<GridEventListener<'columnGroupHeaderFocus'>>(
+    ({ fields, depth }, event) => {
+      if (event.target !== event.currentTarget) {
+        return;
+      }
+      if (focussedColumnGroup !== null && focussedColumnGroup.depth === depth && fields.includes(focussedColumnGroup.field)) {
+        // This group cell has already been focused
+        return
+      }
+      apiRef.current.unstable_setColumnGroupHeaderFocus(fields[0], depth, event);
+    },
+    [apiRef, focussedColumnGroup],
+  );
+
   const handleBlur = React.useCallback<GridEventListener<'columnHeaderBlur'>>(() => {
     logger.debug(`Clearing focus`);
     apiRef.current.setState((state) => ({
       ...state,
-      focus: { cell: null, columnHeader: null },
+      focus: { cell: null, columnHeader: null, columnGroupHeader: null },
     }));
   }, [logger, apiRef]);
 
@@ -217,7 +262,7 @@ export const useGridFocus = (
       } else {
         apiRef.current.setState((state) => ({
           ...state,
-          focus: { cell: null, columnHeader: null },
+          focus: { cell: null, columnHeader: null, columnGroupHeader: null },
         }));
         apiRef.current.forceUpdate();
 
@@ -253,7 +298,7 @@ export const useGridFocus = (
     if (cell && !apiRef.current.getRow(cell.id)) {
       apiRef.current.setState((state) => ({
         ...state,
-        focus: { cell: null, columnHeader: null },
+        focus: { cell: null, columnHeader: null, columnGroupHeader: null },
       }));
     }
   }, [apiRef]);
@@ -264,6 +309,8 @@ export const useGridFocus = (
       setCellFocus,
       setColumnHeaderFocus,
       unstable_moveFocusToRelativeCell: moveFocusToRelativeCell,
+      unstable_setColumnGroupHeaderFocus: setColumnGroupHeaderFocus,
+      unstable_getColumnGroupHeaderFocus: getColumnGroupHeaderFocus,
     },
     'GridFocusApi',
   );
@@ -283,5 +330,6 @@ export const useGridFocus = (
   useGridApiEventHandler(apiRef, 'cellKeyDown', handleCellKeyDown);
   useGridApiEventHandler(apiRef, 'cellModeChange', handleCellModeChange);
   useGridApiEventHandler(apiRef, 'columnHeaderFocus', handleColumnHeaderFocus);
+  useGridApiEventHandler(apiRef, 'columnGroupHeaderFocus', handleColumnGroupHeaderFocus);
   useGridApiEventHandler(apiRef, 'rowsSet', handleRowSet);
 };

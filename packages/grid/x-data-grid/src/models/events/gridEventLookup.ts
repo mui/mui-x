@@ -12,6 +12,7 @@ import type {
   GridRowParams,
   GridRowSelectionCheckboxParams,
   GridScrollParams,
+  GridColumnGroupHeaderParams
 } from '../params';
 import { GridCellEditStartParams, GridCellEditStopParams } from '../params/gridEditCellParams';
 import { GridCellParams } from '../params/gridCellParams';
@@ -186,6 +187,31 @@ export interface GridColumnHeaderEventLookup {
   };
 }
 
+export interface GridColumnGroupHeaderEventLookup {
+  /**
+   * Fired when a key is pressed in a column group header. It's mapped do the `keydown` DOM event.
+   */
+  columnGroupHeaderKeyDown: {
+    params: GridColumnGroupHeaderParams;
+    event: React.KeyboardEvent<HTMLElement>;
+  };
+  /**
+   * Fired when a column group header gains focus.
+   * @ignore - do not document.
+   */
+  columnGroupHeaderFocus: {
+    params: GridColumnGroupHeaderParams;
+    event: React.FocusEvent<HTMLElement>;
+  };
+  /**
+   * Fired when a column group header loses focus.
+   * @ignore - do not document.
+   */
+  columnGroupHeaderBlur: {
+    params: GridColumnGroupHeaderParams;
+    event: React.FocusEvent<HTMLElement>;
+  };
+}
 export interface GridCellEventLookup {
   /**
    * Fired when a cell is clicked.
@@ -274,18 +300,19 @@ export interface GridControlledStateEventLookup {
 
 export interface GridControlledStateReasonLookup {
   filter:
-    | 'upsertFilterItem'
-    | 'upsertFilterItems'
-    | 'deleteFilterItem'
-    | 'changeLogicOperator'
-    | 'restoreState';
+  | 'upsertFilterItem'
+  | 'upsertFilterItems'
+  | 'deleteFilterItem'
+  | 'changeLogicOperator'
+  | 'restoreState';
 }
 
 export interface GridEventLookup
   extends GridRowEventLookup,
-    GridColumnHeaderEventLookup,
-    GridCellEventLookup,
-    GridControlledStateEventLookup {
+  GridColumnHeaderEventLookup,
+  GridColumnGroupHeaderEventLookup,
+  GridCellEventLookup,
+  GridControlledStateEventLookup {
   /**
    * Fired when the grid is unmounted.
    */

@@ -13,6 +13,8 @@ import {
   gridTabIndexColumnHeaderSelector,
   gridTabIndexCellSelector,
   gridFocusColumnHeaderSelector,
+  unstable_gridFocusColumnGroupHeaderSelector,
+  unstable_gridTabIndexColumnGroupHeaderSelector,
 } from '../focus/gridFocusStateSelector';
 import {
   gridDensityHeaderHeightSelector,
@@ -51,6 +53,8 @@ interface HeaderInfo {
   width: number;
   fields: string[];
   colIndex: number;
+  hasFocus: boolean;
+  tabIndex: -1 | 0;
   description?: string;
 }
 
@@ -78,9 +82,11 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
   const apiRef = useGridApiContext();
   const visibleColumns = useGridSelector(apiRef, gridVisibleColumnDefinitionsSelector);
   const columnPositions = useGridSelector(apiRef, gridColumnPositionsSelector);
-  const tabIndexState = useGridSelector(apiRef, gridTabIndexColumnHeaderSelector);
+  const columnHeaderTabIndexState = useGridSelector(apiRef, gridTabIndexColumnHeaderSelector);
   const cellTabIndexState = useGridSelector(apiRef, gridTabIndexCellSelector);
+  const columnGroupHeaderTabIndexState = useGridSelector(apiRef, unstable_gridTabIndexColumnGroupHeaderSelector)
   const columnHeaderFocus = useGridSelector(apiRef, gridFocusColumnHeaderSelector);
+  const columnGroupHeaderFocus = useGridSelector(apiRef, unstable_gridFocusColumnGroupHeaderSelector);
   const headerHeight = useGridSelector(apiRef, gridDensityHeaderHeightSelector);
   const headerGroupingMaxDepth = useGridSelector(apiRef, gridDensityHeaderGroupingMaxDepthSelector);
   const totalHeaderHeight = useGridSelector(apiRef, gridDensityTotalHeaderHeightSelector);
@@ -284,10 +290,10 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
 
       const columnIndex = firstColumnToRender + i;
       const isFirstColumn = columnIndex === 0;
-      const hasTabbableElement = !(tabIndexState === null && cellTabIndexState === null);
+      const hasTabbableElement = !(columnGroupHeaderTabIndexState === null && columnHeaderTabIndexState === null && cellTabIndexState === null);
       const tabIndex =
-        (tabIndexState !== null && tabIndexState.field === column.field) ||
-        (isFirstColumn && !hasTabbableElement)
+        (columnHeaderTabIndexState !== null && columnHeaderTabIndexState.field === column.field) ||
+          (isFirstColumn && !hasTabbableElement)
           ? 0
           : -1;
       const hasFocus = columnHeaderFocus !== null && columnHeaderFocus.field === column.field;
@@ -368,6 +374,10 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
         )
       ) {
         const column = visibleColumns[columnIndex];
+        const hasFocus = columnGroupHeaderFocus !== null && columnGroupHeaderFocus.depth === depth && columnGroupHeaderFocus.field === column.field;
+        const tabIndex = (columnGroupHeaderTabIndexState !== null && columnGroupHeaderTabIndexState.field === column.field && columnGroupHeaderTabIndexState.depth === depth)
+          ? 0
+          : -1;
 
         leftOverflow += column.computedWidth ?? 0;
 
@@ -378,11 +388,15 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
             groupId: firstColumnToRenderGroup,
             groupParents: firstColumnToRenderGroupParents,
             colIndex: columnIndex,
+            hasFocus,
+            tabIndex
           });
         } else {
           initialHeader[0].width += column.computedWidth ?? 0;
           initialHeader[0].fields.push(column.field);
           initialHeader[0].colIndex = columnIndex;
+          initialHeader[0].hasFocus = initialHeader[0].hasFocus || hasFocus;
+          initialHeader[0].tabIndex = initialHeader[0].tabIndex === 0 ? 0 : tabIndex;
         }
 
         columnIndex -= 1;
@@ -390,6 +404,10 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
 
       const depthInfo = renderedColumns.reduce((aggregated, column, i) => {
         const lastItem: HeaderInfo | undefined = aggregated[aggregated.length - 1];
+        const hasFocus = columnGroupHeaderFocus !== null && columnGroupHeaderFocus.depth === depth && columnGroupHeaderFocus.field === column.field;
+        const tabIndex: 0 | -1 = (columnGroupHeaderTabIndexState !== null && columnGroupHeaderTabIndexState.field === column.field && columnGroupHeaderTabIndexState.depth === depth)
+          ? 0
+          : -1;
 
         if (column.groupPath && column.groupPath.length > depth) {
           if (lastItem && lastItem.groupId === column.groupPath[depth]) {
@@ -400,6 +418,8 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
                 ...lastItem,
                 width: lastItem.width + (column.computedWidth ?? 0),
                 fields: [...lastItem.fields, column.field],
+                hasFocus: lastItem.hasFocus || hasFocus,
+                tabIndex: lastItem.tabIndex === 0 ? 0 : tabIndex
               },
             ];
           }
@@ -412,6 +432,8 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
               width: column.computedWidth ?? 0,
               fields: [column.field],
               colIndex: firstColumnToRender + i,
+              hasFocus,
+              tabIndex
             },
           ];
         }
@@ -429,6 +451,8 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
               ...lastItem,
               width: lastItem.width + (column.computedWidth ?? 0),
               fields: [...lastItem.fields, column.field],
+              hasFocus: lastItem.hasFocus || hasFocus,
+              tabIndex: lastItem.tabIndex === 0 ? 0 : tabIndex
             },
           ];
         }
@@ -441,6 +465,8 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
             width: column.computedWidth ?? 0,
             fields: [column.field],
             colIndex: firstColumnToRender + i,
+            hasFocus,
+            tabIndex,
           },
         ];
       }, initialHeader);
@@ -455,9 +481,17 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
         visibleColumns[columnIndex]?.groupPath?.[depth] === lastColumnToRenderGroup
       ) {
         const column = visibleColumns[columnIndex];
+        const hasFocus = columnGroupHeaderFocus !== null && columnGroupHeaderFocus.depth === depth && columnGroupHeaderFocus.field === column.field;
+        const tabIndex = (columnGroupHeaderTabIndexState !== null && columnGroupHeaderTabIndexState.field === column.field && columnGroupHeaderTabIndexState.depth === depth)
+          ? 0
+          : -1;
 
         depthInfo[depthInfo.length - 1].width += column.computedWidth ?? 0;
         depthInfo[depthInfo.length - 1].fields.push(column.field);
+        depthInfo[depthInfo.length - 1].hasFocus = depthInfo[depthInfo.length - 1].hasFocus || hasFocus;
+        depthInfo[depthInfo.length - 1].tabIndex = depthInfo[depthInfo.length - 1].tabIndex === 0 ? 0 : tabIndex;
+
+
         columnIndex += 1;
       }
 
@@ -475,7 +509,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
           role="row"
           aria-rowindex={depthIndex + 1}
         >
-          {depthInfo.elements.map(({ groupId, width, fields, colIndex }, groupIndex) => {
+          {depthInfo.elements.map(({ groupId, width, fields, colIndex, hasFocus, tabIndex }, groupIndex) => {
             return (
               <GridColumnGroupHeader
                 key={groupIndex}
@@ -488,6 +522,8 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
                 extendRowFullWidth={!rootProps.disableExtendRowFullWidth}
                 maxDepth={headerToRender.length}
                 height={headerHeight}
+                hasFocus={hasFocus}
+                tabIndex={tabIndex}
               />
             );
           })}

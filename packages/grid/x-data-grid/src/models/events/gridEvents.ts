@@ -48,6 +48,7 @@ enum GridEvents {
   columnHeaderDragOver = 'columnHeaderDragOver',
   columnHeaderDragEnter = 'columnHeaderDragEnter',
   columnHeaderDragEnd = 'columnHeaderDragEnd',
+  columnGroupHeaderFocus = 'columnGroupHeaderFocus',
   selectionChange = 'selectionChange',
   headerSelectionCheckboxChange = 'headerSelectionCheckboxChange',
   rowSelectionCheckboxChange = 'rowSelectionCheckboxChange',
