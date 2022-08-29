@@ -1,5 +1,6 @@
 import { TextFieldProps } from '@mui/material/TextField';
-import { UseFieldProps, FieldSection, DefaultizedProps } from '@mui/x-date-pickers/internals';
+import { DefaultizedProps } from '@mui/x-date-pickers/internals';
+import { UseFieldProps, FieldSection } from '@mui/x-date-pickers/internals-fields';
 import { DateRange } from '../internal/models';
 import {
   DateRangeValidationError,
