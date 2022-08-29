@@ -446,4 +446,6 @@ GridRow.propTypes = {
   visibleColumns: PropTypes.arrayOf(PropTypes.object).isRequired,
 } as any;
 
-export { GridRow };
+const MemoizedRow = React.memo(GridRow);
+
+export { MemoizedRow as GridRow };
