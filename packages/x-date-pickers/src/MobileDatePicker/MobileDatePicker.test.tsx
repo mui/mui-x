@@ -206,7 +206,7 @@ describe('<MobileDatePicker />', () => {
       />,
     );
     const start = adapterToUse.date();
-    fireEvent.mouseDown(screen.getByRole('textbox'));
+    userEvent.mousePress(screen.getByRole('textbox'));
     clock.tick(10);
     fireEvent.click(screen.getByText(/today/i));
 
