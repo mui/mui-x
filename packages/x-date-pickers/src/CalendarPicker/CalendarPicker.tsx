@@ -1,7 +1,8 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { styled, useThemeProps } from '@mui/material/styles';
+import { styled, Theme, useThemeProps } from '@mui/material/styles';
+import { SxProps } from '@mui/system';
 import { unstable_composeClasses as composeClasses } from '@mui/material';
 import { unstable_useId as useId } from '@mui/material/utils';
 import { MonthPicker, MonthPickerProps } from '../MonthPicker/MonthPicker';
@@ -44,6 +45,10 @@ export interface CalendarPickerProps<TDate>
     ExportedCalendarHeaderProps<TDate> {
   className?: string;
   classes?: Partial<CalendarPickerClasses>;
+  /**
+   * The system prop that allows defining system overrides as well as additional CSS styles.
+   */
+  sx?: SxProps<Theme>;
   /**
    * Overrideable components.
    * @default {}
@@ -243,6 +248,7 @@ export const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
     minDate,
     maxDate,
     disableHighlightToday,
+    sx,
     ...other
   } = props;
 
@@ -418,7 +424,12 @@ export const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
   const gridLabelId = `${id}-grid-label`;
 
   return (
-    <CalendarPickerRoot ref={ref} className={clsx(classes.root, className)} ownerState={ownerState}>
+    <CalendarPickerRoot
+      ref={ref}
+      className={clsx(classes.root, className)}
+      ownerState={ownerState}
+      sx={sx}
+    >
       <PickersCalendarHeader
         {...other}
         views={views}
@@ -647,6 +658,14 @@ CalendarPicker.propTypes = {
    * @default false
    */
   showDaysOutsideCurrentMonth: PropTypes.bool,
+  /**
+   * The system prop that allows defining system overrides as well as additional CSS styles.
+   */
+  sx: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
+    PropTypes.func,
+    PropTypes.object,
+  ]),
   /**
    * Controlled open view.
    */

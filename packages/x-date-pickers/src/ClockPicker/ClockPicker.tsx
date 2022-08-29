@@ -2,7 +2,7 @@ import * as React from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { unstable_useId as useId } from '@mui/material/utils';
-import { styled, useThemeProps } from '@mui/material/styles';
+import { styled, Theme, useThemeProps } from '@mui/material/styles';
 import { unstable_composeClasses as composeClasses } from '@mui/material';
 import { Clock } from './Clock';
 import { useUtils, useNow, useLocaleText } from '../internals/hooks/useUtils';
@@ -21,6 +21,7 @@ import { useMeridiemMode } from '../internals/hooks/date-helpers-hooks';
 import { ClockPickerView, MuiPickersAdapter } from '../internals/models';
 import { getClockPickerUtilityClass, ClockPickerClasses } from './clockPickerClasses';
 import { PickerViewRoot } from '../internals/components/PickerViewRoot';
+import { SxProps } from '@mui/system';
 
 const useUtilityClasses = (ownerState: ClockPickerProps<any>) => {
   const { classes } = ownerState;
@@ -76,6 +77,10 @@ export interface ClockPickerSlotsComponentsProps extends PickersArrowSwitcherSlo
 
 export interface ClockPickerProps<TDate> extends ExportedClockPickerProps<TDate> {
   className?: string;
+  /**
+   * The system prop that allows defining system overrides as well as additional CSS styles.
+   */
+  sx?: SxProps<Theme>;
   /**
    * Set to `true` if focus should be moved to clock picker.
    */
@@ -237,6 +242,7 @@ export const ClockPicker = React.forwardRef(function ClockPicker<TDate extends u
     openTo,
     onViewChange,
     className,
+    sx,
     disabled,
     readOnly,
   } = props;
@@ -442,7 +448,12 @@ export const ClockPicker = React.forwardRef(function ClockPicker<TDate extends u
   const classes = useUtilityClasses(ownerState);
 
   return (
-    <ClockPickerRoot ref={ref} className={clsx(classes.root, className)} ownerState={ownerState}>
+    <ClockPickerRoot
+      ref={ref}
+      className={clsx(classes.root, className)}
+      ownerState={ownerState}
+      sx={sx}
+    >
       {showViewSwitcher && (
         <ClockPickerArrowSwitcher
           className={classes.arrowSwitcher}
@@ -623,6 +634,14 @@ ClockPicker.propTypes = {
    */
   shouldDisableTime: PropTypes.func,
   showViewSwitcher: PropTypes.bool,
+  /**
+   * The system prop that allows defining system overrides as well as additional CSS styles.
+   */
+  sx: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
+    PropTypes.func,
+    PropTypes.object,
+  ]),
   /**
    * Controlled open view.
    */

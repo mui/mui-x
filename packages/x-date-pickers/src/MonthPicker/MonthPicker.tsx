@@ -26,6 +26,10 @@ export interface MonthPickerProps<TDate>
    * Override or extend the styles applied to the component.
    */
   classes?: Partial<MonthPickerClasses>;
+  /**
+   * The system prop that allows defining system overrides as well as additional CSS styles.
+   */
+  sx?: SxProps<Theme>;
   /** Date value for the MonthPicker */
   date: TDate | null;
   /** If `true` picker is disabled */
@@ -34,10 +38,6 @@ export interface MonthPickerProps<TDate>
   onChange: NonNullablePickerChangeHandler<TDate>;
   /** If `true` picker is readonly */
   readOnly?: boolean;
-  /**
-   * The system prop that allows defining system overrides as well as additional CSS styles.
-   */
-  sx?: SxProps<Theme>;
   /**
    * If `true`, today's date is rendering without highlighting with circle.
    * @default false
@@ -114,7 +114,7 @@ export const MonthPicker = React.forwardRef(function MonthPicker<TDate>(
     shouldDisableMonth,
     readOnly,
     disableHighlightToday,
-    ...other
+    sx,
   } = props;
   const ownerState = props;
   const classes = useUtilityClasses(ownerState);
@@ -172,7 +172,7 @@ export const MonthPicker = React.forwardRef(function MonthPicker<TDate>(
       ref={ref}
       className={clsx(classes.root, className)}
       ownerState={ownerState}
-      {...other}
+      sx={sx}
     >
       {utils.getMonthArray(selectedDateOrToday).map((month) => {
         const monthNumber = utils.getMonth(month);

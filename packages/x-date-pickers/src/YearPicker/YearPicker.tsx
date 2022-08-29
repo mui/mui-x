@@ -1,8 +1,9 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { useTheme, styled, useThemeProps } from '@mui/material/styles';
-import { unstable_composeClasses as composeClasses } from '@mui/material';
 import clsx from 'clsx';
+import { useTheme, styled, useThemeProps, Theme } from '@mui/material/styles';
+import { unstable_composeClasses as composeClasses } from '@mui/material';
+import { SxProps } from '@mui/system';
 import { PickersYear } from './PickersYear';
 import { useUtils, useNow, useDefaultDates } from '../internals/hooks/useUtils';
 import { NonNullablePickerChangeHandler } from '../internals/hooks/useViews';
@@ -65,6 +66,10 @@ export interface YearPickerProps<TDate>
   autoFocus?: boolean;
   className?: string;
   classes?: YearPickerClasses;
+  /**
+   * The system prop that allows defining system overrides as well as additional CSS styles.
+   */
+  sx?: SxProps<Theme>;
   date: TDate | null;
   disabled?: boolean;
   onChange: NonNullablePickerChangeHandler<TDate>;
@@ -103,6 +108,7 @@ export const YearPicker = React.forwardRef(function YearPicker<TDate>(
     readOnly,
     shouldDisableYear,
     disableHighlightToday,
+    sx,
   } = props;
 
   const ownerState = props;
@@ -198,7 +204,12 @@ export const YearPicker = React.forwardRef(function YearPicker<TDate>(
   const nowYear = utils.getYear(now);
 
   return (
-    <YearPickerRoot ref={ref} className={clsx(classes.root, className)} ownerState={ownerState}>
+    <YearPickerRoot
+      ref={ref}
+      className={clsx(classes.root, className)}
+      ownerState={ownerState}
+      sx={sx}
+    >
       {utils.getYearRange(minDate, maxDate).map((year) => {
         const yearNumber = utils.getYear(year);
         const selected = yearNumber === currentYear;
@@ -267,4 +278,12 @@ YearPicker.propTypes = {
    * @returns {boolean} Returns `true` if the year should be disabled.
    */
   shouldDisableYear: PropTypes.func,
+  /**
+   * The system prop that allows defining system overrides as well as additional CSS styles.
+   */
+  sx: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
+    PropTypes.func,
+    PropTypes.object,
+  ]),
 } as any;
