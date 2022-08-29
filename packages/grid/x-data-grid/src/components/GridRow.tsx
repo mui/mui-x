@@ -45,7 +45,6 @@ export interface GridRowProps {
   firstColumnToRender: number;
   lastColumnToRender: number;
   visibleColumns: GridStateColDef[];
-  renderedColumns: GridStateColDef[];
   cellFocus: GridCellIdentifier | null;
   cellTabIndex: GridCellIdentifier | null;
   editRowsState: GridEditRowsModel;
@@ -100,7 +99,6 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
     rowHeight,
     className,
     visibleColumns,
-    renderedColumns,
     containerWidth,
     firstColumnToRender,
     lastColumnToRender,
@@ -285,9 +283,9 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
 
   const cells: JSX.Element[] = [];
 
-  for (let i = 0; i < renderedColumns.length; i += 1) {
-    const column = renderedColumns[i];
-    const indexRelativeToAllColumns = firstColumnToRender + i;
+  for (let i = firstColumnToRender; i < lastColumnToRender; i += 1) {
+    const indexRelativeToAllColumns = i;
+    const column = visibleColumns[indexRelativeToAllColumns];
 
     const isLastColumn = indexRelativeToAllColumns === visibleColumns.length - 1;
     const removeLastBorderRight = isLastColumn && hasScrollX && !hasScrollY;
@@ -438,7 +436,6 @@ GridRow.propTypes = {
   index: PropTypes.number.isRequired,
   isLastVisible: PropTypes.bool,
   lastColumnToRender: PropTypes.number.isRequired,
-  renderedColumns: PropTypes.arrayOf(PropTypes.object).isRequired,
   row: PropTypes.object.isRequired,
   rowHeight: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.number]).isRequired,
   rowId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,

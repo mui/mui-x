@@ -395,7 +395,7 @@
   { "name": "GridRoot", "kind": "Variable" },
   { "name": "GridRootContainerRef", "kind": "TypeAlias" },
   { "name": "GridRootProps", "kind": "Interface" },
-  { "name": "GridRow", "kind": "Function" },
+  { "name": "GridRow", "kind": "Variable" },
   { "name": "GridRowApi", "kind": "Interface" },
   { "name": "GridRowClassNameParams", "kind": "Interface" },
   { "name": "GridRowCount", "kind": "Variable" },

@@ -440,8 +440,6 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
       visibleRows: currentPage.rows,
     });
 
-    const renderedColumns = visibleColumns.slice(firstColumnToRender, lastColumnToRender);
-
     const rows: JSX.Element[] = [];
 
     for (let i = 0; i < renderedRows.length; i += 1) {
@@ -468,7 +466,6 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
           cellFocus={cellFocus} // TODO move to inside the row
           cellTabIndex={cellTabIndex} // TODO move to inside the row
           editRowsState={editRowsState} // TODO move to inside the row
-          renderedColumns={renderedColumns}
           visibleColumns={visibleColumns}
           firstColumnToRender={firstColumnToRender}
           lastColumnToRender={lastColumnToRender}
