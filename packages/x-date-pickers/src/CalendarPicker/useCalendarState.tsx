@@ -20,7 +20,11 @@ interface ChangeMonthPayload<TDate> {
 }
 
 interface ChangeFocusedDayPayload<TDate> {
-  focusedDay: TDate | null;
+  focusedDay: TDate;
+  /**
+   * The update does not trigger month switching animation.
+   * For example: when selecting month from the month view.
+   */
   withoutMonthSwitchingAnimation?: boolean;
 }
 
