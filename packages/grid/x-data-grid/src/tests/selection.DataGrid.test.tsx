@@ -1,6 +1,6 @@
 import * as React from 'react';
 // @ts-expect-error Remove once the test utils are typed
-import { createRenderer, fireEvent, screen, act } from '@mui/monorepo/test/utils';
+import { createRenderer, fireEvent, screen, act, userEvent } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
 import { DataGrid, DataGridProps, GridInputSelectionModel, GridRowId } from '@mui/x-data-grid';
 import {
@@ -10,7 +10,6 @@ import {
   getColumnHeaderCell,
   getColumnHeadersTextContent,
   getActiveCell,
-  fireClickEvent,
 } from 'test/utils/helperFn';
 import { getData } from 'storybook/src/data/data-service';
 import { spy } from 'sinon';
@@ -50,9 +49,9 @@ describe('<DataGrid /> - Selection', () => {
   describe('prop: checkboxSelection = false (single selection)', () => {
     it('should select one row at a time on click WITHOUT ctrl or meta pressed', () => {
       render(<TestDataGridSelection />);
-      fireClickEvent(getCell(0, 0));
+      userEvent.mousePress(getCell(0, 0));
       expect(getSelectedRowIds()).to.deep.equal([0]);
-      fireClickEvent(getCell(1, 0));
+      userEvent.mousePress(getCell(1, 0));
       expect(getSelectedRowIds()).to.deep.equal([1]);
     });
 
@@ -96,12 +95,12 @@ describe('<DataGrid /> - Selection', () => {
       render(<TestDataGridSelection disableSelectionOnClick />);
 
       const cell0 = getCell(0, 0);
-      fireClickEvent(cell0);
+      userEvent.mousePress(cell0);
       fireEvent.keyDown(cell0, { key: ' ', shiftKey: true });
       expect(getSelectedRowIds()).to.deep.equal([0]);
 
       const cell1 = getCell(1, 0);
-      fireClickEvent(cell1);
+      userEvent.mousePress(cell1);
       fireEvent.keyDown(cell1, { key: ' ', shiftKey: true });
       expect(getSelectedRowIds()).to.deep.equal([1]);
     });
@@ -125,7 +124,7 @@ describe('<DataGrid /> - Selection', () => {
       expect(onCellEditStart.callCount).to.equal(0);
 
       const cell01 = getCell(0, 1);
-      fireClickEvent(cell01);
+      userEvent.mousePress(cell01);
 
       fireEvent.keyDown(cell01, { key: ' ', shiftKey: true });
 
@@ -133,7 +132,7 @@ describe('<DataGrid /> - Selection', () => {
       expect(getSelectedRowIds()).to.deep.equal([0]);
 
       const cell11 = getCell(1, 1);
-      fireClickEvent(cell11);
+      userEvent.mousePress(cell11);
       fireEvent.keyDown(cell11, { key: ' ', shiftKey: true });
 
       expect(onCellEditStart.callCount).to.equal(0);
@@ -143,7 +142,7 @@ describe('<DataGrid /> - Selection', () => {
     it(`should deselect the selected row on Shift + Space`, () => {
       render(<TestDataGridSelection disableSelectionOnClick />);
       const cell00 = getCell(0, 0);
-      fireClickEvent(cell00);
+      userEvent.mousePress(cell00);
 
       fireEvent.keyDown(cell00, { key: ' ', shiftKey: true });
       expect(getSelectedRowIds()).to.deep.equal([0]);
@@ -155,7 +154,7 @@ describe('<DataGrid /> - Selection', () => {
     it('should not select a range with shift pressed', () => {
       render(<TestDataGridSelection disableSelectionOnClick />);
       const cell00 = getCell(0, 0);
-      fireClickEvent(cell00);
+      userEvent.mousePress(cell00);
 
       fireEvent.keyDown(cell00, { key: ' ', shiftKey: true });
       expect(getSelectedRowIds()).to.deep.equal([0]);
@@ -214,7 +213,7 @@ describe('<DataGrid /> - Selection', () => {
       // simulate click
       const checkboxInput = getCell(0, 0).querySelector('input');
 
-      fireClickEvent(checkboxInput!);
+      userEvent.mousePress(checkboxInput!);
 
       expect(getActiveCell()).to.equal('0-0');
     });
@@ -342,7 +341,7 @@ describe('<DataGrid /> - Selection', () => {
   describe('prop: checkboxSelection = true (multi selection), with keyboard events', () => {
     it('should select row below when pressing "ArrowDown" + shiftKey', () => {
       render(<TestDataGridSelection checkboxSelection />);
-      fireClickEvent(getCell(2, 1));
+      userEvent.mousePress(getCell(2, 1));
       expect(getSelectedRowIds()).to.deep.equal([2]);
       fireEvent.keyDown(getCell(2, 1), { key: 'ArrowDown', shiftKey: true });
       expect(getSelectedRowIds()).to.deep.equal([2, 3]);
@@ -352,9 +351,15 @@ describe('<DataGrid /> - Selection', () => {
 
     it('should unselect previous row when pressing "ArrowDown" + shiftKey', () => {
       render(<TestDataGridSelection checkboxSelection />);
-      fireClickEvent(getCell(3, 1));
+      userEvent.mousePress(getCell(3, 1));
       expect(getSelectedRowIds()).to.deep.equal([3]);
-      fireClickEvent(getCell(1, 1), { shiftKey: true });
+
+      const cell = getCell(1, 1);
+      // TODO: use `userEvent.mousePress` as soon as it allows to pass `shiftKey`
+      fireEvent.mouseDown(cell, { shiftKey: true });
+      fireEvent.mouseUp(cell, { shiftKey: true });
+      fireEvent.click(cell, { shiftKey: true });
+
       expect(getSelectedRowIds()).to.deep.equal([1, 2, 3]);
       fireEvent.keyDown(getCell(1, 1), { key: 'ArrowDown', shiftKey: true });
       expect(getSelectedRowIds()).to.deep.equal([2, 3]);
@@ -362,9 +367,9 @@ describe('<DataGrid /> - Selection', () => {
 
     it('should not unselect row above when pressing "ArrowDown" + shiftKey', () => {
       render(<TestDataGridSelection checkboxSelection />);
-      fireClickEvent(getCell(1, 1));
+      userEvent.mousePress(getCell(1, 1));
       expect(getSelectedRowIds()).to.deep.equal([1]);
-      fireClickEvent(getCell(2, 1), { shiftKey: true });
+      userEvent.mousePress(getCell(2, 1), { shiftKey: true });
       expect(getSelectedRowIds()).to.deep.equal([1, 2]);
       fireEvent.keyDown(getCell(2, 1), { key: 'ArrowDown', shiftKey: true });
       expect(getSelectedRowIds()).to.deep.equal([1, 2, 3]);
@@ -374,9 +379,9 @@ describe('<DataGrid /> - Selection', () => {
 
     it('should unselect previous row when pressing "ArrowUp" + shiftKey', () => {
       render(<TestDataGridSelection checkboxSelection />);
-      fireClickEvent(getCell(2, 1));
+      userEvent.mousePress(getCell(2, 1));
       expect(getSelectedRowIds()).to.deep.equal([2]);
-      fireClickEvent(getCell(3, 1), { shiftKey: true });
+      userEvent.mousePress(getCell(3, 1), { shiftKey: true });
       expect(getSelectedRowIds()).to.deep.equal([2, 3]);
       fireEvent.keyDown(getCell(3, 1), { key: 'ArrowUp', shiftKey: true });
       expect(getSelectedRowIds()).to.deep.equal([2]);
@@ -388,7 +393,7 @@ describe('<DataGrid /> - Selection', () => {
       expect(getSelectedRowIds()).to.deep.equal([]);
 
       const cell21 = getCell(2, 1);
-      fireClickEvent(cell21);
+      userEvent.mousePress(cell21);
       fireEvent.keyDown(cell21, {
         key: ' ',
         shiftKey: true,
@@ -397,7 +402,7 @@ describe('<DataGrid /> - Selection', () => {
       expect(getSelectedRowIds()).to.deep.equal([2]);
 
       const cell11 = getCell(1, 1);
-      fireClickEvent(cell11);
+      userEvent.mousePress(cell11);
       fireEvent.keyDown(cell11, {
         key: ' ',
         shiftKey: true,
@@ -412,7 +417,7 @@ describe('<DataGrid /> - Selection', () => {
       const data = getData(20, 1);
       render(<TestDataGridSelection {...data} rowHeight={50} checkboxSelection hideFooter />);
       const checkboxes = screen.queryAllByRole('checkbox', { name: /select row/i });
-      fireClickEvent(checkboxes[0]);
+      userEvent.mousePress(checkboxes[0]);
       expect(checkboxes[0]).toHaveFocus();
       fireEvent.keyDown(checkboxes[0], { key: 'ArrowDown' });
       fireEvent.keyDown(checkboxes[1], { key: 'ArrowDown' });
@@ -432,7 +437,7 @@ describe('<DataGrid /> - Selection', () => {
       expect(checkboxCell).to.have.attribute('tabindex', '-1');
       expect(secondCell).to.have.attribute('tabindex', '-1');
 
-      fireClickEvent(secondCell);
+      userEvent.mousePress(secondCell);
       expect(secondCell).to.have.attribute('tabindex', '0');
 
       fireEvent.keyDown(secondCell, { key: 'ArrowLeft' });
@@ -473,7 +478,7 @@ describe('<DataGrid /> - Selection', () => {
         }
         render(<TestDataGridSelection checkboxSelection />);
         const cell = getCell(1, 1);
-        fireClickEvent(cell);
+        userEvent.mousePress(cell);
         fireEvent.keyDown(cell, { key: 'ArrowLeft' });
         fireEvent.keyDown(getCell(1, 0).querySelector('input'), { key: 'ArrowUp' });
         clock.runToLast(); // Wait for transition

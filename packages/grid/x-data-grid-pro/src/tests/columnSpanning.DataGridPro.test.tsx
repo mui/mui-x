@@ -1,9 +1,9 @@
 import * as React from 'react';
 // @ts-ignore Remove once the test utils are typed
-import { createRenderer, fireEvent, act } from '@mui/monorepo/test/utils';
+import { createRenderer, fireEvent, act, userEvent } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
 import { DataGridPro, GridApi, useGridApiRef, GridColDef, gridClasses } from '@mui/x-data-grid-pro';
-import { getActiveCell, getCell, getColumnHeaderCell, fireClickEvent } from 'test/utils/helperFn';
+import { getActiveCell, getCell, getColumnHeaderCell } from 'test/utils/helperFn';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
@@ -103,7 +103,7 @@ describe('<DataGridPro /> - Column Spanning', () => {
 
       act(() => apiRef!.current.setColumnIndex('price', 1));
 
-      fireClickEvent(getCell(1, 1));
+      userEvent.mousePress(getCell(1, 1));
       fireEvent.keyDown(getCell(1, 1), { key: 'ArrowRight' });
       expect(getActiveCell()).to.equal('1-2');
     });

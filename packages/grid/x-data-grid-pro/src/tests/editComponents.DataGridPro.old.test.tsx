@@ -7,10 +7,17 @@ import {
   GridEditSingleSelectCell,
   GridColDef,
 } from '@mui/x-data-grid-pro';
-// @ts-ignore Remove once the test utils are typed
-import { createRenderer, fireEvent, screen, waitFor, act } from '@mui/monorepo/test/utils';
+import {
+  createRenderer,
+  fireEvent,
+  screen,
+  waitFor,
+  act,
+  userEvent,
+  // @ts-ignore Remove once the test utils are typed
+} from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
-import { getCell, fireClickEvent } from 'test/utils/helperFn';
+import { getCell } from 'test/utils/helperFn';
 import { spy } from 'sinon';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
@@ -338,7 +345,7 @@ describe('<DataGridPro /> - Edit Components', () => {
         />,
       );
       const cell = getCell(0, 0);
-      fireClickEvent(cell);
+      userEvent.mousePress(cell);
 
       fireEvent.keyDown(cell, { key: 'Enter' });
       fireEvent.keyDown(screen.queryByRole('option', { name: 'Nike' }), { key: 'ArrowDown' });
@@ -373,7 +380,7 @@ describe('<DataGridPro /> - Edit Components', () => {
       fireEvent.doubleClick(cell);
       expect(cell).to.have.class('MuiDataGrid-cell--editing');
       const option = screen.queryAllByRole('option')[1];
-      fireClickEvent(option);
+      userEvent.mousePress(option);
       await waitFor(() => {
         expect(cell.firstChild).to.have.class('Mui-error');
       });
@@ -400,7 +407,7 @@ describe('<DataGridPro /> - Edit Components', () => {
       fireEvent.doubleClick(cell);
       expect(cell).to.have.class('MuiDataGrid-cell--editing');
       const option = screen.queryAllByRole('option')[1];
-      fireClickEvent(option);
+      userEvent.mousePress(option);
 
       await waitFor(() => {
         expect(cell.firstChild).to.have.class('Mui-error');
@@ -431,7 +438,7 @@ describe('<DataGridPro /> - Edit Components', () => {
       const cell = getCell(0, 0);
       fireEvent.doubleClick(cell);
       const option = screen.queryByRole('option', { name: 'Adidas' });
-      fireClickEvent(option);
+      userEvent.mousePress(option);
 
       clock.tick(500);
 

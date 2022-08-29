@@ -8,8 +8,15 @@ import {
   DataGridProProps,
 } from '@mui/x-data-grid-pro';
 import { expect } from 'chai';
-// @ts-expect-error Remove once the test utils are typed
-import { createRenderer, waitFor, fireEvent, screen, act } from '@mui/monorepo/test/utils';
+import {
+  createRenderer,
+  waitFor,
+  fireEvent,
+  screen,
+  act,
+  userEvent,
+  // @ts-expect-error Remove once the test utils are typed
+} from '@mui/monorepo/test/utils';
 import { getData } from 'storybook/src/data/data-service';
 import {
   getActiveCell,
@@ -18,7 +25,6 @@ import {
   getColumnHeaderCell,
   getColumnValues,
   getRows,
-  fireClickEvent,
 } from 'test/utils/helperFn';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
@@ -378,7 +384,7 @@ describe('<DataGridPro /> - Row pinning', () => {
       expect(isRowPinned(getRowById(1), 'top')).to.equal(true, '#1 pinned top');
       expect(isRowPinned(getRowById(0), 'top')).to.equal(true, '#0 pinned top');
 
-      fireClickEvent(getCell(0, 0));
+      userEvent.mousePress(getCell(0, 0));
       // first top pinned row
       expect(getActiveCellRowId()).to.equal('1');
 
@@ -421,7 +427,7 @@ describe('<DataGridPro /> - Row pinning', () => {
       expect(isRowPinned(getRowById(0), 'bottom')).to.equal(true, '#0 pinned top');
       expect(isRowPinned(getRowById(1), 'bottom')).to.equal(true, '#1 pinned top');
 
-      fireClickEvent(getCell(0, 0));
+      userEvent.mousePress(getCell(0, 0));
       expect(getActiveCellRowId()).to.equal('2');
 
       fireEvent.keyDown(getCell(0, 0), { key: 'ArrowDown' });
@@ -474,7 +480,7 @@ describe('<DataGridPro /> - Row pinning', () => {
       expect(isRowPinned(getRowById(0), 'bottom')).to.equal(true, '#0 pinned bottom');
 
       // top-pinned row
-      fireClickEvent(getCell(0, 3));
+      userEvent.mousePress(getCell(0, 3));
       expect(getActiveCell()).to.equal('0-3');
       expect(getActiveCellRowId()).to.equal('1');
 

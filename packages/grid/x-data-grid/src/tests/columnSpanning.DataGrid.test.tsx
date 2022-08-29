@@ -1,9 +1,16 @@
 import * as React from 'react';
-// @ts-ignore Remove once the test utils are typed
-import { createRenderer, fireEvent, waitFor, screen, within } from '@mui/monorepo/test/utils';
+import {
+  createRenderer,
+  fireEvent,
+  waitFor,
+  screen,
+  within,
+  userEvent,
+  // @ts-ignore Remove once the test utils are typed
+} from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
 import { DataGrid, gridClasses, GridColDef } from '@mui/x-data-grid';
-import { getCell, getActiveCell, getColumnHeaderCell, fireClickEvent } from 'test/utils/helperFn';
+import { getCell, getActiveCell, getColumnHeaderCell } from 'test/utils/helperFn';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
@@ -126,7 +133,7 @@ describe('<DataGrid /> - Column Spanning', () => {
         </div>,
       );
 
-      fireClickEvent(getCell(0, 0));
+      userEvent.mousePress(getCell(0, 0));
       expect(getActiveCell()).to.equal('0-0');
 
       fireEvent.keyDown(getCell(0, 0), { key: 'ArrowRight' });
@@ -140,7 +147,7 @@ describe('<DataGrid /> - Column Spanning', () => {
         </div>,
       );
 
-      fireClickEvent(getCell(0, 2));
+      userEvent.mousePress(getCell(0, 2));
       expect(getActiveCell()).to.equal('0-2');
 
       fireEvent.keyDown(getCell(0, 2), { key: 'ArrowLeft' });
@@ -154,7 +161,7 @@ describe('<DataGrid /> - Column Spanning', () => {
         </div>,
       );
 
-      fireClickEvent(getCell(1, 1));
+      userEvent.mousePress(getCell(1, 1));
       expect(getActiveCell()).to.equal('1-1');
 
       fireEvent.keyDown(getCell(1, 1), { key: 'ArrowUp' });
@@ -168,7 +175,7 @@ describe('<DataGrid /> - Column Spanning', () => {
         </div>,
       );
 
-      fireClickEvent(getCell(1, 3));
+      userEvent.mousePress(getCell(1, 3));
       expect(getActiveCell()).to.equal('1-3');
 
       fireEvent.keyDown(getCell(1, 3), { key: 'ArrowDown' });
@@ -187,7 +194,7 @@ describe('<DataGrid /> - Column Spanning', () => {
         </div>,
       );
 
-      fireClickEvent(getCell(0, 3));
+      userEvent.mousePress(getCell(0, 3));
       expect(getActiveCell()).to.equal('0-3');
 
       fireEvent.keyDown(getCell(0, 3), { key: 'PageDown' });
@@ -201,7 +208,7 @@ describe('<DataGrid /> - Column Spanning', () => {
         </div>,
       );
 
-      fireClickEvent(getCell(2, 1));
+      userEvent.mousePress(getCell(2, 1));
       expect(getActiveCell()).to.equal('2-1');
 
       fireEvent.keyDown(getCell(2, 1), { key: 'PageUp' });
@@ -221,7 +228,7 @@ describe('<DataGrid /> - Column Spanning', () => {
         </div>,
       );
 
-      fireClickEvent(getCell(1, 3));
+      userEvent.mousePress(getCell(1, 3));
       expect(getActiveCell()).to.equal('1-3');
 
       // start editing
@@ -242,7 +249,7 @@ describe('<DataGrid /> - Column Spanning', () => {
         </div>,
       );
 
-      fireClickEvent(getCell(1, 1));
+      userEvent.mousePress(getCell(1, 1));
       expect(getActiveCell()).to.equal('1-1');
 
       // start editing
@@ -262,7 +269,7 @@ describe('<DataGrid /> - Column Spanning', () => {
         </div>,
       );
 
-      fireClickEvent(getCell(0, 2));
+      userEvent.mousePress(getCell(0, 2));
       expect(getActiveCell()).to.equal('0-2');
 
       // start editing
@@ -326,7 +333,7 @@ describe('<DataGrid /> - Column Spanning', () => {
         </div>,
       );
 
-      fireClickEvent(getCell(1, 1));
+      userEvent.mousePress(getCell(1, 1));
       expect(getActiveCell()).to.equal('1-1');
 
       fireEvent.keyDown(getCell(1, 1), { key: 'ArrowDown' });
@@ -361,7 +368,7 @@ describe('<DataGrid /> - Column Spanning', () => {
         </div>,
       );
 
-      fireClickEvent(getCell(0, 0));
+      userEvent.mousePress(getCell(0, 0));
 
       fireEvent.keyDown(getCell(0, 0), { key: 'ArrowRight' });
       document.querySelector(`.${gridClasses.virtualScroller}`)!.dispatchEvent(new Event('scroll'));
@@ -437,7 +444,7 @@ describe('<DataGrid /> - Column Spanning', () => {
         </div>,
       );
 
-      fireClickEvent(getCell(0, 0));
+      userEvent.mousePress(getCell(0, 0));
       expect(getActiveCell()).to.equal('0-0');
 
       fireEvent.keyDown(getCell(0, 0), { key: 'ArrowDown' });
@@ -469,7 +476,7 @@ describe('<DataGrid /> - Column Spanning', () => {
         </div>,
       );
 
-      fireClickEvent(getCell(0, 0));
+      userEvent.mousePress(getCell(0, 0));
 
       const virtualScroller = document.querySelector(
         `.${gridClasses.virtualScroller}`,

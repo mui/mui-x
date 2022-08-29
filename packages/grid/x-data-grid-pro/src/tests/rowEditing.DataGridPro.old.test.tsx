@@ -7,9 +7,9 @@ import {
   GridColDef,
 } from '@mui/x-data-grid-pro';
 // @ts-ignore Remove once the test utils are typed
-import { createRenderer, fireEvent, waitFor, act } from '@mui/monorepo/test/utils';
+import { createRenderer, fireEvent, waitFor, act, userEvent } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
-import { getCell, getRow, fireClickEvent } from 'test/utils/helperFn';
+import { getCell, getRow } from 'test/utils/helperFn';
 import { spy } from 'sinon';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
@@ -78,7 +78,7 @@ describe('<DataGridPro /> - Row Editing', () => {
     render(<TestCase editMode="row" />);
     expect(getRow(1)).not.to.have.class('MuiDataGrid-row--editing');
     const cell = getCell(1, 0);
-    fireClickEvent(cell);
+    userEvent.mousePress(cell);
 
     fireEvent.keyDown(cell, { key: 'Enter' });
     expect(getRow(1)).to.have.class('MuiDataGrid-row--editing');
@@ -146,7 +146,7 @@ describe('<DataGridPro /> - Row Editing', () => {
     fireEvent.change(input, { target: { value: 'ADIDAS' } });
     clock.tick(500);
     expect(input!.value).to.equal('ADIDAS');
-    fireClickEvent(getCell(2, 0));
+    userEvent.mousePress(getCell(2, 0));
     clock.tick(0);
     await waitFor(() => {
       // Wait for promise

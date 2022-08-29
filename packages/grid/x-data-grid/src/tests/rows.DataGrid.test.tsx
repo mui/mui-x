@@ -4,6 +4,7 @@ import {
   fireEvent,
   screen,
   act,
+  userEvent,
   // @ts-ignore Remove once the test utils are typed
 } from '@mui/monorepo/test/utils';
 import clsx from 'clsx';
@@ -19,13 +20,7 @@ import {
   GridRowModel,
   GridRenderCellParams,
 } from '@mui/x-data-grid';
-import {
-  getColumnValues,
-  getRow,
-  getActiveCell,
-  getCell,
-  fireClickEvent,
-} from 'test/utils/helperFn';
+import { getColumnValues, getRow, getActiveCell, getCell } from 'test/utils/helperFn';
 import { getData } from 'storybook/src/data/data-service';
 import { COMPACT_DENSITY_FACTOR } from '../hooks/features/density/useGridDensity';
 
@@ -302,7 +297,7 @@ describe('<DataGrid /> - Rows', () => {
         />,
       );
       const moreButton = screen.getByRole('menuitem', { name: 'more' });
-      fireClickEvent(moreButton);
+      userEvent.mousePress(moreButton);
 
       const printButton = screen.queryByRole('menuitem', { name: 'print' });
       expect(printButton).toHaveFocus();

@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { GridApi, useGridApiRef, DataGridPro, DataGridProProps } from '@mui/x-data-grid-pro';
 // @ts-ignore Remove once the test utils are typed
-import { createRenderer, fireEvent, act } from '@mui/monorepo/test/utils';
+import { createRenderer, fireEvent, act, userEvent } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
 import { stub, SinonStub } from 'sinon';
-import { fireClickEvent, getCell } from 'test/utils/helperFn';
+import { getCell } from 'test/utils/helperFn';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
@@ -85,7 +85,7 @@ describe('<DataGridPro /> - Clipboard', () => {
         render(<Test disableSelectionOnClick />);
         act(() => apiRef.current.selectRows([0, 1]));
         const cell = getCell(0, 0);
-        fireClickEvent(cell);
+        userEvent.mousePress(cell);
         fireEvent.keyDown(cell, { key: 'c', keyCode: 67, [key]: true });
         expect(writeText.firstCall.args[0]).to.equal(['0\tNike', '1\tAdidas'].join('\r\n'));
       });
@@ -95,7 +95,7 @@ describe('<DataGridPro /> - Clipboard', () => {
       render(<Test />);
       act(() => apiRef.current.selectRows([0, 1]));
       const cell = getCell(0, 0);
-      fireClickEvent(cell);
+      userEvent.mousePress(cell);
       fireEvent.keyDown(cell, { key: 'c', keyCode: 67, altKey: true });
       expect(writeText.callCount).to.equal(1, "writeText wasn't called");
       expect(writeText.firstCall.args[0]).to.equal(['id\tBrand', '0\tNike'].join('\r\n'));
