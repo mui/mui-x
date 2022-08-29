@@ -4,7 +4,8 @@ import {
   unstable_useDateField as useDateField,
   UseDateFieldProps,
 } from '@mui/x-date-pickers/DateField';
-import { useUtils, useValidation, UseFieldResponse } from '@mui/x-date-pickers/internals';
+import { useUtils, useValidation } from '@mui/x-date-pickers/internals';
+import { UseFieldResponse } from '@mui/x-date-pickers/internals-fields';
 import { UseMultiInputDateRangeFieldProps } from './MultiInputDateRangeField.interfaces';
 import { DateRange } from '../internal/models';
 import { validateDateRange } from '../internal/hooks/validation/useDateRangeValidation';

@@ -1,13 +1,15 @@
 import {
+  useUtils,
+  useDefaultDates,
+  parseNonNullablePickerDate,
+} from '@mui/x-date-pickers/internals';
+import {
   useField,
   FieldValueManager,
   splitFormatIntoSections,
   addPositionPropertiesToSections,
   createDateStrFromSections,
-  useUtils,
-  useDefaultDates,
-  parseNonNullablePickerDate,
-} from '@mui/x-date-pickers/internals';
+} from '@mui/x-date-pickers/internals-fields';
 import {
   DateRangeFieldSection,
   UseDateRangeFieldDefaultizedProps,
