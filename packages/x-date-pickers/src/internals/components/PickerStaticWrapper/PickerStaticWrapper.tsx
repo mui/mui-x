@@ -1,6 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { styled, Theme, useThemeProps } from '@mui/material/styles';
+import { SxProps } from '@mui/system';
 import { unstable_composeClasses as composeClasses } from '@mui/material';
 import { DIALOG_WIDTH } from '../../constants/dimensions';
 import { WrapperVariantContext } from '../wrappers/WrapperVariantContext';
@@ -11,7 +12,6 @@ import {
 import { PickersActionBar, PickersActionBarProps } from '../../../PickersActionBar';
 import { PickerStateWrapperProps } from '../../hooks/usePickerState';
 import { PickersSlotsComponent } from '../wrappers/WrapperProps';
-import { SxProps } from '@mui/system';
 
 const useUtilityClasses = (ownerState: PickerStaticWrapperProps) => {
   const { classes } = ownerState;
