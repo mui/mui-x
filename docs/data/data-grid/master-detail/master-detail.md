@@ -119,7 +119,7 @@ To already start with a few suggested options configured, spread `GRID_DETAIL_PA
   columns={[
     {
       field: GRID_DETAIL_PANEL_TOGGLE_FIELD,
-      renderCell: (params) => <CustomDetailPanelToggle {...params}>
+      renderCell: (params) => <CustomDetailPanelToggle {...params}/>
     },
   ]}
 />
