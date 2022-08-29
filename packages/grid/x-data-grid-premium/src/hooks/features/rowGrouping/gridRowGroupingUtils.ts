@@ -9,7 +9,6 @@ import {
 import {
   passFilterLogic,
   GridAggregatedFilterItemApplier,
-  isDeepEqual,
   GridColumnRawLookup,
 } from '@mui/x-data-grid-pro/internals';
 import { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
@@ -17,7 +16,6 @@ import { GridGroupingRules, GridRowGroupingModel } from './gridRowGroupingInterf
 import { GridStatePremium } from '../../../models/gridStatePremium';
 import { gridRowGroupingSanitizedModelSelector } from './gridRowGroupingSelector';
 import { GridApiPremium } from '../../../models/gridApiPremium';
-import { GridAggregationRules } from '@mui/x-data-grid-premium/hooks';
 
 export const GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD = '__row_group_by_columns_group__';
 
