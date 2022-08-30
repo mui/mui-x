@@ -207,7 +207,7 @@ export const areAggregationRulesEqual = (
     return false;
   }
 
-  return newFields.some((field) => {
+  return newFields.every((field) => {
     const previousRule = previousValue?.[field];
     const newRule = newValue[field];
 
