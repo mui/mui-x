@@ -283,6 +283,7 @@ describe('<DataGridPremium /> - Aggregation', () => {
       return (
         <div style={{ width: 300, height: 300 }}>
           <DataGridPremium
+            {...baselineProps}
             treeData
             defaultGroupingExpansionDepth={-1}
             columns={[
