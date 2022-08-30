@@ -213,7 +213,7 @@ describe('<DataGrid /> - Column Spanning', () => {
       expect(getActiveCell()).to.equal('0-0');
     });
 
-    it('should move to the cell below when pressing "Enter" after editing', async () => {
+    it('should move to the cell below when pressing "Enter" after editing', () => {
       const editableColumns = columns.map((column) => ({ ...column, editable: true }));
       render(
         <div style={{ width: 500, height: 300 }}>
@@ -222,6 +222,7 @@ describe('<DataGrid /> - Column Spanning', () => {
             columns={editableColumns}
             autoHeight={isJSDOM}
             disableVirtualization={isJSDOM}
+            experimentalFeatures={{ newEditingApi: true }}
           />
         </div>,
       );
@@ -234,16 +235,19 @@ describe('<DataGrid /> - Column Spanning', () => {
 
       // commit
       fireEvent.keyDown(getCell(1, 3).querySelector('input'), { key: 'Enter' });
-      await waitFor(() => {
-        expect(getActiveCell()).to.equal('2-2');
-      });
+      expect(getActiveCell()).to.equal('2-2');
     });
 
-    it('should move to the cell on the right when pressing "Tab" after editing', async () => {
+    it('should move to the cell on the right when pressing "Tab" after editing', () => {
       const editableColumns = columns.map((column) => ({ ...column, editable: true }));
       render(
         <div style={{ width: 500, height: 300 }}>
-          <DataGrid {...baselineProps} columns={editableColumns} disableVirtualization={isJSDOM} />
+          <DataGrid
+            {...baselineProps}
+            columns={editableColumns}
+            disableVirtualization={isJSDOM}
+            experimentalFeatures={{ newEditingApi: true }}
+          />
         </div>,
       );
 
@@ -254,16 +258,19 @@ describe('<DataGrid /> - Column Spanning', () => {
       fireEvent.keyDown(getCell(1, 1), { key: 'Enter' });
 
       fireEvent.keyDown(getCell(1, 1).querySelector('input'), { key: 'Tab' });
-      await waitFor(() => {
-        expect(getActiveCell()).to.equal('1-3');
-      });
+      expect(getActiveCell()).to.equal('1-3');
     });
 
     it('should move to the cell on the left when pressing "Shift+Tab" after editing', async () => {
       const editableColumns = columns.map((column) => ({ ...column, editable: true }));
       render(
         <div style={{ width: 500, height: 300 }}>
-          <DataGrid {...baselineProps} columns={editableColumns} disableVirtualization={isJSDOM} />
+          <DataGrid
+            {...baselineProps}
+            columns={editableColumns}
+            disableVirtualization={isJSDOM}
+            experimentalFeatures={{ newEditingApi: true }}
+          />
         </div>,
       );
 
@@ -274,9 +281,7 @@ describe('<DataGrid /> - Column Spanning', () => {
       fireEvent.keyDown(getCell(0, 2), { key: 'Enter' });
 
       fireEvent.keyDown(getCell(0, 2).querySelector('input'), { key: 'Tab', shiftKey: true });
-      await waitFor(() => {
-        expect(getActiveCell()).to.equal('0-0');
-      });
+      expect(getActiveCell()).to.equal('0-0');
     });
 
     it('should work with row virtualization', function test() {
