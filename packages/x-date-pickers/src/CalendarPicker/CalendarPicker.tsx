@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { styled, useThemeProps } from '@mui/material/styles';
 import { unstable_composeClasses as composeClasses } from '@mui/material';
-import { useControlled, unstable_useId as useId } from '@mui/material/utils';
+import { useControlled, unstable_useId as useId, useEventCallback } from '@mui/material/utils';
 import { MonthPicker, MonthPickerProps } from '../MonthPicker/MonthPicker';
 import { useCalendarState } from './useCalendarState';
 import { useDefaultDates, useUtils } from '../internals/hooks/useUtils';
@@ -433,7 +433,7 @@ export const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
 
   const hasFocus = internalFocusedView !== null;
 
-  const handleFocusedViewChange = React.useCallback(
+  const handleFocusedViewChange = useEventCallback(
     (eventView: CalendarPickerView) => (newHasFocus: boolean) => {
       if (onFocusedViewChange) {
         // Use the calendar or clock logic
@@ -447,7 +447,6 @@ export const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
         setInternalFocusedView((prevView) => (prevView === eventView ? null : prevView));
       }
     },
-    [onFocusedViewChange, setInternalFocusedView],
   );
 
   return (
