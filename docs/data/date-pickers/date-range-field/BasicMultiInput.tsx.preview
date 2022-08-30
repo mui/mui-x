@@ -1,0 +1,6 @@
+<LocalizationProvider dateAdapter={AdapterDateFns}>
+  <MultiInputDateRangeField
+    value={value}
+    onChange={(newValue) => setValue(newValue)}
+  />
+</LocalizationProvider>

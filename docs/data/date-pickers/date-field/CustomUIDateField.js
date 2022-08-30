@@ -1,0 +1,70 @@
+import * as React from 'react';
+import { CssVarsProvider } from '@mui/joy/styles';
+import Stack from '@mui/material/Stack';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import FormLabel from '@mui/joy/FormLabel';
+import JoyTextField from '@mui/joy/TextField';
+import InputUnstyled from '@mui/base/InputUnstyled';
+import { LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { unstable_useDateField as useDateField } from '@mui/x-date-pickers/DateField';
+
+const JoyDateField = (props) => {
+  const { inputRef, inputProps } = useDateField(props);
+
+  return (
+    <JoyTextField
+      {...inputProps}
+      componentsProps={{ input: { componentsProps: { input: { ref: inputRef } } } }}
+    />
+  );
+};
+
+const UnstyledDateField = (props) => {
+  const { inputRef, inputProps } = useDateField(props);
+
+  return (
+    <InputUnstyled
+      {...inputProps}
+      componentsProps={{ input: { ref: inputRef, style: { width: '100%' } } }}
+    />
+  );
+};
+
+const BrowserInputDateField = (props) => {
+  const { inputRef, inputProps } = useDateField(props);
+
+  return <input {...inputProps} ref={inputRef} />;
+};
+
+export default function CustomUIDateField() {
+  const [value, setValue] = React.useState(new Date());
+
+  const handleChange = (newValue) => setValue(newValue);
+
+  return (
+    <CssVarsProvider>
+      <LocalizationProvider dateAdapter={AdapterDateFns}>
+        <Stack spacing={2}>
+          <JoyDateField
+            label="Using @mui/joy TextField"
+            value={value}
+            onChange={handleChange}
+          />
+          <FormControlLabel
+            label={<FormLabel>Using unstyled input</FormLabel>}
+            control={<UnstyledDateField value={value} onChange={handleChange} />}
+            labelPlacement="top"
+            sx={{ alignItems: 'stretch' }}
+          />
+          <FormControlLabel
+            label={<FormLabel>Using browser input</FormLabel>}
+            control={<BrowserInputDateField value={value} onChange={handleChange} />}
+            labelPlacement="top"
+            sx={{ alignItems: 'stretch' }}
+          />
+        </Stack>
+      </LocalizationProvider>
+    </CssVarsProvider>
+  );
+}

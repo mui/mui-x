@@ -2,7 +2,7 @@
 title: Data Grid - Row grouping
 ---
 
-# Data grid - Row grouping [<span class="plan-premium"></span>](https://mui.com/store/items/mui-x-premium/)
+# Data grid - Row grouping [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan)
 
 <p class="description">Group your rows according to some column values.</p>
 
@@ -289,7 +289,7 @@ With this panel, your users will be able to control which columns are used for g
 
 {{"demo": "RowGroupingFullExample.js", "bg": "inline", "defaultCodeOpen": false}}
 
-## apiRef [<span class="plan-pro"></span>](https://mui.com/store/items/mui-x-pro/)
+## apiRef [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
 
 {{"demo": "RowGroupingApiNoSnap.js", "bg": "inline", "hideToolbar": true}}
 

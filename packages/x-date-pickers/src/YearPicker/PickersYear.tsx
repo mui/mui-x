@@ -15,8 +15,6 @@ import {
 export interface YearProps {
   autoFocus?: boolean;
   children: React.ReactNode;
-  // The below line triggers a false-positive ESLint error - `classes` are used below.
-  // eslint-disable-next-line react/no-unused-prop-types
   classes?: {
     root?: string;
     modeDesktop?: string;
@@ -102,7 +100,17 @@ export const PickersYear = React.forwardRef<HTMLButtonElement, YearProps>(functi
   props,
   forwardedRef,
 ) {
-  const { autoFocus, className, children, disabled, onClick, onKeyDown, selected, value } = props;
+  const {
+    autoFocus,
+    className,
+    children,
+    disabled,
+    onClick,
+    onKeyDown,
+    selected,
+    value,
+    ...other
+  } = props;
   const ref = React.useRef<HTMLButtonElement>(null);
   const refHandle = useForkRef(ref, forwardedRef as React.Ref<HTMLButtonElement>);
   const wrapperVariant = React.useContext(WrapperVariantContext);
@@ -138,6 +146,7 @@ export const PickersYear = React.forwardRef<HTMLButtonElement, YearProps>(functi
         onKeyDown={(event) => onKeyDown(event, value)}
         className={classes.yearButton}
         ownerState={ownerState}
+        {...other}
       >
         {children}
       </PickersYearButton>

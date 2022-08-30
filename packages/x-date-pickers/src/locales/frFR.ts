@@ -8,6 +8,11 @@ const views = {
   seconds: 'secondes',
 };
 
+const viewTranslation = {
+  calendar: 'calendrier',
+  clock: 'horloge',
+};
+
 const frFRPickers: Partial<PickersLocaleText<any>> = {
   // Calendar navigation
   previousMonth: 'Mois précédent',
@@ -20,6 +25,10 @@ const frFRPickers: Partial<PickersLocaleText<any>> = {
     view === 'year'
       ? 'La vue année est ouverte, ouvrir la vue calendrier'
       : 'La vue calendrier est ouverte, ouvrir la vue année',
+  inputModeToggleButtonAriaLabel: (isKeyboardInputOpen: boolean, viewType: 'calendar' | 'clock') =>
+    isKeyboardInputOpen
+      ? `passer du champ text au ${viewTranslation[viewType]}`
+      : `passer du ${viewTranslation[viewType]} au champ text`,
 
   // DateRange placeholders
   start: 'Début',
@@ -30,6 +39,12 @@ const frFRPickers: Partial<PickersLocaleText<any>> = {
   clearButtonLabel: 'Vider',
   okButtonLabel: 'OK',
   todayButtonLabel: "Aujourd'hui",
+
+  // Toolbar titles
+  // datePickerDefaultToolbarTitle: 'Select date',
+  // dateTimePickerDefaultToolbarTitle: 'Select date & time',
+  // timePickerDefaultToolbarTitle: 'Select time',
+  // dateRangePickerDefaultToolbarTitle: 'Select date range',
 
   // Clock labels
   clockLabelText: (view, time, adapter) =>

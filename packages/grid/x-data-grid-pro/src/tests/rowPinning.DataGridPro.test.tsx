@@ -264,7 +264,10 @@ describe('<DataGridPro /> - Row pinning', () => {
 
       const [pinnedRow0, pinnedRow1, ...rows] = rowsData;
 
-      const getRowId = React.useCallback((row) => row.productId, []);
+      const getRowId = React.useCallback<NonNullable<DataGridProProps['getRowId']>>(
+        (row) => row.productId,
+        [],
+      );
 
       return (
         <div style={{ width: 302, height: 300 }}>
@@ -761,5 +764,16 @@ describe('<DataGridPro /> - Row pinning', () => {
     render(<BaselineTestCase rowCount={rowCount} colCount={1} />);
 
     expect(screen.getByRole('grid').getAttribute('aria-rowcount')).to.equal(`${rowCount + 1}`); // +1 for header row
+  });
+
+  // https://github.com/mui/mui-x/issues/5845
+  it('should work with `getCellClassName` when `rows=[]`', () => {
+    const className = 'test-class-name';
+    render(
+      <BaselineTestCase rowCount={2} colCount={1} rows={[]} getRowClassName={() => className} />,
+    );
+
+    expect(getRowById(0)!.classList.contains(className)).to.equal(true);
+    expect(getRowById(1)!.classList.contains(className)).to.equal(true);
   });
 });

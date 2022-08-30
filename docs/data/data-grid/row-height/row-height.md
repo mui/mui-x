@@ -11,7 +11,7 @@ title: Data Grid - Row height
 By default, the rows have a height of 52 pixels.
 This matches the normal height in the [Material Design guidelines](https://material.io/components/data-tables).
 
-Use the the `rowHeight` prop to change this default value, as shown below:
+Use the `rowHeight` prop to change this default value, as shown below:
 
 {{"demo": "DenseHeightGrid.js", "bg": "inline"}}
 

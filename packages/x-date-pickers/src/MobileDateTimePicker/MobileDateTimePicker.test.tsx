@@ -126,7 +126,7 @@ describe('<MobileDateTimePicker />', () => {
       expect(onChange.lastCall.args[0]).toEqualDateTime(new Date(2010, 0, 1));
 
       // Change the date
-      userEvent.mousePress(screen.getByLabelText('Jan 15, 2010'));
+      userEvent.mousePress(screen.getByRole('gridcell', { name: '15' }));
       expect(onChange.callCount).to.equal(2);
       expect(onChange.lastCall.args[0]).toEqualDateTime(new Date(2010, 0, 15));
 
@@ -171,7 +171,7 @@ describe('<MobileDateTimePicker />', () => {
       openPicker({ type: 'date-time', variant: 'mobile' });
 
       // Change the date (already tested)
-      userEvent.mousePress(screen.getByLabelText('Jan 15, 2018'));
+      userEvent.mousePress(screen.getByRole('gridcell', { name: '15' }));
 
       // Change the hours (already tested)
       const hourClockEvent = getClockTouchEvent();
@@ -212,7 +212,7 @@ describe('<MobileDateTimePicker />', () => {
       openPicker({ type: 'date-time', variant: 'mobile' });
 
       // Change the date (already tested)
-      userEvent.mousePress(screen.getByLabelText('Jan 15, 2018'));
+      userEvent.mousePress(screen.getByRole('gridcell', { name: '15' }));
 
       // Change the hours (already tested)
       const hourClockEvent = getClockTouchEvent();
@@ -249,7 +249,7 @@ describe('<MobileDateTimePicker />', () => {
       openPicker({ type: 'date-time', variant: 'mobile' });
 
       // Change the date (already tested)
-      userEvent.mousePress(screen.getByLabelText('Jan 15, 2018'));
+      userEvent.mousePress(screen.getByRole('gridcell', { name: '15' }));
 
       // Change the hours (already tested)
       const hourClockEvent = getClockTouchEvent();

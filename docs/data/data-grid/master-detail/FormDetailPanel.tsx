@@ -11,7 +11,7 @@ import {
   GridColumns,
   GridRowModelUpdate,
   useGridApiContext,
-  DataGridProProps,
+  GridRowParams,
 } from '@mui/x-data-grid-pro';
 import { randomEmail } from '@mui/x-data-grid-generator';
 
@@ -127,8 +127,10 @@ const rows = [
 type Customer = typeof rows[number];
 
 export default function FormDetailPanel() {
-  const getDetailPanelContent: DataGridProProps['getDetailPanelContent'] =
-    React.useCallback(({ row }) => <DetailPanelContent row={row} />, []);
+  const getDetailPanelContent = React.useCallback(
+    ({ row }: GridRowParams) => <DetailPanelContent row={row} />,
+    [],
+  );
 
   const getDetailPanelHeight = React.useCallback(() => 240, []);
 
