@@ -3,7 +3,7 @@ import { GridPipeProcessor, useGridRegisterPipeProcessor } from '../../core/pipe
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 import { isDeepEqual } from '../../../utils/utils';
-import { unwrapGroupingColumnModel, hasGroupPath } from './useGridColumnGrouping';
+import { unwrapGroupingColumnModel, hasGroupPath } from './gridColumnGroupsUtils';
 
 export const useGridColumnGroupingPreProcessors = (
   apiRef: React.MutableRefObject<GridApiCommunity>,
