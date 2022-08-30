@@ -354,12 +354,7 @@ describe('<DataGrid /> - Selection', () => {
       userEvent.mousePress(getCell(3, 1));
       expect(getSelectedRowIds()).to.deep.equal([3]);
 
-      const cell = getCell(1, 1);
-      // TODO: use `userEvent.mousePress` as soon as it allows to pass `shiftKey`
-      fireEvent.mouseDown(cell, { shiftKey: true });
-      fireEvent.mouseUp(cell, { shiftKey: true });
-      fireEvent.click(cell, { shiftKey: true });
-
+      userEvent.mousePress(getCell(1, 1), { shiftKey: true });
       expect(getSelectedRowIds()).to.deep.equal([1, 2, 3]);
       fireEvent.keyDown(getCell(1, 1), { key: 'ArrowDown', shiftKey: true });
       expect(getSelectedRowIds()).to.deep.equal([2, 3]);
