@@ -6,7 +6,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { Unstable_SingleInputDateRangeField as SingleInputDateRangeField } from '@mui/x-date-pickers-pro/SingleInputDateRangeField';
 
-export default function DateFieldValue() {
+export default function DateRangeFieldValue() {
   const [value, setValue] = React.useState(() => [
     new Date(),
     addWeeks(new Date(), 1),
