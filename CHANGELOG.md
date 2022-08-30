@@ -585,7 +585,7 @@ We'd like to offer a big thanks to the 15 contributors who made this release pos
 
   **MonthPicker**: The prop `onMonthChange` has been removed, you can use `onChange` instead since every change is a month change
 
-  **YearPicker**: The prop `onYearPicker` has been removed, you can use `onChange` instead since every change is a year change
+  **YearPicker**: The prop `onYearChange` has been removed, you can use `onChange` instead since every change is a year change
 
   **DayPicker**: The prop `isDateDisabled` has been removed, you can now use the same validation props as for the other components (`maxDate`, `minDate`, `shouldDisableDate`, `disableFuture` and `disablePast`)
 
