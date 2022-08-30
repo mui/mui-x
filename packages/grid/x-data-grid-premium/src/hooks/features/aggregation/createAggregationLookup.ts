@@ -47,6 +47,19 @@ const getAggregationCellValue = ({
     if (aggregationRowsScope === 'filtered' && filteredRowsLookup[rowId] === false) {
       return;
     }
+
+    // If the row is a group, we want to aggregate based on its children
+    // For instance in the following tree, we want the aggregated values of A to be based on A.A, A.B.A and A.B.B but not A.B
+    // A
+    //   A.A
+    //   A.B
+    //     A.B.A
+    //     A.B.B
+    const rowNode = apiRef.current.getRowNode(rowId)!;
+    if (rowNode.children?.length) {
+      return;
+    }
+
     values.push(apiRef.current.getCellValue(rowId, field));
   });
 
