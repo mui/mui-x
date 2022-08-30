@@ -196,7 +196,7 @@ export const addFooterRows = ({
 /**
  * Compares two sets of aggregation rules to determine if they are equal or not.
  */
-export const hasAggregationRulesChanged = (
+export const areAggregationRulesEqual = (
   previousValue: GridAggregationRules | undefined,
   newValue: GridAggregationRules,
 ) => {
@@ -204,7 +204,7 @@ export const hasAggregationRulesChanged = (
   const newFields = Object.keys(newValue);
 
   if (!isDeepEqual(previousFields, newFields)) {
-    return true;
+    return false;
   }
 
   return newFields.some((field) => {
@@ -212,14 +212,14 @@ export const hasAggregationRulesChanged = (
     const newRule = newValue[field];
 
     if (previousRule?.aggregationFunction !== newRule?.aggregationFunction) {
-      return true;
+      return false;
     }
 
     if (previousRule?.aggregationFunctionName !== newRule?.aggregationFunctionName) {
-      return true;
+      return false;
     }
 
-    return false;
+    return true;
   });
 };
 

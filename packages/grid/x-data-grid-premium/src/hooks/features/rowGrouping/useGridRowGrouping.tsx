@@ -26,7 +26,7 @@ import {
   mergeStateWithRowGroupingModel,
   setStrategyAvailability,
   getGroupingRules,
-  hasGroupingRulesChanged,
+  areGroupingRulesEqual,
 } from './gridRowGroupingUtils';
 import { GridRowGroupingApi } from './gridRowGroupingInterfaces';
 import { GridRowGroupableColumnMenuItems } from '../../../components/GridRowGroupableColumnMenuItems';
@@ -265,7 +265,7 @@ export const useGridRowGrouping = (
       columnsLookup: gridColumnLookupSelector(apiRef),
     });
 
-    if (hasGroupingRulesChanged(rulesOnLastRowTreeCreation, groupingRules)) {
+    if (!areGroupingRulesEqual(rulesOnLastRowTreeCreation, groupingRules)) {
       apiRef.current.unstable_caches.rowGrouping.rulesOnLastRowTreeCreation = groupingRules;
       apiRef.current.unstable_requestPipeProcessorsApplication('hydrateColumns');
       setStrategyAvailability(apiRef, props.disableRowGrouping);

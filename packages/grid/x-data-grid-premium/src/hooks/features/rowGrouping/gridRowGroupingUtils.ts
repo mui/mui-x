@@ -211,25 +211,25 @@ export const getGroupingRules = ({
 /**
  * Compares two sets of grouping rules to determine if they are equal or not.
  */
-export const hasGroupingRulesChanged = (
+export const areGroupingRulesEqual = (
   previousValue: GridGroupingRules | undefined = [],
   newValue: GridGroupingRules,
 ) => {
   if (previousValue.length !== newValue.length) {
-    return true;
+    return false;
   }
 
   return newValue.some((newRule, newRuleIndex) => {
-    const previousRule = previousValue?.[newRuleIndex];
+    const previousRule = previousValue[newRuleIndex];
 
-    if (previousRule?.groupingValueGetter !== newRule?.groupingValueGetter) {
-      return true;
+    if (previousRule.groupingValueGetter !== newRule.groupingValueGetter) {
+      return false;
     }
 
-    if (previousRule?.field !== newRule?.field) {
-      return true;
+    if (previousRule.field !== newRule.field) {
+      return false;
     }
 
-    return false;
+    return true;
   });
 };

@@ -1,5 +1,4 @@
-import { GridKeyValue } from '@mui/x-data-grid';
-import { GridGroupingValueGetterParams } from '../../../models/gridGroupingValueGetterParams';
+import { GridColDef } from '@mui/x-data-grid';
 
 export type GridRowGroupingModel = string[];
 
@@ -46,9 +45,7 @@ export interface GridRowGroupingApi {
 
 export interface GridGroupingRule<R = any, V = any> {
   field: string;
-  groupingValueGetter?: (
-    params: GridGroupingValueGetterParams<V, R>,
-  ) => GridKeyValue | null | undefined;
+  groupingValueGetter?: GridColDef<R, V>['groupingValueGetter'];
 }
 
 export type GridGroupingRules<R = any> = GridGroupingRule<R>[];
