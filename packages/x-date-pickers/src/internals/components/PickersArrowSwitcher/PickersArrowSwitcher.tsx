@@ -111,6 +111,18 @@ export const PickersArrowSwitcher = React.forwardRef(function PickersArrowSwitch
     ownerState: undefined,
   });
 
+  const leftArrowButton = (
+    <LeftArrowButton {...leftArrowButtonProps}>
+      <LeftArrowIcon {...leftArrowIconProps} />
+    </LeftArrowButton>
+  );
+
+  const rightArrowButton = (
+    <RightArrowButton {...rightArrowButtonProps}>
+      <RightArrowIcon {...rightArrowIconProps} />
+    </RightArrowButton>
+  );
+
   return (
     <PickersArrowSwitcherRoot
       ref={ref}
@@ -118,13 +130,7 @@ export const PickersArrowSwitcher = React.forwardRef(function PickersArrowSwitch
       ownerState={ownerState}
       {...other}
     >
-      <LeftArrowButton {...leftArrowButtonProps}>
-        {isRtl ? (
-          <RightArrowIcon {...rightArrowIconProps} />
-        ) : (
-          <LeftArrowIcon {...leftArrowIconProps} />
-        )}
-      </LeftArrowButton>
+      {isRtl ? rightArrowButton : leftArrowButton}
       {children ? (
         <Typography variant="subtitle1" component="span">
           {children}
@@ -132,13 +138,7 @@ export const PickersArrowSwitcher = React.forwardRef(function PickersArrowSwitch
       ) : (
         <PickersArrowSwitcherSpacer className={classes.spacer} ownerState={ownerState} />
       )}
-      <RightArrowButton {...rightArrowButtonProps}>
-        {isRtl ? (
-          <LeftArrowIcon {...leftArrowIconProps} />
-        ) : (
-          <RightArrowIcon {...rightArrowIconProps} />
-        )}
-      </RightArrowButton>
+      {isRtl ? leftArrowButton : rightArrowButton}
     </PickersArrowSwitcherRoot>
   );
 });

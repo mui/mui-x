@@ -14,6 +14,26 @@ import { StaticDatePicker } from '@mui/x-date-pickers/StaticDatePicker';
 import { StaticTimePicker } from '@mui/x-date-pickers/StaticTimePicker';
 import { StaticDateRangePicker } from '@mui/x-date-pickers-pro/StaticDateRangePicker';
 
+const components = {
+  LeftArrowIcon: ArrowLeft,
+  RightArrowIcon: ArrowRight,
+};
+
+const componentsProps = {
+  leftArrowButton: {
+    size: 'medium',
+  },
+  rightArrowButton: {
+    size: 'medium',
+  },
+  leftArrowIcon: {
+    fontSize: 'large',
+  },
+  rightArrowIcon: {
+    fontSize: 'large',
+  },
+};
+
 export default function ArrowSwitcherComponent() {
   const [date, setDate] = React.useState(() => dayjs());
   const [time, setTime] = React.useState(() => dayjs());
@@ -23,26 +43,6 @@ export default function ArrowSwitcherComponent() {
   ]);
 
   const [currentComponent, setCurrentComponent] = React.useState('date');
-
-  const components = {
-    LeftArrowIcon: ArrowLeft,
-    RightArrowIcon: ArrowRight,
-  };
-
-  const componentsProps = {
-    leftArrowButton: {
-      size: 'medium',
-    },
-    rightArrowButton: {
-      size: 'medium',
-    },
-    leftArrowIcon: {
-      fontSize: 'large',
-    },
-    rightArrowIcon: {
-      fontSize: 'large',
-    },
-  };
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>

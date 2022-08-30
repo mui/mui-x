@@ -15,6 +15,26 @@ import { StaticTimePicker } from '@mui/x-date-pickers/StaticTimePicker';
 import { StaticDateRangePicker } from '@mui/x-date-pickers-pro/StaticDateRangePicker';
 import { DateRange } from '@mui/x-date-pickers-pro';
 
+const components: DatePickerProps<any, any>['components'] = {
+  LeftArrowIcon: ArrowLeft,
+  RightArrowIcon: ArrowRight,
+};
+
+const componentsProps: DatePickerProps<any, any>['componentsProps'] = {
+  leftArrowButton: {
+    size: 'medium',
+  },
+  rightArrowButton: {
+    size: 'medium',
+  },
+  leftArrowIcon: {
+    fontSize: 'large',
+  },
+  rightArrowIcon: {
+    fontSize: 'large',
+  },
+};
+
 export default function ArrowSwitcherComponent() {
   const [date, setDate] = React.useState<Dayjs | null>(() => dayjs());
   const [time, setTime] = React.useState<Dayjs | null>(() => dayjs());
@@ -25,32 +45,6 @@ export default function ArrowSwitcherComponent() {
   const [currentComponent, setCurrentComponent] = React.useState<
     'date' | 'time' | 'dateRange'
   >('date');
-
-  const components: Pick<
-    NonNullable<DatePickerProps<any, any>['components']>,
-    'LeftArrowIcon' | 'RightArrowIcon'
-  > = {
-    LeftArrowIcon: ArrowLeft,
-    RightArrowIcon: ArrowRight,
-  };
-
-  const componentsProps: Pick<
-    NonNullable<DatePickerProps<any, any>['componentsProps']>,
-    'leftArrowButton' | 'rightArrowButton' | 'leftArrowIcon' | 'rightArrowIcon'
-  > = {
-    leftArrowButton: {
-      size: 'medium',
-    },
-    rightArrowButton: {
-      size: 'medium',
-    },
-    leftArrowIcon: {
-      fontSize: 'large',
-    },
-    rightArrowIcon: {
-      fontSize: 'large',
-    },
-  };
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
