@@ -281,9 +281,7 @@ describe('<DataGridPremium /> - Aggregation', () => {
   describe('Tree Data', () => {
     const TreeDataTest = (props: Omit<DataGridPremiumProps, 'columns'>) => {
       return (
-        <div style={{ width: 300, height: 300 }}>
-          <DataGridPremium
-            {...baselineProps}
+          <Test
             treeData
             defaultGroupingExpansionDepth={-1}
             columns={[
@@ -304,12 +302,8 @@ describe('<DataGridPremium /> - Aggregation', () => {
                 },
               },
             }}
-            experimentalFeatures={{
-              aggregation: true,
-            }}
             {...props}
           />
-        </div>
       );
     };
 
