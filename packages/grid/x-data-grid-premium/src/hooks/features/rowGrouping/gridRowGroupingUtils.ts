@@ -219,7 +219,7 @@ export const areGroupingRulesEqual = (
     return false;
   }
 
-  return newValue.some((newRule, newRuleIndex) => {
+  return newValue.every((newRule, newRuleIndex) => {
     const previousRule = previousValue[newRuleIndex];
 
     if (previousRule.groupingValueGetter !== newRule.groupingValueGetter) {
