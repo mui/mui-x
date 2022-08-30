@@ -203,7 +203,7 @@ export const wrapColumnWithAggregationValue = ({
     // TODO: Add custom root id
     const groupId = cellAggregationPosition === 'inline' ? id : rowNode.parent ?? '';
 
-    const aggregationResult = gridAggregationLookupSelector(apiRef)?.[groupId]?.[field];
+    const aggregationResult = gridAggregationLookupSelector(apiRef)[groupId]?.[field];
     if (!aggregationResult || aggregationResult.position !== cellAggregationPosition) {
       return null;
     }

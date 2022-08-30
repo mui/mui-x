@@ -278,6 +278,91 @@ describe('<DataGridPremium /> - Aggregation', () => {
     });
   });
 
+  describe('Tree Data', () => {
+    const TreeDataTest = (props: Omit<DataGridPremiumProps, 'columns'>) => {
+      return (
+        <div style={{ width: 300, height: 300 }}>
+          <DataGridPremium
+            treeData
+            defaultGroupingExpansionDepth={-1}
+            columns={[
+              {
+                field: 'value',
+                headerName: 'Value',
+                type: 'number',
+              },
+            ]}
+            getTreeDataPath={(row) => row.hierarchy}
+            getRowId={(row) => row.hierarchy.join('/')}
+            groupingColDef={{ headerName: 'Files', width: 350 }}
+            getAggregationPosition={(rowNode) => (rowNode != null ? 'inline' : null)}
+            initialState={{
+              aggregation: {
+                model: {
+                  value: 'sum',
+                },
+              },
+            }}
+            experimentalFeatures={{
+              aggregation: true,
+            }}
+            {...props}
+          />
+        </div>
+      );
+    };
+
+    it('should use aggregated values instead of provided values on data groups', () => {
+      render(
+        <TreeDataTest
+          rows={[
+            {
+              hierarchy: ['A'],
+              value: 10,
+            },
+            {
+              hierarchy: ['A', 'A'],
+              value: 1,
+            },
+            {
+              hierarchy: ['A', 'B'],
+              value: 2,
+            },
+          ]}
+        />,
+      );
+
+      expect(getColumnValues(1)).to.deep.equal(['3' /* Agg "A" */, '1', '2']);
+    });
+
+    it('should only aggregate based on leaves', () => {
+      render(
+        <TreeDataTest
+          rows={[
+            {
+              hierarchy: ['A'],
+              value: 2,
+            },
+            {
+              hierarchy: ['A', 'A'],
+              value: 2,
+            },
+            {
+              hierarchy: ['A', 'A', 'A'],
+              value: 1,
+            },
+            {
+              hierarchy: ['A', 'A', 'B'],
+              value: 1,
+            },
+          ]}
+        />,
+      );
+
+      expect(getColumnValues(1)).to.deep.equal(['2' /* Agg "A" */, '2' /* Agg "A.A" */, '1', '1']);
+    });
+  });
+
   describe('Column Menu', () => {
     it('should render select on aggregable column', () => {
       render(<Test />);
