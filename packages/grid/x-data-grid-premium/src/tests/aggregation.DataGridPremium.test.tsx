@@ -281,29 +281,29 @@ describe('<DataGridPremium /> - Aggregation', () => {
   describe('Tree Data', () => {
     const TreeDataTest = (props: Omit<DataGridPremiumProps, 'columns'>) => {
       return (
-          <Test
-            treeData
-            defaultGroupingExpansionDepth={-1}
-            columns={[
-              {
-                field: 'value',
-                headerName: 'Value',
-                type: 'number',
+        <Test
+          treeData
+          defaultGroupingExpansionDepth={-1}
+          columns={[
+            {
+              field: 'value',
+              headerName: 'Value',
+              type: 'number',
+            },
+          ]}
+          getTreeDataPath={(row) => row.hierarchy}
+          getRowId={(row) => row.hierarchy.join('/')}
+          groupingColDef={{ headerName: 'Files', width: 350 }}
+          getAggregationPosition={(rowNode) => (rowNode != null ? 'inline' : null)}
+          initialState={{
+            aggregation: {
+              model: {
+                value: 'sum',
               },
-            ]}
-            getTreeDataPath={(row) => row.hierarchy}
-            getRowId={(row) => row.hierarchy.join('/')}
-            groupingColDef={{ headerName: 'Files', width: 350 }}
-            getAggregationPosition={(rowNode) => (rowNode != null ? 'inline' : null)}
-            initialState={{
-              aggregation: {
-                model: {
-                  value: 'sum',
-                },
-              },
-            }}
-            {...props}
-          />
+            },
+          }}
+          {...props}
+        />
       );
     };
 
