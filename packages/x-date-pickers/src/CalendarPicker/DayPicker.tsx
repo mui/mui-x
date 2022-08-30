@@ -254,24 +254,26 @@ export function DayPicker<TDate>(props: DayPickerProps<TDate>) {
   const slideNodeRef = React.useMemo(() => React.createRef<HTMLDivElement>(), [transitionKey]);
   const startOfCurrentWeek = utils.startOfWeek(now);
 
-  let focusableDay: TDate | null = internalFocusedDay;
-  const startOfMonth = utils.startOfMonth(currentMonth);
-  const endOfMonth = utils.endOfMonth(currentMonth);
-  if (
-    isDateDisabled(focusableDay) ||
-    utils.isAfterDay(focusableDay, endOfMonth) ||
-    utils.isBeforeDay(focusableDay, startOfMonth)
-  ) {
-    focusableDay = findClosestEnabledDate({
-      utils,
-      date: focusableDay,
-      minDate: startOfMonth,
-      maxDate: endOfMonth,
-      disablePast,
-      disableFuture,
-      isDateDisabled,
-    });
-  }
+  const focusableDay: TDate | null = React.useMemo(() => {
+    const startOfMonth = utils.startOfMonth(currentMonth);
+    const endOfMonth = utils.endOfMonth(currentMonth);
+    if (
+      isDateDisabled(internalFocusedDay) ||
+      utils.isAfterDay(internalFocusedDay, endOfMonth) ||
+      utils.isBeforeDay(internalFocusedDay, startOfMonth)
+    ) {
+      return findClosestEnabledDate({
+        utils,
+        date: internalFocusedDay,
+        minDate: startOfMonth,
+        maxDate: endOfMonth,
+        disablePast,
+        disableFuture,
+        isDateDisabled,
+      });
+    }
+    return internalFocusedDay;
+  }, [currentMonth, disableFuture, disablePast, internalFocusedDay, isDateDisabled, utils]);
 
   return (
     <div role="grid" aria-labelledby={gridLabelId}>
