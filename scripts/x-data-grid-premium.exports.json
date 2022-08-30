@@ -134,6 +134,7 @@
   { "name": "GridColumnGroupIdentifier", "kind": "TypeAlias" },
   { "name": "GridColumnGroupingModel", "kind": "TypeAlias" },
   { "name": "gridColumnGroupingSelector", "kind": "Variable" },
+  { "name": "gridColumnGroupsHeaderStructureSelector", "kind": "Variable" },
   { "name": "gridColumnGroupsLookupSelector", "kind": "Variable" },
   { "name": "GridColumnHeaderClassFn", "kind": "TypeAlias" },
   { "name": "GridColumnHeaderClassNamePropType", "kind": "TypeAlias" },

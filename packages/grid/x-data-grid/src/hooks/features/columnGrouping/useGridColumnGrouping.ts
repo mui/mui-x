@@ -2,15 +2,13 @@ import * as React from 'react';
 import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { GridStateInitializer } from '../../utils/useGridInitializeState';
-import {
-  GridColumnNode,
-  isLeaf,
-} from '../../../models/gridColumnGrouping';
+import { GridColumnNode, isLeaf } from '../../../models/gridColumnGrouping';
 import { gridColumnGroupsLookupSelector } from './gridColumnGroupsSelector';
 import { gridColumnLookupSelector } from '../columns/gridColumnsSelector';
 import { GridColumnGroupLookup } from './gridColumnGroupsInterfaces';
 import { GridColumnGroupingApi } from '../../../models/api/gridColumnGroupingApi';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
+import { getColumnGroupsHeaderStructure, unwrapGroupingColumnModel } from './gridColumnGroupsUtils';
 
 const createGroupLookup = (columnGroupingModel: GridColumnNode[]): GridColumnGroupLookup => {
   let groupLookup: GridColumnGroupLookup = {};
@@ -40,13 +38,26 @@ const createGroupLookup = (columnGroupingModel: GridColumnNode[]): GridColumnGro
 
   return { ...groupLookup };
 };
+
 export const columnGroupsStateInitializer: GridStateInitializer<
   Pick<DataGridProcessedProps, 'columnGroupingModel'>
 > = (state, props) => {
   const groupLookup = createGroupLookup(props.columnGroupingModel ?? []);
+  const unwrappedGroupingModel = unwrapGroupingColumnModel(props.columnGroupingModel ?? []);
+
+  const orderedFields = state.columns?.all ?? [];
+
+  const columnGroupsHeaderStructure = getColumnGroupsHeaderStructure(
+    orderedFields as string[],
+    unwrappedGroupingModel,
+  );
   return {
     ...state,
-    columnGrouping: { lookup: groupLookup, groupCollapsedModel: {} },
+    columnGrouping: {
+      lookup: groupLookup,
+      groupCollapsedModel: {},
+      headerStructure: columnGroupsHeaderStructure,
+    },
   };
 };
 

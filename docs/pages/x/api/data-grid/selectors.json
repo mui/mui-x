@@ -26,6 +26,12 @@
     "supportsApiRef": true
   },
   {
+    "name": "gridColumnGroupsHeaderStructureSelector",
+    "returnType": "GridGroupingStructure[][]",
+    "description": "",
+    "supportsApiRef": true
+  },
+  {
     "name": "gridColumnGroupsLookupSelector",
     "returnType": "GridColumnGroupLookup",
     "description": "",

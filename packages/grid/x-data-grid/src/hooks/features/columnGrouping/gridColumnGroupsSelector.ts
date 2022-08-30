@@ -11,3 +11,8 @@ export const gridColumnGroupsLookupSelector = createSelector(
   gridColumnGroupingSelector,
   (columnGrouping) => columnGrouping.lookup,
 );
+
+export const gridColumnGroupsHeaderStructureSelector = createSelector(
+  gridColumnGroupingSelector,
+  (columnGrouping) => columnGrouping.headerStructure,
+);

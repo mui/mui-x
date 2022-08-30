@@ -5,6 +5,8 @@ import {
   isLeaf,
 } from '../../../models/gridColumnGrouping';
 import { GridColDef, GridStateColDef } from '../../../models/colDef';
+import { isDeepEqual } from '../../../utils/utils';
+import { GridGroupingStructure } from './gridColumnGroupsInterfaces';
 
 export function hasGroupPath(
   lookupElement: GridColDef | GridStateColDef,
@@ -64,4 +66,58 @@ export const unwrapGroupingColumnModel = (
   });
 
   return unwrappedSubTree;
+};
+
+export const getColumnGroupsHeaderStructure = (
+  orderedColumns: string[],
+  unwrappedGroupingModel: UnwrappedGroupingModel,
+) => {
+  const getParents = (field: string) => unwrappedGroupingModel[field] ?? [];
+
+  const groupingHeaderStructure: GridGroupingStructure[][] = [];
+  const maxDepth = Math.max(...orderedColumns.map((field) => getParents(field).length));
+
+  const haveSameParents = (field1: string, field2: string, depth: number) =>
+    isDeepEqual(getParents(field1).slice(0, depth + 1), getParents(field2).slice(0, depth + 1));
+
+  for (let depth = 0; depth < maxDepth; depth += 1) {
+    const depthStructure = orderedColumns.reduce((structure, newField) => {
+      const groupId = getParents(newField)[depth] ?? null;
+      if (structure.length === 0) {
+        return [
+          {
+            columnFields: [newField],
+            groupId,
+          },
+        ];
+      }
+
+      const lastGroup = structure[structure.length - 1];
+      const prevField = lastGroup.columnFields[lastGroup.columnFields.length - 1];
+      const prevGroupId = lastGroup.groupId;
+
+      if (prevGroupId !== groupId || !haveSameParents(prevField, newField, depth)) {
+        // It's a new group
+        return [
+          ...structure,
+          {
+            columnFields: [newField],
+            groupId,
+          },
+        ];
+      }
+
+      // It extends the previous group
+      return [
+        ...structure.slice(0, structure.length - 1),
+        {
+          columnFields: [...lastGroup.columnFields, newField],
+          groupId,
+        },
+      ];
+    }, [] as GridGroupingStructure[]);
+    groupingHeaderStructure.push(depthStructure);
+  }
+
+  return groupingHeaderStructure;
 };
