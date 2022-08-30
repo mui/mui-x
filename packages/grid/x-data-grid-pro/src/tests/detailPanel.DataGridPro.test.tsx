@@ -488,11 +488,11 @@ describe('<DataGridPro /> - Detail panel', () => {
     expect(screen.queryByRole('columnheader', { name: /detail panel toggle/i })).not.to.equal(null);
   });
 
-  it('should add the MuiDataGrid-row--expanded class to the expanded row', () => {
+  it('should add the MuiDataGrid-row--detailPanelExpanded class to the expanded row', () => {
     render(<TestCase getDetailPanelContent={({ id }) => (id === 0 ? <div /> : null)} />);
-    expect(getRow(0)).not.to.have.class(gridClasses['row--expanded']);
+    expect(getRow(0)).not.to.have.class(gridClasses['row--detailPanelExpanded']);
     fireEvent.click(screen.getAllByRole('button', { name: 'Expand' })[0]);
-    expect(getRow(0)).to.have.class(gridClasses['row--expanded']);
+    expect(getRow(0)).to.have.class(gridClasses['row--detailPanelExpanded']);
   });
 
   describe('prop: onDetailPanelsExpandedRowIds', () => {

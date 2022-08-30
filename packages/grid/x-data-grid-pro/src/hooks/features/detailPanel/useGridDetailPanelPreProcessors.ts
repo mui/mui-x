@@ -53,7 +53,7 @@ export const useGridDetailPanelPreProcessors = (
         return classes;
       }
 
-      return [...classes, 'MuiDataGrid-row--expanded'];
+      return [...classes, 'MuiDataGrid-row--detailPanelExpanded'];
     },
     [apiRef, props.getDetailPanelContent],
   );

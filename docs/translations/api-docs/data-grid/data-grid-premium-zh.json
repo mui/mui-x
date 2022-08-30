@@ -562,7 +562,7 @@
       "nodeName": "the row",
       "conditions": "it has dynamic row height"
     },
-    "row--expanded": {
+    "row--detailPanelExpanded": {
       "description": "Styles applied to {{nodeName}} if {{conditions}}.",
       "nodeName": "the row",
       "conditions": "its detail panel is open"
