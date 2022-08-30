@@ -315,8 +315,6 @@ export const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
     ],
   );
 
-  // TODO: Use same behavior as `handleDateMonthChange` to avoid selecting a date in another year.
-  // Needs startOfYear / endOfYear methods in adapter.
   const handleDateYearChange = React.useCallback<YearPickerProps<TDate>['onChange']>(
     (newDate, selectionState) => {
       const startOfYear = utils.startOfYear(newDate);

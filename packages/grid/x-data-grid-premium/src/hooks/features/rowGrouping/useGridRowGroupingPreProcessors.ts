@@ -34,6 +34,7 @@ import {
   isGroupingColumn,
   setStrategyAvailability,
   getCellGroupingCriteria,
+  getGroupingRules,
 } from './gridRowGroupingUtils';
 import { GridApiPremium } from '../../../models/gridApiPremium';
 
@@ -137,19 +138,23 @@ export const useGridRowGroupingPreProcessors = (
 
   const createRowTreeForRowGrouping = React.useCallback<GridStrategyProcessor<'rowTreeCreation'>>(
     (params) => {
-      const rowGroupingModel = gridRowGroupingSanitizedModelSelector(apiRef);
+      const sanitizedRowGroupingModel = gridRowGroupingSanitizedModelSelector(apiRef);
       const columnsLookup = gridColumnLookupSelector(apiRef);
-      apiRef.current.unstable_caches.rowGrouping.sanitizedModelOnLastRowTreeCreation =
-        rowGroupingModel;
+      const groupingRules = getGroupingRules({
+        sanitizedRowGroupingModel,
+        columnsLookup,
+      });
+      apiRef.current.unstable_caches.rowGrouping.rulesOnLastRowTreeCreation = groupingRules;
 
       const getRowTreeBuilderNode = (rowId: GridRowId) => {
         const row = params.dataRowIdToModelLookup[rowId];
-        const parentPath = rowGroupingModel
-          .map((groupingField) =>
+        const parentPath = groupingRules
+          .map((groupingRule) =>
             getCellGroupingCriteria({
               row,
               id: rowId,
-              colDef: columnsLookup[groupingField],
+              groupingRule,
+              colDef: columnsLookup[groupingRule.field],
             }),
           )
           .filter((cell) => cell.key != null) as RowTreeBuilderGroupingCriterion[];

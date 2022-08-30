@@ -10,10 +10,18 @@ import {
   GridColDef,
   GridKeyValue,
 } from '@mui/x-data-grid-pro';
-import { passFilterLogic, GridAggregatedFilterItemApplier } from '@mui/x-data-grid-pro/internals';
+import {
+  passFilterLogic,
+  GridAggregatedFilterItemApplier,
+  GridColumnRawLookup,
+} from '@mui/x-data-grid-pro/internals';
 import { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
 import { GridGroupingValueGetterParams } from '../../../models/gridGroupingValueGetterParams';
-import { GridRowGroupingModel } from './gridRowGroupingInterfaces';
+import {
+  GridGroupingRule,
+  GridGroupingRules,
+  GridRowGroupingModel,
+} from './gridRowGroupingInterfaces';
 import { GridStatePremium } from '../../../models/gridStatePremium';
 import { gridRowGroupingSanitizedModelSelector } from './gridRowGroupingSelector';
 import { GridApiPremium } from '../../../models/gridApiPremium';
@@ -206,17 +214,19 @@ export const getCellGroupingCriteria = ({
   row,
   id,
   colDef,
+  groupingRule,
 }: {
   row: GridRowModel;
   id: GridRowId;
   colDef: GridColDef;
+  groupingRule: GridGroupingRule;
 }) => {
   let key: GridKeyValue | null | undefined;
-  if (colDef.groupingValueGetter) {
+  if (groupingRule.groupingValueGetter) {
     const groupingValueGetterParams: GridGroupingValueGetterParams = {
       colDef,
-      field: colDef.field,
-      value: row[colDef.field],
+      field: groupingRule.field,
+      value: row[groupingRule.field],
       id,
       row,
       rowNode: {
@@ -224,13 +234,51 @@ export const getCellGroupingCriteria = ({
         id,
       },
     };
-    key = colDef.groupingValueGetter(groupingValueGetterParams);
+    key = groupingRule.groupingValueGetter(groupingValueGetterParams);
   } else {
-    key = row[colDef.field] as GridKeyValue | null | undefined;
+    key = row[groupingRule.field] as GridKeyValue | null | undefined;
   }
 
   return {
     key,
-    field: colDef.field,
+    field: groupingRule.field,
   };
+};
+
+export const getGroupingRules = ({
+  sanitizedRowGroupingModel,
+  columnsLookup,
+}: {
+  sanitizedRowGroupingModel: GridRowGroupingModel;
+  columnsLookup: GridColumnRawLookup;
+}): GridGroupingRules =>
+  sanitizedRowGroupingModel.map((field) => ({
+    field,
+    groupingValueGetter: columnsLookup[field]?.groupingValueGetter,
+  }));
+
+/**
+ * Compares two sets of grouping rules to determine if they are equal or not.
+ */
+export const areGroupingRulesEqual = (
+  previousValue: GridGroupingRules | undefined = [],
+  newValue: GridGroupingRules,
+) => {
+  if (previousValue.length !== newValue.length) {
+    return false;
+  }
+
+  return newValue.every((newRule, newRuleIndex) => {
+    const previousRule = previousValue[newRuleIndex];
+
+    if (previousRule.groupingValueGetter !== newRule.groupingValueGetter) {
+      return false;
+    }
+
+    if (previousRule.field !== newRule.field) {
+      return false;
+    }
+
+    return true;
+  });
 };

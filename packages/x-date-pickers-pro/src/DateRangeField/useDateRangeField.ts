@@ -1,11 +1,20 @@
 import {
+  useUtils,
+  useDefaultDates,
+  parseNonNullablePickerDate,
+} from '@mui/x-date-pickers/internals';
+import {
   useField,
   FieldValueManager,
   splitFormatIntoSections,
   addPositionPropertiesToSections,
   createDateStrFromSections,
-} from '@mui/x-date-pickers/internals';
-import { DateRangeFieldSection, UseDateRangeFieldProps } from './DateRangeField.interfaces';
+} from '@mui/x-date-pickers/internals-fields';
+import {
+  DateRangeFieldSection,
+  UseDateRangeFieldDefaultizedProps,
+  UseDateRangeFieldProps,
+} from './DateRangeField.interfaces';
 import { dateRangePickerValueManager } from '../DateRangePicker/shared';
 import { DateRange } from '../internal/models';
 import { splitDateRangeSections } from './DateRangeField.utils';
@@ -125,6 +134,21 @@ export const dateRangeFieldValueManager: FieldValueManager<
   hasError: (error) => error[0] != null || error[1] != null,
 };
 
+export const useDefaultizedDateRangeFieldProps = <TInputDate, TDate, AdditionalProps extends {}>(
+  props: UseDateRangeFieldProps<TInputDate, TDate>,
+): UseDateRangeFieldDefaultizedProps<TInputDate, TDate> & AdditionalProps => {
+  const utils = useUtils<TDate>();
+  const defaultDates = useDefaultDates<TDate>();
+
+  return {
+    disablePast: false,
+    disableFuture: false,
+    ...props,
+    minDate: parseNonNullablePickerDate(utils, props.minDate, defaultDates.minDate),
+    maxDate: parseNonNullablePickerDate(utils, props.maxDate, defaultDates.maxDate),
+  } as any;
+};
+
 export const useDateRangeField = <
   TInputDate,
   TDate,
@@ -132,8 +156,10 @@ export const useDateRangeField = <
 >(
   inProps: TProps,
 ) => {
+  const props = useDefaultizedDateRangeFieldProps<TInputDate, TDate, TProps>(inProps);
+
   return useField({
-    props: inProps,
+    props,
     valueManager: dateRangePickerValueManager,
     fieldValueManager: dateRangeFieldValueManager,
     validator: validateDateRange as any,

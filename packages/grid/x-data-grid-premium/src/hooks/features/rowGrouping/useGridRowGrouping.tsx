@@ -1,12 +1,16 @@
 import * as React from 'react';
 import MuiDivider from '@mui/material/Divider';
-import { GridEventListener, useGridApiEventHandler, useGridApiMethod } from '@mui/x-data-grid-pro';
+import {
+  GridEventListener,
+  useGridApiEventHandler,
+  useGridApiMethod,
+  gridColumnLookupSelector,
+} from '@mui/x-data-grid-pro';
 import {
   useGridRegisterPipeProcessor,
   GridPipeProcessor,
   GridRestoreStatePreProcessingContext,
   GridStateInitializer,
-  isDeepEqual,
 } from '@mui/x-data-grid-pro/internals';
 import { GridApiPremium } from '../../../models/gridApiPremium';
 import {
@@ -20,6 +24,8 @@ import {
   isGroupingColumn,
   mergeStateWithRowGroupingModel,
   setStrategyAvailability,
+  getGroupingRules,
+  areGroupingRulesEqual,
 } from './gridRowGroupingUtils';
 import { GridRowGroupingApi } from './gridRowGroupingInterfaces';
 import { GridRowGroupableColumnMenuItems } from '../../../components/GridRowGroupableColumnMenuItems';
@@ -32,7 +38,7 @@ export const rowGroupingStateInitializer: GridStateInitializer<
   Pick<DataGridPremiumProcessedProps, 'rowGroupingModel' | 'initialState'>
 > = (state, props, apiRef) => {
   apiRef.current.unstable_caches.rowGrouping = {
-    sanitizedModelOnLastRowTreeCreation: [],
+    rulesOnLastRowTreeCreation: [],
   };
 
   return {
@@ -250,13 +256,17 @@ export const useGridRowGrouping = (
   const checkGroupingColumnsModelDiff = React.useCallback<
     GridEventListener<'columnsChange'>
   >(() => {
-    const rowGroupingModel = gridRowGroupingSanitizedModelSelector(apiRef);
-    const lastGroupingColumnsModelApplied =
-      apiRef.current.unstable_caches.rowGrouping.sanitizedModelOnLastRowTreeCreation;
+    const sanitizedRowGroupingModel = gridRowGroupingSanitizedModelSelector(apiRef);
+    const rulesOnLastRowTreeCreation =
+      apiRef.current.unstable_caches.rowGrouping.rulesOnLastRowTreeCreation;
 
-    if (!isDeepEqual(lastGroupingColumnsModelApplied, rowGroupingModel)) {
-      apiRef.current.unstable_caches.rowGrouping.sanitizedModelOnLastRowTreeCreation =
-        rowGroupingModel;
+    const groupingRules = getGroupingRules({
+      sanitizedRowGroupingModel,
+      columnsLookup: gridColumnLookupSelector(apiRef),
+    });
+
+    if (!areGroupingRulesEqual(rulesOnLastRowTreeCreation, groupingRules)) {
+      apiRef.current.unstable_caches.rowGrouping.rulesOnLastRowTreeCreation = groupingRules;
       apiRef.current.unstable_requestPipeProcessorsApplication('hydrateColumns');
       setStrategyAvailability(apiRef, props.disableRowGrouping);
 

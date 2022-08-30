@@ -10,12 +10,12 @@ export interface UseFieldParams<
   TValue,
   TDate,
   TSection extends FieldSection,
-  TProps extends UseFieldProps<TInputValue, TValue, InferError<TProps>>,
+  TProps extends UseFieldProps<any, any, any>,
 > {
   props: TProps;
   valueManager: PickerStateValueManager<TInputValue, TValue, TDate>;
   fieldValueManager: FieldValueManager<TValue, TDate, TSection, InferError<TProps>>;
-  validator: Validator<TDate, UseFieldValidationProps<TInputValue, TValue, TProps>>;
+  validator: Validator<TDate, UseFieldValidationProps<TInputValue, TProps>>;
 }
 
 export interface UseFieldProps<TInputValue, TValue, TError> {
@@ -33,13 +33,17 @@ export interface UseFieldProps<TInputValue, TValue, TError> {
    * @default false
    */
   readOnly?: boolean;
+  onKeyDown?: React.KeyboardEventHandler;
+  onClick?: () => void;
+  onFocus?: () => void;
+  onBlur?: () => void;
 }
 
 export interface UseFieldResponse<TProps> {
   inputProps: Omit<TProps, keyof UseFieldProps<any, any, any>> & {
     value: string;
-    onClick: React.MouseEventHandler<HTMLInputElement>;
     onKeyDown: React.KeyboardEventHandler<HTMLInputElement>;
+    onClick: () => void;
     onFocus: () => void;
     onBlur: () => void;
     error: boolean;
@@ -88,8 +92,7 @@ export interface UseFieldState<TValue, TSections> {
 
 export type UseFieldValidationProps<
   TInputValue,
-  TValue,
-  TProps extends UseFieldProps<TInputValue, TValue, InferError<TProps>>,
+  TProps extends UseFieldProps<any, any, any>,
 > = Omit<TProps, 'value' | 'defaultValue'> & { value: TInputValue };
 
 export type AvailableAdjustKeyCode =

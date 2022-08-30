@@ -11,12 +11,10 @@ import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import {
   unstable_useDateField as useDateField,
-  UseDateFieldProps,
+  UseDateFieldComponentProps,
 } from '@mui/x-date-pickers/DateField';
 
-interface JoyDateFieldProps
-  extends Omit<JoyTextFieldProps, 'value' | 'defaultValue' | 'onChange' | 'onError'>,
-    UseDateFieldProps<Date, Date> {}
+type JoyDateFieldProps = UseDateFieldComponentProps<Date, Date, JoyTextFieldProps>;
 
 const JoyDateField = (props: JoyDateFieldProps) => {
   const { inputRef, inputProps } = useDateField<Date, Date, JoyDateFieldProps>(
@@ -31,12 +29,11 @@ const JoyDateField = (props: JoyDateFieldProps) => {
   );
 };
 
-interface UnstyledDateFieldProps
-  extends Omit<
-      InputUnstyledProps,
-      'value' | 'defaultValue' | 'onChange' | 'onError'
-    >,
-    UseDateFieldProps<Date, Date> {}
+type UnstyledDateFieldProps = UseDateFieldComponentProps<
+  Date,
+  Date,
+  InputUnstyledProps
+>;
 
 const UnstyledDateField = (props: UnstyledDateFieldProps) => {
   const { inputRef, inputProps } = useDateField<Date, Date, UnstyledDateFieldProps>(
@@ -51,12 +48,11 @@ const UnstyledDateField = (props: UnstyledDateFieldProps) => {
   );
 };
 
-interface BrowserInputDateFieldProps
-  extends Omit<
-      React.HTMLAttributes<HTMLInputElement>,
-      'value' | 'defaultValue' | 'onChange' | 'onError'
-    >,
-    UseDateFieldProps<Date, Date> {}
+type BrowserInputDateFieldProps = UseDateFieldComponentProps<
+  Date,
+  Date,
+  React.HTMLAttributes<HTMLInputElement>
+>;
 
 const BrowserInputDateField = (props: BrowserInputDateFieldProps) => {
   const { inputRef, inputProps } = useDateField<

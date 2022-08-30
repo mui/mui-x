@@ -4,19 +4,28 @@ import {
   unstable_useDateField as useDateField,
   UseDateFieldProps,
 } from '@mui/x-date-pickers/DateField';
-import { useUtils, useValidation, UseFieldResponse } from '@mui/x-date-pickers/internals';
+import { useUtils, useValidation } from '@mui/x-date-pickers/internals';
+import { UseFieldResponse } from '@mui/x-date-pickers/internals-fields';
 import { UseMultiInputDateRangeFieldProps } from './MultiInputDateRangeField.interfaces';
 import { DateRange } from '../internal/models';
 import { validateDateRange } from '../internal/hooks/validation/useDateRangeValidation';
 import { dateRangePickerValueManager } from '../DateRangePicker/shared';
-import { dateRangeFieldValueManager } from '../DateRangeField/useDateRangeField';
+import {
+  dateRangeFieldValueManager,
+  useDefaultizedDateRangeFieldProps,
+} from '../DateRangeField/useDateRangeField';
 
-export const useMultiInputDateRangeField = <TInputDate, TDate>(
-  inProps: UseMultiInputDateRangeFieldProps<TInputDate, TDate>,
+export const useMultiInputDateRangeField = <
+  TInputDate,
+  TDate,
+  TProps extends UseMultiInputDateRangeFieldProps<TInputDate, TDate>,
+>(
+  inProps: TProps,
 ) => {
+  const props = useDefaultizedDateRangeFieldProps<TInputDate, TDate, TProps>(inProps);
   const utils = useUtils<TDate>();
 
-  const { value: valueProp, defaultValue, format, onChange } = inProps;
+  const { value: valueProp, defaultValue, format, onChange } = props;
 
   const firstDefaultValue = React.useRef(defaultValue);
 
@@ -68,11 +77,7 @@ export const useMultiInputDateRangeField = <TInputDate, TDate>(
     firstDefaultValue.current ??
     (dateRangePickerValueManager.emptyValue as unknown as DateRange<TInputDate>);
 
-  const validationError = useValidation(
-    { ...(inProps as any), value },
-    validateDateRange,
-    () => true,
-  );
+  const validationError = useValidation({ ...props, value }, validateDateRange, () => true);
   const inputError = React.useMemo(
     () => dateRangeFieldValueManager.hasError(validationError),
     [validationError],

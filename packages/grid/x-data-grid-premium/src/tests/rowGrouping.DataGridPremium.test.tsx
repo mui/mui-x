@@ -1460,8 +1460,7 @@ describe('<DataGridPremium /> - Row Grouping', () => {
             },
             {
               field: 'category1',
-              groupingValueGetter: (params: GridGroupingValueGetterParams<string>) =>
-                `groupingValue ${params.value}`,
+              groupingValueGetter: (params) => `groupingValue ${params.value}`,
             },
           ]}
           initialState={{ rowGrouping: { model: ['category1'] } }}
@@ -1478,6 +1477,38 @@ describe('<DataGridPremium /> - Row Grouping', () => {
         '',
       ]);
       expect(getColumnValues(1)).to.deep.equal(['', '0', '1', '2', '', '3', '4']);
+    });
+
+    it('should react to groupingValueGetter update', () => {
+      render(
+        <Test
+          columns={[
+            {
+              field: 'id',
+            },
+            {
+              field: 'modulo',
+              groupingValueGetter: (params) => params.row.id % 2,
+            },
+          ]}
+          initialState={{ rowGrouping: { model: ['modulo'] } }}
+          defaultGroupingExpansionDepth={-1}
+        />,
+      );
+      expect(getColumnValues(0)).to.deep.equal(['0 (3)', '', '', '', '1 (2)', '', '']);
+      expect(getColumnValues(1)).to.deep.equal(['', '0', '2', '4', '', '1', '3']);
+
+      act(() =>
+        apiRef.current.updateColumns([
+          {
+            field: 'modulo',
+            groupingValueGetter: (params) => params.row.id % 3,
+          },
+        ]),
+      );
+
+      expect(getColumnValues(0)).to.deep.equal(['0 (2)', '', '', '1 (2)', '', '', '2 (1)', '']);
+      expect(getColumnValues(1)).to.deep.equal(['', '0', '3', '', '1', '4', '', '2']);
     });
 
     it('should not use valueGetter to group the rows when defined', () => {

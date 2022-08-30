@@ -322,6 +322,8 @@
   { "name": "GridGetRowsToExportParams", "kind": "Interface" },
   { "name": "GridGroupingColDefOverride", "kind": "Interface" },
   { "name": "GridGroupingColDefOverrideParams", "kind": "Interface" },
+  { "name": "GridGroupingRule", "kind": "Interface" },
+  { "name": "GridGroupingRules", "kind": "TypeAlias" },
   { "name": "GridGroupingValueGetterParams", "kind": "Interface" },
   { "name": "GridGroupNode", "kind": "TypeAlias" },
   { "name": "GridHeader", "kind": "Variable" },
