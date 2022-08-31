@@ -460,7 +460,7 @@ GridRow.propTypes = {
   index: PropTypes.number.isRequired,
   isLastVisible: PropTypes.bool,
   lastColumnToRender: PropTypes.number.isRequired,
-  position: PropTypes.string.isRequired,
+  position: PropTypes.oneOf(['center', 'left', 'right']).isRequired,
   renderedColumns: PropTypes.arrayOf(PropTypes.object).isRequired,
   row: PropTypes.object.isRequired,
   rowHeight: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.number]).isRequired,
