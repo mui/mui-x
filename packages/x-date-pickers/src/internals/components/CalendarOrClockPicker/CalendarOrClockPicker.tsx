@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
+import { DateTimePickerTabsProps } from '../../../DateTimePicker/DateTimePickerTabs';
 import { useViews, PickerOnChangeFn } from '../../hooks/useViews';
 import { ClockPicker, ExportedClockPickerProps } from '../../../ClockPicker/ClockPicker';
 import {
@@ -56,6 +57,7 @@ export interface ExportedCalendarOrClockPickerProps<TDate, View extends Calendar
   toolbarFormat?: string;
   toolbarPlaceholder?: React.ReactNode;
   toolbarTitle?: React.ReactNode;
+  hideTabs?: boolean;
 }
 
 export interface CalendarOrClockPickerProps<TDate, View extends CalendarOrClockPickerView>
@@ -64,6 +66,7 @@ export interface CalendarOrClockPickerProps<TDate, View extends CalendarOrClockP
   autoFocus?: boolean;
   DateInputProps: DateInputPropsLike;
   ToolbarComponent?: React.JSXElementConstructor<BaseToolbarProps<TDate, TDate | null>>;
+  TabsComponent?: React.JSXElementConstructor<DateTimePickerTabsProps>;
 }
 
 export const MobileKeyboardInputView = styled('div')({
@@ -102,16 +105,21 @@ export function CalendarOrClockPicker<TDate, View extends CalendarOrClockPickerV
     showToolbar,
     toggleMobileKeyboardView,
     ToolbarComponent = () => null,
+    TabsComponent = () => null,
     toolbarFormat,
     toolbarPlaceholder,
     toolbarTitle,
     views,
+    dateRangeIcon,
+    timeIcon,
+    hideTabs,
     ...other
   } = props;
   const isLandscape = useIsLandscape(views, orientation);
   const wrapperVariant = React.useContext(WrapperVariantContext);
 
   const toShowToolbar = showToolbar ?? wrapperVariant !== 'desktop';
+  const showTabs = !hideTabs && typeof window !== 'undefined' && window.innerHeight > 667;
 
   const handleDateChange = React.useCallback<PickerOnChangeFn<TDate>>(
     (newDate, selectionState) => {
@@ -156,6 +164,14 @@ export function CalendarOrClockPicker<TDate, View extends CalendarOrClockPickerV
           toolbarPlaceholder={toolbarPlaceholder}
           isMobileKeyboardViewOpen={isMobileKeyboardViewOpen}
           toggleMobileKeyboardView={toggleMobileKeyboardView}
+        />
+      )}
+      {showTabs && (
+        <TabsComponent
+          dateRangeIcon={dateRangeIcon}
+          timeIcon={timeIcon}
+          view={openView}
+          onChange={setOpenView as (view: CalendarOrClockPickerView) => void}
         />
       )}
 

@@ -13,6 +13,7 @@ import { parsePickerInputValue, parseNonNullablePickerDate } from '../internals/
 import { BaseToolbarProps } from '../internals/models/props/baseToolbarProps';
 import { DefaultizedProps } from '../internals/models/helpers';
 import { BaseDateValidationProps } from '../internals/hooks/validation/models';
+import { DateTimePickerTabsProps } from './DateTimePickerTabs';
 
 export interface BaseDateTimePickerProps<TInputDate, TDate>
   extends ExportedClockPickerProps<TDate>,
@@ -26,7 +27,8 @@ export interface BaseDateTimePickerProps<TInputDate, TDate>
    */
   ampm?: boolean;
   /**
-   * To show tabs.
+   * Toggles visibility of date time switching tabs
+   * @default false for mobile, true for desktop
    */
   hideTabs?: boolean;
   /**
@@ -59,6 +61,11 @@ export interface BaseDateTimePickerProps<TInputDate, TDate>
    * @default DateTimePickerToolbar
    */
   ToolbarComponent?: React.JSXElementConstructor<BaseToolbarProps<TDate, TDate | null>>;
+  /**
+   * Component that will replace default tabs renderer.
+   * @default DateTimePickerTabs
+   */
+  TabsComponent?: React.JSXElementConstructor<DateTimePickerTabsProps>;
   /**
    * Mobile picker title, displaying in the toolbar.
    * @default 'Select date & time'

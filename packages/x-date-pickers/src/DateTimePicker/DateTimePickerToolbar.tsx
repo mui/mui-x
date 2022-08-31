@@ -4,7 +4,6 @@ import { generateUtilityClasses } from '@mui/material';
 import { PickersToolbarText } from '../internals/components/PickersToolbarText';
 import { PickersToolbar, pickersToolbarClasses } from '../internals/components/PickersToolbar';
 import { PickersToolbarButton } from '../internals/components/PickersToolbarButton';
-import { DateTimePickerTabs } from './DateTimePickerTabs';
 import { useLocaleText, useUtils } from '../internals/hooks/useUtils';
 import { WrapperVariantContext } from '../internals/components/wrappers/WrapperVariantContext';
 import { BaseToolbarProps } from '../internals/models/props/baseToolbarProps';
@@ -69,13 +68,10 @@ export const DateTimePickerToolbar = <TDate extends unknown>(
   const {
     ampm,
     parsedValue,
-    dateRangeIcon,
-    hideTabs,
     isMobileKeyboardViewOpen,
     onChange,
     openView,
     setOpenView,
-    timeIcon,
     toggleMobileKeyboardView,
     toolbarFormat,
     toolbarPlaceholder = '––',
@@ -89,10 +85,6 @@ export const DateTimePickerToolbar = <TDate extends unknown>(
   const toolbarTitle = toolbarTitleProp ?? localeText.dateTimePickerDefaultToolbarTitle;
 
   const wrapperVariant = React.useContext(WrapperVariantContext);
-  const showTabs =
-    wrapperVariant === 'desktop'
-      ? true
-      : !hideTabs && typeof window !== 'undefined' && window.innerHeight > 667;
 
   const formatHours = (time: TDate) =>
     ampm ? utils.format(time, 'hours12h') : utils.format(time, 'hours24h');
@@ -197,14 +189,6 @@ export const DateTimePickerToolbar = <TDate extends unknown>(
             )}
           </DateTimePickerToolbarTimeContainer>
         </DateTimePickerToolbarRoot>
-      )}
-      {showTabs && (
-        <DateTimePickerTabs
-          dateRangeIcon={dateRangeIcon}
-          timeIcon={timeIcon}
-          view={openView}
-          onChange={setOpenView}
-        />
       )}
     </React.Fragment>
   );

@@ -225,7 +225,8 @@ DateTimePicker.propTypes = {
    */
   getViewSwitchingButtonText: PropTypes.func,
   /**
-   * To show tabs.
+   * Toggles visibility of date time switching tabs
+   * @default false for mobile, true for desktop
    */
   hideTabs: PropTypes.bool,
   ignoreInvalidInputs: PropTypes.bool,
@@ -459,6 +460,11 @@ DateTimePicker.propTypes = {
    * If `true`, show the toolbar even in desktop mode.
    */
   showToolbar: PropTypes.bool,
+  /**
+   * Component that will replace default tabs renderer.
+   * @default DateTimePickerTabs
+   */
+  TabsComponent: PropTypes.elementType,
   /**
    * Time tab icon.
    */
