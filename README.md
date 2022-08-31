@@ -90,13 +90,12 @@ Visit Stack Overflow to ask questions and read crowdsourced answers from expert 
 
 [Post a question about MUI X](https://stackoverflow.com/questions/tagged/mui) on Stack Overflow using the "mui" tag.
 
-### Bugs or feature request
+### Bugs and feature requests
 
 You can create an [issue](https://github.com/mui/mui-x/issues) on this repository.
 Please always provide a reproduction case.
 As a starting point, we recommend you [browse the documentation](https://mui.com/x/introduction/), and [select](https://mui.com/static/docs/forking-an-example.png) the closest example to your use case.
 Or you can use a [basic template](https://mui.com/r/x-issue-template) to build your reproduction case.
-
 
 ## Contributing
 
