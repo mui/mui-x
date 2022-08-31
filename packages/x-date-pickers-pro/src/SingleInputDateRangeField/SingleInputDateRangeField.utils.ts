@@ -1,4 +1,4 @@
-import { DateRangeFieldSection } from './DateRangeField.interfaces';
+import { DateRangeFieldSection } from './SingleInputDateRangeField.interfaces';
 
 export const splitDateRangeSections = (sections: DateRangeFieldSection[]) => {
   const startDateSections: DateRangeFieldSection[] = [];

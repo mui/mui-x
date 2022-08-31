@@ -15,6 +15,14 @@ export type UseDateFieldDefaultizedProps<TInputDate, TDate> = DefaultizedProps<
   'minDate' | 'maxDate' | 'disableFuture' | 'disablePast'
 >;
 
-export interface DateFieldProps<TInputDate, TDate>
-  extends Omit<TextFieldProps, 'value' | 'defaultValue' | 'onChange' | 'onError'>,
-    UseDateFieldProps<TInputDate, TDate> {}
+export type UseDateFieldComponentProps<TInputDate, TDate, ChildProps extends {}> = Omit<
+  ChildProps,
+  'value' | 'defaultValue' | 'onChange' | 'onError'
+> &
+  UseDateFieldProps<TInputDate, TDate>;
+
+export type DateFieldProps<TInputDate, TDate> = UseDateFieldComponentProps<
+  TInputDate,
+  TDate,
+  TextFieldProps
+>;

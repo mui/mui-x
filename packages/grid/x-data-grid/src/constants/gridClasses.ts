@@ -394,6 +394,10 @@ export interface GridClasses {
    */
   'row--dynamicHeight': string;
   /**
+   * Styles applied to the row if its detail panel is open.
+   */
+  'row--detailPanelExpanded': string;
+  /**
    * Styles applied to the row element.
    */
   row: string;
@@ -574,6 +578,7 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'row--lastVisible',
   'row--dragging',
   'row--dynamicHeight',
+  'row--detailPanelExpanded',
   'rowReorderCellPlaceholder',
   'rowCount',
   'rowReorderCellContainer',

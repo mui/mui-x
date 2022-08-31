@@ -98,15 +98,15 @@
     "TransitionComponent": { "type": { "name": "elementType" } }
   },
   "slots": {
-    "ActionBar": { "type": { "name": "elementType" } },
-    "LeftArrowButton": { "type": { "name": "elementType" } },
-    "LeftArrowIcon": { "type": { "name": "elementType" } },
-    "OpenPickerIcon": { "type": { "name": "elementType" } },
-    "PaperContent": { "type": { "name": "elementType" } },
-    "RightArrowButton": { "type": { "name": "elementType" } },
-    "RightArrowIcon": { "type": { "name": "elementType" } },
-    "SwitchViewButton": { "type": { "name": "elementType" } },
-    "SwitchViewIcon": { "type": { "name": "elementType" } }
+    "ActionBar": { "default": "PickersActionBar", "type": { "name": "elementType" } },
+    "LeftArrowButton": { "default": "IconButton", "type": { "name": "elementType" } },
+    "LeftArrowIcon": { "default": "ArrowLeft", "type": { "name": "elementType" } },
+    "OpenPickerIcon": { "default": "Calendar or Clock", "type": { "name": "elementType" } },
+    "PaperContent": { "default": "React.Fragment", "type": { "name": "elementType" } },
+    "RightArrowButton": { "default": "IconButton", "type": { "name": "elementType" } },
+    "RightArrowIcon": { "default": "ArrowRight", "type": { "name": "elementType" } },
+    "SwitchViewButton": { "default": "IconButton", "type": { "name": "elementType" } },
+    "SwitchViewIcon": { "default": "ArrowDropDown", "type": { "name": "elementType" } }
   },
   "name": "DateRangePicker",
   "styles": { "classes": [], "globalClasses": {}, "name": "MuiDateRangePicker" },

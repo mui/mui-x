@@ -60,9 +60,14 @@ const GridIconButtonRoot = styled(IconButton)({
 });
 
 export interface GridColumnsPanelProps extends GridPanelWrapperProps {
-  // fix endless PropTypes generation for "GridColumnsPanelRowRoot"
-  children?: GridPanelWrapperProps['children'];
+  /*
+   * Changes how the options in the columns selector should be ordered.
+   * If not specified, the order is derived from the `columns` prop.
+   */
+  sort?: 'asc' | 'desc';
 }
+
+const collator = new Intl.Collator();
 
 function GridColumnsPanel(props: GridColumnsPanelProps) {
   const apiRef = useGridApiContext();
@@ -73,6 +78,25 @@ function GridColumnsPanel(props: GridColumnsPanelProps) {
   const [searchValue, setSearchValue] = React.useState('');
   const ownerState = rootProps;
   const classes = useUtilityClasses(ownerState);
+
+  const { sort, ...other } = props;
+
+  const sortedColumns = React.useMemo(() => {
+    switch (sort) {
+      case 'asc':
+        return [...columns].sort((a, b) =>
+          collator.compare(a.headerName || a.field, b.headerName || b.field),
+        );
+
+      case 'desc':
+        return [...columns].sort(
+          (a, b) => -collator.compare(a.headerName || a.field, b.headerName || b.field),
+        );
+
+      default:
+        return columns;
+    }
+  }, [columns, sort]);
 
   const toggleColumn = (event: React.MouseEvent<HTMLButtonElement>) => {
     const { name: field } = event.target as HTMLInputElement;
@@ -116,21 +140,21 @@ function GridColumnsPanel(props: GridColumnsPanelProps) {
 
   const currentColumns = React.useMemo(() => {
     if (!searchValue) {
-      return columns;
+      return sortedColumns;
     }
     const searchValueToCheck = searchValue.toLowerCase();
-    return columns.filter(
+    return sortedColumns.filter(
       (column) =>
         (column.headerName || column.field).toLowerCase().indexOf(searchValueToCheck) > -1,
     );
-  }, [columns, searchValue]);
+  }, [sortedColumns, searchValue]);
 
   React.useEffect(() => {
     searchInputRef.current!.focus();
   }, []);
 
   return (
-    <GridPanelWrapper {...props}>
+    <GridPanelWrapper {...other}>
       <GridPanelHeader>
         <rootProps.components.BaseTextField
           label={apiRef.current.getLocaleText('columnsPanelTextFieldLabel')}
@@ -202,7 +226,7 @@ GridColumnsPanel.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
-  children: PropTypes.node,
+  sort: PropTypes.oneOf(['asc', 'desc']),
 } as any;
 
 export { GridColumnsPanel };

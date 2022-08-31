@@ -106,7 +106,7 @@ The default behavior remains the same (close after the last step on desktop but 
 The props of `MonthPicker`, `YearPicker` and `DayPicker` have been reworked to make them more consistent for a standalone usage.
 
 - **MonthPicker**: The prop `onMonthChange` has been removed, you can use `onChange` instead since every change is a month change.
-- **YearPicker**: The prop `onYearPicker` has been removed, you can use `onChange` instead since every change is a year change.
+- **YearPicker**: The prop `onYearChange` has been removed, you can use `onChange` instead since every change is a year change.
 - **DayPicker**: The prop `isDateDisabled` has been removed, you can now use the same validation props as for the other components (`maxDate`, `minDate`, `shouldDisableDate`, `disableFuture` and `disablePast`).
 
 #### Translation
