@@ -38,17 +38,9 @@ const GridColumnsPanelRoot = styled('div', {
   name: 'MuiDataGrid',
   slot: 'ColumnsPanel',
   overridesResolver: (props, styles) => styles.columnsPanel,
-})<{ ownerState: OwnerState }>(() => ({
+})<{ ownerState: OwnerState }>({
   padding: '8px 0px 8px 8px',
-}));
-
-GridColumnsPanelRoot.propTypes = {
-  // ----------------------------- Warning --------------------------------
-  // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
-  // ----------------------------------------------------------------------
-  ownerState: PropTypes.object.isRequired,
-} as any;
+});
 
 const GridColumnsPanelRowRoot = styled('div', {
   name: 'MuiDataGrid',
@@ -63,21 +55,16 @@ const GridColumnsPanelRowRoot = styled('div', {
   },
 }));
 
-GridColumnsPanelRowRoot.propTypes = {
-  // ----------------------------- Warning --------------------------------
-  // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
-  // ----------------------------------------------------------------------
-  ownerState: PropTypes.object.isRequired,
-} as any;
-
 const GridIconButtonRoot = styled(IconButton)({
   justifyContent: 'flex-end',
 });
 
-export interface GridColumnsPanelProps extends GridPanelWrapperProps {}
+export interface GridColumnsPanelProps extends GridPanelWrapperProps {
+  // fix endless PropTypes generation for "GridColumnsPanelRowRoot"
+  children?: GridPanelWrapperProps['children'];
+}
 
-export function GridColumnsPanel(props: GridColumnsPanelProps) {
+function GridColumnsPanel(props: GridColumnsPanelProps) {
   const apiRef = useGridApiContext();
   const searchInputRef = React.useRef<HTMLInputElement>(null);
   const columns = useGridSelector(apiRef, gridColumnDefinitionsSelector);
@@ -209,3 +196,13 @@ export function GridColumnsPanel(props: GridColumnsPanelProps) {
     </GridPanelWrapper>
   );
 }
+
+GridColumnsPanel.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // ----------------------------------------------------------------------
+  children: PropTypes.node,
+} as any;
+
+export { GridColumnsPanel };
