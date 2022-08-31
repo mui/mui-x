@@ -9,8 +9,15 @@ import {
 } from '@mui/x-data-grid-pro';
 import { spy } from 'sinon';
 import { expect } from 'chai';
-// @ts-ignore Remove once the test utils are typed
-import { createRenderer, fireEvent, screen, createEvent, act } from '@mui/monorepo/test/utils';
+import {
+  createRenderer,
+  fireEvent,
+  screen,
+  createEvent,
+  act,
+  userEvent,
+  // @ts-ignore Remove once the test utils are typed
+} from '@mui/monorepo/test/utils';
 import { getCell, getColumnHeaderCell, getColumnHeadersTextContent } from 'test/utils/helperFn';
 import { useData } from 'storybook/src/hooks/useData';
 
@@ -53,8 +60,7 @@ describe('<DataGridPro /> - Column pinning', () => {
     virtualScroller.scrollLeft = 100;
     act(() => virtualScroller.dispatchEvent(new Event('scroll')));
     const cell = getCell(0, 2);
-    fireEvent.mouseUp(cell);
-    fireEvent.click(cell);
+    userEvent.mousePress(cell);
     fireEvent.keyDown(cell, { key: 'ArrowLeft' });
     expect(virtualScroller.scrollLeft).to.equal(0);
   });
@@ -68,8 +74,7 @@ describe('<DataGridPro /> - Column pinning', () => {
     const virtualScroller = document.querySelector(`.${gridClasses.virtualScroller}`)!;
     expect(virtualScroller.scrollLeft).to.equal(0);
     const cell = getCell(0, 1);
-    fireEvent.mouseUp(cell);
-    fireEvent.click(cell);
+    userEvent.mousePress(cell);
     fireEvent.keyDown(cell, { key: 'ArrowRight' });
     expect(virtualScroller.scrollLeft).to.equal(100);
   });

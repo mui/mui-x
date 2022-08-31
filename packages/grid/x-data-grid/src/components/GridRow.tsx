@@ -269,7 +269,7 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
     style[property] = sizes.spacingBottom;
   }
 
-  let rowClassName: string | null = null;
+  const rowClassNames = apiRef.current.unstable_applyPipeProcessors('rowClassName', [], rowId);
 
   if (typeof rootProps.getRowClassName === 'function') {
     const indexRelativeToCurrentPage = index - (currentPage.range?.firstRowIndex || 0);
@@ -280,7 +280,7 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
       indexRelativeToCurrentPage,
     };
 
-    rowClassName = rootProps.getRowClassName(rowParams);
+    rowClassNames.push(rootProps.getRowClassName(rowParams));
   }
 
   const cells: JSX.Element[] = [];
@@ -405,7 +405,7 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
       data-id={rowId}
       data-rowindex={index}
       role="row"
-      className={clsx(rowClassName, classes.root, className)}
+      className={clsx(...rowClassNames, classes.root, className)}
       aria-rowindex={ariaRowIndex}
       aria-selected={selected}
       style={style}
