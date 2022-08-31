@@ -7,7 +7,7 @@
   sortingMode="server"
   filterMode="server"
   rowsLoadingMode="server"
-  onFetchRows={handleFetchRows}
+  onFetchRows={debouncedHandleFetchRows}
   experimentalFeatures={{
     lazyLoading: true,
   }}

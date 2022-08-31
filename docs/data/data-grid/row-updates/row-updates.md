@@ -65,7 +65,7 @@ Finally, replace the empty rows with the newly fetched ones using `apiRef.curren
 {{"demo": "LazyLoadingGrid.js", "bg": "inline", "disableAd": true}}
 
 :::warning
-The `onFetchRows` callback is called every time a new row is in the viewport, so when you scroll, you can easily send multiple requests to your backend. We recommend developers limit those by implementing throttling.
+The `onFetchRows` callback is called every time a new row is in the viewport, so when you scroll, you can easily send multiple requests to your backend. We recommend developers limit those by implementing debouncing.
 :::
 
 :::info

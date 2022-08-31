@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { debounce } from '@mui/material/utils';
 import {
   DataGridPro,
   GridFetchRowsParams,
@@ -77,12 +78,20 @@ export default function LazyLoadingGrid() {
   }, [dataServerSide, fetchRow]);
 
   // Fetch rows as they become visible in the viewport
-  const handleFetchRows = async (params: GridFetchRowsParams) => {
-    const { slice, total } = await fetchRow(params);
+  const handleFetchRows = React.useCallback(
+    async (params: GridFetchRowsParams) => {
+      const { slice, total } = await fetchRow(params);
 
-    apiRef.current.replaceRows(params.firstRowToRender, slice);
-    setRowCount(total);
-  };
+      apiRef.current.unstable_replaceRows(params.firstRowToRender, slice);
+      setRowCount(total);
+    },
+    [apiRef, fetchRow],
+  );
+
+  const debouncedHandleFetchRows = React.useMemo(
+    () => debounce(handleFetchRows, 200),
+    [handleFetchRows],
+  );
 
   return (
     <div style={{ height: 400, width: '100%' }}>
@@ -95,7 +104,7 @@ export default function LazyLoadingGrid() {
         sortingMode="server"
         filterMode="server"
         rowsLoadingMode="server"
-        onFetchRows={handleFetchRows}
+        onFetchRows={debouncedHandleFetchRows}
         experimentalFeatures={{
           lazyLoading: true,
         }}

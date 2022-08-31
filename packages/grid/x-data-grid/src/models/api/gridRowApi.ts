@@ -99,5 +99,5 @@ export interface GridRowApi {
    * @param {number} firstRowToReplace The index of the first row to be replaced.
    * @param {GridRowModel[]} newRows The new rows.
    */
-  replaceRows: (firstRowToReplace: number, newRows: GridRowModel[]) => void;
+  unstable_replaceRows: (firstRowToReplace: number, newRows: GridRowModel[]) => void;
 }
