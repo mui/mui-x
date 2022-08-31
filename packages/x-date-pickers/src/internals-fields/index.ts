@@ -7,7 +7,6 @@ export {
   splitFormatIntoSections,
 } from '../internals/hooks/useField';
 export type {
-  UseFieldForwardedProps,
   UseFieldInternalProps,
   UseFieldParams,
   UseFieldResponse,

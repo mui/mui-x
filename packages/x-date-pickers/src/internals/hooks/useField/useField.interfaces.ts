@@ -44,17 +44,19 @@ export interface UseFieldForwardedProps {
   onBlur?: () => void;
 }
 
-export interface UseFieldResponse<TForwardedProps> {
-  inputProps: Omit<TForwardedProps, keyof UseFieldForwardedProps> & {
-    value: string;
-    onKeyDown: React.KeyboardEventHandler<HTMLInputElement>;
-    onClick: () => void;
-    onFocus: () => void;
-    onBlur: () => void;
-    error: boolean;
-  };
+export interface UseFieldResponse<TForwardedProps extends UseFieldForwardedProps> {
+  inputProps: UseFieldResponseInputProps<TForwardedProps>;
   inputRef: React.RefObject<HTMLInputElement>;
 }
+
+export type UseFieldResponseInputProps<TForwardedProps extends UseFieldForwardedProps> = Omit<
+  TForwardedProps,
+  keyof UseFieldForwardedProps
+> &
+  NonNullable<UseFieldForwardedProps> & {
+    value: string;
+    error: boolean;
+  };
 
 export interface FieldSection {
   start: number;
