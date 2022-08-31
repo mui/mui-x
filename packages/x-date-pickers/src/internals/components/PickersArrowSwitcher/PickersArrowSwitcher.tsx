@@ -90,8 +90,8 @@ export const PickersArrowSwitcher = React.forwardRef(function PickersArrowSwitch
 
   const RightArrowButton = components.RightArrowButton ?? PickersArrowSwitcherButton;
   const rightArrowButtonProps = useSlotProps({
-    elementType: LeftArrowButton,
-    externalSlotProps: componentsProps.leftArrowButton,
+    elementType: RightArrowButton,
+    externalSlotProps: componentsProps.rightArrowButton,
     additionalProps: {
       size: 'small',
       'aria-label': rightArrowButtonText,
