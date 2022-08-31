@@ -7,7 +7,7 @@ import {
   useGridApiContext,
   GridColTypeDef,
 } from '@mui/x-data-grid-pro';
-import InputBase from '@mui/material/InputBase';
+import InputBase, { InputBaseProps } from '@mui/material/InputBase';
 import Popper from '@mui/material/Popper';
 import Paper from '@mui/material/Paper';
 import {
@@ -35,14 +35,14 @@ const lines = [
 const EditTextarea = (props: GridRenderEditCellParams<string>) => {
   const { id, field, value, colDef } = props;
   const [valueState, setValueState] = React.useState(value);
-  const [anchorEl, setAnchorEl] = React.useState<HTMLDivElement | null>();
+  const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>();
   const apiRef = useGridApiContext();
 
-  const handleRef = React.useCallback((el) => {
+  const handleRef = React.useCallback((el: HTMLElement | null) => {
     setAnchorEl(el);
   }, []);
 
-  const handleChange = React.useCallback(
+  const handleChange = React.useCallback<NonNullable<InputBaseProps['onChange']>>(
     (event) => {
       const newValue = event.target.value;
       setValueState(newValue);
@@ -54,7 +54,7 @@ const EditTextarea = (props: GridRenderEditCellParams<string>) => {
     [apiRef, field, id],
   );
 
-  const handleKeyDown = React.useCallback(
+  const handleKeyDown = React.useCallback<NonNullable<InputBaseProps['onKeyDown']>>(
     (event) => {
       if (
         event.key === 'Escape' ||
