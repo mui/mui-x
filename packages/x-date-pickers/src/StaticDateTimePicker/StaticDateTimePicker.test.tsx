@@ -24,4 +24,76 @@ describe('<StaticDateTimePicker />', () => {
 
     expect(screen.getByLabelText(/Selected time/)).toBeVisible();
   });
+
+  it('should render toolbar and tabs by default', () => {
+    render(
+      <StaticDateTimePicker
+        onChange={() => {}}
+        value={adapterToUse.date(new Date(2021, 10, 20, 10, 1, 22))}
+        renderInput={(params) => <TextField {...params} />}
+      />,
+    );
+
+    expect(screen.getByRole('button', { name: /go to text input view/i })).not.to.equal(null);
+    expect(screen.getByRole('tab', { name: 'pick date' })).not.to.equal(null);
+  });
+
+  it('should not render only toolbar when `showToolbar` is `false`', () => {
+    render(
+      <StaticDateTimePicker
+        showToolbar={false}
+        onChange={() => {}}
+        value={adapterToUse.date(new Date(2021, 10, 20, 10, 1, 22))}
+        renderInput={(params) => <TextField {...params} />}
+      />,
+    );
+
+    expect(screen.queryByRole('button', { name: /go to text input view/i })).to.equal(null);
+    expect(screen.getByRole('tab', { name: 'pick date' })).not.to.equal(null);
+  });
+
+  it('should not render tabs when `hideTabs` is `true`', () => {
+    render(
+      <StaticDateTimePicker
+        hideTabs
+        onChange={() => {}}
+        value={adapterToUse.date(new Date(2021, 10, 20, 10, 1, 22))}
+        renderInput={(params) => <TextField {...params} />}
+      />,
+    );
+
+    expect(screen.getByRole('button', { name: /go to text input view/i })).not.to.equal(null);
+    expect(screen.queryByRole('tab', { name: 'pick date' })).to.equal(null);
+  });
+
+  describe('prop: displayStaticWrapperAs', () => {
+    it('should not render toolbar and tabs by default', () => {
+      render(
+        <StaticDateTimePicker
+          displayStaticWrapperAs="desktop"
+          onChange={() => {}}
+          value={adapterToUse.date(new Date(2021, 10, 20, 10, 1, 22))}
+          renderInput={(params) => <TextField {...params} />}
+        />,
+      );
+
+      expect(screen.queryByRole('button', { name: /go to text input view/i })).to.equal(null);
+      expect(screen.queryByRole('tab', { name: 'pick date' })).to.equal(null);
+    });
+
+    it('should render tabs when `hideTabs` is `false`', () => {
+      render(
+        <StaticDateTimePicker
+          displayStaticWrapperAs="desktop"
+          hideTabs={false}
+          onChange={() => {}}
+          value={adapterToUse.date(new Date(2021, 10, 20, 10, 1, 22))}
+          renderInput={(params) => <TextField {...params} />}
+        />,
+      );
+
+      expect(screen.queryByRole('button', { name: /go to text input view/i })).to.equal(null);
+      expect(screen.getByRole('tab', { name: 'pick date' })).not.to.equal(null);
+    });
+  });
 });
