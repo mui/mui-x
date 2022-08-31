@@ -86,11 +86,8 @@ function extractSlots(options: {
   const { filename, name: componentName, displayName, project } = options;
   const slots: Record<string, { type: string; default?: string; description: string }> = {};
 
-  if (!['x-data-grid', 'x-data-grid-pro'].includes(project.name)) {
-    return slots;
-  }
-
   const proptypes = ttp.parseFromProgram(filename, project.program, {
+    checkDeclarations: true,
     shouldResolveObject: ({ name }) => {
       return name === 'components';
     },

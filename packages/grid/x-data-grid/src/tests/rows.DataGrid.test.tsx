@@ -4,6 +4,7 @@ import {
   fireEvent,
   screen,
   act,
+  userEvent,
   // @ts-ignore Remove once the test utils are typed
 } from '@mui/monorepo/test/utils';
 import clsx from 'clsx';
@@ -296,8 +297,7 @@ describe('<DataGrid /> - Rows', () => {
         />,
       );
       const moreButton = screen.getByRole('menuitem', { name: 'more' });
-      fireEvent.mouseUp(moreButton);
-      fireEvent.click(moreButton);
+      userEvent.mousePress(moreButton);
 
       const printButton = screen.queryByRole('menuitem', { name: 'print' });
       expect(printButton).toHaveFocus();

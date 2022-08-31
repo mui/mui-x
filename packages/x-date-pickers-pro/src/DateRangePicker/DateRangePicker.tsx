@@ -73,6 +73,7 @@ export const DateRangePicker = React.forwardRef(function DateRangePicker<
     desktopModeMediaQuery = '@media (pointer: fine)',
     DialogProps,
     PopperProps,
+    PaperProps,
     TransitionComponent,
     ...other
   } = props;
@@ -85,6 +86,7 @@ export const DateRangePicker = React.forwardRef(function DateRangePicker<
       <DesktopDateRangePicker
         ref={ref}
         PopperProps={PopperProps}
+        PaperProps={PaperProps}
         TransitionComponent={TransitionComponent}
         {...other}
       />
@@ -378,6 +380,7 @@ DateRangePicker.propTypes = {
    * Disable specific date. @DateIOType
    * @template TDate
    * @param {TDate} day The date to test.
+   * @param {string} position The date to test, 'start' or 'end'.
    * @returns {boolean} Returns `true` if the date should be disabled.
    */
   shouldDisableDate: PropTypes.func,

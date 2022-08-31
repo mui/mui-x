@@ -7,7 +7,7 @@ import { GridAutoSizer } from '../GridAutoSizer';
 import { GridOverlays } from './GridOverlays';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { useGridSelector } from '../../hooks/utils/useGridSelector';
-import { gridDensityHeaderHeightSelector } from '../../hooks/features/density/densitySelector';
+import { gridDensityTotalHeaderHeightSelector } from '../../hooks/features/density/densitySelector';
 
 interface GridBodyProps {
   children?: React.ReactNode;
@@ -30,7 +30,7 @@ function GridBody(props: GridBodyProps) {
   const { children, VirtualScrollerComponent, ColumnHeadersComponent } = props;
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
-  const headerHeight = useGridSelector(apiRef, gridDensityHeaderHeightSelector);
+  const totalHeaderHeight = useGridSelector(apiRef, gridDensityTotalHeaderHeightSelector);
   const [isVirtualizationDisabled, setIsVirtualizationDisabled] = React.useState(
     rootProps.disableVirtualization,
   );
@@ -42,6 +42,10 @@ function GridBody(props: GridBodyProps) {
   const enableVirtualization = React.useCallback(() => {
     setIsVirtualizationDisabled(false);
   }, []);
+
+  React.useEffect(() => {
+    setIsVirtualizationDisabled(rootProps.disableVirtualization);
+  }, [rootProps.disableVirtualization]);
 
   // The `useGridApiMethod` hook can't be used here, because it only installs the
   // method if it doesn't exist yet. Once installed, it's never updated again.
@@ -83,8 +87,8 @@ function GridBody(props: GridBodyProps) {
             width: size.width,
             // If `autoHeight` is on, there will be no height value.
             // In this case, let the container to grow whatever it needs.
-            height: size.height ? size.height - headerHeight : 'auto',
-            marginTop: headerHeight,
+            height: size.height ? size.height - totalHeaderHeight : 'auto',
+            marginTop: totalHeaderHeight,
           } as React.CSSProperties;
 
           return (

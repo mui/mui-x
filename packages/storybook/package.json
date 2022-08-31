@@ -1,6 +1,6 @@
 {
   "name": "storybook",
-  "version": "5.15.2",
+  "version": "5.16.0",
   "description": "Storybook components",
   "author": "MUI Team",
   "private": true,
@@ -16,13 +16,13 @@
     "directory": "packages/storybook"
   },
   "dependencies": {
-    "@mui/icons-material": "^5.8.0",
-    "@mui/material": "^5.8.0",
-    "@mui/x-data-grid": "5.15.2",
-    "@mui/x-data-grid-generator": "5.15.2",
-    "@mui/x-data-grid-premium": "5.15.2",
-    "@mui/x-data-grid-pro": "5.15.2",
-    "@mui/x-license-pro": "5.15.0",
+    "@mui/icons-material": "^5.10.2",
+    "@mui/material": "^5.10.2",
+    "@mui/x-data-grid": "5.16.0",
+    "@mui/x-data-grid-generator": "5.16.0",
+    "@mui/x-data-grid-premium": "5.16.0",
+    "@mui/x-data-grid-pro": "5.16.0",
+    "@mui/x-license-pro": "5.16.0",
     "@storybook/builder-webpack5": "^6.5.10",
     "@storybook/manager-webpack5": "^6.5.10",
     "react": "^18.2.0",
@@ -31,7 +31,7 @@
     "webpack": "^5.74.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.18.6",
+    "@babel/core": "^7.18.13",
     "@storybook/addon-a11y": "^6.5.10",
     "@storybook/addon-actions": "^6.5.10",
     "@storybook/addon-console": "^1.2.3",

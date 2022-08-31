@@ -29,6 +29,7 @@ import { GridRenderEditCellParams } from '../models/params/gridCellParams';
 import { GRID_DETAIL_PANEL_TOGGLE_FIELD } from '../constants/gridDetailPanelToggleField';
 import { gridSortModelSelector } from '../hooks/features/sorting/gridSortingSelector';
 import { gridRowTreeDepthSelector } from '../hooks/features/rows/gridRowsSelector';
+import { gridDensityHeaderGroupingMaxDepthSelector } from '../hooks/features/density/densitySelector';
 
 export interface GridRowProps {
   rowId: GridRowId;
@@ -115,7 +116,6 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
     onMouseLeave,
     ...other
   } = props;
-  const ariaRowIndex = index + 2; // 1 for the header row and 1 as it's 1-based
   const apiRef = useGridApiContext();
   const ref = React.useRef<HTMLDivElement>(null);
   const rootProps = useGridRootProps();
@@ -123,6 +123,9 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
   const columnsTotalWidth = useGridSelector(apiRef, gridColumnsTotalWidthSelector);
   const sortModel = useGridSelector(apiRef, gridSortModelSelector);
   const treeDepth = useGridSelector(apiRef, gridRowTreeDepthSelector);
+  const headerGroupingMaxDepth = useGridSelector(apiRef, gridDensityHeaderGroupingMaxDepthSelector);
+
+  const ariaRowIndex = index + headerGroupingMaxDepth + 2; // 1 for the header row and 1 as it's 1-based
   const { hasScrollX, hasScrollY } = apiRef.current.getRootDimensions() ?? {
     hasScrollX: false,
     hasScrollY: false,
@@ -288,10 +291,10 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
     style[property] = sizes.spacingBottom;
   }
 
-  let rowClassName: string | null = null;
+  const rowClassNames = apiRef.current.unstable_applyPipeProcessors('rowClassName', [], rowId);
 
   if (typeof rootProps.getRowClassName === 'function') {
-    const indexRelativeToCurrentPage = index - currentPage.range!.firstRowIndex;
+    const indexRelativeToCurrentPage = index - (currentPage.range?.firstRowIndex || 0);
     const rowParams: GridRowClassNameParams = {
       ...apiRef.current.getRowParams(rowId),
       isFirstVisible: indexRelativeToCurrentPage === 0,
@@ -299,7 +302,7 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
       indexRelativeToCurrentPage,
     };
 
-    rowClassName = rootProps.getRowClassName(rowParams);
+    rowClassNames.push(rootProps.getRowClassName(rowParams));
   }
 
   const cells: JSX.Element[] = [];
@@ -424,7 +427,7 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
       data-id={rowId}
       data-rowindex={index}
       role="row"
-      className={clsx(rowClassName, classes.root, className)}
+      className={clsx(...rowClassNames, classes.root, className)}
       aria-rowindex={ariaRowIndex}
       aria-selected={selected}
       style={style}
@@ -459,7 +462,7 @@ GridRow.propTypes = {
   lastColumnToRender: PropTypes.number.isRequired,
   position: PropTypes.string.isRequired,
   renderedColumns: PropTypes.arrayOf(PropTypes.object).isRequired,
-  row: PropTypes.any.isRequired,
+  row: PropTypes.object.isRequired,
   rowHeight: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.number]).isRequired,
   rowId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
   selected: PropTypes.bool.isRequired,

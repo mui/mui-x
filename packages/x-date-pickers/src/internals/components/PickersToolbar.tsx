@@ -7,6 +7,7 @@ import { styled } from '@mui/material/styles';
 import { generateUtilityClasses } from '@mui/material';
 import { Pen, Calendar, Clock } from './icons';
 import { BaseToolbarProps } from '../models/props/baseToolbarProps';
+import { useLocaleText } from '../hooks/useUtils';
 
 export const pickersToolbarClasses = generateUtilityClasses('MuiPickersToolbar', [
   'root',
@@ -69,15 +70,6 @@ const PickersToolbarPenIconButton = styled(IconButton, {
 const getViewTypeIcon = (viewType: 'calendar' | 'clock') =>
   viewType === 'clock' ? <Clock color="inherit" /> : <Calendar color="inherit" />;
 
-function defaultGetKeyboardInputSwitchingButtonText(
-  isKeyboardInputOpen: boolean,
-  viewType: 'calendar' | 'clock',
-) {
-  return isKeyboardInputOpen
-    ? `text input view is open, go to ${viewType} view`
-    : `${viewType} view is open, go to text input view`;
-}
-
 type PickersToolbarComponent = (<TDate, TValue>(
   props: React.PropsWithChildren<PickersToolbarProps<TDate, TValue>> &
     React.RefAttributes<HTMLDivElement>,
@@ -90,7 +82,7 @@ export const PickersToolbar = React.forwardRef(function PickersToolbar<TDate, TV
   const {
     children,
     className,
-    getMobileKeyboardInputViewButtonText = defaultGetKeyboardInputSwitchingButtonText,
+    getMobileKeyboardInputViewButtonText,
     isLandscape,
     isMobileKeyboardViewOpen,
     landscapeDirection = 'column',
@@ -100,6 +92,7 @@ export const PickersToolbar = React.forwardRef(function PickersToolbar<TDate, TV
   } = props;
 
   const ownerState = props;
+  const localeText = useLocaleText();
 
   return (
     <PickersToolbarRoot
@@ -129,7 +122,11 @@ export const PickersToolbar = React.forwardRef(function PickersToolbar<TDate, TV
           ownerState={ownerState}
           color="inherit"
           data-mui-test="toggle-mobile-keyboard-view"
-          aria-label={getMobileKeyboardInputViewButtonText(isMobileKeyboardViewOpen, viewType)}
+          aria-label={
+            getMobileKeyboardInputViewButtonText
+              ? getMobileKeyboardInputViewButtonText(isMobileKeyboardViewOpen, viewType)
+              : localeText.inputModeToggleButtonAriaLabel(isMobileKeyboardViewOpen, viewType)
+          }
         >
           {isMobileKeyboardViewOpen ? getViewTypeIcon(viewType) : <Pen color="inherit" />}
         </PickersToolbarPenIconButton>

@@ -26,7 +26,15 @@ export type ExportedCalendarHeaderProps<TDate> = Pick<
 >;
 
 export interface PickersCalendarHeaderSlotsComponent extends PickersArrowSwitcherSlotsComponent {
+  /**
+   * Button displayed to switch between different calendar views.
+   * @default IconButton
+   */
   SwitchViewButton: React.ElementType;
+  /**
+   * Icon displayed in the SwitchViewButton. Rotated by 180° when the open view is 'year'.
+   * @default ArrowDropDown
+   */
   SwitchViewIcon: React.ElementType;
 }
 
@@ -66,6 +74,7 @@ export interface PickersCalendarHeaderProps<TDate>
   openView: CalendarPickerView;
   reduceAnimations: boolean;
   onViewChange?: (view: CalendarPickerView) => void;
+  labelId?: string;
 }
 
 const PickersCalendarHeaderRoot = styled('div')<{
@@ -141,6 +150,7 @@ export function PickersCalendarHeader<TDate>(props: PickersCalendarHeaderProps<T
     reduceAnimations,
     rightArrowButtonText: rightArrowButtonTextProp,
     views,
+    labelId,
   } = props;
 
   deprecatedPropsWarning({
@@ -199,13 +209,15 @@ export function PickersCalendarHeader<TDate>(props: PickersCalendarHeaderProps<T
         role="presentation"
         onClick={handleToggleView}
         ownerState={ownerState}
+        // putting this on the label item element below breaks when using transition
+        aria-live="polite"
       >
         <PickersFadeTransitionGroup
           reduceAnimations={reduceAnimations}
           transKey={utils.format(month, 'monthAndYear')}
         >
           <PickersCalendarHeaderLabelItem
-            aria-live="polite"
+            id={labelId}
             data-mui-test="calendar-month-and-year-text"
             ownerState={ownerState}
           >
