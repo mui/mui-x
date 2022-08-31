@@ -32,7 +32,11 @@ export interface GridRowsMetaApi {
    * @param {string} position The position to it the row belongs to.
    * @ignore - do not document.
    */
-  unstable_storeRowHeightMeasurement: (id: GridRowId, height: number, position: string) => void;
+  unstable_storeRowHeightMeasurement: (
+    id: GridRowId,
+    height: number,
+    position: 'left' | 'center' | 'right',
+  ) => void;
   /**
    * Determines if the height of a row is "auto".
    * @ignore - do not document.

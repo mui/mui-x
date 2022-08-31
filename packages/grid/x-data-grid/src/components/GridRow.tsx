@@ -40,7 +40,7 @@ export interface GridRowProps {
   index: number;
   rowHeight: number | 'auto';
   containerWidth: number;
-  position: string;
+  position: 'left' | 'center' | 'right';
   row: GridRowModel;
   firstColumnToRender: number;
   lastColumnToRender: number;
@@ -253,15 +253,21 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
   const sizes = apiRef.current.unstable_getRowInternalSizes(rowId);
 
   let minHeight = rowHeight;
-  if (minHeight === 'auto' && sizes && Object.keys(sizes).length > 1) {
+  if (minHeight === 'auto' && sizes) {
+    let numberOfBaseSizes = 0;
     const maximumSize = Object.entries(sizes).reduce((acc, [key, size]) => {
-      if (!/^base[A-Z]/.test(key) || size <= acc) {
+      const isBaseHeight = /^base[A-Z]/.test(key);
+      if (!isBaseHeight) {
         return acc;
       }
-      return size;
+      numberOfBaseSizes += 1;
+      if (size > acc) {
+        return size;
+      }
+      return acc;
     }, 0);
 
-    if (maximumSize > 0) {
+    if (maximumSize > 0 && numberOfBaseSizes > 1) {
       minHeight = maximumSize;
     }
   }

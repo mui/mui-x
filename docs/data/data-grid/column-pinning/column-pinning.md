@@ -81,7 +81,7 @@ To pin the checkbox column added when using `checkboxSelection`, add `GRID_CHECK
 
 You can have both pinned columns and [dynamic row height](/x/react-data-grid/row-height/#dynamic-row-height) enabled at the same time.
 However, if the rows change their content after the initial calculation, you may need to trigger a manual recalculation to avoid incorrect measurements.
-You can do this by calling `apiRef.current.resetRowHeights()` everytime that the content changes.
+You can do this by calling `apiRef.current.resetRowHeights()` every time that the content changes.
 
 The demo below contains an example of both features enabled:
 

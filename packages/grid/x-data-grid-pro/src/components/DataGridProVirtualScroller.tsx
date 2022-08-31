@@ -331,7 +331,7 @@ const DataGridProVirtualScroller = React.forwardRef<
 
   const detailPanels = getDetailPanels();
 
-  const topPinnedRows = getRows({ renderContext, rows: topPinnedRowsData });
+  const topPinnedRows = getRows({ renderContext, rows: topPinnedRowsData, position: 'center' });
 
   const pinnedRowsHeight = calculatePinnedRowsHeight(apiRef);
 
@@ -345,6 +345,7 @@ const DataGridProVirtualScroller = React.forwardRef<
     renderContext,
     rows: bottomPinnedRowsData,
     rowIndexOffset: topPinnedRowsData.length + (mainRows ? mainRows.length : 0),
+    position: 'center',
   });
 
   const contentProps = getContentProps();
@@ -375,6 +376,7 @@ const DataGridProVirtualScroller = React.forwardRef<
                 maxLastColumn: leftRenderContext.lastColumnIndex,
                 availableSpace: 0,
                 rows: topPinnedRowsData,
+                position: 'left',
               })}
             </VirtualScrollerPinnedColumns>
           )}
@@ -396,6 +398,7 @@ const DataGridProVirtualScroller = React.forwardRef<
                 maxLastColumn: rightRenderContext.lastColumnIndex,
                 availableSpace: 0,
                 rows: topPinnedRowsData,
+                position: 'right',
               })}
             </VirtualScrollerPinnedColumns>
           )}
@@ -464,6 +467,7 @@ const DataGridProVirtualScroller = React.forwardRef<
                 availableSpace: 0,
                 rows: bottomPinnedRowsData,
                 rowIndexOffset: topPinnedRowsData.length + (mainRows ? mainRows.length : 0),
+                position: 'left',
               })}
             </VirtualScrollerPinnedColumns>
           )}
@@ -486,6 +490,7 @@ const DataGridProVirtualScroller = React.forwardRef<
                 availableSpace: 0,
                 rows: bottomPinnedRowsData,
                 rowIndexOffset: topPinnedRowsData.length + (mainRows ? mainRows.length : 0),
+                position: 'right',
               })}
             </VirtualScrollerPinnedColumns>
           )}
