@@ -95,5 +95,19 @@ describe('<StaticDateTimePicker />', () => {
       expect(screen.queryByRole('button', { name: /go to text input view/i })).to.equal(null);
       expect(screen.getByRole('tab', { name: 'pick date' })).not.to.equal(null);
     });
+
+    it('should render toolbar when `showToolbar` is `true`', () => {
+      render(
+        <StaticDateTimePicker
+          displayStaticWrapperAs="desktop"
+          showToolbar
+          onChange={() => {}}
+          value={adapterToUse.date(new Date(2021, 10, 20, 10, 1, 22))}
+          renderInput={(params) => <TextField {...params} />}
+        />,
+      );
+
+      expect(screen.getByRole('button', { name: /go to text input view/i })).not.to.equal(null);
+    });
   });
 });
