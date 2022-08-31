@@ -72,7 +72,6 @@ export default function LazyLoadingGrid() {
   // Fetch rows as they become visible in the viewport
   const handleFetchRows = React.useCallback(
     async (params) => {
-      console.log(params);
       const { slice, total } = await fetchRow(params);
 
       apiRef.current.unstable_replaceRows(params.firstRowToRender, slice);
