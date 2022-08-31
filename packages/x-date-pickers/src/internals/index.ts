@@ -36,19 +36,6 @@ export type { WrapperVariant } from './components/wrappers/WrapperVariantContext
 
 export { DAY_MARGIN } from './constants/dimensions';
 
-export {
-  useField,
-  createDateStrFromSections,
-  addPositionPropertiesToSections,
-  splitFormatIntoSections,
-} from './hooks/useField';
-export type {
-  UseFieldProps,
-  UseFieldParams,
-  UseFieldResponse,
-  FieldValueManager,
-  FieldSection,
-} from './hooks/useField';
 export { useMaskedInput } from './hooks/useMaskedInput';
 export { usePickerState } from './hooks/usePickerState';
 export type { PickerStateProps, PickerStatePickerProps } from './hooks/usePickerState';

@@ -39,6 +39,10 @@ export const useField = <
       defaultValue,
       onChange,
       onError,
+      onClick,
+      onKeyDown,
+      onFocus,
+      onBlur,
       format = utils.formats.keyboardDate,
       readOnly = false,
       ...otherProps
@@ -49,6 +53,7 @@ export const useField = <
   } = params;
 
   const firstDefaultValue = React.useRef(defaultValue);
+  const focusTimeoutRef = React.useRef<NodeJS.Timeout | undefined>(undefined);
 
   const valueParsed = React.useMemo(() => {
     // TODO: Avoid this type casting, the emptyValues are both valid TDate and TInputDate
@@ -97,7 +102,9 @@ export const useField = <
     }));
   };
 
-  const handleInputClick = useEventCallback(() => {
+  const handleInputClick = useEventCallback((...args) => {
+    onClick?.(...(args as []));
+
     if (state.sections.length === 0) {
       return;
     }
@@ -110,7 +117,24 @@ export const useField = <
     updateSelectedSections(sectionIndex);
   });
 
-  const handleInputKeyDown = useEventCallback((event: React.KeyboardEvent<HTMLInputElement>) => {
+  const handleInputFocus = useEventCallback((...args) => {
+    onFocus?.(...(args as []));
+    focusTimeoutRef.current = setTimeout(() => {
+      if ((inputRef.current?.selectionEnd ?? 0) - (inputRef.current?.selectionStart ?? 0) === 0) {
+        handleInputClick();
+      } else {
+        updateSelectedSections(0, state.sections.length - 1);
+      }
+    });
+  });
+
+  const handleInputBlur = useEventCallback((...args) => {
+    onBlur?.(...(args as []));
+    updateSelectedSections();
+  });
+
+  const handleInputKeyDown = useEventCallback((event: React.KeyboardEvent) => {
+    onKeyDown?.(event);
     if (!inputRef.current || state.sections.length === 0) {
       return;
     }
@@ -316,13 +340,6 @@ export const useField = <
     }
   });
 
-  const handleInputFocus = useEventCallback(() => {
-    // TODO: Avoid applying focus when focus is caused by a click
-    updateSelectedSections(0, state.sections.length - 1);
-  });
-
-  const handleInputBlur = useEventCallback(() => updateSelectedSections());
-
   useEnhancedEffect(() => {
     if (!inputRef.current || state.selectedSectionIndexes == null) {
       return;
@@ -375,15 +392,20 @@ export const useField = <
     [fieldValueManager, validationError],
   );
 
+  React.useEffect(() => {
+    return () => window.clearTimeout(focusTimeoutRef.current);
+  }, []);
+
   return {
     inputProps: {
+      ...otherProps,
       value: state.valueStr,
       onClick: handleInputClick,
-      onKeyDown: handleInputKeyDown,
       onFocus: handleInputFocus,
       onBlur: handleInputBlur,
+
+      onKeyDown: handleInputKeyDown,
       error: inputError,
-      ...otherProps,
     },
     inputRef,
   };
