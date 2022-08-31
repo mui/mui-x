@@ -10,15 +10,17 @@ export interface UseFieldParams<
   TValue,
   TDate,
   TSection extends FieldSection,
-  TProps extends UseFieldProps<any, any, any>,
+  TForwardedProps extends UseFieldForwardedProps,
+  TInternalProps extends UseFieldInternalProps<any, any, any>,
 > {
-  props: TProps;
+  forwardedProps: TForwardedProps;
+  internalProps: TInternalProps;
   valueManager: PickerStateValueManager<TInputValue, TValue, TDate>;
-  fieldValueManager: FieldValueManager<TValue, TDate, TSection, InferError<TProps>>;
-  validator: Validator<TDate, UseFieldValidationProps<TInputValue, TProps>>;
+  fieldValueManager: FieldValueManager<TValue, TDate, TSection, InferError<TInternalProps>>;
+  validator: Validator<TDate, UseFieldValidationProps<TInputValue, TInternalProps>>;
 }
 
-export interface UseFieldProps<TInputValue, TValue, TError> {
+export interface UseFieldInternalProps<TInputValue, TValue, TError> {
   value?: TInputValue;
   onChange?: (value: TValue) => void;
   onError?: (error: TError, value: TInputValue) => void;
@@ -33,14 +35,17 @@ export interface UseFieldProps<TInputValue, TValue, TError> {
    * @default false
    */
   readOnly?: boolean;
+}
+
+export interface UseFieldForwardedProps {
   onKeyDown?: React.KeyboardEventHandler;
   onClick?: () => void;
   onFocus?: () => void;
   onBlur?: () => void;
 }
 
-export interface UseFieldResponse<TProps> {
-  inputProps: Omit<TProps, keyof UseFieldProps<any, any, any>> & {
+export interface UseFieldResponse<TForwardedProps> {
+  inputProps: Omit<TForwardedProps, keyof UseFieldForwardedProps> & {
     value: string;
     onKeyDown: React.KeyboardEventHandler<HTMLInputElement>;
     onClick: () => void;
@@ -92,8 +97,8 @@ export interface UseFieldState<TValue, TSections> {
 
 export type UseFieldValidationProps<
   TInputValue,
-  TProps extends UseFieldProps<any, any, any>,
-> = Omit<TProps, 'value' | 'defaultValue'> & { value: TInputValue };
+  TInternalProps extends UseFieldInternalProps<any, any, any>,
+> = Omit<TInternalProps, 'value' | 'defaultValue'> & { value: TInputValue };
 
 export type AvailableAdjustKeyCode =
   | 'ArrowUp'

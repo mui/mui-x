@@ -2,7 +2,8 @@ export { useField } from './useField';
 export type {
   FieldValueManager,
   FieldSection,
-  UseFieldProps,
+  UseFieldForwardedProps,
+  UseFieldInternalProps,
   UseFieldParams,
   UseFieldResponse,
 } from './useField.interfaces';
