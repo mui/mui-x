@@ -9,6 +9,8 @@ import { GridColumnGroupLookup } from './gridColumnGroupsInterfaces';
 import { GridColumnGroupingApi } from '../../../models/api/gridColumnGroupingApi';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { getColumnGroupsHeaderStructure, unwrapGroupingColumnModel } from './gridColumnGroupsUtils';
+import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
+import { GridEventListener } from '../../../models/events';
 
 const createGroupLookup = (columnGroupingModel: GridColumnNode[]): GridColumnGroupLookup => {
   let groupLookup: GridColumnGroupLookup = {};
@@ -97,6 +99,29 @@ export const useGridColumnGrouping = (
 
   useGridApiMethod(apiRef, columnGroupingApi, 'GridColumnGroupingApi');
 
+  const handleColumnReorderChange = React.useCallback<
+    GridEventListener<'columnOrderChange'>
+  >(() => {
+    const unwrappedGroupingModel = unwrapGroupingColumnModel(props.columnGroupingModel ?? []);
+
+    apiRef.current.setState((state) => {
+      const orderedFields = state.columns?.all ?? [];
+
+      const columnGroupsHeaderStructure = getColumnGroupsHeaderStructure(
+        orderedFields as string[],
+        unwrappedGroupingModel,
+      );
+      return {
+        ...state,
+        columnGrouping: {
+          ...state.columnGrouping,
+          headerStructure: columnGroupsHeaderStructure,
+        },
+      };
+    });
+  }, [apiRef, props.columnGroupingModel]);
+
+  useGridApiEventHandler(apiRef, 'columnOrderChange', handleColumnReorderChange);
   /**
    * EFFECTS
    */
@@ -114,7 +139,10 @@ export const useGridColumnGrouping = (
     const groupLookup = createGroupLookup(props.columnGroupingModel ?? []);
     apiRef.current.setState((state) => ({
       ...state,
-      columnGrouping: { ...state.columnGrouping, lookup: groupLookup },
+      columnGrouping: {
+        ...state.columnGrouping,
+        lookup: groupLookup,
+      },
     }));
   }, [apiRef, props.columnGroupingModel, props.experimentalFeatures?.columnGrouping]);
 };
