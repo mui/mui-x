@@ -44,7 +44,7 @@
       "deprecated": true,
       "deprecationInfo": "Use the <code>localeText</code> prop of <code>LocalizationProvider</code> instead, see <a href=\"https://mui.com/x/react-date-pickers/localization\">https://mui.com/x/react-date-pickers/localization</a>"
     },
-    "hideTabs": { "type": { "name": "bool" } },
+    "hideTabs": { "type": { "name": "bool" }, "default": "false for mobile, true for desktop" },
     "InputAdornmentProps": { "type": { "name": "object" } },
     "inputFormat": { "type": { "name": "string" } },
     "inputRef": {
@@ -96,6 +96,7 @@
     "shouldDisableYear": { "type": { "name": "func" } },
     "showDaysOutsideCurrentMonth": { "type": { "name": "bool" } },
     "showToolbar": { "type": { "name": "bool" } },
+    "TabsComponent": { "type": { "name": "elementType" }, "default": "DateTimePickerTabs" },
     "timeIcon": { "type": { "name": "node" } },
     "ToolbarComponent": { "type": { "name": "elementType" }, "default": "DateTimePickerToolbar" },
     "toolbarFormat": { "type": { "name": "string" } },
