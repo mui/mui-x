@@ -18,7 +18,7 @@ export default function DebouncedDateField() {
   return (
     <Stack spacing={2}>
       <Typography>
-        Value outside the field: {value == null ? 'null' : value.format('P')}
+        Value outside the field: {value == null ? 'null' : value.format('LT')}
       </Typography>
       <LocalizationProvider dateAdapter={AdapterDayjs}>
         <DateField
