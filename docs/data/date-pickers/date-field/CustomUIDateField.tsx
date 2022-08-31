@@ -58,11 +58,10 @@ type BrowserInputDateFieldProps = UseDateFieldComponentProps<
 >;
 
 const BrowserInputDateField = (props: BrowserInputDateFieldProps) => {
-  const { inputRef, inputProps } = useDateField<
-    Dayjs,
-    Dayjs,
-    BrowserInputDateFieldProps
-  >(props);
+  const {
+    inputRef,
+    inputProps: { error, ...inputProps },
+  } = useDateField<Dayjs, Dayjs, BrowserInputDateFieldProps>(props);
 
   return <input {...inputProps} ref={inputRef} />;
 };

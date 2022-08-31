@@ -33,7 +33,10 @@ const UnstyledDateField = (props) => {
 };
 
 const BrowserInputDateField = (props) => {
-  const { inputRef, inputProps } = useDateField(props);
+  const {
+    inputRef,
+    inputProps: { error, ...inputProps },
+  } = useDateField(props);
 
   return <input {...inputProps} ref={inputRef} />;
 };
