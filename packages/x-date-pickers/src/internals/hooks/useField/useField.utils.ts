@@ -1,40 +1,18 @@
-import defaultLocale from 'date-fns/locale/en-US';
-// @ts-ignore
-import longFormatters from 'date-fns/_lib/format/longFormatters';
-import { FieldSection, DateSectionName, AvailableAdjustKeyCode } from './useField.interfaces';
-import { MuiPickersAdapter } from '../../models';
+import { FieldSection, AvailableAdjustKeyCode } from './useField.interfaces';
+import { MuiPickerFieldAdapter, MuiDateSectionName } from '../../models';
 
 // TODO: Improve and test with different calendars (move to date-io ?)
-export const getDateSectionNameFromFormat = (format: string): DateSectionName => {
-  if (['MMMM', 'MM'].includes(format)) {
-    return 'month';
+export const getDateSectionNameFromFormatToken = <TDate>(
+  utils: MuiPickerFieldAdapter<TDate>,
+  formatToken: string,
+): MuiDateSectionName => {
+  const dateSectionName = utils.formatTokenMap[formatToken];
+
+  if (dateSectionName == null) {
+    throw new Error(`getDatePartNameFromFormat don't understand the format ${formatToken}`);
   }
 
-  if (['y', 'yy', 'yyy', 'yyyy'].includes(format)) {
-    return 'year';
-  }
-
-  if (['dd'].includes(format)) {
-    return 'day';
-  }
-
-  if (['h', 'H', 'hh', 'HH'].includes(format)) {
-    return 'hour';
-  }
-
-  if (['mm'].includes(format)) {
-    return 'minute';
-  }
-
-  if (['ss'].includes(format)) {
-    return 'second';
-  }
-
-  if (['a', 'aa', 'aaa'].includes(format)) {
-    return 'am-pm';
-  }
-
-  throw new Error(`getDatePartNameFromFormat don't understand the format ${format}`);
+  return dateSectionName;
 };
 
 const getDeltaFromKeyCode = (keyCode: Omit<AvailableAdjustKeyCode, 'Home' | 'End'>) => {
@@ -53,16 +31,16 @@ const getDeltaFromKeyCode = (keyCode: Omit<AvailableAdjustKeyCode, 'Home' | 'End
 };
 
 export const adjustDateSectionValue = <TDate>(
-  utils: MuiPickersAdapter<TDate>,
+  utils: MuiPickerFieldAdapter<TDate>,
   date: TDate,
-  datePartName: DateSectionName,
+  dateSectionName: MuiDateSectionName,
   keyCode: AvailableAdjustKeyCode,
 ) => {
   const delta = getDeltaFromKeyCode(keyCode);
   const isStart = keyCode === 'Home';
   const isEnd = keyCode === 'End';
 
-  switch (datePartName) {
+  switch (dateSectionName) {
     case 'day': {
       if (isStart) {
         return utils.startOfMonth(date);
@@ -121,7 +99,7 @@ export const adjustDateSectionValue = <TDate>(
 };
 
 export const adjustInvalidDateSectionValue = <TDate, TSection extends FieldSection>(
-  utils: MuiPickersAdapter<TDate>,
+  utils: MuiPickerFieldAdapter<TDate>,
   section: TSection,
   keyCode: AvailableAdjustKeyCode,
 ) => {
@@ -260,7 +238,7 @@ export const addPositionPropertiesToSections = <TSection extends FieldSection>(
 };
 
 const formatDateWithPlaceholder = <TDate>(
-  utils: MuiPickersAdapter<TDate>,
+  utils: MuiPickerFieldAdapter<TDate>,
   date: TDate | null,
   format: string,
 ) => {
@@ -272,31 +250,16 @@ const formatDateWithPlaceholder = <TDate>(
 };
 
 export const splitFormatIntoSections = <TDate>(
-  utils: MuiPickersAdapter<TDate>,
+  utils: MuiPickerFieldAdapter<TDate>,
   format: string,
   date: TDate | null,
 ) => {
   let currentTokenValue = '';
   const sections: Omit<FieldSection, 'start' | 'end'>[] = [];
+  const expandedFormat = utils.expandFormat(format);
 
-  // Copy pasted from the `getFormatHelperText` in the date-fns adapter
-  // Would need to be turned into an adapter method
-  const longFormatRegexp = /P+p+|P+|p+|''|'(''|[^'])+('|$)|./g;
-  const locale = utils.locale || defaultLocale;
-  const cleanFormat = format
-    .match(longFormatRegexp)!
-    .map((token) => {
-      const firstCharacter = token[0];
-      if (firstCharacter === 'p' || firstCharacter === 'P') {
-        const longFormatter = longFormatters[firstCharacter];
-        return longFormatter(token, locale.formatLong, {});
-      }
-      return token;
-    })
-    .join('');
-
-  for (let i = 0; i < cleanFormat.length; i += 1) {
-    const char = cleanFormat[i];
+  for (let i = 0; i < expandedFormat.length; i += 1) {
+    const char = expandedFormat[i];
     if (!char.match(/([A-zÀ-ú]+)/g)) {
       if (currentTokenValue === '') {
         sections[sections.length - 1].separator += char;
@@ -306,7 +269,7 @@ export const splitFormatIntoSections = <TDate>(
           sections[sections.length - 1].separator += currentTokenValue;
           currentTokenValue = '';
         } else {
-          const dateSectionName = getDateSectionNameFromFormat(currentTokenValue);
+          const dateSectionName = getDateSectionNameFromFormatToken(utils, currentTokenValue);
 
           sections.push({
             formatValue: currentTokenValue,
@@ -323,12 +286,12 @@ export const splitFormatIntoSections = <TDate>(
       currentTokenValue += char;
     }
 
-    if (i === cleanFormat.length - 1) {
+    if (i === expandedFormat.length - 1) {
       const dateForCurrentToken = formatDateWithPlaceholder(utils, date, currentTokenValue);
       if (dateForCurrentToken === currentTokenValue) {
         sections[sections.length - 1].separator += currentTokenValue;
       } else {
-        const dateSectionName = getDateSectionNameFromFormat(currentTokenValue);
+        const dateSectionName = getDateSectionNameFromFormatToken(utils, currentTokenValue);
 
         sections.push({
           formatValue: currentTokenValue,
@@ -376,7 +339,7 @@ export const setSectionValue = <TSection extends FieldSection>(
 };
 
 export const getMonthsMatchingQuery = <TDate>(
-  utils: MuiPickersAdapter<TDate>,
+  utils: MuiPickerFieldAdapter<TDate>,
   format: string,
   query: string,
 ) => {
@@ -387,9 +350,9 @@ export const getMonthsMatchingQuery = <TDate>(
 };
 
 export const getSectionValueNumericBoundaries = <TDate>(
-  utils: MuiPickersAdapter<TDate>,
+  utils: MuiPickerFieldAdapter<TDate>,
   date: TDate,
-  dateSectionName: DateSectionName,
+  dateSectionName: MuiDateSectionName,
 ) => {
   const dateWithFallback = utils.isValid(date) ? date : utils.date()!;
   const endOfYear = utils.endOfYear(dateWithFallback);

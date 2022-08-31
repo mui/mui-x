@@ -1,4 +1,4 @@
-<LocalizationProvider dateAdapter={AdapterDateFns}>
+<LocalizationProvider dateAdapter={AdapterDayjs}>
   <Stack spacing={4}>
     <MultiInputDateRangeField />
     <SingleInputDateRangeField />
