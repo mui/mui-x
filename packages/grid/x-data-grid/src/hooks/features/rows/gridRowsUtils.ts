@@ -42,10 +42,15 @@ export const createRowsInternalCache = ({
   rows,
   getRowId,
   loading,
-}: Pick<DataGridProcessedProps, 'rows' | 'getRowId' | 'loading'>): GridRowsInternalCache => {
+  rowCount,
+}: Pick<
+  DataGridProcessedProps,
+  'rows' | 'getRowId' | 'loading' | 'rowCount'
+>): GridRowsInternalCache => {
   const cache: GridRowsInternalCache = {
     rowsBeforePartialUpdates: rows,
     loadingPropBeforePartialUpdates: loading,
+    rowCountPropBeforePartialUpdates: rowCount,
     idRowsLookup: {},
     idToIdLookup: {},
     ids: [],
