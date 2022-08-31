@@ -94,7 +94,7 @@ In the examples below we provide ways of implementing date range shortcuts using
 ## Arrow switcher buttons and icons
 
 :::info
-Slots: `LeftArrowIcon` / `RightArrowIcon` / `LeftArrowButton` / `RightArrowButton`
+Slots: `LeftArrowIcon`, `RightArrowIcon`, `LeftArrowButton`, `RightArrowButton`.
 :::
 
 The following slots allows you to customize how to render the buttons and icons for an arrow switcher component (the component to navigate to the "Previous" and "Next" step of the picker)
