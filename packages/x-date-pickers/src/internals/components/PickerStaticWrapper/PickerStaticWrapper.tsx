@@ -10,6 +10,7 @@ import {
 } from './pickerStaticWrapperClasses';
 import { PickersActionBar, PickersActionBarProps } from '../../../PickersActionBar';
 import { PickerStateWrapperProps } from '../../hooks/usePickerState';
+import { PickersSlotsComponent } from '../wrappers/WrapperProps';
 
 const useUtilityClasses = (ownerState: PickerStaticWrapperProps) => {
   const { classes } = ownerState;
@@ -21,12 +22,11 @@ const useUtilityClasses = (ownerState: PickerStaticWrapperProps) => {
   return composeClasses(slots, getStaticWrapperUtilityClass, classes);
 };
 
-export interface PickersStaticWrapperSlotsComponent {
-  ActionBar: React.ElementType<PickersActionBarProps>;
-}
+export interface PickersStaticWrapperSlotsComponent extends PickersSlotsComponent {}
 
 export interface PickersStaticWrapperSlotsComponentsProps {
   actionBar: Omit<PickersActionBarProps, 'onAccept' | 'onClear' | 'onCancel' | 'onSetToday'>;
+  paperContent: Record<string, any>;
 }
 
 export interface PickerStaticWrapperProps extends PickerStateWrapperProps {
@@ -90,12 +90,13 @@ function PickerStaticWrapper(inProps: PickerStaticWrapperProps) {
 
   const classes = useUtilityClasses(props);
   const ActionBar = components?.ActionBar ?? PickersActionBar;
+  const PaperContent = components?.PaperContent || React.Fragment;
 
   return (
     <WrapperVariantContext.Provider value={displayStaticWrapperAs}>
       <PickerStaticWrapperRoot className={classes.root} {...other}>
         <PickerStaticWrapperContent className={classes.content}>
-          {children}
+          <PaperContent {...componentsProps?.paperContent}>{children}</PaperContent>
         </PickerStaticWrapperContent>
         <ActionBar
           onAccept={onAccept}

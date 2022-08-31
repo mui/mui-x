@@ -20,6 +20,7 @@ import {
   useGridApiRef,
   GridGroupingColDefOverrideParams,
   getGroupRowIdFromPath,
+  GridLinkOperator,
 } from '@mui/x-data-grid-premium';
 import { spy } from 'sinon';
 
@@ -1444,8 +1445,7 @@ describe('<DataGridPremium /> - Row Grouping', () => {
             },
             {
               field: 'category1',
-              groupingValueGetter: (params: GridGroupingValueGetterParams<string>) =>
-                `groupingValue ${params.value}`,
+              groupingValueGetter: (params) => `groupingValue ${params.value}`,
             },
           ]}
           initialState={{ rowGrouping: { model: ['category1'] } }}
@@ -1462,6 +1462,38 @@ describe('<DataGridPremium /> - Row Grouping', () => {
         '',
       ]);
       expect(getColumnValues(1)).to.deep.equal(['', '0', '1', '2', '', '3', '4']);
+    });
+
+    it('should react to groupingValueGetter update', () => {
+      render(
+        <Test
+          columns={[
+            {
+              field: 'id',
+            },
+            {
+              field: 'modulo',
+              groupingValueGetter: (params) => params.row.id % 2,
+            },
+          ]}
+          initialState={{ rowGrouping: { model: ['modulo'] } }}
+          defaultGroupingExpansionDepth={-1}
+        />,
+      );
+      expect(getColumnValues(0)).to.deep.equal(['0 (3)', '', '', '', '1 (2)', '', '']);
+      expect(getColumnValues(1)).to.deep.equal(['', '0', '2', '4', '', '1', '3']);
+
+      act(() =>
+        apiRef.current.updateColumns([
+          {
+            field: 'modulo',
+            groupingValueGetter: (params) => params.row.id % 3,
+          },
+        ]),
+      );
+
+      expect(getColumnValues(0)).to.deep.equal(['0 (2)', '', '', '1 (2)', '', '', '2 (1)', '']);
+      expect(getColumnValues(1)).to.deep.equal(['', '0', '3', '', '1', '4', '', '2']);
     });
 
     it('should not use valueGetter to group the rows when defined', () => {
@@ -2121,8 +2153,129 @@ describe('<DataGridPremium /> - Row Grouping', () => {
           />,
         );
 
-        // TODO: allows grouping filter to be more flexible when it is quick filter
         expect(getColumnValues(1)).to.deep.equal(['', '3', '4']);
+      });
+
+      it('should let group appears when a leaf rows pass quick filter', () => {
+        render(
+          <Test
+            initialState={{
+              rowGrouping: { model: ['category1'] },
+              filter: {
+                filterModel: {
+                  items: [],
+                  quickFilterValues: ['Cat 1'],
+                },
+              },
+            }}
+            rowGroupingColumnMode="single"
+            defaultGroupingExpansionDepth={-1}
+          />,
+        );
+
+        // Corresponds to rows id 0 an 4 (respectively "cat A cat 1" and "cat B cat 1")
+        expect(getColumnValues(1)).to.deep.equal(['', '0', '', '4']);
+      });
+
+      it('should let group appears when a rows pass quick filter based on both grouping and leaf values', () => {
+        render(
+          <Test
+            initialState={{
+              rowGrouping: { model: ['category1'] },
+              filter: {
+                filterModel: {
+                  items: [],
+                  quickFilterValues: ['Cat A', 'Cat 2'],
+                },
+              },
+            }}
+            rowGroupingColumnMode="single"
+            defaultGroupingExpansionDepth={-1}
+          />,
+        );
+
+        // Corresponds to rows A.1 and B.1
+        expect(getColumnValues(1)).to.deep.equal(['', '1', '2']);
+      });
+
+      it('should show all children when a group pass quick filter', () => {
+        render(
+          <Test
+            initialState={{
+              rowGrouping: { model: ['category1'] },
+              filter: {
+                filterModel: {
+                  items: [],
+                  quickFilterValues: ['Cat A'],
+                },
+              },
+            }}
+            rowGroupingColumnMode="single"
+            defaultGroupingExpansionDepth={-1}
+          />,
+        );
+
+        expect(getColumnValues(1)).to.deep.equal(['', '0', '1', '2']);
+      });
+
+      it('should let group appears when a leaf rows pass filterModel', () => {
+        render(
+          <Test
+            initialState={{
+              rowGrouping: { model: ['category1'] },
+              filter: {
+                filterModel: {
+                  items: [
+                    {
+                      columnField: 'category2',
+                      operatorValue: 'equals',
+                      value: 'Cat 1',
+                    },
+                  ],
+                },
+              },
+            }}
+            rowGroupingColumnMode="single"
+            defaultGroupingExpansionDepth={-1}
+          />,
+        );
+
+        // Corresponds to rows id 0 an 4 (respectively "cat A cat 1" and "cat B cat 1")
+        expect(getColumnValues(1)).to.deep.equal(['', '0', '', '4']);
+      });
+
+      it('should manage link operator OR accros group and leaf columns', () => {
+        render(
+          <Test
+            initialState={{
+              rowGrouping: { model: ['category1'] },
+              filter: {
+                filterModel: {
+                  items: [
+                    {
+                      id: 2,
+                      columnField: 'category2',
+                      operatorValue: 'equals',
+                      value: 'Cat 1',
+                    },
+                    {
+                      id: 1,
+                      columnField: GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD,
+                      operatorValue: 'equals',
+                      value: 'Cat A',
+                    },
+                  ],
+                  linkOperator: GridLinkOperator.Or,
+                },
+              },
+            }}
+            rowGroupingColumnMode="single"
+            defaultGroupingExpansionDepth={-1}
+          />,
+        );
+
+        // Corresponds to rows id 0, 1, 2 because of Cat A, ann id 4 because of Cat 1
+        expect(getColumnValues(1)).to.deep.equal(['', '0', '1', '2', '', '4']);
       });
     });
 

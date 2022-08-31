@@ -85,7 +85,7 @@ const GridEditInputCell = React.forwardRef<HTMLInputElement, GridEditInputCellPr
     const classes = useUtilityClasses(ownerState);
 
     const handleChange = React.useCallback(
-      async (event) => {
+      async (event: React.ChangeEvent<HTMLInputElement>) => {
         const newValue = event.target.value;
 
         if (onValueChange) {
@@ -193,7 +193,8 @@ GridEditInputCell.propTypes = {
    */
   tabIndex: PropTypes.oneOf([-1, 0]),
   /**
-   * The cell value, but if the column has valueGetter, use getValue.
+   * The cell value.
+   * If the column has `valueGetter`, use `params.row` to directly access the fields.
    */
   value: PropTypes.any,
 } as any;

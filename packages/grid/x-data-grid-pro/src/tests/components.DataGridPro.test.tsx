@@ -1,6 +1,6 @@
 import * as React from 'react';
 // @ts-ignore Remove once the test utils are typed
-import { createRenderer, fireEvent } from '@mui/monorepo/test/utils';
+import { createRenderer, fireEvent, userEvent } from '@mui/monorepo/test/utils';
 import { spy } from 'sinon';
 import { expect } from 'chai';
 import {
@@ -85,8 +85,7 @@ describe('<DataGridPro/> - Components', () => {
       expect(propHandler.callCount).to.equal(0);
       expect(eventHandler.callCount).to.equal(0);
 
-      fireEvent.mouseUp(getCell(0, 0));
-      fireEvent.click(getCell(0, 0));
+      userEvent.mousePress(getCell(0, 0));
       fireEvent.keyDown(getCell(0, 0));
 
       expect(propHandler.callCount).to.equal(1);

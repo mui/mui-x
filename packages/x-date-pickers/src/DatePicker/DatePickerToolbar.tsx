@@ -3,7 +3,7 @@ import Typography from '@mui/material/Typography';
 import { styled } from '@mui/material/styles';
 import { generateUtilityClasses } from '@mui/material';
 import { PickersToolbar, pickersToolbarClasses } from '../internals/components/PickersToolbar';
-import { useUtils } from '../internals/hooks/useUtils';
+import { useLocaleText, useUtils } from '../internals/hooks/useUtils';
 import { BaseToolbarProps } from '../internals/models/props/baseToolbarProps';
 import { isYearAndMonthViews, isYearOnlyView } from './shared';
 import { CalendarPickerView } from '../internals/models';
@@ -53,11 +53,14 @@ export const DatePickerToolbar = React.forwardRef(function DatePickerToolbar<TDa
     toggleMobileKeyboardView,
     toolbarFormat,
     toolbarPlaceholder = '––',
-    toolbarTitle = 'Select date',
+    toolbarTitle: toolbarTitleProp,
     views,
     ...other
   } = props;
   const utils = useUtils<TDate>();
+  const localeText = useLocaleText();
+
+  const toolbarTitle = toolbarTitleProp ?? localeText.datePickerDefaultToolbarTitle;
 
   const dateText = React.useMemo(() => {
     if (!parsedValue) {

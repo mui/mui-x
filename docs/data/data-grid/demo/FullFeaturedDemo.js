@@ -166,7 +166,7 @@ function SettingsPanel(props) {
   }, []);
 
   const handlePaginationChange = React.useCallback((event) => {
-    setSelectedPaginationValue(event.target.value);
+    setSelectedPaginationValue(Number(event.target.value));
   }, []);
 
   const handleThemeChange = React.useCallback((event) => {

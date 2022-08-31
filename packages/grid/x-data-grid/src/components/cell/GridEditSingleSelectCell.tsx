@@ -44,6 +44,10 @@ export interface GridEditSingleSelectCellProps
   initialOpen?: boolean;
 }
 
+function isKeyboardEvent(event: any): event is React.KeyboardEvent {
+  return !!event.key;
+}
+
 function GridEditSingleSelectCell(props: GridEditSingleSelectCellProps) {
   const rootProps = useGridRootProps();
   const {
@@ -152,7 +156,10 @@ function GridEditSingleSelectCell(props: GridEditSingleSelectCellProps) {
     }
   };
 
-  const handleOpen = () => {
+  const handleOpen: SelectProps['onOpen'] = (event) => {
+    if (isKeyboardEvent(event) && event.key === 'Enter') {
+      return;
+    }
     setOpen(true);
   };
 
@@ -258,7 +265,8 @@ GridEditSingleSelectCell.propTypes = {
    */
   tabIndex: PropTypes.oneOf([-1, 0]).isRequired,
   /**
-   * The cell value, but if the column has valueGetter, use getValue.
+   * The cell value.
+   * If the column has `valueGetter`, use `params.row` to directly access the fields.
    */
   value: PropTypes.any,
 } as any;

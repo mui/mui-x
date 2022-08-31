@@ -1,0 +1,10 @@
+<LocalizationProvider dateAdapter={AdapterDateFns}>
+  <Stack spacing={2} direction="row">
+    <DateField label="Uncontrolled field" defaultValue={new Date()} />
+    <DateField
+      label="Controlled field"
+      value={value}
+      onChange={(newValue) => setValue(newValue)}
+    />
+  </Stack>
+</LocalizationProvider>

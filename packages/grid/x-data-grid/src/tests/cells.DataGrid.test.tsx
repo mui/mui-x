@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { spy } from 'sinon';
 // @ts-ignore Remove once the test utils are typed
-import { createRenderer, fireEvent } from '@mui/monorepo/test/utils';
+import { createRenderer, userEvent } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
 import { DataGrid, gridClasses } from '@mui/x-data-grid';
 import { getCell } from 'test/utils/helperFn';
@@ -172,8 +172,7 @@ describe('<DataGrid /> - Cells', () => {
       </div>,
     );
 
-    fireEvent.mouseUp(getCell(0, 0));
-    fireEvent.click(getCell(0, 0));
+    userEvent.mousePress(getCell(0, 0));
 
     expect(() => {
       getCell(1, 0).focus();

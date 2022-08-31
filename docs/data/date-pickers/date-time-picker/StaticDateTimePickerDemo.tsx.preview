@@ -1,4 +1,4 @@
-<LocalizationProvider dateAdapter={AdapterDateFns}>
+<LocalizationProvider dateAdapter={AdapterDayjs}>
   <StaticDateTimePicker
     displayStaticWrapperAs="desktop"
     openTo="year"

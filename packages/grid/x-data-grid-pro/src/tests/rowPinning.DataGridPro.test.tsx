@@ -8,8 +8,15 @@ import {
   DataGridProProps,
 } from '@mui/x-data-grid-pro';
 import { expect } from 'chai';
-// @ts-expect-error Remove once the test utils are typed
-import { createRenderer, waitFor, fireEvent, screen, act } from '@mui/monorepo/test/utils';
+import {
+  createRenderer,
+  waitFor,
+  fireEvent,
+  screen,
+  act,
+  userEvent,
+  // @ts-expect-error Remove once the test utils are typed
+} from '@mui/monorepo/test/utils';
 import { getData } from 'storybook/src/data/data-service';
 import {
   getActiveCell,
@@ -264,7 +271,10 @@ describe('<DataGridPro /> - Row pinning', () => {
 
       const [pinnedRow0, pinnedRow1, ...rows] = rowsData;
 
-      const getRowId = React.useCallback((row) => row.productId, []);
+      const getRowId = React.useCallback<NonNullable<DataGridProProps['getRowId']>>(
+        (row) => row.productId,
+        [],
+      );
 
       return (
         <div style={{ width: 302, height: 300 }}>
@@ -342,11 +352,6 @@ describe('<DataGridPro /> - Row pinning', () => {
   });
 
   describe('keyboard navigation', () => {
-    function fireClickEvent(cell: HTMLElement) {
-      fireEvent.mouseUp(cell);
-      fireEvent.click(cell);
-    }
-
     function getActiveCellRowId() {
       const cell = document.activeElement;
       if (!cell || cell.getAttribute('role') !== 'cell') {
@@ -379,7 +384,7 @@ describe('<DataGridPro /> - Row pinning', () => {
       expect(isRowPinned(getRowById(1), 'top')).to.equal(true, '#1 pinned top');
       expect(isRowPinned(getRowById(0), 'top')).to.equal(true, '#0 pinned top');
 
-      fireClickEvent(getCell(0, 0));
+      userEvent.mousePress(getCell(0, 0));
       // first top pinned row
       expect(getActiveCellRowId()).to.equal('1');
 
@@ -422,7 +427,7 @@ describe('<DataGridPro /> - Row pinning', () => {
       expect(isRowPinned(getRowById(0), 'bottom')).to.equal(true, '#0 pinned top');
       expect(isRowPinned(getRowById(1), 'bottom')).to.equal(true, '#1 pinned top');
 
-      fireClickEvent(getCell(0, 0));
+      userEvent.mousePress(getCell(0, 0));
       expect(getActiveCellRowId()).to.equal('2');
 
       fireEvent.keyDown(getCell(0, 0), { key: 'ArrowDown' });
@@ -475,7 +480,7 @@ describe('<DataGridPro /> - Row pinning', () => {
       expect(isRowPinned(getRowById(0), 'bottom')).to.equal(true, '#0 pinned bottom');
 
       // top-pinned row
-      fireClickEvent(getCell(0, 3));
+      userEvent.mousePress(getCell(0, 3));
       expect(getActiveCell()).to.equal('0-3');
       expect(getActiveCellRowId()).to.equal('1');
 
@@ -761,5 +766,16 @@ describe('<DataGridPro /> - Row pinning', () => {
     render(<BaselineTestCase rowCount={rowCount} colCount={1} />);
 
     expect(screen.getByRole('grid').getAttribute('aria-rowcount')).to.equal(`${rowCount + 1}`); // +1 for header row
+  });
+
+  // https://github.com/mui/mui-x/issues/5845
+  it('should work with `getCellClassName` when `rows=[]`', () => {
+    const className = 'test-class-name';
+    render(
+      <BaselineTestCase rowCount={2} colCount={1} rows={[]} getRowClassName={() => className} />,
+    );
+
+    expect(getRowById(0)!.classList.contains(className)).to.equal(true);
+    expect(getRowById(1)!.classList.contains(className)).to.equal(true);
   });
 });
