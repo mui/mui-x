@@ -221,34 +221,36 @@ export const useGridRows = (
       const tree = { ...gridRowTreeSelector(apiRef) };
       const dataRowIdToModelLookup = { ...gridRowsLookupSelector(apiRef) };
       const dataRowIdToIdLookup = { ...gridRowsDataRowIdToIdLookupSelector(apiRef) };
+      const rootGroup = (tree[GRID_ROOT_GROUP_ID] as GridGroupNode)
+      const rootGroupChildren = [...rootGroup.children];
 
-      const rootGroupChildren = [...(tree[GRID_ROOT_GROUP_ID] as GridGroupNode).children];
+      for (let i=0; i<newRows.length; i+= 1) {
+          const rowModel = newRows[i]
+          const rowId = getRowIdFromRowModel(
+              rowModel,
+              props.getRowId,
+              'A row was provided without id when calling replaceRows().',
+          );
 
-      newRows.forEach((row, index) => {
-        const rowId = getRowIdFromRowModel(
-          row,
-          props.getRowId,
-          'A row was provided without id when calling replaceRows().',
-        );
-        const [replacedRowId] = rootGroupChildren.splice(firstRowToRender + index, 1, rowId);
+          const [replacedRowId] = rootGroupChildren.splice(firstRowToRender + i, 1, rowId);
 
-        delete dataRowIdToModelLookup[replacedRowId];
-        delete dataRowIdToIdLookup[replacedRowId];
-        delete tree[replacedRowId];
-      });
+          delete dataRowIdToModelLookup[replacedRowId];
+          delete dataRowIdToIdLookup[replacedRowId];
+          delete tree[replacedRowId];
 
-      newRows.forEach((row) => {
-        const rowTreeNodeConfig: GridLeafNode = {
-          id: row.id,
-          depth: 0,
-          parent: GRID_ROOT_GROUP_ID,
-          type: 'leaf',
-          groupingKey: null,
-        };
-        dataRowIdToModelLookup[row.id] = row;
-        dataRowIdToIdLookup[row.id] = row.id;
-        tree[row.id] = rowTreeNodeConfig;
-      });
+          const rowTreeNodeConfig: GridLeafNode = {
+              id: rowId,
+              depth: 0,
+              parent: GRID_ROOT_GROUP_ID,
+              type: 'leaf',
+              groupingKey: null,
+          };
+          dataRowIdToModelLookup[rowId] = rowModel;
+          dataRowIdToIdLookup[rowId] = rowId;
+          tree[rowId] = rowTreeNodeConfig;
+      }
+
+      tree[GRID_ROOT_GROUP_ID] = { ...rootGroup, children: rootGroupChildren }
 
       // Removes potential remaining skeleton rows from the dataRowIds.
       const dataRowIds = rootGroupChildren.filter(childId => tree[childId].type === 'leaf')

@@ -1,8 +1,8 @@
-<LocalizationProvider dateAdapter={AdapterDateFns}>
+<LocalizationProvider dateAdapter={AdapterDayjs}>
   <Stack spacing={2} direction="row">
     <SingleInputDateRangeField
       label="Uncontrolled field"
-      defaultValue={[new Date(), addWeeks(new Date(), 1)]}
+      defaultValue={[today, today.add(1, 'week')]}
     />
     <SingleInputDateRangeField
       label="Controlled field"

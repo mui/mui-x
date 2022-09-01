@@ -20,6 +20,7 @@ import {
 } from '@mui/monorepo/test/utils';
 import { getCell, getColumnHeaderCell, getColumnHeadersTextContent } from 'test/utils/helperFn';
 import { useData } from 'storybook/src/hooks/useData';
+import { getData } from 'storybook/src/data/data-service';
 
 // TODO Move to utils
 // Fix https://github.com/mui/mui-x/pull/2085/files/058f56ac3c729b2142a9a28b79b5b13535cdb819#diff-db85480a519a5286d7341e9b8957844762cf04cdacd946331ebaaaff287482ec
@@ -49,6 +50,39 @@ describe('<DataGridPro /> - Column pinning', () => {
       </div>
     );
   };
+
+  function ResizeObserverMock(
+    callback: (entries: { borderBoxSize: [{ blockSize: number }] }[]) => void,
+  ) {
+    let timeout: NodeJS.Timeout;
+
+    return {
+      observe: (element: HTMLElement) => {
+        // Simulates the async behavior of the native ResizeObserver
+        timeout = setTimeout(() => {
+          callback([{ borderBoxSize: [{ blockSize: element.clientHeight }] }]);
+        });
+      },
+      disconnect: () => {
+        clearTimeout(timeout);
+      },
+    };
+  }
+
+  const originalResizeObserver = window.ResizeObserver;
+
+  beforeEach(() => {
+    const { userAgent } = window.navigator;
+
+    if (userAgent.includes('Chrome') && !userAgent.includes('Headless')) {
+      // Only use the mock in non-headless Chrome
+      window.ResizeObserver = ResizeObserverMock as any;
+    }
+  });
+
+  afterEach(() => {
+    window.ResizeObserver = originalResizeObserver;
+  });
 
   it('should scroll when the next cell to focus is covered by the left pinned columns', function test() {
     if (isJSDOM) {
@@ -227,6 +261,97 @@ describe('<DataGridPro /> - Column pinning', () => {
       <TestCase nbCols={2} initialState={{ pinnedColumns: { left: ['id'] } }} checkboxSelection />,
     );
     expect(getColumnHeadersTextContent()).to.deep.equal(['id', '', 'Currency Pair']);
+  });
+
+  describe('dynamic row height', () => {
+    it('should work with dynamic row height', async function test() {
+      if (isJSDOM) {
+        // Need layouting
+        this.skip();
+      }
+
+      const Test = ({ bioHeight }: { bioHeight: number }) => {
+        const data = React.useMemo(() => getData(1, 2), []);
+
+        const columns = [
+          ...data.columns,
+          { field: 'bio', renderCell: () => <div style={{ width: 100, height: bioHeight }} /> },
+        ];
+
+        return (
+          <TestCase
+            rows={data.rows}
+            columns={columns}
+            getRowHeight={() => 'auto'}
+            initialState={{ pinnedColumns: { left: ['id'], right: ['bio'] } }}
+          />
+        );
+      };
+
+      render(<Test bioHeight={100} />);
+      await act(() => Promise.resolve());
+      clock.runToLast();
+      const leftRow = document.querySelector(`.${gridClasses['pinnedColumns--left']} [role="row"]`);
+      expect(leftRow).toHaveInlineStyle({ maxHeight: 'none', minHeight: '101px' });
+      const centerRow = document.querySelector(
+        `.${gridClasses.virtualScrollerRenderZone} [role="row"]`,
+      );
+      expect(centerRow).toHaveInlineStyle({ maxHeight: 'none', minHeight: '101px' });
+      const rightRow = document.querySelector(
+        `.${gridClasses['pinnedColumns--right']} [role="row"]`,
+      );
+      expect(rightRow).toHaveInlineStyle({ maxHeight: 'none', minHeight: '101px' });
+    });
+
+    it('should react to content height changes', async function test() {
+      if (isJSDOM) {
+        // Need layouting
+        this.skip();
+      }
+
+      const Test = ({ bioHeight }: { bioHeight: number }) => {
+        const data = React.useMemo(() => getData(1, 2), []);
+
+        const columns = [
+          ...data.columns,
+          { field: 'bio', renderCell: () => <div style={{ width: 100, height: bioHeight }} /> },
+        ];
+
+        return (
+          <TestCase
+            rows={data.rows}
+            columns={columns}
+            getRowHeight={() => 'auto'}
+            initialState={{ pinnedColumns: { left: ['id'], right: ['bio'] } }}
+          />
+        );
+      };
+
+      const { setProps } = render(<Test bioHeight={100} />);
+      await act(() => Promise.resolve());
+      clock.runToLast();
+      const centerRow = document.querySelector(
+        `.${gridClasses.virtualScrollerRenderZone} [role="row"]`,
+      );
+      expect(centerRow).toHaveInlineStyle({ maxHeight: 'none', minHeight: '101px' });
+
+      setProps({ bioHeight: 200 });
+      await act(() => Promise.resolve());
+      clock.runToLast();
+      expect(centerRow).toHaveInlineStyle({ maxHeight: 'none', minHeight: '201px' });
+
+      setProps({ bioHeight: 100 });
+      await act(() => Promise.resolve());
+      clock.runToLast();
+      // If the new height is smaller than the current one, it won't be reflected unless
+      // apiRef.current.resetRowHeights() is called
+      expect(centerRow).toHaveInlineStyle({ maxHeight: 'none', minHeight: '201px' });
+
+      act(() => apiRef.current.resetRowHeights());
+      await act(() => Promise.resolve());
+      clock.runToLast();
+      expect(centerRow).toHaveInlineStyle({ maxHeight: 'none', minHeight: '101px' });
+    });
   });
 
   describe('prop: onPinnedColumnsChange', () => {
