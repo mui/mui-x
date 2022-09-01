@@ -1,5 +1,5 @@
 <Typography>
-  Value outside the field: {value == null ? 'null' : value.format('P')}
+  Value outside the field: {value == null ? 'null' : value.format('L')}
 </Typography>
 <LocalizationProvider dateAdapter={AdapterDayjs}>
   <DateField
