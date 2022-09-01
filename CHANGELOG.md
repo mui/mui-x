@@ -9,7 +9,20 @@ _Sep 1, 2022_
 
 We'd like to offer a big thanks to the 9 contributors who made this release possible. Here are some highlights ✨:
 
-TODO INSERT HIGHLIGHTS
+- 🎁 Implement Lazy loading (#5214) @DanailH
+
+  Pro users now can try experimental `lazyLoading` feature.
+  Implement lazy infinite skeleton loading with a few settings.
+
+  To enable this feature, add `experimentalFeatures={{ lazyLoading: true }}`.
+  Lazy loading feature has a few other prerequisites.
+  See the [documentation](https://mui.com/x/react-data-grid/row-updates/#lazy-loading) to explore example in detail.
+
+- 🚀 Improve `pickers` focus management (#5820) @alexfauquette
+- 🎉 Enable disabling `day` on date range picker depending on `position` (#5773) @alexfauquette
+- ✨ Various `DataGrid` and `pickers` improvements
+- 📚 Documentation improvements
+- 🐞 Bugfixes
 
 ### `@mui/x-data-grid@v5.17.0` / `@mui/x-data-grid-pro@v5.17.0` / `@mui/x-data-grid-premium@v5.17.0`
 
