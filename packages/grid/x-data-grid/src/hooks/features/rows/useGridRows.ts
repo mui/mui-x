@@ -3,7 +3,12 @@ import { GridEventListener } from '../../../models/events';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridRowApi } from '../../../models/api/gridRowApi';
-import { GridRowModel, GridRowId, GridRowTreeNodeConfig } from '../../../models/gridRows';
+import {
+  GridRowModel,
+  GridRowId,
+  GridRowTreeNodeConfig,
+  GridRowEntry,
+} from '../../../models/gridRows';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { useGridLogger } from '../../utils/useGridLogger';
 import {
@@ -356,20 +361,28 @@ export const useGridRows = (
       const updatedIdToIdLookup = { ...idToIdLookup };
       const updatedTree = { ...tree };
 
-      newRows.forEach((row, index) => {
+      const newRowEntries: GridRowEntry[] = newRows.map((newRowModel) => {
         const rowId = getRowIdFromRowModel(
-          row,
+          newRowModel,
           props.getRowId,
           'A row was provided without id when calling replaceRows().',
         );
-        const [replacedRowId] = updatedRows.splice(firstRowToRender + index, 1, rowId);
+
+        return {
+          id: rowId,
+          model: newRowModel,
+        };
+      });
+
+      newRowEntries.forEach((row, index) => {
+        const [replacedRowId] = updatedRows.splice(firstRowToRender + index, 1, row.id);
 
         delete updatedIdRowsLookup[replacedRowId];
         delete updatedIdToIdLookup[replacedRowId];
         delete updatedTree[replacedRowId];
       });
 
-      newRows.forEach((row) => {
+      newRowEntries.forEach((row) => {
         const rowTreeNodeConfig: GridRowTreeNodeConfig = {
           id: row.id,
           parent: null,
@@ -377,7 +390,7 @@ export const useGridRows = (
           groupingKey: null,
           groupingField: null,
         };
-        updatedIdRowsLookup[row.id] = row;
+        updatedIdRowsLookup[row.id] = row.model;
         updatedIdToIdLookup[row.id] = row.id;
         updatedTree[row.id] = rowTreeNodeConfig;
       });
