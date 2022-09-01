@@ -60,12 +60,16 @@ To enable lazy loading, there are a few steps you need to follow:
 First, set `rowsLoadingMode="server"`.
 Then, set `rowCount` to reflect the number of available rows on the server.
 Third, set a callback function on `onFetchRows` to load the data corresponding to the row indices passed within `GridFetchRowsParams`.
-Finally, replace the empty rows with the newly fetched ones using `apiRef.current.replaceRows()` like in the demo below.
+Finally, replace the empty rows with the newly fetched ones using `apiRef.current.unstable_replaceRows()` like in the demo below.
 
 {{"demo": "LazyLoadingGrid.js", "bg": "inline", "disableAd": true}}
 
 :::warning
 The `onFetchRows` callback is called every time a new row is in the viewport, so when you scroll, you can easily send multiple requests to your backend. We recommend developers limit those by implementing debouncing.
+:::
+
+:::warning
+For now, lazy loading rows does not work with row grouping or tree data.
 :::
 
 :::info
