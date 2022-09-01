@@ -80,14 +80,18 @@ export const MobileDateTimePicker = React.forwardRef(function MobileDateTimePick
   // It saves us >1kb gzip and make any prop available automatically on any level down.
   const {
     ToolbarComponent = DateTimePickerToolbar,
-    TabsComponent = DateTimePickerTabs,
     value,
     onChange,
-    components,
+    components: providedComponents,
     componentsProps,
     hideTabs = false,
     ...other
   } = props;
+  const components = React.useMemo<MobileDateTimePickerProps<TInputDate, TDate>['components']>(
+    () => ({ PickerTabs: DateTimePickerTabs, ...providedComponents }),
+    [providedComponents],
+  );
+
   const DateInputProps = {
     ...inputProps,
     ...other,
@@ -111,7 +115,6 @@ export const MobileDateTimePicker = React.forwardRef(function MobileDateTimePick
         autoFocus
         toolbarTitle={props.label || props.toolbarTitle}
         ToolbarComponent={ToolbarComponent}
-        TabsComponent={TabsComponent}
         DateInputProps={DateInputProps}
         components={components}
         componentsProps={componentsProps}
@@ -479,11 +482,6 @@ MobileDateTimePicker.propTypes = {
    * If `true`, show the toolbar even in desktop mode.
    */
   showToolbar: PropTypes.bool,
-  /**
-   * Component that will replace default tabs renderer.
-   * @default DateTimePickerTabs
-   */
-  TabsComponent: PropTypes.elementType,
   /**
    * Time tab icon.
    */

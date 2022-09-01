@@ -75,9 +75,8 @@ export const StaticDateTimePicker = React.forwardRef(function StaticDateTimePick
     displayStaticWrapperAs = 'mobile',
     onChange,
     ToolbarComponent = DateTimePickerToolbar,
-    TabsComponent = DateTimePickerTabs,
     value,
-    components,
+    components: providedComponents,
     componentsProps,
     hideTabs = displayStaticWrapperAs === 'desktop',
     ...other
@@ -89,6 +88,10 @@ export const StaticDateTimePicker = React.forwardRef(function StaticDateTimePick
   );
 
   const validationError = useDateTimeValidation(props) !== null;
+  const components = React.useMemo<StaticDateTimePickerProps<TInputDate, TDate>['components']>(
+    () => ({ PickerTabs: DateTimePickerTabs, ...providedComponents }),
+    [providedComponents],
+  );
 
   const DateInputProps = {
     ...inputProps,
@@ -110,7 +113,6 @@ export const StaticDateTimePicker = React.forwardRef(function StaticDateTimePick
         {...pickerProps}
         toolbarTitle={props.label || props.toolbarTitle}
         ToolbarComponent={ToolbarComponent}
-        TabsComponent={TabsComponent}
         DateInputProps={DateInputProps}
         components={components}
         componentsProps={componentsProps}
@@ -464,11 +466,6 @@ StaticDateTimePicker.propTypes = {
    * If `true`, show the toolbar even in desktop mode.
    */
   showToolbar: PropTypes.bool,
-  /**
-   * Component that will replace default tabs renderer.
-   * @default DateTimePickerTabs
-   */
-  TabsComponent: PropTypes.elementType,
   /**
    * Time tab icon.
    */

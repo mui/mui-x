@@ -83,14 +83,18 @@ export const DesktopDateTimePicker = React.forwardRef(function DesktopDateTimePi
     PaperProps,
     PopperProps,
     ToolbarComponent = DateTimePickerToolbar,
-    TabsComponent = DateTimePickerTabs,
     TransitionComponent,
     value,
-    components,
+    components: providedComponents,
     componentsProps,
     hideTabs = true,
     ...other
   } = props;
+  const components = React.useMemo<DesktopDateTimePickerProps<TInputDate, TDate>['components']>(
+    () => ({ PickerTabs: DateTimePickerTabs, ...providedComponents }),
+    [providedComponents],
+  );
+
   const AllDateInputProps = {
     ...inputProps,
     ...other,
@@ -116,7 +120,6 @@ export const DesktopDateTimePicker = React.forwardRef(function DesktopDateTimePi
         autoFocus
         toolbarTitle={props.label || props.toolbarTitle}
         ToolbarComponent={ToolbarComponent}
-        TabsComponent={TabsComponent}
         DateInputProps={AllDateInputProps}
         components={components}
         componentsProps={componentsProps}
@@ -488,11 +491,6 @@ DesktopDateTimePicker.propTypes = {
    * If `true`, show the toolbar even in desktop mode.
    */
   showToolbar: PropTypes.bool,
-  /**
-   * Component that will replace default tabs renderer.
-   * @default DateTimePickerTabs
-   */
-  TabsComponent: PropTypes.elementType,
   /**
    * Time tab icon.
    */

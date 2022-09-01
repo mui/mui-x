@@ -461,11 +461,6 @@ DateTimePicker.propTypes = {
    */
   showToolbar: PropTypes.bool,
   /**
-   * Component that will replace default tabs renderer.
-   * @default DateTimePickerTabs
-   */
-  TabsComponent: PropTypes.elementType,
-  /**
    * Time tab icon.
    */
   timeIcon: PropTypes.node,
