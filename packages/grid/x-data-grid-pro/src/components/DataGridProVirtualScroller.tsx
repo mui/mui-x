@@ -331,19 +331,21 @@ const DataGridProVirtualScroller = React.forwardRef<
 
   const detailPanels = getDetailPanels();
 
-  const topPinnedRows = getRows({ renderContext, rows: topPinnedRowsData });
+  const topPinnedRows = getRows({ renderContext, rows: topPinnedRowsData, position: 'center' });
 
   const pinnedRowsHeight = calculatePinnedRowsHeight(apiRef);
 
   const mainRows = getRows({
     renderContext,
     rowIndexOffset: topPinnedRowsData.length,
+    position: 'center',
   });
 
   const bottomPinnedRows = getRows({
     renderContext,
     rows: bottomPinnedRowsData,
     rowIndexOffset: topPinnedRowsData.length + (mainRows ? mainRows.length : 0),
+    position: 'center',
   });
 
   const contentProps = getContentProps();
@@ -373,8 +375,8 @@ const DataGridProVirtualScroller = React.forwardRef<
                 minFirstColumn: leftRenderContext.firstColumnIndex,
                 maxLastColumn: leftRenderContext.lastColumnIndex,
                 availableSpace: 0,
-                ignoreAutoHeight: true,
                 rows: topPinnedRowsData,
+                position: 'left',
               })}
             </VirtualScrollerPinnedColumns>
           )}
@@ -394,9 +396,9 @@ const DataGridProVirtualScroller = React.forwardRef<
                 renderContext: rightRenderContext,
                 minFirstColumn: rightRenderContext.firstColumnIndex,
                 maxLastColumn: rightRenderContext.lastColumnIndex,
-                ignoreAutoHeight: true,
                 availableSpace: 0,
                 rows: topPinnedRowsData,
+                position: 'right',
               })}
             </VirtualScrollerPinnedColumns>
           )}
@@ -415,8 +417,8 @@ const DataGridProVirtualScroller = React.forwardRef<
               minFirstColumn: leftRenderContext.firstColumnIndex,
               maxLastColumn: leftRenderContext.lastColumnIndex,
               availableSpace: 0,
-              ignoreAutoHeight: true,
               rowIndexOffset: topPinnedRowsData.length,
+              position: 'left',
             })}
           </VirtualScrollerPinnedColumns>
         )}
@@ -435,8 +437,8 @@ const DataGridProVirtualScroller = React.forwardRef<
               minFirstColumn: rightRenderContext.firstColumnIndex,
               maxLastColumn: rightRenderContext.lastColumnIndex,
               availableSpace: 0,
-              ignoreAutoHeight: true,
               rowIndexOffset: topPinnedRowsData.length,
+              position: 'right',
             })}
           </VirtualScrollerPinnedColumns>
         )}
@@ -463,9 +465,9 @@ const DataGridProVirtualScroller = React.forwardRef<
                 minFirstColumn: leftRenderContext.firstColumnIndex,
                 maxLastColumn: leftRenderContext.lastColumnIndex,
                 availableSpace: 0,
-                ignoreAutoHeight: true,
                 rows: bottomPinnedRowsData,
                 rowIndexOffset: topPinnedRowsData.length + (mainRows ? mainRows.length : 0),
+                position: 'left',
               })}
             </VirtualScrollerPinnedColumns>
           )}
@@ -486,9 +488,9 @@ const DataGridProVirtualScroller = React.forwardRef<
                 minFirstColumn: rightRenderContext.firstColumnIndex,
                 maxLastColumn: rightRenderContext.lastColumnIndex,
                 availableSpace: 0,
-                ignoreAutoHeight: true,
                 rows: bottomPinnedRowsData,
                 rowIndexOffset: topPinnedRowsData.length + (mainRows ? mainRows.length : 0),
+                position: 'right',
               })}
             </VirtualScrollerPinnedColumns>
           )}

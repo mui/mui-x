@@ -111,4 +111,47 @@ describe('<DataGridPro /> - Lazy loader', () => {
     const updatedAllRows = apiRef.current.state.rows.ids;
     expect(updatedAllRows.slice(4, 6)).to.deep.equal([4, 5]);
   });
+
+  it('should update all rows accordingly when `apiRef.current.unstable_replaceRows` is called and props.getRowId is defined', () => {
+    render(
+      <TestLazyLoader
+        rowCount={6}
+        getRowId={(row) => row.clientId}
+        rows={[
+          {
+            clientId: 1,
+            first: 'Mike',
+          },
+          {
+            clientId: 2,
+            first: 'Jack',
+          },
+          {
+            clientId: 3,
+            first: 'Jim',
+          },
+        ]}
+        columns={[{ field: 'clientId' }]}
+      />,
+    );
+
+    const newRows: GridRowModel[] = [
+      { clientId: 4, name: 'John' },
+      { clientId: 5, name: 'Mac' },
+    ];
+
+    const initialAllRows = apiRef.current.state.rows.ids;
+    expect(initialAllRows.slice(3, 6)).to.deep.equal([
+      'auto-generated-skeleton-row-root-0',
+      'auto-generated-skeleton-row-root-1',
+      'auto-generated-skeleton-row-root-2',
+    ]);
+    act(() => apiRef.current.unstable_replaceRows(4, newRows));
+
+    const updatedAllRows = apiRef.current.state.rows.ids;
+    expect(updatedAllRows.slice(4, 6)).to.deep.equal([4, 5]);
+
+    expect(apiRef.current.getRowNode(4)).to.not.equal(null);
+    expect(apiRef.current.getRowNode(5)).to.not.equal(null);
+  });
 });

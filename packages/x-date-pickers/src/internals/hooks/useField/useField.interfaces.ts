@@ -1,9 +1,7 @@
 import * as React from 'react';
-import { MuiPickersAdapter } from '../../models';
+import { MuiDateSectionName, MuiPickerFieldAdapter } from '../../models';
 import { PickerStateValueManager } from '../usePickerState';
 import { InferError, Validator } from '../validation/useValidation';
-
-export type DateSectionName = 'day' | 'month' | 'year' | 'hour' | 'minute' | 'second' | 'am-pm';
 
 export interface UseFieldParams<
   TInputValue,
@@ -64,21 +62,21 @@ export interface FieldSection {
   value: string;
   emptyValue: string;
   separator: string | null;
-  dateSectionName: DateSectionName;
+  dateSectionName: MuiDateSectionName;
   formatValue: string;
   query: string | null;
 }
 
 export interface FieldValueManager<TValue, TDate, TSection extends FieldSection, TError> {
   getSectionsFromValue: (
-    utils: MuiPickersAdapter<TDate>,
+    utils: MuiPickerFieldAdapter<TDate>,
     prevSections: TSection[] | null,
     value: TValue,
     format: string,
   ) => TSection[];
   getValueStrFromSections: (sections: TSection[]) => string;
   getValueFromSections: (
-    utils: MuiPickersAdapter<TDate>,
+    utils: MuiPickerFieldAdapter<TDate>,
     prevSections: TSection[],
     sections: TSection[],
     format: string,

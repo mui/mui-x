@@ -1,4 +1,5 @@
 import * as React from 'react';
+import dayjs, { Dayjs } from 'dayjs';
 import { CssVarsProvider } from '@mui/joy/styles';
 import Stack from '@mui/material/Stack';
 import FormControlLabel from '@mui/material/FormControlLabel';
@@ -8,16 +9,16 @@ import JoyTextField, {
 } from '@mui/joy/TextField';
 import InputUnstyled, { InputUnstyledProps } from '@mui/base/InputUnstyled';
 import { LocalizationProvider } from '@mui/x-date-pickers';
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import {
   unstable_useDateField as useDateField,
   UseDateFieldComponentProps,
 } from '@mui/x-date-pickers/DateField';
 
-type JoyDateFieldProps = UseDateFieldComponentProps<Date, Date, JoyTextFieldProps>;
+type JoyDateFieldProps = UseDateFieldComponentProps<Dayjs, Dayjs, JoyTextFieldProps>;
 
 const JoyDateField = (props: JoyDateFieldProps) => {
-  const { inputRef, inputProps } = useDateField<Date, Date, JoyDateFieldProps>(
+  const { inputRef, inputProps } = useDateField<Dayjs, Dayjs, JoyDateFieldProps>(
     props,
   );
 
@@ -30,15 +31,17 @@ const JoyDateField = (props: JoyDateFieldProps) => {
 };
 
 type UnstyledDateFieldProps = UseDateFieldComponentProps<
-  Date,
-  Date,
+  Dayjs,
+  Dayjs,
   InputUnstyledProps
 >;
 
 const UnstyledDateField = (props: UnstyledDateFieldProps) => {
-  const { inputRef, inputProps } = useDateField<Date, Date, UnstyledDateFieldProps>(
-    props,
-  );
+  const { inputRef, inputProps } = useDateField<
+    Dayjs,
+    Dayjs,
+    UnstyledDateFieldProps
+  >(props);
 
   return (
     <InputUnstyled
@@ -49,8 +52,8 @@ const UnstyledDateField = (props: UnstyledDateFieldProps) => {
 };
 
 type BrowserInputDateFieldProps = UseDateFieldComponentProps<
-  Date,
-  Date,
+  Dayjs,
+  Dayjs,
   React.HTMLAttributes<HTMLInputElement>
 >;
 
@@ -58,19 +61,19 @@ const BrowserInputDateField = (props: BrowserInputDateFieldProps) => {
   const {
     inputRef,
     inputProps: { error, ...inputProps },
-  } = useDateField<Date, Date, BrowserInputDateFieldProps>(props);
+  } = useDateField<Dayjs, Dayjs, BrowserInputDateFieldProps>(props);
 
   return <input {...inputProps} ref={inputRef} />;
 };
 
 export default function CustomUIDateField() {
-  const [value, setValue] = React.useState<Date | null>(new Date());
+  const [value, setValue] = React.useState<Dayjs | null>(dayjs());
 
-  const handleChange = (newValue: Date | null) => setValue(newValue);
+  const handleChange = (newValue: Dayjs | null) => setValue(newValue);
 
   return (
     <CssVarsProvider>
-      <LocalizationProvider dateAdapter={AdapterDateFns}>
+      <LocalizationProvider dateAdapter={AdapterDayjs}>
         <Stack spacing={2}>
           <JoyDateField
             label="Using @mui/joy TextField"

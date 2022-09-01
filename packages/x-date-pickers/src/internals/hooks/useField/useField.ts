@@ -1,6 +1,7 @@
 import * as React from 'react';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import useEventCallback from '@mui/utils/useEventCallback';
+import { MuiPickerFieldAdapter } from '../../models/muiPickersAdapter';
 import { useValidation } from '../validation/useValidation';
 import { useUtils } from '../useUtils';
 import {
@@ -32,7 +33,10 @@ export const useField = <
 >(
   params: UseFieldParams<TInputValue, TValue, TDate, TSection, TForwardedProps, TInternalProps>,
 ): UseFieldResponse<TForwardedProps> => {
-  const utils = useUtils<TDate>();
+  const utils = useUtils<TDate>() as MuiPickerFieldAdapter<TDate>;
+  if (!utils.formatTokenMap) {
+    throw new Error('This adapter is not compatible with the field components');
+  }
   const inputRef = React.useRef<HTMLInputElement>(null);
 
   const {
