@@ -26,7 +26,8 @@ export interface BaseDateTimePickerProps<TInputDate, TDate>
    */
   ampm?: boolean;
   /**
-   * To show tabs.
+   * Toggles visibility of date time switching tabs
+   * @default false for mobile, true for desktop
    */
   hideTabs?: boolean;
   /**
