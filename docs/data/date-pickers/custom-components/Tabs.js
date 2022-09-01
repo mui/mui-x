@@ -2,7 +2,8 @@ import * as React from 'react';
 import dayjs from 'dayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { TextField, Box } from '@mui/material';
+import TextField from '@mui/material/TextField';
+import Box from '@mui/material/Box';
 import {
   DateTimePicker,
   DateTimePickerTabs,
