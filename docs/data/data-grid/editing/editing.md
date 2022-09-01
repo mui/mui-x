@@ -456,7 +456,7 @@ Instead, use the buttons available in each row or in the toolbar.
 
 ## Advanced use cases
 
-See [Recipes](/x/react-data-grid/recipes/#editing) for more advanced use cases.
+See [Editing recipes](/x/react-data-grid/recipes-editing/) for more advanced use cases.
 
 ## apiRef [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
 
