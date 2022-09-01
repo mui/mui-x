@@ -225,7 +225,7 @@ export const updateCacheWithNewRows = ({
 
   // Remove duplicate updates.
   // A server can batch updates, and send several updates for the same row in one fn call.
-  const uniqUpdates = new Map<GridRowId, GridRowModel>();
+  const uniqueUpdates = new Map<GridRowId, GridRowModel>();
 
   updates.forEach((update) => {
     const id = getRowIdFromRowModel(
@@ -234,10 +234,10 @@ export const updateCacheWithNewRows = ({
       'A row was provided without id when calling updateRows():',
     );
 
-    if (uniqUpdates.has(id)) {
-      uniqUpdates.set(id, { ...uniqUpdates.get(id), ...update });
+    if (uniqueUpdates.has(id)) {
+      uniqueUpdates.set(id, { ...uniqueUpdates.get(id), ...update });
     } else {
-      uniqUpdates.set(id, update);
+      uniqueUpdates.set(id, update);
     }
   });
 
@@ -263,7 +263,7 @@ export const updateCacheWithNewRows = ({
   // For instance:
   // - if you delete then insert, then you don't want to apply the deletion in the tree.
   // - if you insert, then modify, then you just want to apply the insertion in the tree.
-  uniqUpdates.forEach((partialRow, id) => {
+  uniqueUpdates.forEach((partialRow, id) => {
     const actionAlreadyAppliedToRow = partialUpdates.idToActionLookup[id];
 
     // Action === "delete"

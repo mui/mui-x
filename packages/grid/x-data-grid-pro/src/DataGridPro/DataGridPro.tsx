@@ -258,6 +258,7 @@ DataGridProRaw.propTypes = {
    */
   experimentalFeatures: PropTypes.shape({
     columnGrouping: PropTypes.bool,
+    lazyLoading: PropTypes.bool,
     newEditingApi: PropTypes.bool,
     preventCommitWhileValidating: PropTypes.bool,
     rowPinning: PropTypes.bool,
@@ -606,6 +607,13 @@ DataGridProRaw.propTypes = {
    */
   onError: PropTypes.func,
   /**
+   * Callback fired when rowCount is set and the next batch of virtualized rows is rendered.
+   * @param {GridFetchRowsParams} params With all properties from [[GridFetchRowsParams]].
+   * @param {MuiEvent<{}>} event The event object.
+   * @param {GridCallbackDetails} details Additional details for this callback.
+   */
+  onFetchRows: PropTypes.func,
+  /**
    * Callback fired when the Filter model changes before the filters are applied.
    * @param {GridFilterModel} model With all properties from [[GridFilterModel]].
    * @param {GridCallbackDetails} details Additional details for this callback.
@@ -816,6 +824,13 @@ DataGridProRaw.propTypes = {
    * Set of rows of type [[GridRowsProp]].
    */
   rows: PropTypes.array.isRequired,
+  /**
+   * Loading rows can be processed on the server or client-side.
+   * Set it to 'client' if you would like enable infnite loading.
+   * Set it to 'server' if you would like to enable lazy loading.
+   * * @default "client"
+   */
+  rowsLoadingMode: PropTypes.oneOf(['client', 'server']),
   /**
    * Sets the type of space between rows added by `getRowSpacing`.
    * @default "margin"

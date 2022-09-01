@@ -39,6 +39,40 @@ In addition, the area in which `onRowsScrollEnd` is called can be changed using 
 
 {{"demo": "InfiniteLoadingGrid.js", "bg": "inline", "disableAd": true}}
 
+## Lazy loading [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
+
+:::warning
+This feature is experimental, it needs to be explicitly activated using the `lazyLoading` experimental feature flag.
+
+```tsx
+<DataGridPro experimentalFeatures={{ lazyLoading: true }} {...otherProps} />
+```
+
+:::
+
+Lazy Loading works like a pagination system, but instead of loading new rows based on pages, it loads them based on the viewport.
+It loads new rows in chunks, as the user scrolls through the grid and reveals empty rows.
+
+The data grid builds the vertical scroll as if all the rows are already there, and displays empty (skeleton) rows while loading the data. Only rows that are displayed get fetched.
+
+To enable lazy loading, there are a few steps you need to follow:
+
+First, set `rowsLoadingMode="server"`.
+Then, set `rowCount` to reflect the number of available rows on the server.
+Third, set a callback function on `onFetchRows` to load the data corresponding to the row indices passed within `GridFetchRowsParams`.
+Finally, replace the empty rows with the newly fetched ones using `apiRef.current.replaceRows()` like in the demo below.
+
+{{"demo": "LazyLoadingGrid.js", "bg": "inline", "disableAd": true}}
+
+:::warning
+The `onFetchRows` callback is called every time a new row is in the viewport, so when you scroll, you can easily send multiple requests to your backend. We recommend developers limit those by implementing debouncing.
+:::
+
+:::info
+In order for filtering and sorting to work you need to set their modes to `server`.
+You can find out more information about how to do that on the [server-side filter page](/x/react-data-grid/filtering/#server-side-filter) and on the [server-side sorting page](/x/react-data-grid/sorting/#server-side-sorting).
+:::
+
 ## High frequency [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
 
 Whenever the rows are updated, the grid has to apply the sorting and filters. This can be a problem if you have high frequency updates. To maintain good performances, the grid allows to batch the updates and only apply them after a period of time. The `throttleRowsMs` prop can be used to define the frequency (in milliseconds) at which rows updates are applied.

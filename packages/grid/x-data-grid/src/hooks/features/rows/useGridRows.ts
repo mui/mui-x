@@ -3,7 +3,7 @@ import { GridEventListener } from '../../../models/events';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridRowApi } from '../../../models/api/gridRowApi';
-import { GridRowId, GridGroupNode } from '../../../models/gridRows';
+import { GridRowId, GridGroupNode, GridLeafNode } from '../../../models/gridRows';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { useGridLogger } from '../../utils/useGridLogger';
 import {
@@ -14,6 +14,7 @@ import {
   gridRowTreeDepthsSelector,
   gridDataRowIdsSelector,
   gridRowsDataRowIdToIdLookupSelector,
+  gridRowMaximumTreeDepthSelector,
 } from './gridRowsSelector';
 import { GridSignature, useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 import { GridStateInitializer } from '../../utils/useGridInitializeState';
@@ -29,6 +30,7 @@ import {
   GRID_ROOT_GROUP_ID,
   updateCacheWithNewRows,
   getTopLevelRowCount,
+  getRowIdFromRowModel,
 } from './gridRowsUtils';
 import { useGridRegisterPipeApplier } from '../../core/pipeProcessing';
 
@@ -193,6 +195,79 @@ export const useGridRows = (
     [props.signature, props.getRowId, throttledRowsChange, apiRef],
   );
 
+  const replaceRows = React.useCallback<GridRowApi['unstable_replaceRows']>(
+    (firstRowToRender, newRows) => {
+      if (props.signature === GridSignature.DataGrid && newRows.length > 1) {
+        throw new Error(
+          [
+            "MUI: You can't replace rows using `apiRef.current.unstable_replaceRows` on the DataGrid.",
+            'You need to upgrade to DataGridPro or DataGridPremium component to unlock this feature.',
+          ].join('\n'),
+        );
+      }
+
+      if (newRows.length === 0) {
+        return;
+      }
+
+      const tree = gridRowTreeSelector(apiRef);
+      const treeDepth = gridRowMaximumTreeDepthSelector(apiRef);
+
+      if (treeDepth > 1) {
+        throw new Error(
+          '`apiRef.current.unstable_replaceRows` is not compatible with tree data and row grouping',
+        );
+      }
+
+      const allRows = (tree[GRID_ROOT_GROUP_ID] as GridGroupNode).children;
+      const updatedRows = [...allRows];
+      const idRowsLookup = gridRowsLookupSelector(apiRef);
+      const idToIdLookup = gridRowsDataRowIdToIdLookupSelector(apiRef);
+      const updatedIdRowsLookup = { ...idRowsLookup };
+      const updatedIdToIdLookup = { ...idToIdLookup };
+      const updatedTree = { ...tree };
+
+      newRows.forEach((row, index) => {
+        const rowId = getRowIdFromRowModel(
+          row,
+          props.getRowId,
+          'A row was provided without id when calling replaceRows().',
+        );
+        const [replacedRowId] = updatedRows.splice(firstRowToRender + index, 1, rowId);
+
+        delete updatedIdRowsLookup[replacedRowId];
+        delete updatedIdToIdLookup[replacedRowId];
+        delete updatedTree[replacedRowId];
+      });
+
+      newRows.forEach((row) => {
+        const rowTreeNodeConfig: GridLeafNode = {
+            id: row.id,
+            depth: 0,
+            parent: GRID_ROOT_GROUP_ID,
+            type: 'leaf',
+            groupingKey: null,
+        };
+        updatedIdRowsLookup[row.id] = row;
+        updatedIdToIdLookup[row.id] = row.id;
+        updatedTree[row.id] = rowTreeNodeConfig;
+      });
+
+      apiRef.current.setState((state) => ({
+        ...state,
+        rows: {
+          ...state.rows,
+          idRowsLookup: updatedIdRowsLookup,
+          idToIdLookup: updatedIdToIdLookup,
+          tree: updatedTree,
+          ids: updatedRows,
+        },
+      }));
+      apiRef.current.publishEvent('rowsSet');
+    },
+    [apiRef, props.signature, props.getRowId],
+  );
+
   const getRowModels = React.useCallback<GridRowApi['getRowModels']>(() => {
     const dataRows = gridDataRowIdsSelector(apiRef);
     const idRowsLookup = gridRowsLookupSelector(apiRef);
@@ -332,7 +407,7 @@ export const useGridRows = (
           },
         };
       });
-      apiRef.current.applySorting();
+      apiRef.current.publishEvent('rowsSet');
     },
     [apiRef, logger],
   );
@@ -349,6 +424,7 @@ export const useGridRows = (
     getRowNode,
     getRowIndexRelativeToVisibleRows,
     getRowGroupChildren,
+    unstable_replaceRows: replaceRows,
   };
 
   /**
