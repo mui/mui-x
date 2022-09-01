@@ -8,7 +8,7 @@ title: Data Grid - Editing recipes
 
 ## Multiline editing
 
-Creating custom component for inline editing of multiline text.
+You can have columns with multiline text and edit them by creating a custom edit component.
 
 In the demo below, the **Bio** column is composed of multiple lines.
 To persist the changes, use <kbd><kbd class="key">Ctrl</kbd>+<kbd class="key">Enter</kbd></kbd> (or <kbd><kbd class="key">⌘ Command</kbd>+<kbd class="key">Enter</kbd></kbd> on macOS).
