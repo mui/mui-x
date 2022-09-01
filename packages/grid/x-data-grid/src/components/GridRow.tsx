@@ -420,6 +420,7 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
   }
 
   const randomNumber = randomNumberBetween(10000, 20, 80);
+  const rowType = apiRef.current.getRowNode(rowId)!.type;
   const cells: JSX.Element[] = [];
 
   for (let i = 0; i < renderedColumns.length; i += 1) {
@@ -438,7 +439,7 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
     );
 
     if (cellColSpanInfo && !cellColSpanInfo.spannedByColSpan) {
-      if (row) {
+      if (rowType !== 'skeletonRow') {
         const { colSpan, width } = cellColSpanInfo.cellProps;
         const cellProps = { width, colSpan, showRightBorder, indexRelativeToAllColumns };
         cells.push(getCell(column, cellProps));
