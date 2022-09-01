@@ -54,10 +54,36 @@ export const useDateField = <
 >(
   inProps: TProps,
 ) => {
-  const props = useDefaultizedDateField<TInputDate, TDate, TProps>(inProps);
+  const {
+    value,
+    defaultValue,
+    format,
+    onChange,
+    readOnly,
+    onError,
+    shouldDisableDate,
+    minDate,
+    maxDate,
+    disableFuture,
+    disablePast,
+    ...other
+  } = useDefaultizedDateField<TInputDate, TDate, TProps>(inProps);
 
   return useField({
-    props,
+    forwardedProps: other,
+    internalProps: {
+      value,
+      defaultValue,
+      format,
+      onChange,
+      readOnly,
+      onError,
+      shouldDisableDate,
+      minDate,
+      maxDate,
+      disableFuture,
+      disablePast,
+    },
     valueManager: datePickerValueManager,
     fieldValueManager: dateRangeFieldValueManager,
     // TODO: Support time validation.
