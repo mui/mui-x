@@ -1,4 +1,5 @@
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import Tab from '@mui/material/Tab';
 import Tabs, { tabsClasses } from '@mui/material/Tabs';
 import { styled } from '@mui/material/styles';
@@ -29,9 +30,24 @@ const tabToView = (tab: TabValue): CalendarOrClockPickerView => {
 };
 
 export interface DateTimePickerTabsProps {
+  /**
+   * Date tab icon.
+   * @default DateRange
+   */
   dateRangeIcon?: React.ReactNode;
+  /**
+   * Callback called when tab is clicked
+   * @param {CalendarOrClockPickerView} view Picker view that was clicked
+   */
   onChange: (view: CalendarOrClockPickerView) => void;
+  /**
+   * Time tab icon.
+   * @default Time
+   */
   timeIcon?: React.ReactNode;
+  /**
+   * Open picker view
+   */
   view: CalendarOrClockPickerView;
 }
 
@@ -51,10 +67,7 @@ const DateTimePickerTabsRoot = styled(Tabs)<{ ownerState: OwnerState }>(
   }),
 );
 
-/**
- * @ignore - internal component.
- */
-export const DateTimePickerTabs = (props: DateTimePickerTabsProps) => {
+const DateTimePickerTabs = (props: DateTimePickerTabsProps) => {
   const { dateRangeIcon = <DateRange />, onChange, timeIcon = <Time />, view } = props;
 
   const localeText = useLocaleText();
@@ -86,3 +99,31 @@ export const DateTimePickerTabs = (props: DateTimePickerTabsProps) => {
     </DateTimePickerTabsRoot>
   );
 };
+
+DateTimePickerTabs.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // ----------------------------------------------------------------------
+  /**
+   * Date tab icon.
+   * @default DateRange
+   */
+  dateRangeIcon: PropTypes.node,
+  /**
+   * Callback called when tab is clicked
+   * @param {CalendarOrClockPickerView} view Picker view that was clicked
+   */
+  onChange: PropTypes.func.isRequired,
+  /**
+   * Time tab icon.
+   * @default Time
+   */
+  timeIcon: PropTypes.node,
+  /**
+   * Open picker view
+   */
+  view: PropTypes.oneOf(['day', 'hours', 'minutes', 'month', 'seconds', 'year']).isRequired,
+} as any;
+
+export { DateTimePickerTabs };

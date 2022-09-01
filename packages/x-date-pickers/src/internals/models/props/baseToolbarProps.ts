@@ -22,7 +22,6 @@ export interface BaseToolbarProps<TDate, TValue>
     isKeyboardInputOpen: boolean,
     viewType: 'calendar' | 'clock',
   ) => string;
-  hideTabs?: boolean;
   isLandscape: boolean;
   onChange: PickerOnChangeFn<TDate>;
   openView: CalendarOrClockPickerView;
