@@ -44,7 +44,7 @@ The Data Grid listens for keyboard interactions from the user and emits events i
 
 ### Tab sequence
 
-According to [WAI-ARIA](https://www.w3.org/WAI/ARIA/apg/patterns/grid/), only one of the focusable elements contained by a grid should be included in the page tab sequence.
+According to [WAI-ARIA](https://www.w3.org/WAI/ARIA/apg/patterns/grid/), only one of the focusable elements contained by a composite widget should be included in the page tab sequence.
 For an element to be included in the tab sequence, it needs to have a `tabIndex` value of zero or greater.
 
 When a user focuses on a Data Grid cell, the first inner element with `tabIndex={0}` receives the focus.
@@ -100,7 +100,7 @@ On macOS:
 |                                  <kbd class="key">Shift</kbd>+ Click on cell | Select the range of rows between the first and the last clicked rows |
 |              <kbd><kbd class="key">Ctrl</kbd>+<kbd class="key">A</kbd></kbd> | Select all rows                                                      |
 |              <kbd><kbd class="key">Ctrl</kbd>+<kbd class="key">C</kbd></kbd> | Copy the currently selected rows                                     |
-|               <kbd><kbd class="key">Alt</kbd>+<kbd class="key">C</kbd></kbd> | Copy the currently selected row or rows, including headers           |
+|               <kbd><kbd class="key">Alt</kbd>+<kbd class="key">C</kbd></kbd> | Copy the currently selected rows, including headers           |
 |                                   <kbd class="key">Ctrl</kbd>+ Click on cell | Enable multi-selection                                               |
 |                         <kbd class="key">Ctrl</kbd>+ Click on a selected row | Deselect the row                                                     |
 
