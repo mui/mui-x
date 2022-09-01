@@ -195,81 +195,6 @@ export const useGridRows = (
     [props.signature, props.getRowId, throttledRowsChange, apiRef],
   );
 
-  const replaceRows = React.useCallback<GridRowApi['unstable_replaceRows']>(
-    (firstRowToRender, newRows) => {
-      if (props.signature === GridSignature.DataGrid && newRows.length > 1) {
-        throw new Error(
-          [
-            "MUI: You can't replace rows using `apiRef.current.unstable_replaceRows` on the DataGrid.",
-            'You need to upgrade to DataGridPro or DataGridPremium component to unlock this feature.',
-          ].join('\n'),
-        );
-      }
-
-      if (newRows.length === 0) {
-        return;
-      }
-
-      const treeDepth = gridRowMaximumTreeDepthSelector(apiRef);
-
-      if (treeDepth > 1) {
-        throw new Error(
-          '`apiRef.current.unstable_replaceRows` is not compatible with tree data and row grouping',
-        );
-      }
-
-      const tree = { ...gridRowTreeSelector(apiRef) };
-      const dataRowIdToModelLookup = { ...gridRowsLookupSelector(apiRef) };
-      const dataRowIdToIdLookup = { ...gridRowsDataRowIdToIdLookupSelector(apiRef) };
-      const rootGroup = (tree[GRID_ROOT_GROUP_ID] as GridGroupNode)
-      const rootGroupChildren = [...rootGroup.children];
-
-      for (let i=0; i<newRows.length; i+= 1) {
-          const rowModel = newRows[i]
-          const rowId = getRowIdFromRowModel(
-              rowModel,
-              props.getRowId,
-              'A row was provided without id when calling replaceRows().',
-          );
-
-          const [replacedRowId] = rootGroupChildren.splice(firstRowToRender + i, 1, rowId);
-
-          delete dataRowIdToModelLookup[replacedRowId];
-          delete dataRowIdToIdLookup[replacedRowId];
-          delete tree[replacedRowId];
-
-          const rowTreeNodeConfig: GridLeafNode = {
-              id: rowId,
-              depth: 0,
-              parent: GRID_ROOT_GROUP_ID,
-              type: 'leaf',
-              groupingKey: null,
-          };
-          dataRowIdToModelLookup[rowId] = rowModel;
-          dataRowIdToIdLookup[rowId] = rowId;
-          tree[rowId] = rowTreeNodeConfig;
-      }
-
-      tree[GRID_ROOT_GROUP_ID] = { ...rootGroup, children: rootGroupChildren }
-
-      // Removes potential remaining skeleton rows from the dataRowIds.
-      const dataRowIds = rootGroupChildren.filter(childId => tree[childId].type === 'leaf')
-
-      apiRef.current.setState((state) => ({
-        ...state,
-        rows: {
-          ...state.rows,
-          dataRowIdToModelLookup,
-          dataRowIdToIdLookup,
-            dataRowIds,
-          tree,
-        },
-      }));
-      apiRef.current.publishEvent('rowsSet');
-    },
-    [apiRef, props.signature, props.getRowId],
-  );
-
   const getRowModels = React.useCallback<GridRowApi['getRowModels']>(() => {
     const dataRows = gridDataRowIdsSelector(apiRef);
     const idRowsLookup = gridRowsLookupSelector(apiRef);
@@ -412,6 +337,81 @@ export const useGridRows = (
       apiRef.current.publishEvent('rowsSet');
     },
     [apiRef, logger],
+  );
+
+  const replaceRows = React.useCallback<GridRowApi['unstable_replaceRows']>(
+    (firstRowToRender, newRows) => {
+      if (props.signature === GridSignature.DataGrid && newRows.length > 1) {
+        throw new Error(
+          [
+            "MUI: You can't replace rows using `apiRef.current.unstable_replaceRows` on the DataGrid.",
+            'You need to upgrade to DataGridPro or DataGridPremium component to unlock this feature.',
+          ].join('\n'),
+        );
+      }
+
+      if (newRows.length === 0) {
+        return;
+      }
+
+      const treeDepth = gridRowMaximumTreeDepthSelector(apiRef);
+
+      if (treeDepth > 1) {
+        throw new Error(
+          '`apiRef.current.unstable_replaceRows` is not compatible with tree data and row grouping',
+        );
+      }
+
+      const tree = { ...gridRowTreeSelector(apiRef) };
+      const dataRowIdToModelLookup = { ...gridRowsLookupSelector(apiRef) };
+      const dataRowIdToIdLookup = { ...gridRowsDataRowIdToIdLookupSelector(apiRef) };
+      const rootGroup = tree[GRID_ROOT_GROUP_ID] as GridGroupNode;
+      const rootGroupChildren = [...rootGroup.children];
+
+      for (let i = 0; i < newRows.length; i += 1) {
+        const rowModel = newRows[i];
+        const rowId = getRowIdFromRowModel(
+          rowModel,
+          props.getRowId,
+          'A row was provided without id when calling replaceRows().',
+        );
+
+        const [replacedRowId] = rootGroupChildren.splice(firstRowToRender + i, 1, rowId);
+
+        delete dataRowIdToModelLookup[replacedRowId];
+        delete dataRowIdToIdLookup[replacedRowId];
+        delete tree[replacedRowId];
+
+        const rowTreeNodeConfig: GridLeafNode = {
+          id: rowId,
+          depth: 0,
+          parent: GRID_ROOT_GROUP_ID,
+          type: 'leaf',
+          groupingKey: null,
+        };
+        dataRowIdToModelLookup[rowId] = rowModel;
+        dataRowIdToIdLookup[rowId] = rowId;
+        tree[rowId] = rowTreeNodeConfig;
+      }
+
+      tree[GRID_ROOT_GROUP_ID] = { ...rootGroup, children: rootGroupChildren };
+
+      // Removes potential remaining skeleton rows from the dataRowIds.
+      const dataRowIds = rootGroupChildren.filter((childId) => tree[childId].type === 'leaf');
+
+      apiRef.current.setState((state) => ({
+        ...state,
+        rows: {
+          ...state.rows,
+          dataRowIdToModelLookup,
+          dataRowIdToIdLookup,
+          dataRowIds,
+          tree,
+        },
+      }));
+      apiRef.current.publishEvent('rowsSet');
+    },
+    [apiRef, props.signature, props.getRowId],
   );
 
   const rowApi: GridRowApi = {
