@@ -1,14 +1,12 @@
 ---
-title: Data Grid - Recipes
+title: Data Grid - Editing recipes
 ---
 
-# Data grid - Recipes
+# Data grid - Editing recipes
 
 <p class="description">Advanced grid customization recipes.</p>
 
-## Editing
-
-### Multiline editing
+## Multiline editing
 
 Creating custom component for inline editing of multiline text.
 
@@ -17,7 +15,7 @@ To persist the changes, use <kbd><kbd class="key">Ctrl</kbd>+<kbd class="key">En
 
 {{"demo": "MultilineEditing.js", "bg": "inline", "defaultCodeOpen": false}}
 
-### Conditional validation
+## Conditional validation
 
 When all cells in a row are in edit mode, you can validate fields by comparing their values against one another.
 To do this, start by adding the `preProcessEditCellProps` as explained in the [validation](#validation) section.
@@ -30,7 +28,7 @@ The following demo requires a value for the **Payment method** column only if th
 
 {{"demo": "ConditionalValidationGrid.js", "bg": "inline", "defaultCodeOpen": false}}
 
-### Linked fields
+## Linked fields
 
 The options available for one field may depend on the value of another field.
 For instance, if the `singleSelect` column is used, you can provide a function to `valueOptions` returning the relevant options for the value selected in another field, as exemplified below.
@@ -104,7 +102,7 @@ Note that the `onCellEditStart` and `onCellEditStop` props also have to be used 
 
 {{"demo": "LinkedFieldsCellEditing.js", "bg": "inline", "defaultCodeOpen": false}}
 
-### Usage with `@mui/x-date-pickers`
+## Usage with `@mui/x-date-pickers`
 
 By default, the grid uses native browser inputs for editing `date` and `dateTime` columns.
 
@@ -118,11 +116,3 @@ The example below uses `@mui/x-date-pickers` for both `date` and `dateTime` colu
 You can change date format by importing different locale (`en-US` locale is used in the example above).
 See [Localization](/x/react-date-pickers/localization/) for more information.
 :::
-
-## Row grouping
-
-### Toggling groups on row click
-
-In the demo below, you can toggle the group by clicking anywhere on the grouping row:
-
-{{"demo": "RowGroupingExpandOnRowClick.js", "bg": "inline", "defaultCodeOpen": false}}
