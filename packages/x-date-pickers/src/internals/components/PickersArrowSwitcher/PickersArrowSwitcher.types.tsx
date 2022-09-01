@@ -23,9 +23,11 @@ export interface PickersArrowSwitcherProps
   isPreviousDisabled: boolean;
   isPreviousHidden?: boolean;
   goToPrevious: () => void;
+  previousLabel: string;
   isNextDisabled: boolean;
   isNextHidden?: boolean;
   goToNext: () => void;
+  nextLabel: string;
 }
 
 export type PickersArrowSwitcherOwnerState = PickersArrowSwitcherProps;

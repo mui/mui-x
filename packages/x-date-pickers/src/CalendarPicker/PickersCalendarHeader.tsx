@@ -237,9 +237,11 @@ export function PickersCalendarHeader<TDate>(props: PickersCalendarHeaderProps<T
           components={components}
           componentsProps={componentsProps}
           goToPrevious={selectPreviousMonth}
-          goToNext={selectNextMonth}
           isPreviousDisabled={isPreviousMonthDisabled}
+          previousLabel={localeText.previousMonth}
+          goToNext={selectNextMonth}
           isNextDisabled={isNextMonthDisabled}
+          nextLabel={localeText.nextMonth}
         />
       </Fade>
     </PickersCalendarHeaderRoot>

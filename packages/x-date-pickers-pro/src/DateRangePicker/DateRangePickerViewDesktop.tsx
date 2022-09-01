@@ -3,6 +3,7 @@ import { styled } from '@mui/material/styles';
 import {
   useDefaultDates,
   useUtils,
+  useLocaleText,
   PickersArrowSwitcher,
   usePreviousMonthDisabled,
   useNextMonthDisabled,
@@ -128,6 +129,8 @@ export function DateRangePickerViewDesktop<TDate>(props: DateRangePickerViewDesk
     ...other
   } = props;
 
+  const localeText = useLocaleText();
+
   const utils = useUtils<TDate>();
   const defaultDates = useDefaultDates<TDate>();
   const minDate = minDateProp ?? defaultDates.minDate;
@@ -187,9 +190,11 @@ export function DateRangePickerViewDesktop<TDate>(props: DateRangePickerViewDesk
               goToPrevious={selectPreviousMonth}
               goToNext={selectNextMonth}
               isPreviousHidden={index !== 0}
-              isNextHidden={index !== calendars - 1}
               isPreviousDisabled={isPreviousMonthDisabled}
+              previousLabel={localeText.previousMonth}
+              isNextHidden={index !== calendars - 1}
               isNextDisabled={isNextMonthDisabled}
+              nextLabel={localeText.nextMonth}
               components={components}
               componentsProps={componentsProps}
             >

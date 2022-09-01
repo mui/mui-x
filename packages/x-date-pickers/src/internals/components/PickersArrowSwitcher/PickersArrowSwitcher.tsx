@@ -7,7 +7,6 @@ import { useSlotProps } from '@mui/base/utils';
 import IconButton from '@mui/material/IconButton';
 import { ArrowLeft, ArrowRight } from '../icons';
 import { PickersArrowSwitcherProps } from './PickersArrowSwitcher.types';
-import { useLocaleText } from '../../hooks/useUtils';
 
 const classes = generateUtilityClasses('MuiPickersArrowSwitcher', ['root', 'spacer', 'button']);
 
@@ -47,6 +46,8 @@ export const PickersArrowSwitcher = React.forwardRef(function PickersArrowSwitch
   props: PickersArrowSwitcherProps,
   ref: React.Ref<HTMLDivElement>,
 ) {
+  const theme = useTheme();
+
   const {
     children,
     className,
@@ -55,28 +56,28 @@ export const PickersArrowSwitcher = React.forwardRef(function PickersArrowSwitch
     isNextDisabled,
     isNextHidden,
     goToNext,
+    nextLabel,
     isPreviousDisabled,
     isPreviousHidden,
     goToPrevious,
+    previousLabel,
     ...other
   } = props;
 
-  const localeText = useLocaleText();
-  const theme = useTheme();
   const ownerState = props;
 
   const nextProps = {
     isDisabled: isNextDisabled,
     isHidden: isNextHidden,
     goTo: goToNext,
-    text: localeText.openNextView,
+    label: nextLabel,
   };
 
   const previousProps = {
     isDisabled: isPreviousDisabled,
     isHidden: isPreviousHidden,
     goTo: goToPrevious,
-    text: localeText.openPreviousView,
+    label: previousLabel,
   };
 
   const [leftProps, rightProps] =
@@ -88,8 +89,8 @@ export const PickersArrowSwitcher = React.forwardRef(function PickersArrowSwitch
     externalSlotProps: componentsProps.leftArrowButton,
     additionalProps: {
       size: 'small',
-      'aria-label': leftProps.text,
-      title: leftProps.text,
+      'aria-label': leftProps.label,
+      title: leftProps.label,
       disabled: leftProps.isDisabled,
       edge: 'end',
       onClick: leftProps.goTo,
@@ -111,8 +112,8 @@ export const PickersArrowSwitcher = React.forwardRef(function PickersArrowSwitch
     externalSlotProps: componentsProps.rightArrowButton,
     additionalProps: {
       size: 'small',
-      'aria-label': rightProps.text,
-      title: rightProps.text,
+      'aria-label': rightProps.label,
+      title: rightProps.label,
       disabled: rightProps.isDisabled,
       edge: 'start',
       onClick: rightProps.goTo,
