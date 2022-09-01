@@ -5,7 +5,7 @@ import { spy } from 'sinon';
 import { fireEvent, screen } from '@mui/monorepo/test/utils';
 import { StaticDateTimePicker } from '@mui/x-date-pickers/StaticDateTimePicker';
 import { adapterToUse, createPickerRenderer } from '../../../../test/utils/pickers-utils';
-import { DateTimePickerTabs, DateTimePickerTabsProps } from '../DateTimePicker/DateTimePickerTabs';
+import { DateTimePickerTabs, DateTimePickerTabsProps } from '../DateTimePicker';
 
 describe('<StaticDateTimePicker />', () => {
   const { render } = createPickerRenderer({ clock: 'fake' });

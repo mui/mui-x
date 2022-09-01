@@ -3,11 +3,11 @@ import dayjs, { Dayjs } from 'dayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { TextField, Box } from '@mui/material';
-import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import {
+  DateTimePicker,
   DateTimePickerTabs,
   DateTimePickerTabsProps,
-} from '@mui/x-date-pickers/DateTimePicker/DateTimePickerTabs';
+} from '@mui/x-date-pickers/DateTimePicker';
 import LightModeIcon from '@mui/icons-material/LightMode';
 import AcUnitIcon from '@mui/icons-material/AcUnit';
 
