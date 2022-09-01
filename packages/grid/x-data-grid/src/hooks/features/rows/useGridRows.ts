@@ -242,11 +242,11 @@ export const useGridRows = (
 
       newRows.forEach((row) => {
         const rowTreeNodeConfig: GridLeafNode = {
-            id: row.id,
-            depth: 0,
-            parent: GRID_ROOT_GROUP_ID,
-            type: 'leaf',
-            groupingKey: null,
+          id: row.id,
+          depth: 0,
+          parent: GRID_ROOT_GROUP_ID,
+          type: 'leaf',
+          groupingKey: null,
         };
         updatedIdRowsLookup[row.id] = row;
         updatedIdToIdLookup[row.id] = row.id;

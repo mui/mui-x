@@ -5,7 +5,12 @@ import {
 } from '@mui/x-data-grid-pro/models/dataGridProProps';
 import { GridApiPro } from '@mui/x-data-grid-pro/models/gridApiPro';
 import { GridPipeProcessor, useGridRegisterPipeProcessor } from '@mui/x-data-grid/internals';
-import { GridFeatureModeConstant, GridRowId } from '@mui/x-data-grid';
+import {
+  GRID_ROOT_GROUP_ID,
+  GridFeatureModeConstant,
+  GridGroupNode,
+  GridSkeletonRowNode,
+} from '@mui/x-data-grid';
 
 export const GRID_SKELETON_ROW_ROOT_ID = 'auto-generated-skeleton-row-root';
 
@@ -19,25 +24,40 @@ export const useGridLazyLoaderPreProcessors = (
 
   const addSkeletonRows = React.useCallback<GridPipeProcessor<'hydrateRows'>>(
     (groupingParams) => {
+      const tree = { ...groupingParams.tree };
+      const rootGroup = tree[GRID_ROOT_GROUP_ID] as GridGroupNode;
+
       if (
         !lazyLoading ||
         props.rowsLoadingMode !== GridFeatureModeConstant.server ||
         !props.rowCount ||
-        groupingParams.ids.length >= props.rowCount
+        rootGroup.children.length >= props.rowCount
       ) {
         return groupingParams;
       }
 
-      const newRowsIds: GridRowId[] = [...groupingParams.ids];
+      const rootGroupChildren = [...rootGroup.children];
 
-      for (let i = 0; i < props.rowCount - groupingParams.ids.length; i += 1) {
+      for (let i = 0; i < props.rowCount - rootGroup.children.length; i += 1) {
         const skeletonId = getSkeletonRowId(i);
-        newRowsIds.push(skeletonId);
+
+        rootGroupChildren.push(skeletonId);
+
+        const skeletonRowNode: GridSkeletonRowNode = {
+          type: 'skeletonRow',
+          id: skeletonId,
+          parent: GRID_ROOT_GROUP_ID,
+          depth: 0,
+        };
+
+        tree[skeletonId] = skeletonRowNode;
       }
+
+      tree[GRID_ROOT_GROUP_ID] = { ...rootGroup, children: rootGroupChildren }
 
       return {
         ...groupingParams,
-        ids: newRowsIds,
+        tree,
       };
     },
     [props.rowCount, props.rowsLoadingMode, lazyLoading],
