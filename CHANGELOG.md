@@ -61,7 +61,7 @@ We'd like to offer a big thanks to the 9 contributors who made this release poss
 
 ### Docs
 
-- [docs] Add description and default to pickers slots (#5893) @alexfauquette
+- [docs] Add `description` and `default` to pickers slots (#5893) @alexfauquette
 - [docs] Fix typo (#5945) @wettopa
 - [docs] Fix typo `onYearPicker` to `onYearChange` (#5954) @alexfauquette
 - [docs] Update `GridCellParams` `value` description (#5849) @cherniavskii
