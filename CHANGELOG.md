@@ -7,6 +7,10 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 _Sep 1, 2022_
 
+🎉 We are excited to finally introduce a stable v5 `x-date-pickers` release!
+
+If you are still using `pickers` from the `lab`, take a look at the [migration guide](https://mui.com/x/react-date-pickers/migration-lab/).
+
 We'd like to offer a big thanks to the 9 contributors who made this release possible. Here are some highlights ✨:
 
 - 🎁 Implement Lazy loading (#5214) @DanailH
