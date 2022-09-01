@@ -3,6 +3,63 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 5.17.0
+
+_Sep 1, 2022_
+
+We'd like to offer a big thanks to the 9 contributors who made this release possible. Here are some highlights ✨:
+
+TODO INSERT HIGHLIGHTS
+
+### `@mui/x-data-grid@v5.17.0` / `@mui/x-data-grid-pro@v5.17.0` / `@mui/x-data-grid-premium@v5.17.0`
+
+#### Changes
+
+- [DataGrid] Add `sort` prop to columns panel slot (#5888) @gavbrennan
+- [DataGrid] Do not throw if `fieldToFocus` cannot be found (#5871) @cherniavskii
+- [DataGrid] Support `getRowId` in the `replaceRows` method (#5988) @flaviendelangle
+- [DataGridPro] Add class name to row with open detail panel (#5924) @m4theushw
+- [DataGridPro] Fix crash when using `pinnedRows` + `getRowClassName` props and `rows=[]` (#5851) @cherniavskii
+- [DataGridPro] Implement Lazy loading (#5214) @DanailH
+- [DataGridPro] Support pinned columns and dynamic row height (#5782) @m4theushw
+- [DataGridPremium] Add columnGroups initializer (#5963) @alexfauquette
+- [DataGridPremium] Update grouping when `groupingValueGetter` changes (#5919) @flaviendelangle
+- [DataGridPremium] Use the aggregated value on tree data real groups (#5953) @flaviendelangle
+
+### `@mui/x-date-pickers@v5.0.0` / `@mui/x-date-pickers-pro@v5.0.0`
+
+#### Changes
+
+- [DatePicker] Improve focus management (#5820) @alexfauquette
+- [DateRangePicker] disable day on date range (#5773) @alexfauquette
+- [DateTimePicker] Extract `tabs` component from `toolbar` (#5972) @LukasTy
+- [pickers] Do not forward validation props to the dom on field components (#5971) @flaviendelangle
+- [pickers] Do not hardcode date-fns elements in field components (#5975) @flaviendelangle
+- [pickers] Do not require `date-fns` in `@mui/x-date-pickers-pro` (#5941) @flaviendelangle
+- [pickers] Fix mobile picker not opening on label click (#5651) @LukasTy
+- [pickers] Improve DOM event management on `useField` (#5901) @flaviendelangle
+- [pickers] Include `community` package `themeAugmentation` in `pro` package types (#5969) @LukasTy
+- [pickers] Rename `DateRangeField` into `SingleInputDateRangeField` (#5961) @flaviendelangle
+- [pickers] Support `isSameError` on field components (#5984) @flaviendelangle
+
+### Docs
+
+- [docs] Add description and default to pickers slots (#5893) @alexfauquette
+- [docs] Fix typo (#5945) @wettopa
+- [docs] Fix typo `onYearPicker` to `onYearChange` (#5954) @alexfauquette
+- [docs] Update `GridCellParams` `value` description (#5849) @cherniavskii
+
+### Core
+
+- [core] Fix typo (#5990) @flaviendelangle
+- [core] Remove old babel resolve rule (#5939) @oliviertassinari
+- [core] Remove outdated TODO (#5956) @flaviendelangle
+- [core] Upgrade monorepo (#5960) @cherniavskii
+- [core] Fix statics (#5986) @DanailH
+- [license] Remove CLI (#5757) @flaviendelangle
+- [test] Fix time zone sensitive test (#5955) @LukasTy
+- [test] Use `userEvent.mousePress` instead of `fireClickEvent` (#5920) @cherniavskii
+
 ## 5.16.0
 
 _Aug 25, 2022_
