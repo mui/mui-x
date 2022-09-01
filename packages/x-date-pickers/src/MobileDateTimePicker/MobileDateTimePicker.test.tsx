@@ -55,18 +55,48 @@ describe('<MobileDateTimePicker />', () => {
     expect(screen.getByMuiTest('datetimepicker-toolbar-day')).to.have.text('Nov 20');
   });
 
-  it('prop `showToolbar` – renders toolbar in MobileDateTimePicker', () => {
+  it('should render toolbar and tabs by default', () => {
     render(
       <MobileDateTimePicker
         open
-        showToolbar
         onChange={() => {}}
         value={adapterToUse.date(new Date(2021, 10, 20, 10, 1, 22))}
         renderInput={(params) => <TextField {...params} />}
       />,
     );
 
-    expect(screen.getByMuiTest('picker-toolbar')).toBeVisible();
+    expect(screen.getByRole('button', { name: /go to text input view/i })).not.to.equal(null);
+    expect(screen.getByRole('tab', { name: 'pick date' })).not.to.equal(null);
+  });
+
+  it('should not render only toolbar when `showToolbar` is `false`', () => {
+    render(
+      <MobileDateTimePicker
+        open
+        showToolbar={false}
+        onChange={() => {}}
+        value={adapterToUse.date(new Date(2021, 10, 20, 10, 1, 22))}
+        renderInput={(params) => <TextField {...params} />}
+      />,
+    );
+
+    expect(screen.queryByRole('button', { name: /go to text input view/i })).to.equal(null);
+    expect(screen.getByRole('tab', { name: 'pick date' })).not.to.equal(null);
+  });
+
+  it('should not render tabs when `hideTabs` is `true`', () => {
+    render(
+      <MobileDateTimePicker
+        open
+        hideTabs
+        onChange={() => {}}
+        value={adapterToUse.date(new Date(2021, 10, 20, 10, 1, 22))}
+        renderInput={(params) => <TextField {...params} />}
+      />,
+    );
+
+    expect(screen.getByRole('button', { name: /go to text input view/i })).not.to.equal(null);
+    expect(screen.queryByRole('tab', { name: 'pick date' })).to.equal(null);
   });
 
   it('can render seconds on view', () => {

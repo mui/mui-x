@@ -1,1 +1,1 @@
-export { default as AdapterMoment } from '@date-io/moment';
+export { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';

@@ -9,8 +9,8 @@
     "componentsProps": { "type": { "name": "object" }, "default": "{}" }
   },
   "slots": {
-    "ActionBar": { "type": { "name": "elementType" } },
-    "PaperContent": { "type": { "name": "elementType" } }
+    "ActionBar": { "default": "PickersActionBar", "type": { "name": "elementType" } },
+    "PaperContent": { "default": "React.Fragment", "type": { "name": "elementType" } }
   },
   "name": "PickerStaticWrapper",
   "styles": {

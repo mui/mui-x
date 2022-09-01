@@ -74,10 +74,10 @@
     }
   },
   "slots": {
-    "LeftArrowButton": { "type": { "name": "elementType" } },
-    "LeftArrowIcon": { "type": { "name": "elementType" } },
-    "RightArrowButton": { "type": { "name": "elementType" } },
-    "RightArrowIcon": { "type": { "name": "elementType" } }
+    "LeftArrowButton": { "default": "IconButton", "type": { "name": "elementType" } },
+    "LeftArrowIcon": { "default": "ArrowLeft", "type": { "name": "elementType" } },
+    "RightArrowButton": { "default": "IconButton", "type": { "name": "elementType" } },
+    "RightArrowIcon": { "default": "ArrowRight", "type": { "name": "elementType" } }
   },
   "name": "ClockPicker",
   "styles": { "classes": ["root", "arrowSwitcher"], "globalClasses": {}, "name": "MuiClockPicker" },

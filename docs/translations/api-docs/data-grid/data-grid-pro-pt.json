@@ -90,6 +90,7 @@
     "onEditCellPropsChange": "Callback fired when the edit cell value changes.<br><br><strong>Signature:</strong><br><code>function(params: GridEditCellPropsParams, event: MuiEvent&lt;React.SyntheticEvent&gt;, details: GridCallbackDetails) =&gt; void</code><br><em>params:</em> With all properties from GridEditCellPropsParams.<br><em>event:</em> The event that caused this prop to be called.<br><em>details:</em> Additional details for this callback.",
     "onEditRowsModelChange": "Callback fired when the <code>editRowsModel</code> changes.<br><br><strong>Signature:</strong><br><code>function(editRowsModel: GridEditRowsModel, details: GridCallbackDetails) =&gt; void</code><br><em>editRowsModel:</em> With all properties from GridEditRowsModel.<br><em>details:</em> Additional details for this callback.",
     "onError": "Callback fired when an exception is thrown in the grid.<br><br><strong>Signature:</strong><br><code>function(args: any, event: MuiEvent&lt;{}&gt;, details: GridCallbackDetails) =&gt; void</code><br><em>args:</em> The arguments passed to the <code>showError</code> call.<br><em>event:</em> The event object.<br><em>details:</em> Additional details for this callback.",
+    "onFetchRows": "Callback fired when rowCount is set and the next batch of virtualized rows is rendered.<br><br><strong>Signature:</strong><br><code>function(params: GridFetchRowsParams, event: MuiEvent&lt;{}&gt;, details: GridCallbackDetails) =&gt; void</code><br><em>params:</em> With all properties from GridFetchRowsParams.<br><em>event:</em> The event object.<br><em>details:</em> Additional details for this callback.",
     "onFilterModelChange": "Callback fired when the Filter model changes before the filters are applied.<br><br><strong>Signature:</strong><br><code>function(model: GridFilterModel, details: GridCallbackDetails) =&gt; void</code><br><em>model:</em> With all properties from <a href=\"/x/api/data-grid/grid-filter-model/\">GridFilterModel</a>.<br><em>details:</em> Additional details for this callback.",
     "onMenuClose": "Callback fired when the menu is closed.<br><br><strong>Signature:</strong><br><code>function(params: GridMenuParams, event: MuiEvent&lt;{}&gt;, details: GridCallbackDetails) =&gt; void</code><br><em>params:</em> With all properties from GridMenuParams.<br><em>event:</em> The event object.<br><em>details:</em> Additional details for this callback.",
     "onMenuOpen": "Callback fired when the menu is opened.<br><br><strong>Signature:</strong><br><code>function(params: GridMenuParams, event: MuiEvent&lt;{}&gt;, details: GridCallbackDetails) =&gt; void</code><br><em>params:</em> With all properties from GridMenuParams.<br><em>event:</em> The event object.<br><em>details:</em> Additional details for this callback.",
@@ -123,6 +124,7 @@
     "rowModesModel": "Controls the modes of the rows.",
     "rowReordering": "If <code>true</code>, the reordering of rows is enabled.",
     "rows": "Set of rows of type GridRowsProp.",
+    "rowsLoadingMode": "Loading rows can be processed on the server or client-side. Set it to &#39;client&#39; if you would like enable infnite loading. Set it to &#39;server&#39; if you would like to enable lazy loading. * @default &quot;client&quot;",
     "rowSpacingType": "Sets the type of space between rows added by <code>getRowSpacing</code>.",
     "rowsPerPageOptions": "Select the pageSize dynamically using the component UI.",
     "rowThreshold": "Number of rows from the <code>rowBuffer</code> that can be visible before a new slice is rendered.",
@@ -215,6 +217,10 @@
     "cellCheckbox": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the cell checkbox element"
+    },
+    "cellSkeleton": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the skeleton cell element"
     },
     "checkboxInput": {
       "description": "Styles applied to {{nodeName}}.",
@@ -552,6 +558,11 @@
       "nodeName": "the row",
       "conditions": "it has dynamic row height"
     },
+    "row--detailPanelExpanded": {
+      "description": "Styles applied to {{nodeName}} if {{conditions}}.",
+      "nodeName": "the row",
+      "conditions": "its detail panel is open"
+    },
     "row": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the row element" },
     "rowCount": {
       "description": "Styles applied to {{nodeName}}.\nOnly works when pagination is disabled.",
@@ -641,6 +652,7 @@
     "BaseTooltip": "The custom Tooltip component used in the grid.",
     "BasePopper": "The custom Popper component used in the grid.",
     "Cell": "Component rendered for each cell.",
+    "SkeletonCell": "Component rendered for each skeleton cell.",
     "ColumnHeaderFilterIconButton": "Filter icon component rendered in each column header.",
     "ColumnMenu": "Column menu component rendered by clicking on the 3 dots &quot;kebab&quot; icon in column headers.",
     "ErrorOverlay": "Error overlay component rendered above the grid when an error is caught.",

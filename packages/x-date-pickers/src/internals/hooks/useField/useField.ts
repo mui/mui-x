@@ -1,14 +1,16 @@
 import * as React from 'react';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import useEventCallback from '@mui/utils/useEventCallback';
+import { MuiPickerFieldAdapter } from '../../models/muiPickersAdapter';
 import { useValidation } from '../validation/useValidation';
 import { useUtils } from '../useUtils';
 import {
   FieldSection,
   UseFieldParams,
-  UseFieldProps,
   UseFieldResponse,
   UseFieldState,
+  UseFieldForwardedProps,
+  UseFieldInternalProps,
   AvailableAdjustKeyCode,
 } from './useField.interfaces';
 import {
@@ -26,29 +28,33 @@ export const useField = <
   TValue,
   TDate,
   TSection extends FieldSection,
-  TProps extends UseFieldProps<any, any, any>,
+  TForwardedProps extends UseFieldForwardedProps,
+  TInternalProps extends UseFieldInternalProps<any, any, any>,
 >(
-  params: UseFieldParams<TInputValue, TValue, TDate, TSection, TProps>,
-): UseFieldResponse<TProps> => {
-  const utils = useUtils<TDate>();
+  params: UseFieldParams<TInputValue, TValue, TDate, TSection, TForwardedProps, TInternalProps>,
+): UseFieldResponse<TForwardedProps> => {
+  const utils = useUtils<TDate>() as MuiPickerFieldAdapter<TDate>;
+  if (!utils.formatTokenMap) {
+    throw new Error('This adapter is not compatible with the field components');
+  }
   const inputRef = React.useRef<HTMLInputElement>(null);
 
   const {
-    props: {
+    internalProps: {
       value: valueProp,
       defaultValue,
       onChange,
-      onError,
       format = utils.formats.keyboardDate,
       readOnly = false,
-      ...otherProps
     },
+    forwardedProps: { onClick, onKeyDown, onFocus, onBlur, ...otherForwardedProps },
     valueManager,
     fieldValueManager,
     validator,
   } = params;
 
   const firstDefaultValue = React.useRef(defaultValue);
+  const focusTimeoutRef = React.useRef<NodeJS.Timeout | undefined>(undefined);
 
   const valueParsed = React.useMemo(() => {
     // TODO: Avoid this type casting, the emptyValues are both valid TDate and TInputDate
@@ -97,7 +103,9 @@ export const useField = <
     }));
   };
 
-  const handleInputClick = useEventCallback(() => {
+  const handleInputClick = useEventCallback((...args) => {
+    onClick?.(...(args as []));
+
     if (state.sections.length === 0) {
       return;
     }
@@ -110,7 +118,24 @@ export const useField = <
     updateSelectedSections(sectionIndex);
   });
 
-  const handleInputKeyDown = useEventCallback((event: React.KeyboardEvent<HTMLInputElement>) => {
+  const handleInputFocus = useEventCallback((...args) => {
+    onFocus?.(...(args as []));
+    focusTimeoutRef.current = setTimeout(() => {
+      if ((inputRef.current?.selectionEnd ?? 0) - (inputRef.current?.selectionStart ?? 0) === 0) {
+        handleInputClick();
+      } else {
+        updateSelectedSections(0, state.sections.length - 1);
+      }
+    });
+  });
+
+  const handleInputBlur = useEventCallback((...args) => {
+    onBlur?.(...(args as []));
+    updateSelectedSections();
+  });
+
+  const handleInputKeyDown = useEventCallback((event: React.KeyboardEvent) => {
+    onKeyDown?.(event);
     if (!inputRef.current || state.sections.length === 0) {
       return;
     }
@@ -316,13 +341,6 @@ export const useField = <
     }
   });
 
-  const handleInputFocus = useEventCallback(() => {
-    // TODO: Avoid applying focus when focus is caused by a click
-    updateSelectedSections(0, state.sections.length - 1);
-  });
-
-  const handleInputBlur = useEventCallback(() => updateSelectedSections());
-
   useEnhancedEffect(() => {
     if (!inputRef.current || state.selectedSectionIndexes == null) {
       return;
@@ -362,12 +380,11 @@ export const useField = <
     }
   }, [valueParsed]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  // TODO: Support `isSameError`.
   // TODO: Make validation work with TDate instead of TInputDate
   const validationError = useValidation(
-    { ...params.props, value: state.valueParsed as unknown as TInputValue },
+    { ...params.internalProps, value: state.valueParsed as unknown as TInputValue },
     validator,
-    () => true,
+    fieldValueManager.isSameError,
   );
 
   const inputError = React.useMemo(
@@ -375,15 +392,19 @@ export const useField = <
     [fieldValueManager, validationError],
   );
 
+  React.useEffect(() => {
+    return () => window.clearTimeout(focusTimeoutRef.current);
+  }, []);
+
   return {
     inputProps: {
+      ...otherForwardedProps,
       value: state.valueStr,
       onClick: handleInputClick,
-      onKeyDown: handleInputKeyDown,
       onFocus: handleInputFocus,
       onBlur: handleInputBlur,
+      onKeyDown: handleInputKeyDown,
       error: inputError,
-      ...otherProps,
     },
     inputRef,
   };

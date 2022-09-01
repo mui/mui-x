@@ -1,6 +1,6 @@
 import * as React from 'react';
 import Typography from '@mui/material/Typography';
-import { styled } from '@mui/material/styles';
+import { styled, useTheme } from '@mui/material/styles';
 import { PickersDay, PickersDayProps } from '../PickersDay/PickersDay';
 import { useUtils, useNow } from '../internals/hooks/useUtils';
 import { PickerOnChangeFn } from '../internals/hooks/useViews';
@@ -13,10 +13,10 @@ import {
 } from './PickersSlideTransition';
 import { BaseDateValidationProps, DayValidationProps } from '../internals/hooks/validation/models';
 import { useIsDayDisabled } from '../internals/hooks/validation/useDateValidation';
+import { findClosestEnabledDate } from '../internals/utils/date-utils';
 
 export interface ExportedDayPickerProps<TDate>
   extends Pick<PickersDayProps<TDate>, 'disableHighlightToday' | 'showDaysOutsideCurrentMonth'> {
-  autoFocus?: boolean;
   /**
    * If `true` renders `LoadingComponent` in calendar instead of calendar view.
    * Can be used to preload information and show it in calendar.
@@ -69,6 +69,8 @@ export interface DayPickerProps<TDate>
   reduceAnimations: boolean;
   slideDirection: SlideDirection;
   TransitionProps?: Partial<SlideTransitionProps>;
+  hasFocus?: boolean;
+  onFocusedViewChange?: (newHasFocus: boolean) => void;
   gridLabelId?: string;
 }
 
@@ -119,7 +121,6 @@ export function DayPicker<TDate>(props: DayPickerProps<TDate>) {
   const now = useNow<TDate>();
   const utils = useUtils<TDate>();
   const {
-    autoFocus,
     onFocusedDayChange,
     className,
     currentMonth,
@@ -144,6 +145,8 @@ export function DayPicker<TDate>(props: DayPickerProps<TDate>) {
     maxDate,
     shouldDisableDate,
     dayOfWeekFormatter = defaultDayOfWeekFormatter,
+    hasFocus,
+    onFocusedViewChange,
     gridLabelId,
   } = props;
 
@@ -154,6 +157,19 @@ export function DayPicker<TDate>(props: DayPickerProps<TDate>) {
     disablePast,
     disableFuture,
   });
+
+  const [internalFocusedDay, setInternalFocusedDay] = React.useState<TDate>(
+    () => focusedDay || now,
+  );
+
+  const changeHasFocus = React.useCallback(
+    (newHasFocus: boolean) => {
+      if (onFocusedViewChange) {
+        onFocusedViewChange(newHasFocus);
+      }
+    },
+    [onFocusedViewChange],
+  );
 
   const handleDaySelect = React.useCallback(
     (day: TDate, isFinish: PickerSelectionState = 'finish') => {
@@ -166,6 +182,67 @@ export function DayPicker<TDate>(props: DayPickerProps<TDate>) {
     [onSelectedDaysChange, readOnly],
   );
 
+  const focusDay = React.useCallback(
+    (day: TDate) => {
+      if (!isDateDisabled(day)) {
+        onFocusedDayChange(day);
+        setInternalFocusedDay(day);
+        changeHasFocus(true);
+      }
+    },
+    [isDateDisabled, onFocusedDayChange, changeHasFocus],
+  );
+
+  const theme = useTheme();
+
+  function handleKeyDown(event: React.KeyboardEvent<HTMLButtonElement>, day: TDate) {
+    switch (event.key) {
+      case 'ArrowUp':
+        focusDay(utils.addDays(day, -7));
+        event.preventDefault();
+        break;
+      case 'ArrowDown':
+        focusDay(utils.addDays(day, 7));
+        event.preventDefault();
+        break;
+      case 'ArrowLeft':
+        focusDay(utils.addDays(day, theme.direction === 'ltr' ? -1 : 1));
+        event.preventDefault();
+        break;
+      case 'ArrowRight':
+        focusDay(utils.addDays(day, theme.direction === 'ltr' ? 1 : -1));
+        event.preventDefault();
+        break;
+      case 'Home':
+        focusDay(utils.startOfWeek(day));
+        event.preventDefault();
+        break;
+      case 'End':
+        focusDay(utils.endOfWeek(day));
+        event.preventDefault();
+        break;
+      case 'PageUp':
+        focusDay(utils.getNextMonth(day));
+        event.preventDefault();
+        break;
+      case 'PageDown':
+        focusDay(utils.getPreviousMonth(day));
+        event.preventDefault();
+        break;
+      default:
+        break;
+    }
+  }
+
+  function handleFocus(event: React.FocusEvent<HTMLButtonElement>, day: TDate) {
+    focusDay(day);
+  }
+  function handleBlur(event: React.FocusEvent<HTMLButtonElement>, day: TDate) {
+    if (hasFocus && utils.isSameDay(internalFocusedDay, day)) {
+      changeHasFocus(false);
+    }
+  }
+
   const currentMonthNumber = utils.getMonth(currentMonth);
   const validSelectedDays = selectedDays
     .filter((day): day is TDate => !!day)
@@ -176,6 +253,27 @@ export function DayPicker<TDate>(props: DayPickerProps<TDate>) {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const slideNodeRef = React.useMemo(() => React.createRef<HTMLDivElement>(), [transitionKey]);
   const startOfCurrentWeek = utils.startOfWeek(now);
+
+  const focusableDay: TDate | null = React.useMemo(() => {
+    const startOfMonth = utils.startOfMonth(currentMonth);
+    const endOfMonth = utils.endOfMonth(currentMonth);
+    if (
+      isDateDisabled(internalFocusedDay) ||
+      utils.isAfterDay(internalFocusedDay, endOfMonth) ||
+      utils.isBeforeDay(internalFocusedDay, startOfMonth)
+    ) {
+      return findClosestEnabledDate({
+        utils,
+        date: internalFocusedDay,
+        minDate: startOfMonth,
+        maxDate: endOfMonth,
+        disablePast,
+        disableFuture,
+        isDateDisabled,
+      });
+    }
+    return internalFocusedDay;
+  }, [currentMonth, disableFuture, disablePast, internalFocusedDay, isDateDisabled, utils]);
 
   return (
     <div role="grid" aria-labelledby={gridLabelId}>
@@ -212,6 +310,8 @@ export function DayPicker<TDate>(props: DayPickerProps<TDate>) {
             {utils.getWeekArray(currentMonth).map((week) => (
               <PickersCalendarWeek role="row" key={`week-${week[0]}`}>
                 {week.map((day) => {
+                  const isFocusableDay =
+                    focusableDay !== null && utils.isSameDay(day, focusableDay);
                   const isSelected = validSelectedDays.some((selectedDay) =>
                     utils.isSameDay(selectedDay, day),
                   );
@@ -221,14 +321,17 @@ export function DayPicker<TDate>(props: DayPickerProps<TDate>) {
                     day,
                     isAnimating: isMonthSwitchingAnimating,
                     disabled: disabled || isDateDisabled(day),
-                    autoFocus: autoFocus && focusedDay !== null && utils.isSameDay(day, focusedDay),
+                    autoFocus: hasFocus && isFocusableDay,
                     today: isToday,
                     outsideCurrentMonth: utils.getMonth(day) !== currentMonthNumber,
                     selected: isSelected,
                     disableHighlightToday,
                     showDaysOutsideCurrentMonth,
-                    onDayFocus: onFocusedDayChange,
+                    onKeyDown: handleKeyDown,
+                    onFocus: handleFocus,
+                    onBlur: handleBlur,
                     onDaySelect: handleDaySelect,
+                    tabIndex: isFocusableDay ? 0 : -1,
                     role: 'gridcell',
                     'aria-selected': isSelected,
                   };
