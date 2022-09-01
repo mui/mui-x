@@ -13,11 +13,17 @@ It should not be used in a production setup.
 
 ## Basic usage
 
+You can render your date range field with either one input using `SingleInputDateRangeField`
+or two inputs using `MultiInputDateRangeField` as show below.
+
+:::info
+All the topics covered below are applicable to both `SingleInputDateRangeField` and `MultiInputDateRangeField` unless explicitly mentioned.
+:::
+
 {{"demo": "BasicDateRangeField.js"}}
 
-## Multi input
+## Uncontrolled vs. Controlled
 
-You can render the start and end date in standalone inputs using `MultiInputDateRangeField`.
-All the topics covered below are also applicable to this component unless explicitly mentioned.
+The component can be controlled or uncontrolled
 
-{{"demo": "BasicMultiInput.js"}}
+{{"demo": "DateRangeFieldValue.js"}}

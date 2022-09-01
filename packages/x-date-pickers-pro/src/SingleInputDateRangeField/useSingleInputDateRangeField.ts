@@ -12,12 +12,12 @@ import {
 } from '@mui/x-date-pickers/internals-fields';
 import {
   DateRangeFieldSection,
-  UseDateRangeFieldDefaultizedProps,
-  UseDateRangeFieldProps,
-} from './DateRangeField.interfaces';
+  UseSingleInputDateRangeFieldDefaultizedProps,
+  UseSingleInputDateRangeFieldProps,
+} from './SingleInputDateRangeField.interfaces';
 import { dateRangePickerValueManager } from '../DateRangePicker/shared';
 import { DateRange } from '../internal/models';
-import { splitDateRangeSections } from './DateRangeField.utils';
+import { splitDateRangeSections } from './SingleInputDateRangeField.utils';
 import {
   DateRangeValidationError,
   validateDateRange,
@@ -135,8 +135,8 @@ export const dateRangeFieldValueManager: FieldValueManager<
 };
 
 export const useDefaultizedDateRangeFieldProps = <TInputDate, TDate, AdditionalProps extends {}>(
-  props: UseDateRangeFieldProps<TInputDate, TDate>,
-): UseDateRangeFieldDefaultizedProps<TInputDate, TDate> & AdditionalProps => {
+  props: UseSingleInputDateRangeFieldProps<TInputDate, TDate>,
+): UseSingleInputDateRangeFieldDefaultizedProps<TInputDate, TDate> & AdditionalProps => {
   const utils = useUtils<TDate>();
   const defaultDates = useDefaultDates<TDate>();
 
@@ -149,17 +149,43 @@ export const useDefaultizedDateRangeFieldProps = <TInputDate, TDate, AdditionalP
   } as any;
 };
 
-export const useDateRangeField = <
+export const useSingleInputDateRangeField = <
   TInputDate,
   TDate,
-  TProps extends UseDateRangeFieldProps<TInputDate, TDate>,
+  TProps extends UseSingleInputDateRangeFieldProps<TInputDate, TDate>,
 >(
   inProps: TProps,
 ) => {
-  const props = useDefaultizedDateRangeFieldProps<TInputDate, TDate, TProps>(inProps);
+  const {
+    value,
+    defaultValue,
+    format,
+    onChange,
+    readOnly,
+    onError,
+    shouldDisableDate,
+    minDate,
+    maxDate,
+    disableFuture,
+    disablePast,
+    ...other
+  } = useDefaultizedDateRangeFieldProps<TInputDate, TDate, TProps>(inProps);
 
   return useField({
-    props,
+    forwardedProps: other,
+    internalProps: {
+      value,
+      defaultValue,
+      format,
+      onChange,
+      readOnly,
+      onError,
+      shouldDisableDate,
+      minDate,
+      maxDate,
+      disableFuture,
+      disablePast,
+    },
     valueManager: dateRangePickerValueManager,
     fieldValueManager: dateRangeFieldValueManager,
     validator: validateDateRange as any,

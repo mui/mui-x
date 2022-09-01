@@ -10,9 +10,9 @@ export default function DateFieldValue() {
   return (
     <LocalizationProvider dateAdapter={AdapterDateFns}>
       <Stack spacing={2} direction="row">
-        <DateField label="Uncontrolled date field" defaultValue={new Date()} />
+        <DateField label="Uncontrolled field" defaultValue={new Date()} />
         <DateField
-          label="Controlled date field"
+          label="Controlled field"
           value={value}
           onChange={(newValue) => setValue(newValue)}
         />

@@ -1,9 +1,13 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { SxProps } from '@mui/system';
+import { SxProps, useTheme } from '@mui/system';
 import { styled, useThemeProps, Theme } from '@mui/material/styles';
-import { unstable_composeClasses as composeClasses } from '@mui/material';
+import {
+  unstable_composeClasses as composeClasses,
+  useControlled,
+  useEventCallback,
+} from '@mui/material';
 import { PickersMonth } from './PickersMonth';
 import { useUtils, useNow, useDefaultDates } from '../internals/hooks/useUtils';
 import { NonNullablePickerChangeHandler } from '../internals/hooks/useViews';
@@ -43,6 +47,10 @@ export interface MonthPickerProps<TDate>
    * @default false
    */
   disableHighlightToday?: boolean;
+  autoFocus?: boolean;
+  onMonthFocus?: (month: number) => void;
+  hasFocus?: boolean;
+  onFocusedViewChange?: (newHasFocus: boolean) => void;
 }
 
 const useUtilityClasses = (ownerState: MonthPickerProps<any>) => {
@@ -114,13 +122,17 @@ export const MonthPicker = React.forwardRef(function MonthPicker<TDate>(
     shouldDisableMonth,
     readOnly,
     disableHighlightToday,
+    autoFocus = false,
+    onMonthFocus,
+    hasFocus,
+    onFocusedViewChange,
     ...other
   } = props;
   const ownerState = props;
   const classes = useUtilityClasses(ownerState);
-
+  const theme = useTheme();
   const selectedDateOrToday = date ?? now;
-  const focusedMonth = React.useMemo(() => {
+  const selectedMonth = React.useMemo(() => {
     if (date != null) {
       return utils.getMonth(date);
     }
@@ -131,30 +143,36 @@ export const MonthPicker = React.forwardRef(function MonthPicker<TDate>(
 
     return utils.getMonth(now);
   }, [now, date, utils, disableHighlightToday]);
+  const [focusedMonth, setFocusedMonth] = React.useState<number>(
+    () => selectedMonth || utils.getMonth(now),
+  );
 
-  const isMonthDisabled = (month: TDate) => {
-    const firstEnabledMonth = utils.startOfMonth(
-      disablePast && utils.isAfter(now, minDate) ? now : minDate,
-    );
+  const isMonthDisabled = React.useCallback(
+    (month: TDate) => {
+      const firstEnabledMonth = utils.startOfMonth(
+        disablePast && utils.isAfter(now, minDate) ? now : minDate,
+      );
 
-    const lastEnabledMonth = utils.startOfMonth(
-      disableFuture && utils.isBefore(now, maxDate) ? now : maxDate,
-    );
+      const lastEnabledMonth = utils.startOfMonth(
+        disableFuture && utils.isBefore(now, maxDate) ? now : maxDate,
+      );
 
-    if (utils.isBefore(month, firstEnabledMonth)) {
-      return true;
-    }
+      if (utils.isBefore(month, firstEnabledMonth)) {
+        return true;
+      }
 
-    if (utils.isAfter(month, lastEnabledMonth)) {
-      return true;
-    }
+      if (utils.isAfter(month, lastEnabledMonth)) {
+        return true;
+      }
 
-    if (!shouldDisableMonth) {
-      return false;
-    }
+      if (!shouldDisableMonth) {
+        return false;
+      }
 
-    return shouldDisableMonth(month);
-  };
+      return shouldDisableMonth(month);
+    },
+    [disableFuture, disablePast, maxDate, minDate, now, shouldDisableMonth, utils],
+  );
 
   const onMonthSelect = (month: number) => {
     if (readOnly) {
@@ -165,6 +183,88 @@ export const MonthPicker = React.forwardRef(function MonthPicker<TDate>(
     onChange(newDate, 'finish');
   };
 
+  const [internalHasFocus, setInternalHasFocus] = useControlled<boolean>({
+    name: 'MonthPicker',
+    state: 'hasFocus',
+    controlled: hasFocus,
+    default: autoFocus,
+  });
+
+  const changeHasFocus = React.useCallback(
+    (newHasFocus: boolean) => {
+      setInternalHasFocus(newHasFocus);
+
+      if (onFocusedViewChange) {
+        onFocusedViewChange(newHasFocus);
+      }
+    },
+    [setInternalHasFocus, onFocusedViewChange],
+  );
+
+  const focusMonth = React.useCallback(
+    (month: number) => {
+      if (!isMonthDisabled(utils.setMonth(selectedDateOrToday, month))) {
+        setFocusedMonth(month);
+        changeHasFocus(true);
+        if (onMonthFocus) {
+          onMonthFocus(month);
+        }
+      }
+    },
+    [selectedDateOrToday, isMonthDisabled, utils, onMonthFocus, changeHasFocus],
+  );
+
+  React.useEffect(() => {
+    setFocusedMonth((prevFocusedMonth) =>
+      selectedMonth !== null && prevFocusedMonth !== selectedMonth
+        ? selectedMonth
+        : prevFocusedMonth,
+    );
+  }, [selectedMonth]);
+
+  const handleKeyDown = useEventCallback((event: React.KeyboardEvent) => {
+    const monthsInYear = 12;
+    const monthsInRow = 3;
+
+    switch (event.key) {
+      case 'ArrowUp':
+        focusMonth((monthsInYear + focusedMonth - monthsInRow) % monthsInYear);
+        event.preventDefault();
+        break;
+      case 'ArrowDown':
+        focusMonth((monthsInYear + focusedMonth + monthsInRow) % monthsInYear);
+        event.preventDefault();
+        break;
+      case 'ArrowLeft':
+        focusMonth(
+          (monthsInYear + focusedMonth + (theme.direction === 'ltr' ? -1 : 1)) % monthsInYear,
+        );
+
+        event.preventDefault();
+        break;
+      case 'ArrowRight':
+        focusMonth(
+          (monthsInYear + focusedMonth + (theme.direction === 'ltr' ? 1 : -1)) % monthsInYear,
+        );
+
+        event.preventDefault();
+        break;
+      default:
+        break;
+    }
+  });
+
+  const handleMonthFocus = React.useCallback(
+    (event: React.FocusEvent, month: number) => {
+      focusMonth(month);
+    },
+    [focusMonth],
+  );
+
+  const handleMonthBlur = React.useCallback(() => {
+    changeHasFocus(false);
+  }, [changeHasFocus]);
+
   const currentMonthNumber = utils.getMonth(now);
 
   return (
@@ -172,19 +272,25 @@ export const MonthPicker = React.forwardRef(function MonthPicker<TDate>(
       ref={ref}
       className={clsx(classes.root, className)}
       ownerState={ownerState}
+      onKeyDown={handleKeyDown}
       {...other}
     >
       {utils.getMonthArray(selectedDateOrToday).map((month) => {
         const monthNumber = utils.getMonth(month);
         const monthText = utils.format(month, 'monthShort');
+        const isDisabled = disabled || isMonthDisabled(month);
 
         return (
           <PickersMonth
             key={monthText}
             value={monthNumber}
-            selected={monthNumber === focusedMonth}
+            selected={monthNumber === selectedMonth}
+            tabIndex={monthNumber === focusedMonth && !isDisabled ? 0 : -1}
+            hasFocus={internalHasFocus && monthNumber === focusedMonth}
             onSelect={onMonthSelect}
-            disabled={disabled || isMonthDisabled(month)}
+            onFocus={handleMonthFocus}
+            onBlur={handleMonthBlur}
+            disabled={isDisabled}
             aria-current={currentMonthNumber === monthNumber ? 'date' : undefined}
           >
             {monthText}
@@ -200,6 +306,7 @@ MonthPicker.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
+  autoFocus: PropTypes.bool,
   /**
    * Override or extend the styles applied to the component.
    */
@@ -231,6 +338,7 @@ MonthPicker.propTypes = {
    * @default false
    */
   disablePast: PropTypes.bool,
+  hasFocus: PropTypes.bool,
   /**
    * Maximal selectable date. @DateIOType
    */
@@ -243,6 +351,8 @@ MonthPicker.propTypes = {
    * Callback fired on date change.
    */
   onChange: PropTypes.func.isRequired,
+  onFocusedViewChange: PropTypes.func,
+  onMonthFocus: PropTypes.func,
   /**
    * If `true` picker is readonly
    */
