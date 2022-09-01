@@ -7,6 +7,7 @@ import { useSlotProps } from '@mui/base/utils';
 import IconButton from '@mui/material/IconButton';
 import { ArrowLeft, ArrowRight } from '../icons';
 import { PickersArrowSwitcherProps } from './PickersArrowSwitcher.types';
+import { useLocaleText } from '../../hooks/useUtils';
 
 const classes = generateUtilityClasses('MuiPickersArrowSwitcher', ['root', 'spacer', 'button']);
 
@@ -51,19 +52,35 @@ export const PickersArrowSwitcher = React.forwardRef(function PickersArrowSwitch
     className,
     components = {},
     componentsProps = {},
-    isLeftDisabled,
-    isLeftHidden,
-    isRightDisabled,
-    isRightHidden,
-    leftArrowButtonText,
-    onLeftClick,
-    onRightClick,
-    rightArrowButtonText,
+    isNextDisabled,
+    isNextHidden,
+    goToNext,
+    isPreviousDisabled,
+    isPreviousHidden,
+    goToPrevious,
     ...other
   } = props;
+
+  const localeText = useLocaleText();
   const theme = useTheme();
-  const isRtl = theme.direction === 'rtl';
   const ownerState = props;
+
+  const nextProps = {
+    isDisabled: isNextDisabled,
+    isHidden: isNextHidden,
+    goTo: goToNext,
+    text: localeText.openNextView,
+  };
+
+  const previousProps = {
+    isDisabled: isPreviousDisabled,
+    isHidden: isPreviousHidden,
+    goTo: goToPrevious,
+    text: localeText.openPreviousView,
+  };
+
+  const [leftProps, rightProps] =
+    theme.direction === 'rtl' ? [nextProps, previousProps] : [previousProps, nextProps];
 
   const LeftArrowButton = components.LeftArrowButton ?? PickersArrowSwitcherButton;
   const leftArrowButtonProps = useSlotProps({
@@ -71,13 +88,13 @@ export const PickersArrowSwitcher = React.forwardRef(function PickersArrowSwitch
     externalSlotProps: componentsProps.leftArrowButton,
     additionalProps: {
       size: 'small',
-      'aria-label': leftArrowButtonText,
-      title: leftArrowButtonText,
-      disabled: isLeftDisabled,
+      'aria-label': leftProps.text,
+      title: leftProps.text,
+      disabled: leftProps.isDisabled,
       edge: 'end',
-      onClick: onLeftClick,
+      onClick: leftProps.goTo,
     },
-    ownerState: { ...ownerState, hidden: isLeftHidden },
+    ownerState: { ...ownerState, hidden: leftProps.isHidden },
     className: classes.button,
   });
 
@@ -94,13 +111,13 @@ export const PickersArrowSwitcher = React.forwardRef(function PickersArrowSwitch
     externalSlotProps: componentsProps.rightArrowButton,
     additionalProps: {
       size: 'small',
-      'aria-label': rightArrowButtonText,
-      title: rightArrowButtonText,
-      disabled: isRightDisabled,
+      'aria-label': rightProps.text,
+      title: rightProps.text,
+      disabled: rightProps.isDisabled,
       edge: 'start',
-      onClick: onRightClick,
+      onClick: rightProps.goTo,
     },
-    ownerState: { ...ownerState, hidden: isRightHidden },
+    ownerState: { ...ownerState, hidden: rightProps.isHidden },
     className: classes.button,
   });
 
@@ -111,18 +128,6 @@ export const PickersArrowSwitcher = React.forwardRef(function PickersArrowSwitch
     ownerState: undefined,
   });
 
-  const leftArrowButton = (
-    <LeftArrowButton {...leftArrowButtonProps}>
-      <LeftArrowIcon {...leftArrowIconProps} />
-    </LeftArrowButton>
-  );
-
-  const rightArrowButton = (
-    <RightArrowButton {...rightArrowButtonProps}>
-      <RightArrowIcon {...rightArrowIconProps} />
-    </RightArrowButton>
-  );
-
   return (
     <PickersArrowSwitcherRoot
       ref={ref}
@@ -130,7 +135,9 @@ export const PickersArrowSwitcher = React.forwardRef(function PickersArrowSwitch
       ownerState={ownerState}
       {...other}
     >
-      {isRtl ? rightArrowButton : leftArrowButton}
+      <LeftArrowButton {...leftArrowButtonProps}>
+        <LeftArrowIcon {...leftArrowIconProps} />
+      </LeftArrowButton>
       {children ? (
         <Typography variant="subtitle1" component="span">
           {children}
@@ -138,7 +145,9 @@ export const PickersArrowSwitcher = React.forwardRef(function PickersArrowSwitch
       ) : (
         <PickersArrowSwitcherSpacer className={classes.spacer} ownerState={ownerState} />
       )}
-      {isRtl ? leftArrowButton : rightArrowButton}
+      <RightArrowButton {...rightArrowButtonProps}>
+        <RightArrowIcon {...rightArrowIconProps} />
+      </RightArrowButton>
     </PickersArrowSwitcherRoot>
   );
 });

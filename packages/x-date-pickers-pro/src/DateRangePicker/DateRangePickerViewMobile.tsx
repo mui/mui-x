@@ -55,12 +55,10 @@ export function DateRangePickerViewMobile<TDate>(props: DesktopDateRangeCalendar
     components,
     componentsProps,
     parsedValue,
-    leftArrowButtonText,
     maxDate: maxDateProp,
     minDate: minDateProp,
     onSelectedDaysChange,
     renderDay = (_, dayProps) => <DateRangePickerDay<TDate> {...dayProps} />,
-    rightArrowButtonText,
     disabled,
     readOnly,
     ...other
@@ -81,12 +79,10 @@ export function DateRangePickerViewMobile<TDate>(props: DesktopDateRangeCalendar
       <PickersCalendarHeader
         components={components}
         componentsProps={componentsProps}
-        leftArrowButtonText={leftArrowButtonText}
         maxDate={maxDateWithDisabled}
         minDate={minDateWithDisabled}
         onMonthChange={changeMonth as any}
         openView="day"
-        rightArrowButtonText={rightArrowButtonText}
         views={onlyDayView}
         disabled={disabled}
         {...other}

@@ -14,28 +14,18 @@ export interface ExportedPickersArrowSwitcherProps {
    * @default {}
    */
   componentsProps?: Partial<PickersArrowSwitcherSlotsComponentsProps>;
-  /**
-   * Left arrow icon aria-label text.
-   * @deprecated
-   */
-  leftArrowButtonText?: string;
-  /**
-   * Right arrow icon aria-label text.
-   * @deprecated
-   */
-  rightArrowButtonText?: string;
 }
 
 export interface PickersArrowSwitcherProps
   extends ExportedPickersArrowSwitcherProps,
     Omit<React.HTMLProps<HTMLDivElement>, 'ref' | 'as'> {
   children?: React.ReactNode;
-  isLeftDisabled: boolean;
-  isLeftHidden?: boolean;
-  isRightDisabled: boolean;
-  isRightHidden?: boolean;
-  onLeftClick: () => void;
-  onRightClick: () => void;
+  isPreviousDisabled: boolean;
+  isPreviousHidden?: boolean;
+  goToPrevious: () => void;
+  isNextDisabled: boolean;
+  isNextHidden?: boolean;
+  goToNext: () => void;
 }
 
 export type PickersArrowSwitcherOwnerState = PickersArrowSwitcherProps;

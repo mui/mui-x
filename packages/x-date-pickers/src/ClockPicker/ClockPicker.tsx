@@ -120,21 +120,9 @@ export interface ClockPickerProps<TDate> extends ExportedClockPickerProps<TDate>
    */
   getSecondsClockNumberText?: (seconds: string) => string;
   /**
-   * Left arrow icon aria-label text.
-   * @default 'open previous view'
-   * @deprecated Use the `localeText` prop of `LocalizationProvider` instead, see https://mui.com/x/react-date-pickers/localization
-   */
-  leftArrowButtonText?: string;
-  /**
    * On change callback @DateIOType.
    */
   onChange: PickerOnChangeFn<TDate>;
-  /**
-   * Right arrow icon aria-label text.
-   * @default 'open next view'
-   * @deprecated Use the `localeText` prop of `LocalizationProvider` instead, see https://mui.com/x/react-date-pickers/localization
-   */
-  rightArrowButtonText?: string;
   showViewSwitcher?: boolean;
   /**
    * Controlled open view.
@@ -221,11 +209,9 @@ export const ClockPicker = React.forwardRef(function ClockPicker<TDate extends u
     getHoursClockNumberText: getHoursClockNumberTextProp,
     getMinutesClockNumberText: getMinutesClockNumberTextProp,
     getSecondsClockNumberText: getSecondsClockNumberTextProp,
-    leftArrowButtonText: leftArrowButtonTextProp,
     maxTime,
     minTime,
     minutesStep = 1,
-    rightArrowButtonText: rightArrowButtonTextProp,
     shouldDisableTime,
     showViewSwitcher,
     onChange,
@@ -239,8 +225,6 @@ export const ClockPicker = React.forwardRef(function ClockPicker<TDate extends u
   } = props;
 
   deprecatedPropsWarning({
-    leftArrowButtonText: leftArrowButtonTextProp,
-    rightArrowButtonText: rightArrowButtonTextProp,
     getClockLabelText: getClockLabelTextProp,
     getHoursClockNumberText: getHoursClockNumberTextProp,
     getMinutesClockNumberText: getMinutesClockNumberTextProp,
@@ -249,8 +233,6 @@ export const ClockPicker = React.forwardRef(function ClockPicker<TDate extends u
 
   const localeText = useLocaleText();
 
-  const leftArrowButtonText = leftArrowButtonTextProp ?? localeText.openPreviousView;
-  const rightArrowButtonText = rightArrowButtonTextProp ?? localeText.openNextView;
   const getClockLabelText = getClockLabelTextProp ?? localeText.clockLabelText;
   const getHoursClockNumberText = getHoursClockNumberTextProp ?? localeText.hoursClockNumberText;
   const getMinutesClockNumberText =
@@ -443,14 +425,12 @@ export const ClockPicker = React.forwardRef(function ClockPicker<TDate extends u
       {showViewSwitcher && (
         <ClockPickerArrowSwitcher
           className={classes.arrowSwitcher}
-          leftArrowButtonText={leftArrowButtonText}
-          rightArrowButtonText={rightArrowButtonText}
           components={components}
           componentsProps={componentsProps}
-          onLeftClick={() => setOpenView(previousView)}
-          onRightClick={() => setOpenView(nextView)}
-          isLeftDisabled={!previousView}
-          isRightDisabled={!nextView}
+          goToPrevious={() => setOpenView(previousView)}
+          goToNext={() => setOpenView(nextView)}
+          isPreviousDisabled={!previousView}
+          isNextDisabled={!nextView}
           ownerState={ownerState}
         />
       )}
@@ -566,12 +546,6 @@ ClockPicker.propTypes = {
    */
   getSecondsClockNumberText: PropTypes.func,
   /**
-   * Left arrow icon aria-label text.
-   * @default 'open previous view'
-   * @deprecated Use the `localeText` prop of `LocalizationProvider` instead, see https://mui.com/x/react-date-pickers/localization
-   */
-  leftArrowButtonText: PropTypes.string,
-  /**
    * Max time acceptable time.
    * For input validation date part of passed object will be ignored if `disableIgnoringDatePartForTimeValidation` not specified.
    */
@@ -605,12 +579,6 @@ ClockPicker.propTypes = {
    * @default false
    */
   readOnly: PropTypes.bool,
-  /**
-   * Right arrow icon aria-label text.
-   * @default 'open next view'
-   * @deprecated Use the `localeText` prop of `LocalizationProvider` instead, see https://mui.com/x/react-date-pickers/localization
-   */
-  rightArrowButtonText: PropTypes.string,
   /**
    * Dynamically check if time is disabled or not.
    * If returns `false` appropriate time point will ot be acceptable.

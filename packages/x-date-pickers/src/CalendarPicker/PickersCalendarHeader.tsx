@@ -22,7 +22,7 @@ import { buildDeprecatedPropsWarning } from '../internals/utils/warning';
 
 export type ExportedCalendarHeaderProps<TDate> = Pick<
   PickersCalendarHeaderProps<TDate>,
-  'getViewSwitchingButtonText' | 'leftArrowButtonText' | 'rightArrowButtonText'
+  'getViewSwitchingButtonText'
 >;
 
 export interface PickersCalendarHeaderSlotsComponent extends PickersArrowSwitcherSlotsComponent {
@@ -141,28 +141,22 @@ export function PickersCalendarHeader<TDate>(props: PickersCalendarHeaderProps<T
     disableFuture,
     disablePast,
     getViewSwitchingButtonText: getViewSwitchingButtonTextProp,
-    leftArrowButtonText: leftArrowButtonTextProp,
     maxDate,
     minDate,
     onMonthChange,
     onViewChange,
     openView: currentView,
     reduceAnimations,
-    rightArrowButtonText: rightArrowButtonTextProp,
     views,
     labelId,
   } = props;
 
   deprecatedPropsWarning({
-    leftArrowButtonText: leftArrowButtonTextProp,
-    rightArrowButtonText: rightArrowButtonTextProp,
     getViewSwitchingButtonText: getViewSwitchingButtonTextProp,
   });
 
   const localeText = useLocaleText();
 
-  const leftArrowButtonText = leftArrowButtonTextProp ?? localeText.previousMonth;
-  const rightArrowButtonText = rightArrowButtonTextProp ?? localeText.nextMonth;
   const getViewSwitchingButtonText =
     getViewSwitchingButtonTextProp ?? localeText.calendarViewSwitchingButtonAriaLabel;
 
@@ -240,14 +234,12 @@ export function PickersCalendarHeader<TDate>(props: PickersCalendarHeaderProps<T
       </PickersCalendarHeaderLabel>
       <Fade in={currentView === 'day'}>
         <PickersArrowSwitcher
-          leftArrowButtonText={leftArrowButtonText}
-          rightArrowButtonText={rightArrowButtonText}
           components={components}
           componentsProps={componentsProps}
-          onLeftClick={selectPreviousMonth}
-          onRightClick={selectNextMonth}
-          isLeftDisabled={isPreviousMonthDisabled}
-          isRightDisabled={isNextMonthDisabled}
+          goToPrevious={selectPreviousMonth}
+          goToNext={selectNextMonth}
+          isPreviousDisabled={isPreviousMonthDisabled}
+          isNextDisabled={isNextMonthDisabled}
         />
       </Fade>
     </PickersCalendarHeaderRoot>

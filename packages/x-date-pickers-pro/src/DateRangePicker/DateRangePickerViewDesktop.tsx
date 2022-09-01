@@ -3,12 +3,10 @@ import { styled } from '@mui/material/styles';
 import {
   useDefaultDates,
   useUtils,
-  useLocaleText,
   PickersArrowSwitcher,
   usePreviousMonthDisabled,
   useNextMonthDisabled,
   DayPicker,
-  buildDeprecatedPropsWarning,
   DayPickerProps,
   DAY_MARGIN,
   DayValidationProps,
@@ -109,10 +107,6 @@ function getCalendarsArray(
   }
 }
 
-const deprecatedPropsWarning = buildDeprecatedPropsWarning(
-  'Props for translation are deprecated. See https://mui.com/x/react-date-pickers/localization for more information.',
-);
-
 /**
  * @ignore - internal component.
  */
@@ -127,24 +121,12 @@ export function DateRangePickerViewDesktop<TDate>(props: DateRangePickerViewDesk
     parsedValue,
     disableFuture,
     disablePast,
-    leftArrowButtonText: leftArrowButtonTextProp,
     maxDate: maxDateProp,
     minDate: minDateProp,
     onSelectedDaysChange,
     renderDay = (_, dateRangeProps) => <DateRangePickerDay {...dateRangeProps} />,
-    rightArrowButtonText: rightArrowButtonTextProp,
     ...other
   } = props;
-
-  deprecatedPropsWarning({
-    leftArrowButtonText: leftArrowButtonTextProp,
-    rightArrowButtonText: rightArrowButtonTextProp,
-  });
-
-  const localeText = useLocaleText();
-
-  const leftArrowButtonText = leftArrowButtonTextProp ?? localeText.previousMonth;
-  const rightArrowButtonText = rightArrowButtonTextProp ?? localeText.nextMonth;
 
   const utils = useUtils<TDate>();
   const defaultDates = useDefaultDates<TDate>();
@@ -202,16 +184,14 @@ export function DateRangePickerViewDesktop<TDate>(props: DateRangePickerViewDesk
         return (
           <DateRangePickerViewDesktopContainer key={index}>
             <DateRangePickerViewDesktopArrowSwitcher
-              onLeftClick={selectPreviousMonth}
-              onRightClick={selectNextMonth}
-              isLeftHidden={index !== 0}
-              isRightHidden={index !== calendars - 1}
-              isLeftDisabled={isPreviousMonthDisabled}
-              isRightDisabled={isNextMonthDisabled}
-              leftArrowButtonText={leftArrowButtonText}
+              goToPrevious={selectPreviousMonth}
+              goToNext={selectNextMonth}
+              isPreviousHidden={index !== 0}
+              isNextHidden={index !== calendars - 1}
+              isPreviousDisabled={isPreviousMonthDisabled}
+              isNextDisabled={isNextMonthDisabled}
               components={components}
               componentsProps={componentsProps}
-              rightArrowButtonText={rightArrowButtonText}
             >
               {utils.format(monthOnIteration, 'monthAndYear')}
             </DateRangePickerViewDesktopArrowSwitcher>
