@@ -97,6 +97,7 @@
     "onEditCellPropsChange": "Callback fired when the edit cell value changes.<br><br><strong>Signature:</strong><br><code>function(params: GridEditCellPropsParams, event: MuiEvent&lt;React.SyntheticEvent&gt;, details: GridCallbackDetails) =&gt; void</code><br><em>params:</em> With all properties from GridEditCellPropsParams.<br><em>event:</em> The event that caused this prop to be called.<br><em>details:</em> Additional details for this callback.",
     "onEditRowsModelChange": "Callback fired when the <code>editRowsModel</code> changes.<br><br><strong>Signature:</strong><br><code>function(editRowsModel: GridEditRowsModel, details: GridCallbackDetails) =&gt; void</code><br><em>editRowsModel:</em> With all properties from GridEditRowsModel.<br><em>details:</em> Additional details for this callback.",
     "onError": "Callback fired when an exception is thrown in the grid.<br><br><strong>Signature:</strong><br><code>function(args: any, event: MuiEvent&lt;{}&gt;, details: GridCallbackDetails) =&gt; void</code><br><em>args:</em> The arguments passed to the <code>showError</code> call.<br><em>event:</em> The event object.<br><em>details:</em> Additional details for this callback.",
+    "onFetchRows": "Callback fired when rowCount is set and the next batch of virtualized rows is rendered.<br><br><strong>Signature:</strong><br><code>function(params: GridFetchRowsParams, event: MuiEvent&lt;{}&gt;, details: GridCallbackDetails) =&gt; void</code><br><em>params:</em> With all properties from GridFetchRowsParams.<br><em>event:</em> The event object.<br><em>details:</em> Additional details for this callback.",
     "onFilterModelChange": "Callback fired when the Filter model changes before the filters are applied.<br><br><strong>Signature:</strong><br><code>function(model: GridFilterModel, details: GridCallbackDetails) =&gt; void</code><br><em>model:</em> With all properties from <a href=\"/x/api/data-grid/grid-filter-model/\">GridFilterModel</a>.<br><em>details:</em> Additional details for this callback.",
     "onMenuClose": "Callback fired when the menu is closed.<br><br><strong>Signature:</strong><br><code>function(params: GridMenuParams, event: MuiEvent&lt;{}&gt;, details: GridCallbackDetails) =&gt; void</code><br><em>params:</em> With all properties from GridMenuParams.<br><em>event:</em> The event object.<br><em>details:</em> Additional details for this callback.",
     "onMenuOpen": "Callback fired when the menu is opened.<br><br><strong>Signature:</strong><br><code>function(params: GridMenuParams, event: MuiEvent&lt;{}&gt;, details: GridCallbackDetails) =&gt; void</code><br><em>params:</em> With all properties from GridMenuParams.<br><em>event:</em> The event object.<br><em>details:</em> Additional details for this callback.",
@@ -133,6 +134,7 @@
     "rowModesModel": "Controls the modes of the rows.",
     "rowReordering": "If <code>true</code>, the reordering of rows is enabled.",
     "rows": "Set of rows of type GridRowsProp.",
+    "rowsLoadingMode": "Loading rows can be processed on the server or client-side. Set it to &#39;client&#39; if you would like enable infnite loading. Set it to &#39;server&#39; if you would like to enable lazy loading. * @default &quot;client&quot;",
     "rowSpacingType": "Sets the type of space between rows added by <code>getRowSpacing</code>.",
     "rowsPerPageOptions": "Select the pageSize dynamically using the component UI.",
     "rowThreshold": "Number of rows from the <code>rowBuffer</code> that can be visible before a new slice is rendered.",
@@ -226,6 +228,10 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the cell checkbox element"
     },
+    "cellSkeleton": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the skeleton cell element"
+    },
     "checkboxInput": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the selection checkbox element"
@@ -279,6 +285,10 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the column header element"
     },
+    "columnGroupHeader": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the column group header element"
+    },
     "columnHeaderCheckbox": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the header checkbox cell element"
@@ -304,6 +314,20 @@
     "columnHeaderTitleContainerContent": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the column header's title excepted buttons"
+    },
+    "columnHeader--filledGroup": {
+      "description": "Styles applied to {{nodeName}} if {{conditions}}.",
+      "nodeName": "the column group header cell",
+      "conditions": "not empty"
+    },
+    "columnHeader--emptyGroup": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the empty column group header cell"
+    },
+    "columnHeader--showColumnBorder": {
+      "description": "Styles applied to {{nodeName}} when {{conditions}}.",
+      "nodeName": "the column group header cell",
+      "conditions": "show column border"
     },
     "columnHeaders": {
       "description": "Styles applied to {{nodeName}}.",
@@ -544,6 +568,11 @@
       "nodeName": "the row",
       "conditions": "it has dynamic row height"
     },
+    "row--detailPanelExpanded": {
+      "description": "Styles applied to {{nodeName}} if {{conditions}}.",
+      "nodeName": "the row",
+      "conditions": "its detail panel is open"
+    },
     "row": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the row element" },
     "rowCount": {
       "description": "Styles applied to {{nodeName}}.\nOnly works when pagination is disabled.",
@@ -623,5 +652,55 @@
       "nodeName": "pinned rows render zones"
     }
   },
-  "slotDescriptions": {}
+  "slotDescriptions": {
+    "BaseCheckbox": "The custom Checkbox component used in the grid for both header and cells.",
+    "BaseTextField": "The custom TextField component used in the grid.",
+    "BaseFormControl": "The custom FormControl component used in the grid.",
+    "BaseSelect": "The custom Select component used in the grid.",
+    "BaseSwitch": "The custom Switch component used in the grid.",
+    "BaseButton": "The custom Button component used in the grid.",
+    "BaseTooltip": "The custom Tooltip component used in the grid.",
+    "BasePopper": "The custom Popper component used in the grid.",
+    "Cell": "Component rendered for each cell.",
+    "ColumnHeaderFilterIconButton": "Filter icon component rendered in each column header.",
+    "ColumnMenu": "Column menu component rendered by clicking on the 3 dots &quot;kebab&quot; icon in column headers.",
+    "ErrorOverlay": "Error overlay component rendered above the grid when an error is caught.",
+    "Footer": "Footer component rendered at the bottom of the grid viewport.",
+    "Header": "Header component rendered above the grid column header bar.\nPrefer using the <code>Toolbar</code> slot. You should never need to use this slot.",
+    "Toolbar": "Toolbar component rendered inside the Header component.",
+    "PreferencesPanel": "PreferencesPanel component rendered inside the Header component.",
+    "LoadingOverlay": "Loading overlay component rendered when the grid is in a loading state.",
+    "NoResultsOverlay": "No results overlay component rendered when the grid has no results after filtering.",
+    "NoRowsOverlay": "No rows overlay component rendered when the grid has no rows.",
+    "Pagination": "Pagination component rendered in the grid footer by default.",
+    "FilterPanel": "Filter panel component rendered when clicking the filter button.",
+    "ColumnsPanel": "GridColumns panel component rendered when clicking the columns button.",
+    "Panel": "Panel component wrapping the filters and columns panels.",
+    "Row": "Component rendered for each row.",
+    "BooleanCellTrueIcon": "Icon displayed on the boolean cell to represent the true value.",
+    "BooleanCellFalseIcon": "Icon displayed on the boolean cell to represent the false value.",
+    "ColumnMenuIcon": "Icon displayed on the side of the column header title to display the filter input component.",
+    "OpenFilterButtonIcon": "Icon displayed on the open filter button present in the toolbar by default.",
+    "ColumnFilteredIcon": "Icon displayed on the column header menu to show that a filter has been applied to the column.",
+    "ColumnSelectorIcon": "Icon displayed on the column menu selector tab.",
+    "ColumnUnsortedIcon": "Icon displayed on the side of the column header title when unsorted.",
+    "ColumnSortedAscendingIcon": "Icon displayed on the side of the column header title when sorted in ascending order.",
+    "ColumnSortedDescendingIcon": "Icon displayed on the side of the column header title when sorted in descending order.",
+    "ColumnResizeIcon": "Icon displayed in between two column headers that allows to resize the column header.",
+    "DensityCompactIcon": "Icon displayed on the compact density option in the toolbar.",
+    "DensityStandardIcon": "Icon displayed on the standard density option in the toolbar.",
+    "DensityComfortableIcon": "Icon displayed on the &quot;comfortable&quot; density option in the toolbar.",
+    "ExportIcon": "Icon displayed on the open export button present in the toolbar by default.",
+    "MoreActionsIcon": "Icon displayed on the <code>actions</code> column type to open the menu.",
+    "TreeDataExpandIcon": "Icon displayed on the tree data toggling column when the children are collapsed",
+    "TreeDataCollapseIcon": "Icon displayed on the tree data toggling column when the children are expanded",
+    "GroupingCriteriaExpandIcon": "Icon displayed on the grouping column when the children are collapsed",
+    "GroupingCriteriaCollapseIcon": "Icon displayed on the grouping column when the children are expanded",
+    "DetailPanelExpandIcon": "Icon displayed on the detail panel toggle column when collapsed.",
+    "DetailPanelCollapseIcon": "Icon displayed on the detail panel toggle column when expanded.",
+    "FilterPanelDeleteIcon": "Icon displayed for deleting the filter from filter Panel.",
+    "RowReorderIcon": "Icon displayed on the <code>reorder</code> column type to reorder a row.",
+    "QuickFilterIcon": "Icon displayed on the quick filter input.",
+    "QuickFilterClearIcon": "Icon displayed on the quick filter reset input."
+  }
 }

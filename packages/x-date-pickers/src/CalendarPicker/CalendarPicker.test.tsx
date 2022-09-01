@@ -1,13 +1,7 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
-import {
-  fireEvent,
-  userEvent,
-  screen,
-  describeConformance,
-  getAllByRole,
-} from '@mui/monorepo/test/utils';
+import { fireEvent, userEvent, screen, describeConformance } from '@mui/monorepo/test/utils';
 import {
   CalendarPicker,
   calendarPickerClasses as classes,
@@ -77,7 +71,9 @@ describe('<CalendarPicker />', () => {
     fireEvent.click(screen.getByTitle('Next month'));
     expect(onMonthChangeMock.callCount).to.equal(2);
 
-    fireEvent.click(screen.getByLabelText(/Jan 5, 2019/i));
+    clock.runToLast();
+
+    fireEvent.click(screen.getByRole('gridcell', { name: '5' }));
     expect(onChangeMock.callCount).to.equal(0);
 
     fireEvent.click(screen.getByText('January 2019'));
@@ -106,7 +102,7 @@ describe('<CalendarPicker />', () => {
     fireEvent.click(screen.getByTitle('Next month'));
     expect(onMonthChangeMock.callCount).to.equal(0);
 
-    fireEvent.click(screen.getByLabelText(/Jan 5, 2019/i));
+    fireEvent.click(screen.getByRole('gridcell', { name: '5' }));
     expect(onChangeMock.callCount).to.equal(0);
   });
 
@@ -123,11 +119,12 @@ describe('<CalendarPicker />', () => {
     );
 
     // days are disabled
-    const daysContainer = screen.getByRole('grid');
-    const days = getAllByRole(daysContainer, 'button');
-    const disabledDays = days.filter((day) => day.getAttribute('disabled') !== null);
+    const cells = screen.getAllByRole('gridcell');
+    const disabledDays = cells.filter(
+      (cell) => cell.getAttribute('disabled') !== null && cell.tagName === 'BUTTON',
+    );
 
-    expect(days.length).to.equal(31);
+    expect(cells.length).to.equal(35);
     expect(disabledDays.length).to.equal(31);
   });
 
@@ -185,7 +182,9 @@ describe('<CalendarPicker />', () => {
       expect(screen.getAllByMuiTest('day')).to.have.length(31);
       // It should follow https://www.w3.org/WAI/ARIA/apg/example-index/dialog-modal/datepicker-dialog.html
       expect(
-        document.querySelector('[role="grid"] > [role="row"] > [role="cell"] > button'),
+        document.querySelector(
+          '[role="grid"] [role="rowgroup"] > [role="row"] button[role="gridcell"]',
+        ),
       ).to.have.text('1');
     });
 
@@ -201,7 +200,7 @@ describe('<CalendarPicker />', () => {
         />,
       );
 
-      userEvent.mousePress(screen.getByLabelText('Jan 2, 2018'));
+      userEvent.mousePress(screen.getByRole('gridcell', { name: '2' }));
       expect(onChange.callCount).to.equal(1);
       expect(onChange.lastCall.args[0]).toEqualDateTime(new Date(2018, 0, 2));
     });
@@ -218,7 +217,7 @@ describe('<CalendarPicker />', () => {
         />,
       );
 
-      userEvent.mousePress(screen.getByLabelText('Jan 2, 2018'));
+      userEvent.mousePress(screen.getByRole('gridcell', { name: '2' }));
       expect(onChange.callCount).to.equal(1);
       expect(onChange.lastCall.args[0]).toEqualDateTime(
         adapterToUse.date(new Date(2018, 0, 2, 11, 11, 11)),

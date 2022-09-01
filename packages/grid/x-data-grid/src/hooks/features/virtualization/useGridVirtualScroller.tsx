@@ -278,9 +278,23 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
   const updateRenderContext = React.useCallback(
     (nextRenderContext: GridRenderContext) => {
       setRenderContext(nextRenderContext);
+
+      const [firstRowToRender, lastRowToRender] = getRenderableIndexes({
+        firstIndex: nextRenderContext.firstRowIndex,
+        lastIndex: nextRenderContext.lastRowIndex,
+        minFirstIndex: 0,
+        maxLastIndex: currentPage.rows.length,
+        buffer: rootProps.rowBuffer,
+      });
+
+      apiRef.current.publishEvent('renderedRowsIntervalChange', {
+        firstRowToRender,
+        lastRowToRender,
+      });
+
       prevRenderContext.current = nextRenderContext;
     },
-    [setRenderContext, prevRenderContext],
+    [apiRef, setRenderContext, prevRenderContext, currentPage.rows.length, rootProps.rowBuffer],
   );
 
   React.useEffect(() => {

@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { styled, useThemeProps } from '@mui/material/styles';
 import { unstable_composeClasses as composeClasses } from '@mui/material';
+import { useControlled, unstable_useId as useId, useEventCallback } from '@mui/material/utils';
 import { MonthPicker, MonthPickerProps } from '../MonthPicker/MonthPicker';
 import { useCalendarState } from './useCalendarState';
 import { useDefaultDates, useUtils } from '../internals/hooks/useUtils';
@@ -16,16 +17,18 @@ import {
   PickersCalendarHeaderSlotsComponentsProps,
 } from './PickersCalendarHeader';
 import { YearPicker, YearPickerProps } from '../YearPicker/YearPicker';
-import { findClosestEnabledDate } from '../internals/utils/date-utils';
+import { findClosestEnabledDate, parseNonNullablePickerDate } from '../internals/utils/date-utils';
 import { CalendarPickerView } from '../internals/models';
 import { PickerViewRoot } from '../internals/components/PickerViewRoot';
 import { defaultReduceAnimations } from '../internals/utils/defaultReduceAnimations';
 import { CalendarPickerClasses, getCalendarPickerUtilityClass } from './calendarPickerClasses';
 import {
   BaseDateValidationProps,
+  DayValidationProps,
   MonthValidationProps,
   YearValidationProps,
 } from '../internals/hooks/validation/models';
+import { DefaultizedProps } from '../internals/models/helpers';
 
 export interface CalendarPickerSlotsComponent extends PickersCalendarHeaderSlotsComponent {}
 
@@ -34,9 +37,12 @@ export interface CalendarPickerSlotsComponentsProps
 
 export interface CalendarPickerProps<TDate>
   extends ExportedDayPickerProps<TDate>,
+    BaseDateValidationProps<TDate>,
+    DayValidationProps<TDate>,
     YearValidationProps<TDate>,
     MonthValidationProps<TDate>,
     ExportedCalendarHeaderProps<TDate> {
+  autoFocus?: boolean;
   className?: string;
   classes?: Partial<CalendarPickerClasses>;
   /**
@@ -111,6 +117,8 @@ export interface CalendarPickerProps<TDate>
    * @returns {void|Promise} -
    */
   onMonthChange?: (month: TDate) => void | Promise<void>;
+  focusedView?: CalendarPickerView | null;
+  onFocusedViewChange?: (view: CalendarPickerView) => (newHasFocus: boolean) => void;
 }
 
 export type ExportedCalendarPickerProps<TDate> = Omit<
@@ -127,6 +135,18 @@ export type ExportedCalendarPickerProps<TDate> = Omit<
   | 'classes'
   | 'components'
   | 'componentsProps'
+  | 'onFocusedViewChange'
+  | 'focusedView'
+>;
+
+export type CalendarPickerDefaultizedProps<TDate> = DefaultizedProps<
+  CalendarPickerProps<TDate>,
+  | 'views'
+  | 'openTo'
+  | 'loading'
+  | 'reduceAnimations'
+  | 'renderLoading'
+  | keyof BaseDateValidationProps<TDate>
 >;
 
 const useUtilityClasses = (
@@ -140,6 +160,31 @@ const useUtilityClasses = (
 
   return composeClasses(slots, getCalendarPickerUtilityClass, classes);
 };
+
+function useCalendarPickerDefaultizedProps<TDate>(
+  props: CalendarPickerProps<TDate>,
+  name: string,
+): CalendarPickerDefaultizedProps<TDate> {
+  const utils = useUtils<TDate>();
+  const defaultDates = useDefaultDates<TDate>();
+  const themeProps = useThemeProps({
+    props,
+    name,
+  });
+
+  return {
+    loading: false,
+    disablePast: false,
+    disableFuture: false,
+    openTo: 'day',
+    views: ['year', 'day'],
+    reduceAnimations: defaultReduceAnimations,
+    renderLoading: () => <span data-mui-test="loading-progress">...</span>,
+    ...themeProps,
+    minDate: parseNonNullablePickerDate(utils, themeProps.minDate, defaultDates.minDate),
+    maxDate: parseNonNullablePickerDate(utils, themeProps.maxDate, defaultDates.maxDate),
+  };
+}
 
 const CalendarPickerRoot = styled(PickerViewRoot, {
   name: 'MuiCalendarPicker',
@@ -172,17 +217,13 @@ type CalendarPickerComponent = (<TDate>(
  *
  * - [CalendarPicker API](https://mui.com/x/api/date-pickers/calendar-picker/)
  */
-const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
+export const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
   inProps: CalendarPickerProps<TDate>,
   ref: React.Ref<HTMLDivElement>,
 ) {
   const utils = useUtils<TDate>();
-  const defaultDates = useDefaultDates<TDate>();
-
-  const props = useThemeProps({
-    props: inProps,
-    name: 'MuiCalendarPicker',
-  });
+  const id = useId();
+  const props = useCalendarPickerDefaultizedProps(inProps, 'MuiCalendarPicker');
 
   const {
     autoFocus,
@@ -191,24 +232,24 @@ const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
     disableFuture,
     disablePast,
     defaultCalendarMonth,
-    loading = false,
     onChange,
     onYearChange,
     onMonthChange,
-    reduceAnimations = defaultReduceAnimations,
-    renderLoading = () => <span data-mui-test="loading-progress">...</span>,
+    reduceAnimations,
     shouldDisableDate,
     shouldDisableMonth,
     shouldDisableYear,
     view,
-    views = ['year', 'day'],
-    openTo = 'day',
+    views,
+    openTo,
     className,
     disabled,
     readOnly,
-    minDate = defaultDates.minDate,
-    maxDate = defaultDates.maxDate,
+    minDate,
+    maxDate,
     disableHighlightToday,
+    focusedView,
+    onFocusedViewChange,
     ...other
   } = props;
 
@@ -264,7 +305,7 @@ const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
         changeMonth(startOfMonth);
       }
 
-      changeFocusedDay(closestEnabledDate);
+      changeFocusedDay(closestEnabledDate, true);
     },
     [
       changeFocusedDay,
@@ -281,8 +322,6 @@ const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
     ],
   );
 
-  // TODO: Use same behavior as `handleDateMonthChange` to avoid selecting a date in another year.
-  // Needs startOfYear / endOfYear methods in adapter.
   const handleDateYearChange = React.useCallback<YearPickerProps<TDate>['onChange']>(
     (newDate, selectionState) => {
       const startOfYear = utils.startOfYear(newDate);
@@ -308,7 +347,7 @@ const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
         changeMonth(startOfYear);
       }
 
-      changeFocusedDay(closestEnabledDate);
+      changeFocusedDay(closestEnabledDate, true);
     },
     [
       changeFocusedDay,
@@ -364,7 +403,7 @@ const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
   const ownerState = props;
   const classes = useUtilityClasses(ownerState);
 
-  const baseDateValidationProps: BaseDateValidationProps<TDate> = {
+  const baseDateValidationProps: Required<BaseDateValidationProps<TDate>> = {
     disablePast,
     disableFuture,
     maxDate,
@@ -381,6 +420,33 @@ const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
     disabled,
   };
 
+  const gridLabelId = `${id}-grid-label`;
+
+  const [internalFocusedView, setInternalFocusedView] = useControlled<CalendarPickerView | null>({
+    name: 'DayPicker',
+    state: 'focusedView',
+    controlled: focusedView,
+    default: autoFocus ? openView : null,
+  });
+
+  const hasFocus = internalFocusedView !== null;
+
+  const handleFocusedViewChange = useEventCallback(
+    (eventView: CalendarPickerView) => (newHasFocus: boolean) => {
+      if (onFocusedViewChange) {
+        // Use the calendar or clock logic
+        onFocusedViewChange(eventView)(newHasFocus);
+        return;
+      }
+      // If alone, do the local modifications
+      if (newHasFocus) {
+        setInternalFocusedView(eventView);
+      } else {
+        setInternalFocusedView((prevView) => (prevView === eventView ? null : prevView));
+      }
+    },
+  );
+
   return (
     <CalendarPickerRoot ref={ref} className={clsx(classes.root, className)} ownerState={ownerState}>
       <PickersCalendarHeader
@@ -396,6 +462,7 @@ const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
         disablePast={disablePast}
         disableFuture={disableFuture}
         reduceAnimations={reduceAnimations}
+        labelId={gridLabelId}
       />
       <CalendarPickerViewTransitionContainer
         reduceAnimations={reduceAnimations}
@@ -413,6 +480,8 @@ const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
               date={date}
               onChange={handleDateYearChange}
               shouldDisableYear={shouldDisableYear}
+              hasFocus={hasFocus}
+              onFocusedViewChange={handleFocusedViewChange('year')}
             />
           )}
 
@@ -420,10 +489,13 @@ const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
             <MonthPicker
               {...baseDateValidationProps}
               {...commonViewProps}
+              autoFocus={autoFocus}
+              hasFocus={hasFocus}
               className={className}
               date={date}
               onChange={handleDateMonthChange}
               shouldDisableMonth={shouldDisableMonth}
+              onFocusedViewChange={handleFocusedViewChange('month')}
             />
           )}
 
@@ -439,9 +511,10 @@ const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
               reduceAnimations={reduceAnimations}
               selectedDays={[date]}
               onSelectedDaysChange={onSelectedDayChange}
-              loading={loading}
-              renderLoading={renderLoading}
               shouldDisableDate={shouldDisableDate}
+              hasFocus={hasFocus}
+              onFocusedViewChange={handleFocusedViewChange('day')}
+              gridLabelId={gridLabelId}
             />
           )}
         </div>
@@ -500,6 +573,7 @@ CalendarPicker.propTypes = {
    * @default false
    */
   disablePast: PropTypes.bool,
+  focusedView: PropTypes.oneOf(['day', 'month', 'year']),
   /**
    * Get aria-label text for switching between views button.
    * @param {CalendarPickerView} currentView The view from which we want to get the button text.
@@ -530,6 +604,7 @@ CalendarPicker.propTypes = {
    * Callback fired on date change
    */
   onChange: PropTypes.func.isRequired,
+  onFocusedViewChange: PropTypes.func,
   /**
    * Callback firing on month change @DateIOType.
    * @template TDate
@@ -621,5 +696,3 @@ CalendarPicker.propTypes = {
    */
   views: PropTypes.arrayOf(PropTypes.oneOf(['day', 'month', 'year']).isRequired),
 } as any;
-
-export { CalendarPicker };

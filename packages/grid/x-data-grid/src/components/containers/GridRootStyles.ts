@@ -31,6 +31,7 @@ export const GridRootStyles = styled('div', {
     { [`& .${gridClasses.cell}`]: styles.cell },
     { [`& .${gridClasses.cellContent}`]: styles.cellContent },
     { [`& .${gridClasses.cellCheckbox}`]: styles.cellCheckbox },
+    { [`& .${gridClasses.cellSkeleton}`]: styles.cellSkeleton },
     { [`& .${gridClasses.checkboxInput}`]: styles.checkboxInput },
     { [`& .${gridClasses['columnHeader--alignCenter']}`]: styles['columnHeader--alignCenter'] },
     { [`& .${gridClasses['columnHeader--alignLeft']}`]: styles['columnHeader--alignLeft'] },
@@ -145,13 +146,26 @@ export const GridRootStyles = styled('div', {
       minWidth: 0,
       flex: 1,
       whiteSpace: 'nowrap',
-      overflowX: 'hidden',
+      overflow: 'hidden',
     },
     [`& .${gridClasses.columnHeaderTitleContainerContent}`]: {
       overflow: 'hidden',
       display: 'flex',
       alignItems: 'center',
     },
+    [`& .${gridClasses['columnHeader--filledGroup']} .${gridClasses.columnHeaderTitleContainer}`]: {
+      borderBottom: `solid ${borderColor} 1px`,
+      boxSizing: 'border-box',
+    },
+    [`& .${gridClasses['columnHeader--filledGroup']}.${gridClasses['columnHeader--showColumnBorder']} .${gridClasses.columnHeaderTitleContainer}`]:
+      {
+        borderBottom: `none`,
+      },
+    [`& .${gridClasses['columnHeader--filledGroup']}.${gridClasses['columnHeader--showColumnBorder']}`]:
+      {
+        borderBottom: `solid ${borderColor} 1px`,
+        boxSizing: 'border-box',
+      },
     [`& .${gridClasses.sortIcon}, & .${gridClasses.filterIcon}`]: {
       fontSize: 'inherit',
     },
@@ -340,6 +354,7 @@ export const GridRootStyles = styled('div', {
     [`& .${gridClasses.columnHeaderDraggableContainer}`]: {
       display: 'flex',
       width: '100%',
+      height: '100%',
     },
     [`& .${gridClasses.rowReorderCellPlaceholder}`]: {
       display: 'none',

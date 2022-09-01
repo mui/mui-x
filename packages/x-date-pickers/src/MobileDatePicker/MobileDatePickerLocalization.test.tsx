@@ -21,7 +21,7 @@ describe('<MobileDatePicker /> localization', () => {
 
     expect(screen.getByRole('textbox')).to.have.value('2018');
 
-    fireEvent.click(screen.getByLabelText(/Choose date/));
+    fireEvent.mouseDown(screen.getByLabelText(/Choose date/));
     expect(screen.getByMuiTest('datepicker-toolbar-date').textContent).to.equal('2018');
   });
 
@@ -38,7 +38,7 @@ describe('<MobileDatePicker /> localization', () => {
 
     expect(screen.getByRole('textbox')).to.have.value('janvier 2018');
 
-    fireEvent.click(screen.getByLabelText(/Choose date/));
+    fireEvent.mouseDown(screen.getByLabelText(/Choose date/));
     expect(screen.getByMuiTest('datepicker-toolbar-date').textContent).to.equal('janvier');
   });
 
@@ -54,7 +54,7 @@ describe('<MobileDatePicker /> localization', () => {
 
     expect(screen.getByRole('textbox')).to.have.value('01/01/2018');
 
-    fireEvent.click(screen.getByLabelText(/Choose date/));
+    fireEvent.mouseDown(screen.getByLabelText(/Choose date/));
     expect(screen.getByMuiTest('datepicker-toolbar-date').textContent).to.equal('1 janvier');
   });
 });
