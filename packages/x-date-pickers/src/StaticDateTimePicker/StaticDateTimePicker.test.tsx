@@ -80,7 +80,7 @@ describe('<StaticDateTimePicker />', () => {
         onChange={() => {}}
         value={adapterToUse.date(new Date(2021, 10, 20, 10, 1, 22))}
         renderInput={(params) => <TextField {...params} />}
-        components={{ PickerTabs: CustomPickerTabs }}
+        components={{ Tabs: CustomPickerTabs }}
       />,
     );
 

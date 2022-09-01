@@ -91,7 +91,7 @@ export const DesktopDateTimePicker = React.forwardRef(function DesktopDateTimePi
     ...other
   } = props;
   const components = React.useMemo<DesktopDateTimePickerProps<TInputDate, TDate>['components']>(
-    () => ({ PickerTabs: DateTimePickerTabs, ...providedComponents }),
+    () => ({ Tabs: DateTimePickerTabs, ...providedComponents }),
     [providedComponents],
   );
 

@@ -89,7 +89,7 @@ export const StaticDateTimePicker = React.forwardRef(function StaticDateTimePick
 
   const validationError = useDateTimeValidation(props) !== null;
   const components = React.useMemo<StaticDateTimePickerProps<TInputDate, TDate>['components']>(
-    () => ({ PickerTabs: DateTimePickerTabs, ...providedComponents }),
+    () => ({ Tabs: DateTimePickerTabs, ...providedComponents }),
     [providedComponents],
   );
 

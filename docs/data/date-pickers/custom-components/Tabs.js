@@ -8,28 +8,28 @@ import { DateTimePickerTabs } from '@mui/x-date-pickers/DateTimePicker/DateTimeP
 import LightModeIcon from '@mui/icons-material/LightMode';
 import AcUnitIcon from '@mui/icons-material/AcUnit';
 
-const CustomPickerTabs = (props) => (
+const CustomTabs = (props) => (
   <React.Fragment>
     <DateTimePickerTabs {...props} />
     <Box sx={{ backgroundColor: 'blueviolet', height: 5 }} />
   </React.Fragment>
 );
 
-export default function PickerTabs() {
+export default function Tabs() {
   const [value, setValue] = React.useState(dayjs());
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <DateTimePicker
-        label="Picker tabs"
+        label="Tabs"
         renderInput={(params) => <TextField {...params} />}
         value={value}
         onChange={(newValue) => {
           setValue(newValue);
         }}
         hideTabs={false}
-        components={{ PickerTabs: CustomPickerTabs }}
+        components={{ Tabs: CustomTabs }}
         componentsProps={{
-          pickerTabs: {
+          tabs: {
             dateRangeIcon: <LightModeIcon />,
             timeIcon: <AcUnitIcon />,
           },

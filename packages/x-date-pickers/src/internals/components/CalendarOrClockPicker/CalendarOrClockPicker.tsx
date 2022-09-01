@@ -24,12 +24,12 @@ export interface CalendarOrClockPickerSlotsComponent extends CalendarPickerSlots
    * Tabs enabling toggling between date and time pickers.
    * @default DateTimePickerTabs
    */
-  PickerTabs: React.ElementType<DateTimePickerTabsProps>;
+  Tabs: React.ElementType<DateTimePickerTabsProps>;
 }
 
 export interface CalendarOrClockPickerSlotsComponentsProps
   extends CalendarPickerSlotsComponentsProps {
-  pickerTabs: Omit<DateTimePickerTabsProps, 'onChange' | 'view'>;
+  tabs: Omit<DateTimePickerTabsProps, 'onChange' | 'view'>;
 }
 
 export interface ExportedCalendarOrClockPickerProps<TDate, View extends CalendarOrClockPickerView>
@@ -121,7 +121,7 @@ export function CalendarOrClockPicker<TDate, View extends CalendarOrClockPickerV
     hideTabs,
     ...other
   } = props;
-  const TabsComponent = other.components?.PickerTabs ?? (() => null);
+  const TabsComponent = other.components?.Tabs ?? (() => null);
   const isLandscape = useIsLandscape(views, orientation);
   const wrapperVariant = React.useContext(WrapperVariantContext);
 
@@ -179,7 +179,7 @@ export function CalendarOrClockPicker<TDate, View extends CalendarOrClockPickerV
           timeIcon={timeIcon}
           view={openView}
           onChange={setOpenView as (view: CalendarOrClockPickerView) => void}
-          {...other.componentsProps?.pickerTabs}
+          {...other.componentsProps?.tabs}
         />
       )}
 

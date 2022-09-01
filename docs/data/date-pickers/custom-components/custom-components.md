@@ -91,20 +91,20 @@ In the examples below we provide ways of implementing date range shortcuts using
 
 {{"demo": "PaperContentComponent.js", "defaultCodeOpen": false, "disableAd": true}}
 
-## Picker tabs
+## Tabs
 
-The picker tabs are available on all date time picker components.
+The tabs are available on all date time picker components.
 By default, it is `hidden` on desktop, and `visible` on mobile.
 This behavior can be overridden by setting `hideTabs` prop.
 
 ### Component props
 
-You can override the icons displayed by passing props to the `pickerTabs` within `componentsProps`, as shown here:
+You can override the icons displayed by passing props to the `tabs` within `componentsProps`, as shown here:
 
 ```jsx
 <DateTimePicker
   componentsProps={{
-    pickerTabs: {
+    tabs: {
       dateRangeIcon: <LightModeIcon />,
       timeIcon: <AcUnitIcon />,
     },
@@ -117,6 +117,6 @@ You can override the icons displayed by passing props to the `pickerTabs` within
 If you need to customize the date time picker beyond the options described above, you can provide a custom component.
 This can be used in combination with `componentsProps`.
 
-In the example below, the picker tabs are using different icons and have an additional component:
+In the example below, the tabs are using different icons and have an additional component:
 
-{{"demo": "PickerTabs.js", "disableAd": true}}
+{{"demo": "Tabs.js", "disableAd": true}}

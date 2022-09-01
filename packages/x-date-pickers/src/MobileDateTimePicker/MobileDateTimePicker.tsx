@@ -88,7 +88,7 @@ export const MobileDateTimePicker = React.forwardRef(function MobileDateTimePick
     ...other
   } = props;
   const components = React.useMemo<MobileDateTimePickerProps<TInputDate, TDate>['components']>(
-    () => ({ PickerTabs: DateTimePickerTabs, ...providedComponents }),
+    () => ({ Tabs: DateTimePickerTabs, ...providedComponents }),
     [providedComponents],
   );
 
