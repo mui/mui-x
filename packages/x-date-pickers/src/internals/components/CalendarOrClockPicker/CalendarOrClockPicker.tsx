@@ -121,7 +121,7 @@ export function CalendarOrClockPicker<TDate, View extends CalendarOrClockPickerV
     hideTabs,
     ...other
   } = props;
-  const TabsComponent = other.components?.Tabs ?? (() => null);
+  const TabsComponent = other.components?.Tabs;
   const isLandscape = useIsLandscape(views, orientation);
   const wrapperVariant = React.useContext(WrapperVariantContext);
 
@@ -173,7 +173,7 @@ export function CalendarOrClockPicker<TDate, View extends CalendarOrClockPickerV
           toggleMobileKeyboardView={toggleMobileKeyboardView}
         />
       )}
-      {showTabs && (
+      {showTabs && !!TabsComponent && (
         <TabsComponent
           dateRangeIcon={dateRangeIcon}
           timeIcon={timeIcon}
