@@ -11,6 +11,8 @@ const formatTokenMap: MuiFormatTokenMap = {
   yyyy: 'year',
   MMMM: 'month',
   MM: 'month',
+  DD: 'day',
+  d: 'day',
   dd: 'day',
   H: 'hour',
   HH: 'hour',
