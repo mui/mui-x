@@ -377,10 +377,10 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
   const getRows = (
     params: {
       renderContext: GridRenderContext | null;
+      position?: string;
       minFirstColumn?: number;
       maxLastColumn?: number;
       availableSpace?: number | null;
-      ignoreAutoHeight?: boolean;
       rows?: GridRowEntry[];
       rowIndexOffset?: number;
     } = { renderContext },
@@ -390,8 +390,8 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
       minFirstColumn = renderZoneMinColumnIndex,
       maxLastColumn = renderZoneMaxColumnIndex,
       availableSpace = containerWidth,
-      ignoreAutoHeight,
       rowIndexOffset = 0,
+      position = 'center',
     } = params;
 
     if (!nextRenderContext || availableSpace == null) {
@@ -461,10 +461,9 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
     for (let i = 0; i < renderedRows.length; i += 1) {
       const { id, model } = renderedRows[i];
       const lastVisibleRowIndex = firstRowToRender + i === currentPage.rows.length - 1;
-      const baseRowHeight =
-        !apiRef.current.unstable_rowHasAutoHeight(id) || ignoreAutoHeight
-          ? apiRef.current.unstable_getRowHeight(id)
-          : 'auto';
+      const baseRowHeight = !apiRef.current.unstable_rowHasAutoHeight(id)
+        ? apiRef.current.unstable_getRowHeight(id)
+        : 'auto';
 
       let isSelected: boolean;
       if (selectedRowsLookup[id] == null) {
@@ -490,6 +489,7 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
           index={rowIndexOffset + (currentPage?.range?.firstRowIndex || 0) + firstRowToRender + i}
           containerWidth={availableSpace}
           isLastVisible={lastVisibleRowIndex}
+          position={position}
           {...(typeof getRowProps === 'function' ? getRowProps(id, model) : {})}
           {...rootProps.componentsProps?.row}
         />,

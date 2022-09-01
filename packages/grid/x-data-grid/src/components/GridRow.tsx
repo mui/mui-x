@@ -48,6 +48,7 @@ export interface GridRowProps {
   cellFocus: GridCellIdentifier | null;
   cellTabIndex: GridCellIdentifier | null;
   editRowsState: GridEditRowsModel;
+  position: 'left' | 'center' | 'right';
   row?: GridRowModel;
   isLastVisible?: boolean;
   onClick?: React.MouseEventHandler<HTMLDivElement>;
@@ -97,6 +98,7 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
     row,
     index,
     style: styleProp,
+    position,
     rowHeight,
     className,
     visibleColumns,
@@ -143,9 +145,9 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
   React.useLayoutEffect(() => {
     if (rowHeight === 'auto' && ref.current && typeof ResizeObserver === 'undefined') {
       // Fallback for IE
-      apiRef.current.unstable_storeRowHeightMeasurement(rowId, ref.current.clientHeight);
+      apiRef.current.unstable_storeRowHeightMeasurement(rowId, ref.current.clientHeight, position);
     }
-  }, [apiRef, rowHeight, rowId]);
+  }, [apiRef, rowHeight, rowId, position]);
 
   React.useLayoutEffect(() => {
     if (currentPage.range) {
@@ -173,13 +175,13 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
         entry.borderBoxSize && entry.borderBoxSize.length > 0
           ? entry.borderBoxSize[0].blockSize
           : entry.contentRect.height;
-      apiRef.current.unstable_storeRowHeightMeasurement(rowId, height);
+      apiRef.current.unstable_storeRowHeightMeasurement(rowId, height, position);
     });
 
     resizeObserver.observe(rootElement);
 
     return () => resizeObserver.disconnect();
-  }, [apiRef, currentPage.range, index, rowHeight, rowId]);
+  }, [apiRef, currentPage.range, index, rowHeight, rowId, position]);
 
   const publish = React.useCallback(
     (
@@ -365,13 +367,33 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
     ],
   );
 
+  const sizes = apiRef.current.unstable_getRowInternalSizes(rowId);
+
+  let minHeight = rowHeight;
+  if (minHeight === 'auto' && sizes) {
+    let numberOfBaseSizes = 0;
+    const maximumSize = Object.entries(sizes).reduce((acc, [key, size]) => {
+      const isBaseHeight = /^base[A-Z]/.test(key);
+      if (!isBaseHeight) {
+        return acc;
+      }
+      numberOfBaseSizes += 1;
+      if (size > acc) {
+        return size;
+      }
+      return acc;
+    }, 0);
+
+    if (maximumSize > 0 && numberOfBaseSizes > 1) {
+      minHeight = maximumSize;
+    }
+  }
+
   const style = {
     ...styleProp,
     maxHeight: rowHeight === 'auto' ? 'none' : rowHeight, // max-height doesn't support "auto"
-    minHeight: rowHeight,
+    minHeight,
   };
-
-  const sizes = apiRef.current.unstable_getRowInternalSizes(rowId);
 
   if (sizes?.spacingTop) {
     const property = rootProps.rowSpacingType === 'border' ? 'borderTopWidth' : 'marginTop';
@@ -484,6 +506,7 @@ GridRow.propTypes = {
   index: PropTypes.number.isRequired,
   isLastVisible: PropTypes.bool,
   lastColumnToRender: PropTypes.number.isRequired,
+  position: PropTypes.oneOf(['center', 'left', 'right']).isRequired,
   renderedColumns: PropTypes.arrayOf(PropTypes.object).isRequired,
   row: PropTypes.object,
   rowHeight: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.number]).isRequired,
