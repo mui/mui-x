@@ -7,9 +7,10 @@ import { useUtils } from '../useUtils';
 import {
   FieldSection,
   UseFieldParams,
-  UseFieldProps,
   UseFieldResponse,
   UseFieldState,
+  UseFieldForwardedProps,
+  UseFieldInternalProps,
   AvailableAdjustKeyCode,
 } from './useField.interfaces';
 import {
@@ -27,31 +28,26 @@ export const useField = <
   TValue,
   TDate,
   TSection extends FieldSection,
-  TProps extends UseFieldProps<any, any, any>,
+  TForwardedProps extends UseFieldForwardedProps,
+  TInternalProps extends UseFieldInternalProps<any, any, any>,
 >(
-  params: UseFieldParams<TInputValue, TValue, TDate, TSection, TProps>,
-): UseFieldResponse<TProps> => {
+  params: UseFieldParams<TInputValue, TValue, TDate, TSection, TForwardedProps, TInternalProps>,
+): UseFieldResponse<TForwardedProps> => {
   const utils = useUtils<TDate>() as MuiPickerFieldAdapter<TDate>;
   if (!utils.formatTokenMap) {
     throw new Error('This adapter is not compatible with the field components');
   }
-
   const inputRef = React.useRef<HTMLInputElement>(null);
 
   const {
-    props: {
+    internalProps: {
       value: valueProp,
       defaultValue,
       onChange,
-      onError,
-      onClick,
-      onKeyDown,
-      onFocus,
-      onBlur,
       format = utils.formats.keyboardDate,
       readOnly = false,
-      ...otherProps
     },
+    forwardedProps: { onClick, onKeyDown, onFocus, onBlur, ...otherForwardedProps },
     valueManager,
     fieldValueManager,
     validator,
@@ -387,7 +383,7 @@ export const useField = <
   // TODO: Support `isSameError`.
   // TODO: Make validation work with TDate instead of TInputDate
   const validationError = useValidation(
-    { ...params.props, value: state.valueParsed as unknown as TInputValue },
+    { ...params.internalProps, value: state.valueParsed as unknown as TInputValue },
     validator,
     () => true,
   );
@@ -403,12 +399,11 @@ export const useField = <
 
   return {
     inputProps: {
-      ...otherProps,
+      ...otherForwardedProps,
       value: state.valueStr,
       onClick: handleInputClick,
       onFocus: handleInputFocus,
       onBlur: handleInputBlur,
-
       onKeyDown: handleInputKeyDown,
       error: inputError,
     },

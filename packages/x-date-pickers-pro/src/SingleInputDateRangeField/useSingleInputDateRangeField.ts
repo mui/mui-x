@@ -156,10 +156,36 @@ export const useSingleInputDateRangeField = <
 >(
   inProps: TProps,
 ) => {
-  const props = useDefaultizedDateRangeFieldProps<TInputDate, TDate, TProps>(inProps);
+  const {
+    value,
+    defaultValue,
+    format,
+    onChange,
+    readOnly,
+    onError,
+    shouldDisableDate,
+    minDate,
+    maxDate,
+    disableFuture,
+    disablePast,
+    ...other
+  } = useDefaultizedDateRangeFieldProps<TInputDate, TDate, TProps>(inProps);
 
   return useField({
-    props,
+    forwardedProps: other,
+    internalProps: {
+      value,
+      defaultValue,
+      format,
+      onChange,
+      readOnly,
+      onError,
+      shouldDisableDate,
+      minDate,
+      maxDate,
+      disableFuture,
+      disablePast,
+    },
     valueManager: dateRangePickerValueManager,
     fieldValueManager: dateRangeFieldValueManager,
     validator: validateDateRange as any,
