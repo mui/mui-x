@@ -376,12 +376,11 @@ export const useField = <
     }
   }, [valueParsed]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  // TODO: Support `isSameError`.
   // TODO: Make validation work with TDate instead of TInputDate
   const validationError = useValidation(
     { ...params.internalProps, value: state.valueParsed as unknown as TInputValue },
     validator,
-    () => true,
+    fieldValueManager.isSameError,
   );
 
   const inputError = React.useMemo(

@@ -94,7 +94,7 @@ export const useIsDayDisabled = <TDate>({
   );
 };
 
-const isSameDateError = (a: DateValidationError, b: DateValidationError) => a === b;
+export const isSameDateError = (a: DateValidationError, b: DateValidationError) => a === b;
 
 export const useDateValidation = <TInputDate, TDate>(
   props: DateValidationProps<TInputDate, TDate>,

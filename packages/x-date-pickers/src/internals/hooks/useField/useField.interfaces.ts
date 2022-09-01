@@ -88,6 +88,7 @@ export interface FieldValueManager<TValue, TDate, TSection extends FieldSection,
     activeSection: TSection,
   ) => { value: TDate | null; update: (newActiveDate: TDate | null) => TValue };
   hasError: (error: TError) => boolean;
+  isSameError: (error: TError, prevError: TError | null) => boolean;
 }
 
 export interface UseFieldState<TValue, TSections> {
