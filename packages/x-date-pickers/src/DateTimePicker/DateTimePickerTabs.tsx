@@ -105,9 +105,24 @@ DateTimePickerTabs.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
+  /**
+   * Date tab icon.
+   * @default DateRange
+   */
   dateRangeIcon: PropTypes.node,
+  /**
+   * Callback called when tab is clicked
+   * @param {CalendarOrClockPickerView} view Picker view that was clicked
+   */
   onChange: PropTypes.func.isRequired,
+  /**
+   * Time tab icon.
+   * @default Time
+   */
   timeIcon: PropTypes.node,
+  /**
+   * Open picker view
+   */
   view: PropTypes.oneOf(['day', 'hours', 'minutes', 'month', 'seconds', 'year']).isRequired,
 } as any;
 
