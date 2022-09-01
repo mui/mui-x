@@ -12,3 +12,4 @@ export * from './gridCellParams';
 export * from './gridSortModelParams';
 export * from './gridPreferencePanelParams';
 export * from './gridMenuParams';
+export * from './gridRenderedRowsIntervalChangeParams';
