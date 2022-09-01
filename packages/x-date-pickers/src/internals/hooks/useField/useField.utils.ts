@@ -9,7 +9,7 @@ export const getDateSectionNameFromFormatToken = <TDate>(
   const dateSectionName = utils.formatTokenMap[formatToken];
 
   if (dateSectionName == null) {
-    throw new Error(`getDatePartNameFromFormat don't understand the format ${formatToken}`);
+    throw new Error(`getDatePartNameFromFormat doesn't understand the format ${formatToken}`);
   }
 
   return dateSectionName;
