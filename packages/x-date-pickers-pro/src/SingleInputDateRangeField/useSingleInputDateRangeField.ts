@@ -20,6 +20,7 @@ import { DateRange } from '../internal/models';
 import { splitDateRangeSections } from './SingleInputDateRangeField.utils';
 import {
   DateRangeValidationError,
+  isSameDateRangeError,
   validateDateRange,
 } from '../internal/hooks/validation/useDateRangeValidation';
 
@@ -132,6 +133,7 @@ export const dateRangeFieldValueManager: FieldValueManager<
     };
   },
   hasError: (error) => error[0] != null || error[1] != null,
+  isSameError: isSameDateRangeError,
 };
 
 export const useDefaultizedDateRangeFieldProps = <TInputDate, TDate, AdditionalProps extends {}>(
