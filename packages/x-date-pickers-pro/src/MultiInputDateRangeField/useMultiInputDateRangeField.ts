@@ -13,7 +13,7 @@ import { dateRangePickerValueManager } from '../DateRangePicker/shared';
 import {
   dateRangeFieldValueManager,
   useDefaultizedDateRangeFieldProps,
-} from '../DateRangeField/useDateRangeField';
+} from '../SingleInputDateRangeField/useSingleInputDateRangeField';
 
 export const useMultiInputDateRangeField = <
   TInputDate,

@@ -5,7 +5,7 @@ import { CSSInterpolation } from '@mui/system';
 import ButtonBase, { ButtonBaseProps } from '@mui/material/ButtonBase';
 import { unstable_useEnhancedEffect as useEnhancedEffect } from '@mui/utils';
 import { unstable_composeClasses as composeClasses } from '@mui/material';
-import { useTheme, alpha, styled, useThemeProps, Theme } from '@mui/material/styles';
+import { alpha, styled, useThemeProps, Theme } from '@mui/material/styles';
 import { useForkRef } from '@mui/material/utils';
 import { ExtendMui } from '../internals/models/helpers';
 import { useUtils } from '../internals/hooks/useUtils';
@@ -18,7 +18,8 @@ import {
   pickersDayClasses,
 } from './pickersDayClasses';
 
-export interface PickersDayProps<TDate> extends ExtendMui<ButtonBaseProps> {
+export interface PickersDayProps<TDate>
+  extends Omit<ExtendMui<ButtonBaseProps>, 'onKeyDown' | 'onFocus' | 'onBlur'> {
   /**
    * Override or extend the styles applied to the component.
    */
@@ -43,7 +44,9 @@ export interface PickersDayProps<TDate> extends ExtendMui<ButtonBaseProps> {
    */
   disableMargin?: boolean;
   isAnimating?: boolean;
-  onDayFocus?: (day: TDate) => void;
+  onFocus?: (event: React.FocusEvent<HTMLButtonElement>, day: TDate) => void;
+  onBlur?: (event: React.FocusEvent<HTMLButtonElement>, day: TDate) => void;
+  onKeyDown?: (event: React.KeyboardEvent<HTMLButtonElement>, day: TDate) => void;
   onDaySelect: (day: TDate, isFinish: PickerSelectionState) => void;
   /**
    * If `true`, day is outside of month and will be hidden.
@@ -201,10 +204,10 @@ const PickersDayRaw = React.forwardRef(function PickersDay<TDate>(
     hidden,
     isAnimating,
     onClick,
-    onDayFocus = noop,
     onDaySelect,
-    onFocus,
-    onKeyDown,
+    onFocus = noop,
+    onBlur = noop,
+    onKeyDown = noop,
     onMouseDown,
     outsideCurrentMonth,
     selected = false,
@@ -239,16 +242,6 @@ const PickersDayRaw = React.forwardRef(function PickersDay<TDate>(
     }
   }, [autoFocus, disabled, isAnimating, outsideCurrentMonth]);
 
-  const handleFocus = (event: React.FocusEvent<HTMLButtonElement>) => {
-    if (onDayFocus) {
-      onDayFocus(day);
-    }
-
-    if (onFocus) {
-      onFocus(event);
-    }
-  };
-
   // For day outside of current month, move focus from mouseDown to mouseUp
   // Goal: have the onClick ends before sliding to the new month
   const handleMouseDown = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -274,51 +267,6 @@ const PickersDayRaw = React.forwardRef(function PickersDay<TDate>(
     }
   };
 
-  const theme = useTheme();
-
-  function handleKeyDown(event: React.KeyboardEvent<HTMLButtonElement>) {
-    if (onKeyDown !== undefined) {
-      onKeyDown(event);
-    }
-
-    switch (event.key) {
-      case 'ArrowUp':
-        onDayFocus(utils.addDays(day, -7));
-        event.preventDefault();
-        break;
-      case 'ArrowDown':
-        onDayFocus(utils.addDays(day, 7));
-        event.preventDefault();
-        break;
-      case 'ArrowLeft':
-        onDayFocus(utils.addDays(day, theme.direction === 'ltr' ? -1 : 1));
-        event.preventDefault();
-        break;
-      case 'ArrowRight':
-        onDayFocus(utils.addDays(day, theme.direction === 'ltr' ? 1 : -1));
-        event.preventDefault();
-        break;
-      case 'Home':
-        onDayFocus(utils.startOfWeek(day));
-        event.preventDefault();
-        break;
-      case 'End':
-        onDayFocus(utils.endOfWeek(day));
-        event.preventDefault();
-        break;
-      case 'PageUp':
-        onDayFocus(utils.getNextMonth(day));
-        event.preventDefault();
-        break;
-      case 'PageDown':
-        onDayFocus(utils.getPreviousMonth(day));
-        event.preventDefault();
-        break;
-      default:
-        break;
-    }
-  }
-
   if (outsideCurrentMonth && !showDaysOutsideCurrentMonth) {
     return (
       <PickersDayFiller
@@ -338,8 +286,9 @@ const PickersDayRaw = React.forwardRef(function PickersDay<TDate>(
       data-mui-test="day"
       disabled={disabled}
       tabIndex={selected ? 0 : -1}
-      onFocus={handleFocus}
-      onKeyDown={handleKeyDown}
+      onKeyDown={(event) => onKeyDown(event, day)}
+      onFocus={(event) => onFocus(event, day)}
+      onBlur={(event) => onBlur(event, day)}
       onClick={handleClick}
       onMouseDown={handleMouseDown}
       {...other}
@@ -364,7 +313,8 @@ export const areDayPropsEqual = (
     prevProps.disableHighlightToday === nextProps.disableHighlightToday &&
     prevProps.className === nextProps.className &&
     prevProps.outsideCurrentMonth === nextProps.outsideCurrentMonth &&
-    prevProps.onDayFocus === nextProps.onDayFocus &&
+    prevProps.onFocus === nextProps.onFocus &&
+    prevProps.onBlur === nextProps.onBlur &&
     prevProps.onDaySelect === nextProps.onDaySelect
   );
 };
@@ -398,8 +348,10 @@ PickersDayRaw.propTypes = {
    */
   disableMargin: PropTypes.bool,
   isAnimating: PropTypes.bool,
-  onDayFocus: PropTypes.func,
+  onBlur: PropTypes.func,
   onDaySelect: PropTypes.func.isRequired,
+  onFocus: PropTypes.func,
+  onKeyDown: PropTypes.func,
   /**
    * If `true`, day is outside of month and will be hidden.
    */

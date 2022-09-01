@@ -55,11 +55,12 @@ describe('<DesktopDatePicker />', () => {
         </div>
       );
     }
+    const testDate = adapterToUse.date(new Date(2000, 0, 1));
     render(
       <DesktopDatePicker
         renderInput={(params) => <TextField {...params} />}
         onChange={() => {}}
-        value={null}
+        value={testDate}
         components={{
           PaperContent: CustomPaperContent,
         }}
@@ -69,7 +70,7 @@ describe('<DesktopDatePicker />', () => {
     openPicker({ type: 'date', variant: 'desktop' });
 
     expect(screen.getByText('test custom content')).not.equal(null);
-    expect(screen.getByText('January 1970')).not.equal(null);
+    expect(screen.getByText(adapterToUse.format(testDate, 'monthAndYear'))).not.equal(null);
   });
 
   ['readOnly', 'disabled'].forEach((prop) => {
