@@ -86,6 +86,7 @@ export function useGridParamsApi(apiRef: React.MutableRefObject<GridApiCommunity
       const rowNode = apiRef.current.getRowNode(id);
 
       if (!row || !rowNode) {
+        console.log(id, apiRef.current.state.rows.dataRowIdToModelLookup);
         throw new Error(`No row with id #${id} found`);
       }
 

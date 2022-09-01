@@ -53,7 +53,7 @@ export const useGridLazyLoaderPreProcessors = (
         tree[skeletonId] = skeletonRowNode;
       }
 
-      tree[GRID_ROOT_GROUP_ID] = { ...rootGroup, children: rootGroupChildren }
+      tree[GRID_ROOT_GROUP_ID] = { ...rootGroup, children: rootGroupChildren };
 
       return {
         ...groupingParams,

@@ -210,7 +210,6 @@ export const useGridRows = (
         return;
       }
 
-      const tree = gridRowTreeSelector(apiRef);
       const treeDepth = gridRowMaximumTreeDepthSelector(apiRef);
 
       if (treeDepth > 1) {
@@ -219,13 +218,11 @@ export const useGridRows = (
         );
       }
 
-      const allRows = (tree[GRID_ROOT_GROUP_ID] as GridGroupNode).children;
-      const updatedRows = [...allRows];
-      const idRowsLookup = gridRowsLookupSelector(apiRef);
-      const idToIdLookup = gridRowsDataRowIdToIdLookupSelector(apiRef);
-      const updatedIdRowsLookup = { ...idRowsLookup };
-      const updatedIdToIdLookup = { ...idToIdLookup };
-      const updatedTree = { ...tree };
+      const tree = { ...gridRowTreeSelector(apiRef) };
+      const dataRowIdToModelLookup = { ...gridRowsLookupSelector(apiRef) };
+      const dataRowIdToIdLookup = { ...gridRowsDataRowIdToIdLookupSelector(apiRef) };
+
+      const rootGroupChildren = [...(tree[GRID_ROOT_GROUP_ID] as GridGroupNode).children];
 
       newRows.forEach((row, index) => {
         const rowId = getRowIdFromRowModel(
@@ -233,11 +230,11 @@ export const useGridRows = (
           props.getRowId,
           'A row was provided without id when calling replaceRows().',
         );
-        const [replacedRowId] = updatedRows.splice(firstRowToRender + index, 1, rowId);
+        const [replacedRowId] = rootGroupChildren.splice(firstRowToRender + index, 1, rowId);
 
-        delete updatedIdRowsLookup[replacedRowId];
-        delete updatedIdToIdLookup[replacedRowId];
-        delete updatedTree[replacedRowId];
+        delete dataRowIdToModelLookup[replacedRowId];
+        delete dataRowIdToIdLookup[replacedRowId];
+        delete tree[replacedRowId];
       });
 
       newRows.forEach((row) => {
@@ -248,19 +245,22 @@ export const useGridRows = (
           type: 'leaf',
           groupingKey: null,
         };
-        updatedIdRowsLookup[row.id] = row;
-        updatedIdToIdLookup[row.id] = row.id;
-        updatedTree[row.id] = rowTreeNodeConfig;
+        dataRowIdToModelLookup[row.id] = row;
+        dataRowIdToIdLookup[row.id] = row.id;
+        tree[row.id] = rowTreeNodeConfig;
       });
+
+      // Removes potential remaining skeleton rows from the dataRowIds.
+      const dataRowIds = rootGroupChildren.filter(childId => tree[childId].type === 'leaf')
 
       apiRef.current.setState((state) => ({
         ...state,
         rows: {
           ...state.rows,
-          idRowsLookup: updatedIdRowsLookup,
-          idToIdLookup: updatedIdToIdLookup,
-          tree: updatedTree,
-          ids: updatedRows,
+          dataRowIdToModelLookup,
+          dataRowIdToIdLookup,
+            dataRowIds,
+          tree,
         },
       }));
       apiRef.current.publishEvent('rowsSet');
