@@ -1,6 +1,6 @@
 <DataGrid
-  rows={data}
-  columns={columns}
+  rows={rows}
+  {...data}
   filterMode="server"
   onFilterModelChange={onFilterChange}
   loading={isLoading}
