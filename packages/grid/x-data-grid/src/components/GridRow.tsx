@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { unstable_composeClasses as composeClasses } from '@mui/material';
 import { GridRowEventLookup } from '../models/events';
-import { GridRowId, GridRowModel } from '../models/gridRows';
+import { GridRowId, GridRowModel, GridTreeNodeWithRender } from '../models/gridRows';
 import {
   GridEditModes,
   GridRowModes,
@@ -261,7 +261,10 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
         'width' | 'colSpan' | 'showRightBorder' | 'indexRelativeToAllColumns'
       >,
     ) => {
-      const cellParams = apiRef.current.getCellParams(rowId, column.field);
+      const cellParams = apiRef.current.getCellParams<any, any, any, GridTreeNodeWithRender>(
+        rowId,
+        column.field,
+      );
 
       const classNames: string[] = [];
 

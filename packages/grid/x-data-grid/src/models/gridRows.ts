@@ -174,6 +174,12 @@ export type GridTreeNode =
   | GridPinnedRowNode
   | GridSkeletonRowNode;
 
+export type GridTreeNodeWithRender =
+  | GridLeafNode
+  | GridGroupNode
+  | GridFooterNode
+  | GridPinnedRowNode;
+
 export type GridRowTreeConfig = Record<GridRowId, GridTreeNode>;
 
 /**
