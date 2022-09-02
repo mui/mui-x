@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ElementSize, GridColDef, DataGridPro } from '@mui/x-data-grid-pro';
+import { ElementSize, DataGridPro } from '@mui/x-data-grid-pro';
 import { useDemoData } from '@mui/x-data-grid-generator';
 import '../style/grid-stories.css';
 import { useData } from '../hooks/useData';
