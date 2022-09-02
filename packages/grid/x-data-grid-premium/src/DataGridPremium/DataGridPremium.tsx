@@ -601,15 +601,6 @@ DataGridPremiumRaw.propTypes = {
    */
   onColumnResize: PropTypes.func,
   /**
-   * Callback fired when a column visibility changes.
-   * Only works when no `columnVisibilityModel` is provided and if we change the visibility of a single column at a time.
-   * @param {GridColumnVisibilityChangeParams} params With all properties from [[GridColumnVisibilityChangeParams]].
-   * @param {MuiEvent<{}>} event The event object.
-   * @param {GridCallbackDetails} details Additional details for this callback.
-   * @deprecated Use `onColumnVisibilityModelChange` instead.
-   */
-  onColumnVisibilityChange: PropTypes.func,
-  /**
    * Callback fired when the column visibility model changes.
    * @param {GridColumnVisibilityModel} model The new model.
    * @param {GridCallbackDetails} details Additional details for this callback.

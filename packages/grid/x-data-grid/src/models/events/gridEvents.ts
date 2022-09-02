@@ -77,7 +77,6 @@ enum GridEvents {
   filterModelChange = 'filterModelChange',
   columnVisibilityModelChange = 'columnVisibilityModelChange',
   stateChange = 'stateChange',
-  columnVisibilityChange = 'columnVisibilityChange',
   virtualScrollerContentSizeChange = 'virtualScrollerContentSizeChange',
   virtualScrollerWheel = 'virtualScrollerWheel',
   virtualScrollerTouchMove = 'virtualScrollerTouchMove',

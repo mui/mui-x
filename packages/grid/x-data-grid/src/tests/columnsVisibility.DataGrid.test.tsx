@@ -225,38 +225,4 @@ describe('<DataGridPro /> - Columns Visibility', () => {
       expect(getColumnHeadersTextContent()).to.deep.equal([]);
     });
   });
-
-  describe('GridColDef: hide (deprecated)', () => {
-    it('should hide columns with `hide: true`', () => {
-      render(<TestDataGrid columns={[{ field: 'id' }, { field: 'idBis', hide: true }]} />);
-
-      expect(getColumnHeadersTextContent()).to.deep.equal(['id']);
-    });
-
-    it('should not hide columns with `hide: true` if the model is initialized', () => {
-      render(
-        <TestDataGrid
-          initialState={{
-            columns: {
-              columnVisibilityModel: {},
-            },
-          }}
-          columns={[{ field: 'id' }, { field: 'idBis', hide: true }]}
-        />,
-      );
-
-      expect(getColumnHeadersTextContent()).to.deep.equal(['id', 'idBis']);
-    });
-
-    it('should not hide columns with `hide: true` if the model is controlled', () => {
-      render(
-        <TestDataGrid
-          columnVisibilityModel={{}}
-          columns={[{ field: 'id' }, { field: 'idBis', hide: true }]}
-        />,
-      );
-
-      expect(getColumnHeadersTextContent()).to.deep.equal(['id', 'idBis']);
-    });
-  });
 });
