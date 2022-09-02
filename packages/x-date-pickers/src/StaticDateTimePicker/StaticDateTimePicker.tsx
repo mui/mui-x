@@ -20,6 +20,7 @@ import { useDateTimeValidation } from '../internals/hooks/validation/useDateTime
 import { usePickerState } from '../internals/hooks/usePickerState';
 import { StaticPickerProps } from '../internals/models/props/staticPickerProps';
 import { DateInputSlotsComponent } from '../internals/components/PureDateInput';
+import { DateTimePickerTabs } from '../DateTimePicker';
 
 export interface StaticDateTimePickerSlotsComponent
   extends PickersStaticWrapperSlotsComponent,
@@ -75,9 +76,10 @@ export const StaticDateTimePicker = React.forwardRef(function StaticDateTimePick
     onChange,
     ToolbarComponent = DateTimePickerToolbar,
     value,
-    components,
+    components: providedComponents,
     componentsProps,
     sx,
+    hideTabs = displayStaticWrapperAs === 'desktop',
     ...other
   } = props;
 
@@ -87,6 +89,10 @@ export const StaticDateTimePicker = React.forwardRef(function StaticDateTimePick
   );
 
   const validationError = useDateTimeValidation(props) !== null;
+  const components = React.useMemo<StaticDateTimePickerProps<TInputDate, TDate>['components']>(
+    () => ({ Tabs: DateTimePickerTabs, ...providedComponents }),
+    [providedComponents],
+  );
 
   const DateInputProps = {
     ...inputProps,
@@ -112,6 +118,7 @@ export const StaticDateTimePicker = React.forwardRef(function StaticDateTimePick
         DateInputProps={DateInputProps}
         components={components}
         componentsProps={componentsProps}
+        hideTabs={hideTabs}
         {...other}
       />
     </PickerStaticWrapper>
@@ -248,7 +255,8 @@ StaticDateTimePicker.propTypes = {
    */
   getViewSwitchingButtonText: PropTypes.func,
   /**
-   * To show tabs.
+   * Toggles visibility of date time switching tabs
+   * @default false for mobile, true for desktop
    */
   hideTabs: PropTypes.bool,
   ignoreInvalidInputs: PropTypes.bool,

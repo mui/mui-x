@@ -3,7 +3,12 @@ import { GridEventListener } from '../../../models/events';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridRowApi } from '../../../models/api/gridRowApi';
-import { GridRowModel, GridRowId, GridRowTreeNodeConfig } from '../../../models/gridRows';
+import {
+  GridRowModel,
+  GridRowId,
+  GridRowTreeNodeConfig,
+  GridRowEntry,
+} from '../../../models/gridRows';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { useGridLogger } from '../../utils/useGridLogger';
 import {
@@ -12,6 +17,7 @@ import {
   gridRowTreeSelector,
   gridRowIdsSelector,
   gridRowGroupingNameSelector,
+  gridRowsIdToIdLookupSelector,
 } from './gridRowsSelector';
 import { GridSignature, useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 import { GridStateInitializer } from '../../utils/useGridInitializeState';
@@ -162,7 +168,7 @@ export const useGridRows = (
       }
 
       // we remove duplicate updates. A server can batch updates, and send several updates for the same row in one fn call.
-      const uniqUpdates = new Map<GridRowId, GridRowModel>();
+      const uniqueUpdates = new Map<GridRowId, GridRowModel>();
 
       updates.forEach((update) => {
         const id = getRowIdFromRowModel(
@@ -171,10 +177,10 @@ export const useGridRows = (
           'A row was provided without id when calling updateRows():',
         );
 
-        if (uniqUpdates.has(id)) {
-          uniqUpdates.set(id, { ...uniqUpdates.get(id), ...update });
+        if (uniqueUpdates.has(id)) {
+          uniqueUpdates.set(id, { ...uniqueUpdates.get(id), ...update });
         } else {
-          uniqUpdates.set(id, update);
+          uniqueUpdates.set(id, update);
         }
       });
 
@@ -189,7 +195,7 @@ export const useGridRows = (
         ids: [...prevCache.ids],
       };
 
-      uniqUpdates.forEach((partialRow, id) => {
+      uniqueUpdates.forEach((partialRow, id) => {
         // eslint-disable-next-line no-underscore-dangle
         if (partialRow._action === 'delete') {
           delete newCache.idRowsLookup[id];
@@ -326,9 +332,82 @@ export const useGridRows = (
           ids: updatedRows,
         },
       }));
-      apiRef.current.applySorting();
+      apiRef.current.publishEvent('rowsSet');
     },
     [apiRef, logger],
+  );
+
+  const replaceRows = React.useCallback<GridRowApi['unstable_replaceRows']>(
+    (firstRowToRender, newRows) => {
+      if (props.signature === GridSignature.DataGrid && newRows.length > 1) {
+        throw new Error(
+          [
+            "MUI: You can't replace rows using `apiRef.current.unstable_replaceRows` on the DataGrid.",
+            'You need to upgrade to DataGridPro or DataGridPremium component to unlock this feature.',
+          ].join('\n'),
+        );
+      }
+
+      if (newRows.length === 0) {
+        return;
+      }
+
+      const allRows = gridRowIdsSelector(apiRef);
+      const updatedRows = [...allRows];
+      const idRowsLookup = gridRowsLookupSelector(apiRef);
+      const idToIdLookup = gridRowsIdToIdLookupSelector(apiRef);
+      const tree = gridRowTreeSelector(apiRef);
+      const updatedIdRowsLookup = { ...idRowsLookup };
+      const updatedIdToIdLookup = { ...idToIdLookup };
+      const updatedTree = { ...tree };
+
+      const newRowEntries: GridRowEntry[] = newRows.map((newRowModel) => {
+        const rowId = getRowIdFromRowModel(
+          newRowModel,
+          props.getRowId,
+          'A row was provided without id when calling replaceRows().',
+        );
+
+        return {
+          id: rowId,
+          model: newRowModel,
+        };
+      });
+
+      newRowEntries.forEach((row, index) => {
+        const [replacedRowId] = updatedRows.splice(firstRowToRender + index, 1, row.id);
+
+        delete updatedIdRowsLookup[replacedRowId];
+        delete updatedIdToIdLookup[replacedRowId];
+        delete updatedTree[replacedRowId];
+      });
+
+      newRowEntries.forEach((row) => {
+        const rowTreeNodeConfig: GridRowTreeNodeConfig = {
+          id: row.id,
+          parent: null,
+          depth: 0,
+          groupingKey: null,
+          groupingField: null,
+        };
+        updatedIdRowsLookup[row.id] = row.model;
+        updatedIdToIdLookup[row.id] = row.id;
+        updatedTree[row.id] = rowTreeNodeConfig;
+      });
+
+      apiRef.current.setState((state) => ({
+        ...state,
+        rows: {
+          ...state.rows,
+          idRowsLookup: updatedIdRowsLookup,
+          idToIdLookup: updatedIdToIdLookup,
+          tree: updatedTree,
+          ids: updatedRows,
+        },
+      }));
+      apiRef.current.publishEvent('rowsSet');
+    },
+    [apiRef, props.signature, props.getRowId],
   );
 
   const rowApi: GridRowApi = {
@@ -343,6 +422,7 @@ export const useGridRows = (
     getRowNode,
     getRowIndexRelativeToVisibleRows,
     getRowGroupChildren,
+    unstable_replaceRows: replaceRows,
   };
 
   /**

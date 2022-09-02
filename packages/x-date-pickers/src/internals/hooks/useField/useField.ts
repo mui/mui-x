@@ -1,6 +1,7 @@
 import * as React from 'react';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import useEventCallback from '@mui/utils/useEventCallback';
+import { MuiPickerFieldAdapter } from '../../models/muiPickersAdapter';
 import { useValidation } from '../validation/useValidation';
 import { useUtils } from '../useUtils';
 import {
@@ -32,7 +33,10 @@ export const useField = <
 >(
   params: UseFieldParams<TInputValue, TValue, TDate, TSection, TForwardedProps, TInternalProps>,
 ): UseFieldResponse<TForwardedProps> => {
-  const utils = useUtils<TDate>();
+  const utils = useUtils<TDate>() as MuiPickerFieldAdapter<TDate>;
+  if (!utils.formatTokenMap) {
+    throw new Error('This adapter is not compatible with the field components');
+  }
   const inputRef = React.useRef<HTMLInputElement>(null);
 
   const {
@@ -376,12 +380,11 @@ export const useField = <
     }
   }, [valueParsed]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  // TODO: Support `isSameError`.
   // TODO: Make validation work with TDate instead of TInputDate
   const validationError = useValidation(
     { ...params.internalProps, value: state.valueParsed as unknown as TInputValue },
     validator,
-    () => true,
+    fieldValueManager.isSameError,
   );
 
   const inputError = React.useMemo(

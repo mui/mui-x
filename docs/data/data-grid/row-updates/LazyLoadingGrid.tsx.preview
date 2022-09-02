@@ -1,0 +1,14 @@
+<DataGridPro
+  columns={columns}
+  rows={initialRows}
+  apiRef={apiRef}
+  hideFooterPagination
+  rowCount={rowCount}
+  sortingMode="server"
+  filterMode="server"
+  rowsLoadingMode="server"
+  onFetchRows={debouncedHandleFetchRows}
+  experimentalFeatures={{
+    lazyLoading: true,
+  }}
+/>

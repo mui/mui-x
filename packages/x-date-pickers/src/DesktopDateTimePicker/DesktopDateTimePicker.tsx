@@ -21,6 +21,7 @@ import { useDateTimeValidation } from '../internals/hooks/validation/useDateTime
 import { KeyboardDateInput } from '../internals/components/KeyboardDateInput';
 import { usePickerState } from '../internals/hooks/usePickerState';
 import { DateInputSlotsComponent } from '../internals/components/PureDateInput';
+import { DateTimePickerTabs } from '../DateTimePicker';
 
 export interface DesktopDateTimePickerSlotsComponent
   extends DesktopWrapperSlotsComponent,
@@ -84,10 +85,16 @@ export const DesktopDateTimePicker = React.forwardRef(function DesktopDateTimePi
     ToolbarComponent = DateTimePickerToolbar,
     TransitionComponent,
     value,
-    components,
+    components: providedComponents,
     componentsProps,
+    hideTabs = true,
     ...other
   } = props;
+  const components = React.useMemo<DesktopDateTimePickerProps<TInputDate, TDate>['components']>(
+    () => ({ Tabs: DateTimePickerTabs, ...providedComponents }),
+    [providedComponents],
+  );
+
   const AllDateInputProps = {
     ...inputProps,
     ...other,
@@ -116,6 +123,7 @@ export const DesktopDateTimePicker = React.forwardRef(function DesktopDateTimePi
         DateInputProps={AllDateInputProps}
         components={components}
         componentsProps={componentsProps}
+        hideTabs={hideTabs}
         {...other}
       />
     </DesktopWrapper>
@@ -248,7 +256,8 @@ DesktopDateTimePicker.propTypes = {
    */
   getViewSwitchingButtonText: PropTypes.func,
   /**
-   * To show tabs.
+   * Toggles visibility of date time switching tabs
+   * @default false for mobile, true for desktop
    */
   hideTabs: PropTypes.bool,
   ignoreInvalidInputs: PropTypes.bool,
