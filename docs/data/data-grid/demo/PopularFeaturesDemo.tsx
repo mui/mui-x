@@ -50,8 +50,7 @@ export const featuresSet = [
   {
     id: 3,
     name: 'Column groups',
-    description:
-      'Group columns in a multi-level hierarchy',
+    description: 'Group columns in a multi-level hierarchy',
     plan: 'Community',
     detailPage: '/column-groups/',
     newBadge: true,
