@@ -55,11 +55,11 @@ export const PickersArrowSwitcher = React.forwardRef(function PickersArrowSwitch
     componentsProps = {},
     isNextDisabled,
     isNextHidden,
-    goToNext,
+    onGoToNext,
     nextLabel,
     isPreviousDisabled,
     isPreviousHidden,
-    goToPrevious,
+    onGoToPrevious,
     previousLabel,
     ...other
   } = props;
@@ -69,14 +69,14 @@ export const PickersArrowSwitcher = React.forwardRef(function PickersArrowSwitch
   const nextProps = {
     isDisabled: isNextDisabled,
     isHidden: isNextHidden,
-    goTo: goToNext,
+    goTo: onGoToNext,
     label: nextLabel,
   };
 
   const previousProps = {
     isDisabled: isPreviousDisabled,
     isHidden: isPreviousHidden,
-    goTo: goToPrevious,
+    goTo: onGoToPrevious,
     label: previousLabel,
   };
 

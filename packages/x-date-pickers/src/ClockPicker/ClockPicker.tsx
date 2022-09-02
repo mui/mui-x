@@ -427,10 +427,10 @@ export const ClockPicker = React.forwardRef(function ClockPicker<TDate extends u
           className={classes.arrowSwitcher}
           components={components}
           componentsProps={componentsProps}
-          goToPrevious={() => setOpenView(previousView)}
+          onGoToPrevious={() => setOpenView(previousView)}
           isPreviousDisabled={!previousView}
           previousLabel={localeText.openPreviousView}
-          goToNext={() => setOpenView(nextView)}
+          onGoToNext={() => setOpenView(nextView)}
           isNextDisabled={!nextView}
           nextLabel={localeText.openNextView}
           ownerState={ownerState}

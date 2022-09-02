@@ -236,10 +236,10 @@ export function PickersCalendarHeader<TDate>(props: PickersCalendarHeaderProps<T
         <PickersArrowSwitcher
           components={components}
           componentsProps={componentsProps}
-          goToPrevious={selectPreviousMonth}
+          onGoToPrevious={selectPreviousMonth}
           isPreviousDisabled={isPreviousMonthDisabled}
           previousLabel={localeText.previousMonth}
-          goToNext={selectNextMonth}
+          onGoToNext={selectNextMonth}
           isNextDisabled={isNextMonthDisabled}
           nextLabel={localeText.nextMonth}
         />

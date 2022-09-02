@@ -187,8 +187,8 @@ export function DateRangePickerViewDesktop<TDate>(props: DateRangePickerViewDesk
         return (
           <DateRangePickerViewDesktopContainer key={index}>
             <DateRangePickerViewDesktopArrowSwitcher
-              goToPrevious={selectPreviousMonth}
-              goToNext={selectNextMonth}
+              onGoToPrevious={selectPreviousMonth}
+              onGoToNext={selectNextMonth}
               isPreviousHidden={index !== 0}
               isPreviousDisabled={isPreviousMonthDisabled}
               previousLabel={localeText.previousMonth}

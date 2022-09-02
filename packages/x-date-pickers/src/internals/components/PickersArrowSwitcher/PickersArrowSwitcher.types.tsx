@@ -22,11 +22,11 @@ export interface PickersArrowSwitcherProps
   children?: React.ReactNode;
   isPreviousDisabled: boolean;
   isPreviousHidden?: boolean;
-  goToPrevious: () => void;
+  onGoToPrevious: () => void;
   previousLabel: string;
   isNextDisabled: boolean;
   isNextHidden?: boolean;
-  goToNext: () => void;
+  onGoToNext: () => void;
   nextLabel: string;
 }
 
