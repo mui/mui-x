@@ -24,6 +24,7 @@ const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
 function fireDoubleClickEvent(cell: HTMLElement) {
   fireEvent.mouseUp(cell);
+  fireEvent.mouseDown(cell);
   fireEvent.doubleClick(cell);
 }
 
