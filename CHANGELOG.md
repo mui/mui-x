@@ -15,7 +15,7 @@ We'd like to offer a big thanks to the 9 contributors who made this release poss
 
 - 🎁 Implement Lazy loading (#5214) @DanailH
 
-  Pro users now can try experimental `lazyLoading` feature.
+  Pro users now can try the experimental lazy loading feature.
   Implement lazy infinite skeleton loading with a few settings.
 
   To enable this feature, add `experimentalFeatures={{ lazyLoading: true }}`.
