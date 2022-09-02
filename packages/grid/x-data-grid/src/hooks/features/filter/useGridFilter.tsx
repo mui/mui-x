@@ -359,6 +359,7 @@ export const useGridFilter = (
               [passingFilterItems],
               [passingQuickFilterValues],
               params.filterModel,
+              apiRef,
             );
           }
           filteredRowsLookup[rowId] = isRowPassing;
