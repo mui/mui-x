@@ -10,6 +10,7 @@ export interface MuiPickersAdapterContextValue<TDate> {
     minDate: TDate;
     maxDate: TDate;
   };
+
   utils: MuiPickersAdapter<TDate>;
   localeText: PickersInputLocaleText<TDate> | undefined;
 }
@@ -51,9 +52,9 @@ export interface LocalizationProviderProps<TDate> {
  * @ignore - do not document.
  */
 export function LocalizationProvider<TDate>(inProps: LocalizationProviderProps<TDate>) {
-  const { utils: parentUtils, localeText: parentLocaleText } = (React.useContext(
-    MuiPickersAdapterContext,
-  ) ?? { utils: undefined, localeText: undefined }) as MuiPickersAdapterContextNullableValue<TDate>;
+  const { utils: parentUtils, localeText: parentLocaleText } =
+    React.useContext(MuiPickersAdapterContext) ??
+    ({ utils: undefined, localeText: undefined } as MuiPickersAdapterContextNullableValue<TDate>);
 
   const props = useThemeProps({
     props: {
@@ -128,7 +129,7 @@ LocalizationProvider.propTypes = {
   /**
    * DateIO adapter class function
    */
-  dateAdapter: PropTypes.func.isRequired,
+  dateAdapter: PropTypes.func,
   /**
    * Formats that are used for any child pickers
    */
@@ -168,11 +169,6 @@ LocalizationProvider.propTypes = {
    * ```
    */
   dateLibInstance: PropTypes.any,
-  /**
-   * Locale for the date library you are using
-   * @deprecated Use `adapterLocale` instead
-   */
-  locale: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),
   /**
    * Locale for components texts
    */
