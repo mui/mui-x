@@ -267,7 +267,7 @@ describe('<DataGridPro /> - Column pinning', () => {
     beforeEach(function beforeEach() {
       const { userAgent } = window.navigator;
 
-      if (isJSDOM || (!userAgent.includes('Headless') && /safari/i.test(userAgent))) {
+      if (!userAgent.includes('Headless') && !/safari/i.test(userAgent)) {
         // Need layouting and on Chrome non-headless and Edge these tests are flacky
         this.skip();
       }
