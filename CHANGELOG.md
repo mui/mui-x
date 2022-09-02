@@ -19,7 +19,7 @@ We'd like to offer a big thanks to the 9 contributors who made this release poss
   In a few steps, you can load your data on demand, as the rows are displayed.
 
   To enable this feature, add `experimentalFeatures={{ lazyLoading: true }}`.
-  Lazy loading feature has a few other prerequisites.
+  Lazy Loading requires a few other settings.
   See the [documentation](https://mui.com/x/react-data-grid/row-updates/#lazy-loading) to explore the example in detail.
 
 - 🚀 Improve `pickers` focus management (#5820) @alexfauquette
