@@ -16,7 +16,7 @@ We'd like to offer a big thanks to the 9 contributors who made this release poss
 - 🎁 Implement Lazy loading (#5214) @DanailH
 
   Pro users now can try the experimental lazy loading feature.
-  Implement lazy infinite skeleton loading with a few settings.
+  In a few steps, you can load your data on demand, as the rows are displayed.
 
   To enable this feature, add `experimentalFeatures={{ lazyLoading: true }}`.
   Lazy loading feature has a few other prerequisites.
