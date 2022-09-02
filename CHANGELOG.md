@@ -24,7 +24,7 @@ We'd like to offer a big thanks to the 9 contributors who made this release poss
 
 - 🚀 Improve `pickers` focus management (#5820) @alexfauquette
 - 🎉 Enable disabling `day` on date range picker depending on `position` (#5773) @alexfauquette
-- ✨ Various `DataGrid` and `pickers` improvements
+- ✨ Various improvements
 - 📚 Documentation improvements
 - 🐞 Bugfixes
 
