@@ -136,8 +136,21 @@ export const useGridFocus = (
       }
 
       rowIndexToFocus = clamp(rowIndexToFocus, 0, currentPage.rows.length - 1);
-      columnIndexToFocus = clamp(columnIndexToFocus, 0, visibleColumns.length - 1);
       const rowToFocus = currentPage.rows[rowIndexToFocus];
+
+      const colSpanInfo = apiRef.current.unstable_getCellColSpanInfo(
+        rowToFocus.id,
+        columnIndexToFocus,
+      );
+      if (colSpanInfo && colSpanInfo.spannedByColSpan) {
+        if (direction === 'left' || direction === 'below') {
+          columnIndexToFocus = colSpanInfo.leftVisibleCellIndex;
+        } else if (direction === 'right') {
+          columnIndexToFocus = colSpanInfo.rightVisibleCellIndex;
+        }
+      }
+
+      columnIndexToFocus = clamp(columnIndexToFocus, 0, visibleColumns.length - 1);
       const columnToFocus = visibleColumns[columnIndexToFocus];
       apiRef.current.setCellFocus(rowToFocus.id, columnToFocus.field);
     },
