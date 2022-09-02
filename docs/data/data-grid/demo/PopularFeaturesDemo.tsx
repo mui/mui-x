@@ -317,6 +317,10 @@ function PopularFeaturesDemo() {
           [`& .${gridClasses.cell}:focus, & .${gridClasses.cell}:focus-within`]: {
             outline: 'none',
           },
+          [`& .${gridClasses.columnHeader}:focus, & .${gridClasses.columnHeader}:focus-within`]:
+            {
+              outline: 'none',
+            },
           border: 0,
         }}
         rows={featuresSet}
