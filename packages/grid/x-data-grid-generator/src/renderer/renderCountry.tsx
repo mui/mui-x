@@ -10,8 +10,6 @@ interface CountryProps {
 const Country = React.memo(function Country(props: CountryProps) {
   const { value } = props;
 
-  console.log('HEY');
-
   return (
     <Box
       sx={{

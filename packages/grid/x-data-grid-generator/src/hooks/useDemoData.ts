@@ -206,8 +206,6 @@ export const useDemoData = (options: UseDemoDataOptions): DemoDataReturnType => 
     columns,
   ]);
 
-  console.log(data);
-
   return {
     data,
     loading,
