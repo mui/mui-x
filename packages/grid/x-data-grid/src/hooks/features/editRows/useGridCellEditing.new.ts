@@ -181,7 +181,7 @@ export const useGridCellEditing = (
     (params) => {
       const { id, field, value, reason } = params;
       console.log("Provide here the value: ", value);
-      const startCellEditModeParams: GridStartCellEditModeParams = { id, field, value };
+      const startCellEditModeParams: GridStartCellEditModeParams = { id, field };
 
       if (
         reason === GridCellEditStartReasons.deleteKeyDown ||
