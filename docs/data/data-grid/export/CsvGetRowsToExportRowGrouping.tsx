@@ -71,7 +71,9 @@ export default function CsvGetRowsToExportRowGrouping() {
         loading={loading}
         components={{ Toolbar: CustomToolbar }}
         initialState={{
+          ...data.initialState,
           rowGrouping: {
+            ...data.initialState?.rowGrouping,
             model: ['commodity'],
           },
         }}

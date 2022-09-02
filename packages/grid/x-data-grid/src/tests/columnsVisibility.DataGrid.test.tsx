@@ -135,11 +135,6 @@ describe('<DataGridPro /> - Columns Visibility', () => {
             Toolbar: GridToolbar,
           }}
           columns={[{ field: 'id' }, { field: 'idBis', hideable: false }]}
-          initialState={{
-            columns: {
-              columnVisibilityModel: {},
-            },
-          }}
         />,
       );
 
