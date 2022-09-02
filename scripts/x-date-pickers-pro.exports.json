@@ -30,6 +30,8 @@
   { "name": "DateRangePickerProps", "kind": "Interface" },
   { "name": "DateTimePicker", "kind": "Variable" },
   { "name": "DateTimePickerProps", "kind": "Interface" },
+  { "name": "DateTimePickerTabs", "kind": "Variable" },
+  { "name": "DateTimePickerTabsProps", "kind": "Interface" },
   { "name": "deDE", "kind": "Variable" },
   { "name": "DEFAULT_LOCALE", "kind": "Variable" },
   { "name": "DesktopDatePicker", "kind": "Variable" },

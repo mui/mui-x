@@ -20,6 +20,7 @@ import { DateRange } from '../internal/models';
 import { splitDateRangeSections } from './SingleInputDateRangeField.utils';
 import {
   DateRangeValidationError,
+  isSameDateRangeError,
   validateDateRange,
 } from '../internal/hooks/validation/useDateRangeValidation';
 
@@ -132,6 +133,7 @@ export const dateRangeFieldValueManager: FieldValueManager<
     };
   },
   hasError: (error) => error[0] != null || error[1] != null,
+  isSameError: isSameDateRangeError,
 };
 
 export const useDefaultizedDateRangeFieldProps = <TInputDate, TDate, AdditionalProps extends {}>(
@@ -156,10 +158,36 @@ export const useSingleInputDateRangeField = <
 >(
   inProps: TProps,
 ) => {
-  const props = useDefaultizedDateRangeFieldProps<TInputDate, TDate, TProps>(inProps);
+  const {
+    value,
+    defaultValue,
+    format,
+    onChange,
+    readOnly,
+    onError,
+    shouldDisableDate,
+    minDate,
+    maxDate,
+    disableFuture,
+    disablePast,
+    ...other
+  } = useDefaultizedDateRangeFieldProps<TInputDate, TDate, TProps>(inProps);
 
   return useField({
-    props,
+    forwardedProps: other,
+    internalProps: {
+      value,
+      defaultValue,
+      format,
+      onChange,
+      readOnly,
+      onError,
+      shouldDisableDate,
+      minDate,
+      maxDate,
+      disableFuture,
+      disablePast,
+    },
     valueManager: dateRangePickerValueManager,
     fieldValueManager: dateRangeFieldValueManager,
     validator: validateDateRange as any,

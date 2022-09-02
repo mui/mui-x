@@ -1,7 +1,7 @@
 import * as React from 'react';
 import dayjs, { Dayjs } from 'dayjs';
-import ruLocale from 'dayjs/locale/ru';
-import arSaLocale from 'dayjs/locale/ar-sa';
+import 'dayjs/locale/ru';
+import 'dayjs/locale/ar-sa';
 import Stack from '@mui/material/Stack';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
@@ -15,11 +15,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
 
-const localeMap = {
-  en: undefined,
-  ru: ruLocale,
-  ar: arSaLocale,
-};
+const locales = ['en', 'ru', 'ar-sa'] as const;
 
 // prettier-ignore
 const ampmOptions: { [key: string]: undefined | boolean } = {
@@ -29,7 +25,7 @@ const ampmOptions: { [key: string]: undefined | boolean } = {
 };
 
 export default function LocalizedTimePicker() {
-  const [locale, setLocale] = React.useState<keyof typeof localeMap>('ru');
+  const [locale, setLocale] = React.useState<typeof locales[number]>('ru');
   const [value, setValue] = React.useState<Dayjs | null>(dayjs());
 
   const [ampm, setAmpm] = React.useState<boolean | undefined>(undefined);
@@ -45,14 +41,11 @@ export default function LocalizedTimePicker() {
   };
 
   return (
-    <LocalizationProvider
-      dateAdapter={AdapterDayjs}
-      adapterLocale={localeMap[locale]}
-    >
+    <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale={locale}>
       <Stack spacing={3}>
         <Stack direction="row" spacing={3}>
           <ToggleButtonGroup value={locale} exclusive sx={{ display: 'block' }}>
-            {Object.keys(localeMap).map((localeItem) => (
+            {locales.map((localeItem) => (
               <ToggleButton
                 key={localeItem}
                 value={localeItem}

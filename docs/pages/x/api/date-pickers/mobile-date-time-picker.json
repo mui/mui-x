@@ -44,7 +44,7 @@
       "deprecated": true,
       "deprecationInfo": "Use the <code>localeText</code> prop of <code>LocalizationProvider</code> instead, see <a href=\"https://mui.com/x/react-date-pickers/localization\">https://mui.com/x/react-date-pickers/localization</a>"
     },
-    "hideTabs": { "type": { "name": "bool" } },
+    "hideTabs": { "type": { "name": "bool" }, "default": "false for mobile, true for desktop" },
     "InputAdornmentProps": { "type": { "name": "object" } },
     "inputFormat": { "type": { "name": "string" } },
     "inputRef": {
@@ -115,7 +115,8 @@
     "RightArrowButton": { "default": "IconButton", "type": { "name": "elementType" } },
     "RightArrowIcon": { "default": "ArrowRight", "type": { "name": "elementType" } },
     "SwitchViewButton": { "default": "IconButton", "type": { "name": "elementType" } },
-    "SwitchViewIcon": { "default": "ArrowDropDown", "type": { "name": "elementType" } }
+    "SwitchViewIcon": { "default": "ArrowDropDown", "type": { "name": "elementType" } },
+    "Tabs": { "default": "DateTimePickerTabs", "type": { "name": "elementType" } }
   },
   "name": "MobileDateTimePicker",
   "styles": { "classes": [], "globalClasses": {}, "name": "MuiMobileDateTimePicker" },
