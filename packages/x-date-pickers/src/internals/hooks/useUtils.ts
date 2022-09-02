@@ -4,6 +4,7 @@ import {
   MuiPickersAdapterContextValue,
 } from '../../LocalizationProvider/LocalizationProvider';
 import { DEFAULT_LOCALE } from '../../locales/enUS';
+import { PickersLocaleText } from '@mui/x-date-pickers';
 
 export const useLocalizationContext = <TDate>() => {
   const localization = React.useContext(MuiPickersAdapterContext);
@@ -33,7 +34,9 @@ export const useLocalizationContext = <TDate>() => {
   return {
     ...localization,
     localeText,
-  } as MuiPickersAdapterContextValue<TDate>;
+  } as Omit<MuiPickersAdapterContextValue<TDate>, 'localeText'> & {
+    localeText: PickersLocaleText<TDate>;
+  };
 };
 
 export const useUtils = <T>() => useLocalizationContext<T>().utils;
