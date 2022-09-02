@@ -345,7 +345,7 @@ function CustomEditComponent(props: GridRenderEditCellParams) {
     apiRef.current.setEditCellValue({ id, field, value: newValue });
   };
 
-  return <input type="text" value={value} onValueChange={handleValueChange} />;
+  return <input type="text" value={value} onChange={handleValueChange} />;
 }
 ```
 
