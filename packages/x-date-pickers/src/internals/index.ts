@@ -34,7 +34,11 @@ export { DAY_MARGIN } from './constants/dimensions';
 
 export { useMaskedInput } from './hooks/useMaskedInput';
 export { usePickerState } from './hooks/usePickerState';
-export type { PickerStateProps, PickerStatePickerProps } from './hooks/usePickerState';
+export type {
+  PickerStateProps,
+  PickerStatePickerProps,
+  PickerStateWrapperProps,
+} from './hooks/usePickerState';
 export type { PickerStateValueManager, PickerSelectionState } from './hooks/usePickerState';
 export { useDefaultDates, useUtils, useLocaleText } from './hooks/useUtils';
 export type { BaseDateValidationProps, DayValidationProps } from './hooks/validation/models';

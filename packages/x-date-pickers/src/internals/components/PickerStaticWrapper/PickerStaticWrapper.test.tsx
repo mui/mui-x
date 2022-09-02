@@ -16,6 +16,7 @@ describe('<PickerStaticWrapper />', () => {
       onSetToday={() => {}}
       onAccept={() => {}}
       onClear={() => {}}
+      onSetValue={() => {}}
     />,
     () => ({
       classes,

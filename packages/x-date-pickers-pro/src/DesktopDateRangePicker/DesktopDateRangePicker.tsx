@@ -123,6 +123,7 @@ export const DesktopDateRangePicker = React.forwardRef(function DesktopDateRange
     >
       <DateRangePickerView<TInputDate, TDate>
         open={wrapperProps.open}
+        onSetValue={wrapperProps.onSetValue}
         DateInputProps={DateInputProps}
         currentlySelectingRangeEnd={currentlySelectingRangeEnd}
         setCurrentlySelectingRangeEnd={setCurrentlySelectingRangeEnd}

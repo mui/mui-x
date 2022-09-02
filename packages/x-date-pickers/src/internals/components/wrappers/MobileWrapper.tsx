@@ -16,9 +16,9 @@ export interface MobileWrapperProps extends ExportedPickerModalProps {
 
 export interface MobileWrapperSlotsComponent
   extends PickersModalDialogSlotsComponent,
-    DateInputSlotsComponent {}
+  DateInputSlotsComponent { }
 
-export interface MobileWrapperSlotsComponentsProps extends PickersModalDialogSlotsComponentsProps {}
+export interface MobileWrapperSlotsComponentsProps extends PickersModalDialogSlotsComponentsProps { }
 
 export interface InternalMobileWrapperProps extends MobileWrapperProps, PickerStateWrapperProps {
   DateInputProps: DateInputPropsLike & { ref?: React.Ref<HTMLDivElement> };
@@ -37,6 +37,7 @@ export function MobileWrapper(props: InternalMobileWrapperProps) {
     onDismiss,
     onCancel,
     onSetToday,
+    onSetValue,
     open,
     PureDateInputComponent,
     components,
@@ -54,6 +55,7 @@ export function MobileWrapper(props: InternalMobileWrapperProps) {
         onDismiss={onDismiss}
         onCancel={onCancel}
         onSetToday={onSetToday}
+        onSetValue={onSetValue}
         open={open}
         components={components}
         componentsProps={componentsProps}

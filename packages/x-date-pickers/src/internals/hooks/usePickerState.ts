@@ -163,19 +163,20 @@ export interface PickerStatePickerProps<TValue> {
   ) => void;
 }
 
-export interface PickerStateWrapperProps {
+export interface PickerStateWrapperProps<TValue=any> {
   onAccept: () => void;
   onClear: () => void;
   onDismiss: () => void;
   onCancel: () => void;
   onSetToday: () => void;
+  onSetValue: (newValue: TValue, acceptAndClose?: boolean) => void;
   open: boolean;
 }
 
 interface PickerState<TInputValue, TValue> {
   inputProps: PickerStateInputProps<TInputValue, TValue>;
   pickerProps: PickerStatePickerProps<TValue>;
-  wrapperProps: PickerStateWrapperProps;
+  wrapperProps: PickerStateWrapperProps<TValue>;
 }
 
 export const usePickerState = <TInputValue, TValue, TDate>(
@@ -259,7 +260,7 @@ export const usePickerState = <TInputValue, TValue, TDate>(
     setDate({ action: 'setCommitted', value: parsedDateValue, skipOnChangeCall: true });
   }
 
-  const wrapperProps = React.useMemo<PickerStateWrapperProps>(
+  const wrapperProps = React.useMemo<PickerStateWrapperProps<TValue>>(
     () => ({
       open: isOpen,
       onClear: () => {
@@ -297,6 +298,10 @@ export const usePickerState = <TInputValue, TValue, TDate>(
       onSetToday: () => {
         // Set all dates in state to equal today and close picker.
         setDate({ value: valueManager.getTodayValue(utils), action: 'acceptAndClose' });
+      },
+      onSetValue: (newValue: TValue, acceptAndClose: boolean = false) => {
+        // Set any value, and optiomnaly accept and close the picker after.
+        setDate({ value: newValue, action: acceptAndClose ? 'acceptAndClose' : 'setCommitted' });
       },
     }),
     [setDate, isOpen, utils, dateState, valueManager, value, parsedDateValue],

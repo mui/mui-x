@@ -119,6 +119,7 @@ export const MobileDateRangePicker = React.forwardRef(function MobileDateRangePi
     >
       <DateRangePickerView
         open={wrapperProps.open}
+        onSetValue={wrapperProps.onSetValue}
         DateInputProps={DateInputProps}
         currentlySelectingRangeEnd={currentlySelectingRangeEnd}
         setCurrentlySelectingRangeEnd={setCurrentlySelectingRangeEnd}

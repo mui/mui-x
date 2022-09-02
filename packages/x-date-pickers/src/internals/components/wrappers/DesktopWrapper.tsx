@@ -22,7 +22,9 @@ export interface DesktopWrapperSlotsComponent
 
 export interface DesktopWrapperSlotsComponentsProps extends PickersPopperSlotsComponentsProps {}
 
-export interface InternalDesktopWrapperProps extends DesktopWrapperProps, PickerStateWrapperProps {
+export interface InternalDesktopWrapperProps
+  extends DesktopWrapperProps,
+    PickerStateWrapperProps {
   DateInputProps: DateInputPropsLike & { ref?: React.Ref<HTMLDivElement> };
   KeyboardDateInputComponent: React.JSXElementConstructor<
     DateInputPropsLike & { ref?: React.Ref<HTMLDivElement> }
@@ -49,6 +51,7 @@ export function DesktopWrapper(props: InternalDesktopWrapperProps) {
     onCancel,
     onAccept,
     onSetToday,
+    onSetValue,
     open,
     PopperProps,
     PaperProps,
@@ -74,6 +77,7 @@ export function DesktopWrapper(props: InternalDesktopWrapperProps) {
         onClear={onClear}
         onAccept={onAccept}
         onSetToday={onSetToday}
+        onSetValue={onSetValue}
         components={components}
         componentsProps={componentsProps}
       >

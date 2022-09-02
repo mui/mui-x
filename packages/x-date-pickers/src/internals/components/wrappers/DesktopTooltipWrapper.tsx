@@ -19,6 +19,7 @@ export function DesktopTooltipWrapper(props: InternalDesktopWrapperProps) {
     onCancel,
     onAccept,
     onSetToday,
+    onSetValue,
     components,
     componentsProps,
   } = props;
@@ -57,6 +58,7 @@ export function DesktopTooltipWrapper(props: InternalDesktopWrapperProps) {
         onCancel={onCancel}
         onAccept={onAccept}
         onSetToday={onSetToday}
+        onSetValue={onSetValue}
         components={components}
         componentsProps={componentsProps}
       >

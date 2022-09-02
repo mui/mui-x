@@ -8,8 +8,9 @@ import { styled } from '@mui/material/styles';
 import { TransitionProps as MuiTransitionProps } from '@mui/material/transitions';
 import { PickersActionBar, PickersActionBarProps } from '../../PickersActionBar';
 import { PickersSlotsComponent } from './wrappers/WrapperProps';
+import { PickerStateWrapperProps } from '../hooks/usePickerState';
 
-export interface PickersPopperSlotsComponent extends PickersSlotsComponent {}
+export interface PickersPopperSlotsComponent extends PickersSlotsComponent { }
 
 export interface PickersPopperSlotsComponentsProps {
   actionBar: Omit<PickersActionBarProps, 'onAccept' | 'onClear' | 'onCancel' | 'onSetToday'>;
@@ -34,19 +35,17 @@ export interface ExportedPickerPopperProps {
   TransitionComponent?: React.JSXElementConstructor<MuiTransitionProps>;
 }
 
-export interface PickerPopperProps extends ExportedPickerPopperProps, ExportedPickerPaperProps {
+export interface PickerPopperProps
+  extends ExportedPickerPopperProps,
+  ExportedPickerPaperProps,
+  Omit<PickerStateWrapperProps, 'onDismiss'> {
   role: 'tooltip' | 'dialog';
   TrapFocusProps?: Partial<MuiTrapFocusProps>;
   anchorEl: MuiPopperProps['anchorEl'];
-  open: MuiPopperProps['open'];
   containerRef?: React.Ref<HTMLDivElement>;
   children?: React.ReactNode;
   onClose: () => void;
   onBlur?: () => void;
-  onClear: () => void;
-  onCancel: () => void;
-  onAccept: () => void;
-  onSetToday: () => void;
   components?: Partial<PickersPopperSlotsComponent>;
   componentsProps?: Partial<PickersPopperSlotsComponentsProps>;
 }

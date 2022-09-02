@@ -113,6 +113,7 @@ export const StaticDateRangePicker = React.forwardRef(function StaticDateRangePi
     >
       <DateRangePickerView
         open={wrapperProps.open}
+        onSetValue={wrapperProps.onSetValue}
         DateInputProps={DateInputProps}
         currentlySelectingRangeEnd={currentlySelectingRangeEnd}
         setCurrentlySelectingRangeEnd={setCurrentlySelectingRangeEnd}
