@@ -39,7 +39,7 @@ We'd like to offer a big thanks to the 9 contributors who made this release poss
 - [DataGridPro] Fix crash when using `pinnedRows` + `getRowClassName` props and `rows=[]` (#5851) @cherniavskii
 - [DataGridPro] Implement Lazy loading (#5214) @DanailH
 - [DataGridPro] Support pinned columns and dynamic row height (#5782) @m4theushw
-- [DataGridPremium] Add columnGroups initializer (#5963) @alexfauquette
+- [DataGridPremium] Add state initializer for column groups (#5963) @alexfauquette
 - [DataGridPremium] Update grouping when `groupingValueGetter` changes (#5919) @flaviendelangle
 - [DataGridPremium] Use the aggregated value on tree data real groups (#5953) @flaviendelangle
 
