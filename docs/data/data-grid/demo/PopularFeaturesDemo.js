@@ -227,7 +227,9 @@ const columns = [
   {
     field: 'name',
     headerName: 'Feature name',
-    width: 160,
+    maxWidth: 160,
+    flex: 0.2,
+    minWidth: 100,
     groupable: false,
     renderCell: (params) => {
       if (!params.value) {
@@ -272,11 +274,13 @@ const columns = [
     headerName: 'Brief description',
     groupable: false,
     flex: 0.5,
+    minWidth: 120,
   },
   {
     field: 'plan',
     headerName: 'Plan',
-    width: 130,
+    maxWidth: 130,
+    flex: 0.3,
     type: 'singleSelect',
     valueOptions: ['Premium', 'Pro', 'Community'],
     renderCell: (params) => {
