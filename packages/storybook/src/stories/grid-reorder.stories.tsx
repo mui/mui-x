@@ -21,7 +21,7 @@ export const ReorderSmallDataset = () => {
 
   return (
     <div style={{ width: size.width, height: size.height, display: 'flex' }}>
-      <DataGridPro rows={data.rows} columns={data.columns} />
+      <DataGridPro {...data} />
     </div>
   );
 };
@@ -32,20 +32,17 @@ export const DisableReorderOnSomeColumn = () => {
     rowLength: 10,
     maxColumns: 6,
   });
-  const [columns, setColumns] = React.useState(data.columns);
-
-  React.useEffect(() => {
-    if (data.columns.length > 0) {
-      const newColumns: GridColDef[] = data.columns.map((col) =>
+  const columns = React.useMemo(
+    () =>
+      data.columns.map((col) =>
         col.field === 'quantity' ? { ...col, disableReorder: true } : col,
-      );
-      setColumns(newColumns);
-    }
-  }, [data.columns]);
+      ),
+    [data.columns],
+  );
 
   return (
     <div className="grid-container">
-      <DataGridPro rows={data.rows} columns={columns} checkboxSelection />
+      <DataGridPro {...data} columns={columns} checkboxSelection />
     </div>
   );
 };

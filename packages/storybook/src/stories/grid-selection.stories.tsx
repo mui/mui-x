@@ -31,7 +31,7 @@ export const ApiPreSelectedRows = () => {
     setData(getData(50, 5));
   }, []);
 
-  return <DataGridPro rows={data.rows} columns={data.columns} apiRef={apiRef} />;
+  return <DataGridPro {...data} apiRef={apiRef} />;
 };
 
 export const EventsMapped = () => {
@@ -39,8 +39,7 @@ export const EventsMapped = () => {
 
   return (
     <DataGridPro
-      rows={data.rows}
-      columns={data.columns}
+      {...data}
       onSelectionModelChange={(params) => action('onSelectionChange', { depth: 1 })(params)}
     />
   );
@@ -48,27 +47,20 @@ export const EventsMapped = () => {
 
 export const SingleSelect = () => {
   const data = useData(200, 200);
-  return <DataGridPro rows={data.rows} columns={data.columns} disableMultipleSelection />;
+  return <DataGridPro {...data} disableMultipleSelection />;
 };
 
 export const MultipleSelect = () => {
   const data = useData(200, 200);
-  return <DataGridPro rows={data.rows} columns={data.columns} />;
+  return <DataGridPro {...data} />;
 };
 export const MultipleSelectWithCheckbox = () => {
   const data = useData(200, 200);
-  return <DataGridPro rows={data.rows} columns={data.columns} checkboxSelection />;
+  return <DataGridPro {...data} checkboxSelection />;
 };
 export const MultipleSelectWithCheckboxNoClick = () => {
   const data = useData(200, 200);
-  return (
-    <DataGridPro
-      rows={data.rows}
-      columns={data.columns}
-      checkboxSelection
-      disableSelectionOnClick
-    />
-  );
+  return <DataGridPro {...data} checkboxSelection disableSelectionOnClick />;
 };
 
 export function HandleSelection() {
@@ -97,7 +89,7 @@ export function HandleSelection() {
 export const GridSelection = () => {
   const data = useData(200, 200);
 
-  return <DataGridPro rows={data.rows} columns={data.columns} selectionModel={[1, 2, 3]} />;
+  return <DataGridPro {...data} selectionModel={[1, 2, 3]} />;
 };
 
 export const UnselectableRows = () => {
@@ -105,8 +97,7 @@ export const UnselectableRows = () => {
 
   return (
     <DataGridPro
-      rows={data.rows}
-      columns={data.columns}
+      {...data}
       isRowSelectable={(params) => Number(params.id) % 2 === 0}
       checkboxSelection
     />
@@ -188,8 +179,7 @@ export function LargeControlSelection() {
 
   return (
     <DataGridPro
-      columns={data.columns}
-      rows={data.rows}
+      {...data}
       selectionModel={selectionModel}
       onSelectionModelChange={handleSelectionChange}
       checkboxSelection

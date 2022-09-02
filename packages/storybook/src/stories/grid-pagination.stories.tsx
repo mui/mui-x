@@ -22,7 +22,7 @@ export function PaginationDefault() {
 
   return (
     <div className="grid-container">
-      <DataGridPro rows={data.rows} columns={data.columns} pagination />
+      <DataGridPro {...data} pagination />
     </div>
   );
 }
@@ -32,7 +32,7 @@ export function PageSize100() {
 
   return (
     <div className="grid-container">
-      <DataGrid rows={data.rows} columns={data.columns} pageSize={100} />
+      <DataGrid {...data} pageSize={100} />
     </div>
   );
 }
@@ -41,7 +41,7 @@ export const PaginationArgs: Story = (props) => {
   const { rowCount, ...others } = props;
   const data = useData(rowCount, 20);
 
-  return <DataGridPro rows={data.rows} columns={data.columns} {...others} />;
+  return <DataGridPro {...data} {...others} />;
 };
 PaginationArgs.args = {
   pagination: true,
@@ -60,13 +60,7 @@ export function HiddenPagination() {
 
   return (
     <div className="grid-container">
-      <DataGridPro
-        rows={data.rows}
-        columns={data.columns}
-        pageSize={100}
-        pagination
-        hideFooterPagination
-      />
+      <DataGridPro {...data} pageSize={100} pagination hideFooterPagination />
     </div>
   );
 }
@@ -118,8 +112,7 @@ export function PaginationApiTests() {
       <div className="grid-container">
         <DataGridPro
           apiRef={apiRef}
-          rows={data.rows}
-          columns={data.columns}
+          {...data}
           pagination
           pageSize={myPageSize}
           autoPageSize={autosize}
@@ -166,7 +159,7 @@ export function AutoPagination() {
         </Button>
       </div>
       <div style={{ width: size.width, height: size.height }}>
-        <DataGridPro rows={data.rows} columns={data.columns} autoPageSize pagination />
+        <DataGridPro {...data} autoPageSize pagination />
       </div>
     </React.Fragment>
   );
@@ -240,8 +233,7 @@ export function Page1Prop() {
   return (
     <div className="grid-container">
       <DataGridPro
-        rows={data.rows}
-        columns={data.columns}
+        {...data}
         pagination
         pageSize={50}
         page={0}
@@ -256,8 +248,7 @@ export function Page2PropSnap() {
   return (
     <div className="grid-container">
       <DataGridPro
-        rows={data.rows}
-        columns={data.columns}
+        {...data}
         pagination
         pageSize={50}
         page={1}
@@ -278,8 +269,7 @@ export function Page2Api() {
     <div className="grid-container">
       <DataGridPro
         apiRef={apiRef}
-        rows={data.rows}
-        columns={data.columns}
+        {...data}
         pagination
         pageSize={50}
         onPageChange={(p) => action('pageChange')(p)}
@@ -364,8 +354,8 @@ export function ServerPaginationDocsDemo() {
   return (
     <div style={{ height: 400, width: '100%' }}>
       <DataGrid
+        {...data}
         rows={rows}
-        columns={data.columns}
         pageSize={5}
         rowCount={100}
         paginationMode="server"
@@ -382,7 +372,7 @@ export function CommodityAutoPageSizeSnap() {
   });
   return (
     <div className="grid-container">
-      <DataGrid rows={data.rows} columns={data.columns} autoPageSize />
+      <DataGrid {...data} autoPageSize />
     </div>
   );
 }

@@ -19,8 +19,7 @@ export function AllEvents() {
 
   return (
     <DataGridPro
-      rows={data.rows}
-      columns={data.columns}
+      {...data}
       onRowClick={(params) => action('onRowClick')(params)}
       onCellClick={(params) => action('onCellClick')(params)}
       onColumnHeaderClick={(params) => action('onColumnHeaderClick')(params)}
@@ -38,44 +37,27 @@ export function AllEvents() {
 export const OnRowClick = () => {
   const data = useData(2000, 200);
 
-  return (
-    <DataGridPro
-      rows={data.rows}
-      columns={data.columns}
-      onRowClick={(params) => action('row click')(params)}
-    />
-  );
+  return <DataGridPro {...data} onRowClick={(params) => action('row click')(params)} />;
 };
 export const OnRowDoubleClick = () => {
   const data = useData(2000, 200);
 
   return (
-    <DataGridPro
-      rows={data.rows}
-      columns={data.columns}
-      onRowDoubleClick={(params) => action('row double click')(params)}
-    />
+    <DataGridPro {...data} onRowDoubleClick={(params) => action('row double click')(params)} />
   );
 };
 
 export const OnCellClick = () => {
   const data = useData(2000, 200);
 
-  return (
-    <DataGridPro
-      rows={data.rows}
-      columns={data.columns}
-      onCellClick={(params) => action('cell click')(params)}
-    />
-  );
+  return <DataGridPro {...data} onCellClick={(params) => action('cell click')(params)} />;
 };
 export const OnCellClickNotPropagated = () => {
   const data = useData(2000, 200);
 
   return (
     <DataGridPro
-      rows={data.rows}
-      columns={data.columns}
+      {...data}
       onCellClick={(params, event) => {
         (event as React.SyntheticEvent).stopPropagation();
         action('cell click')(params);
@@ -87,24 +69,14 @@ export const OnCellDoubleClick = () => {
   const data = useData(2000, 200);
 
   return (
-    <DataGridPro
-      rows={data.rows}
-      columns={data.columns}
-      onCellDoubleClick={(params) => action('Cell double click')(params)}
-    />
+    <DataGridPro {...data} onCellDoubleClick={(params) => action('Cell double click')(params)} />
   );
 };
 
 export const OnColumnHeaderClick = () => {
   const data = useData(2000, 200);
 
-  return (
-    <DataGridPro
-      rows={data.rows}
-      columns={data.columns}
-      onColumnHeaderClick={(params) => action('Header click')(params)}
-    />
-  );
+  return <DataGridPro {...data} onColumnHeaderClick={(params) => action('Header click')(params)} />;
 };
 
 export const OnPreferencePanelClose = () => {
@@ -112,8 +84,7 @@ export const OnPreferencePanelClose = () => {
 
   return (
     <DataGridPro
-      rows={data.rows}
-      columns={data.columns}
+      {...data}
       onPreferencePanelClose={(params) => action('preferences panel Close')(params)}
     />
   );
@@ -124,8 +95,7 @@ export const OnPreferencePanelOpen = () => {
 
   return (
     <DataGridPro
-      rows={data.rows}
-      columns={data.columns}
+      {...data}
       onPreferencePanelOpen={(params) => action('preferences panel Open')(params)}
     />
   );

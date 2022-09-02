@@ -23,7 +23,7 @@ const GridDataSet = ({ nbRows, nbCols, ...other }: GridDatasetProps) => {
   const data = useData(nbRows, nbCols);
   return (
     <div className="grid-container">
-      <DataGridPro rows={data.rows} columns={data.columns} {...other} />
+      <DataGridPro {...data} {...other} />
     </div>
   );
 };
@@ -78,7 +78,7 @@ const DemoDynamicContainerTemplate: Story<GridDynamicContainerProps> = ({
   return (
     <div className="demo-rendering grid-container" style={{ padding: 10 }}>
       <div style={{ width, height }}>
-        <DataGridPro rows={data.rows} columns={data.columns} {...args} />
+        <DataGridPro {...data} {...args} />
       </div>
     </div>
   );

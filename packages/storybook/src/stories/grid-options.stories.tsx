@@ -49,7 +49,7 @@ export const NoRowExtend = () => {
   const data = useData(20, 2);
   return (
     <div className="grid-container">
-      <DataGridPro rows={data.rows} columns={data.columns} disableExtendRowFullWidth />
+      <DataGridPro {...data} disableExtendRowFullWidth />
     </div>
   );
 };
@@ -58,12 +58,7 @@ export const NoRowExtendCellBorder = () => {
   const data = useData(20, 2);
   return (
     <div className="grid-container">
-      <DataGridPro
-        rows={data.rows}
-        columns={data.columns}
-        disableExtendRowFullWidth
-        showCellRightBorder
-      />
+      <DataGridPro {...data} disableExtendRowFullWidth showCellRightBorder />
     </div>
   );
 };
@@ -72,7 +67,7 @@ export const CellRightBorder = () => {
   const data = useData(20, 2);
   return (
     <div className="grid-container">
-      <DataGridPro rows={data.rows} columns={data.columns} showCellRightBorder />
+      <DataGridPro {...data} showCellRightBorder />
     </div>
   );
 };
@@ -81,7 +76,7 @@ export const ColumnRightBorder = () => {
   const data = useData(20, 2);
   return (
     <div className="grid-container">
-      <DataGridPro rows={data.rows} columns={data.columns} showColumnRightBorder />
+      <DataGridPro {...data} showColumnRightBorder />
     </div>
   );
 };
@@ -89,7 +84,7 @@ export const AutoHeightSmall = () => {
   const data = useData(8, 12);
   return (
     <div>
-      <DataGridPro rows={data.rows} columns={data.columns} autoHeight />
+      <DataGridPro {...data} autoHeight />
     </div>
   );
 };
@@ -98,7 +93,7 @@ export const AutoHeightLarge = () => {
   const data = useData(75, 20);
   return (
     <div>
-      <DataGridPro rows={data.rows} columns={data.columns} autoHeight />
+      <DataGridPro {...data} autoHeight />
     </div>
   );
 };

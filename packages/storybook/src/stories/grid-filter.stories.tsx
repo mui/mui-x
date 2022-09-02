@@ -40,10 +40,10 @@ export function CommodityWithOpenFilters() {
   return (
     <div className="grid-container">
       <DataGridPro
-        rows={data.rows}
-        columns={data.columns}
+        {...data}
         checkboxSelection
         initialState={{
+          ...data.initialState,
           preferencePanel: {
             open: true,
             openedPanelValue: GridPreferencePanelsValue.filters,
@@ -59,14 +59,15 @@ export function CommodityWithOpenFiltersAndState() {
   return (
     <div className="grid-container">
       <DataGridPro
-        rows={data.rows}
-        columns={data.columns}
+        {...data}
         initialState={{
+          ...data.initialState,
           preferencePanel: {
             open: true,
             openedPanelValue: GridPreferencePanelsValue.filters,
           },
           filter: {
+            ...data.initialState,
             filterModel: {
               items: [
                 { id: 123, columnField: 'commodity', value: 'soy', operatorValue: 'startsWith' },
@@ -91,14 +92,15 @@ export function WithNewOperator() {
       </div>
       <div className="grid-container">
         <DataGridPro
-          rows={data.rows}
-          columns={data.columns}
+          {...data}
           initialState={{
+            ...data.initialState,
             preferencePanel: {
               open: true,
               openedPanelValue: GridPreferencePanelsValue.filters,
             },
             filter: {
+              ...data.initialState?.filter,
               filterModel: {
                 items: [
                   { id: 123, columnField: 'commodity', value: 'co', operatorValue: operator },
@@ -127,14 +129,15 @@ export function CommodityWithNewRowsViaProps() {
       </div>
       <div className="grid-container">
         <DataGridPro
-          rows={data.rows}
-          columns={data.columns}
+          {...data}
           initialState={{
+            ...data.initialState,
             preferencePanel: {
               open: true,
               openedPanelValue: GridPreferencePanelsValue.filters,
             },
             filter: {
+              ...data.initialState?.filter,
               filterModel: {
                 items: [
                   { id: 123, columnField: 'commodity', value: 'soy', operatorValue: 'startsWith' },
@@ -173,14 +176,16 @@ export function CommodityWithNewColsViaProps() {
       </div>
       <div className="grid-container">
         <DataGridPro
-          rows={data.rows}
+          {...data}
           columns={cols}
           initialState={{
+            ...data.initialState,
             preferencePanel: {
               open: true,
               openedPanelValue: GridPreferencePanelsValue.filters,
             },
             filter: {
+              ...data.initialState?.filter,
               filterModel: {
                 items: [
                   { id: 123, columnField: 'commodity', value: 'soy', operatorValue: 'startsWith' },
@@ -208,14 +213,15 @@ export function CommodityNoToolbar() {
       </div>
       <div className="grid-container">
         <DataGridPro
-          rows={data.rows}
-          columns={data.columns}
+          {...data}
           initialState={{
+            ...data.initialState,
             preferencePanel: {
               open: true,
               openedPanelValue: GridPreferencePanelsValue.filters,
             },
             filter: {
+              ...data.initialState?.filter,
               filterModel: {
                 items: [
                   { id: 123, columnField: 'commodity', value: 'soy', operatorValue: 'startsWith' },
@@ -254,7 +260,9 @@ export function CommodityWithEmptyCells() {
         {...data}
         rows={rows}
         initialState={{
+          ...data.initialState,
           filter: {
+            ...data.initialState?.filter,
             filterModel: {
               items: [{ columnField: 'commodity', operatorValue: 'isEmpty' }],
               linkOperator: GridLinkOperator.Or,
@@ -267,8 +275,8 @@ export function CommodityWithEmptyCells() {
 }
 
 export function ServerFilterViaProps() {
-  const demoServer = useDemoData({ dataSet: 'Commodity', rowLength: 100 });
-  const [rows, setRows] = React.useState<GridRowModel[]>(demoServer.data.rows);
+  const { data } = useDemoData({ dataSet: 'Commodity', rowLength: 100 });
+  const [rows, setRows] = React.useState<GridRowModel[]>(data.rows);
   const [filterModel, setFilterModel] = React.useState<GridFilterModel>({
     items: [{ id: 123, columnField: 'commodity', value: 'soy', operatorValue: 'contains' }],
   });
@@ -276,9 +284,9 @@ export function ServerFilterViaProps() {
 
   const applyFilters = React.useCallback(() => {
     if (!filterModel.items.length) {
-      setRows(demoServer.data.rows);
+      setRows(data.rows);
     } else {
-      const newRows = demoServer.data.rows.filter(
+      const newRows = data.rows.filter(
         (row) =>
           row[filterModel.items[0].columnField!]
             .toString()
@@ -288,7 +296,7 @@ export function ServerFilterViaProps() {
       setRows(newRows);
     }
     setLoading(false);
-  }, [demoServer.data.rows, filterModel]);
+  }, [data.rows, filterModel]);
 
   // TODO allow to filter operators using string value
   // columnTypes={{string: {filterOperators: ['contains']}}}
@@ -310,19 +318,20 @@ export function ServerFilterViaProps() {
 
   React.useEffect(() => {
     applyFilters();
-  }, [applyFilters, demoServer.data.rows]);
+  }, [applyFilters, data.rows]);
 
   return (
     <div className="grid-container">
       <DataGridPro
+        {...data}
         rows={rows}
-        columns={demoServer.data.columns}
         filterMode={'server'}
         onFilterModelChange={onFilterChange}
         disableMultipleColumnsFiltering
         filterModel={filterModel}
         loading={loading}
         initialState={{
+          ...data.initialState,
           preferencePanel: {
             open: true,
             openedPanelValue: GridPreferencePanelsValue.filters,
@@ -408,15 +417,16 @@ export function CommodityWithNewRowsViaApi() {
       </div>
       <div className="grid-container">
         <DataGridPro
-          rows={data.rows}
-          columns={data.columns}
+          {...data}
           apiRef={apiRef}
           initialState={{
+            ...data.initialState,
             preferencePanel: {
               open: true,
               openedPanelValue: GridPreferencePanelsValue.filters,
             },
             filter: {
+              ...data.initialState?.filter,
               filterModel: {
                 items: [
                   { id: 123, columnField: 'commodity', value: 'soy', operatorValue: 'startsWith' },
@@ -487,14 +497,16 @@ export function CustomFilterOperator() {
   return (
     <div className="grid-container">
       <DataGridPro
-        rows={data.rows}
+        {...data}
         columns={columns}
         initialState={{
+          ...data.initialState,
           preferencePanel: {
             open: true,
             openedPanelValue: GridPreferencePanelsValue.filters,
           },
           filter: {
+            ...data.initialState?.filter,
             filterModel: {
               items: [{ columnField: 'rating', value: '3.5', operatorValue: '>=' }],
             },
@@ -541,14 +553,16 @@ export function RatingOperator() {
   return (
     <div className="grid-container">
       <DataGridPro
-        rows={data.rows}
+        {...data}
         columns={columns}
         initialState={{
+          ...data.initialState,
           preferencePanel: {
             open: true,
             openedPanelValue: GridPreferencePanelsValue.filters,
           },
           filter: {
+            ...data.initialState?.filter,
             filterModel: {
               items: [{ columnField: 'rating', value: '3.5', operatorValue: 'from' }],
             },
@@ -584,7 +598,7 @@ export function ColumnsAlign() {
 
   return (
     <div className="grid-container">
-      <DataGridPro rows={data.rows} columns={transformedCols} />
+      <DataGridPro {...data} columns={transformedCols} />
     </div>
   );
 }
@@ -625,12 +639,14 @@ export function NewColumnTypes() {
   return (
     <div className="grid-container">
       <DataGrid
-        rows={data.rows}
+        {...data}
         columns={cols}
         columnTypes={{ price: priceColumnType }}
         initialState={{
+          ...data.initialState,
           preferencePanel: { openedPanelValue: GridPreferencePanelsValue.filters, open: true },
           filter: {
+            ...data.initialState?.filter,
             filterModel: {
               items: [{ id: 1, columnField: 'totalPrice', operatorValue: '>', value: '1000000' }],
             },
@@ -670,7 +686,14 @@ export function DemoCustomRatingFilterOperator() {
 
   return (
     <div style={{ height: 400, width: '100%' }}>
-      <DataGrid rows={data.rows} columns={columns} initialState={{ filter: { filterModel } }} />
+      <DataGrid
+        {...data}
+        columns={columns}
+        initialState={{
+          ...data.initialState,
+          filter: { ...data.initialState?.filter, filterModel },
+        }}
+      />
     </div>
   );
 }
@@ -692,8 +715,11 @@ export function DemoMultiFilteringGrid() {
   return (
     <div style={{ height: 400, width: '100%' }}>
       <DataGridPro
-        initialState={{ filter: { filterModel: demoFilterModel } }}
         {...data}
+        initialState={{
+          ...data.initialState,
+          filter: { ...data.initialState?.filter, filterModel: demoFilterModel },
+        }}
         checkboxSelection
       />
     </div>
@@ -712,7 +738,8 @@ export function MultiFilteringPanelSnap() {
       <DataGridPro
         {...data}
         initialState={{
-          filter: { filterModel: demoFilterModel },
+          ...data.initialState,
+          filter: { ...data.initialState?.filter, filterModel: demoFilterModel },
           preferencePanel: {
             open: true,
             openedPanelValue: GridPreferencePanelsValue.filters,
@@ -735,7 +762,9 @@ export function NoResultsSnap() {
       <DataGridPro
         {...data}
         initialState={{
+          ...data.initialState,
           filter: {
+            ...data.initialState?.filter,
             filterModel: {
               items: [
                 { id: 123, columnField: 'commodity', value: 'foobar', operatorValue: 'startsWith' },

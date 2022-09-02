@@ -27,8 +27,7 @@ export const DensitySelectorCompact = () => {
   return (
     <div style={{ height: 600 }}>
       <DataGridPro
-        rows={data.rows}
-        columns={data.columns}
+        {...data}
         density="compact"
         components={{
           Toolbar: GridToolbar,
@@ -44,8 +43,7 @@ export const DensitySelectorComfortable = () => {
   return (
     <div style={{ height: 600 }}>
       <DataGridPro
-        columns={data.columns}
-        rows={data.rows}
+        {...data}
         density="comfortable"
         components={{
           Toolbar: GridToolbar,

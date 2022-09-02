@@ -29,7 +29,7 @@ export const ResizeSmallDataset = () => {
         </button>
       </div>
       <div style={{ width: size.width, height: size.height }}>
-        <DataGridPro rows={data.rows} columns={data.columns} />
+        <DataGridPro {...data} />
       </div>
     </React.Fragment>
   );
@@ -50,7 +50,7 @@ export const ResizeLargeDataset = () => {
         </button>
       </div>
       <div style={{ width: size.width, height: size.height }}>
-        <DataGridPro rows={data.rows} columns={data.columns} />
+        <DataGridPro {...data} />
       </div>
     </React.Fragment>
   );

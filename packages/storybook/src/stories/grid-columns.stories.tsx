@@ -25,13 +25,13 @@ export function SmallColSizes() {
   const data = useData(100, 20);
   const transformColSizes = (columns: GridColDef[]) => columns.map((c) => ({ ...c, width: 60 }));
 
-  return <DataGridPro rows={data.rows} columns={transformColSizes(data.columns)} />;
+  return <DataGridPro {...data} columns={transformColSizes(data.columns)} />;
 }
 
 export function VerySmallColSizes() {
   const data = useData(100, 20);
   const transformColSizes = (columns: GridColDef[]) => columns.map((c) => ({ ...c, width: 50 }));
-  return <DataGridPro rows={data.rows} columns={transformColSizes(data.columns)} />;
+  return <DataGridPro {...data} columns={transformColSizes(data.columns)} />;
 }
 export function ColumnDescriptionTooltip() {
   const data = useData(100, 20);
@@ -43,14 +43,14 @@ export function ColumnDescriptionTooltip() {
       return c;
     });
 
-  return <DataGridPro rows={data.rows} columns={transformColSizes(data.columns)} />;
+  return <DataGridPro {...data} columns={transformColSizes(data.columns)} />;
 }
 
 export function HiddenColumns() {
   const data = useData(100, 20);
   const transformColSizes = (columns: GridColDef[]) =>
     columns.map((c, idx) => ({ ...c, hide: idx % 2 === 0 }));
-  return <DataGridPro rows={data.rows} columns={transformColSizes(data.columns)} />;
+  return <DataGridPro {...data} columns={transformColSizes(data.columns)} />;
 }
 
 export function UpdateColumnsBtn() {
@@ -161,7 +161,7 @@ export function HeaderComponent() {
 
   return (
     <div className="grid-container">
-      <DataGridPro rows={data.rows} columns={transformCols(data.columns)} />
+      <DataGridPro {...data} columns={transformCols(data.columns)} />
     </div>
   );
 }
@@ -187,7 +187,7 @@ export function ColumnsAlign() {
 
   return (
     <div className="grid-container">
-      <DataGridPro rows={data.rows} columns={transformCols(data.columns)} />
+      <DataGridPro {...data} columns={transformCols(data.columns)} />
     </div>
   );
 }
@@ -218,7 +218,7 @@ export function NewColumnTypes() {
   return (
     <div className="grid-container">
       <DataGridPro
-        rows={data.rows}
+        {...data}
         columns={transformCols(data.columns)}
         columnTypes={{ price: priceColumnType, unknownPrice: unknownPriceColumnType }}
       />
@@ -238,7 +238,7 @@ export const FlexColumnsWithCheckbox = () => {
 
   return (
     <div className="grid-container">
-      <DataGridPro rows={data.rows} columns={transformColSizes(data.columns)} checkboxSelection />
+      <DataGridPro {...data} columns={transformColSizes(data.columns)} checkboxSelection />
     </div>
   );
 };
@@ -255,7 +255,7 @@ export const FewFlexColumns = () => {
 
   return (
     <div className="grid-container">
-      <DataGridPro rows={data.rows} columns={transformColSizes(data.columns)} />
+      <DataGridPro {...data} columns={transformColSizes(data.columns)} />
     </div>
   );
 };
@@ -272,7 +272,7 @@ export const SeveralFlexColumn = () => {
 
   return (
     <div className="grid-container">
-      <DataGridPro rows={data.rows} columns={transformColSizes(data.columns)} />
+      <DataGridPro {...data} columns={transformColSizes(data.columns)} />
     </div>
   );
 };
@@ -289,7 +289,7 @@ export const FlexColumnWidth2000 = () => {
 
   return (
     <div className="grid-container">
-      <DataGridPro rows={data.rows} columns={transformColSizes(data.columns)} />
+      <DataGridPro {...data} columns={transformColSizes(data.columns)} />
     </div>
   );
 };
@@ -316,7 +316,7 @@ export const ValueGetterAndFormatter = () => {
 
   return (
     <div className="grid-container">
-      <DataGridPro rows={data.rows} columns={data.columns} />
+      <DataGridPro {...data} />
     </div>
   );
 };
@@ -397,7 +397,7 @@ export const SingleSelectColumnType = () => {
 
   return (
     <div className="grid-container">
-      <DataGridPro rows={data.rows} columns={data.columns} />
+      <DataGridPro {...data} />
     </div>
   );
 };
@@ -422,8 +422,7 @@ export function FlexLayoutGridSnap() {
             showCellRightBorder
             showColumnRightBorder
             disableExtendRowFullWidth
-            rows={tmpData.rows}
-            columns={tmpData.columns}
+            {...tmpData}
           />
         </div>
       </div>
@@ -442,7 +441,7 @@ export function PinnedColumnWithCheckboxSelectionSnap() {
     <div style={{ height: 400, width: '100%' }}>
       <DataGridPro
         {...data}
-        initialState={{ pinnedColumns: { left: ['desk'] } }}
+        initialState={{ ...data.initialState, pinnedColumns: { left: ['desk'] } }}
         checkboxSelection
       />
     </div>

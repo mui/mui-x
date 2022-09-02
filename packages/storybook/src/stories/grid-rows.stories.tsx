@@ -99,7 +99,7 @@ export function CommodityNewRowId() {
   return (
     <div className="grid-container">
       <DataGridPro
-        rows={data.rows}
+        {...data}
         columns={data.columns.filter((c) => c.field !== 'id')}
         getRowId={getRowId}
       />
@@ -145,7 +145,7 @@ export function SetCommodityRowsViaApi() {
         </Button>
       </div>
       <div className="grid-container">
-        <DataGridPro rows={data.rows} columns={data.columns} apiRef={apiRef} />
+        <DataGridPro {...data} apiRef={apiRef} />
       </div>
     </React.Fragment>
   );
@@ -986,7 +986,7 @@ export function SwitchVirtualization() {
         <Button onClick={() => handleButtonClick(100)}>100 items</Button>
       </div>
       <div style={{ width: '100%', height: 500 }}>
-        <DataGridPro rows={data.rows} columns={data.columns} />
+        <DataGridPro {...data} />
       </div>
     </div>
   );
@@ -1001,7 +1001,7 @@ export function DisableVirtualization() {
 
   return (
     <div style={{ width: '100%', height: '100%' }}>
-      <DataGridPro rows={data.rows} columns={data.columns} pagination disableVirtualization />
+      <DataGridPro {...data} pagination disableVirtualization />
     </div>
   );
 }

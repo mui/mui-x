@@ -20,26 +20,18 @@ export default {
 export const BigRowsAndHeader = () => {
   const data = useData(200, 200);
 
-  return (
-    <DataGridPro
-      rows={data.rows}
-      columns={data.columns}
-      headerHeight={80}
-      rowHeight={60}
-      checkboxSelection
-    />
-  );
+  return <DataGridPro {...data} headerHeight={80} rowHeight={60} checkboxSelection />;
 };
 
 export const Unset = () => {
   const data = useData(200, 200);
-  return <DataGridPro rows={data.rows} columns={data.columns} />;
+  return <DataGridPro {...data} />;
 };
 
 export const Small = () => {
   const data = useData(200, 200);
 
-  return <DataGridPro rows={data.rows} columns={data.columns} headerHeight={35} rowHeight={27} />;
+  return <DataGridPro {...data} headerHeight={35} rowHeight={27} />;
 };
 
 interface IsDoneProps {
