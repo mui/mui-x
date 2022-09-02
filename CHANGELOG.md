@@ -66,6 +66,7 @@ We'd like to offer a big thanks to the 9 contributors who made this release poss
 - [docs] Fix typo (#5945) @wettopa
 - [docs] Fix typo `onYearPicker` to `onYearChange` (#5954) @alexfauquette
 - [docs] Update `GridCellParams`'s `value` description (#5849) @cherniavskii
+- [docs] Update `README.md` to match Introduction section of the docs (#5754) @samuelsycamore
 
 ### Core
 
@@ -74,6 +75,7 @@ We'd like to offer a big thanks to the 9 contributors who made this release poss
 - [core] Remove outdated TODO (#5956) @flaviendelangle
 - [core] Upgrade monorepo (#5960) @cherniavskii
 - [core] Fix statics (#5986) @DanailH
+- [core] Remove unused dependencies (#5937) @oliviertassinari
 - [license] Remove CLI (#5757) @flaviendelangle
 - [test] Fix time zone sensitive test (#5955) @LukasTy
 - [test] Use `userEvent.mousePress` instead of `fireClickEvent` (#5920) @cherniavskii
