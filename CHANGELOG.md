@@ -49,7 +49,7 @@ We'd like to offer a big thanks to the 9 contributors who made this release poss
 
 - [DatePicker] Improve focus management (#5820) @alexfauquette
 - [DateRangePicker] Enable disabling `day` depending on `position` (#5773) @alexfauquette
-- [DateTimePicker] Extract `tabs` component from `toolbar` (#5972) @LukasTy
+- [DateTimePicker] Create a new `tabs` component slot (#5972) @LukasTy
 - [pickers] Do not forward validation props to the DOM on field components (#5971) @flaviendelangle
 - [pickers] Do not hardcode `date-fns` elements in `field` components (#5975) @flaviendelangle
 - [pickers] Do not require `date-fns` in `@mui/x-date-pickers-pro` (#5941) @flaviendelangle
