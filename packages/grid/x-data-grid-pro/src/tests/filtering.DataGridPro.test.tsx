@@ -75,7 +75,7 @@ describe('<DataGridPro /> - Filter', () => {
     expect(getColumnValues(0)).to.deep.equal(['Adidas', 'Puma']);
   });
 
-  it('should not apply items that are incomplet with AND operator', () => {
+  it('should not apply items that are incomplete with AND operator', () => {
     render(
       <TestCase
         filterModel={{
@@ -92,13 +92,14 @@ describe('<DataGridPro /> - Filter', () => {
               operatorValue: 'contains',
             },
           ],
+          linkOperator: GridLinkOperator.And,
         }}
       />,
     );
     expect(getColumnValues(0)).to.deep.equal(['Adidas', 'Puma']);
   });
 
-  it('should not apply items that are incomplet with OR operator', () => {
+  it('should not apply items that are incomplete with OR operator', () => {
     render(
       <TestCase
         filterModel={{
