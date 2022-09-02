@@ -22,9 +22,6 @@ const rows: GridRowsProp = [{ id: 1 }];
 
 const columns: GridColumns = [{ field: 'id' }, { field: 'idBis' }];
 
-/**
- * TODO v6: Remove deprecated tests
- */
 describe('<DataGridPro /> - Columns Visibility', () => {
   const { render } = createRenderer({ clock: 'fake' });
 
