@@ -52,9 +52,9 @@ export interface LocalizationProviderProps<TDate> {
  * @ignore - do not document.
  */
 export function LocalizationProvider<TDate>(inProps: LocalizationProviderProps<TDate>) {
-  const { utils: parentUtils, localeText: parentLocaleText } =
-    React.useContext(MuiPickersAdapterContext) ??
-    ({ utils: undefined, localeText: undefined } as MuiPickersAdapterContextNullableValue<TDate>);
+  const { utils: parentUtils, localeText: parentLocaleText } = React.useContext(
+    MuiPickersAdapterContext,
+  ) ?? { utils: undefined, localeText: undefined };
 
   const props = useThemeProps({
     props: {
