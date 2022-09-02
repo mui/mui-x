@@ -20,7 +20,7 @@ We'd like to offer a big thanks to the 9 contributors who made this release poss
 
   To enable this feature, add `experimentalFeatures={{ lazyLoading: true }}`.
   Lazy loading feature has a few other prerequisites.
-  See the [documentation](https://mui.com/x/react-data-grid/row-updates/#lazy-loading) to explore example in detail.
+  See the [documentation](https://mui.com/x/react-data-grid/row-updates/#lazy-loading) to explore the example in detail.
 
 - 🚀 Improve `pickers` focus management (#5820) @alexfauquette
 - 🎉 Enable disabling `day` on date range picker depending on `position` (#5773) @alexfauquette
