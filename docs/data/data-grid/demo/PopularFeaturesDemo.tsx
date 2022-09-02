@@ -277,7 +277,7 @@ function PopularFeaturesDemo() {
   );
 
   return (
-    <div style={{ height: 600, width: '100%' }}>
+    <div style={{ height: 1300, width: '100%' }}>
       <DataGridPremium
         components={{ Toolbar: CustomToolbar }}
         componentsProps={{
@@ -293,10 +293,11 @@ function PopularFeaturesDemo() {
           [`& .${gridClasses.columnHeaderTitle}`]: {
             fontWeight: 400,
           },
-          borderRadius: 2,
+          border:0,
         }}
         rows={featuresSet}
         columns={columns}
+        hideFooter
         groupingColDef={{
           headerName: 'Grouped by Plan',
           width: 200,
