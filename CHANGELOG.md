@@ -37,6 +37,7 @@ We'd like to offer a big thanks to the 9 contributors who made this release poss
 - [DataGrid] Support `getRowId` in the `replaceRows` method (#5988) @flaviendelangle
 - [DataGridPro] Add class name to row with open detail panel (#5924) @m4theushw
 - [DataGridPro] Fix crash when using `pinnedRows` + `getRowClassName` props and `rows=[]` (#5851) @cherniavskii
+- [DataGridPro] Fix filtering with inactive filter items (#5993) @alexfauquette
 - [DataGridPro] Implement Lazy loading (#5214) @DanailH
 - [DataGridPro] Support pinned columns and dynamic row height (#5782) @m4theushw
 - [DataGridPremium] Add state initializer for column groups (#5963) @alexfauquette
