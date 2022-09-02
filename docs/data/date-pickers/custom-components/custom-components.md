@@ -127,7 +127,7 @@ In the example below, the tabs are using different icons and have an additional 
 Slots: `LeftArrowIcon`, `RightArrowIcon`, `LeftArrowButton`, `RightArrowButton`.
 :::
 
-The following slots allows you to customize how to render the buttons and icons for an arrow switcher component (the component to navigate to the "Previous" and "Next" step of the picker)
+The following slots let you customize how to render the buttons and icons for an arrow switcher component—the component to navigate to the "Previous" and "Next" steps of the picker.
 
 The demo below uses the `ArrowLeft` and `ArrowRight` icons from `@mui/icons-material` and makes the button and the icon bigger.
 
