@@ -204,19 +204,18 @@ const CustomToolbar = () => {
   );
 };
 
-const RowDemo = (props:any) => {
-  const {row} = props
+const RowDemo = (props: any) => {
+  const { row } = props;
   const theme = useTheme();
-  const bgColor = (theme.palette.mode === 'dark') ? '#000': '#fff';
+  const bgColor = theme.palette.mode === 'dark' ? '#000' : '#fff';
 
-  console.log(theme.palette.background)
+  console.log(theme.palette.background);
 
-
-  return <Box sx={{ width: '90%', margin: 'auto', py: 2 }}>
-    <Box style={{background:bgColor}}>
-    {row.demo}
+  return (
+    <Box sx={{ width: '90%', margin: 'auto', py: 2 }}>
+      <Box style={{ background: bgColor }}>{row.demo}</Box>
     </Box>
-  </Box>;
+  );
 };
 
 const columns: GridColDef[] = [
@@ -290,18 +289,18 @@ function PopularFeaturesDemo() {
     [],
   );
   const theme = useTheme();
-  const panelBGColor = (theme.palette.mode === 'dark') ? 'transparent': '#efefef';
+  const panelBGColor = theme.palette.mode === 'dark' ? 'transparent' : '#efefef';
 
   return (
     <div style={{ height: 'fit-content', width: '100%' }}>
       <DataGridPremium
         autoHeight
         disableSelectionOnClick
-        components={{ 
+        components={{
           Toolbar: CustomToolbar,
           DetailPanelExpandIcon: ArrowDown,
           DetailPanelCollapseIcon: ArrowUp,
-         }}
+        }}
         componentsProps={{
           toolbar: { showQuickFilter: true, quickFilterProps: { debounceMs: 500 } },
         }}
@@ -316,9 +315,9 @@ function PopularFeaturesDemo() {
             fontWeight: 400,
           },
           [`& .${gridClasses.detailPanel}`]: {
-            background:panelBGColor
+            background: panelBGColor,
           },
-          border:0,
+          border: 0,
         }}
         rows={featuresSet}
         columns={columns}

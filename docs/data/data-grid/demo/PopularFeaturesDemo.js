@@ -27,6 +27,9 @@ import ColumnVirtualizationGrid from '../virtualization/ColumnVirtualizationGrid
 import FullFeaturedDemo from './FullFeaturedDemo';
 import LazyLoadingGrid from '../row-updates/LazyLoadingGrid';
 import BasicGroupingDemo from '../column-groups/BasicGroupingDemo';
+import ArrowUp from '@mui/icons-material/KeyboardArrowUp';
+import ArrowDown from '@mui/icons-material/KeyboardArrowDown';
+import { useTheme } from '@mui/material';
 
 export const featuresSet = [
   {
@@ -205,8 +208,18 @@ const CustomToolbar = () => {
   );
 };
 
-const renderFeatures = (row) => {
-  return <Box sx={{ width: '80%', margin: 'auto', py: 2 }}>{row.demo}</Box>;
+const RowDemo = (props) => {
+  const { row } = props;
+  const theme = useTheme();
+  const bgColor = theme.palette.mode === 'dark' ? '#000' : '#fff';
+
+  console.log(theme.palette.background);
+
+  return (
+    <Box sx={{ width: '90%', margin: 'auto', py: 2 }}>
+      <Box style={{ background: bgColor }}>{row.demo}</Box>
+    </Box>
+  );
 };
 
 const columns = [
@@ -276,14 +289,23 @@ const columns = [
 
 function PopularFeaturesDemo() {
   const getDetailPanelContent = React.useCallback(
-    ({ row }) => renderFeatures(row),
+    ({ row }) => <RowDemo row={row} />,
     [],
   );
 
+  const theme = useTheme();
+  const panelBGColor = theme.palette.mode === 'dark' ? 'transparent' : '#efefef';
+
   return (
-    <div style={{ height: 600, width: '100%' }}>
+    <div style={{ height: 'fit-content', width: '100%' }}>
       <DataGridPremium
-        components={{ Toolbar: CustomToolbar }}
+        autoHeight
+        disableSelectionOnClick
+        components={{
+          Toolbar: CustomToolbar,
+          DetailPanelExpandIcon: ArrowDown,
+          DetailPanelCollapseIcon: ArrowUp,
+        }}
         componentsProps={{
           toolbar: { showQuickFilter: true, quickFilterProps: { debounceMs: 500 } },
         }}
@@ -297,10 +319,14 @@ function PopularFeaturesDemo() {
           [`& .${gridClasses.columnHeaderTitle}`]: {
             fontWeight: 400,
           },
-          borderRadius: 2,
+          [`& .${gridClasses.detailPanel}`]: {
+            background: panelBGColor,
+          },
+          border: 0,
         }}
         rows={featuresSet}
         columns={columns}
+        hideFooter
         groupingColDef={{
           headerName: 'Grouped by Plan',
           width: 200,
