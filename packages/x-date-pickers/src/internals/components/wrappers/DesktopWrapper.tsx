@@ -22,9 +22,7 @@ export interface DesktopWrapperSlotsComponent
 
 export interface DesktopWrapperSlotsComponentsProps extends PickersPopperSlotsComponentsProps {}
 
-export interface InternalDesktopWrapperProps
-  extends DesktopWrapperProps,
-    PickerStateWrapperProps {
+export interface InternalDesktopWrapperProps extends DesktopWrapperProps, PickerStateWrapperProps {
   DateInputProps: DateInputPropsLike & { ref?: React.Ref<HTMLDivElement> };
   KeyboardDateInputComponent: React.JSXElementConstructor<
     DateInputPropsLike & { ref?: React.Ref<HTMLDivElement> }

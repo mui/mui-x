@@ -38,26 +38,25 @@ import { DateRangeShortCutWrapper } from '../DateRangeShortCutWrapper';
 
 const releaseInfo = getReleaseInfo();
 
-export interface DateRangePickerViewSlotsComponent
-  extends DateRangePickerViewMobileSlotsComponent {
+export interface DateRangePickerViewSlotsComponent extends DateRangePickerViewMobileSlotsComponent {
   ShortCutWrapper: React.ElementType;
 }
 
 export interface DateRangePickerViewSlotsComponentsProps
   extends DateRangePickerViewMobileSlotsComponentsProps {
-  shortCutWrapper?: any
+  shortCutWrapper?: any;
 }
 
 export interface ExportedDateRangePickerViewProps<TDate>
   extends ExportedDesktopDateRangeCalendarProps<TDate>,
-  DayRangeValidationProps<TDate>,
-  Omit<
-  ExportedCalendarPickerProps<TDate>,
-  | 'onYearChange'
-  | 'renderDay'
-  | keyof BaseDateValidationProps<TDate>
-  | keyof DayValidationProps<TDate>
-  > {
+    DayRangeValidationProps<TDate>,
+    Omit<
+      ExportedCalendarPickerProps<TDate>,
+      | 'onYearChange'
+      | 'renderDay'
+      | keyof BaseDateValidationProps<TDate>
+      | keyof DayValidationProps<TDate>
+    > {
   /**
    * Overrideable components.
    * @default {}
@@ -94,9 +93,9 @@ export interface ExportedDateRangePickerViewProps<TDate>
 
 interface DateRangePickerViewProps<TInputDate, TDate>
   extends CurrentlySelectingRangeEndProps,
-  ExportedDateRangePickerViewProps<TDate>,
-  PickerStatePickerProps<DateRange<TDate>>,
-  Required<BaseDateValidationProps<TDate>> {
+    ExportedDateRangePickerViewProps<TDate>,
+    PickerStatePickerProps<DateRange<TDate>>,
+    Required<BaseDateValidationProps<TDate>> {
   calendars: 1 | 2 | 3;
   open: boolean;
   startText: React.ReactNode;
@@ -109,10 +108,10 @@ type DateRangePickerViewComponent = (<TInputDate, TDate = TInputDate>(
   props: DateRangePickerViewProps<TInputDate, TDate>,
 ) => JSX.Element) & { propTypes?: any };
 
-
 const DateRangePickerViewContent = styled('div')({
-  display: 'flex', flexDirection: 'column'
-})
+  display: 'flex',
+  flexDirection: 'column',
+});
 
 /**
  * @ignore - internal component.
@@ -205,7 +204,7 @@ function DateRangePickerViewRaw<TInputDate, TDate>(
         currentlySelectingRangeEnd === 'start'
           ? currentlySelectedDate
           : // If need to focus end, scroll to the state when "end" is displaying in the last calendar
-          utils.addMonths(currentlySelectedDate, -displayingMonthRange);
+            utils.addMonths(currentlySelectedDate, -displayingMonthRange);
 
       changeMonth(newMonth);
     }
@@ -281,10 +280,15 @@ function DateRangePickerViewRaw<TInputDate, TDate>(
     }
   };
 
-  const ShortCutWrapper = components?.ShortCutWrapper ?? DateRangeShortCutWrapper
+  const ShortCutWrapper = components?.ShortCutWrapper ?? DateRangeShortCutWrapper;
   return (
     <div className={className}>
-      <ShortCutWrapper isDateDisabled={isDateDisabled} onSetValue={onSetValue} position={wrapperVariant === 'desktop' ? 'start' : 'bottom'}  {...componentsProps?.shortCutWrapper}>
+      <ShortCutWrapper
+        isDateDisabled={isDateDisabled}
+        onSetValue={onSetValue}
+        position={wrapperVariant === 'desktop' ? 'start' : 'bottom'}
+        {...componentsProps?.shortCutWrapper}
+      >
         <DateRangePickerViewContent>
           <Watermark packageName="x-date-pickers-pro" releaseInfo={releaseInfo} />
           {toShowToolbar && (

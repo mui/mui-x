@@ -140,6 +140,7 @@ PickerStaticWrapper.propTypes = {
   onClear: PropTypes.func.isRequired,
   onDismiss: PropTypes.func.isRequired,
   onSetToday: PropTypes.func.isRequired,
+  onSetValue: PropTypes.func.isRequired,
   open: PropTypes.bool.isRequired,
 } as any;
 

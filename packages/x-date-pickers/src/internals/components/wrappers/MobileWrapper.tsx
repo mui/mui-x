@@ -16,9 +16,9 @@ export interface MobileWrapperProps extends ExportedPickerModalProps {
 
 export interface MobileWrapperSlotsComponent
   extends PickersModalDialogSlotsComponent,
-  DateInputSlotsComponent { }
+    DateInputSlotsComponent {}
 
-export interface MobileWrapperSlotsComponentsProps extends PickersModalDialogSlotsComponentsProps { }
+export interface MobileWrapperSlotsComponentsProps extends PickersModalDialogSlotsComponentsProps {}
 
 export interface InternalMobileWrapperProps extends MobileWrapperProps, PickerStateWrapperProps {
   DateInputProps: DateInputPropsLike & { ref?: React.Ref<HTMLDivElement> };

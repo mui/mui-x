@@ -10,7 +10,7 @@ import { PickersActionBar, PickersActionBarProps } from '../../PickersActionBar'
 import { PickersSlotsComponent } from './wrappers/WrapperProps';
 import { PickerStateWrapperProps } from '../hooks/usePickerState';
 
-export interface PickersPopperSlotsComponent extends PickersSlotsComponent { }
+export interface PickersPopperSlotsComponent extends PickersSlotsComponent {}
 
 export interface PickersPopperSlotsComponentsProps {
   actionBar: Omit<PickersActionBarProps, 'onAccept' | 'onClear' | 'onCancel' | 'onSetToday'>;
@@ -37,8 +37,8 @@ export interface ExportedPickerPopperProps {
 
 export interface PickerPopperProps
   extends ExportedPickerPopperProps,
-  ExportedPickerPaperProps,
-  Omit<PickerStateWrapperProps, 'onDismiss'> {
+    ExportedPickerPaperProps,
+    Omit<PickerStateWrapperProps, 'onDismiss'> {
   role: 'tooltip' | 'dialog';
   TrapFocusProps?: Partial<MuiTrapFocusProps>;
   anchorEl: MuiPopperProps['anchorEl'];

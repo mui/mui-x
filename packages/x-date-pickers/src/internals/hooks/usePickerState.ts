@@ -163,7 +163,7 @@ export interface PickerStatePickerProps<TValue> {
   ) => void;
 }
 
-export interface PickerStateWrapperProps<TValue=any> {
+export interface PickerStateWrapperProps<TValue = any> {
   onAccept: () => void;
   onClear: () => void;
   onDismiss: () => void;
