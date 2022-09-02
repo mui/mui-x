@@ -68,13 +68,13 @@ function findSkeletonRowsSection({
 function isLazyLoadingDisabled({
   lazyLoadingFeatureFlag,
   rowsLoadingMode,
-  gridDimentions,
+  gridDimensions,
 }: {
   lazyLoadingFeatureFlag: boolean;
   rowsLoadingMode: GridFeatureMode;
-  gridDimentions: GridDimensions | null;
+  gridDimensions: GridDimensions | null;
 }) {
-  if (!lazyLoadingFeatureFlag || !gridDimentions) {
+  if (!lazyLoadingFeatureFlag || !gridDimensions) {
     return true;
   }
 
@@ -138,7 +138,7 @@ export const useGridLazyLoader = (
         isLazyLoadingDisabled({
           lazyLoadingFeatureFlag: lazyLoading,
           rowsLoadingMode: props.rowsLoadingMode,
-          gridDimentions: dimensions,
+          gridDimensions: dimensions,
         })
       ) {
         return;
@@ -190,7 +190,7 @@ export const useGridLazyLoader = (
         isLazyLoadingDisabled({
           lazyLoadingFeatureFlag: lazyLoading,
           rowsLoadingMode: props.rowsLoadingMode,
-          gridDimentions: dimensions,
+          gridDimensions: dimensions,
         })
       ) {
         return;
@@ -219,7 +219,7 @@ export const useGridLazyLoader = (
         isLazyLoadingDisabled({
           lazyLoadingFeatureFlag: lazyLoading,
           rowsLoadingMode: props.rowsLoadingMode,
-          gridDimentions: dimensions,
+          gridDimensions: dimensions,
         })
       ) {
         return;

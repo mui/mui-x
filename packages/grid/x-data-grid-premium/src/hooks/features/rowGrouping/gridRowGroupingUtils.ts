@@ -14,6 +14,7 @@ import {
   passFilterLogic,
   GridAggregatedFilterItemApplier,
   GridColumnRawLookup,
+  GridApiCommunity,
 } from '@mui/x-data-grid-pro/internals';
 import { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
 import { GridGroupingValueGetterParams } from '../../../models/gridGroupingValueGetterParams';
@@ -56,6 +57,7 @@ interface FilterRowTreeFromTreeDataParams {
   rowTree: GridRowTreeConfig;
   isRowMatchingFilters: GridAggregatedFilterItemApplier | null;
   filterModel: GridFilterModel;
+  apiRef: React.MutableRefObject<GridApiCommunity>;
 }
 
 /**
@@ -131,6 +133,7 @@ export const filterRowTreeFromGroupingColumns = (
           allResults.map((result) => result.passingFilterItems),
           allResults.map((result) => result.passingQuickFilterValues),
           filterModel,
+          params.apiRef,
         );
       }
     }

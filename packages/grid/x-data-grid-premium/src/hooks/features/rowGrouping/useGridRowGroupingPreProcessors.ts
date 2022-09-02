@@ -203,6 +203,7 @@ export const useGridRowGroupingPreProcessors = (
         rowTree,
         isRowMatchingFilters: params.isRowMatchingFilters,
         filterModel: params.filterModel,
+        apiRef,
       });
     },
     [apiRef],

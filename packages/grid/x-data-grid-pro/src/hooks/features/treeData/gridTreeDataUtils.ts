@@ -5,13 +5,18 @@ import {
   GridFilterState,
   GridFilterModel,
 } from '@mui/x-data-grid';
-import { GridAggregatedFilterItemApplier, passFilterLogic } from '@mui/x-data-grid/internals';
+import {
+  GridAggregatedFilterItemApplier,
+  GridApiCommunity,
+  passFilterLogic,
+} from '@mui/x-data-grid/internals';
 
 interface FilterRowTreeFromTreeDataParams {
   rowTree: GridRowTreeConfig;
   disableChildrenFiltering: boolean;
   isRowMatchingFilters: GridAggregatedFilterItemApplier | null;
   filterModel: GridFilterModel;
+  apiRef: React.MutableRefObject<GridApiCommunity>;
 }
 
 export const TREE_DATA_STRATEGY = 'tree-data';
@@ -47,6 +52,7 @@ export const filterRowTreeFromTreeData = (
         [passingFilterItems],
         [passingQuickFilterValues],
         params.filterModel,
+        params.apiRef,
       );
     }
 
