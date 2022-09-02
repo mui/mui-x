@@ -1,6 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { Watermark } from '@mui/x-license-pro';
+import { styled } from '@mui/material/styles';
 import {
   useUtils,
   WrapperVariantContext,
@@ -107,6 +108,11 @@ interface DateRangePickerViewProps<TInputDate, TDate>
 type DateRangePickerViewComponent = (<TInputDate, TDate = TInputDate>(
   props: DateRangePickerViewProps<TInputDate, TDate>,
 ) => JSX.Element) & { propTypes?: any };
+
+
+const DateRangePickerViewContent = styled('div')({
+  display: 'flex', flexDirection: 'column'
+})
 
 /**
  * @ignore - internal component.
@@ -279,28 +285,30 @@ function DateRangePickerViewRaw<TInputDate, TDate>(
   return (
     <div className={className}>
       <ShortCutWrapper isDateDisabled={isDateDisabled} onSetValue={onSetValue} position={wrapperVariant === 'desktop' ? 'start' : 'bottom'}  {...componentsProps?.shortCutWrapper}>
-        <Watermark packageName="x-date-pickers-pro" releaseInfo={releaseInfo} />
-        {toShowToolbar && (
-          <DateRangePickerToolbar
-            parsedValue={parsedValue}
-            isMobileKeyboardViewOpen={isMobileKeyboardViewOpen}
-            toggleMobileKeyboardView={toggleMobileKeyboardView}
-            currentlySelectingRangeEnd={currentlySelectingRangeEnd}
-            setCurrentlySelectingRangeEnd={setCurrentlySelectingRangeEnd}
-            startText={startText}
-            endText={endText}
-            toolbarTitle={toolbarTitle}
-            toolbarFormat={toolbarFormat}
-          />
-        )}
+        <DateRangePickerViewContent>
+          <Watermark packageName="x-date-pickers-pro" releaseInfo={releaseInfo} />
+          {toShowToolbar && (
+            <DateRangePickerToolbar
+              parsedValue={parsedValue}
+              isMobileKeyboardViewOpen={isMobileKeyboardViewOpen}
+              toggleMobileKeyboardView={toggleMobileKeyboardView}
+              currentlySelectingRangeEnd={currentlySelectingRangeEnd}
+              setCurrentlySelectingRangeEnd={setCurrentlySelectingRangeEnd}
+              startText={startText}
+              endText={endText}
+              toolbarTitle={toolbarTitle}
+              toolbarFormat={toolbarFormat}
+            />
+          )}
 
-        {isMobileKeyboardViewOpen ? (
-          <MobileKeyboardInputView>
-            <DateRangePickerInput disableOpenPicker ignoreInvalidInputs {...DateInputProps} />
-          </MobileKeyboardInputView>
-        ) : (
-          renderView()
-        )}
+          {isMobileKeyboardViewOpen ? (
+            <MobileKeyboardInputView>
+              <DateRangePickerInput disableOpenPicker ignoreInvalidInputs {...DateInputProps} />
+            </MobileKeyboardInputView>
+          ) : (
+            renderView()
+          )}
+        </DateRangePickerViewContent>
       </ShortCutWrapper>
     </div>
   );
