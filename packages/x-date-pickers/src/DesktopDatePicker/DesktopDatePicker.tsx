@@ -21,7 +21,7 @@ import {
   CalendarPickerSlotsComponentsProps,
 } from '../CalendarPicker';
 import { LocalizationProvider } from '../LocalizationProvider';
-import { PickersInputLocaleText } from '@mui/x-date-pickers/locales';
+import { PickersInputLocaleText } from '../locales/utils/pickersLocaleTextApi';
 
 export interface DesktopDatePickerSlotsComponent
   extends DesktopWrapperSlotsComponent,
