@@ -188,8 +188,9 @@ export const wrapColumnWithAggregationValue = ({
     field: string,
   ): GridAggregationLookup[GridRowId][string] | null => {
     let cellAggregationPosition: GridAggregationPosition | null = null;
+    const rowNode = apiRef.current.getRowNode(id)!;
 
-    if (id.toString().startsWith('auto-generated-row-')) {
+    if (rowNode.children?.length) {
       cellAggregationPosition = 'inline';
     } else if (id.toString().startsWith('auto-generated-group-footer-')) {
       cellAggregationPosition = 'footer';
@@ -200,8 +201,7 @@ export const wrapColumnWithAggregationValue = ({
     }
 
     // TODO: Add custom root id
-    const groupId =
-      cellAggregationPosition === 'inline' ? id : apiRef.current.getRowNode(id)!.parent ?? '';
+    const groupId = cellAggregationPosition === 'inline' ? id : rowNode.parent ?? '';
 
     const aggregationResult = gridAggregationLookupSelector(apiRef)[groupId]?.[field];
     if (!aggregationResult || aggregationResult.position !== cellAggregationPosition) {

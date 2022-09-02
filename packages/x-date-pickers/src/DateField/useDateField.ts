@@ -7,8 +7,14 @@ import {
   addPositionPropertiesToSections,
   createDateStrFromSections,
 } from '../internals/hooks/useField';
-import { DateValidationError, validateDate } from '../internals/hooks/validation/useDateValidation';
-import { UseDateFieldProps } from './DateField.interfaces';
+import { UseDateFieldProps, UseDateFieldDefaultizedProps } from './DateField.interfaces';
+import {
+  DateValidationError,
+  isSameDateError,
+  validateDate,
+} from '../internals/hooks/validation/useDateValidation';
+import { parseNonNullablePickerDate } from '../internals/utils/date-utils';
+import { useUtils, useDefaultDates } from '../internals/hooks/useUtils';
 
 const dateRangeFieldValueManager: FieldValueManager<any, any, FieldSection, DateValidationError> = {
   getSectionsFromValue: (utils, prevSections, date, format) =>
@@ -28,6 +34,22 @@ const dateRangeFieldValueManager: FieldValueManager<any, any, FieldSection, Date
     update: (newActiveDate) => newActiveDate,
   }),
   hasError: (error) => error != null,
+  isSameError: isSameDateError,
+};
+
+const useDefaultizedDateField = <TInputDate, TDate, AdditionalProps extends {}>(
+  props: UseDateFieldProps<TInputDate, TDate>,
+): AdditionalProps & UseDateFieldDefaultizedProps<TInputDate, TDate> => {
+  const utils = useUtils<TDate>();
+  const defaultDates = useDefaultDates<TDate>();
+
+  return {
+    disablePast: false,
+    disableFuture: false,
+    ...props,
+    minDate: parseNonNullablePickerDate(utils, props.minDate, defaultDates.minDate),
+    maxDate: parseNonNullablePickerDate(utils, props.maxDate, defaultDates.maxDate),
+  } as any;
 };
 
 export const useDateField = <
@@ -37,11 +59,39 @@ export const useDateField = <
 >(
   inProps: TProps,
 ) => {
+  const {
+    value,
+    defaultValue,
+    format,
+    onChange,
+    readOnly,
+    onError,
+    shouldDisableDate,
+    minDate,
+    maxDate,
+    disableFuture,
+    disablePast,
+    ...other
+  } = useDefaultizedDateField<TInputDate, TDate, TProps>(inProps);
+
   return useField({
-    props: inProps,
+    forwardedProps: other,
+    internalProps: {
+      value,
+      defaultValue,
+      format,
+      onChange,
+      readOnly,
+      onError,
+      shouldDisableDate,
+      minDate,
+      maxDate,
+      disableFuture,
+      disablePast,
+    },
     valueManager: datePickerValueManager,
     fieldValueManager: dateRangeFieldValueManager,
     // TODO: Support time validation.
-    validator: validateDate as any,
+    validator: validateDate,
   });
 };

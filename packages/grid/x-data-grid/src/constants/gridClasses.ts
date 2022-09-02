@@ -70,6 +70,10 @@ export interface GridClasses {
    */
   cellCheckbox: string;
   /**
+   * Styles applied to the skeleton cell element.
+   */
+  cellSkeleton: string;
+  /**
    * Styles applied to the selection checkbox element.
    */
   checkboxInput: string;
@@ -394,6 +398,10 @@ export interface GridClasses {
    */
   'row--dynamicHeight': string;
   /**
+   * Styles applied to the row if its detail panel is open.
+   */
+  'row--detailPanelExpanded': string;
+  /**
    * Styles applied to the row element.
    */
   row: string;
@@ -503,6 +511,7 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'cell',
   'cellContent',
   'cellCheckbox',
+  'cellSkeleton',
   'checkboxInput',
   'columnHeader--alignCenter',
   'columnHeader--alignLeft',
@@ -574,6 +583,7 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'row--lastVisible',
   'row--dragging',
   'row--dynamicHeight',
+  'row--detailPanelExpanded',
   'rowReorderCellPlaceholder',
   'rowCount',
   'rowReorderCellContainer',

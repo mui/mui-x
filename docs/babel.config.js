@@ -1,14 +1,4 @@
-const bpmr = require('babel-plugin-module-resolver');
 const fse = require('fs-extra');
-
-function resolvePath(sourcePath, currentFile, opts) {
-  if (sourcePath === 'markdown') {
-    const base = currentFile.substring(__dirname.length).slice(0, -3);
-    return `${__dirname}/docs/src/${base}/`;
-  }
-
-  return bpmr.resolvePath(sourcePath, currentFile, opts);
-}
 
 const alias = {
   '@mui/x-data-grid': '../packages/grid/x-data-grid/src',
@@ -51,7 +41,6 @@ module.exports = {
       {
         alias,
         transformFunctions: ['require', 'require.context'],
-        resolvePath,
       },
     ],
   ],

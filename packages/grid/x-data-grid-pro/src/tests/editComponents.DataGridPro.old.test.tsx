@@ -7,17 +7,25 @@ import {
   GridEditSingleSelectCell,
   GridColDef,
 } from '@mui/x-data-grid-pro';
-// @ts-ignore Remove once the test utils are typed
-import { createRenderer, fireEvent, screen, waitFor, act } from '@mui/monorepo/test/utils';
+import {
+  createRenderer,
+  fireEvent,
+  screen,
+  waitFor,
+  act,
+  userEvent,
+  // @ts-ignore Remove once the test utils are typed
+} from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
 import { getCell } from 'test/utils/helperFn';
 import { spy } from 'sinon';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
-function fireClickEvent(cell: HTMLElement) {
+function fireDoubleClickEvent(cell: HTMLElement) {
   fireEvent.mouseUp(cell);
-  fireEvent.click(cell);
+  fireEvent.mouseDown(cell);
+  fireEvent.doubleClick(cell);
 }
 
 /**
@@ -116,8 +124,7 @@ describe('<DataGridPro /> - Edit Components', () => {
       );
 
       const cell = getCell(0, 0);
-      fireEvent.mouseUp(cell);
-      fireEvent.doubleClick(cell);
+      fireDoubleClickEvent(cell);
       fireEvent.click(screen.queryAllByRole('option')[1]);
 
       await act(() => Promise.resolve());
@@ -166,8 +173,7 @@ describe('<DataGridPro /> - Edit Components', () => {
       );
 
       const cell = getCell(0, 0);
-      fireEvent.mouseUp(cell);
-      fireEvent.doubleClick(cell);
+      fireDoubleClickEvent(cell);
       fireEvent.click(screen.queryAllByRole('option')[1]);
 
       await act(() => Promise.resolve());
@@ -201,8 +207,7 @@ describe('<DataGridPro /> - Edit Components', () => {
       );
 
       const cell = getCell(0, 0);
-      fireEvent.mouseUp(cell);
-      fireEvent.doubleClick(cell);
+      fireDoubleClickEvent(cell);
       fireEvent.click(screen.queryAllByRole('option')[1]);
 
       await act(() => Promise.resolve());
@@ -251,8 +256,7 @@ describe('<DataGridPro /> - Edit Components', () => {
       );
 
       const cell = getCell(0, 0);
-      fireEvent.mouseUp(cell);
-      fireEvent.doubleClick(cell);
+      fireDoubleClickEvent(cell);
       fireEvent.click(screen.queryAllByRole('option')[1]);
 
       await act(() => Promise.resolve());
@@ -288,8 +292,7 @@ describe('<DataGridPro /> - Edit Components', () => {
       );
 
       const cell = getCell(0, 0);
-      fireEvent.mouseUp(cell);
-      fireEvent.doubleClick(cell);
+      fireDoubleClickEvent(cell);
       const firstOption = screen.queryAllByRole('option')[0];
       const secondOption = screen.queryAllByRole('option')[1];
 
@@ -320,8 +323,7 @@ describe('<DataGridPro /> - Edit Components', () => {
         />,
       );
       const cell = getCell(0, 0);
-      fireEvent.mouseUp(cell);
-      fireEvent.doubleClick(cell);
+      fireDoubleClickEvent(cell);
       expect(screen.getByRole('button', { name: 'Nike' })).toHaveFocus();
     });
 
@@ -343,7 +345,7 @@ describe('<DataGridPro /> - Edit Components', () => {
         />,
       );
       const cell = getCell(0, 0);
-      fireClickEvent(cell);
+      userEvent.mousePress(cell);
 
       fireEvent.keyDown(cell, { key: 'Enter' });
       fireEvent.keyDown(screen.queryByRole('option', { name: 'Nike' }), { key: 'ArrowDown' });
@@ -374,11 +376,10 @@ describe('<DataGridPro /> - Edit Components', () => {
         </div>,
       );
       const cell = getCell(0, 0);
-      fireEvent.mouseUp(cell);
-      fireEvent.doubleClick(cell);
+      fireDoubleClickEvent(cell);
       expect(cell).to.have.class('MuiDataGrid-cell--editing');
       const option = screen.queryAllByRole('option')[1];
-      fireClickEvent(option);
+      userEvent.mousePress(option);
       await waitFor(() => {
         expect(cell.firstChild).to.have.class('Mui-error');
       });
@@ -405,7 +406,7 @@ describe('<DataGridPro /> - Edit Components', () => {
       fireEvent.doubleClick(cell);
       expect(cell).to.have.class('MuiDataGrid-cell--editing');
       const option = screen.queryAllByRole('option')[1];
-      fireClickEvent(option);
+      userEvent.mousePress(option);
 
       await waitFor(() => {
         expect(cell.firstChild).to.have.class('Mui-error');
@@ -436,8 +437,7 @@ describe('<DataGridPro /> - Edit Components', () => {
       const cell = getCell(0, 0);
       fireEvent.doubleClick(cell);
       const option = screen.queryByRole('option', { name: 'Adidas' });
-      fireEvent.mouseUp(option);
-      fireEvent.click(option);
+      userEvent.mousePress(option);
 
       clock.tick(500);
 
@@ -470,8 +470,7 @@ describe('<DataGridPro /> - Edit Components', () => {
       render(<Test />);
       expect(screen.queryAllByRole('row')).to.have.length(4);
       const cell = getCell(0, 0);
-      fireEvent.mouseUp(cell);
-      fireEvent.doubleClick(cell);
+      fireDoubleClickEvent(cell);
       const input = cell.querySelector('input')!;
       expect(input.value).to.equal('1941');
       fireEvent.change(input, { target: { value: '1942' } });
@@ -500,8 +499,7 @@ describe('<DataGridPro /> - Edit Components', () => {
       };
       render(<Test />);
       const cell = getCell(0, 0);
-      fireEvent.mouseUp(cell);
-      fireEvent.doubleClick(cell);
+      fireDoubleClickEvent(cell);
       const input = cell.querySelector('input')!;
       fireEvent.change(input, { target: { value: '0' } });
       expect(input.value).to.equal('0');
@@ -519,8 +517,7 @@ describe('<DataGridPro /> - Edit Components', () => {
         />,
       );
       const cell = getCell(0, 0);
-      fireEvent.mouseUp(cell);
-      fireEvent.doubleClick(cell);
+      fireDoubleClickEvent(cell);
       const input = cell.querySelector('input')!;
       fireEvent.change(input, { target: { value: '2022-05-07' } });
       expect(onEditCellPropsChange.args[0][0].props.value.toISOString()).to.equal(
@@ -538,8 +535,7 @@ describe('<DataGridPro /> - Edit Components', () => {
         />,
       );
       const cell = getCell(0, 0);
-      fireEvent.mouseUp(cell);
-      fireEvent.doubleClick(cell);
+      fireDoubleClickEvent(cell);
       const input = cell.querySelector('input')!;
       fireEvent.change(input, { target: { value: '' } });
       expect(onEditCellPropsChange.args[0][0].props.value).to.equal(null);
@@ -553,8 +549,7 @@ describe('<DataGridPro /> - Edit Components', () => {
         />,
       );
       const cell = getCell(0, 0);
-      fireEvent.mouseUp(cell);
-      fireEvent.doubleClick(cell);
+      fireDoubleClickEvent(cell);
       expect(screen.getByRole('cell').querySelector('input')).toHaveFocus();
     });
 
@@ -568,8 +563,7 @@ describe('<DataGridPro /> - Edit Components', () => {
         />,
       );
       const cell = getCell(0, 0);
-      fireEvent.mouseUp(cell);
-      fireEvent.doubleClick(cell);
+      fireDoubleClickEvent(cell);
       const newValue = new Date(2021, 6, 4);
       act(() => apiRef.current.setEditCellValue({ id: 0, field: 'date', value: newValue }));
       const input = cell.querySelector('input')!;
@@ -589,8 +583,7 @@ describe('<DataGridPro /> - Edit Components', () => {
       );
 
       const cell = getCell(0, 0);
-      fireEvent.mouseUp(cell);
-      fireEvent.doubleClick(cell);
+      fireDoubleClickEvent(cell);
       const input = cell.querySelector('input')!;
       fireEvent.change(input, { target: { value: '' } });
       expect(onEditCellPropsChange.lastCall.args[0].props.value).to.equal(null);
@@ -659,8 +652,7 @@ describe('<DataGridPro /> - Edit Components', () => {
         />,
       );
       const cell = getCell(0, 0);
-      fireEvent.mouseUp(cell);
-      fireEvent.doubleClick(cell);
+      fireDoubleClickEvent(cell);
       const input = cell.querySelector('input')!;
       fireEvent.change(input, { target: { value: '2022-05-07T15:30:00' } });
       expect(onEditCellPropsChange.args[0][0].props.value.toISOString()).to.equal(
@@ -678,8 +670,7 @@ describe('<DataGridPro /> - Edit Components', () => {
         />,
       );
       const cell = getCell(0, 0);
-      fireEvent.mouseUp(cell);
-      fireEvent.doubleClick(cell);
+      fireDoubleClickEvent(cell);
       const input = cell.querySelector('input')!;
       fireEvent.change(input, { target: { value: '' } });
       expect(onEditCellPropsChange.args[0][0].props.value).to.equal(null);
@@ -693,8 +684,7 @@ describe('<DataGridPro /> - Edit Components', () => {
         />,
       );
       const cell = getCell(0, 0);
-      fireEvent.mouseUp(cell);
-      fireEvent.doubleClick(cell);
+      fireDoubleClickEvent(cell);
       expect(screen.getByRole('cell').querySelector('input')).toHaveFocus();
     });
 
@@ -708,8 +698,7 @@ describe('<DataGridPro /> - Edit Components', () => {
         />,
       );
       const cell = getCell(0, 0);
-      fireEvent.mouseUp(cell);
-      fireEvent.doubleClick(cell);
+      fireDoubleClickEvent(cell);
       const newValue = new Date(2021, 6, 4, 17, 30);
       act(() => apiRef.current.setEditCellValue({ id: 0, field: 'date', value: newValue }));
       const input = cell.querySelector('input')!;
@@ -729,8 +718,7 @@ describe('<DataGridPro /> - Edit Components', () => {
       );
 
       const cell = getCell(0, 0);
-      fireEvent.mouseUp(cell);
-      fireEvent.doubleClick(cell);
+      fireDoubleClickEvent(cell);
       const input = cell.querySelector('input')!;
       fireEvent.change(input, { target: { value: '' } });
       expect(onEditCellPropsChange.lastCall.args[0].props.value).to.equal(null);
@@ -790,8 +778,7 @@ describe('<DataGridPro /> - Edit Components', () => {
       };
       render(<Test />);
       const cell = getCell(0, 0);
-      fireEvent.mouseUp(cell);
-      fireEvent.doubleClick(cell);
+      fireDoubleClickEvent(cell);
       const input = cell.querySelector('input')!;
       expect(input.value).to.equal('Nike');
       fireEvent.change(input, { target: { value: 'n' } });
@@ -815,8 +802,7 @@ describe('<DataGridPro /> - Edit Components', () => {
         />,
       );
       const cell = getCell(0, 0);
-      fireEvent.mouseUp(cell);
-      fireEvent.doubleClick(cell);
+      fireDoubleClickEvent(cell);
       const input = cell.querySelector('input')!;
       fireEvent.click(input);
 
@@ -835,8 +821,7 @@ describe('<DataGridPro /> - Edit Components', () => {
         />,
       );
       const cell = getCell(0, 0);
-      fireEvent.mouseUp(cell);
-      fireEvent.doubleClick(cell);
+      fireDoubleClickEvent(cell);
       expect(screen.getByRole('checkbox')).toHaveFocus();
     });
 

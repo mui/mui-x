@@ -1,16 +1,26 @@
 import {
+  useUtils,
+  useDefaultDates,
+  parseNonNullablePickerDate,
+} from '@mui/x-date-pickers/internals';
+import {
   useField,
   FieldValueManager,
   splitFormatIntoSections,
   addPositionPropertiesToSections,
   createDateStrFromSections,
-} from '@mui/x-date-pickers/internals';
-import { DateRangeFieldSection, UseDateRangeFieldProps } from './DateRangeField.interfaces';
+} from '@mui/x-date-pickers/internals-fields';
+import {
+  DateRangeFieldSection,
+  UseSingleInputDateRangeFieldDefaultizedProps,
+  UseSingleInputDateRangeFieldProps,
+} from './SingleInputDateRangeField.interfaces';
 import { dateRangePickerValueManager } from '../DateRangePicker/shared';
 import { DateRange } from '../internal/models';
-import { splitDateRangeSections } from './DateRangeField.utils';
+import { splitDateRangeSections } from './SingleInputDateRangeField.utils';
 import {
   DateRangeValidationError,
+  isSameDateRangeError,
   validateDateRange,
 } from '../internal/hooks/validation/useDateRangeValidation';
 
@@ -123,17 +133,61 @@ export const dateRangeFieldValueManager: FieldValueManager<
     };
   },
   hasError: (error) => error[0] != null || error[1] != null,
+  isSameError: isSameDateRangeError,
 };
 
-export const useDateRangeField = <
+export const useDefaultizedDateRangeFieldProps = <TInputDate, TDate, AdditionalProps extends {}>(
+  props: UseSingleInputDateRangeFieldProps<TInputDate, TDate>,
+): UseSingleInputDateRangeFieldDefaultizedProps<TInputDate, TDate> & AdditionalProps => {
+  const utils = useUtils<TDate>();
+  const defaultDates = useDefaultDates<TDate>();
+
+  return {
+    disablePast: false,
+    disableFuture: false,
+    ...props,
+    minDate: parseNonNullablePickerDate(utils, props.minDate, defaultDates.minDate),
+    maxDate: parseNonNullablePickerDate(utils, props.maxDate, defaultDates.maxDate),
+  } as any;
+};
+
+export const useSingleInputDateRangeField = <
   TInputDate,
   TDate,
-  TProps extends UseDateRangeFieldProps<TInputDate, TDate>,
+  TProps extends UseSingleInputDateRangeFieldProps<TInputDate, TDate>,
 >(
   inProps: TProps,
 ) => {
+  const {
+    value,
+    defaultValue,
+    format,
+    onChange,
+    readOnly,
+    onError,
+    shouldDisableDate,
+    minDate,
+    maxDate,
+    disableFuture,
+    disablePast,
+    ...other
+  } = useDefaultizedDateRangeFieldProps<TInputDate, TDate, TProps>(inProps);
+
   return useField({
-    props: inProps,
+    forwardedProps: other,
+    internalProps: {
+      value,
+      defaultValue,
+      format,
+      onChange,
+      readOnly,
+      onError,
+      shouldDisableDate,
+      minDate,
+      maxDate,
+      disableFuture,
+      disablePast,
+    },
     valueManager: dateRangePickerValueManager,
     fieldValueManager: dateRangeFieldValueManager,
     validator: validateDateRange as any,

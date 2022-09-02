@@ -1,7 +1,7 @@
 <Typography>
-  Value outside the field: {value == null ? 'null' : format(value, 'P')}
+  Value outside the field: {value == null ? 'null' : value.format('L')}
 </Typography>
-<LocalizationProvider dateAdapter={AdapterDateFns}>
+<LocalizationProvider dateAdapter={AdapterDayjs}>
   <DateField
     value={value}
     onChange={(newValue) => debounceSetValue(newValue)}
@@ -9,7 +9,7 @@
 </LocalizationProvider>
 <Button
   onClick={() => setValue(today)}
-  disabled={!!value && isEqual(value, today)}
+  disabled={!!value && value.isSame(today)}
 >
   Set to today
 </Button>

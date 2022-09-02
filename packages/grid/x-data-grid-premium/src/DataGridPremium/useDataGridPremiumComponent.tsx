@@ -59,6 +59,8 @@ import {
   useGridRowPinning,
   useGridRowPinningPreProcessors,
   rowPinningStateInitializer,
+  useGridColumnGrouping,
+  columnGroupsStateInitializer,
 } from '@mui/x-data-grid-pro/internals';
 import { GridApiPremium } from '../models/gridApiPremium';
 import { DataGridPremiumProcessedProps } from '../models/dataGridPremiumProps';
@@ -125,6 +127,7 @@ export const useDataGridPremiumComponent = (
   useGridInitializeState(paginationStateInitializer, apiRef, props);
   useGridInitializeState(rowsMetaStateInitializer, apiRef, props);
   useGridInitializeState(columnMenuStateInitializer, apiRef, props);
+  useGridInitializeState(columnGroupsStateInitializer, apiRef, props);
 
   useGridRowGrouping(apiRef, props);
   useGridTreeData(apiRef);
@@ -138,6 +141,7 @@ export const useDataGridPremiumComponent = (
   useGridParamsApi(apiRef);
   useGridDetailPanel(apiRef, props);
   useGridColumnSpanning(apiRef);
+  useGridColumnGrouping(apiRef, props);
 
   const useGridEditing = props.experimentalFeatures?.newEditingApi
     ? useGridEditing_new
