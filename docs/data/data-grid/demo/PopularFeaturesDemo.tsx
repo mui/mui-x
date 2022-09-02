@@ -19,7 +19,6 @@ import EditingWithDatePickers from '../editing/EditingWithDatePickers';
 import ExcelExport from '../export/ExcelExport';
 import QuickFilteringGrid from '../filtering/QuickFilteringGrid';
 import BasicDetailPanels from '../master-detail/BasicDetailPanels';
-import CursorPaginationGrid from '../pagination/CursorPaginationGrid';
 import RowGroupingInitialState from '../row-grouping/RowGroupingInitialState';
 import RowOrderingGrid from '../row-ordering/RowOrderingGrid';
 import RowPinningWithPagination from '../row-pinning/RowPinningWithPagination';
@@ -27,6 +26,8 @@ import RestoreStateInitialState from '../state/RestoreStateInitialState';
 import TreeDataFullExample from '../tree-data/TreeDataFullExample';
 import ColumnVirtualizationGrid from '../virtualization/ColumnVirtualizationGrid';
 import FullFeaturedDemo from './FullFeaturedDemo';
+import LazyLoadingGrid from '../row-updates/LazyLoadingGrid';
+import BasicGroupingDemo from '../column-groups/BasicGroupingDemo';
 
 export const featuresSet = [
   {
@@ -48,14 +49,25 @@ export const featuresSet = [
   },
   {
     id: 3,
-    name: 'Pagination',
-    description: 'Easily paginate your rows and only fetch what you need',
+    name: 'Column groups',
+    description:
+      'Group columns in a multi-level hierarchy',
     plan: 'Community',
-    detailPage: '/pagination/',
-    demo: <CursorPaginationGrid />,
+    detailPage: '/column-groups/',
+    newBadge: true,
+    demo: <BasicGroupingDemo />,
   },
   {
     id: 4,
+    name: 'Lazy Loading',
+    description: 'Easily paginate your rows and only fetch what you need',
+    plan: 'Pro',
+    detailPage: '/pagination/',
+    newBadge: true,
+    demo: <LazyLoadingGrid />,
+  },
+  {
+    id: 5,
     name: 'Save and restore state',
     description:
       'Save and restore internal state and configurations like active filters and sorting',
@@ -64,7 +76,7 @@ export const featuresSet = [
     demo: <RestoreStateInitialState />,
   },
   {
-    id: 5,
+    id: 6,
     name: 'Row Grouping',
     description: 'Group rows with repeating column values',
     plan: 'Premium',
@@ -72,7 +84,7 @@ export const featuresSet = [
     demo: <RowGroupingInitialState />,
   },
   {
-    id: 6,
+    id: 7,
     name: 'Excel export',
     description:
       'Easily export the rows in various file formats such as CSV, PDF or Excel',
@@ -81,7 +93,7 @@ export const featuresSet = [
     demo: <ExcelExport />,
   },
   {
-    id: 7,
+    id: 8,
     name: 'Quick filter',
     description: 'Use a single text input to filter multiple fields',
     plan: 'Community',
@@ -89,7 +101,7 @@ export const featuresSet = [
     demo: <QuickFilteringGrid />,
   },
   {
-    id: 8,
+    id: 9,
     name: 'Row reorder',
     description: 'Drag and drop to reorder your data',
     plan: 'Pro',
@@ -97,7 +109,7 @@ export const featuresSet = [
     demo: <RowOrderingGrid />,
   },
   {
-    id: 9,
+    id: 10,
     name: 'Column Pinning',
     description: 'Pin your columns to the left or right',
     plan: 'Pro',
@@ -105,7 +117,7 @@ export const featuresSet = [
     demo: <BasicColumnPinning />,
   },
   {
-    id: 10,
+    id: 11,
     name: 'Row Pinning',
     description: 'Pin your rows up or down',
     plan: 'Pro',
@@ -114,7 +126,7 @@ export const featuresSet = [
     newBadge: true,
   },
   {
-    id: 11,
+    id: 12,
     name: 'Aggretation and Summary rows',
     description: 'Set summary footer rows or inline summaries with row grouping',
     plan: 'Premium',
@@ -123,7 +135,7 @@ export const featuresSet = [
     newBadge: true,
   },
   {
-    id: 12,
+    id: 13,
     name: 'Column Visibility',
     description:
       'Display different columns in different use cases by defining which columns are visible',
@@ -132,7 +144,7 @@ export const featuresSet = [
     demo: <ColumnSelectorGrid />,
   },
   {
-    id: 13,
+    id: 14,
     name: 'Column Virtualization',
     description: 'High performance support for thousands of columns',
     plan: 'Community',
@@ -140,7 +152,7 @@ export const featuresSet = [
     demo: <ColumnVirtualizationGrid />,
   },
   {
-    id: 14,
+    id: 15,
     name: 'Row Virtualization',
     description: 'High performance support for vast volume of data',
     plan: 'Pro',
@@ -148,7 +160,7 @@ export const featuresSet = [
     demo: <FullFeaturedDemo />,
   },
   {
-    id: 15,
+    id: 16,
     name: 'Tree data',
     description: 'Support rows with parent / child relationship',
     plan: 'Pro',
