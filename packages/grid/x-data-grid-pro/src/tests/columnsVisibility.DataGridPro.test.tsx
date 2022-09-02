@@ -8,7 +8,6 @@ import {
   DataGridProProps,
   GridApi,
   gridClasses,
-  gridColumnLookupSelector,
   GridColumns,
   gridColumnVisibilityModelSelector,
   GridPreferencePanelsValue,

@@ -60,7 +60,7 @@ describe('<DataGridPro /> - Columns Visibility', () => {
       expect(getColumnHeadersTextContent()).to.deep.equal(['idBis']);
     });
 
-    it('should call onColumnVisibilityModelChange and update the visible columns when props.columnVisibilityModel is not defined', () => {
+    it.only('should call onColumnVisibilityModelChange and update the visible columns when props.columnVisibilityModel is not defined', () => {
       const onColumnVisibilityModelChange = spy();
       render(
         <TestDataGrid
@@ -78,7 +78,6 @@ describe('<DataGridPro /> - Columns Visibility', () => {
       expect(onColumnVisibilityModelChange.callCount).to.equal(1);
       expect(onColumnVisibilityModelChange.lastCall.firstArg).to.deep.equal({
         id: false,
-        idBis: true,
       });
     });
 
