@@ -28,6 +28,8 @@ import ColumnVirtualizationGrid from '../virtualization/ColumnVirtualizationGrid
 import FullFeaturedDemo from './FullFeaturedDemo';
 import LazyLoadingGrid from '../row-updates/LazyLoadingGrid';
 import BasicGroupingDemo from '../column-groups/BasicGroupingDemo';
+import ArrowUp from '@mui/icons-material/KeyboardArrowUp';
+import ArrowDown from '@mui/icons-material/KeyboardArrowDown';
 
 export const featuresSet = [
   {
@@ -202,7 +204,11 @@ const CustomToolbar = () => {
 };
 
 const renderFeatures = (row: any) => {
-  return <Box sx={{ width: '80%', margin: 'auto', py: 2 }}>{row.demo}</Box>;
+  return <Box sx={{ width: '90%', margin: 'auto', py: 2 }}>
+    <Box style={{background:'#fff'}}>
+    {row.demo}
+    </Box>
+  </Box>;
 };
 
 const columns: GridColDef[] = [
@@ -277,9 +283,15 @@ function PopularFeaturesDemo() {
   );
 
   return (
-    <div style={{ height: 1300, width: '100%' }}>
+    <div style={{ height: 'fit-content', width: '100%' }}>
       <DataGridPremium
-        components={{ Toolbar: CustomToolbar }}
+        autoHeight
+        disableSelectionOnClick
+        components={{ 
+          Toolbar: CustomToolbar,
+          DetailPanelExpandIcon: ArrowDown,
+          DetailPanelCollapseIcon: ArrowUp,
+         }}
         componentsProps={{
           toolbar: { showQuickFilter: true, quickFilterProps: { debounceMs: 500 } },
         }}
@@ -292,6 +304,9 @@ function PopularFeaturesDemo() {
           },
           [`& .${gridClasses.columnHeaderTitle}`]: {
             fontWeight: 400,
+          },
+          [`& .${gridClasses.detailPanel}`]: {
+            background:'#efefef'
           },
           border:0,
         }}
