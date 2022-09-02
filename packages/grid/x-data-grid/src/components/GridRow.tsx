@@ -307,6 +307,7 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
           api: apiRef.current,
         };
 
+        // This is where the `GridEditInputCell` is being created
         content = column.renderEditCell(params);
         // TODO move to GridCell
         classNames.push(clsx(gridClasses['cell--editing'], rootProps.classes?.['cell--editing']));

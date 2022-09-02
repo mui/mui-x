@@ -168,6 +168,7 @@ export const useGridCellEditing = (
         }
 
         if (reason) {
+          // This is not always correct, but just to validate if it will work
           const newParams: GridCellEditStartParams = { ...params, reason };
           apiRef.current.publishEvent('cellEditStart', newParams, event);
         }
@@ -178,9 +179,9 @@ export const useGridCellEditing = (
 
   const handleCellEditStart = React.useCallback<GridEventListener<'cellEditStart'>>(
     (params) => {
-      const { id, field, reason } = params;
-
-      const startCellEditModeParams: GridStartCellEditModeParams = { id, field };
+      const { id, field, value, reason } = params;
+      console.log("Provide here the value: ", value);
+      const startCellEditModeParams: GridStartCellEditModeParams = { id, field, value };
 
       if (
         reason === GridCellEditStartReasons.deleteKeyDown ||

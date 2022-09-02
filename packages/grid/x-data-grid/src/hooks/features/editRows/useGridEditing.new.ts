@@ -128,6 +128,7 @@ export const useGridEditing = (
 
       return new Promise((resolve) => {
         maybeDebounce(id, field, debounceMs, async () => {
+          // Looks like this is not invoked on the first keydown
           const setEditCellValueToCall =
             props.editMode === GridEditModes.Row
               ? apiRef.current.unstable_setRowEditingEditCellValue
