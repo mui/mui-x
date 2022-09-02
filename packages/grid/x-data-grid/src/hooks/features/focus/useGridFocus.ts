@@ -228,11 +228,6 @@ export const useGridFocus = (
         return;
       }
 
-      // The row might have been deleted during the click
-      if (!apiRef.current.getRow(focusedCell.id)) {
-        return;
-      }
-
       if (cellParams) {
         apiRef.current.setCellFocus(cellParams.id, cellParams.field);
       } else {
