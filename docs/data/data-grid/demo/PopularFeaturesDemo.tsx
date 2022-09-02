@@ -207,13 +207,14 @@ const CustomToolbar = () => {
 const RowDemo = (props: any) => {
   const { row } = props;
   const theme = useTheme();
-  const bgColor = theme.palette.mode === 'dark' ? '#000' : '#fff';
-
-  console.log(theme.palette.background);
+  const gridBgColor = theme.palette.mode === 'dark' ? '#000' : '#fff';
+  const panelColor = theme.palette.mode === 'dark' ? 'transparent' : '#efefef';
 
   return (
-    <Box sx={{ width: '90%', margin: 'auto', py: 2 }}>
-      <Box style={{ background: bgColor }}>{row.demo}</Box>
+    <Box sx={{ py: 2, background: panelColor }}>
+      <Box style={{ width: '90%', margin: 'auto', background: gridBgColor }}>
+        {row.demo}
+      </Box>
     </Box>
   );
 };
@@ -288,14 +289,13 @@ function PopularFeaturesDemo() {
     ({ row }) => <RowDemo row={row} />,
     [],
   );
-  const theme = useTheme();
-  const panelBGColor = theme.palette.mode === 'dark' ? 'transparent' : '#efefef';
 
   return (
     <div style={{ height: 'fit-content', width: '100%' }}>
       <DataGridPremium
         autoHeight
         disableSelectionOnClick
+        onCellClick={(_, e) => e.stopPropagation()}
         components={{
           Toolbar: CustomToolbar,
           DetailPanelExpandIcon: ArrowDown,
@@ -314,8 +314,8 @@ function PopularFeaturesDemo() {
           [`& .${gridClasses.columnHeaderTitle}`]: {
             fontWeight: 400,
           },
-          [`& .${gridClasses.detailPanel}`]: {
-            background: panelBGColor,
+          [`& .${gridClasses.cell}:focus, & .${gridClasses.cell}:focus-within`]: {
+            outline: 'none',
           },
           border: 0,
         }}
