@@ -4,7 +4,7 @@ import {
   MuiPickersAdapterContextValue,
 } from '../../LocalizationProvider/LocalizationProvider';
 import { DEFAULT_LOCALE } from '../../locales/enUS';
-import { PickersLocaleText } from '@mui/x-date-pickers';
+import { PickersLocaleText } from '../../locales/utils/pickersLocaleTextApi';
 
 export const useLocalizationContext = <TDate>() => {
   const localization = React.useContext(MuiPickersAdapterContext);
