@@ -57,11 +57,16 @@ export interface PickersArrowSwitcherSlotsComponent {
   RightArrowIcon: React.ElementType;
 }
 
+export interface PickersArrowSwitcherButtonSlotOwnerState extends PickersArrowSwitcherOwnerState {
+  hidden?: boolean;
+  target: 'previous' | 'next';
+}
+
 export interface PickersArrowSwitcherSlotsComponentsProps {
   leftArrowButton: SlotComponentProps<
     typeof IconButton,
     PickersArrowSwitcherComponentsPropsOverrides,
-    PickersArrowSwitcherOwnerState & { hidden?: boolean }
+    PickersArrowSwitcherButtonSlotOwnerState
   >;
   leftArrowIcon: SlotComponentProps<
     typeof SvgIcon,
@@ -71,7 +76,7 @@ export interface PickersArrowSwitcherSlotsComponentsProps {
   rightArrowButton: SlotComponentProps<
     typeof IconButton,
     PickersArrowSwitcherComponentsPropsOverrides,
-    PickersArrowSwitcherOwnerState & { hidden?: boolean }
+    PickersArrowSwitcherButtonSlotOwnerState
   >;
   rightArrowIcon: SlotComponentProps<
     typeof SvgIcon,

@@ -132,3 +132,22 @@ The following slots let you customize how to render the buttons and icons for an
 The demo below uses the `ArrowLeft` and `ArrowRight` icons from `@mui/icons-material` and makes the button and the icon bigger:
 
 {{"demo": "ArrowSwitcherComponent.js", "defaultCodeOpen": false, "disableAd": true}}
+
+:::info
+You can use the callback form of the slot props to change the prop value depending on the target of the button.
+In the example below, we are always disabling the button going to the previous view:
+
+```tsx
+const isViewDisabled = (target: 'next' | 'previous') => target === 'previous';
+
+const CustomDatePicker = () => (
+  <DatePicker
+    componentsProps={{
+      leftArrowButton: ({ target }) => ({ disabled: isViewDisabled(target) }),
+      rightArrowButton: ({ target }) => ({ disabled: isViewDisabled(target) }),
+    }}
+  />
+);
+```
+
+:::

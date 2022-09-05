@@ -67,6 +67,7 @@ export const PickersArrowSwitcher = React.forwardRef(function PickersArrowSwitch
   const ownerState = props;
 
   const nextProps = {
+    target: 'next' as const,
     isDisabled: isNextDisabled,
     isHidden: isNextHidden,
     goTo: onGoToNext,
@@ -74,6 +75,7 @@ export const PickersArrowSwitcher = React.forwardRef(function PickersArrowSwitch
   };
 
   const previousProps = {
+    target: 'previous' as const,
     isDisabled: isPreviousDisabled,
     isHidden: isPreviousHidden,
     goTo: onGoToPrevious,
@@ -89,13 +91,12 @@ export const PickersArrowSwitcher = React.forwardRef(function PickersArrowSwitch
     externalSlotProps: componentsProps.leftArrowButton,
     additionalProps: {
       size: 'small',
-      'aria-label': leftProps.label,
       title: leftProps.label,
       disabled: leftProps.isDisabled,
       edge: 'end',
       onClick: leftProps.goTo,
     },
-    ownerState: { ...ownerState, hidden: leftProps.isHidden },
+    ownerState: { ...ownerState, hidden: leftProps.isHidden, target: leftProps.target },
     className: classes.button,
   });
 
@@ -112,13 +113,12 @@ export const PickersArrowSwitcher = React.forwardRef(function PickersArrowSwitch
     externalSlotProps: componentsProps.rightArrowButton,
     additionalProps: {
       size: 'small',
-      'aria-label': rightProps.label,
       title: rightProps.label,
       disabled: rightProps.isDisabled,
       edge: 'start',
       onClick: rightProps.goTo,
     },
-    ownerState: { ...ownerState, hidden: rightProps.isHidden },
+    ownerState: { ...ownerState, hidden: rightProps.isHidden, target: rightProps.target },
     className: classes.button,
   });
 
