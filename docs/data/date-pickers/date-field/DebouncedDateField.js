@@ -8,10 +8,10 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 
-const today = dayjs();
+const today = dayjs('2022-04-07');
 
 export default function DebouncedDateField() {
-  const [value, setValue] = React.useState(() => today.add(1, 'week'));
+  const [value, setValue] = React.useState(dayjs('2022-04-07'));
 
   const debounceSetValue = React.useMemo(() => debounce(setValue, 500), []);
 
