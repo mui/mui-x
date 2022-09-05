@@ -130,7 +130,8 @@ Slots:
 - `RightArrowIcon`
 - `LeftArrowButton`
 - `RightArrowButton`
-  :::
+
+:::
 
 The following slots let you customize how to render the buttons and icons for an arrow switcher component—the component to navigate to the "Previous" and "Next" steps of the picker.
 
