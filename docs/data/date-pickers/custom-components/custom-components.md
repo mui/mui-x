@@ -121,7 +121,7 @@ In the example below, the tabs are using different icons and have an additional 
 
 {{"demo": "Tabs.js", "disableAd": true}}
 
-## Arrow switcher buttons and icons
+## Arrow switcher
 
 :::info
 Slots:

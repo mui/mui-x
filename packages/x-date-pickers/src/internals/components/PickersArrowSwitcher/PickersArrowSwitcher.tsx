@@ -102,6 +102,7 @@ export const PickersArrowSwitcher = React.forwardRef(function PickersArrowSwitch
   });
 
   const LeftArrowIcon = components?.LeftArrowIcon ?? ArrowLeft;
+  // The spread is here to avoid this bug mui/material-ui#34056
   const { ownerState: leftArrowIconOwnerState, ...leftArrowIconProps } = useSlotProps({
     elementType: LeftArrowIcon,
     externalSlotProps: componentsProps.leftArrowIcon,
@@ -125,6 +126,7 @@ export const PickersArrowSwitcher = React.forwardRef(function PickersArrowSwitch
   });
 
   const RightArrowIcon = components?.RightArrowIcon ?? ArrowRight;
+  // The spread is here to avoid this bug mui/material-ui#34056
   const { ownerState: rightArrowIconOwnerState, ...rightArrowIconProps } = useSlotProps({
     elementType: RightArrowIcon,
     externalSlotProps: componentsProps.rightArrowIcon,
