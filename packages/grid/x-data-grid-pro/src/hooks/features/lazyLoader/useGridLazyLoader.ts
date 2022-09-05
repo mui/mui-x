@@ -12,7 +12,8 @@ import {
   GridDimensions,
   GridFeatureMode,
 } from '@mui/x-data-grid';
-import { useGridVisibleRows, getRenderableIndexes } from '@mui/x-data-grid/internals';
+import { useGridVisibleRows } from '@mui/x-data-grid/internals';
+import { getRenderableIndexes } from '@mui/x-data-grid/hooks/features/virtualization/useGridVirtualScroller';
 import { GridApiPro } from '../../../models/gridApiPro';
 import {
   DataGridProProcessedProps,

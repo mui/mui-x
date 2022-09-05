@@ -20,8 +20,27 @@ module.exports = {
     'import/prefer-default-export': 'off',
     // TODO move rule into the main repo once it has upgraded
     '@typescript-eslint/return-await': 'off',
-    // TODO move rule into main repo to allow deep @mui/monorepo imports
-    'no-restricted-imports': 'off',
+    'no-restricted-imports': [
+      'error',
+      {
+        patterns: [
+          '@mui/*/*/*',
+          // Begin block: Packages with files instead of packages in the top level
+          // Importing from the top level pulls in CommonJS instead of ES modules
+          // Allowing /icons as to reduce cold-start of dev builds significantly.
+          // There's nothing to tree-shake when importing from /icons this way:
+          // '@mui/icons-material/*/',
+          '@mui/utils/*',
+          // End block
+          // Macros are fine since their import path is transpiled away
+          '!@mui/utils/macros',
+          '@mui/utils/macros/*',
+          '!@mui/utils/macros/*.macro',
+          // TODO move rule into main repo to allow deep @mui/monorepo imports
+          '!@mui/monorepo/*/*',
+        ],
+      },
+    ],
     'jsdoc/require-param': ['error', { contexts: ['TSFunctionType'] }],
     'jsdoc/require-param-type': ['error', { contexts: ['TSFunctionType'] }],
     'jsdoc/require-param-name': ['error', { contexts: ['TSFunctionType'] }],
