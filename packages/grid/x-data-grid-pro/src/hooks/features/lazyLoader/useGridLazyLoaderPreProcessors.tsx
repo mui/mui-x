@@ -1,11 +1,11 @@
 import * as React from 'react';
+import { GridPipeProcessor, useGridRegisterPipeProcessor } from '@mui/x-data-grid/internals';
+import { GridFeatureModeConstant, GridRowId } from '@mui/x-data-grid';
 import {
   DataGridProProcessedProps,
   GridExperimentalProFeatures,
-} from '@mui/x-data-grid-pro/models/dataGridProProps';
-import { GridApiPro } from '@mui/x-data-grid-pro/models/gridApiPro';
-import { GridPipeProcessor, useGridRegisterPipeProcessor } from '@mui/x-data-grid/internals';
-import { GridFeatureModeConstant, GridRowId } from '@mui/x-data-grid';
+} from '../../../models/dataGridProProps';
+import { GridApiPro } from '../../../models/gridApiPro';
 
 export const GRID_SKELETON_ROW_ROOT_ID = 'auto-generated-skeleton-row-root';
 
