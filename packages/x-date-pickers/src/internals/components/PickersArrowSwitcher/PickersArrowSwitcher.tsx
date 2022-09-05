@@ -16,9 +16,10 @@ const PickersArrowSwitcherRoot = styled('div', {
   overridesResolver: (props, styles) => styles.root,
 })<{
   ownerState: PickersArrowSwitcherProps;
-}>({
-  display: 'flex',
-});
+}>`
+  /* @noflip */
+  display: flex;
+`;
 
 const PickersArrowSwitcherSpacer = styled('div', {
   name: 'MuiPickersArrowSwitcher',
