@@ -157,65 +157,56 @@ export const MonthPicker = React.forwardRef(function MonthPicker<TDate>(
     default: autoFocus,
   });
 
-  const changeHasFocus = React.useCallback(
-    (newHasFocus: boolean) => {
-      setInternalHasFocus(newHasFocus);
+  const changeHasFocus = useEventCallback((newHasFocus: boolean) => {
+    setInternalHasFocus(newHasFocus);
 
-      if (onFocusedViewChange) {
-        onFocusedViewChange(newHasFocus);
-      }
-    },
-    [setInternalHasFocus, onFocusedViewChange],
-  );
+    if (onFocusedViewChange) {
+      onFocusedViewChange(newHasFocus);
+    }
+  });
 
-  const isMonthDisabled = React.useCallback(
-    (month: TDate) => {
-      const firstEnabledMonth = utils.startOfMonth(
-        disablePast && utils.isAfter(now, minDate) ? now : minDate,
-      );
+  const isMonthDisabled = useEventCallback((month: TDate) => {
+    const firstEnabledMonth = utils.startOfMonth(
+      disablePast && utils.isAfter(now, minDate) ? now : minDate,
+    );
 
-      const lastEnabledMonth = utils.startOfMonth(
-        disableFuture && utils.isBefore(now, maxDate) ? now : maxDate,
-      );
+    const lastEnabledMonth = utils.startOfMonth(
+      disableFuture && utils.isBefore(now, maxDate) ? now : maxDate,
+    );
 
-      if (utils.isBefore(month, firstEnabledMonth)) {
-        return true;
-      }
+    if (utils.isBefore(month, firstEnabledMonth)) {
+      return true;
+    }
 
-      if (utils.isAfter(month, lastEnabledMonth)) {
-        return true;
-      }
+    if (utils.isAfter(month, lastEnabledMonth)) {
+      return true;
+    }
 
-      if (!shouldDisableMonth) {
-        return false;
-      }
+    if (!shouldDisableMonth) {
+      return false;
+    }
 
-      return shouldDisableMonth(month);
-    },
-    [disableFuture, disablePast, maxDate, minDate, now, shouldDisableMonth, utils],
-  );
+    return shouldDisableMonth(month);
+  });
 
-  const handleMonthSelection = (event: React.MouseEvent, year: number) => {
+  const handleMonthSelection = useEventCallback((event: React.MouseEvent, year: number) => {
     if (readOnly) {
       return;
     }
 
     const newDate = utils.setMonth(selectedDateOrToday, year);
     onChange(newDate, 'finish');
-  };
+  });
 
-  const focusMonth = React.useCallback(
-    (month: number) => {
-      if (!isMonthDisabled(utils.setMonth(selectedDateOrToday, month))) {
-        setFocusedMonth(month);
-        changeHasFocus(true);
-        if (onMonthFocus) {
-          onMonthFocus(month);
-        }
+  const focusMonth = useEventCallback((month: number) => {
+    if (!isMonthDisabled(utils.setMonth(selectedDateOrToday, month))) {
+      setFocusedMonth(month);
+      changeHasFocus(true);
+      if (onMonthFocus) {
+        onMonthFocus(month);
       }
-    },
-    [selectedDateOrToday, isMonthDisabled, utils, onMonthFocus, changeHasFocus],
-  );
+    }
+  });
 
   React.useEffect(() => {
     setFocusedMonth((prevFocusedMonth) =>

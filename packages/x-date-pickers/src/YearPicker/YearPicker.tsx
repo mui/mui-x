@@ -156,58 +156,49 @@ export const YearPicker = React.forwardRef(function YearPicker<TDate>(
     default: autoFocus,
   });
 
-  const changeHasFocus = React.useCallback(
-    (newHasFocus: boolean) => {
-      setInternalHasFocus(newHasFocus);
+  const changeHasFocus = useEventCallback((newHasFocus: boolean) => {
+    setInternalHasFocus(newHasFocus);
 
-      if (onFocusedViewChange) {
-        onFocusedViewChange(newHasFocus);
-      }
-    },
-    [setInternalHasFocus, onFocusedViewChange],
-  );
+    if (onFocusedViewChange) {
+      onFocusedViewChange(newHasFocus);
+    }
+  });
 
-  const isYearDisabled = React.useCallback(
-    (dateToValidate: TDate) => {
-      if (disablePast && utils.isBeforeYear(dateToValidate, now)) {
-        return true;
-      }
-      if (disableFuture && utils.isAfterYear(dateToValidate, now)) {
-        return true;
-      }
-      if (minDate && utils.isBeforeYear(dateToValidate, minDate)) {
-        return true;
-      }
-      if (maxDate && utils.isAfterYear(dateToValidate, maxDate)) {
-        return true;
-      }
-      if (shouldDisableYear && shouldDisableYear(dateToValidate)) {
-        return true;
-      }
-      return false;
-    },
-    [disableFuture, disablePast, maxDate, minDate, now, shouldDisableYear, utils],
-  );
+  const isYearDisabled = useEventCallback((dateToValidate: TDate) => {
+    if (disablePast && utils.isBeforeYear(dateToValidate, now)) {
+      return true;
+    }
+    if (disableFuture && utils.isAfterYear(dateToValidate, now)) {
+      return true;
+    }
+    if (minDate && utils.isBeforeYear(dateToValidate, minDate)) {
+      return true;
+    }
+    if (maxDate && utils.isAfterYear(dateToValidate, maxDate)) {
+      return true;
+    }
+    if (shouldDisableYear && shouldDisableYear(dateToValidate)) {
+      return true;
+    }
+    return false;
+  });
 
-  const handleYearSelection = (event: React.MouseEvent, year: number) => {
+  const handleYearSelection = useEventCallback((event: React.MouseEvent, year: number) => {
     if (readOnly) {
       return;
     }
 
     const newDate = utils.setYear(selectedDateOrToday, year);
     onChange(newDate, 'finish');
-  };
+  });
 
-  const focusYear = React.useCallback(
-    (year: number) => {
-      if (!isYearDisabled(utils.setYear(selectedDateOrToday, year))) {
-        setFocusedYear(year);
-        changeHasFocus(true);
-        onYearFocus?.(year);
-      }
-    },
-    [isYearDisabled, utils, selectedDateOrToday, changeHasFocus, onYearFocus],
-  );
+  const focusYear = useEventCallback((year: number) => {
+    if (!isYearDisabled(utils.setYear(selectedDateOrToday, year))) {
+      setFocusedYear(year);
+      changeHasFocus(true);
+      onYearFocus?.(year);
+    }
+  });
 
   React.useEffect(() => {
     setFocusedYear((prevFocusedYear) =>
