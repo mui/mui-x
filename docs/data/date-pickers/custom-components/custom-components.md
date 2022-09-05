@@ -129,25 +129,14 @@ Slots: `LeftArrowIcon`, `RightArrowIcon`, `LeftArrowButton`, `RightArrowButton`.
 
 The following slots let you customize how to render the buttons and icons for an arrow switcher component—the component to navigate to the "Previous" and "Next" steps of the picker.
 
-The demo below uses the `ArrowLeft` and `ArrowRight` icons from `@mui/icons-material` and makes the button and the icon bigger:
+### Component props
+
+You can pass props to the icon and buttons as show below:
+
+{{"demo": "ArrowSwitcherComponentProps.js", "defaultCodeOpen": false, "disableAd": true}}
+
+### Component
+
+You can pass custom components, for example to replace the icons as show below:
 
 {{"demo": "ArrowSwitcherComponent.js", "defaultCodeOpen": false, "disableAd": true}}
-
-:::info
-You can use the callback form of the slot props to change the prop value depending on the target of the button.
-In the example below, we are always disabling the button going to the previous view:
-
-```tsx
-const isViewDisabled = (target: 'next' | 'previous') => target === 'previous';
-
-const CustomDatePicker = () => (
-  <DatePicker
-    componentsProps={{
-      leftArrowButton: ({ target }) => ({ disabled: isViewDisabled(target) }),
-      rightArrowButton: ({ target }) => ({ disabled: isViewDisabled(target) }),
-    }}
-  />
-);
-```
-
-:::

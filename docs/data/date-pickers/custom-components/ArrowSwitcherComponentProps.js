@@ -1,25 +1,30 @@
 import * as React from 'react';
 import dayjs from 'dayjs';
-import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
-import ToggleButton from '@mui/material/ToggleButton';
-import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
-import Box from '@mui/material/Box';
-import ArrowLeft from '@mui/icons-material/ArrowLeft';
-import ArrowRight from '@mui/icons-material/ArrowRight';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { StaticDatePicker, StaticTimePicker } from '@mui/x-date-pickers';
+import { StaticDateRangePicker } from '@mui/x-date-pickers-pro';
+import Stack from '@mui/material/Stack';
+import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
+import ToggleButton from '@mui/material/ToggleButton';
+import Box from '@mui/material/Box';
 
-import { StaticDatePicker } from '@mui/x-date-pickers/StaticDatePicker';
-import { StaticTimePicker } from '@mui/x-date-pickers/StaticTimePicker';
-import { StaticDateRangePicker } from '@mui/x-date-pickers-pro/StaticDateRangePicker';
-
-const components = {
-  LeftArrowIcon: ArrowLeft,
-  RightArrowIcon: ArrowRight,
+const componentsProps = {
+  leftArrowIcon: { fontSize: 'large' },
+  rightArrowIcon: { fontSize: 'large' },
+  // Using the target here makes sure that the colors will be correct in RTL mode.
+  leftArrowButton: ({ target }) => ({
+    size: 'medium',
+    color: target === 'previous' ? 'error' : 'success',
+  }),
+  rightArrowButton: ({ target }) => ({
+    size: 'medium',
+    color: target === 'previous' ? 'error' : 'success',
+  }),
 };
 
-export default function ArrowSwitcherComponent() {
+export default function ArrowSwitcherComponentProps() {
   const [date, setDate] = React.useState(() => dayjs());
   const [time, setTime] = React.useState(() => dayjs());
   const [dateRange, setDateRange] = React.useState(() => [
@@ -49,7 +54,7 @@ export default function ArrowSwitcherComponent() {
             onChange={(newValue) => setDate(newValue)}
             value={date}
             renderInput={(params) => <TextField {...params} />}
-            components={components}
+            componentsProps={componentsProps}
           />
         )}
 
@@ -60,7 +65,7 @@ export default function ArrowSwitcherComponent() {
               onChange={(newValue) => setTime(newValue)}
               value={time}
               renderInput={(params) => <TextField {...params} />}
-              components={components}
+              componentsProps={componentsProps}
             />
           </Box>
         )}
@@ -71,7 +76,7 @@ export default function ArrowSwitcherComponent() {
             onChange={(newValue) => setDateRange(newValue)}
             value={dateRange}
             renderInput={(params) => <TextField {...params} />}
-            components={components}
+            componentsProps={componentsProps}
           />
         )}
       </Stack>

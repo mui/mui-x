@@ -1,33 +1,43 @@
 import * as React from 'react';
-import dayjs from 'dayjs';
-import Stack from '@mui/material/Stack';
+import dayjs, { Dayjs } from 'dayjs';
 import TextField from '@mui/material/TextField';
-import ToggleButton from '@mui/material/ToggleButton';
-import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
-import Box from '@mui/material/Box';
-import ArrowLeft from '@mui/icons-material/ArrowLeft';
-import ArrowRight from '@mui/icons-material/ArrowRight';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import {
+  DatePickerProps,
+  StaticDatePicker,
+  StaticTimePicker,
+} from '@mui/x-date-pickers';
+import { DateRange, StaticDateRangePicker } from '@mui/x-date-pickers-pro';
+import Stack from '@mui/material/Stack';
+import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
+import ToggleButton from '@mui/material/ToggleButton';
+import Box from '@mui/material/Box';
 
-import { StaticDatePicker } from '@mui/x-date-pickers/StaticDatePicker';
-import { StaticTimePicker } from '@mui/x-date-pickers/StaticTimePicker';
-import { StaticDateRangePicker } from '@mui/x-date-pickers-pro/StaticDateRangePicker';
-
-const components = {
-  LeftArrowIcon: ArrowLeft,
-  RightArrowIcon: ArrowRight,
+const componentsProps: DatePickerProps<any, any>['componentsProps'] = {
+  leftArrowIcon: { fontSize: 'large' },
+  rightArrowIcon: { fontSize: 'large' },
+  // Using the target here makes sure that the colors will be correct in RTL mode.
+  leftArrowButton: ({ target }) => ({
+    size: 'medium',
+    color: target === 'previous' ? 'error' : 'success',
+  }),
+  rightArrowButton: ({ target }) => ({
+    size: 'medium',
+    color: target === 'previous' ? 'error' : 'success',
+  }),
 };
 
-export default function ArrowSwitcherComponent() {
-  const [date, setDate] = React.useState(() => dayjs());
-  const [time, setTime] = React.useState(() => dayjs());
-  const [dateRange, setDateRange] = React.useState(() => [
+export default function ArrowSwitcherComponentProps() {
+  const [date, setDate] = React.useState<Dayjs | null>(() => dayjs());
+  const [time, setTime] = React.useState<Dayjs | null>(() => dayjs());
+  const [dateRange, setDateRange] = React.useState<DateRange<Dayjs>>(() => [
     dayjs(),
     dayjs().add(3, 'day'),
   ]);
-
-  const [currentComponent, setCurrentComponent] = React.useState('date');
+  const [currentComponent, setCurrentComponent] = React.useState<
+    'date' | 'time' | 'dateRange'
+  >('date');
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -49,10 +59,9 @@ export default function ArrowSwitcherComponent() {
             onChange={(newValue) => setDate(newValue)}
             value={date}
             renderInput={(params) => <TextField {...params} />}
-            components={components}
+            componentsProps={componentsProps}
           />
         )}
-
         {currentComponent === 'time' && (
           <Box sx={{ position: 'relative' }}>
             <StaticTimePicker
@@ -60,18 +69,17 @@ export default function ArrowSwitcherComponent() {
               onChange={(newValue) => setTime(newValue)}
               value={time}
               renderInput={(params) => <TextField {...params} />}
-              components={components}
+              componentsProps={componentsProps}
             />
           </Box>
         )}
-
         {currentComponent === 'dateRange' && (
           <StaticDateRangePicker
             displayStaticWrapperAs="desktop"
             onChange={(newValue) => setDateRange(newValue)}
             value={dateRange}
             renderInput={(params) => <TextField {...params} />}
-            components={components}
+            componentsProps={componentsProps}
           />
         )}
       </Stack>

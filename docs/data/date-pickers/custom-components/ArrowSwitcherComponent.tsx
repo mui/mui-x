@@ -20,21 +20,6 @@ const components: DatePickerProps<any, any>['components'] = {
   RightArrowIcon: ArrowRight,
 };
 
-const componentsProps: DatePickerProps<any, any>['componentsProps'] = {
-  leftArrowButton: {
-    size: 'medium',
-  },
-  rightArrowButton: {
-    size: 'medium',
-  },
-  leftArrowIcon: {
-    fontSize: 'large',
-  },
-  rightArrowIcon: {
-    fontSize: 'large',
-  },
-};
-
 export default function ArrowSwitcherComponent() {
   const [date, setDate] = React.useState<Dayjs | null>(() => dayjs());
   const [time, setTime] = React.useState<Dayjs | null>(() => dayjs());
@@ -67,7 +52,6 @@ export default function ArrowSwitcherComponent() {
             value={date}
             renderInput={(params) => <TextField {...params} />}
             components={components}
-            componentsProps={componentsProps}
           />
         )}
         {currentComponent === 'time' && (
@@ -78,7 +62,6 @@ export default function ArrowSwitcherComponent() {
               value={time}
               renderInput={(params) => <TextField {...params} />}
               components={components}
-              componentsProps={componentsProps}
             />
           </Box>
         )}
@@ -89,7 +72,6 @@ export default function ArrowSwitcherComponent() {
             value={dateRange}
             renderInput={(params) => <TextField {...params} />}
             components={components}
-            componentsProps={componentsProps}
           />
         )}
       </Stack>
