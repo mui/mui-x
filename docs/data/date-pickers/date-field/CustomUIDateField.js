@@ -1,4 +1,5 @@
 import * as React from 'react';
+import dayjs from 'dayjs';
 import { CssVarsProvider } from '@mui/joy/styles';
 import Stack from '@mui/material/Stack';
 import FormControlLabel from '@mui/material/FormControlLabel';
@@ -6,7 +7,7 @@ import FormLabel from '@mui/joy/FormLabel';
 import JoyTextField from '@mui/joy/TextField';
 import InputUnstyled from '@mui/base/InputUnstyled';
 import { LocalizationProvider } from '@mui/x-date-pickers';
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { unstable_useDateField as useDateField } from '@mui/x-date-pickers/DateField';
 
 const JoyDateField = (props) => {
@@ -32,19 +33,22 @@ const UnstyledDateField = (props) => {
 };
 
 const BrowserInputDateField = (props) => {
-  const { inputRef, inputProps } = useDateField(props);
+  const {
+    inputRef,
+    inputProps: { error, ...inputProps },
+  } = useDateField(props);
 
   return <input {...inputProps} ref={inputRef} />;
 };
 
 export default function CustomUIDateField() {
-  const [value, setValue] = React.useState(new Date());
+  const [value, setValue] = React.useState(dayjs());
 
   const handleChange = (newValue) => setValue(newValue);
 
   return (
     <CssVarsProvider>
-      <LocalizationProvider dateAdapter={AdapterDateFns}>
+      <LocalizationProvider dateAdapter={AdapterDayjs}>
         <Stack spacing={2}>
           <JoyDateField
             label="Using @mui/joy TextField"

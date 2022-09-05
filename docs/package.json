@@ -1,6 +1,6 @@
 {
   "name": "docs",
-  "version": "5.16.0",
+  "version": "5.17.1",
   "private": true,
   "author": "MUI Team",
   "license": "MIT",
@@ -63,7 +63,7 @@
     "next": "^12.2.5",
     "nprogress": "^0.2.0",
     "postcss": "^8.4.16",
-    "prismjs": "^1.28.0",
+    "prismjs": "^1.29.0",
     "prop-types": "^15.8.1",
     "raw-loader": "^1.0.0",
     "react": "^18.2.0",

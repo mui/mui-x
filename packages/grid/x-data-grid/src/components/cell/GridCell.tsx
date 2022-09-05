@@ -136,6 +136,18 @@ function GridCell(props: GridCellProps) {
     [apiRef, field, onMouseUp, rowId],
   );
 
+  const publishMouseDown = React.useCallback(
+    (eventName: GridEventsStr) => (event: React.MouseEvent<HTMLDivElement>) => {
+      const params = apiRef.current.getCellParams(rowId, field || '');
+      apiRef.current.publishEvent(eventName as any, params as any, event);
+
+      if (onMouseDown) {
+        onMouseDown(event);
+      }
+    },
+    [apiRef, field, onMouseDown, rowId],
+  );
+
   const publish = React.useCallback(
     (eventName: keyof GridCellEventLookup, propHandler: any) =>
       (event: React.SyntheticEvent<HTMLDivElement>) => {
@@ -252,7 +264,7 @@ function GridCell(props: GridCellProps) {
       tabIndex={(cellMode === 'view' || !isEditable) && !managesOwnFocus ? tabIndex : -1}
       onClick={publish('cellClick', onClick)}
       onDoubleClick={publish('cellDoubleClick', onDoubleClick)}
-      onMouseDown={publish('cellMouseDown', onMouseDown)}
+      onMouseDown={publishMouseDown('cellMouseDown')}
       onMouseUp={publishMouseUp('cellMouseUp')}
       onKeyDown={publish('cellKeyDown', onKeyDown)}
       {...draggableEventHandlers}

@@ -16,7 +16,8 @@ import { getReleaseInfo } from '../internal/utils/releaseInfo';
 
 const releaseInfo = getReleaseInfo();
 
-export interface DateRangePickerDayProps<TDate> extends Omit<PickersDayProps<TDate>, 'classes'> {
+export interface DateRangePickerDayProps<TDate>
+  extends Omit<PickersDayProps<TDate>, 'classes' | 'onBlur' | 'onFocus' | 'onKeyDown'> {
   /**
    * Set to `true` if the `day` is in a highlighted date range.
    */
@@ -318,7 +319,6 @@ DateRangePickerDayRaw.propTypes = {
    * Set to `true` if the `day` is the end of a highlighted date range.
    */
   isStartOfPreviewing: PropTypes.bool.isRequired,
-  onDayFocus: PropTypes.func,
   onDaySelect: PropTypes.func.isRequired,
   /**
    * If `true`, day is outside of month and will be hidden.

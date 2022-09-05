@@ -47,7 +47,7 @@ export default function InfiniteLoadingGrid() {
 
   React.useEffect(() => {
     return () => {
-      mounted.current = false;
+      mounted.current = true;
     };
   }, []);
 
