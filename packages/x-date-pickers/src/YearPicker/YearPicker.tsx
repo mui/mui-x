@@ -290,9 +290,21 @@ YearPicker.propTypes = {
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
   autoFocus: PropTypes.bool,
+  /**
+   * Override or extend the styles applied to the component.
+   */
   classes: PropTypes.object,
+  /**
+   * className applied to the root element.
+   */
   className: PropTypes.string,
+  /**
+   * Date value for the YearPicker
+   */
   date: PropTypes.any,
+  /**
+   * If `true` picker is disabled
+   */
   disabled: PropTypes.bool,
   /**
    * If `true` future days are disabled.
@@ -318,9 +330,15 @@ YearPicker.propTypes = {
    * Minimal selectable date. @DateIOType
    */
   minDate: PropTypes.any,
+  /**
+   * Callback fired on date change.
+   */
   onChange: PropTypes.func.isRequired,
   onFocusedViewChange: PropTypes.func,
   onYearFocus: PropTypes.func,
+  /**
+   * If `true` picker is readonly
+   */
   readOnly: PropTypes.bool,
   /**
    * Disable specific years dynamically.
@@ -330,4 +348,12 @@ YearPicker.propTypes = {
    * @returns {boolean} Returns `true` if the year should be disabled.
    */
   shouldDisableYear: PropTypes.func,
+  /**
+   * The system prop that allows defining system overrides as well as additional CSS styles.
+   */
+  sx: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
+    PropTypes.func,
+    PropTypes.object,
+  ]),
 } as any;
