@@ -21,7 +21,6 @@ import {
   CalendarPickerSlotsComponentsProps,
 } from '../CalendarPicker';
 import { LocalizationProvider } from '../LocalizationProvider';
-import { PickersInputLocaleText } from '../locales/utils/pickersLocaleTextApi';
 
 export interface DesktopDatePickerSlotsComponent
   extends DesktopWrapperSlotsComponent,
@@ -44,7 +43,6 @@ export interface DesktopDatePickerProps<TInputDate, TDate>
    * @default {}
    */
   componentsProps?: Partial<DesktopDatePickerSlotsComponentsProps>;
-  localeText?: PickersInputLocaleText<TDate>;
 }
 
 type DesktopDatePickerComponent = (<TInputDate, TDate = TInputDate>(
@@ -83,7 +81,6 @@ export const DesktopDatePicker = React.forwardRef(function DesktopDatePicker<
     value,
     components,
     componentsProps,
-    localeText,
     ...other
   } = props;
   const AllDateInputProps = {
@@ -96,29 +93,27 @@ export const DesktopDatePicker = React.forwardRef(function DesktopDatePicker<
   };
 
   return (
-    <LocalizationProvider localeText={localeText}>
-      <DesktopWrapper
-        {...wrapperProps}
+    <DesktopWrapper
+      {...wrapperProps}
+      DateInputProps={AllDateInputProps}
+      KeyboardDateInputComponent={KeyboardDateInput}
+      PopperProps={PopperProps}
+      PaperProps={PaperProps}
+      TransitionComponent={TransitionComponent}
+      components={components}
+      componentsProps={componentsProps}
+    >
+      <CalendarOrClockPicker
+        {...pickerProps}
+        autoFocus
+        toolbarTitle={props.label || props.toolbarTitle}
+        ToolbarComponent={ToolbarComponent}
         DateInputProps={AllDateInputProps}
-        KeyboardDateInputComponent={KeyboardDateInput}
-        PopperProps={PopperProps}
-        PaperProps={PaperProps}
-        TransitionComponent={TransitionComponent}
         components={components}
         componentsProps={componentsProps}
-      >
-        <CalendarOrClockPicker
-          {...pickerProps}
-          autoFocus
-          toolbarTitle={props.label || props.toolbarTitle}
-          ToolbarComponent={ToolbarComponent}
-          DateInputProps={AllDateInputProps}
-          components={components}
-          componentsProps={componentsProps}
-          {...other}
-        />
-      </DesktopWrapper>
-    </LocalizationProvider>
+        {...other}
+      />
+    </DesktopWrapper>
   );
 }) as DesktopDatePickerComponent;
 
@@ -241,7 +236,6 @@ DesktopDatePicker.propTypes = {
    * @default false
    */
   loading: PropTypes.bool,
-  localeText: PropTypes.object,
   /**
    * Custom mask. Can be used to override generate from format. (e.g. `__/__/____ __:__` or `__/__/____ __:__ _M`).
    */
