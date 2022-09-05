@@ -104,7 +104,6 @@ const PickersYearButton = styled('button')<{
   },
 }));
 
-const noop = () => {};
 /**
  * @ignore - internal component.
  */
