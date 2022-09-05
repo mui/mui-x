@@ -174,18 +174,13 @@ export const YearPicker = React.forwardRef(function YearPicker<TDate>(
     [disableFuture, disablePast, maxDate, minDate, now, shouldDisableYear, utils],
   );
 
-  const handleYearSelection = (
-    event: React.SyntheticEvent,
-    year: number,
-    isFinish: PickerSelectionState = 'finish',
-  ) => {
+  const handleYearSelection = (event: React.MouseEvent, year: number) => {
     if (readOnly) {
       return;
     }
 
     const newDate = utils.setYear(selectedDateOrToday, year);
-
-    onChange(newDate, isFinish);
+    onChange(newDate, 'finish');
   };
 
   const focusYear = React.useCallback(

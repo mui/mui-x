@@ -1,18 +1,44 @@
 import * as React from 'react';
-import clsx from 'clsx';
-import Typography, { TypographyTypeMap } from '@mui/material/Typography';
 import { styled, alpha } from '@mui/material/styles';
-import { OverridableComponent } from '@mui/material/OverridableComponent';
-import { generateUtilityClasses } from '@mui/material';
-import { unstable_useEnhancedEffect as useEnhancedEffect } from '@mui/material/utils';
-import { onSpaceOrEnter } from '../internals/utils/utils';
+import {
+  generateUtilityClass,
+  generateUtilityClasses,
+  unstable_composeClasses as composeClasses,
+} from '@mui/material';
+import { capitalize, unstable_useEnhancedEffect as useEnhancedEffect } from '@mui/material/utils';
+import {
+  WrapperVariant,
+  WrapperVariantContext,
+} from '../internals/components/wrappers/WrapperVariantContext';
 
-const classes = generateUtilityClasses('PrivatePickersMonth', ['root', 'selected']);
+interface PickersMonthClasses {
+  root: string;
+  modeDesktop: string;
+  modeMobile: string;
+  monthButton: string;
+  disabled: string;
+  selected: string;
+}
 
-export interface MonthProps {
+function getPickersYearUtilityClass(slot: string) {
+  return generateUtilityClass('PrivatePickersMonth', slot);
+}
+
+const pickersMonthClasses = generateUtilityClasses('PrivatePickersMonth', [
+  'root',
+  'modeMobile',
+  'modeDesktop',
+  'monthButton',
+  'disabled',
+  'selected',
+]);
+
+interface PickersMonthProps {
+  classes?: Partial<PickersMonthClasses>;
   children: React.ReactNode;
   disabled?: boolean;
-  onSelect: (value: number) => void;
+  onClick: (event: React.MouseEvent, value: number) => void;
+  onKeyDown: (event: React.KeyboardEvent, value: number) => void;
   selected?: boolean;
   value: number;
   hasFocus: boolean;
@@ -21,15 +47,36 @@ export interface MonthProps {
   tabIndex: number;
 }
 
-export type PickersMonthClassKey = keyof typeof classes;
+interface PickersMonthOwnerState extends PickersMonthProps {
+  wrapperVariant: WrapperVariant;
+}
 
-const PickersMonthRoot = styled<
-  OverridableComponent<TypographyTypeMap<{ component?: React.ElementType; disabled?: boolean }>>
->(Typography)(({ theme }) => ({
-  flex: '1 0 33.33%',
+const useUtilityClasses = (ownerState: PickersMonthOwnerState) => {
+  const { wrapperVariant, disabled, selected, classes } = ownerState;
+
+  const slots = {
+    root: ['root', wrapperVariant && `mode${capitalize(wrapperVariant)}`],
+    yearButton: ['yearButton', disabled && 'disabled', selected && 'selected'],
+  };
+
+  return composeClasses(slots, getPickersYearUtilityClass, classes);
+};
+
+const PickersYearRoot = styled('div')<{
+  ownerState: PickersMonthOwnerState;
+}>(({ ownerState }) => ({
+  flexBasis: '33.3%',
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
+  ...(ownerState?.wrapperVariant === 'desktop' && {
+    flexBasis: '25%',
+  }),
+}));
+
+const PickersYearButton = styled('button')<{
+  ownerState: PickersMonthOwnerState;
+}>(({ theme }) => ({
   color: 'unset',
   backgroundColor: 'transparent',
   border: 0,
@@ -37,44 +84,44 @@ const PickersMonthRoot = styled<
   ...theme.typography.subtitle1,
   margin: '8px 0',
   height: 36,
+  width: 72,
   borderRadius: 18,
   cursor: 'pointer',
   '&:focus, &:hover': {
     backgroundColor: alpha(theme.palette.action.active, theme.palette.action.hoverOpacity),
   },
-  '&:disabled': {
-    pointerEvents: 'none',
+  [`&.${pickersMonthClasses.disabled}`]: {
     color: theme.palette.text.secondary,
   },
-  [`&.${classes.selected}`]: {
+  [`&.${pickersMonthClasses.selected}`]: {
     color: theme.palette.primary.contrastText,
     backgroundColor: theme.palette.primary.main,
     '&:focus, &:hover': {
       backgroundColor: theme.palette.primary.dark,
     },
   },
-})) as typeof Typography;
+}));
 
 const noop = () => {};
 /**
  * @ignore - do not document.
  */
-export const PickersMonth: React.FC<MonthProps> = (props) => {
+export const PickersMonth: React.FC<PickersMonthProps> = (props) => {
   const {
     disabled,
-    onSelect,
     selected,
     value,
     tabIndex,
     hasFocus,
     onFocus = noop,
     onBlur = noop,
+    onClick,
+    onKeyDown,
+    children,
     ...other
   } = props;
 
-  const handleSelection = () => {
-    onSelect(value);
-  };
+  const wrapperVariant = React.useContext(WrapperVariantContext);
 
   const ref = React.useRef<HTMLButtonElement>(null);
   useEnhancedEffect(() => {
@@ -83,24 +130,28 @@ export const PickersMonth: React.FC<MonthProps> = (props) => {
     }
   }, [hasFocus]);
 
+  const ownerState = { ...props, wrapperVariant };
+
+  const classes = useUtilityClasses(ownerState);
+
   return (
-    <PickersMonthRoot
-      ref={ref}
-      data-mui-test="month"
-      component="button"
-      type="button"
-      className={clsx(classes.root, {
-        [classes.selected]: selected,
-      })}
-      tabIndex={tabIndex}
-      onClick={handleSelection}
-      onKeyDown={onSpaceOrEnter(handleSelection)}
-      color={selected ? 'primary' : undefined}
-      variant={selected ? 'h5' : 'subtitle1'}
-      disabled={disabled}
-      onFocus={(event: React.FocusEvent) => onFocus(event, value)}
-      onBlur={(event: React.FocusEvent) => onBlur(event, value)}
-      {...other}
-    />
+    <PickersYearRoot data-mui-test="month" className={classes.root} ownerState={ownerState}>
+      <PickersYearButton
+        ref={ref}
+        disabled={disabled}
+        type="button"
+        data-mui-test={`month-${value}`}
+        tabIndex={disabled ? -1 : tabIndex}
+        onClick={(event) => onClick(event, value)}
+        onKeyDown={(event) => onKeyDown(event, value)}
+        onFocus={(event) => onFocus(event, value)}
+        onBlur={(event) => onBlur(event, value)}
+        className={classes.yearButton}
+        ownerState={ownerState}
+        {...other}
+      >
+        {children}
+      </PickersYearButton>
+    </PickersYearRoot>
   );
 };

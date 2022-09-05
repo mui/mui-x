@@ -12,17 +12,32 @@ import {
   WrapperVariantContext,
 } from '../internals/components/wrappers/WrapperVariantContext';
 
-export interface YearProps {
+interface PickersYearClasses {
+  root: string;
+  modeDesktop: string;
+  modeMobile: string;
+  yearButton: string;
+  disabled: string;
+  selected: string;
+}
+
+function getPickersYearUtilityClass(slot: string) {
+  return generateUtilityClass('PrivatePickersYear', slot);
+}
+
+const pickersYearClasses: PickersYearClasses = generateUtilityClasses('PrivatePickersYear', [
+  'root',
+  'modeMobile',
+  'modeDesktop',
+  'yearButton',
+  'disabled',
+  'selected',
+]);
+
+interface PickersYearProps {
   autoFocus?: boolean;
   children: React.ReactNode;
-  classes?: {
-    root?: string;
-    modeDesktop?: string;
-    modeMobile?: string;
-    yearButton?: string;
-    disabled?: string;
-    selected?: string;
-  };
+  classes?: Partial<PickersYearClasses>;
   className?: string;
   disabled?: boolean;
   onClick: (event: React.MouseEvent, value: number) => void;
@@ -34,18 +49,11 @@ export interface YearProps {
   onBlur: (event: React.FocusEvent, year: number) => void;
 }
 
-export function getPickersYearUtilityClass(slot: string) {
-  return generateUtilityClass('PrivatePickersYear', slot);
+interface PickersYearOwnerState extends PickersYearProps {
+  wrapperVariant: WrapperVariant;
 }
 
-export type PickersYearClassKey = keyof NonNullable<YearProps['classes']>;
-
-export const pickersYearClasses = generateUtilityClasses<PickersYearClassKey>(
-  'PrivatePickersYear',
-  ['root', 'modeMobile', 'modeDesktop', 'yearButton', 'disabled', 'selected'],
-);
-
-const useUtilityClasses = (ownerState: YearProps & { wrapperVariant: WrapperVariant }) => {
+const useUtilityClasses = (ownerState: PickersYearOwnerState) => {
   const { wrapperVariant, disabled, selected, classes } = ownerState;
 
   const slots = {
@@ -57,7 +65,7 @@ const useUtilityClasses = (ownerState: YearProps & { wrapperVariant: WrapperVari
 };
 
 const PickersYearRoot = styled('div')<{
-  ownerState: YearProps & { wrapperVariant: WrapperVariant };
+  ownerState: PickersYearOwnerState;
 }>(({ ownerState }) => ({
   flexBasis: '33.3%',
   display: 'flex',
@@ -69,7 +77,7 @@ const PickersYearRoot = styled('div')<{
 }));
 
 const PickersYearButton = styled('button')<{
-  ownerState: YearProps & { wrapperVariant: WrapperVariant };
+  ownerState: PickersYearOwnerState;
 }>(({ theme }) => ({
   color: 'unset',
   backgroundColor: 'transparent',
@@ -100,64 +108,63 @@ const noop = () => {};
 /**
  * @ignore - internal component.
  */
-export const PickersYear = React.forwardRef<HTMLButtonElement, YearProps>(function PickersYear(
-  props,
-  forwardedRef,
-) {
-  const {
-    autoFocus,
-    className,
-    children,
-    disabled,
-    onClick,
-    onKeyDown,
-    value,
-    tabIndex,
-    onFocus = noop,
-    onBlur = noop,
-    ...other
-  } = props;
-  const ref = React.useRef<HTMLButtonElement>(null);
-  const refHandle = useForkRef(ref, forwardedRef as React.Ref<HTMLButtonElement>);
-  const wrapperVariant = React.useContext(WrapperVariantContext);
+export const PickersYear = React.forwardRef<HTMLButtonElement, PickersYearProps>(
+  function PickersYear(props, forwardedRef) {
+    const {
+      autoFocus,
+      className,
+      children,
+      disabled,
+      onClick,
+      onKeyDown,
+      value,
+      tabIndex,
+      onFocus = noop,
+      onBlur = noop,
+      ...other
+    } = props;
+    const ref = React.useRef<HTMLButtonElement>(null);
+    const refHandle = useForkRef(ref, forwardedRef as React.Ref<HTMLButtonElement>);
+    const wrapperVariant = React.useContext(WrapperVariantContext);
 
-  const ownerState = {
-    ...props,
-    wrapperVariant,
-  };
+    const ownerState = {
+      ...props,
+      wrapperVariant,
+    };
 
-  const classes = useUtilityClasses(ownerState);
+    const classes = useUtilityClasses(ownerState);
 
-  // TODO: Can we just forward this to the button?
-  React.useEffect(() => {
-    if (autoFocus) {
-      // `ref.current` being `null` would be a bug in MUIu
-      ref.current!.focus();
-    }
-  }, [autoFocus]);
+    // TODO: Can we just forward this to the button?
+    React.useEffect(() => {
+      if (autoFocus) {
+        // `ref.current` being `null` would be a bug in MUI.
+        ref.current!.focus();
+      }
+    }, [autoFocus]);
 
-  return (
-    <PickersYearRoot
-      data-mui-test="year"
-      className={clsx(classes.root, className)}
-      ownerState={ownerState}
-    >
-      <PickersYearButton
-        ref={refHandle}
-        disabled={disabled}
-        type="button"
-        data-mui-test={`year-${children}`}
-        tabIndex={disabled ? -1 : tabIndex}
-        onClick={(event) => onClick(event, value)}
-        onKeyDown={(event) => onKeyDown(event, value)}
-        onFocus={(event) => onFocus(event, value)}
-        onBlur={(event) => onBlur(event, value)}
-        className={classes.yearButton}
+    return (
+      <PickersYearRoot
+        data-mui-test="year"
+        className={clsx(classes.root, className)}
         ownerState={ownerState}
-        {...other}
       >
-        {children}
-      </PickersYearButton>
-    </PickersYearRoot>
-  );
-});
+        <PickersYearButton
+          ref={refHandle}
+          disabled={disabled}
+          type="button"
+          data-mui-test={`year-${children}`}
+          tabIndex={disabled ? -1 : tabIndex}
+          onClick={(event) => onClick(event, value)}
+          onKeyDown={(event) => onKeyDown(event, value)}
+          onFocus={(event) => onFocus(event, value)}
+          onBlur={(event) => onBlur(event, value)}
+          className={classes.yearButton}
+          ownerState={ownerState}
+          {...other}
+        >
+          {children}
+        </PickersYearButton>
+      </PickersYearRoot>
+    );
+  },
+);

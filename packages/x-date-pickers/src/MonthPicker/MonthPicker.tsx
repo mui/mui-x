@@ -174,12 +174,12 @@ export const MonthPicker = React.forwardRef(function MonthPicker<TDate>(
     [disableFuture, disablePast, maxDate, minDate, now, shouldDisableMonth, utils],
   );
 
-  const onMonthSelect = (month: number) => {
+  const handleMonthSelection = (event: React.MouseEvent, year: number) => {
     if (readOnly) {
       return;
     }
 
-    const newDate = utils.setMonth(selectedDateOrToday, month);
+    const newDate = utils.setMonth(selectedDateOrToday, year);
     onChange(newDate, 'finish');
   };
 
@@ -222,30 +222,26 @@ export const MonthPicker = React.forwardRef(function MonthPicker<TDate>(
     );
   }, [selectedMonth]);
 
-  const handleKeyDown = useEventCallback((event: React.KeyboardEvent) => {
+  const handleKeyDown = useEventCallback((event: React.KeyboardEvent, month: number) => {
     const monthsInYear = 12;
     const monthsInRow = 3;
 
     switch (event.key) {
       case 'ArrowUp':
-        focusMonth((monthsInYear + focusedMonth - monthsInRow) % monthsInYear);
+        focusMonth((monthsInYear + month - monthsInRow) % monthsInYear);
         event.preventDefault();
         break;
       case 'ArrowDown':
-        focusMonth((monthsInYear + focusedMonth + monthsInRow) % monthsInYear);
+        focusMonth((monthsInYear + month + monthsInRow) % monthsInYear);
         event.preventDefault();
         break;
       case 'ArrowLeft':
-        focusMonth(
-          (monthsInYear + focusedMonth + (theme.direction === 'ltr' ? -1 : 1)) % monthsInYear,
-        );
+        focusMonth((monthsInYear + month + (theme.direction === 'ltr' ? -1 : 1)) % monthsInYear);
 
         event.preventDefault();
         break;
       case 'ArrowRight':
-        focusMonth(
-          (monthsInYear + focusedMonth + (theme.direction === 'ltr' ? 1 : -1)) % monthsInYear,
-        );
+        focusMonth((monthsInYear + month + (theme.direction === 'ltr' ? 1 : -1)) % monthsInYear);
 
         event.preventDefault();
         break;
@@ -272,7 +268,6 @@ export const MonthPicker = React.forwardRef(function MonthPicker<TDate>(
       ref={ref}
       className={clsx(classes.root, className)}
       ownerState={ownerState}
-      onKeyDown={handleKeyDown}
       {...other}
     >
       {utils.getMonthArray(selectedDateOrToday).map((month) => {
@@ -287,7 +282,8 @@ export const MonthPicker = React.forwardRef(function MonthPicker<TDate>(
             selected={monthNumber === selectedMonth}
             tabIndex={monthNumber === focusedMonth && !isDisabled ? 0 : -1}
             hasFocus={internalHasFocus && monthNumber === focusedMonth}
-            onSelect={onMonthSelect}
+            onClick={handleMonthSelection}
+            onKeyDown={handleKeyDown}
             onFocus={handleMonthFocus}
             onBlur={handleMonthBlur}
             disabled={isDisabled}
