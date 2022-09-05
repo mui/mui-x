@@ -362,16 +362,17 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
     for (let depth = 0; depth < headerGroupingMaxDepth; depth += 1) {
       const rowStructure = columnGroupsHeaderStructure[depth];
 
-      const firstGroupToRender = visibleColumns[firstColumnToRender]?.groupPath?.[depth] ?? null;
       const firstColumnFieldToRender = visibleColumns[firstColumnToRender].field;
+      const firstGroupToRender =
+        apiRef.current.unstable_getColumnGroupPath(firstColumnFieldToRender)[depth] ?? null;
       const firstGroupIndex = rowStructure.findIndex(
         ({ groupId, columnFields }) =>
           groupId === firstGroupToRender && columnFields.includes(firstColumnFieldToRender),
       );
 
-      const lastGroupToRender = visibleColumns[lastColumnToRender - 1]?.groupPath?.[depth] ?? null;
-
       const lastColumnFieldToRender = visibleColumns[lastColumnToRender - 1].field;
+      const lastGroupToRender =
+        apiRef.current.unstable_getColumnGroupPath(lastColumnFieldToRender)[depth] ?? null;
       const lastGroupIndex = rowStructure.findIndex(
         ({ groupId, columnFields }) =>
           groupId === lastGroupToRender && columnFields.includes(lastColumnFieldToRender),

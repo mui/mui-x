@@ -90,7 +90,11 @@ export const useGridDensity = (
 
   const maxDepth =
     visibleColumns.length > 0
-      ? Math.max(...visibleColumns.map((column) => column.groupPath?.length ?? 0))
+      ? Math.max(
+          ...visibleColumns.map(
+            (column) => apiRef.current.unstable_getColumnGroupPath(column.field).length,
+          ),
+        )
       : 0;
 
   const logger = useGridLogger(apiRef, 'useDensity');

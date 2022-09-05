@@ -3,8 +3,10 @@ import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { GridStateInitializer } from '../../utils/useGridInitializeState';
 import { GridColumnNode, isLeaf } from '../../../models/gridColumnGrouping';
-import { gridColumnGroupsLookupSelector } from './gridColumnGroupsSelector';
-import { gridColumnLookupSelector } from '../columns/gridColumnsSelector';
+import {
+  gridColumnGroupsLookupSelector,
+  gridColumnGroupsUnwrappedModelSelector,
+} from './gridColumnGroupsSelector';
 import { GridColumnGroupLookup } from './gridColumnGroupsInterfaces';
 import { GridColumnGroupingApi } from '../../../models/api/gridColumnGroupingApi';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
@@ -58,6 +60,7 @@ export const columnGroupsStateInitializer: GridStateInitializer<
     columnGrouping: {
       lookup: groupLookup,
       groupCollapsedModel: {},
+      unwrappedGroupingModel,
       headerStructure: columnGroupsHeaderStructure,
     },
   };
@@ -78,9 +81,9 @@ export const useGridColumnGrouping = (
     GridColumnGroupingApi['unstable_getColumnGroupPath']
   >(
     (field) => {
-      const columnLookup = gridColumnLookupSelector(apiRef);
+      const unwrappedGroupingModel = gridColumnGroupsUnwrappedModelSelector(apiRef);
 
-      return columnLookup[field]?.groupPath ?? [];
+      return unwrappedGroupingModel[field] ?? [];
     },
     [apiRef],
   );
@@ -137,12 +140,24 @@ export const useGridColumnGrouping = (
       return;
     }
     const groupLookup = createGroupLookup(props.columnGroupingModel ?? []);
-    apiRef.current.setState((state) => ({
-      ...state,
-      columnGrouping: {
-        ...state.columnGrouping,
-        lookup: groupLookup,
-      },
-    }));
+    const unwrappedGroupingModel = unwrapGroupingColumnModel(props.columnGroupingModel ?? []);
+
+    apiRef.current.setState((state) => {
+      const orderedFields = state.columns?.all ?? [];
+
+      const columnGroupsHeaderStructure = getColumnGroupsHeaderStructure(
+        orderedFields as string[],
+        unwrappedGroupingModel,
+      );
+      return {
+        ...state,
+        columnGrouping: {
+          lookup: groupLookup,
+          // groupCollapsedModel: {},
+          unwrappedGroupingModel,
+          headerStructure: columnGroupsHeaderStructure,
+        },
+      };
+    });
   }, [apiRef, props.columnGroupingModel, props.experimentalFeatures?.columnGrouping]);
 };

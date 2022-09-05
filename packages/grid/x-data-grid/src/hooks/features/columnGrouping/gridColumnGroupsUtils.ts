@@ -4,15 +4,9 @@ import {
   GridColumnGroup,
   isLeaf,
 } from '../../../models/gridColumnGrouping';
-import { GridColDef, GridStateColDef } from '../../../models/colDef';
+import { GridColDef } from '../../../models/colDef';
 import { isDeepEqual } from '../../../utils/utils';
 import { GridGroupingStructure } from './gridColumnGroupsInterfaces';
-
-export function hasGroupPath(
-  lookupElement: GridColDef | GridStateColDef,
-): lookupElement is GridStateColDef {
-  return (<GridStateColDef>lookupElement).groupPath !== undefined;
-}
 
 type UnwrappedGroupingModel = { [key: GridColDef['field']]: GridColumnGroup['groupId'][] };
 
