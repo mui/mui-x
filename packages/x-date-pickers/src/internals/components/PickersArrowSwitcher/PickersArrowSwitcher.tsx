@@ -16,10 +16,9 @@ const PickersArrowSwitcherRoot = styled('div', {
   overridesResolver: (props, styles) => styles.root,
 })<{
   ownerState: PickersArrowSwitcherProps;
-}>`
-  /* @noflip */
-  display: flex;
-`;
+}>({
+  display: 'flex',
+});
 
 const PickersArrowSwitcherSpacer = styled('div', {
   name: 'MuiPickersArrowSwitcher',
@@ -48,6 +47,7 @@ export const PickersArrowSwitcher = React.forwardRef(function PickersArrowSwitch
   ref: React.Ref<HTMLDivElement>,
 ) {
   const theme = useTheme();
+  const isRTL = theme.direction === 'rtl';
 
   const {
     children,
@@ -83,8 +83,7 @@ export const PickersArrowSwitcher = React.forwardRef(function PickersArrowSwitch
     label: previousLabel,
   };
 
-  const [leftProps, rightProps] =
-    theme.direction === 'rtl' ? [nextProps, previousProps] : [previousProps, nextProps];
+  const [leftProps, rightProps] = isRTL ? [nextProps, previousProps] : [previousProps, nextProps];
 
   const LeftArrowButton = components.LeftArrowButton ?? PickersArrowSwitcherButton;
   const leftArrowButtonProps = useSlotProps({
@@ -132,6 +131,18 @@ export const PickersArrowSwitcher = React.forwardRef(function PickersArrowSwitch
     ownerState: undefined,
   });
 
+  const leftPart = (
+    <LeftArrowButton {...leftArrowButtonProps}>
+      <LeftArrowIcon {...leftArrowIconProps} />
+    </LeftArrowButton>
+  );
+
+  const rightPart = (
+    <RightArrowButton {...rightArrowButtonProps}>
+      <RightArrowIcon {...rightArrowIconProps} />
+    </RightArrowButton>
+  );
+
   return (
     <PickersArrowSwitcherRoot
       ref={ref}
@@ -139,9 +150,7 @@ export const PickersArrowSwitcher = React.forwardRef(function PickersArrowSwitch
       ownerState={ownerState}
       {...other}
     >
-      <LeftArrowButton {...leftArrowButtonProps}>
-        <LeftArrowIcon {...leftArrowIconProps} />
-      </LeftArrowButton>
+      {isRTL ? rightPart : leftPart}
       {children ? (
         <Typography variant="subtitle1" component="span">
           {children}
@@ -149,9 +158,7 @@ export const PickersArrowSwitcher = React.forwardRef(function PickersArrowSwitch
       ) : (
         <PickersArrowSwitcherSpacer className={classes.spacer} ownerState={ownerState} />
       )}
-      <RightArrowButton {...rightArrowButtonProps}>
-        <RightArrowIcon {...rightArrowIconProps} />
-      </RightArrowButton>
+      {isRTL ? leftPart : rightPart}
     </PickersArrowSwitcherRoot>
   );
 });
