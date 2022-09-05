@@ -1,9 +1,4 @@
 import * as React from 'react';
-import {
-  DataGridProProcessedProps,
-  GridExperimentalProFeatures,
-} from '@mui/x-data-grid-pro/models/dataGridProProps';
-import { GridApiPro } from '@mui/x-data-grid-pro/models/gridApiPro';
 import { GridPipeProcessor, useGridRegisterPipeProcessor } from '@mui/x-data-grid/internals';
 import {
   GRID_ROOT_GROUP_ID,
@@ -11,6 +6,11 @@ import {
   GridGroupNode,
   GridSkeletonRowNode,
 } from '@mui/x-data-grid';
+import { GridApiPro } from '../../../models/gridApiPro';
+import {
+  DataGridProProcessedProps,
+  GridExperimentalProFeatures,
+} from '../../../models/dataGridProProps';
 
 export const GRID_SKELETON_ROW_ROOT_ID = 'auto-generated-skeleton-row-root';
 

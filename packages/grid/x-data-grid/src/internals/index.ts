@@ -89,7 +89,10 @@ export { useGridEvents } from '../hooks/features/events/useGridEvents';
 export { useGridDimensions } from '../hooks/features/dimensions/useGridDimensions';
 export { useGridStatePersistence } from '../hooks/features/statePersistence/useGridStatePersistence';
 export type { GridRestoreStatePreProcessingContext } from '../hooks/features/statePersistence/gridStatePersistenceInterface';
-export { useGridVirtualScroller } from '../hooks/features/virtualization/useGridVirtualScroller';
+export {
+  useGridVirtualScroller,
+  getRenderableIndexes,
+} from '../hooks/features/virtualization/useGridVirtualScroller';
 
 export { useGridVisibleRows } from '../hooks/utils/useGridVisibleRows';
 export { useGridInitializeState } from '../hooks/utils/useGridInitializeState';
