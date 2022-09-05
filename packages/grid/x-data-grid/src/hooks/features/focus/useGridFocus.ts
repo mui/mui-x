@@ -136,8 +136,21 @@ export const useGridFocus = (
       }
 
       rowIndexToFocus = clamp(rowIndexToFocus, 0, currentPage.rows.length - 1);
-      columnIndexToFocus = clamp(columnIndexToFocus, 0, visibleColumns.length - 1);
       const rowToFocus = currentPage.rows[rowIndexToFocus];
+
+      const colSpanInfo = apiRef.current.unstable_getCellColSpanInfo(
+        rowToFocus.id,
+        columnIndexToFocus,
+      );
+      if (colSpanInfo && colSpanInfo.spannedByColSpan) {
+        if (direction === 'left' || direction === 'below') {
+          columnIndexToFocus = colSpanInfo.leftVisibleCellIndex;
+        } else if (direction === 'right') {
+          columnIndexToFocus = colSpanInfo.rightVisibleCellIndex;
+        }
+      }
+
+      columnIndexToFocus = clamp(columnIndexToFocus, 0, visibleColumns.length - 1);
       const columnToFocus = visibleColumns[columnIndexToFocus];
       apiRef.current.setCellFocus(rowToFocus.id, columnToFocus.field);
     },
@@ -180,7 +193,7 @@ export const useGridFocus = (
     }));
   }, [logger, apiRef]);
 
-  const handleCellMouseUp = React.useCallback<GridEventListener<'cellMouseUp'>>((params) => {
+  const handleCellMouseDown = React.useCallback<GridEventListener<'cellMouseDown'>>((params) => {
     lastClickedCell.current = params;
   }, []);
 
@@ -279,7 +292,7 @@ export const useGridFocus = (
 
   useGridApiEventHandler(apiRef, 'columnHeaderBlur', handleBlur);
   useGridApiEventHandler(apiRef, 'cellDoubleClick', handleCellDoubleClick);
-  useGridApiEventHandler(apiRef, 'cellMouseUp', handleCellMouseUp);
+  useGridApiEventHandler(apiRef, 'cellMouseDown', handleCellMouseDown);
   useGridApiEventHandler(apiRef, 'cellKeyDown', handleCellKeyDown);
   useGridApiEventHandler(apiRef, 'cellModeChange', handleCellModeChange);
   useGridApiEventHandler(apiRef, 'columnHeaderFocus', handleColumnHeaderFocus);
