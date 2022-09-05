@@ -226,7 +226,7 @@ function GridCell(props: GridCellProps) {
     }
 
     if (React.isValidElement(children) && managesOwnFocus) {
-      return React.cloneElement(children, { focusElementRef });
+      return React.cloneElement<any>(children, { focusElementRef });
     }
 
     return children;
