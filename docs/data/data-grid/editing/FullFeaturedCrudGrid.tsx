@@ -138,8 +138,8 @@ export default function FullFeaturedCrudGrid() {
     return updatedRow;
   };
 
-  const handleRowModesModelChange = (rowModesModel: GridRowModesModel) => {
-    setRowModesModel(rowModesModel);
+  const handleRowModesModelChange = (newRowModesModel: GridRowModesModel) => {
+    setRowModesModel(newRowModesModel);
   };
 
   const columns: GridColumns = [
