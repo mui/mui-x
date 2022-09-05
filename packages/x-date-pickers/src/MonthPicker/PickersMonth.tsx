@@ -38,13 +38,13 @@ interface PickersMonthProps {
   children: React.ReactNode;
   classes?: Partial<PickersMonthClasses>;
   disabled?: boolean;
-  onClick: (event: React.MouseEvent, value: number) => void;
-  onKeyDown: (event: React.KeyboardEvent, value: number) => void;
+  onClick: (event: React.MouseEvent, month: number) => void;
+  onKeyDown: (event: React.KeyboardEvent, month: number) => void;
+  onFocus: (event: React.FocusEvent, month: number) => void;
+  onBlur: (event: React.FocusEvent, month: number) => void;
   selected?: boolean;
   value: number;
   tabIndex: number;
-  onFocus: (event: React.FocusEvent, month: number) => void;
-  onBlur: (event: React.FocusEvent, month: number) => void;
 }
 
 interface PickersMonthOwnerState extends PickersMonthProps {
@@ -102,22 +102,21 @@ const PickersYearButton = styled('button')<{
   },
 }));
 
-const noop = () => {};
 /**
  * @ignore - do not document.
  */
-export const PickersMonth = (props: PickersMonthProps) => {
+const PickersMonthRaw = (props: PickersMonthProps) => {
   const {
+    autoFocus,
+    children,
     disabled,
     selected,
     value,
     tabIndex,
-    autoFocus,
-    onFocus = noop,
-    onBlur = noop,
     onClick,
     onKeyDown,
-    children,
+    onFocus,
+    onBlur,
     ...other
   } = props;
 
@@ -155,3 +154,8 @@ export const PickersMonth = (props: PickersMonthProps) => {
     </PickersYearRoot>
   );
 };
+
+/**
+ * @ignore - do not document.
+ */
+export const PickersMonth = React.memo(PickersMonthRaw);

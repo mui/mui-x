@@ -40,13 +40,13 @@ interface PickersYearProps {
   classes?: Partial<PickersYearClasses>;
   className?: string;
   disabled?: boolean;
-  onClick: (event: React.MouseEvent, value: number) => void;
-  onKeyDown: (event: React.KeyboardEvent, value: number) => void;
+  onClick: (event: React.MouseEvent, year: number) => void;
+  onKeyDown: (event: React.KeyboardEvent, year: number) => void;
+  onFocus: (event: React.FocusEvent, year: number) => void;
+  onBlur: (event: React.FocusEvent, year: number) => void;
   selected: boolean;
   value: number;
   tabIndex: number;
-  onFocus: (event: React.FocusEvent, year: number) => void;
-  onBlur: (event: React.FocusEvent, year: number) => void;
 }
 
 interface PickersYearOwnerState extends PickersYearProps {
@@ -108,18 +108,19 @@ const noop = () => {};
 /**
  * @ignore - internal component.
  */
-export const PickersYear = (props: PickersYearProps) => {
+const PickersYearRaw = (props: PickersYearProps) => {
   const {
     autoFocus,
     className,
     children,
     disabled,
-    onClick,
-    onKeyDown,
+    selected,
     value,
     tabIndex,
-    onFocus = noop,
-    onBlur = noop,
+    onClick,
+    onKeyDown,
+    onFocus,
+    onBlur,
     ...other
   } = props;
   const ref = React.useRef<HTMLButtonElement>(null);
@@ -165,3 +166,8 @@ export const PickersYear = (props: PickersYearProps) => {
     </PickersYearRoot>
   );
 };
+
+/**
+ * @ignore - do not document.
+ */
+export const PickersYear = React.memo(PickersYearRaw);
