@@ -92,6 +92,7 @@ export const PickersArrowSwitcher = React.forwardRef(function PickersArrowSwitch
     additionalProps: {
       size: 'small',
       title: leftProps.label,
+      'aria-label': leftProps.label,
       disabled: leftProps.isDisabled,
       edge: 'end',
       onClick: leftProps.goTo,
@@ -114,6 +115,7 @@ export const PickersArrowSwitcher = React.forwardRef(function PickersArrowSwitch
     additionalProps: {
       size: 'small',
       title: rightProps.label,
+      'aria-label': rightProps.label,
       disabled: rightProps.isDisabled,
       edge: 'start',
       onClick: rightProps.goTo,
