@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 5.17.1
+
+_Sep 5, 2022_
+
+We'd like to offer a big thanks to the 3 contributors who made this release possible. Here are some highlights ✨:
+
+- 🐞 Bugfixes
+
+### `@mui/x-data-grid@v5.17.1` / `@mui/x-data-grid-pro@v5.17.1` / `@mui/x-data-grid-premium@v5.17.1`
+
+#### Changes
+
+- [DataGrid] Fix cells being focused on mouseUp (#5980) @cherniavskii
+- [DataGrid] Fix focused cell if column is spanned and new editing API is used (#5962) @m4theushw
+- [DataGridPro] Fix import in lazy-loading causing a bundling error (#6031) @flaviendelangle
+
 ## 5.17.0
 
 _Sep 2, 2022_
