@@ -2769,7 +2769,7 @@
   resolved "https://registry.yarnpkg.com/@mui/types/-/types-7.1.5.tgz#5e5cc49d719bc86522983359bc1f90eddcff0624"
   integrity sha512-HnRXrxgHJYJcT8ZDdDCQIlqk0s0skOKD7eWs9mJgBUu70hyW4iA6Kiv3yspJR474RFH8hysKR65VVSzUSzkuwA==
 
-"@mui/utils@^5.4.1", "@mui/utils@^5.9.3":
+"@mui/utils@^5.9.3":
   version "5.9.3"
   resolved "https://registry.yarnpkg.com/@mui/utils/-/utils-5.9.3.tgz#a11e0824f00b7ea40257b390060ce167fe861d02"
   integrity sha512-l0N5bcrenE9hnwZ/jPecpIRqsDFHkPXoFUcmkgysaJwVZzJ3yQkGXB47eqmXX5yyGrSc6HksbbqXEaUya+siew==
@@ -2789,16 +2789,6 @@
     clsx "^1.1.1"
     prop-types "^15.7.2"
     reselect "^4.0.0"
-
-"@mui/x-license-pro@5.12.1":
-  version "5.12.1"
-  resolved "https://registry.yarnpkg.com/@mui/x-license-pro/-/x-license-pro-5.12.1.tgz#c0c0a175ebacd1a017fcd9bc25afe205ff6bd1f7"
-  integrity sha512-loiYFPr709tvWpIDLkDuNwsRoGVAkW1MlKDiurPlQaizVaS4w9YGw+oSHro7DTkXehuhkF2g2QTKorynazDu/Q==
-  dependencies:
-    "@babel/runtime" "^7.17.2"
-    "@mui/utils" "^5.4.1"
-    esm "^3.2.25"
-    yargs "^17.5.1"
 
 "@next/env@12.2.5":
   version "12.2.5"
@@ -9807,11 +9797,6 @@ eslint@^8.22.0:
     strip-json-comments "^3.1.0"
     text-table "^0.2.0"
     v8-compile-cache "^2.0.3"
-
-esm@^3.2.25:
-  version "3.2.25"
-  resolved "https://registry.yarnpkg.com/esm/-/esm-3.2.25.tgz#342c18c29d56157688ba5ce31f8431fbb795cc10"
-  integrity sha512-U1suiZ2oDVWv4zPO56S0NcR5QriEahGtdN2OR6FiOG4WJvcjBVFB0qI4+eKoWFH483PKGuLuu6V8Z4T5g63UVA==
 
 espree@^9.3.2, espree@^9.3.3:
   version "9.3.3"
