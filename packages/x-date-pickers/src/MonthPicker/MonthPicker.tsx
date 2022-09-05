@@ -22,6 +22,7 @@ import { DefaultizedProps } from '../internals/models/helpers';
 export interface MonthPickerProps<TDate>
   extends MonthValidationProps<TDate>,
     BaseDateValidationProps<TDate> {
+  autoFocus?: boolean;
   /**
    * className applied to the root element.
    */
@@ -47,7 +48,6 @@ export interface MonthPickerProps<TDate>
    * @default false
    */
   disableHighlightToday?: boolean;
-  autoFocus?: boolean;
   onMonthFocus?: (month: number) => void;
   hasFocus?: boolean;
   onFocusedViewChange?: (newHasFocus: boolean) => void;

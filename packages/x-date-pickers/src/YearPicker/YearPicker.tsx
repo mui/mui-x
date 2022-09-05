@@ -1,7 +1,8 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { useTheme, styled, useThemeProps } from '@mui/material/styles';
+import { SxProps, useTheme } from '@mui/system';
+import { styled, useThemeProps, Theme } from '@mui/material/styles';
 import { unstable_composeClasses as composeClasses } from '@mui/material';
 import '@mui/material/utils';
 import {
@@ -67,12 +68,26 @@ export interface YearPickerProps<TDate>
   extends YearValidationProps<TDate>,
     BaseDateValidationProps<TDate> {
   autoFocus?: boolean;
+  /**
+   * className applied to the root element.
+   */
   className?: string;
-  classes?: YearPickerClasses;
+  /**
+   * Override or extend the styles applied to the component.
+   */
+  classes?: Partial<YearPickerClasses>;
+  /** Date value for the YearPicker */
   date: TDate | null;
+  /** If `true` picker is disabled */
   disabled?: boolean;
+  /** Callback fired on date change. */
   onChange: NonNullablePickerChangeHandler<TDate>;
+  /** If `true` picker is readonly */
   readOnly?: boolean;
+  /**
+   * The system prop that allows defining system overrides as well as additional CSS styles.
+   */
+  sx?: SxProps<Theme>;
   /**
    * If `true`, today's date is rendering without highlighting with circle.
    * @default false
