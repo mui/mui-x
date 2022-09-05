@@ -34,17 +34,17 @@ const pickersMonthClasses = generateUtilityClasses('PrivatePickersMonth', [
 ]);
 
 interface PickersMonthProps {
-  classes?: Partial<PickersMonthClasses>;
+  autoFocus: boolean;
   children: React.ReactNode;
+  classes?: Partial<PickersMonthClasses>;
   disabled?: boolean;
   onClick: (event: React.MouseEvent, value: number) => void;
   onKeyDown: (event: React.KeyboardEvent, value: number) => void;
   selected?: boolean;
   value: number;
-  hasFocus: boolean;
-  onBlur: (event: React.FocusEvent, month: number) => void;
-  onFocus: (event: React.FocusEvent, month: number) => void;
   tabIndex: number;
+  onFocus: (event: React.FocusEvent, month: number) => void;
+  onBlur: (event: React.FocusEvent, month: number) => void;
 }
 
 interface PickersMonthOwnerState extends PickersMonthProps {
@@ -106,13 +106,13 @@ const noop = () => {};
 /**
  * @ignore - do not document.
  */
-export const PickersMonth: React.FC<PickersMonthProps> = (props) => {
+export const PickersMonth = (props: PickersMonthProps) => {
   const {
     disabled,
     selected,
     value,
     tabIndex,
-    hasFocus,
+    autoFocus,
     onFocus = noop,
     onBlur = noop,
     onClick,
@@ -125,10 +125,10 @@ export const PickersMonth: React.FC<PickersMonthProps> = (props) => {
 
   const ref = React.useRef<HTMLButtonElement>(null);
   useEnhancedEffect(() => {
-    if (hasFocus) {
+    if (autoFocus) {
       ref.current?.focus();
     }
-  }, [hasFocus]);
+  }, [autoFocus]);
 
   const ownerState = { ...props, wrapperVariant };
 

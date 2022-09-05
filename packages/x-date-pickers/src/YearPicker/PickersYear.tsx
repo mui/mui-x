@@ -1,6 +1,6 @@
 import * as React from 'react';
 import clsx from 'clsx';
-import { useForkRef, capitalize } from '@mui/material/utils';
+import { capitalize } from '@mui/material/utils';
 import { alpha, styled } from '@mui/material/styles';
 import {
   unstable_composeClasses as composeClasses,
@@ -108,63 +108,60 @@ const noop = () => {};
 /**
  * @ignore - internal component.
  */
-export const PickersYear = React.forwardRef<HTMLButtonElement, PickersYearProps>(
-  function PickersYear(props, forwardedRef) {
-    const {
-      autoFocus,
-      className,
-      children,
-      disabled,
-      onClick,
-      onKeyDown,
-      value,
-      tabIndex,
-      onFocus = noop,
-      onBlur = noop,
-      ...other
-    } = props;
-    const ref = React.useRef<HTMLButtonElement>(null);
-    const refHandle = useForkRef(ref, forwardedRef as React.Ref<HTMLButtonElement>);
-    const wrapperVariant = React.useContext(WrapperVariantContext);
+export const PickersYear = (props: PickersYearProps) => {
+  const {
+    autoFocus,
+    className,
+    children,
+    disabled,
+    onClick,
+    onKeyDown,
+    value,
+    tabIndex,
+    onFocus = noop,
+    onBlur = noop,
+    ...other
+  } = props;
+  const ref = React.useRef<HTMLButtonElement>(null);
+  const wrapperVariant = React.useContext(WrapperVariantContext);
 
-    const ownerState = {
-      ...props,
-      wrapperVariant,
-    };
+  const ownerState = {
+    ...props,
+    wrapperVariant,
+  };
 
-    const classes = useUtilityClasses(ownerState);
+  const classes = useUtilityClasses(ownerState);
 
-    // TODO: Can we just forward this to the button?
-    React.useEffect(() => {
-      if (autoFocus) {
-        // `ref.current` being `null` would be a bug in MUI.
-        ref.current!.focus();
-      }
-    }, [autoFocus]);
+  // TODO: Can we just forward this to the button?
+  React.useEffect(() => {
+    if (autoFocus) {
+      // `ref.current` being `null` would be a bug in MUI.
+      ref.current!.focus();
+    }
+  }, [autoFocus]);
 
-    return (
-      <PickersYearRoot
-        data-mui-test="year"
-        className={clsx(classes.root, className)}
+  return (
+    <PickersYearRoot
+      data-mui-test="year"
+      className={clsx(classes.root, className)}
+      ownerState={ownerState}
+    >
+      <PickersYearButton
+        ref={ref}
+        disabled={disabled}
+        type="button"
+        data-mui-test={`year-${children}`}
+        tabIndex={disabled ? -1 : tabIndex}
+        onClick={(event) => onClick(event, value)}
+        onKeyDown={(event) => onKeyDown(event, value)}
+        onFocus={(event) => onFocus(event, value)}
+        onBlur={(event) => onBlur(event, value)}
+        className={classes.yearButton}
         ownerState={ownerState}
+        {...other}
       >
-        <PickersYearButton
-          ref={refHandle}
-          disabled={disabled}
-          type="button"
-          data-mui-test={`year-${children}`}
-          tabIndex={disabled ? -1 : tabIndex}
-          onClick={(event) => onClick(event, value)}
-          onKeyDown={(event) => onKeyDown(event, value)}
-          onFocus={(event) => onFocus(event, value)}
-          onBlur={(event) => onBlur(event, value)}
-          className={classes.yearButton}
-          ownerState={ownerState}
-          {...other}
-        >
-          {children}
-        </PickersYearButton>
-      </PickersYearRoot>
-    );
-  },
-);
+        {children}
+      </PickersYearButton>
+    </PickersYearRoot>
+  );
+};
