@@ -11,6 +11,9 @@ import Chip from '@mui/material/Chip';
 import Avatar from '@mui/material/Avatar';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
+import ArrowUp from '@mui/icons-material/KeyboardArrowUp';
+import ArrowDown from '@mui/icons-material/KeyboardArrowDown';
+import { useTheme } from '@mui/material';
 import AggregationRowGrouping from '../aggregation/AggregationRowGrouping';
 import BasicColumnPinning from '../column-pinning/BasicColumnPinning';
 import ColumnSelectorGrid from '../column-visibility/ColumnSelectorGrid';
@@ -27,9 +30,6 @@ import ColumnVirtualizationGrid from '../virtualization/ColumnVirtualizationGrid
 import FullFeaturedDemo from './FullFeaturedDemo';
 import LazyLoadingGrid from '../row-updates/LazyLoadingGrid';
 import BasicGroupingDemo from '../column-groups/BasicGroupingDemo';
-import ArrowUp from '@mui/icons-material/KeyboardArrowUp';
-import ArrowDown from '@mui/icons-material/KeyboardArrowDown';
-import { useTheme } from '@mui/material';
 
 export const featuresSet = [
   {
