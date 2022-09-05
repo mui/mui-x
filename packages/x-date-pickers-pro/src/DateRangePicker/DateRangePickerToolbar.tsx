@@ -8,6 +8,7 @@ import {
   pickersToolbarClasses,
   useUtils,
   BaseToolbarProps,
+  useLocaleText,
 } from '@mui/x-date-pickers/internals';
 import { DateRange, CurrentlySelectingRangeEndProps } from '../internal/models';
 
@@ -63,8 +64,11 @@ export const DateRangePickerToolbar = <TDate extends unknown>(
     startText,
     toggleMobileKeyboardView,
     toolbarFormat,
-    toolbarTitle = 'Select date range',
+    toolbarTitle: toolbarTitleProp,
   } = props;
+
+  const localeText = useLocaleText();
+  const toolbarTitle = toolbarTitleProp ?? localeText.dateRangePickerDefaultToolbarTitle;
 
   const startDateValue = start
     ? utils.formatByString(start, toolbarFormat || utils.formats.shortDate)

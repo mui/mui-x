@@ -23,6 +23,9 @@ export interface GridRestoreStatePreProcessingValue {
   callbacks: (() => void)[];
 }
 
+/**
+ * Object passed as parameter in the `exportState()` grid API method.
+ */
 export interface GridExportStateParams {
   /**
    * By default, the grid exports all the models.

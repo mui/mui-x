@@ -21,6 +21,11 @@ export {
 } from '../hooks/features/columnMenu/useGridColumnMenu';
 export { useGridColumns, columnsStateInitializer } from '../hooks/features/columns/useGridColumns';
 export { useGridColumnSpanning } from '../hooks/features/columns/useGridColumnSpanning';
+export {
+  useGridColumnGrouping,
+  columnGroupsStateInitializer,
+} from '../hooks/features/columnGrouping/useGridColumnGrouping';
+export { useGridColumnGroupingPreProcessors } from '../hooks/features/columnGrouping/useGridColumnGroupingPreProcessors';
 export type {
   GridColumnRawLookup,
   GridColumnsRawState,
@@ -30,6 +35,7 @@ export { useGridDensity, densityStateInitializer } from '../hooks/features/densi
 export { useGridCsvExport } from '../hooks/features/export/useGridCsvExport';
 export { useGridPrintExport } from '../hooks/features/export/useGridPrintExport';
 export { useGridFilter, filterStateInitializer } from '../hooks/features/filter/useGridFilter';
+export { passFilterLogic } from '../hooks/features/filter/gridFilterUtils';
 export type { GridAggregatedFilterItemApplier } from '../hooks/features/filter/gridFilterState';
 export { useGridFocus, focusStateInitializer } from '../hooks/features/focus/useGridFocus';
 export { useGridKeyboardNavigation } from '../hooks/features/keyboardNavigation/useGridKeyboardNavigation';
@@ -77,7 +83,10 @@ export { useGridEvents } from '../hooks/features/events/useGridEvents';
 export { useGridDimensions } from '../hooks/features/dimensions/useGridDimensions';
 export { useGridStatePersistence } from '../hooks/features/statePersistence/useGridStatePersistence';
 export type { GridRestoreStatePreProcessingContext } from '../hooks/features/statePersistence/gridStatePersistenceInterface';
-export { useGridVirtualScroller } from '../hooks/features/virtualization/useGridVirtualScroller';
+export {
+  useGridVirtualScroller,
+  getRenderableIndexes,
+} from '../hooks/features/virtualization/useGridVirtualScroller';
 
 export { useGridVisibleRows } from '../hooks/utils/useGridVisibleRows';
 export { useGridInitializeState } from '../hooks/utils/useGridInitializeState';

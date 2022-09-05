@@ -13,6 +13,7 @@
   { "name": "GridColDefGenerator", "kind": "Interface" },
   { "name": "GridDataGeneratorContext", "kind": "Interface" },
   { "name": "GridDemoData", "kind": "Interface" },
+  { "name": "loadServerRows", "kind": "Variable" },
   { "name": "Movie", "kind": "TypeAlias" },
   { "name": "QueryOptions", "kind": "Interface" },
   { "name": "random", "kind": "Variable" },
@@ -70,7 +71,6 @@
   { "name": "renderRating", "kind": "Function" },
   { "name": "renderStatus", "kind": "Function" },
   { "name": "renderTotalPrice", "kind": "Function" },
-  { "name": "ServerOptions", "kind": "Interface" },
   { "name": "useDemoData", "kind": "Variable" },
   { "name": "UseDemoDataOptions", "kind": "Interface" },
   { "name": "useMovieData", "kind": "Variable" }

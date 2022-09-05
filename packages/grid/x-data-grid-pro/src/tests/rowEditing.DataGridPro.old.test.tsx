@@ -7,19 +7,12 @@ import {
   GridColDef,
 } from '@mui/x-data-grid-pro';
 // @ts-ignore Remove once the test utils are typed
-import { createRenderer, fireEvent, waitFor } from '@mui/monorepo/test/utils';
+import { createRenderer, fireEvent, waitFor, act, userEvent } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
 import { getCell, getRow } from 'test/utils/helperFn';
 import { spy } from 'sinon';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
-
-function fireClickEvent(cell: HTMLElement) {
-  fireEvent.mouseUp(cell);
-  fireEvent.click(cell);
-}
-
-const nativeSetTimeout = setTimeout;
 
 describe('<DataGridPro /> - Row Editing', () => {
   let baselineProps: Pick<
@@ -85,7 +78,7 @@ describe('<DataGridPro /> - Row Editing', () => {
     render(<TestCase editMode="row" />);
     expect(getRow(1)).not.to.have.class('MuiDataGrid-row--editing');
     const cell = getCell(1, 0);
-    fireClickEvent(cell);
+    userEvent.mousePress(cell);
 
     fireEvent.keyDown(cell, { key: 'Enter' });
     expect(getRow(1)).to.have.class('MuiDataGrid-row--editing');
@@ -153,7 +146,7 @@ describe('<DataGridPro /> - Row Editing', () => {
     fireEvent.change(input, { target: { value: 'ADIDAS' } });
     clock.tick(500);
     expect(input!.value).to.equal('ADIDAS');
-    fireClickEvent(getCell(2, 0));
+    userEvent.mousePress(getCell(2, 0));
     clock.tick(0);
     await waitFor(() => {
       // Wait for promise
@@ -169,7 +162,7 @@ describe('<DataGridPro /> - Row Editing', () => {
     expect(getCell(1, 0).querySelector('input')).toHaveFocus();
   });
 
-  it('should call the valueSetter on each column', () => {
+  it('should call the valueSetter on each column', async () => {
     const valueSetter = spy(({ row }) => row);
     render(
       <TestCase
@@ -199,6 +192,7 @@ describe('<DataGridPro /> - Row Editing', () => {
     fireEvent.change(input, { target: { value: 'Peter Smith' } });
     clock.tick(500);
     fireEvent.keyDown(input, { key: 'Enter' });
+    await act(() => Promise.resolve());
     expect(valueSetter.callCount).to.equal(1);
     expect(valueSetter.lastCall.args[0]).to.deep.equal({
       row: { id: 0, firstName: 'John', lastName: 'Doe' },
@@ -282,11 +276,11 @@ describe('<DataGridPro /> - Row Editing', () => {
     fireEvent.doubleClick(cell);
     const input = cell.querySelector('input')!;
     fireEvent.change(input, { target: { value: 'Adidas' } });
-    clock.runToLast();
-    await new Promise((resolve) => nativeSetTimeout(resolve));
+    act(() => clock.runToLast());
+    await act(() => Promise.resolve());
     expect(apiRef.current.getEditRowsModel()[0].brand.value).to.equal('Adidas');
     fireEvent.keyDown(input, { key: 'Enter' });
-    await new Promise((resolve) => nativeSetTimeout(resolve));
+    await act(() => Promise.resolve());
     expect(cell).not.to.have.class('MuiDataGrid-cell--editing');
     expect(cell).to.have.text('Adidas');
   });
@@ -323,9 +317,7 @@ describe('<DataGridPro /> - Row Editing', () => {
     fireEvent.change(input, { target: { value: 'Adidas' } });
     clock.tick(500);
     fireEvent.keyDown(input, { key: 'Enter' });
-
-    await new Promise((resolve) => nativeSetTimeout(resolve)); // Wait for promise
-
+    await act(() => Promise.resolve());
     expect(brandPreProcessEditCellProps.callCount).to.equal(2);
     expect(brandPreProcessEditCellProps.args[0][0].props).to.deep.equal({ value: 'Adidas' });
     expect(brandPreProcessEditCellProps.args[1][0].props).to.deep.equal({ value: 'Nike' });
@@ -368,9 +360,7 @@ describe('<DataGridPro /> - Row Editing', () => {
     fireEvent.change(input, { target: { value: 'Adidas' } });
     clock.tick(500);
     fireEvent.keyDown(input, { key: 'Enter' });
-
-    await new Promise((resolve) => nativeSetTimeout(resolve)); // Wait for promise
-
+    await act(() => Promise.resolve());
     expect(brandPreProcessEditCellProps.callCount).to.equal(1);
     expect(brandPreProcessEditCellProps.lastCall.args[0].props).to.deep.equal({
       value: 'Adidas',
@@ -410,9 +400,7 @@ describe('<DataGridPro /> - Row Editing', () => {
     fireEvent.change(input, { target: { value: 'Adidas' } });
     clock.tick(500);
     fireEvent.keyDown(input, { key: 'Enter' });
-
-    await new Promise((resolve) => nativeSetTimeout(resolve)); // Wait for promise
-
+    await act(() => Promise.resolve());
     expect(preProcessEditCellProps.callCount).to.equal(1);
     expect(preProcessEditCellProps.lastCall.args[0].props).to.deep.equal({
       value: 'ADIDAS',
@@ -443,12 +431,11 @@ describe('<DataGridPro /> - Row Editing', () => {
     const input = cell.querySelector('input')!;
     fireEvent.change(input, { target: { value: 'Adidas' } });
     fireEvent.keyDown(input, { key: 'Enter' });
-    await new Promise((resolve) => nativeSetTimeout(resolve)); // Wait for promise
     clock.runToLast();
     expect(getRow(1)).not.to.have.class('MuiDataGrid-row--editing');
   });
 
-  it(`should ignore keydown event until the IME is confirmed`, () => {
+  it(`should ignore keydown event until the IME is confirmed`, async () => {
     const valueSetter = spy(({ row }) => row);
     render(
       <TestCase
@@ -466,6 +453,7 @@ describe('<DataGridPro /> - Row Editing', () => {
     fireEvent.keyDown(input, { key: 'Enter', keyCode: 229 });
     expect(valueSetter.callCount).to.equal(0);
     fireEvent.keyDown(input, { key: 'Enter', keyCode: 13 });
+    await act(() => Promise.resolve());
     expect(valueSetter.callCount).to.equal(1);
     expect(input!.value).to.equal('あ');
   });

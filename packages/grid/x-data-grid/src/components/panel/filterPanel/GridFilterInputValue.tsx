@@ -91,7 +91,7 @@ function GridFilterInputValue(props: GridTypeFilterInputValueProps & TextFieldPr
       : {};
 
   const onFilterChange = React.useCallback(
-    (event) => {
+    (event: React.ChangeEvent<HTMLInputElement>) => {
       let value = event.target.value;
       // NativeSelect casts the value to a string.
       if (type === 'singleSelect') {

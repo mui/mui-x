@@ -1,4 +1,4 @@
-<LocalizationProvider dateAdapter={AdapterDateFns}>
+<LocalizationProvider dateAdapter={AdapterDayjs}>
   <DatePicker
     label="Helper text example"
     value={value}

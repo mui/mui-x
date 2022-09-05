@@ -39,7 +39,7 @@
     "experimentalFeatures": {
       "type": {
         "name": "shape",
-        "description": "{ newEditingApi?: bool, preventCommitWhileValidating?: bool, warnIfFocusStateIsNotSynced?: bool }"
+        "description": "{ columnGrouping?: bool, newEditingApi?: bool, preventCommitWhileValidating?: bool, warnIfFocusStateIsNotSynced?: bool }"
       }
     },
     "filterMode": {
@@ -81,7 +81,7 @@
         "name": "enum",
         "description": "'debug'<br>&#124;&nbsp;'error'<br>&#124;&nbsp;'info'<br>&#124;&nbsp;'warn'<br>&#124;&nbsp;false"
       },
-      "default": "\"debug\""
+      "default": "\"error\" (\"warn\" in dev mode)"
     },
     "nonce": { "type": { "name": "string" } },
     "onCellClick": { "type": { "name": "func" } },
@@ -129,7 +129,6 @@
     "onRowModesModelChange": { "type": { "name": "func" } },
     "onSelectionModelChange": { "type": { "name": "func" } },
     "onSortModelChange": { "type": { "name": "func" } },
-    "onStateChange": { "type": { "name": "func" } },
     "page": { "type": { "name": "number" }, "default": "0" },
     "pageSize": { "type": { "name": "custom", "description": "number" }, "default": "100" },
     "paginationMode": {
@@ -251,6 +250,7 @@
     "QuickFilterIcon": { "default": "GridSearchIcon", "type": { "name": "elementType" } },
     "Row": { "default": "GridRow", "type": { "name": "elementType" } },
     "RowReorderIcon": { "default": "GridDragIcon", "type": { "name": "elementType" } },
+    "SkeletonCell": { "default": "GridSkeletonCell", "type": { "name": "elementType" } },
     "Toolbar": { "default": "null", "type": { "name": "elementType | null" } },
     "TreeDataCollapseIcon": { "default": "GridExpandMoreIcon", "type": { "name": "elementType" } },
     "TreeDataExpandIcon": { "default": "GridKeyboardArrowRight", "type": { "name": "elementType" } }
@@ -275,6 +275,7 @@
       "cell",
       "cellContent",
       "cellCheckbox",
+      "cellSkeleton",
       "checkboxInput",
       "columnHeader--alignCenter",
       "columnHeader--alignLeft",
@@ -286,6 +287,7 @@
       "columnHeader--sorted",
       "columnHeader--filtered",
       "columnHeader",
+      "columnGroupHeader",
       "columnHeaderCheckbox",
       "columnHeaderDraggableContainer",
       "rowReorderCellPlaceholder",
@@ -293,6 +295,9 @@
       "columnHeaderTitle",
       "columnHeaderTitleContainer",
       "columnHeaderTitleContainerContent",
+      "columnHeader--filledGroup",
+      "columnHeader--emptyGroup",
+      "columnHeader--showColumnBorder",
       "columnHeaders",
       "columnHeadersInner",
       "columnHeadersInner--scrollable",
@@ -352,6 +357,7 @@
       "row--dragging",
       "row--lastVisible",
       "row--dynamicHeight",
+      "row--detailPanelExpanded",
       "row",
       "rowCount",
       "rowReorderCellContainer",

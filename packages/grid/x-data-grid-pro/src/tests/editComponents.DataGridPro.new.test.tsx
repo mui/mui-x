@@ -11,7 +11,7 @@ import {
   renderEditSingleSelectCell,
 } from '@mui/x-data-grid-pro';
 // @ts-ignore Remove once the test utils are typed
-import { act, createRenderer, fireEvent, screen } from '@mui/monorepo/test/utils';
+import { act, createRenderer, fireEvent, screen, userEvent } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
 import { getCell } from 'test/utils/helperFn';
 import { spy, SinonSpy } from 'sinon';
@@ -37,8 +37,6 @@ const generateDate = (
   rawDate.setMilliseconds(0);
   return rawDate.getTime();
 };
-
-const nativeSetTimeout = setTimeout;
 
 describe('<DataGridPro /> - Edit Components', () => {
   const { render, clock } = createRenderer({ clock: 'fake' });
@@ -119,11 +117,11 @@ describe('<DataGridPro /> - Edit Components', () => {
 
       expect(screen.queryByTestId('LoadIcon')).to.equal(null);
       fireEvent.change(input, { target: { value: 'Puma' } });
-      clock.tick(200);
+      act(() => clock.tick(200));
       expect(screen.queryByTestId('LoadIcon')).not.to.equal(null);
 
       clock.tick(500);
-      await new Promise((resolve) => nativeSetTimeout(resolve));
+      await act(() => Promise.resolve());
       expect(screen.queryByTestId('LoadIcon')).to.equal(null);
     });
 
@@ -140,7 +138,7 @@ describe('<DataGridPro /> - Edit Components', () => {
 
       const input = cell.querySelector('input')!;
       fireEvent.change(input, { target: { value: 'Puma' } });
-      await new Promise((resolve) => nativeSetTimeout(resolve));
+      await act(() => Promise.resolve());
 
       expect(onValueChange.callCount).to.equal(1);
       expect(onValueChange.lastCall.args[1]).to.equal('Puma');
@@ -201,9 +199,9 @@ describe('<DataGridPro /> - Edit Components', () => {
       expect(input.value).to.equal('100');
 
       fireEvent.change(input, { target: { value: '110' } });
-      clock.tick(200);
+      act(() => clock.tick(200));
       expect(preProcessEditCellPropsSpy.lastCall.args[0].props.value).to.equal(110);
-      await new Promise((resolve) => nativeSetTimeout(resolve)); // To avoid mutating the state after unmount
+      await act(() => Promise.resolve()); // To avoid mutating the state after unmount
     });
 
     it('should display a indicator while processing the props', async () => {
@@ -225,7 +223,7 @@ describe('<DataGridPro /> - Edit Components', () => {
       expect(screen.queryByTestId('LoadIcon')).not.to.equal(null);
 
       clock.tick(500);
-      await new Promise((resolve) => nativeSetTimeout(resolve));
+      await act(() => Promise.resolve());
       expect(screen.queryByTestId('LoadIcon')).to.equal(null);
     });
   });
@@ -342,7 +340,7 @@ describe('<DataGridPro /> - Edit Components', () => {
 
       const input = cell.querySelector('input')!;
       fireEvent.change(input, { target: { value: '2022-02-10' } });
-      await new Promise((resolve) => nativeSetTimeout(resolve));
+      await act(() => Promise.resolve());
 
       expect(onValueChange.callCount).to.equal(1);
       expect((onValueChange.lastCall.args[1]! as Date).toISOString()).to.equal(
@@ -550,14 +548,14 @@ describe('<DataGridPro /> - Edit Components', () => {
       expect(screen.queryAllByRole('option')[1]).to.have.text('adidas');
     });
 
-    it('should pass the value prop to the select', () => {
+    it('should pass the value prop to the select', async () => {
       render(<TestCase />);
 
       const cell = getCell(0, 0);
       fireEvent.doubleClick(cell);
 
       expect(cell.textContent!.replace(/[\W]+/, '')).to.equal('Nike'); // We use .replace to remove &ZeroWidthSpace;
-      apiRef.current.setEditCellValue({ id: 0, field: 'brand', value: 'Adidas' });
+      await act(() => apiRef.current.setEditCellValue({ id: 0, field: 'brand', value: 'Adidas' }));
       expect(cell.textContent!.replace(/[\W]+/, '')).to.equal('Adidas');
     });
 
@@ -572,10 +570,33 @@ describe('<DataGridPro /> - Edit Components', () => {
       const cell = getCell(0, 0);
       fireEvent.doubleClick(cell);
       fireEvent.click(screen.queryAllByRole('option')[1]);
-      await new Promise((resolve) => nativeSetTimeout(resolve));
+      await Promise.resolve();
 
       expect(onValueChange.callCount).to.equal(1);
       expect(onValueChange.lastCall.args[1]).to.equal('Adidas');
+    });
+
+    it('should not open the suggestions when Enter is pressed', async () => {
+      let resolveCallback: () => void;
+      const processRowUpdate = (newRow: any) =>
+        new Promise((resolve) => {
+          resolveCallback = () => resolve(newRow);
+        });
+
+      defaultData.columns[0].renderEditCell = (params) => renderEditSingleSelectCell(params);
+
+      render(<TestCase processRowUpdate={processRowUpdate} />);
+
+      const cell = getCell(0, 0);
+      fireEvent.doubleClick(cell);
+      userEvent.mousePress(screen.queryAllByRole('option')[1]);
+      clock.runToLast();
+      expect(screen.queryByRole('listbox')).to.equal(null);
+      fireEvent.keyDown(screen.queryByRole('button', { name: 'Adidas' }), { key: 'Enter' });
+      expect(screen.queryByRole('listbox')).to.equal(null);
+
+      resolveCallback!();
+      await act(() => Promise.resolve());
     });
   });
 
@@ -616,7 +637,7 @@ describe('<DataGridPro /> - Edit Components', () => {
 
       const input = cell.querySelector('input')!;
       fireEvent.click(input);
-      await new Promise((resolve) => nativeSetTimeout(resolve));
+      await act(() => Promise.resolve());
 
       expect(onValueChange.callCount).to.equal(1);
       expect(onValueChange.lastCall.args[1]).to.equal(true);

@@ -24,7 +24,7 @@ export interface GridExperimentalPremiumFeatures extends GridExperimentalProFeat
   /**
    * Enables the aggregation feature.
    */
-  private_aggregation: boolean;
+  aggregation: boolean;
 }
 
 /**
@@ -63,9 +63,8 @@ export interface DataGridPremiumPropsWithDefaultValue extends DataGridProPropsWi
   /**
    * If `true`, aggregation is disabled.
    * @default false
-   * @ignore - do not document.
    */
-  private_disableAggregation: boolean;
+  disableAggregation: boolean;
   /**
    * If `true`, the row grouping is disabled.
    * @default false
@@ -80,25 +79,22 @@ export interface DataGridPremiumPropsWithDefaultValue extends DataGridProPropsWi
   /**
    * Aggregation functions available on the grid.
    * @default GRID_AGGREGATION_FUNCTIONS
-   * @ignore - do not document.
    */
-  private_aggregationFunctions: Record<string, GridAggregationFunction>;
+  aggregationFunctions: Record<string, GridAggregationFunction>;
   /**
    * Rows used to generate the aggregated value.
    * If `filtered`, the aggregated values will be generated using only the rows currently passing the filtering process.
    * If `all`, the aggregated values will be generated using all the rows.
    * @default "filtered"
-   * @ignore - do not document.
    */
-  private_aggregationRowsScope: 'filtered' | 'all';
+  aggregationRowsScope: 'filtered' | 'all';
   /**
    * Determines the position of an aggregated value.
    * @param {GridRowTreeNodeConfig | null} groupNode The current group (`null` being the top level group).
    * @returns {GridAggregationPosition | null} Position of the aggregated value (if `null`, the group will not be aggregated).
    * @default `(groupNode) => groupNode == null ? 'footer' : 'inline'`
-   * @ignore - do not document.
    */
-  private_getAggregationPosition: (
+  getAggregationPosition: (
     groupNode: GridRowTreeNodeConfig | null,
   ) => GridAggregationPosition | null;
 }
@@ -127,17 +123,12 @@ export interface DataGridPremiumPropsWithoutDefaultValue<R extends GridValidRowM
   onRowGroupingModelChange?: (model: GridRowGroupingModel, details: GridCallbackDetails) => void;
   /**
    * Set the aggregation model of the grid.
-   * @ignore - do not document.
    */
-  private_aggregationModel?: GridAggregationModel;
+  aggregationModel?: GridAggregationModel;
   /**
    * Callback fired when the row grouping model changes.
    * @param {GridAggregationModel} model The aggregated columns.
    * @param {GridCallbackDetails} details Additional details for this callback.
-   * @ignore - do not document.
    */
-  private_onAggregationModelChange?: (
-    model: GridAggregationModel,
-    details: GridCallbackDetails,
-  ) => void;
+  onAggregationModelChange?: (model: GridAggregationModel, details: GridCallbackDetails) => void;
 }

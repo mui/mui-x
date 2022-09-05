@@ -59,6 +59,7 @@ export const useGridCellEditing = (
   >,
 ) => {
   const [cellModesModel, setCellModesModel] = React.useState<GridCellModesModel>({});
+  const cellModesModelRef = React.useRef(cellModesModel);
   const prevCellModesModel = React.useRef<GridCellModesModel>({});
   const {
     processRowUpdate,
@@ -117,6 +118,9 @@ export const useGridCellEditing = (
       if (params.cellMode === GridCellModes.View) {
         return;
       }
+      if (apiRef.current.getCellMode(params.id, params.field) === GridCellModes.View) {
+        return;
+      }
       const newParams = { ...params, reason: GridCellEditStopReasons.cellFocusOut };
       apiRef.current.publishEvent('cellEditStop', newParams, event);
     },
@@ -152,18 +156,14 @@ export const useGridCellEditing = (
       } else if (params.isEditable) {
         let reason: GridCellEditStartReasons | undefined;
 
-        if (isPrintableKey(event.key)) {
-          if (
-            (event.ctrlKey && event.key !== 'v') ||
-            (event.metaKey && event.key !== 'v') ||
-            event.altKey
-          ) {
-            return;
-          }
+        if (isPrintableKey(event)) {
+          reason = GridCellEditStartReasons.printableKeyDown;
+        } else if ((event.ctrlKey || event.metaKey) && event.key === 'v') {
           reason = GridCellEditStartReasons.printableKeyDown;
         } else if (event.key === 'Enter') {
           reason = GridCellEditStartReasons.enterKeyDown;
-        } else if (event.key === 'Delete') {
+        } else if (event.key === 'Delete' || event.key === 'Backspace') {
+          // Delete on Windows, Backspace on macOS
           reason = GridCellEditStartReasons.deleteKeyDown;
         }
 
@@ -263,6 +263,7 @@ export const useGridCellEditing = (
       }
 
       setCellModesModel(newModel);
+      cellModesModelRef.current = newModel;
       apiRef.current.publishEvent('cellModesModelChange', newModel);
     },
     [apiRef, onCellModesModelChange, props.cellModesModel, signature],
@@ -270,12 +271,14 @@ export const useGridCellEditing = (
 
   const updateFieldInCellModesModel = React.useCallback(
     (id: GridRowId, field: string, newProps: GridCellModesModelProps | null) => {
-      const newModel = { ...cellModesModel };
+      // We use the ref because it always contain the up-to-date value, different from the state
+      // that needs a rerender to reflect the new value
+      const newModel = { ...cellModesModelRef.current };
 
       if (newProps !== null) {
         newModel[id] = { ...newModel[id], [field]: { ...newProps } };
       } else {
-        const { [field]: fieldToRemove, ...otherFields } = cellModesModel[id]; // Ensure that we have a new object, not a reference
+        const { [field]: fieldToRemove, ...otherFields } = newModel[id]; // Ensure that we have a new object, not a reference
         newModel[id] = otherFields;
         if (Object.keys(newModel[id]).length === 0) {
           delete newModel[id];
@@ -284,7 +287,7 @@ export const useGridCellEditing = (
 
       updateCellModesModel(newModel);
     },
-    [cellModesModel, updateCellModesModel],
+    [updateCellModesModel],
   );
 
   const updateOrDeleteFieldState = React.useCallback(
@@ -361,11 +364,11 @@ export const useGridCellEditing = (
       apiRef.current.unstable_runPendingEditCellValueMutation(id, field);
 
       const finishCellEditMode = () => {
+        updateOrDeleteFieldState(id, field, null);
+        updateFieldInCellModesModel(id, field, null);
         if (cellToFocusAfter !== 'none') {
           apiRef.current.unstable_moveFocusToRelativeCell(id, field, cellToFocusAfter);
         }
-        updateOrDeleteFieldState(id, field, null);
-        updateFieldInCellModesModel(id, field, null);
       };
 
       if (ignoreModifications) {

@@ -9,7 +9,7 @@ import {
   useGridApiRef,
 } from '@mui/x-data-grid-premium';
 // @ts-ignore Remove once the test utils are typed
-import { createRenderer } from '@mui/monorepo/test/utils';
+import { createRenderer, act } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
 import { getColumnValues } from '../../../../../test/utils/helperFn';
 
@@ -41,7 +41,7 @@ const FULL_INITIAL_STATE: GridInitialState = {
   rowGrouping: {
     model: ['category'],
   },
-  private_aggregation: {
+  aggregation: {
     model: {
       id: 'size',
     },
@@ -69,7 +69,7 @@ describe('<DataGridPremium /> - State Persistence', () => {
           defaultGroupingExpansionDepth={-1}
           groupingColDef={{ headerName: 'Group' }}
           experimentalFeatures={{
-            private_aggregation: true,
+            aggregation: true,
           }}
         />
       </div>
@@ -82,9 +82,7 @@ describe('<DataGridPremium /> - State Persistence', () => {
 
       const exportedState = apiRef.current.exportState();
       expect(exportedState.rowGrouping).to.deep.equal(FULL_INITIAL_STATE.rowGrouping);
-      expect(exportedState.private_aggregation).to.deep.equal(
-        FULL_INITIAL_STATE.private_aggregation,
-      );
+      expect(exportedState.aggregation).to.deep.equal(FULL_INITIAL_STATE.aggregation);
     });
 
     it('should not export the default values of the models when using exportOnlyDirtyModels', () => {
@@ -98,44 +96,44 @@ describe('<DataGridPremium /> - State Persistence', () => {
 
     it('should export the current version of the exportable state', () => {
       render(<TestCase />);
-      apiRef.current.setRowGroupingModel(['category']);
-      apiRef.current.private_setAggregationModel({
-        id: 'size',
-      });
+      act(() => apiRef.current.setRowGroupingModel(['category']));
+      act(() =>
+        apiRef.current.setAggregationModel({
+          id: 'size',
+        }),
+      );
 
       const exportedState = apiRef.current.exportState();
       expect(exportedState.rowGrouping).to.deep.equal(FULL_INITIAL_STATE.rowGrouping);
-      expect(exportedState.private_aggregation).to.deep.equal(
-        FULL_INITIAL_STATE.private_aggregation,
-      );
+      expect(exportedState.aggregation).to.deep.equal(FULL_INITIAL_STATE.aggregation);
     });
 
     it('should export the current version of the exportable state when using exportOnlyDirtyModels', () => {
       render(<TestCase />);
-      apiRef.current.setRowGroupingModel(['category']);
-      apiRef.current.private_setAggregationModel({
-        id: 'size',
-      });
+      act(() => apiRef.current.setRowGroupingModel(['category']));
+      act(() =>
+        apiRef.current.setAggregationModel({
+          id: 'size',
+        }),
+      );
 
       const exportedState = apiRef.current.exportState({ exportOnlyDirtyModels: true });
       expect(exportedState.rowGrouping).to.deep.equal(FULL_INITIAL_STATE.rowGrouping);
-      expect(exportedState.private_aggregation).to.deep.equal(
-        FULL_INITIAL_STATE.private_aggregation,
-      );
+      expect(exportedState.aggregation).to.deep.equal(FULL_INITIAL_STATE.aggregation);
     });
 
     it('should export the controlled values of the models', () => {
       render(
         <TestCase
           rowGroupingModel={FULL_INITIAL_STATE.rowGrouping?.model}
-          private_aggregationModel={FULL_INITIAL_STATE.private_aggregation?.model}
+          aggregationModel={FULL_INITIAL_STATE.aggregation?.model}
         />,
       );
       expect(apiRef.current.exportState().rowGrouping).to.deep.equal(
         FULL_INITIAL_STATE.rowGrouping,
       );
-      expect(apiRef.current.exportState().private_aggregation).to.deep.equal(
-        FULL_INITIAL_STATE.private_aggregation,
+      expect(apiRef.current.exportState().aggregation).to.deep.equal(
+        FULL_INITIAL_STATE.aggregation,
       );
     });
 
@@ -143,14 +141,14 @@ describe('<DataGridPremium /> - State Persistence', () => {
       render(
         <TestCase
           rowGroupingModel={FULL_INITIAL_STATE.rowGrouping?.model}
-          private_aggregationModel={FULL_INITIAL_STATE.private_aggregation?.model}
+          aggregationModel={FULL_INITIAL_STATE.aggregation?.model}
         />,
       );
       expect(apiRef.current.exportState().rowGrouping).to.deep.equal(
         FULL_INITIAL_STATE.rowGrouping,
       );
-      expect(apiRef.current.exportState().private_aggregation).to.deep.equal(
-        FULL_INITIAL_STATE.private_aggregation,
+      expect(apiRef.current.exportState().aggregation).to.deep.equal(
+        FULL_INITIAL_STATE.aggregation,
       );
     });
   });
@@ -159,7 +157,7 @@ describe('<DataGridPremium /> - State Persistence', () => {
     it('should restore the whole exportable state', () => {
       render(<TestCase />);
 
-      apiRef.current.restoreState(FULL_INITIAL_STATE);
+      act(() => apiRef.current.restoreState(FULL_INITIAL_STATE));
       expect(getColumnValues(0)).to.deep.equal([
         'Cat A (3)',
         '',

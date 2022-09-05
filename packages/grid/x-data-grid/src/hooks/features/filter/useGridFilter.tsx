@@ -26,6 +26,7 @@ import {
   sanitizeFilterModel,
   mergeStateWithFilterModel,
   cleanFilterItem,
+  passFilterLogic,
 } from './gridFilterUtils';
 import { GridStateInitializer } from '../../utils/useGridInitializeState';
 import { isDeepEqual } from '../../../utils/utils';
@@ -84,6 +85,7 @@ export const useGridFilter = (
 
       const filteringResult = apiRef.current.unstable_applyStrategyProcessor('filtering', {
         isRowMatchingFilters,
+        filterModel: filterModel ?? getDefaultGridFilterModel(),
       });
 
       return {
@@ -347,7 +349,20 @@ export const useGridFilter = (
         const filteredRowsLookup: Record<GridRowId, boolean> = {};
         for (let i = 0; i < rowIds.length; i += 1) {
           const rowId = rowIds[i];
-          filteredRowsLookup[rowId] = params.isRowMatchingFilters(rowId);
+          let isRowPassing;
+          if (typeof rowId === 'string' && rowId.startsWith('auto-generated-group-footer')) {
+            isRowPassing = true;
+          } else {
+            const { passingFilterItems, passingQuickFilterValues } =
+              params.isRowMatchingFilters(rowId);
+            isRowPassing = passFilterLogic(
+              [passingFilterItems],
+              [passingQuickFilterValues],
+              params.filterModel,
+              apiRef,
+            );
+          }
+          filteredRowsLookup[rowId] = isRowPassing;
         }
         return {
           filteredRowsLookup,

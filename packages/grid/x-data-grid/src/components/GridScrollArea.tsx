@@ -80,7 +80,7 @@ function GridScrollAreaRaw(props: ScrollAreaProps) {
   );
 
   const handleDragOver = React.useCallback(
-    (event) => {
+    (event: React.DragEvent<HTMLDivElement>) => {
       let offset: number;
 
       if (scrollDirection === 'left') {

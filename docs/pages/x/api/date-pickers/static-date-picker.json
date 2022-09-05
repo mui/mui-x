@@ -13,6 +13,10 @@
     },
     "components": { "type": { "name": "object" }, "default": "{}" },
     "componentsProps": { "type": { "name": "object" }, "default": "{}" },
+    "dayOfWeekFormatter": {
+      "type": { "name": "func" },
+      "default": "(day) => day.charAt(0).toUpperCase()"
+    },
     "defaultCalendarMonth": { "type": { "name": "any" } },
     "disabled": { "type": { "name": "bool" } },
     "disableFuture": { "type": { "name": "bool" } },
@@ -87,7 +91,17 @@
       }
     }
   },
-  "slots": {},
+  "slots": {
+    "ActionBar": { "default": "PickersActionBar", "type": { "name": "elementType" } },
+    "LeftArrowButton": { "default": "IconButton", "type": { "name": "elementType" } },
+    "LeftArrowIcon": { "default": "ArrowLeft", "type": { "name": "elementType" } },
+    "OpenPickerIcon": { "default": "Calendar or Clock", "type": { "name": "elementType" } },
+    "PaperContent": { "default": "React.Fragment", "type": { "name": "elementType" } },
+    "RightArrowButton": { "default": "IconButton", "type": { "name": "elementType" } },
+    "RightArrowIcon": { "default": "ArrowRight", "type": { "name": "elementType" } },
+    "SwitchViewButton": { "default": "IconButton", "type": { "name": "elementType" } },
+    "SwitchViewIcon": { "default": "ArrowDropDown", "type": { "name": "elementType" } }
+  },
   "name": "StaticDatePicker",
   "styles": { "classes": [], "globalClasses": {}, "name": "MuiStaticDatePicker" },
   "filename": "/packages/x-date-pickers/src/StaticDatePicker/StaticDatePicker.tsx",

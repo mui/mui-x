@@ -30,9 +30,8 @@ export interface StaticDatePickerSlotsComponentsProps
   extends PickersStaticWrapperSlotsComponentsProps,
     CalendarPickerSlotsComponentsProps {}
 
-export type StaticDatePickerProps<TInputDate, TDate> = StaticPickerProps<
-  BaseDatePickerProps<TInputDate, TDate>
-> & {
+export interface StaticDatePickerProps<TInputDate, TDate>
+  extends StaticPickerProps<BaseDatePickerProps<TInputDate, TDate>> {
   /**
    * Overrideable components.
    * @default {}
@@ -43,7 +42,7 @@ export type StaticDatePickerProps<TInputDate, TDate> = StaticPickerProps<
    * @default {}
    */
   componentsProps?: Partial<StaticDatePickerSlotsComponentsProps>;
-};
+}
 
 type StaticDatePickerComponent = (<TInputDate, TDate = TInputDate>(
   props: StaticDatePickerProps<TInputDate, TDate> & React.RefAttributes<HTMLDivElement>,
@@ -136,6 +135,13 @@ StaticDatePicker.propTypes = {
    * @default {}
    */
   componentsProps: PropTypes.object,
+  /**
+   * Formats the day of week displayed in the calendar header.
+   * @param {string} day The day of week provided by the adapter's method `getWeekdays`.
+   * @returns {string} The name to display.
+   * @default (day) => day.charAt(0).toUpperCase()
+   */
+  dayOfWeekFormatter: PropTypes.func,
   /**
    * Default calendar month displayed when `value={null}`.
    */

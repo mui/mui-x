@@ -7,17 +7,25 @@ import {
   GridEditSingleSelectCell,
   GridColDef,
 } from '@mui/x-data-grid-pro';
-// @ts-ignore Remove once the test utils are typed
-import { createRenderer, fireEvent, screen, waitFor, act } from '@mui/monorepo/test/utils';
+import {
+  createRenderer,
+  fireEvent,
+  screen,
+  waitFor,
+  act,
+  userEvent,
+  // @ts-ignore Remove once the test utils are typed
+} from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
 import { getCell } from 'test/utils/helperFn';
 import { spy } from 'sinon';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
-function fireClickEvent(cell: HTMLElement) {
+function fireDoubleClickEvent(cell: HTMLElement) {
   fireEvent.mouseUp(cell);
-  fireEvent.click(cell);
+  fireEvent.mouseDown(cell);
+  fireEvent.doubleClick(cell);
 }
 
 /**
@@ -42,8 +50,6 @@ const generateDate = (
 
   return rawDate.getTime();
 };
-
-const nativeSetTimeout = setTimeout;
 
 describe('<DataGridPro /> - Edit Components', () => {
   let baselineProps: Pick<DataGridProProps, 'autoHeight' | 'rows' | 'columns' | 'throttleRowsMs'>;
@@ -118,9 +124,10 @@ describe('<DataGridPro /> - Edit Components', () => {
       );
 
       const cell = getCell(0, 0);
-      fireEvent.mouseUp(cell);
-      fireEvent.doubleClick(cell);
+      fireDoubleClickEvent(cell);
       fireEvent.click(screen.queryAllByRole('option')[1]);
+
+      await act(() => Promise.resolve());
 
       await waitFor(() => {
         expect(cell).not.to.have.class('MuiDataGrid-cell--editing');
@@ -166,9 +173,10 @@ describe('<DataGridPro /> - Edit Components', () => {
       );
 
       const cell = getCell(0, 0);
-      fireEvent.mouseUp(cell);
-      fireEvent.doubleClick(cell);
+      fireDoubleClickEvent(cell);
       fireEvent.click(screen.queryAllByRole('option')[1]);
+
+      await act(() => Promise.resolve());
 
       await waitFor(() => {
         expect(cell).not.to.have.class('MuiDataGrid-cell--editing');
@@ -199,9 +207,10 @@ describe('<DataGridPro /> - Edit Components', () => {
       );
 
       const cell = getCell(0, 0);
-      fireEvent.mouseUp(cell);
-      fireEvent.doubleClick(cell);
+      fireDoubleClickEvent(cell);
       fireEvent.click(screen.queryAllByRole('option')[1]);
+
+      await act(() => Promise.resolve());
 
       await waitFor(() => {
         expect(cell).not.to.have.class('MuiDataGrid-cell--editing');
@@ -247,9 +256,10 @@ describe('<DataGridPro /> - Edit Components', () => {
       );
 
       const cell = getCell(0, 0);
-      fireEvent.mouseUp(cell);
-      fireEvent.doubleClick(cell);
+      fireDoubleClickEvent(cell);
       fireEvent.click(screen.queryAllByRole('option')[1]);
+
+      await act(() => Promise.resolve());
 
       await waitFor(() => {
         expect(cell).not.to.have.class('MuiDataGrid-cell--editing');
@@ -282,8 +292,7 @@ describe('<DataGridPro /> - Edit Components', () => {
       );
 
       const cell = getCell(0, 0);
-      fireEvent.mouseUp(cell);
-      fireEvent.doubleClick(cell);
+      fireDoubleClickEvent(cell);
       const firstOption = screen.queryAllByRole('option')[0];
       const secondOption = screen.queryAllByRole('option')[1];
 
@@ -314,8 +323,7 @@ describe('<DataGridPro /> - Edit Components', () => {
         />,
       );
       const cell = getCell(0, 0);
-      fireEvent.mouseUp(cell);
-      fireEvent.doubleClick(cell);
+      fireDoubleClickEvent(cell);
       expect(screen.getByRole('button', { name: 'Nike' })).toHaveFocus();
     });
 
@@ -337,11 +345,14 @@ describe('<DataGridPro /> - Edit Components', () => {
         />,
       );
       const cell = getCell(0, 0);
-      fireClickEvent(cell);
+      userEvent.mousePress(cell);
 
       fireEvent.keyDown(cell, { key: 'Enter' });
       fireEvent.keyDown(screen.queryByRole('option', { name: 'Nike' }), { key: 'ArrowDown' });
       fireEvent.keyDown(screen.queryByRole('option', { name: 'Adidas' }), { key: 'Enter' });
+
+      await act(() => Promise.resolve());
+
       await waitFor(() => {
         expect(getCell(1, 0)).toHaveFocus();
       });
@@ -365,11 +376,10 @@ describe('<DataGridPro /> - Edit Components', () => {
         </div>,
       );
       const cell = getCell(0, 0);
-      fireEvent.mouseUp(cell);
-      fireEvent.doubleClick(cell);
+      fireDoubleClickEvent(cell);
       expect(cell).to.have.class('MuiDataGrid-cell--editing');
       const option = screen.queryAllByRole('option')[1];
-      fireClickEvent(option);
+      userEvent.mousePress(option);
       await waitFor(() => {
         expect(cell.firstChild).to.have.class('Mui-error');
       });
@@ -396,7 +406,8 @@ describe('<DataGridPro /> - Edit Components', () => {
       fireEvent.doubleClick(cell);
       expect(cell).to.have.class('MuiDataGrid-cell--editing');
       const option = screen.queryAllByRole('option')[1];
-      fireClickEvent(option);
+      userEvent.mousePress(option);
+
       await waitFor(() => {
         expect(cell.firstChild).to.have.class('Mui-error');
       });
@@ -426,11 +437,11 @@ describe('<DataGridPro /> - Edit Components', () => {
       const cell = getCell(0, 0);
       fireEvent.doubleClick(cell);
       const option = screen.queryByRole('option', { name: 'Adidas' });
-      fireEvent.mouseUp(option);
-      fireEvent.click(option);
+      userEvent.mousePress(option);
+
       clock.tick(500);
 
-      await new Promise((resolve) => nativeSetTimeout(resolve)); // Wait for promise
+      await act(() => Promise.resolve());
 
       expect(preProcessEditCellProps.callCount).to.equal(1);
       expect(preProcessEditCellProps.lastCall.args[0].props).to.deep.equal({
@@ -459,17 +470,16 @@ describe('<DataGridPro /> - Edit Components', () => {
       render(<Test />);
       expect(screen.queryAllByRole('row')).to.have.length(4);
       const cell = getCell(0, 0);
-      fireEvent.mouseUp(cell);
-      fireEvent.doubleClick(cell);
+      fireDoubleClickEvent(cell);
       const input = cell.querySelector('input')!;
       expect(input.value).to.equal('1941');
       fireEvent.change(input, { target: { value: '1942' } });
       clock.tick(500);
-
       fireEvent.keyDown(input, { key: 'Enter' });
+
       await waitFor(() => {
         expect(cell).to.have.text('1,942');
-        expect(apiRef.current.getRow(baselineProps.rows[0].id)!.year).to.equal(1942);
+        act(() => expect(apiRef.current.getRow(baselineProps.rows[0].id)!.year).to.equal(1942));
       });
     });
 
@@ -489,8 +499,7 @@ describe('<DataGridPro /> - Edit Components', () => {
       };
       render(<Test />);
       const cell = getCell(0, 0);
-      fireEvent.mouseUp(cell);
-      fireEvent.doubleClick(cell);
+      fireDoubleClickEvent(cell);
       const input = cell.querySelector('input')!;
       fireEvent.change(input, { target: { value: '0' } });
       expect(input.value).to.equal('0');
@@ -508,8 +517,7 @@ describe('<DataGridPro /> - Edit Components', () => {
         />,
       );
       const cell = getCell(0, 0);
-      fireEvent.mouseUp(cell);
-      fireEvent.doubleClick(cell);
+      fireDoubleClickEvent(cell);
       const input = cell.querySelector('input')!;
       fireEvent.change(input, { target: { value: '2022-05-07' } });
       expect(onEditCellPropsChange.args[0][0].props.value.toISOString()).to.equal(
@@ -527,8 +535,7 @@ describe('<DataGridPro /> - Edit Components', () => {
         />,
       );
       const cell = getCell(0, 0);
-      fireEvent.mouseUp(cell);
-      fireEvent.doubleClick(cell);
+      fireDoubleClickEvent(cell);
       const input = cell.querySelector('input')!;
       fireEvent.change(input, { target: { value: '' } });
       expect(onEditCellPropsChange.args[0][0].props.value).to.equal(null);
@@ -542,8 +549,7 @@ describe('<DataGridPro /> - Edit Components', () => {
         />,
       );
       const cell = getCell(0, 0);
-      fireEvent.mouseUp(cell);
-      fireEvent.doubleClick(cell);
+      fireDoubleClickEvent(cell);
       expect(screen.getByRole('cell').querySelector('input')).toHaveFocus();
     });
 
@@ -557,12 +563,9 @@ describe('<DataGridPro /> - Edit Components', () => {
         />,
       );
       const cell = getCell(0, 0);
-      fireEvent.mouseUp(cell);
-      fireEvent.doubleClick(cell);
+      fireDoubleClickEvent(cell);
       const newValue = new Date(2021, 6, 4);
-      act(() => {
-        apiRef.current.setEditCellValue({ id: 0, field: 'date', value: newValue });
-      });
+      act(() => apiRef.current.setEditCellValue({ id: 0, field: 'date', value: newValue }));
       const input = cell.querySelector('input')!;
       await waitFor(() => {
         expect(input.value).to.equal('2021-07-04');
@@ -580,8 +583,7 @@ describe('<DataGridPro /> - Edit Components', () => {
       );
 
       const cell = getCell(0, 0);
-      fireEvent.mouseUp(cell);
-      fireEvent.doubleClick(cell);
+      fireDoubleClickEvent(cell);
       const input = cell.querySelector('input')!;
       fireEvent.change(input, { target: { value: '' } });
       expect(onEditCellPropsChange.lastCall.args[0].props.value).to.equal(null);
@@ -629,7 +631,7 @@ describe('<DataGridPro /> - Edit Components', () => {
       clock.tick(500);
       fireEvent.keyDown(input, { key: 'Enter' });
 
-      await new Promise((resolve) => nativeSetTimeout(resolve)); // Wait for promise
+      await act(() => Promise.resolve());
 
       expect(preProcessEditCellProps.callCount).to.equal(1);
       expect(preProcessEditCellProps.lastCall.args[0].props.value.getTime()).to.equal(
@@ -650,8 +652,7 @@ describe('<DataGridPro /> - Edit Components', () => {
         />,
       );
       const cell = getCell(0, 0);
-      fireEvent.mouseUp(cell);
-      fireEvent.doubleClick(cell);
+      fireDoubleClickEvent(cell);
       const input = cell.querySelector('input')!;
       fireEvent.change(input, { target: { value: '2022-05-07T15:30:00' } });
       expect(onEditCellPropsChange.args[0][0].props.value.toISOString()).to.equal(
@@ -669,8 +670,7 @@ describe('<DataGridPro /> - Edit Components', () => {
         />,
       );
       const cell = getCell(0, 0);
-      fireEvent.mouseUp(cell);
-      fireEvent.doubleClick(cell);
+      fireDoubleClickEvent(cell);
       const input = cell.querySelector('input')!;
       fireEvent.change(input, { target: { value: '' } });
       expect(onEditCellPropsChange.args[0][0].props.value).to.equal(null);
@@ -684,8 +684,7 @@ describe('<DataGridPro /> - Edit Components', () => {
         />,
       );
       const cell = getCell(0, 0);
-      fireEvent.mouseUp(cell);
-      fireEvent.doubleClick(cell);
+      fireDoubleClickEvent(cell);
       expect(screen.getByRole('cell').querySelector('input')).toHaveFocus();
     });
 
@@ -699,12 +698,9 @@ describe('<DataGridPro /> - Edit Components', () => {
         />,
       );
       const cell = getCell(0, 0);
-      fireEvent.mouseUp(cell);
-      fireEvent.doubleClick(cell);
+      fireDoubleClickEvent(cell);
       const newValue = new Date(2021, 6, 4, 17, 30);
-      act(() => {
-        apiRef.current.setEditCellValue({ id: 0, field: 'date', value: newValue });
-      });
+      act(() => apiRef.current.setEditCellValue({ id: 0, field: 'date', value: newValue }));
       const input = cell.querySelector('input')!;
       await waitFor(() => {
         expect(input.value).to.equal('2021-07-04T17:30');
@@ -722,8 +718,7 @@ describe('<DataGridPro /> - Edit Components', () => {
       );
 
       const cell = getCell(0, 0);
-      fireEvent.mouseUp(cell);
-      fireEvent.doubleClick(cell);
+      fireDoubleClickEvent(cell);
       const input = cell.querySelector('input')!;
       fireEvent.change(input, { target: { value: '' } });
       expect(onEditCellPropsChange.lastCall.args[0].props.value).to.equal(null);
@@ -783,8 +778,7 @@ describe('<DataGridPro /> - Edit Components', () => {
       };
       render(<Test />);
       const cell = getCell(0, 0);
-      fireEvent.mouseUp(cell);
-      fireEvent.doubleClick(cell);
+      fireDoubleClickEvent(cell);
       const input = cell.querySelector('input')!;
       expect(input.value).to.equal('Nike');
       fireEvent.change(input, { target: { value: 'n' } });
@@ -798,7 +792,7 @@ describe('<DataGridPro /> - Edit Components', () => {
   });
 
   describe('column type: boolean', () => {
-    it('should call onEditCellPropsChange with the correct params', () => {
+    it('should call onEditCellPropsChange with the correct params', async () => {
       const onEditCellPropsChange = spy();
       render(
         <TestCase
@@ -808,10 +802,10 @@ describe('<DataGridPro /> - Edit Components', () => {
         />,
       );
       const cell = getCell(0, 0);
-      fireEvent.mouseUp(cell);
-      fireEvent.doubleClick(cell);
+      fireDoubleClickEvent(cell);
       const input = cell.querySelector('input')!;
       fireEvent.click(input);
+
       expect(onEditCellPropsChange.args[0][0]).to.deep.equal({
         id: 0,
         field: 'isAdmin',
@@ -827,8 +821,7 @@ describe('<DataGridPro /> - Edit Components', () => {
         />,
       );
       const cell = getCell(0, 0);
-      fireEvent.mouseUp(cell);
-      fireEvent.doubleClick(cell);
+      fireDoubleClickEvent(cell);
       expect(screen.getByRole('checkbox')).toHaveFocus();
     });
 
@@ -852,14 +845,15 @@ describe('<DataGridPro /> - Edit Components', () => {
       fireEvent.click(input);
       fireEvent.doubleClick(getCell(1, 0));
 
-      await new Promise((resolve) => nativeSetTimeout(resolve)); // Wait for promise
+      expect(cell).to.have.class('MuiDataGrid-cell--editing');
+      await act(() => Promise.resolve());
 
       expect(preProcessEditCellProps.callCount).to.equal(1);
       expect(preProcessEditCellProps.lastCall.args[0].props).to.deep.equal({
         value: true,
         isValidating: true,
       });
-      expect(cell).to.have.class('MuiDataGrid-cell--editing');
+      expect(cell).not.to.have.class('MuiDataGrid-cell--editing');
     });
   });
 });

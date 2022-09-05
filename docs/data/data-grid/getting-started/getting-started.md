@@ -148,8 +148,8 @@ Please pay attention to the license.
 The component comes [in different plans](https://mui.com/pricing/):
 
 - **Community** Plan: [`@mui/x-data-grid`](https://www.npmjs.com/package/@mui/x-data-grid), published under the [MIT license](https://tldrlegal.com/license/mit-license) and [free forever](https://mui-org.notion.site/Stewardship-542a2226043d4f4a96dfb429d16cf5bd).
-- **Pro** Plan: [`@mui/x-data-grid-pro`](https://www.npmjs.com/package/@mui/x-data-grid-pro) published under a [Commercial license](https://mui.com/store/legal/mui-x-eula/).
-- **Premium** Plan: [`@mui/x-data-grid-premium`](https://www.npmjs.com/package/@mui/x-data-grid-premium) published under a [Commercial license](https://mui.com/store/legal/mui-x-eula/).
+- **Pro** Plan: [`@mui/x-data-grid-pro`](https://www.npmjs.com/package/@mui/x-data-grid-pro) published under a [Commercial license](https://mui.com/legal/mui-x-eula/).
+- **Premium** Plan: [`@mui/x-data-grid-premium`](https://www.npmjs.com/package/@mui/x-data-grid-premium) published under a [Commercial license](https://mui.com/legal/mui-x-eula/).
 
 You can find more information about the plans in [the Licensing page](/x/introduction/licensing/).
 
@@ -168,10 +168,10 @@ The enterprise components come in two plans: Pro and Premium.
 | [Column reorder](/x/react-data-grid/column-ordering/)                                  |    ❌     |                 ✅                 |                     ✅                     |
 | [Column pinning](/x/react-data-grid/column-pinning/)                                   |    ❌     |                 ✅                 |                     ✅                     |
 | **Row**                                                                                |           |                                    |                                            |
-| [Row height](/x/react-data-grid/rows/#row-height)                                      |    ✅     |                 ✅                 |                     ✅                     |
-| [Row spanning](/x/react-data-grid/rows/#row-spanning)                                  |    🚧     |                 🚧                 |                     🚧                     |
-| [Row reordering](/x/react-data-grid/rows/#row-reorder)                                 |    ❌     |                 ✅                 |                     ✅                     |
-| [Row pinning](/x/react-data-grid/rows/#row-pinning)                                    |    ❌     |                 ✅                 |                     ✅                     |
+| [Row height](/x/react-data-grid/row-height/)                                           |    ✅     |                 ✅                 |                     ✅                     |
+| [Row spanning](/x/react-data-grid/row-spanning/)                                       |    🚧     |                 🚧                 |                     🚧                     |
+| [Row reordering](/x/react-data-grid/row-ordering/)                                     |    ❌     |                 ✅                 |                     ✅                     |
+| [Row pinning](/x/react-data-grid/row-pinning/)                                         |    ❌     |                 ✅                 |                     ✅                     |
 | **Selection**                                                                          |           |                                    |                                            |
 | [Single row selection](/x/react-data-grid/selection/#single-row-selection)             |    ✅     |                 ✅                 |                     ✅                     |
 | [Checkbox selection](/x/react-data-grid/selection/#checkbox-selection)                 |    ✅     |                 ✅                 |                     ✅                     |

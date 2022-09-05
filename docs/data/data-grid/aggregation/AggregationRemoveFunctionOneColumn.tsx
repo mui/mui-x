@@ -28,7 +28,7 @@ const COLUMNS: GridColDef[] = [
     field: 'year',
     headerName: 'Year',
     type: 'number',
-    private_availableAggregationFunctions: ['max', 'min'],
+    availableAggregationFunctions: ['max', 'min'],
   },
 ];
 
@@ -41,16 +41,14 @@ export default function AggregationRemoveFunctionOneColumn() {
         rows={data.rows}
         columns={COLUMNS}
         initialState={{
-          private_aggregation: {
+          aggregation: {
             model: {
               year: 'max',
               gross: 'max',
             },
           },
         }}
-        experimentalFeatures={{
-          private_aggregation: true,
-        }}
+        experimentalFeatures={{ aggregation: true }}
       />
     </div>
   );

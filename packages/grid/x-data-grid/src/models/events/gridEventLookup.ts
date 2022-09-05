@@ -9,6 +9,7 @@ import type {
   GridHeaderSelectionCheckboxParams,
   GridMenuParams,
   GridPreferencePanelParams,
+  GridRenderedRowsIntervalChangeParams,
   GridRowParams,
   GridRowSelectionCheckboxParams,
   GridScrollParams,
@@ -380,6 +381,10 @@ export interface GridEventLookup
    * @ignore - do not document.
    */
   rowExpansionChange: { params: GridRowTreeNodeConfig };
+  /**
+   * Fired when the rendered rows index interval changes. Called with a [[GridRenderedRowsIntervalChangeParams]] object.
+   */
+  renderedRowsIntervalChange: { params: GridRenderedRowsIntervalChangeParams };
 
   // Edit
   /**

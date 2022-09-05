@@ -11,7 +11,7 @@ import {
   DataGridPro,
 } from '@mui/x-data-grid-pro';
 // @ts-ignore Remove once the test utils are typed
-import { createRenderer, fireEvent, screen } from '@mui/monorepo/test/utils';
+import { createRenderer, fireEvent, screen, act } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
 import * as React from 'react';
 import { spy } from 'sinon';
@@ -75,6 +75,54 @@ describe('<DataGridPro /> - Filter', () => {
     expect(getColumnValues(0)).to.deep.equal(['Adidas', 'Puma']);
   });
 
+  it('should not apply items that are incomplete with AND operator', () => {
+    render(
+      <TestCase
+        filterModel={{
+          items: [
+            {
+              id: 1,
+              columnField: 'brand',
+              value: 'a',
+              operatorValue: 'contains',
+            },
+            {
+              id: 2,
+              columnField: 'brand',
+              operatorValue: 'contains',
+            },
+          ],
+          linkOperator: GridLinkOperator.And,
+        }}
+      />,
+    );
+    expect(getColumnValues(0)).to.deep.equal(['Adidas', 'Puma']);
+  });
+
+  it('should not apply items that are incomplete with OR operator', () => {
+    render(
+      <TestCase
+        filterModel={{
+          linkOperator: GridLinkOperator.Or,
+          items: [
+            {
+              id: 1,
+              columnField: 'brand',
+              value: 'a',
+              operatorValue: 'contains',
+            },
+            {
+              id: 2,
+              columnField: 'brand',
+              operatorValue: 'contains',
+            },
+          ],
+        }}
+      />,
+    );
+    expect(getColumnValues(0)).to.deep.equal(['Adidas', 'Puma']);
+  });
+
   it('should apply the filterModel prop correctly on GridApiRef setRows', () => {
     render(<TestCase filterModel={filterModel} />);
 
@@ -92,28 +140,30 @@ describe('<DataGridPro /> - Filter', () => {
         brand: 'Hugo',
       },
     ];
-    apiRef.current.setRows(newRows);
+    act(() => apiRef.current.setRows(newRows));
     expect(getColumnValues(0)).to.deep.equal(['Asics']);
   });
 
   it('should apply the filterModel prop correctly on GridApiRef update row data', () => {
     render(<TestCase filterModel={filterModel} />);
-    apiRef.current.updateRows([{ id: 1, brand: 'Fila' }]);
-    apiRef.current.updateRows([{ id: 0, brand: 'Patagonia' }]);
+    act(() => apiRef.current.updateRows([{ id: 1, brand: 'Fila' }]));
+    act(() => apiRef.current.updateRows([{ id: 0, brand: 'Patagonia' }]));
     expect(getColumnValues(0)).to.deep.equal(['Patagonia', 'Fila', 'Puma']);
   });
 
   it('should allow apiRef to setFilterModel', () => {
     render(<TestCase />);
-    apiRef.current.setFilterModel({
-      items: [
-        {
-          columnField: 'brand',
-          value: 'a',
-          operatorValue: 'startsWith',
-        },
-      ],
-    });
+    act(() =>
+      apiRef.current.setFilterModel({
+        items: [
+          {
+            columnField: 'brand',
+            value: 'a',
+            operatorValue: 'startsWith',
+          },
+        ],
+      }),
+    );
     expect(getColumnValues(0)).to.deep.equal(['Adidas']);
   });
 
@@ -156,7 +206,7 @@ describe('<DataGridPro /> - Filter', () => {
         },
       ],
     };
-    apiRef.current.setFilterModel(newModel);
+    act(() => apiRef.current.setFilterModel(newModel));
     expect(getColumnValues(0)).to.deep.equal(['Adidas']);
   });
 
@@ -434,14 +484,14 @@ describe('<DataGridPro /> - Filter', () => {
     screen.getByRole('grid').scrollIntoView();
     const initialScrollPosition = window.scrollY;
     expect(initialScrollPosition).not.to.equal(0);
-    apiRef.current.hidePreferences();
+    act(() => apiRef.current.hidePreferences());
     clock.tick(100);
-    apiRef.current.showPreferences(GridPreferencePanelsValue.filters);
+    act(() => apiRef.current.showPreferences(GridPreferencePanelsValue.filters));
     expect(window.scrollY).to.equal(initialScrollPosition);
   });
 
   describe('Server', () => {
-    it('should refresh the filter panel when adding filters', () => {
+    it('should refresh the filter panel when adding filters', async () => {
       function loadServerRows(commodityFilterValue: string | undefined) {
         const serverRows = [
           { id: '1', commodity: 'rice' },
@@ -511,6 +561,8 @@ describe('<DataGridPro /> - Filter', () => {
       }
 
       render(<AddServerFilterGrid />);
+      await act(() => Promise.resolve()); // Wait for the server to send rows
+
       const addButton = screen.getByRole('button', { name: /Add Filter/i });
       fireEvent.click(addButton);
       const filterForms = document.querySelectorAll(`.MuiDataGrid-filterForm`);

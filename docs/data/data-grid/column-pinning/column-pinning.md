@@ -2,7 +2,7 @@
 title: Data Grid - Column pinning
 ---
 
-# Data grid - Column pinning [<span class="plan-pro"></span>](https://mui.com/store/items/mui-x-pro/)
+# Data grid - Column pinning [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
 
 <p class="description">Pin columns to keep them visible at all time.</p>
 
@@ -76,6 +76,16 @@ Using the `disableColumnMenu` prop also works, however, you disable completely t
 To pin the checkbox column added when using `checkboxSelection`, add `GRID_CHECKBOX_SELECTION_COL_DEF.field` to the list of pinned columns.
 
 {{"demo": "ColumnPinningWithCheckboxSelection.js", "disableAd": true, "bg": "inline"}}
+
+## Usage with dynamic row height
+
+You can have both pinned columns and [dynamic row height](/x/react-data-grid/row-height/#dynamic-row-height) enabled at the same time.
+However, if the rows change their content after the initial calculation, you may need to trigger a manual recalculation to avoid incorrect measurements.
+You can do this by calling `apiRef.current.resetRowHeights()` every time that the content changes.
+
+The demo below contains an example of both features enabled:
+
+{{"demo": "ColumnPinningDynamicRowHeight.js", "disableAd": true, "bg": "inline"}}
 
 ## apiRef
 
