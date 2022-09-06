@@ -115,13 +115,13 @@ export const useGridColumnReorder = (
 
       draggingColumnGroupPath.forEach((groupId) => {
         if (!groupsLookup[groupId]?.freeReordering) {
-          const previousColumnGroupPath = getGroupPathFromColumnIndex(columnIndex - 1);
-          const nextColumnGroupPath = getGroupPathFromColumnIndex(columnIndex + 1);
-
           // Only consider group that are made of more than one column
-          if (columnIndex > 0 && previousColumnGroupPath.includes(groupId)) {
+          if (columnIndex > 0 && getGroupPathFromColumnIndex(columnIndex - 1).includes(groupId)) {
             limitingGroupId = groupId;
-          } else if (columnIndex + 1 < allColumns.length && nextColumnGroupPath.includes(groupId)) {
+          } else if (
+            columnIndex + 1 < allColumns.length &&
+            getGroupPathFromColumnIndex(columnIndex + 1).includes(groupId)
+          ) {
             limitingGroupId = groupId;
           }
         }
@@ -133,16 +133,14 @@ export const useGridColumnReorder = (
         const leftIndex = indexToForbid <= columnIndex ? indexToForbid - 1 : indexToForbid;
         const rightIndex = indexToForbid < columnIndex ? indexToForbid : indexToForbid + 1;
 
-        const rightColumnGroupPath = getGroupPathFromColumnIndex(rightIndex);
-        const leftColumnGroupPath = getGroupPathFromColumnIndex(leftIndex);
         if (limitingGroupId !== null) {
           // verify this indexToForbid will be linked to the limiting group. Otherwise forbid it
           let allowIndex = false;
-          if (leftIndex >= 0 && leftColumnGroupPath.includes(limitingGroupId)) {
+          if (leftIndex >= 0 && getGroupPathFromColumnIndex(leftIndex).includes(limitingGroupId)) {
             allowIndex = true;
           } else if (
             rightIndex < allColumns.length &&
-            rightColumnGroupPath.includes(limitingGroupId)
+            getGroupPathFromColumnIndex(rightIndex).includes(limitingGroupId)
           ) {
             allowIndex = true;
           }
@@ -153,8 +151,8 @@ export const useGridColumnReorder = (
 
         // Verify we are not splitting another group
         if (leftIndex >= 0 && rightIndex < allColumns.length) {
-          rightColumnGroupPath.forEach((groupId) => {
-            if (leftColumnGroupPath.includes(groupId)) {
+          getGroupPathFromColumnIndex(rightIndex).forEach((groupId) => {
+            if (getGroupPathFromColumnIndex(leftIndex).includes(groupId)) {
               if (!draggingColumnGroupPath.includes(groupId)) {
                 // moving here split the group groupId in two distincts chunks
                 if (!groupsLookup[groupId]?.freeReordering) {
