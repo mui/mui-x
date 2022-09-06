@@ -20,7 +20,7 @@ interface PickersMonthClasses {
   selected: string;
 }
 
-function getPickersYearUtilityClass(slot: string) {
+function getPickersMonthUtilityClass(slot: string) {
   return generateUtilityClass('PrivatePickersMonth', slot);
 }
 
@@ -59,10 +59,10 @@ const useUtilityClasses = (ownerState: PickersMonthOwnerState) => {
     yearButton: ['yearButton', disabled && 'disabled', selected && 'selected'],
   };
 
-  return composeClasses(slots, getPickersYearUtilityClass, classes);
+  return composeClasses(slots, getPickersMonthUtilityClass, classes);
 };
 
-const PickersYearRoot = styled('div')<{
+const PickersMonthRoot = styled('div')<{
   ownerState: PickersMonthOwnerState;
 }>(({ ownerState }) => ({
   flexBasis: '33.3%',
@@ -74,7 +74,7 @@ const PickersYearRoot = styled('div')<{
   }),
 }));
 
-const PickersYearButton = styled('button')<{
+const PickersMonthButton = styled('button')<{
   ownerState: PickersMonthOwnerState;
 }>(({ theme }) => ({
   color: 'unset',
@@ -134,12 +134,11 @@ const PickersMonthRaw = (props: PickersMonthProps) => {
   const classes = useUtilityClasses(ownerState);
 
   return (
-    <PickersYearRoot data-mui-test="month" className={classes.root} ownerState={ownerState}>
-      <PickersYearButton
+    <PickersMonthRoot data-mui-test="month" className={classes.root} ownerState={ownerState}>
+      <PickersMonthButton
         ref={ref}
         disabled={disabled}
         type="button"
-        data-mui-test={`month-${value}`}
         tabIndex={disabled ? -1 : tabIndex}
         onClick={(event) => onClick(event, value)}
         onKeyDown={(event) => onKeyDown(event, value)}
@@ -150,8 +149,8 @@ const PickersMonthRaw = (props: PickersMonthProps) => {
         {...other}
       >
         {children}
-      </PickersYearButton>
-    </PickersYearRoot>
+      </PickersMonthButton>
+    </PickersMonthRoot>
   );
 };
 
