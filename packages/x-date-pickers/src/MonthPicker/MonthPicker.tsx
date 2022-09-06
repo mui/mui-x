@@ -189,12 +189,12 @@ export const MonthPicker = React.forwardRef(function MonthPicker<TDate>(
     return shouldDisableMonth(month);
   });
 
-  const handleMonthSelection = useEventCallback((event: React.MouseEvent, year: number) => {
+  const handleMonthSelection = useEventCallback((event: React.MouseEvent, month: number) => {
     if (readOnly) {
       return;
     }
 
-    const newDate = utils.setMonth(selectedDateOrToday, year);
+    const newDate = utils.setMonth(selectedDateOrToday, month);
     onChange(newDate, 'finish');
   });
 

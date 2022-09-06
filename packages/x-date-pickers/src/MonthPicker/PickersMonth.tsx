@@ -56,7 +56,7 @@ const useUtilityClasses = (ownerState: PickersMonthOwnerState) => {
 
   const slots = {
     root: ['root', wrapperVariant && `mode${capitalize(wrapperVariant)}`],
-    yearButton: ['yearButton', disabled && 'disabled', selected && 'selected'],
+    monthButton: ['monthButton', disabled && 'disabled', selected && 'selected'],
   };
 
   return composeClasses(slots, getPickersMonthUtilityClass, classes);
@@ -146,7 +146,7 @@ const PickersMonthRaw = (props: PickersMonthProps) => {
         onKeyDown={(event) => onKeyDown(event, value)}
         onFocus={(event) => onFocus(event, value)}
         onBlur={(event) => onBlur(event, value)}
-        className={classes.yearButton}
+        className={classes.monthButton}
         ownerState={ownerState}
       >
         {children}
