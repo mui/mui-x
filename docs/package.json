@@ -74,7 +74,7 @@
     "react-router": "^6.3.0",
     "react-router-dom": "^6.3.0",
     "react-text-mask": "^5.4.3",
-    "recast": "^0.21.1",
+    "recast": "^0.21.2",
     "rimraf": "^3.0.2",
     "styled-components": "^5.3.5",
     "stylis": "^4.1.1",
