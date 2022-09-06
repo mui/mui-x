@@ -145,6 +145,7 @@ const PickersYearRaw = (props: PickersYearProps) => {
       data-mui-test="year"
       className={clsx(classes.root, className)}
       ownerState={ownerState}
+      {...other}
     >
       <PickersYearButton
         ref={ref}
@@ -158,7 +159,6 @@ const PickersYearRaw = (props: PickersYearProps) => {
         onBlur={(event) => onBlur(event, value)}
         className={classes.yearButton}
         ownerState={ownerState}
-        {...other}
       >
         {children}
       </PickersYearButton>

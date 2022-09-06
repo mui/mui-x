@@ -134,7 +134,12 @@ const PickersMonthRaw = (props: PickersMonthProps) => {
   const classes = useUtilityClasses(ownerState);
 
   return (
-    <PickersMonthRoot data-mui-test="month" className={classes.root} ownerState={ownerState}>
+    <PickersMonthRoot
+      data-mui-test="month"
+      className={classes.root}
+      ownerState={ownerState}
+      {...other}
+    >
       <PickersMonthButton
         ref={ref}
         disabled={disabled}
@@ -146,7 +151,6 @@ const PickersMonthRaw = (props: PickersMonthProps) => {
         onBlur={(event) => onBlur(event, value)}
         className={classes.yearButton}
         ownerState={ownerState}
-        {...other}
       >
         {children}
       </PickersMonthButton>
