@@ -149,6 +149,7 @@ export function CalendarOrClockPicker<TDate, View extends CalendarOrClockPickerV
   );
 
   if (process.env.NODE_ENV !== 'production') {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
     const warnedOnceNotValidOpenTo = React.useRef(false);
     if (!warnedOnceNotValidOpenTo.current && !views.includes(openTo)) {
       console.warn(
