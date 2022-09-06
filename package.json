@@ -1,5 +1,5 @@
 {
-  "version": "5.17.0",
+  "version": "5.17.1",
   "private": true,
   "scripts": {
     "start": "yarn docs:dev",
@@ -59,7 +59,8 @@
     "release:version": "lerna version --exact --no-changelog --no-push --no-git-tag-version",
     "release:build": "lerna run --parallel --scope \"@mui/*\" build",
     "release:publish": "lerna publish from-package --dist-tag latest --contents build",
-    "release:publish:dry-run": "lerna publish from-package --dist-tag latest --contents build --registry=\"http://localhost:4873/\""
+    "release:publish:dry-run": "lerna publish from-package --dist-tag latest --contents build --registry=\"http://localhost:4873/\"",
+    "release:tag": "node scripts/releaseTag"
   },
   "devDependencies": {
     "@babel/cli": "^7.18.10",
@@ -76,9 +77,9 @@
     "@babel/register": "^7.18.9",
     "@babel/traverse": "^7.18.13",
     "@babel/types": "^7.18.13",
-    "@emotion/cache": "^11.10.1",
-    "@emotion/react": "^11.10.0",
-    "@emotion/styled": "^11.10.0",
+    "@emotion/cache": "^11.10.3",
+    "@emotion/react": "^11.10.4",
+    "@emotion/styled": "^11.10.4",
     "@mnajdova/enzyme-adapter-react-18": "^0.2.0",
     "@mui/icons-material": "^5.10.2",
     "@mui/material": "^5.10.2",
@@ -93,7 +94,7 @@
     "@types/chai-dom": "^0.0.13",
     "@types/enzyme": "^3.10.12",
     "@types/mocha": "^9.1.1",
-    "@types/node": "^18.7.9",
+    "@types/node": "^18.7.15",
     "@types/prettier": "^2.7.0",
     "@types/react": "^18.0.17",
     "@types/react-dom": "^18.0.6",
@@ -120,7 +121,7 @@
     "cross-env": "^7.0.3",
     "danger": "^11.0.2",
     "enzyme": "^3.11.0",
-    "eslint": "^8.22.0",
+    "eslint": "^8.23.0",
     "eslint-config-airbnb-typescript": "^12.3.1",
     "eslint-config-prettier": "^8.5.0",
     "eslint-import-resolver-webpack": "^0.13.2",
