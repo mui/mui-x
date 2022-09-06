@@ -70,7 +70,7 @@ async function main(argv) {
 
   // eslint-disable-next-line no-console -- verbose logging
   console.log(
-    `Pushed tag '${tag}' to . This should not be reversed. In case of emergency enter 'git push --delete ${muiXRemote.name} ${tag}' to remove.`,
+    `Pushed tag '${tag}' to ${muiXRemote.name}. This should not be reversed. In case of emergency enter 'git push --delete ${muiXRemote.name} ${tag}' to remove.`,
   );
 }
 
