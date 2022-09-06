@@ -63,7 +63,6 @@ describe('<DataGridPro /> - Print export', () => {
     }
   });
 
-
   describe('Export toolbar', () => {
     clock.withFakeTimers();
 

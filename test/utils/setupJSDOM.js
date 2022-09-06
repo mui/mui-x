@@ -1,3 +1,4 @@
+require('@mui/monorepo/test/utils/setupJSDOM');
 require('./licenseRelease');
 const { createXMochaHooks } = require('./mochaHooks');
 
