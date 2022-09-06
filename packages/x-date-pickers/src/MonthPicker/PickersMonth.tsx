@@ -64,12 +64,12 @@ const useUtilityClasses = (ownerState: PickersMonthOwnerState) => {
 
 const PickersMonthRoot = styled('div')<{
   ownerState: PickersMonthOwnerState;
-}>(({ ownerState }) => ({
+}>({
   flexBasis: '33.3%',
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
-}));
+});
 
 const PickersMonthButton = styled('button')<{
   ownerState: PickersMonthOwnerState;
