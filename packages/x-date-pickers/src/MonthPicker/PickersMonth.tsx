@@ -69,9 +69,6 @@ const PickersMonthRoot = styled('div')<{
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
-  ...(ownerState?.wrapperVariant === 'desktop' && {
-    flexBasis: '25%',
-  }),
 }));
 
 const PickersMonthButton = styled('button')<{
