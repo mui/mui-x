@@ -16,11 +16,13 @@ import { StaticTimePickerProps } from '../StaticTimePicker';
 import { TimePickerProps } from '../TimePicker';
 import { YearPickerProps } from '../YearPicker';
 import { PickerStaticWrapperProps } from '../internals/components/PickerStaticWrapper';
+import { DateFieldProps } from '../DateField';
 
 export interface PickersComponentsPropsList {
   MuiCalendarPicker: CalendarPickerProps<unknown>;
   MuiCalendarPickerSkeleton: CalendarPickerSkeletonProps;
   MuiClockPicker: ClockPickerProps<unknown>;
+  MuiDateField: DateFieldProps<unknown, unknown>;
   MuiDatePicker: DatePickerProps<unknown, unknown>;
   MuiDateTimePicker: DateTimePickerProps<unknown, unknown>;
   MuiDesktopDateTimePicker: DesktopDateTimePickerProps<unknown, unknown>;

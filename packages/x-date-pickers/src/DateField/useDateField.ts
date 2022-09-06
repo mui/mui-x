@@ -7,7 +7,7 @@ import {
   addPositionPropertiesToSections,
   createDateStrFromSections,
 } from '../internals/hooks/useField';
-import { UseDateFieldProps, UseDateFieldDefaultizedProps } from './DateField.interfaces';
+import { UseDateFieldProps, UseDateFieldDefaultizedProps } from './DateField.types';
 import {
   DateValidationError,
   isSameDateError,

@@ -16,6 +16,11 @@ export interface PickerComponents<Theme = unknown> {
     styleOverrides?: ComponentsOverrides<Theme>['MuiClockPicker'];
     variants?: ComponentsVariants['MuiClockPicker'];
   };
+  MuiDateField?: {
+    defaultProps?: ComponentsProps['MuiDateField'];
+    styleOverrides?: ComponentsOverrides<Theme>['MuiDateField'];
+    variants?: ComponentsVariants['MuiDateField'];
+  };
   MuiDatePicker?: {
     defaultProps?: ComponentsProps['MuiDatePicker'];
     styleOverrides?: ComponentsOverrides<Theme>['MuiDatePicker'];

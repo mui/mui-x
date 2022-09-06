@@ -11,6 +11,7 @@ export interface PickersComponentNameToClassKey {
   MuiCalendarPicker: CalendarPickerClassKey;
   MuiCalendarPickerSkeleton: CalendarPickerSkeletonClassKey;
   MuiClockPicker: ClockPickerClassKey;
+  MuiDateField: never;
   MuiDatePicker: never;
   MuiDateTimePicker: never;
   MuiMonthPicker: MonthPickerClassKey;

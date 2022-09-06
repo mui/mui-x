@@ -36,6 +36,7 @@ export interface UseFieldInternalProps<TInputValue, TValue, TError> {
 }
 
 export interface UseFieldForwardedProps {
+  ref?: React.RefObject<HTMLInputElement>;
   onKeyDown?: React.KeyboardEventHandler;
   onClick?: () => void;
   onFocus?: () => void;
@@ -44,7 +45,6 @@ export interface UseFieldForwardedProps {
 
 export interface UseFieldResponse<TForwardedProps extends UseFieldForwardedProps> {
   inputProps: UseFieldResponseInputProps<TForwardedProps>;
-  inputRef: React.RefObject<HTMLInputElement>;
 }
 
 export type UseFieldResponseInputProps<TForwardedProps extends UseFieldForwardedProps> = Omit<
@@ -54,6 +54,7 @@ export type UseFieldResponseInputProps<TForwardedProps extends UseFieldForwarded
   NonNullable<UseFieldForwardedProps> & {
     value: string;
     error: boolean;
+    ref: React.Ref<HTMLInputElement>;
   };
 
 export interface FieldSection {
