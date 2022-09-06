@@ -7,12 +7,13 @@ import { useForkRef, useEventCallback, ownerDocument } from '@mui/material/utils
 import { styled } from '@mui/material/styles';
 import { TransitionProps as MuiTransitionProps } from '@mui/material/transitions';
 import { PickersActionBar, PickersActionBarProps } from '../../PickersActionBar';
+import { PickersSlotsComponent } from './wrappers/WrapperProps';
 
-export interface PickersPopperSlotsComponent {
-  ActionBar: React.ElementType<PickersActionBarProps>;
-}
+export interface PickersPopperSlotsComponent extends PickersSlotsComponent {}
+
 export interface PickersPopperSlotsComponentsProps {
   actionBar: Omit<PickersActionBarProps, 'onAccept' | 'onClear' | 'onCancel' | 'onSetToday'>;
+  paperContent: Record<string, any>;
 }
 
 export interface ExportedPickerPaperProps {
@@ -256,7 +257,13 @@ export const PickersPopper = (props: PickerPopperProps) => {
       lastFocusedElementRef.current &&
       lastFocusedElementRef.current instanceof HTMLElement
     ) {
-      lastFocusedElementRef.current.focus();
+      // make sure the button is flushed with updated label, before returning focus to it
+      // avoids issue, where screen reader could fail to announce selected date after selection
+      setTimeout(() => {
+        if (lastFocusedElementRef.current instanceof HTMLElement) {
+          lastFocusedElementRef.current.focus();
+        }
+      });
     }
   }, [open, role]);
 
@@ -284,6 +291,7 @@ export const PickersPopper = (props: PickerPopperProps) => {
   };
 
   const ActionBar = components?.ActionBar ?? PickersActionBar;
+  const PaperContent = components?.PaperContent || React.Fragment;
 
   return (
     <PickersPopperRoot
@@ -299,6 +307,10 @@ export const PickersPopper = (props: PickerPopperProps) => {
         <TrapFocus
           open={open}
           disableAutoFocus
+          // pickers are managing focus position manually
+          // without this prop the focus is returned to the button before `aria-label` is updated
+          // which would force screen readers to read too old label
+          disableRestoreFocus
           disableEnforceFocus={role === 'tooltip'}
           isEnabled={() => true}
           {...TrapFocusProps}
@@ -323,15 +335,17 @@ export const PickersPopper = (props: PickerPopperProps) => {
               ownerState={{ ...ownerState, placement }}
               {...otherPaperProps}
             >
-              {children}
-              <ActionBar
-                onAccept={onAccept}
-                onClear={onClear}
-                onCancel={onCancel}
-                onSetToday={onSetToday}
-                actions={[]}
-                {...componentsProps?.actionBar}
-              />
+              <PaperContent {...componentsProps?.paperContent}>
+                {children}
+                <ActionBar
+                  onAccept={onAccept}
+                  onClear={onClear}
+                  onCancel={onCancel}
+                  onSetToday={onSetToday}
+                  actions={[]}
+                  {...componentsProps?.actionBar}
+                />
+              </PaperContent>
             </PickersPopperPaper>
           </TransitionComponent>
         </TrapFocus>

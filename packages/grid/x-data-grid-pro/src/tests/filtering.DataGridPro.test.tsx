@@ -75,6 +75,54 @@ describe('<DataGridPro /> - Filter', () => {
     expect(getColumnValues(0)).to.deep.equal(['Adidas', 'Puma']);
   });
 
+  it('should not apply items that are incomplete with AND operator', () => {
+    render(
+      <TestCase
+        filterModel={{
+          items: [
+            {
+              id: 1,
+              columnField: 'brand',
+              value: 'a',
+              operatorValue: 'contains',
+            },
+            {
+              id: 2,
+              columnField: 'brand',
+              operatorValue: 'contains',
+            },
+          ],
+          linkOperator: GridLinkOperator.And,
+        }}
+      />,
+    );
+    expect(getColumnValues(0)).to.deep.equal(['Adidas', 'Puma']);
+  });
+
+  it('should not apply items that are incomplete with OR operator', () => {
+    render(
+      <TestCase
+        filterModel={{
+          linkOperator: GridLinkOperator.Or,
+          items: [
+            {
+              id: 1,
+              columnField: 'brand',
+              value: 'a',
+              operatorValue: 'contains',
+            },
+            {
+              id: 2,
+              columnField: 'brand',
+              operatorValue: 'contains',
+            },
+          ],
+        }}
+      />,
+    );
+    expect(getColumnValues(0)).to.deep.equal(['Adidas', 'Puma']);
+  });
+
   it('should apply the filterModel prop correctly on GridApiRef setRows', () => {
     render(<TestCase filterModel={filterModel} />);
 

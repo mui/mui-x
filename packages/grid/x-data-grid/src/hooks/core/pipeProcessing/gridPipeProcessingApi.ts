@@ -7,7 +7,7 @@ import {
   GridRestoreStatePreProcessingValue,
 } from '../../features/statePersistence/gridStatePersistenceInterface';
 import { GridHydrateColumnsValue } from '../../features/columns/gridColumnsInterfaces';
-import { GridRowEntry } from '../../../models/gridRows';
+import { GridRowEntry, GridRowId } from '../../../models/gridRows';
 import { GridHydrateRowsValue } from '../../features/rows/gridRowsState';
 import { GridPreferencePanelsValue } from '../../features/preferencesPanel';
 
@@ -32,6 +32,10 @@ export interface GridPipeProcessingLookup {
   scrollToIndexes: {
     value: Partial<GridScrollParams>;
     context: Partial<GridCellIndexCoordinates>;
+  };
+  rowClassName: {
+    value: string[];
+    context: GridRowId;
   };
 }
 

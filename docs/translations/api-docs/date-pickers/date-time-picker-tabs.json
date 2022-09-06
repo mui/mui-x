@@ -1,0 +1,11 @@
+{
+  "componentDescription": "",
+  "propDescriptions": {
+    "dateRangeIcon": "Date tab icon.",
+    "onChange": "Callback called when tab is clicked<br><br><strong>Signature:</strong><br><code>function(view: CalendarOrClockPickerView) =&gt; void</code><br><em>view:</em> Picker view that was clicked",
+    "timeIcon": "Time tab icon.",
+    "view": "Open picker view"
+  },
+  "classDescriptions": {},
+  "slotDescriptions": {}
+}

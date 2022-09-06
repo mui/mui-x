@@ -9,8 +9,10 @@ import { BasePickerProps } from '../internals/models/props/basePickerProps';
 import { ExportedDateInputProps } from '../internals/components/PureDateInput';
 import { CalendarOrClockPickerView } from '../internals/models';
 import { PickerStateValueManager } from '../internals/hooks/usePickerState';
-import { parsePickerInputValue } from '../internals/utils/date-utils';
+import { parsePickerInputValue, parseNonNullablePickerDate } from '../internals/utils/date-utils';
 import { BaseToolbarProps } from '../internals/models/props/baseToolbarProps';
+import { DefaultizedProps } from '../internals/models/helpers';
+import { BaseDateValidationProps } from '../internals/hooks/validation/models';
 
 export interface BaseDateTimePickerProps<TInputDate, TDate>
   extends ExportedClockPickerProps<TDate>,
@@ -24,7 +26,8 @@ export interface BaseDateTimePickerProps<TInputDate, TDate>
    */
   ampm?: boolean;
   /**
-   * To show tabs.
+   * Toggles visibility of date time switching tabs
+   * @default false for mobile, true for desktop
    */
   hideTabs?: boolean;
   /**
@@ -77,8 +80,6 @@ export interface BaseDateTimePickerProps<TInputDate, TDate>
   views?: readonly CalendarOrClockPickerView[];
 }
 
-type DefaultizedProps<Props> = Props & { inputFormat: string };
-
 export function useDateTimePickerDefaultizedProps<
   TInputDate,
   TDate,
@@ -86,8 +87,11 @@ export function useDateTimePickerDefaultizedProps<
 >(
   props: Props,
   name: string,
-): DefaultizedProps<Props> &
-  Required<Pick<BaseDateTimePickerProps<TInputDate, TDate>, 'openTo' | 'views'>> {
+): DefaultizedProps<
+  Props,
+  'openTo' | 'views' | keyof BaseDateValidationProps<TDate>,
+  { inputFormat: string }
+> {
   // This is technically unsound if the type parameters appear in optional props.
   // Optional props can be filled by `useThemeProps` with types that don't match the type parameters.
   const themeProps = useThemeProps({
@@ -115,9 +119,19 @@ export function useDateTimePickerDefaultizedProps<
     disableIgnoringDatePartForTimeValidation: Boolean(
       themeProps.minDateTime || themeProps.maxDateTime,
     ),
+    disablePast: false,
+    disableFuture: false,
     ...themeProps,
-    minDate: themeProps.minDateTime ?? themeProps.minDate ?? defaultDates.minDate,
-    maxDate: themeProps.maxDateTime ?? themeProps.maxDate ?? defaultDates.maxDate,
+    minDate: parseNonNullablePickerDate(
+      utils,
+      themeProps.minDateTime ?? themeProps.minDate,
+      defaultDates.minDate,
+    ),
+    maxDate: parseNonNullablePickerDate(
+      utils,
+      themeProps.maxDateTime ?? themeProps.maxDate,
+      defaultDates.maxDate,
+    ),
     minTime: themeProps.minDateTime ?? themeProps.minTime,
     maxTime: themeProps.maxDateTime ?? themeProps.maxTime,
   };

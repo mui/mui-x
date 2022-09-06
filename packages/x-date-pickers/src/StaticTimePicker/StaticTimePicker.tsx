@@ -30,9 +30,8 @@ export interface StaticTimePickerSlotsComponentsProps
   extends PickersStaticWrapperSlotsComponentsProps,
     ClockPickerSlotsComponentsProps {}
 
-export type StaticTimePickerProps<TInputDate, TDate> = StaticPickerProps<
-  BaseTimePickerProps<TInputDate, TDate>
-> & {
+export interface StaticTimePickerProps<TInputDate, TDate>
+  extends StaticPickerProps<BaseTimePickerProps<TInputDate, TDate>> {
   /**
    * Overrideable components.
    * @default {}
@@ -43,7 +42,7 @@ export type StaticTimePickerProps<TInputDate, TDate> = StaticPickerProps<
    * @default {}
    */
   componentsProps?: Partial<StaticTimePickerSlotsComponentsProps>;
-};
+}
 
 type StaticTimePickerComponent = (<TInputDate, TDate = TInputDate>(
   props: StaticTimePickerProps<TInputDate, TDate> & React.RefAttributes<HTMLDivElement>,
@@ -142,8 +141,9 @@ StaticTimePicker.propTypes = {
   closeOnSelect: PropTypes.bool,
   /**
    * Overrideable components.
+   * @default {}
    */
-  components: PropTypes.any,
+  components: PropTypes.object,
   /**
    * The props used for each component slot.
    * @default {}
