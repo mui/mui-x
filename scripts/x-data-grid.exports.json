@@ -110,6 +110,7 @@
   { "name": "gridColumnGroupingSelector", "kind": "Variable" },
   { "name": "gridColumnGroupsHeaderStructureSelector", "kind": "Variable" },
   { "name": "gridColumnGroupsLookupSelector", "kind": "Variable" },
+  { "name": "gridColumnGroupsUnwrappedModelSelector", "kind": "Variable" },
   { "name": "GridColumnHeaderClassFn", "kind": "TypeAlias" },
   { "name": "GridColumnHeaderClassNamePropType", "kind": "TypeAlias" },
   { "name": "GridColumnHeaderEventLookup", "kind": "Interface" },
