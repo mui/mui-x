@@ -3,10 +3,12 @@ import { LicenseInfo } from '@mui/x-license-pro';
 import { unstable_resetCleanupTracking } from '@mui/x-data-grid';
 import { unstable_resetCleanupTracking as unstable_resetCleanupTrackingPro } from '@mui/x-data-grid-pro';
 
-function createXMochaHooks() {
+function createXMochaHooks(coreMochaHooks = {}) {
   const mochaHooks = {
-    beforeEach: [],
-    afterEach: [],
+    beforeAll: [...coreMochaHooks.beforeAll],
+    afterAll: [...coreMochaHooks.afterAll],
+    beforeEach: [...coreMochaHooks.beforeEach],
+    afterEach: [...coreMochaHooks.afterEach],
   };
 
   mochaHooks.beforeEach.push(function setLicenseKey() {
