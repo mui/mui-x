@@ -148,6 +148,17 @@ export function CalendarOrClockPicker<TDate, View extends CalendarOrClockPickerV
     [isMobileKeyboardViewOpen, onViewChange, toggleMobileKeyboardView],
   );
 
+  if (process.env.NODE_ENV !== 'production') {
+    const warnedOnceNotValidOpenTo = React.useRef(false);
+    if (!warnedOnceNotValidOpenTo.current && !views.includes(openTo)) {
+      console.warn(
+        `MUI: \`openTo="${openTo}"\` is not a valid prop.`,
+        `The possible \`view\` values are \`["${views.join('", "')}"]\`.`,
+      );
+      warnedOnceNotValidOpenTo.current = true;
+    }
+  }
+
   const { openView, setOpenView, handleChangeAndOpenNext } = useViews<TDate, View>({
     view: undefined,
     views,
