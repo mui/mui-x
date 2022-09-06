@@ -5,10 +5,10 @@ import { unstable_resetCleanupTracking as unstable_resetCleanupTrackingPro } fro
 
 function createXMochaHooks(coreMochaHooks = {}) {
   const mochaHooks = {
-    beforeAll: [...coreMochaHooks.beforeAll],
-    afterAll: [...coreMochaHooks.afterAll],
-    beforeEach: [...coreMochaHooks.beforeEach],
-    afterEach: [...coreMochaHooks.afterEach],
+    beforeAll: [...(coreMochaHooks.beforeAll ?? [])],
+    afterAll: [...(coreMochaHooks.afterAll ?? [])],
+    beforeEach: [...(coreMochaHooks.beforeEach ?? [])],
+    afterEach: [...(coreMochaHooks.afterEach ?? [])],
   };
 
   mochaHooks.beforeEach.push(function setLicenseKey() {
