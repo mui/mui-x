@@ -162,10 +162,10 @@ async function main() {
       await testcase.screenshot({ path: screenshotPath, type: 'png' });
     });
 
-    it('should take a screenshot of the print preview', async function test() {
+    it.only('should take a screenshot of the print preview', async function test() {
       this.timeout(20000);
 
-      const route = `${baseUrl}/stories-grid-toolbar/PrintExportSnap`;
+      const route = `${baseUrl}/docs-data-grid-export/ExportDefaultToolbar`;
       const screenshotPath = path.resolve(screenshotDir, `${route.replace(baseUrl, '.')}Print.png`);
       await fse.ensureDir(path.dirname(screenshotPath));
 
