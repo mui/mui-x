@@ -97,6 +97,8 @@ const isDatePickerView = (view: CalendarOrClockPickerView): view is CalendarPick
 const isTimePickerView = (view: CalendarOrClockPickerView): view is ClockPickerView =>
   view === 'hours' || view === 'minutes' || view === 'seconds';
 
+let warnedOnceNotValidOpenTo = false;
+
 export function CalendarOrClockPicker<TDate, View extends CalendarOrClockPickerView>(
   props: CalendarOrClockPickerProps<TDate, View>,
 ) {
@@ -149,14 +151,12 @@ export function CalendarOrClockPicker<TDate, View extends CalendarOrClockPickerV
   );
 
   if (process.env.NODE_ENV !== 'production') {
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    const warnedOnceNotValidOpenTo = React.useRef(false);
-    if (!warnedOnceNotValidOpenTo.current && !views.includes(openTo)) {
+    if (!warnedOnceNotValidOpenTo && !views.includes(openTo)) {
       console.warn(
         `MUI: \`openTo="${openTo}"\` is not a valid prop.`,
-        `The possible \`view\` values are \`["${views.join('", "')}"]\`.`,
+        `It must be an element of \`views=["${views.join('", "')}"]\`.`,
       );
-      warnedOnceNotValidOpenTo.current = true;
+      warnedOnceNotValidOpenTo = true;
     }
   }
 
