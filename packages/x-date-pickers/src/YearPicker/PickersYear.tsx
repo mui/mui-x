@@ -151,7 +151,6 @@ const PickersYearRaw = (props: PickersYearProps) => {
         ref={ref}
         disabled={disabled}
         type="button"
-        data-mui-test={`year-${children}`}
         tabIndex={disabled ? -1 : tabIndex}
         onClick={(event) => onClick(event, value)}
         onKeyDown={(event) => onKeyDown(event, value)}
