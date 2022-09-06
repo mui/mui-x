@@ -13,6 +13,8 @@ import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { getColumnGroupsHeaderStructure, unwrapGroupingColumnModel } from './gridColumnGroupsUtils';
 import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 import { GridEventListener } from '../../../models/events';
+import { gridColumnFieldsSelector } from '../columns';
+import { useGridSelector } from '../../utils/useGridSelector';
 
 const createGroupLookup = (columnGroupingModel: GridColumnNode[]): GridColumnGroupLookup => {
   let groupLookup: GridColumnGroupLookup = {};
@@ -125,6 +127,8 @@ export const useGridColumnGrouping = (
   }, [apiRef, props.columnGroupingModel]);
 
   useGridApiEventHandler(apiRef, 'columnOrderChange', handleColumnReorderChange);
+
+  const columnFields = useGridSelector(apiRef, gridColumnFieldsSelector);
   /**
    * EFFECTS
    */
@@ -141,14 +145,12 @@ export const useGridColumnGrouping = (
     }
     const groupLookup = createGroupLookup(props.columnGroupingModel ?? []);
     const unwrappedGroupingModel = unwrapGroupingColumnModel(props.columnGroupingModel ?? []);
+    const columnGroupsHeaderStructure = getColumnGroupsHeaderStructure(
+      columnFields,
+      unwrappedGroupingModel,
+    );
 
     apiRef.current.setState((state) => {
-      const orderedFields = state.columns?.all ?? [];
-
-      const columnGroupsHeaderStructure = getColumnGroupsHeaderStructure(
-        orderedFields as string[],
-        unwrappedGroupingModel,
-      );
       return {
         ...state,
         columnGrouping: {
@@ -159,5 +161,5 @@ export const useGridColumnGrouping = (
         },
       };
     });
-  }, [apiRef, props.columnGroupingModel, props.experimentalFeatures?.columnGrouping]);
+  }, [apiRef, columnFields, props.columnGroupingModel, props.experimentalFeatures?.columnGrouping]);
 };

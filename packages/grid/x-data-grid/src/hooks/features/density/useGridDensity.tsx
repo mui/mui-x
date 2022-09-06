@@ -10,7 +10,7 @@ import { gridDensitySelector } from './densitySelector';
 import { isDeepEqual } from '../../../utils/utils';
 import { GridStateInitializer } from '../../utils/useGridInitializeState';
 import { useGridSelector } from '../../utils/useGridSelector';
-import { gridVisibleColumnDefinitionsSelector } from '../columns';
+import { gridVisibleColumnFieldsSelector } from '../columns';
 import { unwrapGroupingColumnModel } from '../columnGrouping/gridColumnGroupsUtils';
 import { GridStateCommunity } from '../../../models/gridStateCommunity';
 
@@ -86,13 +86,12 @@ export const useGridDensity = (
   apiRef: React.MutableRefObject<GridApiCommunity>,
   props: Pick<DataGridProcessedProps, 'headerHeight' | 'rowHeight' | 'density'>,
 ): void => {
-  const visibleColumns = useGridSelector(apiRef, gridVisibleColumnDefinitionsSelector);
-
+  const visibleColumnFields = useGridSelector(apiRef, gridVisibleColumnFieldsSelector);
   const maxDepth =
-    visibleColumns.length > 0
+    visibleColumnFields.length > 0
       ? Math.max(
-          ...visibleColumns.map(
-            (column) => apiRef.current.unstable_getColumnGroupPath(column.field).length,
+          ...visibleColumnFields.map(
+            (field) => apiRef.current.unstable_getColumnGroupPath(field).length,
           ),
         )
       : 0;
