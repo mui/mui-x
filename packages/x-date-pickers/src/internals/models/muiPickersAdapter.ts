@@ -1,6 +1,6 @@
 import { IUtils } from '@date-io/core/IUtils';
 
-export type MuiPickersAdapter<TDate> = IUtils<TDate>;
+export type MuiPickersAdapter<TDate> = IUtils<TDate extends {}>;
 
 export type MuiDateSectionName = 'day' | 'month' | 'year' | 'hour' | 'minute' | 'second' | 'am-pm';
 
