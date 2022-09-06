@@ -2,7 +2,7 @@
 title: Data Grid - Demo
 ---
 
-# Data Grid - Demo
+# Data grid - Demo
 
 <p class="description">Use the demo below to explore the available features.</p>
 
@@ -12,3 +12,4 @@ title: Data Grid - Demo
 
 - [DataGrid](/x/api/data-grid/data-grid/)
 - [DataGridPro](/x/api/data-grid/data-grid-pro/)
+- [DataGridPremium](/x/api/data-grid/data-grid-premium/)

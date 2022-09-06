@@ -27,7 +27,6 @@ const GridCustomToolbar = ({
       <GridToolbarDensitySelector />
       <Button
         size="small"
-        color="primary"
         startIcon={<rootProps.components.ColumnSelectorIcon />}
         onClick={() => syncState(apiRef.current.exportState())}
         {...rootProps.componentsProps?.baseButton}
@@ -47,8 +46,8 @@ export default function RestoreStateInitialState() {
 
   const [savedState, setSavedState] = React.useState<{
     count: number;
-    initialState: GridInitialState | undefined;
-  }>({ count: 0, initialState: undefined });
+    initialState: GridInitialState;
+  }>({ count: 0, initialState: data.initialState! });
 
   const syncState = React.useCallback((newInitialState: GridInitialState) => {
     setSavedState((prev) => ({
@@ -60,7 +59,7 @@ export default function RestoreStateInitialState() {
 
   return (
     <Stack spacing={2} sx={{ width: '100%' }}>
-      <Box sx={{ width: '100%', height: 336, bgcolor: 'background.paper' }}>
+      <Box sx={{ height: 336 }}>
         <DataGridPro
           {...data}
           loading={loading}
@@ -68,7 +67,7 @@ export default function RestoreStateInitialState() {
           componentsProps={{ toolbar: { syncState } }}
         />
       </Box>
-      <Box sx={{ width: '100%', height: 300, bgcolor: 'background.paper' }}>
+      <Box sx={{ height: 300 }}>
         <DataGridPro
           {...data}
           loading={loading}

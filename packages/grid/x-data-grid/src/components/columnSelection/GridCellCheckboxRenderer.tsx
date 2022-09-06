@@ -76,7 +76,7 @@ const GridCellCheckboxForwardRef = React.forwardRef<HTMLInputElement, GridRender
     }, [hasFocus]);
 
     const handleKeyDown = React.useCallback(
-      (event) => {
+      (event: React.KeyboardEvent<HTMLInputElement>) => {
         if (isSpaceKey(event.key)) {
           event.stopPropagation();
         }
@@ -87,12 +87,19 @@ const GridCellCheckboxForwardRef = React.forwardRef<HTMLInputElement, GridRender
       [apiRef, props],
     );
 
-    const isSelectable =
-      !rootProps.isRowSelectable || rootProps.isRowSelectable(apiRef.current.getRowParams(id));
+    if (rowNode.position === 'footer') {
+      return null;
+    }
+
+    const isSelectable = apiRef.current.isRowSelectable(id);
 
     const label = apiRef.current.getLocaleText(
       isChecked ? 'checkboxSelectionUnselectRow' : 'checkboxSelectionSelectRow',
     );
+
+    if (rowNode.isPinned) {
+      return null;
+    }
 
     return (
       <rootProps.components.BaseCheckbox
@@ -101,7 +108,6 @@ const GridCellCheckboxForwardRef = React.forwardRef<HTMLInputElement, GridRender
         checked={isChecked}
         onChange={handleChange}
         className={classes.root}
-        color="primary"
         inputProps={{ 'aria-label': label }}
         onKeyDown={handleKeyDown}
         disabled={!isSelectable}
@@ -185,7 +191,8 @@ GridCellCheckboxForwardRef.propTypes = {
    */
   tabIndex: PropTypes.oneOf([-1, 0]).isRequired,
   /**
-   * The cell value, but if the column has valueGetter, use getValue.
+   * The cell value.
+   * If the column has `valueGetter`, use `params.row` to directly access the fields.
    */
   value: PropTypes.any,
 } as any;

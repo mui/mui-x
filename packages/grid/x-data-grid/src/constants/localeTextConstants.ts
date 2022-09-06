@@ -26,7 +26,7 @@ export const GRID_DEFAULT_LOCALE_TEXT: GridLocaleText = {
     count !== 1 ? `${count} active filters` : `${count} active filter`,
 
   // Quick filter toolbar field
-  toolbarQuickFilterPlaceholder: 'Search...',
+  toolbarQuickFilterPlaceholder: 'Search…',
   toolbarQuickFilterLabel: 'Search',
   toolbarQuickFilterDeleteIconLabel: 'Clear',
 
@@ -133,6 +133,7 @@ export const GRID_DEFAULT_LOCALE_TEXT: GridLocaleText = {
   unGroupColumn: (name) => `Stop grouping by ${name}`,
 
   // Master/detail
+  detailPanelToggle: 'Detail panel toggle',
   expandDetailPanel: 'Expand',
   collapseDetailPanel: 'Collapse',
 
@@ -141,4 +142,12 @@ export const GRID_DEFAULT_LOCALE_TEXT: GridLocaleText = {
 
   // Row reordering text
   rowReorderingHeaderName: 'Row reordering',
+
+  // Aggregation
+  aggregationMenuItemHeader: 'Aggregation',
+  aggregationFunctionLabelSum: 'sum',
+  aggregationFunctionLabelAvg: 'avg',
+  aggregationFunctionLabelMin: 'min',
+  aggregationFunctionLabelMax: 'max',
+  aggregationFunctionLabelSize: 'size',
 };

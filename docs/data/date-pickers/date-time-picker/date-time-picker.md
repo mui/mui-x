@@ -7,11 +7,11 @@ packageName: '@mui/x-date-pickers'
 materialDesign: https://material.io/components/date-pickers
 ---
 
-# Date Time Picker
+# Date time picker
 
-<p class="description">Combined date & time picker.</p>
+<p class="description">This component combines the date & time pickers.</p>
 
-This component combines the date & time pickers. It allows the user to select both date and time with the same control.
+It allows the user to select both date and time with the same control.
 
 Note that this component is the [DatePicker](/x/react-date-pickers/date-picker/) and [TimePicker](/x/react-date-pickers/time-picker/)
 component combined, so any of these components' props can be passed to the DateTimePicker.
@@ -31,6 +31,8 @@ The `DateTimePicker` component is designed and optimized for the device it runs 
 
 By default, the `DateTimePicker` component renders the desktop version if the media query [`@media (pointer: fine)`](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/pointer) matches.
 This can be customized with the `desktopModeMediaQuery` prop.
+
+There are certain caveats when testing pickers, please refer to [this section](/x/react-date-pickers/getting-started/#testing-caveats) for more information.
 
 {{"demo": "ResponsiveDateTimePickers.js"}}
 

@@ -4,7 +4,6 @@ import {
   useDefaultDates,
   useUtils,
   useLocaleText,
-  ExportedDateValidationProps,
   PickersArrowSwitcher,
   ExportedArrowSwitcherProps,
   usePreviousMonthDisabled,
@@ -12,6 +11,8 @@ import {
   DayPicker,
   buildDeprecatedPropsWarning,
   DayPickerProps,
+  DAY_MARGIN,
+  DayValidationProps,
 } from '@mui/x-date-pickers/internals';
 import { calculateRangePreview } from './date-range-manager';
 import { DateRange } from '../internal/models';
@@ -39,7 +40,7 @@ export interface ExportedDesktopDateRangeCalendarProps<TDate> {
 interface DesktopDateRangeCalendarProps<TDate>
   extends ExportedDesktopDateRangeCalendarProps<TDate>,
     Omit<DayPickerProps<TDate>, 'selectedDays' | 'renderDay' | 'onFocusedDayChange'>,
-    ExportedDateValidationProps<TDate>,
+    DayValidationProps<TDate>,
     ExportedArrowSwitcherProps {
   calendars: 1 | 2 | 3;
   parsedValue: DateRange<TDate>;
@@ -58,9 +59,13 @@ const DateRangePickerViewDesktopContainer = styled('div')(({ theme }) => ({
   },
 }));
 
+const DAY_RANGE_SIZE = 40;
+
+const weeksContainerHeight = (DAY_RANGE_SIZE + DAY_MARGIN * 2) * 6;
+
 const DateRangePickerViewDesktopCalendar = styled(DayPicker)({
   minWidth: 312,
-  minHeight: 288,
+  minHeight: weeksContainerHeight,
 }) as typeof DayPicker;
 
 const DateRangePickerViewDesktopArrowSwitcher = styled(PickersArrowSwitcher)({

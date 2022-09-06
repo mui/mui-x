@@ -7,11 +7,10 @@ packageName: '@mui/x-date-pickers'
 materialDesign: https://material.io/components/time-pickers
 ---
 
-# Time Picker
+# Time picker
 
 <p class="description">Time pickers allow the user to select a single time.</p>
 
-Time pickers allow the user to select a single time (in the hours:minutes format).
 The selected time is indicated by the filled circle at the end of the clock hand.
 
 ## Basic usage
@@ -35,6 +34,8 @@ The time picker component is designed and optimized for the device it runs on.
 
 By default, the `TimePicker` component renders the desktop version if the media query [`@media (pointer: fine)`](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/pointer) matches.
 This can be customized with the `desktopModeMediaQuery` prop.
+
+There are certain caveats when testing pickers, please refer to [this section](/x/react-date-pickers/getting-started/#testing-caveats) for more information.
 
 {{"demo": "ResponsiveTimePickers.js"}}
 

@@ -20,7 +20,7 @@ export default function StylingRowsGrid() {
     <Box
       sx={{
         height: 400,
-        width: 1,
+        width: '100%',
         '& .super-app-theme--Open': {
           bgcolor: (theme) =>
             getBackgroundColor(theme.palette.info.main, theme.palette.mode),

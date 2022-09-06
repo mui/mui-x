@@ -13,7 +13,6 @@ import { gridFilterableColumnDefinitionsSelector } from '../../../hooks/features
 import { useGridSelector } from '../../../hooks/utils/useGridSelector';
 import { GridFilterItem, GridLinkOperator } from '../../../models/gridFilterItem';
 import { useGridApiContext } from '../../../hooks/utils/useGridApiContext';
-import { GridTranslationKeys } from '../../../models/api/gridLocaleTextApi';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { getDataGridUtilityClass } from '../../../constants/gridClasses';
@@ -96,6 +95,10 @@ export interface GridFilterFormProps {
    * @default {}
    */
   valueInputProps?: any;
+  /**
+   * @ignore - do not document.
+   */
+  children?: React.ReactNode;
 }
 
 type OwnerState = { classes: DataGridProcessedProps['classes'] };
@@ -219,6 +222,8 @@ const GridFilterForm = React.forwardRef<HTMLDivElement, GridFilterFormProps>(
     const baseSelectProps = rootProps.componentsProps?.baseSelect || {};
     const isBaseSelectNative = baseSelectProps.native ?? true;
     const OptionComponent = isBaseSelectNative ? 'option' : MenuItem;
+
+    const { InputComponentProps, ...valueInputPropsOther } = valueInputProps;
 
     const sortedFilterableColumns = React.useMemo(() => {
       switch (columnsSort) {
@@ -452,7 +457,7 @@ const GridFilterForm = React.forwardRef<HTMLDivElement, GridFilterFormProps>(
               <OptionComponent key={operator.value} value={operator.value}>
                 {operator.label ||
                   apiRef.current.getLocaleText(
-                    `filterOperator${capitalize(operator.value)}` as GridTranslationKeys,
+                    `filterOperator${capitalize(operator.value)}` as 'filterOperatorContains',
                   )}
               </OptionComponent>
             ))}
@@ -462,11 +467,11 @@ const GridFilterForm = React.forwardRef<HTMLDivElement, GridFilterFormProps>(
           variant="standard"
           as={rootProps.components.BaseFormControl}
           {...baseFormControlProps}
-          {...valueInputProps}
+          {...valueInputPropsOther}
           className={clsx(
             classes.valueInput,
             baseFormControlProps.className,
-            valueInputProps.className,
+            valueInputPropsOther.className,
           )}
         >
           {currentOperator?.InputComponent ? (
@@ -476,6 +481,7 @@ const GridFilterForm = React.forwardRef<HTMLDivElement, GridFilterFormProps>(
               applyValue={applyFilterChanges}
               focusElementRef={valueRef}
               {...currentOperator.InputComponentProps}
+              {...InputComponentProps}
             />
           ) : null}
         </FilterFormValueInput>
@@ -499,6 +505,10 @@ GridFilterForm.propTypes = {
    * @param {GridLinkOperator} operator The new logic operator.
    */
   applyMultiFilterOperatorChanges: PropTypes.func.isRequired,
+  /**
+   * @ignore - do not document.
+   */
+  children: PropTypes.node,
   /**
    * Props passed to the column input component.
    * @default {}

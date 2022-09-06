@@ -1,17 +1,15 @@
 import { useValidation, ValidationProps, Validator } from './useValidation';
-import {
-  validateDate,
-  DateValidationError,
-  ExportedDateValidationProps,
-} from './useDateValidation';
+import { validateDate, DateValidationError } from './useDateValidation';
 import {
   validateTime,
   TimeValidationError,
   ExportedTimeValidationProps,
 } from './useTimeValidation';
+import { BaseDateValidationProps, DayValidationProps } from './models';
 
-export interface DateTimeValidationProps<TInputDate, TDate>
-  extends ExportedDateValidationProps<TDate>,
+interface DateTimeValidationProps<TInputDate, TDate>
+  extends DayValidationProps<TDate>,
+    Required<BaseDateValidationProps<TDate>>,
     ExportedTimeValidationProps<TDate>,
     ValidationProps<DateTimeValidationError, TInputDate | null> {}
 

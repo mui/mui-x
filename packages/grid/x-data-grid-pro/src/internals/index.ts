@@ -20,13 +20,21 @@ export {
   useGridDetailPanel,
   detailPanelStateInitializer,
 } from '../hooks/features/detailPanel/useGridDetailPanel';
-export { useGridDetailPanelCache } from '../hooks/features/detailPanel/useGridDetailPanelCache';
 export { useGridDetailPanelPreProcessors } from '../hooks/features/detailPanel/useGridDetailPanelPreProcessors';
 export { useGridInfiniteLoader } from '../hooks/features/infiniteLoader/useGridInfiniteLoader';
 export { useGridRowReorder } from '../hooks/features/rowReorder/useGridRowReorder';
 export { useGridRowReorderPreProcessors } from '../hooks/features/rowReorder/useGridRowReorderPreProcessors';
 export { useGridTreeData } from '../hooks/features/treeData/useGridTreeData';
 export { useGridTreeDataPreProcessors } from '../hooks/features/treeData/useGridTreeDataPreProcessors';
+export { TREE_DATA_STRATEGY } from '../hooks/features/treeData/gridTreeDataUtils';
+export {
+  useGridRowPinning,
+  rowPinningStateInitializer,
+} from '../hooks/features/rowPinning/useGridRowPinning';
+export {
+  useGridRowPinningPreProcessors,
+  addPinnedRow,
+} from '../hooks/features/rowPinning/useGridRowPinningPreProcessors';
 
 export type {
   GridExperimentalProFeatures,

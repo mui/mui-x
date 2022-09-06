@@ -1,6 +1,12 @@
 import * as React from 'react';
-// @ts-ignore Remove once the test utils are typed
-import { createRenderer, fireEvent, screen, waitFor } from '@mui/monorepo/test/utils';
+import {
+  createRenderer,
+  fireEvent,
+  screen,
+  act,
+  userEvent,
+  // @ts-ignore Remove once the test utils are typed
+} from '@mui/monorepo/test/utils';
 import clsx from 'clsx';
 import { expect } from 'chai';
 import { spy, stub } from 'sinon';
@@ -181,6 +187,7 @@ describe('<DataGrid /> - Rows', () => {
         render(<TestCase />);
       }).toErrorDev([
         'MUI: Missing the `getActions` property in the `GridColDef`.',
+        'MUI: Missing the `getActions` property in the `GridColDef`.',
         'The above error occurred in the <GridActionsCell> component',
         'MUI: GridErrorHandler - An unexpected error occurred.',
       ]);
@@ -290,8 +297,7 @@ describe('<DataGrid /> - Rows', () => {
         />,
       );
       const moreButton = screen.getByRole('menuitem', { name: 'more' });
-      fireEvent.mouseUp(moreButton);
-      fireEvent.click(moreButton);
+      userEvent.mousePress(moreButton);
 
       const printButton = screen.queryByRole('menuitem', { name: 'print' });
       expect(printButton).toHaveFocus();
@@ -483,6 +489,39 @@ describe('<DataGrid /> - Rows', () => {
     });
 
     describe('dynamic row height', () => {
+      function ResizeObserverMock(
+        callback: (entries: { borderBoxSize: [{ blockSize: number }] }[]) => void,
+      ) {
+        let timeout: NodeJS.Timeout;
+
+        return {
+          observe: (element: HTMLElement) => {
+            // Simulates the async behavior of the native ResizeObserver
+            timeout = setTimeout(() => {
+              callback([{ borderBoxSize: [{ blockSize: element.clientHeight }] }]);
+            });
+          },
+          disconnect: () => {
+            clearTimeout(timeout);
+          },
+        };
+      }
+
+      const originalResizeObserver = window.ResizeObserver;
+
+      beforeEach(() => {
+        const { userAgent } = window.navigator;
+
+        if (userAgent.includes('Chrome') && !userAgent.includes('Headless')) {
+          // Only use the mock in non-headless Chrome
+          window.ResizeObserver = ResizeObserverMock as any;
+        }
+      });
+
+      afterEach(() => {
+        window.ResizeObserver = originalResizeObserver;
+      });
+
       const TestCase = (
         props: Partial<DataGridProps> & {
           getBioContentHeight: (row: GridRowModel) => number;
@@ -518,11 +557,6 @@ describe('<DataGrid /> - Rows', () => {
       };
 
       it('should measure all rows and update the content size', async () => {
-        // Swallow "ResizeObserver loop limit exceeded" errors
-        // See https://github.com/WICG/resize-observer/issues/38
-        const originalErrorHandler = window.onerror;
-        window.onerror = () => {};
-
         const border = 1;
         const contentHeight = 100;
         render(<TestCase getBioContentHeight={() => contentHeight} getRowHeight={() => 'auto'} />);
@@ -530,14 +564,13 @@ describe('<DataGrid /> - Rows', () => {
           '.MuiDataGrid-virtualScrollerContent',
         );
         const expectedHeight = baselineProps.rows.length * (contentHeight + border);
-        await waitFor(() => {
-          expect(virtualScrollerContent).toHaveInlineStyle({
-            width: 'auto',
-            height: `${expectedHeight}px`,
-          });
+        await act(() => Promise.resolve());
+        clock.runToLast(); // Run timers in the mocked ResizeObserver
+        clock.runToLast(); // Run the debounce timeout that triggers the rerender
+        expect(virtualScrollerContent).toHaveInlineStyle({
+          width: 'auto',
+          height: `${expectedHeight}px`,
         });
-
-        window.onerror = originalErrorHandler;
       });
 
       it('should use the default row height to calculate the content size when the row has not been measured yet', async () => {
@@ -561,11 +594,12 @@ describe('<DataGrid /> - Rows', () => {
           measuredRowHeight +
           border + // Measured rows also include the border
           (baselineProps.rows.length - 1) * defaultRowHeight;
-        await waitFor(() => {
-          expect(virtualScrollerContent).toHaveInlineStyle({
-            width: 'auto',
-            height: `${expectedHeight}px`,
-          });
+        await act(() => Promise.resolve());
+        clock.runToLast(); // Run timers in the mocked ResizeObserver
+        clock.runToLast(); // Run the debounce timeout that triggers the rerender
+        expect(virtualScrollerContent).toHaveInlineStyle({
+          width: 'auto',
+          height: `${expectedHeight}px`,
         });
       });
 
@@ -590,11 +624,12 @@ describe('<DataGrid /> - Rows', () => {
         const firstRowHeight = measuredRowHeight + border; // Measured rows also include the border
         const expectedHeight =
           firstRowHeight + (baselineProps.rows.length - 1) * estimatedRowHeight;
-        await waitFor(() => {
-          expect(virtualScrollerContent).toHaveInlineStyle({
-            width: 'auto',
-            height: `${expectedHeight}px`,
-          });
+        await act(() => Promise.resolve());
+        clock.runToLast(); // Run timers in the mocked ResizeObserver
+        clock.runToLast(); // Run the debounce timeout that triggers the rerender
+        expect(virtualScrollerContent).toHaveInlineStyle({
+          width: 'auto',
+          height: `${expectedHeight}px`,
         });
       });
 
@@ -610,18 +645,20 @@ describe('<DataGrid /> - Rows', () => {
         const virtualScrollerContent = document.querySelector(
           '.MuiDataGrid-virtualScrollerContent',
         );
-        await waitFor(() => {
-          expect(virtualScrollerContent).toHaveInlineStyle({
-            width: 'auto',
-            height: '101px',
-          });
+        await act(() => Promise.resolve()); // Wait for ResizeObserver to send dimensions
+        clock.runToLast(); // Run timers in the mocked ResizeObserver
+        clock.runToLast(); // Run the debounce timeout that triggers the rerender
+        expect(virtualScrollerContent).toHaveInlineStyle({
+          width: 'auto',
+          height: '101px',
         });
-        setProps({ rows: [{ clientId: 'c1', expanded: true }] }); // Wait for ResizeObserver to send dimensions
-        await waitFor(() => {
-          expect(virtualScrollerContent).toHaveInlineStyle({
-            width: 'auto',
-            height: '201px',
-          });
+        setProps({ rows: [{ clientId: 'c1', expanded: true }] });
+        await act(() => Promise.resolve()); // Wait for ResizeObserver to send dimensions
+        clock.runToLast(); // Run timers in the mocked ResizeObserver
+        clock.runToLast(); // Run the debounce timeout that triggers the rerender
+        expect(virtualScrollerContent).toHaveInlineStyle({
+          width: 'auto',
+          height: '201px',
         });
       });
 
@@ -652,7 +689,7 @@ describe('<DataGrid /> - Rows', () => {
         expect(document.querySelectorAll('.MuiDataGrid-cell')).to.have.length(2);
       });
 
-      it('should measure all rows before rendering a new row', async () => {
+      it('should measure rows while scrolling', async () => {
         const headerHeight = 50;
         const border = 1;
         render(
@@ -666,20 +703,25 @@ describe('<DataGrid /> - Rows', () => {
           />,
         );
         const virtualScroller = document.querySelector('.MuiDataGrid-virtualScroller')!;
-        await waitFor(() => {
-          expect(virtualScroller.scrollHeight).to.equal(101 + 52 + 52);
-        });
-        virtualScroller.scrollTop = 10e6; // Scroll to the bottom
+        await act(() => Promise.resolve());
+        clock.runToLast(); // Run timers in the mocked ResizeObserver
+        clock.runToLast(); // Run the debounce timeout that triggers the rerender
+        expect(virtualScroller.scrollHeight).to.equal(101 + 52 + 52);
+        virtualScroller.scrollTop = 101; // Scroll to measure the 2nd cell
         virtualScroller.dispatchEvent(new Event('scroll'));
+        await act(() => Promise.resolve());
+        clock.runToLast(); // Run timers in the mocked ResizeObserver
+        clock.runToLast(); // Run the debounce timeout that triggers the rerender
+        expect(virtualScroller.scrollHeight).to.equal(101 + 101 + 52);
+        virtualScroller.scrollTop = 10e6; // Scroll to measure all cells
+        virtualScroller.dispatchEvent(new Event('scroll'));
+        await act(() => Promise.resolve());
+        clock.runToLast(); // Run timers in the mocked ResizeObserver
+        clock.runToLast(); // Run the debounce timeout that triggers the rerender
         expect(virtualScroller.scrollHeight).to.equal(101 + 101 + 101); // Ensure that all rows before the last were measured
       });
 
       it('should allow to mix rows with dynamic row height and default row height', async () => {
-        // Swallow "ResizeObserver loop limit exceeded" errors
-        // See https://github.com/WICG/resize-observer/issues/38
-        const originalErrorHandler = window.onerror;
-        window.onerror = () => {};
-
         const headerHeight = 50;
         const densityFactor = 1.3;
         const rowHeight = 52;
@@ -700,14 +742,79 @@ describe('<DataGrid /> - Rows', () => {
         const virtualScrollerContent = document.querySelector(
           '.MuiDataGrid-virtualScrollerContent',
         )!;
-        await waitFor(() => {
-          expect(virtualScrollerContent).toHaveInlineStyle({
-            width: 'auto',
-            height: `${Math.floor(expectedHeight)}px`,
-          });
+        await act(() => Promise.resolve());
+        clock.runToLast(); // Run timers in the mocked ResizeObserver
+        clock.runToLast(); // Run the debounce timeout that triggers the rerender
+        expect(virtualScrollerContent).toHaveInlineStyle({
+          width: 'auto',
+          height: `${Math.floor(expectedHeight)}px`,
         });
+      });
 
-        window.onerror = originalErrorHandler;
+      it('should position correctly the render zone when the 2nd page has less rows than the 1st page', async function test() {
+        if (/edg/i.test(window.navigator.userAgent)) {
+          this.skip(); // FIXME: We need a waitFor that works with fake clock
+        }
+        const data = getData(120, 3);
+        const headerHeight = 50;
+        const measuredRowHeight = 100;
+        render(
+          <TestCase
+            getBioContentHeight={() => measuredRowHeight}
+            getRowHeight={() => 'auto'}
+            rowBuffer={0}
+            rowThreshold={0}
+            headerHeight={headerHeight}
+            getRowId={(row) => row.id}
+            hideFooter={false}
+            {...data}
+          />,
+        );
+        const virtualScroller = document.querySelector('.MuiDataGrid-virtualScroller')!;
+        virtualScroller.scrollTop = 10e6; // Scroll to measure all cells
+        virtualScroller.dispatchEvent(new Event('scroll'));
+        await act(() => Promise.resolve());
+        clock.runToLast();
+        const virtualScrollerRenderZone = document.querySelector(
+          '.MuiDataGrid-virtualScrollerRenderZone',
+        )!;
+        fireEvent.click(screen.getByRole('button', { name: /next page/i }));
+        await act(() => Promise.resolve());
+        clock.runToLast();
+        expect(virtualScrollerRenderZone).toHaveInlineStyle({
+          transform: 'translate3d(0px, 0px, 0px)',
+        });
+      });
+
+      it('should position correctly the render zone when changing pageSize to a lower value', async () => {
+        const data = getData(120, 3);
+        const headerHeight = 50;
+        const measuredRowHeight = 100;
+        const { setProps } = render(
+          <TestCase
+            getBioContentHeight={() => measuredRowHeight}
+            getRowHeight={() => 'auto'}
+            rowBuffer={0}
+            rowThreshold={0}
+            headerHeight={headerHeight}
+            getRowId={(row) => row.id}
+            hideFooter={false}
+            pageSize={10}
+            rowsPerPageOptions={[5, 10]}
+            height={headerHeight + 10 * measuredRowHeight}
+            {...data}
+          />,
+        );
+        const virtualScrollerRenderZone = document.querySelector(
+          '.MuiDataGrid-virtualScrollerRenderZone',
+        )!;
+        expect(virtualScrollerRenderZone).toHaveInlineStyle({
+          transform: 'translate3d(0px, 0px, 0px)',
+        });
+        setProps({ pageSize: 5 });
+        expect(virtualScrollerRenderZone).toHaveInlineStyle({
+          transform: 'translate3d(0px, 0px, 0px)',
+        });
       });
     });
   });

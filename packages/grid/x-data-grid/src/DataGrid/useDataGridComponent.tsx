@@ -1,9 +1,7 @@
 import { DataGridProcessedProps } from '../models/props/DataGridProps';
 import { GridApiCommunity } from '../models/api/gridApiCommunity';
-
 import { useGridInitialization } from '../hooks/core/useGridInitialization';
 import { useGridInitializeState } from '../hooks/utils/useGridInitializeState';
-
 import { useGridClipboard } from '../hooks/features/clipboard/useGridClipboard';
 import {
   columnMenuStateInitializer,
@@ -47,6 +45,11 @@ import { useGridDimensions } from '../hooks/features/dimensions/useGridDimension
 import { rowsMetaStateInitializer, useGridRowsMeta } from '../hooks/features/rows/useGridRowsMeta';
 import { useGridStatePersistence } from '../hooks/features/statePersistence/useGridStatePersistence';
 import { useGridColumnSpanning } from '../hooks/features/columns/useGridColumnSpanning';
+import {
+  useGridColumnGrouping,
+  columnGroupsStateInitializer,
+} from '../hooks/features/columnGrouping/useGridColumnGrouping';
+import { useGridColumnGroupingPreProcessors } from '../hooks/features/columnGrouping/useGridColumnGroupingPreProcessors';
 
 export const useDataGridComponent = (props: DataGridProcessedProps) => {
   const apiRef = useGridInitialization<GridApiCommunity>(undefined, props);
@@ -54,6 +57,7 @@ export const useDataGridComponent = (props: DataGridProcessedProps) => {
   /**
    * Register all pre-processors called during state initialization here.
    */
+  useGridColumnGroupingPreProcessors(apiRef, props);
   useGridSelectionPreProcessors(apiRef, props);
   useGridRowsPreProcessors(apiRef);
 
@@ -62,6 +66,7 @@ export const useDataGridComponent = (props: DataGridProcessedProps) => {
    */
   useGridInitializeState(selectionStateInitializer, apiRef, props);
   useGridInitializeState(columnsStateInitializer, apiRef, props);
+  useGridInitializeState(columnGroupsStateInitializer, apiRef, props);
   useGridInitializeState(rowsStateInitializer, apiRef, props);
   useGridInitializeState(
     props.experimentalFeatures?.newEditingApi
@@ -85,6 +90,7 @@ export const useDataGridComponent = (props: DataGridProcessedProps) => {
   useGridRows(apiRef, props);
   useGridParamsApi(apiRef);
   useGridColumnSpanning(apiRef);
+  useGridColumnGrouping(apiRef, props);
 
   const useGridEditing = props.experimentalFeatures?.newEditingApi
     ? useGridEditing_new
@@ -92,7 +98,7 @@ export const useDataGridComponent = (props: DataGridProcessedProps) => {
   useGridEditing(apiRef, props);
 
   useGridFocus(apiRef, props);
-  useGridPreferencesPanel(apiRef);
+  useGridPreferencesPanel(apiRef, props);
   useGridFilter(apiRef, props);
   useGridSorting(apiRef, props);
   useGridDensity(apiRef, props);

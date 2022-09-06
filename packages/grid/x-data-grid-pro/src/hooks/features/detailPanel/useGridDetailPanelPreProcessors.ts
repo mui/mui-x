@@ -6,6 +6,7 @@ import {
   GRID_DETAIL_PANEL_TOGGLE_COL_DEF,
 } from './gridDetailPanelToggleColDef';
 import { GridApiPro } from '../../../models/gridApiPro';
+import { gridDetailPanelExpandedRowIdsSelector } from './gridDetailPanelSelector';
 
 export const useGridDetailPanelPreProcessors = (
   apiRef: React.MutableRefObject<GridApiPro>,
@@ -32,11 +33,31 @@ export const useGridDetailPanelPreProcessors = (
 
       // Othewise, add the toggle column at the beginning
       columnsState.all = [GRID_DETAIL_PANEL_TOGGLE_FIELD, ...columnsState.all];
-      columnsState.lookup[GRID_DETAIL_PANEL_TOGGLE_FIELD] = GRID_DETAIL_PANEL_TOGGLE_COL_DEF;
+      columnsState.lookup[GRID_DETAIL_PANEL_TOGGLE_FIELD] = {
+        ...GRID_DETAIL_PANEL_TOGGLE_COL_DEF,
+        headerName: apiRef.current.getLocaleText('detailPanelToggle'),
+      };
       return columnsState;
     },
-    [props.getDetailPanelContent],
+    [apiRef, props.getDetailPanelContent],
+  );
+
+  const addExpandedClassToRow = React.useCallback<GridPipeProcessor<'rowClassName'>>(
+    (classes, id) => {
+      if (props.getDetailPanelContent == null) {
+        return classes;
+      }
+
+      const expandedRowIds = gridDetailPanelExpandedRowIdsSelector(apiRef.current.state);
+      if (!expandedRowIds.includes(id)) {
+        return classes;
+      }
+
+      return [...classes, 'MuiDataGrid-row--detailPanelExpanded'];
+    },
+    [apiRef, props.getDetailPanelContent],
   );
 
   useGridRegisterPipeProcessor(apiRef, 'hydrateColumns', addToggleColumn);
+  useGridRegisterPipeProcessor(apiRef, 'rowClassName', addExpandedClassToRow);
 };

@@ -22,6 +22,7 @@ export * from './logger';
 export * from './muiEvent';
 export * from './events';
 export * from './gridSortModel';
+export * from './gridColumnGrouping';
 
 // Do not export GridExportFormat and GridExportExtension which are override in pro package
 export type {

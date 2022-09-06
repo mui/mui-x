@@ -13,7 +13,7 @@ describe('<MobileDatePicker /> localization', () => {
     render(
       <MobileDatePicker
         renderInput={(params) => <TextField {...params} />}
-        value={adapterToUse.date('2018-01-01T00:00:00.000')}
+        value={adapterToUse.date(new Date(2018, 0, 1))}
         onChange={() => {}}
         views={['year']}
       />,
@@ -21,7 +21,7 @@ describe('<MobileDatePicker /> localization', () => {
 
     expect(screen.getByRole('textbox')).to.have.value('2018');
 
-    fireEvent.click(screen.getByLabelText(/Choose date/));
+    fireEvent.mouseDown(screen.getByLabelText(/Choose date/));
     expect(screen.getByMuiTest('datepicker-toolbar-date').textContent).to.equal('2018');
   });
 
@@ -38,7 +38,7 @@ describe('<MobileDatePicker /> localization', () => {
 
     expect(screen.getByRole('textbox')).to.have.value('janvier 2018');
 
-    fireEvent.click(screen.getByLabelText(/Choose date/));
+    fireEvent.mouseDown(screen.getByLabelText(/Choose date/));
     expect(screen.getByMuiTest('datepicker-toolbar-date').textContent).to.equal('janvier');
   });
 
@@ -47,14 +47,14 @@ describe('<MobileDatePicker /> localization', () => {
       <MobileDatePicker
         onChange={() => {}}
         renderInput={(params) => <TextField {...params} />}
-        value={adapterToUse.date('2018-01-01T00:00:00.000')}
+        value={adapterToUse.date(new Date(2018, 0, 1))}
         views={['year', 'month', 'day']}
       />,
     );
 
     expect(screen.getByRole('textbox')).to.have.value('01/01/2018');
 
-    fireEvent.click(screen.getByLabelText(/Choose date/));
+    fireEvent.mouseDown(screen.getByLabelText(/Choose date/));
     expect(screen.getByMuiTest('datepicker-toolbar-date').textContent).to.equal('1 janvier');
   });
 });

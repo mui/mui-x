@@ -1,8 +1,7 @@
 import * as React from 'react';
 import clsx from 'clsx';
-import { GridRenderEditCellParams } from '@mui/x-data-grid-premium';
+import { GridRenderEditCellParams, useGridApiContext } from '@mui/x-data-grid-premium';
 import Slider, { SliderProps, sliderClasses } from '@mui/material/Slider';
-import { ValueLabelProps } from '@mui/base/SliderUnstyled';
 import Tooltip from '@mui/material/Tooltip';
 import { debounce } from '@mui/material/utils';
 import { alpha, styled } from '@mui/material/styles';
@@ -43,7 +42,7 @@ const StyledSlider = styled(Slider)(({ theme }) => ({
   },
 }));
 
-const ValueLabelComponent = (props: ValueLabelProps) => {
+const ValueLabelComponent = (props: any) => {
   const { children, open, value } = props;
 
   return (
@@ -54,14 +53,16 @@ const ValueLabelComponent = (props: ValueLabelProps) => {
 };
 
 function EditProgress(props: GridRenderEditCellParams<number>) {
-  const { id, value, api, field } = props;
+  const { id, value, field } = props;
   const [valueState, setValueState] = React.useState(Number(value));
 
+  const apiRef = useGridApiContext();
+
   const updateCellEditProps = React.useCallback(
-    (newValue) => {
-      api.setEditCellValue({ id, field, value: newValue });
+    (newValue: number) => {
+      apiRef.current.setEditCellValue({ id, field, value: newValue });
     },
-    [api, field, id],
+    [apiRef, field, id],
   );
 
   const debouncedUpdateCellEditProps = React.useMemo(
@@ -71,7 +72,7 @@ function EditProgress(props: GridRenderEditCellParams<number>) {
 
   const handleChange = (event: Event, newValue: number | number[]) => {
     setValueState(newValue as number);
-    debouncedUpdateCellEditProps(newValue);
+    debouncedUpdateCellEditProps(newValue as number);
   };
 
   React.useEffect(() => {

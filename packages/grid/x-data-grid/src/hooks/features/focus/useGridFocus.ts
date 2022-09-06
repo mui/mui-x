@@ -56,6 +56,15 @@ export const useGridFocus = (
         return;
       }
 
+      if (focusedCell) {
+        // There's a focused cell but another cell was clicked
+        // Publishes an event to notify that the focus was lost
+        apiRef.current.publishEvent(
+          'cellFocusOut',
+          apiRef.current.getCellParams(focusedCell.id, focusedCell.field),
+        );
+      }
+
       apiRef.current.publishEvent('cellFocusIn', apiRef.current.getCellParams(id, field));
     },
     [apiRef, logger],
@@ -127,8 +136,21 @@ export const useGridFocus = (
       }
 
       rowIndexToFocus = clamp(rowIndexToFocus, 0, currentPage.rows.length - 1);
-      columnIndexToFocus = clamp(columnIndexToFocus, 0, visibleColumns.length - 1);
       const rowToFocus = currentPage.rows[rowIndexToFocus];
+
+      const colSpanInfo = apiRef.current.unstable_getCellColSpanInfo(
+        rowToFocus.id,
+        columnIndexToFocus,
+      );
+      if (colSpanInfo && colSpanInfo.spannedByColSpan) {
+        if (direction === 'left' || direction === 'below') {
+          columnIndexToFocus = colSpanInfo.leftVisibleCellIndex;
+        } else if (direction === 'right') {
+          columnIndexToFocus = colSpanInfo.rightVisibleCellIndex;
+        }
+      }
+
+      columnIndexToFocus = clamp(columnIndexToFocus, 0, visibleColumns.length - 1);
       const columnToFocus = visibleColumns[columnIndexToFocus];
       apiRef.current.setCellFocus(rowToFocus.id, columnToFocus.field);
     },
@@ -171,7 +193,7 @@ export const useGridFocus = (
     }));
   }, [logger, apiRef]);
 
-  const handleCellMouseUp = React.useCallback<GridEventListener<'cellMouseUp'>>((params) => {
+  const handleCellMouseDown = React.useCallback<GridEventListener<'cellMouseDown'>>((params) => {
     lastClickedCell.current = params;
   }, []);
 
@@ -203,14 +225,6 @@ export const useGridFocus = (
         return;
       }
 
-      // There's a focused cell but another cell was clicked
-      // Publishes an event to notify that the focus was lost
-      apiRef.current.publishEvent(
-        'cellFocusOut',
-        apiRef.current.getCellParams(focusedCell.id, focusedCell.field),
-        event,
-      );
-
       if (cellParams) {
         apiRef.current.setCellFocus(cellParams.id, cellParams.field);
       } else {
@@ -219,6 +233,14 @@ export const useGridFocus = (
           focus: { cell: null, columnHeader: null },
         }));
         apiRef.current.forceUpdate();
+
+        // There's a focused cell but another element (not a cell) was clicked
+        // Publishes an event to notify that the focus was lost
+        apiRef.current.publishEvent(
+          'cellFocusOut',
+          apiRef.current.getCellParams(focusedCell.id, focusedCell.field),
+          event,
+        );
       }
     },
     [apiRef],
@@ -270,7 +292,7 @@ export const useGridFocus = (
 
   useGridApiEventHandler(apiRef, 'columnHeaderBlur', handleBlur);
   useGridApiEventHandler(apiRef, 'cellDoubleClick', handleCellDoubleClick);
-  useGridApiEventHandler(apiRef, 'cellMouseUp', handleCellMouseUp);
+  useGridApiEventHandler(apiRef, 'cellMouseDown', handleCellMouseDown);
   useGridApiEventHandler(apiRef, 'cellKeyDown', handleCellKeyDown);
   useGridApiEventHandler(apiRef, 'cellModeChange', handleCellModeChange);
   useGridApiEventHandler(apiRef, 'columnHeaderFocus', handleColumnHeaderFocus);

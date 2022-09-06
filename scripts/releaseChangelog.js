@@ -130,7 +130,8 @@ async function main(argv) {
   );
 
   // Dispatch commits in different sections
-  const changeCommits = [];
+  const dataGridCommits = [];
+  const pickersCommits = [];
   const coreCommits = [];
   const docsCommits = [];
   const otherCommits = [];
@@ -143,7 +144,14 @@ async function main(argv) {
       case 'DataGridPremium':
       case 'l10n':
       case '118n':
-        changeCommits.push(commitItem);
+        dataGridCommits.push(commitItem);
+        break;
+      case 'DatePicker':
+      case 'TimePicker':
+      case 'DateTimePicker':
+      case 'DateRangePicker':
+      case 'pickers':
+        pickersCommits.push(commitItem);
         break;
       case 'docs':
         docsCommits.push(commitItem);
@@ -186,7 +194,7 @@ async function main(argv) {
   });
 
   const changelog = `
-## TODO RELEASE NAME
+## __VERSION__
 <!-- generated comparing ${lastRelease}..${release} -->
 _${nowFormatted}_
 
@@ -196,10 +204,11 @@ We'd like to offer a big thanks to the ${
 
 TODO INSERT HIGHLIGHTS
 ${changeLogMessages.length > 0 ? '\n\n' : ''}${changeLogMessages.join('\n')}
+### \`@mui/x-data-grid@v__VERSION__\` / \`@mui/x-data-grid-pro@v__VERSION__\` / \`@mui/x-data-grid-premium@v__VERSION__\`
+${logChangelogSection(dataGridCommits, '#### Changes')}
 
-TODO WRITE THE VERSION
-### \`@mui/x-data-grid@v\` / \`@mui/x-data-grid-pro@v\` / \`@mui/x-data-grid-premium@v\`
-${logChangelogSection(changeCommits, '#### Changes')}
+### \`@mui/x-date-pickers@v__PICKERS_VERSION__\` / \`@mui/x-date-pickers-pro@v__PICKERS_VERSION__\`
+${logChangelogSection(pickersCommits, '#### Changes')}
 ${logChangelogSection(docsCommits, '### Docs')}
 ${logChangelogSection(coreCommits, '### Core')}
 ${logChangelogSection(otherCommits, '')}

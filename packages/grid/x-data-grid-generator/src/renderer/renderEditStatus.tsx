@@ -1,5 +1,10 @@
 import * as React from 'react';
-import { GridRenderEditCellParams } from '@mui/x-data-grid-premium';
+import {
+  GridRenderEditCellParams,
+  useGridApiContext,
+  useGridRootProps,
+  GridEditModes,
+} from '@mui/x-data-grid-premium';
 import Select, { SelectProps } from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import { MenuProps } from '@mui/material/Menu';
@@ -12,27 +17,21 @@ import DoneIcon from '@mui/icons-material/Done';
 import { STATUS_OPTIONS } from '../services/static-data';
 
 function EditStatus(props: GridRenderEditCellParams<string>) {
-  const { id, value, api, field } = props;
+  const { id, value, field } = props;
+  const rootProps = useGridRootProps();
+  const apiRef = useGridApiContext();
 
-  const handleChange: SelectProps['onChange'] = (event) => {
-    api.setEditCellValue({ id, field, value: event.target.value as any }, event);
-    api.commitCellChange({ id, field });
-    api.setCellMode(id, field, 'view');
+  const handleChange: SelectProps['onChange'] = async (event) => {
+    const isValid = await apiRef.current.setEditCellValue({ id, field, value: event.target.value });
 
-    if ((event as any).key) {
-      // TODO v6: remove once we stop ignoring events fired from portals
-      const params = api.getCellParams(id, field);
-      api.publishEvent(
-        'cellNavigationKeyDown',
-        params,
-        event as any as React.KeyboardEvent<HTMLElement>,
-      );
+    if (isValid && rootProps.editMode === GridEditModes.Cell) {
+      apiRef.current.stopCellEditMode({ id, field, cellToFocusAfter: 'below' });
     }
   };
 
   const handleClose: MenuProps['onClose'] = (event, reason) => {
     if (reason === 'backdropClick') {
-      api.setCellMode(id, field, 'view');
+      apiRef.current.stopCellEditMode({ id, field, ignoreModifications: true });
     }
   };
 
@@ -44,7 +43,7 @@ function EditStatus(props: GridRenderEditCellParams<string>) {
         onClose: handleClose,
       }}
       sx={{
-        height: 1,
+        height: '100%',
         '& .MuiSelect-select': {
           display: 'flex',
           alignItems: 'center',

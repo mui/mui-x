@@ -16,10 +16,11 @@ import { useGridLogger } from '../../utils/useGridLogger';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { GridDimensions, GridDimensionsApi } from './gridDimensionsApi';
 import { gridColumnsTotalWidthSelector } from '../columns';
-import { gridDensityHeaderHeightSelector, gridDensityRowHeightSelector } from '../density';
+import { gridDensityTotalHeaderHeightSelector, gridDensityRowHeightSelector } from '../density';
 import { useGridSelector } from '../../utils';
 import { getVisibleRows } from '../../utils/useGridVisibleRows';
 import { gridRowsMetaSelector } from '../rows/gridRowsMetaSelector';
+import { calculatePinnedRowsHeight } from '../rows/gridRowsUtils';
 
 const isTestEnvironment = process.env.NODE_ENV === 'test';
 
@@ -58,15 +59,16 @@ export function useGridDimensions(
   >,
 ) {
   const logger = useGridLogger(apiRef, 'useResizeContainer');
-  const warningShown = React.useRef(false);
+  const errorShown = React.useRef(false);
   const rootDimensionsRef = React.useRef<ElementSize | null>(null);
   const fullDimensionsRef = React.useRef<GridDimensions | null>(null);
   const rowsMeta = useGridSelector(apiRef, gridRowsMetaSelector);
-  const headerHeight = useGridSelector(apiRef, gridDensityHeaderHeightSelector);
+  const totalHeaderHeight = useGridSelector(apiRef, gridDensityTotalHeaderHeightSelector);
 
   const updateGridDimensionsRef = React.useCallback(() => {
     const rootElement = apiRef.current.rootElementRef?.current;
     const columnsTotalWidth = gridColumnsTotalWidthSelector(apiRef);
+    const pinnedRowsHeight = calculatePinnedRowsHeight(apiRef);
 
     if (!rootDimensionsRef.current) {
       return;
@@ -90,18 +92,36 @@ export function useGridDimensions(
       rootElement.removeChild(scrollDiv);
     }
 
-    const viewportOuterSize: ElementSize = {
-      width: rootDimensionsRef.current.width,
-      height: props.autoHeight
-        ? rowsMeta.currentPageTotalHeight
-        : rootDimensionsRef.current.height - headerHeight,
-    };
+    let viewportOuterSize: ElementSize;
+    let hasScrollX: boolean;
+    let hasScrollY: boolean;
 
-    const { hasScrollX, hasScrollY } = hasScroll({
-      content: { width: Math.round(columnsTotalWidth), height: rowsMeta.currentPageTotalHeight },
-      container: viewportOuterSize,
-      scrollBarSize,
-    });
+    if (props.autoHeight) {
+      hasScrollY = false;
+      hasScrollX = Math.round(columnsTotalWidth) > rootDimensionsRef.current.width;
+
+      viewportOuterSize = {
+        width: rootDimensionsRef.current.width,
+        height: rowsMeta.currentPageTotalHeight + (hasScrollX ? scrollBarSize : 0),
+      };
+    } else {
+      viewportOuterSize = {
+        width: rootDimensionsRef.current.width,
+        height: rootDimensionsRef.current.height - totalHeaderHeight,
+      };
+
+      const scrollInformation = hasScroll({
+        content: { width: Math.round(columnsTotalWidth), height: rowsMeta.currentPageTotalHeight },
+        container: {
+          width: viewportOuterSize.width,
+          height: viewportOuterSize.height - pinnedRowsHeight.top - pinnedRowsHeight.bottom,
+        },
+        scrollBarSize,
+      });
+
+      hasScrollY = scrollInformation.hasScrollY;
+      hasScrollX = scrollInformation.hasScrollX;
+    }
 
     const viewportInnerSize: ElementSize = {
       width: viewportOuterSize.width - (hasScrollY ? scrollBarSize : 0),
@@ -113,6 +133,7 @@ export function useGridDimensions(
       viewportInnerSize,
       hasScrollX,
       hasScrollY,
+      scrollBarSize,
     };
 
     const prevDimensions = fullDimensionsRef.current;
@@ -128,7 +149,7 @@ export function useGridDimensions(
     apiRef,
     props.scrollbarSize,
     props.autoHeight,
-    headerHeight,
+    totalHeaderHeight,
     rowsMeta.currentPageTotalHeight,
   ]);
 
@@ -190,31 +211,29 @@ export function useGridDimensions(
       // jsdom has no layout capabilities
       const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
-      if (size.height === 0 && !warningShown.current && !props.autoHeight && !isJSDOM) {
-        logger.warn(
+      if (size.height === 0 && !errorShown.current && !props.autoHeight && !isJSDOM) {
+        logger.error(
           [
-            'The parent of the grid has an empty height.',
-            'You need to make sure the container has an intrinsic height.',
+            'The parent DOM element of the data grid has an empty height.',
+            'Please make sure that this element has an intrinsic height.',
             'The grid displays with a height of 0px.',
             '',
-            'You can find a solution in the docs:',
-            'https://mui.com/x/react-data-grid/layout/',
+            'More details: https://mui.com/r/x-data-grid-no-dimensions.',
           ].join('\n'),
         );
-        warningShown.current = true;
+        errorShown.current = true;
       }
-      if (size.width === 0 && !warningShown.current && !isJSDOM) {
-        logger.warn(
+      if (size.width === 0 && !errorShown.current && !isJSDOM) {
+        logger.error(
           [
-            'The parent of the grid has an empty width.',
-            'You need to make sure the container has an intrinsic width.',
+            'The parent DOM element of the data grid has an empty width.',
+            'Please make sure that this element has an intrinsic width.',
             'The grid displays with a width of 0px.',
             '',
-            'You can find a solution in the docs:',
-            'https://mui.com/x/react-data-grid/layout/',
+            'More details: https://mui.com/r/x-data-grid-no-dimensions.',
           ].join('\n'),
         );
-        warningShown.current = true;
+        errorShown.current = true;
       }
 
       if (isTestEnvironment) {

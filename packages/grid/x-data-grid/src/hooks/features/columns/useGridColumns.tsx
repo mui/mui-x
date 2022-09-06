@@ -86,7 +86,6 @@ export function useGridColumns(
     | 'columnVisibilityModel'
     | 'onColumnVisibilityModelChange'
     | 'columnTypes'
-    | 'classes'
     | 'components'
     | 'componentsProps'
   >,
@@ -189,7 +188,7 @@ export function useGridColumns(
       const columnsState = createColumnsState({
         apiRef,
         columnTypes,
-        columnsToUpsert: columns as any,
+        columnsToUpsert: columns,
         initialState: undefined,
         shouldRegenColumnVisibilityModelFromColumns: true,
         keepOnlyColumnsToUpsert: false,
@@ -301,16 +300,23 @@ export function useGridColumns(
    * PRE-PROCESSING
    */
   const stateExportPreProcessing = React.useCallback<GridPipeProcessor<'exportState'>>(
-    (prevState) => {
+    (prevState, context) => {
       const columnsStateToExport: GridColumnsInitialState = {};
 
       if (apiRef.current.unstable_caches.columns.isUsingColumnVisibilityModel) {
         const columnVisibilityModelToExport = gridColumnVisibilityModelSelector(apiRef);
-        const hasHiddenColumns = Object.values(columnVisibilityModelToExport).some(
-          (value) => value === false,
-        );
+        const shouldExportColumnVisibilityModel =
+          // Always export if the `exportOnlyDirtyModels` property is activated
+          !context.exportOnlyDirtyModels ||
+          // Always export if the model is controlled
+          props.columnVisibilityModel != null ||
+          // Always export if the model has been initialized
+          // TODO v6 Do a nullish check instead to export even if the initial model equals "{}"
+          Object.keys(props.initialState?.columns?.columnVisibilityModel ?? {}).length > 0 ||
+          // Always export if the model is not empty
+          Object.keys(columnVisibilityModelToExport).length > 0;
 
-        if (hasHiddenColumns) {
+        if (shouldExportColumnVisibilityModel) {
           columnsStateToExport.columnVisibilityModel = columnVisibilityModelToExport;
         }
       }
@@ -342,7 +348,7 @@ export function useGridColumns(
         columns: columnsStateToExport,
       };
     },
-    [apiRef],
+    [apiRef, props.columnVisibilityModel, props.initialState?.columns],
   );
 
   const stateRestorePreProcessing = React.useCallback<GridPipeProcessor<'restoreState'>>(

@@ -106,15 +106,15 @@ export default function LinkedFieldsCellEditing() {
   ];
 
   const handleCellEditStart = (params) => {
-    editingRow.current = rows.find((row) => row.id === params.id);
+    editingRow.current = rows.find((row) => row.id === params.id) || null;
   };
 
   const handleCellEditStop = (params) => {
     if (params.reason === GridCellEditStopReasons.escapeKeyDown) {
       setRows((prevRows) =>
         prevRows.map((row) =>
-          row.id === editingRow.current.id
-            ? { ...row, account: editingRow.current.account }
+          row.id === editingRow.current?.id
+            ? { ...row, account: editingRow.current?.account }
             : row,
         ),
       );
@@ -123,14 +123,14 @@ export default function LinkedFieldsCellEditing() {
 
   const processRowUpdate = (newRow) => {
     setRows((prevRows) =>
-      prevRows.map((row) => (row.id === editingRow.current.id ? newRow : row)),
+      prevRows.map((row) => (row.id === editingRow.current?.id ? newRow : row)),
     );
 
     return newRow;
   };
 
   return (
-    <Box sx={{ width: 1, height: 300 }}>
+    <Box sx={{ width: '100%', height: 300 }}>
       <DataGrid
         rows={rows}
         columns={columns}

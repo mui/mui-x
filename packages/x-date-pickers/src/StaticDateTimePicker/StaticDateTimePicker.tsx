@@ -20,6 +20,7 @@ import { useDateTimeValidation } from '../internals/hooks/validation/useDateTime
 import { usePickerState } from '../internals/hooks/usePickerState';
 import { StaticPickerProps } from '../internals/models/props/staticPickerProps';
 import { DateInputSlotsComponent } from '../internals/components/PureDateInput';
+import { DateTimePickerTabs } from '../DateTimePicker';
 
 export interface StaticDateTimePickerSlotsComponent
   extends PickersStaticWrapperSlotsComponent,
@@ -30,9 +31,8 @@ export interface StaticDateTimePickerSlotsComponentsProps
   extends PickersStaticWrapperSlotsComponentsProps,
     CalendarOrClockPickerSlotsComponentsProps {}
 
-export type StaticDateTimePickerProps<TInputDate, TDate> = StaticPickerProps<
-  BaseDateTimePickerProps<TInputDate, TDate>
-> & {
+export interface StaticDateTimePickerProps<TInputDate, TDate>
+  extends StaticPickerProps<BaseDateTimePickerProps<TInputDate, TDate>> {
   /**
    * Overrideable components.
    * @default {}
@@ -43,7 +43,7 @@ export type StaticDateTimePickerProps<TInputDate, TDate> = StaticPickerProps<
    * @default {}
    */
   componentsProps?: Partial<StaticDateTimePickerSlotsComponentsProps>;
-};
+}
 
 type StaticDateTimePickerComponent = (<TInputDate, TDate = TInputDate>(
   props: StaticDateTimePickerProps<TInputDate, TDate> & React.RefAttributes<HTMLDivElement>,
@@ -76,8 +76,9 @@ export const StaticDateTimePicker = React.forwardRef(function StaticDateTimePick
     onChange,
     ToolbarComponent = DateTimePickerToolbar,
     value,
-    components,
+    components: providedComponents,
     componentsProps,
+    hideTabs = displayStaticWrapperAs === 'desktop',
     ...other
   } = props;
 
@@ -87,6 +88,10 @@ export const StaticDateTimePicker = React.forwardRef(function StaticDateTimePick
   );
 
   const validationError = useDateTimeValidation(props) !== null;
+  const components = React.useMemo<StaticDateTimePickerProps<TInputDate, TDate>['components']>(
+    () => ({ Tabs: DateTimePickerTabs, ...providedComponents }),
+    [providedComponents],
+  );
 
   const DateInputProps = {
     ...inputProps,
@@ -111,6 +116,7 @@ export const StaticDateTimePicker = React.forwardRef(function StaticDateTimePick
         DateInputProps={DateInputProps}
         components={components}
         componentsProps={componentsProps}
+        hideTabs={hideTabs}
         {...other}
       />
     </PickerStaticWrapper>
@@ -161,6 +167,13 @@ StaticDateTimePicker.propTypes = {
    * Date tab icon.
    */
   dateRangeIcon: PropTypes.node,
+  /**
+   * Formats the day of week displayed in the calendar header.
+   * @param {string} day The day of week provided by the adapter's method `getWeekdays`.
+   * @returns {string} The name to display.
+   * @default (day) => day.charAt(0).toUpperCase()
+   */
+  dayOfWeekFormatter: PropTypes.func,
   /**
    * Default calendar month displayed when `value={null}`.
    */
@@ -240,7 +253,8 @@ StaticDateTimePicker.propTypes = {
    */
   getViewSwitchingButtonText: PropTypes.func,
   /**
-   * To show tabs.
+   * Toggles visibility of date time switching tabs
+   * @default false for mobile, true for desktop
    */
   hideTabs: PropTypes.bool,
   ignoreInvalidInputs: PropTypes.bool,
@@ -283,7 +297,7 @@ StaticDateTimePicker.propTypes = {
    */
   maxDate: PropTypes.any,
   /**
-   * Minimal selectable moment of time with binding to date, to set max time in each day use `maxTime`.
+   * Maximal selectable moment of time with binding to date, to set max time in each day use `maxTime`.
    */
   maxDateTime: PropTypes.any,
   /**

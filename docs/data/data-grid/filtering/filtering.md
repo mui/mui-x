@@ -2,7 +2,7 @@
 title: Data Grid - Filtering
 ---
 
-# Data Grid - Filtering
+# Data grid - Filtering
 
 <p class="description">Easily filter your rows based on one or several criteria.</p>
 
@@ -23,10 +23,10 @@ _See [the dedicated section](#customize-the-operators) to learn how to create yo
 :::warning
 The `DataGrid` can only filter the rows according to one criterion at the time.
 
-To use multi-filtering, you need to upgrade to the [Pro plan](https://mui.com/store/items/mui-x-pro/).
+To use multi-filtering, you need to upgrade to the [Pro plan](/x/introduction/licensing/#pro-plan) or above.
 :::
 
-## Multi-filtering [<span class="plan-pro"></span>](https://mui.com/store/items/mui-x-pro/)
+## Multi-filtering [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
 
 The following demo lets you filter the rows according to several criteria at the same time.
 
@@ -47,13 +47,13 @@ A filter item represents a filtering rule and is composed of several elements:
 - `filterItem.columnField`: the field on which we want to apply the rule.
 - `filterItem.value`: the value to look for.
 - `filterItem.operatorValue`: name of the operator method to use (e.g. _contains_), matches the `value` key of the operator object.
-- `filterItem.id` ([<span class="plan-pro"></span>](https://mui.com/store/items/mui-x-pro/)): only useful when multiple filters are used.
+- `filterItem.id` ([<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)): only useful when multiple filters are used.
 
 :::info
 Some operators do not need any value (for instance the `isEmpty` operator of the `string` column).
 :::
 
-#### The `linkOperator` [<span class="plan-pro"></span>](https://mui.com/store/items/mui-x-pro/)
+#### The `linkOperator` [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
 
 The `linkOperator` tells the grid if a row should satisfy all (`AND`) filter items or at least one (`OR`) in order to be considered valid.
 
@@ -299,6 +299,9 @@ More details are available in the demo.
 | `operatorInputProps`     | `MuiDataGrid-filterFormOperatorInput`     |
 | `valueInputProps`        | `MuiDataGrid-filterFormValueInput`        |
 
+The value input is a special case, because it can contain a wide variety of components (the one we provide or [your custom `InputComponent`](#create-a-custom-operator)).
+To pass props directly to the `InputComponent` and not its wrapper, you can use `valueInputProps.InputComponentProps`.
+
 {{"demo": "CustomFilterPanelContent.js", "bg": "inline"}}
 
 ### Customize the filter panel position
@@ -353,7 +356,7 @@ This function takes as an input a value of the quick filter and returns another 
 In the example below, a custom filter is created for the `date` column to check if it contains the correct year.
 
 ```ts
-getApplyFilterFn: (value: string) => {
+getApplyQuickFilterFn: (value: string) => {
   if (!value || value.length !== 4 || !/\d{4}/.test(value)) {
     // If the value is not a 4 digit string, it can not be a year so applying this filter is useless
     return null;
@@ -364,7 +367,7 @@ getApplyFilterFn: (value: string) => {
 };
 ```
 
-To remove the quick filtering on a given column set `getApplyFilterFn: undefined`.
+To remove the quick filtering on a given column set `getApplyQuickFilterFn: undefined`.
 
 In the demo bellow, the column "Name" is not searchable with the quick filter, and 4 digits figures will be compared to the year of column "Created on".
 
@@ -396,7 +399,7 @@ In the following demo, the quick filter value `"Saint Martin, Saint Lucia"` will
 
 {{"demo": "QuickFilteringCustomizedGrid.js", "bg": "inline", "defaultCodeOpen": false}}
 
-## apiRef [<span class="plan-pro"></span>](https://mui.com/store/items/mui-x-pro/)
+## apiRef [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
 
 :::warning
 Only use this API as the last option. Give preference to the props to control the grid.
@@ -404,7 +407,7 @@ Only use this API as the last option. Give preference to the props to control th
 
 {{"demo": "FilterApiNoSnap.js", "bg": "inline", "hideToolbar": true}}
 
-## Selectors [<span class="plan-pro"></span>](https://mui.com/store/items/mui-x-pro/)
+## Selectors [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
 
 {{"demo": "FilterSelectorsNoSnap.js", "bg": "inline", "hideToolbar": true}}
 
@@ -412,10 +415,11 @@ More information about the selectors and how to use them on the [dedicated page]
 
 ## API
 
-- [DataGrid](/x/api/data-grid/data-grid/)
-- [DataGridPro](/x/api/data-grid/data-grid-pro/)
 - [GridFilterForm](/x/api/data-grid/grid-filter-form/)
 - [GridFilterItem](/x/api/data-grid/grid-filter-item/)
 - [GridFilterModel](/x/api/data-grid/grid-filter-model/)
 - [GridFilterOperator](/x/api/data-grid/grid-filter-operator/)
 - [GridFilterPanel](/x/api/data-grid/grid-filter-panel/)
+- [DataGrid](/x/api/data-grid/data-grid/)
+- [DataGridPro](/x/api/data-grid/data-grid-pro/)
+- [DataGridPremium](/x/api/data-grid/data-grid-premium/)

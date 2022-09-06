@@ -86,11 +86,8 @@ function extractSlots(options: {
   const { filename, name: componentName, displayName, project } = options;
   const slots: Record<string, { type: string; default?: string; description: string }> = {};
 
-  if (!['x-data-grid', 'x-data-grid-pro'].includes(project.name)) {
-    return slots;
-  }
-
   const proptypes = ttp.parseFromProgram(filename, project.program, {
+    checkDeclarations: true,
     shouldResolveObject: ({ name }) => {
       return name === 'components';
     },
@@ -241,7 +238,7 @@ const buildComponentDocumentation = async (options: {
   reactApi.styles = await parseStyles(reactApi, project.program as any);
   reactApi.styles.name = reactApi.name.startsWith('Grid')
     ? 'MuiDataGrid' // TODO: Read from @slot annotation
-    : `Mui${reactApi.name.replace(/Pro$/, '')}`;
+    : `Mui${reactApi.name.replace(/(Pro|Premium)$/, '')}`;
   reactApi.styles.classes.forEach((key) => {
     const globalClass = generateUtilityClass(reactApi.styles.name!, key);
     reactApi.styles.globalClasses[key] = globalClass;

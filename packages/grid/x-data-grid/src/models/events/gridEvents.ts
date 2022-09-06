@@ -54,6 +54,7 @@ enum GridEvents {
   pageChange = 'pageChange',
   pageSizeChange = 'pageSizeChange',
   rowGroupingModelChange = 'rowGroupingModelChange',
+  aggregationModelChange = 'aggregationModelChange',
   rowsScroll = 'rowsScroll',
   rowsScrollEnd = 'rowsScrollEnd',
   columnSeparatorMouseDown = 'columnSeparatorMouseDown',
@@ -84,6 +85,8 @@ enum GridEvents {
   preferencePanelOpen = 'preferencePanelOpen',
   menuOpen = 'menuOpen',
   menuClose = 'menuClose',
+  renderedRowsIntervalChange = 'renderedRowsIntervalChange',
+  fetchRows = 'fetchRows',
 }
 
 export type GridEventsStr = keyof GridEventLookup;

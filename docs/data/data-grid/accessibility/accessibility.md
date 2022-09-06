@@ -2,9 +2,9 @@
 title: Data Grid - Accessibility
 ---
 
-# Data Grid - Accessibility
+# Data grid - Accessibility
 
-<p class="description">The Data Grid has complete accessibility support. For instance, every cell is accessible using the keyboard.</p>
+<p class="description">The data grid has complete accessibility support. For instance, every cell is accessible using the keyboard.</p>
 
 ## Guidelines
 
@@ -99,7 +99,7 @@ Use the arrow keys to move the focus.
 |                                  <kbd class="key">Shift</kbd>+ Click on cell | Select the range of rows between the first and the last clicked rows |
 |              <kbd><kbd class="key">Ctrl</kbd>+<kbd class="key">A</kbd></kbd> | Select all rows                                                      |
 |              <kbd><kbd class="key">Ctrl</kbd>+<kbd class="key">C</kbd></kbd> | Copy the currently selected row(s)                                   |
-|               <kbd><kbd class="key">ALT</kbd>+<kbd class="key">C</kbd></kbd> | Copy the currently selected row(s) including headers                 |
+|               <kbd><kbd class="key">Alt</kbd>+<kbd class="key">C</kbd></kbd> | Copy the currently selected row(s) including headers                 |
 |                                   <kbd class="key">Ctrl</kbd>+ Click on cell | Enable multi-selection                                               |
 |                         <kbd class="key">Ctrl</kbd>+ Click on a selected row | Deselect the row                                                     |
 
@@ -125,9 +125,10 @@ The above key assignments are for Windows and Linux.
 On macOS:
 
 - replace <kbd class="key">Ctrl</kbd> with <kbd class="key">⌘ Command</kbd>
-- replace <kbd class="key">ALT</kbd> with <kbd class="key">⌥ Option</kbd>
+- replace <kbd class="key">Alt</kbd> with <kbd class="key">⌥ Option</kbd>
 
 ## API
 
 - [DataGrid](/x/api/data-grid/data-grid/)
 - [DataGridPro](/x/api/data-grid/data-grid-pro/)
+- [DataGridPremium](/x/api/data-grid/data-grid-premium/)

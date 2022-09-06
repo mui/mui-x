@@ -2,7 +2,7 @@
 title: Data Grid - Selection
 ---
 
-# Data Grid - Selection
+# Data grid - Selection
 
 <p class="description">Selection allows the user to select and highlight a number of rows that they can then take action on.</p>
 
@@ -17,7 +17,7 @@ To unselect a row, hold the <kbd class="key">Ctrl</kbd> key and click on it.
 
 {{"demo": "SingleRowSelectionGrid.js", "bg": "inline"}}
 
-### Multiple row selection [<span class="plan-pro"></span>](https://mui.com/store/items/mui-x-pro/)
+### Multiple row selection [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
 
 On the `DataGridPro` component, you can select multiple rows in two ways:
 
@@ -32,6 +32,21 @@ On the `DataGridPro` component, you can select multiple rows in two ways:
 To activate checkbox selection set `checkboxSelection={true}`.
 
 {{"demo": "CheckboxSelectionGrid.js", "bg": "inline"}}
+
+### Custom checkbox column
+
+If you provide a custom checkbox column to the grid with the `GRID_CHECKBOX_SELECTION_FIELD` field, the grid will not add its own.
+
+We strongly recommend to use the `GRID_CHECKBOX_SELECTION_COL_DEF` variable instead of re-defining all the custom properties yourself.
+
+In the following demo, the checkbox column has been moved to the right and its width has been increased to 100px.
+
+{{"demo": "CheckboxSelectionCustom.js", "bg": "inline"}}
+
+:::warning
+Always set the `checkboxSelection` prop to `true` even when providing a custom checkbox column.
+Otherwise, the grid might remove your column.
+:::
 
 ## Disable selection on click
 
@@ -73,7 +88,7 @@ The following demo shows the prop in action:
 
 {{"demo": "ControlledSelectionServerPaginationGrid.js", "bg": "inline"}}
 
-## apiRef [<span class="plan-pro"></span>](https://mui.com/store/items/mui-x-pro/)
+## apiRef [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
 
 The grid exposes a set of methods that enables all of these features using the imperative apiRef.
 
@@ -83,7 +98,7 @@ Only use this API as the last option. Give preference to the props to control th
 
 {{"demo": "SelectionApiNoSnap.js", "bg": "inline", "hideToolbar": true}}
 
-## 🚧 Range selection [<span class="plan-premium"></span>](https://mui.com/store/items/mui-x-premium/)
+## 🚧 Range selection [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan)
 
 :::warning
 This feature isn't implemented yet. It's coming.
@@ -97,3 +112,4 @@ With this feature, you will be able to select ranges of cells across the Grid.
 
 - [DataGrid](/x/api/data-grid/data-grid/)
 - [DataGridPro](/x/api/data-grid/data-grid-pro/)
+- [DataGridPremium](/x/api/data-grid/data-grid-premium/)
