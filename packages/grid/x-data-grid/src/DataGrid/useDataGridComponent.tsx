@@ -47,7 +47,7 @@ import { useGridStatePersistence } from '../hooks/features/statePersistence/useG
 import { useGridColumnSpanning } from '../hooks/features/columns/useGridColumnSpanning';
 import {
   useGridColumnGrouping,
-  columnGroupsStateInitializer,
+  //  columnGroupsStateInitializer,
 } from '../hooks/features/columnGrouping/useGridColumnGrouping';
 
 export const useDataGridComponent = (props: DataGridProcessedProps) => {
@@ -64,7 +64,7 @@ export const useDataGridComponent = (props: DataGridProcessedProps) => {
    */
   useGridInitializeState(selectionStateInitializer, apiRef, props);
   useGridInitializeState(columnsStateInitializer, apiRef, props);
-  useGridInitializeState(columnGroupsStateInitializer, apiRef, props);
+  // useGridInitializeState(columnGroupsStateInitializer, apiRef, props);
   useGridInitializeState(rowsStateInitializer, apiRef, props);
   useGridInitializeState(
     props.experimentalFeatures?.newEditingApi

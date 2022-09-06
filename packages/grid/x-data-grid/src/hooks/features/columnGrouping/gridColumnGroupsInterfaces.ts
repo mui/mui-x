@@ -13,4 +13,5 @@ export interface GridColumnsGroupingState {
   lookup: GridColumnGroupLookup;
   headerStructure: GridGroupingStructure[][];
   unwrappedGroupingModel: { [columnField: string]: GridColumnGroup['groupId'][] };
+  maxDepth: number;
 }

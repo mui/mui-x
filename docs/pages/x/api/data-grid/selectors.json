@@ -26,6 +26,12 @@
     "supportsApiRef": true
   },
   {
+    "name": "gridColumnGroupsHeaderMaxDepthSelector",
+    "returnType": "number",
+    "description": "",
+    "supportsApiRef": true
+  },
+  {
     "name": "gridColumnGroupsHeaderStructureSelector",
     "returnType": "GridGroupingStructure[][]",
     "description": "",
@@ -102,12 +108,6 @@
     "supportsApiRef": true
   },
   {
-    "name": "gridDensityHeaderGroupingMaxDepthSelector",
-    "returnType": "number",
-    "description": "",
-    "supportsApiRef": true
-  },
-  {
     "name": "gridDensityHeaderHeightSelector",
     "returnType": "number",
     "description": "",
@@ -124,12 +124,6 @@
     "returnType": "GridDensityState",
     "description": "",
     "supportsApiRef": false
-  },
-  {
-    "name": "gridDensityTotalHeaderHeightSelector",
-    "returnType": "number",
-    "description": "",
-    "supportsApiRef": true
   },
   {
     "name": "gridDensityValueSelector",
@@ -332,6 +326,12 @@
     "returnType": "GridTabIndexState",
     "description": "",
     "supportsApiRef": false
+  },
+  {
+    "name": "gridTotalHeaderHeightSelector",
+    "returnType": "number",
+    "description": "",
+    "supportsApiRef": true
   },
   {
     "name": "gridVisibleColumnDefinitionsSelector",

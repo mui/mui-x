@@ -17,11 +17,7 @@ import {
   unstable_gridFocusColumnGroupHeaderSelector,
   unstable_gridTabIndexColumnGroupHeaderSelector,
 } from '../focus/gridFocusStateSelector';
-import {
-  gridDensityHeaderHeightSelector,
-  gridDensityHeaderGroupingMaxDepthSelector,
-  gridDensityTotalHeaderHeightSelector,
-} from '../density/densitySelector';
+import { gridDensityHeaderHeightSelector } from '../density/densitySelector';
 import { gridFilterActiveItemsLookupSelector } from '../filter/gridFilterSelector';
 import { gridSortColumnLookupSelector } from '../sorting/gridSortingSelector';
 import { gridColumnMenuSelector } from '../columnMenu/columnMenuSelector';
@@ -35,7 +31,11 @@ import { useGridVisibleRows } from '../../utils/useGridVisibleRows';
 import { getRenderableIndexes } from '../virtualization/useGridVirtualScroller';
 import { GridColumnGroupHeader } from '../../../components/columnHeaders/GridColumnGroupHeader';
 import { GridColumnGroup } from '../../../models/gridColumnGrouping';
-import { gridColumnGroupsHeaderStructureSelector } from '../columnGrouping/gridColumnGroupsSelector';
+import {
+  gridTotalHeaderHeightSelector,
+  gridColumnGroupsHeaderMaxDepthSelector,
+  gridColumnGroupsHeaderStructureSelector,
+} from '../columnGrouping/gridColumnGroupsSelector';
 
 const GridColumnHeaderRow = styled('div', {
   name: 'MuiDataGrid',
@@ -91,8 +91,8 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
     unstable_gridFocusColumnGroupHeaderSelector,
   );
   const headerHeight = useGridSelector(apiRef, gridDensityHeaderHeightSelector);
-  const headerGroupingMaxDepth = useGridSelector(apiRef, gridDensityHeaderGroupingMaxDepthSelector);
-  const totalHeaderHeight = useGridSelector(apiRef, gridDensityTotalHeaderHeightSelector);
+  const headerGroupingMaxDepth = useGridSelector(apiRef, gridColumnGroupsHeaderMaxDepthSelector);
+  const totalHeaderHeight = useGridSelector(apiRef, gridTotalHeaderHeightSelector);
   const filterColumnLookup = useGridSelector(apiRef, gridFilterActiveItemsLookupSelector);
   const sortColumnLookup = useGridSelector(apiRef, gridSortColumnLookupSelector);
   const columnMenuState = useGridSelector(apiRef, gridColumnMenuSelector);
@@ -365,6 +365,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
       const firstColumnFieldToRender = visibleColumns[firstColumnToRender].field;
       const firstGroupToRender =
         apiRef.current.unstable_getColumnGroupPath(firstColumnFieldToRender)[depth] ?? null;
+
       const firstGroupIndex = rowStructure.findIndex(
         ({ groupId, columnFields }) =>
           groupId === firstGroupToRender && columnFields.includes(firstColumnFieldToRender),

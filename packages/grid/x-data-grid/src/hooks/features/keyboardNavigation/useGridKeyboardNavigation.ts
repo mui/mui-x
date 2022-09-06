@@ -16,7 +16,7 @@ import { GRID_DETAIL_PANEL_TOGGLE_FIELD } from '../../../constants/gridDetailPan
 import { GridRowEntry, GridRowId } from '../../../models';
 import { gridPinnedRowsSelector } from '../rows/gridRowsSelector';
 import { unstable_gridFocusColumnGroupHeaderSelector } from '../focus';
-import { gridDensityHeaderGroupingMaxDepthSelector } from '../density';
+import { gridColumnGroupsHeaderMaxDepthSelector } from '../columnGrouping/gridColumnGroupsSelector';
 
 function enrichPageRowsWithPinnedRows(
   apiRef: React.MutableRefObject<GridApiCommunity>,
@@ -261,7 +261,7 @@ export const useGridKeyboardNavigation = (
       const lastRowIndexInPage = currentPageRows.length - 1;
       const firstColIndex = 0;
       const lastColIndex = gridVisibleColumnDefinitionsSelector(apiRef).length - 1;
-      const columnGroupMaxDepth = gridDensityHeaderGroupingMaxDepthSelector(apiRef);
+      const columnGroupMaxDepth = gridColumnGroupsHeaderMaxDepthSelector(apiRef);
       let shouldPreventDefault = true;
 
       switch (event.key) {

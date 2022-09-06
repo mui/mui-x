@@ -23,7 +23,7 @@ export { useGridColumns, columnsStateInitializer } from '../hooks/features/colum
 export { useGridColumnSpanning } from '../hooks/features/columns/useGridColumnSpanning';
 export {
   useGridColumnGrouping,
-  columnGroupsStateInitializer,
+  //  columnGroupsStateInitializer,
 } from '../hooks/features/columnGrouping/useGridColumnGrouping';
 export type {
   GridColumnRawLookup,

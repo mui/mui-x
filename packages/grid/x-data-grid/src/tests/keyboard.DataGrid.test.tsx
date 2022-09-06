@@ -493,6 +493,7 @@ describe('<DataGrid /> - Keyboard', () => {
             rowHeight={ROW_HEIGHT}
             headerHeight={HEADER_HEIGHT}
             hideFooter
+            disableVirtualization
             columnGroupingModel={columnGroupingModel}
             experimentalFeatures={{ warnIfFocusStateIsNotSynced: true, columnGrouping: true }}
             {...props}

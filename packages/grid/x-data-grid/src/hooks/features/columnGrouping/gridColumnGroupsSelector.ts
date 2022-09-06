@@ -21,3 +21,18 @@ export const gridColumnGroupsHeaderStructureSelector = createSelector(
   gridColumnGroupingSelector,
   (columnGrouping) => columnGrouping.headerStructure,
 );
+
+export const gridColumnGroupsHeaderMaxDepthSelector = createSelector(
+  gridColumnGroupingSelector,
+  (columnGrouping) => columnGrouping?.maxDepth ?? 0,
+);
+
+const getGroupingHeader = (state: GridStateCommunity) => ({
+  columnGrouping: state.columnGrouping,
+  density: state.density,
+});
+
+export const gridTotalHeaderHeightSelector = createSelector(
+  getGroupingHeader,
+  ({ columnGrouping, density }) => density.headerHeight * ((columnGrouping?.maxDepth ?? 0) + 1),
+);

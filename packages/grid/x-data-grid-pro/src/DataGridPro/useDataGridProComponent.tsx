@@ -41,7 +41,7 @@ import {
   rowsMetaStateInitializer,
   selectionStateInitializer,
   useGridColumnGrouping,
-  columnGroupsStateInitializer,
+  //  columnGroupsStateInitializer,
 } from '@mui/x-data-grid/internals';
 import { GridApiPro } from '../models/gridApiPro';
 import { DataGridProProcessedProps } from '../models/dataGridProProps';
@@ -120,7 +120,7 @@ export const useDataGridProComponent = (
   useGridInitializeState(paginationStateInitializer, apiRef, props);
   useGridInitializeState(rowsMetaStateInitializer, apiRef, props);
   useGridInitializeState(columnMenuStateInitializer, apiRef, props);
-  useGridInitializeState(columnGroupsStateInitializer, apiRef, props);
+  // useGridInitializeState(columnGroupsStateInitializer, apiRef, props);
 
   useGridTreeData(apiRef);
   useGridKeyboardNavigation(apiRef, props);
