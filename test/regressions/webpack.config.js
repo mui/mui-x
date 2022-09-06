@@ -25,7 +25,7 @@ module.exports = {
       DISABLE_CHANCE_RANDOM: JSON.stringify(true),
     }),
     new webpack.ProvidePlugin({
-      // required by enzyme > cheerio > parse5 > util
+      // required by sinon
       process: 'process/browser',
     }),
   ],
