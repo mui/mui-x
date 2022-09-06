@@ -8,12 +8,11 @@ title: Data Grid - Demo
 
 :::info
 
-We're using the Data Grid to display the following features' table. 
+We're using the Data Grid to display the following features' table.
 
 Filtering, sorting and grouping (by plan) are at your disposal to help you explore the list.
 
 :::
-
 
 {{"demo": "PopularFeaturesDemo.tsx", "defaultCodeOpen": false, "bg": "inline", "hideToolbar": true}}
 
