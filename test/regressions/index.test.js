@@ -162,7 +162,7 @@ async function main() {
       await testcase.screenshot({ path: screenshotPath, type: 'png' });
     });
 
-    it.only('should take a screenshot of the print preview', async function test() {
+    it('should take a screenshot of the print preview', async function test() {
       this.timeout(20000);
 
       const route = `${baseUrl}/docs-data-grid-export/ExportDefaultToolbar`;
