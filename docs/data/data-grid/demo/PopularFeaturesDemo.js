@@ -236,7 +236,15 @@ const columns = [
         return <React.Fragment />;
       }
       return (
-        <Box sx={{ width: '100%', height: '100%', position: 'relative' }}>
+        <Box
+          sx={{
+            width: '100%',
+            height: '100%',
+            position: 'relative',
+            display: 'flex',
+            alignItems: 'center',
+          }}
+        >
           <Typography sx={{ fontSize: '1rem', fontWeight: '500' }}>
             <Link
               href={`/x/react-data-grid${params.row.detailPage}`}
