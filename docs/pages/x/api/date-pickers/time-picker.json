@@ -54,7 +54,8 @@
       "type": {
         "name": "enum",
         "description": "'hours'<br>&#124;&nbsp;'minutes'<br>&#124;&nbsp;'seconds'"
-      }
+      },
+      "default": "'hours'"
     },
     "orientation": {
       "type": { "name": "enum", "description": "'landscape'<br>&#124;&nbsp;'portrait'" }
@@ -73,7 +74,8 @@
       "type": {
         "name": "arrayOf",
         "description": "Array&lt;'hours'<br>&#124;&nbsp;'minutes'<br>&#124;&nbsp;'seconds'&gt;"
-      }
+      },
+      "default": "['hours', 'minutes']"
     }
   },
   "slots": {

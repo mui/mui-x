@@ -16,6 +16,7 @@ describe('<MobileDatePicker /> localization', () => {
         value={adapterToUse.date(new Date(2018, 0, 1))}
         onChange={() => {}}
         views={['year']}
+        openTo="year"
       />,
     );
 
@@ -33,6 +34,7 @@ describe('<MobileDatePicker /> localization', () => {
         value={value}
         onChange={() => {}}
         views={['year', 'month']}
+        openTo="year"
       />,
     );
 
