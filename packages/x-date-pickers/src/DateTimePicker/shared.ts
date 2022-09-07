@@ -26,7 +26,8 @@ export interface BaseDateTimePickerProps<TInputDate, TDate>
    */
   ampm?: boolean;
   /**
-   * To show tabs.
+   * Toggles visibility of date time switching tabs
+   * @default false for mobile, true for desktop
    */
   hideTabs?: boolean;
   /**
@@ -52,6 +53,8 @@ export interface BaseDateTimePickerProps<TInputDate, TDate>
   onViewChange?: (view: CalendarOrClockPickerView) => void;
   /**
    * First view to show.
+   * Must be a valid option from `views` list
+   * @default 'day'
    */
   openTo?: CalendarOrClockPickerView;
   /**
@@ -75,6 +78,7 @@ export interface BaseDateTimePickerProps<TInputDate, TDate>
   toolbarPlaceholder?: React.ReactNode;
   /**
    * Array of views to show.
+   * @default ['year', 'day', 'hours', 'minutes']
    */
   views?: readonly CalendarOrClockPickerView[];
 }

@@ -52,6 +52,7 @@ export const useGridKeyboardNavigation = (
    * @param {number} colIndex Index of the column to focus
    * @param {number} rowIndex index of the row to focus
    * @param {string} closestColumnToUse Which closest column cell to use when the cell is spanned by `colSpan`.
+   * TODO replace with apiRef.current.unstable_moveFocusToRelativeCell()
    */
   const goToCell = React.useCallback(
     (colIndex: number, rowId: GridRowId, closestColumnToUse: 'left' | 'right' = 'left') => {
@@ -127,6 +128,7 @@ export const useGridKeyboardNavigation = (
       switch (event.key) {
         case 'ArrowDown':
         case 'Enter': {
+          // TODO v6: Remove Enter case because `cellNavigationKeyDown` is not fired by the new editing API
           // "Enter" is only triggered by the row / cell editing feature
           if (rowIndexBefore < lastRowIndexInPage) {
             goToCell(colIndexBefore, getRowIdFromIndex(rowIndexBefore + 1));

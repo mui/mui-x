@@ -127,6 +127,58 @@ export const mergeStateWithFilterModel =
     filterModel: sanitizeFilterModel(filterModel, disableMultipleColumnsFiltering, apiRef),
   });
 
+const getFilterCallbackFromItem = (
+  filterItem: GridFilterItem,
+  apiRef: React.MutableRefObject<GridApiCommunity>,
+): GridFilterItemApplier | null => {
+  if (!filterItem.columnField || !filterItem.operatorValue) {
+    return null;
+  }
+
+  const column = apiRef.current.getColumn(filterItem.columnField);
+  if (!column) {
+    return null;
+  }
+  let parsedValue;
+
+  if (column.valueParser) {
+    const parser = column.valueParser;
+    parsedValue = Array.isArray(filterItem.value)
+      ? filterItem.value?.map((x) => parser(x))
+      : parser(filterItem.value);
+  } else {
+    parsedValue = filterItem.value;
+  }
+  const newFilterItem: GridFilterItem = { ...filterItem, value: parsedValue };
+
+  const filterOperators = column.filterOperators;
+  if (!filterOperators?.length) {
+    throw new Error(`MUI: No filter operators found for column '${column.field}'.`);
+  }
+
+  const filterOperator = filterOperators.find(
+    (operator) => operator.value === newFilterItem.operatorValue,
+  )!;
+  if (!filterOperator) {
+    throw new Error(
+      `MUI: No filter operator found for column '${column.field}' and operator value '${newFilterItem.operatorValue}'.`,
+    );
+  }
+
+  const applyFilterOnRow = filterOperator.getApplyFilterFn(newFilterItem, column)!;
+  if (typeof applyFilterOnRow !== 'function') {
+    return null;
+  }
+
+  const fn = (rowId: GridRowId) => {
+    const cellParams = apiRef.current.getCellParams(rowId, newFilterItem.columnField!);
+
+    return applyFilterOnRow(cellParams);
+  };
+
+  return { fn, item: newFilterItem };
+};
+
 /**
  * Generates a method to easily check if a row is matching the current filter model.
  * @param {GridFilterModel} filterModel The model with which we want to filter the rows.
@@ -139,57 +191,8 @@ export const buildAggregatedFilterItemsApplier = (
 ): GridFilterItemApplierNotAggregated | null => {
   const { items } = filterModel;
 
-  const getFilterCallbackFromItem = (filterItem: GridFilterItem): GridFilterItemApplier | null => {
-    if (!filterItem.columnField || !filterItem.operatorValue) {
-      return null;
-    }
-
-    const column = apiRef.current.getColumn(filterItem.columnField);
-    if (!column) {
-      return null;
-    }
-    let parsedValue;
-
-    if (column.valueParser) {
-      const parser = column.valueParser;
-      parsedValue = Array.isArray(filterItem.value)
-        ? filterItem.value?.map((x) => parser(x))
-        : parser(filterItem.value);
-    } else {
-      parsedValue = filterItem.value;
-    }
-    const newFilterItem: GridFilterItem = { ...filterItem, value: parsedValue };
-
-    const filterOperators = column.filterOperators;
-    if (!filterOperators?.length) {
-      throw new Error(`MUI: No filter operators found for column '${column.field}'.`);
-    }
-
-    const filterOperator = filterOperators.find(
-      (operator) => operator.value === newFilterItem.operatorValue,
-    )!;
-    if (!filterOperator) {
-      throw new Error(
-        `MUI: No filter operator found for column '${column.field}' and operator value '${newFilterItem.operatorValue}'.`,
-      );
-    }
-
-    const applyFilterOnRow = filterOperator.getApplyFilterFn(newFilterItem, column)!;
-    if (typeof applyFilterOnRow !== 'function') {
-      return null;
-    }
-
-    const fn = (rowId: GridRowId) => {
-      const cellParams = apiRef.current.getCellParams(rowId, newFilterItem.columnField!);
-
-      return applyFilterOnRow(cellParams);
-    };
-
-    return { fn, item: newFilterItem };
-  };
-
   const appliers = items
-    .map(getFilterCallbackFromItem)
+    .map((item) => getFilterCallbackFromItem(item, apiRef))
     .filter((callback): callback is GridFilterItemApplier => !!callback);
 
   if (appliers.length === 0) {
@@ -298,10 +301,16 @@ export const passFilterLogic = (
   allFilterItemResults: (null | GridFilterItemResult)[],
   allQuickFilterResults: (null | GridQuickFilterValueResult)[],
   filterModel: GridFilterModel,
+  apiRef: React.MutableRefObject<GridApiCommunity>,
 ): boolean => {
+  const cleanedFilterItems = filterModel.items.filter(
+    (item) => getFilterCallbackFromItem(item, apiRef) !== null,
+  );
+
   const cleanedAllFilterItemResults = allFilterItemResults.filter(
     (result): result is GridFilterItemResult => result != null,
   );
+
   const cleanedAllQuickFilterResults = allQuickFilterResults.filter(
     (result): result is GridQuickFilterValueResult => result != null,
   );
@@ -319,12 +328,12 @@ export const passFilterLogic = (
     };
 
     if (linkOperator === GridLinkOperator.And) {
-      const passesAllFilters = filterModel.items.every(filterItemPredicate);
+      const passesAllFilters = cleanedFilterItems.every(filterItemPredicate);
       if (!passesAllFilters) {
         return false;
       }
     } else {
-      const passesSomeFilters = filterModel.items.some(filterItemPredicate);
+      const passesSomeFilters = cleanedFilterItems.some(filterItemPredicate);
       if (!passesSomeFilters) {
         return false;
       }

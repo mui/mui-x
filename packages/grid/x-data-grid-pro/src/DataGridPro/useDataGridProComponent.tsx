@@ -69,6 +69,8 @@ import {
 import { useGridDetailPanelPreProcessors } from '../hooks/features/detailPanel/useGridDetailPanelPreProcessors';
 import { useGridRowReorder } from '../hooks/features/rowReorder/useGridRowReorder';
 import { useGridRowReorderPreProcessors } from '../hooks/features/rowReorder/useGridRowReorderPreProcessors';
+import { useGridLazyLoader } from '../hooks/features/lazyLoader/useGridLazyLoader';
+import { useGridLazyLoaderPreProcessors } from '../hooks/features/lazyLoader/useGridLazyLoaderPreProcessors';
 import {
   useGridRowPinning,
   rowPinningStateInitializer,
@@ -87,6 +89,7 @@ export const useDataGridProComponent = (
   useGridSelectionPreProcessors(apiRef, props);
   useGridRowReorderPreProcessors(apiRef, props);
   useGridTreeDataPreProcessors(apiRef, props);
+  useGridLazyLoaderPreProcessors(apiRef, props);
   useGridRowPinningPreProcessors(apiRef);
   useGridDetailPanelPreProcessors(apiRef, props);
   // The column pinning `hydrateColumns` pre-processor must be after every other `hydrateColumns` pre-processors
@@ -151,6 +154,7 @@ export const useDataGridProComponent = (
   useGridRowReorder(apiRef, props);
   useGridScroll(apiRef, props);
   useGridInfiniteLoader(apiRef, props);
+  useGridLazyLoader(apiRef, props);
   useGridColumnMenu(apiRef);
   useGridCsvExport(apiRef);
   useGridPrintExport(apiRef, props);

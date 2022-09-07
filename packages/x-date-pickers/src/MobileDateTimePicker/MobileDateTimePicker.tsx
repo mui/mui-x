@@ -20,6 +20,7 @@ import {
 import { useDateTimeValidation } from '../internals/hooks/validation/useDateTimeValidation';
 import { DateInputSlotsComponent, PureDateInput } from '../internals/components/PureDateInput';
 import { usePickerState } from '../internals/hooks/usePickerState';
+import { DateTimePickerTabs } from '../DateTimePicker';
 
 export interface MobileDateTimePickerSlotsComponent
   extends MobileWrapperSlotsComponent,
@@ -81,10 +82,16 @@ export const MobileDateTimePicker = React.forwardRef(function MobileDateTimePick
     ToolbarComponent = DateTimePickerToolbar,
     value,
     onChange,
-    components,
+    components: providedComponents,
     componentsProps,
+    hideTabs = false,
     ...other
   } = props;
+  const components = React.useMemo<MobileDateTimePickerProps<TInputDate, TDate>['components']>(
+    () => ({ Tabs: DateTimePickerTabs, ...providedComponents }),
+    [providedComponents],
+  );
+
   const DateInputProps = {
     ...inputProps,
     ...other,
@@ -111,6 +118,7 @@ export const MobileDateTimePicker = React.forwardRef(function MobileDateTimePick
         DateInputProps={DateInputProps}
         components={components}
         componentsProps={componentsProps}
+        hideTabs={hideTabs}
         {...other}
       />
     </MobileWrapper>
@@ -247,7 +255,8 @@ MobileDateTimePicker.propTypes = {
    */
   getViewSwitchingButtonText: PropTypes.func,
   /**
-   * To show tabs.
+   * Toggles visibility of date time switching tabs
+   * @default false for mobile, true for desktop
    */
   hideTabs: PropTypes.bool,
   ignoreInvalidInputs: PropTypes.bool,
@@ -380,6 +389,8 @@ MobileDateTimePicker.propTypes = {
   OpenPickerButtonProps: PropTypes.object,
   /**
    * First view to show.
+   * Must be a valid option from `views` list
+   * @default 'day'
    */
   openTo: PropTypes.oneOf(['day', 'hours', 'minutes', 'month', 'seconds', 'year']),
   /**
@@ -502,6 +513,7 @@ MobileDateTimePicker.propTypes = {
   value: PropTypes.any,
   /**
    * Array of views to show.
+   * @default ['year', 'day', 'hours', 'minutes']
    */
   views: PropTypes.arrayOf(
     PropTypes.oneOf(['day', 'hours', 'minutes', 'month', 'seconds', 'year']).isRequired,

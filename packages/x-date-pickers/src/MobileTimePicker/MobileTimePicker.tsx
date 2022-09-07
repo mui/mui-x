@@ -295,6 +295,8 @@ MobileTimePicker.propTypes = {
   OpenPickerButtonProps: PropTypes.object,
   /**
    * First view to show.
+   * Must be a valid option from `views` list
+   * @default 'hours'
    */
   openTo: PropTypes.oneOf(['hours', 'minutes', 'seconds']),
   /**
@@ -351,6 +353,7 @@ MobileTimePicker.propTypes = {
   value: PropTypes.any,
   /**
    * Array of views to show.
+   * @default ['hours', 'minutes']
    */
   views: PropTypes.arrayOf(PropTypes.oneOf(['hours', 'minutes', 'seconds']).isRequired),
 } as any;

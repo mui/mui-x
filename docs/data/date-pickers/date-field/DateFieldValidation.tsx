@@ -1,35 +1,40 @@
 import * as React from 'react';
-import addDays from 'date-fns/addDays';
-import isWeekend from 'date-fns/isWeekend';
+import dayjs, { Dayjs } from 'dayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers';
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { Unstable_DateField as DateField } from '@mui/x-date-pickers/DateField';
 import Stack from '@mui/material/Stack';
 
-const today = new Date();
+const today = dayjs();
+
+const isWeekend = (date: Dayjs) => {
+  const day = date.day();
+
+  return day === 0 || day === 6;
+};
 
 export default function DateFieldValidation() {
   return (
-    <LocalizationProvider dateAdapter={AdapterDateFns}>
+    <LocalizationProvider dateAdapter={AdapterDayjs}>
       <Stack spacing={2}>
         <DateField
           label="props.minDate = today"
-          defaultValue={addDays(today, -1)}
+          defaultValue={today.subtract(1, 'day')}
           minDate={today}
         />
         <DateField
           label="props.maxDate = today"
-          defaultValue={addDays(today, 1)}
+          defaultValue={today.add(1, 'day')}
           maxDate={today}
         />
         <DateField
           label="props.disablePast = true"
-          defaultValue={addDays(today, -1)}
+          defaultValue={today.subtract(1, 'day')}
           disablePast
         />
         <DateField
           label="props.disableFuture = true"
-          defaultValue={addDays(today, 1)}
+          defaultValue={today.add(1, 'day')}
           disableFuture
         />
         <DateField

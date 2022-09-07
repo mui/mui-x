@@ -148,6 +148,7 @@ async function main(argv) {
         break;
       case 'DatePicker':
       case 'TimePicker':
+      case 'DateTimePicker':
       case 'DateRangePicker':
       case 'pickers':
         pickersCommits.push(commitItem);
