@@ -13,6 +13,7 @@ import {
   withPickerControls,
   openPicker,
 } from '../../../../test/utils/pickers-utils';
+import { inputBaseClasses } from '@mui/material/InputBase';
 
 const WrappedDesktopDatePicker = withPickerControls(DesktopDatePicker)({
   DialogProps: { TransitionComponent: FakeTransitionComponent },
@@ -728,6 +729,41 @@ describe('<DesktopDatePicker />', () => {
 
       expect(screen.getByLabelText('Previous month')).not.to.have.attribute('disabled');
       expect(screen.getByLabelText('Next month')).not.to.have.attribute('disabled');
+    });
+  });
+
+  it('Validation', () => {
+    it('should enable the input error state when the current date has an invalid day', () => {
+      render(
+        <WrappedDesktopDatePicker
+          initialValue={adapterToUse.date(new Date(2018, 5, 1))}
+          shouldDisableDate={() => true}
+        />,
+      );
+
+      expect(document.querySelector(`.${inputBaseClasses.error}`)).to.not.equal(null);
+    });
+
+    it('should enable the input error state when the current date has an invalid month', () => {
+      render(
+        <WrappedDesktopDatePicker
+          initialValue={adapterToUse.date(new Date(2018, 5, 1))}
+          shouldDisableMonth={() => true}
+        />,
+      );
+
+      expect(document.querySelector(`.${inputBaseClasses.error}`)).to.not.equal(null);
+    });
+
+    it('should enable the input error state when the current date has an invalid year', () => {
+      render(
+        <WrappedDesktopDatePicker
+          initialValue={adapterToUse.date(new Date(2018, 1, 1))}
+          shouldDisableMonth={() => true}
+        />,
+      );
+
+      expect(document.querySelector(`.${inputBaseClasses.error}`)).to.not.equal(null);
     });
   });
 
