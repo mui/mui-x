@@ -137,7 +137,7 @@ The following slots let you customize how to render the buttons and icons for an
 
 ### Component props
 
-You can pass props to the icon and buttons as show below:
+You can pass props to the icons and buttons as shown below:
 
 {{"demo": "ArrowSwitcherComponentProps.js", "defaultCodeOpen": false, "disableAd": true}}
 
