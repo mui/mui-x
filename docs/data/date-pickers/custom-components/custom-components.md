@@ -143,6 +143,6 @@ You can pass props to the icon and buttons as show below:
 
 ### Component
 
-You can pass custom components, for example to replace the icons as show below:
+You can pass custom components—to replace the icons, for example—as shown below:
 
 {{"demo": "ArrowSwitcherComponent.js", "defaultCodeOpen": false, "disableAd": true}}
