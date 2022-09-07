@@ -14,7 +14,6 @@ import generatePropTypeDescription, {
 import parseTest from '@mui/monorepo/docs/src/modules/utils/parseTest';
 import kebabCase from 'lodash/kebabCase';
 import { LANGUAGES } from 'docs/src/modules/constants';
-import { findPagesMarkdown } from 'docs/src/modules/utils/find';
 import { defaultHandlers, parse as docgenParse, ReactDocgenApi } from 'react-docgen';
 import {
   renderInline as renderMarkdownInline,
@@ -22,6 +21,7 @@ import {
 } from '@mui/monorepo/docs/packages/markdown';
 import { getLineFeed } from '@mui/monorepo/docs/scripts/helpers';
 import generateUtilityClass from '@mui/base/generateUtilityClass';
+import { findPagesMarkdown } from '../../src/modules/utils/find';
 import { DocumentedInterfaces, getJsdocDefaultValue, linkify, writePrettifiedFile } from './utils';
 import { Project, Projects } from '../getTypeScriptProjects';
 
