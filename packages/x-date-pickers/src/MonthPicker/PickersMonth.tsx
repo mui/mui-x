@@ -34,6 +34,7 @@ const pickersMonthClasses = generateUtilityClasses('PrivatePickersMonth', [
 ]);
 
 interface PickersMonthProps {
+  'aria-current'?: React.AriaAttributes['aria-current'];
   autoFocus: boolean;
   children: React.ReactNode;
   classes?: Partial<PickersMonthClasses>;
@@ -114,6 +115,7 @@ const PickersMonthRaw = (props: PickersMonthProps) => {
     onKeyDown,
     onFocus,
     onBlur,
+    'aria-current': ariaCurrent,
     ...other
   } = props;
 
@@ -142,6 +144,7 @@ const PickersMonthRaw = (props: PickersMonthProps) => {
         disabled={disabled}
         type="button"
         tabIndex={disabled ? -1 : tabIndex}
+        aria-current={ariaCurrent}
         onClick={(event) => onClick(event, value)}
         onKeyDown={(event) => onKeyDown(event, value)}
         onFocus={(event) => onFocus(event, value)}

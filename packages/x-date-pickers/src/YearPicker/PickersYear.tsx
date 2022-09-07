@@ -35,6 +35,7 @@ const pickersYearClasses: PickersYearClasses = generateUtilityClasses('PrivatePi
 ]);
 
 interface PickersYearProps {
+  'aria-current'?: React.AriaAttributes['aria-current'];
   autoFocus?: boolean;
   children: React.ReactNode;
   classes?: Partial<PickersYearClasses>;
@@ -120,6 +121,7 @@ const PickersYearRaw = (props: PickersYearProps) => {
     onKeyDown,
     onFocus,
     onBlur,
+    'aria-current': ariaCurrent,
     ...other
   } = props;
   const ref = React.useRef<HTMLButtonElement>(null);
@@ -152,6 +154,7 @@ const PickersYearRaw = (props: PickersYearProps) => {
         disabled={disabled}
         type="button"
         tabIndex={disabled ? -1 : tabIndex}
+        aria-current={ariaCurrent}
         onClick={(event) => onClick(event, value)}
         onKeyDown={(event) => onKeyDown(event, value)}
         onFocus={(event) => onFocus(event, value)}
