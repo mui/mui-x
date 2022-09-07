@@ -345,5 +345,3 @@ export default function PopularFeaturesDemo() {
     </div>
   );
 }
-
-export default PopularFeaturesDemo;
