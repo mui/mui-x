@@ -127,6 +127,9 @@ module.exports = function setKarmaConfig(config) {
           // this allows correct pickers behavior, where their rendering depends on this condition
           // https://github.com/microsoft/playwright/issues/7769#issuecomment-1205106311
           '--blink-settings=primaryPointerType=4',
+          // increasing default `800x600` size to certain window sizing cases to consider browser as "mobile"
+          // i.e.: date time pickers do check height > 667
+          '--window-size=1000,800',
         ],
       },
     },

@@ -1,4 +1,5 @@
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import { unstable_composeClasses as composeClasses } from '@mui/material';
 import IconButton from '@mui/material/IconButton';
 import { switchClasses } from '@mui/material/Switch';
@@ -58,9 +59,17 @@ const GridIconButtonRoot = styled(IconButton)({
   justifyContent: 'flex-end',
 });
 
-export interface GridColumnsPanelProps extends GridPanelWrapperProps {}
+export interface GridColumnsPanelProps extends GridPanelWrapperProps {
+  /*
+   * Changes how the options in the columns selector should be ordered.
+   * If not specified, the order is derived from the `columns` prop.
+   */
+  sort?: 'asc' | 'desc';
+}
 
-export function GridColumnsPanel(props: GridColumnsPanelProps) {
+const collator = new Intl.Collator();
+
+function GridColumnsPanel(props: GridColumnsPanelProps) {
   const apiRef = useGridApiContext();
   const searchInputRef = React.useRef<HTMLInputElement>(null);
   const columns = useGridSelector(apiRef, gridColumnDefinitionsSelector);
@@ -69,6 +78,25 @@ export function GridColumnsPanel(props: GridColumnsPanelProps) {
   const [searchValue, setSearchValue] = React.useState('');
   const ownerState = { classes: rootProps.classes };
   const classes = useUtilityClasses(ownerState);
+
+  const { sort, ...other } = props;
+
+  const sortedColumns = React.useMemo(() => {
+    switch (sort) {
+      case 'asc':
+        return [...columns].sort((a, b) =>
+          collator.compare(a.headerName || a.field, b.headerName || b.field),
+        );
+
+      case 'desc':
+        return [...columns].sort(
+          (a, b) => -collator.compare(a.headerName || a.field, b.headerName || b.field),
+        );
+
+      default:
+        return columns;
+    }
+  }, [columns, sort]);
 
   const toggleColumn = (event: React.MouseEvent<HTMLButtonElement>) => {
     const { name: field } = event.target as HTMLInputElement;
@@ -112,21 +140,21 @@ export function GridColumnsPanel(props: GridColumnsPanelProps) {
 
   const currentColumns = React.useMemo(() => {
     if (!searchValue) {
-      return columns;
+      return sortedColumns;
     }
     const searchValueToCheck = searchValue.toLowerCase();
-    return columns.filter(
+    return sortedColumns.filter(
       (column) =>
         (column.headerName || column.field).toLowerCase().indexOf(searchValueToCheck) > -1,
     );
-  }, [columns, searchValue]);
+  }, [sortedColumns, searchValue]);
 
   React.useEffect(() => {
     searchInputRef.current!.focus();
   }, []);
 
   return (
-    <GridPanelWrapper {...props}>
+    <GridPanelWrapper {...other}>
       <GridPanelHeader>
         <rootProps.components.BaseTextField
           label={apiRef.current.getLocaleText('columnsPanelTextFieldLabel')}
@@ -188,3 +216,13 @@ export function GridColumnsPanel(props: GridColumnsPanelProps) {
     </GridPanelWrapper>
   );
 }
+
+GridColumnsPanel.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // ----------------------------------------------------------------------
+  sort: PropTypes.oneOf(['asc', 'desc']),
+} as any;
+
+export { GridColumnsPanel };

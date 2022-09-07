@@ -6,6 +6,7 @@ import {
   GridRowParams,
   GridRowId,
   GridValidRowModel,
+  GridFeatureMode,
 } from '@mui/x-data-grid';
 import {
   GridExperimentalFeatures,
@@ -24,6 +25,13 @@ import {
 import { GridInitialStatePro } from './gridStatePro';
 
 export interface GridExperimentalProFeatures extends GridExperimentalFeatures {
+  /**
+   * Enables the data grid to lazy load rows while scrolling.
+   */
+  lazyLoading: boolean;
+  /**
+   * Enables the the ability for rows to be pinned in data grid.
+   */
   rowPinning: boolean;
 }
 
@@ -104,6 +112,13 @@ export interface DataGridProPropsWithDefaultValue extends DataGridPropsWithDefau
    * @default false
    */
   rowReordering: boolean;
+  /**
+   * Loading rows can be processed on the server or client-side.
+   * Set it to 'client' if you would like enable infnite loading.
+   * Set it to 'server' if you would like to enable lazy loading.
+   * * @default "client"
+   */
+  rowsLoadingMode: GridFeatureMode;
 }
 
 export interface DataGridProPropsWithoutDefaultValue<R extends GridValidRowModel = any>
@@ -194,6 +209,13 @@ export interface DataGridProPropsWithoutDefaultValue<R extends GridValidRowModel
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onRowOrderChange?: GridEventListener<'rowOrderChange'>;
+  /**
+   * Callback fired when rowCount is set and the next batch of virtualized rows is rendered.
+   * @param {GridFetchRowsParams} params With all properties from [[GridFetchRowsParams]].
+   * @param {MuiEvent<{}>} event The event object.
+   * @param {GridCallbackDetails} details Additional details for this callback.
+   */
+  onFetchRows?: GridEventListener<'fetchRows'>;
   /**
    * Rows data to pin on top or bottom.
    */
