@@ -36,7 +36,6 @@ const formatTokenMap: MuiFormatTokenMap = {
   y: 'year',
   yy: 'year',
   yyyy: 'year',
-  yyyyy: 'year',
 };
 
 export class AdapterLuxon extends BaseAdapterLuxon implements MuiPickerFieldAdapter<DateTime> {
@@ -44,7 +43,9 @@ export class AdapterLuxon extends BaseAdapterLuxon implements MuiPickerFieldAdap
 
   // eslint-disable-next-line class-methods-use-this
   public expandFormat = (format: string) => {
-    return DateTime.expandFormat(format);
+    // The format can contain `yyyyy` which means year between 4 and 6 digits.
+    // But for formatter, it must be either 4 or 6. 5 digits does not exist
+    return DateTime.expandFormat(format).replace('yyyyy', 'yyyy');
   };
 
   // Redefined here just to show how it can be written using expandFormat
