@@ -1,5 +1,3 @@
----
-
 # Data Grid - Demo
 
 <p class="description">Use the demo below to explore the most significant features and their respective plans.</p>
