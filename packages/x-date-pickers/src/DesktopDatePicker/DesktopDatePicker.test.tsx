@@ -3,9 +3,10 @@ import { expect } from 'chai';
 import { spy } from 'sinon';
 import TextField from '@mui/material/TextField';
 import { TransitionProps } from '@mui/material/transitions';
+import { inputBaseClasses } from '@mui/material/InputBase';
+import SvgIcon, { SvgIconProps } from '@mui/material/SvgIcon';
 import { fireEvent, screen, userEvent } from '@mui/monorepo/test/utils';
 import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
-import SvgIcon, { SvgIconProps } from '@mui/material/SvgIcon';
 import {
   createPickerRenderer,
   FakeTransitionComponent,
@@ -13,7 +14,6 @@ import {
   withPickerControls,
   openPicker,
 } from '../../../../test/utils/pickers-utils';
-import { inputBaseClasses } from '@mui/material/InputBase';
 
 const WrappedDesktopDatePicker = withPickerControls(DesktopDatePicker)({
   DialogProps: { TransitionComponent: FakeTransitionComponent },
@@ -732,7 +732,7 @@ describe('<DesktopDatePicker />', () => {
     });
   });
 
-  it('Validation', () => {
+  describe('Validation', () => {
     it('should enable the input error state when the current date has an invalid day', () => {
       render(
         <WrappedDesktopDatePicker

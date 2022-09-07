@@ -1,8 +1,8 @@
 import * as React from 'react';
+import { expect } from 'chai';
 import { screen, fireEvent } from '@mui/monorepo/test/utils';
 import { CalendarPicker, CalendarPickerProps } from '@mui/x-date-pickers/CalendarPicker';
 import { createPickerRenderer, adapterToUse } from '../../../../../test/utils/pickers-utils';
-import { expect } from 'chai';
 
 const WrappedCalendarPicker = <TDate extends any>(
   props: Omit<CalendarPickerProps<TDate>, 'date' | 'onChange'> & { initialValue: TDate },

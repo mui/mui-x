@@ -109,7 +109,16 @@ export const useIsDateDisabled = <TDate>({
           disablePast,
         },
       }) !== null,
-    [adapter, shouldDisableDate, minDate, maxDate, disableFuture, disablePast],
+    [
+      adapter,
+      shouldDisableDate,
+      shouldDisableMonth,
+      shouldDisableYear,
+      minDate,
+      maxDate,
+      disableFuture,
+      disablePast,
+    ],
   );
 };
 
