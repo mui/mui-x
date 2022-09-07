@@ -22,7 +22,7 @@
   "slots": {},
   "name": "YearPicker",
   "styles": { "classes": ["root"], "globalClasses": {}, "name": "MuiYearPicker" },
-  "spread": false,
+  "spread": true,
   "forwardsRefTo": "HTMLDivElement",
   "filename": "/packages/x-date-pickers/src/YearPicker/YearPicker.tsx",
   "inheritance": null,
