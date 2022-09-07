@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import {
   DataGridPremium,
   gridClasses,
@@ -142,7 +142,7 @@ export const featuresSet = [
     description:
       'Display different columns in different use cases by defining which columns are visible',
     plan: 'Community',
-    detailPage: '"/column-visibility/',
+    detailPage: '/column-visibility/',
     demo: <ColumnSelectorGrid />,
   },
   {
@@ -288,7 +288,7 @@ const columns: GridColDef[] = [
   },
 ];
 
-function PopularFeaturesDemo() {
+export default function PopularFeaturesDemo() {
   const getDetailPanelContent = React.useCallback(
     ({ row }) => <RowDemo row={row} />,
     [],
@@ -299,7 +299,7 @@ function PopularFeaturesDemo() {
       <DataGridPremium
         autoHeight
         disableSelectionOnClick
-        onCellClick={(_, e) => e.stopPropagation()}
+        onCellClick={(_, event) => event.stopPropagation()}
         components={{
           Toolbar: CustomToolbar,
           DetailPanelExpandIcon: ArrowDown,
