@@ -10030,11 +10030,6 @@ lru-cache@^6.0.0:
   dependencies:
     yallist "^4.0.0"
 
-"luxon@^1.21.3 || ^2.x || ^3.0.0":
-  version "3.0.1"
-  resolved "https://registry.yarnpkg.com/luxon/-/luxon-3.0.1.tgz#6901111d10ad06fd267ad4e4128a84bef8a77299"
-  integrity sha512-hF3kv0e5gwHQZKz4wtm4c+inDtyc7elkanAsBq+fundaCdUBNJB1dHEGUZIM6SfSBUlbVFduPwEtNjFK8wLtcw==
-
 luxon@^3.0.2:
   version "3.0.3"
   resolved "https://registry.yarnpkg.com/luxon/-/luxon-3.0.3.tgz#573e65531efd3d92265feb640f02ba7a192e2388"

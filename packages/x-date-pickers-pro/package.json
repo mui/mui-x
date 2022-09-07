@@ -82,7 +82,7 @@
     "@types/luxon": "^3.0.1",
     "date-fns": "^2.29.2",
     "dayjs": "^1.11.5",
-    "luxon": "^1.21.3 || ^2.x || ^3.0.0",
+    "luxon": "^3.0.2",
     "moment": "^2.29.4"
   },
   "setupFiles": [
