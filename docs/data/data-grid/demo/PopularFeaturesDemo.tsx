@@ -293,6 +293,18 @@ const columns: GridColDef[] = [
       }
       return <PlanTag plan={params.value} />;
     },
+    sortComparator: (p1, p2) => {
+      function getSortingValue(plan:string) {
+        switch(plan) {
+          case 'Pro': return 1
+          case 'Premium': return 2
+          default: return 0
+        }
+      }
+      const p1Value = getSortingValue(p1);
+      const p2Value = getSortingValue(p2);
+      return p1Value - p2Value;
+    },
   },
 ];
 
