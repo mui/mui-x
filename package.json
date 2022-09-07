@@ -63,6 +63,7 @@
     "release:tag": "node scripts/releaseTag"
   },
   "devDependencies": {
+    "@argos-ci/core": "^0.4.0",
     "@babel/cli": "^7.18.10",
     "@babel/core": "^7.18.13",
     "@babel/node": "^7.18.10",
@@ -103,7 +104,6 @@
     "@types/yargs": "^17.0.11",
     "@typescript-eslint/eslint-plugin": "^5.36.1",
     "@typescript-eslint/parser": "^5.36.1",
-    "argos-cli": "^0.4.0",
     "axe-core": "4.4.3",
     "babel-loader": "^8.2.5",
     "babel-plugin-istanbul": "^6.1.1",
