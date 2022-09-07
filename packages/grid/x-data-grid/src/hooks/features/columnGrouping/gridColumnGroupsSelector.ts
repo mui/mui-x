@@ -9,17 +9,17 @@ export const gridColumnGroupingSelector = (state: GridStateCommunity) => state.c
 
 export const gridColumnGroupsUnwrappedModelSelector = createSelector(
   gridColumnGroupingSelector,
-  (columnGrouping) => columnGrouping.unwrappedGroupingModel,
+  (columnGrouping) => columnGrouping?.unwrappedGroupingModel ?? {},
 );
 
 export const gridColumnGroupsLookupSelector = createSelector(
   gridColumnGroupingSelector,
-  (columnGrouping) => columnGrouping.lookup,
+  (columnGrouping) => columnGrouping?.lookup ?? {},
 );
 
 export const gridColumnGroupsHeaderStructureSelector = createSelector(
   gridColumnGroupingSelector,
-  (columnGrouping) => columnGrouping.headerStructure,
+  (columnGrouping) => columnGrouping?.headerStructure ?? [],
 );
 
 export const gridColumnGroupsHeaderMaxDepthSelector = createSelector(
