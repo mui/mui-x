@@ -3,7 +3,7 @@ import { SlotComponentProps } from '@mui/base/utils';
 import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
 import { UseSingleInputDateRangeFieldProps } from '../SingleInputDateRangeField';
-import { UseSingleInputDateRangeFieldDefaultizedProps } from '@mui/x-date-pickers-pro/SingleInputDateRangeField/SingleInputDateRangeField.types';
+import { UseSingleInputDateRangeFieldDefaultizedProps } from '../SingleInputDateRangeField/SingleInputDateRangeField.types';
 
 export interface UseMultiInputDateRangeFieldParams<TInputDate, TDate, TChildProps extends {}> {
   props: UseMultiInputDateRangeFieldComponentProps<TInputDate, TDate, TChildProps>;

@@ -48,7 +48,7 @@ export interface DateFieldSlotsComponent {
   /**
    * Input rendered.
    * @default TextField
-   * **/
+   **/
   Input?: React.ElementType;
 }
 

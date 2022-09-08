@@ -53,7 +53,7 @@ export interface SingleInputDateRangeFieldSlotsComponent {
   /**
    * Input rendered.
    * @default TextField
-   * **/
+   **/
   Input?: React.ElementType;
 }
 

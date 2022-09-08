@@ -3,9 +3,9 @@ import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import { styled, useThemeProps } from '@mui/material/styles';
+import { useSlotProps } from '@mui/base/utils';
 import { MultiInputDateRangeFieldProps } from './MultiInputDateRangeField.types';
 import { useMultiInputDateRangeField } from './useMultiInputDateRangeField';
-import { useSlotProps } from '@mui/base/utils';
 
 const MultiInputDateRangeFieldRoot = styled(
   React.forwardRef((props, ref) => (
@@ -112,7 +112,7 @@ export const MultiInputDateRangeField = React.forwardRef(function MultiInputDate
       <Input
         {...startDateProps}
         inputProps={{
-          //...startDateProps.inputProps,
+          // ...startDateProps.inputProps,
           ref: startInputRef,
           onKeyDown: onStartInputKeyDown,
         }}
