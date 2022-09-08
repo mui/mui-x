@@ -18,7 +18,11 @@ import {
 type JoyDateFieldProps = UseDateFieldComponentProps<Dayjs, Dayjs, JoyTextFieldProps>;
 
 const JoyDateField = (props: JoyDateFieldProps) => {
-  const { ref: inputRef, ...fieldProps }  = useDateField<Dayjs, Dayjs, JoyDateFieldProps>({ props });
+  const { ref: inputRef, ...fieldProps } = useDateField<
+    Dayjs,
+    Dayjs,
+    JoyDateFieldProps
+  >({ props });
 
   return (
     <JoyTextField
@@ -56,7 +60,9 @@ type BrowserInputDateFieldProps = UseDateFieldComponentProps<
 >;
 
 const BrowserInputDateField = (props: BrowserInputDateFieldProps) => {
-  const fieldProps = useDateField<Dayjs, Dayjs, BrowserInputDateFieldProps>({ props });
+  const fieldProps = useDateField<Dayjs, Dayjs, BrowserInputDateFieldProps>({
+    props,
+  });
 
   return <input {...fieldProps} />;
 };
