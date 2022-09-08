@@ -8,7 +8,7 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 
-const today = dayjs('2022-04-07');
+const today = dayjs();
 
 export default function DebouncedDateField() {
   const [value, setValue] = React.useState(dayjs('2022-04-07'));
