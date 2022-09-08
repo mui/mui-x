@@ -140,7 +140,7 @@ export function useGridParamsApi(apiRef: React.MutableRefObject<GridApiCommunity
         value,
         formattedValue: value,
       };
-      if (colDef.valueFormatter) {
+      if (colDef && colDef.valueFormatter) {
         params.formattedValue = colDef.valueFormatter({
           id,
           field: params.field,

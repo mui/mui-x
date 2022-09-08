@@ -30,9 +30,8 @@ export interface StaticDatePickerSlotsComponentsProps
   extends PickersStaticWrapperSlotsComponentsProps,
     CalendarPickerSlotsComponentsProps {}
 
-export type StaticDatePickerProps<TInputDate, TDate> = StaticPickerProps<
-  BaseDatePickerProps<TInputDate, TDate>
-> & {
+export interface StaticDatePickerProps<TInputDate, TDate>
+  extends StaticPickerProps<BaseDatePickerProps<TInputDate, TDate>> {
   /**
    * Overrideable components.
    * @default {}
@@ -43,7 +42,7 @@ export type StaticDatePickerProps<TInputDate, TDate> = StaticPickerProps<
    * @default {}
    */
   componentsProps?: Partial<StaticDatePickerSlotsComponentsProps>;
-};
+}
 
 type StaticDatePickerComponent = (<TInputDate, TDate = TInputDate>(
   props: StaticDatePickerProps<TInputDate, TDate> & React.RefAttributes<HTMLDivElement>,
@@ -291,6 +290,8 @@ StaticDatePicker.propTypes = {
   OpenPickerButtonProps: PropTypes.object,
   /**
    * First view to show.
+   * Must be a valid option from `views` list
+   * @default 'day'
    */
   openTo: PropTypes.oneOf(['day', 'month', 'year']),
   /**
@@ -401,6 +402,7 @@ StaticDatePicker.propTypes = {
   value: PropTypes.any,
   /**
    * Array of views to show.
+   * @default ['year', 'day']
    */
   views: PropTypes.arrayOf(PropTypes.oneOf(['day', 'month', 'year']).isRequired),
 } as any;

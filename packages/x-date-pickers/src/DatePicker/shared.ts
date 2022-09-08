@@ -8,8 +8,10 @@ import { ValidationProps } from '../internals/hooks/validation/useValidation';
 import { ExportedDateInputProps } from '../internals/components/PureDateInput';
 import { BasePickerProps } from '../internals/models/props/basePickerProps';
 import { PickerStateValueManager } from '../internals/hooks/usePickerState';
-import { parsePickerInputValue } from '../internals/utils/date-utils';
+import { parsePickerInputValue, parseNonNullablePickerDate } from '../internals/utils/date-utils';
 import { BaseToolbarProps } from '../internals/models/props/baseToolbarProps';
+import { DefaultizedProps } from '../internals/models/helpers';
+import { BaseDateValidationProps } from '../internals/hooks/validation/models';
 
 export interface BaseDatePickerProps<TInputDate, TDate>
   extends ExportedCalendarPickerProps<TDate>,
@@ -23,6 +25,8 @@ export interface BaseDatePickerProps<TInputDate, TDate>
   onViewChange?: (view: CalendarPickerView) => void;
   /**
    * First view to show.
+   * Must be a valid option from `views` list
+   * @default 'day'
    */
   openTo?: CalendarPickerView;
   /**
@@ -46,6 +50,7 @@ export interface BaseDatePickerProps<TInputDate, TDate>
   toolbarTitle?: React.ReactNode;
   /**
    * Array of views to show.
+   * @default ['year', 'day']
    */
   views?: readonly CalendarPickerView[];
 }
@@ -81,8 +86,6 @@ const getFormatAndMaskByViews = <TDate>(
   };
 };
 
-export type DefaultizedProps<Props> = Props & { inputFormat: string };
-
 export function useDatePickerDefaultizedProps<
   TInputDate,
   TDate,
@@ -90,10 +93,13 @@ export function useDatePickerDefaultizedProps<
 >(
   props: Props,
   name: string,
-): DefaultizedProps<Props> &
-  Required<Pick<BaseDatePickerProps<TInputDate, TDate>, 'openTo' | 'views'>> {
+): DefaultizedProps<
+  Props,
+  'openTo' | 'views' | keyof BaseDateValidationProps<TDate>,
+  { inputFormat: string }
+> {
   const utils = useUtils<TDate>();
-  const defaultDates = useDefaultDates();
+  const defaultDates = useDefaultDates<TDate>();
 
   // This is technically unsound if the type parameters appear in optional props.
   // Optional props can be filled by `useThemeProps` with types that don't match the type parameters.
@@ -106,11 +112,13 @@ export function useDatePickerDefaultizedProps<
 
   return {
     openTo: 'day',
-    minDate: defaultDates.minDate,
-    maxDate: defaultDates.maxDate,
+    disableFuture: false,
+    disablePast: false,
     ...getFormatAndMaskByViews(views, utils),
     ...themeProps,
     views,
+    minDate: parseNonNullablePickerDate(utils, themeProps.minDate, defaultDates.minDate),
+    maxDate: parseNonNullablePickerDate(utils, themeProps.maxDate, defaultDates.maxDate),
   };
 }
 

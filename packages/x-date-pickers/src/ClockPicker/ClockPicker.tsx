@@ -1,14 +1,18 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
-import { unstable_useId as useId } from '@mui/utils';
+import { unstable_useId as useId } from '@mui/material/utils';
 import { styled, useThemeProps } from '@mui/material/styles';
 import { unstable_composeClasses as composeClasses } from '@mui/material';
 import { Clock } from './Clock';
 import { useUtils, useNow, useLocaleText } from '../internals/hooks/useUtils';
 import { buildDeprecatedPropsWarning } from '../internals/utils/warning';
 import { getHourNumbers, getMinutesNumbers } from './ClockNumbers';
-import { PickersArrowSwitcher } from '../internals/components/PickersArrowSwitcher';
+import {
+  PickersArrowSwitcher,
+  PickersArrowSwitcherSlotsComponent,
+  PickersArrowSwitcherSlotsComponentsProps,
+} from '../internals/components/PickersArrowSwitcher';
 import { convertValueToMeridiem, createIsAfterIgnoreDatePart } from '../internals/utils/time-utils';
 import { PickerOnChangeFn, useViews } from '../internals/hooks/useViews';
 import { PickerSelectionState } from '../internals/hooks/usePickerState';
@@ -63,20 +67,12 @@ export interface ExportedClockPickerProps<TDate> extends ExportedTimeValidationP
   ) => string;
 }
 
-export interface ClockPickerSlotsComponent {
-  LeftArrowButton: React.ElementType;
-  LeftArrowIcon: React.ElementType;
-  RightArrowButton: React.ElementType;
-  RightArrowIcon: React.ElementType;
-}
+export interface ClockPickerSlotsComponent extends PickersArrowSwitcherSlotsComponent {}
 
 // We keep the interface to allow module augmentation
 export interface ClockPickerComponentsPropsOverrides {}
 
-export interface ClockPickerSlotsComponentsProps {
-  leftArrowButton: React.SVGAttributes<SVGSVGElement> & ClockPickerComponentsPropsOverrides;
-  rightArrowButton: React.SVGAttributes<SVGSVGElement> & ClockPickerComponentsPropsOverrides;
-}
+export interface ClockPickerSlotsComponentsProps extends PickersArrowSwitcherSlotsComponentsProps {}
 
 export interface ClockPickerProps<TDate> extends ExportedClockPickerProps<TDate> {
   className?: string;

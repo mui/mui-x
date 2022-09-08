@@ -59,7 +59,7 @@
     "experimentalFeatures": {
       "type": {
         "name": "shape",
-        "description": "{ columnGrouping?: bool, newEditingApi?: bool, preventCommitWhileValidating?: bool, rowPinning?: bool, warnIfFocusStateIsNotSynced?: bool }"
+        "description": "{ columnGrouping?: bool, lazyLoading?: bool, newEditingApi?: bool, preventCommitWhileValidating?: bool, rowPinning?: bool, warnIfFocusStateIsNotSynced?: bool }"
       }
     },
     "filterMode": {
@@ -144,6 +144,7 @@
     },
     "onEditRowsModelChange": { "type": { "name": "func" } },
     "onError": { "type": { "name": "func" } },
+    "onFetchRows": { "type": { "name": "func" } },
     "onFilterModelChange": { "type": { "name": "func" } },
     "onMenuClose": { "type": { "name": "func" } },
     "onMenuOpen": { "type": { "name": "func" } },
@@ -184,6 +185,9 @@
     "rowHeight": { "type": { "name": "number" }, "default": "52" },
     "rowModesModel": { "type": { "name": "object" } },
     "rowReordering": { "type": { "name": "bool" } },
+    "rowsLoadingMode": {
+      "type": { "name": "enum", "description": "'client'<br>&#124;&nbsp;'server'" }
+    },
     "rowSpacingType": {
       "type": { "name": "enum", "description": "'border'<br>&#124;&nbsp;'margin'" },
       "default": "\"margin\""
@@ -297,6 +301,7 @@
     "QuickFilterIcon": { "default": "GridSearchIcon", "type": { "name": "elementType" } },
     "Row": { "default": "GridRow", "type": { "name": "elementType" } },
     "RowReorderIcon": { "default": "GridDragIcon", "type": { "name": "elementType" } },
+    "SkeletonCell": { "default": "GridSkeletonCell", "type": { "name": "elementType" } },
     "Toolbar": { "default": "null", "type": { "name": "elementType | null" } },
     "TreeDataCollapseIcon": { "default": "GridExpandMoreIcon", "type": { "name": "elementType" } },
     "TreeDataExpandIcon": { "default": "GridKeyboardArrowRight", "type": { "name": "elementType" } }
@@ -321,6 +326,7 @@
       "cell",
       "cellContent",
       "cellCheckbox",
+      "cellSkeleton",
       "checkboxInput",
       "columnHeader--alignCenter",
       "columnHeader--alignLeft",
@@ -402,6 +408,7 @@
       "row--dragging",
       "row--lastVisible",
       "row--dynamicHeight",
+      "row--detailPanelExpanded",
       "row",
       "rowCount",
       "rowReorderCellContainer",

@@ -206,7 +206,7 @@ describe('<MobileDatePicker />', () => {
       />,
     );
     const start = adapterToUse.date();
-    fireEvent.click(screen.getByRole('textbox'));
+    userEvent.mousePress(screen.getByRole('textbox'));
     clock.tick(10);
     fireEvent.click(screen.getByText(/today/i));
 
@@ -282,14 +282,14 @@ describe('<MobileDatePicker />', () => {
       expect(onClose.callCount).to.equal(0);
 
       // Change the date
-      userEvent.mousePress(screen.getByLabelText('Jan 8, 2018'));
+      userEvent.mousePress(screen.getByRole('gridcell', { name: '8' }));
       expect(onChange.callCount).to.equal(1);
       expect(onChange.lastCall.args[0]).toEqualDateTime(new Date(2018, 0, 8));
       expect(onAccept.callCount).to.equal(0);
       expect(onClose.callCount).to.equal(0);
 
       // Change the date
-      userEvent.mousePress(screen.getByLabelText('Jan 6, 2018'));
+      userEvent.mousePress(screen.getByRole('gridcell', { name: '6' }));
       expect(onChange.callCount).to.equal(2);
       expect(onChange.lastCall.args[0]).toEqualDateTime(new Date(2018, 0, 6));
       expect(onAccept.callCount).to.equal(0);
@@ -315,7 +315,7 @@ describe('<MobileDatePicker />', () => {
       openPicker({ type: 'date', variant: 'mobile' });
 
       // Change the date
-      userEvent.mousePress(screen.getByLabelText('Jan 8, 2018'));
+      userEvent.mousePress(screen.getByRole('gridcell', { name: '8' }));
       expect(onChange.callCount).to.equal(1);
       expect(onChange.lastCall.args[0]).toEqualDateTime(new Date(2018, 0, 8));
       expect(onAccept.callCount).to.equal(1);
@@ -341,7 +341,7 @@ describe('<MobileDatePicker />', () => {
       openPicker({ type: 'date', variant: 'mobile' });
 
       // Change the date (already tested)
-      userEvent.mousePress(screen.getByLabelText('Jan 8, 2018'));
+      userEvent.mousePress(screen.getByRole('gridcell', { name: '8' }));
 
       // Cancel the modifications
       userEvent.mousePress(screen.getByText(/cancel/i));
@@ -369,7 +369,7 @@ describe('<MobileDatePicker />', () => {
       openPicker({ type: 'date', variant: 'mobile' });
 
       // Change the date (already tested)
-      userEvent.mousePress(screen.getByLabelText('Jan 8, 2018'));
+      userEvent.mousePress(screen.getByRole('gridcell', { name: '8' }));
 
       // Accept the modifications
       userEvent.mousePress(screen.getByText(/ok/i));

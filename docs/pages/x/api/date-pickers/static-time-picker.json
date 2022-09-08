@@ -13,7 +13,7 @@
       "type": { "name": "bool" },
       "default": "`true` for Desktop, `false` for Mobile (based on the chosen wrapper and `desktopModeMediaQuery` prop)."
     },
-    "components": { "type": { "name": "any" } },
+    "components": { "type": { "name": "object" }, "default": "{}" },
     "componentsProps": { "type": { "name": "object" }, "default": "{}" },
     "disabled": { "type": { "name": "bool" } },
     "disableIgnoringDatePartForTimeValidation": { "type": { "name": "bool" } },
@@ -50,7 +50,8 @@
       "type": {
         "name": "enum",
         "description": "'hours'<br>&#124;&nbsp;'minutes'<br>&#124;&nbsp;'seconds'"
-      }
+      },
+      "default": "'hours'"
     },
     "orientation": {
       "type": { "name": "enum", "description": "'landscape'<br>&#124;&nbsp;'portrait'" }
@@ -66,10 +67,19 @@
       "type": {
         "name": "arrayOf",
         "description": "Array&lt;'hours'<br>&#124;&nbsp;'minutes'<br>&#124;&nbsp;'seconds'&gt;"
-      }
+      },
+      "default": "['hours', 'minutes']"
     }
   },
-  "slots": {},
+  "slots": {
+    "ActionBar": { "default": "PickersActionBar", "type": { "name": "elementType" } },
+    "LeftArrowButton": { "default": "IconButton", "type": { "name": "elementType" } },
+    "LeftArrowIcon": { "default": "ArrowLeft", "type": { "name": "elementType" } },
+    "OpenPickerIcon": { "default": "Calendar or Clock", "type": { "name": "elementType" } },
+    "PaperContent": { "default": "React.Fragment", "type": { "name": "elementType" } },
+    "RightArrowButton": { "default": "IconButton", "type": { "name": "elementType" } },
+    "RightArrowIcon": { "default": "ArrowRight", "type": { "name": "elementType" } }
+  },
   "name": "StaticTimePicker",
   "styles": { "classes": [], "globalClasses": {}, "name": "MuiStaticTimePicker" },
   "spread": false,

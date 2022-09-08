@@ -36,7 +36,7 @@
     "onYearChange": "Callback firing on year change @DateIOType.<br><br><strong>Signature:</strong><br><code>function(year: TDate) =&gt; void</code><br><em>year:</em> The new year.",
     "open": "Control the popup or dialog open state.",
     "OpenPickerButtonProps": "Props to pass to keyboard adornment button.",
-    "openTo": "First view to show.",
+    "openTo": "First view to show. Must be a valid option from <code>views</code> list",
     "orientation": "Force rendering in particular orientation.",
     "PaperProps": "Paper props passed down to <a href=\"https://mui.com/material-ui/api/paper/\">Paper</a> component.",
     "PopperProps": "Popper props passed down to <a href=\"https://mui.com/material-ui/api/popper/\">Popper</a> component.",
@@ -61,5 +61,15 @@
     "views": "Array of views to show."
   },
   "classDescriptions": {},
-  "slotDescriptions": {}
+  "slotDescriptions": {
+    "ActionBar": "The action bar placed bellow picker views.",
+    "OpenPickerIcon": "Icon displayed in the open picker button.",
+    "SwitchViewButton": "Button displayed to switch between different calendar views.",
+    "SwitchViewIcon": "Icon displayed in the SwitchViewButton. Rotated by 180° when the open view is &#39;year&#39;.",
+    "LeftArrowButton": "Button allowing to switch to the left view.",
+    "LeftArrowIcon": "Icon displayed in the left view switch button.",
+    "RightArrowButton": "Button allowing to switch to the right view.",
+    "RightArrowIcon": "Icon displayed in the right view switch button.",
+    "PaperContent": "The content of the Paper wrapping views."
+  }
 }
