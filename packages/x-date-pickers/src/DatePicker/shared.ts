@@ -25,6 +25,8 @@ export interface BaseDatePickerProps<TInputDate, TDate>
   onViewChange?: (view: CalendarPickerView) => void;
   /**
    * First view to show.
+   * Must be a valid option from `views` list
+   * @default 'day'
    */
   openTo?: CalendarPickerView;
   /**
@@ -48,6 +50,7 @@ export interface BaseDatePickerProps<TInputDate, TDate>
   toolbarTitle?: React.ReactNode;
   /**
    * Array of views to show.
+   * @default ['year', 'day']
    */
   views?: readonly CalendarPickerView[];
 }
