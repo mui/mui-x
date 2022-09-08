@@ -1,12 +1,17 @@
 import * as React from 'react';
-import { TextFieldProps } from '@mui/material/TextField';
 import { SlotComponentProps } from '@mui/base/utils';
+import { TextFieldProps } from '@mui/material/TextField';
 import { UseFieldInternalProps } from '../internals/hooks/useField';
 import {
   DateValidationError,
   DateValidationProps,
 } from '../internals/hooks/validation/useDateValidation';
 import { DefaultizedProps } from '../internals/models/helpers';
+
+export interface UseDateFieldParams<TInputDate, TDate, TChildProps extends {}> {
+  props: UseDateFieldComponentProps<TInputDate, TDate, TChildProps>;
+  inputRef?: React.Ref<HTMLInputElement>;
+}
 
 export interface UseDateFieldProps<TInputDate, TDate>
   extends UseFieldInternalProps<TInputDate | null, TDate | null, DateValidationError>,
@@ -17,9 +22,9 @@ export type UseDateFieldDefaultizedProps<TInputDate, TDate> = DefaultizedProps<
   'minDate' | 'maxDate' | 'disableFuture' | 'disablePast'
 >;
 
-export type UseDateFieldComponentProps<TInputDate, TDate, ChildProps extends {}> = Omit<
-  ChildProps,
-  'value' | 'defaultValue' | 'onChange' | 'onError'
+export type UseDateFieldComponentProps<TInputDate, TDate, TChildProps extends {}> = Omit<
+  TChildProps,
+  keyof UseDateFieldProps<TInputDate, TDate>
 > &
   UseDateFieldProps<TInputDate, TDate>;
 
@@ -29,29 +34,24 @@ export interface DateFieldProps<TInputDate, TDate>
    * Overrideable components.
    * @default {}
    */
-  components?: Partial<DateFieldSlotsComponent>;
+  components?: DateFieldSlotsComponent;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  componentsProps?: Partial<DateFieldSlotsComponentsProps<TInputDate, TDate>>;
+  componentsProps?: DateFieldSlotsComponentsProps<TInputDate, TDate>;
 }
 
 export type DateFieldOwnerState<TInputDate, TDate> = DateFieldProps<TInputDate, TDate>;
 
 export interface DateFieldSlotsComponent {
   /**
-   * Root element.
-   */
-  Root: React.ElementType;
-  /**
    * Input rendered.
-   * @default Input
+   * @default TextField
    * **/
-  Input: React.ElementType;
+  Input?: React.ElementType;
 }
 
 export interface DateFieldSlotsComponentsProps<TDate, TInputDate> {
-  root: SlotComponentProps<'div', {}, DateFieldOwnerState<TDate, TInputDate>>;
-  input: SlotComponentProps<'input', {}, DateFieldOwnerState<TDate, TInputDate>>;
+  input?: SlotComponentProps<'input', {}, DateFieldOwnerState<TDate, TInputDate>>;
 }

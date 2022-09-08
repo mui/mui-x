@@ -11,6 +11,7 @@ export interface UseFieldParams<
   TForwardedProps extends UseFieldForwardedProps,
   TInternalProps extends UseFieldInternalProps<any, any, any>,
 > {
+  inputRef?: React.Ref<HTMLInputElement>;
   forwardedProps: TForwardedProps;
   internalProps: TInternalProps;
   valueManager: PickerStateValueManager<TInputValue, TValue, TDate>;
@@ -36,25 +37,21 @@ export interface UseFieldInternalProps<TInputValue, TValue, TError> {
 }
 
 export interface UseFieldForwardedProps {
-  ref?: React.RefObject<HTMLInputElement>;
   onKeyDown?: React.KeyboardEventHandler;
   onClick?: () => void;
   onFocus?: () => void;
   onBlur?: () => void;
 }
 
-export interface UseFieldResponse<TForwardedProps extends UseFieldForwardedProps> {
-  inputProps: UseFieldResponseInputProps<TForwardedProps>;
-}
-
-export type UseFieldResponseInputProps<TForwardedProps extends UseFieldForwardedProps> = Omit<
+export type UseFieldResponse<TForwardedProps extends UseFieldForwardedProps> = Omit<
   TForwardedProps,
   keyof UseFieldForwardedProps
 > &
-  NonNullable<UseFieldForwardedProps> & {
-    value: string;
-    error: boolean;
+  Required<UseFieldForwardedProps> & {
     ref: React.Ref<HTMLInputElement>;
+    value: string;
+    onChange: () => void;
+    error: boolean;
   };
 
 export interface FieldSection {

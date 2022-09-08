@@ -3,6 +3,7 @@ export type {
   FieldValueManager,
   FieldSection,
   UseFieldInternalProps,
+  UseFieldForwardedProps,
   UseFieldParams,
   UseFieldResponse,
 } from './useField.interfaces';

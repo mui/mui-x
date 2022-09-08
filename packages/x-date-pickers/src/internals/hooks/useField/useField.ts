@@ -24,6 +24,8 @@ import {
   setSectionValue,
 } from './useField.utils';
 
+const noop = () => {};
+
 export const useField = <
   TInputValue,
   TValue,
@@ -40,6 +42,7 @@ export const useField = <
   }
 
   const {
+    inputRef: externalInputRef,
     internalProps: {
       value: valueProp,
       defaultValue,
@@ -47,14 +50,7 @@ export const useField = <
       format = utils.formats.keyboardDate,
       readOnly = false,
     },
-    forwardedProps: {
-      onClick,
-      onKeyDown,
-      onFocus,
-      onBlur,
-      ref: externalInputRef,
-      ...otherForwardedProps
-    },
+    forwardedProps: { onClick, onKeyDown, onFocus, onBlur, ...otherForwardedProps },
     valueManager,
     fieldValueManager,
     validator,
@@ -411,15 +407,14 @@ export const useField = <
   }, []);
 
   return {
-    inputProps: {
-      ...otherForwardedProps,
-      value: state.valueStr,
-      onClick: handleInputClick,
-      onFocus: handleInputFocus,
-      onBlur: handleInputBlur,
-      onKeyDown: handleInputKeyDown,
-      error: inputError,
-      ref: inputRef,
-    },
+    ...otherForwardedProps,
+    value: state.valueStr,
+    onClick: handleInputClick,
+    onFocus: handleInputFocus,
+    onBlur: handleInputBlur,
+    onKeyDown: handleInputKeyDown,
+    onChange: noop,
+    error: inputError,
+    ref: inputRef,
   };
 };

@@ -2,8 +2,22 @@ import * as React from 'react';
 import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
-import { MultiInputDateRangeFieldProps } from './MultiInputDateRangeField.interfaces';
+import { styled, useThemeProps } from '@mui/material/styles';
+import { MultiInputDateRangeFieldProps } from './MultiInputDateRangeField.types';
 import { useMultiInputDateRangeField } from './useMultiInputDateRangeField';
+import { useSlotProps } from '@mui/base/utils';
+
+const MultiInputDateRangeFieldRoot = styled(Stack, {
+  name: 'MuiMultiInputDateRangeField',
+  slot: 'Root',
+  overridesResolver: (props, styles) => styles.root,
+})({});
+
+const MultiInputDateRangeFieldSeparator = styled(Typography, {
+  name: 'MuiMultiInputDateRangeField',
+  slot: 'Separator',
+  overridesResolver: (props, styles) => styles.separator,
+})({});
 
 type MultiInputDateRangeFieldComponent = (<TInputDate, TDate = TInputDate>(
   props: MultiInputDateRangeFieldProps<TInputDate, TDate> & React.RefAttributes<HTMLInputElement>,
@@ -13,17 +27,111 @@ export const MultiInputDateRangeField = React.forwardRef(function MultiInputDate
   TInputDate,
   TDate = TInputDate,
 >(inProps: MultiInputDateRangeFieldProps<TInputDate, TDate>, ref: React.Ref<HTMLInputElement>) {
+  const themeProps = useThemeProps({
+    props: inProps,
+    name: 'MuiMultiInputDateRangeField',
+  });
+
+  const {
+    components,
+    componentsProps,
+    value,
+    defaultValue,
+    format,
+    onChange,
+    readOnly,
+    onError,
+    shouldDisableDate,
+    minDate,
+    maxDate,
+    disableFuture,
+    disablePast,
+    ...other
+  } = themeProps;
+
   const { startDate, endDate } = useMultiInputDateRangeField<
     TInputDate,
     TDate,
     MultiInputDateRangeFieldProps<TInputDate, TDate>
-  >(inProps);
+  >({
+    props: inProps,
+  });
+
+  const ownerState = themeProps;
+
+  const Root = components?.Root ?? MultiInputDateRangeFieldRoot;
+  const rootProps = useSlotProps({
+    elementType: Root,
+    externalSlotProps: componentsProps?.root,
+    externalForwardedProps: other,
+    additionalProps: {
+      ref,
+      spacing: 2,
+      direction: 'row',
+      alignItems: 'center',
+    },
+    ownerState,
+  });
+
+  const Input = components?.Input ?? TextField;
+  const startInputProps = useSlotProps({
+    elementType: Input,
+    externalSlotProps: componentsProps?.input,
+    ownerState: { ...ownerState, position: 'start' },
+  });
+  const endInputProps = useSlotProps({
+    elementType: Input,
+    externalSlotProps: componentsProps?.input,
+    ownerState: { ...ownerState, position: 'end' },
+  });
+
+  const Separator = components?.Separator ?? MultiInputDateRangeFieldSeparator;
+  const separatorProps = useSlotProps({
+    elementType: Separator,
+    externalSlotProps: componentsProps?.separator,
+    ownerState,
+  });
+
+  const {
+    startDate: { onKeyDown: onStartInputKeyDown, ref: startInputRef, ...startDateProps },
+    endDate: { onKeyDown: onEndInputKeyDown, ref: endInputRef, ...endDateProps },
+  } = useMultiInputDateRangeField({
+    props: {
+      value,
+      defaultValue,
+      format,
+      onChange,
+      readOnly,
+      onError,
+      shouldDisableDate,
+      minDate,
+      maxDate,
+      disableFuture,
+      disablePast,
+    },
+    startInputRef: startInputProps.ref,
+    endInputRef: endInputProps.ref,
+  });
 
   return (
-    <Stack spacing={2} direction="row" alignItems="center" ref={ref}>
-      <TextField inputRef={startDate.inputRef} {...startDate.inputProps} />
-      <Typography>to</Typography>
-      <TextField inputRef={endDate.inputRef} {...endDate.inputProps} />
-    </Stack>
+    <Root {...rootProps}>
+      <Input
+        {...startDateProps}
+        inputProps={{
+          //...startDateProps.inputProps,
+          ref: startInputRef,
+          onKeyDown: onStartInputKeyDown,
+        }}
+      />
+      <Separator {...separatorProps} />
+      <Input
+        {...endDateProps}
+        inputProps={{
+          // ...endDateProps.inputProps,
+          ref: endInputRef,
+          onKeyDown: onEndInputKeyDown,
+        }}
+      />
+    </Root>
   );
 }) as MultiInputDateRangeFieldComponent;
