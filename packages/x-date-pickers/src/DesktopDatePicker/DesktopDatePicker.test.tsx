@@ -730,4 +730,12 @@ describe('<DesktopDatePicker />', () => {
       expect(screen.getByLabelText('Next month')).not.to.have.attribute('disabled');
     });
   });
+
+  it('should throw console warning when invalid `openTo` prop is provided', () => {
+    expect(() => {
+      render(<WrappedDesktopDatePicker initialValue={null} openTo="month" />);
+
+      openPicker({ type: 'date', variant: 'desktop' });
+    }).toWarnDev('MUI: `openTo="month"` is not a valid prop.');
+  });
 });

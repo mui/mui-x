@@ -2,6 +2,7 @@ import * as React from 'react';
 import { TextFieldProps as MuiTextFieldPropsType } from '@mui/material/TextField';
 import { IconButtonProps } from '@mui/material/IconButton';
 import { InputAdornmentProps } from '@mui/material/InputAdornment';
+import { useEventCallback } from '@mui/material/utils';
 import { onSpaceOrEnter } from '../utils/utils';
 import { useLocaleText, useUtils } from '../hooks/useUtils';
 import { getDisplayDate } from '../utils/text-field-helper';
@@ -151,6 +152,11 @@ export const PureDateInput = React.forwardRef(function PureDateInput<TInputDate,
 
   const inputValue = getDisplayDate(utils, rawValue, inputFormat);
 
+  const handleOnClick = useEventCallback((event: React.MouseEvent<HTMLElement>) => {
+    event.stopPropagation();
+    onOpen();
+  });
+
   return renderInput({
     label,
     disabled,
@@ -159,13 +165,16 @@ export const PureDateInput = React.forwardRef(function PureDateInput<TInputDate,
     error: validationError,
     InputProps: PureDateInputProps,
     className,
+    // registering `onClick` listener on the root element as well to correctly handle cases where user is clicking on `label`
+    // which has `pointer-events: none` and due to DOM structure the `input` does not catch the click event
+    ...(!props.readOnly && !props.disabled && { onClick: handleOnClick }),
     inputProps: {
       disabled,
       readOnly: true,
       'aria-readonly': true,
       'aria-label': getOpenDialogAriaText(rawValue, utils),
       value: inputValue,
-      ...(!props.readOnly && { onMouseDown: onOpen }),
+      ...(!props.readOnly && { onClick: handleOnClick }),
       onKeyDown: onSpaceOrEnter(onOpen),
     },
     ...TextFieldProps,

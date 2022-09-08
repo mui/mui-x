@@ -30,6 +30,7 @@ import { gridColumnFieldsSelector } from '../columns/gridColumnsSelector';
 import { GridCellParams } from '../../../models/params/gridCellParams';
 import { buildWarning } from '../../../utils/warning';
 import { gridRowsIdToIdLookupSelector } from '../rows/gridRowsSelector';
+import { deepClone } from '../../../utils/utils';
 import {
   GridRowEditStopParams,
   GridRowEditStartParams,
@@ -475,6 +476,8 @@ export const useGridRowEditing = (
 
       if (hasSomeFieldWithError) {
         prevRowModesModel.current[id].mode = GridRowModes.Edit;
+        // Revert the mode in the rowModesModel prop back to "edit"
+        updateRowInRowModesModel(id, { mode: GridRowModes.Edit });
         return;
       }
 
@@ -677,7 +680,7 @@ export const useGridRowEditing = (
 
     // Update the ref here because updateStateToStopRowEditMode may change it later
     const copyOfPrevRowModesModel = prevRowModesModel.current;
-    prevRowModesModel.current = rowModesModel;
+    prevRowModesModel.current = deepClone(rowModesModel); // Do a deep-clone because the attributes might be changed later
 
     Object.entries(rowModesModel).forEach(([id, params]) => {
       const prevMode = copyOfPrevRowModesModel[id]?.mode || GridRowModes.View;
