@@ -181,23 +181,25 @@ jobs:
       - run:
           name: '`yarn l10n` changes committed?'
           command: git diff --exit-code
-  test_browser:
-    <<: *defaults
-    docker:
-      - image: mcr.microsoft.com/playwright@sha256:c3c8a833254aaad31b2d336e67b0dbb9af744a12ab486e18f230033b99649c4f
-        environment:
-          NODE_ENV: development # Needed if playwright is in `devDependencies`
-    steps:
-      - checkout
-      - install_js:
-          browsers: true
-      - run:
-          name: Tests real browsers
-          command: yarn test:karma
-      - store_artifacts:
-          # hardcoded in karma-webpack
-          path: /tmp/_karma_webpack_
-          destination: artifact-file
+  # Tests run in BrowserStack are flaky and give a missleading information about the state of the code.
+  # Due to this the build on the master branch is aways red.
+  # test_browser:
+  #   <<: *defaults
+  #   docker:
+  #     - image: mcr.microsoft.com/playwright@sha256:c3c8a833254aaad31b2d336e67b0dbb9af744a12ab486e18f230033b99649c4f
+  #       environment:
+  #         NODE_ENV: development # Needed if playwright is in `devDependencies`
+  #   steps:
+  #     - checkout
+  #     - install_js:
+  #         browsers: true
+  #     - run:
+  #         name: Tests real browsers
+  #         command: yarn test:karma
+  #     - store_artifacts:
+  #         # hardcoded in karma-webpack
+  #         path: /tmp/_karma_webpack_
+  #         destination: artifact-file
   test_types:
     <<: *defaults
     steps:

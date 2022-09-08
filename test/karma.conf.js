@@ -142,7 +142,7 @@ module.exports = function setKarmaConfig(config) {
     newConfig = {
       ...baseConfig,
       browserStack,
-      browsers: baseConfig.browsers.concat(['chrome', 'safari', 'edge']),
+      browsers: baseConfig.browsers.concat(['chrome', 'firefox', 'safari', 'edge']),
       plugins: baseConfig.plugins.concat(['karma-browserstack-launcher']),
       customLaunchers: {
         ...baseConfig.customLaunchers,
@@ -156,15 +156,13 @@ module.exports = function setKarmaConfig(config) {
           // TODO: Investigate why.
           browser_version: '87.0',
         },
-        // Firefox tests are flaky and give a missleading information about the state of the code.
-        // Due to this the build on the master branch is aways red.
-        // firefox: {
-        //   base: 'BrowserStack',
-        //   os: 'Windows',
-        //   os_version: '10',
-        //   browser: 'firefox',
-        //   browser_version: '78.0',
-        // },
+        firefox: {
+          base: 'BrowserStack',
+          os: 'Windows',
+          os_version: '10',
+          browser: 'firefox',
+          browser_version: '78.0',
+        },
         safari: {
           base: 'BrowserStack',
           os: 'OS X',
