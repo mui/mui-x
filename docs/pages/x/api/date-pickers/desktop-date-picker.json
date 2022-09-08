@@ -55,7 +55,8 @@
       "type": {
         "name": "enum",
         "description": "'day'<br>&#124;&nbsp;'month'<br>&#124;&nbsp;'year'"
-      }
+      },
+      "default": "'day'"
     },
     "orientation": {
       "type": { "name": "enum", "description": "'landscape'<br>&#124;&nbsp;'portrait'" }
@@ -88,7 +89,8 @@
       "type": {
         "name": "arrayOf",
         "description": "Array&lt;'day'<br>&#124;&nbsp;'month'<br>&#124;&nbsp;'year'&gt;"
-      }
+      },
+      "default": "['year', 'day']"
     }
   },
   "slots": {

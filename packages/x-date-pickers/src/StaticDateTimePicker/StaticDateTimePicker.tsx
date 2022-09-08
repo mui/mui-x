@@ -20,7 +20,7 @@ import { useDateTimeValidation } from '../internals/hooks/validation/useDateTime
 import { usePickerState } from '../internals/hooks/usePickerState';
 import { StaticPickerProps } from '../internals/models/props/staticPickerProps';
 import { DateInputSlotsComponent } from '../internals/components/PureDateInput';
-import { DateTimePickerTabs } from '../DateTimePicker';
+import { DateTimePickerTabs } from '../DateTimePicker/DateTimePickerTabs';
 
 export interface StaticDateTimePickerSlotsComponent
   extends PickersStaticWrapperSlotsComponent,
@@ -368,6 +368,8 @@ StaticDateTimePicker.propTypes = {
   OpenPickerButtonProps: PropTypes.object,
   /**
    * First view to show.
+   * Must be a valid option from `views` list
+   * @default 'day'
    */
   openTo: PropTypes.oneOf(['day', 'hours', 'minutes', 'month', 'seconds', 'year']),
   /**
@@ -485,6 +487,7 @@ StaticDateTimePicker.propTypes = {
   value: PropTypes.any,
   /**
    * Array of views to show.
+   * @default ['year', 'day', 'hours', 'minutes']
    */
   views: PropTypes.arrayOf(
     PropTypes.oneOf(['day', 'hours', 'minutes', 'month', 'seconds', 'year']).isRequired,

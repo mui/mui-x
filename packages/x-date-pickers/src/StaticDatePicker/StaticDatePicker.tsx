@@ -285,6 +285,8 @@ StaticDatePicker.propTypes = {
   OpenPickerButtonProps: PropTypes.object,
   /**
    * First view to show.
+   * Must be a valid option from `views` list
+   * @default 'day'
    */
   openTo: PropTypes.oneOf(['day', 'month', 'year']),
   /**
@@ -390,6 +392,7 @@ StaticDatePicker.propTypes = {
   value: PropTypes.any,
   /**
    * Array of views to show.
+   * @default ['year', 'day']
    */
   views: PropTypes.arrayOf(PropTypes.oneOf(['day', 'month', 'year']).isRequired),
 } as any;
