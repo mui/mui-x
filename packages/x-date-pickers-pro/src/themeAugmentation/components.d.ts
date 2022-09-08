@@ -11,6 +11,11 @@ export interface PickersProComponents<Theme = unknown> {
     styleOverrides?: ComponentsOverrides<Theme>['MuiDateRangePickerDay'];
     variants?: ComponentsVariants['MuiDateRangePickerDay'];
   };
+  MuiDateRangePickerInput?: {
+    defaultProps?: ComponentsProps['MuiDateRangePickerInput'];
+    styleOverrides?: ComponentsOverrides<Theme>['MuiDateRangePickerInput'];
+    variants?: ComponentsVariants['MuiDateRangePickerInput'];
+  };
   MuiDesktopDateRangePicker?: {
     defaultProps?: ComponentsProps['MuiDesktopDateRangePicker'];
     styleOverrides?: ComponentsOverrides<Theme>['MuiDesktopDateRangePicker'];
