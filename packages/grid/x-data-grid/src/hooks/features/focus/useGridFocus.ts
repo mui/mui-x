@@ -56,7 +56,7 @@ export const useGridFocus = (
         return;
       }
 
-      if (focusedCell) {
+      if (focusedCell && apiRef.current.getRow(focusedCell.id)) {
         // There's a focused cell but another cell was clicked
         // Publishes an event to notify that the focus was lost
         apiRef.current.publishEvent(
