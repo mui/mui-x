@@ -6,6 +6,16 @@ export interface PickersProComponents {
     styleOverrides?: ComponentsOverrides['MuiDateRangePickerDay'];
     variants?: ComponentsVariants['MuiDateRangePickerDay'];
   };
+  MuiMultiInputDateRangeField?: {
+    defaultProps?: ComponentsProps['MuiMultiInputDateRangeField'];
+    styleOverrides?: ComponentsOverrides['MuiMultiInputDateRangeField'];
+    variants?: ComponentsVariants['MuiMultiInputDateRangeField'];
+  };
+  MuiSingleInputDateRangeField?: {
+    defaultProps?: ComponentsProps['MuiSingleInputDateRangeField'];
+    styleOverrides?: ComponentsOverrides['MuiSingleInputDateRangeField'];
+    variants?: ComponentsVariants['MuiSingleInputDateRangeField'];
+  };
 }
 
 declare module '@mui/material/styles' {

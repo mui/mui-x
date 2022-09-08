@@ -1,18 +1,16 @@
 import * as React from 'react';
 import { describeConformance } from '@mui/monorepo/test/utils';
-import { Unstable_DateField as DateField } from '@mui/x-date-pickers/DateField';
+import { Unstable_MultiInputDateRangeField as MultiInputDateRangeField } from '@mui/x-date-pickers-pro/MultiInputDateRangeField';
 import { createPickerRenderer, wrapPickerMount } from 'test/utils/pickers-utils';
 
-describe.only('<DateField />', () => {
-  const { render, clock } = createPickerRenderer({ clock: 'fake' });
+describe('<MultiInputDateRangeField />', () => {
+  const { render } = createPickerRenderer();
 
-  console.log('HEY');
-
-  describeConformance(<DateField />, () => ({
+  describeConformance(<MultiInputDateRangeField />, () => ({
     classes: {},
     inheritComponent: 'div',
     render,
-    muiName: 'MuiDateField',
+    muiName: 'MuiMultiInputDateRangeField',
     wrapMount: wrapPickerMount,
     refInstanceof: window.HTMLDivElement,
     // cannot test reactTestRenderer because of required context

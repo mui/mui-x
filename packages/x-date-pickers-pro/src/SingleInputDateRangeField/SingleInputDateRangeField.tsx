@@ -40,6 +40,10 @@ export const SingleInputDateRangeField = React.forwardRef(function SingleInputDa
   });
 
   return (
-    <Input {...fieldProps} inputProps={{ ...fieldProps.inputProps, ref: inputRef, onKeyDown }} />
+    <Input
+      ref={ref}
+      {...fieldProps}
+      inputProps={{ ...fieldProps.inputProps, ref: inputRef, onKeyDown }}
+    />
   );
 }) as DateRangeFieldComponent;

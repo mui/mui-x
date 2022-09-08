@@ -40,6 +40,10 @@ export const DateField = React.forwardRef(function DateField<TInputDate, TDate =
   });
 
   return (
-    <Input {...fieldProps} inputProps={{ ...fieldProps.inputProps, ref: inputRef, onKeyDown }} />
+    <Input
+      ref={ref}
+      {...fieldProps}
+      inputProps={{ ...fieldProps.inputProps, ref: inputRef, onKeyDown }}
+    />
   );
 }) as DateFieldComponent;
