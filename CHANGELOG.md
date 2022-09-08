@@ -21,6 +21,7 @@ We'd like to offer a big thanks to the 3 contributors who made this release poss
 
 #### Changes
 
+- [DateTimePicker] Remove circular import (#6087) @flaviendelangle
 - [pickers] Allow keyboard navigation to ignore disabled date for left / right arrow (#6082) @alexfauquette
 - [pickers] Add warning when `openTo` is invalid based on available `views` (#6042) @LukasTy
 - [pickers] Fix mobile picker not opening on label click (#6074) @LukasTy
