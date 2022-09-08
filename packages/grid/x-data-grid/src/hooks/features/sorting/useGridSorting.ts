@@ -4,7 +4,6 @@ import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridSortApi } from '../../../models/api/gridSortApi';
 import { GridColDef } from '../../../models/colDef/gridColDef';
-import { GridFeatureModeConstant } from '../../../models/gridFeatureMode';
 import { GridRowId, GridRowTreeNodeConfig } from '../../../models/gridRows';
 import { GridSortItem, GridSortModel, GridSortDirection } from '../../../models/gridSortModel';
 import { isEnterKey } from '../../../utils/keyboardUtils';
@@ -121,7 +120,7 @@ export const useGridSorting = (
    */
   const applySorting = React.useCallback<GridSortApi['applySorting']>(() => {
     apiRef.current.setState((state) => {
-      if (props.sortingMode === GridFeatureModeConstant.server) {
+      if (props.sortingMode === 'server') {
         logger.debug('Skipping sorting rows as sortingMode = server');
         return {
           ...state,

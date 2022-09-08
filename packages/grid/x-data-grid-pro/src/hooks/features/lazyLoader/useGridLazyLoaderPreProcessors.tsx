@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { GridPipeProcessor, useGridRegisterPipeProcessor } from '@mui/x-data-grid/internals';
-import { GridFeatureModeConstant, GridRowId } from '@mui/x-data-grid';
+import { GridRowId } from '@mui/x-data-grid';
 import {
   DataGridProProcessedProps,
   GridExperimentalProFeatures,
@@ -21,7 +21,7 @@ export const useGridLazyLoaderPreProcessors = (
     (groupingParams) => {
       if (
         !lazyLoading ||
-        props.rowsLoadingMode !== GridFeatureModeConstant.server ||
+        props.rowsLoadingMode !== 'server' ||
         !props.rowCount ||
         groupingParams.ids.length >= props.rowCount
       ) {
