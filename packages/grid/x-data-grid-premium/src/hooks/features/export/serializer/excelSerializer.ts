@@ -203,9 +203,12 @@ const addColumnGroupingHeaders = (
     const row = columns.map(({ field }) => {
       const groupingPath = api.unstable_getColumnGroupPath(field);
       if (groupingPath.length <= rowIndex) {
-        return { groupId: null };
+        return { groupId: null, parents: groupingPath };
       }
-      return columnGroupDetails[groupingPath[rowIndex]];
+      return {
+        ...columnGroupDetails[groupingPath[rowIndex]],
+        parents: groupingPath.slice(0, rowIndex),
+      };
     });
 
     const newRow = worksheet.addRow(
@@ -217,7 +220,14 @@ const addColumnGroupingHeaders = (
     let leftIndex = 0;
     let rightIndex = 1;
     while (rightIndex < columns.length) {
-      if (row[leftIndex].groupId === row[rightIndex].groupId) {
+      const { groupId: leftGroupId, parents: leftParents } = row[leftIndex];
+      const { groupId: rightGroupId, parents: rightParents } = row[rightIndex];
+
+      const areInSameGroup =
+        leftGroupId === rightGroupId &&
+        leftParents.length === rightParents.length &&
+        leftParents.every((leftParent, index) => rightParents[index] === leftParent);
+      if (areInSameGroup) {
         rightIndex += 1;
       } else {
         if (rightIndex - leftIndex > 1) {
