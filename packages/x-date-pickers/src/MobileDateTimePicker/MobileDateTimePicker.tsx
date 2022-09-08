@@ -20,7 +20,7 @@ import {
 import { useDateTimeValidation } from '../internals/hooks/validation/useDateTimeValidation';
 import { DateInputSlotsComponent, PureDateInput } from '../internals/components/PureDateInput';
 import { usePickerState } from '../internals/hooks/usePickerState';
-import { DateTimePickerTabs } from '../DateTimePicker';
+import { DateTimePickerTabs } from '../DateTimePicker/DateTimePickerTabs';
 
 export interface MobileDateTimePickerSlotsComponent
   extends MobileWrapperSlotsComponent,
