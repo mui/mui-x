@@ -55,6 +55,7 @@
     "typescript": "lerna run --no-bail --parallel typescript",
     "typescript:ci": "lerna run --concurrency 7 --no-bail --no-sort typescript",
     "build:codesandbox": "yarn release:build",
+    "install:codesandbox": "PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1 yarn install --ignore-engines",
     "release:changelog": "node scripts/releaseChangelog",
     "release:version": "lerna version --exact --no-changelog --no-push --no-git-tag-version",
     "release:build": "lerna run --parallel --scope \"@mui/*\" build",
@@ -63,6 +64,7 @@
     "release:tag": "node scripts/releaseTag"
   },
   "devDependencies": {
+    "@argos-ci/core": "^0.4.0",
     "@babel/cli": "^7.18.10",
     "@babel/core": "^7.18.13",
     "@babel/node": "^7.18.10",
@@ -83,7 +85,7 @@
     "@mnajdova/enzyme-adapter-react-18": "^0.2.0",
     "@mui/icons-material": "^5.10.2",
     "@mui/material": "^5.10.2",
-    "@mui/monorepo": "https://github.com/mui/material-ui.git#master",
+    "@mui/monorepo": "https://github.com/m4theushw/material-ui.git#master",
     "@mui/utils": "^5.9.3",
     "@octokit/plugin-retry": "^3.0.9",
     "@octokit/rest": "^18.12.0",
@@ -103,7 +105,6 @@
     "@types/yargs": "^17.0.11",
     "@typescript-eslint/eslint-plugin": "^5.36.1",
     "@typescript-eslint/parser": "^5.36.1",
-    "argos-cli": "^0.4.0",
     "axe-core": "4.4.3",
     "babel-loader": "^8.2.5",
     "babel-plugin-istanbul": "^6.1.1",
