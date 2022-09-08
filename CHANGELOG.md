@@ -9,6 +9,8 @@ _Sep 8, 2022_
 
 We'd like to offer a big thanks to the 3 contributors who made this release possible. Here are some highlights ✨:
 
+- 🐞 Bugfixes
+
 ### `@mui/x-data-grid@v5.17.2` / `@mui/x-data-grid-pro@v5.17.2` / `@mui/x-data-grid-premium@v5.17.2`
 
 #### Changes
