@@ -199,8 +199,15 @@ const CalendarPickerViewTransitionContainer = styled(PickersFadeTransitionGroup,
   name: 'MuiCalendarPicker',
   slot: 'ViewTransitionContainer',
   overridesResolver: (props, styles) => styles.viewTransitionContainer,
-})<{ ownerState: CalendarPickerProps<any> }>({
+})<{ ownerState: CalendarPickerProps<any> }>({});
+
+const CalendarPickerViewContainer = styled('div', {
+  name: 'MuiCalendarPicker',
+  slot: 'ViewContainer',
+  overridesResolver: (props, styles) => styles.viewTransitionContainer,
+})({
   overflowY: 'auto',
+  position: 'relative',
 });
 
 type CalendarPickerComponent = (<TDate>(
@@ -447,6 +454,36 @@ export const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
     },
   );
 
+  const scrollerRef = React.useRef<HTMLDivElement>(null);
+  React.useEffect(() => {
+    if (autoFocus || openView !== 'year' || scrollerRef.current === null) {
+      return;
+    }
+
+    const selectedButton = scrollerRef.current.getElementsByClassName(
+      'Mui-selected',
+    )[0] as HTMLElement;
+    if (!selectedButton) {
+      return;
+    }
+
+    // Taken from useScroll in x-data-grid, but vertically centered
+    const offsetHeight = selectedButton.offsetHeight;
+    const offsetTop = selectedButton.offsetTop;
+
+    const clientHeight = scrollerRef.current.clientHeight;
+    const scrollTop = scrollerRef.current.scrollTop;
+
+    const elementBottom = offsetTop + offsetHeight;
+
+    if (offsetHeight > clientHeight || offsetTop < scrollTop) {
+      // Button already visible
+      return;
+    }
+    // return
+    scrollerRef.current.scrollTop = elementBottom - clientHeight / 2 - offsetHeight / 2;
+  }, [autoFocus, openView]);
+
   return (
     <CalendarPickerRoot ref={ref} className={clsx(classes.root, className)} ownerState={ownerState}>
       <PickersCalendarHeader
@@ -464,61 +501,63 @@ export const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
         reduceAnimations={reduceAnimations}
         labelId={gridLabelId}
       />
-      <CalendarPickerViewTransitionContainer
-        reduceAnimations={reduceAnimations}
-        className={classes.viewTransitionContainer}
-        transKey={openView}
-        ownerState={ownerState}
-      >
-        <div>
-          {openView === 'year' && (
-            <YearPicker
-              {...other}
-              {...baseDateValidationProps}
-              {...commonViewProps}
-              autoFocus={autoFocus}
-              date={date}
-              onChange={handleDateYearChange}
-              shouldDisableYear={shouldDisableYear}
-              hasFocus={hasFocus}
-              onFocusedViewChange={handleFocusedViewChange('year')}
-            />
-          )}
+      <CalendarPickerViewContainer ref={scrollerRef}>
+        <CalendarPickerViewTransitionContainer
+          reduceAnimations={reduceAnimations}
+          className={classes.viewTransitionContainer}
+          transKey={openView}
+          ownerState={ownerState}
+        >
+          <div>
+            {openView === 'year' && (
+              <YearPicker
+                {...other}
+                {...baseDateValidationProps}
+                {...commonViewProps}
+                autoFocus={autoFocus}
+                date={date}
+                onChange={handleDateYearChange}
+                shouldDisableYear={shouldDisableYear}
+                hasFocus={hasFocus}
+                onFocusedViewChange={handleFocusedViewChange('year')}
+              />
+            )}
 
-          {openView === 'month' && (
-            <MonthPicker
-              {...baseDateValidationProps}
-              {...commonViewProps}
-              autoFocus={autoFocus}
-              hasFocus={hasFocus}
-              className={className}
-              date={date}
-              onChange={handleDateMonthChange}
-              shouldDisableMonth={shouldDisableMonth}
-              onFocusedViewChange={handleFocusedViewChange('month')}
-            />
-          )}
+            {openView === 'month' && (
+              <MonthPicker
+                {...baseDateValidationProps}
+                {...commonViewProps}
+                autoFocus={autoFocus}
+                hasFocus={hasFocus}
+                className={className}
+                date={date}
+                onChange={handleDateMonthChange}
+                shouldDisableMonth={shouldDisableMonth}
+                onFocusedViewChange={handleFocusedViewChange('month')}
+              />
+            )}
 
-          {openView === 'day' && (
-            <DayPicker
-              {...other}
-              {...calendarState}
-              {...baseDateValidationProps}
-              {...commonViewProps}
-              autoFocus={autoFocus}
-              onMonthSwitchingAnimationEnd={onMonthSwitchingAnimationEnd}
-              onFocusedDayChange={changeFocusedDay}
-              reduceAnimations={reduceAnimations}
-              selectedDays={[date]}
-              onSelectedDaysChange={onSelectedDayChange}
-              shouldDisableDate={shouldDisableDate}
-              hasFocus={hasFocus}
-              onFocusedViewChange={handleFocusedViewChange('day')}
-              gridLabelId={gridLabelId}
-            />
-          )}
-        </div>
-      </CalendarPickerViewTransitionContainer>
+            {openView === 'day' && (
+              <DayPicker
+                {...other}
+                {...calendarState}
+                {...baseDateValidationProps}
+                {...commonViewProps}
+                autoFocus={autoFocus}
+                onMonthSwitchingAnimationEnd={onMonthSwitchingAnimationEnd}
+                onFocusedDayChange={changeFocusedDay}
+                reduceAnimations={reduceAnimations}
+                selectedDays={[date]}
+                onSelectedDaysChange={onSelectedDayChange}
+                shouldDisableDate={shouldDisableDate}
+                hasFocus={hasFocus}
+                onFocusedViewChange={handleFocusedViewChange('day')}
+                gridLabelId={gridLabelId}
+              />
+            )}
+          </div>
+        </CalendarPickerViewTransitionContainer>
+      </CalendarPickerViewContainer>
     </CalendarPickerRoot>
   );
 }) as CalendarPickerComponent;

@@ -129,6 +129,7 @@ export const PickersYear = React.forwardRef<HTMLButtonElement, YearProps>(functi
   const classes = useUtilityClasses(ownerState);
 
   // TODO: Can we just forward this to the button?
+  // > No because it's a native button, not a mui Button
   React.useEffect(() => {
     if (autoFocus) {
       // `ref.current` being `null` would be a bug in MUIu
