@@ -106,7 +106,21 @@ const startBorderStyle = {
 const DateRangePickerDayRoot = styled('div', {
   name: 'MuiDateRangePickerDay',
   slot: 'Root',
-  overridesResolver: (props, styles) => styles.root,
+  overridesResolver: (_, styles) => [
+    {
+      [`&.${dateRangePickerDayClasses.rangeIntervalDayHighlight}`]:
+        styles.rangeIntervalDayHighlight,
+    },
+    {
+      [`&.${dateRangePickerDayClasses.rangeIntervalDayHighlightStart}`]:
+        styles.rangeIntervalDayHighlightStart,
+    },
+    {
+      [`&.${dateRangePickerDayClasses.rangeIntervalDayHighlightEnd}`]:
+        styles.rangeIntervalDayHighlightEnd,
+    },
+    styles.root,
+  ],
 })<{ ownerState: OwnerState }>(({ theme, ownerState }) => ({
   [`&:first-of-type .${dateRangePickerDayClasses.rangeIntervalDayPreview}`]: {
     ...startBorderStyle,
@@ -147,6 +161,18 @@ DateRangePickerDayRoot.propTypes = {
 const DateRangePickerDayRangeIntervalPreview = styled('div', {
   name: 'MuiDateRangePickerDay',
   slot: 'RangeIntervalPreview',
+  overridesResolver: (_, styles) => [
+    { [`&.${dateRangePickerDayClasses.rangeIntervalDayPreview}`]: styles.rangeIntervalDayPreview },
+    {
+      [`&.${dateRangePickerDayClasses.rangeIntervalDayPreviewStart}`]:
+        styles.rangeIntervalDayPreviewStart,
+    },
+    {
+      [`&.${dateRangePickerDayClasses.rangeIntervalDayPreviewEnd}`]:
+        styles.rangeIntervalDayPreviewEnd,
+    },
+    styles.rangeIntervalPreview,
+  ],
 })<{ ownerState: OwnerState }>(({ theme, ownerState }) => ({
   // replace default day component margin with transparent border to avoid jumping on preview
   border: '2px solid transparent',
@@ -175,7 +201,16 @@ DateRangePickerDayRangeIntervalPreview.propTypes = {
   ownerState: PropTypes.object.isRequired,
 } as any;
 
-const DateRangePickerDayDay = styled(PickersDay, { name: 'MuiDateRangePickerDay', slot: 'Day' })<{
+const DateRangePickerDayDay = styled(PickersDay, {
+  name: 'MuiDateRangePickerDay',
+  slot: 'Day',
+  overridesResolver: (_, styles) => [
+    { [`&.${dateRangePickerDayClasses.dayInsideRangeInterval}`]: styles.dayInsideRangeInterval },
+    { [`&.${dateRangePickerDayClasses.dayOutsideRangeInterval}`]: styles.dayOutsideRangeInterval },
+    { [`&.${dateRangePickerDayClasses.notSelectedDate}`]: styles.notSelectedDate },
+    styles.day,
+  ],
+})<{
   ownerState: OwnerState;
 }>(({ theme, ownerState }) => ({
   // Required to overlap preview border
