@@ -3,6 +3,30 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 5.17.2
+
+_Sep 8, 2022_
+
+We'd like to offer a big thanks to the 3 contributors who made this release possible. Here are some highlights ✨:
+
+### `@mui/x-data-grid@v5.17.2` / `@mui/x-data-grid-pro@v5.17.2` / `@mui/x-data-grid-premium@v5.17.2`
+
+#### Changes
+
+- [DataGridPremium] Export column grouping in Excel (#5895) @alexfauquette
+
+### `@mui/x-date-pickers@v5.0.1` / `@mui/x-date-pickers-pro@v5.0.1`
+
+#### Changes
+
+- [pickers] Allow keyboard navigation to ignore disabled date for left / right arrow (#6082) @alexfauquette
+- [pickers] Add warning when `openTo` is invalid based on available `views` (#6042) @LukasTy
+- [pickers] Fix mobile picker not opening on label click (#6074) @LukasTy
+
+### Core
+
+- [core] Add `yarn release:tag` script (#5169) @DanailH
+
 ## 5.17.1
 
 _Sep 5, 2022_
