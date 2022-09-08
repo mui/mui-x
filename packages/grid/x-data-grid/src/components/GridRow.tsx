@@ -185,9 +185,9 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
 
   const publish = React.useCallback(
     (
-      eventName: keyof GridRowEventLookup,
-      propHandler: React.MouseEventHandler<HTMLDivElement> | undefined,
-    ): React.MouseEventHandler<HTMLDivElement> =>
+        eventName: keyof GridRowEventLookup,
+        propHandler: React.MouseEventHandler<HTMLDivElement> | undefined,
+      ): React.MouseEventHandler<HTMLDivElement> =>
       (event) => {
         // Ignore portal
         // The target is not an element when triggered by a Select inside the cell
@@ -322,9 +322,9 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
 
       const tabIndex =
         cellTabIndex !== null &&
-          cellTabIndex.id === rowId &&
-          cellTabIndex.field === column.field &&
-          cellParams.cellMode === 'view'
+        cellTabIndex.id === rowId &&
+        cellTabIndex.field === column.field &&
+        cellParams.cellMode === 'view'
           ? 0
           : -1;
 
@@ -463,11 +463,11 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
 
   const eventHandlers = row
     ? {
-      onClick: publishClick,
-      onDoubleClick: publish('rowDoubleClick', onDoubleClick),
-      onMouseEnter: publish('rowMouseEnter', onMouseEnter),
-      onMouseLeave: publish('rowMouseLeave', onMouseLeave),
-    }
+        onClick: publishClick,
+        onDoubleClick: publish('rowDoubleClick', onDoubleClick),
+        onMouseEnter: publish('rowMouseEnter', onMouseEnter),
+        onMouseLeave: publish('rowMouseLeave', onMouseLeave),
+      }
     : null;
 
   return (
