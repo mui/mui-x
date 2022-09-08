@@ -20,7 +20,6 @@ import {
   CalendarPickerSlotsComponent,
   CalendarPickerSlotsComponentsProps,
 } from '../CalendarPicker';
-import { LocalizationProvider } from '../LocalizationProvider';
 
 export interface DesktopDatePickerSlotsComponent
   extends DesktopWrapperSlotsComponent,
