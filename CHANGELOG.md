@@ -15,6 +15,7 @@ We'd like to offer a big thanks to the 3 contributors who made this release poss
 
 #### Changes
 
+- [DataGrid] Revert mode if cell/row couldn't be saved due to validation error (#5897) @m4theushw
 - [DataGridPremium] Export column grouping in Excel (#5895) @alexfauquette
 
 ### `@mui/x-date-pickers@v5.0.1` / `@mui/x-date-pickers-pro@v5.0.1`
@@ -29,6 +30,7 @@ We'd like to offer a big thanks to the 3 contributors who made this release poss
 ### Core
 
 - [core] Add `yarn release:tag` script (#5169) @DanailH
+- [core] Upgrade monorepo (#6072) @m4theushw
 
 ## 5.17.1
 
