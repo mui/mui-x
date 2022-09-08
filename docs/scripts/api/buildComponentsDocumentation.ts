@@ -14,7 +14,7 @@ import generatePropTypeDescription, {
 import parseTest from '@mui/monorepo/docs/src/modules/utils/parseTest';
 import kebabCase from 'lodash/kebabCase';
 import { LANGUAGES } from 'docs/src/modules/constants';
-import { findPagesMarkdown } from 'docs/src/modules/utils/find';
+import { findPagesMarkdownNew } from 'docs/src/modules/utils/find';
 import { defaultHandlers, parse as docgenParse, ReactDocgenApi } from 'react-docgen';
 import {
   renderInline as renderMarkdownInline,
@@ -509,7 +509,7 @@ export default async function buildComponentsDocumentation(
 ) {
   const { documentationRoot, documentedInterfaces, projects } = options;
 
-  const pagesMarkdown = findPagesMarkdown()
+  const pagesMarkdown = findPagesMarkdownNew()
     .map((markdown) => {
       const markdownSource = fse.readFileSync(markdown.filename, 'utf8');
       return {
