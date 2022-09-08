@@ -129,7 +129,6 @@ export const YearPicker = React.forwardRef(function YearPicker<TDate>(
   }, [now, date, utils, disableHighlightToday]);
 
   const wrapperVariant = React.useContext(WrapperVariantContext);
-  const selectedYearRef = React.useRef<HTMLButtonElement>(null);
   const [focusedYear, setFocusedYear] = React.useState<number>(
     () => currentYear || utils.getYear(now),
   );
@@ -265,7 +264,6 @@ export const YearPicker = React.forwardRef(function YearPicker<TDate>(
             onClick={handleYearSelection}
             onKeyDown={handleKeyDown}
             autoFocus={internalHasFocus && yearNumber === focusedYear}
-            ref={selected ? selectedYearRef : undefined}
             disabled={disabled || isYearDisabled(year)}
             tabIndex={yearNumber === focusedYear ? 0 : -1}
             onFocus={handleFocus}
