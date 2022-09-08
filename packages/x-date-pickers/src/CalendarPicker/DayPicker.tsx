@@ -216,14 +216,46 @@ export function DayPicker<TDate>(props: DayPickerProps<TDate>) {
         focusDay(utils.addDays(day, 7));
         event.preventDefault();
         break;
-      case 'ArrowLeft':
-        focusDay(utils.addDays(day, theme.direction === 'ltr' ? -1 : 1));
+      case 'ArrowLeft': {
+        const newFocusedDayDefault = utils.addDays(day, theme.direction === 'ltr' ? -1 : 1);
+        const nextAvailableMonth =
+          theme.direction === 'ltr' ? utils.getPreviousMonth(day) : utils.getNextMonth(day);
+
+        const closestDayToFocus = findClosestEnabledDate({
+          utils,
+          date: newFocusedDayDefault,
+          minDate:
+            theme.direction === 'ltr'
+              ? utils.startOfMonth(nextAvailableMonth)
+              : newFocusedDayDefault,
+          maxDate:
+            theme.direction === 'ltr' ? newFocusedDayDefault : utils.endOfMonth(nextAvailableMonth),
+          isDateDisabled,
+        });
+        focusDay(closestDayToFocus || newFocusedDayDefault);
         event.preventDefault();
         break;
-      case 'ArrowRight':
-        focusDay(utils.addDays(day, theme.direction === 'ltr' ? 1 : -1));
+      }
+      case 'ArrowRight': {
+        const newFocusedDayDefault = utils.addDays(day, theme.direction === 'ltr' ? 1 : -1);
+        const nextAvailableMonth =
+          theme.direction === 'ltr' ? utils.getNextMonth(day) : utils.getPreviousMonth(day);
+
+        const closestDayToFocus = findClosestEnabledDate({
+          utils,
+          date: newFocusedDayDefault,
+          minDate:
+            theme.direction === 'ltr'
+              ? newFocusedDayDefault
+              : utils.startOfMonth(nextAvailableMonth),
+          maxDate:
+            theme.direction === 'ltr' ? utils.endOfMonth(nextAvailableMonth) : newFocusedDayDefault,
+          isDateDisabled,
+        });
+        focusDay(closestDayToFocus || newFocusedDayDefault);
         event.preventDefault();
         break;
+      }
       case 'Home':
         focusDay(utils.startOfWeek(day));
         event.preventDefault();
