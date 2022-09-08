@@ -2,6 +2,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { styled, useThemeProps } from '@mui/material/styles';
 import { unstable_composeClasses as composeClasses } from '@mui/material';
+import clsx from 'clsx';
 import { DIALOG_WIDTH } from '../../constants/dimensions';
 import { WrapperVariantContext } from '../wrappers/WrapperVariantContext';
 import {
@@ -30,6 +31,7 @@ export interface PickersStaticWrapperSlotsComponentsProps {
 }
 
 export interface PickerStaticWrapperProps extends PickerStateWrapperProps {
+  className?: string;
   children?: React.ReactNode;
   /**
    * Override or extend the styles applied to the component.
@@ -85,6 +87,7 @@ function PickerStaticWrapper(inProps: PickerStaticWrapperProps) {
     children,
     components,
     componentsProps,
+    className,
     ...other
   } = props;
 
@@ -94,7 +97,7 @@ function PickerStaticWrapper(inProps: PickerStaticWrapperProps) {
 
   return (
     <WrapperVariantContext.Provider value={displayStaticWrapperAs}>
-      <PickerStaticWrapperRoot className={classes.root} {...other}>
+      <PickerStaticWrapperRoot className={clsx(classes.root, className)} {...other}>
         <PickerStaticWrapperContent className={classes.content}>
           <PaperContent {...componentsProps?.paperContent}>{children}</PaperContent>
         </PickerStaticWrapperContent>

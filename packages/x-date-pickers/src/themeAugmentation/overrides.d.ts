@@ -5,9 +5,6 @@ import type { MonthPickerClassKey } from '../MonthPicker';
 import type { PickersDayClassKey } from '../PickersDay';
 import type { YearPickerClassKey } from '../YearPicker';
 import type { PickerStaticWrapperClassKey } from '../internals/components/PickerStaticWrapper';
-import type { StaticDatePickerClassKey } from '../StaticDatePicker';
-import type { StaticDateTimePickerClassKey } from '../StaticDateTimePicker';
-import type { StaticTimePickerClassKey } from '../StaticTimePicker';
 
 // prettier-ignore
 export interface PickersComponentNameToClassKey {
@@ -16,13 +13,16 @@ export interface PickersComponentNameToClassKey {
   MuiClockPicker: ClockPickerClassKey;
   MuiDatePicker: never;
   MuiDateTimePicker: never;
+  MuiDesktopDatePicker: never;
+  MuiDesktopDateTimePicker: never;
+  MuiDesktopTimePicker: never;
   MuiMonthPicker: MonthPickerClassKey;
   MuiPickersDay: PickersDayClassKey;
   MuiYearPicker: YearPickerClassKey;
   MuiPickerStaticWrapper: PickerStaticWrapperClassKey;
-  MuiStaticDatePicker: StaticDatePickerClassKey;
-  MuiStaticDateTimePicker: StaticDateTimePickerClassKey;
-  MuiStaticTimePicker: StaticTimePickerClassKey;
+  MuiStaticDatePicker: never;
+  MuiStaticDateTimePicker: never;
+  MuiStaticTimePicker: never;
 }
 
 declare module '@mui/material/styles' {

@@ -26,6 +26,21 @@ export interface PickerComponents<Theme = unknown> {
     styleOverrides?: ComponentsOverrides<Theme>['MuiDateTimePicker'];
     variants?: ComponentsVariants['MuiDateTimePicker'];
   };
+  MuiDesktopDatePicker?: {
+    defaultProps?: ComponentsProps['MuiDesktopDatePicker'];
+    styleOverrides?: ComponentsOverrides<Theme>['MuiDesktopDatePicker'];
+    variants?: ComponentsVariants['MuiDesktopDatePicker'];
+  };
+  MuiDesktopDateTimePicker?: {
+    defaultProps?: ComponentsProps['MuiDesktopDateTimePicker'];
+    styleOverrides?: ComponentsOverrides<Theme>['MuiDesktopDateTimePicker'];
+    variants?: ComponentsVariants['MuiDesktopDateTimePicker'];
+  };
+  MuiDesktopTimePicker?: {
+    defaultProps?: ComponentsProps['MuiDesktopTimePicker'];
+    styleOverrides?: ComponentsOverrides<Theme>['MuiDesktopTimePicker'];
+    variants?: ComponentsVariants['MuiDesktopTimePicker'];
+  };
   MuiMonthPicker?: {
     defaultProps?: ComponentsProps['MuiMonthPicker'];
     styleOverrides?: ComponentsOverrides<Theme>['MuiMonthPicker'];

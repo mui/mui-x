@@ -90,6 +90,7 @@ export const StaticDateRangePicker = React.forwardRef(function StaticDateRangePi
     onChange,
     components,
     componentsProps,
+    className,
     ...other
   } = props;
 
@@ -109,6 +110,7 @@ export const StaticDateRangePicker = React.forwardRef(function StaticDateRangePi
       displayStaticWrapperAs={displayStaticWrapperAs}
       components={components}
       componentsProps={componentsProps}
+      className={className}
       {...wrapperProps}
     >
       <DateRangePickerView
