@@ -329,15 +329,16 @@ export default function PopularFeaturesDemo() {
 
   const memoizedGroupingDef = React.useMemo(() => {
     return {
-    headerName: 'Grouped by Plan',
-    width: 200,
-    renderCell: (params:GridRenderCellParams) => {
-      if (!params.value) {
-        return '';
-      }
-      return <PlanTag plan={params.value} />;
-    },
-  }}, []);
+      headerName: 'Grouped by Plan',
+      width: 200,
+      renderCell: (params: GridRenderCellParams) => {
+        if (!params.value) {
+          return '';
+        }
+        return <PlanTag plan={params.value} />;
+      },
+    };
+  }, []);
 
   return (
     <div style={{ height: 'fit-content', width: '100%' }}>
