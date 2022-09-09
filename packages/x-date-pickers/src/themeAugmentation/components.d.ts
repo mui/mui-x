@@ -36,6 +36,11 @@ export interface PickerComponents<Theme = unknown> {
     styleOverrides?: ComponentsOverrides<Theme>['MuiMonthPicker'];
     variants?: ComponentsVariants['MuiMonthPicker'];
   };
+  MuiPickersCalendarHeader?: {
+    defaultProps?: ComponentsProps['MuiPickersCalendarHeader'];
+    styleOverrides?: ComponentsOverrides<Theme>['MuiPickersCalendarHeader'];
+    variants?: ComponentsVariants['MuiPickersCalendarHeader'];
+  };
   MuiPickersDay?: {
     defaultProps?: ComponentsProps['MuiPickersDay'];
     styleOverrides?: ComponentsOverrides<Theme>['MuiPickersDay'];

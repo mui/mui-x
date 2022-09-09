@@ -51,6 +51,13 @@ createTheme({
         someRandomProp: true,
       },
     },
+    MuiPickersCalendarHeader: {
+      defaultProps: {
+        disabled: true,
+        // @ts-expect-error invalid MuiPickersDay prop
+        someRandomProp: true,
+      },
+    },
     MuiPickersDay: {
       defaultProps: {
         disabled: true,
