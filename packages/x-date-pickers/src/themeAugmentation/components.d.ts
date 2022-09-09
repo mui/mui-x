@@ -26,11 +26,6 @@ export interface PickerComponents<Theme = unknown> {
     styleOverrides?: ComponentsOverrides<Theme>['MuiDateTimePicker'];
     variants?: ComponentsVariants['MuiDateTimePicker'];
   };
-  MuiLocalizationProvider?: {
-    defaultProps?: ComponentsProps['MuiLocalizationProvider'];
-    styleOverrides?: ComponentsOverrides<Theme>['MuiLocalizationProvider'];
-    variants?: ComponentsVariants['MuiLocalizationProvider'];
-  };
   MuiMonthPicker?: {
     defaultProps?: ComponentsProps['MuiMonthPicker'];
     styleOverrides?: ComponentsOverrides<Theme>['MuiMonthPicker'];

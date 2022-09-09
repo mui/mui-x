@@ -1,10 +1,10 @@
 import * as React from 'react';
-import { expect } from 'chai';
-import axe from 'axe-core';
 import { DataGridPro } from '@mui/x-data-grid-pro';
-import { useBasicDemoData } from '@mui/x-data-grid-generator';
+import { expect } from 'chai';
 // @ts-ignore Remove once the test utils are typed
 import { createRenderer } from '@mui/monorepo/test/utils';
+import { useData } from 'storybook/src/hooks/useData';
+import axe from 'axe-core';
 
 function logViolations(violations: any) {
   if (violations.length !== 0) {
@@ -27,7 +27,7 @@ describe('<DataGridPro /> - Accessibility', () => {
 
   it('pinned columns should pass `aria-required-parent` rule', async () => {
     const TestCase = () => {
-      const data = useBasicDemoData(1, 3);
+      const data = useData(1, 3);
       return (
         <div style={{ width: 302, height: 300 }}>
           <DataGridPro

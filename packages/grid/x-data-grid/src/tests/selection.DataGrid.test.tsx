@@ -1,8 +1,7 @@
 import * as React from 'react';
-import { expect } from 'chai';
-import { spy } from 'sinon';
 // @ts-expect-error Remove once the test utils are typed
 import { createRenderer, fireEvent, screen, act, userEvent } from '@mui/monorepo/test/utils';
+import { expect } from 'chai';
 import { DataGrid, DataGridProps, GridInputSelectionModel, GridRowId } from '@mui/x-data-grid';
 import {
   getCell,
@@ -12,7 +11,8 @@ import {
   getColumnHeadersTextContent,
   getActiveCell,
 } from 'test/utils/helperFn';
-import { getBasicGridData } from '@mui/x-data-grid-generator';
+import { getData } from 'storybook/src/data/data-service';
+import { spy } from 'sinon';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
@@ -30,7 +30,7 @@ function getSelectedRowIds() {
 describe('<DataGrid /> - Selection', () => {
   const { render, clock } = createRenderer();
 
-  const defaultData = getBasicGridData(4, 2);
+  const defaultData = getData(4, 2);
 
   const TestDataGridSelection = (
     props: Omit<DataGridProps, 'rows' | 'columns'> &
@@ -409,7 +409,7 @@ describe('<DataGrid /> - Selection', () => {
       if (isJSDOM) {
         this.skip(); // HTMLElement.focus() only scrolls to the element on a real browser
       }
-      const data = getBasicGridData(20, 1);
+      const data = getData(20, 1);
       render(<TestDataGridSelection {...data} rowHeight={50} checkboxSelection hideFooter />);
       const checkboxes = screen.queryAllByRole('checkbox', { name: /select row/i });
       userEvent.mousePress(checkboxes[0]);
@@ -550,7 +550,7 @@ describe('<DataGrid /> - Selection', () => {
 
   describe('prop: rows', () => {
     it('should remove the outdated selected rows when rows prop changes', () => {
-      const data = getBasicGridData(4, 2);
+      const data = getData(4, 2);
 
       const { setProps } = render(
         <TestDataGridSelection selectionModel={[0, 1, 2]} checkboxSelection {...data} />,
@@ -564,7 +564,7 @@ describe('<DataGrid /> - Selection', () => {
     });
 
     it('should retain the outdated selected rows when the rows prop changes when keepNonExistentRowsSelected is true', () => {
-      const data = getBasicGridData(10, 2);
+      const data = getData(10, 2);
       const onSelectionModelChange = spy();
 
       const { setProps } = render(

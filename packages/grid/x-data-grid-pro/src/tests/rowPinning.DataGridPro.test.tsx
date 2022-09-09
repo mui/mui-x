@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { expect } from 'chai';
 import {
   DataGridPro,
   gridClasses,
@@ -8,7 +7,7 @@ import {
   GridRowsProp,
   DataGridProProps,
 } from '@mui/x-data-grid-pro';
-import { getBasicGridData } from '@mui/x-data-grid-generator';
+import { expect } from 'chai';
 import {
   createRenderer,
   waitFor,
@@ -18,6 +17,7 @@ import {
   userEvent,
   // @ts-expect-error Remove once the test utils are typed
 } from '@mui/monorepo/test/utils';
+import { getData } from 'storybook/src/data/data-service';
 import {
   getActiveCell,
   getActiveColumnHeader,
@@ -62,7 +62,7 @@ describe('<DataGridPro /> - Row pinning', () => {
     colCount: number;
     height?: number | string;
   } & Partial<DataGridProProps>) => {
-    const data = getBasicGridData(rowCount, colCount);
+    const data = getData(rowCount, colCount);
     const [pinnedRow0, pinnedRow1, ...rows] = data.rows;
 
     return (
@@ -92,7 +92,7 @@ describe('<DataGridPro /> - Row pinning', () => {
     const rowCount = 5;
 
     const TestCase = ({ pinRows = true }) => {
-      const data = getBasicGridData(rowCount, 5);
+      const data = getData(rowCount, 5);
 
       const pinnedRows = React.useMemo(() => {
         if (pinRows) {
@@ -161,7 +161,7 @@ describe('<DataGridPro /> - Row pinning', () => {
   });
 
   it('should update pinned rows when `pinnedRows` prop change', () => {
-    const data = getBasicGridData(20, 5);
+    const data = getData(20, 5);
     const TestCase = (props: any) => {
       const [pinnedRow0, pinnedRow1, ...rows] = data.rows;
       return (
@@ -198,7 +198,7 @@ describe('<DataGridPro /> - Row pinning', () => {
   });
 
   it('should update pinned rows when calling `apiRef.current.setPinnedRows` method', async () => {
-    const data = getBasicGridData(20, 5);
+    const data = getData(20, 5);
     let apiRef!: React.MutableRefObject<GridApi>;
 
     const TestCase = (props: any) => {
@@ -259,7 +259,7 @@ describe('<DataGridPro /> - Row pinning', () => {
 
   it('should work with `getRowId`', () => {
     const TestCase = () => {
-      const data = getBasicGridData(20, 5);
+      const data = getData(20, 5);
 
       const rowsData = data.rows.map((row) => {
         const { id, ...rowData } = row;
@@ -362,7 +362,7 @@ describe('<DataGridPro /> - Row pinning', () => {
 
     it('should work with top pinned rows', () => {
       const TestCase = () => {
-        const data = getBasicGridData(20, 5);
+        const data = getData(20, 5);
         const [pinnedRow0, pinnedRow1, ...rows] = data.rows;
 
         return (
@@ -405,7 +405,7 @@ describe('<DataGridPro /> - Row pinning', () => {
 
     it('should work with bottom pinned rows', () => {
       const TestCase = () => {
-        const data = getBasicGridData(5, 5);
+        const data = getData(5, 5);
         const [pinnedRow0, pinnedRow1, ...rows] = data.rows;
 
         return (
@@ -450,7 +450,7 @@ describe('<DataGridPro /> - Row pinning', () => {
       }
 
       const TestCase = () => {
-        const data = getBasicGridData(5, 7);
+        const data = getData(5, 7);
         const [pinnedRow0, pinnedRow1, ...rows] = data.rows;
 
         return (

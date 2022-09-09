@@ -76,7 +76,6 @@
   { "name": "PickersDayClasses", "kind": "Interface" },
   { "name": "PickersDayClassKey", "kind": "TypeAlias" },
   { "name": "PickersDayProps", "kind": "Interface" },
-  { "name": "PickersInputLocaleText", "kind": "TypeAlias" },
   { "name": "PickersLocaleText", "kind": "Interface" },
   { "name": "PickerStaticWrapper", "kind": "Function" },
   { "name": "PickersTranslationKeys", "kind": "TypeAlias" },

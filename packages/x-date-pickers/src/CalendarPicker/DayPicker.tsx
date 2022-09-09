@@ -11,13 +11,8 @@ import {
   SlideDirection,
   SlideTransitionProps,
 } from './PickersSlideTransition';
-import {
-  BaseDateValidationProps,
-  DayValidationProps,
-  MonthValidationProps,
-  YearValidationProps,
-} from '../internals/hooks/validation/models';
-import { useIsDateDisabled } from '../internals/hooks/validation/useDateValidation';
+import { BaseDateValidationProps, DayValidationProps } from '../internals/hooks/validation/models';
+import { useIsDayDisabled } from '../internals/hooks/validation/useDateValidation';
 import { findClosestEnabledDate } from '../internals/utils/date-utils';
 
 export interface ExportedDayPickerProps<TDate>
@@ -59,8 +54,6 @@ export interface ExportedDayPickerProps<TDate>
 export interface DayPickerProps<TDate>
   extends ExportedDayPickerProps<TDate>,
     DayValidationProps<TDate>,
-    MonthValidationProps<TDate>,
-    YearValidationProps<TDate>,
     Required<BaseDateValidationProps<TDate>> {
   autoFocus?: boolean;
   className?: string;
@@ -151,18 +144,14 @@ export function DayPicker<TDate>(props: DayPickerProps<TDate>) {
     minDate,
     maxDate,
     shouldDisableDate,
-    shouldDisableMonth,
-    shouldDisableYear,
     dayOfWeekFormatter = defaultDayOfWeekFormatter,
     hasFocus,
     onFocusedViewChange,
     gridLabelId,
   } = props;
 
-  const isDateDisabled = useIsDateDisabled({
+  const isDateDisabled = useIsDayDisabled({
     shouldDisableDate,
-    shouldDisableMonth,
-    shouldDisableYear,
     minDate,
     maxDate,
     disablePast,
