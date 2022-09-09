@@ -3,6 +3,50 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 5.17.2
+
+_Sep 9, 2022_
+
+This release will the last regular release for our `v5` packages.
+From now on, we'll be focusing on developing MUI X v6.
+You can check the [roadmap](https://github.com/mui/mui-x/projects/1) for more details on what's coming next.
+
+And if you'd like to help, please consider volunteering to give us a [user interview](https://forms.gle/vsBv6CLPz9h57xg8A).
+We'd love to know more about your use cases, pain points and expectations for the future.
+
+The `v5` packages will only get new versions to patch critical bug fixes.
+
+We'd like to offer a big thanks to the 6 contributors who made this release possible. Here are some highlights ✨:
+
+- 📃 Add support for column grouping when exporting to Excel (#5895) @alexfauquette
+- 🐞 Bugfixes
+
+### `@mui/x-data-grid@v5.17.2` / `@mui/x-data-grid-pro@v5.17.2` / `@mui/x-data-grid-premium@v5.17.2`
+
+#### Changes
+
+- [DataGrid] Revert mode if cell/row couldn't be saved due to validation error (#5897) @m4theushw
+- [DataGridPremium] Export column grouping in Excel (#5895) @alexfauquette
+
+### `@mui/x-date-pickers@v5.0.1` / `@mui/x-date-pickers-pro@v5.0.1`
+
+#### Changes
+
+- [DateTimePicker] Remove circular import (#6087) @flaviendelangle
+- [pickers] Add `sx` prop to the equality check of `PickersDay` (#6030) @TheUnlocked
+- [pickers] Add warning when `openTo` is invalid based on available `views` (#6042) @LukasTy
+- [pickers] Allow keyboard navigation to ignore disabled date for left / right arrow (#6082) @alexfauquette
+- [pickers] Fix mobile picker not opening on label click (#6074) @LukasTy
+
+### Docs
+
+- [docs] Add Recipes section
+
+### Core
+
+- [core] Add `yarn release:tag` script (#5169) @DanailH
+- [core] Upgrade monorepo (#6072) @m4theushw
+
 ## 5.17.1
 
 _Sep 5, 2022_
