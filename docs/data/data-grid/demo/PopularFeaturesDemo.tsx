@@ -32,7 +32,17 @@ import LazyLoadingGrid from '../row-updates/LazyLoadingGrid';
 import BasicGroupingDemo from '../column-groups/BasicGroupingDemo';
 import EditingWithDatePickers from '../recipes-editing/EditingWithDatePickers';
 
-export const featuresSet = [
+type Row = {
+  id: number;
+  name: string;
+  description: string;
+  plan: string;
+  detailPage: string;
+  demo: JSX.Element;
+  newBadge?: boolean;
+};
+
+export const featuresSet: Row[] = [
   {
     id: 1,
     name: 'Master detail',
@@ -204,7 +214,7 @@ const CustomToolbar = () => {
   );
 };
 
-const RowDemo = (props: any) => {
+const RowDemo = (props: { row: Row }) => {
   const { row } = props;
   const theme = useTheme();
   const gridBgColor = theme.palette.mode === 'dark' ? '#000' : '#fff';
@@ -313,7 +323,6 @@ const columns: GridColDef[] = [
 
 export default function PopularFeaturesDemo() {
   const getDetailPanelContent = React.useCallback(
-    // @ts-ignore
     ({ row }) => <RowDemo row={row} />,
     [],
   );

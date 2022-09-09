@@ -223,6 +223,10 @@ const RowDemo = (props) => {
   );
 };
 
+RowDemo.propTypes = {
+  row: PropTypes.object.isRequired,
+};
+
 const columns = [
   {
     field: 'name',
@@ -317,7 +321,6 @@ const columns = [
 
 export default function PopularFeaturesDemo() {
   const getDetailPanelContent = React.useCallback(
-    // @ts-ignore
     ({ row }) => <RowDemo row={row} />,
     [],
   );
