@@ -1,6 +1,6 @@
 import * as React from 'react';
 import clsx from 'clsx';
-import { capitalize } from '@mui/material/utils';
+import { useForkRef, capitalize } from '@mui/material/utils';
 import { alpha, styled } from '@mui/material/styles';
 import {
   unstable_composeClasses as composeClasses,
@@ -12,49 +12,40 @@ import {
   WrapperVariantContext,
 } from '../internals/components/wrappers/WrapperVariantContext';
 
-interface PickersYearClasses {
-  root: string;
-  modeDesktop: string;
-  modeMobile: string;
-  yearButton: string;
-  disabled: string;
-  selected: string;
-}
-
-function getPickersYearUtilityClass(slot: string) {
-  return generateUtilityClass('PrivatePickersYear', slot);
-}
-
-const pickersYearClasses: PickersYearClasses = generateUtilityClasses('PrivatePickersYear', [
-  'root',
-  'modeMobile',
-  'modeDesktop',
-  'yearButton',
-  'disabled',
-  'selected',
-]);
-
-interface PickersYearProps {
-  'aria-current'?: React.AriaAttributes['aria-current'];
+export interface YearProps {
   autoFocus?: boolean;
   children: React.ReactNode;
-  classes?: Partial<PickersYearClasses>;
+  classes?: {
+    root?: string;
+    modeDesktop?: string;
+    modeMobile?: string;
+    yearButton?: string;
+    disabled?: string;
+    selected?: string;
+  };
   className?: string;
   disabled?: boolean;
-  onClick: (event: React.MouseEvent, year: number) => void;
-  onKeyDown: (event: React.KeyboardEvent, year: number) => void;
-  onFocus: (event: React.FocusEvent, year: number) => void;
-  onBlur: (event: React.FocusEvent, year: number) => void;
+  onClick: (event: React.MouseEvent, value: number) => void;
+  onKeyDown: (event: React.KeyboardEvent, value: number) => void;
   selected: boolean;
   value: number;
   tabIndex: number;
+  onFocus: (event: React.FocusEvent, year: number) => void;
+  onBlur: (event: React.FocusEvent, year: number) => void;
 }
 
-interface PickersYearOwnerState extends PickersYearProps {
-  wrapperVariant: WrapperVariant;
+export function getPickersYearUtilityClass(slot: string) {
+  return generateUtilityClass('PrivatePickersYear', slot);
 }
 
-const useUtilityClasses = (ownerState: PickersYearOwnerState) => {
+export type PickersYearClassKey = keyof NonNullable<YearProps['classes']>;
+
+export const pickersYearClasses = generateUtilityClasses<PickersYearClassKey>(
+  'PrivatePickersYear',
+  ['root', 'modeMobile', 'modeDesktop', 'yearButton', 'disabled', 'selected'],
+);
+
+const useUtilityClasses = (ownerState: YearProps & { wrapperVariant: WrapperVariant }) => {
   const { wrapperVariant, disabled, selected, classes } = ownerState;
 
   const slots = {
@@ -66,7 +57,7 @@ const useUtilityClasses = (ownerState: PickersYearOwnerState) => {
 };
 
 const PickersYearRoot = styled('div')<{
-  ownerState: PickersYearOwnerState;
+  ownerState: YearProps & { wrapperVariant: WrapperVariant };
 }>(({ ownerState }) => ({
   flexBasis: '33.3%',
   display: 'flex',
@@ -78,7 +69,7 @@ const PickersYearRoot = styled('div')<{
 }));
 
 const PickersYearButton = styled('button')<{
-  ownerState: PickersYearOwnerState;
+  ownerState: YearProps & { wrapperVariant: WrapperVariant };
 }>(({ theme }) => ({
   color: 'unset',
   backgroundColor: 'transparent',
@@ -90,15 +81,8 @@ const PickersYearButton = styled('button')<{
   width: 72,
   borderRadius: 18,
   cursor: 'pointer',
-  '&:focus': {
-    backgroundColor: alpha(theme.palette.action.active, theme.palette.action.focusOpacity),
-  },
-  '&:hover': {
+  '&:focus, &:hover': {
     backgroundColor: alpha(theme.palette.action.active, theme.palette.action.hoverOpacity),
-  },
-  '&:disabled': {
-    cursor: 'auto',
-    pointerEvents: 'none',
   },
   [`&.${pickersYearClasses.disabled}`]: {
     color: theme.palette.text.secondary,
@@ -112,26 +96,29 @@ const PickersYearButton = styled('button')<{
   },
 }));
 
+const noop = () => {};
 /**
  * @ignore - internal component.
  */
-const PickersYearRaw = (props: PickersYearProps) => {
+export const PickersYear = React.forwardRef<HTMLButtonElement, YearProps>(function PickersYear(
+  props,
+  forwardedRef,
+) {
   const {
     autoFocus,
     className,
     children,
     disabled,
-    selected,
-    value,
-    tabIndex,
     onClick,
     onKeyDown,
-    onFocus,
-    onBlur,
-    'aria-current': ariaCurrent,
+    value,
+    tabIndex,
+    onFocus = noop,
+    onBlur = noop,
     ...other
   } = props;
   const ref = React.useRef<HTMLButtonElement>(null);
+  const refHandle = useForkRef(ref, forwardedRef as React.Ref<HTMLButtonElement>);
   const wrapperVariant = React.useContext(WrapperVariantContext);
 
   const ownerState = {
@@ -144,7 +131,7 @@ const PickersYearRaw = (props: PickersYearProps) => {
   // TODO: Can we just forward this to the button?
   React.useEffect(() => {
     if (autoFocus) {
-      // `ref.current` being `null` would be a bug in MUI.
+      // `ref.current` being `null` would be a bug in MUIu
       ref.current!.focus();
     }
   }, [autoFocus]);
@@ -154,28 +141,23 @@ const PickersYearRaw = (props: PickersYearProps) => {
       data-mui-test="year"
       className={clsx(classes.root, className)}
       ownerState={ownerState}
-      {...other}
     >
       <PickersYearButton
-        ref={ref}
+        ref={refHandle}
         disabled={disabled}
         type="button"
+        data-mui-test={`year-${children}`}
         tabIndex={disabled ? -1 : tabIndex}
-        aria-current={ariaCurrent}
         onClick={(event) => onClick(event, value)}
         onKeyDown={(event) => onKeyDown(event, value)}
         onFocus={(event) => onFocus(event, value)}
         onBlur={(event) => onBlur(event, value)}
         className={classes.yearButton}
         ownerState={ownerState}
+        {...other}
       >
         {children}
       </PickersYearButton>
     </PickersYearRoot>
   );
-};
-
-/**
- * @ignore - do not document.
- */
-export const PickersYear = React.memo(PickersYearRaw);
+});

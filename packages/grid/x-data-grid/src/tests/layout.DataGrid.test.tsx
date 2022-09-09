@@ -12,7 +12,7 @@ import {
   GridColumns,
   gridClasses,
 } from '@mui/x-data-grid';
-import { useBasicDemoData } from '@mui/x-data-grid-generator';
+import { useData } from 'packages/storybook/src/hooks/useData';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { getColumnHeaderCell, getColumnValues, getCell, getRow } from 'test/utils/helperFn';
 
@@ -868,7 +868,7 @@ describe('<DataGrid /> - Layout & Warnings', () => {
     // A function test counterpart of ScrollbarOverflowVerticalSnap.
     it('should not have a horizontal scrollbar if not needed', () => {
       const TestCase = () => {
-        const data = useBasicDemoData(100, 1);
+        const data = useData(100, 1);
         return (
           <div style={{ width: 500, height: 300 }}>
             <DataGrid {...data} />

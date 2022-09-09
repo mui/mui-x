@@ -1,16 +1,14 @@
 import * as React from 'react';
-import { expect } from 'chai';
-import { spy } from 'sinon';
 import {
   DataGridPro,
   GridApi,
   useGridApiRef,
   DataGridProProps,
   GridRowParams,
-  gridClasses,
   GRID_DETAIL_PANEL_TOGGLE_FIELD,
 } from '@mui/x-data-grid-pro';
-import { useBasicDemoData } from '@mui/x-data-grid-generator';
+import { expect } from 'chai';
+import { spy } from 'sinon';
 import {
   createRenderer,
   fireEvent,
@@ -21,6 +19,8 @@ import {
   // @ts-ignore Remove once the test utils are typed
 } from '@mui/monorepo/test/utils';
 import { getRow, getCell, getColumnValues } from 'test/utils/helperFn';
+import { useData } from 'storybook/src/hooks/useData';
+import { gridClasses } from '../../../x-data-grid/src/constants/gridClasses';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
@@ -31,7 +31,7 @@ describe('<DataGridPro /> - Detail panel', () => {
 
   const TestCase = ({ nbRows = 20, ...other }: Partial<DataGridProProps> & { nbRows?: number }) => {
     apiRef = useGridApiRef();
-    const data = useBasicDemoData(nbRows, 1);
+    const data = useData(nbRows, 1);
     return (
       <div style={{ width: 300, height: 302 }}>
         <DataGridPro {...data} apiRef={apiRef} {...other} />
@@ -258,7 +258,7 @@ describe('<DataGridPro /> - Detail panel', () => {
       this.skip(); // Needs layout
     }
     function Component() {
-      const data = useBasicDemoData(10, 4);
+      const data = useData(10, 4);
       return (
         <TestCase
           {...data}

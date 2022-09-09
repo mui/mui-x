@@ -106,6 +106,7 @@ You can find more details on, the [feature comparison](/x/react-data-grid/gettin
 
 Here are some resources you might be interested in to learn more about the grid:
 
+- The storybook used for [internal development](https://material-ui-x.netlify.app/storybook/)
 - The [source on GitHub](https://github.com/mui/mui-x/tree/master/packages/)
 - The [Material Design specification](https://material.io/components/data-tables) specification
 - The accessibility [WAI-ARIA authoring practices](https://www.w3.org/WAI/ARIA/apg/patterns/grid/)

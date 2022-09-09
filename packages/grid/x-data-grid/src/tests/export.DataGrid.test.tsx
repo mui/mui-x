@@ -1,16 +1,16 @@
 import * as React from 'react';
-import { expect } from 'chai';
-import { spy, SinonSpy } from 'sinon';
 import { DataGrid, DataGridProps, GridToolbar, GridToolbarExport } from '@mui/x-data-grid';
-import { useBasicDemoData } from '@mui/x-data-grid-generator';
 // @ts-ignore Remove once the test utils are typed
 import { createRenderer, screen, fireEvent } from '@mui/monorepo/test/utils';
+import { useData } from 'storybook/src/hooks/useData';
+import { expect } from 'chai';
+import { spy, SinonSpy } from 'sinon';
 
 describe('<DataGrid /> - Export', () => {
   const { render, clock } = createRenderer({ clock: 'fake' });
 
   const TestCase = (props: Omit<DataGridProps, 'rows' | 'columns'>) => {
-    const basicData = useBasicDemoData(3, 2);
+    const basicData = useData(3, 2);
 
     return (
       <div style={{ width: 300, height: 300 }}>

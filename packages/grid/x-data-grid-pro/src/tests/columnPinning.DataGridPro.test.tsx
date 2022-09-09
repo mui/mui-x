@@ -1,6 +1,4 @@
 import * as React from 'react';
-import { spy } from 'sinon';
-import { expect } from 'chai';
 import {
   DataGridPro,
   GridApi,
@@ -9,7 +7,8 @@ import {
   gridClasses,
   GridPinnedPosition,
 } from '@mui/x-data-grid-pro';
-import { useBasicDemoData, getBasicGridData } from '@mui/x-data-grid-generator';
+import { spy } from 'sinon';
+import { expect } from 'chai';
 import {
   createRenderer,
   fireEvent,
@@ -20,6 +19,8 @@ import {
   // @ts-ignore Remove once the test utils are typed
 } from '@mui/monorepo/test/utils';
 import { getCell, getColumnHeaderCell, getColumnHeadersTextContent } from 'test/utils/helperFn';
+import { useData } from 'storybook/src/hooks/useData';
+import { getData } from 'storybook/src/data/data-service';
 
 // TODO Move to utils
 // Fix https://github.com/mui/mui-x/pull/2085/files/058f56ac3c729b2142a9a28b79b5b13535cdb819#diff-db85480a519a5286d7341e9b8957844762cf04cdacd946331ebaaaff287482ec
@@ -42,7 +43,7 @@ describe('<DataGridPro /> - Column pinning', () => {
 
   const TestCase = ({ nbCols = 20, ...other }: Partial<DataGridProProps> & { nbCols?: number }) => {
     apiRef = useGridApiRef();
-    const data = useBasicDemoData(1, nbCols);
+    const data = useData(1, nbCols);
     return (
       <div style={{ width: 302, height: 300 }}>
         <DataGridPro {...data} apiRef={apiRef} {...other} />
@@ -270,7 +271,7 @@ describe('<DataGridPro /> - Column pinning', () => {
       }
 
       const Test = ({ bioHeight }: { bioHeight: number }) => {
-        const data = React.useMemo(() => getBasicGridData(1, 2), []);
+        const data = React.useMemo(() => getData(1, 2), []);
 
         const columns = [
           ...data.columns,
@@ -309,7 +310,7 @@ describe('<DataGridPro /> - Column pinning', () => {
       }
 
       const Test = ({ bioHeight }: { bioHeight: number }) => {
-        const data = React.useMemo(() => getBasicGridData(1, 2), []);
+        const data = React.useMemo(() => getData(1, 2), []);
 
         const columns = [
           ...data.columns,
