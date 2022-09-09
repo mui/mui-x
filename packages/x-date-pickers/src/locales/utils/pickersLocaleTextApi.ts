@@ -36,4 +36,6 @@ export interface PickersLocaleText<TDate> {
   dateRangePickerDefaultToolbarTitle: string;
 }
 
+export type PickersInputLocaleText<TDate> = Partial<PickersLocaleText<TDate>>;
+
 export type PickersTranslationKeys = keyof PickersLocaleText<any>;
