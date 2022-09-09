@@ -90,8 +90,15 @@ const PickersYearButton = styled('button')<{
   width: 72,
   borderRadius: 18,
   cursor: 'pointer',
-  '&:focus, &:hover': {
+  '&:focus': {
+    backgroundColor: alpha(theme.palette.action.active, theme.palette.action.focusOpacity),
+  },
+  '&:hover': {
     backgroundColor: alpha(theme.palette.action.active, theme.palette.action.hoverOpacity),
+  },
+  '&:disabled': {
+    cursor: 'auto',
+    pointerEvents: 'none',
   },
   [`&.${pickersYearClasses.disabled}`]: {
     color: theme.palette.text.secondary,
