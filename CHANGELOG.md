@@ -7,9 +7,14 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 _Sep 9, 2022_
 
-This release will the last regular release for our packages in version `v5.x`.
-We are starting the alpha process for the `v6.x` of our packages.
-The `v5.x` will now only receive critical bug fixes.
+This release will the last regular release for our `v5` packages.
+From now on, we'll be focusing on developing MUI X v6.
+You can check the [roadmap](https://github.com/mui/mui-x/projects/1) for more details on what's coming next.
+
+And if you'd like to help, please consider volunteering to give us a [user interview](https://docs.google.com/forms/d/11L_zxL7oD_B-ZrZDuSyIkUzJLzOTUU2M4vHXxMVtWhU/edit).
+We'd love to know more about your use cases, pain points and expectations for the future.
+
+The `v5` packages will only get new versions to patch critical bug fixes.
 
 We'd like to offer a big thanks to the 6 contributors who made this release possible. Here are some highlights ✨:
 
