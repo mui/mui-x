@@ -31,6 +31,7 @@ import ColumnVirtualizationGrid from '../virtualization/ColumnVirtualizationGrid
 import FullFeaturedDemo from './FullFeaturedDemo';
 import LazyLoadingGrid from '../row-updates/LazyLoadingGrid';
 import BasicGroupingDemo from '../column-groups/BasicGroupingDemo';
+import { transcode } from 'buffer';
 
 export const featuresSet = [
   {
@@ -340,6 +341,9 @@ export default function PopularFeaturesDemo() {
           },
           [`& .${gridClasses.columnHeaderTitle}`]: {
             fontWeight: 400,
+          },
+          [`& .${gridClasses.detailPanel}`]: {
+            background: 'transparent',
           },
           [`& .${gridClasses.cell}:focus, & .${gridClasses.cell}:focus-within`]: {
             outline: 'none',
