@@ -7,5 +7,5 @@ import {
 } from 'docsx/data/data-grid/tree-data/tree-data.md?@mui/markdown';
 
 export default function Page() {
-  return <MarkdownDocs demos={demos} docs={docs} demoComponents={demoComponents} disableAd />;
+  return <MarkdownDocs {...pageProps} disableAd />;
 }

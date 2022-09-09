@@ -1,5 +1,5 @@
-/* eslint-disable react/prop-types */
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
 import Accordion from '@mui/material/Accordion';
 import AccordionSummary, { accordionSummaryClasses } from '@mui/material/AccordionSummary';
@@ -21,6 +21,7 @@ const SelectorName = styled(Typography)({
 
 const SelectorDescription = styled(Typography)(({ theme }) => ({
   color: theme.palette.text.secondary,
+  fontWeight: 400,
 }));
 
 export const SelectorExample = styled(HighlightedCode)(({ theme }) => ({
@@ -96,14 +97,16 @@ function SelectorCategoryDocs(props) {
   );
 }
 
-function SelectorsDocs(props) {
-  const { category } = props;
+export default function SelectorsDocs(props) {
+  const { headers, options } = props;
 
-  if (category) {
+  console.log(props);
+
+  if (options.category) {
     return (
-      <MarkdownElement sx={{ width: '100%' }}>
+      <MarkdownElement sx={{ width: '100%', mb: 2 }}>
         <SelectorCategoryDocs
-          selectors={allSelectors.filter((selector) => selector.category === category)}
+          selectors={allSelectors.filter((selector) => selector.category === options.category)}
         />
       </MarkdownElement>
     );
@@ -121,7 +124,7 @@ function SelectorsDocs(props) {
   });
 
   return (
-    <MarkdownElement sx={{ width: '100%' }}>
+    <MarkdownElement sx={{ width: '100%', mb: 3 }}>
       {Object.entries(selectors).map(([categoryName, categorySelectors]) => (
         <React.Fragment key={categoryName}>
           <Typography variant="h4" sx={(theme) => ({ mb: theme.spacing(2) })}>
@@ -137,4 +140,7 @@ function SelectorsDocs(props) {
   );
 }
 
-export default SelectorsDocs;
+SelectorsDocs.propTypes = {
+  headers: PropTypes.object.isRequired,
+  options: PropTypes.object.isRequired,
+};

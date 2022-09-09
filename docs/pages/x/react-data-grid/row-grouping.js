@@ -7,5 +7,5 @@ import {
 } from 'docsx/data/data-grid/row-grouping/row-grouping.md?@mui/markdown';
 
 export default function Page() {
-  return <MarkdownDocs demos={demos} docs={docs} demoComponents={demoComponents} disableAd />;
+  return <MarkdownDocs {...pageProps} disableAd />;
 }

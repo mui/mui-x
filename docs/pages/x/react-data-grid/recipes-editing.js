@@ -7,5 +7,5 @@ import {
 } from 'docsx/data/data-grid/recipes-editing/recipes-editing.md?@mui/markdown';
 
 export default function Page() {
-  return <MarkdownDocs demos={demos} docs={docs} demoComponents={demoComponents} />;
+  return <MarkdownDocs {...pageProps} />;
 }

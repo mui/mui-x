@@ -70,7 +70,7 @@ Otherwise, you will have an error saying that the state is not initialized durin
 
 Some selectors are yet to be documented.
 
-{{"demo": "SelectorsNoSnap.js", "bg": "inline", "hideToolbar": true}}
+{{"component": "modules/components/SelectorsDocs.js"}}
 
 ## Save and restore the state
 

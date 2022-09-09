@@ -7,5 +7,5 @@ import {
 } from 'docsx/data/introduction/installation/installation.md?@mui/markdown';
 
 export default function Page() {
-  return <MarkdownDocs demos={demos} docs={docs} demoComponents={demoComponents} />;
+  return <MarkdownDocs {...pageProps} />;
 }

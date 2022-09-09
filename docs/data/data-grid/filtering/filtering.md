@@ -409,7 +409,7 @@ Only use this API as the last option. Give preference to the props to control th
 
 ## Selectors [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
 
-{{"demo": "FilterSelectorsNoSnap.js", "bg": "inline", "hideToolbar": true}}
+{{"component": "modules/components/SelectorsDocs.js", "category": "Filtering"}}
 
 More information about the selectors and how to use them on the [dedicated page](/x/react-data-grid/state/#access-the-state)
 
