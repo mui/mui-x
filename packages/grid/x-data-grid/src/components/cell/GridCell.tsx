@@ -137,7 +137,7 @@ function GridCell(props: GridCellProps) {
   );
 
   const publishMouseDown = React.useCallback(
-    (eventName: GridEventsStr) => (event: React.MouseEvent<HTMLDivElement>) => {
+    (eventName: GridEvents) => (event: React.MouseEvent<HTMLDivElement>) => {
       const params = apiRef.current.getCellParams(rowId, field || '');
       apiRef.current.publishEvent(eventName as any, params as any, event);
 
