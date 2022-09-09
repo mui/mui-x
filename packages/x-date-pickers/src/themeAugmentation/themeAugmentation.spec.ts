@@ -30,6 +30,13 @@ createTheme({
         someRandomProp: true,
       },
     },
+    MuiDayPicker: {
+      defaultProps: {
+        disabled: true,
+        // @ts-expect-error invalid MuiDayPicker prop
+        someRandomProp: true,
+      },
+    },
     MuiDateTimePicker: {
       defaultProps: {
         open: true,
