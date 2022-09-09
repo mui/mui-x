@@ -2,6 +2,7 @@ import {
   CalendarPickerClassKey,
   DayPickerClassKey,
   PickersCalendarHeaderClassKey,
+  PickersFadeTransitionGroupClassKey,
 } from '../CalendarPicker';
 import { CalendarPickerSkeletonClassKey } from '../CalendarPickerSkeleton';
 import { ClockPickerClassKey } from '../ClockPicker';
@@ -21,6 +22,7 @@ export interface PickersComponentNameToClassKey {
   MuiMonthPicker: MonthPickerClassKey;
   MuiPickersCalendarHeader: PickersCalendarHeaderClassKey;
   MuiPickersDay: PickersDayClassKey;
+  MuiPickersFadeTransitionGroup: PickersFadeTransitionGroupClassKey;
   MuiYearPicker: YearPickerClassKey;
   MuiPickerStaticWrapper: PickerStaticWrapperClassKey;
 }

@@ -17,5 +17,13 @@ export type {
   PickersCalendarHeaderClassKey,
   PickersCalendarHeaderClasses,
 } from './pickersCalendarHeaderClasses';
+export {
+  getPickersFadeTransitionGroupUtilityClass,
+  pickersFadeTransitionGroupClasses,
+} from './pickersFadeTransitionGroupClasses';
+export type {
+  PickersFadeTransitionGroupClassKey,
+  PickersFadeTransitionGroupClasses,
+} from './pickersFadeTransitionGroupClasses';
 
 export type { CalendarPickerView } from '../internals/models';

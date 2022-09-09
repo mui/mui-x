@@ -54,7 +54,14 @@ createTheme({
     MuiPickersCalendarHeader: {
       defaultProps: {
         disabled: true,
-        // @ts-expect-error invalid MuiPickersDay prop
+        // @ts-expect-error invalid MuiPickersCalendarHeader prop
+        someRandomProp: true,
+      },
+    },
+    MuiPickersFadeTransitionGroup: {
+      defaultProps: {
+        reduceAnimations: true,
+        // @ts-expect-error invalid MuiPickersFadeTransitionGroup prop
         someRandomProp: true,
       },
     },
