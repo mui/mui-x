@@ -5,9 +5,9 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ## 5.17.2
 
-_Sep 8, 2022_
+_Sep 9, 2022_
 
-We'd like to offer a big thanks to the 3 contributors who made this release possible. Here are some highlights ✨:
+We'd like to offer a big thanks to the 6 contributors who made this release possible. Here are some highlights ✨:
 
 - 📃 Add support for column grouping when exporting to Excel (#5895) @alexfauquette
 - 🐞 Bugfixes
@@ -24,8 +24,9 @@ We'd like to offer a big thanks to the 3 contributors who made this release poss
 #### Changes
 
 - [DateTimePicker] Remove circular import (#6087) @flaviendelangle
-- [pickers] Allow keyboard navigation to ignore disabled date for left / right arrow (#6082) @alexfauquette
+- [pickers] Add `sx` prop to the equality check of `PickersDay` (#6030) @TheUnlocked
 - [pickers] Add warning when `openTo` is invalid based on available `views` (#6042) @LukasTy
+- [pickers] Allow keyboard navigation to ignore disabled date for left / right arrow (#6082) @alexfauquette
 - [pickers] Fix mobile picker not opening on label click (#6074) @LukasTy
 
 ### Core
