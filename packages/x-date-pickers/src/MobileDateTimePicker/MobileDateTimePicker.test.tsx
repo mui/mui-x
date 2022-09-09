@@ -106,6 +106,7 @@ describe('<MobileDateTimePicker />', () => {
         onChange={() => {}}
         open
         showToolbar
+        openTo="seconds"
         views={['seconds']}
         value={adapterToUse.date(new Date(2021, 10, 20, 10, 1, 22))}
       />,
