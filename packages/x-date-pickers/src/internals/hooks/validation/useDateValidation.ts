@@ -1,11 +1,6 @@
 import * as React from 'react';
 import { useValidation, ValidationProps, Validator } from './useValidation';
-import {
-  BaseDateValidationProps,
-  DayValidationProps,
-  MonthValidationProps,
-  YearValidationProps,
-} from './models';
+import { BaseDateValidationProps, DayValidationProps } from './models';
 import { useLocalizationContext } from '../useUtils';
 import { parseNonNullablePickerDate } from '../../utils/date-utils';
 
@@ -16,15 +11,11 @@ export interface ExportedDateValidationProps<TDate>
 export interface DateValidationProps<TInputDate, TDate>
   extends ValidationProps<DateValidationError, TInputDate | null>,
     DayValidationProps<TDate>,
-    MonthValidationProps<TDate>,
-    YearValidationProps<TDate>,
     Required<BaseDateValidationProps<TDate>> {}
 
 export type DateValidationError =
   | 'invalidDate'
   | 'shouldDisableDate'
-  | 'shouldDisableMonth'
-  | 'shouldDisableYear'
   | 'disableFuture'
   | 'disablePast'
   | 'minDate'
@@ -60,12 +51,6 @@ export const validateDate: Validator<any, DateValidationProps<any, any>> = ({
     case Boolean(props.shouldDisableDate && props.shouldDisableDate(date)):
       return 'shouldDisableDate';
 
-    case Boolean(props.shouldDisableMonth && props.shouldDisableMonth(date)):
-      return 'shouldDisableMonth';
-
-    case Boolean(props.shouldDisableYear && props.shouldDisableYear(date)):
-      return 'shouldDisableYear';
-
     case Boolean(props.disableFuture && adapter.utils.isAfterDay(date, now)):
       return 'disableFuture';
 
@@ -83,15 +68,13 @@ export const validateDate: Validator<any, DateValidationProps<any, any>> = ({
   }
 };
 
-export const useIsDateDisabled = <TDate>({
+export const useIsDayDisabled = <TDate>({
   shouldDisableDate,
-  shouldDisableMonth,
-  shouldDisableYear,
   minDate,
   maxDate,
   disableFuture,
   disablePast,
-}: Omit<DateValidationProps<any, TDate>, keyof ValidationProps<any, any>>) => {
+}: DayValidationProps<TDate> & Required<BaseDateValidationProps<TDate>>) => {
   const adapter = useLocalizationContext<TDate>();
 
   return React.useCallback(
@@ -101,24 +84,13 @@ export const useIsDateDisabled = <TDate>({
         value: day,
         props: {
           shouldDisableDate,
-          shouldDisableMonth,
-          shouldDisableYear,
           minDate,
           maxDate,
           disableFuture,
           disablePast,
         },
       }) !== null,
-    [
-      adapter,
-      shouldDisableDate,
-      shouldDisableMonth,
-      shouldDisableYear,
-      minDate,
-      maxDate,
-      disableFuture,
-      disablePast,
-    ],
+    [adapter, shouldDisableDate, minDate, maxDate, disableFuture, disablePast],
   );
 };
 

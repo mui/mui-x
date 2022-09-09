@@ -1,6 +1,4 @@
 import * as React from 'react';
-import { expect } from 'chai';
-import { spy } from 'sinon';
 import {
   GridApi,
   DataGridProProps,
@@ -11,17 +9,19 @@ import {
   GridPreProcessEditCellProps,
   GridRowModes,
 } from '@mui/x-data-grid-pro';
-import { getBasicGridData } from '@mui/x-data-grid-generator';
 // @ts-ignore Remove once the test utils are typed
 import { createRenderer, fireEvent, act, userEvent } from '@mui/monorepo/test/utils';
+import { expect } from 'chai';
 import { getCell, getRow } from 'test/utils/helperFn';
+import { spy } from 'sinon';
+import { getData } from 'storybook/src/data/data-service';
 
 describe('<DataGridPro /> - Row Editing', () => {
   const { render, clock } = createRenderer();
 
   let apiRef: React.MutableRefObject<GridApi>;
 
-  const defaultData = getBasicGridData(4, 4);
+  const defaultData = getData(4, 4);
 
   const CustomEditComponent = ({ hasFocus }: GridRenderEditCellParams) => {
     const ref = React.useRef<HTMLInputElement>(null);

@@ -70,6 +70,10 @@
       }
     },
     {
+      "groupName": "storybook",
+      "matchPackagePatterns": "@storybook/*"
+    },
+    {
       "groupName": "AG Grid",
       "matchPackagePatterns": "ag-grid-*"
     },
