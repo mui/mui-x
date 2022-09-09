@@ -9,7 +9,7 @@ _Sep 9, 2022_
 
 This release will the last regular release for our packages in version `v5.x`.
 We are starting the alpha process for the `v6.x` of our packages.
-The `v5.x` will now only receive bugfixes.
+The `v5.x` will now only receive critical bug fixes.
 
 We'd like to offer a big thanks to the 6 contributors who made this release possible. Here are some highlights ✨:
 
