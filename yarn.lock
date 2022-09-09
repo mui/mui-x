@@ -2532,7 +2532,7 @@
 
 "@mui/monorepo@https://github.com/flaviendelangle/material-ui.git#master":
   version "5.10.4"
-  resolved "https://github.com/flaviendelangle/material-ui.git#205379ecf8ff82c26e579d1fd3814245de2a0072"
+  resolved "https://github.com/flaviendelangle/material-ui.git#cb73ceeef124965708b2f50791bf52a5fd900d2d"
 
 "@mui/private-theming@^5.9.3":
   version "5.9.3"
