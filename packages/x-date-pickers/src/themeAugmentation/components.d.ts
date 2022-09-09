@@ -51,11 +51,6 @@ export interface PickerComponents<Theme = unknown> {
     styleOverrides?: ComponentsOverrides<Theme>['MuiPickersDay'];
     variants?: ComponentsVariants['MuiPickersDay'];
   };
-  MuiYearPicker?: {
-    defaultProps?: ComponentsProps['MuiYearPicker'];
-    styleOverrides?: ComponentsOverrides<Theme>['MuiYearPicker'];
-    variants?: ComponentsVariants['MuiYearPicker'];
-  };
   MuiPickerStaticWrapper?: {
     defaultProps?: ComponentsProps['MuiPickerStaticWrapper'];
     styleOverrides?: ComponentsOverrides<Theme>['MuiPickerStaticWrapper'];
@@ -75,6 +70,11 @@ export interface PickerComponents<Theme = unknown> {
     defaultProps?: ComponentsProps['MuiStaticTimePicker'];
     styleOverrides?: ComponentsOverrides<Theme>['MuiStaticTimePicker'];
     variants?: ComponentsVariants['MuiStaticTimePicker'];
+  };
+  MuiYearPicker?: {
+    defaultProps?: ComponentsProps['MuiYearPicker'];
+    styleOverrides?: ComponentsOverrides<Theme>['MuiYearPicker'];
+    variants?: ComponentsVariants['MuiYearPicker'];
   };
 }
 
