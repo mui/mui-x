@@ -97,5 +97,46 @@ describe('<CalendarPicker /> keyboard interactions', () => {
         expect(document.activeElement).toHaveAccessibleName(expectFocusedDay);
       });
     });
+
+    describe('navigation with disabled dates', () => {
+      const disabledDates = [
+        adapterToUse.date(new Date(2020, 0, 10)),
+        // month extremities
+        adapterToUse.date(new Date(2019, 11, 31)),
+        adapterToUse.date(new Date(2020, 0, 1)),
+        adapterToUse.date(new Date(2020, 0, 2)),
+        adapterToUse.date(new Date(2020, 0, 31)),
+        adapterToUse.date(new Date(2020, 1, 1)),
+      ];
+      [
+        { initialDay: 11, key: 'ArrowLeft', expectFocusedDay: '9' },
+        { initialDay: 9, key: 'ArrowRight', expectFocusedDay: '11' },
+        // Switch between months
+        { initialDay: 3, key: 'ArrowLeft', expectFocusedDay: '30' },
+        { initialDay: 30, key: 'ArrowRight', expectFocusedDay: '2' },
+      ].forEach(({ initialDay, key, expectFocusedDay }) => {
+        it(key, () => {
+          render(
+            <CalendarPicker
+              date={adapterToUse.date(new Date(2020, 0, initialDay))}
+              onChange={() => {}}
+              shouldDisableDate={(date) =>
+                disabledDates.some((disabled) => adapterToUse.isSameDay(date, disabled))
+              }
+            />,
+          );
+
+          act(() => screen.getByText(`${initialDay}`).focus());
+          // Don't care about what's focused.
+          // eslint-disable-next-line material-ui/disallow-active-element-as-key-event-target
+          fireEvent.keyDown(document.activeElement!, { key });
+
+          clock.runToLast();
+          // Based on column header, screen reader should pronounce <Day Number> <Week Day>
+          // But `toHaveAccessibleName` does not do the link between column header and cell value, so we only get <day number> in test
+          expect(document.activeElement).toHaveAccessibleName(expectFocusedDay);
+        });
+      });
+    });
   });
 });
