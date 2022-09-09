@@ -289,6 +289,10 @@ With this panel, your users will be able to control which columns are used for g
 
 {{"demo": "RowGroupingFullExample.js", "bg": "inline", "defaultCodeOpen": false}}
 
+## Advanced use cases
+
+See [Row grouping recipes](/x/react-data-grid/recipes-row-grouping/) for more advanced use cases.
+
 ## apiRef [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
 
 {{"demo": "RowGroupingApiNoSnap.js", "bg": "inline", "hideToolbar": true}}
