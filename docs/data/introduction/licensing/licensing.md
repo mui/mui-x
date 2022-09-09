@@ -87,7 +87,7 @@ For example, when you want to upgrade the Data Grid:
 
   :::info
   If you are looking for upgrading from Pro to Premium, please contact us at [sales@mui.com](mailto:sales@mui.com?subject=My%20upgrade%20discount%20to%20Premium).
-  We'll provide you with a discount to recoup the remaining time of your Pro license.
+  We'll provide you with a discount based on the remaining time of your current license term.
   :::
 
 For more details on how to install the packages, please check out our [package installation guide](/x/introduction/installation/).
