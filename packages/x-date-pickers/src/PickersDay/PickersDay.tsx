@@ -312,6 +312,7 @@ export const areDayPropsEqual = (
     prevProps.showDaysOutsideCurrentMonth === nextProps.showDaysOutsideCurrentMonth &&
     prevProps.disableHighlightToday === nextProps.disableHighlightToday &&
     prevProps.className === nextProps.className &&
+    prevProps.sx === nextProps.sx &&
     prevProps.outsideCurrentMonth === nextProps.outsideCurrentMonth &&
     prevProps.onFocus === nextProps.onFocus &&
     prevProps.onBlur === nextProps.onBlur &&

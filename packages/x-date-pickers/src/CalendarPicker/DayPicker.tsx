@@ -11,8 +11,13 @@ import {
   SlideDirection,
   SlideTransitionProps,
 } from './PickersSlideTransition';
-import { BaseDateValidationProps, DayValidationProps } from '../internals/hooks/validation/models';
-import { useIsDayDisabled } from '../internals/hooks/validation/useDateValidation';
+import {
+  BaseDateValidationProps,
+  DayValidationProps,
+  MonthValidationProps,
+  YearValidationProps,
+} from '../internals/hooks/validation/models';
+import { useIsDateDisabled } from '../internals/hooks/validation/useDateValidation';
 import { findClosestEnabledDate } from '../internals/utils/date-utils';
 
 export interface ExportedDayPickerProps<TDate>
@@ -54,6 +59,8 @@ export interface ExportedDayPickerProps<TDate>
 export interface DayPickerProps<TDate>
   extends ExportedDayPickerProps<TDate>,
     DayValidationProps<TDate>,
+    MonthValidationProps<TDate>,
+    YearValidationProps<TDate>,
     Required<BaseDateValidationProps<TDate>> {
   autoFocus?: boolean;
   className?: string;
@@ -144,14 +151,18 @@ export function DayPicker<TDate>(props: DayPickerProps<TDate>) {
     minDate,
     maxDate,
     shouldDisableDate,
+    shouldDisableMonth,
+    shouldDisableYear,
     dayOfWeekFormatter = defaultDayOfWeekFormatter,
     hasFocus,
     onFocusedViewChange,
     gridLabelId,
   } = props;
 
-  const isDateDisabled = useIsDayDisabled({
+  const isDateDisabled = useIsDateDisabled({
     shouldDisableDate,
+    shouldDisableMonth,
+    shouldDisableYear,
     minDate,
     maxDate,
     disablePast,
@@ -205,14 +216,46 @@ export function DayPicker<TDate>(props: DayPickerProps<TDate>) {
         focusDay(utils.addDays(day, 7));
         event.preventDefault();
         break;
-      case 'ArrowLeft':
-        focusDay(utils.addDays(day, theme.direction === 'ltr' ? -1 : 1));
+      case 'ArrowLeft': {
+        const newFocusedDayDefault = utils.addDays(day, theme.direction === 'ltr' ? -1 : 1);
+        const nextAvailableMonth =
+          theme.direction === 'ltr' ? utils.getPreviousMonth(day) : utils.getNextMonth(day);
+
+        const closestDayToFocus = findClosestEnabledDate({
+          utils,
+          date: newFocusedDayDefault,
+          minDate:
+            theme.direction === 'ltr'
+              ? utils.startOfMonth(nextAvailableMonth)
+              : newFocusedDayDefault,
+          maxDate:
+            theme.direction === 'ltr' ? newFocusedDayDefault : utils.endOfMonth(nextAvailableMonth),
+          isDateDisabled,
+        });
+        focusDay(closestDayToFocus || newFocusedDayDefault);
         event.preventDefault();
         break;
-      case 'ArrowRight':
-        focusDay(utils.addDays(day, theme.direction === 'ltr' ? 1 : -1));
+      }
+      case 'ArrowRight': {
+        const newFocusedDayDefault = utils.addDays(day, theme.direction === 'ltr' ? 1 : -1);
+        const nextAvailableMonth =
+          theme.direction === 'ltr' ? utils.getNextMonth(day) : utils.getPreviousMonth(day);
+
+        const closestDayToFocus = findClosestEnabledDate({
+          utils,
+          date: newFocusedDayDefault,
+          minDate:
+            theme.direction === 'ltr'
+              ? newFocusedDayDefault
+              : utils.startOfMonth(nextAvailableMonth),
+          maxDate:
+            theme.direction === 'ltr' ? utils.endOfMonth(nextAvailableMonth) : newFocusedDayDefault,
+          isDateDisabled,
+        });
+        focusDay(closestDayToFocus || newFocusedDayDefault);
         event.preventDefault();
         break;
+      }
       case 'Home':
         focusDay(utils.startOfWeek(day));
         event.preventDefault();
