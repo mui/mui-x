@@ -14,7 +14,7 @@ import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import ArrowUp from '@mui/icons-material/KeyboardArrowUp';
 import ArrowDown from '@mui/icons-material/KeyboardArrowDown';
-import { useTheme } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
 import AggregationRowGrouping from '../aggregation/AggregationRowGrouping';
 import BasicColumnPinning from '../column-pinning/BasicColumnPinning';
 import ColumnSelectorGrid from '../column-visibility/ColumnSelectorGrid';
@@ -239,7 +239,7 @@ const columns: GridColDef[] = [
     groupable: false,
     renderCell: (params) => {
       if (!params.value) {
-        return <React.Fragment />;
+        return '';
       }
       return (
         <Box
@@ -299,7 +299,7 @@ const columns: GridColDef[] = [
     valueOptions: ['Premium', 'Pro', 'Community'],
     renderCell: (params: GridRenderCellParams<string>) => {
       if (!params.value) {
-        return <React.Fragment />;
+        return '';
       }
       return <PlanTag plan={params.value} />;
     },
@@ -326,6 +326,18 @@ export default function PopularFeaturesDemo() {
     ({ row }) => <RowDemo row={row} />,
     [],
   );
+
+  const memoizedGroupingDef = React.useMemo(() => {
+    return {
+    headerName: 'Grouped by Plan',
+    width: 200,
+    renderCell: (params:GridRenderCellParams) => {
+      if (!params.value) {
+        return '';
+      }
+      return <PlanTag plan={params.value} />;
+    },
+  }}, []);
 
   return (
     <div style={{ height: 'fit-content', width: '100%' }}>
@@ -366,17 +378,7 @@ export default function PopularFeaturesDemo() {
         rows={featuresSet}
         columns={columns}
         hideFooter
-        groupingColDef={{
-          headerName: 'Grouped by Plan',
-          width: 200,
-          valueFormatter: (valueFormatterParams) => {
-            console.log(valueFormatterParams);
-            if (!valueFormatterParams.value) {
-              return <React.Fragment />;
-            }
-            return <PlanTag plan={valueFormatterParams.value} />;
-          },
-        }}
+        groupingColDef={memoizedGroupingDef}
       />
     </div>
   );
