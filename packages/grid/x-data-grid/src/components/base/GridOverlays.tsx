@@ -1,5 +1,7 @@
 import * as React from 'react';
 import { unstable_useEnhancedEffect as useEnhancedEffect } from '@mui/material/utils';
+import { unstable_composeClasses } from '@mui/utils';
+import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { useGridSelector } from '../../hooks/utils/useGridSelector';
 import { gridVisibleRowCountSelector } from '../../hooks/features/filter/gridFilterSelector';
 import {
@@ -9,10 +11,23 @@ import {
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { gridDensityTotalHeaderHeightSelector } from '../../hooks/features/density/densitySelector';
+import { getDataGridUtilityClass } from '../../constants/gridClasses';
+
+const useUtilityClasses = (ownerState: { classes: DataGridProcessedProps['classes'] }) => {
+  const { classes } = ownerState;
+
+  const slots = {
+    root: ['overlayWrapper'],
+  };
+
+  return unstable_composeClasses(slots, getDataGridUtilityClass, classes);
+};
 
 function GridOverlayWrapper(props: React.PropsWithChildren<{}>) {
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
+  const classes = useUtilityClasses({ classes: rootProps.classes });
+
   const totalHeaderHeight = useGridSelector(apiRef, gridDensityTotalHeaderHeightSelector);
 
   const [viewportInnerSize, setViewportInnerSize] = React.useState(
@@ -38,12 +53,14 @@ function GridOverlayWrapper(props: React.PropsWithChildren<{}>) {
 
   return (
     <div
+      className={classes.root}
       style={{
         height,
         width: viewportInnerSize?.width ?? 0,
         position: 'absolute',
         top: totalHeaderHeight,
         bottom: height === 'auto' ? 0 : undefined,
+        zIndex: 1,
       }}
       {...props}
     />
