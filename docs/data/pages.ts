@@ -94,6 +94,15 @@ const pages: MuiPage[] = [
         ],
       },
       {
+        title: 'Recipes',
+        pathname: '/x/react-data-grid/recipes',
+        scopePathnames: ['/x/react-data-grid/recipes-'],
+        children: [
+          { pathname: '/x/react-data-grid/recipes-editing', title: 'Editing' },
+          { pathname: '/x/react-data-grid/recipes-row-grouping', title: 'Row grouping' },
+        ],
+      },
+      {
         pathname: '/x/api/data-grid',
         title: 'API Reference',
         children: [
