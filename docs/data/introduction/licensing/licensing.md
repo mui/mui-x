@@ -58,10 +58,10 @@ The features exclusive to the Premium version are marked with the <span class="p
 
 ## Upgrading
 
-The npm packages of of any given plan is a **superset** of the npm packages of the plan below.
-So to upgrade, replace the [npm packages](#plans) you installed and imported with the ones of the plan above.
+The npm packages of any given plan are a **superset** of the packages on the plan below.
+So to upgrade, replace the [npm packages](#plans) and the components' imports with the ones from the target plan.
 
-For example with the Data Grid:
+For example, when you want to upgrade the Data Grid:
 
 - **Upgrading from Community to Pro.**
 
@@ -78,7 +78,7 @@ For example with the Data Grid:
 
 - **Upgrading from Pro to Premium.**
 
-  `@mui/x-data-grid-premium` is a superset of `@mui/x-data-grid-pro`, so you can upgrade from the Pro to the Pro Premium like this:.
+  `@mui/x-data-grid-premium` is a superset of `@mui/x-data-grid-pro`, so you can upgrade from Pro to Premium like this:
 
   ```diff
   -import { DataGridPro } from '@mui/x-data-grid-pro';
