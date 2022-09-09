@@ -17,7 +17,6 @@ import { useTheme } from '@mui/material';
 import AggregationRowGrouping from '../aggregation/AggregationRowGrouping';
 import BasicColumnPinning from '../column-pinning/BasicColumnPinning';
 import ColumnSelectorGrid from '../column-visibility/ColumnSelectorGrid';
-import EditingWithDatePickers from '../editing/EditingWithDatePickers';
 import ExcelExport from '../export/ExcelExport';
 import QuickFilteringGrid from '../filtering/QuickFilteringGrid';
 import BasicDetailPanels from '../master-detail/BasicDetailPanels';
@@ -30,6 +29,7 @@ import ColumnVirtualizationGrid from '../virtualization/ColumnVirtualizationGrid
 import FullFeaturedDemo from './FullFeaturedDemo';
 import LazyLoadingGrid from '../row-updates/LazyLoadingGrid';
 import BasicGroupingDemo from '../column-groups/BasicGroupingDemo';
+import EditingWithDatePickers from '../recipes-editing/EditingWithDatePickers';
 
 export const featuresSet = [
   {
@@ -61,7 +61,7 @@ export const featuresSet = [
   {
     id: 4,
     name: 'Lazy Loading',
-    description: 'Easily paginate your rows and only fetch what you need',
+    description: 'Easily paginate your rows and only fetqch what you need',
     plan: 'Pro',
     detailPage: '/pagination/',
     newBadge: true,
@@ -344,6 +344,9 @@ export default function PopularFeaturesDemo() {
           },
           [`& .${gridClasses.columnHeaderTitle}`]: {
             fontWeight: 400,
+          },
+          [`& .${gridClasses.detailPanel}`]: {
+            background: 'transparent',
           },
           [`& .${gridClasses.cell}:focus, & .${gridClasses.cell}:focus-within`]: {
             outline: 'none',
