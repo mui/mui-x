@@ -1,5 +1,7 @@
 import * as React from 'react';
-import { styled } from '@mui/material/styles';
+import clsx from 'clsx';
+import { styled, useThemeProps } from '@mui/material/styles';
+import { unstable_composeClasses as composeClasses } from '@mui/material';
 import {
   useDefaultDates,
   useUtils,
@@ -19,6 +21,16 @@ import { DateRange } from '../internal/models';
 import { DateRangePickerDay, DateRangePickerDayProps } from '../DateRangePickerDay';
 import { isWithinRange, isStartOfRange, isEndOfRange } from '../internal/utils/date-utils';
 import { doNothing } from '../internal/utils/utils';
+import { getDateRangePickerViewDesktopUtilityClass } from './dateRangePickerViewDesktopClasses';
+
+const useUtilityClasses = () => {
+  const slots = {
+    root: ['root'],
+    container: ['container'],
+  };
+
+  return composeClasses(slots, getDateRangePickerViewDesktopUtilityClass, {});
+};
 
 export interface ExportedDesktopDateRangeCalendarProps<TDate> {
   /**
@@ -37,7 +49,7 @@ export interface ExportedDesktopDateRangeCalendarProps<TDate> {
   renderDay?: (day: TDate, dateRangePickerDayProps: DateRangePickerDayProps<TDate>) => JSX.Element;
 }
 
-interface DesktopDateRangeCalendarProps<TDate>
+export interface DesktopDateRangeCalendarProps<TDate>
   extends ExportedDesktopDateRangeCalendarProps<TDate>,
     Omit<DayPickerProps<TDate>, 'selectedDays' | 'renderDay' | 'onFocusedDayChange'>,
     DayValidationProps<TDate>,
@@ -48,12 +60,20 @@ interface DesktopDateRangeCalendarProps<TDate>
   currentlySelectingRangeEnd: 'start' | 'end';
 }
 
-const DateRangePickerViewDesktopRoot = styled('div')({
+const DateRangePickerViewDesktopRoot = styled('div', {
+  name: 'MuiDateRangePickerViewDesktop',
+  slot: 'Root',
+  overridesResolver: (_, styles) => styles.root,
+})({
   display: 'flex',
   flexDirection: 'row',
 });
 
-const DateRangePickerViewDesktopContainer = styled('div')(({ theme }) => ({
+const DateRangePickerViewDesktopContainer = styled('div', {
+  name: 'MuiDateRangePickerViewDesktop',
+  slot: 'Container',
+  overridesResolver: (_, styles) => styles.container,
+})(({ theme }) => ({
   '&:not(:last-of-type)': {
     borderRight: `2px solid ${theme.palette.divider}`,
   },
@@ -96,7 +116,8 @@ const deprecatedPropsWarning = buildDeprecatedPropsWarning(
 /**
  * @ignore - internal component.
  */
-export function DateRangePickerViewDesktop<TDate>(props: DesktopDateRangeCalendarProps<TDate>) {
+export function DateRangePickerViewDesktop<TDate>(inProps: DesktopDateRangeCalendarProps<TDate>) {
+  const props = useThemeProps({ props: inProps, name: 'MuiDateRangePickerViewDesktop' });
   const {
     calendars,
     changeMonth,
@@ -113,6 +134,7 @@ export function DateRangePickerViewDesktop<TDate>(props: DesktopDateRangeCalenda
     onSelectedDaysChange,
     renderDay = (_, dateRangeProps) => <DateRangePickerDay {...dateRangeProps} />,
     rightArrowButtonText: rightArrowButtonTextProp,
+    className,
     ...other
   } = props;
 
@@ -127,6 +149,7 @@ export function DateRangePickerViewDesktop<TDate>(props: DesktopDateRangeCalenda
   const rightArrowButtonText = rightArrowButtonTextProp ?? localeText.nextMonth;
 
   const utils = useUtils<TDate>();
+  const classes = useUtilityClasses();
   const defaultDates = useDefaultDates<TDate>();
   const minDate = minDateProp ?? defaultDates.minDate;
   const maxDate = maxDateProp ?? defaultDates.maxDate;
@@ -175,12 +198,12 @@ export function DateRangePickerViewDesktop<TDate>(props: DesktopDateRangeCalenda
   }, [changeMonth, currentMonth, utils]);
 
   return (
-    <DateRangePickerViewDesktopRoot>
+    <DateRangePickerViewDesktopRoot className={clsx(className, classes.root)}>
       {getCalendarsArray(calendars).map((_, index) => {
         const monthOnIteration = utils.setMonth(currentMonth, utils.getMonth(currentMonth) + index);
 
         return (
-          <DateRangePickerViewDesktopContainer key={index}>
+          <DateRangePickerViewDesktopContainer key={index} className={classes.container}>
             <DateRangePickerViewDesktopArrowSwitcher
               onLeftClick={selectPreviousMonth}
               onRightClick={selectNextMonth}

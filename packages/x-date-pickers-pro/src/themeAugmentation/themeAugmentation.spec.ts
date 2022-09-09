@@ -30,6 +30,13 @@ createTheme({
         someRandomProp: true,
       },
     },
+    MuiDateRangePickerViewDesktop: {
+      defaultProps: {
+        disabled: true,
+        // @ts-expect-error invalid MuiDateRangePickerViewDesktop prop
+        someRandomProp: true,
+      },
+    },
     MuiDesktopDateRangePicker: {
       defaultProps: {
         open: true,
