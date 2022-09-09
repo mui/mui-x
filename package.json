@@ -26,6 +26,7 @@
     "prettier": "node ./scripts/prettier.js --branch master",
     "prettier:all": "node ./scripts/prettier.js write",
     "proptypes": "cross-env BABEL_ENV=development babel-node -i \"/node_modules/(?!@mui)/\" -x .ts,.tsx,.js ./docs/scripts/generateProptypes.ts",
+    "check-links": "node ./docs/scripts/checkLinks.js",
     "size:snapshot": "node --max-old-space-size=2048 ./scripts/sizeSnapshot/create",
     "size:why": "yarn size:snapshot --analyze --accurateBundles",
     "test": "lerna run test --parallel",
