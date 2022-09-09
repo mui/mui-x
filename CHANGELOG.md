@@ -7,6 +7,10 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 _Sep 9, 2022_
 
+This release will the last regular release for our packages in version `v5.x`.
+We are starting the alpha process for the `v6.x` of our packages.
+The `v5.x` will now only receive bugfixes.
+
 We'd like to offer a big thanks to the 6 contributors who made this release possible. Here are some highlights ✨:
 
 - 📃 Add support for column grouping when exporting to Excel (#5895) @alexfauquette
@@ -28,6 +32,10 @@ We'd like to offer a big thanks to the 6 contributors who made this release poss
 - [pickers] Add warning when `openTo` is invalid based on available `views` (#6042) @LukasTy
 - [pickers] Allow keyboard navigation to ignore disabled date for left / right arrow (#6082) @alexfauquette
 - [pickers] Fix mobile picker not opening on label click (#6074) @LukasTy
+
+### Docs
+
+- [docs] Add Recipes section
 
 ### Core
 
