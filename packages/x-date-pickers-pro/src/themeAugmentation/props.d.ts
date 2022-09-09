@@ -1,5 +1,6 @@
 import { DateRangePickerProps } from '../DateRangePicker';
 import { DateRangePickerInputProps } from '../DateRangePicker/DateRangePickerInput';
+import { DateRangePickerToolbarProps } from '../DateRangePicker/DateRangePickerToolbar';
 import { DateRangePickerDayProps } from '../DateRangePickerDay';
 import { DesktopDateRangePickerProps } from '../DesktopDateRangePicker';
 import { MobileDateRangePickerProps } from '../MobileDateRangePicker';
@@ -9,6 +10,7 @@ export interface PickersProComponentsPropsList {
   MuiDateRangePicker: DateRangePickerProps<unknown, unknown>;
   MuiDateRangePickerDay: DateRangePickerDayProps<unknown>;
   MuiDateRangePickerInput: DateRangePickerInputProps<unknown, unknown>;
+  MuiDateRangePickerToolbar: DateRangePickerToolbarProps<unknown>;
   MuiDesktopDateRangePicker: DesktopDateRangePickerProps<unknown, unknown>;
   MuiMobileDateRangePicker: MobileDateRangePickerProps<unknown, unknown>;
   MuiStaticDateRangePicker: StaticDateRangePickerProps<unknown, unknown>;
