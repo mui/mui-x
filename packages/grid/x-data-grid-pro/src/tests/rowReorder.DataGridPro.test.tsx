@@ -1,11 +1,11 @@
 import * as React from 'react';
 import { expect } from 'chai';
+import { spy } from 'sinon';
 // @ts-ignore Remove once the test utils are typed
 import { createRenderer, fireEvent, createEvent } from '@mui/monorepo/test/utils';
 import { getCell, getRowsFieldContent } from 'test/utils/helperFn';
 import { useGridApiRef, DataGridPro, gridClasses, GridApi } from '@mui/x-data-grid-pro';
-import { useData } from 'storybook/src/hooks/useData';
-import { spy } from 'sinon';
+import { useBasicDemoData } from '@mui/x-data-grid-generator';
 
 function createDragOverEvent(target: ChildNode) {
   const dragOverEvent = createEvent.dragOver(target);
@@ -171,7 +171,7 @@ describe('<DataGridPro /> - Row reorder', () => {
     let apiRef: React.MutableRefObject<GridApi>;
     const Test = () => {
       apiRef = useGridApiRef();
-      const data = useData(3, 3);
+      const data = useBasicDemoData(3, 3);
 
       return (
         <div

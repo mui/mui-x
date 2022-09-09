@@ -257,7 +257,16 @@ export const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
     disableHighlightToday,
     focusedView,
     onFocusedViewChange,
-    ...other
+    showDaysOutsideCurrentMonth,
+    dayOfWeekFormatter,
+    renderDay,
+    components,
+    componentsProps,
+    loading,
+    getViewSwitchingButtonText,
+    leftArrowButtonText,
+    rightArrowButtonText,
+    renderLoading,
   } = props;
 
   const { openView, setOpenView, openNext } = useViews({
@@ -487,7 +496,6 @@ export const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
   return (
     <CalendarPickerRoot ref={ref} className={clsx(classes.root, className)} ownerState={ownerState}>
       <PickersCalendarHeader
-        {...other}
         views={views}
         openView={openView}
         currentMonth={calendarState.currentMonth}
@@ -500,6 +508,11 @@ export const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
         disableFuture={disableFuture}
         reduceAnimations={reduceAnimations}
         labelId={gridLabelId}
+        components={components}
+        componentsProps={componentsProps}
+        getViewSwitchingButtonText={getViewSwitchingButtonText}
+        leftArrowButtonText={leftArrowButtonText}
+        rightArrowButtonText={rightArrowButtonText}
       />
       <CalendarPickerViewContainer ref={scrollerRef}>
         <CalendarPickerViewTransitionContainer
@@ -511,7 +524,6 @@ export const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
           <div>
             {openView === 'year' && (
               <YearPicker
-                {...other}
                 {...baseDateValidationProps}
                 {...commonViewProps}
                 autoFocus={autoFocus}
@@ -522,7 +534,6 @@ export const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
                 onFocusedViewChange={handleFocusedViewChange('year')}
               />
             )}
-
             {openView === 'month' && (
               <MonthPicker
                 {...baseDateValidationProps}
@@ -539,7 +550,6 @@ export const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
 
             {openView === 'day' && (
               <DayPicker
-                {...other}
                 {...calendarState}
                 {...baseDateValidationProps}
                 {...commonViewProps}
@@ -550,9 +560,16 @@ export const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
                 selectedDays={[date]}
                 onSelectedDaysChange={onSelectedDayChange}
                 shouldDisableDate={shouldDisableDate}
+                shouldDisableMonth={shouldDisableMonth}
+                shouldDisableYear={shouldDisableYear}
                 hasFocus={hasFocus}
                 onFocusedViewChange={handleFocusedViewChange('day')}
                 gridLabelId={gridLabelId}
+                showDaysOutsideCurrentMonth={showDaysOutsideCurrentMonth}
+                dayOfWeekFormatter={dayOfWeekFormatter}
+                renderDay={renderDay}
+                loading={loading}
+                renderLoading={renderLoading}
               />
             )}
           </div>
