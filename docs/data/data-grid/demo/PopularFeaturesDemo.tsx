@@ -1,6 +1,7 @@
 import * as React from 'react';
 import {
   DataGridPremium,
+  DataGridPremiumProps,
   gridClasses,
   GridColDef,
   GridRenderCellParams,
@@ -322,10 +323,9 @@ const columns: GridColDef[] = [
 ];
 
 export default function PopularFeaturesDemo() {
-  const getDetailPanelContent = React.useCallback(
-    ({ row }) => <RowDemo row={row} />,
-    [],
-  );
+  const getDetailPanelContent = React.useCallback<
+    NonNullable<DataGridPremiumProps['getDetailPanelContent']>
+  >(({ row }) => <RowDemo row={row} />, []);
 
   const memoizedGroupingDef = React.useMemo(() => {
     return {
