@@ -317,6 +317,7 @@ const columns = [
 
 export default function PopularFeaturesDemo() {
   const getDetailPanelContent = React.useCallback(
+    // @ts-ignore
     ({ row }) => <RowDemo row={row} />,
     [],
   );
