@@ -60,10 +60,9 @@ const DateRangePickerToolbarContainer = styled('div', {
 /**
  * @ignore - internal component.
  */
-export const DateRangePickerToolbar = React.forwardRef(function DateRangePickerToolbar<TDate extends unknown>(
-  inProps: DateRangePickerToolbarProps<TDate>,
-  ref: React.Ref<HTMLDivElement>,
-) {
+export const DateRangePickerToolbar = React.forwardRef(function DateRangePickerToolbar<
+  TDate extends unknown,
+>(inProps: DateRangePickerToolbarProps<TDate>, ref: React.Ref<HTMLDivElement>) {
   const utils = useUtils<TDate>();
   const props = useThemeProps({ props: inProps, name: 'MuiDateRangePickerToolbar' });
 

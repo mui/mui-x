@@ -13,7 +13,5 @@ export function getDateRangePickerViewDesktopUtilityClass(slot: string) {
   return generateUtilityClass('MuiDateRangePickerViewDesktop', slot);
 }
 
-export const dateRangePickerViewDesktopClasses: DateRangePickerViewDesktopClasses = generateUtilityClasses(
-  'MuiDateRangePickerViewDesktop',
-  ['root', 'container'],
-);
+export const dateRangePickerViewDesktopClasses: DateRangePickerViewDesktopClasses =
+  generateUtilityClasses('MuiDateRangePickerViewDesktop', ['root', 'container']);
