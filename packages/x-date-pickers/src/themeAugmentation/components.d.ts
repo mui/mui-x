@@ -11,6 +11,11 @@ export interface PickerComponents<Theme = unknown> {
     styleOverrides?: ComponentsOverrides<Theme>['MuiCalendarPickerSkeleton'];
     variants?: ComponentsVariants['MuiCalendarPickerSkeleton'];
   };
+  MuiClock?: {
+    defaultProps?: ComponentsProps['MuiClock'];
+    styleOverrides?: ComponentsOverrides<Theme>['MuiClock'];
+    variants?: ComponentsVariants['MuiClock'];
+  };
   MuiClockPicker?: {
     defaultProps?: ComponentsProps['MuiClockPicker'];
     styleOverrides?: ComponentsOverrides<Theme>['MuiClockPicker'];

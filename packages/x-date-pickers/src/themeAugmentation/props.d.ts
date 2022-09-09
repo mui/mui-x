@@ -19,10 +19,12 @@ import { PickerStaticWrapperProps } from '../internals/components/PickerStaticWr
 import { DayPickerProps } from '../internals';
 import { PickersCalendarHeaderProps } from '../CalendarPicker/PickersCalendarHeader';
 import { PickersFadeTransitionGroupProps } from '../CalendarPicker/PickersFadeTransitionGroup';
+import { ClockProps } from '../ClockPicker/Clock';
 
 export interface PickersComponentsPropsList {
   MuiCalendarPicker: CalendarPickerProps<unknown>;
   MuiCalendarPickerSkeleton: CalendarPickerSkeletonProps;
+  MuiClock: ClockProps<unknown>;
   MuiClockPicker: ClockPickerProps<unknown>;
   MuiDatePicker: DatePickerProps<unknown, unknown>;
   MuiDateTimePicker: DateTimePickerProps<unknown, unknown>;
