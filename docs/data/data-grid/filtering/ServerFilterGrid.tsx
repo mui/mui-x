@@ -17,8 +17,8 @@ export default function ServerFilterGrid() {
   return (
     <div style={{ height: 400, width: '100%' }}>
       <DataGrid
-        rows={rows}
         {...data}
+        rows={rows}
         filterMode="server"
         onFilterModelChange={onFilterChange}
         loading={isLoading}
