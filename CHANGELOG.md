@@ -3975,6 +3975,9 @@ Big thanks to the 7 contributors who made this release possible. Here are some h
 
   This is the first release of the Cell editing feature. You can find the documentation [following this link](https://mui.com/x/react-data-grid/editing/#cell-editing). We have spent the last three months working on it.
 
+  
+  This is the first release of the Cell editing feature. You can find the documentation [following this link](https://mui.com/x/react-data-grid/editing/). We have spent the last three months working on it.
+
   ![cell edit](https://user-images.githubusercontent.com/3165635/115632215-87994700-a307-11eb-91d9-9f5537df0911.gif)
 
 - 🐞 A focus on bug fixes and documentation improvements
