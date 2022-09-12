@@ -1,4 +1,4 @@
-import {GridColDef, GridValidRowModel} from '@mui/x-data-grid';
+import { GridColDef, GridValidRowModel } from '@mui/x-data-grid';
 
 export type GridRowGroupingModel = string[];
 
@@ -48,4 +48,5 @@ export interface GridGroupingRule<R extends GridValidRowModel = GridValidRowMode
   groupingValueGetter?: GridColDef<R, V>['groupingValueGetter'];
 }
 
-export type GridGroupingRules<R extends GridValidRowModel = GridValidRowModel> = GridGroupingRule<R>[];
+export type GridGroupingRules<R extends GridValidRowModel = GridValidRowModel> =
+  GridGroupingRule<R>[];
