@@ -10,7 +10,6 @@ import {
 } from '@mui/utils';
 import { PickersMonth } from './PickersMonth';
 import { useUtils, useNow, useDefaultDates } from '../internals/hooks/useUtils';
-import { NonNullablePickerChangeHandler } from '../internals/hooks/useViews';
 import { MonthPickerClasses, getMonthPickerUtilityClass } from './monthPickerClasses';
 import {
   BaseDateValidationProps,
@@ -39,7 +38,11 @@ export interface MonthPickerProps<TDate>
   value: TDate | null;
   /** If `true` picker is disabled */
   disabled?: boolean;
-  /** Callback fired on date change. */
+  /**
+   * Callback fired when the value (the selected month) changes.
+   * @template TValue
+   * @param {TValue} value The new parsed value.
+   */
   onChange: (value: TDate) => void;
   /** If `true` picker is readonly */
   readOnly?: boolean;
@@ -332,7 +335,9 @@ MonthPicker.propTypes = {
    */
   minDate: PropTypes.any,
   /**
-   * Callback fired on date change.
+   * Callback fired when the value (the selected month) changes.
+   * @template TValue
+   * @param {TValue} value The new parsed value.
    */
   onChange: PropTypes.func.isRequired,
   onFocusedViewChange: PropTypes.func,

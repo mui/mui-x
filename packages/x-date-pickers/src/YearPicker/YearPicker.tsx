@@ -11,7 +11,6 @@ import {
 } from '@mui/utils';
 import { PickersYear } from './PickersYear';
 import { useUtils, useNow, useDefaultDates } from '../internals/hooks/useUtils';
-import { NonNullablePickerChangeHandler } from '../internals/hooks/useViews';
 import { WrapperVariantContext } from '../internals/components/wrappers/WrapperVariantContext';
 import { YearPickerClasses, getYearPickerUtilityClass } from './yearPickerClasses';
 import { BaseDateValidationProps, YearValidationProps } from '../internals/hooks/validation/models';
@@ -83,7 +82,11 @@ export interface YearPickerProps<TDate>
   value: TDate | null;
   /** If `true` picker is disabled */
   disabled?: boolean;
-  /** Callback fired on date change. */
+  /**
+   * Callback fired when the value (the selected year) changes.
+   * @template TValue
+   * @param {TValue} value The new parsed value.
+   */
   onChange: (value: TDate) => void;
   /** If `true` picker is readonly */
   readOnly?: boolean;
@@ -317,7 +320,9 @@ YearPicker.propTypes = {
    */
   minDate: PropTypes.any,
   /**
-   * Callback fired on date change.
+   * Callback fired when the value (the selected year) changes.
+   * @template TValue
+   * @param {TValue} value The new parsed value.
    */
   onChange: PropTypes.func.isRequired,
   onFocusedViewChange: PropTypes.func,
