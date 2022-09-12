@@ -263,12 +263,16 @@ describe('<DataGridPro /> - Column pinning', () => {
   });
 
   describe('dynamic row height', () => {
-    it('should work with dynamic row height', async function test() {
-      if (isJSDOM) {
-        // Need layouting
+    beforeEach(function beforeEach() {
+      const { userAgent } = window.navigator;
+
+      if (!userAgent.includes('Headless') && !/safari/i.test(userAgent)) {
+        // Need layouting and on Chrome non-headless and Edge these tests are flacky
         this.skip();
       }
+    });
 
+    it('should work with dynamic row height', async () => {
       const Test = ({ bioHeight }: { bioHeight: number }) => {
         const data = React.useMemo(() => getBasicGridData(1, 2), []);
 
@@ -302,12 +306,7 @@ describe('<DataGridPro /> - Column pinning', () => {
       expect(rightRow).toHaveInlineStyle({ maxHeight: 'none', minHeight: '101px' });
     });
 
-    it('should react to content height changes', async function test() {
-      if (isJSDOM) {
-        // Need layouting
-        this.skip();
-      }
-
+    it('should react to content height changes', async () => {
       const Test = ({ bioHeight }: { bioHeight: number }) => {
         const data = React.useMemo(() => getBasicGridData(1, 2), []);
 
