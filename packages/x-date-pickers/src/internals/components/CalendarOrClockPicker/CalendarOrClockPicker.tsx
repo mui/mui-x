@@ -97,6 +97,8 @@ const isDatePickerView = (view: CalendarOrClockPickerView): view is CalendarPick
 const isTimePickerView = (view: CalendarOrClockPickerView): view is ClockPickerView =>
   view === 'hours' || view === 'minutes' || view === 'seconds';
 
+let warnedOnceNotValidOpenTo = false;
+
 export function CalendarOrClockPicker<TDate, View extends CalendarOrClockPickerView>(
   props: CalendarOrClockPickerProps<TDate, View>,
 ) {
@@ -147,6 +149,16 @@ export function CalendarOrClockPicker<TDate, View extends CalendarOrClockPickerV
     },
     [isMobileKeyboardViewOpen, onViewChange, toggleMobileKeyboardView],
   );
+
+  if (process.env.NODE_ENV !== 'production') {
+    if (!warnedOnceNotValidOpenTo && !views.includes(openTo)) {
+      console.warn(
+        `MUI: \`openTo="${openTo}"\` is not a valid prop.`,
+        `It must be an element of \`views=["${views.join('", "')}"]\`.`,
+      );
+      warnedOnceNotValidOpenTo = true;
+    }
+  }
 
   const { openView, setOpenView, handleChangeAndOpenNext } = useViews<TDate, View>({
     view: undefined,

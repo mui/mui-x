@@ -47,6 +47,7 @@
     "showDaysOutsideCurrentMonth": "If <code>true</code>, days that have <code>outsideCurrentMonth={true}</code> are displayed.",
     "showToolbar": "If <code>true</code>, show the toolbar even in desktop mode.",
     "startText": "Text for start input label and toolbar placeholder.",
+    "sx": "The system prop that allows defining system overrides as well as additional CSS styles. See the <a href=\"/system/the-sx-prop/\">`sx` page</a> for more details.",
     "toolbarFormat": "Date format, that is displaying in toolbar.",
     "toolbarTitle": "Mobile picker title, displaying in the toolbar.",
     "value": "The value of the picker."

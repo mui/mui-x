@@ -1,13 +1,17 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { useTheme, styled, useThemeProps } from '@mui/material/styles';
-import { unstable_composeClasses as composeClasses } from '@mui/material';
-import { useControlled } from '@mui/material/utils';
 import clsx from 'clsx';
+import { SxProps, useTheme } from '@mui/system';
+import { styled, useThemeProps, Theme } from '@mui/material/styles';
+import { unstable_composeClasses as composeClasses } from '@mui/material';
+import '@mui/material/utils';
+import {
+  unstable_useControlled as useControlled,
+  unstable_useEventCallback as useEventCallback,
+} from '@mui/utils';
 import { PickersYear } from './PickersYear';
 import { useUtils, useNow, useDefaultDates } from '../internals/hooks/useUtils';
 import { NonNullablePickerChangeHandler } from '../internals/hooks/useViews';
-import { PickerSelectionState } from '../internals/hooks/usePickerState';
 import { WrapperVariantContext } from '../internals/components/wrappers/WrapperVariantContext';
 import { YearPickerClasses, getYearPickerUtilityClass } from './yearPickerClasses';
 import { BaseDateValidationProps, YearValidationProps } from '../internals/hooks/validation/models';
@@ -64,12 +68,24 @@ export interface YearPickerProps<TDate>
   extends YearValidationProps<TDate>,
     BaseDateValidationProps<TDate> {
   autoFocus?: boolean;
+  /**
+   * className applied to the root element.
+   */
   className?: string;
-  classes?: YearPickerClasses;
+  /**
+   * Override or extend the styles applied to the component.
+   */
+  classes?: Partial<YearPickerClasses>;
+  /**
+   * The system prop that allows defining system overrides as well as additional CSS styles.
+   */
+  sx?: SxProps<Theme>;
   date: TDate | null;
+  /** If `true` picker is disabled */
   disabled?: boolean;
+  /** Callback fired on date change. */
   onChange: NonNullablePickerChangeHandler<TDate>;
-  onFocusedDayChange?: (day: TDate) => void;
+  /** If `true` picker is readonly */
   readOnly?: boolean;
   /**
    * If `true`, today's date is rendering without highlighting with circle.
@@ -92,6 +108,7 @@ export const YearPicker = React.forwardRef(function YearPicker<TDate>(
   const now = useNow<TDate>();
   const theme = useTheme();
   const utils = useUtils<TDate>();
+  const wrapperVariant = React.useContext(WrapperVariantContext);
 
   const props = useYearPickerDefaultizedProps(inProps, 'MuiYearPicker');
   const {
@@ -110,13 +127,15 @@ export const YearPicker = React.forwardRef(function YearPicker<TDate>(
     onYearFocus,
     hasFocus,
     onFocusedViewChange,
+    ...other
   } = props;
 
   const ownerState = props;
   const classes = useUtilityClasses(ownerState);
 
   const selectedDateOrToday = date ?? now;
-  const currentYear = React.useMemo(() => {
+  const todayYear = React.useMemo(() => utils.getYear(now), [utils, now]);
+  const selectedYear = React.useMemo(() => {
     if (date != null) {
       return utils.getYear(date);
     }
@@ -127,12 +146,7 @@ export const YearPicker = React.forwardRef(function YearPicker<TDate>(
 
     return utils.getYear(now);
   }, [now, date, utils, disableHighlightToday]);
-
-  const wrapperVariant = React.useContext(WrapperVariantContext);
-  const selectedYearRef = React.useRef<HTMLButtonElement>(null);
-  const [focusedYear, setFocusedYear] = React.useState<number>(
-    () => currentYear || utils.getYear(now),
-  );
+  const [focusedYear, setFocusedYear] = React.useState(() => selectedYear || todayYear);
 
   const [internalHasFocus, setInternalHasFocus] = useControlled<boolean>({
     name: 'YearPicker',
@@ -141,136 +155,116 @@ export const YearPicker = React.forwardRef(function YearPicker<TDate>(
     default: autoFocus,
   });
 
-  const changeHasFocus = React.useCallback(
-    (newHasFocus: boolean) => {
-      setInternalHasFocus(newHasFocus);
+  const changeHasFocus = useEventCallback((newHasFocus: boolean) => {
+    setInternalHasFocus(newHasFocus);
 
-      if (onFocusedViewChange) {
-        onFocusedViewChange(newHasFocus);
-      }
-    },
-    [setInternalHasFocus, onFocusedViewChange],
-  );
+    if (onFocusedViewChange) {
+      onFocusedViewChange(newHasFocus);
+    }
+  });
 
-  const isYearDisabled = React.useCallback(
-    (dateToValidate: TDate) => {
-      if (disablePast && utils.isBeforeYear(dateToValidate, now)) {
-        return true;
-      }
-      if (disableFuture && utils.isAfterYear(dateToValidate, now)) {
-        return true;
-      }
-      if (minDate && utils.isBeforeYear(dateToValidate, minDate)) {
-        return true;
-      }
-      if (maxDate && utils.isAfterYear(dateToValidate, maxDate)) {
-        return true;
-      }
-      if (shouldDisableYear && shouldDisableYear(dateToValidate)) {
-        return true;
-      }
-      return false;
-    },
-    [disableFuture, disablePast, maxDate, minDate, now, shouldDisableYear, utils],
-  );
+  const isYearDisabled = useEventCallback((dateToValidate: TDate) => {
+    if (disablePast && utils.isBeforeYear(dateToValidate, now)) {
+      return true;
+    }
+    if (disableFuture && utils.isAfterYear(dateToValidate, now)) {
+      return true;
+    }
+    if (minDate && utils.isBeforeYear(dateToValidate, minDate)) {
+      return true;
+    }
+    if (maxDate && utils.isAfterYear(dateToValidate, maxDate)) {
+      return true;
+    }
+    if (shouldDisableYear && shouldDisableYear(dateToValidate)) {
+      return true;
+    }
+    return false;
+  });
 
-  const handleYearSelection = (
-    event: React.SyntheticEvent,
-    year: number,
-    isFinish: PickerSelectionState = 'finish',
-  ) => {
+  const handleYearSelection = useEventCallback((event: React.MouseEvent, year: number) => {
     if (readOnly) {
       return;
     }
 
     const newDate = utils.setYear(selectedDateOrToday, year);
+    onChange(newDate, 'finish');
+  });
 
-    onChange(newDate, isFinish);
-  };
-
-  const focusYear = React.useCallback(
-    (year: number) => {
-      if (!isYearDisabled(utils.setYear(selectedDateOrToday, year))) {
-        setFocusedYear(year);
-        changeHasFocus(true);
-        onYearFocus?.(year);
-      }
-    },
-    [isYearDisabled, utils, selectedDateOrToday, changeHasFocus, onYearFocus],
-  );
+  const focusYear = useEventCallback((year: number) => {
+    if (!isYearDisabled(utils.setYear(selectedDateOrToday, year))) {
+      setFocusedYear(year);
+      changeHasFocus(true);
+      onYearFocus?.(year);
+    }
+  });
 
   React.useEffect(() => {
     setFocusedYear((prevFocusedYear) =>
-      currentYear !== null && prevFocusedYear !== currentYear ? currentYear : prevFocusedYear,
+      selectedYear !== null && prevFocusedYear !== selectedYear ? selectedYear : prevFocusedYear,
     );
-  }, [currentYear]);
+  }, [selectedYear]);
 
-  const yearsInRow = wrapperVariant === 'desktop' ? 4 : 3;
+  const handleKeyDown = useEventCallback((event: React.KeyboardEvent, year: number) => {
+    const yearsInRow = wrapperVariant === 'desktop' ? 4 : 3;
 
-  const handleKeyDown = React.useCallback(
-    (event: React.KeyboardEvent, year: number) => {
-      switch (event.key) {
-        case 'ArrowUp':
-          focusYear(year - yearsInRow);
-          event.preventDefault();
-          break;
-        case 'ArrowDown':
-          focusYear(year + yearsInRow);
-          event.preventDefault();
-          break;
-        case 'ArrowLeft':
-          focusYear(year + (theme.direction === 'ltr' ? -1 : 1));
-          event.preventDefault();
-          break;
-        case 'ArrowRight':
-          focusYear(year + (theme.direction === 'ltr' ? 1 : -1));
-          event.preventDefault();
-          break;
-        default:
-          break;
-      }
-    },
-    [focusYear, theme.direction, yearsInRow],
-  );
+    switch (event.key) {
+      case 'ArrowUp':
+        focusYear(year - yearsInRow);
+        event.preventDefault();
+        break;
+      case 'ArrowDown':
+        focusYear(year + yearsInRow);
+        event.preventDefault();
+        break;
+      case 'ArrowLeft':
+        focusYear(year + (theme.direction === 'ltr' ? -1 : 1));
+        event.preventDefault();
+        break;
+      case 'ArrowRight':
+        focusYear(year + (theme.direction === 'ltr' ? 1 : -1));
+        event.preventDefault();
+        break;
+      default:
+        break;
+    }
+  });
 
-  const handleFocus = React.useCallback(
-    (event: React.FocusEvent, year: number) => {
-      focusYear(year);
-    },
-    [focusYear],
-  );
+  const handleYearFocus = useEventCallback((event: React.FocusEvent, year: number) => {
+    focusYear(year);
+  });
 
-  const handleBlur = React.useCallback(
-    (event: React.FocusEvent, year: number) => {
-      if (focusedYear === year) {
-        changeHasFocus(false);
-      }
-    },
-    [focusedYear, changeHasFocus],
-  );
-
-  const nowYear = utils.getYear(now);
+  const handleYearBlur = useEventCallback((event: React.FocusEvent, year: number) => {
+    if (focusedYear === year) {
+      changeHasFocus(false);
+    }
+  });
 
   return (
-    <YearPickerRoot ref={ref} className={clsx(classes.root, className)} ownerState={ownerState}>
+    <YearPickerRoot
+      ref={ref}
+      className={clsx(classes.root, className)}
+      ownerState={ownerState}
+      {...other}
+    >
       {utils.getYearRange(minDate, maxDate).map((year) => {
         const yearNumber = utils.getYear(year);
-        const selected = yearNumber === currentYear;
+        const isSelected = yearNumber === selectedYear;
+        const isDisabled = disabled || isYearDisabled(year);
 
         return (
           <PickersYear
             key={utils.format(year, 'year')}
-            selected={selected}
+            selected={isSelected}
             value={yearNumber}
             onClick={handleYearSelection}
             onKeyDown={handleKeyDown}
             autoFocus={internalHasFocus && yearNumber === focusedYear}
-            ref={selected ? selectedYearRef : undefined}
-            disabled={disabled || isYearDisabled(year)}
+            disabled={isDisabled}
             tabIndex={yearNumber === focusedYear ? 0 : -1}
-            onFocus={handleFocus}
-            onBlur={handleBlur}
-            aria-current={nowYear === yearNumber ? 'date' : undefined}
+            onFocus={handleYearFocus}
+            onBlur={handleYearBlur}
+            aria-current={todayYear === yearNumber ? 'date' : undefined}
           >
             {utils.format(year, 'year')}
           </PickersYear>
@@ -286,9 +280,18 @@ YearPicker.propTypes = {
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
   autoFocus: PropTypes.bool,
+  /**
+   * Override or extend the styles applied to the component.
+   */
   classes: PropTypes.object,
+  /**
+   * className applied to the root element.
+   */
   className: PropTypes.string,
   date: PropTypes.any,
+  /**
+   * If `true` picker is disabled
+   */
   disabled: PropTypes.bool,
   /**
    * If `true` future days are disabled.
@@ -314,10 +317,15 @@ YearPicker.propTypes = {
    * Minimal selectable date. @DateIOType
    */
   minDate: PropTypes.any,
+  /**
+   * Callback fired on date change.
+   */
   onChange: PropTypes.func.isRequired,
-  onFocusedDayChange: PropTypes.func,
   onFocusedViewChange: PropTypes.func,
   onYearFocus: PropTypes.func,
+  /**
+   * If `true` picker is readonly
+   */
   readOnly: PropTypes.bool,
   /**
    * Disable specific years dynamically.
@@ -327,4 +335,12 @@ YearPicker.propTypes = {
    * @returns {boolean} Returns `true` if the year should be disabled.
    */
   shouldDisableYear: PropTypes.func,
+  /**
+   * The system prop that allows defining system overrides as well as additional CSS styles.
+   */
+  sx: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
+    PropTypes.func,
+    PropTypes.object,
+  ]),
 } as any;
