@@ -110,6 +110,13 @@ module.exports = {
       parserOptions: { tsconfigRootDir: __dirname, project: ['./tsconfig.json'] },
     },
     {
+      files: ['*.tsx'],
+      excludedFiles: '*.spec.tsx',
+      rules: {
+        'react/prop-types': 'off',
+      },
+    },
+    {
       files: ['docs/data/**/*.js', 'docs/data/**/*.tsx'],
       rules: {
         'filenames/match-exported': ['error'],

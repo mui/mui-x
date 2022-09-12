@@ -30,6 +30,8 @@ export interface BaseTimePickerProps<TInputDate, TDate>
   onViewChange?: (view: ClockPickerView) => void;
   /**
    * First view to show.
+   * Must be a valid option from `views` list
+   * @default 'hours'
    */
   openTo?: ClockPickerView;
   /**
@@ -44,6 +46,7 @@ export interface BaseTimePickerProps<TInputDate, TDate>
   toolbarTitle?: React.ReactNode;
   /**
    * Array of views to show.
+   * @default ['hours', 'minutes']
    */
   views?: readonly ClockPickerView[];
   components?: any;

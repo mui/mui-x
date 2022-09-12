@@ -451,7 +451,7 @@ describe('<DataGridPro /> - Row Editing', () => {
         await act(() => promise); // Run all updates scheduled for when preProcessEditCellProps resolves
       });
 
-      it('should do nothing if props of any column contain error=true', async () => {
+      it('should do nothing if props of any column contains error=true', async () => {
         column1Props.preProcessEditCellProps = ({ props }: GridPreProcessEditCellProps) => ({
           ...props,
           error: true,
@@ -463,6 +463,21 @@ describe('<DataGridPro /> - Row Editing', () => {
         );
         act(() => apiRef.current.stopRowEditMode({ id: 0 }));
         expect(getCell(0, 1).className).to.contain('MuiDataGrid-cell--editing');
+      });
+
+      it('should keep mode=edit if props of any column contains error=true', async () => {
+        column1Props.preProcessEditCellProps = ({ props }: GridPreProcessEditCellProps) => ({
+          ...props,
+          error: true,
+        });
+        const onRowModesModelChange = spy();
+        render(<TestCase onRowModesModelChange={onRowModesModelChange} />);
+        act(() => apiRef.current.startRowEditMode({ id: 0 }));
+        await act(() =>
+          apiRef.current.setEditCellValue({ id: 0, field: 'currencyPair', value: 'USD GBP' }),
+        );
+        act(() => apiRef.current.stopRowEditMode({ id: 0 }));
+        expect(onRowModesModelChange.lastCall.args[0]).to.deep.equal({ 0: { mode: 'edit' } });
       });
 
       it('should allow a 2nd call if the first call was when error=true', async () => {
@@ -1221,6 +1236,26 @@ describe('<DataGridPro /> - Row Editing', () => {
       const cell = getCell(0, 1);
       fireEvent.doubleClick(cell);
       expect(listener.callCount).to.equal(0);
+    });
+
+    it('should not mutate the rowModesModel prop if props of any column contains error=true', async () => {
+      column1Props.preProcessEditCellProps = ({ props }: GridPreProcessEditCellProps) => ({
+        ...props,
+        error: true,
+      });
+      const { setProps } = render(<TestCase />);
+      const cell = getCell(0, 1);
+      fireEvent.mouseUp(cell);
+      fireEvent.click(cell);
+      fireEvent.doubleClick(cell);
+
+      await act(() =>
+        apiRef.current.setEditCellValue({ id: 0, field: 'currencyPair', value: 'USD GBP' }),
+      );
+
+      const rowModesModel = { 0: { mode: 'view' } };
+      setProps({ rowModesModel });
+      expect(rowModesModel).to.deep.equal({ 0: { mode: 'view' } });
     });
   });
 
