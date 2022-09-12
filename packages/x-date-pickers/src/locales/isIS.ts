@@ -16,7 +16,6 @@ const isISPickers: PickersLocaleText<any> = {
     view === 'year'
       ? 'ársskoðun er opin, skipta yfir í dagatalsskoðun'
       : 'dagatalsskoðun er opin, skipta yfir í ársskoðun',
-
   inputModeToggleButtonAriaLabel: (
     isKeyboardInputOpen: boolean,
     viewType: 'calendar' | 'clock',
