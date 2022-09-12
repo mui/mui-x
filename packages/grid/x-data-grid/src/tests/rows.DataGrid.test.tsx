@@ -20,8 +20,8 @@ import {
   GridRowModel,
   GridRenderCellParams,
 } from '@mui/x-data-grid';
+import { getBasicGridData } from '@mui/x-data-grid-generator';
 import { getColumnValues, getRow, getActiveCell, getCell } from 'test/utils/helperFn';
-import { getData } from 'storybook/src/data/data-service';
 import { COMPACT_DENSITY_FACTOR } from '../hooks/features/density/useGridDensity';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
@@ -65,7 +65,7 @@ describe('<DataGrid /> - Rows', () => {
 
   describe('prop: rows', () => {
     it('should support new dataset', () => {
-      const { rows, columns } = getData(5, 2);
+      const { rows, columns } = getBasicGridData(5, 2);
 
       const Test = (props: Pick<DataGridProps, 'rows'>) => (
         <div style={{ width: 300, height: 300 }}>
@@ -129,7 +129,7 @@ describe('<DataGrid /> - Rows', () => {
     });
 
     it('should call with isFirstVisible=true in the first row and isLastVisible=true in the last', () => {
-      const { rows, columns } = getData(4, 2);
+      const { rows, columns } = getBasicGridData(4, 2);
       const getRowClassName = (params: GridRowClassNameParams) =>
         clsx({ first: params.isFirstVisible, last: params.isLastVisible });
       render(
@@ -755,7 +755,7 @@ describe('<DataGrid /> - Rows', () => {
         if (/edg/i.test(window.navigator.userAgent)) {
           this.skip(); // FIXME: We need a waitFor that works with fake clock
         }
-        const data = getData(120, 3);
+        const data = getBasicGridData(120, 3);
         const headerHeight = 50;
         const measuredRowHeight = 100;
         render(
@@ -787,7 +787,7 @@ describe('<DataGrid /> - Rows', () => {
       });
 
       it('should position correctly the render zone when changing pageSize to a lower value', async () => {
-        const data = getData(120, 3);
+        const data = getBasicGridData(120, 3);
         const headerHeight = 50;
         const measuredRowHeight = 100;
         const { setProps } = render(
@@ -820,7 +820,7 @@ describe('<DataGrid /> - Rows', () => {
   });
 
   describe('prop: getRowSpacing', () => {
-    const { rows, columns } = getData(4, 2);
+    const { rows, columns } = getBasicGridData(4, 2);
 
     const TestCase = (props: Partial<DataGridProps>) => {
       return (

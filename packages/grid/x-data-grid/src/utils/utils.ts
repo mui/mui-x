@@ -187,3 +187,10 @@ export function randomNumberBetween(seed: number, min: number, max: number): () 
   const random = mulberry32(seed);
   return () => min + (max - min) * random();
 }
+
+export function deepClone(obj: Record<string, any>) {
+  if (typeof structuredClone === 'function') {
+    return structuredClone(obj);
+  }
+  return JSON.parse(JSON.stringify(obj));
+}

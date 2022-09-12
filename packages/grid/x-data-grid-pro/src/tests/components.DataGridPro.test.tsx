@@ -10,7 +10,7 @@ import {
   DataGridProProps,
   GridApi,
 } from '@mui/x-data-grid-pro';
-import { useData } from 'packages/storybook/src/hooks/useData';
+import { useBasicDemoData } from '@mui/x-data-grid-generator';
 import { getCell, getRow } from 'test/utils/helperFn';
 
 describe('<DataGridPro/> - Components', () => {
@@ -20,7 +20,7 @@ describe('<DataGridPro/> - Components', () => {
 
   const TestCase = (props: Partial<DataGridProProps>) => {
     apiRef = useGridApiRef();
-    const data = useData(100, 1);
+    const data = useBasicDemoData(100, 1);
     return (
       <div style={{ width: 500, height: 300 }}>
         <DataGridPro apiRef={apiRef} {...data} disableVirtualization {...props} />

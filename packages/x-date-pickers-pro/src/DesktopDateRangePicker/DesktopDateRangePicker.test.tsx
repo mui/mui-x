@@ -326,7 +326,7 @@ describe('<DesktopDateRangePicker />', () => {
     expect(screen.getByRole('tooltip')).toBeVisible();
   });
 
-  it('respect localeText', () => {
+  it('should respect localeText from the theme', () => {
     const theme = createTheme({
       components: {
         MuiLocalizationProvider: {
@@ -334,7 +334,7 @@ describe('<DesktopDateRangePicker />', () => {
             localeText: { start: 'Início', end: 'Fim' },
           },
         },
-      } as any,
+      },
     });
 
     render(
