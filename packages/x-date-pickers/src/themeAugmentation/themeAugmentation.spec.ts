@@ -114,6 +114,13 @@ createTheme({
         someRandomProp: true,
       },
     },
+    MuiTimePickerToolbar: {
+      defaultProps: {
+        disabled: true,
+        // @ts-expect-error invalid MuiTimePickerToolbar prop
+        someRandomProp: true,
+      },
+    },
     MuiStaticDatePicker: {
       defaultProps: {
         open: true,

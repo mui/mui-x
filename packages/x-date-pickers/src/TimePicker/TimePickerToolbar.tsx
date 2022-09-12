@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useTheme, styled, Theme } from '@mui/material/styles';
+import { useTheme, styled, Theme, useThemeProps } from '@mui/material/styles';
 import { unstable_composeClasses as composeClasses } from '@mui/material';
 import { PickersToolbarText } from '../internals/components/PickersToolbarText';
 import { PickersToolbarButton } from '../internals/components/PickersToolbarButton';
@@ -61,7 +61,13 @@ const TimePickerToolbarSeparator = styled(PickersToolbarText, {
 const TimePickerToolbarHourMinuteLabel = styled('div', {
   name: 'MuiTimePickerToolbar',
   slot: 'HourMinuteLabel',
-  overridesResolver: (props, styles) => styles.hourMinuteLabel,
+  overridesResolver: (props, styles) => [
+    {
+      [`&.${timePickerToolbarClasses.hourMinuteLabelLandscape}`]: styles.hourMinuteLabelLandscape,
+      [`&.${timePickerToolbarClasses.hourMinuteLabelReverse}`]: styles.hourMinuteLabelReverse,
+    },
+    styles.hourMinuteLabel,
+  ],
 })<{
   ownerState: TimePickerToolbarProps<any>;
 }>(({ theme, ownerState }) => ({
@@ -79,7 +85,11 @@ const TimePickerToolbarHourMinuteLabel = styled('div', {
 const TimePickerToolbarAmPmSelection = styled('div', {
   name: 'MuiTimePickerToolbar',
   slot: 'AmPmSelection',
-  overridesResolver: (props, styles) => styles.ampmSelection,
+  overridesResolver: (props, styles) => [
+    { [`.${timePickerToolbarClasses.ampmLabel}`]: styles.ampmLabel },
+    { [`&.${timePickerToolbarClasses.ampmLandscape}`]: styles.ampmLandscape },
+    styles.ampmSelection,
+  ],
 })<{
   ownerState: TimePickerToolbarProps<any>;
 }>(({ ownerState }) => ({
@@ -101,9 +111,10 @@ const TimePickerToolbarAmPmSelection = styled('div', {
 /**
  * @ignore - internal component.
  */
-export const TimePickerToolbar = <TDate extends unknown>(
-  props: BaseToolbarProps<TDate, TDate | null>,
-) => {
+export function TimePickerToolbar<TDate extends unknown>(
+  inProps: BaseToolbarProps<TDate, TDate | null>,
+) {
+  const props = useThemeProps({ props: inProps, name: 'MuiTimePickerToolbar' });
   const {
     ampm,
     ampmInClock,
@@ -215,4 +226,4 @@ export const TimePickerToolbar = <TDate extends unknown>(
       )}
     </TimePickerToolbarRoot>
   );
-};
+}

@@ -17,6 +17,7 @@ import { YearPickerClassKey } from '../YearPicker';
 import { PickerStaticWrapperClassKey } from '../internals/components/PickerStaticWrapper';
 import { DatePickerToolbarClassKey } from '../DatePicker';
 import { DateTimePickerTabsClassKey, DateTimePickerToolbarClassKey } from '../DateTimePicker';
+import { TimePickerToolbarClassKey } from '../TimePicker';
 
 // prettier-ignore
 export interface PickersComponentNameToClassKey {
@@ -36,6 +37,7 @@ export interface PickersComponentNameToClassKey {
   MuiPickersCalendarHeader: PickersCalendarHeaderClassKey;
   MuiPickersDay: PickersDayClassKey;
   MuiPickersFadeTransitionGroup: PickersFadeTransitionGroupClassKey;
+  MuiTimePickerToolbar: TimePickerToolbarClassKey;
   MuiYearPicker: YearPickerClassKey;
   MuiPickerStaticWrapper: PickerStaticWrapperClassKey;
 }

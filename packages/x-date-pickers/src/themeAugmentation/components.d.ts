@@ -81,6 +81,11 @@ export interface PickerComponents<Theme = unknown> {
     styleOverrides?: ComponentsOverrides<Theme>['MuiPickersFadeTransitionGroup'];
     variants?: ComponentsVariants['MuiPickersFadeTransitionGroup'];
   };
+  MuiTimePickerToolbar?: {
+    defaultProps?: ComponentsProps['MuiTimePickerToolbar'];
+    styleOverrides?: ComponentsOverrides<Theme>['MuiTimePickerToolbar'];
+    variants?: ComponentsVariants['MuiTimePickerToolbar'];
+  };
   MuiYearPicker?: {
     defaultProps?: ComponentsProps['MuiYearPicker'];
     styleOverrides?: ComponentsOverrides<Theme>['MuiYearPicker'];
