@@ -76,7 +76,10 @@ export interface YearPickerProps<TDate>
    * Override or extend the styles applied to the component.
    */
   classes?: Partial<YearPickerClasses>;
-  /** Date value for the YearPicker */
+  /**
+   * The system prop that allows defining system overrides as well as additional CSS styles.
+   */
+  sx?: SxProps<Theme>;
   date: TDate | null;
   /** If `true` picker is disabled */
   disabled?: boolean;
@@ -84,10 +87,6 @@ export interface YearPickerProps<TDate>
   onChange: NonNullablePickerChangeHandler<TDate>;
   /** If `true` picker is readonly */
   readOnly?: boolean;
-  /**
-   * The system prop that allows defining system overrides as well as additional CSS styles.
-   */
-  sx?: SxProps<Theme>;
   /**
    * If `true`, today's date is rendering without highlighting with circle.
    * @default false
@@ -289,9 +288,6 @@ YearPicker.propTypes = {
    * className applied to the root element.
    */
   className: PropTypes.string,
-  /**
-   * Date value for the YearPicker
-   */
   date: PropTypes.any,
   /**
    * If `true` picker is disabled

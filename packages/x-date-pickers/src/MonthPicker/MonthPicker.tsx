@@ -31,6 +31,10 @@ export interface MonthPickerProps<TDate>
    * Override or extend the styles applied to the component.
    */
   classes?: Partial<MonthPickerClasses>;
+  /**
+   * The system prop that allows defining system overrides as well as additional CSS styles.
+   */
+  sx?: SxProps<Theme>;
   /** Date value for the MonthPicker */
   date: TDate | null;
   /** If `true` picker is disabled */
@@ -39,10 +43,6 @@ export interface MonthPickerProps<TDate>
   onChange: NonNullablePickerChangeHandler<TDate>;
   /** If `true` picker is readonly */
   readOnly?: boolean;
-  /**
-   * The system prop that allows defining system overrides as well as additional CSS styles.
-   */
-  sx?: SxProps<Theme>;
   /**
    * If `true`, today's date is rendering without highlighting with circle.
    * @default false
