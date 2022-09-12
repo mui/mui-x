@@ -4,7 +4,7 @@ import { getColumnValues } from 'test/utils/helperFn';
 import * as React from 'react';
 import { expect } from 'chai';
 import { DataGridPro, GridApi, useGridApiRef } from '@mui/x-data-grid-pro';
-import { useData } from 'packages/storybook/src/hooks/useData';
+import { useBasicDemoData } from '@mui/x-data-grid-generator';
 
 describe('<DataGridPro /> - Pagination', () => {
   const { render, clock } = createRenderer({ clock: 'fake' });
@@ -14,7 +14,7 @@ describe('<DataGridPro /> - Pagination', () => {
       let apiRef: React.MutableRefObject<GridApi>;
 
       const GridTest = () => {
-        const basicData = useData(20, 2);
+        const basicData = useBasicDemoData(20, 2);
         apiRef = useGridApiRef();
 
         return (
@@ -43,7 +43,7 @@ describe('<DataGridPro /> - Pagination', () => {
     it('should apply last page if trying to go to a non-existing page', () => {
       let apiRef: React.MutableRefObject<GridApi>;
       const GridTest = () => {
-        const basicData = useData(20, 2);
+        const basicData = useBasicDemoData(20, 2);
         apiRef = useGridApiRef();
 
         return (
@@ -75,7 +75,7 @@ describe('<DataGridPro /> - Pagination', () => {
       let apiRef: React.MutableRefObject<GridApiPro>;
       const GridTest = () => {
         const [pageSize, setPageSize] = React.useState(5);
-        const basicData = useData(20, 2);
+        const basicData = useBasicDemoData(20, 2);
         apiRef = useGridApiRef();
 
         return (

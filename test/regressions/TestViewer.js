@@ -131,6 +131,12 @@ function TestViewer(props) {
             margin: 0,
             overflowX: 'hidden',
           },
+          '@media print': {
+            '@page': {
+              size: 'auto',
+              margin: 0,
+            },
+          },
         }}
       />
       <MockTime isDataGridTest={isDataGridTest}>

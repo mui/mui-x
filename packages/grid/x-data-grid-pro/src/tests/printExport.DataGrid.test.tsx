@@ -1,4 +1,6 @@
 import * as React from 'react';
+import { expect } from 'chai';
+import { spy } from 'sinon';
 import {
   DataGridPro,
   GridToolbar,
@@ -6,11 +8,9 @@ import {
   useGridApiRef,
   DataGridProProps,
 } from '@mui/x-data-grid-pro';
+import { getBasicGridData } from '@mui/x-data-grid-generator';
 // @ts-ignore Remove once the test utils are typed
 import { createRenderer, screen, fireEvent, act } from '@mui/monorepo/test/utils';
-import { expect } from 'chai';
-import { spy } from 'sinon';
-import { getData } from 'storybook/src/data/data-service';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
@@ -18,7 +18,7 @@ describe('<DataGridPro /> - Print export', () => {
   const { render, clock } = createRenderer();
 
   const NB_ROWS = 2;
-  const defaultData = getData(NB_ROWS, 2);
+  const defaultData = getBasicGridData(NB_ROWS, 2);
   let apiRef: React.MutableRefObject<GridApi>;
 
   const baselineProps = {
