@@ -18,8 +18,7 @@ import {
   GridApi,
   gridFocusCellSelector,
 } from '@mui/x-data-grid-pro';
-import { useData } from 'packages/storybook/src/hooks/useData';
-import { getData } from 'storybook/src/data/data-service';
+import { useBasicDemoData, getBasicGridData } from '@mui/x-data-grid-generator';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
@@ -110,7 +109,7 @@ describe('<DataGridPro /> - Rows', () => {
 
   describe('prop: rows', () => {
     it('should not throttle even when props.throttleRowsMs is defined', () => {
-      const { rows, columns } = getData(5, 2);
+      const { rows, columns } = getBasicGridData(5, 2);
 
       const Test = (props: Pick<DataGridProProps, 'rows'>) => (
         <div style={{ width: 300, height: 300 }}>
@@ -366,7 +365,7 @@ describe('<DataGridPro /> - Rows', () => {
       },
     ) => {
       apiRef = useGridApiRef();
-      const data = useData(props.nbRows || 100, props.nbCols || 10);
+      const data = useBasicDemoData(props.nbRows || 100, props.nbCols || 10);
 
       return (
         <div style={{ width: props.width || 300, height: props.height || 300 }}>
@@ -630,7 +629,7 @@ describe('<DataGridPro /> - Rows', () => {
 
     const TestCase = (props: Partial<DataGridProProps> & { nbRows?: number; nbCols?: number }) => {
       apiRef = useGridApiRef();
-      const data = useData(props.nbRows || 10, props.nbCols || 10);
+      const data = useBasicDemoData(props.nbRows || 10, props.nbCols || 10);
       return (
         <div style={{ width: 100, height: 300 }}>
           <DataGridPro

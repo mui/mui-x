@@ -1,7 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { CSSInterpolation, SxProps } from '@mui/system';
+import { CSSInterpolation } from '@mui/system';
 import ButtonBase, { ButtonBaseProps } from '@mui/material/ButtonBase';
 import { unstable_useEnhancedEffect as useEnhancedEffect } from '@mui/utils';
 import { unstable_composeClasses as composeClasses } from '@mui/material';
@@ -67,10 +67,6 @@ export interface PickersDayProps<TDate>
    * @default false
    */
   today?: boolean;
-  /**
-   * The system prop that allows defining system overrides as well as additional CSS styles.
-   */
-  sx?: SxProps<Theme>;
 }
 
 type OwnerState = Partial<PickersDayProps<any>>;
@@ -316,6 +312,7 @@ export const areDayPropsEqual = (
     prevProps.showDaysOutsideCurrentMonth === nextProps.showDaysOutsideCurrentMonth &&
     prevProps.disableHighlightToday === nextProps.disableHighlightToday &&
     prevProps.className === nextProps.className &&
+    prevProps.sx === nextProps.sx &&
     prevProps.outsideCurrentMonth === nextProps.outsideCurrentMonth &&
     prevProps.onFocus === nextProps.onFocus &&
     prevProps.onBlur === nextProps.onBlur &&
@@ -370,14 +367,6 @@ PickersDayRaw.propTypes = {
    * @default false
    */
   showDaysOutsideCurrentMonth: PropTypes.bool,
-  /**
-   * The system prop that allows defining system overrides as well as additional CSS styles.
-   */
-  sx: PropTypes.oneOfType([
-    PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
-    PropTypes.func,
-    PropTypes.object,
-  ]),
   /**
    * If `true`, renders as today date.
    * @default false
