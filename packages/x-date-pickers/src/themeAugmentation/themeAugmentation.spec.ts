@@ -23,6 +23,13 @@ createTheme({
         someRandomProp: true,
       },
     },
+    MuiClockNumber: {
+      defaultProps: {
+        selected: true,
+        // @ts-expect-error invalid MuiClockNumber prop
+        someRandomProp: true,
+      },
+    },
     MuiClockPicker: {
       defaultProps: {
         view: 'hours',

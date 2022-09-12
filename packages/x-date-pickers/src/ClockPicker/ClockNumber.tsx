@@ -1,8 +1,13 @@
 import * as React from 'react';
 import clsx from 'clsx';
-import { styled } from '@mui/material/styles';
-import { generateUtilityClasses } from '@mui/material';
+import { styled, useThemeProps } from '@mui/material/styles';
+import { unstable_composeClasses as composeClasses } from '@mui/material';
 import { CLOCK_WIDTH, CLOCK_HOUR_WIDTH } from './shared';
+import {
+  ClockNumberClasses,
+  getClockNumberUtilityClass,
+  clockNumberClasses,
+} from './clockNumberClasses';
 
 export interface ClockNumberProps extends React.HTMLAttributes<HTMLSpanElement> {
   'aria-label': string;
@@ -17,43 +22,60 @@ export interface ClockNumberProps extends React.HTMLAttributes<HTMLSpanElement> 
   selected: boolean;
 }
 
-export const classes = generateUtilityClasses('PrivateClockNumber', ['selected', 'disabled']);
+const useUtilityClasses = (
+  ownerState: ClockNumberProps & { classes?: Partial<ClockNumberClasses> },
+) => {
+  const { classes } = ownerState;
+  const slots = {
+    root: ['root'],
+  };
 
-const ClockNumberRoot = styled('span')<{ ownerState: ClockNumberProps }>(
-  ({ theme, ownerState }) => ({
-    height: CLOCK_HOUR_WIDTH,
-    width: CLOCK_HOUR_WIDTH,
-    position: 'absolute',
-    left: `calc((100% - ${CLOCK_HOUR_WIDTH}px) / 2)`,
-    display: 'inline-flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: '50%',
-    color: theme.palette.text.primary,
-    fontFamily: theme.typography.fontFamily,
-    '&:focused': {
-      backgroundColor: theme.palette.background.paper,
-    },
-    [`&.${classes.selected}`]: {
-      color: theme.palette.primary.contrastText,
-    },
-    [`&.${classes.disabled}`]: {
-      pointerEvents: 'none',
-      color: theme.palette.text.disabled,
-    },
-    ...(ownerState.inner && {
-      ...theme.typography.body2,
-      color: theme.palette.text.secondary,
-    }),
+  return composeClasses(slots, getClockNumberUtilityClass, classes);
+};
+
+const ClockNumberRoot = styled('span', {
+  name: 'MuiClockNumber',
+  slot: 'Root',
+  overridesResolver: (_, styles) => [
+    styles.root,
+    { [`&.${clockNumberClasses.disabled}`]: styles.disabled },
+    { [`&.${clockNumberClasses.selected}`]: styles.selected },
+  ],
+})<{ ownerState: ClockNumberProps }>(({ theme, ownerState }) => ({
+  height: CLOCK_HOUR_WIDTH,
+  width: CLOCK_HOUR_WIDTH,
+  position: 'absolute',
+  left: `calc((100% - ${CLOCK_HOUR_WIDTH}px) / 2)`,
+  display: 'inline-flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+  borderRadius: '50%',
+  color: theme.palette.text.primary,
+  fontFamily: theme.typography.fontFamily,
+  '&:focused': {
+    backgroundColor: theme.palette.background.paper,
+  },
+  [`&.${clockNumberClasses.selected}`]: {
+    color: theme.palette.primary.contrastText,
+  },
+  [`&.${clockNumberClasses.disabled}`]: {
+    pointerEvents: 'none',
+    color: theme.palette.text.disabled,
+  },
+  ...(ownerState.inner && {
+    ...theme.typography.body2,
+    color: theme.palette.text.secondary,
   }),
-);
+}));
 
 /**
  * @ignore - internal component.
  */
-export function ClockNumber(props: ClockNumberProps) {
+export function ClockNumber(inProps: ClockNumberProps) {
+  const props = useThemeProps({ props: inProps, name: 'MuiClockNumber' });
   const { className, disabled, index, inner, label, selected, ...other } = props;
   const ownerState = props;
+  const classes = useUtilityClasses(ownerState);
 
   const angle = ((index % 12) / 12) * Math.PI * 2 - Math.PI / 2;
   const length = ((CLOCK_WIDTH - CLOCK_HOUR_WIDTH - 2) / 2) * (inner ? 0.65 : 1);
@@ -62,13 +84,10 @@ export function ClockNumber(props: ClockNumberProps) {
 
   return (
     <ClockNumberRoot
-      className={clsx(
-        {
-          [classes.selected]: selected,
-          [classes.disabled]: disabled,
-        },
-        className,
-      )}
+      className={clsx(className, classes.root, {
+        [clockNumberClasses.selected]: selected,
+        [clockNumberClasses.disabled]: disabled,
+      })}
       aria-disabled={disabled ? true : undefined}
       aria-selected={selected ? true : undefined}
       role="option"
