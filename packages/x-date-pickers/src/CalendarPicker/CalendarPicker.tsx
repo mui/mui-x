@@ -1,7 +1,8 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { styled, useThemeProps } from '@mui/material/styles';
+import { styled, Theme, useThemeProps } from '@mui/material/styles';
+import { SxProps } from '@mui/system';
 import { unstable_composeClasses as composeClasses } from '@mui/material';
 import { useControlled, unstable_useId as useId, useEventCallback } from '@mui/material/utils';
 import { MonthPicker, MonthPickerProps } from '../MonthPicker/MonthPicker';
@@ -45,6 +46,10 @@ export interface CalendarPickerProps<TDate>
   autoFocus?: boolean;
   className?: string;
   classes?: Partial<CalendarPickerClasses>;
+  /**
+   * The system prop that allows defining system overrides as well as additional CSS styles.
+   */
+  sx?: SxProps<Theme>;
   /**
    * Overrideable components.
    * @default {}
@@ -260,6 +265,7 @@ export const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
     leftArrowButtonText,
     rightArrowButtonText,
     renderLoading,
+    sx,
   } = props;
 
   const { openView, setOpenView, openNext } = useViews({
@@ -457,7 +463,12 @@ export const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
   );
 
   return (
-    <CalendarPickerRoot ref={ref} className={clsx(classes.root, className)} ownerState={ownerState}>
+    <CalendarPickerRoot
+      ref={ref}
+      className={clsx(classes.root, className)}
+      ownerState={ownerState}
+      sx={sx}
+    >
       <PickersCalendarHeader
         views={views}
         openView={openView}
@@ -704,6 +715,14 @@ CalendarPicker.propTypes = {
    * @default false
    */
   showDaysOutsideCurrentMonth: PropTypes.bool,
+  /**
+   * The system prop that allows defining system overrides as well as additional CSS styles.
+   */
+  sx: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
+    PropTypes.func,
+    PropTypes.object,
+  ]),
   /**
    * Controlled open view.
    */
