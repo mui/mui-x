@@ -17,11 +17,11 @@ export default function SubComponentsPickers() {
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <Grid container spacing={3}>
         <Grid item xs={12} md={6}>
-          <CalendarPicker date={date} onChange={(newDate) => setDate(newDate)} />
+          <CalendarPicker value={date} onChange={(newDate) => setDate(newDate)} />
         </Grid>
         <Grid item xs={12} md={6}>
           <MonthPicker
-            date={date}
+            value={date}
             minDate={minDate}
             maxDate={maxDate}
             onChange={(newDate) => setDate(newDate)}
@@ -29,7 +29,7 @@ export default function SubComponentsPickers() {
         </Grid>
         <Grid item xs={12} md={6}>
           <YearPicker
-            date={date}
+            value={date}
             minDate={minDate}
             maxDate={maxDate}
             onChange={(newDate) => setDate(newDate)}

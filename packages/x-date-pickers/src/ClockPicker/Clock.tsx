@@ -16,7 +16,6 @@ export interface ClockProps<TDate> extends ReturnType<typeof useMeridiemMode> {
   ampmInClock: boolean;
   autoFocus?: boolean;
   children: readonly React.ReactNode[];
-  date: TDate | null;
   getClockLabelText: (
     view: ClockPickerView,
     time: TDate | null,
@@ -31,7 +30,14 @@ export interface ClockProps<TDate> extends ReturnType<typeof useMeridiemMode> {
    */
   selectedId: string | undefined;
   type: ClockPickerView;
-  value: number;
+  /**
+   * The numeric value of the current view.
+   */
+  viewValue: number;
+  /**
+   * The current full date value.
+   */
+  value: TDate | null;
   disabled?: boolean;
   readOnly?: boolean;
 }
@@ -139,7 +145,7 @@ export function Clock<TDate>(props: ClockProps<TDate>) {
     ampmInClock,
     autoFocus,
     children,
-    date,
+    value,
     getClockLabelText,
     handleMeridiemChange,
     isTimeDisabled,
@@ -148,7 +154,7 @@ export function Clock<TDate>(props: ClockProps<TDate>) {
     onChange,
     selectedId,
     type,
-    value,
+    viewValue,
     disabled,
     readOnly,
   } = props;
@@ -159,8 +165,8 @@ export function Clock<TDate>(props: ClockProps<TDate>) {
   const wrapperVariant = React.useContext(WrapperVariantContext);
   const isMoving = React.useRef(false);
 
-  const isSelectedTimeDisabled = isTimeDisabled(value, type);
-  const isPointerInner = !ampm && type === 'hours' && (value < 1 || value > 12);
+  const isSelectedTimeDisabled = isTimeDisabled(viewValue, type);
+  const isPointerInner = !ampm && type === 'hours' && (viewValue < 1 || viewValue > 12);
 
   const handleValueChange = (newValue: number, isFinish: PickerSelectionState) => {
     if (disabled || readOnly) {
@@ -223,8 +229,8 @@ export function Clock<TDate>(props: ClockProps<TDate>) {
       return true;
     }
 
-    return value % 5 === 0;
-  }, [type, value]);
+    return viewValue % 5 === 0;
+  }, [type, viewValue]);
 
   const keyboardControlStep = type === 'minutes' ? minutesStep : 1;
 
@@ -255,11 +261,11 @@ export function Clock<TDate>(props: ClockProps<TDate>) {
         event.preventDefault();
         break;
       case 'ArrowUp':
-        handleValueChange(value + keyboardControlStep, 'partial');
+        handleValueChange(viewValue + keyboardControlStep, 'partial');
         event.preventDefault();
         break;
       case 'ArrowDown':
-        handleValueChange(value - keyboardControlStep, 'partial');
+        handleValueChange(viewValue - keyboardControlStep, 'partial');
         event.preventDefault();
         break;
       default:
@@ -281,10 +287,10 @@ export function Clock<TDate>(props: ClockProps<TDate>) {
         {!isSelectedTimeDisabled && (
           <React.Fragment>
             <ClockPin />
-            {date && (
+            {value != null && (
               <ClockPointer
                 type={type}
-                value={value}
+                viewValue={viewValue}
                 isInner={isPointerInner}
                 hasSelected={hasSelected}
               />
@@ -293,7 +299,7 @@ export function Clock<TDate>(props: ClockProps<TDate>) {
         )}
         <ClockWrapper
           aria-activedescendant={selectedId}
-          aria-label={getClockLabelText(type, date, utils)}
+          aria-label={getClockLabelText(type, value, utils)}
           ref={listboxRef}
           role="listbox"
           onKeyDown={handleKeyDown}

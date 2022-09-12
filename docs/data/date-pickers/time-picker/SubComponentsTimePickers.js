@@ -9,7 +9,7 @@ export default function SubComponentsTimePickers() {
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <ClockPicker date={date} onChange={(newDate) => setDate(newDate)} />
+      <ClockPicker value={date} onChange={(newDate) => setDate(newDate)} />
     </LocalizationProvider>
   );
 }
