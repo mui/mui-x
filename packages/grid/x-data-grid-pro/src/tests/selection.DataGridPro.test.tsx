@@ -11,7 +11,7 @@ import {
   DataGridProProps,
   GridSelectionModel,
 } from '@mui/x-data-grid-pro';
-import { getData } from 'storybook/src/data/data-service';
+import { getBasicGridData } from '@mui/x-data-grid-generator';
 
 function getSelectedRowIds() {
   const hasCheckbox = !!document.querySelector('input[type="checkbox"]');
@@ -36,7 +36,7 @@ describe('<DataGridPro /> - Selection', () => {
     Partial<Pick<DataGridProProps, 'rows' | 'columns'>> & { rowLength?: number }) => {
     apiRef = useGridApiRef();
 
-    const data = React.useMemo(() => getData(rowLength, 2), [rowLength]);
+    const data = React.useMemo(() => getBasicGridData(rowLength, 2), [rowLength]);
 
     return (
       <div style={{ width: 300, height: 300 }}>
