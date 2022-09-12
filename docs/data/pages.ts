@@ -32,7 +32,7 @@ const pages: MuiPage[] = [
           { pathname: '/x/react-data-grid/column-dimensions' },
           { pathname: '/x/react-data-grid/column-visibility' },
           { pathname: '/x/react-data-grid/column-header' },
-          { pathname: '/x/react-data-grid/column-ordering' },
+          { pathname: '/x/react-data-grid/column-ordering', plan: 'pro' },
           { pathname: '/x/react-data-grid/column-pinning', plan: 'pro' },
           { pathname: '/x/react-data-grid/column-spanning' },
           { pathname: '/x/react-data-grid/column-groups' },
