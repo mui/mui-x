@@ -34,6 +34,7 @@ export interface PickersComponentsPropsList {
   MuiDatePickerToolbar: BaseToolbarProps<unknown, unknown>;
   MuiDateTimePicker: DateTimePickerProps<unknown, unknown>;
   MuiDateTimePickerTabs: DateTimePickerTabsProps;
+  MuiDateTimePickerToolbar: BaseToolbarProps<unknown, unknown>;
   MuiDayPicker: DayPickerProps<unknown>;
   MuiDesktopDateTimePicker: DesktopDateTimePickerProps<unknown, unknown>;
   MuiDesktopTimePicker: DesktopTimePickerProps<unknown, unknown>;

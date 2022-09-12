@@ -11,3 +11,11 @@ export type {
   DateTimePickerTabsClassKey,
   DateTimePickerTabsClasses,
 } from './dateTimePickerTabsClasses';
+export {
+  getDateTimePickerToolbarUtilityClass,
+  dateTimePickerToolbarClasses,
+} from './dateTimePickerToolbarClasses';
+export type {
+  DateTimePickerToolbarClassKey,
+  DateTimePickerToolbarClasses,
+} from './dateTimePickerToolbarClasses';

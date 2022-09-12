@@ -1,18 +1,29 @@
 import * as React from 'react';
-import { styled } from '@mui/material/styles';
-import { generateUtilityClasses } from '@mui/material';
+import { styled, useThemeProps } from '@mui/material/styles';
+import { unstable_composeClasses as composeClasses } from '@mui/material';
 import { PickersToolbarText } from '../internals/components/PickersToolbarText';
 import { PickersToolbar, pickersToolbarClasses } from '../internals/components/PickersToolbar';
 import { PickersToolbarButton } from '../internals/components/PickersToolbarButton';
 import { useLocaleText, useUtils } from '../internals/hooks/useUtils';
 import { BaseToolbarProps } from '../internals/models/props/baseToolbarProps';
+import {
+  DateTimePickerToolbarClasses,
+  getDateTimePickerToolbarUtilityClass,
+} from './dateTimePickerToolbarClasses';
 
-export const dateTimePickerToolbarClasses = generateUtilityClasses('MuiDateTimePickerToolbar', [
-  'root',
-  'dateContainer',
-  'timeContainer',
-  'separator',
-]);
+const useUtilityClasses = (
+  ownerState: BaseToolbarProps<any, any> & { classes?: Partial<DateTimePickerToolbarClasses> },
+) => {
+  const { classes } = ownerState;
+  const slots = {
+    root: ['root'],
+    dateContainer: ['dateContainer'],
+    timeContainer: ['timeContainer'],
+    separator: ['separator'],
+  };
+
+  return composeClasses(slots, getDateTimePickerToolbarUtilityClass, classes);
+};
 
 const DateTimePickerToolbarRoot = styled(PickersToolbar, {
   name: 'MuiDateTimePickerToolbar',
@@ -61,9 +72,10 @@ const DateTimePickerToolbarSeparator = styled(PickersToolbarText, {
 /**
  * @ignore - internal component.
  */
-export const DateTimePickerToolbar = <TDate extends unknown>(
-  props: BaseToolbarProps<TDate, TDate | null>,
-) => {
+export function DateTimePickerToolbar<TDate extends unknown>(
+  inProps: BaseToolbarProps<TDate, TDate | null>,
+) {
+  const props = useThemeProps({ props: inProps, name: 'MuiDateTimePickerToolbar' });
   const {
     ampm,
     parsedValue,
@@ -78,8 +90,10 @@ export const DateTimePickerToolbar = <TDate extends unknown>(
     views,
     ...other
   } = props;
+  const ownerState = props;
   const utils = useUtils<TDate>();
   const localeText = useLocaleText();
+  const classes = useUtilityClasses(ownerState);
 
   const toolbarTitle = toolbarTitleProp ?? localeText.dateTimePickerDefaultToolbarTitle;
 
@@ -98,22 +112,17 @@ export const DateTimePickerToolbar = <TDate extends unknown>(
     return utils.format(parsedValue, 'shortDate');
   }, [parsedValue, toolbarFormat, toolbarPlaceholder, utils]);
 
-  const ownerState = props;
-
   return (
     <DateTimePickerToolbarRoot
       toolbarTitle={toolbarTitle}
       isMobileKeyboardViewOpen={isMobileKeyboardViewOpen}
       toggleMobileKeyboardView={toggleMobileKeyboardView}
-      className={dateTimePickerToolbarClasses.root}
+      className={classes.root}
       {...other}
       isLandscape={false}
       ownerState={ownerState}
     >
-      <DateTimePickerToolbarDateContainer
-        className={dateTimePickerToolbarClasses.dateContainer}
-        ownerState={ownerState}
-      >
+      <DateTimePickerToolbarDateContainer className={classes.dateContainer} ownerState={ownerState}>
         {views.includes('year') && (
           <PickersToolbarButton
             tabIndex={-1}
@@ -135,10 +144,7 @@ export const DateTimePickerToolbar = <TDate extends unknown>(
           />
         )}
       </DateTimePickerToolbarDateContainer>
-      <DateTimePickerToolbarTimeContainer
-        className={dateTimePickerToolbarClasses.timeContainer}
-        ownerState={ownerState}
-      >
+      <DateTimePickerToolbarTimeContainer className={classes.timeContainer} ownerState={ownerState}>
         {views.includes('hours') && (
           <PickersToolbarButton
             variant="h3"
@@ -153,7 +159,7 @@ export const DateTimePickerToolbar = <TDate extends unknown>(
             <DateTimePickerToolbarSeparator
               variant="h3"
               value=":"
-              className={dateTimePickerToolbarClasses.separator}
+              className={classes.separator}
               ownerState={ownerState}
             />
             <PickersToolbarButton
@@ -170,7 +176,7 @@ export const DateTimePickerToolbar = <TDate extends unknown>(
             <DateTimePickerToolbarSeparator
               variant="h3"
               value=":"
-              className={dateTimePickerToolbarClasses.separator}
+              className={classes.separator}
               ownerState={ownerState}
             />
             <PickersToolbarButton
@@ -185,4 +191,4 @@ export const DateTimePickerToolbar = <TDate extends unknown>(
       </DateTimePickerToolbarTimeContainer>
     </DateTimePickerToolbarRoot>
   );
-};
+}
