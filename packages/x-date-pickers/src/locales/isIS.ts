@@ -19,12 +19,12 @@ const isISPickers: PickersLocaleText<any> = {
 
   inputModeToggleButtonAriaLabel: (
     isKeyboardInputOpen: boolean,
-    viewType: "calendar" | "clock"
+    viewType: 'calendar' | 'clock',
   ) => {
-    const viewTypeTranslated = viewType === "calendar" ? "dagatals" : "klukku";
+    const viewTypeTranslated = viewType === 'calendar' ? 'dagatals' : 'klukku';
     return isKeyboardInputOpen
-       ? `textainnsláttur er opinn, fara í ${viewTypeTranslated}skoðun`
-       : `${viewTypeTranslated}skoðun er opin, opna fyrir textainnslátt`;
+      ? `textainnsláttur er opinn, fara í ${viewTypeTranslated}skoðun`
+      : `${viewTypeTranslated}skoðun er opin, opna fyrir textainnslátt`;
   },
 
   // DateRange placeholders
