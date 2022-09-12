@@ -3,7 +3,6 @@
   "propDescriptions": {
     "classes": "Override or extend the styles applied to the component. See <a href=\"#css\">CSS API</a> below for more details.",
     "className": "className applied to the root element.",
-    "date": "Date value for the YearPicker",
     "disabled": "If <code>true</code> picker is disabled",
     "disableFuture": "If <code>true</code> future days are disabled.",
     "disableHighlightToday": "If <code>true</code>, today&#39;s date is rendering without highlighting with circle.",

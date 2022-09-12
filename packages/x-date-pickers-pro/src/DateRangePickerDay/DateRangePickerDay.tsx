@@ -1,9 +1,8 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { SxProps } from '@mui/system';
 import { useLicenseVerifier } from '@mui/x-license-pro';
-import { alpha, styled, Theme } from '@mui/material/styles';
+import { alpha, styled } from '@mui/material/styles';
 import { unstable_composeClasses as composeClasses } from '@mui/material';
 import { DAY_MARGIN, useUtils, areDayPropsEqual } from '@mui/x-date-pickers/internals';
 import { PickersDay, PickersDayProps } from '@mui/x-date-pickers/PickersDay';
@@ -46,10 +45,6 @@ export interface DateRangePickerDayProps<TDate>
    * Override or extend the styles applied to the component.
    */
   classes?: Partial<DateRangePickerDayClasses>;
-  /**
-   * The system prop that allows defining system overrides as well as additional CSS styles.
-   */
-  sx?: SxProps<Theme>;
 }
 
 type OwnerState = DateRangePickerDayProps<any> & { isEndOfMonth: boolean; isStartOfMonth: boolean };
@@ -218,6 +213,7 @@ const DateRangePickerDayRaw = React.forwardRef(function DateRangePickerDay<TDate
     isStartOfHighlighting,
     isStartOfPreviewing,
     selected = false,
+    sx,
     ...other
   } = props;
 
@@ -244,6 +240,7 @@ const DateRangePickerDayRaw = React.forwardRef(function DateRangePickerDay<TDate
       data-mui-test={shouldRenderHighlight ? 'DateRangeHighlight' : undefined}
       className={clsx(classes.root, className)}
       ownerState={ownerState}
+      sx={sx}
     >
       <DateRangePickerDayRangeIntervalPreview
         data-mui-test={shouldRenderPreview ? 'DateRangePreview' : undefined}
@@ -334,14 +331,6 @@ DateRangePickerDayRaw.propTypes = {
    * @default false
    */
   showDaysOutsideCurrentMonth: PropTypes.bool,
-  /**
-   * The system prop that allows defining system overrides as well as additional CSS styles.
-   */
-  sx: PropTypes.oneOfType([
-    PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
-    PropTypes.func,
-    PropTypes.object,
-  ]),
   /**
    * If `true`, renders as today date.
    * @default false
