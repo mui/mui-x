@@ -77,6 +77,7 @@ export const StaticDatePicker = React.forwardRef(function StaticDatePicker<
     displayStaticWrapperAs = 'mobile',
     components,
     componentsProps,
+    sx,
     ...other
   } = props;
 
@@ -90,6 +91,7 @@ export const StaticDatePicker = React.forwardRef(function StaticDatePicker<
       displayStaticWrapperAs={displayStaticWrapperAs}
       components={components}
       componentsProps={componentsProps}
+      sx={sx}
       {...wrapperProps}
     >
       <CalendarOrClockPicker
@@ -377,6 +379,14 @@ StaticDatePicker.propTypes = {
    * If `true`, show the toolbar even in desktop mode.
    */
   showToolbar: PropTypes.bool,
+  /**
+   * The system prop that allows defining system overrides as well as additional CSS styles.
+   */
+  sx: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
+    PropTypes.func,
+    PropTypes.object,
+  ]),
   /**
    * Component that will replace default toolbar renderer.
    * @default DatePickerToolbar

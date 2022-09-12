@@ -189,7 +189,7 @@ The enterprise components come in two plans: Pro and Premium.
 | [Pagination > 100 rows per page](/x/react-data-grid/pagination/#size-of-the-page)      |    ❌     |                 ✅                 |                     ✅                     |
 | **Editing**                                                                            |           |                                    |                                            |
 | [Row editing](/x/react-data-grid/editing/#row-editing)                                 |    ✅     |                 ✅                 |                     ✅                     |
-| [Cell editing](/x/react-data-grid/editing/#cell-editing)                               |    ✅     |                 ✅                 |                     ✅                     |
+| [Cell editing](/x/react-data-grid/editing/)                                            |    ✅     |                 ✅                 |                     ✅                     |
 | **Import & export**                                                                    |           |                                    |                                            |
 | [CSV export](/x/react-data-grid/export/#csv-export)                                    |    ✅     |                 ✅                 |                     ✅                     |
 | [Print](/x/react-data-grid/export/#print-export)                                       |    ✅     |                 ✅                 |                     ✅                     |
