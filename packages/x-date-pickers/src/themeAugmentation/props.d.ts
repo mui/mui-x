@@ -21,6 +21,7 @@ import { PickersCalendarHeaderProps } from '../CalendarPicker/PickersCalendarHea
 import { PickersFadeTransitionGroupProps } from '../CalendarPicker/PickersFadeTransitionGroup';
 import { ClockProps } from '../ClockPicker/Clock';
 import { ClockNumberProps } from '../ClockPicker/ClockNumber';
+import { ClockPointerProps } from '../ClockPicker/ClockPointer';
 
 export interface PickersComponentsPropsList {
   MuiCalendarPicker: CalendarPickerProps<unknown>;
@@ -28,6 +29,7 @@ export interface PickersComponentsPropsList {
   MuiClock: ClockProps<unknown>;
   MuiClockNumber: ClockNumberProps;
   MuiClockPicker: ClockPickerProps<unknown>;
+  MuiClockPointer: ClockPointerProps;
   MuiDatePicker: DatePickerProps<unknown, unknown>;
   MuiDateTimePicker: DateTimePickerProps<unknown, unknown>;
   MuiDayPicker: DayPickerProps<unknown>;

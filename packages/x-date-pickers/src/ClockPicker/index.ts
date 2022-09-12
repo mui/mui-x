@@ -7,5 +7,7 @@ export { clockNumberClasses, getClockNumberUtilityClass } from './clockNumberCla
 export type { ClockNumberClasses, ClockNumberClassKey } from './clockNumberClasses';
 export { clockPickerClasses, getClockPickerUtilityClass } from './clockPickerClasses';
 export type { ClockPickerClasses, ClockPickerClassKey } from './clockPickerClasses';
+export { clockPointerClasses, getClockPointerUtilityClass } from './clockPointerClasses';
+export type { ClockPointerClasses, ClockPointerClassKey } from './clockPointerClasses';
 
 export type { ClockPickerView } from '../internals/models';

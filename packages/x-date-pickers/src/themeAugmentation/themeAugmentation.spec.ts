@@ -37,6 +37,13 @@ createTheme({
         someRandomProp: true,
       },
     },
+    MuiClockPointer: {
+      defaultProps: {
+        type: 'hours',
+        // @ts-expect-error invalid MuiClockPointer prop
+        someRandomProp: true,
+      },
+    },
     MuiDatePicker: {
       defaultProps: {
         open: true,
