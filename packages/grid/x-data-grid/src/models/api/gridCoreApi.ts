@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { GridEventPublisher, GridEventListener, GridEventsStr } from '../events';
+import { GridEventPublisher, GridEventListener, GridEvents } from '../events';
 import { EventManager, EventListenerOptions } from '../../utils/EventManager';
 import { GridApiCaches } from '../gridApiCaches';
 
@@ -59,7 +59,7 @@ export interface GridCoreApi {
    * @param {object} options Additional options for this listener.
    * @returns {function} A function to unsubscribe from this event.
    */
-  subscribeEvent: <E extends GridEventsStr>(
+  subscribeEvent: <E extends GridEvents>(
     event: E,
     handler: GridEventListener<E>,
     options?: EventListenerOptions,
