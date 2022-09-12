@@ -2,7 +2,7 @@ import { CalendarPickerProps } from '../CalendarPicker';
 import { CalendarPickerSkeletonProps } from '../CalendarPickerSkeleton';
 import { ClockPickerProps } from '../ClockPicker';
 import { DatePickerProps } from '../DatePicker';
-import { DateTimePickerProps } from '../DateTimePicker';
+import { DateTimePickerProps, DateTimePickerTabsProps } from '../DateTimePicker';
 import { DesktopDateTimePickerProps } from '../DesktopDateTimePicker';
 import { DesktopTimePickerProps } from '../DesktopTimePicker';
 import { MobileDatePickerProps } from '../MobileDatePicker';
@@ -33,6 +33,7 @@ export interface PickersComponentsPropsList {
   MuiDatePicker: DatePickerProps<unknown, unknown>;
   MuiDatePickerToolbar: BaseToolbarProps<unknown, unknown>;
   MuiDateTimePicker: DateTimePickerProps<unknown, unknown>;
+  MuiDateTimePickerTabs: DateTimePickerTabsProps;
   MuiDayPicker: DayPickerProps<unknown>;
   MuiDesktopDateTimePicker: DesktopDateTimePickerProps<unknown, unknown>;
   MuiDesktopTimePicker: DesktopTimePickerProps<unknown, unknown>;

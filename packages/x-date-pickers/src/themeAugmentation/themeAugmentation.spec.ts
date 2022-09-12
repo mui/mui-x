@@ -72,6 +72,13 @@ createTheme({
         someRandomProp: true,
       },
     },
+    MuiDateTimePickerTabs: {
+      defaultProps: {
+        view: 'day',
+        // @ts-expect-error invalid MuiDateTimePicker prop
+        someRandomProp: true,
+      },
+    },
     MuiMonthPicker: {
       defaultProps: {
         disableFuture: true,
