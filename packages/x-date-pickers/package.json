@@ -44,13 +44,13 @@
     "directory": "packages/x-date-pickers"
   },
   "dependencies": {
-    "@babel/runtime": "^7.18.9",
+    "@babel/runtime": "^7.19.0",
     "@date-io/core": "^2.15.0",
     "@date-io/date-fns": "^2.15.0",
     "@date-io/dayjs": "^2.15.0",
     "@date-io/luxon": "^2.15.0",
     "@date-io/moment": "^2.15.0",
-    "@mui/utils": "^5.9.3",
+    "@mui/utils": "^5.10.3",
     "@types/react-transition-group": "^4.4.5",
     "clsx": "^1.2.1",
     "prop-types": "^15.7.2",
@@ -90,7 +90,7 @@
     }
   },
   "devDependencies": {
-    "@types/luxon": "^3.0.0",
+    "@types/luxon": "^3.0.1",
     "date-fns": "^2.29.2",
     "dayjs": "^1.11.5",
     "luxon": "^1.21.3 || ^2.x || ^3.0.0",

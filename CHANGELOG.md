@@ -1372,7 +1372,7 @@ We'd like to offer a big thanks to the 15 contributors who made this release pos
 - [DataGrid] Stop checkbox ripple on blur (#3835) @m4theushw
 - [DataGrid] Stop calling `onRowClick` when clicking in cells with interactive elements (#3929) @m4theushw
 - [DataGrid] Use only `headerName` when available to search column (#3959) @pkratz
-- [DataGrid] Use the bundling scripts as the packages published by the [https://github.com/mui/material-ui](material-ui) repository (#3965) @flaviendelangle
+- [DataGrid] Use the bundling scripts as the packages published by the [material-ui](https://github.com/mui/material-ui) repository (#3965) @flaviendelangle
 - [DataGridPro] Add `unstable_setRowHeight` method to `apiRef` (#3751) @cherniavskii
 - [DataGridPro] Always export the `pageSize` and `page` when it has been initialized or is being controlled (#3908) @flaviendelangle
 - [DataGridPro] Disable export for detail panel column (#4057) @gustavhagland
@@ -4017,7 +4017,7 @@ Big thanks to the 7 contributors who made this release possible. Here are some h
 
 - 💄 Release the cell editing feature (#1287) @dtassone
 
-  This is the first release of the Cell editing feature. You can find the documentation [following this link](https://mui.com/x/react-data-grid/editing/#cell-editing). We have spent the last three months working on it.
+  This is the first release of the Cell editing feature. You can find the documentation [following this link](https://mui.com/x/react-data-grid/editing/). We have spent the last three months working on it.
 
   ![cell edit](https://user-images.githubusercontent.com/3165635/115632215-87994700-a307-11eb-91d9-9f5537df0911.gif)
 
@@ -4627,7 +4627,7 @@ _Dec 9, 2020_
 
 Big thanks to the 6 contributors who made this release possible. Here are some highlights ✨:
 
-- 🔍 Add a new data grid [density selector](https://mui.com/x/react-data-grid/rendering/#density) feature (#606) @DanailH.
+- 🔍 Add a new data grid [density selector](https://mui.com/x/react-data-grid/accessibility/#density) feature (#606) @DanailH.
 - 💄 A first iteration on the data grid's toolbar.
 - 🧪 Continue the iteration on the data grid filtering feature, soon to be released @dtassone.
 
