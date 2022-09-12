@@ -1,6 +1,11 @@
-import { GridRowId, GridRowIdToModelLookup, GridRowsProp } from '@mui/x-data-grid';
+import {
+  GridRowId,
+  GridRowIdToModelLookup,
+  GridRowsProp,
+  GridValidRowModel,
+} from '@mui/x-data-grid';
 
-export interface GridPinnedRowsProp<R = any> {
+export interface GridPinnedRowsProp<R extends GridValidRowModel = GridValidRowModel> {
   top?: GridRowsProp<R>;
   bottom?: GridRowsProp<R>;
 }

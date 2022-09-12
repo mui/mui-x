@@ -2,7 +2,9 @@ import type { GridKeyValue } from './colDef/gridColDef';
 
 export type GridValidRowModel = { [key: string]: any };
 
-export type GridRowsProp<R = GridValidRowModel> = Readonly<GridRowModel<R>[]>;
+export type GridRowsProp<R extends GridValidRowModel = GridValidRowModel> = Readonly<
+  GridRowModel<R>[]
+>;
 
 /**
  * @deprecated prefer GridRowModel.

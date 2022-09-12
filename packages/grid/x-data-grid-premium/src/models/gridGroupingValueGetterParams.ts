@@ -1,6 +1,7 @@
 import {
   GridRowId,
   GridRowModel,
+  GridValidRowModel,
   GridGroupNode,
   GridColDef,
   GridStateColDef,
@@ -9,7 +10,7 @@ import {
 /**
  * Parameters passed to `colDef.groupingValueGetter`.
  */
-export interface GridGroupingValueGetterParams<V = any, R = any> {
+export interface GridGroupingValueGetterParams<V = any, R extends GridValidRowModel = any> {
   /**
    * The grid row id.
    */
