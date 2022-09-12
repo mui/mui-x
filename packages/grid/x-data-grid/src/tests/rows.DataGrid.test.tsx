@@ -818,7 +818,7 @@ describe('<DataGrid /> - Rows', () => {
       });
 
       it('should position correctly the render zone when changing pageSize to a lower value and moving to next page', async () => {
-        const data = getData(120, 3);
+        const data = getBasicGridData(120, 3);
         const headerHeight = 50;
         const measuredRowHeight = 100;
         const { setProps } = render(
