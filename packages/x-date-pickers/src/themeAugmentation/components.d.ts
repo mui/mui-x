@@ -36,6 +36,11 @@ export interface PickerComponents<Theme = unknown> {
     styleOverrides?: ComponentsOverrides<Theme>['MuiDatePicker'];
     variants?: ComponentsVariants['MuiDatePicker'];
   };
+  MuiDatePickerToolbar?: {
+    defaultProps?: ComponentsProps['MuiDatePickerToolbar'];
+    styleOverrides?: ComponentsOverrides<Theme>['MuiDatePickerToolbar'];
+    variants?: ComponentsVariants['MuiDatePickerToolbar'];
+  };
   MuiDateTimePicker?: {
     defaultProps?: ComponentsProps['MuiDateTimePicker'];
     styleOverrides?: ComponentsOverrides<Theme>['MuiDateTimePicker'];

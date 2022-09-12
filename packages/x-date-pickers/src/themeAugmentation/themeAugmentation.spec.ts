@@ -51,6 +51,13 @@ createTheme({
         someRandomProp: true,
       },
     },
+    MuiDatePickerToolbar: {
+      defaultProps: {
+        disabled: true,
+        // @ts-expect-error invalid MuiDatePicker prop
+        someRandomProp: true,
+      },
+    },
     MuiDayPicker: {
       defaultProps: {
         disabled: true,
