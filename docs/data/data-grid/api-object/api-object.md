@@ -1,8 +1,4 @@
----
-title: Data Grid - API object
----
-
-# Data grid - API object
+# Data Grid - API object
 
 <p class="description">Interact with the grid using its API.</p>
 
@@ -30,11 +26,11 @@ If you need to access the API object inside component slots or inside renders (e
 you can use the `useGridApiContext` hook.
 
 ```tsx
-const CustomFooter = () => {
+function CustomFooter() {
   const apiRef = useGridApiContext();
 
   return <Button onClick={() => apiRef.current.setPage(1)}>Go to page 1</Button>;
-};
+}
 ```
 
 :::info
@@ -49,7 +45,7 @@ When using the API object outside the grid components, you need to initialize it
 You can then pass it to the `apiRef` prop of the grid.
 
 ```tsx
-const CustomDataGrid = (props) => {
+function CustomDataGrid(props) {
   const apiRef = useGridApiRef();
 
   return (
@@ -58,7 +54,7 @@ const CustomDataGrid = (props) => {
       <DataGridPro apiRef={apiRef} {...other} />
     </div>
   );
-};
+}
 ```
 
 :::warning
