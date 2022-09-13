@@ -499,6 +499,7 @@ export const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
               onFocusedViewChange={handleFocusedViewChange('year')}
             />
           )}
+
           {openView === 'month' && (
             <MonthPicker
               {...baseDateValidationProps}
