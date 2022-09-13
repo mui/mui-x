@@ -52,7 +52,7 @@ export interface MultiInputDateRangeFieldSlotsComponent {
   /**
    * Input rendered for the start or end date.
    * @default TextField
-   **/
+   */
   Input?: React.ElementType;
   /**
    * Element rendered between the two inputs.
