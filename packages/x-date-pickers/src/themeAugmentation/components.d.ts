@@ -96,6 +96,12 @@ export interface PickerComponents<Theme = unknown> {
     styleOverrides?: ComponentsOverrides<Theme>['MuiPickerStaticWrapper'];
     variants?: ComponentsVariants['MuiPickerStaticWrapper'];
   };
+  // TODO: Rename 'PrivatePickersYear' to 'MuiPickersYear' to follow convention in v6
+  PrivatePickersYear?: {
+    defaultProps?: ComponentsProps['PrivatePickersYear'];
+    styleOverrides?: ComponentsOverrides<Theme>['PrivatePickersYear'];
+    variants?: ComponentsVariants['PrivatePickersYear'];
+  };
 }
 
 declare module '@mui/material/styles' {

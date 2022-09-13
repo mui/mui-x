@@ -13,7 +13,7 @@ import {
 } from '../ClockPicker';
 import { MonthPickerClassKey } from '../MonthPicker';
 import { PickersDayClassKey } from '../PickersDay';
-import { YearPickerClassKey } from '../YearPicker';
+import { PickersYearClassKey, YearPickerClassKey } from '../YearPicker';
 import { PickerStaticWrapperClassKey } from '../internals/components/PickerStaticWrapper';
 import { DatePickerToolbarClassKey } from '../DatePicker';
 import { DateTimePickerTabsClassKey, DateTimePickerToolbarClassKey } from '../DateTimePicker';
@@ -40,6 +40,7 @@ export interface PickersComponentNameToClassKey {
   MuiTimePickerToolbar: TimePickerToolbarClassKey;
   MuiYearPicker: YearPickerClassKey;
   MuiPickerStaticWrapper: PickerStaticWrapperClassKey;
+  PrivatePickersYear: PickersYearClassKey;
 }
 
 declare module '@mui/material/styles' {
