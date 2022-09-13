@@ -1,27 +1,29 @@
 import * as React from 'react';
 import {
-  DesktopWrapper2,
-  DesktopWrapper2SlotsComponent,
-  DesktopWrapper2SlotsComponentsProps,
-} from '../internals/components/wrappers/DesktopWrapper2';
+  DesktopPicker,
+  DesktopPickerSlotsComponent,
+  DesktopPickerSlotsComponentsProps,
+  ExportedDesktopPickerProps,
+} from '../internals/components/DesktopPicker';
+import { datePickerValueManager } from '../DatePicker/shared';
 import { Unstable_DateField as DateField } from '@mui/x-date-pickers/DateField';
 
-export interface DesktopDatePicker2SlotsComponent extends DesktopWrapper2SlotsComponent {}
+export interface DesktopDatePicker2SlotsComponent extends DesktopPickerSlotsComponent {}
 
-export interface DesktopDatePicker2SlotsComponentsProps
-  extends DesktopWrapper2SlotsComponentsProps {}
+export interface DesktopDatePicker2SlotsComponentsProps extends DesktopPickerSlotsComponentsProps {}
 
-export interface DesktopDatePicker2Props<TDate> {
+export interface DesktopDatePicker2Props<TDate>
+  extends ExportedDesktopPickerProps<TDate | null, TDate> {
   /**
    * Overrideable components.
    * @default {}
    */
-  components?: Partial<DesktopDatePicker2SlotsComponent>;
+  components?: DesktopDatePicker2SlotsComponent;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  componentsProps?: Partial<DesktopDatePicker2SlotsComponentsProps>;
+  componentsProps?: DesktopDatePicker2SlotsComponentsProps;
 }
 
 type DesktopDatePickerComponent = (<TDate>(
@@ -32,7 +34,7 @@ export const DesktopDatePicker2 = React.forwardRef(function DesktopDatePicker<TD
   inProps: DesktopDatePicker2Props<TDate>,
   ref: React.Ref<HTMLDivElement>,
 ) {
-  const { components: inComponents, componentsProps } = inProps;
+  const { components: inComponents, componentsProps, ...other } = inProps;
 
   const components = React.useMemo(
     () => ({
@@ -42,5 +44,12 @@ export const DesktopDatePicker2 = React.forwardRef(function DesktopDatePicker<TD
     [inComponents],
   );
 
-  return <DesktopWrapper2 components={components} componentsProps={componentsProps} />;
+  return (
+    <DesktopPicker
+      components={components}
+      componentsProps={componentsProps}
+      valueManager={datePickerValueManager}
+      {...other}
+    />
+  );
 }) as DesktopDatePickerComponent;
