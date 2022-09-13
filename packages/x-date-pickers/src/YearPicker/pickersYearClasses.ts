@@ -18,11 +18,11 @@ export interface PickersYearClasses {
 export type PickersYearClassKey = keyof PickersYearClasses;
 
 export function getPickersYearUtilityClass(slot: string) {
-  // TODO: Rename 'PrivatePickersYear' to 'MuiPickersYear' to follow convention in v6
+  // TODO v6 Rename 'PrivatePickersYear' to 'MuiPickersYear' to follow convention
   return generateUtilityClass('PrivatePickersYear', slot);
 }
 
-// TODO: Rename 'PrivatePickersYear' to 'MuiPickersYear' to follow convention in v6
+// TODO v6 Rename 'PrivatePickersYear' to 'MuiPickersYear' to follow convention
 export const pickersYearClasses = generateUtilityClasses('PrivatePickersYear', [
   'root',
   'modeDesktop',

@@ -22,6 +22,7 @@ import {
   PickersPopperClassKey,
   PickersToolbarButtonClassKey,
   PickersToolbarClassKey,
+  PickersToolbarTextClassKey,
 } from '../internals';
 
 // prettier-ignore
@@ -49,6 +50,7 @@ export interface PickersComponentNameToClassKey {
   MuiYearPicker: YearPickerClassKey;
   MuiPickerStaticWrapper: PickerStaticWrapperClassKey;
   PrivatePickersYear: PickersYearClassKey;
+  PrivatePickersToolbarText: PickersToolbarTextClassKey;
 }
 
 declare module '@mui/material/styles' {

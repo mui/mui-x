@@ -111,11 +111,17 @@ export interface PickerComponents<Theme = unknown> {
     styleOverrides?: ComponentsOverrides<Theme>['MuiPickerStaticWrapper'];
     variants?: ComponentsVariants['MuiPickerStaticWrapper'];
   };
-  // TODO: Rename 'PrivatePickersYear' to 'MuiPickersYear' to follow convention in v6
+  // TODO v6 Rename 'PrivatePickersYear' to 'MuiPickersYear' to follow convention
   PrivatePickersYear?: {
     defaultProps?: ComponentsProps['PrivatePickersYear'];
     styleOverrides?: ComponentsOverrides<Theme>['PrivatePickersYear'];
     variants?: ComponentsVariants['PrivatePickersYear'];
+  };
+  // TODO v6 Rename 'PrivatePickersToolbarText' to 'MuiPickersToolbarText' to follow convention
+  PrivatePickersToolbarText?: {
+    defaultProps?: ComponentsProps['PrivatePickersToolbarText'];
+    styleOverrides?: ComponentsOverrides<Theme>['PrivatePickersToolbarText'];
+    variants?: ComponentsVariants['PrivatePickersToolbarText'];
   };
 }
 
