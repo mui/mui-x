@@ -2,6 +2,13 @@ import { createTheme } from '@mui/material/styles';
 
 createTheme({
   components: {
+    MuiCalendarOrClockPicker: {
+      defaultProps: {
+        open: true,
+        // @ts-expect-error invalid MuiCalendarOrClockPicker prop
+        someRandomProp: true,
+      },
+    },
     MuiCalendarPicker: {
       defaultProps: {
         view: 'day',

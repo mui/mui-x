@@ -18,6 +18,7 @@ import { YearPickerProps } from '../YearPicker';
 import { PickerStaticWrapperProps } from '../internals/components/PickerStaticWrapper';
 import {
   BaseToolbarProps,
+  CalendarOrClockPickerProps,
   DayPickerProps,
   PickerPopperProps,
   PickersToolbarButtonProps,
@@ -31,6 +32,7 @@ import { ClockPointerProps } from '../ClockPicker/ClockPointer';
 import { TimePickerToolbarProps } from '../TimePicker/TimePickerToolbar';
 
 export interface PickersComponentsPropsList {
+  MuiCalendarOrClockPicker: CalendarOrClockPickerProps<unknown, unknown>;
   MuiCalendarPicker: CalendarPickerProps<unknown>;
   MuiCalendarPickerSkeleton: CalendarPickerSkeletonProps;
   MuiClock: ClockProps<unknown>;

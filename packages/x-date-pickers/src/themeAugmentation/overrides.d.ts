@@ -19,6 +19,7 @@ import { DatePickerToolbarClassKey } from '../DatePicker';
 import { DateTimePickerTabsClassKey, DateTimePickerToolbarClassKey } from '../DateTimePicker';
 import { TimePickerToolbarClassKey } from '../TimePicker';
 import {
+  CalendarOrClockPickerClassKey,
   PickersPopperClassKey,
   PickersToolbarButtonClassKey,
   PickersToolbarClassKey,
@@ -27,6 +28,7 @@ import {
 
 // prettier-ignore
 export interface PickersComponentNameToClassKey {
+  MuiCalendarOrClockPicker: CalendarOrClockPickerClassKey;
   MuiCalendarPicker: CalendarPickerClassKey;
   MuiCalendarPickerSkeleton: CalendarPickerSkeletonClassKey;
   MuiClock: ClockClassKey;

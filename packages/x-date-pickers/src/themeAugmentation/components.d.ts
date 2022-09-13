@@ -1,6 +1,11 @@
 import { ComponentsProps, ComponentsOverrides, ComponentsVariants } from '@mui/material/styles';
 
 export interface PickerComponents<Theme = unknown> {
+  MuiCalendarOrClockPicker?: {
+    defaultProps?: ComponentsProps['MuiCalendarOrClockPicker'];
+    styleOverrides?: ComponentsOverrides<Theme>['MuiCalendarOrClockPicker'];
+    variants?: ComponentsVariants['MuiCalendarOrClockPicker'];
+  };
   MuiCalendarPicker?: {
     defaultProps?: ComponentsProps['MuiCalendarPicker'];
     styleOverrides?: ComponentsOverrides<Theme>['MuiCalendarPicker'];
