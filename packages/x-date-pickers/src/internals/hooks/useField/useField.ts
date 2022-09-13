@@ -395,7 +395,7 @@ export const useField = <
 
   const valueStr = React.useMemo(
     () => fieldValueManager.getValueStrFromSections(state.sections),
-    [state.sections],
+    [state.sections, fieldValueManager],
   );
 
   return {
