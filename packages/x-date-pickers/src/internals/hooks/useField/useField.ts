@@ -76,7 +76,7 @@ export const useField = <
   });
 
   const updateSections = (sections: TSection[]) => {
-    const { shouldPublish, valueParsed } = fieldValueManager.getValueFromSections({
+    const response = fieldValueManager.getValueFromSections({
       utils,
       sections,
       format,
@@ -87,11 +87,11 @@ export const useField = <
       ...prevState,
       sections,
       valueStr: fieldValueManager.getValueStrFromSections(sections),
-      valueParsed,
+      valueParsed: response.valueParsed,
     }));
 
-    if (onChange && shouldPublish) {
-      onChange(valueParsed);
+    if (onChange && response.shouldPublish) {
+      onChange(response.valueParsed);
     }
   };
 

@@ -9,6 +9,8 @@ import {
   splitFormatIntoSections,
   addPositionPropertiesToSections,
   createDateStrFromSections,
+  createDateFromSectionsAndPreviousDate,
+  shouldPublishDate,
 } from '@mui/x-date-pickers/internals-fields';
 import {
   DateRangeFieldSection,
@@ -23,10 +25,6 @@ import {
   isSameDateRangeError,
   validateDateRange,
 } from '../internal/hooks/validation/useDateRangeValidation';
-import {
-  createDateFromSectionsAndPreviousDate,
-  shouldPublishDate,
-} from '@mui/x-date-pickers/internals/hooks/useField';
 
 export const dateRangeFieldValueManager: FieldValueManager<
   DateRange<any>,
@@ -83,9 +81,9 @@ export const dateRangeFieldValueManager: FieldValueManager<
     return `${startDateStr}${endDateStr}`;
   },
   getValueFromSections: ({ utils, prevValue, sections, format }) => {
-    const removeLastSeparator = (sections: DateRangeFieldSection[]) =>
-      sections.map((section, sectionIndex) => {
-        if (sectionIndex === sections.length - 1) {
+    const removeLastSeparator = (dateSections: DateRangeFieldSection[]) =>
+      dateSections.map((section, sectionIndex) => {
+        if (sectionIndex === dateSections.length - 1) {
           return { ...section, separator: null };
         }
 
