@@ -1,6 +1,13 @@
 import { DateTime } from 'luxon';
 import BaseAdapterLuxon from '@date-io/luxon';
 import { MuiFormatTokenMap, MuiPickerFieldAdapter } from '../internals/models';
+import { buildWarning } from '../internals/utils/warning';
+
+const luxonVersionWarning = buildWarning(
+  ["Your luxon version does not support `expandFormat`.",
+    "Consider upgrading it to v3.0.2 to have access to the helper text."]
+
+)
 
 const formatTokenMap: MuiFormatTokenMap = {
   // seconds
@@ -43,6 +50,9 @@ export class AdapterLuxon extends BaseAdapterLuxon implements MuiPickerFieldAdap
 
   // eslint-disable-next-line class-methods-use-this
   public expandFormat = (format: string) => {
+    if (!DateTime.expandFormat) {
+      throw Error("Your luxon version does not support `expandFormat`. Consider upgrading it to v3.0.2")
+    }
     // The format can contain `yyyyy` which means year between 4 and 6 digits.
     // But for formatter, it must be either 4 or 6. 5 digits does not exist
     return DateTime.expandFormat(format).replace('yyyyy', 'yyyy');
@@ -50,6 +60,10 @@ export class AdapterLuxon extends BaseAdapterLuxon implements MuiPickerFieldAdap
 
   // Redefined here just to show how it can be written using expandFormat
   public getFormatHelperText = (format: string) => {
+    if (!DateTime.expandFormat) {
+      luxonVersionWarning()
+      return ''
+    }
     return this.expandFormat(format).replace(/(a)/g, '(a|p)m').toLocaleLowerCase();
   };
 }
