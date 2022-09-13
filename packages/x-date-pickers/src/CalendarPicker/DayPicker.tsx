@@ -197,8 +197,10 @@ export function DayPicker<TDate>(props: DayPickerProps<TDate>) {
     onFocusedViewChange,
     gridLabelId,
     displayWeekNumber,
-    getWeekNumber,
+    getWeekNumber: getWeekNumberProp,
   } = props;
+
+  const getWeekNumber = getWeekNumberProp ?? utils.getWeekNumber;
 
   const isDateDisabled = useIsDateDisabled({
     shouldDisableDate,
