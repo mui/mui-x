@@ -1,4 +1,6 @@
 import * as React from 'react';
+import { spy, stub, SinonStub } from 'sinon';
+import { expect } from 'chai';
 import {
   createRenderer,
   fireEvent,
@@ -6,7 +8,6 @@ import {
   waitFor,
   // @ts-ignore Remove once the test utils are typed
 } from '@mui/monorepo/test/utils';
-import { expect } from 'chai';
 import {
   DataGrid,
   DataGridProps,
@@ -14,9 +15,8 @@ import {
   GridLinkOperator,
   GridRowsProp,
 } from '@mui/x-data-grid';
+import { useBasicDemoData } from '@mui/x-data-grid-generator';
 import { getCell, getColumnValues, getRows } from 'test/utils/helperFn';
-import { spy, stub, SinonStub } from 'sinon';
-import { useData } from 'packages/storybook/src/hooks/useData';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
@@ -28,7 +28,7 @@ describe('<DataGrid /> - Pagination', () => {
   ) => {
     const { height = 300, ...other } = props;
 
-    const basicData = useData(20, 2);
+    const basicData = useBasicDemoData(20, 2);
 
     return (
       <div style={{ width: 300, height }}>
@@ -417,7 +417,7 @@ describe('<DataGrid /> - Pagination', () => {
     ) => {
       const { height, nbRows, ...other } = props;
 
-      const data = useData(nbRows, 10);
+      const data = useBasicDemoData(nbRows, 10);
 
       return (
         <div style={{ width: 300, height: props.height }}>

@@ -1,3 +1,5 @@
+import { SxProps } from '@mui/system';
+import { Theme } from '@mui/material/styles';
 import { BasePickerProps } from './basePickerProps';
 import { PickerStaticWrapperProps } from '../../components/PickerStaticWrapper';
 
@@ -10,4 +12,8 @@ export type StaticPickerProps<BaseProps extends BasePickerProps<any, any>> = Omi
    * @default 'mobile'
    */
   displayStaticWrapperAs?: PickerStaticWrapperProps['displayStaticWrapperAs'];
+  /**
+   * The system prop that allows defining system overrides as well as additional CSS styles.
+   */
+  sx?: SxProps<Theme>;
 };

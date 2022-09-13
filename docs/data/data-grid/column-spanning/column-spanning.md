@@ -51,7 +51,7 @@ interface GridColDef {
 ## Function signature
 
 The function signature allows spanning only **specific cells** in the column.
-The function receives [`GridCellParams`](/api/data-grid/grid-cell-params/) as argument.
+The function receives [`GridCellParams`](/x/api/data-grid/grid-cell-params/) as argument.
 
 ```ts
 interface GridColDef {
