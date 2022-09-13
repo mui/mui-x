@@ -6,6 +6,8 @@ import {
   splitFormatIntoSections,
   addPositionPropertiesToSections,
   createDateStrFromSections,
+  createDateFromSectionsAndPreviousDate,
+  shouldPublishDate,
 } from '../internals/hooks/useField';
 import { UseDateFieldProps, UseDateFieldDefaultizedProps } from './DateField.interfaces';
 import {
@@ -20,13 +22,17 @@ const dateRangeFieldValueManager: FieldValueManager<any, any, FieldSection, Date
   getSectionsFromValue: (utils, prevSections, date, format) =>
     addPositionPropertiesToSections(splitFormatIntoSections(utils, format, date)),
   getValueStrFromSections: (sections) => createDateStrFromSections(sections),
-  getValueFromSections: (utils, prevSections, sections, format) => {
-    const dateStr = createDateStrFromSections(sections);
-    const value = utils.parse(dateStr, format);
+  getValueFromSections: ({ utils, prevValue, sections, format }) => {
+    const valueParsed = createDateFromSectionsAndPreviousDate({
+      utils,
+      sections,
+      format,
+      prevDate: prevValue,
+    });
 
     return {
-      value,
-      shouldPublish: utils.isValid(value),
+      valueParsed,
+      shouldPublish: shouldPublishDate(utils, valueParsed, prevValue),
     };
   },
   getActiveDateFromActiveSection: (value) => ({

@@ -75,12 +75,12 @@ export interface FieldValueManager<TValue, TDate, TSection extends FieldSection,
     format: string,
   ) => TSection[];
   getValueStrFromSections: (sections: TSection[]) => string;
-  getValueFromSections: (
-    utils: MuiPickerFieldAdapter<TDate>,
-    prevSections: TSection[],
-    sections: TSection[],
-    format: string,
-  ) => { value: TValue; shouldPublish: boolean };
+  getValueFromSections: (params: {
+    utils: MuiPickerFieldAdapter<TDate>;
+    prevValue: TValue;
+    sections: TSection[];
+    format: string;
+  }) => { valueParsed: TValue; shouldPublish: boolean };
   getActiveDateFromActiveSection: (
     value: TValue,
     activeSection: TSection,

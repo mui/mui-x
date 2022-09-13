@@ -428,3 +428,72 @@ export const cleanTrailingZeroInNumericSectionValue = (value: string, maximum: n
 
   return cleanValue;
 };
+
+export const createDateFromSectionsAndPreviousDate = <TDate, TSection extends FieldSection>({
+  utils,
+  sections,
+  prevDate,
+  format,
+}: {
+  utils: MuiPickerFieldAdapter<TDate>;
+  sections: TSection[];
+  prevDate: TDate;
+  format: string;
+}) => {
+  const newDateStr = createDateStrFromSections(sections);
+  let newDate = utils.parse(newDateStr, format);
+
+  if (newDate == null || !utils.isValid(newDate) || prevDate == null || !utils.isValid(prevDate)) {
+    return newDate;
+  }
+
+  // TODO: Add day/date when setDate and getDate are released.
+  const adapterMethods = {
+    second: {
+      getter: utils.getSeconds,
+      setter: utils.setSeconds,
+    },
+    minute: {
+      getter: utils.getMinutes,
+      setter: utils.setMinutes,
+    },
+    hour: {
+      getter: utils.getHours,
+      setter: utils.setHours,
+    },
+    month: {
+      getter: utils.getMonth,
+      setter: utils.setMonth,
+    },
+    year: {
+      getter: utils.getYear,
+      setter: utils.setYear,
+    },
+  };
+
+  Object.keys(adapterMethods).forEach((dateSectionName) => {
+    const hasSection = sections.some((section) => section.dateSectionName === dateSectionName);
+    if (!hasSection) {
+      const dateSectionMethods = adapterMethods[dateSectionName as keyof typeof adapterMethods];
+      newDate = dateSectionMethods.setter(newDate!, dateSectionMethods.getter(prevDate));
+    }
+  });
+
+  return newDate;
+};
+
+export const shouldPublishDate = <TDate>(
+  utils: MuiPickerFieldAdapter<TDate>,
+  date: TDate | null,
+  prevDate: TDate | null,
+) => {
+  if (date == null && prevDate != null) {
+    return true;
+  }
+
+  if (!utils.isValid(date)) {
+    return false;
+  }
+
+  return !utils.isEqual(date, prevDate);
+};

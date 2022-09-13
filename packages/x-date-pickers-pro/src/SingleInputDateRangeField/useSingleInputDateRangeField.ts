@@ -23,6 +23,10 @@ import {
   isSameDateRangeError,
   validateDateRange,
 } from '../internal/hooks/validation/useDateRangeValidation';
+import {
+  createDateFromSectionsAndPreviousDate,
+  shouldPublishDate,
+} from '@mui/x-date-pickers/internals/hooks/useField';
 
 export const dateRangeFieldValueManager: FieldValueManager<
   DateRange<any>,
@@ -78,7 +82,7 @@ export const dateRangeFieldValueManager: FieldValueManager<
 
     return `${startDateStr}${endDateStr}`;
   },
-  getValueFromSections: (utils, prevSections, newSections, format) => {
+  getValueFromSections: ({ utils, prevValue, sections, format }) => {
     const removeLastSeparator = (sections: DateRangeFieldSection[]) =>
       sections.map((section, sectionIndex) => {
         if (sectionIndex === sections.length - 1) {
@@ -88,27 +92,26 @@ export const dateRangeFieldValueManager: FieldValueManager<
         return section;
       });
 
-    const prevDateRangeSections = splitDateRangeSections(prevSections);
-    const dateRangeSections = splitDateRangeSections(newSections);
+    const dateRangeSections = splitDateRangeSections(sections);
 
-    const startDateStr = createDateStrFromSections(
-      removeLastSeparator(dateRangeSections.startDate),
-    );
-    const endDateStr = createDateStrFromSections(dateRangeSections.endDate);
-
-    const startDate = utils.parse(startDateStr, format);
-    const endDate = utils.parse(endDateStr, format);
-
-    const shouldPublish =
-      (startDateStr !==
-        createDateStrFromSections(removeLastSeparator(prevDateRangeSections.startDate)) &&
-        utils.isValid(startDate)) ||
-      (endDateStr !== createDateStrFromSections(prevDateRangeSections.endDate) &&
-        utils.isValid(endDate));
+    const startDate = createDateFromSectionsAndPreviousDate({
+      utils,
+      prevDate: prevValue[0],
+      sections: removeLastSeparator(dateRangeSections.startDate),
+      format,
+    });
+    const endDate = createDateFromSectionsAndPreviousDate({
+      utils,
+      prevDate: prevValue[1],
+      sections: dateRangeSections.endDate,
+      format,
+    });
 
     return {
-      value: [startDate, endDate] as DateRange<any>,
-      shouldPublish,
+      valueParsed: [startDate, endDate] as DateRange<any>,
+      shouldPublish:
+        shouldPublishDate(utils, startDate, prevValue[0]) ||
+        shouldPublishDate(utils, startDate, prevValue[1]),
     };
   },
   getActiveDateFromActiveSection: (value, activeSection) => {
