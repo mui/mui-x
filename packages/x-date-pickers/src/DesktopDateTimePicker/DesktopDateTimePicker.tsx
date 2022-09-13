@@ -222,6 +222,11 @@ DesktopDateTimePicker.propTypes = {
    */
   disablePast: PropTypes.bool,
   /**
+   * If `true`, the week number will be display in the calendar.
+   * Needs to provide `getWeekNumber` if the adapter does not support `getWeekNumber`
+   */
+  displayWeekNumber: PropTypes.bool,
+  /**
    * Accessible text that helps user to understand which time and view is selected.
    * @template TDate
    * @param {ClockPickerView} view The current view rendered.
@@ -255,6 +260,12 @@ DesktopDateTimePicker.propTypes = {
    * @deprecated Use the `localeText` prop of `LocalizationProvider` instead, see https://mui.com/x/react-date-pickers/localization
    */
   getViewSwitchingButtonText: PropTypes.func,
+  /**
+   * Get the week number form keek first day
+   * @param {TDate} date The first day of the week.
+   * @returns {string} The displayed week number
+   */
+  getWeekNumber: PropTypes.func,
   /**
    * Toggles visibility of date time switching tabs
    * @default false for mobile, true for desktop

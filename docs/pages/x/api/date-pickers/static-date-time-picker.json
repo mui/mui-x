@@ -32,6 +32,7 @@
       "type": { "name": "enum", "description": "'desktop'<br>&#124;&nbsp;'mobile'" },
       "default": "'mobile'"
     },
+    "displayWeekNumber": { "type": { "name": "bool" } },
     "getClockLabelText": {
       "type": { "name": "func" },
       "default": "<TDate extends any>(\n  view: ClockView,\n  time: TDate | null,\n  adapter: MuiPickersAdapter<TDate>,\n) =>\n  `Select ${view}. ${\n    time === null ? 'No time selected' : `Selected time is ${adapter.format(time, 'fullTime')}`\n  }`",
@@ -47,6 +48,7 @@
       "deprecated": true,
       "deprecationInfo": "Use the <code>localeText</code> prop of <code>LocalizationProvider</code> instead, see <a href=\"https://mui.com/x/react-date-pickers/localization\">https://mui.com/x/react-date-pickers/localization</a>"
     },
+    "getWeekNumber": { "type": { "name": "func" } },
     "hideTabs": { "type": { "name": "bool" }, "default": "false for mobile, true for desktop" },
     "InputAdornmentProps": { "type": { "name": "object" } },
     "inputFormat": { "type": { "name": "string" } },

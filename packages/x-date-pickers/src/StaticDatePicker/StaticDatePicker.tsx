@@ -184,6 +184,11 @@ StaticDatePicker.propTypes = {
    */
   displayStaticWrapperAs: PropTypes.oneOf(['desktop', 'mobile']),
   /**
+   * If `true`, the week number will be display in the calendar.
+   * Needs to provide `getWeekNumber` if the adapter does not support `getWeekNumber`
+   */
+  displayWeekNumber: PropTypes.bool,
+  /**
    * Get aria-label text for control that opens picker dialog. Aria-label text must include selected date. @DateIOType
    * @template TInputDate, TDate
    * @param {TInputDate} date The date from which we want to add an aria-text.
@@ -199,6 +204,12 @@ StaticDatePicker.propTypes = {
    * @deprecated Use the `localeText` prop of `LocalizationProvider` instead, see https://mui.com/x/react-date-pickers/localization
    */
   getViewSwitchingButtonText: PropTypes.func,
+  /**
+   * Get the week number form keek first day
+   * @param {TDate} date The first day of the week.
+   * @returns {string} The displayed week number
+   */
+  getWeekNumber: PropTypes.func,
   ignoreInvalidInputs: PropTypes.bool,
   /**
    * Props to pass to keyboard input adornment.

@@ -218,6 +218,11 @@ DesktopDateRangePicker.propTypes = {
    */
   disablePast: PropTypes.bool,
   /**
+   * If `true`, the week number will be display in the calendar.
+   * Needs to provide `getWeekNumber` if the adapter does not support `getWeekNumber`
+   */
+  displayWeekNumber: PropTypes.bool,
+  /**
    * Text for end input label and toolbar placeholder.
    * @default 'End'
    * @deprecated Use the `localeText` prop of `LocalizationProvider` instead, see https://mui.com/x/react-date-pickers/localization
@@ -239,6 +244,12 @@ DesktopDateRangePicker.propTypes = {
    * @deprecated Use the `localeText` prop of `LocalizationProvider` instead, see https://mui.com/x/react-date-pickers/localization
    */
   getViewSwitchingButtonText: PropTypes.func,
+  /**
+   * Get the week number form keek first day
+   * @param {TDate} date The first day of the week.
+   * @returns {string} The displayed week number
+   */
+  getWeekNumber: PropTypes.func,
   ignoreInvalidInputs: PropTypes.bool,
   /**
    * Props to pass to keyboard input adornment.
