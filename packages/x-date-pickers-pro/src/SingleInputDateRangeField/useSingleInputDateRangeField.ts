@@ -111,7 +111,7 @@ export const dateRangeFieldValueManager: FieldValueManager<
       valueParsed: [startDate, endDate] as DateRange<any>,
       shouldPublish:
         shouldPublishDate(utils, startDate, prevValue[0]) ||
-        shouldPublishDate(utils, startDate, prevValue[1]),
+        shouldPublishDate(utils, endDate, prevValue[1]),
     };
   },
   getActiveDateFromActiveSection: (value, activeSection) => {

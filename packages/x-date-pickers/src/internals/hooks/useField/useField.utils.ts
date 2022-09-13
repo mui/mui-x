@@ -440,6 +440,10 @@ export const createDateFromSectionsAndPreviousDate = <TDate, TSection extends Fi
   prevDate: TDate;
   format: string;
 }) => {
+  if (sections.every((section) => section.value === '')) {
+    return null;
+  }
+
   const newDateStr = createDateStrFromSections(sections);
   let newDate = utils.parse(newDateStr, format);
 
