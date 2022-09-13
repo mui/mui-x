@@ -46,7 +46,7 @@
     "directory": "packages/grid/x-data-grid"
   },
   "dependencies": {
-    "@babel/runtime": "^7.18.9",
+    "@babel/runtime": "^7.19.0",
     "@mui/utils": "^5.10.3",
     "clsx": "^1.2.1",
     "prop-types": "^15.8.1",
