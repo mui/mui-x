@@ -1,6 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { styled, useThemeProps } from '@mui/material/styles';
+import { styled, Theme, useThemeProps } from '@mui/material/styles';
+import { SxProps } from '@mui/system';
 import { unstable_composeClasses as composeClasses } from '@mui/material';
 import { DIALOG_WIDTH } from '../../constants/dimensions';
 import { WrapperVariantContext } from '../wrappers/WrapperVariantContext';
@@ -35,6 +36,10 @@ export interface PickerStaticWrapperProps extends PickerStateWrapperProps {
    * Override or extend the styles applied to the component.
    */
   classes?: Partial<PickerStaticWrapperClasses>;
+  /**
+   * The system prop that allows defining system overrides as well as additional CSS styles.
+   */
+  sx?: SxProps<Theme>;
   /**
    * Force static wrapper inner components to be rendered in mobile or desktop mode.
    */
@@ -79,10 +84,10 @@ function PickerStaticWrapper(inProps: PickerStaticWrapperProps) {
     onAccept,
     onClear,
     onCancel,
-    onDismiss,
     onSetToday,
-    open,
     children,
+    onDismiss,
+    open,
     components,
     componentsProps,
     ...other
@@ -141,6 +146,14 @@ PickerStaticWrapper.propTypes = {
   onDismiss: PropTypes.func.isRequired,
   onSetToday: PropTypes.func.isRequired,
   open: PropTypes.bool.isRequired,
+  /**
+   * The system prop that allows defining system overrides as well as additional CSS styles.
+   */
+  sx: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
+    PropTypes.func,
+    PropTypes.object,
+  ]),
 } as any;
 
 export { PickerStaticWrapper };
