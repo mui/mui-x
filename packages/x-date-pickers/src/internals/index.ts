@@ -19,6 +19,12 @@ export type {
   PickersStaticWrapperSlotsComponentsProps,
 } from './components/PickerStaticWrapper/PickerStaticWrapper';
 export { PickersToolbar, pickersToolbarClasses } from './components/PickersToolbar';
+export type { PickerPopperProps } from './components/PickersPopper';
+export { pickersPopperClasses } from './components/pickersPopperClasses';
+export type {
+  PickersPopperClassKey,
+  PickersPopperClasses,
+} from './components/pickersPopperClasses';
 export { PickersToolbarButton } from './components/PickersToolbarButton';
 export type {
   DateInputProps,
