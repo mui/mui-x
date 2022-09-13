@@ -265,6 +265,8 @@ export const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
     leftArrowButtonText,
     rightArrowButtonText,
     renderLoading,
+    displayWeekNumber,
+    getWeekNumber,
     sx,
   } = props;
 
@@ -542,6 +544,8 @@ export const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
               showDaysOutsideCurrentMonth={showDaysOutsideCurrentMonth}
               dayOfWeekFormatter={dayOfWeekFormatter}
               renderDay={renderDay}
+              displayWeekNumber={displayWeekNumber}
+              getWeekNumber={getWeekNumber}
               loading={loading}
               renderLoading={renderLoading}
             />

@@ -13,6 +13,8 @@ export interface PickersLocaleText<TDate> {
   todayButtonLabel: string;
   start: string;
   end: string;
+  calendarWeekNumberHeaderLabel: string;
+  calendarWeekNumberHeaderText: string;
   calendarViewSwitchingButtonAriaLabel: (currentView: CalendarPickerView) => string;
   inputModeToggleButtonAriaLabel: (
     isKeyboardInputOpen: boolean,

@@ -90,6 +90,20 @@ You can take advantage of the [PickersDay](/x/api/date-pickers/pickers-day/) com
 
 {{"demo": "CustomDay.js"}}
 
+## Add week number
+
+To display week number, use the `displayWeekNumber`.
+You also need to provide the method `getWeekNumber`.
+It takes the first day of the week as an input and returns the string displayed in week number column.
+
+The four supported libraries ([dayjs](https://day.js.org/docs/en/get-set/week),
+[date-fns](https://date-fns.org/v2.29.2/docs/getWeek),
+[moment](https://momentjs.com/docs/#/get-set/week/), and
+[luxon](https://moment.github.io/luxon/api-docs/index.html#datetimeweeknumber)
+have dedicated method to help you.
+
+{{"demo": "AddWeekNumber.js"}}
+
 ## Dynamic data
 
 Sometimes it may be necessary to display additional info right in the calendar. Here's an example of prefetching and displaying server-side data using the `onMonthChange`, `loading`, and `renderDay` props.

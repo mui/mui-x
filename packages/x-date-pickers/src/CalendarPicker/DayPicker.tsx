@@ -1,8 +1,8 @@
 import * as React from 'react';
 import Typography from '@mui/material/Typography';
-import { styled, useTheme } from '@mui/material/styles';
+import { styled, Theme, useTheme } from '@mui/material/styles';
 import { PickersDay, PickersDayProps } from '../PickersDay/PickersDay';
-import { useUtils, useNow } from '../internals/hooks/useUtils';
+import { useUtils, useNow, useLocaleText } from '../internals/hooks/useUtils';
 import { PickerOnChangeFn } from '../internals/hooks/useViews';
 import { DAY_SIZE, DAY_MARGIN } from '../internals/constants/dimensions';
 import { PickerSelectionState } from '../internals/hooks/usePickerState';
@@ -54,6 +54,17 @@ export interface ExportedDayPickerProps<TDate>
    * @default (day) => day.charAt(0).toUpperCase()
    */
   dayOfWeekFormatter?: (day: string) => string;
+  /**
+   * If `true`, the week number will be display in the calendar.
+   * Needs to provide `getWeekNumber` if the adapter does not support `getWeekNumber`
+   */
+  displayWeekNumber?: boolean;
+  /**
+   * Get the week number form keek first day
+   * @param {TDate} date The first day of the week.
+   * @returns {string} The displayed week number
+   */
+  getWeekNumber?: (date: TDate) => string;
 }
 
 export interface DayPickerProps<TDate>
@@ -100,6 +111,34 @@ const PickersCalendarWeekDayLabel = styled(Typography)(({ theme }) => ({
   justifyContent: 'center',
   alignItems: 'center',
   color: theme.palette.text.secondary,
+}));
+
+const PickersCalendarWeekNumberLabel = styled(Typography, {
+  name: 'MuiPickersDay',
+  slot: 'WeekNumberHeader',
+})(({ theme }) => ({
+  width: 18,
+  height: 40,
+  margin: '0 2px',
+  paddingRight: '2px',
+  display: 'flex',
+  justifyContent: 'end',
+  alignItems: 'center',
+  color: theme.palette.text.disabled,
+}));
+
+const PickersDayRoot = styled(Typography, {
+  name: 'MuiPickersDay',
+  slot: 'WeekNumber',
+})(({ theme }: { theme: Theme }) => ({
+  width: 18,
+  height: DAY_SIZE,
+  padding: 0,
+  paddingRight: '2px',
+  color: theme.palette.text.disabled,
+  textAlign: 'end',
+  lineHeight: `${DAY_SIZE}px`,
+  fontSize: '0.75rem',
 }));
 
 const PickersCalendarLoadingContainer = styled('div')({
@@ -157,6 +196,8 @@ export function DayPicker<TDate>(props: DayPickerProps<TDate>) {
     hasFocus,
     onFocusedViewChange,
     gridLabelId,
+    displayWeekNumber,
+    getWeekNumber,
   } = props;
 
   const isDateDisabled = useIsDateDisabled({
@@ -168,6 +209,8 @@ export function DayPicker<TDate>(props: DayPickerProps<TDate>) {
     disablePast,
     disableFuture,
   });
+
+  const localeText = useLocaleText();
 
   const [internalFocusedDay, setInternalFocusedDay] = React.useState<TDate>(
     () => focusedDay || now,
@@ -321,6 +364,15 @@ export function DayPicker<TDate>(props: DayPickerProps<TDate>) {
   return (
     <div role="grid" aria-labelledby={gridLabelId}>
       <PickersCalendarDayHeader role="row">
+        {displayWeekNumber && getWeekNumber && (
+          <PickersCalendarWeekNumberLabel
+            variant="caption"
+            role="columnheader"
+            aria-label={localeText.calendarWeekNumberHeaderLabel}
+          >
+            {localeText.calendarWeekNumberHeaderText}
+          </PickersCalendarWeekNumberLabel>
+        )}
         {utils.getWeekdays().map((day, i) => (
           <PickersCalendarWeekDayLabel
             key={day + i.toString()}
@@ -352,6 +404,9 @@ export function DayPicker<TDate>(props: DayPickerProps<TDate>) {
           >
             {utils.getWeekArray(currentMonth).map((week) => (
               <PickersCalendarWeek role="row" key={`week-${week[0]}`}>
+                {displayWeekNumber && getWeekNumber && (
+                  <PickersDayRoot>{getWeekNumber(week[0])}</PickersDayRoot>
+                )}
                 {week.map((day) => {
                   const isFocusableDay =
                     focusableDay !== null && utils.isSameDay(day, focusableDay);
