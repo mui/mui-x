@@ -128,6 +128,13 @@ createTheme({
         someRandomProp: true,
       },
     },
+    MuiPickersToolbarButton: {
+      defaultProps: {
+        disabled: true,
+        // @ts-expect-error invalid MuiPickersToolbarButton prop
+        someRandomProp: true,
+      },
+    },
     MuiTimePickerToolbar: {
       defaultProps: {
         disabled: true,

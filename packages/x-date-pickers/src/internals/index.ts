@@ -25,6 +25,12 @@ export type {
   PickersToolbarClassKey,
   PickersToolbarClasses,
 } from './components/pickersToolbarClasses';
+export type { PickersToolbarButtonProps } from './components/PickersToolbarButton';
+export { pickersToolbarButtonClasses } from './components/pickersToolbarButtonClasses';
+export type {
+  PickersToolbarButtonClassKey,
+  PickersToolbarButtonClasses,
+} from './components/pickersToolbarButtonClasses';
 export type { PickerPopperProps } from './components/PickersPopper';
 export { pickersPopperClasses } from './components/pickersPopperClasses';
 export type {

@@ -20,6 +20,7 @@ import {
   BaseToolbarProps,
   DayPickerProps,
   PickerPopperProps,
+  PickersToolbarButtonProps,
   PickersToolbarProps,
 } from '../internals';
 import { PickersCalendarHeaderProps } from '../CalendarPicker/PickersCalendarHeader';
@@ -53,6 +54,7 @@ export interface PickersComponentsPropsList {
   MuiPickersFadeTransitionGroup: PickersFadeTransitionGroupProps;
   MuiPickersPopper: PickerPopperProps;
   MuiPickersToolbar: PickersToolbarProps<unknown, unknown>;
+  MuiPickersToolbarButton: PickersToolbarButtonProps;
   MuiStaticDatePicker: StaticDatePickerProps<unknown, unknown>;
   MuiStaticDateTimePicker: StaticDateTimePickerProps<unknown, unknown>;
   MuiStaticTimePicker: StaticTimePickerProps<unknown, unknown>;

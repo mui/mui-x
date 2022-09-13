@@ -91,6 +91,11 @@ export interface PickerComponents<Theme = unknown> {
     styleOverrides?: ComponentsOverrides<Theme>['MuiPickersToolbar'];
     variants?: ComponentsVariants['MuiPickersToolbar'];
   };
+  MuiPickersToolbarButton?: {
+    defaultProps?: ComponentsProps['MuiPickersToolbarButton'];
+    styleOverrides?: ComponentsOverrides<Theme>['MuiPickersToolbarButton'];
+    variants?: ComponentsVariants['MuiPickersToolbarButton'];
+  };
   MuiTimePickerToolbar?: {
     defaultProps?: ComponentsProps['MuiTimePickerToolbar'];
     styleOverrides?: ComponentsOverrides<Theme>['MuiTimePickerToolbar'];
