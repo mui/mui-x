@@ -1,14 +1,14 @@
 import * as React from 'react';
-import Stack from '@mui/material/Stack';
+import Stack, { StackProps } from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
-import Typography from '@mui/material/Typography';
+import Typography, { TypographyProps } from '@mui/material/Typography';
 import { styled, useThemeProps } from '@mui/material/styles';
 import { useSlotProps } from '@mui/base/utils';
 import { MultiInputDateRangeFieldProps } from './MultiInputDateRangeField.types';
 import { useMultiInputDateRangeField } from './useMultiInputDateRangeField';
 
 const MultiInputDateRangeFieldRoot = styled(
-  React.forwardRef((props, ref) => (
+  React.forwardRef((props: StackProps, ref: React.Ref<HTMLDivElement>) => (
     <Stack ref={ref} {...props} spacing={2} direction="row" alignItems="center" />
   )),
   {
@@ -18,11 +18,14 @@ const MultiInputDateRangeFieldRoot = styled(
   },
 )({});
 
-const MultiInputDateRangeFieldSeparator = styled(Typography, {
-  name: 'MuiMultiInputDateRangeField',
-  slot: 'Separator',
-  overridesResolver: (props, styles) => styles.separator,
-})({});
+const MultiInputDateRangeFieldSeparator = styled(
+  (props: TypographyProps) => <Typography {...props}>{props.children ?? ' — '}</Typography>,
+  {
+    name: 'MuiMultiInputDateRangeField',
+    slot: 'Separator',
+    overridesResolver: (props, styles) => styles.separator,
+  },
+)({});
 
 type MultiInputDateRangeFieldComponent = (<TInputDate, TDate = TInputDate>(
   props: MultiInputDateRangeFieldProps<TInputDate, TDate> & React.RefAttributes<HTMLInputElement>,
