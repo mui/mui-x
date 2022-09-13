@@ -121,6 +121,13 @@ createTheme({
         someRandomProp: true,
       },
     },
+    MuiPickersToolbar: {
+      defaultProps: {
+        isLandscape: true,
+        // @ts-expect-error invalid MuiPickersToolbar prop
+        someRandomProp: true,
+      },
+    },
     MuiTimePickerToolbar: {
       defaultProps: {
         disabled: true,

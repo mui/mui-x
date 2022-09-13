@@ -86,6 +86,11 @@ export interface PickerComponents<Theme = unknown> {
     styleOverrides?: ComponentsOverrides<Theme>['MuiPickersPopper'];
     variants?: ComponentsVariants['MuiPickersPopper'];
   };
+  MuiPickersToolbar?: {
+    defaultProps?: ComponentsProps['MuiPickersToolbar'];
+    styleOverrides?: ComponentsOverrides<Theme>['MuiPickersToolbar'];
+    variants?: ComponentsVariants['MuiPickersToolbar'];
+  };
   MuiTimePickerToolbar?: {
     defaultProps?: ComponentsProps['MuiTimePickerToolbar'];
     styleOverrides?: ComponentsOverrides<Theme>['MuiTimePickerToolbar'];
