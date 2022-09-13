@@ -21,15 +21,19 @@ import { DateRange } from '../internal/models';
 import { DateRangePickerDay, DateRangePickerDayProps } from '../DateRangePickerDay';
 import { isWithinRange, isStartOfRange, isEndOfRange } from '../internal/utils/date-utils';
 import { doNothing } from '../internal/utils/utils';
-import { getDateRangePickerViewDesktopUtilityClass } from './dateRangePickerViewDesktopClasses';
+import {
+  DateRangePickerViewDesktopClasses,
+  getDateRangePickerViewDesktopUtilityClass,
+} from './dateRangePickerViewDesktopClasses';
 
-const useUtilityClasses = () => {
+const useUtilityClasses = (ownerState: DesktopDateRangeCalendarProps<any>) => {
+  const { classes } = ownerState;
   const slots = {
     root: ['root'],
     container: ['container'],
   };
 
-  return composeClasses(slots, getDateRangePickerViewDesktopUtilityClass, {});
+  return composeClasses(slots, getDateRangePickerViewDesktopUtilityClass, classes);
 };
 
 export interface ExportedDesktopDateRangeCalendarProps<TDate> {
@@ -58,6 +62,7 @@ export interface DesktopDateRangeCalendarProps<TDate>
   parsedValue: DateRange<TDate>;
   changeMonth: (date: TDate) => void;
   currentlySelectingRangeEnd: 'start' | 'end';
+  classes?: Partial<DateRangePickerViewDesktopClasses>;
 }
 
 const DateRangePickerViewDesktopRoot = styled('div', {
@@ -149,7 +154,7 @@ export function DateRangePickerViewDesktop<TDate>(inProps: DesktopDateRangeCalen
   const rightArrowButtonText = rightArrowButtonTextProp ?? localeText.nextMonth;
 
   const utils = useUtils<TDate>();
-  const classes = useUtilityClasses();
+  const classes = useUtilityClasses(props);
   const defaultDates = useDefaultDates<TDate>();
   const minDate = minDateProp ?? defaultDates.minDate;
   const maxDate = maxDateProp ?? defaultDates.maxDate;

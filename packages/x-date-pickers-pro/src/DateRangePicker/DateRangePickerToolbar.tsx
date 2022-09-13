@@ -11,15 +11,19 @@ import {
   useLocaleText,
 } from '@mui/x-date-pickers/internals';
 import { DateRange, CurrentlySelectingRangeEndProps } from '../internal/models';
-import { getDateRangePickerToolbarUtilityClass } from './dateRangePickerToolbarClasses';
+import {
+  DateRangePickerToolbarClasses,
+  getDateRangePickerToolbarUtilityClass,
+} from './dateRangePickerToolbarClasses';
 
-const useUtilityClasses = () => {
+const useUtilityClasses = (ownerState: DateRangePickerToolbarProps<any>) => {
+  const { classes } = ownerState;
   const slots = {
     root: ['root'],
     container: ['container'],
   };
 
-  return composeClasses(slots, getDateRangePickerToolbarUtilityClass, {});
+  return composeClasses(slots, getDateRangePickerToolbarUtilityClass, classes);
 };
 
 export interface DateRangePickerToolbarProps<TDate>
@@ -34,6 +38,7 @@ export interface DateRangePickerToolbarProps<TDate>
     > {
   startText: React.ReactNode;
   endText: React.ReactNode;
+  classes?: Partial<DateRangePickerToolbarClasses>;
 }
 
 const DateRangePickerToolbarRoot = styled(PickersToolbar, {
@@ -79,7 +84,6 @@ export const DateRangePickerToolbar = React.forwardRef(function DateRangePickerT
   } = props;
 
   const localeText = useLocaleText();
-  const classes = useUtilityClasses();
   const toolbarTitle = toolbarTitleProp ?? localeText.dateRangePickerDefaultToolbarTitle;
 
   const startDateValue = start
@@ -91,6 +95,7 @@ export const DateRangePickerToolbar = React.forwardRef(function DateRangePickerT
     : endText;
 
   const ownerState = props;
+  const classes = useUtilityClasses(ownerState);
 
   return (
     <DateRangePickerToolbarRoot

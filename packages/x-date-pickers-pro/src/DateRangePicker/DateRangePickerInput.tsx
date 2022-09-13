@@ -1,4 +1,5 @@
 import * as React from 'react';
+import clsx from 'clsx';
 import { styled, useThemeProps } from '@mui/material/styles';
 import { unstable_composeClasses as composeClasses } from '@mui/material';
 import {
@@ -12,14 +13,18 @@ import {
 } from '@mui/x-date-pickers/internals';
 import { CurrentlySelectingRangeEndProps, DateRange } from '../internal/models/dateRange';
 import { DateRangeValidationError } from '../internal/hooks/validation/useDateRangeValidation';
-import { getDateRangePickerInputUtilityClass } from './dateRangePickerInputClasses';
+import {
+  DateRangePickerInputClasses,
+  getDateRangePickerInputUtilityClass,
+} from './dateRangePickerInputClasses';
 
-const useUtilityClasses = () => {
+const useUtilityClasses = (ownerState: DateRangePickerInputProps<any, any>) => {
+  const { classes } = ownerState;
   const slots = {
     root: ['root'],
   };
 
-  return composeClasses(slots, getDateRangePickerInputUtilityClass, {});
+  return composeClasses(slots, getDateRangePickerInputUtilityClass, classes);
 };
 
 const DateRangePickerInputRoot = styled('div', {
@@ -73,6 +78,7 @@ export interface DateRangePickerInputProps<TInputDate, TDate>
   endText: React.ReactNode;
   validationError: DateRangeValidationError;
   rawValue: DateRange<TInputDate>;
+  classes?: Partial<DateRangePickerInputClasses>;
 }
 
 type DatePickerInputComponent = <TInputDate, TDate>(
@@ -106,13 +112,14 @@ export const DateRangePickerInput = React.forwardRef(function DateRangePickerInp
     startText,
     TextFieldProps,
     validationError: [startValidationError, endValidationError],
+    className,
     ...other
   } = props;
 
   const utils = useUtils<TDate>();
   const startRef = React.useRef<HTMLInputElement>(null);
   const endRef = React.useRef<HTMLInputElement>(null);
-  const classes = useUtilityClasses();
+  const classes = useUtilityClasses(props);
 
   React.useEffect(() => {
     if (!open) {
@@ -210,7 +217,7 @@ export const DateRangePickerInput = React.forwardRef(function DateRangePickerInp
   });
 
   return (
-    <DateRangePickerInputRoot onBlur={onBlur} ref={ref} className={classes.root}>
+    <DateRangePickerInputRoot onBlur={onBlur} ref={ref} className={clsx(classes.root, className)}>
       {renderInput(startInputProps, endInputProps)}
     </DateRangePickerInputRoot>
   );

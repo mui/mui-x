@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { SxProps } from '@mui/system';
 import { useLicenseVerifier } from '@mui/x-license-pro';
-import { alpha, styled, Theme } from '@mui/material/styles';
+import { alpha, styled, Theme, useThemeProps } from '@mui/material/styles';
 import { unstable_composeClasses as composeClasses } from '@mui/material';
 import { DAY_MARGIN, useUtils, areDayPropsEqual } from '@mui/x-date-pickers/internals';
 import { PickersDay, PickersDayProps } from '@mui/x-date-pickers/PickersDay';
@@ -239,9 +239,10 @@ type DateRangePickerDayComponent = <TDate>(
 ) => JSX.Element;
 
 const DateRangePickerDayRaw = React.forwardRef(function DateRangePickerDay<TDate>(
-  props: DateRangePickerDayProps<TDate>,
+  inProps: DateRangePickerDayProps<TDate>,
   ref: React.Ref<HTMLButtonElement>,
 ) {
+  const props = useThemeProps({ props: inProps, name: 'MuiDateRangePickerDay' });
   const {
     className,
     day,
