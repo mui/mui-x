@@ -116,17 +116,23 @@ export interface PickerComponents<Theme = unknown> {
     styleOverrides?: ComponentsOverrides<Theme>['MuiPickerStaticWrapper'];
     variants?: ComponentsVariants['MuiPickerStaticWrapper'];
   };
-  // TODO v6 Rename 'PrivatePickersYear' to 'MuiPickersYear' to follow convention
-  PrivatePickersYear?: {
-    defaultProps?: ComponentsProps['PrivatePickersYear'];
-    styleOverrides?: ComponentsOverrides<Theme>['PrivatePickersYear'];
-    variants?: ComponentsVariants['PrivatePickersYear'];
+  // TODO v6: Rename 'PrivatePickersSlideTransition' to 'MuiPickersSlideTransition' to follow convention
+  PrivatePickersSlideTransition?: {
+    defaultProps?: ComponentsProps['PrivatePickersSlideTransition'];
+    styleOverrides?: ComponentsOverrides<Theme>['PrivatePickersSlideTransition'];
+    variants?: ComponentsVariants['PrivatePickersSlideTransition'];
   };
-  // TODO v6 Rename 'PrivatePickersToolbarText' to 'MuiPickersToolbarText' to follow convention
+  // TODO v6: Rename 'PrivatePickersToolbarText' to 'MuiPickersToolbarText' to follow convention
   PrivatePickersToolbarText?: {
     defaultProps?: ComponentsProps['PrivatePickersToolbarText'];
     styleOverrides?: ComponentsOverrides<Theme>['PrivatePickersToolbarText'];
     variants?: ComponentsVariants['PrivatePickersToolbarText'];
+  };
+  // TODO v6: Rename 'PrivatePickersYear' to 'MuiPickersYear' to follow convention
+  PrivatePickersYear?: {
+    defaultProps?: ComponentsProps['PrivatePickersYear'];
+    styleOverrides?: ComponentsOverrides<Theme>['PrivatePickersYear'];
+    variants?: ComponentsVariants['PrivatePickersYear'];
   };
 }
 

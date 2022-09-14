@@ -3,6 +3,7 @@ import {
   DayPickerClassKey,
   PickersCalendarHeaderClassKey,
   PickersFadeTransitionGroupClassKey,
+  PickersSlideTransitionClassKey,
 } from '../CalendarPicker';
 import { CalendarPickerSkeletonClassKey } from '../CalendarPickerSkeleton';
 import {
@@ -51,8 +52,9 @@ export interface PickersComponentNameToClassKey {
   MuiTimePickerToolbar: TimePickerToolbarClassKey;
   MuiYearPicker: YearPickerClassKey;
   MuiPickerStaticWrapper: PickerStaticWrapperClassKey;
-  PrivatePickersYear: PickersYearClassKey;
+  PrivatePickersSlideTransition: PickersSlideTransitionClassKey;
   PrivatePickersToolbarText: PickersToolbarTextClassKey;
+  PrivatePickersYear: PickersYearClassKey;
 }
 
 declare module '@mui/material/styles' {

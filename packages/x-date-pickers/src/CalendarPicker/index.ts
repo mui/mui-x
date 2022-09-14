@@ -5,25 +5,24 @@ export type {
   CalendarPickerSlotsComponentsProps,
 } from './CalendarPicker';
 
-export { getCalendarPickerUtilityClass, calendarPickerClasses } from './calendarPickerClasses';
+export { calendarPickerClasses } from './calendarPickerClasses';
 export type { CalendarPickerClassKey, CalendarPickerClasses } from './calendarPickerClasses';
-export { getDayPickerUtilityClass, dayPickerClasses } from './dayPickerClasses';
+export { dayPickerClasses } from './dayPickerClasses';
 export type { DayPickerClassKey, DayPickerClasses } from './dayPickerClasses';
-export {
-  getPickersCalendarHeaderUtilityClass,
-  pickersCalendarHeaderClasses,
-} from './pickersCalendarHeaderClasses';
+export { pickersCalendarHeaderClasses } from './pickersCalendarHeaderClasses';
 export type {
   PickersCalendarHeaderClassKey,
   PickersCalendarHeaderClasses,
 } from './pickersCalendarHeaderClasses';
-export {
-  getPickersFadeTransitionGroupUtilityClass,
-  pickersFadeTransitionGroupClasses,
-} from './pickersFadeTransitionGroupClasses';
+export { pickersFadeTransitionGroupClasses } from './pickersFadeTransitionGroupClasses';
 export type {
   PickersFadeTransitionGroupClassKey,
   PickersFadeTransitionGroupClasses,
 } from './pickersFadeTransitionGroupClasses';
+export { pickersSlideTransitionClasses } from './pickersSlideTransitionClasses';
+export type {
+  PickersSlideTransitionClassKey,
+  PickersSlideTransitionClasses,
+} from './pickersSlideTransitionClasses';
 
 export type { CalendarPickerView } from '../internals/models';

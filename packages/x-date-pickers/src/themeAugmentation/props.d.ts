@@ -64,10 +64,12 @@ export interface PickersComponentsPropsList {
   MuiTimePickerToolbar: TimePickerToolbarProps<unknown>;
   MuiYearPicker: YearPickerProps<unknown>;
   MuiPickerStaticWrapper: PickerStaticWrapperProps;
-  // TODO v6 add `PickersYearProps` once component is renamed to `MuiPickersYear`
-  PrivatePickersYear: never;
-  // TODO v6 add `PickersToolbarTextProps` once component is renamed to `MuiPickersToolbarText`
+  // TODO v6: add `PrivatePickersSlideTransition` once component is renamed to `MuiPickersSlideTransition`
+  PrivatePickersSlideTransition: never;
+  // TODO v6: add `PickersToolbarTextProps` once component is renamed to `MuiPickersToolbarText`
   PrivatePickersToolbarText: never;
+  // TODO v6: add `PickersYearProps` once component is renamed to `MuiPickersYear`
+  PrivatePickersYear: never;
 }
 
 declare module '@mui/material/styles' {
