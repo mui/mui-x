@@ -10,7 +10,6 @@ import {
 } from '@mui/utils';
 import { PickersMonth } from './PickersMonth';
 import { useUtils, useNow, useDefaultDates } from '../internals/hooks/useUtils';
-import { NonNullablePickerChangeHandler } from '../internals/hooks/useViews';
 import { MonthPickerClasses, getMonthPickerUtilityClass } from './monthPickerClasses';
 import {
   BaseDateValidationProps,
@@ -31,18 +30,22 @@ export interface MonthPickerProps<TDate>
    * Override or extend the styles applied to the component.
    */
   classes?: Partial<MonthPickerClasses>;
-  /** Date value for the MonthPicker */
-  date: TDate | null;
-  /** If `true` picker is disabled */
-  disabled?: boolean;
-  /** Callback fired on date change. */
-  onChange: NonNullablePickerChangeHandler<TDate>;
-  /** If `true` picker is readonly */
-  readOnly?: boolean;
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */
   sx?: SxProps<Theme>;
+  /** Date value for the MonthPicker */
+  value: TDate | null;
+  /** If `true` picker is disabled */
+  disabled?: boolean;
+  /**
+   * Callback fired when the value (the selected month) changes.
+   * @template TValue
+   * @param {TValue} value The new parsed value.
+   */
+  onChange: (value: TDate) => void;
+  /** If `true` picker is readonly */
+  readOnly?: boolean;
   /**
    * If `true`, today's date is rendering without highlighting with circle.
    * @default false
@@ -114,7 +117,7 @@ export const MonthPicker = React.forwardRef(function MonthPicker<TDate>(
 
   const {
     className,
-    date,
+    value,
     disabled,
     disableFuture,
     disablePast,
@@ -136,10 +139,10 @@ export const MonthPicker = React.forwardRef(function MonthPicker<TDate>(
 
   const todayMonth = React.useMemo(() => utils.getMonth(now), [utils, now]);
 
-  const selectedDateOrToday = date ?? now;
+  const selectedDateOrToday = value ?? now;
   const selectedMonth = React.useMemo(() => {
-    if (date != null) {
-      return utils.getMonth(date);
+    if (value != null) {
+      return utils.getMonth(value);
     }
 
     if (disableHighlightToday) {
@@ -147,7 +150,7 @@ export const MonthPicker = React.forwardRef(function MonthPicker<TDate>(
     }
 
     return utils.getMonth(now);
-  }, [now, date, utils, disableHighlightToday]);
+  }, [now, value, utils, disableHighlightToday]);
   const [focusedMonth, setFocusedMonth] = React.useState(() => selectedMonth || todayMonth);
 
   const [internalHasFocus, setInternalHasFocus] = useControlled<boolean>({
@@ -195,7 +198,7 @@ export const MonthPicker = React.forwardRef(function MonthPicker<TDate>(
     }
 
     const newDate = utils.setMonth(selectedDateOrToday, month);
-    onChange(newDate, 'finish');
+    onChange(newDate);
   });
 
   const focusMonth = useEventCallback((month: number) => {
@@ -304,10 +307,6 @@ MonthPicker.propTypes = {
    */
   className: PropTypes.string,
   /**
-   * Date value for the MonthPicker
-   */
-  date: PropTypes.any,
-  /**
    * If `true` picker is disabled
    */
   disabled: PropTypes.bool,
@@ -336,7 +335,9 @@ MonthPicker.propTypes = {
    */
   minDate: PropTypes.any,
   /**
-   * Callback fired on date change.
+   * Callback fired when the value (the selected month) changes.
+   * @template TValue
+   * @param {TValue} value The new parsed value.
    */
   onChange: PropTypes.func.isRequired,
   onFocusedViewChange: PropTypes.func,
@@ -361,4 +362,8 @@ MonthPicker.propTypes = {
     PropTypes.func,
     PropTypes.object,
   ]),
+  /**
+   * Date value for the MonthPicker
+   */
+  value: PropTypes.any,
 } as any;

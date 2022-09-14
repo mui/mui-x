@@ -1,7 +1,8 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { styled, useThemeProps } from '@mui/material/styles';
+import { styled, Theme, useThemeProps } from '@mui/material/styles';
+import { SxProps } from '@mui/system';
 import { unstable_composeClasses as composeClasses } from '@mui/material';
 import { useControlled, unstable_useId as useId, useEventCallback } from '@mui/material/utils';
 import { MonthPicker, MonthPickerProps } from '../MonthPicker/MonthPicker';
@@ -46,6 +47,10 @@ export interface CalendarPickerProps<TDate>
   className?: string;
   classes?: Partial<CalendarPickerClasses>;
   /**
+   * The system prop that allows defining system overrides as well as additional CSS styles.
+   */
+  sx?: SxProps<Theme>;
+  /**
    * Overrideable components.
    * @default {}
    */
@@ -55,7 +60,7 @@ export interface CalendarPickerProps<TDate>
    * @default {}
    */
   componentsProps?: Partial<CalendarPickerSlotsComponentsProps>;
-  date: TDate | null;
+  value: TDate | null;
   /**
    * Default calendar month displayed when `value={null}`.
    */
@@ -123,7 +128,7 @@ export interface CalendarPickerProps<TDate>
 
 export type ExportedCalendarPickerProps<TDate> = Omit<
   CalendarPickerProps<TDate>,
-  | 'date'
+  | 'value'
   | 'view'
   | 'views'
   | 'openTo'
@@ -226,7 +231,7 @@ export const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
   const {
     autoFocus,
     onViewChange,
-    date,
+    value,
     disableFuture,
     disablePast,
     defaultCalendarMonth,
@@ -258,6 +263,7 @@ export const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
     leftArrowButtonText,
     rightArrowButtonText,
     renderLoading,
+    sx,
   } = props;
 
   const { openView, setOpenView, openNext } = useViews({
@@ -276,7 +282,7 @@ export const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
     isDateDisabled,
     onMonthSwitchingAnimationEnd,
   } = useCalendarState({
-    date,
+    value,
     defaultCalendarMonth,
     reduceAnimations,
     onMonthChange,
@@ -288,7 +294,7 @@ export const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
   });
 
   const handleDateMonthChange = React.useCallback<MonthPickerProps<TDate>['onChange']>(
-    (newDate, selectionState) => {
+    (newDate) => {
       const startOfMonth = utils.startOfMonth(newDate);
       const endOfMonth = utils.endOfMonth(newDate);
 
@@ -305,7 +311,7 @@ export const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
         : newDate;
 
       if (closestEnabledDate) {
-        onChange(closestEnabledDate, selectionState);
+        onChange(closestEnabledDate, 'finish');
         onMonthChange?.(startOfMonth);
       } else {
         openNext();
@@ -330,7 +336,7 @@ export const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
   );
 
   const handleDateYearChange = React.useCallback<YearPickerProps<TDate>['onChange']>(
-    (newDate, selectionState) => {
+    (newDate) => {
       const startOfYear = utils.startOfYear(newDate);
       const endOfYear = utils.endOfYear(newDate);
 
@@ -347,7 +353,7 @@ export const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
         : newDate;
 
       if (closestEnabledDate) {
-        onChange(closestEnabledDate, selectionState);
+        onChange(closestEnabledDate, 'finish');
         onYearChange?.(closestEnabledDate);
       } else {
         openNext();
@@ -373,21 +379,21 @@ export const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
 
   const onSelectedDayChange = React.useCallback<DayPickerProps<TDate>['onSelectedDaysChange']>(
     (day, isFinish) => {
-      if (date && day) {
+      if (value && day) {
         // If there is a date already selected, then we want to keep its time
-        return onChange(utils.mergeDateAndTime(day, date), isFinish);
+        return onChange(utils.mergeDateAndTime(day, value), isFinish);
       }
 
       return onChange(day, isFinish);
     },
-    [utils, date, onChange],
+    [utils, value, onChange],
   );
 
   React.useEffect(() => {
-    if (date && isDateDisabled(date)) {
+    if (value && isDateDisabled(value)) {
       const closestEnabledDate = findClosestEnabledDate({
         utils,
-        date,
+        date: value,
         minDate,
         maxDate,
         disablePast,
@@ -402,10 +408,10 @@ export const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
   }, []); // eslint-disable-line
 
   React.useEffect(() => {
-    if (date) {
-      changeMonth(date);
+    if (value) {
+      changeMonth(value);
     }
-  }, [date]); // eslint-disable-line
+  }, [value]); // eslint-disable-line
 
   const ownerState = props;
   const classes = useUtilityClasses(ownerState);
@@ -418,8 +424,8 @@ export const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
   };
 
   // When disabled, limit the view to the selected date
-  const minDateWithDisabled = (disabled && date) || minDate;
-  const maxDateWithDisabled = (disabled && date) || maxDate;
+  const minDateWithDisabled = (disabled && value) || minDate;
+  const maxDateWithDisabled = (disabled && value) || maxDate;
 
   const commonViewProps = {
     disableHighlightToday,
@@ -460,7 +466,12 @@ export const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
   }, [openView, handleFocusedViewChange]);
 
   return (
-    <CalendarPickerRoot ref={ref} className={clsx(classes.root, className)} ownerState={ownerState}>
+    <CalendarPickerRoot
+      ref={ref}
+      className={clsx(classes.root, className)}
+      ownerState={ownerState}
+      sx={sx}
+    >
       <PickersCalendarHeader
         views={views}
         openView={openView}
@@ -488,11 +499,11 @@ export const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
       >
         <div>
           {openView === 'year' && (
-            <YearPicker
+            <YearPicker<TDate>
               {...baseDateValidationProps}
               {...commonViewProps}
               autoFocus={autoFocus}
-              date={date}
+              value={value}
               onChange={handleDateYearChange}
               shouldDisableYear={shouldDisableYear}
               hasFocus={hasFocus}
@@ -501,13 +512,13 @@ export const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
           )}
 
           {openView === 'month' && (
-            <MonthPicker
+            <MonthPicker<TDate>
               {...baseDateValidationProps}
               {...commonViewProps}
               autoFocus={autoFocus}
               hasFocus={hasFocus}
               className={className}
-              date={date}
+              value={value}
               onChange={handleDateMonthChange}
               shouldDisableMonth={shouldDisableMonth}
               onFocusedViewChange={handleFocusedViewChange('month')}
@@ -523,7 +534,7 @@ export const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
               onMonthSwitchingAnimationEnd={onMonthSwitchingAnimationEnd}
               onFocusedDayChange={changeFocusedDay}
               reduceAnimations={reduceAnimations}
-              selectedDays={[date]}
+              selectedDays={[value]}
               onSelectedDaysChange={onSelectedDayChange}
               shouldDisableDate={shouldDisableDate}
               shouldDisableMonth={shouldDisableMonth}
@@ -562,7 +573,6 @@ CalendarPicker.propTypes = {
    * @default {}
    */
   componentsProps: PropTypes.object,
-  date: PropTypes.any,
   /**
    * Formats the day of week displayed in the calendar header.
    * @param {string} day The day of week provided by the adapter's method `getWeekdays`.
@@ -707,6 +717,15 @@ CalendarPicker.propTypes = {
    * @default false
    */
   showDaysOutsideCurrentMonth: PropTypes.bool,
+  /**
+   * The system prop that allows defining system overrides as well as additional CSS styles.
+   */
+  sx: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
+    PropTypes.func,
+    PropTypes.object,
+  ]),
+  value: PropTypes.any,
   /**
    * Controlled open view.
    */

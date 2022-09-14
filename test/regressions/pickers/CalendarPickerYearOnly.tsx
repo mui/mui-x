@@ -10,7 +10,7 @@ export default function CalendarPickerYearOnly() {
     <LocalizationProvider dateAdapter={AdapterDateFns}>
       <CalendarPicker
         views={['year']}
-        date={adapterToUse.date('2019-01-01T00:00:00.000')}
+        value={adapterToUse.date('2019-01-01T00:00:00.000')}
         onChange={() => {}}
       />
     </LocalizationProvider>

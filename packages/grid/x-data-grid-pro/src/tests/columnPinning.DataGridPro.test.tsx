@@ -263,9 +263,17 @@ describe('<DataGridPro /> - Column pinning', () => {
   });
 
   describe('dynamic row height', () => {
+    let skipTest = false;
+
+    beforeEach(function beforeEach() {
+      const { userAgent } = window.navigator;
+
+      // Need layouting and on Chrome non-headless and Edge these tests are flacky
+      skipTest = !userAgent.includes('Headless') || /edg/i.test(userAgent);
+    });
+
     it('should work with dynamic row height', async function test() {
-      if (isJSDOM) {
-        // Need layouting
+      if (skipTest) {
         this.skip();
       }
 
@@ -303,8 +311,7 @@ describe('<DataGridPro /> - Column pinning', () => {
     });
 
     it('should react to content height changes', async function test() {
-      if (isJSDOM) {
-        // Need layouting
+      if (skipTest) {
         this.skip();
       }
 
