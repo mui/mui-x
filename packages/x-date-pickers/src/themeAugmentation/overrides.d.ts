@@ -21,6 +21,7 @@ import { DateTimePickerTabsClassKey, DateTimePickerToolbarClassKey } from '../Da
 import { TimePickerToolbarClassKey } from '../TimePicker';
 import {
   CalendarOrClockPickerClassKey,
+  PickersArrowSwitcherClassKey,
   PickersPopperClassKey,
   PickersToolbarButtonClassKey,
   PickersToolbarClassKey,
@@ -43,6 +44,7 @@ export interface PickersComponentNameToClassKey {
   MuiDateTimePickerToolbar: DateTimePickerToolbarClassKey;
   MuiDayPicker: DayPickerClassKey;
   MuiMonthPicker: MonthPickerClassKey;
+  MuiPickersArrowSwitcher: PickersArrowSwitcherClassKey;
   MuiPickersCalendarHeader: PickersCalendarHeaderClassKey;
   MuiPickersDay: PickersDayClassKey;
   MuiPickersFadeTransitionGroup: PickersFadeTransitionGroupClassKey;

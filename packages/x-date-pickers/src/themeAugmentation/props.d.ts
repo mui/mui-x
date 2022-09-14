@@ -23,6 +23,7 @@ import { PickerStaticWrapperProps } from '../internals/components/PickerStaticWr
 import {
   CalendarOrClockPickerProps,
   DayPickerProps,
+  ExportedArrowSwitcherProps,
   PickerPopperProps,
   PickersToolbarButtonProps,
   PickersToolbarProps,
@@ -54,6 +55,7 @@ export interface PickersComponentsPropsList {
   MuiMobileDateTimePicker: MobileDateTimePickerProps<unknown, unknown>;
   MuiMobileTimePicker: MobileTimePickerProps<unknown, unknown>;
   MuiMonthPicker: MonthPickerProps<unknown>;
+  MuiPickersArrowSwitcher: ExportedArrowSwitcherProps;
   MuiPickersCalendarHeader: PickersCalendarHeaderProps<unknown>;
   MuiPickersDay: PickersDayProps<unknown>;
   MuiPickersFadeTransitionGroup: PickersFadeTransitionGroupProps;

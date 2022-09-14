@@ -43,6 +43,11 @@ export type {
   PickersToolbarTextClassKey,
   PickersToolbarTextClasses,
 } from './components/pickersToolbarTextClasses';
+export { pickersArrowSwitcherClasses } from './components/pickersArrowSwitcherClasses';
+export type {
+  PickersArrowSwitcherClassKey,
+  PickersArrowSwitcherClasses,
+} from './components/pickersArrowSwitcherClasses';
 export type { PickerPopperProps } from './components/PickersPopper';
 export { pickersPopperClasses } from './components/pickersPopperClasses';
 export type {

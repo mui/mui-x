@@ -100,6 +100,13 @@ createTheme({
         someRandomProp: true,
       },
     },
+    MuiPickersArrowSwitcher: {
+      defaultProps: {
+        classes: { root: 'test' },
+        // @ts-expect-error invalid MuiPickersArrowSwitcher prop
+        someRandomProp: true,
+      },
+    },
     MuiPickersCalendarHeader: {
       defaultProps: {
         disabled: true,
