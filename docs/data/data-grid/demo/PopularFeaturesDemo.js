@@ -325,6 +325,9 @@ export default function PopularFeaturesDemo() {
     [],
   );
 
+  const getRowHeight = React.useCallback(() => 'auto', []);
+  const getDetailPanelHeight = React.useCallback(() => 'auto', []);
+
   const memoizedGroupingDef = React.useMemo(() => {
     return {
       headerName: 'Grouped by Plan',
@@ -353,8 +356,8 @@ export default function PopularFeaturesDemo() {
           toolbar: { showQuickFilter: true, quickFilterProps: { debounceMs: 500 } },
         }}
         getDetailPanelContent={getDetailPanelContent}
-        getDetailPanelHeight={() => 'auto'}
-        getRowHeight={() => 'auto'}
+        getDetailPanelHeight={getDetailPanelHeight}
+        getRowHeight={getRowHeight}
         sx={{
           [`& .${gridClasses.cell}`]: {
             py: 2,

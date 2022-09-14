@@ -327,6 +327,9 @@ export default function PopularFeaturesDemo() {
     NonNullable<DataGridPremiumProps['getDetailPanelContent']>
   >(({ row }) => <RowDemo row={row} />, []);
 
+  const getRowHeight = React.useCallback<NonNullable<DataGridPremiumProps['getRowHeight']>>(() => 'auto', []);
+  const getDetailPanelHeight = React.useCallback<NonNullable<DataGridPremiumProps['getDetailPanelHeight']>>(() => 'auto', []);
+
   const memoizedGroupingDef = React.useMemo(() => {
     return {
       headerName: 'Grouped by Plan',
@@ -355,8 +358,8 @@ export default function PopularFeaturesDemo() {
           toolbar: { showQuickFilter: true, quickFilterProps: { debounceMs: 500 } },
         }}
         getDetailPanelContent={getDetailPanelContent}
-        getDetailPanelHeight={() => 'auto'}
-        getRowHeight={() => 'auto'}
+        getDetailPanelHeight={getDetailPanelHeight}
+        getRowHeight={getRowHeight}
         sx={{
           [`& .${gridClasses.cell}`]: {
             py: 2,
