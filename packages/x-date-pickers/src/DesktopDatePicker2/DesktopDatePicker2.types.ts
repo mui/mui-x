@@ -14,7 +14,7 @@ export interface DesktopDatePicker2SlotsComponentsProps extends DesktopPickerSlo
 export interface DesktopDatePicker2Props<TDate>
   extends MakeOptional<
     ExportedDesktopPickerProps<TDate | null, TDate, CalendarPickerView>,
-    'views' | 'openTo'
+    'views' | 'openTo' | 'inputFormat'
   > {
   /**
    * Overrideable components.

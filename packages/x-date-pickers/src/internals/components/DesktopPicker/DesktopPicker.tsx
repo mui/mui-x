@@ -56,16 +56,17 @@ interface DesktopPickerProps<TValue, TDate, TView extends CalendarOrClockPickerV
    * @default (date, utils) => `Choose date, selected date is ${utils.format(utils.date(date), 'fullDate')}`
    */
   getOpenDialogAriaText: (date: TDate, utils: MuiPickersAdapter<TDate>) => string;
+  /**
+   * Format of the date when rendered in the input(s).
+   */
+  inputFormat: string;
 }
 
-export type ExportedDesktopPickerProps<
-  TValue,
-  TDate,
-  TView extends CalendarOrClockPickerView,
-> = Omit<
-  DesktopPickerProps<TValue, TDate, TView>,
-  'valueManager' | 'renderViews' | 'components' | 'componentsProps' | 'getOpenDialogAriaText'
->;
+export interface ExportedDesktopPickerProps<TValue, TDate, TView extends CalendarOrClockPickerView>
+  extends Omit<
+    DesktopPickerProps<TValue, TDate, TView>,
+    'valueManager' | 'renderViews' | 'components' | 'componentsProps' | 'getOpenDialogAriaText'
+  > {}
 
 export function DesktopPicker<TValue, TDate, TView extends CalendarOrClockPickerView>(
   props: DesktopPickerProps<TValue, TDate, TView>,
@@ -75,6 +76,7 @@ export function DesktopPicker<TValue, TDate, TView extends CalendarOrClockPicker
     componentsProps = {},
     openTo,
     views,
+    inputFormat,
     onViewChange,
     renderViews,
     readOnly,
@@ -104,6 +106,7 @@ export function DesktopPicker<TValue, TDate, TView extends CalendarOrClockPicker
       ...pickerStateFieldProps,
       readOnly,
       disabled,
+      format: inputFormat,
     },
     // TODO: Pass owner state
     ownerState: {},
