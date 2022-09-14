@@ -2,7 +2,7 @@ export const buildDeprecatedPropsWarning = (message: string | string[]) => {
   let alreadyWarned = false;
 
   if (process.env.NODE_ENV === 'production') {
-    return () => { };
+    return () => {};
   }
 
   const cleanMessage = Array.isArray(message) ? message.join('\n') : message;
