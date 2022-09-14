@@ -211,7 +211,7 @@ export function CalendarOrClockPicker<TDate, View extends CalendarOrClockPickerV
             {isDatePickerView(openView) && (
               <CalendarPicker
                 autoFocus={autoFocus}
-                date={parsedValue}
+                value={parsedValue}
                 onViewChange={setOpenView as (view: CalendarPickerView) => void}
                 onChange={handleChangeAndOpenNext}
                 view={openView}
@@ -225,7 +225,7 @@ export function CalendarOrClockPicker<TDate, View extends CalendarOrClockPickerV
               <ClockPicker
                 {...other}
                 autoFocus={autoFocus}
-                date={parsedValue}
+                value={parsedValue}
                 view={openView}
                 // Unclear why the predicate `isDatePickerView` does not imply the casted type
                 views={views.filter(isTimePickerView) as ClockPickerView[]}
