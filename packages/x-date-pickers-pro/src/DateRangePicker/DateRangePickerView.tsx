@@ -151,7 +151,7 @@ function DateRangePickerViewRaw<TInputDate, TDate>(
     onMonthSwitchingAnimationEnd,
     changeFocusedDay,
   } = useCalendarState({
-    date: start || end,
+    value: start || end,
     defaultCalendarMonth,
     disableFuture,
     disablePast,

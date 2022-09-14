@@ -11,7 +11,6 @@ import {
 } from '@mui/utils';
 import { PickersYear } from './PickersYear';
 import { useUtils, useNow, useDefaultDates } from '../internals/hooks/useUtils';
-import { NonNullablePickerChangeHandler } from '../internals/hooks/useViews';
 import { WrapperVariantContext } from '../internals/components/wrappers/WrapperVariantContext';
 import { YearPickerClasses, getYearPickerUtilityClass } from './yearPickerClasses';
 import { BaseDateValidationProps, YearValidationProps } from '../internals/hooks/validation/models';
@@ -80,11 +79,15 @@ export interface YearPickerProps<TDate>
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */
   sx?: SxProps<Theme>;
-  date: TDate | null;
+  value: TDate | null;
   /** If `true` picker is disabled */
   disabled?: boolean;
-  /** Callback fired on date change. */
-  onChange: NonNullablePickerChangeHandler<TDate>;
+  /**
+   * Callback fired when the value (the selected year) changes.
+   * @template TValue
+   * @param {TValue} value The new parsed value.
+   */
+  onChange: (value: TDate) => void;
   /** If `true` picker is readonly */
   readOnly?: boolean;
   /**
@@ -114,7 +117,7 @@ export const YearPicker = React.forwardRef(function YearPicker<TDate>(
   const {
     autoFocus,
     className,
-    date,
+    value,
     disabled,
     disableFuture,
     disablePast,
@@ -133,11 +136,11 @@ export const YearPicker = React.forwardRef(function YearPicker<TDate>(
   const ownerState = props;
   const classes = useUtilityClasses(ownerState);
 
-  const selectedDateOrToday = date ?? now;
+  const selectedDateOrToday = value ?? now;
   const todayYear = React.useMemo(() => utils.getYear(now), [utils, now]);
   const selectedYear = React.useMemo(() => {
-    if (date != null) {
-      return utils.getYear(date);
+    if (value != null) {
+      return utils.getYear(value);
     }
 
     if (disableHighlightToday) {
@@ -145,7 +148,7 @@ export const YearPicker = React.forwardRef(function YearPicker<TDate>(
     }
 
     return utils.getYear(now);
-  }, [now, date, utils, disableHighlightToday]);
+  }, [now, value, utils, disableHighlightToday]);
   const [focusedYear, setFocusedYear] = React.useState(() => selectedYear || todayYear);
 
   const [internalHasFocus, setInternalHasFocus] = useControlled<boolean>({
@@ -188,7 +191,7 @@ export const YearPicker = React.forwardRef(function YearPicker<TDate>(
     }
 
     const newDate = utils.setYear(selectedDateOrToday, year);
-    onChange(newDate, 'finish');
+    onChange(newDate);
   });
 
   const focusYear = useEventCallback((year: number) => {
@@ -288,7 +291,6 @@ YearPicker.propTypes = {
    * className applied to the root element.
    */
   className: PropTypes.string,
-  date: PropTypes.any,
   /**
    * If `true` picker is disabled
    */
@@ -318,7 +320,9 @@ YearPicker.propTypes = {
    */
   minDate: PropTypes.any,
   /**
-   * Callback fired on date change.
+   * Callback fired when the value (the selected year) changes.
+   * @template TValue
+   * @param {TValue} value The new parsed value.
    */
   onChange: PropTypes.func.isRequired,
   onFocusedViewChange: PropTypes.func,
@@ -343,4 +347,5 @@ YearPicker.propTypes = {
     PropTypes.func,
     PropTypes.object,
   ]),
+  value: PropTypes.any,
 } as any;

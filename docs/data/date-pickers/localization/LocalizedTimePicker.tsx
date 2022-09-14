@@ -26,7 +26,7 @@ const ampmOptions: { [key: string]: undefined | boolean } = {
 
 export default function LocalizedTimePicker() {
   const [locale, setLocale] = React.useState<typeof locales[number]>('ru');
-  const [value, setValue] = React.useState<Dayjs | null>(dayjs());
+  const [value, setValue] = React.useState<Dayjs | null>(dayjs('2022-04-07'));
 
   const [ampm, setAmpm] = React.useState<boolean | undefined>(undefined);
   const [ampmOption, setAmpmOption] = React.useState<string>('undefined');
