@@ -79,6 +79,7 @@ export const StaticDateTimePicker = React.forwardRef(function StaticDateTimePick
     components: providedComponents,
     componentsProps,
     hideTabs = displayStaticWrapperAs === 'desktop',
+    className,
     ...other
   } = props;
 
@@ -107,6 +108,7 @@ export const StaticDateTimePicker = React.forwardRef(function StaticDateTimePick
       displayStaticWrapperAs={displayStaticWrapperAs}
       components={components}
       componentsProps={componentsProps}
+      className={className}
       {...wrapperProps}
     >
       <CalendarOrClockPicker

@@ -77,6 +77,7 @@ export const StaticDatePicker = React.forwardRef(function StaticDatePicker<
     displayStaticWrapperAs = 'mobile',
     components,
     componentsProps,
+    className,
     ...other
   } = props;
 
@@ -90,6 +91,7 @@ export const StaticDatePicker = React.forwardRef(function StaticDatePicker<
       displayStaticWrapperAs={displayStaticWrapperAs}
       components={components}
       componentsProps={componentsProps}
+      className={className}
       {...wrapperProps}
     >
       <CalendarOrClockPicker

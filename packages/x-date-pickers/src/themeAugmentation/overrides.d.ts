@@ -13,10 +13,17 @@ export interface PickersComponentNameToClassKey {
   MuiClockPicker: ClockPickerClassKey;
   MuiDatePicker: never;
   MuiDateTimePicker: never;
+  MuiDesktopDatePicker: never;
+  MuiDesktopDateTimePicker: never;
+  MuiDesktopTimePicker: never;
+  MuiLocalizationProvider: never;
   MuiMonthPicker: MonthPickerClassKey;
   MuiPickersDay: PickersDayClassKey;
   MuiYearPicker: YearPickerClassKey;
   MuiPickerStaticWrapper: PickerStaticWrapperClassKey;
+  MuiStaticDatePicker: never;
+  MuiStaticDateTimePicker: never;
+  MuiStaticTimePicker: never;
 }
 
 declare module '@mui/material/styles' {
