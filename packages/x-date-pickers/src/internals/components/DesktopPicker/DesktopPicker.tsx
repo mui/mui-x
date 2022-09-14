@@ -67,9 +67,6 @@ export function DesktopPicker<TValue, TDate, TView extends CalendarOrClockPicker
   props: DesktopPickerProps<TValue, TDate, TView>,
 ) {
   const {
-    value: incomingValue,
-    defaultValue,
-    onChange,
     components,
     componentsProps = {},
     openTo,
@@ -85,7 +82,7 @@ export function DesktopPicker<TValue, TDate, TView extends CalendarOrClockPicker
 
   const {
     wrapperProps,
-    fieldProps: additionalFieldProps,
+    fieldProps: pickerStateFieldProps,
     viewProps,
     openPicker,
   } = usePickerState2(props, props.valueManager, 'desktop');
@@ -99,7 +96,11 @@ export function DesktopPicker<TValue, TDate, TView extends CalendarOrClockPicker
   const fieldProps = useSlotProps({
     elementType: Field,
     externalSlotProps: componentsProps.field,
-    additionalProps: additionalFieldProps,
+    additionalProps: {
+      ...pickerStateFieldProps,
+      readOnly,
+      disabled,
+    },
     // TODO: Pass owner state
     ownerState: {},
   });

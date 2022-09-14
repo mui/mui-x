@@ -15,14 +15,13 @@ export const DesktopDatePicker2 = React.forwardRef(function DesktopDatePicker<TD
   inProps: DesktopDatePicker2Props<TDate>,
   ref: React.Ref<HTMLDivElement>,
 ) {
+  const localeText = useLocaleText();
   const props = useDatePicker2DefaultizedProps<TDate, DesktopDatePicker2Props<TDate>>(
     inProps,
     'MuiDesktopDatePicker2',
   );
 
-  const localeText = useLocaleText();
-
-  const { components: inComponents, componentsProps, ...other } = props;
+  const { components: inComponents, componentsProps: inComponentsProps, ...other } = props;
 
   const components = React.useMemo(
     () => ({
@@ -31,6 +30,16 @@ export const DesktopDatePicker2 = React.forwardRef(function DesktopDatePicker<TD
       ...inComponents,
     }),
     [inComponents],
+  );
+
+  const componentsProps = React.useMemo(
+    () => ({
+      ...inComponentsProps,
+      field: {
+        ref,
+      },
+    }),
+    [inComponentsProps],
   );
 
   return (
