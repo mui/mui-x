@@ -67,7 +67,7 @@ const BrowserInputDateField = (props: BrowserInputDateFieldProps) => {
 };
 
 export default function CustomUIDateField() {
-  const [value, setValue] = React.useState<Dayjs | null>(dayjs());
+  const [value, setValue] = React.useState<Dayjs | null>(dayjs('2022-04-07'));
 
   const handleChange = (newValue: Dayjs | null) => setValue(newValue);
 
