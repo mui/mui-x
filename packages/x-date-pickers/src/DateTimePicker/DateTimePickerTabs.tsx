@@ -54,6 +54,9 @@ export interface DateTimePickerTabsProps {
    * Open picker view
    */
   view: CalendarOrClockPickerView;
+  /**
+   * Override or extend the styles applied to the component.
+   */
   classes?: Partial<DateTimePickerTabsClasses>;
 }
 
@@ -124,6 +127,10 @@ DateTimePickerTabs.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
+  /**
+   * Override or extend the styles applied to the component.
+   */
+  classes: PropTypes.object,
   /**
    * Date tab icon.
    * @default DateRange
