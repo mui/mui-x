@@ -7,7 +7,7 @@ export interface ClockPointerProps extends React.HTMLAttributes<HTMLDivElement> 
   hasSelected: boolean;
   isInner: boolean;
   type: ClockPickerView;
-  value: number;
+  viewValue: number;
 }
 
 const ClockPointerRoot = styled('div')<{
@@ -69,15 +69,15 @@ export class ClockPointer extends React.Component<ClockPointerProps> {
   };
 
   render() {
-    const { className, hasSelected, isInner, type, value, ...other } = this.props;
+    const { className, hasSelected, isInner, type, viewValue, ...other } = this.props;
 
     const ownerState = { ...this.props, ...this.state };
 
     const getAngleStyle = () => {
       const max = type === 'hours' ? 12 : 60;
-      let angle = (360 / max) * value;
+      let angle = (360 / max) * viewValue;
 
-      if (type === 'hours' && value > 12) {
+      if (type === 'hours' && viewValue > 12) {
         angle -= 360; // round up angle to max 360 degrees
       }
 
