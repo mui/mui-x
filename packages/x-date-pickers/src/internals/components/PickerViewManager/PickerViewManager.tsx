@@ -6,7 +6,7 @@ import { PickerViewManagerProps } from './PickerViewManager.types';
 export function PickerViewManager<TValue, TDate, TView extends CalendarOrClockPickerView>(
   props: PickerViewManagerProps<TValue, TDate, TView>,
 ) {
-  const { views, openTo, viewRenderers, onViewChange, onChange, value } = props;
+  const { views, openTo, renderViews, onViewChange, onChange, value, ...other } = props;
 
   const { openView, setOpenView, handleChangeAndOpenNext } = useViews<TValue, TView>({
     view: undefined,
@@ -16,7 +16,12 @@ export function PickerViewManager<TValue, TDate, TView extends CalendarOrClockPi
     onViewChange,
   });
 
-  const currentViewRenderer = viewRenderers[openView];
-
-  return currentViewRenderer({ value });
+  return renderViews({
+    value,
+    view: openView,
+    onViewChange: setOpenView,
+    onChange: handleChangeAndOpenNext,
+    views,
+    ...other,
+  });
 }

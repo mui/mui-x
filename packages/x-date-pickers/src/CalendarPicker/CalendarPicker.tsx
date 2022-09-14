@@ -4,7 +4,7 @@ import clsx from 'clsx';
 import { styled, Theme, useThemeProps } from '@mui/material/styles';
 import { SxProps } from '@mui/system';
 import { unstable_composeClasses as composeClasses } from '@mui/material';
-import { useControlled, unstable_useId as useId, useEventCallback } from '@mui/material/utils';
+import { unstable_useId as useId } from '@mui/material/utils';
 import { MonthPicker, MonthPickerProps } from '../MonthPicker/MonthPicker';
 import { useCalendarState } from './useCalendarState';
 import { useDefaultDates, useUtils } from '../internals/hooks/useUtils';
@@ -122,8 +122,6 @@ export interface CalendarPickerProps<TDate>
    * @returns {void|Promise} -
    */
   onMonthChange?: (month: TDate) => void | Promise<void>;
-  focusedView?: CalendarPickerView | null;
-  onFocusedViewChange?: (view: CalendarPickerView) => (newHasFocus: boolean) => void;
 }
 
 export type ExportedCalendarPickerProps<TDate> = Omit<
@@ -140,8 +138,6 @@ export type ExportedCalendarPickerProps<TDate> = Omit<
   | 'classes'
   | 'components'
   | 'componentsProps'
-  | 'onFocusedViewChange'
-  | 'focusedView'
 >;
 
 export type CalendarPickerDefaultizedProps<TDate> = DefaultizedProps<
@@ -253,8 +249,6 @@ export const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
     minDate,
     maxDate,
     disableHighlightToday,
-    focusedView,
-    onFocusedViewChange,
     showDaysOutsideCurrentMonth,
     dayOfWeekFormatter,
     renderDay,
@@ -437,30 +431,18 @@ export const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
 
   const gridLabelId = `${id}-grid-label`;
 
-  const [internalFocusedView, setInternalFocusedView] = useControlled<CalendarPickerView | null>({
-    name: 'DayPicker',
-    state: 'focusedView',
-    controlled: focusedView,
-    default: autoFocus ? openView : null,
-  });
-
-  const hasFocus = internalFocusedView !== null;
-
-  const handleFocusedViewChange = useEventCallback(
-    (eventView: CalendarPickerView) => (newHasFocus: boolean) => {
-      if (onFocusedViewChange) {
-        // Use the calendar or clock logic
-        onFocusedViewChange(eventView)(newHasFocus);
-        return;
-      }
-      // If alone, do the local modifications
-      if (newHasFocus) {
-        setInternalFocusedView(eventView);
-      } else {
-        setInternalFocusedView((prevView) => (prevView === eventView ? null : prevView));
-      }
-    },
+  const [focusedView, setFocusedView] = React.useState<CalendarPickerView | null>(
+    autoFocus ? openView : null,
   );
+  const hasFocus = focusedView !== null;
+
+  const handleFocusedViewChange = (eventView: CalendarPickerView) => (newHasFocus: boolean) => {
+    if (newHasFocus) {
+      setFocusedView(eventView);
+    } else {
+      setFocusedView((prevView) => (prevView === eventView ? null : prevView));
+    }
+  };
 
   return (
     <CalendarPickerRoot

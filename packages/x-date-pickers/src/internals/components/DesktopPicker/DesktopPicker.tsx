@@ -24,7 +24,7 @@ export interface DesktopPickerSlotsComponentsProps {
 
 export interface ExportedDesktopPickerProps<TValue, TDate, TView extends CalendarOrClockPickerView>
   extends Omit<PickerStateProps<TValue, TValue>, 'value' | 'onChange'>,
-    Omit<PickerViewManagerProps<TValue, TDate, TView>, 'value' | 'onChange' | 'viewRenderers'> {
+    Omit<PickerViewManagerProps<TValue, TDate, TView>, 'value' | 'onChange' | 'renderViews'> {
   /**
    * The value of the picker.
    */
@@ -44,7 +44,7 @@ export interface ExportedDesktopPickerProps<TValue, TDate, TView extends Calenda
 
 interface DesktopPickerProps<TValue, TDate, TView extends CalendarOrClockPickerView>
   extends ExportedDesktopPickerProps<TValue, TDate, TView>,
-    Pick<PickerViewManagerProps<TValue, TDate, TView>, 'viewRenderers'> {
+    Pick<PickerViewManagerProps<TValue, TDate, TView>, 'renderViews'> {
   valueManager: PickerStateValueManager<TValue, TValue, TDate>;
   /**
    * Overrideable components.
@@ -70,7 +70,7 @@ export function DesktopPicker<TValue, TDate, TView extends CalendarOrClockPicker
     openTo,
     views,
     onViewChange,
-    viewRenderers,
+    renderViews,
   } = props;
 
   const [value, setValue] = useControlled({
@@ -121,7 +121,7 @@ export function DesktopPicker<TValue, TDate, TView extends CalendarOrClockPicker
           openTo={openTo}
           views={views}
           onViewChange={onViewChange}
-          viewRenderers={viewRenderers}
+          renderViews={renderViews}
           value={pickerProps.parsedValue}
           // TODO: Fix the wrapper info
           onChange={pickerProps.onDateChange}

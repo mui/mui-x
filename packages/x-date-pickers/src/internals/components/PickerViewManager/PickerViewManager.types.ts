@@ -2,7 +2,13 @@ import * as React from 'react';
 import { CalendarOrClockPickerView } from '../../models/views';
 import { PickerSelectionState } from '../../hooks/usePickerState';
 
-export type PickerViewRenderer<TValue> = (props: { value: TValue }) => React.ReactNode;
+export interface PickerViewsRendererProps<TValue, TDate, TView extends CalendarOrClockPickerView>
+  extends Pick<
+    PickerViewManagerProps<TValue, TDate, TView>,
+    'value' | 'onChange' | 'views' | 'onViewChange' | 'autoFocus'
+  > {
+  view: TView;
+}
 
 export interface PickerViewManagerProps<TValue, TDate, TView extends CalendarOrClockPickerView> {
   value: TValue;
@@ -21,5 +27,6 @@ export interface PickerViewManagerProps<TValue, TDate, TView extends CalendarOrC
    * Array of views to show.
    */
   views: readonly TView[];
-  viewRenderers: Record<TView, PickerViewRenderer<TValue>>;
+  renderViews: (props: PickerViewsRendererProps<TValue, TDate, TView>) => React.ReactElement;
+  autoFocus?: boolean;
 }
