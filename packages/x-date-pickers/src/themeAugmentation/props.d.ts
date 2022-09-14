@@ -17,6 +17,7 @@ import { TimePickerProps } from '../TimePicker';
 import { YearPickerProps } from '../YearPicker';
 import { PickerStaticWrapperProps } from '../internals/components/PickerStaticWrapper';
 import { LocalizationProviderProps } from '../LocalizationProvider';
+import { DesktopDatePickerProps } from '../DesktopDatePicker';
 
 export interface PickersComponentsPropsList {
   MuiCalendarPicker: CalendarPickerProps<unknown>;
@@ -24,6 +25,7 @@ export interface PickersComponentsPropsList {
   MuiClockPicker: ClockPickerProps<unknown>;
   MuiDatePicker: DatePickerProps<unknown, unknown>;
   MuiDateTimePicker: DateTimePickerProps<unknown, unknown>;
+  MuiDesktopDatePicker: DesktopDatePickerProps<unknown, unknown>;
   MuiDesktopDateTimePicker: DesktopDateTimePickerProps<unknown, unknown>;
   MuiDesktopTimePicker: DesktopTimePickerProps<unknown, unknown>;
   MuiLocalizationProvider: LocalizationProviderProps;
