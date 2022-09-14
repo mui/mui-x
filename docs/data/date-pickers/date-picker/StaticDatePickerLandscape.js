@@ -12,7 +12,7 @@ const isWeekend = (date) => {
 };
 
 export default function StaticDatePickerLandscape() {
-  const [value, setValue] = React.useState(dayjs());
+  const [value, setValue] = React.useState(dayjs('2022-04-07'));
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
