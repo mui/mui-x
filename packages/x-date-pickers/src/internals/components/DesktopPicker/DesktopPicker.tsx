@@ -4,69 +4,11 @@ import IconButton from '@mui/material/IconButton';
 import { useSlotProps } from '@mui/base/utils';
 import { PickersPopper } from '../PickersPopper';
 import { useUtils } from '../../hooks/useUtils';
-import { PickerViewManager, PickerViewManagerProps } from '../PickerViewManager';
-import { usePickerState2, PickerStateProps2 } from '../../hooks/usePickerState2';
-import { PickerStateValueManager } from '../../hooks/usePickerState';
+import { PickerViewManager } from '../PickerViewManager';
+import { usePickerState2 } from '../../hooks/usePickerState2';
 import { CalendarOrClockPickerView } from '../../models/views';
-import { MuiPickersAdapter } from '../../models/muiPickersAdapter';
 import { Calendar } from '../icons';
-
-export interface DesktopPickerSlotsComponent {
-  Field: React.ElementType;
-  /**
-   * Icon displayed in the open picker button.
-   */
-  OpenPickerIcon: React.ElementType;
-  Input?: React.ElementType;
-  /**
-   * Button to open the picker.
-   * @default IconButton
-   */
-  OpenPickerButton?: React.ElementType;
-}
-
-// TODO: Type props of all slots
-export interface DesktopPickerSlotsComponentsProps {
-  field?: Record<string, any>;
-  input?: Record<string, any>;
-  openPickerIcon?: Record<string, any>;
-  openPickerButton?: Record<string, any>;
-}
-
-interface DesktopPickerProps<TValue, TDate, TView extends CalendarOrClockPickerView>
-  extends PickerStateProps2<TValue>,
-    Omit<PickerViewManagerProps<TValue, TDate, TView>, 'value' | 'onChange'> {
-  valueManager: PickerStateValueManager<TValue, TValue, TDate>;
-  /**
-   * Overrideable components.
-   * @default {}
-   */
-  components: DesktopPickerSlotsComponent;
-  /**
-   * The props used for each component slot.
-   * @default {}
-   */
-  componentsProps?: DesktopPickerSlotsComponentsProps;
-  /**
-   * Get aria-label text for control that opens picker dialog. Aria-label text must include selected date. @DateIOType
-   * @template TInputDate, TDate
-   * @param {TInputDate} date The date from which we want to add an aria-text.
-   * @param {MuiPickersAdapter<TDate>} utils The utils to manipulate the date.
-   * @returns {string} The aria-text to render inside the dialog.
-   * @default (date, utils) => `Choose date, selected date is ${utils.format(utils.date(date), 'fullDate')}`
-   */
-  getOpenDialogAriaText: (date: TDate, utils: MuiPickersAdapter<TDate>) => string;
-  /**
-   * Format of the date when rendered in the input(s).
-   */
-  inputFormat: string;
-}
-
-export interface ExportedDesktopPickerProps<TValue, TDate, TView extends CalendarOrClockPickerView>
-  extends Omit<
-    DesktopPickerProps<TValue, TDate, TView>,
-    'valueManager' | 'renderViews' | 'components' | 'componentsProps' | 'getOpenDialogAriaText'
-  > {}
+import { DesktopPickerProps } from './DesktopPicker.types';
 
 export function DesktopPicker<TValue, TDate, TView extends CalendarOrClockPickerView>(
   props: DesktopPickerProps<TValue, TDate, TView>,
@@ -74,6 +16,7 @@ export function DesktopPicker<TValue, TDate, TView extends CalendarOrClockPicker
   const {
     components,
     componentsProps = {},
+    className,
     openTo,
     views,
     inputFormat,
@@ -106,6 +49,7 @@ export function DesktopPicker<TValue, TDate, TView extends CalendarOrClockPicker
       ...pickerStateFieldProps,
       readOnly,
       disabled,
+      className,
       format: inputFormat,
     },
     // TODO: Pass owner state

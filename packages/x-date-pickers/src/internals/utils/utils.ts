@@ -23,6 +23,8 @@ export const onSpaceOrEnter =
     if (onFocus) {
       onFocus(event);
     }
+
+    return false;
   };
 
 export const executeInTheNextEventLoopTick = (fn: () => void) => {

@@ -434,6 +434,7 @@ export const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
   const [focusedView, setFocusedView] = React.useState<CalendarPickerView | null>(
     autoFocus ? openView : null,
   );
+
   const hasFocus = focusedView !== null;
 
   const handleFocusedViewChange = (eventView: CalendarPickerView) => (newHasFocus: boolean) => {
@@ -583,7 +584,6 @@ CalendarPicker.propTypes = {
    * @default false
    */
   disablePast: PropTypes.bool,
-  focusedView: PropTypes.oneOf(['day', 'month', 'year']),
   /**
    * Get aria-label text for switching between views button.
    * @param {CalendarPickerView} currentView The view from which we want to get the button text.
@@ -614,7 +614,6 @@ CalendarPicker.propTypes = {
    * Callback fired on date change
    */
   onChange: PropTypes.func.isRequired,
-  onFocusedViewChange: PropTypes.func,
   /**
    * Callback firing on month change @DateIOType.
    * @template TDate

@@ -1,3 +1,4 @@
+import * as React from 'react';
 import {
   DesktopPickerSlotsComponent,
   DesktopPickerSlotsComponentsProps,
@@ -14,7 +15,7 @@ export interface DesktopDatePicker2SlotsComponentsProps extends DesktopPickerSlo
 export interface DesktopDatePicker2Props<TDate>
   extends MakeOptional<
     ExportedDesktopPickerProps<TDate | null, TDate, CalendarPickerView>,
-    'views' | 'openTo' | 'inputFormat'
+    'inputFormat' | 'views' | 'openTo'
   > {
   /**
    * Overrideable components.
@@ -26,4 +27,8 @@ export interface DesktopDatePicker2Props<TDate>
    * @default {}
    */
   componentsProps?: DesktopDatePicker2SlotsComponentsProps;
+  /**
+   * The label content.
+   */
+  label?: React.ReactNode;
 }

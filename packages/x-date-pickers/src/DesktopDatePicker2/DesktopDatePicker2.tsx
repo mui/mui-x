@@ -1,4 +1,5 @@
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import { DesktopPicker } from '../internals/components/DesktopPicker';
 import { datePickerValueManager } from '../DatePicker/shared';
 import { Unstable_DateField as DateField } from '../DateField';
@@ -11,7 +12,7 @@ type DesktopDatePickerComponent = (<TDate>(
   props: DesktopDatePicker2Props<TDate> & React.RefAttributes<HTMLDivElement>,
 ) => JSX.Element) & { propTypes?: any };
 
-export const DesktopDatePicker2 = React.forwardRef(function DesktopDatePicker<TDate>(
+const DesktopDatePicker2 = React.forwardRef(function DesktopDatePicker<TDate>(
   inProps: DesktopDatePicker2Props<TDate>,
   ref: React.Ref<HTMLDivElement>,
 ) {
@@ -21,7 +22,7 @@ export const DesktopDatePicker2 = React.forwardRef(function DesktopDatePicker<TD
     'MuiDesktopDatePicker2',
   );
 
-  const { components: inComponents, componentsProps: inComponentsProps, ...other } = props;
+  const { components: inComponents, componentsProps: inComponentsProps, label, ...other } = props;
 
   const components = React.useMemo(
     () => ({
@@ -37,6 +38,7 @@ export const DesktopDatePicker2 = React.forwardRef(function DesktopDatePicker<TD
       ...inComponentsProps,
       field: {
         ref,
+        label,
       },
     }),
     [inComponentsProps],
@@ -53,3 +55,38 @@ export const DesktopDatePicker2 = React.forwardRef(function DesktopDatePicker<TD
     />
   );
 }) as DesktopDatePickerComponent;
+
+DesktopDatePicker2.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // ----------------------------------------------------------------------
+  /**
+   * Overrideable components.
+   * @default {}
+   */
+  components: PropTypes.object,
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  componentsProps: PropTypes.object,
+  /**
+   * Format of the date when rendered in the input(s).
+   */
+  inputFormat: PropTypes.string,
+  /**
+   * The label content.
+   */
+  label: PropTypes.node,
+  /**
+   * First view to show.
+   */
+  openTo: PropTypes.oneOf(['day', 'hours', 'minutes', 'month', 'seconds', 'year']).isRequired,
+  /**
+   * Array of views to show.
+   */
+  views: PropTypes.arrayOf(PropTypes.oneOf(['day', 'month', 'year']).isRequired),
+} as any;
+
+export { DesktopDatePicker2 };
