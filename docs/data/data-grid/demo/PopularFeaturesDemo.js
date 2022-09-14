@@ -5,6 +5,7 @@ import {
   gridClasses,
   GridToolbarContainer,
   GridToolbarQuickFilter,
+  useGridApiRef,
 } from '@mui/x-data-grid-premium';
 import Link from '@mui/material/Link';
 import Chip from '@mui/material/Chip';
@@ -320,6 +321,8 @@ const columns = [
 ];
 
 export default function PopularFeaturesDemo() {
+  const apiRef = useGridApiRef();
+
   const getDetailPanelContent = React.useCallback(
     ({ row }) => <RowDemo row={row} />,
     [],
@@ -327,6 +330,14 @@ export default function PopularFeaturesDemo() {
 
   const getRowHeight = React.useCallback(() => 'auto', []);
   const getDetailPanelHeight = React.useCallback(() => 'auto', []);
+
+  const onRowClick = React.useCallback(
+    (params) => {
+      console.log('row click');
+      apiRef.current.toggleDetailPanel(params.id);
+    },
+    [apiRef],
+  );
 
   const memoizedGroupingDef = React.useMemo(() => {
     return {
@@ -344,9 +355,10 @@ export default function PopularFeaturesDemo() {
   return (
     <div style={{ height: 'fit-content', width: '100%' }}>
       <DataGridPremium
+        apiRef={apiRef}
         autoHeight
         disableSelectionOnClick
-        onCellClick={(_, event) => event.stopPropagation()}
+        onRowClick={onRowClick}
         components={{
           Toolbar: CustomToolbar,
           DetailPanelExpandIcon: ArrowDown,

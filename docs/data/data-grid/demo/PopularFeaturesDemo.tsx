@@ -4,9 +4,11 @@ import {
   DataGridPremiumProps,
   gridClasses,
   GridColDef,
+  GridEventListener,
   GridRenderCellParams,
   GridToolbarContainer,
   GridToolbarQuickFilter,
+  useGridApiRef,
 } from '@mui/x-data-grid-premium';
 import Link from '@mui/material/Link';
 import Chip from '@mui/material/Chip';
@@ -32,6 +34,7 @@ import FullFeaturedDemo from './FullFeaturedDemo';
 import LazyLoadingGrid from '../row-updates/LazyLoadingGrid';
 import BasicGroupingDemo from '../column-groups/BasicGroupingDemo';
 import EditingWithDatePickers from '../recipes-editing/EditingWithDatePickers';
+import { on } from 'stream';
 
 type Row = {
   id: number;
@@ -323,12 +326,25 @@ const columns: GridColDef[] = [
 ];
 
 export default function PopularFeaturesDemo() {
+  const apiRef = useGridApiRef();
+
   const getDetailPanelContent = React.useCallback<
     NonNullable<DataGridPremiumProps['getDetailPanelContent']>
   >(({ row }) => <RowDemo row={row} />, []);
 
-  const getRowHeight = React.useCallback<NonNullable<DataGridPremiumProps['getRowHeight']>>(() => 'auto', []);
-  const getDetailPanelHeight = React.useCallback<NonNullable<DataGridPremiumProps['getDetailPanelHeight']>>(() => 'auto', []);
+  const getRowHeight = React.useCallback<
+    NonNullable<DataGridPremiumProps['getRowHeight']>
+  >(() => 'auto', []);
+  const getDetailPanelHeight = React.useCallback<
+    NonNullable<DataGridPremiumProps['getDetailPanelHeight']>
+  >(() => 'auto', []);
+
+  const onRowClick = React.useCallback<GridEventListener<'rowClick'>>(
+    (params) => {
+      apiRef.current.toggleDetailPanel(params.id);
+    },
+    [apiRef],
+  );
 
   const memoizedGroupingDef = React.useMemo(() => {
     return {
@@ -346,9 +362,10 @@ export default function PopularFeaturesDemo() {
   return (
     <div style={{ height: 'fit-content', width: '100%' }}>
       <DataGridPremium
+        apiRef={apiRef}
         autoHeight
         disableSelectionOnClick
-        onCellClick={(_, event) => event.stopPropagation()}
+        onRowClick={onRowClick}
         components={{
           Toolbar: CustomToolbar,
           DetailPanelExpandIcon: ArrowDown,
