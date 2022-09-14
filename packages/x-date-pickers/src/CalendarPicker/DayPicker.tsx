@@ -127,6 +127,7 @@ const PickersCalendarWeek = styled('div')({
 export function DayPicker<TDate>(props: DayPickerProps<TDate>) {
   const now = useNow<TDate>();
   const utils = useUtils<TDate>();
+
   const {
     onFocusedDayChange,
     className,

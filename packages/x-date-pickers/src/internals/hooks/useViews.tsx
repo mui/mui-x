@@ -14,21 +14,21 @@ export type NonNullablePickerChangeHandler<TDate> = (
   selectionState?: PickerSelectionState,
 ) => void;
 
-interface UseViewsOptions<TDate, View extends CalendarOrClockPickerView> {
-  onChange: PickerOnChangeFn<TDate>;
+interface UseViewsOptions<TValue, View extends CalendarOrClockPickerView> {
+  onChange: (value: TValue, selectionState?: PickerSelectionState) => void;
   onViewChange?: (newView: View) => void;
   openTo?: View;
   view: View | undefined;
   views: readonly View[];
 }
 
-export function useViews<TDate, View extends CalendarOrClockPickerView>({
+export function useViews<TValue, View extends CalendarOrClockPickerView>({
   onChange,
   onViewChange,
   openTo,
   view,
   views,
-}: UseViewsOptions<TDate, View>) {
+}: UseViewsOptions<TValue, View>) {
   const [openView, setOpenView] = useControlled<View>({
     name: 'Picker',
     state: 'view',
@@ -56,15 +56,15 @@ export function useViews<TDate, View extends CalendarOrClockPickerView>({
     }
   }, [nextView, changeView]);
 
-  const handleChangeAndOpenNext = React.useCallback<PickerOnChangeFn<TDate>>(
-    (date, currentViewSelectionState) => {
+  const handleChangeAndOpenNext = React.useCallback(
+    (value: TValue, currentViewSelectionState?: PickerSelectionState) => {
       const isSelectionFinishedOnCurrentView = currentViewSelectionState === 'finish';
       const globalSelectionState =
         isSelectionFinishedOnCurrentView && Boolean(nextView)
           ? 'partial'
           : currentViewSelectionState;
 
-      onChange(date, globalSelectionState);
+      onChange(value, globalSelectionState);
       if (isSelectionFinishedOnCurrentView) {
         openNext();
       }
