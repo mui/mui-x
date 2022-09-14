@@ -5,11 +5,11 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { ClockPicker } from '@mui/x-date-pickers/ClockPicker';
 
 export default function SubComponentsTimePickers() {
-  const [date, setDate] = React.useState<Dayjs | null>(dayjs());
+  const [value, setValue] = React.useState<Dayjs | null>(dayjs());
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <ClockPicker value={date} onChange={(newDate) => setDate(newDate)} />
+      <ClockPicker value={value} onChange={(newValue) => setValue(newValue)} />
     </LocalizationProvider>
   );
 }
