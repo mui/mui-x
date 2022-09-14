@@ -120,6 +120,7 @@ describe('<DataGridPro /> - Row Editing', () => {
     clock.tick(500);
     expect(input!.value).to.equal('ADIDAS');
     fireEvent.keyDown(input, { key: 'Enter' });
+    await act(() => Promise.resolve());
     await waitFor(() => {
       expect(cell).to.have.text('ADIDAS');
     });
@@ -133,6 +134,7 @@ describe('<DataGridPro /> - Row Editing', () => {
     fireEvent.change(input, { target: { value: 'ADIDAS' } });
     expect(input!.value).to.equal('ADIDAS');
     fireEvent.keyDown(input, { key: 'Enter' });
+    await act(() => Promise.resolve());
     await waitFor(() => {
       expect(getCell(2, 0)).toHaveFocus();
     });

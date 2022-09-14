@@ -9,6 +9,7 @@ import {
   getColumnValues,
   getRows,
   getColumnHeaderCell,
+  getActiveCell,
 } from 'test/utils/helperFn';
 import {
   GridRowModel,
@@ -467,6 +468,16 @@ describe('<DataGridPro /> - Rows', () => {
       firstRow = renderingZone.querySelector('[role="row"]:first-child')!;
       firstColumn = firstRow.firstChild!;
       expect(firstColumn).to.have.attr('data-colindex', '3');
+    });
+
+    it('should keep the focused cell in the DOM while scrolling', () => {
+      render(<TestCaseVirtualization rowBuffer={0} columnBuffer={0} />);
+      userEvent.mousePress(getCell(0, 0));
+      expect(getActiveCell()).to.equal('0-0');
+      const virtualScroller = document.querySelector('.MuiDataGrid-virtualScroller')!;
+      virtualScroller.scrollTop = 10e6; // scroll to the bottom
+      act(() => virtualScroller.dispatchEvent(new Event('scroll')));
+      expect(getActiveCell()).to.equal('0-0');
     });
 
     describe('Pagination', () => {

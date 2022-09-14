@@ -1046,6 +1046,7 @@ describe('<DataGridPro /> - Row Editing', () => {
           apiRef.current.setEditCellValue({ id: 0, field: 'currencyPair', value: 'USD GBP' });
         });
         fireEvent.keyDown(cell.querySelector('input'), { key: 'Enter' });
+        await act(() => Promise.resolve());
         expect(spiedStopRowEditMode.callCount).to.equal(1);
         expect(spiedStopRowEditMode.lastCall.args[0].ignoreModifications).to.equal(true);
       });
@@ -1115,7 +1116,7 @@ describe('<DataGridPro /> - Row Editing', () => {
         const cell = getCell(0, 2);
         userEvent.mousePress(cell);
         fireEvent.doubleClick(cell);
-        await act(() => {
+        act(() => {
           apiRef.current.setEditCellValue({ id: 0, field: 'price1M', value: 'USD GBP' });
         });
         fireEvent.keyDown(cell.querySelector('input'), { key: 'Tab' });

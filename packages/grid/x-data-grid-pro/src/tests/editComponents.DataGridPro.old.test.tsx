@@ -476,6 +476,7 @@ describe('<DataGridPro /> - Edit Components', () => {
       fireEvent.change(input, { target: { value: '1942' } });
       clock.tick(500);
       fireEvent.keyDown(input, { key: 'Enter' });
+      await act(() => Promise.resolve());
 
       await waitFor(() => {
         expect(cell).to.have.text('1,942');

@@ -231,6 +231,7 @@ describe('<DataGridPro /> - Events Params', () => {
       clock.tick(500);
       expect(handleEditCellPropsChange.callCount).to.equal(1);
       fireEvent.keyDown(input, { key: 'Enter' });
+      await act(() => Promise.resolve());
 
       await waitFor(() => {
         expect(cell).to.have.text('Jack');

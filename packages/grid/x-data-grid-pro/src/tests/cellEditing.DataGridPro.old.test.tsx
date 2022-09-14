@@ -162,6 +162,7 @@ describe('<DataGridPro /> - Cell Editing', () => {
       clock.tick(500);
       expect(input.value).to.equal('1970');
       fireEvent.keyDown(input, { key: 'Enter' });
+      await act(() => Promise.resolve());
       await waitFor(() => {
         expect(cell).to.have.text('1970');
       });
@@ -198,6 +199,7 @@ describe('<DataGridPro /> - Cell Editing', () => {
         1: { year: { value: '1970' } },
       });
       fireEvent.keyDown(input, { key: 'Enter' });
+      await act(() => Promise.resolve());
       await waitFor(() => {
         expect(cell).to.have.text('1970');
       });
@@ -382,6 +384,7 @@ describe('<DataGridPro /> - Cell Editing', () => {
     expect(cell.querySelector('input')!.value).to.equal('n');
     clock.tick(500);
     fireEvent.keyDown(input, { key: 'Enter' });
+    await act(() => Promise.resolve());
 
     await waitFor(() => {
       expect(cell).to.have.class('MuiDataGrid-cell--editable');
@@ -402,6 +405,7 @@ describe('<DataGridPro /> - Cell Editing', () => {
     expect(cell.querySelector('input')!.value).to.equal('n');
     clock.tick(500);
     fireEvent.keyDown(input, { key: 'Tab' });
+    await act(() => Promise.resolve());
 
     await waitFor(() => {
       expect(cell).to.have.class('MuiDataGrid-cell--editable');
@@ -422,6 +426,7 @@ describe('<DataGridPro /> - Cell Editing', () => {
     clock.tick(500);
     expect(cell.querySelector('input')!.value).to.equal('1970');
     fireEvent.keyDown(input, { key: 'Tab', shiftKey: true });
+    await act(() => Promise.resolve());
 
     await waitFor(() => {
       expect(cell).to.have.class('MuiDataGrid-cell--editable');
@@ -553,6 +558,7 @@ describe('<DataGridPro /> - Cell Editing', () => {
     clock.tick(500);
     expect(cell.querySelector('input')!.value).to.equal('1962');
     fireEvent.keyDown(input, { key: 'Enter' });
+    await act(() => Promise.resolve());
 
     await waitFor(() => {
       expect(cell).not.to.have.class('MuiDataGrid-cell--editing');
@@ -661,6 +667,7 @@ describe('<DataGridPro /> - Cell Editing', () => {
     clock.tick(500);
     expect(cell.querySelector('input')!.value).to.equal('n');
     fireEvent.keyDown(input, { key: 'Enter' });
+    await act(() => Promise.resolve());
 
     await waitFor(() => {
       expect(cell).to.have.class('MuiDataGrid-cell--editable');

@@ -244,9 +244,11 @@ const DataGridProVirtualScroller = React.forwardRef<
   const {
     renderContext,
     getRows,
+    getFocusedRow,
     getRootProps,
     getContentProps,
     getRenderZoneProps,
+    getFocusRenderZoneProps,
     updateRenderZonePosition,
   } = useGridVirtualScroller({
     ref,
@@ -424,6 +426,9 @@ const DataGridProVirtualScroller = React.forwardRef<
         )}
         <GridVirtualScrollerRenderZone {...getRenderZoneProps()}>
           {mainRows}
+        </GridVirtualScrollerRenderZone>
+        <GridVirtualScrollerRenderZone {...getFocusRenderZoneProps()}>
+          {getFocusedRow()}
         </GridVirtualScrollerRenderZone>
         {rightRenderContext && (
           <VirtualScrollerPinnedColumns
