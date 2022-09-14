@@ -33,14 +33,9 @@ export interface DesktopPickerSlotsComponentsProps {
   openPickerButton?: Record<string, any>;
 }
 
-export interface ExportedDesktopPickerProps<TValue, TDate, TView extends CalendarOrClockPickerView>
-  extends Omit<PickerStateProps2<TValue>, 'value' | 'onChange'>,
-    Omit<PickerViewManagerProps<TValue, TDate, TView>, 'value' | 'onChange' | 'renderViews'>,
-    PickerStateProps2<TValue> {}
-
 interface DesktopPickerProps<TValue, TDate, TView extends CalendarOrClockPickerView>
-  extends ExportedDesktopPickerProps<TValue, TDate, TView>,
-    Pick<PickerViewManagerProps<TValue, TDate, TView>, 'renderViews'> {
+  extends PickerStateProps2<TValue>,
+    Omit<PickerViewManagerProps<TValue, TDate, TView>, 'value' | 'onChange'> {
   valueManager: PickerStateValueManager<TValue, TValue, TDate>;
   /**
    * Overrideable components.
@@ -62,6 +57,15 @@ interface DesktopPickerProps<TValue, TDate, TView extends CalendarOrClockPickerV
    */
   getOpenDialogAriaText: (date: TDate, utils: MuiPickersAdapter<TDate>) => string;
 }
+
+export type ExportedDesktopPickerProps<
+  TValue,
+  TDate,
+  TView extends CalendarOrClockPickerView,
+> = Omit<
+  DesktopPickerProps<TValue, TDate, TView>,
+  'valueManager' | 'renderViews' | 'components' | 'componentsProps' | 'getOpenDialogAriaText'
+>;
 
 export function DesktopPicker<TValue, TDate, TView extends CalendarOrClockPickerView>(
   props: DesktopPickerProps<TValue, TDate, TView>,

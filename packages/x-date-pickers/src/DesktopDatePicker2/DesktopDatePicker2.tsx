@@ -44,12 +44,12 @@ export const DesktopDatePicker2 = React.forwardRef(function DesktopDatePicker<TD
 
   return (
     <DesktopPicker
+      {...other}
       components={components}
       componentsProps={componentsProps}
       valueManager={datePickerValueManager}
       renderViews={renderDateViews}
       getOpenDialogAriaText={localeText.openDatePickerDialogue}
-      {...other}
     />
   );
 }) as DesktopDatePickerComponent;
