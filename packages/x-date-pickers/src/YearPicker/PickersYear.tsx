@@ -7,7 +7,11 @@ import {
   WrapperVariant,
   WrapperVariantContext,
 } from '../internals/components/wrappers/WrapperVariantContext';
-import { getPickersYearUtilityClass, pickersYearClasses, PickersYearClasses } from './pickersYearClasses';
+import {
+  getPickersYearUtilityClass,
+  pickersYearClasses,
+  PickersYearClasses,
+} from './pickersYearClasses';
 
 export interface PickersYearProps {
   autoFocus?: boolean;

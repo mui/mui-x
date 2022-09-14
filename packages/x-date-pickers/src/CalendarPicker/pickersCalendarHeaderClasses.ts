@@ -18,10 +18,7 @@ export type PickersCalendarHeaderClassKey = keyof PickersCalendarHeaderClasses;
 export const getPickersCalendarHeaderUtilityClass = (slot: string) =>
   generateUtilityClass('MuiPickersCalendarHeader', slot);
 
-export const pickersCalendarHeaderClasses: PickersCalendarHeaderClasses = generateUtilityClasses('MuiPickersCalendarHeader', [
-  'root',
-  'labelContainer',
-  'label',
-  'switchViewButton',
-  'switchViewIcon',
-]);
+export const pickersCalendarHeaderClasses: PickersCalendarHeaderClasses = generateUtilityClasses(
+  'MuiPickersCalendarHeader',
+  ['root', 'labelContainer', 'label', 'switchViewButton', 'switchViewIcon'],
+);
