@@ -432,7 +432,7 @@ export const useGridCellEditing = (
     GridNewCellEditingApi['unstable_setCellEditingEditCellValue']
   >(
     async (params) => {
-      const { id, field, value } = params;
+      const { id, field, value, debounceMs, unstable_skipValueParser: skipValueParser } = params;
 
       throwIfNotEditable(id, field);
       throwIfNotInMode(id, field, GridCellModes.Edit);
@@ -441,12 +441,16 @@ export const useGridCellEditing = (
       const row = apiRef.current.getRow(id)!;
 
       let parsedValue = value;
-      if (column.valueParser) {
+      if (column.valueParser && !skipValueParser) {
         parsedValue = column.valueParser(value, apiRef.current.getCellParams(id, field));
       }
 
       let editingState = gridEditRowsStateSelector(apiRef.current.state);
-      let newProps: GridEditCellProps = { ...editingState[id][field], value: parsedValue };
+      let newProps: GridEditCellProps = {
+        ...editingState[id][field],
+        value: parsedValue,
+        changeReason: debounceMs ? 'debouncedSetEditCellValue' : 'setEditCellValue',
+      };
 
       if (column.preProcessEditCellProps) {
         const hasChanged = value !== editingState[id][field].value;

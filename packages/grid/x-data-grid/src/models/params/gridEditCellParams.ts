@@ -29,6 +29,10 @@ export interface GridEditCellValueParams {
    * The debounce time in milliseconds.
    */
   debounceMs?: number;
+  /**
+   * TBD
+   */
+  unstable_skipValueParser?: boolean;
 }
 
 // TODO v6 - remove
