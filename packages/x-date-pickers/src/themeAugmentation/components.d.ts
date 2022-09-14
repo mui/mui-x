@@ -126,6 +126,12 @@ export interface PickerComponents<Theme = unknown> {
     styleOverrides?: ComponentsOverrides<Theme>['MuiPickerStaticWrapper'];
     variants?: ComponentsVariants['MuiPickerStaticWrapper'];
   };
+  // TODO v6: Rename 'PrivatePickersMonth' to 'MuiPickersMonth' to follow convention
+  PrivatePickersMonth?: {
+    defaultProps?: ComponentsProps['PrivatePickersMonth'];
+    styleOverrides?: ComponentsOverrides<Theme>['PrivatePickersMonth'];
+    variants?: ComponentsVariants['PrivatePickersMonth'];
+  };
   // TODO v6: Rename 'PrivatePickersSlideTransition' to 'MuiPickersSlideTransition' to follow convention
   PrivatePickersSlideTransition?: {
     defaultProps?: ComponentsProps['PrivatePickersSlideTransition'];

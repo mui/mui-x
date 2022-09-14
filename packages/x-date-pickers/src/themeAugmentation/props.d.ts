@@ -71,6 +71,8 @@ export interface PickersComponentsPropsList {
   MuiTimePickerToolbar: TimePickerToolbarProps<unknown>;
   MuiYearPicker: YearPickerProps<unknown>;
   MuiPickerStaticWrapper: PickerStaticWrapperProps;
+  // TODO v6: add `PrivatePickersMonth` once component is renamed to `MuiPickersMonth`
+  PrivatePickersMonth: never;
   // TODO v6: add `PrivatePickersSlideTransition` once component is renamed to `MuiPickersSlideTransition`
   PrivatePickersSlideTransition: never;
   // TODO v6: add `PickersToolbarTextProps` once component is renamed to `MuiPickersToolbarText`
