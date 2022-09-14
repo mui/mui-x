@@ -377,6 +377,11 @@ export default function PopularFeaturesDemo() {
         getDetailPanelContent={getDetailPanelContent}
         getDetailPanelHeight={getDetailPanelHeight}
         getRowHeight={getRowHeight}
+        initialState={{
+          sorting: {
+            sortModel: [{ field: 'plan', sort: 'asc' }],
+          },
+        }}
         sx={{
           [`& .${gridClasses.cell}`]: {
             py: 2,

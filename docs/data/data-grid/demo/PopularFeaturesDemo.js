@@ -333,7 +333,6 @@ export default function PopularFeaturesDemo() {
 
   const onRowClick = React.useCallback(
     (params) => {
-      console.log('row click');
       apiRef.current.toggleDetailPanel(params.id);
     },
     [apiRef],
@@ -370,6 +369,11 @@ export default function PopularFeaturesDemo() {
         getDetailPanelContent={getDetailPanelContent}
         getDetailPanelHeight={getDetailPanelHeight}
         getRowHeight={getRowHeight}
+        initialState={{
+          sorting: {
+            sortModel: [{ field: 'plan', sort: 'asc' }],
+          },
+        }}
         sx={{
           [`& .${gridClasses.cell}`]: {
             py: 2,
