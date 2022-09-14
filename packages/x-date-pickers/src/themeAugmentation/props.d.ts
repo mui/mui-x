@@ -34,6 +34,7 @@ import { ClockProps } from '../ClockPicker/Clock';
 import { ClockNumberProps } from '../ClockPicker/ClockNumber';
 import { ClockPointerProps } from '../ClockPicker/ClockPointer';
 import { TimePickerToolbarProps } from '../TimePicker/TimePickerToolbar';
+import { LocalizationProviderProps } from '../LocalizationProvider';
 
 export interface PickersComponentsPropsList {
   MuiCalendarOrClockPicker: CalendarOrClockPickerProps<unknown, unknown>;
@@ -51,6 +52,7 @@ export interface PickersComponentsPropsList {
   MuiDayPicker: DayPickerProps<unknown>;
   MuiDesktopDateTimePicker: DesktopDateTimePickerProps<unknown, unknown>;
   MuiDesktopTimePicker: DesktopTimePickerProps<unknown, unknown>;
+  MuiLocalizationProvider: LocalizationProviderProps;
   MuiMobileDatePicker: MobileDatePickerProps<unknown, unknown>;
   MuiMobileDateTimePicker: MobileDateTimePickerProps<unknown, unknown>;
   MuiMobileTimePicker: MobileTimePickerProps<unknown, unknown>;

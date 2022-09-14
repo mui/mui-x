@@ -66,6 +66,11 @@ export interface PickerComponents<Theme = unknown> {
     styleOverrides?: ComponentsOverrides<Theme>['MuiDayPicker'];
     variants?: ComponentsVariants['MuiDayPicker'];
   };
+  MuiLocalizationProvider?: {
+    defaultProps?: ComponentsProps['MuiLocalizationProvider'];
+    styleOverrides?: ComponentsOverrides<Theme>['MuiLocalizationProvider'];
+    variants?: ComponentsVariants['MuiLocalizationProvider'];
+  };
   MuiMonthPicker?: {
     defaultProps?: ComponentsProps['MuiMonthPicker'];
     styleOverrides?: ComponentsOverrides<Theme>['MuiMonthPicker'];
