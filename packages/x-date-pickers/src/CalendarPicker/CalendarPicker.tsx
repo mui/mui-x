@@ -197,9 +197,7 @@ const CalendarPickerViewTransitionContainer = styled(PickersFadeTransitionGroup,
   name: 'MuiCalendarPicker',
   slot: 'ViewTransitionContainer',
   overridesResolver: (props, styles) => styles.viewTransitionContainer,
-})<{ ownerState: CalendarPickerProps<any> }>({
-  overflowY: 'auto',
-});
+})<{ ownerState: CalendarPickerProps<any> }>({});
 
 type CalendarPickerComponent = (<TDate>(
   props: CalendarPickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
@@ -446,6 +444,11 @@ export const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
       }
     },
   );
+
+  React.useEffect(() => {
+    // Set focus to the button when switching from a view to another
+    handleFocusedViewChange(openView)(true);
+  }, [openView, handleFocusedViewChange]);
 
   return (
     <CalendarPickerRoot ref={ref} className={clsx(classes.root, className)} ownerState={ownerState}>
