@@ -73,7 +73,8 @@
       "type": {
         "name": "enum",
         "description": "'day'<br>&#124;&nbsp;'hours'<br>&#124;&nbsp;'minutes'<br>&#124;&nbsp;'month'<br>&#124;&nbsp;'seconds'<br>&#124;&nbsp;'year'"
-      }
+      },
+      "default": "'day'"
     },
     "orientation": {
       "type": { "name": "enum", "description": "'landscape'<br>&#124;&nbsp;'portrait'" }
@@ -96,6 +97,12 @@
     "shouldDisableYear": { "type": { "name": "func" } },
     "showDaysOutsideCurrentMonth": { "type": { "name": "bool" } },
     "showToolbar": { "type": { "name": "bool" } },
+    "sx": {
+      "type": {
+        "name": "union",
+        "description": "Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object"
+      }
+    },
     "timeIcon": { "type": { "name": "node" } },
     "ToolbarComponent": { "type": { "name": "elementType" }, "default": "DateTimePickerToolbar" },
     "toolbarFormat": { "type": { "name": "string" } },
@@ -106,7 +113,8 @@
       "type": {
         "name": "arrayOf",
         "description": "Array&lt;'day'<br>&#124;&nbsp;'hours'<br>&#124;&nbsp;'minutes'<br>&#124;&nbsp;'month'<br>&#124;&nbsp;'seconds'<br>&#124;&nbsp;'year'&gt;"
-      }
+      },
+      "default": "['year', 'day', 'hours', 'minutes']"
     }
   },
   "slots": {

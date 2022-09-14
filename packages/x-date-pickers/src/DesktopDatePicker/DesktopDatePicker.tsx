@@ -311,6 +311,8 @@ DesktopDatePicker.propTypes = {
   OpenPickerButtonProps: PropTypes.object,
   /**
    * First view to show.
+   * Must be a valid option from `views` list
+   * @default 'day'
    */
   openTo: PropTypes.oneOf(['day', 'month', 'year']),
   /**
@@ -405,6 +407,14 @@ DesktopDatePicker.propTypes = {
    */
   showToolbar: PropTypes.bool,
   /**
+   * The system prop that allows defining system overrides as well as additional CSS styles.
+   */
+  sx: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
+    PropTypes.func,
+    PropTypes.object,
+  ]),
+  /**
    * Component that will replace default toolbar renderer.
    * @default DatePickerToolbar
    */
@@ -433,6 +443,7 @@ DesktopDatePicker.propTypes = {
   value: PropTypes.any,
   /**
    * Array of views to show.
+   * @default ['year', 'day']
    */
   views: PropTypes.arrayOf(PropTypes.oneOf(['day', 'month', 'year']).isRequired),
 } as any;

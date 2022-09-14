@@ -73,7 +73,7 @@ The following demo shows how these two functions can be used:
 {{"demo": "ValueGetterSetterGrid.js", "bg": "inline"}}
 
 > Calling the `valueSetter` is the last step in the saving process.
-> The [validation](/x/react-data-grid/editing/#client-side-validation) will still be called with the values before they pass through the setter.
+> The [validation](/x/react-data-grid/editing/#validation) will still be called with the values before they pass through the setter.
 
 ### Client-side validation
 
@@ -166,7 +166,7 @@ The demo shows how to catch the start and end edit events in order to log which 
 ## Row editing
 
 Row editing lets you edit all cells in a given row simultaneously.
-It supports most of the same features as those available for [cell editing](/x/react-data-grid/editing/#cell-editing).
+It supports most of the same features as those available for cell editing.
 To enable it, change the edit mode to `"row"` using the `editMode` prop, then set to `true` the `editable` property in the `GridColDef` object of those columns that should be editable.
 
 ```tsx
@@ -242,7 +242,7 @@ Here is how you can create a full-featured CRUD:
 ### Saving rows with nested structures
 
 You can save columns that make use of `valueGetter` by adding a `valueSetter`.
-The same [approach](/x/react-data-grid/editing/#saving-nested-structures) from the cell editing mode can be used here.
+The same [approach](/x/react-data-grid/editing/#value-parser-and-value-setter) from the cell editing mode can be used here.
 Note that the `valueSetter` will be called for each field.
 
 ### Server-side persistence [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)

@@ -20,12 +20,12 @@ import { expectType } from '@mui/types';
 
 // Inference from the state
 const InferTest = () => {
-  const [date, setDate] = React.useState<Moment | null>(moment());
+  const [value, setValue] = React.useState<Moment | null>(moment());
 
   return (
     <DatePicker
-      value={date}
-      onChange={(newDate) => setDate(newDate)}
+      value={value}
+      onChange={(newValue) => setValue(newValue)}
       renderInput={() => <input />}
     />
   );

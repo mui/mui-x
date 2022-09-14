@@ -2,9 +2,10 @@ import * as React from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { unstable_useId as useId } from '@mui/material/utils';
-import { styled, useThemeProps } from '@mui/material/styles';
+import { styled, Theme, useThemeProps } from '@mui/material/styles';
 import { unstable_composeClasses as composeClasses } from '@mui/material';
-import { Clock } from './Clock';
+import { SxProps } from '@mui/system';
+import { Clock, ClockProps } from './Clock';
 import { useUtils, useNow, useLocaleText } from '../internals/hooks/useUtils';
 import { buildDeprecatedPropsWarning } from '../internals/utils/warning';
 import { getHourNumbers, getMinutesNumbers } from './ClockNumbers';
@@ -77,6 +78,10 @@ export interface ClockPickerSlotsComponentsProps extends PickersArrowSwitcherSlo
 export interface ClockPickerProps<TDate> extends ExportedClockPickerProps<TDate> {
   className?: string;
   /**
+   * The system prop that allows defining system overrides as well as additional CSS styles.
+   */
+  sx?: SxProps<Theme>;
+  /**
    * Set to `true` if focus should be moved to clock picker.
    */
   autoFocus?: boolean;
@@ -97,7 +102,7 @@ export interface ClockPickerProps<TDate> extends ExportedClockPickerProps<TDate>
   /**
    * Selected date @DateIOType.
    */
-  date: TDate | null;
+  value: TDate | null;
   /**
    * Get clock number aria-text for hours.
    * @param {string} hours The hours to format.
@@ -218,7 +223,7 @@ export const ClockPicker = React.forwardRef(function ClockPicker<TDate extends u
     autoFocus,
     components,
     componentsProps,
-    date,
+    value,
     disableIgnoringDatePartForTimeValidation,
     getClockLabelText: getClockLabelTextProp,
     getHoursClockNumberText: getHoursClockNumberTextProp,
@@ -237,6 +242,7 @@ export const ClockPicker = React.forwardRef(function ClockPicker<TDate extends u
     openTo,
     onViewChange,
     className,
+    sx,
     disabled,
     readOnly,
   } = props;
@@ -272,13 +278,13 @@ export const ClockPicker = React.forwardRef(function ClockPicker<TDate extends u
   const now = useNow<TDate>();
   const utils = useUtils<TDate>();
 
-  const dateOrMidnight = React.useMemo(
-    () => date || utils.setSeconds(utils.setMinutes(utils.setHours(now, 0), 0), 0),
-    [date, now, utils],
+  const selectedTimeOrMidnight = React.useMemo(
+    () => value || utils.setSeconds(utils.setMinutes(utils.setHours(now, 0), 0), 0),
+    [value, now, utils],
   );
 
   const { meridiemMode, handleMeridiemChange } = useMeridiemMode<TDate>(
-    dateOrMidnight,
+    selectedTimeOrMidnight,
     ampm,
     handleChangeAndOpenNext,
   );
@@ -299,13 +305,13 @@ export const ClockPicker = React.forwardRef(function ClockPicker<TDate extends u
         return true;
       };
 
-      const isValidValue = (value: number, step = 1) => {
-        if (value % step !== 0) {
+      const isValidValue = (timeValue: number, step = 1) => {
+        if (timeValue % step !== 0) {
           return false;
         }
 
         if (shouldDisableTime) {
-          return !shouldDisableTime(value, viewType);
+          return !shouldDisableTime(timeValue, viewType);
         }
 
         return true;
@@ -313,16 +319,16 @@ export const ClockPicker = React.forwardRef(function ClockPicker<TDate extends u
 
       switch (viewType) {
         case 'hours': {
-          const value = convertValueToMeridiem(rawValue, meridiemMode, ampm);
-          const dateWithNewHours = utils.setHours(dateOrMidnight, value);
+          const valueWithMeridiem = convertValueToMeridiem(rawValue, meridiemMode, ampm);
+          const dateWithNewHours = utils.setHours(selectedTimeOrMidnight, valueWithMeridiem);
           const start = utils.setSeconds(utils.setMinutes(dateWithNewHours, 0), 0);
           const end = utils.setSeconds(utils.setMinutes(dateWithNewHours, 59), 59);
 
-          return !containsValidTime({ start, end }) || !isValidValue(value);
+          return !containsValidTime({ start, end }) || !isValidValue(valueWithMeridiem);
         }
 
         case 'minutes': {
-          const dateWithNewMinutes = utils.setMinutes(dateOrMidnight, rawValue);
+          const dateWithNewMinutes = utils.setMinutes(selectedTimeOrMidnight, rawValue);
           const start = utils.setSeconds(dateWithNewMinutes, 0);
           const end = utils.setSeconds(dateWithNewMinutes, 59);
 
@@ -330,7 +336,7 @@ export const ClockPicker = React.forwardRef(function ClockPicker<TDate extends u
         }
 
         case 'seconds': {
-          const dateWithNewSeconds = utils.setSeconds(dateOrMidnight, rawValue);
+          const dateWithNewSeconds = utils.setSeconds(selectedTimeOrMidnight, rawValue);
           const start = dateWithNewSeconds;
           const end = dateWithNewSeconds;
 
@@ -343,7 +349,7 @@ export const ClockPicker = React.forwardRef(function ClockPicker<TDate extends u
     },
     [
       ampm,
-      dateOrMidnight,
+      selectedTimeOrMidnight,
       disableIgnoringDatePartForTimeValidation,
       maxTime,
       meridiemMode,
@@ -356,64 +362,69 @@ export const ClockPicker = React.forwardRef(function ClockPicker<TDate extends u
 
   const selectedId = useId();
 
-  const viewProps = React.useMemo(() => {
+  const viewProps = React.useMemo<
+    Pick<ClockProps<TDate>, 'onChange' | 'viewValue' | 'children'>
+  >(() => {
     switch (openView) {
       case 'hours': {
-        const handleHoursChange = (value: number, isFinish?: PickerSelectionState) => {
-          const valueWithMeridiem = convertValueToMeridiem(value, meridiemMode, ampm);
-          handleChangeAndOpenNext(utils.setHours(dateOrMidnight, valueWithMeridiem), isFinish);
+        const handleHoursChange = (hourValue: number, isFinish?: PickerSelectionState) => {
+          const valueWithMeridiem = convertValueToMeridiem(hourValue, meridiemMode, ampm);
+          handleChangeAndOpenNext(
+            utils.setHours(selectedTimeOrMidnight, valueWithMeridiem),
+            isFinish,
+          );
         };
 
         return {
           onChange: handleHoursChange,
-          value: utils.getHours(dateOrMidnight),
+          viewValue: utils.getHours(selectedTimeOrMidnight),
           children: getHourNumbers({
-            date,
+            value,
             utils,
             ampm,
             onChange: handleHoursChange,
             getClockNumberText: getHoursClockNumberText,
-            isDisabled: (value) => disabled || isTimeDisabled(value, 'hours'),
+            isDisabled: (hourValue) => disabled || isTimeDisabled(hourValue, 'hours'),
             selectedId,
           }),
         };
       }
 
       case 'minutes': {
-        const minutesValue = utils.getMinutes(dateOrMidnight);
-        const handleMinutesChange = (value: number, isFinish?: PickerSelectionState) => {
-          handleChangeAndOpenNext(utils.setMinutes(dateOrMidnight, value), isFinish);
+        const minutesValue = utils.getMinutes(selectedTimeOrMidnight);
+        const handleMinutesChange = (minuteValue: number, isFinish?: PickerSelectionState) => {
+          handleChangeAndOpenNext(utils.setMinutes(selectedTimeOrMidnight, minuteValue), isFinish);
         };
 
         return {
-          value: minutesValue,
+          viewValue: minutesValue,
           onChange: handleMinutesChange,
-          children: getMinutesNumbers({
+          children: getMinutesNumbers<TDate>({
             utils,
             value: minutesValue,
             onChange: handleMinutesChange,
             getClockNumberText: getMinutesClockNumberText,
-            isDisabled: (value) => disabled || isTimeDisabled(value, 'minutes'),
+            isDisabled: (minuteValue) => disabled || isTimeDisabled(minuteValue, 'minutes'),
             selectedId,
           }),
         };
       }
 
       case 'seconds': {
-        const secondsValue = utils.getSeconds(dateOrMidnight);
-        const handleSecondsChange = (value: number, isFinish?: PickerSelectionState) => {
-          handleChangeAndOpenNext(utils.setSeconds(dateOrMidnight, value), isFinish);
+        const secondsValue = utils.getSeconds(selectedTimeOrMidnight);
+        const handleSecondsChange = (secondValue: number, isFinish?: PickerSelectionState) => {
+          handleChangeAndOpenNext(utils.setSeconds(selectedTimeOrMidnight, secondValue), isFinish);
         };
 
         return {
-          value: secondsValue,
+          viewValue: secondsValue,
           onChange: handleSecondsChange,
           children: getMinutesNumbers({
             utils,
             value: secondsValue,
             onChange: handleSecondsChange,
             getClockNumberText: getSecondsClockNumberText,
-            isDisabled: (value) => disabled || isTimeDisabled(value, 'seconds'),
+            isDisabled: (secondValue) => disabled || isTimeDisabled(secondValue, 'seconds'),
             selectedId,
           }),
         };
@@ -425,14 +436,14 @@ export const ClockPicker = React.forwardRef(function ClockPicker<TDate extends u
   }, [
     openView,
     utils,
-    date,
+    value,
     ampm,
     getHoursClockNumberText,
     getMinutesClockNumberText,
     getSecondsClockNumberText,
     meridiemMode,
     handleChangeAndOpenNext,
-    dateOrMidnight,
+    selectedTimeOrMidnight,
     isTimeDisabled,
     selectedId,
     disabled,
@@ -442,7 +453,12 @@ export const ClockPicker = React.forwardRef(function ClockPicker<TDate extends u
   const classes = useUtilityClasses(ownerState);
 
   return (
-    <ClockPickerRoot ref={ref} className={clsx(classes.root, className)} ownerState={ownerState}>
+    <ClockPickerRoot
+      ref={ref}
+      className={clsx(classes.root, className)}
+      ownerState={ownerState}
+      sx={sx}
+    >
       {showViewSwitcher && (
         <ClockPickerArrowSwitcher
           className={classes.arrowSwitcher}
@@ -460,8 +476,8 @@ export const ClockPicker = React.forwardRef(function ClockPicker<TDate extends u
 
       <Clock<TDate>
         autoFocus={autoFocus}
-        date={date}
         ampmInClock={ampmInClock}
+        value={value}
         type={openView}
         ampm={ampm}
         getClockLabelText={getClockLabelText}
@@ -512,10 +528,6 @@ ClockPicker.propTypes = {
    * @default {}
    */
   componentsProps: PropTypes.object,
-  /**
-   * Selected date @DateIOType.
-   */
-  date: PropTypes.any,
   /**
    * If `true`, the picker and text field are disabled.
    * @default false
@@ -623,6 +635,18 @@ ClockPicker.propTypes = {
    */
   shouldDisableTime: PropTypes.func,
   showViewSwitcher: PropTypes.bool,
+  /**
+   * The system prop that allows defining system overrides as well as additional CSS styles.
+   */
+  sx: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
+    PropTypes.func,
+    PropTypes.object,
+  ]),
+  /**
+   * Selected date @DateIOType.
+   */
+  value: PropTypes.any,
   /**
    * Controlled open view.
    */

@@ -97,6 +97,8 @@ const isDatePickerView = (view: CalendarOrClockPickerView): view is CalendarPick
 const isTimePickerView = (view: CalendarOrClockPickerView): view is ClockPickerView =>
   view === 'hours' || view === 'minutes' || view === 'seconds';
 
+let warnedOnceNotValidOpenTo = false;
+
 export function CalendarOrClockPicker<TDate, View extends CalendarOrClockPickerView>(
   props: CalendarOrClockPickerProps<TDate, View>,
 ) {
@@ -147,6 +149,16 @@ export function CalendarOrClockPicker<TDate, View extends CalendarOrClockPickerV
     },
     [isMobileKeyboardViewOpen, onViewChange, toggleMobileKeyboardView],
   );
+
+  if (process.env.NODE_ENV !== 'production') {
+    if (!warnedOnceNotValidOpenTo && !views.includes(openTo)) {
+      console.warn(
+        `MUI: \`openTo="${openTo}"\` is not a valid prop.`,
+        `It must be an element of \`views=["${views.join('", "')}"]\`.`,
+      );
+      warnedOnceNotValidOpenTo = true;
+    }
+  }
 
   const { openView, setOpenView, handleChangeAndOpenNext } = useViews<TDate, View>({
     view: undefined,
@@ -201,7 +213,7 @@ export function CalendarOrClockPicker<TDate, View extends CalendarOrClockPickerV
             {isDatePickerView(openView) && (
               <CalendarPicker
                 autoFocus={autoFocus}
-                date={parsedValue}
+                value={parsedValue}
                 onViewChange={setOpenView as (view: CalendarPickerView) => void}
                 onChange={handleChangeAndOpenNext}
                 view={openView}
@@ -217,7 +229,7 @@ export function CalendarOrClockPicker<TDate, View extends CalendarOrClockPickerV
               <ClockPicker
                 {...other}
                 autoFocus={autoFocus}
-                date={parsedValue}
+                value={parsedValue}
                 view={openView}
                 // Unclear why the predicate `isDatePickerView` does not imply the casted type
                 views={views.filter(isTimePickerView) as ClockPickerView[]}
