@@ -4,6 +4,8 @@ import { datePickerValueManager } from '../DatePicker/shared';
 import { Unstable_DateField as DateField } from '../DateField';
 import { DesktopDatePicker2Props } from './DesktopDatePicker2.types';
 import { useDatePicker2DefaultizedProps, renderDateViews } from './shared';
+import { useLocaleText } from '../internals';
+import { Calendar } from '../internals/components/icons';
 
 type DesktopDatePickerComponent = (<TDate>(
   props: DesktopDatePicker2Props<TDate> & React.RefAttributes<HTMLDivElement>,
@@ -18,12 +20,15 @@ export const DesktopDatePicker2 = React.forwardRef(function DesktopDatePicker<TD
     'MuiDesktopDatePicker2',
   );
 
+  const localeText = useLocaleText();
+
   const { components: inComponents, componentsProps, ...other } = props;
 
   const components = React.useMemo(
     () => ({
-      ...inComponents,
       Field: DateField,
+      OpenPickerIcon: Calendar,
+      ...inComponents,
     }),
     [inComponents],
   );
@@ -34,6 +39,7 @@ export const DesktopDatePicker2 = React.forwardRef(function DesktopDatePicker<TD
       componentsProps={componentsProps}
       valueManager={datePickerValueManager}
       renderViews={renderDateViews}
+      getOpenDialogAriaText={localeText.openDatePickerDialogue}
       {...other}
     />
   );

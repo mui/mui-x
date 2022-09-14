@@ -6,7 +6,8 @@ import {
 import { CalendarPickerView } from '../internals/models';
 import { MakeOptional } from '../internals/models/helpers';
 
-export interface DesktopDatePicker2SlotsComponent extends DesktopPickerSlotsComponent {}
+export interface DesktopDatePicker2SlotsComponent
+  extends MakeOptional<DesktopPickerSlotsComponent, 'Field' | 'OpenPickerIcon'> {}
 
 export interface DesktopDatePicker2SlotsComponentsProps extends DesktopPickerSlotsComponentsProps {}
 

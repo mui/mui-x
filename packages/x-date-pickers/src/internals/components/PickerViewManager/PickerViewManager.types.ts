@@ -29,4 +29,14 @@ export interface PickerViewManagerProps<TValue, TDate, TView extends CalendarOrC
   views: readonly TView[];
   renderViews: (props: PickerViewsRendererProps<TValue, TDate, TView>) => React.ReactElement;
   autoFocus?: boolean;
+  /**
+   * Make picker read only.
+   * @default false
+   */
+  readOnly?: boolean;
+  /**
+   * If `true`, the picker and text field are disabled.
+   * @default false
+   */
+  disabled?: boolean;
 }

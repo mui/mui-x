@@ -24,9 +24,6 @@ export function useDatePicker2DefaultizedProps<
   };
 }
 
-export const renderDateViews = <TDate extends unknown>({
-  value,
-  ...other
-}: PickerViewsRendererProps<TDate | null, TDate, CalendarPickerView>) => (
-  <CalendarPicker<TDate> date={value} {...other} />
-);
+export const renderDateViews = <TDate extends unknown>(
+  props: PickerViewsRendererProps<TDate | null, TDate, CalendarPickerView>,
+) => <CalendarPicker<TDate> {...props} />;
