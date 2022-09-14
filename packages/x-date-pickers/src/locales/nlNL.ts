@@ -43,6 +43,10 @@ const nlNLPickers: Partial<PickersLocaleText<any>> = {
   minutesClockNumberText: (minutes) => `${minutes} minuten`,
   secondsClockNumberText: (seconds) => `${seconds} seconden`,
 
+  // Calendar labels
+  // calendarWeekNumberHeaderLabel: 'Week number',
+  // calendarWeekNumberHeaderText: '#',
+
   // Open picker labels
   openDatePickerDialogue: (rawValue, utils) =>
     rawValue && utils.isValid(utils.date(rawValue))

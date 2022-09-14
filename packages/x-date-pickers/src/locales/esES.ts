@@ -49,6 +49,10 @@ const esESPickers: Partial<PickersLocaleText<any>> = {
   minutesClockNumberText: (minutes) => `${minutes} minutos`,
   secondsClockNumberText: (seconds) => `${seconds} segundos`,
 
+  // Calendar labels
+  // calendarWeekNumberHeaderLabel: 'Week number',
+  // calendarWeekNumberHeaderText: '#',
+
   // Open picker labels
   openDatePickerDialogue: (rawValue, utils) =>
     rawValue && utils.isValid(utils.date(rawValue))

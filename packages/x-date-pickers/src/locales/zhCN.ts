@@ -45,6 +45,10 @@ const zhCNPickers: Partial<PickersLocaleText<any>> = {
   minutesClockNumberText: (minutes) => `${minutes}分钟`,
   secondsClockNumberText: (seconds) => `${seconds}秒`,
 
+  // Calendar labels
+  // calendarWeekNumberHeaderLabel: 'Week number',
+  // calendarWeekNumberHeaderText: '#',
+
   // Open picker labels
   openDatePickerDialogue: (rawValue, utils) =>
     rawValue && utils.isValid(utils.date(rawValue))

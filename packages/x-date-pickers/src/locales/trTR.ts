@@ -35,6 +35,10 @@ const trTRPickers: Partial<PickersLocaleText<any>> = {
   // minutesClockNumberText: minutes => `${minutes} minutes`,
   // secondsClockNumberText: seconds => `${seconds} seconds`,
 
+  // Calendar labels
+  // calendarWeekNumberHeaderLabel: 'Week number',
+  // calendarWeekNumberHeaderText: '#',
+
   // Open picker labels
   // openDatePickerDialogue: (rawValue, utils) => rawValue && utils.isValid(utils.date(rawValue)) ? `Choose date, selected date is ${utils.format(utils.date(rawValue)!, 'fullDate')}` : 'Choose date',
   // openTimePickerDialogue: (rawValue, utils) => rawValue && utils.isValid(utils.date(rawValue)) ? `Choose time, selected time is ${utils.format(utils.date(rawValue)!, 'fullTime')}` : 'Choose time',

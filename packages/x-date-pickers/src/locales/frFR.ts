@@ -57,6 +57,10 @@ const frFRPickers: Partial<PickersLocaleText<any>> = {
   minutesClockNumberText: (minutes) => `${minutes} minutes`,
   secondsClockNumberText: (seconds) => `${seconds} secondes`,
 
+  // Calendar labels
+  // calendarWeekNumberHeaderLabel: 'Week number',
+  // calendarWeekNumberHeaderText: '#',
+
   // Open picker labels
   openDatePickerDialogue: (rawValue, utils) =>
     rawValue && utils.isValid(utils.date(rawValue))
