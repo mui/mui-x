@@ -56,7 +56,7 @@ const CalendarPickerSkeletonWeek = styled('div', {
 
 const CalendarPickerSkeletonDay = styled(Skeleton, {
   name: 'MuiCalendarPickerSkeleton',
-  slot: 'Day',
+  slot: 'DaySkeleton',
   overridesResolver: (props, styles) => styles.daySkeleton,
 })<{ ownerState: { day: number } }>(({ ownerState }) => ({
   margin: `0 ${DAY_MARGIN}px`,
@@ -103,7 +103,7 @@ function CalendarPickerSkeleton(props: CalendarPickerSkeletonProps) {
     name: 'MuiCalendarPickerSkeleton',
   });
 
-  const classes = useUtilityClasses(props);
+  const classes = useUtilityClasses(other);
 
   return (
     <CalendarPickerSkeletonRoot className={clsx(classes.root, className)} {...other}>

@@ -2,19 +2,14 @@ export { DateTimePicker } from './DateTimePicker';
 export { DateTimePickerTabs } from './DateTimePickerTabs';
 export type { DateTimePickerProps } from './DateTimePicker';
 export type { DateTimePickerTabsProps } from './DateTimePickerTabs';
+export type { DateTimePickerToolbarProps } from './DateTimePickerToolbar';
 
-export {
-  getDateTimePickerTabsUtilityClass,
-  dateTimePickerTabsClasses,
-} from './dateTimePickerTabsClasses';
+export { dateTimePickerTabsClasses } from './dateTimePickerTabsClasses';
 export type {
   DateTimePickerTabsClassKey,
   DateTimePickerTabsClasses,
 } from './dateTimePickerTabsClasses';
-export {
-  getDateTimePickerToolbarUtilityClass,
-  dateTimePickerToolbarClasses,
-} from './dateTimePickerToolbarClasses';
+export { dateTimePickerToolbarClasses } from './dateTimePickerToolbarClasses';
 export type {
   DateTimePickerToolbarClassKey,
   DateTimePickerToolbarClasses,

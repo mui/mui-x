@@ -147,6 +147,8 @@ export function CalendarOrClockPicker<TDate, View extends CalendarOrClockPickerV
     dateRangeIcon,
     timeIcon,
     hideTabs,
+    // excluding classes from `other` to avoid passing them down to children
+    classes: providedClasses,
     ...other
   } = props;
   const TabsComponent = other.components?.Tabs;

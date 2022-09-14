@@ -43,7 +43,7 @@ const PickersToolbarTextRoot = styled(Typography, {
 
 export const PickersToolbarText = React.forwardRef<HTMLSpanElement, PickersToolbarTextProps>(
   function PickersToolbarText(props, ref) {
-    // TODO: add 'useThemeProps' once the component class names are aligned
+    // TODO v6: add 'useThemeProps' once the component class names are aligned
     const { className, selected, value, ...other } = props;
     const classes = useUtilityClasses(props);
 

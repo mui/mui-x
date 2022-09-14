@@ -1,10 +1,8 @@
 export { DatePicker } from './DatePicker';
 export type { DatePickerProps } from './DatePicker';
+export type { DatePickerToolbarProps } from './DatePickerToolbar';
 
-export {
-  getDatePickerToolbarUtilityClass,
-  datePickerToolbarClasses,
-} from './datePickerToolbarClasses';
+export { datePickerToolbarClasses } from './datePickerToolbarClasses';
 export type {
   DatePickerToolbarClassKey,
   DatePickerToolbarClasses,

@@ -75,11 +75,10 @@ export interface DayPickerProps<TDate>
   hasFocus?: boolean;
   onFocusedViewChange?: (newHasFocus: boolean) => void;
   gridLabelId?: string;
+  classes?: Partial<DayPickerClasses>;
 }
 
-const useUtilityClasses = (
-  ownerState: DayPickerProps<any> & { classes?: Partial<DayPickerClasses> },
-) => {
+const useUtilityClasses = (ownerState: DayPickerProps<any>) => {
   const { classes } = ownerState;
   const slots = {
     header: ['header'],

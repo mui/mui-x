@@ -97,7 +97,7 @@ const noop = () => {};
  */
 export const PickersYear = React.forwardRef<HTMLButtonElement, PickersYearProps>(
   function PickersYear(props, forwardedRef) {
-    // TODO: add 'useThemeProps' once the component class names are aligned
+    // TODO v6: add 'useThemeProps' once the component class names are aligned
     const {
       autoFocus,
       className,

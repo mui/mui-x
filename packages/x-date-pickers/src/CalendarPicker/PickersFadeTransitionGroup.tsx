@@ -14,13 +14,10 @@ export interface PickersFadeTransitionGroupProps {
   className?: string;
   reduceAnimations: boolean;
   transKey: React.Key;
+  classes?: Partial<PickersFadeTransitionGroupClasses>;
 }
 
-const useUtilityClasses = (
-  ownerState: PickersFadeTransitionGroupProps & {
-    classes?: Partial<PickersFadeTransitionGroupClasses>;
-  },
-) => {
+const useUtilityClasses = (ownerState: PickersFadeTransitionGroupProps) => {
   const { classes } = ownerState;
   const slots = {
     root: ['root'],

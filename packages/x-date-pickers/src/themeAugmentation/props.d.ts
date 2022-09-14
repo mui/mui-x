@@ -1,8 +1,12 @@
 import { CalendarPickerProps } from '../CalendarPicker';
 import { CalendarPickerSkeletonProps } from '../CalendarPickerSkeleton';
 import { ClockPickerProps } from '../ClockPicker';
-import { DatePickerProps } from '../DatePicker';
-import { DateTimePickerProps, DateTimePickerTabsProps } from '../DateTimePicker';
+import { DatePickerProps, DatePickerToolbarProps } from '../DatePicker';
+import {
+  DateTimePickerProps,
+  DateTimePickerTabsProps,
+  DateTimePickerToolbarProps,
+} from '../DateTimePicker';
 import { DesktopDateTimePickerProps } from '../DesktopDateTimePicker';
 import { DesktopTimePickerProps } from '../DesktopTimePicker';
 import { MobileDatePickerProps } from '../MobileDatePicker';
@@ -17,7 +21,6 @@ import { TimePickerProps } from '../TimePicker';
 import { YearPickerProps } from '../YearPicker';
 import { PickerStaticWrapperProps } from '../internals/components/PickerStaticWrapper';
 import {
-  BaseToolbarProps,
   CalendarOrClockPickerProps,
   DayPickerProps,
   PickerPopperProps,
@@ -40,10 +43,10 @@ export interface PickersComponentsPropsList {
   MuiClockPicker: ClockPickerProps<unknown>;
   MuiClockPointer: ClockPointerProps;
   MuiDatePicker: DatePickerProps<unknown, unknown>;
-  MuiDatePickerToolbar: BaseToolbarProps<unknown, unknown>;
+  MuiDatePickerToolbar: DatePickerToolbarProps<unknown>;
   MuiDateTimePicker: DateTimePickerProps<unknown, unknown>;
   MuiDateTimePickerTabs: DateTimePickerTabsProps;
-  MuiDateTimePickerToolbar: BaseToolbarProps<unknown, unknown>;
+  MuiDateTimePickerToolbar: DateTimePickerToolbarProps<unknown>;
   MuiDayPicker: DayPickerProps<unknown>;
   MuiDesktopDateTimePicker: DesktopDateTimePickerProps<unknown, unknown>;
   MuiDesktopTimePicker: DesktopTimePickerProps<unknown, unknown>;

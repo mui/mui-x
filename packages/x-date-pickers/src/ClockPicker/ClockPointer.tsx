@@ -11,15 +11,14 @@ export interface ClockPointerProps extends React.HTMLAttributes<HTMLDivElement> 
   isInner: boolean;
   type: ClockPickerView;
   value: number;
+  classes?: Partial<ClockPointerClasses>;
 }
 
 interface ClockPointerState {
   shouldAnimate: boolean;
 }
 
-const useUtilityClasses = (
-  ownerState: ClockPointerProps & { classes?: Partial<ClockPointerClasses> },
-) => {
+const useUtilityClasses = (ownerState: ClockPointerProps) => {
   const { classes } = ownerState;
   const slots = {
     root: ['root'],

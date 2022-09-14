@@ -40,9 +40,10 @@ export interface ClockProps<TDate> extends ReturnType<typeof useMeridiemMode> {
   disabled?: boolean;
   readOnly?: boolean;
   className?: string;
+  classes?: Partial<ClockClasses>;
 }
 
-const useUtilityClasses = (ownerState: ClockProps<any> & { classes?: Partial<ClockClasses> }) => {
+const useUtilityClasses = (ownerState: ClockProps<any>) => {
   const { classes } = ownerState;
   const slots = {
     root: ['root'],

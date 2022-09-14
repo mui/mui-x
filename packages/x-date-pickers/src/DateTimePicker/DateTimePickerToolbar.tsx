@@ -2,7 +2,7 @@ import * as React from 'react';
 import { styled, useThemeProps } from '@mui/material/styles';
 import { unstable_composeClasses as composeClasses } from '@mui/material';
 import { PickersToolbarText } from '../internals/components/PickersToolbarText';
-import { PickersToolbar} from '../internals/components/PickersToolbar';
+import { PickersToolbar } from '../internals/components/PickersToolbar';
 import { pickersToolbarClasses } from '../internals/components/pickersToolbarClasses';
 import { PickersToolbarButton } from '../internals/components/PickersToolbarButton';
 import { useLocaleText, useUtils } from '../internals/hooks/useUtils';
@@ -12,9 +12,11 @@ import {
   getDateTimePickerToolbarUtilityClass,
 } from './dateTimePickerToolbarClasses';
 
-const useUtilityClasses = (
-  ownerState: BaseToolbarProps<any, any> & { classes?: Partial<DateTimePickerToolbarClasses> },
-) => {
+export interface DateTimePickerToolbarProps<TDate> extends BaseToolbarProps<TDate, TDate | null> {
+  classes?: Partial<DateTimePickerToolbarClasses>;
+}
+
+const useUtilityClasses = (ownerState: DateTimePickerToolbarProps<any>) => {
   const { classes } = ownerState;
   const slots = {
     root: ['root'],
@@ -30,7 +32,7 @@ const DateTimePickerToolbarRoot = styled(PickersToolbar, {
   name: 'MuiDateTimePickerToolbar',
   slot: 'Root',
   overridesResolver: (props, styles) => styles.root,
-})<{ ownerState: BaseToolbarProps<any, any> }>({
+})<{ ownerState: DateTimePickerToolbarProps<any> }>({
   paddingLeft: 16,
   paddingRight: 16,
   justifyContent: 'space-around',
@@ -45,7 +47,7 @@ const DateTimePickerToolbarDateContainer = styled('div', {
   name: 'MuiDateTimePickerToolbar',
   slot: 'DateContainer',
   overridesResolver: (props, styles) => styles.dateContainer,
-})<{ ownerState: BaseToolbarProps<any, any> }>({
+})<{ ownerState: DateTimePickerToolbarProps<any> }>({
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'flex-start',
@@ -55,7 +57,7 @@ const DateTimePickerToolbarTimeContainer = styled('div', {
   name: 'MuiDateTimePickerToolbar',
   slot: 'TimeContainer',
   overridesResolver: (props, styles) => styles.timeContainer,
-})<{ ownerState: BaseToolbarProps<any, any> }>({
+})<{ ownerState: DateTimePickerToolbarProps<any> }>({
   display: 'flex',
 });
 
@@ -64,7 +66,7 @@ const DateTimePickerToolbarSeparator = styled(PickersToolbarText, {
   slot: 'Separator',
   overridesResolver: (props, styles) => styles.separator,
 })<{
-  ownerState: BaseToolbarProps<any, any>;
+  ownerState: DateTimePickerToolbarProps<any>;
 }>({
   margin: '0 4px 0 2px',
   cursor: 'default',
@@ -74,7 +76,7 @@ const DateTimePickerToolbarSeparator = styled(PickersToolbarText, {
  * @ignore - internal component.
  */
 export function DateTimePickerToolbar<TDate extends unknown>(
-  inProps: BaseToolbarProps<TDate, TDate | null>,
+  inProps: DateTimePickerToolbarProps<TDate>,
 ) {
   const props = useThemeProps({ props: inProps, name: 'MuiDateTimePickerToolbar' });
   const {

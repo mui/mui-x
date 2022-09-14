@@ -13,9 +13,11 @@ import {
   getDatePickerToolbarUtilityClass,
 } from './datePickerToolbarClasses';
 
-const useUtilityClasses = (
-  ownerState: BaseToolbarProps<any, any> & { classes?: Partial<DatePickerToolbarClasses> },
-) => {
+export interface DatePickerToolbarProps<TDate> extends BaseToolbarProps<TDate, TDate | null> {
+  classes?: Partial<DatePickerToolbarClasses>;
+}
+
+const useUtilityClasses = (ownerState: DatePickerToolbarProps<any>) => {
   const { classes } = ownerState;
   const slots = {
     root: ['root'],
@@ -29,7 +31,7 @@ const DatePickerToolbarRoot = styled(PickersToolbar, {
   name: 'MuiDatePickerToolbar',
   slot: 'Root',
   overridesResolver: (_, styles) => styles.root,
-})<{ ownerState: BaseToolbarProps<any, any> }>({
+})<{ ownerState: DatePickerToolbarProps<any> }>({
   [`& .${pickersToolbarClasses.penIconButton}`]: {
     position: 'relative',
     top: 4,
@@ -40,21 +42,21 @@ const DatePickerToolbarTitle = styled(Typography, {
   name: 'MuiDatePickerToolbar',
   slot: 'Title',
   overridesResolver: (_, styles) => styles.title,
-})<{ ownerState: BaseToolbarProps<any, any> }>(({ ownerState }) => ({
+})<{ ownerState: DatePickerToolbarProps<any> }>(({ ownerState }) => ({
   ...(ownerState.isLandscape && {
     margin: 'auto 16px auto auto',
   }),
 }));
 
 type DatePickerToolbarComponent = (<TDate>(
-  props: BaseToolbarProps<TDate, TDate | null> & React.RefAttributes<HTMLDivElement>,
+  props: DatePickerToolbarProps<TDate> & React.RefAttributes<HTMLDivElement>,
 ) => JSX.Element) & { propTypes?: any };
 
 /**
  * @ignore - internal component.
  */
 export const DatePickerToolbar = React.forwardRef(function DatePickerToolbar<TDate>(
-  inProps: BaseToolbarProps<TDate, TDate | null>,
+  inProps: DatePickerToolbarProps<TDate>,
   ref: React.Ref<HTMLDivElement>,
 ) {
   const props = useThemeProps({ props: inProps, name: 'MuiDatePickerToolbar' });

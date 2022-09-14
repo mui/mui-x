@@ -149,9 +149,7 @@ export type CalendarPickerDefaultizedProps<TDate> = DefaultizedProps<
   | keyof BaseDateValidationProps<TDate>
 >;
 
-const useUtilityClasses = (
-  ownerState: CalendarPickerProps<any> & { classes?: Partial<CalendarPickerClasses> },
-) => {
+const useUtilityClasses = (ownerState: CalendarPickerProps<any>) => {
   const { classes } = ownerState;
   const slots = {
     root: ['root'],
@@ -250,6 +248,8 @@ export const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
     disableHighlightToday,
     focusedView,
     onFocusedViewChange,
+    // excluding classes from `other` to avoid passing them down to children
+    classes: providedClasses,
     ...other
   } = props;
 

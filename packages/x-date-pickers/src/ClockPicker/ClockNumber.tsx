@@ -20,14 +20,13 @@ export interface ClockNumberProps extends React.HTMLAttributes<HTMLSpanElement> 
   inner: boolean;
   label: string;
   selected: boolean;
+  classes?: Partial<ClockNumberClasses>;
 }
 
-const useUtilityClasses = (
-  ownerState: ClockNumberProps & { classes?: Partial<ClockNumberClasses> },
-) => {
-  const { classes } = ownerState;
+const useUtilityClasses = (ownerState: ClockNumberProps) => {
+  const { classes, selected, disabled } = ownerState;
   const slots = {
-    root: ['root'],
+    root: ['root', selected && 'selected', disabled && 'disabled'],
   };
 
   return composeClasses(slots, getClockNumberUtilityClass, classes);
@@ -84,10 +83,7 @@ export function ClockNumber(inProps: ClockNumberProps) {
 
   return (
     <ClockNumberRoot
-      className={clsx(className, classes.root, {
-        [clockNumberClasses.selected]: selected,
-        [clockNumberClasses.disabled]: disabled,
-      })}
+      className={clsx(className, classes.root)}
       aria-disabled={disabled ? true : undefined}
       aria-selected={selected ? true : undefined}
       role="option"

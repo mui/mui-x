@@ -54,13 +54,12 @@ export interface DateTimePickerTabsProps {
    * Open picker view
    */
   view: CalendarOrClockPickerView;
+  classes?: Partial<DateTimePickerTabsClasses>;
 }
 
 type OwnerState = DateTimePickerTabsProps & { wrapperVariant: WrapperVariant };
 
-const useUtilityClasses = (
-  ownerState: OwnerState & { classes?: Partial<DateTimePickerTabsClasses> },
-) => {
+const useUtilityClasses = (ownerState: OwnerState) => {
   const { classes } = ownerState;
   const slots = {
     root: ['root'],

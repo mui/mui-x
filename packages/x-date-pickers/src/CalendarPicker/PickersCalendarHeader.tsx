@@ -80,11 +80,10 @@ export interface PickersCalendarHeaderProps<TDate>
   reduceAnimations: boolean;
   onViewChange?: (view: CalendarPickerView) => void;
   labelId?: string;
+  classes?: Partial<PickersCalendarHeaderClasses>;
 }
 
-const useUtilityClasses = (
-  ownerState: PickersCalendarHeaderProps<any> & { classes?: Partial<PickersCalendarHeaderClasses> },
-) => {
+const useUtilityClasses = (ownerState: PickersCalendarHeaderProps<any>) => {
   const { classes } = ownerState;
   const slots = {
     root: ['root'],
