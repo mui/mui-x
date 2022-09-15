@@ -59,7 +59,7 @@ const PickersMonthRoot = styled('div', {
   justifyContent: 'center',
 });
 
-const PickersMonthButton = styled('button',  {
+const PickersMonthButton = styled('button', {
   name: 'PrivatePickersMonth',
   slot: 'MonthButton',
   overridesResolver: (_, styles) => [
