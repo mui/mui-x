@@ -251,7 +251,7 @@ createTheme({
     },
     MuiPickersCalendarHeader: {
       defaultProps: {
-        disabled: true,
+        classes: { root: 'test' },
         // @ts-expect-error invalid MuiPickersCalendarHeader prop
         someRandomProp: true,
       },

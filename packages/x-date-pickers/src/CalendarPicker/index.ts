@@ -14,6 +14,7 @@ export type {
   PickersCalendarHeaderClassKey,
   PickersCalendarHeaderClasses,
 } from './pickersCalendarHeaderClasses';
+export type { PickersFadeTransitionGroupProps } from './PickersFadeTransitionGroup';
 export { pickersFadeTransitionGroupClasses } from './pickersFadeTransitionGroupClasses';
 export type {
   PickersFadeTransitionGroupClassKey,

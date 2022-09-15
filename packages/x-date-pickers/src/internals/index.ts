@@ -20,6 +20,7 @@ export type {
 export { PickersArrowSwitcher } from './components/PickersArrowSwitcher';
 export type { ExportedArrowSwitcherProps } from './components/PickersArrowSwitcher';
 export { PickerStaticWrapper } from './components/PickerStaticWrapper/PickerStaticWrapper';
+export type { PickerStaticWrapperProps } from './components/PickerStaticWrapper/PickerStaticWrapper';
 export type {
   PickersStaticWrapperSlotsComponent,
   PickersStaticWrapperSlotsComponentsProps,

@@ -6,3 +6,4 @@ export type {
   TimePickerToolbarClassKey,
   TimePickerToolbarClasses,
 } from './timePickerToolbarClasses';
+export type { TimePickerToolbarProps } from './TimePickerToolbar';

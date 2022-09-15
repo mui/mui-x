@@ -27,7 +27,7 @@ import {
 
 export type ExportedCalendarHeaderProps<TDate> = Pick<
   PickersCalendarHeaderProps<TDate>,
-  'getViewSwitchingButtonText' | 'leftArrowButtonText' | 'rightArrowButtonText'
+  'getViewSwitchingButtonText' | 'leftArrowButtonText' | 'rightArrowButtonText' | 'classes'
 >;
 
 export interface PickersCalendarHeaderSlotsComponent extends PickersArrowSwitcherSlotsComponent {

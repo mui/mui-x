@@ -1,6 +1,6 @@
-import { CalendarPickerProps } from '../CalendarPicker';
+import { CalendarPickerProps, PickersFadeTransitionGroupProps } from '../CalendarPicker';
 import { CalendarPickerSkeletonProps } from '../CalendarPickerSkeleton';
-import { ClockPickerProps } from '../ClockPicker';
+import { ClockNumberProps, ClockPickerProps, ClockPointerProps, ClockProps } from '../ClockPicker';
 import { DatePickerProps, DatePickerToolbarProps } from '../DatePicker';
 import {
   DateTimePickerProps,
@@ -17,9 +17,8 @@ import { PickersDayProps } from '../PickersDay';
 import { StaticDatePickerProps } from '../StaticDatePicker';
 import { StaticDateTimePickerProps } from '../StaticDateTimePicker';
 import { StaticTimePickerProps } from '../StaticTimePicker';
-import { TimePickerProps } from '../TimePicker';
+import { TimePickerProps, TimePickerToolbarProps } from '../TimePicker';
 import { YearPickerProps } from '../YearPicker';
-import { PickerStaticWrapperProps } from '../internals/components/PickerStaticWrapper';
 import { LocalizationProviderProps } from '../LocalizationProvider';
 import { DesktopDatePickerProps } from '../DesktopDatePicker';
 import {
@@ -29,13 +28,9 @@ import {
   PickerPopperProps,
   PickersToolbarButtonProps,
   PickersToolbarProps,
+  PickerStaticWrapperProps,
+  ExportedCalendarHeaderProps,
 } from '../internals';
-import { PickersCalendarHeaderProps } from '../CalendarPicker/PickersCalendarHeader';
-import { PickersFadeTransitionGroupProps } from '../CalendarPicker/PickersFadeTransitionGroup';
-import { ClockProps } from '../ClockPicker/Clock';
-import { ClockNumberProps } from '../ClockPicker/ClockNumber';
-import { ClockPointerProps } from '../ClockPicker/ClockPointer';
-import { TimePickerToolbarProps } from '../TimePicker/TimePickerToolbar';
 
 export interface PickersComponentsPropsList {
   MuiCalendarOrClockPicker: CalendarOrClockPickerProps<unknown, unknown>;
@@ -60,7 +55,7 @@ export interface PickersComponentsPropsList {
   MuiMobileTimePicker: MobileTimePickerProps<unknown, unknown>;
   MuiMonthPicker: MonthPickerProps<unknown>;
   MuiPickersArrowSwitcher: ExportedArrowSwitcherProps;
-  MuiPickersCalendarHeader: PickersCalendarHeaderProps<unknown>;
+  MuiPickersCalendarHeader: ExportedCalendarHeaderProps<unknown>;
   MuiPickersDay: PickersDayProps<unknown>;
   MuiPickersFadeTransitionGroup: PickersFadeTransitionGroupProps;
   MuiPickersPopper: PickerPopperProps;
