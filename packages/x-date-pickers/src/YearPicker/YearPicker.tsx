@@ -4,14 +4,13 @@ import clsx from 'clsx';
 import { SxProps, useTheme } from '@mui/system';
 import { styled, useThemeProps, Theme } from '@mui/material/styles';
 import { unstable_composeClasses as composeClasses } from '@mui/material';
-import '@mui/material/utils';
+import { useForkRef } from '@mui/material/utils';
 import {
   unstable_useControlled as useControlled,
   unstable_useEventCallback as useEventCallback,
 } from '@mui/utils';
 import { PickersYear } from './PickersYear';
 import { useUtils, useNow, useDefaultDates } from '../internals/hooks/useUtils';
-import { NonNullablePickerChangeHandler } from '../internals/hooks/useViews';
 import { WrapperVariantContext } from '../internals/components/wrappers/WrapperVariantContext';
 import { YearPickerClasses, getYearPickerUtilityClass } from './yearPickerClasses';
 import { BaseDateValidationProps, YearValidationProps } from '../internals/hooks/validation/models';
@@ -61,7 +60,8 @@ const YearPickerRoot = styled('div', {
   flexWrap: 'wrap',
   overflowY: 'auto',
   height: '100%',
-  margin: '0 4px',
+  padding: '0 4px',
+  maxHeight: '304px',
 });
 
 export interface YearPickerProps<TDate>
@@ -80,11 +80,15 @@ export interface YearPickerProps<TDate>
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */
   sx?: SxProps<Theme>;
-  date: TDate | null;
+  value: TDate | null;
   /** If `true` picker is disabled */
   disabled?: boolean;
-  /** Callback fired on date change. */
-  onChange: NonNullablePickerChangeHandler<TDate>;
+  /**
+   * Callback fired when the value (the selected year) changes.
+   * @template TValue
+   * @param {TValue} value The new parsed value.
+   */
+  onChange: (value: TDate) => void;
   /** If `true` picker is readonly */
   readOnly?: boolean;
   /**
@@ -114,7 +118,7 @@ export const YearPicker = React.forwardRef(function YearPicker<TDate>(
   const {
     autoFocus,
     className,
-    date,
+    value,
     disabled,
     disableFuture,
     disablePast,
@@ -133,11 +137,11 @@ export const YearPicker = React.forwardRef(function YearPicker<TDate>(
   const ownerState = props;
   const classes = useUtilityClasses(ownerState);
 
-  const selectedDateOrToday = date ?? now;
+  const selectedDateOrToday = value ?? now;
   const todayYear = React.useMemo(() => utils.getYear(now), [utils, now]);
   const selectedYear = React.useMemo(() => {
-    if (date != null) {
-      return utils.getYear(date);
+    if (value != null) {
+      return utils.getYear(value);
     }
 
     if (disableHighlightToday) {
@@ -145,7 +149,8 @@ export const YearPicker = React.forwardRef(function YearPicker<TDate>(
     }
 
     return utils.getYear(now);
-  }, [now, date, utils, disableHighlightToday]);
+  }, [now, value, utils, disableHighlightToday]);
+
   const [focusedYear, setFocusedYear] = React.useState(() => selectedYear || todayYear);
 
   const [internalHasFocus, setInternalHasFocus] = useControlled<boolean>({
@@ -188,7 +193,7 @@ export const YearPicker = React.forwardRef(function YearPicker<TDate>(
     }
 
     const newDate = utils.setYear(selectedDateOrToday, year);
-    onChange(newDate, 'finish');
+    onChange(newDate);
   });
 
   const focusYear = useEventCallback((year: number) => {
@@ -240,9 +245,37 @@ export const YearPicker = React.forwardRef(function YearPicker<TDate>(
     }
   });
 
+  const scrollerRef = React.useRef<HTMLDivElement>(null);
+  const handleRef = useForkRef(ref, scrollerRef);
+  React.useEffect(() => {
+    if (autoFocus || scrollerRef.current === null) {
+      return;
+    }
+    const tabbableButton = scrollerRef.current.querySelector<HTMLElement>('[tabindex="0"]');
+    if (!tabbableButton) {
+      return;
+    }
+
+    // Taken from useScroll in x-data-grid, but vertically centered
+    const offsetHeight = tabbableButton.offsetHeight;
+    const offsetTop = tabbableButton.offsetTop;
+
+    const clientHeight = scrollerRef.current.clientHeight;
+    const scrollTop = scrollerRef.current.scrollTop;
+
+    const elementBottom = offsetTop + offsetHeight;
+
+    if (offsetHeight > clientHeight || offsetTop < scrollTop) {
+      // Button already visible
+      return;
+    }
+
+    scrollerRef.current.scrollTop = elementBottom - clientHeight / 2 - offsetHeight / 2;
+  }, [autoFocus]);
+
   return (
     <YearPickerRoot
-      ref={ref}
+      ref={handleRef}
       className={clsx(classes.root, className)}
       ownerState={ownerState}
       {...other}
@@ -288,7 +321,6 @@ YearPicker.propTypes = {
    * className applied to the root element.
    */
   className: PropTypes.string,
-  date: PropTypes.any,
   /**
    * If `true` picker is disabled
    */
@@ -318,7 +350,9 @@ YearPicker.propTypes = {
    */
   minDate: PropTypes.any,
   /**
-   * Callback fired on date change.
+   * Callback fired when the value (the selected year) changes.
+   * @template TValue
+   * @param {TValue} value The new parsed value.
    */
   onChange: PropTypes.func.isRequired,
   onFocusedViewChange: PropTypes.func,
@@ -343,4 +377,5 @@ YearPicker.propTypes = {
     PropTypes.func,
     PropTypes.object,
   ]),
+  value: PropTypes.any,
 } as any;

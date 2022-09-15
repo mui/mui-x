@@ -60,6 +60,7 @@
   { "name": "getMonthPickerUtilityClass", "kind": "Function" },
   { "name": "getPickersDayUtilityClass", "kind": "Function" },
   { "name": "getYearPickerUtilityClass", "kind": "Function" },
+  { "name": "isIS", "kind": "Variable" },
   { "name": "itIT", "kind": "Variable" },
   { "name": "koKR", "kind": "Variable" },
   { "name": "LicenseInfo", "kind": "Class" },
