@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { SlideDirection } from './PickersSlideTransition';
-import { useIsDayDisabled } from '../internals/hooks/validation/useDateValidation';
+import { useIsDateDisabled } from '../internals/hooks/validation/useDateValidation';
 import { useUtils, useNow } from '../internals/hooks/useUtils';
 import { MuiPickersAdapter } from '../internals/models';
 import type { CalendarPickerDefaultizedProps } from './CalendarPicker';
@@ -93,7 +93,7 @@ export const createCalendarStateReducer =
 interface CalendarStateInput<TDate>
   extends Pick<
     CalendarPickerDefaultizedProps<TDate>,
-    | 'date'
+    | 'value'
     | 'defaultCalendarMonth'
     | 'disableFuture'
     | 'disablePast'
@@ -107,7 +107,7 @@ interface CalendarStateInput<TDate>
 }
 
 export const useCalendarState = <TDate extends unknown>({
-  date,
+  value,
   defaultCalendarMonth,
   disableFuture,
   disablePast,
@@ -131,8 +131,8 @@ export const useCalendarState = <TDate extends unknown>({
 
   const [calendarState, dispatch] = React.useReducer(reducerFn, {
     isMonthSwitchingAnimating: false,
-    focusedDay: date || now,
-    currentMonth: utils.startOfMonth(date ?? defaultCalendarMonth ?? now),
+    focusedDay: value || now,
+    currentMonth: utils.startOfMonth(value ?? defaultCalendarMonth ?? now),
     slideDirection: 'left',
   });
 
@@ -167,7 +167,7 @@ export const useCalendarState = <TDate extends unknown>({
     [calendarState.currentMonth, handleChangeMonth, now, utils],
   );
 
-  const isDateDisabled = useIsDayDisabled({
+  const isDateDisabled = useIsDateDisabled({
     shouldDisableDate,
     minDate,
     maxDate,

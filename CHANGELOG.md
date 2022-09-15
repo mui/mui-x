@@ -3,6 +3,50 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 5.17.2
+
+_Sep 9, 2022_
+
+This release will the last regular release for our `v5` packages.
+From now on, we'll be focusing on developing MUI X v6.
+You can check the [roadmap](https://github.com/mui/mui-x/projects/1) for more details on what's coming next.
+
+And if you'd like to help, please consider volunteering to give us a [user interview](https://forms.gle/vsBv6CLPz9h57xg8A).
+We'd love to know more about your use cases, pain points and expectations for the future.
+
+The `v5` packages will only get new versions to patch critical bug fixes.
+
+We'd like to offer a big thanks to the 6 contributors who made this release possible. Here are some highlights ✨:
+
+- 📃 Add support for column grouping when exporting to Excel (#5895) @alexfauquette
+- 🐞 Bugfixes
+
+### `@mui/x-data-grid@v5.17.2` / `@mui/x-data-grid-pro@v5.17.2` / `@mui/x-data-grid-premium@v5.17.2`
+
+#### Changes
+
+- [DataGrid] Revert mode if cell/row couldn't be saved due to validation error (#5897) @m4theushw
+- [DataGridPremium] Export column grouping in Excel (#5895) @alexfauquette
+
+### `@mui/x-date-pickers@v5.0.1` / `@mui/x-date-pickers-pro@v5.0.1`
+
+#### Changes
+
+- [DateTimePicker] Remove circular import (#6087) @flaviendelangle
+- [pickers] Add `sx` prop to the equality check of `PickersDay` (#6030) @TheUnlocked
+- [pickers] Add warning when `openTo` is invalid based on available `views` (#6042) @LukasTy
+- [pickers] Allow keyboard navigation to ignore disabled date for left / right arrow (#6082) @alexfauquette
+- [pickers] Fix mobile picker not opening on label click (#6074) @LukasTy
+
+### Docs
+
+- [docs] Add Recipes section
+
+### Core
+
+- [core] Add `yarn release:tag` script (#5169) @DanailH
+- [core] Upgrade monorepo (#6072) @m4theushw
+
 ## 5.17.1
 
 _Sep 5, 2022_
@@ -1328,7 +1372,7 @@ We'd like to offer a big thanks to the 15 contributors who made this release pos
 - [DataGrid] Stop checkbox ripple on blur (#3835) @m4theushw
 - [DataGrid] Stop calling `onRowClick` when clicking in cells with interactive elements (#3929) @m4theushw
 - [DataGrid] Use only `headerName` when available to search column (#3959) @pkratz
-- [DataGrid] Use the bundling scripts as the packages published by the [https://github.com/mui/material-ui](material-ui) repository (#3965) @flaviendelangle
+- [DataGrid] Use the bundling scripts as the packages published by the [material-ui](https://github.com/mui/material-ui) repository (#3965) @flaviendelangle
 - [DataGridPro] Add `unstable_setRowHeight` method to `apiRef` (#3751) @cherniavskii
 - [DataGridPro] Always export the `pageSize` and `page` when it has been initialized or is being controlled (#3908) @flaviendelangle
 - [DataGridPro] Disable export for detail panel column (#4057) @gustavhagland
@@ -3973,7 +4017,7 @@ Big thanks to the 7 contributors who made this release possible. Here are some h
 
 - 💄 Release the cell editing feature (#1287) @dtassone
 
-  This is the first release of the Cell editing feature. You can find the documentation [following this link](https://mui.com/x/react-data-grid/editing/#cell-editing). We have spent the last three months working on it.
+  This is the first release of the Cell editing feature. You can find the documentation [following this link](https://mui.com/x/react-data-grid/editing/). We have spent the last three months working on it.
 
   ![cell edit](https://user-images.githubusercontent.com/3165635/115632215-87994700-a307-11eb-91d9-9f5537df0911.gif)
 
@@ -4583,7 +4627,7 @@ _Dec 9, 2020_
 
 Big thanks to the 6 contributors who made this release possible. Here are some highlights ✨:
 
-- 🔍 Add a new data grid [density selector](https://mui.com/x/react-data-grid/rendering/#density) feature (#606) @DanailH.
+- 🔍 Add a new data grid [density selector](https://mui.com/x/react-data-grid/accessibility/#density) feature (#606) @DanailH.
 - 💄 A first iteration on the data grid's toolbar.
 - 🧪 Continue the iteration on the data grid filtering feature, soon to be released @dtassone.
 

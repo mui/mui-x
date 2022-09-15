@@ -2,7 +2,7 @@ import { generateUtilityClass, generateUtilityClasses } from '@mui/material';
 
 export interface YearPickerClasses {
   /** Styles applied to the root element. */
-  root?: string;
+  root: string;
 }
 
 export type YearPickerClassKey = keyof YearPickerClasses;

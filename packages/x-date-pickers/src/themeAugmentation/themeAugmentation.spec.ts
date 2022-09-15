@@ -37,6 +37,27 @@ createTheme({
         someRandomProp: true,
       },
     },
+    MuiDesktopDatePicker: {
+      defaultProps: {
+        open: true,
+        // @ts-expect-error invalid MuiDesktopDatePicker prop
+        someRandomProp: true,
+      },
+    },
+    MuiDesktopDateTimePicker: {
+      defaultProps: {
+        open: true,
+        // @ts-expect-error invalid MuiDesktopDateTimePicker prop
+        someRandomProp: true,
+      },
+    },
+    MuiDesktopTimePicker: {
+      defaultProps: {
+        open: true,
+        // @ts-expect-error invalid MuiDesktopTimePicker prop
+        someRandomProp: true,
+      },
+    },
     MuiMonthPicker: {
       defaultProps: {
         disableFuture: true,
@@ -51,9 +72,31 @@ createTheme({
         someRandomProp: true,
       },
     },
-    MuiStaticDatePicker: {
+    MuiPickerStaticWrapper: {
       defaultProps: {
         open: true,
+        // @ts-expect-error invalid MuiPickerStaticWrapper prop
+        someRandomProp: true,
+      },
+    },
+    MuiStaticDatePicker: {
+      defaultProps: {
+        disabled: true,
+        // @ts-expect-error invalid MuiStaticDatePicker prop
+        someRandomProp: true,
+      },
+    },
+    MuiStaticDateTimePicker: {
+      defaultProps: {
+        disabled: true,
+        // @ts-expect-error invalid MuiStaticDatePicker prop
+        someRandomProp: true,
+      },
+    },
+    MuiStaticTimePicker: {
+      defaultProps: {
+        disabled: true,
+        // @ts-expect-error invalid MuiStaticDatePicker prop
         someRandomProp: true,
       },
     },
@@ -61,13 +104,6 @@ createTheme({
       defaultProps: {
         disableFuture: true,
         // @ts-expect-error invalid MuiYearPicker prop
-        someRandomProp: true,
-      },
-    },
-    MuiPickerStaticWrapper: {
-      defaultProps: {
-        open: true,
-        // @ts-expect-error invalid MuiPickerStaticWrapper prop
         someRandomProp: true,
       },
     },

@@ -555,3 +555,5 @@ export interface GridEventLookup
    */
   menuClose: { params: GridMenuParams };
 }
+
+export type GridEvents = keyof GridEventLookup;

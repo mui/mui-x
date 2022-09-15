@@ -174,13 +174,13 @@ describe('<DesktopDatePicker /> keyboard interactions', () => {
         const onErrorMock = spy();
         // we are running validation on value change
         function DatePickerInput() {
-          const [date, setDate] = React.useState<number | Date | null>(null);
+          const [value, setValue] = React.useState<number | Date | null>(null);
 
           return (
             <DesktopDatePicker
-              value={date}
+              value={value}
               onError={onErrorMock}
-              onChange={(newDate) => setDate(newDate)}
+              onChange={(newDate) => setValue(newDate)}
               renderInput={(inputProps) => <TextField {...inputProps} />}
               {...props}
             />

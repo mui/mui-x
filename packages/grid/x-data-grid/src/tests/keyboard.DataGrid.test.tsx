@@ -13,8 +13,7 @@ import {
   getRow,
 } from 'test/utils/helperFn';
 import { DataGrid, DataGridProps, GridColumns } from '@mui/x-data-grid';
-import { useData } from 'storybook/src/hooks/useData';
-import { getData } from 'storybook/src/data/data-service';
+import { useBasicDemoData, getBasicGridData } from '@mui/x-data-grid-generator';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
@@ -42,7 +41,7 @@ describe('<DataGrid /> - Keyboard', () => {
       'autoHeight' | 'rows' | 'columns' | 'pageSize' | 'rowsPerPageOptions'
     > & {},
   ) => {
-    const data = useData(100, 3);
+    const data = useBasicDemoData(100, 3);
     const transformColSizes = (columns: GridColumns) =>
       columns.map((column) => ({ ...column, width: 60 }));
 
@@ -312,7 +311,7 @@ describe('<DataGrid /> - Keyboard', () => {
       }
       render(
         <div style={{ width: 60, height: 300 }}>
-          <DataGrid autoHeight={isJSDOM} {...getData(10, 10)} />
+          <DataGrid autoHeight={isJSDOM} {...getBasicGridData(10, 10)} />
         </div>,
       );
       getColumnHeaderCell(0).focus();
@@ -329,7 +328,7 @@ describe('<DataGrid /> - Keyboard', () => {
       }
       render(
         <div style={{ width: 60, height: 300 }}>
-          <DataGrid autoHeight={isJSDOM} {...getData(10, 10)} rows={[]} />
+          <DataGrid autoHeight={isJSDOM} {...getBasicGridData(10, 10)} rows={[]} />
         </div>,
       );
       getColumnHeaderCell(0).focus();

@@ -5,7 +5,7 @@ import { PickerSelectionState } from '../internals/hooks/usePickerState';
 
 interface GetHourNumbersOptions<TDate> {
   ampm: boolean;
-  date: TDate;
+  value: TDate | null;
   getClockNumberText: (hour: string) => string;
   isDisabled: (value: number) => boolean;
   onChange: (value: number, isFinish?: PickerSelectionState) => void;
@@ -22,13 +22,13 @@ interface GetHourNumbersOptions<TDate> {
  */
 export const getHourNumbers = <TDate extends unknown>({
   ampm,
-  date,
+  value,
   getClockNumberText,
   isDisabled,
   selectedId,
   utils,
 }: GetHourNumbersOptions<TDate>) => {
-  const currentHours = date ? utils.getHours(date) : null;
+  const currentHours = value ? utils.getHours(value) : null;
 
   const hourNumbers: JSX.Element[] = [];
   const startHour = ampm ? 1 : 0;
@@ -85,7 +85,7 @@ export const getMinutesNumbers = <TDate extends unknown>({
   isDisabled,
   getClockNumberText,
   selectedId,
-}: Omit<GetHourNumbersOptions<TDate>, 'ampm' | 'date'> & { value: number }) => {
+}: Omit<GetHourNumbersOptions<TDate>, 'ampm' | 'value'> & { value: number }) => {
   const f = utils.formatNumber;
 
   return (

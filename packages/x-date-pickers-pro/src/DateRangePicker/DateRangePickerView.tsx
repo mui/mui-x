@@ -26,7 +26,7 @@ import {
   DateRangePickerViewMobileSlotsComponent,
   DateRangePickerViewMobileSlotsComponentsProps,
 } from './DateRangePickerViewMobile';
-import { DateRangePickerInput, DateRangeInputProps } from './DateRangePickerInput';
+import { DateRangePickerInput, DateRangePickerInputProps } from './DateRangePickerInput';
 import {
   DateRangePickerViewDesktop,
   ExportedDesktopDateRangeCalendarProps,
@@ -94,7 +94,7 @@ interface DateRangePickerViewProps<TInputDate, TDate>
   open: boolean;
   startText: React.ReactNode;
   endText: React.ReactNode;
-  DateInputProps: DateRangeInputProps<TInputDate, TDate>;
+  DateInputProps: DateRangePickerInputProps<TInputDate, TDate>;
 }
 
 type DateRangePickerViewComponent = (<TInputDate, TDate = TInputDate>(
@@ -151,7 +151,7 @@ function DateRangePickerViewRaw<TInputDate, TDate>(
     onMonthSwitchingAnimationEnd,
     changeFocusedDay,
   } = useCalendarState({
-    date: start || end,
+    value: start || end,
     defaultCalendarMonth,
     disableFuture,
     disablePast,
