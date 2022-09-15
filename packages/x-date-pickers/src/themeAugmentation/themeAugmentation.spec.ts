@@ -312,6 +312,14 @@ createTheme({
         // @ts-expect-error invalid MuiPickerStaticWrapper prop
         someRandomProp: true,
       },
+      styleOverrides: {
+        root: {
+          backgroundColor: 'red',
+          [`.${pickerStaticWrapperClasses.content}`]: {
+            backgroundColor: 'green',
+          },
+        },
+      },
     },
     MuiPickersToolbar: {
       defaultProps: {
@@ -353,11 +361,6 @@ createTheme({
         // @ts-expect-error invalid MuiStaticDateTimePicker prop
         someRandomProp: true,
       },
-      styleOverrides: {
-        root: {
-          backgroundColor: 'red',
-        },
-      },
     },
     MuiStaticTimePicker: {
       defaultProps: {
@@ -390,9 +393,6 @@ createTheme({
       styleOverrides: {
         root: {
           backgroundColor: 'red',
-          [`.${pickerStaticWrapperClasses.content}`]: {
-            backgroundColor: 'green',
-          },
         },
       },
     },
