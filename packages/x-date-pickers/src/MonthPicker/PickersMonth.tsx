@@ -42,7 +42,15 @@ const useUtilityClasses = (ownerState: PickersMonthOwnerState) => {
   return composeClasses(slots, getPickersMonthUtilityClass, classes);
 };
 
-const PickersMonthRoot = styled('div')<{
+const PickersMonthRoot = styled('div', {
+  name: 'PrivatePickersMonth',
+  slot: 'Root',
+  overridesResolver: (_, styles) => [
+    styles.root,
+    { [`&.${pickersMonthClasses.modeDesktop}`]: styles.modeDesktop },
+    { [`&.${pickersMonthClasses.modeMobile}`]: styles.modeMobile },
+  ],
+})<{
   ownerState: PickersMonthOwnerState;
 }>({
   flexBasis: '33.3%',
@@ -51,7 +59,15 @@ const PickersMonthRoot = styled('div')<{
   justifyContent: 'center',
 });
 
-const PickersMonthButton = styled('button')<{
+const PickersMonthButton = styled('button',  {
+  name: 'PrivatePickersMonth',
+  slot: 'MonthButton',
+  overridesResolver: (_, styles) => [
+    styles.monthButton,
+    { [`&.${pickersMonthClasses.disabled}`]: styles.disabled },
+    { [`&.${pickersMonthClasses.selected}`]: styles.selected },
+  ],
+})<{
   ownerState: PickersMonthOwnerState;
 }>(({ theme }) => ({
   color: 'unset',
