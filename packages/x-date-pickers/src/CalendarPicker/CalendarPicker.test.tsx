@@ -14,6 +14,8 @@ import {
   createPickerRenderer,
 } from '../../../../test/utils/pickers-utils';
 
+const isJSDOM = /jsdom/.test(window.navigator.userAgent);
+
 describe('<CalendarPicker />', () => {
   const { render, clock } = createPickerRenderer({ clock: 'fake' });
 
@@ -411,6 +413,34 @@ describe('<CalendarPicker />', () => {
 
       expect(onChange.callCount).to.equal(0);
       expect(screen.getByMuiTest('calendar-month-and-year-text')).to.have.text('January 2022');
+    });
+
+    it('should scroll to show the selected year', function test() {
+      if (isJSDOM) {
+        this.skip(); // Needs layout
+      }
+      render(
+        <CalendarPicker
+          value={adapterToUse.date(new Date(2019, 3, 29))}
+          onChange={() => {}}
+          views={['year']}
+          openTo="year"
+        />,
+      );
+
+      // const virtualScroller = document.querySelector('.MuiDataGrid-virtualScroller')!;
+      //
+      const rootElement = document.querySelector('.MuiCalendarPicker-root')!;
+      const selectedButton = document.querySelector('.Mui-selected')!;
+
+      expect(rootElement).not.to.equal(null);
+      expect(selectedButton).not.to.equal(null);
+
+      const parentBoundingBox = rootElement.getBoundingClientRect();
+      const buttonBoundingBox = selectedButton.getBoundingClientRect();
+
+      expect(parentBoundingBox.top).not.to.greaterThan(buttonBoundingBox.top);
+      expect(parentBoundingBox.bottom).not.to.lessThan(buttonBoundingBox.bottom);
     });
   });
 });

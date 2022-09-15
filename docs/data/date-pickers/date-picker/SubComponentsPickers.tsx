@@ -11,7 +11,7 @@ const minDate = dayjs('2020-01-01T00:00:00.000');
 const maxDate = dayjs('2034-01-01T00:00:00.000');
 
 export default function SubComponentsPickers() {
-  const [value, setValue] = React.useState<Dayjs | null>(dayjs());
+  const [value, setValue] = React.useState<Dayjs | null>(dayjs('2022-04-07'));
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>

@@ -5,7 +5,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { ClockPicker } from '@mui/x-date-pickers/ClockPicker';
 
 export default function SubComponentsTimePickers() {
-  const [value, setValue] = React.useState(dayjs());
+  const [value, setValue] = React.useState(dayjs('2022-04-07T10:15'));
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
