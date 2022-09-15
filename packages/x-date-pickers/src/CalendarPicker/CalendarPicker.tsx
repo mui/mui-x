@@ -154,9 +154,7 @@ export type CalendarPickerDefaultizedProps<TDate> = DefaultizedProps<
   | keyof BaseDateValidationProps<TDate>
 >;
 
-const useUtilityClasses = (
-  ownerState: CalendarPickerProps<any> & { classes?: Partial<CalendarPickerClasses> },
-) => {
+const useUtilityClasses = (ownerState: CalendarPickerProps<any>) => {
   const { classes } = ownerState;
   const slots = {
     root: ['root'],
