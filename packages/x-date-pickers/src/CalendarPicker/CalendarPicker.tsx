@@ -30,6 +30,7 @@ import {
   YearValidationProps,
 } from '../internals/hooks/validation/models';
 import { DefaultizedProps } from '../internals/models/helpers';
+import useEventCallback from '@mui/utils/useEventCallback';
 
 export interface CalendarPickerSlotsComponent extends PickersCalendarHeaderSlotsComponent {}
 
@@ -435,13 +436,15 @@ export const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
 
   const hasFocus = focusedView !== null;
 
-  const handleFocusedViewChange = (eventView: CalendarPickerView) => (newHasFocus: boolean) => {
-    if (newHasFocus) {
-      setFocusedView(eventView);
-    } else {
-      setFocusedView((prevView) => (prevView === eventView ? null : prevView));
-    }
-  };
+  const handleFocusedViewChange = useEventCallback(
+    (eventView: CalendarPickerView) => (newHasFocus: boolean) => {
+      if (newHasFocus) {
+        setFocusedView(eventView);
+      } else {
+        setFocusedView((prevView) => (prevView === eventView ? null : prevView));
+      }
+    },
+  );
 
   React.useEffect(() => {
     // Set focus to the button when switching from a view to another

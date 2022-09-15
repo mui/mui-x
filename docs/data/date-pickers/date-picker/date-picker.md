@@ -101,3 +101,7 @@ Sometimes it may be necessary to display additional info right in the calendar. 
 You can show a helper text with the date format accepted.
 
 {{"demo": "HelperText.js"}}
+
+## New date pickers
+
+{{"demo": "NewDatePickers.js"}}

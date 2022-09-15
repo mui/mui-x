@@ -11,7 +11,7 @@ export interface PickersModalDialogSlotsComponent
   extends Omit<PickersSlotsComponent, 'PaperContent'> {}
 
 export interface PickersModalDialogSlotsComponentsProps {
-  actionBar: Omit<PickersActionBarProps, 'onAccept' | 'onClear' | 'onCancel' | 'onSetToday'>;
+  actionBar?: Omit<PickersActionBarProps, 'onAccept' | 'onClear' | 'onCancel' | 'onSetToday'>;
 }
 
 export interface ExportedPickerModalProps {

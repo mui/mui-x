@@ -19,7 +19,4 @@ export * from './TimePicker';
 export * from './YearPicker';
 export * from './locales';
 
-// New pickers
-export * from './DesktopDatePicker2';
-
 export { PickerStaticWrapper } from './internals/components/PickerStaticWrapper';

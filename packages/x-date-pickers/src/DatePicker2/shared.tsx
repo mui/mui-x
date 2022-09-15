@@ -1,16 +1,22 @@
 import * as React from 'react';
 import { useThemeProps } from '@mui/material/styles';
 import { DefaultizedProps } from '../internals/models/helpers';
-import { DesktopDatePicker2Props } from './DesktopDatePicker2.types';
 import { CalendarPicker, CalendarPickerView } from '../CalendarPicker';
 import { PickerViewsRendererProps } from '../internals/components/PickerViewManager';
 import { useUtils } from '../internals/hooks/useUtils';
 import { isYearAndMonthViews, isYearOnlyView } from '../DatePicker/shared';
 
+// TODO: Avoid redefined here
+interface BaseDatePicker2Props {
+  inputFormat?: string;
+  openTo?: CalendarPickerView;
+  views?: readonly CalendarPickerView[];
+}
+
 export function useDatePicker2DefaultizedProps<
   TDate,
   // TODO: Reduce the extension scope.
-  Props extends DesktopDatePicker2Props<TDate>,
+  Props extends BaseDatePicker2Props,
 >(props: Props, name: string): DefaultizedProps<Props, 'openTo' | 'views' | 'inputFormat'> {
   const utils = useUtils<TDate>();
   const themeProps = useThemeProps({

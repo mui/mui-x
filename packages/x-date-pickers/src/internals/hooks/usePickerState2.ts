@@ -1,12 +1,12 @@
 import * as React from 'react';
+import { useControlled } from '@mui/material/utils';
+import useEventCallback from '@mui/utils/useEventCallback';
 import { WrapperVariant } from '../components/wrappers/WrapperVariantContext';
 import { useOpenState } from './useOpenState';
 import { useUtils } from './useUtils';
 import { PickerStateValueManager } from './usePickerState';
-import useEventCallback from '@mui/utils/useEventCallback';
 import { PickerViewManagerProps } from '../components/PickerViewManager';
 import { UseFieldInternalProps } from './useField';
-import { useControlled } from '@mui/material/utils';
 
 export type PickerSelectionState = 'partial' | 'shallow' | 'finish';
 
@@ -154,9 +154,6 @@ export const usePickerState2 = <TValue, TDate>(
     resetFallback: value,
   }));
 
-  // TODO: Do not store here is invalid
-  const [lastValidDateValue, setLastValidDateValue] = React.useState<TValue>(dateState.draft);
-
   const setDate = React.useCallback(
     (params: DateStateAction<TValue>) => {
       setDateState((prev) => {
@@ -196,14 +193,8 @@ export const usePickerState2 = <TValue, TDate>(
         }
       }
     },
-    [onAccept, onChange, setIsOpen, dateState, utils, valueManager],
+    [onAccept, onChange, setIsOpen, dateState, utils, valueManager, setValue],
   );
-
-  React.useEffect(() => {
-    if (value != null && utils.isValid(value)) {
-      setLastValidDateValue(value);
-    }
-  }, [utils, value]);
 
   React.useEffect(() => {
     if (isOpen) {
@@ -264,10 +255,6 @@ export const usePickerState2 = <TValue, TDate>(
     [setDate, isOpen, utils, dateState, valueManager, value],
   );
 
-  // Mobile keyboard view is a special case.
-  // When it's open picker should work like closed, because we are just showing text field
-  const [isMobileKeyboardViewOpen, setMobileKeyboardViewOpen] = React.useState(false);
-
   const handleChange = useEventCallback(
     (newDate: TValue, selectionState: PickerSelectionState = 'partial') => {
       switch (selectionState) {
@@ -303,7 +290,7 @@ export const usePickerState2 = <TValue, TDate>(
       value: dateState.draft,
       onChange: handleChange,
     }),
-    [setDate, isMobileKeyboardViewOpen, dateState.draft, closeOnSelect],
+    [dateState.draft, handleChange],
   );
 
   const fieldProps = React.useMemo<PickerStateFieldProps2<TValue>>(
@@ -311,7 +298,7 @@ export const usePickerState2 = <TValue, TDate>(
       value: dateState.draft,
       onChange: (newValue) => setDate({ action: 'setCommitted', value: newValue }),
     }),
-    [dateState.draft],
+    [dateState.draft, setDate],
   );
 
   const openPicker = useEventCallback(() => setIsOpen(true));

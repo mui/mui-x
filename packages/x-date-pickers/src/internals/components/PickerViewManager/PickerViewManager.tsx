@@ -1,9 +1,9 @@
 import * as React from 'react';
+import { styled } from '@mui/material/styles';
 import { CalendarOrClockPickerView } from '../../models/views';
 import { useViews } from '../../hooks/useViews';
 import { PickerViewManagerProps } from './PickerViewManager.types';
-import { styled } from '@mui/material/styles';
-import { useIsLandscape } from '@mui/x-date-pickers/internals/hooks/useIsLandscape';
+import { useIsLandscape } from '../../hooks/useIsLandscape';
 
 const PickersViewManagerRoot = styled('div')<{ ownerState: { isLandscape: boolean } }>(
   ({ ownerState }) => ({
