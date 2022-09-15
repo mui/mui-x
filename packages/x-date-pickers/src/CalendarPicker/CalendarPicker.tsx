@@ -6,6 +6,7 @@ import { SxProps } from '@mui/system';
 import { unstable_composeClasses as composeClasses } from '@mui/material';
 import { unstable_useId as useId } from '@mui/material/utils';
 import { MonthPicker, MonthPickerProps } from '../MonthPicker/MonthPicker';
+import useEventCallback from '@mui/utils/useEventCallback';
 import { useCalendarState } from './useCalendarState';
 import { useDefaultDates, useUtils } from '../internals/hooks/useUtils';
 import { PickersFadeTransitionGroup } from './PickersFadeTransitionGroup';
@@ -30,7 +31,6 @@ import {
   YearValidationProps,
 } from '../internals/hooks/validation/models';
 import { DefaultizedProps } from '../internals/models/helpers';
-import useEventCallback from '@mui/utils/useEventCallback';
 
 export interface CalendarPickerSlotsComponent extends PickersCalendarHeaderSlotsComponent {}
 

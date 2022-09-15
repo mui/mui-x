@@ -1,5 +1,5 @@
 export { MobilePicker } from './MobilePicker';
-export {
+export type {
   ExportedMobilePickerProps,
   MobilePickerSlotsComponentsProps,
   MobilePickerSlotsComponent,

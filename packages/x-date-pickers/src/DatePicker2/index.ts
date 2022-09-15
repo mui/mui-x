@@ -1,5 +1,5 @@
 export { DatePicker2 } from './DatePicker2';
-export {
+export type {
   DatePicker2Props,
   DatePicker2SlotsComponents,
   DatePicker2SlotsComponentsProps,
