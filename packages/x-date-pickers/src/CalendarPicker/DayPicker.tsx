@@ -85,7 +85,7 @@ const useUtilityClasses = (ownerState: DayPickerProps<any>) => {
     weekDayLabel: ['weekDayLabel'],
     loadingContainer: ['loadingContainer'],
     slideTransition: ['slideTransition'],
-    weeksContainer: ['weeksContainer'],
+    monthContainer: ['monthContainer'],
     weekContainer: ['weekContainer'],
   };
 
@@ -142,8 +142,8 @@ const PickersCalendarSlideTransition = styled(PickersSlideTransition, {
 
 const PickersCalendarWeekContainer = styled('div', {
   name: 'MuiDayPicker',
-  slot: 'WeeksContainer',
-  overridesResolver: (_, styles) => styles.weeksContainer,
+  slot: 'MonthContainer',
+  overridesResolver: (_, styles) => styles.monthContainer,
 })({ overflow: 'hidden' });
 
 const PickersCalendarWeek = styled('div', {
@@ -385,7 +385,7 @@ export function DayPicker<TDate>(inProps: DayPickerProps<TDate>) {
             data-mui-test="pickers-calendar"
             ref={slideNodeRef}
             role="rowgroup"
-            className={classes.weeksContainer}
+            className={classes.monthContainer}
           >
             {utils.getWeekArray(currentMonth).map((week) => (
               <PickersCalendarWeek

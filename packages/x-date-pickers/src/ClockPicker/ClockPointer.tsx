@@ -72,13 +72,13 @@ const ClockPointerThumb = styled('div', {
  */
 export function ClockPointer(inProps: ClockPointerProps) {
   const props = useThemeProps({ props: inProps, name: 'MuiClockPointer' });
-  const previousType = React.useRef<ClockPickerView | null>(props.type);
-  React.useEffect(() => {
-    previousType.current = props.type;
-  }, [props.type]);
-
   const { className, hasSelected, isInner, type, value, ...other } = props;
-  const ownerState = { ...props, shouldAnimate: previousType.current !== props.type };
+  const previousType = React.useRef<ClockPickerView | null>(type);
+  React.useEffect(() => {
+    previousType.current = type;
+  }, [type]);
+
+  const ownerState = { ...props, shouldAnimate: previousType.current !== type };
   const classes = useUtilityClasses(ownerState);
 
   const getAngleStyle = () => {

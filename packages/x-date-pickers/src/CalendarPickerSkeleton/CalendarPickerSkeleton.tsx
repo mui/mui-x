@@ -93,15 +93,12 @@ const monthMap = [
  *
  * - [CalendarPickerSkeleton API](https://mui.com/x/api/date-pickers/calendar-picker-skeleton/)
  */
-function CalendarPickerSkeleton(props: CalendarPickerSkeletonProps) {
-  const { className, ...other } = useThemeProps<
-    Theme,
-    Omit<JSX.IntrinsicElements['div'], 'ref'> & { ref?: React.Ref<HTMLDivElement> },
-    'MuiCalendarPickerSkeleton'
-  >({
-    props,
+function CalendarPickerSkeleton(inProps: CalendarPickerSkeletonProps) {
+  const props = useThemeProps({
+    props: inProps,
     name: 'MuiCalendarPickerSkeleton',
   });
+  const { className, ...other } = props;
 
   const classes = useUtilityClasses(other);
 

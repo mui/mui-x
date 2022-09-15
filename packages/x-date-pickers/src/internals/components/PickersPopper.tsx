@@ -69,7 +69,7 @@ const PickersPopperRoot = styled(Popper, {
   name: 'MuiPickersPopper',
   slot: 'Root',
   overridesResolver: (_, styles) => styles.root,
-})<{ ownerState: PickerPopperProps }>(({ theme }) => ({
+})(({ theme }) => ({
   zIndex: theme.zIndex.modal,
 }));
 
@@ -323,7 +323,6 @@ export function PickersPopper(inProps: PickerPopperProps) {
       role={role}
       open={open}
       anchorEl={anchorEl}
-      ownerState={ownerState}
       onKeyDown={handleKeyDown}
       className={classes.root}
       {...PopperProps}
