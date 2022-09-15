@@ -4,9 +4,8 @@ import clsx from 'clsx';
 import { styled, Theme, useThemeProps } from '@mui/material/styles';
 import { SxProps } from '@mui/system';
 import { unstable_composeClasses as composeClasses } from '@mui/material';
-import { unstable_useId as useId } from '@mui/material/utils';
+import { useControlled, unstable_useId as useId, useEventCallback } from '@mui/material/utils';
 import { MonthPicker, MonthPickerProps } from '../MonthPicker/MonthPicker';
-import useEventCallback from '@mui/utils/useEventCallback';
 import { useCalendarState } from './useCalendarState';
 import { useDefaultDates, useUtils } from '../internals/hooks/useUtils';
 import { PickersFadeTransitionGroup } from './PickersFadeTransitionGroup';
@@ -123,6 +122,8 @@ export interface CalendarPickerProps<TDate>
    * @returns {void|Promise} -
    */
   onMonthChange?: (month: TDate) => void | Promise<void>;
+  focusedView?: CalendarPickerView | null;
+  onFocusedViewChange?: (view: CalendarPickerView) => (newHasFocus: boolean) => void;
 }
 
 export type ExportedCalendarPickerProps<TDate> = Omit<
@@ -139,6 +140,8 @@ export type ExportedCalendarPickerProps<TDate> = Omit<
   | 'classes'
   | 'components'
   | 'componentsProps'
+  | 'onFocusedViewChange'
+  | 'focusedView'
 >;
 
 export type CalendarPickerDefaultizedProps<TDate> = DefaultizedProps<
@@ -248,6 +251,8 @@ export const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
     minDate,
     maxDate,
     disableHighlightToday,
+    focusedView,
+    onFocusedViewChange,
     showDaysOutsideCurrentMonth,
     dayOfWeekFormatter,
     renderDay,
@@ -385,24 +390,6 @@ export const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
   );
 
   React.useEffect(() => {
-    if (value && isDateDisabled(value)) {
-      const closestEnabledDate = findClosestEnabledDate({
-        utils,
-        date: value,
-        minDate,
-        maxDate,
-        disablePast,
-        disableFuture,
-        isDateDisabled,
-      });
-
-      onChange(closestEnabledDate, 'partial');
-    }
-    // This call is too expensive to run it on each prop change.
-    // So just ensure that we are not rendering disabled as selected on mount.
-  }, []); // eslint-disable-line
-
-  React.useEffect(() => {
     if (value) {
       changeMonth(value);
     }
@@ -430,18 +417,27 @@ export const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
 
   const gridLabelId = `${id}-grid-label`;
 
-  const [focusedView, setFocusedView] = React.useState<CalendarPickerView | null>(
-    autoFocus ? openView : null,
-  );
+  const [internalFocusedView, setInternalFocusedView] = useControlled<CalendarPickerView | null>({
+    name: 'DayPicker',
+    state: 'focusedView',
+    controlled: focusedView,
+    default: autoFocus ? openView : null,
+  });
 
-  const hasFocus = focusedView !== null;
+  const hasFocus = internalFocusedView !== null;
 
   const handleFocusedViewChange = useEventCallback(
     (eventView: CalendarPickerView) => (newHasFocus: boolean) => {
+      if (onFocusedViewChange) {
+        // Use the calendar or clock logic
+        onFocusedViewChange(eventView)(newHasFocus);
+        return;
+      }
+      // If alone, do the local modifications
       if (newHasFocus) {
-        setFocusedView(eventView);
+        setInternalFocusedView(eventView);
       } else {
-        setFocusedView((prevView) => (prevView === eventView ? null : prevView));
+        setInternalFocusedView((prevView) => (prevView === eventView ? null : prevView));
       }
     },
   );
@@ -590,6 +586,7 @@ CalendarPicker.propTypes = {
    * @default false
    */
   disablePast: PropTypes.bool,
+  focusedView: PropTypes.oneOf(['day', 'month', 'year']),
   /**
    * Get aria-label text for switching between views button.
    * @param {CalendarPickerView} currentView The view from which we want to get the button text.
@@ -620,6 +617,7 @@ CalendarPicker.propTypes = {
    * Callback fired on date change
    */
   onChange: PropTypes.func.isRequired,
+  onFocusedViewChange: PropTypes.func,
   /**
    * Callback firing on month change @DateIOType.
    * @template TDate
