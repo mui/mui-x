@@ -3,6 +3,42 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 5.17.3
+<!-- generated comparing v5.17.2..master -->
+_Sep 15, 2022_
+
+We'd like to offer a big thanks to the 6 contributors who made this release possible. Here are some highlights ✨:
+
+- 📝 Fix lost characters when typing into edit fields (#5646) @m4theushw
+- 🌏 New locale and improvements for pickers
+- 🎁 Improve support to theme augmentation for pickers
+
+### `@mui/x-data-grid@v5.17.3` / `@mui/x-data-grid-pro@v5.17.3` / `@mui/x-data-grid-premium@v5.17.3`
+
+#### Changes
+
+- [DataGrid] Only update input with value prop if debounce is off (#5646) @m4theushw
+
+### `@mui/x-date-pickers@v5.0.2` / `@mui/x-date-pickers-pro@v5.0.2`
+
+#### Changes
+
+- [pickers] Add Icelandic (is-IS) locale (#6137) @flaviendelangle
+- [pickers] Fix `themeAugmentation` and style overriding (#6156) @LukasTy
+- [pickers] Fix `x-date-pickers-pro` theme augmentation (#6096) @LukasTy
+- [pickers] Improve German (de-DE) locale (#6138) @alexfauquette
+
+### Docs
+
+- [docs] Improve main demo to show new functionalities (#5292) @joserodolfofreitas
+
+### Core
+
+- [core] Remove Storybook (#6040, #6098) @flaviendelangle
+- [core] Update to typescript 4.8.3 (#6136) @flaviendelangle
+- [core] Update RFC template (#6100) @bytasv
+- [core] v5.17.2 (#6086) @flaviendelangle
+
 ## 5.17.2
 
 _Sep 9, 2022_
