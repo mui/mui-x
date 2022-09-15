@@ -262,8 +262,6 @@ export const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
     rightArrowButtonText,
     renderLoading,
     sx,
-    // excluding classes from `other` to avoid passing them down to children
-    classes: providedClasses,
   } = props;
 
   const { openView, setOpenView, openNext } = useViews({
