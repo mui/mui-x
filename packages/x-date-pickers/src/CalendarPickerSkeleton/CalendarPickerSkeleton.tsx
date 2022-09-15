@@ -98,6 +98,7 @@ function CalendarPickerSkeleton(inProps: CalendarPickerSkeletonProps) {
     props: inProps,
     name: 'MuiCalendarPickerSkeleton',
   });
+
   const { className, ...other } = props;
 
   const classes = useUtilityClasses(other);
