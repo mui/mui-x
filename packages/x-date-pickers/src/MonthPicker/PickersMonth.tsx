@@ -1,37 +1,16 @@
 import * as React from 'react';
 import { styled, alpha } from '@mui/material/styles';
-import {
-  generateUtilityClass,
-  generateUtilityClasses,
-  unstable_composeClasses as composeClasses,
-} from '@mui/material';
+import { unstable_composeClasses as composeClasses } from '@mui/material';
 import { capitalize, unstable_useEnhancedEffect as useEnhancedEffect } from '@mui/material/utils';
 import {
   WrapperVariant,
   WrapperVariantContext,
 } from '../internals/components/wrappers/WrapperVariantContext';
-
-interface PickersMonthClasses {
-  root: string;
-  modeDesktop: string;
-  modeMobile: string;
-  monthButton: string;
-  disabled: string;
-  selected: string;
-}
-
-function getPickersMonthUtilityClass(slot: string) {
-  return generateUtilityClass('PrivatePickersMonth', slot);
-}
-
-const pickersMonthClasses = generateUtilityClasses('PrivatePickersMonth', [
-  'root',
-  'modeMobile',
-  'modeDesktop',
-  'monthButton',
-  'disabled',
-  'selected',
-]);
+import {
+  getPickersMonthUtilityClass,
+  pickersMonthClasses,
+  PickersMonthClasses,
+} from './pickersMonthClasses';
 
 interface PickersMonthProps {
   'aria-current'?: React.AriaAttributes['aria-current'];
@@ -111,6 +90,7 @@ const PickersMonthButton = styled('button')<{
  * @ignore - do not document.
  */
 const PickersMonthRaw = (props: PickersMonthProps) => {
+  // TODO v6 add 'useThemeProps' once the component class names are aligned
   const {
     autoFocus,
     children,
