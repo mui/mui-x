@@ -69,7 +69,7 @@
   { "name": "frFR", "kind": "Variable" },
   { "name": "getCalendarPickerSkeletonUtilityClass", "kind": "Variable" },
   { "name": "getCalendarPickerUtilityClass", "kind": "Variable" },
-  { "name": "getClockUtilityClass", "kind": "Function" },
+  { "name": "getClockPickerUtilityClass", "kind": "Function" },
   { "name": "getMonthPickerUtilityClass", "kind": "Function" },
   { "name": "getPickersDayUtilityClass", "kind": "Function" },
   { "name": "getYearPickerUtilityClass", "kind": "Function" },

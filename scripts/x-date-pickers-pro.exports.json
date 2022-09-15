@@ -90,7 +90,7 @@
   { "name": "frFR", "kind": "Variable" },
   { "name": "getCalendarPickerSkeletonUtilityClass", "kind": "Variable" },
   { "name": "getCalendarPickerUtilityClass", "kind": "Variable" },
-  { "name": "getClockUtilityClass", "kind": "Function" },
+  { "name": "getClockPickerUtilityClass", "kind": "Function" },
   { "name": "getDateRangePickerDayUtilityClass", "kind": "Function" },
   { "name": "getDateRangePickerInputUtilityClass", "kind": "Function" },
   { "name": "getDateRangePickerToolbarUtilityClass", "kind": "Function" },
