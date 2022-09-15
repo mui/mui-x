@@ -23,9 +23,9 @@ export interface TimePickerSlotsComponentsProps
   extends MobileTimePickerSlotsComponentsProps,
     DesktopTimePickerSlotsComponentsProps {}
 
-export interface TimePickerProps<TInputDate, TDate>
-  extends Omit<DesktopTimePickerProps<TInputDate, TDate>, 'components' | 'componentsProps'>,
-    Omit<MobileTimePickerProps<TInputDate, TDate>, 'components' | 'componentsProps'> {
+export interface TimePickerProps<TDate>
+  extends Omit<DesktopTimePickerProps<TDate>, 'components' | 'componentsProps'>,
+    Omit<MobileTimePickerProps<TDate>, 'components' | 'componentsProps'> {
   /**
    * CSS media query when `Mobile` mode will be changed to `Desktop`.
    * @default '@media (pointer: fine)'
@@ -44,8 +44,8 @@ export interface TimePickerProps<TInputDate, TDate>
   componentsProps?: Partial<TimePickerSlotsComponentsProps>;
 }
 
-type TimePickerComponent = (<TInputDate, TDate = TInputDate>(
-  props: TimePickerProps<TInputDate, TDate> & React.RefAttributes<HTMLDivElement>,
+type TimePickerComponent = (<TDate>(
+  props: TimePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
 ) => JSX.Element) & { propTypes?: any };
 
 /**
@@ -59,8 +59,8 @@ type TimePickerComponent = (<TInputDate, TDate = TInputDate>(
  *
  * - [TimePicker API](https://mui.com/x/api/date-pickers/time-picker/)
  */
-export const TimePicker = React.forwardRef(function TimePicker<TInputDate, TDate = TInputDate>(
-  inProps: TimePickerProps<TInputDate, TDate>,
+export const TimePicker = React.forwardRef(function TimePicker<TDate>(
+  inProps: TimePickerProps<TDate>,
   ref: React.Ref<HTMLDivElement>,
 ) {
   const props = useThemeProps({ props: inProps, name: 'MuiTimePicker' });
@@ -179,8 +179,8 @@ TimePicker.propTypes = {
   getClockLabelText: PropTypes.func,
   /**
    * Get aria-label text for control that opens picker dialog. Aria-label text must include selected date. @DateIOType
-   * @template TInputDate, TDate
-   * @param {TInputDate} date The date from which we want to add an aria-text.
+   * @template TDate
+   * @param {TDate | null} date The date from which we want to add an aria-text.
    * @param {MuiPickersAdapter<TDate>} utils The utils to manipulate the date.
    * @returns {string} The aria-text to render inside the dialog.
    * @default (date, utils) => `Choose date, selected date is ${utils.format(utils.date(date), 'fullDate')}`
@@ -234,7 +234,7 @@ TimePicker.propTypes = {
   /**
    * Callback fired when the value (the selected date) changes @DateIOType.
    * @template TValue
-   * @param {TValue} value The new parsed value.
+   * @param {TValue} value The new value.
    * @param {string} keyboardInputValue The current value of the keyboard input.
    */
   onChange: PropTypes.func.isRequired,
@@ -251,9 +251,9 @@ TimePicker.propTypes = {
    * [Read the guide](https://next.material-ui-pickers.dev/guides/forms) about form integration and error displaying.
    * @DateIOType
    *
-   * @template TError, TInputValue
+   * @template TError, TValue
    * @param {TError} reason The reason why the current value is not valid.
-   * @param {TInputValue} value The invalid value.
+   * @param {TValue} value The invalid value.
    */
   onError: PropTypes.func,
   /**

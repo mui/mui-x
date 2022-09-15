@@ -19,7 +19,7 @@ export interface DateInputSlotsComponent {
   OpenPickerIcon: React.ElementType;
 }
 
-export interface DateInputProps<TInputDate, TDate> {
+export interface DateInputProps<TDate> {
   /**
    * Regular expression to detect "accepted" symbols.
    * @default /\dap/gi
@@ -44,13 +44,13 @@ export interface DateInputProps<TInputDate, TDate> {
   disableOpenPicker?: boolean;
   /**
    * Get aria-label text for control that opens picker dialog. Aria-label text must include selected date. @DateIOType
-   * @template TInputDate, TDate
-   * @param {TInputDate} date The date from which we want to add an aria-text.
+   * @template TDate
+   * @param {TDate | null} date The date from which we want to add an aria-text.
    * @param {MuiPickersAdapter<TDate>} utils The utils to manipulate the date.
    * @returns {string} The aria-text to render inside the dialog.
    * @default (date, utils) => `Choose date, selected date is ${utils.format(utils.date(date), 'fullDate')}`
    */
-  getOpenDialogAriaText?: (date: TInputDate, utils: MuiPickersAdapter<TDate>) => string;
+  getOpenDialogAriaText?: (date: TDate | null, utils: MuiPickersAdapter<TDate>) => string;
   // ?? TODO when it will be possible to display "empty" date in datepicker use it instead of ignoring invalid inputs.
   ignoreInvalidInputs?: boolean;
   /**
@@ -77,7 +77,7 @@ export interface DateInputProps<TInputDate, TDate> {
    * Props to pass to keyboard adornment button.
    */
   OpenPickerButtonProps?: Partial<IconButtonProps>;
-  rawValue: TInputDate;
+  rawValue: TDate | null;
   readOnly?: boolean;
   /**
    * The `renderInput` prop allows you to customize the rendered input.
@@ -100,9 +100,8 @@ export interface DateInputProps<TInputDate, TDate> {
   validationError?: boolean;
 }
 
-// TODO: Is it TInputDate or TInputValue ?
-export type ExportedDateInputProps<TInputDate, TDate> = Omit<
-  DateInputProps<TInputDate, TDate>,
+export type ExportedDateInputProps<TDate> = Omit<
+  DateInputProps<TDate>,
   | 'inputFormat'
   | 'inputValue'
   | 'onBlur'
@@ -116,8 +115,8 @@ export type ExportedDateInputProps<TInputDate, TDate> = Omit<
 >;
 
 // TODO: why is this called "Pure*" when it's not memoized? Does "Pure" mean "readonly"?
-export const PureDateInput = React.forwardRef(function PureDateInput<TInputDate, TDate>(
-  props: DateInputProps<TInputDate, TDate>,
+export const PureDateInput = React.forwardRef(function PureDateInput<TDate>(
+  props: DateInputProps<TDate>,
   ref: React.Ref<HTMLDivElement>,
 ) {
   const {

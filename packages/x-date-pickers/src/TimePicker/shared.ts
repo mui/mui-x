@@ -9,15 +9,14 @@ import { BasePickerProps } from '../internals/models/props/basePickerProps';
 import { ExportedDateInputProps } from '../internals/components/PureDateInput';
 import { ClockPickerView } from '../internals/models';
 import { PickerStateValueManager } from '../internals/hooks/usePickerState';
-import { parsePickerInputValue } from '../internals/utils/date-utils';
 import { BaseToolbarProps } from '../internals/models/props/baseToolbarProps';
 import { DefaultizedProps } from '../internals/models/helpers';
 
-export interface BaseTimePickerProps<TInputDate, TDate>
+export interface BaseTimePickerProps<TDate>
   extends ExportedClockPickerProps<TDate>,
-    BasePickerProps<TInputDate | null, TDate | null>,
-    ValidationProps<TimeValidationError, TInputDate | null>,
-    ExportedDateInputProps<TInputDate, TDate> {
+    BasePickerProps<TDate | null>,
+    ValidationProps<TimeValidationError, TDate | null>,
+    ExportedDateInputProps<TDate> {
   /**
    * 12h/24h view for hour selection clock.
    * @default `utils.is12HourCycleInCurrentLocale()`
@@ -52,11 +51,7 @@ export interface BaseTimePickerProps<TInputDate, TDate>
   components?: any;
 }
 
-export function useTimePickerDefaultizedProps<
-  TInputDate,
-  TDate,
-  Props extends BaseTimePickerProps<TInputDate, TDate>,
->(
+export function useTimePickerDefaultizedProps<TDate, Props extends BaseTimePickerProps<TDate>>(
   props: Props,
   name: string,
 ): DefaultizedProps<Props, 'openTo' | 'views', { inputFormat: string }> {
@@ -87,9 +82,8 @@ export function useTimePickerDefaultizedProps<
   };
 }
 
-export const timePickerValueManager: PickerStateValueManager<any, any, any> = {
+export const timePickerValueManager: PickerStateValueManager<any, any> = {
   emptyValue: null,
-  parseInput: parsePickerInputValue,
   getTodayValue: (utils) => utils.date()!,
   areValuesEqual: (utils, a, b) => utils.isEqual(a, b),
   valueReducer: (utils, lastValidValue, newValue) => {

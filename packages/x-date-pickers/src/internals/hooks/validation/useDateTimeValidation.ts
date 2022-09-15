@@ -7,13 +7,13 @@ import {
 } from './useTimeValidation';
 import { BaseDateValidationProps, DayValidationProps } from './models';
 
-interface DateTimeValidationProps<TInputDate, TDate>
+interface DateTimeValidationProps<TDate>
   extends DayValidationProps<TDate>,
     Required<BaseDateValidationProps<TDate>>,
     ExportedTimeValidationProps<TDate>,
-    ValidationProps<DateTimeValidationError, TInputDate | null> {}
+    ValidationProps<DateTimeValidationError, TDate | null> {}
 
-export const validateDateTime: Validator<any, DateTimeValidationProps<any, any>> = ({
+export const validateDateTime: Validator<any, DateTimeValidationProps<any>> = ({
   props,
   value,
   adapter,
@@ -50,8 +50,8 @@ export type DateTimeValidationError = DateValidationError | TimeValidationError;
 
 const isSameDateTimeError = (a: DateTimeValidationError, b: DateTimeValidationError) => a === b;
 
-export function useDateTimeValidation<TInputDate, TDate>(
-  props: DateTimeValidationProps<TInputDate, TDate>,
+export function useDateTimeValidation<TDate>(
+  props: DateTimeValidationProps<TDate>,
 ): DateTimeValidationError {
   return useValidation(props, validateDateTime, isSameDateTimeError);
 }

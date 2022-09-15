@@ -37,9 +37,9 @@ const dateRangeFieldValueManager: FieldValueManager<any, any, FieldSection, Date
   isSameError: isSameDateError,
 };
 
-const useDefaultizedDateField = <TInputDate, TDate, AdditionalProps extends {}>(
-  props: UseDateFieldProps<TInputDate, TDate>,
-): AdditionalProps & UseDateFieldDefaultizedProps<TInputDate, TDate> => {
+const useDefaultizedDateField = <TDate, AdditionalProps extends {}>(
+  props: UseDateFieldProps<TDate>,
+): AdditionalProps & UseDateFieldDefaultizedProps<TDate> => {
   const utils = useUtils<TDate>();
   const defaultDates = useDefaultDates<TDate>();
 
@@ -52,13 +52,7 @@ const useDefaultizedDateField = <TInputDate, TDate, AdditionalProps extends {}>(
   } as any;
 };
 
-export const useDateField = <
-  TInputDate,
-  TDate,
-  TProps extends UseDateFieldProps<TInputDate, TDate>,
->(
-  inProps: TProps,
-) => {
+export const useDateField = <TDate, TProps extends UseDateFieldProps<TDate>>(inProps: TProps) => {
   const {
     value,
     defaultValue,
@@ -74,7 +68,7 @@ export const useDateField = <
     disableFuture,
     disablePast,
     ...other
-  } = useDefaultizedDateField<TInputDate, TDate, TProps>(inProps);
+  } = useDefaultizedDateField<TDate, TProps>(inProps);
 
   return useField({
     forwardedProps: other,

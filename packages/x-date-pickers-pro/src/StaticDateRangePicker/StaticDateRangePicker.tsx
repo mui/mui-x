@@ -33,8 +33,8 @@ export interface StaticDateRangePickersSlotsComponentsProps
   extends PickersStaticWrapperSlotsComponentsProps,
     DateRangePickerViewSlotsComponentsProps {}
 
-export interface StaticDateRangePickerProps<TInputDate, TDate>
-  extends StaticPickerProps<BaseDateRangePickerProps<TInputDate, TDate>> {
+export interface StaticDateRangePickerProps<TDate>
+  extends StaticPickerProps<BaseDateRangePickerProps<TDate>> {
   /**
    * Overrideable components.
    * @default {}
@@ -47,8 +47,8 @@ export interface StaticDateRangePickerProps<TInputDate, TDate>
   componentsProps?: Partial<StaticDateRangePickersSlotsComponentsProps>;
 }
 
-type StaticDateRangePickerComponent = (<TInputDate, TDate = TInputDate>(
-  props: StaticDateRangePickerProps<TInputDate, TDate> & React.RefAttributes<HTMLDivElement>,
+type StaticDateRangePickerComponent = (<TDate>(
+  props: StaticDateRangePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
 ) => JSX.Element) & { propTypes?: any };
 
 /**
@@ -61,17 +61,16 @@ type StaticDateRangePickerComponent = (<TInputDate, TDate = TInputDate>(
  *
  * - [StaticDateRangePicker API](https://mui.com/x/api/date-pickers/static-date-range-picker/)
  */
-export const StaticDateRangePicker = React.forwardRef(function StaticDateRangePicker<
-  TInputDate,
-  TDate = TInputDate,
->(inProps: StaticDateRangePickerProps<TInputDate, TDate>, ref: React.Ref<HTMLDivElement>) {
+export const StaticDateRangePicker = React.forwardRef(function StaticDateRangePicker<TDate>(
+  inProps: StaticDateRangePickerProps<TDate>,
+  ref: React.Ref<HTMLDivElement>,
+) {
   useLicenseVerifier('x-date-pickers-pro', releaseInfo);
 
-  const props = useDateRangePickerDefaultizedProps<
-    TInputDate,
-    TDate,
-    StaticDateRangePickerProps<TInputDate, TDate>
-  >(inProps, 'MuiStaticDateRangePicker');
+  const props = useDateRangePickerDefaultizedProps<TDate, StaticDateRangePickerProps<TDate>>(
+    inProps,
+    'MuiStaticDateRangePicker',
+  );
 
   const [currentlySelectingRangeEnd, setCurrentlySelectingRangeEnd] = React.useState<
     'start' | 'end'
@@ -223,8 +222,8 @@ StaticDateRangePicker.propTypes = {
   endText: PropTypes.node,
   /**
    * Get aria-label text for control that opens picker dialog. Aria-label text must include selected date. @DateIOType
-   * @template TInputDate, TDate
-   * @param {TInputDate} date The date from which we want to add an aria-text.
+   * @template TDate
+   * @param {TDate | null} date The date from which we want to add an aria-text.
    * @param {MuiPickersAdapter<TDate>} utils The utils to manipulate the date.
    * @returns {string} The aria-text to render inside the dialog.
    * @default (date, utils) => `Choose date, selected date is ${utils.format(utils.date(date), 'fullDate')}`
@@ -302,9 +301,9 @@ StaticDateRangePicker.propTypes = {
    * [Read the guide](https://next.material-ui-pickers.dev/guides/forms) about form integration and error displaying.
    * @DateIOType
    *
-   * @template TError, TInputValue
+   * @template TError, TValue
    * @param {TError} reason The reason why the current value is not valid.
-   * @param {TInputValue} value The invalid value.
+   * @param {TValue} value The invalid value.
    */
   onError: PropTypes.func,
   /**

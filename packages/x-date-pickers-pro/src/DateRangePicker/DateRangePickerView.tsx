@@ -85,7 +85,7 @@ export interface ExportedDateRangePickerViewProps<TDate>
   className?: string;
 }
 
-interface DateRangePickerViewProps<TInputDate, TDate>
+interface DateRangePickerViewProps<TDate>
   extends CurrentlySelectingRangeEndProps,
     ExportedDateRangePickerViewProps<TDate>,
     PickerStatePickerProps<DateRange<TDate>>,
@@ -94,19 +94,21 @@ interface DateRangePickerViewProps<TInputDate, TDate>
   open: boolean;
   startText: React.ReactNode;
   endText: React.ReactNode;
+<<<<<<< Updated upstream
   DateInputProps: DateRangePickerInputProps<TInputDate, TDate>;
+=======
+  DateInputProps: DateRangePickerInputProps<TDate>;
+>>>>>>> Stashed changes
 }
 
-type DateRangePickerViewComponent = (<TInputDate, TDate = TInputDate>(
-  props: DateRangePickerViewProps<TInputDate, TDate>,
+type DateRangePickerViewComponent = (<TDate>(
+  props: DateRangePickerViewProps<TDate>,
 ) => JSX.Element) & { propTypes?: any };
 
 /**
  * @ignore - internal component.
  */
-function DateRangePickerViewRaw<TInputDate, TDate>(
-  props: DateRangePickerViewProps<TInputDate, TDate>,
-) {
+function DateRangePickerViewRaw<TDate>(props: DateRangePickerViewProps<TDate>) {
   const {
     calendars,
     className,
@@ -150,8 +152,8 @@ function DateRangePickerViewRaw<TInputDate, TDate>(
     isDateDisabled,
     onMonthSwitchingAnimationEnd,
     changeFocusedDay,
-  } = useCalendarState({
-    value: start || end,
+  } = useCalendarState<TDate>({
+    date: start ?? end,
     defaultCalendarMonth,
     disableFuture,
     disablePast,

@@ -70,29 +70,13 @@ export const findClosestEnabledDate = <TDate>({
   return null;
 };
 
-export const parsePickerInputValue = <TDate>(
-  utils: MuiPickersAdapter<TDate>,
-  value: TDate | null,
-): TDate | null => {
-  const parsedValue = utils.date(value);
-
-  return utils.isValid(parsedValue) ? parsedValue : null;
-};
-
 export const parseNonNullablePickerDate = <TDate>(
   utils: MuiPickersAdapter<TDate>,
   value: TDate | null | undefined,
   defaultValue: TDate,
 ): TDate => {
-  if (value == null) {
+  if (value == null || !utils.isValid(value)) {
     return defaultValue;
-  }
-
-  const parsedValue = utils.date(value);
-  const isDateValid = utils.isValid(parsedValue);
-
-  if (isDateValid) {
-    return parsedValue as TDate;
   }
 
   return defaultValue;

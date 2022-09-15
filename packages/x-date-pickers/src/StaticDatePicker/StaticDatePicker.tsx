@@ -30,8 +30,8 @@ export interface StaticDatePickerSlotsComponentsProps
   extends PickersStaticWrapperSlotsComponentsProps,
     CalendarPickerSlotsComponentsProps {}
 
-export interface StaticDatePickerProps<TInputDate, TDate>
-  extends StaticPickerProps<BaseDatePickerProps<TInputDate, TDate>> {
+export interface StaticDatePickerProps<TDate>
+  extends StaticPickerProps<BaseDatePickerProps<TDate>> {
   /**
    * Overrideable components.
    * @default {}
@@ -44,8 +44,8 @@ export interface StaticDatePickerProps<TInputDate, TDate>
   componentsProps?: Partial<StaticDatePickerSlotsComponentsProps>;
 }
 
-type StaticDatePickerComponent = (<TInputDate, TDate = TInputDate>(
-  props: StaticDatePickerProps<TInputDate, TDate> & React.RefAttributes<HTMLDivElement>,
+type StaticDatePickerComponent = (<TDate>(
+  props: StaticDatePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
 ) => JSX.Element) & { propTypes?: any };
 
 /**
@@ -58,15 +58,14 @@ type StaticDatePickerComponent = (<TInputDate, TDate = TInputDate>(
  *
  * - [StaticDatePicker API](https://mui.com/x/api/date-pickers/static-date-picker/)
  */
-export const StaticDatePicker = React.forwardRef(function StaticDatePicker<
-  TInputDate,
-  TDate = TInputDate,
->(inProps: StaticDatePickerProps<TInputDate, TDate>, ref: React.Ref<HTMLDivElement>) {
-  const props = useDatePickerDefaultizedProps<
-    TInputDate,
-    TDate,
-    StaticDatePickerProps<TInputDate, TDate>
-  >(inProps, 'MuiStaticDatePicker');
+export const StaticDatePicker = React.forwardRef(function StaticDatePicker<TDate>(
+  inProps: StaticDatePickerProps<TDate>,
+  ref: React.Ref<HTMLDivElement>,
+) {
+  const props = useDatePickerDefaultizedProps<TDate, StaticDatePickerProps<TDate>>(
+    inProps,
+    'MuiStaticDatePicker',
+  );
 
   // Note that we are passing down all the value without spread.
   // It saves us >1kb gzip and make any prop available automatically on any level down.
@@ -187,8 +186,8 @@ StaticDatePicker.propTypes = {
   displayStaticWrapperAs: PropTypes.oneOf(['desktop', 'mobile']),
   /**
    * Get aria-label text for control that opens picker dialog. Aria-label text must include selected date. @DateIOType
-   * @template TInputDate, TDate
-   * @param {TInputDate} date The date from which we want to add an aria-text.
+   * @template TDate
+   * @param {TDate | null} date The date from which we want to add an aria-text.
    * @param {MuiPickersAdapter<TDate>} utils The utils to manipulate the date.
    * @returns {string} The aria-text to render inside the dialog.
    * @default (date, utils) => `Choose date, selected date is ${utils.format(utils.date(date), 'fullDate')}`
@@ -253,7 +252,7 @@ StaticDatePicker.propTypes = {
   /**
    * Callback fired when the value (the selected date) changes @DateIOType.
    * @template TValue
-   * @param {TValue} value The new parsed value.
+   * @param {TValue} value The new value.
    * @param {string} keyboardInputValue The current value of the keyboard input.
    */
   onChange: PropTypes.func.isRequired,
@@ -265,9 +264,9 @@ StaticDatePicker.propTypes = {
    * [Read the guide](https://next.material-ui-pickers.dev/guides/forms) about form integration and error displaying.
    * @DateIOType
    *
-   * @template TError, TInputValue
+   * @template TError, TValue
    * @param {TError} reason The reason why the current value is not valid.
-   * @param {TInputValue} value The invalid value.
+   * @param {TValue} value The invalid value.
    */
   onError: PropTypes.func,
   /**

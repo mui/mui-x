@@ -9,8 +9,8 @@ import {
   getMaskFromCurrentFormat,
 } from '../utils/text-field-helper';
 
-type MaskedInputProps<TInputDate, TDate> = Omit<
-  DateInputProps<TInputDate, TDate>,
+type MaskedInputProps<TDate> = Omit<
+  DateInputProps<TDate>,
   | 'adornmentPosition'
   | 'disableOpenPicker'
   | 'getOpenDialogAriaText'
@@ -22,7 +22,7 @@ type MaskedInputProps<TInputDate, TDate> = Omit<
   | 'renderInput'
 > & { inputProps?: Partial<React.HTMLProps<HTMLInputElement>> };
 
-export const useMaskedInput = <TInputDate, TDate>({
+export const useMaskedInput = <TDate extends unknown>({
   acceptRegex = /[\d]/gi,
   disabled,
   disableMaskedInput,
@@ -37,7 +37,7 @@ export const useMaskedInput = <TInputDate, TDate>({
   rifmFormatter,
   TextFieldProps,
   validationError,
-}: MaskedInputProps<TInputDate, TDate>): MuiTextFieldProps => {
+}: MaskedInputProps<TDate>): MuiTextFieldProps => {
   const utils = useUtils<TDate>();
 
   const formatHelperText = utils.getFormatHelperText(inputFormat);
@@ -79,7 +79,7 @@ export const useMaskedInput = <TInputDate, TDate>({
   );
 
   // Inspired from autocomplete: https://github.com/mui/material-ui/blob/2c89d036dc2e16f100528f161600dffc83241768/packages/mui-base/src/AutocompleteUnstyled/useAutocomplete.js#L185:L201
-  const prevRawValue = React.useRef<TInputDate>();
+  const prevRawValue = React.useRef<TDate | null>(null);
   const prevLocale = React.useRef<Locale | string>(utils.locale);
 
   React.useEffect(() => {

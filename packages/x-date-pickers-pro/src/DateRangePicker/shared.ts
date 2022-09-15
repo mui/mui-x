@@ -15,15 +15,14 @@ import { useThemeProps } from '@mui/material/styles';
 import { ExportedDateRangePickerViewProps } from './DateRangePickerView';
 import { DateRangeValidationError } from '../internal/hooks/validation/useDateRangeValidation';
 import { DateRange } from '../internal/models';
-import { parseRangeInputValue } from '../internal/utils/date-utils';
 import { ExportedDateRangePickerInputProps } from './DateRangePickerInput';
 
-export interface BaseDateRangePickerProps<TInputDate, TDate>
-  extends Omit<BasePickerProps<DateRange<TInputDate>, DateRange<TDate>>, 'orientation'>,
+export interface BaseDateRangePickerProps<TDate>
+  extends Omit<BasePickerProps<DateRange<TDate>>, 'orientation'>,
     ExportedDateRangePickerViewProps<TDate>,
     BaseDateValidationProps<TDate>,
-    ValidationProps<DateRangeValidationError, DateRange<TInputDate>>,
-    ExportedDateRangePickerInputProps<TInputDate, TDate> {
+    ValidationProps<DateRangeValidationError, DateRange<TDate>>,
+    ExportedDateRangePickerInputProps<TDate> {
   /**
    * Text for end input label and toolbar placeholder.
    * @default 'End'
@@ -34,7 +33,7 @@ export interface BaseDateRangePickerProps<TInputDate, TDate>
    * Custom mask. Can be used to override generate from format. (e.g. `__/__/____ __:__` or `__/__/____ __:__ _M`).
    * @default '__/__/____'
    */
-  mask?: ExportedDateRangePickerInputProps<TInputDate, TDate>['mask'];
+  mask?: ExportedDateRangePickerInputProps<TDate>['mask'];
   /**
    * Callback fired when the value (the selected date range) changes @DateIOType.
    * @template TDate
@@ -55,9 +54,8 @@ const deprecatedPropsWarning = buildDeprecatedPropsWarning(
 );
 
 export function useDateRangePickerDefaultizedProps<
-  TInputDate,
   TDate,
-  Props extends BaseDateRangePickerProps<TInputDate, TDate>,
+  Props extends BaseDateRangePickerProps<TDate>,
 >(
   props: Props,
   name: string,
@@ -99,9 +97,8 @@ export function useDateRangePickerDefaultizedProps<
   };
 }
 
-export const dateRangePickerValueManager: PickerStateValueManager<[any, any], [any, any], any> = {
+export const dateRangePickerValueManager: PickerStateValueManager<[any, any], any> = {
   emptyValue: [null, null],
   getTodayValue: (utils) => [utils.date()!, utils.date()!],
-  parseInput: parseRangeInputValue,
   areValuesEqual: (utils, a, b) => utils.isEqual(a[0], b[0]) && utils.isEqual(a[1], b[1]),
 };

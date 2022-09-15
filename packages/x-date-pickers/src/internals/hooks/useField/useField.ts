@@ -24,14 +24,13 @@ import {
 } from './useField.utils';
 
 export const useField = <
-  TInputValue,
   TValue,
   TDate,
   TSection extends FieldSection,
   TForwardedProps extends UseFieldForwardedProps,
-  TInternalProps extends UseFieldInternalProps<any, any, any>,
+  TInternalProps extends UseFieldInternalProps<any, any>,
 >(
-  params: UseFieldParams<TInputValue, TValue, TDate, TSection, TForwardedProps, TInternalProps>,
+  params: UseFieldParams<TValue, TDate, TSection, TForwardedProps, TInternalProps>,
 ): UseFieldResponse<TForwardedProps> => {
   const utils = useUtils<TDate>() as MuiPickerFieldAdapter<TDate>;
   if (!utils.formatTokenMap) {
@@ -56,20 +55,14 @@ export const useField = <
   const firstDefaultValue = React.useRef(defaultValue);
   const focusTimeoutRef = React.useRef<NodeJS.Timeout | undefined>(undefined);
 
-  const valueParsed = React.useMemo(() => {
-    // TODO: Avoid this type casting, the emptyValues are both valid TDate and TInputDate
-    const value =
-      firstDefaultValue.current ?? valueProp ?? (valueManager.emptyValue as unknown as TInputValue);
-
-    return valueManager.parseInput(utils, value);
-  }, [valueProp, valueManager, utils]);
+  const value = firstDefaultValue.current ?? valueProp ?? valueManager.emptyValue;
 
   const [state, setState] = React.useState<UseFieldState<TValue, TSection[]>>(() => {
-    const sections = fieldValueManager.getSectionsFromValue(utils, null, valueParsed, format);
+    const sections = fieldValueManager.getSectionsFromValue(utils, null, value, format);
 
     return {
       sections,
-      valueParsed,
+      value,
       valueStr: fieldValueManager.getValueStrFromSections(sections),
       selectedSectionIndexes: null,
     };
@@ -216,7 +209,7 @@ export const useField = <
 
         const activeSection = state.sections[state.selectedSectionIndexes.start];
         const activeDate = fieldValueManager.getActiveDateFromActiveSection(
-          state.valueParsed,
+          state.value,
           activeSection,
         );
 
@@ -263,7 +256,7 @@ export const useField = <
 
         const activeSection = state.sections[state.selectedSectionIndexes.start];
         const activeDate = fieldValueManager.getActiveDateFromActiveSection(
-          state.valueParsed,
+          state.value,
           activeSection,
         );
 
@@ -364,25 +357,19 @@ export const useField = <
   });
 
   React.useEffect(() => {
-    if (!valueManager.areValuesEqual(utils, state.valueParsed, valueParsed)) {
-      const sections = fieldValueManager.getSectionsFromValue(
-        utils,
-        state.sections,
-        valueParsed,
-        format,
-      );
+    if (!valueManager.areValuesEqual(utils, state.value, value)) {
+      const sections = fieldValueManager.getSectionsFromValue(utils, state.sections, value, format);
       setState((prevState) => ({
         ...prevState,
-        valueParsed,
+        valueParsed: value,
         valueStr: fieldValueManager.getValueStrFromSections(sections),
         sections,
       }));
     }
-  }, [valueParsed]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [value]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  // TODO: Make validation work with TDate instead of TInputDate
   const validationError = useValidation(
-    { ...params.internalProps, value: state.valueParsed as unknown as TInputValue },
+    { ...params.internalProps, value: state.value },
     validator,
     fieldValueManager.isSameError,
   );

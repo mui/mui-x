@@ -13,8 +13,8 @@ export interface ExportedDateValidationProps<TDate>
   extends DayValidationProps<TDate>,
     BaseDateValidationProps<TDate> {}
 
-export interface DateValidationProps<TInputDate, TDate>
-  extends ValidationProps<DateValidationError, TInputDate | null>,
+export interface DateValidationProps<TDate>
+  extends ValidationProps<DateValidationError, TDate | null>,
     DayValidationProps<TDate>,
     MonthValidationProps<TDate>,
     YearValidationProps<TDate>,
@@ -31,7 +31,7 @@ export type DateValidationError =
   | 'maxDate'
   | null;
 
-export const validateDate: Validator<any, DateValidationProps<any, any>> = ({
+export const validateDate: Validator<any, DateValidationProps<any>> = ({
   props,
   value,
   adapter,
@@ -91,7 +91,7 @@ export const useIsDateDisabled = <TDate>({
   maxDate,
   disableFuture,
   disablePast,
-}: Omit<DateValidationProps<any, TDate>, keyof ValidationProps<any, any>>) => {
+}: Omit<DateValidationProps<TDate>, keyof ValidationProps<any, any>>) => {
   const adapter = useLocalizationContext<TDate>();
 
   return React.useCallback(
@@ -124,6 +124,5 @@ export const useIsDateDisabled = <TDate>({
 
 export const isSameDateError = (a: DateValidationError, b: DateValidationError) => a === b;
 
-export const useDateValidation = <TInputDate, TDate>(
-  props: DateValidationProps<TInputDate, TDate>,
-): DateValidationError => useValidation(props, validateDate, isSameDateError);
+export const useDateValidation = <TDate>(props: DateValidationProps<TDate>): DateValidationError =>
+  useValidation(props, validateDate, isSameDateError);

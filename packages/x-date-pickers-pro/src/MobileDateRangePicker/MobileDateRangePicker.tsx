@@ -37,8 +37,8 @@ export interface MobileDateRangePickerSlotsComponentsProps
   extends MobileWrapperSlotsComponentsProps,
     DateRangePickerViewSlotsComponentsProps {}
 
-export interface MobileDateRangePickerProps<TInputDate, TDate>
-  extends BaseDateRangePickerProps<TInputDate, TDate>,
+export interface MobileDateRangePickerProps<TDate>
+  extends BaseDateRangePickerProps<TDate>,
     MobileWrapperProps {
   /**
    * Overrideable components.
@@ -52,8 +52,8 @@ export interface MobileDateRangePickerProps<TInputDate, TDate>
   componentsProps?: Partial<MobileDateRangePickerSlotsComponentsProps>;
 }
 
-type MobileDateRangePickerComponent = (<TInputDate, TDate = TInputDate>(
-  props: MobileDateRangePickerProps<TInputDate, TDate> & React.RefAttributes<HTMLDivElement>,
+type MobileDateRangePickerComponent = (<TDate>(
+  props: MobileDateRangePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
 ) => JSX.Element) & { propTypes?: any };
 
 /**
@@ -66,17 +66,16 @@ type MobileDateRangePickerComponent = (<TInputDate, TDate = TInputDate>(
  *
  * - [MobileDateRangePicker API](https://mui.com/x/api/date-pickers/mobile-date-range-picker/)
  */
-export const MobileDateRangePicker = React.forwardRef(function MobileDateRangePicker<
-  TInputDate,
-  TDate = TInputDate,
->(inProps: MobileDateRangePickerProps<TInputDate, TDate>, ref: React.Ref<HTMLDivElement>) {
+export const MobileDateRangePicker = React.forwardRef(function MobileDateRangePicker<TDate>(
+  inProps: MobileDateRangePickerProps<TDate>,
+  ref: React.Ref<HTMLDivElement>,
+) {
   useLicenseVerifier('x-date-pickers-pro', releaseInfo);
 
-  const props = useDateRangePickerDefaultizedProps<
-    TInputDate,
-    TDate,
-    MobileDateRangePickerProps<TInputDate, TDate>
-  >(inProps, 'MuiMobileDateRangePicker');
+  const props = useDateRangePickerDefaultizedProps<TDate, MobileDateRangePickerProps<TDate>>(
+    inProps,
+    'MuiMobileDateRangePicker',
+  );
 
   const { value, onChange, components, componentsProps, ...other } = props;
 
@@ -225,8 +224,8 @@ MobileDateRangePicker.propTypes = {
   endText: PropTypes.node,
   /**
    * Get aria-label text for control that opens picker dialog. Aria-label text must include selected date. @DateIOType
-   * @template TInputDate, TDate
-   * @param {TInputDate} date The date from which we want to add an aria-text.
+   * @template TDate
+   * @param {TDate | null} date The date from which we want to add an aria-text.
    * @param {MuiPickersAdapter<TDate>} utils The utils to manipulate the date.
    * @returns {string} The aria-text to render inside the dialog.
    * @default (date, utils) => `Choose date, selected date is ${utils.format(utils.date(date), 'fullDate')}`
@@ -309,9 +308,9 @@ MobileDateRangePicker.propTypes = {
    * [Read the guide](https://next.material-ui-pickers.dev/guides/forms) about form integration and error displaying.
    * @DateIOType
    *
-   * @template TError, TInputValue
+   * @template TError, TValue
    * @param {TError} reason The reason why the current value is not valid.
-   * @param {TInputValue} value The invalid value.
+   * @param {TValue} value The invalid value.
    */
   onError: PropTypes.func,
   /**

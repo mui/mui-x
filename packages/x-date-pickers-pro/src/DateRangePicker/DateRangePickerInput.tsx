@@ -18,7 +18,11 @@ import {
   getDateRangePickerInputUtilityClass,
 } from './dateRangePickerInputClasses';
 
+<<<<<<< Updated upstream
 const useUtilityClasses = (ownerState: DateRangePickerInputProps<any, any>) => {
+=======
+const useUtilityClasses = (ownerState: DateRangePickerInputProps<any>) => {
+>>>>>>> Stashed changes
   const { classes } = ownerState;
   const slots = {
     root: ['root'],
@@ -40,8 +44,8 @@ const DateRangePickerInputRoot = styled('div', {
   },
 }));
 
-export interface ExportedDateRangePickerInputProps<TInputDate, TDate>
-  extends Omit<ExportedDateInputProps<TInputDate, TDate>, 'renderInput'> {
+export interface ExportedDateRangePickerInputProps<TDate>
+  extends Omit<ExportedDateInputProps<TDate>, 'renderInput'> {
   /**
    * The `renderInput` prop allows you to customize the rendered input.
    * The `startProps` and `endProps` arguments of this render prop contains props of [TextField](https://mui.com/material-ui/api/text-field/#props),
@@ -67,32 +71,51 @@ export interface ExportedDateRangePickerInputProps<TInputDate, TDate>
   onChange: (date: DateRange<TDate>, keyboardInputValue?: string) => void;
 }
 
+<<<<<<< Updated upstream
 export interface DateRangePickerInputProps<TInputDate, TDate>
   extends ExportedDateRangePickerInputProps<TInputDate, TDate>,
+=======
+export interface DateRangePickerInputProps<TDate>
+  extends ExportedDateRangePickerInputProps<TDate>,
+>>>>>>> Stashed changes
     Omit<
-      DateInputProps<TInputDate, TDate>,
-      keyof ExportedDateRangePickerInputProps<TInputDate, TDate> | 'rawValue' | 'validationError'
+      DateInputProps<TDate>,
+      keyof ExportedDateRangePickerInputProps<TDate> | 'rawValue' | 'validationError'
     >,
     CurrentlySelectingRangeEndProps {
   startText: React.ReactNode;
   endText: React.ReactNode;
   validationError: DateRangeValidationError;
+<<<<<<< Updated upstream
   rawValue: DateRange<TInputDate>;
   classes?: Partial<DateRangePickerInputClasses>;
 }
 
 type DatePickerInputComponent = <TInputDate, TDate>(
   props: DateRangePickerInputProps<TInputDate, TDate> & React.RefAttributes<HTMLDivElement>,
+=======
+  rawValue: DateRange<TDate>;
+  classes?: Partial<DateRangePickerInputClasses>;
+}
+
+type DatePickerInputComponent = <TDate>(
+  props: DateRangePickerInputProps<TDate> & React.RefAttributes<HTMLDivElement>,
+>>>>>>> Stashed changes
 ) => JSX.Element;
 
 /**
  * @ignore - internal component.
  */
+<<<<<<< Updated upstream
 export const DateRangePickerInput = React.forwardRef(function DateRangePickerInput<
   TInputDate,
   TDate,
 >(
   inProps: DateRangePickerInputProps<TInputDate, TDate>,
+=======
+export const DateRangePickerInput = React.forwardRef(function DateRangePickerInput<TDate>(
+  inProps: DateRangePickerInputProps<TDate>,
+>>>>>>> Stashed changes
   ref: React.Ref<HTMLDivElement>,
 ): JSX.Element {
   const props = useThemeProps({ props: inProps, name: 'MuiDateRangePickerInput' });

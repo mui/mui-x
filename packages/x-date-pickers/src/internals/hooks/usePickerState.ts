@@ -4,7 +4,7 @@ import { useOpenState } from './useOpenState';
 import { useUtils } from './useUtils';
 import { MuiPickersAdapter } from '../models';
 
-export interface PickerStateValueManager<TInputValue, TValue, TDate> {
+export interface PickerStateValueManager<TValue, TDate> {
   /**
    * Determines if two values are equal.
    * @template TDate, TValue
@@ -29,14 +29,6 @@ export interface PickerStateValueManager<TInputValue, TValue, TDate> {
    * @returns {TValue} The value to set when clicking the "Today" button.
    */
   getTodayValue: (utils: MuiPickersAdapter<TDate>) => TValue;
-  /**
-   * Method parsing the input value.
-   * @template TDate, TInputValue, TValue
-   * @param {MuiPickersAdapter<TDate>} utils The adapter.
-   * @param {TInputValue} value The raw value to parse.
-   * @returns {TValue} The parsed value.
-   */
-  parseInput: (utils: MuiPickersAdapter<TDate>, value: TInputValue) => TValue;
   /**
    * Generates the new value, given the previous value and the new proposed value.
    * @template TDate, TValue
@@ -106,7 +98,7 @@ interface DateStateAction<DraftValue> {
   forceOnChangeCall?: boolean;
 }
 
-export interface PickerStateProps<TInputValue, TValue> {
+export interface PickerStateProps<TValue> {
   /**
    * If `true` the popup or dialog will immediately close after submitting full date.
    * @default `true` for Desktop, `false` for Mobile (based on the chosen wrapper and `desktopModeMediaQuery` prop).
@@ -125,7 +117,7 @@ export interface PickerStateProps<TInputValue, TValue> {
   /**
    * Callback fired when the value (the selected date) changes @DateIOType.
    * @template TValue
-   * @param {TValue} value The new parsed value.
+   * @param {TValue} value The new value.
    * @param {string} keyboardInputValue The current value of the keyboard input.
    */
   onChange: (value: TValue, keyboardInputValue?: string) => void;
@@ -142,13 +134,13 @@ export interface PickerStateProps<TInputValue, TValue> {
   /**
    * The value of the picker.
    */
-  value: TInputValue;
+  value: TValue;
 }
 
-interface PickerStateInputProps<TInputValue, TValue> {
+interface PickerStateInputProps<TValue> {
   onChange: (value: TValue, keyboardInputValue?: string) => void;
   open: boolean;
-  rawValue: TInputValue;
+  rawValue: TValue;
   openPicker: () => void;
 }
 
@@ -172,32 +164,27 @@ export interface PickerStateWrapperProps {
   open: boolean;
 }
 
-interface PickerState<TInputValue, TValue> {
-  inputProps: PickerStateInputProps<TInputValue, TValue>;
+interface PickerState<TValue> {
+  inputProps: PickerStateInputProps<TValue>;
   pickerProps: PickerStatePickerProps<TValue>;
   wrapperProps: PickerStateWrapperProps;
 }
 
-export const usePickerState = <TInputValue, TValue, TDate>(
-  props: PickerStateProps<TInputValue, TValue>,
-  valueManager: PickerStateValueManager<TInputValue, TValue, TDate>,
-): PickerState<TInputValue, TValue> => {
+export const usePickerState = <TValue, TDate>(
+  props: PickerStateProps<TValue>,
+  valueManager: PickerStateValueManager<TValue, TDate>,
+): PickerState<TValue> => {
   const { onAccept, onChange, value, closeOnSelect } = props;
 
   const utils = useUtils<TDate>();
   const { isOpen, setIsOpen } = useOpenState(props);
 
-  const parsedDateValue = React.useMemo(
-    () => valueManager.parseInput(utils, value),
-    [valueManager, utils, value],
-  );
-
-  const [lastValidDateValue, setLastValidDateValue] = React.useState<TValue>(parsedDateValue);
+  const [lastValidDateValue, setLastValidDateValue] = React.useState<TValue>(value);
 
   const [dateState, setDateState] = React.useState<PickerDateState<TValue>>(() => ({
-    committed: parsedDateValue,
-    draft: parsedDateValue,
-    resetFallback: parsedDateValue,
+    committed: value,
+    draft: value,
+    resetFallback: value,
   }));
 
   const setDate = React.useCallback(
@@ -242,21 +229,21 @@ export const usePickerState = <TInputValue, TValue, TDate>(
   );
 
   React.useEffect(() => {
-    if (utils.isValid(parsedDateValue)) {
-      setLastValidDateValue(parsedDateValue);
+    if (utils.isValid(value)) {
+      setLastValidDateValue(value);
     }
-  }, [utils, parsedDateValue]);
+  }, [utils, value]);
 
   React.useEffect(() => {
     if (isOpen) {
       // Update all dates in state to equal the current prop value
-      setDate({ action: 'setAll', value: parsedDateValue, skipOnChangeCall: true });
+      setDate({ action: 'setAll', value, skipOnChangeCall: true });
     }
   }, [isOpen]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Set the draft and committed date to equal the new prop value.
-  if (!valueManager.areValuesEqual(utils, dateState.committed, parsedDateValue)) {
-    setDate({ action: 'setCommitted', value: parsedDateValue, skipOnChangeCall: true });
+  if (!valueManager.areValuesEqual(utils, dateState.committed, value)) {
+    setDate({ action: 'setCommitted', value, skipOnChangeCall: true });
   }
 
   const wrapperProps = React.useMemo<PickerStateWrapperProps>(
@@ -280,8 +267,6 @@ export const usePickerState = <TInputValue, TValue, TDate>(
         setDate({
           value: dateState.draft,
           action: 'acceptAndClose',
-          // force `onChange` in cases like input (value) === `Invalid date`
-          forceOnChangeCall: !valueManager.areValuesEqual(utils, value as any, parsedDateValue),
         });
       },
       onDismiss: () => {
@@ -299,7 +284,7 @@ export const usePickerState = <TInputValue, TValue, TDate>(
         setDate({ value: valueManager.getTodayValue(utils), action: 'acceptAndClose' });
       },
     }),
-    [setDate, isOpen, utils, dateState, valueManager, value, parsedDateValue],
+    [setDate, isOpen, utils, dateState, valueManager, value],
   );
 
   // Mobile keyboard view is a special case.
@@ -356,7 +341,7 @@ export const usePickerState = <TInputValue, TValue, TDate>(
     [onChange, valueManager, lastValidDateValue, utils],
   );
 
-  const inputProps = React.useMemo<PickerStateInputProps<TInputValue, TValue>>(
+  const inputProps = React.useMemo<PickerStateInputProps<TValue>>(
     () => ({
       onChange: handleInputChange,
       open: isOpen,
@@ -366,7 +351,7 @@ export const usePickerState = <TInputValue, TValue, TDate>(
     [handleInputChange, isOpen, value, setIsOpen],
   );
 
-  const pickerState: PickerState<TInputValue, TValue> = { pickerProps, inputProps, wrapperProps };
+  const pickerState: PickerState<TValue> = { pickerProps, inputProps, wrapperProps };
   React.useDebugValue(pickerState, () => ({
     MuiPickerState: {
       dateState,

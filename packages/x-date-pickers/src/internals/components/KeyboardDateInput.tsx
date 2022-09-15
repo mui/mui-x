@@ -6,8 +6,8 @@ import { Calendar } from './icons';
 import { useMaskedInput } from '../hooks/useMaskedInput';
 import { DateInputProps } from './PureDateInput';
 
-export const KeyboardDateInput = React.forwardRef(function KeyboardDateInput<TInputDate, TDate>(
-  props: DateInputProps<TInputDate, TDate>,
+export const KeyboardDateInput = React.forwardRef(function KeyboardDateInput<TDate>(
+  props: DateInputProps<TDate>,
   ref: React.Ref<HTMLDivElement>,
 ) {
   const {
