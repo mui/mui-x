@@ -5,7 +5,7 @@ export type {
   CalendarPickerSlotsComponentsProps,
 } from './CalendarPicker';
 
-export { calendarPickerClasses } from './calendarPickerClasses';
+export { getCalendarPickerUtilityClass, calendarPickerClasses } from './calendarPickerClasses';
 export type { CalendarPickerClassKey, CalendarPickerClasses } from './calendarPickerClasses';
 export { dayPickerClasses } from './dayPickerClasses';
 export type { DayPickerClassKey, DayPickerClasses } from './dayPickerClasses';

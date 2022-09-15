@@ -1,7 +1,7 @@
 export { ClockPicker } from './ClockPicker';
 export type { ClockPickerProps } from './ClockPicker';
 
-export { clockClasses } from './clockClasses';
+export { clockClasses, getClockUtilityClass } from './clockClasses';
 export type { ClockClasses, ClockClassKey } from './clockClasses';
 export { clockNumberClasses } from './clockNumberClasses';
 export type { ClockNumberClasses, ClockNumberClassKey } from './clockNumberClasses';
