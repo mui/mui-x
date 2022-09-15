@@ -1,17 +1,39 @@
 import * as React from 'react';
-import { styled } from '@mui/material/styles';
+import clsx from 'clsx';
+import { styled, useThemeProps } from '@mui/material/styles';
+import { unstable_composeClasses as composeClasses } from '@mui/material';
 import { CLOCK_WIDTH, CLOCK_HOUR_WIDTH } from './shared';
 import { ClockPickerView } from '../internals/models';
+import { ClockPointerClasses, getClockPointerUtilityClass } from './clockPointerClasses';
 
 export interface ClockPointerProps extends React.HTMLAttributes<HTMLDivElement> {
   hasSelected: boolean;
   isInner: boolean;
   type: ClockPickerView;
   value: number;
+  classes?: Partial<ClockPointerClasses>;
 }
 
-const ClockPointerRoot = styled('div')<{
-  ownerState: ClockPointerProps & ClockPointer['state'];
+interface ClockPointerState {
+  shouldAnimate: boolean;
+}
+
+const useUtilityClasses = (ownerState: ClockPointerProps) => {
+  const { classes } = ownerState;
+  const slots = {
+    root: ['root'],
+    thumb: ['thumb'],
+  };
+
+  return composeClasses(slots, getClockPointerUtilityClass, classes);
+};
+
+const ClockPointerRoot = styled('div', {
+  name: 'MuiClockPointer',
+  slot: 'Root',
+  overridesResolver: (_, styles) => styles.root,
+})<{
+  ownerState: ClockPointerProps & ClockPointerState;
 }>(({ theme, ownerState }) => ({
   width: 2,
   backgroundColor: theme.palette.primary.main,
@@ -19,13 +41,17 @@ const ClockPointerRoot = styled('div')<{
   left: 'calc(50% - 1px)',
   bottom: '50%',
   transformOrigin: 'center bottom 0px',
-  ...(ownerState.toAnimateTransform && {
+  ...(ownerState.shouldAnimate && {
     transition: theme.transitions.create(['transform', 'height']),
   }),
 }));
 
-const ClockPointerThumb = styled('div')<{
-  ownerState: ClockPointerProps & ClockPointer['state'];
+const ClockPointerThumb = styled('div', {
+  name: 'MuiClockPointer',
+  slot: 'Thumb',
+  overridesResolver: (_, styles) => styles.thumb,
+})<{
+  ownerState: ClockPointerProps & ClockPointerState;
 }>(({ theme, ownerState }) => ({
   width: 4,
   height: 4,
@@ -43,59 +69,40 @@ const ClockPointerThumb = styled('div')<{
 
 /**
  * @ignore - internal component.
- * TODO: Remove class
  */
-export class ClockPointer extends React.Component<ClockPointerProps> {
-  static getDerivedStateFromProps = (
-    nextProps: ClockPointerProps,
-    state: ClockPointer['state'],
-  ) => {
-    if (nextProps.type !== state.previousType) {
-      return {
-        toAnimateTransform: true,
-        previousType: nextProps.type,
-      };
+export function ClockPointer(inProps: ClockPointerProps) {
+  const props = useThemeProps({ props: inProps, name: 'MuiClockPointer' });
+  const { className, hasSelected, isInner, type, value, ...other } = props;
+  const previousType = React.useRef<ClockPickerView | null>(type);
+  React.useEffect(() => {
+    previousType.current = type;
+  }, [type]);
+
+  const ownerState = { ...props, shouldAnimate: previousType.current !== type };
+  const classes = useUtilityClasses(ownerState);
+
+  const getAngleStyle = () => {
+    const max = type === 'hours' ? 12 : 60;
+    let angle = (360 / max) * value;
+
+    if (type === 'hours' && value > 12) {
+      angle -= 360; // round up angle to max 360 degrees
     }
 
     return {
-      toAnimateTransform: false,
-      previousType: nextProps.type,
+      height: Math.round((isInner ? 0.26 : 0.4) * CLOCK_WIDTH),
+      transform: `rotateZ(${angle}deg)`,
     };
   };
 
-  state = {
-    toAnimateTransform: false,
-    previousType: undefined,
-  };
-
-  render() {
-    const { className, hasSelected, isInner, type, value, ...other } = this.props;
-
-    const ownerState = { ...this.props, ...this.state };
-
-    const getAngleStyle = () => {
-      const max = type === 'hours' ? 12 : 60;
-      let angle = (360 / max) * value;
-
-      if (type === 'hours' && value > 12) {
-        angle -= 360; // round up angle to max 360 degrees
-      }
-
-      return {
-        height: Math.round((isInner ? 0.26 : 0.4) * CLOCK_WIDTH),
-        transform: `rotateZ(${angle}deg)`,
-      };
-    };
-
-    return (
-      <ClockPointerRoot
-        style={getAngleStyle()}
-        className={className}
-        ownerState={ownerState}
-        {...other}
-      >
-        <ClockPointerThumb ownerState={ownerState} />
-      </ClockPointerRoot>
-    );
-  }
+  return (
+    <ClockPointerRoot
+      style={getAngleStyle()}
+      className={clsx(className, classes.root)}
+      ownerState={ownerState}
+      {...other}
+    >
+      <ClockPointerThumb ownerState={ownerState} className={classes.thumb} />
+    </ClockPointerRoot>
+  );
 }

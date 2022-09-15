@@ -1,6 +1,7 @@
 import { generateUtilityClass, generateUtilityClasses } from '@mui/material';
 
 export interface TimePickerToolbarClasses {
+  root: string;
   separator: string;
   hourMinuteLabel: string;
   hourMinuteLabelLandscape: string;

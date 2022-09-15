@@ -81,6 +81,7 @@ const useUtilityClasses = (ownerState: PickersDayProps<any>) => {
     disableMargin,
     disableHighlightToday,
     today,
+    disabled,
     outsideCurrentMonth,
     showDaysOutsideCurrentMonth,
     classes,
@@ -90,9 +91,11 @@ const useUtilityClasses = (ownerState: PickersDayProps<any>) => {
     root: [
       'root',
       selected && 'selected',
+      disabled && 'disabled',
       !disableMargin && 'dayWithMargin',
       !disableHighlightToday && today && 'today',
       outsideCurrentMonth && showDaysOutsideCurrentMonth && 'dayOutsideMonth',
+      outsideCurrentMonth && !showDaysOutsideCurrentMonth && 'hiddenDaySpacingFiller',
     ],
     hiddenDaySpacingFiller: ['hiddenDaySpacingFiller'],
   };

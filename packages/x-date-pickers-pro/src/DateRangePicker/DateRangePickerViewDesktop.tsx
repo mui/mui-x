@@ -55,7 +55,7 @@ export interface ExportedDesktopDateRangeCalendarProps<TDate> {
 
 export interface DesktopDateRangeCalendarProps<TDate>
   extends ExportedDesktopDateRangeCalendarProps<TDate>,
-    Omit<DayPickerProps<TDate>, 'selectedDays' | 'renderDay' | 'onFocusedDayChange'>,
+    Omit<DayPickerProps<TDate>, 'selectedDays' | 'renderDay' | 'onFocusedDayChange' | 'classes'>,
     DayValidationProps<TDate>,
     ExportedArrowSwitcherProps {
   calendars: 1 | 2 | 3;
@@ -140,6 +140,8 @@ export function DateRangePickerViewDesktop<TDate>(inProps: DesktopDateRangeCalen
     renderDay = (_, dateRangeProps) => <DateRangePickerDay {...dateRangeProps} />,
     rightArrowButtonText: rightArrowButtonTextProp,
     className,
+    // excluding classes from `other` to avoid passing them down to children
+    classes: providedClasses,
     ...other
   } = props;
 
