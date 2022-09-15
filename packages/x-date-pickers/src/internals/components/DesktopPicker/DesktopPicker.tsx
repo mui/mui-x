@@ -14,6 +14,12 @@ export function DesktopPicker<TValue, TDate, TView extends CalendarOrClockPicker
   props: DesktopPickerProps<TValue, TDate, TView>,
 ) {
   const {
+    // Props provided by the picker
+    getOpenDialogAriaText,
+    renderViews,
+    valueManager,
+
+    // Props provided outside the picker
     components,
     componentsProps = {},
     className,
@@ -21,10 +27,9 @@ export function DesktopPicker<TValue, TDate, TView extends CalendarOrClockPicker
     views,
     inputFormat,
     onViewChange,
-    renderViews,
     readOnly,
     disabled,
-    getOpenDialogAriaText,
+    disableOpenPicker,
   } = props;
 
   const utils = useUtils<TDate>();
@@ -34,11 +39,10 @@ export function DesktopPicker<TValue, TDate, TView extends CalendarOrClockPicker
     fieldProps: pickerStateFieldProps,
     viewProps,
     openPicker,
-  } = usePickerState2(props, props.valueManager, 'desktop');
+  } = usePickerState2(props, valueManager, 'desktop');
   const inputRef = React.useRef<HTMLInputElement>(null);
 
   // TODO: Add prop
-  const disableOpenPicker = false;
   const adornmentPosition = 'end';
 
   const Field = components.Field;
@@ -85,7 +89,7 @@ export function DesktopPicker<TValue, TDate, TView extends CalendarOrClockPicker
     externalSlotProps: componentsProps.input,
     additionalProps: {
       InputProps: {
-        [`${adornmentPosition}Adornment`]: (
+        [`${adornmentPosition}Adornment`]: disableOpenPicker ? undefined : (
           <InputAdornment position={adornmentPosition}>
             <OpenPickerButton {...openPickerButtonProps}>
               <OpenPickerIcon {...openPickerIconProps} />
@@ -113,8 +117,8 @@ export function DesktopPicker<TValue, TDate, TView extends CalendarOrClockPicker
         anchorEl={inputRef.current}
         {...wrapperProps}
         onClose={wrapperProps.onDismiss}
-        // components={components}
-        // componentsProps={componentsProps}
+        components={components}
+        componentsProps={componentsProps}
       >
         <PickerViewManager
           openTo={openTo}

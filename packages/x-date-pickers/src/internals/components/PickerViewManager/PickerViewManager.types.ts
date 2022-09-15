@@ -39,4 +39,8 @@ export interface PickerViewManagerProps<TValue, TDate, TView extends CalendarOrC
    * @default false
    */
   disabled?: boolean;
+  /**
+   * Force rendering in particular orientation.
+   */
+  orientation?: 'portrait' | 'landscape';
 }

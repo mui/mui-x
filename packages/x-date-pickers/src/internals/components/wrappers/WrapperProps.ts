@@ -12,10 +12,10 @@ export interface PickersSlotsComponent {
    * The action bar placed bellow picker views.
    * @default PickersActionBar
    */
-  ActionBar: React.ElementType<PickersActionBarProps>;
+  ActionBar?: React.ElementType<PickersActionBarProps>;
   /**
    * The content of the Paper wrapping views.
    * @default React.Fragment
    */
-  PaperContent: React.ElementType<{ children: React.ReactNode }>;
+  PaperContent?: React.ElementType<{ children: React.ReactNode }>;
 }

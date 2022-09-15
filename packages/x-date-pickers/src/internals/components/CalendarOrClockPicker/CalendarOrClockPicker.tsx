@@ -18,7 +18,6 @@ import { BasePickerProps } from '../../models/props/basePickerProps';
 import { PickerViewRoot } from '../PickerViewRoot';
 import { CalendarOrClockPickerView, CalendarPickerView, ClockPickerView } from '../../models';
 import { BaseToolbarProps } from '../../models/props/baseToolbarProps';
-import { useFocusManagement } from './useFocusManagement';
 
 export interface CalendarOrClockPickerSlotsComponent extends CalendarPickerSlotsComponent {
   /**

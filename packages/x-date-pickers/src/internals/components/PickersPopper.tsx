@@ -12,8 +12,8 @@ import { PickersSlotsComponent } from './wrappers/WrapperProps';
 export interface PickersPopperSlotsComponent extends PickersSlotsComponent {}
 
 export interface PickersPopperSlotsComponentsProps {
-  actionBar: Omit<PickersActionBarProps, 'onAccept' | 'onClear' | 'onCancel' | 'onSetToday'>;
-  paperContent: Record<string, any>;
+  actionBar?: Omit<PickersActionBarProps, 'onAccept' | 'onClear' | 'onCancel' | 'onSetToday'>;
+  paperContent?: Record<string, any>;
 }
 
 export interface ExportedPickerPaperProps {

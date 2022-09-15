@@ -1,10 +1,11 @@
 import * as React from 'react';
-import { CalendarOrClockPickerView, MuiPickersAdapter } from '@mui/x-date-pickers/internals/models';
-import { PickerStateProps2 } from '@mui/x-date-pickers/internals/hooks/usePickerState2';
-import { PickerViewManagerProps } from '@mui/x-date-pickers/internals/components/PickerViewManager';
-import { PickerStateValueManager } from '@mui/x-date-pickers/internals';
+import { CalendarOrClockPickerView, MuiPickersAdapter } from '../../models';
+import { PickerStateProps2 } from '../../hooks/usePickerState2';
+import { PickerViewManagerProps } from '../PickerViewManager';
+import { PickerStateValueManager } from '../../hooks/usePickerState';
+import { PickersPopperSlotsComponent, PickersPopperSlotsComponentsProps } from '../PickersPopper';
 
-export interface DesktopPickerSlotsComponent {
+export interface DesktopPickerSlotsComponent extends PickersPopperSlotsComponent {
   Field: React.ElementType;
   /**
    * Icon displayed in the open picker button.
@@ -19,7 +20,7 @@ export interface DesktopPickerSlotsComponent {
 }
 
 // TODO: Type props of all slots
-export interface DesktopPickerSlotsComponentsProps {
+export interface DesktopPickerSlotsComponentsProps extends PickersPopperSlotsComponentsProps {
   field?: Record<string, any>;
   input?: Record<string, any>;
   openPickerIcon?: Record<string, any>;
@@ -57,6 +58,11 @@ export interface DesktopPickerProps<TValue, TDate, TView extends CalendarOrClock
    * Format of the date when rendered in the input(s).
    */
   inputFormat: string;
+  /**
+   * Do not render open picker button (renders only the field).
+   * @default false
+   */
+  disableOpenPicker?: boolean;
 }
 
 export interface ExportedDesktopPickerProps<TValue, TDate, TView extends CalendarOrClockPickerView>
