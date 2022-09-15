@@ -4,7 +4,7 @@ import clsx from 'clsx';
 import { SxProps, useTheme } from '@mui/system';
 import { styled, useThemeProps, Theme } from '@mui/material/styles';
 import { unstable_composeClasses as composeClasses } from '@mui/material';
-import '@mui/material/utils';
+import { useForkRef } from '@mui/material/utils';
 import {
   unstable_useControlled as useControlled,
   unstable_useEventCallback as useEventCallback,
@@ -60,7 +60,8 @@ const YearPickerRoot = styled('div', {
   flexWrap: 'wrap',
   overflowY: 'auto',
   height: '100%',
-  margin: '0 4px',
+  padding: '0 4px',
+  maxHeight: '304px',
 });
 
 export interface YearPickerProps<TDate>
@@ -149,6 +150,7 @@ export const YearPicker = React.forwardRef(function YearPicker<TDate>(
 
     return utils.getYear(now);
   }, [now, value, utils, disableHighlightToday]);
+
   const [focusedYear, setFocusedYear] = React.useState(() => selectedYear || todayYear);
 
   const [internalHasFocus, setInternalHasFocus] = useControlled<boolean>({
@@ -243,9 +245,37 @@ export const YearPicker = React.forwardRef(function YearPicker<TDate>(
     }
   });
 
+  const scrollerRef = React.useRef<HTMLDivElement>(null);
+  const handleRef = useForkRef(ref, scrollerRef);
+  React.useEffect(() => {
+    if (autoFocus || scrollerRef.current === null) {
+      return;
+    }
+    const tabbableButton = scrollerRef.current.querySelector<HTMLElement>('[tabindex="0"]');
+    if (!tabbableButton) {
+      return;
+    }
+
+    // Taken from useScroll in x-data-grid, but vertically centered
+    const offsetHeight = tabbableButton.offsetHeight;
+    const offsetTop = tabbableButton.offsetTop;
+
+    const clientHeight = scrollerRef.current.clientHeight;
+    const scrollTop = scrollerRef.current.scrollTop;
+
+    const elementBottom = offsetTop + offsetHeight;
+
+    if (offsetHeight > clientHeight || offsetTop < scrollTop) {
+      // Button already visible
+      return;
+    }
+
+    scrollerRef.current.scrollTop = elementBottom - clientHeight / 2 - offsetHeight / 2;
+  }, [autoFocus]);
+
   return (
     <YearPickerRoot
-      ref={ref}
+      ref={handleRef}
       className={clsx(classes.root, className)}
       ownerState={ownerState}
       {...other}

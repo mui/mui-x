@@ -11,7 +11,7 @@ import Button from '@mui/material/Button';
 const today = dayjs();
 
 export default function DebouncedDateField() {
-  const [value, setValue] = React.useState(() => today.add(1, 'week'));
+  const [value, setValue] = React.useState(dayjs('2022-04-07'));
 
   const debounceSetValue = React.useMemo(() => debounce(setValue, 500), []);
 
