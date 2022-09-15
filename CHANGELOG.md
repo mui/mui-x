@@ -4,12 +4,11 @@ All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
 ## 5.17.3
-<!-- generated comparing v5.17.2..master -->
 _Sep 15, 2022_
 
 We'd like to offer a big thanks to the 6 contributors who made this release possible. Here are some highlights ✨:
 
-- 📝 Fix lost characters when typing into edit fields (#5646) @m4theushw
+- 📝 Fix lost characters when typing into fields in the DataGrid(#5646) @m4theushw
 - 🌏 New locale and improvements for pickers
 - 🎁 Improve support to theme augmentation for pickers
 
@@ -23,9 +22,9 @@ We'd like to offer a big thanks to the 6 contributors who made this release poss
 
 #### Changes
 
-- [pickers] Add Icelandic (is-IS) locale (#6137) @flaviendelangle
-- [pickers] Fix `themeAugmentation` and style overriding (#6156) @LukasTy
-- [pickers] Fix `x-date-pickers-pro` theme augmentation (#6096) @LukasTy
+- [pickers] Add Icelandic (is-IS) locale (#6137) @elvatli
+- [pickers] Fix `@mui/x-date-pickers` theme augmentation and style overriding (#6156) @LukasTy
+- [pickers] Fix `@mui/x-date-pickers-pro` theme augmentation (#6096) @LukasTy
 - [pickers] Improve German (de-DE) locale (#6138) @alexfauquette
 
 ### Docs
@@ -34,10 +33,8 @@ We'd like to offer a big thanks to the 6 contributors who made this release poss
 
 ### Core
 
-- [core] Remove Storybook (#6040, #6098) @flaviendelangle
 - [core] Update to typescript 4.8.3 (#6136) @flaviendelangle
 - [core] Update RFC template (#6100) @bytasv
-- [core] v5.17.2 (#6086) @flaviendelangle
 
 ## 5.17.2
 
