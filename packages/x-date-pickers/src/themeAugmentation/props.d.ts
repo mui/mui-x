@@ -20,6 +20,8 @@ import { StaticTimePickerProps } from '../StaticTimePicker';
 import { TimePickerProps } from '../TimePicker';
 import { YearPickerProps } from '../YearPicker';
 import { PickerStaticWrapperProps } from '../internals/components/PickerStaticWrapper';
+import { LocalizationProviderProps } from '../LocalizationProvider';
+import { DesktopDatePickerProps } from '../DesktopDatePicker';
 import {
   CalendarOrClockPickerProps,
   DayPickerProps,
@@ -34,7 +36,6 @@ import { ClockProps } from '../ClockPicker/Clock';
 import { ClockNumberProps } from '../ClockPicker/ClockNumber';
 import { ClockPointerProps } from '../ClockPicker/ClockPointer';
 import { TimePickerToolbarProps } from '../TimePicker/TimePickerToolbar';
-import { LocalizationProviderProps } from '../LocalizationProvider';
 
 export interface PickersComponentsPropsList {
   MuiCalendarOrClockPicker: CalendarOrClockPickerProps<unknown, unknown>;
@@ -50,6 +51,7 @@ export interface PickersComponentsPropsList {
   MuiDateTimePickerTabs: DateTimePickerTabsProps;
   MuiDateTimePickerToolbar: DateTimePickerToolbarProps<unknown>;
   MuiDayPicker: DayPickerProps<unknown>;
+  MuiDesktopDatePicker: DesktopDatePickerProps<unknown, unknown>;
   MuiDesktopDateTimePicker: DesktopDateTimePickerProps<unknown, unknown>;
   MuiDesktopTimePicker: DesktopTimePickerProps<unknown, unknown>;
   MuiLocalizationProvider: LocalizationProviderProps;
@@ -62,6 +64,7 @@ export interface PickersComponentsPropsList {
   MuiPickersDay: PickersDayProps<unknown>;
   MuiPickersFadeTransitionGroup: PickersFadeTransitionGroupProps;
   MuiPickersPopper: PickerPopperProps;
+  MuiPickerStaticWrapper: PickerStaticWrapperProps;
   MuiPickersToolbar: PickersToolbarProps<unknown, unknown>;
   MuiPickersToolbarButton: PickersToolbarButtonProps;
   MuiStaticDatePicker: StaticDatePickerProps<unknown, unknown>;
@@ -70,7 +73,6 @@ export interface PickersComponentsPropsList {
   MuiTimePicker: TimePickerProps<unknown, unknown>;
   MuiTimePickerToolbar: TimePickerToolbarProps<unknown>;
   MuiYearPicker: YearPickerProps<unknown>;
-  MuiPickerStaticWrapper: PickerStaticWrapperProps;
   // TODO v6: add `PrivatePickersMonth` once component is renamed to `MuiPickersMonth`
   PrivatePickersMonth: never;
   // TODO v6: add `PrivatePickersSlideTransition` once component is renamed to `MuiPickersSlideTransition`

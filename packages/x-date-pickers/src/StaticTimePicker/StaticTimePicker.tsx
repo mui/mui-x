@@ -75,6 +75,7 @@ export const StaticTimePicker = React.forwardRef(function StaticTimePicker<
     value,
     components,
     componentsProps,
+    className,
     ...other
   } = props;
 
@@ -95,6 +96,7 @@ export const StaticTimePicker = React.forwardRef(function StaticTimePicker<
       displayStaticWrapperAs={displayStaticWrapperAs}
       components={components}
       componentsProps={componentsProps}
+      className={className}
       {...wrapperProps}
     >
       <CalendarOrClockPicker

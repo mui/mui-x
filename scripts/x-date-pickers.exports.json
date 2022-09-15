@@ -67,6 +67,7 @@
   { "name": "getCalendarPickerSkeletonUtilityClass", "kind": "Variable" },
   { "name": "getMonthPickerUtilityClass", "kind": "Function" },
   { "name": "getPickersDayUtilityClass", "kind": "Function" },
+  { "name": "isIS", "kind": "Variable" },
   { "name": "itIT", "kind": "Variable" },
   { "name": "koKR", "kind": "Variable" },
   { "name": "LocalizationProvider", "kind": "Function" },
