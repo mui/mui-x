@@ -4,11 +4,12 @@ All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
 ## 5.17.3
+
 _Sep 15, 2022_
 
 We'd like to offer a big thanks to the 6 contributors who made this release possible. Here are some highlights ✨:
 
-- 📝 Fix lost characters when typing into fields in the DataGrid(#5646) @m4theushw
+- 📝 Fix lost characters when typing into fields in the DataGrid (#5646) @m4theushw
 - 🌏 New locale and improvements for pickers
 - 🎁 Improve support to theme augmentation for pickers
 
