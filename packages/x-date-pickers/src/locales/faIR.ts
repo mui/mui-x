@@ -2,9 +2,7 @@ import { PickersLocaleText } from './utils/pickersLocaleTextApi';
 import { getPickersLocalization } from './utils/getPickersLocalization';
 import { CalendarPickerView } from '../internals/models';
 
-// This object is not Partial<PickersLocaleText> because it is the default values
-
-const faIRPickers: PickersLocaleText<any> = {
+const faIRPickers: Partial<PickersLocaleText<any>> = {
   // Calendar navigation
   previousMonth: 'ماه گذشته',
   nextMonth: 'ماه آینده',
@@ -39,8 +37,7 @@ const faIRPickers: PickersLocaleText<any> = {
 
   // Clock labels
   clockLabelText: (view, time, adapter) =>
-    `Select ${view}. ${
-      time === null ? 'هیچ ساعتی انتخاب نشده است' : `ساعت انتخاب ${adapter.format(time, 'fullTime')} می باشد`
+    `Select ${view}. ${time === null ? 'هیچ ساعتی انتخاب نشده است' : `ساعت انتخاب ${adapter.format(time, 'fullTime')} می باشد`
     }`,
   hoursClockNumberText: (hours) => `${hours} ساعت ها`,
   minutesClockNumberText: (minutes) => `${minutes} دقیقه ها`,
