@@ -37,7 +37,10 @@ const faIRPickers: Partial<PickersLocaleText<any>> = {
 
   // Clock labels
   clockLabelText: (view, time, adapter) =>
-    `Select ${view}. ${time === null ? 'هیچ ساعتی انتخاب نشده است' : `ساعت انتخاب ${adapter.format(time, 'fullTime')} می باشد`
+    `Select ${view}. ${
+      time === null
+        ? 'هیچ ساعتی انتخاب نشده است'
+        : `ساعت انتخاب ${adapter.format(time, 'fullTime')} می باشد`
     }`,
   hoursClockNumberText: (hours) => `${hours} ساعت ها`,
   minutesClockNumberText: (minutes) => `${minutes} دقیقه ها`,
@@ -46,11 +49,17 @@ const faIRPickers: Partial<PickersLocaleText<any>> = {
   // Open picker labels
   openDatePickerDialogue: (rawValue, utils) =>
     rawValue && utils.isValid(utils.date(rawValue))
-      ? `تاریخ را انتخاب کنید، تاریخ انتخاب شده ${utils.format(utils.date(rawValue)!, 'fullDate')} می باشد`
+      ? `تاریخ را انتخاب کنید، تاریخ انتخاب شده ${utils.format(
+          utils.date(rawValue)!,
+          'fullDate',
+        )} می باشد`
       : 'تاریخ را انتخاب کنید',
   openTimePickerDialogue: (rawValue, utils) =>
     rawValue && utils.isValid(utils.date(rawValue))
-      ? `ساعت را انتخاب کنید، ساعت انتخاب شده ${utils.format(utils.date(rawValue)!, 'fullTime')} می باشد`
+      ? `ساعت را انتخاب کنید، ساعت انتخاب شده ${utils.format(
+          utils.date(rawValue)!,
+          'fullTime',
+        )} می باشد`
       : 'ساعت را انتخاب کنید',
 
   // Table labels

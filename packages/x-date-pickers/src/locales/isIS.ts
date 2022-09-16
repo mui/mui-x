@@ -2,7 +2,6 @@ import { PickersLocaleText } from './utils/pickersLocaleTextApi';
 import { getPickersLocalization } from './utils/getPickersLocalization';
 import { CalendarPickerView } from '../internals/models';
 
-
 const isISPickers: Partial<PickersLocaleText<any>> = {
   // Calendar navigation
   previousMonth: 'Fyrri mánuður',
@@ -43,7 +42,8 @@ const isISPickers: Partial<PickersLocaleText<any>> = {
 
   // Clock labels
   clockLabelText: (view, time, adapter) =>
-    `Select ${view}. ${time === null ? 'Enginn tími valinn' : `Valinn tími er ${adapter.format(time, 'fullTime')}`
+    `Select ${view}. ${
+      time === null ? 'Enginn tími valinn' : `Valinn tími er ${adapter.format(time, 'fullTime')}`
     }`,
   hoursClockNumberText: (hours) => `${hours} klukkustundir`,
   minutesClockNumberText: (minutes) => `${minutes} mínútur`,
