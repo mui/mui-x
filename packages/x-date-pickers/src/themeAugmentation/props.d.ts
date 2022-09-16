@@ -19,7 +19,6 @@ import { StaticDateTimePickerProps } from '../StaticDateTimePicker';
 import { StaticTimePickerProps } from '../StaticTimePicker';
 import { TimePickerProps, TimePickerToolbarProps } from '../TimePicker';
 import { YearPickerProps } from '../YearPicker';
-import { PickerStaticWrapperProps } from '../internals/components/PickerStaticWrapper';
 import { DateFieldProps } from '../DateField';
 import { LocalizationProviderProps } from '../LocalizationProvider';
 import { DesktopDatePickerProps } from '../DesktopDatePicker';
