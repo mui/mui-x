@@ -94,11 +94,7 @@ interface DateRangePickerViewProps<TDate>
   open: boolean;
   startText: React.ReactNode;
   endText: React.ReactNode;
-<<<<<<< Updated upstream
-  DateInputProps: DateRangePickerInputProps<TInputDate, TDate>;
-=======
   DateInputProps: DateRangePickerInputProps<TDate>;
->>>>>>> Stashed changes
 }
 
 type DateRangePickerViewComponent = (<TDate>(
@@ -153,7 +149,7 @@ function DateRangePickerViewRaw<TDate>(props: DateRangePickerViewProps<TDate>) {
     onMonthSwitchingAnimationEnd,
     changeFocusedDay,
   } = useCalendarState<TDate>({
-    date: start ?? end,
+    value: start ?? end,
     defaultCalendarMonth,
     disableFuture,
     disablePast,

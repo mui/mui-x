@@ -77,7 +77,7 @@ export interface DateInputProps<TDate> {
    * Props to pass to keyboard adornment button.
    */
   OpenPickerButtonProps?: Partial<IconButtonProps>;
-  rawValue: TDate | null;
+  value: TDate | null;
   readOnly?: boolean;
   /**
    * The `renderInput` prop allows you to customize the rendered input.
@@ -108,7 +108,7 @@ export type ExportedDateInputProps<TDate> = Omit<
   | 'onChange'
   | 'open'
   | 'openPicker'
-  | 'rawValue'
+  | 'value'
   | 'TextFieldProps'
   | 'validationError'
   | 'components'
@@ -127,7 +127,7 @@ export const PureDateInput = React.forwardRef(function PureDateInput<TDate>(
     inputRef,
     label,
     openPicker: onOpen,
-    rawValue,
+    value,
     renderInput,
     TextFieldProps = {},
     validationError,
@@ -149,7 +149,7 @@ export const PureDateInput = React.forwardRef(function PureDateInput<TDate>(
     [InputProps],
   );
 
-  const inputValue = getDisplayDate(utils, rawValue, inputFormat);
+  const inputValue = getDisplayDate(utils, value, inputFormat);
 
   const handleOnClick = useEventCallback((event: React.MouseEvent<HTMLElement>) => {
     event.stopPropagation();
@@ -171,7 +171,7 @@ export const PureDateInput = React.forwardRef(function PureDateInput<TDate>(
       disabled,
       readOnly: true,
       'aria-readonly': true,
-      'aria-label': getOpenDialogAriaText(rawValue, utils),
+      'aria-label': getOpenDialogAriaText(value, utils),
       value: inputValue,
       ...(!props.readOnly && { onClick: handleOnClick }),
       onKeyDown: onSpaceOrEnter(onOpen),

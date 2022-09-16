@@ -15,7 +15,7 @@ import {
   BaseDateValidationProps,
   MonthValidationProps,
 } from '../internals/hooks/validation/models';
-import { parseNonNullablePickerDate } from '../internals/utils/date-utils';
+import { applyDefaultDate } from '../internals/utils/date-utils';
 import { DefaultizedProps } from '../internals/models/helpers';
 
 export interface MonthPickerProps<TDate>
@@ -84,8 +84,8 @@ export function useMonthPickerDefaultizedProps<TDate>(
     disableFuture: false,
     disablePast: false,
     ...themeProps,
-    minDate: parseNonNullablePickerDate(utils, themeProps.minDate, defaultDates.minDate),
-    maxDate: parseNonNullablePickerDate(utils, themeProps.maxDate, defaultDates.maxDate),
+    minDate: applyDefaultDate(utils, themeProps.minDate, defaultDates.minDate),
+    maxDate: applyDefaultDate(utils, themeProps.maxDate, defaultDates.maxDate),
   };
 }
 

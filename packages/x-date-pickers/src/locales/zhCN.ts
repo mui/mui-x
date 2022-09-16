@@ -46,13 +46,13 @@ const zhCNPickers: Partial<PickersLocaleText<any>> = {
   secondsClockNumberText: (seconds) => `${seconds}秒`,
 
   // Open picker labels
-  openDatePickerDialogue: (rawValue, utils) =>
-    rawValue && utils.isValid(utils.date(rawValue))
-      ? `选择日期，已选择${utils.format(utils.date(rawValue)!, 'fullDate')}`
+  openDatePickerDialogue: (value, utils) =>
+    value != null && utils.isValid(value)
+      ? `选择日期，已选择${utils.format(value, 'fullDate')}`
       : '选择日期',
-  openTimePickerDialogue: (rawValue, utils) =>
-    rawValue && utils.isValid(utils.date(rawValue))
-      ? `选择时间，已选择${utils.format(utils.date(rawValue)!, 'fullTime')}`
+  openTimePickerDialogue: (value, utils) =>
+    value != null && utils.isValid(value)
+      ? `选择时间，已选择${utils.format(value, 'fullTime')}`
       : '选择时间',
 
   // Table labels

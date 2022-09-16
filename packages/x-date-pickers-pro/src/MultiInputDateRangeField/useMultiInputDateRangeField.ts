@@ -4,7 +4,7 @@ import {
   unstable_useDateField as useDateField,
   UseDateFieldProps,
 } from '@mui/x-date-pickers/DateField';
-import { useUtils, useValidation } from '@mui/x-date-pickers/internals';
+import { useValidation } from '@mui/x-date-pickers/internals';
 import { UseFieldResponse } from '@mui/x-date-pickers/internals-fields';
 import { UseMultiInputDateRangeFieldProps } from './MultiInputDateRangeField.interfaces';
 import { DateRange } from '../internal/models';
@@ -22,7 +22,6 @@ export const useMultiInputDateRangeField = <
   inProps: TProps,
 ) => {
   const props = useDefaultizedDateRangeFieldProps<TDate, TProps>(inProps);
-  const utils = useUtils<TDate>();
 
   const { value: valueProp, defaultValue, format, onChange } = props;
 

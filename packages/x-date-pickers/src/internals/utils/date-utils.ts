@@ -70,7 +70,7 @@ export const findClosestEnabledDate = <TDate>({
   return null;
 };
 
-export const parseNonNullablePickerDate = <TDate>(
+export const applyDefaultDate = <TDate>(
   utils: MuiPickersAdapter<TDate>,
   value: TDate | null | undefined,
   defaultValue: TDate,

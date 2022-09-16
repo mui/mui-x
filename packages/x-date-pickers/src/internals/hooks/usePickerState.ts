@@ -140,7 +140,7 @@ export interface PickerStateProps<TValue> {
 interface PickerStateInputProps<TValue> {
   onChange: (value: TValue, keyboardInputValue?: string) => void;
   open: boolean;
-  rawValue: TValue;
+  value: TValue;
   openPicker: () => void;
 }
 
@@ -345,7 +345,7 @@ export const usePickerState = <TValue, TDate>(
     () => ({
       onChange: handleInputChange,
       open: isOpen,
-      rawValue: value,
+      value,
       openPicker: () => setIsOpen(true),
     }),
     [handleInputChange, isOpen, value, setIsOpen],

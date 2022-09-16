@@ -7,7 +7,7 @@ import {
   YearValidationProps,
 } from './models';
 import { useLocalizationContext } from '../useUtils';
-import { parseNonNullablePickerDate } from '../../utils/date-utils';
+import { applyDefaultDate } from '../../utils/date-utils';
 
 export interface ExportedDateValidationProps<TDate>
   extends DayValidationProps<TDate>,
@@ -37,19 +37,10 @@ export const validateDate: Validator<any, DateValidationProps<any>> = ({
   adapter,
 }): DateValidationError => {
   const now = adapter.utils.date()!;
-  const date = adapter.utils.date(value);
-  const minDate = parseNonNullablePickerDate(
-    adapter.utils,
-    props.minDate,
-    adapter.defaultDates.minDate,
-  );
-  const maxDate = parseNonNullablePickerDate(
-    adapter.utils,
-    props.maxDate,
-    adapter.defaultDates.maxDate,
-  );
+  const minDate = applyDefaultDate(adapter.utils, props.minDate, adapter.defaultDates.minDate);
+  const maxDate = applyDefaultDate(adapter.utils, props.maxDate, adapter.defaultDates.maxDate);
 
-  if (date === null) {
+  if (value === null) {
     return null;
   }
 
@@ -57,25 +48,25 @@ export const validateDate: Validator<any, DateValidationProps<any>> = ({
     case !adapter.utils.isValid(value):
       return 'invalidDate';
 
-    case Boolean(props.shouldDisableDate && props.shouldDisableDate(date)):
+    case Boolean(props.shouldDisableDate && props.shouldDisableDate(value)):
       return 'shouldDisableDate';
 
-    case Boolean(props.shouldDisableMonth && props.shouldDisableMonth(date)):
+    case Boolean(props.shouldDisableMonth && props.shouldDisableMonth(value)):
       return 'shouldDisableMonth';
 
-    case Boolean(props.shouldDisableYear && props.shouldDisableYear(date)):
+    case Boolean(props.shouldDisableYear && props.shouldDisableYear(value)):
       return 'shouldDisableYear';
 
-    case Boolean(props.disableFuture && adapter.utils.isAfterDay(date, now)):
+    case Boolean(props.disableFuture && adapter.utils.isAfterDay(value, now)):
       return 'disableFuture';
 
-    case Boolean(props.disablePast && adapter.utils.isBeforeDay(date, now)):
+    case Boolean(props.disablePast && adapter.utils.isBeforeDay(value, now)):
       return 'disablePast';
 
-    case Boolean(minDate && adapter.utils.isBeforeDay(date, minDate)):
+    case Boolean(minDate && adapter.utils.isBeforeDay(value, minDate)):
       return 'minDate';
 
-    case Boolean(maxDate && adapter.utils.isAfterDay(date, maxDate)):
+    case Boolean(maxDate && adapter.utils.isAfterDay(value, maxDate)):
       return 'maxDate';
 
     default:

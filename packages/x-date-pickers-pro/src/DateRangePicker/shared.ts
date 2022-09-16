@@ -8,7 +8,7 @@ import {
   useUtils,
   ValidationProps,
   DefaultizedProps,
-  parseNonNullablePickerDate,
+  applyDefaultDate,
   BaseDateValidationProps,
 } from '@mui/x-date-pickers/internals';
 import { useThemeProps } from '@mui/material/styles';
@@ -92,8 +92,8 @@ export function useDateRangePickerDefaultizedProps<
     ...themeProps,
     endText,
     startText,
-    minDate: parseNonNullablePickerDate(utils, themeProps.minDate, defaultDates.minDate),
-    maxDate: parseNonNullablePickerDate(utils, themeProps.maxDate, defaultDates.maxDate),
+    minDate: applyDefaultDate(utils, themeProps.minDate, defaultDates.minDate),
+    maxDate: applyDefaultDate(utils, themeProps.maxDate, defaultDates.maxDate),
   };
 }
 

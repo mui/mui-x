@@ -46,7 +46,7 @@ export const KeyboardDateInput = React.forwardRef(function KeyboardDateInput<TDa
             edge={adornmentPosition}
             data-mui-test="open-picker-from-keyboard"
             disabled={other.disabled || other.readOnly}
-            aria-label={getOpenDialogAriaText(other.rawValue, utils)}
+            aria-label={getOpenDialogAriaText(other.value, utils)}
             {...OpenPickerButtonProps}
             onClick={openPicker}
           >

@@ -3,7 +3,6 @@ import clsx from 'clsx';
 import { styled, useThemeProps } from '@mui/material/styles';
 import { unstable_composeClasses as composeClasses } from '@mui/material';
 import {
-  useUtils,
   executeInTheNextEventLoopTick,
   DateInputProps,
   ExportedDateInputProps,
@@ -18,11 +17,7 @@ import {
   getDateRangePickerInputUtilityClass,
 } from './dateRangePickerInputClasses';
 
-<<<<<<< Updated upstream
-const useUtilityClasses = (ownerState: DateRangePickerInputProps<any, any>) => {
-=======
 const useUtilityClasses = (ownerState: DateRangePickerInputProps<any>) => {
->>>>>>> Stashed changes
   const { classes } = ownerState;
   const slots = {
     root: ['root'],
@@ -71,51 +66,29 @@ export interface ExportedDateRangePickerInputProps<TDate>
   onChange: (date: DateRange<TDate>, keyboardInputValue?: string) => void;
 }
 
-<<<<<<< Updated upstream
-export interface DateRangePickerInputProps<TInputDate, TDate>
-  extends ExportedDateRangePickerInputProps<TInputDate, TDate>,
-=======
 export interface DateRangePickerInputProps<TDate>
-  extends ExportedDateRangePickerInputProps<TDate>,
->>>>>>> Stashed changes
+  extends Omit<ExportedDateRangePickerInputProps<TDate>, 'value'>,
     Omit<
       DateInputProps<TDate>,
-      keyof ExportedDateRangePickerInputProps<TDate> | 'rawValue' | 'validationError'
+      keyof ExportedDateRangePickerInputProps<TDate> | 'value' | 'validationError'
     >,
     CurrentlySelectingRangeEndProps {
   startText: React.ReactNode;
   endText: React.ReactNode;
   validationError: DateRangeValidationError;
-<<<<<<< Updated upstream
-  rawValue: DateRange<TInputDate>;
-  classes?: Partial<DateRangePickerInputClasses>;
-}
-
-type DatePickerInputComponent = <TInputDate, TDate>(
-  props: DateRangePickerInputProps<TInputDate, TDate> & React.RefAttributes<HTMLDivElement>,
-=======
-  rawValue: DateRange<TDate>;
+  value: DateRange<TDate>;
   classes?: Partial<DateRangePickerInputClasses>;
 }
 
 type DatePickerInputComponent = <TDate>(
   props: DateRangePickerInputProps<TDate> & React.RefAttributes<HTMLDivElement>,
->>>>>>> Stashed changes
 ) => JSX.Element;
 
 /**
  * @ignore - internal component.
  */
-<<<<<<< Updated upstream
-export const DateRangePickerInput = React.forwardRef(function DateRangePickerInput<
-  TInputDate,
-  TDate,
->(
-  inProps: DateRangePickerInputProps<TInputDate, TDate>,
-=======
 export const DateRangePickerInput = React.forwardRef(function DateRangePickerInput<TDate>(
   inProps: DateRangePickerInputProps<TDate>,
->>>>>>> Stashed changes
   ref: React.Ref<HTMLDivElement>,
 ): JSX.Element {
   const props = useThemeProps({ props: inProps, name: 'MuiDateRangePickerInput' });
@@ -127,8 +100,8 @@ export const DateRangePickerInput = React.forwardRef(function DateRangePickerInp
     onChange,
     open,
     openPicker,
-    rawValue,
-    rawValue: [start, end],
+    value,
+    value: [start, end],
     readOnly,
     renderInput,
     setCurrentlySelectingRangeEnd,
@@ -139,7 +112,6 @@ export const DateRangePickerInput = React.forwardRef(function DateRangePickerInp
     ...other
   } = props;
 
-  const utils = useUtils<TDate>();
   const startRef = React.useRef<HTMLInputElement>(null);
   const endRef = React.useRef<HTMLInputElement>(null);
   const classes = useUtilityClasses(props);
@@ -165,11 +137,11 @@ export const DateRangePickerInput = React.forwardRef(function DateRangePickerInp
   );
 
   const handleStartChange = (date: TDate | null, inputString?: string) => {
-    lazyHandleChangeCallback([date, utils.date(end)], inputString);
+    lazyHandleChangeCallback([date, end], inputString);
   };
 
   const handleEndChange = (date: TDate | null, inputString?: string) => {
-    lazyHandleChangeCallback([utils.date(start), date], inputString);
+    lazyHandleChangeCallback([start, date], inputString);
   };
 
   const openRangeStartSelection = () => {
@@ -204,7 +176,7 @@ export const DateRangePickerInput = React.forwardRef(function DateRangePickerInp
   const startInputProps = useMaskedInput({
     ...other,
     readOnly,
-    rawValue: start,
+    value: start,
     onChange: handleStartChange,
     label: startText,
     validationError: startValidationError !== null,
@@ -224,7 +196,7 @@ export const DateRangePickerInput = React.forwardRef(function DateRangePickerInp
     ...other,
     readOnly,
     label: endText,
-    rawValue: end,
+    value: end,
     onChange: handleEndChange,
     validationError: endValidationError !== null,
     TextFieldProps: {

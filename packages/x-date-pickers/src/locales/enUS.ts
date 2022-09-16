@@ -47,13 +47,13 @@ const enUSPickers: PickersLocaleText<any> = {
   secondsClockNumberText: (seconds) => `${seconds} seconds`,
 
   // Open picker labels
-  openDatePickerDialogue: (rawValue, utils) =>
-    rawValue && utils.isValid(utils.date(rawValue))
-      ? `Choose date, selected date is ${utils.format(utils.date(rawValue)!, 'fullDate')}`
+  openDatePickerDialogue: (value, utils) =>
+    value != null && utils.isValid(value)
+      ? `Choose date, selected date is ${utils.format(value, 'fullDate')}`
       : 'Choose date',
-  openTimePickerDialogue: (rawValue, utils) =>
-    rawValue && utils.isValid(utils.date(rawValue))
-      ? `Choose time, selected time is ${utils.format(utils.date(rawValue)!, 'fullTime')}`
+  openTimePickerDialogue: (value, utils) =>
+    value != null && utils.isValid(value)
+      ? `Choose time, selected time is ${utils.format(value, 'fullTime')}`
       : 'Choose time',
 
   // Table labels
