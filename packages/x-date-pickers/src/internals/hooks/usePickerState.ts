@@ -298,7 +298,7 @@ export const usePickerState = <TValue, TDate>(
         setDate({ value: valueManager.getTodayValue(utils), action: 'acceptAndClose' });
       },
     }),
-    [setDate, isOpen, utils, dateState, valueManager, value],
+    [setDate, isOpen, utils, dateState, valueManager, value, inputValue],
   );
 
   // Mobile keyboard view is a special case.
@@ -362,7 +362,7 @@ export const usePickerState = <TValue, TDate>(
       value: inputValue,
       openPicker: () => setIsOpen(true),
     }),
-    [handleInputChange, isOpen, value, setIsOpen],
+    [handleInputChange, isOpen, value, setIsOpen, inputValue],
   );
 
   const pickerState: PickerState<TValue> = { pickerProps, inputProps, wrapperProps };
