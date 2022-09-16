@@ -154,9 +154,7 @@ export type CalendarPickerDefaultizedProps<TDate> = DefaultizedProps<
   | keyof BaseDateValidationProps<TDate>
 >;
 
-const useUtilityClasses = (
-  ownerState: CalendarPickerProps<any> & { classes?: Partial<CalendarPickerClasses> },
-) => {
+const useUtilityClasses = (ownerState: CalendarPickerProps<any>) => {
   const { classes } = ownerState;
   const slots = {
     root: ['root'],
@@ -390,7 +388,7 @@ export const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
   );
 
   React.useEffect(() => {
-    if (value) {
+    if (value != null && utils.isValid(value)) {
       changeMonth(value);
     }
   }, [value]); // eslint-disable-line

@@ -115,7 +115,6 @@ export function DesktopPicker<TValue, TDate, TView extends CalendarOrClockPicker
         role="dialog"
         anchorEl={inputRef.current}
         {...wrapperProps}
-        onClose={wrapperProps.onDismiss}
         components={components}
         componentsProps={componentsProps}
       >

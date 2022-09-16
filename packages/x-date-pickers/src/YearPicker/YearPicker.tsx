@@ -17,7 +17,7 @@ import { BaseDateValidationProps, YearValidationProps } from '../internals/hooks
 import { DefaultizedProps } from '../internals/models/helpers';
 import { parseNonNullablePickerDate } from '../internals/utils/date-utils';
 
-const useUtilityClasses = (ownerState: any) => {
+const useUtilityClasses = (ownerState: YearPickerProps<any>) => {
   const { classes } = ownerState;
 
   const slots = {
