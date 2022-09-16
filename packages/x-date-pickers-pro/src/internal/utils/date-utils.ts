@@ -4,7 +4,7 @@ import { DateRange, NonEmptyDateRange } from '../models';
 export const replaceInvalidDatesByNull = <TDate>(
   utils: MuiPickersAdapter<TDate>,
   value: DateRange<TDate> = [null, null],
-) => value.map(date => replaceInvalidDateByNull(utils, date)) as DateRange<TDate>;
+) => value.map((date) => replaceInvalidDateByNull(utils, date)) as DateRange<TDate>;
 
 export const isRangeValid = <TDate>(
   utils: MuiPickersAdapter<TDate>,

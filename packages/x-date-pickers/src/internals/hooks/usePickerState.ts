@@ -270,7 +270,7 @@ export const usePickerState = <TValue, TDate>(
           // force `onChange` in cases like input (value) === `Invalid date`
           forceOnChangeCall: !valueManager.areValuesEqual(
             utils,
-            value as any,
+            inputValue,
             valueManager.emptyValue,
           ),
         });
@@ -280,6 +280,7 @@ export const usePickerState = <TValue, TDate>(
         setDate({
           value: dateState.draft,
           action: 'acceptAndClose',
+          forceOnChangeCall: !valueManager.areValuesEqual(utils, inputValue, value),
         });
       },
       onDismiss: () => {
@@ -358,7 +359,7 @@ export const usePickerState = <TValue, TDate>(
     () => ({
       onChange: handleInputChange,
       open: isOpen,
-      value,
+      value: inputValue,
       openPicker: () => setIsOpen(true),
     }),
     [handleInputChange, isOpen, value, setIsOpen],
