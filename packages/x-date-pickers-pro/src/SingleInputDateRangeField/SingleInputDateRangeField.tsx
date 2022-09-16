@@ -1,21 +1,49 @@
 import * as React from 'react';
 import TextField from '@mui/material/TextField';
-import { SingleInputDateRangeFieldProps } from './SingleInputDateRangeField.interfaces';
+import { useThemeProps } from '@mui/material/styles';
+import { useSlotProps } from '@mui/base/utils';
+import { SingleInputDateRangeFieldProps } from './SingleInputDateRangeField.types';
 import { useSingleInputDateRangeField } from './useSingleInputDateRangeField';
 
 type DateRangeFieldComponent = (<TInputDate, TDate = TInputDate>(
   props: SingleInputDateRangeFieldProps<TInputDate, TDate> & React.RefAttributes<HTMLInputElement>,
 ) => JSX.Element) & { propTypes?: any };
 
-export const SingleInputDateRangeField = React.forwardRef(function SingleInputDateField<
+export const SingleInputDateRangeField = React.forwardRef(function SingleInputDateRangeField<
   TInputDate,
   TDate = TInputDate,
 >(inProps: SingleInputDateRangeFieldProps<TInputDate, TDate>, ref: React.Ref<HTMLInputElement>) {
-  const { inputRef, inputProps } = useSingleInputDateRangeField<
-    TInputDate,
-    TDate,
-    SingleInputDateRangeFieldProps<TInputDate, TDate>
-  >(inProps);
+  const themeProps = useThemeProps({
+    props: inProps,
+    name: 'MuiSingleInputDateRangeField',
+  });
 
-  return <TextField ref={ref} inputRef={inputRef} {...inputProps} />;
+  const { components, componentsProps, ...other } = themeProps;
+
+  const ownerState = themeProps;
+
+  const Input = components?.Input ?? TextField;
+  const inputProps = useSlotProps({
+    elementType: Input,
+    externalSlotProps: componentsProps?.input,
+    externalForwardedProps: other,
+    ownerState,
+  }) as Omit<SingleInputDateRangeFieldProps<TInputDate, TDate>, 'components' | 'componentsProps'>;
+
+  const {
+    onKeyDown,
+    ref: inputRef,
+    ...fieldProps
+  } = useSingleInputDateRangeField<TInputDate, TDate, typeof inputProps>({
+    props: inputProps,
+    inputRef: inputProps.inputRef,
+  });
+
+  return (
+    <Input
+      ref={ref}
+      {...fieldProps}
+      inputProps={{ ...fieldProps.inputProps, ref: inputRef, onKeyDown }}
+    />
+  );
 }) as DateRangeFieldComponent;

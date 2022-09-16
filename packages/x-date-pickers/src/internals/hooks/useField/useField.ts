@@ -1,6 +1,7 @@
 import * as React from 'react';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import useEventCallback from '@mui/utils/useEventCallback';
+import useForkRef from '@mui/utils/useForkRef';
 import { MuiPickerFieldAdapter } from '../../models/muiPickersAdapter';
 import { useValidation } from '../validation/useValidation';
 import { useUtils } from '../useUtils';
@@ -23,6 +24,8 @@ import {
   setSectionValue,
 } from './useField.utils';
 
+const noop = () => {};
+
 export const useField = <
   TInputValue,
   TValue,
@@ -37,9 +40,9 @@ export const useField = <
   if (!utils.formatTokenMap) {
     throw new Error('This adapter is not compatible with the field components');
   }
-  const inputRef = React.useRef<HTMLInputElement>(null);
 
   const {
+    inputRef: externalInputRef,
     internalProps: {
       value: valueProp,
       defaultValue,
@@ -52,6 +55,9 @@ export const useField = <
     fieldValueManager,
     validator,
   } = params;
+
+  const internalInputRef = React.useRef<HTMLInputElement>(null);
+  const inputRef = useForkRef(externalInputRef, internalInputRef);
 
   const firstDefaultValue = React.useRef(defaultValue);
   const focusTimeoutRef = React.useRef<NodeJS.Timeout | undefined>(undefined);
@@ -111,7 +117,7 @@ export const useField = <
     }
 
     const nextSectionIndex = state.sections.findIndex(
-      (section) => section.start > (inputRef.current?.selectionStart ?? 0),
+      (section) => section.start > (internalInputRef.current?.selectionStart ?? 0),
     );
     const sectionIndex = nextSectionIndex === -1 ? state.sections.length - 1 : nextSectionIndex - 1;
 
@@ -121,7 +127,11 @@ export const useField = <
   const handleInputFocus = useEventCallback((...args) => {
     onFocus?.(...(args as []));
     focusTimeoutRef.current = setTimeout(() => {
-      if ((inputRef.current?.selectionEnd ?? 0) - (inputRef.current?.selectionStart ?? 0) === 0) {
+      if (
+        (internalInputRef.current?.selectionEnd ?? 0) -
+          (internalInputRef.current?.selectionStart ?? 0) ===
+        0
+      ) {
         handleInputClick();
       } else {
         updateSelectedSections(0, state.sections.length - 1);
@@ -136,7 +146,7 @@ export const useField = <
 
   const handleInputKeyDown = useEventCallback((event: React.KeyboardEvent) => {
     onKeyDown?.(event);
-    if (!inputRef.current || state.sections.length === 0) {
+    if (!internalInputRef.current || state.sections.length === 0) {
       return;
     }
 
@@ -342,16 +352,16 @@ export const useField = <
   });
 
   useEnhancedEffect(() => {
-    if (!inputRef.current || state.selectedSectionIndexes == null) {
+    if (!internalInputRef.current || state.selectedSectionIndexes == null) {
       return;
     }
 
     const updateSelectionRangeIfChanged = (selectionStart: number, selectionEnd: number) => {
       if (
-        selectionStart !== inputRef.current!.selectionStart ||
-        selectionEnd !== inputRef.current!.selectionEnd
+        selectionStart !== internalInputRef.current!.selectionStart ||
+        selectionEnd !== internalInputRef.current!.selectionEnd
       ) {
-        inputRef.current!.setSelectionRange(selectionStart, selectionEnd);
+        internalInputRef.current!.setSelectionRange(selectionStart, selectionEnd);
       }
     };
 
@@ -397,15 +407,14 @@ export const useField = <
   }, []);
 
   return {
-    inputProps: {
-      ...otherForwardedProps,
-      value: state.valueStr,
-      onClick: handleInputClick,
-      onFocus: handleInputFocus,
-      onBlur: handleInputBlur,
-      onKeyDown: handleInputKeyDown,
-      error: inputError,
-    },
-    inputRef,
+    ...otherForwardedProps,
+    value: state.valueStr,
+    onClick: handleInputClick,
+    onFocus: handleInputFocus,
+    onBlur: handleInputBlur,
+    onKeyDown: handleInputKeyDown,
+    onChange: noop,
+    error: inputError,
+    ref: inputRef,
   };
 };

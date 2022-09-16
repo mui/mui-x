@@ -6,7 +6,6 @@ import {
 } from '@mui/x-date-pickers/DateField';
 import { useUtils, useValidation } from '@mui/x-date-pickers/internals';
 import { UseFieldResponse } from '@mui/x-date-pickers/internals-fields';
-import { UseMultiInputDateRangeFieldProps } from './MultiInputDateRangeField.interfaces';
 import { DateRange } from '../internal/models';
 import { validateDateRange } from '../internal/hooks/validation/useDateRangeValidation';
 import { dateRangePickerValueManager } from '../DateRangePicker/shared';
@@ -14,15 +13,14 @@ import {
   dateRangeFieldValueManager,
   useDefaultizedDateRangeFieldProps,
 } from '../SingleInputDateRangeField/useSingleInputDateRangeField';
+import { UseMultiInputDateRangeFieldParams } from './MultiInputDateRangeField.types';
 
-export const useMultiInputDateRangeField = <
-  TInputDate,
-  TDate,
-  TProps extends UseMultiInputDateRangeFieldProps<TInputDate, TDate>,
->(
-  inProps: TProps,
-) => {
-  const props = useDefaultizedDateRangeFieldProps<TInputDate, TDate, TProps>(inProps);
+export const useMultiInputDateRangeField = <TInputDate, TDate, TChildProps extends {}>({
+  props: inProps,
+  startInputRef,
+  endInputRef,
+}: UseMultiInputDateRangeFieldParams<TInputDate, TDate, TChildProps>) => {
+  const props = useDefaultizedDateRangeFieldProps<TInputDate, TDate, TChildProps>(inProps);
   const utils = useUtils<TDate>();
 
   const { value: valueProp, defaultValue, format, onChange } = props;
@@ -68,8 +66,14 @@ export const useMultiInputDateRangeField = <
     onChange: handleEndDateChange,
   };
 
-  const rawStartDateResponse = useDateField<TInputDate, TDate, {}>(startInputProps);
-  const rawEndDateResponse = useDateField<TInputDate, TDate, {}>(endInputProps);
+  const rawStartDateResponse = useDateField<TInputDate, TDate, {}>({
+    props: startInputProps,
+    inputRef: startInputRef,
+  });
+  const rawEndDateResponse = useDateField<TInputDate, TDate, {}>({
+    props: endInputProps,
+    inputRef: endInputRef,
+  });
 
   // TODO: Avoid the type casting.
   const value =
@@ -85,18 +89,12 @@ export const useMultiInputDateRangeField = <
 
   const startDateResponse: UseFieldResponse<{}> = {
     ...rawStartDateResponse,
-    inputProps: {
-      ...rawStartDateResponse.inputProps,
-      error: inputError,
-    },
+    error: inputError,
   };
 
   const endDateResponse: UseFieldResponse<{}> = {
     ...rawEndDateResponse,
-    inputProps: {
-      ...rawEndDateResponse.inputProps,
-      error: inputError,
-    },
+    error: inputError,
   };
 
   return { startDate: startDateResponse, endDate: endDateResponse };

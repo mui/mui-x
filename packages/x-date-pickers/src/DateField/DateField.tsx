@@ -1,7 +1,8 @@
 import * as React from 'react';
 import TextField from '@mui/material/TextField';
-
-import { DateFieldProps } from './DateField.interfaces';
+import { useThemeProps } from '@mui/material/styles';
+import { useSlotProps } from '@mui/base/utils';
+import { DateFieldProps } from './DateField.types';
 import { useDateField } from './useDateField';
 
 type DateFieldComponent = (<TInputDate, TDate = TInputDate>(
@@ -12,11 +13,29 @@ export const DateField = React.forwardRef(function DateField<TInputDate, TDate =
   inProps: DateFieldProps<TInputDate, TDate>,
   ref: React.Ref<HTMLInputElement>,
 ) {
-  const { inputRef, inputProps } = useDateField<
-    TInputDate,
-    TDate,
-    DateFieldProps<TInputDate, TDate>
-  >(inProps);
+  const themeProps = useThemeProps({
+    props: inProps,
+    name: 'MuiDateField',
+  });
 
-  return <TextField ref={ref} inputRef={inputRef} {...inputProps} />;
+  const { components, componentsProps, ...other } = themeProps;
+
+  const ownerState = themeProps;
+
+  const Input = components?.Input ?? TextField;
+  const { inputRef: externalInputRef, ...inputProps } = useSlotProps({
+    elementType: Input,
+    externalSlotProps: componentsProps?.input,
+    externalForwardedProps: other,
+    ownerState,
+  }) as Omit<DateFieldProps<TInputDate, TDate>, 'components' | 'componentsProps'>;
+
+  const { ref: inputRef, ...fieldProps } = useDateField<TInputDate, TDate, typeof inputProps>({
+    props: inputProps,
+    inputRef: externalInputRef,
+  });
+
+  return (
+    <Input ref={ref} {...fieldProps} inputProps={{ ...fieldProps.inputProps, ref: inputRef }} />
+  );
 }) as DateFieldComponent;
