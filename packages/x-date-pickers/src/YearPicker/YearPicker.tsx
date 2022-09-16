@@ -86,7 +86,7 @@ export interface YearPickerProps<TDate>
   /**
    * Callback fired when the value (the selected year) changes.
    * @template TValue
-   * @param {TValue} value The new parsed value.
+   * @param {TValue} value The new value.
    */
   onChange: (value: TDate) => void;
   /** If `true` picker is readonly */
@@ -352,7 +352,7 @@ YearPicker.propTypes = {
   /**
    * Callback fired when the value (the selected year) changes.
    * @template TValue
-   * @param {TValue} value The new parsed value.
+   * @param {TValue} value The new value.
    */
   onChange: PropTypes.func.isRequired,
   onFocusedViewChange: PropTypes.func,

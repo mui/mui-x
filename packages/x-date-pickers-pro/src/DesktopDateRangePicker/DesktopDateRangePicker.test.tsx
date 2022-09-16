@@ -238,7 +238,7 @@ describe('<DesktopDateRangePicker />', () => {
     expect(secondChangeValues[1]).toEqualDateTime(new Date(2019, 7, 8));
   });
 
-  it('should allow partial date enter', () => {
+  it.only('should allow partial date enter', () => {
     const handleChange = spy();
     render(
       <WrappedDesktopDateRangePicker

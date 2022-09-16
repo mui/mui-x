@@ -59,7 +59,7 @@ export interface DesktopDateRangeCalendarProps<TDate>
     DayValidationProps<TDate>,
     ExportedArrowSwitcherProps {
   calendars: 1 | 2 | 3;
-  parsedValue: DateRange<TDate>;
+  value: DateRange<TDate>;
   changeMonth: (date: TDate) => void;
   currentlySelectingRangeEnd: 'start' | 'end';
   classes?: Partial<DateRangePickerViewDesktopClasses>;
@@ -130,7 +130,7 @@ export function DateRangePickerViewDesktop<TDate>(inProps: DesktopDateRangeCalen
     componentsProps,
     currentlySelectingRangeEnd,
     currentMonth,
-    parsedValue,
+    value,
     disableFuture,
     disablePast,
     leftArrowButtonText: leftArrowButtonTextProp,
@@ -168,7 +168,7 @@ export function DateRangePickerViewDesktop<TDate>(inProps: DesktopDateRangeCalen
 
   const previewingRange = calculateRangePreview({
     utils,
-    range: parsedValue,
+    range: value,
     newDate: rangePreviewDay,
     currentlySelectingRangeEnd,
   });
@@ -182,7 +182,7 @@ export function DateRangePickerViewDesktop<TDate>(inProps: DesktopDateRangeCalen
   );
 
   const handlePreviewDayChange = (newPreviewRequest: TDate) => {
-    if (!isWithinRange(utils, newPreviewRequest, parsedValue)) {
+    if (!isWithinRange(utils, newPreviewRequest, value)) {
       setRangePreviewDay(newPreviewRequest);
     } else {
       setRangePreviewDay(null);
@@ -232,7 +232,7 @@ export function DateRangePickerViewDesktop<TDate>(inProps: DesktopDateRangeCalen
               disablePast={disablePast}
               disableFuture={disableFuture}
               key={index}
-              selectedDays={parsedValue}
+              selectedDays={value}
               onFocusedDayChange={doNothing}
               onSelectedDaysChange={handleSelectedDayChange}
               currentMonth={monthOnIteration}
@@ -242,9 +242,9 @@ export function DateRangePickerViewDesktop<TDate>(inProps: DesktopDateRangeCalen
                   isPreviewing: isWithinRange(utils, day, previewingRange),
                   isStartOfPreviewing: isStartOfRange(utils, day, previewingRange),
                   isEndOfPreviewing: isEndOfRange(utils, day, previewingRange),
-                  isHighlighting: isWithinRange(utils, day, parsedValue),
-                  isStartOfHighlighting: isStartOfRange(utils, day, parsedValue),
-                  isEndOfHighlighting: isEndOfRange(utils, day, parsedValue),
+                  isHighlighting: isWithinRange(utils, day, value),
+                  isStartOfHighlighting: isStartOfRange(utils, day, value),
+                  isEndOfHighlighting: isEndOfRange(utils, day, value),
                   onMouseEnter: () => handlePreviewDayChange(day),
                   ...DayProps,
                 })

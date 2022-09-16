@@ -109,7 +109,7 @@ function DateRangePickerViewRaw<TDate>(props: DateRangePickerViewProps<TDate>) {
     calendars,
     className,
     currentlySelectingRangeEnd,
-    parsedValue,
+    value,
     DateInputProps,
     defaultCalendarMonth,
     disableAutoMonthSwitching = false,
@@ -141,7 +141,7 @@ function DateRangePickerViewRaw<TDate>(props: DateRangePickerViewProps<TDate>) {
     shouldDisableDate &&
     ((dayToTest: TDate) => shouldDisableDate?.(dayToTest, currentlySelectingRangeEnd));
 
-  const [start, end] = parsedValue;
+  const [start, end] = value;
   const {
     changeMonth,
     calendarState,
@@ -199,14 +199,14 @@ function DateRangePickerViewRaw<TDate>(props: DateRangePickerViewProps<TDate>) {
     }
 
     scrollToDayIfNeeded(currentlySelectingRangeEnd === 'start' ? start : end);
-  }, [currentlySelectingRangeEnd, parsedValue]); // eslint-disable-line
+  }, [currentlySelectingRangeEnd, value]); // eslint-disable-line
 
   const handleSelectedDayChange = React.useCallback<DayPickerProps<TDate>['onSelectedDaysChange']>(
     (newDate) => {
       const { nextSelection, newRange } = calculateRangeChange({
         newDate,
         utils,
-        range: parsedValue,
+        range: value,
         currentlySelectingRangeEnd,
       });
 
@@ -223,7 +223,7 @@ function DateRangePickerViewRaw<TDate>(props: DateRangePickerViewProps<TDate>) {
     },
     [
       currentlySelectingRangeEnd,
-      parsedValue,
+      value,
       onDateChange,
       setCurrentlySelectingRangeEnd,
       utils,
@@ -233,7 +233,7 @@ function DateRangePickerViewRaw<TDate>(props: DateRangePickerViewProps<TDate>) {
 
   const renderView = () => {
     const sharedCalendarProps = {
-      parsedValue,
+      value,
       changeFocusedDay,
       onSelectedDaysChange: handleSelectedDayChange,
       reduceAnimations,
@@ -266,7 +266,7 @@ function DateRangePickerViewRaw<TDate>(props: DateRangePickerViewProps<TDate>) {
       <Watermark packageName="x-date-pickers-pro" releaseInfo={releaseInfo} />
       {toShowToolbar && (
         <DateRangePickerToolbar
-          parsedValue={parsedValue}
+            value={value}
           isMobileKeyboardViewOpen={isMobileKeyboardViewOpen}
           toggleMobileKeyboardView={toggleMobileKeyboardView}
           currentlySelectingRangeEnd={currentlySelectingRangeEnd}

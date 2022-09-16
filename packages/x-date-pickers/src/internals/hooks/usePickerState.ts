@@ -145,7 +145,7 @@ interface PickerStateInputProps<TValue> {
 }
 
 export interface PickerStatePickerProps<TValue> {
-  parsedValue: TValue;
+  value: TValue;
   isMobileKeyboardViewOpen: boolean;
   toggleMobileKeyboardView: () => void;
   onDateChange: (
@@ -293,7 +293,7 @@ export const usePickerState = <TValue, TDate>(
 
   const pickerProps = React.useMemo<PickerStatePickerProps<TValue>>(
     () => ({
-      parsedValue: dateState.draft,
+      value: dateState.draft,
       isMobileKeyboardViewOpen,
       toggleMobileKeyboardView: () => setMobileKeyboardViewOpen(!isMobileKeyboardViewOpen),
       onDateChange: (
@@ -332,10 +332,10 @@ export const usePickerState = <TValue, TDate>(
   );
 
   const handleInputChange = React.useCallback(
-    (newParsedValue: TValue, keyboardInputValue?: string) => {
+    (newDate: TValue, keyboardInputValue?: string) => {
       const cleanParsedValue = valueManager.valueReducer
-        ? valueManager.valueReducer(utils, lastValidDateValue, newParsedValue)
-        : newParsedValue;
+        ? valueManager.valueReducer(utils, lastValidDateValue, newDate)
+        : newDate;
       onChange(cleanParsedValue, keyboardInputValue);
     },
     [onChange, valueManager, lastValidDateValue, utils],
