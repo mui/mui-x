@@ -16,6 +16,7 @@ import { ExportedDateRangePickerViewProps } from './DateRangePickerView';
 import { DateRangeValidationError } from '../internal/hooks/validation/useDateRangeValidation';
 import { DateRange } from '../internal/models';
 import { ExportedDateRangePickerInputProps } from './DateRangePickerInput';
+import { replaceInvalidDatesByNull } from '../internal/utils/date-utils';
 
 export interface BaseDateRangePickerProps<TDate>
   extends Omit<BasePickerProps<DateRange<TDate>>, 'orientation'>,
@@ -100,5 +101,6 @@ export function useDateRangePickerDefaultizedProps<
 export const dateRangePickerValueManager: PickerStateValueManager<[any, any], any> = {
   emptyValue: [null, null],
   getTodayValue: (utils) => [utils.date()!, utils.date()!],
+  parseInput: replaceInvalidDatesByNull,
   areValuesEqual: (utils, a, b) => utils.isEqual(a[0], b[0]) && utils.isEqual(a[1], b[1]),
 };

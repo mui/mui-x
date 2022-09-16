@@ -266,7 +266,7 @@ function DateRangePickerViewRaw<TDate>(props: DateRangePickerViewProps<TDate>) {
       <Watermark packageName="x-date-pickers-pro" releaseInfo={releaseInfo} />
       {toShowToolbar && (
         <DateRangePickerToolbar
-            value={value}
+          value={value}
           isMobileKeyboardViewOpen={isMobileKeyboardViewOpen}
           toggleMobileKeyboardView={toggleMobileKeyboardView}
           currentlySelectingRangeEnd={currentlySelectingRangeEnd}

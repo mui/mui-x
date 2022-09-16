@@ -9,7 +9,7 @@ import { BasePickerProps } from '../internals/models/props/basePickerProps';
 import { ExportedDateInputProps } from '../internals/components/PureDateInput';
 import { CalendarOrClockPickerView } from '../internals/models';
 import { PickerStateValueManager } from '../internals/hooks/usePickerState';
-import { applyDefaultDate } from '../internals/utils/date-utils';
+import { applyDefaultDate, replaceInvalidDateByNull } from '../internals/utils/date-utils';
 import { BaseToolbarProps } from '../internals/models/props/baseToolbarProps';
 import { DefaultizedProps } from '../internals/models/helpers';
 import { BaseDateValidationProps } from '../internals/hooks/validation/models';
@@ -142,5 +142,6 @@ export function useDateTimePickerDefaultizedProps<
 export const dateTimePickerValueManager: PickerStateValueManager<any, any> = {
   emptyValue: null,
   getTodayValue: (utils) => utils.date()!,
+  parseInput: replaceInvalidDateByNull,
   areValuesEqual: (utils, a, b) => utils.isEqual(a, b),
 };

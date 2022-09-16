@@ -11,6 +11,7 @@ import { ClockPickerView } from '../internals/models';
 import { PickerStateValueManager } from '../internals/hooks/usePickerState';
 import { BaseToolbarProps } from '../internals/models/props/baseToolbarProps';
 import { DefaultizedProps } from '../internals/models/helpers';
+import { replaceInvalidDateByNull } from '../internals/utils/date-utils';
 
 export interface BaseTimePickerProps<TDate>
   extends ExportedClockPickerProps<TDate>,
@@ -85,6 +86,7 @@ export function useTimePickerDefaultizedProps<TDate, Props extends BaseTimePicke
 export const timePickerValueManager: PickerStateValueManager<any, any> = {
   emptyValue: null,
   getTodayValue: (utils) => utils.date()!,
+  parseInput: replaceInvalidDateByNull,
   areValuesEqual: (utils, a, b) => utils.isEqual(a, b),
   valueReducer: (utils, lastValidValue, newValue) => {
     if (!lastValidValue || !utils.isValid(newValue)) {

@@ -8,7 +8,7 @@ import { ValidationProps } from '../internals/hooks/validation/useValidation';
 import { ExportedDateInputProps } from '../internals/components/PureDateInput';
 import { BasePickerProps } from '../internals/models/props/basePickerProps';
 import { PickerStateValueManager } from '../internals/hooks/usePickerState';
-import { applyDefaultDate } from '../internals/utils/date-utils';
+import { applyDefaultDate, replaceInvalidDateByNull } from '../internals/utils/date-utils';
 import { BaseToolbarProps } from '../internals/models/props/baseToolbarProps';
 import { DefaultizedProps } from '../internals/models/helpers';
 import { BaseDateValidationProps } from '../internals/hooks/validation/models';
@@ -121,5 +121,6 @@ export function useDatePickerDefaultizedProps<TDate, Props extends BaseDatePicke
 export const datePickerValueManager: PickerStateValueManager<any, any> = {
   emptyValue: null,
   getTodayValue: (utils) => utils.date()!,
+  parseInput: replaceInvalidDateByNull,
   areValuesEqual: (utils, a, b) => utils.isEqual(a, b),
 };

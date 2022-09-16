@@ -54,7 +54,7 @@ export function DateRangePickerViewMobile<TDate>(props: DesktopDateRangeCalendar
     changeMonth,
     components,
     componentsProps,
-      value,
+    value,
     leftArrowButtonText,
     maxDate: maxDateProp,
     minDate: minDateProp,

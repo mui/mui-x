@@ -70,6 +70,11 @@ export const findClosestEnabledDate = <TDate>({
   return null;
 };
 
+export const replaceInvalidDateByNull = <TDate>(
+  utils: MuiPickersAdapter<TDate>,
+  value: TDate | null,
+) => (value == null || !utils.isValid(value) ? null : value);
+
 export const applyDefaultDate = <TDate>(
   utils: MuiPickersAdapter<TDate>,
   value: TDate | null | undefined,
@@ -79,5 +84,5 @@ export const applyDefaultDate = <TDate>(
     return defaultValue;
   }
 
-  return defaultValue;
+  return value;
 };

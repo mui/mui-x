@@ -30,6 +30,14 @@ export interface PickerStateValueManager<TValue, TDate> {
    */
   getTodayValue: (utils: MuiPickersAdapter<TDate>) => TValue;
   /**
+   * Method parsing the input value to replace all invalid dates by `null`.
+   * @template TDate, TInputValue, TValue
+   * @param {MuiPickersAdapter<TDate>} utils The adapter.
+   * @param {TInputValue} value The raw value to parse.
+   * @returns {TValue} The parsed value.
+   */
+  parseInput: (utils: MuiPickersAdapter<TDate>, value: TValue) => TValue;
+  /**
    * Generates the new value, given the previous value and the new proposed value.
    * @template TDate, TValue
    * @param {MuiPickersAdapter<TDate>} utils The adapter.
@@ -174,10 +182,15 @@ export const usePickerState = <TValue, TDate>(
   props: PickerStateProps<TValue>,
   valueManager: PickerStateValueManager<TValue, TDate>,
 ): PickerState<TValue> => {
-  const { onAccept, onChange, value, closeOnSelect } = props;
+  const { onAccept, onChange, value: inputValue, closeOnSelect } = props;
 
   const utils = useUtils<TDate>();
   const { isOpen, setIsOpen } = useOpenState(props);
+
+  const value = React.useMemo(
+    () => valueManager.parseInput(utils, inputValue),
+    [valueManager, utils, inputValue],
+  );
 
   const [lastValidDateValue, setLastValidDateValue] = React.useState<TValue>(value);
 
