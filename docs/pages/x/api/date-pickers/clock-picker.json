@@ -1,7 +1,7 @@
 {
   "props": {
-    "date": { "type": { "name": "any" }, "required": true },
     "onChange": { "type": { "name": "func" }, "required": true },
+    "value": { "type": { "name": "any" }, "required": true },
     "ampm": { "type": { "name": "bool" } },
     "ampmInClock": { "type": { "name": "bool" } },
     "autoFocus": { "type": { "name": "bool" } },
@@ -47,6 +47,12 @@
     },
     "readOnly": { "type": { "name": "bool" } },
     "shouldDisableTime": { "type": { "name": "func" } },
+    "sx": {
+      "type": {
+        "name": "union",
+        "description": "Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object"
+      }
+    },
     "view": {
       "type": {
         "name": "enum",

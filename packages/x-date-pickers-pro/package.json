@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-date-pickers-pro",
-  "version": "5.0.0",
+  "version": "5.0.1",
   "description": "The commercial edition of the date picker components (MUI X).",
   "author": "MUI Team",
   "main": "./src/index.js",
@@ -37,17 +37,17 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/mui-org/material-ui-x.git",
+    "url": "https://github.com/mui/mui-x.git",
     "directory": "packages/x-date-pickers-pro"
   },
   "dependencies": {
-    "@babel/runtime": "^7.18.9",
+    "@babel/runtime": "^7.19.0",
     "@date-io/date-fns": "^2.15.0",
     "@date-io/dayjs": "^2.15.0",
     "@date-io/luxon": "^2.15.0",
     "@date-io/moment": "^2.15.0",
-    "@mui/utils": "^5.9.3",
-    "@mui/x-date-pickers": "5.0.0",
+    "@mui/utils": "^5.10.3",
+    "@mui/x-date-pickers": "5.0.1",
     "@mui/x-license-pro": "5.17.0",
     "clsx": "^1.2.1",
     "prop-types": "^15.7.2",
@@ -79,7 +79,7 @@
     }
   },
   "devDependencies": {
-    "@types/luxon": "^3.0.0",
+    "@types/luxon": "^3.0.1",
     "date-fns": "^2.29.2",
     "dayjs": "^1.11.5",
     "luxon": "^1.21.3 || ^2.x || ^3.0.0",

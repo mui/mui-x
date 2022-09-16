@@ -70,7 +70,7 @@ In addition to the required `groupId` and `children`, you can use the following 
 
 {{"demo": "CustomizationDemo.js", "bg": "inline"}}
 
-## Column reordering [<span class="plan-pro"></span>](https://mui.com/store/items/mui-x-pro/)
+## Column reordering [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
 
 By default, the columns that are part of a group cannot be dragged to outside their group.
 You can customize this behavior on specific groups by setting `freeReordering: true` in a column group object.
@@ -87,7 +87,7 @@ This feature isn't implemented yet. It's coming.
 
 The column group should allow to switch between an extended/collapsed view which hide/show some columns
 
-## Reordering groups 🚧[<span class="plan-pro"></span>](https://mui.com/store/items/mui-x-pro/)
+## Reordering groups 🚧[<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
 
 :::warning
 This feature isn't implemented yet. It's coming.

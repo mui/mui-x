@@ -26,7 +26,7 @@ import {
   DateRangePickerViewMobileSlotsComponent,
   DateRangePickerViewMobileSlotsComponentsProps,
 } from './DateRangePickerViewMobile';
-import { DateRangePickerInput, DateRangeInputProps } from './DateRangePickerInput';
+import { DateRangePickerInput, DateRangePickerInputProps } from './DateRangePickerInput';
 import {
   DateRangePickerViewDesktop,
   ExportedDateRangePickerViewDesktopProps,
@@ -94,7 +94,7 @@ interface DateRangePickerViewProps<TInputDate, TDate>
   open: boolean;
   startText: React.ReactNode;
   endText: React.ReactNode;
-  DateInputProps: DateRangeInputProps<TInputDate, TDate>;
+  DateInputProps: DateRangePickerInputProps<TInputDate, TDate>;
 }
 
 type DateRangePickerViewComponent = (<TInputDate, TDate = TInputDate>(
@@ -144,63 +144,56 @@ function DateRangePickerViewRaw<TInputDate, TDate>(
     ((dayToTest: TDate) => shouldDisableDate?.(dayToTest, currentlySelectingRangeEnd));
 
   const [start, end] = parsedValue;
-  const {
-    changeMonth,
-    calendarState,
-    isDateDisabled,
-    onMonthSwitchingAnimationEnd,
-    changeFocusedDay,
-  } = useCalendarState({
-    date: start || end,
-    defaultCalendarMonth,
-    disableFuture,
-    disablePast,
-    disableSwitchToMonthOnDayFocus: true,
-    maxDate,
-    minDate,
-    onMonthChange,
-    reduceAnimations,
-    shouldDisableDate: wrappedShouldDisableDate,
-  });
+  const { changeMonth, calendarState, onMonthSwitchingAnimationEnd, changeFocusedDay } =
+    useCalendarState({
+      value: start || end,
+      defaultCalendarMonth,
+      disableFuture,
+      disablePast,
+      disableSwitchToMonthOnDayFocus: true,
+      maxDate,
+      minDate,
+      onMonthChange,
+      reduceAnimations,
+      shouldDisableDate: wrappedShouldDisableDate,
+    });
 
   const toShowToolbar = showToolbar ?? wrapperVariant !== 'desktop';
 
-  const scrollToDayIfNeeded = (day: TDate | null) => {
-    if (!day || !utils.isValid(day) || isDateDisabled(day)) {
+  const prevValue = React.useRef<DateRange<TDate> | null>(null);
+  React.useEffect(() => {
+    const date = currentlySelectingRangeEnd === 'start' ? start : end;
+    if (!date || !utils.isValid(date)) {
       return;
     }
 
-    const currentlySelectedDate = currentlySelectingRangeEnd === 'start' ? start : end;
-    if (currentlySelectedDate === null) {
-      // do not scroll if one of ages is not selected
+    const prevDate =
+      currentlySelectingRangeEnd === 'start' ? prevValue.current?.[0] : prevValue.current?.[1];
+    prevValue.current = parsedValue;
+
+    // The current date did not change, this call comes either from a `currentlySelectingRangeEnd` change or a change in the other date.
+    // In both cases, we don't want to change the visible month(s).
+    if (disableAutoMonthSwitching && prevDate && utils.isEqual(prevDate, date)) {
       return;
     }
 
     const displayingMonthRange = wrapperVariant === 'mobile' ? 0 : calendars - 1;
     const currentMonthNumber = utils.getMonth(calendarState.currentMonth);
-    const requestedMonthNumber = utils.getMonth(day);
+    const requestedMonthNumber = utils.getMonth(date);
 
     if (
-      !utils.isSameYear(calendarState.currentMonth, day) ||
+      !utils.isSameYear(calendarState.currentMonth, date) ||
       requestedMonthNumber < currentMonthNumber ||
       requestedMonthNumber > currentMonthNumber + displayingMonthRange
     ) {
       const newMonth =
         currentlySelectingRangeEnd === 'start'
-          ? currentlySelectedDate
+          ? date
           : // If need to focus end, scroll to the state when "end" is displaying in the last calendar
-            utils.addMonths(currentlySelectedDate, -displayingMonthRange);
+            utils.addMonths(date, -displayingMonthRange);
 
       changeMonth(newMonth);
     }
-  };
-
-  React.useEffect(() => {
-    if (disableAutoMonthSwitching || !open) {
-      return;
-    }
-
-    scrollToDayIfNeeded(currentlySelectingRangeEnd === 'start' ? start : end);
   }, [currentlySelectingRangeEnd, parsedValue]); // eslint-disable-line
 
   const handleSelectedDayChange = React.useCallback<DayPickerProps<TDate>['onSelectedDaysChange']>(

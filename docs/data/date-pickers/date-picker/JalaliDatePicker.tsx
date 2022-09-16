@@ -5,7 +5,7 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 
 export default function JalaliDatePicker() {
-  const [value, setValue] = React.useState<Date | null>(new Date());
+  const [value, setValue] = React.useState<Date | null>(new Date(2022, 3, 7));
 
   return (
     <LocalizationProvider dateAdapter={AdapterJalali}>

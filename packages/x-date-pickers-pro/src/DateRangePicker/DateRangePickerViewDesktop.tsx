@@ -1,5 +1,7 @@
 import * as React from 'react';
-import { styled } from '@mui/material/styles';
+import clsx from 'clsx';
+import { styled, useThemeProps } from '@mui/material/styles';
+import { unstable_composeClasses as composeClasses } from '@mui/material';
 import {
   useDefaultDates,
   useUtils,
@@ -20,6 +22,20 @@ import { DateRange } from '../internal/models';
 import { DateRangePickerDay, DateRangePickerDayProps } from '../DateRangePickerDay';
 import { isWithinRange, isStartOfRange, isEndOfRange } from '../internal/utils/date-utils';
 import { doNothing } from '../internal/utils/utils';
+import {
+  DateRangePickerViewDesktopClasses,
+  getDateRangePickerViewDesktopUtilityClass,
+} from './dateRangePickerViewDesktopClasses';
+
+const useUtilityClasses = (ownerState: DateRangePickerViewDesktopProps<any>) => {
+  const { classes } = ownerState;
+  const slots = {
+    root: ['root'],
+    container: ['container'],
+  };
+
+  return composeClasses(slots, getDateRangePickerViewDesktopUtilityClass, classes);
+};
 
 export interface ExportedDateRangePickerViewDesktopProps<TDate> {
   /**
@@ -44,9 +60,9 @@ export interface DesktopDateRangeCalendarSlotsComponent
 export interface DesktopDateRangeCalendarSlotsComponentsProps
   extends PickersArrowSwitcherSlotsComponentsProps {}
 
-interface DateRangePickerViewDesktopProps<TDate>
+export interface DateRangePickerViewDesktopProps<TDate>
   extends ExportedDateRangePickerViewDesktopProps<TDate>,
-    Omit<DayPickerProps<TDate>, 'selectedDays' | 'renderDay' | 'onFocusedDayChange'>,
+    Omit<DayPickerProps<TDate>, 'selectedDays' | 'renderDay' | 'onFocusedDayChange' | 'classes'>,
     DayValidationProps<TDate>,
     ExportedPickersArrowSwitcherProps {
   /**
@@ -63,14 +79,23 @@ interface DateRangePickerViewDesktopProps<TDate>
   parsedValue: DateRange<TDate>;
   changeMonth: (date: TDate) => void;
   currentlySelectingRangeEnd: 'start' | 'end';
+  classes?: Partial<DateRangePickerViewDesktopClasses>;
 }
 
-const DateRangePickerViewDesktopRoot = styled('div')({
+const DateRangePickerViewDesktopRoot = styled('div', {
+  name: 'MuiDateRangePickerViewDesktop',
+  slot: 'Root',
+  overridesResolver: (_, styles) => styles.root,
+})({
   display: 'flex',
   flexDirection: 'row',
 });
 
-const DateRangePickerViewDesktopContainer = styled('div')(({ theme }) => ({
+const DateRangePickerViewDesktopContainer = styled('div', {
+  name: 'MuiDateRangePickerViewDesktop',
+  slot: 'Container',
+  overridesResolver: (_, styles) => styles.container,
+})(({ theme }) => ({
   '&:not(:last-of-type)': {
     borderRight: `2px solid ${theme.palette.divider}`,
   },
@@ -111,7 +136,8 @@ function getCalendarsArray(
 /**
  * @ignore - internal component.
  */
-export function DateRangePickerViewDesktop<TDate>(props: DateRangePickerViewDesktopProps<TDate>) {
+export function DateRangePickerViewDesktop<TDate>(inProps: DateRangePickerViewDesktopProps<TDate>) {
+  const props = useThemeProps({ props: inProps, name: 'MuiDateRangePickerViewDesktop' });
   const {
     calendars,
     changeMonth,
@@ -126,12 +152,16 @@ export function DateRangePickerViewDesktop<TDate>(props: DateRangePickerViewDesk
     minDate: minDateProp,
     onSelectedDaysChange,
     renderDay = (_, dateRangeProps) => <DateRangePickerDay {...dateRangeProps} />,
+    className,
+    // excluding classes from `other` to avoid passing them down to children
+    classes: providedClasses,
     ...other
   } = props;
 
   const localeText = useLocaleText();
 
   const utils = useUtils<TDate>();
+  const classes = useUtilityClasses(props);
   const defaultDates = useDefaultDates<TDate>();
   const minDate = minDateProp ?? defaultDates.minDate;
   const maxDate = maxDateProp ?? defaultDates.maxDate;
@@ -180,12 +210,12 @@ export function DateRangePickerViewDesktop<TDate>(props: DateRangePickerViewDesk
   }, [changeMonth, currentMonth, utils]);
 
   return (
-    <DateRangePickerViewDesktopRoot>
+    <DateRangePickerViewDesktopRoot className={clsx(className, classes.root)}>
       {getCalendarsArray(calendars).map((_, index) => {
         const monthOnIteration = utils.setMonth(currentMonth, utils.getMonth(currentMonth) + index);
 
         return (
-          <DateRangePickerViewDesktopContainer key={index}>
+          <DateRangePickerViewDesktopContainer key={index} className={classes.container}>
             <DateRangePickerViewDesktopArrowSwitcher
               onGoToPrevious={selectPreviousMonth}
               onGoToNext={selectNextMonth}

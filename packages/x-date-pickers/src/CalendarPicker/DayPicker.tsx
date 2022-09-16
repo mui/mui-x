@@ -1,6 +1,8 @@
 import * as React from 'react';
 import Typography from '@mui/material/Typography';
-import { styled, useTheme } from '@mui/material/styles';
+import { styled, useTheme, useThemeProps } from '@mui/material/styles';
+import { unstable_composeClasses as composeClasses } from '@mui/material';
+import clsx from 'clsx';
 import { PickersDay, PickersDayProps } from '../PickersDay/PickersDay';
 import { useUtils, useNow } from '../internals/hooks/useUtils';
 import { PickerOnChangeFn } from '../internals/hooks/useViews';
@@ -11,9 +13,15 @@ import {
   SlideDirection,
   SlideTransitionProps,
 } from './PickersSlideTransition';
-import { BaseDateValidationProps, DayValidationProps } from '../internals/hooks/validation/models';
-import { useIsDayDisabled } from '../internals/hooks/validation/useDateValidation';
+import {
+  BaseDateValidationProps,
+  DayValidationProps,
+  MonthValidationProps,
+  YearValidationProps,
+} from '../internals/hooks/validation/models';
+import { useIsDateDisabled } from '../internals/hooks/validation/useDateValidation';
 import { findClosestEnabledDate } from '../internals/utils/date-utils';
+import { DayPickerClasses, getDayPickerUtilityClass } from './dayPickerClasses';
 
 export interface ExportedDayPickerProps<TDate>
   extends Pick<PickersDayProps<TDate>, 'disableHighlightToday' | 'showDaysOutsideCurrentMonth'> {
@@ -54,6 +62,8 @@ export interface ExportedDayPickerProps<TDate>
 export interface DayPickerProps<TDate>
   extends ExportedDayPickerProps<TDate>,
     DayValidationProps<TDate>,
+    MonthValidationProps<TDate>,
+    YearValidationProps<TDate>,
     Required<BaseDateValidationProps<TDate>> {
   autoFocus?: boolean;
   className?: string;
@@ -72,19 +82,42 @@ export interface DayPickerProps<TDate>
   hasFocus?: boolean;
   onFocusedViewChange?: (newHasFocus: boolean) => void;
   gridLabelId?: string;
+  classes?: Partial<DayPickerClasses>;
 }
+
+const useUtilityClasses = (ownerState: DayPickerProps<any>) => {
+  const { classes } = ownerState;
+  const slots = {
+    header: ['header'],
+    weekDayLabel: ['weekDayLabel'],
+    loadingContainer: ['loadingContainer'],
+    slideTransition: ['slideTransition'],
+    monthContainer: ['monthContainer'],
+    weekContainer: ['weekContainer'],
+  };
+
+  return composeClasses(slots, getDayPickerUtilityClass, classes);
+};
 
 const defaultDayOfWeekFormatter = (day: string) => day.charAt(0).toUpperCase();
 
 const weeksContainerHeight = (DAY_SIZE + DAY_MARGIN * 2) * 6;
 
-const PickersCalendarDayHeader = styled('div')({
+const PickersCalendarDayHeader = styled('div', {
+  name: 'MuiDayPicker',
+  slot: 'Header',
+  overridesResolver: (_, styles) => styles.header,
+})({
   display: 'flex',
   justifyContent: 'center',
   alignItems: 'center',
 });
 
-const PickersCalendarWeekDayLabel = styled(Typography)(({ theme }) => ({
+const PickersCalendarWeekDayLabel = styled(Typography, {
+  name: 'MuiDayPicker',
+  slot: 'WeekDayLabel',
+  overridesResolver: (_, styles) => styles.weekDayLabel,
+})(({ theme }) => ({
   width: 36,
   height: 40,
   margin: '0 2px',
@@ -95,20 +128,36 @@ const PickersCalendarWeekDayLabel = styled(Typography)(({ theme }) => ({
   color: theme.palette.text.secondary,
 }));
 
-const PickersCalendarLoadingContainer = styled('div')({
+const PickersCalendarLoadingContainer = styled('div', {
+  name: 'MuiDayPicker',
+  slot: 'LoadingContainer',
+  overridesResolver: (_, styles) => styles.loadingContainer,
+})({
   display: 'flex',
   justifyContent: 'center',
   alignItems: 'center',
   minHeight: weeksContainerHeight,
 });
 
-const PickersCalendarSlideTransition = styled(PickersSlideTransition)({
+const PickersCalendarSlideTransition = styled(PickersSlideTransition, {
+  name: 'MuiDayPicker',
+  slot: 'SlideTransition',
+  overridesResolver: (_, styles) => styles.slideTransition,
+})({
   minHeight: weeksContainerHeight,
 });
 
-const PickersCalendarWeekContainer = styled('div')({ overflow: 'hidden' });
+const PickersCalendarWeekContainer = styled('div', {
+  name: 'MuiDayPicker',
+  slot: 'MonthContainer',
+  overridesResolver: (_, styles) => styles.monthContainer,
+})({ overflow: 'hidden' });
 
-const PickersCalendarWeek = styled('div')({
+const PickersCalendarWeek = styled('div', {
+  name: 'MuiDayPicker',
+  slot: 'WeekContainer',
+  overridesResolver: (_, styles) => styles.weekContainer,
+})({
   margin: `${DAY_MARGIN}px 0`,
   display: 'flex',
   justifyContent: 'center',
@@ -117,9 +166,11 @@ const PickersCalendarWeek = styled('div')({
 /**
  * @ignore - do not document.
  */
-export function DayPicker<TDate>(props: DayPickerProps<TDate>) {
+export function DayPicker<TDate>(inProps: DayPickerProps<TDate>) {
   const now = useNow<TDate>();
   const utils = useUtils<TDate>();
+  const props = useThemeProps({ props: inProps, name: 'MuiDayPicker' });
+  const classes = useUtilityClasses(props);
   const {
     onFocusedDayChange,
     className,
@@ -144,14 +195,18 @@ export function DayPicker<TDate>(props: DayPickerProps<TDate>) {
     minDate,
     maxDate,
     shouldDisableDate,
+    shouldDisableMonth,
+    shouldDisableYear,
     dayOfWeekFormatter = defaultDayOfWeekFormatter,
     hasFocus,
     onFocusedViewChange,
     gridLabelId,
   } = props;
 
-  const isDateDisabled = useIsDayDisabled({
+  const isDateDisabled = useIsDateDisabled({
     shouldDisableDate,
+    shouldDisableMonth,
+    shouldDisableYear,
     minDate,
     maxDate,
     disablePast,
@@ -309,13 +364,14 @@ export function DayPicker<TDate>(props: DayPickerProps<TDate>) {
 
   return (
     <div role="grid" aria-labelledby={gridLabelId}>
-      <PickersCalendarDayHeader role="row">
+      <PickersCalendarDayHeader role="row" className={classes.header}>
         {utils.getWeekdays().map((day, i) => (
           <PickersCalendarWeekDayLabel
             key={day + i.toString()}
             variant="caption"
             role="columnheader"
             aria-label={utils.format(utils.addDays(startOfCurrentWeek, i), 'weekday')}
+            className={classes.weekDayLabel}
           >
             {dayOfWeekFormatter?.(day) ?? day}
           </PickersCalendarWeekDayLabel>
@@ -323,14 +379,16 @@ export function DayPicker<TDate>(props: DayPickerProps<TDate>) {
       </PickersCalendarDayHeader>
 
       {loading ? (
-        <PickersCalendarLoadingContainer>{renderLoading()}</PickersCalendarLoadingContainer>
+        <PickersCalendarLoadingContainer className={classes.loadingContainer}>
+          {renderLoading()}
+        </PickersCalendarLoadingContainer>
       ) : (
         <PickersCalendarSlideTransition
           transKey={transitionKey}
           onExited={onMonthSwitchingAnimationEnd}
           reduceAnimations={reduceAnimations}
           slideDirection={slideDirection}
-          className={className}
+          className={clsx(className, classes.slideTransition)}
           {...TransitionProps}
           nodeRef={slideNodeRef}
         >
@@ -338,9 +396,14 @@ export function DayPicker<TDate>(props: DayPickerProps<TDate>) {
             data-mui-test="pickers-calendar"
             ref={slideNodeRef}
             role="rowgroup"
+            className={classes.monthContainer}
           >
             {utils.getWeekArray(currentMonth).map((week) => (
-              <PickersCalendarWeek role="row" key={`week-${week[0]}`}>
+              <PickersCalendarWeek
+                role="row"
+                key={`week-${week[0]}`}
+                className={classes.weekContainer}
+              >
                 {week.map((day) => {
                   const isFocusableDay =
                     focusableDay !== null && utils.isSameDay(day, focusableDay);

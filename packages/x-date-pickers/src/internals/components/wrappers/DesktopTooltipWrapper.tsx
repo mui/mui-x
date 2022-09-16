@@ -52,7 +52,7 @@ export function DesktopTooltipWrapper(props: InternalDesktopWrapperProps) {
         PopperProps={PopperProps}
         PaperProps={PaperProps}
         onBlur={handleBlur}
-        onClose={onDismiss}
+        onDismiss={onDismiss}
         onClear={onClear}
         onCancel={onCancel}
         onAccept={onAccept}

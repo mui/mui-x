@@ -27,7 +27,7 @@ export interface ExportedMobileDateRangeCalendarProps<TDate>
 
 interface DesktopDateRangeCalendarProps<TDate>
   extends ExportedMobileDateRangeCalendarProps<TDate>,
-    Omit<DayPickerProps<TDate>, 'selectedDays' | 'renderDay' | 'onFocusedDayChange'>,
+    Omit<DayPickerProps<TDate>, 'selectedDays' | 'renderDay' | 'onFocusedDayChange' | 'classes'>,
     DayValidationProps<TDate>,
     ExportedCalendarHeaderProps<TDate> {
   /**
@@ -61,6 +61,8 @@ export function DateRangePickerViewMobile<TDate>(props: DesktopDateRangeCalendar
     renderDay = (_, dayProps) => <DateRangePickerDay<TDate> {...dayProps} />,
     disabled,
     readOnly,
+    // excluding classes from `other` to avoid passing them down to children
+    classes: providedClasses,
     ...other
   } = props;
 

@@ -1,4 +1,6 @@
 import * as React from 'react';
+import { expect } from 'chai';
+import { spy } from 'sinon';
 import {
   GridApi,
   DataGridProProps,
@@ -8,21 +10,19 @@ import {
   GridValueSetterParams,
   GridPreProcessEditCellProps,
   GridCellProps,
+  GridCellModes,
 } from '@mui/x-data-grid-pro';
+import { getBasicGridData } from '@mui/x-data-grid-generator';
 // @ts-ignore Remove once the test utils are typed
 import { createRenderer, fireEvent, act, userEvent } from '@mui/monorepo/test/utils';
-import { expect } from 'chai';
 import { getCell } from 'test/utils/helperFn';
-import { spy } from 'sinon';
-import { getData } from 'storybook/src/data/data-service';
-import { GridCellModes } from '@mui/x-data-grid';
 
 describe('<DataGridPro /> - Cell Editing', () => {
   const { render, clock } = createRenderer({ clock: 'fake' });
 
   let apiRef: React.MutableRefObject<GridApi>;
 
-  const defaultData = getData(4, 2);
+  const defaultData = getBasicGridData(4, 2);
 
   const renderEditCell = spy((() => <input />) as (
     props: GridRenderEditCellParams,
@@ -187,6 +187,7 @@ describe('<DataGridPro /> - Cell Editing', () => {
           value: 'USD GBP',
           error: false,
           isProcessingProps: true,
+          changeReason: 'setEditCellValue',
         });
       });
 
@@ -567,7 +568,7 @@ describe('<DataGridPro /> - Cell Editing', () => {
         columnProps.renderEditCell = (props: GridCellProps) => <CustomEditComponent {...props} />;
         render(
           <TestCase
-            {...getData(1, 3)}
+            {...getBasicGridData(1, 3)}
             columns={[
               { field: 'id' },
               { field: 'currencyPair', editable: true },
@@ -592,7 +593,7 @@ describe('<DataGridPro /> - Cell Editing', () => {
         columnProps.renderEditCell = (props: GridCellProps) => <CustomEditComponent {...props} />;
         render(
           <TestCase
-            {...getData(1, 3)}
+            {...getBasicGridData(1, 3)}
             columns={[
               { field: 'id' },
               { field: 'currencyPair', editable: true },

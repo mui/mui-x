@@ -1,14 +1,16 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import Typography from '@mui/material/Typography';
-import { generateUtilityClasses } from '@mui/material';
-import { useTheme, styled } from '@mui/material/styles';
+import { useTheme, styled, useThemeProps } from '@mui/material/styles';
+import { unstable_composeClasses as composeClasses } from '@mui/material';
 import { useSlotProps } from '@mui/base/utils';
 import IconButton from '@mui/material/IconButton';
 import { ArrowLeft, ArrowRight } from '../icons';
-import { PickersArrowSwitcherProps } from './PickersArrowSwitcher.types';
-
-const classes = generateUtilityClasses('MuiPickersArrowSwitcher', ['root', 'spacer', 'button']);
+import {
+  PickersArrowSwitcherOwnerState,
+  PickersArrowSwitcherProps,
+} from './PickersArrowSwitcher.types';
+import { getPickersArrowSwitcherUtilityClass } from './pickersArrowSwitcherClasses';
 
 const PickersArrowSwitcherRoot = styled('div', {
   name: 'MuiPickersArrowSwitcher',
@@ -42,12 +44,25 @@ const PickersArrowSwitcherButton = styled(IconButton, {
   }),
 }));
 
+const useUtilityClasses = (ownerState: PickersArrowSwitcherOwnerState) => {
+  const { classes } = ownerState;
+  const slots = {
+    root: ['root'],
+    spacer: ['spacer'],
+    button: ['button'],
+  };
+
+  return composeClasses(slots, getPickersArrowSwitcherUtilityClass, classes);
+};
+
 export const PickersArrowSwitcher = React.forwardRef(function PickersArrowSwitcher(
-  props: PickersArrowSwitcherProps,
+  inProps: PickersArrowSwitcherProps,
   ref: React.Ref<HTMLDivElement>,
 ) {
   const theme = useTheme();
   const isRTL = theme.direction === 'rtl';
+
+  const props = useThemeProps({ props: inProps, name: 'MuiPickersArrowSwitcher' });
 
   const {
     children,
@@ -66,6 +81,8 @@ export const PickersArrowSwitcher = React.forwardRef(function PickersArrowSwitch
   } = props;
 
   const ownerState = props;
+
+  const classes = useUtilityClasses(ownerState);
 
   const nextProps = {
     target: 'next' as const,

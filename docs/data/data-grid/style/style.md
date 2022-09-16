@@ -11,7 +11,7 @@ title: Data Grid - Styling
 For one-off styles, the `sx` prop can be used.
 It allows to apply simple to complex customizations directly onto the `DataGrid` element.
 The keys accepted can be any CSS property as well as the custom properties provided by MUI.
-For more details, visit the [`sx` prop page](/system/the-sx-prop/).
+For more details, visit the [`sx` prop page](/system/getting-started/the-sx-prop/).
 
 ```tsx
 <DataGrid sx={{ m: 2 }} /> // Sets the margin to 2 times the spacing unit = 16px

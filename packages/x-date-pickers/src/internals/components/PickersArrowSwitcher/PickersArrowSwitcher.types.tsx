@@ -2,6 +2,7 @@ import * as React from 'react';
 import { SlotComponentProps } from '@mui/base';
 import IconButton from '@mui/material/IconButton';
 import SvgIcon from '@mui/material/SvgIcon';
+import { PickersArrowSwitcherClasses } from './pickersArrowSwitcherClasses';
 
 export interface ExportedPickersArrowSwitcherProps {
   /**
@@ -14,6 +15,7 @@ export interface ExportedPickersArrowSwitcherProps {
    * @default {}
    */
   componentsProps?: Partial<PickersArrowSwitcherSlotsComponentsProps>;
+  classes?: Partial<PickersArrowSwitcherClasses>;
 }
 
 export interface PickersArrowSwitcherProps

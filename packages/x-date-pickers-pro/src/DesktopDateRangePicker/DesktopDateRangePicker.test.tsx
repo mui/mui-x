@@ -327,7 +327,7 @@ describe('<DesktopDateRangePicker />', () => {
     expect(screen.getByRole('tooltip')).toBeVisible();
   });
 
-  it('respect localeText', () => {
+  it('should respect localeText from the theme', () => {
     const theme = createTheme({
       components: {
         MuiLocalizationProvider: {
@@ -335,7 +335,7 @@ describe('<DesktopDateRangePicker />', () => {
             localeText: { start: 'Início', end: 'Fim' },
           },
         },
-      } as any,
+      },
     });
 
     render(
@@ -405,6 +405,57 @@ describe('<DesktopDateRangePicker />', () => {
     expect(screen.getAllByRole('textbox')[0]).to.have.value('');
     expect(screen.getAllByRole('textbox')[1]).to.have.value('');
     expect(screen.queryByRole('dialog')).to.equal(null);
+  });
+
+  describe('prop: disableAutoMonthSwitching', () => {
+    it('should go to the month of the end date when changing the start date', () => {
+      render(
+        <WrappedDesktopDateRangePicker
+          initialValue={[
+            adapterToUse.date(new Date(2018, 0, 1)),
+            adapterToUse.date(new Date(2018, 6, 1)),
+          ]}
+        />,
+      );
+
+      openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'start' });
+      fireEvent.click(getPickerDay('5', 'January 2018'));
+      clock.runToLast();
+      expect(getPickerDay('1', 'July 2018')).not.to.equal(null);
+    });
+
+    it('should not go to the month of the end date when changing the start date and props.disableAutoMonthSwitching = true', () => {
+      render(
+        <WrappedDesktopDateRangePicker
+          initialValue={[
+            adapterToUse.date(new Date(2018, 0, 1)),
+            adapterToUse.date(new Date(2018, 6, 1)),
+          ]}
+          disableAutoMonthSwitching
+        />,
+      );
+
+      openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'start' });
+      fireEvent.click(getPickerDay('5', 'January 2018'));
+      clock.runToLast();
+      expect(getPickerDay('1', 'January 2018')).not.to.equal(null);
+    });
+
+    it('should go to the month of the start date when changing both date from the outside', () => {
+      const { setProps } = render(
+        <WrappedDesktopDateRangePicker
+          value={[adapterToUse.date(new Date(2018, 0, 1)), adapterToUse.date(new Date(2018, 6, 1))]}
+        />,
+      );
+
+      openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'start' });
+
+      setProps({
+        value: [adapterToUse.date(new Date(2018, 3, 1)), adapterToUse.date(new Date(2018, 3, 1))],
+      });
+      clock.runToLast();
+      expect(getPickerDay('1', 'April 2018')).not.to.equal(null);
+    });
   });
 
   describe('prop: PopperProps', () => {
