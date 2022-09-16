@@ -388,7 +388,7 @@ export const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
   );
 
   React.useEffect(() => {
-    if (value) {
+    if (value != null && utils.isValid(value)) {
       changeMonth(value);
     }
   }, [value]); // eslint-disable-line
