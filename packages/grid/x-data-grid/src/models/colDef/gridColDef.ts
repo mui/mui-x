@@ -40,7 +40,7 @@ export interface GridColDef<R extends GridValidRowModel = any, V = any, F = V> {
   /**
    * The column identifier. It's used to map with [[GridRowModel]] values.
    */
-  field: string;
+  field: keyof R;
   /**
    * The title of the column rendered in the column header cell.
    */
