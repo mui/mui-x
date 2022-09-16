@@ -362,7 +362,7 @@ export const usePickerState = <TValue, TDate>(
       value: inputValue,
       openPicker: () => setIsOpen(true),
     }),
-    [handleInputChange, isOpen, value, setIsOpen, inputValue],
+    [handleInputChange, isOpen, setIsOpen, inputValue],
   );
 
   const pickerState: PickerState<TValue> = { pickerProps, inputProps, wrapperProps };
