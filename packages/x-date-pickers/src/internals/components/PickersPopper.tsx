@@ -9,6 +9,7 @@ import { unstable_composeClasses as composeClasses } from '@mui/material';
 import { TransitionProps as MuiTransitionProps } from '@mui/material/transitions';
 import { PickersActionBar, PickersActionBarProps } from '../../PickersActionBar';
 import { PickersSlotsComponent } from './wrappers/WrapperProps';
+import { PickerStateWrapperProps } from '../hooks/usePickerState';
 import { getPickersPopperUtilityClass, PickersPopperClasses } from './pickersPopperClasses';
 
 export interface PickersPopperSlotsComponent extends PickersSlotsComponent {}
@@ -36,19 +37,17 @@ export interface ExportedPickerPopperProps {
   TransitionComponent?: React.JSXElementConstructor<MuiTransitionProps>;
 }
 
-export interface PickerPopperProps extends ExportedPickerPopperProps, ExportedPickerPaperProps {
+export interface PickerPopperProps
+  extends ExportedPickerPopperProps,
+    ExportedPickerPaperProps,
+    PickerStateWrapperProps {
   role: 'tooltip' | 'dialog';
   TrapFocusProps?: Partial<MuiTrapFocusProps>;
   anchorEl: MuiPopperProps['anchorEl'];
   open: MuiPopperProps['open'];
   containerRef?: React.Ref<HTMLDivElement>;
   children?: React.ReactNode;
-  onClose: () => void;
   onBlur?: () => void;
-  onClear: () => void;
-  onCancel: () => void;
-  onAccept: () => void;
-  onSetToday: () => void;
   components?: Partial<PickersPopperSlotsComponent>;
   componentsProps?: Partial<PickersPopperSlotsComponentsProps>;
   classes?: Partial<PickersPopperClasses>;
@@ -238,7 +237,7 @@ export function PickersPopper(inProps: PickerPopperProps) {
     children,
     containerRef = null,
     onBlur,
-    onClose,
+    onDismiss,
     onClear,
     onAccept,
     onCancel,
@@ -257,7 +256,7 @@ export function PickersPopper(inProps: PickerPopperProps) {
     function handleKeyDown(nativeEvent: KeyboardEvent) {
       // IE11, Edge (prior to using Bink?) use 'Esc'
       if (open && (nativeEvent.key === 'Escape' || nativeEvent.key === 'Esc')) {
-        onClose();
+        onDismiss();
       }
     }
 
@@ -266,7 +265,7 @@ export function PickersPopper(inProps: PickerPopperProps) {
     return () => {
       document.removeEventListener('keydown', handleKeyDown);
     };
-  }, [onClose, open]);
+  }, [onDismiss, open]);
 
   const lastFocusedElementRef = React.useRef<Element | null>(null);
   React.useEffect(() => {
@@ -292,7 +291,7 @@ export function PickersPopper(inProps: PickerPopperProps) {
 
   const [clickAwayRef, onPaperClick, onPaperTouchStart] = useClickAwayListener(
     open,
-    onBlur ?? onClose,
+    onBlur ?? onDismiss,
   );
   const paperRef = React.useRef<HTMLDivElement>(null);
   const handleRef = useForkRef(paperRef, containerRef);
@@ -310,7 +309,7 @@ export function PickersPopper(inProps: PickerPopperProps) {
     if (event.key === 'Escape') {
       // stop the propagation to avoid closing parent modal
       event.stopPropagation();
-      onClose();
+      onDismiss();
     }
   };
 
