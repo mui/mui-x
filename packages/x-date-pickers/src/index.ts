@@ -20,3 +20,6 @@ export * from './YearPicker';
 export * from './locales';
 
 export { PickerStaticWrapper } from './internals/components/PickerStaticWrapper';
+export type { DateValidationError } from './internals/hooks/validation/useDateValidation';
+export type { TimeValidationError } from './internals/hooks/validation/useTimeValidation';
+export type { DateTimeValidationError } from './internals/hooks/validation/useDateTimeValidation';

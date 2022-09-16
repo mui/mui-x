@@ -45,9 +45,9 @@ The time picker component can be disabled or read-only.
 
 {{"demo": "FormPropsTimePickers.js"}}
 
-## Time validation
+## Validation
 
-{{"demo": "TimeValidationTimePicker.js"}}
+You can find the documentation in the [Validation page](/react-date-pickers/validation/)
 
 ## Landscape
 
