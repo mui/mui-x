@@ -167,7 +167,7 @@ function DateRangePickerViewRaw<TDate>(props: DateRangePickerViewProps<TDate>) {
 
     const prevDate =
       currentlySelectingRangeEnd === 'start' ? prevValue.current?.[0] : prevValue.current?.[1];
-    prevValue.current = parsedValue;
+    prevValue.current = value;
 
     // The current date did not change, this call comes either from a `currentlySelectingRangeEnd` change or a change in the other date.
     // In both cases, we don't want to change the visible month(s).
