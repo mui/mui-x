@@ -31,12 +31,12 @@ export interface PickerStateValueManager<TValue, TDate> {
   getTodayValue: (utils: MuiPickersAdapter<TDate>) => TValue;
   /**
    * Method parsing the input value to replace all invalid dates by `null`.
-   * @template TDate, TInputValue, TValue
+   * @template TDate, TValue
    * @param {MuiPickersAdapter<TDate>} utils The adapter.
-   * @param {TInputValue} value The raw value to parse.
-   * @returns {TValue} The parsed value.
+   * @param {TValue} value The value to parse.
+   * @returns {TValue} The value without invalid date.
    */
-  parseInput: (utils: MuiPickersAdapter<TDate>, value: TValue) => TValue;
+  cleanValue: (utils: MuiPickersAdapter<TDate>, value: TValue) => TValue;
   /**
    * Generates the new value, given the previous value and the new proposed value.
    * @template TDate, TValue
@@ -182,14 +182,14 @@ export const usePickerState = <TValue, TDate>(
   props: PickerStateProps<TValue>,
   valueManager: PickerStateValueManager<TValue, TDate>,
 ): PickerState<TValue> => {
-  const { onAccept, onChange, value: inputValue, closeOnSelect } = props;
+  const { onAccept, onChange, value: rawValue, closeOnSelect } = props;
 
   const utils = useUtils<TDate>();
   const { isOpen, setIsOpen } = useOpenState(props);
 
   const value = React.useMemo(
-    () => valueManager.parseInput(utils, inputValue),
-    [valueManager, utils, inputValue],
+    () => valueManager.cleanValue(utils, rawValue),
+    [valueManager, utils, rawValue],
   );
 
   const [lastValidDateValue, setLastValidDateValue] = React.useState<TValue>(value);
@@ -268,11 +268,7 @@ export const usePickerState = <TValue, TDate>(
           value: valueManager.emptyValue,
           action: 'acceptAndClose',
           // force `onChange` in cases like input (value) === `Invalid date`
-          forceOnChangeCall: !valueManager.areValuesEqual(
-            utils,
-            inputValue,
-            valueManager.emptyValue,
-          ),
+          forceOnChangeCall: !valueManager.areValuesEqual(utils, rawValue, valueManager.emptyValue),
         });
       },
       onAccept: () => {
@@ -280,7 +276,7 @@ export const usePickerState = <TValue, TDate>(
         setDate({
           value: dateState.draft,
           action: 'acceptAndClose',
-          forceOnChangeCall: !valueManager.areValuesEqual(utils, inputValue, value),
+          forceOnChangeCall: !valueManager.areValuesEqual(utils, rawValue, value),
         });
       },
       onDismiss: () => {
@@ -298,7 +294,7 @@ export const usePickerState = <TValue, TDate>(
         setDate({ value: valueManager.getTodayValue(utils), action: 'acceptAndClose' });
       },
     }),
-    [setDate, isOpen, utils, dateState, valueManager, value, inputValue],
+    [setDate, isOpen, utils, dateState, valueManager, value, rawValue],
   );
 
   // Mobile keyboard view is a special case.
@@ -359,10 +355,10 @@ export const usePickerState = <TValue, TDate>(
     () => ({
       onChange: handleInputChange,
       open: isOpen,
-      value: inputValue,
+      value: rawValue,
       openPicker: () => setIsOpen(true),
     }),
-    [handleInputChange, isOpen, setIsOpen, inputValue],
+    [handleInputChange, isOpen, setIsOpen, rawValue],
   );
 
   const pickerState: PickerState<TValue> = { pickerProps, inputProps, wrapperProps };

@@ -43,7 +43,7 @@
     },
     "getOpenDialogAriaText": {
       "type": { "name": "func" },
-      "default": "(date, utils) => `Choose date, selected date is ${utils.format(utils.date(date), 'fullDate')}`"
+      "default": "(date, utils) => `Choose date, selected date is ${utils.format(date, 'fullDate')}`"
     },
     "getViewSwitchingButtonText": {
       "type": { "name": "func" },

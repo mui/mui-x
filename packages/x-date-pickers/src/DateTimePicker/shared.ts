@@ -142,6 +142,6 @@ export function useDateTimePickerDefaultizedProps<
 export const dateTimePickerValueManager: PickerStateValueManager<any, any> = {
   emptyValue: null,
   getTodayValue: (utils) => utils.date()!,
-  parseInput: replaceInvalidDateByNull,
+  cleanValue: replaceInvalidDateByNull,
   areValuesEqual: (utils, a, b) => utils.isEqual(a, b),
 };

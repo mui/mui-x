@@ -121,6 +121,6 @@ export function useDatePickerDefaultizedProps<TDate, Props extends BaseDatePicke
 export const datePickerValueManager: PickerStateValueManager<any, any> = {
   emptyValue: null,
   getTodayValue: (utils) => utils.date()!,
-  parseInput: replaceInvalidDateByNull,
+  cleanValue: replaceInvalidDateByNull,
   areValuesEqual: (utils, a, b) => utils.isEqual(a, b),
 };

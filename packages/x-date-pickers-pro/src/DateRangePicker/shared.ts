@@ -101,6 +101,6 @@ export function useDateRangePickerDefaultizedProps<
 export const dateRangePickerValueManager: PickerStateValueManager<[any, any], any> = {
   emptyValue: [null, null],
   getTodayValue: (utils) => [utils.date()!, utils.date()!],
-  parseInput: replaceInvalidDatesByNull,
+  cleanValue: replaceInvalidDatesByNull,
   areValuesEqual: (utils, a, b) => utils.isEqual(a[0], b[0]) && utils.isEqual(a[1], b[1]),
 };

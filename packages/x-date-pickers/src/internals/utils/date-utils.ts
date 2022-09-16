@@ -32,13 +32,13 @@ export const findClosestEnabledDate = <TDate>({
   let forward: TDate | null = date;
   let backward: TDate | null = date;
   if (utils.isBefore(date, minDate)) {
-    forward = utils.date(minDate);
+    forward = minDate;
     backward = null;
   }
 
   if (utils.isAfter(date, maxDate)) {
     if (backward) {
-      backward = utils.date(maxDate);
+      backward = maxDate;
     }
 
     forward = null;

@@ -86,7 +86,7 @@ export function useTimePickerDefaultizedProps<TDate, Props extends BaseTimePicke
 export const timePickerValueManager: PickerStateValueManager<any, any> = {
   emptyValue: null,
   getTodayValue: (utils) => utils.date()!,
-  parseInput: replaceInvalidDateByNull,
+  cleanValue: replaceInvalidDateByNull,
   areValuesEqual: (utils, a, b) => utils.isEqual(a, b),
   valueReducer: (utils, lastValidValue, newValue) => {
     if (!lastValidValue || !utils.isValid(newValue)) {

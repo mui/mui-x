@@ -48,7 +48,7 @@ export interface DateInputProps<TDate> {
    * @param {TDate | null} date The date from which we want to add an aria-text.
    * @param {MuiPickersAdapter<TDate>} utils The utils to manipulate the date.
    * @returns {string} The aria-text to render inside the dialog.
-   * @default (date, utils) => `Choose date, selected date is ${utils.format(utils.date(date), 'fullDate')}`
+   * @default (date, utils) => `Choose date, selected date is ${utils.format(date, 'fullDate')}`
    */
   getOpenDialogAriaText?: (date: TDate | null, utils: MuiPickersAdapter<TDate>) => string;
   // ?? TODO when it will be possible to display "empty" date in datepicker use it instead of ignoring invalid inputs.
