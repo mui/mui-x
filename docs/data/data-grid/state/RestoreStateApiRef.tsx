@@ -291,6 +291,7 @@ function CustomToolbar() {
           role={undefined}
           transition
           placement="bottom-start"
+          style={{ zIndex: 1 }}
         >
           {({ TransitionProps }) => (
             <Fade {...TransitionProps} timeout={350}>
