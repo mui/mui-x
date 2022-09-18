@@ -10,7 +10,7 @@ import {
   fireEvent,
 } from '@mui/monorepo/test/utils';
 import { adapterToUse, wrapPickerMount, createPickerRenderer } from 'test/utils/pickers-utils';
-import { StaticTimePicker } from './StaticTimePicker';
+import { StaticTimePicker } from '@mui/x-date-pickers/StaticTimePicker';
 
 describe('<StaticTimePicker />', () => {
   const { render } = createPickerRenderer({ clock: 'fake' });
