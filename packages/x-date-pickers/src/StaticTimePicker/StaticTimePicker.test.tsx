@@ -14,7 +14,7 @@ import {
   adapterToUse,
   wrapPickerMount,
   createPickerRenderer,
-} from '../../../../test/utils/pickers-utils';
+} from 'test/utils/pickers-utils';
 
 describe('<StaticTimePicker />', () => {
   const { render } = createPickerRenderer({ clock: 'fake' });

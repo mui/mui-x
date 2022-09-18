@@ -8,7 +8,7 @@ import {
   createPickerRenderer,
   stubMatchMedia,
   wrapPickerMount,
-} from '../../../../test/utils/pickers-utils';
+} from 'test/utils/pickers-utils';
 
 describe('<DateRangePicker />', () => {
   const { render, clock } = createPickerRenderer({ clock: 'fake' });

@@ -7,7 +7,7 @@ import {
   createPickerRenderer,
   stubMatchMedia,
   wrapPickerMount,
-} from '../../../../test/utils/pickers-utils';
+} from 'test/utils/pickers-utils';
 import { TimePicker } from './TimePicker';
 
 describe('<TimePicker />', () => {
