@@ -3,11 +3,7 @@ import TextField from '@mui/material/TextField';
 import { describeConformance } from '@mui/monorepo/test/utils';
 import { fireEvent, screen } from '@mui/monorepo/test/utils/createRenderer';
 import { expect } from 'chai';
-import {
-  createPickerRenderer,
-  stubMatchMedia,
-  wrapPickerMount,
-} from 'test/utils/pickers-utils';
+import { createPickerRenderer, stubMatchMedia, wrapPickerMount } from 'test/utils/pickers-utils';
 import { TimePicker } from './TimePicker';
 
 describe('<TimePicker />', () => {

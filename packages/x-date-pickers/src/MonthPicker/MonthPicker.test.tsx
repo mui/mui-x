@@ -3,11 +3,7 @@ import { spy } from 'sinon';
 import { expect } from 'chai';
 import { fireEvent, screen, describeConformance } from '@mui/monorepo/test/utils';
 import { MonthPicker, monthPickerClasses as classes } from '@mui/x-date-pickers/MonthPicker';
-import {
-  adapterToUse,
-  wrapPickerMount,
-  createPickerRenderer,
-} from 'test/utils/pickers-utils';
+import { adapterToUse, wrapPickerMount, createPickerRenderer } from 'test/utils/pickers-utils';
 
 describe('<MonthPicker />', () => {
   const { render } = createPickerRenderer();

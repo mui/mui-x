@@ -4,11 +4,7 @@ import { isWeekend } from 'date-fns';
 import TextField, { TextFieldProps } from '@mui/material/TextField';
 import { StaticDateRangePicker } from '@mui/x-date-pickers-pro/StaticDateRangePicker';
 import { describeConformance, screen } from '@mui/monorepo/test/utils';
-import {
-  wrapPickerMount,
-  createPickerRenderer,
-  adapterToUse,
-} from 'test/utils/pickers-utils';
+import { wrapPickerMount, createPickerRenderer, adapterToUse } from 'test/utils/pickers-utils';
 
 const defaultRangeRenderInput = (startProps: TextFieldProps, endProps: TextFieldProps) => (
   <React.Fragment>

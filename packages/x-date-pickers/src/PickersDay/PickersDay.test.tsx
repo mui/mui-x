@@ -3,11 +3,7 @@ import { expect } from 'chai';
 import { spy } from 'sinon';
 import { describeConformance, fireEvent, screen } from '@mui/monorepo/test/utils';
 import { PickersDay, pickersDayClasses as classes } from '@mui/x-date-pickers/PickersDay';
-import {
-  adapterToUse,
-  wrapPickerMount,
-  createPickerRenderer,
-} from 'test/utils/pickers-utils';
+import { adapterToUse, wrapPickerMount, createPickerRenderer } from 'test/utils/pickers-utils';
 
 describe('<PickersDay />', () => {
   const { render } = createPickerRenderer();

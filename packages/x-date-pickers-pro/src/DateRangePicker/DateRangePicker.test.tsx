@@ -4,11 +4,7 @@ import { describeConformance } from '@mui/monorepo/test/utils';
 import { DateRangePicker } from '@mui/x-date-pickers-pro/DateRangePicker';
 import { fireEvent, screen } from '@mui/monorepo/test/utils/createRenderer';
 import { expect } from 'chai';
-import {
-  createPickerRenderer,
-  stubMatchMedia,
-  wrapPickerMount,
-} from 'test/utils/pickers-utils';
+import { createPickerRenderer, stubMatchMedia, wrapPickerMount } from 'test/utils/pickers-utils';
 
 describe('<DateRangePicker />', () => {
   const { render, clock } = createPickerRenderer({ clock: 'fake' });
