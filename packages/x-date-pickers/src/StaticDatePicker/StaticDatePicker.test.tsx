@@ -3,11 +3,7 @@ import { expect } from 'chai';
 import TextField from '@mui/material/TextField';
 import { fireEvent, screen } from '@mui/monorepo/test/utils';
 import { StaticDatePicker } from '@mui/x-date-pickers/StaticDatePicker';
-import {
-  createPickerRenderer,
-  adapterToUse,
-  withPickerControls,
-} from '../../../../test/utils/pickers-utils';
+import { createPickerRenderer, adapterToUse, withPickerControls } from 'test/utils/pickers-utils';
 
 const WrappedStaticDatePicker = withPickerControls(StaticDatePicker)({
   renderInput: (params) => <TextField {...params} />,

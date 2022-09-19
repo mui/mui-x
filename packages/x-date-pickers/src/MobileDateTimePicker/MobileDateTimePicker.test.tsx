@@ -11,7 +11,7 @@ import {
   openPicker,
   getClockTouchEvent,
   withPickerControls,
-} from '../../../../test/utils/pickers-utils';
+} from 'test/utils/pickers-utils';
 
 const WrappedMobileDateTimePicker = withPickerControls(MobileDateTimePicker)({
   DialogProps: { TransitionComponent: FakeTransitionComponent },

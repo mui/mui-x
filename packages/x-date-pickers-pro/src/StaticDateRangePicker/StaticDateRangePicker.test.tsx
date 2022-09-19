@@ -9,7 +9,7 @@ import {
   createPickerRenderer,
   adapterToUse,
   withPickerControls,
-} from '../../../../test/utils/pickers-utils';
+} from 'test/utils/pickers-utils';
 
 const defaultRangeRenderInput = (startProps: TextFieldProps, endProps: TextFieldProps) => (
   <React.Fragment>

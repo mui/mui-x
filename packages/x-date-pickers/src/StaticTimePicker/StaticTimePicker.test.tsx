@@ -9,13 +9,13 @@ import {
   getAllByRole,
   fireEvent,
 } from '@mui/monorepo/test/utils';
-import { StaticTimePicker } from './StaticTimePicker';
 import {
   adapterToUse,
   wrapPickerMount,
   createPickerRenderer,
   withPickerControls,
-} from '../../../../test/utils/pickers-utils';
+} from 'test/utils/pickers-utils';
+import { StaticTimePicker } from '@mui/x-date-pickers/StaticTimePicker';
 
 const WrappedStaticTimePicker = withPickerControls(StaticTimePicker)({
   renderInput: (params) => <TextField {...params} />,

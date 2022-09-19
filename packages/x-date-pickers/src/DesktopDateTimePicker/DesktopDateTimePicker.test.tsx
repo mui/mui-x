@@ -12,7 +12,7 @@ import {
   openPicker,
   getClockMouseEvent,
   withPickerControls,
-} from '../../../../test/utils/pickers-utils';
+} from 'test/utils/pickers-utils';
 
 const WrappedDesktopDateTimePicker = withPickerControls(DesktopDateTimePicker)({
   DialogProps: { TransitionComponent: FakeTransitionComponent },
