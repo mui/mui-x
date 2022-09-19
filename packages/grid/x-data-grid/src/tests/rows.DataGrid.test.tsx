@@ -752,7 +752,8 @@ describe('<DataGrid /> - Rows', () => {
       });
 
       it('should position correctly the render zone when the 2nd page has less rows than the 1st page', async function test() {
-        if (/edg/i.test(window.navigator.userAgent)) {
+        const { userAgent } = window.navigator;
+        if (!userAgent.includes('Headless') || /edg/i.test(userAgent)) {
           this.skip(); // FIXME: We need a waitFor that works with fake clock
         }
         const data = getBasicGridData(120, 3);

@@ -125,6 +125,7 @@ import bgLocale from 'date-fns/locale/bg';
 | Italian                 | it-IT               | `itIT`      |
 | Korean                  | ko-KR               | `koKR`      |
 | Norwegian (Bokmål)      | nb-NO               | `nbNO`      |
+| Persian                 | fa-IR               | `faIR`      |
 | Polish                  | pl-PL               | `plPL`      |
 | Spanish                 | es-ES               | `esES`      |
 | Swedish                 | sv-SE               | `svSE`      |

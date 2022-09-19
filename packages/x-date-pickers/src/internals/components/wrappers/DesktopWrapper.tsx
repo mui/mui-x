@@ -69,7 +69,7 @@ export function DesktopWrapper(props: InternalDesktopWrapperProps) {
         TransitionComponent={TransitionComponent}
         PopperProps={PopperProps}
         PaperProps={PaperProps}
-        onClose={onDismiss}
+        onDismiss={onDismiss}
         onCancel={onCancel}
         onClear={onClear}
         onAccept={onAccept}

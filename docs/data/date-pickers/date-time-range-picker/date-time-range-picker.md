@@ -12,4 +12,4 @@ materialDesign: https://material.io/components/date-pickers
 
 > ⚠️ This feature isn't implemented yet. It's coming.
 >
-> 👍 Upvote [issue #4460](https://github.com/mui/mui-x/issues/4547) if you want to see it land faster.
+> 👍 Upvote [issue #4547](https://github.com/mui/mui-x/issues/4547) if you want to see it land faster.

@@ -1,10 +1,14 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import Typography from '@mui/material/Typography';
-import { generateUtilityClasses } from '@mui/material';
-import { useTheme, styled } from '@mui/material/styles';
+import { useTheme, styled, useThemeProps } from '@mui/material/styles';
+import { unstable_composeClasses as composeClasses } from '@mui/material';
 import IconButton from '@mui/material/IconButton';
 import { ArrowLeft, ArrowRight } from './icons';
+import {
+  getPickersArrowSwitcherUtilityClass,
+  PickersArrowSwitcherClasses,
+} from './pickersArrowSwitcherClasses';
 
 export interface PickersArrowSwitcherSlotsComponent {
   /**
@@ -55,6 +59,7 @@ export interface ExportedArrowSwitcherProps {
    * @deprecated
    */
   rightArrowButtonText?: string;
+  classes?: Partial<PickersArrowSwitcherClasses>;
 }
 
 interface ArrowSwitcherProps
@@ -69,7 +74,16 @@ interface ArrowSwitcherProps
   onRightClick: () => void;
 }
 
-const classes = generateUtilityClasses('MuiPickersArrowSwitcher', ['root', 'spacer', 'button']);
+const useUtilityClasses = (ownerState: ArrowSwitcherProps) => {
+  const { classes } = ownerState;
+  const slots = {
+    root: ['root'],
+    spacer: ['spacer'],
+    button: ['button'],
+  };
+
+  return composeClasses(slots, getPickersArrowSwitcherUtilityClass, classes);
+};
 
 const PickersArrowSwitcherRoot = styled('div', {
   name: 'MuiPickersArrowSwitcher',
@@ -104,9 +118,10 @@ const PickersArrowSwitcherButton = styled(IconButton, {
 }));
 
 export const PickersArrowSwitcher = React.forwardRef(function PickersArrowSwitcher(
-  props: Omit<ArrowSwitcherProps, 'as'>,
+  inProps: Omit<ArrowSwitcherProps, 'as'>,
   ref: React.Ref<HTMLDivElement>,
 ) {
+  const props = useThemeProps({ props: inProps, name: 'MuiPickersArrowSwitcher' });
   const {
     children,
     className,
@@ -132,6 +147,7 @@ export const PickersArrowSwitcher = React.forwardRef(function PickersArrowSwitch
   const RightArrowIcon = components?.RightArrowIcon || ArrowRight;
 
   const ownerState = props;
+  const classes = useUtilityClasses(ownerState);
 
   return (
     <PickersArrowSwitcherRoot
