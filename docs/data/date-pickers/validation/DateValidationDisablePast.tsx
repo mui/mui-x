@@ -3,7 +3,7 @@ import dayjs, { Dayjs } from 'dayjs';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
-import Stack from '@mui/material/Stack';
+import Grid from '@mui/material/Grid';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
@@ -17,18 +17,22 @@ const GridItem = ({
   label,
   children,
   spacing = 1,
+  size = 6,
 }: {
   label: string;
   children: React.ReactNode;
   spacing?: number;
+  size?: number;
 }) => {
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-      <Typography variant="body2" sx={{ mb: spacing }}>
-        {label}
-      </Typography>
-      {children}
-    </Box>
+    <Grid xs={12} md={size} item>
+      <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+        <Typography variant="body2" sx={{ mb: spacing }}>
+          {label}
+        </Typography>
+        {children}
+      </Box>
+    </Grid>
   );
 };
 
@@ -45,7 +49,7 @@ export default function DateValidationDisablePast() {
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <Stack spacing={4}>
+      <Grid container spacing={4} width={550}>
         <GridItem label="DatePicker">
           <DatePicker
             disablePast
@@ -62,21 +66,21 @@ export default function DateValidationDisablePast() {
             renderInput={(params) => <TextField {...params} />}
           />
         </GridItem>
-        <GridItem label="DateRangePicker" spacing={2}>
+        <GridItem label="DateRangePicker" spacing={2} size={12}>
           <DateRangePicker
             disablePast
             value={dateRangePickerValue}
             onChange={(newValue) => setDateRangePickerValue(newValue)}
             renderInput={(startProps, endProps) => (
               <React.Fragment>
-                <TextField {...startProps} />
+                <TextField {...startProps} fullWidth />
                 <Box sx={{ mx: 2 }}> to </Box>
-                <TextField {...endProps} />
+                <TextField {...endProps} fullWidth />
               </React.Fragment>
             )}
           />
         </GridItem>
-      </Stack>
+      </Grid>
     </LocalizationProvider>
   );
 }

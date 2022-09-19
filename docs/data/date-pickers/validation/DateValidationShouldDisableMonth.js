@@ -44,6 +44,7 @@ export default function DateValidationShouldDisableMonth() {
             value={datePickerValue}
             onChange={(newValue) => setDatePickerValue(newValue)}
             renderInput={(params) => <TextField {...params} />}
+            views={['year', 'month', 'day']}
           />
         </GridItem>
         <GridItem label="DateTimePicker">
@@ -52,6 +53,7 @@ export default function DateValidationShouldDisableMonth() {
             value={dateTimePickerValue}
             onChange={(newValue) => setDateTimePickerValue(newValue)}
             renderInput={(params) => <TextField {...params} />}
+            views={['year', 'month', 'day', 'hours', 'minutes']}
           />
         </GridItem>
       </Stack>

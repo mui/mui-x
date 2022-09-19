@@ -1,6 +1,7 @@
 import * as React from 'react';
-import TextField from '@mui/material/TextField';
 import dayjs, { Dayjs } from 'dayjs';
+import TextField from '@mui/material/TextField';
+import Box from '@mui/material/Box';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -34,14 +35,18 @@ export default function RenderErrorUnderField() {
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <DatePicker
-        value={value}
-        onChange={(newValue) => setValue(newValue)}
-        onError={(newError) => setError(newError)}
-        renderInput={(params) => <TextField {...params} helperText={errorMessage} />}
-        minDate={startOfQ12022}
-        maxDate={endOfQ12022}
-      />
+      <Box width={300}>
+        <DatePicker
+          value={value}
+          onChange={(newValue) => setValue(newValue)}
+          onError={(newError) => setError(newError)}
+          renderInput={(params) => (
+            <TextField {...params} helperText={errorMessage} fullWidth />
+          )}
+          minDate={startOfQ12022}
+          maxDate={endOfQ12022}
+        />
+      </Box>
     </LocalizationProvider>
   );
 }

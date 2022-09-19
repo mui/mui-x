@@ -6,8 +6,8 @@ title: Date and Time pickers - Validation
 
 <p class="description">Add custom validation to user inputs.</p>
 
-All the date and time pickers have an API for adding validation constraints,
-and by default, provide visual feedback if the component value doesn't meet the validation criteria.
+All the date and time pickers have an API for adding validation constraints.
+By default they provide visual feedback if the component value doesn't meet the validation criteria.
 
 :::info
 The validation props are showcased for each type of picker component (`TimePicker`, `DatePicker`, `DateRangePicker`, etc).
@@ -23,11 +23,11 @@ For example, the validation props available on the `DatePicker` component are al
 
 ## Invalid values feedback
 
-On the input, it enables its error state.
+On the input—it enables its error state.
 
 {{"demo": "ValidationBehaviorInput.js", "defaultCodeOpen": false}}
 
-On the calendar and clock views, the invalid values are displayed as disabled to prevent their selection.
+On the calendar and clock views—the invalid values are displayed as disabled to prevent their selection.
 
 {{"demo": "ValidationBehaviorView.js", "defaultCodeOpen": false}}
 
@@ -39,15 +39,15 @@ All the props described below are available on all the components supporting dat
 
 The `disablePast` prop prevents the selection of all values before today.
 
-- On the `day` view, all the days before today won't be selectable.
-- On the `month` and `year` views, all the values ending before today won't be selectable.
+- On the `day` view—all the days before today won't be selectable.
+- On the `month` and `year` views—all the values ending before today won't be selectable.
 
 {{"demo": "DateValidationDisablePast.js", "defaultCodeOpen": false}}
 
 The `disableFuture` prop prevents the selection of all values after today.
 
-- On the `day` view, all the days after today won't be selectable.
-- On the `month` and `year` views, all the values beginning after today won't be selectable.
+- On the `day` view—all the days after today won't be selectable.
+- On the `month` and `year` views—all the values beginning after today won't be selectable.
 
 {{"demo": "DateValidationDisableFuture.js", "defaultCodeOpen": false}}
 
@@ -55,15 +55,15 @@ The `disableFuture` prop prevents the selection of all values after today.
 
 The `minDate` prop prevents the selection of all values before `props.minDate`.
 
-- On the `day` view, all the days before the `minDate` won't be selectable.
-- On the `month` and `year` views, all the values ending before the `minDate` won't be selectable.
+- On the `day` view—all the days before the `minDate` won't be selectable.
+- On the `month` and `year` views—all the values ending before the `minDate` won't be selectable.
 
 {{"demo": "DateValidationMinDate.js", "defaultCodeOpen": false}}
 
 The `maxDate` prop prevents the selection of all values after `props.maxDate`.
 
-- On the `day` view, all the days after the `maxDate` won't be selectable.
-- On the `month` and `year` views, all the values starting after the `maxDate` won't be selectable.
+- On the `day` view—all the days after the `maxDate` won't be selectable.
+- On the `month` and `year` views—all the values starting after the `maxDate` won't be selectable.
 
 {{"demo": "DateValidationMaxDate.js", "defaultCodeOpen": false}}
 
@@ -77,7 +77,7 @@ In the example below, the weekends are not selectable:
 
 :::warning
 `shouldDisableDate` only prevents the selection of disabled dates on the `day` view.
-For performance reasons, when rendering the `month` view, we are not calling the callback for every day of each month to see which one should be disabled (same for the `year` view).
+For performance reasons—when rendering the `month` view—we are not calling the callback for every day of each month to see which one should be disabled (same for the `year` view).
 
 If you know that all days of some months are disabled, you can provide the [`shouldDisableMonth`](#disable-specific-months) prop to disable them in the `month` view.
 Same with the [`shouldDisableYear`](#disable-specific-years) prop for the `year` view.
@@ -99,7 +99,7 @@ The `shouldDisableMonth` prop prevents the selection of all dates in months for 
 
 :::warning
 `shouldDisableMonth` only prevents the selection of disabled months on the `day` and `month` views.
-For performance reasons, when rendering the `year` view, we are not calling the callback for every month of each year to see which one should be disabled.
+For performance reasons—when rendering the `year` view—we are not calling the callback for every month of each year to see which one should be disabled.
 
 If you know that all months of some years are disabled, you can provide the [`shouldDisableYear`](#disable-specific-years) prop to disable them in the `year` view.
 :::
@@ -181,10 +181,10 @@ If you want to put time boundaries independent of the date, use the [`time bound
 
 :::
 
-## Show the error under the field
+## Show the error
 
-To render the current error below the input, you can subscribe to the `onError` callback which is called every time the error changes.
-You can then use the `helperText` prop of the `TextField` to pass your error message to your input as show below.
+To render the current error, you can subscribe to the `onError` callback which is called every time the error changes.
+You can then use the `helperText` prop of the `TextField` to pass your error message to your input as shown below.
 
 Try to type a date that is inside the first quarter of 2022, the error will go away.
 

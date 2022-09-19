@@ -15,7 +15,13 @@ export default function ValidationBehaviorView() {
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <Grid container columns={{ xs: 1, lg: 2 }} spacing={4}>
+      <Grid
+        container
+        columns={{ xs: 1, lg: 2 }}
+        spacing={4}
+        alignItems="center"
+        justifyContent="center"
+      >
         <Grid item>
           <StaticDatePicker
             disableFuture

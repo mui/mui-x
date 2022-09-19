@@ -12,7 +12,7 @@ import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 
 const today = dayjs();
 
-const isInCurrentMonth = (date) => date.get('year') === dayjs().get('year');
+const isInCurrentYear = (date) => date.get('year') === dayjs().get('year');
 
 const GridItem = ({ label, children, spacing = 1 }) => {
   return (
@@ -40,7 +40,7 @@ export default function DateValidationShouldDisableYear() {
       <Stack spacing={4}>
         <GridItem label="DatePicker">
           <DatePicker
-            shouldDisableDate={isInCurrentMonth}
+            shouldDisableDate={isInCurrentYear}
             value={datePickerValue}
             onChange={(newValue) => setDatePickerValue(newValue)}
             renderInput={(params) => <TextField {...params} />}
@@ -48,7 +48,7 @@ export default function DateValidationShouldDisableYear() {
         </GridItem>
         <GridItem label="DateTimePicker">
           <DateTimePicker
-            shouldDisableDate={isInCurrentMonth}
+            shouldDisableDate={isInCurrentYear}
             value={dateTimePickerValue}
             onChange={(newValue) => setDateTimePickerValue(newValue)}
             renderInput={(params) => <TextField {...params} />}
