@@ -124,12 +124,8 @@ export const useField = <
   const handleInputClick = useEventCallback((...args) => {
     onClick?.(...(args as []));
 
-    if (state.sections.length === 0) {
-      return;
-    }
-
     const nextSectionIndex = state.sections.findIndex(
-      (section) => section.start > (inputRef.current?.selectionStart ?? 0),
+      (section) => section.start > (inputRef.current!.selectionStart ?? 0),
     );
     const sectionIndex = nextSectionIndex === -1 ? state.sections.length - 1 : nextSectionIndex - 1;
 
@@ -163,14 +159,13 @@ export const useField = <
 
   const handleInputKeyDown = useEventCallback((event: React.KeyboardEvent) => {
     onKeyDown?.(event);
-    if (!inputRef.current || state.sections.length === 0) {
-      return;
-    }
 
     // eslint-disable-next-line default-case
     switch (true) {
       // Select all
       case event.key === 'a' && (event.ctrlKey || event.metaKey): {
+        // prevent default to make sure that the next line "select all" while updating
+        // the internal state at the same time.
         event.preventDefault();
         updateSelectedSections(0, state.sections.length - 1);
         return;
@@ -367,7 +362,7 @@ export const useField = <
   });
 
   useEnhancedEffect(() => {
-    if (!inputRef.current || selectedSectionIndexes == null) {
+    if (selectedSectionIndexes == null) {
       return;
     }
 
