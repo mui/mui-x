@@ -21,7 +21,7 @@ import {
   getHeaders,
 } from '@mui/monorepo/docs/packages/markdown';
 import { getLineFeed } from '@mui/monorepo/docs/scripts/helpers';
-import generateUtilityClass from '@mui/base/generateUtilityClass';
+import { unstable_generateUtilityClass as generateUtilityClass } from '@mui/utils';
 import { DocumentedInterfaces, getJsdocDefaultValue, linkify, writePrettifiedFile } from './utils';
 import { Project, Projects } from '../getTypeScriptProjects';
 
