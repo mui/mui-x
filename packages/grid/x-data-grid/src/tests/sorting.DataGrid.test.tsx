@@ -516,5 +516,28 @@ describe('<DataGrid /> - Sorting', () => {
         'MUI: The `sortModel` can only contain a single item when the `disableMultipleColumnsSorting` prop is set to `true`.',
       );
     });
+
+    // See https://github.com/mui/mui-x/issues/6206
+    it('should work with columns initialized asynchronously', () => {
+      const { setProps } = render(
+        <Test
+          columns={[]}
+          initialState={{
+            sorting: {
+              sortModel: [
+                {
+                  field: 'brand',
+                  sort: 'asc',
+                },
+              ],
+            },
+          }}
+        />,
+      );
+
+      setProps({ columns: baselineProps.columns });
+
+      expect(getColumnValues(0)).to.deep.equal(['Adidas', 'Nike', 'Puma']);
+    });
   });
 });

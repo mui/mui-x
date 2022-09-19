@@ -255,6 +255,26 @@ describe('<DataGrid /> - Filter', () => {
       clock.runToLast();
       expect(getColumnValues(0)).to.deep.equal(['Puma']);
     });
+
+    // See https://github.com/mui/mui-x/issues/6206
+    it('should work with columns initialized asynchronously', () => {
+      const { setProps } = render(
+        <TestCase
+          columns={[]}
+          initialState={{
+            filter: {
+              filterModel: {
+                items: [{ columnField: 'brand', operatorValue: 'equals', value: 'Adidas' }],
+              },
+            },
+          }}
+        />,
+      );
+
+      setProps({ columns: baselineProps.columns });
+
+      expect(getColumnValues(0)).to.deep.equal(['Adidas']);
+    });
   });
 
   describe('column type: string', () => {
