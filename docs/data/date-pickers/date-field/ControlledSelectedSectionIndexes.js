@@ -16,6 +16,7 @@ export default function ControlledSelectedSectionIndexes() {
     const sectionIndex = fieldRef.current.sections.findIndex(
       (section) => section.dateSectionName === selectedDateSectionName,
     );
+
     const newSelectedSectionIndexes =
       sectionIndex === -1 ? null : { start: sectionIndex, end: sectionIndex };
 
