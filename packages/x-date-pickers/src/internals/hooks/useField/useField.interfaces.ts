@@ -88,7 +88,6 @@ export interface FieldValueManager<TValue, TDate, TSection extends FieldSection,
 }
 
 export interface UseFieldState<TValue, TSections> {
-  valueStr: string;
   valueParsed: TValue;
   sections: TSections;
   selectedSectionIndexes: { start: number; end: number } | null;
