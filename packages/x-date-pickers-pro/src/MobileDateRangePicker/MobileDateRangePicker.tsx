@@ -219,12 +219,6 @@ MobileDateRangePicker.propTypes = {
    */
   disablePast: PropTypes.bool,
   /**
-   * Text for end input label and toolbar placeholder.
-   * @default 'End'
-   * @deprecated Use the `localeText` prop of `LocalizationProvider` instead, see https://mui.com/x/react-date-pickers/localization
-   */
-  endText: PropTypes.node,
-  /**
    * Get aria-label text for control that opens picker dialog. Aria-label text must include selected date. @DateIOType
    * @template TInputDate, TDate
    * @param {TInputDate} date The date from which we want to add an aria-text.
@@ -435,12 +429,6 @@ MobileDateRangePicker.propTypes = {
    * If `true`, show the toolbar even in desktop mode.
    */
   showToolbar: PropTypes.bool,
-  /**
-   * Text for start input label and toolbar placeholder.
-   * @default 'Start'
-   * @deprecated Use the `localeText` prop of `LocalizationProvider` instead, see https://mui.com/x/react-date-pickers/localization
-   */
-  startText: PropTypes.node,
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */

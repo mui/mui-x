@@ -14,6 +14,7 @@ import { PickersActionBar, PickersActionBarProps } from '../../../PickersActionB
 import { PickerStateWrapperProps } from '../../hooks/usePickerState';
 import { PickersSlotsComponent } from '../wrappers/WrapperProps';
 import { PickersInputLocaleText } from '../../../locales/utils/pickersLocaleTextApi';
+import { LocalizationProvider } from '../../../LocalizationProvider';
 
 const useUtilityClasses = <TDate extends unknown>(ownerState: PickerStaticWrapperProps<TDate>) => {
   const { classes } = ownerState;
@@ -103,6 +104,7 @@ function PickerStaticWrapper<TDate>(inProps: PickerStaticWrapperProps<TDate>) {
     open,
     components,
     componentsProps,
+    localeText,
     className,
     ...other
   } = props;
@@ -112,21 +114,23 @@ function PickerStaticWrapper<TDate>(inProps: PickerStaticWrapperProps<TDate>) {
   const PaperContent = components?.PaperContent || React.Fragment;
 
   return (
-    <WrapperVariantContext.Provider value={displayStaticWrapperAs}>
-      <PickerStaticWrapperRoot className={clsx(classes.root, className)} {...other}>
-        <PickerStaticWrapperContent className={classes.content}>
-          <PaperContent {...componentsProps?.paperContent}>{children}</PaperContent>
-        </PickerStaticWrapperContent>
-        <ActionBar
-          onAccept={onAccept}
-          onClear={onClear}
-          onCancel={onCancel}
-          onSetToday={onSetToday}
-          actions={displayStaticWrapperAs === 'desktop' ? [] : ['cancel', 'accept']}
-          {...componentsProps?.actionBar}
-        />
-      </PickerStaticWrapperRoot>
-    </WrapperVariantContext.Provider>
+    <LocalizationProvider localeText={localeText}>
+      <WrapperVariantContext.Provider value={displayStaticWrapperAs}>
+        <PickerStaticWrapperRoot className={clsx(classes.root, className)} {...other}>
+          <PickerStaticWrapperContent className={classes.content}>
+            <PaperContent {...componentsProps?.paperContent}>{children}</PaperContent>
+          </PickerStaticWrapperContent>
+          <ActionBar
+            onAccept={onAccept}
+            onClear={onClear}
+            onCancel={onCancel}
+            onSetToday={onSetToday}
+            actions={displayStaticWrapperAs === 'desktop' ? [] : ['cancel', 'accept']}
+            {...componentsProps?.actionBar}
+          />
+        </PickerStaticWrapperRoot>
+      </WrapperVariantContext.Provider>
+    </LocalizationProvider>
   );
 }
 

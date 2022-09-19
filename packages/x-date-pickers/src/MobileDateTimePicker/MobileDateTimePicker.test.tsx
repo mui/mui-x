@@ -352,4 +352,18 @@ describe('<MobileDateTimePicker />', () => {
     // it('should call onClose and onAccept with the live value when clicking outside of the picker', () => {
     // })
   });
+
+  describe('localization', () => {
+    it('should respect the `localeText` prop', () => {
+      render(
+        <WrappedMobileDateTimePicker
+          initialValue={null}
+          localeText={{ cancelButtonLabel: 'Custom cancel' }}
+        />,
+      );
+      openPicker({ type: 'date-time', variant: 'mobile' });
+
+      expect(screen.queryByText('Custom cancel')).not.to.equal(null);
+    });
+  });
 });

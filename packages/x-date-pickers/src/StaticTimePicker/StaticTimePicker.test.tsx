@@ -14,7 +14,12 @@ import {
   adapterToUse,
   wrapPickerMount,
   createPickerRenderer,
+  withPickerControls,
 } from '../../../../test/utils/pickers-utils';
+
+const WrappedStaticTimePicker = withPickerControls(StaticTimePicker)({
+  renderInput: (params) => <TextField {...params} />,
+});
 
 describe('<StaticTimePicker />', () => {
   const { render } = createPickerRenderer({ clock: 'fake' });
@@ -149,5 +154,18 @@ describe('<StaticTimePicker />', () => {
     // meridiem are disabled
     expect(screen.getByRole('button', { name: /AM/i }).getAttribute('disabled')).to.not.equal(null);
     expect(screen.getByRole('button', { name: /PM/i }).getAttribute('disabled')).to.not.equal(null);
+  });
+
+  describe('localization', () => {
+    it('should respect the `localeText` prop', () => {
+      render(
+        <WrappedStaticTimePicker
+          initialValue={null}
+          localeText={{ cancelButtonLabel: 'Custom cancel' }}
+        />,
+      );
+
+      expect(screen.queryByText('Custom cancel')).not.to.equal(null);
+    });
   });
 });
