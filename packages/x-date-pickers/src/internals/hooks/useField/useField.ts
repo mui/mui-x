@@ -116,7 +116,7 @@ export const useField = <
 
   const handleInputFocus = useEventCallback((...args) => {
     onFocus?.(...(args as []));
-    // The ref is guarenteed to be resolved that this point.
+    // The ref is guaranteed to be resolved that this point.
     const input = inputRef.current as HTMLInputElement;
 
     clearTimeout(focusTimeoutRef.current);
