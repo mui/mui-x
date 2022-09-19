@@ -8,7 +8,12 @@ import {
 } from '../internal/hooks/validation/useDateRangeValidation';
 
 export interface UseSingleInputDateRangeFieldProps<TInputDate, TDate>
-  extends UseFieldInternalProps<DateRange<TInputDate>, DateRange<TDate>, DateRangeValidationError>,
+  extends UseFieldInternalProps<
+      DateRange<TInputDate>,
+      DateRange<TDate>,
+      DateRangeFieldSection,
+      DateRangeValidationError
+    >,
     Partial<Omit<DateRangeValidationProps<TInputDate, TDate>, 'value'>> {}
 
 export type UseSingleInputDateRangeFieldDefaultizedProps<TInputDate, TDate> = DefaultizedProps<

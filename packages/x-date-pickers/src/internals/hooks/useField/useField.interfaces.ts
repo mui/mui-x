@@ -9,7 +9,7 @@ export interface UseFieldParams<
   TDate,
   TSection extends FieldSection,
   TForwardedProps extends UseFieldForwardedProps,
-  TInternalProps extends UseFieldInternalProps<any, any, any>,
+  TInternalProps extends UseFieldInternalProps<any, any, any, any>,
 > {
   forwardedProps: TForwardedProps;
   internalProps: TInternalProps;
@@ -18,7 +18,7 @@ export interface UseFieldParams<
   validator: Validator<TDate, UseFieldValidationProps<TInputValue, TInternalProps>>;
 }
 
-export interface UseFieldInternalProps<TInputValue, TValue, TError> {
+export interface UseFieldInternalProps<TInputValue, TValue, TSection extends FieldSection, TError> {
   value?: TInputValue;
   onChange?: (value: TValue) => void;
   onError?: (error: TError, value: TInputValue) => void;
@@ -33,6 +33,23 @@ export interface UseFieldInternalProps<TInputValue, TValue, TError> {
    * @default false
    */
   readOnly?: boolean;
+  /**
+   * The currently selected sections.
+   * If `null`, no section is selected.
+   * If not provided, the selected sections will be handled internally.
+   */
+  selectedSectionIndexes?: FieldSelectionSectionIndexes;
+  /**
+   * Callback fired when the selected sections change.
+   * @param {FieldSelectionSectionIndexes} newValue The new selected sections.
+   */
+  onSelectedSectionIndexesChange?: (newValue: FieldSelectionSectionIndexes) => void;
+  fieldRef?: React.Ref<FieldInstance<TSection>>;
+  inputRef?: React.Ref<HTMLInputElement>;
+}
+
+export interface FieldInstance<TSection extends FieldSection> {
+  sections: TSection[];
 }
 
 export interface UseFieldForwardedProps {
@@ -67,6 +84,8 @@ export interface FieldSection {
   query: string | null;
 }
 
+export type FieldSelectionSectionIndexes = { start: number; end: number } | null;
+
 export interface FieldValueManager<TValue, TDate, TSection extends FieldSection, TError> {
   getSectionsFromValue: (
     utils: MuiPickerFieldAdapter<TDate>,
@@ -92,12 +111,11 @@ export interface FieldValueManager<TValue, TDate, TSection extends FieldSection,
 export interface UseFieldState<TValue, TSections> {
   valueParsed: TValue;
   sections: TSections;
-  selectedSectionIndexes: { start: number; end: number } | null;
 }
 
 export type UseFieldValidationProps<
   TInputValue,
-  TInternalProps extends UseFieldInternalProps<any, any, any>,
+  TInternalProps extends UseFieldInternalProps<any, any, any, any>,
 > = Omit<TInternalProps, 'value' | 'defaultValue'> & { value: TInputValue };
 
 export type AvailableAdjustKeyCode =

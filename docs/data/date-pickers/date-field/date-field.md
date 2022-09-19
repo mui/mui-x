@@ -53,6 +53,18 @@ And that when debouncing the state (for instance if you have a server side persi
 
 {{"demo": "DebouncedDateField.js"}}
 
+## Advanced
+
+### Control the selected sections
+
+Use the `selectedSectionIndexes` and `onSelectedSectionIndexesChange` props to control which sections are currently being selected.
+
+:::warning
+You need to make sure the input is focused before imperatively updating the selected sections.
+:::
+
+{{"demo": "ControlledSelectedSectionIndexes.js", "defaultCodeOpen": false }}
+
 ## Headless usage
 
 {{"demo": "CustomUIDateField.js", "defaultCodeOpen": false }}
