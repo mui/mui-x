@@ -119,7 +119,7 @@ import bgLocale from 'date-fns/locale/bg';
 | Locale                  | BCP 47 language tag | Import name |
 | :---------------------- | :------------------ | :---------- |
 | English (United States) | en-US               | `enUS`      |
-| Finnish | fi-FI               | `fiFI`      |
+| Finnish                 | fi-FI               | `fiFI`      |
 | French                  | fr-FR               | `frFR`      |
 | German                  | de-DE               | `deDE`      |
 | Icelandic               | is-IS               | `isIS`      |
