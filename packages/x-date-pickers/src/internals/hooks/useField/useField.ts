@@ -63,7 +63,6 @@ export const useField = <
     return {
       sections,
       value,
-      valueStr: fieldValueManager.getValueStrFromSections(sections),
       selectedSectionIndexes: null,
     };
   });
@@ -79,7 +78,6 @@ export const useField = <
     setState((prevState) => ({
       ...prevState,
       sections,
-      valueStr: fieldValueManager.getValueStrFromSections(sections),
       valueParsed: newValueParsed,
     }));
 
@@ -362,7 +360,6 @@ export const useField = <
       setState((prevState) => ({
         ...prevState,
         valueParsed: value,
-        valueStr: fieldValueManager.getValueStrFromSections(sections),
         sections,
       }));
     }
@@ -383,10 +380,15 @@ export const useField = <
     return () => window.clearTimeout(focusTimeoutRef.current);
   }, []);
 
+  const valueStr = React.useMemo(
+    () => fieldValueManager.getValueStrFromSections(state.sections),
+    [state.sections, fieldValueManager],
+  );
+
   return {
     inputProps: {
       ...otherForwardedProps,
-      value: state.valueStr,
+      value: valueStr,
       onClick: handleInputClick,
       onFocus: handleInputFocus,
       onBlur: handleInputBlur,
