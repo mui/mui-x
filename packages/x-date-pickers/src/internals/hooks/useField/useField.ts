@@ -104,12 +104,8 @@ export const useField = <
   const handleInputClick = useEventCallback((...args) => {
     onClick?.(...(args as []));
 
-    if (state.sections.length === 0) {
-      return;
-    }
-
     const nextSectionIndex = state.sections.findIndex(
-      (section) => section.start > (inputRef.current?.selectionStart ?? 0),
+      (section) => section.start > (inputRef.current!.selectionStart ?? 0),
     );
     const sectionIndex = nextSectionIndex === -1 ? state.sections.length - 1 : nextSectionIndex - 1;
 
@@ -118,11 +114,20 @@ export const useField = <
 
   const handleInputFocus = useEventCallback((...args) => {
     onFocus?.(...(args as []));
+    // The ref is guaranteed to be resolved that this point.
+    const input = inputRef.current as HTMLInputElement;
+
+    clearTimeout(focusTimeoutRef.current);
     focusTimeoutRef.current = setTimeout(() => {
-      if ((inputRef.current?.selectionEnd ?? 0) - (inputRef.current?.selectionStart ?? 0) === 0) {
-        handleInputClick();
-      } else {
+      // The ref changed, the component got remounted, the focus event is no longer relevant.
+      if (input !== inputRef.current) {
+        return;
+      }
+
+      if (Number(input.selectionEnd) - Number(input.selectionStart) === input.value.length) {
         updateSelectedSections(0, state.sections.length - 1);
+      } else {
+        handleInputClick();
       }
     });
   });
@@ -134,14 +139,13 @@ export const useField = <
 
   const handleInputKeyDown = useEventCallback((event: React.KeyboardEvent) => {
     onKeyDown?.(event);
-    if (!inputRef.current || state.sections.length === 0) {
-      return;
-    }
 
     // eslint-disable-next-line default-case
     switch (true) {
       // Select all
       case event.key === 'a' && (event.ctrlKey || event.metaKey): {
+        // prevent default to make sure that the next line "select all" while updating
+        // the internal state at the same time.
         event.preventDefault();
         updateSelectedSections(0, state.sections.length - 1);
         return;
@@ -340,7 +344,7 @@ export const useField = <
   });
 
   useEnhancedEffect(() => {
-    if (!inputRef.current || state.selectedSectionIndexes == null) {
+    if (state.selectedSectionIndexes == null) {
       return;
     }
 
