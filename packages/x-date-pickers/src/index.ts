@@ -20,4 +20,4 @@ export * from './YearPicker';
 export * from './locales';
 
 export { PickerStaticWrapper } from './internals/components/PickerStaticWrapper';
-export { MuiDateSectionName } from './internals/models/muiPickersAdapter';
+export type { MuiDateSectionName } from './internals/models/muiPickersAdapter';
