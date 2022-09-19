@@ -22,6 +22,7 @@
     "inputRef": "Pass a ref to the <code>input</code> element.",
     "leftArrowButtonText": "Left arrow icon aria-label text.",
     "loading": "If <code>true</code> renders <code>LoadingComponent</code> in calendar instead of calendar view. Can be used to preload information and show it in calendar.",
+    "localeText": "Locale for components texts",
     "mask": "Custom mask. Can be used to override generate from format. (e.g. <code>__/__/____ __:__</code> or <code>__/__/____ __:__ _M</code>).",
     "maxDate": "Maximal selectable date. @DateIOType",
     "minDate": "Minimal selectable date. @DateIOType",

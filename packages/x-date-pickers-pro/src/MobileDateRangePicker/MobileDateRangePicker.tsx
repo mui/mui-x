@@ -39,7 +39,7 @@ export interface MobileDateRangePickerSlotsComponentsProps
 
 export interface MobileDateRangePickerProps<TInputDate, TDate>
   extends BaseDateRangePickerProps<TInputDate, TDate>,
-    MobileWrapperProps {
+    MobileWrapperProps<TDate> {
   /**
    * Overrideable components.
    * @default {}
@@ -78,7 +78,7 @@ export const MobileDateRangePicker = React.forwardRef(function MobileDateRangePi
     MobileDateRangePickerProps<TInputDate, TDate>
   >(inProps, 'MuiMobileDateRangePicker');
 
-  const { value, onChange, components, componentsProps, ...other } = props;
+  const { value, onChange, components, componentsProps, localeText, ...other } = props;
 
   const [currentlySelectingRangeEnd, setCurrentlySelectingRangeEnd] = React.useState<
     'start' | 'end'
@@ -116,6 +116,7 @@ export const MobileDateRangePicker = React.forwardRef(function MobileDateRangePi
       PureDateInputComponent={PureDateInputComponent}
       components={components}
       componentsProps={componentsProps}
+      localeText={localeText}
     >
       <DateRangePickerView
         open={wrapperProps.open}
@@ -270,6 +271,10 @@ MobileDateRangePicker.propTypes = {
    * @default false
    */
   loading: PropTypes.bool,
+  /**
+   * Locale for components texts
+   */
+  localeText: PropTypes.object,
   /**
    * Custom mask. Can be used to override generate from format. (e.g. `__/__/____ __:__` or `__/__/____ __:__ _M`).
    * @default '__/__/____'

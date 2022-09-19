@@ -57,6 +57,7 @@
     },
     "leftArrowButtonText": { "type": { "name": "string" }, "deprecated": true },
     "loading": { "type": { "name": "bool" } },
+    "localeText": { "type": { "name": "object" } },
     "mask": { "type": { "name": "string" }, "default": "'__/__/____'" },
     "maxDate": { "type": { "name": "any" } },
     "minDate": { "type": { "name": "any" } },

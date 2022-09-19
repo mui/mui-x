@@ -32,7 +32,7 @@
     "disablePast": { "type": { "name": "bool" } },
     "displayStaticWrapperAs": {
       "type": { "name": "enum", "description": "'desktop'<br>&#124;&nbsp;'mobile'" },
-      "default": "'mobile'"
+      "default": "\"mobile\""
     },
     "endText": {
       "type": { "name": "node" },
@@ -56,6 +56,7 @@
     },
     "leftArrowButtonText": { "type": { "name": "string" }, "deprecated": true },
     "loading": { "type": { "name": "bool" } },
+    "localeText": { "type": { "name": "object" } },
     "mask": { "type": { "name": "string" }, "default": "'__/__/____'" },
     "maxDate": { "type": { "name": "any" } },
     "minDate": { "type": { "name": "any" } },

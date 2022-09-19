@@ -32,7 +32,7 @@ export interface MobileTimePickerSlotsComponentsProps
 
 export interface MobileTimePickerProps<TInputDate, TDate>
   extends BaseTimePickerProps<TInputDate, TDate>,
-    MobileWrapperProps {
+    MobileWrapperProps<TDate> {
   /**
    * Overrideable components.
    * @default {}
@@ -80,6 +80,7 @@ export const MobileTimePicker = React.forwardRef(function MobileTimePicker<
     onChange,
     components,
     componentsProps,
+    localeText,
     ...other
   } = props;
   const DateInputProps = {
@@ -99,6 +100,7 @@ export const MobileTimePicker = React.forwardRef(function MobileTimePicker<
       PureDateInputComponent={PureDateInput}
       components={components}
       componentsProps={componentsProps}
+      localeText={localeText}
     >
       <CalendarOrClockPicker
         {...pickerProps}
@@ -225,6 +227,10 @@ MobileTimePicker.propTypes = {
     }),
   ]),
   label: PropTypes.node,
+  /**
+   * Locale for components texts
+   */
+  localeText: PropTypes.object,
   /**
    * Custom mask. Can be used to override generate from format. (e.g. `__/__/____ __:__` or `__/__/____ __:__ _M`).
    */

@@ -34,7 +34,7 @@ export interface StaticDateRangePickersSlotsComponentsProps
     DateRangePickerViewSlotsComponentsProps {}
 
 export interface StaticDateRangePickerProps<TInputDate, TDate>
-  extends StaticPickerProps<BaseDateRangePickerProps<TInputDate, TDate>> {
+  extends StaticPickerProps<TDate, BaseDateRangePickerProps<TInputDate, TDate>> {
   /**
    * Overrideable components.
    * @default {}
@@ -85,11 +85,12 @@ export const StaticDateRangePicker = React.forwardRef(function StaticDateRangePi
   );
 
   const {
-    displayStaticWrapperAs = 'mobile',
+    displayStaticWrapperAs,
     value,
     onChange,
     components,
     componentsProps,
+    localeText,
     sx,
     className,
     ...other
@@ -111,6 +112,7 @@ export const StaticDateRangePicker = React.forwardRef(function StaticDateRangePi
       displayStaticWrapperAs={displayStaticWrapperAs}
       components={components}
       componentsProps={componentsProps}
+      localeText={localeText}
       sx={sx}
       className={className}
       {...wrapperProps}
@@ -212,7 +214,7 @@ StaticDateRangePicker.propTypes = {
   disablePast: PropTypes.bool,
   /**
    * Force static wrapper inner components to be rendered in mobile or desktop mode.
-   * @default 'mobile'
+   * @default "mobile"
    */
   displayStaticWrapperAs: PropTypes.oneOf(['desktop', 'mobile']),
   /**
@@ -268,6 +270,10 @@ StaticDateRangePicker.propTypes = {
    * @default false
    */
   loading: PropTypes.bool,
+  /**
+   * Locale for components texts
+   */
+  localeText: PropTypes.object,
   /**
    * Custom mask. Can be used to override generate from format. (e.g. `__/__/____ __:__` or `__/__/____ __:__ _M`).
    * @default '__/__/____'

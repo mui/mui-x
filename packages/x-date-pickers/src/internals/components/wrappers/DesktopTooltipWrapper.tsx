@@ -5,7 +5,7 @@ import { executeInTheNextEventLoopTick } from '../../utils/utils';
 import { PickersPopper } from '../PickersPopper';
 import { InternalDesktopWrapperProps } from './DesktopWrapper';
 
-export function DesktopTooltipWrapper(props: InternalDesktopWrapperProps) {
+export function DesktopTooltipWrapper<TDate>(props: InternalDesktopWrapperProps<TDate>) {
   const {
     children,
     DateInputProps,

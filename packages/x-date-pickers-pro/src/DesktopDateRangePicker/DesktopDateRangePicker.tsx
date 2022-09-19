@@ -39,7 +39,7 @@ export interface DesktopDateRangePickerSlotsComponentsProps
 
 export interface DesktopDateRangePickerProps<TInputDate, TDate>
   extends BaseDateRangePickerProps<TInputDate, TDate>,
-    DesktopWrapperProps {
+    DesktopWrapperProps<TDate> {
   /**
    * Overrideable components.
    * @default {}
@@ -97,6 +97,7 @@ export const DesktopDateRangePicker = React.forwardRef(function DesktopDateRange
     TransitionComponent,
     components,
     componentsProps,
+    localeText,
     ...other
   } = props;
   const DateInputProps = {
@@ -120,6 +121,7 @@ export const DesktopDateRangePicker = React.forwardRef(function DesktopDateRange
       TransitionComponent={TransitionComponent}
       components={components}
       componentsProps={componentsProps}
+      localeText={localeText}
     >
       <DateRangePickerView<TInputDate, TDate>
         open={wrapperProps.open}
@@ -270,6 +272,10 @@ DesktopDateRangePicker.propTypes = {
    * @default false
    */
   loading: PropTypes.bool,
+  /**
+   * Locale for components texts
+   */
+  localeText: PropTypes.object,
   /**
    * Custom mask. Can be used to override generate from format. (e.g. `__/__/____ __:__` or `__/__/____ __:__ _M`).
    * @default '__/__/____'

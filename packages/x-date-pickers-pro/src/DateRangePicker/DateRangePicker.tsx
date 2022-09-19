@@ -242,6 +242,10 @@ DateRangePicker.propTypes = {
    */
   loading: PropTypes.bool,
   /**
+   * Locale for components texts
+   */
+  localeText: PropTypes.object,
+  /**
    * Custom mask. Can be used to override generate from format. (e.g. `__/__/____ __:__` or `__/__/____ __:__ _M`).
    * @default '__/__/____'
    */

@@ -18,6 +18,7 @@
     "InputAdornmentProps": "Props to pass to keyboard input adornment.",
     "inputFormat": "Format string.",
     "inputRef": "Pass a ref to the <code>input</code> element.",
+    "localeText": "Locale for components texts",
     "mask": "Custom mask. Can be used to override generate from format. (e.g. <code>__/__/____ __:__</code> or <code>__/__/____ __:__ _M</code>).",
     "maxTime": "Max time acceptable time. For input validation date part of passed object will be ignored if <code>disableIgnoringDatePartForTimeValidation</code> not specified.",
     "minTime": "Min time acceptable time. For input validation date part of passed object will be ignored if <code>disableIgnoringDatePartForTimeValidation</code> not specified.",
