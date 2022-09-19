@@ -9,7 +9,6 @@ import { GridRowId, GridRowModel } from '../../../models/gridRows';
 import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { useGridLogger } from '../../utils/useGridLogger';
-import { gridFilterableColumnLookupSelector } from '../columns/gridColumnsSelector';
 import { GridPreferencePanelsValue } from '../preferencesPanel/gridPreferencePanelsValue';
 import { getDefaultGridFilterModel } from './gridFilterState';
 import { gridFilterModelSelector, gridVisibleSortedRowEntriesSelector } from './gridFilterSelector';
@@ -391,14 +390,7 @@ export const useGridFilter = (
    */
   const handleColumnsChange = React.useCallback<GridEventListener<'columnsChange'>>(() => {
     logger.debug('onColUpdated - GridColumns changed, applying filters');
-    const filterModel = gridFilterModelSelector(apiRef);
-    const filterableColumnsLookup = gridFilterableColumnLookupSelector(apiRef);
-    const newFilterItems = filterModel.items.filter(
-      (item) => item.columnField && filterableColumnsLookup[item.columnField],
-    );
-    if (newFilterItems.length < filterModel.items.length) {
-      apiRef.current.setFilterModel({ ...filterModel, items: newFilterItems });
-    }
+    apiRef.current.unstable_applyFilters();
   }, [apiRef, logger]);
 
   const handleStrategyProcessorChange = React.useCallback<
