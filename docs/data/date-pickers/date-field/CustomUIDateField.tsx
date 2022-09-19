@@ -18,9 +18,9 @@ import {
 type JoyDateFieldProps = UseDateFieldComponentProps<Dayjs, Dayjs, JoyTextFieldProps>;
 
 const JoyDateField = (props: JoyDateFieldProps) => {
-  const { inputRef, inputProps } = useDateField<Dayjs, Dayjs, JoyDateFieldProps>(
-    props,
-  );
+  const { inputRef, inputProps } = useDateField<Dayjs, Dayjs, JoyDateFieldProps>({
+    ...props,
+  });
 
   return (
     <JoyTextField

@@ -61,7 +61,7 @@ export interface UseFieldForwardedProps {
 
 export interface UseFieldResponse<TForwardedProps extends UseFieldForwardedProps> {
   inputProps: UseFieldResponseInputProps<TForwardedProps>;
-  inputRef: React.RefObject<HTMLInputElement>;
+  inputRef: React.Ref<HTMLInputElement>;
 }
 
 export type UseFieldResponseInputProps<TForwardedProps extends UseFieldForwardedProps> = Omit<
