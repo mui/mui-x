@@ -12,9 +12,9 @@ describe('<DateField />', () => {
       render(<DateField label="Basic date field" />);
       const input = screen.getByRole('textbox');
       // Simulate a <Tab> focus interaction on desktop
-      input.select();
       act(() => {
         input.focus();
+        input.select();
         clock.runToLast();
       });
       expect(input.value).to.equal('month/day/year');
@@ -26,9 +26,9 @@ describe('<DateField />', () => {
       render(<DateField label="Basic date field" />);
       const input = screen.getByRole('textbox');
       // Simulate a touch focus interaction on mobile
-      input.setSelectionRange(7, 9);
       act(() => {
         input.focus();
+        input.setSelectionRange(7, 9);
         clock.runToLast();
       });
       expect(input.value).to.equal('month/day/year');
@@ -40,9 +40,9 @@ describe('<DateField />', () => {
       render(<DateField label="Basic date field" />);
       const input = screen.getByRole('textbox');
       // Simulate a clic focus interaction on desktop
-      input.setSelectionRange(7, 7);
       act(() => {
         input.focus();
+        input.setSelectionRange(7, 7);
         clock.runToLast();
       });
       expect(input.value).to.equal('month/day/year');
