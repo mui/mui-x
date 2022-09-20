@@ -46,8 +46,7 @@ const useFieldState = <TValue, TDate, TSection extends FieldSection>({
 
   const firstDefaultValue = React.useRef(defaultValue);
   const valueParsed = React.useMemo(() => {
-    const value = firstDefaultValue.current ?? valueProp ?? valueManager.emptyValue;
-
+    const value = valueProp ?? firstDefaultValue.current ?? valueManager.emptyValue;
     return valueManager.parseInput(utils, value);
   }, [valueProp, valueManager, utils]);
 
@@ -57,7 +56,6 @@ const useFieldState = <TValue, TDate, TSection extends FieldSection>({
     return {
       sections,
       value: valueParsed,
-      lastPublishedValue: valueParsed,
       referenceValue: fieldValueManager.getReferenceValue({
         value: valueParsed,
         prevValue: valueManager.getTodayValue(utils),
@@ -66,7 +64,10 @@ const useFieldState = <TValue, TDate, TSection extends FieldSection>({
     };
   });
 
-  const publishValue = ({ value, referenceValue }: { value: TValue; referenceValue: TValue }) => {
+  const publishValue = ({
+    value,
+    referenceValue,
+  }: Pick<UseFieldState<TValue, TSection>, 'value' | 'referenceValue'>) => {
     const newSections = fieldValueManager.getSectionsFromValue(
       utils,
       state.sections,
@@ -78,7 +79,6 @@ const useFieldState = <TValue, TDate, TSection extends FieldSection>({
       ...prevState,
       sections: newSections,
       value,
-      lastPublishedValue: value,
       referenceValue,
     }));
 
@@ -97,10 +97,9 @@ const useFieldState = <TValue, TDate, TSection extends FieldSection>({
     }
 
     const activeSection = state.sections[state.selectedSectionIndexes.start];
-    const { getInvalidValue } = fieldValueManager.getActiveDateFromActiveSection({
+    const activeDateManager = fieldValueManager.getActiveDateManager({
       state,
       activeSection,
-      publishValue,
     });
 
     const newSections = setSectionValue(state.sections, state.selectedSectionIndexes.start, '');
@@ -108,7 +107,7 @@ const useFieldState = <TValue, TDate, TSection extends FieldSection>({
     return setState((prevState) => ({
       ...prevState,
       sections: newSections,
-      value: getInvalidValue(),
+      value: activeDateManager.getInvalidValue(),
     }));
   };
 
@@ -127,22 +126,20 @@ const useFieldState = <TValue, TDate, TSection extends FieldSection>({
     }
 
     const activeSection = state.sections[state.selectedSectionIndexes.start];
-    const { activeDate, referenceActiveDate, saveActiveDate, getInvalidValue } =
-      fieldValueManager.getActiveDateFromActiveSection({
-        state,
-        activeSection,
-        publishValue,
-      });
+    const activeDateManager = fieldValueManager.getActiveDateManager({
+      state,
+      activeSection,
+    });
 
-    if (activeDate != null && utils.isValid(activeDate)) {
-      const newDate = setSectionValueOnDate({ date: activeDate, activeSection });
-      return saveActiveDate(newDate);
+    if (activeDateManager.activeDate != null && utils.isValid(activeDateManager.activeDate)) {
+      const newDate = setSectionValueOnDate({ date: activeDateManager.activeDate, activeSection });
+      return publishValue(activeDateManager.getNewValueFromNewActiveDate(newDate));
     }
 
     // The date is not valid, we have to update the section value rather than date itself.
     const newSectionValue = setSectionValueOnSections({
       activeSection,
-      referenceActiveDate,
+      referenceActiveDate: activeDateManager.referenceActiveDate,
     });
     const newSections = setSectionValue(
       state.sections,
@@ -155,7 +152,7 @@ const useFieldState = <TValue, TDate, TSection extends FieldSection>({
     });
     const newDate = createDateFromSections({ utils, format, sections: activeDateSections });
     if (newDate != null && utils.isValid(newDate)) {
-      let mergedDate = referenceActiveDate;
+      let mergedDate = activeDateManager.referenceActiveDate;
 
       activeDateSections.forEach((section) => {
         if (section.edited) {
@@ -168,13 +165,13 @@ const useFieldState = <TValue, TDate, TSection extends FieldSection>({
         }
       });
 
-      return saveActiveDate(mergedDate);
+      return publishValue(activeDateManager.getNewValueFromNewActiveDate(mergedDate));
     }
 
     return setState((prevState) => ({
       ...prevState,
       sections: newSections,
-      value: getInvalidValue(),
+      value: activeDateManager.getInvalidValue(),
     }));
   };
 
@@ -187,7 +184,7 @@ const useFieldState = <TValue, TDate, TSection extends FieldSection>({
   };
 
   React.useEffect(() => {
-    if (!valueManager.areValuesEqual(utils, state.lastPublishedValue, valueParsed)) {
+    if (!valueManager.areValuesEqual(utils, state.value, valueParsed)) {
       const sections = fieldValueManager.getSectionsFromValue(
         utils,
         state.sections,
@@ -196,12 +193,11 @@ const useFieldState = <TValue, TDate, TSection extends FieldSection>({
       );
       setState((prevState) => ({
         ...prevState,
-        lastPublishedValue: valueParsed,
+        value: valueParsed,
         referenceValue: fieldValueManager.getReferenceValue({
           value: valueParsed,
           prevValue: prevState.referenceValue,
         }),
-        value: valueParsed,
         sections,
       }));
     }

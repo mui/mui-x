@@ -94,22 +94,6 @@ export const dateRangeFieldValueManager: FieldValueManager<
 
     return `${startDateStr}${endDateStr}`;
   },
-  getValueFromSections: ({ utils, sections, format }) => {
-    const dateRangeSections = splitDateRangeSections(sections);
-
-    const startDate = createDateFromSections({
-      utils,
-      sections: removeLastSeparator(dateRangeSections.startDate),
-      format,
-    });
-    const endDate = createDateFromSections({
-      utils,
-      sections: dateRangeSections.endDate,
-      format,
-    });
-
-    return [startDate, endDate] as DateRange<any>;
-  },
   getActiveDateSectionsFromActiveSection: ({ activeSection, sections }) => {
     const index = activeSection.dateName === 'start' ? 0 : 1;
     const dateRangeSections = splitDateRangeSections(sections);
@@ -118,7 +102,7 @@ export const dateRangeFieldValueManager: FieldValueManager<
       ? removeLastSeparator(dateRangeSections.startDate)
       : dateRangeSections.endDate;
   },
-  getActiveDateFromActiveSection: ({ state, activeSection, publishValue }) => {
+  getActiveDateManager: ({ state, activeSection }) => {
     const index = activeSection.dateName === 'start' ? 0 : 1;
 
     const updateDateInRange = (date: any, dateRange: DateRange<any>) =>
@@ -127,14 +111,13 @@ export const dateRangeFieldValueManager: FieldValueManager<
     return {
       activeDate: state.value[index],
       referenceActiveDate: state.referenceValue[index],
-      saveActiveDate: (newActiveDate) =>
-        publishValue({
-          value: updateDateInRange(newActiveDate, state.value),
-          referenceValue:
-            newActiveDate == null
-              ? state.referenceValue
-              : updateDateInRange(newActiveDate, state.referenceValue),
-        }),
+      getNewValueFromNewActiveDate: (newActiveDate) => ({
+        value: updateDateInRange(newActiveDate, state.value),
+        referenceValue:
+          newActiveDate == null
+            ? state.referenceValue
+            : updateDateInRange(newActiveDate, state.referenceValue),
+      }),
       getInvalidValue: () => {
         if (index === 0) {
           return [null, state.value[1]];

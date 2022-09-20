@@ -22,21 +22,14 @@ const dateRangeFieldValueManager: FieldValueManager<any, any, FieldSection, Date
   getSectionsFromValue: (utils, prevSections, date, format) =>
     addPositionPropertiesToSections(splitFormatIntoSections(utils, format, date)),
   getValueStrFromSections: (sections) => createDateStrFromSections(sections),
-  getValueFromSections: ({ utils, sections, format }) =>
-    createDateFromSections({
-      utils,
-      sections,
-      format,
-    }),
   getActiveDateSectionsFromActiveSection: ({ sections }) => sections,
-  getActiveDateFromActiveSection: ({ state, publishValue }) => ({
+  getActiveDateManager: ({ state }) => ({
     activeDate: state.value,
     referenceActiveDate: state.referenceValue,
-    saveActiveDate: (newActiveDate) =>
-      publishValue({
-        value: newActiveDate,
-        referenceValue: newActiveDate == null ? state.referenceValue : newActiveDate,
-      }),
+    getNewValueFromNewActiveDate: (newActiveDate) => ({
+      value: newActiveDate,
+      referenceValue: newActiveDate == null ? state.referenceValue : newActiveDate,
+    }),
     getInvalidValue: () => null,
   }),
   hasError: (error) => error != null,

@@ -66,6 +66,31 @@ export interface FieldSection {
   edited: boolean;
 }
 
+/**
+ * Object used to access and update the active value.
+ * Mainly useful in the range fields where we need to update the date containing the active section without impacting the other one.
+ */
+interface FieldActiveDateManager<TValue, TDate> {
+  /**
+   * Date containing the current active section.
+   */
+  activeDate: TDate | null;
+  /**
+   * Reference date containing the current active section.
+   */
+  referenceActiveDate: TDate;
+  /**
+   * Creates the new value and reference value based on the new active date and the current state.
+   * @template TValue, TDate
+   * @param {TDate | null} newActiveDate The new value of the date containing the active section.
+   * @returns {Pick<UseFieldState<TValue, any>, 'value' | 'referenceValue'>} The new value and reference value to publish and store in the state.
+   */
+  getNewValueFromNewActiveDate: (
+    newActiveDate: TDate | null,
+  ) => Pick<UseFieldState<TValue, any>, 'value' | 'referenceValue'>;
+  getInvalidValue: () => TValue;
+}
+
 export interface FieldValueManager<TValue, TDate, TSection extends FieldSection, TError> {
   getReferenceValue: (params: { value: TValue; prevValue: TValue }) => TValue;
   getSectionsFromValue: (
@@ -75,32 +100,24 @@ export interface FieldValueManager<TValue, TDate, TSection extends FieldSection,
     format: string,
   ) => TSection[];
   getValueStrFromSections: (sections: TSection[]) => string;
-  getValueFromSections: (params: {
-    utils: MuiPickerFieldAdapter<TDate>;
-    sections: TSection[];
-    format: string;
-  }) => TValue;
   getActiveDateSectionsFromActiveSection: (params: {
     activeSection: TSection;
     sections: TSection[];
   }) => TSection[];
-  getActiveDateFromActiveSection: (params: {
+  getActiveDateManager: (params: {
     state: UseFieldState<TValue, TSection>;
     activeSection: TSection;
-    publishValue: (params: { value: TValue; referenceValue: TValue }) => void;
-  }) => {
-    activeDate: TDate | null;
-    referenceActiveDate: TDate;
-    saveActiveDate: (date: TDate | null) => void;
-    getInvalidValue: () => TValue;
-  };
+  }) => FieldActiveDateManager<TValue, TDate>;
   hasError: (error: TError) => boolean;
   isSameError: (error: TError, prevError: TError | null) => boolean;
 }
 
 export interface UseFieldState<TValue, TSection extends FieldSection> {
   value: TValue;
-  lastPublishedValue: TValue;
+  /**
+   * Non-nullable value used to keep trace of the timezone and the date parts not present in the format.
+   * It is updated whenever we have a valid date (for the range picker we update only the portion of the range that is valid).
+   */
   referenceValue: TValue;
   sections: TSection[];
   selectedSectionIndexes: { start: number; end: number } | null;
