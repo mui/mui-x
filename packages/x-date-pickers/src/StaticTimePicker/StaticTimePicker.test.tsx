@@ -9,12 +9,8 @@ import {
   getAllByRole,
   fireEvent,
 } from '@mui/monorepo/test/utils';
-import { StaticTimePicker } from './StaticTimePicker';
-import {
-  adapterToUse,
-  wrapPickerMount,
-  createPickerRenderer,
-} from '../../../../test/utils/pickers-utils';
+import { adapterToUse, wrapPickerMount, createPickerRenderer } from 'test/utils/pickers-utils';
+import { StaticTimePicker } from '@mui/x-date-pickers/StaticTimePicker';
 
 describe('<StaticTimePicker />', () => {
   const { render } = createPickerRenderer({ clock: 'fake' });

@@ -11,7 +11,7 @@ import {
   FakeTransitionComponent,
   adapterToUse,
   openPicker,
-} from '../../../../test/utils/pickers-utils';
+} from 'test/utils/pickers-utils';
 
 const WrappedMobileDateRangePicker = withPickerControls(MobileDateRangePicker)({
   DialogProps: { TransitionComponent: FakeTransitionComponent },
