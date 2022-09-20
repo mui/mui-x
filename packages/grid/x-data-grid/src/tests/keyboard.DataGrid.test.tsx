@@ -469,7 +469,7 @@ describe('<DataGrid /> - Keyboard', () => {
         'autoHeight' | 'rows' | 'columns' | 'pageSize' | 'rowsPerPageOptions'
       > & {},
     ) => {
-      const data = useData(10, 10);
+      const data = getBasicGridData(10, 10);
       const transformColSizes = (columns: GridColumns) =>
         columns.map((column) => ({ ...column, width: 60 }));
 
@@ -505,7 +505,7 @@ describe('<DataGrid /> - Keyboard', () => {
             experimentalFeatures={{ columnGrouping: true }}
             columnGroupingModel={columnGroupingModel}
             autoHeight={isJSDOM}
-            {...getData(10, 10)}
+            {...getBasicGridData(10, 10)}
           />
         </div>,
       );
@@ -527,7 +527,7 @@ describe('<DataGrid /> - Keyboard', () => {
             experimentalFeatures={{ columnGrouping: true }}
             columnGroupingModel={columnGroupingModel}
             autoHeight={isJSDOM}
-            {...getData(10, 10)}
+            {...getBasicGridData(10, 10)}
             rows={[]}
           />
         </div>,
