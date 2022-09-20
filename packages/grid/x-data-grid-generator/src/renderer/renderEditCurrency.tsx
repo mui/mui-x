@@ -27,12 +27,9 @@ function EditCurrency(props: GridRenderEditCellParams<string>) {
   const handleChange = React.useCallback<
     NonNullable<AutocompleteProps<string, false, true, false>['onChange']>
   >(
-    (event, newValue) => {
-      apiRef.current.setEditCellValue({ id, field, value: newValue.toUpperCase() }, event);
-      if (!(event as any).key) {
-        apiRef.current.commitCellChange({ id, field });
-        apiRef.current.setCellMode(id, field, 'view');
-      }
+    async (event, newValue) => {
+      await apiRef.current.setEditCellValue({ id, field, value: newValue.toUpperCase() }, event);
+      apiRef.current.stopCellEditMode({ id, field });
     },
     [apiRef, field, id],
   );

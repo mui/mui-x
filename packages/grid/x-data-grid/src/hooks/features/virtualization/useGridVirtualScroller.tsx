@@ -11,7 +11,7 @@ import {
 } from '../columns/gridColumnsSelector';
 import { gridDensityRowHeightSelector } from '../density/densitySelector';
 import { gridFocusCellSelector, gridTabIndexCellSelector } from '../focus/gridFocusStateSelector';
-import { gridEditRowsStateSelector } from '../editRows/gridEditRowsSelector';
+import { gridEditRowsStateSelector } from '../editing/gridEditingSelectors';
 import { useGridVisibleRows } from '../../utils/useGridVisibleRows';
 import { GridEventListener } from '../../../models/events';
 import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';

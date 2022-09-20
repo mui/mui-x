@@ -115,7 +115,7 @@ GridDetailPanelToggleCell.propTypes = {
   /**
    * The row model of the row that the current cell belongs to.
    */
-  row: PropTypes.any.isRequired,
+  row: PropTypes.object.isRequired,
   /**
    * The node of the row that the current cell belongs to.
    */

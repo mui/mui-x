@@ -1,14 +1,14 @@
 import * as React from 'react';
 import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
-import { GridEditingApi, GridNewEditingSharedApi } from '../../../models/api/gridEditingApi';
+import { GridEditingApi, GridEditingSharedApi } from '../../../models/api/gridEditingApi';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { GridRowId } from '../../../models/gridRows';
-import { useGridCellEditing } from './useGridCellEditing.new';
+import { useGridCellEditing } from './useGridCellEditing';
 import { GridCellModes, GridEditModes } from '../../../models/gridEditRowModel';
-import { useGridRowEditing } from './useGridRowEditing.new';
+import { useGridRowEditing } from './useGridRowEditing';
 import { GridStateInitializer } from '../../utils/useGridInitializeState';
-import { gridEditRowsStateSelector } from './gridEditRowsSelector';
+import { gridEditRowsStateSelector } from './gridEditingSelectors';
 
 export const editingStateInitializer: GridStateInitializer = (state) => ({
   ...state,
@@ -147,7 +147,7 @@ export const useGridEditing = (
   );
 
   const getRowWithUpdatedValues = React.useCallback<
-    GridNewEditingSharedApi['unstable_getRowWithUpdatedValues']
+    GridEditingSharedApi['unstable_getRowWithUpdatedValues']
   >(
     (id, field) => {
       return props.editMode === GridEditModes.Cell
@@ -157,7 +157,7 @@ export const useGridEditing = (
     [apiRef, props.editMode],
   );
 
-  const getEditCellMeta = React.useCallback<GridNewEditingSharedApi['unstable_getEditCellMeta']>(
+  const getEditCellMeta = React.useCallback<GridEditingSharedApi['unstable_getEditCellMeta']>(
     (id, field) => {
       const editingState = gridEditRowsStateSelector(apiRef.current.state);
 
@@ -166,7 +166,7 @@ export const useGridEditing = (
     [apiRef],
   );
 
-  const editingSharedApi: GridNewEditingSharedApi = {
+  const editingSharedApi: GridEditingSharedApi = {
     isCellEditable,
     setEditCellValue,
     unstable_runPendingEditCellValueMutation: runPendingEditCellValueMutation,
