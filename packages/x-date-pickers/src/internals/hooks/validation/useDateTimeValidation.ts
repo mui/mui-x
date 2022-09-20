@@ -43,7 +43,7 @@ export const validateDateTime: Validator<any, DateTimeValidationProps<any, any>>
     return dateValidationResult;
   }
 
-  return validateTime({ adapter, value, props: timeValidationProps });
+  return validateTime({ adapter, value, props: { ...timeValidationProps, disablePast, disableFuture } });
 };
 
 export type DateTimeValidationError = DateValidationError | TimeValidationError;

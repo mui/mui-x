@@ -2,6 +2,7 @@ import * as React from 'react';
 import { useValidation, ValidationProps, Validator } from './useValidation';
 import {
   BaseDateValidationProps,
+  CommonDateTimeValidationError,
   DayValidationProps,
   MonthValidationProps,
   YearValidationProps,
@@ -21,15 +22,12 @@ export interface DateValidationProps<TInputDate, TDate>
     Required<BaseDateValidationProps<TDate>> {}
 
 export type DateValidationError =
-  | 'invalidDate'
+  | CommonDateTimeValidationError
   | 'shouldDisableDate'
   | 'shouldDisableMonth'
   | 'shouldDisableYear'
-  | 'disableFuture'
-  | 'disablePast'
   | 'minDate'
-  | 'maxDate'
-  | null;
+  | 'maxDate';
 
 export const validateDate: Validator<any, DateValidationProps<any, any>> = ({
   props,

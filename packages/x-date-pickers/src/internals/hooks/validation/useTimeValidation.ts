@@ -1,6 +1,7 @@
 import { createIsAfterIgnoreDatePart } from '../../utils/time-utils';
 import { useValidation, ValidationProps, Validator } from './useValidation';
 import { ClockPickerView } from '../../models';
+import { BaseDateValidationProps, CommonDateTimeValidationError } from './models';
 
 export interface ExportedTimeValidationProps<TDate> {
   /**
@@ -35,17 +36,17 @@ export interface ExportedTimeValidationProps<TDate> {
 
 export interface TimeValidationProps<TInputDate, TDate>
   extends ExportedTimeValidationProps<TDate>,
-    ValidationProps<TimeValidationError, TInputDate | null> {}
+    ValidationProps<TimeValidationError, TInputDate | null>,
+    Pick<BaseDateValidationProps<TDate>, 'disablePast' | 'disableFuture'> {}
 
 export type TimeValidationError =
-  | 'invalidDate'
+  | CommonDateTimeValidationError
   | 'minutesStep'
   | 'minTime'
   | 'maxTime'
   | 'shouldDisableTime-hours'
   | 'shouldDisableTime-minutes'
-  | 'shouldDisableTime-seconds'
-  | null;
+  | 'shouldDisableTime-seconds';
 
 export const validateTime: Validator<any, TimeValidationProps<any, any>> = ({
   adapter,
@@ -58,8 +59,11 @@ export const validateTime: Validator<any, TimeValidationProps<any, any>> = ({
     minutesStep,
     shouldDisableTime,
     disableIgnoringDatePartForTimeValidation,
+    disablePast,
+    disableFuture,
   } = props;
 
+  const now = adapter.utils.date()!;
   const date = adapter.utils.date(value);
   const isAfter = createIsAfterIgnoreDatePart(
     disableIgnoringDatePartForTimeValidation,
@@ -79,6 +83,12 @@ export const validateTime: Validator<any, TimeValidationProps<any, any>> = ({
 
     case Boolean(maxTime && isAfter(date!, maxTime)):
       return 'maxTime';
+
+    case Boolean(disableFuture && adapter.utils.isAfter(date, now)):
+      return 'disableFuture';
+
+    case Boolean(disablePast && adapter.utils.isBefore(date, now)):
+      return 'disablePast';
 
     case Boolean(shouldDisableTime && shouldDisableTime(adapter.utils.getHours(date!), 'hours')):
       return 'shouldDisableTime-hours';

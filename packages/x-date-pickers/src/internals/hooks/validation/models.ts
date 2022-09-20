@@ -3,12 +3,14 @@
  */
 export interface BaseDateValidationProps<TDate> {
   /**
-   * If `true` past days are disabled.
+   * If `true` past selection is disabled.
+   * In case of `Date time pickers` also disables past time.
    * @default false
    */
   disablePast?: boolean;
   /**
-   * If `true` future days are disabled.
+   * If `true` future selection is disabled.
+   * In case of `Date time pickers` also disables future time.
    * @default false
    */
   disableFuture?: boolean;
@@ -62,3 +64,8 @@ export interface YearValidationProps<TDate> {
    */
   shouldDisableYear?: (year: TDate) => boolean;
 }
+
+/**
+ * Common validation error types applicable to both date and time validation
+ */
+export type CommonDateTimeValidationError = 'invalidDate' | 'disableFuture' | 'disablePast' | null;

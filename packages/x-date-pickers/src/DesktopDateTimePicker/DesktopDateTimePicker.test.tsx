@@ -5,6 +5,7 @@ import { spy } from 'sinon';
 import { act, fireEvent, screen, userEvent } from '@mui/monorepo/test/utils';
 import 'dayjs/locale/ru';
 import { DesktopDateTimePicker } from '@mui/x-date-pickers/DesktopDateTimePicker';
+import { inputBaseClasses } from '@mui/material/InputBase';
 import {
   adapterToUse,
   createPickerRenderer,
@@ -22,7 +23,7 @@ const WrappedDesktopDateTimePicker = withPickerControls(DesktopDateTimePicker)({
 describe('<DesktopDateTimePicker />', () => {
   const { render } = createPickerRenderer({
     clock: 'fake',
-    clockConfig: new Date('2018-01-01T00:00:00.000'),
+    clockConfig: new Date('2018-01-01T10:00:00.000'),
   });
 
   ['readOnly', 'disabled'].forEach((prop) => {
@@ -152,6 +153,55 @@ describe('<DesktopDateTimePicker />', () => {
 
     fireEvent.click(screen.getByLabelText('open next view'));
     expect(screen.getByLabelText('open next view')).to.have.attribute('disabled');
+  });
+
+  it('should respect `disableFuture` prop', async () => {
+    render(
+      <WrappedDesktopDateTimePicker
+        onChange={() => {}}
+        initialValue={adapterToUse.date(new Date('2018-01-01T11:00:00.000'))}
+        disableFuture
+      />,
+    );
+
+    expect(screen.getByRole('textbox').parentElement).to.have.class(inputBaseClasses.error);
+
+    openPicker({ type: 'date-time', variant: 'desktop' });
+
+    // re-select current day
+    userEvent.mousePress(screen.getByRole('gridcell', { selected: true }));
+    // click on `9 hours`
+    fireEvent(screen.getByMuiTest('clock'), getClockMouseEvent('mousemove', 20, 110));
+    fireEvent(screen.getByMuiTest('clock'), getClockMouseEvent('mouseup', 20, 110));
+    // click on `10 minutes`
+    fireEvent(screen.getByMuiTest('clock'), getClockMouseEvent('mousemove', 64, 33));
+    fireEvent(screen.getByMuiTest('clock'), getClockMouseEvent('mouseup', 64, 33));
+
+    expect(screen.getByRole('textbox').parentElement).not.to.have.class(inputBaseClasses.error);
+  });
+
+  it('should respect `disablePast` prop', () => {
+    render(
+      <WrappedDesktopDateTimePicker
+        initialValue={adapterToUse.date(new Date('2018-01-01T09:00:00.000'))}
+        disablePast
+      />,
+    );
+
+    openPicker({ type: 'date-time', variant: 'desktop' });
+
+    expect(screen.getByRole('textbox').parentElement).to.have.class(inputBaseClasses.error);
+
+    // re-select current day
+    userEvent.mousePress(screen.getByRole('gridcell', { selected: true }));
+    // select hours
+    fireEvent(screen.getByMuiTest('clock'), getClockMouseEvent('mousemove'));
+    fireEvent(screen.getByMuiTest('clock'), getClockMouseEvent('mouseup'));
+    // click minutes
+    fireEvent(screen.getByMuiTest('clock'), getClockMouseEvent('mousemove'));
+    fireEvent(screen.getByMuiTest('clock'), getClockMouseEvent('mouseup'));
+
+    expect(screen.getByRole('textbox').parentElement).not.to.have.class(inputBaseClasses.error);
   });
 
   describe('prop: PopperProps', () => {
