@@ -46,6 +46,12 @@
     "shouldDisableMonth": { "type": { "name": "func" } },
     "shouldDisableYear": { "type": { "name": "func" } },
     "showDaysOutsideCurrentMonth": { "type": { "name": "bool" } },
+    "sx": {
+      "type": {
+        "name": "union",
+        "description": "Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object"
+      }
+    },
     "view": {
       "type": {
         "name": "enum",
@@ -61,12 +67,12 @@
     }
   },
   "slots": {
-    "LeftArrowButton": { "type": { "name": "elementType" } },
-    "LeftArrowIcon": { "type": { "name": "elementType" } },
-    "RightArrowButton": { "type": { "name": "elementType" } },
-    "RightArrowIcon": { "type": { "name": "elementType" } },
-    "SwitchViewButton": { "type": { "name": "elementType" } },
-    "SwitchViewIcon": { "type": { "name": "elementType" } }
+    "LeftArrowButton": { "default": "IconButton", "type": { "name": "elementType" } },
+    "LeftArrowIcon": { "default": "ArrowLeft", "type": { "name": "elementType" } },
+    "RightArrowButton": { "default": "IconButton", "type": { "name": "elementType" } },
+    "RightArrowIcon": { "default": "ArrowRight", "type": { "name": "elementType" } },
+    "SwitchViewButton": { "default": "IconButton", "type": { "name": "elementType" } },
+    "SwitchViewIcon": { "default": "ArrowDropDown", "type": { "name": "elementType" } }
   },
   "name": "CalendarPicker",
   "styles": {

@@ -3,7 +3,9 @@ import { expect } from 'chai';
 import TextField from '@mui/material/TextField';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { fireEvent, screen } from '@mui/monorepo/test/utils/createRenderer';
-import { createPickerRenderer, stubMatchMedia } from '../../../../test/utils/pickers-utils';
+import { createPickerRenderer, stubMatchMedia } from 'test/utils/pickers-utils';
+
+const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
 describe('<DatePicker />', () => {
   const { render } = createPickerRenderer();
@@ -59,6 +61,26 @@ describe('<DatePicker />', () => {
       expect(screen.getByLabelText(/Choose date/)).to.have.tagName('input');
 
       window.matchMedia = originalMatchMedia;
+    });
+
+    it('should keep focus when switching views', function test() {
+      if (isJSDOM) {
+        this.skip();
+      }
+      render(
+        <DatePicker
+          renderInput={(params) => <TextField {...params} />}
+          onChange={() => {}}
+          value={new Date(2019, 5, 5)}
+          openTo="year"
+        />,
+      );
+
+      fireEvent.click(screen.getByRole('button'));
+      expect(document.activeElement).to.have.text('2019');
+
+      fireEvent.click(screen.getByText('2020'));
+      expect(document.activeElement).to.have.text('5');
     });
   });
 });

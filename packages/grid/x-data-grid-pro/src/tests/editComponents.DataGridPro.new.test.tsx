@@ -11,7 +11,7 @@ import {
   renderEditSingleSelectCell,
 } from '@mui/x-data-grid-pro';
 // @ts-ignore Remove once the test utils are typed
-import { act, createRenderer, fireEvent, screen } from '@mui/monorepo/test/utils';
+import { act, createRenderer, fireEvent, screen, userEvent } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
 import { getCell } from 'test/utils/helperFn';
 import { spy, SinonSpy } from 'sinon';
@@ -81,10 +81,11 @@ describe('<DataGridPro /> - Edit Components', () => {
         field: 'brand',
         value: 'Puma',
         debounceMs: 200,
+        unstable_skipValueParser: true,
       });
     });
 
-    it('should the value prop to the input', () => {
+    it('should pass the value prop to the input', () => {
       defaultData.columns[0].valueParser = (value) => (value as string).toUpperCase();
       render(<TestCase />);
 
@@ -95,7 +96,7 @@ describe('<DataGridPro /> - Edit Components', () => {
       expect(input.value).to.equal('Nike');
 
       fireEvent.change(input, { target: { value: 'Puma' } });
-      expect(input.value).to.equal('Puma');
+      expect(input.value).to.equal('PUMA');
 
       clock.tick(200);
       expect(input.value).to.equal('PUMA');
@@ -164,8 +165,9 @@ describe('<DataGridPro /> - Edit Components', () => {
       expect(spiedSetEditCellValue.lastCall.args[0]).to.deep.equal({
         id: 0,
         field: 'quantity',
-        value: '110',
+        value: 110,
         debounceMs: 200,
+        unstable_skipValueParser: true,
       });
     });
 
@@ -587,8 +589,7 @@ describe('<DataGridPro /> - Edit Components', () => {
 
       const cell = getCell(0, 0);
       fireEvent.doubleClick(cell);
-      fireEvent.mouseUp(screen.queryAllByRole('option')[1]);
-      fireEvent.click(screen.queryAllByRole('option')[1]);
+      userEvent.mousePress(screen.queryAllByRole('option')[1]);
       clock.runToLast();
       expect(screen.queryByRole('listbox')).to.equal(null);
       fireEvent.keyDown(screen.queryByRole('button', { name: 'Adidas' }), { key: 'Enter' });

@@ -8,7 +8,11 @@ import {
   createDateStrFromSections,
 } from '../internals/hooks/useField';
 import { UseDateFieldProps, UseDateFieldDefaultizedProps } from './DateField.interfaces';
-import { DateValidationError, validateDate } from '../internals/hooks/validation/useDateValidation';
+import {
+  DateValidationError,
+  isSameDateError,
+  validateDate,
+} from '../internals/hooks/validation/useDateValidation';
 import { parseNonNullablePickerDate } from '../internals/utils/date-utils';
 import { useUtils, useDefaultDates } from '../internals/hooks/useUtils';
 
@@ -30,6 +34,7 @@ const dateRangeFieldValueManager: FieldValueManager<any, any, FieldSection, Date
     update: (newActiveDate) => newActiveDate,
   }),
   hasError: (error) => error != null,
+  isSameError: isSameDateError,
 };
 
 const useDefaultizedDateField = <TInputDate, TDate, AdditionalProps extends {}>(
@@ -54,10 +59,40 @@ export const useDateField = <
 >(
   inProps: TProps,
 ) => {
-  const props = useDefaultizedDateField<TInputDate, TDate, TProps>(inProps);
+  const {
+    value,
+    defaultValue,
+    format,
+    onChange,
+    readOnly,
+    onError,
+    shouldDisableDate,
+    shouldDisableMonth,
+    shouldDisableYear,
+    minDate,
+    maxDate,
+    disableFuture,
+    disablePast,
+    ...other
+  } = useDefaultizedDateField<TInputDate, TDate, TProps>(inProps);
 
   return useField({
-    props,
+    forwardedProps: other,
+    internalProps: {
+      value,
+      defaultValue,
+      format,
+      onChange,
+      readOnly,
+      onError,
+      shouldDisableDate,
+      shouldDisableMonth,
+      shouldDisableYear,
+      minDate,
+      maxDate,
+      disableFuture,
+      disablePast,
+    },
     valueManager: datePickerValueManager,
     fieldValueManager: dateRangeFieldValueManager,
     // TODO: Support time validation.

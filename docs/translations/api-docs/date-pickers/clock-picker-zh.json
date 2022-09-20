@@ -7,7 +7,6 @@
     "classes": "Override or extend the styles applied to the component. See <a href=\"#css\">CSS API</a> below for more details.",
     "components": "Overrideable components.",
     "componentsProps": "The props used for each component slot.",
-    "date": "Selected date @DateIOType.",
     "disabled": "If <code>true</code>, the picker and text field are disabled.",
     "disableIgnoringDatePartForTimeValidation": "Do not ignore date part when validating min/max time.",
     "getClockLabelText": "Accessible text that helps user to understand which time and view is selected.<br><br><strong>Signature:</strong><br><code>function(view: ClockPickerView, time: TDate | null, adapter: MuiPickersAdapter&lt;TDate&gt;) =&gt; string</code><br><em>view:</em> The current view rendered.<br><em>time:</em> The current time.<br><em>adapter:</em> The current date adapter.<br> <em>returns</em> (string): The clock label.",
@@ -24,6 +23,8 @@
     "readOnly": "Make picker read only.",
     "rightArrowButtonText": "Right arrow icon aria-label text.",
     "shouldDisableTime": "Dynamically check if time is disabled or not. If returns <code>false</code> appropriate time point will ot be acceptable.<br><br><strong>Signature:</strong><br><code>function(timeValue: number, clockType: ClockPickerView) =&gt; boolean</code><br><em>timeValue:</em> The value to check.<br><em>clockType:</em> The clock type of the timeValue.<br> <em>returns</em> (boolean): Returns <code>true</code> if the time should be disabled",
+    "sx": "The system prop that allows defining system overrides as well as additional CSS styles. See the <a href=\"/system/the-sx-prop/\">`sx` page</a> for more details.",
+    "value": "Selected date @DateIOType.",
     "view": "Controlled open view.",
     "views": "Views for calendar picker."
   },
@@ -35,9 +36,9 @@
     }
   },
   "slotDescriptions": {
-    "LeftArrowButton": "",
-    "LeftArrowIcon": "",
-    "RightArrowButton": "",
-    "RightArrowIcon": ""
+    "LeftArrowButton": "Button allowing to switch to the left view.",
+    "LeftArrowIcon": "Icon displayed in the left view switch button.",
+    "RightArrowButton": "Button allowing to switch to the right view.",
+    "RightArrowIcon": "Icon displayed in the right view switch button."
   }
 }

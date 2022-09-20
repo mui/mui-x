@@ -12,7 +12,7 @@ import {
   adapterToUse,
   withPickerControls,
   openPicker,
-} from '../../../../test/utils/pickers-utils';
+} from 'test/utils/pickers-utils';
 
 const WrappedMobileDatePicker = withPickerControls(MobileDatePicker)({
   DialogProps: { TransitionComponent: FakeTransitionComponent },
@@ -206,7 +206,7 @@ describe('<MobileDatePicker />', () => {
       />,
     );
     const start = adapterToUse.date();
-    fireEvent.click(screen.getByRole('textbox'));
+    userEvent.mousePress(screen.getByRole('textbox'));
     clock.tick(10);
     fireEvent.click(screen.getByText(/today/i));
 

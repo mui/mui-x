@@ -1,0 +1,21 @@
+{
+  "props": {
+    "onChange": { "type": { "name": "func" }, "required": true },
+    "view": {
+      "type": {
+        "name": "enum",
+        "description": "'day'<br>&#124;&nbsp;'hours'<br>&#124;&nbsp;'minutes'<br>&#124;&nbsp;'month'<br>&#124;&nbsp;'seconds'<br>&#124;&nbsp;'year'"
+      },
+      "required": true
+    },
+    "classes": { "type": { "name": "object" } },
+    "dateRangeIcon": { "type": { "name": "node" }, "default": "DateRange" },
+    "timeIcon": { "type": { "name": "node" }, "default": "Time" }
+  },
+  "slots": {},
+  "name": "DateTimePickerTabs",
+  "styles": { "classes": ["root"], "globalClasses": {}, "name": "MuiDateTimePickerTabs" },
+  "filename": "/packages/x-date-pickers/src/DateTimePicker/DateTimePickerTabs.tsx",
+  "demos": "<ul></ul>",
+  "packages": ["@mui/x-date-pickers-pro", "@mui/x-date-pickers"]
+}

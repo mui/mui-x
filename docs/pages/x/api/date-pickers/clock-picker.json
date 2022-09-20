@@ -1,7 +1,7 @@
 {
   "props": {
-    "date": { "type": { "name": "any" }, "required": true },
     "onChange": { "type": { "name": "func" }, "required": true },
+    "value": { "type": { "name": "any" }, "required": true },
     "ampm": { "type": { "name": "bool" } },
     "ampmInClock": { "type": { "name": "bool" } },
     "autoFocus": { "type": { "name": "bool" } },
@@ -59,6 +59,12 @@
       "deprecationInfo": "Use the <code>localeText</code> prop of <code>LocalizationProvider</code> instead, see <a href=\"https://mui.com/x/react-date-pickers/localization\">https://mui.com/x/react-date-pickers/localization</a>"
     },
     "shouldDisableTime": { "type": { "name": "func" } },
+    "sx": {
+      "type": {
+        "name": "union",
+        "description": "Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object"
+      }
+    },
     "view": {
       "type": {
         "name": "enum",
@@ -74,10 +80,10 @@
     }
   },
   "slots": {
-    "LeftArrowButton": { "type": { "name": "elementType" } },
-    "LeftArrowIcon": { "type": { "name": "elementType" } },
-    "RightArrowButton": { "type": { "name": "elementType" } },
-    "RightArrowIcon": { "type": { "name": "elementType" } }
+    "LeftArrowButton": { "default": "IconButton", "type": { "name": "elementType" } },
+    "LeftArrowIcon": { "default": "ArrowLeft", "type": { "name": "elementType" } },
+    "RightArrowButton": { "default": "IconButton", "type": { "name": "elementType" } },
+    "RightArrowIcon": { "default": "ArrowRight", "type": { "name": "elementType" } }
   },
   "name": "ClockPicker",
   "styles": { "classes": ["root", "arrowSwitcher"], "globalClasses": {}, "name": "MuiClockPicker" },

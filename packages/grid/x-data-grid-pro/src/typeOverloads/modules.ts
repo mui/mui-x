@@ -1,5 +1,9 @@
 import { GridRowId } from '@mui/x-data-grid';
-import type { GridRowScrollEndParams, GridRowOrderChangeParams } from '../models';
+import type {
+  GridRowScrollEndParams,
+  GridRowOrderChangeParams,
+  GridFetchRowsParams,
+} from '../models';
 import type {
   GridColumnPinningInternalCache,
   GridPinnedColumns,
@@ -29,6 +33,10 @@ export interface GridEventLookupPro {
    * Fired when the user ends reordering a row.
    */
   rowOrderChange: { params: GridRowOrderChangeParams };
+  /**
+   * Fired when a new batch of rows is requested to be loaded. Called with a [[GridFetchRowsParams]] object.
+   */
+  fetchRows: { params: GridFetchRowsParams };
 }
 
 export interface GridPipeProcessingLookupPro {

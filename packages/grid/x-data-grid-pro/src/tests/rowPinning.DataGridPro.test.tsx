@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { expect } from 'chai';
 import {
   DataGridPro,
   gridClasses,
@@ -7,10 +8,16 @@ import {
   GridRowsProp,
   DataGridProProps,
 } from '@mui/x-data-grid-pro';
-import { expect } from 'chai';
-// @ts-expect-error Remove once the test utils are typed
-import { createRenderer, waitFor, fireEvent, screen, act } from '@mui/monorepo/test/utils';
-import { getData } from 'storybook/src/data/data-service';
+import { getBasicGridData } from '@mui/x-data-grid-generator';
+import {
+  createRenderer,
+  waitFor,
+  fireEvent,
+  screen,
+  act,
+  userEvent,
+  // @ts-expect-error Remove once the test utils are typed
+} from '@mui/monorepo/test/utils';
 import {
   getActiveCell,
   getActiveColumnHeader,
@@ -55,7 +62,7 @@ describe('<DataGridPro /> - Row pinning', () => {
     colCount: number;
     height?: number | string;
   } & Partial<DataGridProProps>) => {
-    const data = getData(rowCount, colCount);
+    const data = getBasicGridData(rowCount, colCount);
     const [pinnedRow0, pinnedRow1, ...rows] = data.rows;
 
     return (
@@ -85,7 +92,7 @@ describe('<DataGridPro /> - Row pinning', () => {
     const rowCount = 5;
 
     const TestCase = ({ pinRows = true }) => {
-      const data = getData(rowCount, 5);
+      const data = getBasicGridData(rowCount, 5);
 
       const pinnedRows = React.useMemo(() => {
         if (pinRows) {
@@ -154,7 +161,7 @@ describe('<DataGridPro /> - Row pinning', () => {
   });
 
   it('should update pinned rows when `pinnedRows` prop change', () => {
-    const data = getData(20, 5);
+    const data = getBasicGridData(20, 5);
     const TestCase = (props: any) => {
       const [pinnedRow0, pinnedRow1, ...rows] = data.rows;
       return (
@@ -191,7 +198,7 @@ describe('<DataGridPro /> - Row pinning', () => {
   });
 
   it('should update pinned rows when calling `apiRef.current.setPinnedRows` method', async () => {
-    const data = getData(20, 5);
+    const data = getBasicGridData(20, 5);
     let apiRef!: React.MutableRefObject<GridApi>;
 
     const TestCase = (props: any) => {
@@ -252,7 +259,7 @@ describe('<DataGridPro /> - Row pinning', () => {
 
   it('should work with `getRowId`', () => {
     const TestCase = () => {
-      const data = getData(20, 5);
+      const data = getBasicGridData(20, 5);
 
       const rowsData = data.rows.map((row) => {
         const { id, ...rowData } = row;
@@ -345,11 +352,6 @@ describe('<DataGridPro /> - Row pinning', () => {
   });
 
   describe('keyboard navigation', () => {
-    function fireClickEvent(cell: HTMLElement) {
-      fireEvent.mouseUp(cell);
-      fireEvent.click(cell);
-    }
-
     function getActiveCellRowId() {
       const cell = document.activeElement;
       if (!cell || cell.getAttribute('role') !== 'cell') {
@@ -360,7 +362,7 @@ describe('<DataGridPro /> - Row pinning', () => {
 
     it('should work with top pinned rows', () => {
       const TestCase = () => {
-        const data = getData(20, 5);
+        const data = getBasicGridData(20, 5);
         const [pinnedRow0, pinnedRow1, ...rows] = data.rows;
 
         return (
@@ -382,7 +384,7 @@ describe('<DataGridPro /> - Row pinning', () => {
       expect(isRowPinned(getRowById(1), 'top')).to.equal(true, '#1 pinned top');
       expect(isRowPinned(getRowById(0), 'top')).to.equal(true, '#0 pinned top');
 
-      fireClickEvent(getCell(0, 0));
+      userEvent.mousePress(getCell(0, 0));
       // first top pinned row
       expect(getActiveCellRowId()).to.equal('1');
 
@@ -403,7 +405,7 @@ describe('<DataGridPro /> - Row pinning', () => {
 
     it('should work with bottom pinned rows', () => {
       const TestCase = () => {
-        const data = getData(5, 5);
+        const data = getBasicGridData(5, 5);
         const [pinnedRow0, pinnedRow1, ...rows] = data.rows;
 
         return (
@@ -425,7 +427,7 @@ describe('<DataGridPro /> - Row pinning', () => {
       expect(isRowPinned(getRowById(0), 'bottom')).to.equal(true, '#0 pinned top');
       expect(isRowPinned(getRowById(1), 'bottom')).to.equal(true, '#1 pinned top');
 
-      fireClickEvent(getCell(0, 0));
+      userEvent.mousePress(getCell(0, 0));
       expect(getActiveCellRowId()).to.equal('2');
 
       fireEvent.keyDown(getCell(0, 0), { key: 'ArrowDown' });
@@ -448,7 +450,7 @@ describe('<DataGridPro /> - Row pinning', () => {
       }
 
       const TestCase = () => {
-        const data = getData(5, 7);
+        const data = getBasicGridData(5, 7);
         const [pinnedRow0, pinnedRow1, ...rows] = data.rows;
 
         return (
@@ -478,7 +480,7 @@ describe('<DataGridPro /> - Row pinning', () => {
       expect(isRowPinned(getRowById(0), 'bottom')).to.equal(true, '#0 pinned bottom');
 
       // top-pinned row
-      fireClickEvent(getCell(0, 3));
+      userEvent.mousePress(getCell(0, 3));
       expect(getActiveCell()).to.equal('0-3');
       expect(getActiveCellRowId()).to.equal('1');
 

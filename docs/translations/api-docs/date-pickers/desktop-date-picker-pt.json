@@ -34,7 +34,7 @@
     "onYearChange": "Callback firing on year change @DateIOType.<br><br><strong>Signature:</strong><br><code>function(year: TDate) =&gt; void</code><br><em>year:</em> The new year.",
     "open": "Control the popup or dialog open state.",
     "OpenPickerButtonProps": "Props to pass to keyboard adornment button.",
-    "openTo": "First view to show.",
+    "openTo": "First view to show. Must be a valid option from <code>views</code> list",
     "orientation": "Force rendering in particular orientation.",
     "PaperProps": "Paper props passed down to <a href=\"https://mui.com/material-ui/api/paper/\">Paper</a> component.",
     "PopperProps": "Popper props passed down to <a href=\"https://mui.com/material-ui/api/popper/\">Popper</a> component.",
@@ -50,6 +50,7 @@
     "shouldDisableYear": "Disable specific years dynamically. Works like <code>shouldDisableDate</code> but for year selection view @DateIOType.<br><br><strong>Signature:</strong><br><code>function(year: TDate) =&gt; boolean</code><br><em>year:</em> The year to test.<br> <em>returns</em> (boolean): Returns <code>true</code> if the year should be disabled.",
     "showDaysOutsideCurrentMonth": "If <code>true</code>, days that have <code>outsideCurrentMonth={true}</code> are displayed.",
     "showToolbar": "If <code>true</code>, show the toolbar even in desktop mode.",
+    "sx": "The system prop that allows defining system overrides as well as additional CSS styles. See the <a href=\"/system/the-sx-prop/\">`sx` page</a> for more details.",
     "ToolbarComponent": "Component that will replace default toolbar renderer.",
     "toolbarFormat": "Date format, that is displaying in toolbar.",
     "toolbarPlaceholder": "Mobile picker date value placeholder, displaying if <code>value</code> === <code>null</code>.",
@@ -60,14 +61,14 @@
   },
   "classDescriptions": {},
   "slotDescriptions": {
-    "ActionBar": "",
-    "PaperContent": "",
-    "OpenPickerIcon": "",
-    "SwitchViewButton": "",
-    "SwitchViewIcon": "",
-    "LeftArrowButton": "",
-    "LeftArrowIcon": "",
-    "RightArrowButton": "",
-    "RightArrowIcon": ""
+    "ActionBar": "The action bar placed bellow picker views.",
+    "PaperContent": "The content of the Paper wrapping views.",
+    "OpenPickerIcon": "Icon displayed in the open picker button.",
+    "SwitchViewButton": "Button displayed to switch between different calendar views.",
+    "SwitchViewIcon": "Icon displayed in the SwitchViewButton. Rotated by 180° when the open view is &#39;year&#39;.",
+    "LeftArrowButton": "Button allowing to switch to the left view.",
+    "LeftArrowIcon": "Icon displayed in the left view switch button.",
+    "RightArrowButton": "Button allowing to switch to the right view.",
+    "RightArrowIcon": "Icon displayed in the right view switch button."
   }
 }

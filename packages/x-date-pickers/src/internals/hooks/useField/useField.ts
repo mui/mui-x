@@ -1,14 +1,16 @@
 import * as React from 'react';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import useEventCallback from '@mui/utils/useEventCallback';
+import { MuiPickerFieldAdapter } from '../../models/muiPickersAdapter';
 import { useValidation } from '../validation/useValidation';
 import { useUtils } from '../useUtils';
 import {
   FieldSection,
   UseFieldParams,
-  UseFieldProps,
   UseFieldResponse,
   UseFieldState,
+  UseFieldForwardedProps,
+  UseFieldInternalProps,
   AvailableAdjustKeyCode,
 } from './useField.interfaces';
 import {
@@ -26,29 +28,33 @@ export const useField = <
   TValue,
   TDate,
   TSection extends FieldSection,
-  TProps extends UseFieldProps<any, any, any>,
+  TForwardedProps extends UseFieldForwardedProps,
+  TInternalProps extends UseFieldInternalProps<any, any, any>,
 >(
-  params: UseFieldParams<TInputValue, TValue, TDate, TSection, TProps>,
-): UseFieldResponse<TProps> => {
-  const utils = useUtils<TDate>();
+  params: UseFieldParams<TInputValue, TValue, TDate, TSection, TForwardedProps, TInternalProps>,
+): UseFieldResponse<TForwardedProps> => {
+  const utils = useUtils<TDate>() as MuiPickerFieldAdapter<TDate>;
+  if (!utils.formatTokenMap) {
+    throw new Error('This adapter is not compatible with the field components');
+  }
   const inputRef = React.useRef<HTMLInputElement>(null);
 
   const {
-    props: {
+    internalProps: {
       value: valueProp,
       defaultValue,
       onChange,
-      onError,
       format = utils.formats.keyboardDate,
       readOnly = false,
-      ...otherProps
     },
+    forwardedProps: { onClick, onKeyDown, onFocus, onBlur, ...otherForwardedProps },
     valueManager,
     fieldValueManager,
     validator,
   } = params;
 
   const firstDefaultValue = React.useRef(defaultValue);
+  const focusTimeoutRef = React.useRef<NodeJS.Timeout | undefined>(undefined);
 
   const valueParsed = React.useMemo(() => {
     // TODO: Avoid this type casting, the emptyValues are both valid TDate and TInputDate
@@ -64,7 +70,6 @@ export const useField = <
     return {
       sections,
       valueParsed,
-      valueStr: fieldValueManager.getValueStrFromSections(sections),
       selectedSectionIndexes: null,
     };
   });
@@ -80,7 +85,6 @@ export const useField = <
     setState((prevState) => ({
       ...prevState,
       sections,
-      valueStr: fieldValueManager.getValueStrFromSections(sections),
       valueParsed: newValueParsed,
     }));
 
@@ -97,28 +101,51 @@ export const useField = <
     }));
   };
 
-  const handleInputClick = useEventCallback(() => {
-    if (state.sections.length === 0) {
-      return;
-    }
+  const handleInputClick = useEventCallback((...args) => {
+    onClick?.(...(args as []));
 
     const nextSectionIndex = state.sections.findIndex(
-      (section) => section.start > (inputRef.current?.selectionStart ?? 0),
+      (section) => section.start > (inputRef.current!.selectionStart ?? 0),
     );
     const sectionIndex = nextSectionIndex === -1 ? state.sections.length - 1 : nextSectionIndex - 1;
 
     updateSelectedSections(sectionIndex);
   });
 
-  const handleInputKeyDown = useEventCallback((event: React.KeyboardEvent<HTMLInputElement>) => {
-    if (!inputRef.current || state.sections.length === 0) {
-      return;
-    }
+  const handleInputFocus = useEventCallback((...args) => {
+    onFocus?.(...(args as []));
+    // The ref is guaranteed to be resolved that this point.
+    const input = inputRef.current as HTMLInputElement;
+
+    clearTimeout(focusTimeoutRef.current);
+    focusTimeoutRef.current = setTimeout(() => {
+      // The ref changed, the component got remounted, the focus event is no longer relevant.
+      if (input !== inputRef.current) {
+        return;
+      }
+
+      if (Number(input.selectionEnd) - Number(input.selectionStart) === input.value.length) {
+        updateSelectedSections(0, state.sections.length - 1);
+      } else {
+        handleInputClick();
+      }
+    });
+  });
+
+  const handleInputBlur = useEventCallback((...args) => {
+    onBlur?.(...(args as []));
+    updateSelectedSections();
+  });
+
+  const handleInputKeyDown = useEventCallback((event: React.KeyboardEvent) => {
+    onKeyDown?.(event);
 
     // eslint-disable-next-line default-case
     switch (true) {
       // Select all
       case event.key === 'a' && (event.ctrlKey || event.metaKey): {
+        // prevent default to make sure that the next line "select all" while updating
+        // the internal state at the same time.
         event.preventDefault();
         updateSelectedSections(0, state.sections.length - 1);
         return;
@@ -316,15 +343,8 @@ export const useField = <
     }
   });
 
-  const handleInputFocus = useEventCallback(() => {
-    // TODO: Avoid applying focus when focus is caused by a click
-    updateSelectedSections(0, state.sections.length - 1);
-  });
-
-  const handleInputBlur = useEventCallback(() => updateSelectedSections());
-
   useEnhancedEffect(() => {
-    if (!inputRef.current || state.selectedSectionIndexes == null) {
+    if (state.selectedSectionIndexes == null) {
       return;
     }
 
@@ -356,18 +376,16 @@ export const useField = <
       setState((prevState) => ({
         ...prevState,
         valueParsed,
-        valueStr: fieldValueManager.getValueStrFromSections(sections),
         sections,
       }));
     }
   }, [valueParsed]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  // TODO: Support `isSameError`.
   // TODO: Make validation work with TDate instead of TInputDate
   const validationError = useValidation(
-    { ...params.props, value: state.valueParsed as unknown as TInputValue },
+    { ...params.internalProps, value: state.valueParsed as unknown as TInputValue },
     validator,
-    () => true,
+    fieldValueManager.isSameError,
   );
 
   const inputError = React.useMemo(
@@ -375,15 +393,24 @@ export const useField = <
     [fieldValueManager, validationError],
   );
 
+  React.useEffect(() => {
+    return () => window.clearTimeout(focusTimeoutRef.current);
+  }, []);
+
+  const valueStr = React.useMemo(
+    () => fieldValueManager.getValueStrFromSections(state.sections),
+    [state.sections, fieldValueManager],
+  );
+
   return {
     inputProps: {
-      value: state.valueStr,
+      ...otherForwardedProps,
+      value: valueStr,
       onClick: handleInputClick,
-      onKeyDown: handleInputKeyDown,
       onFocus: handleInputFocus,
       onBlur: handleInputBlur,
+      onKeyDown: handleInputKeyDown,
       error: inputError,
-      ...otherProps,
     },
     inputRef,
   };

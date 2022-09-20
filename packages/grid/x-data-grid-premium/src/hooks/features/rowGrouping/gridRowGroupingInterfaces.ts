@@ -1,3 +1,5 @@
+import { GridColDef, GridValidRowModel } from '@mui/x-data-grid';
+
 export type GridRowGroupingModel = string[];
 
 export interface GridRowGroupingState {
@@ -13,7 +15,7 @@ export interface GridRowGroupingInternalCache {
    * Tracks the model on the last pre-processing
    * Allows to check if we need to re-build the grouping columns when the grid upserts a column.
    */
-  sanitizedModelOnLastRowTreeCreation: GridRowGroupingModel;
+  rulesOnLastRowTreeCreation: GridGroupingRules;
 }
 
 export interface GridRowGroupingApi {
@@ -40,3 +42,11 @@ export interface GridRowGroupingApi {
    */
   setRowGroupingCriteriaIndex: (groupingCriteriaField: string, groupingIndex: number) => void;
 }
+
+export interface GridGroupingRule<R extends GridValidRowModel = GridValidRowModel, V = any> {
+  field: string;
+  groupingValueGetter?: GridColDef<R, V>['groupingValueGetter'];
+}
+
+export type GridGroupingRules<R extends GridValidRowModel = GridValidRowModel> =
+  GridGroupingRule<R>[];

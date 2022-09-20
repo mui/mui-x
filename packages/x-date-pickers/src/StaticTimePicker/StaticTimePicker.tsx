@@ -75,6 +75,8 @@ export const StaticTimePicker = React.forwardRef(function StaticTimePicker<
     value,
     components,
     componentsProps,
+    sx,
+    className,
     ...other
   } = props;
 
@@ -95,6 +97,8 @@ export const StaticTimePicker = React.forwardRef(function StaticTimePicker<
       displayStaticWrapperAs={displayStaticWrapperAs}
       components={components}
       componentsProps={componentsProps}
+      sx={sx}
+      className={className}
       {...wrapperProps}
     >
       <CalendarOrClockPicker
@@ -277,6 +281,8 @@ StaticTimePicker.propTypes = {
   OpenPickerButtonProps: PropTypes.object,
   /**
    * First view to show.
+   * Must be a valid option from `views` list
+   * @default 'hours'
    */
   openTo: PropTypes.oneOf(['hours', 'minutes', 'seconds']),
   /**
@@ -318,6 +324,14 @@ StaticTimePicker.propTypes = {
    */
   showToolbar: PropTypes.bool,
   /**
+   * The system prop that allows defining system overrides as well as additional CSS styles.
+   */
+  sx: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
+    PropTypes.func,
+    PropTypes.object,
+  ]),
+  /**
    * Component that will replace default toolbar renderer.
    * @default TimePickerToolbar
    */
@@ -333,6 +347,7 @@ StaticTimePicker.propTypes = {
   value: PropTypes.any,
   /**
    * Array of views to show.
+   * @default ['hours', 'minutes']
    */
   views: PropTypes.arrayOf(PropTypes.oneOf(['hours', 'minutes', 'seconds']).isRequired),
 } as any;

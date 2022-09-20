@@ -1,13 +1,9 @@
 import * as React from 'react';
 import { spy } from 'sinon';
 import { expect } from 'chai';
-import { fireEvent, screen, describeConformance } from '@mui/monorepo/test/utils';
+import { act, fireEvent, screen, describeConformance } from '@mui/monorepo/test/utils';
 import { YearPicker, yearPickerClasses as classes } from '@mui/x-date-pickers/YearPicker';
-import {
-  adapterToUse,
-  wrapPickerMount,
-  createPickerRenderer,
-} from '../../../../test/utils/pickers-utils';
+import { adapterToUse, wrapPickerMount, createPickerRenderer } from 'test/utils/pickers-utils';
 
 describe('<YearPicker />', () => {
   const { render } = createPickerRenderer();
@@ -16,7 +12,7 @@ describe('<YearPicker />', () => {
     <YearPicker
       minDate={adapterToUse.date(new Date(2019, 0, 1))}
       maxDate={adapterToUse.date(new Date(2029, 0, 1))}
-      date={adapterToUse.date()}
+      value={adapterToUse.date()}
       onChange={() => {}}
     />,
     () => ({
@@ -27,14 +23,7 @@ describe('<YearPicker />', () => {
       muiName: 'MuiYearPicker',
       refInstanceof: window.HTMLDivElement,
       // cannot test reactTestRenderer because of required context
-      skip: [
-        'componentProp',
-        'componentsProp',
-        'propsSpread',
-        'reactTestRenderer',
-        'themeDefaultProps',
-        'themeVariants',
-      ],
+      skip: ['componentProp', 'componentsProp', 'reactTestRenderer', 'themeVariants'],
     }),
   );
 
@@ -44,7 +33,7 @@ describe('<YearPicker />', () => {
       <YearPicker
         minDate={adapterToUse.date(new Date(2019, 0, 1))}
         maxDate={adapterToUse.date(new Date(2029, 0, 1))}
-        date={adapterToUse.date(new Date(2019, 1, 2))}
+        value={adapterToUse.date(new Date(2019, 1, 2))}
         onChange={onChangeMock}
       />,
     );
@@ -69,7 +58,7 @@ describe('<YearPicker />', () => {
       <YearPicker
         minDate={adapterToUse.date(new Date(2019, 0, 1))}
         maxDate={adapterToUse.date(new Date(2029, 0, 1))}
-        date={adapterToUse.date(new Date(2019, 1, 2))}
+        value={adapterToUse.date(new Date(2019, 1, 2))}
         onChange={onChangeMock}
         readOnly
       />,
@@ -86,7 +75,11 @@ describe('<YearPicker />', () => {
     it('should disable all years if props.disabled = true', () => {
       const onChange = spy();
       render(
-        <YearPicker date={adapterToUse.date(new Date(2017, 1, 15))} onChange={onChange} disabled />,
+        <YearPicker
+          value={adapterToUse.date(new Date(2017, 1, 15))}
+          onChange={onChange}
+          disabled
+        />,
       );
 
       screen.getAllByRole('button').forEach((monthButton) => {
@@ -100,7 +93,7 @@ describe('<YearPicker />', () => {
       const onChange = spy();
       render(
         <YearPicker
-          date={adapterToUse.date(new Date(2017, 1, 15))}
+          value={adapterToUse.date(new Date(2017, 1, 15))}
           onChange={onChange}
           minDate={adapterToUse.date(new Date(2018, 1, 12))}
         />,
@@ -120,7 +113,7 @@ describe('<YearPicker />', () => {
       const onChange = spy();
       render(
         <YearPicker
-          date={adapterToUse.date(new Date(2019, 1, 15))}
+          value={adapterToUse.date(new Date(2019, 1, 15))}
           onChange={onChange}
           maxDate={adapterToUse.date(new Date(2025, 3, 12))}
         />,
@@ -140,7 +133,7 @@ describe('<YearPicker />', () => {
       const onChange = spy();
       render(
         <YearPicker
-          date={adapterToUse.date(new Date(2019, 0, 2))}
+          value={adapterToUse.date(new Date(2019, 0, 2))}
           onChange={onChange}
           shouldDisableYear={(month) => adapterToUse.getYear(month) === 2024}
         />,
@@ -166,7 +159,7 @@ describe('<YearPicker />', () => {
         minDate={adapterToUse.date(new Date(2018, 10, 1))}
         maxDate={adapterToUse.date(new Date(2020, 3, 1))}
         // date is chose such as replacing year by 2018 or 2020 makes it out of valid range
-        date={adapterToUse.date(new Date(2019, 7, 1))}
+        value={adapterToUse.date(new Date(2019, 7, 1))}
         onChange={() => {}}
         autoFocus // needed to allow keyboard navigation
       />,
@@ -174,11 +167,11 @@ describe('<YearPicker />', () => {
 
     const button2019 = screen.getByRole('button', { name: '2019' });
 
-    button2019.focus();
+    act(() => button2019.focus());
     fireEvent.keyDown(button2019, { key: 'ArrowLeft' });
     expect(document.activeElement).to.have.text('2018');
 
-    button2019.focus();
+    act(() => button2019.focus());
     fireEvent.keyDown(button2019, { key: 'ArrowRight' });
     expect(document.activeElement).to.have.text('2020');
   });

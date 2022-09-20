@@ -288,6 +288,7 @@ DataGridPremiumRaw.propTypes = {
   experimentalFeatures: PropTypes.shape({
     aggregation: PropTypes.bool,
     columnGrouping: PropTypes.bool,
+    lazyLoading: PropTypes.bool,
     newEditingApi: PropTypes.bool,
     preventCommitWhileValidating: PropTypes.bool,
     rowPinning: PropTypes.bool,
@@ -649,6 +650,13 @@ DataGridPremiumRaw.propTypes = {
    */
   onError: PropTypes.func,
   /**
+   * Callback fired when rowCount is set and the next batch of virtualized rows is rendered.
+   * @param {GridFetchRowsParams} params With all properties from [[GridFetchRowsParams]].
+   * @param {MuiEvent<{}>} event The event object.
+   * @param {GridCallbackDetails} details Additional details for this callback.
+   */
+  onFetchRows: PropTypes.func,
+  /**
    * Callback fired when the Filter model changes before the filters are applied.
    * @param {GridFilterModel} model With all properties from [[GridFilterModel]].
    * @param {GridCallbackDetails} details Additional details for this callback.
@@ -825,8 +833,8 @@ DataGridPremiumRaw.propTypes = {
    * Rows data to pin on top or bottom.
    */
   pinnedRows: PropTypes.shape({
-    bottom: PropTypes.array,
-    top: PropTypes.array,
+    bottom: PropTypes.arrayOf(PropTypes.object),
+    top: PropTypes.arrayOf(PropTypes.object),
   }),
   /**
    * Callback called before updating a row with new values in the row and cell editing.
@@ -874,7 +882,14 @@ DataGridPremiumRaw.propTypes = {
   /**
    * Set of rows of type [[GridRowsProp]].
    */
-  rows: PropTypes.array.isRequired,
+  rows: PropTypes.arrayOf(PropTypes.object).isRequired,
+  /**
+   * Loading rows can be processed on the server or client-side.
+   * Set it to 'client' if you would like enable infnite loading.
+   * Set it to 'server' if you would like to enable lazy loading.
+   * * @default "client"
+   */
+  rowsLoadingMode: PropTypes.oneOf(['client', 'server']),
   /**
    * Sets the type of space between rows added by `getRowSpacing`.
    * @default "margin"
