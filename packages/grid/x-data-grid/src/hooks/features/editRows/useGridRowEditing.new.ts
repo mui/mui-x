@@ -219,6 +219,10 @@ export const useGridRowEditing = (
       } else if (params.isEditable) {
         let reason: GridRowEditStartReasons | undefined;
 
+        if (event.key === ' ' && event.shiftKey) {
+          return; // Shift + Space is used to select the row
+        }
+
         if (isPrintableKey(event)) {
           reason = GridRowEditStartReasons.printableKeyDown;
         } else if ((event.ctrlKey || event.metaKey) && event.key === 'v') {
