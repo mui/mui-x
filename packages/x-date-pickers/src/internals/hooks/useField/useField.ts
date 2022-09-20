@@ -25,7 +25,7 @@ import {
   applySectionValueToDate,
   applyEditedSectionsOnReferenceDate,
   createDateFromSections,
-  cleanTrailingZeroInNumericSectionValue,
+  cleanTrailingZeroInNumericSectionValue, FieldPartialSection,
 } from './useField.utils';
 
 const useFieldState = <TValue, TDate, TSection extends FieldSection>({
@@ -108,7 +108,7 @@ const useFieldState = <TValue, TDate, TSection extends FieldSection>({
     let sections = state.sections;
 
     for (let i = startIndex; i <= endIndex; i += 1) {
-      sections = setSectionValue(sections, i, '');
+      sections = setSectionValue(sections, i, { value: '', query: null });
     }
 
     updateSections(sections);
@@ -122,7 +122,7 @@ const useFieldState = <TValue, TDate, TSection extends FieldSection>({
     setSectionValueOnSections: (params: {
       activeSection: TSection;
       referenceActiveDate: TDate;
-    }) => string;
+    }) => FieldPartialSection;
   }) => {
     if (state.selectedSectionIndexes == null) {
       return;
@@ -141,14 +141,14 @@ const useFieldState = <TValue, TDate, TSection extends FieldSection>({
       saveActiveDate(newDate);
     } else {
       // The date is not valid, we have to update the section value rather than date itself.
-      const newSectionValue = setSectionValueOnSections({
+      const partialSection = setSectionValueOnSections({
         activeSection,
         referenceActiveDate,
       });
       const newSections = setSectionValue(
         state.sections,
         state.selectedSectionIndexes.start,
-        newSectionValue,
+          partialSection,
       );
       const newDate = createDateFromSections({ utils, format, sections: newSections });
       if (utils.isValid(newDate)) {
@@ -194,10 +194,8 @@ const useFieldState = <TValue, TDate, TSection extends FieldSection>({
   return {
     state,
     setSelectedSections,
-    publishValue,
     clearValue,
     clearSections,
-    updateSections,
     updateSectionValue,
   };
 };
@@ -238,7 +236,6 @@ export const useField = <
     setSelectedSections,
     clearValue,
     clearSections,
-    updateSections,
     updateSectionValue,
   } = useFieldState({
     valueManager,
@@ -356,12 +353,13 @@ export const useField = <
               activeSection.dateSectionName,
               event.key as AvailableAdjustKeyCode,
             ),
-          setSectionValueOnSections: ({ activeSection }) =>
-            adjustInvalidDateSectionValue(
-              utils,
-              activeSection,
-              event.key as AvailableAdjustKeyCode,
-            ),
+          setSectionValueOnSections: ({ activeSection }) => ({
+            value: adjustInvalidDateSectionValue(
+                utils,
+                activeSection,
+                event.key as AvailableAdjustKeyCode,
+            )
+          }),
         });
         return;
       }
@@ -411,8 +409,9 @@ export const useField = <
               getSectionValue: () =>
                 Number(getSectionValueStr({ activeSection, date, fixedWidth: false })),
             }),
-          setSectionValueOnSections: ({ referenceActiveDate, activeSection }) =>
-            getSectionValueStr({ activeSection, date: referenceActiveDate, fixedWidth: true }),
+          setSectionValueOnSections: ({ referenceActiveDate, activeSection }) => ({
+            value: getSectionValueStr({ activeSection, date: referenceActiveDate, fixedWidth: true })
+          }),
         });
 
         return;
@@ -426,46 +425,51 @@ export const useField = <
           return;
         }
 
-        const activeSection = state.sections[state.selectedSectionIndexes.start];
+        const getPartialSection = ({ activeSection }: { activeSection: TSection }): FieldPartialSection => {
+          // TODO: Do not hardcode the compatible formatValue
+          if (activeSection.formatValue !== 'MMMM') {
+            return {
+              value: activeSection.value,
+              query: null,
+            };
+          }
 
-        // TODO: Do not hardcode the compatible formatValue
-        if (activeSection.formatValue !== 'MMMM') {
-          return;
-        }
-
-        const newQuery = event.key.toLowerCase();
-        const concatenatedQuery = `${activeSection.query ?? ''}${newQuery}`;
-        const matchingMonthsWithConcatenatedQuery = getMonthsMatchingQuery(
-          utils,
-          activeSection.formatValue,
-          concatenatedQuery,
-        );
-        if (matchingMonthsWithConcatenatedQuery.length > 0) {
-          updateSections(
-            setSectionValue(
-              state.sections,
-              state.selectedSectionIndexes.start,
-              matchingMonthsWithConcatenatedQuery[0],
+          const newQuery = event.key.toLowerCase();
+          const concatenatedQuery = `${activeSection.query ?? ''}${newQuery}`;
+          const matchingMonthsWithConcatenatedQuery = getMonthsMatchingQuery(
+              utils,
+              activeSection.formatValue,
               concatenatedQuery,
-            ),
           );
-        } else {
+          if (matchingMonthsWithConcatenatedQuery.length > 0) {
+            return {
+              value: matchingMonthsWithConcatenatedQuery[0],
+              query: newQuery,
+            }
+          }
+
           const matchingMonthsWithNewQuery = getMonthsMatchingQuery(
-            utils,
-            activeSection.formatValue,
-            newQuery,
+              utils,
+              activeSection.formatValue,
+              newQuery,
           );
           if (matchingMonthsWithNewQuery.length > 0) {
-            updateSections(
-              setSectionValue(
-                state.sections,
-                state.selectedSectionIndexes.start,
-                matchingMonthsWithNewQuery[0],
-                newQuery,
-              ),
-            );
+            return {
+              value: matchingMonthsWithNewQuery[0],
+              query: newQuery,
+            }
+          }
+
+          return {
+            value: activeSection.value,
+            query: null,
           }
         }
+
+        updateSectionValue({
+          setSectionValueOnDate: () => {},
+          setSectionValueOnSections: ({ activeSection }) => getPartialSection({ activeSection }),
+        })
       }
     }
   });

@@ -335,20 +335,21 @@ export const createDateStrFromSections = (sections: FieldSection[]) =>
     })
     .join('');
 
+export interface FieldPartialSection { value: string, query?: string | null }
+
 export const setSectionValue = <TSection extends FieldSection>(
   sections: TSection[],
   sectionIndex: number,
-  sectionNewValue: string,
-  sectionNewQuery?: string | null,
+  partialSection: FieldPartialSection
 ) => {
   const newSections = [...sections];
   const modifiedSection: TSection = {
     ...newSections[sectionIndex],
-    value: sectionNewValue,
+    value: partialSection.value,
     edited: true,
   };
-  if (sectionNewQuery !== undefined) {
-    modifiedSection.query = sectionNewQuery;
+  if (partialSection.query !== undefined) {
+    modifiedSection.query = partialSection.query;
   }
 
   newSections[sectionIndex] = modifiedSection;
