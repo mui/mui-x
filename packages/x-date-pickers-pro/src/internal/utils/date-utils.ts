@@ -6,11 +6,9 @@ export const parseRangeInputValue = <TDate>(
   value: DateRange<any> = [null, null],
 ) =>
   value.map((date) => {
-    if (date === null || !utils.isValid(date)) {
-      return null;
-    }
+    const parsedDate = utils.date(date);
 
-    return utils.startOfDay(utils.date(date) as TDate);
+    return utils.isValid(parsedDate) ? parsedDate : null;
   }) as DateRange<TDate>;
 
 export const isRangeValid = <TDate>(

@@ -67,6 +67,7 @@ export interface FieldSection {
 }
 
 export interface FieldValueManager<TValue, TDate, TSection extends FieldSection, TError> {
+  getReferenceValue: (params: { value: TValue; prevValue: TValue }) => TValue;
   getSectionsFromValue: (
     utils: MuiPickerFieldAdapter<TDate>,
     prevSections: TSection[] | null,
@@ -79,15 +80,19 @@ export interface FieldValueManager<TValue, TDate, TSection extends FieldSection,
     sections: TSection[];
     format: string;
   }) => TValue;
+  getActiveDateSectionsFromActiveSection: (params: {
+    activeSection: TSection;
+    sections: TSection[];
+  }) => TSection[];
   getActiveDateFromActiveSection: (params: {
     state: UseFieldState<TValue, TSection>;
     activeSection: TSection;
     publishValue: (params: { value: TValue; referenceValue: TValue }) => void;
   }) => {
     activeDate: TDate | null;
-    activeDateSections: TSection[];
     referenceActiveDate: TDate;
     saveActiveDate: (date: TDate | null) => void;
+    getInvalidValue: () => TValue;
   };
   hasError: (error: TError) => boolean;
   isSameError: (error: TError, prevError: TError | null) => boolean;

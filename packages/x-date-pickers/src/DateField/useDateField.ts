@@ -18,6 +18,7 @@ import { parseNonNullablePickerDate } from '../internals/utils/date-utils';
 import { useUtils, useDefaultDates } from '../internals/hooks/useUtils';
 
 const dateRangeFieldValueManager: FieldValueManager<any, any, FieldSection, DateValidationError> = {
+  getReferenceValue: ({ value, prevValue }) => value ?? prevValue,
   getSectionsFromValue: (utils, prevSections, date, format) =>
     addPositionPropertiesToSections(splitFormatIntoSections(utils, format, date)),
   getValueStrFromSections: (sections) => createDateStrFromSections(sections),
@@ -27,15 +28,16 @@ const dateRangeFieldValueManager: FieldValueManager<any, any, FieldSection, Date
       sections,
       format,
     }),
+  getActiveDateSectionsFromActiveSection: ({ sections }) => sections,
   getActiveDateFromActiveSection: ({ state, publishValue }) => ({
     activeDate: state.value,
-    activeDateSections: state.sections,
     referenceActiveDate: state.referenceValue,
     saveActiveDate: (newActiveDate) =>
       publishValue({
         value: newActiveDate,
         referenceValue: newActiveDate == null ? state.referenceValue : newActiveDate,
       }),
+    getInvalidValue: () => null,
   }),
   hasError: (error) => error != null,
   isSameError: isSameDateError,

@@ -31,6 +31,21 @@ export const dateRangeFieldValueManager: FieldValueManager<
   DateRangeFieldSection,
   DateRangeValidationError
 > = {
+  getReferenceValue: ({ value, prevValue }) => {
+    if (value[0] == null && value[1] == null) {
+      return prevValue;
+    }
+
+    if (value[0] != null && value[1] != null) {
+      return value;
+    }
+
+    if (value[0] != null) {
+      return [value[0], value[0]];
+    }
+
+    return [value[1], value[1]];
+  },
   getSectionsFromValue: (utils, prevSections, [start, end], format) => {
     const prevDateRangeSections =
       prevSections == null
@@ -95,27 +110,37 @@ export const dateRangeFieldValueManager: FieldValueManager<
 
     return [startDate, endDate] as DateRange<any>;
   },
-  getActiveDateFromActiveSection: ({ state, publishValue, activeSection }) => {
+  getActiveDateSectionsFromActiveSection: ({ activeSection, sections }) => {
+    const index = activeSection.dateName === 'start' ? 0 : 1;
+    const dateRangeSections = splitDateRangeSections(sections);
+
+    return index === 0
+      ? removeLastSeparator(dateRangeSections.startDate)
+      : dateRangeSections.endDate;
+  },
+  getActiveDateFromActiveSection: ({ state, activeSection, publishValue }) => {
     const index = activeSection.dateName === 'start' ? 0 : 1;
 
     const updateDateInRange = (date: any, dateRange: DateRange<any>) =>
       (index === 0 ? [date, dateRange[1]] : [dateRange[0], date]) as DateRange<any>;
 
-    const dateRangeSections = splitDateRangeSections(state.sections);
-
     return {
       activeDate: state.value[index],
-      activeDateSections:
-        index === 0 ? removeLastSeparator(dateRangeSections.startDate) : dateRangeSections.endDate,
       referenceActiveDate: state.referenceValue[index],
-      saveActiveDate: (newActiveDate) => {
-        return publishValue({
+      saveActiveDate: (newActiveDate) =>
+        publishValue({
           value: updateDateInRange(newActiveDate, state.value),
           referenceValue:
             newActiveDate == null
               ? state.referenceValue
               : updateDateInRange(newActiveDate, state.referenceValue),
-        });
+        }),
+      getInvalidValue: () => {
+        if (index === 0) {
+          return [null, state.value[1]];
+        }
+
+        return [state.value[0], null];
       },
     };
   },

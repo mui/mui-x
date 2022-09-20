@@ -59,7 +59,10 @@ const useFieldState = <TValue, TDate, TSection extends FieldSection>({
       sections,
       value: valueParsed,
       lastPublishedValue: valueParsed,
-      referenceValue: valueParsed,
+      referenceValue: fieldValueManager.getReferenceValue({
+        value: valueParsed,
+        prevValue: valueManager.getTodayValue(utils),
+      }),
       selectedSectionIndexes: null,
     };
   });
@@ -83,34 +86,31 @@ const useFieldState = <TValue, TDate, TSection extends FieldSection>({
     onChange?.(value);
   };
 
-  const updateSections = (sections: TSection[]) => {
-    const value = fieldValueManager.getValueFromSections({
-      utils,
-      sections,
-      format,
-    });
-
-    setState((prevState) => ({
-      ...prevState,
-      sections,
-      value,
-    }));
-  };
-
   const clearValue = () =>
     publishValue({
       value: valueManager.emptyValue,
       referenceValue: state.referenceValue,
     });
 
-  const clearSections = (startIndex: number, endIndex: number) => {
-    let sections = state.sections;
-
-    for (let i = startIndex; i <= endIndex; i += 1) {
-      sections = setSectionValue(sections, i, '');
+  const clearActiveSection = () => {
+    if (state.selectedSectionIndexes == null) {
+      return undefined;
     }
 
-    updateSections(sections);
+    const activeSection = state.sections[state.selectedSectionIndexes.start];
+    const { getInvalidValue } = fieldValueManager.getActiveDateFromActiveSection({
+      state,
+      activeSection,
+      publishValue,
+    });
+
+    const newSections = setSectionValue(state.sections, state.selectedSectionIndexes.start, '');
+
+    return setState((prevState) => ({
+      ...prevState,
+      sections: newSections,
+      value: getInvalidValue(),
+    }));
   };
 
   const updateSectionValue = ({
@@ -128,7 +128,7 @@ const useFieldState = <TValue, TDate, TSection extends FieldSection>({
     }
 
     const activeSection = state.sections[state.selectedSectionIndexes.start];
-    const { activeDateSections, activeDate, referenceActiveDate, saveActiveDate } =
+    const { activeDate, referenceActiveDate, saveActiveDate, getInvalidValue } =
       fieldValueManager.getActiveDateFromActiveSection({
         state,
         activeSection,
@@ -141,16 +141,20 @@ const useFieldState = <TValue, TDate, TSection extends FieldSection>({
     }
 
     // The date is not valid, we have to update the section value rather than date itself.
-    const partialSection = setSectionValueOnSections({
+    const newSectionValue = setSectionValueOnSections({
       activeSection,
       referenceActiveDate,
     });
     const newSections = setSectionValue(
       state.sections,
       state.selectedSectionIndexes.start,
-      partialSection,
+      newSectionValue,
     );
-    const newDate = createDateFromSections({ utils, format, sections: newSections });
+    const activeDateSections = fieldValueManager.getActiveDateSectionsFromActiveSection({
+      activeSection,
+      sections: newSections,
+    });
+    const newDate = createDateFromSections({ utils, format, sections: activeDateSections });
     if (newDate != null && utils.isValid(newDate)) {
       let mergedDate = referenceActiveDate;
 
@@ -168,7 +172,11 @@ const useFieldState = <TValue, TDate, TSection extends FieldSection>({
       return saveActiveDate(mergedDate);
     }
 
-    return updateSections(newSections);
+    return setState((prevState) => ({
+      ...prevState,
+      sections: newSections,
+      value: getInvalidValue(),
+    }));
   };
 
   const setSelectedSections = (start?: number, end?: number) => {
@@ -190,6 +198,10 @@ const useFieldState = <TValue, TDate, TSection extends FieldSection>({
       setState((prevState) => ({
         ...prevState,
         lastPublishedValue: valueParsed,
+        referenceValue: fieldValueManager.getReferenceValue({
+          value: valueParsed,
+          prevValue: prevState.referenceValue,
+        }),
         value: valueParsed,
         sections,
       }));
@@ -200,7 +212,7 @@ const useFieldState = <TValue, TDate, TSection extends FieldSection>({
     state,
     setSelectedSections,
     clearValue,
-    clearSections,
+    clearActiveSection,
     updateSectionValue,
   };
 };
@@ -239,7 +251,7 @@ export const useField = <
 
   const focusTimeoutRef = React.useRef<NodeJS.Timeout | undefined>(undefined);
 
-  const { state, setSelectedSections, clearValue, clearSections, updateSectionValue } =
+  const { state, setSelectedSections, clearValue, clearActiveSection, updateSectionValue } =
     useFieldState({
       valueManager,
       fieldValueManager,
@@ -343,7 +355,7 @@ export const useField = <
         ) {
           clearValue();
         } else {
-          clearSections(state.selectedSectionIndexes.start, state.selectedSectionIndexes.end);
+          clearActiveSection();
         }
         break;
       }
