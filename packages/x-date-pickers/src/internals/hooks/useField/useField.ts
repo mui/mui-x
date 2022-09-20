@@ -4,16 +4,13 @@ import useEventCallback from '@mui/utils/useEventCallback';
 import { MuiDateSectionName, MuiPickerFieldAdapter } from '../../models/muiPickersAdapter';
 import { useValidation } from '../validation/useValidation';
 import { useUtils } from '../useUtils';
-import { PickerStateValueManager } from '../usePickerState';
 import {
   FieldSection,
   UseFieldParams,
   UseFieldResponse,
-  UseFieldState,
   UseFieldForwardedProps,
   UseFieldInternalProps,
   AvailableAdjustKeyCode,
-  FieldValueManager,
 } from './useField.interfaces';
 import {
   getMonthsMatchingQuery,
@@ -22,196 +19,9 @@ import {
   adjustDateSectionValue,
   adjustInvalidDateSectionValue,
   applySectionValueToDate,
-  createDateFromSections,
   cleanTrailingZeroInNumericSectionValue,
-  addPositionPropertiesToSections,
 } from './useField.utils';
-
-const useFieldState = <TValue, TDate, TSection extends FieldSection>({
-  fieldValueManager,
-  valueManager,
-  value: valueProp,
-  defaultValue,
-  onChange,
-  format,
-}: {
-  valueManager: PickerStateValueManager<TValue, TValue, TDate>;
-  fieldValueManager: FieldValueManager<TValue, TDate, TSection, any>;
-  defaultValue: TValue | undefined;
-  value: TValue | undefined;
-  onChange?: (value: TValue) => void;
-  format: string;
-}) => {
-  const utils = useUtils<TDate>() as MuiPickerFieldAdapter<TDate>;
-
-  const firstDefaultValue = React.useRef(defaultValue);
-  const valueParsed = React.useMemo(() => {
-    const value = valueProp ?? firstDefaultValue.current ?? valueManager.emptyValue;
-    return valueManager.parseInput(utils, value);
-  }, [valueProp, valueManager, utils]);
-
-  const [state, setState] = React.useState<UseFieldState<TValue, TSection>>(() => {
-    const sections = fieldValueManager.getSectionsFromValue(utils, null, valueParsed, format);
-
-    return {
-      sections,
-      value: valueParsed,
-      referenceValue: fieldValueManager.updateReferenceValue(
-        utils,
-        valueParsed,
-        valueManager.getTodayValue(utils),
-      ),
-      selectedSectionIndexes: null,
-    };
-  });
-
-  const publishValue = ({
-    value,
-    referenceValue,
-  }: Pick<UseFieldState<TValue, TSection>, 'value' | 'referenceValue'>) => {
-    const newSections = fieldValueManager.getSectionsFromValue(
-      utils,
-      state.sections,
-      value,
-      format,
-    );
-
-    setState((prevState) => ({
-      ...prevState,
-      sections: newSections,
-      value,
-      referenceValue,
-    }));
-
-    onChange?.(value);
-  };
-
-  const setSectionValue = (sectionIndex: number, newSectionValue: string) => {
-    const newSections = [...state.sections];
-
-    newSections[sectionIndex] = {
-      ...newSections[sectionIndex],
-      value: newSectionValue,
-      edited: true,
-    };
-
-    return addPositionPropertiesToSections<TSection>(newSections);
-  };
-
-  const clearValue = () =>
-    publishValue({
-      value: valueManager.emptyValue,
-      referenceValue: state.referenceValue,
-    });
-
-  const clearActiveSection = () => {
-    if (state.selectedSectionIndexes == null) {
-      return undefined;
-    }
-
-    const activeSection = state.sections[state.selectedSectionIndexes.start];
-    const activeDateManager = fieldValueManager.getActiveDateManager(state, activeSection);
-
-    const newSections = setSectionValue(state.selectedSectionIndexes.start, '');
-
-    return setState((prevState) => ({
-      ...prevState,
-      sections: newSections,
-      value: activeDateManager.setActiveDateAsInvalid(),
-    }));
-  };
-
-  const updateSectionValue = ({
-    setSectionValueOnDate,
-    setSectionValueOnSections,
-  }: {
-    setSectionValueOnDate: (params: { activeSection: TSection; date: TDate }) => TDate;
-    setSectionValueOnSections: (params: {
-      activeSection: TSection;
-      referenceActiveDate: TDate;
-    }) => string;
-  }) => {
-    if (state.selectedSectionIndexes == null) {
-      return undefined;
-    }
-
-    const activeSection = state.sections[state.selectedSectionIndexes.start];
-    const activeDateManager = fieldValueManager.getActiveDateManager(state, activeSection);
-
-    if (activeDateManager.activeDate != null && utils.isValid(activeDateManager.activeDate)) {
-      const newDate = setSectionValueOnDate({ date: activeDateManager.activeDate, activeSection });
-      return publishValue(activeDateManager.getNewValueFromNewActiveDate(newDate));
-    }
-
-    // The date is not valid, we have to update the section value rather than date itself.
-    const newSectionValue = setSectionValueOnSections({
-      activeSection,
-      referenceActiveDate: activeDateManager.referenceActiveDate,
-    });
-    const newSections = setSectionValue(state.selectedSectionIndexes.start, newSectionValue);
-    const activeDateSections = fieldValueManager.getActiveDateSections(newSections, activeSection);
-    const newDate = createDateFromSections({ utils, format, sections: activeDateSections });
-    if (newDate != null && utils.isValid(newDate)) {
-      let mergedDate = activeDateManager.referenceActiveDate;
-
-      activeDateSections.forEach((section) => {
-        if (section.edited) {
-          mergedDate = applySectionValueToDate({
-            utils,
-            date: mergedDate,
-            dateSectionName: section.dateSectionName,
-            getSectionValue: (getter) => getter(newDate),
-          });
-        }
-      });
-
-      return publishValue(activeDateManager.getNewValueFromNewActiveDate(mergedDate));
-    }
-
-    return setState((prevState) => ({
-      ...prevState,
-      sections: newSections,
-      value: activeDateManager.setActiveDateAsInvalid(),
-    }));
-  };
-
-  const setSelectedSections = (start?: number, end?: number) => {
-    setState((prevState) => ({
-      ...prevState,
-      selectedSectionIndexes: start == null ? null : { start, end: end ?? start },
-      selectedSectionQuery: null,
-    }));
-  };
-
-  React.useEffect(() => {
-    if (!valueManager.areValuesEqual(utils, state.value, valueParsed)) {
-      const sections = fieldValueManager.getSectionsFromValue(
-        utils,
-        state.sections,
-        valueParsed,
-        format,
-      );
-      setState((prevState) => ({
-        ...prevState,
-        value: valueParsed,
-        referenceValue: fieldValueManager.updateReferenceValue(
-          utils,
-          valueParsed,
-          prevState.referenceValue,
-        ),
-        sections,
-      }));
-    }
-  }, [valueParsed]); // eslint-disable-line react-hooks/exhaustive-deps
-
-  return {
-    state,
-    setSelectedSections,
-    clearValue,
-    clearActiveSection,
-    updateSectionValue,
-  };
-};
+import { useFieldState } from './useFieldState';
 
 export const useField = <
   TValue,
@@ -231,31 +41,17 @@ export const useField = <
     null,
   );
 
+  const { state, setSelectedSections, clearValue, clearActiveSection, updateSectionValue } =
+    useFieldState(params);
+
   const {
-    internalProps: {
-      value: valueProp,
-      defaultValue,
-      onChange,
-      format = utils.formats.keyboardDate,
-      readOnly = false,
-    },
+    internalProps: { readOnly = false },
     forwardedProps: { onClick, onKeyDown, onFocus, onBlur, ...otherForwardedProps },
-    valueManager,
     fieldValueManager,
     validator,
   } = params;
 
   const focusTimeoutRef = React.useRef<NodeJS.Timeout | undefined>(undefined);
-
-  const { state, setSelectedSections, clearValue, clearActiveSection, updateSectionValue } =
-    useFieldState({
-      valueManager,
-      fieldValueManager,
-      value: valueProp,
-      defaultValue,
-      onChange,
-      format,
-    });
 
   const handleInputClick = useEventCallback((...args) => {
     onClick?.(...(args as []));
@@ -360,10 +156,6 @@ export const useField = <
       case ['ArrowUp', 'ArrowDown', 'Home', 'End', 'PageUp', 'PageDown'].includes(event.key): {
         event.preventDefault();
 
-        if (readOnly) {
-          return;
-        }
-
         updateSectionValue({
           setSectionValueOnDate: ({ date, activeSection }) =>
             adjustDateSectionValue(
@@ -385,10 +177,6 @@ export const useField = <
       // Apply numeric editing on the selected section value
       case !Number.isNaN(Number(event.key)): {
         event.preventDefault();
-
-        if (readOnly) {
-          return;
-        }
 
         const getNewSectionValueStr = ({
           activeSection,
@@ -441,10 +229,6 @@ export const useField = <
       // Apply full letter editing on the selected section value
       case event.key.length === 1: {
         event.preventDefault();
-
-        if (readOnly || state.selectedSectionIndexes == null) {
-          return;
-        }
 
         const getNewSectionValueStr = ({ activeSection }: { activeSection: TSection }): string => {
           // TODO: Do not hardcode the compatible formatValue
