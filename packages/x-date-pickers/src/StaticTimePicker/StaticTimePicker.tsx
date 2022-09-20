@@ -159,6 +159,11 @@ StaticTimePicker.propTypes = {
    */
   disabled: PropTypes.bool,
   /**
+   * If `true` future selection is disabled.
+   * @default false
+   */
+  disableFuture: PropTypes.bool,
+  /**
    * Do not ignore date part when validating min/max time.
    * @default false
    */
@@ -173,6 +178,11 @@ StaticTimePicker.propTypes = {
    * @default false
    */
   disableOpenPicker: PropTypes.bool,
+  /**
+   * If `true` past selection is disabled.
+   * @default false
+   */
+  disablePast: PropTypes.bool,
   /**
    * Force static wrapper inner components to be rendered in mobile or desktop mode.
    * @default 'mobile'

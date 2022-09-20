@@ -164,6 +164,11 @@ DesktopTimePicker.propTypes = {
    */
   disabled: PropTypes.bool,
   /**
+   * If `true` future selection is disabled.
+   * @default false
+   */
+  disableFuture: PropTypes.bool,
+  /**
    * Do not ignore date part when validating min/max time.
    * @default false
    */
@@ -178,6 +183,11 @@ DesktopTimePicker.propTypes = {
    * @default false
    */
   disableOpenPicker: PropTypes.bool,
+  /**
+   * If `true` past selection is disabled.
+   * @default false
+   */
+  disablePast: PropTypes.bool,
   /**
    * Accessible text that helps user to understand which time and view is selected.
    * @template TDate

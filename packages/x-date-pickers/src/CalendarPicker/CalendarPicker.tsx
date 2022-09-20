@@ -570,7 +570,7 @@ CalendarPicker.propTypes = {
    */
   disabled: PropTypes.bool,
   /**
-   * If `true` future days are disabled.
+   * If `true` future selection is disabled.
    * @default false
    */
   disableFuture: PropTypes.bool,
@@ -580,7 +580,7 @@ CalendarPicker.propTypes = {
    */
   disableHighlightToday: PropTypes.bool,
   /**
-   * If `true` past days are disabled.
+   * If `true` past selection is disabled.
    * @default false
    */
   disablePast: PropTypes.bool,
