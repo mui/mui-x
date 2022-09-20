@@ -1,9 +1,4 @@
-import {
-  FieldSection,
-  AvailableAdjustKeyCode,
-  UseFieldState,
-  FieldValueManager,
-} from './useField.interfaces';
+import { FieldSection, AvailableAdjustKeyCode } from './useField.interfaces';
 import { MuiPickerFieldAdapter, MuiDateSectionName } from '../../models';
 
 // TODO: Improve and test with different calendars (move to date-io ?)
@@ -454,39 +449,12 @@ export const applySectionValueToDate = <TDate>({
     },
   };
 
-  if (adapterMethods[dateSectionName]) {
-    const methods = adapterMethods[dateSectionName];
+  const methods = adapterMethods[dateSectionName as keyof typeof adapterMethods];
+  if (methods) {
     return methods.setter(date, getSectionValue(methods.getter));
   }
 
   return date;
-};
-
-export const applyEditedSectionsOnReferenceDate = <TDate, TSection extends FieldSection>({
-  utils,
-  date,
-  referenceActiveDate,
-  activeDateSections,
-}: {
-  utils: MuiPickerFieldAdapter<TDate>;
-  date: TDate;
-  referenceActiveDate: TDate;
-  activeDateSections: TSection[];
-}): TDate => {
-  let newDate = referenceActiveDate;
-
-  activeDateSections.forEach((section) => {
-    if (section.edited) {
-      newDate = applySectionValueToDate({
-        utils,
-        date: newDate,
-        dateSectionName: section.dateSectionName,
-        getSectionValue: (getter) => getter(date),
-      });
-    }
-  });
-
-  return newDate;
 };
 
 export const createDateFromSections = <TDate, TSection extends FieldSection>({
@@ -504,22 +472,6 @@ export const createDateFromSections = <TDate, TSection extends FieldSection>({
 
   const dateFromSectionsStr = createDateStrFromSections(sections);
   return utils.parse(dateFromSectionsStr, format);
-};
-
-export const shouldPublishDate = <TDate>(
-  utils: MuiPickerFieldAdapter<TDate>,
-  date: TDate | null,
-  prevDate: TDate | null,
-) => {
-  if (date == null && prevDate != null) {
-    return true;
-  }
-
-  if (!utils.isValid(date)) {
-    return false;
-  }
-
-  return !utils.isEqual(date, prevDate);
 };
 
 export const cleanTrailingZeroInNumericSectionValue = (value: string, maximum: number) => {

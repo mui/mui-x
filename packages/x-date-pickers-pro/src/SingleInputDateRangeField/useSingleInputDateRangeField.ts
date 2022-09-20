@@ -10,7 +10,6 @@ import {
   addPositionPropertiesToSections,
   createDateStrFromSections,
   createDateFromSections,
-  shouldPublishDate,
 } from '@mui/x-date-pickers/internals-fields';
 import {
   DateRangeFieldSection,
@@ -19,7 +18,7 @@ import {
 } from './SingleInputDateRangeField.interfaces';
 import { dateRangePickerValueManager } from '../DateRangePicker/shared';
 import { DateRange } from '../internal/models';
-import { splitDateRangeSections } from './SingleInputDateRangeField.utils';
+import { splitDateRangeSections, removeLastSeparator } from './SingleInputDateRangeField.utils';
 import {
   DateRangeValidationError,
   isSameDateRangeError,
@@ -81,15 +80,6 @@ export const dateRangeFieldValueManager: FieldValueManager<
     return `${startDateStr}${endDateStr}`;
   },
   getValueFromSections: ({ utils, sections, format }) => {
-    const removeLastSeparator = (dateSections: DateRangeFieldSection[]) =>
-      dateSections.map((section, sectionIndex) => {
-        if (sectionIndex === dateSections.length - 1) {
-          return { ...section, separator: null };
-        }
-
-        return section;
-      });
-
     const dateRangeSections = splitDateRangeSections(sections);
 
     const startDate = createDateFromSections({
@@ -105,34 +95,37 @@ export const dateRangeFieldValueManager: FieldValueManager<
 
     return [startDate, endDate] as DateRange<any>;
   },
-  getActiveDateFromActiveSection: (value, activeSection) => {
-    const updateActiveDate = (dateName: 'start' | 'end') => (newActiveDate: any) => {
-      if (dateName === 'start') {
-        return [newActiveDate, value[1]] as DateRange<any>;
-      }
+  getActiveDateFromActiveSection: ({ state, publishValue, activeSection }) => {
+    const index = activeSection.dateName === 'start' ? 0 : 1;
 
-      return [value[0], newActiveDate] as DateRange<any>;
-    };
+    const updateDateInRange = (date: any, dateRange: DateRange<any>) =>
+      (index === 0 ? [date, dateRange[1]] : [dateRange[0], date]) as DateRange<any>;
 
-    if (activeSection.dateName === 'start') {
-      return {
-        value: value[0],
-        update: updateActiveDate('start'),
-      };
-    }
+    const dateRangeSections = splitDateRangeSections(state.sections);
 
     return {
-      value: value[1],
-      update: updateActiveDate('end'),
+      activeDate: state.value[index],
+      activeDateSections:
+        index === 0 ? removeLastSeparator(dateRangeSections.startDate) : dateRangeSections.endDate,
+      referenceActiveDate: state.referenceValue[index],
+      saveActiveDate: (newActiveDate) => {
+        return publishValue({
+          value: updateDateInRange(newActiveDate, state.value),
+          referenceValue:
+            newActiveDate == null
+              ? state.referenceValue
+              : updateDateInRange(newActiveDate, state.referenceValue),
+        });
+      },
     };
   },
   hasError: (error) => error[0] != null || error[1] != null,
   isSameError: isSameDateRangeError,
 };
 
-export const useDefaultizedDateRangeFieldProps = <TInputDate, TDate, AdditionalProps extends {}>(
-  props: UseSingleInputDateRangeFieldProps<TInputDate, TDate>,
-): UseSingleInputDateRangeFieldDefaultizedProps<TInputDate, TDate> & AdditionalProps => {
+export const useDefaultizedDateRangeFieldProps = <TDate, AdditionalProps extends {}>(
+  props: UseSingleInputDateRangeFieldProps<TDate>,
+): UseSingleInputDateRangeFieldDefaultizedProps<TDate> & AdditionalProps => {
   const utils = useUtils<TDate>();
   const defaultDates = useDefaultDates<TDate>();
 
@@ -146,9 +139,8 @@ export const useDefaultizedDateRangeFieldProps = <TInputDate, TDate, AdditionalP
 };
 
 export const useSingleInputDateRangeField = <
-  TInputDate,
   TDate,
-  TProps extends UseSingleInputDateRangeFieldProps<TInputDate, TDate>,
+  TProps extends UseSingleInputDateRangeFieldProps<TDate>,
 >(
   inProps: TProps,
 ) => {
@@ -165,7 +157,7 @@ export const useSingleInputDateRangeField = <
     disableFuture,
     disablePast,
     ...other
-  } = useDefaultizedDateRangeFieldProps<TInputDate, TDate, TProps>(inProps);
+  } = useDefaultizedDateRangeFieldProps<TDate, TProps>(inProps);
 
   return useField({
     forwardedProps: other,

@@ -11,5 +11,4 @@ export {
   addPositionPropertiesToSections,
   createDateStrFromSections,
   createDateFromSections,
-  shouldPublishDate,
 } from './useField.utils';

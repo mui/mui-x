@@ -7,24 +7,25 @@ import {
   DateRangeValidationProps,
 } from '../internal/hooks/validation/useDateRangeValidation';
 
-export interface UseSingleInputDateRangeFieldProps<TInputDate, TDate>
-  extends UseFieldInternalProps<DateRange<TInputDate>, DateRange<TDate>, DateRangeValidationError>,
-    Partial<Omit<DateRangeValidationProps<TInputDate, TDate>, 'value'>> {}
+export interface UseSingleInputDateRangeFieldProps<TDate>
+  extends UseFieldInternalProps<DateRange<TDate>, DateRangeValidationError>,
+    Partial<Omit<DateRangeValidationProps<TDate, TDate>, 'value'>> {}
 
-export type UseSingleInputDateRangeFieldDefaultizedProps<TInputDate, TDate> = DefaultizedProps<
-  UseSingleInputDateRangeFieldProps<TInputDate, TDate>,
+export type UseSingleInputDateRangeFieldDefaultizedProps<TDate> = DefaultizedProps<
+  UseSingleInputDateRangeFieldProps<TDate>,
   'minDate' | 'maxDate' | 'disableFuture' | 'disablePast'
 >;
 
-export type UseSingleInputDateRangeFieldComponentProps<
-  TInputDate,
-  TDate,
-  ChildProps extends {},
-> = Omit<ChildProps, 'value' | 'defaultValue' | 'onChange' | 'onError'> &
-  UseSingleInputDateRangeFieldProps<TInputDate, TDate>;
+export type UseSingleInputDateRangeFieldComponentProps<TDate, ChildProps extends {}> = Omit<
+  ChildProps,
+  'value' | 'defaultValue' | 'onChange' | 'onError'
+> &
+  UseSingleInputDateRangeFieldProps<TDate>;
 
-export type SingleInputDateRangeFieldProps<TInputDate, TDate> =
-  UseSingleInputDateRangeFieldComponentProps<TInputDate, TDate, TextFieldProps>;
+export type SingleInputDateRangeFieldProps<TDate> = UseSingleInputDateRangeFieldComponentProps<
+  TDate,
+  TextFieldProps
+>;
 
 export interface DateRangeFieldSection extends FieldSection {
   dateName: 'start' | 'end';

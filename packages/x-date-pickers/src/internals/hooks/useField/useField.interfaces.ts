@@ -79,11 +79,6 @@ export interface FieldValueManager<TValue, TDate, TSection extends FieldSection,
     sections: TSection[];
     format: string;
   }) => TValue;
-  isActiveDateValid: (params: {
-    utils: MuiPickerFieldAdapter<TDate>;
-    value: TValue;
-    activeSection: TSection;
-  }) => boolean;
   getActiveDateFromActiveSection: (params: {
     state: UseFieldState<TValue, TSection>;
     activeSection: TSection;

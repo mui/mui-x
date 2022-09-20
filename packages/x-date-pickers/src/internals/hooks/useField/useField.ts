@@ -23,7 +23,6 @@ import {
   adjustInvalidDateSectionValue,
   setSectionValue,
   applySectionValueToDate,
-  applyEditedSectionsOnReferenceDate,
   createDateFromSections,
   cleanTrailingZeroInNumericSectionValue,
 } from './useField.utils';
@@ -151,12 +150,18 @@ const useFieldState = <TValue, TDate, TSection extends FieldSection>({
         partialSection,
       );
       const newDate = createDateFromSections({ utils, format, sections: newSections });
-      if (utils.isValid(newDate)) {
-        const mergedDate = applyEditedSectionsOnReferenceDate({
-          utils,
-          date: newDate,
-          referenceActiveDate,
-          activeDateSections,
+      if (newDate != null && utils.isValid(newDate)) {
+        let mergedDate = referenceActiveDate;
+
+        activeDateSections.forEach((section) => {
+          if (section.edited) {
+            mergedDate = applySectionValueToDate({
+              utils,
+              date: newDate,
+              dateSectionName: section.dateSectionName,
+              getSectionValue: (getter) => getter(newDate),
+            });
+          }
         });
 
         saveActiveDate(mergedDate);
