@@ -9,7 +9,6 @@ import {
   splitFormatIntoSections,
   addPositionPropertiesToSections,
   createDateStrFromSections,
-  createDateFromSections,
 } from '@mui/x-date-pickers/internals-fields';
 import {
   DateRangeFieldSection,
@@ -31,20 +30,23 @@ export const dateRangeFieldValueManager: FieldValueManager<
   DateRangeFieldSection,
   DateRangeValidationError
 > = {
-  getReferenceValue: ({ value, prevValue }) => {
-    if (value[0] == null && value[1] == null) {
-      return prevValue;
+  updateReferenceValue: (utils, value, prevReferenceValue) => {
+    const shouldKeepStartDate = value[0] != null && utils.isValid(value[0]);
+    const shouldKeepEndDate = value[1] != null && utils.isValid(value[1]);
+
+    if (!shouldKeepStartDate && !shouldKeepEndDate) {
+      return prevReferenceValue;
     }
 
-    if (value[0] != null && value[1] != null) {
+    if (shouldKeepStartDate && shouldKeepEndDate) {
       return value;
     }
 
-    if (value[0] != null) {
-      return [value[0], value[0]];
+    if (shouldKeepStartDate) {
+      return [value[0], prevReferenceValue[0]];
     }
 
-    return [value[1], value[1]];
+    return [prevReferenceValue[1], value[1]];
   },
   getSectionsFromValue: (utils, prevSections, [start, end], format) => {
     const prevDateRangeSections =
@@ -94,7 +96,7 @@ export const dateRangeFieldValueManager: FieldValueManager<
 
     return `${startDateStr}${endDateStr}`;
   },
-  getActiveDateSectionsFromActiveSection: ({ activeSection, sections }) => {
+  getActiveDateSections: (sections, activeSection) => {
     const index = activeSection.dateName === 'start' ? 0 : 1;
     const dateRangeSections = splitDateRangeSections(sections);
 
@@ -102,7 +104,7 @@ export const dateRangeFieldValueManager: FieldValueManager<
       ? removeLastSeparator(dateRangeSections.startDate)
       : dateRangeSections.endDate;
   },
-  getActiveDateManager: ({ state, activeSection }) => {
+  getActiveDateManager: (state, activeSection) => {
     const index = activeSection.dateName === 'start' ? 0 : 1;
 
     const updateDateInRange = (date: any, dateRange: DateRange<any>) =>
@@ -118,7 +120,7 @@ export const dateRangeFieldValueManager: FieldValueManager<
             ? state.referenceValue
             : updateDateInRange(newActiveDate, state.referenceValue),
       }),
-      getInvalidValue: () => {
+      setActiveDateAsInvalid: () => {
         if (index === 0) {
           return [null, state.value[1]];
         }

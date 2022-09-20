@@ -328,22 +328,6 @@ export const createDateStrFromSections = (sections: FieldSection[]) =>
     })
     .join('');
 
-export const setSectionValue = <TSection extends FieldSection>(
-  sections: TSection[],
-  sectionIndex: number,
-  newSectionValue: string,
-) => {
-  const newSections = [...sections];
-
-  newSections[sectionIndex] = {
-    ...newSections[sectionIndex],
-    value: newSectionValue,
-    edited: true,
-  };
-
-  return addPositionPropertiesToSections<TSection>(newSections);
-};
-
 export const getMonthsMatchingQuery = <TDate>(
   utils: MuiPickerFieldAdapter<TDate>,
   format: string,

@@ -88,27 +88,87 @@ interface FieldActiveDateManager<TValue, TDate> {
   getNewValueFromNewActiveDate: (
     newActiveDate: TDate | null,
   ) => Pick<UseFieldState<TValue, any>, 'value' | 'referenceValue'>;
-  getInvalidValue: () => TValue;
+  /**
+   * Creates a value with an invalid active date (represented by a `null`) without losing any other date on the range fields.
+   * @template TValue
+   * @returns {TValue} The value containing the invalid date.
+   */
+  setActiveDateAsInvalid: () => TValue;
 }
 
 export interface FieldValueManager<TValue, TDate, TSection extends FieldSection, TError> {
-  getReferenceValue: (params: { value: TValue; prevValue: TValue }) => TValue;
+  /**
+   * Creates the section list from the current value.
+   * The `prevSections` are used on the range fields to avoid losing the sections of a partially filled date when editing the other date.
+   * @template TValue, TDate, TSection
+   * @param {MuiPickersAdapter<TDate>} utils The utils to manipulate the date.
+   * @param {TSection[] | null} prevSections The last section list stored in state.
+   * @param {TValue} value The current value to generate sections from.
+   * @param {string} format The date format.
+   * @returns {TSection[]}  The new section list.
+   */
   getSectionsFromValue: (
     utils: MuiPickerFieldAdapter<TDate>,
     prevSections: TSection[] | null,
     value: TValue,
     format: string,
   ) => TSection[];
+  /**
+   * Creates the string value to render in the input based on the current section list.
+   * @template TSection
+   * @param {TSection[]} sections The current section list.
+   * @returns {string} The string value to render in the input.
+   */
   getValueStrFromSections: (sections: TSection[]) => string;
-  getActiveDateSectionsFromActiveSection: (params: {
-    activeSection: TSection;
-    sections: TSection[];
-  }) => TSection[];
-  getActiveDateManager: (params: {
-    state: UseFieldState<TValue, TSection>;
-    activeSection: TSection;
-  }) => FieldActiveDateManager<TValue, TDate>;
+  /**
+   * Filter the section list to only keep the sections in the same date as the active section.
+   * On a single date field does nothing.
+   * On a range date range, returns the sections of the start date if editing the start date and the end date otherwise.
+   * @template TSection
+   * @param {TSection[]} sections The full section list.
+   * @param {TSection} activeSection The active section.
+   * @returns {TSection[]} The sections in the same date as the active section.
+   */
+  getActiveDateSections: (sections: TSection[], activeSection: TSection) => TSection[];
+  /**
+   * Returns the manager of the active date.
+   * @template TValue, TDate, TSection
+   * @param {UseFieldState<TValue, TSection>} state The current state of the field.
+   * @param {TSection} activeSection The active section.
+   * @returns {FieldActiveDateManager<TValue, TDate>} The manager of the active date.
+   */
+  getActiveDateManager: (
+    state: UseFieldState<TValue, TSection>,
+    activeSection: TSection,
+  ) => FieldActiveDateManager<TValue, TDate>;
+  /**
+   * Update the reference value with the new value.
+   * This method must make sure that no date inside the returned `referenceValue` is invalid.
+   * @template TValue, TDate
+   * @param {MuiPickersAdapter<TDate>} utils The utils to manipulate the date.
+   * @param {TValue} value The new value from which we want to take all valid dates in the `referenceValue` state.
+   * @param {TValue} prevReferenceValue The previous reference value. It is used as a fallback for invalid dates in the new value.
+   * @returns {TValue} The new reference value with no invalid date.
+   */
+  updateReferenceValue: (
+    utils: MuiPickerFieldAdapter<TDate>,
+    value: TValue,
+    prevReferenceValue: TValue,
+  ) => TValue;
+  /**
+   * Checks if the current error is empty or not.
+   * @template TError
+   * @param {TError} error The current error.
+   * @returns {boolean} `true` if the current error is not empty.
+   */
   hasError: (error: TError) => boolean;
+  /**
+   * Compare two errors to know if they are equal.
+   * @template TError
+   * @param {TError} error The new error
+   * @param {TError | null} prevError The previous error
+   * @returns {boolean} `true` if the new error is different from the previous one.
+   */
   isSameError: (error: TError, prevError: TError | null) => boolean;
 }
 

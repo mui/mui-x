@@ -21,10 +21,10 @@ import {
   getSectionVisibleValue,
   adjustDateSectionValue,
   adjustInvalidDateSectionValue,
-  setSectionValue,
   applySectionValueToDate,
   createDateFromSections,
   cleanTrailingZeroInNumericSectionValue,
+  addPositionPropertiesToSections,
 } from './useField.utils';
 
 const useFieldState = <TValue, TDate, TSection extends FieldSection>({
@@ -56,10 +56,11 @@ const useFieldState = <TValue, TDate, TSection extends FieldSection>({
     return {
       sections,
       value: valueParsed,
-      referenceValue: fieldValueManager.getReferenceValue({
-        value: valueParsed,
-        prevValue: valueManager.getTodayValue(utils),
-      }),
+      referenceValue: fieldValueManager.updateReferenceValue(
+        utils,
+        valueParsed,
+        valueManager.getTodayValue(utils),
+      ),
       selectedSectionIndexes: null,
     };
   });
@@ -85,6 +86,18 @@ const useFieldState = <TValue, TDate, TSection extends FieldSection>({
     onChange?.(value);
   };
 
+  const setSectionValue = (sectionIndex: number, newSectionValue: string) => {
+    const newSections = [...state.sections];
+
+    newSections[sectionIndex] = {
+      ...newSections[sectionIndex],
+      value: newSectionValue,
+      edited: true,
+    };
+
+    return addPositionPropertiesToSections<TSection>(newSections);
+  };
+
   const clearValue = () =>
     publishValue({
       value: valueManager.emptyValue,
@@ -97,17 +110,14 @@ const useFieldState = <TValue, TDate, TSection extends FieldSection>({
     }
 
     const activeSection = state.sections[state.selectedSectionIndexes.start];
-    const activeDateManager = fieldValueManager.getActiveDateManager({
-      state,
-      activeSection,
-    });
+    const activeDateManager = fieldValueManager.getActiveDateManager(state, activeSection);
 
-    const newSections = setSectionValue(state.sections, state.selectedSectionIndexes.start, '');
+    const newSections = setSectionValue(state.selectedSectionIndexes.start, '');
 
     return setState((prevState) => ({
       ...prevState,
       sections: newSections,
-      value: activeDateManager.getInvalidValue(),
+      value: activeDateManager.setActiveDateAsInvalid(),
     }));
   };
 
@@ -126,10 +136,7 @@ const useFieldState = <TValue, TDate, TSection extends FieldSection>({
     }
 
     const activeSection = state.sections[state.selectedSectionIndexes.start];
-    const activeDateManager = fieldValueManager.getActiveDateManager({
-      state,
-      activeSection,
-    });
+    const activeDateManager = fieldValueManager.getActiveDateManager(state, activeSection);
 
     if (activeDateManager.activeDate != null && utils.isValid(activeDateManager.activeDate)) {
       const newDate = setSectionValueOnDate({ date: activeDateManager.activeDate, activeSection });
@@ -141,15 +148,8 @@ const useFieldState = <TValue, TDate, TSection extends FieldSection>({
       activeSection,
       referenceActiveDate: activeDateManager.referenceActiveDate,
     });
-    const newSections = setSectionValue(
-      state.sections,
-      state.selectedSectionIndexes.start,
-      newSectionValue,
-    );
-    const activeDateSections = fieldValueManager.getActiveDateSectionsFromActiveSection({
-      activeSection,
-      sections: newSections,
-    });
+    const newSections = setSectionValue(state.selectedSectionIndexes.start, newSectionValue);
+    const activeDateSections = fieldValueManager.getActiveDateSections(newSections, activeSection);
     const newDate = createDateFromSections({ utils, format, sections: activeDateSections });
     if (newDate != null && utils.isValid(newDate)) {
       let mergedDate = activeDateManager.referenceActiveDate;
@@ -171,7 +171,7 @@ const useFieldState = <TValue, TDate, TSection extends FieldSection>({
     return setState((prevState) => ({
       ...prevState,
       sections: newSections,
-      value: activeDateManager.getInvalidValue(),
+      value: activeDateManager.setActiveDateAsInvalid(),
     }));
   };
 
@@ -194,10 +194,11 @@ const useFieldState = <TValue, TDate, TSection extends FieldSection>({
       setState((prevState) => ({
         ...prevState,
         value: valueParsed,
-        referenceValue: fieldValueManager.getReferenceValue({
-          value: valueParsed,
-          prevValue: prevState.referenceValue,
-        }),
+        referenceValue: fieldValueManager.updateReferenceValue(
+          utils,
+          valueParsed,
+          prevState.referenceValue,
+        ),
         sections,
       }));
     }
