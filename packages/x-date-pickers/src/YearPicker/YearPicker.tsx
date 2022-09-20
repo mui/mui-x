@@ -2,8 +2,9 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useTheme, styled, useThemeProps } from '@mui/material/styles';
 import { unstable_composeClasses as composeClasses } from '@mui/material';
-import { useControlled } from '@mui/material/utils';
 import clsx from 'clsx';
+import { useForkRef } from '@mui/material/utils';
+import { unstable_useControlled as useControlled } from '@mui/utils';
 import { PickersYear } from './PickersYear';
 import { useUtils, useNow, useDefaultDates } from '../internals/hooks/useUtils';
 import { NonNullablePickerChangeHandler } from '../internals/hooks/useViews';
@@ -57,7 +58,8 @@ const YearPickerRoot = styled('div', {
   flexWrap: 'wrap',
   overflowY: 'auto',
   height: '100%',
-  margin: '0 4px',
+  padding: '0 4px',
+  maxHeight: '304px',
 });
 
 export interface YearPickerProps<TDate>
@@ -251,8 +253,40 @@ export const YearPicker = React.forwardRef(function YearPicker<TDate>(
 
   const nowYear = utils.getYear(now);
 
+  const scrollerRef = React.useRef<HTMLDivElement>(null);
+  const handleRef = useForkRef(ref, scrollerRef);
+  React.useEffect(() => {
+    if (autoFocus || scrollerRef.current === null) {
+      return;
+    }
+    const tabbableButton = scrollerRef.current.querySelector<HTMLElement>('[tabindex="0"]');
+    if (!tabbableButton) {
+      return;
+    }
+
+    // Taken from useScroll in x-data-grid, but vertically centered
+    const offsetHeight = tabbableButton.offsetHeight;
+    const offsetTop = tabbableButton.offsetTop;
+
+    const clientHeight = scrollerRef.current.clientHeight;
+    const scrollTop = scrollerRef.current.scrollTop;
+
+    const elementBottom = offsetTop + offsetHeight;
+
+    if (offsetHeight > clientHeight || offsetTop < scrollTop) {
+      // Button already visible
+      return;
+    }
+
+    scrollerRef.current.scrollTop = elementBottom - clientHeight / 2 - offsetHeight / 2;
+  }, [autoFocus]);
+
   return (
-    <YearPickerRoot ref={ref} className={clsx(classes.root, className)} ownerState={ownerState}>
+    <YearPickerRoot
+      ref={handleRef}
+      className={clsx(classes.root, className)}
+      ownerState={ownerState}
+    >
       {utils.getYearRange(minDate, maxDate).map((year) => {
         const yearNumber = utils.getYear(year);
         const selected = yearNumber === currentYear;
