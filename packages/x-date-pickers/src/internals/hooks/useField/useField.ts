@@ -124,7 +124,7 @@ const useFieldState = <TValue, TDate, TSection extends FieldSection>({
     }) => string;
   }) => {
     if (state.selectedSectionIndexes == null) {
-      return;
+      return undefined;
     }
 
     const activeSection = state.sections[state.selectedSectionIndexes.start];
@@ -137,38 +137,38 @@ const useFieldState = <TValue, TDate, TSection extends FieldSection>({
 
     if (activeDate != null && utils.isValid(activeDate)) {
       const newDate = setSectionValueOnDate({ date: activeDate, activeSection });
-      saveActiveDate(newDate);
-    } else {
-      // The date is not valid, we have to update the section value rather than date itself.
-      const partialSection = setSectionValueOnSections({
-        activeSection,
-        referenceActiveDate,
-      });
-      const newSections = setSectionValue(
-        state.sections,
-        state.selectedSectionIndexes.start,
-        partialSection,
-      );
-      const newDate = createDateFromSections({ utils, format, sections: newSections });
-      if (newDate != null && utils.isValid(newDate)) {
-        let mergedDate = referenceActiveDate;
-
-        activeDateSections.forEach((section) => {
-          if (section.edited) {
-            mergedDate = applySectionValueToDate({
-              utils,
-              date: newDate,
-              dateSectionName: section.dateSectionName,
-              getSectionValue: (getter) => getter(newDate),
-            });
-          }
-        });
-
-        saveActiveDate(mergedDate);
-      } else {
-        updateSections(newSections);
-      }
+      return saveActiveDate(newDate);
     }
+
+    // The date is not valid, we have to update the section value rather than date itself.
+    const partialSection = setSectionValueOnSections({
+      activeSection,
+      referenceActiveDate,
+    });
+    const newSections = setSectionValue(
+      state.sections,
+      state.selectedSectionIndexes.start,
+      partialSection,
+    );
+    const newDate = createDateFromSections({ utils, format, sections: newSections });
+    if (newDate != null && utils.isValid(newDate)) {
+      let mergedDate = referenceActiveDate;
+
+      activeDateSections.forEach((section) => {
+        if (section.edited) {
+          mergedDate = applySectionValueToDate({
+            utils,
+            date: mergedDate,
+            dateSectionName: section.dateSectionName,
+            getSectionValue: (getter) => getter(newDate),
+          });
+        }
+      });
+
+      return saveActiveDate(mergedDate);
+    }
+
+    return updateSections(newSections);
   };
 
   const setSelectedSections = (start?: number, end?: number) => {
@@ -336,7 +336,11 @@ export const useField = <
           return;
         }
 
-        if (state.selectedSectionIndexes == null) {
+        if (
+          state.selectedSectionIndexes == null ||
+          (state.selectedSectionIndexes.start === 0 &&
+            state.selectedSectionIndexes.end === state.sections.length - 1)
+        ) {
           clearValue();
         } else {
           clearSections(state.selectedSectionIndexes.start, state.selectedSectionIndexes.end);
