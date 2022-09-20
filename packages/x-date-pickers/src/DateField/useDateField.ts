@@ -6,8 +6,7 @@ import {
   splitFormatIntoSections,
   addPositionPropertiesToSections,
   createDateStrFromSections,
-  createDateFromSectionsAndPreviousDate,
-  shouldPublishDate,
+  createDateFromSections,
 } from '../internals/hooks/useField';
 import { UseDateFieldProps, UseDateFieldDefaultizedProps } from './DateField.interfaces';
 import {
@@ -22,25 +21,23 @@ const dateRangeFieldValueManager: FieldValueManager<any, any, FieldSection, Date
   getSectionsFromValue: (utils, prevSections, date, format) =>
     addPositionPropertiesToSections(splitFormatIntoSections(utils, format, date)),
   getValueStrFromSections: (sections) => createDateStrFromSections(sections),
-  getValueFromSections: ({ utils, prevValue, sections, format }) => {
-    const valueParsed = createDateFromSectionsAndPreviousDate({
+  getValueFromSections: ({ utils, sections, format }) =>
+    createDateFromSections({
       utils,
       sections,
       format,
-    });
-
-    return {
-      valueParsed,
-      shouldPublish: shouldPublishDate(utils, valueParsed, prevValue),
-    };
-  },
-  getActiveDateFromActiveSection: ({ value, sections }) => {
-    return {
-      value,
-      sections,
-      update: (newActiveDate) => newActiveDate,
-    };
-  },
+    }),
+  isActiveDateValid: ({ utils, value }) => utils.isValid(value),
+  getActiveDateFromActiveSection: ({ state, publishValue }) => ({
+    activeDate: state.value,
+    activeDateSections: state.sections,
+    referenceActiveDate: state.referenceValue,
+    saveActiveDate: (newActiveDate) =>
+      publishValue({
+        value: newActiveDate,
+        referenceValue: newActiveDate == null ? state.referenceValue : newActiveDate,
+      }),
+  }),
   hasError: (error) => error != null,
   isSameError: isSameDateError,
 };

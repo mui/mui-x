@@ -4,28 +4,27 @@ import { PickerStateValueManager } from '../usePickerState';
 import { InferError, Validator } from '../validation/useValidation';
 
 export interface UseFieldParams<
-  TInputValue,
   TValue,
   TDate,
   TSection extends FieldSection,
   TForwardedProps extends UseFieldForwardedProps,
-  TInternalProps extends UseFieldInternalProps<any, any, any>,
+  TInternalProps extends UseFieldInternalProps<any, any>,
 > {
   forwardedProps: TForwardedProps;
   internalProps: TInternalProps;
-  valueManager: PickerStateValueManager<TInputValue, TValue, TDate>;
+  valueManager: PickerStateValueManager<TValue, TValue, TDate>;
   fieldValueManager: FieldValueManager<TValue, TDate, TSection, InferError<TInternalProps>>;
-  validator: Validator<TDate, UseFieldValidationProps<TInputValue, TInternalProps>>;
+  validator: Validator<TDate, UseFieldValidationProps<TValue, TInternalProps>>;
 }
 
-export interface UseFieldInternalProps<TInputValue, TValue, TError> {
-  value?: TInputValue;
+export interface UseFieldInternalProps<TValue, TError> {
+  value?: TValue;
   onChange?: (value: TValue) => void;
-  onError?: (error: TError, value: TInputValue) => void;
+  onError?: (error: TError, value: TValue) => void;
   /**
    * The default value. Use when the component is not controlled.
    */
-  defaultValue?: TInputValue;
+  defaultValue?: TValue;
   format?: string;
   /**
    * It prevents the user from changing the value of the field
@@ -78,34 +77,40 @@ export interface FieldValueManager<TValue, TDate, TSection extends FieldSection,
   getValueStrFromSections: (sections: TSection[]) => string;
   getValueFromSections: (params: {
     utils: MuiPickerFieldAdapter<TDate>;
-    prevValue: TValue;
     sections: TSection[];
     format: string;
-  }) => { valueParsed: TValue; shouldPublish: boolean };
-  getActiveDateFromActiveSection: (params: {
+  }) => TValue;
+  isActiveDateValid: (params: {
+    utils: MuiPickerFieldAdapter<TDate>;
     value: TValue;
-    sections: TSection[];
     activeSection: TSection;
+  }) => boolean;
+  getActiveDateFromActiveSection: (params: {
+    state: UseFieldState<TValue, TSection>;
+    activeSection: TSection;
+    publishValue: (params: { value: TValue; referenceValue: TValue }) => void;
   }) => {
-    value: TDate | null;
-    sections: TSection[];
-    update: (newActiveDate: TDate | null) => TValue;
+    activeDate: TDate | null;
+    activeDateSections: TSection[];
+    referenceActiveDate: TDate;
+    saveActiveDate: (date: TDate | null) => void;
   };
   hasError: (error: TError) => boolean;
   isSameError: (error: TError, prevError: TError | null) => boolean;
 }
 
-export interface UseFieldState<TValue, TSections> {
+export interface UseFieldState<TValue, TSection extends FieldSection> {
   value: TValue;
   lastPublishedValue: TValue;
-  sections: TSections;
+  referenceValue: TValue;
+  sections: TSection[];
   selectedSectionIndexes: { start: number; end: number } | null;
 }
 
 export type UseFieldValidationProps<
-  TInputValue,
-  TInternalProps extends UseFieldInternalProps<any, any, any>,
-> = Omit<TInternalProps, 'value' | 'defaultValue'> & { value: TInputValue };
+  TValue,
+  TInternalProps extends UseFieldInternalProps<any, any>,
+> = Omit<TInternalProps, 'value' | 'defaultValue'> & { value: TValue };
 
 export type AvailableAdjustKeyCode =
   | 'ArrowUp'

@@ -4,6 +4,7 @@ import useEventCallback from '@mui/utils/useEventCallback';
 import { MuiPickerFieldAdapter } from '../../models/muiPickersAdapter';
 import { useValidation } from '../validation/useValidation';
 import { useUtils } from '../useUtils';
+import { PickerStateValueManager } from '../usePickerState';
 import {
   FieldSection,
   UseFieldParams,
@@ -12,6 +13,7 @@ import {
   UseFieldForwardedProps,
   UseFieldInternalProps,
   AvailableAdjustKeyCode,
+  FieldValueManager,
 } from './useField.interfaces';
 import {
   getMonthsMatchingQuery,
@@ -21,19 +23,193 @@ import {
   adjustInvalidDateSectionValue,
   setSectionValue,
   applySectionValueToDate,
-  createDateStrFromSections,
-  applyEditedSectionsOnLastValidDate,
+  applyEditedSectionsOnReferenceDate,
+  createDateFromSections,
+  cleanTrailingZeroInNumericSectionValue,
 } from './useField.utils';
 
+const useFieldState = <TValue, TDate, TSection extends FieldSection>({
+  fieldValueManager,
+  valueManager,
+  value: valueProp,
+  defaultValue,
+  onChange,
+  format,
+}: {
+  valueManager: PickerStateValueManager<TValue, TValue, TDate>;
+  fieldValueManager: FieldValueManager<TValue, TDate, TSection, any>;
+  defaultValue: TValue | undefined;
+  value: TValue | undefined;
+  onChange?: (value: TValue) => void;
+  format: string;
+}) => {
+  const utils = useUtils<TDate>() as MuiPickerFieldAdapter<TDate>;
+
+  const firstDefaultValue = React.useRef(defaultValue);
+  const valueParsed = React.useMemo(() => {
+    // TODO: Avoid this type casting, the emptyValues are both valid TDate and TInputDate
+    const value = firstDefaultValue.current ?? valueProp ?? valueManager.emptyValue;
+
+    return valueManager.parseInput(utils, value);
+  }, [valueProp, valueManager, utils]);
+
+  const [state, setState] = React.useState<UseFieldState<TValue, TSection>>(() => {
+    const sections = fieldValueManager.getSectionsFromValue(utils, null, valueParsed, format);
+
+    return {
+      sections,
+      value: valueParsed,
+      lastPublishedValue: valueParsed,
+      referenceValue: valueParsed,
+      selectedSectionIndexes: null,
+    };
+  });
+
+  const publishValue = ({ value, referenceValue }: { value: TValue; referenceValue: TValue }) => {
+    const newSections = fieldValueManager.getSectionsFromValue(
+      utils,
+      state.sections,
+      value,
+      format,
+    );
+
+    setState((prevState) => ({
+      ...prevState,
+      sections: newSections,
+      value,
+      lastPublishedValue: value,
+      referenceValue,
+    }));
+
+    onChange?.(value);
+  };
+
+  const updateSections = (sections: TSection[]) => {
+    const value = fieldValueManager.getValueFromSections({
+      utils,
+      sections,
+      format,
+    });
+
+    setState((prevState) => ({
+      ...prevState,
+      sections,
+      value,
+    }));
+  };
+
+  const clearValue = () =>
+    publishValue({
+      value: valueManager.emptyValue,
+      referenceValue: state.referenceValue,
+    });
+
+  const clearSections = (startIndex: number, endIndex: number) => {
+    let sections = state.sections;
+
+    for (let i = startIndex; i <= endIndex; i += 1) {
+      sections = setSectionValue(sections, i, '');
+    }
+
+    updateSections(sections);
+  };
+
+  const updateSectionValue = ({
+    setSectionValueOnDate,
+    setSectionValueOnSections,
+  }: {
+    setSectionValueOnDate: (params: { activeSection: TSection; date: TDate }) => TDate;
+    setSectionValueOnSections: (params: {
+      activeSection: TSection;
+      referenceActiveDate: TDate;
+    }) => string;
+  }) => {
+    if (state.selectedSectionIndexes == null) {
+      return;
+    }
+
+    const activeSection = state.sections[state.selectedSectionIndexes.start];
+    const { activeDateSections, activeDate, referenceActiveDate, saveActiveDate } =
+      fieldValueManager.getActiveDateFromActiveSection({
+        state,
+        activeSection,
+        publishValue,
+      });
+
+    if (activeDate != null && utils.isValid(activeDate)) {
+      const newDate = setSectionValueOnDate({ date: activeDate, activeSection });
+      saveActiveDate(newDate);
+    } else {
+      // The date is not valid, we have to update the section value rather than date itself.
+      const newSectionValue = setSectionValueOnSections({
+        activeSection,
+        referenceActiveDate,
+      });
+      const newSections = setSectionValue(
+        state.sections,
+        state.selectedSectionIndexes.start,
+        newSectionValue,
+      );
+      const newDate = createDateFromSections({ utils, format, sections: newSections });
+      if (utils.isValid(newDate)) {
+        const mergedDate = applyEditedSectionsOnReferenceDate({
+          utils,
+          date: newDate,
+          referenceActiveDate,
+          activeDateSections,
+        });
+
+        saveActiveDate(mergedDate);
+      } else {
+        updateSections(newSections);
+      }
+    }
+  };
+
+  const setSelectedSections = (start?: number, end?: number) => {
+    setState((prevState) => ({
+      ...prevState,
+      selectedSectionIndexes: start == null ? null : { start, end: end ?? start },
+      selectedSectionQuery: null,
+    }));
+  };
+
+  React.useEffect(() => {
+    if (!valueManager.areValuesEqual(utils, state.lastPublishedValue, valueParsed)) {
+      const sections = fieldValueManager.getSectionsFromValue(
+        utils,
+        state.sections,
+        valueParsed,
+        format,
+      );
+      setState((prevState) => ({
+        ...prevState,
+        lastPublishedValue: valueParsed,
+        value: valueParsed,
+        sections,
+      }));
+    }
+  }, [valueParsed]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  return {
+    state,
+    setSelectedSections,
+    publishValue,
+    clearValue,
+    clearSections,
+    updateSections,
+    updateSectionValue,
+  };
+};
+
 export const useField = <
-  TInputValue,
   TValue,
   TDate,
   TSection extends FieldSection,
   TForwardedProps extends UseFieldForwardedProps,
-  TInternalProps extends UseFieldInternalProps<any, any, any>,
+  TInternalProps extends UseFieldInternalProps<any, any>,
 >(
-  params: UseFieldParams<TInputValue, TValue, TDate, TSection, TForwardedProps, TInternalProps>,
+  params: UseFieldParams<TValue, TDate, TSection, TForwardedProps, TInternalProps>,
 ): UseFieldResponse<TForwardedProps> => {
   const utils = useUtils<TDate>() as MuiPickerFieldAdapter<TDate>;
   if (!utils.formatTokenMap) {
@@ -55,75 +231,23 @@ export const useField = <
     validator,
   } = params;
 
-  const firstDefaultValue = React.useRef(defaultValue);
   const focusTimeoutRef = React.useRef<NodeJS.Timeout | undefined>(undefined);
 
-  const valueParsed = React.useMemo(() => {
-    // TODO: Avoid this type casting, the emptyValues are both valid TDate and TInputDate
-    const value =
-      firstDefaultValue.current ?? valueProp ?? (valueManager.emptyValue as unknown as TInputValue);
-
-    return valueManager.parseInput(utils, value);
-  }, [valueProp, valueManager, utils]);
-
-  const [state, setState] = React.useState<UseFieldState<TValue, TSection[]>>(() => {
-    const sections = fieldValueManager.getSectionsFromValue(utils, null, valueParsed, format);
-
-    return {
-      sections,
-      value: valueParsed,
-      lastPublishedValue: valueParsed,
-      selectedSectionIndexes: null,
-    };
+  const {
+    state,
+    setSelectedSections,
+    clearValue,
+    clearSections,
+    updateSections,
+    updateSectionValue,
+  } = useFieldState({
+    valueManager,
+    fieldValueManager,
+    value: valueProp,
+    defaultValue,
+    onChange,
+    format,
   });
-
-  const updateValueAndPublish = (newValue: TValue) => {
-    const newSections = fieldValueManager.getSectionsFromValue(
-      utils,
-      state.sections,
-      newValue,
-      format,
-    );
-
-    setState((prevState) => ({
-      ...prevState,
-      sections: newSections,
-      value: newValue,
-      lastPublishedValue: newValue,
-    }));
-
-    onChange?.(newValue);
-  };
-
-  const updateSections = (sections: TSection[]) => {
-    const response = fieldValueManager.getValueFromSections({
-      utils,
-      sections,
-      format,
-      prevValue: state.lastPublishedValue,
-    });
-
-    setState((prevState) => ({
-      ...prevState,
-      sections,
-      value: response.valueParsed,
-      lastPublishedValue: response.shouldPublish
-        ? response.valueParsed
-        : prevState.lastPublishedValue,
-    }));
-
-    if (onChange && response.shouldPublish) {
-      onChange(response.valueParsed);
-    }
-  };
-
-  const updateSelectedSections = (start?: number, end?: number) => {
-    setState((prevState) => ({
-      ...prevState,
-      selectedSectionIndexes: start == null ? null : { start, end: end ?? start },
-      selectedSectionQuery: null,
-    }));
-  };
 
   const handleInputClick = useEventCallback((...args) => {
     onClick?.(...(args as []));
@@ -137,7 +261,7 @@ export const useField = <
     );
     const sectionIndex = nextSectionIndex === -1 ? state.sections.length - 1 : nextSectionIndex - 1;
 
-    updateSelectedSections(sectionIndex);
+    setSelectedSections(sectionIndex);
   });
 
   const handleInputFocus = useEventCallback((...args) => {
@@ -146,14 +270,14 @@ export const useField = <
       if ((inputRef.current?.selectionEnd ?? 0) - (inputRef.current?.selectionStart ?? 0) === 0) {
         handleInputClick();
       } else {
-        updateSelectedSections(0, state.sections.length - 1);
+        setSelectedSections(0, state.sections.length - 1);
       }
     });
   });
 
   const handleInputBlur = useEventCallback((...args) => {
     onBlur?.(...(args as []));
-    updateSelectedSections();
+    setSelectedSections();
   });
 
   const handleInputKeyDown = useEventCallback((event: React.KeyboardEvent) => {
@@ -167,7 +291,7 @@ export const useField = <
       // Select all
       case event.key === 'a' && (event.ctrlKey || event.metaKey): {
         event.preventDefault();
-        updateSelectedSections(0, state.sections.length - 1);
+        setSelectedSections(0, state.sections.length - 1);
         return;
       }
 
@@ -176,11 +300,11 @@ export const useField = <
         event.preventDefault();
 
         if (state.selectedSectionIndexes == null) {
-          updateSelectedSections(0);
+          setSelectedSections(0);
         } else if (state.selectedSectionIndexes.start < state.sections.length - 1) {
-          updateSelectedSections(state.selectedSectionIndexes.start + 1);
+          setSelectedSections(state.selectedSectionIndexes.start + 1);
         } else if (state.selectedSectionIndexes.start !== state.selectedSectionIndexes.end) {
-          updateSelectedSections(state.selectedSectionIndexes.end);
+          setSelectedSections(state.selectedSectionIndexes.end);
         }
 
         return;
@@ -191,11 +315,11 @@ export const useField = <
         event.preventDefault();
 
         if (state.selectedSectionIndexes == null) {
-          updateSelectedSections(state.sections.length - 1);
+          setSelectedSections(state.sections.length - 1);
         } else if (state.selectedSectionIndexes.start !== state.selectedSectionIndexes.end) {
-          updateSelectedSections(state.selectedSectionIndexes.start);
+          setSelectedSections(state.selectedSectionIndexes.start);
         } else if (state.selectedSectionIndexes.start > 0) {
-          updateSelectedSections(state.selectedSectionIndexes.start - 1);
+          setSelectedSections(state.selectedSectionIndexes.start - 1);
         }
         return;
       }
@@ -208,22 +332,10 @@ export const useField = <
           return;
         }
 
-        const resetSections = (startIndex: number, endIndex: number) => {
-          let sections = state.sections;
-
-          for (let i = startIndex; i <= endIndex; i += 1) {
-            sections = setSectionValue(sections, i, '');
-          }
-
-          return sections;
-        };
-
         if (state.selectedSectionIndexes == null) {
-          updateSections(resetSections(0, state.sections.length));
+          clearValue();
         } else {
-          updateSections(
-            resetSections(state.selectedSectionIndexes.start, state.selectedSectionIndexes.end),
-          );
+          clearSections(state.selectedSectionIndexes.start, state.selectedSectionIndexes.end);
         }
         break;
       }
@@ -232,62 +344,25 @@ export const useField = <
       case ['ArrowUp', 'ArrowDown', 'Home', 'End', 'PageUp', 'PageDown'].includes(event.key): {
         event.preventDefault();
 
-        if (readOnly || state.selectedSectionIndexes == null) {
+        if (readOnly) {
           return;
         }
 
-        const activeSection = state.sections[state.selectedSectionIndexes.start];
-        const activeDate = fieldValueManager.getActiveDateFromActiveSection({
-          activeSection,
-          sections: state.sections,
-          value: state.value,
-        });
-
-        // The date is not valid, we have to increment the section value rather than the date
-        if (!utils.isValid(activeDate.value)) {
-          const newSectionValue = adjustInvalidDateSectionValue(
-            utils,
-            activeSection,
-            event.key as AvailableAdjustKeyCode,
-          );
-          const newSections = setSectionValue(
-            state.sections,
-            state.selectedSectionIndexes.start,
-            newSectionValue,
-          );
-          const newDateStr = createDateStrFromSections(newSections);
-          const newDate = utils.parse(newDateStr, format);
-          if (utils.isValid(newDate)) {
-            const activeDateOnLastPublishedValue = fieldValueManager.getActiveDateFromActiveSection(
-              {
-                activeSection,
-                sections: state.sections,
-                value: state.lastPublishedValue,
-              },
-            );
-            const mergedDate = applyEditedSectionsOnLastValidDate({
+        updateSectionValue({
+          setSectionValueOnDate: ({ date, activeSection }) =>
+            adjustDateSectionValue(
               utils,
-              date: newDate,
-              lastPublishedDate: activeDateOnLastPublishedValue.value,
-              sections: activeDateOnLastPublishedValue.sections,
-            });
-
-            // TODO: Probably does not work on range input
-            updateValueAndPublish(activeDateOnLastPublishedValue.update(mergedDate));
-          } else {
-            updateSections(newSections);
-          }
-        } else {
-          const newDate = adjustDateSectionValue(
-            utils,
-            activeDate.value,
-            activeSection.dateSectionName,
-            event.key as AvailableAdjustKeyCode,
-          );
-          const newValue = activeDate.update(newDate);
-          updateValueAndPublish(newValue);
-        }
-
+              date,
+              activeSection.dateSectionName,
+              event.key as AvailableAdjustKeyCode,
+            ),
+          setSectionValueOnSections: ({ activeSection }) =>
+            adjustInvalidDateSectionValue(
+              utils,
+              activeSection,
+              event.key as AvailableAdjustKeyCode,
+            ),
+        });
         return;
       }
 
@@ -295,36 +370,51 @@ export const useField = <
       case !Number.isNaN(Number(event.key)): {
         event.preventDefault();
 
-        if (readOnly || state.selectedSectionIndexes == null) {
+        if (readOnly) {
           return;
         }
 
-        const activeSection = state.sections[state.selectedSectionIndexes.start];
-        const activeDateOnLastPublishedValue = fieldValueManager.getActiveDateFromActiveSection({
+        const getSectionValueStr = ({
           activeSection,
-          sections: state.sections,
-          value: state.lastPublishedValue,
-        });
-        const boundaries = getSectionValueNumericBoundaries(
-          utils,
-          activeDateOnLastPublishedValue.value ?? utils.date()!,
-          activeSection.dateSectionName,
-        );
+          date,
+          fixedWidth,
+        }: {
+          activeSection: TSection;
+          date: TDate;
+          fixedWidth: boolean;
+        }) => {
+          const boundaries = getSectionValueNumericBoundaries(
+            utils,
+            date,
+            activeSection.dateSectionName,
+          );
 
-        const concatenatedSectionValue = `${activeSection.value}${event.key}`;
-        const newSectionValue =
-          Number(concatenatedSectionValue) > boundaries.maximum
-            ? event.key
-            : concatenatedSectionValue;
+          const concatenatedSectionValue = `${activeSection.value}${event.key}`;
+          const newSectionValue =
+            Number(concatenatedSectionValue) > boundaries.maximum
+              ? event.key
+              : concatenatedSectionValue;
 
-        const newDate = applySectionValueToDate({
-          utils,
-          dateSectionName: activeSection.dateSectionName,
-          date: activeDateOnLastPublishedValue.value,
-          getSectionValue: () => Number(newSectionValue),
+          if (fixedWidth) {
+            cleanTrailingZeroInNumericSectionValue(newSectionValue, boundaries.maximum);
+          }
+
+          return newSectionValue;
+        };
+
+        updateSectionValue({
+          setSectionValueOnDate: ({ date, activeSection }) =>
+            applySectionValueToDate({
+              utils,
+              dateSectionName: activeSection.dateSectionName,
+              date,
+              getSectionValue: () =>
+                Number(getSectionValueStr({ activeSection, date, fixedWidth: false })),
+            }),
+          setSectionValueOnSections: ({ referenceActiveDate, activeSection }) =>
+            getSectionValueStr({ activeSection, date: referenceActiveDate, fixedWidth: true }),
         });
-        const newValue = activeDateOnLastPublishedValue.update(newDate);
-        updateValueAndPublish(newValue);
+
         return;
       }
 
@@ -402,26 +492,8 @@ export const useField = <
     );
   });
 
-  React.useEffect(() => {
-    if (!valueManager.areValuesEqual(utils, state.lastPublishedValue, valueParsed)) {
-      const sections = fieldValueManager.getSectionsFromValue(
-        utils,
-        state.sections,
-        valueParsed,
-        format,
-      );
-      setState((prevState) => ({
-        ...prevState,
-        lastPublishedValue: valueParsed,
-        value: valueParsed,
-        sections,
-      }));
-    }
-  }, [valueParsed]); // eslint-disable-line react-hooks/exhaustive-deps
-
-  // TODO: Make validation work with TDate instead of TInputDate
   const validationError = useValidation(
-    { ...params.internalProps, value: state.value as unknown as TInputValue },
+    { ...params.internalProps, value: state.value },
     validator,
     fieldValueManager.isSameError,
   );

@@ -5,7 +5,7 @@ export {
   createDateStrFromSections,
   addPositionPropertiesToSections,
   splitFormatIntoSections,
-  createDateFromSectionsAndPreviousDate,
+  createDateFromSections,
   shouldPublishDate,
 } from '../internals/hooks/useField';
 export type {

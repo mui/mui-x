@@ -9,7 +9,7 @@ import {
   splitFormatIntoSections,
   addPositionPropertiesToSections,
   createDateStrFromSections,
-  createDateFromSectionsAndPreviousDate,
+  createDateFromSections,
   shouldPublishDate,
 } from '@mui/x-date-pickers/internals-fields';
 import {
@@ -80,7 +80,7 @@ export const dateRangeFieldValueManager: FieldValueManager<
 
     return `${startDateStr}${endDateStr}`;
   },
-  getValueFromSections: ({ utils, prevValue, sections, format }) => {
+  getValueFromSections: ({ utils, sections, format }) => {
     const removeLastSeparator = (dateSections: DateRangeFieldSection[]) =>
       dateSections.map((section, sectionIndex) => {
         if (sectionIndex === dateSections.length - 1) {
@@ -92,23 +92,18 @@ export const dateRangeFieldValueManager: FieldValueManager<
 
     const dateRangeSections = splitDateRangeSections(sections);
 
-    const startDate = createDateFromSectionsAndPreviousDate({
+    const startDate = createDateFromSections({
       utils,
       sections: removeLastSeparator(dateRangeSections.startDate),
       format,
     });
-    const endDate = createDateFromSectionsAndPreviousDate({
+    const endDate = createDateFromSections({
       utils,
       sections: dateRangeSections.endDate,
       format,
     });
 
-    return {
-      valueParsed: [startDate, endDate] as DateRange<any>,
-      shouldPublish:
-        shouldPublishDate(utils, startDate, prevValue[0]) ||
-        shouldPublishDate(utils, endDate, prevValue[1]),
-    };
+    return [startDate, endDate] as DateRange<any>;
   },
   getActiveDateFromActiveSection: (value, activeSection) => {
     const updateActiveDate = (dateName: 'start' | 'end') => (newActiveDate: any) => {

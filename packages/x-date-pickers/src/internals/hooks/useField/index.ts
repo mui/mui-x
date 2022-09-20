@@ -10,6 +10,6 @@ export {
   splitFormatIntoSections,
   addPositionPropertiesToSections,
   createDateStrFromSections,
-  createDateFromSectionsAndPreviousDate,
+  createDateFromSections,
   shouldPublishDate,
 } from './useField.utils';

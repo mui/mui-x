@@ -1,4 +1,9 @@
-import { FieldSection, AvailableAdjustKeyCode } from './useField.interfaces';
+import {
+  FieldSection,
+  AvailableAdjustKeyCode,
+  UseFieldState,
+  FieldValueManager,
+} from './useField.interfaces';
 import { MuiPickerFieldAdapter, MuiDateSectionName } from '../../models';
 
 // TODO: Improve and test with different calendars (move to date-io ?)
@@ -35,7 +40,7 @@ export const adjustDateSectionValue = <TDate>(
   date: TDate,
   dateSectionName: MuiDateSectionName,
   keyCode: AvailableAdjustKeyCode,
-) => {
+): TDate => {
   const delta = getDeltaFromKeyCode(keyCode);
   const isStart = keyCode === 'Home';
   const isEnd = keyCode === 'End';
@@ -102,7 +107,7 @@ export const adjustInvalidDateSectionValue = <TDate, TSection extends FieldSecti
   utils: MuiPickerFieldAdapter<TDate>,
   section: TSection,
   keyCode: AvailableAdjustKeyCode,
-) => {
+): string => {
   const today = utils.date()!;
   const delta = getDeltaFromKeyCode(keyCode);
   const isStart = keyCode === 'Home';
@@ -458,31 +463,26 @@ export const applySectionValueToDate = <TDate>({
 
   if (adapterMethods[dateSectionName]) {
     const methods = adapterMethods[dateSectionName];
-
     return methods.setter(date, getSectionValue(methods.getter));
   }
 
   return date;
 };
 
-export const applyEditedSectionsOnLastValidDate = <TDate, TSection extends FieldSection>({
+export const applyEditedSectionsOnReferenceDate = <TDate, TSection extends FieldSection>({
   utils,
   date,
-  lastPublishedDate,
-  sections,
+  referenceActiveDate,
+  activeDateSections,
 }: {
   utils: MuiPickerFieldAdapter<TDate>;
   date: TDate;
-  lastPublishedDate: TDate | null;
-  sections: TSection[];
+  referenceActiveDate: TDate;
+  activeDateSections: TSection[];
 }): TDate => {
-  if (lastPublishedDate == null) {
-    return date;
-  }
+  let newDate = referenceActiveDate;
 
-  let newDate = lastPublishedDate;
-
-  sections.forEach((section) => {
+  activeDateSections.forEach((section) => {
     if (section.edited) {
       newDate = applySectionValueToDate({
         utils,
@@ -496,7 +496,7 @@ export const applyEditedSectionsOnLastValidDate = <TDate, TSection extends Field
   return newDate;
 };
 
-export const createDateFromSectionsAndPreviousDate = <TDate, TSection extends FieldSection>({
+export const createDateFromSections = <TDate, TSection extends FieldSection>({
   utils,
   sections,
   format,
@@ -527,4 +527,19 @@ export const shouldPublishDate = <TDate>(
   }
 
   return !utils.isEqual(date, prevDate);
+};
+
+export const cleanTrailingZeroInNumericSectionValue = (value: string, maximum: number) => {
+  const maximumStr = maximum.toString();
+  let cleanValue = value;
+
+  // We remove the trailing zeros
+  cleanValue = Number(cleanValue).toString();
+
+  // We add enough trailing zeros to fill the section
+  while (cleanValue.length < maximumStr.length) {
+    cleanValue = `0${cleanValue}`;
+  }
+
+  return cleanValue;
 };
