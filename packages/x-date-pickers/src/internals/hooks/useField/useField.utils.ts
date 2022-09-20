@@ -285,6 +285,7 @@ export const splitFormatIntoSections = <TDate>(
             dateSectionName,
             separator: char,
             query: null,
+            edited: false,
           });
           currentTokenValue = '';
         }
@@ -307,6 +308,7 @@ export const splitFormatIntoSections = <TDate>(
           dateSectionName,
           separator: null,
           query: null,
+          edited: false,
         });
       }
     }
@@ -335,7 +337,11 @@ export const setSectionValue = <TSection extends FieldSection>(
   sectionNewQuery?: string | null,
 ) => {
   const newSections = [...sections];
-  const modifiedSection = { ...newSections[sectionIndex], value: sectionNewValue };
+  const modifiedSection: TSection = {
+    ...newSections[sectionIndex],
+    value: sectionNewValue,
+    edited: true,
+  };
   if (sectionNewQuery !== undefined) {
     modifiedSection.query = sectionNewQuery;
   }
@@ -384,6 +390,7 @@ export const getSectionValueNumericBoundaries = <TDate>(
         maximum: 9999,
       };
 
+    // TODO: Limit to 11 when using AM-PM
     case 'hour': {
       return {
         minimum: 0,
@@ -414,43 +421,17 @@ export const getSectionValueNumericBoundaries = <TDate>(
   }
 };
 
-export const cleanTrailingZeroInNumericSectionValue = (value: string, maximum: number) => {
-  const maximumStr = maximum.toString();
-  let cleanValue = value;
-
-  // We remove the trailing zeros
-  cleanValue = Number(cleanValue).toString();
-
-  // We add enough trailing zeros to fill the section
-  while (cleanValue.length < maximumStr.length) {
-    cleanValue = `0${cleanValue}`;
-  }
-
-  return cleanValue;
-};
-
-export const createDateFromSectionsAndPreviousDate = <TDate, TSection extends FieldSection>({
+export const applySectionValueToDate = <TDate>({
   utils,
-  sections,
-  prevDate,
-  format,
+  dateSectionName,
+  date,
+  getSectionValue,
 }: {
   utils: MuiPickerFieldAdapter<TDate>;
-  sections: TSection[];
-  prevDate: TDate;
-  format: string;
+  dateSectionName: MuiDateSectionName;
+  date: TDate;
+  getSectionValue: (getter: (date: TDate) => number) => number;
 }) => {
-  if (sections.every((section) => section.value === '')) {
-    return null;
-  }
-
-  const newDateStr = createDateStrFromSections(sections);
-  let newDate = utils.parse(newDateStr, format);
-
-  if (newDate == null || !utils.isValid(newDate) || prevDate == null || !utils.isValid(prevDate)) {
-    return newDate;
-  }
-
   // TODO: Add day/date when setDate and getDate are released.
   const adapterMethods = {
     second: {
@@ -475,15 +456,61 @@ export const createDateFromSectionsAndPreviousDate = <TDate, TSection extends Fi
     },
   };
 
-  Object.keys(adapterMethods).forEach((dateSectionName) => {
-    const hasSection = sections.some((section) => section.dateSectionName === dateSectionName);
-    if (!hasSection) {
-      const dateSectionMethods = adapterMethods[dateSectionName as keyof typeof adapterMethods];
-      newDate = dateSectionMethods.setter(newDate!, dateSectionMethods.getter(prevDate));
+  if (adapterMethods[dateSectionName]) {
+    const methods = adapterMethods[dateSectionName];
+
+    return methods.setter(date, getSectionValue(methods.getter));
+  }
+
+  return date;
+};
+
+export const applyEditedSectionsOnLastValidDate = <TDate, TSection extends FieldSection>({
+  utils,
+  date,
+  lastPublishedDate,
+  sections,
+}: {
+  utils: MuiPickerFieldAdapter<TDate>;
+  date: TDate;
+  lastPublishedDate: TDate | null;
+  sections: TSection[];
+}): TDate => {
+  if (lastPublishedDate == null) {
+    return date;
+  }
+
+  let newDate = lastPublishedDate;
+
+  sections.forEach((section) => {
+    if (section.edited) {
+      newDate = applySectionValueToDate({
+        utils,
+        date: newDate,
+        dateSectionName: section.dateSectionName,
+        getSectionValue: (getter) => getter(date),
+      });
     }
   });
 
   return newDate;
+};
+
+export const createDateFromSectionsAndPreviousDate = <TDate, TSection extends FieldSection>({
+  utils,
+  sections,
+  format,
+}: {
+  utils: MuiPickerFieldAdapter<TDate>;
+  sections: TSection[];
+  format: string;
+}) => {
+  if (sections.every((section) => section.value === '')) {
+    return null;
+  }
+
+  const dateFromSectionsStr = createDateStrFromSections(sections);
+  return utils.parse(dateFromSectionsStr, format);
 };
 
 export const shouldPublishDate = <TDate>(

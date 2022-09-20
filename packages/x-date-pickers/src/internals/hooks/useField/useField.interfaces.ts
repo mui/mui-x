@@ -65,6 +65,7 @@ export interface FieldSection {
   dateSectionName: MuiDateSectionName;
   formatValue: string;
   query: string | null;
+  edited: boolean;
 }
 
 export interface FieldValueManager<TValue, TDate, TSection extends FieldSection, TError> {
@@ -81,16 +82,22 @@ export interface FieldValueManager<TValue, TDate, TSection extends FieldSection,
     sections: TSection[];
     format: string;
   }) => { valueParsed: TValue; shouldPublish: boolean };
-  getActiveDateFromActiveSection: (
-    value: TValue,
-    activeSection: TSection,
-  ) => { value: TDate | null; update: (newActiveDate: TDate | null) => TValue };
+  getActiveDateFromActiveSection: (params: {
+    value: TValue;
+    sections: TSection[];
+    activeSection: TSection;
+  }) => {
+    value: TDate | null;
+    sections: TSection[];
+    update: (newActiveDate: TDate | null) => TValue;
+  };
   hasError: (error: TError) => boolean;
   isSameError: (error: TError, prevError: TError | null) => boolean;
 }
 
 export interface UseFieldState<TValue, TSections> {
-  valueParsed: TValue;
+  value: TValue;
+  lastPublishedValue: TValue;
   sections: TSections;
   selectedSectionIndexes: { start: number; end: number } | null;
 }

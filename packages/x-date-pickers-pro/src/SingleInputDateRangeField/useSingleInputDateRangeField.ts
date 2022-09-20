@@ -94,13 +94,11 @@ export const dateRangeFieldValueManager: FieldValueManager<
 
     const startDate = createDateFromSectionsAndPreviousDate({
       utils,
-      prevDate: prevValue[0],
       sections: removeLastSeparator(dateRangeSections.startDate),
       format,
     });
     const endDate = createDateFromSectionsAndPreviousDate({
       utils,
-      prevDate: prevValue[1],
       sections: dateRangeSections.endDate,
       format,
     });

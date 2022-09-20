@@ -14,13 +14,15 @@ import {
   AvailableAdjustKeyCode,
 } from './useField.interfaces';
 import {
-  cleanTrailingZeroInNumericSectionValue,
   getMonthsMatchingQuery,
   getSectionValueNumericBoundaries,
   getSectionVisibleValue,
   adjustDateSectionValue,
   adjustInvalidDateSectionValue,
   setSectionValue,
+  applySectionValueToDate,
+  createDateStrFromSections,
+  applyEditedSectionsOnLastValidDate,
 } from './useField.utils';
 
 export const useField = <
@@ -69,23 +71,45 @@ export const useField = <
 
     return {
       sections,
-      valueParsed,
+      value: valueParsed,
+      lastPublishedValue: valueParsed,
       selectedSectionIndexes: null,
     };
   });
+
+  const updateValueAndPublish = (newValue: TValue) => {
+    const newSections = fieldValueManager.getSectionsFromValue(
+      utils,
+      state.sections,
+      newValue,
+      format,
+    );
+
+    setState((prevState) => ({
+      ...prevState,
+      sections: newSections,
+      value: newValue,
+      lastPublishedValue: newValue,
+    }));
+
+    onChange?.(newValue);
+  };
 
   const updateSections = (sections: TSection[]) => {
     const response = fieldValueManager.getValueFromSections({
       utils,
       sections,
       format,
-      prevValue: state.valueParsed,
+      prevValue: state.lastPublishedValue,
     });
 
     setState((prevState) => ({
       ...prevState,
       sections,
-      valueParsed: response.valueParsed,
+      value: response.valueParsed,
+      lastPublishedValue: response.shouldPublish
+        ? response.valueParsed
+        : prevState.lastPublishedValue,
     }));
 
     if (onChange && response.shouldPublish) {
@@ -213,10 +237,11 @@ export const useField = <
         }
 
         const activeSection = state.sections[state.selectedSectionIndexes.start];
-        const activeDate = fieldValueManager.getActiveDateFromActiveSection(
-          state.valueParsed,
+        const activeDate = fieldValueManager.getActiveDateFromActiveSection({
           activeSection,
-        );
+          sections: state.sections,
+          value: state.value,
+        });
 
         // The date is not valid, we have to increment the section value rather than the date
         if (!utils.isValid(activeDate.value)) {
@@ -225,10 +250,33 @@ export const useField = <
             activeSection,
             event.key as AvailableAdjustKeyCode,
           );
-
-          updateSections(
-            setSectionValue(state.sections, state.selectedSectionIndexes.start, newSectionValue),
+          const newSections = setSectionValue(
+            state.sections,
+            state.selectedSectionIndexes.start,
+            newSectionValue,
           );
+          const newDateStr = createDateStrFromSections(newSections);
+          const newDate = utils.parse(newDateStr, format);
+          if (utils.isValid(newDate)) {
+            const activeDateOnLastPublishedValue = fieldValueManager.getActiveDateFromActiveSection(
+              {
+                activeSection,
+                sections: state.sections,
+                value: state.lastPublishedValue,
+              },
+            );
+            const mergedDate = applyEditedSectionsOnLastValidDate({
+              utils,
+              date: newDate,
+              lastPublishedDate: activeDateOnLastPublishedValue.value,
+              sections: activeDateOnLastPublishedValue.sections,
+            });
+
+            // TODO: Probably does not work on range input
+            updateValueAndPublish(activeDateOnLastPublishedValue.update(mergedDate));
+          } else {
+            updateSections(newSections);
+          }
         } else {
           const newDate = adjustDateSectionValue(
             utils,
@@ -236,16 +284,8 @@ export const useField = <
             activeSection.dateSectionName,
             event.key as AvailableAdjustKeyCode,
           );
-
           const newValue = activeDate.update(newDate);
-          const sections = fieldValueManager.getSectionsFromValue(
-            utils,
-            state.sections,
-            newValue,
-            format,
-          );
-
-          updateSections(sections);
+          updateValueAndPublish(newValue);
         }
 
         return;
@@ -260,14 +300,14 @@ export const useField = <
         }
 
         const activeSection = state.sections[state.selectedSectionIndexes.start];
-        const activeDate = fieldValueManager.getActiveDateFromActiveSection(
-          state.valueParsed,
+        const activeDateOnLastPublishedValue = fieldValueManager.getActiveDateFromActiveSection({
           activeSection,
-        );
-
+          sections: state.sections,
+          value: state.lastPublishedValue,
+        });
         const boundaries = getSectionValueNumericBoundaries(
           utils,
-          activeDate.value ?? utils.date()!,
+          activeDateOnLastPublishedValue.value ?? utils.date()!,
           activeSection.dateSectionName,
         );
 
@@ -277,13 +317,14 @@ export const useField = <
             ? event.key
             : concatenatedSectionValue;
 
-        updateSections(
-          setSectionValue(
-            state.sections,
-            state.selectedSectionIndexes.start,
-            cleanTrailingZeroInNumericSectionValue(newSectionValue, boundaries.maximum),
-          ),
-        );
+        const newDate = applySectionValueToDate({
+          utils,
+          dateSectionName: activeSection.dateSectionName,
+          date: activeDateOnLastPublishedValue.value,
+          getSectionValue: () => Number(newSectionValue),
+        });
+        const newValue = activeDateOnLastPublishedValue.update(newDate);
+        updateValueAndPublish(newValue);
         return;
       }
 
@@ -362,7 +403,7 @@ export const useField = <
   });
 
   React.useEffect(() => {
-    if (!valueManager.areValuesEqual(utils, state.valueParsed, valueParsed)) {
+    if (!valueManager.areValuesEqual(utils, state.lastPublishedValue, valueParsed)) {
       const sections = fieldValueManager.getSectionsFromValue(
         utils,
         state.sections,
@@ -371,7 +412,8 @@ export const useField = <
       );
       setState((prevState) => ({
         ...prevState,
-        valueParsed,
+        lastPublishedValue: valueParsed,
+        value: valueParsed,
         sections,
       }));
     }
@@ -379,7 +421,7 @@ export const useField = <
 
   // TODO: Make validation work with TDate instead of TInputDate
   const validationError = useValidation(
-    { ...params.internalProps, value: state.valueParsed as unknown as TInputValue },
+    { ...params.internalProps, value: state.value as unknown as TInputValue },
     validator,
     fieldValueManager.isSameError,
   );

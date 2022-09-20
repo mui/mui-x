@@ -27,7 +27,6 @@ const dateRangeFieldValueManager: FieldValueManager<any, any, FieldSection, Date
       utils,
       sections,
       format,
-      prevDate: prevValue,
     });
 
     return {
@@ -35,10 +34,13 @@ const dateRangeFieldValueManager: FieldValueManager<any, any, FieldSection, Date
       shouldPublish: shouldPublishDate(utils, valueParsed, prevValue),
     };
   },
-  getActiveDateFromActiveSection: (value) => ({
-    value,
-    update: (newActiveDate) => newActiveDate,
-  }),
+  getActiveDateFromActiveSection: ({ value, sections }) => {
+    return {
+      value,
+      sections,
+      update: (newActiveDate) => newActiveDate,
+    };
+  },
   hasError: (error) => error != null,
   isSameError: isSameDateError,
 };
