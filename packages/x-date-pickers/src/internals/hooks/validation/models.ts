@@ -4,13 +4,11 @@
 export interface BaseDateValidationProps<TDate> {
   /**
    * If `true` past selection is disabled.
-   * In case of `Date time pickers` also disables past time.
    * @default false
    */
   disablePast?: boolean;
   /**
    * If `true` future selection is disabled.
-   * In case of `Date time pickers` also disables future time.
    * @default false
    */
   disableFuture?: boolean;
