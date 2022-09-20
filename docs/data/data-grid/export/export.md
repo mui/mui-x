@@ -212,7 +212,7 @@ In order for the Print export to work as expected set `X-Frame-Options: SAMEORIG
 ## Custom export format
 
 You can add custom export formats by creating your own export menu.
-To simplify its creation, we export `<GridToolbarExportContainer />` which contains the menu logic.
+To simplify its creation, you can use `<GridToolbarExportContainer />` which contains the menu logic.
 The default `<GridToolbarExport />` is defined as follow:
 
 ```jsx
