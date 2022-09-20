@@ -289,7 +289,6 @@ export const splitFormatIntoSections = <TDate>(
             emptyValue: dateSectionName,
             dateSectionName,
             separator: char,
-            query: null,
             edited: false,
           });
           currentTokenValue = '';
@@ -312,7 +311,6 @@ export const splitFormatIntoSections = <TDate>(
           emptyValue: dateSectionName,
           dateSectionName,
           separator: null,
-          query: null,
           edited: false,
         });
       }
@@ -335,24 +333,18 @@ export const createDateStrFromSections = (sections: FieldSection[]) =>
     })
     .join('');
 
-export interface FieldPartialSection { value: string, query?: string | null }
-
 export const setSectionValue = <TSection extends FieldSection>(
   sections: TSection[],
   sectionIndex: number,
-  partialSection: FieldPartialSection
+  newSectionValue: string,
 ) => {
   const newSections = [...sections];
-  const modifiedSection: TSection = {
+
+  newSections[sectionIndex] = {
     ...newSections[sectionIndex],
-    value: partialSection.value,
+    value: newSectionValue,
     edited: true,
   };
-  if (partialSection.query !== undefined) {
-    modifiedSection.query = partialSection.query;
-  }
-
-  newSections[sectionIndex] = modifiedSection;
 
   return addPositionPropertiesToSections<TSection>(newSections);
 };

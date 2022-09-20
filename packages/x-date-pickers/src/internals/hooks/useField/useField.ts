@@ -1,7 +1,7 @@
 import * as React from 'react';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import useEventCallback from '@mui/utils/useEventCallback';
-import { MuiPickerFieldAdapter } from '../../models/muiPickersAdapter';
+import { MuiDateSectionName, MuiPickerFieldAdapter } from '../../models/muiPickersAdapter';
 import { useValidation } from '../validation/useValidation';
 import { useUtils } from '../useUtils';
 import { PickerStateValueManager } from '../usePickerState';
@@ -25,7 +25,7 @@ import {
   applySectionValueToDate,
   applyEditedSectionsOnReferenceDate,
   createDateFromSections,
-  cleanTrailingZeroInNumericSectionValue, FieldPartialSection,
+  cleanTrailingZeroInNumericSectionValue,
 } from './useField.utils';
 
 const useFieldState = <TValue, TDate, TSection extends FieldSection>({
@@ -108,7 +108,7 @@ const useFieldState = <TValue, TDate, TSection extends FieldSection>({
     let sections = state.sections;
 
     for (let i = startIndex; i <= endIndex; i += 1) {
-      sections = setSectionValue(sections, i, { value: '', query: null });
+      sections = setSectionValue(sections, i, '');
     }
 
     updateSections(sections);
@@ -122,7 +122,7 @@ const useFieldState = <TValue, TDate, TSection extends FieldSection>({
     setSectionValueOnSections: (params: {
       activeSection: TSection;
       referenceActiveDate: TDate;
-    }) => FieldPartialSection;
+    }) => string;
   }) => {
     if (state.selectedSectionIndexes == null) {
       return;
@@ -148,7 +148,7 @@ const useFieldState = <TValue, TDate, TSection extends FieldSection>({
       const newSections = setSectionValue(
         state.sections,
         state.selectedSectionIndexes.start,
-          partialSection,
+        partialSection,
       );
       const newDate = createDateFromSections({ utils, format, sections: newSections });
       if (utils.isValid(newDate)) {
@@ -214,6 +214,9 @@ export const useField = <
     throw new Error('This adapter is not compatible with the field components');
   }
   const inputRef = React.useRef<HTMLInputElement>(null);
+  const queryRef = React.useRef<{ dateSectionName: MuiDateSectionName; value: string } | null>(
+    null,
+  );
 
   const {
     internalProps: {
@@ -231,20 +234,15 @@ export const useField = <
 
   const focusTimeoutRef = React.useRef<NodeJS.Timeout | undefined>(undefined);
 
-  const {
-    state,
-    setSelectedSections,
-    clearValue,
-    clearSections,
-    updateSectionValue,
-  } = useFieldState({
-    valueManager,
-    fieldValueManager,
-    value: valueProp,
-    defaultValue,
-    onChange,
-    format,
-  });
+  const { state, setSelectedSections, clearValue, clearSections, updateSectionValue } =
+    useFieldState({
+      valueManager,
+      fieldValueManager,
+      value: valueProp,
+      defaultValue,
+      onChange,
+      format,
+    });
 
   const handleInputClick = useEventCallback((...args) => {
     onClick?.(...(args as []));
@@ -353,13 +351,12 @@ export const useField = <
               activeSection.dateSectionName,
               event.key as AvailableAdjustKeyCode,
             ),
-          setSectionValueOnSections: ({ activeSection }) => ({
-            value: adjustInvalidDateSectionValue(
-                utils,
-                activeSection,
-                event.key as AvailableAdjustKeyCode,
-            )
-          }),
+          setSectionValueOnSections: ({ activeSection }) =>
+            adjustInvalidDateSectionValue(
+              utils,
+              activeSection,
+              event.key as AvailableAdjustKeyCode,
+            ),
         });
         return;
       }
@@ -372,7 +369,7 @@ export const useField = <
           return;
         }
 
-        const getSectionValueStr = ({
+        const getNewSectionValueStr = ({
           activeSection,
           date,
           fixedWidth,
@@ -407,11 +404,14 @@ export const useField = <
               dateSectionName: activeSection.dateSectionName,
               date,
               getSectionValue: () =>
-                Number(getSectionValueStr({ activeSection, date, fixedWidth: false })),
+                Number(getNewSectionValueStr({ activeSection, date, fixedWidth: false })),
             }),
-          setSectionValueOnSections: ({ referenceActiveDate, activeSection }) => ({
-            value: getSectionValueStr({ activeSection, date: referenceActiveDate, fixedWidth: true })
-          }),
+          setSectionValueOnSections: ({ referenceActiveDate, activeSection }) =>
+            getNewSectionValueStr({
+              activeSection,
+              date: referenceActiveDate,
+              fixedWidth: true,
+            }),
         });
 
         return;
@@ -425,51 +425,63 @@ export const useField = <
           return;
         }
 
-        const getPartialSection = ({ activeSection }: { activeSection: TSection }): FieldPartialSection => {
+        const getNewSectionValueStr = ({ activeSection }: { activeSection: TSection }): string => {
           // TODO: Do not hardcode the compatible formatValue
-          if (activeSection.formatValue !== 'MMMM') {
-            return {
-              value: activeSection.value,
-              query: null,
-            };
+          if (!activeSection.formatValue.includes('MMM')) {
+            return activeSection.value;
           }
 
           const newQuery = event.key.toLowerCase();
-          const concatenatedQuery = `${activeSection.query ?? ''}${newQuery}`;
+
+          const currentQuery =
+            queryRef.current?.dateSectionName === activeSection.dateSectionName
+              ? queryRef.current!.value
+              : '';
+          const concatenatedQuery = `${currentQuery}${newQuery}`;
           const matchingMonthsWithConcatenatedQuery = getMonthsMatchingQuery(
-              utils,
-              activeSection.formatValue,
-              concatenatedQuery,
+            utils,
+            activeSection.formatValue,
+            concatenatedQuery,
           );
           if (matchingMonthsWithConcatenatedQuery.length > 0) {
-            return {
-              value: matchingMonthsWithConcatenatedQuery[0],
-              query: newQuery,
-            }
+            queryRef.current = {
+              dateSectionName: activeSection.dateSectionName,
+              value: concatenatedQuery,
+            };
+            return matchingMonthsWithConcatenatedQuery[0];
           }
 
           const matchingMonthsWithNewQuery = getMonthsMatchingQuery(
-              utils,
-              activeSection.formatValue,
-              newQuery,
+            utils,
+            activeSection.formatValue,
+            newQuery,
           );
           if (matchingMonthsWithNewQuery.length > 0) {
-            return {
-              value: matchingMonthsWithNewQuery[0],
-              query: newQuery,
-            }
+            queryRef.current = {
+              dateSectionName: activeSection.dateSectionName,
+              value: newQuery,
+            };
+            return matchingMonthsWithNewQuery[0];
           }
 
-          return {
-            value: activeSection.value,
-            query: null,
-          }
-        }
+          return activeSection.value;
+        };
 
         updateSectionValue({
-          setSectionValueOnDate: () => {},
-          setSectionValueOnSections: ({ activeSection }) => getPartialSection({ activeSection }),
-        })
+          setSectionValueOnDate: ({ activeSection, date }) =>
+            applySectionValueToDate({
+              utils,
+              dateSectionName: activeSection.dateSectionName,
+              date,
+              getSectionValue: (getter) => {
+                const sectionValueStr = getNewSectionValueStr({ activeSection });
+                const sectionDate = utils.parse(sectionValueStr, activeSection.formatValue)!;
+                return getter(sectionDate);
+              },
+            }),
+          setSectionValueOnSections: ({ activeSection }) =>
+            getNewSectionValueStr({ activeSection }),
+        });
       }
     }
   });

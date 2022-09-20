@@ -63,7 +63,6 @@ export interface FieldSection {
   separator: string | null;
   dateSectionName: MuiDateSectionName;
   formatValue: string;
-  query: string | null;
   edited: boolean;
 }
 
