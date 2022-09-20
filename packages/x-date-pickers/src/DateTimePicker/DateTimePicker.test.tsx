@@ -3,7 +3,7 @@ import TextField from '@mui/material/TextField';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { fireEvent, screen } from '@mui/monorepo/test/utils/createRenderer';
 import { expect } from 'chai';
-import { createPickerRenderer, stubMatchMedia } from '../../../../test/utils/pickers-utils';
+import { createPickerRenderer, stubMatchMedia } from 'test/utils/pickers-utils';
 
 describe('<DateTimePicker />', () => {
   const ControlledDateTimePicker = () => {

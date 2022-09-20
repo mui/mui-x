@@ -13,6 +13,7 @@ export const useLocalizationContext = <TDate>() => {
       [
         'MUI: Can not find the date and time pickers localization context.',
         'It looks like you forgot to wrap your component in LocalizationProvider.',
+        'This can also happen if you are bundling multiple versions of the `@mui/x-date-pickers` package',
       ].join('\n'),
     );
   }

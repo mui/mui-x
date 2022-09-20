@@ -20,3 +20,5 @@ dist
 node_modules
 size-snapshot.json
 performance-snapshot.json
+.github/styles/Google
+.github/styles/write-good

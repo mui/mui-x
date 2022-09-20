@@ -21,7 +21,7 @@ import {
   AdapterClassToUse,
   withPickerControls,
   openPicker,
-} from '../../../../test/utils/pickers-utils';
+} from 'test/utils/pickers-utils';
 
 const WrappedDesktopDateRangePicker = withPickerControls(DesktopDateRangePicker)({
   DialogProps: { TransitionComponent: FakeTransitionComponent },
