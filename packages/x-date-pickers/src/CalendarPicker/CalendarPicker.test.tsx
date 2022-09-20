@@ -419,7 +419,7 @@ describe('<CalendarPicker />', () => {
       }
       render(
         <CalendarPicker
-          value={adapterToUse.date(new Date(2019, 3, 29))}
+          date={adapterToUse.date(new Date(2019, 3, 29))}
           onChange={() => {}}
           views={['year']}
           openTo="year"
