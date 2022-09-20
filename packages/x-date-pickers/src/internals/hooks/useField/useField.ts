@@ -46,7 +46,6 @@ const useFieldState = <TValue, TDate, TSection extends FieldSection>({
 
   const firstDefaultValue = React.useRef(defaultValue);
   const valueParsed = React.useMemo(() => {
-    // TODO: Avoid this type casting, the emptyValues are both valid TDate and TInputDate
     const value = firstDefaultValue.current ?? valueProp ?? valueManager.emptyValue;
 
     return valueManager.parseInput(utils, value);
