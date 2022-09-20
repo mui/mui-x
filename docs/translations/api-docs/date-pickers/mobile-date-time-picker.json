@@ -48,6 +48,7 @@
     "OpenPickerButtonProps": "Props to pass to keyboard adornment button.",
     "openTo": "First view to show. Must be a valid option from <code>views</code> list",
     "orientation": "Force rendering in particular orientation.",
+    "PaperProps": "Paper props passed down to <a href=\"https://mui.com/material-ui/api/paper/\">Paper</a> component.",
     "readOnly": "Make picker read only.",
     "reduceAnimations": "Disable heavy animations.",
     "renderDay": "Custom renderer for day. Check the <a href=\"https://mui.com/x/api/date-pickers/pickers-day/\">PickersDay</a> component.<br><br><strong>Signature:</strong><br><code>function(day: TDate, selectedDays: Array&lt;TDate | null&gt;, pickersDayProps: PickersDayProps&lt;TDate&gt;) =&gt; JSX.Element</code><br><em>day:</em> The day to render.<br><em>selectedDays:</em> The days currently selected.<br><em>pickersDayProps:</em> The props of the day to render.<br> <em>returns</em> (JSX.Element): The element representing the day.",

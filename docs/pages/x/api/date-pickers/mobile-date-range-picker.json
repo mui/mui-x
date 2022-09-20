@@ -64,6 +64,7 @@
     "onViewChange": { "type": { "name": "func" } },
     "open": { "type": { "name": "bool" } },
     "OpenPickerButtonProps": { "type": { "name": "object" } },
+    "PaperProps": { "type": { "name": "object" } },
     "readOnly": { "type": { "name": "bool" } },
     "reduceAnimations": {
       "type": { "name": "bool" },
