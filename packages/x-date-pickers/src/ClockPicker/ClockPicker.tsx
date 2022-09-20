@@ -22,6 +22,7 @@ import { useMeridiemMode } from '../internals/hooks/date-helpers-hooks';
 import { ClockPickerView, MuiPickersAdapter } from '../internals/models';
 import { getClockPickerUtilityClass, ClockPickerClasses } from './clockPickerClasses';
 import { PickerViewRoot } from '../internals/components/PickerViewRoot';
+import { BaseDateValidationProps } from '../internals/hooks/validation/models';
 
 const useUtilityClasses = (ownerState: ClockPickerProps<any>) => {
   const { classes } = ownerState;
@@ -33,7 +34,9 @@ const useUtilityClasses = (ownerState: ClockPickerProps<any>) => {
   return composeClasses(slots, getClockPickerUtilityClass, classes);
 };
 
-export interface ExportedClockPickerProps<TDate> extends ExportedTimeValidationProps<TDate> {
+export interface ExportedClockPickerProps<TDate>
+  extends ExportedTimeValidationProps<TDate>,
+    Pick<BaseDateValidationProps<TDate>, 'disableFuture' | 'disablePast'> {
   /**
    * 12h/24h view for hour selection clock.
    * @default false
@@ -232,6 +235,8 @@ export const ClockPicker = React.forwardRef(function ClockPicker<TDate extends u
     leftArrowButtonText: leftArrowButtonTextProp,
     maxTime,
     minTime,
+    disableFuture,
+    disablePast,
     minutesStep = 1,
     rightArrowButtonText: rightArrowButtonTextProp,
     shouldDisableTime,
@@ -292,6 +297,8 @@ export const ClockPicker = React.forwardRef(function ClockPicker<TDate extends u
   const isTimeDisabled = React.useCallback(
     (rawValue: number, viewType: ClockPickerView) => {
       const isAfter = createIsAfterIgnoreDatePart(disableIgnoringDatePartForTimeValidation, utils);
+      const shouldCheckPastEnd =
+        viewType === 'hours' || (viewType === 'minutes' && views.includes('seconds'));
 
       const containsValidTime = ({ start, end }: { start: TDate; end: TDate }) => {
         if (minTime && isAfter(minTime, end)) {
@@ -299,6 +306,14 @@ export const ClockPicker = React.forwardRef(function ClockPicker<TDate extends u
         }
 
         if (maxTime && isAfter(start, maxTime)) {
+          return false;
+        }
+
+        if (disableFuture && isAfter(start, now)) {
+          return false;
+        }
+
+        if (disablePast && isAfter(now, shouldCheckPastEnd ? end : start)) {
           return false;
         }
 
@@ -357,6 +372,10 @@ export const ClockPicker = React.forwardRef(function ClockPicker<TDate extends u
       minutesStep,
       shouldDisableTime,
       utils,
+      disableFuture,
+      disablePast,
+      now,
+      views,
     ],
   );
 

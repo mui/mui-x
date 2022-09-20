@@ -23,7 +23,7 @@ const WrappedDesktopDateTimePicker = withPickerControls(DesktopDateTimePicker)({
 describe('<DesktopDateTimePicker />', () => {
   const { render } = createPickerRenderer({
     clock: 'fake',
-    clockConfig: new Date('2018-01-01T10:00:00.000'),
+    clockConfig: new Date('2018-01-01T10:05:05.000'),
   });
 
   ['readOnly', 'disabled'].forEach((prop) => {
@@ -156,10 +156,12 @@ describe('<DesktopDateTimePicker />', () => {
   });
 
   it('should respect `disableFuture` prop', async () => {
+    const onChange = spy();
     render(
       <WrappedDesktopDateTimePicker
-        onChange={() => {}}
         initialValue={adapterToUse.date(new Date('2018-01-01T11:00:00.000'))}
+        onChange={onChange}
+        ampm={false}
         disableFuture
       />,
     );
@@ -170,20 +172,35 @@ describe('<DesktopDateTimePicker />', () => {
 
     // re-select current day
     userEvent.mousePress(screen.getByRole('gridcell', { selected: true }));
-    // click on `9 hours`
-    fireEvent(screen.getByMuiTest('clock'), getClockMouseEvent('mousemove', 20, 110));
-    fireEvent(screen.getByMuiTest('clock'), getClockMouseEvent('mouseup', 20, 110));
-    // click on `10 minutes`
-    fireEvent(screen.getByMuiTest('clock'), getClockMouseEvent('mousemove', 64, 33));
-    fireEvent(screen.getByMuiTest('clock'), getClockMouseEvent('mouseup', 64, 33));
+    expect(screen.getByRole('option', { name: '11 hours' })).to.have.class(
+      inputBaseClasses.disabled,
+    );
+    expect(screen.getByRole('option', { name: '12 hours' })).to.have.class(
+      inputBaseClasses.disabled,
+    );
+
+    // click on `10 hours`
+    fireEvent(screen.getByMuiTest('clock'), getClockMouseEvent('mousemove', 30, 65));
+    fireEvent(screen.getByMuiTest('clock'), getClockMouseEvent('mouseup', 30, 65));
+    expect(screen.getByRole('option', { name: '10 minutes' })).to.have.class(
+      inputBaseClasses.disabled,
+    );
+
+    // click on `05 minutes`
+    fireEvent(screen.getByMuiTest('clock'), getClockMouseEvent('mousemove', 155, 30));
+    fireEvent(screen.getByMuiTest('clock'), getClockMouseEvent('mouseup', 155, 30));
 
     expect(screen.getByRole('textbox').parentElement).not.to.have.class(inputBaseClasses.error);
+    expect(onChange.lastCall.args[0]).toEqualDateTime(new Date('2018-01-01T10:05:00.000'));
   });
 
   it('should respect `disablePast` prop', () => {
+    const onChange = spy();
     render(
       <WrappedDesktopDateTimePicker
         initialValue={adapterToUse.date(new Date('2018-01-01T09:00:00.000'))}
+        onChange={onChange}
+        ampm={false}
         disablePast
       />,
     );
@@ -194,14 +211,29 @@ describe('<DesktopDateTimePicker />', () => {
 
     // re-select current day
     userEvent.mousePress(screen.getByRole('gridcell', { selected: true }));
-    // select hours
-    fireEvent(screen.getByMuiTest('clock'), getClockMouseEvent('mousemove'));
-    fireEvent(screen.getByMuiTest('clock'), getClockMouseEvent('mouseup'));
+    expect(screen.getByRole('option', { name: '8 hours' })).to.have.class(
+      inputBaseClasses.disabled,
+    );
+    expect(screen.getByRole('option', { name: '9 hours' })).to.have.class(
+      inputBaseClasses.disabled,
+    );
+
+    // click on `10 hours`
+    fireEvent(screen.getByMuiTest('clock'), getClockMouseEvent('mousemove', 30, 65));
+    fireEvent(screen.getByMuiTest('clock'), getClockMouseEvent('mouseup', 30, 65));
+    expect(screen.getByRole('option', { name: '00 minutes' })).to.have.class(
+      inputBaseClasses.disabled,
+    );
+    expect(screen.getByRole('option', { name: '05 minutes' })).to.have.class(
+      inputBaseClasses.disabled,
+    );
+
     // click minutes
     fireEvent(screen.getByMuiTest('clock'), getClockMouseEvent('mousemove'));
     fireEvent(screen.getByMuiTest('clock'), getClockMouseEvent('mouseup'));
 
     expect(screen.getByRole('textbox').parentElement).not.to.have.class(inputBaseClasses.error);
+    expect(onChange.lastCall.args[0]).toEqualDateTime(new Date('2018-01-01T10:53:00.000'));
   });
 
   describe('prop: PopperProps', () => {
