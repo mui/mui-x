@@ -41,7 +41,7 @@ export const useField = <
     null,
   );
 
-  const { state, setSelectedSections, clearValue, clearActiveSection, updateSectionValue } =
+  const { state, setSelectedSectionIndexes, clearValue, clearActiveSection, updateSectionValue } =
     useFieldState(params);
 
   const {
@@ -61,7 +61,7 @@ export const useField = <
     );
     const sectionIndex = nextSectionIndex === -1 ? state.sections.length - 1 : nextSectionIndex - 1;
 
-    setSelectedSections(sectionIndex);
+    setSelectedSectionIndexes(sectionIndex);
   });
 
   const handleInputFocus = useEventCallback((...args) => {
@@ -77,7 +77,7 @@ export const useField = <
       }
 
       if (Number(input.selectionEnd) - Number(input.selectionStart) === input.value.length) {
-        setSelectedSections(0, state.sections.length - 1);
+        setSelectedSectionIndexes(0, state.sections.length - 1);
       } else {
         handleInputClick();
       }
@@ -86,7 +86,7 @@ export const useField = <
 
   const handleInputBlur = useEventCallback((...args) => {
     onBlur?.(...(args as []));
-    setSelectedSections();
+    setSelectedSectionIndexes();
   });
 
   const handleInputKeyDown = useEventCallback((event: React.KeyboardEvent) => {
@@ -99,7 +99,7 @@ export const useField = <
         // prevent default to make sure that the next line "select all" while updating
         // the internal state at the same time.
         event.preventDefault();
-        setSelectedSections(0, state.sections.length - 1);
+        setSelectedSectionIndexes(0, state.sections.length - 1);
         return;
       }
 
@@ -108,11 +108,11 @@ export const useField = <
         event.preventDefault();
 
         if (state.selectedSectionIndexes == null) {
-          setSelectedSections(0);
+          setSelectedSectionIndexes(0);
         } else if (state.selectedSectionIndexes.start < state.sections.length - 1) {
-          setSelectedSections(state.selectedSectionIndexes.start + 1);
+          setSelectedSectionIndexes(state.selectedSectionIndexes.start + 1);
         } else if (state.selectedSectionIndexes.start !== state.selectedSectionIndexes.end) {
-          setSelectedSections(state.selectedSectionIndexes.end);
+          setSelectedSectionIndexes(state.selectedSectionIndexes.end);
         }
 
         return;
@@ -123,11 +123,11 @@ export const useField = <
         event.preventDefault();
 
         if (state.selectedSectionIndexes == null) {
-          setSelectedSections(state.sections.length - 1);
+          setSelectedSectionIndexes(state.sections.length - 1);
         } else if (state.selectedSectionIndexes.start !== state.selectedSectionIndexes.end) {
-          setSelectedSections(state.selectedSectionIndexes.start);
+          setSelectedSectionIndexes(state.selectedSectionIndexes.start);
         } else if (state.selectedSectionIndexes.start > 0) {
-          setSelectedSections(state.selectedSectionIndexes.start - 1);
+          setSelectedSectionIndexes(state.selectedSectionIndexes.start - 1);
         }
         return;
       }
@@ -157,14 +157,14 @@ export const useField = <
         event.preventDefault();
 
         updateSectionValue({
-          setSectionValueOnDate: ({ date, activeSection }) =>
+          setSectionValueOnDate: (activeSection, activeDate) =>
             adjustDateSectionValue(
               utils,
-              date,
+              activeDate,
               activeSection.dateSectionName,
               event.key as AvailableAdjustKeyCode,
             ),
-          setSectionValueOnSections: ({ activeSection }) =>
+          setSectionValueOnSections: (activeSection) =>
             adjustInvalidDateSectionValue(
               utils,
               activeSection,
@@ -200,22 +200,31 @@ export const useField = <
               : concatenatedSectionValue;
 
           if (fixedWidth) {
-            cleanTrailingZeroInNumericSectionValue(newSectionValue, boundaries.maximum);
+            return cleanTrailingZeroInNumericSectionValue(newSectionValue, boundaries.maximum);
           }
 
           return newSectionValue;
         };
 
         updateSectionValue({
-          setSectionValueOnDate: ({ date, activeSection }) =>
-            applySectionValueToDate({
+          setSectionValueOnDate: (activeSection, activeDate) => {
+            // TODO: Do not hardcode the compatible formatValue
+            // TODO: Support digit edition on full letter sections.
+            if (activeSection.formatValue.includes('MMM')) {
+              return activeDate;
+            }
+
+            return applySectionValueToDate({
               utils,
               dateSectionName: activeSection.dateSectionName,
-              date,
+              date: activeDate,
               getSectionValue: () =>
-                Number(getNewSectionValueStr({ activeSection, date, fixedWidth: false })),
-            }),
-          setSectionValueOnSections: ({ referenceActiveDate, activeSection }) =>
+                Number(
+                  getNewSectionValueStr({ activeSection, date: activeDate, fixedWidth: false }),
+                ),
+            });
+          },
+          setSectionValueOnSections: (activeSection, referenceActiveDate) =>
             getNewSectionValueStr({
               activeSection,
               date: referenceActiveDate,
@@ -273,19 +282,18 @@ export const useField = <
         };
 
         updateSectionValue({
-          setSectionValueOnDate: ({ activeSection, date }) =>
+          setSectionValueOnDate: (activeSection, activeDate) =>
             applySectionValueToDate({
               utils,
               dateSectionName: activeSection.dateSectionName,
-              date,
+              date: activeDate,
               getSectionValue: (getter) => {
                 const sectionValueStr = getNewSectionValueStr({ activeSection });
                 const sectionDate = utils.parse(sectionValueStr, activeSection.formatValue)!;
                 return getter(sectionDate);
               },
             }),
-          setSectionValueOnSections: ({ activeSection }) =>
-            getNewSectionValueStr({ activeSection }),
+          setSectionValueOnSections: (activeSection) => getNewSectionValueStr({ activeSection }),
         });
       }
     }

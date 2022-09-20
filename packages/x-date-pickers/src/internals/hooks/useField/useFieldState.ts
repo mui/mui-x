@@ -14,6 +14,11 @@ import {
   createDateFromSections,
 } from './useField.utils';
 
+interface UpdateSectionValueParams<TDate, TSection> {
+  setSectionValueOnDate: (activeSection: TSection, activeDate: TDate) => TDate;
+  setSectionValueOnSections: (activeSection: TSection, referenceActiveDate: TDate) => string;
+}
+
 export const useFieldState = <
   TValue,
   TDate,
@@ -117,13 +122,7 @@ export const useFieldState = <
   const updateSectionValue = ({
     setSectionValueOnDate,
     setSectionValueOnSections,
-  }: {
-    setSectionValueOnDate: (params: { activeSection: TSection; date: TDate }) => TDate;
-    setSectionValueOnSections: (params: {
-      activeSection: TSection;
-      referenceActiveDate: TDate;
-    }) => string;
-  }) => {
+  }: UpdateSectionValueParams<TDate, TSection>) => {
     if (readOnly || state.selectedSectionIndexes == null) {
       return undefined;
     }
@@ -132,15 +131,15 @@ export const useFieldState = <
     const activeDateManager = fieldValueManager.getActiveDateManager(state, activeSection);
 
     if (activeDateManager.activeDate != null && utils.isValid(activeDateManager.activeDate)) {
-      const newDate = setSectionValueOnDate({ date: activeDateManager.activeDate, activeSection });
+      const newDate = setSectionValueOnDate(activeSection, activeDateManager.activeDate);
       return publishValue(activeDateManager.getNewValueFromNewActiveDate(newDate));
     }
 
     // The date is not valid, we have to update the section value rather than date itself.
-    const newSectionValue = setSectionValueOnSections({
+    const newSectionValue = setSectionValueOnSections(
       activeSection,
-      referenceActiveDate: activeDateManager.referenceActiveDate,
-    });
+      activeDateManager.referenceActiveDate,
+    );
     const newSections = setSectionValue(state.selectedSectionIndexes.start, newSectionValue);
     const activeDateSections = fieldValueManager.getActiveDateSections(newSections, activeSection);
     const newDate = createDateFromSections({ utils, format, sections: activeDateSections });
@@ -168,7 +167,7 @@ export const useFieldState = <
     }));
   };
 
-  const setSelectedSections = (start?: number, end?: number) => {
+  const setSelectedSectionIndexes = (start?: number, end?: number) => {
     setState((prevState) => ({
       ...prevState,
       selectedSectionIndexes: start == null ? null : { start, end: end ?? start },
@@ -199,7 +198,7 @@ export const useFieldState = <
 
   return {
     state,
-    setSelectedSections,
+    setSelectedSectionIndexes,
     clearValue,
     clearActiveSection,
     updateSectionValue,
