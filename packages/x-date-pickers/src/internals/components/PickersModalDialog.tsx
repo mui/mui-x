@@ -6,6 +6,7 @@ import { DIALOG_WIDTH } from '../constants/dimensions';
 import { PickersActionBar, PickersActionBarProps } from '../../PickersActionBar';
 import { PickerStateWrapperProps } from '../hooks/usePickerState';
 import { PickersSlotsComponent } from './wrappers/WrapperProps';
+import { ExportedPickerPaperProps } from './PickersPopper';
 
 export interface PickersModalDialogSlotsComponent
   extends Omit<PickersSlotsComponent, 'PaperContent'> {}
@@ -21,7 +22,10 @@ export interface ExportedPickerModalProps {
   DialogProps?: Partial<MuiDialogProps>;
 }
 
-export interface PickersModalDialogProps extends ExportedPickerModalProps, PickerStateWrapperProps {
+export interface PickersModalDialogProps
+  extends ExportedPickerModalProps,
+    ExportedPickerPaperProps,
+    PickerStateWrapperProps {
   /**
    * Overrideable components.
    * @default {}
@@ -62,12 +66,18 @@ export const PickersModalDialog = (props: React.PropsWithChildren<PickersModalDi
     open,
     components,
     componentsProps,
+    PaperProps,
   } = props;
 
   const ActionBar = components?.ActionBar ?? PickersActionBar;
 
   return (
-    <PickersModalDialogRoot open={open} onClose={onDismiss} {...DialogProps}>
+    <PickersModalDialogRoot
+      open={open}
+      onClose={onDismiss}
+      PaperProps={PaperProps}
+      {...DialogProps}
+    >
       <PickersModalDialogContent>{children}</PickersModalDialogContent>
       <ActionBar
         onAccept={onAccept}

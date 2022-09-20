@@ -9,8 +9,9 @@ import {
 import { DateInputPropsLike } from './WrapperProps';
 import { PickerStateWrapperProps } from '../../hooks/usePickerState';
 import { DateInputSlotsComponent } from '../PureDateInput';
+import { ExportedPickerPaperProps } from '../PickersPopper';
 
-export interface MobileWrapperProps extends ExportedPickerModalProps {
+export interface MobileWrapperProps extends ExportedPickerModalProps, ExportedPickerPaperProps {
   children?: React.ReactNode;
 }
 
@@ -41,6 +42,7 @@ export function MobileWrapper(props: InternalMobileWrapperProps) {
     PureDateInputComponent,
     components,
     componentsProps,
+    PaperProps,
     ...other
   } = props;
 
@@ -57,6 +59,7 @@ export function MobileWrapper(props: InternalMobileWrapperProps) {
         open={open}
         components={components}
         componentsProps={componentsProps}
+        PaperProps={PaperProps}
       >
         {children}
       </PickersModalDialog>

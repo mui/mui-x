@@ -79,6 +79,7 @@ export const MobileDatePicker = React.forwardRef(function MobileDatePicker<
     onChange,
     components,
     componentsProps,
+    PaperProps,
     ...other
   } = props;
   const DateInputProps = {
@@ -98,6 +99,7 @@ export const MobileDatePicker = React.forwardRef(function MobileDatePicker<
       PureDateInputComponent={PureDateInput}
       components={components}
       componentsProps={componentsProps}
+      PaperProps={PaperProps}
     >
       <CalendarOrClockPicker
         {...pickerProps}
