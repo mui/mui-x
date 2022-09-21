@@ -156,6 +156,7 @@ describe('<DesktopDateRangePicker />', () => {
       openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'start' });
 
       fireEvent.click(getPickerDay('1', 'January 2019'));
+
       // FIXME use `getByRole(role, {hidden: false})` and skip JSDOM once this suite can run in JSDOM
       const [visibleButton] = screen.getAllByRole('button', {
         hidden: true,
