@@ -33,7 +33,7 @@ export interface DesktopTimePickerSlotsComponentsProps
 
 export interface DesktopTimePickerProps<TInputDate, TDate>
   extends BaseTimePickerProps<TInputDate, TDate>,
-    DesktopWrapperProps {
+    DesktopWrapperProps<TDate> {
   /**
    * Overrideable components.
    * @default {}
@@ -82,6 +82,7 @@ export const DesktopTimePicker = React.forwardRef(function DesktopTimePicker<
     value,
     components,
     componentsProps,
+    localeText,
     ...other
   } = props;
   const DateInputProps = {
@@ -103,6 +104,7 @@ export const DesktopTimePicker = React.forwardRef(function DesktopTimePicker<
       TransitionComponent={TransitionComponent}
       components={components}
       componentsProps={componentsProps}
+      localeText={localeText}
     >
       <CalendarOrClockPicker
         {...pickerProps}
@@ -225,6 +227,10 @@ DesktopTimePicker.propTypes = {
     }),
   ]),
   label: PropTypes.node,
+  /**
+   * Locale for components texts
+   */
+  localeText: PropTypes.object,
   /**
    * Custom mask. Can be used to override generate from format. (e.g. `__/__/____ __:__` or `__/__/____ __:__ _M`).
    */
