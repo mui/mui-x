@@ -24,7 +24,6 @@
     "InputAdornmentProps": "Props to pass to keyboard input adornment.",
     "inputFormat": "Format string.",
     "inputRef": "Pass a ref to the <code>input</code> element.",
-    "leftArrowButtonText": "Left arrow icon aria-label text.",
     "loading": "If <code>true</code> renders <code>LoadingComponent</code> in calendar instead of calendar view. Can be used to preload information and show it in calendar.",
     "localeText": "Locale for components texts",
     "mask": "Custom mask. Can be used to override generate from format. (e.g. <code>__/__/____ __:__</code> or <code>__/__/____ __:__ _M</code>).",
@@ -45,7 +44,6 @@
     "renderInput": "The <code>renderInput</code> prop allows you to customize the rendered input. The <code>startProps</code> and <code>endProps</code> arguments of this render prop contains props of <a href=\"https://mui.com/material-ui/api/text-field/#props\">TextField</a>, that you need to forward to the range start/end inputs respectively. Pay specific attention to the <code>ref</code> and <code>inputProps</code> keys.<br><br><strong>Signature:</strong><br><code>function(startProps: MuiTextFieldProps, endProps: MuiTextFieldProps) =&gt; React.ReactElement</code><br><em>startProps:</em> Props that you need to forward to the range start input.<br><em>endProps:</em> Props that you need to forward to the range end input.<br> <em>returns</em> (React.ReactElement): The range input to render.",
     "renderLoading": "Component displaying when passed <code>loading</code> true.<br><br><strong>Signature:</strong><br><code>function() =&gt; React.ReactNode</code><br><br> <em>returns</em> (React.ReactNode): The node to render when loading.",
     "rifmFormatter": "Custom formatter to be passed into Rifm component.<br><br><strong>Signature:</strong><br><code>function(str: string) =&gt; string</code><br><em>str:</em> The un-formatted string.<br> <em>returns</em> (string): The formatted string.",
-    "rightArrowButtonText": "Right arrow icon aria-label text.",
     "shouldDisableDate": "Disable specific date. @DateIOType<br><br><strong>Signature:</strong><br><code>function(day: TDate, position: string) =&gt; boolean</code><br><em>day:</em> The date to test.<br><em>position:</em> The date to test, &#39;start&#39; or &#39;end&#39;.<br> <em>returns</em> (boolean): Returns <code>true</code> if the date should be disabled.",
     "shouldDisableMonth": "Disable specific months dynamically. Works like <code>shouldDisableDate</code> but for month selection view @DateIOType.<br><br><strong>Signature:</strong><br><code>function(month: TDate) =&gt; boolean</code><br><em>month:</em> The month to check.<br> <em>returns</em> (boolean): If <code>true</code> the month will be disabled.",
     "shouldDisableYear": "Disable specific years dynamically. Works like <code>shouldDisableDate</code> but for year selection view @DateIOType.<br><br><strong>Signature:</strong><br><code>function(year: TDate) =&gt; boolean</code><br><em>year:</em> The year to test.<br> <em>returns</em> (boolean): Returns <code>true</code> if the year should be disabled.",
@@ -62,9 +60,9 @@
     "OpenPickerIcon": "Icon displayed in the open picker button.",
     "SwitchViewButton": "Button displayed to switch between different calendar views.",
     "SwitchViewIcon": "Icon displayed in the SwitchViewButton. Rotated by 180° when the open view is &#39;year&#39;.",
-    "LeftArrowButton": "Button allowing to switch to the left view.",
+    "PreviousIconButton": "Button allowing to switch to the left view.",
+    "NextIconButton": "Button allowing to switch to the right view.",
     "LeftArrowIcon": "Icon displayed in the left view switch button.",
-    "RightArrowButton": "Button allowing to switch to the right view.",
     "RightArrowIcon": "Icon displayed in the right view switch button."
   }
 }

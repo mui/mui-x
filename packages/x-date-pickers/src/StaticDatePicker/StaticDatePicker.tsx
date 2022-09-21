@@ -235,11 +235,6 @@ StaticDatePicker.propTypes = {
   ]),
   label: PropTypes.node,
   /**
-   * Left arrow icon aria-label text.
-   * @deprecated
-   */
-  leftArrowButtonText: PropTypes.string,
-  /**
    * If `true` renders `LoadingComponent` in calendar instead of calendar view.
    * Can be used to preload information and show it in calendar.
    * @default false
@@ -361,11 +356,6 @@ StaticDatePicker.propTypes = {
    * @returns {string} The formatted string.
    */
   rifmFormatter: PropTypes.func,
-  /**
-   * Right arrow icon aria-label text.
-   * @deprecated
-   */
-  rightArrowButtonText: PropTypes.string,
   /**
    * Disable specific date. @DateIOType
    * @template TDate
