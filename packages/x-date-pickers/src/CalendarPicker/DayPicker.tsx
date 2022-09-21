@@ -5,7 +5,7 @@ import { unstable_composeClasses as composeClasses } from '@mui/material';
 import clsx from 'clsx';
 import { PickersDay, PickersDayProps } from '../PickersDay/PickersDay';
 import { useUtils, useNow, useLocaleText } from '../internals/hooks/useUtils';
-import { PickerOnChangeFn } from '../internals/hooks/useViews';
+import { NonNullablePickerChangeHandler } from '../internals/hooks/useViews';
 import { DAY_SIZE, DAY_MARGIN } from '../internals/constants/dimensions';
 import { PickerSelectionState } from '../internals/hooks/usePickerState';
 import {
@@ -80,7 +80,7 @@ export interface DayPickerProps<TDate>
   className?: string;
   currentMonth: TDate;
   selectedDays: (TDate | null)[];
-  onSelectedDaysChange: PickerOnChangeFn<TDate>;
+  onSelectedDaysChange: NonNullablePickerChangeHandler<TDate>;
   disabled?: boolean;
   focusedDay: TDate | null;
   isMonthSwitchingAnimating: boolean;

@@ -223,7 +223,7 @@ export const useField = <
         );
 
         // The date is not valid, we have to increment the section value rather than the date
-        if (!utils.isValid(activeDate.value)) {
+        if (activeDate.value === null || !utils.isValid(activeDate.value)) {
           const newSectionValue = adjustInvalidDateSectionValue(
             utils,
             activeSection,

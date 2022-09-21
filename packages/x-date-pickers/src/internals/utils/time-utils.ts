@@ -2,7 +2,10 @@ import { MuiPickersAdapter } from '../models';
 
 type Meridiem = 'am' | 'pm' | null;
 
-export const getMeridiem = <TDate>(date: TDate, utils: MuiPickersAdapter<TDate>): Meridiem => {
+export const getMeridiem = <TDate>(
+  date: TDate | null,
+  utils: MuiPickersAdapter<TDate>,
+): Meridiem => {
   if (!date) {
     return null;
   }
