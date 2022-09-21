@@ -13,6 +13,10 @@ export interface DayPickerClasses {
   monthContainer: string;
   /** Styles applied to the week container element. */
   weekContainer: string;
+  /** Styles applied to the week number header */
+  weekNumberLabel: string;
+  /** Styles applied to the week number element */
+  weekNumber: string;
 }
 
 export type DayPickerClassKey = keyof DayPickerClasses;
@@ -27,4 +31,6 @@ export const dayPickerClasses: DayPickerClasses = generateUtilityClasses('MuiDay
   'slideTransition',
   'monthContainer',
   'weekContainer',
+  'weekNumberLabel',
+  'weekNumber',
 ]);

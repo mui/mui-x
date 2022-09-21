@@ -105,6 +105,8 @@ const useUtilityClasses = (ownerState: DayPickerProps<any>) => {
     slideTransition: ['slideTransition'],
     monthContainer: ['monthContainer'],
     weekContainer: ['weekContainer'],
+    weekNumberLabel: ['weekNumberLabel'],
+    weekNumber: ['weekNumber'],
   };
 
   return composeClasses(slots, getDayPickerUtilityClass, classes);
@@ -140,8 +142,9 @@ const PickersCalendarWeekDayLabel = styled(Typography, {
 }));
 
 const PickersCalendarWeekNumberLabel = styled(Typography, {
-  name: 'MuiPickersDay',
-  slot: 'WeekNumberHeader',
+  name: 'MuiDayPicker',
+  slot: 'WeekNumberLabel',
+  overridesResolver: (_, styles) => styles.weekNumberLabel,
 })(({ theme }) => ({
   width: 18,
   height: 40,
@@ -153,9 +156,10 @@ const PickersCalendarWeekNumberLabel = styled(Typography, {
   color: theme.palette.text.disabled,
 }));
 
-const PickersDayRoot = styled(Typography, {
-  name: 'MuiPickersDay',
+const PickersCalendarWeekNumber = styled(Typography, {
+  name: 'MuiDayPicker',
   slot: 'WeekNumber',
+  overridesResolver: (_, styles) => styles.weekNumber,
 })(({ theme }: { theme: Theme }) => ({
   width: 18,
   height: DAY_SIZE,
@@ -415,6 +419,7 @@ export function DayPicker<TDate>(inProps: DayPickerProps<TDate>) {
             variant="caption"
             role="columnheader"
             aria-label={localeText.calendarWeekNumberHeaderLabel}
+            className={classes.weekNumberLabel}
           >
             {localeText.calendarWeekNumberHeaderText}
           </PickersCalendarWeekNumberLabel>
@@ -459,7 +464,9 @@ export function DayPicker<TDate>(inProps: DayPickerProps<TDate>) {
                 className={classes.weekContainer}
               >
                 {displayWeekNumber && getWeekNumber && (
-                  <PickersDayRoot>{getWeekNumber(week[0])}</PickersDayRoot>
+                  <PickersCalendarWeekNumber className={classes.weekNumber}>
+                    {getWeekNumber(week[0])}
+                  </PickersCalendarWeekNumber>
                 )}
                 {week.map((day) => {
                   const isFocusableDay =
