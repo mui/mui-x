@@ -7,7 +7,6 @@ import { unstable_composeClasses as composeClasses } from '@mui/material';
 import { SxProps } from '@mui/system';
 import { Clock, ClockProps } from './Clock';
 import { useUtils, useNow, useLocaleText } from '../internals/hooks/useUtils';
-import { buildDeprecatedPropsWarning } from '../internals/utils/warning';
 import { getHourNumbers, getMinutesNumbers } from './ClockNumbers';
 import {
   PickersArrowSwitcher,
@@ -19,7 +18,7 @@ import { PickerOnChangeFn, useViews } from '../internals/hooks/useViews';
 import { PickerSelectionState } from '../internals/hooks/usePickerState';
 import { ExportedTimeValidationProps } from '../internals/hooks/validation/useTimeValidation';
 import { useMeridiemMode } from '../internals/hooks/date-helpers-hooks';
-import { ClockPickerView, MuiPickersAdapter } from '../internals/models';
+import { ClockPickerView } from '../internals/models';
 import { getClockPickerUtilityClass, ClockPickerClasses } from './clockPickerClasses';
 import { PickerViewRoot } from '../internals/components/PickerViewRoot';
 
@@ -44,28 +43,6 @@ export interface ExportedClockPickerProps<TDate> extends ExportedTimeValidationP
    * @default false
    */
   ampmInClock?: boolean;
-  /**
-   * Accessible text that helps user to understand which time and view is selected.
-   * @template TDate
-   * @param {ClockPickerView} view The current view rendered.
-   * @param {TDate | null} time The current time.
-   * @param {MuiPickersAdapter<TDate>} adapter The current date adapter.
-   * @returns {string} The clock label.
-   * @deprecated Use the `localeText` prop of `LocalizationProvider` instead, see https://mui.com/x/react-date-pickers/localization
-   * @default <TDate extends any>(
-   *   view: ClockView,
-   *   time: TDate | null,
-   *   adapter: MuiPickersAdapter<TDate>,
-   * ) =>
-   *   `Select ${view}. ${
-   *     time === null ? 'No time selected' : `Selected time is ${adapter.format(time, 'fullTime')}`
-   *   }`
-   */
-  getClockLabelText?: (
-    view: ClockPickerView,
-    time: TDate | null,
-    adapter: MuiPickersAdapter<TDate>,
-  ) => string;
 }
 
 export interface ClockPickerSlotsComponent extends PickersArrowSwitcherSlotsComponent {}
@@ -100,30 +77,6 @@ export interface ClockPickerProps<TDate> extends ExportedClockPickerProps<TDate>
    * Selected date @DateIOType.
    */
   value: TDate | null;
-  /**
-   * Get clock number aria-text for hours.
-   * @param {string} hours The hours to format.
-   * @returns {string} the formatted hours text.
-   * @default (hours: string) => `${hours} hours`
-   * @deprecated Use the `localeText` prop of `LocalizationProvider` instead, see https://mui.com/x/react-date-pickers/localization
-   */
-  getHoursClockNumberText?: (hours: string) => string;
-  /**
-   * Get clock number aria-text for minutes.
-   * @param {string} minutes The minutes to format.
-   * @returns {string} the formatted minutes text.
-   * @default (minutes: string) => `${minutes} minutes`
-   * @deprecated Use the `localeText` prop of `LocalizationProvider` instead, see https://mui.com/x/react-date-pickers/localization
-   */
-  getMinutesClockNumberText?: (minutes: string) => string;
-  /**
-   * Get clock number aria-text for seconds.
-   * @param {string} seconds The seconds to format.
-   * @returns {string} the formatted seconds text.
-   * @default (seconds: string) => `${seconds} seconds`
-   * @deprecated Use the `localeText` prop of `LocalizationProvider` instead, see https://mui.com/x/react-date-pickers/localization
-   */
-  getSecondsClockNumberText?: (seconds: string) => string;
   /**
    * On change callback @DateIOType.
    */
@@ -183,10 +136,6 @@ type ClockPickerComponent = (<TDate>(
   props: ClockPickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
 ) => JSX.Element) & { propTypes?: any };
 
-const deprecatedPropsWarning = buildDeprecatedPropsWarning(
-  'Props for translation are deprecated. See https://mui.com/x/react-date-pickers/localization for more information.',
-);
-
 /**
  *
  * API:
@@ -210,10 +159,6 @@ export const ClockPicker = React.forwardRef(function ClockPicker<TDate extends u
     componentsProps,
     value,
     disableIgnoringDatePartForTimeValidation,
-    getClockLabelText: getClockLabelTextProp,
-    getHoursClockNumberText: getHoursClockNumberTextProp,
-    getMinutesClockNumberText: getMinutesClockNumberTextProp,
-    getSecondsClockNumberText: getSecondsClockNumberTextProp,
     maxTime,
     minTime,
     minutesStep = 1,
@@ -230,21 +175,10 @@ export const ClockPicker = React.forwardRef(function ClockPicker<TDate extends u
     readOnly,
   } = props;
 
-  deprecatedPropsWarning({
-    getClockLabelText: getClockLabelTextProp,
-    getHoursClockNumberText: getHoursClockNumberTextProp,
-    getMinutesClockNumberText: getMinutesClockNumberTextProp,
-    getSecondsClockNumberText: getSecondsClockNumberTextProp,
-  });
-
   const localeText = useLocaleText();
 
-  const getClockLabelText = getClockLabelTextProp ?? localeText.clockLabelText;
-  const getHoursClockNumberText = getHoursClockNumberTextProp ?? localeText.hoursClockNumberText;
-  const getMinutesClockNumberText =
-    getMinutesClockNumberTextProp ?? localeText.minutesClockNumberText;
-  const getSecondsClockNumberText =
-    getSecondsClockNumberTextProp ?? localeText.secondsClockNumberText;
+  // const getClockLabelText = getClockLabelTextProp ?? localeText.clockLabelText;
+  // const getHoursClockNumberText = getHoursClockNumberTextProp ?? localeText.hoursClockNumberText;
 
   const { openView, setOpenView, nextView, previousView, handleChangeAndOpenNext } = useViews({
     view,
@@ -362,7 +296,7 @@ export const ClockPicker = React.forwardRef(function ClockPicker<TDate extends u
             utils,
             ampm,
             onChange: handleHoursChange,
-            getClockNumberText: getHoursClockNumberText,
+            getClockNumberText: localeText.hoursClockNumberText,
             isDisabled: (hourValue) => disabled || isTimeDisabled(hourValue, 'hours'),
             selectedId,
           }),
@@ -382,7 +316,7 @@ export const ClockPicker = React.forwardRef(function ClockPicker<TDate extends u
             utils,
             value: minutesValue,
             onChange: handleMinutesChange,
-            getClockNumberText: getMinutesClockNumberText,
+            getClockNumberText: localeText.minutesClockNumberText,
             isDisabled: (minuteValue) => disabled || isTimeDisabled(minuteValue, 'minutes'),
             selectedId,
           }),
@@ -402,7 +336,7 @@ export const ClockPicker = React.forwardRef(function ClockPicker<TDate extends u
             utils,
             value: secondsValue,
             onChange: handleSecondsChange,
-            getClockNumberText: getSecondsClockNumberText,
+            getClockNumberText: localeText.secondsClockNumberText,
             isDisabled: (secondValue) => disabled || isTimeDisabled(secondValue, 'seconds'),
             selectedId,
           }),
@@ -417,9 +351,9 @@ export const ClockPicker = React.forwardRef(function ClockPicker<TDate extends u
     utils,
     value,
     ampm,
-    getHoursClockNumberText,
-    getMinutesClockNumberText,
-    getSecondsClockNumberText,
+    localeText.hoursClockNumberText,
+    localeText.minutesClockNumberText,
+    localeText.secondsClockNumberText,
     meridiemMode,
     handleChangeAndOpenNext,
     selectedTimeOrMidnight,
@@ -517,48 +451,6 @@ ClockPicker.propTypes = {
    * @default false
    */
   disableIgnoringDatePartForTimeValidation: PropTypes.bool,
-  /**
-   * Accessible text that helps user to understand which time and view is selected.
-   * @template TDate
-   * @param {ClockPickerView} view The current view rendered.
-   * @param {TDate | null} time The current time.
-   * @param {MuiPickersAdapter<TDate>} adapter The current date adapter.
-   * @returns {string} The clock label.
-   * @deprecated Use the `localeText` prop of `LocalizationProvider` instead, see https://mui.com/x/react-date-pickers/localization
-   * @default <TDate extends any>(
-   *   view: ClockView,
-   *   time: TDate | null,
-   *   adapter: MuiPickersAdapter<TDate>,
-   * ) =>
-   *   `Select ${view}. ${
-   *     time === null ? 'No time selected' : `Selected time is ${adapter.format(time, 'fullTime')}`
-   *   }`
-   */
-  getClockLabelText: PropTypes.func,
-  /**
-   * Get clock number aria-text for hours.
-   * @param {string} hours The hours to format.
-   * @returns {string} the formatted hours text.
-   * @default (hours: string) => `${hours} hours`
-   * @deprecated Use the `localeText` prop of `LocalizationProvider` instead, see https://mui.com/x/react-date-pickers/localization
-   */
-  getHoursClockNumberText: PropTypes.func,
-  /**
-   * Get clock number aria-text for minutes.
-   * @param {string} minutes The minutes to format.
-   * @returns {string} the formatted minutes text.
-   * @default (minutes: string) => `${minutes} minutes`
-   * @deprecated Use the `localeText` prop of `LocalizationProvider` instead, see https://mui.com/x/react-date-pickers/localization
-   */
-  getMinutesClockNumberText: PropTypes.func,
-  /**
-   * Get clock number aria-text for seconds.
-   * @param {string} seconds The seconds to format.
-   * @returns {string} the formatted seconds text.
-   * @default (seconds: string) => `${seconds} seconds`
-   * @deprecated Use the `localeText` prop of `LocalizationProvider` instead, see https://mui.com/x/react-date-pickers/localization
-   */
-  getSecondsClockNumberText: PropTypes.func,
   /**
    * Max time acceptable time.
    * For input validation date part of passed object will be ignored if `disableIgnoringDatePartForTimeValidation` not specified.
