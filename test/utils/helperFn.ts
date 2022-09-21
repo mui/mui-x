@@ -67,24 +67,10 @@ export function getColumnValues(colIndex: number) {
 export function getColumnHeaderCell(colIndex: number, rowIndex?: number): HTMLElement {
   const headerRowSelector =
     rowIndex === undefined ? '' : `[role="row"][aria-rowindex="${rowIndex + 1}"] `;
-
   const headerCellSelector = `[role="columnheader"][aria-colindex="${colIndex + 1}"]`;
   const columnHeader = document.querySelector<HTMLElement>(
     `${headerRowSelector}${headerCellSelector}`,
   );
-  // console.log(Array.from(document.querySelectorAll(`${headerRowSelector}[role="columnheader"]`)).map((node) => node!.textContent))
-  // console.log(document.querySelector<HTMLElement>(
-  //   `${headerRowSelector}[role="columnheader"][aria-colindex="${colIndex - 1}"]`,
-  // ));
-  // console.log(document.querySelector<HTMLElement>(
-  //   `${headerRowSelector}[role="columnheader"][aria-colindex="${colIndex}"]`,
-  // ));
-  // console.log(document.querySelector<HTMLElement>(
-  //   `${headerRowSelector}[role="columnheader"][aria-colindex="${colIndex + 1}"]`,
-  // ));
-  // console.log(document.querySelector<HTMLElement>(
-  //   `${headerRowSelector}[role="columnheader"][aria-colindex="${colIndex + 2}"]`,
-  // ));
 
   if (columnHeader == null) {
     throw new Error(`columnheader ${colIndex} not found`);

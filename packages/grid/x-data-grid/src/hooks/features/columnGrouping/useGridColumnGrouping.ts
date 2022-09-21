@@ -49,41 +49,6 @@ const createGroupLookup = (columnGroupingModel: GridColumnNode[]): GridColumnGro
   return { ...groupLookup };
 };
 
-// export const columnGroupsStateInitializer: GridStateInitializer<
-//   Pick<DataGridProcessedProps, 'columnGroupingModel'>
-// > = (state, props) => {
-//   const groupLookup = createGroupLookup(props.columnGroupingModel ?? []);
-//   const unwrappedGroupingModel = unwrapGroupingColumnModel(props.columnGroupingModel ?? []);
-
-//   console.log(state.columns)
-//   const orderedFields = (state.columns as GridColumnsState)?.all ?? [];
-//   const columnVisibilityModel = state.columns?.columnVisibilityModel ?? {};
-//   const visibleColumnFields = orderedFields.filter(
-//     (field) => columnVisibilityModel[field] !== false,
-//   );
-
-//   const columnGroupsHeaderStructure = getColumnGroupsHeaderStructure(
-//     orderedFields as string[],
-//     unwrappedGroupingModel,
-//   );
-
-//   const maxDepth =
-//     visibleColumnFields.length === 0
-//       ? 0
-//       : Math.max(...visibleColumnFields.map((field) => unwrappedGroupingModel[field]?.length ?? 0));
-
-//   return {
-//     ...state,
-//     columnGrouping: {
-//       lookup: groupLookup,
-//       groupCollapsedModel: {},
-//       unwrappedGroupingModel,
-//       headerStructure: columnGroupsHeaderStructure,
-//       maxDepth,
-//     },
-//   };
-// };
-
 /**
  * @requires useGridColumns (method, event)
  * @requires useGridParamsApi (method)
@@ -171,7 +136,6 @@ export const useGridColumnGrouping = (
         ...state,
         columnGrouping: {
           lookup: groupLookup,
-          // groupCollapsedModel: {},
           unwrappedGroupingModel,
           headerStructure: columnGroupsHeaderStructure,
           maxDepth,
