@@ -441,23 +441,6 @@ export const applySectionValueToDate = <TDate>({
   return date;
 };
 
-export const createDateFromSections = <TDate, TSection extends FieldSection>({
-  utils,
-  sections,
-  format,
-}: {
-  utils: MuiPickerFieldAdapter<TDate>;
-  sections: TSection[];
-  format: string;
-}) => {
-  if (sections.every((section) => section.value === '')) {
-    return null;
-  }
-
-  const dateFromSectionsStr = createDateStrFromSections(sections);
-  return utils.parse(dateFromSectionsStr, format);
-};
-
 export const cleanTrailingZeroInNumericSectionValue = (value: string, maximum: number) => {
   const maximumStr = maximum.toString();
   let cleanValue = value;

@@ -11,7 +11,7 @@ import {
 import {
   addPositionPropertiesToSections,
   applySectionValueToDate,
-  createDateFromSections,
+  createDateStrFromSections,
 } from './useField.utils';
 
 interface UpdateSectionValueParams<TDate, TSection> {
@@ -142,7 +142,8 @@ export const useFieldState = <
     );
     const newSections = setSectionValue(state.selectedSectionIndexes.start, newSectionValue);
     const activeDateSections = fieldValueManager.getActiveDateSections(newSections, activeSection);
-    const newDate = createDateFromSections({ utils, format, sections: activeDateSections });
+    const newDate = utils.parse(createDateStrFromSections(activeDateSections), format);
+
     if (newDate != null && utils.isValid(newDate)) {
       let mergedDate = activeDateManager.referenceActiveDate;
 
