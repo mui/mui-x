@@ -12,7 +12,7 @@ import {
   openPicker,
   getClockMouseEvent,
   withPickerControls,
-} from '../../../../test/utils/pickers-utils';
+} from 'test/utils/pickers-utils';
 
 const WrappedDesktopDateTimePicker = withPickerControls(DesktopDateTimePicker)({
   DialogProps: { TransitionComponent: FakeTransitionComponent },
@@ -512,6 +512,21 @@ describe('<DesktopDateTimePicker />', () => {
       expect(onAccept.callCount).to.equal(1);
       expect(onAccept.lastCall.args[0]).toEqualDateTime(new Date(2025, 0, 1, 11, 53));
       expect(onClose.callCount).to.equal(1);
+    });
+  });
+
+  describe('localization', () => {
+    it('should respect the `localeText` prop', () => {
+      render(
+        <WrappedDesktopDateTimePicker
+          initialValue={null}
+          localeText={{ cancelButtonLabel: 'Custom cancel' }}
+          componentsProps={{ actionBar: { actions: () => ['cancel'] } }}
+        />,
+      );
+      openPicker({ type: 'date', variant: 'desktop' });
+
+      expect(screen.queryByText('Custom cancel')).not.to.equal(null);
     });
   });
 });

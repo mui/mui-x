@@ -8,7 +8,8 @@ import {
   wrapPickerMount,
   createPickerRenderer,
   adapterToUse,
-} from '../../../../test/utils/pickers-utils';
+  withPickerControls,
+} from 'test/utils/pickers-utils';
 
 const defaultRangeRenderInput = (startProps: TextFieldProps, endProps: TextFieldProps) => (
   <React.Fragment>
@@ -16,6 +17,10 @@ const defaultRangeRenderInput = (startProps: TextFieldProps, endProps: TextField
     <TextField {...endProps} />
   </React.Fragment>
 );
+
+const WrappedStaticDateTimePicker = withPickerControls(StaticDateRangePicker)({
+  renderInput: defaultRangeRenderInput,
+});
 
 describe('<StaticDateRangePicker />', () => {
   const { render } = createPickerRenderer({ clock: 'fake' });
@@ -79,5 +84,18 @@ describe('<StaticDateRangePicker />', () => {
         '[role="grid"] [role="rowgroup"] > [role="row"] button[role="gridcell"]',
       ),
     ).to.have.text('1');
+  });
+
+  describe('localization', () => {
+    it('should respect the `localeText` prop', () => {
+      render(
+        <WrappedStaticDateTimePicker
+          initialValue={[null, null]}
+          localeText={{ cancelButtonLabel: 'Custom cancel' }}
+        />,
+      );
+
+      expect(screen.queryByText('Custom cancel')).not.to.equal(null);
+    });
   });
 });

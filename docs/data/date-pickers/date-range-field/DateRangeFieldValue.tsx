@@ -6,12 +6,10 @@ import { DateRange } from '@mui/x-date-pickers-pro/DateRangePicker';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { Unstable_SingleInputDateRangeField as SingleInputDateRangeField } from '@mui/x-date-pickers-pro/SingleInputDateRangeField';
 
-const today = dayjs();
-
 export default function DateRangeFieldValue() {
   const [value, setValue] = React.useState<DateRange<Dayjs>>(() => [
-    today,
-    today.add(1, 'week'),
+    dayjs('2022-04-07'),
+    dayjs('2022-04-13'),
   ]);
 
   return (
@@ -19,7 +17,7 @@ export default function DateRangeFieldValue() {
       <Stack spacing={2} direction="row">
         <SingleInputDateRangeField
           label="Uncontrolled field"
-          defaultValue={[today, today.add(1, 'week')]}
+          defaultValue={[dayjs('2022-04-07'), dayjs('2022-04-13')]}
         />
         <SingleInputDateRangeField
           label="Controlled field"

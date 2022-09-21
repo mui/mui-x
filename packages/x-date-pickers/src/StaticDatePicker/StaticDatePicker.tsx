@@ -31,7 +31,7 @@ export interface StaticDatePickerSlotsComponentsProps
     CalendarPickerSlotsComponentsProps {}
 
 export interface StaticDatePickerProps<TInputDate, TDate>
-  extends StaticPickerProps<BaseDatePickerProps<TInputDate, TDate>> {
+  extends StaticPickerProps<TDate, BaseDatePickerProps<TInputDate, TDate>> {
   /**
    * Overrideable components.
    * @default {}
@@ -74,10 +74,12 @@ export const StaticDatePicker = React.forwardRef(function StaticDatePicker<
     ToolbarComponent = DatePickerToolbar,
     value,
     onChange,
-    displayStaticWrapperAs = 'mobile',
+    displayStaticWrapperAs,
     components,
     componentsProps,
+    localeText,
     sx,
+    className,
     ...other
   } = props;
 
@@ -91,7 +93,9 @@ export const StaticDatePicker = React.forwardRef(function StaticDatePicker<
       displayStaticWrapperAs={displayStaticWrapperAs}
       components={components}
       componentsProps={componentsProps}
+      localeText={localeText}
       sx={sx}
+      className={className}
       {...wrapperProps}
     >
       <CalendarOrClockPicker
@@ -180,7 +184,7 @@ StaticDatePicker.propTypes = {
   disablePast: PropTypes.bool,
   /**
    * Force static wrapper inner components to be rendered in mobile or desktop mode.
-   * @default 'mobile'
+   * @default "mobile"
    */
   displayStaticWrapperAs: PropTypes.oneOf(['desktop', 'mobile']),
   /**
@@ -241,6 +245,10 @@ StaticDatePicker.propTypes = {
    * @default false
    */
   loading: PropTypes.bool,
+  /**
+   * Locale for components texts
+   */
+  localeText: PropTypes.object,
   /**
    * Custom mask. Can be used to override generate from format. (e.g. `__/__/____ __:__` or `__/__/____ __:__ _M`).
    */

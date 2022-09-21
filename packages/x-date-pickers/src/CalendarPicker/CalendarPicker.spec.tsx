@@ -6,7 +6,7 @@ import { CalendarPicker } from '@mui/x-date-pickers/CalendarPicker';
 <CalendarPicker<Moment>
   view="day"
   views={['day']}
-  date={moment()}
+  value={moment()}
   minDate={moment()}
   maxDate={moment()}
   onChange={(date) => date?.format()}

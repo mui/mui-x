@@ -21,7 +21,7 @@
     "disableOpenPicker": { "type": { "name": "bool" } },
     "displayStaticWrapperAs": {
       "type": { "name": "enum", "description": "'desktop'<br>&#124;&nbsp;'mobile'" },
-      "default": "'mobile'"
+      "default": "\"mobile\""
     },
     "getClockLabelText": {
       "type": { "name": "func" },
@@ -38,6 +38,7 @@
     "inputRef": {
       "type": { "name": "union", "description": "func<br>&#124;&nbsp;{ current?: object }" }
     },
+    "localeText": { "type": { "name": "object" } },
     "mask": { "type": { "name": "string" } },
     "maxTime": { "type": { "name": "any" } },
     "minTime": { "type": { "name": "any" } },

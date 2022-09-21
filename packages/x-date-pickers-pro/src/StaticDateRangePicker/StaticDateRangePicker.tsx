@@ -34,7 +34,7 @@ export interface StaticDateRangePickersSlotsComponentsProps
     DateRangePickerViewSlotsComponentsProps {}
 
 export interface StaticDateRangePickerProps<TInputDate, TDate>
-  extends StaticPickerProps<BaseDateRangePickerProps<TInputDate, TDate>> {
+  extends StaticPickerProps<TDate, BaseDateRangePickerProps<TInputDate, TDate>> {
   /**
    * Overrideable components.
    * @default {}
@@ -85,12 +85,14 @@ export const StaticDateRangePicker = React.forwardRef(function StaticDateRangePi
   );
 
   const {
-    displayStaticWrapperAs = 'mobile',
+    displayStaticWrapperAs,
     value,
     onChange,
     components,
     componentsProps,
+    localeText,
     sx,
+    className,
     ...other
   } = props;
 
@@ -110,7 +112,9 @@ export const StaticDateRangePicker = React.forwardRef(function StaticDateRangePi
       displayStaticWrapperAs={displayStaticWrapperAs}
       components={components}
       componentsProps={componentsProps}
+      localeText={localeText}
       sx={sx}
+      className={className}
       {...wrapperProps}
     >
       <DateRangePickerView
@@ -210,7 +214,7 @@ StaticDateRangePicker.propTypes = {
   disablePast: PropTypes.bool,
   /**
    * Force static wrapper inner components to be rendered in mobile or desktop mode.
-   * @default 'mobile'
+   * @default "mobile"
    */
   displayStaticWrapperAs: PropTypes.oneOf(['desktop', 'mobile']),
   /**
@@ -218,12 +222,6 @@ StaticDateRangePicker.propTypes = {
    * Needs to provide `getWeekNumber` if the adapter does not support `getWeekNumber`
    */
   displayWeekNumber: PropTypes.bool,
-  /**
-   * Text for end input label and toolbar placeholder.
-   * @default 'End'
-   * @deprecated Use the `localeText` prop of `LocalizationProvider` instead, see https://mui.com/x/react-date-pickers/localization
-   */
-  endText: PropTypes.node,
   /**
    * Get aria-label text for control that opens picker dialog. Aria-label text must include selected date. @DateIOType
    * @template TInputDate, TDate
@@ -277,6 +275,10 @@ StaticDateRangePicker.propTypes = {
    * @default false
    */
   loading: PropTypes.bool,
+  /**
+   * Locale for components texts
+   */
+  localeText: PropTypes.object,
   /**
    * Custom mask. Can be used to override generate from format. (e.g. `__/__/____ __:__` or `__/__/____ __:__ _M`).
    * @default '__/__/____'
@@ -423,12 +425,6 @@ StaticDateRangePicker.propTypes = {
    * If `true`, show the toolbar even in desktop mode.
    */
   showToolbar: PropTypes.bool,
-  /**
-   * Text for start input label and toolbar placeholder.
-   * @default 'Start'
-   * @deprecated Use the `localeText` prop of `LocalizationProvider` instead, see https://mui.com/x/react-date-pickers/localization
-   */
-  startText: PropTypes.node,
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */
