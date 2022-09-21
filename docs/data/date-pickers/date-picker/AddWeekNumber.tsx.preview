@@ -1,7 +1,6 @@
-<LocalizationProvider dateAdapter={AdapterDayjs} instance={dayjsInstance}>
+<LocalizationProvider dateAdapter={AdapterDayjs}>
   <StaticDatePicker
     displayWeekNumber
-    getWeekNumber={(date: Dayjs): string => `${date.week()}`}
     label="Basic example"
     value={value}
     onChange={(newValue) => {
