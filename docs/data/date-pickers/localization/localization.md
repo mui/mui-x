@@ -43,7 +43,7 @@ in the GitHub repository.
 ### Using the theme
 
 To translate all your components from `@mui/x-date-pickers` and `@mui/x-date-pickers-pro`,
-you just have to import the locale from `@mui/x-date-pikers` (see the [list of supported locales below](/#supported-locales)).
+you just have to import the locale from `@mui/x-date-pikers` (see the [list of supported locales below](#supported-locales)).
 
 ```jsx
 import { createTheme, ThemeProvider } from '@mui/material/styles';
@@ -120,9 +120,9 @@ import bgLocale from 'date-fns/locale/bg';
 </LocalizationProvider>;
 ```
 
-### Using the component prop
+### Using props
 
-If you want to customize some translations on specific component, you can use the `localeText` prop exposer by all our pickers.
+If you want to customize some translations on specific component, you can use the `localeText` prop exposed by all our pickers.
 
 ```jsx
 <DatePicker localeText={{ clearButtonLabel: 'Empty' }} />
