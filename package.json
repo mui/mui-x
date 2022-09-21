@@ -133,6 +133,7 @@
     "eslint-plugin-react-hooks": "^4.6.0",
     "format-util": "^1.0.5",
     "glob-gitignore": "^1.0.14",
+    "html-webpack-plugin": "^5.5.0",
     "jsdom": "^20.0.1",
     "jss": "^10.9.2",
     "jss-plugin-template": "^10.9.2",
@@ -149,6 +150,7 @@
     "nyc": "^15.1.0",
     "playwright": "^1.21.1",
     "prettier": "^2.7.1",
+    "process": "^0.11.10",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "serve": "^14.0.1",
@@ -177,9 +179,7 @@
       "**/@mui/monorepo"
     ]
   },
-  "dependencies": {
-    "html-webpack-plugin": "^5.5.0"
-  },
+  "dependencies": {},
   "resolutions": {
     "**/react-is": "^18.2.0"
   }
