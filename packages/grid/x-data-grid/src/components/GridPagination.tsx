@@ -22,7 +22,7 @@ const GridPaginationRoot = styled(TablePagination)(({ theme }) => ({
       display: 'inline-flex',
     },
   },
-}));
+})) as typeof TablePagination;
 
 export const GridPagination = React.forwardRef<HTMLDivElement, Partial<TablePaginationProps>>(
   function GridPagination(props, ref) {
@@ -74,7 +74,6 @@ export const GridPagination = React.forwardRef<HTMLDivElement, Partial<TablePagi
     return (
       <GridPaginationRoot
         ref={ref}
-        // @ts-ignore
         component="div"
         count={paginationState.rowCount}
         page={paginationState.page <= lastPage ? paginationState.page : lastPage}
