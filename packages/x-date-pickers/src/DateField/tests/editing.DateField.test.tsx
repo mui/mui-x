@@ -10,7 +10,7 @@ describe('<DateField /> - Editing', () => {
     clockConfig: new Date(2022, 1, 1, 1, 1, 1, 1),
   });
 
-  describe.only('ArrowDown / ArrowUp edition', () => {
+  describe('ArrowDown / ArrowUp edition', () => {
     it("should set the year to today's value when pressing ArrowDown and no value provided", () => {
       render(<DateField format={adapterToUse.formats.year} />);
       const input = screen.getByRole('textbox');
