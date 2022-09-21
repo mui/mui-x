@@ -17,15 +17,12 @@ import Box from '@mui/material/Box';
 const componentsProps: DatePickerProps<any, any>['componentsProps'] = {
   leftArrowIcon: { fontSize: 'large' },
   rightArrowIcon: { fontSize: 'large' },
-  // Using the target here makes sure that the colors will be correct in RTL mode.
-  leftArrowButton: ({ target }) => ({
+  previousIconButton: {
     size: 'medium',
-    color: target === 'previous' ? 'error' : 'success',
-  }),
-  rightArrowButton: ({ target }) => ({
+  },
+  nextIconButton: {
     size: 'medium',
-    color: target === 'previous' ? 'error' : 'success',
-  }),
+  },
 };
 
 export default function ArrowSwitcherComponentProps() {

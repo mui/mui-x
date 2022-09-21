@@ -124,7 +124,7 @@ In the example below, the tabs are using different icons and have an additional 
 ## Arrow switcher
 
 The following slots let you customize how to render the buttons and icons for an arrow switcher component—the component
-to navigate to the "Previous" and "Next" steps of the picker: `LeftArrowIcon`, `RightArrowIcon`, `LeftArrowButton`, `RightArrowButton`.
+to navigate to the "Previous" and "Next" steps of the picker: `PreviousIconButton`, `NextIconButton`, `LeftArrowIcon`, `RightArrowIcon`.
 
 ### Component props
 

@@ -41,17 +41,17 @@ export interface PickersArrowSwitcherSlotsComponent {
    * Button allowing to switch to the left view.
    * @default IconButton
    */
-  LeftArrowButton: React.ElementType;
+  PreviousIconButton: React.ElementType;
+  /**
+   * Button allowing to switch to the right view.
+   * @default IconButton
+   */
+  NextIconButton: React.ElementType;
   /**
    * Icon displayed in the left view switch button.
    * @default ArrowLeft
    */
   LeftArrowIcon: React.ElementType;
-  /**
-   * Button allowing to switch to the right view.
-   * @default IconButton
-   */
-  RightArrowButton: React.ElementType;
   /**
    * Icon displayed in the right view switch button.
    * @default ArrowRight
@@ -61,11 +61,15 @@ export interface PickersArrowSwitcherSlotsComponent {
 
 export interface PickersArrowSwitcherButtonSlotOwnerState extends PickersArrowSwitcherOwnerState {
   hidden?: boolean;
-  target: 'previous' | 'next';
 }
 
 export interface PickersArrowSwitcherSlotsComponentsProps {
-  leftArrowButton: SlotComponentProps<
+  previousIconButton: SlotComponentProps<
+    typeof IconButton,
+    PickersArrowSwitcherComponentsPropsOverrides,
+    PickersArrowSwitcherButtonSlotOwnerState
+  >;
+  nextIconButton: SlotComponentProps<
     typeof IconButton,
     PickersArrowSwitcherComponentsPropsOverrides,
     PickersArrowSwitcherButtonSlotOwnerState
@@ -74,11 +78,6 @@ export interface PickersArrowSwitcherSlotsComponentsProps {
     typeof SvgIcon,
     PickersArrowSwitcherComponentsPropsOverrides,
     undefined
-  >;
-  rightArrowButton: SlotComponentProps<
-    typeof IconButton,
-    PickersArrowSwitcherComponentsPropsOverrides,
-    PickersArrowSwitcherButtonSlotOwnerState
   >;
   rightArrowIcon: SlotComponentProps<
     typeof SvgIcon,

@@ -85,7 +85,6 @@ export const PickersArrowSwitcher = React.forwardRef(function PickersArrowSwitch
   const classes = useUtilityClasses(ownerState);
 
   const nextProps = {
-    target: 'next' as const,
     isDisabled: isNextDisabled,
     isHidden: isNextHidden,
     goTo: onGoToNext,
@@ -93,7 +92,6 @@ export const PickersArrowSwitcher = React.forwardRef(function PickersArrowSwitch
   };
 
   const previousProps = {
-    target: 'previous' as const,
     isDisabled: isPreviousDisabled,
     isHidden: isPreviousHidden,
     goTo: onGoToPrevious,
@@ -102,10 +100,10 @@ export const PickersArrowSwitcher = React.forwardRef(function PickersArrowSwitch
 
   const [leftProps, rightProps] = isRTL ? [nextProps, previousProps] : [previousProps, nextProps];
 
-  const LeftArrowButton = components.LeftArrowButton ?? PickersArrowSwitcherButton;
-  const leftArrowButtonProps = useSlotProps({
-    elementType: LeftArrowButton,
-    externalSlotProps: componentsProps.leftArrowButton,
+  const PreviousIconButton = components.PreviousIconButton ?? PickersArrowSwitcherButton;
+  const previousIconButtonProps = useSlotProps({
+    elementType: PreviousIconButton,
+    externalSlotProps: componentsProps.previousIconButton,
     additionalProps: {
       size: 'small',
       title: leftProps.label,
@@ -114,7 +112,23 @@ export const PickersArrowSwitcher = React.forwardRef(function PickersArrowSwitch
       edge: 'end',
       onClick: leftProps.goTo,
     },
-    ownerState: { ...ownerState, hidden: leftProps.isHidden, target: leftProps.target },
+    ownerState: { ...ownerState, hidden: leftProps.isHidden },
+    className: classes.button,
+  });
+
+  const NextIconButton = components.NextIconButton ?? PickersArrowSwitcherButton;
+  const nextIconButtonProps = useSlotProps({
+    elementType: NextIconButton,
+    externalSlotProps: componentsProps.nextIconButton,
+    additionalProps: {
+      size: 'small',
+      title: rightProps.label,
+      'aria-label': rightProps.label,
+      disabled: rightProps.isDisabled,
+      edge: 'start',
+      onClick: rightProps.goTo,
+    },
+    ownerState: { ...ownerState, hidden: rightProps.isHidden },
     className: classes.button,
   });
 
@@ -126,22 +140,6 @@ export const PickersArrowSwitcher = React.forwardRef(function PickersArrowSwitch
     ownerState: undefined,
   });
 
-  const RightArrowButton = components.RightArrowButton ?? PickersArrowSwitcherButton;
-  const rightArrowButtonProps = useSlotProps({
-    elementType: RightArrowButton,
-    externalSlotProps: componentsProps.rightArrowButton,
-    additionalProps: {
-      size: 'small',
-      title: rightProps.label,
-      'aria-label': rightProps.label,
-      disabled: rightProps.isDisabled,
-      edge: 'start',
-      onClick: rightProps.goTo,
-    },
-    ownerState: { ...ownerState, hidden: rightProps.isHidden, target: rightProps.target },
-    className: classes.button,
-  });
-
   const RightArrowIcon = components?.RightArrowIcon ?? ArrowRight;
   // The spread is here to avoid this bug mui/material-ui#34056
   const { ownerState: rightArrowIconOwnerState, ...rightArrowIconProps } = useSlotProps({
@@ -150,18 +148,6 @@ export const PickersArrowSwitcher = React.forwardRef(function PickersArrowSwitch
     ownerState: undefined,
   });
 
-  const leftPart = (
-    <LeftArrowButton {...leftArrowButtonProps}>
-      <LeftArrowIcon {...leftArrowIconProps} />
-    </LeftArrowButton>
-  );
-
-  const rightPart = (
-    <RightArrowButton {...rightArrowButtonProps}>
-      <RightArrowIcon {...rightArrowIconProps} />
-    </RightArrowButton>
-  );
-
   return (
     <PickersArrowSwitcherRoot
       ref={ref}
@@ -169,7 +155,13 @@ export const PickersArrowSwitcher = React.forwardRef(function PickersArrowSwitch
       ownerState={ownerState}
       {...other}
     >
-      {isRTL ? rightPart : leftPart}
+      <PreviousIconButton {...previousIconButtonProps}>
+        {isRTL ? (
+          <RightArrowIcon {...rightArrowIconProps} />
+        ) : (
+          <LeftArrowIcon {...leftArrowIconProps} />
+        )}
+      </PreviousIconButton>
       {children ? (
         <Typography variant="subtitle1" component="span">
           {children}
@@ -177,7 +169,13 @@ export const PickersArrowSwitcher = React.forwardRef(function PickersArrowSwitch
       ) : (
         <PickersArrowSwitcherSpacer className={classes.spacer} ownerState={ownerState} />
       )}
-      {isRTL ? leftPart : rightPart}
+      <NextIconButton {...nextIconButtonProps}>
+        {isRTL ? (
+          <LeftArrowIcon {...leftArrowIconProps} />
+        ) : (
+          <RightArrowIcon {...rightArrowIconProps} />
+        )}
+      </NextIconButton>
     </PickersArrowSwitcherRoot>
   );
 });
