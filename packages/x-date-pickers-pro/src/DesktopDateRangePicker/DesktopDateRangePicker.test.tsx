@@ -988,4 +988,19 @@ describe('<DesktopDateRangePicker />', () => {
       expect(getPickerDay('17')).to.have.attribute('disabled');
     });
   });
+
+  describe('localization', () => {
+    it('should respect the `localeText` prop', () => {
+      render(
+        <WrappedDesktopDateRangePicker
+          initialValue={[null, null]}
+          localeText={{ cancelButtonLabel: 'Custom cancel' }}
+          componentsProps={{ actionBar: { actions: () => ['cancel'] } }}
+        />,
+      );
+      openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'start' });
+
+      expect(screen.queryByText('Custom cancel')).not.to.equal(null);
+    });
+  });
 });

@@ -39,6 +39,7 @@
     "inputRef": {
       "type": { "name": "union", "description": "func<br>&#124;&nbsp;{ current?: object }" }
     },
+    "localeText": { "type": { "name": "object" } },
     "mask": { "type": { "name": "string" } },
     "maxTime": { "type": { "name": "any" } },
     "minTime": { "type": { "name": "any" } },

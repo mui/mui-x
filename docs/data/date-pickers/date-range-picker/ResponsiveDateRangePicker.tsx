@@ -14,11 +14,9 @@ export default function ResponsiveDateRangePicker() {
 
   return (
     <Stack spacing={3}>
-      <LocalizationProvider
-        dateAdapter={AdapterDayjs}
-        localeText={{ start: 'Mobile start', end: 'Mobile end' }}
-      >
+      <LocalizationProvider dateAdapter={AdapterDayjs}>
         <MobileDateRangePicker
+          localeText={{ start: 'Mobile start', end: 'Mobile end' }}
           value={value}
           onChange={(newValue) => {
             setValue(newValue);
@@ -31,12 +29,8 @@ export default function ResponsiveDateRangePicker() {
             </React.Fragment>
           )}
         />
-      </LocalizationProvider>
-      <LocalizationProvider
-        dateAdapter={AdapterDayjs}
-        localeText={{ start: 'Desktop start', end: 'Desktop end' }}
-      >
         <DesktopDateRangePicker
+          localeText={{ start: 'Desktop start', end: 'Desktop end' }}
           value={value}
           onChange={(newValue) => {
             setValue(newValue);

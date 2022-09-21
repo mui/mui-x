@@ -4,8 +4,12 @@ import { expect } from 'chai';
 import { spy } from 'sinon';
 import { fireEvent, screen } from '@mui/monorepo/test/utils';
 import { StaticDateTimePicker } from '@mui/x-date-pickers/StaticDateTimePicker';
-import { adapterToUse, createPickerRenderer } from 'test/utils/pickers-utils';
+import { adapterToUse, createPickerRenderer, withPickerControls } from 'test/utils/pickers-utils';
 import { DateTimePickerTabs, DateTimePickerTabsProps } from '../DateTimePicker';
+
+const WrappedStaticDateTimePicker = withPickerControls(StaticDateTimePicker)({
+  renderInput: (params) => <TextField {...params} />,
+});
 
 describe('<StaticDateTimePicker />', () => {
   const { render } = createPickerRenderer({ clock: 'fake' });
@@ -130,6 +134,19 @@ describe('<StaticDateTimePicker />', () => {
       );
 
       expect(screen.getByRole('button', { name: /go to text input view/i })).not.to.equal(null);
+    });
+  });
+
+  describe('localization', () => {
+    it('should respect the `localeText` prop', () => {
+      render(
+        <WrappedStaticDateTimePicker
+          initialValue={null}
+          localeText={{ cancelButtonLabel: 'Custom cancel' }}
+        />,
+      );
+
+      expect(screen.queryByText('Custom cancel')).not.to.equal(null);
     });
   });
 });

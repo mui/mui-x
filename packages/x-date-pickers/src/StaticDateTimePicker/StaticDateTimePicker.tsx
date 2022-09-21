@@ -32,7 +32,7 @@ export interface StaticDateTimePickerSlotsComponentsProps
     CalendarOrClockPickerSlotsComponentsProps {}
 
 export interface StaticDateTimePickerProps<TInputDate, TDate>
-  extends StaticPickerProps<BaseDateTimePickerProps<TInputDate, TDate>> {
+  extends StaticPickerProps<TDate, BaseDateTimePickerProps<TInputDate, TDate>> {
   /**
    * Overrideable components.
    * @default {}
@@ -72,12 +72,13 @@ export const StaticDateTimePicker = React.forwardRef(function StaticDateTimePick
   // Note that we are passing down all the value without spread.
   // It saves us >1kb gzip and make any prop available automatically on any level down.
   const {
-    displayStaticWrapperAs = 'mobile',
+    displayStaticWrapperAs,
     onChange,
     ToolbarComponent = DateTimePickerToolbar,
     value,
     components: providedComponents,
     componentsProps,
+    localeText,
     sx,
     hideTabs = displayStaticWrapperAs === 'desktop',
     className,
@@ -109,6 +110,7 @@ export const StaticDateTimePicker = React.forwardRef(function StaticDateTimePick
       displayStaticWrapperAs={displayStaticWrapperAs}
       components={components}
       componentsProps={componentsProps}
+      localeText={localeText}
       sx={sx}
       className={className}
       {...wrapperProps}
@@ -219,7 +221,7 @@ StaticDateTimePicker.propTypes = {
   disablePast: PropTypes.bool,
   /**
    * Force static wrapper inner components to be rendered in mobile or desktop mode.
-   * @default 'mobile'
+   * @default "mobile"
    */
   displayStaticWrapperAs: PropTypes.oneOf(['desktop', 'mobile']),
   /**
@@ -292,6 +294,10 @@ StaticDateTimePicker.propTypes = {
    * @default false
    */
   loading: PropTypes.bool,
+  /**
+   * Locale for components texts
+   */
+  localeText: PropTypes.object,
   /**
    * Custom mask. Can be used to override generate from format. (e.g. `__/__/____ __:__` or `__/__/____ __:__ _M`).
    */
