@@ -10,7 +10,7 @@ describe('<DateField /> - Editing', () => {
     clockConfig: new Date(2022, 1, 1, 1, 1, 1, 1),
   });
 
-  describe('ArrowDown / ArrowUp edition', () => {
+  describe.only('ArrowDown / ArrowUp edition', () => {
     it("should set the year to today's value when pressing ArrowDown and no value provided", () => {
       render(<DateField format={adapterToUse.formats.year} />);
       const input = screen.getByRole('textbox');
@@ -43,13 +43,11 @@ describe('<DateField /> - Editing', () => {
       expect(input.value).to.equal('January');
     });
 
-    // Remove when the adapter supports getDay / setDay
-    // eslint-disable-next-line mocha/no-skipped-tests
-    it.skip("should set the day to the last day of today's month when pressing ArrowDown and no value provided", () => {
+    it("should set the day to the last day of today's month when pressing ArrowDown and no value provided", () => {
       render(<DateField format={adapterToUse.formats.dayOfMonth} />);
       const input = screen.getByRole('textbox');
       clickOnField(input, 1, clock);
-      userEvent.keyPress(input, { key: 'ArrowDOwn' });
+      userEvent.keyPress(input, { key: 'ArrowDown' });
       expect(input.value).to.equal('28');
     });
 

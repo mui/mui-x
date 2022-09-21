@@ -409,7 +409,6 @@ export const applySectionValueToDate = <TDate>({
   date: TDate;
   getSectionValue: (getter: (date: TDate) => number) => number;
 }) => {
-  // TODO: Add day/date when setDate and getDate are released.
   const adapterMethods = {
     second: {
       getter: utils.getSeconds,
@@ -422,6 +421,10 @@ export const applySectionValueToDate = <TDate>({
     hour: {
       getter: utils.getHours,
       setter: utils.setHours,
+    },
+    day: {
+      getter: utils.getDate,
+      setter: utils.setDate,
     },
     month: {
       getter: utils.getMonth,
