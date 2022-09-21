@@ -22,6 +22,7 @@ const pages: MuiPage[] = [
       { pathname: '/x/react-data-grid', title: 'Overview' },
       { pathname: '/x/react-data-grid/demo' },
       { pathname: '/x/react-data-grid/getting-started' },
+      { pathname: '/x/react-data-grid/migration-v4', title: 'Migration from v4' },
       { pathname: '/x/react-data-grid/migration-v5', title: 'Migration from v5' },
       { pathname: '/x/react-data-grid/layout' },
       {
