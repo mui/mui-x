@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { SlotComponentProps } from '@mui/base/utils';
-import { TextFieldProps } from '@mui/material/TextField';
+import TextField, { TextFieldProps } from '@mui/material/TextField';
 import { UseFieldInternalProps } from '../internals/hooks/useField';
 import {
   DateValidationError,
@@ -53,5 +53,5 @@ export interface DateFieldSlotsComponent {
 }
 
 export interface DateFieldSlotsComponentsProps<TDate, TInputDate> {
-  input?: SlotComponentProps<'input', {}, DateFieldOwnerState<TDate, TInputDate>>;
+  input?: SlotComponentProps<typeof TextField, {}, DateFieldOwnerState<TDate, TInputDate>>;
 }

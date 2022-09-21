@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { SlotComponentProps } from '@mui/base/utils';
-import { TextFieldProps } from '@mui/material/TextField';
+import TextField, { TextFieldProps } from '@mui/material/TextField';
 import { DefaultizedProps } from '@mui/x-date-pickers/internals';
 import { UseFieldInternalProps, FieldSection } from '@mui/x-date-pickers/internals-fields';
 import { DateRange } from '../internal/models';
@@ -58,7 +58,11 @@ export interface SingleInputDateRangeFieldSlotsComponent {
 }
 
 export interface SingleInputDateRangeFieldSlotsComponentsProps<TDate, TInputDate> {
-  input?: SlotComponentProps<'input', {}, SingleInputDateRangeFieldOwnerState<TDate, TInputDate>>;
+  input?: SlotComponentProps<
+    typeof TextField,
+    {},
+    SingleInputDateRangeFieldOwnerState<TDate, TInputDate>
+  >;
 }
 
 export interface DateRangeFieldSection extends FieldSection {
