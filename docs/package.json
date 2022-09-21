@@ -72,7 +72,7 @@
     "react-hook-form": "^7.35.0",
     "react-is": "^18.2.0",
     "react-router": "^6.4.0",
-    "react-router-dom": "^6.3.0",
+    "react-router-dom": "^6.4.1",
     "react-text-mask": "^5.4.3",
     "recast": "^0.21.2",
     "rimraf": "^3.0.2",
