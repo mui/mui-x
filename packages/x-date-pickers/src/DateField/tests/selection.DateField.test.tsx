@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import { Unstable_DateField as DateField } from '@mui/x-date-pickers/DateField';
-import { screen } from '@mui/monorepo/test/utils';
+import { screen, act } from '@mui/monorepo/test/utils';
 import { createPickerRenderer } from 'test/utils/pickers-utils';
 
 describe('<DateField /> - Selection', () => {
@@ -11,8 +11,10 @@ describe('<DateField /> - Selection', () => {
     render(<DateField />);
     const input = screen.getByRole('textbox');
     // Simulate a <Tab> focus interaction on desktop
-    input.focus();
-    input.select();
+    act(() => {
+      input.focus();
+      input.select();
+    });
 
     expect(input.value).to.equal('month/day/year');
     expect(input.selectionStart).to.equal(0);
@@ -23,9 +25,11 @@ describe('<DateField /> - Selection', () => {
     render(<DateField />);
     const input: HTMLInputElement = screen.getByRole('textbox');
     // Simulate a touch focus interaction on mobile
-    input.focus();
-    input.setSelectionRange(7, 9);
-    clock.runToLast();
+    act(() => {
+      input.focus();
+      input.setSelectionRange(7, 9);
+      clock.runToLast();
+    });
 
     expect(input.value).to.equal('month/day/year');
     expect(input.selectionStart).to.equal(6);
@@ -36,9 +40,11 @@ describe('<DateField /> - Selection', () => {
     render(<DateField />);
     const input = screen.getByRole('textbox');
     // Simulate a click focus interaction on desktop
-    input.focus();
-    input.setSelectionRange(7, 7);
-    clock.runToLast();
+    act(() => {
+      input.focus();
+      input.setSelectionRange(7, 7);
+      clock.runToLast();
+    });
 
     expect(input.value).to.equal('month/day/year');
     expect(input.selectionStart).to.equal(6);
