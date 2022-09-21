@@ -464,7 +464,7 @@ export function DayPicker<TDate>(inProps: DayPickerProps<TDate>) {
                 className={classes.weekContainer}
               >
                 {displayWeekNumber && getWeekNumber && (
-                  <PickersCalendarWeekNumber className={classes.weekNumber}>
+                  <PickersCalendarWeekNumber className={classes.weekNumber} role="rowheader">
                     {getWeekNumber(week[0])}
                   </PickersCalendarWeekNumber>
                 )}
