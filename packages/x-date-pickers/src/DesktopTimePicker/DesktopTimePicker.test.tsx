@@ -522,4 +522,19 @@ describe('<DesktopTimePicker />', () => {
       expect(onClose.callCount).to.equal(1);
     });
   });
+
+  describe('localization', () => {
+    it('should respect the `localeText` prop', () => {
+      render(
+        <WrappedDesktopTimePicker
+          initialValue={null}
+          localeText={{ cancelButtonLabel: 'Custom cancel' }}
+          componentsProps={{ actionBar: { actions: () => ['cancel'] } }}
+        />,
+      );
+      openPicker({ type: 'time', variant: 'desktop' });
+
+      expect(screen.queryByText('Custom cancel')).not.to.equal(null);
+    });
+  });
 });
