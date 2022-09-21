@@ -30,7 +30,7 @@ To customize the date format used in the toolbar, you can use prop `toolbarForma
 To customize day names in calendar header, you can use `dayOfWeekFormatter` which takes as an input the short name of the day provided by the date-library and returns it's formatted version.
 The default formatter only keeps the first letter and capitalises it.
 
-In the example bellow, we add a dot at the end of each day in the calendar header, and use `eee dd MMMM` format for the toolbar.
+The example bellow adds a dot at the end of each day in the calendar header, and uses `eee dd MMMM` format for the toolbar.
 
 {{"demo": "CustomizeDayPicker.js"}}
 
@@ -133,6 +133,7 @@ If you want to customize some translations on specific component, you can use th
 | Locale                  | BCP 47 language tag | Import name |
 | :---------------------- | :------------------ | :---------- |
 | English (United States) | en-US               | `enUS`      |
+| Finnish                 | fi-FI               | `fiFI`      |
 | French                  | fr-FR               | `frFR`      |
 | German                  | de-DE               | `deDE`      |
 | Icelandic               | is-IS               | `isIS`      |
