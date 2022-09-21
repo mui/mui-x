@@ -160,6 +160,23 @@ describe('<CalendarPicker />', () => {
     });
   });
 
+  it('should render week number when `displayWeekNumber=true`', () => {
+    render(
+      <LocalizationProvider dateAdapter={AdapterClassToUse}>
+        <CalendarPicker
+          value={adapterToUse.date(new Date(2019, 0, 1))}
+          onChange={() => {}}
+          displayWeekNumber
+          // TODO: remove `getWeekNumber` when all adapters support it
+          getWeekNumber={() => 'x'}
+        />
+        ,
+      </LocalizationProvider>,
+    );
+
+    expect(screen.getAllByRole('rowheader').length).to.equal(5);
+  });
+
   describe('view: day', () => {
     it('renders day calendar standalone', () => {
       render(
