@@ -135,7 +135,7 @@ export const PureDateInput = React.forwardRef(function PureDateInput<TInputDate,
     className,
   } = props;
 
-  const localeText = useLocaleText();
+  const localeText = useLocaleText<TDate>();
 
   // The prop can not be deprecated
   // Default is "Choose date, ...", but time pickers override it with "Choose time, ..."

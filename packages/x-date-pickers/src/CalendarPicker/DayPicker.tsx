@@ -260,7 +260,7 @@ export function DayPicker<TDate>(inProps: DayPickerProps<TDate>) {
     disableFuture,
   });
 
-  const localeText = useLocaleText();
+  const localeText = useLocaleText<TDate>();
 
   const [internalFocusedDay, setInternalFocusedDay] = React.useState<TDate>(
     () => focusedDay || now,

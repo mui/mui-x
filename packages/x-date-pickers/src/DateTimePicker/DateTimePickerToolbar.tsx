@@ -95,7 +95,7 @@ export function DateTimePickerToolbar<TDate extends unknown>(
   } = props;
   const ownerState = props;
   const utils = useUtils<TDate>();
-  const localeText = useLocaleText();
+  const localeText = useLocaleText<TDate>();
   const classes = useUtilityClasses(ownerState);
 
   const toolbarTitle = toolbarTitleProp ?? localeText.dateTimePickerDefaultToolbarTitle;

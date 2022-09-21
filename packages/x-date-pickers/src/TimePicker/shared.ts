@@ -67,7 +67,7 @@ export function useTimePickerDefaultizedProps<
   const utils = useUtils<TDate>();
   const ampm = themeProps.ampm ?? utils.is12HourCycleInCurrentLocale();
 
-  const localeText = useLocaleText();
+  const localeText = useLocaleText<TDate>();
 
   const getOpenDialogAriaText = localeText.openTimePickerDialogue;
 

@@ -237,7 +237,7 @@ export const ClockPicker = React.forwardRef(function ClockPicker<TDate extends u
     getSecondsClockNumberText: getSecondsClockNumberTextProp,
   });
 
-  const localeText = useLocaleText();
+  const localeText = useLocaleText<TDate>();
 
   const getClockLabelText = getClockLabelTextProp ?? localeText.clockLabelText;
   const getHoursClockNumberText = getHoursClockNumberTextProp ?? localeText.hoursClockNumberText;

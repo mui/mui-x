@@ -133,7 +133,7 @@ export function TimePickerToolbar<TDate extends unknown>(
     ...other
   } = props;
   const utils = useUtils<TDate>();
-  const localeText = useLocaleText();
+  const localeText = useLocaleText<TDate>();
 
   const toolbarTitle = toolbarTitleProp ?? localeText.timePickerDefaultToolbarTitle;
   const theme = useTheme();

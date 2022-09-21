@@ -195,7 +195,7 @@ export function PickersCalendarHeader<TDate>(inProps: PickersCalendarHeaderProps
     getViewSwitchingButtonText: getViewSwitchingButtonTextProp,
   });
 
-  const localeText = useLocaleText();
+  const localeText = useLocaleText<TDate>();
 
   const getViewSwitchingButtonText =
     getViewSwitchingButtonTextProp ?? localeText.calendarViewSwitchingButtonAriaLabel;
