@@ -1,4 +1,6 @@
+/* eslint-disable class-methods-use-this */
 import { Dayjs } from 'dayjs';
+import weekOfYear from 'dayjs/plugin/weekOfYear';
 import BaseAdapterDayjs from '@date-io/dayjs';
 import { MuiFormatTokenMap, MuiPickerFieldAdapter } from '../internals/models';
 
@@ -24,6 +26,11 @@ const formatTokenMap: MuiFormatTokenMap = {
 };
 
 export class AdapterDayjs extends BaseAdapterDayjs implements MuiPickerFieldAdapter<Dayjs> {
+  constructor() {
+    super();
+    this.rawDayJsInstance.extend(weekOfYear);
+  }
+
   public formatTokenMap = formatTokenMap;
 
   /**
@@ -56,5 +63,9 @@ export class AdapterDayjs extends BaseAdapterDayjs implements MuiPickerFieldAdap
   // Redefined here just to show how it can be written using expandFormat
   public getFormatHelperText = (format: string) => {
     return this.expandFormat(format).replace(/a/gi, '(a|p)m').toLocaleLowerCase();
+  };
+
+  public getWeekNumber = (date: Dayjs) => {
+    return `${date.week()}`;
   };
 }
