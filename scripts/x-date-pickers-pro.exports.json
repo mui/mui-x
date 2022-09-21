@@ -87,6 +87,8 @@
   { "name": "DesktopTimePickerSlotsComponentsProps", "kind": "Interface" },
   { "name": "enUS", "kind": "Variable" },
   { "name": "esES", "kind": "Variable" },
+  { "name": "faIR", "kind": "Variable" },
+  { "name": "fiFI", "kind": "Variable" },
   { "name": "frFR", "kind": "Variable" },
   { "name": "getCalendarPickerSkeletonUtilityClass", "kind": "Variable" },
   { "name": "getCalendarPickerUtilityClass", "kind": "Variable" },

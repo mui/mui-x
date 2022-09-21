@@ -3,7 +3,7 @@ import { expect } from 'chai';
 import TextField from '@mui/material/TextField';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { fireEvent, screen } from '@mui/monorepo/test/utils/createRenderer';
-import { createPickerRenderer, stubMatchMedia } from '../../../../test/utils/pickers-utils';
+import { createPickerRenderer, stubMatchMedia } from 'test/utils/pickers-utils';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
