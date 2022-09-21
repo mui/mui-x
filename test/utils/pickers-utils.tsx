@@ -195,11 +195,3 @@ export const stubMatchMedia = (matches = true) =>
     addListener: () => {},
     removeListener: () => {},
   });
-
-export const clickOnField = (input: HTMLInputElement, cursorPosition: number, clock: any) => {
-  act(() => {
-    input.focus();
-    input.setSelectionRange(cursorPosition, cursorPosition);
-    clock.runToLast();
-  });
-};

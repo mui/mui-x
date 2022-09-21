@@ -5,12 +5,12 @@ import { DateFieldProps } from './DateField.interfaces';
 import { useDateField } from './useDateField';
 
 type DateFieldComponent = (<TDate>(
-  props: DateFieldProps<TDate> & React.RefAttributes<HTMLInputElement>,
+  props: DateFieldProps<TDate> & React.RefAttributes<HTMLDivElement>,
 ) => JSX.Element) & { propTypes?: any };
 
 export const DateField = React.forwardRef(function DateField<TDate>(
   inProps: DateFieldProps<TDate>,
-  ref: React.Ref<HTMLInputElement>,
+  ref: React.Ref<HTMLDivElement>,
 ) {
   const { inputRef, inputProps } = useDateField<TDate, DateFieldProps<TDate>>(inProps);
 
