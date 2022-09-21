@@ -10,11 +10,7 @@ import {
   getAllByRole,
 } from '@mui/monorepo/test/utils';
 import { ClockPicker, clockPickerClasses as classes } from '@mui/x-date-pickers/ClockPicker';
-import {
-  adapterToUse,
-  wrapPickerMount,
-  createPickerRenderer,
-} from '../../../../test/utils/pickers-utils';
+import { adapterToUse, wrapPickerMount, createPickerRenderer } from 'test/utils/pickers-utils';
 
 describe('<ClockPicker />', () => {
   const { render } = createPickerRenderer();

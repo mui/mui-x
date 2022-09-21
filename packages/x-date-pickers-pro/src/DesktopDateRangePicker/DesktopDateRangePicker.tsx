@@ -39,7 +39,7 @@ export interface DesktopDateRangePickerSlotsComponentsProps
 
 export interface DesktopDateRangePickerProps<TInputDate, TDate>
   extends BaseDateRangePickerProps<TInputDate, TDate>,
-    DesktopWrapperProps {
+    DesktopWrapperProps<TDate> {
   /**
    * Overrideable components.
    * @default {}
@@ -97,6 +97,7 @@ export const DesktopDateRangePicker = React.forwardRef(function DesktopDateRange
     TransitionComponent,
     components,
     componentsProps,
+    localeText,
     ...other
   } = props;
   const DateInputProps = {
@@ -120,6 +121,7 @@ export const DesktopDateRangePicker = React.forwardRef(function DesktopDateRange
       TransitionComponent={TransitionComponent}
       components={components}
       componentsProps={componentsProps}
+      localeText={localeText}
     >
       <DateRangePickerView<TInputDate, TDate>
         open={wrapperProps.open}
@@ -218,12 +220,6 @@ DesktopDateRangePicker.propTypes = {
    */
   disablePast: PropTypes.bool,
   /**
-   * Text for end input label and toolbar placeholder.
-   * @default 'End'
-   * @deprecated Use the `localeText` prop of `LocalizationProvider` instead, see https://mui.com/x/react-date-pickers/localization
-   */
-  endText: PropTypes.node,
-  /**
    * Get aria-label text for control that opens picker dialog. Aria-label text must include selected date. @DateIOType
    * @template TInputDate, TDate
    * @param {TInputDate} date The date from which we want to add an aria-text.
@@ -260,16 +256,15 @@ DesktopDateRangePicker.propTypes = {
   ]),
   label: PropTypes.node,
   /**
-   * Left arrow icon aria-label text.
-   * @deprecated
-   */
-  leftArrowButtonText: PropTypes.string,
-  /**
    * If `true` renders `LoadingComponent` in calendar instead of calendar view.
    * Can be used to preload information and show it in calendar.
    * @default false
    */
   loading: PropTypes.bool,
+  /**
+   * Locale for components texts
+   */
+  localeText: PropTypes.object,
   /**
    * Custom mask. Can be used to override generate from format. (e.g. `__/__/____ __:__` or `__/__/____ __:__ _M`).
    * @default '__/__/____'
@@ -401,11 +396,6 @@ DesktopDateRangePicker.propTypes = {
    */
   rifmFormatter: PropTypes.func,
   /**
-   * Right arrow icon aria-label text.
-   * @deprecated
-   */
-  rightArrowButtonText: PropTypes.string,
-  /**
    * Disable specific date. @DateIOType
    * @template TDate
    * @param {TDate} day The date to test.
@@ -438,12 +428,6 @@ DesktopDateRangePicker.propTypes = {
    * If `true`, show the toolbar even in desktop mode.
    */
   showToolbar: PropTypes.bool,
-  /**
-   * Text for start input label and toolbar placeholder.
-   * @default 'Start'
-   * @deprecated Use the `localeText` prop of `LocalizationProvider` instead, see https://mui.com/x/react-date-pickers/localization
-   */
-  startText: PropTypes.node,
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */

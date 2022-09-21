@@ -18,7 +18,7 @@ component combined, so any of these components' props can be passed to the DateT
 
 ## Basic usage
 
-Allows choosing date then time. There are 4 steps available (year, date, hour and minute), so tabs are required to visually distinguish date/time steps.
+Allows choosing date then time. There are 4 steps available (year, date, hour, and minute), so tabs are required to visually distinguish date/time steps.
 
 {{"demo": "BasicDateTimePicker.js"}}
 

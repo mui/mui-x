@@ -21,7 +21,7 @@
     "disableOpenPicker": { "type": { "name": "bool" } },
     "displayStaticWrapperAs": {
       "type": { "name": "enum", "description": "'desktop'<br>&#124;&nbsp;'mobile'" },
-      "default": "'mobile'"
+      "default": "\"mobile\""
     },
     "getClockLabelText": {
       "type": { "name": "func" },
@@ -38,6 +38,7 @@
     "inputRef": {
       "type": { "name": "union", "description": "func<br>&#124;&nbsp;{ current?: object }" }
     },
+    "localeText": { "type": { "name": "object" } },
     "mask": { "type": { "name": "string" } },
     "maxTime": { "type": { "name": "any" } },
     "minTime": { "type": { "name": "any" } },
@@ -79,11 +80,11 @@
   },
   "slots": {
     "ActionBar": { "default": "PickersActionBar", "type": { "name": "elementType" } },
-    "LeftArrowButton": { "default": "IconButton", "type": { "name": "elementType" } },
     "LeftArrowIcon": { "default": "ArrowLeft", "type": { "name": "elementType" } },
+    "NextIconButton": { "default": "IconButton", "type": { "name": "elementType" } },
     "OpenPickerIcon": { "default": "Calendar or Clock", "type": { "name": "elementType" } },
     "PaperContent": { "default": "React.Fragment", "type": { "name": "elementType" } },
-    "RightArrowButton": { "default": "IconButton", "type": { "name": "elementType" } },
+    "PreviousIconButton": { "default": "IconButton", "type": { "name": "elementType" } },
     "RightArrowIcon": { "default": "ArrowRight", "type": { "name": "elementType" } }
   },
   "name": "StaticTimePicker",
