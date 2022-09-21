@@ -1,0 +1,54 @@
+# Migration from v5 to v6
+
+<p class="description">This guide describes the changes needed to migrate from v5 to v6.</p>
+
+## Start using the alpha release
+
+In `package.json`, change the version of the data grid package to `next`.
+
+```diff
+-"@mui/x-data-grid": "latest",
++"@mui/x-data-grid": "next",
+```
+
+Using `next` ensures that it will always use the latest v6 alpha release, but you can also use a fixed version.
+
+## Breaking changes
+
+Since v6 is a major release, we leveraged this opportunity to do some changes that affect the public API.
+These changes were done for consistency, improve stability and make room for new features.
+Below are described the steps you need to make to migrate from v5 to v6.
+
+<!--
+### CSS classes
+
+TBD
+
+### Virtualization
+
+TBD
+
+### Removed props
+
+TBD
+
+### State access
+
+TBD
+
+### `apiRef` methods
+
+TBD
+
+### Columns
+
+TBD
+
+### Other exports
+
+TBD
+
+### Removals from the public API
+
+TBD
+-->
