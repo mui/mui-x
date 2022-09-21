@@ -177,9 +177,6 @@ export const ClockPicker = React.forwardRef(function ClockPicker<TDate extends u
 
   const localeText = useLocaleText();
 
-  // const getClockLabelText = getClockLabelTextProp ?? localeText.clockLabelText;
-  // const getHoursClockNumberText = getHoursClockNumberTextProp ?? localeText.hoursClockNumberText;
-
   const { openView, setOpenView, nextView, previousView, handleChangeAndOpenNext } = useViews({
     view,
     views,
@@ -393,7 +390,6 @@ export const ClockPicker = React.forwardRef(function ClockPicker<TDate extends u
         value={value}
         type={openView}
         ampm={ampm}
-        getClockLabelText={getClockLabelText}
         minutesStep={minutesStep}
         isTimeDisabled={isTimeDisabled}
         meridiemMode={meridiemMode}
