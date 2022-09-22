@@ -342,7 +342,6 @@ export default function RestoreStateApiRef() {
         loading={loading}
         apiRef={apiRef}
         pagination
-        initialState={{ columns: { columnVisibilityModel: {} } }}
         {...data}
       />
     </Box>

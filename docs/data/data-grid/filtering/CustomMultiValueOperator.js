@@ -170,7 +170,7 @@ export default function CustomMultiValueOperator() {
   return (
     <div style={{ height: 400, width: '100%' }}>
       <DataGrid
-        rows={data.rows}
+        {...data}
         columns={columns}
         filterModel={filterModel}
         onFilterModelChange={(model) => setFilterModel(model)}
