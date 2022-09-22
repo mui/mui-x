@@ -46,9 +46,9 @@ export default function RowOrderingGrid() {
   return (
     <div style={{ height: 400, width: '100%' }}>
       <DataGridPro
+        {...data}
         loading={loading}
         rows={rows}
-        columns={data.columns}
         rowReordering
         onRowOrderChange={handleRowOrderChange}
       />
