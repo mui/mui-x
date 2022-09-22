@@ -24,7 +24,7 @@ We'd like to offer a big thanks to the 5 contributors who made this release poss
 #### Changes
 
 - [pickers] Add Finnish (fi-FI) locale to pickers (#6219) (#6230) @PetroSilenius
-- [pickers] Add Persian (fa-IR) locale to the pickers (#6181) @alexfauquette
+- [pickers] Add Persian (fa-IR) locale to the pickers (#6181) @fakhamatia
 - [pickers] Fix usage with Typescript 4.8 (#6229) @flaviendelangle
 - [YearPicker] Scroll to the current year even with `autoFocus=false` (#6224) @alexfauquette
 
