@@ -4,7 +4,6 @@ import type {
   GridColumnHeaderParams,
   GridColumnOrderChangeParams,
   GridColumnResizeParams,
-  GridColumnVisibilityChangeParams,
   GridEditCellPropsParams,
   GridHeaderSelectionCheckboxParams,
   GridMenuParams,
@@ -344,13 +343,6 @@ export interface GridEventLookup
    * Fired when the user stops resizing a column.
    */
   columnResizeStop: { params: null; event: MouseEvent };
-  /**
-   * Fired when a column visibility changes.
-   * It is not fired when the `columnVisibilityModel` is controlled or initialized.
-   * It is not fired when toggling all column's visibility at once.
-   * @deprecated Use `'columnVisibilityModelChange'` instead.
-   */
-  columnVisibilityChange: { params: GridColumnVisibilityChangeParams };
   /**
    * Fired during the resizing of a column.
    */

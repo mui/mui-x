@@ -9,7 +9,6 @@
     "disableFuture": "If <code>true</code> future days are disabled.",
     "disableHighlightToday": "If <code>true</code>, today&#39;s date is rendering without highlighting with circle.",
     "disablePast": "If <code>true</code> past days are disabled.",
-    "getViewSwitchingButtonText": "Get aria-label text for switching between views button.<br><br><strong>Signature:</strong><br><code>function(currentView: CalendarPickerView) =&gt; string</code><br><em>currentView:</em> The view from which we want to get the button text.<br> <em>returns</em> (string): The label of the view.",
     "loading": "If <code>true</code> renders <code>LoadingComponent</code> in calendar instead of calendar view. Can be used to preload information and show it in calendar.",
     "maxDate": "Maximal selectable date. @DateIOType",
     "minDate": "Minimal selectable date. @DateIOType",

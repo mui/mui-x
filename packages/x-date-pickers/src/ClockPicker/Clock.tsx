@@ -8,12 +8,12 @@ import {
   unstable_composeClasses as composeClasses,
 } from '@mui/utils';
 import { ClockPointer } from './ClockPointer';
-import { useUtils } from '../internals/hooks/useUtils';
+import { useLocaleText, useUtils } from '../internals/hooks/useUtils';
 import { WrapperVariantContext } from '../internals/components/wrappers/WrapperVariantContext';
 import { PickerSelectionState } from '../internals/hooks/usePickerState';
 import { useMeridiemMode } from '../internals/hooks/date-helpers-hooks';
 import { getHours, getMinutes } from './shared';
-import { ClockPickerView, MuiPickersAdapter } from '../internals/models';
+import { ClockPickerView } from '../internals/models';
 import { ClockClasses, getClockUtilityClass } from './clockClasses';
 
 export interface ClockProps<TDate> extends ReturnType<typeof useMeridiemMode> {
@@ -21,11 +21,6 @@ export interface ClockProps<TDate> extends ReturnType<typeof useMeridiemMode> {
   ampmInClock: boolean;
   autoFocus?: boolean;
   children: readonly React.ReactNode[];
-  getClockLabelText: (
-    view: ClockPickerView,
-    time: TDate | null,
-    adapter: MuiPickersAdapter<TDate>,
-  ) => string;
   isTimeDisabled: (timeValue: number, type: ClockPickerView) => boolean;
   minutesStep?: number;
   onChange: (value: number, isFinish?: PickerSelectionState) => void;
@@ -191,7 +186,6 @@ export function Clock<TDate>(inProps: ClockProps<TDate>) {
     autoFocus,
     children,
     value,
-    getClockLabelText,
     handleMeridiemChange,
     isTimeDisabled,
     meridiemMode,
@@ -208,6 +202,7 @@ export function Clock<TDate>(inProps: ClockProps<TDate>) {
   const ownerState = props;
 
   const utils = useUtils<TDate>();
+  const localeText = useLocaleText();
   const wrapperVariant = React.useContext(WrapperVariantContext);
   const isMoving = React.useRef(false);
   const classes = useUtilityClasses(ownerState);
@@ -347,7 +342,7 @@ export function Clock<TDate>(inProps: ClockProps<TDate>) {
         )}
         <ClockWrapper
           aria-activedescendant={selectedId}
-          aria-label={getClockLabelText(type, value, utils)}
+          aria-label={localeText.clockLabelText(type, value, utils)}
           ref={listboxRef}
           role="listbox"
           onKeyDown={handleKeyDown}

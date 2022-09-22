@@ -107,7 +107,6 @@ export const getColumnsFromOptions = (options: ColumnsOptions): GridColDefGenera
 };
 
 export const getInitialState = (options: UseDemoDataOptions, columns: GridColDefGenerator[]) => {
-  // TODO v6: Stop using `GridColDef.hide`
   const columnVisibilityModel: GridColumnVisibilityModel = {};
   columns.forEach((col) => {
     if (col.hide) {
