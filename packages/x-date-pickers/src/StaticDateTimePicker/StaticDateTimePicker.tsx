@@ -224,24 +224,6 @@ StaticDateTimePicker.propTypes = {
    */
   displayStaticWrapperAs: PropTypes.oneOf(['desktop', 'mobile']),
   /**
-   * Accessible text that helps user to understand which time and view is selected.
-   * @template TDate
-   * @param {ClockPickerView} view The current view rendered.
-   * @param {TDate | null} time The current time.
-   * @param {MuiPickersAdapter<TDate>} adapter The current date adapter.
-   * @returns {string} The clock label.
-   * @deprecated Use the `localeText` prop of `LocalizationProvider` instead, see https://mui.com/x/react-date-pickers/localization
-   * @default <TDate extends any>(
-   *   view: ClockView,
-   *   time: TDate | null,
-   *   adapter: MuiPickersAdapter<TDate>,
-   * ) =>
-   *   `Select ${view}. ${
-   *     time === null ? 'No time selected' : `Selected time is ${adapter.format(time, 'fullTime')}`
-   *   }`
-   */
-  getClockLabelText: PropTypes.func,
-  /**
    * Get aria-label text for control that opens picker dialog. Aria-label text must include selected date. @DateIOType
    * @template TDate
    * @param {TDate | null} date The date from which we want to add an aria-text.
@@ -250,13 +232,6 @@ StaticDateTimePicker.propTypes = {
    * @default (date, utils) => `Choose date, selected date is ${utils.format(date, 'fullDate')}`
    */
   getOpenDialogAriaText: PropTypes.func,
-  /**
-   * Get aria-label text for switching between views button.
-   * @param {CalendarPickerView} currentView The view from which we want to get the button text.
-   * @returns {string} The label of the view.
-   * @deprecated Use the `localeText` prop of `LocalizationProvider` instead, see https://mui.com/x/react-date-pickers/localization
-   */
-  getViewSwitchingButtonText: PropTypes.func,
   /**
    * Toggles visibility of date time switching tabs
    * @default false for mobile, true for desktop

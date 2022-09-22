@@ -19,16 +19,12 @@ import {
   useNextMonthDisabled,
 } from '../internals/hooks/date-helpers-hooks';
 import { CalendarPickerView } from '../internals/models';
-import { buildDeprecatedPropsWarning } from '../internals/utils/warning';
 import {
   getPickersCalendarHeaderUtilityClass,
   PickersCalendarHeaderClasses,
 } from './pickersCalendarHeaderClasses';
 
-export type ExportedCalendarHeaderProps<TDate> = Pick<
-  PickersCalendarHeaderProps<TDate>,
-  'getViewSwitchingButtonText' | 'classes'
->;
+export type ExportedCalendarHeaderProps<TDate> = Pick<PickersCalendarHeaderProps<TDate>, 'classes'>;
 
 export interface PickersCalendarHeaderSlotsComponent extends PickersArrowSwitcherSlotsComponent {
   /**
@@ -68,13 +64,6 @@ export interface PickersCalendarHeaderProps<TDate>
   currentMonth: TDate;
   disabled?: boolean;
   views: readonly CalendarPickerView[];
-  /**
-   * Get aria-label text for switching between views button.
-   * @param {CalendarPickerView} currentView The view from which we want to get the button text.
-   * @returns {string} The label of the view.
-   * @deprecated Use the `localeText` prop of `LocalizationProvider` instead, see https://mui.com/x/react-date-pickers/localization
-   */
-  getViewSwitchingButtonText?: (currentView: CalendarPickerView) => string;
   onMonthChange: (date: TDate, slideDirection: SlideDirection) => void;
   openView: CalendarPickerView;
   reduceAnimations: boolean;
@@ -164,10 +153,6 @@ const PickersCalendarHeaderSwitchViewIcon = styled(ArrowDropDown, {
   }),
 }));
 
-const deprecatedPropsWarning = buildDeprecatedPropsWarning(
-  'Props for translation are deprecated. See https://mui.com/x/react-date-pickers/localization for more information.',
-);
-
 /**
  * @ignore - do not document.
  */
@@ -180,7 +165,6 @@ export function PickersCalendarHeader<TDate>(inProps: PickersCalendarHeaderProps
     disabled,
     disableFuture,
     disablePast,
-    getViewSwitchingButtonText: getViewSwitchingButtonTextProp,
     maxDate,
     minDate,
     onMonthChange,
@@ -191,14 +175,7 @@ export function PickersCalendarHeader<TDate>(inProps: PickersCalendarHeaderProps
     labelId,
   } = props;
 
-  deprecatedPropsWarning({
-    getViewSwitchingButtonText: getViewSwitchingButtonTextProp,
-  });
-
   const localeText = useLocaleText();
-
-  const getViewSwitchingButtonText =
-    getViewSwitchingButtonTextProp ?? localeText.calendarViewSwitchingButtonAriaLabel;
 
   const utils = useUtils<TDate>();
   const classes = useUtilityClasses(props);
@@ -265,7 +242,7 @@ export function PickersCalendarHeader<TDate>(inProps: PickersCalendarHeaderProps
           <PickersCalendarHeaderSwitchViewButton
             size="small"
             as={components.SwitchViewButton}
-            aria-label={getViewSwitchingButtonText(currentView)}
+            aria-label={localeText.calendarViewSwitchingButtonAriaLabel(currentView)}
             className={classes.switchViewButton}
             {...switchViewButtonProps}
           >

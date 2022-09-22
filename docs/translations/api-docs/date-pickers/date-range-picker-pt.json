@@ -19,7 +19,6 @@
     "disableOpenPicker": "Do not render open picker button (renders only text field with validation).",
     "disablePast": "If <code>true</code> past days are disabled.",
     "getOpenDialogAriaText": "Get aria-label text for control that opens picker dialog. Aria-label text must include selected date. @DateIOType<br><br><strong>Signature:</strong><br><code>function(date: TDate | null, utils: MuiPickersAdapter&lt;TDate&gt;) =&gt; string</code><br><em>date:</em> The date from which we want to add an aria-text.<br><em>utils:</em> The utils to manipulate the date.<br> <em>returns</em> (string): The aria-text to render inside the dialog.",
-    "getViewSwitchingButtonText": "Get aria-label text for switching between views button.<br><br><strong>Signature:</strong><br><code>function(currentView: CalendarPickerView) =&gt; string</code><br><em>currentView:</em> The view from which we want to get the button text.<br> <em>returns</em> (string): The label of the view.",
     "InputAdornmentProps": "Props to pass to keyboard input adornment.",
     "inputFormat": "Format string.",
     "inputRef": "Pass a ref to the <code>input</code> element.",
