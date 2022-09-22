@@ -7,7 +7,7 @@ import {
 } from './models';
 
 export interface TimeComponentValidationProps<TDate>
-  extends Required<BaseTimeValidationProps<TDate>>,
+  extends Required<BaseTimeValidationProps>,
     TimeValidationProps<TDate> {}
 
 export type TimeValidationError =

@@ -1,4 +1,4 @@
-import { useValidation, ValidationCommonProps, ValidationProps, Validator } from './useValidation';
+import { useValidation, ValidationProps, Validator } from './useValidation';
 import {
   validateDate,
   DateValidationError,

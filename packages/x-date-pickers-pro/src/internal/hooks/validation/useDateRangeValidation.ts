@@ -4,10 +4,10 @@ import {
   DateValidationError,
   validateDate,
   BaseDateValidationProps,
+  ValidationProps,
 } from '@mui/x-date-pickers/internals';
 import { isRangeValid, parseRangeInputValue } from '../../utils/date-utils';
 import { DateRange, DayRangeValidationProps } from '../../models/dateRange';
-import { ValidationProps } from '@mui/x-date-pickers/internals/hooks/validation/useValidation';
 
 export interface DateRangeComponentValidationProps<TDate>
   extends DayRangeValidationProps<TDate>,

@@ -62,7 +62,7 @@ export function useTimePickerDefaultizedProps<
   name: string,
 ): DefaultizedProps<
   Props,
-  'openTo' | 'views' | keyof BaseTimeValidationProps<TDate>,
+  'openTo' | 'views' | keyof BaseTimeValidationProps,
   { inputFormat: string }
 > {
   // This is technically unsound if the type parameters appear in optional props.

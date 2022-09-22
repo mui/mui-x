@@ -1,4 +1,4 @@
-import { ClockPickerView } from '@mui/x-date-pickers';
+import { ClockPickerView } from '../../models/views';
 
 interface FutureAndPastValidationProps {
   /**
@@ -17,7 +17,7 @@ interface FutureAndPastValidationProps {
  * Validation props common to all time views.
  * All these props have a default value when used inside a picker component.
  */
-export interface BaseTimeValidationProps<TDate> extends FutureAndPastValidationProps {}
+export interface BaseTimeValidationProps extends FutureAndPastValidationProps {}
 
 /**
  * Props used to validate a time value.

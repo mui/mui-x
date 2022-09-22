@@ -84,7 +84,11 @@ export type { PickerStateValueManager, PickerSelectionState } from './hooks/useP
 export { useLocalizationContext, useDefaultDates, useUtils, useLocaleText } from './hooks/useUtils';
 export type { BaseDateValidationProps, DayValidationProps } from './hooks/validation/models';
 export { useValidation } from './hooks/validation/useValidation';
-export type { ValidationCommonProps, Validator } from './hooks/validation/useValidation';
+export type {
+  ValidationCommonProps,
+  ValidationProps,
+  Validator,
+} from './hooks/validation/useValidation';
 export { validateDate } from './hooks/validation/useDateValidation';
 export type {
   DateComponentValidationProps,

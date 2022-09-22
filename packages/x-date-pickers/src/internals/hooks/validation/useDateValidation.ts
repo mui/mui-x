@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useValidation, ValidationCommonProps, ValidationProps, Validator } from './useValidation';
+import { useValidation, ValidationProps, Validator } from './useValidation';
 import {
   BaseDateValidationProps,
   CommonDateTimeValidationError,
