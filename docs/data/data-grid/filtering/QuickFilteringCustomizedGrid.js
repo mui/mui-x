@@ -48,7 +48,9 @@ export default function QuickFilteringCustomizedGrid() {
         {...data}
         columns={columns}
         initialState={{
+          ...data.initialState,
           filter: {
+            ...data.initialState?.filter,
             filterModel: {
               items: [],
               quickFilterLogicOperator: GridLinkOperator.Or,

@@ -34,7 +34,7 @@ export interface StaticDateRangePickersSlotsComponentsProps
     DateRangePickerViewSlotsComponentsProps {}
 
 export interface StaticDateRangePickerProps<TDate>
-  extends StaticPickerProps<BaseDateRangePickerProps<TDate>> {
+  extends StaticPickerProps<TDate, BaseDateRangePickerProps<TDate>> {
   /**
    * Overrideable components.
    * @default {}
@@ -84,11 +84,12 @@ export const StaticDateRangePicker = React.forwardRef(function StaticDateRangePi
   );
 
   const {
-    displayStaticWrapperAs = 'mobile',
+    displayStaticWrapperAs,
     value,
     onChange,
     components,
     componentsProps,
+    localeText,
     sx,
     className,
     ...other
@@ -110,6 +111,7 @@ export const StaticDateRangePicker = React.forwardRef(function StaticDateRangePi
       displayStaticWrapperAs={displayStaticWrapperAs}
       components={components}
       componentsProps={componentsProps}
+      localeText={localeText}
       sx={sx}
       className={className}
       {...wrapperProps}
@@ -211,15 +213,9 @@ StaticDateRangePicker.propTypes = {
   disablePast: PropTypes.bool,
   /**
    * Force static wrapper inner components to be rendered in mobile or desktop mode.
-   * @default 'mobile'
+   * @default "mobile"
    */
   displayStaticWrapperAs: PropTypes.oneOf(['desktop', 'mobile']),
-  /**
-   * Text for end input label and toolbar placeholder.
-   * @default 'End'
-   * @deprecated Use the `localeText` prop of `LocalizationProvider` instead, see https://mui.com/x/react-date-pickers/localization
-   */
-  endText: PropTypes.node,
   /**
    * Get aria-label text for control that opens picker dialog. Aria-label text must include selected date. @DateIOType
    * @template TDate
@@ -257,16 +253,15 @@ StaticDateRangePicker.propTypes = {
   ]),
   label: PropTypes.node,
   /**
-   * Left arrow icon aria-label text.
-   * @deprecated
-   */
-  leftArrowButtonText: PropTypes.string,
-  /**
    * If `true` renders `LoadingComponent` in calendar instead of calendar view.
    * Can be used to preload information and show it in calendar.
    * @default false
    */
   loading: PropTypes.bool,
+  /**
+   * Locale for components texts
+   */
+  localeText: PropTypes.object,
   /**
    * Custom mask. Can be used to override generate from format. (e.g. `__/__/____ __:__` or `__/__/____ __:__ _M`).
    * @default '__/__/____'
@@ -376,11 +371,6 @@ StaticDateRangePicker.propTypes = {
    */
   rifmFormatter: PropTypes.func,
   /**
-   * Right arrow icon aria-label text.
-   * @deprecated
-   */
-  rightArrowButtonText: PropTypes.string,
-  /**
    * Disable specific date. @DateIOType
    * @template TDate
    * @param {TDate} day The date to test.
@@ -413,12 +403,6 @@ StaticDateRangePicker.propTypes = {
    * If `true`, show the toolbar even in desktop mode.
    */
   showToolbar: PropTypes.bool,
-  /**
-   * Text for start input label and toolbar placeholder.
-   * @default 'Start'
-   * @deprecated Use the `localeText` prop of `LocalizationProvider` instead, see https://mui.com/x/react-date-pickers/localization
-   */
-  startText: PropTypes.node,
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */

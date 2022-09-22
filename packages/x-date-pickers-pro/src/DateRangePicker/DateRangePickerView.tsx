@@ -29,7 +29,7 @@ import {
 import { DateRangePickerInput, DateRangePickerInputProps } from './DateRangePickerInput';
 import {
   DateRangePickerViewDesktop,
-  ExportedDesktopDateRangeCalendarProps,
+  ExportedDateRangePickerViewDesktopProps,
 } from './DateRangePickerViewDesktop';
 import { getReleaseInfo } from '../internal/utils/releaseInfo';
 
@@ -42,7 +42,7 @@ export interface DateRangePickerViewSlotsComponentsProps
   extends DateRangePickerViewMobileSlotsComponentsProps {}
 
 export interface ExportedDateRangePickerViewProps<TDate>
-  extends ExportedDesktopDateRangeCalendarProps<TDate>,
+  extends ExportedDateRangePickerViewDesktopProps<TDate>,
     DayRangeValidationProps<TDate>,
     Omit<
       ExportedCalendarPickerProps<TDate>,
@@ -92,8 +92,6 @@ interface DateRangePickerViewProps<TDate>
     Required<BaseDateValidationProps<TDate>> {
   calendars: 1 | 2 | 3;
   open: boolean;
-  startText: React.ReactNode;
-  endText: React.ReactNode;
   DateInputProps: DateRangePickerInputProps<TDate>;
 }
 
@@ -116,7 +114,6 @@ function DateRangePickerViewRaw<TDate>(props: DateRangePickerViewProps<TDate>) {
     disableFuture,
     disableHighlightToday,
     disablePast,
-    endText,
     isMobileKeyboardViewOpen,
     maxDate,
     minDate,
@@ -127,7 +124,6 @@ function DateRangePickerViewRaw<TDate>(props: DateRangePickerViewProps<TDate>) {
     setCurrentlySelectingRangeEnd,
     shouldDisableDate,
     showToolbar,
-    startText,
     toggleMobileKeyboardView,
     toolbarFormat,
     toolbarTitle,
@@ -264,8 +260,6 @@ function DateRangePickerViewRaw<TDate>(props: DateRangePickerViewProps<TDate>) {
           toggleMobileKeyboardView={toggleMobileKeyboardView}
           currentlySelectingRangeEnd={currentlySelectingRangeEnd}
           setCurrentlySelectingRangeEnd={setCurrentlySelectingRangeEnd}
-          startText={startText}
-          endText={endText}
           toolbarTitle={toolbarTitle}
           toolbarFormat={toolbarFormat}
         />

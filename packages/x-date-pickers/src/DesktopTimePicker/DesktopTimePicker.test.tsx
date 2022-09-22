@@ -13,7 +13,7 @@ import {
   FakeTransitionComponent,
   openPicker,
   getClockMouseEvent,
-} from '../../../../test/utils/pickers-utils';
+} from 'test/utils/pickers-utils';
 
 const WrappedDesktopTimePicker = withPickerControls(DesktopTimePicker)({
   DialogProps: { TransitionComponent: FakeTransitionComponent },
@@ -519,6 +519,21 @@ describe('<DesktopTimePicker />', () => {
       expect(onAccept.callCount).to.equal(1);
       expect(onAccept.lastCall.args[0]).to.equal(null);
       expect(onClose.callCount).to.equal(1);
+    });
+  });
+
+  describe('localization', () => {
+    it('should respect the `localeText` prop', () => {
+      render(
+        <WrappedDesktopTimePicker
+          initialValue={null}
+          localeText={{ cancelButtonLabel: 'Custom cancel' }}
+          componentsProps={{ actionBar: { actions: () => ['cancel'] } }}
+        />,
+      );
+      openPicker({ type: 'time', variant: 'desktop' });
+
+      expect(screen.queryByText('Custom cancel')).not.to.equal(null);
     });
   });
 });

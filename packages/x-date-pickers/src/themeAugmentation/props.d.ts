@@ -24,7 +24,7 @@ import { DesktopDatePickerProps } from '../DesktopDatePicker';
 import {
   CalendarOrClockPickerProps,
   DayPickerProps,
-  ExportedArrowSwitcherProps,
+  ExportedPickersArrowSwitcherProps,
   PickerPopperProps,
   PickersToolbarButtonProps,
   PickersToolbarProps,
@@ -54,12 +54,12 @@ export interface PickersComponentsPropsList {
   MuiMobileDateTimePicker: MobileDateTimePickerProps<unknown>;
   MuiMobileTimePicker: MobileTimePickerProps<unknown>;
   MuiMonthPicker: MonthPickerProps<unknown>;
-  MuiPickersArrowSwitcher: ExportedArrowSwitcherProps;
+  MuiPickersArrowSwitcher: ExportedPickersArrowSwitcherProps;
   MuiPickersCalendarHeader: ExportedCalendarHeaderProps<unknown>;
   MuiPickersDay: PickersDayProps<unknown>;
   MuiPickersFadeTransitionGroup: PickersFadeTransitionGroupProps;
   MuiPickersPopper: PickerPopperProps;
-  MuiPickerStaticWrapper: PickerStaticWrapperProps;
+  MuiPickerStaticWrapper: PickerStaticWrapperProps<unknown>;
   MuiPickersToolbar: PickersToolbarProps<unknown, unknown>;
   MuiPickersToolbarButton: PickersToolbarButtonProps;
   MuiStaticDatePicker: StaticDatePickerProps<unknown>;

@@ -31,7 +31,7 @@ export interface StaticDatePickerSlotsComponentsProps
     CalendarPickerSlotsComponentsProps {}
 
 export interface StaticDatePickerProps<TDate>
-  extends StaticPickerProps<BaseDatePickerProps<TDate>> {
+  extends StaticPickerProps<TDate, BaseDatePickerProps<TDate>> {
   /**
    * Overrideable components.
    * @default {}
@@ -73,9 +73,10 @@ export const StaticDatePicker = React.forwardRef(function StaticDatePicker<TDate
     ToolbarComponent = DatePickerToolbar,
     value,
     onChange,
-    displayStaticWrapperAs = 'mobile',
+    displayStaticWrapperAs,
     components,
     componentsProps,
+    localeText,
     sx,
     className,
     ...other
@@ -91,6 +92,7 @@ export const StaticDatePicker = React.forwardRef(function StaticDatePicker<TDate
       displayStaticWrapperAs={displayStaticWrapperAs}
       components={components}
       componentsProps={componentsProps}
+      localeText={localeText}
       sx={sx}
       className={className}
       {...wrapperProps}
@@ -181,7 +183,7 @@ StaticDatePicker.propTypes = {
   disablePast: PropTypes.bool,
   /**
    * Force static wrapper inner components to be rendered in mobile or desktop mode.
-   * @default 'mobile'
+   * @default "mobile"
    */
   displayStaticWrapperAs: PropTypes.oneOf(['desktop', 'mobile']),
   /**
@@ -221,16 +223,15 @@ StaticDatePicker.propTypes = {
   ]),
   label: PropTypes.node,
   /**
-   * Left arrow icon aria-label text.
-   * @deprecated
-   */
-  leftArrowButtonText: PropTypes.string,
-  /**
    * If `true` renders `LoadingComponent` in calendar instead of calendar view.
    * Can be used to preload information and show it in calendar.
    * @default false
    */
   loading: PropTypes.bool,
+  /**
+   * Locale for components texts
+   */
+  localeText: PropTypes.object,
   /**
    * Custom mask. Can be used to override generate from format. (e.g. `__/__/____ __:__` or `__/__/____ __:__ _M`).
    */
@@ -343,11 +344,6 @@ StaticDatePicker.propTypes = {
    * @returns {string} The formatted string.
    */
   rifmFormatter: PropTypes.func,
-  /**
-   * Right arrow icon aria-label text.
-   * @deprecated
-   */
-  rightArrowButtonText: PropTypes.string,
   /**
    * Disable specific date. @DateIOType
    * @template TDate

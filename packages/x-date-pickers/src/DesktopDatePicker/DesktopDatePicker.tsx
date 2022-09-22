@@ -31,7 +31,7 @@ export interface DesktopDatePickerSlotsComponentsProps
 
 export interface DesktopDatePickerProps<TDate>
   extends Omit<BaseDatePickerProps<TDate>, 'components' | 'componentsProps'>,
-    DesktopWrapperProps {
+    DesktopWrapperProps<TDate> {
   /**
    * Overrideable components.
    * @default {}
@@ -79,6 +79,7 @@ export const DesktopDatePicker = React.forwardRef(function DesktopDatePicker<TDa
     value,
     components,
     componentsProps,
+    localeText,
     ...other
   } = props;
   const AllDateInputProps = {
@@ -100,6 +101,7 @@ export const DesktopDatePicker = React.forwardRef(function DesktopDatePicker<TDa
       TransitionComponent={TransitionComponent}
       components={components}
       componentsProps={componentsProps}
+      localeText={localeText}
     >
       <CalendarOrClockPicker
         {...pickerProps}
@@ -224,16 +226,15 @@ DesktopDatePicker.propTypes = {
   ]),
   label: PropTypes.node,
   /**
-   * Left arrow icon aria-label text.
-   * @deprecated
-   */
-  leftArrowButtonText: PropTypes.string,
-  /**
    * If `true` renders `LoadingComponent` in calendar instead of calendar view.
    * Can be used to preload information and show it in calendar.
    * @default false
    */
   loading: PropTypes.bool,
+  /**
+   * Locale for components texts
+   */
+  localeText: PropTypes.object,
   /**
    * Custom mask. Can be used to override generate from format. (e.g. `__/__/____ __:__` or `__/__/____ __:__ _M`).
    */
@@ -368,11 +369,6 @@ DesktopDatePicker.propTypes = {
    * @returns {string} The formatted string.
    */
   rifmFormatter: PropTypes.func,
-  /**
-   * Right arrow icon aria-label text.
-   * @deprecated
-   */
-  rightArrowButtonText: PropTypes.string,
   /**
    * Disable specific date. @DateIOType
    * @template TDate
