@@ -9,7 +9,7 @@ _Sep 22, 2022_
 
 We'd like to offer a big thanks to the 5 contributors who made this release possible. Here are some highlights ✨:
 
-- 🌍 Add Persian (fa-IR) locale to the pickers (#6181) @alexfauquette
+- 🌍 Add Persian (fa-IR) locale to the pickers (#6181) @fakhamatia
 - 🐞 Bugfixes
 
 ### `@mui/x-data-grid@v5.17.4` / `@mui/x-data-grid-pro@v5.17.4` / `@mui/x-data-grid-premium@v5.17.4`
