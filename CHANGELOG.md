@@ -30,7 +30,7 @@ We'd like to offer a big thanks to the 5 contributors who made this release poss
 
 ### Docs
 
-- [docs] Fix 301 link @oliviertassinari
+- [docs] Fix 301 link (#6239) @oliviertassinari
 
 ### Core
 
