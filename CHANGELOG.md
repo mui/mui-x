@@ -159,7 +159,6 @@ You can find more information about the new api, including how to set those tran
 - [core] Add `v5.17.3` changelog to next branch (#6250) @flaviendelangle
 - [core] Add link to the security page on the `README` (#6073) @oliviertassinari
 - [core] Fix scroll restoration in the docs (#5938) @oliviertassinari
-- [core] Merge `master` into `next`  (#6253) @flaviendelangle
 - [core] Remove the Storybook (#6099) @flaviendelangle
 - [core] Tag release as `next` in NPM (#6256) @m4theushw
 - [core] Update monorepo (#6180) @flaviendelangle
