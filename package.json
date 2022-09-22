@@ -57,8 +57,8 @@
     "release:changelog": "node scripts/releaseChangelog",
     "release:version": "lerna version --exact --no-changelog --no-push --no-git-tag-version",
     "release:build": "lerna run --parallel --scope \"@mui/*\" build",
-    "release:publish": "lerna publish from-package --dist-tag latest --contents build",
-    "release:publish:dry-run": "lerna publish from-package --dist-tag latest --contents build --registry=\"http://localhost:4873/\"",
+    "release:publish": "lerna publish from-package --dist-tag next --contents build",
+    "release:publish:dry-run": "lerna publish from-package --dist-tag next --contents build --registry=\"http://localhost:4873/\"",
     "release:tag": "node scripts/releaseTag"
   },
   "devDependencies": {
