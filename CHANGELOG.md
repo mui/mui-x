@@ -142,7 +142,7 @@ You can find more information about the new api, including how to set those tran
 ### Docs
 
 - [docs] Add automatic vale check (#5429) @alexfauquette
-- [docs] Add pro logo in "column ordering" link (#6127) @alexfauquette
+- [docs] Add Pro logo in "column ordering" link (#6127) @alexfauquette
 - [docs] Fix broken link (#6163) @alexfauquette
 - [docs] Fix broken links (#6101) @alexfauquette
 - [docs] Fix demonstration date to avoid hydration errors (#6032) @alexfauquette
