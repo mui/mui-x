@@ -7,7 +7,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 _Sep 22, 2022_
 
-We'd like to offer a big thanks to the 4 contributors who made this release possible. Here are some highlights ✨:
+We'd like to offer a big thanks to the 5 contributors who made this release possible. Here are some highlights ✨:
 
 - 🌍 Add Persian (fa-IR) locale to the pickers (#6181) @alexfauquette
 - 🐞 Bugfixes
@@ -16,6 +16,7 @@ We'd like to offer a big thanks to the 4 contributors who made this release poss
 
 #### Changes
 
+- [DataGrid] Do not publish `cellFocusOut` event if the row was removed (#6251) @cherniavskii
 - [DataGrid] Improve Polish (pl-PL) locale on the data grid (#6245) @grzegorz-bach
 
 ### `@mui/x-date-pickers@v5.0.3` / `@mui/x-date-pickers-pro@v5.0.3`
@@ -26,6 +27,10 @@ We'd like to offer a big thanks to the 4 contributors who made this release poss
 - [pickers] Add Persian (fa-IR) locale to the pickers (#6181) @alexfauquette
 - [pickers] Fix usage with Typescript 4.8 (#6229) @flaviendelangle
 - [YearPicker] Scroll to the current year even with `autoFocus=false` (#6224) @alexfauquette
+
+### Docs
+
+- [docs] Fix 301 link @oliviertassinari
 
 ### Core
 
@@ -129,7 +134,7 @@ We'd like to offer a big thanks to the 3 contributors who made this release poss
 
 _Sep 2, 2022_
 
-🎉 We are excited to finally introduce a stable release (v5.0.0) for the `@mui/x-date-pickers` and  `@mui/x-date-pickers-pro` packages!
+🎉 We are excited to finally introduce a stable release (v5.0.0) for the `@mui/x-date-pickers` and `@mui/x-date-pickers-pro` packages!
 
 If you are still using picker components from the `lab`, take a look at the [migration guide](https://mui.com/x/react-date-pickers/migration-lab/).
 
