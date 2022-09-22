@@ -53,12 +53,6 @@ You can use the `onColumnVisibilityModelChange` prop to listen to the changes to
 />
 ```
 
-:::warning
-The grid does not handle switching between controlled and uncontrolled modes.
-
-This edge case will be supported in v6 after the removal of the legacy `hide` field.
-:::
-
 {{"demo": "VisibleColumnsModelControlled.js", "bg": "inline"}}
 
 ## Column visibility panel
