@@ -162,6 +162,7 @@ You can find more information about the new api, including how to set those tran
 - [core] Fix scroll restoration in the docs (#5938) @oliviertassinari
 - [core] Merge `master` into `next`  (#6253) @flaviendelangle
 - [core] Remove the Storybook (#6099) @flaviendelangle
+- [core] Tag release as `next` in NPM (#6256) @m4theushw
 - [core] Update monorepo (#6180) @flaviendelangle
 - [core] Use the `next` branch for Prettier (#6097) @flaviendelangle
 - [test] Fix logic to skip column pinning tests (#6133) @m4theushw
