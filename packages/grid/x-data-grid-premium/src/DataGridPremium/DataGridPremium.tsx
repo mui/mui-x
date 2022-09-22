@@ -824,8 +824,8 @@ DataGridPremiumRaw.propTypes = {
    * Rows data to pin on top or bottom.
    */
   pinnedRows: PropTypes.shape({
-    bottom: PropTypes.arrayOf(PropTypes.object),
-    top: PropTypes.arrayOf(PropTypes.object),
+    bottom: PropTypes.array,
+    top: PropTypes.array,
   }),
   /**
    * Callback called before updating a row with new values in the row and cell editing.
@@ -873,7 +873,7 @@ DataGridPremiumRaw.propTypes = {
   /**
    * Set of rows of type [[GridRowsProp]].
    */
-  rows: PropTypes.arrayOf(PropTypes.object).isRequired,
+  rows: PropTypes.array.isRequired,
   /**
    * Loading rows can be processed on the server or client-side.
    * Set it to 'client' if you would like enable infnite loading.

@@ -200,7 +200,7 @@ GridEditInputCell.propTypes = {
   /**
    * The row model of the row that the current cell belongs to.
    */
-  row: PropTypes.any,
+  row: PropTypes.object,
   /**
    * The node of the row that the current cell belongs to.
    */

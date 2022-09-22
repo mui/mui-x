@@ -112,6 +112,7 @@
   { "name": "PickersFadeTransitionGroupClasses", "kind": "Interface" },
   { "name": "PickersFadeTransitionGroupClassKey", "kind": "TypeAlias" },
   { "name": "PickersFadeTransitionGroupProps", "kind": "Interface" },
+  { "name": "PickersInputLocaleText", "kind": "TypeAlias" },
   { "name": "PickersLocaleText", "kind": "Interface" },
   { "name": "pickersMonthClasses", "kind": "Variable" },
   { "name": "PickersMonthClasses", "kind": "Interface" },

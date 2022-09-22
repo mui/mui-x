@@ -1,10 +1,7 @@
 {
   "props": {
     "columns": { "type": { "name": "custom", "description": "array" }, "required": true },
-    "rows": {
-      "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" },
-      "required": true
-    },
+    "rows": { "type": { "name": "array" }, "required": true },
     "aria-label": { "type": { "name": "string" } },
     "aria-labelledby": { "type": { "name": "string" } },
     "autoHeight": { "type": { "name": "bool" } },

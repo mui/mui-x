@@ -37,7 +37,6 @@ export interface DateRangePickerToolbarProps<TDate>
       | 'parsedValue'
     > {
   classes?: Partial<DateRangePickerToolbarClasses>;
-  classes?: Partial<DateRangePickerToolbarClasses>;
 }
 
 const DateRangePickerToolbarRoot = styled(PickersToolbar, {

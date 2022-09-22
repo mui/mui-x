@@ -654,7 +654,7 @@ DataGridRaw.propTypes = {
   /**
    * Set of rows of type [[GridRowsProp]].
    */
-  rows: PropTypes.arrayOf(PropTypes.object).isRequired,
+  rows: PropTypes.array.isRequired,
   /**
    * Sets the type of space between rows added by `getRowSpacing`.
    * @default "margin"

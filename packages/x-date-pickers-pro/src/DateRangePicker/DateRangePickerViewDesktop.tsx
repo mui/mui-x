@@ -155,9 +155,6 @@ export function DateRangePickerViewDesktop<TDate>(inProps: DateRangePickerViewDe
     className,
     // excluding classes from `other` to avoid passing them down to children
     classes: providedClasses,
-    className,
-    // excluding classes from `other` to avoid passing them down to children
-    classes: providedClasses,
     ...other
   } = props;
 
