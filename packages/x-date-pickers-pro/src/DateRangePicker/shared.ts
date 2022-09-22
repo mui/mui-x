@@ -6,7 +6,7 @@ import {
   useDefaultDates,
   useLocaleText,
   useUtils,
-  ValidationProps,
+  ValidationCommonProps,
   DefaultizedProps,
   parseNonNullablePickerDate,
   BaseDateValidationProps,
@@ -22,7 +22,7 @@ export interface BaseDateRangePickerProps<TInputDate, TDate>
   extends Omit<BasePickerProps<DateRange<TInputDate>, DateRange<TDate>>, 'orientation'>,
     ExportedDateRangePickerViewProps<TDate>,
     BaseDateValidationProps<TDate>,
-    ValidationProps<DateRangeValidationError, DateRange<TInputDate>>,
+    ValidationCommonProps<DateRangeValidationError, DateRange<TInputDate>>,
     ExportedDateRangePickerInputProps<TInputDate, TDate> {
   /**
    * Text for end input label and toolbar placeholder.

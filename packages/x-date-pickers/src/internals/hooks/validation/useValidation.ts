@@ -2,7 +2,7 @@ import * as React from 'react';
 import { useLocalizationContext } from '../useUtils';
 import { MuiPickersAdapterContextValue } from '../../../LocalizationProvider/LocalizationProvider';
 
-export interface ValidationProps<TError, TInputValue> {
+export interface ValidationCommonProps<TError, TInputValue> {
   /**
    * Callback that fired when input value or new `value` prop validation returns **new** validation error (or value is valid after error).
    * In case of validation error detected `reason` prop return non-null value and `TextField` must be displayed in `error` state.
@@ -19,25 +19,30 @@ export interface ValidationProps<TError, TInputValue> {
   value: TInputValue;
 }
 
-export type InferError<TProps> = TProps extends Pick<ValidationProps<any, any>, 'onError'>
+export type ValidationProps<
+  TError,
+  TInputValue,
+  TValidationProps extends {},
+> = ValidationCommonProps<TError, TInputValue> & TValidationProps;
+
+export type InferError<TProps> = TProps extends Pick<ValidationCommonProps<any, any>, 'onError'>
   ? Parameters<Exclude<TProps['onError'], undefined>>[0]
   : never;
-type InferInputValue<TProps> = TProps extends { value: any } ? TProps['value'] : never;
 
-export type Validator<TDate, TProps> = (params: {
+export type Validator<TInputValue, TDate, TError, TValidationProps> = (params: {
   adapter: MuiPickersAdapterContextValue<TDate>;
-  value: InferInputValue<TProps>;
-  props: Omit<TProps, 'value' | 'onError'>;
-}) => InferError<TProps>;
+  value: TInputValue;
+  props: Omit<TValidationProps, 'value' | 'onError'>;
+}) => TError;
 
-export function useValidation<TDate, TProps extends ValidationProps<any, any>>(
-  props: TProps,
-  validate: Validator<TDate, TProps>,
-  isSameError: (a: InferError<TProps>, b: InferError<TProps> | null) => boolean,
-): InferError<TProps> {
+export function useValidation<TInputValue, TDate, TError, TValidationProps extends {}>(
+  props: ValidationProps<TError, TInputValue, TValidationProps>,
+  validate: Validator<TInputValue, TDate, TError, TValidationProps>,
+  isSameError: (a: TError, b: TError | null) => boolean,
+): TError {
   const { value, onError } = props;
   const adapter = useLocalizationContext<TDate>();
-  const previousValidationErrorRef = React.useRef<InferError<TProps> | null>(null);
+  const previousValidationErrorRef = React.useRef<TError | null>(null);
 
   const validationError = validate({ adapter, value, props });
 

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useValidation, ValidationProps, Validator } from './useValidation';
+import { useValidation, ValidationCommonProps, ValidationProps, Validator } from './useValidation';
 import {
   BaseDateValidationProps,
   CommonDateTimeValidationError,
@@ -10,13 +10,8 @@ import {
 import { useLocalizationContext } from '../useUtils';
 import { parseNonNullablePickerDate } from '../../utils/date-utils';
 
-export interface ExportedDateValidationProps<TDate>
+export interface DateComponentValidationProps<TDate>
   extends DayValidationProps<TDate>,
-    BaseDateValidationProps<TDate> {}
-
-export interface DateValidationProps<TInputDate, TDate>
-  extends ValidationProps<DateValidationError, TInputDate | null>,
-    DayValidationProps<TDate>,
     MonthValidationProps<TDate>,
     YearValidationProps<TDate>,
     Required<BaseDateValidationProps<TDate>> {}
@@ -29,11 +24,12 @@ export type DateValidationError =
   | 'minDate'
   | 'maxDate';
 
-export const validateDate: Validator<any, DateValidationProps<any, any>> = ({
-  props,
-  value,
-  adapter,
-}): DateValidationError => {
+export const validateDate: Validator<
+  any | null,
+  any,
+  DateValidationError,
+  DateComponentValidationProps<any>
+> = ({ props, value, adapter }): DateValidationError => {
   const now = adapter.utils.date()!;
   const date = adapter.utils.date(value);
   const minDate = parseNonNullablePickerDate(
@@ -89,7 +85,7 @@ export const useIsDateDisabled = <TDate>({
   maxDate,
   disableFuture,
   disablePast,
-}: Omit<DateValidationProps<any, TDate>, keyof ValidationProps<any, any>>) => {
+}: DateComponentValidationProps<TDate>) => {
   const adapter = useLocalizationContext<TDate>();
 
   return React.useCallback(
@@ -123,5 +119,9 @@ export const useIsDateDisabled = <TDate>({
 export const isSameDateError = (a: DateValidationError, b: DateValidationError) => a === b;
 
 export const useDateValidation = <TInputDate, TDate>(
-  props: DateValidationProps<TInputDate, TDate>,
+  props: ValidationProps<
+    DateValidationError,
+    TInputDate | null,
+    DateComponentValidationProps<TDate>
+  >,
 ): DateValidationError => useValidation(props, validateDate, isSameDateError);

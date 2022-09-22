@@ -17,12 +17,11 @@ import {
 import { convertValueToMeridiem, createIsAfterIgnoreDatePart } from '../internals/utils/time-utils';
 import { PickerOnChangeFn, useViews } from '../internals/hooks/useViews';
 import { PickerSelectionState } from '../internals/hooks/usePickerState';
-import { ExportedTimeValidationProps } from '../internals/hooks/validation/useTimeValidation';
 import { useMeridiemMode } from '../internals/hooks/date-helpers-hooks';
 import { ClockPickerView, MuiPickersAdapter } from '../internals/models';
 import { getClockPickerUtilityClass, ClockPickerClasses } from './clockPickerClasses';
 import { PickerViewRoot } from '../internals/components/PickerViewRoot';
-import { BaseDateValidationProps } from '../internals/hooks/validation/models';
+import { BaseTimeValidationProps, TimeValidationProps } from '../internals/hooks/validation/models';
 
 const useUtilityClasses = (ownerState: ClockPickerProps<any>) => {
   const { classes } = ownerState;
@@ -35,8 +34,8 @@ const useUtilityClasses = (ownerState: ClockPickerProps<any>) => {
 };
 
 export interface ExportedClockPickerProps<TDate>
-  extends ExportedTimeValidationProps<TDate>,
-    Pick<BaseDateValidationProps<TDate>, 'disableFuture' | 'disablePast'> {
+  extends TimeValidationProps<TDate>,
+    BaseTimeValidationProps<TDate> {
   /**
    * 12h/24h view for hour selection clock.
    * @default false
@@ -553,7 +552,7 @@ ClockPicker.propTypes = {
    */
   disabled: PropTypes.bool,
   /**
-   * If `true` future selection is disabled.
+   * If `true` disable values before the current time
    * @default false
    */
   disableFuture: PropTypes.bool,
@@ -563,7 +562,7 @@ ClockPicker.propTypes = {
    */
   disableIgnoringDatePartForTimeValidation: PropTypes.bool,
   /**
-   * If `true` past selection is disabled.
+   * If `true` disable values after the current time.
    * @default false
    */
   disablePast: PropTypes.bool,

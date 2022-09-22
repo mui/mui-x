@@ -1,17 +1,63 @@
-/**
- * Validation props common to all date views
- */
-export interface BaseDateValidationProps<TDate> {
+import { ClockPickerView } from '@mui/x-date-pickers';
+
+interface FutureAndPastValidationProps {
   /**
-   * If `true` past selection is disabled.
+   * If `true` disable values after the current time.
    * @default false
    */
   disablePast?: boolean;
   /**
-   * If `true` future selection is disabled.
+   * If `true` disable values before the current time
    * @default false
    */
   disableFuture?: boolean;
+}
+
+/**
+ * Validation props common to all time views.
+ * All these props have a default value when used inside a picker component.
+ */
+export interface BaseTimeValidationProps<TDate> extends FutureAndPastValidationProps {}
+
+/**
+ * Props used to validate a time value.
+ */
+export interface TimeValidationProps<TDate> {
+  /**
+   * Min time acceptable time.
+   * For input validation date part of passed object will be ignored if `disableIgnoringDatePartForTimeValidation` not specified.
+   */
+  minTime?: TDate;
+  /**
+   * Max time acceptable time.
+   * For input validation date part of passed object will be ignored if `disableIgnoringDatePartForTimeValidation` not specified.
+   */
+  maxTime?: TDate;
+  /**
+   * Step over minutes.
+   * @default 1
+   */
+  minutesStep?: number;
+  /**
+   * Dynamically check if time is disabled or not.
+   * If returns `false` appropriate time point will ot be acceptable.
+   * @param {number} timeValue The value to check.
+   * @param {ClockPickerView} clockType The clock type of the timeValue.
+   * @returns {boolean} Returns `true` if the time should be disabled
+   */
+  shouldDisableTime?: (timeValue: number, clockType: ClockPickerView) => boolean;
+  /**
+   * Do not ignore date part when validating min/max time.
+   * @default false
+   */
+  disableIgnoringDatePartForTimeValidation?: boolean;
+}
+
+/**
+ * Validation props common to all date views.
+ * All these props have a default value when used inside a picker component.
+ */
+export interface BaseDateValidationProps<TDate> extends FutureAndPastValidationProps {
   /**
    * Maximal selectable date. @DateIOType
    */

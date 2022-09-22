@@ -156,7 +156,7 @@ StaticDatePicker.propTypes = {
    */
   disabled: PropTypes.bool,
   /**
-   * If `true` future selection is disabled.
+   * If `true` disable values before the current time
    * @default false
    */
   disableFuture: PropTypes.bool,
@@ -176,7 +176,7 @@ StaticDatePicker.propTypes = {
    */
   disableOpenPicker: PropTypes.bool,
   /**
-   * If `true` past selection is disabled.
+   * If `true` disable values after the current time.
    * @default false
    */
   disablePast: PropTypes.bool,

@@ -80,12 +80,11 @@ export type { PickerStateValueManager, PickerSelectionState } from './hooks/useP
 export { useLocalizationContext, useDefaultDates, useUtils, useLocaleText } from './hooks/useUtils';
 export type { BaseDateValidationProps, DayValidationProps } from './hooks/validation/models';
 export { useValidation } from './hooks/validation/useValidation';
-export type { ValidationProps, Validator } from './hooks/validation/useValidation';
+export type { ValidationCommonProps, Validator } from './hooks/validation/useValidation';
 export { validateDate } from './hooks/validation/useDateValidation';
 export type {
-  DateValidationProps,
+  DateComponentValidationProps,
   DateValidationError,
-  ExportedDateValidationProps,
 } from './hooks/validation/useDateValidation';
 export { usePreviousMonthDisabled, useNextMonthDisabled } from './hooks/date-helpers-hooks';
 
