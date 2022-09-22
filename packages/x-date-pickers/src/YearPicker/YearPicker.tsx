@@ -273,6 +273,34 @@ export const YearPicker = React.forwardRef(function YearPicker<TDate>(
     scrollerRef.current.scrollTop = elementBottom - clientHeight / 2 - offsetHeight / 2;
   }, [autoFocus]);
 
+  const scrollerRef = React.useRef<HTMLDivElement>(null);
+  const handleRef = useForkRef(ref, scrollerRef);
+  React.useEffect(() => {
+    if (autoFocus || scrollerRef.current === null) {
+      return;
+    }
+    const tabbableButton = scrollerRef.current.querySelector<HTMLElement>('[tabindex="0"]');
+    if (!tabbableButton) {
+      return;
+    }
+
+    // Taken from useScroll in x-data-grid, but vertically centered
+    const offsetHeight = tabbableButton.offsetHeight;
+    const offsetTop = tabbableButton.offsetTop;
+
+    const clientHeight = scrollerRef.current.clientHeight;
+    const scrollTop = scrollerRef.current.scrollTop;
+
+    const elementBottom = offsetTop + offsetHeight;
+
+    if (offsetHeight > clientHeight || offsetTop < scrollTop) {
+      // Button already visible
+      return;
+    }
+
+    scrollerRef.current.scrollTop = elementBottom - clientHeight / 2 - offsetHeight / 2;
+  }, [autoFocus]);
+
   return (
     <YearPickerRoot
       ref={handleRef}

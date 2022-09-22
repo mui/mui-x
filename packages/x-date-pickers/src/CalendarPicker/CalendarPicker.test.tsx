@@ -16,6 +16,8 @@ import {
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
+const isJSDOM = /jsdom/.test(window.navigator.userAgent);
+
 describe('<CalendarPicker />', () => {
   const { render, clock } = createPickerRenderer({ clock: 'fake' });
 

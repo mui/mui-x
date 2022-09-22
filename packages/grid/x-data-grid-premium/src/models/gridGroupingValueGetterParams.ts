@@ -5,6 +5,7 @@ import {
   GridRowTreeNodeConfig,
   GridColDef,
   GridStateColDef,
+  GridValidRowModel,
 } from '@mui/x-data-grid-pro';
 
 /**
