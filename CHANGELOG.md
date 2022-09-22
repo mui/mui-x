@@ -3,6 +3,35 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## v5.17.4
+
+_Sep 22, 2022_
+
+We'd like to offer a big thanks to the 4 contributors who made this release possible. Here are some highlights ✨:
+
+- 🌍 Add Persian (fa-IR) locale to the pickers (#6181) @alexfauquette
+- 🐞 Bugfixes
+
+### `@mui/x-data-grid@v5.17.4` / `@mui/x-data-grid-pro@v5.17.4` / `@mui/x-data-grid-premium@v5.17.4`
+
+#### Changes
+
+- [DataGrid] Improve Polish (pl-PL) locale on the data grid (#6245) @grzegorz-bach
+
+### `@mui/x-date-pickers@v5.0.3` / `@mui/x-date-pickers-pro@v5.0.3`
+
+#### Changes
+
+- [pickers] Add Finnish (fi-FI) locale to pickers (#6219) (#6230) @PetroSilenius
+- [pickers] Add Persian (fa-IR) locale to the pickers (#6181) @alexfauquette
+- [pickers] Fix usage with Typescript 4.8 (#6229) @flaviendelangle
+- [YearPicker] Scroll to the current year even with `autoFocus=false` (#6224) @alexfauquette
+
+### Core
+
+- [core] Improve security header @oliviertassinari
+- [core] Use the official repository for `@mui/monorepo` instead of a fork (#6189) @oliviertassinari
+
 ## 5.17.3
 
 _Sep 16, 2022_
