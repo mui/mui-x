@@ -10,6 +10,7 @@ import {
   MuiTextFieldProps,
   useMaskedInput,
   onSpaceOrEnter,
+  useLocaleText,
 } from '@mui/x-date-pickers/internals';
 import { CurrentlySelectingRangeEndProps, DateRange } from '../internal/models/dateRange';
 import { DateRangeValidationError } from '../internal/hooks/validation/useDateRangeValidation';
@@ -74,8 +75,6 @@ export interface DateRangePickerInputProps<TInputDate, TDate>
       keyof ExportedDateRangePickerInputProps<TInputDate, TDate> | 'rawValue' | 'validationError'
     >,
     CurrentlySelectingRangeEndProps {
-  startText: React.ReactNode;
-  endText: React.ReactNode;
   validationError: DateRangeValidationError;
   rawValue: DateRange<TInputDate>;
   classes?: Partial<DateRangePickerInputClasses>;
@@ -99,7 +98,6 @@ export const DateRangePickerInput = React.forwardRef(function DateRangePickerInp
   const {
     currentlySelectingRangeEnd,
     disableOpenPicker,
-    endText,
     onBlur,
     onChange,
     open,
@@ -109,7 +107,6 @@ export const DateRangePickerInput = React.forwardRef(function DateRangePickerInp
     readOnly,
     renderInput,
     setCurrentlySelectingRangeEnd,
-    startText,
     TextFieldProps,
     validationError: [startValidationError, endValidationError],
     className,
@@ -120,6 +117,7 @@ export const DateRangePickerInput = React.forwardRef(function DateRangePickerInp
   const startRef = React.useRef<HTMLInputElement>(null);
   const endRef = React.useRef<HTMLInputElement>(null);
   const classes = useUtilityClasses(props);
+  const localeText = useLocaleText();
 
   React.useEffect(() => {
     if (!open) {
@@ -183,7 +181,7 @@ export const DateRangePickerInput = React.forwardRef(function DateRangePickerInp
     readOnly,
     rawValue: start,
     onChange: handleStartChange,
-    label: startText,
+    label: localeText.start,
     validationError: startValidationError !== null,
     TextFieldProps: {
       ...TextFieldProps,
@@ -200,7 +198,7 @@ export const DateRangePickerInput = React.forwardRef(function DateRangePickerInp
   const endInputProps = useMaskedInput({
     ...other,
     readOnly,
-    label: endText,
+    label: localeText.end,
     rawValue: end,
     onChange: handleEndChange,
     validationError: endValidationError !== null,

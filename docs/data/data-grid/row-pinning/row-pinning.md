@@ -6,7 +6,7 @@ title: Data Grid - Row pinning
 
 <p class="description">Pin rows to keep them visible at all times.</p>
 
-Pinned (or frozen, locked or floating) rows are those visible at all times while the user scrolls the grid vertically.
+Pinned (or frozen, locked, or floating) rows are those visible at all times while the user scrolls the grid vertically.
 
 :::warning
 This feature is experimental, it needs to be explicitly activated using the `rowPinning` experimental feature flag.

@@ -20,6 +20,7 @@ export default function PageInitialState() {
         initialState={{
           ...data.initialState,
           pagination: {
+            ...data.initialState?.pagination,
             page: 1,
           },
         }}

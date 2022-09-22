@@ -605,4 +605,19 @@ describe('<DesktopTimePicker />', () => {
       expect(onChange.lastCall.args[0]).toEqualDateTime(new Date('2018-01-01T10:53:00.000'));
     });
   });
+
+  describe('localization', () => {
+    it('should respect the `localeText` prop', () => {
+      render(
+        <WrappedDesktopTimePicker
+          initialValue={null}
+          localeText={{ cancelButtonLabel: 'Custom cancel' }}
+          componentsProps={{ actionBar: { actions: () => ['cancel'] } }}
+        />,
+      );
+      openPicker({ type: 'time', variant: 'desktop' });
+
+      expect(screen.queryByText('Custom cancel')).not.to.equal(null);
+    });
+  });
 });

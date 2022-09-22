@@ -1,10 +1,7 @@
-import * as React from 'react';
 import {
-  buildDeprecatedPropsWarning,
   BasePickerProps,
   PickerStateValueManager,
   useDefaultDates,
-  useLocaleText,
   useUtils,
   ValidationCommonProps,
   DefaultizedProps,
@@ -25,12 +22,6 @@ export interface BaseDateRangePickerProps<TInputDate, TDate>
     ValidationCommonProps<DateRangeValidationError, DateRange<TInputDate>>,
     ExportedDateRangePickerInputProps<TInputDate, TDate> {
   /**
-   * Text for end input label and toolbar placeholder.
-   * @default 'End'
-   * @deprecated Use the `localeText` prop of `LocalizationProvider` instead, see https://mui.com/x/react-date-pickers/localization
-   */
-  endText?: React.ReactNode;
-  /**
    * Custom mask. Can be used to override generate from format. (e.g. `__/__/____ __:__` or `__/__/____ __:__ _M`).
    * @default '__/__/____'
    */
@@ -42,17 +33,7 @@ export interface BaseDateRangePickerProps<TInputDate, TDate>
    * @param {string} keyboardInputValue The current value of the keyboard input.
    */
   onChange: (date: DateRange<TDate>, keyboardInputValue?: string) => void;
-  /**
-   * Text for start input label and toolbar placeholder.
-   * @default 'Start'
-   * @deprecated Use the `localeText` prop of `LocalizationProvider` instead, see https://mui.com/x/react-date-pickers/localization
-   */
-  startText?: React.ReactNode;
 }
-
-const deprecatedPropsWarning = buildDeprecatedPropsWarning(
-  'Props for translation are deprecated. See https://mui.com/x/react-date-pickers/localization for more information.',
-);
 
 export function useDateRangePickerDefaultizedProps<
   TInputDate,
@@ -63,7 +44,7 @@ export function useDateRangePickerDefaultizedProps<
   name: string,
 ): DefaultizedProps<
   Props,
-  'calendars' | 'startText' | 'endText' | keyof BaseDateValidationProps<TDate>,
+  'calendars' | keyof BaseDateValidationProps<TDate>,
   { inputFormat: string }
 > {
   const utils = useUtils<TDate>();
@@ -76,24 +57,12 @@ export function useDateRangePickerDefaultizedProps<
     name,
   });
 
-  deprecatedPropsWarning({
-    startText: themeProps.startText,
-    endText: themeProps.endText,
-  });
-
-  const localeText = useLocaleText();
-
-  const startText = themeProps.startText ?? localeText.start;
-  const endText = themeProps.endText ?? localeText.end;
-
   return {
     disableFuture: false,
     disablePast: false,
     calendars: 2,
     inputFormat: utils.formats.keyboardDate,
     ...themeProps,
-    endText,
-    startText,
     minDate: parseNonNullablePickerDate(utils, themeProps.minDate, defaultDates.minDate),
     maxDate: parseNonNullablePickerDate(utils, themeProps.maxDate, defaultDates.maxDate),
   };
