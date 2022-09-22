@@ -62,7 +62,7 @@
     "release:tag": "node scripts/releaseTag"
   },
   "devDependencies": {
-    "@argos-ci/core": "^0.4.0",
+    "@argos-ci/core": "^0.4.1",
     "@babel/cli": "^7.18.10",
     "@babel/core": "^7.19.1",
     "@babel/node": "^7.19.1",
