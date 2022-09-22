@@ -257,7 +257,6 @@ export const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
     components,
     componentsProps,
     loading,
-    getViewSwitchingButtonText,
     renderLoading,
     sx,
   } = props;
@@ -465,7 +464,6 @@ export const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
         labelId={gridLabelId}
         components={components}
         componentsProps={componentsProps}
-        getViewSwitchingButtonText={getViewSwitchingButtonText}
       />
       <CalendarPickerViewTransitionContainer
         reduceAnimations={reduceAnimations}
@@ -581,13 +579,6 @@ CalendarPicker.propTypes = {
    */
   disablePast: PropTypes.bool,
   focusedView: PropTypes.oneOf(['day', 'month', 'year']),
-  /**
-   * Get aria-label text for switching between views button.
-   * @param {CalendarPickerView} currentView The view from which we want to get the button text.
-   * @returns {string} The label of the view.
-   * @deprecated Use the `localeText` prop of `LocalizationProvider` instead, see https://mui.com/x/react-date-pickers/localization
-   */
-  getViewSwitchingButtonText: PropTypes.func,
   /**
    * If `true` renders `LoadingComponent` in calendar instead of calendar view.
    * Can be used to preload information and show it in calendar.
