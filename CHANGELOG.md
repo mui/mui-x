@@ -43,7 +43,6 @@ We'd like to offer a big thanks to the 12 contributors who made this release pos
   + apiRef.current.subscribeEvent('rowClick', handleRowClick)
   ```
 
-
 #### Changes
 
 - [DataGrid] Do not publish `cellFocusOut` event if the row was removed (#6009) @cherniavskii
@@ -123,7 +122,6 @@ You can find more information about the new api, including how to set those tran
   - <CalendarPicker date={dayjs()} onChange={handleDateChange} />
   + <CalendarPicker value={dayjs()} onChange={handleDateChange} />
   ```
-
 
 #### Changes
 
