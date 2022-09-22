@@ -45,7 +45,6 @@ We'd like to offer a big thanks to the 12 contributors who made this release pos
 
 #### Changes
 
-- [DataGrid] Do not publish `cellFocusOut` event if the row was removed (#6009) @cherniavskii
 - [DataGrid] Fix scroll anchoring with master details (#6054) @oliviertassinari
 - [DataGrid] Remove the `GridEvents` enum (#6003) @flaviendelangle
 - [DataGrid] Remove the deprecated `hide` column property (#5999) @flaviendelangle
@@ -59,7 +58,7 @@ We'd like to offer a big thanks to the 12 contributors who made this release pos
   You can now use the `localText` prop available on all picker components:
 
   | Removed prop                 | Property in the new `localText` prop                                              |
-      |------------------------------|-----------------------------------------------------------------------------------|
+  |------------------------------|-----------------------------------------------------------------------------------|
   | `endText`                    | `end`                                                                             |
   | `getClockLabelText`          | `clockLabelText`                                                                  |
   | `getHoursClockNumberText`    | `hoursClockNumberText`                                                            |
@@ -137,9 +136,9 @@ You can find more information about the new api, including how to set those tran
 - [pickers] Remove remaining deprecated locale props (#6233) @flaviendelangle
 - [pickers] Rename the `date` prop `value` on `MonthPicker` / `YearPicker`, `ClockPicker` and `CalendarPicker` (#6128) @flaviendelangle
 - [pickers] Rename the `onClose` prop of  `PickersPopper` `onDismiss` to simplify typing (#6155) @flaviendelangle
-- [pickers] Support sx props on all public component with a root HTML elements (#5944) @flaviendelangle
+- [pickers] Support the `sx` prop on all public component with a root HTML elements (#5944) @flaviendelangle
 - [pickers] Unify `PickersMonth` and `PickersYear` behaviors (#6034) @flaviendelangle
-- [pickers] `shouldDisableMonth` and `shouldDisableYear` should be used for date validation (#6066) @flaviendelangle
+- [pickers] Use `shouldDisableMonth` and `shouldDisableYear` for date validation (#6066) @flaviendelangle
 
 ### Docs
 
