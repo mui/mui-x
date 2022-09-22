@@ -33,7 +33,7 @@ We'd like to offer a big thanks to the 12 contributors who made this release pos
   />
   ```
 
-  You can find more information about this new api on our [documentation](https://next.mui.com/x/react-data-grid/column-visibility/).
+  You can find more information about this new API on our [documentation](https://next.mui.com/x/react-data-grid/column-visibility/).
 
 - The `GridEvents` enum is now a TypeScript type.
 
