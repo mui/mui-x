@@ -11,6 +11,14 @@ describe('<DateField /> - Editing', () => {
     clockConfig: new Date(2022, 5, 15),
   });
 
+  const clickOnInput = (input: HTMLInputElement, cursorPosition: number) => {
+    act(() => {
+      input.focus();
+      input.setSelectionRange(cursorPosition, cursorPosition);
+      clock.runToLast();
+    });
+  };
+
   const testKeyPress = <TDate extends unknown>({
     key,
     expectedValue,
@@ -19,13 +27,7 @@ describe('<DateField /> - Editing', () => {
   }: DateFieldProps<TDate> & { key: string; expectedValue: string; cursorPosition?: number }) => {
     render(<DateField {...props} />);
     const input = screen.getByRole('textbox');
-
-    act(() => {
-      input.focus();
-      input.setSelectionRange(cursorPosition, cursorPosition);
-      clock.runToLast();
-    });
-
+    clickOnInput(input, cursorPosition);
     userEvent.keyPress(input, { key });
     expect(input.value).to.equal(expectedValue);
   };
@@ -214,6 +216,70 @@ describe('<DateField /> - Editing', () => {
     });
   });
 
+  describe('key: Backspace', () => {
+    it('should clean the selected section when only this section is completed', () => {
+      render(<DateField format={adapterToUse.formats.monthAndYear} />);
+      const input = screen.getByRole('textbox');
+      clickOnInput(input, 1);
+
+      // Set a value for the "month" section
+      userEvent.keyPress(input, { key: 'j' });
+      expect(input.value).to.equal('January year');
+
+      userEvent.keyPress(input, { key: 'Backspace' });
+      expect(input.value).to.equal('month year');
+    });
+
+    it('should clean the selected section when all sections are completed', () => {
+      testKeyPress({
+        format: adapterToUse.formats.monthAndYear,
+        defaultValue: adapterToUse.date(),
+        key: 'Backspace',
+        expectedValue: 'month 2022',
+      });
+    });
+
+    it('should clean all the sections when all sections are selected and all sections are completed', () => {
+      render(
+        <DateField format={adapterToUse.formats.monthAndYear} defaultValue={adapterToUse.date()} />,
+      );
+      const input = screen.getByRole('textbox');
+      clickOnInput(input, 1);
+
+      // Select all sections
+      userEvent.keyPress(input, { key: 'a', ctrlKey: true });
+
+      userEvent.keyPress(input, { key: 'Backspace' });
+      expect(input.value).to.equal('month year');
+    });
+
+    it('should clean all the sections when all sections are selected and not all sections are completed', () => {
+      render(<DateField format={adapterToUse.formats.monthAndYear} />);
+      const input = screen.getByRole('textbox');
+      clickOnInput(input, 1);
+
+      // Set a value for the "month" section
+      userEvent.keyPress(input, { key: 'j' });
+      expect(input.value).to.equal('January year');
+
+      // Select all sections
+      userEvent.keyPress(input, { key: 'a', ctrlKey: true });
+
+      userEvent.keyPress(input, { key: 'Backspace' });
+      expect(input.value).to.equal('month year');
+    });
+
+    it('should not clean the sections when props.readOnly = true', () => {
+      testKeyPress({
+        format: adapterToUse.formats.year,
+        defaultValue: adapterToUse.date(),
+        readOnly: true,
+        key: 'Backspace',
+        expectedValue: '2022',
+      });
+    });
+  });
+
   describe('Digit editing', () => {
     it('should not edit when props.readOnly = true and no value is provided', () => {
       testKeyPress({
@@ -236,6 +302,45 @@ describe('<DateField /> - Editing', () => {
   });
 
   describe('Letter editing', () => {
+    it('should select the first month starting with the typed letter when no letter has been typed before and no value is provided', () => {
+      testKeyPress({
+        format: adapterToUse.formats.month,
+        key: 'm',
+        expectedValue: 'March',
+      });
+    });
+
+    it('should select the first month starting with the typed letter when no letter has been typed before and a value is provided', () => {
+      testKeyPress({
+        format: adapterToUse.formats.month,
+        defaultValue: adapterToUse.date(),
+        key: 'm',
+        expectedValue: 'March',
+      });
+    });
+
+    it('should use the previously typed letters as long as it matches at least one month', () => {
+      render(<DateField format={adapterToUse.formats.month} />);
+      const input = screen.getByRole('textbox');
+      clickOnInput(input, 1);
+
+      // Current query: "J" => 3 matches
+      userEvent.keyPress(input, { key: 'j' });
+      expect(input.value).to.equal('January');
+
+      // Current query: "JU" => 2 matches
+      userEvent.keyPress(input, { key: 'u' });
+      expect(input.value).to.equal('June');
+
+      // Current query: "JUL" => 1 match
+      userEvent.keyPress(input, { key: 'l' });
+      expect(input.value).to.equal('July');
+
+      // Current query: "JULO" => 0 match => fallback set the query to "O"
+      userEvent.keyPress(input, { key: 'o' });
+      expect(input.value).to.equal('October');
+    });
+
     it('should not edit when props.readOnly = true and no value is provided', () => {
       testKeyPress({
         format: adapterToUse.formats.month,

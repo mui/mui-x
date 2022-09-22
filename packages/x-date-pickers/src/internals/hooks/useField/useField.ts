@@ -208,9 +208,12 @@ export const useField = <
 
         updateSectionValue({
           setSectionValueOnDate: (activeSection, activeDate) => {
-            // TODO: Do not hardcode the compatible formatValue
             // TODO: Support digit edition on full letter sections.
-            if (activeSection.formatValue.includes('MMM')) {
+            // TODO: Do not hardcode the compatible formatValue
+            if (
+              !activeSection.formatValue.includes('MMM') &&
+              !activeSection.formatValue.includes('LLL')
+            ) {
               return activeDate;
             }
 
@@ -241,7 +244,10 @@ export const useField = <
 
         const getNewSectionValueStr = ({ activeSection }: { activeSection: TSection }): string => {
           // TODO: Do not hardcode the compatible formatValue
-          if (!activeSection.formatValue.includes('MMM')) {
+          if (
+            !activeSection.formatValue.includes('MMM') &&
+            !activeSection.formatValue.includes('LLL')
+          ) {
             return activeSection.value;
           }
 
