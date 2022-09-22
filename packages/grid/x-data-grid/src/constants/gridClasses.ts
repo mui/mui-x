@@ -318,6 +318,14 @@ export interface GridClasses {
    */
   menuList: string;
   /**
+   * Styles applied to the overlay wrapper anchor element.
+   */
+  overlayWrapperAnchor: string;
+  /**
+   * Styles applied to the overlay wrapper container element.
+   */
+  overlayWrapperContainer: string;
+  /**
    * Styles applied to the overlay element.
    */
   overlay: string;

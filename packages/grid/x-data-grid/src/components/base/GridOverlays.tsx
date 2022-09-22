@@ -11,7 +11,11 @@ import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { getMinimalContentHeight } from '../../hooks/features/rows/gridRowsUtils';
 
-const GridOverlayWrapperRoot = styled('div')({
+const GridOverlayWrapperAnchor = styled('div', {
+  name: 'MuiDataGrid',
+  slot: 'OverlayWrapperAnchor',
+  overridesResolver: (props, styles) => styles.overlayWrapperAnchor,
+})({
   position: 'sticky', // To stay in place while scrolling
   top: 0,
   left: 0,
@@ -19,6 +23,12 @@ const GridOverlayWrapperRoot = styled('div')({
   height: 0, // To stay above the content instead of shifting it down
   zIndex: 4, // Should be above pinned columns, pinned rows and detail panel
 });
+
+const GridOverlayWrapperContainer = styled('div', {
+  name: 'MuiDataGrid',
+  slot: 'OverlayWrapperContainer',
+  overridesResolver: (props, styles) => styles.overlayWrapperContainer,
+})({});
 
 function GridOverlayWrapper(props: React.PropsWithChildren<{}>) {
   const apiRef = useGridApiContext();
@@ -46,15 +56,15 @@ function GridOverlayWrapper(props: React.PropsWithChildren<{}>) {
   }
 
   return (
-    <GridOverlayWrapperRoot>
-      <div
+    <GridOverlayWrapperAnchor>
+      <GridOverlayWrapperContainer
         style={{
           height,
           width: viewportInnerSize?.width ?? 0,
         }}
         {...props}
       />
-    </GridOverlayWrapperRoot>
+    </GridOverlayWrapperAnchor>
   );
 }
 

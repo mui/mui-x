@@ -335,6 +335,8 @@
       "menuIconButton",
       "menuOpen",
       "menuList",
+      "overlayWrapperAnchor",
+      "overlayWrapperContainer",
       "overlay",
       "virtualScroller",
       "virtualScrollerContent",
