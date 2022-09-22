@@ -140,7 +140,7 @@ function DateRangePickerViewRaw<TDate>(props: DateRangePickerViewProps<TDate>) {
   const [start, end] = value;
   const { changeMonth, calendarState, onMonthSwitchingAnimationEnd, changeFocusedDay } =
     useCalendarState<TDate>({
-      value: start ?? end,
+      value: start || end,
       defaultCalendarMonth,
       disableFuture,
       disablePast,

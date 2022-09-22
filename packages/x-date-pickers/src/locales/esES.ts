@@ -51,11 +51,11 @@ const esESPickers: Partial<PickersLocaleText<any>> = {
 
   // Open picker labels
   openDatePickerDialogue: (value, utils) =>
-    value != null && utils.isValid(value)
+    value !== null && utils.isValid(value)
       ? `Elige la fecha, la fecha elegida es ${utils.format(value, 'fullDate')}`
       : 'Elige la fecha',
   openTimePickerDialogue: (value, utils) =>
-    value != null && utils.isValid(value)
+    value !== null && utils.isValid(value)
       ? `Elige la hora, la hora elegido es ${utils.format(value, 'fullTime')}`
       : 'Elige la hora',
 

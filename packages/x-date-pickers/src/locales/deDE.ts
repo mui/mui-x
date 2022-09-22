@@ -61,11 +61,11 @@ const deDEPickers: Partial<PickersLocaleText<any>> = {
 
   // Open picker labels
   openDatePickerDialogue: (value, utils) =>
-    value != null && utils.isValid(value)
+    value !== null && utils.isValid(value)
       ? `Datum auswählen, gewähltes Datum ist ${utils.format(value, 'fullDate')}`
       : 'Datum auswählen',
   openTimePickerDialogue: (value, utils) =>
-    value != null && utils.isValid(value)
+    value !== null && utils.isValid(value)
       ? `Uhrzeit auswählen, gewählte Uhrzeit ist ${utils.format(value, 'fullTime')}`
       : 'Uhrzeit auswählen',
 

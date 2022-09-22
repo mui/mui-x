@@ -51,11 +51,11 @@ const itITPickers: Partial<PickersLocaleText<any>> = {
 
   // Open picker labels
   openDatePickerDialogue: (value, utils) =>
-    value != null && utils.isValid(value)
+    value !== null && utils.isValid(value)
       ? `Scegli la data, la data selezionata è ${utils.format(value, 'fullDate')}`
       : 'Scegli la data',
   openTimePickerDialogue: (value, utils) =>
-    value != null && utils.isValid(value)
+    value !== null && utils.isValid(value)
       ? `Scegli l'ora, l'ora selezionata è ${utils.format(value, 'fullTime')}`
       : "Scegli l'ora",
 

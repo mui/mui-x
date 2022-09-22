@@ -45,11 +45,11 @@ const ptBRPickers: Partial<PickersLocaleText<any>> = {
 
   // Open picker labels
   openDatePickerDialogue: (value, utils) =>
-    value != null && utils.isValid(value)
+    value !== null && utils.isValid(value)
       ? `Escolha uma data, data selecionada ${utils.format(value, 'fullDate')}`
       : 'Escolha uma data',
   openTimePickerDialogue: (value, utils) =>
-    value != null && utils.isValid(value)
+    value !== null && utils.isValid(value)
       ? `Escolha uma hora, hora selecionada ${utils.format(value, 'fullTime')}`
       : 'Escolha uma hora',
 

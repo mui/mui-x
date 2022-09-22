@@ -43,11 +43,11 @@ const svSEPickers: Partial<PickersLocaleText<any>> = {
 
   // Open picker labels
   openDatePickerDialogue: (value, utils) =>
-    value != null && utils.isValid(value)
+    value !== null && utils.isValid(value)
       ? `Välj datum, valt datum är ${utils.format(value, 'fullDate')}`
       : 'Välj datum',
   openTimePickerDialogue: (value, utils) =>
-    value != null && utils.isValid(value)
+    value !== null && utils.isValid(value)
       ? `Välj tid, vald tid är ${utils.format(value, 'fullTime')}`
       : 'Välj tid',
 

@@ -36,8 +36,8 @@ const trTRPickers: Partial<PickersLocaleText<any>> = {
   // secondsClockNumberText: seconds => `${seconds} seconds`,
 
   // Open picker labels
-  // openDatePickerDialogue: (value, utils) => value != null && utils.isValid(value) ? `Choose date, selected date is ${utils.format(value, 'fullDate')}` : 'Choose date',
-  // openTimePickerDialogue: (value, utils) => value != null && utils.isValid(value) ? `Choose time, selected time is ${utils.format(value, 'fullTime')}` : 'Choose time',
+  // openDatePickerDialogue: (value, utils) => value !== null && utils.isValid(value) ? `Choose date, selected date is ${utils.format(value, 'fullDate')}` : 'Choose date',
+  // openTimePickerDialogue: (value, utils) => value !== null && utils.isValid(value) ? `Choose time, selected time is ${utils.format(value, 'fullTime')}` : 'Choose time',
 
   // Table labels
   // timeTableLabel: 'pick time',

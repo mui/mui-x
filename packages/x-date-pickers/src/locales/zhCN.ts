@@ -47,11 +47,11 @@ const zhCNPickers: Partial<PickersLocaleText<any>> = {
 
   // Open picker labels
   openDatePickerDialogue: (value, utils) =>
-    value != null && utils.isValid(value)
+    value !== null && utils.isValid(value)
       ? `选择日期，已选择${utils.format(value, 'fullDate')}`
       : '选择日期',
   openTimePickerDialogue: (value, utils) =>
-    value != null && utils.isValid(value)
+    value !== null && utils.isValid(value)
       ? `选择时间，已选择${utils.format(value, 'fullTime')}`
       : '选择时间',
 

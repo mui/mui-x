@@ -48,11 +48,11 @@ const enUSPickers: PickersLocaleText<any> = {
 
   // Open picker labels
   openDatePickerDialogue: (value, utils) =>
-    value != null && utils.isValid(value)
+    value !== null && utils.isValid(value)
       ? `Choose date, selected date is ${utils.format(value, 'fullDate')}`
       : 'Choose date',
   openTimePickerDialogue: (value, utils) =>
-    value != null && utils.isValid(value)
+    value !== null && utils.isValid(value)
       ? `Choose time, selected time is ${utils.format(value, 'fullTime')}`
       : 'Choose time',
 

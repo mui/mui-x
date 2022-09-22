@@ -63,7 +63,6 @@ export const useMultiInputDateRangeField = <
   const rawStartDateResponse = useDateField<TDate, {}>(startInputProps);
   const rawEndDateResponse = useDateField<TDate, {}>(endInputProps);
 
-  // TODO: Avoid the type casting.
   const value = valueProp ?? firstDefaultValue.current ?? dateRangePickerValueManager.emptyValue;
 
   const validationError = useValidation({ ...props, value }, validateDateRange, () => true);

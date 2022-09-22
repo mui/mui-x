@@ -47,7 +47,7 @@ const plPLPickers: Partial<PickersLocaleText<any>> = {
       ? `Wybierz datę, obecnie wybrana data to ${utils.format(value, 'fullDate')}`
       : 'Wybierz datę',
   openTimePickerDialogue: (value, utils) =>
-    value != null && utils.isValid(value)
+    value !== null && utils.isValid(value)
       ? `Wybierz czas, obecnie wybrany czas to ${utils.format(value, 'fullTime')}`
       : 'Wybierz czas',
 

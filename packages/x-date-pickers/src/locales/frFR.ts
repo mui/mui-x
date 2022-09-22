@@ -59,11 +59,11 @@ const frFRPickers: Partial<PickersLocaleText<any>> = {
 
   // Open picker labels
   openDatePickerDialogue: (value, utils) =>
-    value != null && utils.isValid(value)
+    value !== null && utils.isValid(value)
       ? `Choisir la date, la date sélectionnée est ${utils.format(value, 'fullDate')}`
       : 'Choisir la date',
   openTimePickerDialogue: (value, utils) =>
-    value != null && utils.isValid(value)
+    value !== null && utils.isValid(value)
       ? `Choisir l'heure, l'heure sélectionnée est ${utils.format(value, 'fullTime')}`
       : "Choisir l'heure",
 
