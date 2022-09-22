@@ -25,7 +25,6 @@ We'd like to offer a big thanks to the 12 contributors who made this release pos
       field: 'id,
   -   hide: true,
     ]}
-
   +  initialState={{
   +    columns: {
   +      columnVisibilityModel: { id: false },
