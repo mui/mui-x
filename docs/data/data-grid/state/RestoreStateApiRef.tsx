@@ -291,6 +291,7 @@ function CustomToolbar() {
           role={undefined}
           transition
           placement="bottom-start"
+          sx={{ zIndex: 'modal' }}
         >
           {({ TransitionProps }) => (
             <Fade {...TransitionProps} timeout={350}>
@@ -341,7 +342,6 @@ export default function RestoreStateApiRef() {
         loading={loading}
         apiRef={apiRef}
         pagination
-        initialState={{ columns: { columnVisibilityModel: {} } }}
         {...data}
       />
     </Box>

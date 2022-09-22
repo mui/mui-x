@@ -229,8 +229,8 @@ export const createFakeServer = (
     const queryOptionsRef = React.useRef(queryOptions);
     const [response, setResponse] = React.useState<{
       pageInfo: PageInfo;
-      data: GridRowModel[];
-    }>({ pageInfo: {}, data: [] });
+      rows: GridRowModel[];
+    }>({ pageInfo: {}, rows: [] });
     const [isLoading, setIsLoading] = React.useState<boolean>(dataGenerationIsLoading);
 
     React.useEffect(() => {
@@ -258,7 +258,7 @@ export const createFakeServer = (
           return;
         }
         const newRep = {
-          data: returnedRows,
+          rows: returnedRows,
           pageInfo: {
             totalRowCount,
             nextCursor,

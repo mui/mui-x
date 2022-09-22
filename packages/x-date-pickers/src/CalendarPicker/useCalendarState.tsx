@@ -152,7 +152,7 @@ export const useCalendarState = <TDate extends unknown>({
 
   const changeMonth = React.useCallback(
     (newDate: TDate) => {
-      const newDateRequested = newDate ?? now;
+      const newDateRequested = newDate;
       if (utils.isSameMonth(newDateRequested, calendarState.currentMonth)) {
         return;
       }
@@ -164,7 +164,7 @@ export const useCalendarState = <TDate extends unknown>({
           : 'right',
       });
     },
-    [calendarState.currentMonth, handleChangeMonth, now, utils],
+    [calendarState.currentMonth, handleChangeMonth, utils],
   );
 
   const isDateDisabled = useIsDateDisabled({

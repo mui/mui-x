@@ -168,7 +168,6 @@
   { "name": "GridColumnsState", "kind": "Interface" },
   { "name": "gridColumnsTotalWidthSelector", "kind": "Variable" },
   { "name": "GridColumnTypesRecord", "kind": "TypeAlias" },
-  { "name": "GridColumnVisibilityChangeParams", "kind": "Interface" },
   { "name": "GridColumnVisibilityModel", "kind": "TypeAlias" },
   { "name": "gridColumnVisibilityModelSelector", "kind": "Variable" },
   { "name": "GridCommitCellChangeParams", "kind": "Interface" },

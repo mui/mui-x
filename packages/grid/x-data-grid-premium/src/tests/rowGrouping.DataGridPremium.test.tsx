@@ -1543,7 +1543,6 @@ describe('<DataGridPremium /> - Row Grouping', () => {
             },
             {
               field: 'category1',
-              hide: true,
               valueGetter: (params) => `value ${params.row.category1}`,
               groupingValueGetter: (params: GridGroupingValueGetterParams<string>) =>
                 `groupingValue ${params.row.category1}`,

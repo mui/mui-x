@@ -13,6 +13,8 @@ They feature advanced functionality for data-rich applications and a wide range 
 MUI X is **open core**—base components are MIT-licensed, while more advanced features require a Pro or Premium commercial license.
 See the [Licensing page](https://mui.com/x/introduction/licensing/) for details.
 
+[![CII Best Practices](https://bestpractices.coreinfrastructure.org/projects/6293/badge)](https://bestpractices.coreinfrastructure.org/projects/6293)
+
 ## Components
 
 - [Data Grid](https://mui.com/x/react-data-grid/)

@@ -477,7 +477,7 @@ export const useGridSelection = (
         return;
       }
 
-      if (event.key.toLowerCase() === 'a' && (event.ctrlKey || event.metaKey)) {
+      if (event.key === 'a' && (event.ctrlKey || event.metaKey)) {
         event.preventDefault();
         selectRows(apiRef.current.getAllRowIds(), true);
       }

@@ -10,7 +10,7 @@ const DATASET_OPTION: UseDemoDataOptions = {
   rowLength: 100,
 };
 
-const { columns, useQuery } = createFakeServer(DATASET_OPTION);
+const { useQuery, ...data } = createFakeServer(DATASET_OPTION);
 
 export default function ServerSortingGrid() {
   const [queryOptions, setQueryOptions] = React.useState({});
@@ -20,13 +20,13 @@ export default function ServerSortingGrid() {
     setQueryOptions({ sortModel: [...sortModel] });
   }, []);
 
-  const { isLoading, data } = useQuery(queryOptions);
+  const { isLoading, rows } = useQuery(queryOptions);
 
   return (
     <div style={{ height: 400, width: '100%' }}>
       <DataGrid
-        rows={data}
-        columns={columns}
+        rows={rows}
+        {...data}
         sortingMode="server"
         onSortModelChange={handleSortModelChange}
         loading={isLoading}

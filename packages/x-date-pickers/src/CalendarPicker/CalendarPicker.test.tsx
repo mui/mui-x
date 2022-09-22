@@ -12,7 +12,7 @@ import {
   adapterToUse,
   wrapPickerMount,
   createPickerRenderer,
-} from '../../../../test/utils/pickers-utils';
+} from 'test/utils/pickers-utils';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
@@ -158,22 +158,6 @@ describe('<CalendarPicker />', () => {
     ['Su.', 'Mo.', 'Tu.', 'We.', 'Th.', 'Fr.', 'Sa.'].forEach((formattedDay) => {
       expect(screen.getByText(formattedDay)).toBeVisible();
     });
-  });
-
-  it('should select the closest enabled date if the prop.date contains a disabled date', () => {
-    const onChange = spy();
-
-    render(
-      <CalendarPicker
-        value={adapterToUse.date(new Date(2019, 0, 1))}
-        onChange={onChange}
-        maxDate={adapterToUse.date(new Date(2018, 0, 1))}
-      />,
-    );
-
-    // onChange must be dispatched with newly selected date
-    expect(onChange.callCount).to.equal(React.version.startsWith('18') ? 2 : 1); // Strict Effects run mount effects twice
-    expect(onChange.lastCall.args[0]).toEqualDateTime(new Date(2018, 0, 1));
   });
 
   describe('view: day', () => {

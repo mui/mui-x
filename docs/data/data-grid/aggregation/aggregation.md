@@ -48,7 +48,7 @@ You can use the `onAggregationModelChange` prop to listen to changes to aggregat
 
 You can disable aggregation by setting the `disableAggregation` prop to true.
 
-It will disable all features related to aggregation, even if a model is provided.
+It disables all features related to aggregation, even if a model is provided.
 
 {{"demo": "AggregationDisabled.js", "bg": "inline", "defaultCodeOpen": false}}
 
