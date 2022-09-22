@@ -29,7 +29,6 @@ We'd like to offer a big thanks to the 4 contributors who made this release poss
 
 ### Core
 
-- [core] Improve security header @oliviertassinari
 - [core] Use the official repository for `@mui/monorepo` instead of a fork (#6189) @oliviertassinari
 
 ## 5.17.3
