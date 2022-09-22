@@ -35,7 +35,7 @@
       "type": { "name": "node" },
       "default": "'End'",
       "deprecated": true,
-      "deprecationInfo": "Use the <code>localeText</code> prop of <code>LocalizationProvider</code> instead, see <a href=\"https://mui.com/x/react-date-pickers/localization\">https://mui.com/x/react-date-pickers/localization</a>"
+      "deprecationInfo": "Use the <code>localeText</code> prop of <code>LocalizationProvider</code> instead, see <a href=\"https://mui.com/x/react-date-pickers/localization/\">https://mui.com/x/react-date-pickers/localization/</a>."
     },
     "getOpenDialogAriaText": {
       "type": { "name": "func" },
@@ -44,7 +44,7 @@
     "getViewSwitchingButtonText": {
       "type": { "name": "func" },
       "deprecated": true,
-      "deprecationInfo": "Use the <code>localeText</code> prop of <code>LocalizationProvider</code> instead, see <a href=\"https://mui.com/x/react-date-pickers/localization\">https://mui.com/x/react-date-pickers/localization</a>"
+      "deprecationInfo": "Use the <code>localeText</code> prop of <code>LocalizationProvider</code> instead, see <a href=\"https://mui.com/x/react-date-pickers/localization/\">https://mui.com/x/react-date-pickers/localization/</a>."
     },
     "InputAdornmentProps": { "type": { "name": "object" } },
     "inputFormat": { "type": { "name": "string" } },
@@ -85,7 +85,7 @@
       "type": { "name": "node" },
       "default": "'Start'",
       "deprecated": true,
-      "deprecationInfo": "Use the <code>localeText</code> prop of <code>LocalizationProvider</code> instead, see <a href=\"https://mui.com/x/react-date-pickers/localization\">https://mui.com/x/react-date-pickers/localization</a>"
+      "deprecationInfo": "Use the <code>localeText</code> prop of <code>LocalizationProvider</code> instead, see <a href=\"https://mui.com/x/react-date-pickers/localization/\">https://mui.com/x/react-date-pickers/localization/</a>."
     },
     "toolbarFormat": { "type": { "name": "string" } },
     "toolbarTitle": { "type": { "name": "node" }, "default": "'Select date range'" }

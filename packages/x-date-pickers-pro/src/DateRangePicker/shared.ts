@@ -27,7 +27,7 @@ export interface BaseDateRangePickerProps<TInputDate, TDate>
   /**
    * Text for end input label and toolbar placeholder.
    * @default 'End'
-   * @deprecated Use the `localeText` prop of `LocalizationProvider` instead, see https://mui.com/x/react-date-pickers/localization
+   * @deprecated Use the `localeText` prop of `LocalizationProvider` instead, see https://mui.com/x/react-date-pickers/localization/.
    */
   endText?: React.ReactNode;
   /**
@@ -45,7 +45,7 @@ export interface BaseDateRangePickerProps<TInputDate, TDate>
   /**
    * Text for start input label and toolbar placeholder.
    * @default 'Start'
-   * @deprecated Use the `localeText` prop of `LocalizationProvider` instead, see https://mui.com/x/react-date-pickers/localization
+   * @deprecated Use the `localeText` prop of `LocalizationProvider` instead, see https://mui.com/x/react-date-pickers/localization/.
    */
   startText?: React.ReactNode;
 }
