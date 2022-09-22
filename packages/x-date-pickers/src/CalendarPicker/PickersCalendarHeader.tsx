@@ -10,7 +10,7 @@ import { ExportedDateValidationProps } from '../internals/hooks/validation/useDa
 import { ArrowDropDown } from '../internals/components/icons';
 import {
   PickersArrowSwitcher,
-  ExportedArrowSwitcherProps,
+  ExportedPickersArrowSwitcherProps,
   PickersArrowSwitcherSlotsComponent,
   PickersArrowSwitcherSlotsComponentsProps,
 } from '../internals/components/PickersArrowSwitcher';
@@ -27,7 +27,7 @@ import {
 
 export type ExportedCalendarHeaderProps<TDate> = Pick<
   PickersCalendarHeaderProps<TDate>,
-  'getViewSwitchingButtonText' | 'leftArrowButtonText' | 'rightArrowButtonText' | 'classes'
+  'getViewSwitchingButtonText' | 'classes'
 >;
 
 export interface PickersCalendarHeaderSlotsComponent extends PickersArrowSwitcherSlotsComponent {
@@ -53,7 +53,7 @@ export interface PickersCalendarHeaderSlotsComponentsProps
 }
 
 export interface PickersCalendarHeaderProps<TDate>
-  extends ExportedArrowSwitcherProps,
+  extends ExportedPickersArrowSwitcherProps,
     Omit<ExportedDateValidationProps<TDate>, 'shouldDisableDate'> {
   /**
    * Overrideable components.
@@ -181,28 +181,22 @@ export function PickersCalendarHeader<TDate>(inProps: PickersCalendarHeaderProps
     disableFuture,
     disablePast,
     getViewSwitchingButtonText: getViewSwitchingButtonTextProp,
-    leftArrowButtonText: leftArrowButtonTextProp,
     maxDate,
     minDate,
     onMonthChange,
     onViewChange,
     openView: currentView,
     reduceAnimations,
-    rightArrowButtonText: rightArrowButtonTextProp,
     views,
     labelId,
   } = props;
 
   deprecatedPropsWarning({
-    leftArrowButtonText: leftArrowButtonTextProp,
-    rightArrowButtonText: rightArrowButtonTextProp,
     getViewSwitchingButtonText: getViewSwitchingButtonTextProp,
   });
 
   const localeText = useLocaleText();
 
-  const leftArrowButtonText = leftArrowButtonTextProp ?? localeText.previousMonth;
-  const rightArrowButtonText = rightArrowButtonTextProp ?? localeText.nextMonth;
   const getViewSwitchingButtonText =
     getViewSwitchingButtonTextProp ?? localeText.calendarViewSwitchingButtonAriaLabel;
 
@@ -285,14 +279,14 @@ export function PickersCalendarHeader<TDate>(inProps: PickersCalendarHeaderProps
       </PickersCalendarHeaderLabelContainer>
       <Fade in={currentView === 'day'}>
         <PickersArrowSwitcher
-          leftArrowButtonText={leftArrowButtonText}
-          rightArrowButtonText={rightArrowButtonText}
           components={components}
           componentsProps={componentsProps}
-          onLeftClick={selectPreviousMonth}
-          onRightClick={selectNextMonth}
-          isLeftDisabled={isPreviousMonthDisabled}
-          isRightDisabled={isNextMonthDisabled}
+          onGoToPrevious={selectPreviousMonth}
+          isPreviousDisabled={isPreviousMonthDisabled}
+          previousLabel={localeText.previousMonth}
+          onGoToNext={selectNextMonth}
+          isNextDisabled={isNextMonthDisabled}
+          nextLabel={localeText.nextMonth}
         />
       </Fade>
     </PickersCalendarHeaderRoot>

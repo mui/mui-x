@@ -2,7 +2,7 @@ import * as React from 'react';
 import { DataGrid, GridFilterModel } from '@mui/x-data-grid';
 import { createFakeServer } from '@mui/x-data-grid-generator';
 
-const { columns, useQuery } = createFakeServer();
+const { useQuery, ...data } = createFakeServer();
 
 export default function ServerFilterGrid() {
   const [queryOptions, setQueryOptions] = React.useState({});
@@ -12,13 +12,13 @@ export default function ServerFilterGrid() {
     setQueryOptions({ filterModel: { ...filterModel } });
   }, []);
 
-  const { isLoading, data } = useQuery(queryOptions);
+  const { isLoading, rows } = useQuery(queryOptions);
 
   return (
     <div style={{ height: 400, width: '100%' }}>
       <DataGrid
-        rows={data}
-        columns={columns}
+        {...data}
+        rows={rows}
         filterMode="server"
         onFilterModelChange={onFilterChange}
         loading={isLoading}

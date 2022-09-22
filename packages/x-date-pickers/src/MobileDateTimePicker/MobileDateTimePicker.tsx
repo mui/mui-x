@@ -33,7 +33,7 @@ export interface MobileDateTimePickerSlotsComponentsProps
 
 export interface MobileDateTimePickerProps<TInputDate, TDate>
   extends BaseDateTimePickerProps<TInputDate, TDate>,
-    MobileWrapperProps {
+    MobileWrapperProps<TDate> {
   /**
    * Overrideable components.
    * @default {}
@@ -84,6 +84,7 @@ export const MobileDateTimePicker = React.forwardRef(function MobileDateTimePick
     onChange,
     components: providedComponents,
     componentsProps,
+    localeText,
     hideTabs = false,
     ...other
   } = props;
@@ -109,6 +110,7 @@ export const MobileDateTimePicker = React.forwardRef(function MobileDateTimePick
       PureDateInputComponent={PureDateInput}
       components={components}
       componentsProps={componentsProps}
+      localeText={localeText}
     >
       <CalendarOrClockPicker
         {...pickerProps}
@@ -280,16 +282,15 @@ MobileDateTimePicker.propTypes = {
   ]),
   label: PropTypes.node,
   /**
-   * Left arrow icon aria-label text.
-   * @deprecated
-   */
-  leftArrowButtonText: PropTypes.string,
-  /**
    * If `true` renders `LoadingComponent` in calendar instead of calendar view.
    * Can be used to preload information and show it in calendar.
    * @default false
    */
   loading: PropTypes.bool,
+  /**
+   * Locale for components texts
+   */
+  localeText: PropTypes.object,
   /**
    * Custom mask. Can be used to override generate from format. (e.g. `__/__/____ __:__` or `__/__/____ __:__ _M`).
    */
@@ -439,11 +440,6 @@ MobileDateTimePicker.propTypes = {
    * @returns {string} The formatted string.
    */
   rifmFormatter: PropTypes.func,
-  /**
-   * Right arrow icon aria-label text.
-   * @deprecated
-   */
-  rightArrowButtonText: PropTypes.string,
   /**
    * Disable specific date. @DateIOType
    * @template TDate

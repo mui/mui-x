@@ -34,13 +34,16 @@ The example bellow adds a dot at the end of each day in the calendar header, and
 
 {{"demo": "CustomizeDayPicker.js"}}
 
-## Translation keys
+## Text translations
 
 As the rest of MUI components, you can modify text and translations.
 You can find all the translation keys supported in [the source](https://github.com/mui/mui-x/blob/HEAD/packages/x-date-pickers/src/locales/utils/pickersLocaleTextApi.ts)
 in the GitHub repository.
 
-You can set the locale text by using the theme provider.
+### Using the theme
+
+To translate all your components from `@mui/x-date-pickers` and `@mui/x-date-pickers-pro`,
+you just have to import the locale from `@mui/x-date-pikers` (see the [list of supported locales below](#supported-locales)).
 
 ```jsx
 import { createTheme, ThemeProvider } from '@mui/material/styles';
@@ -98,7 +101,10 @@ const theme = createTheme(
 </ThemeProvider>;
 ```
 
-If you want to pass language translations without using `createTheme` and `ThemeProvider`, you can directly load the language translations from the `@mui/x-date-pickers` or `@mui/x-date-pickers-pro` package and pass them to the `LocalizationProvider`.
+### Using the localization provider
+
+If you want to pass language translations without using `createTheme` and `ThemeProvider`,
+you can directly load the language translations from the `@mui/x-date-pickers` or `@mui/x-date-pickers-pro` package and pass them to the `LocalizationProvider`.
 
 ```jsx
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -114,7 +120,15 @@ import bgLocale from 'date-fns/locale/bg';
 </LocalizationProvider>;
 ```
 
-## Supported locales
+### Using props
+
+If you want to customize some translations on specific component, you can use the `localeText` prop exposed by all our pickers.
+
+```jsx
+<DatePicker localeText={{ clearButtonLabel: 'Empty' }} />
+```
+
+### Supported locales
 
 | Locale                  | BCP 47 language tag | Import name |
 | :---------------------- | :------------------ | :---------- |

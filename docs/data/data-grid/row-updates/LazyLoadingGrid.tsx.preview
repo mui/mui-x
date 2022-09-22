@@ -1,6 +1,6 @@
 <DataGridPro
-  columns={columns}
   rows={initialRows}
+  {...data}
   apiRef={apiRef}
   hideFooterPagination
   rowCount={rowCount}

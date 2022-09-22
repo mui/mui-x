@@ -45,8 +45,8 @@ export default function ControlledSelectionServerPaginationGrid() {
   return (
     <div style={{ height: 400, width: '100%' }}>
       <DataGrid
+        {...data}
         rows={rows}
-        columns={data.columns}
         pagination
         checkboxSelection
         pageSize={5}

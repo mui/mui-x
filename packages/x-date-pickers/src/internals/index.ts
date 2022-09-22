@@ -17,8 +17,12 @@ export type {
   CalendarOrClockPickerClassKey,
   CalendarOrClockPickerClasses,
 } from './components/CalendarOrClockPicker/calendarOrClockPickerClasses';
-export { PickersArrowSwitcher } from './components/PickersArrowSwitcher';
-export type { ExportedArrowSwitcherProps } from './components/PickersArrowSwitcher';
+export { PickersArrowSwitcher } from './components/PickersArrowSwitcher/PickersArrowSwitcher';
+export type {
+  ExportedPickersArrowSwitcherProps,
+  PickersArrowSwitcherSlotsComponent,
+  PickersArrowSwitcherSlotsComponentsProps,
+} from './components/PickersArrowSwitcher';
 export { PickerStaticWrapper } from './components/PickerStaticWrapper/PickerStaticWrapper';
 export type { PickerStaticWrapperProps } from './components/PickerStaticWrapper/PickerStaticWrapper';
 export type {
@@ -44,11 +48,11 @@ export type {
   PickersToolbarTextClassKey,
   PickersToolbarTextClasses,
 } from './components/pickersToolbarTextClasses';
-export { pickersArrowSwitcherClasses } from './components/pickersArrowSwitcherClasses';
+export { pickersArrowSwitcherClasses } from './components/PickersArrowSwitcher/pickersArrowSwitcherClasses';
 export type {
   PickersArrowSwitcherClassKey,
   PickersArrowSwitcherClasses,
-} from './components/pickersArrowSwitcherClasses';
+} from './components/PickersArrowSwitcher/pickersArrowSwitcherClasses';
 export type { PickerPopperProps } from './components/PickersPopper';
 export { pickersPopperClasses } from './components/pickersPopperClasses';
 export type {
