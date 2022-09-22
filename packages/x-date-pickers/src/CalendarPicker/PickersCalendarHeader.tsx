@@ -19,7 +19,6 @@ import {
   useNextMonthDisabled,
 } from '../internals/hooks/date-helpers-hooks';
 import { CalendarPickerView } from '../internals/models';
-import { buildDeprecatedPropsWarning } from '../internals/utils/warning';
 import {
   getPickersCalendarHeaderUtilityClass,
   PickersCalendarHeaderClasses,
@@ -153,10 +152,6 @@ const PickersCalendarHeaderSwitchViewIcon = styled(ArrowDropDown, {
     transform: 'rotate(180deg)',
   }),
 }));
-
-const deprecatedPropsWarning = buildDeprecatedPropsWarning(
-  'Props for translation are deprecated. See https://mui.com/x/react-date-pickers/localization for more information.',
-);
 
 /**
  * @ignore - do not document.
