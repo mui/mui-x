@@ -4,7 +4,7 @@ import { useDefaultDates, useUtils } from '../internals/hooks/useUtils';
 import { ExportedClockPickerProps } from '../ClockPicker/ClockPicker';
 import { ExportedCalendarPickerProps } from '../CalendarPicker/CalendarPicker';
 import { DateTimeValidationError } from '../internals/hooks/validation/useDateTimeValidation';
-import { ValidationProps } from '../internals/hooks/validation/useValidation';
+import { ValidationCommonProps } from '../internals/hooks/validation/useValidation';
 import { BasePickerProps } from '../internals/models/props/basePickerProps';
 import { ExportedDateInputProps } from '../internals/components/PureDateInput';
 import { CalendarOrClockPickerView } from '../internals/models';
@@ -12,13 +12,16 @@ import { PickerStateValueManager } from '../internals/hooks/usePickerState';
 import { applyDefaultDate, replaceInvalidDateByNull } from '../internals/utils/date-utils';
 import { BaseToolbarProps } from '../internals/models/props/baseToolbarProps';
 import { DefaultizedProps } from '../internals/models/helpers';
-import { BaseDateValidationProps } from '../internals/hooks/validation/models';
+import {
+  BaseDateValidationProps,
+  BaseTimeValidationProps,
+} from '../internals/hooks/validation/models';
 
 export interface BaseDateTimePickerProps<TDate>
   extends ExportedClockPickerProps<TDate>,
     ExportedCalendarPickerProps<TDate>,
     BasePickerProps<TDate | null>,
-    ValidationProps<DateTimeValidationError, TDate | null>,
+    ValidationCommonProps<DateTimeValidationError, TDate | null>,
     ExportedDateInputProps<TDate> {
   /**
    * 12h/24h view for hour selection clock.
@@ -91,7 +94,7 @@ export function useDateTimePickerDefaultizedProps<
   name: string,
 ): DefaultizedProps<
   Props,
-  'openTo' | 'views' | keyof BaseDateValidationProps<TDate>,
+  'openTo' | 'views' | keyof BaseDateValidationProps<TDate> | keyof BaseTimeValidationProps,
   { inputFormat: string }
 > {
   // This is technically unsound if the type parameters appear in optional props.

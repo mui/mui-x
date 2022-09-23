@@ -3,7 +3,7 @@ import {
   PickerStateValueManager,
   useDefaultDates,
   useUtils,
-  ValidationProps,
+  ValidationCommonProps,
   DefaultizedProps,
   applyDefaultDate,
   BaseDateValidationProps,
@@ -19,7 +19,7 @@ export interface BaseDateRangePickerProps<TDate>
   extends Omit<BasePickerProps<DateRange<TDate>>, 'orientation'>,
     ExportedDateRangePickerViewProps<TDate>,
     BaseDateValidationProps<TDate>,
-    ValidationProps<DateRangeValidationError, DateRange<TDate>>,
+    ValidationCommonProps<DateRangeValidationError, DateRange<TDate>>,
     ExportedDateRangePickerInputProps<TDate> {
   /**
    * Custom mask. Can be used to override generate from format. (e.g. `__/__/____ __:__` or `__/__/____ __:__ _M`).

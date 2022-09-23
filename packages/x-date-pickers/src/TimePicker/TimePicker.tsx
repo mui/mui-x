@@ -145,6 +145,11 @@ TimePicker.propTypes = {
    */
   disabled: PropTypes.bool,
   /**
+   * If `true` disable values before the current time
+   * @default false
+   */
+  disableFuture: PropTypes.bool,
+  /**
    * Do not ignore date part when validating min/max time.
    * @default false
    */
@@ -159,6 +164,11 @@ TimePicker.propTypes = {
    * @default false
    */
   disableOpenPicker: PropTypes.bool,
+  /**
+   * If `true` disable values after the current time.
+   * @default false
+   */
+  disablePast: PropTypes.bool,
   /**
    * Get aria-label text for control that opens picker dialog. Aria-label text must include selected date. @DateIOType
    * @template TDate
