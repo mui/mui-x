@@ -14,6 +14,7 @@ import {
   openPicker,
   getClockMouseEvent,
 } from 'test/utils/pickers-utils';
+import describeValidation from '@mui/x-date-pickers/internals/utils/describeValidation';
 
 const WrappedDesktopTimePicker = withPickerControls(DesktopTimePicker)({
   DialogProps: { TransitionComponent: FakeTransitionComponent },
@@ -21,7 +22,13 @@ const WrappedDesktopTimePicker = withPickerControls(DesktopTimePicker)({
 });
 
 describe('<DesktopTimePicker />', () => {
-  const { render } = createPickerRenderer({ clock: 'fake' });
+  const { render, clock } = createPickerRenderer({ clock: 'fake' });
+
+  describeValidation(DesktopTimePicker, () => ({
+    render,
+    clock,
+    views: ['hour', 'minutes'],
+  }));
 
   describeConformance(
     <DesktopTimePicker
