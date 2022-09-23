@@ -9,7 +9,7 @@ export interface UseFieldParams<
   TDate,
   TSection extends FieldSection,
   TForwardedProps extends UseFieldForwardedProps,
-  TInternalProps extends UseFieldInternalProps<any, any, any, any>,
+  TInternalProps extends UseFieldInternalProps<any, any, any>,
 > {
   forwardedProps: TForwardedProps;
   internalProps: TInternalProps;
@@ -18,7 +18,7 @@ export interface UseFieldParams<
   validator: Validator<TDate, UseFieldValidationProps<TInputValue, TInternalProps>>;
 }
 
-export interface UseFieldInternalProps<TInputValue, TValue, TSection extends FieldSection, TError> {
+export interface UseFieldInternalProps<TInputValue, TValue, TError> {
   value?: TInputValue;
   onChange?: (value: TValue) => void;
   onError?: (error: TError, value: TInputValue) => void;
@@ -120,7 +120,7 @@ export interface UseFieldState<TValue, TSections> {
 
 export type UseFieldValidationProps<
   TInputValue,
-  TInternalProps extends UseFieldInternalProps<any, any, any, any>,
+  TInternalProps extends UseFieldInternalProps<any, any, any>,
 > = Omit<TInternalProps, 'value' | 'defaultValue'> & { value: TInputValue };
 
 export type AvailableAdjustKeyCode =

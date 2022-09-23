@@ -33,7 +33,7 @@ export const useField = <
   TDate,
   TSection extends FieldSection,
   TForwardedProps extends UseFieldForwardedProps,
-  TInternalProps extends UseFieldInternalProps<any, any, any, any>,
+  TInternalProps extends UseFieldInternalProps<any, any, any>,
 >(
   params: UseFieldParams<TInputValue, TValue, TDate, TSection, TForwardedProps, TInternalProps>,
 ): UseFieldResponse<TForwardedProps> => {

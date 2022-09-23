@@ -7,7 +7,7 @@ import {
 import { DefaultizedProps } from '../internals/models/helpers';
 
 export interface UseDateFieldProps<TInputDate, TDate>
-  extends UseFieldInternalProps<TInputDate | null, TDate | null, FieldSection, DateValidationError>,
+  extends UseFieldInternalProps<TInputDate | null, TDate | null, DateValidationError>,
     Partial<Omit<DateValidationProps<TInputDate, TDate>, 'value'>> {}
 
 export type UseDateFieldDefaultizedProps<TInputDate, TDate> = DefaultizedProps<
