@@ -15,14 +15,12 @@ import {
   UseDateFieldComponentProps,
 } from '@mui/x-date-pickers/DateField';
 
-type JoyDateFieldProps = UseDateFieldComponentProps<Dayjs, Dayjs, JoyTextFieldProps>;
+type JoyDateFieldProps = UseDateFieldComponentProps<Dayjs, JoyTextFieldProps>;
 
 const JoyDateField = (props: JoyDateFieldProps) => {
-  const { ref: inputRef, ...fieldProps } = useDateField<
-    Dayjs,
-    Dayjs,
-    JoyDateFieldProps
-  >({ props });
+  const { ref: inputRef, ...fieldProps } = useDateField<Dayjs, JoyDateFieldProps>({
+    props,
+  });
 
   return (
     <JoyTextField
@@ -32,15 +30,10 @@ const JoyDateField = (props: JoyDateFieldProps) => {
   );
 };
 
-type UnstyledDateFieldProps = UseDateFieldComponentProps<
-  Dayjs,
-  Dayjs,
-  InputUnstyledProps
->;
+type UnstyledDateFieldProps = UseDateFieldComponentProps<Dayjs, InputUnstyledProps>;
 
 const UnstyledDateField = (props: UnstyledDateFieldProps) => {
   const { ref: inputRef, ...fieldProps } = useDateField<
-    Dayjs,
     Dayjs,
     UnstyledDateFieldProps
   >({ props });
@@ -55,12 +48,11 @@ const UnstyledDateField = (props: UnstyledDateFieldProps) => {
 
 type BrowserInputDateFieldProps = UseDateFieldComponentProps<
   Dayjs,
-  Dayjs,
   React.HTMLAttributes<HTMLInputElement>
 >;
 
 const BrowserInputDateField = (props: BrowserInputDateFieldProps) => {
-  const fieldProps = useDateField<Dayjs, Dayjs, BrowserInputDateFieldProps>({
+  const fieldProps = useDateField<Dayjs, BrowserInputDateFieldProps>({
     props,
   });
 

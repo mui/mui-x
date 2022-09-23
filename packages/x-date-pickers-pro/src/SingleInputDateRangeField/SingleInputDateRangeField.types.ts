@@ -1,37 +1,34 @@
 import * as React from 'react';
 import { SlotComponentProps } from '@mui/base/utils';
 import TextField, { TextFieldProps } from '@mui/material/TextField';
-import { DefaultizedProps } from '@mui/x-date-pickers/internals';
+import { BaseDateValidationProps, DefaultizedProps } from '@mui/x-date-pickers/internals';
 import { UseFieldInternalProps, FieldSection } from '@mui/x-date-pickers/internals-fields';
-import { DateRange } from '../internal/models';
-import {
-  DateRangeValidationError,
-  DateRangeValidationProps,
-} from '../internal/hooks/validation/useDateRangeValidation';
+import { DateRange, DayRangeValidationProps } from '../internal/models';
+import { DateRangeValidationError } from '../internal/hooks/validation/useDateRangeValidation';
 
-export interface UseSingleInputDateRangeFieldParams<TInputDate, TDate, TChildProps extends {}> {
-  props: UseSingleInputDateRangeFieldComponentProps<TInputDate, TDate, TChildProps>;
+export interface UseSingleInputDateRangeFieldParams<TDate, TChildProps extends {}> {
+  props: UseSingleInputDateRangeFieldComponentProps<TDate, TChildProps>;
   inputRef?: React.Ref<HTMLInputElement>;
 }
 
-export interface UseSingleInputDateRangeFieldProps<TInputDate, TDate>
-  extends UseFieldInternalProps<DateRange<TInputDate>, DateRange<TDate>, DateRangeValidationError>,
-    Partial<Omit<DateRangeValidationProps<TInputDate, TDate>, 'value'>> {}
+export interface UseSingleInputDateRangeFieldProps<TDate>
+  extends UseFieldInternalProps<DateRange<TDate>, DateRangeValidationError>,
+    DayRangeValidationProps<TDate>,
+    BaseDateValidationProps<TDate> {}
 
-export type UseSingleInputDateRangeFieldDefaultizedProps<TInputDate, TDate> = DefaultizedProps<
-  UseSingleInputDateRangeFieldProps<TInputDate, TDate>,
-  'minDate' | 'maxDate' | 'disableFuture' | 'disablePast'
+export type UseSingleInputDateRangeFieldDefaultizedProps<TDate> = DefaultizedProps<
+  UseSingleInputDateRangeFieldProps<TDate>,
+  keyof BaseDateValidationProps<TDate>
 >;
 
-export type UseSingleInputDateRangeFieldComponentProps<
-  TInputDate,
-  TDate,
-  TChildProps extends {},
-> = Omit<TChildProps, keyof UseSingleInputDateRangeFieldProps<TInputDate, TDate>> &
-  UseSingleInputDateRangeFieldProps<TInputDate, TDate>;
+export type UseSingleInputDateRangeFieldComponentProps<TDate, TChildProps extends {}> = Omit<
+  TChildProps,
+  keyof UseSingleInputDateRangeFieldProps<TDate>
+> &
+  UseSingleInputDateRangeFieldProps<TDate>;
 
-export interface SingleInputDateRangeFieldProps<TInputDate, TDate>
-  extends UseSingleInputDateRangeFieldComponentProps<TInputDate, TDate, TextFieldProps> {
+export interface SingleInputDateRangeFieldProps<TDate>
+  extends UseSingleInputDateRangeFieldComponentProps<TDate, TextFieldProps> {
   /**
    * Overrideable components.
    * @default {}
@@ -41,13 +38,10 @@ export interface SingleInputDateRangeFieldProps<TInputDate, TDate>
    * The props used for each component slot.
    * @default {}
    */
-  componentsProps?: SingleInputDateRangeFieldSlotsComponentsProps<TInputDate, TDate>;
+  componentsProps?: SingleInputDateRangeFieldSlotsComponentsProps<TDate>;
 }
 
-export type SingleInputDateRangeFieldOwnerState<TInputDate, TDate> = SingleInputDateRangeFieldProps<
-  TInputDate,
-  TDate
->;
+export type SingleInputDateRangeFieldOwnerState<TDate> = SingleInputDateRangeFieldProps<TDate>;
 
 export interface SingleInputDateRangeFieldSlotsComponent {
   /**
@@ -57,12 +51,8 @@ export interface SingleInputDateRangeFieldSlotsComponent {
   Input?: React.ElementType;
 }
 
-export interface SingleInputDateRangeFieldSlotsComponentsProps<TDate, TInputDate> {
-  input?: SlotComponentProps<
-    typeof TextField,
-    {},
-    SingleInputDateRangeFieldOwnerState<TDate, TInputDate>
-  >;
+export interface SingleInputDateRangeFieldSlotsComponentsProps<TDate> {
+  input?: SlotComponentProps<typeof TextField, {}, SingleInputDateRangeFieldOwnerState<TDate>>;
 }
 
 export interface DateRangeFieldSection extends FieldSection {

@@ -23,9 +23,9 @@ export interface DateTimePickerSlotsComponentsProps
   extends MobileDateTimePickerSlotsComponentsProps,
     DesktopDateTimePickerSlotsComponentsProps {}
 
-export interface DateTimePickerProps<TInputDate, TDate>
-  extends Omit<DesktopDateTimePickerProps<TInputDate, TDate>, 'components' | 'componentsProps'>,
-    Omit<MobileDateTimePickerProps<TInputDate, TDate>, 'components' | 'componentsProps'> {
+export interface DateTimePickerProps<TDate>
+  extends Omit<DesktopDateTimePickerProps<TDate>, 'components' | 'componentsProps'>,
+    Omit<MobileDateTimePickerProps<TDate>, 'components' | 'componentsProps'> {
   /**
    * CSS media query when `Mobile` mode will be changed to `Desktop`.
    * @default '@media (pointer: fine)'
@@ -44,8 +44,8 @@ export interface DateTimePickerProps<TInputDate, TDate>
   componentsProps?: Partial<DateTimePickerSlotsComponentsProps>;
 }
 
-type DateTimePickerComponent = (<TInputDate, TDate = TInputDate>(
-  props: DateTimePickerProps<TInputDate, TDate> & React.RefAttributes<HTMLDivElement>,
+type DateTimePickerComponent = (<TDate>(
+  props: DateTimePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
 ) => JSX.Element) & { propTypes?: any };
 
 /**
@@ -59,8 +59,8 @@ type DateTimePickerComponent = (<TInputDate, TDate = TInputDate>(
  *
  * - [DateTimePicker API](https://mui.com/x/api/date-pickers/date-time-picker/)
  */
-const DateTimePicker = React.forwardRef(function DateTimePicker<TInputDate, TDate = TInputDate>(
-  inProps: DateTimePickerProps<TInputDate, TDate>,
+const DateTimePicker = React.forwardRef(function DateTimePicker<TDate>(
+  inProps: DateTimePickerProps<TDate>,
   ref: React.Ref<HTMLDivElement>,
 ) {
   const props = useThemeProps({ props: inProps, name: 'MuiDateTimePicker' });
@@ -161,7 +161,7 @@ DateTimePicker.propTypes = {
    */
   disabled: PropTypes.bool,
   /**
-   * If `true` future days are disabled.
+   * If `true` disable values before the current time
    * @default false
    */
   disableFuture: PropTypes.bool,
@@ -186,17 +186,17 @@ DateTimePicker.propTypes = {
    */
   disableOpenPicker: PropTypes.bool,
   /**
-   * If `true` past days are disabled.
+   * If `true` disable values after the current time.
    * @default false
    */
   disablePast: PropTypes.bool,
   /**
    * Get aria-label text for control that opens picker dialog. Aria-label text must include selected date. @DateIOType
-   * @template TInputDate, TDate
-   * @param {TInputDate} date The date from which we want to add an aria-text.
+   * @template TDate
+   * @param {TDate | null} date The date from which we want to add an aria-text.
    * @param {MuiPickersAdapter<TDate>} utils The utils to manipulate the date.
    * @returns {string} The aria-text to render inside the dialog.
-   * @default (date, utils) => `Choose date, selected date is ${utils.format(utils.date(date), 'fullDate')}`
+   * @default (date, utils) => `Choose date, selected date is ${utils.format(date, 'fullDate')}`
    */
   getOpenDialogAriaText: PropTypes.func,
   /**
@@ -278,7 +278,7 @@ DateTimePicker.propTypes = {
   /**
    * Callback fired when the value (the selected date) changes @DateIOType.
    * @template TValue
-   * @param {TValue} value The new parsed value.
+   * @param {TValue} value The new value.
    * @param {string} keyboardInputValue The current value of the keyboard input.
    */
   onChange: PropTypes.func.isRequired,
@@ -295,9 +295,9 @@ DateTimePicker.propTypes = {
    * [Read the guide](https://next.material-ui-pickers.dev/guides/forms) about form integration and error displaying.
    * @DateIOType
    *
-   * @template TError, TInputValue
+   * @template TError, TValue
    * @param {TError} reason The reason why the current value is not valid.
-   * @param {TInputValue} value The invalid value.
+   * @param {TValue} value The invalid value.
    */
   onError: PropTypes.func,
   /**

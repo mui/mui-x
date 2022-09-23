@@ -17,7 +17,7 @@ import {
   isSameDateError,
   validateDate,
 } from '../internals/hooks/validation/useDateValidation';
-import { parseNonNullablePickerDate } from '../internals/utils/date-utils';
+import { applyDefaultDate } from '../internals/utils/date-utils';
 import { useUtils, useDefaultDates } from '../internals/hooks/useUtils';
 
 const dateRangeFieldValueManager: FieldValueManager<any, any, FieldSection, DateValidationError> = {
@@ -41,9 +41,9 @@ const dateRangeFieldValueManager: FieldValueManager<any, any, FieldSection, Date
   isSameError: isSameDateError,
 };
 
-const useDefaultizedDateField = <TInputDate, TDate, AdditionalProps extends {}>(
-  props: UseDateFieldProps<TInputDate, TDate>,
-): AdditionalProps & UseDateFieldDefaultizedProps<TInputDate, TDate> => {
+const useDefaultizedDateField = <TDate, AdditionalProps extends {}>(
+  props: UseDateFieldProps<TDate>,
+): AdditionalProps & UseDateFieldDefaultizedProps<TDate> => {
   const utils = useUtils<TDate>();
   const defaultDates = useDefaultDates<TDate>();
 
@@ -51,15 +51,15 @@ const useDefaultizedDateField = <TInputDate, TDate, AdditionalProps extends {}>(
     disablePast: false,
     disableFuture: false,
     ...props,
-    minDate: parseNonNullablePickerDate(utils, props.minDate, defaultDates.minDate),
-    maxDate: parseNonNullablePickerDate(utils, props.maxDate, defaultDates.maxDate),
+    minDate: applyDefaultDate(utils, props.minDate, defaultDates.minDate),
+    maxDate: applyDefaultDate(utils, props.maxDate, defaultDates.maxDate),
   } as any;
 };
 
-export const useDateField = <TInputDate, TDate, TChildProps extends {}>({
+export const useDateField = <TDate, TChildProps extends {}>({
   props,
   inputRef,
-}: UseDateFieldParams<TInputDate, TDate, TChildProps>) => {
+}: UseDateFieldParams<TDate, TChildProps>) => {
   const {
     value,
     defaultValue,
@@ -75,7 +75,7 @@ export const useDateField = <TInputDate, TDate, TChildProps extends {}>({
     disableFuture,
     disablePast,
     ...other
-  } = useDefaultizedDateField<TInputDate, TDate, TChildProps>(props);
+  } = useDefaultizedDateField<TDate, TChildProps>(props);
 
   return useField({
     inputRef,
