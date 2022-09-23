@@ -9,9 +9,9 @@ _Sep 22, 2022_
 
 We'd like to offer a big thanks to the 12 contributors who made this release possible. Here are some highlights ✨:
 
+- 🌍 Add a `localeText` prop to all pickers to customize the translations (#6212) @flaviendelangle
 - 🌍 Add Finnish (fi-FI) locale to the pickers (#6219) @PetroSilenius
 - 🌍 Add Persian (fa-IR) locale to the pickers (#6181) @fakhamatia
-- 🌍 Add a `localeText` prop to all pickers to customize the translations (#6212) @flaviendelangle
 - 📚 Documentation improvements
 - 🐞 Bugfixes
 
@@ -130,7 +130,7 @@ You can find more information about the new api, including how to set those tran
 - [CalendarPicker] Don't move to closest enabled date when `props.date` contains a disabled date (#6146) @flaviendelangle
 - [DateRangePicker] Switch to new month when changing the value from the outside (#6166) @flaviendelangle
 - [pickers] Add a `localeText` prop to all pickers to customize the translations (#6212) @flaviendelangle
-- [pickers] Add Finnish (fi-FI) locale to pickers (#6219) (#6230) @PetroSilenius
+- [pickers] Add Finnish (fi-FI) locale to the pickers (#6219) (#6230) @PetroSilenius
 - [pickers] Add Persian (fa-IR) locale to the pickers (#6181) @fakhamatia
 - [pickers] Allow nested `LocalizationProvider` (#6011) @flaviendelangle
 - [pickers] Clean slots on `PickersArrowSwitcher` component (#5890) @flaviendelangle
