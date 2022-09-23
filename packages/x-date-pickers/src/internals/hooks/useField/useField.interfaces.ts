@@ -4,28 +4,32 @@ import { PickerStateValueManager } from '../usePickerState';
 import { InferError, Validator } from '../validation/useValidation';
 
 export interface UseFieldParams<
-  TInputValue,
   TValue,
   TDate,
   TSection extends FieldSection,
   TForwardedProps extends UseFieldForwardedProps,
-  TInternalProps extends UseFieldInternalProps<any, any, any>,
+  TInternalProps extends UseFieldInternalProps<any, any>,
 > {
   forwardedProps: TForwardedProps;
   internalProps: TInternalProps;
-  valueManager: PickerStateValueManager<TInputValue, TValue, TDate>;
+  valueManager: PickerStateValueManager<TValue, TDate>;
   fieldValueManager: FieldValueManager<TValue, TDate, TSection, InferError<TInternalProps>>;
-  validator: Validator<TDate, UseFieldValidationProps<TInputValue, TInternalProps>>;
+  validator: Validator<
+    TValue,
+    TDate,
+    InferError<TInternalProps>,
+    UseFieldValidationProps<TValue, TInternalProps>
+  >;
 }
 
-export interface UseFieldInternalProps<TInputValue, TValue, TError> {
-  value?: TInputValue;
+export interface UseFieldInternalProps<TValue, TError> {
+  value?: TValue;
   onChange?: (value: TValue) => void;
-  onError?: (error: TError, value: TInputValue) => void;
+  onError?: (error: TError, value: TValue) => void;
   /**
    * The default value. Use when the component is not controlled.
    */
-  defaultValue?: TInputValue;
+  defaultValue?: TValue;
   format?: string;
   /**
    * It prevents the user from changing the value of the field
@@ -90,15 +94,15 @@ export interface FieldValueManager<TValue, TDate, TSection extends FieldSection,
 }
 
 export interface UseFieldState<TValue, TSections> {
-  valueParsed: TValue;
+  value: TValue;
   sections: TSections;
   selectedSectionIndexes: { start: number; end: number } | null;
 }
 
 export type UseFieldValidationProps<
-  TInputValue,
-  TInternalProps extends UseFieldInternalProps<any, any, any>,
-> = Omit<TInternalProps, 'value' | 'defaultValue'> & { value: TInputValue };
+  TValue,
+  TInternalProps extends UseFieldInternalProps<any, any>,
+> = Omit<TInternalProps, 'value' | 'defaultValue'> & { value: TValue };
 
 export type AvailableAdjustKeyCode =
   | 'ArrowUp'

@@ -57,8 +57,8 @@
     "release:changelog": "node scripts/releaseChangelog",
     "release:version": "lerna version --exact --no-changelog --no-push --no-git-tag-version",
     "release:build": "lerna run --parallel --scope \"@mui/*\" build",
-    "release:publish": "lerna publish from-package --dist-tag latest --contents build",
-    "release:publish:dry-run": "lerna publish from-package --dist-tag latest --contents build --registry=\"http://localhost:4873/\"",
+    "release:publish": "lerna publish from-package --dist-tag next --contents build",
+    "release:publish:dry-run": "lerna publish from-package --dist-tag next --contents build --registry=\"http://localhost:4873/\"",
     "release:tag": "node scripts/releaseTag"
   },
   "devDependencies": {
@@ -115,7 +115,7 @@
     "babel-plugin-transform-rename-import": "^2.3.0",
     "chai": "^4.3.6",
     "chai-dom": "^1.11.0",
-    "compression-webpack-plugin": "^9.2.0",
+    "compression-webpack-plugin": "^10.0.0",
     "concurrently": "^7.4.0",
     "cross-env": "^7.0.3",
     "danger": "^11.1.2",

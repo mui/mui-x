@@ -6,8 +6,8 @@ import { Calendar } from './icons';
 import { useMaskedInput } from '../hooks/useMaskedInput';
 import { DateInputProps } from './PureDateInput';
 
-export const KeyboardDateInput = React.forwardRef(function KeyboardDateInput<TInputDate, TDate>(
-  props: DateInputProps<TInputDate, TDate>,
+export const KeyboardDateInput = React.forwardRef(function KeyboardDateInput<TDate>(
+  props: DateInputProps<TDate>,
   ref: React.Ref<HTMLDivElement>,
 ) {
   const {
@@ -46,7 +46,7 @@ export const KeyboardDateInput = React.forwardRef(function KeyboardDateInput<TIn
             edge={adornmentPosition}
             data-mui-test="open-picker-from-keyboard"
             disabled={other.disabled || other.readOnly}
-            aria-label={getOpenDialogAriaText(other.rawValue, utils)}
+            aria-label={getOpenDialogAriaText(other.value, utils)}
             {...OpenPickerButtonProps}
             onClick={openPicker}
           >

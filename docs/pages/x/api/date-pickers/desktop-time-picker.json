@@ -16,12 +16,14 @@
     "components": { "type": { "name": "object" }, "default": "{}" },
     "componentsProps": { "type": { "name": "object" }, "default": "{}" },
     "disabled": { "type": { "name": "bool" } },
+    "disableFuture": { "type": { "name": "bool" } },
     "disableIgnoringDatePartForTimeValidation": { "type": { "name": "bool" } },
     "disableMaskedInput": { "type": { "name": "bool" } },
     "disableOpenPicker": { "type": { "name": "bool" } },
+    "disablePast": { "type": { "name": "bool" } },
     "getOpenDialogAriaText": {
       "type": { "name": "func" },
-      "default": "(date, utils) => `Choose date, selected date is ${utils.format(utils.date(date), 'fullDate')}`"
+      "default": "(date, utils) => `Choose date, selected date is ${utils.format(date, 'fullDate')}`"
     },
     "InputAdornmentProps": { "type": { "name": "object" } },
     "inputFormat": { "type": { "name": "string" } },
