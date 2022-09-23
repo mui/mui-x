@@ -13,6 +13,7 @@ import {
   withPickerControls,
   openPicker,
 } from 'test/utils/pickers-utils';
+import describeValidation from '@mui/x-date-pickers/internals/utils/describeValidation';
 
 const WrappedMobileDatePicker = withPickerControls(MobileDatePicker)({
   DialogProps: { TransitionComponent: FakeTransitionComponent },
@@ -20,7 +21,13 @@ const WrappedMobileDatePicker = withPickerControls(MobileDatePicker)({
 });
 
 describe('<MobileDatePicker />', () => {
-  const { clock, render } = createPickerRenderer({ clock: 'fake', clockConfig: new Date() });
+  const { render, clock } = createPickerRenderer({ clock: 'fake', clockConfig: new Date() });
+
+  describeValidation(MobileDatePicker, () => ({
+    render,
+    clock,
+    views: ['year', 'month', 'day'],
+  }));
 
   it('allows to change only year', () => {
     const onChangeMock = spy();
