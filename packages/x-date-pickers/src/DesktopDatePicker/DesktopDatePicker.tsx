@@ -29,8 +29,8 @@ export interface DesktopDatePickerSlotsComponentsProps
   extends DesktopWrapperSlotsComponentsProps,
     CalendarPickerSlotsComponentsProps {}
 
-export interface DesktopDatePickerProps<TInputDate, TDate>
-  extends Omit<BaseDatePickerProps<TInputDate, TDate>, 'components' | 'componentsProps'>,
+export interface DesktopDatePickerProps<TDate>
+  extends Omit<BaseDatePickerProps<TDate>, 'components' | 'componentsProps'>,
     DesktopWrapperProps<TDate> {
   /**
    * Overrideable components.
@@ -44,8 +44,8 @@ export interface DesktopDatePickerProps<TInputDate, TDate>
   componentsProps?: Partial<DesktopDatePickerSlotsComponentsProps>;
 }
 
-type DesktopDatePickerComponent = (<TInputDate, TDate = TInputDate>(
-  props: DesktopDatePickerProps<TInputDate, TDate> & React.RefAttributes<HTMLDivElement>,
+type DesktopDatePickerComponent = (<TDate>(
+  props: DesktopDatePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
 ) => JSX.Element) & { propTypes?: any };
 
 /**
@@ -58,15 +58,14 @@ type DesktopDatePickerComponent = (<TInputDate, TDate = TInputDate>(
  *
  * - [DesktopDatePicker API](https://mui.com/x/api/date-pickers/desktop-date-picker/)
  */
-export const DesktopDatePicker = React.forwardRef(function DesktopDatePicker<
-  TInputDate,
-  TDate = TInputDate,
->(inProps: DesktopDatePickerProps<TInputDate, TDate>, ref: React.Ref<HTMLDivElement>) {
-  const props = useDatePickerDefaultizedProps<
-    TInputDate,
-    TDate,
-    DesktopDatePickerProps<TInputDate, TDate>
-  >(inProps, 'MuiDesktopDatePicker');
+export const DesktopDatePicker = React.forwardRef(function DesktopDatePicker<TDate>(
+  inProps: DesktopDatePickerProps<TDate>,
+  ref: React.Ref<HTMLDivElement>,
+) {
+  const props = useDatePickerDefaultizedProps<TDate, DesktopDatePickerProps<TDate>>(
+    inProps,
+    'MuiDesktopDatePicker',
+  );
 
   const validationError = useDateValidation(props) !== null;
   const { pickerProps, inputProps, wrapperProps } = usePickerState(props, datePickerValueManager);
@@ -192,11 +191,11 @@ DesktopDatePicker.propTypes = {
   disablePast: PropTypes.bool,
   /**
    * Get aria-label text for control that opens picker dialog. Aria-label text must include selected date. @DateIOType
-   * @template TInputDate, TDate
-   * @param {TInputDate} date The date from which we want to add an aria-text.
+   * @template TDate
+   * @param {TDate | null} date The date from which we want to add an aria-text.
    * @param {MuiPickersAdapter<TDate>} utils The utils to manipulate the date.
    * @returns {string} The aria-text to render inside the dialog.
-   * @default (date, utils) => `Choose date, selected date is ${utils.format(utils.date(date), 'fullDate')}`
+   * @default (date, utils) => `Choose date, selected date is ${utils.format(date, 'fullDate')}`
    */
   getOpenDialogAriaText: PropTypes.func,
   ignoreInvalidInputs: PropTypes.bool,
@@ -250,7 +249,7 @@ DesktopDatePicker.propTypes = {
   /**
    * Callback fired when the value (the selected date) changes @DateIOType.
    * @template TValue
-   * @param {TValue} value The new parsed value.
+   * @param {TValue} value The new value.
    * @param {string} keyboardInputValue The current value of the keyboard input.
    */
   onChange: PropTypes.func.isRequired,
@@ -267,9 +266,9 @@ DesktopDatePicker.propTypes = {
    * [Read the guide](https://next.material-ui-pickers.dev/guides/forms) about form integration and error displaying.
    * @DateIOType
    *
-   * @template TError, TInputValue
+   * @template TError, TValue
    * @param {TError} reason The reason why the current value is not valid.
-   * @param {TInputValue} value The invalid value.
+   * @param {TValue} value The invalid value.
    */
   onError: PropTypes.func,
   /**

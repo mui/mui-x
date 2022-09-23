@@ -1,8 +1,4 @@
-import {
-  useUtils,
-  useDefaultDates,
-  parseNonNullablePickerDate,
-} from '@mui/x-date-pickers/internals';
+import { useUtils, useDefaultDates, applyDefaultDate } from '@mui/x-date-pickers/internals';
 import {
   useField,
   FieldValueManager,
@@ -136,9 +132,9 @@ export const dateRangeFieldValueManager: FieldValueManager<
   isSameError: isSameDateRangeError,
 };
 
-export const useDefaultizedDateRangeFieldProps = <TInputDate, TDate, AdditionalProps extends {}>(
-  props: UseSingleInputDateRangeFieldProps<TInputDate, TDate>,
-): UseSingleInputDateRangeFieldDefaultizedProps<TInputDate, TDate> & AdditionalProps => {
+export const useDefaultizedDateRangeFieldProps = <TDate, AdditionalProps extends {}>(
+  props: UseSingleInputDateRangeFieldProps<TDate>,
+): UseSingleInputDateRangeFieldDefaultizedProps<TDate> & AdditionalProps => {
   const utils = useUtils<TDate>();
   const defaultDates = useDefaultDates<TDate>();
 
@@ -146,15 +142,14 @@ export const useDefaultizedDateRangeFieldProps = <TInputDate, TDate, AdditionalP
     disablePast: false,
     disableFuture: false,
     ...props,
-    minDate: parseNonNullablePickerDate(utils, props.minDate, defaultDates.minDate),
-    maxDate: parseNonNullablePickerDate(utils, props.maxDate, defaultDates.maxDate),
+    minDate: applyDefaultDate(utils, props.minDate, defaultDates.minDate),
+    maxDate: applyDefaultDate(utils, props.maxDate, defaultDates.maxDate),
   } as any;
 };
 
 export const useSingleInputDateRangeField = <
-  TInputDate,
   TDate,
-  TProps extends UseSingleInputDateRangeFieldProps<TInputDate, TDate>,
+  TProps extends UseSingleInputDateRangeFieldProps<TDate>,
 >(
   inProps: TProps,
 ) => {
@@ -171,7 +166,7 @@ export const useSingleInputDateRangeField = <
     disableFuture,
     disablePast,
     ...other
-  } = useDefaultizedDateRangeFieldProps<TInputDate, TDate, TProps>(inProps);
+  } = useDefaultizedDateRangeFieldProps<TDate, TProps>(inProps);
 
   return useField({
     forwardedProps: other,

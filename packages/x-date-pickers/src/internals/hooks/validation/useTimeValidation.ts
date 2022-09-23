@@ -50,10 +50,10 @@ export const validateTime: Validator<
     case !adapter.utils.isValid(value):
       return 'invalidDate';
 
-    case Boolean(minTime && isAfter(minTime, date!)):
+    case Boolean(minTime && isAfter(minTime, value)):
       return 'minTime';
 
-    case Boolean(maxTime && isAfter(date!, maxTime)):
+    case Boolean(maxTime && isAfter(value, maxTime)):
       return 'maxTime';
 
     case Boolean(disableFuture && adapter.utils.isAfter(date, now)):
@@ -62,20 +62,20 @@ export const validateTime: Validator<
     case Boolean(disablePast && adapter.utils.isBefore(date, now)):
       return 'disablePast';
 
-    case Boolean(shouldDisableTime && shouldDisableTime(adapter.utils.getHours(date!), 'hours')):
+    case Boolean(shouldDisableTime && shouldDisableTime(adapter.utils.getHours(value), 'hours')):
       return 'shouldDisableTime-hours';
 
     case Boolean(
-      shouldDisableTime && shouldDisableTime(adapter.utils.getMinutes(date!), 'minutes'),
+      shouldDisableTime && shouldDisableTime(adapter.utils.getMinutes(value), 'minutes'),
     ):
       return 'shouldDisableTime-minutes';
 
     case Boolean(
-      shouldDisableTime && shouldDisableTime(adapter.utils.getSeconds(date!), 'seconds'),
+      shouldDisableTime && shouldDisableTime(adapter.utils.getSeconds(value), 'seconds'),
     ):
       return 'shouldDisableTime-seconds';
 
-    case Boolean(minutesStep && adapter.utils.getMinutes(date!) % minutesStep !== 0):
+    case Boolean(minutesStep && adapter.utils.getMinutes(value) % minutesStep !== 0):
       return 'minutesStep';
 
     default:
@@ -85,10 +85,6 @@ export const validateTime: Validator<
 
 const isSameTimeError = (a: unknown, b: unknown) => a === b;
 
-export const useTimeValidation = <TInputDate, TDate>(
-  props: ValidationProps<
-    TimeValidationError,
-    TInputDate | null,
-    TimeComponentValidationProps<TDate>
-  >,
+export const useTimeValidation = <TDate>(
+  props: ValidationProps<TimeValidationError, TDate | null, TimeComponentValidationProps<TDate>>,
 ): TimeValidationError => useValidation(props, validateTime, isSameTimeError);

@@ -56,10 +56,10 @@ export type DateTimeValidationError = DateValidationError | TimeValidationError;
 
 const isSameDateTimeError = (a: DateTimeValidationError, b: DateTimeValidationError) => a === b;
 
-export function useDateTimeValidation<TInputDate, TDate>(
+export function useDateTimeValidation<TDate>(
   props: ValidationProps<
     DateTimeValidationError,
-    TInputDate | null,
+    TDate | null,
     DateTimeComponentValidationProps<TDate>
   >,
 ): DateTimeValidationError {

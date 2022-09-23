@@ -102,7 +102,7 @@ export type { BaseToolbarProps } from './models/props/baseToolbarProps';
 export type { MuiPickersAdapter } from './models/muiPickersAdapter';
 export type { DefaultizedProps } from './models/helpers';
 
-export { parseNonNullablePickerDate } from './utils/date-utils';
+export { applyDefaultDate, replaceInvalidDateByNull } from './utils/date-utils';
 export { executeInTheNextEventLoopTick, onSpaceOrEnter } from './utils/utils';
 export { defaultReduceAnimations } from './utils/defaultReduceAnimations';
 export { buildDeprecatedPropsWarning } from './utils/warning';

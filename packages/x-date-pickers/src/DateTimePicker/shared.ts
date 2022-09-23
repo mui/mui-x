@@ -9,7 +9,7 @@ import { BasePickerProps } from '../internals/models/props/basePickerProps';
 import { ExportedDateInputProps } from '../internals/components/PureDateInput';
 import { CalendarOrClockPickerView } from '../internals/models';
 import { PickerStateValueManager } from '../internals/hooks/usePickerState';
-import { parsePickerInputValue, parseNonNullablePickerDate } from '../internals/utils/date-utils';
+import { applyDefaultDate, replaceInvalidDateByNull } from '../internals/utils/date-utils';
 import { BaseToolbarProps } from '../internals/models/props/baseToolbarProps';
 import { DefaultizedProps } from '../internals/models/helpers';
 import {
@@ -17,12 +17,12 @@ import {
   BaseTimeValidationProps,
 } from '../internals/hooks/validation/models';
 
-export interface BaseDateTimePickerProps<TInputDate, TDate>
+export interface BaseDateTimePickerProps<TDate>
   extends ExportedClockPickerProps<TDate>,
     ExportedCalendarPickerProps<TDate>,
-    BasePickerProps<TInputDate | null, TDate | null>,
-    ValidationCommonProps<DateTimeValidationError, TInputDate | null>,
-    ExportedDateInputProps<TInputDate, TDate> {
+    BasePickerProps<TDate | null>,
+    ValidationCommonProps<DateTimeValidationError, TDate | null>,
+    ExportedDateInputProps<TDate> {
   /**
    * 12h/24h view for hour selection clock.
    * @default `utils.is12HourCycleInCurrentLocale()`
@@ -87,9 +87,8 @@ export interface BaseDateTimePickerProps<TInputDate, TDate>
 }
 
 export function useDateTimePickerDefaultizedProps<
-  TInputDate,
   TDate,
-  Props extends BaseDateTimePickerProps<TInputDate, TDate>,
+  Props extends BaseDateTimePickerProps<TDate>,
 >(
   props: Props,
   name: string,
@@ -128,12 +127,12 @@ export function useDateTimePickerDefaultizedProps<
     disablePast: false,
     disableFuture: false,
     ...themeProps,
-    minDate: parseNonNullablePickerDate(
+    minDate: applyDefaultDate(
       utils,
       themeProps.minDateTime ?? themeProps.minDate,
       defaultDates.minDate,
     ),
-    maxDate: parseNonNullablePickerDate(
+    maxDate: applyDefaultDate(
       utils,
       themeProps.maxDateTime ?? themeProps.maxDate,
       defaultDates.maxDate,
@@ -143,9 +142,9 @@ export function useDateTimePickerDefaultizedProps<
   };
 }
 
-export const dateTimePickerValueManager: PickerStateValueManager<any, any, any> = {
+export const dateTimePickerValueManager: PickerStateValueManager<any, any> = {
   emptyValue: null,
   getTodayValue: (utils) => utils.date()!,
-  parseInput: parsePickerInputValue,
+  cleanValue: replaceInvalidDateByNull,
   areValuesEqual: (utils, a, b) => utils.isEqual(a, b),
 };

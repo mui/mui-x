@@ -15,7 +15,7 @@ import { WrapperVariantContext } from '../internals/components/wrappers/WrapperV
 import { YearPickerClasses, getYearPickerUtilityClass } from './yearPickerClasses';
 import { BaseDateValidationProps, YearValidationProps } from '../internals/hooks/validation/models';
 import { DefaultizedProps } from '../internals/models/helpers';
-import { parseNonNullablePickerDate } from '../internals/utils/date-utils';
+import { applyDefaultDate } from '../internals/utils/date-utils';
 
 const useUtilityClasses = (ownerState: YearPickerProps<any>) => {
   const { classes } = ownerState;
@@ -45,8 +45,8 @@ function useYearPickerDefaultizedProps<TDate>(
     disablePast: false,
     disableFuture: false,
     ...themeProps,
-    minDate: parseNonNullablePickerDate(utils, themeProps.minDate, defaultDates.minDate),
-    maxDate: parseNonNullablePickerDate(utils, themeProps.maxDate, defaultDates.maxDate),
+    minDate: applyDefaultDate(utils, themeProps.minDate, defaultDates.minDate),
+    maxDate: applyDefaultDate(utils, themeProps.maxDate, defaultDates.maxDate),
   };
 }
 
@@ -86,7 +86,7 @@ export interface YearPickerProps<TDate>
   /**
    * Callback fired when the value (the selected year) changes.
    * @template TValue
-   * @param {TValue} value The new parsed value.
+   * @param {TValue} value The new value.
    */
   onChange: (value: TDate) => void;
   /** If `true` picker is readonly */
@@ -352,7 +352,7 @@ YearPicker.propTypes = {
   /**
    * Callback fired when the value (the selected year) changes.
    * @template TValue
-   * @param {TValue} value The new parsed value.
+   * @param {TValue} value The new value.
    */
   onChange: PropTypes.func.isRequired,
   onFocusedViewChange: PropTypes.func,

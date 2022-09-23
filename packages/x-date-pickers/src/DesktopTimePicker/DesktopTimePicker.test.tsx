@@ -205,8 +205,7 @@ describe('<DesktopTimePicker />', () => {
       }),
     );
 
-    const shouldDisableTime: TimePickerProps<any, any>['shouldDisableTime'] = (value) =>
-      value === 10;
+    const shouldDisableTime: TimePickerProps<any>['shouldDisableTime'] = (value) => value === 10;
 
     [
       { expectedError: 'invalidDate', props: { disableMaskedInput: true }, input: 'invalidText' },

@@ -5,18 +5,17 @@ import Typography from '@mui/material/Typography';
 import { MultiInputDateRangeFieldProps } from './MultiInputDateRangeField.interfaces';
 import { useMultiInputDateRangeField } from './useMultiInputDateRangeField';
 
-type MultiInputDateRangeFieldComponent = (<TInputDate, TDate = TInputDate>(
-  props: MultiInputDateRangeFieldProps<TInputDate, TDate> & React.RefAttributes<HTMLInputElement>,
+type MultiInputDateRangeFieldComponent = (<TDate>(
+  props: MultiInputDateRangeFieldProps<TDate> & React.RefAttributes<HTMLInputElement>,
 ) => JSX.Element) & { propTypes?: any };
 
-export const MultiInputDateRangeField = React.forwardRef(function MultiInputDateRangeField<
-  TInputDate,
-  TDate = TInputDate,
->(inProps: MultiInputDateRangeFieldProps<TInputDate, TDate>, ref: React.Ref<HTMLInputElement>) {
+export const MultiInputDateRangeField = React.forwardRef(function MultiInputDateRangeField<TDate>(
+  inProps: MultiInputDateRangeFieldProps<TDate>,
+  ref: React.Ref<HTMLInputElement>,
+) {
   const { startDate, endDate } = useMultiInputDateRangeField<
-    TInputDate,
     TDate,
-    MultiInputDateRangeFieldProps<TInputDate, TDate>
+    MultiInputDateRangeFieldProps<TDate>
   >(inProps);
 
   return (

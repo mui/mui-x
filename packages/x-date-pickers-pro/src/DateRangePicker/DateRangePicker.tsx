@@ -27,9 +27,9 @@ export interface DateRangePickerSlotsComponentsProps
   extends MobileDateRangePickerSlotsComponentsProps,
     DesktopDateRangePickerSlotsComponentsProps {}
 
-export interface DateRangePickerProps<TInputDate, TDate>
-  extends Omit<DesktopDateRangePickerProps<TInputDate, TDate>, 'components' | 'componentsProps'>,
-    Omit<MobileDateRangePickerProps<TInputDate, TDate>, 'components' | 'componentsProps'> {
+export interface DateRangePickerProps<TDate>
+  extends Omit<DesktopDateRangePickerProps<TDate>, 'components' | 'componentsProps'>,
+    Omit<MobileDateRangePickerProps<TDate>, 'components' | 'componentsProps'> {
   /**
    * CSS media query when `Mobile` mode will be changed to `Desktop`.
    * @default '@media (pointer: fine)'
@@ -48,8 +48,8 @@ export interface DateRangePickerProps<TInputDate, TDate>
   componentsProps?: Partial<DateRangePickerSlotsComponentsProps>;
 }
 
-type DateRangePickerComponent = (<TInputDate, TDate = TInputDate>(
-  props: DateRangePickerProps<TInputDate, TDate> & React.RefAttributes<HTMLDivElement>,
+type DateRangePickerComponent = (<TDate>(
+  props: DateRangePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
 ) => JSX.Element) & { propTypes?: any };
 
 /**
@@ -62,10 +62,10 @@ type DateRangePickerComponent = (<TInputDate, TDate = TInputDate>(
  *
  * - [DateRangePicker API](https://mui.com/x/api/date-pickers/date-range-picker/)
  */
-export const DateRangePicker = React.forwardRef(function DateRangePicker<
-  TInputDate,
-  TDate = TInputDate,
->(inProps: DateRangePickerProps<TInputDate, TDate>, ref: React.Ref<HTMLDivElement>) {
+export const DateRangePicker = React.forwardRef(function DateRangePicker<TDate>(
+  inProps: DateRangePickerProps<TDate>,
+  ref: React.Ref<HTMLDivElement>,
+) {
   const props = useThemeProps({ props: inProps, name: 'MuiDateRangePicker' });
   useLicenseVerifier('x-date-pickers-pro', releaseInfo);
 
@@ -190,11 +190,11 @@ DateRangePicker.propTypes = {
   disablePast: PropTypes.bool,
   /**
    * Get aria-label text for control that opens picker dialog. Aria-label text must include selected date. @DateIOType
-   * @template TInputDate, TDate
-   * @param {TInputDate} date The date from which we want to add an aria-text.
+   * @template TDate
+   * @param {TDate | null} date The date from which we want to add an aria-text.
    * @param {MuiPickersAdapter<TDate>} utils The utils to manipulate the date.
    * @returns {string} The aria-text to render inside the dialog.
-   * @default (date, utils) => `Choose date, selected date is ${utils.format(utils.date(date), 'fullDate')}`
+   * @default (date, utils) => `Choose date, selected date is ${utils.format(date, 'fullDate')}`
    */
   getOpenDialogAriaText: PropTypes.func,
   ignoreInvalidInputs: PropTypes.bool,
@@ -249,7 +249,7 @@ DateRangePicker.propTypes = {
   /**
    * Callback fired when the value (the selected date range) changes @DateIOType.
    * @template TDate
-   * @param {DateRange<TDate>} date The new parsed date range.
+   * @param {DateRange<TDate>} date The new date range.
    * @param {string} keyboardInputValue The current value of the keyboard input.
    */
   onChange: PropTypes.func.isRequired,
@@ -266,9 +266,9 @@ DateRangePicker.propTypes = {
    * [Read the guide](https://next.material-ui-pickers.dev/guides/forms) about form integration and error displaying.
    * @DateIOType
    *
-   * @template TError, TInputValue
+   * @template TError, TValue
    * @param {TError} reason The reason why the current value is not valid.
-   * @param {TInputValue} value The invalid value.
+   * @param {TValue} value The invalid value.
    */
   onError: PropTypes.func,
   /**
