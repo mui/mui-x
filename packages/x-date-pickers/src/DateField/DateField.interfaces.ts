@@ -1,5 +1,5 @@
 import { TextFieldProps } from '@mui/material/TextField';
-import { FieldSection, UseFieldInternalProps } from '../internals/hooks/useField';
+import { UseFieldInternalProps } from '../internals/hooks/useField';
 import {
   DateValidationError,
   DateValidationProps,
