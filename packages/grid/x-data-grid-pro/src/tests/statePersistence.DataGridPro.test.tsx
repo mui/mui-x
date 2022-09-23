@@ -283,45 +283,5 @@ describe('<DataGridPro /> - State Persistence', () => {
       clock.runToLast();
       expect(getColumnValues(0)).to.deep.equal(['2', '3']);
     });
-
-    it('should not restore the column visibility model when using the legacy column visibility', () => {
-      const TestCaseLegacyColumnVisibility = () => {
-        apiRef = useGridApiRef();
-
-        return (
-          <div style={{ width: 300, height: 300 }}>
-            <DataGridPro
-              rows={rows}
-              columns={[
-                {
-                  field: 'id',
-                  hide: true,
-                },
-                {
-                  field: 'category',
-                },
-              ]}
-              autoHeight={isJSDOM}
-              apiRef={apiRef}
-              disableVirtualization
-            />
-          </div>
-        );
-      };
-
-      render(<TestCaseLegacyColumnVisibility />);
-
-      act(() =>
-        apiRef.current.restoreState({
-          columns: {
-            columnVisibilityModel: {
-              category: false,
-            },
-          },
-        }),
-      );
-
-      expect(getColumnHeadersTextContent()).to.deep.equal(['category']);
-    });
   });
 });

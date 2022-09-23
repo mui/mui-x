@@ -31,7 +31,7 @@ export interface StaticTimePickerSlotsComponentsProps
     ClockPickerSlotsComponentsProps {}
 
 export interface StaticTimePickerProps<TInputDate, TDate>
-  extends StaticPickerProps<BaseTimePickerProps<TInputDate, TDate>> {
+  extends StaticPickerProps<TDate, BaseTimePickerProps<TInputDate, TDate>> {
   /**
    * Overrideable components.
    * @default {}
@@ -69,13 +69,15 @@ export const StaticTimePicker = React.forwardRef(function StaticTimePicker<
   >(inProps, 'MuiStaticTimePicker');
 
   const {
-    displayStaticWrapperAs = 'mobile',
+    displayStaticWrapperAs,
     onChange,
     ToolbarComponent = TimePickerToolbar,
     value,
     components,
     componentsProps,
+    localeText,
     sx,
+    className,
     ...other
   } = props;
 
@@ -96,7 +98,9 @@ export const StaticTimePicker = React.forwardRef(function StaticTimePicker<
       displayStaticWrapperAs={displayStaticWrapperAs}
       components={components}
       componentsProps={componentsProps}
+      localeText={localeText}
       sx={sx}
+      className={className}
       {...wrapperProps}
     >
       <CalendarOrClockPicker
@@ -173,27 +177,9 @@ StaticTimePicker.propTypes = {
   disableOpenPicker: PropTypes.bool,
   /**
    * Force static wrapper inner components to be rendered in mobile or desktop mode.
-   * @default 'mobile'
+   * @default "mobile"
    */
   displayStaticWrapperAs: PropTypes.oneOf(['desktop', 'mobile']),
-  /**
-   * Accessible text that helps user to understand which time and view is selected.
-   * @template TDate
-   * @param {ClockPickerView} view The current view rendered.
-   * @param {TDate | null} time The current time.
-   * @param {MuiPickersAdapter<TDate>} adapter The current date adapter.
-   * @returns {string} The clock label.
-   * @deprecated Use the `localeText` prop of `LocalizationProvider` instead, see https://mui.com/x/react-date-pickers/localization
-   * @default <TDate extends any>(
-   *   view: ClockView,
-   *   time: TDate | null,
-   *   adapter: MuiPickersAdapter<TDate>,
-   * ) =>
-   *   `Select ${view}. ${
-   *     time === null ? 'No time selected' : `Selected time is ${adapter.format(time, 'fullTime')}`
-   *   }`
-   */
-  getClockLabelText: PropTypes.func,
   /**
    * Get aria-label text for control that opens picker dialog. Aria-label text must include selected date. @DateIOType
    * @template TInputDate, TDate
@@ -223,6 +209,10 @@ StaticTimePicker.propTypes = {
     }),
   ]),
   label: PropTypes.node,
+  /**
+   * Locale for components texts
+   */
+  localeText: PropTypes.object,
   /**
    * Custom mask. Can be used to override generate from format. (e.g. `__/__/____ __:__` or `__/__/____ __:__ _M`).
    */

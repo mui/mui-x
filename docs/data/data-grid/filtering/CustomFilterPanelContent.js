@@ -4,33 +4,6 @@ import { useDemoData } from '@mui/x-data-grid-generator';
 
 const VISIBLE_FIELDS = ['name', 'rating', 'country', 'dateCreated', 'isAdmin'];
 
-const initialState = {
-  filter: {
-    filterModel: {
-      items: [
-        {
-          id: 1,
-          columnField: 'name',
-          operatorValue: 'contains',
-          value: 'D',
-        },
-        {
-          id: 2,
-          columnField: 'name',
-          operatorValue: 'contains',
-          value: 'D',
-        },
-        {
-          id: 3,
-          columnField: 'rating',
-          operatorValue: '>',
-          value: '0',
-        },
-      ],
-    },
-  },
-};
-
 export default function CustomFilterPanelContent() {
   const { data } = useDemoData({
     dataSet: 'Employee',
@@ -95,7 +68,34 @@ export default function CustomFilterPanelContent() {
             },
           },
         }}
-        initialState={initialState}
+        initialState={{
+          ...data.initialState,
+          filter: {
+            ...data.initialState?.filter,
+            filterModel: {
+              items: [
+                {
+                  id: 1,
+                  columnField: 'name',
+                  operatorValue: 'contains',
+                  value: 'D',
+                },
+                {
+                  id: 2,
+                  columnField: 'name',
+                  operatorValue: 'contains',
+                  value: 'D',
+                },
+                {
+                  id: 3,
+                  columnField: 'rating',
+                  operatorValue: '>',
+                  value: '0',
+                },
+              ],
+            },
+          },
+        }}
       />
     </div>
   );

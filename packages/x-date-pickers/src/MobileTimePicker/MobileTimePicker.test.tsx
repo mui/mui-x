@@ -17,7 +17,7 @@ import {
   FakeTransitionComponent,
   openPicker,
   getClockTouchEvent,
-} from '../../../../test/utils/pickers-utils';
+} from 'test/utils/pickers-utils';
 
 const WrappedMobileTimePicker = withPickerControls(MobileTimePicker)({
   DialogProps: { TransitionComponent: FakeTransitionComponent },
@@ -265,5 +265,19 @@ describe('<MobileTimePicker />', () => {
     // TODO: Write test
     // it('should call onClose and onAccept with the live value when clicking outside of the picker', () => {
     // })
+  });
+
+  describe('localization', () => {
+    it('should respect the `localeText` prop', () => {
+      render(
+        <WrappedMobileTimePicker
+          initialValue={null}
+          localeText={{ cancelButtonLabel: 'Custom cancel' }}
+        />,
+      );
+      openPicker({ type: 'time', variant: 'mobile' });
+
+      expect(screen.queryByText('Custom cancel')).not.to.equal(null);
+    });
   });
 });

@@ -11,7 +11,7 @@ import {
   FakeTransitionComponent,
   adapterToUse,
   openPicker,
-} from '../../../../test/utils/pickers-utils';
+} from 'test/utils/pickers-utils';
 
 const WrappedMobileDateRangePicker = withPickerControls(MobileDateRangePicker)({
   DialogProps: { TransitionComponent: FakeTransitionComponent },
@@ -328,4 +328,18 @@ describe('<MobileDateRangePicker />', () => {
   // TODO: Write test
   // it('should call onClose and onAccept with the live value when clicking outside of the picker', () => {
   // })
+
+  describe('localization', () => {
+    it('should respect the `localeText` prop', () => {
+      render(
+        <WrappedMobileDateRangePicker
+          initialValue={[null, null]}
+          localeText={{ cancelButtonLabel: 'Custom cancel' }}
+        />,
+      );
+      openPicker({ type: 'date-range', variant: 'mobile', initialFocus: 'start' });
+
+      expect(screen.queryByText('Custom cancel')).not.to.equal(null);
+    });
+  });
 });

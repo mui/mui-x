@@ -212,7 +212,7 @@ In order for the Print export to work as expected set `X-Frame-Options: SAMEORIG
 ## Custom export format
 
 You can add custom export formats by creating your own export menu.
-To simplify its creation, we export `<GridToolbarExportContainer />` which contains the menu logic.
+To simplify its creation, you can use `<GridToolbarExportContainer />` which contains the menu logic.
 The default `<GridToolbarExport />` is defined as follow:
 
 ```jsx
@@ -234,7 +234,7 @@ The demo below shows how to add a JSON export.
 This feature relies on [exceljs](https://github.com/exceljs/exceljs).
 The Excel export allows translating columns' type and tree structure of a DataGrid to an Excel file.
 
-Columns with types `'boolean'`, `'number'`, `'singleSelect'`, `'date'`, and `'dateTime'` are exported in their corresponding type in Excel. Please ensure the `rows` values have the correct type, you can always [convert them](/components/data-grid/columns/#converting-types) as needed.
+Columns with types `'boolean'`, `'number'`, `'singleSelect'`, `'date'`, and `'dateTime'` are exported in their corresponding type in Excel. Please ensure the `rows` values have the correct type, you can always [convert them](/x/react-data-grid/column-definition/#converting-types) as needed.
 
 {{"demo": "ExcelExport.js", "bg": "inline", "defaultCodeOpen": false}}
 

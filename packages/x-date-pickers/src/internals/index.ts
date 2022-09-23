@@ -11,15 +11,60 @@ export type {
   MobileWrapperSlotsComponentsProps,
 } from './components/wrappers/MobileWrapper';
 export { MobileKeyboardInputView } from './components/CalendarOrClockPicker/CalendarOrClockPicker';
-export { PickersArrowSwitcher } from './components/PickersArrowSwitcher';
-export type { ExportedArrowSwitcherProps } from './components/PickersArrowSwitcher';
+export type { CalendarOrClockPickerProps } from './components/CalendarOrClockPicker/CalendarOrClockPicker';
+export { calendarOrClockPickerClasses } from './components/CalendarOrClockPicker/calendarOrClockPickerClasses';
+export type {
+  CalendarOrClockPickerClassKey,
+  CalendarOrClockPickerClasses,
+} from './components/CalendarOrClockPicker/calendarOrClockPickerClasses';
+export { PickersArrowSwitcher } from './components/PickersArrowSwitcher/PickersArrowSwitcher';
+export type {
+  ExportedPickersArrowSwitcherProps,
+  PickersArrowSwitcherSlotsComponent,
+  PickersArrowSwitcherSlotsComponentsProps,
+} from './components/PickersArrowSwitcher';
 export { PickerStaticWrapper } from './components/PickerStaticWrapper/PickerStaticWrapper';
+export type { PickerStaticWrapperProps } from './components/PickerStaticWrapper/PickerStaticWrapper';
 export type {
   PickersStaticWrapperSlotsComponent,
   PickersStaticWrapperSlotsComponentsProps,
 } from './components/PickerStaticWrapper/PickerStaticWrapper';
-export { PickersToolbar, pickersToolbarClasses } from './components/PickersToolbar';
+export { PickersToolbar } from './components/PickersToolbar';
+export type { PickersToolbarProps } from './components/PickersToolbar';
+export { pickersToolbarClasses } from './components/pickersToolbarClasses';
+export type {
+  PickersToolbarClassKey,
+  PickersToolbarClasses,
+} from './components/pickersToolbarClasses';
+export type { PickersToolbarButtonProps } from './components/PickersToolbarButton';
+export { pickersToolbarButtonClasses } from './components/pickersToolbarButtonClasses';
+export type {
+  PickersToolbarButtonClassKey,
+  PickersToolbarButtonClasses,
+} from './components/pickersToolbarButtonClasses';
+export type { PickersToolbarTextProps } from './components/PickersToolbarText';
+export { pickersToolbarTextClasses } from './components/pickersToolbarTextClasses';
+export type {
+  PickersToolbarTextClassKey,
+  PickersToolbarTextClasses,
+} from './components/pickersToolbarTextClasses';
+export { pickersArrowSwitcherClasses } from './components/PickersArrowSwitcher/pickersArrowSwitcherClasses';
+export type {
+  PickersArrowSwitcherClassKey,
+  PickersArrowSwitcherClasses,
+} from './components/PickersArrowSwitcher/pickersArrowSwitcherClasses';
+export type { PickerPopperProps } from './components/PickersPopper';
+export { pickersPopperClasses } from './components/pickersPopperClasses';
+export type {
+  PickersPopperClassKey,
+  PickersPopperClasses,
+} from './components/pickersPopperClasses';
 export { PickersToolbarButton } from './components/PickersToolbarButton';
+export { pickerStaticWrapperClasses } from './components/PickerStaticWrapper/pickerStaticWrapperClasses';
+export type {
+  PickerStaticWrapperClasses,
+  PickerStaticWrapperClassKey,
+} from './components/PickerStaticWrapper/pickerStaticWrapperClasses';
 export type {
   DateInputProps,
   ExportedDateInputProps,

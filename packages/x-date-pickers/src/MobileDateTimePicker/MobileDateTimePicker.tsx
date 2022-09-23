@@ -33,7 +33,7 @@ export interface MobileDateTimePickerSlotsComponentsProps
 
 export interface MobileDateTimePickerProps<TInputDate, TDate>
   extends BaseDateTimePickerProps<TInputDate, TDate>,
-    MobileWrapperProps {
+    MobileWrapperProps<TDate> {
   /**
    * Overrideable components.
    * @default {}
@@ -84,6 +84,7 @@ export const MobileDateTimePicker = React.forwardRef(function MobileDateTimePick
     onChange,
     components: providedComponents,
     componentsProps,
+    localeText,
     hideTabs = false,
     ...other
   } = props;
@@ -109,6 +110,7 @@ export const MobileDateTimePicker = React.forwardRef(function MobileDateTimePick
       PureDateInputComponent={PureDateInput}
       components={components}
       componentsProps={componentsProps}
+      localeText={localeText}
     >
       <CalendarOrClockPicker
         {...pickerProps}
@@ -221,24 +223,6 @@ MobileDateTimePicker.propTypes = {
    */
   disablePast: PropTypes.bool,
   /**
-   * Accessible text that helps user to understand which time and view is selected.
-   * @template TDate
-   * @param {ClockPickerView} view The current view rendered.
-   * @param {TDate | null} time The current time.
-   * @param {MuiPickersAdapter<TDate>} adapter The current date adapter.
-   * @returns {string} The clock label.
-   * @deprecated Use the `localeText` prop of `LocalizationProvider` instead, see https://mui.com/x/react-date-pickers/localization
-   * @default <TDate extends any>(
-   *   view: ClockView,
-   *   time: TDate | null,
-   *   adapter: MuiPickersAdapter<TDate>,
-   * ) =>
-   *   `Select ${view}. ${
-   *     time === null ? 'No time selected' : `Selected time is ${adapter.format(time, 'fullTime')}`
-   *   }`
-   */
-  getClockLabelText: PropTypes.func,
-  /**
    * Get aria-label text for control that opens picker dialog. Aria-label text must include selected date. @DateIOType
    * @template TInputDate, TDate
    * @param {TInputDate} date The date from which we want to add an aria-text.
@@ -247,13 +231,6 @@ MobileDateTimePicker.propTypes = {
    * @default (date, utils) => `Choose date, selected date is ${utils.format(utils.date(date), 'fullDate')}`
    */
   getOpenDialogAriaText: PropTypes.func,
-  /**
-   * Get aria-label text for switching between views button.
-   * @param {CalendarPickerView} currentView The view from which we want to get the button text.
-   * @returns {string} The label of the view.
-   * @deprecated Use the `localeText` prop of `LocalizationProvider` instead, see https://mui.com/x/react-date-pickers/localization
-   */
-  getViewSwitchingButtonText: PropTypes.func,
   /**
    * Toggles visibility of date time switching tabs
    * @default false for mobile, true for desktop
@@ -280,16 +257,15 @@ MobileDateTimePicker.propTypes = {
   ]),
   label: PropTypes.node,
   /**
-   * Left arrow icon aria-label text.
-   * @deprecated
-   */
-  leftArrowButtonText: PropTypes.string,
-  /**
    * If `true` renders `LoadingComponent` in calendar instead of calendar view.
    * Can be used to preload information and show it in calendar.
    * @default false
    */
   loading: PropTypes.bool,
+  /**
+   * Locale for components texts
+   */
+  localeText: PropTypes.object,
   /**
    * Custom mask. Can be used to override generate from format. (e.g. `__/__/____ __:__` or `__/__/____ __:__ _M`).
    */
@@ -439,11 +415,6 @@ MobileDateTimePicker.propTypes = {
    * @returns {string} The formatted string.
    */
   rifmFormatter: PropTypes.func,
-  /**
-   * Right arrow icon aria-label text.
-   * @deprecated
-   */
-  rightArrowButtonText: PropTypes.string,
   /**
    * Disable specific date. @DateIOType
    * @template TDate

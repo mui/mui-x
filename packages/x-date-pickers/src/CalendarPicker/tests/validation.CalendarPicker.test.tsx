@@ -5,7 +5,7 @@ import { CalendarPicker, CalendarPickerProps } from '@mui/x-date-pickers/Calenda
 import { createPickerRenderer, adapterToUse } from '../../../../../test/utils/pickers-utils';
 
 const WrappedCalendarPicker = <TDate extends any>(
-  props: Omit<CalendarPickerProps<TDate>, 'date' | 'onChange'> & { initialValue: TDate },
+  props: Omit<CalendarPickerProps<TDate>, 'value' | 'onChange'> & { initialValue: TDate },
 ) => {
   const { initialValue, ...other } = props;
 
@@ -15,7 +15,7 @@ const WrappedCalendarPicker = <TDate extends any>(
     setValue(newValue);
   }, []);
 
-  return <CalendarPicker {...other} date={value} onChange={handleChange} />;
+  return <CalendarPicker {...other} value={value} onChange={handleChange} />;
 };
 
 describe('<CalendarPicker /> - Validation', () => {
