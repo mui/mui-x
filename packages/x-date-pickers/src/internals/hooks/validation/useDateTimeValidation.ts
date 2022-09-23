@@ -20,25 +20,10 @@ export const validateDateTime: Validator<
   DateTimeValidationError,
   DateTimeComponentValidationProps<any>
 > = ({ props, value, adapter }) => {
-  const {
-    minDate,
-    maxDate,
-    disableFuture,
-    shouldDisableDate,
-    disablePast,
-    ...timeValidationProps
-  } = props;
-
   const dateValidationResult = validateDate({
     adapter,
     value,
-    props: {
-      minDate,
-      maxDate,
-      disableFuture,
-      shouldDisableDate,
-      disablePast,
-    },
+    props,
   });
 
   if (dateValidationResult !== null) {
@@ -48,7 +33,7 @@ export const validateDateTime: Validator<
   return validateTime({
     adapter,
     value,
-    props: { ...timeValidationProps, disablePast, disableFuture },
+    props,
   });
 };
 
