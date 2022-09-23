@@ -51,7 +51,7 @@ We'd like to offer a big thanks to the 12 contributors who made this release pos
 - [DataGrid] Improve Polish (pl-PL) locale on the data grid (#6245) @grzegorz-bach
 - [DataGrid] Remove the `GridEvents` enum (#6003) @flaviendelangle
 - [DataGrid] Remove the deprecated `hide` column property (#5999) @flaviendelangle
-- 
+
 ### `@mui/x-date-pickers@v6.0.0-alpha.0` / `@mui/x-date-pickers-pro@v6.0.0-alpha.0`
 
 #### Breaking changes
