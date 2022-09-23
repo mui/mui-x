@@ -337,7 +337,7 @@ export const useField = <
           return;
         }
 
-        const activeSection = state.sections[selectedSectionIndexes.start];
+        const activeSection = state.sections[selectedSectionIndexes.startIndex];
 
         // TODO: Do not hardcode the compatible formatValue
         if (activeSection.formatValue !== 'MMMM') {
