@@ -25,7 +25,7 @@
     "shouldDisableMonth": "Disable specific months dynamically. Works like <code>shouldDisableDate</code> but for month selection view @DateIOType.<br><br><strong>Signature:</strong><br><code>function(month: TDate) =&gt; boolean</code><br><em>month:</em> The month to check.<br> <em>returns</em> (boolean): If <code>true</code> the month will be disabled.",
     "shouldDisableYear": "Disable specific years dynamically. Works like <code>shouldDisableDate</code> but for year selection view @DateIOType.<br><br><strong>Signature:</strong><br><code>function(year: TDate) =&gt; boolean</code><br><em>year:</em> The year to test.<br> <em>returns</em> (boolean): Returns <code>true</code> if the year should be disabled.",
     "showDaysOutsideCurrentMonth": "If <code>true</code>, days that have <code>outsideCurrentMonth={true}</code> are displayed.",
-    "sx": "The system prop that allows defining system overrides as well as additional CSS styles. See the <a href=\"/system/the-sx-prop/\">`sx` page</a> for more details.",
+    "sx": "The system prop that allows defining system overrides as well as additional CSS styles. See the <a href=\"/system/getting-started/the-sx-prop/\">`sx` page</a> for more details.",
     "view": "Controlled open view.",
     "views": "Views for calendar picker."
   },
