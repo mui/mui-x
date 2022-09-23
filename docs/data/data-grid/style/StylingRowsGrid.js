@@ -21,7 +21,7 @@ export default function StylingRowsGrid() {
       sx={{
         height: 400,
         width: '100%',
-        '& .super-app-theme--Open': {
+        '&& .super-app-theme--Open': {
           bgcolor: (theme) =>
             getBackgroundColor(theme.palette.info.main, theme.palette.mode),
           '&:hover': {
@@ -29,7 +29,7 @@ export default function StylingRowsGrid() {
               getHoverBackgroundColor(theme.palette.info.main, theme.palette.mode),
           },
         },
-        '& .super-app-theme--Filled': {
+        '&& .super-app-theme--Filled': {
           bgcolor: (theme) =>
             getBackgroundColor(theme.palette.success.main, theme.palette.mode),
           '&:hover': {
@@ -40,7 +40,7 @@ export default function StylingRowsGrid() {
               ),
           },
         },
-        '& .super-app-theme--PartiallyFilled': {
+        '&& .super-app-theme--PartiallyFilled': {
           bgcolor: (theme) =>
             getBackgroundColor(theme.palette.warning.main, theme.palette.mode),
           '&:hover': {
@@ -51,7 +51,7 @@ export default function StylingRowsGrid() {
               ),
           },
         },
-        '& .super-app-theme--Rejected': {
+        '&& .super-app-theme--Rejected': {
           bgcolor: (theme) =>
             getBackgroundColor(theme.palette.error.main, theme.palette.mode),
           '&:hover': {
