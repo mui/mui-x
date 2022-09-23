@@ -43,7 +43,7 @@ export default function DateValidationShouldDisableYear() {
       <Stack spacing={4}>
         <GridItem label="DatePicker">
           <DatePicker
-            shouldDisableDate={isInCurrentYear}
+            shouldDisableYear={isInCurrentYear}
             value={datePickerValue}
             onChange={(newValue) => setDatePickerValue(newValue)}
             renderInput={(params) => <TextField {...params} />}
@@ -51,7 +51,7 @@ export default function DateValidationShouldDisableYear() {
         </GridItem>
         <GridItem label="DateTimePicker">
           <DateTimePicker
-            shouldDisableDate={isInCurrentYear}
+            shouldDisableYear={isInCurrentYear}
             value={dateTimePickerValue}
             onChange={(newValue) => setDateTimePickerValue(newValue)}
             renderInput={(params) => <TextField {...params} />}

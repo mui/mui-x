@@ -40,7 +40,7 @@ export default function DateValidationShouldDisableMonth() {
       <Stack spacing={4}>
         <GridItem label="DatePicker">
           <DatePicker
-            shouldDisableDate={isInCurrentMonth}
+            shouldDisableMonth={isInCurrentMonth}
             value={datePickerValue}
             onChange={(newValue) => setDatePickerValue(newValue)}
             renderInput={(params) => <TextField {...params} />}
@@ -49,7 +49,7 @@ export default function DateValidationShouldDisableMonth() {
         </GridItem>
         <GridItem label="DateTimePicker">
           <DateTimePicker
-            shouldDisableDate={isInCurrentMonth}
+            shouldDisableMonth={isInCurrentMonth}
             value={dateTimePickerValue}
             onChange={(newValue) => setDateTimePickerValue(newValue)}
             renderInput={(params) => <TextField {...params} />}
