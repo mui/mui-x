@@ -40,7 +40,7 @@ interface DesktopDateRangeCalendarProps<TDate>
    * @default {}
    */
   componentsProps?: Partial<DateRangePickerViewMobileSlotsComponentsProps>;
-  parsedValue: DateRange<TDate>;
+  value: DateRange<TDate>;
   changeMonth: (date: TDate) => void;
 }
 
@@ -54,7 +54,7 @@ export function DateRangePickerViewMobile<TDate>(props: DesktopDateRangeCalendar
     changeMonth,
     components,
     componentsProps,
-    parsedValue,
+    value,
     maxDate: maxDateProp,
     minDate: minDateProp,
     onSelectedDaysChange,
@@ -72,7 +72,7 @@ export function DateRangePickerViewMobile<TDate>(props: DesktopDateRangeCalendar
   const maxDate = maxDateProp ?? defaultDates.maxDate;
 
   // When disable, limit the view to the selected range
-  const [start, end] = parsedValue;
+  const [start, end] = value;
   const minDateWithDisabled = (disabled && start) || minDate;
   const maxDateWithDisabled = (disabled && end) || maxDate;
 
@@ -95,7 +95,7 @@ export function DateRangePickerViewMobile<TDate>(props: DesktopDateRangeCalendar
         maxDate={maxDate}
         disabled={disabled}
         readOnly={readOnly}
-        selectedDays={parsedValue}
+        selectedDays={value}
         onSelectedDaysChange={onSelectedDaysChange}
         onFocusedDayChange={doNothing}
         renderDay={(day, _, DayProps) =>
@@ -103,9 +103,9 @@ export function DateRangePickerViewMobile<TDate>(props: DesktopDateRangeCalendar
             isPreviewing: false,
             isStartOfPreviewing: false,
             isEndOfPreviewing: false,
-            isHighlighting: isWithinRange(utils, day, parsedValue),
-            isStartOfHighlighting: isStartOfRange(utils, day, parsedValue),
-            isEndOfHighlighting: isEndOfRange(utils, day, parsedValue),
+            isHighlighting: isWithinRange(utils, day, value),
+            isStartOfHighlighting: isStartOfRange(utils, day, value),
+            isEndOfHighlighting: isEndOfRange(utils, day, value),
             ...DayProps,
           })
         }

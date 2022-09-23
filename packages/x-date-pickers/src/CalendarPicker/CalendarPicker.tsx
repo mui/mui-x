@@ -18,7 +18,7 @@ import {
   PickersCalendarHeaderSlotsComponentsProps,
 } from './PickersCalendarHeader';
 import { YearPicker, YearPickerProps } from '../YearPicker/YearPicker';
-import { findClosestEnabledDate, parseNonNullablePickerDate } from '../internals/utils/date-utils';
+import { findClosestEnabledDate, applyDefaultDate } from '../internals/utils/date-utils';
 import { CalendarPickerView } from '../internals/models';
 import { PickerViewRoot } from '../internals/components/PickerViewRoot';
 import { defaultReduceAnimations } from '../internals/utils/defaultReduceAnimations';
@@ -184,8 +184,8 @@ function useCalendarPickerDefaultizedProps<TDate>(
     reduceAnimations: defaultReduceAnimations,
     renderLoading: () => <span data-mui-test="loading-progress">...</span>,
     ...themeProps,
-    minDate: parseNonNullablePickerDate(utils, themeProps.minDate, defaultDates.minDate),
-    maxDate: parseNonNullablePickerDate(utils, themeProps.maxDate, defaultDates.maxDate),
+    minDate: applyDefaultDate(utils, themeProps.minDate, defaultDates.minDate),
+    maxDate: applyDefaultDate(utils, themeProps.maxDate, defaultDates.maxDate),
   };
 }
 
@@ -564,7 +564,7 @@ CalendarPicker.propTypes = {
    */
   disabled: PropTypes.bool,
   /**
-   * If `true` future days are disabled.
+   * If `true` disable values before the current time
    * @default false
    */
   disableFuture: PropTypes.bool,
@@ -574,7 +574,7 @@ CalendarPicker.propTypes = {
    */
   disableHighlightToday: PropTypes.bool,
   /**
-   * If `true` past days are disabled.
+   * If `true` disable values after the current time.
    * @default false
    */
   disablePast: PropTypes.bool,

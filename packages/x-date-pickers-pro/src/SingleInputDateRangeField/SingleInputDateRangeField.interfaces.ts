@@ -1,15 +1,13 @@
 import { TextFieldProps } from '@mui/material/TextField';
-import { DefaultizedProps } from '@mui/x-date-pickers/internals';
+import { BaseDateValidationProps, DefaultizedProps } from '@mui/x-date-pickers/internals';
 import { UseFieldInternalProps, FieldSection } from '@mui/x-date-pickers/internals-fields';
-import { DateRange } from '../internal/models';
-import {
-  DateRangeValidationError,
-  DateRangeValidationProps,
-} from '../internal/hooks/validation/useDateRangeValidation';
+import { DateRange, DayRangeValidationProps } from '../internal/models';
+import { DateRangeValidationError } from '../internal/hooks/validation/useDateRangeValidation';
 
 export interface UseSingleInputDateRangeFieldProps<TDate>
   extends UseFieldInternalProps<DateRange<TDate>, DateRangeValidationError>,
-    Partial<Omit<DateRangeValidationProps<TDate, TDate>, 'value'>> {}
+    DayRangeValidationProps<TDate>,
+    BaseDateValidationProps<TDate> {}
 
 export type UseSingleInputDateRangeFieldDefaultizedProps<TDate> = DefaultizedProps<
   UseSingleInputDateRangeFieldProps<TDate>,

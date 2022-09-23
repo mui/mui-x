@@ -1,8 +1,4 @@
-import {
-  useUtils,
-  useDefaultDates,
-  parseNonNullablePickerDate,
-} from '@mui/x-date-pickers/internals';
+import { useUtils, useDefaultDates, applyDefaultDate } from '@mui/x-date-pickers/internals';
 import {
   useField,
   FieldValueManager,
@@ -143,8 +139,8 @@ export const useDefaultizedDateRangeFieldProps = <TDate, AdditionalProps extends
     disablePast: false,
     disableFuture: false,
     ...props,
-    minDate: parseNonNullablePickerDate(utils, props.minDate, defaultDates.minDate),
-    maxDate: parseNonNullablePickerDate(utils, props.maxDate, defaultDates.maxDate),
+    minDate: applyDefaultDate(utils, props.minDate, defaultDates.minDate),
+    maxDate: applyDefaultDate(utils, props.maxDate, defaultDates.maxDate),
   } as any;
 };
 

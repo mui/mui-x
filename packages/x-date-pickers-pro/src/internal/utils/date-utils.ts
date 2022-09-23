@@ -1,15 +1,10 @@
-import { MuiPickersAdapter } from '@mui/x-date-pickers/internals';
+import { MuiPickersAdapter, replaceInvalidDateByNull } from '@mui/x-date-pickers/internals';
 import { DateRange, NonEmptyDateRange } from '../models';
 
-export const parseRangeInputValue = <TDate>(
+export const replaceInvalidDatesByNull = <TDate>(
   utils: MuiPickersAdapter<TDate>,
-  value: DateRange<any> = [null, null],
-) =>
-  value.map((date) => {
-    const parsedDate = utils.date(date);
-
-    return utils.isValid(parsedDate) ? parsedDate : null;
-  }) as DateRange<TDate>;
+  value: DateRange<TDate> = [null, null],
+) => value.map((date) => replaceInvalidDateByNull(utils, date)) as DateRange<TDate>;
 
 export const isRangeValid = <TDate>(
   utils: MuiPickersAdapter<TDate>,

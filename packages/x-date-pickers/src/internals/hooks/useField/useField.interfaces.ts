@@ -12,9 +12,14 @@ export interface UseFieldParams<
 > {
   forwardedProps: TForwardedProps;
   internalProps: TInternalProps;
-  valueManager: PickerStateValueManager<TValue, TValue, TDate>;
+  valueManager: PickerStateValueManager<TValue, TDate>;
   fieldValueManager: FieldValueManager<TValue, TDate, TSection, InferError<TInternalProps>>;
-  validator: Validator<TDate, UseFieldValidationProps<TValue, TInternalProps>>;
+  validator: Validator<
+    TValue,
+    TDate,
+    InferError<TInternalProps>,
+    UseFieldValidationProps<TValue, TInternalProps>
+  >;
 }
 
 export interface UseFieldInternalProps<TValue, TError> {

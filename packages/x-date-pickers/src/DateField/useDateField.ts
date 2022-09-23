@@ -13,7 +13,7 @@ import {
   isSameDateError,
   validateDate,
 } from '../internals/hooks/validation/useDateValidation';
-import { parseNonNullablePickerDate } from '../internals/utils/date-utils';
+import { applyDefaultDate } from '../internals/utils/date-utils';
 import { useUtils, useDefaultDates } from '../internals/hooks/useUtils';
 
 const dateRangeFieldValueManager: FieldValueManager<any, any, FieldSection, DateValidationError> = {
@@ -46,8 +46,8 @@ const useDefaultizedDateField = <TDate, AdditionalProps extends {}>(
     disablePast: false,
     disableFuture: false,
     ...props,
-    minDate: parseNonNullablePickerDate(utils, props.minDate, defaultDates.minDate),
-    maxDate: parseNonNullablePickerDate(utils, props.maxDate, defaultDates.maxDate),
+    minDate: applyDefaultDate(utils, props.minDate, defaultDates.minDate),
+    maxDate: applyDefaultDate(utils, props.maxDate, defaultDates.maxDate),
   } as any;
 };
 

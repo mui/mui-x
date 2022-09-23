@@ -43,20 +43,22 @@ export const useFieldState = <
   } = params;
 
   const firstDefaultValue = React.useRef(defaultValue);
-  const valueParsed = React.useMemo(() => {
-    const value = valueProp ?? firstDefaultValue.current ?? valueManager.emptyValue;
-    return valueManager.parseInput(utils, value);
-  }, [valueProp, valueManager, utils]);
+  const valueFromTheOutside = valueProp ?? firstDefaultValue.current ?? valueManager.emptyValue;
 
   const [state, setState] = React.useState<UseFieldState<TValue, TSection>>(() => {
-    const sections = fieldValueManager.getSectionsFromValue(utils, null, valueParsed, format);
+    const sections = fieldValueManager.getSectionsFromValue(
+      utils,
+      null,
+      valueFromTheOutside,
+      format,
+    );
 
     return {
       sections,
-      value: valueParsed,
+      value: valueFromTheOutside,
       referenceValue: fieldValueManager.updateReferenceValue(
         utils,
-        valueParsed,
+        valueFromTheOutside,
         valueManager.getTodayValue(utils),
       ),
       selectedSectionIndexes: null,
@@ -177,25 +179,25 @@ export const useFieldState = <
   };
 
   React.useEffect(() => {
-    if (!valueManager.areValuesEqual(utils, state.value, valueParsed)) {
+    if (!valueManager.areValuesEqual(utils, state.value, valueFromTheOutside)) {
       const sections = fieldValueManager.getSectionsFromValue(
         utils,
         state.sections,
-        valueParsed,
+        valueFromTheOutside,
         format,
       );
       setState((prevState) => ({
         ...prevState,
-        value: valueParsed,
+        value: valueFromTheOutside,
         referenceValue: fieldValueManager.updateReferenceValue(
           utils,
-          valueParsed,
+          valueFromTheOutside,
           prevState.referenceValue,
         ),
         sections,
       }));
     }
-  }, [valueParsed]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [valueFromTheOutside]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return {
     state,

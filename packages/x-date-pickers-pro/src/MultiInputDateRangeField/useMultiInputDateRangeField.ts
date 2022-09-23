@@ -4,7 +4,7 @@ import {
   unstable_useDateField as useDateField,
   UseDateFieldProps,
 } from '@mui/x-date-pickers/DateField';
-import { useUtils, useValidation } from '@mui/x-date-pickers/internals';
+import { useValidation } from '@mui/x-date-pickers/internals';
 import { UseFieldResponse } from '@mui/x-date-pickers/internals-fields';
 import { UseMultiInputDateRangeFieldProps } from './MultiInputDateRangeField.interfaces';
 import { DateRange } from '../internal/models';
@@ -22,7 +22,6 @@ export const useMultiInputDateRangeField = <
   inProps: TProps,
 ) => {
   const props = useDefaultizedDateRangeFieldProps<TDate, TProps>(inProps);
-  const utils = useUtils<TDate>();
 
   const { value: valueProp, defaultValue, format, onChange } = props;
 
@@ -35,16 +34,10 @@ export const useMultiInputDateRangeField = <
     }
 
     return (newDate: TDate | null) => {
-      let newDateRange: DateRange<TDate>;
-      if (valueProp !== undefined) {
-        newDateRange = dateRangePickerValueManager.parseInput(utils, valueProp);
-      } else if (firstDefaultValue.current !== undefined) {
-        newDateRange = dateRangePickerValueManager.parseInput(utils, firstDefaultValue.current);
-      } else {
-        newDateRange = dateRangePickerValueManager.emptyValue;
-      }
-
-      newDateRange[index] = newDate;
+      const currentDateRange =
+        valueProp ?? firstDefaultValue.current ?? dateRangePickerValueManager.emptyValue;
+      const newDateRange: DateRange<TDate> =
+        index === 0 ? [newDate, currentDateRange[1]] : [currentDateRange[0], newDate];
 
       onChange(newDateRange);
     };
