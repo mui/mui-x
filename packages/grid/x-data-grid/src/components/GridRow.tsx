@@ -1,7 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { unstable_composeClasses as composeClasses } from '@mui/material';
+import { unstable_composeClasses as composeClasses, useForkRef } from '@mui/material';
 import { GridRowEventLookup } from '../models/events';
 import { GridRowId, GridRowModel } from '../models/gridRows';
 import {
@@ -91,7 +91,10 @@ const EmptyCell = ({ width }: { width: number }) => {
   return <div className="MuiDataGrid-cell" style={style} />; // TODO change to .MuiDataGrid-emptyCell or .MuiDataGrid-rowFiller
 };
 
-function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
+const GridRow = React.forwardRef<
+  HTMLDivElement,
+  React.HTMLAttributes<HTMLDivElement> & GridRowProps
+>(function GridRow(props, refProp) {
   const {
     selected,
     rowId,
@@ -124,6 +127,7 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
   const sortModel = useGridSelector(apiRef, gridSortModelSelector);
   const treeDepth = useGridSelector(apiRef, gridRowTreeDepthSelector);
   const headerGroupingMaxDepth = useGridSelector(apiRef, gridDensityHeaderGroupingMaxDepthSelector);
+  const handleRef = useForkRef(ref, refProp);
 
   const ariaRowIndex = index + headerGroupingMaxDepth + 2; // 1 for the header row and 1 as it's 1-based
   const { hasScrollX, hasScrollY } = apiRef.current.getRootDimensions() ?? {
@@ -474,7 +478,7 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
 
   return (
     <div
-      ref={ref}
+      ref={handleRef}
       data-id={rowId}
       data-rowindex={index}
       role="row"
@@ -489,7 +493,7 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
       {emptyCellWidth > 0 && <EmptyCell width={emptyCellWidth} />}
     </div>
   );
-}
+});
 
 GridRow.propTypes = {
   // ----------------------------- Warning --------------------------------
