@@ -9,6 +9,8 @@ _Sep 22, 2022_
 
 We'd like to offer a big thanks to the 12 contributors who made this release possible. Here are some highlights ✨:
 
+- 🌍 Add Finnish (fi-FI) locale to the pickers (#6219) @PetroSilenius
+- 🌍 Add Persian (fa-IR) locale to the pickers (#6181) @fakhamatia
 - 🌍 Add a `localeText` prop to all pickers to customize the translations (#6212) @flaviendelangle
 - 📚 Documentation improvements
 - 🐞 Bugfixes
@@ -45,10 +47,12 @@ We'd like to offer a big thanks to the 12 contributors who made this release pos
 
 #### Changes
 
+- [DataGrid] Do not publish `cellFocusOut` event if the row was removed (#6251) @cherniavskii
 - [DataGrid] Fix scroll anchoring with master details (#6054) @oliviertassinari
+- [DataGrid] Improve Polish (pl-PL) locale on the data grid (#6245) @grzegorz-bach
 - [DataGrid] Remove the `GridEvents` enum (#6003) @flaviendelangle
 - [DataGrid] Remove the deprecated `hide` column property (#5999) @flaviendelangle
-
+- 
 ### `@mui/x-date-pickers@v6.0.0-alpha.0` / `@mui/x-date-pickers-pro@v6.0.0-alpha.0`
 
 #### Breaking changes
@@ -127,10 +131,13 @@ You can find more information about the new api, including how to set those tran
 - [CalendarPicker] Don't move to closest enabled date when `props.date` contains a disabled date (#6146) @flaviendelangle
 - [DateRangePicker] Switch to new month when changing the value from the outside (#6166) @flaviendelangle
 - [pickers] Add a `localeText` prop to all pickers to customize the translations (#6212) @flaviendelangle
+- [pickers] Add Finnish (fi-FI) locale to pickers (#6219) (#6230) @PetroSilenius
+- [pickers] Add Persian (fa-IR) locale to the pickers (#6181) @fakhamatia
 - [pickers] Allow nested `LocalizationProvider` (#6011) @flaviendelangle
 - [pickers] Clean slots on `PickersArrowSwitcher` component (#5890) @flaviendelangle
 - [pickers] Fix invalid date error when decreasing `DateField` day (#6071) @alexfauquette
 - [pickers] Fix mobile section selection (#6207) @oliviertassinari
+- [pickers] Fix usage with Typescript 4.8 (#6229) @flaviendelangle
 - [pickers] Improve error message when no adapter context is found (#6211) @flaviendelangle
 - [pickers] Remove `valueStr` from the field state (#6142) @flaviendelangle
 - [pickers] Remove remaining deprecated locale props (#6233) @flaviendelangle
@@ -139,11 +146,13 @@ You can find more information about the new api, including how to set those tran
 - [pickers] Support the `sx` prop on all public component with a root HTML elements (#5944) @flaviendelangle
 - [pickers] Unify `PickersMonth` and `PickersYear` behaviors (#6034) @flaviendelangle
 - [pickers] Use `shouldDisableMonth` and `shouldDisableYear` for date validation (#6066) @flaviendelangle
+- [YearPicker] Scroll to the current year even with `autoFocus=false` (#6224) @alexfauquette
 
 ### Docs
 
 - [docs] Add automatic vale check (#5429) @alexfauquette
 - [docs] Add pro logo in "column ordering" link (#6127) @alexfauquette
+- [docs] Fix 301 link (#6239) @oliviertassinari
 - [docs] Fix broken link (#6163) @alexfauquette
 - [docs] Fix broken links (#6101) @alexfauquette
 - [docs] Fix demonstration date to avoid hydration errors (#6032) @alexfauquette
@@ -165,6 +174,7 @@ You can find more information about the new api, including how to set those tran
 - [core] Tag release as `next` in NPM (#6256) @m4theushw
 - [core] Update monorepo (#6180) @flaviendelangle
 - [core] Use the `next` branch for Prettier (#6097) @flaviendelangle
+- [core] Use the official repository for `@mui/monorepo` instead of a fork (#6189) @oliviertassinari
 - [test] Fix logic to skip column pinning tests (#6133) @m4theushw
 - [test] Hide the date on the print regression test (#6120) @flaviendelangle
 - [test] Skip tests for column pinning and dynamic row height (#5997) @m4theushw
