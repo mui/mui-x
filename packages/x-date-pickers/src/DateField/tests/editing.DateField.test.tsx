@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { expect } from 'chai';
+import { spy } from 'sinon';
 import { Unstable_DateField as DateField } from '@mui/x-date-pickers/DateField';
 import { screen, act, userEvent } from '@mui/monorepo/test/utils';
 import { createPickerRenderer, adapterToUse } from 'test/utils/pickers-utils';
@@ -217,7 +218,7 @@ describe('<DateField /> - Editing', () => {
   });
 
   describe('key: Backspace', () => {
-    it('should clean the selected section when only this section is completed', () => {
+    it('should clear the selected section when only this section is completed', () => {
       render(<DateField format={adapterToUse.formats.monthAndYear} />);
       const input = screen.getByRole('textbox');
       clickOnInput(input, 1);
@@ -230,7 +231,7 @@ describe('<DateField /> - Editing', () => {
       expect(input.value).to.equal('month year');
     });
 
-    it('should clean the selected section when all sections are completed', () => {
+    it('should clear the selected section when all sections are completed', () => {
       testKeyPress({
         format: adapterToUse.formats.monthAndYear,
         defaultValue: adapterToUse.date(),
@@ -239,7 +240,7 @@ describe('<DateField /> - Editing', () => {
       });
     });
 
-    it('should clean all the sections when all sections are selected and all sections are completed', () => {
+    it('should clear all the sections when all sections are selected and all sections are completed', () => {
       render(
         <DateField format={adapterToUse.formats.monthAndYear} defaultValue={adapterToUse.date()} />,
       );
@@ -253,7 +254,7 @@ describe('<DateField /> - Editing', () => {
       expect(input.value).to.equal('month year');
     });
 
-    it('should clean all the sections when all sections are selected and not all sections are completed', () => {
+    it('should clear all the sections when all sections are selected and not all sections are completed', () => {
       render(<DateField format={adapterToUse.formats.monthAndYear} />);
       const input = screen.getByRole('textbox');
       clickOnInput(input, 1);
@@ -269,7 +270,7 @@ describe('<DateField /> - Editing', () => {
       expect(input.value).to.equal('month year');
     });
 
-    it('should not clean the sections when props.readOnly = true', () => {
+    it('should not clear the sections when props.readOnly = true', () => {
       testKeyPress({
         format: adapterToUse.formats.year,
         defaultValue: adapterToUse.date(),
@@ -358,6 +359,90 @@ describe('<DateField /> - Editing', () => {
         key: 'd',
         expectedValue: 'June',
       });
+    });
+  });
+
+  describe.only('Do not loose missing section values ', () => {
+    it('should not loose time information when a value is provided', () => {
+      const onChange = spy();
+
+      render(
+        <DateField
+          defaultValue={adapterToUse.date(new Date(2010, 3, 3, 3, 3, 3))}
+          onChange={onChange}
+        />,
+      );
+      const input = screen.getByRole('textbox');
+      clickOnInput(input, 8);
+      userEvent.keyPress(input, { key: 'ArrowDown' });
+
+      expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2009, 3, 3, 3, 3, 3));
+    });
+
+    it('should not loose time information when cleaning the date then filling it again', () => {
+      const onChange = spy();
+
+      render(
+        <DateField
+          defaultValue={adapterToUse.date(new Date(2010, 3, 3, 3, 3, 3))}
+          onChange={onChange}
+        />,
+      );
+      const input = screen.getByRole('textbox');
+      clickOnInput(input, 1);
+
+      userEvent.keyPress(input, { key: 'a', ctrlKey: true });
+      userEvent.keyPress(input, { key: 'Backspace' });
+
+      userEvent.keyPress(input, { key: '4' });
+      expect(input.value).to.equal('04/day/year');
+
+      userEvent.keyPress(input, { key: 'ArrowRight' });
+      userEvent.keyPress(input, { key: '3' });
+      expect(input.value).to.equal('04/03/year');
+
+      userEvent.keyPress(input, { key: 'ArrowRight' });
+      userEvent.keyPress(input, { key: '2' });
+      userEvent.keyPress(input, { key: '0' });
+      userEvent.keyPress(input, { key: '0' });
+      userEvent.keyPress(input, { key: '9' });
+      expect(input.value).to.equal('04/03/2009');
+
+      expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2009, 3, 3, 3, 3, 3));
+    });
+
+    it('should not loose date information when using the year format and value is provided', () => {
+      const onChange = spy();
+
+      render(
+        <DateField
+          format={adapterToUse.formats.year}
+          defaultValue={adapterToUse.date(new Date(2010, 3, 3, 3, 3, 3))}
+          onChange={onChange}
+        />,
+      );
+      const input = screen.getByRole('textbox');
+      clickOnInput(input, 1);
+      userEvent.keyPress(input, { key: 'ArrowDown' });
+
+      expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2009, 3, 3, 3, 3, 3));
+    });
+
+    it('should not loose date information when using the month format and value is provided', () => {
+      const onChange = spy();
+
+      render(
+        <DateField
+          format={adapterToUse.formats.month}
+          defaultValue={adapterToUse.date(new Date(2010, 3, 3, 3, 3, 3))}
+          onChange={onChange}
+        />,
+      );
+      const input = screen.getByRole('textbox');
+      clickOnInput(input, 1);
+      userEvent.keyPress(input, { key: 'ArrowDown' });
+
+      expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2010, 2, 3, 3, 3, 3));
     });
   });
 });

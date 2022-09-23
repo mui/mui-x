@@ -193,11 +193,18 @@ export const useField = <
             activeSection.dateSectionName,
           );
 
-          const concatenatedSectionValue = `${activeSection.value}${event.key}`;
-          const newSectionValue =
-            Number(concatenatedSectionValue) > boundaries.maximum
-              ? event.key
-              : concatenatedSectionValue;
+          // Remove the trailing `0` (`01` => `1`)
+          const currentSectionValue = Number(activeSection.value).toString();
+
+          let newSectionValue = `${currentSectionValue}${event.key}`;
+          while (newSectionValue.length > 0 && Number(newSectionValue) > boundaries.maximum) {
+            newSectionValue = newSectionValue.slice(1);
+          }
+
+          // In the unlikely scenario where max < 9, we could type a single digit that already exceeds the maximum.
+          if (newSectionValue.length === 0) {
+            newSectionValue = boundaries.minimum.toString();
+          }
 
           if (fixedWidth) {
             return cleanTrailingZeroInNumericSectionValue(newSectionValue, boundaries.maximum);
@@ -211,8 +218,8 @@ export const useField = <
             // TODO: Support digit edition on full letter sections.
             // TODO: Do not hardcode the compatible formatValue
             if (
-              !activeSection.formatValue.includes('MMM') &&
-              !activeSection.formatValue.includes('LLL')
+              activeSection.formatValue.includes('MMM') ||
+              activeSection.formatValue.includes('LLL')
             ) {
               return activeDate;
             }
@@ -221,10 +228,16 @@ export const useField = <
               utils,
               dateSectionName: activeSection.dateSectionName,
               date: activeDate,
-              getSectionValue: () =>
-                Number(
-                  getNewSectionValueStr({ activeSection, date: activeDate, fixedWidth: false }),
-                ),
+              getSectionValue: (getter) => {
+                const sectionValueStr = getNewSectionValueStr({
+                  activeSection,
+                  date: activeDate,
+                  fixedWidth: false,
+                });
+                const sectionDate = utils.parse(sectionValueStr, activeSection.formatValue)!;
+
+                return getter(sectionDate);
+              },
             });
           },
           setSectionValueOnSections: (activeSection, referenceActiveDate) =>
