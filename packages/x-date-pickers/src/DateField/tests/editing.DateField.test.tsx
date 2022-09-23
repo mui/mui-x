@@ -362,7 +362,7 @@ describe('<DateField /> - Editing', () => {
     });
   });
 
-  describe.only('Do not loose missing section values ', () => {
+  describe('Do not loose missing section values ', () => {
     it('should not loose time information when a value is provided', () => {
       const onChange = spy();
 
