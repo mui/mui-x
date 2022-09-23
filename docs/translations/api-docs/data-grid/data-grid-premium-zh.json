@@ -482,13 +482,13 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the menu list element"
     },
-    "overlayWrapperAnchor": {
+    "overlayWrapper": {
       "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the overlay wrapper anchor element"
+      "nodeName": "the overlay wrapper element"
     },
-    "overlayWrapperContainer": {
+    "overlayWrapperInner": {
       "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the overlay wrapper container element"
+      "nodeName": "the overlay wrapper inner element"
     },
     "overlay": {
       "description": "Styles applied to {{nodeName}}.",
