@@ -9,6 +9,7 @@ _Sep 22, 2022_
 
 We'd like to offer a big thanks to the 5 contributors who made this release possible. Here are some highlights ✨:
 
+- 🌍 Add Finnish (fi-FI) locale to the pickers (#6230) @PetroSilenius
 - 🌍 Add Persian (fa-IR) locale to the pickers (#6181) @fakhamatia
 - 🐞 Bugfixes
 
