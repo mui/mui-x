@@ -5,6 +5,7 @@ import { spy } from 'sinon';
 import { fireEvent, screen } from '@mui/monorepo/test/utils';
 import { StaticDateTimePicker } from '@mui/x-date-pickers/StaticDateTimePicker';
 import { adapterToUse, createPickerRenderer, withPickerControls } from 'test/utils/pickers-utils';
+import describeValidation from '@mui/x-date-pickers/internals/utils/describeValidation';
 import { DateTimePickerTabs, DateTimePickerTabsProps } from '../DateTimePicker';
 
 const WrappedStaticDateTimePicker = withPickerControls(StaticDateTimePicker)({
@@ -12,8 +13,16 @@ const WrappedStaticDateTimePicker = withPickerControls(StaticDateTimePicker)({
 });
 
 describe('<StaticDateTimePicker />', () => {
-  const { render } = createPickerRenderer({ clock: 'fake' });
+  const { render, clock } = createPickerRenderer({
+    clock: 'fake',
+  });
 
+  describeValidation(StaticDateTimePicker, () => ({
+    render,
+    clock,
+    views: ['year', 'month', 'day', 'hour', 'minutes'],
+    skip: ['textField'],
+  }));
   it('should allow to select the same day and move to the next view', () => {
     const onChangeMock = spy();
     render(
