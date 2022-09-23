@@ -27,7 +27,6 @@ We'd like to offer a big thanks to the 12 contributors who made this release pos
       field: 'id,
   -   hide: true,
     ]}
-
   +  initialState={{
   +    columns: {
   +      columnVisibilityModel: { id: false },
@@ -36,7 +35,7 @@ We'd like to offer a big thanks to the 12 contributors who made this release pos
   />
   ```
 
-  You can find more information about this new api on our [documentation](https://next.mui.com/x/react-data-grid/column-visibility/).
+  You can find more information about this new API on our [documentation](https://next.mui.com/x/react-data-grid/column-visibility/).
 
 - The `GridEvents` enum is now a TypeScript type.
 
@@ -151,7 +150,7 @@ You can find more information about the new api, including how to set those tran
 ### Docs
 
 - [docs] Add automatic vale check (#5429) @alexfauquette
-- [docs] Add pro logo in "column ordering" link (#6127) @alexfauquette
+- [docs] Add Pro logo in "column ordering" link (#6127) @alexfauquette
 - [docs] Fix 301 link (#6239) @oliviertassinari
 - [docs] Fix broken link (#6163) @alexfauquette
 - [docs] Fix broken links (#6101) @alexfauquette
@@ -169,7 +168,6 @@ You can find more information about the new api, including how to set those tran
 - [core] Add `v5.17.3` changelog to next branch (#6250) @flaviendelangle
 - [core] Add link to the security page on the `README` (#6073) @oliviertassinari
 - [core] Fix scroll restoration in the docs (#5938) @oliviertassinari
-- [core] Merge `master` into `next`  (#6253) @flaviendelangle
 - [core] Remove the Storybook (#6099) @flaviendelangle
 - [core] Tag release as `next` in NPM (#6256) @m4theushw
 - [core] Update monorepo (#6180) @flaviendelangle
