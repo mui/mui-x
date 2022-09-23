@@ -2,13 +2,13 @@ import { TextFieldProps } from '@mui/material/TextField';
 import { UseFieldInternalProps } from '../internals/hooks/useField';
 import {
   DateValidationError,
-  DateValidationProps,
+  DateComponentValidationProps,
 } from '../internals/hooks/validation/useDateValidation';
 import { DefaultizedProps } from '../internals/models/helpers';
 
 export interface UseDateFieldProps<TInputDate, TDate>
   extends UseFieldInternalProps<TInputDate | null, TDate | null, DateValidationError>,
-    Partial<Omit<DateValidationProps<TInputDate, TDate>, 'value'>> {}
+    Partial<Omit<DateComponentValidationProps<TDate>, 'value'>> {}
 
 export type UseDateFieldDefaultizedProps<TInputDate, TDate> = DefaultizedProps<
   UseDateFieldProps<TInputDate, TDate>,

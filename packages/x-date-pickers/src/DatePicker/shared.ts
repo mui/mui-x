@@ -4,7 +4,7 @@ import { useDefaultDates, useUtils } from '../internals/hooks/useUtils';
 import { CalendarPickerView, MuiPickersAdapter } from '../internals/models';
 import { ExportedCalendarPickerProps } from '../CalendarPicker/CalendarPicker';
 import { DateValidationError } from '../internals/hooks/validation/useDateValidation';
-import { ValidationProps } from '../internals/hooks/validation/useValidation';
+import { ValidationCommonProps } from '../internals/hooks/validation/useValidation';
 import { ExportedDateInputProps } from '../internals/components/PureDateInput';
 import { BasePickerProps } from '../internals/models/props/basePickerProps';
 import { PickerStateValueManager } from '../internals/hooks/usePickerState';
@@ -16,7 +16,7 @@ import { BaseDateValidationProps } from '../internals/hooks/validation/models';
 export interface BaseDatePickerProps<TInputDate, TDate>
   extends ExportedCalendarPickerProps<TDate>,
     BasePickerProps<TInputDate | null, TDate | null>,
-    ValidationProps<DateValidationError, TInputDate | null>,
+    ValidationCommonProps<DateValidationError, TInputDate | null>,
     ExportedDateInputProps<TInputDate, TDate> {
   /**
    * Callback fired on view change.

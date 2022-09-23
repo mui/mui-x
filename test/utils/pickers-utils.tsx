@@ -125,10 +125,11 @@ export const openPicker = (params: OpenPickerParams) => {
 };
 
 // TODO: Handle dynamic values
-export const getClockMouseEvent = (type: 'mousedown' | 'mousemove' | 'mouseup') => {
-  const offsetX = 20;
-  const offsetY = 15;
-
+export const getClockMouseEvent = (
+  type: 'mousedown' | 'mousemove' | 'mouseup',
+  offsetX = 20,
+  offsetY = 15,
+) => {
   const event = new window.MouseEvent(type, {
     bubbles: true,
     cancelable: true,
