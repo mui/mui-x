@@ -59,6 +59,13 @@ And that when debouncing the state (for instance if you have a server side persi
 
 Use the `selectedSectionIndexes` and `onSelectedSectionIndexesChange` props to control which sections are currently being selected.
 
+This prop accept four formats:
+
+1. If a number is provided, the section at this index will be selected.
+2. If an object with a `startIndex` and `endIndex` properties are provided, the sections between those two indexes will be selected.
+3. If a string of type `MuiDateSectionName` is provided, the first section with that name will be selected.
+4. If `null` is provided, no section will be selected
+
 :::warning
 You need to make sure the input is focused before imperatively updating the selected sections.
 :::

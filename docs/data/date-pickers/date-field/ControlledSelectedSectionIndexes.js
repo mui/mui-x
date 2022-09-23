@@ -8,21 +8,11 @@ import { Unstable_DateField as DateField } from '@mui/x-date-pickers/DateField';
 
 export default function ControlledSelectedSectionIndexes() {
   const [selectedSectionIndexes, setSelectedSectionIndexes] = React.useState(null);
-  const fieldRef = React.useRef(null);
   const inputRef = React.useRef(null);
 
   const setSelectedDateSectionName = (selectedDateSectionName) => {
-    const sectionIndex = fieldRef.current.sections.findIndex(
-      (section) => section.dateSectionName === selectedDateSectionName,
-    );
-
-    const newSelectedSectionIndexes =
-      sectionIndex === -1 ? null : { start: sectionIndex, end: sectionIndex };
-
-    if (newSelectedSectionIndexes != null) {
-      inputRef.current?.focus();
-    }
-    setSelectedSectionIndexes(newSelectedSectionIndexes);
+    inputRef.current?.focus();
+    setSelectedSectionIndexes(selectedDateSectionName);
   };
 
   return (
@@ -51,7 +41,6 @@ export default function ControlledSelectedSectionIndexes() {
         <DateField
           label="Basic date field"
           inputRef={inputRef}
-          fieldRef={fieldRef}
           selectedSectionIndexes={selectedSectionIndexes}
           onSelectedSectionIndexesChange={setSelectedSectionIndexes}
         />

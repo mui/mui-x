@@ -35,21 +35,20 @@ export interface UseFieldInternalProps<TInputValue, TValue, TSection extends Fie
   readOnly?: boolean;
   /**
    * The currently selected sections.
-   * If `null`, no section is selected.
+   * This prop accept four formats:
+   * 1. If a number is provided, the section at this index will be selected.
+   * 2. If an object with a `startIndex` and `endIndex` properties are provided, the sections between those two indexes will be selected.
+   * 3. If a string of type `MuiDateSectionName` is provided, the first section with that name will be selected.
+   * 4. If `null` is provided, no section will be selected
    * If not provided, the selected sections will be handled internally.
    */
-  selectedSectionIndexes?: FieldSelectionSectionIndexes;
+  selectedSectionIndexes?: FieldSelectedSections;
   /**
    * Callback fired when the selected sections change.
-   * @param {FieldSelectionSectionIndexes} newValue The new selected sections.
+   * @param {FieldSelectedSections} newValue The new selected sections.
    */
-  onSelectedSectionIndexesChange?: (newValue: FieldSelectionSectionIndexes) => void;
-  fieldRef?: React.Ref<FieldInstance<TSection>>;
+  onSelectedSectionIndexesChange?: (newValue: FieldSelectedSections) => void;
   inputRef?: React.Ref<HTMLInputElement>;
-}
-
-export interface FieldInstance<TSection extends FieldSection> {
-  sections: TSection[];
 }
 
 export interface UseFieldForwardedProps {
@@ -84,7 +83,13 @@ export interface FieldSection {
   query: string | null;
 }
 
-export type FieldSelectionSectionIndexes = { start: number; end: number } | null;
+export type FieldSelectedSectionsIndexes = { startIndex: number; endIndex: number };
+
+export type FieldSelectedSections =
+  | number
+  | FieldSelectedSectionsIndexes
+  | MuiDateSectionName
+  | null;
 
 export interface FieldValueManager<TValue, TDate, TSection extends FieldSection, TError> {
   getSectionsFromValue: (

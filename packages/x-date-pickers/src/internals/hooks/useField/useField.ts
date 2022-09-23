@@ -14,6 +14,8 @@ import {
   UseFieldForwardedProps,
   UseFieldInternalProps,
   AvailableAdjustKeyCode,
+  FieldSelectedSectionsIndexes,
+  FieldSelectedSections,
 } from './useField.interfaces';
 import {
   cleanTrailingZeroInNumericSectionValue,
@@ -49,7 +51,6 @@ export const useField = <
       readOnly = false,
       selectedSectionIndexes: selectedSectionIndexesProp,
       onSelectedSectionIndexesChange,
-      fieldRef,
       inputRef: inputRefProp,
     },
     forwardedProps: { onClick, onKeyDown, onFocus, onBlur, ...otherForwardedProps },
@@ -82,14 +83,32 @@ export const useField = <
     };
   });
 
-  React.useImperativeHandle(fieldRef, () => ({ sections: state.sections }));
-
-  const [selectedSectionIndexes, setSelectedSectionIndexes] = useControlled({
+  const [selectedSections, setSelectedSection] = useControlled({
     controlled: selectedSectionIndexesProp,
     default: null,
     name: 'useField',
     state: 'selectedSectionIndexes',
   });
+
+  const selectedSectionIndexes = React.useMemo<FieldSelectedSectionsIndexes | null>(() => {
+    if (selectedSections == null) {
+      return null;
+    }
+
+    if (typeof selectedSections === 'number') {
+      return { startIndex: selectedSections, endIndex: selectedSections };
+    }
+
+    if (typeof selectedSections === 'string') {
+      const selectedSectionIndex = state.sections.findIndex(
+        (section) => section.dateSectionName === selectedSections,
+      );
+
+      return { startIndex: selectedSectionIndex, endIndex: selectedSectionIndex };
+    }
+
+    return selectedSections;
+  }, [selectedSections, state.sections]);
 
   const updateSections = (sections: TSection[]) => {
     const { value: newValueParsed, shouldPublish } = fieldValueManager.getValueFromSections(
@@ -110,10 +129,9 @@ export const useField = <
     }
   };
 
-  const updateSelectedSections = (start?: number, end?: number) => {
-    const nexSelectedSectionIndexes = start == null ? null : { start, end: end ?? start };
-    setSelectedSectionIndexes(nexSelectedSectionIndexes);
-    onSelectedSectionIndexesChange?.(nexSelectedSectionIndexes);
+  const updateSelectedSections = (newSelectedSections: FieldSelectedSections) => {
+    setSelectedSection(newSelectedSections);
+    onSelectedSectionIndexesChange?.(newSelectedSections);
 
     setState((prevState) => ({
       ...prevState,
@@ -145,7 +163,7 @@ export const useField = <
       }
 
       if (Number(input.selectionEnd) - Number(input.selectionStart) === input.value.length) {
-        updateSelectedSections(0, state.sections.length - 1);
+        updateSelectedSections({ startIndex: 0, endIndex: state.sections.length - 1 });
       } else {
         handleInputClick();
       }
@@ -154,7 +172,7 @@ export const useField = <
 
   const handleInputBlur = useEventCallback((...args) => {
     onBlur?.(...(args as []));
-    updateSelectedSections();
+    updateSelectedSections(null);
   });
 
   const handleInputKeyDown = useEventCallback((event: React.KeyboardEvent) => {
@@ -167,7 +185,7 @@ export const useField = <
         // prevent default to make sure that the next line "select all" while updating
         // the internal state at the same time.
         event.preventDefault();
-        updateSelectedSections(0, state.sections.length - 1);
+        updateSelectedSections({ startIndex: 0, endIndex: state.sections.length - 1 });
         return;
       }
 
@@ -177,10 +195,10 @@ export const useField = <
 
         if (selectedSectionIndexes == null) {
           updateSelectedSections(0);
-        } else if (selectedSectionIndexes.start < state.sections.length - 1) {
-          updateSelectedSections(selectedSectionIndexes.start + 1);
-        } else if (selectedSectionIndexes.start !== selectedSectionIndexes.end) {
-          updateSelectedSections(selectedSectionIndexes.end);
+        } else if (selectedSectionIndexes.startIndex < state.sections.length - 1) {
+          updateSelectedSections(selectedSectionIndexes.startIndex + 1);
+        } else if (selectedSectionIndexes.startIndex !== selectedSectionIndexes.endIndex) {
+          updateSelectedSections(selectedSectionIndexes.startIndex);
         }
 
         return;
@@ -192,10 +210,10 @@ export const useField = <
 
         if (selectedSectionIndexes == null) {
           updateSelectedSections(state.sections.length - 1);
-        } else if (selectedSectionIndexes.start !== selectedSectionIndexes.end) {
-          updateSelectedSections(selectedSectionIndexes.start);
-        } else if (selectedSectionIndexes.start > 0) {
-          updateSelectedSections(selectedSectionIndexes.start - 1);
+        } else if (selectedSectionIndexes.startIndex !== selectedSectionIndexes.endIndex) {
+          updateSelectedSections(selectedSectionIndexes.startIndex);
+        } else if (selectedSectionIndexes.startIndex > 0) {
+          updateSelectedSections(selectedSectionIndexes.startIndex - 1);
         }
         return;
       }
@@ -221,7 +239,9 @@ export const useField = <
         if (selectedSectionIndexes == null) {
           updateSections(resetSections(0, state.sections.length));
         } else {
-          updateSections(resetSections(selectedSectionIndexes.start, selectedSectionIndexes.end));
+          updateSections(
+            resetSections(selectedSectionIndexes.startIndex, selectedSectionIndexes.endIndex),
+          );
         }
         break;
       }
@@ -234,7 +254,7 @@ export const useField = <
           return;
         }
 
-        const activeSection = state.sections[selectedSectionIndexes.start];
+        const activeSection = state.sections[selectedSectionIndexes.startIndex];
         const activeDate = fieldValueManager.getActiveDateFromActiveSection(
           state.valueParsed,
           activeSection,
@@ -249,7 +269,7 @@ export const useField = <
           );
 
           updateSections(
-            setSectionValue(state.sections, selectedSectionIndexes.start, newSectionValue),
+            setSectionValue(state.sections, selectedSectionIndexes.startIndex, newSectionValue),
           );
         } else {
           const newDate = adjustDateSectionValue(
@@ -281,7 +301,7 @@ export const useField = <
           return;
         }
 
-        const activeSection = state.sections[selectedSectionIndexes.start];
+        const activeSection = state.sections[selectedSectionIndexes.startIndex];
         const activeDate = fieldValueManager.getActiveDateFromActiveSection(
           state.valueParsed,
           activeSection,
@@ -302,7 +322,7 @@ export const useField = <
         updateSections(
           setSectionValue(
             state.sections,
-            selectedSectionIndexes.start,
+            selectedSectionIndexes.startIndex,
             cleanTrailingZeroInNumericSectionValue(newSectionValue, boundaries.maximum),
           ),
         );
@@ -335,7 +355,7 @@ export const useField = <
           updateSections(
             setSectionValue(
               state.sections,
-              selectedSectionIndexes.start,
+              selectedSectionIndexes.startIndex,
               matchingMonthsWithConcatenatedQuery[0],
               concatenatedQuery,
             ),
@@ -350,7 +370,7 @@ export const useField = <
             updateSections(
               setSectionValue(
                 state.sections,
-                selectedSectionIndexes.start,
+                selectedSectionIndexes.startIndex,
                 matchingMonthsWithNewQuery[0],
                 newQuery,
               ),
@@ -375,8 +395,8 @@ export const useField = <
       }
     };
 
-    const firstSelectedSection = state.sections[selectedSectionIndexes.start];
-    const lastSelectedSection = state.sections[selectedSectionIndexes.end];
+    const firstSelectedSection = state.sections[selectedSectionIndexes.startIndex];
+    const lastSelectedSection = state.sections[selectedSectionIndexes.endIndex];
     updateSelectionRangeIfChanged(
       firstSelectedSection.start,
       lastSelectedSection.start + getSectionVisibleValue(lastSelectedSection).length,

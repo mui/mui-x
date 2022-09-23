@@ -11,9 +11,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { unstable_useDateField as useDateField } from '@mui/x-date-pickers/DateField';
 
 const JoyDateField = (props) => {
-  const { inputRef, inputProps } = useDateField({
-    ...props,
-  });
+  const { inputRef, inputProps } = useDateField(props);
 
   return (
     <JoyTextField

@@ -5,8 +5,7 @@ export type {
   UseFieldInternalProps,
   UseFieldParams,
   UseFieldResponse,
-  FieldSelectionSectionIndexes,
-  FieldInstance,
+  FieldSelectedSections,
 } from './useField.interfaces';
 export {
   splitFormatIntoSections,

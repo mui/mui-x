@@ -75,7 +75,6 @@ export const useDateField = <
     disablePast,
     selectedSectionIndexes,
     onSelectedSectionIndexesChange,
-    fieldRef,
     inputRef,
     ...other
   } = useDefaultizedDateField<TInputDate, TDate, TProps>(inProps);
@@ -98,7 +97,6 @@ export const useDateField = <
       disablePast,
       selectedSectionIndexes,
       onSelectedSectionIndexesChange,
-      fieldRef,
       inputRef,
     },
     valueManager: datePickerValueManager,

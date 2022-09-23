@@ -6,30 +6,19 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { MuiDateSectionName } from '@mui/x-date-pickers';
 import {
   Unstable_DateField as DateField,
-  FieldSelectionSectionIndexes,
-  FieldInstance,
-  FieldSection,
+  FieldSelectedSections,
 } from '@mui/x-date-pickers/DateField';
 
 export default function ControlledSelectedSectionIndexes() {
   const [selectedSectionIndexes, setSelectedSectionIndexes] =
-    React.useState<FieldSelectionSectionIndexes>(null);
-  const fieldRef = React.useRef<FieldInstance<FieldSection>>(null);
+    React.useState<FieldSelectedSections>(null);
   const inputRef = React.useRef<HTMLInputElement>(null);
 
   const setSelectedDateSectionName = (
     selectedDateSectionName: MuiDateSectionName,
   ) => {
-    const sectionIndex = fieldRef.current!.sections.findIndex(
-      (section) => section.dateSectionName === selectedDateSectionName,
-    );
-    const newSelectedSectionIndexes =
-      sectionIndex === -1 ? null : { start: sectionIndex, end: sectionIndex };
-
-    if (newSelectedSectionIndexes != null) {
-      inputRef.current?.focus();
-    }
-    setSelectedSectionIndexes(newSelectedSectionIndexes);
+    inputRef.current?.focus();
+    setSelectedSectionIndexes(selectedDateSectionName);
   };
 
   return (
@@ -58,7 +47,6 @@ export default function ControlledSelectedSectionIndexes() {
         <DateField
           label="Basic date field"
           inputRef={inputRef}
-          fieldRef={fieldRef}
           selectedSectionIndexes={selectedSectionIndexes}
           onSelectedSectionIndexesChange={setSelectedSectionIndexes}
         />
