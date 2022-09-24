@@ -30,7 +30,7 @@ LicenseInfo.setLicenseKey(process.env.NEXT_PUBLIC_MUI_LICENSE);
 
 function getMuiPackageVersion(packageName, commitRef) {
   if (commitRef === undefined) {
-    // #default-branch-switch
+    // #default-branch-switch with latest for the master branch
     return 'next';
   }
   const shortSha = commitRef.slice(0, 8);
