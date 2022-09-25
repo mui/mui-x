@@ -12100,7 +12100,7 @@ react-router-dom@^6.4.1:
     "@remix-run/router" "1.0.1"
     react-router "6.4.1"
 
-react-router@6.4.1, react-router@^6.4.0:
+react-router@6.4.1, react-router@^6.4.1:
   version "6.4.1"
   resolved "https://registry.yarnpkg.com/react-router/-/react-router-6.4.1.tgz#dd9cc4dfa264751d143a4b6c9d4faa60ab3ce26c"
   integrity sha512-OJASKp5AykDWFewgWUim1vlLr7yfD4vO/h+bSgcP/ix8Md+LMHuAjovA74MQfsfhQJGGN1nHRhwS5qQQbbBt3A==
