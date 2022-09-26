@@ -4,7 +4,6 @@ import {
   GridEventListener,
   useGridApiEventHandler,
   useGridApiMethod,
-  gridFilteredDescendantCountLookupSelector,
   gridColumnLookupSelector,
 } from '@mui/x-data-grid-pro';
 import {
@@ -237,13 +236,14 @@ export const useGridRowGrouping = (
         event.stopPropagation();
         event.preventDefault();
 
-        const filteredDescendantCount =
-          gridFilteredDescendantCountLookupSelector(apiRef)[params.id] ?? 0;
+        if (params.rowNode.type !== 'group') {
+          return;
+        }
 
         const isOnGroupingCell =
           props.rowGroupingColumnMode === 'single' ||
           getRowGroupingFieldFromGroupingCriteria(params.rowNode.groupingField) === params.field;
-        if (!isOnGroupingCell || filteredDescendantCount === 0) {
+        if (!isOnGroupingCell) {
           return;
         }
 

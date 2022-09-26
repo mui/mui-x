@@ -11,7 +11,7 @@ import {
   GridAggregationFunction,
   GridApi,
   GridRenderCellParams,
-  GridRowTreeNodeConfig,
+  GridGroupNode,
   useGridApiRef,
 } from '@mui/x-data-grid-premium';
 
@@ -223,8 +223,7 @@ describe('<DataGridPremium /> - Aggregation', () => {
 
         // All groups aggregated inline except the root
         setProps({
-          getAggregationPosition: (group: GridRowTreeNodeConfig | null) =>
-            group == null ? null : 'inline',
+          getAggregationPosition: (group: GridGroupNode) => (group.depth === -1 ? null : 'inline'),
         });
         expect(getColumnValues(1)).to.deep.equal([
           '4' /* Agg "Cat A" */,
@@ -239,8 +238,7 @@ describe('<DataGridPremium /> - Aggregation', () => {
 
         // All groups aggregated in footer except the root
         setProps({
-          getAggregationPosition: (group: GridRowTreeNodeConfig | null) =>
-            group == null ? null : 'footer',
+          getAggregationPosition: (group: GridGroupNode) => (group.depth === -1 ? null : 'footer'),
         });
         expect(getColumnValues(1)).to.deep.equal([
           '',
@@ -670,7 +668,9 @@ describe('<DataGridPremium /> - Aggregation', () => {
         />,
       );
 
-      const callForAggCell = renderCell.getCalls().find((call) => call.firstArg.rowNode.isPinned);
+      const callForAggCell = renderCell
+        .getCalls()
+        .find((call) => call.firstArg.rowNode.type === 'pinnedRow');
       expect(callForAggCell!.firstArg.aggregation.hasCellUnit).to.equal(true);
     });
 
@@ -696,7 +696,9 @@ describe('<DataGridPremium /> - Aggregation', () => {
         />,
       );
 
-      const callForAggCell = renderCell.getCalls().find((call) => call.firstArg.rowNode.isPinned);
+      const callForAggCell = renderCell
+        .getCalls()
+        .find((call) => call.firstArg.rowNode.type === 'pinnedRow');
       expect(callForAggCell!.firstArg.aggregation.hasCellUnit).to.equal(false);
     });
   });
@@ -747,7 +749,7 @@ describe('<DataGridPremium /> - Aggregation', () => {
             },
           }}
           defaultGroupingExpansionDepth={-1}
-          getAggregationPosition={(group) => (group == null ? null : 'footer')}
+          getAggregationPosition={(group) => (group.depth === -1 ? null : 'footer')}
         />,
       );
       expect(getColumnValues(1)).to.deep.equal([

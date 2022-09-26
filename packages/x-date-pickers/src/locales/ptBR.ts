@@ -48,13 +48,13 @@ const ptBRPickers: Partial<PickersLocaleText<any>> = {
   // calendarWeekNumberHeaderText: '#',
 
   // Open picker labels
-  openDatePickerDialogue: (rawValue, utils) =>
-    rawValue && utils.isValid(utils.date(rawValue))
-      ? `Escolha uma data, data selecionada ${utils.format(utils.date(rawValue)!, 'fullDate')}`
+  openDatePickerDialogue: (value, utils) =>
+    value !== null && utils.isValid(value)
+      ? `Escolha uma data, data selecionada ${utils.format(value, 'fullDate')}`
       : 'Escolha uma data',
-  openTimePickerDialogue: (rawValue, utils) =>
-    rawValue && utils.isValid(utils.date(rawValue))
-      ? `Escolha uma hora, hora selecionada ${utils.format(utils.date(rawValue)!, 'fullTime')}`
+  openTimePickerDialogue: (value, utils) =>
+    value !== null && utils.isValid(value)
+      ? `Escolha uma hora, hora selecionada ${utils.format(value, 'fullTime')}`
       : 'Escolha uma hora',
 
   // Table labels

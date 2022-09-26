@@ -23,9 +23,9 @@ export interface DatePickerSlotsComponentsProps
   extends MobileDatePickerSlotsComponentsProps,
     DesktopDatePickerSlotsComponentsProps {}
 
-export interface DatePickerProps<TInputDate, TDate>
-  extends Omit<DesktopDatePickerProps<TInputDate, TDate>, 'components' | 'componentsProps'>,
-    Omit<MobileDatePickerProps<TInputDate, TDate>, 'components' | 'componentsProps'> {
+export interface DatePickerProps<TDate>
+  extends Omit<DesktopDatePickerProps<TDate>, 'components' | 'componentsProps'>,
+    Omit<MobileDatePickerProps<TDate>, 'components' | 'componentsProps'> {
   /**
    * CSS media query when `Mobile` mode will be changed to `Desktop`.
    * @default '@media (pointer: fine)'
@@ -44,8 +44,8 @@ export interface DatePickerProps<TInputDate, TDate>
   componentsProps?: Partial<DatePickerSlotsComponentsProps>;
 }
 
-type DatePickerComponent = (<TInputDate, TDate = TInputDate>(
-  props: DatePickerProps<TInputDate, TDate> & React.RefAttributes<HTMLDivElement>,
+type DatePickerComponent = (<TDate>(
+  props: DatePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
 ) => JSX.Element) & { propTypes?: any };
 
 /**
@@ -59,8 +59,8 @@ type DatePickerComponent = (<TInputDate, TDate = TInputDate>(
  *
  * - [DatePicker API](https://mui.com/x/api/date-pickers/date-picker/)
  */
-export const DatePicker = React.forwardRef(function DatePicker<TInputDate, TDate = TInputDate>(
-  inProps: DatePickerProps<TInputDate, TDate>,
+export const DatePicker = React.forwardRef(function DatePicker<TDate>(
+  inProps: DatePickerProps<TDate>,
   ref: React.Ref<HTMLDivElement>,
 ) {
   const props = useThemeProps({ props: inProps, name: 'MuiDatePicker' });
@@ -147,7 +147,7 @@ DatePicker.propTypes = {
    */
   disabled: PropTypes.bool,
   /**
-   * If `true` future days are disabled.
+   * If `true` disable values before the current time
    * @default false
    */
   disableFuture: PropTypes.bool,
@@ -167,7 +167,7 @@ DatePicker.propTypes = {
    */
   disableOpenPicker: PropTypes.bool,
   /**
-   * If `true` past days are disabled.
+   * If `true` disable values after the current time.
    * @default false
    */
   disablePast: PropTypes.bool,
@@ -178,20 +178,13 @@ DatePicker.propTypes = {
   displayWeekNumber: PropTypes.bool,
   /**
    * Get aria-label text for control that opens picker dialog. Aria-label text must include selected date. @DateIOType
-   * @template TInputDate, TDate
-   * @param {TInputDate} date The date from which we want to add an aria-text.
+   * @template TDate
+   * @param {TDate | null} date The date from which we want to add an aria-text.
    * @param {MuiPickersAdapter<TDate>} utils The utils to manipulate the date.
    * @returns {string} The aria-text to render inside the dialog.
-   * @default (date, utils) => `Choose date, selected date is ${utils.format(utils.date(date), 'fullDate')}`
+   * @default (date, utils) => `Choose date, selected date is ${utils.format(date, 'fullDate')}`
    */
   getOpenDialogAriaText: PropTypes.func,
-  /**
-   * Get aria-label text for switching between views button.
-   * @param {CalendarPickerView} currentView The view from which we want to get the button text.
-   * @returns {string} The label of the view.
-   * @deprecated Use the `localeText` prop of `LocalizationProvider` instead, see https://mui.com/x/react-date-pickers/localization
-   */
-  getViewSwitchingButtonText: PropTypes.func,
   /**
    * Get the week number form keek first day
    * @param {TDate} date The first day of the week.
@@ -249,7 +242,7 @@ DatePicker.propTypes = {
   /**
    * Callback fired when the value (the selected date) changes @DateIOType.
    * @template TValue
-   * @param {TValue} value The new parsed value.
+   * @param {TValue} value The new value.
    * @param {string} keyboardInputValue The current value of the keyboard input.
    */
   onChange: PropTypes.func.isRequired,
@@ -266,9 +259,9 @@ DatePicker.propTypes = {
    * [Read the guide](https://next.material-ui-pickers.dev/guides/forms) about form integration and error displaying.
    * @DateIOType
    *
-   * @template TError, TInputValue
+   * @template TError, TValue
    * @param {TError} reason The reason why the current value is not valid.
-   * @param {TInputValue} value The invalid value.
+   * @param {TValue} value The invalid value.
    */
   onError: PropTypes.func,
   /**

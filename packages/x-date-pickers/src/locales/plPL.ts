@@ -46,13 +46,13 @@ const plPLPickers: Partial<PickersLocaleText<any>> = {
   // calendarWeekNumberHeaderText: '#',
 
   // Open picker labels
-  openDatePickerDialogue: (rawValue, utils) =>
-    rawValue && utils.isValid(utils.date(rawValue))
-      ? `Wybierz datę, obecnie wybrana data to ${utils.format(utils.date(rawValue)!, 'fullDate')}`
+  openDatePickerDialogue: (value, utils) =>
+    value != null && utils.isValid(value)
+      ? `Wybierz datę, obecnie wybrana data to ${utils.format(value, 'fullDate')}`
       : 'Wybierz datę',
-  openTimePickerDialogue: (rawValue, utils) =>
-    rawValue && utils.isValid(utils.date(rawValue))
-      ? `Wybierz czas, obecnie wybrany czas to ${utils.format(utils.date(rawValue)!, 'fullTime')}`
+  openTimePickerDialogue: (value, utils) =>
+    value !== null && utils.isValid(value)
+      ? `Wybierz czas, obecnie wybrany czas to ${utils.format(value, 'fullTime')}`
       : 'Wybierz czas',
 
   // Table labels

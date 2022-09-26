@@ -61,7 +61,7 @@ export const DatePickerToolbar = React.forwardRef(function DatePickerToolbar<TDa
 ) {
   const props = useThemeProps({ props: inProps, name: 'MuiDatePickerToolbar' });
   const {
-    parsedValue,
+    value,
     isLandscape,
     isMobileKeyboardViewOpen,
     onChange,
@@ -79,29 +79,29 @@ export const DatePickerToolbar = React.forwardRef(function DatePickerToolbar<TDa
   const toolbarTitle = toolbarTitleProp ?? localeText.datePickerDefaultToolbarTitle;
 
   const dateText = React.useMemo(() => {
-    if (!parsedValue) {
+    if (!value) {
       return toolbarPlaceholder;
     }
 
     if (toolbarFormat) {
-      return utils.formatByString(parsedValue, toolbarFormat);
+      return utils.formatByString(value, toolbarFormat);
     }
 
     if (isYearOnlyView(views as CalendarPickerView[])) {
-      return utils.format(parsedValue, 'year');
+      return utils.format(value, 'year');
     }
 
     if (isYearAndMonthViews(views as CalendarPickerView[])) {
-      return utils.format(parsedValue, 'month');
+      return utils.format(value, 'month');
     }
 
     // Little localization hack (Google is doing the same for android native pickers):
     // For english localization it is convenient to include weekday into the date "Mon, Jun 1".
     // For other locales using strings like "June 1", without weekday.
     return /en/.test(utils.getCurrentLocaleCode())
-      ? utils.format(parsedValue, 'normalDateWithWeekday')
-      : utils.format(parsedValue, 'normalDate');
-  }, [parsedValue, toolbarFormat, toolbarPlaceholder, utils, views]);
+      ? utils.format(value, 'normalDateWithWeekday')
+      : utils.format(value, 'normalDate');
+  }, [value, toolbarFormat, toolbarPlaceholder, utils, views]);
 
   const ownerState = props;
 

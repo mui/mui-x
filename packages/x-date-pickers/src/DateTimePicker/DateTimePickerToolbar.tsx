@@ -81,7 +81,7 @@ export function DateTimePickerToolbar<TDate extends unknown>(
   const props = useThemeProps({ props: inProps, name: 'MuiDateTimePickerToolbar' });
   const {
     ampm,
-    parsedValue,
+    value,
     isMobileKeyboardViewOpen,
     onChange,
     openView,
@@ -104,16 +104,16 @@ export function DateTimePickerToolbar<TDate extends unknown>(
     ampm ? utils.format(time, 'hours12h') : utils.format(time, 'hours24h');
 
   const dateText = React.useMemo(() => {
-    if (!parsedValue) {
+    if (!value) {
       return toolbarPlaceholder;
     }
 
     if (toolbarFormat) {
-      return utils.formatByString(parsedValue, toolbarFormat);
+      return utils.formatByString(value, toolbarFormat);
     }
 
-    return utils.format(parsedValue, 'shortDate');
-  }, [parsedValue, toolbarFormat, toolbarPlaceholder, utils]);
+    return utils.format(value, 'shortDate');
+  }, [value, toolbarFormat, toolbarPlaceholder, utils]);
 
   return (
     <DateTimePickerToolbarRoot
@@ -133,7 +133,7 @@ export function DateTimePickerToolbar<TDate extends unknown>(
             data-mui-test="datetimepicker-toolbar-year"
             onClick={() => setOpenView('year')}
             selected={openView === 'year'}
-            value={parsedValue ? utils.format(parsedValue, 'year') : '–'}
+            value={value ? utils.format(value, 'year') : '–'}
           />
         )}
         {views.includes('day') && (
@@ -154,7 +154,7 @@ export function DateTimePickerToolbar<TDate extends unknown>(
             data-mui-test="hours"
             onClick={() => setOpenView('hours')}
             selected={openView === 'hours'}
-            value={parsedValue ? formatHours(parsedValue) : '--'}
+            value={value ? formatHours(value) : '--'}
           />
         )}
         {views.includes('minutes') && (
@@ -170,7 +170,7 @@ export function DateTimePickerToolbar<TDate extends unknown>(
               data-mui-test="minutes"
               onClick={() => setOpenView('minutes')}
               selected={openView === 'minutes'}
-              value={parsedValue ? utils.format(parsedValue, 'minutes') : '--'}
+              value={value ? utils.format(value, 'minutes') : '--'}
             />
           </React.Fragment>
         )}
@@ -187,7 +187,7 @@ export function DateTimePickerToolbar<TDate extends unknown>(
               data-mui-test="seconds"
               onClick={() => setOpenView('seconds')}
               selected={openView === 'seconds'}
-              value={parsedValue ? utils.format(parsedValue, 'seconds') : '--'}
+              value={value ? utils.format(value, 'seconds') : '--'}
             />
           </React.Fragment>
         )}

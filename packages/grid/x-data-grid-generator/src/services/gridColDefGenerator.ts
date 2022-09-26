@@ -19,4 +19,8 @@ export interface GridColDefGenerator extends GridColDef {
    * @default false
    */
   dataGeneratorUniquenessEnabled?: boolean;
+  /**
+   * If `true`, the column will be marked as hidden in the `columnVisibilityModel`.
+   */
+  hide?: boolean;
 }
