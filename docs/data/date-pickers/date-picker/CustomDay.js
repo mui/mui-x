@@ -58,6 +58,10 @@ function Day(props) {
   );
 }
 
+/**
+ * @ignore - do not document.
+ */
+
 Day.propTypes = {
   /**
    * The date to show.

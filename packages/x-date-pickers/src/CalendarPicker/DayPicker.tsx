@@ -220,7 +220,6 @@ const WrappedDay = <TDate extends unknown>({
   return (
     <Day
       {...dayProps}
-      key={(day as any).toString()}
       day={day}
       disabled={disabled || isDateDisabled(day)}
       autoFocus={hasFocus && isFocusableDay}
@@ -472,6 +471,7 @@ export function DayPicker<TDate>(inProps: DayPickerProps<TDate>) {
               >
                 {week.map((day) => (
                   <WrappedDay
+                    key={(day as any).toString()}
                     parentProps={props}
                     day={day}
                     selectedDays={validSelectedDays}
