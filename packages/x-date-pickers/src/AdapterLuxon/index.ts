@@ -5,7 +5,7 @@ import { buildWarning } from '../internals/utils/warning';
 
 const luxonVersionWarning = buildWarning([
   'Your luxon version does not support `expandFormat`.',
-  'Consider upgrading it to v3.0.2 to have access to the helper text.',
+  'Consider upgrading it to v3.0.2 or above to have access to the helper text.',
 ]);
 
 const formatTokenMap: MuiFormatTokenMap = {
@@ -54,8 +54,9 @@ export class AdapterLuxon extends BaseAdapterLuxon implements MuiPickerFieldAdap
         'Your luxon version does not support `expandFormat`. Consider upgrading it to v3.0.2',
       );
     }
-    // The format can contain `yyyyy` which means year between 4 and 6 digits.
-    // But for formatter, it must be either 4 or 6. 5 digits does not exist
+    // The returned format can contain `yyyyy` which means year between 4 and 6 digits.
+    // This value is supported by luxon parser but not luxon formatter.
+    // To avoid conflicts, we replace it by 4 digits which is enough for most use-cases.
     return DateTime.expandFormat(format).replace('yyyyy', 'yyyy');
   };
 
