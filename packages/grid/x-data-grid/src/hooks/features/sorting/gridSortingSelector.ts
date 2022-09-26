@@ -25,7 +25,8 @@ export const gridSortedRowIdsSelector = createSelector(
 export const gridSortedRowEntriesSelector = createSelector(
   gridSortedRowIdsSelector,
   gridRowsLookupSelector,
-  (sortedIds, idRowsLookup) => sortedIds.map((id) => ({ id, model: idRowsLookup[id] })),
+  // TODO rows v6: Is this the best approach ?
+  (sortedIds, idRowsLookup) => sortedIds.map((id) => ({ id, model: idRowsLookup[id] ?? {} })),
 );
 
 /**

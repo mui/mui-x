@@ -29,8 +29,8 @@ export interface MobileDatePickerSlotsComponentsProps
   extends MobileWrapperSlotsComponentsProps,
     CalendarPickerSlotsComponentsProps {}
 
-export interface MobileDatePickerProps<TInputDate, TDate>
-  extends BaseDatePickerProps<TInputDate, TDate>,
+export interface MobileDatePickerProps<TDate>
+  extends BaseDatePickerProps<TDate>,
     MobileWrapperProps<TDate> {
   /**
    * Overrideable components.
@@ -44,8 +44,8 @@ export interface MobileDatePickerProps<TInputDate, TDate>
   componentsProps?: Partial<MobileDatePickerSlotsComponentsProps>;
 }
 
-type MobileDatePickerComponent = (<TInputDate, TDate = TInputDate>(
-  props: MobileDatePickerProps<TInputDate, TDate> & React.RefAttributes<HTMLDivElement>,
+type MobileDatePickerComponent = (<TDate>(
+  props: MobileDatePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
 ) => JSX.Element) & { propTypes?: any };
 
 /**
@@ -58,15 +58,14 @@ type MobileDatePickerComponent = (<TInputDate, TDate = TInputDate>(
  *
  * - [MobileDatePicker API](https://mui.com/x/api/date-pickers/mobile-date-picker/)
  */
-export const MobileDatePicker = React.forwardRef(function MobileDatePicker<
-  TInputDate,
-  TDate = TInputDate,
->(inProps: MobileDatePickerProps<TInputDate, TDate>, ref: React.Ref<HTMLDivElement>) {
-  const props = useDatePickerDefaultizedProps<
-    TInputDate,
-    TDate,
-    MobileDatePickerProps<TInputDate, TDate>
-  >(inProps, 'MuiMobileDatePicker');
+export const MobileDatePicker = React.forwardRef(function MobileDatePicker<TDate>(
+  inProps: MobileDatePickerProps<TDate>,
+  ref: React.Ref<HTMLDivElement>,
+) {
+  const props = useDatePickerDefaultizedProps<TDate, MobileDatePickerProps<TDate>>(
+    inProps,
+    'MuiMobileDatePicker',
+  );
 
   const validationError = useDateValidation(props) !== null;
   const { pickerProps, inputProps, wrapperProps } = usePickerState(props, datePickerValueManager);
@@ -168,7 +167,7 @@ MobileDatePicker.propTypes = {
    */
   disabled: PropTypes.bool,
   /**
-   * If `true` future days are disabled.
+   * If `true` disable values before the current time
    * @default false
    */
   disableFuture: PropTypes.bool,
@@ -188,26 +187,19 @@ MobileDatePicker.propTypes = {
    */
   disableOpenPicker: PropTypes.bool,
   /**
-   * If `true` past days are disabled.
+   * If `true` disable values after the current time.
    * @default false
    */
   disablePast: PropTypes.bool,
   /**
    * Get aria-label text for control that opens picker dialog. Aria-label text must include selected date. @DateIOType
-   * @template TInputDate, TDate
-   * @param {TInputDate} date The date from which we want to add an aria-text.
+   * @template TDate
+   * @param {TDate | null} date The date from which we want to add an aria-text.
    * @param {MuiPickersAdapter<TDate>} utils The utils to manipulate the date.
    * @returns {string} The aria-text to render inside the dialog.
-   * @default (date, utils) => `Choose date, selected date is ${utils.format(utils.date(date), 'fullDate')}`
+   * @default (date, utils) => `Choose date, selected date is ${utils.format(date, 'fullDate')}`
    */
   getOpenDialogAriaText: PropTypes.func,
-  /**
-   * Get aria-label text for switching between views button.
-   * @param {CalendarPickerView} currentView The view from which we want to get the button text.
-   * @returns {string} The label of the view.
-   * @deprecated Use the `localeText` prop of `LocalizationProvider` instead, see https://mui.com/x/react-date-pickers/localization
-   */
-  getViewSwitchingButtonText: PropTypes.func,
   ignoreInvalidInputs: PropTypes.bool,
   /**
    * Props to pass to keyboard input adornment.
@@ -259,7 +251,7 @@ MobileDatePicker.propTypes = {
   /**
    * Callback fired when the value (the selected date) changes @DateIOType.
    * @template TValue
-   * @param {TValue} value The new parsed value.
+   * @param {TValue} value The new value.
    * @param {string} keyboardInputValue The current value of the keyboard input.
    */
   onChange: PropTypes.func.isRequired,
@@ -276,9 +268,9 @@ MobileDatePicker.propTypes = {
    * [Read the guide](https://next.material-ui-pickers.dev/guides/forms) about form integration and error displaying.
    * @DateIOType
    *
-   * @template TError, TInputValue
+   * @template TError, TValue
    * @param {TError} reason The reason why the current value is not valid.
-   * @param {TInputValue} value The invalid value.
+   * @param {TValue} value The invalid value.
    */
   onError: PropTypes.func,
   /**

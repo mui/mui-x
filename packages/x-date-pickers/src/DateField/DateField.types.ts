@@ -1,35 +1,40 @@
 import * as React from 'react';
 import { SlotComponentProps } from '@mui/base/utils';
-import { TextFieldProps } from '@mui/material/TextField';
+import TextField, { TextFieldProps } from '@mui/material/TextField';
 import { UseFieldInternalProps } from '../internals/hooks/useField';
-import {
-  DateValidationError,
-  DateValidationProps,
-} from '../internals/hooks/validation/useDateValidation';
+import { DateValidationError } from '../internals/hooks/validation/useDateValidation';
 import { DefaultizedProps } from '../internals/models/helpers';
+import {
+  BaseDateValidationProps,
+  DayValidationProps,
+  MonthValidationProps,
+  YearValidationProps,
+} from '../internals/hooks/validation/models';
 
-export interface UseDateFieldParams<TInputDate, TDate, TChildProps extends {}> {
-  props: UseDateFieldComponentProps<TInputDate, TDate, TChildProps>;
+export interface UseDateFieldParams<TDate, TChildProps extends {}> {
+  props: UseDateFieldComponentProps<TDate, TChildProps>;
   inputRef?: React.Ref<HTMLInputElement>;
 }
 
-export interface UseDateFieldProps<TInputDate, TDate>
-  extends UseFieldInternalProps<TInputDate | null, TDate | null, DateValidationError>,
-    Partial<Omit<DateValidationProps<TInputDate, TDate>, 'value'>> {}
+export interface UseDateFieldProps<TDate>
+  extends UseFieldInternalProps<TDate | null, DateValidationError>,
+    DayValidationProps<TDate>,
+    MonthValidationProps<TDate>,
+    YearValidationProps<TDate>,
+    BaseDateValidationProps<TDate> {}
 
-export type UseDateFieldDefaultizedProps<TInputDate, TDate> = DefaultizedProps<
-  UseDateFieldProps<TInputDate, TDate>,
+export type UseDateFieldDefaultizedProps<TDate> = DefaultizedProps<
+  UseDateFieldProps<TDate>,
   'minDate' | 'maxDate' | 'disableFuture' | 'disablePast'
 >;
 
-export type UseDateFieldComponentProps<TInputDate, TDate, TChildProps extends {}> = Omit<
+export type UseDateFieldComponentProps<TDate, TChildProps extends {}> = Omit<
   TChildProps,
-  keyof UseDateFieldProps<TInputDate, TDate>
+  keyof UseDateFieldProps<TDate>
 > &
-  UseDateFieldProps<TInputDate, TDate>;
+  UseDateFieldProps<TDate>;
 
-export interface DateFieldProps<TInputDate, TDate>
-  extends UseDateFieldComponentProps<TInputDate, TDate, TextFieldProps> {
+export interface DateFieldProps<TDate> extends UseDateFieldComponentProps<TDate, TextFieldProps> {
   /**
    * Overrideable components.
    * @default {}
@@ -39,10 +44,10 @@ export interface DateFieldProps<TInputDate, TDate>
    * The props used for each component slot.
    * @default {}
    */
-  componentsProps?: DateFieldSlotsComponentsProps<TInputDate, TDate>;
+  componentsProps?: DateFieldSlotsComponentsProps<TDate>;
 }
 
-export type DateFieldOwnerState<TInputDate, TDate> = DateFieldProps<TInputDate, TDate>;
+export type DateFieldOwnerState<TDate> = DateFieldProps<TDate>;
 
 export interface DateFieldSlotsComponent {
   /**
@@ -52,6 +57,6 @@ export interface DateFieldSlotsComponent {
   Input?: React.ElementType;
 }
 
-export interface DateFieldSlotsComponentsProps<TDate, TInputDate> {
-  input?: SlotComponentProps<'input', {}, DateFieldOwnerState<TDate, TInputDate>>;
+export interface DateFieldSlotsComponentsProps<TDate> {
+  input?: SlotComponentProps<typeof TextField, {}, DateFieldOwnerState<TDate>>;
 }

@@ -119,7 +119,7 @@ export function TimePickerToolbar<TDate extends unknown>(
   const {
     ampm,
     ampmInClock,
-    parsedValue,
+    value,
     isLandscape,
     isMobileKeyboardViewOpen,
     onChange,
@@ -138,7 +138,7 @@ export function TimePickerToolbar<TDate extends unknown>(
   const toolbarTitle = toolbarTitleProp ?? localeText.timePickerDefaultToolbarTitle;
   const theme = useTheme();
   const showAmPmControl = Boolean(ampm && !ampmInClock);
-  const { meridiemMode, handleMeridiemChange } = useMeridiemMode(parsedValue, ampm, onChange);
+  const { meridiemMode, handleMeridiemChange } = useMeridiemMode(value, ampm, onChange);
 
   const formatHours = (time: TDate) =>
     ampm ? utils.format(time, 'hours12h') : utils.format(time, 'hours24h');
@@ -176,7 +176,7 @@ export function TimePickerToolbar<TDate extends unknown>(
             variant="h3"
             onClick={() => setOpenView('hours')}
             selected={openView === 'hours'}
-            value={parsedValue ? formatHours(parsedValue) : '--'}
+            value={value ? formatHours(value) : '--'}
           />
         )}
         {arrayIncludes(views, ['hours', 'minutes']) && separator}
@@ -187,7 +187,7 @@ export function TimePickerToolbar<TDate extends unknown>(
             variant="h3"
             onClick={() => setOpenView('minutes')}
             selected={openView === 'minutes'}
-            value={parsedValue ? utils.format(parsedValue, 'minutes') : '--'}
+            value={value ? utils.format(value, 'minutes') : '--'}
           />
         )}
         {arrayIncludes(views, ['minutes', 'seconds']) && separator}
@@ -197,7 +197,7 @@ export function TimePickerToolbar<TDate extends unknown>(
             variant="h3"
             onClick={() => setOpenView('seconds')}
             selected={openView === 'seconds'}
-            value={parsedValue ? utils.format(parsedValue, 'seconds') : '--'}
+            value={value ? utils.format(value, 'seconds') : '--'}
           />
         )}
       </TimePickerToolbarHourMinuteLabel>

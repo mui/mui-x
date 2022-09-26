@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { unstable_composeClasses as composeClasses } from '@mui/material';
 import { GridRowEventLookup } from '../models/events';
-import { GridRowId, GridRowModel } from '../models/gridRows';
+import { GridRowId, GridRowModel, GridTreeNodeWithRender } from '../models/gridRows';
 import {
   GridEditModes,
   GridRowModes,
@@ -26,7 +26,7 @@ import { GRID_ACTIONS_COLUMN_TYPE } from '../colDef/gridActionsColDef';
 import { GridRenderEditCellParams } from '../models/params/gridCellParams';
 import { GRID_DETAIL_PANEL_TOGGLE_FIELD } from '../constants/gridDetailPanelToggleField';
 import { gridSortModelSelector } from '../hooks/features/sorting/gridSortingSelector';
-import { gridRowTreeDepthSelector } from '../hooks/features/rows/gridRowsSelector';
+import { gridRowMaximumTreeDepthSelector } from '../hooks/features/rows/gridRowsSelector';
 import { gridDensityHeaderGroupingMaxDepthSelector } from '../hooks/features/density/densitySelector';
 import { randomNumberBetween } from '../utils/utils';
 import { GridCellProps } from './cell/GridCell';
@@ -122,7 +122,7 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
   const currentPage = useGridVisibleRows(apiRef, rootProps);
   const columnsTotalWidth = useGridSelector(apiRef, gridColumnsTotalWidthSelector);
   const sortModel = useGridSelector(apiRef, gridSortModelSelector);
-  const treeDepth = useGridSelector(apiRef, gridRowTreeDepthSelector);
+  const treeDepth = useGridSelector(apiRef, gridRowMaximumTreeDepthSelector);
   const headerGroupingMaxDepth = useGridSelector(apiRef, gridDensityHeaderGroupingMaxDepthSelector);
 
   const ariaRowIndex = index + headerGroupingMaxDepth + 2; // 1 for the header row and 1 as it's 1-based
@@ -261,7 +261,10 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
         'width' | 'colSpan' | 'showRightBorder' | 'indexRelativeToAllColumns'
       >,
     ) => {
-      const cellParams = apiRef.current.getCellParams(rowId, column.field);
+      const cellParams = apiRef.current.getCellParams<any, any, any, GridTreeNodeWithRender>(
+        rowId,
+        column.field,
+      );
 
       const classNames: string[] = [];
 
@@ -422,6 +425,7 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
   }
 
   const randomNumber = randomNumberBetween(10000, 20, 80);
+  const rowType = apiRef.current.getRowNode(rowId)!.type;
   const cells: JSX.Element[] = [];
 
   for (let i = 0; i < renderedColumns.length; i += 1) {
@@ -440,7 +444,7 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
     );
 
     if (cellColSpanInfo && !cellColSpanInfo.spannedByColSpan) {
-      if (row) {
+      if (rowType !== 'skeletonRow') {
         const { colSpan, width } = cellColSpanInfo.cellProps;
         const cellProps = { width, colSpan, showRightBorder, indexRelativeToAllColumns };
         cells.push(getCell(column, cellProps));

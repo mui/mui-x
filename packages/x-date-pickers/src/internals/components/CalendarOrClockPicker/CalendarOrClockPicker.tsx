@@ -39,7 +39,7 @@ export interface CalendarOrClockPickerSlotsComponentsProps
 }
 
 export interface ExportedCalendarOrClockPickerProps<TDate, View extends CalendarOrClockPickerView>
-  extends Omit<BasePickerProps<any, TDate | null>, 'value' | 'onChange'>,
+  extends Omit<BasePickerProps<TDate | null>, 'value' | 'onChange'>,
     Omit<ExportedCalendarPickerProps<TDate>, 'onViewChange' | 'openTo' | 'view'>,
     ExportedClockPickerProps<TDate> {
   dateRangeIcon?: React.ReactNode;
@@ -130,7 +130,7 @@ export function CalendarOrClockPicker<TDate, View extends CalendarOrClockPickerV
   const {
     autoFocus,
     className,
-    parsedValue,
+    value,
     DateInputProps,
     isMobileKeyboardViewOpen,
     onDateChange,
@@ -205,7 +205,7 @@ export function CalendarOrClockPicker<TDate, View extends CalendarOrClockPickerV
           {...other}
           views={views}
           isLandscape={isLandscape}
-          parsedValue={parsedValue}
+          value={value}
           onChange={handleDateChange}
           setOpenView={setOpenView as (view: CalendarOrClockPickerView) => void}
           openView={openView}
@@ -241,7 +241,7 @@ export function CalendarOrClockPicker<TDate, View extends CalendarOrClockPickerV
             {isDatePickerView(openView) && (
               <CalendarPicker
                 autoFocus={autoFocus}
-                value={parsedValue}
+                value={value}
                 onViewChange={setOpenView as (view: CalendarPickerView) => void}
                 onChange={handleChangeAndOpenNext}
                 view={openView}
@@ -257,7 +257,7 @@ export function CalendarOrClockPicker<TDate, View extends CalendarOrClockPickerV
               <ClockPicker
                 {...other}
                 autoFocus={autoFocus}
-                value={parsedValue}
+                value={value}
                 view={openView}
                 // Unclear why the predicate `isDatePickerView` does not imply the casted type
                 views={views.filter(isTimePickerView) as ClockPickerView[]}

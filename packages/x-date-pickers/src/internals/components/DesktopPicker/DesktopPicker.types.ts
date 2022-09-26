@@ -34,7 +34,7 @@ export interface DesktopPickerProps<TValue, TDate, TView extends CalendarOrClock
    * Class name applied to the root element.
    */
   className?: string;
-  valueManager: PickerStateValueManager<TValue, TValue, TDate>;
+  valueManager: PickerStateValueManager<TValue, TDate>;
   /**
    * Overrideable components.
    * @default {}

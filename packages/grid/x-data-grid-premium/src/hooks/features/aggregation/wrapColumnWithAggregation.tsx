@@ -190,7 +190,7 @@ export const wrapColumnWithAggregationValue = ({
     let cellAggregationPosition: GridAggregationPosition | null = null;
     const rowNode = apiRef.current.getRowNode(id)!;
 
-    if (rowNode.children?.length) {
+    if (rowNode.type === 'group') {
       cellAggregationPosition = 'inline';
     } else if (id.toString().startsWith('auto-generated-group-footer-')) {
       cellAggregationPosition = 'footer';

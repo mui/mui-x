@@ -5,14 +5,14 @@ import { useSlotProps } from '@mui/base/utils';
 import { SingleInputDateRangeFieldProps } from './SingleInputDateRangeField.types';
 import { useSingleInputDateRangeField } from './useSingleInputDateRangeField';
 
-type DateRangeFieldComponent = (<TInputDate, TDate = TInputDate>(
-  props: SingleInputDateRangeFieldProps<TInputDate, TDate> & React.RefAttributes<HTMLInputElement>,
+type DateRangeFieldComponent = (<TDate>(
+  props: SingleInputDateRangeFieldProps<TDate> & React.RefAttributes<HTMLInputElement>,
 ) => JSX.Element) & { propTypes?: any };
 
-export const SingleInputDateRangeField = React.forwardRef(function SingleInputDateRangeField<
-  TInputDate,
-  TDate = TInputDate,
->(inProps: SingleInputDateRangeFieldProps<TInputDate, TDate>, ref: React.Ref<HTMLInputElement>) {
+export const SingleInputDateRangeField = React.forwardRef(function SingleInputDateRangeField<TDate>(
+  inProps: SingleInputDateRangeFieldProps<TDate>,
+  ref: React.Ref<HTMLInputElement>,
+) {
   const themeProps = useThemeProps({
     props: inProps,
     name: 'MuiSingleInputDateRangeField',
@@ -28,13 +28,13 @@ export const SingleInputDateRangeField = React.forwardRef(function SingleInputDa
     externalSlotProps: componentsProps?.input,
     externalForwardedProps: other,
     ownerState,
-  }) as Omit<SingleInputDateRangeFieldProps<TInputDate, TDate>, 'components' | 'componentsProps'>;
+  }) as Omit<SingleInputDateRangeFieldProps<TDate>, 'components' | 'componentsProps'>;
 
   const {
     onKeyDown,
     ref: inputRef,
     ...fieldProps
-  } = useSingleInputDateRangeField<TInputDate, TDate, typeof inputProps>({
+  } = useSingleInputDateRangeField<TDate, typeof inputProps>({
     props: inputProps,
     inputRef: inputProps.inputRef,
   });

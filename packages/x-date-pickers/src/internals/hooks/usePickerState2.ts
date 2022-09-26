@@ -120,7 +120,7 @@ type PickerStateViewProps2<TValue> = Pick<
 >;
 
 type PickerStateFieldProps2<TValue> = Pick<
-  UseFieldInternalProps<TValue, TValue, any>,
+  UseFieldInternalProps<TValue, any>,
   'value' | 'onChange'
 >;
 
@@ -133,7 +133,7 @@ interface PickerState2<TValue> {
 
 export const usePickerState2 = <TValue, TDate>(
   props: PickerStateProps2<TValue>,
-  valueManager: PickerStateValueManager<TValue, TValue, TDate>,
+  valueManager: PickerStateValueManager<TValue, TDate>,
   wrapperVariant: WrapperVariant,
 ): PickerState2<TValue> => {
   const { onAccept, onChange, value: inValue, defaultValue, closeOnSelect } = props;

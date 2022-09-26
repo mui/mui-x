@@ -10,16 +10,16 @@ import { MobileDateRangePickerProps } from '../MobileDateRangePicker';
 import { StaticDateRangePickerProps } from '../StaticDateRangePicker';
 
 export interface PickersProComponentsPropsList {
-  MuiDateRangePicker: DateRangePickerProps<unknown, unknown>;
+  MuiDateRangePicker: DateRangePickerProps<unknown>;
   MuiDateRangePickerDay: DateRangePickerDayProps<unknown>;
-  MuiDateRangePickerInput: DateRangePickerInputProps<unknown, unknown>;
+  MuiDateRangePickerInput: DateRangePickerInputProps<unknown>;
   MuiDateRangePickerToolbar: DateRangePickerToolbarProps<unknown>;
   MuiDateRangePickerViewDesktop: DateRangePickerViewDesktopProps<unknown>;
-  MuiDesktopDateRangePicker: DesktopDateRangePickerProps<unknown, unknown>;
-  MuiMobileDateRangePicker: MobileDateRangePickerProps<unknown, unknown>;
+  MuiDesktopDateRangePicker: DesktopDateRangePickerProps<unknown>;
+  MuiMobileDateRangePicker: MobileDateRangePickerProps<unknown>;
   MuiMultiInputDateRangeField: MultiInputDateRangeFieldProps<unknown, unknown>;
   MuiSingleInputDateRangeField: SingleInputDateRangeFieldProps<unknown, unknown>;
-  MuiStaticDateRangePicker: StaticDateRangePickerProps<unknown, unknown>;
+  MuiStaticDateRangePicker: StaticDateRangePickerProps<unknown>;
 }
 
 declare module '@mui/material/styles' {

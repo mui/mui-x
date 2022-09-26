@@ -6,6 +6,7 @@ import { DesktopDatePicker2Props } from './DesktopDatePicker2.types';
 import { useDatePicker2DefaultizedProps, renderDateViews } from '../DatePicker2/shared';
 import { useLocaleText } from '../internals';
 import { Calendar } from '../internals/components/icons';
+import { CalendarPickerView } from '../internals/models/views';
 
 type DesktopDatePickerComponent = (<TDate>(
   props: DesktopDatePicker2Props<TDate> & React.RefAttributes<HTMLDivElement>,
@@ -44,7 +45,7 @@ const DesktopDatePicker2 = React.forwardRef(function DesktopDatePicker2<TDate>(
   );
 
   return (
-    <DesktopPicker
+    <DesktopPicker<TDate | null, TDate, CalendarPickerView>
       {...other}
       components={components}
       componentsProps={componentsProps}

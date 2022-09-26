@@ -126,6 +126,7 @@ export default function CustomRatingOperator() {
         initialState={{
           ...data.initialState,
           filter: {
+            ...data.initialState?.filter,
             filterModel: {
               items: [
                 {

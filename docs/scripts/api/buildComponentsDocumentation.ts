@@ -217,20 +217,20 @@ const buildComponentDocumentation = async (options: {
       demos.push(['/x/react-data-grid/#mit-version', 'DataGrid']);
     }
     if (reactApi.name === 'DataGridPro' || reactApi.name.startsWith('Grid')) {
-      demos.push(['/x/react-data-grid#commercial-version', 'DataGridPro']);
+      demos.push(['/x/react-data-grid/#commercial-version', 'DataGridPro']);
     }
     if (reactApi.name === 'DataGridPremium' || reactApi.name.startsWith('Grid')) {
-      demos.push(['/x/react-data-grid#commercial-version', 'DataGridPremium']);
+      demos.push(['/x/react-data-grid/#commercial-version', 'DataGridPremium']);
     }
   } else {
     if (reactApi.name === 'DataGrid' || reactApi.name.startsWith('Grid')) {
-      demos.push(['/components/data-grid#mit-version', 'DataGrid']);
+      demos.push(['/components/data-grid/#mit-version', 'DataGrid']);
     }
     if (reactApi.name === 'DataGridPro' || reactApi.name.startsWith('Grid')) {
-      demos.push(['/components/data-grid#commercial-version', 'DataGridPro']);
+      demos.push(['/components/data-grid/#commercial-version', 'DataGridPro']);
     }
     if (reactApi.name === 'DataGridPremium' || reactApi.name.startsWith('Grid')) {
-      demos.push(['/components/data-grid#commercial-version', 'DataGridPremium']);
+      demos.push(['/components/data-grid/#commercial-version', 'DataGridPremium']);
     }
   }
   reactApi.demos = demos;
@@ -292,7 +292,8 @@ const buildComponentDocumentation = async (options: {
       if (propName === 'classes') {
         description += ' See <a href="#css">CSS API</a> below for more details.';
       } else if (propName === 'sx') {
-        description += ' See the <a href="/system/the-sx-prop/">`sx` page</a> for more details.';
+        description +=
+          ' See the <a href="/system/getting-started/the-sx-prop/">`sx` page</a> for more details.';
       }
       componentApi.propDescriptions[propName] = linkify(description, documentedInterfaces, 'html');
 
@@ -479,7 +480,7 @@ export default function Page(props) {
 
 Page.getInitialProps = () => {
   const req = require.context(
-    'docsx/translations/api-docs/${project.documentationFolderName}', 
+    'docsx/translations/api-docs/${project.documentationFolderName}',
     false,
     /\\/${kebabCase(reactApi.name)}(-[a-z]{2})?\\.json$/,
   );

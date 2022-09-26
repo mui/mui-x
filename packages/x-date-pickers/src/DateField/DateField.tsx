@@ -5,12 +5,12 @@ import { useSlotProps } from '@mui/base/utils';
 import { DateFieldProps } from './DateField.types';
 import { useDateField } from './useDateField';
 
-type DateFieldComponent = (<TInputDate, TDate = TInputDate>(
-  props: DateFieldProps<TInputDate, TDate> & React.RefAttributes<HTMLInputElement>,
+type DateFieldComponent = (<TDate>(
+  props: DateFieldProps<TDate> & React.RefAttributes<HTMLInputElement>,
 ) => JSX.Element) & { propTypes?: any };
 
-export const DateField = React.forwardRef(function DateField<TInputDate, TDate = TInputDate>(
-  inProps: DateFieldProps<TInputDate, TDate>,
+export const DateField = React.forwardRef(function DateField<TDate>(
+  inProps: DateFieldProps<TDate>,
   ref: React.Ref<HTMLInputElement>,
 ) {
   const themeProps = useThemeProps({
@@ -28,9 +28,9 @@ export const DateField = React.forwardRef(function DateField<TInputDate, TDate =
     externalSlotProps: componentsProps?.input,
     externalForwardedProps: other,
     ownerState,
-  }) as Omit<DateFieldProps<TInputDate, TDate>, 'components' | 'componentsProps'>;
+  }) as Omit<DateFieldProps<TDate>, 'components' | 'componentsProps'>;
 
-  const { ref: inputRef, ...fieldProps } = useDateField<TInputDate, TDate, typeof inputProps>({
+  const { ref: inputRef, ...fieldProps } = useDateField<TDate, typeof inputProps>({
     props: inputProps,
     inputRef: externalInputRef,
   });

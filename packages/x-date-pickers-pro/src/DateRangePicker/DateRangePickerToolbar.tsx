@@ -34,7 +34,7 @@ export interface DateRangePickerToolbarProps<TDate>
       | 'toggleMobileKeyboardView'
       | 'toolbarTitle'
       | 'toolbarFormat'
-      | 'parsedValue'
+      | 'value'
     > {
   classes?: Partial<DateRangePickerToolbarClasses>;
 }
@@ -71,7 +71,7 @@ export const DateRangePickerToolbar = React.forwardRef(function DateRangePickerT
 
   const {
     currentlySelectingRangeEnd,
-    parsedValue: [start, end],
+    value: [start, end],
     isMobileKeyboardViewOpen,
     setCurrentlySelectingRangeEnd,
     toggleMobileKeyboardView,

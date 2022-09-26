@@ -6,6 +6,7 @@ import { MobileDatePicker2Props } from './MobileDatePicker2.types';
 import { useDatePicker2DefaultizedProps, renderDateViews } from '../DatePicker2/shared';
 import { useLocaleText } from '../internals';
 import { Calendar } from '../internals/components/icons';
+import { CalendarPickerView } from '../internals/models/views';
 
 type MobileDatePickerComponent = (<TDate>(
   props: MobileDatePicker2Props<TDate> & React.RefAttributes<HTMLDivElement>,
@@ -44,7 +45,7 @@ const MobileDatePicker2 = React.forwardRef(function MobileDatePicker2<TDate>(
   );
 
   return (
-    <MobilePicker
+    <MobilePicker<TDate | null, TDate, CalendarPickerView>
       {...other}
       components={components}
       componentsProps={componentsProps}
