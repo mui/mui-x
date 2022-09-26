@@ -5,24 +5,30 @@ import { BasePickerProps2, ExportedBasePickerProps2 } from '../../models/props/b
 
 export interface DesktopPickerSlotsComponent extends PickersPopperSlotsComponent {
   Field: React.ElementType;
-  /**
-   * Icon displayed in the open picker button.
-   */
-  OpenPickerIcon: React.ElementType;
   Input?: React.ElementType;
+  /**
+   * Component disabled on the start or end input adornment used to open the picker.
+   * @default InputAdornment
+   */
+  InputAdornment?: React.ElementType;
   /**
    * Button to open the picker.
    * @default IconButton
    */
   OpenPickerButton?: React.ElementType;
+  /**
+   * Icon displayed in the open picker button.
+   */
+  OpenPickerIcon: React.ElementType;
 }
 
 // TODO: Type props of all slots
 export interface DesktopPickerSlotsComponentsProps extends PickersPopperSlotsComponentsProps {
   field?: Record<string, any>;
   input?: Record<string, any>;
-  openPickerIcon?: Record<string, any>;
+  inputAdornment?: Record<string, any>;
   openPickerButton?: Record<string, any>;
+  openPickerIcon?: Record<string, any>;
 }
 
 interface DesktopOnlyPickerProps {

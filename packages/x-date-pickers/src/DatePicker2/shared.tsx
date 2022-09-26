@@ -8,19 +8,25 @@ import { isYearAndMonthViews, isYearOnlyView } from '../DatePicker/shared';
 import { ExportedDesktopPickerProps } from '../internals/components/DesktopPicker';
 import { ValidationCommonPropsOptionalValue } from '../internals/hooks/validation/useValidation';
 import { DateValidationError } from '../internals/hooks/validation/useDateValidation';
+import { ExportedCalendarPickerProps } from '../CalendarPicker/CalendarPicker';
 
 type DesktopPickerDefaultizedKeys = 'inputFormat' | 'views' | 'openTo';
 
 export interface BaseDatePicker2Props<TDate>
-  extends MakeOptional<
+  extends ExportedCalendarPickerProps<TDate>,
+    ValidationCommonPropsOptionalValue<DateValidationError, TDate | null>,
+    MakeOptional<
       ExportedDesktopPickerProps<TDate | null, TDate, CalendarPickerView>,
       DesktopPickerDefaultizedKeys
-    >,
-    ValidationCommonPropsOptionalValue<DateValidationError, TDate | null> {
+    > {
   /**
    * The label content.
    */
   label?: React.ReactNode;
+  /**
+   * Pass a ref to the `input` element.
+   */
+  inputRef?: React.Ref<HTMLInputElement>;
 }
 
 export function useDatePicker2DefaultizedProps<TDate, Props extends BaseDatePicker2Props<TDate>>(

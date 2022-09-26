@@ -24,7 +24,13 @@ const MobileDatePicker2 = React.forwardRef(function MobileDatePicker2<TDate>(
     'MuiMobileDatePicker2',
   );
 
-  const { components: inComponents, componentsProps: inComponentsProps, label, ...other } = props;
+  const {
+    components: inComponents,
+    componentsProps: inComponentsProps,
+    inputRef,
+    label,
+    ...other
+  } = props;
 
   const components = React.useMemo(
     () => ({
@@ -41,6 +47,7 @@ const MobileDatePicker2 = React.forwardRef(function MobileDatePicker2<TDate>(
       field: (ownerState: any) => ({
         ...resolveComponentProps(inComponentsProps?.field, ownerState),
         ref,
+        inputRef,
         label,
       }),
     }),

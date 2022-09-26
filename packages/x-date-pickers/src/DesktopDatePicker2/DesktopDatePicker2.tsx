@@ -24,7 +24,13 @@ const DesktopDatePicker2 = React.forwardRef(function DesktopDatePicker2<TDate>(
     'MuiDesktopDatePicker2',
   );
 
-  const { components: inComponents, componentsProps: inComponentsProps, label, ...other } = props;
+  const {
+    components: inComponents,
+    componentsProps: inComponentsProps,
+    inputRef,
+    label,
+    ...other
+  } = props;
 
   const components = React.useMemo(
     () => ({
@@ -41,10 +47,11 @@ const DesktopDatePicker2 = React.forwardRef(function DesktopDatePicker2<TDate>(
       field: (ownerState: any) => ({
         ...resolveComponentProps(inComponentsProps?.field, ownerState),
         ref,
+        inputRef,
         label,
       }),
     }),
-    [inComponentsProps, ref, label],
+    [inComponentsProps, ref, label, inputRef],
   );
 
   const renderViews = (

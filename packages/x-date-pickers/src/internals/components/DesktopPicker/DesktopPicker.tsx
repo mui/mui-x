@@ -1,5 +1,5 @@
 import * as React from 'react';
-import InputAdornment from '@mui/material/InputAdornment';
+import MuiInputAdornment from '@mui/material/InputAdornment';
 import IconButton from '@mui/material/IconButton';
 import { useSlotProps } from '@mui/base/utils';
 import { PickersPopper } from '../PickersPopper';
@@ -8,6 +8,7 @@ import { PickerViewManager } from '../PickerViewManager';
 import { usePickerState2 } from '../../hooks/usePickerState2';
 import { CalendarOrClockPickerView } from '../../models/views';
 import { DesktopPickerProps } from './DesktopPicker.types';
+import useForkRef from '@mui/utils/useForkRef';
 
 export function DesktopPicker<TValue, TDate, TView extends CalendarOrClockPickerView>(
   props: DesktopPickerProps<TValue, TDate, TView>,
@@ -39,10 +40,6 @@ export function DesktopPicker<TValue, TDate, TView extends CalendarOrClockPicker
     viewProps,
     openPicker,
   } = usePickerState2(props, valueManager, 'desktop');
-  const inputRef = React.useRef<HTMLInputElement>(null);
-
-  // TODO: Add prop
-  const adornmentPosition = 'end';
 
   const Field = components.Field;
   const fieldProps = useSlotProps({
@@ -59,6 +56,17 @@ export function DesktopPicker<TValue, TDate, TView extends CalendarOrClockPicker
     ownerState: {},
   });
 
+  const InputAdornment = components.InputAdornment ?? MuiInputAdornment;
+  const inputAdornmentProps = useSlotProps({
+    elementType: InputAdornment,
+    externalSlotProps: componentsProps.inputAdornment,
+    additionalProps: {
+      position: 'end',
+    },
+    // TODO: Pass owner state
+    ownerState: {},
+  });
+
   const OpenPickerButton = components.OpenPickerButton ?? IconButton;
   const { ownerState: openPickerButtonOwnerState, ...openPickerButtonProps } = useSlotProps({
     elementType: OpenPickerButton,
@@ -68,7 +76,7 @@ export function DesktopPicker<TValue, TDate, TView extends CalendarOrClockPicker
       onClick: openPicker,
       // TODO: Correctly support date range
       'aria-label': getOpenDialogAriaText(fieldProps.value as any as TDate, utils),
-      edge: adornmentPosition,
+      edge: inputAdornmentProps.position,
     },
     // TODO: Pass owner state
     ownerState: {},
@@ -88,8 +96,8 @@ export function DesktopPicker<TValue, TDate, TView extends CalendarOrClockPicker
     externalSlotProps: componentsProps.input,
     additionalProps: {
       InputProps: {
-        [`${adornmentPosition}Adornment`]: disableOpenPicker ? undefined : (
-          <InputAdornment position={adornmentPosition}>
+        [`${inputAdornmentProps.position}Adornment`]: disableOpenPicker ? undefined : (
+          <InputAdornment {...inputAdornmentProps}>
             <OpenPickerButton {...openPickerButtonProps}>
               <OpenPickerIcon {...openPickerIconProps} />
             </OpenPickerButton>
@@ -101,6 +109,10 @@ export function DesktopPicker<TValue, TDate, TView extends CalendarOrClockPicker
     ownerState: {},
   });
 
+  const inputRef = React.useRef<HTMLInputElement>(null);
+  // TODO: Correctly type the field slot
+  const handleInputRef = useForkRef(inputRef, (fieldProps as any).inputRef);
+
   return (
     <React.Fragment>
       <Field
@@ -109,7 +121,7 @@ export function DesktopPicker<TValue, TDate, TView extends CalendarOrClockPicker
           Input: components.Input,
         }}
         componentsProps={{ input: inputProps }}
-        inputRef={inputRef}
+        inputRef={handleInputRef}
       />
       <PickersPopper
         role="dialog"
