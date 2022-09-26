@@ -343,10 +343,9 @@ function testTextFieldValidation(ElementToTest, propsToTest, getOptions) {
 
     if (propsToTest.includes('shouldDisableYear')) {
       it('should apply shouldDisableYear', function test() {
-        const { render, withTime } = getOptions();
-        if (withTime) {
+        const { render, withDate } = getOptions();
+        if (!withDate) {
           // Early return to remove when DateTimePickers will support those props
-          // To be replaced by `!withDate`
           return;
         }
 
@@ -368,10 +367,9 @@ function testTextFieldValidation(ElementToTest, propsToTest, getOptions) {
 
     if (propsToTest.includes('shouldDisableMonth')) {
       it('should apply shouldDisableMonth', function test() {
-        const { render, withTime } = getOptions();
-        if (withTime) {
+        const { render, withDate } = getOptions();
+        if (!withDate) {
           // Early return to remove when DateTimePickers will support those props
-          // To be replaced by `!withDate`
           return;
         }
 
