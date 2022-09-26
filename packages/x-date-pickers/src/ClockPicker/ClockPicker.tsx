@@ -34,7 +34,7 @@ const useUtilityClasses = (ownerState: ClockPickerProps<any>) => {
 
 export interface ExportedClockPickerProps<TDate>
   extends TimeValidationProps<TDate>,
-  BaseTimeValidationProps {
+    BaseTimeValidationProps {
   /**
    * 12h/24h view for hour selection clock.
    * @default false
@@ -47,9 +47,9 @@ export interface ExportedClockPickerProps<TDate>
   ampmInClock?: boolean;
 }
 
-export interface ClockPickerSlotsComponent extends PickersArrowSwitcherSlotsComponent { }
+export interface ClockPickerSlotsComponent extends PickersArrowSwitcherSlotsComponent {}
 
-export interface ClockPickerSlotsComponentsProps extends PickersArrowSwitcherSlotsComponentsProps { }
+export interface ClockPickerSlotsComponentsProps extends PickersArrowSwitcherSlotsComponentsProps {}
 
 export interface ClockPickerProps<TDate> extends ExportedClockPickerProps<TDate> {
   className?: string;

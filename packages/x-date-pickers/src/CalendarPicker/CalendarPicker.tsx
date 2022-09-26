@@ -31,18 +31,18 @@ import {
 } from '../internals/hooks/validation/models';
 import { DefaultizedProps } from '../internals/models/helpers';
 
-export interface CalendarPickerSlotsComponent extends PickersCalendarHeaderSlotsComponent { }
+export interface CalendarPickerSlotsComponent extends PickersCalendarHeaderSlotsComponent {}
 
 export interface CalendarPickerSlotsComponentsProps
-  extends PickersCalendarHeaderSlotsComponentsProps { }
+  extends PickersCalendarHeaderSlotsComponentsProps {}
 
 export interface CalendarPickerProps<TDate>
   extends ExportedDayPickerProps<TDate>,
-  BaseDateValidationProps<TDate>,
-  DayValidationProps<TDate>,
-  YearValidationProps<TDate>,
-  MonthValidationProps<TDate>,
-  ExportedCalendarHeaderProps<TDate> {
+    BaseDateValidationProps<TDate>,
+    DayValidationProps<TDate>,
+    YearValidationProps<TDate>,
+    MonthValidationProps<TDate>,
+    ExportedCalendarHeaderProps<TDate> {
   autoFocus?: boolean;
   className?: string;
   classes?: Partial<CalendarPickerClasses>;
@@ -295,14 +295,14 @@ export const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
 
       const closestEnabledDate = isDateDisabled(newDate)
         ? findClosestEnabledDate({
-          utils,
-          date: newDate,
-          minDate: utils.isBefore(minDate, startOfMonth) ? startOfMonth : minDate,
-          maxDate: utils.isAfter(maxDate, endOfMonth) ? endOfMonth : maxDate,
-          disablePast,
-          disableFuture,
-          isDateDisabled,
-        })
+            utils,
+            date: newDate,
+            minDate: utils.isBefore(minDate, startOfMonth) ? startOfMonth : minDate,
+            maxDate: utils.isAfter(maxDate, endOfMonth) ? endOfMonth : maxDate,
+            disablePast,
+            disableFuture,
+            isDateDisabled,
+          })
         : newDate;
 
       if (closestEnabledDate) {
@@ -337,14 +337,14 @@ export const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
 
       const closestEnabledDate = isDateDisabled(newDate)
         ? findClosestEnabledDate({
-          utils,
-          date: newDate,
-          minDate: utils.isBefore(minDate, startOfYear) ? startOfYear : minDate,
-          maxDate: utils.isAfter(maxDate, endOfYear) ? endOfYear : maxDate,
-          disablePast,
-          disableFuture,
-          isDateDisabled,
-        })
+            utils,
+            date: newDate,
+            minDate: utils.isBefore(minDate, startOfYear) ? startOfYear : minDate,
+            maxDate: utils.isAfter(maxDate, endOfYear) ? endOfYear : maxDate,
+            disablePast,
+            disableFuture,
+            isDateDisabled,
+          })
         : newDate;
 
       if (closestEnabledDate) {

@@ -114,14 +114,14 @@ const ClockSquareMask = styled('div', {
   ...(ownerState.disabled
     ? {}
     : {
-      '@media (pointer: fine)': {
-        cursor: 'pointer',
-        borderRadius: '50%',
-      },
-      '&:active': {
-        cursor: 'move',
-      },
-    }),
+        '@media (pointer: fine)': {
+          cursor: 'pointer',
+          borderRadius: '50%',
+        },
+        '&:active': {
+          cursor: 'move',
+        },
+      }),
 }));
 
 const ClockPin = styled('div', {

@@ -36,21 +36,21 @@ import { getReleaseInfo } from '../internal/utils/releaseInfo';
 const releaseInfo = getReleaseInfo();
 
 export interface DateRangePickerViewSlotsComponent
-  extends DateRangePickerViewMobileSlotsComponent { }
+  extends DateRangePickerViewMobileSlotsComponent {}
 
 export interface DateRangePickerViewSlotsComponentsProps
-  extends DateRangePickerViewMobileSlotsComponentsProps { }
+  extends DateRangePickerViewMobileSlotsComponentsProps {}
 
 export interface ExportedDateRangePickerViewProps<TDate>
   extends ExportedDateRangePickerViewDesktopProps<TDate>,
-  DayRangeValidationProps<TDate>,
-  Omit<
-    ExportedCalendarPickerProps<TDate>,
-    | 'onYearChange'
-    | 'renderDay'
-    | keyof BaseDateValidationProps<TDate>
-    | keyof DayValidationProps<TDate>
-  > {
+    DayRangeValidationProps<TDate>,
+    Omit<
+      ExportedCalendarPickerProps<TDate>,
+      | 'onYearChange'
+      | 'renderDay'
+      | keyof BaseDateValidationProps<TDate>
+      | keyof DayValidationProps<TDate>
+    > {
   /**
    * Overrideable components.
    * @default {}
@@ -87,9 +87,9 @@ export interface ExportedDateRangePickerViewProps<TDate>
 
 interface DateRangePickerViewProps<TDate>
   extends CurrentlySelectingRangeEndProps,
-  ExportedDateRangePickerViewProps<TDate>,
-  PickerStatePickerProps<DateRange<TDate>>,
-  Required<BaseDateValidationProps<TDate>> {
+    ExportedDateRangePickerViewProps<TDate>,
+    PickerStatePickerProps<DateRange<TDate>>,
+    Required<BaseDateValidationProps<TDate>> {
   calendars: 1 | 2 | 3;
   open: boolean;
   DateInputProps: DateRangePickerInputProps<TDate>;
@@ -184,7 +184,7 @@ function DateRangePickerViewRaw<TDate>(props: DateRangePickerViewProps<TDate>) {
         currentlySelectingRangeEnd === 'start'
           ? date
           : // If need to focus end, scroll to the state when "end" is displaying in the last calendar
-          utils.addMonths(date, -displayingMonthRange);
+            utils.addMonths(date, -displayingMonthRange);
 
       changeMonth(newMonth);
     }

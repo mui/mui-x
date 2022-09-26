@@ -19,7 +19,7 @@ const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 describe('<CalendarPicker />', () => {
   const { render, clock } = createPickerRenderer({ clock: 'fake' });
 
-  describeConformance(<CalendarPicker value={adapterToUse.date()} onChange={() => { }} />, () => ({
+  describeConformance(<CalendarPicker value={adapterToUse.date()} onChange={() => {}} />, () => ({
     classes,
     inheritComponent: 'div',
     render,
@@ -43,7 +43,7 @@ describe('<CalendarPicker />', () => {
     render(
       <CalendarPicker
         value={adapterToUse.date(new Date(2019, 0, 1))}
-        onChange={() => { }}
+        onChange={() => {}}
         onViewChange={handleViewChange}
       />,
     );
@@ -136,7 +136,7 @@ describe('<CalendarPicker />', () => {
         dateAdapter={AdapterClassToUse}
         dateFormats={{ monthAndYear: 'yyyy/MM' }}
       >
-        <CalendarPicker value={adapterToUse.date(new Date(2019, 0, 1))} onChange={() => { }} />,
+        <CalendarPicker value={adapterToUse.date(new Date(2019, 0, 1))} onChange={() => {}} />,
       </LocalizationProvider>,
     );
 
@@ -148,7 +148,7 @@ describe('<CalendarPicker />', () => {
       <LocalizationProvider dateAdapter={AdapterClassToUse}>
         <CalendarPicker
           value={adapterToUse.date(new Date(2019, 0, 1))}
-          onChange={() => { }}
+          onChange={() => {}}
           dayOfWeekFormatter={(day) => `${day}.`}
         />
         ,
@@ -163,7 +163,7 @@ describe('<CalendarPicker />', () => {
   describe('view: day', () => {
     it('renders day calendar standalone', () => {
       render(
-        <CalendarPicker value={adapterToUse.date(new Date(2019, 0, 1))} onChange={() => { }} />,
+        <CalendarPicker value={adapterToUse.date(new Date(2019, 0, 1))} onChange={() => {}} />,
       );
 
       expect(screen.getByText('January 2019')).toBeVisible();
@@ -309,7 +309,7 @@ describe('<CalendarPicker />', () => {
         <CalendarPicker
           value={adapterToUse.date(new Date(2019, 0, 1))}
           openTo="year"
-          onChange={() => { }}
+          onChange={() => {}}
         />,
       );
 
@@ -406,7 +406,7 @@ describe('<CalendarPicker />', () => {
       render(
         <CalendarPicker
           value={adapterToUse.date(new Date(2019, 3, 29))}
-          onChange={() => { }}
+          onChange={() => {}}
           views={['year']}
           openTo="year"
         />,

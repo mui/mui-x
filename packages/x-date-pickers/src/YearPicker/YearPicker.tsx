@@ -66,7 +66,7 @@ const YearPickerRoot = styled('div', {
 
 export interface YearPickerProps<TDate>
   extends YearValidationProps<TDate>,
-  BaseDateValidationProps<TDate> {
+    BaseDateValidationProps<TDate> {
   autoFocus?: boolean;
   /**
    * className applied to the root element.
