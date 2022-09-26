@@ -59,7 +59,7 @@
     "hideFooterSelectedRowCount": "If <code>true</code>, the selected row count in the footer is hidden.",
     "initialState": "The initial state of the DataGridPro. The data in it will be set in the state on initialization but will not be controlled. If one of the data in <code>initialState</code> is also being controlled, then the control state wins.",
     "isCellEditable": "Callback fired when a cell is rendered, returns true if the cell is editable.<br><br><strong>Signature:</strong><br><code>function(params: GridCellParams) =&gt; boolean</code><br><em>params:</em> With all properties from <a href=\"/x/api/data-grid/grid-cell-params/\">GridCellParams</a>.<br> <em>returns</em> (boolean): A boolean indicating if the cell is editable.",
-    "isGroupExpandedByDefault": "Determines if a group should be expanded after its creation. This prop takes priority over the <code>defaultGroupingExpansionDepth</code> prop.<br><br><strong>Signature:</strong><br><code>function(node: GridRowTreeNodeConfig) =&gt; boolean</code><br><em>node:</em> The node of the group to test.<br> <em>returns</em> (boolean): A boolean indicating if the group is expanded.",
+    "isGroupExpandedByDefault": "Determines if a group should be expanded after its creation. This prop takes priority over the <code>defaultGroupingExpansionDepth</code> prop.<br><br><strong>Signature:</strong><br><code>function(node: GridGroupNode) =&gt; boolean</code><br><em>node:</em> The node of the group to test.<br> <em>returns</em> (boolean): A boolean indicating if the group is expanded.",
     "isRowSelectable": "Determines if a row can be selected.<br><br><strong>Signature:</strong><br><code>function(params: GridRowParams) =&gt; boolean</code><br><em>params:</em> With all properties from <a href=\"/x/api/data-grid/grid-row-params/\">GridRowParams</a>.<br> <em>returns</em> (boolean): A boolean indicating if the cell is selectable.",
     "keepNonExistentRowsSelected": "If <code>true</code>, the selection model will retain selected rows that do not exist. Useful when using server side pagination and row selections need to be retained when changing pages.",
     "loading": "If <code>true</code>, a  loading overlay is displayed.",
@@ -135,7 +135,7 @@
     "sortingMode": "Sorting can be processed on the server or client-side. Set it to &#39;client&#39; if you would like to handle sorting on the client-side. Set it to &#39;server&#39; if you would like to handle sorting on the server-side.",
     "sortingOrder": "The order of the sorting sequence.",
     "sortModel": "Set the sort model of the grid.",
-    "sx": "The system prop that allows defining system overrides as well as additional CSS styles. See the <a href=\"/system/the-sx-prop/\">`sx` page</a> for more details.",
+    "sx": "The system prop that allows defining system overrides as well as additional CSS styles. See the <a href=\"/system/getting-started/the-sx-prop/\">`sx` page</a> for more details.",
     "throttleRowsMs": "If positive, the Grid will throttle updates coming from <code>apiRef.current.updateRows</code> and <code>apiRef.current.setRows</code>. It can be useful if you have a high update rate but do not want to do heavy work like filtering / sorting or rendering on each  individual update.",
     "treeData": "If <code>true</code>, the rows will be gathered in a tree structure according to the <code>getTreeDataPath</code> prop."
   },

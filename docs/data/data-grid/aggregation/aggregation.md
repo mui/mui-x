@@ -83,24 +83,24 @@ This position must be one of the three following values:
 ```tsx
 // Will aggregate the root group on the top-level footer and the other groups on their grouping row
 // (default behavior)
-getAggregationPosition=(groupNode) => (groupNode == null ? 'footer' : 'inline'),
+getAggregationPosition={(groupNode) => groupNode.depth === -1 ? 'footer' : 'inline'}
 
 // Will aggregate all the groups on their grouping row
 // The root will not be aggregated
-getAggregationPosition={(groupNode) => groupNode == null ? null : 'inline'}
+getAggregationPosition={(groupNode) => groupNode.depth === -1 ? null : 'inline'}
 
 // Will only aggregate the company groups on the grouping row
 // Director groups and the root will not be aggregated
-getAggregationPosition={(groupNode) => groupNode?.groupingField === 'company' ? 'inline' : null}
+getAggregationPosition={(groupNode) => groupNode.groupingField === 'company' ? 'inline' : null}
 
 // Will only aggregate the company group "Universal Pictures" on the grouping row
 getAggregationPosition={(groupNode) =>
-(groupNode?.groupingField === 'company' &&
-  groupNode?.groupingKey === 'Universal Pictures') ? 'inline' : null
+(groupNode.groupingField === 'company' &&
+  groupNode.groupingKey === 'Universal Pictures') ? 'inline' : null
 }
 
 // Will only aggregate the root group on the top-level footer
-getAggregationPosition={(groupNode) => groupNode == null ? 'footer' : null}
+getAggregationPosition={(groupNode) => groupNode.depth === -1 ? 'footer' : null}
 ```
 
 The demo below shows the _sum_ aggregation on the footer of each group but not on the top-level footer:

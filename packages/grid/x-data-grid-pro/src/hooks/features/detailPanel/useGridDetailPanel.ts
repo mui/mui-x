@@ -6,7 +6,7 @@ import {
   useGridApiEventHandler,
   useGridApiMethod,
   GridCellParams,
-  gridRowIdsSelector,
+  gridDataRowIdsSelector,
 } from '@mui/x-data-grid';
 import {
   useGridRegisterPipeProcessor,
@@ -49,7 +49,7 @@ function cacheContentAndHeight(
 
   // TODO change to lazy approach using a Proxy
   // only call getDetailPanelContent when asked for an id
-  const rowIds = gridRowIdsSelector(apiRef);
+  const rowIds = gridDataRowIdsSelector(apiRef);
   const contentCache = rowIds.reduce<Record<GridRowId, ReturnType<typeof getDetailPanelContent>>>(
     (acc, id) => {
       const params = apiRef.current.getRowParams(id);

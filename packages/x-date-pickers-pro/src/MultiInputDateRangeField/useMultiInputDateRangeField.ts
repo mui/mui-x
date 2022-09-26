@@ -4,7 +4,7 @@ import {
   unstable_useDateField as useDateField,
   UseDateFieldProps,
 } from '@mui/x-date-pickers/DateField';
-import { useUtils, useValidation } from '@mui/x-date-pickers/internals';
+import { useValidation } from '@mui/x-date-pickers/internals';
 import { UseFieldResponse } from '@mui/x-date-pickers/internals-fields';
 import { UseMultiInputDateRangeFieldProps } from './MultiInputDateRangeField.interfaces';
 import { DateRange } from '../internal/models';
@@ -16,14 +16,12 @@ import {
 } from '../SingleInputDateRangeField/useSingleInputDateRangeField';
 
 export const useMultiInputDateRangeField = <
-  TInputDate,
   TDate,
-  TProps extends UseMultiInputDateRangeFieldProps<TInputDate, TDate>,
+  TProps extends UseMultiInputDateRangeFieldProps<TDate>,
 >(
   inProps: TProps,
 ) => {
-  const props = useDefaultizedDateRangeFieldProps<TInputDate, TDate, TProps>(inProps);
-  const utils = useUtils<TDate>();
+  const props = useDefaultizedDateRangeFieldProps<TDate, TProps>(inProps);
 
   const { value: valueProp, defaultValue, format, onChange } = props;
 
@@ -36,16 +34,10 @@ export const useMultiInputDateRangeField = <
     }
 
     return (newDate: TDate | null) => {
-      let newDateRange: DateRange<TDate>;
-      if (valueProp !== undefined) {
-        newDateRange = dateRangePickerValueManager.parseInput(utils, valueProp);
-      } else if (firstDefaultValue.current !== undefined) {
-        newDateRange = dateRangePickerValueManager.parseInput(utils, firstDefaultValue.current);
-      } else {
-        newDateRange = dateRangePickerValueManager.emptyValue;
-      }
-
-      newDateRange[index] = newDate;
+      const currentDateRange =
+        valueProp ?? firstDefaultValue.current ?? dateRangePickerValueManager.emptyValue;
+      const newDateRange: DateRange<TDate> =
+        index === 0 ? [newDate, currentDateRange[1]] : [currentDateRange[0], newDate];
 
       onChange(newDateRange);
     };
@@ -54,28 +46,24 @@ export const useMultiInputDateRangeField = <
   const handleStartDateChange = useEventCallback(buildChangeHandler(0));
   const handleEndDateChange = useEventCallback(buildChangeHandler(1));
 
-  const startInputProps: UseDateFieldProps<TInputDate, TDate> = {
+  const startInputProps: UseDateFieldProps<TDate> = {
     format,
     value: valueProp === undefined ? undefined : valueProp[0],
     defaultValue: defaultValue === undefined ? undefined : defaultValue[0],
     onChange: handleStartDateChange,
   };
 
-  const endInputProps: UseDateFieldProps<TInputDate, TDate> = {
+  const endInputProps: UseDateFieldProps<TDate> = {
     format,
     value: valueProp === undefined ? undefined : valueProp[1],
     defaultValue: defaultValue === undefined ? undefined : defaultValue[1],
     onChange: handleEndDateChange,
   };
 
-  const rawStartDateResponse = useDateField<TInputDate, TDate, {}>(startInputProps);
-  const rawEndDateResponse = useDateField<TInputDate, TDate, {}>(endInputProps);
+  const rawStartDateResponse = useDateField<TDate, {}>(startInputProps);
+  const rawEndDateResponse = useDateField<TDate, {}>(endInputProps);
 
-  // TODO: Avoid the type casting.
-  const value =
-    valueProp ??
-    firstDefaultValue.current ??
-    (dateRangePickerValueManager.emptyValue as unknown as DateRange<TInputDate>);
+  const value = valueProp ?? firstDefaultValue.current ?? dateRangePickerValueManager.emptyValue;
 
   const validationError = useValidation({ ...props, value }, validateDateRange, () => true);
   const inputError = React.useMemo(

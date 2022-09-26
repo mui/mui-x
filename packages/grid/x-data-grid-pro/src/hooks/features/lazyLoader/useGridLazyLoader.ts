@@ -20,10 +20,15 @@ import {
 } from '../../../models/dataGridProProps';
 import { GridFetchRowsParams } from '../../../models/gridFetchRowsParams';
 
-function findSkeletonRowsSection(
-  visibleRows: GridRowEntry[],
-  range: { firstRowIndex: number; lastRowIndex: number },
-) {
+function findSkeletonRowsSection({
+  apiRef,
+  visibleRows,
+  range,
+}: {
+  apiRef: React.MutableRefObject<GridApiPro>;
+  visibleRows: GridRowEntry[];
+  range: { firstRowIndex: number; lastRowIndex: number };
+}) {
   let { firstRowIndex, lastRowIndex } = range;
   const visibleRowsSection = visibleRows.slice(range.firstRowIndex, range.lastRowIndex);
   let startIndex = 0;
@@ -31,16 +36,21 @@ function findSkeletonRowsSection(
   let isSkeletonSectionFound = false;
 
   while (!isSkeletonSectionFound && firstRowIndex < lastRowIndex) {
-    if (!visibleRowsSection[startIndex].model && !visibleRowsSection[endIndex].model) {
+    const isStartingWithASkeletonRow =
+      apiRef.current.getRowNode(visibleRowsSection[startIndex].id)!.type === 'skeletonRow';
+    const isEndingWithASkeletonRow =
+      apiRef.current.getRowNode(visibleRowsSection[endIndex].id)!.type === 'skeletonRow';
+
+    if (isStartingWithASkeletonRow && isEndingWithASkeletonRow) {
       isSkeletonSectionFound = true;
     }
 
-    if (visibleRowsSection[startIndex].model) {
+    if (!isStartingWithASkeletonRow) {
       startIndex += 1;
       firstRowIndex += 1;
     }
 
-    if (visibleRowsSection[endIndex].model) {
+    if (!isEndingWithASkeletonRow) {
       endIndex -= 1;
       lastRowIndex -= 1;
     }
@@ -148,9 +158,13 @@ export const useGridLazyLoader = (
       }
 
       if (sortModel.length === 0 && filterModel.items.length === 0) {
-        const skeletonRowsSection = findSkeletonRowsSection(visibleRows.rows, {
-          firstRowIndex: params.firstRowToRender,
-          lastRowIndex: params.lastRowToRender,
+        const skeletonRowsSection = findSkeletonRowsSection({
+          apiRef,
+          visibleRows: visibleRows.rows,
+          range: {
+            firstRowIndex: params.firstRowToRender,
+            lastRowIndex: params.lastRowToRender,
+          },
         });
 
         if (!skeletonRowsSection) {
