@@ -403,7 +403,7 @@ DataGridProRaw.propTypes = {
   /**
    * Determines if a group should be expanded after its creation.
    * This prop takes priority over the `defaultGroupingExpansionDepth` prop.
-   * @param {GridRowTreeNodeConfig} node The node of the group to test.
+   * @param {GridGroupNode} node The node of the group to test.
    * @returns {boolean} A boolean indicating if the group is expanded.
    */
   isGroupExpandedByDefault: PropTypes.func,
@@ -557,15 +557,6 @@ DataGridProRaw.propTypes = {
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onColumnResize: PropTypes.func,
-  /**
-   * Callback fired when a column visibility changes.
-   * Only works when no `columnVisibilityModel` is provided and if we change the visibility of a single column at a time.
-   * @param {GridColumnVisibilityChangeParams} params With all properties from [[GridColumnVisibilityChangeParams]].
-   * @param {MuiEvent<{}>} event The event object.
-   * @param {GridCallbackDetails} details Additional details for this callback.
-   * @deprecated Use `onColumnVisibilityModelChange` instead.
-   */
-  onColumnVisibilityChange: PropTypes.func,
   /**
    * Callback fired when the column visibility model changes.
    * @param {GridColumnVisibilityModel} model The new model.
@@ -784,8 +775,8 @@ DataGridProRaw.propTypes = {
    * Rows data to pin on top or bottom.
    */
   pinnedRows: PropTypes.shape({
-    bottom: PropTypes.array,
-    top: PropTypes.array,
+    bottom: PropTypes.arrayOf(PropTypes.object),
+    top: PropTypes.arrayOf(PropTypes.object),
   }),
   /**
    * Callback called before updating a row with new values in the row and cell editing.
@@ -823,7 +814,7 @@ DataGridProRaw.propTypes = {
   /**
    * Set of rows of type [[GridRowsProp]].
    */
-  rows: PropTypes.array.isRequired,
+  rows: PropTypes.arrayOf(PropTypes.object).isRequired,
   /**
    * Loading rows can be processed on the server or client-side.
    * Set it to 'client' if you would like enable infnite loading.

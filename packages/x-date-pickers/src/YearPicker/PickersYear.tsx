@@ -2,39 +2,18 @@ import * as React from 'react';
 import clsx from 'clsx';
 import { capitalize } from '@mui/material/utils';
 import { alpha, styled } from '@mui/material/styles';
-import {
-  unstable_composeClasses as composeClasses,
-  generateUtilityClass,
-  generateUtilityClasses,
-} from '@mui/material';
+import { unstable_composeClasses as composeClasses } from '@mui/material';
 import {
   WrapperVariant,
   WrapperVariantContext,
 } from '../internals/components/wrappers/WrapperVariantContext';
+import {
+  getPickersYearUtilityClass,
+  pickersYearClasses,
+  PickersYearClasses,
+} from './pickersYearClasses';
 
-interface PickersYearClasses {
-  root: string;
-  modeDesktop: string;
-  modeMobile: string;
-  yearButton: string;
-  disabled: string;
-  selected: string;
-}
-
-function getPickersYearUtilityClass(slot: string) {
-  return generateUtilityClass('PrivatePickersYear', slot);
-}
-
-const pickersYearClasses: PickersYearClasses = generateUtilityClasses('PrivatePickersYear', [
-  'root',
-  'modeMobile',
-  'modeDesktop',
-  'yearButton',
-  'disabled',
-  'selected',
-]);
-
-interface PickersYearProps {
+export interface PickersYearProps {
   'aria-current'?: React.AriaAttributes['aria-current'];
   autoFocus?: boolean;
   children: React.ReactNode;
@@ -65,9 +44,15 @@ const useUtilityClasses = (ownerState: PickersYearOwnerState) => {
   return composeClasses(slots, getPickersYearUtilityClass, classes);
 };
 
-const PickersYearRoot = styled('div')<{
-  ownerState: PickersYearOwnerState;
-}>(({ ownerState }) => ({
+const PickersYearRoot = styled('div', {
+  name: 'PrivatePickersYear',
+  slot: 'Root',
+  overridesResolver: (_, styles) => [
+    styles.root,
+    { [`&.${pickersYearClasses.modeDesktop}`]: styles.modeDesktop },
+    { [`&.${pickersYearClasses.modeMobile}`]: styles.modeMobile },
+  ],
+})<{ ownerState: PickersYearOwnerState }>(({ ownerState }) => ({
   flexBasis: '33.3%',
   display: 'flex',
   alignItems: 'center',
@@ -77,9 +62,15 @@ const PickersYearRoot = styled('div')<{
   }),
 }));
 
-const PickersYearButton = styled('button')<{
-  ownerState: PickersYearOwnerState;
-}>(({ theme }) => ({
+const PickersYearButton = styled('button', {
+  name: 'PrivatePickersYear',
+  slot: 'Button',
+  overridesResolver: (_, styles) => [
+    styles.button,
+    { [`&.${pickersYearClasses.disabled}`]: styles.disabled },
+    { [`&.${pickersYearClasses.selected}`]: styles.selected },
+  ],
+})<{ ownerState: PickersYearOwnerState }>(({ theme }) => ({
   color: 'unset',
   backgroundColor: 'transparent',
   border: 0,
@@ -116,6 +107,7 @@ const PickersYearButton = styled('button')<{
  * @ignore - internal component.
  */
 const PickersYearRaw = (props: PickersYearProps) => {
+  // TODO v6: add 'useThemeProps' once the component class names are aligned
   const {
     autoFocus,
     className,
@@ -141,7 +133,7 @@ const PickersYearRaw = (props: PickersYearProps) => {
 
   const classes = useUtilityClasses(ownerState);
 
-  // TODO: Can we just forward this to the button?
+  // We can't forward the `autoFocus` to the button because it is a native button, not a MUI Button
   React.useEffect(() => {
     if (autoFocus) {
       // `ref.current` being `null` would be a bug in MUI.

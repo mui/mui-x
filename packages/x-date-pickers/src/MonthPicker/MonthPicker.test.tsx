@@ -3,11 +3,7 @@ import { spy } from 'sinon';
 import { expect } from 'chai';
 import { fireEvent, screen, describeConformance } from '@mui/monorepo/test/utils';
 import { MonthPicker, monthPickerClasses as classes } from '@mui/x-date-pickers/MonthPicker';
-import {
-  adapterToUse,
-  wrapPickerMount,
-  createPickerRenderer,
-} from '../../../../test/utils/pickers-utils';
+import { adapterToUse, wrapPickerMount, createPickerRenderer } from 'test/utils/pickers-utils';
 
 describe('<MonthPicker />', () => {
   const { render } = createPickerRenderer();
@@ -16,7 +12,7 @@ describe('<MonthPicker />', () => {
     <MonthPicker
       minDate={adapterToUse.date(new Date(2019, 0, 1))}
       maxDate={adapterToUse.date(new Date(2029, 0, 1))}
-      date={adapterToUse.date()}
+      value={adapterToUse.date()}
       onChange={() => {}}
     />,
     () => ({
@@ -37,7 +33,7 @@ describe('<MonthPicker />', () => {
       <MonthPicker
         minDate={adapterToUse.date(new Date(2019, 0, 1))}
         maxDate={adapterToUse.date(new Date(2029, 0, 1))}
-        date={adapterToUse.date(new Date(2019, 1, 2))}
+        value={adapterToUse.date(new Date(2019, 1, 2))}
         onChange={onChangeMock}
       />,
     );
@@ -52,7 +48,7 @@ describe('<MonthPicker />', () => {
       <MonthPicker
         minDate={adapterToUse.date(new Date(2019, 0, 1))}
         maxDate={adapterToUse.date(new Date(2029, 0, 1))}
-        date={adapterToUse.date(new Date(2019, 1, 2))}
+        value={adapterToUse.date(new Date(2019, 1, 2))}
         onChange={onChangeMock}
         readOnly
       />,
@@ -75,7 +71,7 @@ describe('<MonthPicker />', () => {
         <MonthPicker
           minDate={adapterToUse.date(new Date(2019, 0, 1))}
           maxDate={adapterToUse.date(new Date(2029, 0, 1))}
-          date={adapterToUse.date(new Date(2019, 1, 2))}
+          value={adapterToUse.date(new Date(2019, 1, 2))}
           onChange={() => {}}
         />
       </form>,
@@ -90,7 +86,7 @@ describe('<MonthPicker />', () => {
       const onChange = spy();
       render(
         <MonthPicker
-          date={adapterToUse.date(new Date(2019, 1, 15))}
+          value={adapterToUse.date(new Date(2019, 1, 15))}
           onChange={onChange}
           disabled
         />,
@@ -107,7 +103,7 @@ describe('<MonthPicker />', () => {
       const onChange = spy();
       render(
         <MonthPicker
-          date={adapterToUse.date(new Date(2019, 1, 15))}
+          value={adapterToUse.date(new Date(2019, 1, 15))}
           onChange={onChange}
           minDate={adapterToUse.date(new Date(2019, 1, 12))}
         />,
@@ -130,7 +126,7 @@ describe('<MonthPicker />', () => {
       const onChange = spy();
       render(
         <MonthPicker
-          date={adapterToUse.date(new Date(2019, 1, 15))}
+          value={adapterToUse.date(new Date(2019, 1, 15))}
           onChange={onChange}
           maxDate={adapterToUse.date(new Date(2019, 3, 12))}
         />,
@@ -153,7 +149,7 @@ describe('<MonthPicker />', () => {
       const onChange = spy();
       render(
         <MonthPicker
-          date={adapterToUse.date(new Date(2019, 1, 2))}
+          value={adapterToUse.date(new Date(2019, 1, 2))}
           onChange={onChange}
           shouldDisableMonth={(month) => adapterToUse.getMonth(month) === 3}
         />,

@@ -1,27 +1,26 @@
 import * as React from 'react';
+import clsx from 'clsx';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
-import { styled } from '@mui/material/styles';
-import { unstable_useEnhancedEffect as useEnhancedEffect } from '@mui/utils';
+import { styled, useThemeProps } from '@mui/material/styles';
+import {
+  unstable_useEnhancedEffect as useEnhancedEffect,
+  unstable_composeClasses as composeClasses,
+} from '@mui/utils';
 import { ClockPointer } from './ClockPointer';
-import { useUtils } from '../internals/hooks/useUtils';
+import { useLocaleText, useUtils } from '../internals/hooks/useUtils';
 import { WrapperVariantContext } from '../internals/components/wrappers/WrapperVariantContext';
 import { PickerSelectionState } from '../internals/hooks/usePickerState';
 import { useMeridiemMode } from '../internals/hooks/date-helpers-hooks';
 import { getHours, getMinutes } from './shared';
-import { ClockPickerView, MuiPickersAdapter } from '../internals/models';
+import { ClockPickerView } from '../internals/models';
+import { ClockClasses, getClockUtilityClass } from './clockClasses';
 
 export interface ClockProps<TDate> extends ReturnType<typeof useMeridiemMode> {
   ampm: boolean;
   ampmInClock: boolean;
   autoFocus?: boolean;
   children: readonly React.ReactNode[];
-  date: TDate | null;
-  getClockLabelText: (
-    view: ClockPickerView,
-    time: TDate | null,
-    adapter: MuiPickersAdapter<TDate>,
-  ) => string;
   isTimeDisabled: (timeValue: number, type: ClockPickerView) => boolean;
   minutesStep?: number;
   onChange: (value: number, isFinish?: PickerSelectionState) => void;
@@ -31,19 +30,51 @@ export interface ClockProps<TDate> extends ReturnType<typeof useMeridiemMode> {
    */
   selectedId: string | undefined;
   type: ClockPickerView;
-  value: number;
+  /**
+   * The numeric value of the current view.
+   */
+  viewValue: number;
+  /**
+   * The current full date value.
+   */
+  value: TDate | null;
   disabled?: boolean;
   readOnly?: boolean;
+  className?: string;
+  classes?: Partial<ClockClasses>;
 }
 
-const ClockRoot = styled('div')(({ theme }) => ({
+const useUtilityClasses = (ownerState: ClockProps<any>) => {
+  const { classes } = ownerState;
+  const slots = {
+    root: ['root'],
+    clock: ['clock'],
+    wrapper: ['wrapper'],
+    squareMask: ['squareMask'],
+    pin: ['pin'],
+    amButton: ['amButton'],
+    pmButton: ['pmButton'],
+  };
+
+  return composeClasses(slots, getClockUtilityClass, classes);
+};
+
+const ClockRoot = styled('div', {
+  name: 'MuiClock',
+  slot: 'Root',
+  overridesResolver: (_, styles) => styles.root,
+})(({ theme }) => ({
   display: 'flex',
   justifyContent: 'center',
   alignItems: 'center',
   margin: theme.spacing(2),
 }));
 
-const ClockClock = styled('div')({
+const ClockClock = styled('div', {
+  name: 'MuiClock',
+  slot: 'Clock',
+  overridesResolver: (_, styles) => styles.clock,
+})({
   backgroundColor: 'rgba(0,0,0,.07)',
   borderRadius: '50%',
   height: 220,
@@ -53,7 +84,11 @@ const ClockClock = styled('div')({
   pointerEvents: 'none',
 });
 
-const ClockWrapper = styled('div')({
+const ClockWrapper = styled('div', {
+  name: 'MuiClock',
+  slot: 'Wrapper',
+  overridesResolver: (_, styles) => styles.wrapper,
+})({
   '&:focus': {
     outline: 'none',
   },
@@ -63,31 +98,37 @@ type ClockSquareMaskOwnerState = {
   disabled?: ClockProps<any>['disabled'];
 };
 
-const ClockSquareMask = styled('div')<{ ownerState: ClockSquareMaskOwnerState }>(
-  ({ ownerState }) => ({
-    width: '100%',
-    height: '100%',
-    position: 'absolute',
-    pointerEvents: 'auto',
-    outline: 0,
-    // Disable scroll capabilities.
-    touchAction: 'none',
-    userSelect: 'none',
-    ...(ownerState.disabled
-      ? {}
-      : {
-          '@media (pointer: fine)': {
-            cursor: 'pointer',
-            borderRadius: '50%',
-          },
-          '&:active': {
-            cursor: 'move',
-          },
-        }),
-  }),
-);
+const ClockSquareMask = styled('div', {
+  name: 'MuiClock',
+  slot: 'SquareMask',
+  overridesResolver: (_, styles) => styles.squareMask,
+})<{ ownerState: ClockSquareMaskOwnerState }>(({ ownerState }) => ({
+  width: '100%',
+  height: '100%',
+  position: 'absolute',
+  pointerEvents: 'auto',
+  outline: 0,
+  // Disable scroll capabilities.
+  touchAction: 'none',
+  userSelect: 'none',
+  ...(ownerState.disabled
+    ? {}
+    : {
+        '@media (pointer: fine)': {
+          cursor: 'pointer',
+          borderRadius: '50%',
+        },
+        '&:active': {
+          cursor: 'move',
+        },
+      }),
+}));
 
-const ClockPin = styled('div')(({ theme }) => ({
+const ClockPin = styled('div', {
+  name: 'MuiClock',
+  slot: 'Pin',
+  overridesResolver: (_, styles) => styles.pin,
+})(({ theme }) => ({
   width: 6,
   height: 6,
   borderRadius: '50%',
@@ -98,49 +139,53 @@ const ClockPin = styled('div')(({ theme }) => ({
   transform: 'translate(-50%, -50%)',
 }));
 
-const ClockAmButton = styled(IconButton)<{ ownerState: ClockProps<any> }>(
-  ({ theme, ownerState }) => ({
-    zIndex: 1,
-    position: 'absolute',
-    bottom: ownerState.ampmInClock ? 64 : 8,
-    left: 8,
-    ...(ownerState.meridiemMode === 'am' && {
-      backgroundColor: theme.palette.primary.main,
-      color: theme.palette.primary.contrastText,
-      '&:hover': {
-        backgroundColor: theme.palette.primary.light,
-      },
-    }),
+const ClockAmButton = styled(IconButton, {
+  name: 'MuiClock',
+  slot: 'AmButton',
+  overridesResolver: (_, styles) => styles.amButton,
+})<{ ownerState: ClockProps<any> }>(({ theme, ownerState }) => ({
+  zIndex: 1,
+  position: 'absolute',
+  bottom: ownerState.ampmInClock ? 64 : 8,
+  left: 8,
+  ...(ownerState.meridiemMode === 'am' && {
+    backgroundColor: theme.palette.primary.main,
+    color: theme.palette.primary.contrastText,
+    '&:hover': {
+      backgroundColor: theme.palette.primary.light,
+    },
   }),
-);
+}));
 
-const ClockPmButton = styled(IconButton)<{ ownerState: ClockProps<any> }>(
-  ({ theme, ownerState }) => ({
-    zIndex: 1,
-    position: 'absolute',
-    bottom: ownerState.ampmInClock ? 64 : 8,
-    right: 8,
-    ...(ownerState.meridiemMode === 'pm' && {
-      backgroundColor: theme.palette.primary.main,
-      color: theme.palette.primary.contrastText,
-      '&:hover': {
-        backgroundColor: theme.palette.primary.light,
-      },
-    }),
+const ClockPmButton = styled(IconButton, {
+  name: 'MuiClock',
+  slot: 'PmButton',
+  overridesResolver: (_, styles) => styles.pmButton,
+})<{ ownerState: ClockProps<any> }>(({ theme, ownerState }) => ({
+  zIndex: 1,
+  position: 'absolute',
+  bottom: ownerState.ampmInClock ? 64 : 8,
+  right: 8,
+  ...(ownerState.meridiemMode === 'pm' && {
+    backgroundColor: theme.palette.primary.main,
+    color: theme.palette.primary.contrastText,
+    '&:hover': {
+      backgroundColor: theme.palette.primary.light,
+    },
   }),
-);
+}));
 
 /**
  * @ignore - internal component.
  */
-export function Clock<TDate>(props: ClockProps<TDate>) {
+export function Clock<TDate>(inProps: ClockProps<TDate>) {
+  const props = useThemeProps({ props: inProps, name: 'MuiClock' });
   const {
     ampm,
     ampmInClock,
     autoFocus,
     children,
-    date,
-    getClockLabelText,
+    value,
     handleMeridiemChange,
     isTimeDisabled,
     meridiemMode,
@@ -148,19 +193,22 @@ export function Clock<TDate>(props: ClockProps<TDate>) {
     onChange,
     selectedId,
     type,
-    value,
+    viewValue,
     disabled,
     readOnly,
+    className,
   } = props;
 
   const ownerState = props;
 
   const utils = useUtils<TDate>();
+  const localeText = useLocaleText();
   const wrapperVariant = React.useContext(WrapperVariantContext);
   const isMoving = React.useRef(false);
+  const classes = useUtilityClasses(ownerState);
 
-  const isSelectedTimeDisabled = isTimeDisabled(value, type);
-  const isPointerInner = !ampm && type === 'hours' && (value < 1 || value > 12);
+  const isSelectedTimeDisabled = isTimeDisabled(viewValue, type);
+  const isPointerInner = !ampm && type === 'hours' && (viewValue < 1 || viewValue > 12);
 
   const handleValueChange = (newValue: number, isFinish: PickerSelectionState) => {
     if (disabled || readOnly) {
@@ -223,8 +271,8 @@ export function Clock<TDate>(props: ClockProps<TDate>) {
       return true;
     }
 
-    return value % 5 === 0;
-  }, [type, value]);
+    return viewValue % 5 === 0;
+  }, [type, viewValue]);
 
   const keyboardControlStep = type === 'minutes' ? minutesStep : 1;
 
@@ -255,11 +303,11 @@ export function Clock<TDate>(props: ClockProps<TDate>) {
         event.preventDefault();
         break;
       case 'ArrowUp':
-        handleValueChange(value + keyboardControlStep, 'partial');
+        handleValueChange(viewValue + keyboardControlStep, 'partial');
         event.preventDefault();
         break;
       case 'ArrowDown':
-        handleValueChange(value - keyboardControlStep, 'partial');
+        handleValueChange(viewValue - keyboardControlStep, 'partial');
         event.preventDefault();
         break;
       default:
@@ -268,8 +316,8 @@ export function Clock<TDate>(props: ClockProps<TDate>) {
   };
 
   return (
-    <ClockRoot>
-      <ClockClock>
+    <ClockRoot className={clsx(className, classes.root)}>
+      <ClockClock className={classes.clock}>
         <ClockSquareMask
           data-mui-test="clock"
           onTouchMove={handleTouchMove}
@@ -277,14 +325,15 @@ export function Clock<TDate>(props: ClockProps<TDate>) {
           onMouseUp={handleMouseUp}
           onMouseMove={handleMouseMove}
           ownerState={{ disabled }}
+          className={classes.squareMask}
         />
         {!isSelectedTimeDisabled && (
           <React.Fragment>
-            <ClockPin />
-            {date && (
+            <ClockPin className={classes.pin} />
+            {value != null && (
               <ClockPointer
                 type={type}
-                value={value}
+                viewValue={viewValue}
                 isInner={isPointerInner}
                 hasSelected={hasSelected}
               />
@@ -293,11 +342,12 @@ export function Clock<TDate>(props: ClockProps<TDate>) {
         )}
         <ClockWrapper
           aria-activedescendant={selectedId}
-          aria-label={getClockLabelText(type, date, utils)}
+          aria-label={localeText.clockLabelText(type, value, utils)}
           ref={listboxRef}
           role="listbox"
           onKeyDown={handleKeyDown}
           tabIndex={0}
+          className={classes.wrapper}
         >
           {children}
         </ClockWrapper>
@@ -309,6 +359,7 @@ export function Clock<TDate>(props: ClockProps<TDate>) {
             onClick={readOnly ? undefined : () => handleMeridiemChange('am')}
             disabled={disabled || meridiemMode === null}
             ownerState={ownerState}
+            className={classes.amButton}
           >
             <Typography variant="caption">AM</Typography>
           </ClockAmButton>
@@ -317,6 +368,7 @@ export function Clock<TDate>(props: ClockProps<TDate>) {
             data-mui-test="in-clock-pm-btn"
             onClick={readOnly ? undefined : () => handleMeridiemChange('pm')}
             ownerState={ownerState}
+            className={classes.pmButton}
           >
             <Typography variant="caption">PM</Typography>
           </ClockPmButton>

@@ -37,9 +37,9 @@ export interface MobileDateRangePickerSlotsComponentsProps
   extends MobileWrapperSlotsComponentsProps,
     DateRangePickerViewSlotsComponentsProps {}
 
-export interface MobileDateRangePickerProps<TInputDate, TDate>
-  extends BaseDateRangePickerProps<TInputDate, TDate>,
-    MobileWrapperProps {
+export interface MobileDateRangePickerProps<TDate>
+  extends BaseDateRangePickerProps<TDate>,
+    MobileWrapperProps<TDate> {
   /**
    * Overrideable components.
    * @default {}
@@ -52,8 +52,8 @@ export interface MobileDateRangePickerProps<TInputDate, TDate>
   componentsProps?: Partial<MobileDateRangePickerSlotsComponentsProps>;
 }
 
-type MobileDateRangePickerComponent = (<TInputDate, TDate = TInputDate>(
-  props: MobileDateRangePickerProps<TInputDate, TDate> & React.RefAttributes<HTMLDivElement>,
+type MobileDateRangePickerComponent = (<TDate>(
+  props: MobileDateRangePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
 ) => JSX.Element) & { propTypes?: any };
 
 /**
@@ -66,19 +66,18 @@ type MobileDateRangePickerComponent = (<TInputDate, TDate = TInputDate>(
  *
  * - [MobileDateRangePicker API](https://mui.com/x/api/date-pickers/mobile-date-range-picker/)
  */
-export const MobileDateRangePicker = React.forwardRef(function MobileDateRangePicker<
-  TInputDate,
-  TDate = TInputDate,
->(inProps: MobileDateRangePickerProps<TInputDate, TDate>, ref: React.Ref<HTMLDivElement>) {
+export const MobileDateRangePicker = React.forwardRef(function MobileDateRangePicker<TDate>(
+  inProps: MobileDateRangePickerProps<TDate>,
+  ref: React.Ref<HTMLDivElement>,
+) {
   useLicenseVerifier('x-date-pickers-pro', releaseInfo);
 
-  const props = useDateRangePickerDefaultizedProps<
-    TInputDate,
-    TDate,
-    MobileDateRangePickerProps<TInputDate, TDate>
-  >(inProps, 'MuiMobileDateRangePicker');
+  const props = useDateRangePickerDefaultizedProps<TDate, MobileDateRangePickerProps<TDate>>(
+    inProps,
+    'MuiMobileDateRangePicker',
+  );
 
-  const { value, onChange, components, componentsProps, ...other } = props;
+  const { value, onChange, components, componentsProps, localeText, ...other } = props;
 
   const [currentlySelectingRangeEnd, setCurrentlySelectingRangeEnd] = React.useState<
     'start' | 'end'
@@ -116,6 +115,7 @@ export const MobileDateRangePicker = React.forwardRef(function MobileDateRangePi
       PureDateInputComponent={PureDateInputComponent}
       components={components}
       componentsProps={componentsProps}
+      localeText={localeText}
     >
       <DateRangePickerView
         open={wrapperProps.open}
@@ -193,7 +193,7 @@ MobileDateRangePicker.propTypes = {
    */
   disabled: PropTypes.bool,
   /**
-   * If `true` future days are disabled.
+   * If `true` disable values before the current time
    * @default false
    */
   disableFuture: PropTypes.bool,
@@ -213,32 +213,19 @@ MobileDateRangePicker.propTypes = {
    */
   disableOpenPicker: PropTypes.bool,
   /**
-   * If `true` past days are disabled.
+   * If `true` disable values after the current time.
    * @default false
    */
   disablePast: PropTypes.bool,
   /**
-   * Text for end input label and toolbar placeholder.
-   * @default 'End'
-   * @deprecated Use the `localeText` prop of `LocalizationProvider` instead, see https://mui.com/x/react-date-pickers/localization
-   */
-  endText: PropTypes.node,
-  /**
    * Get aria-label text for control that opens picker dialog. Aria-label text must include selected date. @DateIOType
-   * @template TInputDate, TDate
-   * @param {TInputDate} date The date from which we want to add an aria-text.
+   * @template TDate
+   * @param {TDate | null} date The date from which we want to add an aria-text.
    * @param {MuiPickersAdapter<TDate>} utils The utils to manipulate the date.
    * @returns {string} The aria-text to render inside the dialog.
-   * @default (date, utils) => `Choose date, selected date is ${utils.format(utils.date(date), 'fullDate')}`
+   * @default (date, utils) => `Choose date, selected date is ${utils.format(date, 'fullDate')}`
    */
   getOpenDialogAriaText: PropTypes.func,
-  /**
-   * Get aria-label text for switching between views button.
-   * @param {CalendarPickerView} currentView The view from which we want to get the button text.
-   * @returns {string} The label of the view.
-   * @deprecated Use the `localeText` prop of `LocalizationProvider` instead, see https://mui.com/x/react-date-pickers/localization
-   */
-  getViewSwitchingButtonText: PropTypes.func,
   ignoreInvalidInputs: PropTypes.bool,
   /**
    * Props to pass to keyboard input adornment.
@@ -260,16 +247,15 @@ MobileDateRangePicker.propTypes = {
   ]),
   label: PropTypes.node,
   /**
-   * Left arrow icon aria-label text.
-   * @deprecated
-   */
-  leftArrowButtonText: PropTypes.string,
-  /**
    * If `true` renders `LoadingComponent` in calendar instead of calendar view.
    * Can be used to preload information and show it in calendar.
    * @default false
    */
   loading: PropTypes.bool,
+  /**
+   * Locale for components texts
+   */
+  localeText: PropTypes.object,
   /**
    * Custom mask. Can be used to override generate from format. (e.g. `__/__/____ __:__` or `__/__/____ __:__ _M`).
    * @default '__/__/____'
@@ -292,7 +278,7 @@ MobileDateRangePicker.propTypes = {
   /**
    * Callback fired when the value (the selected date range) changes @DateIOType.
    * @template TDate
-   * @param {DateRange<TDate>} date The new parsed date range.
+   * @param {DateRange<TDate>} date The new date range.
    * @param {string} keyboardInputValue The current value of the keyboard input.
    */
   onChange: PropTypes.func.isRequired,
@@ -309,9 +295,9 @@ MobileDateRangePicker.propTypes = {
    * [Read the guide](https://next.material-ui-pickers.dev/guides/forms) about form integration and error displaying.
    * @DateIOType
    *
-   * @template TError, TInputValue
+   * @template TError, TValue
    * @param {TError} reason The reason why the current value is not valid.
-   * @param {TInputValue} value The invalid value.
+   * @param {TValue} value The invalid value.
    */
   onError: PropTypes.func,
   /**
@@ -393,11 +379,6 @@ MobileDateRangePicker.propTypes = {
    */
   rifmFormatter: PropTypes.func,
   /**
-   * Right arrow icon aria-label text.
-   * @deprecated
-   */
-  rightArrowButtonText: PropTypes.string,
-  /**
    * Disable specific date. @DateIOType
    * @template TDate
    * @param {TDate} day The date to test.
@@ -430,12 +411,6 @@ MobileDateRangePicker.propTypes = {
    * If `true`, show the toolbar even in desktop mode.
    */
   showToolbar: PropTypes.bool,
-  /**
-   * Text for start input label and toolbar placeholder.
-   * @default 'Start'
-   * @deprecated Use the `localeText` prop of `LocalizationProvider` instead, see https://mui.com/x/react-date-pickers/localization
-   */
-  startText: PropTypes.node,
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */

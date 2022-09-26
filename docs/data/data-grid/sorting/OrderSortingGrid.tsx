@@ -16,7 +16,9 @@ export default function OrderSortingGrid() {
       <DataGrid
         sortingOrder={['desc', 'asc']}
         initialState={{
+          ...data.initialState,
           sorting: {
+            ...data.initialState?.sorting,
             sortModel: [
               {
                 field: 'commodity',

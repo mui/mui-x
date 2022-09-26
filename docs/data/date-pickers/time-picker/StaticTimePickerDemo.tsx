@@ -6,7 +6,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { StaticTimePicker } from '@mui/x-date-pickers/StaticTimePicker';
 
 export default function StaticTimePickerDemo() {
-  const [value, setValue] = React.useState<Dayjs | null>(dayjs());
+  const [value, setValue] = React.useState<Dayjs | null>(dayjs('2022-04-07'));
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>

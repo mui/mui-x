@@ -2,9 +2,7 @@ import { PickersLocaleText } from './utils/pickersLocaleTextApi';
 import { getPickersLocalization } from './utils/getPickersLocalization';
 import { CalendarPickerView } from '../internals/models';
 
-// This object is not Partial<PickersLocaleText> because it is the default values
-
-const isISPickers: PickersLocaleText<any> = {
+const isISPickers: Partial<PickersLocaleText<any>> = {
   // Calendar navigation
   previousMonth: 'Fyrri mánuður',
   nextMonth: 'Næsti mánuður',
@@ -52,13 +50,13 @@ const isISPickers: PickersLocaleText<any> = {
   secondsClockNumberText: (seconds) => `${seconds} sekúndur`,
 
   // Open picker labels
-  openDatePickerDialogue: (rawValue, utils) =>
-    rawValue && utils.isValid(utils.date(rawValue))
-      ? `Velja dagsetningu, valin dagsetning er ${utils.format(utils.date(rawValue)!, 'fullDate')}`
+  openDatePickerDialogue: (value, utils) =>
+    value !== null && utils.isValid(value)
+      ? `Velja dagsetningu, valin dagsetning er ${utils.format(value, 'fullDate')}`
       : 'Velja dagsetningu',
-  openTimePickerDialogue: (rawValue, utils) =>
-    rawValue && utils.isValid(utils.date(rawValue))
-      ? `Velja tíma, valinn tími er ${utils.format(utils.date(rawValue)!, 'fullTime')}`
+  openTimePickerDialogue: (value, utils) =>
+    value !== null && utils.isValid(value)
+      ? `Velja tíma, valinn tími er ${utils.format(value, 'fullTime')}`
       : 'Velja tíma',
 
   // Table labels

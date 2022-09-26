@@ -3,7 +3,7 @@ import { expect } from 'chai';
 import TextField from '@mui/material/TextField';
 import { act, fireEvent, screen } from '@mui/monorepo/test/utils';
 import { StaticDatePicker } from '@mui/x-date-pickers/StaticDatePicker';
-import { adapterToUse, createPickerRenderer } from '../../../../test/utils/pickers-utils';
+import { adapterToUse, createPickerRenderer } from 'test/utils/pickers-utils';
 import { CalendarPickerView } from '../internals/models/views';
 
 describe('<StaticDatePicker /> keyboard interactions', () => {

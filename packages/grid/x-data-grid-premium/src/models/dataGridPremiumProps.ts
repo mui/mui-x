@@ -1,9 +1,5 @@
 import * as React from 'react';
-import {
-  GridCallbackDetails,
-  GridValidRowModel,
-  GridRowTreeNodeConfig,
-} from '@mui/x-data-grid-pro';
+import { GridCallbackDetails, GridValidRowModel, GridGroupNode } from '@mui/x-data-grid-pro';
 import {
   GridExperimentalProFeatures,
   DataGridProPropsWithDefaultValue,
@@ -90,13 +86,11 @@ export interface DataGridPremiumPropsWithDefaultValue extends DataGridProPropsWi
   aggregationRowsScope: 'filtered' | 'all';
   /**
    * Determines the position of an aggregated value.
-   * @param {GridRowTreeNodeConfig | null} groupNode The current group (`null` being the top level group).
+   * @param {GridGroupNode} groupNode The current group.
    * @returns {GridAggregationPosition | null} Position of the aggregated value (if `null`, the group will not be aggregated).
    * @default `(groupNode) => groupNode == null ? 'footer' : 'inline'`
    */
-  getAggregationPosition: (
-    groupNode: GridRowTreeNodeConfig | null,
-  ) => GridAggregationPosition | null;
+  getAggregationPosition: (groupNode: GridGroupNode) => GridAggregationPosition | null;
 }
 
 export interface DataGridPremiumPropsWithoutDefaultValue<R extends GridValidRowModel = any>

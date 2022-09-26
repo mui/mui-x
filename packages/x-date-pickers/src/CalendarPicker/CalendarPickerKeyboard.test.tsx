@@ -2,7 +2,7 @@ import * as React from 'react';
 import { expect } from 'chai';
 import { act, fireEvent, screen } from '@mui/monorepo/test/utils';
 import { CalendarPicker } from '@mui/x-date-pickers/CalendarPicker';
-import { adapterToUse, createPickerRenderer } from '../../../../test/utils/pickers-utils';
+import { adapterToUse, createPickerRenderer } from 'test/utils/pickers-utils';
 
 describe('<CalendarPicker /> keyboard interactions', () => {
   const { render, clock } = createPickerRenderer({ clock: 'fake' });
@@ -11,7 +11,7 @@ describe('<CalendarPicker /> keyboard interactions', () => {
     it('can autofocus selected day on mount', () => {
       render(
         <CalendarPicker
-          date={adapterToUse.date(new Date(2020, 7, 13))}
+          value={adapterToUse.date(new Date(2020, 7, 13))}
           autoFocus
           onChange={() => {}}
         />,
@@ -30,7 +30,7 @@ describe('<CalendarPicker /> keyboard interactions', () => {
     ].forEach(({ key, expectFocusedDay }) => {
       it(key, () => {
         render(
-          <CalendarPicker date={adapterToUse.date(new Date(2020, 7, 13))} onChange={() => {}} />,
+          <CalendarPicker value={adapterToUse.date(new Date(2020, 7, 13))} onChange={() => {}} />,
         );
 
         act(() => screen.getByText('13').focus());
@@ -46,7 +46,7 @@ describe('<CalendarPicker /> keyboard interactions', () => {
 
     it('should manage a sequence of keyboard interactions', () => {
       render(
-        <CalendarPicker date={adapterToUse.date(new Date(2020, 7, 13))} onChange={() => {}} />,
+        <CalendarPicker value={adapterToUse.date(new Date(2020, 7, 13))} onChange={() => {}} />,
       );
 
       act(() => screen.getByText('13').focus());
@@ -81,7 +81,7 @@ describe('<CalendarPicker /> keyboard interactions', () => {
       it(key, () => {
         render(
           <CalendarPicker
-            date={adapterToUse.date(new Date(2020, 7, initialDay))}
+            value={adapterToUse.date(new Date(2020, 7, initialDay))}
             onChange={() => {}}
           />,
         );
@@ -118,7 +118,7 @@ describe('<CalendarPicker /> keyboard interactions', () => {
         it(key, () => {
           render(
             <CalendarPicker
-              date={adapterToUse.date(new Date(2020, 0, initialDay))}
+              value={adapterToUse.date(new Date(2020, 0, initialDay))}
               onChange={() => {}}
               shouldDisableDate={(date) =>
                 disabledDates.some((disabled) => adapterToUse.isSameDay(date, disabled))

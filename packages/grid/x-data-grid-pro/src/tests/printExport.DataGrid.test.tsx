@@ -131,48 +131,6 @@ describe('<DataGridPro /> - Print export', () => {
     });
   });
 
-  describe('column visibility with colDef.hide', () => {
-    allBooleanConfigurations.forEach(({ printVisible, gridVisible }) => {
-      it(`should have 'currencyPair' ${printVisible ? "'visible'" : "'hidden'"} in print and ${
-        gridVisible ? "'visible'" : "'hidden'"
-      } in screen`, async function test() {
-        const onColumnVisibilityModelChange = spy();
-
-        render(
-          <Test
-            onColumnVisibilityModelChange={onColumnVisibilityModelChange}
-            columns={[
-              { field: 'currencyPair', hide: !gridVisible },
-              { field: 'id', hide: true },
-            ]}
-          />,
-        );
-
-        expect(onColumnVisibilityModelChange.callCount).to.equal(0);
-
-        await act(() =>
-          apiRef.current.exportDataAsPrint({
-            fields: printVisible ? ['currencyPair', 'id'] : ['id'],
-          }),
-        );
-
-        expect(onColumnVisibilityModelChange.callCount).to.equal(2);
-
-        // verify column visibility has been set
-        expect(onColumnVisibilityModelChange.firstCall.firstArg).to.deep.equal({
-          currencyPair: printVisible,
-          id: true,
-        });
-
-        // verify column visibility has been restored
-        expect(onColumnVisibilityModelChange.secondCall.firstArg).to.deep.equal({
-          currencyPair: gridVisible,
-          id: false,
-        });
-      });
-    });
-  });
-
   describe('columns to print', () => {
     it(`should ignore 'allColumns' if 'fields' is provided`, async function test() {
       const onColumnVisibilityModelChange = spy();
@@ -234,8 +192,9 @@ describe('<DataGridPro /> - Print export', () => {
 
       render(
         <Test
+          columnVisibilityModel={{ id: false }}
           onColumnVisibilityModelChange={onColumnVisibilityModelChange}
-          columns={[{ field: 'currencyPair' }, { field: 'id', hide: true }]}
+          columns={[{ field: 'currencyPair' }, { field: 'id' }]}
         />,
       );
 
