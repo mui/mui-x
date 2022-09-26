@@ -4,9 +4,19 @@ import { expect } from 'chai';
 import { act, fireEvent, screen, describeConformance } from '@mui/monorepo/test/utils';
 import { YearPicker, yearPickerClasses as classes } from '@mui/x-date-pickers/YearPicker';
 import { adapterToUse, wrapPickerMount, createPickerRenderer } from 'test/utils/pickers-utils';
+import describeValidation from '@mui/x-date-pickers/internals/utils/describeValidation';
 
 describe('<YearPicker />', () => {
-  const { render } = createPickerRenderer();
+  const { render, clock } = createPickerRenderer({
+    clock: 'fake',
+  });
+
+  describeValidation(YearPicker, () => ({
+    render,
+    clock,
+    views: ['year'],
+    skip: ['textField'],
+  }));
 
   describeConformance(
     <YearPicker

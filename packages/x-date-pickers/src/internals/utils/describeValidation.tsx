@@ -33,7 +33,7 @@ function testDayViewValidation(ElementToTest, propsToTest, getOptions) {
   }
   describe('validation in day view:', () => {
     const defaultProps = {
-      onChange: () => { },
+      onChange: () => {},
       renderInput: (params) => <TextField {...params} />,
       open: true,
       view: 'day',
@@ -311,7 +311,7 @@ function testDayViewValidation(ElementToTest, propsToTest, getOptions) {
 function testTextFieldValidation(ElementToTest, propsToTest, getOptions) {
   describe('validation in textfield:', () => {
     const defaultProps = {
-      onChange: () => { },
+      onChange: () => {},
       renderInput: (params) => <TextField {...params} />,
       reduceAnimations: true,
       showToolbar: false,
@@ -613,7 +613,7 @@ const testsToRun = {
 export default function describeValidation(minimalElement, getOptions) {
   describe('Pickers validation API', () => {
     const {
-      after: runAfterHook = () => { },
+      after: runAfterHook = () => {},
       props = defaultAvailableProps,
       views = [],
       ignoredProps = [],
