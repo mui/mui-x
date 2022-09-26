@@ -4,7 +4,7 @@ import clsx from 'clsx';
 import { SxProps, useTheme } from '@mui/system';
 import { styled, useThemeProps, Theme } from '@mui/material/styles';
 import { unstable_composeClasses as composeClasses } from '@mui/material';
-import '@mui/material/utils';
+import { useForkRef } from '@mui/material/utils';
 import {
   unstable_useControlled as useControlled,
   unstable_useEventCallback as useEventCallback,
@@ -15,9 +15,9 @@ import { WrapperVariantContext } from '../internals/components/wrappers/WrapperV
 import { YearPickerClasses, getYearPickerUtilityClass } from './yearPickerClasses';
 import { BaseDateValidationProps, YearValidationProps } from '../internals/hooks/validation/models';
 import { DefaultizedProps } from '../internals/models/helpers';
-import { parseNonNullablePickerDate } from '../internals/utils/date-utils';
+import { applyDefaultDate } from '../internals/utils/date-utils';
 
-const useUtilityClasses = (ownerState: any) => {
+const useUtilityClasses = (ownerState: YearPickerProps<any>) => {
   const { classes } = ownerState;
 
   const slots = {
@@ -45,8 +45,8 @@ function useYearPickerDefaultizedProps<TDate>(
     disablePast: false,
     disableFuture: false,
     ...themeProps,
-    minDate: parseNonNullablePickerDate(utils, themeProps.minDate, defaultDates.minDate),
-    maxDate: parseNonNullablePickerDate(utils, themeProps.maxDate, defaultDates.maxDate),
+    minDate: applyDefaultDate(utils, themeProps.minDate, defaultDates.minDate),
+    maxDate: applyDefaultDate(utils, themeProps.maxDate, defaultDates.maxDate),
   };
 }
 
@@ -60,12 +60,13 @@ const YearPickerRoot = styled('div', {
   flexWrap: 'wrap',
   overflowY: 'auto',
   height: '100%',
-  margin: '0 4px',
+  padding: '0 4px',
+  maxHeight: '304px',
 });
 
 export interface YearPickerProps<TDate>
   extends YearValidationProps<TDate>,
-    BaseDateValidationProps<TDate> {
+  BaseDateValidationProps<TDate> {
   autoFocus?: boolean;
   /**
    * className applied to the root element.
@@ -85,7 +86,7 @@ export interface YearPickerProps<TDate>
   /**
    * Callback fired when the value (the selected year) changes.
    * @template TValue
-   * @param {TValue} value The new parsed value.
+   * @param {TValue} value The new value.
    */
   onChange: (value: TDate) => void;
   /** If `true` picker is readonly */
@@ -243,9 +244,37 @@ export const YearPicker = React.forwardRef(function YearPicker<TDate>(
     }
   });
 
+  const scrollerRef = React.useRef<HTMLDivElement>(null);
+  const handleRef = useForkRef(ref, scrollerRef);
+  React.useEffect(() => {
+    if (autoFocus || scrollerRef.current === null) {
+      return;
+    }
+    const tabbableButton = scrollerRef.current.querySelector<HTMLElement>('[tabindex="0"]');
+    if (!tabbableButton) {
+      return;
+    }
+
+    // Taken from useScroll in x-data-grid, but vertically centered
+    const offsetHeight = tabbableButton.offsetHeight;
+    const offsetTop = tabbableButton.offsetTop;
+
+    const clientHeight = scrollerRef.current.clientHeight;
+    const scrollTop = scrollerRef.current.scrollTop;
+
+    const elementBottom = offsetTop + offsetHeight;
+
+    if (offsetHeight > clientHeight || offsetTop < scrollTop) {
+      // Button already visible
+      return;
+    }
+
+    scrollerRef.current.scrollTop = elementBottom - clientHeight / 2 - offsetHeight / 2;
+  }, [autoFocus]);
+
   return (
     <YearPickerRoot
-      ref={ref}
+      ref={handleRef}
       className={clsx(classes.root, className)}
       ownerState={ownerState}
       {...other}
@@ -296,7 +325,7 @@ YearPicker.propTypes = {
    */
   disabled: PropTypes.bool,
   /**
-   * If `true` future days are disabled.
+   * If `true` disable values before the current time
    * @default false
    */
   disableFuture: PropTypes.bool,
@@ -306,7 +335,7 @@ YearPicker.propTypes = {
    */
   disableHighlightToday: PropTypes.bool,
   /**
-   * If `true` past days are disabled.
+   * If `true` disable values after the current time.
    * @default false
    */
   disablePast: PropTypes.bool,
@@ -322,7 +351,7 @@ YearPicker.propTypes = {
   /**
    * Callback fired when the value (the selected year) changes.
    * @template TValue
-   * @param {TValue} value The new parsed value.
+   * @param {TValue} value The new value.
    */
   onChange: PropTypes.func.isRequired,
   onFocusedViewChange: PropTypes.func,

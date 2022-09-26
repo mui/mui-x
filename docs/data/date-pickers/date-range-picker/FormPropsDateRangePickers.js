@@ -12,11 +12,9 @@ export default function FormPropsDateRangePickers() {
 
   return (
     <Stack spacing={3}>
-      <LocalizationProvider
-        dateAdapter={AdapterDayjs}
-        localeText={{ start: 'Disabled start', end: 'Disabled end' }}
-      >
+      <LocalizationProvider dateAdapter={AdapterDayjs}>
         <DateRangePicker
+          localeText={{ start: 'Disabled start', end: 'Disabled end' }}
           disabled
           value={value}
           onChange={(newValue) => {
@@ -30,12 +28,8 @@ export default function FormPropsDateRangePickers() {
             </React.Fragment>
           )}
         />
-      </LocalizationProvider>
-      <LocalizationProvider
-        dateAdapter={AdapterDayjs}
-        localeText={{ start: 'Read-only start', end: 'Read-only end' }}
-      >
         <DateRangePicker
+          localeText={{ start: 'Read-only start', end: 'Read-only end' }}
           readOnly
           value={value}
           onChange={(newValue) => {

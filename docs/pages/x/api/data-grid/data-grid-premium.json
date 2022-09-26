@@ -4,7 +4,10 @@
       "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" },
       "required": true
     },
-    "rows": { "type": { "name": "array" }, "required": true },
+    "rows": {
+      "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" },
+      "required": true
+    },
     "aggregationFunctions": {
       "type": { "name": "object" },
       "default": "GRID_AGGREGATION_FUNCTIONS"
@@ -144,11 +147,6 @@
     "onColumnHeaderOver": { "type": { "name": "func" } },
     "onColumnOrderChange": { "type": { "name": "func" } },
     "onColumnResize": { "type": { "name": "func" } },
-    "onColumnVisibilityChange": {
-      "type": { "name": "func" },
-      "deprecated": true,
-      "deprecationInfo": "Use <code>onColumnVisibilityModelChange</code> instead."
-    },
     "onColumnVisibilityModelChange": { "type": { "name": "func" } },
     "onColumnWidthChange": { "type": { "name": "func" } },
     "onDetailPanelExpandedRowIdsChange": { "type": { "name": "func" } },
@@ -194,7 +192,12 @@
         "description": "{ left?: Array&lt;string&gt;, right?: Array&lt;string&gt; }"
       }
     },
-    "pinnedRows": { "type": { "name": "shape", "description": "{ bottom?: array, top?: array }" } },
+    "pinnedRows": {
+      "type": {
+        "name": "shape",
+        "description": "{ bottom?: Array&lt;object&gt;, top?: Array&lt;object&gt; }"
+      }
+    },
     "processRowUpdate": { "type": { "name": "func" } },
     "rowBuffer": { "type": { "name": "number" }, "default": "3" },
     "rowCount": { "type": { "name": "number" } },
@@ -457,6 +460,6 @@
   },
   "forwardsRefTo": "GridRoot",
   "filename": "/packages/grid/x-data-grid-premium/src/DataGridPremium/DataGridPremium.tsx",
-  "demos": "<ul><li><a href=\"/x/react-data-grid#commercial-version\">DataGridPremium</a></li></ul>",
+  "demos": "<ul><li><a href=\"/x/react-data-grid/#commercial-version\">DataGridPremium</a></li></ul>",
   "packages": ["@mui/x-data-grid-premium"]
 }

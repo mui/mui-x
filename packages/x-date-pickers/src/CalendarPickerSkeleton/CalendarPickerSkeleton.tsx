@@ -56,7 +56,7 @@ const CalendarPickerSkeletonWeek = styled('div', {
 
 const CalendarPickerSkeletonDay = styled(Skeleton, {
   name: 'MuiCalendarPickerSkeleton',
-  slot: 'Day',
+  slot: 'DaySkeleton',
   overridesResolver: (props, styles) => styles.daySkeleton,
 })<{ ownerState: { day: number } }>(({ ownerState }) => ({
   margin: `0 ${DAY_MARGIN}px`,
@@ -93,17 +93,15 @@ const monthMap = [
  *
  * - [CalendarPickerSkeleton API](https://mui.com/x/api/date-pickers/calendar-picker-skeleton/)
  */
-function CalendarPickerSkeleton(props: CalendarPickerSkeletonProps) {
-  const { className, ...other } = useThemeProps<
-    Theme,
-    Omit<JSX.IntrinsicElements['div'], 'ref'> & { ref?: React.Ref<HTMLDivElement> },
-    'MuiCalendarPickerSkeleton'
-  >({
-    props,
+function CalendarPickerSkeleton(inProps: CalendarPickerSkeletonProps) {
+  const props = useThemeProps({
+    props: inProps,
     name: 'MuiCalendarPickerSkeleton',
   });
 
-  const classes = useUtilityClasses(props);
+  const { className, ...other } = props;
+
+  const classes = useUtilityClasses(other);
 
   return (
     <CalendarPickerSkeletonRoot className={clsx(classes.root, className)} {...other}>

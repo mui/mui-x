@@ -15,12 +15,12 @@ import {
   BaseDateValidationProps,
   MonthValidationProps,
 } from '../internals/hooks/validation/models';
-import { parseNonNullablePickerDate } from '../internals/utils/date-utils';
+import { applyDefaultDate } from '../internals/utils/date-utils';
 import { DefaultizedProps } from '../internals/models/helpers';
 
 export interface MonthPickerProps<TDate>
   extends MonthValidationProps<TDate>,
-    BaseDateValidationProps<TDate> {
+  BaseDateValidationProps<TDate> {
   autoFocus?: boolean;
   /**
    * className applied to the root element.
@@ -41,7 +41,7 @@ export interface MonthPickerProps<TDate>
   /**
    * Callback fired when the value (the selected month) changes.
    * @template TValue
-   * @param {TValue} value The new parsed value.
+   * @param {TValue} value The new value.
    */
   onChange: (value: TDate) => void;
   /** If `true` picker is readonly */
@@ -84,8 +84,8 @@ export function useMonthPickerDefaultizedProps<TDate>(
     disableFuture: false,
     disablePast: false,
     ...themeProps,
-    minDate: parseNonNullablePickerDate(utils, themeProps.minDate, defaultDates.minDate),
-    maxDate: parseNonNullablePickerDate(utils, themeProps.maxDate, defaultDates.maxDate),
+    minDate: applyDefaultDate(utils, themeProps.minDate, defaultDates.minDate),
+    maxDate: applyDefaultDate(utils, themeProps.maxDate, defaultDates.maxDate),
   };
 }
 
@@ -311,7 +311,7 @@ MonthPicker.propTypes = {
    */
   disabled: PropTypes.bool,
   /**
-   * If `true` future days are disabled.
+   * If `true` disable values before the current time
    * @default false
    */
   disableFuture: PropTypes.bool,
@@ -321,7 +321,7 @@ MonthPicker.propTypes = {
    */
   disableHighlightToday: PropTypes.bool,
   /**
-   * If `true` past days are disabled.
+   * If `true` disable values after the current time.
    * @default false
    */
   disablePast: PropTypes.bool,
@@ -337,7 +337,7 @@ MonthPicker.propTypes = {
   /**
    * Callback fired when the value (the selected month) changes.
    * @template TValue
-   * @param {TValue} value The new parsed value.
+   * @param {TValue} value The new value.
    */
   onChange: PropTypes.func.isRequired,
   onFocusedViewChange: PropTypes.func,

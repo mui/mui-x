@@ -29,7 +29,7 @@ import { isPrintableKey } from '../../../utils/keyboardUtils';
 import { gridColumnFieldsSelector } from '../columns/gridColumnsSelector';
 import { GridCellParams } from '../../../models/params/gridCellParams';
 import { buildWarning } from '../../../utils/warning';
-import { gridRowsIdToIdLookupSelector } from '../rows/gridRowsSelector';
+import { gridRowsDataRowIdToIdLookupSelector } from '../rows/gridRowsSelector';
 import { deepClone } from '../../../utils/utils';
 import {
   GridRowEditStopParams,
@@ -522,7 +522,7 @@ export const useGridRowEditing = (
     GridNewRowEditingApi['unstable_setRowEditingEditCellValue']
   >(
     (params) => {
-      const { id, field, value } = params;
+      const { id, field, value, debounceMs, unstable_skipValueParser: skipValueParser } = params;
 
       throwIfNotEditable(id, field);
 
@@ -530,12 +530,16 @@ export const useGridRowEditing = (
       const row = apiRef.current.getRow(id)!;
 
       let parsedValue = value;
-      if (column.valueParser) {
+      if (column.valueParser && !skipValueParser) {
         parsedValue = column.valueParser(value, apiRef.current.getCellParams(id, field));
       }
 
       let editingState = gridEditRowsStateSelector(apiRef.current.state);
-      let newProps = { ...editingState[id][field], value: parsedValue };
+      let newProps: GridEditCellProps = {
+        ...editingState[id][field],
+        value: parsedValue,
+        changeReason: debounceMs ? 'debouncedSetEditCellValue' : 'setEditCellValue',
+      };
 
       if (!column.preProcessEditCellProps) {
         updateOrDeleteFieldState(id, field, newProps);
@@ -676,7 +680,7 @@ export const useGridRowEditing = (
   }, [rowModesModelProp, updateRowModesModel]);
 
   React.useEffect(() => {
-    const idToIdLookup = gridRowsIdToIdLookupSelector(apiRef);
+    const idToIdLookup = gridRowsDataRowIdToIdLookupSelector(apiRef);
 
     // Update the ref here because updateStateToStopRowEditMode may change it later
     const copyOfPrevRowModesModel = prevRowModesModel.current;

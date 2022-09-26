@@ -187,6 +187,7 @@ describe('<DataGridPro /> - Cell Editing', () => {
           value: 'USD GBP',
           error: false,
           isProcessingProps: true,
+          changeReason: 'setEditCellValue',
         });
       });
 

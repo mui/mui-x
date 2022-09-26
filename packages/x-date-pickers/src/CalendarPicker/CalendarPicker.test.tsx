@@ -12,12 +12,14 @@ import {
   adapterToUse,
   wrapPickerMount,
   createPickerRenderer,
-} from '../../../../test/utils/pickers-utils';
+} from 'test/utils/pickers-utils';
+
+const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
 describe('<CalendarPicker />', () => {
   const { render, clock } = createPickerRenderer({ clock: 'fake' });
 
-  describeConformance(<CalendarPicker value={adapterToUse.date()} onChange={() => {}} />, () => ({
+  describeConformance(<CalendarPicker value={adapterToUse.date()} onChange={() => { }} />, () => ({
     classes,
     inheritComponent: 'div',
     render,
@@ -41,7 +43,7 @@ describe('<CalendarPicker />', () => {
     render(
       <CalendarPicker
         value={adapterToUse.date(new Date(2019, 0, 1))}
-        onChange={() => {}}
+        onChange={() => { }}
         onViewChange={handleViewChange}
       />,
     );
@@ -134,7 +136,7 @@ describe('<CalendarPicker />', () => {
         dateAdapter={AdapterClassToUse}
         dateFormats={{ monthAndYear: 'yyyy/MM' }}
       >
-        <CalendarPicker value={adapterToUse.date(new Date(2019, 0, 1))} onChange={() => {}} />,
+        <CalendarPicker value={adapterToUse.date(new Date(2019, 0, 1))} onChange={() => { }} />,
       </LocalizationProvider>,
     );
 
@@ -146,7 +148,7 @@ describe('<CalendarPicker />', () => {
       <LocalizationProvider dateAdapter={AdapterClassToUse}>
         <CalendarPicker
           value={adapterToUse.date(new Date(2019, 0, 1))}
-          onChange={() => {}}
+          onChange={() => { }}
           dayOfWeekFormatter={(day) => `${day}.`}
         />
         ,
@@ -158,26 +160,10 @@ describe('<CalendarPicker />', () => {
     });
   });
 
-  it('should select the closest enabled date if the prop.date contains a disabled date', () => {
-    const onChange = spy();
-
-    render(
-      <CalendarPicker
-        value={adapterToUse.date(new Date(2019, 0, 1))}
-        onChange={onChange}
-        maxDate={adapterToUse.date(new Date(2018, 0, 1))}
-      />,
-    );
-
-    // onChange must be dispatched with newly selected date
-    expect(onChange.callCount).to.equal(React.version.startsWith('18') ? 2 : 1); // Strict Effects run mount effects twice
-    expect(onChange.lastCall.args[0]).toEqualDateTime(new Date(2018, 0, 1));
-  });
-
   describe('view: day', () => {
     it('renders day calendar standalone', () => {
       render(
-        <CalendarPicker value={adapterToUse.date(new Date(2019, 0, 1))} onChange={() => {}} />,
+        <CalendarPicker value={adapterToUse.date(new Date(2019, 0, 1))} onChange={() => { }} />,
       );
 
       expect(screen.getByText('January 2019')).toBeVisible();
@@ -323,7 +309,7 @@ describe('<CalendarPicker />', () => {
         <CalendarPicker
           value={adapterToUse.date(new Date(2019, 0, 1))}
           openTo="year"
-          onChange={() => {}}
+          onChange={() => { }}
         />,
       );
 
@@ -411,6 +397,34 @@ describe('<CalendarPicker />', () => {
 
       expect(onChange.callCount).to.equal(0);
       expect(screen.getByMuiTest('calendar-month-and-year-text')).to.have.text('January 2022');
+    });
+
+    it('should scroll to show the selected year', function test() {
+      if (isJSDOM) {
+        this.skip(); // Needs layout
+      }
+      render(
+        <CalendarPicker
+          value={adapterToUse.date(new Date(2019, 3, 29))}
+          onChange={() => { }}
+          views={['year']}
+          openTo="year"
+        />,
+      );
+
+      // const virtualScroller = document.querySelector('.MuiDataGrid-virtualScroller')!;
+      //
+      const rootElement = document.querySelector('.MuiCalendarPicker-root')!;
+      const selectedButton = document.querySelector('.Mui-selected')!;
+
+      expect(rootElement).not.to.equal(null);
+      expect(selectedButton).not.to.equal(null);
+
+      const parentBoundingBox = rootElement.getBoundingClientRect();
+      const buttonBoundingBox = selectedButton.getBoundingClientRect();
+
+      expect(parentBoundingBox.top).not.to.greaterThan(buttonBoundingBox.top);
+      expect(parentBoundingBox.bottom).not.to.lessThan(buttonBoundingBox.bottom);
     });
   });
 });

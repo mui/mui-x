@@ -58,7 +58,7 @@ function CustomDataGrid(props) {
 ```
 
 :::warning
-The API object will be populated by the various plugins of the grid during the first render of the component.
+The API object is populated by the various plugins of the grid during the first render of the component.
 If you try to use it in the first render of the component, it will crash since all methods are not registered yet.
 :::
 

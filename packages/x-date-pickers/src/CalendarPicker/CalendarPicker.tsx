@@ -18,7 +18,7 @@ import {
   PickersCalendarHeaderSlotsComponentsProps,
 } from './PickersCalendarHeader';
 import { YearPicker, YearPickerProps } from '../YearPicker/YearPicker';
-import { findClosestEnabledDate, parseNonNullablePickerDate } from '../internals/utils/date-utils';
+import { findClosestEnabledDate, applyDefaultDate } from '../internals/utils/date-utils';
 import { CalendarPickerView } from '../internals/models';
 import { PickerViewRoot } from '../internals/components/PickerViewRoot';
 import { defaultReduceAnimations } from '../internals/utils/defaultReduceAnimations';
@@ -31,18 +31,18 @@ import {
 } from '../internals/hooks/validation/models';
 import { DefaultizedProps } from '../internals/models/helpers';
 
-export interface CalendarPickerSlotsComponent extends PickersCalendarHeaderSlotsComponent {}
+export interface CalendarPickerSlotsComponent extends PickersCalendarHeaderSlotsComponent { }
 
 export interface CalendarPickerSlotsComponentsProps
-  extends PickersCalendarHeaderSlotsComponentsProps {}
+  extends PickersCalendarHeaderSlotsComponentsProps { }
 
 export interface CalendarPickerProps<TDate>
   extends ExportedDayPickerProps<TDate>,
-    BaseDateValidationProps<TDate>,
-    DayValidationProps<TDate>,
-    YearValidationProps<TDate>,
-    MonthValidationProps<TDate>,
-    ExportedCalendarHeaderProps<TDate> {
+  BaseDateValidationProps<TDate>,
+  DayValidationProps<TDate>,
+  YearValidationProps<TDate>,
+  MonthValidationProps<TDate>,
+  ExportedCalendarHeaderProps<TDate> {
   autoFocus?: boolean;
   className?: string;
   classes?: Partial<CalendarPickerClasses>;
@@ -154,9 +154,7 @@ export type CalendarPickerDefaultizedProps<TDate> = DefaultizedProps<
   | keyof BaseDateValidationProps<TDate>
 >;
 
-const useUtilityClasses = (
-  ownerState: CalendarPickerProps<any> & { classes?: Partial<CalendarPickerClasses> },
-) => {
+const useUtilityClasses = (ownerState: CalendarPickerProps<any>) => {
   const { classes } = ownerState;
   const slots = {
     root: ['root'],
@@ -186,8 +184,8 @@ function useCalendarPickerDefaultizedProps<TDate>(
     reduceAnimations: defaultReduceAnimations,
     renderLoading: () => <span data-mui-test="loading-progress">...</span>,
     ...themeProps,
-    minDate: parseNonNullablePickerDate(utils, themeProps.minDate, defaultDates.minDate),
-    maxDate: parseNonNullablePickerDate(utils, themeProps.maxDate, defaultDates.maxDate),
+    minDate: applyDefaultDate(utils, themeProps.minDate, defaultDates.minDate),
+    maxDate: applyDefaultDate(utils, themeProps.maxDate, defaultDates.maxDate),
   };
 }
 
@@ -204,9 +202,7 @@ const CalendarPickerViewTransitionContainer = styled(PickersFadeTransitionGroup,
   name: 'MuiCalendarPicker',
   slot: 'ViewTransitionContainer',
   overridesResolver: (props, styles) => styles.viewTransitionContainer,
-})<{ ownerState: CalendarPickerProps<any> }>({
-  overflowY: 'auto',
-});
+})<{ ownerState: CalendarPickerProps<any> }>({});
 
 type CalendarPickerComponent = (<TDate>(
   props: CalendarPickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
@@ -261,9 +257,6 @@ export const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
     components,
     componentsProps,
     loading,
-    getViewSwitchingButtonText,
-    leftArrowButtonText,
-    rightArrowButtonText,
     renderLoading,
     sx,
   } = props;
@@ -302,14 +295,14 @@ export const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
 
       const closestEnabledDate = isDateDisabled(newDate)
         ? findClosestEnabledDate({
-            utils,
-            date: newDate,
-            minDate: utils.isBefore(minDate, startOfMonth) ? startOfMonth : minDate,
-            maxDate: utils.isAfter(maxDate, endOfMonth) ? endOfMonth : maxDate,
-            disablePast,
-            disableFuture,
-            isDateDisabled,
-          })
+          utils,
+          date: newDate,
+          minDate: utils.isBefore(minDate, startOfMonth) ? startOfMonth : minDate,
+          maxDate: utils.isAfter(maxDate, endOfMonth) ? endOfMonth : maxDate,
+          disablePast,
+          disableFuture,
+          isDateDisabled,
+        })
         : newDate;
 
       if (closestEnabledDate) {
@@ -344,14 +337,14 @@ export const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
 
       const closestEnabledDate = isDateDisabled(newDate)
         ? findClosestEnabledDate({
-            utils,
-            date: newDate,
-            minDate: utils.isBefore(minDate, startOfYear) ? startOfYear : minDate,
-            maxDate: utils.isAfter(maxDate, endOfYear) ? endOfYear : maxDate,
-            disablePast,
-            disableFuture,
-            isDateDisabled,
-          })
+          utils,
+          date: newDate,
+          minDate: utils.isBefore(minDate, startOfYear) ? startOfYear : minDate,
+          maxDate: utils.isAfter(maxDate, endOfYear) ? endOfYear : maxDate,
+          disablePast,
+          disableFuture,
+          isDateDisabled,
+        })
         : newDate;
 
       if (closestEnabledDate) {
@@ -392,25 +385,7 @@ export const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
   );
 
   React.useEffect(() => {
-    if (value && isDateDisabled(value)) {
-      const closestEnabledDate = findClosestEnabledDate({
-        utils,
-        date: value,
-        minDate,
-        maxDate,
-        disablePast,
-        disableFuture,
-        isDateDisabled,
-      });
-
-      onChange(closestEnabledDate, 'partial');
-    }
-    // This call is too expensive to run it on each prop change.
-    // So just ensure that we are not rendering disabled as selected on mount.
-  }, []); // eslint-disable-line
-
-  React.useEffect(() => {
-    if (value) {
+    if (value != null && utils.isValid(value)) {
       changeMonth(value);
     }
   }, [value]); // eslint-disable-line
@@ -462,6 +437,11 @@ export const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
     },
   );
 
+  React.useEffect(() => {
+    // Set focus to the button when switching from a view to another
+    handleFocusedViewChange(openView)(true);
+  }, [openView, handleFocusedViewChange]);
+
   return (
     <CalendarPickerRoot
       ref={ref}
@@ -484,9 +464,6 @@ export const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
         labelId={gridLabelId}
         components={components}
         componentsProps={componentsProps}
-        getViewSwitchingButtonText={getViewSwitchingButtonText}
-        leftArrowButtonText={leftArrowButtonText}
-        rightArrowButtonText={rightArrowButtonText}
       />
       <CalendarPickerViewTransitionContainer
         reduceAnimations={reduceAnimations}
@@ -587,7 +564,7 @@ CalendarPicker.propTypes = {
    */
   disabled: PropTypes.bool,
   /**
-   * If `true` future days are disabled.
+   * If `true` disable values before the current time
    * @default false
    */
   disableFuture: PropTypes.bool,
@@ -597,23 +574,11 @@ CalendarPicker.propTypes = {
    */
   disableHighlightToday: PropTypes.bool,
   /**
-   * If `true` past days are disabled.
+   * If `true` disable values after the current time.
    * @default false
    */
   disablePast: PropTypes.bool,
   focusedView: PropTypes.oneOf(['day', 'month', 'year']),
-  /**
-   * Get aria-label text for switching between views button.
-   * @param {CalendarPickerView} currentView The view from which we want to get the button text.
-   * @returns {string} The label of the view.
-   * @deprecated Use the `localeText` prop of `LocalizationProvider` instead, see https://mui.com/x/react-date-pickers/localization
-   */
-  getViewSwitchingButtonText: PropTypes.func,
-  /**
-   * Left arrow icon aria-label text.
-   * @deprecated
-   */
-  leftArrowButtonText: PropTypes.string,
   /**
    * If `true` renders `LoadingComponent` in calendar instead of calendar view.
    * Can be used to preload information and show it in calendar.
@@ -681,11 +646,6 @@ CalendarPicker.propTypes = {
    * @default () => <span data-mui-test="loading-progress">...</span>
    */
   renderLoading: PropTypes.func,
-  /**
-   * Right arrow icon aria-label text.
-   * @deprecated
-   */
-  rightArrowButtonText: PropTypes.string,
   /**
    * Disable specific date. @DateIOType
    * @template TDate
