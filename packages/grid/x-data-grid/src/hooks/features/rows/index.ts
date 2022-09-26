@@ -6,11 +6,12 @@ export {
   gridRowsLoadingSelector,
   gridTopLevelRowCountSelector,
   gridRowsLookupSelector,
-  gridRowsIdToIdLookupSelector,
+  gridRowsDataRowIdToIdLookupSelector,
   gridRowTreeSelector,
   gridRowGroupingNameSelector,
-  gridRowTreeDepthSelector,
-  gridRowIdsSelector,
+  gridRowTreeDepthsSelector,
+  gridRowMaximumTreeDepthSelector,
+  gridDataRowIdsSelector,
 } from './gridRowsSelector';
-export type { GridRowsState } from './gridRowsState';
-export { checkGridRowIdIsValid } from './gridRowsUtils';
+export type { GridRowsState, GridRowIdToModelLookup } from './gridRowsInterfaces';
+export { GRID_ROOT_GROUP_ID, checkGridRowIdIsValid } from './gridRowsUtils';
