@@ -1,26 +1,16 @@
-import * as React from 'react';
 import {
   MobilePickerSlotsComponent,
   MobilePickerSlotsComponentsProps,
-  ExportedMobilePickerProps,
 } from '../internals/components/MobilePicker';
-import { CalendarPickerView } from '../internals/models';
 import { MakeOptional } from '../internals/models/helpers';
+import { BaseDatePicker2Props } from '../DatePicker2/shared';
 
 export interface MobileDatePicker2SlotsComponent
   extends MakeOptional<MobilePickerSlotsComponent, 'Field'> {}
 
 export interface MobileDatePicker2SlotsComponentsProps extends MobilePickerSlotsComponentsProps {}
 
-export interface MobileDatePicker2Props<TDate>
-  extends MakeOptional<
-    ExportedMobilePickerProps<TDate | null, TDate, CalendarPickerView>,
-    'inputFormat' | 'views' | 'openTo'
-  > {
-  /**
-   * The label content.
-   */
-  label?: React.ReactNode;
+export interface MobileDatePicker2Props<TDate> extends BaseDatePicker2Props<TDate> {
   /**
    * Overrideable components.
    * @default {}

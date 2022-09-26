@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { resolveComponentProps } from '@mui/base/utils';
 import { MobilePicker } from '../internals/components/MobilePicker';
 import { datePickerValueManager } from '../DatePicker/shared';
 import { Unstable_DateField as DateField } from '../DateField';
@@ -7,6 +8,7 @@ import { useDatePicker2DefaultizedProps, renderDateViews } from '../DatePicker2/
 import { useLocaleText } from '../internals';
 import { Calendar } from '../internals/components/icons';
 import { CalendarPickerView } from '../internals/models/views';
+import { PickerViewsRendererProps } from '../internals/components/PickerViewManager';
 
 type MobileDatePickerComponent = (<TDate>(
   props: MobileDatePicker2Props<TDate> & React.RefAttributes<HTMLDivElement>,
@@ -36,13 +38,18 @@ const MobileDatePicker2 = React.forwardRef(function MobileDatePicker2<TDate>(
   const componentsProps = React.useMemo(
     () => ({
       ...inComponentsProps,
-      field: {
+      field: (ownerState: any) => ({
+        ...resolveComponentProps(inComponentsProps?.field, ownerState),
         ref,
         label,
-      },
+      }),
     }),
     [inComponentsProps, ref, label],
   );
+
+  const renderViews = (
+    viewProps: PickerViewsRendererProps<TDate | null, TDate, CalendarPickerView>,
+  ) => renderDateViews({ ...other, ...viewProps });
 
   return (
     <MobilePicker<TDate | null, TDate, CalendarPickerView>
@@ -50,7 +57,7 @@ const MobileDatePicker2 = React.forwardRef(function MobileDatePicker2<TDate>(
       components={components}
       componentsProps={componentsProps}
       valueManager={datePickerValueManager}
-      renderViews={renderDateViews}
+      renderViews={renderViews}
       getOpenDialogAriaText={localeText.openDatePickerDialogue}
     />
   );

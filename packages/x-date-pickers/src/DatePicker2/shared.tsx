@@ -1,23 +1,32 @@
 import * as React from 'react';
 import { useThemeProps } from '@mui/material/styles';
-import { DefaultizedProps } from '../internals/models/helpers';
+import { DefaultizedProps, MakeOptional } from '../internals/models/helpers';
 import { CalendarPicker, CalendarPickerView } from '../CalendarPicker';
 import { PickerViewsRendererProps } from '../internals/components/PickerViewManager';
 import { useUtils } from '../internals/hooks/useUtils';
 import { isYearAndMonthViews, isYearOnlyView } from '../DatePicker/shared';
+import { ExportedDesktopPickerProps } from '../internals/components/DesktopPicker';
+import { ValidationCommonPropsOptionalValue } from '../internals/hooks/validation/useValidation';
+import { DateValidationError } from '../internals/hooks/validation/useDateValidation';
 
-// TODO: Avoid redefined here
-interface BaseDatePicker2Props {
-  inputFormat?: string;
-  openTo?: CalendarPickerView;
-  views?: readonly CalendarPickerView[];
+type DesktopPickerDefaultizedKeys = 'inputFormat' | 'views' | 'openTo';
+
+export interface BaseDatePicker2Props<TDate>
+  extends MakeOptional<
+      ExportedDesktopPickerProps<TDate | null, TDate, CalendarPickerView>,
+      DesktopPickerDefaultizedKeys
+    >,
+    ValidationCommonPropsOptionalValue<DateValidationError, TDate | null> {
+  /**
+   * The label content.
+   */
+  label?: React.ReactNode;
 }
 
-export function useDatePicker2DefaultizedProps<
-  TDate,
-  // TODO: Reduce the extension scope.
-  Props extends BaseDatePicker2Props,
->(props: Props, name: string): DefaultizedProps<Props, 'openTo' | 'views' | 'inputFormat'> {
+export function useDatePicker2DefaultizedProps<TDate, Props extends BaseDatePicker2Props<TDate>>(
+  props: Props,
+  name: string,
+): DefaultizedProps<Props, DesktopPickerDefaultizedKeys> {
   const utils = useUtils<TDate>();
   const themeProps = useThemeProps({
     props,

@@ -2,6 +2,12 @@ import * as React from 'react';
 import { useLocalizationContext } from '../useUtils';
 import { MuiPickersAdapterContextValue } from '../../../LocalizationProvider/LocalizationProvider';
 
+/**
+ * Replaces `ValidationCommonProps` in the field and new pickers.
+ */
+export interface ValidationCommonPropsOptionalValue<TError, TValue>
+  extends Partial<ValidationCommonProps<TError, TValue>> {}
+
 export interface ValidationCommonProps<TError, TValue> {
   /**
    * Callback that fired when input value or new `value` prop validation returns **new** validation error (or value is valid after error).
