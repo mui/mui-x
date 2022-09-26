@@ -202,7 +202,7 @@ export function Clock<TDate>(inProps: ClockProps<TDate>) {
   const ownerState = props;
 
   const utils = useUtils<TDate>();
-  const localeText = useLocaleText();
+  const localeText = useLocaleText<TDate>();
   const wrapperVariant = React.useContext(WrapperVariantContext);
   const isMoving = React.useRef(false);
   const classes = useUtilityClasses(ownerState);

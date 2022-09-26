@@ -40,17 +40,17 @@ export interface PickersCalendarHeaderSlotsComponent extends PickersArrowSwitche
 }
 
 // We keep the interface to allow module augmentation
-export interface PickersCalendarHeaderComponentsPropsOverrides { }
+export interface PickersCalendarHeaderComponentsPropsOverrides {}
 
 export interface PickersCalendarHeaderSlotsComponentsProps
   extends PickersArrowSwitcherSlotsComponentsProps {
   switchViewButton: React.ComponentPropsWithRef<typeof IconButton> &
-  PickersCalendarHeaderComponentsPropsOverrides;
+    PickersCalendarHeaderComponentsPropsOverrides;
 }
 
 export interface PickersCalendarHeaderProps<TDate>
   extends ExportedPickersArrowSwitcherProps,
-  DateComponentValidationProps<TDate> {
+    DateComponentValidationProps<TDate> {
   /**
    * Overrideable components.
    * @default {}
