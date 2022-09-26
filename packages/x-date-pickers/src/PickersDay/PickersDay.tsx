@@ -67,6 +67,10 @@ export interface PickersDayProps<TDate>
    * @default false
    */
   today?: boolean;
+  /**
+   * The days currently selected.
+   */
+  selectedDays: TDate[];
 }
 
 type OwnerState = Partial<PickersDayProps<any>>;
@@ -365,6 +369,10 @@ PickersDayRaw.propTypes = {
    * @default false
    */
   selected: PropTypes.bool,
+  /**
+   * The days currently selected.
+   */
+  selectedDays: PropTypes.array.isRequired,
   /**
    * If `true`, days that have `outsideCurrentMonth={true}` are displayed.
    * @default false

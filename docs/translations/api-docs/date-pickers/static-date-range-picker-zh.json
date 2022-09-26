@@ -34,7 +34,6 @@
     "OpenPickerButtonProps": "Props to pass to keyboard adornment button.",
     "readOnly": "Make picker read only.",
     "reduceAnimations": "Disable heavy animations.",
-    "renderDay": "Custom renderer for <code>&lt;DateRangePicker /&gt;</code> days. @DateIOType<br><br><strong>Signature:</strong><br><code>function(day: TDate, dateRangePickerDayProps: DateRangePickerDayProps&lt;TDate&gt;) =&gt; JSX.Element</code><br><em>day:</em> The day to render.<br><em>dateRangePickerDayProps:</em> The props of the day to render.<br> <em>returns</em> (JSX.Element): The element representing the day.",
     "renderInput": "The <code>renderInput</code> prop allows you to customize the rendered input. The <code>startProps</code> and <code>endProps</code> arguments of this render prop contains props of <a href=\"https://mui.com/material-ui/api/text-field/#props\">TextField</a>, that you need to forward to the range start/end inputs respectively. Pay specific attention to the <code>ref</code> and <code>inputProps</code> keys.<br><br><strong>Signature:</strong><br><code>function(startProps: MuiTextFieldProps, endProps: MuiTextFieldProps) =&gt; React.ReactElement</code><br><em>startProps:</em> Props that you need to forward to the range start input.<br><em>endProps:</em> Props that you need to forward to the range end input.<br> <em>returns</em> (React.ReactElement): The range input to render.",
     "renderLoading": "Component displaying when passed <code>loading</code> true.<br><br><strong>Signature:</strong><br><code>function() =&gt; React.ReactNode</code><br><br> <em>returns</em> (React.ReactNode): The node to render when loading.",
     "rifmFormatter": "Custom formatter to be passed into Rifm component.<br><br><strong>Signature:</strong><br><code>function(str: string) =&gt; string</code><br><em>str:</em> The un-formatted string.<br> <em>returns</em> (string): The formatted string.",
@@ -52,12 +51,6 @@
   "slotDescriptions": {
     "ActionBar": "The action bar placed bellow picker views.",
     "PaperContent": "The content of the Paper wrapping views.",
-    "SwitchViewButton": "Button displayed to switch between different calendar views.",
-    "SwitchViewIcon": "Icon displayed in the SwitchViewButton. Rotated by 180° when the open view is &#39;year&#39;.",
-    "PreviousIconButton": "Button allowing to switch to the left view.",
-    "NextIconButton": "Button allowing to switch to the right view.",
-    "LeftArrowIcon": "Icon displayed in the left view switch button.",
-    "RightArrowIcon": "Icon displayed in the right view switch button.",
     "OpenPickerIcon": "Icon displayed in the open picker button."
   }
 }

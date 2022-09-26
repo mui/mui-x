@@ -360,17 +360,21 @@ describe('<DesktopDateRangePicker />', () => {
     expect(screen.queryByText('Fim')).not.to.equal(null);
   });
 
-  it('prop: renderDay - should be called and render days', async () => {
-    render(
-      <WrappedDesktopDateRangePicker
-        renderDay={(day) => <div key={String(day)} data-testid="renderDayCalled" />}
-        initialValue={[null, null]}
-      />,
-    );
+  describe('Component slots', () => {
+    it('slot: `Day` - renders custom day', () => {
+      render(
+        <WrappedDesktopDateRangePicker
+          components={{
+            Day: (day) => <div key={String(day)} data-testid="slot used" />,
+          }}
+          initialValue={[null, null]}
+        />,
+      );
 
-    openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'start' });
+      openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'start' });
 
-    expect(screen.getAllByTestId('renderDayCalled')).not.to.have.length(0);
+      expect(screen.getAllByTestId('slot used')).not.to.have.length(0);
+    });
   });
 
   it('prop: calendars - should render the provided amount of calendars', () => {
