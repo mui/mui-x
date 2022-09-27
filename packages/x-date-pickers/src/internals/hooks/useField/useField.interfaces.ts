@@ -37,6 +37,22 @@ export interface UseFieldInternalProps<TValue, TError> {
    * @default false
    */
   readOnly?: boolean;
+  /**
+   * The currently selected sections.
+   * This prop accept four formats:
+   * 1. If a number is provided, the section at this index will be selected.
+   * 2. If an object with a `startIndex` and `endIndex` properties are provided, the sections between those two indexes will be selected.
+   * 3. If a string of type `MuiDateSectionName` is provided, the first section with that name will be selected.
+   * 4. If `null` is provided, no section will be selected
+   * If not provided, the selected sections will be handled internally.
+   */
+  selectedSectionIndexes?: FieldSelectedSections;
+  /**
+   * Callback fired when the selected sections change.
+   * @param {FieldSelectedSections} newValue The new selected sections.
+   */
+  onSelectedSectionIndexesChange?: (newValue: FieldSelectedSections) => void;
+  inputRef?: React.Ref<HTMLInputElement>;
 }
 
 export interface UseFieldForwardedProps {
@@ -48,7 +64,7 @@ export interface UseFieldForwardedProps {
 
 export interface UseFieldResponse<TForwardedProps extends UseFieldForwardedProps> {
   inputProps: UseFieldResponseInputProps<TForwardedProps>;
-  inputRef: React.RefObject<HTMLInputElement>;
+  inputRef: React.Ref<HTMLInputElement>;
 }
 
 export type UseFieldResponseInputProps<TForwardedProps extends UseFieldForwardedProps> = Omit<
@@ -70,6 +86,14 @@ export interface FieldSection {
   formatValue: string;
   query: string | null;
 }
+
+export type FieldSelectedSectionsIndexes = { startIndex: number; endIndex: number };
+
+export type FieldSelectedSections =
+  | number
+  | FieldSelectedSectionsIndexes
+  | MuiDateSectionName
+  | null;
 
 export interface FieldValueManager<TValue, TDate, TSection extends FieldSection, TError> {
   getSectionsFromValue: (
@@ -96,7 +120,6 @@ export interface FieldValueManager<TValue, TDate, TSection extends FieldSection,
 export interface UseFieldState<TValue, TSections> {
   value: TValue;
   sections: TSections;
-  selectedSectionIndexes: { start: number; end: number } | null;
 }
 
 export type UseFieldValidationProps<

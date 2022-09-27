@@ -1,6 +1,8 @@
 import * as React from 'react';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import useEventCallback from '@mui/utils/useEventCallback';
+import useControlled from '@mui/utils/useControlled';
+import useForkRef from '@mui/utils/useForkRef';
 import { MuiPickerFieldAdapter } from '../../models/muiPickersAdapter';
 import { useValidation } from '../validation/useValidation';
 import { useUtils } from '../useUtils';
@@ -12,6 +14,8 @@ import {
   UseFieldForwardedProps,
   UseFieldInternalProps,
   AvailableAdjustKeyCode,
+  FieldSelectedSectionsIndexes,
+  FieldSelectedSections,
 } from './useField.interfaces';
 import {
   cleanTrailingZeroInNumericSectionValue,
@@ -36,7 +40,6 @@ export const useField = <
   if (!utils.formatTokenMap) {
     throw new Error('This adapter is not compatible with the field components');
   }
-  const inputRef = React.useRef<HTMLInputElement>(null);
 
   const {
     internalProps: {
@@ -45,12 +48,18 @@ export const useField = <
       onChange,
       format = utils.formats.keyboardDate,
       readOnly = false,
+      selectedSectionIndexes: selectedSectionIndexesProp,
+      onSelectedSectionIndexesChange,
+      inputRef: inputRefProp,
     },
     forwardedProps: { onClick, onKeyDown, onFocus, onBlur, ...otherForwardedProps },
     valueManager,
     fieldValueManager,
     validator,
   } = params;
+
+  const inputRef = React.useRef<HTMLInputElement>(null);
+  const handleRef = useForkRef(inputRefProp, inputRef);
 
   const firstDefaultValue = React.useRef(defaultValue);
   const focusTimeoutRef = React.useRef<NodeJS.Timeout | undefined>(undefined);
@@ -66,6 +75,33 @@ export const useField = <
       selectedSectionIndexes: null,
     };
   });
+
+  const [selectedSections, setSelectedSection] = useControlled({
+    controlled: selectedSectionIndexesProp,
+    default: null,
+    name: 'useField',
+    state: 'selectedSectionIndexes',
+  });
+
+  const selectedSectionIndexes = React.useMemo<FieldSelectedSectionsIndexes | null>(() => {
+    if (selectedSections == null) {
+      return null;
+    }
+
+    if (typeof selectedSections === 'number') {
+      return { startIndex: selectedSections, endIndex: selectedSections };
+    }
+
+    if (typeof selectedSections === 'string') {
+      const selectedSectionIndex = state.sections.findIndex(
+        (section) => section.dateSectionName === selectedSections,
+      );
+
+      return { startIndex: selectedSectionIndex, endIndex: selectedSectionIndex };
+    }
+
+    return selectedSections;
+  }, [selectedSections, state.sections]);
 
   const updateSections = (sections: TSection[]) => {
     const { value: newValueParsed, shouldPublish } = fieldValueManager.getValueFromSections(
@@ -86,10 +122,12 @@ export const useField = <
     }
   };
 
-  const updateSelectedSections = (start?: number, end?: number) => {
+  const updateSelectedSections = (newSelectedSections: FieldSelectedSections) => {
+    setSelectedSection(newSelectedSections);
+    onSelectedSectionIndexesChange?.(newSelectedSections);
+
     setState((prevState) => ({
       ...prevState,
-      selectedSectionIndexes: start == null ? null : { start, end: end ?? start },
       selectedSectionQuery: null,
     }));
   };
@@ -118,7 +156,7 @@ export const useField = <
       }
 
       if (Number(input.selectionEnd) - Number(input.selectionStart) === input.value.length) {
-        updateSelectedSections(0, state.sections.length - 1);
+        updateSelectedSections({ startIndex: 0, endIndex: state.sections.length - 1 });
       } else {
         handleInputClick();
       }
@@ -127,7 +165,7 @@ export const useField = <
 
   const handleInputBlur = useEventCallback((...args) => {
     onBlur?.(...(args as []));
-    updateSelectedSections();
+    updateSelectedSections(null);
   });
 
   const handleInputKeyDown = useEventCallback((event: React.KeyboardEvent) => {
@@ -140,7 +178,7 @@ export const useField = <
         // prevent default to make sure that the next line "select all" while updating
         // the internal state at the same time.
         event.preventDefault();
-        updateSelectedSections(0, state.sections.length - 1);
+        updateSelectedSections({ startIndex: 0, endIndex: state.sections.length - 1 });
         return;
       }
 
@@ -148,12 +186,12 @@ export const useField = <
       case event.key === 'ArrowRight': {
         event.preventDefault();
 
-        if (state.selectedSectionIndexes == null) {
+        if (selectedSectionIndexes == null) {
           updateSelectedSections(0);
-        } else if (state.selectedSectionIndexes.start < state.sections.length - 1) {
-          updateSelectedSections(state.selectedSectionIndexes.start + 1);
-        } else if (state.selectedSectionIndexes.start !== state.selectedSectionIndexes.end) {
-          updateSelectedSections(state.selectedSectionIndexes.end);
+        } else if (selectedSectionIndexes.startIndex < state.sections.length - 1) {
+          updateSelectedSections(selectedSectionIndexes.startIndex + 1);
+        } else if (selectedSectionIndexes.startIndex !== selectedSectionIndexes.endIndex) {
+          updateSelectedSections(selectedSectionIndexes.startIndex);
         }
 
         return;
@@ -163,12 +201,12 @@ export const useField = <
       case event.key === 'ArrowLeft': {
         event.preventDefault();
 
-        if (state.selectedSectionIndexes == null) {
+        if (selectedSectionIndexes == null) {
           updateSelectedSections(state.sections.length - 1);
-        } else if (state.selectedSectionIndexes.start !== state.selectedSectionIndexes.end) {
-          updateSelectedSections(state.selectedSectionIndexes.start);
-        } else if (state.selectedSectionIndexes.start > 0) {
-          updateSelectedSections(state.selectedSectionIndexes.start - 1);
+        } else if (selectedSectionIndexes.startIndex !== selectedSectionIndexes.endIndex) {
+          updateSelectedSections(selectedSectionIndexes.startIndex);
+        } else if (selectedSectionIndexes.startIndex > 0) {
+          updateSelectedSections(selectedSectionIndexes.startIndex - 1);
         }
         return;
       }
@@ -191,11 +229,11 @@ export const useField = <
           return sections;
         };
 
-        if (state.selectedSectionIndexes == null) {
+        if (selectedSectionIndexes == null) {
           updateSections(resetSections(0, state.sections.length));
         } else {
           updateSections(
-            resetSections(state.selectedSectionIndexes.start, state.selectedSectionIndexes.end),
+            resetSections(selectedSectionIndexes.startIndex, selectedSectionIndexes.endIndex),
           );
         }
         break;
@@ -205,11 +243,11 @@ export const useField = <
       case ['ArrowUp', 'ArrowDown', 'Home', 'End', 'PageUp', 'PageDown'].includes(event.key): {
         event.preventDefault();
 
-        if (readOnly || state.selectedSectionIndexes == null) {
+        if (readOnly || selectedSectionIndexes == null) {
           return;
         }
 
-        const activeSection = state.sections[state.selectedSectionIndexes.start];
+        const activeSection = state.sections[selectedSectionIndexes.startIndex];
         const activeDate = fieldValueManager.getActiveDateFromActiveSection(
           state.value,
           activeSection,
@@ -224,7 +262,7 @@ export const useField = <
           );
 
           updateSections(
-            setSectionValue(state.sections, state.selectedSectionIndexes.start, newSectionValue),
+            setSectionValue(state.sections, selectedSectionIndexes.startIndex, newSectionValue),
           );
         } else {
           const newDate = adjustDateSectionValue(
@@ -252,11 +290,11 @@ export const useField = <
       case !Number.isNaN(Number(event.key)): {
         event.preventDefault();
 
-        if (readOnly || state.selectedSectionIndexes == null) {
+        if (readOnly || selectedSectionIndexes == null) {
           return;
         }
 
-        const activeSection = state.sections[state.selectedSectionIndexes.start];
+        const activeSection = state.sections[selectedSectionIndexes.startIndex];
         const activeDate = fieldValueManager.getActiveDateFromActiveSection(
           state.value,
           activeSection,
@@ -277,7 +315,7 @@ export const useField = <
         updateSections(
           setSectionValue(
             state.sections,
-            state.selectedSectionIndexes.start,
+            selectedSectionIndexes.startIndex,
             cleanTrailingZeroInNumericSectionValue(newSectionValue, boundaries.maximum),
           ),
         );
@@ -288,11 +326,11 @@ export const useField = <
       case event.key.length === 1: {
         event.preventDefault();
 
-        if (readOnly || state.selectedSectionIndexes == null) {
+        if (readOnly || selectedSectionIndexes == null) {
           return;
         }
 
-        const activeSection = state.sections[state.selectedSectionIndexes.start];
+        const activeSection = state.sections[selectedSectionIndexes.startIndex];
 
         // TODO: Do not hardcode the compatible formatValue
         if (activeSection.formatValue !== 'MMMM') {
@@ -310,7 +348,7 @@ export const useField = <
           updateSections(
             setSectionValue(
               state.sections,
-              state.selectedSectionIndexes.start,
+              selectedSectionIndexes.startIndex,
               matchingMonthsWithConcatenatedQuery[0],
               concatenatedQuery,
             ),
@@ -325,7 +363,7 @@ export const useField = <
             updateSections(
               setSectionValue(
                 state.sections,
-                state.selectedSectionIndexes.start,
+                selectedSectionIndexes.startIndex,
                 matchingMonthsWithNewQuery[0],
                 newQuery,
               ),
@@ -337,7 +375,7 @@ export const useField = <
   });
 
   useEnhancedEffect(() => {
-    if (state.selectedSectionIndexes == null) {
+    if (selectedSectionIndexes == null) {
       return;
     }
 
@@ -350,8 +388,8 @@ export const useField = <
       }
     };
 
-    const firstSelectedSection = state.sections[state.selectedSectionIndexes.start];
-    const lastSelectedSection = state.sections[state.selectedSectionIndexes.end];
+    const firstSelectedSection = state.sections[selectedSectionIndexes.startIndex];
+    const lastSelectedSection = state.sections[selectedSectionIndexes.endIndex];
     updateSelectionRangeIfChanged(
       firstSelectedSection.start,
       lastSelectedSection.start + getSectionVisibleValue(lastSelectedSection).length,
@@ -399,6 +437,6 @@ export const useField = <
       onKeyDown: handleInputKeyDown,
       error: inputError,
     },
-    inputRef,
+    inputRef: handleRef,
   };
 };
