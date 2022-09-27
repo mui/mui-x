@@ -57,7 +57,7 @@ And that when debouncing the state (for instance if you have a server side persi
 
 ### Control the selected sections
 
-Use the `selectedSectionIndexes` and `onSelectedSectionIndexesChange` props to control which sections are currently being selected.
+Use the `selectedSections` and `onSelectedSectionsChange` props to control which sections are currently being selected.
 
 This prop accept four formats:
 
@@ -70,7 +70,7 @@ This prop accept four formats:
 You need to make sure the input is focused before imperatively updating the selected sections.
 :::
 
-{{"demo": "ControlledSelectedSectionIndexes.js", "defaultCodeOpen": false }}
+{{"demo": "ControlledSelectedSections.js", "defaultCodeOpen": false }}
 
 ## Headless usage
 
