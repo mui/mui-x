@@ -90,10 +90,7 @@ export type {
   Validator,
 } from './hooks/validation/useValidation';
 export { validateDate } from './hooks/validation/useDateValidation';
-export type {
-  DateComponentDefaultizedValidationProps,
-  DateValidationError,
-} from './hooks/validation/useDateValidation';
+export type { DateValidationError } from './hooks/validation/useDateValidation';
 export { usePreviousMonthDisabled, useNextMonthDisabled } from './hooks/date-helpers-hooks';
 
 export type { BasePickerProps } from './models/props/basePickerProps';
