@@ -13,3 +13,12 @@ export const splitDateRangeSections = (sections: DateRangeFieldSection[]) => {
 
   return { startDate: startDateSections, endDate: endDateSections };
 };
+
+export const removeLastSeparator = (dateSections: DateRangeFieldSection[]) =>
+  dateSections.map((section, sectionIndex) => {
+    if (sectionIndex === dateSections.length - 1) {
+      return { ...section, separator: null };
+    }
+
+    return section;
+  });
