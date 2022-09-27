@@ -211,6 +211,33 @@ describe('<CalendarPicker />', () => {
         adapterToUse.date(new Date(2018, 0, 2, 11, 11, 11)),
       );
     });
+
+    it('should complet weeks when showDaysOutsideCurrentMonth=true', () => {
+      render(
+        <CalendarPicker
+          value={adapterToUse.date(new Date(2018, 0, 3, 11, 11, 11, 111))}
+          onChange={() => {}}
+          defaultCalendarMonth={adapterToUse.date(new Date(2018, 0, 1))}
+          view="day"
+          showDaysOutsideCurrentMonth
+        />,
+      );
+      expect(screen.getAllByRole('gridcell', { name: '31' }).length).to.equal(2);
+    });
+
+    it('should complet weeks up to match `fixedWeekNumber`', () => {
+      render(
+        <CalendarPicker
+          value={adapterToUse.date(new Date(2018, 0, 3, 11, 11, 11, 111))}
+          onChange={() => {}}
+          defaultCalendarMonth={adapterToUse.date(new Date(2018, 0, 1))}
+          view="day"
+          showDaysOutsideCurrentMonth
+          fixedWeekNumber={6}
+        />,
+      );
+      expect(screen.getAllByRole('row').length).to.equal(7); // 6 weeks + header
+    });
   });
 
   describe('view: month', () => {
