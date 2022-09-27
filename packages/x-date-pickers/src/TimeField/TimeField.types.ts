@@ -4,12 +4,7 @@ import TextField, { TextFieldProps } from '@mui/material/TextField';
 import { UseFieldInternalProps } from '../internals/hooks/useField';
 import { TimeValidationError } from '../internals/hooks/validation/useTimeValidation';
 import { DefaultizedProps, MakeOptional } from '../internals/models/helpers';
-import {
-  BaseDateValidationProps,
-  DayValidationProps,
-  MonthValidationProps,
-  YearValidationProps,
-} from '../internals/hooks/validation/models';
+import { BaseTimeValidationProps, TimeValidationProps } from '../internals/hooks/validation/models';
 
 export interface UseTimeFieldParams<TDate, TChildProps extends {}> {
   props: UseTimeFieldComponentProps<TDate, TChildProps>;
@@ -18,14 +13,12 @@ export interface UseTimeFieldParams<TDate, TChildProps extends {}> {
 
 export interface UseTimeFieldProps<TDate>
   extends MakeOptional<UseFieldInternalProps<TDate | null, TimeValidationError>, 'format'>,
-    DayValidationProps<TDate>,
-    MonthValidationProps<TDate>,
-    YearValidationProps<TDate>,
-    BaseDateValidationProps<TDate> {}
+    TimeValidationProps<TDate>,
+    BaseTimeValidationProps {}
 
 export type UseTimeFieldDefaultizedProps<TDate> = DefaultizedProps<
   UseTimeFieldProps<TDate>,
-  'disableFuture' | 'disablePast' | 'format'
+  keyof BaseTimeValidationProps | 'format'
 >;
 
 export type UseTimeFieldComponentProps<TDate, TChildProps extends {}> = Omit<

@@ -6,8 +6,10 @@ import { DateTimeValidationError } from '../internals/hooks/validation/useDateTi
 import { DefaultizedProps, MakeOptional } from '../internals/models/helpers';
 import {
   BaseDateValidationProps,
+  BaseTimeValidationProps,
   DayValidationProps,
   MonthValidationProps,
+  TimeValidationProps,
   YearValidationProps,
 } from '../internals/hooks/validation/models';
 
@@ -21,11 +23,13 @@ export interface UseDateTimeFieldProps<TDate>
     DayValidationProps<TDate>,
     MonthValidationProps<TDate>,
     YearValidationProps<TDate>,
-    BaseDateValidationProps<TDate> {}
+    BaseDateValidationProps<TDate>,
+    TimeValidationProps<TDate>,
+    BaseTimeValidationProps {}
 
 export type UseDateTimeFieldDefaultizedProps<TDate> = DefaultizedProps<
   UseDateTimeFieldProps<TDate>,
-  'minDate' | 'maxDate' | 'disableFuture' | 'disablePast' | 'format'
+  keyof BaseDateValidationProps<TDate> | keyof BaseTimeValidationProps | 'format'
 >;
 
 export type UseDateTimeFieldComponentProps<TDate, TChildProps extends {}> = Omit<

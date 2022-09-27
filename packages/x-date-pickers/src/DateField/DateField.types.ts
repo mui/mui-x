@@ -25,7 +25,7 @@ export interface UseDateFieldProps<TDate>
 
 export type UseDateFieldDefaultizedProps<TDate> = DefaultizedProps<
   UseDateFieldProps<TDate>,
-  'minDate' | 'maxDate' | 'disableFuture' | 'disablePast' | 'format'
+  keyof BaseDateValidationProps<TDate> | 'format'
 >;
 
 export type UseDateFieldComponentProps<TDate, TChildProps extends {}> = Omit<

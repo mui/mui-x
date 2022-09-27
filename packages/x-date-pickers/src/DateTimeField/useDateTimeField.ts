@@ -26,21 +26,20 @@ const dateRangeFieldValueManager: FieldValueManager<
   FieldSection,
   DateTimeValidationError
 > = {
+  updateReferenceValue: (utils, value, prevReferenceValue) =>
+    value == null || !utils.isValid(value) ? prevReferenceValue : value,
   getSectionsFromValue: (utils, prevSections, date, format) =>
     addPositionPropertiesToSections(splitFormatIntoSections(utils, format, date)),
   getValueStrFromSections: (sections) => createDateStrFromSections(sections),
-  getValueFromSections: (utils, prevSections, sections, format) => {
-    const dateStr = createDateStrFromSections(sections);
-    const value = utils.parse(dateStr, format);
-
-    return {
-      value,
-      shouldPublish: utils.isValid(value),
-    };
-  },
-  getActiveDateFromActiveSection: (value) => ({
-    value,
-    update: (newActiveDate) => newActiveDate,
+  getActiveDateSections: (sections) => sections,
+  getActiveDateManager: (state) => ({
+    activeDate: state.value,
+    referenceActiveDate: state.referenceValue,
+    getNewValueFromNewActiveDate: (newActiveDate) => ({
+      value: newActiveDate,
+      referenceValue: newActiveDate == null ? state.referenceValue : newActiveDate,
+    }),
+    setActiveDateAsInvalid: () => null,
   }),
   hasError: (error) => error != null,
   isSameError: isSameDateTimeError,
@@ -80,6 +79,11 @@ export const useDateTimeField = <TDate, TChildProps extends {}>({
     maxDate,
     disableFuture,
     disablePast,
+    minTime,
+    maxTime,
+    minutesStep,
+    disableIgnoringDatePartForTimeValidation,
+    shouldDisableTime,
     selectedSections,
     onSelectedSectionsChange,
     ...other
@@ -102,6 +106,11 @@ export const useDateTimeField = <TDate, TChildProps extends {}>({
       maxDate,
       disableFuture,
       disablePast,
+      minTime,
+      maxTime,
+      minutesStep,
+      shouldDisableTime,
+      disableIgnoringDatePartForTimeValidation,
       selectedSections,
       onSelectedSectionsChange,
       inputRef,

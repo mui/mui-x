@@ -139,6 +139,7 @@ export const useDefaultizedDateRangeFieldProps = <TDate, AdditionalProps extends
   return {
     disablePast: false,
     disableFuture: false,
+    format: utils.formats.keyboardDate,
     ...props,
     minDate: applyDefaultDate(utils, props.minDate, defaultDates.minDate),
     maxDate: applyDefaultDate(utils, props.maxDate, defaultDates.maxDate),

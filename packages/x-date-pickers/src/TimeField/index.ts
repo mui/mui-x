@@ -1,10 +1,10 @@
-export { TimeField as Unstable_DateTimeField } from './DateTimeField';
-export { useTimeField as unstable_useDateTimeField } from './useDateTimeField';
+export { TimeField as Unstable_TimeFieldField } from './TimeField';
+export { useTimeField as unstable_useDateTimeField } from './useTimeField';
 export type {
-  UseDateTimeFieldProps,
-  UseDateTimeFieldComponentProps,
-  DateTimeFieldProps,
-} from './DateTimeField.types';
+  UseTimeFieldProps,
+  UseTimeFieldComponentProps,
+  TimeFieldProps,
+} from './TimeField.types';
 
 // Shared interfaces to expose
 export type { FieldSection, FieldSelectedSections } from '../internals/hooks/useField';
