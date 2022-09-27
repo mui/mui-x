@@ -376,7 +376,6 @@ DataGridRaw.propTypes = {
    * Callback fired when a cell loses focus.
    * @param {GridCellParams} params With all properties from [[GridCellParams]].
    * @param {MuiEvent<MuiBaseEvent>} event The event object.
-   * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onCellFocusOut: PropTypes.func,
   /**
