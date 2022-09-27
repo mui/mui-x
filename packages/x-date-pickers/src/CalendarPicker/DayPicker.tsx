@@ -57,6 +57,12 @@ export interface ExportedDayPickerProps<TDate>
    * @default (day) => day.charAt(0).toUpperCase()
    */
   dayOfWeekFormatter?: (day: string) => string;
+  /**
+   * Calendar will show more weeks in order to match this value.
+   * Put it to 6 for having fix number of week in Gregorian calendars
+   * @default undefined
+   */
+  fixedWeekNumber?: number;
 }
 
 export interface DayPickerProps<TDate>
@@ -201,6 +207,7 @@ export function DayPicker<TDate>(inProps: DayPickerProps<TDate>) {
     hasFocus,
     onFocusedViewChange,
     gridLabelId,
+    fixedWeekNumber,
   } = props;
 
   const isDateDisabled = useIsDateDisabled({
@@ -362,6 +369,27 @@ export function DayPicker<TDate>(inProps: DayPickerProps<TDate>) {
     return internalFocusedDay;
   }, [currentMonth, disableFuture, disablePast, internalFocusedDay, isDateDisabled, utils]);
 
+  const weeksToDisplay = React.useMemo(() => {
+    const toDisplay = utils.getWeekArray(currentMonth);
+    let nextMonth = utils.addMonths(currentMonth, 1);
+    while (fixedWeekNumber && toDisplay.length < fixedWeekNumber) {
+      const additionalWeeks = utils.getWeekArray(nextMonth);
+      const hasCommonWeek = utils.isSameDay(
+        toDisplay[toDisplay.length - 1][0],
+        additionalWeeks[0][0],
+      );
+
+      additionalWeeks.slice(hasCommonWeek ? 1 : 0).forEach((week) => {
+        if (toDisplay.length < fixedWeekNumber) {
+          toDisplay.push(week);
+        }
+      });
+
+      nextMonth = utils.addMonths(nextMonth, 1);
+    }
+    return toDisplay;
+  }, [currentMonth, fixedWeekNumber, utils]);
+
   return (
     <div role="grid" aria-labelledby={gridLabelId}>
       <PickersCalendarDayHeader role="row" className={classes.header}>
@@ -398,7 +426,7 @@ export function DayPicker<TDate>(inProps: DayPickerProps<TDate>) {
             role="rowgroup"
             className={classes.monthContainer}
           >
-            {utils.getWeekArray(currentMonth).map((week) => (
+            {weeksToDisplay.map((week) => (
               <PickersCalendarWeek
                 role="row"
                 key={`week-${week[0]}`}

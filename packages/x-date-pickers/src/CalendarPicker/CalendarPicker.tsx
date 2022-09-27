@@ -252,6 +252,7 @@ export const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
     focusedView,
     onFocusedViewChange,
     showDaysOutsideCurrentMonth,
+    fixedWeekNumber,
     dayOfWeekFormatter,
     renderDay,
     components,
@@ -517,6 +518,7 @@ export const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
               onFocusedViewChange={handleFocusedViewChange('day')}
               gridLabelId={gridLabelId}
               showDaysOutsideCurrentMonth={showDaysOutsideCurrentMonth}
+              fixedWeekNumber={fixedWeekNumber}
               dayOfWeekFormatter={dayOfWeekFormatter}
               renderDay={renderDay}
               loading={loading}
