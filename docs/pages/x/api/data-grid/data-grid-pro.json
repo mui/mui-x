@@ -120,6 +120,7 @@
     "onCellEditCommit": { "type": { "name": "func" } },
     "onCellEditStart": { "type": { "name": "func" } },
     "onCellEditStop": { "type": { "name": "func" } },
+    "onCellFocusIn": { "type": { "name": "func" } },
     "onCellFocusOut": { "type": { "name": "func" } },
     "onCellKeyDown": { "type": { "name": "func" } },
     "onCellModesModelChange": { "type": { "name": "func" } },
