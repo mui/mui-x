@@ -45,10 +45,10 @@ const useDefaultizedTimeField = <TDate, AdditionalProps extends {}>(
   const utils = useUtils<TDate>();
 
   return {
-    disablePast: false,
-    disableFuture: false,
-    format: utils.formats.fullTime,
     ...props,
+    disablePast: props.disablePast ?? false,
+    disableFuture: props.disableFuture ?? false,
+    format: props.format ?? utils.formats.fullTime,
   } as any;
 };
 

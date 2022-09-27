@@ -52,10 +52,10 @@ const useDefaultizedDateTimeField = <TDate, AdditionalProps extends {}>(
   const defaultDates = useDefaultDates<TDate>();
 
   return {
-    disablePast: false,
-    disableFuture: false,
-    format: utils.formats.keyboardDateTime,
     ...props,
+    disablePast: props.disablePast ?? false,
+    disableFuture: props.disableFuture ?? false,
+    format: props.format ?? utils.formats.keyboardDateTime,
     minDate: applyDefaultDate(utils, props.minDate, defaultDates.minDate),
     maxDate: applyDefaultDate(utils, props.maxDate, defaultDates.maxDate),
   } as any;

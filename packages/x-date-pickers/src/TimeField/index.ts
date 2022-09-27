@@ -1,4 +1,4 @@
-export { TimeField as Unstable_TimeFieldField } from './TimeField';
+export { TimeField as Unstable_TimeField } from './TimeField';
 export { useTimeField as unstable_useDateTimeField } from './useTimeField';
 export type {
   UseTimeFieldProps,

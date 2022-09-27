@@ -1,6 +1,5 @@
 import { FieldSection, AvailableAdjustKeyCode } from './useField.interfaces';
 import { MuiPickerFieldAdapter, MuiDateSectionName } from '../../models';
-import { buildWarning } from '../../utils/warning';
 
 // TODO: Improve and test with different calendars (move to date-io ?)
 export const getDateSectionNameFromFormatToken = <TDate>(
