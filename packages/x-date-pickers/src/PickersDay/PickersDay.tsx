@@ -221,6 +221,7 @@ const PickersDayRaw = React.forwardRef(function PickersDay<TDate>(
     showDaysOutsideCurrentMonth = false,
     children,
     today: isToday = false,
+    selectedDays,
     ...other
   } = props;
   const ownerState = {
@@ -287,7 +288,6 @@ const PickersDayRaw = React.forwardRef(function PickersDay<TDate>(
   return (
     <PickersDayRoot
       className={clsx(classes.root, className)}
-      ownerState={ownerState}
       ref={handleRef}
       centerRipple
       data-mui-test="day"
@@ -299,6 +299,7 @@ const PickersDayRaw = React.forwardRef(function PickersDay<TDate>(
       onClick={handleClick}
       onMouseDown={handleMouseDown}
       {...other}
+      ownerState={ownerState}
     >
       {!children ? utils.format(day, 'dayOfMonth') : children}
     </PickersDayRoot>
