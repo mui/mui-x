@@ -1,43 +1,29 @@
 import * as React from 'react';
-import { TextFieldProps } from '@mui/material/TextField';
 import { useSlotProps } from '@mui/base/utils';
-import { PickersModalDialog } from '../PickersModalDialog';
-import { useUtils } from '../../hooks/useUtils';
-import { PickerViewManager } from '../PickerViewManager';
-import { usePickerState2 } from '../../hooks/usePickerState2';
-import { CalendarOrClockPickerView } from '../../models/views';
-import { MobilePickerProps } from './MobilePicker.types';
+import { TextFieldProps } from '@mui/material/TextField';
+import { PickersModalDialog } from '../../components/PickersModalDialog';
+import { CalendarOrClockPickerView } from '../../models';
+import { UseMobilePickerParams } from './useMobilePicker.types';
+import { usePicker } from '../usePicker';
 import { onSpaceOrEnter } from '../../utils/utils';
+import { useUtils } from '../useUtils';
 
-export function MobilePicker<TValue, TDate, TView extends CalendarOrClockPickerView>(
-  props: MobilePickerProps<TValue, TDate, TView>,
-) {
-  const {
-    // Props provided by the picker
-    getOpenDialogAriaText,
-    renderViews,
-    valueManager,
-
-    // Props provided outside the picker
-    components,
-    componentsProps = {},
-    className,
-    openTo,
-    views,
-    inputFormat,
-    onViewChange,
-    readOnly,
-    disabled,
-  } = props;
+export const useMobilePicker = <TValue, TDate, TView extends CalendarOrClockPickerView>({
+  props,
+  valueManager,
+  renderViews: renderViewsParam,
+  getOpenDialogAriaText,
+}: UseMobilePickerParams<TValue, TDate, TView>) => {
+  const { components, componentsProps = {}, className, inputFormat, disabled } = props;
 
   const utils = useUtils<TDate>();
 
   const {
     wrapperProps,
     fieldProps: pickerStateFieldProps,
-    viewProps,
     openPicker,
-  } = usePickerState2(props, valueManager, 'mobile');
+    renderViews,
+  } = usePicker({ props, valueManager, wrapperVariant: 'mobile', renderViews: renderViewsParam });
 
   const Field = components.Field;
   const fieldProps = useSlotProps({
@@ -72,7 +58,7 @@ export function MobilePicker<TValue, TDate, TView extends CalendarOrClockPickerV
     'aria-label': getOpenDialogAriaText(fieldProps.value as any as TDate, utils),
   };
 
-  return (
+  const renderPicker = () => (
     <React.Fragment>
       <Field
         {...fieldProps}
@@ -86,16 +72,10 @@ export function MobilePicker<TValue, TDate, TView extends CalendarOrClockPickerV
         components={components}
         componentsProps={componentsProps}
       >
-        <PickerViewManager
-          openTo={openTo}
-          views={views}
-          onViewChange={onViewChange}
-          renderViews={renderViews}
-          readOnly={readOnly}
-          disabled={disabled}
-          {...viewProps}
-        />
+        {renderViews()}
       </PickersModalDialog>
     </React.Fragment>
   );
-}
+
+  return { renderPicker };
+};

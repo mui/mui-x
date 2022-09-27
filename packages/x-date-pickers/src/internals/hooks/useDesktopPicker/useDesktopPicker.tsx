@@ -1,32 +1,25 @@
 import * as React from 'react';
+import { useSlotProps } from '@mui/base/utils';
 import MuiInputAdornment from '@mui/material/InputAdornment';
 import IconButton from '@mui/material/IconButton';
-import { useSlotProps } from '@mui/base/utils';
-import { PickersPopper } from '../PickersPopper';
-import { useUtils } from '../../hooks/useUtils';
-import { PickerViewManager } from '../PickerViewManager';
-import { usePickerState2 } from '../../hooks/usePickerState2';
-import { CalendarOrClockPickerView } from '../../models/views';
-import { DesktopPickerProps } from './DesktopPicker.types';
 import useForkRef from '@mui/utils/useForkRef';
+import { PickersPopper } from '../../components/PickersPopper';
+import { CalendarOrClockPickerView } from '../../models/views';
+import { UseDesktopPickerParams } from './useDesktopPicker.types';
+import { useUtils } from '../useUtils';
+import { usePicker } from '../usePicker';
 
-export function DesktopPicker<TValue, TDate, TView extends CalendarOrClockPickerView>(
-  props: DesktopPickerProps<TValue, TDate, TView>,
-) {
+export const useDesktopPicker = <TValue, TDate, TView extends CalendarOrClockPickerView>({
+  props,
+  valueManager,
+  renderViews: renderViewsParam,
+  getOpenDialogAriaText,
+}: UseDesktopPickerParams<TValue, TDate, TView>) => {
   const {
-    // Props provided by the picker
-    getOpenDialogAriaText,
-    renderViews,
-    valueManager,
-
-    // Props provided outside the picker
     components,
     componentsProps = {},
     className,
     inputFormat,
-    openTo,
-    views,
-    onViewChange,
     readOnly,
     disabled,
     disableOpenPicker,
@@ -37,9 +30,9 @@ export function DesktopPicker<TValue, TDate, TView extends CalendarOrClockPicker
   const {
     wrapperProps,
     fieldProps: pickerStateFieldProps,
-    viewProps,
     openPicker,
-  } = usePickerState2(props, valueManager, 'desktop');
+    renderViews,
+  } = usePicker({ props, valueManager, wrapperVariant: 'desktop', renderViews: renderViewsParam });
 
   const Field = components.Field;
   const fieldProps = useSlotProps({
@@ -113,7 +106,7 @@ export function DesktopPicker<TValue, TDate, TView extends CalendarOrClockPicker
   // TODO: Correctly type the field slot
   const handleInputRef = useForkRef(inputRef, (fieldProps as any).inputRef);
 
-  return (
+  const renderPicker = () => (
     <React.Fragment>
       <Field
         {...fieldProps}
@@ -130,16 +123,10 @@ export function DesktopPicker<TValue, TDate, TView extends CalendarOrClockPicker
         components={components}
         componentsProps={componentsProps}
       >
-        <PickerViewManager
-          openTo={openTo}
-          views={views}
-          onViewChange={onViewChange}
-          renderViews={renderViews}
-          readOnly={readOnly}
-          disabled={disabled}
-          {...viewProps}
-        />
+        {renderViews()}
       </PickersPopper>
     </React.Fragment>
   );
-}
+
+  return { renderPicker };
+};

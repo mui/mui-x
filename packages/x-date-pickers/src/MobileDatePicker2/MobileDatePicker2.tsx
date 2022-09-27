@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { resolveComponentProps } from '@mui/base/utils';
-import { MobilePicker } from '../internals/components/MobilePicker';
+import { useMobilePicker } from '../internals/hooks/useMobilePicker';
 import { datePickerValueManager } from '../DatePicker/shared';
 import { Unstable_DateField as DateField } from '../DateField';
 import { MobileDatePicker2Props } from './MobileDatePicker2.types';
@@ -8,7 +8,7 @@ import { useDatePicker2DefaultizedProps, renderDateViews } from '../DatePicker2/
 import { useLocaleText } from '../internals';
 import { Calendar } from '../internals/components/icons';
 import { CalendarPickerView } from '../internals/models/views';
-import { PickerViewsRendererProps } from '../internals/components/PickerViewManager';
+import { PickerViewRenderer } from '../internals/hooks/usePicker';
 
 type MobileDatePickerComponent = (<TDate>(
   props: MobileDatePicker2Props<TDate> & React.RefAttributes<HTMLDivElement>,
@@ -54,20 +54,17 @@ const MobileDatePicker2 = React.forwardRef(function MobileDatePicker2<TDate>(
     [inComponentsProps, ref, label, inputRef],
   );
 
-  const renderViews = (
-    viewProps: PickerViewsRendererProps<TDate | null, TDate, CalendarPickerView>,
-  ) => renderDateViews({ ...other, ...viewProps });
+  const renderViews: PickerViewRenderer<TDate | null, CalendarPickerView> = (viewProps) =>
+    renderDateViews({ ...other, ...viewProps });
 
-  return (
-    <MobilePicker<TDate | null, TDate, CalendarPickerView>
-      {...other}
-      components={components}
-      componentsProps={componentsProps}
-      valueManager={datePickerValueManager}
-      renderViews={renderViews}
-      getOpenDialogAriaText={localeText.openDatePickerDialogue}
-    />
-  );
+  const { renderPicker } = useMobilePicker({
+    props: { ...other, components, componentsProps },
+    valueManager: datePickerValueManager,
+    renderViews,
+    getOpenDialogAriaText: localeText.openDatePickerDialogue,
+  });
+
+  return renderPicker();
 }) as MobileDatePickerComponent;
 
 export { MobileDatePicker2 };

@@ -1,9 +1,13 @@
 import * as React from 'react';
-import { CalendarOrClockPickerView } from '../../models';
-import { PickersPopperSlotsComponent, PickersPopperSlotsComponentsProps } from '../PickersPopper';
-import { BasePickerProps2, ExportedBasePickerProps2 } from '../../models/props/basePickerProps';
+import { CalendarOrClockPickerView, MuiPickersAdapter } from '../../models';
+import { BasePickerProps2 } from '../../models/props/basePickerProps';
+import {
+  PickersPopperSlotsComponent,
+  PickersPopperSlotsComponentsProps,
+} from '../../components/PickersPopper';
+import { UsePickerParams } from '../usePicker';
 
-export interface DesktopPickerSlotsComponent extends PickersPopperSlotsComponent {
+export interface UseDesktopPickerSlotsComponent extends PickersPopperSlotsComponent {
   Field: React.ElementType;
   Input?: React.ElementType;
   /**
@@ -23,7 +27,7 @@ export interface DesktopPickerSlotsComponent extends PickersPopperSlotsComponent
 }
 
 // TODO: Type props of all slots
-export interface DesktopPickerSlotsComponentsProps extends PickersPopperSlotsComponentsProps {
+export interface UseDesktopPickerSlotsComponentsProps extends PickersPopperSlotsComponentsProps {
   field?: Record<string, any>;
   input?: Record<string, any>;
   inputAdornment?: Record<string, any>;
@@ -39,21 +43,23 @@ interface DesktopOnlyPickerProps {
   disableOpenPicker?: boolean;
 }
 
-export interface DesktopPickerProps<TValue, TDate, TView extends CalendarOrClockPickerView>
+export interface UseDesktopPickerProps<TValue, TDate, TView extends CalendarOrClockPickerView>
   extends DesktopOnlyPickerProps,
     BasePickerProps2<TValue, TDate, TView> {
   /**
    * Overrideable components.
    * @default {}
    */
-  components: DesktopPickerSlotsComponent;
+  components: UseDesktopPickerSlotsComponent;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  componentsProps?: DesktopPickerSlotsComponentsProps;
+  componentsProps?: UseDesktopPickerSlotsComponentsProps;
 }
 
-export interface ExportedDesktopPickerProps<TValue, TDate, TView extends CalendarOrClockPickerView>
-  extends DesktopOnlyPickerProps,
-    ExportedBasePickerProps2<TValue, TDate, TView> {}
+export interface UseDesktopPickerParams<TValue, TDate, TView extends CalendarOrClockPickerView>
+  extends Omit<UsePickerParams<TValue, TDate, TView>, 'props' | 'wrapperVariant'> {
+  props: UseDesktopPickerProps<TValue, TDate, TView>;
+  getOpenDialogAriaText: (date: TDate, utils: MuiPickersAdapter<TDate>) => string;
+}

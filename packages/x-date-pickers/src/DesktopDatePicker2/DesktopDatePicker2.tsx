@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { resolveComponentProps } from '@mui/base/utils';
-import { DesktopPicker } from '../internals/components/DesktopPicker';
 import { datePickerValueManager } from '../DatePicker/shared';
 import { Unstable_DateField as DateField } from '../DateField';
 import { DesktopDatePicker2Props } from './DesktopDatePicker2.types';
@@ -8,7 +7,8 @@ import { useDatePicker2DefaultizedProps, renderDateViews } from '../DatePicker2/
 import { useLocaleText } from '../internals';
 import { Calendar } from '../internals/components/icons';
 import { CalendarPickerView } from '../internals/models/views';
-import { PickerViewsRendererProps } from '../internals/components/PickerViewManager';
+import { useDesktopPicker } from '../internals/hooks/useDesktopPicker';
+import { PickerViewRenderer } from '../internals/hooks/usePicker';
 
 type DesktopDatePickerComponent = (<TDate>(
   props: DesktopDatePicker2Props<TDate> & React.RefAttributes<HTMLDivElement>,
@@ -54,20 +54,17 @@ const DesktopDatePicker2 = React.forwardRef(function DesktopDatePicker2<TDate>(
     [inComponentsProps, ref, label, inputRef],
   );
 
-  const renderViews = (
-    viewProps: PickerViewsRendererProps<TDate | null, TDate, CalendarPickerView>,
-  ) => renderDateViews({ ...other, ...viewProps });
+  const renderViews: PickerViewRenderer<TDate | null, CalendarPickerView> = (viewProps) =>
+    renderDateViews({ ...other, ...viewProps });
 
-  return (
-    <DesktopPicker<TDate | null, TDate, CalendarPickerView>
-      {...other}
-      components={components}
-      componentsProps={componentsProps}
-      valueManager={datePickerValueManager}
-      renderViews={renderViews}
-      getOpenDialogAriaText={localeText.openDatePickerDialogue}
-    />
-  );
+  const { renderPicker } = useDesktopPicker({
+    props: { ...other, components, componentsProps },
+    valueManager: datePickerValueManager,
+    renderViews,
+    getOpenDialogAriaText: localeText.openDatePickerDialogue,
+  });
+
+  return renderPicker();
 }) as DesktopDatePickerComponent;
 
 export { DesktopDatePicker2 };

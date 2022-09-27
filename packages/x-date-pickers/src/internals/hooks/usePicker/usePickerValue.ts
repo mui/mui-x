@@ -1,16 +1,15 @@
 import * as React from 'react';
 import { useControlled } from '@mui/material/utils';
 import useEventCallback from '@mui/utils/useEventCallback';
-import { WrapperVariant } from '../components/wrappers/WrapperVariantContext';
-import { useOpenState } from './useOpenState';
-import { useUtils } from './useUtils';
-import { PickerStateValueManager } from './usePickerState';
-import { PickerViewManagerProps } from '../components/PickerViewManager';
-import { UseFieldInternalProps } from './useField';
+import { WrapperVariant } from '../../components/wrappers/WrapperVariantContext';
+import { useOpenState } from '../useOpenState';
+import { useUtils } from '../useUtils';
+import { PickerStateValueManager } from '../usePickerState';
+import { UseFieldInternalProps } from '../useField';
 
 export type PickerSelectionState = 'partial' | 'shallow' | 'finish';
 
-interface PickerDateState<TValue> {
+interface UsePickerValueState<TValue> {
   /**
    * Date internally used on the picker and displayed in the input.
    * It is updates whenever the user validates a step.
@@ -27,7 +26,7 @@ interface PickerDateState<TValue> {
   resetFallback: TValue;
 }
 
-type DateStateActionType =
+type PickerValueActionType =
   /**
    * Set the draft, committed and accepted dates to the action value
    * Closes the picker
@@ -46,8 +45,8 @@ type DateStateActionType =
    */
   | 'setDraft';
 
-interface DateStateAction<DraftValue> {
-  action: DateStateActionType;
+interface UsePickerValueAction<DraftValue> {
+  action: PickerValueActionType;
   value: DraftValue;
   /**
    * If `true`, do not fire the `onChange` callback
@@ -62,7 +61,11 @@ interface DateStateAction<DraftValue> {
   forceOnChangeCall?: boolean;
 }
 
-export interface PickerStateProps2<TValue> {
+export interface UsePickerValueProps<TValue>
+  extends Pick<
+    UseFieldInternalProps<TValue, unknown>,
+    'selectedSections' | 'onSelectedSectionsChange'
+  > {
   /**
    * The value of the picker.
    */
@@ -105,7 +108,7 @@ export interface PickerStateProps2<TValue> {
   onOpen?: () => void;
 }
 
-export interface PickerStateWrapperProps2 {
+export interface UsePickerValueWrapperProps {
   onAccept: () => void;
   onClear: () => void;
   onDismiss: () => void;
@@ -114,29 +117,37 @@ export interface PickerStateWrapperProps2 {
   open: boolean;
 }
 
-type PickerStateViewProps2<TValue> = Pick<
-  PickerViewManagerProps<TValue, any, any>,
-  'value' | 'onChange'
+interface UsePickerValueViewProps<TValue> {
+  onChange: (value: TValue, selectionState?: PickerSelectionState) => void;
+  value: TValue;
+}
+
+type UsePickerValueFieldProps<TValue> = Pick<
+  UseFieldInternalProps<TValue, unknown>,
+  'value' | 'onChange' | 'selectedSections' | 'onSelectedSectionsChange'
 >;
 
-type PickerStateFieldProps2<TValue> = Pick<
-  UseFieldInternalProps<TValue, any>,
-  'value' | 'onChange'
->;
-
-interface PickerState2<TValue> {
-  wrapperProps: PickerStateWrapperProps2;
-  viewProps: PickerStateViewProps2<TValue>;
-  fieldProps: PickerStateFieldProps2<TValue>;
+interface UsePickerValueResponse<TValue> {
+  wrapperProps: UsePickerValueWrapperProps;
+  viewProps: UsePickerValueViewProps<TValue>;
+  fieldProps: UsePickerValueFieldProps<TValue>;
   openPicker: () => void;
 }
 
-export const usePickerState2 = <TValue, TDate>(
-  props: PickerStateProps2<TValue>,
+export const usePickerValue = <TValue, TDate>(
+  props: UsePickerValueProps<TValue>,
   valueManager: PickerStateValueManager<TValue, TDate>,
   wrapperVariant: WrapperVariant,
-): PickerState2<TValue> => {
-  const { onAccept, onChange, value: inValue, defaultValue, closeOnSelect } = props;
+): UsePickerValueResponse<TValue> => {
+  const {
+    onAccept,
+    onChange,
+    value: inValue,
+    defaultValue,
+    closeOnSelect,
+    selectedSections: selectedSectionsProp,
+    onSelectedSectionsChange,
+  } = props;
 
   const [value, setValue] = useControlled({
     controlled: inValue,
@@ -145,17 +156,24 @@ export const usePickerState2 = <TValue, TDate>(
     state: 'value',
   });
 
+  const [selectedSections, setSelectedSections] = useControlled({
+    controlled: selectedSectionsProp,
+    default: null,
+    name: 'usePickerState2',
+    state: 'selectedSections',
+  });
+
   const utils = useUtils<TDate>();
   const { isOpen, setIsOpen } = useOpenState(props);
 
-  const [dateState, setDateState] = React.useState<PickerDateState<TValue>>(() => ({
+  const [dateState, setDateState] = React.useState<UsePickerValueState<TValue>>(() => ({
     committed: value,
     draft: value,
     resetFallback: value,
   }));
 
   const setDate = React.useCallback(
-    (params: DateStateAction<TValue>) => {
+    (params: UsePickerValueAction<TValue>) => {
       setDateState((prev) => {
         switch (params.action) {
           case 'setAll':
@@ -208,7 +226,7 @@ export const usePickerState2 = <TValue, TDate>(
     setDate({ action: 'setCommitted', value, skipOnChangeCall: true });
   }
 
-  const wrapperProps = React.useMemo<PickerStateWrapperProps2>(
+  const wrapperProps = React.useMemo<UsePickerValueWrapperProps>(
     () => ({
       open: isOpen,
       onClear: () => {
@@ -285,7 +303,7 @@ export const usePickerState2 = <TValue, TDate>(
     },
   );
 
-  const viewProps = React.useMemo<PickerStateViewProps2<TValue>>(
+  const viewProps = React.useMemo<UsePickerValueViewProps<TValue>>(
     () => ({
       value: dateState.draft,
       onChange: handleChange,
@@ -293,24 +311,20 @@ export const usePickerState2 = <TValue, TDate>(
     [dateState.draft, handleChange],
   );
 
-  const fieldProps = React.useMemo<PickerStateFieldProps2<TValue>>(
+  const fieldProps = React.useMemo<UsePickerValueFieldProps<TValue>>(
     () => ({
       value: dateState.draft,
       onChange: (newValue) => setDate({ action: 'setCommitted', value: newValue }),
+      selectedSections,
+      onSelectedSectionsChange: (newSelectedSections) => {
+        setSelectedSections(newSelectedSections);
+        onSelectedSectionsChange?.(newSelectedSections);
+      },
     }),
-    [dateState.draft, setDate],
+    [dateState.draft, setDate, selectedSections, setSelectedSections, onSelectedSectionsChange],
   );
 
   const openPicker = useEventCallback(() => setIsOpen(true));
 
-  const pickerState: PickerState2<TValue> = { wrapperProps, viewProps, fieldProps, openPicker };
-
-  React.useDebugValue(pickerState, () => ({
-    MuiPickerState: {
-      dateState,
-      other: pickerState,
-    },
-  }));
-
-  return pickerState;
+  return { wrapperProps, viewProps, fieldProps, openPicker };
 };

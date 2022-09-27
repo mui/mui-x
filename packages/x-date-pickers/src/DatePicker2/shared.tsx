@@ -2,13 +2,15 @@ import * as React from 'react';
 import { useThemeProps } from '@mui/material/styles';
 import { DefaultizedProps, MakeOptional } from '../internals/models/helpers';
 import { CalendarPicker, CalendarPickerView } from '../CalendarPicker';
-import { PickerViewsRendererProps } from '../internals/components/PickerViewManager';
 import { useUtils } from '../internals/hooks/useUtils';
 import { isYearAndMonthViews, isYearOnlyView } from '../DatePicker/shared';
-import { ExportedDesktopPickerProps } from '../internals/components/DesktopPicker';
+import { UseDesktopPickerProps } from '../internals/hooks/useDesktopPicker';
 import { ValidationCommonPropsOptionalValue } from '../internals/hooks/validation/useValidation';
 import { DateValidationError } from '../internals/hooks/validation/useDateValidation';
 import { ExportedCalendarPickerProps } from '../CalendarPicker/CalendarPicker';
+import { PickerViewRenderer } from '../internals/hooks/usePicker';
+import { PickerViewContainer } from '../internals/components/PickerViewContainer';
+import { PickerViewsRendererProps } from '@mui/x-date-pickers/internals/hooks/usePicker/usePickerViews';
 
 type DesktopPickerDefaultizedKeys = 'inputFormat' | 'views' | 'openTo';
 
@@ -16,7 +18,10 @@ export interface BaseDatePicker2Props<TDate>
   extends ExportedCalendarPickerProps<TDate>,
     ValidationCommonPropsOptionalValue<DateValidationError, TDate | null>,
     MakeOptional<
-      ExportedDesktopPickerProps<TDate | null, TDate, CalendarPickerView>,
+      Omit<
+        UseDesktopPickerProps<TDate | null, TDate, CalendarPickerView>,
+        'components' | 'componentsProps'
+      >,
       DesktopPickerDefaultizedKeys
     > {
   /**
@@ -61,5 +66,9 @@ export function useDatePicker2DefaultizedProps<TDate, Props extends BaseDatePick
 }
 
 export const renderDateViews = <TDate extends unknown>(
-  props: PickerViewsRendererProps<TDate | null, TDate, CalendarPickerView>,
-) => <CalendarPicker<TDate> {...props} />;
+  props: PickerViewsRendererProps<TDate | null, CalendarPickerView>,
+) => (
+  <PickerViewContainer isLandscape={props.isLandscape}>
+    <CalendarPicker<TDate> {...props} />
+  </PickerViewContainer>
+);
