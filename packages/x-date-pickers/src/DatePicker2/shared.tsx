@@ -5,6 +5,7 @@ import { CalendarPicker, CalendarPickerProps, CalendarPickerView } from '../Cale
 import { useUtils } from '../internals/hooks/useUtils';
 import { isYearAndMonthViews, isYearOnlyView } from '../DatePicker/shared';
 import { UseDesktopPickerProps } from '../internals/hooks/useDesktopPicker';
+import { UseMobilePickerProps } from '../internals/hooks/useMobilePicker';
 import { ValidationCommonPropsOptionalValue } from '../internals/hooks/validation/useValidation';
 import { DateValidationError } from '../internals/hooks/validation/useDateValidation';
 import { ExportedCalendarPickerProps } from '../CalendarPicker/CalendarPicker';
@@ -17,7 +18,8 @@ export interface BaseDatePicker2Props<TDate>
     ValidationCommonPropsOptionalValue<DateValidationError, TDate | null>,
     MakeOptional<
       Omit<
-        UseDesktopPickerProps<TDate | null, TDate, CalendarPickerView>,
+        UseDesktopPickerProps<TDate | null, CalendarPickerView> &
+          UseMobilePickerProps<TDate | null, CalendarPickerView>,
         'components' | 'componentsProps'
       >,
       DesktopPickerDefaultizedKeys

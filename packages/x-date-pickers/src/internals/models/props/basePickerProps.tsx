@@ -31,7 +31,7 @@ export interface BasePickerProps<TValue> extends PickerStateProps<TValue> {
   showToolbar?: boolean;
 }
 
-export interface BasePickerProps2<TValue, TDate, TView extends CalendarOrClockPickerView>
+export interface BasePickerProps2<TValue, TView extends CalendarOrClockPickerView>
   extends UsePickerProps<TValue, TView> {
   /**
    * Class name applied to the root element.
@@ -42,9 +42,3 @@ export interface BasePickerProps2<TValue, TDate, TView extends CalendarOrClockPi
    */
   inputFormat: string;
 }
-
-export interface ExportedBasePickerProps2<TValue, TDate, TView extends CalendarOrClockPickerView>
-  extends Omit<
-    BasePickerProps2<TValue, TDate, TView>,
-    'valueManager' | 'renderViews' | 'getOpenDialogAriaText'
-  > {}
