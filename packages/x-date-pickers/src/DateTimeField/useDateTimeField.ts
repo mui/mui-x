@@ -1,12 +1,5 @@
-import { datePickerValueManager } from '../DatePicker/shared';
-import {
-  useField,
-  FieldValueManager,
-  FieldSection,
-  splitFormatIntoSections,
-  addPositionPropertiesToSections,
-  createDateStrFromSections,
-} from '../internals/hooks/useField';
+import { dateTimePickerValueManager } from '../DateTimePicker/shared';
+import { useField, FieldValueManager, FieldSection } from '../internals/hooks/useField';
 import {
   UseDateTimeFieldProps,
   UseDateTimeFieldDefaultizedProps,
@@ -19,28 +12,15 @@ import {
 } from '../internals/hooks/validation/useDateTimeValidation';
 import { applyDefaultDate } from '../internals/utils/date-utils';
 import { useUtils, useDefaultDates } from '../internals/hooks/useUtils';
+import { dateFieldValueManager } from '../DateField/useDateField';
 
-const dateRangeFieldValueManager: FieldValueManager<
+const dateTimeFieldValueManager: FieldValueManager<
   any,
   any,
   FieldSection,
   DateTimeValidationError
 > = {
-  updateReferenceValue: (utils, value, prevReferenceValue) =>
-    value == null || !utils.isValid(value) ? prevReferenceValue : value,
-  getSectionsFromValue: (utils, prevSections, date, format) =>
-    addPositionPropertiesToSections(splitFormatIntoSections(utils, format, date)),
-  getValueStrFromSections: (sections) => createDateStrFromSections(sections),
-  getActiveDateSections: (sections) => sections,
-  getActiveDateManager: (state) => ({
-    activeDate: state.value,
-    referenceActiveDate: state.referenceValue,
-    getNewValueFromNewActiveDate: (newActiveDate) => ({
-      value: newActiveDate,
-      referenceValue: newActiveDate == null ? state.referenceValue : newActiveDate,
-    }),
-    setActiveDateAsInvalid: () => null,
-  }),
+  ...dateFieldValueManager,
   hasError: (error) => error != null,
   isSameError: isSameDateTimeError,
 };
@@ -115,8 +95,8 @@ export const useDateTimeField = <TDate, TChildProps extends {}>({
       onSelectedSectionsChange,
       inputRef,
     },
-    valueManager: datePickerValueManager,
-    fieldValueManager: dateRangeFieldValueManager,
+    valueManager: dateTimePickerValueManager,
+    fieldValueManager: dateTimeFieldValueManager,
     validator: validateDateTime,
     supportedDateSections: ['year', 'month', 'day', 'hour', 'minute', 'second', 'am-pm'],
   });

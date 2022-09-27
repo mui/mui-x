@@ -20,25 +20,26 @@ import {
 import { applyDefaultDate } from '../internals/utils/date-utils';
 import { useUtils, useDefaultDates } from '../internals/hooks/useUtils';
 
-const dateRangeFieldValueManager: FieldValueManager<any, any, FieldSection, DateValidationError> = {
-  updateReferenceValue: (utils, value, prevReferenceValue) =>
-    value == null || !utils.isValid(value) ? prevReferenceValue : value,
-  getSectionsFromValue: (utils, prevSections, date, format) =>
-    addPositionPropertiesToSections(splitFormatIntoSections(utils, format, date)),
-  getValueStrFromSections: (sections) => createDateStrFromSections(sections),
-  getActiveDateSections: (sections) => sections,
-  getActiveDateManager: (state) => ({
-    activeDate: state.value,
-    referenceActiveDate: state.referenceValue,
-    getNewValueFromNewActiveDate: (newActiveDate) => ({
-      value: newActiveDate,
-      referenceValue: newActiveDate == null ? state.referenceValue : newActiveDate,
+export const dateFieldValueManager: FieldValueManager<any, any, FieldSection, DateValidationError> =
+  {
+    updateReferenceValue: (utils, value, prevReferenceValue) =>
+      value == null || !utils.isValid(value) ? prevReferenceValue : value,
+    getSectionsFromValue: (utils, prevSections, date, format) =>
+      addPositionPropertiesToSections(splitFormatIntoSections(utils, format, date)),
+    getValueStrFromSections: (sections) => createDateStrFromSections(sections),
+    getActiveDateSections: (sections) => sections,
+    getActiveDateManager: (state) => ({
+      activeDate: state.value,
+      referenceActiveDate: state.referenceValue,
+      getNewValueFromNewActiveDate: (newActiveDate) => ({
+        value: newActiveDate,
+        referenceValue: newActiveDate == null ? state.referenceValue : newActiveDate,
+      }),
+      setActiveDateAsInvalid: () => null,
     }),
-    setActiveDateAsInvalid: () => null,
-  }),
-  hasError: (error) => error != null,
-  isSameError: isSameDateError,
-};
+    hasError: (error) => error != null,
+    isSameError: isSameDateError,
+  };
 
 const useDefaultizedDateField = <TDate, AdditionalProps extends {}>(
   props: UseDateFieldProps<TDate>,
@@ -101,7 +102,7 @@ export const useDateField = <TDate, TChildProps extends {}>({
       inputRef,
     },
     valueManager: datePickerValueManager,
-    fieldValueManager: dateRangeFieldValueManager,
+    fieldValueManager: dateFieldValueManager,
     validator: validateDate,
     supportedDateSections: ['year', 'month', 'day'],
   });
