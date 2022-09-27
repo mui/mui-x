@@ -51,8 +51,7 @@
     "name": "cellFocusIn",
     "description": "Fired when a cell gains focus.",
     "params": "GridCellParams",
-    "event": "MuiEvent<{}>",
-    "componentProp": "onCellFocusIn"
+    "event": "MuiEvent<{}>"
   },
   {
     "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],

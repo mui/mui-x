@@ -525,11 +525,6 @@ DataGridPremiumRaw.propTypes = {
    */
   onCellEditStop: PropTypes.func,
   /**
-   * Callback fired when a cell gains focus.
-   * @param {GridCellParams} params With all properties from [[GridCellParams]].
-   */
-  onCellFocusIn: PropTypes.func,
-  /**
    * Callback fired when a cell loses focus.
    * @param {GridCellParams} params With all properties from [[GridCellParams]].
    * @param {MuiEvent<MuiBaseEvent>} event The event object.
