@@ -27,6 +27,8 @@ import {
   setSectionValue,
 } from './useField.utils';
 
+const noop = () => {};
+
 export const useField = <
   TValue,
   TDate,
@@ -42,6 +44,7 @@ export const useField = <
   }
 
   const {
+    inputRef: inputRefProp,
     internalProps: {
       value: valueProp,
       defaultValue,
@@ -50,7 +53,6 @@ export const useField = <
       readOnly = false,
       selectedSections: selectedSectionIndexesProp,
       onSelectedSectionsChange,
-      inputRef: inputRefProp,
     },
     forwardedProps: { onClick, onKeyDown, onFocus, onBlur, ...otherForwardedProps },
     valueManager,
@@ -428,15 +430,14 @@ export const useField = <
   );
 
   return {
-    inputProps: {
-      ...otherForwardedProps,
-      value: valueStr,
-      onClick: handleInputClick,
-      onFocus: handleInputFocus,
-      onBlur: handleInputBlur,
-      onKeyDown: handleInputKeyDown,
-      error: inputError,
-    },
-    inputRef: handleRef,
+    ...otherForwardedProps,
+    value: valueStr,
+    onClick: handleInputClick,
+    onFocus: handleInputFocus,
+    onBlur: handleInputBlur,
+    onKeyDown: handleInputKeyDown,
+    onChange: noop,
+    error: inputError,
+    ref: handleRef,
   };
 };

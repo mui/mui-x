@@ -9,8 +9,9 @@ import {
 import {
   DateRangeFieldSection,
   UseSingleInputDateRangeFieldDefaultizedProps,
+  UseSingleInputDateRangeFieldParams,
   UseSingleInputDateRangeFieldProps,
-} from './SingleInputDateRangeField.interfaces';
+} from './SingleInputDateRangeField.types';
 import { dateRangePickerValueManager } from '../DateRangePicker/shared';
 import { DateRange } from '../internal/models';
 import { splitDateRangeSections } from './SingleInputDateRangeField.utils';
@@ -147,12 +148,10 @@ export const useDefaultizedDateRangeFieldProps = <TDate, AdditionalProps extends
   } as any;
 };
 
-export const useSingleInputDateRangeField = <
-  TDate,
-  TProps extends UseSingleInputDateRangeFieldProps<TDate>,
->(
-  inProps: TProps,
-) => {
+export const useSingleInputDateRangeField = <TDate, TChildProps extends {}>({
+  props,
+  inputRef,
+}: UseSingleInputDateRangeFieldParams<TDate, TChildProps>) => {
   const {
     value,
     defaultValue,
@@ -167,11 +166,11 @@ export const useSingleInputDateRangeField = <
     disablePast,
     selectedSections,
     onSelectedSectionsChange,
-    inputRef,
     ...other
-  } = useDefaultizedDateRangeFieldProps<TDate, TProps>(inProps);
+  } = useDefaultizedDateRangeFieldProps<TDate, TChildProps>(props);
 
   return useField({
+    inputRef,
     forwardedProps: other,
     internalProps: {
       value,
@@ -191,6 +190,6 @@ export const useSingleInputDateRangeField = <
     },
     valueManager: dateRangePickerValueManager,
     fieldValueManager: dateRangeFieldValueManager,
-    validator: validateDateRange as any,
+    validator: validateDateRange,
   });
 };

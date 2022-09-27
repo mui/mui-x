@@ -18,11 +18,13 @@ import {
 type JoyDateFieldProps = UseDateFieldComponentProps<Dayjs, JoyTextFieldProps>;
 
 const JoyDateField = (props: JoyDateFieldProps) => {
-  const { inputRef, inputProps } = useDateField<Dayjs, JoyDateFieldProps>(props);
+  const { ref: inputRef, ...fieldProps } = useDateField<Dayjs, JoyDateFieldProps>({
+    props,
+  });
 
   return (
     <JoyTextField
-      {...inputProps}
+      {...fieldProps}
       componentsProps={{ input: { componentsProps: { input: { ref: inputRef } } } }}
     />
   );
@@ -31,13 +33,14 @@ const JoyDateField = (props: JoyDateFieldProps) => {
 type UnstyledDateFieldProps = UseDateFieldComponentProps<Dayjs, InputUnstyledProps>;
 
 const UnstyledDateField = (props: UnstyledDateFieldProps) => {
-  const { inputRef, inputProps } = useDateField<Dayjs, UnstyledDateFieldProps>(
-    props,
-  );
+  const { ref: inputRef, ...fieldProps } = useDateField<
+    Dayjs,
+    UnstyledDateFieldProps
+  >({ props });
 
   return (
     <InputUnstyled
-      {...(inputProps as InputUnstyledProps)}
+      {...(fieldProps as InputUnstyledProps)}
       componentsProps={{ input: { ref: inputRef, style: { width: '100%' } } }}
     />
   );
@@ -49,12 +52,11 @@ type BrowserInputDateFieldProps = UseDateFieldComponentProps<
 >;
 
 const BrowserInputDateField = (props: BrowserInputDateFieldProps) => {
-  const {
-    inputRef,
-    inputProps: { error, ...inputProps },
-  } = useDateField<Dayjs, BrowserInputDateFieldProps>(props);
+  const fieldProps = useDateField<Dayjs, BrowserInputDateFieldProps>({
+    props,
+  });
 
-  return <input {...inputProps} ref={inputRef} />;
+  return <input {...fieldProps} />;
 };
 
 export default function CustomUIDateField() {
