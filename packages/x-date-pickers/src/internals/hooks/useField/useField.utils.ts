@@ -36,7 +36,7 @@ export const adjustDateSectionValue = <TDate>(
   date: TDate,
   dateSectionName: MuiDateSectionName,
   keyCode: AvailableAdjustKeyCode,
-) => {
+): TDate => {
   const delta = getDeltaFromKeyCode(keyCode);
   const isStart = keyCode === 'Home';
   const isEnd = keyCode === 'End';
@@ -103,7 +103,7 @@ export const adjustInvalidDateSectionValue = <TDate, TSection extends FieldSecti
   utils: MuiPickerFieldAdapter<TDate>,
   section: TSection,
   keyCode: AvailableAdjustKeyCode,
-) => {
+): string => {
   const today = utils.date()!;
   const delta = getDeltaFromKeyCode(keyCode);
   const isStart = keyCode === 'Home';
@@ -126,9 +126,9 @@ export const adjustInvalidDateSectionValue = <TDate, TSection extends FieldSecti
       let newDate: TDate;
       if (shouldSetAbsolute) {
         if (delta > 0 || isEnd) {
-          newDate = utils.endOfYear(today);
-        } else {
           newDate = utils.startOfYear(today);
+        } else {
+          newDate = utils.endOfYear(today);
         }
       } else {
         newDate = utils.addMonths(utils.parse(section.value, section.formatValue)!, delta);
@@ -285,7 +285,7 @@ export const splitFormatIntoSections = <TDate>(
             emptyValue: dateSectionName,
             dateSectionName,
             separator: char,
-            query: null,
+            edited: false,
           });
           currentTokenValue = '';
         }
@@ -307,7 +307,7 @@ export const splitFormatIntoSections = <TDate>(
           emptyValue: dateSectionName,
           dateSectionName,
           separator: null,
-          query: null,
+          edited: false,
         });
       }
     }
@@ -328,23 +328,6 @@ export const createDateStrFromSections = (sections: FieldSection[]) =>
       return sectionValueStr;
     })
     .join('');
-
-export const setSectionValue = <TSection extends FieldSection>(
-  sections: TSection[],
-  sectionIndex: number,
-  sectionNewValue: string,
-  sectionNewQuery?: string | null,
-) => {
-  const newSections = [...sections];
-  const modifiedSection = { ...newSections[sectionIndex], value: sectionNewValue };
-  if (sectionNewQuery !== undefined) {
-    modifiedSection.query = sectionNewQuery;
-  }
-
-  newSections[sectionIndex] = modifiedSection;
-
-  return addPositionPropertiesToSections<TSection>(newSections);
-};
 
 export const getMonthsMatchingQuery = <TDate>(
   utils: MuiPickerFieldAdapter<TDate>,
@@ -385,6 +368,7 @@ export const getSectionValueNumericBoundaries = <TDate>(
         maximum: 9999,
       };
 
+    // TODO: Limit to 11 when using AM-PM
     case 'hour': {
       return {
         minimum: 0,
@@ -413,6 +397,52 @@ export const getSectionValueNumericBoundaries = <TDate>(
       };
     }
   }
+};
+
+export const applySectionValueToDate = <TDate>({
+  utils,
+  dateSectionName,
+  date,
+  getSectionValue,
+}: {
+  utils: MuiPickerFieldAdapter<TDate>;
+  dateSectionName: MuiDateSectionName;
+  date: TDate;
+  getSectionValue: (getter: (date: TDate) => number) => number;
+}) => {
+  const adapterMethods = {
+    second: {
+      getter: utils.getSeconds,
+      setter: utils.setSeconds,
+    },
+    minute: {
+      getter: utils.getMinutes,
+      setter: utils.setMinutes,
+    },
+    hour: {
+      getter: utils.getHours,
+      setter: utils.setHours,
+    },
+    day: {
+      getter: utils.getDate,
+      setter: utils.setDate,
+    },
+    month: {
+      getter: utils.getMonth,
+      setter: utils.setMonth,
+    },
+    year: {
+      getter: utils.getYear,
+      setter: utils.setYear,
+    },
+  };
+
+  const methods = adapterMethods[dateSectionName as keyof typeof adapterMethods];
+  if (methods) {
+    return methods.setter(date, getSectionValue(methods.getter));
+  }
+
+  return date;
 };
 
 export const cleanTrailingZeroInNumericSectionValue = (value: string, maximum: number) => {
