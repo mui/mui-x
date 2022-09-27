@@ -8,24 +8,18 @@ import {
   createDateStrFromSections,
 } from '../internals/hooks/useField';
 import {
-  UseDateTimeFieldProps,
-  UseDateTimeFieldDefaultizedProps,
-  UseDateTimeFieldParams,
-} from './DateTimeField.types';
+  UseTimeFieldProps,
+  UseTimeFieldDefaultizedProps,
+  UseTimeFieldParams,
+} from './TimeField.types';
 import {
-  DateTimeValidationError,
-  isSameDateTimeError,
-  validateDateTime,
-} from '../internals/hooks/validation/useDateTimeValidation';
-import { applyDefaultDate } from '../internals/utils/date-utils';
-import { useUtils, useDefaultDates } from '../internals/hooks/useUtils';
+  TimeValidationError,
+  isSameTimeError,
+  validateTime,
+} from '../internals/hooks/validation/useTimeValidation';
+import { useUtils } from '../internals/hooks/useUtils';
 
-const dateRangeFieldValueManager: FieldValueManager<
-  any,
-  any,
-  FieldSection,
-  DateTimeValidationError
-> = {
+const dateRangeFieldValueManager: FieldValueManager<any, any, FieldSection, TimeValidationError> = {
   getSectionsFromValue: (utils, prevSections, date, format) =>
     addPositionPropertiesToSections(splitFormatIntoSections(utils, format, date)),
   getValueStrFromSections: (sections) => createDateStrFromSections(sections),
@@ -43,29 +37,26 @@ const dateRangeFieldValueManager: FieldValueManager<
     update: (newActiveDate) => newActiveDate,
   }),
   hasError: (error) => error != null,
-  isSameError: isSameDateTimeError,
+  isSameError: isSameTimeError,
 };
 
-const useDefaultizedDateTimeField = <TDate, AdditionalProps extends {}>(
-  props: UseDateTimeFieldProps<TDate>,
-): AdditionalProps & UseDateTimeFieldDefaultizedProps<TDate> => {
+const useDefaultizedTimeField = <TDate, AdditionalProps extends {}>(
+  props: UseTimeFieldProps<TDate>,
+): AdditionalProps & UseTimeFieldDefaultizedProps<TDate> => {
   const utils = useUtils<TDate>();
-  const defaultDates = useDefaultDates<TDate>();
 
   return {
     disablePast: false,
     disableFuture: false,
-    format: utils.formats.keyboardDateTime,
+    format: utils.formats.fullTime,
     ...props,
-    minDate: applyDefaultDate(utils, props.minDate, defaultDates.minDate),
-    maxDate: applyDefaultDate(utils, props.maxDate, defaultDates.maxDate),
   } as any;
 };
 
-export const useDateTimeField = <TDate, TChildProps extends {}>({
+export const useTimeField = <TDate, TChildProps extends {}>({
   props,
   inputRef,
-}: UseDateTimeFieldParams<TDate, TChildProps>) => {
+}: UseTimeFieldParams<TDate, TChildProps>) => {
   const {
     value,
     defaultValue,
@@ -83,7 +74,7 @@ export const useDateTimeField = <TDate, TChildProps extends {}>({
     selectedSections,
     onSelectedSectionsChange,
     ...other
-  } = useDefaultizedDateTimeField<TDate, TChildProps>(props);
+  } = useDefaultizedTimeField<TDate, TChildProps>(props);
 
   return useField({
     inputRef,
@@ -108,7 +99,7 @@ export const useDateTimeField = <TDate, TChildProps extends {}>({
     },
     valueManager: datePickerValueManager,
     fieldValueManager: dateRangeFieldValueManager,
-    validator: validateDateTime,
+    validator: validateTime,
     supportedDateSections: ['year', 'month', 'day', 'hour', 'minute', 'second', 'am-pm'],
   });
 };

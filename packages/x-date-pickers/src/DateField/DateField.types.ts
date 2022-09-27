@@ -3,7 +3,7 @@ import { SlotComponentProps } from '@mui/base/utils';
 import TextField, { TextFieldProps } from '@mui/material/TextField';
 import { UseFieldInternalProps } from '../internals/hooks/useField';
 import { DateValidationError } from '../internals/hooks/validation/useDateValidation';
-import {DefaultizedProps, MakeOptional} from '../internals/models/helpers';
+import { DefaultizedProps, MakeOptional } from '../internals/models/helpers';
 import {
   BaseDateValidationProps,
   DayValidationProps,

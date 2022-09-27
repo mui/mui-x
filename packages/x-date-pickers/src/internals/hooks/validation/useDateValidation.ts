@@ -28,7 +28,7 @@ export const validateDate: Validator<
   any | null,
   any,
   DateValidationError,
-    DateComponentValidationProps<any>
+  DateComponentValidationProps<any>
 > = ({ props, value, adapter }): DateValidationError => {
   const now = adapter.utils.date()!;
   const minDate = applyDefaultDate(adapter.utils, props.minDate, adapter.defaultDates.minDate);
@@ -110,9 +110,5 @@ export const useIsDateDisabled = <TDate>({
 export const isSameDateError = (a: DateValidationError, b: DateValidationError) => a === b;
 
 export const useDateValidation = <TDate>(
-  props: ValidationProps<
-    DateValidationError,
-    TDate | null,
-      DateComponentValidationProps<TDate>
-  >,
+  props: ValidationProps<DateValidationError, TDate | null, DateComponentValidationProps<TDate>>,
 ): DateValidationError => useValidation(props, validateDate, isSameDateError);

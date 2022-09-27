@@ -29,18 +29,6 @@ export default function CustomDateFormat() {
           onChange={(newValue) => setValue(newValue)}
           format="DD MMMM YYYY"
         />
-        <DateField
-          label="Date and time format"
-          value={value}
-          onChange={(newValue) => setValue(newValue)}
-          format="L LT"
-        />
-        <DateField
-          label="Time format"
-          value={value}
-          onChange={(newValue) => setValue(newValue)}
-          format="LT"
-        />
       </Stack>
     </LocalizationProvider>
   );

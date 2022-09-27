@@ -39,7 +39,8 @@ export const validateDateTime: Validator<
 
 export type DateTimeValidationError = DateValidationError | TimeValidationError;
 
-export const isSameDateTimeError = (a: DateTimeValidationError, b: DateTimeValidationError) => a === b;
+export const isSameDateTimeError = (a: DateTimeValidationError, b: DateTimeValidationError) =>
+  a === b;
 
 export function useDateTimeValidation<TDate>(
   props: ValidationProps<

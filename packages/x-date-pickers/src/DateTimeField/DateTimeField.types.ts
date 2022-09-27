@@ -3,7 +3,7 @@ import { SlotComponentProps } from '@mui/base/utils';
 import TextField, { TextFieldProps } from '@mui/material/TextField';
 import { UseFieldInternalProps } from '../internals/hooks/useField';
 import { DateTimeValidationError } from '../internals/hooks/validation/useDateTimeValidation';
-import {DefaultizedProps, MakeOptional} from '../internals/models/helpers';
+import { DefaultizedProps, MakeOptional } from '../internals/models/helpers';
 import {
   BaseDateValidationProps,
   DayValidationProps,
@@ -34,7 +34,8 @@ export type UseDateTimeFieldComponentProps<TDate, TChildProps extends {}> = Omit
 > &
   UseDateTimeFieldProps<TDate>;
 
-export interface DateTimeFieldProps<TDate> extends UseDateTimeFieldComponentProps<TDate, TextFieldProps> {
+export interface DateTimeFieldProps<TDate>
+  extends UseDateTimeFieldComponentProps<TDate, TextFieldProps> {
   /**
    * Overrideable components.
    * @default {}
