@@ -8,9 +8,8 @@ import { UseDesktopPickerProps } from '../internals/hooks/useDesktopPicker';
 import { ValidationCommonPropsOptionalValue } from '../internals/hooks/validation/useValidation';
 import { DateValidationError } from '../internals/hooks/validation/useDateValidation';
 import { ExportedCalendarPickerProps } from '../CalendarPicker/CalendarPicker';
-import { PickerViewRenderer } from '../internals/hooks/usePicker';
 import { PickerViewContainer } from '../internals/components/PickerViewContainer';
-import { PickerViewsRendererProps } from '@mui/x-date-pickers/internals/hooks/usePicker/usePickerViews';
+import { PickerViewsRendererProps } from '../internals/hooks/usePicker/usePickerViews';
 
 type DesktopPickerDefaultizedKeys = 'inputFormat' | 'views' | 'openTo';
 

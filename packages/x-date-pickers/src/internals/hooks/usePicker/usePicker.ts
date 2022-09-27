@@ -9,16 +9,16 @@ export const usePicker = <TValue, TDate, TView extends CalendarOrClockPickerView
   wrapperVariant,
   renderViews: renderViewsParam,
 }: UsePickerParams<TValue, TDate, TView>) => {
-  const { fieldProps, viewProps, wrapperProps, openPicker } = usePickerValue(
+  const { fieldProps, actions, onChange, value, open } = usePickerValue(
     props,
     valueManager,
     wrapperVariant,
   );
 
   const renderViews = usePickerViews({
-    props: { ...props, ...viewProps },
+    props: { ...props, value, onChange },
     renderViews: renderViewsParam,
   });
 
-  return { fieldProps, wrapperProps, openPicker, renderViews };
+  return { fieldProps, actions, renderViews, open };
 };

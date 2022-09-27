@@ -19,10 +19,10 @@ export const useMobilePicker = <TValue, TDate, TView extends CalendarOrClockPick
   const utils = useUtils<TDate>();
 
   const {
-    wrapperProps,
     fieldProps: pickerStateFieldProps,
-    openPicker,
     renderViews,
+    actions,
+    open,
   } = usePicker({ props, valueManager, wrapperVariant: 'mobile', renderViews: renderViewsParam });
 
   const Field = components.Field;
@@ -45,8 +45,8 @@ export const useMobilePicker = <TValue, TDate, TView extends CalendarOrClockPick
     elementType: Input,
     externalSlotProps: componentsProps.input,
     additionalProps: {
-      onClick: props.readOnly ? undefined : openPicker,
-      onKeyDown: onSpaceOrEnter(openPicker),
+      onClick: props.readOnly ? undefined : actions.onOpen,
+      onKeyDown: onSpaceOrEnter(actions.onOpen),
     },
     // TODO: Pass owner state
     ownerState: {},
@@ -68,7 +68,8 @@ export const useMobilePicker = <TValue, TDate, TView extends CalendarOrClockPick
         componentsProps={{ input: { ...inputProps, inputProps: htmlInputProps } }}
       />
       <PickersModalDialog
-        {...wrapperProps}
+        {...actions}
+        open={open}
         components={components}
         componentsProps={componentsProps}
       >

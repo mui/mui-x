@@ -1,7 +1,6 @@
-import { PickerStateProps, PickerStateValueManager } from '../../hooks/usePickerState';
+import { PickerStateProps } from '../../hooks/usePickerState';
 import { UsePickerProps } from '../../hooks/usePicker';
 import { CalendarOrClockPickerView } from '../views';
-import { MuiPickersAdapter } from '../muiPickersAdapter';
 
 export interface BasePickerProps<TValue> extends PickerStateProps<TValue> {
   /**

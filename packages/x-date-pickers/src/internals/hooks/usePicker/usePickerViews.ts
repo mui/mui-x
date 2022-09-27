@@ -2,7 +2,7 @@ import * as React from 'react';
 import { CalendarOrClockPickerView } from '../../models';
 import { useViews } from '../useViews';
 import { PickerSelectionState } from '../usePickerState';
-import { useIsLandscape } from '@mui/x-date-pickers/internals/hooks/useIsLandscape';
+import { useIsLandscape } from '../useIsLandscape';
 
 export interface ExportedUsePickerViewProps<TView extends CalendarOrClockPickerView> {
   autoFocus?: boolean;

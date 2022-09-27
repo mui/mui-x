@@ -114,28 +114,6 @@ export type ExportedDateInputProps<TDate> = Omit<
   | 'components'
 >;
 
-/**
- * TODO: Remove before merging PR.
- * List the props from PureDateInput not supported on the new date picker.
- */
-type A = Exclude<
-  keyof ExportedDateInputProps<any>,
-  | 'className'
-  | 'disabled'
-  | 'label'
-  | 'mask'
-  | 'readOnly'
-  | 'acceptRegex'
-  | 'disableMaskedInput'
-  | 'disableOpenPicker'
-  | 'rifmFormatter'
-  | 'renderInput'
-  | 'getOpenDialogAriaText'
-  | 'OpenPickerButtonProps'
-  | 'InputAdornmentProps'
-  | 'inputRef'
->;
-
 // TODO: why is this called "Pure*" when it's not memoized? Does "Pure" mean "readonly"?
 export const PureDateInput = React.forwardRef(function PureDateInput<TDate>(
   props: DateInputProps<TDate>,

@@ -108,18 +108,13 @@ export interface UsePickerValueProps<TValue>
   onOpen?: () => void;
 }
 
-export interface UsePickerValueWrapperProps {
+export interface UsePickerValueActions {
   onAccept: () => void;
   onClear: () => void;
   onDismiss: () => void;
   onCancel: () => void;
   onSetToday: () => void;
-  open: boolean;
-}
-
-interface UsePickerValueViewProps<TValue> {
-  onChange: (value: TValue, selectionState?: PickerSelectionState) => void;
-  value: TValue;
+  onOpen: () => void;
 }
 
 type UsePickerValueFieldProps<TValue> = Pick<
@@ -128,10 +123,11 @@ type UsePickerValueFieldProps<TValue> = Pick<
 >;
 
 interface UsePickerValueResponse<TValue> {
-  wrapperProps: UsePickerValueWrapperProps;
-  viewProps: UsePickerValueViewProps<TValue>;
+  onChange: (value: TValue, selectionState?: PickerSelectionState) => void;
+  value: TValue;
+  actions: UsePickerValueActions;
   fieldProps: UsePickerValueFieldProps<TValue>;
-  openPicker: () => void;
+  open: boolean;
 }
 
 export const usePickerValue = <TValue, TDate>(
@@ -140,7 +136,7 @@ export const usePickerValue = <TValue, TDate>(
   wrapperVariant: WrapperVariant,
 ): UsePickerValueResponse<TValue> => {
   const {
-    onAccept,
+    onAccept: onAcceptProp,
     onChange,
     value: inValue,
     defaultValue,
@@ -204,14 +200,14 @@ export const usePickerValue = <TValue, TDate>(
       if (params.action === 'acceptAndClose') {
         setIsOpen(false);
         if (
-          onAccept &&
+          onAcceptProp &&
           !valueManager.areValuesEqual(utils, dateState.resetFallback, params.value)
         ) {
-          onAccept(params.value);
+          onAcceptProp(params.value);
         }
       }
     },
-    [onAccept, onChange, setIsOpen, dateState, utils, valueManager, setValue],
+    [onAcceptProp, onChange, setIsOpen, dateState, utils, valueManager, setValue],
   );
 
   React.useEffect(() => {
@@ -226,52 +222,44 @@ export const usePickerValue = <TValue, TDate>(
     setDate({ action: 'setCommitted', value, skipOnChangeCall: true });
   }
 
-  const wrapperProps = React.useMemo<UsePickerValueWrapperProps>(
-    () => ({
-      open: isOpen,
-      onClear: () => {
-        // Reset all date in state to the empty value and close picker.
-        setDate({
-          value: valueManager.emptyValue,
-          action: 'acceptAndClose',
-          // force `onChange` in cases like input (value) === `Invalid date`
-          forceOnChangeCall: !valueManager.areValuesEqual(
-            utils,
-            value as any,
-            valueManager.emptyValue,
-          ),
-        });
-      },
-      onAccept: () => {
-        // Set all date in state to equal the current draft value and close picker.
-        setDate({
-          value: dateState.draft,
-          action: 'acceptAndClose',
-          // force `onChange` in cases like input (value) === `Invalid date`
-          forceOnChangeCall: !valueManager.areValuesEqual(
-            utils,
-            dateState.committed,
-            dateState.draft,
-          ),
-        });
-      },
-      onDismiss: () => {
-        // Set all dates in state to equal the last committed date.
-        // e.g. Reset the state to the last committed value.
-        setDate({ value: dateState.committed, action: 'acceptAndClose' });
-      },
-      onCancel: () => {
-        // Set all dates in state to equal the last accepted date and close picker.
-        // e.g. Reset the state to the last accepted value
-        setDate({ value: dateState.resetFallback, action: 'acceptAndClose' });
-      },
-      onSetToday: () => {
-        // Set all dates in state to equal today and close picker.
-        setDate({ value: valueManager.getTodayValue(utils), action: 'acceptAndClose' });
-      },
-    }),
-    [setDate, isOpen, utils, dateState, valueManager, value],
-  );
+  const onClear = useEventCallback(() => {
+    // Reset all date in state to the empty value and close picker.
+    setDate({
+      value: valueManager.emptyValue,
+      action: 'acceptAndClose',
+      // force `onChange` in cases like input (value) === `Invalid date`
+      forceOnChangeCall: !valueManager.areValuesEqual(utils, value as any, valueManager.emptyValue),
+    });
+  });
+
+  const onAccept = useEventCallback(() => {
+    // Set all date in state to equal the current draft value and close picker.
+    setDate({
+      value: dateState.draft,
+      action: 'acceptAndClose',
+      // force `onChange` in cases like input (value) === `Invalid date`
+      forceOnChangeCall: !valueManager.areValuesEqual(utils, dateState.committed, dateState.draft),
+    });
+  });
+
+  const onDismiss = useEventCallback(() => {
+    // Set all dates in state to equal the last committed date.
+    // e.g. Reset the state to the last committed value.
+    setDate({ value: dateState.committed, action: 'acceptAndClose' });
+  });
+
+  const onCancel = useEventCallback(() => {
+    // Set all dates in state to equal the last accepted date and close picker.
+    // e.g. Reset the state to the last accepted value
+    setDate({ value: dateState.resetFallback, action: 'acceptAndClose' });
+  });
+
+  const onSetToday = useEventCallback(() => {
+    // Set all dates in state to equal today and close picker.
+    setDate({ value: valueManager.getTodayValue(utils), action: 'acceptAndClose' });
+  });
+
+  const onOpen = useEventCallback(() => setIsOpen(true));
 
   const handleChange = useEventCallback(
     (newDate: TValue, selectionState: PickerSelectionState = 'partial') => {
@@ -303,14 +291,6 @@ export const usePickerValue = <TValue, TDate>(
     },
   );
 
-  const viewProps = React.useMemo<UsePickerValueViewProps<TValue>>(
-    () => ({
-      value: dateState.draft,
-      onChange: handleChange,
-    }),
-    [dateState.draft, handleChange],
-  );
-
   const fieldProps = React.useMemo<UsePickerValueFieldProps<TValue>>(
     () => ({
       value: dateState.draft,
@@ -324,7 +304,18 @@ export const usePickerValue = <TValue, TDate>(
     [dateState.draft, setDate, selectedSections, setSelectedSections, onSelectedSectionsChange],
   );
 
-  const openPicker = useEventCallback(() => setIsOpen(true));
-
-  return { wrapperProps, viewProps, fieldProps, openPicker };
+  return {
+    value: dateState.draft,
+    onChange: handleChange,
+    open: isOpen,
+    fieldProps,
+    actions: {
+      onClear,
+      onAccept,
+      onDismiss,
+      onCancel,
+      onSetToday,
+      onOpen,
+    },
+  };
 };
