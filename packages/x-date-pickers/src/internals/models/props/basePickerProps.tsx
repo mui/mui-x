@@ -40,5 +40,5 @@ export interface BasePickerProps2<TValue, TView extends CalendarOrClockPickerVie
   /**
    * Format of the date when rendered in the input(s).
    */
-  inputFormat: string;
+  inputFormat?: string;
 }

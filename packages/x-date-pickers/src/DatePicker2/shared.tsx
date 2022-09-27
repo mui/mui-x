@@ -2,28 +2,20 @@ import * as React from 'react';
 import { useThemeProps } from '@mui/material/styles';
 import { DefaultizedProps, MakeOptional } from '../internals/models/helpers';
 import { CalendarPicker, CalendarPickerProps, CalendarPickerView } from '../CalendarPicker';
-import { useUtils } from '../internals/hooks/useUtils';
-import { isYearAndMonthViews, isYearOnlyView } from '../DatePicker/shared';
-import { UseDesktopPickerProps } from '../internals/hooks/useDesktopPicker';
-import { UseMobilePickerProps } from '../internals/hooks/useMobilePicker';
+import { useDefaultDates, useUtils } from '../internals/hooks/useUtils';
+import { isYearAndMonthViews, isYearOnlyView } from '../internals/utils/views';
 import { ValidationCommonPropsOptionalValue } from '../internals/hooks/validation/useValidation';
 import { DateValidationError } from '../internals/hooks/validation/useDateValidation';
 import { ExportedCalendarPickerProps } from '../CalendarPicker/CalendarPicker';
 import { PickerViewContainer } from '../internals/components/PickerViewContainer';
-
-type DesktopPickerDefaultizedKeys = 'inputFormat' | 'views' | 'openTo';
+import { BasePickerProps2 } from '../internals/models/props/basePickerProps';
+import { applyDefaultDate } from '../internals/utils/date-utils';
+import { BaseDateValidationProps } from '../internals';
 
 export interface BaseDatePicker2Props<TDate>
-  extends ExportedCalendarPickerProps<TDate>,
-    ValidationCommonPropsOptionalValue<DateValidationError, TDate | null>,
-    MakeOptional<
-      Omit<
-        UseDesktopPickerProps<TDate | null, CalendarPickerView> &
-          UseMobilePickerProps<TDate | null, CalendarPickerView>,
-        'components' | 'componentsProps'
-      >,
-      DesktopPickerDefaultizedKeys
-    > {
+  extends MakeOptional<BasePickerProps2<TDate | null, CalendarPickerView>, 'views' | 'openTo'>,
+    ExportedCalendarPickerProps<TDate>,
+    ValidationCommonPropsOptionalValue<DateValidationError, TDate | null> {
   /**
    * The label content.
    */
@@ -37,8 +29,9 @@ export interface BaseDatePicker2Props<TDate>
 export function useDatePicker2DefaultizedProps<TDate, Props extends BaseDatePicker2Props<TDate>>(
   props: Props,
   name: string,
-): DefaultizedProps<Props, DesktopPickerDefaultizedKeys> {
+): DefaultizedProps<Props, 'views' | 'openTo' | keyof BaseDateValidationProps<TDate>> {
   const utils = useUtils<TDate>();
+  const defaultDates = useDefaultDates<TDate>();
   const themeProps = useThemeProps({
     props,
     name,
@@ -46,7 +39,7 @@ export function useDatePicker2DefaultizedProps<TDate, Props extends BaseDatePick
 
   const views = themeProps.views ?? ['year', 'day'];
 
-  let inputFormat: string;
+  let inputFormat: string | undefined;
   if (themeProps.inputFormat != null) {
     inputFormat = themeProps.inputFormat;
   } else if (isYearOnlyView(views)) {
@@ -54,14 +47,18 @@ export function useDatePicker2DefaultizedProps<TDate, Props extends BaseDatePick
   } else if (isYearAndMonthViews(views)) {
     inputFormat = utils.formats.monthAndYear;
   } else {
-    inputFormat = utils.formats.keyboardDate;
+    inputFormat = undefined;
   }
 
   return {
     openTo: 'day',
+    disableFuture: false,
+    disablePast: false,
     ...themeProps,
     inputFormat,
     views,
+    minDate: applyDefaultDate(utils, themeProps.minDate, defaultDates.minDate),
+    maxDate: applyDefaultDate(utils, themeProps.maxDate, defaultDates.maxDate),
   };
 }
 
