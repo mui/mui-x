@@ -203,12 +203,6 @@ By default, the print export display all the DataGrid. It is possible to remove 
 
 For more option to customize the print export, please visit the [`printOptions` api page](/x/api/data-grid/grid-print-export-options/).
 
-:::warning
-Due to the fact that the Print export relies on the usage of an `iframe`, there is a limitation around the usage of `X-Frame-Options`.
-
-In order for the Print export to work as expected set `X-Frame-Options: SAMEORIGIN` or unset the `X-Frame-Options` header.
-:::
-
 ## Custom export format
 
 You can add custom export formats by creating your own export menu.
