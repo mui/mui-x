@@ -106,7 +106,7 @@ export const useField = <
   }, [selectedSections, state.sections]);
 
   const updateSections = (sections: TSection[]) => {
-    const { value: newValueParsed, shouldPublish } = fieldValueManager.getValueFromSections(
+    const { value: newValue, shouldPublish } = fieldValueManager.getValueFromSections(
       utils,
       state.sections,
       sections,
@@ -116,11 +116,11 @@ export const useField = <
     setState((prevState) => ({
       ...prevState,
       sections,
-      valueParsed: newValueParsed,
+      value: newValue,
     }));
 
     if (onChange && shouldPublish) {
-      onChange(newValueParsed);
+      onChange(newValue);
     }
   };
 
@@ -403,7 +403,7 @@ export const useField = <
       const sections = fieldValueManager.getSectionsFromValue(utils, state.sections, value, format);
       setState((prevState) => ({
         ...prevState,
-        valueParsed: value,
+        value,
         sections,
       }));
     }
