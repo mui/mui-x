@@ -1,5 +1,6 @@
 import { FieldSection, AvailableAdjustKeyCode } from './useField.interfaces';
 import { MuiPickerFieldAdapter, MuiDateSectionName } from '../../models';
+import { buildWarning } from '../../utils/warning';
 
 // TODO: Improve and test with different calendars (move to date-io ?)
 export const getDateSectionNameFromFormatToken = <TDate>(
@@ -427,4 +428,27 @@ export const cleanTrailingZeroInNumericSectionValue = (value: string, maximum: n
   }
 
   return cleanValue;
+};
+
+let warnedOnceInvalidSection = false;
+
+export const validateSections = <TSection extends FieldSection>(
+  sections: TSection[],
+  supportedSections: MuiDateSectionName[],
+) => {
+  if (process.env.NODE_ENV !== 'production') {
+    if (!warnedOnceInvalidSection) {
+      const invalidSection = sections.find(
+        (section) => !supportedSections.includes(section.dateSectionName),
+      );
+
+      if (invalidSection) {
+        console.warn(
+          `MUI: The field component you are using is not compatible with the "${invalidSection.dateSectionName} date section.`,
+          `The supported date sections are ["${supportedSections.join('", "')}"]\`.`,
+        );
+        warnedOnceInvalidSection = true;
+      }
+    }
+  }
 };

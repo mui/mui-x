@@ -191,5 +191,6 @@ export const useSingleInputDateRangeField = <TDate, TChildProps extends {}>({
     valueManager: dateRangePickerValueManager,
     fieldValueManager: dateRangeFieldValueManager,
     validator: validateDateRange,
+    supportedDateSections: ['year', 'month', 'day'],
   });
 };

@@ -25,6 +25,7 @@ import {
   adjustDateSectionValue,
   adjustInvalidDateSectionValue,
   setSectionValue,
+  validateSections,
 } from './useField.utils';
 
 const noop = () => {};
@@ -49,7 +50,7 @@ export const useField = <
       value: valueProp,
       defaultValue,
       onChange,
-      format = utils.formats.keyboardDate,
+      format,
       readOnly = false,
       selectedSections: selectedSectionIndexesProp,
       onSelectedSectionsChange,
@@ -58,6 +59,7 @@ export const useField = <
     valueManager,
     fieldValueManager,
     validator,
+    supportedDateSections,
   } = params;
 
   const inputRef = React.useRef<HTMLInputElement>(null);
@@ -70,7 +72,7 @@ export const useField = <
 
   const [state, setState] = React.useState<UseFieldState<TValue, TSection[]>>(() => {
     const sections = fieldValueManager.getSectionsFromValue(utils, null, value, format);
-
+    validateSections(sections, supportedDateSections);
     return {
       sections,
       value,
@@ -408,6 +410,15 @@ export const useField = <
       }));
     }
   }, [value]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  React.useEffect(() => {
+    const sections = fieldValueManager.getSectionsFromValue(utils, state.sections, value, format);
+    validateSections(sections, supportedDateSections);
+    setState((prevState) => ({
+      ...prevState,
+      sections,
+    }));
+  }, [format]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const validationError = useValidation(
     { ...params.internalProps, value: state.value },

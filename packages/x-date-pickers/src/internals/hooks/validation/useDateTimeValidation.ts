@@ -2,7 +2,7 @@ import { useValidation, ValidationProps, Validator } from './useValidation';
 import {
   validateDate,
   DateValidationError,
-  DateComponentDefaultizedValidationProps,
+  DateComponentValidationProps,
 } from './useDateValidation';
 import {
   validateTime,
@@ -11,7 +11,7 @@ import {
 } from './useTimeValidation';
 
 export interface DateTimeComponentValidationProps<TDate>
-  extends DateComponentDefaultizedValidationProps<TDate>,
+  extends DateComponentValidationProps<TDate>,
     TimeComponentValidationProps<TDate> {}
 
 export const validateDateTime: Validator<
@@ -39,7 +39,7 @@ export const validateDateTime: Validator<
 
 export type DateTimeValidationError = DateValidationError | TimeValidationError;
 
-const isSameDateTimeError = (a: DateTimeValidationError, b: DateTimeValidationError) => a === b;
+export const isSameDateTimeError = (a: DateTimeValidationError, b: DateTimeValidationError) => a === b;
 
 export function useDateTimeValidation<TDate>(
   props: ValidationProps<
