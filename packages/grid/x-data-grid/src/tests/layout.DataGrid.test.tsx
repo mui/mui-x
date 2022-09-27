@@ -12,7 +12,7 @@ import {
   GridColumns,
   gridClasses,
 } from '@mui/x-data-grid';
-import { useData } from 'packages/storybook/src/hooks/useData';
+import { useBasicDemoData } from '@mui/x-data-grid-generator';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { getColumnHeaderCell, getColumnValues, getCell, getRow } from 'test/utils/helperFn';
 
@@ -571,29 +571,6 @@ describe('<DataGrid /> - Layout & Warnings', () => {
         expect(getColumnHeaderCell(2).offsetWidth).to.be.equal(expectedWidth);
       });
 
-      it('should handle hidden columns (deprecated)', () => {
-        const rows = [{ id: 1, firstName: 'Jon' }];
-        const columns = [
-          { field: 'id', headerName: 'ID', flex: 1 },
-          {
-            field: 'firstName',
-            headerName: 'First name',
-            hide: true,
-          },
-        ];
-
-        render(
-          <div style={{ width: 200, height: 300 }}>
-            <DataGrid rows={rows} columns={columns} />
-          </div>,
-        );
-
-        const firstColumn = getColumnHeaderCell(0);
-        expect(firstColumn).toHaveInlineStyle({
-          width: '198px', // because of the 2px border
-        });
-      });
-
       it('should handle hidden columns', () => {
         const rows = [{ id: 1, firstName: 'Jon' }];
         const columns = [
@@ -617,59 +594,6 @@ describe('<DataGrid /> - Layout & Warnings', () => {
         const firstColumn = getColumnHeaderCell(0);
         expect(firstColumn).toHaveInlineStyle({
           width: '198px', // because of the 2px border
-        });
-      });
-
-      it('should resize flex: 1 column when setting hide: false on a column to avoid exceeding grid width (deprecated)', () => {
-        const TestCase = (props: DataGridProps) => (
-          <div style={{ width: 300, height: 500 }}>
-            <DataGrid {...props} />
-          </div>
-        );
-
-        const { setProps } = render(
-          <TestCase
-            rows={[
-              {
-                id: 1,
-                first: 'Mike',
-                age: 11,
-              },
-              {
-                id: 2,
-                first: 'Jack',
-                age: 11,
-              },
-              {
-                id: 3,
-                first: 'Mike',
-                age: 20,
-              },
-            ]}
-            columns={[
-              { field: 'id', flex: 1 },
-              { field: 'first', width: 100 },
-              { field: 'age', width: 50, hide: true },
-            ]}
-          />,
-        );
-
-        let firstColumn = document.querySelector('[role="columnheader"][aria-colindex="1"]');
-        expect(firstColumn).toHaveInlineStyle({
-          width: '198px', // because of the 2px border
-        });
-
-        setProps({
-          columns: [
-            { field: 'clientId', flex: 1 },
-            { field: 'first', width: 100 },
-            { field: 'age', width: 50 },
-          ],
-        });
-
-        firstColumn = document.querySelector('[role="columnheader"][aria-colindex="1"]');
-        expect(firstColumn).toHaveInlineStyle({
-          width: '148px', // because of the 2px border
         });
       });
 
@@ -868,7 +792,7 @@ describe('<DataGrid /> - Layout & Warnings', () => {
     // A function test counterpart of ScrollbarOverflowVerticalSnap.
     it('should not have a horizontal scrollbar if not needed', () => {
       const TestCase = () => {
-        const data = useData(100, 1);
+        const data = useBasicDemoData(100, 1);
         return (
           <div style={{ width: 500, height: 300 }}>
             <DataGrid {...data} />

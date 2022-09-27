@@ -12,9 +12,6 @@ const rows: GridRowsProp = [{ id: 1, idBis: 1 }];
 
 const columns: GridColumns = [{ field: 'id' }, { field: 'idBis' }];
 
-/**
- * TODO v6: Remove deprecated tests
- */
 describe('<DataGridPro /> - Columns Visibility', () => {
   const { render } = createRenderer();
 
@@ -78,7 +75,6 @@ describe('<DataGridPro /> - Columns Visibility', () => {
       expect(onColumnVisibilityModelChange.callCount).to.equal(1);
       expect(onColumnVisibilityModelChange.lastCall.firstArg).to.deep.equal({
         id: false,
-        idBis: true,
       });
     });
 
@@ -139,11 +135,6 @@ describe('<DataGridPro /> - Columns Visibility', () => {
             Toolbar: GridToolbar,
           }}
           columns={[{ field: 'id' }, { field: 'idBis', hideable: false }]}
-          initialState={{
-            columns: {
-              columnVisibilityModel: {},
-            },
-          }}
         />,
       );
 
@@ -223,40 +214,6 @@ describe('<DataGridPro /> - Columns Visibility', () => {
       fireEvent.click(screen.getByRole('button', { name: 'Select columns' }));
       fireEvent.click(screen.getByRole('checkbox', { name: 'id' }));
       expect(getColumnHeadersTextContent()).to.deep.equal([]);
-    });
-  });
-
-  describe('GridColDef: hide (deprecated)', () => {
-    it('should hide columns with `hide: true`', () => {
-      render(<TestDataGrid columns={[{ field: 'id' }, { field: 'idBis', hide: true }]} />);
-
-      expect(getColumnHeadersTextContent()).to.deep.equal(['id']);
-    });
-
-    it('should not hide columns with `hide: true` if the model is initialized', () => {
-      render(
-        <TestDataGrid
-          initialState={{
-            columns: {
-              columnVisibilityModel: {},
-            },
-          }}
-          columns={[{ field: 'id' }, { field: 'idBis', hide: true }]}
-        />,
-      );
-
-      expect(getColumnHeadersTextContent()).to.deep.equal(['id', 'idBis']);
-    });
-
-    it('should not hide columns with `hide: true` if the model is controlled', () => {
-      render(
-        <TestDataGrid
-          columnVisibilityModel={{}}
-          columns={[{ field: 'id' }, { field: 'idBis', hide: true }]}
-        />,
-      );
-
-      expect(getColumnHeadersTextContent()).to.deep.equal(['id', 'idBis']);
     });
   });
 });

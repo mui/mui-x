@@ -61,8 +61,14 @@ export type {
   GridRowTreeCreationParams,
   GridRowTreeCreationValue,
   GridHydrateRowsValue,
+  GridRowsPartialUpdates,
+  GridRowsPartialUpdateAction,
+  GridTreeDepths,
+  GridRowTreeUpdatedGroupsManager,
+  GridRowTreeUpdateGroupAction,
   GridPinnedRowsState,
-} from '../hooks/features/rows/gridRowsState';
+} from '../hooks/features/rows/gridRowsInterfaces';
+export { getTreeNodeDescendants, buildRootGroup } from '../hooks/features/rows/gridRowsUtils';
 export { useGridRowsMeta, rowsMetaStateInitializer } from '../hooks/features/rows/useGridRowsMeta';
 export { useGridParamsApi } from '../hooks/features/rows/useGridParamsApi';
 export { getRowIdFromRowModel } from '../hooks/features/rows/gridRowsUtils';
@@ -83,7 +89,10 @@ export { useGridEvents } from '../hooks/features/events/useGridEvents';
 export { useGridDimensions } from '../hooks/features/dimensions/useGridDimensions';
 export { useGridStatePersistence } from '../hooks/features/statePersistence/useGridStatePersistence';
 export type { GridRestoreStatePreProcessingContext } from '../hooks/features/statePersistence/gridStatePersistenceInterface';
-export { useGridVirtualScroller } from '../hooks/features/virtualization/useGridVirtualScroller';
+export {
+  useGridVirtualScroller,
+  getRenderableIndexes,
+} from '../hooks/features/virtualization/useGridVirtualScroller';
 
 export { useGridVisibleRows } from '../hooks/utils/useGridVisibleRows';
 export { useGridInitializeState } from '../hooks/utils/useGridInitializeState';

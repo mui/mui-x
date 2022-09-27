@@ -18,10 +18,10 @@ const locales = ['en', 'fr', 'de', 'ru', 'ar-sa'] as const;
 export default function LocalizedDatePicker() {
   const [locale, setLocale] = React.useState<typeof locales[number]>('ru');
   const [datePickerValue, setDatePickerValue] = React.useState<Dayjs | null>(
-    dayjs(),
+    dayjs('2022-04-07'),
   );
   const [timePickerValue, setTimePickerValue] = React.useState<Dayjs | null>(
-    dayjs(),
+    dayjs('2022-04-07'),
   );
 
   const selectLocale = (newLocale: any) => {

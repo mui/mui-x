@@ -9,7 +9,7 @@ import {
   raf,
 } from 'test/utils/helperFn';
 import { useGridApiRef, DataGridPro, gridClasses, GridApi } from '@mui/x-data-grid-pro';
-import { useData } from 'storybook/src/hooks/useData';
+import { useBasicDemoData } from '@mui/x-data-grid-generator';
 import { spy } from 'sinon';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
@@ -211,7 +211,7 @@ describe('<DataGridPro /> - Columns reorder', () => {
     let apiRef: React.MutableRefObject<GridApi>;
     const Test = () => {
       apiRef = useGridApiRef();
-      const data = useData(1, 3);
+      const data = useBasicDemoData(1, 3);
 
       return (
         <div style={{ width: 300, height: 300 }}>
@@ -391,7 +391,7 @@ describe('<DataGridPro /> - Columns reorder', () => {
     let apiRef: React.MutableRefObject<GridApi>;
     const Test = () => {
       apiRef = useGridApiRef();
-      const data = useData(3, 3);
+      const data = useBasicDemoData(3, 3);
 
       return (
         <div

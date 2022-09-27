@@ -29,7 +29,8 @@ import { isPrintableKey } from '../../../utils/keyboardUtils';
 import { gridColumnFieldsSelector } from '../columns/gridColumnsSelector';
 import { GridCellParams } from '../../../models/params/gridCellParams';
 import { buildWarning } from '../../../utils/warning';
-import { gridRowsIdToIdLookupSelector } from '../rows/gridRowsSelector';
+import { gridRowsDataRowIdToIdLookupSelector } from '../rows/gridRowsSelector';
+import { deepClone } from '../../../utils/utils';
 import {
   GridRowEditStopParams,
   GridRowEditStartParams,
@@ -475,6 +476,8 @@ export const useGridRowEditing = (
 
       if (hasSomeFieldWithError) {
         prevRowModesModel.current[id].mode = GridRowModes.Edit;
+        // Revert the mode in the rowModesModel prop back to "edit"
+        updateRowInRowModesModel(id, { mode: GridRowModes.Edit });
         return;
       }
 
@@ -519,7 +522,7 @@ export const useGridRowEditing = (
     GridNewRowEditingApi['unstable_setRowEditingEditCellValue']
   >(
     (params) => {
-      const { id, field, value } = params;
+      const { id, field, value, debounceMs, unstable_skipValueParser: skipValueParser } = params;
 
       throwIfNotEditable(id, field);
 
@@ -527,12 +530,16 @@ export const useGridRowEditing = (
       const row = apiRef.current.getRow(id)!;
 
       let parsedValue = value;
-      if (column.valueParser) {
+      if (column.valueParser && !skipValueParser) {
         parsedValue = column.valueParser(value, apiRef.current.getCellParams(id, field));
       }
 
       let editingState = gridEditRowsStateSelector(apiRef.current.state);
-      let newProps = { ...editingState[id][field], value: parsedValue };
+      let newProps: GridEditCellProps = {
+        ...editingState[id][field],
+        value: parsedValue,
+        changeReason: debounceMs ? 'debouncedSetEditCellValue' : 'setEditCellValue',
+      };
 
       if (!column.preProcessEditCellProps) {
         updateOrDeleteFieldState(id, field, newProps);
@@ -673,11 +680,11 @@ export const useGridRowEditing = (
   }, [rowModesModelProp, updateRowModesModel]);
 
   React.useEffect(() => {
-    const idToIdLookup = gridRowsIdToIdLookupSelector(apiRef);
+    const idToIdLookup = gridRowsDataRowIdToIdLookupSelector(apiRef);
 
     // Update the ref here because updateStateToStopRowEditMode may change it later
     const copyOfPrevRowModesModel = prevRowModesModel.current;
-    prevRowModesModel.current = rowModesModel;
+    prevRowModesModel.current = deepClone(rowModesModel); // Do a deep-clone because the attributes might be changed later
 
     Object.entries(rowModesModel).forEach(([id, params]) => {
       const prevMode = copyOfPrevRowModesModel[id]?.mode || GridRowModes.View;

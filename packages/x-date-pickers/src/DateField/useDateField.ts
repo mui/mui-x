@@ -13,7 +13,7 @@ import {
   isSameDateError,
   validateDate,
 } from '../internals/hooks/validation/useDateValidation';
-import { parseNonNullablePickerDate } from '../internals/utils/date-utils';
+import { applyDefaultDate } from '../internals/utils/date-utils';
 import { useUtils, useDefaultDates } from '../internals/hooks/useUtils';
 
 const dateRangeFieldValueManager: FieldValueManager<any, any, FieldSection, DateValidationError> = {
@@ -37,9 +37,9 @@ const dateRangeFieldValueManager: FieldValueManager<any, any, FieldSection, Date
   isSameError: isSameDateError,
 };
 
-const useDefaultizedDateField = <TInputDate, TDate, AdditionalProps extends {}>(
-  props: UseDateFieldProps<TInputDate, TDate>,
-): AdditionalProps & UseDateFieldDefaultizedProps<TInputDate, TDate> => {
+const useDefaultizedDateField = <TDate, AdditionalProps extends {}>(
+  props: UseDateFieldProps<TDate>,
+): AdditionalProps & UseDateFieldDefaultizedProps<TDate> => {
   const utils = useUtils<TDate>();
   const defaultDates = useDefaultDates<TDate>();
 
@@ -47,18 +47,12 @@ const useDefaultizedDateField = <TInputDate, TDate, AdditionalProps extends {}>(
     disablePast: false,
     disableFuture: false,
     ...props,
-    minDate: parseNonNullablePickerDate(utils, props.minDate, defaultDates.minDate),
-    maxDate: parseNonNullablePickerDate(utils, props.maxDate, defaultDates.maxDate),
+    minDate: applyDefaultDate(utils, props.minDate, defaultDates.minDate),
+    maxDate: applyDefaultDate(utils, props.maxDate, defaultDates.maxDate),
   } as any;
 };
 
-export const useDateField = <
-  TInputDate,
-  TDate,
-  TProps extends UseDateFieldProps<TInputDate, TDate>,
->(
-  inProps: TProps,
-) => {
+export const useDateField = <TDate, TProps extends UseDateFieldProps<TDate>>(inProps: TProps) => {
   const {
     value,
     defaultValue,
@@ -67,12 +61,17 @@ export const useDateField = <
     readOnly,
     onError,
     shouldDisableDate,
+    shouldDisableMonth,
+    shouldDisableYear,
     minDate,
     maxDate,
     disableFuture,
     disablePast,
+    selectedSections,
+    onSelectedSectionsChange,
+    inputRef,
     ...other
-  } = useDefaultizedDateField<TInputDate, TDate, TProps>(inProps);
+  } = useDefaultizedDateField<TDate, TProps>(inProps);
 
   return useField({
     forwardedProps: other,
@@ -84,10 +83,15 @@ export const useDateField = <
       readOnly,
       onError,
       shouldDisableDate,
+      shouldDisableMonth,
+      shouldDisableYear,
       minDate,
       maxDate,
       disableFuture,
       disablePast,
+      selectedSections,
+      onSelectedSectionsChange,
+      inputRef,
     },
     valueManager: datePickerValueManager,
     fieldValueManager: dateRangeFieldValueManager,

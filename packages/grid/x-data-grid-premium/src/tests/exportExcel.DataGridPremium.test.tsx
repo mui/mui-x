@@ -282,5 +282,73 @@ describe('<DataGridPremium /> - Export Excel', () => {
       expect(headerRow.getCell(3).value).to.equal('col2');
       expect(headerRow.getCell(4).value).to.equal('col3');
     });
+
+    it(`should export column grouping`, async () => {
+      const Test = () => {
+        apiRef = useGridApiRef();
+        return (
+          <div style={{ width: 300, height: 300 }}>
+            <DataGridPremium
+              columns={[{ field: 'col1' }, { field: 'col2' }, { field: 'col3' }]}
+              rows={[
+                {
+                  id: 1,
+                  col1: 1,
+                  col2: 2,
+                  col3: 3,
+                },
+              ]}
+              columnGroupingModel={[
+                { groupId: 'group1', children: [{ field: 'col1' }] },
+                {
+                  groupId: 'group23',
+                  children: [
+                    { field: 'col2' },
+                    {
+                      groupId: 'group3',
+                      headerName: 'special col3',
+                      children: [{ field: 'col3' }],
+                    },
+                  ],
+                },
+              ]}
+              experimentalFeatures={{ columnGrouping: true }}
+              apiRef={apiRef}
+            />
+          </div>
+        );
+      };
+      render(<Test />);
+
+      const workbook = await act(() => apiRef.current.getDataAsExcel());
+      const worksheet = workbook!.worksheets[0];
+
+      // line 1: | group1 | group23 |
+      expect(worksheet.getCell('A1').value).to.equal('group1');
+      expect(worksheet.getCell('B1').value).to.equal('group23');
+
+      expect(worksheet.getCell('A1').type).to.equal(Excel.ValueType.String);
+      expect(worksheet.getCell('B1').type).to.equal(Excel.ValueType.String);
+      expect(worksheet.getCell('C1').type).to.equal(Excel.ValueType.Merge);
+
+      // line 2: |  |  | special col3 |
+
+      expect(worksheet.getCell('A2').value).to.equal(null);
+      expect(worksheet.getCell('B2').value).to.equal(null);
+      expect(worksheet.getCell('C2').value).to.equal('special col3');
+
+      expect(worksheet.getCell('A2').type).to.equal(Excel.ValueType.Null);
+      expect(worksheet.getCell('B2').type).to.equal(Excel.ValueType.Null);
+      expect(worksheet.getCell('C2').type).to.equal(Excel.ValueType.String);
+      // line 3: | col1 | col2 | col3 |
+
+      expect(worksheet.getCell('A3').value).to.equal('col1');
+      expect(worksheet.getCell('B3').value).to.equal('col2');
+      expect(worksheet.getCell('C3').value).to.equal('col3');
+
+      expect(worksheet.getCell('A3').type).to.equal(Excel.ValueType.String);
+      expect(worksheet.getCell('B3').type).to.equal(Excel.ValueType.String);
+      expect(worksheet.getCell('C3').type).to.equal(Excel.ValueType.String);
+    });
   });
 });

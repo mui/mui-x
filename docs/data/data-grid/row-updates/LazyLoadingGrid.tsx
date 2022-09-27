@@ -16,23 +16,23 @@ const DATASET_OPTION: UseDemoDataOptions = {
   rowLength: 10000,
 };
 
-const { columns, columnsWithDefaultColDef, useQuery } =
+const { columnsWithDefaultColDef, useQuery, ...data } =
   createFakeServer(DATASET_OPTION);
 
 const emptyObject = {};
 
 export default function LazyLoadingGrid() {
   // dataServerSide simulates your database.
-  const { data: dataServerSide } = useQuery(emptyObject);
+  const { rows: rowsServerSide } = useQuery(emptyObject);
 
   const apiRef = useGridApiRef();
-  const [initialRows, setInitialRows] = React.useState<typeof dataServerSide>([]);
+  const [initialRows, setInitialRows] = React.useState<typeof rowsServerSide>([]);
   const [rowCount, setRowCount] = React.useState(0);
 
   const fetchRow = React.useCallback(
     async (params: GridFetchRowsParams) => {
       const serverRows = await loadServerRows(
-        dataServerSide,
+        rowsServerSide,
         {
           filterModel: params.filterModel,
           sortModel: params.sortModel,
@@ -53,12 +53,12 @@ export default function LazyLoadingGrid() {
         total: serverRows.returnedRows.length,
       };
     },
-    [dataServerSide],
+    [rowsServerSide],
   );
 
   // The initial fetch request of the viewport.
   React.useEffect(() => {
-    if (dataServerSide.length === 0) {
+    if (rowsServerSide.length === 0) {
       return;
     }
 
@@ -75,7 +75,7 @@ export default function LazyLoadingGrid() {
       setInitialRows(slice);
       setRowCount(total);
     })();
-  }, [dataServerSide, fetchRow]);
+  }, [rowsServerSide, fetchRow]);
 
   // Fetch rows as they become visible in the viewport
   const handleFetchRows = React.useCallback(
@@ -96,8 +96,8 @@ export default function LazyLoadingGrid() {
   return (
     <div style={{ height: 400, width: '100%' }}>
       <DataGridPro
-        columns={columns}
         rows={initialRows}
+        {...data}
         apiRef={apiRef}
         hideFooterPagination
         rowCount={rowCount}

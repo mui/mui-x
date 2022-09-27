@@ -140,12 +140,19 @@ export const adjustInvalidDateSectionValue = <TDate, TSection extends FieldSecti
       let newDate: TDate;
       if (shouldSetAbsolute) {
         if (delta > 0 || isEnd) {
-          newDate = utils.endOfMonth(today);
-        } else {
           newDate = utils.startOfMonth(today);
+        } else {
+          newDate = utils.endOfMonth(today);
         }
       } else {
         newDate = utils.addDays(utils.parse(section.value, section.formatValue)!, delta);
+        if (!utils.isSameMonth(newDate, today)) {
+          if (delta > 0) {
+            newDate = utils.startOfMonth(today);
+          } else {
+            newDate = utils.endOfMonth(today);
+          }
+        }
       }
 
       return utils.formatByString(newDate, section.formatValue);

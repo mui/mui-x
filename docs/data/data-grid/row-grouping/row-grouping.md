@@ -7,7 +7,7 @@ title: Data Grid - Row grouping
 <p class="description">Group your rows according to some column values.</p>
 
 For when you need to group rows based on repeated column values, and/or custom functions.
-In the following example, we're grouping all movies based on their production `company`
+In the following example groups all movies based on their production `company`
 
 {{"demo": "RowGroupingBasicExample.js", "bg": "inline", "defaultCodeOpen": false}}
 
@@ -26,7 +26,7 @@ initialState={{
 ```
 
 The basic parameters are the columns you want to check for repeating values.
-In this example, we want to group all the movies matching the same company name, followed by a second group matching the director's name.
+This example groups all the movies matching the same company name, followed by a second group matching the director's name.
 
 {{"demo": "RowGroupingInitialState.js", "bg": "inline", "defaultCodeOpen": false}}
 
@@ -42,7 +42,7 @@ You can use the `onRowGroupingModelChange` prop to listen to changes to the grou
 ### Single grouping column
 
 By default, the grid will display a single column holding all grouping columns.
-If you have multiple grouping criteria, this column name will be set to "Group".
+If you have multiple grouping criteria, this column name will be set to "Group."
 
 {{"demo": "RowGroupingSingleGroupingCol.js", "bg": "inline", "defaultCodeOpen": false}}
 
@@ -68,7 +68,7 @@ The callback is called for each grouping column, and it receives the respective 
 
 ### Show values for the leaves
 
-By default, the grouped rows display no value on their grouping columns' cells. We're calling those cells "leaves".
+By default, the grouped rows display no value on their grouping columns' cells. Those cells are called "leaves."
 
 If you want to display some value, you can provide a `leafField` property to the `groupingColDef`.
 
@@ -288,6 +288,10 @@ With this panel, your users will be able to control which columns are used for g
 ## Full example
 
 {{"demo": "RowGroupingFullExample.js", "bg": "inline", "defaultCodeOpen": false}}
+
+## Advanced use cases
+
+See [Row grouping recipes](/x/react-data-grid/recipes-row-grouping/) for more advanced use cases.
 
 ## apiRef [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
 

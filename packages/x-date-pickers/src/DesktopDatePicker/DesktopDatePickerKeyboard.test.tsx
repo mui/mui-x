@@ -5,11 +5,11 @@ import { isWeekend } from 'date-fns';
 import TextField from '@mui/material/TextField';
 import { fireEvent, screen } from '@mui/monorepo/test/utils';
 import { DesktopDatePicker, DesktopDatePickerProps } from '@mui/x-date-pickers/DesktopDatePicker';
-import { adapterToUse, createPickerRenderer } from '../../../../test/utils/pickers-utils';
+import { adapterToUse, createPickerRenderer } from 'test/utils/pickers-utils';
 import { MakeOptional } from '../internals/models/helpers';
 
 function TestKeyboardDatePicker(
-  PickerProps: MakeOptional<DesktopDatePickerProps<any, any>, 'value' | 'onChange' | 'renderInput'>,
+  PickerProps: MakeOptional<DesktopDatePickerProps<any>, 'value' | 'onChange' | 'renderInput'>,
 ) {
   const { onChange: propsOnChange, value: propsValue, ...other } = PickerProps;
   const [value, setValue] = React.useState<unknown>(
@@ -174,13 +174,13 @@ describe('<DesktopDatePicker /> keyboard interactions', () => {
         const onErrorMock = spy();
         // we are running validation on value change
         function DatePickerInput() {
-          const [date, setDate] = React.useState<number | Date | null>(null);
+          const [value, setValue] = React.useState<number | Date | null>(null);
 
           return (
             <DesktopDatePicker
-              value={date}
+              value={value}
               onError={onErrorMock}
-              onChange={(newDate) => setDate(newDate)}
+              onChange={(newDate) => setValue(newDate)}
               renderInput={(inputProps) => <TextField {...inputProps} />}
               {...props}
             />

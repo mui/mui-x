@@ -1,12 +1,14 @@
----
-title: Data Grid - Demo
----
+# Data Grid - Demo
 
-# Data grid - Demo
+<p class="description">Use the demo below to explore the most significant features and their respective plans.</p>
 
-<p class="description">Use the demo below to explore the available features.</p>
+:::info
+We're using the Data Grid to display the following features' table.
 
-{{"demo": "FullFeaturedDemo.js", "defaultCodeOpen": false, "bg": "inline"}}
+Filtering, sorting, and grouping (by plan) are at your disposal to help you explore the list.
+:::
+
+{{"demo": "PopularFeaturesDemo.tsx", "defaultCodeOpen": false, "bg": "inline", "hideToolbar": true}}
 
 ## API
 
