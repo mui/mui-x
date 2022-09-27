@@ -90,6 +90,17 @@ You can take advantage of the [PickersDay](/x/api/date-pickers/pickers-day/) com
 
 {{"demo": "CustomDay.js"}}
 
+## Customize month layout
+
+You can customize the month layout with some props.
+
+To shows all days of displayed weeks, included those outside of the current month, use `showDaysOutsideCurrentMonth`.
+
+By default, only weeks of the current month are displayed, but you can provide a total number of week to display with `fixedWeekNumber` prop.
+This value is usually set to `6` for Gregorian calendars, because months display can vary between 4 and 6 weeks.
+
+{{"demo": "CustomMonthLayout.js"}}
+
 ## Dynamic data
 
 Sometimes it may be necessary to display additional info right in the calendar. Here's an example of prefetching and displaying server-side data using the `onMonthChange`, `loading`, and `renderDay` props.

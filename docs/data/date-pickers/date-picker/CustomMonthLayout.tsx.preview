@@ -1,0 +1,12 @@
+<LocalizationProvider dateAdapter={AdapterDayjs}>
+  <StaticDatePicker
+    displayStaticWrapperAs="desktop"
+    openTo="day"
+    value={value}
+    onChange={(newValue) => {
+      setValue(newValue);
+    }}
+    renderInput={(params) => <TextField {...params} />}
+    showDaysOutsideCurrentMonth
+  />
+</LocalizationProvider>
