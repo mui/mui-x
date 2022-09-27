@@ -28,7 +28,7 @@ export const useDesktopPicker = <TValue, TDate, TView extends CalendarOrClockPic
   const utils = useUtils<TDate>();
 
   const {
-    fieldProps: pickerStateFieldProps,
+    field: headlessPickerFieldResponse,
     renderViews,
     actions,
     open,
@@ -39,7 +39,7 @@ export const useDesktopPicker = <TValue, TDate, TView extends CalendarOrClockPic
     elementType: Field,
     externalSlotProps: componentsProps.field,
     additionalProps: {
-      ...pickerStateFieldProps,
+      ...headlessPickerFieldResponse,
       readOnly,
       disabled,
       className,

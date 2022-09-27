@@ -19,7 +19,7 @@ export const useMobilePicker = <TValue, TDate, TView extends CalendarOrClockPick
   const utils = useUtils<TDate>();
 
   const {
-    fieldProps: pickerStateFieldProps,
+    field: headlessPickerFieldResponse,
     renderViews,
     actions,
     open,
@@ -30,7 +30,7 @@ export const useMobilePicker = <TValue, TDate, TView extends CalendarOrClockPick
     elementType: Field,
     externalSlotProps: componentsProps.field,
     additionalProps: {
-      ...pickerStateFieldProps,
+      ...headlessPickerFieldResponse,
       readOnly: true,
       disabled,
       className,

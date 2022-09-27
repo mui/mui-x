@@ -4,6 +4,10 @@ import { useViews } from '../useViews';
 import { PickerSelectionState } from '../usePickerState';
 import { useIsLandscape } from '../useIsLandscape';
 
+export type PickerViewRenderer<TValue, TView extends CalendarOrClockPickerView> = (
+  props: PickerViewsRendererProps<TValue, TView>,
+) => React.ReactElement;
+
 export interface ExportedUsePickerViewProps<TView extends CalendarOrClockPickerView> {
   autoFocus?: boolean;
   /**
@@ -36,11 +40,7 @@ export interface ExportedUsePickerViewProps<TView extends CalendarOrClockPickerV
   views: readonly TView[];
 }
 
-export type PickerViewRenderer<TValue, TView extends CalendarOrClockPickerView> = (
-  props: PickerViewsRendererProps<TValue, TView>,
-) => React.ReactElement;
-
-interface UsePickerViewsProps<TValue, TView extends CalendarOrClockPickerView>
+export interface UsePickerViewsProps<TValue, TView extends CalendarOrClockPickerView>
   extends ExportedUsePickerViewProps<TView> {
   onChange: (value: TValue, selectionState?: PickerSelectionState) => void;
   value: TValue;

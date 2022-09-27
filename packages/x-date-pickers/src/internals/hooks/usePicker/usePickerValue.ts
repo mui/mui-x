@@ -5,7 +5,8 @@ import { WrapperVariant } from '../../components/wrappers/WrapperVariantContext'
 import { useOpenState } from '../useOpenState';
 import { useUtils } from '../useUtils';
 import { PickerStateValueManager } from '../usePickerState';
-import { UseFieldInternalProps } from '../useField';
+import { FieldSelectedSections, UseFieldInternalProps } from '../useField';
+import { UsePickerViewsProps } from './usePickerViews';
 
 export type PickerSelectionState = 'partial' | 'shallow' | 'finish';
 
@@ -117,16 +118,20 @@ export interface UsePickerValueActions {
   onOpen: () => void;
 }
 
-type UsePickerValueFieldProps<TValue> = Pick<
+type UsePickerValueFieldResponse<TValue> = Pick<
   UseFieldInternalProps<TValue, unknown>,
   'value' | 'onChange' | 'selectedSections' | 'onSelectedSectionsChange'
 >;
 
+type UsePickerValueViewsResponse<TValue> = Pick<
+  UsePickerViewsProps<TValue, any>,
+  'value' | 'onChange'
+>;
+
 interface UsePickerValueResponse<TValue> {
-  onChange: (value: TValue, selectionState?: PickerSelectionState) => void;
-  value: TValue;
   actions: UsePickerValueActions;
-  fieldProps: UsePickerValueFieldProps<TValue>;
+  views: UsePickerValueViewsResponse<TValue>;
+  field: UsePickerValueFieldResponse<TValue>;
   open: boolean;
 }
 
@@ -222,7 +227,7 @@ export const usePickerValue = <TValue, TDate>(
     setDate({ action: 'setCommitted', value, skipOnChangeCall: true });
   }
 
-  const onClear = useEventCallback(() => {
+  const handleClear = useEventCallback(() => {
     // Reset all date in state to the empty value and close picker.
     setDate({
       value: valueManager.emptyValue,
@@ -232,7 +237,7 @@ export const usePickerValue = <TValue, TDate>(
     });
   });
 
-  const onAccept = useEventCallback(() => {
+  const handleAccept = useEventCallback(() => {
     // Set all date in state to equal the current draft value and close picker.
     setDate({
       value: dateState.draft,
@@ -242,24 +247,24 @@ export const usePickerValue = <TValue, TDate>(
     });
   });
 
-  const onDismiss = useEventCallback(() => {
+  const handleDismiss = useEventCallback(() => {
     // Set all dates in state to equal the last committed date.
     // e.g. Reset the state to the last committed value.
     setDate({ value: dateState.committed, action: 'acceptAndClose' });
   });
 
-  const onCancel = useEventCallback(() => {
+  const handleCancel = useEventCallback(() => {
     // Set all dates in state to equal the last accepted date and close picker.
     // e.g. Reset the state to the last accepted value
     setDate({ value: dateState.resetFallback, action: 'acceptAndClose' });
   });
 
-  const onSetToday = useEventCallback(() => {
+  const handleSetToday = useEventCallback(() => {
     // Set all dates in state to equal today and close picker.
     setDate({ value: valueManager.getTodayValue(utils), action: 'acceptAndClose' });
   });
 
-  const onOpen = useEventCallback(() => setIsOpen(true));
+  const handleOpen = useEventCallback(() => setIsOpen(true));
 
   const handleChange = useEventCallback(
     (newDate: TValue, selectionState: PickerSelectionState = 'partial') => {
@@ -291,31 +296,42 @@ export const usePickerValue = <TValue, TDate>(
     },
   );
 
-  const fieldProps = React.useMemo<UsePickerValueFieldProps<TValue>>(
-    () => ({
-      value: dateState.draft,
-      onChange: (newValue) => setDate({ action: 'setCommitted', value: newValue }),
-      selectedSections,
-      onSelectedSectionsChange: (newSelectedSections) => {
-        setSelectedSections(newSelectedSections);
-        onSelectedSectionsChange?.(newSelectedSections);
-      },
-    }),
-    [dateState.draft, setDate, selectedSections, setSelectedSections, onSelectedSectionsChange],
+  const handleFieldChange = useEventCallback((newValue: TValue) =>
+    setDate({ action: 'setCommitted', value: newValue }),
   );
 
-  return {
+  const handleFieldSelectedSectionsChange = useEventCallback(
+    (newSelectedSections: FieldSelectedSections) => {
+      setSelectedSections(newSelectedSections);
+      onSelectedSectionsChange?.(newSelectedSections);
+    },
+  );
+
+  const fieldResponse: UsePickerValueFieldResponse<TValue> = {
+    value: dateState.draft,
+    onChange: handleFieldChange,
+    selectedSections,
+    onSelectedSectionsChange: handleFieldSelectedSectionsChange,
+  };
+
+  const viewResponse: UsePickerValueViewsResponse<TValue> = {
     value: dateState.draft,
     onChange: handleChange,
+  };
+
+  const actions: UsePickerValueActions = {
+    onClear: handleClear,
+    onAccept: handleAccept,
+    onDismiss: handleDismiss,
+    onCancel: handleCancel,
+    onSetToday: handleSetToday,
+    onOpen: handleOpen,
+  };
+
+  return {
     open: isOpen,
-    fieldProps,
-    actions: {
-      onClear,
-      onAccept,
-      onDismiss,
-      onCancel,
-      onSetToday,
-      onOpen,
-    },
+    field: fieldResponse,
+    views: viewResponse,
+    actions,
   };
 };
