@@ -6,7 +6,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 
 import { Unstable_DateField as DateField } from '@mui/x-date-pickers/DateField';
 
-export default function ControlledSelectedSectionIndexes() {
+export default function ControlledSelectedSections() {
   const [selectedSectionIndexes, setSelectedSectionIndexes] = React.useState(null);
   const inputRef = React.useRef(null);
 
@@ -41,8 +41,8 @@ export default function ControlledSelectedSectionIndexes() {
         <DateField
           label="Basic date field"
           inputRef={inputRef}
-          selectedSectionIndexes={selectedSectionIndexes}
-          onSelectedSectionIndexesChange={setSelectedSectionIndexes}
+          selectedSections={selectedSectionIndexes}
+          onSelectedSectionsChange={setSelectedSectionIndexes}
         />
       </Stack>
     </LocalizationProvider>

@@ -67,8 +67,8 @@ export const useDateField = <TDate, TProps extends UseDateFieldProps<TDate>>(inP
     maxDate,
     disableFuture,
     disablePast,
-    selectedSectionIndexes,
-    onSelectedSectionIndexesChange,
+    selectedSections,
+    onSelectedSectionsChange,
     inputRef,
     ...other
   } = useDefaultizedDateField<TDate, TProps>(inProps);
@@ -89,8 +89,8 @@ export const useDateField = <TDate, TProps extends UseDateFieldProps<TDate>>(inP
       maxDate,
       disableFuture,
       disablePast,
-      selectedSectionIndexes,
-      onSelectedSectionIndexesChange,
+      selectedSections,
+      onSelectedSectionsChange,
       inputRef,
     },
     valueManager: datePickerValueManager,
