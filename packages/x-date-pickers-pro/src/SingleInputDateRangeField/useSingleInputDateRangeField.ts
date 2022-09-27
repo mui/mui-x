@@ -104,8 +104,8 @@ export const dateRangeFieldValueManager: FieldValueManager<
   getActiveDateManager: (state, activeSection) => {
     const index = activeSection.dateName === 'start' ? 0 : 1;
 
-    const updateDateInRange = (date: any, dateRange: DateRange<any>) =>
-      (index === 0 ? [date, dateRange[1]] : [dateRange[0], date]) as DateRange<any>;
+    const updateDateInRange = (newDate: any, prevDateRange: DateRange<any>) =>
+      (index === 0 ? [newDate, prevDateRange[1]] : [prevDateRange[0], newDate]) as DateRange<any>;
 
     return {
       activeDate: state.value[index],
