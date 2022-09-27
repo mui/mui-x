@@ -44,7 +44,7 @@ export const useField = <
   const {
     state,
     selectedSectionIndexes,
-    setSelectedSectionIndexes,
+    setSelectedSections,
     clearValue,
     clearActiveSection,
     updateSectionValue,
@@ -67,7 +67,7 @@ export const useField = <
     );
     const sectionIndex = nextSectionIndex === -1 ? state.sections.length - 1 : nextSectionIndex - 1;
 
-    setSelectedSectionIndexes(sectionIndex);
+    setSelectedSections(sectionIndex);
   });
 
   const handleInputFocus = useEventCallback((...args) => {
@@ -83,7 +83,7 @@ export const useField = <
       }
 
       if (Number(input.selectionEnd) - Number(input.selectionStart) === input.value.length) {
-        setSelectedSectionIndexes({ startIndex: 0, endIndex: state.sections.length - 1 });
+        setSelectedSections({ startIndex: 0, endIndex: state.sections.length - 1 });
       } else {
         handleInputClick();
       }
@@ -92,7 +92,7 @@ export const useField = <
 
   const handleInputBlur = useEventCallback((...args) => {
     onBlur?.(...(args as []));
-    setSelectedSectionIndexes(null);
+    setSelectedSections(null);
   });
 
   const handleInputKeyDown = useEventCallback((event: React.KeyboardEvent) => {
@@ -105,7 +105,7 @@ export const useField = <
         // prevent default to make sure that the next line "select all" while updating
         // the internal state at the same time.
         event.preventDefault();
-        setSelectedSectionIndexes({ startIndex: 0, endIndex: state.sections.length - 1 });
+        setSelectedSections({ startIndex: 0, endIndex: state.sections.length - 1 });
         return;
       }
 
@@ -114,11 +114,11 @@ export const useField = <
         event.preventDefault();
 
         if (selectedSectionIndexes == null) {
-          setSelectedSectionIndexes(0);
+          setSelectedSections(0);
         } else if (selectedSectionIndexes.startIndex < state.sections.length - 1) {
-          setSelectedSectionIndexes(selectedSectionIndexes.startIndex + 1);
+          setSelectedSections(selectedSectionIndexes.startIndex + 1);
         } else if (selectedSectionIndexes.startIndex !== selectedSectionIndexes.endIndex) {
-          setSelectedSectionIndexes(selectedSectionIndexes.endIndex);
+          setSelectedSections(selectedSectionIndexes.endIndex);
         }
 
         return;
@@ -129,11 +129,11 @@ export const useField = <
         event.preventDefault();
 
         if (selectedSectionIndexes == null) {
-          setSelectedSectionIndexes(state.sections.length - 1);
+          setSelectedSections(state.sections.length - 1);
         } else if (selectedSectionIndexes.startIndex !== selectedSectionIndexes.endIndex) {
-          setSelectedSectionIndexes(selectedSectionIndexes.startIndex);
+          setSelectedSections(selectedSectionIndexes.startIndex);
         } else if (selectedSectionIndexes.startIndex > 0) {
-          setSelectedSectionIndexes(selectedSectionIndexes.startIndex - 1);
+          setSelectedSections(selectedSectionIndexes.startIndex - 1);
         }
         return;
       }

@@ -42,8 +42,8 @@ export const useFieldState = <
       onChange,
       readOnly,
       format = utils.formats.keyboardDate,
-      selectedSectionIndexes: selectedSectionIndexesProp,
-      onSelectedSectionIndexesChange,
+      selectedSections: selectedSectionsProp,
+      onSelectedSectionsChange,
     },
   } = params;
 
@@ -71,7 +71,7 @@ export const useFieldState = <
   });
 
   const [selectedSections, setSelectedSection] = useControlled({
-    controlled: selectedSectionIndexesProp,
+    controlled: selectedSectionsProp,
     default: null,
     name: 'useField',
     state: 'selectedSectionIndexes',
@@ -202,9 +202,9 @@ export const useFieldState = <
     }));
   };
 
-  const setSelectedSectionIndexes = (newSelectedSections: FieldSelectedSections) => {
+  const setSelectedSections = (newSelectedSections: FieldSelectedSections) => {
     setSelectedSection(newSelectedSections);
-    onSelectedSectionIndexesChange?.(newSelectedSections);
+    onSelectedSectionsChange?.(newSelectedSections);
 
     setState((prevState) => ({
       ...prevState,
@@ -236,7 +236,7 @@ export const useFieldState = <
   return {
     state,
     selectedSectionIndexes,
-    setSelectedSectionIndexes,
+    setSelectedSections,
     clearValue,
     clearActiveSection,
     updateSectionValue,

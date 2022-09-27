@@ -181,10 +181,14 @@ async function main() {
 
       // Click the print export option from the export menu in the toolbar.
       await page.$eval(`li[role="menuitem"]:last-child`, (printButton) => {
-        printButton.click();
+        // Trigger the action async because window.print() is blocking the main thread
+        // like window.alert() is.
+        setTimeout(() => {
+          printButton.click();
+        });
       });
 
-      await sleep(6000);
+      await sleep(4000);
 
       return new Promise((resolve, reject) => {
         // See https://ffmpeg.org/ffmpeg-devices.html#x11grab
@@ -195,7 +199,7 @@ async function main() {
           if (code === 0) {
             resolve();
           } else {
-            reject();
+            reject(code);
           }
         });
       });
