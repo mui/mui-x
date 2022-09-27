@@ -499,6 +499,11 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
    */
   onCellFocusOut?: GridEventListener<'cellFocusOut'>;
   /**
+   * Callback fired when a cell gains focus.
+   * @param {GridCellParams} params With all properties from [[GridCellParams]].
+   */
+  onCellFocusIn?: GridEventListener<'cellFocusIn'>;
+  /**
    * Callback fired when a keydown event comes from a cell element.
    * @param {GridCellParams} params With all properties from [[GridCellParams]].
    * @param {MuiEvent<React.KeyboardEvent>} event The event object.
