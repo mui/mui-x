@@ -4,7 +4,7 @@ import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridSortApi } from '../../../models/api/gridSortApi';
 import { GridColDef } from '../../../models/colDef/gridColDef';
-import { GridRowId, GridRowTreeNodeConfig } from '../../../models/gridRows';
+import { GridGroupNode } from '../../../models/gridRows';
 import { GridSortItem, GridSortModel, GridSortDirection } from '../../../models/gridSortModel';
 import { isEnterKey } from '../../../utils/keyboardUtils';
 import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
@@ -16,7 +16,7 @@ import {
   gridSortedRowIdsSelector,
   gridSortModelSelector,
 } from './gridSortingSelector';
-import { gridRowIdsSelector, gridRowTreeSelector } from '../rows';
+import { GRID_ROOT_GROUP_ID, gridRowTreeSelector } from '../rows';
 import { useFirstRender } from '../../utils/useFirstRender';
 import {
   useGridRegisterStrategyProcessor,
@@ -31,6 +31,7 @@ import {
 } from './gridSortingUtils';
 import { GridPipeProcessor, useGridRegisterPipeProcessor } from '../../core/pipeProcessing';
 import { GridStateInitializer } from '../../utils/useGridInitializeState';
+import { getTreeNodeDescendants } from '../rows/gridRowsUtils';
 
 export const sortingStateInitializer: GridStateInitializer<
   Pick<DataGridProcessedProps, 'sortModel' | 'initialState' | 'disableMultipleColumnsSorting'>
@@ -126,7 +127,11 @@ export const useGridSorting = (
           ...state,
           sorting: {
             ...state.sorting,
-            sortedRows: gridRowIdsSelector(state, apiRef.current.instanceId),
+            sortedRows: getTreeNodeDescendants(
+              gridRowTreeSelector(apiRef),
+              GRID_ROOT_GROUP_ID,
+              false,
+            ),
           },
         };
       }
@@ -268,40 +273,16 @@ export const useGridSorting = (
   const flatSortingMethod = React.useCallback<GridStrategyProcessor<'sorting'>>(
     (params) => {
       const rowTree = gridRowTreeSelector(apiRef);
+      const rootGroupNode = rowTree[GRID_ROOT_GROUP_ID] as GridGroupNode;
 
-      if (!params.sortRowList) {
-        const bodyRowIds: GridRowId[] = [];
-        const footerRowIds: GridRowId[] = [];
-
-        gridRowIdsSelector(apiRef).forEach((rowId) => {
-          if (rowTree[rowId].isPinned) {
-            return;
-          }
-          if (rowTree[rowId].position === 'footer') {
-            footerRowIds.push(rowId);
-          } else {
-            bodyRowIds.push(rowId);
-          }
-        });
-
-        return [...bodyRowIds, ...footerRowIds];
+      const sortedChildren = params.sortRowList
+        ? params.sortRowList(rootGroupNode.children.map((childId) => rowTree[childId]))
+        : [...rootGroupNode.children];
+      if (rootGroupNode.footerId != null) {
+        sortedChildren.push(rootGroupNode.footerId);
       }
 
-      const bodyRows: GridRowTreeNodeConfig[] = [];
-      const footerRowIds: GridRowId[] = [];
-
-      Object.values(rowTree).forEach((rowNode) => {
-        if (rowNode.isPinned) {
-          return;
-        }
-        if (rowNode.position === 'footer') {
-          footerRowIds.push(rowNode.id);
-        } else {
-          bodyRows.push(rowNode);
-        }
-      });
-
-      return [...params.sortRowList(bodyRows), ...footerRowIds];
+      return sortedChildren;
     },
     [apiRef],
   );

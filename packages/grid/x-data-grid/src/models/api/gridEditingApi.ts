@@ -26,6 +26,10 @@ export type GridRowModesModelProps =
 
 export type GridRowModesModel = Record<GridRowId, GridRowModesModelProps>;
 
+export interface GridEditCellMeta {
+  changeReason?: 'debouncedSetEditCellValue' | 'setEditCellValue';
+}
+
 export interface GridNewEditingSharedApi {
   /**
    * Controls if a cell is editable.
@@ -59,6 +63,13 @@ export interface GridNewEditingSharedApi {
    * @ignore - do not document.
    */
   unstable_getRowWithUpdatedValues: (id: GridRowId, field: string) => GridRowModel;
+  /**
+   * Gets the meta information for the edit cell.
+   * @param {GridRowId} id The row id being edited.
+   * @param {string} field The field being edited.
+   * @ignore - do not document.
+   */
+  unstable_getEditCellMeta: (id: GridRowId, field: string) => GridEditCellMeta;
 }
 
 /**

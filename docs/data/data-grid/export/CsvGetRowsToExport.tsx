@@ -79,7 +79,9 @@ export default function CsvGetRowsToExport() {
         pageSize={10}
         rowsPerPageOptions={[10]}
         initialState={{
+          ...data.initialState,
           filter: {
+            ...data.initialState?.filter,
             filterModel: {
               items: [
                 { columnField: 'quantity', operatorValue: '>', value: '20000' },

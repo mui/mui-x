@@ -10,13 +10,12 @@ import {
 } from '@mui/utils';
 import { PickersMonth } from './PickersMonth';
 import { useUtils, useNow, useDefaultDates } from '../internals/hooks/useUtils';
-import { NonNullablePickerChangeHandler } from '../internals/hooks/useViews';
 import { MonthPickerClasses, getMonthPickerUtilityClass } from './monthPickerClasses';
 import {
   BaseDateValidationProps,
   MonthValidationProps,
 } from '../internals/hooks/validation/models';
-import { parseNonNullablePickerDate } from '../internals/utils/date-utils';
+import { applyDefaultDate } from '../internals/utils/date-utils';
 import { DefaultizedProps } from '../internals/models/helpers';
 
 export interface MonthPickerProps<TDate>
@@ -36,11 +35,15 @@ export interface MonthPickerProps<TDate>
    */
   sx?: SxProps<Theme>;
   /** Date value for the MonthPicker */
-  date: TDate | null;
+  value: TDate | null;
   /** If `true` picker is disabled */
   disabled?: boolean;
-  /** Callback fired on date change. */
-  onChange: NonNullablePickerChangeHandler<TDate>;
+  /**
+   * Callback fired when the value (the selected month) changes.
+   * @template TValue
+   * @param {TValue} value The new value.
+   */
+  onChange: (value: TDate) => void;
   /** If `true` picker is readonly */
   readOnly?: boolean;
   /**
@@ -81,8 +84,8 @@ export function useMonthPickerDefaultizedProps<TDate>(
     disableFuture: false,
     disablePast: false,
     ...themeProps,
-    minDate: parseNonNullablePickerDate(utils, themeProps.minDate, defaultDates.minDate),
-    maxDate: parseNonNullablePickerDate(utils, themeProps.maxDate, defaultDates.maxDate),
+    minDate: applyDefaultDate(utils, themeProps.minDate, defaultDates.minDate),
+    maxDate: applyDefaultDate(utils, themeProps.maxDate, defaultDates.maxDate),
   };
 }
 
@@ -114,7 +117,7 @@ export const MonthPicker = React.forwardRef(function MonthPicker<TDate>(
 
   const {
     className,
-    date,
+    value,
     disabled,
     disableFuture,
     disablePast,
@@ -136,10 +139,10 @@ export const MonthPicker = React.forwardRef(function MonthPicker<TDate>(
 
   const todayMonth = React.useMemo(() => utils.getMonth(now), [utils, now]);
 
-  const selectedDateOrToday = date ?? now;
+  const selectedDateOrToday = value ?? now;
   const selectedMonth = React.useMemo(() => {
-    if (date != null) {
-      return utils.getMonth(date);
+    if (value != null) {
+      return utils.getMonth(value);
     }
 
     if (disableHighlightToday) {
@@ -147,7 +150,7 @@ export const MonthPicker = React.forwardRef(function MonthPicker<TDate>(
     }
 
     return utils.getMonth(now);
-  }, [now, date, utils, disableHighlightToday]);
+  }, [now, value, utils, disableHighlightToday]);
   const [focusedMonth, setFocusedMonth] = React.useState(() => selectedMonth || todayMonth);
 
   const [internalHasFocus, setInternalHasFocus] = useControlled<boolean>({
@@ -195,7 +198,7 @@ export const MonthPicker = React.forwardRef(function MonthPicker<TDate>(
     }
 
     const newDate = utils.setMonth(selectedDateOrToday, month);
-    onChange(newDate, 'finish');
+    onChange(newDate);
   });
 
   const focusMonth = useEventCallback((month: number) => {
@@ -304,15 +307,11 @@ MonthPicker.propTypes = {
    */
   className: PropTypes.string,
   /**
-   * Date value for the MonthPicker
-   */
-  date: PropTypes.any,
-  /**
    * If `true` picker is disabled
    */
   disabled: PropTypes.bool,
   /**
-   * If `true` future days are disabled.
+   * If `true` disable values before the current time
    * @default false
    */
   disableFuture: PropTypes.bool,
@@ -322,7 +321,7 @@ MonthPicker.propTypes = {
    */
   disableHighlightToday: PropTypes.bool,
   /**
-   * If `true` past days are disabled.
+   * If `true` disable values after the current time.
    * @default false
    */
   disablePast: PropTypes.bool,
@@ -336,7 +335,9 @@ MonthPicker.propTypes = {
    */
   minDate: PropTypes.any,
   /**
-   * Callback fired on date change.
+   * Callback fired when the value (the selected month) changes.
+   * @template TValue
+   * @param {TValue} value The new value.
    */
   onChange: PropTypes.func.isRequired,
   onFocusedViewChange: PropTypes.func,
@@ -361,4 +362,8 @@ MonthPicker.propTypes = {
     PropTypes.func,
     PropTypes.object,
   ]),
+  /**
+   * Date value for the MonthPicker
+   */
+  value: PropTypes.any,
 } as any;

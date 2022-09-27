@@ -8,7 +8,7 @@ import {
 } from '../../features/statePersistence/gridStatePersistenceInterface';
 import { GridHydrateColumnsValue } from '../../features/columns/gridColumnsInterfaces';
 import { GridRowEntry, GridRowId } from '../../../models/gridRows';
-import { GridHydrateRowsValue } from '../../features/rows/gridRowsState';
+import { GridHydrateRowsValue } from '../../features/rows/gridRowsInterfaces';
 import { GridPreferencePanelsValue } from '../../features/preferencesPanel';
 
 export type GridPipeProcessorGroup = keyof GridPipeProcessingLookup;

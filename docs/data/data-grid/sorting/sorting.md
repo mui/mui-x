@@ -35,8 +35,8 @@ Hold down the <kbd class="key">Ctrl</kbd> or <kbd class="key">Shift</kbd> (use <
 The sort model is a list of sorting items.
 Each item represents a sorting rule and is composed of several elements:
 
-- `sortingItem.field`: the field on which we want to apply the rule
-- `sortingItem.sort`: the direction of the sorting (`'asc'`, `'desc'`, `null` or `undefined`). If `null` or `undefined`, the rule will not be applied.
+- `sortingItem.field`: the field on which the rule applies.
+- `sortingItem.sort`: the direction of the sorting (`'asc'`, `'desc'`, `null` or `undefined`). If `null` or `undefined`, the rule doesn't apply.
 
 ### Initialize the sort model
 

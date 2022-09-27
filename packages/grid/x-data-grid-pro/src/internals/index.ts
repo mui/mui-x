@@ -42,6 +42,8 @@ export type {
   DataGridProPropsWithDefaultValue,
 } from '../models/dataGridProProps';
 
-export { buildRowTree } from '../utils/tree/buildRowTree';
-export type { BuildRowTreeGroupingCriteria } from '../utils/tree/buildRowTree';
+export { createRowTree } from '../utils/tree/createRowTree';
+export { updateRowTree } from '../utils/tree/updateRowTree';
 export { sortRowTree } from '../utils/tree/sortRowTree';
+export { insertNodeInTree, removeNodeFromTree } from '../utils/tree/utils';
+export type { RowTreeBuilderGroupingCriterion } from '../utils/tree/models';

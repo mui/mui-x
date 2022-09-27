@@ -3,7 +3,11 @@ import { expect } from 'chai';
 import TextField from '@mui/material/TextField';
 import { fireEvent, screen } from '@mui/monorepo/test/utils';
 import { StaticDatePicker } from '@mui/x-date-pickers/StaticDatePicker';
-import { createPickerRenderer, adapterToUse } from '../../../../test/utils/pickers-utils';
+import { createPickerRenderer, adapterToUse, withPickerControls } from 'test/utils/pickers-utils';
+
+const WrappedStaticDatePicker = withPickerControls(StaticDatePicker)({
+  renderInput: (params) => <TextField {...params} />,
+});
 
 describe('<StaticDatePicker />', () => {
   const { render } = createPickerRenderer({ clock: 'fake' });
@@ -43,5 +47,18 @@ describe('<StaticDatePicker />', () => {
     fireEvent.click(previousMonth);
 
     expect(screen.getByMuiTest('calendar-month-and-year-text')).to.have.text('December 2018');
+  });
+
+  describe('localization', () => {
+    it('should respect the `localeText` prop', () => {
+      render(
+        <WrappedStaticDatePicker
+          initialValue={null}
+          localeText={{ cancelButtonLabel: 'Custom cancel' }}
+        />,
+      );
+
+      expect(screen.queryByText('Custom cancel')).not.to.equal(null);
+    });
   });
 });

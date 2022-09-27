@@ -32,7 +32,7 @@ function fakeFetch(date: Dayjs, { signal }: { signal: AbortSignal }) {
   });
 }
 
-const initialValue = dayjs();
+const initialValue = dayjs('2022-04-07');
 
 export default function ServerRequestDatePicker() {
   const requestAbortController = React.useRef<AbortController | null>(null);

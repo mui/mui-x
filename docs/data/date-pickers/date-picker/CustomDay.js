@@ -33,7 +33,7 @@ const CustomPickersDay = styled(PickersDay, {
 }));
 
 export default function CustomDay() {
-  const [value, setValue] = React.useState(dayjs());
+  const [value, setValue] = React.useState(dayjs('2022-04-07'));
 
   const renderWeekPickerDay = (date, selectedDates, pickersDayProps) => {
     if (!value) {

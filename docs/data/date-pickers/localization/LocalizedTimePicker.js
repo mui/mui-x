@@ -25,7 +25,7 @@ const ampmOptions = {
 
 export default function LocalizedTimePicker() {
   const [locale, setLocale] = React.useState('ru');
-  const [value, setValue] = React.useState(dayjs());
+  const [value, setValue] = React.useState(dayjs('2022-04-07'));
 
   const [ampm, setAmpm] = React.useState(undefined);
   const [ampmOption, setAmpmOption] = React.useState('undefined');

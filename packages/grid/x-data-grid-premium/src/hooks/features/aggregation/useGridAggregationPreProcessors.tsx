@@ -4,7 +4,6 @@ import { gridColumnLookupSelector } from '@mui/x-data-grid-pro';
 import {
   GridPipeProcessor,
   GridRestoreStatePreProcessingContext,
-  GridRowTreeCreationValue,
   useGridRegisterPipeProcessor,
 } from '@mui/x-data-grid-pro/internals';
 import { GridApiPremium } from '../../../models/gridApiPremium';
@@ -22,7 +21,6 @@ import { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumPr
 import { GridAggregationColumnMenuItem } from '../../../components/GridAggregationColumnMenuItem';
 import { gridAggregationModelSelector } from './gridAggregationSelectors';
 import { GridInitialStatePremium } from '../../../models/gridStatePremium';
-import { GridAggregationRules } from './gridAggregationInterfaces';
 
 const Divider = () => <MuiDivider onClick={(event) => event.stopPropagation()} />;
 
@@ -76,39 +74,35 @@ export const useGridAggregationPreProcessors = (
   );
 
   const addGroupFooterRows = React.useCallback<GridPipeProcessor<'hydrateRows'>>(
-    (groupingParams) => {
-      let newGroupingParams: GridRowTreeCreationValue;
-      let rulesOnLastRowHydration: GridAggregationRules;
-
-      if (props.disableAggregation) {
-        newGroupingParams = groupingParams;
-        rulesOnLastRowHydration = {};
-      } else {
-        const aggregationRules = getAggregationRules({
-          columnsLookup: gridColumnLookupSelector(apiRef),
-          aggregationModel: gridAggregationModelSelector(apiRef),
-          aggregationFunctions: props.aggregationFunctions,
-        });
-
-        rulesOnLastRowHydration = aggregationRules;
-
-        // If no column have an aggregation rule
-        // Then don't create the footer rows
-        if (Object.values(aggregationRules).length === 0) {
-          newGroupingParams = groupingParams;
-        } else {
-          newGroupingParams = addFooterRows({
-            groupingParams,
-            aggregationRules,
-            getAggregationPosition: props.getAggregationPosition,
-            apiRef,
+    (value) => {
+      const aggregationRules = props.disableAggregation
+        ? {}
+        : getAggregationRules({
+            columnsLookup: gridColumnLookupSelector(apiRef),
+            aggregationModel: gridAggregationModelSelector(apiRef),
+            aggregationFunctions: props.aggregationFunctions,
           });
-        }
+
+      const hasAggregationRule = Object.keys(aggregationRules).length > 0;
+
+      // If we did not have any aggregation footer before, and we still don't have any,
+      // Then we can skip this step
+      if (
+        Object.keys(apiRef.current.unstable_caches.aggregation.rulesOnLastRowHydration).length ===
+          0 &&
+        !hasAggregationRule
+      ) {
+        return value;
       }
 
-      apiRef.current.unstable_caches.aggregation.rulesOnLastRowHydration = rulesOnLastRowHydration;
+      apiRef.current.unstable_caches.aggregation.rulesOnLastRowHydration = aggregationRules;
 
-      return newGroupingParams;
+      return addFooterRows({
+        apiRef,
+        groupingParams: value,
+        getAggregationPosition: props.getAggregationPosition,
+        hasAggregationRule,
+      });
     },
     [apiRef, props.disableAggregation, props.getAggregationPosition, props.aggregationFunctions],
   );
