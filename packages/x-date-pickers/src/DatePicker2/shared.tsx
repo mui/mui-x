@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useThemeProps } from '@mui/material/styles';
 import { DefaultizedProps, MakeOptional } from '../internals/models/helpers';
-import { CalendarPicker, CalendarPickerView } from '../CalendarPicker';
+import { CalendarPicker, CalendarPickerProps, CalendarPickerView } from '../CalendarPicker';
 import { useUtils } from '../internals/hooks/useUtils';
 import { isYearAndMonthViews, isYearOnlyView } from '../DatePicker/shared';
 import { UseDesktopPickerProps } from '../internals/hooks/useDesktopPicker';
@@ -9,7 +9,6 @@ import { ValidationCommonPropsOptionalValue } from '../internals/hooks/validatio
 import { DateValidationError } from '../internals/hooks/validation/useDateValidation';
 import { ExportedCalendarPickerProps } from '../CalendarPicker/CalendarPicker';
 import { PickerViewContainer } from '../internals/components/PickerViewContainer';
-import { PickerViewsRendererProps } from '../internals/hooks/usePicker/usePickerViews';
 
 type DesktopPickerDefaultizedKeys = 'inputFormat' | 'views' | 'openTo';
 
@@ -65,7 +64,7 @@ export function useDatePicker2DefaultizedProps<TDate, Props extends BaseDatePick
 }
 
 export const renderDateViews = <TDate extends unknown>(
-  props: PickerViewsRendererProps<TDate | null, CalendarPickerView>,
+  props: CalendarPickerProps<TDate> & { isLandscape: boolean },
 ) => (
   <PickerViewContainer isLandscape={props.isLandscape}>
     <CalendarPicker<TDate> {...props} />

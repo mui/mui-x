@@ -7,8 +7,6 @@ import { MobileDatePicker2Props } from './MobileDatePicker2.types';
 import { useDatePicker2DefaultizedProps, renderDateViews } from '../DatePicker2/shared';
 import { useLocaleText } from '../internals';
 import { Calendar } from '../internals/components/icons';
-import { CalendarPickerView } from '../internals/models/views';
-import { PickerViewRenderer } from '../internals/hooks/usePicker';
 
 type MobileDatePickerComponent = (<TDate>(
   props: MobileDatePicker2Props<TDate> & React.RefAttributes<HTMLDivElement>,
@@ -32,35 +30,27 @@ const MobileDatePicker2 = React.forwardRef(function MobileDatePicker2<TDate>(
     ...other
   } = props;
 
-  const components = React.useMemo(
-    () => ({
-      Field: DateField,
-      OpenPickerIcon: Calendar,
-      ...inComponents,
-    }),
-    [inComponents],
-  );
+  const components = {
+    Field: DateField,
+    OpenPickerIcon: Calendar,
+    ...inComponents,
+  };
 
-  const componentsProps = React.useMemo(
-    () => ({
-      ...inComponentsProps,
-      field: (ownerState: any) => ({
-        ...resolveComponentProps(inComponentsProps?.field, ownerState),
-        ref,
-        inputRef,
-        label,
-      }),
+  const componentsProps = {
+    ...inComponentsProps,
+    field: (ownerState: any) => ({
+      ...resolveComponentProps(inComponentsProps?.field, ownerState),
+      ref,
+      inputRef,
+      label,
     }),
-    [inComponentsProps, ref, label, inputRef],
-  );
-
-  const renderViews: PickerViewRenderer<TDate | null, CalendarPickerView> = (viewProps) =>
-    renderDateViews({ ...other, ...viewProps });
+  };
 
   const { renderPicker } = useMobilePicker({
     props: { ...other, components, componentsProps },
     valueManager: datePickerValueManager,
-    renderViews,
+    renderViews: (viewProps) =>
+      renderDateViews({ ...other, ...viewProps, components, componentsProps }),
     getOpenDialogAriaText: localeText.openDatePickerDialogue,
   });
 
