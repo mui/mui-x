@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { TextFieldProps } from '@mui/material/TextField';
 import { useSlotProps } from '@mui/base/utils';
 import { PickersModalDialog } from '../PickersModalDialog';
 import { useUtils } from '../../hooks/useUtils';
@@ -54,18 +55,22 @@ export function MobilePicker<TValue, TDate, TView extends CalendarOrClockPickerV
   });
 
   const Input = components.Input!;
-  const inputProps = useSlotProps({
+  const inputProps: TextFieldProps = useSlotProps({
     elementType: Input,
     externalSlotProps: componentsProps.input,
     additionalProps: {
       onClick: props.readOnly ? undefined : openPicker,
       onKeyDown: onSpaceOrEnter(openPicker),
-      // TODO: Correctly support date range
-      'aria-label': getOpenDialogAriaText(fieldProps.value as any as TDate, utils),
     },
     // TODO: Pass owner state
     ownerState: {},
   });
+
+  const htmlInputProps = {
+    ...inputProps.inputProps,
+    // TODO: Correctly support date range
+    'aria-label': getOpenDialogAriaText(fieldProps.value as any as TDate, utils),
+  };
 
   return (
     <React.Fragment>
@@ -74,7 +79,7 @@ export function MobilePicker<TValue, TDate, TView extends CalendarOrClockPickerV
         components={{
           Input: components.Input,
         }}
-        componentsProps={{ input: inputProps }}
+        componentsProps={{ input: { ...inputProps, inputProps: htmlInputProps } }}
       />
       <PickersModalDialog
         {...wrapperProps}

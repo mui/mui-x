@@ -100,15 +100,18 @@ export const useField = <
     }));
   };
 
-  const handleInputClick = useEventCallback((...args) => {
-    onClick?.(...(args as []));
-
+  const syncSelectionWithDOM = () => {
     const nextSectionIndex = state.sections.findIndex(
       (section) => section.start > (internalInputRef.current!.selectionStart ?? 0),
     );
     const sectionIndex = nextSectionIndex === -1 ? state.sections.length - 1 : nextSectionIndex - 1;
 
     updateSelectedSections(sectionIndex);
+  };
+
+  const handleInputClick = useEventCallback((...args) => {
+    onClick?.(...(args as []));
+    syncSelectionWithDOM();
   });
 
   const handleInputFocus = useEventCallback((...args) => {
@@ -126,7 +129,7 @@ export const useField = <
       if (Number(input.selectionEnd) - Number(input.selectionStart) === input.value.length) {
         updateSelectedSections(0, state.sections.length - 1);
       } else {
-        handleInputClick();
+        syncSelectionWithDOM();
       }
     });
   });
@@ -369,7 +372,7 @@ export const useField = <
       const sections = fieldValueManager.getSectionsFromValue(utils, state.sections, value, format);
       setState((prevState) => ({
         ...prevState,
-        valueParsed: value,
+        value,
         sections,
       }));
     }

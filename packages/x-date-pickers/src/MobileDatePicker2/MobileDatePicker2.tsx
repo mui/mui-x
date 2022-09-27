@@ -51,7 +51,7 @@ const MobileDatePicker2 = React.forwardRef(function MobileDatePicker2<TDate>(
         label,
       }),
     }),
-    [inComponentsProps, ref, label],
+    [inComponentsProps, ref, label, inputRef],
   );
 
   const renderViews = (

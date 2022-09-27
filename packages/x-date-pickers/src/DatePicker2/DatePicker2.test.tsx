@@ -6,24 +6,20 @@ import { createPickerRenderer, stubMatchMedia } from 'test/utils/pickers-utils';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
-describe.only('<DatePicker2 />', () => {
+describe('<DatePicker2 />', () => {
   const { render } = createPickerRenderer();
 
   describe('prop: inputRef', () => {
     it('should forward ref to the text box', () => {
       const inputRef = React.createRef<HTMLInputElement>();
-      render(
-        <DatePicker2
-          inputRef={inputRef}
-        />,
-      );
+      render(<DatePicker2 inputRef={inputRef} />);
 
       expect(inputRef.current).to.have.tagName('input');
     });
   });
 
   describe('rendering', () => {
-    it('should handle controlled `onChange` in desktop mode', () => {
+    it.skip('should handle controlled `onChange` in desktop mode', () => {
       render(<DatePicker2 />);
 
       fireEvent.change(screen.getByRole('textbox'), { target: { value: '02/22/2022' } });
@@ -35,9 +31,7 @@ describe.only('<DatePicker2 />', () => {
       const originalMatchMedia = window.matchMedia;
       window.matchMedia = stubMatchMedia(false);
 
-      render(
-        <DatePicker2  />,
-      );
+      render(<DatePicker2 />);
 
       expect(screen.getByLabelText(/Choose date/)).to.have.tagName('input');
 
@@ -48,12 +42,7 @@ describe.only('<DatePicker2 />', () => {
       if (isJSDOM) {
         this.skip();
       }
-      render(
-        <DatePicker2
-          defaultValue={new Date(2019, 5, 5)}
-          openTo="year"
-        />,
-      );
+      render(<DatePicker2 defaultValue={new Date(2019, 5, 5)} openTo="year" />);
 
       fireEvent.click(screen.getByRole('button'));
       expect(document.activeElement).to.have.text('2019');
