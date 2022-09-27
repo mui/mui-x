@@ -51,8 +51,8 @@ export const useField = <
       onChange,
       format = utils.formats.keyboardDate,
       readOnly = false,
-      selectedSectionIndexes: selectedSectionIndexesProp,
-      onSelectedSectionIndexesChange,
+      selectedSections: selectedSectionIndexesProp,
+      onSelectedSectionsChange,
     },
     forwardedProps: { onClick, onKeyDown, onFocus, onBlur, ...otherForwardedProps },
     valueManager,
@@ -126,7 +126,7 @@ export const useField = <
 
   const updateSelectedSections = (newSelectedSections: FieldSelectedSections) => {
     setSelectedSection(newSelectedSections);
-    onSelectedSectionIndexesChange?.(newSelectedSections);
+    onSelectedSectionsChange?.(newSelectedSections);
 
     setState((prevState) => ({
       ...prevState,

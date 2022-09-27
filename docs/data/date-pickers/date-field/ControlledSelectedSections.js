@@ -3,22 +3,16 @@ import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { MuiDateSectionName } from '@mui/x-date-pickers';
-import {
-  Unstable_DateField as DateField,
-  FieldSelectedSections,
-} from '@mui/x-date-pickers/DateField';
 
-export default function ControlledSelectedSectionIndexes() {
-  const [selectedSectionIndexes, setSelectedSectionIndexes] =
-    React.useState<FieldSelectedSections>(null);
-  const inputRef = React.useRef<HTMLInputElement>(null);
+import { Unstable_DateField as DateField } from '@mui/x-date-pickers/DateField';
 
-  const setSelectedDateSectionName = (
-    selectedDateSectionName: MuiDateSectionName,
-  ) => {
+export default function ControlledSelectedSections() {
+  const [selectedSections, setSelectedSections] = React.useState(null);
+  const inputRef = React.useRef(null);
+
+  const setSelectedDateSectionName = (selectedDateSectionName) => {
     inputRef.current?.focus();
-    setSelectedSectionIndexes(selectedDateSectionName);
+    setSelectedSections(selectedDateSectionName);
   };
 
   return (
@@ -47,8 +41,8 @@ export default function ControlledSelectedSectionIndexes() {
         <DateField
           label="Basic date field"
           inputRef={inputRef}
-          selectedSectionIndexes={selectedSectionIndexes}
-          onSelectedSectionIndexesChange={setSelectedSectionIndexes}
+          selectedSections={selectedSections}
+          onSelectedSectionsChange={setSelectedSections}
         />
       </Stack>
     </LocalizationProvider>
