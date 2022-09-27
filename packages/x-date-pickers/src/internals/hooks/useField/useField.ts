@@ -1,6 +1,7 @@
 import * as React from 'react';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import useEventCallback from '@mui/utils/useEventCallback';
+import useForkRef from '@mui/utils/useForkRef';
 import { MuiDateSectionName, MuiPickerFieldAdapter } from '../../models/muiPickersAdapter';
 import { useValidation } from '../validation/useValidation';
 import { useUtils } from '../useUtils';
@@ -23,6 +24,8 @@ import {
 } from './useField.utils';
 import { useFieldState } from './useFieldState';
 
+const noop = () => {};
+
 export const useField = <
   TValue,
   TDate,
@@ -36,7 +39,6 @@ export const useField = <
   if (!utils.formatTokenMap) {
     throw new Error('This adapter is not compatible with the field components');
   }
-  const inputRef = React.useRef<HTMLInputElement>(null);
   const queryRef = React.useRef<{ dateSectionName: MuiDateSectionName; value: string } | null>(
     null,
   );
@@ -51,11 +53,15 @@ export const useField = <
   } = useFieldState(params);
 
   const {
+    inputRef: inputRefProp,
     internalProps: { readOnly = false },
     forwardedProps: { onClick, onKeyDown, onFocus, onBlur, ...otherForwardedProps },
     fieldValueManager,
     validator,
   } = params;
+
+  const inputRef = React.useRef<HTMLInputElement>(null);
+  const handleRef = useForkRef(inputRefProp, inputRef);
 
   const focusTimeoutRef = React.useRef<NodeJS.Timeout | undefined>(undefined);
 
@@ -367,15 +373,14 @@ export const useField = <
   );
 
   return {
-    inputProps: {
-      ...otherForwardedProps,
-      value: valueStr,
-      onClick: handleInputClick,
-      onFocus: handleInputFocus,
-      onBlur: handleInputBlur,
-      onKeyDown: handleInputKeyDown,
-      error: inputError,
-    },
-    inputRef,
+    ...otherForwardedProps,
+    value: valueStr,
+    onClick: handleInputClick,
+    onFocus: handleInputFocus,
+    onBlur: handleInputBlur,
+    onKeyDown: handleInputKeyDown,
+    onChange: noop,
+    error: inputError,
+    ref: handleRef,
   };
 };

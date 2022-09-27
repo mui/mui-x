@@ -2,7 +2,7 @@ import { useValidation, ValidationProps, Validator } from './useValidation';
 import {
   validateDate,
   DateValidationError,
-  DateComponentValidationProps,
+  DateComponentDefaultizedValidationProps,
 } from './useDateValidation';
 import {
   validateTime,
@@ -11,7 +11,7 @@ import {
 } from './useTimeValidation';
 
 export interface DateTimeComponentValidationProps<TDate>
-  extends DateComponentValidationProps<TDate>,
+  extends DateComponentDefaultizedValidationProps<TDate>,
     TimeComponentValidationProps<TDate> {}
 
 export const validateDateTime: Validator<

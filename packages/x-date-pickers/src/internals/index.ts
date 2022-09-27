@@ -91,7 +91,7 @@ export type {
 } from './hooks/validation/useValidation';
 export { validateDate } from './hooks/validation/useDateValidation';
 export type {
-  DateComponentValidationProps,
+  DateComponentDefaultizedValidationProps,
   DateValidationError,
 } from './hooks/validation/useDateValidation';
 export { usePreviousMonthDisabled, useNextMonthDisabled } from './hooks/date-helpers-hooks';

@@ -7,7 +7,11 @@ import {
   addPositionPropertiesToSections,
   createDateStrFromSections,
 } from '../internals/hooks/useField';
-import { UseDateFieldProps, UseDateFieldDefaultizedProps } from './DateField.interfaces';
+import {
+  UseDateFieldProps,
+  UseDateFieldDefaultizedProps,
+  UseDateFieldParams,
+} from './DateField.types';
 import {
   DateValidationError,
   isSameDateError,
@@ -51,7 +55,10 @@ const useDefaultizedDateField = <TDate, AdditionalProps extends {}>(
   } as any;
 };
 
-export const useDateField = <TDate, TProps extends UseDateFieldProps<TDate>>(inProps: TProps) => {
+export const useDateField = <TDate, TChildProps extends {}>({
+  props,
+  inputRef,
+}: UseDateFieldParams<TDate, TChildProps>) => {
   const {
     value,
     defaultValue,
@@ -68,11 +75,11 @@ export const useDateField = <TDate, TProps extends UseDateFieldProps<TDate>>(inP
     disablePast,
     selectedSections,
     onSelectedSectionsChange,
-    inputRef,
     ...other
-  } = useDefaultizedDateField<TDate, TProps>(inProps);
+  } = useDefaultizedDateField<TDate, TChildProps>(props);
 
   return useField({
+    inputRef,
     forwardedProps: other,
     internalProps: {
       value,
