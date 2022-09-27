@@ -47,12 +47,12 @@ export interface UseFieldInternalProps<TValue, TError> {
    * 4. If `null` is provided, no section will be selected
    * If not provided, the selected sections will be handled internally.
    */
-  selectedSectionIndexes?: FieldSelectedSections;
+  selectedSections?: FieldSelectedSections;
   /**
    * Callback fired when the selected sections change.
    * @param {FieldSelectedSections} newValue The new selected sections.
    */
-  onSelectedSectionIndexesChange?: (newValue: FieldSelectedSections) => void;
+  onSelectedSectionsChange?: (newValue: FieldSelectedSections) => void;
 }
 
 export interface UseFieldForwardedProps {

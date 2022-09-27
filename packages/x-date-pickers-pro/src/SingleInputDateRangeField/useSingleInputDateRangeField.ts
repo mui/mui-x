@@ -164,8 +164,8 @@ export const useSingleInputDateRangeField = <TDate, TChildProps extends {}>({
     maxDate,
     disableFuture,
     disablePast,
-    selectedSectionIndexes,
-    onSelectedSectionIndexesChange,
+    selectedSections,
+    onSelectedSectionsChange,
     ...other
   } = useDefaultizedDateRangeFieldProps<TDate, TChildProps>(props);
 
@@ -184,8 +184,8 @@ export const useSingleInputDateRangeField = <TDate, TChildProps extends {}>({
       maxDate,
       disableFuture,
       disablePast,
-      selectedSectionIndexes,
-      onSelectedSectionIndexesChange,
+      selectedSections,
+      onSelectedSectionsChange,
       inputRef,
     },
     valueManager: dateRangePickerValueManager,
