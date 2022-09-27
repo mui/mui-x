@@ -1,4 +1,5 @@
 import * as React from 'react';
+import useControlled from '@mui/utils/useControlled';
 import { MuiPickerFieldAdapter } from '../../models/muiPickersAdapter';
 import { useUtils } from '../useUtils';
 import {
@@ -7,6 +8,8 @@ import {
   UseFieldInternalProps,
   UseFieldParams,
   UseFieldState,
+  FieldSelectedSectionsIndexes,
+  FieldSelectedSections,
 } from './useField.interfaces';
 import {
   addPositionPropertiesToSections,
@@ -39,6 +42,8 @@ export const useFieldState = <
       onChange,
       readOnly,
       format = utils.formats.keyboardDate,
+      selectedSectionIndexes: selectedSectionIndexesProp,
+      onSelectedSectionIndexesChange,
     },
   } = params;
 
@@ -64,6 +69,33 @@ export const useFieldState = <
       selectedSectionIndexes: null,
     };
   });
+
+  const [selectedSections, setSelectedSection] = useControlled({
+    controlled: selectedSectionIndexesProp,
+    default: null,
+    name: 'useField',
+    state: 'selectedSectionIndexes',
+  });
+
+  const selectedSectionIndexes = React.useMemo<FieldSelectedSectionsIndexes | null>(() => {
+    if (selectedSections == null) {
+      return null;
+    }
+
+    if (typeof selectedSections === 'number') {
+      return { startIndex: selectedSections, endIndex: selectedSections };
+    }
+
+    if (typeof selectedSections === 'string') {
+      const selectedSectionIndex = state.sections.findIndex(
+        (section) => section.dateSectionName === selectedSections,
+      );
+
+      return { startIndex: selectedSectionIndex, endIndex: selectedSectionIndex };
+    }
+
+    return selectedSections;
+  }, [selectedSections, state.sections]);
 
   const publishValue = ({
     value,
@@ -105,14 +137,14 @@ export const useFieldState = <
     });
 
   const clearActiveSection = () => {
-    if (state.selectedSectionIndexes == null) {
+    if (selectedSectionIndexes == null) {
       return undefined;
     }
 
-    const activeSection = state.sections[state.selectedSectionIndexes.start];
+    const activeSection = state.sections[selectedSectionIndexes.startIndex];
     const activeDateManager = fieldValueManager.getActiveDateManager(state, activeSection);
 
-    const newSections = setSectionValue(state.selectedSectionIndexes.start, '');
+    const newSections = setSectionValue(selectedSectionIndexes.startIndex, '');
 
     return setState((prevState) => ({
       ...prevState,
@@ -125,11 +157,11 @@ export const useFieldState = <
     setSectionValueOnDate,
     setSectionValueOnSections,
   }: UpdateSectionValueParams<TDate, TSection>) => {
-    if (readOnly || state.selectedSectionIndexes == null) {
+    if (readOnly || selectedSectionIndexes == null) {
       return undefined;
     }
 
-    const activeSection = state.sections[state.selectedSectionIndexes.start];
+    const activeSection = state.sections[selectedSectionIndexes.startIndex];
     const activeDateManager = fieldValueManager.getActiveDateManager(state, activeSection);
 
     if (activeDateManager.activeDate != null && utils.isValid(activeDateManager.activeDate)) {
@@ -142,7 +174,7 @@ export const useFieldState = <
       activeSection,
       activeDateManager.referenceActiveDate,
     );
-    const newSections = setSectionValue(state.selectedSectionIndexes.start, newSectionValue);
+    const newSections = setSectionValue(selectedSectionIndexes.startIndex, newSectionValue);
     const activeDateSections = fieldValueManager.getActiveDateSections(newSections, activeSection);
     const newDate = utils.parse(createDateStrFromSections(activeDateSections), format);
 
@@ -170,10 +202,12 @@ export const useFieldState = <
     }));
   };
 
-  const setSelectedSectionIndexes = (start?: number, end?: number) => {
+  const setSelectedSectionIndexes = (newSelectedSections: FieldSelectedSections) => {
+    setSelectedSection(newSelectedSections);
+    onSelectedSectionIndexesChange?.(newSelectedSections);
+
     setState((prevState) => ({
       ...prevState,
-      selectedSectionIndexes: start == null ? null : { start, end: end ?? start },
       selectedSectionQuery: null,
     }));
   };
@@ -201,6 +235,7 @@ export const useFieldState = <
 
   return {
     state,
+    selectedSectionIndexes,
     setSelectedSectionIndexes,
     clearValue,
     clearActiveSection,

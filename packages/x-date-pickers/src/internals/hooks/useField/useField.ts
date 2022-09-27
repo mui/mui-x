@@ -41,8 +41,14 @@ export const useField = <
     null,
   );
 
-  const { state, setSelectedSectionIndexes, clearValue, clearActiveSection, updateSectionValue } =
-    useFieldState(params);
+  const {
+    state,
+    selectedSectionIndexes,
+    setSelectedSectionIndexes,
+    clearValue,
+    clearActiveSection,
+    updateSectionValue,
+  } = useFieldState(params);
 
   const {
     internalProps: { readOnly = false },
@@ -77,7 +83,7 @@ export const useField = <
       }
 
       if (Number(input.selectionEnd) - Number(input.selectionStart) === input.value.length) {
-        setSelectedSectionIndexes(0, state.sections.length - 1);
+        setSelectedSectionIndexes({ startIndex: 0, endIndex: state.sections.length - 1 });
       } else {
         handleInputClick();
       }
@@ -86,7 +92,7 @@ export const useField = <
 
   const handleInputBlur = useEventCallback((...args) => {
     onBlur?.(...(args as []));
-    setSelectedSectionIndexes();
+    setSelectedSectionIndexes(null);
   });
 
   const handleInputKeyDown = useEventCallback((event: React.KeyboardEvent) => {
@@ -99,7 +105,7 @@ export const useField = <
         // prevent default to make sure that the next line "select all" while updating
         // the internal state at the same time.
         event.preventDefault();
-        setSelectedSectionIndexes(0, state.sections.length - 1);
+        setSelectedSectionIndexes({ startIndex: 0, endIndex: state.sections.length - 1 });
         return;
       }
 
@@ -107,12 +113,12 @@ export const useField = <
       case event.key === 'ArrowRight': {
         event.preventDefault();
 
-        if (state.selectedSectionIndexes == null) {
+        if (selectedSectionIndexes == null) {
           setSelectedSectionIndexes(0);
-        } else if (state.selectedSectionIndexes.start < state.sections.length - 1) {
-          setSelectedSectionIndexes(state.selectedSectionIndexes.start + 1);
-        } else if (state.selectedSectionIndexes.start !== state.selectedSectionIndexes.end) {
-          setSelectedSectionIndexes(state.selectedSectionIndexes.end);
+        } else if (selectedSectionIndexes.startIndex < state.sections.length - 1) {
+          setSelectedSectionIndexes(selectedSectionIndexes.startIndex + 1);
+        } else if (selectedSectionIndexes.startIndex !== selectedSectionIndexes.endIndex) {
+          setSelectedSectionIndexes(selectedSectionIndexes.endIndex);
         }
 
         return;
@@ -122,12 +128,12 @@ export const useField = <
       case event.key === 'ArrowLeft': {
         event.preventDefault();
 
-        if (state.selectedSectionIndexes == null) {
+        if (selectedSectionIndexes == null) {
           setSelectedSectionIndexes(state.sections.length - 1);
-        } else if (state.selectedSectionIndexes.start !== state.selectedSectionIndexes.end) {
-          setSelectedSectionIndexes(state.selectedSectionIndexes.start);
-        } else if (state.selectedSectionIndexes.start > 0) {
-          setSelectedSectionIndexes(state.selectedSectionIndexes.start - 1);
+        } else if (selectedSectionIndexes.startIndex !== selectedSectionIndexes.endIndex) {
+          setSelectedSectionIndexes(selectedSectionIndexes.startIndex);
+        } else if (selectedSectionIndexes.startIndex > 0) {
+          setSelectedSectionIndexes(selectedSectionIndexes.startIndex - 1);
         }
         return;
       }
@@ -141,9 +147,9 @@ export const useField = <
         }
 
         if (
-          state.selectedSectionIndexes == null ||
-          (state.selectedSectionIndexes.start === 0 &&
-            state.selectedSectionIndexes.end === state.sections.length - 1)
+          selectedSectionIndexes == null ||
+          (selectedSectionIndexes.startIndex === 0 &&
+            selectedSectionIndexes.endIndex === state.sections.length - 1)
         ) {
           clearValue();
         } else {
@@ -319,7 +325,7 @@ export const useField = <
   });
 
   useEnhancedEffect(() => {
-    if (state.selectedSectionIndexes == null) {
+    if (selectedSectionIndexes == null) {
       return;
     }
 
@@ -332,8 +338,8 @@ export const useField = <
       }
     };
 
-    const firstSelectedSection = state.sections[state.selectedSectionIndexes.start];
-    const lastSelectedSection = state.sections[state.selectedSectionIndexes.end];
+    const firstSelectedSection = state.sections[selectedSectionIndexes.startIndex];
+    const lastSelectedSection = state.sections[selectedSectionIndexes.endIndex];
     updateSelectionRangeIfChanged(
       firstSelectedSection.start,
       lastSelectedSection.start + getSectionVisibleValue(lastSelectedSection).length,

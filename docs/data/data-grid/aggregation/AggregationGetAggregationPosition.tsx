@@ -67,7 +67,9 @@ export default function AggregationGetAggregationPosition() {
         columns={COLUMNS}
         disableSelectionOnClick
         initialState={initialState}
-        getAggregationPosition={(groupNode) => (groupNode == null ? null : 'footer')}
+        getAggregationPosition={(groupNode) =>
+          groupNode.depth === -1 ? null : 'footer'
+        }
         experimentalFeatures={{ aggregation: true }}
       />
     </div>

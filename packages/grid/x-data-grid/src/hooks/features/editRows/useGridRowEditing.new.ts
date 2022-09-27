@@ -29,7 +29,7 @@ import { isPrintableKey } from '../../../utils/keyboardUtils';
 import { gridColumnFieldsSelector } from '../columns/gridColumnsSelector';
 import { GridCellParams } from '../../../models/params/gridCellParams';
 import { buildWarning } from '../../../utils/warning';
-import { gridRowsIdToIdLookupSelector } from '../rows/gridRowsSelector';
+import { gridRowsDataRowIdToIdLookupSelector } from '../rows/gridRowsSelector';
 import { deepClone } from '../../../utils/utils';
 import {
   GridRowEditStopParams,
@@ -680,7 +680,7 @@ export const useGridRowEditing = (
   }, [rowModesModelProp, updateRowModesModel]);
 
   React.useEffect(() => {
-    const idToIdLookup = gridRowsIdToIdLookupSelector(apiRef);
+    const idToIdLookup = gridRowsDataRowIdToIdLookupSelector(apiRef);
 
     // Update the ref here because updateStateToStopRowEditMode may change it later
     const copyOfPrevRowModesModel = prevRowModesModel.current;

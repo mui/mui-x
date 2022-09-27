@@ -29,7 +29,7 @@
     "@mui/icons-material": "^5.10.6",
     "@mui/joy": "^5.0.0-alpha.46",
     "@mui/material": "^5.10.6",
-    "@mui/styles": "^5.10.3",
+    "@mui/styles": "^5.10.6",
     "@mui/utils": "^5.10.6",
     "@trendmicro/react-interpolate": "^0.5.5",
     "@types/lodash": "^4.14.185",
@@ -60,7 +60,7 @@
     "lz-string": "^1.4.4",
     "markdown-to-jsx": "^7.1.7",
     "marked": "^4.1.0",
-    "next": "^12.3.0",
+    "next": "^12.3.1",
     "nprogress": "^0.2.0",
     "postcss": "^8.4.16",
     "prismjs": "^1.29.0",
@@ -69,9 +69,9 @@
     "react": "^18.2.0",
     "react-docgen": "^5.4.3",
     "react-dom": "^18.2.0",
-    "react-hook-form": "^7.35.0",
+    "react-hook-form": "^7.36.1",
     "react-is": "^18.2.0",
-    "react-router": "^6.4.0",
+    "react-router": "^6.4.1",
     "react-router-dom": "^6.4.1",
     "react-text-mask": "^5.4.3",
     "recast": "^0.21.2",
@@ -88,7 +88,7 @@
     "@types/doctrine": "^0.0.5",
     "cpy-cli": "^4.2.0",
     "cross-fetch": "^3.1.5",
-    "gm": "^1.23.1",
+    "gm": "^1.25.0",
     "typescript-to-proptypes": "^2.2.1"
   }
 }

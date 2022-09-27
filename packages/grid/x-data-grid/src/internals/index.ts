@@ -61,8 +61,14 @@ export type {
   GridRowTreeCreationParams,
   GridRowTreeCreationValue,
   GridHydrateRowsValue,
+  GridRowsPartialUpdates,
+  GridRowsPartialUpdateAction,
+  GridTreeDepths,
+  GridRowTreeUpdatedGroupsManager,
+  GridRowTreeUpdateGroupAction,
   GridPinnedRowsState,
-} from '../hooks/features/rows/gridRowsState';
+} from '../hooks/features/rows/gridRowsInterfaces';
+export { getTreeNodeDescendants, buildRootGroup } from '../hooks/features/rows/gridRowsUtils';
 export { useGridRowsMeta, rowsMetaStateInitializer } from '../hooks/features/rows/useGridRowsMeta';
 export { useGridParamsApi } from '../hooks/features/rows/useGridParamsApi';
 export { getRowIdFromRowModel } from '../hooks/features/rows/gridRowsUtils';
