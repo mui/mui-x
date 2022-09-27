@@ -5,3 +5,6 @@ export type {
   UseDateFieldComponentProps,
   DateFieldProps,
 } from './DateField.types';
+
+// Shared interfaces to expose
+export type { FieldSection, FieldSelectedSections } from '../internals/hooks/useField';
