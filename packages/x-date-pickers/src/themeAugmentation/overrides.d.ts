@@ -37,6 +37,7 @@ export interface PickersComponentNameToClassKey {
   MuiClockNumber: ClockNumberClassKey;
   MuiClockPicker: ClockPickerClassKey;
   MuiClockPointer: ClockPointerClassKey;
+  MuiDateField: never;
   MuiDatePicker: never;
   MuiDatePickerToolbar: DatePickerToolbarClassKey;
   MuiDateTimePicker: never;

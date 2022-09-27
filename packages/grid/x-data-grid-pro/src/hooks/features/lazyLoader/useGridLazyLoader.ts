@@ -1,7 +1,6 @@
 import * as React from 'react';
 import {
   useGridApiEventHandler,
-  GridFeatureModeConstant,
   GridRenderedRowsIntervalChangeParams,
   useGridSelector,
   gridSortModelSelector,
@@ -77,7 +76,7 @@ function isLazyLoadingDisabled({
     return true;
   }
 
-  if (rowsLoadingMode !== GridFeatureModeConstant.server) {
+  if (rowsLoadingMode !== 'server') {
     return true;
   }
 
