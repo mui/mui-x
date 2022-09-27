@@ -580,6 +580,12 @@ CalendarPicker.propTypes = {
    * @default false
    */
   disablePast: PropTypes.bool,
+  /**
+   * Calendar will show more weeks in order to match this value.
+   * Put it to 6 for having fix number of week in Gregorian calendars
+   * @default undefined
+   */
+  fixedWeekNumber: PropTypes.number,
   focusedView: PropTypes.oneOf(['day', 'month', 'year']),
   /**
    * If `true` renders `LoadingComponent` in calendar instead of calendar view.
