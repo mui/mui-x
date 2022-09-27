@@ -7,7 +7,6 @@ import {
   useGridApiOptionHandler,
   gridVisibleColumnDefinitionsSelector,
   gridRowsMetaSelector,
-  GridFeatureModeConstant,
 } from '@mui/x-data-grid';
 import { useGridVisibleRows } from '@mui/x-data-grid/internals';
 import { GridRowScrollEndParams } from '../../../models';
@@ -38,7 +37,7 @@ export const useGridInfiniteLoader = (
       const dimensions = apiRef.current.getRootDimensions();
 
       // Prevent the infite loading working in combination with lazy loading
-      if (!dimensions || props.rowsLoadingMode !== GridFeatureModeConstant.client) {
+      if (!dimensions || props.rowsLoadingMode !== 'client') {
         return;
       }
 
