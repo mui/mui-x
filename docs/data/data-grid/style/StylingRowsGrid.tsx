@@ -23,42 +23,57 @@ const StyledDataGrid = styled(DataGrid)(({ theme }) => ({
       backgroundColor: getHoverBgColor(theme.palette.info.main, theme.palette.mode),
     },
     '&.Mui-selected': {
-      backgroundColor: getSelectedBgColor(theme.palette.info.main, theme.palette.mode),
+      backgroundColor: getSelectedBgColor(
+        theme.palette.info.main,
+        theme.palette.mode,
+      ),
       '&:hover': {
         backgroundColor: getSelectedHoverBgColor(
-            theme.palette.info.main,
-            theme.palette.mode,
-          ),
+          theme.palette.info.main,
+          theme.palette.mode,
+        ),
       },
     },
   },
   '& .super-app-theme--Filled': {
     backgroundColor: getBgColor(theme.palette.success.main, theme.palette.mode),
     '&:hover': {
-      backgroundColor: getHoverBgColor(theme.palette.success.main, theme.palette.mode),
+      backgroundColor: getHoverBgColor(
+        theme.palette.success.main,
+        theme.palette.mode,
+      ),
     },
     '&.Mui-selected': {
-      backgroundColor: getSelectedBgColor(theme.palette.success.main, theme.palette.mode),
+      backgroundColor: getSelectedBgColor(
+        theme.palette.success.main,
+        theme.palette.mode,
+      ),
       '&:hover': {
         backgroundColor: getSelectedHoverBgColor(
-            theme.palette.success.main,
-            theme.palette.mode,
-          ),
+          theme.palette.success.main,
+          theme.palette.mode,
+        ),
       },
     },
   },
   '& .super-app-theme--PartiallyFilled': {
     backgroundColor: getBgColor(theme.palette.warning.main, theme.palette.mode),
     '&:hover': {
-      backgroundColor: getHoverBgColor(theme.palette.warning.main, theme.palette.mode),
+      backgroundColor: getHoverBgColor(
+        theme.palette.warning.main,
+        theme.palette.mode,
+      ),
     },
     '&.Mui-selected': {
-      backgroundColor: getSelectedBgColor(theme.palette.warning.main, theme.palette.mode),
+      backgroundColor: getSelectedBgColor(
+        theme.palette.warning.main,
+        theme.palette.mode,
+      ),
       '&:hover': {
         backgroundColor: getSelectedHoverBgColor(
-            theme.palette.warning.main,
-            theme.palette.mode,
-          ),
+          theme.palette.warning.main,
+          theme.palette.mode,
+        ),
       },
     },
   },
@@ -68,12 +83,15 @@ const StyledDataGrid = styled(DataGrid)(({ theme }) => ({
       backgroundColor: getHoverBgColor(theme.palette.error.main, theme.palette.mode),
     },
     '&.Mui-selected': {
-      backgroundColor: getSelectedBgColor(theme.palette.error.main, theme.palette.mode),
+      backgroundColor: getSelectedBgColor(
+        theme.palette.error.main,
+        theme.palette.mode,
+      ),
       '&:hover': {
         backgroundColor: getSelectedHoverBgColor(
-            theme.palette.error.main,
-            theme.palette.mode,
-          ),
+          theme.palette.error.main,
+          theme.palette.mode,
+        ),
       },
     },
   },
