@@ -1,5 +1,6 @@
 /* eslint-env mocha */
 import testDayViewValidation from './testValidation/testDayViewValidation';
+import testMonthViewValidation from './testValidation/testMonthViewValidation';
 import testTextFieldValidation from './testValidation/testTextFieldValidation';
 
 const defaultAvailableProps = [
@@ -25,6 +26,7 @@ const defaultAvailableProps = [
 ];
 
 const testsToRun = {
+  month: testMonthViewValidation,
   day: testDayViewValidation,
   textField: testTextFieldValidation,
 };
