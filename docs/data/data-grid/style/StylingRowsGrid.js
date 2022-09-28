@@ -2,7 +2,7 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import { DataGrid } from '@mui/x-data-grid';
 import { useDemoData } from '@mui/x-data-grid-generator';
-import { darken, lighten } from '@mui/material/styles';
+import { darken, lighten, styled } from '@mui/material/styles';
 
 const getBgColor = (color, mode) =>
   mode === 'dark' ? darken(color, 0.7) : lighten(color, 0.7);
@@ -16,6 +16,69 @@ const getSelectedBgColor = (color, mode) =>
 const getSelectedHoverBgColor = (color, mode) =>
   mode === 'dark' ? darken(color, 0.4) : lighten(color, 0.4);
 
+const StyledDataGrid = styled(DataGrid)(({ theme }) => ({
+  '& .super-app-theme--Open': {
+    backgroundColor: getBgColor(theme.palette.info.main, theme.palette.mode),
+    '&:hover': {
+      backgroundColor: getHoverBgColor(theme.palette.info.main, theme.palette.mode),
+    },
+    '&.Mui-selected': {
+      backgroundColor: getSelectedBgColor(theme.palette.info.main, theme.palette.mode),
+      '&:hover': {
+        backgroundColor: getSelectedHoverBgColor(
+            theme.palette.info.main,
+            theme.palette.mode,
+          ),
+      },
+    },
+  },
+  '& .super-app-theme--Filled': {
+    backgroundColor: getBgColor(theme.palette.success.main, theme.palette.mode),
+    '&:hover': {
+      backgroundColor: getHoverBgColor(theme.palette.success.main, theme.palette.mode),
+    },
+    '&.Mui-selected': {
+      backgroundColor: getSelectedBgColor(theme.palette.success.main, theme.palette.mode),
+      '&:hover': {
+        backgroundColor: getSelectedHoverBgColor(
+            theme.palette.success.main,
+            theme.palette.mode,
+          ),
+      },
+    },
+  },
+  '& .super-app-theme--PartiallyFilled': {
+    backgroundColor: getBgColor(theme.palette.warning.main, theme.palette.mode),
+    '&:hover': {
+      backgroundColor: getHoverBgColor(theme.palette.warning.main, theme.palette.mode),
+    },
+    '&.Mui-selected': {
+      backgroundColor: getSelectedBgColor(theme.palette.warning.main, theme.palette.mode),
+      '&:hover': {
+        backgroundColor: getSelectedHoverBgColor(
+            theme.palette.warning.main,
+            theme.palette.mode,
+          ),
+      },
+    },
+  },
+  '& .super-app-theme--Rejected': {
+    backgroundColor: getBgColor(theme.palette.error.main, theme.palette.mode),
+    '&:hover': {
+      backgroundColor: getHoverBgColor(theme.palette.error.main, theme.palette.mode),
+    },
+    '&.Mui-selected': {
+      backgroundColor: getSelectedBgColor(theme.palette.error.main, theme.palette.mode),
+      '&:hover': {
+        backgroundColor: getSelectedHoverBgColor(
+            theme.palette.error.main,
+            theme.palette.mode,
+          ),
+      },
+    },
+  },
+}));
+
 export default function StylingRowsGrid() {
   const { data } = useDemoData({
     dataSet: 'Commodity',
@@ -24,86 +87,8 @@ export default function StylingRowsGrid() {
 
   return (
     <Box sx={{ height: 400, width: '100%' }}>
-      <DataGrid
+      <StyledDataGrid
         {...data}
-        sx={{
-          '& .super-app-theme--Open': {
-            bgcolor: (theme) =>
-              getBgColor(theme.palette.info.main, theme.palette.mode),
-            '&:hover': {
-              bgcolor: (theme) =>
-                getHoverBgColor(theme.palette.info.main, theme.palette.mode),
-            },
-            '&.Mui-selected': {
-              bgcolor: (theme) =>
-                getSelectedBgColor(theme.palette.info.main, theme.palette.mode),
-              '&:hover': {
-                bgcolor: (theme) =>
-                  getSelectedHoverBgColor(
-                    theme.palette.info.main,
-                    theme.palette.mode,
-                  ),
-              },
-            },
-          },
-          '& .super-app-theme--Filled': {
-            bgcolor: (theme) =>
-              getBgColor(theme.palette.success.main, theme.palette.mode),
-            '&:hover': {
-              bgcolor: (theme) =>
-                getHoverBgColor(theme.palette.success.main, theme.palette.mode),
-            },
-            '&.Mui-selected': {
-              bgcolor: (theme) =>
-                getSelectedBgColor(theme.palette.success.main, theme.palette.mode),
-              '&:hover': {
-                bgcolor: (theme) =>
-                  getSelectedHoverBgColor(
-                    theme.palette.success.main,
-                    theme.palette.mode,
-                  ),
-              },
-            },
-          },
-          '& .super-app-theme--PartiallyFilled': {
-            bgcolor: (theme) =>
-              getBgColor(theme.palette.warning.main, theme.palette.mode),
-            '&:hover': {
-              bgcolor: (theme) =>
-                getHoverBgColor(theme.palette.warning.main, theme.palette.mode),
-            },
-            '&.Mui-selected': {
-              bgcolor: (theme) =>
-                getSelectedBgColor(theme.palette.warning.main, theme.palette.mode),
-              '&:hover': {
-                bgcolor: (theme) =>
-                  getSelectedHoverBgColor(
-                    theme.palette.warning.main,
-                    theme.palette.mode,
-                  ),
-              },
-            },
-          },
-          '& .super-app-theme--Rejected': {
-            bgcolor: (theme) =>
-              getBgColor(theme.palette.error.main, theme.palette.mode),
-            '&:hover': {
-              bgcolor: (theme) =>
-                getHoverBgColor(theme.palette.error.main, theme.palette.mode),
-            },
-            '&.Mui-selected': {
-              bgcolor: (theme) =>
-                getSelectedBgColor(theme.palette.error.main, theme.palette.mode),
-              '&:hover': {
-                bgcolor: (theme) =>
-                  getSelectedHoverBgColor(
-                    theme.palette.error.main,
-                    theme.palette.mode,
-                  ),
-              },
-            },
-          },
-        }}
         getRowClassName={(params) => `super-app-theme--${params.row.status}`}
       />
     </Box>
