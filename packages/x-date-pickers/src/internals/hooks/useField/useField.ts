@@ -232,15 +232,13 @@ export const useField = <
             fixedWidth: true,
           }),
       });
-    } else {
-      // TODO: Improve condition
-      if (['/', ' ', '-'].includes(keyPressed)) {
-        if (selectedSectionIndexes.startIndex < state.sections.length - 1) {
-          setSelectedSections(selectedSectionIndexes.startIndex + 1);
-        }
-        return;
+    }
+    // TODO: Improve condition
+    else if (['/', ' ', '-'].includes(keyPressed)) {
+      if (selectedSectionIndexes.startIndex < state.sections.length - 1) {
+        setSelectedSections(selectedSectionIndexes.startIndex + 1);
       }
-
+    } else {
       if (keyPressed.length > 1) {
         // TODO: Might be able to support it in some scenario
         return;
