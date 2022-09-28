@@ -7,10 +7,21 @@ import { useDateTimePicker2DefaultizedProps, renderDateTimeViews } from '../Date
 import { useLocaleText } from '../internals';
 import { Calendar } from '../internals/components/icons';
 import { useDesktopPicker } from '../internals/hooks/useDesktopPicker';
+import { PickerDateSectionModeLookup } from '../internals/hooks/usePicker';
+import { CalendarOrClockPickerView } from '../internals/models';
 
 type DesktopDateTimePickerComponent = (<TDate>(
   props: DesktopDateTimePicker2Props<TDate> & React.RefAttributes<HTMLDivElement>,
 ) => JSX.Element) & { propTypes?: any };
+
+const SECTION_MODE_LOOKUP: PickerDateSectionModeLookup<CalendarOrClockPickerView> = {
+  year: 'view',
+  month: 'view',
+  day: 'view',
+  hours: 'field',
+  minutes: 'field',
+  seconds: 'field',
+};
 
 const DesktopDateTimePicker2 = React.forwardRef(function DesktopDateTimePicker2<TDate>(
   inProps: DesktopDateTimePicker2Props<TDate>,
@@ -52,6 +63,7 @@ const DesktopDateTimePicker2 = React.forwardRef(function DesktopDateTimePicker2<
     renderViews: (viewProps) =>
       renderDateTimeViews({ ...other, ...viewProps, components, componentsProps }),
     getOpenDialogAriaText: localeText.openDatePickerDialogue,
+    sectionModeLookup: SECTION_MODE_LOOKUP,
   });
 
   return renderPicker();

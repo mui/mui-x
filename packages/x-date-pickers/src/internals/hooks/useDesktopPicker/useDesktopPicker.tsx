@@ -14,6 +14,7 @@ export const useDesktopPicker = <TValue, TDate, TView extends CalendarOrClockPic
   valueManager,
   renderViews: renderViewsParam,
   getOpenDialogAriaText,
+  sectionModeLookup,
 }: UseDesktopPickerParams<TValue, TDate, TView>) => {
   const {
     components,
@@ -32,7 +33,13 @@ export const useDesktopPicker = <TValue, TDate, TView extends CalendarOrClockPic
     renderViews,
     actions,
     open,
-  } = usePicker({ props, valueManager, wrapperVariant: 'desktop', renderViews: renderViewsParam });
+  } = usePicker({
+    props,
+    valueManager,
+    wrapperVariant: 'desktop',
+    renderViews: renderViewsParam,
+    sectionModeLookup,
+  });
 
   const Field = components.Field;
   const fieldProps = useSlotProps({

@@ -8,6 +8,11 @@ export type PickerViewRenderer<TValue, TView extends CalendarOrClockPickerView> 
   props: PickerViewsRendererProps<TValue, TView>,
 ) => React.ReactElement;
 
+export type PickerDateSectionModeLookup<TView extends CalendarOrClockPickerView> = Record<
+  TView,
+  'field' | 'view'
+>;
+
 export interface ExportedUsePickerViewProps<TView extends CalendarOrClockPickerView> {
   autoFocus?: boolean;
   /**
@@ -49,6 +54,9 @@ export interface UsePickerViewsProps<TValue, TView extends CalendarOrClockPicker
 interface UsePickerViewParams<TValue, TView extends CalendarOrClockPickerView> {
   props: UsePickerViewsProps<TValue, TView>;
   renderViews: PickerViewRenderer<TValue, TView>;
+  sectionModeLookup?: PickerDateSectionModeLookup<TView>;
+  open: boolean;
+  onClose: () => void;
 }
 
 export interface PickerViewsRendererProps<TValue, TView extends CalendarOrClockPickerView>
@@ -66,6 +74,9 @@ let warnedOnceNotValidOpenTo = false;
 export const usePickerViews = <TValue, TView extends CalendarOrClockPickerView>({
   props,
   renderViews,
+  sectionModeLookup,
+  open,
+  onClose,
 }: UsePickerViewParams<TValue, TView>) => {
   const { views, openTo, onViewChange, onChange, orientation, ...other } = props;
 
@@ -89,6 +100,18 @@ export const usePickerViews = <TValue, TView extends CalendarOrClockPickerView>(
     onChange,
     onViewChange,
   });
+
+  React.useLayoutEffect(() => {
+    if (!sectionModeLookup) {
+      return;
+    }
+
+    const openViewMode = sectionModeLookup[openView];
+    if (openViewMode === 'field' && open) {
+      onClose();
+    }
+    console.log(openViewMode);
+  }, [openView]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return () =>
     renderViews({

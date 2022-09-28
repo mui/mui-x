@@ -3,7 +3,11 @@ import { WrapperVariant } from '../../components/wrappers/WrapperVariantContext'
 import { CalendarOrClockPickerView } from '../../models/views';
 import { PickerStateValueManager } from '../usePickerState';
 import { UsePickerValueProps } from './usePickerValue';
-import { ExportedUsePickerViewProps, PickerViewsRendererProps } from './usePickerViews';
+import {
+  ExportedUsePickerViewProps,
+  PickerDateSectionModeLookup,
+  PickerViewsRendererProps,
+} from './usePickerViews';
 
 export interface UsePickerProps<TValue, TView extends CalendarOrClockPickerView>
   extends UsePickerValueProps<TValue>,
@@ -14,4 +18,5 @@ export interface UsePickerParams<TValue, TDate, TView extends CalendarOrClockPic
   valueManager: PickerStateValueManager<TValue, TDate>;
   wrapperVariant: WrapperVariant;
   renderViews: (props: PickerViewsRendererProps<TValue, TView>) => React.ReactElement;
+  sectionModeLookup?: PickerDateSectionModeLookup<TView>;
 }

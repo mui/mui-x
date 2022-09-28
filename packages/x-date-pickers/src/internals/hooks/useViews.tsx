@@ -29,15 +29,16 @@ export function useViews<TValue, View extends CalendarOrClockPickerView>({
   view,
   views,
 }: UseViewsOptions<TValue, View>) {
-  const [openView, setOpenView] = useControlled<View>({
+  const [openView, setOpenView] = useControlled({
     name: 'Picker',
     state: 'view',
     controlled: view,
     default: openTo && arrayIncludes(views, openTo) ? openTo : views[0],
   });
 
-  const previousView: View | null = views[views.indexOf(openView) - 1] ?? null;
-  const nextView: View | null = views[views.indexOf(openView) + 1] ?? null;
+  const openViewIndex = views.indexOf(openView);
+  const previousView: View | null = views[openViewIndex - 1] ?? null;
+  const nextView: View | null = views[openViewIndex + 1] ?? null;
 
   const changeView = React.useCallback(
     (newView: View) => {

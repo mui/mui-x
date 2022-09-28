@@ -13,6 +13,7 @@ export const useMobilePicker = <TValue, TDate, TView extends CalendarOrClockPick
   valueManager,
   renderViews: renderViewsParam,
   getOpenDialogAriaText,
+  sectionModeLookup,
 }: UseMobilePickerParams<TValue, TDate, TView>) => {
   const { components, componentsProps = {}, className, inputFormat, disabled } = props;
 
@@ -23,7 +24,13 @@ export const useMobilePicker = <TValue, TDate, TView extends CalendarOrClockPick
     renderViews,
     actions,
     open,
-  } = usePicker({ props, valueManager, wrapperVariant: 'mobile', renderViews: renderViewsParam });
+  } = usePicker({
+    props,
+    valueManager,
+    wrapperVariant: 'mobile',
+    renderViews: renderViewsParam,
+    sectionModeLookup,
+  });
 
   const Field = components.Field;
   const fieldProps = useSlotProps({

@@ -7,10 +7,18 @@ import { useTimePicker2DefaultizedProps, renderTimeViews } from '../TimePicker2/
 import { useLocaleText } from '../internals';
 import { Clock } from '../internals/components/icons';
 import { useDesktopPicker } from '../internals/hooks/useDesktopPicker';
+import { PickerDateSectionModeLookup } from '../internals/hooks/usePicker';
+import { ClockPickerView } from '../internals/models';
 
 type DesktopTimePickerComponent = (<TTime>(
   props: DesktopTimePicker2Props<TTime> & React.RefAttributes<HTMLDivElement>,
 ) => JSX.Element) & { propTypes?: any };
+
+const SECTION_MODE_LOOKUP: PickerDateSectionModeLookup<ClockPickerView> = {
+  hours: 'field',
+  minutes: 'field',
+  seconds: 'field',
+};
 
 const DesktopTimePicker2 = React.forwardRef(function DesktopTimePicker2<TTime>(
   inProps: DesktopTimePicker2Props<TTime>,
@@ -52,6 +60,7 @@ const DesktopTimePicker2 = React.forwardRef(function DesktopTimePicker2<TTime>(
     renderViews: (viewProps) =>
       renderTimeViews({ ...other, ...viewProps, components, componentsProps }),
     getOpenDialogAriaText: localeText.openTimePickerDialogue,
+    sectionModeLookup: SECTION_MODE_LOOKUP,
   });
 
   return renderPicker();

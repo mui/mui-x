@@ -116,6 +116,7 @@ export interface UsePickerValueActions {
   onCancel: () => void;
   onSetToday: () => void;
   onOpen: () => void;
+  onClose: () => void;
 }
 
 type UsePickerValueFieldResponse<TValue> = Pick<
@@ -266,6 +267,8 @@ export const usePickerValue = <TValue, TDate>(
 
   const handleOpen = useEventCallback(() => setIsOpen(true));
 
+  const handleClose = useEventCallback(() => setIsOpen(true));
+
   const handleChange = useEventCallback(
     (newDate: TValue, selectionState: PickerSelectionState = 'partial') => {
       switch (selectionState) {
@@ -326,6 +329,7 @@ export const usePickerValue = <TValue, TDate>(
     onCancel: handleCancel,
     onSetToday: handleSetToday,
     onOpen: handleOpen,
+    onClose: handleClose,
   };
 
   return {
