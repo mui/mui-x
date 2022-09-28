@@ -80,6 +80,8 @@ export const useField = <
 
   const handleInputMouseUp = useEventCallback((event: React.MouseEvent) => {
     onMouseUp?.(event);
+
+    // Without this, the browser will remove the selected when clicking inside an already-selected section.
     event.preventDefault();
   });
 
