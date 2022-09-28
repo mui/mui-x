@@ -24,7 +24,14 @@ import {
   isAndroid,
 } from './useField.utils';
 import { useFieldState } from './useFieldState';
-import { clamp } from '../../utils/utils';
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const debug = (...messages: (string | number | boolean | null | undefined)[]) => {
+  const node = document.querySelector('#debug');
+  if (node) {
+    node.innerHTML += `${messages.join(' ')}<br />`;
+  }
+};
 
 export const useField = <
   TValue,
@@ -154,6 +161,8 @@ export const useField = <
       (activeSection.separator?.length ?? 0);
     const keyPressed = valueStr.slice(activeSection.start, activeSectionEndRelativeToNewValue);
 
+    debug('Key pressed', keyPressed);
+
     if (isAndroid() && keyPressed.length === 0) {
       setTempAndroidValueStr(valueStr);
       return;
@@ -224,6 +233,14 @@ export const useField = <
           }),
       });
     } else {
+      // TODO: Improve condition
+      if (['/', ' ', '-'].includes(keyPressed)) {
+        if (selectedSectionIndexes.startIndex < state.sections.length - 1) {
+          setSelectedSections(selectedSectionIndexes.startIndex + 1);
+        }
+        return;
+      }
+
       if (keyPressed.length > 1) {
         // TODO: Might be able to support it in some scenario
         return;
@@ -418,13 +435,26 @@ export const useField = <
   }, []);
 
   const valueStr = React.useMemo(
-    () => fieldValueManager.getValueStrFromSections(state.sections),
-    [state.sections, fieldValueManager],
+    () => state.tempValueStrAndroid ?? fieldValueManager.getValueStrFromSections(state.sections),
+    [state.sections, fieldValueManager, state.tempValueStrAndroid],
   );
+
+  const inputMode = React.useMemo(() => {
+    if (selectedSectionIndexes == null) {
+      return 'text';
+    }
+
+    if (state.sections[selectedSectionIndexes.startIndex].contentType === 'letter') {
+      return 'text';
+    }
+
+    return 'tel';
+  }, [selectedSectionIndexes, state.sections]);
 
   return {
     ...otherForwardedProps,
     value: valueStr,
+    inputMode,
     onClick: handleInputClick,
     onFocus: handleInputFocus,
     onBlur: handleInputBlur,

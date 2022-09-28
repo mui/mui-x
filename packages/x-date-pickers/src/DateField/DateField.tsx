@@ -33,6 +33,7 @@ export const DateField = React.forwardRef(function DateField<TDate>(
   const {
     ref: inputRef,
     onPaste,
+    inputMode,
     ...fieldProps
   } = useDateField<TDate, typeof inputProps>({
     props: inputProps,
@@ -43,7 +44,7 @@ export const DateField = React.forwardRef(function DateField<TDate>(
     <Input
       ref={ref}
       {...fieldProps}
-      inputProps={{ ...fieldProps.inputProps, ref: inputRef, onPaste }}
+      inputProps={{ ...fieldProps.inputProps, ref: inputRef, onPaste, inputMode }}
     />
   );
 }) as DateFieldComponent;

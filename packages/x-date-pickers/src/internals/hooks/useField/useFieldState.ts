@@ -113,6 +113,7 @@ export const useFieldState = <
       sections: newSections,
       value,
       referenceValue,
+      tempValueStrAndroid: null,
     }));
 
     onChange?.(value);
@@ -192,6 +193,7 @@ export const useFieldState = <
       ...prevState,
       sections: newSections,
       value: activeDateManager.setActiveDateAsInvalid(),
+      tempValueStrAndroid: null,
     }));
   };
 
