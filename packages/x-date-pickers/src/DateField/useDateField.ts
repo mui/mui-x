@@ -7,7 +7,11 @@ import {
   addPositionPropertiesToSections,
   createDateStrFromSections,
 } from '../internals/hooks/useField';
-import { UseDateFieldProps, UseDateFieldDefaultizedProps } from './DateField.interfaces';
+import {
+  UseDateFieldProps,
+  UseDateFieldDefaultizedProps,
+  UseDateFieldParams,
+} from './DateField.types';
 import {
   DateValidationError,
   isSameDateError,
@@ -17,21 +21,20 @@ import { applyDefaultDate } from '../internals/utils/date-utils';
 import { useUtils, useDefaultDates } from '../internals/hooks/useUtils';
 
 const dateRangeFieldValueManager: FieldValueManager<any, any, FieldSection, DateValidationError> = {
+  updateReferenceValue: (utils, value, prevReferenceValue) =>
+    value == null || !utils.isValid(value) ? prevReferenceValue : value,
   getSectionsFromValue: (utils, prevSections, date, format) =>
     addPositionPropertiesToSections(splitFormatIntoSections(utils, format, date)),
   getValueStrFromSections: (sections) => createDateStrFromSections(sections),
-  getValueFromSections: (utils, prevSections, sections, format) => {
-    const dateStr = createDateStrFromSections(sections);
-    const value = utils.parse(dateStr, format);
-
-    return {
-      value,
-      shouldPublish: utils.isValid(value),
-    };
-  },
-  getActiveDateFromActiveSection: (value) => ({
-    value,
-    update: (newActiveDate) => newActiveDate,
+  getActiveDateSections: (sections) => sections,
+  getActiveDateManager: (state) => ({
+    activeDate: state.value,
+    referenceActiveDate: state.referenceValue,
+    getNewValueFromNewActiveDate: (newActiveDate) => ({
+      value: newActiveDate,
+      referenceValue: newActiveDate == null ? state.referenceValue : newActiveDate,
+    }),
+    setActiveDateAsInvalid: () => null,
   }),
   hasError: (error) => error != null,
   isSameError: isSameDateError,
@@ -52,7 +55,10 @@ const useDefaultizedDateField = <TDate, AdditionalProps extends {}>(
   } as any;
 };
 
-export const useDateField = <TDate, TProps extends UseDateFieldProps<TDate>>(inProps: TProps) => {
+export const useDateField = <TDate, TChildProps extends {}>({
+  props,
+  inputRef,
+}: UseDateFieldParams<TDate, TChildProps>) => {
   const {
     value,
     defaultValue,
@@ -67,10 +73,13 @@ export const useDateField = <TDate, TProps extends UseDateFieldProps<TDate>>(inP
     maxDate,
     disableFuture,
     disablePast,
+    selectedSections,
+    onSelectedSectionsChange,
     ...other
-  } = useDefaultizedDateField<TDate, TProps>(inProps);
+  } = useDefaultizedDateField<TDate, TChildProps>(props);
 
   return useField({
+    inputRef,
     forwardedProps: other,
     internalProps: {
       value,
@@ -86,6 +95,9 @@ export const useDateField = <TDate, TProps extends UseDateFieldProps<TDate>>(inP
       maxDate,
       disableFuture,
       disablePast,
+      selectedSections,
+      onSelectedSectionsChange,
+      inputRef,
     },
     valueManager: datePickerValueManager,
     fieldValueManager: dateRangeFieldValueManager,

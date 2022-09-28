@@ -150,7 +150,6 @@ export const YearPicker = React.forwardRef(function YearPicker<TDate>(
 
     return utils.getYear(now);
   }, [now, value, utils, disableHighlightToday]);
-
   const [focusedYear, setFocusedYear] = React.useState(() => selectedYear || todayYear);
 
   const [internalHasFocus, setInternalHasFocus] = useControlled<boolean>({
