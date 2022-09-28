@@ -9,7 +9,7 @@ describe('<DateField /> validation', () => {
     render,
     clock,
     views: ['year', 'month', 'day'],
-    skip: ['day', 'month'],
+    skip: ['day', 'month', 'year'],
     ignoredProps: ['minTime', 'maxTime'],
     isFieldComponent: true,
   }));

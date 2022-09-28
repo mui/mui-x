@@ -2,6 +2,7 @@
 import testDayViewValidation from './testValidation/testDayViewValidation';
 import testMonthViewValidation from './testValidation/testMonthViewValidation';
 import testTextFieldValidation from './testValidation/testTextFieldValidation';
+import testYearViewValidation from './testValidation/testYearViewValidation';
 
 const defaultAvailableProps = [
   // from now
@@ -26,6 +27,7 @@ const defaultAvailableProps = [
 ];
 
 const testsToRun = {
+  year: testYearViewValidation,
   month: testMonthViewValidation,
   day: testDayViewValidation,
   textField: testTextFieldValidation,
