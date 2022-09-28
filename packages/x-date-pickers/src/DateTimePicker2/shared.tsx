@@ -11,7 +11,7 @@ import { BasePickerProps2 } from '../internals/models/props/basePickerProps';
 import { applyDefaultDate } from '../internals/utils/date-utils';
 import { PickerViewContainer } from '../internals/components/PickerViewContainer';
 import { PickerViewsRendererProps } from '../internals/hooks/usePicker/usePickerViews';
-import { UsePickerProps } from '@mui/x-date-pickers/internals/hooks/usePicker';
+import { UsePickerProps } from '../internals/hooks/usePicker';
 
 export interface BaseDateTimePicker2Props<TDate>
   extends MakeOptional<
