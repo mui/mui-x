@@ -25,8 +25,7 @@ import {
 } from './useField.utils';
 import { useFieldState } from './useFieldState';
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const debug = (...messages: (string | number | boolean | null | undefined)[]) => {
+export const debug = (...messages: (string | number | boolean | null | undefined)[]) => {
   const node = document.querySelector('#debug');
   if (node) {
     node.innerHTML += `${messages.join(' ')}<br />`;
