@@ -30,12 +30,20 @@ export const DateField = React.forwardRef(function DateField<TDate>(
     ownerState,
   }) as Omit<DateFieldProps<TDate>, 'components' | 'componentsProps'>;
 
-  const { ref: inputRef, ...fieldProps } = useDateField<TDate, typeof inputProps>({
+  const {
+    ref: inputRef,
+    onPaste,
+    ...fieldProps
+  } = useDateField<TDate, typeof inputProps>({
     props: inputProps,
     inputRef: externalInputRef,
   });
 
   return (
-    <Input ref={ref} {...fieldProps} inputProps={{ ...fieldProps.inputProps, ref: inputRef }} />
+    <Input
+      ref={ref}
+      {...fieldProps}
+      inputProps={{ ...fieldProps.inputProps, ref: inputRef, onPaste }}
+    />
   );
 }) as DateFieldComponent;

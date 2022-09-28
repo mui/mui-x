@@ -24,6 +24,7 @@ import {
   isAndroid,
 } from './useField.utils';
 import { useFieldState } from './useFieldState';
+import { clamp } from '../../utils/utils';
 
 export const useField = <
   TValue,
@@ -101,6 +102,16 @@ export const useField = <
     setSelectedSections(null);
   });
 
+  const handleInputPaste = useEventCallback((event: React.ClipboardEvent<HTMLInputElement>) => {
+    if (readOnly || selectedSectionIndexes == null) {
+      return;
+    }
+
+    event.preventDefault();
+    const pastedValue = event.clipboardData.getData('text');
+    throw new Error(`Pasting is not implemented yet, the value to paste would be "${pastedValue}"`);
+  });
+
   const handleInputChange = useEventCallback((event: React.ChangeEvent<HTMLInputElement>) => {
     if (readOnly || selectedSectionIndexes == null) {
       return;
@@ -145,11 +156,6 @@ export const useField = <
 
     if (isAndroid() && keyPressed.length === 0) {
       setTempAndroidValueStr(valueStr);
-      return;
-    }
-
-    if (keyPressed.length > 1) {
-      // TODO: Might be able to support it in some scenario
       return;
     }
 
@@ -218,6 +224,11 @@ export const useField = <
           }),
       });
     } else {
+      if (keyPressed.length > 1) {
+        // TODO: Might be able to support it in some scenario
+        return;
+      }
+
       const getNewSectionValueStr = (): string => {
         if (activeSection.contentType === 'digit') {
           return activeSection.value;
@@ -417,8 +428,9 @@ export const useField = <
     onClick: handleInputClick,
     onFocus: handleInputFocus,
     onBlur: handleInputBlur,
-    onKeyDown: handleInputKeyDown,
+    onPaste: handleInputPaste,
     onChange: handleInputChange,
+    onKeyDown: handleInputKeyDown,
     error: inputError,
     ref: handleRef,
   };
