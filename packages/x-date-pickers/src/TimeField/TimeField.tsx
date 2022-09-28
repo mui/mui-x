@@ -6,16 +6,16 @@ import { TimeFieldProps } from './TimeField.types';
 import { useTimeField } from './useTimeField';
 
 type TimeFieldComponent = (<TDate>(
-  props: TimeFieldProps<TDate> & React.RefAttributes<HTMLInputElement>,
+  props: TimeFieldProps<TDate> & React.RefAttributes<HTMLDivElement>,
 ) => JSX.Element) & { propTypes?: any };
 
-export const TimeField = React.forwardRef(function DateField<TDate>(
+export const TimeField = React.forwardRef(function TimeField<TDate>(
   inProps: TimeFieldProps<TDate>,
-  ref: React.Ref<HTMLInputElement>,
+  ref: React.Ref<HTMLDivElement>,
 ) {
   const themeProps = useThemeProps({
     props: inProps,
-    name: 'MuiDateField',
+    name: 'MuiTimeField',
   });
 
   const { components, componentsProps, ...other } = themeProps;

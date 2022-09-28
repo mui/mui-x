@@ -6,16 +6,16 @@ import { DateTimeFieldProps } from './DateTimeField.types';
 import { useDateTimeField } from './useDateTimeField';
 
 type DateTimeFieldComponent = (<TDate>(
-  props: DateTimeFieldProps<TDate> & React.RefAttributes<HTMLInputElement>,
+  props: DateTimeFieldProps<TDate> & React.RefAttributes<HTMLDivElement>,
 ) => JSX.Element) & { propTypes?: any };
 
-export const DateTimeField = React.forwardRef(function DateField<TDate>(
+export const DateTimeField = React.forwardRef(function DateTimeField<TDate>(
   inProps: DateTimeFieldProps<TDate>,
-  ref: React.Ref<HTMLInputElement>,
+  ref: React.Ref<HTMLDivElement>,
 ) {
   const themeProps = useThemeProps({
     props: inProps,
-    name: 'MuiDateField',
+    name: 'MuiDateTimeField',
   });
 
   const { components, componentsProps, ...other } = themeProps;
