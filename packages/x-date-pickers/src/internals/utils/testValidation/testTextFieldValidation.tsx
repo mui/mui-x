@@ -6,12 +6,16 @@ import { adapterToUse } from 'test/utils/pickers-utils';
 
 function testTextFieldValidation(ElementToTest, propsToTest, getOptions) {
   describe('validation in textfield:', () => {
-    const defaultProps = {
-      onChange: () => {},
-      renderInput: (params) => <TextField {...params} />,
-      reduceAnimations: true,
-      showToolbar: false,
-    };
+    const { isFieldComponent } = getOptions();
+
+    const defaultProps = isFieldComponent
+      ? {}
+      : {
+          onChange: () => {},
+          renderInput: (params) => <TextField {...params} />,
+          reduceAnimations: true,
+          showToolbar: false,
+        };
 
     if (propsToTest.includes('shouldDisableDate')) {
       it('should apply shouldDisableDate', function test() {
@@ -31,7 +35,7 @@ function testTextFieldValidation(ElementToTest, propsToTest, getOptions) {
           withDate ? 'true' : 'false',
         );
 
-        setProps({ value: adapterToUse.date(new Date(2018, 2, 9)), ...defaultProps });
+        setProps({ value: adapterToUse.date(new Date(2018, 2, 9)) });
 
         expect(screen.getByRole('textbox')).to.have.attribute('aria-invalid', 'false');
       });
