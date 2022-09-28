@@ -2,7 +2,7 @@ import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
 import { Unstable_DateField as DateField } from '@mui/x-date-pickers/DateField';
-import { screen, act, userEvent } from '@mui/monorepo/test/utils';
+import { screen, act, userEvent, fireEvent } from '@mui/monorepo/test/utils';
 import { createPickerRenderer, adapterToUse } from 'test/utils/pickers-utils';
 import { DateFieldProps } from '@mui/x-date-pickers/DateField/DateField.interfaces';
 
@@ -14,8 +14,14 @@ describe('<DateField /> - Editing', () => {
 
   const clickOnInput = (input: HTMLInputElement, cursorPosition: number) => {
     act(() => {
-      input.focus();
+      fireEvent.mouseDown(input);
+      if (document.activeElement !== input) {
+        input.focus();
+      }
+      fireEvent.mouseUp(input);
       input.setSelectionRange(cursorPosition, cursorPosition);
+      fireEvent.click(input);
+
       clock.runToLast();
     });
   };

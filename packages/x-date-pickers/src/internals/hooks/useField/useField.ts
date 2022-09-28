@@ -55,7 +55,7 @@ export const useField = <
   const {
     inputRef: inputRefProp,
     internalProps: { readOnly = false },
-    forwardedProps: { onClick, onKeyDown, onFocus, onBlur, ...otherForwardedProps },
+    forwardedProps: { onClick, onKeyDown, onFocus, onBlur, onMouseUp, ...otherForwardedProps },
     fieldValueManager,
     validator,
   } = params;
@@ -65,15 +65,22 @@ export const useField = <
 
   const focusTimeoutRef = React.useRef<NodeJS.Timeout | undefined>(undefined);
 
-  const handleInputClick = useEventCallback((...args) => {
-    onClick?.(...(args as []));
-
+  const syncSelectionWithDOM = () => {
     const nextSectionIndex = state.sections.findIndex(
       (section) => section.start > (inputRef.current!.selectionStart ?? 0),
     );
     const sectionIndex = nextSectionIndex === -1 ? state.sections.length - 1 : nextSectionIndex - 1;
-
     setSelectedSections(sectionIndex);
+  };
+
+  const handleInputClick = useEventCallback((...args) => {
+    onClick?.(...(args as []));
+    syncSelectionWithDOM();
+  });
+
+  const handleInputMouseUp = useEventCallback((event: React.MouseEvent) => {
+    onMouseUp?.(event);
+    event.preventDefault();
   });
 
   const handleInputFocus = useEventCallback((...args) => {
@@ -91,7 +98,7 @@ export const useField = <
       if (Number(input.selectionEnd) - Number(input.selectionStart) === input.value.length) {
         setSelectedSections({ startIndex: 0, endIndex: state.sections.length - 1 });
       } else {
-        handleInputClick();
+        syncSelectionWithDOM();
       }
     });
   });
@@ -121,10 +128,10 @@ export const useField = <
 
         if (selectedSectionIndexes == null) {
           setSelectedSections(0);
+        } else if (selectedSectionIndexes.startIndex !== selectedSectionIndexes.endIndex) {
+          setSelectedSections(selectedSectionIndexes.startIndex);
         } else if (selectedSectionIndexes.startIndex < state.sections.length - 1) {
           setSelectedSections(selectedSectionIndexes.startIndex + 1);
-        } else if (selectedSectionIndexes.startIndex !== selectedSectionIndexes.endIndex) {
-          setSelectedSections(selectedSectionIndexes.endIndex);
         }
 
         return;
@@ -137,7 +144,7 @@ export const useField = <
         if (selectedSectionIndexes == null) {
           setSelectedSections(state.sections.length - 1);
         } else if (selectedSectionIndexes.startIndex !== selectedSectionIndexes.endIndex) {
-          setSelectedSections(selectedSectionIndexes.startIndex);
+          setSelectedSections(selectedSectionIndexes.endIndex);
         } else if (selectedSectionIndexes.startIndex > 0) {
           setSelectedSections(selectedSectionIndexes.startIndex - 1);
         }
@@ -379,6 +386,7 @@ export const useField = <
     onFocus: handleInputFocus,
     onBlur: handleInputBlur,
     onKeyDown: handleInputKeyDown,
+    onMouseUp: handleInputMouseUp,
     onChange: noop,
     error: inputError,
     ref: handleRef,

@@ -57,6 +57,7 @@ export interface UseFieldInternalProps<TValue, TError> {
 
 export interface UseFieldForwardedProps {
   onKeyDown?: React.KeyboardEventHandler;
+  onMouseUp?: React.MouseEventHandler;
   onClick?: () => void;
   onFocus?: () => void;
   onBlur?: () => void;
