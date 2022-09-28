@@ -248,7 +248,6 @@ describe('<TimeField /> - Editing', () => {
           format: adapterToUse.formats.fullTime12h,
           defaultValue: adapterToUse.date(new Date(2022, 5, 15, 11, 59, 32)),
           key: 'ArrowUp',
-          // TODO: Should be 00:00 pm
           expectedValue: '12:00 pm',
           cursorPosition: 4,
         });
@@ -259,7 +258,6 @@ describe('<TimeField /> - Editing', () => {
           format: adapterToUse.formats.fullTime12h,
           defaultValue: adapterToUse.date(new Date(2022, 5, 15, 23, 59, 32)),
           key: 'ArrowUp',
-          // TODO: Should be 00:00 am
           expectedValue: '12:00 am',
           cursorPosition: 4,
         });
