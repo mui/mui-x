@@ -18,8 +18,9 @@ import {
 } from './useField.utils';
 
 interface UpdateSectionValueParams<TDate, TSection> {
-  setSectionValueOnDate: (activeSection: TSection, activeDate: TDate) => TDate;
-  setSectionValueOnSections: (activeSection: TSection, referenceActiveDate: TDate) => string;
+  activeSection: TSection;
+  setSectionValueOnDate: (activeDate: TDate) => TDate;
+  setSectionValueOnSections: (referenceActiveDate: TDate) => string;
 }
 
 export const useFieldState = <
@@ -40,7 +41,6 @@ export const useFieldState = <
       value: valueProp,
       defaultValue,
       onChange,
-      readOnly,
       format = utils.formats.keyboardDate,
       selectedSections: selectedSectionsProp,
       onSelectedSectionsChange,
@@ -66,7 +66,7 @@ export const useFieldState = <
         valueFromTheOutside,
         valueManager.getTodayValue(utils),
       ),
-      selectedSectionIndexes: null,
+      tempValueStrAndroid: null,
     };
   });
 
@@ -154,27 +154,20 @@ export const useFieldState = <
   };
 
   const updateSectionValue = ({
+    activeSection,
     setSectionValueOnDate,
     setSectionValueOnSections,
   }: UpdateSectionValueParams<TDate, TSection>) => {
-    if (readOnly || selectedSectionIndexes == null) {
-      return undefined;
-    }
-
-    const activeSection = state.sections[selectedSectionIndexes.startIndex];
     const activeDateManager = fieldValueManager.getActiveDateManager(state, activeSection);
 
     if (activeDateManager.activeDate != null && utils.isValid(activeDateManager.activeDate)) {
-      const newDate = setSectionValueOnDate(activeSection, activeDateManager.activeDate);
+      const newDate = setSectionValueOnDate(activeDateManager.activeDate);
       return publishValue(activeDateManager.getNewValueFromNewActiveDate(newDate));
     }
 
     // The date is not valid, we have to update the section value rather than date itself.
-    const newSectionValue = setSectionValueOnSections(
-      activeSection,
-      activeDateManager.referenceActiveDate,
-    );
-    const newSections = setSectionValue(selectedSectionIndexes.startIndex, newSectionValue);
+    const newSectionValue = setSectionValueOnSections(activeDateManager.referenceActiveDate);
+    const newSections = setSectionValue(selectedSectionIndexes!.startIndex, newSectionValue);
     const activeDateSections = fieldValueManager.getActiveDateSections(newSections, activeSection);
     const newDate = utils.parse(createDateStrFromSections(activeDateSections), format);
 
@@ -212,6 +205,9 @@ export const useFieldState = <
     }));
   };
 
+  const setTempAndroidValueStr = (tempValueStrAndroid: string) =>
+    setState((prev) => ({ ...prev, tempValueStrAndroid }));
+
   React.useEffect(() => {
     if (!valueManager.areValuesEqual(utils, state.value, valueFromTheOutside)) {
       const sections = fieldValueManager.getSectionsFromValue(
@@ -240,5 +236,6 @@ export const useFieldState = <
     clearValue,
     clearActiveSection,
     updateSectionValue,
+    setTempAndroidValueStr,
   };
 };

@@ -21,10 +21,9 @@ import {
   adjustInvalidDateSectionValue,
   applySectionValueToDate,
   cleanTrailingZeroInNumericSectionValue,
+  isAndroid,
 } from './useField.utils';
 import { useFieldState } from './useFieldState';
-
-const noop = () => {};
 
 export const useField = <
   TValue,
@@ -50,6 +49,7 @@ export const useField = <
     clearValue,
     clearActiveSection,
     updateSectionValue,
+    setTempAndroidValueStr,
   } = useFieldState(params);
 
   const {
@@ -101,6 +101,181 @@ export const useField = <
     setSelectedSections(null);
   });
 
+  const handleInputChange = useEventCallback((event: React.ChangeEvent<HTMLInputElement>) => {
+    if (readOnly || selectedSectionIndexes == null) {
+      return;
+    }
+
+    const prevValueStr = fieldValueManager.getValueStrFromSections(state.sections);
+    const valueStr = event.target.value;
+
+    let startOfDiffIndex = -1;
+    let endOfDiffIndex = -1;
+    for (let i = 0; i < prevValueStr.length; i += 1) {
+      if (startOfDiffIndex === -1 && prevValueStr[i] !== valueStr[i]) {
+        startOfDiffIndex = i;
+      }
+
+      if (
+        endOfDiffIndex === -1 &&
+        prevValueStr[prevValueStr.length - i - 1] !== valueStr[valueStr.length - i - 1]
+      ) {
+        endOfDiffIndex = i;
+      }
+    }
+
+    const activeSection = state.sections[selectedSectionIndexes.startIndex];
+
+    const hasDiffOutsideOfActiveSection =
+      startOfDiffIndex < activeSection.start ||
+      prevValueStr.length - endOfDiffIndex - 1 > activeSection.end;
+
+    if (hasDiffOutsideOfActiveSection) {
+      // TODO: Support if the new date is valid
+      return;
+    }
+
+    // The active section being selected, the browser has replaced its value with the key pressed by the user.
+    const activeSectionEndRelativeToNewValue =
+      valueStr.length -
+      prevValueStr.length +
+      activeSection.end -
+      (activeSection.separator?.length ?? 0);
+    const keyPressed = valueStr.slice(activeSection.start, activeSectionEndRelativeToNewValue);
+
+    if (isAndroid() && keyPressed.length === 0) {
+      setTempAndroidValueStr(valueStr);
+      return;
+    }
+
+    if (keyPressed.length > 1) {
+      // TODO: Might be able to support it in some scenario
+      return;
+    }
+
+    const isNumericValue = !Number.isNaN(Number(keyPressed));
+
+    if (isNumericValue) {
+      const getNewSectionValueStr = ({
+        date,
+        fixedWidth,
+      }: {
+        date: TDate;
+        fixedWidth: boolean;
+      }) => {
+        const boundaries = getSectionValueNumericBoundaries(
+          utils,
+          date,
+          activeSection.dateSectionName,
+        );
+
+        // Remove the trailing `0` (`01` => `1`)
+        const currentSectionValue = Number(activeSection.value).toString();
+
+        let newSectionValue = `${currentSectionValue}${keyPressed}`;
+        while (newSectionValue.length > 0 && Number(newSectionValue) > boundaries.maximum) {
+          newSectionValue = newSectionValue.slice(1);
+        }
+
+        // In the unlikely scenario where max < 9, we could type a single digit that already exceeds the maximum.
+        if (newSectionValue.length === 0) {
+          newSectionValue = boundaries.minimum.toString();
+        }
+
+        if (fixedWidth) {
+          return cleanTrailingZeroInNumericSectionValue(newSectionValue, boundaries.maximum);
+        }
+
+        return newSectionValue;
+      };
+
+      updateSectionValue({
+        activeSection,
+        setSectionValueOnDate: (activeDate) => {
+          if (activeSection.contentType === 'letter') {
+            return activeDate;
+          }
+
+          return applySectionValueToDate({
+            utils,
+            dateSectionName: activeSection.dateSectionName,
+            date: activeDate,
+            getSectionValue: (getter) => {
+              const sectionValueStr = getNewSectionValueStr({
+                date: activeDate,
+                fixedWidth: false,
+              });
+              const sectionDate = utils.parse(sectionValueStr, activeSection.formatValue)!;
+
+              return getter(sectionDate);
+            },
+          });
+        },
+        setSectionValueOnSections: (referenceActiveDate) =>
+          getNewSectionValueStr({
+            date: referenceActiveDate,
+            fixedWidth: true,
+          }),
+      });
+    } else {
+      const getNewSectionValueStr = (): string => {
+        if (activeSection.contentType === 'digit') {
+          return activeSection.value;
+        }
+
+        const newQuery = keyPressed.toLowerCase();
+        const currentQuery =
+          queryRef.current?.dateSectionName === activeSection.dateSectionName
+            ? queryRef.current!.value
+            : '';
+        const concatenatedQuery = `${currentQuery}${newQuery}`;
+        const matchingMonthsWithConcatenatedQuery = getMonthsMatchingQuery(
+          utils,
+          activeSection.formatValue,
+          concatenatedQuery,
+        );
+        if (matchingMonthsWithConcatenatedQuery.length > 0) {
+          queryRef.current = {
+            dateSectionName: activeSection.dateSectionName,
+            value: concatenatedQuery,
+          };
+          return matchingMonthsWithConcatenatedQuery[0];
+        }
+
+        const matchingMonthsWithNewQuery = getMonthsMatchingQuery(
+          utils,
+          activeSection.formatValue,
+          newQuery,
+        );
+        if (matchingMonthsWithNewQuery.length > 0) {
+          queryRef.current = {
+            dateSectionName: activeSection.dateSectionName,
+            value: newQuery,
+          };
+          return matchingMonthsWithNewQuery[0];
+        }
+
+        return activeSection.value;
+      };
+
+      updateSectionValue({
+        activeSection,
+        setSectionValueOnDate: (activeDate) =>
+          applySectionValueToDate({
+            utils,
+            dateSectionName: activeSection.dateSectionName,
+            date: activeDate,
+            getSectionValue: (getter) => {
+              const sectionValueStr = getNewSectionValueStr();
+              const sectionDate = utils.parse(sectionValueStr, activeSection.formatValue)!;
+              return getter(sectionDate);
+            },
+          }),
+        setSectionValueOnSections: () => getNewSectionValueStr(),
+      });
+    }
+  });
+
   const handleInputKeyDown = useEventCallback((event: React.KeyboardEvent) => {
     onKeyDown?.(event);
 
@@ -112,7 +287,7 @@ export const useField = <
         // the internal state at the same time.
         event.preventDefault();
         setSelectedSections({ startIndex: 0, endIndex: state.sections.length - 1 });
-        return;
+        break;
       }
 
       // Move selection to next section
@@ -126,8 +301,7 @@ export const useField = <
         } else if (selectedSectionIndexes.startIndex !== selectedSectionIndexes.endIndex) {
           setSelectedSections(selectedSectionIndexes.endIndex);
         }
-
-        return;
+        break;
       }
 
       // Move selection to previous section
@@ -141,7 +315,7 @@ export const useField = <
         } else if (selectedSectionIndexes.startIndex > 0) {
           setSelectedSections(selectedSectionIndexes.startIndex - 1);
         }
-        return;
+        break;
       }
 
       // Reset the value of the selected section
@@ -149,7 +323,7 @@ export const useField = <
         event.preventDefault();
 
         if (readOnly) {
-          return;
+          break;
         }
 
         if (
@@ -168,164 +342,29 @@ export const useField = <
       case ['ArrowUp', 'ArrowDown', 'Home', 'End', 'PageUp', 'PageDown'].includes(event.key): {
         event.preventDefault();
 
+        if (readOnly || selectedSectionIndexes == null) {
+          break;
+        }
+
+        const activeSection = state.sections[selectedSectionIndexes.startIndex];
+
         updateSectionValue({
-          setSectionValueOnDate: (activeSection, activeDate) =>
+          activeSection,
+          setSectionValueOnDate: (activeDate) =>
             adjustDateSectionValue(
               utils,
               activeDate,
               activeSection.dateSectionName,
               event.key as AvailableAdjustKeyCode,
             ),
-          setSectionValueOnSections: (activeSection) =>
+          setSectionValueOnSections: () =>
             adjustInvalidDateSectionValue(
               utils,
               activeSection,
               event.key as AvailableAdjustKeyCode,
             ),
         });
-        return;
-      }
-
-      // Apply numeric editing on the selected section value
-      case !Number.isNaN(Number(event.key)): {
-        event.preventDefault();
-
-        const getNewSectionValueStr = ({
-          activeSection,
-          date,
-          fixedWidth,
-        }: {
-          activeSection: TSection;
-          date: TDate;
-          fixedWidth: boolean;
-        }) => {
-          const boundaries = getSectionValueNumericBoundaries(
-            utils,
-            date,
-            activeSection.dateSectionName,
-          );
-
-          // Remove the trailing `0` (`01` => `1`)
-          const currentSectionValue = Number(activeSection.value).toString();
-
-          let newSectionValue = `${currentSectionValue}${event.key}`;
-          while (newSectionValue.length > 0 && Number(newSectionValue) > boundaries.maximum) {
-            newSectionValue = newSectionValue.slice(1);
-          }
-
-          // In the unlikely scenario where max < 9, we could type a single digit that already exceeds the maximum.
-          if (newSectionValue.length === 0) {
-            newSectionValue = boundaries.minimum.toString();
-          }
-
-          if (fixedWidth) {
-            return cleanTrailingZeroInNumericSectionValue(newSectionValue, boundaries.maximum);
-          }
-
-          return newSectionValue;
-        };
-
-        updateSectionValue({
-          setSectionValueOnDate: (activeSection, activeDate) => {
-            // TODO: Support digit edition on full letter sections.
-            // TODO: Do not hardcode the compatible formatValue
-            if (
-              activeSection.formatValue.includes('MMM') ||
-              activeSection.formatValue.includes('LLL')
-            ) {
-              return activeDate;
-            }
-
-            return applySectionValueToDate({
-              utils,
-              dateSectionName: activeSection.dateSectionName,
-              date: activeDate,
-              getSectionValue: (getter) => {
-                const sectionValueStr = getNewSectionValueStr({
-                  activeSection,
-                  date: activeDate,
-                  fixedWidth: false,
-                });
-                const sectionDate = utils.parse(sectionValueStr, activeSection.formatValue)!;
-
-                return getter(sectionDate);
-              },
-            });
-          },
-          setSectionValueOnSections: (activeSection, referenceActiveDate) =>
-            getNewSectionValueStr({
-              activeSection,
-              date: referenceActiveDate,
-              fixedWidth: true,
-            }),
-        });
-
-        return;
-      }
-
-      // Apply full letter editing on the selected section value
-      case event.key.length === 1: {
-        event.preventDefault();
-
-        const getNewSectionValueStr = ({ activeSection }: { activeSection: TSection }): string => {
-          // TODO: Do not hardcode the compatible formatValue
-          if (
-            !activeSection.formatValue.includes('MMM') &&
-            !activeSection.formatValue.includes('LLL')
-          ) {
-            return activeSection.value;
-          }
-
-          const newQuery = event.key.toLowerCase();
-
-          const currentQuery =
-            queryRef.current?.dateSectionName === activeSection.dateSectionName
-              ? queryRef.current!.value
-              : '';
-          const concatenatedQuery = `${currentQuery}${newQuery}`;
-          const matchingMonthsWithConcatenatedQuery = getMonthsMatchingQuery(
-            utils,
-            activeSection.formatValue,
-            concatenatedQuery,
-          );
-          if (matchingMonthsWithConcatenatedQuery.length > 0) {
-            queryRef.current = {
-              dateSectionName: activeSection.dateSectionName,
-              value: concatenatedQuery,
-            };
-            return matchingMonthsWithConcatenatedQuery[0];
-          }
-
-          const matchingMonthsWithNewQuery = getMonthsMatchingQuery(
-            utils,
-            activeSection.formatValue,
-            newQuery,
-          );
-          if (matchingMonthsWithNewQuery.length > 0) {
-            queryRef.current = {
-              dateSectionName: activeSection.dateSectionName,
-              value: newQuery,
-            };
-            return matchingMonthsWithNewQuery[0];
-          }
-
-          return activeSection.value;
-        };
-
-        updateSectionValue({
-          setSectionValueOnDate: (activeSection, activeDate) =>
-            applySectionValueToDate({
-              utils,
-              dateSectionName: activeSection.dateSectionName,
-              date: activeDate,
-              getSectionValue: (getter) => {
-                const sectionValueStr = getNewSectionValueStr({ activeSection });
-                const sectionDate = utils.parse(sectionValueStr, activeSection.formatValue)!;
-                return getter(sectionDate);
-              },
-            }),
-          setSectionValueOnSections: (activeSection) => getNewSectionValueStr({ activeSection }),
-        });
+        break;
       }
     }
   });
@@ -379,7 +418,7 @@ export const useField = <
     onFocus: handleInputFocus,
     onBlur: handleInputBlur,
     onKeyDown: handleInputKeyDown,
-    onChange: noop,
+    onChange: handleInputChange,
     error: inputError,
     ref: handleRef,
   };

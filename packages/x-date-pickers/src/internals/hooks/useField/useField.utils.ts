@@ -1,18 +1,27 @@
 import { FieldSection, AvailableAdjustKeyCode } from './useField.interfaces';
 import { MuiPickerFieldAdapter, MuiDateSectionName } from '../../models';
 
-// TODO: Improve and test with different calendars (move to date-io ?)
-export const getDateSectionNameFromFormatToken = <TDate>(
+export const getDateSectionConfigFromFormatToken = <TDate>(
   utils: MuiPickerFieldAdapter<TDate>,
   formatToken: string,
-): MuiDateSectionName => {
-  const dateSectionName = utils.formatTokenMap[formatToken];
+): Pick<FieldSection, 'dateSectionName' | 'contentType'> => {
+  const config = utils.formatTokenMap[formatToken];
 
-  if (dateSectionName == null) {
+  if (config == null) {
     throw new Error(`getDatePartNameFromFormat doesn't understand the format ${formatToken}`);
   }
 
-  return dateSectionName;
+  if (typeof config === 'string') {
+    return {
+      dateSectionName: config,
+      contentType: 'digit',
+    };
+  }
+
+  return {
+    dateSectionName: config.sectionName,
+    contentType: config.contentType,
+  };
 };
 
 const getDeltaFromKeyCode = (keyCode: Omit<AvailableAdjustKeyCode, 'Home' | 'End'>) => {
@@ -276,13 +285,13 @@ export const splitFormatIntoSections = <TDate>(
           sections[sections.length - 1].separator += currentTokenValue;
           currentTokenValue = '';
         } else {
-          const dateSectionName = getDateSectionNameFromFormatToken(utils, currentTokenValue);
+          const sectionConfig = getDateSectionConfigFromFormatToken(utils, currentTokenValue);
 
           sections.push({
+            ...sectionConfig,
             formatValue: currentTokenValue,
             value: dateForCurrentToken,
-            emptyValue: dateSectionName,
-            dateSectionName,
+            emptyValue: sectionConfig.dateSectionName,
             separator: char,
             edited: false,
           });
@@ -298,13 +307,13 @@ export const splitFormatIntoSections = <TDate>(
       if (dateForCurrentToken === currentTokenValue) {
         sections[sections.length - 1].separator += currentTokenValue;
       } else {
-        const dateSectionName = getDateSectionNameFromFormatToken(utils, currentTokenValue);
+        const sectionConfig = getDateSectionConfigFromFormatToken(utils, currentTokenValue);
 
         sections.push({
+          ...sectionConfig,
           formatValue: currentTokenValue,
           value: dateForCurrentToken,
-          emptyValue: dateSectionName,
-          dateSectionName,
+          emptyValue: sectionConfig.dateSectionName,
           separator: null,
           edited: false,
         });
@@ -458,3 +467,5 @@ export const cleanTrailingZeroInNumericSectionValue = (value: string, maximum: n
 
   return cleanValue;
 };
+
+export const isAndroid = () => navigator.userAgent.toLowerCase().indexOf('android') > -1;
