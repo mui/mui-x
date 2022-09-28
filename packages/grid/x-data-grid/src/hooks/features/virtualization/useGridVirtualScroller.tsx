@@ -9,7 +9,6 @@ import {
   gridColumnsTotalWidthSelector,
   gridColumnPositionsSelector,
 } from '../columns/gridColumnsSelector';
-import { gridDensityRowHeightSelector } from '../density/densitySelector';
 import { gridFocusCellSelector, gridTabIndexCellSelector } from '../focus/gridFocusStateSelector';
 import { gridEditRowsStateSelector } from '../editRows/gridEditRowsSelector';
 import { useGridVisibleRows } from '../../utils/useGridVisibleRows';
@@ -21,6 +20,7 @@ import { selectedIdsLookupSelector } from '../selection/gridSelectionSelector';
 import { gridRowsMetaSelector } from '../rows/gridRowsMetaSelector';
 import { GridRowId, GridRowModel } from '../../../models/gridRows';
 import { getFirstNonSpannedColumnToRender } from '../columns/gridColumnsUtils';
+import { getMinimalContentHeight } from '../rows/gridRowsUtils';
 
 // Uses binary search to avoid looping through all possible positions
 export function binarySearch(
@@ -99,7 +99,6 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
 
   const columnPositions = useGridSelector(apiRef, gridColumnPositionsSelector);
   const columnsTotalWidth = useGridSelector(apiRef, gridColumnsTotalWidthSelector);
-  const rowHeight = useGridSelector(apiRef, gridDensityRowHeightSelector);
   const cellFocus = useGridSelector(apiRef, gridFocusCellSelector);
   const cellTabIndex = useGridSelector(apiRef, gridTabIndexCellSelector);
   const rowsMeta = useGridSelector(apiRef, gridRowsMetaSelector);
@@ -518,27 +517,15 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
       minHeight: shouldExtendContent ? '100%' : 'auto',
     };
 
-    if (rootProps.autoHeight && currentPage.rows.length === 0) {
-      size.height = 2 * rowHeight; // Give room to show the overlay when there's no row.
-    }
-
     return size;
-  }, [
-    rootRef,
-    columnsTotalWidth,
-    rowsMeta.currentPageTotalHeight,
-    currentPage.rows.length,
-    needsHorizontalScrollbar,
-    rootProps.autoHeight,
-    rowHeight,
-  ]);
+  }, [rootRef, columnsTotalWidth, rowsMeta.currentPageTotalHeight, needsHorizontalScrollbar]);
 
   React.useEffect(() => {
     apiRef.current.publishEvent('virtualScrollerContentSizeChange');
   }, [apiRef, contentSize]);
 
   if (rootProps.autoHeight && currentPage.rows.length === 0) {
-    contentSize.height = 2 * rowHeight; // Give room to show the overlay when there no rows.
+    contentSize.height = getMinimalContentHeight(apiRef); // Give room to show the overlay when there no rows.
   }
 
   const rootStyle = {} as React.CSSProperties;
