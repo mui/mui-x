@@ -15,6 +15,7 @@ import {
   addPositionPropertiesToSections,
   applySectionValueToDate,
   createDateStrFromSections,
+  validateSections,
 } from './useField.utils';
 
 interface UpdateSectionValueParams<TDate, TSection> {
@@ -36,12 +37,13 @@ export const useFieldState = <
   const {
     valueManager,
     fieldValueManager,
+    supportedDateSections,
     internalProps: {
       value: valueProp,
       defaultValue,
       onChange,
       readOnly,
-      format = utils.formats.keyboardDate,
+      format,
       selectedSections: selectedSectionsProp,
       onSelectedSectionsChange,
     },
@@ -57,6 +59,7 @@ export const useFieldState = <
       valueFromTheOutside,
       format,
     );
+    validateSections(sections, supportedDateSections);
 
     return {
       sections,
@@ -232,6 +235,20 @@ export const useFieldState = <
       }));
     }
   }, [valueFromTheOutside]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  React.useEffect(() => {
+    const sections = fieldValueManager.getSectionsFromValue(
+      utils,
+      state.sections,
+      state.value,
+      format,
+    );
+    validateSections(sections, supportedDateSections);
+    setState((prevState) => ({
+      ...prevState,
+      sections,
+    }));
+  }, [format]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return {
     state,

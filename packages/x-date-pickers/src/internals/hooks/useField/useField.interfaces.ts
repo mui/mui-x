@@ -21,6 +21,7 @@ export interface UseFieldParams<
     InferError<TInternalProps>,
     UseFieldValidationProps<TValue, TInternalProps>
   >;
+  supportedDateSections: MuiDateSectionName[];
 }
 
 export interface UseFieldInternalProps<TValue, TError> {
@@ -31,7 +32,7 @@ export interface UseFieldInternalProps<TValue, TError> {
    * The default value. Use when the component is not controlled.
    */
   defaultValue?: TValue;
-  format?: string;
+  format: string;
   /**
    * It prevents the user from changing the value of the field
    * (not from interacting with the field).
