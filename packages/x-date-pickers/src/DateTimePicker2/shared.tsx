@@ -5,10 +5,13 @@ import { CalendarOrClockPickerView } from '../internals/models';
 import { useDefaultDates, useUtils } from '../internals/hooks/useUtils';
 import { ValidationCommonPropsOptionalValue } from '../internals/hooks/validation/useValidation';
 import { DateValidationError } from '../internals/hooks/validation/useDateValidation';
-import { ExportedCalendarPickerProps } from '../CalendarPicker/CalendarPicker';
-import { ExportedClockPickerProps } from '../ClockPicker/ClockPicker';
+import { CalendarPickerProps, ExportedCalendarPickerProps } from '../CalendarPicker/CalendarPicker';
+import { ClockPickerProps, ExportedClockPickerProps } from '../ClockPicker/ClockPicker';
 import { BasePickerProps2 } from '../internals/models/props/basePickerProps';
 import { applyDefaultDate } from '../internals/utils/date-utils';
+import { PickerViewContainer } from '../internals/components/PickerViewContainer';
+import { PickerViewsRendererProps } from '../internals/hooks/usePicker/usePickerViews';
+import { UsePickerProps } from '@mui/x-date-pickers/internals/hooks/usePicker';
 
 export interface BaseDateTimePicker2Props<TDate>
   extends MakeOptional<
@@ -53,23 +56,32 @@ export function useDateTimePicker2DefaultizedProps<
   });
 
   const views = themeProps.views ?? ['year', 'day', 'hours', 'minutes'];
-
   const ampm = themeProps.ampm ?? utils.is12HourCycleInCurrentLocale();
 
+  // TODO: Move logic inside `DateTimeField` if it supports the `ampm` prop.
+  let inputFormat: string;
+  if (themeProps.inputFormat != null) {
+    inputFormat = themeProps.inputFormat;
+  } else if (ampm) {
+    inputFormat = utils.formats.keyboardDateTime12h;
+  } else {
+    inputFormat = utils.formats.keyboardDateTime24h;
+  }
+
   return {
-    ampm,
-    orientation: 'portrait',
-    openTo: 'day',
-    ampmInClock: true,
-    disableMaskedInput: false,
-    inputFormat: ampm ? utils.formats.keyboardDateTime12h : utils.formats.keyboardDateTime24h,
-    disableIgnoringDatePartForTimeValidation: Boolean(
-      themeProps.minDateTime || themeProps.maxDateTime,
-    ),
-    disablePast: false,
-    disableFuture: false,
     ...themeProps,
+    inputFormat,
     views,
+    ampm,
+    orientation: themeProps.orientation ?? 'portrait',
+    ampmInClock: themeProps.ampmInClock ?? true,
+    openTo: themeProps.openTo ?? 'day',
+    // TODO: Remove from public API
+    disableIgnoringDatePartForTimeValidation:
+      themeProps.disableIgnoringDatePartForTimeValidation ??
+      Boolean(themeProps.minDateTime || themeProps.maxDateTime),
+    disableFuture: themeProps.disableFuture ?? false,
+    disablePast: themeProps.disablePast ?? false,
     minDate: applyDefaultDate(
       utils,
       themeProps.minDateTime ?? themeProps.minDate,
@@ -84,3 +96,17 @@ export function useDateTimePicker2DefaultizedProps<
     maxTime: themeProps.maxDateTime ?? themeProps.maxTime,
   };
 }
+
+interface DateTimePickerViewsProps<TDate>
+  extends Omit<BaseDateTimePicker2Props<TDate>, keyof UsePickerProps<any, any>>,
+    PickerViewsRendererProps<TDate | null, CalendarOrClockPickerView> {
+  components?: CalendarPickerProps<TDate>['components'] & ClockPickerProps<TDate>['components'];
+  componentsProps?: CalendarPickerProps<TDate>['componentsProps'] &
+    ClockPickerProps<TDate>['componentsProps'];
+}
+
+export const renderDateTimeViews = <TDate extends unknown>(
+  props: DateTimePickerViewsProps<TDate>,
+) => {
+  return <PickerViewContainer isLandscape={props.isLandscape}>TO DO</PickerViewContainer>;
+};

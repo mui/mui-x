@@ -24,6 +24,9 @@ export interface BaseDatePicker2Props<TDate>
    * Pass a ref to the `input` element.
    */
   inputRef?: React.Ref<HTMLInputElement>;
+  components?: {
+    Field?: React.ElementType;
+  };
 }
 
 export function useDatePicker2DefaultizedProps<TDate, Props extends BaseDatePicker2Props<TDate>>(
@@ -51,12 +54,12 @@ export function useDatePicker2DefaultizedProps<TDate, Props extends BaseDatePick
   }
 
   return {
-    openTo: 'day',
-    disableFuture: false,
-    disablePast: false,
     ...themeProps,
     inputFormat,
     views,
+    openTo: themeProps.openTo ?? 'day',
+    disableFuture: themeProps.disableFuture ?? false,
+    disablePast: themeProps.disablePast ?? false,
     minDate: applyDefaultDate(utils, themeProps.minDate, defaultDates.minDate),
     maxDate: applyDefaultDate(utils, themeProps.maxDate, defaultDates.maxDate),
   };

@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { resolveComponentProps } from '@mui/base/utils';
 import { datePickerValueManager } from '../DatePicker/shared';
-import { Unstable_DateField as DateField } from '../DateField';
+import { Unstable_DateTimeField as DateTimeField } from '../DateTimeField';
 import { DesktopDateTimePicker2Props } from './DesktopDateTimePicker2.types';
-import { useDateTimePicker2DefaultizedProps } from '../DateTimePicker2/shared';
+import { useDateTimePicker2DefaultizedProps, renderDateTimeViews } from '../DateTimePicker2/shared';
 import { useLocaleText } from '../internals';
 import { Calendar } from '../internals/components/icons';
 import { useDesktopPicker } from '../internals/hooks/useDesktopPicker';
@@ -31,7 +31,7 @@ const DesktopDateTimePicker2 = React.forwardRef(function DesktopDateTimePicker2<
   } = props;
 
   const components = {
-    Field: DateField,
+    Field: DateTimeField,
     OpenPickerIcon: Calendar,
     ...inComponents,
   };
@@ -49,7 +49,8 @@ const DesktopDateTimePicker2 = React.forwardRef(function DesktopDateTimePicker2<
   const { renderPicker } = useDesktopPicker({
     props: { ...other, components, componentsProps },
     valueManager: datePickerValueManager,
-    renderViews: () => null,
+    renderViews: (viewProps) =>
+      renderDateTimeViews({ ...other, ...viewProps, components, componentsProps }),
     getOpenDialogAriaText: localeText.openDatePickerDialogue,
   });
 

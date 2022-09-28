@@ -139,6 +139,8 @@ module.exports = {
               'useMonthPickerDefaultizedProps',
               'useYearPickerDefaultizedProps',
               'useDatePicker2DefaultizedProps',
+              'useTimePicker2DefaultizedProps',
+              'useDateTimePicker2DefaultizedProps',
             ],
           },
         ],
