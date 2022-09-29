@@ -30,12 +30,21 @@ export const TimeField = React.forwardRef(function TimeField<TDate>(
     ownerState,
   }) as Omit<TimeFieldProps<TDate>, 'components' | 'componentsProps'>;
 
-  const { ref: inputRef, ...fieldProps } = useTimeField<TDate, typeof inputProps>({
+  const {
+    ref: inputRef,
+    onPaste,
+    inputMode,
+    ...fieldProps
+  } = useTimeField<TDate, typeof inputProps>({
     props: inputProps,
     inputRef: externalInputRef,
   });
 
   return (
-    <Input ref={ref} {...fieldProps} inputProps={{ ...fieldProps.inputProps, ref: inputRef }} />
+    <Input
+      ref={ref}
+      {...fieldProps}
+      inputProps={{ ...fieldProps.inputProps, ref: inputRef, onPaste, inputMode }}
+    />
   );
 }) as TimeFieldComponent;
