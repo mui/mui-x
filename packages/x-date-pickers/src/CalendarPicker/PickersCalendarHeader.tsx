@@ -6,7 +6,7 @@ import IconButton from '@mui/material/IconButton';
 import { SlideDirection } from './PickersSlideTransition';
 import { useLocaleText, useUtils } from '../internals/hooks/useUtils';
 import { PickersFadeTransitionGroup } from './PickersFadeTransitionGroup';
-import { DateComponentDefaultizedValidationProps } from '../internals/hooks/validation/useDateValidation';
+import { DateComponentValidationProps } from '../internals/hooks/validation/useDateValidation';
 import { ArrowDropDown } from '../internals/components/icons';
 import {
   PickersArrowSwitcher,
@@ -50,7 +50,7 @@ export interface PickersCalendarHeaderSlotsComponentsProps
 
 export interface PickersCalendarHeaderProps<TDate>
   extends ExportedPickersArrowSwitcherProps,
-    DateComponentDefaultizedValidationProps<TDate> {
+    DateComponentValidationProps<TDate> {
   /**
    * Overrideable components.
    * @default {}

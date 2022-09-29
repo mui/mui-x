@@ -137,9 +137,10 @@ export const useDefaultizedDateRangeFieldProps = <TDate, AdditionalProps extends
   const defaultDates = useDefaultDates<TDate>();
 
   return {
-    disablePast: false,
-    disableFuture: false,
     ...props,
+    disablePast: props.disablePast ?? false,
+    disableFuture: props.disableFuture ?? false,
+    format: props.format ?? utils.formats.keyboardDate,
     minDate: applyDefaultDate(utils, props.minDate, defaultDates.minDate),
     maxDate: applyDefaultDate(utils, props.maxDate, defaultDates.maxDate),
   } as any;
@@ -188,5 +189,6 @@ export const useSingleInputDateRangeField = <TDate, TChildProps extends {}>({
     valueManager: dateRangePickerValueManager,
     fieldValueManager: dateRangeFieldValueManager,
     validator: validateDateRange,
+    supportedDateSections: ['year', 'month', 'day'],
   });
 };
