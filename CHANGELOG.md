@@ -11,7 +11,7 @@ We'd like to offer a big thanks to the 8 contributors who made this release poss
 
 - 🚀 Better support for custom overlays (#5808) @cherniavskii
 - 🖨️ Improve print export (#6273) @oliviertassinari
-- 🎁 Reduce confusion when initialing pickers with a date value (#6170) @flaviendelangle
+- 🎁 Reduce confusion when initializing pickers with a date value (#6170) @flaviendelangle
 - 📚 Documentation improvements
 - 🐞 Bugfixes
 
