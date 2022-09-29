@@ -7,8 +7,16 @@ title: React Fields components
 <p class="description">The fields components let the user select a date / date range with the keyboard.</p>
 
 :::warning
-These components are in a very early stage.
-They should not be used in a production setup.
+These components are unstable.
+We might do some breaking change on their props to have the best component possible by the time of the stable release.
+:::
+
+## Introduction
+
+The fields are React components that lets you enter a date with the keyboard, without any modal or drop down UI.
+
+:::info
+We are currently building new picker components based on those fields.
 :::
 
 ## Customize the input props
@@ -17,15 +25,31 @@ All the field components supports the input props
 
 {{"demo": "CustomInputProps.js"}}
 
-## When is `onChange` called
+## When is `onChange` called?
 
-The `DateField` component has an internal state to update the visible date.
-It will only call the `onChange` callback when the modified date is valid.
+The field components have an internal state to update the visible value.
 
-In the demo below, you can see that the component reacts to an external date update (when pressing "Set to today").
-And that when debouncing the state (for instance if you have a server side persistence) do not affect the rendering of the field.
+It will only call the `onChange` callback when all the sections of the modified date are filled.
 
-{{"demo": "DebouncedDateField.js", "defaultCodeOpen": false}}
+### On simple fields
+
+On a single date field (`DateField` / `DateTimeField` / `TimeField`),
+`onChange` will be called if all the sections are filled.
+
+In the example below, `onChange` will not be fired until the date is fully completed:
+
+{{"demo": "LifeCycleDateFieldEmpty.js", "defaultCodeOpen": false}}
+
+### On range fields [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
+
+On a date range field (`SingleInputDateRangeField` / `MultiInputDateRangeField`),
+`onChange` will be called if all the sections of the date you modified are filled,
+even if some sections of the other date are not filled.
+
+In the demo below, changing the value of a start date section will fire `onChange` even if the end date is empty.
+But changing the value of an end date section will not fire `onChange` until the end date is fully completed:
+
+{{"demo": "LifeCycleDateRangeField.js", "defaultCodeOpen": false}}
 
 ## Advanced
 
@@ -45,3 +69,8 @@ You need to make sure the input is focused before imperatively updating the sele
 :::
 
 {{"demo": "ControlledSelectedSections.js", "defaultCodeOpen": false }}
+
+:::warning
+For range fields, you will not be able to use the string format since each section is present twice.
+We will add new apis in the future to better support this use case.
+:::
