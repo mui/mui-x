@@ -83,7 +83,7 @@ export const validateTime: Validator<
   }
 };
 
-const isSameTimeError = (a: unknown, b: unknown) => a === b;
+export const isSameTimeError = (a: unknown, b: unknown) => a === b;
 
 export const useTimeValidation = <TDate>(
   props: ValidationProps<TimeValidationError, TDate | null, TimeComponentValidationProps<TDate>>,

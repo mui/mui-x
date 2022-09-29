@@ -19,6 +19,8 @@ The fields are React components that lets you enter a date with the keyboard, wi
 We are currently building new picker components based on those fields.
 :::
 
+{{"demo": "FieldExamples.js", "bg": "inline", "defaultCodeOpen": false}}
+
 ## Customize the input props
 
 All the field components supports the input props
