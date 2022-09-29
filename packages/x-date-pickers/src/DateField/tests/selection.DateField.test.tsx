@@ -116,7 +116,7 @@ describe('<DateField /> - Selection', () => {
       expect(getSelectedContent(input)).to.equal('year');
     });
 
-    it('should select the last section when all the sections are selected', () => {
+    it('should select the first section when all the sections are selected', () => {
       render(<DateField />);
       const input = screen.getByRole('textbox');
       clickOnInput(input, 1);
