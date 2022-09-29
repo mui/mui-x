@@ -19,27 +19,29 @@ The fields are React components that lets you enter a date with the keyboard, wi
 We are currently building new picker components based on those fields.
 :::
 
-### Fields to edit a single date
+### Fields to edit a single element
 
 {{"demo": "SingleDateFieldExamples.js", "defaultCodeOpen": false}}
 
-### Fields to edit a date range
+### Fields to edit a range
 
 {{"demo": "DateRangeFieldExamples.js", "defaultCodeOpen": false}}
 
 ## Form props
 
-The standard form attributes (`disabled`, `readOnly`, `required`) are supported.
+The standard form attributes (`disabled`, `readOnly`, `required`) are supported by all the field components:
 
-{{"demo": "FormProps.js"}}
+{{"demo": "FormProps.js", "defaultCodeOpen": false}}
 
-## When is `onChange` called?
+## Advanced
+
+### When is `onChange` called?
 
 The field components have an internal state to update the visible value.
 
 It will only call the `onChange` callback when all the sections of the modified date are filled.
 
-### On simple fields
+#### On single element fields
 
 On a single date field (`DateField` / `DateTimeField` / `TimeField`),
 `onChange` will be called if all the sections are filled.
@@ -48,7 +50,7 @@ In the example below, `onChange` will not be fired until the date is fully compl
 
 {{"demo": "LifeCycleDateFieldEmpty.js", "defaultCodeOpen": false}}
 
-### On range fields [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
+#### On range fields [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
 
 On a date range field (`SingleInputDateRangeField` / `MultiInputDateRangeField`),
 `onChange` will be called if all the sections of the date you modified are filled,
@@ -58,8 +60,6 @@ In the demo below, changing the value of a start date section will fire `onChang
 But changing the value of an end date section will not fire `onChange` until the end date is fully completed:
 
 {{"demo": "LifeCycleDateRangeField.js", "defaultCodeOpen": false}}
-
-## Advanced
 
 ### Control the selected sections
 
