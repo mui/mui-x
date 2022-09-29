@@ -4,9 +4,8 @@ import { spy } from 'sinon';
 import { Unstable_TimeField as TimeField, TimeFieldProps } from '@mui/x-date-pickers/TimeField';
 import { screen, act, userEvent, fireEvent } from '@mui/monorepo/test/utils';
 import { createPickerRenderer, adapterToUse } from 'test/utils/pickers-utils';
-import { DateFieldProps } from '@mui/x-date-pickers/DateField';
 
-describe.only('<TimeField /> - Editing', () => {
+describe('<TimeField /> - Editing', () => {
   const { render, clock } = createPickerRenderer({
     clock: 'fake',
     clockConfig: new Date(2022, 5, 15, 14, 25, 32),
@@ -38,7 +37,7 @@ describe.only('<TimeField /> - Editing', () => {
     expectedValue,
     cursorPosition = 1,
     ...props
-  }: DateFieldProps<TDate> & {
+  }: TimeFieldProps<TDate> & {
     inputValue: string;
     expectedValue: string;
     cursorPosition?: number;
