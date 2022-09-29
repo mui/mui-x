@@ -25,13 +25,6 @@ import {
 } from './useField.utils';
 import { useFieldState } from './useFieldState';
 
-export const debug = (...messages: (string | number | boolean | null | undefined)[]) => {
-  const node = document.querySelector('#debug');
-  if (node) {
-    node.innerHTML += `${messages.join(' ')}<br />`;
-  }
-};
-
 export const useField = <
   TValue,
   TDate,
@@ -159,8 +152,6 @@ export const useField = <
       activeSection.end -
       (activeSection.separator?.length ?? 0);
     const keyPressed = valueStr.slice(activeSection.start, activeSectionEndRelativeToNewValue);
-
-    debug('Key pressed', keyPressed);
 
     if (isAndroid() && keyPressed.length === 0) {
       setTempAndroidValueStr(valueStr);
