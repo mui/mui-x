@@ -98,15 +98,13 @@ function SelectorCategoryDocs(props) {
 }
 
 export default function SelectorsDocs(props) {
-  const { headers, options } = props;
+  const { category } = props;
 
-  console.log(props);
-
-  if (options.category) {
+  if (category) {
     return (
       <MarkdownElement sx={{ width: '100%', mb: 2 }}>
         <SelectorCategoryDocs
-          selectors={allSelectors.filter((selector) => selector.category === options.category)}
+          selectors={allSelectors.filter((selector) => selector.category === category)}
         />
       </MarkdownElement>
     );
