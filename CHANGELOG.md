@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
 ## 6.0.0-alpha.1
-<!-- generated comparing v6.0.0-alpha.0..next -->
+
 _Sep 29, 2022_
 
 We'd like to offer a big thanks to the 8 contributors who made this release possible. Here are some highlights ✨:
@@ -118,6 +118,8 @@ We'd like to offer a big thanks to the 8 contributors who made this release poss
 - [pickers] Do not support unparsed date formats anymore (#6170) @flaviendelangle
 - [pickers] Support slots on the `DateField` component  (#6048) @flaviendelangle
 - [pickers] Support Luxon v3 in `AdapterLuxon` (#6069) @alexfauquette
+- [pickers] New components `TimeField` and `DateTimeField` (#6312) @flaviendelangle
+- [pickers] Support basic mobile edition on new field components (#5958) @flaviendelangle
 
 ### Docs
 
