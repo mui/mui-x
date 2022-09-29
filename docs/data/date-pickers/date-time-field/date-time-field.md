@@ -34,4 +34,3 @@ See the [localization documentation page](/react-date-pickers/localization/) for
 ## Validation
 
 See the documentation page [validation documentation page](/react-date-pickers/validation/) for more details.
-

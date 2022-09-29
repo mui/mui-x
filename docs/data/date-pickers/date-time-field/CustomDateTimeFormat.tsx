@@ -11,18 +11,18 @@ export default function CustomDateTimeFormat() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <Stack spacing={2} sx={(theme) => ({ width: theme.spacing(48) })}>
-          <DateTimeField
-              label="Format with meridiem"
-              value={value}
-              onChange={(newValue) => setValue(newValue)}
-              format="L hh:mm a"
-          />
-          <DateTimeField
-              label="Format without meridiem"
-              value={value}
-              onChange={(newValue) => setValue(newValue)}
-              format="L HH:mm"
-          />
+        <DateTimeField
+          label="Format with meridiem"
+          value={value}
+          onChange={(newValue) => setValue(newValue)}
+          format="L hh:mm a"
+        />
+        <DateTimeField
+          label="Format without meridiem"
+          value={value}
+          onChange={(newValue) => setValue(newValue)}
+          format="L HH:mm"
+        />
         <DateTimeField
           label="Localized format with full letter month"
           value={value}

@@ -11,7 +11,10 @@ export default function DateTimeFieldValue() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <Stack spacing={2} direction="row">
-        <DateTimeField label="Uncontrolled field" defaultValue={dayjs('2022-04-07T15:30')} />
+        <DateTimeField
+          label="Uncontrolled field"
+          defaultValue={dayjs('2022-04-07T15:30')}
+        />
         <DateTimeField
           label="Controlled field"
           value={value}

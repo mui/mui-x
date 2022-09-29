@@ -19,13 +19,19 @@ The fields are React components that lets you enter a date with the keyboard, wi
 We are currently building new picker components based on those fields.
 :::
 
-{{"demo": "FieldExamples.js", "bg": "inline", "defaultCodeOpen": false}}
+### Fields to edit a single date
 
-## Customize the input props
+{{"demo": "SingleDateFieldExamples.js", "defaultCodeOpen": false}}
 
-All the field components supports the input props
+### Fields to edit a date range
 
-{{"demo": "CustomInputProps.js"}}
+{{"demo": "DateRangeFieldExamples.js", "defaultCodeOpen": false}}
+
+## Form props
+
+The standard form attributes (`disabled`, `readOnly`, `required`) are supported.
+
+{{"demo": "FormProps.js"}}
 
 ## When is `onChange` called?
 
