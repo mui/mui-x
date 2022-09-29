@@ -174,7 +174,10 @@ export const useFieldState = <
   }: UpdateSectionValueParams<TDate, TSection>) => {
     const activeDateManager = fieldValueManager.getActiveDateManager(state, activeSection);
 
-    if (selectedSectionIndexes.startIndex !== selectedSectionIndexes.endIndex) {
+    if (
+      selectedSectionIndexes &&
+      selectedSectionIndexes.startIndex !== selectedSectionIndexes.endIndex
+    ) {
       setSelectedSections(selectedSectionIndexes.startIndex);
     }
 
