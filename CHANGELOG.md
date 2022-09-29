@@ -11,7 +11,7 @@ We'd like to offer a big thanks to the 8 contributors who made this release poss
 
 - 🚀 Better support for custom overlays (#5808) @cherniavskii
 - 🖨️ Improve print export (#6273) @oliviertassinari
-- 🎁 Support slots on the `DateField` component  (#6048) @flaviendelangle
+- 🎁 Reduce confusion when initialing pickers with a date value (#6170) @flaviendelangle
 - 📚 Documentation improvements
 - 🐞 Bugfixes
 
@@ -77,9 +77,38 @@ We'd like to offer a big thanks to the 8 contributors who made this release poss
 
 ### `@mui/x-date-pickers@v6.0.0-alpha.1` / `@mui/x-date-pickers-pro@v6.0.0-alpha.1`
 
+#### Breaking changes
+
+- [pickers] Do not support unparsed date formats anymore (#6170) @flaviendelangle
+
+  The `value` prop of the pickers now expects a parsed value.
+  Until now, it was possible to provide any format that your date management library was able to parse.
+  For instance, you could pass `value={new Date()}` when using `AdapterDayjs`.
+
+  This brought a lot of confusion so we decided to remove this behavior.
+  The format expected by the `value` prop is now the same as for any other prop holding a date.
+  Here is the syntax to initialize a date picker at the current date for each adapter:
+
+  ```tsx
+  // Date-fns
+  <DatePicker value={new Date()} />
+
+  // Dayjs
+  import dayjs from 'dayjs'
+  <DatePicker value={dayjs()} />
+
+  // Moment
+  import moment from 'moment'
+  <DatePicker value={moment()} />
+
+  // Luxon
+  import { DateTime } from 'luxon'
+  <DatePicker value={DateTime.now()} />
+  ```
+
 #### Changes
 
-- [DatePicker] Open in a valid month (#6309) @alexfauquette
+- [DatePicker] Respect `minDate` and `maxDate` when opening a `DatePicker` or `DateTimePicker` (#6309) @alexfauquette
 - [DateTimePicker] Fix validation with `shouldDisableMonth` and `shouldDisableYear` (#6266) @flaviendelangle
 - [TimePicker] Add support for `disablePast` and `disableFuture` validation props (#6226) @LukasTy
 - [CalendarPicker] Prevent getting focus when `autoFocus=false` (#6304) @alexfauquette
@@ -88,7 +117,7 @@ We'd like to offer a big thanks to the 8 contributors who made this release poss
 - [pickers] Do not loose the value of date sections not present in the format in the new field components (#6141) @flaviendelangle
 - [pickers] Do not support unparsed date formats anymore (#6170) @flaviendelangle
 - [pickers] Support slots on the `DateField` component  (#6048) @flaviendelangle
-- [pickers] Try adapter to luxon v3 (#6069) @alexfauquette
+- [pickers] Support Luxon v3 in `AdapterLuxon` (#6069) @alexfauquette
 
 ### Docs
 
