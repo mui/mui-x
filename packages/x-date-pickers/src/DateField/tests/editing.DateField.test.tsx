@@ -299,6 +299,32 @@ describe('<DateField /> - Editing', () => {
   });
 
   describe('Digit editing', () => {
+    it('should set the day to the digit pressed when no digit no value is provided', () => {
+      testChange({
+        format: adapterToUse.formats.dayOfMonth,
+        inputValue: '1',
+        expectedValue: '1',
+      });
+    });
+
+    it('should concatenate the digit pressed to the current section value if the output is valid', () => {
+      testChange({
+        format: adapterToUse.formats.dayOfMonth,
+        defaultValue: adapterToUse.date(new Date(2022, 5, 0)),
+        inputValue: '1',
+        expectedValue: '11',
+      });
+    });
+
+    it('should set the day to the digit pressed if the concatenate exceeds the maximum value for the section', () => {
+      testChange({
+        format: adapterToUse.formats.dayOfMonth,
+        defaultValue: adapterToUse.date(new Date(2022, 5, 4)),
+        inputValue: '1',
+        expectedValue: '1',
+      });
+    });
+
     it('should not edit when props.readOnly = true and no value is provided', () => {
       testChange({
         format: adapterToUse.formats.year,
