@@ -170,13 +170,7 @@ export const useField = <
     const isNumericValue = !Number.isNaN(Number(keyPressed));
 
     if (isNumericValue) {
-      const getNewSectionValueStr = ({
-        date,
-        fixedWidth,
-      }: {
-        date: TDate;
-        fixedWidth: boolean;
-      }) => {
+      const getNewSectionValueStr = (date: TDate) => {
         const boundaries = getSectionValueNumericBoundaries(
           utils,
           date,
@@ -196,11 +190,7 @@ export const useField = <
           newSectionValue = boundaries.minimum.toString();
         }
 
-        if (fixedWidth) {
-          return cleanTrailingZeroInNumericSectionValue(newSectionValue, boundaries.maximum);
-        }
-
-        return newSectionValue;
+        return cleanTrailingZeroInNumericSectionValue(newSectionValue, boundaries.maximum);
       };
 
       updateSectionValue({
@@ -215,21 +205,14 @@ export const useField = <
             dateSectionName: activeSection.dateSectionName,
             date: activeDate,
             getSectionValue: (getter) => {
-              const sectionValueStr = getNewSectionValueStr({
-                date: activeDate,
-                fixedWidth: false,
-              });
+              const sectionValueStr = getNewSectionValueStr(activeDate);
               const sectionDate = utils.parse(sectionValueStr, activeSection.formatValue)!;
-
               return getter(sectionDate);
             },
           });
         },
         setSectionValueOnSections: (referenceActiveDate) =>
-          getNewSectionValueStr({
-            date: referenceActiveDate,
-            fixedWidth: true,
-          }),
+          getNewSectionValueStr(referenceActiveDate),
       });
     }
     // TODO: Improve condition
