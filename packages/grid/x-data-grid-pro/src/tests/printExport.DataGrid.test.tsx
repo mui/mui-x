@@ -12,8 +12,6 @@ import { getBasicGridData } from '@mui/x-data-grid-generator';
 // @ts-ignore Remove once the test utils are typed
 import { createRenderer, screen, fireEvent, act } from '@mui/monorepo/test/utils';
 
-const isJSDOM = /jsdom/.test(window.navigator.userAgent);
-
 describe('<DataGridPro /> - Print export', () => {
   const { render, clock } = createRenderer();
 
@@ -55,13 +53,6 @@ describe('<DataGridPro /> - Print export', () => {
       gridVisible: false,
     },
   ];
-
-  before(function beforeHook() {
-    if (isJSDOM) {
-      // Can't access the document.body to print
-      this.skip();
-    }
-  });
 
   describe('Export toolbar', () => {
     clock.withFakeTimers();

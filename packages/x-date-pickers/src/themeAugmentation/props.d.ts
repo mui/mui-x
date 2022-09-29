@@ -19,6 +19,7 @@ import { StaticDateTimePickerProps } from '../StaticDateTimePicker';
 import { StaticTimePickerProps } from '../StaticTimePicker';
 import { TimePickerProps, TimePickerToolbarProps } from '../TimePicker';
 import { YearPickerProps } from '../YearPicker';
+import { DateFieldProps } from '../DateField';
 import { LocalizationProviderProps } from '../LocalizationProvider';
 import { DesktopDatePickerProps } from '../DesktopDatePicker';
 import {
@@ -40,6 +41,7 @@ export interface PickersComponentsPropsList {
   MuiClockNumber: ClockNumberProps;
   MuiClockPicker: ClockPickerProps<unknown>;
   MuiClockPointer: ClockPointerProps;
+  MuiDateField: DateFieldProps<unknown, unknown>;
   MuiDatePicker: DatePickerProps<unknown>;
   MuiDatePickerToolbar: DatePickerToolbarProps<unknown>;
   MuiDateTimePicker: DateTimePickerProps<unknown>;

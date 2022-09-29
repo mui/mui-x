@@ -759,6 +759,18 @@ describe('<DataGrid /> - Layout & Warnings', () => {
         );
       });
 
+      it('should render loading overlay the same height as the content', () => {
+        const rowHeight = 30;
+        render(
+          <div style={{ width: 300 }}>
+            <DataGrid {...baselineProps} rowHeight={rowHeight} autoHeight loading />
+          </div>,
+        );
+        expect(document.querySelector<HTMLElement>('.MuiDataGrid-overlay')!.clientHeight).to.equal(
+          rowHeight * baselineProps.rows.length,
+        );
+      });
+
       it('should expand content height to one row height when there is an error', () => {
         const error = { message: 'ERROR' };
         const rowHeight = 50;

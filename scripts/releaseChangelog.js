@@ -238,7 +238,7 @@ yargs
         })
         .option('release', {
           // #default-branch-switch
-          default: 'master',
+          default: 'next',
           describe: 'Ref which we want to release',
           type: 'string',
         });

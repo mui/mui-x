@@ -16,6 +16,12 @@ export interface DateComponentValidationProps<TDate>
     YearValidationProps<TDate>,
     Required<BaseDateValidationProps<TDate>> {}
 
+export interface DateComponentDefaultizedValidationProps<TDate>
+  extends DayValidationProps<TDate>,
+    MonthValidationProps<TDate>,
+    YearValidationProps<TDate>,
+    Required<BaseDateValidationProps<TDate>> {}
+
 export type DateValidationError =
   | CommonDateTimeValidationError
   | 'shouldDisableDate'
@@ -28,7 +34,7 @@ export const validateDate: Validator<
   any | null,
   any,
   DateValidationError,
-  DateComponentValidationProps<any>
+  DateComponentDefaultizedValidationProps<any>
 > = ({ props, value, adapter }): DateValidationError => {
   const now = adapter.utils.date()!;
   const minDate = applyDefaultDate(adapter.utils, props.minDate, adapter.defaultDates.minDate);
@@ -76,7 +82,7 @@ export const useIsDateDisabled = <TDate>({
   maxDate,
   disableFuture,
   disablePast,
-}: DateComponentValidationProps<TDate>) => {
+}: DateComponentDefaultizedValidationProps<TDate>) => {
   const adapter = useLocalizationContext<TDate>();
 
   return React.useCallback(
@@ -110,5 +116,9 @@ export const useIsDateDisabled = <TDate>({
 export const isSameDateError = (a: DateValidationError, b: DateValidationError) => a === b;
 
 export const useDateValidation = <TDate>(
-  props: ValidationProps<DateValidationError, TDate | null, DateComponentValidationProps<TDate>>,
+  props: ValidationProps<
+    DateValidationError,
+    TDate | null,
+    DateComponentDefaultizedValidationProps<TDate>
+  >,
 ): DateValidationError => useValidation(props, validateDate, isSameDateError);
