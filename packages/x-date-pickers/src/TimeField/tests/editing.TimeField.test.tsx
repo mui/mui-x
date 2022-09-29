@@ -2,10 +2,11 @@ import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
 import { Unstable_TimeField as TimeField, TimeFieldProps } from '@mui/x-date-pickers/TimeField';
-import { screen, act, userEvent } from '@mui/monorepo/test/utils';
+import { screen, act, userEvent, fireEvent } from '@mui/monorepo/test/utils';
 import { createPickerRenderer, adapterToUse } from 'test/utils/pickers-utils';
+import { DateFieldProps } from '@mui/x-date-pickers/DateField';
 
-describe('<TimeField /> - Editing', () => {
+describe.only('<TimeField /> - Editing', () => {
   const { render, clock } = createPickerRenderer({
     clock: 'fake',
     clockConfig: new Date(2022, 5, 15, 14, 25, 32),
@@ -29,6 +30,23 @@ describe('<TimeField /> - Editing', () => {
     const input = screen.getByRole('textbox');
     clickOnInput(input, cursorPosition);
     userEvent.keyPress(input, { key });
+    expect(input.value).to.equal(expectedValue);
+  };
+
+  const testChange = <TDate extends unknown>({
+    inputValue,
+    expectedValue,
+    cursorPosition = 1,
+    ...props
+  }: DateFieldProps<TDate> & {
+    inputValue: string;
+    expectedValue: string;
+    cursorPosition?: number;
+  }) => {
+    render(<TimeField {...props} />);
+    const input = screen.getByRole('textbox');
+    clickOnInput(input, cursorPosition);
+    fireEvent.change(input, { target: { value: inputValue } });
     expect(input.value).to.equal(expectedValue);
   };
 
@@ -265,6 +283,53 @@ describe('<TimeField /> - Editing', () => {
     });
   });
 
+  describe('Digit editing', () => {
+    it('should set the day to the digit pressed when no digit no value is provided', () => {
+      testChange({
+        format: adapterToUse.formats.minutes,
+        inputValue: '1',
+        expectedValue: '01',
+      });
+    });
+
+    it('should concatenate the digit pressed to the current section value if the output is valid', () => {
+      testChange({
+        format: adapterToUse.formats.minutes,
+        defaultValue: adapterToUse.date(new Date(2022, 5, 15, 14, 3, 32)),
+        inputValue: '1',
+        expectedValue: '31',
+      });
+    });
+
+    it('should set the day to the digit pressed if the concatenate exceeds the maximum value for the section', () => {
+      testChange({
+        format: adapterToUse.formats.minutes,
+        defaultValue: adapterToUse.date(new Date(2022, 5, 15, 14, 8, 32)),
+        inputValue: '1',
+        expectedValue: '01',
+      });
+    });
+
+    it('should not edit when props.readOnly = true and no value is provided', () => {
+      testChange({
+        format: adapterToUse.formats.minutes,
+        readOnly: true,
+        inputValue: '1',
+        expectedValue: 'minute',
+      });
+    });
+
+    it('should not edit value when props.readOnly = true and a value is provided', () => {
+      testChange({
+        format: adapterToUse.formats.minutes,
+        defaultValue: adapterToUse.date(),
+        readOnly: true,
+        inputValue: '1',
+        expectedValue: '25',
+      });
+    });
+  });
+
   describe('Do not loose missing section values ', () => {
     it('should not loose date information when a value is provided', () => {
       const onChange = spy();
@@ -298,11 +363,11 @@ describe('<TimeField /> - Editing', () => {
       userEvent.keyPress(input, { key: 'a', ctrlKey: true });
       userEvent.keyPress(input, { key: 'Backspace' });
 
-      userEvent.keyPress(input, { key: '3' });
+      fireEvent.change(input, { target: { value: '3:minute' } }); // Press "3"
       expect(input.value).to.equal('03:minute');
 
       userEvent.keyPress(input, { key: 'ArrowRight' });
-      userEvent.keyPress(input, { key: '4' });
+      fireEvent.change(input, { target: { value: '03:4' } }); // Press "3"
       expect(input.value).to.equal('03:04');
 
       expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2010, 3, 3, 3, 4, 3));
