@@ -1,8 +1,10 @@
 import * as React from 'react';
+import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import { CalendarOrClockPickerView } from '../../models';
 import { useViews } from '../useViews';
 import { PickerSelectionState } from '../usePickerState';
 import { useIsLandscape } from '../useIsLandscape';
+import { UseFieldInternalProps } from '../useField';
 
 export type PickerViewRenderer<TValue, TView extends CalendarOrClockPickerView> = (
   props: PickerViewsRendererProps<TValue, TView>,
@@ -10,7 +12,7 @@ export type PickerViewRenderer<TValue, TView extends CalendarOrClockPickerView> 
 
 export type PickerDateSectionModeLookup<TView extends CalendarOrClockPickerView> = Record<
   TView,
-  'field' | 'view'
+  'field' | 'popper'
 >;
 
 export interface ExportedUsePickerViewProps<TView extends CalendarOrClockPickerView> {
@@ -57,6 +59,15 @@ interface UsePickerViewParams<TValue, TView extends CalendarOrClockPickerView> {
   sectionModeLookup?: PickerDateSectionModeLookup<TView>;
   open: boolean;
   onClose: () => void;
+  onSelectedSectionsChange: NonNullable<
+    UseFieldInternalProps<TValue, unknown>['onSelectedSectionsChange']
+  >;
+}
+
+export interface UsePickerViewsResponse {
+  hasFieldView: boolean;
+  hasPopperView: boolean;
+  renderViews: () => React.ReactNode;
 }
 
 export interface PickerViewsRendererProps<TValue, TView extends CalendarOrClockPickerView>
@@ -74,10 +85,11 @@ let warnedOnceNotValidOpenTo = false;
 export const usePickerViews = <TValue, TView extends CalendarOrClockPickerView>({
   props,
   renderViews,
-  sectionModeLookup,
+  sectionModeLookup: inputSectionModelLookup,
   open,
   onClose,
-}: UsePickerViewParams<TValue, TView>) => {
+  onSelectedSectionsChange,
+}: UsePickerViewParams<TValue, TView>): UsePickerViewsResponse => {
   const { views, openTo, onViewChange, onChange, orientation, ...other } = props;
 
   const isLandscape = useIsLandscape(views, orientation);
@@ -101,25 +113,74 @@ export const usePickerViews = <TValue, TView extends CalendarOrClockPickerView>(
     onViewChange,
   });
 
-  React.useLayoutEffect(() => {
-    if (!sectionModeLookup) {
+  const viewModeResponse = React.useMemo(() => {
+    let hasFieldView = false;
+    let hasPopperView = false;
+    const sectionModeLookup = {} as PickerDateSectionModeLookup<TView>;
+
+    views.forEach((view) => {
+      const viewMode: 'field' | 'popper' = inputSectionModelLookup?.[view] ?? 'popper';
+      if (viewMode === 'field') {
+        hasFieldView = true;
+      } else {
+        hasPopperView = true;
+      }
+
+      sectionModeLookup[view] = viewMode;
+    });
+
+    return {
+      hasFieldView,
+      hasPopperView,
+      sectionModeLookup,
+    };
+  }, [inputSectionModelLookup, views]);
+
+  useEnhancedEffect(() => {
+    const openViewMode = viewModeResponse.sectionModeLookup[openView];
+    if (openViewMode === 'field' && open) {
+      onClose();
+
+      // TODO: Remove setTimeout and stop hard-coding the section to select
+      setTimeout(() => {
+        document.querySelectorAll('input')[1]!.focus();
+        onSelectedSectionsChange('hour');
+      }, 100);
+    }
+  }, [openView]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  useEnhancedEffect(() => {
+    if (!open) {
       return;
     }
 
-    const openViewMode = sectionModeLookup[openView];
-    if (openViewMode === 'field' && open) {
-      onClose();
+    const openViewMode = viewModeResponse.sectionModeLookup[openView];
+    if (openViewMode === 'field' && viewModeResponse.hasPopperView) {
+      setOpenView(openTo);
     }
-    console.log(openViewMode);
-  }, [openView]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [open]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  return () =>
-    renderViews({
-      view: openView,
-      onViewChange: setOpenView,
-      onChange: handleChangeAndOpenNext,
-      views,
-      isLandscape,
-      ...other,
-    });
+  const lastOpenView = React.useRef(openTo);
+
+  const viewInPopper = React.useMemo(() => {
+    if (viewModeResponse.sectionModeLookup[openView] === 'field') {
+      return lastOpenView.current;
+    }
+
+    lastOpenView.current = openView;
+    return openView;
+  }, [openView, viewModeResponse.sectionModeLookup]);
+
+  return {
+    ...viewModeResponse,
+    renderViews: () =>
+      renderViews({
+        view: viewInPopper,
+        onViewChange: setOpenView,
+        onChange: handleChangeAndOpenNext,
+        views,
+        isLandscape,
+        ...other,
+      }),
+  };
 };

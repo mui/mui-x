@@ -15,9 +15,9 @@ type DesktopDateTimePickerComponent = (<TDate>(
 ) => JSX.Element) & { propTypes?: any };
 
 const SECTION_MODE_LOOKUP: PickerDateSectionModeLookup<CalendarOrClockPickerView> = {
-  year: 'view',
-  month: 'view',
-  day: 'view',
+  year: 'popper',
+  month: 'popper',
+  day: 'popper',
   hours: 'field',
   minutes: 'field',
   seconds: 'field',

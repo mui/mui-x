@@ -33,6 +33,7 @@ export const useDesktopPicker = <TValue, TDate, TView extends CalendarOrClockPic
     renderViews,
     actions,
     open,
+    hasPopperView,
   } = usePicker({
     props,
     valueManager,
@@ -72,7 +73,7 @@ export const useDesktopPicker = <TValue, TDate, TView extends CalendarOrClockPic
     elementType: OpenPickerButton,
     externalSlotProps: componentsProps.openPickerButton,
     additionalProps: {
-      disabled: disabled || readOnly,
+      disabled: disabled || readOnly || !hasPopperView,
       onClick: actions.onOpen,
       // TODO: Correctly support date range
       'aria-label': getOpenDialogAriaText(fieldProps.value as any as TDate, utils),

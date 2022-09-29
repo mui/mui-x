@@ -119,9 +119,11 @@ export interface UsePickerValueActions {
   onClose: () => void;
 }
 
-type UsePickerValueFieldResponse<TValue> = Pick<
-  UseFieldInternalProps<TValue, unknown>,
-  'value' | 'onChange' | 'selectedSections' | 'onSelectedSectionsChange'
+type UsePickerValueFieldResponse<TValue> = Required<
+  Pick<
+    UseFieldInternalProps<TValue, unknown>,
+    'value' | 'onChange' | 'selectedSections' | 'onSelectedSectionsChange'
+  >
 >;
 
 type UsePickerValueViewsResponse<TValue> = Pick<
@@ -129,7 +131,7 @@ type UsePickerValueViewsResponse<TValue> = Pick<
   'value' | 'onChange'
 >;
 
-interface UsePickerValueResponse<TValue> {
+export interface UsePickerValueResponse<TValue> {
   actions: UsePickerValueActions;
   views: UsePickerValueViewsResponse<TValue>;
   field: UsePickerValueFieldResponse<TValue>;
@@ -267,7 +269,7 @@ export const usePickerValue = <TValue, TDate>(
 
   const handleOpen = useEventCallback(() => setIsOpen(true));
 
-  const handleClose = useEventCallback(() => setIsOpen(true));
+  const handleClose = useEventCallback(() => setIsOpen(false));
 
   const handleChange = useEventCallback(
     (newDate: TValue, selectionState: PickerSelectionState = 'partial') => {
