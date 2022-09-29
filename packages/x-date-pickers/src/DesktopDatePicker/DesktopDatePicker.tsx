@@ -29,9 +29,9 @@ export interface DesktopDatePickerSlotsComponentsProps
   extends DesktopWrapperSlotsComponentsProps,
     CalendarPickerSlotsComponentsProps {}
 
-export interface DesktopDatePickerProps<TInputDate, TDate>
-  extends Omit<BaseDatePickerProps<TInputDate, TDate>, 'components' | 'componentsProps'>,
-    DesktopWrapperProps {
+export interface DesktopDatePickerProps<TDate>
+  extends Omit<BaseDatePickerProps<TDate>, 'components' | 'componentsProps'>,
+    DesktopWrapperProps<TDate> {
   /**
    * Overrideable components.
    * @default {}
@@ -44,8 +44,8 @@ export interface DesktopDatePickerProps<TInputDate, TDate>
   componentsProps?: Partial<DesktopDatePickerSlotsComponentsProps>;
 }
 
-type DesktopDatePickerComponent = (<TInputDate, TDate = TInputDate>(
-  props: DesktopDatePickerProps<TInputDate, TDate> & React.RefAttributes<HTMLDivElement>,
+type DesktopDatePickerComponent = (<TDate>(
+  props: DesktopDatePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
 ) => JSX.Element) & { propTypes?: any };
 
 /**
@@ -58,15 +58,14 @@ type DesktopDatePickerComponent = (<TInputDate, TDate = TInputDate>(
  *
  * - [DesktopDatePicker API](https://mui.com/x/api/date-pickers/desktop-date-picker/)
  */
-export const DesktopDatePicker = React.forwardRef(function DesktopDatePicker<
-  TInputDate,
-  TDate = TInputDate,
->(inProps: DesktopDatePickerProps<TInputDate, TDate>, ref: React.Ref<HTMLDivElement>) {
-  const props = useDatePickerDefaultizedProps<
-    TInputDate,
-    TDate,
-    DesktopDatePickerProps<TInputDate, TDate>
-  >(inProps, 'MuiDesktopDatePicker');
+export const DesktopDatePicker = React.forwardRef(function DesktopDatePicker<TDate>(
+  inProps: DesktopDatePickerProps<TDate>,
+  ref: React.Ref<HTMLDivElement>,
+) {
+  const props = useDatePickerDefaultizedProps<TDate, DesktopDatePickerProps<TDate>>(
+    inProps,
+    'MuiDesktopDatePicker',
+  );
 
   const validationError = useDateValidation(props) !== null;
   const { pickerProps, inputProps, wrapperProps } = usePickerState(props, datePickerValueManager);
@@ -80,6 +79,7 @@ export const DesktopDatePicker = React.forwardRef(function DesktopDatePicker<
     value,
     components,
     componentsProps,
+    localeText,
     ...other
   } = props;
   const AllDateInputProps = {
@@ -101,6 +101,7 @@ export const DesktopDatePicker = React.forwardRef(function DesktopDatePicker<
       TransitionComponent={TransitionComponent}
       components={components}
       componentsProps={componentsProps}
+      localeText={localeText}
     >
       <CalendarOrClockPicker
         {...pickerProps}
@@ -164,7 +165,7 @@ DesktopDatePicker.propTypes = {
    */
   disabled: PropTypes.bool,
   /**
-   * If `true` future days are disabled.
+   * If `true` disable values before the current time
    * @default false
    */
   disableFuture: PropTypes.bool,
@@ -184,26 +185,19 @@ DesktopDatePicker.propTypes = {
    */
   disableOpenPicker: PropTypes.bool,
   /**
-   * If `true` past days are disabled.
+   * If `true` disable values after the current time.
    * @default false
    */
   disablePast: PropTypes.bool,
   /**
    * Get aria-label text for control that opens picker dialog. Aria-label text must include selected date. @DateIOType
-   * @template TInputDate, TDate
-   * @param {TInputDate} date The date from which we want to add an aria-text.
+   * @template TDate
+   * @param {TDate | null} date The date from which we want to add an aria-text.
    * @param {MuiPickersAdapter<TDate>} utils The utils to manipulate the date.
    * @returns {string} The aria-text to render inside the dialog.
-   * @default (date, utils) => `Choose date, selected date is ${utils.format(utils.date(date), 'fullDate')}`
+   * @default (date, utils) => `Choose date, selected date is ${utils.format(date, 'fullDate')}`
    */
   getOpenDialogAriaText: PropTypes.func,
-  /**
-   * Get aria-label text for switching between views button.
-   * @param {CalendarPickerView} currentView The view from which we want to get the button text.
-   * @returns {string} The label of the view.
-   * @deprecated Use the `localeText` prop of `LocalizationProvider` instead, see https://mui.com/x/react-date-pickers/localization
-   */
-  getViewSwitchingButtonText: PropTypes.func,
   ignoreInvalidInputs: PropTypes.bool,
   /**
    * Props to pass to keyboard input adornment.
@@ -225,16 +219,15 @@ DesktopDatePicker.propTypes = {
   ]),
   label: PropTypes.node,
   /**
-   * Left arrow icon aria-label text.
-   * @deprecated
-   */
-  leftArrowButtonText: PropTypes.string,
-  /**
    * If `true` renders `LoadingComponent` in calendar instead of calendar view.
    * Can be used to preload information and show it in calendar.
    * @default false
    */
   loading: PropTypes.bool,
+  /**
+   * Locale for components texts
+   */
+  localeText: PropTypes.object,
   /**
    * Custom mask. Can be used to override generate from format. (e.g. `__/__/____ __:__` or `__/__/____ __:__ _M`).
    */
@@ -256,7 +249,7 @@ DesktopDatePicker.propTypes = {
   /**
    * Callback fired when the value (the selected date) changes @DateIOType.
    * @template TValue
-   * @param {TValue} value The new parsed value.
+   * @param {TValue} value The new value.
    * @param {string} keyboardInputValue The current value of the keyboard input.
    */
   onChange: PropTypes.func.isRequired,
@@ -273,9 +266,9 @@ DesktopDatePicker.propTypes = {
    * [Read the guide](https://next.material-ui-pickers.dev/guides/forms) about form integration and error displaying.
    * @DateIOType
    *
-   * @template TError, TInputValue
+   * @template TError, TValue
    * @param {TError} reason The reason why the current value is not valid.
-   * @param {TInputValue} value The invalid value.
+   * @param {TValue} value The invalid value.
    */
   onError: PropTypes.func,
   /**
@@ -370,11 +363,6 @@ DesktopDatePicker.propTypes = {
    */
   rifmFormatter: PropTypes.func,
   /**
-   * Right arrow icon aria-label text.
-   * @deprecated
-   */
-  rightArrowButtonText: PropTypes.string,
-  /**
    * Disable specific date. @DateIOType
    * @template TDate
    * @param {TDate} day The date to test.
@@ -406,6 +394,14 @@ DesktopDatePicker.propTypes = {
    * If `true`, show the toolbar even in desktop mode.
    */
   showToolbar: PropTypes.bool,
+  /**
+   * The system prop that allows defining system overrides as well as additional CSS styles.
+   */
+  sx: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
+    PropTypes.func,
+    PropTypes.object,
+  ]),
   /**
    * Component that will replace default toolbar renderer.
    * @default DatePickerToolbar

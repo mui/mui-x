@@ -132,10 +132,7 @@ function App() {
             return null;
           }
 
-          let isDataGridTest = false;
-          if (path.indexOf('/docs-data-grid') === 0 || path.indexOf('/stories-') === 0) {
-            isDataGridTest = true;
-          }
+          const isDataGridTest = path.indexOf('/docs-data-grid') === 0;
 
           return (
             <Route

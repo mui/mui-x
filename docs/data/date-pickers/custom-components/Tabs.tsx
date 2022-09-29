@@ -20,7 +20,7 @@ const CustomTabs = (props: DateTimePickerTabsProps) => (
 );
 
 export default function Tabs() {
-  const [value, setValue] = React.useState<Dayjs | null>(dayjs());
+  const [value, setValue] = React.useState<Dayjs | null>(dayjs('2022-04-07'));
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <DateTimePicker

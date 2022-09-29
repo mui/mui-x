@@ -16,7 +16,10 @@ export type GridStateInitializer<
   apiRef: React.MutableRefObject<Api>,
 ) => DeepPartial<Api['state']>;
 
-export const useGridInitializeState = <P, Api extends GridApiCommon = GridApiCommunity>(
+export const useGridInitializeState = <
+  P extends Partial<DataGridProcessedProps>,
+  Api extends GridApiCommon = GridApiCommunity,
+>(
   initializer: GridStateInitializer<P, Api>,
   apiRef: React.MutableRefObject<Api>,
   props: P,

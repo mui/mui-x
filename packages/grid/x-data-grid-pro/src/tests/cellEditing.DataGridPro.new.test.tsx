@@ -187,6 +187,7 @@ describe('<DataGridPro /> - Cell Editing', () => {
           value: 'USD GBP',
           error: false,
           isProcessingProps: true,
+          changeReason: 'setEditCellValue',
         });
       });
 
@@ -527,16 +528,40 @@ describe('<DataGridPro /> - Cell Editing', () => {
         expect(onProcessRowUpdateError.lastCall.args[0]).to.equal(error);
       });
 
+      it('should keep mode=edit if processRowUpdate rejects', async () => {
+        const error = new Error('Something went wrong');
+        const processRowUpdate = () => {
+          throw error;
+        };
+        const onProcessRowUpdateError = spy();
+        const onCellModesModelChange = spy();
+        render(
+          <TestCase
+            onCellModesModelChange={onCellModesModelChange}
+            processRowUpdate={processRowUpdate}
+            onProcessRowUpdateError={onProcessRowUpdateError}
+          />,
+        );
+        act(() => apiRef.current.startCellEditMode({ id: 0, field: 'currencyPair' }));
+        await act(() =>
+          apiRef.current.setEditCellValue({ id: 0, field: 'currencyPair', value: 'USD GBP' }),
+        );
+        act(() => apiRef.current.stopCellEditMode({ id: 0, field: 'currencyPair' }));
+        expect(onCellModesModelChange.lastCall.args[0]).to.deep.equal({
+          0: { currencyPair: { mode: 'edit' } },
+        });
+      });
+
       it('should pass the new value through the value setter before calling processRowUpdate', async () => {
         columnProps.valueSetter = spy(({ value, row }) => ({ ...row, _currencyPair: value }));
-        const processRowUpdate = spy();
+        const processRowUpdate = spy(() => new Promise(() => {}));
         render(<TestCase processRowUpdate={processRowUpdate} />);
         act(() => apiRef.current.startCellEditMode({ id: 0, field: 'currencyPair' }));
         await act(() =>
           apiRef.current.setEditCellValue({ id: 0, field: 'currencyPair', value: 'USD GBP' }),
         );
         act(() => apiRef.current.stopCellEditMode({ id: 0, field: 'currencyPair' }));
-        expect(processRowUpdate.lastCall.args[0]).to.deep.equal({
+        expect((processRowUpdate.lastCall as any).args[0]).to.deep.equal({
           ...defaultData.rows[0],
           currencyPair: 'USDGBP',
           _currencyPair: 'USD GBP',
@@ -614,7 +639,7 @@ describe('<DataGridPro /> - Cell Editing', () => {
       });
 
       it('should run all pending value mutations before calling processRowUpdate', async () => {
-        const processRowUpdate = spy();
+        const processRowUpdate = spy(() => new Promise(() => {}));
         render(<TestCase processRowUpdate={processRowUpdate} />);
         act(() => apiRef.current.startCellEditMode({ id: 0, field: 'currencyPair' }));
         await act(
@@ -631,7 +656,7 @@ describe('<DataGridPro /> - Cell Editing', () => {
         );
         act(() => apiRef.current.stopCellEditMode({ id: 0, field: 'currencyPair' }));
         expect(renderEditCell.lastCall.args[0].value).to.equal('USD GBP');
-        expect(processRowUpdate.lastCall.args[0].currencyPair).to.equal('USD GBP');
+        expect((processRowUpdate.lastCall as any).args[0].currencyPair).to.equal('USD GBP');
       });
 
       it('should keep in edit mode the cells that entered edit mode while processRowUpdate is called', async () => {

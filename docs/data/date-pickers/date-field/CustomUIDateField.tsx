@@ -15,37 +15,32 @@ import {
   UseDateFieldComponentProps,
 } from '@mui/x-date-pickers/DateField';
 
-type JoyDateFieldProps = UseDateFieldComponentProps<Dayjs, Dayjs, JoyTextFieldProps>;
+type JoyDateFieldProps = UseDateFieldComponentProps<Dayjs, JoyTextFieldProps>;
 
 const JoyDateField = (props: JoyDateFieldProps) => {
-  const { inputRef, inputProps } = useDateField<Dayjs, Dayjs, JoyDateFieldProps>(
+  const { ref: inputRef, ...fieldProps } = useDateField<Dayjs, JoyDateFieldProps>({
     props,
-  );
+  });
 
   return (
     <JoyTextField
-      {...inputProps}
+      {...fieldProps}
       componentsProps={{ input: { componentsProps: { input: { ref: inputRef } } } }}
     />
   );
 };
 
-type UnstyledDateFieldProps = UseDateFieldComponentProps<
-  Dayjs,
-  Dayjs,
-  InputUnstyledProps
->;
+type UnstyledDateFieldProps = UseDateFieldComponentProps<Dayjs, InputUnstyledProps>;
 
 const UnstyledDateField = (props: UnstyledDateFieldProps) => {
-  const { inputRef, inputProps } = useDateField<
-    Dayjs,
+  const { ref: inputRef, ...fieldProps } = useDateField<
     Dayjs,
     UnstyledDateFieldProps
-  >(props);
+  >({ props });
 
   return (
     <InputUnstyled
-      {...(inputProps as InputUnstyledProps)}
+      {...(fieldProps as InputUnstyledProps)}
       componentsProps={{ input: { ref: inputRef, style: { width: '100%' } } }}
     />
   );
@@ -53,21 +48,19 @@ const UnstyledDateField = (props: UnstyledDateFieldProps) => {
 
 type BrowserInputDateFieldProps = UseDateFieldComponentProps<
   Dayjs,
-  Dayjs,
   React.HTMLAttributes<HTMLInputElement>
 >;
 
 const BrowserInputDateField = (props: BrowserInputDateFieldProps) => {
-  const {
-    inputRef,
-    inputProps: { error, ...inputProps },
-  } = useDateField<Dayjs, Dayjs, BrowserInputDateFieldProps>(props);
+  const fieldProps = useDateField<Dayjs, BrowserInputDateFieldProps>({
+    props,
+  });
 
-  return <input {...inputProps} ref={inputRef} />;
+  return <input {...fieldProps} />;
 };
 
 export default function CustomUIDateField() {
-  const [value, setValue] = React.useState<Dayjs | null>(dayjs());
+  const [value, setValue] = React.useState<Dayjs | null>(dayjs('2022-04-07'));
 
   const handleChange = (newValue: Dayjs | null) => setValue(newValue);
 

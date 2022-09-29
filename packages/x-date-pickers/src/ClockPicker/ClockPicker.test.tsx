@@ -10,17 +10,13 @@ import {
   getAllByRole,
 } from '@mui/monorepo/test/utils';
 import { ClockPicker, clockPickerClasses as classes } from '@mui/x-date-pickers/ClockPicker';
-import {
-  adapterToUse,
-  wrapPickerMount,
-  createPickerRenderer,
-} from '../../../../test/utils/pickers-utils';
+import { adapterToUse, wrapPickerMount, createPickerRenderer } from 'test/utils/pickers-utils';
 
 describe('<ClockPicker />', () => {
   const { render } = createPickerRenderer();
 
   describeConformance(
-    <ClockPicker date={adapterToUse.date()} showViewSwitcher onChange={() => {}} />,
+    <ClockPicker value={adapterToUse.date()} showViewSwitcher onChange={() => {}} />,
     () => ({
       classes,
       inheritComponent: 'div',
@@ -41,7 +37,7 @@ describe('<ClockPicker />', () => {
   );
 
   it('renders a listbox with a name', () => {
-    render(<ClockPicker date={null} onChange={() => {}} />);
+    render(<ClockPicker value={null} onChange={() => {}} />);
 
     const listbox = screen.getByRole('listbox');
     expect(listbox).toHaveAccessibleName('Select hours. No time selected');
@@ -49,7 +45,7 @@ describe('<ClockPicker />', () => {
 
   it('has a name depending on the `date`', () => {
     render(
-      <ClockPicker date={adapterToUse.date(new Date(2019, 0, 1, 4, 20))} onChange={() => {}} />,
+      <ClockPicker value={adapterToUse.date(new Date(2019, 0, 1, 4, 20))} onChange={() => {}} />,
     );
 
     const listbox = screen.getByRole('listbox');
@@ -58,7 +54,7 @@ describe('<ClockPicker />', () => {
 
   it('renders the current value as an accessible option', () => {
     render(
-      <ClockPicker date={adapterToUse.date(new Date(2019, 0, 1, 4, 20))} onChange={() => {}} />,
+      <ClockPicker value={adapterToUse.date(new Date(2019, 0, 1, 4, 20))} onChange={() => {}} />,
     );
 
     const listbox = screen.getByRole('listbox');
@@ -68,7 +64,7 @@ describe('<ClockPicker />', () => {
   });
 
   it('can be autofocused on mount', () => {
-    render(<ClockPicker autoFocus date={null} onChange={() => {}} />);
+    render(<ClockPicker autoFocus value={null} onChange={() => {}} />);
 
     const listbox = screen.getByRole('listbox');
     expect(listbox).toHaveFocus();
@@ -76,7 +72,7 @@ describe('<ClockPicker />', () => {
 
   it('stays focused when the view changes', () => {
     const { setProps } = render(
-      <ClockPicker autoFocus date={null} onChange={() => {}} view="hours" />,
+      <ClockPicker autoFocus value={null} onChange={() => {}} view="hours" />,
     );
 
     setProps({ view: 'minutes' });
@@ -87,7 +83,7 @@ describe('<ClockPicker />', () => {
 
   it('selects the current date on mount', () => {
     render(
-      <ClockPicker date={adapterToUse.date(new Date(2019, 0, 1, 4, 20))} onChange={() => {}} />,
+      <ClockPicker value={adapterToUse.date(new Date(2019, 0, 1, 4, 20))} onChange={() => {}} />,
     );
 
     const selectedOption = screen.getByRole('option', { selected: true });
@@ -99,7 +95,7 @@ describe('<ClockPicker />', () => {
     render(
       <ClockPicker
         autoFocus
-        date={adapterToUse.date(new Date(2019, 0, 1, 4, 20))}
+        value={adapterToUse.date(new Date(2019, 0, 1, 4, 20))}
         onChange={handleChange}
       />,
     );
@@ -122,7 +118,7 @@ describe('<ClockPicker />', () => {
     render(
       <ClockPicker
         autoFocus
-        date={adapterToUse.date(new Date(2019, 0, 1, 4, 20))}
+        value={adapterToUse.date(new Date(2019, 0, 1, 4, 20))}
         onChange={handleChange}
       />,
     );
@@ -142,7 +138,7 @@ describe('<ClockPicker />', () => {
     render(
       <ClockPicker
         autoFocus
-        date={adapterToUse.date(new Date(2019, 0, 1, 4, 20))}
+        value={adapterToUse.date(new Date(2019, 0, 1, 4, 20))}
         onChange={handleChange}
       />,
     );
@@ -162,7 +158,7 @@ describe('<ClockPicker />', () => {
     render(
       <ClockPicker
         autoFocus
-        date={adapterToUse.date(new Date(2019, 0, 1, 4, 20))}
+        value={adapterToUse.date(new Date(2019, 0, 1, 4, 20))}
         onChange={handleChange}
       />,
     );
@@ -183,7 +179,7 @@ describe('<ClockPicker />', () => {
     render(
       <ClockPicker
         autoFocus
-        date={adapterToUse.date(new Date(2019, 0, 1, 18, 20))}
+        value={adapterToUse.date(new Date(2019, 0, 1, 18, 20))}
         onChange={() => {}}
         shouldDisableTime={shouldDisableTime}
         ampm
@@ -216,7 +212,7 @@ describe('<ClockPicker />', () => {
     const onChangeMock = spy();
     render(
       <ClockPicker
-        date={adapterToUse.date(new Date(2019, 0, 1))}
+        value={adapterToUse.date(new Date(2019, 0, 1))}
         onChange={onChangeMock}
         readOnly
       />,
@@ -250,7 +246,7 @@ describe('<ClockPicker />', () => {
     const onChangeMock = spy();
     render(
       <ClockPicker
-        date={adapterToUse.date(new Date(2019, 0, 1))}
+        value={adapterToUse.date(new Date(2019, 0, 1))}
         onChange={onChangeMock}
         disabled
       />,
@@ -316,7 +312,7 @@ describe('<ClockPicker />', () => {
       render(
         <ClockPicker
           ampm={false}
-          date={adapterToUse.date(new Date(2018, 0, 1))}
+          value={adapterToUse.date(new Date(2018, 0, 1))}
           minTime={adapterToUse.date(new Date(2018, 0, 1, 12, 15))}
           maxTime={adapterToUse.date(new Date(2018, 0, 1, 15, 45, 30))}
           onChange={handleChange}
@@ -339,7 +335,7 @@ describe('<ClockPicker />', () => {
       render(
         <ClockPicker
           ampm={false}
-          date={adapterToUse.date(new Date(2018, 0, 1, 13))}
+          value={adapterToUse.date(new Date(2018, 0, 1, 13))}
           minTime={adapterToUse.date(new Date(2018, 0, 1, 12, 15))}
           maxTime={adapterToUse.date(new Date(2018, 0, 1, 15, 45, 30))}
           onChange={handleChange}
@@ -362,7 +358,7 @@ describe('<ClockPicker />', () => {
       render(
         <ClockPicker
           ampm={false}
-          date={adapterToUse.date(new Date(2018, 0, 1, 20))}
+          value={adapterToUse.date(new Date(2018, 0, 1, 20))}
           minTime={adapterToUse.date(new Date(2018, 0, 1, 12, 15))}
           maxTime={adapterToUse.date(new Date(2018, 0, 1, 15, 45, 30))}
           onChange={handleChange}
@@ -380,7 +376,7 @@ describe('<ClockPicker />', () => {
       render(
         <ClockPicker
           ampm={false}
-          date={null}
+          value={null}
           minTime={adapterToUse.date(new Date(2018, 0, 1, 12, 15))}
           maxTime={adapterToUse.date(new Date(2018, 0, 1, 15, 45, 30))}
           onChange={handleChange}
@@ -398,7 +394,7 @@ describe('<ClockPicker />', () => {
       render(
         <ClockPicker
           ampm={false}
-          date={adapterToUse.date(new Date(2018, 0, 1, 13))}
+          value={adapterToUse.date(new Date(2018, 0, 1, 13))}
           minTime={adapterToUse.date(new Date(2018, 0, 1, 12, 15))}
           maxTime={adapterToUse.date(new Date(2018, 0, 1, 15, 45, 30))}
           onChange={handleChange}
@@ -416,7 +412,7 @@ describe('<ClockPicker />', () => {
       render(
         <ClockPicker
           ampm={false}
-          date={null}
+          value={null}
           minTime={adapterToUse.date(new Date(2018, 0, 1, 12, 15))}
           maxTime={adapterToUse.date(new Date(2018, 0, 1, 15, 45, 30))}
           onChange={handleChange}
@@ -433,7 +429,7 @@ describe('<ClockPicker />', () => {
       render(
         <ClockPicker
           ampm={false}
-          date={adapterToUse.date(new Date(2018, 0, 1, 13, 20))}
+          value={adapterToUse.date(new Date(2018, 0, 1, 13, 20))}
           minutesStep={15}
           onChange={() => {}}
           view="minutes"
@@ -450,7 +446,7 @@ describe('<ClockPicker />', () => {
       render(
         <ClockPicker
           ampm={false}
-          date={adapterToUse.date(new Date(2018, 0, 1, 13, 20))}
+          value={adapterToUse.date(new Date(2018, 0, 1, 13, 20))}
           minTime={adapterToUse.date(new Date(2018, 0, 1, 12, 15))}
           maxTime={adapterToUse.date(new Date(2018, 0, 1, 15, 45, 30))}
           onChange={handleChange}
@@ -473,7 +469,7 @@ describe('<ClockPicker />', () => {
       render(
         <ClockPicker
           ampm={false}
-          date={adapterToUse.date(new Date(2018, 0, 1))}
+          value={adapterToUse.date(new Date(2018, 0, 1))}
           minTime={adapterToUse.date(new Date(2018, 0, 1, 12, 15))}
           maxTime={adapterToUse.date(new Date(2018, 0, 1, 15, 45, 30))}
           onChange={handleChange}
@@ -491,7 +487,7 @@ describe('<ClockPicker />', () => {
       render(
         <ClockPicker
           ampm={false}
-          date={null}
+          value={null}
           minTime={adapterToUse.date(new Date(2018, 0, 1, 12, 15))}
           maxTime={adapterToUse.date(new Date(2018, 0, 1, 15, 45, 30))}
           onChange={handleChange}
@@ -511,7 +507,7 @@ describe('<ClockPicker />', () => {
       render(
         <ClockPicker
           autoFocus
-          date={adapterToUse.date(new Date(2019, 0, 1, 4, 19, 47))}
+          value={adapterToUse.date(new Date(2019, 0, 1, 4, 19, 47))}
           onChange={handleChange}
         />,
       );
@@ -528,7 +524,7 @@ describe('<ClockPicker />', () => {
 
     it('if value is not provided, uses zero as default for minutes and seconds when selecting hour', () => {
       const handleChange = spy();
-      render(<ClockPicker autoFocus date={null} onChange={handleChange} />);
+      render(<ClockPicker autoFocus value={null} onChange={handleChange} />);
       const listbox = screen.getByRole('listbox');
 
       fireEvent.keyDown(listbox, { key: 'ArrowUp' });

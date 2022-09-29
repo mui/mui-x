@@ -8,6 +8,7 @@ import {
   gridFilteredDescendantCountLookupSelector,
   getDataGridUtilityClass,
   GridRenderCellParams,
+  GridGroupNode,
 } from '@mui/x-data-grid';
 import { isNavigationKey } from '@mui/x-data-grid/internals';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
@@ -27,7 +28,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   return composeClasses(slots, getDataGridUtilityClass, classes);
 };
 
-interface GridTreeDataGroupingCellProps extends GridRenderCellParams {
+interface GridTreeDataGroupingCellProps extends GridRenderCellParams<any, any, any, GridGroupNode> {
   hideDescendantCount?: boolean;
 }
 
@@ -154,7 +155,7 @@ GridTreeDataGroupingCell.propTypes = {
   /**
    * The row model of the row that the current cell belongs to.
    */
-  row: PropTypes.object.isRequired,
+  row: PropTypes.any.isRequired,
   /**
    * The node of the row that the current cell belongs to.
    */

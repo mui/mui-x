@@ -233,6 +233,7 @@ describe('<DataGridPro /> - Row Editing', () => {
           value: 'USD GBP',
           error: false,
           isProcessingProps: true,
+          changeReason: 'setEditCellValue',
         });
 
         const args2 = column2Props.preProcessEditCellProps.lastCall.args[0];
@@ -585,6 +586,28 @@ describe('<DataGridPro /> - Row Editing', () => {
         act(() => apiRef.current.stopRowEditMode({ id: 0 }));
         await Promise.resolve();
         expect(onProcessRowUpdateError.lastCall.args[0]).to.equal(error);
+      });
+
+      it('should keep mode=edit if processRowUpdate rejects', async () => {
+        const error = new Error('Something went wrong');
+        const processRowUpdate = () => {
+          throw error;
+        };
+        const onProcessRowUpdateError = spy();
+        const onRowModesModelChange = spy();
+        render(
+          <TestCase
+            onRowModesModelChange={onRowModesModelChange}
+            processRowUpdate={processRowUpdate}
+            onProcessRowUpdateError={onProcessRowUpdateError}
+          />,
+        );
+        act(() => apiRef.current.startRowEditMode({ id: 0 }));
+        await act(() =>
+          apiRef.current.setEditCellValue({ id: 0, field: 'currencyPair', value: 'USD GBP' }),
+        );
+        act(() => apiRef.current.stopRowEditMode({ id: 0 }));
+        expect(onRowModesModelChange.lastCall.args[0]).to.deep.equal({ 0: { mode: 'edit' } });
       });
 
       it('should pass the new value through all value setters before calling processRowUpdate', async () => {

@@ -1,7 +1,7 @@
 {
   "props": {
-    "date": { "type": { "name": "any" }, "required": true },
     "onChange": { "type": { "name": "func" }, "required": true },
+    "value": { "type": { "name": "any" }, "required": true },
     "classes": { "type": { "name": "object" } },
     "className": { "type": { "name": "string" } },
     "disabled": { "type": { "name": "bool" } },

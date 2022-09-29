@@ -1,3 +1,4 @@
+// TODO rows v6: Adapt to new lazy loading api
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import {

@@ -87,7 +87,7 @@ const GridCellCheckboxForwardRef = React.forwardRef<HTMLInputElement, GridRender
       [apiRef, props],
     );
 
-    if (rowNode.position === 'footer') {
+    if (rowNode.type === 'footer' || rowNode.type === 'pinnedRow') {
       return null;
     }
 
@@ -96,10 +96,6 @@ const GridCellCheckboxForwardRef = React.forwardRef<HTMLInputElement, GridRender
     const label = apiRef.current.getLocaleText(
       isChecked ? 'checkboxSelectionUnselectRow' : 'checkboxSelectionSelectRow',
     );
-
-    if (rowNode.isPinned) {
-      return null;
-    }
 
     return (
       <rootProps.components.BaseCheckbox
@@ -181,7 +177,7 @@ GridCellCheckboxForwardRef.propTypes = {
   /**
    * The row model of the row that the current cell belongs to.
    */
-  row: PropTypes.object.isRequired,
+  row: PropTypes.any.isRequired,
   /**
    * The node of the row that the current cell belongs to.
    */

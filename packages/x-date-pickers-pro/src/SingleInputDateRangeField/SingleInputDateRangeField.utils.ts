@@ -1,4 +1,4 @@
-import { DateRangeFieldSection } from './SingleInputDateRangeField.interfaces';
+import { DateRangeFieldSection } from './SingleInputDateRangeField.types';
 
 export const splitDateRangeSections = (sections: DateRangeFieldSection[]) => {
   const startDateSections: DateRangeFieldSection[] = [];
@@ -13,3 +13,12 @@ export const splitDateRangeSections = (sections: DateRangeFieldSection[]) => {
 
   return { startDate: startDateSections, endDate: endDateSections };
 };
+
+export const removeLastSeparator = (dateSections: DateRangeFieldSection[]) =>
+  dateSections.map((section, sectionIndex) => {
+    if (sectionIndex === dateSections.length - 1) {
+      return { ...section, separator: null };
+    }
+
+    return section;
+  });

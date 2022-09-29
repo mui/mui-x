@@ -4,7 +4,6 @@ import type {
   GridColumnHeaderParams,
   GridColumnOrderChangeParams,
   GridColumnResizeParams,
-  GridColumnVisibilityChangeParams,
   GridEditCellPropsParams,
   GridHeaderSelectionCheckboxParams,
   GridMenuParams,
@@ -22,7 +21,7 @@ import type { GridEditRowsModel } from '../gridEditRowModel';
 import type { GridSelectionModel } from '../gridSelectionModel';
 import type { ElementSize } from '../elementSize';
 import type { MuiBaseEvent } from '../muiEvent';
-import type { GridRowId, GridRowTreeNodeConfig } from '../gridRows';
+import type { GridGroupNode, GridRowId } from '../gridRows';
 import type { GridColumnVisibilityModel } from '../../hooks/features/columns';
 import type { GridStrategyProcessorName } from '../../hooks/core/strategyProcessing';
 import { GridRowEditStartParams, GridRowEditStopParams } from '../params/gridRowParams';
@@ -345,13 +344,6 @@ export interface GridEventLookup
    */
   columnResizeStop: { params: null; event: MouseEvent };
   /**
-   * Fired when a column visibility changes.
-   * It is not fired when the `columnVisibilityModel` is controlled or initialized.
-   * It is not fired when toggling all column's visibility at once.
-   * @deprecated Use `'columnVisibilityModelChange'` instead.
-   */
-  columnVisibilityChange: { params: GridColumnVisibilityChangeParams };
-  /**
    * Fired during the resizing of a column.
    */
   columnResize: { params: GridColumnResizeParams; event: MouseEvent };
@@ -377,10 +369,10 @@ export interface GridEventLookup
    */
   sortedRowsSet: {};
   /**
-   * Fired when the expansion of a row is changed. Called with a [[GridRowTreeNodeConfig]] object.
+   * Fired when the expansion of a row is changed. Called with a [[GridGroupNode]] object.
    * @ignore - do not document.
    */
-  rowExpansionChange: { params: GridRowTreeNodeConfig };
+  rowExpansionChange: { params: GridGroupNode };
   /**
    * Fired when the rendered rows index interval changes. Called with a [[GridRenderedRowsIntervalChangeParams]] object.
    */
@@ -528,3 +520,5 @@ export interface GridEventLookup
    */
   menuClose: { params: GridMenuParams };
 }
+
+export type GridEvents = keyof GridEventLookup;

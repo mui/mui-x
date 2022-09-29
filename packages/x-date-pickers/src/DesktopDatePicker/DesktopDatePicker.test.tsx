@@ -13,7 +13,7 @@ import {
   adapterToUse,
   withPickerControls,
   openPicker,
-} from '../../../../test/utils/pickers-utils';
+} from 'test/utils/pickers-utils';
 
 const WrappedDesktopDatePicker = withPickerControls(DesktopDatePicker)({
   DialogProps: { TransitionComponent: FakeTransitionComponent },
@@ -773,5 +773,20 @@ describe('<DesktopDatePicker />', () => {
 
       openPicker({ type: 'date', variant: 'desktop' });
     }).toWarnDev('MUI: `openTo="month"` is not a valid prop.');
+  });
+
+  describe('localization', () => {
+    it('should respect the `localeText` prop', () => {
+      render(
+        <WrappedDesktopDatePicker
+          initialValue={null}
+          localeText={{ cancelButtonLabel: 'Custom cancel' }}
+          componentsProps={{ actionBar: { actions: () => ['cancel'] } }}
+        />,
+      );
+      openPicker({ type: 'date', variant: 'desktop' });
+
+      expect(screen.queryByText('Custom cancel')).not.to.equal(null);
+    });
   });
 });

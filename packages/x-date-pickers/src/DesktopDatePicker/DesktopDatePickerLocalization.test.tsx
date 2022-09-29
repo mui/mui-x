@@ -5,7 +5,7 @@ import enLocale from 'date-fns/locale/en-US';
 import TextField from '@mui/material/TextField';
 import { DesktopDatePicker, DesktopDatePickerProps } from '@mui/x-date-pickers/DesktopDatePicker';
 import { fireEvent, screen } from '@mui/monorepo/test/utils';
-import { adapterToUse, createPickerRenderer } from '../../../../test/utils/pickers-utils';
+import { adapterToUse, createPickerRenderer } from 'test/utils/pickers-utils';
 
 describe('<DesktopDatePicker /> localization', () => {
   const tests = [
@@ -28,8 +28,8 @@ describe('<DesktopDatePicker /> localization', () => {
       const { render: localizedRender } = createPickerRenderer({ locale: dateFnsLocale });
 
       interface FormProps {
-        Picker: React.ElementType<DesktopDatePickerProps<any, any>>;
-        PickerProps: Partial<DesktopDatePickerProps<any, any>>;
+        Picker: React.ElementType<DesktopDatePickerProps<any>>;
+        PickerProps: Partial<DesktopDatePickerProps<any>>;
       }
 
       const Form = (props: FormProps) => {

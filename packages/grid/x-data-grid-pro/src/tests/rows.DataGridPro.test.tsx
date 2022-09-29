@@ -798,6 +798,24 @@ describe('<DataGridPro /> - Rows', () => {
         fireEvent.mouseLeave(cell);
       }).not.to.throw();
     });
+
+    // See https://github.com/mui/mui-x/issues/5742
+    it('should not crash when focusing header after row is removed during the click', () => {
+      expect(() => {
+        render(
+          <TestCase
+            rows={baselineProps.rows}
+            onCellClick={() => {
+              apiRef.current.updateRows([{ id: 1, _action: 'delete' }]);
+            }}
+          />,
+        );
+        const cell = getCell(0, 0);
+        userEvent.mousePress(cell);
+        const columnHeaderCell = getColumnHeaderCell(0);
+        fireEvent.focus(columnHeaderCell);
+      }).not.to.throw();
+    });
   });
 
   describe('apiRef: setRowHeight', () => {

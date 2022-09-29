@@ -7,13 +7,7 @@ import {
   DataGridPropsWithDefaultValues,
 } from '../models/props/DataGridProps';
 import { DATA_GRID_DEFAULT_SLOTS_COMPONENTS, GRID_DEFAULT_LOCALE_TEXT } from '../constants';
-import {
-  GridDensityTypes,
-  GridEditModes,
-  GridFeatureModeConstant,
-  GridSlotsComponent,
-  GridValidRowModel,
-} from '../models';
+import { GridDensityTypes, GridEditModes, GridSlotsComponent, GridValidRowModel } from '../models';
 
 const DATA_GRID_FORCED_PROPS: { [key in DataGridForcedPropsKey]?: DataGridProcessedProps[key] } = {
   apiRef: undefined,
@@ -56,7 +50,7 @@ export const DATA_GRID_PROPS_DEFAULT_VALUES: DataGridPropsWithDefaultValues = {
   disableVirtualization: false,
   disableIgnoreModificationsIfProcessingProps: false,
   editMode: GridEditModes.Cell,
-  filterMode: GridFeatureModeConstant.client,
+  filterMode: 'client',
   headerHeight: 56,
   hideFooter: false,
   hideFooterPagination: false,
@@ -65,14 +59,14 @@ export const DATA_GRID_PROPS_DEFAULT_VALUES: DataGridPropsWithDefaultValues = {
   logger: console,
   logLevel: process.env.NODE_ENV === 'production' ? ('error' as const) : ('warn' as const),
   pagination: false,
-  paginationMode: GridFeatureModeConstant.client,
+  paginationMode: 'client',
   rowHeight: 52,
   rowsPerPageOptions: [25, 50, 100],
   rowSpacingType: 'margin',
   showCellRightBorder: false,
   showColumnRightBorder: false,
   sortingOrder: ['asc' as const, 'desc' as const, null],
-  sortingMode: GridFeatureModeConstant.client,
+  sortingMode: 'client',
   throttleRowsMs: 0,
   disableColumnReorder: false,
   disableColumnResize: false,

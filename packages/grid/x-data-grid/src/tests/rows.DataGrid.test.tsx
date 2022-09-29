@@ -752,7 +752,8 @@ describe('<DataGrid /> - Rows', () => {
       });
 
       it('should position correctly the render zone when the 2nd page has less rows than the 1st page', async function test() {
-        if (/edg/i.test(window.navigator.userAgent)) {
+        const { userAgent } = window.navigator;
+        if (!userAgent.includes('Headless') || /edg/i.test(userAgent)) {
           this.skip(); // FIXME: We need a waitFor that works with fake clock
         }
         const data = getBasicGridData(120, 3);
@@ -812,6 +813,52 @@ describe('<DataGrid /> - Rows', () => {
           transform: 'translate3d(0px, 0px, 0px)',
         });
         setProps({ pageSize: 5 });
+        expect(virtualScrollerRenderZone).toHaveInlineStyle({
+          transform: 'translate3d(0px, 0px, 0px)',
+        });
+      });
+
+      it('should position correctly the render zone when changing pageSize to a lower value and moving to next page', async function test() {
+        const { userAgent } = window.navigator;
+        if (!userAgent.includes('Headless') || /edg/i.test(userAgent)) {
+          this.skip(); // In Chrome non-headless and Edge this test is flacky
+        }
+        const data = getBasicGridData(120, 3);
+        const headerHeight = 50;
+        const measuredRowHeight = 100;
+        const { setProps } = render(
+          <TestCase
+            getBioContentHeight={() => measuredRowHeight}
+            getRowHeight={() => 'auto'}
+            rowBuffer={0}
+            rowThreshold={0}
+            headerHeight={headerHeight}
+            getRowId={(row) => row.id}
+            hideFooter={false}
+            pageSize={25}
+            rowsPerPageOptions={[10, 25]}
+            height={headerHeight + 10 * measuredRowHeight}
+            {...data}
+          />,
+        );
+
+        const virtualScrollerRenderZone = document.querySelector(
+          '.MuiDataGrid-virtualScrollerRenderZone',
+        )!;
+        expect(virtualScrollerRenderZone).toHaveInlineStyle({
+          transform: 'translate3d(0px, 0px, 0px)',
+        });
+
+        const virtualScroller = document.querySelector('.MuiDataGrid-virtualScroller')!;
+        virtualScroller.scrollTop = 10e6; // Scroll to measure all cells
+        virtualScroller.dispatchEvent(new Event('scroll'));
+        await act(() => Promise.resolve());
+        clock.runToLast();
+
+        setProps({ pageSize: 10 });
+        fireEvent.click(screen.getByRole('button', { name: /next page/i }));
+        await act(() => Promise.resolve());
+        clock.runToLast();
         expect(virtualScrollerRenderZone).toHaveInlineStyle({
           transform: 'translate3d(0px, 0px, 0px)',
         });
