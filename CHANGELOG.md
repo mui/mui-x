@@ -19,7 +19,9 @@ We'd like to offer a big thanks to the 8 contributors who made this release poss
 
 #### Breaking changes
 
-- Some selectors related to the rows have been renamed to better describe the type of rows they are returning:
+- New internal rows structure for v6 (#4927) @flaviendelangle
+
+  Some selectors related to the rows have been renamed to better describe the type of rows they are returning:
 
   ```diff
   -const result = gridRowsIdToIdLookupSelector(apiRef);
@@ -55,7 +57,7 @@ We'd like to offer a big thanks to the 8 contributors who made this release poss
    />
   ```
 
-- The `GridFeatureModeConstant` constant no longer exists.
+- The `GridFeatureModeConstant` constant no longer exists (#6077) @DanailH
 
   ```diff
   -import { GridFeatureModeConstant } from '@mui/x-data-grid';
