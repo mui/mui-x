@@ -173,9 +173,9 @@ export const adjustInvalidDateSectionValue = <TDate, TSection extends FieldSecti
 
       if (section.value === '') {
         if (delta > 0 || isEnd) {
-          return pm;
+          return am;
         }
-        return am;
+        return pm;
       }
 
       if (section.value === am) {
@@ -189,9 +189,9 @@ export const adjustInvalidDateSectionValue = <TDate, TSection extends FieldSecti
       let newDate: TDate;
       if (shouldSetAbsolute) {
         if (delta > 0 || isEnd) {
-          newDate = utils.endOfDay(today);
-        } else {
           newDate = utils.startOfDay(today);
+        } else {
+          newDate = utils.endOfDay(today);
         }
       } else {
         newDate = utils.addHours(utils.setHours(today, Number(section.value)), delta);
@@ -204,7 +204,7 @@ export const adjustInvalidDateSectionValue = <TDate, TSection extends FieldSecti
       let newDate: TDate;
       if (section.value === '') {
         // TODO: Add startOfHour and endOfHours to adapters to avoid hard-coding those values
-        const newNumericValue = delta > 0 || isEnd ? 59 : 0;
+        const newNumericValue = delta > 0 || isEnd ? 0 : 59;
         newDate = utils.setMinutes(today, newNumericValue);
       } else {
         newDate = utils.addMinutes(utils.setMinutes(today, Number(section.value)), delta);
@@ -217,7 +217,7 @@ export const adjustInvalidDateSectionValue = <TDate, TSection extends FieldSecti
       let newDate: TDate;
       if (section.value === '') {
         // TODO: Add startOfMinute and endOfMinute to adapters to avoid hard-coding those values
-        const newNumericValue = delta > 0 || isEnd ? 59 : 0;
+        const newNumericValue = delta > 0 || isEnd ? 0 : 59;
         newDate = utils.setSeconds(today, newNumericValue);
       } else {
         newDate = utils.addSeconds(utils.setSeconds(today, Number(section.value)), delta);
@@ -466,6 +466,29 @@ export const cleanTrailingZeroInNumericSectionValue = (value: string, maximum: n
   }
 
   return cleanValue;
+};
+
+let warnedOnceInvalidSection = false;
+
+export const validateSections = <TSection extends FieldSection>(
+  sections: TSection[],
+  supportedSections: MuiDateSectionName[],
+) => {
+  if (process.env.NODE_ENV !== 'production') {
+    if (!warnedOnceInvalidSection) {
+      const invalidSection = sections.find(
+        (section) => !supportedSections.includes(section.dateSectionName),
+      );
+
+      if (invalidSection) {
+        console.warn(
+          `MUI: The field component you are using is not compatible with the "${invalidSection.dateSectionName} date section.`,
+          `The supported date sections are ["${supportedSections.join('", "')}"]\`.`,
+        );
+        warnedOnceInvalidSection = true;
+      }
+    }
+  }
 };
 
 export const isAndroid = () => navigator.userAgent.toLowerCase().indexOf('android') > -1;

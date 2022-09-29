@@ -1,10 +1,9 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
-import { Unstable_DateField as DateField } from '@mui/x-date-pickers/DateField';
+import { Unstable_DateField as DateField, DateFieldProps } from '@mui/x-date-pickers/DateField';
 import { screen, act, userEvent, fireEvent } from '@mui/monorepo/test/utils';
 import { createPickerRenderer, adapterToUse } from 'test/utils/pickers-utils';
-import { DateFieldProps } from '@mui/x-date-pickers/DateField/DateField.interfaces';
 
 describe('<DateField /> - Editing', () => {
   const { render, clock } = createPickerRenderer({
