@@ -818,7 +818,11 @@ describe('<DataGrid /> - Rows', () => {
         });
       });
 
-      it('should position correctly the render zone when changing pageSize to a lower value and moving to next page', async () => {
+      it('should position correctly the render zone when changing pageSize to a lower value and moving to next page', async function test() {
+        const { userAgent } = window.navigator;
+        if (!userAgent.includes('Headless') || /edg/i.test(userAgent)) {
+          this.skip(); // In Chrome non-headless and Edge this test is flacky
+        }
         const data = getBasicGridData(120, 3);
         const headerHeight = 50;
         const measuredRowHeight = 100;
