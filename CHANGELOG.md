@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
 ## 5.17.5
-<!-- generated comparing v5.17.4..master -->
+
 _Sep 29, 2022_
 
 We'd like to offer a big thanks to the 2 contributors who made this release possible. Here are some highlights ✨:
@@ -33,7 +33,7 @@ We'd like to offer a big thanks to the 2 contributors who made this release poss
 
 - [core] Reduce the amount of updated screenshots reported by Argos (#6310) @cherniavskii
 
-## v5.17.4
+## 5.17.4
 
 _Sep 22, 2022_
 
