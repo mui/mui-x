@@ -4,31 +4,34 @@ import { DataGrid } from '@mui/x-data-grid';
 import { useDemoData } from '@mui/x-data-grid-generator';
 import { darken, lighten, styled } from '@mui/material/styles';
 
-const getBgColor = (color, mode) =>
+const getBackgroundColor = (color, mode) =>
   mode === 'dark' ? darken(color, 0.7) : lighten(color, 0.7);
 
-const getHoverBgColor = (color, mode) =>
+const getHoverBackgroundColor = (color, mode) =>
   mode === 'dark' ? darken(color, 0.6) : lighten(color, 0.6);
 
-const getSelectedBgColor = (color, mode) =>
+const getSelectedBackgroundColor = (color, mode) =>
   mode === 'dark' ? darken(color, 0.5) : lighten(color, 0.5);
 
-const getSelectedHoverBgColor = (color, mode) =>
+const getSelectedHoverBackgroundColor = (color, mode) =>
   mode === 'dark' ? darken(color, 0.4) : lighten(color, 0.4);
 
 const StyledDataGrid = styled(DataGrid)(({ theme }) => ({
   '& .super-app-theme--Open': {
-    backgroundColor: getBgColor(theme.palette.info.main, theme.palette.mode),
+    backgroundColor: getBackgroundColor(theme.palette.info.main, theme.palette.mode),
     '&:hover': {
-      backgroundColor: getHoverBgColor(theme.palette.info.main, theme.palette.mode),
+      backgroundColor: getHoverBackgroundColor(
+        theme.palette.info.main,
+        theme.palette.mode,
+      ),
     },
     '&.Mui-selected': {
-      backgroundColor: getSelectedBgColor(
+      backgroundColor: getSelectedBackgroundColor(
         theme.palette.info.main,
         theme.palette.mode,
       ),
       '&:hover': {
-        backgroundColor: getSelectedHoverBgColor(
+        backgroundColor: getSelectedHoverBackgroundColor(
           theme.palette.info.main,
           theme.palette.mode,
         ),
@@ -36,20 +39,23 @@ const StyledDataGrid = styled(DataGrid)(({ theme }) => ({
     },
   },
   '& .super-app-theme--Filled': {
-    backgroundColor: getBgColor(theme.palette.success.main, theme.palette.mode),
+    backgroundColor: getBackgroundColor(
+      theme.palette.success.main,
+      theme.palette.mode,
+    ),
     '&:hover': {
-      backgroundColor: getHoverBgColor(
+      backgroundColor: getHoverBackgroundColor(
         theme.palette.success.main,
         theme.palette.mode,
       ),
     },
     '&.Mui-selected': {
-      backgroundColor: getSelectedBgColor(
+      backgroundColor: getSelectedBackgroundColor(
         theme.palette.success.main,
         theme.palette.mode,
       ),
       '&:hover': {
-        backgroundColor: getSelectedHoverBgColor(
+        backgroundColor: getSelectedHoverBackgroundColor(
           theme.palette.success.main,
           theme.palette.mode,
         ),
@@ -57,20 +63,23 @@ const StyledDataGrid = styled(DataGrid)(({ theme }) => ({
     },
   },
   '& .super-app-theme--PartiallyFilled': {
-    backgroundColor: getBgColor(theme.palette.warning.main, theme.palette.mode),
+    backgroundColor: getBackgroundColor(
+      theme.palette.warning.main,
+      theme.palette.mode,
+    ),
     '&:hover': {
-      backgroundColor: getHoverBgColor(
+      backgroundColor: getHoverBackgroundColor(
         theme.palette.warning.main,
         theme.palette.mode,
       ),
     },
     '&.Mui-selected': {
-      backgroundColor: getSelectedBgColor(
+      backgroundColor: getSelectedBackgroundColor(
         theme.palette.warning.main,
         theme.palette.mode,
       ),
       '&:hover': {
-        backgroundColor: getSelectedHoverBgColor(
+        backgroundColor: getSelectedHoverBackgroundColor(
           theme.palette.warning.main,
           theme.palette.mode,
         ),
@@ -78,17 +87,23 @@ const StyledDataGrid = styled(DataGrid)(({ theme }) => ({
     },
   },
   '& .super-app-theme--Rejected': {
-    backgroundColor: getBgColor(theme.palette.error.main, theme.palette.mode),
+    backgroundColor: getBackgroundColor(
+      theme.palette.error.main,
+      theme.palette.mode,
+    ),
     '&:hover': {
-      backgroundColor: getHoverBgColor(theme.palette.error.main, theme.palette.mode),
+      backgroundColor: getHoverBackgroundColor(
+        theme.palette.error.main,
+        theme.palette.mode,
+      ),
     },
     '&.Mui-selected': {
-      backgroundColor: getSelectedBgColor(
+      backgroundColor: getSelectedBackgroundColor(
         theme.palette.error.main,
         theme.palette.mode,
       ),
       '&:hover': {
-        backgroundColor: getSelectedHoverBgColor(
+        backgroundColor: getSelectedHoverBackgroundColor(
           theme.palette.error.main,
           theme.palette.mode,
         ),
