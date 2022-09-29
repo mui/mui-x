@@ -238,6 +238,32 @@ describe('<CalendarPicker />', () => {
       );
       expect(screen.getAllByRole('row').length).to.equal(7); // 6 weeks + header
     });
+
+    it('should open after `minDate` if now is outside', () => {
+      render(
+        <CalendarPicker
+          value={null}
+          onChange={() => {}}
+          view="day"
+          minDate={adapterToUse.date(new Date(2031, 2, 3))}
+        />,
+      );
+
+      expect(screen.getByText('March 2031')).not.to.equal(null);
+    });
+
+    it('should open before `maxDate` if now is outside', () => {
+      render(
+        <CalendarPicker
+          value={null}
+          onChange={() => {}}
+          view="day"
+          maxDate={adapterToUse.date(new Date(1534, 2, 3))}
+        />,
+      );
+
+      expect(screen.getByText('March 1534')).not.to.equal(null);
+    });
   });
 
   describe('view: month', () => {

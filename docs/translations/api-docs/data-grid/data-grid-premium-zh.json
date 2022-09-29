@@ -482,6 +482,14 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the menu list element"
     },
+    "overlayWrapper": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the overlay wrapper element"
+    },
+    "overlayWrapperInner": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the overlay wrapper inner element"
+    },
     "overlay": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the overlay element"
