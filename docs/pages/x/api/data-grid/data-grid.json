@@ -1,7 +1,10 @@
 {
   "props": {
     "columns": { "type": { "name": "custom", "description": "array" }, "required": true },
-    "rows": { "type": { "name": "array" }, "required": true },
+    "rows": {
+      "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" },
+      "required": true
+    },
     "aria-label": { "type": { "name": "string" } },
     "aria-labelledby": { "type": { "name": "string" } },
     "autoHeight": { "type": { "name": "bool" } },
@@ -99,11 +102,6 @@
     "onColumnHeaderOut": { "type": { "name": "func" } },
     "onColumnHeaderOver": { "type": { "name": "func" } },
     "onColumnOrderChange": { "type": { "name": "func" } },
-    "onColumnVisibilityChange": {
-      "type": { "name": "func" },
-      "deprecated": true,
-      "deprecationInfo": "Use <code>onColumnVisibilityModelChange</code> instead."
-    },
     "onColumnVisibilityModelChange": { "type": { "name": "func" } },
     "onEditCellPropsChange": {
       "type": { "name": "func" },
@@ -337,6 +335,8 @@
       "menuIconButton",
       "menuOpen",
       "menuList",
+      "overlayWrapper",
+      "overlayWrapperInner",
       "overlay",
       "virtualScroller",
       "virtualScrollerContent",

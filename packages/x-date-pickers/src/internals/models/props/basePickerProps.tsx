@@ -1,7 +1,6 @@
 import { PickerStateProps } from '../../hooks/usePickerState';
 
-export interface BasePickerProps<TInputValue, TValue>
-  extends PickerStateProps<TInputValue, TValue> {
+export interface BasePickerProps<TValue> extends PickerStateProps<TValue> {
   /**
    * className applied to the root component.
    */

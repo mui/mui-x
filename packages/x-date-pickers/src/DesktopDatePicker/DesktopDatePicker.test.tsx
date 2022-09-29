@@ -3,16 +3,17 @@ import { expect } from 'chai';
 import { spy } from 'sinon';
 import TextField from '@mui/material/TextField';
 import { TransitionProps } from '@mui/material/transitions';
+import { inputBaseClasses } from '@mui/material/InputBase';
+import SvgIcon, { SvgIconProps } from '@mui/material/SvgIcon';
 import { fireEvent, screen, userEvent } from '@mui/monorepo/test/utils';
 import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
-import SvgIcon, { SvgIconProps } from '@mui/material/SvgIcon';
 import {
   createPickerRenderer,
   FakeTransitionComponent,
   adapterToUse,
   withPickerControls,
   openPicker,
-} from '../../../../test/utils/pickers-utils';
+} from 'test/utils/pickers-utils';
 
 const WrappedDesktopDatePicker = withPickerControls(DesktopDatePicker)({
   DialogProps: { TransitionComponent: FakeTransitionComponent },
@@ -728,6 +729,64 @@ describe('<DesktopDatePicker />', () => {
 
       expect(screen.getByLabelText('Previous month')).not.to.have.attribute('disabled');
       expect(screen.getByLabelText('Next month')).not.to.have.attribute('disabled');
+    });
+  });
+
+  describe('Validation', () => {
+    it('should enable the input error state when the current date has an invalid day', () => {
+      render(
+        <WrappedDesktopDatePicker
+          initialValue={adapterToUse.date(new Date(2018, 5, 1))}
+          shouldDisableDate={() => true}
+        />,
+      );
+
+      expect(document.querySelector(`.${inputBaseClasses.error}`)).to.not.equal(null);
+    });
+
+    it('should enable the input error state when the current date has an invalid month', () => {
+      render(
+        <WrappedDesktopDatePicker
+          initialValue={adapterToUse.date(new Date(2018, 5, 1))}
+          shouldDisableMonth={() => true}
+        />,
+      );
+
+      expect(document.querySelector(`.${inputBaseClasses.error}`)).to.not.equal(null);
+    });
+
+    it('should enable the input error state when the current date has an invalid year', () => {
+      render(
+        <WrappedDesktopDatePicker
+          initialValue={adapterToUse.date(new Date(2018, 1, 1))}
+          shouldDisableMonth={() => true}
+        />,
+      );
+
+      expect(document.querySelector(`.${inputBaseClasses.error}`)).to.not.equal(null);
+    });
+  });
+
+  it('should throw console warning when invalid `openTo` prop is provided', () => {
+    expect(() => {
+      render(<WrappedDesktopDatePicker initialValue={null} openTo="month" />);
+
+      openPicker({ type: 'date', variant: 'desktop' });
+    }).toWarnDev('MUI: `openTo="month"` is not a valid prop.');
+  });
+
+  describe('localization', () => {
+    it('should respect the `localeText` prop', () => {
+      render(
+        <WrappedDesktopDatePicker
+          initialValue={null}
+          localeText={{ cancelButtonLabel: 'Custom cancel' }}
+          componentsProps={{ actionBar: { actions: () => ['cancel'] } }}
+        />,
+      );
+      openPicker({ type: 'date', variant: 'desktop' });
+
+      expect(screen.queryByText('Custom cancel')).not.to.equal(null);
     });
   });
 });

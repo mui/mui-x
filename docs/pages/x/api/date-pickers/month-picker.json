@@ -1,7 +1,7 @@
 {
   "props": {
-    "date": { "type": { "name": "any" }, "required": true },
     "onChange": { "type": { "name": "func" }, "required": true },
+    "value": { "type": { "name": "any" }, "required": true },
     "classes": { "type": { "name": "object" } },
     "className": { "type": { "name": "string" } },
     "disabled": { "type": { "name": "bool" } },
@@ -22,7 +22,7 @@
   "slots": {},
   "name": "MonthPicker",
   "styles": { "classes": ["root"], "globalClasses": {}, "name": "MuiMonthPicker" },
-  "spread": false,
+  "spread": true,
   "forwardsRefTo": "HTMLDivElement",
   "filename": "/packages/x-date-pickers/src/MonthPicker/MonthPicker.tsx",
   "inheritance": null,

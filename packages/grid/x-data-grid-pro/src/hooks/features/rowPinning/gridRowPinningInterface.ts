@@ -1,6 +1,11 @@
-import { GridRowId, GridRowsLookup, GridRowsProp } from '@mui/x-data-grid';
+import {
+  GridRowId,
+  GridRowIdToModelLookup,
+  GridRowsProp,
+  GridValidRowModel,
+} from '@mui/x-data-grid';
 
-export interface GridPinnedRowsProp<R = any> {
+export interface GridPinnedRowsProp<R extends GridValidRowModel = GridValidRowModel> {
   top?: GridRowsProp<R>;
   bottom?: GridRowsProp<R>;
 }
@@ -16,5 +21,5 @@ export interface GridRowPinningApi {
 export interface GridRowPinningInternalCache {
   topIds: GridRowId[];
   bottomIds: GridRowId[];
-  idLookup: GridRowsLookup;
+  idLookup: GridRowIdToModelLookup;
 }

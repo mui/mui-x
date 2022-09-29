@@ -4,7 +4,7 @@ import {
   CalendarPickerSkeleton,
   calendarPickerSkeletonClasses as classes,
 } from '@mui/x-date-pickers/CalendarPickerSkeleton';
-import { createPickerRenderer } from '../../../../test/utils/pickers-utils';
+import { createPickerRenderer } from 'test/utils/pickers-utils';
 
 describe('<CalendarPickerSkeleton />', () => {
   const { render } = createPickerRenderer();

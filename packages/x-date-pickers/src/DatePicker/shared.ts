@@ -4,20 +4,20 @@ import { useDefaultDates, useUtils } from '../internals/hooks/useUtils';
 import { CalendarPickerView, MuiPickersAdapter } from '../internals/models';
 import { ExportedCalendarPickerProps } from '../CalendarPicker/CalendarPicker';
 import { DateValidationError } from '../internals/hooks/validation/useDateValidation';
-import { ValidationProps } from '../internals/hooks/validation/useValidation';
+import { ValidationCommonProps } from '../internals/hooks/validation/useValidation';
 import { ExportedDateInputProps } from '../internals/components/PureDateInput';
 import { BasePickerProps } from '../internals/models/props/basePickerProps';
 import { PickerStateValueManager } from '../internals/hooks/usePickerState';
-import { parsePickerInputValue, parseNonNullablePickerDate } from '../internals/utils/date-utils';
+import { applyDefaultDate, replaceInvalidDateByNull } from '../internals/utils/date-utils';
 import { BaseToolbarProps } from '../internals/models/props/baseToolbarProps';
 import { DefaultizedProps } from '../internals/models/helpers';
 import { BaseDateValidationProps } from '../internals/hooks/validation/models';
 
-export interface BaseDatePickerProps<TInputDate, TDate>
+export interface BaseDatePickerProps<TDate>
   extends ExportedCalendarPickerProps<TDate>,
-    BasePickerProps<TInputDate | null, TDate | null>,
-    ValidationProps<DateValidationError, TInputDate | null>,
-    ExportedDateInputProps<TInputDate, TDate> {
+    BasePickerProps<TDate | null>,
+    ValidationCommonProps<DateValidationError, TDate | null>,
+    ExportedDateInputProps<TDate> {
   /**
    * Callback fired on view change.
    * @param {CalendarPickerView} view The new view.
@@ -25,6 +25,8 @@ export interface BaseDatePickerProps<TInputDate, TDate>
   onViewChange?: (view: CalendarPickerView) => void;
   /**
    * First view to show.
+   * Must be a valid option from `views` list
+   * @default 'day'
    */
   openTo?: CalendarPickerView;
   /**
@@ -48,6 +50,7 @@ export interface BaseDatePickerProps<TInputDate, TDate>
   toolbarTitle?: React.ReactNode;
   /**
    * Array of views to show.
+   * @default ['year', 'day']
    */
   views?: readonly CalendarPickerView[];
 }
@@ -83,11 +86,7 @@ const getFormatAndMaskByViews = <TDate>(
   };
 };
 
-export function useDatePickerDefaultizedProps<
-  TInputDate,
-  TDate,
-  Props extends BaseDatePickerProps<TInputDate, TDate>,
->(
+export function useDatePickerDefaultizedProps<TDate, Props extends BaseDatePickerProps<TDate>>(
   props: Props,
   name: string,
 ): DefaultizedProps<
@@ -114,14 +113,14 @@ export function useDatePickerDefaultizedProps<
     ...getFormatAndMaskByViews(views, utils),
     ...themeProps,
     views,
-    minDate: parseNonNullablePickerDate(utils, themeProps.minDate, defaultDates.minDate),
-    maxDate: parseNonNullablePickerDate(utils, themeProps.maxDate, defaultDates.maxDate),
+    minDate: applyDefaultDate(utils, themeProps.minDate, defaultDates.minDate),
+    maxDate: applyDefaultDate(utils, themeProps.maxDate, defaultDates.maxDate),
   };
 }
 
-export const datePickerValueManager: PickerStateValueManager<any, any, any> = {
+export const datePickerValueManager: PickerStateValueManager<any, any> = {
   emptyValue: null,
   getTodayValue: (utils) => utils.date()!,
-  parseInput: parsePickerInputValue,
+  cleanValue: replaceInvalidDateByNull,
   areValuesEqual: (utils, a, b) => utils.isEqual(a, b),
 };

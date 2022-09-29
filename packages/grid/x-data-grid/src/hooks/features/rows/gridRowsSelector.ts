@@ -18,14 +18,15 @@ export const gridTopLevelRowCountSelector = createSelector(
   (rows) => rows.totalTopLevelRowCount,
 );
 
+// TODO rows v6: Rename
 export const gridRowsLookupSelector = createSelector(
   gridRowsStateSelector,
-  (rows) => rows.idRowsLookup,
+  (rows) => rows.dataRowIdToModelLookup,
 );
 
-export const gridRowsIdToIdLookupSelector = createSelector(
+export const gridRowsDataRowIdToIdLookupSelector = createSelector(
   gridRowsStateSelector,
-  (rows) => rows.idToIdLookup,
+  (rows) => rows.dataRowIdToIdLookup,
 );
 
 export const gridRowTreeSelector = createSelector(gridRowsStateSelector, (rows) => rows.tree);
@@ -35,12 +36,30 @@ export const gridRowGroupingNameSelector = createSelector(
   (rows) => rows.groupingName,
 );
 
-export const gridRowTreeDepthSelector = createSelector(
+export const gridRowTreeDepthsSelector = createSelector(
   gridRowsStateSelector,
-  (rows) => rows.treeDepth,
+  (rows) => rows.treeDepths,
 );
 
-export const gridRowIdsSelector = createSelector(gridRowsStateSelector, (rows) => rows.ids);
+export const gridRowMaximumTreeDepthSelector = createSelector(gridRowsStateSelector, (rows) => {
+  const entries = Object.entries(rows.treeDepths);
+
+  if (entries.length === 0) {
+    return 1;
+  }
+
+  return (
+    entries
+      .filter(([, nodeCount]) => nodeCount > 0)
+      .map(([depth]) => Number(depth))
+      .sort((a, b) => b - a)[0] + 1
+  );
+});
+
+export const gridDataRowIdsSelector = createSelector(
+  gridRowsStateSelector,
+  (rows) => rows.dataRowIds,
+);
 
 /**
  * @ignore - do not document.
@@ -55,7 +74,20 @@ export const gridAdditionalRowGroupsSelector = createSelector(
  */
 export const gridPinnedRowsSelector = createSelector(
   gridAdditionalRowGroupsSelector,
-  (additionalRowGroups) => additionalRowGroups?.pinnedRows,
+  (additionalRowGroups) => {
+    const rawPinnedRows = additionalRowGroups?.pinnedRows;
+
+    return {
+      bottom: rawPinnedRows?.bottom?.map((rowEntry) => ({
+        id: rowEntry.id,
+        model: rowEntry.model ?? {},
+      })),
+      top: rawPinnedRows?.top?.map((rowEntry) => ({
+        id: rowEntry.id,
+        model: rowEntry.model ?? {},
+      })),
+    };
+  },
 );
 
 /**

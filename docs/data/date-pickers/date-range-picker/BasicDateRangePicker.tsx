@@ -10,11 +10,9 @@ export default function BasicDateRangePicker() {
   const [value, setValue] = React.useState<DateRange<Dayjs>>([null, null]);
 
   return (
-    <LocalizationProvider
-      dateAdapter={AdapterDayjs}
-      localeText={{ start: 'Check-in', end: 'Check-out' }}
-    >
+    <LocalizationProvider dateAdapter={AdapterDayjs}>
       <DateRangePicker
+        localeText={{ start: 'Check-in', end: 'Check-out' }}
         value={value}
         onChange={(newValue) => {
           setValue(newValue);

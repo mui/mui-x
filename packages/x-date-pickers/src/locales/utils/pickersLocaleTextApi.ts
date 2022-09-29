@@ -26,8 +26,8 @@ export interface PickersLocaleText<TDate> {
   hoursClockNumberText: (hours: string) => string;
   minutesClockNumberText: (minutes: string) => string;
   secondsClockNumberText: (seconds: string) => string;
-  openDatePickerDialogue: (date: TDate, utils: MuiPickersAdapter<TDate>) => string;
-  openTimePickerDialogue: (date: TDate, utils: MuiPickersAdapter<TDate>) => string;
+  openDatePickerDialogue: (date: TDate | null, utils: MuiPickersAdapter<TDate>) => string;
+  openTimePickerDialogue: (date: TDate | null, utils: MuiPickersAdapter<TDate>) => string;
   timeTableLabel: string;
   dateTableLabel: string;
   datePickerDefaultToolbarTitle: string;
@@ -35,5 +35,7 @@ export interface PickersLocaleText<TDate> {
   timePickerDefaultToolbarTitle: string;
   dateRangePickerDefaultToolbarTitle: string;
 }
+
+export type PickersInputLocaleText<TDate> = Partial<PickersLocaleText<TDate>>;
 
 export type PickersTranslationKeys = keyof PickersLocaleText<any>;

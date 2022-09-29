@@ -5,7 +5,7 @@ import {
   gridVisibleSortedRowIdsSelector,
   gridVisibleSortedTopLevelRowEntriesSelector,
 } from '../filter/gridFilterSelector';
-import { gridRowTreeDepthSelector, gridRowTreeSelector } from '../rows/gridRowsSelector';
+import { gridRowMaximumTreeDepthSelector, gridRowTreeSelector } from '../rows/gridRowsSelector';
 
 /**
  * @category Pagination
@@ -47,7 +47,7 @@ export const gridPageCountSelector = createSelector(
 export const gridPaginationRowRangeSelector = createSelector(
   gridPaginationSelector,
   gridRowTreeSelector,
-  gridRowTreeDepthSelector,
+  gridRowMaximumTreeDepthSelector,
   gridVisibleSortedRowEntriesSelector,
   gridVisibleSortedTopLevelRowEntriesSelector,
   (pagination, rowTree, rowTreeDepth, visibleSortedRowEntries, visibleSortedTopLevelRowEntries) => {

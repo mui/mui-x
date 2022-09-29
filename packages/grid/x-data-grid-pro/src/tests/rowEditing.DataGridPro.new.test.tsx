@@ -1,4 +1,6 @@
 import * as React from 'react';
+import { expect } from 'chai';
+import { spy } from 'sinon';
 import {
   GridApi,
   DataGridProProps,
@@ -9,19 +11,17 @@ import {
   GridPreProcessEditCellProps,
   GridRowModes,
 } from '@mui/x-data-grid-pro';
+import { getBasicGridData } from '@mui/x-data-grid-generator';
 // @ts-ignore Remove once the test utils are typed
 import { createRenderer, fireEvent, act, userEvent } from '@mui/monorepo/test/utils';
-import { expect } from 'chai';
 import { getCell, getRow } from 'test/utils/helperFn';
-import { spy } from 'sinon';
-import { getData } from 'storybook/src/data/data-service';
 
 describe('<DataGridPro /> - Row Editing', () => {
   const { render, clock } = createRenderer();
 
   let apiRef: React.MutableRefObject<GridApi>;
 
-  const defaultData = getData(4, 4);
+  const defaultData = getBasicGridData(4, 4);
 
   const CustomEditComponent = ({ hasFocus }: GridRenderEditCellParams) => {
     const ref = React.useRef<HTMLInputElement>(null);
@@ -233,6 +233,7 @@ describe('<DataGridPro /> - Row Editing', () => {
           value: 'USD GBP',
           error: false,
           isProcessingProps: true,
+          changeReason: 'setEditCellValue',
         });
 
         const args2 = column2Props.preProcessEditCellProps.lastCall.args[0];
@@ -450,7 +451,7 @@ describe('<DataGridPro /> - Row Editing', () => {
         await act(() => promise); // Run all updates scheduled for when preProcessEditCellProps resolves
       });
 
-      it('should do nothing if props of any column contain error=true', async () => {
+      it('should do nothing if props of any column contains error=true', async () => {
         column1Props.preProcessEditCellProps = ({ props }: GridPreProcessEditCellProps) => ({
           ...props,
           error: true,
@@ -462,6 +463,21 @@ describe('<DataGridPro /> - Row Editing', () => {
         );
         act(() => apiRef.current.stopRowEditMode({ id: 0 }));
         expect(getCell(0, 1).className).to.contain('MuiDataGrid-cell--editing');
+      });
+
+      it('should keep mode=edit if props of any column contains error=true', async () => {
+        column1Props.preProcessEditCellProps = ({ props }: GridPreProcessEditCellProps) => ({
+          ...props,
+          error: true,
+        });
+        const onRowModesModelChange = spy();
+        render(<TestCase onRowModesModelChange={onRowModesModelChange} />);
+        act(() => apiRef.current.startRowEditMode({ id: 0 }));
+        await act(() =>
+          apiRef.current.setEditCellValue({ id: 0, field: 'currencyPair', value: 'USD GBP' }),
+        );
+        act(() => apiRef.current.stopRowEditMode({ id: 0 }));
+        expect(onRowModesModelChange.lastCall.args[0]).to.deep.equal({ 0: { mode: 'edit' } });
       });
 
       it('should allow a 2nd call if the first call was when error=true', async () => {
@@ -570,6 +586,28 @@ describe('<DataGridPro /> - Row Editing', () => {
         act(() => apiRef.current.stopRowEditMode({ id: 0 }));
         await Promise.resolve();
         expect(onProcessRowUpdateError.lastCall.args[0]).to.equal(error);
+      });
+
+      it('should keep mode=edit if processRowUpdate rejects', async () => {
+        const error = new Error('Something went wrong');
+        const processRowUpdate = () => {
+          throw error;
+        };
+        const onProcessRowUpdateError = spy();
+        const onRowModesModelChange = spy();
+        render(
+          <TestCase
+            onRowModesModelChange={onRowModesModelChange}
+            processRowUpdate={processRowUpdate}
+            onProcessRowUpdateError={onProcessRowUpdateError}
+          />,
+        );
+        act(() => apiRef.current.startRowEditMode({ id: 0 }));
+        await act(() =>
+          apiRef.current.setEditCellValue({ id: 0, field: 'currencyPair', value: 'USD GBP' }),
+        );
+        act(() => apiRef.current.stopRowEditMode({ id: 0 }));
+        expect(onRowModesModelChange.lastCall.args[0]).to.deep.equal({ 0: { mode: 'edit' } });
       });
 
       it('should pass the new value through all value setters before calling processRowUpdate', async () => {
@@ -1220,6 +1258,26 @@ describe('<DataGridPro /> - Row Editing', () => {
       const cell = getCell(0, 1);
       fireEvent.doubleClick(cell);
       expect(listener.callCount).to.equal(0);
+    });
+
+    it('should not mutate the rowModesModel prop if props of any column contains error=true', async () => {
+      column1Props.preProcessEditCellProps = ({ props }: GridPreProcessEditCellProps) => ({
+        ...props,
+        error: true,
+      });
+      const { setProps } = render(<TestCase />);
+      const cell = getCell(0, 1);
+      fireEvent.mouseUp(cell);
+      fireEvent.click(cell);
+      fireEvent.doubleClick(cell);
+
+      await act(() =>
+        apiRef.current.setEditCellValue({ id: 0, field: 'currencyPair', value: 'USD GBP' }),
+      );
+
+      const rowModesModel = { 0: { mode: 'view' } };
+      setProps({ rowModesModel });
+      expect(rowModesModel).to.deep.equal({ 0: { mode: 'view' } });
     });
   });
 

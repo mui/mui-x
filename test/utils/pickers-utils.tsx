@@ -8,6 +8,7 @@ import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon';
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import sinon from 'sinon';
+import { useControlled } from '@mui/material/utils';
 
 const availableAdapters = {
   'date-fns': AdapterDateFns,
@@ -124,10 +125,11 @@ export const openPicker = (params: OpenPickerParams) => {
 };
 
 // TODO: Handle dynamic values
-export const getClockMouseEvent = (type: 'mousedown' | 'mousemove' | 'mouseup') => {
-  const offsetX = 20;
-  const offsetY = 15;
-
+export const getClockMouseEvent = (
+  type: 'mousedown' | 'mousemove' | 'mouseup',
+  offsetX = 20,
+  offsetY = 15,
+) => {
   const event = new window.MouseEvent(type, {
     bubbles: true,
     cancelable: true,
@@ -160,20 +162,26 @@ export const withPickerControls =
     return (
       props: Omit<Props, 'value' | 'onChange' | keyof DefaultProps> &
         Partial<DefaultProps> & {
-          initialValue: TValue;
+          initialValue?: TValue;
+          value?: TValue;
           onChange?: any;
         },
     ) => {
-      const { initialValue, onChange, ...other } = props;
+      const { initialValue, value: inValue, onChange, ...other } = props;
 
-      const [value, setValue] = React.useState<TValue>(initialValue);
+      const [value, setValue] = useControlled({
+        controlled: inValue,
+        default: initialValue,
+        name: 'withPickerControls',
+        state: 'value,',
+      });
 
       const handleChange = React.useCallback(
         (newValue: TValue, keyboardInputValue?: string) => {
           setValue(newValue);
           onChange?.(newValue, keyboardInputValue);
         },
-        [onChange],
+        [onChange, setValue],
       );
 
       return (

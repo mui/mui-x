@@ -32,7 +32,7 @@ const pages: MuiPage[] = [
           { pathname: '/x/react-data-grid/column-dimensions' },
           { pathname: '/x/react-data-grid/column-visibility' },
           { pathname: '/x/react-data-grid/column-header' },
-          { pathname: '/x/react-data-grid/column-ordering' },
+          { pathname: '/x/react-data-grid/column-ordering', plan: 'pro' },
           { pathname: '/x/react-data-grid/column-pinning', plan: 'pro' },
           { pathname: '/x/react-data-grid/column-spanning' },
           { pathname: '/x/react-data-grid/column-groups' },
@@ -91,6 +91,15 @@ const pages: MuiPage[] = [
           { pathname: '/x/react-data-grid/api-object', title: 'API object' },
           { pathname: '/x/react-data-grid/events' },
           { pathname: '/x/react-data-grid/state' },
+        ],
+      },
+      {
+        title: 'Recipes',
+        pathname: '/x/react-data-grid/recipes',
+        scopePathnames: ['/x/react-data-grid/recipes-'],
+        children: [
+          { pathname: '/x/react-data-grid/recipes-editing', title: 'Editing' },
+          { pathname: '/x/react-data-grid/recipes-row-grouping', title: 'Row grouping' },
         ],
       },
       {

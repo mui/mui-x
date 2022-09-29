@@ -1,9 +1,10 @@
 import * as React from 'react';
-import { useTheme, styled, Theme } from '@mui/material/styles';
+import { useTheme, styled, Theme, useThemeProps } from '@mui/material/styles';
 import { unstable_composeClasses as composeClasses } from '@mui/material';
 import { PickersToolbarText } from '../internals/components/PickersToolbarText';
 import { PickersToolbarButton } from '../internals/components/PickersToolbarButton';
-import { PickersToolbar, pickersToolbarClasses } from '../internals/components/PickersToolbar';
+import { PickersToolbar } from '../internals/components/PickersToolbar';
+import { pickersToolbarClasses } from '../internals/components/pickersToolbarClasses';
 import { arrayIncludes } from '../internals/utils/utils';
 import { useLocaleText, useUtils } from '../internals/hooks/useUtils';
 import { useMeridiemMode } from '../internals/hooks/date-helpers-hooks';
@@ -61,7 +62,13 @@ const TimePickerToolbarSeparator = styled(PickersToolbarText, {
 const TimePickerToolbarHourMinuteLabel = styled('div', {
   name: 'MuiTimePickerToolbar',
   slot: 'HourMinuteLabel',
-  overridesResolver: (props, styles) => styles.hourMinuteLabel,
+  overridesResolver: (props, styles) => [
+    {
+      [`&.${timePickerToolbarClasses.hourMinuteLabelLandscape}`]: styles.hourMinuteLabelLandscape,
+      [`&.${timePickerToolbarClasses.hourMinuteLabelReverse}`]: styles.hourMinuteLabelReverse,
+    },
+    styles.hourMinuteLabel,
+  ],
 })<{
   ownerState: TimePickerToolbarProps<any>;
 }>(({ theme, ownerState }) => ({
@@ -79,7 +86,11 @@ const TimePickerToolbarHourMinuteLabel = styled('div', {
 const TimePickerToolbarAmPmSelection = styled('div', {
   name: 'MuiTimePickerToolbar',
   slot: 'AmPmSelection',
-  overridesResolver: (props, styles) => styles.ampmSelection,
+  overridesResolver: (props, styles) => [
+    { [`.${timePickerToolbarClasses.ampmLabel}`]: styles.ampmLabel },
+    { [`&.${timePickerToolbarClasses.ampmLandscape}`]: styles.ampmLandscape },
+    styles.ampmSelection,
+  ],
 })<{
   ownerState: TimePickerToolbarProps<any>;
 }>(({ ownerState }) => ({
@@ -101,13 +112,14 @@ const TimePickerToolbarAmPmSelection = styled('div', {
 /**
  * @ignore - internal component.
  */
-export const TimePickerToolbar = <TDate extends unknown>(
-  props: BaseToolbarProps<TDate, TDate | null>,
-) => {
+export function TimePickerToolbar<TDate extends unknown>(
+  inProps: BaseToolbarProps<TDate, TDate | null>,
+) {
+  const props = useThemeProps({ props: inProps, name: 'MuiTimePickerToolbar' });
   const {
     ampm,
     ampmInClock,
-    parsedValue,
+    value,
     isLandscape,
     isMobileKeyboardViewOpen,
     onChange,
@@ -126,7 +138,7 @@ export const TimePickerToolbar = <TDate extends unknown>(
   const toolbarTitle = toolbarTitleProp ?? localeText.timePickerDefaultToolbarTitle;
   const theme = useTheme();
   const showAmPmControl = Boolean(ampm && !ampmInClock);
-  const { meridiemMode, handleMeridiemChange } = useMeridiemMode(parsedValue, ampm, onChange);
+  const { meridiemMode, handleMeridiemChange } = useMeridiemMode(value, ampm, onChange);
 
   const formatHours = (time: TDate) =>
     ampm ? utils.format(time, 'hours12h') : utils.format(time, 'hours24h');
@@ -164,7 +176,7 @@ export const TimePickerToolbar = <TDate extends unknown>(
             variant="h3"
             onClick={() => setOpenView('hours')}
             selected={openView === 'hours'}
-            value={parsedValue ? formatHours(parsedValue) : '--'}
+            value={value ? formatHours(value) : '--'}
           />
         )}
         {arrayIncludes(views, ['hours', 'minutes']) && separator}
@@ -175,7 +187,7 @@ export const TimePickerToolbar = <TDate extends unknown>(
             variant="h3"
             onClick={() => setOpenView('minutes')}
             selected={openView === 'minutes'}
-            value={parsedValue ? utils.format(parsedValue, 'minutes') : '--'}
+            value={value ? utils.format(value, 'minutes') : '--'}
           />
         )}
         {arrayIncludes(views, ['minutes', 'seconds']) && separator}
@@ -185,7 +197,7 @@ export const TimePickerToolbar = <TDate extends unknown>(
             variant="h3"
             onClick={() => setOpenView('seconds')}
             selected={openView === 'seconds'}
-            value={parsedValue ? utils.format(parsedValue, 'seconds') : '--'}
+            value={value ? utils.format(value, 'seconds') : '--'}
           />
         )}
       </TimePickerToolbarHourMinuteLabel>
@@ -215,4 +227,4 @@ export const TimePickerToolbar = <TDate extends unknown>(
       )}
     </TimePickerToolbarRoot>
   );
-};
+}

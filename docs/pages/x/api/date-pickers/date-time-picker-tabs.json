@@ -8,12 +8,13 @@
       },
       "required": true
     },
+    "classes": { "type": { "name": "object" } },
     "dateRangeIcon": { "type": { "name": "node" }, "default": "DateRange" },
     "timeIcon": { "type": { "name": "node" }, "default": "Time" }
   },
   "slots": {},
   "name": "DateTimePickerTabs",
-  "styles": { "classes": [], "globalClasses": {}, "name": "MuiDateTimePickerTabs" },
+  "styles": { "classes": ["root"], "globalClasses": {}, "name": "MuiDateTimePickerTabs" },
   "filename": "/packages/x-date-pickers/src/DateTimePicker/DateTimePickerTabs.tsx",
   "demos": "<ul></ul>",
   "packages": ["@mui/x-date-pickers-pro", "@mui/x-date-pickers"]
