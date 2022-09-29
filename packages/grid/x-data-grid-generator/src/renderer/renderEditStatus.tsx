@@ -1,5 +1,10 @@
 import * as React from 'react';
-import { GridRenderEditCellParams } from '@mui/x-data-grid';
+import {
+  GridRenderEditCellParams,
+  useGridApiContext,
+  useGridRootProps,
+  GridEditModes,
+} from '@mui/x-data-grid-premium';
 import Select, { SelectProps } from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import { MenuProps } from '@mui/material/Menu';
@@ -9,54 +14,41 @@ import ReportProblemIcon from '@mui/icons-material/ReportProblem';
 import InfoIcon from '@mui/icons-material/Info';
 import AutorenewIcon from '@mui/icons-material/Autorenew';
 import DoneIcon from '@mui/icons-material/Done';
-import { createStyles, makeStyles } from '@mui/styles';
-import { createTheme } from '@mui/material/styles';
 import { STATUS_OPTIONS } from '../services/static-data';
 
-const defaultTheme = createTheme();
-const useStyles = makeStyles(
-  (theme) =>
-    createStyles({
-      select: {
-        display: 'flex',
-        alignItems: 'center',
-        paddingLeft: theme.spacing(1),
-      },
-      optionIcon: {
-        minWidth: 36,
-      },
-      optionText: {
-        overflow: 'hidden',
-      },
-    }),
-  { defaultTheme },
-);
+function EditStatus(props: GridRenderEditCellParams<string>) {
+  const { id, value, field } = props;
+  const rootProps = useGridRootProps();
+  const apiRef = useGridApiContext();
 
-function EditStatus(props: GridRenderEditCellParams) {
-  const classes = useStyles();
-  const { id, value, api, field } = props;
+  const handleChange: SelectProps['onChange'] = async (event) => {
+    const isValid = await apiRef.current.setEditCellValue({ id, field, value: event.target.value });
 
-  const handleChange: SelectProps['onChange'] = (event) => {
-    api.setEditCellValue({ id, field, value: event.target.value }, event);
-    if (!(event as any).key) {
-      api.commitCellChange({ id, field });
-      api.setCellMode(id, field, 'view');
+    if (isValid && rootProps.editMode === GridEditModes.Cell) {
+      apiRef.current.stopCellEditMode({ id, field, cellToFocusAfter: 'below' });
     }
   };
 
   const handleClose: MenuProps['onClose'] = (event, reason) => {
     if (reason === 'backdropClick') {
-      api.setCellMode(id, field, 'view');
+      apiRef.current.stopCellEditMode({ id, field, ignoreModifications: true });
     }
   };
 
   return (
     <Select
       value={value}
-      classes={{ select: classes.select }}
       onChange={handleChange}
       MenuProps={{
         onClose: handleClose,
+      }}
+      sx={{
+        height: '100%',
+        '& .MuiSelect-select': {
+          display: 'flex',
+          alignItems: 'center',
+          pl: 1,
+        },
       }}
       autoFocus
       fullWidth
@@ -81,10 +73,10 @@ function EditStatus(props: GridRenderEditCellParams) {
 
         return (
           <MenuItem key={option} value={option}>
-            <ListItemIcon className={classes.optionIcon}>
+            <ListItemIcon sx={{ minWidth: 36 }}>
               <IconComponent fontSize="small" />
             </ListItemIcon>
-            <ListItemText className={classes.optionText} primary={label} />
+            <ListItemText primary={label} sx={{ overflow: 'hidden' }} />
           </MenuItem>
         );
       })}
@@ -92,6 +84,6 @@ function EditStatus(props: GridRenderEditCellParams) {
   );
 }
 
-export function renderEditStatus(params: GridRenderEditCellParams) {
+export function renderEditStatus(params: GridRenderEditCellParams<string>) {
   return <EditStatus {...params} />;
 }

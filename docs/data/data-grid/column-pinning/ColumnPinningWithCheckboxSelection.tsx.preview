@@ -1,0 +1,11 @@
+<DataGridPro
+  rows={rows}
+  columns={columns}
+  checkboxSelection
+  initialState={{
+    pinnedColumns: {
+      left: [GRID_CHECKBOX_SELECTION_COL_DEF.field],
+      right: ['actions'],
+    },
+  }}
+/>

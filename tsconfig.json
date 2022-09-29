@@ -1,23 +1,13 @@
 {
+  "extends": "@mui/monorepo/tsconfig.json",
   "compilerOptions": {
-    "target": "es6",
-    "module": "esnext",
     "lib": ["dom", "dom.iterable", "esnext"],
-    "allowJs": false,
-    "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
-    "strict": true,
-    "forceConsistentCasingInFileNames": true,
-    "moduleResolution": "node",
-    "resolveJsonModule": true,
-    "isolatedModules": true,
     // Already tested with eslint
     "noUnusedLocals": false,
-    "jsx": "react",
     // TODO, turn to true
     "noImplicitAny": false,
-    "types": ["node", "requestidlecallback"],
     "baseUrl": "./",
+    "allowJs": true,
     "paths": {
       "@mui/x-data-grid": ["./packages/grid/x-data-grid/src"],
       "@mui/x-data-grid/*": ["./packages/grid/x-data-grid/src/*"],
@@ -25,8 +15,16 @@
       "@mui/x-data-grid-generator/*": ["./packages/grid/x-data-grid-generator/src/*"],
       "@mui/x-data-grid-pro": ["./packages/grid/x-data-grid-pro/src"],
       "@mui/x-data-grid-pro/*": ["./packages/grid/x-data-grid-pro/src/*"],
+      "@mui/x-data-grid-premium": ["./packages/grid/x-data-grid-premium/src"],
+      "@mui/x-data-grid-premium/*": ["./packages/grid/x-data-grid-premium/src/*"],
+      "@mui/x-date-pickers": ["./packages/x-date-pickers/src"],
+      "@mui/x-date-pickers/*": ["./packages/x-date-pickers/src/*"],
+      "@mui/x-date-pickers-pro": ["./packages/x-date-pickers-pro/src"],
+      "@mui/x-date-pickers-pro/*": ["./packages/x-date-pickers-pro/src/*"],
       "@mui/x-license-pro": ["./packages/x-license-pro/src"],
-      "@mui/x-license-pro/*": ["./packages/x-license-pro/src/*"]
+      "@mui/x-license-pro/*": ["./packages/x-license-pro/src/*"],
+      "test/*": ["./test/*"]
     }
-  }
+  },
+  "exclude": ["**/node_modules/!(@mui)/**", "**/build/**/*", "docs/export/**/*"]
 }

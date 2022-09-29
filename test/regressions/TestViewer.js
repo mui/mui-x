@@ -1,18 +1,19 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import clsx from 'clsx';
+import { styled } from '@mui/material/styles';
+import Box from '@mui/material/Box';
+import GlobalStyles from '@mui/material/GlobalStyles';
+import { useLocation } from 'react-router-dom';
 import { useFakeTimers } from 'sinon';
-import { withStyles } from '@mui/styles';
-import { createTheme } from '@mui/material/styles';
 
-const styles = (theme) => ({
-  root: {
-    backgroundColor: theme.palette.background.default,
-    padding: theme.spacing(1),
-    display: 'flex',
-    justifyContent: 'center',
-  },
-  dataGridContainer: {
+const StyledBox = styled(Box, {
+  shouldForwardProp: (prop) => prop !== 'isDataGridTest',
+})(({ theme, isDataGridTest }) => ({
+  backgroundColor: theme.palette.background.default,
+  display: 'flex',
+  padding: theme.spacing(1),
+  justifyContent: 'center',
+  ...(isDataGridTest && {
     minHeight: 400,
     maxWidth: 500,
     // Workaround the min-height limitation
@@ -26,8 +27,8 @@ const styles = (theme) => ({
         bottom: 0,
       },
     },
-  },
-});
+  }),
+}));
 
 let clock;
 
@@ -39,25 +40,34 @@ function MockTime(props) {
     // eslint-disable-next-line react-hooks/rules-of-hooks -- not a React hook
     clock = useFakeTimers({
       now: new Date('Mon Aug 18 14:11:54 2014 -0500').getTime(),
-      shouldAdvanceTime: true,
+      // We need to let time advance to use `useDemoData`, but on the pickers test it makes the tests flaky
+      shouldAdvanceTime: props.isDataGridTest,
     });
-
     setReady(true);
 
     return () => {
       clock.restore();
     };
-  }, []);
+  }, [props.isDataGridTest]);
 
   return ready ? props.children : null;
 }
 
+MockTime.propTypes = {
+  children: PropTypes.node.isRequired,
+  isDataGridTest: PropTypes.bool,
+};
+
 function LoadFont(props) {
   const { children, ...other } = props;
+  const location = useLocation();
   // We're simulating `act(() => ReactDOM.render(children))`
   // In the end children passive effects should've been flushed.
   // React doesn't have any such guarantee outside of `act()` so we're approximating it.
   const [ready, setReady] = React.useState(false);
+
+  // In react-router v6, with multiple routes sharing the same element,
+  // this effect will only run once if no dependency is passed.
   React.useEffect(() => {
     function handleFontsEvent(event) {
       if (event.type === 'loading') {
@@ -87,12 +97,12 @@ function LoadFont(props) {
       document.fonts.removeEventListener('loading', handleFontsEvent);
       document.fonts.removeEventListener('loadingdone', handleFontsEvent);
     };
-  }, []);
+  }, [location]);
 
   return (
-    <div aria-busy={!ready} data-testid="testcase" {...other}>
+    <StyledBox aria-busy={!ready} data-testid="testcase" {...other}>
       {children}
-    </div>
+    </StyledBox>
   );
 }
 
@@ -101,26 +111,46 @@ LoadFont.propTypes = {
 };
 
 function TestViewer(props) {
-  const { children, classes, dataGridContainer } = props;
+  const { children, isDataGridTest } = props;
 
   return (
-    <MockTime>
-      <LoadFont
-        className={clsx(classes.root, {
-          [classes.dataGridContainer]: dataGridContainer,
-        })}
-      >
-        {children}
-      </LoadFont>
-    </MockTime>
+    <React.Fragment>
+      <GlobalStyles
+        styles={{
+          html: {
+            WebkitFontSmoothing: 'antialiased', // Antialiasing.
+            MozOsxFontSmoothing: 'grayscale', // Antialiasing.
+            // Do the opposite of the docs in order to help catching issues.
+            boxSizing: 'content-box',
+          },
+          '*, *::before, *::after': {
+            boxSizing: 'inherit',
+            // Disable transitions to avoid flaky screenshots
+            transition: 'none !important',
+            animation: 'none !important',
+          },
+          body: {
+            margin: 0,
+            overflowX: 'hidden',
+          },
+          '@media print': {
+            '@page': {
+              size: 'auto',
+              margin: 0,
+            },
+          },
+        }}
+      />
+      <MockTime isDataGridTest={isDataGridTest}>
+        <LoadFont isDataGridTest={isDataGridTest}>{children}</LoadFont>
+      </MockTime>
+    </React.Fragment>
   );
 }
 
 TestViewer.propTypes = {
   children: PropTypes.node.isRequired,
-  classes: PropTypes.object.isRequired,
-  dataGridContainer: PropTypes.bool.isRequired,
+  isDataGridTest: PropTypes.bool.isRequired,
 };
 
-const defaultTheme = createTheme();
-export default withStyles(styles, { defaultTheme })(TestViewer);
+export default TestViewer;

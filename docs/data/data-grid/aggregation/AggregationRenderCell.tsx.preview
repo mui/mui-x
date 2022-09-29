@@ -1,0 +1,12 @@
+<DataGridPremium
+  rows={rows}
+  columns={COLUMNS}
+  initialState={{
+    aggregation: {
+      model: {
+        imdbRating: 'avg',
+      },
+    },
+  }}
+  experimentalFeatures={{ aggregation: true }}
+/>

@@ -1,75 +1,72 @@
 import * as React from 'react';
-import { GridRenderEditCellParams } from '@mui/x-data-grid';
-import Autocomplete from '@mui/material/Autocomplete';
+import { GridRenderEditCellParams, useGridApiContext } from '@mui/x-data-grid-premium';
+import Autocomplete, { autocompleteClasses, AutocompleteProps } from '@mui/material/Autocomplete';
 import InputBase from '@mui/material/InputBase';
-import { createStyles, makeStyles } from '@mui/styles';
-import { createTheme } from '@mui/material/styles';
-import { COUNTRY_ISO_OPTIONS } from '../services/static-data';
+import Box from '@mui/material/Box';
+import { styled } from '@mui/material/styles';
+import { COUNTRY_ISO_OPTIONS, CountryIsoOption } from '../services/static-data';
 
-// ISO 3166-1 alpha-2
-// ⚠️ No support for IE 11
-function countryToFlag(isoCode: string) {
-  return typeof String.fromCodePoint !== 'undefined'
-    ? isoCode
-        .toUpperCase()
-        .replace(/./g, (char) => String.fromCodePoint(char.charCodeAt(0) + 127397))
-    : isoCode;
-}
+const StyledAutocomplete = styled(Autocomplete)(({ theme }) => ({
+  height: '100%',
+  [`& .${autocompleteClasses.inputRoot}`]: {
+    ...theme.typography.body2,
+    padding: '1px 0',
+    height: '100%',
+    '& input': {
+      padding: '0 16px',
+      height: '100%',
+    },
+  },
+})) as typeof Autocomplete;
 
-const defaultTheme = createTheme();
-const useStyles = makeStyles(
-  (theme) =>
-    createStyles({
-      option: {
-        '& > span': {
-          marginRight: 10,
-          fontSize: 18,
-        },
-      },
-      inputRoot: {
-        ...theme.typography.body2,
-        padding: '1px 0',
-        height: '100%',
-        '& input': {
-          padding: '0 16px',
-          height: '100%',
-        },
-      },
-    }),
-  { defaultTheme },
-);
+function EditCountry(props: GridRenderEditCellParams<CountryIsoOption>) {
+  const { id, value, field } = props;
 
-function EditCountry(props: GridRenderEditCellParams) {
-  const classes = useStyles();
-  const { id, value, api, field } = props;
+  const apiRef = useGridApiContext();
 
-  const handleChange = React.useCallback(
+  const handleChange = React.useCallback<
+    NonNullable<AutocompleteProps<CountryIsoOption, false, true, false>['onChange']>
+  >(
     (event, newValue) => {
-      api.setEditCellValue({ id, field, value: newValue }, event);
-      if (!event.key) {
-        api.commitCellChange({ id, field });
-        api.setCellMode(id, field, 'view');
+      apiRef.current.setEditCellValue({ id, field, value: newValue }, event);
+      if (!(event as any).key) {
+        apiRef.current.commitCellChange({ id, field });
+        apiRef.current.setCellMode(id, field, 'view');
       }
     },
-    [api, field, id],
+    [apiRef, field, id],
   );
 
   return (
-    <Autocomplete
-      value={value as any}
+    <StyledAutocomplete<CountryIsoOption, false, true, false>
+      value={value}
       onChange={handleChange}
       options={COUNTRY_ISO_OPTIONS}
-      getOptionLabel={(option) => option.label}
+      getOptionLabel={(option: any) => option.label}
       autoHighlight
       fullWidth
       open
-      classes={classes}
       disableClearable
-      renderOption={(optionProps, option) => (
-        <li {...optionProps}>
-          <span>{countryToFlag(option.code)}</span>
+      renderOption={(optionProps, option: any) => (
+        <Box
+          component="li"
+          sx={{
+            '& > img': {
+              mr: 1.5,
+              flexShrink: 0,
+            },
+          }}
+          {...optionProps}
+        >
+          <img
+            loading="lazy"
+            width="20"
+            src={`https://flagcdn.com/w20/${option.code.toLowerCase()}.png`}
+            srcSet={`https://flagcdn.com/w40/${option.code.toLowerCase()}.png 2x`}
+            alt=""
+          />
           {option.label}
-        </li>
+        </Box>
       )}
       renderInput={(params) => (
         <InputBase
@@ -87,6 +84,6 @@ function EditCountry(props: GridRenderEditCellParams) {
   );
 }
 
-export function renderEditCountry(params: GridRenderEditCellParams) {
+export function renderEditCountry(params: GridRenderEditCellParams<CountryIsoOption>) {
   return <EditCountry {...params} />;
 }

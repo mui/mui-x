@@ -1,29 +1,35 @@
 import * as React from 'react';
-import ReactDOM from 'react-dom';
-import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
+import * as ReactDOM from 'react-dom';
+import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import { LicenseInfo } from '@mui/x-data-grid-pro';
-import { withStyles } from '@mui/styles';
 import TestViewer from 'test/regressions/TestViewer';
 import { useFakeTimers } from 'sinon';
-import addons, { mockChannel } from '@storybook/addons';
 
-// See https://storybook.js.org/docs/react/workflows/faq#why-is-there-no-addons-channel
-addons.setChannel(mockChannel());
-
-// Remove the license warning from demonstration purposes
+// This license key is only valid for use with Material UI SAS's projects
+// See the terms: https://mui.com/r/x-license-eula
 LicenseInfo.setLicenseKey(
-  '0f94d8b65161817ca5d7f7af8ac2f042T1JERVI6TVVJLVN0b3J5Ym9vayxFWFBJUlk9MTY1NDg1ODc1MzU1MCxLRVlWRVJTSU9OPTE=',
+  '61628ce74db2c1b62783a6d438593bc5Tz1NVUktRG9jLEU9MTY4MzQ0NzgyMTI4NCxTPXByZW1pdW0sTE09c3Vic2NyaXB0aW9uLEtWPTI=',
 );
 
 const blacklist = [
-  /^docs-components-(.*)(?<=NoSnap)\.png$/, // Excludes demos that we don't want
-  'docs-components-data-grid-filtering/ColumnTypeFilteringGrid.png', // Needs interaction
-  'docs-components-data-grid-filtering/CustomRatingOperator.png', // Needs interaction
-  'docs-components-data-grid-filtering/ExtendNumericOperator.png', // Needs interaction
-  // TODO import the Rating from @mui/material, not the lab.
-  'docs-components-data-grid-components/CustomFooter.png',
+  /^docs-(.*)(?<=NoSnap)\.png$/, // Excludes demos that we don't want
+  'docs-data-grid-filtering/RemoveBuiltInOperators.png', // Needs interaction
+  'docs-data-grid-filtering/CustomRatingOperator.png', // Needs interaction
+  'docs-data-grid-filtering/CustomInputComponent.png', // Needs interaction
+  'docs-date-pickers-date-picker/CustomInput.png', // Redundant
+  'docs-date-pickers-date-picker/ResponsiveDatePickers.png', // Redundant
+  'docs-date-pickers-date-picker/ServerRequestDatePicker.png', // Redundant
+  'docs-date-pickers-date-picker/ViewsDatePicker.png', // Redundant
+  'docs-date-pickers-date-range-picker/CalendarsDateRangePicker.png', // Redundant
+  'docs-date-pickers-date-range-picker/CustomDateRangeInputs.png', // Redundant
+  'docs-date-pickers-date-range-picker/MinMaxDateRangePicker.png', // Redundant
+  'docs-date-pickers-date-range-picker/ResponsiveDateRangePicker.png', // Redundant
+  'docs-date-pickers-date-time-picker/BasicDateTimePicker.png', // Redundant
+  'docs-date-pickers-date-time-picker/ResponsiveDateTimePickers.png', // Redundant
+  'docs-date-pickers-localization/LocalizedTimePicker.png', // Redundant
+  'docs-date-pickers-localization/LocalizedDatePicker.png', // Redundant
+  'docs-date-pickers-time-picker/ResponsiveTimePickers.png', // Redundant
   // 'docs-system-typography',
-  /^stories(.*)(?<!Snap)\.png$/, // Excludes stories that aren't suffixed with 'Snap'.
 ];
 
 const unusedBlacklistPatterns = new Set(blacklist);
@@ -58,34 +64,9 @@ function excludeTest(suite, name) {
   });
 }
 
-// Get all the tests specifically written for preventing regressions.
-const requireStories = require.context('packages/storybook/src/stories', true, /\.(js|ts|tsx)$/);
-const stories = requireStories.keys().reduce((res, path) => {
-  let suite = path
-    .replace('./', '')
-    .replace('.stories', '')
-    .replace(/\.\w+$/, '');
-  suite = `stories-${suite}`;
-
-  const cases = requireStories(path);
-
-  Object.keys(cases).forEach((name) => {
-    if (name !== 'default' && !excludeTest(suite, name)) {
-      res.push({
-        path,
-        suite,
-        name,
-        case: cases[name],
-      });
-    }
-  });
-
-  return res;
-}, []);
-
 // Also use some of the demos to avoid code duplication.
-const requireDocs = require.context('docsx/src/pages', true, /js$/);
-const docs = requireDocs.keys().reduce((res, path) => {
+const requireDocs = require.context('docsx/data', true, /js$/);
+const tests = requireDocs.keys().reduce((res, path) => {
   const [name, ...suiteArray] = path.replace('./', '').replace('.js', '').split('/').reverse();
   const suite = `docs-${suiteArray.reverse().join('-')}`;
 
@@ -105,36 +86,14 @@ const docs = requireDocs.keys().reduce((res, path) => {
 
 clock.restore();
 
-const tests = stories.concat(docs);
-
 if (unusedBlacklistPatterns.size > 0) {
   console.warn(
-    `The following patterns are unused:\n\n${Array.from(unusedBlacklistPatterns)
-      .map((pattern) => `- ${pattern}`)
-      .join('\n')}`,
+    [
+      'The following patterns are unused:',
+      ...Array.from(unusedBlacklistPatterns).map((pattern) => `- ${pattern}`),
+    ].join('\n'),
   );
 }
-
-const GlobalStyles = withStyles({
-  '@global': {
-    html: {
-      WebkitFontSmoothing: 'antialiased', // Antialiasing.
-      MozOsxFontSmoothing: 'grayscale', // Antialiasing.
-      // Do the opposite of the docs in order to help catching issues.
-      boxSizing: 'content-box',
-    },
-    '*, *::before, *::after': {
-      boxSizing: 'inherit',
-      // Disable transitions to avoid flaky screenshots
-      transition: 'none !important',
-      animation: 'none !important',
-    },
-    body: {
-      margin: 0,
-      overflowX: 'hidden',
-    },
-  },
-})(() => null);
 
 function App() {
   function computeIsDev() {
@@ -164,8 +123,7 @@ function App() {
 
   return (
     <Router>
-      <GlobalStyles />
-      <Switch>
+      <Routes>
         {tests.map((test) => {
           const path = computePath(test);
           const TestCase = test.case;
@@ -174,20 +132,22 @@ function App() {
             return null;
           }
 
-          let dataGridContainer = false;
-          if (path.indexOf('/docs-components-data-grid') === 0 || path.indexOf('/stories-') === 0) {
-            dataGridContainer = true;
-          }
+          const isDataGridTest = path.indexOf('/docs-data-grid') === 0;
 
           return (
-            <Route key={path} exact path={path}>
-              <TestViewer dataGridContainer={dataGridContainer}>
-                <TestCase />
-              </TestViewer>
-            </Route>
+            <Route
+              key={path}
+              exact
+              path={path}
+              element={
+                <TestViewer isDataGridTest={isDataGridTest}>
+                  <TestCase />
+                </TestViewer>
+              }
+            />
           );
         })}
-      </Switch>
+      </Routes>
       <div hidden={!isDev}>
         <p>
           Devtools can be enabled by appending <code>#dev</code> in the addressbar or disabled by

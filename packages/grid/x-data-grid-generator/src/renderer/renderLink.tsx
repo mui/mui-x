@@ -1,36 +1,41 @@
 import * as React from 'react';
-import { GridCellParams } from '@mui/x-data-grid-pro';
-import { makeStyles } from '@mui/styles';
-
-const useStyles = makeStyles({
-  root: {
-    textOverflow: 'ellipsis',
-    whiteSpace: 'nowrap',
-    overflow: 'hidden',
-    color: 'inherit',
-  },
-});
+import { styled } from '@mui/material/styles';
+import { GridRenderCellParams } from '@mui/x-data-grid-premium';
 
 interface DemoLinkProps {
   href: string;
   children: string;
+  tabIndex: number;
 }
 
-export const DemoLink = React.memo(function DemoLink(props: DemoLinkProps) {
-  const classes = useStyles();
+const Link = styled('a')({
+  textOverflow: 'ellipsis',
+  whiteSpace: 'nowrap',
+  overflow: 'hidden',
+  color: 'inherit',
+});
 
+export const DemoLink = React.memo(function DemoLink(props: DemoLinkProps) {
   const handleClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
     event.preventDefault();
     event.stopPropagation();
   };
 
   return (
-    <a tabIndex={-1} className={classes.root} onClick={handleClick} href={props.href}>
+    <Link tabIndex={props.tabIndex} onClick={handleClick} href={props.href}>
       {props.children}
-    </a>
+    </Link>
   );
 });
 
-export function renderLink(params: GridCellParams) {
-  return <DemoLink href={params.value!.toString()}>{params.value!.toString()}</DemoLink>;
+export function renderLink(params: GridRenderCellParams<string, any, any>) {
+  if (params.value == null) {
+    return '';
+  }
+
+  return (
+    <DemoLink href={params.value} tabIndex={params.tabIndex}>
+      {params.value}
+    </DemoLink>
+  );
 }

@@ -1,1 +1,1 @@
-require('@material-ui/monorepo/scripts/jsonlint');
+require('@mui/monorepo/scripts/jsonlint');

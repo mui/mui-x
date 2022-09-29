@@ -1,4 +1,2 @@
+import '@mui/monorepo/test/utils/init';
 import './licenseRelease';
-import './licenseKey';
-
-export * from '@material-ui/monorepo/test/utils/init';

@@ -1,13 +1,14 @@
 import * as React from 'react';
-import { createRenderer, fireEvent, screen, waitFor } from '@material-ui/monorepo/test/utils';
+// @ts-ignore Remove once the test utils are typed
+import { createRenderer, fireEvent, screen } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
-import { gridClasses, DataGridPro } from '@mui/x-data-grid-pro';
+import { gridClasses, DataGridPro, DataGridProProps } from '@mui/x-data-grid-pro';
 import { getColumnHeaderCell, getColumnValues } from 'test/utils/helperFn';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
 describe('<DataGridPro /> - Column Headers', () => {
-  const { render } = createRenderer();
+  const { render, clock } = createRenderer({ clock: 'fake' });
 
   const baselineProps = {
     autoHeight: isJSDOM,
@@ -31,23 +32,64 @@ describe('<DataGridPro /> - Column Headers', () => {
     ],
   };
 
+  it('should not scroll the column headers when a column is focused', function test() {
+    if (isJSDOM) {
+      this.skip(); // JSDOM version of .focus() doesn't scroll
+    }
+    render(
+      <div style={{ width: 102, height: 500 }}>
+        <DataGridPro
+          {...baselineProps}
+          columns={[{ field: 'brand' }, { field: 'foundationYear' }]}
+        />
+      </div>,
+    );
+    const columnHeaders = document.querySelector('.MuiDataGrid-columnHeaders')!;
+    expect(columnHeaders.scrollLeft).to.equal(0);
+    const columnCell = getColumnHeaderCell(0);
+    columnCell.focus();
+    fireEvent.keyDown(columnCell, { key: 'End' });
+    expect(columnHeaders.scrollLeft).to.equal(0);
+  });
+
   describe('GridColumnHeaderMenu', () => {
-    it('should close the menu when the window is scrolled', async () => {
+    it('should close the menu when the window is scrolled', () => {
       render(
-        <div style={{ width: 300, height: 500 }}>
+        <div style={{ width: 300, height: 200 }}>
           <DataGridPro {...baselineProps} columns={[{ field: 'brand' }]} />
         </div>,
       );
       const columnCell = getColumnHeaderCell(0);
       const menuIconButton = columnCell.querySelector('button[aria-label="Menu"]');
       fireEvent.click(menuIconButton);
-      await waitFor(() => expect(screen.queryByRole('menu')).not.to.equal(null));
+      clock.runToLast();
+      expect(screen.queryByRole('menu')).not.to.equal(null);
       const virtualScroller = document.querySelector('.MuiDataGrid-virtualScroller')!;
-      virtualScroller.dispatchEvent(new Event('scroll'));
-      await waitFor(() => expect(screen.queryByRole('menu')).to.equal(null));
+      fireEvent.wheel(virtualScroller);
+      clock.runToLast();
+      expect(screen.queryByRole('menu')).to.equal(null);
     });
 
-    it('should not modify column order when menu is clicked', async () => {
+    it('should not close the menu when updating the rows prop', () => {
+      const Test = (props: Partial<DataGridProProps>) => {
+        return (
+          <div style={{ width: 300, height: 500 }}>
+            <DataGridPro {...baselineProps} columns={[{ field: 'brand' }]} {...props} />
+          </div>
+        );
+      };
+      const { setProps } = render(<Test />);
+      const columnCell = getColumnHeaderCell(0);
+      const menuIconButton = columnCell.querySelector('button[aria-label="Menu"]');
+      fireEvent.click(menuIconButton);
+      clock.runToLast();
+      expect(screen.queryByRole('menu')).not.to.equal(null);
+      setProps({ rows: [...baselineProps.rows] });
+      clock.runToLast();
+      expect(screen.queryByRole('menu')).not.to.equal(null);
+    });
+
+    it('should not modify column order when menu is clicked', () => {
       render(
         <div style={{ width: 300, height: 500 }}>
           <DataGridPro {...baselineProps} columns={[{ field: 'brand' }]} />
@@ -57,12 +99,13 @@ describe('<DataGridPro /> - Column Headers', () => {
       const columnCell = getColumnHeaderCell(0);
       const menuIconButton = columnCell.querySelector('button[aria-label="Menu"]');
       fireEvent.click(menuIconButton);
-      await waitFor(() => expect(screen.queryByRole('menu')).not.to.equal(null));
+      clock.runToLast();
+      expect(screen.queryByRole('menu')).not.to.equal(null);
       fireEvent.click(screen.queryByRole('menu'));
       expect(getColumnValues(0)).to.deep.equal(['Nike', 'Adidas', 'Puma']);
     });
 
-    it('should sort column when sort by Asc is clicked', async () => {
+    it('should sort column when sort by Asc is clicked', () => {
       render(
         <div style={{ width: 300, height: 500 }}>
           <DataGridPro {...baselineProps} columns={[{ field: 'brand' }]} />
@@ -72,12 +115,13 @@ describe('<DataGridPro /> - Column Headers', () => {
       const menuIconButton = columnCell.querySelector('button[aria-label="Menu"]');
       expect(getColumnValues(0)).to.deep.equal(['Nike', 'Adidas', 'Puma']);
       fireEvent.click(menuIconButton);
-      await waitFor(() => expect(screen.queryByRole('menu')).not.to.equal(null));
+      clock.runToLast();
+      expect(screen.queryByRole('menu')).not.to.equal(null);
       fireEvent.click(screen.getByRole('menuitem', { name: 'Sort by ASC' }));
       expect(getColumnValues(0)).to.deep.equal(['Adidas', 'Nike', 'Puma']);
     });
 
-    it('should close the menu of a column when resizing this column', async () => {
+    it('should close the menu of a column when resizing this column', () => {
       render(
         <div style={{ width: 300, height: 500 }}>
           <DataGridPro
@@ -91,20 +135,21 @@ describe('<DataGridPro /> - Column Headers', () => {
       );
 
       const columnCell = getColumnHeaderCell(0);
-
       const menuIconButton = columnCell.querySelector('button[aria-label="Menu"]');
 
       fireEvent.click(menuIconButton);
-      await waitFor(() => expect(screen.queryByRole('menu')).not.to.equal(null));
+      clock.runToLast();
+      expect(screen.queryByRole('menu')).not.to.equal(null);
 
       const separator = columnCell.querySelector('.MuiDataGrid-iconSeparator');
       fireEvent.mouseDown(separator);
       // TODO remove mouseUp once useGridColumnReorder will handle cleanup properly
       fireEvent.mouseUp(separator);
-      await waitFor(() => expect(screen.queryByRole('menu')).to.equal(null));
+      clock.runToLast();
+      expect(screen.queryByRole('menu')).to.equal(null);
     });
 
-    it('should close the menu of a column when resizing another column', async () => {
+    it('should close the menu of a column when resizing another column', () => {
       render(
         <div style={{ width: 300, height: 500 }}>
           <DataGridPro
@@ -123,16 +168,18 @@ describe('<DataGridPro /> - Column Headers', () => {
       const menuIconButton = columnWithMenuCell.querySelector('button[aria-label="Menu"]');
 
       fireEvent.click(menuIconButton);
-      await waitFor(() => expect(screen.queryByRole('menu')).not.to.equal(null));
+      clock.runToLast();
+      expect(screen.queryByRole('menu')).not.to.equal(null);
 
       const separator = columnToResizeCell.querySelector(
         `.${gridClasses['columnSeparator--resizable']}`,
       );
       fireEvent.mouseDown(separator);
-      await waitFor(() => expect(screen.queryByRole('menu')).to.equal(null));
+      clock.runToLast();
+      expect(screen.queryByRole('menu')).to.equal(null);
     });
 
-    it('should close the menu of a column when pressing the Escape key', async () => {
+    it('should close the menu of a column when pressing the Escape key', () => {
       render(
         <div style={{ width: 300, height: 500 }}>
           <DataGridPro {...baselineProps} columns={[{ field: 'brand' }]} />
@@ -143,10 +190,81 @@ describe('<DataGridPro /> - Column Headers', () => {
       const menuIconButton = columnCell.querySelector('button[aria-label="Menu"]');
 
       fireEvent.click(menuIconButton);
-      await waitFor(() => expect(screen.queryByRole('menu')).not.to.equal(null));
+      clock.runToLast();
+      expect(screen.queryByRole('menu')).not.to.equal(null);
       /* eslint-disable material-ui/disallow-active-element-as-key-event-target */
       fireEvent.keyDown(document.activeElement!, { key: 'Escape' });
-      await waitFor(() => expect(screen.queryByRole('menu')).to.equal(null));
+      clock.runToLast();
+      expect(screen.queryByRole('menu')).to.equal(null);
+    });
+
+    it('should remove the MuiDataGrid-menuOpen CSS class only after the transition has ended', () => {
+      render(
+        <div style={{ width: 300, height: 500 }}>
+          <DataGridPro {...baselineProps} columns={[{ field: 'brand' }]} />
+        </div>,
+      );
+      const columnCell = getColumnHeaderCell(0);
+      const menuIconButton = columnCell.querySelector('button[aria-label="Menu"]');
+      fireEvent.click(menuIconButton);
+      expect(menuIconButton?.parentElement).to.have.class(gridClasses.menuOpen);
+      clock.runToLast(); // Wait for the transition to run
+      fireEvent.keyDown(document.activeElement!, { key: 'Escape' });
+      expect(menuIconButton?.parentElement).to.have.class(gridClasses.menuOpen);
+      clock.runToLast(); // Wait for the transition to run
+      expect(menuIconButton?.parentElement).not.to.have.class(gridClasses.menuOpen);
+    });
+
+    it('should restore focus to the column header when dismissing the menu by selecting any item', () => {
+      const Test = (props: Partial<DataGridProProps>) => {
+        return (
+          <div style={{ width: 300, height: 500 }}>
+            <DataGridPro
+              {...baselineProps}
+              columns={[{ field: 'brand' }]}
+              initialState={{ sorting: { sortModel: [{ field: 'brand', sort: 'asc' }] } }}
+              {...props}
+            />
+          </div>
+        );
+      };
+      render(<Test />);
+      const columnCell = getColumnHeaderCell(0);
+      const menuIconButton = columnCell.querySelector('button[aria-label="Menu"]');
+      fireEvent.click(menuIconButton);
+      clock.runToLast();
+
+      const menu = screen.queryByRole('menu');
+      const unsortMenuitem = screen.queryByRole('menuitem', { name: /unsort/i });
+      expect(menu).toHaveFocus();
+
+      fireEvent.keyDown(menu, { key: 'ArrowDown' });
+      expect(unsortMenuitem).toHaveFocus();
+      fireEvent.keyDown(unsortMenuitem, { key: 'Enter' });
+
+      expect(columnCell).toHaveFocus();
+    });
+
+    it('should restore focus to the column header when dismissing the menu without selecting any item', () => {
+      const Test = (props: Partial<DataGridProProps>) => {
+        return (
+          <div style={{ width: 300, height: 500 }}>
+            <DataGridPro {...baselineProps} columns={[{ field: 'brand' }]} {...props} />
+          </div>
+        );
+      };
+      render(<Test />);
+      const columnCell = getColumnHeaderCell(0);
+      const menuIconButton = columnCell.querySelector('button[aria-label="Menu"]');
+      fireEvent.click(menuIconButton);
+      clock.runToLast();
+
+      const menu = screen.queryByRole('menu');
+      expect(menu).toHaveFocus();
+      fireEvent.keyDown(menu, { key: 'Escape' });
+
+      expect(menu).not.toHaveFocus();
+      expect(columnCell).toHaveFocus();
     });
   });
 });

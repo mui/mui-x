@@ -1,5 +1,6 @@
-import { GridApiRef, GridColumns, useGridApiRef, DataGridPro } from '@mui/x-data-grid-pro';
-import { createRenderer } from '@material-ui/monorepo/test/utils';
+import { GridColumns, useGridApiRef, DataGridPro, GridApi } from '@mui/x-data-grid-pro';
+// @ts-ignore Remove once the test utils are typed
+import { createRenderer, act } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
 import * as React from 'react';
 
@@ -12,7 +13,7 @@ describe('<DataGridPro /> - Export', () => {
     autoHeight: isJSDOM,
   };
 
-  let apiRef: GridApiRef;
+  let apiRef: React.MutableRefObject<GridApi>;
 
   const columns: GridColumns = [{ field: 'id' }, { field: 'brand', headerName: 'Brand' }];
 
@@ -20,6 +21,7 @@ describe('<DataGridPro /> - Export', () => {
     it('should work with basic strings', () => {
       const TestCaseCSVExport = () => {
         apiRef = useGridApiRef();
+
         return (
           <div style={{ width: 300, height: 300 }}>
             <DataGridPro
@@ -49,12 +51,14 @@ describe('<DataGridPro /> - Export', () => {
       expect(apiRef.current.getDataAsCsv()).to.equal(
         ['id,Brand', '0,Nike', '1,Adidas', '2,Puma'].join('\r\n'),
       );
-      apiRef.current.updateRows([
-        {
-          id: 1,
-          brand: 'Adidas,Reebok',
-        },
-      ]);
+      act(() =>
+        apiRef.current.updateRows([
+          {
+            id: 1,
+            brand: 'Adidas,Reebok',
+          },
+        ]),
+      );
       expect(apiRef.current.getDataAsCsv()).to.equal(
         ['id,Brand', '0,Nike', '1,"Adidas,Reebok"', '2,Puma'].join('\r\n'),
       );
@@ -157,6 +161,50 @@ describe('<DataGridPro /> - Export', () => {
       );
     });
 
+    it('should work with newline', () => {
+      const TestCaseCSVExport = () => {
+        apiRef = useGridApiRef();
+        return (
+          <div style={{ width: 300, height: 300 }}>
+            <DataGridPro
+              {...baselineProps}
+              apiRef={apiRef}
+              columns={columns}
+              rows={[
+                {
+                  id: 0,
+                  brand: `Nike \n Nike`,
+                },
+                {
+                  id: 1,
+                  brand: 'Adidas \n Adidas',
+                },
+                {
+                  id: 2,
+                  brand: 'Puma \r\n Puma',
+                },
+                {
+                  id: 3,
+                  brand: 'Reebok \n\r Reebok',
+                },
+              ]}
+            />
+          </div>
+        );
+      };
+
+      render(<TestCaseCSVExport />);
+      expect(apiRef.current.getDataAsCsv()).to.equal(
+        [
+          'id,Brand',
+          '0,"Nike \n Nike"',
+          '1,"Adidas \n Adidas"',
+          '2,"Puma \r\n Puma"',
+          '3,"Reebok \n\r Reebok"',
+        ].join('\r\n'),
+      );
+    });
+
     it('should allow to change the delimiter', () => {
       const TestCaseCSVExport = () => {
         apiRef = useGridApiRef();
@@ -218,6 +266,36 @@ describe('<DataGridPro /> - Export', () => {
       expect(apiRef.current.getDataAsCsv()).to.equal(['id,Brand', '0,Nike'].join('\r\n'));
     });
 
+    it('should export the rows returned by params.getRowsToExport if defined', () => {
+      const TestCaseCSVExport = () => {
+        apiRef = useGridApiRef();
+        return (
+          <div style={{ width: 300, height: 300 }}>
+            <DataGridPro
+              {...baselineProps}
+              apiRef={apiRef}
+              columns={[{ field: 'id' }, { field: 'brand', headerName: 'Brand' }]}
+              rows={[
+                {
+                  id: 0,
+                  brand: 'Nike',
+                },
+                {
+                  id: 1,
+                  brand: 'Adidas',
+                },
+              ]}
+            />
+          </div>
+        );
+      };
+
+      render(<TestCaseCSVExport />);
+      expect(apiRef.current.getDataAsCsv({ getRowsToExport: () => [0] })).to.equal(
+        ['id,Brand', '0,Nike'].join('\r\n'),
+      );
+    });
+
     it('should not export hidden column', () => {
       const TestCaseCSVExport = () => {
         apiRef = useGridApiRef();
@@ -226,7 +304,8 @@ describe('<DataGridPro /> - Export', () => {
             <DataGridPro
               {...baselineProps}
               apiRef={apiRef}
-              columns={[{ field: 'id' }, { field: 'brand', headerName: 'Brand', hide: true }]}
+              columns={[{ field: 'id' }, { field: 'brand', headerName: 'Brand' }]}
+              initialState={{ columns: { columnVisibilityModel: { brand: false } } }}
               rows={[
                 {
                   id: 0,
@@ -254,7 +333,8 @@ describe('<DataGridPro /> - Export', () => {
             <DataGridPro
               {...baselineProps}
               apiRef={apiRef}
-              columns={[{ field: 'id' }, { field: 'brand', headerName: 'Brand', hide: true }]}
+              columns={[{ field: 'id' }, { field: 'brand', headerName: 'Brand' }]}
+              initialState={{ columns: { columnVisibilityModel: { brand: false } } }}
               rows={[
                 {
                   id: 0,
@@ -321,7 +401,8 @@ describe('<DataGridPro /> - Export', () => {
             <DataGridPro
               {...baselineProps}
               apiRef={apiRef}
-              columns={[{ field: 'id' }, { field: 'brand', headerName: 'Brand', hide: true }]}
+              columns={[{ field: 'id' }, { field: 'brand', headerName: 'Brand' }]}
+              initialState={{ columns: { columnVisibilityModel: { brand: false } } }}
               rows={[
                 {
                   id: 0,
@@ -345,7 +426,7 @@ describe('<DataGridPro /> - Export', () => {
       ).to.equal(['Brand', 'Nike', 'Adidas'].join('\r\n'));
     });
 
-    it('should export column defined in params.fields even if column.hide=true or column.disableExport=true', () => {
+    it('should export column defined in params.fields even if `columnVisibilityModel` does not include the field or column.disableExport=true', () => {
       const TestCaseCSVExport = () => {
         apiRef = useGridApiRef();
         return (
@@ -355,8 +436,9 @@ describe('<DataGridPro /> - Export', () => {
               apiRef={apiRef}
               columns={[
                 { field: 'id', disableExport: true },
-                { field: 'brand', headerName: 'Brand', hide: true },
+                { field: 'brand', headerName: 'Brand' },
               ]}
+              initialState={{ columns: { columnVisibilityModel: { brand: false } } }}
               rows={[
                 {
                   id: 0,
@@ -400,6 +482,47 @@ describe('<DataGridPro /> - Export', () => {
       };
       render(<TestCaseCSVExport />);
       expect(apiRef.current.getDataAsCsv()).to.equal(['id,isAdmin', '0,Yes', '1,No'].join('\r\n'));
+    });
+
+    it('should warn when a value of a field is an object and no `valueFormatter` is provided', () => {
+      const COUNTRY_ISO_OPTIONS = [
+        { value: 'FR', label: 'France' },
+        { value: 'BR', label: 'Brazil' },
+      ];
+
+      const TestCaseCSVExport = () => {
+        apiRef = useGridApiRef();
+        return (
+          <div style={{ width: 300, height: 300 }}>
+            <DataGridPro
+              {...baselineProps}
+              apiRef={apiRef}
+              columns={[
+                { field: 'id' },
+                {
+                  field: 'country',
+                  type: 'singleSelect',
+                  valueOptions: COUNTRY_ISO_OPTIONS,
+                },
+              ]}
+              rows={[
+                { id: 0, country: COUNTRY_ISO_OPTIONS[0] },
+                { id: 1, country: COUNTRY_ISO_OPTIONS[1] },
+              ]}
+            />
+          </div>
+        );
+      };
+
+      render(<TestCaseCSVExport />);
+      expect(() => {
+        apiRef.current.getDataAsCsv();
+      }).toWarnDev(
+        [
+          'MUI: When the value of a field is an object or a `renderCell` is provided, the CSV export might not display the value correctly.',
+          'You can provide a `valueFormatter` with a string representation to be used.',
+        ].join('\n'),
+      );
     });
   });
 });

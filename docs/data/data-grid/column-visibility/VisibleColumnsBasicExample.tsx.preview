@@ -1,0 +1,11 @@
+<DataGrid
+  columns={[
+    { field: 'username', hideable: false },
+    { field: 'age' },
+    { field: 'desk' },
+  ]}
+  rows={rows}
+  components={{
+    Toolbar: GridToolbar,
+  }}
+/>

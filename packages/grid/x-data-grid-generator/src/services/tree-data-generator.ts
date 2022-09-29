@@ -1,4 +1,4 @@
-import { GridRowModel } from '@mui/x-data-grid-pro';
+import { DataGridPremiumProps, GridRowModel } from '@mui/x-data-grid-premium';
 import { GridDemoData } from './real-data-service';
 import { randomArrayItem } from './random-generator';
 
@@ -22,14 +22,9 @@ export interface AddPathToDemoDataOptions {
   averageChildren?: number;
 }
 
-/**
- * TODO: Use `Pick<DataGridProProps, 'getTreeDataPath' | 'treeData' | 'groupingColDef'>` once the tree data PR has been merged
- */
-export interface DemoTreeDataValue extends GridDemoData {
-  getTreeDataPath?: any;
-  groupingColDef?: any;
-  treeData?: boolean;
-}
+export interface DemoTreeDataValue
+  extends Pick<DataGridPremiumProps, 'getTreeDataPath' | 'treeData' | 'groupingColDef'>,
+    GridDemoData {}
 
 interface RowWithParentIndex {
   value: GridRowModel;
@@ -47,6 +42,10 @@ export const addTreeDataOptionsToDemoData = (
     return data;
   }
 
+  if (data.rows.length > 1000) {
+    throw new Error('MUI: useDemoData tree data mode only works up to 1000 rows.');
+  }
+
   const rowsByTreeDepth: Record<
     number,
     { rows: { [index: number]: RowWithParentIndex }; rowIndexes: number[] }
@@ -58,7 +57,8 @@ export const addTreeDataOptionsToDemoData = (
   if (!groupingCol) {
     throw new Error('MUI: The tree data grouping field does not exist');
   }
-  groupingCol.hide = true;
+
+  data.initialState!.columns!.columnVisibilityModel![groupingField] = false;
 
   for (let i = 0; i < rowsCount; i += 1) {
     const row = data.rows[i];

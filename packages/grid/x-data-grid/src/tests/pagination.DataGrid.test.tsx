@@ -1,28 +1,34 @@
 import * as React from 'react';
-import { createRenderer, fireEvent, screen, waitFor } from '@material-ui/monorepo/test/utils';
+import { spy, stub, SinonStub } from 'sinon';
 import { expect } from 'chai';
+import {
+  createRenderer,
+  fireEvent,
+  screen,
+  waitFor,
+  // @ts-ignore Remove once the test utils are typed
+} from '@mui/monorepo/test/utils';
 import {
   DataGrid,
   DataGridProps,
-  GridFilterModel,
+  gridClasses,
   GridLinkOperator,
   GridRowsProp,
 } from '@mui/x-data-grid';
-import { getColumnValues, getRows } from 'test/utils/helperFn';
-import { spy } from 'sinon';
-import { useData } from 'packages/storybook/src/hooks/useData';
+import { useBasicDemoData } from '@mui/x-data-grid-generator';
+import { getCell, getColumnValues, getRows } from 'test/utils/helperFn';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
 describe('<DataGrid /> - Pagination', () => {
-  const { render } = createRenderer();
+  const { render } = createRenderer({ clock: 'fake' });
 
   const BaselineTestCase = (
     props: Omit<DataGridProps, 'rows' | 'columns'> & { height?: number },
   ) => {
     const { height = 300, ...other } = props;
 
-    const basicData = useData(20, 2);
+    const basicData = useBasicDemoData(20, 2);
 
     return (
       <div style={{ width: 300, height }}>
@@ -31,10 +37,17 @@ describe('<DataGrid /> - Pagination', () => {
     );
   };
 
-  describe('props: page and onPageChange', () => {
+  describe('prop: page and onPageChange', () => {
+    before(function beforeHook() {
+      if (isJSDOM) {
+        // Need layouting
+        this.skip();
+      }
+    });
+
     it('should display the rows of page given in props', () => {
       render(<BaselineTestCase page={1} pageSize={1} rowsPerPageOptions={[1]} />);
-      expect(getColumnValues()).to.deep.equal(['1']);
+      expect(getColumnValues(0)).to.deep.equal(['1']);
     });
 
     it('should not call onPageChange on initialisation or on page prop change', () => {
@@ -59,18 +72,18 @@ describe('<DataGrid /> - Pagination', () => {
       const { setProps } = render(
         <BaselineTestCase pageSize={1} page={0} rowsPerPageOptions={[1]} />,
       );
-      expect(getColumnValues()).to.deep.equal(['0']);
+      expect(getColumnValues(0)).to.deep.equal(['0']);
       setProps({ page: 1 });
-      expect(getColumnValues()).to.deep.equal(['1']);
+      expect(getColumnValues(0)).to.deep.equal(['1']);
     });
 
     it('should apply new page when clicking on next / previous button and onPageChange is not defined and page is not controlled', () => {
       render(<BaselineTestCase pageSize={1} rowsPerPageOptions={[1]} />);
       fireEvent.click(screen.getByRole('button', { name: /next page/i }));
-      expect(getColumnValues()).to.deep.equal(['1']);
+      expect(getColumnValues(0)).to.deep.equal(['1']);
 
       fireEvent.click(screen.getByRole('button', { name: /previous page/i }));
-      expect(getColumnValues()).to.deep.equal(['0']);
+      expect(getColumnValues(0)).to.deep.equal(['0']);
     });
 
     it('should call onPageChange and apply new page when clicking on next / previous button and page is not controlled', () => {
@@ -82,12 +95,12 @@ describe('<DataGrid /> - Pagination', () => {
       fireEvent.click(screen.getByRole('button', { name: /next page/i }));
       expect(onPageChange.callCount).to.equal(1);
       expect(onPageChange.lastCall.args[0]).to.equal(1);
-      expect(getColumnValues()).to.deep.equal(['1']);
+      expect(getColumnValues(0)).to.deep.equal(['1']);
 
       fireEvent.click(screen.getByRole('button', { name: /previous page/i }));
       expect(onPageChange.callCount).to.equal(2);
       expect(onPageChange.lastCall.args[0]).to.equal(0);
-      expect(getColumnValues()).to.deep.equal(['0']);
+      expect(getColumnValues(0)).to.deep.equal(['0']);
     });
 
     it('should call onPageChange with the correct page when clicking on next / previous button when page is controlled', () => {
@@ -104,11 +117,11 @@ describe('<DataGrid /> - Pagination', () => {
 
       fireEvent.click(screen.getByRole('button', { name: /next page/i }));
       expect(onPageChange.lastCall.args[0]).to.equal(2);
-      expect(getColumnValues()).to.deep.equal(['1']);
+      expect(getColumnValues(0)).to.deep.equal(['1']);
 
       fireEvent.click(screen.getByRole('button', { name: /previous page/i }));
       expect(onPageChange.lastCall.args[0]).to.equal(0);
-      expect(getColumnValues()).to.deep.equal(['1']);
+      expect(getColumnValues(0)).to.deep.equal(['1']);
     });
 
     it('should call onPageChange when clicking on next / previous button in "server" mode', () => {
@@ -120,6 +133,7 @@ describe('<DataGrid /> - Pagination', () => {
           pageSize={1}
           rowsPerPageOptions={[1]}
           paginationMode="server"
+          rowCount={4}
         />,
       );
       fireEvent.click(screen.getByRole('button', { name: /next page/i }));
@@ -131,9 +145,9 @@ describe('<DataGrid /> - Pagination', () => {
 
     it('should not change the page state when clicking on next button and a page prop is provided', () => {
       render(<BaselineTestCase page={0} pageSize={1} rowsPerPageOptions={[1]} />);
-      expect(getColumnValues()).to.deep.equal(['0']);
+      expect(getColumnValues(0)).to.deep.equal(['0']);
       fireEvent.click(screen.getByRole('button', { name: /next page/i }));
-      expect(getColumnValues()).to.deep.equal(['0']);
+      expect(getColumnValues(0)).to.deep.equal(['0']);
     });
 
     it('should control page state when the prop and the onChange are set', () => {
@@ -153,30 +167,18 @@ describe('<DataGrid /> - Pagination', () => {
       render(<ControlCase />);
 
       fireEvent.click(screen.getByRole('button', { name: /next page/i }));
-      expect(getColumnValues()).to.deep.equal(['1']);
+      expect(getColumnValues(0)).to.deep.equal(['1']);
 
       fireEvent.click(screen.getByRole('button', { name: /previous page/i }));
-      expect(getColumnValues()).to.deep.equal(['0']);
+      expect(getColumnValues(0)).to.deep.equal(['0']);
     });
 
     it('should go to last page when page is controlled and the current page is greater than the last page', () => {
       const onPageChange = spy();
-
-      const filterModel: GridFilterModel = {
-        linkOperator: GridLinkOperator.And,
-        items: [
-          {
-            columnField: 'id',
-            operatorValue: '<=',
-            value: '3',
-          },
-        ],
-      };
-
-      const TestCasePaginationFilteredData = () => {
+      const TestCasePaginationFilteredData = (props: Partial<DataGridProps>) => {
         const [page, setPage] = React.useState(1);
 
-        const handlePageChange = (newPage: number) => {
+        const handlePageChange: DataGridProps['onPageChange'] = (newPage) => {
           onPageChange(newPage);
           setPage(newPage);
         };
@@ -187,22 +189,53 @@ describe('<DataGrid /> - Pagination', () => {
             onPageChange={handlePageChange}
             pageSize={5}
             rowsPerPageOptions={[5]}
-            filterModel={filterModel}
+            {...props}
           />
         );
       };
-      render(<TestCasePaginationFilteredData />);
+      const { setProps } = render(<TestCasePaginationFilteredData />);
+      expect(onPageChange.callCount).to.equal(0);
+
+      setProps({
+        filterModel: {
+          linkOperator: GridLinkOperator.And,
+          items: [
+            {
+              columnField: 'id',
+              operatorValue: '<=',
+              value: '3',
+            },
+          ],
+        },
+      });
 
       expect(getColumnValues(0)).to.deep.equal(['0', '1', '2', '3']);
       expect(onPageChange.lastCall.args[0]).to.equal(0);
       expect(onPageChange.callCount).to.equal(1);
     });
+
+    it('should scroll to the top of the page when changing page', () => {
+      const { setProps } = render(
+        <BaselineTestCase page={0} pageSize={5} rowsPerPageOptions={[5]} />,
+      );
+      const virtualScroller = document.querySelector(`.${gridClasses.virtualScroller}`)!;
+      virtualScroller.scrollTop = 100;
+      setProps({ page: 1 });
+      expect(virtualScroller.scrollTop).to.equal(0);
+    });
   });
 
-  describe('props: pageSize and onPageSizeChange', () => {
+  describe('prop: pageSize and onPageSizeChange', () => {
+    before(function beforeHook() {
+      if (isJSDOM) {
+        // Need layouting
+        this.skip();
+      }
+    });
+
     it('should display the amount of rows given in props', () => {
       render(<BaselineTestCase page={0} pageSize={2} rowsPerPageOptions={[2]} />);
-      expect(getColumnValues()).to.deep.equal(['0', '1']);
+      expect(getColumnValues(0)).to.deep.equal(['0', '1']);
     });
 
     it('should not call onPageSizeChange on initialisation or on pageSize prop change', () => {
@@ -232,18 +265,18 @@ describe('<DataGrid /> - Pagination', () => {
           rowsPerPageOptions={[1, 2]}
         />,
       );
-      expect(getColumnValues()).to.deep.equal(['0']);
+      expect(getColumnValues(0)).to.deep.equal(['0']);
       setProps({ pageSize: 2 });
-      expect(getColumnValues()).to.deep.equal(['0', '1']);
+      expect(getColumnValues(0)).to.deep.equal(['0', '1']);
     });
 
     it('should allow to update both the page and pageSize from the outside at once', () => {
       const { setProps } = render(
         <BaselineTestCase pageSize={1} page={0} rowsPerPageOptions={[1, 2]} />,
       );
-      expect(getColumnValues()).to.deep.equal(['0']);
+      expect(getColumnValues(0)).to.deep.equal(['0']);
       setProps({ page: 1, pageSize: 2 });
-      expect(getColumnValues()).to.deep.equal(['2', '3']);
+      expect(getColumnValues(0)).to.deep.equal(['2', '3']);
     });
 
     it('should apply the new pageSize when clicking on a page size option and onPageSizeChanged is not defined and pageSize is not controlled', () => {
@@ -252,7 +285,7 @@ describe('<DataGrid /> - Pagination', () => {
       expect(screen.queryAllByRole('option').length).to.equal(4);
 
       fireEvent.click(screen.queryAllByRole('option')[1]);
-      expect(getColumnValues()).to.deep.equal(['0', '1']);
+      expect(getColumnValues(0)).to.deep.equal(['0', '1']);
     });
 
     it('should call onPageChange and apply the new pageSize when clicking on a page size option and pageSize is not controlled', () => {
@@ -270,7 +303,7 @@ describe('<DataGrid /> - Pagination', () => {
       fireEvent.click(screen.queryAllByRole('option')[1]);
       expect(onPageSizeChange.callCount).to.equal(1);
       expect(onPageSizeChange.lastCall.args[0]).to.equal(2);
-      expect(getColumnValues()).to.deep.equal(['0', '1']);
+      expect(getColumnValues(0)).to.deep.equal(['0', '1']);
     });
 
     it('should call onPageSizeChange with the correct page when clicking on a page size option when pageSize is controlled', () => {
@@ -300,7 +333,7 @@ describe('<DataGrid /> - Pagination', () => {
       expect(screen.queryAllByRole('option').length).to.equal(3);
 
       fireEvent.click(screen.queryAllByRole('option')[1]);
-      expect(getColumnValues()).to.deep.equal(['0']);
+      expect(getColumnValues(0)).to.deep.equal(['0']);
     });
 
     it('should control pageSize state when the prop and the onChange are set', () => {
@@ -323,7 +356,7 @@ describe('<DataGrid /> - Pagination', () => {
       expect(screen.queryAllByRole('option').length).to.equal(3);
 
       fireEvent.click(screen.queryAllByRole('option')[1]);
-      expect(getColumnValues()).to.deep.equal(['0', '1']);
+      expect(getColumnValues(0)).to.deep.equal(['0', '1']);
     });
 
     it('should display a warning if the prop pageSize is not in the prop rowsPerPageOptions', () => {
@@ -331,8 +364,8 @@ describe('<DataGrid /> - Pagination', () => {
 
       expect(() => {
         render(<BaselineTestCase pageSize={pageSize} rowsPerPageOptions={[25, 50, 100]} />);
-        // @ts-expect-error need to migrate helpers to TypeScript
       }).toWarnDev([
+        `MUI: The page size \`${pageSize}\` is not preset in the \`rowsPerPageOptions\``,
         `MUI: The page size \`${pageSize}\` is not preset in the \`rowsPerPageOptions\``,
       ]);
     });
@@ -342,8 +375,8 @@ describe('<DataGrid /> - Pagination', () => {
 
       expect(() => {
         render(<BaselineTestCase pageSize={pageSize} />);
-        // @ts-expect-error need to migrate helpers to TypeScript
       }).toWarnDev([
+        `MUI: The page size \`${pageSize}\` is not preset in the \`rowsPerPageOptions\``,
         `MUI: The page size \`${pageSize}\` is not preset in the \`rowsPerPageOptions\``,
       ]);
     });
@@ -351,12 +384,27 @@ describe('<DataGrid /> - Pagination', () => {
     it('should display a warning if the default pageSize given as props is not in the prop rowsPerPageOptions', () => {
       expect(() => {
         render(<BaselineTestCase rowsPerPageOptions={[25, 50]} />);
-        // @ts-expect-error need to migrate helpers to TypeScript
-      }).toWarnDev([`MUI: The page size \`100\` is not preset in the \`rowsPerPageOptions\``]);
+      }).toWarnDev([
+        `MUI: The page size \`100\` is not preset in the \`rowsPerPageOptions\``,
+        `MUI: The page size \`100\` is not preset in the \`rowsPerPageOptions\``,
+      ]);
+    });
+
+    it('should update the pageCount state when updating the pageSize prop with a lower value', () => {
+      const { setProps } = render(
+        <BaselineTestCase rowsPerPageOptions={[10, 20]} pageSize={20} disableVirtualization />,
+      );
+      expect(getColumnValues(0)).to.have.length(20);
+      setProps({ pageSize: 10 });
+      expect(getColumnValues(0)).to.have.length(10);
+      expect(getCell(0, 0)).to.not.equal(null);
+      fireEvent.click(screen.getByRole('button', { name: /next page/i }));
+      expect(getColumnValues(0)).to.have.length(10);
+      expect(getCell(10, 0)).to.not.equal(null);
     });
   });
 
-  describe('props: autoPageSize', () => {
+  describe('prop: autoPageSize', () => {
     before(function beforeHook() {
       if (isJSDOM) {
         // Need layouting
@@ -369,7 +417,7 @@ describe('<DataGrid /> - Pagination', () => {
     ) => {
       const { height, nbRows, ...other } = props;
 
-      const data = useData(nbRows, 10);
+      const data = useBasicDemoData(nbRows, 10);
 
       return (
         <div style={{ width: 300, height: props.height }}>
@@ -438,6 +486,11 @@ describe('<DataGrid /> - Pagination', () => {
     });
 
     it('should update the amount of rows rendered and call onPageSizeChange when changing the table height', async () => {
+      // Using a fake clock also affects `requestAnimationFrame`
+      // Calling clock.tick() should call the callback passed, but it doesn't work
+      stub(window, 'requestAnimationFrame').callsFake((fn: any) => fn());
+      stub(window, 'cancelAnimationFrame');
+
       const onPageSizeChange = spy();
 
       const nbRows = 27;
@@ -480,6 +533,9 @@ describe('<DataGrid /> - Pagination', () => {
       expect(rows.length).to.equal(expectedViewportRowsLengthAfter);
 
       expect(onPageSizeChange.lastCall.args[0]).to.equal(expectedViewportRowsLengthAfter);
+
+      (window.requestAnimationFrame as SinonStub).restore();
+      (window.cancelAnimationFrame as SinonStub).restore();
     });
   });
 
@@ -497,7 +553,7 @@ describe('<DataGrid /> - Pagination', () => {
       const [rows, setRows] = React.useState<GridRowsProp>([]);
       const [page, setPage] = React.useState(0);
 
-      const handlePageChange = (newPage) => {
+      const handlePageChange: DataGridProps['onPageChange'] = (newPage) => {
         setPage(newPage);
       };
 
@@ -539,8 +595,167 @@ describe('<DataGrid /> - Pagination', () => {
     };
 
     render(<ServerPaginationGrid />);
-    expect(getColumnValues()).to.deep.equal(['0']);
+    expect(getColumnValues(0)).to.deep.equal(['0']);
     fireEvent.click(screen.getByRole('button', { name: /next page/i }));
-    expect(getColumnValues()).to.deep.equal(['1']);
+    expect(getColumnValues(0)).to.deep.equal(['1']);
+  });
+
+  describe('prop: initialState.pagination', () => {
+    before(function beforeHook() {
+      if (isJSDOM) {
+        // Need layouting
+        this.skip();
+      }
+    });
+
+    it('should allow to initialize the pageSize', () => {
+      render(
+        <BaselineTestCase
+          initialState={{
+            pagination: {
+              pageSize: 2,
+            },
+          }}
+          rowsPerPageOptions={[2, 5]}
+        />,
+      );
+
+      expect(getColumnValues(0)).to.deep.equal(['0', '1']);
+    });
+
+    it('should use the pageSize control state upon the initialize state when both are defined', () => {
+      render(
+        <BaselineTestCase
+          pageSize={5}
+          initialState={{
+            pagination: {
+              pageSize: 2,
+            },
+          }}
+          rowsPerPageOptions={[2, 5]}
+        />,
+      );
+
+      expect(getColumnValues(0)).to.deep.equal(['0', '1', '2', '3', '4']);
+    });
+
+    it('should not update the pageSize when updating the initial state', () => {
+      const { setProps } = render(
+        <BaselineTestCase
+          initialState={{
+            pagination: {
+              pageSize: 2,
+            },
+          }}
+          rowsPerPageOptions={[2, 5]}
+        />,
+      );
+
+      setProps({
+        initialState: {
+          pagination: {
+            pageSize: 5,
+          },
+        },
+      });
+
+      expect(getColumnValues(0)).to.deep.equal(['0', '1']);
+    });
+
+    it('should allow to update the pageSize when initialized with initialState', () => {
+      render(
+        <BaselineTestCase
+          initialState={{
+            pagination: {
+              pageSize: 2,
+            },
+          }}
+          rowsPerPageOptions={[2, 5]}
+        />,
+      );
+
+      expect(getColumnValues(0)).to.deep.equal(['0', '1']);
+
+      fireEvent.mouseDown(screen.queryByLabelText('Rows per page:'));
+      expect(screen.queryAllByRole('option').length).to.equal(2);
+      fireEvent.click(screen.queryAllByRole('option')[1]);
+      expect(getColumnValues(0)).to.deep.equal(['0', '1', '2', '3', '4']);
+    });
+
+    it('should allow to initialize the page', () => {
+      render(
+        <BaselineTestCase
+          pageSize={2}
+          rowsPerPageOptions={[2]}
+          initialState={{
+            pagination: {
+              page: 1,
+            },
+          }}
+        />,
+      );
+
+      expect(getColumnValues(0)).to.deep.equal(['2', '3']);
+    });
+
+    it('should use the page control state upon the initialize state when both are defined', () => {
+      render(
+        <BaselineTestCase
+          pageSize={2}
+          rowsPerPageOptions={[2]}
+          page={2}
+          initialState={{
+            pagination: {
+              page: 1,
+            },
+          }}
+        />,
+      );
+
+      expect(getColumnValues(0)).to.deep.equal(['4', '5']);
+    });
+
+    it('should not update the page when updating the initial state', () => {
+      const { setProps } = render(
+        <BaselineTestCase
+          pageSize={2}
+          rowsPerPageOptions={[2]}
+          initialState={{
+            pagination: {
+              page: 1,
+            },
+          }}
+        />,
+      );
+
+      setProps({
+        initialState: {
+          pagination: {
+            page: 2,
+          },
+        },
+      });
+
+      expect(getColumnValues(0)).to.deep.equal(['2', '3']);
+    });
+
+    it('should allow to update the page when initialized with initialState', () => {
+      render(
+        <BaselineTestCase
+          pageSize={2}
+          rowsPerPageOptions={[2]}
+          initialState={{
+            pagination: {
+              page: 1,
+            },
+          }}
+        />,
+      );
+
+      expect(getColumnValues(0)).to.deep.equal(['2', '3']);
+
+      fireEvent.click(screen.getByRole('button', { name: /next page/i }));
+      expect(getColumnValues(0)).to.deep.equal(['4', '5']);
+    });
   });
 });

@@ -1,0 +1,3 @@
+<StyledBox>
+  <DataGridPro apiRef={apiRef} rows={rows} columns={columns} editMode="row" />
+</StyledBox>

@@ -1,7 +1,0 @@
-<DataGrid
-  components={{
-    LoadingOverlay: CustomLoadingOverlay,
-  }}
-  loading
-  {...data}
-/>

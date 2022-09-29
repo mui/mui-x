@@ -1,13 +1,14 @@
 import * as React from 'react';
-import { createRenderer } from '@material-ui/monorepo/test/utils';
+// @ts-ignore Remove once the test utils are typed
+import { createRenderer, fireEvent, screen, within } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
 import { DataGrid } from '@mui/x-data-grid';
-import { getColumnHeaderCell } from 'test/utils/helperFn';
+import { getColumnHeaderCell, getColumnHeadersTextContent } from 'test/utils/helperFn';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
 describe('<DataGrid /> - Column Headers', () => {
-  const { render } = createRenderer();
+  const { render, clock } = createRenderer({ clock: 'fake' });
 
   const baselineProps = {
     autoHeight: isJSDOM,
@@ -47,6 +48,73 @@ describe('<DataGrid /> - Column Headers', () => {
         </div>,
       );
       expect(getColumnHeaderCell(0)).to.have.class('foobar');
+    });
+  });
+
+  describe('GridColumnHeaderMenu', () => {
+    it('should allow to hide column', () => {
+      render(
+        <div style={{ width: 300, height: 300 }}>
+          <DataGrid
+            {...baselineProps}
+            columns={[{ field: 'id' }, { field: 'brand', headerClassName: 'foobar' }]}
+          />
+        </div>,
+      );
+
+      expect(getColumnHeadersTextContent()).to.deep.equal(['id', 'brand']);
+
+      fireEvent.click(within(getColumnHeaderCell(0)).getByLabelText('Menu'));
+      fireEvent.click(screen.getByRole('menuitem', { name: 'Hide' }));
+      clock.runToLast();
+
+      expect(getColumnHeadersTextContent()).to.deep.equal(['brand']);
+    });
+
+    it('should not allow to hide the only visible column', () => {
+      render(
+        <div style={{ width: 300, height: 300 }}>
+          <DataGrid
+            {...baselineProps}
+            columns={[{ field: 'id' }, { field: 'brand', headerClassName: 'foobar' }]}
+            initialState={{
+              columns: {
+                columnVisibilityModel: { brand: false },
+              },
+            }}
+          />
+        </div>,
+      );
+
+      expect(getColumnHeadersTextContent()).to.deep.equal(['id']);
+
+      fireEvent.click(within(getColumnHeaderCell(0)).getByLabelText('Menu'));
+      fireEvent.click(screen.getByRole('menuitem', { name: 'Hide' }));
+      clock.runToLast();
+
+      expect(getColumnHeadersTextContent()).to.deep.equal(['id']);
+    });
+
+    it('should not allow to hide the only visible column that has menu', () => {
+      render(
+        <div style={{ width: 300, height: 300 }}>
+          <DataGrid
+            {...baselineProps}
+            columns={[
+              { field: 'id', disableColumnMenu: true },
+              { field: 'brand', headerClassName: 'foobar' },
+            ]}
+          />
+        </div>,
+      );
+
+      expect(getColumnHeadersTextContent()).to.deep.equal(['id', 'brand']);
+
+      fireEvent.click(within(getColumnHeaderCell(1)).getByLabelText('Menu'));
+      fireEvent.click(screen.getByRole('menuitem', { name: 'Hide' }));
+      clock.runToLast();
+
+      expect(getColumnHeadersTextContent()).to.deep.equal(['id', 'brand']);
     });
   });
 });

@@ -1,22 +1,21 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
-import { getCell, getColumnValues, getRow, getRows } from 'test/utils/helperFn';
-import { createRenderer, fireEvent, screen } from '@material-ui/monorepo/test/utils';
+import { getCell, getColumnValues, getRows } from 'test/utils/helperFn';
+// @ts-ignore Remove once the test utils are typed
+import { createRenderer, fireEvent, screen, act } from '@mui/monorepo/test/utils';
 import {
-  GridApiRef,
+  GridApi,
   useGridApiRef,
   DataGridPro,
-  GridEvents,
   DataGridProProps,
+  GridSelectionModel,
 } from '@mui/x-data-grid-pro';
-import { getData } from 'storybook/src/data/data-service';
-
-const isJSDOM = /jsdom/.test(window.navigator.userAgent);
+import { getBasicGridData } from '@mui/x-data-grid-generator';
 
 function getSelectedRowIds() {
   const hasCheckbox = !!document.querySelector('input[type="checkbox"]');
-  return [...getRows()]
+  return Array.from(getRows())
     .filter((row) => row.classList.contains('Mui-selected'))
     .map((row) =>
       Number(
@@ -28,7 +27,7 @@ function getSelectedRowIds() {
 describe('<DataGridPro /> - Selection', () => {
   const { render } = createRenderer();
 
-  let apiRef: GridApiRef;
+  let apiRef: React.MutableRefObject<GridApi>;
 
   const TestDataGridSelection = ({
     rowLength = 4,
@@ -37,11 +36,11 @@ describe('<DataGridPro /> - Selection', () => {
     Partial<Pick<DataGridProProps, 'rows' | 'columns'>> & { rowLength?: number }) => {
     apiRef = useGridApiRef();
 
-    const data = React.useMemo(() => getData(rowLength, 2), [rowLength]);
+    const data = React.useMemo(() => getBasicGridData(rowLength, 2), [rowLength]);
 
     return (
       <div style={{ width: 300, height: 300 }}>
-        <DataGridPro {...data} {...other} apiRef={apiRef} autoHeight={isJSDOM} />
+        <DataGridPro {...data} {...other} apiRef={apiRef} disableVirtualization />
       </div>
     );
   };
@@ -57,7 +56,7 @@ describe('<DataGridPro /> - Selection', () => {
         />,
       );
       const selectAllCheckbox = screen.getByRole('checkbox', {
-        name: /select all rows checkbox/i,
+        name: /select all rows/i,
       });
       fireEvent.click(selectAllCheckbox);
       expect(apiRef.current.getSelectedRows()).to.have.length(4);
@@ -73,11 +72,11 @@ describe('<DataGridPro /> - Selection', () => {
           rowsPerPageOptions={[2]}
         />,
       );
-      fireEvent.click(getCell(0, 0));
+      fireEvent.click(getCell(0, 0).querySelector('input'));
       expect(apiRef.current.getSelectedRows()).to.have.keys([0]);
       fireEvent.click(screen.getByRole('button', { name: /next page/i }));
       const selectAllCheckbox = screen.getByRole('checkbox', {
-        name: /select all rows checkbox/i,
+        name: /select all rows/i,
       });
       fireEvent.click(selectAllCheckbox);
       expect(apiRef.current.getSelectedRows()).to.have.length(0);
@@ -96,7 +95,7 @@ describe('<DataGridPro /> - Selection', () => {
       );
 
       const selectAllCheckbox = screen.getByRole('checkbox', {
-        name: /select all rows checkbox/i,
+        name: /select all rows/i,
       });
       fireEvent.click(selectAllCheckbox);
       expect(apiRef.current.getSelectedRows()).to.have.length(rowLength);
@@ -115,11 +114,11 @@ describe('<DataGridPro /> - Selection', () => {
       );
 
       const selectAllCheckbox = screen.getByRole('checkbox', {
-        name: /select all rows checkbox/i,
+        name: /select all rows/i,
       });
 
-      fireEvent.click(getCell(0, 0));
-      fireEvent.click(getCell(1, 0));
+      fireEvent.click(getCell(0, 0).querySelector('input'));
+      fireEvent.click(getCell(1, 0).querySelector('input'));
       fireEvent.click(screen.getByRole('button', { name: /next page/i }));
       expect(selectAllCheckbox).to.have.attr('data-indeterminate', 'true');
     });
@@ -131,11 +130,9 @@ describe('<DataGridPro /> - Selection', () => {
         render(
           <TestDataGridSelection checkboxSelection checkboxSelectionVisibleOnly rowLength={100} />,
         );
-      })
-        // @ts-expect-error need to migrate helpers to TypeScript
-        .toErrorDev(
-          'MUI: The `checkboxSelectionVisibleOnly` prop has no effect when the pagination is not enabled.',
-        );
+      }).toErrorDev(
+        'MUI: The `checkboxSelectionVisibleOnly` prop has no effect when the pagination is not enabled.',
+      );
     });
 
     it('should select all the rows of the current page if no row of the current page is selected', () => {
@@ -148,11 +145,11 @@ describe('<DataGridPro /> - Selection', () => {
           rowsPerPageOptions={[2]}
         />,
       );
-      fireEvent.click(getCell(0, 0));
+      fireEvent.click(getCell(0, 0).querySelector('input'));
       expect(apiRef.current.getSelectedRows()).to.have.keys([0]);
       fireEvent.click(screen.getByRole('button', { name: /next page/i }));
       const selectAllCheckbox = screen.getByRole('checkbox', {
-        name: /select all rows checkbox/i,
+        name: /select all rows/i,
       });
       fireEvent.click(selectAllCheckbox);
       expect(apiRef.current.getSelectedRows()).to.have.keys([0, 2, 3]);
@@ -169,13 +166,13 @@ describe('<DataGridPro /> - Selection', () => {
           rowsPerPageOptions={[2]}
         />,
       );
-      fireEvent.click(getCell(0, 0));
+      fireEvent.click(getCell(0, 0).querySelector('input'));
       expect(apiRef.current.getSelectedRows()).to.have.keys([0]);
       fireEvent.click(screen.getByRole('button', { name: /next page/i }));
-      fireEvent.click(getCell(2, 0));
+      fireEvent.click(getCell(2, 0).querySelector('input'));
       expect(apiRef.current.getSelectedRows()).to.have.keys([0, 2]);
       const selectAllCheckbox = screen.getByRole('checkbox', {
-        name: /select all rows checkbox/i,
+        name: /select all rows/i,
       });
       fireEvent.click(selectAllCheckbox);
       expect(apiRef.current.getSelectedRows()).to.have.keys([0]);
@@ -197,7 +194,7 @@ describe('<DataGridPro /> - Selection', () => {
       fireEvent.click(getCell(1, 0));
       fireEvent.click(screen.getByRole('button', { name: /next page/i }));
       const selectAllCheckbox = screen.getByRole('checkbox', {
-        name: /select all rows checkbox/i,
+        name: /select all rows/i,
       });
       expect(selectAllCheckbox).to.have.attr('data-indeterminate', 'false');
     });
@@ -214,7 +211,7 @@ describe('<DataGridPro /> - Selection', () => {
         />,
       );
       expect(apiRef.current.getSelectedRows()).to.have.length(0);
-      apiRef.current.selectRow(1);
+      act(() => apiRef.current.selectRow(1));
       expect(apiRef.current.getSelectedRows().get(1)).to.deep.equal({
         id: 1,
         currencyPair: 'USDEUR',
@@ -226,7 +223,7 @@ describe('<DataGridPro /> - Selection', () => {
     it('should check if the rows selected by clicking on the rows are selected', () => {
       render(<TestDataGridSelection />);
 
-      fireEvent.click(getRow(1));
+      fireEvent.click(getCell(1, 0));
 
       expect(apiRef.current.isRowSelected(0)).to.equal(false);
       expect(apiRef.current.isRowSelected(1)).to.equal(true);
@@ -244,15 +241,15 @@ describe('<DataGridPro /> - Selection', () => {
     it('should call onSelectionModelChange with the ids selected', () => {
       const handleSelectionModelChange = spy();
       render(<TestDataGridSelection onSelectionModelChange={handleSelectionModelChange} />);
-      apiRef.current.selectRow(1);
+      act(() => apiRef.current.selectRow(1));
       expect(handleSelectionModelChange.lastCall.args[0]).to.deep.equal([1]);
       // Reset old selection
-      apiRef.current.selectRow(2, true, true);
+      act(() => apiRef.current.selectRow(2, true, true));
       expect(handleSelectionModelChange.lastCall.args[0]).to.deep.equal([2]);
       // Keep old selection
-      apiRef.current.selectRow(3);
+      act(() => apiRef.current.selectRow(3));
       expect(handleSelectionModelChange.lastCall.args[0]).to.deep.equal([2, 3]);
-      apiRef.current.selectRow(3, false);
+      act(() => apiRef.current.selectRow(3, false));
       expect(handleSelectionModelChange.lastCall.args[0]).to.deep.equal([2]);
     });
 
@@ -264,9 +261,9 @@ describe('<DataGridPro /> - Selection', () => {
           onSelectionModelChange={handleSelectionModelChange}
         />,
       );
-      apiRef.current.selectRow(0);
+      act(() => apiRef.current.selectRow(0));
       expect(handleSelectionModelChange.callCount).to.equal(0);
-      apiRef.current.selectRow(1);
+      act(() => apiRef.current.selectRow(1));
       expect(handleSelectionModelChange.callCount).to.equal(1);
     });
   });
@@ -276,17 +273,17 @@ describe('<DataGridPro /> - Selection', () => {
       const handleSelectionModelChange = spy();
       render(<TestDataGridSelection onSelectionModelChange={handleSelectionModelChange} />);
 
-      apiRef.current.selectRows([1, 2]);
+      act(() => apiRef.current.selectRows([1, 2]));
       expect(handleSelectionModelChange.lastCall.args[0]).to.deep.equal([1, 2]);
 
-      apiRef.current.selectRows([3]);
+      act(() => apiRef.current.selectRows([3]));
       expect(handleSelectionModelChange.lastCall.args[0]).to.deep.equal([1, 2, 3]);
 
-      apiRef.current.selectRows([1, 2], false);
+      act(() => apiRef.current.selectRows([1, 2], false));
       expect(handleSelectionModelChange.lastCall.args[0]).to.deep.equal([3]);
 
       // Deselect others
-      apiRef.current.selectRows([4, 5], true, true);
+      act(() => apiRef.current.selectRows([4, 5], true, true));
       expect(handleSelectionModelChange.lastCall.args[0]).to.deep.equal([4, 5]);
     });
 
@@ -298,14 +295,14 @@ describe('<DataGridPro /> - Selection', () => {
           onSelectionModelChange={handleSelectionModelChange}
         />,
       );
-      apiRef.current.selectRows([0, 1, 2]);
+      act(() => apiRef.current.selectRows([0, 1, 2]));
       expect(handleSelectionModelChange.lastCall.args[0]).to.deep.equal([1, 2]);
     });
 
     it('should not select a range of several elements when disableMultipleSelection = true', () => {
       render(<TestDataGridSelection disableMultipleSelection />);
 
-      apiRef.current.selectRows([0, 1, 2], true);
+      act(() => apiRef.current.selectRows([0, 1, 2], true));
       expect(getSelectedRowIds()).to.deep.equal([]);
     });
   });
@@ -314,54 +311,60 @@ describe('<DataGridPro /> - Selection', () => {
     it('should select all the rows in the range', () => {
       render(<TestDataGridSelection />);
 
-      apiRef.current.selectRowRange({ startId: 1, endId: 3 }, true);
+      act(() => apiRef.current.selectRowRange({ startId: 1, endId: 3 }, true));
       expect(getSelectedRowIds()).to.deep.equal([1, 2, 3]);
     });
 
     it('should unselect all the rows in the range', () => {
       render(<TestDataGridSelection />);
 
-      apiRef.current.setSelectionModel([2, 3]);
+      act(() => apiRef.current.setSelectionModel([2, 3]));
       expect(getSelectedRowIds()).to.deep.equal([2, 3]);
-      apiRef.current.selectRowRange({ startId: 0, endId: 3 }, false);
+      act(() => apiRef.current.selectRowRange({ startId: 0, endId: 3 }, false));
       expect(getSelectedRowIds()).to.deep.equal([]);
     });
 
     it('should not unselect the selected elements if the range is to be selected', () => {
       render(<TestDataGridSelection />);
 
-      apiRef.current.setSelectionModel([2]);
-      apiRef.current.selectRowRange({ startId: 1, endId: 3 }, true);
+      act(() => {
+        apiRef.current.setSelectionModel([2]);
+        apiRef.current.selectRowRange({ startId: 1, endId: 3 }, true);
+      });
       expect(getSelectedRowIds()).to.deep.equal([1, 2, 3]);
     });
 
     it('should not reset the other selections when resetSelection = false', () => {
       render(<TestDataGridSelection />);
 
-      apiRef.current.setSelectionModel([0]);
-      apiRef.current.selectRowRange({ startId: 2, endId: 3 }, true, false);
+      act(() => {
+        apiRef.current.setSelectionModel([0]);
+        apiRef.current.selectRowRange({ startId: 2, endId: 3 }, true, false);
+      });
       expect(getSelectedRowIds()).to.deep.equal([0, 2, 3]);
     });
 
     it('should reset the other selections when resetSelection = true', () => {
       render(<TestDataGridSelection />);
 
-      apiRef.current.setSelectionModel([0]);
-      apiRef.current.selectRowRange({ startId: 2, endId: 3 }, true, true);
+      act(() => {
+        apiRef.current.setSelectionModel([0]);
+        apiRef.current.selectRowRange({ startId: 2, endId: 3 }, true, true);
+      });
       expect(getSelectedRowIds()).to.deep.equal([2, 3]);
     });
 
     it('should not select unselectable rows inside the range', () => {
       render(<TestDataGridSelection isRowSelectable={(params) => Number(params.id) % 2 === 1} />);
 
-      apiRef.current.selectRowRange({ startId: 1, endId: 3 }, true);
+      act(() => apiRef.current.selectRowRange({ startId: 1, endId: 3 }, true));
       expect(getSelectedRowIds()).to.deep.equal([1, 3]);
     });
 
     it('should not select a range of several elements when disableMultipleSelection = true', () => {
       render(<TestDataGridSelection disableMultipleSelection />);
 
-      apiRef.current.selectRowRange({ startId: 1, endId: 3 }, true);
+      act(() => apiRef.current.selectRowRange({ startId: 1, endId: 3 }, true));
       expect(getSelectedRowIds()).to.deep.equal([]);
     });
 
@@ -371,7 +374,7 @@ describe('<DataGridPro /> - Selection', () => {
           filterModel={{ items: [{ columnField: 'id', value: 1, operatorValue: '!=' }] }}
         />,
       );
-      apiRef.current.selectRowRange({ startId: 0, endId: 2 }, true);
+      act(() => apiRef.current.selectRowRange({ startId: 0, endId: 2 }, true));
       expect(getSelectedRowIds()).to.deep.equal([0, 2]);
     });
   });
@@ -379,17 +382,19 @@ describe('<DataGridPro /> - Selection', () => {
   it('should select only filtered rows after filter is applied', () => {
     render(<TestDataGridSelection checkboxSelection />);
     const selectAll = screen.getByRole('checkbox', {
-      name: /select all rows checkbox/i,
+      name: /select all rows/i,
     });
-    apiRef.current.setFilterModel({
-      items: [
-        {
-          columnField: 'currencyPair',
-          value: 'usd',
-          operatorValue: 'startsWith',
-        },
-      ],
-    });
+    act(() =>
+      apiRef.current.setFilterModel({
+        items: [
+          {
+            columnField: 'currencyPair',
+            value: 'usd',
+            operatorValue: 'startsWith',
+          },
+        ],
+      }),
+    );
     expect(getColumnValues(1)).to.deep.equal(['0', '1']);
     fireEvent.click(selectAll);
     expect(getSelectedRowIds()).to.deep.equal([0, 1]);
@@ -404,11 +409,22 @@ describe('<DataGridPro /> - Selection', () => {
   describe('controlled selection', () => {
     it('should not publish GRID_SELECTION_CHANGE if the selection state did not change ', () => {
       const handleSelectionChange = spy();
-      const selectionModel = [];
+      const selectionModel: GridSelectionModel = [];
       render(<TestDataGridSelection selectionModel={selectionModel} />);
-      apiRef.current.subscribeEvent(GridEvents.selectionChange, handleSelectionChange);
+      apiRef.current.subscribeEvent('selectionChange', handleSelectionChange);
       apiRef.current.setSelectionModel(selectionModel);
       expect(handleSelectionChange.callCount).to.equal(0);
+    });
+
+    it('should not call onSelectionModelChange on initialization if selectionModel contains more than one id and checkboxSelection=false', () => {
+      const onSelectionModelChange = spy();
+      render(
+        <TestDataGridSelection
+          onSelectionModelChange={onSelectionModelChange}
+          selectionModel={[0, 1]}
+        />,
+      );
+      expect(onSelectionModelChange.callCount).to.equal(0);
     });
   });
 });

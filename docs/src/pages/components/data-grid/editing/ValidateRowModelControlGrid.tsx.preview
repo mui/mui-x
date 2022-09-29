@@ -1,1 +1,0 @@
-<DataGrid className={classes.root} rows={rows} columns={columns} />

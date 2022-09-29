@@ -1,0 +1,41 @@
+import { CalendarPickerView, ClockPickerView, MuiPickersAdapter } from '../../internals/models';
+/**
+ * Set the types of the texts in the grid.
+ */
+export interface PickersLocaleText<TDate> {
+  previousMonth: string;
+  nextMonth: string;
+  openPreviousView: string;
+  openNextView: string;
+  cancelButtonLabel: string;
+  clearButtonLabel: string;
+  okButtonLabel: string;
+  todayButtonLabel: string;
+  start: string;
+  end: string;
+  calendarViewSwitchingButtonAriaLabel: (currentView: CalendarPickerView) => string;
+  inputModeToggleButtonAriaLabel: (
+    isKeyboardInputOpen: boolean,
+    viewType: 'calendar' | 'clock',
+  ) => string;
+  clockLabelText: (
+    view: ClockPickerView,
+    time: TDate | null,
+    adapter: MuiPickersAdapter<TDate>,
+  ) => string;
+  hoursClockNumberText: (hours: string) => string;
+  minutesClockNumberText: (minutes: string) => string;
+  secondsClockNumberText: (seconds: string) => string;
+  openDatePickerDialogue: (date: TDate | null, utils: MuiPickersAdapter<TDate>) => string;
+  openTimePickerDialogue: (date: TDate | null, utils: MuiPickersAdapter<TDate>) => string;
+  timeTableLabel: string;
+  dateTableLabel: string;
+  datePickerDefaultToolbarTitle: string;
+  dateTimePickerDefaultToolbarTitle: string;
+  timePickerDefaultToolbarTitle: string;
+  dateRangePickerDefaultToolbarTitle: string;
+}
+
+export type PickersInputLocaleText<TDate> = Partial<PickersLocaleText<TDate>>;
+
+export type PickersTranslationKeys = keyof PickersLocaleText<any>;

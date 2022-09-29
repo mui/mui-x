@@ -1,84 +1,121 @@
+/**
+ * TODO replace file with:
+ * import ApiPage from 'docs/src/modules/components/ApiPage';
+ */
 /* eslint-disable react/no-danger */
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import { useRouter } from 'next/router';
 import clsx from 'clsx';
 import { exactProp } from '@mui/utils';
-import { styled } from '@mui/material/styles';
+import { alpha, styled } from '@mui/material/styles';
 import Alert from '@mui/material/Alert';
 import Typography from '@mui/material/Typography';
 import { useTranslate, useUserLanguage } from 'docs/src/modules/utils/i18n';
 import HighlightedCode from 'docs/src/modules/components/HighlightedCode';
 import MarkdownElement from 'docs/src/modules/components/MarkdownElement';
 import AppLayoutDocs from 'docs/src/modules/components/AppLayoutDocs';
+import replaceHtmlLinks from 'docs/src/modules/utils/replaceHtmlLinks';
 
 const Asterisk = styled('abbr')(({ theme }) => ({ color: theme.palette.error.main }));
+
+const Wrapper = styled('div')({
+  overflow: 'hidden',
+});
+const Table = styled('table')(({ theme }) => {
+  const contentColor =
+    theme.palette.mode === 'dark'
+      ? alpha(theme.palette.primaryDark[900], 1)
+      : 'rgba(255, 255, 255, 1)';
+  const contentColorTransparent =
+    theme.palette.mode === 'dark'
+      ? alpha(theme.palette.primaryDark[900], 0)
+      : 'rgba(255, 255, 255, 0)';
+  const shadowColor = theme.palette.mode === 'dark' ? 'rgba(0,0,0,0.7)' : 'rgba(0,0,0,0.2)';
+  return {
+    borderRadius: 10,
+    background: `
+  linear-gradient(to right, ${contentColor} 5%, ${contentColorTransparent}),
+  linear-gradient(to right, ${contentColorTransparent}, ${contentColor} 100%) 100%,
+  linear-gradient(to right, ${shadowColor}, rgba(0, 0, 0, 0) 5%),
+  linear-gradient(to left, ${shadowColor}, rgba(0, 0, 0, 0) 5%)`,
+    backgroundAttachment: 'local, local, scroll, scroll',
+    // the above background create thin line on the left and right sides of the table
+    // as a workaround, use negative margin with overflow `hidden` on the parent
+    marginLeft: -1,
+    marginRight: -1,
+  };
+});
 
 function PropsTable(props) {
   const { componentProps, propDescriptions } = props;
   const t = useTranslate();
+  const router = useRouter();
 
   return (
-    <table>
-      <thead>
-        <tr>
-          <th align="left">{t('api-docs.name')}</th>
-          <th align="left">{t('api-docs.type')}</th>
-          <th align="left">{t('api-docs.default')}</th>
-          <th align="left">{t('api-docs.description')}</th>
-        </tr>
-      </thead>
-      <tbody>
-        {Object.entries(componentProps).map(([propName, propData]) => {
-          const typeDescription = propData.type.description || propData.type.name;
-          const propDefault = propData.default || (propData.type.name === 'bool' && 'false');
-          return (
-            propData.description !== '@ignore' && (
-              <tr key={propName}>
-                <td align="left">
-                  <span className={clsx('prop-name', propData.required ? 'required' : null)}>
-                    {propName}
-                    {propData.required && (
-                      <sup>
-                        <Asterisk title="required">*</Asterisk>
-                      </sup>
-                    )}
-                  </span>
-                </td>
-                <td align="left">
-                  <span
-                    className="prop-type"
-                    dangerouslySetInnerHTML={{ __html: typeDescription }}
-                  />
-                </td>
-                <td align="left">
-                  {propDefault && <span className="prop-default">{propDefault}</span>}
-                </td>
-                <td align="left">
-                  {propData.deprecated && (
-                    <Alert severity="warning" sx={{ mb: 1, py: 0 }}>
-                      <strong>{t('api-docs.deprecated')}</strong>
-                      {propData.deprecationInfo && ' - '}
-                      {propData.deprecationInfo && (
-                        <span
-                          dangerouslySetInnerHTML={{
-                            __html: propData.deprecationInfo,
-                          }}
-                        />
+    <Wrapper>
+      <Table>
+        <thead>
+          <tr>
+            <th align="left">{t('api-docs.name')}</th>
+            <th align="left">{t('api-docs.type')}</th>
+            <th align="left">{t('api-docs.default')}</th>
+            <th align="left">{t('api-docs.description')}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {Object.entries(componentProps).map(([propName, propData]) => {
+            const typeDescription = propData.type.description || propData.type.name;
+            const propDefault = propData.default || (propData.type.name === 'bool' && 'false');
+            return (
+              propData.description !== '@ignore' && (
+                <tr key={propName}>
+                  <td align="left">
+                    <span className={clsx('prop-name', propData.required ? 'required' : null)}>
+                      {propName}
+                      {propData.required && (
+                        <sup>
+                          <Asterisk title="required">*</Asterisk>
+                        </sup>
                       )}
-                    </Alert>
-                  )}
-                  <div
-                    dangerouslySetInnerHTML={{
-                      __html: propDescriptions[propName] || '',
-                    }}
-                  />
-                </td>
-              </tr>
-            )
-          );
-        })}
-      </tbody>
-    </table>
+                    </span>
+                  </td>
+                  <td align="left">
+                    <span
+                      className="prop-type"
+                      dangerouslySetInnerHTML={{ __html: typeDescription }}
+                    />
+                  </td>
+                  <td align="left">
+                    {propDefault && <span className="prop-default">{propDefault}</span>}
+                  </td>
+                  <td align="left">
+                    {propData.deprecated && (
+                      <Alert severity="warning" sx={{ mb: 1, py: 0 }}>
+                        <strong>{t('api-docs.deprecated')}</strong>
+                        {propData.deprecationInfo && ' - '}
+                        {propData.deprecationInfo && (
+                          <span
+                            dangerouslySetInnerHTML={{
+                              __html: propData.deprecationInfo,
+                            }}
+                          />
+                        )}
+                      </Alert>
+                    )}
+                    <div
+                      dangerouslySetInnerHTML={{
+                        __html: replaceHtmlLinks(propDescriptions[propName] || '', router.asPath),
+                      }}
+                    />
+                  </td>
+                </tr>
+              )
+            );
+          })}
+        </tbody>
+      </Table>
+    </Wrapper>
   );
 }
 
@@ -88,7 +125,7 @@ PropsTable.propTypes = {
 };
 
 function ClassesTable(props) {
-  const { componentName, componentStyles, classDescriptions } = props;
+  const { componentStyles, classDescriptions } = props;
   const t = useTranslate();
 
   return (
@@ -108,7 +145,8 @@ function ClassesTable(props) {
             </td>
             <td align="left">
               <span className="prop-name">
-                .{componentStyles.globalClasses[className] || `Mui${componentName}-${className}`}
+                .
+                {componentStyles.globalClasses[className] || `${componentStyles.name}-${className}`}
               </span>
             </td>
             <td
@@ -130,7 +168,6 @@ function ClassesTable(props) {
 
 ClassesTable.propTypes = {
   classDescriptions: PropTypes.object.isRequired,
-  componentName: PropTypes.string.isRequired,
   componentStyles: PropTypes.object.isRequired,
 };
 
@@ -160,13 +197,11 @@ function getTranslatedHeader(t, header) {
 function Heading(props) {
   const { hash, level: Level = 'h2' } = props;
   const t = useTranslate();
-  const headingId = `heading-${hash}`;
 
   return (
-    <Level id={headingId}>
-      <span className="anchor-link" id={hash} />
+    <Level id={hash}>
       {getTranslatedHeader(t, hash)}
-      <a aria-labelledby={headingId} className="anchor-link-style" href={`#${hash}`} tabIndex={-1}>
+      <a aria-labelledby={hash} className="anchor-link-style" href={`#${hash}`} tabIndex={-1}>
         <svg>
           <use xlinkHref="#anchor-link-icon" />
         </svg>
@@ -181,6 +216,7 @@ Heading.propTypes = {
 };
 
 function ApiDocs(props) {
+  const router = useRouter();
   const { descriptions, pageContent } = props;
   const t = useTranslate();
   const userLanguage = useUserLanguage();
@@ -196,6 +232,7 @@ function ApiDocs(props) {
     spread,
     slots,
     styles: componentStyles,
+    packages,
   } = pageContent;
 
   const {
@@ -206,6 +243,11 @@ function ApiDocs(props) {
     slotDescriptions,
   } = descriptions[userLanguage];
   const description = t('api-docs.pageDescription').replace(/{{name}}/, componentName);
+
+  const source = filename
+    .replace(/\/packages\/(grid\/|)(.+?)?\/src/, (match, dash, pkg) => `@mui/${pkg}`)
+    // convert things like `/Table/Table.js` to ``
+    .replace(/\/([^/]+)\/\1\.(js|tsx)$/, '');
 
   // Prefer linking the .tsx or .d.ts for the "Edit this page" link.
   const apiSourceLocation = filename.replace('.js', '.d.ts');
@@ -227,8 +269,8 @@ function ApiDocs(props) {
     ...componentDescriptionToc,
     componentStyles.name && createTocEntry('component-name'),
     createTocEntry('props'),
-    createTocEntry('slots'),
-    componentStyles.classes && createTocEntry('css'),
+    Object.keys(slots).length && createTocEntry('slots'),
+    componentStyles.classes.length > 0 && createTocEntry('css'),
     createTocEntry('demos'),
   ].filter(Boolean);
 
@@ -255,14 +297,19 @@ function ApiDocs(props) {
     inheritanceSuffix = t('api-docs.inheritanceSuffixTransition');
   }
 
-  const packageName = componentName === 'DataGrid' ? '@mui/x-data-grid' : '@mui/x-data-grid-pro';
-  let importStatements = `import { ${componentName} } from '${packageName}';`;
-  if (componentName.startsWith('Grid')) {
-    importStatements = `
-import { ${componentName} } from '@mui/x-data-grid';
-// ${t('or')}
-import { ${componentName} } from '@mui/x-data-grid-pro';`;
+  const imports = [];
+
+  if (source === '@mui/x-date-pickers' || source === '@mui/x-date-pickers-pro') {
+    packages.forEach((pkg) => {
+      // e.g. import DatePicker from '@mui/x-date-pickers/DatePicker';
+      imports.push(`import ${componentName} from '${pkg}/${componentName}';`);
+    });
   }
+
+  packages.forEach((pkg) => {
+    // e.g. import { DatePicker } from '@mui/x-date-pickers';
+    imports.push(`import { ${componentName} } from '${pkg}';`);
+  });
 
   return (
     <AppLayoutDocs
@@ -270,7 +317,7 @@ import { ${componentName} } from '@mui/x-data-grid-pro';`;
       disableAd={false}
       disableToc={false}
       location={apiSourceLocation}
-      title={`${componentName} API – MUI`}
+      title={`${componentName} API`}
       toc={toc}
     >
       <MarkdownElement>
@@ -279,13 +326,17 @@ import { ${componentName} } from '@mui/x-data-grid-pro';`;
           {description}
         </Typography>
         <Heading hash="import" />
-        <HighlightedCode code={importStatements} language="jsx" />
+        <HighlightedCode code={imports.join(`\n// ${t('or')}\n`)} language="jsx" />
         <span dangerouslySetInnerHTML={{ __html: t('api-docs.importDifference') }} />
         {componentDescription ? (
           <React.Fragment>
             <br />
             <br />
-            <span dangerouslySetInnerHTML={{ __html: componentDescription }} />
+            <span
+              dangerouslySetInnerHTML={{
+                __html: replaceHtmlLinks(componentDescription, router.asPath),
+              }}
+            />
           </React.Fragment>
         ) : null}
         {componentStyles.name && (
@@ -293,16 +344,19 @@ import { ${componentName} } from '@mui/x-data-grid-pro';`;
             <Heading hash="component-name" />
             <span
               dangerouslySetInnerHTML={{
-                __html: t('api-docs.styleOverrides').replace(
-                  /{{componentStyles\.name}}/,
-                  componentStyles.name,
+                __html: replaceHtmlLinks(
+                  t('api-docs.styleOverrides').replace(
+                    /{{componentStyles\.name}}/,
+                    componentStyles.name,
+                  ),
+                  router.asPath,
                 ),
               }}
             />
           </React.Fragment>
         )}
         <Heading hash="props" />
-        <p dangerouslySetInnerHTML={{ __html: spreadHint }} />
+        <p dangerouslySetInnerHTML={{ __html: replaceHtmlLinks(spreadHint, router.asPath) }} />
         <PropsTable componentProps={componentProps} propDescriptions={propDescriptions} />
         <br />
         {Object.keys(slots).length ? (
@@ -328,11 +382,14 @@ import { ${componentName} } from '@mui/x-data-grid-pro';`;
             <Heading hash="inheritance" level="h3" />
             <span
               dangerouslySetInnerHTML={{
-                __html: t('api-docs.inheritanceDescription')
-                  .replace(/{{component}}/, inheritance.component)
-                  .replace(/{{pathname}}/, inheritance.pathname)
-                  .replace(/{{suffix}}/, inheritanceSuffix)
-                  .replace(/{{componentName}}/, componentName),
+                __html: replaceHtmlLinks(
+                  t('api-docs.inheritanceDescription')
+                    .replace(/{{component}}/, inheritance.component)
+                    .replace(/{{pathname}}/, inheritance.pathname)
+                    .replace(/{{suffix}}/, inheritanceSuffix)
+                    .replace(/{{componentName}}/, componentName),
+                  router.asPath,
+                ),
               }}
             />
           </React.Fragment>
@@ -341,7 +398,7 @@ import { ${componentName} } from '@mui/x-data-grid-pro';`;
           <React.Fragment>
             <Heading hash="css" />
             <ClassesTable
-              componentName="DataGrid" // TODO save the suffix in the JSON file
+              componentName={componentName}
               componentStyles={componentStyles}
               classDescriptions={classDescriptions}
             />
@@ -353,7 +410,7 @@ import { ${componentName} } from '@mui/x-data-grid-pro';`;
           </React.Fragment>
         ) : null}
         <Heading hash="demos" />
-        <span dangerouslySetInnerHTML={{ __html: demos }} />
+        <span dangerouslySetInnerHTML={{ __html: replaceHtmlLinks(demos, router.asPath) }} />
       </MarkdownElement>
       <svg style={{ display: 'none' }} xmlns="http://www.w3.org/2000/svg">
         <symbol id="anchor-link-icon" viewBox="0 0 16 16">

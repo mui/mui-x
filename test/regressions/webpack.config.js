@@ -22,9 +22,11 @@ module.exports = {
       template: path.resolve(__dirname, './template.html'),
     }),
     new webpack.DefinePlugin({
-      'process.env': {
-        DISABLE_CHANCE_RANDOM: JSON.stringify(true),
-      },
+      DISABLE_CHANCE_RANDOM: JSON.stringify(true),
+    }),
+    new webpack.ProvidePlugin({
+      // required by sinon
+      process: 'process/browser',
     }),
   ],
   module: {

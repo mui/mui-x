@@ -3,14 +3,2236 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 6.0.0-alpha.0
+
+_Sep 22, 2022_
+
+We'd like to offer a big thanks to the 12 contributors who made this release possible. Here are some highlights ✨:
+
+- 🌍 Add a `localeText` prop to all pickers to customize the translations (#6212) @flaviendelangle
+- 🌍 Add Finnish (fi-FI) locale to the pickers (#6219) @PetroSilenius
+- 🌍 Add Persian (fa-IR) locale to the pickers (#6181) @fakhamatia
+- 📚 Documentation improvements
+- 🐞 Bugfixes
+
+### `@mui/x-data-grid@v6.0.0-alpha.0` / `@mui/x-data-grid-pro@v6.0.0-alpha.0` / `@mui/x-data-grid-premium@v6.0.0-alpha.0`
+
+#### Breaking changes
+
+- The deprecated `hide` column property has been removed in favor of the `columnVisibilityModel` prop and initial state.
+
+  ```diff
+  <DataGrid
+    columns={[
+      field: 'id,
+  -   hide: true,
+    ]}
+  +  initialState={{
+  +    columns: {
+  +      columnVisibilityModel: { id: false },
+  +    }
+  +  }}
+  />
+  ```
+
+  You can find more information about this new API on our [documentation](https://next.mui.com/x/react-data-grid/column-visibility/).
+
+- The `GridEvents` enum is now a TypeScript type.
+
+  ```diff
+  - apiRef.current.subscribeEvent(GridEvents.rowClick', handleRowClick)
+  + apiRef.current.subscribeEvent('rowClick', handleRowClick)
+  ```
+
+#### Changes
+
+- [DataGrid] Do not publish `cellFocusOut` event if the row was removed (#6251) @cherniavskii
+- [DataGrid] Fix scroll anchoring with master details (#6054) @oliviertassinari
+- [DataGrid] Improve Polish (pl-PL) locale on the data grid (#6245) @grzegorz-bach
+- [DataGrid] Remove the `GridEvents` enum (#6003) @flaviendelangle
+- [DataGrid] Remove the deprecated `hide` column property (#5999) @flaviendelangle
+
+### `@mui/x-date-pickers@v6.0.0-alpha.0` / `@mui/x-date-pickers-pro@v6.0.0-alpha.0`
+
+#### Breaking changes
+
+- All the deprecated props that allowed you to set the text displayed in the pickers have been removed.
+
+  You can now use the `localText` prop available on all picker components:
+
+  | Removed prop                 | Property in the new `localText` prop                                              |
+  |------------------------------|-----------------------------------------------------------------------------------|
+  | `endText`                    | `end`                                                                             |
+  | `getClockLabelText`          | `clockLabelText`                                                                  |
+  | `getHoursClockNumberText`    | `hoursClockNumberText`                                                            |
+  | `getMinutesClockNumberText`  | `minutesClockNumberText`                                                          |
+  | `getSecondsClockNumberText`  | `secondsClockNumberText`                                                          |
+  | `getViewSwitchingButtonText` | `calendarViewSwitchingButtonAriaLabel`                                            |
+  | `leftArrowButtonText`        | `openPreviousView` (or `previousMonth` when the button changes the visible month) |
+  | `rightArrowButtonText`       | `openNextView` (or `nextMonth` when the button changes the visible month)         |
+  | `startText`                  | `start`                                                                           |
+
+  For instance if you want to replace the `startText` / `endText`
+
+  ```diff
+  <DateRangePicker
+  -  startText="From"
+  -  endText="To"
+  +  localeText={{
+  +    start: 'From',
+  +    end: 'To',
+  +  }}
+  />
+  ```
+
+You can find more information about the new api, including how to set those translations on all your components at once in the [documentation](https://next.mui.com/x/react-date-pickers/localization/)
+
+- The component slots `LeftArrowButton` and `RightArrowButton` have been renamed `PreviousIconButton` and `NextIconButton` to better describe there usage:
+
+  ```diff
+  <DatePicker 
+    components={{
+  -   LeftArrowButton: CustomButton,  
+  +   PreviousIconButton: CustomButton,
+
+  -   RightArrowButton: CustomButton,
+  +   NextIconButton: CustomButton,
+    }}
+
+    componentsProps={{
+  -   leftArrowButton: {},  
+  +   previousIconButton: {},
+
+  -   rightArrowButton: {},
+  +   nextIconButton: {},
+    }}
+  />
+  ```
+
+- The `date` prop has been renamed `value` on  `MonthPicker` / `YearPicker`, `ClockPicker` and `CalendarPicker`.
+
+  ```diff
+  - <MonthPicker date={dayjs()} onChange={handleMonthChange} />
+  + <MonthPicker value={dayjs()} onChange={handleMonthChange} />
+
+  - <YearPicker date={dayjs()} onChange={handleYearChange} />
+  + <YearPicker value={dayjs()} onChange={handleYearChange} />
+
+  - <ClockPicker date={dayjs()} onChange={handleTimeChange} />
+  + <ClockPicker value={dayjs()} onChange={handleTimeChange} />
+
+  - <CalendarPicker date={dayjs()} onChange={handleDateChange} />
+  + <CalendarPicker value={dayjs()} onChange={handleDateChange} />
+  ```
+
+#### Changes
+
+- [CalendarPicker] Don't move to closest enabled date when `props.date` contains a disabled date (#6146) @flaviendelangle
+- [DateRangePicker] Switch to new month when changing the value from the outside (#6166) @flaviendelangle
+- [pickers] Add a `localeText` prop to all pickers to customize the translations (#6212) @flaviendelangle
+- [pickers] Add Finnish (fi-FI) locale to the pickers (#6219) (#6230) @PetroSilenius
+- [pickers] Add Persian (fa-IR) locale to the pickers (#6181) @fakhamatia
+- [pickers] Allow nested `LocalizationProvider` (#6011) @flaviendelangle
+- [pickers] Clean slots on `PickersArrowSwitcher` component (#5890) @flaviendelangle
+- [pickers] Fix invalid date error when decreasing `DateField` day (#6071) @alexfauquette
+- [pickers] Fix mobile section selection (#6207) @oliviertassinari
+- [pickers] Fix usage with Typescript 4.8 (#6229) @flaviendelangle
+- [pickers] Improve error message when no adapter context is found (#6211) @flaviendelangle
+- [pickers] Remove `valueStr` from the field state (#6142) @flaviendelangle
+- [pickers] Remove remaining deprecated locale props (#6233) @flaviendelangle
+- [pickers] Rename the `date` prop `value` on `MonthPicker` / `YearPicker`, `ClockPicker` and `CalendarPicker` (#6128) @flaviendelangle
+- [pickers] Rename the `onClose` prop of  `PickersPopper` `onDismiss` to simplify typing (#6155) @flaviendelangle
+- [pickers] Support the `sx` prop on all public component with a root HTML elements (#5944) @flaviendelangle
+- [pickers] Unify `PickersMonth` and `PickersYear` behaviors (#6034) @flaviendelangle
+- [pickers] Use `shouldDisableMonth` and `shouldDisableYear` for date validation (#6066) @flaviendelangle
+- [YearPicker] Scroll to the current year even with `autoFocus=false` (#6224) @alexfauquette
+
+### Docs
+
+- [docs] Add automatic vale check (#5429) @alexfauquette
+- [docs] Add Pro logo in "column ordering" link (#6127) @alexfauquette
+- [docs] Fix 301 link (#6239) @oliviertassinari
+- [docs] Fix broken link (#6163) @alexfauquette
+- [docs] Fix broken links (#6101) @alexfauquette
+- [docs] Fix demonstration date to avoid hydration errors (#6032) @alexfauquette
+- [docs] Fix hidden popper in restore state example (#6191) @heyfirst
+- [docs] Fix invalid links causing 404 & 301 errors (#6105) @oliviertassinari
+- [docs] Fix npm repository url in the pickers `package.json` (#6172) @oliviertassinari
+- [docs] Fix typo in linked issue (#6162) @flaviendelangle
+- [docs] Import `generateUtilityClass` from `@mui/utils` (#6216) @michaldudak
+- [docs] Improve Upgrade plan docs (#6018) @oliviertassinari
+- [docs] Link the OpenSSF Best Practices card (#6171) @oliviertassinari
+
+### Core
+
+- [core] Add `v5.17.3` changelog to next branch (#6250) @flaviendelangle
+- [core] Add link to the security page on the `README` (#6073) @oliviertassinari
+- [core] Fix scroll restoration in the docs (#5938) @oliviertassinari
+- [core] Remove the Storybook (#6099) @flaviendelangle
+- [core] Tag release as `next` in NPM (#6256) @m4theushw
+- [core] Update monorepo (#6180) @flaviendelangle
+- [core] Use the `next` branch for Prettier (#6097) @flaviendelangle
+- [core] Use the official repository for `@mui/monorepo` instead of a fork (#6189) @oliviertassinari
+- [test] Fix logic to skip column pinning tests (#6133) @m4theushw
+- [test] Hide the date on the print regression test (#6120) @flaviendelangle
+- [test] Skip tests for column pinning and dynamic row height (#5997) @m4theushw
+- [website] Improve security header @oliviertassinari
+
+## v5.17.4
+
+_Sep 22, 2022_
+
+We'd like to offer a big thanks to the 5 contributors who made this release possible. Here are some highlights ✨:
+
+- 🌍 Add Finnish (fi-FI) locale to the pickers (#6230) @PetroSilenius
+- 🌍 Add Persian (fa-IR) locale to the pickers (#6181) @fakhamatia
+- 🐞 Bugfixes
+
+### `@mui/x-data-grid@v5.17.4` / `@mui/x-data-grid-pro@v5.17.4` / `@mui/x-data-grid-premium@v5.17.4`
+
+#### Changes
+
+- [DataGrid] Do not publish `cellFocusOut` event if the row was removed (#6251) @cherniavskii
+- [DataGrid] Improve Polish (pl-PL) locale on the data grid (#6245) @grzegorz-bach
+
+### `@mui/x-date-pickers@v5.0.3` / `@mui/x-date-pickers-pro@v5.0.3`
+
+#### Changes
+
+- [pickers] Add Finnish (fi-FI) locale to pickers (#6219) (#6230) @PetroSilenius
+- [pickers] Add Persian (fa-IR) locale to the pickers (#6181) @fakhamatia
+- [pickers] Fix usage with Typescript 4.8 (#6229) @flaviendelangle
+- [YearPicker] Scroll to the current year even with `autoFocus=false` (#6224) @alexfauquette
+
+### Docs
+
+- [docs] Fix 301 link (#6239) @oliviertassinari
+
+### Core
+
+- [core] Use the official repository for `@mui/monorepo` instead of a fork (#6189) @oliviertassinari
+
+## 5.17.3
+
+_Sep 16, 2022_
+
+We'd like to offer a big thanks to the 6 contributors who made this release possible. Here are some highlights ✨:
+
+- 📝 Fix lost characters when typing into fields in the DataGrid (#5646) @m4theushw
+- 🌏 New locale and improvements for pickers
+- 🎁 Improve support to theme augmentation for pickers
+
+### `@mui/x-data-grid@v5.17.3` / `@mui/x-data-grid-pro@v5.17.3` / `@mui/x-data-grid-premium@v5.17.3`
+
+#### Changes
+
+- [DataGrid] Only update input with value prop if debounce is off (#5646) @m4theushw
+
+### `@mui/x-date-pickers@v5.0.2` / `@mui/x-date-pickers-pro@v5.0.2`
+
+#### Changes
+
+- [pickers] Add Icelandic (is-IS) locale (#6137) @elvatli
+- [pickers] Fix `@mui/x-date-pickers` theme augmentation and style overriding (#6156) @LukasTy
+- [pickers] Fix `@mui/x-date-pickers-pro` theme augmentation (#6096) @LukasTy
+- [pickers] Improve German (de-DE) locale (#6138) @alexfauquette
+
+### Docs
+
+- [docs] Improve main demo to show new functionalities (#5292) @joserodolfofreitas
+
+### Core
+
+- [core] Update to typescript 4.8.3 (#6136) @flaviendelangle
+- [core] Update RFC template (#6100) @bytasv
+
+## 5.17.2
+
+_Sep 9, 2022_
+
+This release will the last regular release for our `v5` packages.
+From now on, we'll be focusing on developing MUI X v6.
+You can check the [roadmap](https://github.com/mui/mui-x/projects/1) for more details on what's coming next.
+
+And if you'd like to help, please consider volunteering to give us a [user interview](https://forms.gle/vsBv6CLPz9h57xg8A).
+We'd love to know more about your use cases, pain points and expectations for the future.
+
+The `v5` packages will only get new versions to patch critical bug fixes.
+
+We'd like to offer a big thanks to the 6 contributors who made this release possible. Here are some highlights ✨:
+
+- 📃 Add support for column grouping when exporting to Excel (#5895) @alexfauquette
+- 🐞 Bugfixes
+
+### `@mui/x-data-grid@v5.17.2` / `@mui/x-data-grid-pro@v5.17.2` / `@mui/x-data-grid-premium@v5.17.2`
+
+#### Changes
+
+- [DataGrid] Revert mode if cell/row couldn't be saved due to validation error (#5897) @m4theushw
+- [DataGridPremium] Export column grouping in Excel (#5895) @alexfauquette
+
+### `@mui/x-date-pickers@v5.0.1` / `@mui/x-date-pickers-pro@v5.0.1`
+
+#### Changes
+
+- [DateTimePicker] Remove circular import (#6087) @flaviendelangle
+- [pickers] Add `sx` prop to the equality check of `PickersDay` (#6030) @TheUnlocked
+- [pickers] Add warning when `openTo` is invalid based on available `views` (#6042) @LukasTy
+- [pickers] Allow keyboard navigation to ignore disabled date for left / right arrow (#6082) @alexfauquette
+- [pickers] Fix mobile picker not opening on label click (#6074) @LukasTy
+
+### Docs
+
+- [docs] Add Recipes section
+
+### Core
+
+- [core] Add `yarn release:tag` script (#5169) @DanailH
+- [core] Upgrade monorepo (#6072) @m4theushw
+
+## 5.17.1
+
+_Sep 5, 2022_
+
+We'd like to offer a big thanks to the 3 contributors who made this release possible. Here are some highlights ✨:
+
+- 🐞 Bugfixes
+
+### `@mui/x-data-grid@v5.17.1` / `@mui/x-data-grid-pro@v5.17.1` / `@mui/x-data-grid-premium@v5.17.1`
+
+#### Changes
+
+- [DataGrid] Fix cells being focused on mouseUp (#5980) @cherniavskii
+- [DataGrid] Fix focused cell if column is spanned and new editing API is used (#5962) @m4theushw
+- [DataGridPro] Fix import in lazy-loading causing a bundling error (#6031) @flaviendelangle
+
+## 5.17.0
+
+_Sep 2, 2022_
+
+🎉 We are excited to finally introduce a stable release (v5.0.0) for the `@mui/x-date-pickers` and  `@mui/x-date-pickers-pro` packages!
+
+If you are still using picker components from the `lab`, take a look at the [migration guide](https://mui.com/x/react-date-pickers/migration-lab/).
+
+We'd like to offer a big thanks to the 9 contributors who made this release possible. Here are some highlights ✨:
+
+- 🎁 Implement Lazy loading (#5214) @DanailH
+
+  Pro users now can try the experimental lazy loading feature.
+  In a few steps, you can load your data on demand, as the rows are displayed.
+
+  To enable this feature, add `experimentalFeatures={{ lazyLoading: true }}`.
+  Lazy Loading requires a few other settings.
+  See the [documentation](https://mui.com/x/react-data-grid/row-updates/#lazy-loading) to explore the example in detail.
+
+- 🚀 Improve `pickers` focus management (#5820) @alexfauquette
+- 🎉 Enable disabling `day` on date range picker depending on `position` (#5773) @alexfauquette
+- ✨ Various improvements
+- 📚 Documentation improvements
+- 🐞 Bugfixes
+
+### `@mui/x-data-grid@v5.17.0` / `@mui/x-data-grid-pro@v5.17.0` / `@mui/x-data-grid-premium@v5.17.0`
+
+#### Changes
+
+- [DataGrid] Add `sort` prop to columns panel slot (#5888) @gavbrennan
+- [DataGrid] Do not throw if `fieldToFocus` cannot be found (#5871) @cherniavskii
+- [DataGrid] Support `getRowId` in the `replaceRows` method (#5988) @flaviendelangle
+- [DataGridPro] Add class name to row with open detail panel (#5924) @m4theushw
+- [DataGridPro] Fix crash when using `pinnedRows` + `getRowClassName` props and `rows=[]` (#5851) @cherniavskii
+- [DataGridPro] Fix filtering with inactive filter items (#5993) @alexfauquette
+- [DataGridPro] Implement Lazy loading (#5214) @DanailH
+- [DataGridPro] Support pinned columns and dynamic row height (#5782) @m4theushw
+- [DataGridPremium] Add state initializer for column groups (#5963) @alexfauquette
+- [DataGridPremium] Update grouping when `groupingValueGetter` changes (#5919) @flaviendelangle
+- [DataGridPremium] Use the aggregated value on tree data real groups (#5953) @flaviendelangle
+
+### `@mui/x-date-pickers@v5.0.0` / `@mui/x-date-pickers-pro@v5.0.0`
+
+#### Changes
+
+- [DatePicker] Improve focus management (#5820) @alexfauquette
+- [DateRangePicker] Enable disabling `day` depending on `position` (#5773) @alexfauquette
+- [DateTimePicker] Create a new `tabs` component slot (#5972) @LukasTy
+- [pickers] Do not forward validation props to the DOM on field components (#5971) @flaviendelangle
+- [pickers] Do not hardcode `date-fns` elements in field components (#5975) @flaviendelangle
+- [pickers] Do not require `date-fns` in `@mui/x-date-pickers-pro` (#5941) @flaviendelangle
+- [pickers] Fix mobile picker not opening on label click (#5651) @LukasTy
+- [pickers] Improve DOM event management on `useField` (#5901) @flaviendelangle
+- [pickers] Include `community` package `themeAugmentation` in `pro` package types (#5969) @LukasTy
+- [pickers] Rename `DateRangeField` into `SingleInputDateRangeField` (#5961) @flaviendelangle
+- [pickers] Support `isSameError` on field components (#5984) @flaviendelangle
+
+### Docs
+
+- [docs] Add `description` and `default` to pickers slots (#5893) @alexfauquette
+- [docs] Fix typo (#5945) @wettopa
+- [docs] Fix typo `onYearPicker` to `onYearChange` (#5954) @alexfauquette
+- [docs] Update `GridCellParams`'s `value` description (#5849) @cherniavskii
+- [docs] Update `README.md` to match Introduction section of the docs (#5754) @samuelsycamore
+
+### Core
+
+- [core] Fix typo (#5990) @flaviendelangle
+- [core] Remove old babel resolve rule (#5939) @oliviertassinari
+- [core] Remove outdated TODO (#5956) @flaviendelangle
+- [core] Upgrade monorepo (#5960) @cherniavskii
+- [core] Fix statics (#5986) @DanailH
+- [core] Remove unused dependencies (#5937) @oliviertassinari
+- [license] Remove CLI (#5757) @flaviendelangle
+- [test] Fix time zone sensitive test (#5955) @LukasTy
+- [test] Use `userEvent.mousePress` instead of `fireClickEvent` (#5920) @cherniavskii
+
+## 5.16.0
+
+_Aug 25, 2022_
+
+We'd like to offer a big thanks to the 11 contributors who made this release possible. Here are some highlights ✨:
+
+- 🎁 Introduce column grouping for data grid (#5133) @alexfauquette
+
+  You can now group columns using the `columnGroupingModel` prop. This lets you to display more structured data.
+
+  <img src="https://user-images.githubusercontent.com/45398769/186178366-4fba66b2-bf90-4c7a-9d83-940a7fc78704.png" width="800" />
+
+  To enable this feature, add `experimentalFeatures={{ columnGrouping: true }}`.
+  The grouping header can be fully customized.
+  See the [documentation](https://mui.com/x/react-data-grid/column-groups/) to explore everything it has to offer.
+
+- 🐞 Bugfixes
+- 🌏 New locales for pickers thanks to @tesseractjh and @drastus
+
+### `@mui/x-data-grid@v5.16.0` / `@mui/x-data-grid-pro@v5.16.0` / `@mui/x-data-grid-premium@v5.16.0`
+
+#### Changes
+
+- [DataGrid] Implement column grouping (#5133) @alexfauquette
+- [DataGrid] Handle `disableVirtualization` prop change (#5889) @cherniavskii
+- [DataGrid] Improve `GridRowModel` typing (#5734) @cherniavskii
+- [DataGrid] Update deprecation note for `GridColDef` `hide` property (#5886) @cherniavskii
+
+### `@mui/x-date-pickers@v5.0.0-beta.7` / `@mui/x-date-pickers-pro@v5.0.0-beta.7`
+
+#### Changes
+
+- [DatePicker] Fix to pass down `className` prop provided on DatePicker to `renderInput` (#5471) @CruseCtrl
+- [DatePicker] Improve `a11y` support (#5809) @LukasTy
+- [pickers] Add `PaperContent` component slot (#5801) @LukasTy
+- [pickers] Add a breaking change section in the migration guide (#5805) @alexfauquette
+- [pickers] Add new translations to `localeText` (#5143) @alexfauquette
+- [pickers] Document components slots (#4657) @flaviendelangle
+- [pickers] Add new unstable field components (#5504) @flaviendelangle
+- [pickers] Fallback to default `minDate` / `maxDate` when `null` value is passed (#5397) @flaviendelangle
+- [l10n] Add Korean (ko-KR) locale (#5854) @tesseractjh
+- [l10n] Add Polish (pl-PL) locale (#5833) @drastus
+
+### Docs
+
+- [docs] Fix typo in `migration from lab` (#5277) @chuckwired
+- [docs] Use `dayjs` instead of `date-fns` in doc examples (#5481) @flaviendelangle
+
+### Core
+
+- [core] Clarify the scope of the license key used for tests and documentation (#5824) @oliviertassinari
+- [core] Fix Typescript error on field hooks (#5892) @flaviendelangle
+- [core] Memoize `columns` in `useDemoData` hook (#5848) @cherniavskii
+- [core] Remove Firefox from the BrowserStack list (#5874) @DanailH
+- [core] Small changes to the release script (#5840) @m4theushw
+
+## 5.15.3
+
+_Aug 18, 2022_
+
+We'd like to offer a big thanks to the 9 contributors who made this release possible. Here are some highlights ✨:
+
+- 📚 Documentation improvements
+- 🐞 Bugfixes
+
+### `@mui/x-data-grid@v5.15.3` / `@mui/x-data-grid-pro@v5.15.3` / `@mui/x-data-grid-premium@v5.15.3`
+
+#### Changes
+
+- [DataGrid] Fix <kbd>Enter</kbd> causing Select to re-open when commiting value (#5756) @m4theushw
+- [DataGrid] Fix `GridOverlays` bypassing pointer events (#5674) @philjones88
+
+### `@mui/x-date-pickers@v5.0.0-beta.6` / `@mui/x-date-picker-pro@v5.0.0-beta.6`
+
+#### Changes
+
+- [DatePicker] Support click on day outside of current month (#5768) @alexfauquette
+- [pickers] Extend `PickersActionBarProps` with `DialogActionProps` (#5798) @LukasTy
+
+### Docs
+
+- [docs] Fix API anchor link scroll top (#5795) @oliviertassinari
+- [docs] Fix contradiction in the free trial clause (#5732) @oliviertassinari
+- [docs] Fix default value of the DataGrid `logLevel` prop to false (#5784) @HwangTaehyun
+- [docs] Fix typo on the row height page (#5772) @flaviendelangle
+- [docs] Improve "upgrading plans" documentation. (#5683) @joserodolfofreitas
+- [docs] Link the license docs before pricing (#5726) @oliviertassinari
+- [docs] Update packages README files (#5835) @cherniavskii
+- [docs] Use `InputBase` for pickers inputs (#5597) @cherniavskii
+
+### Core
+
+- [core] Upgrade monorepo (#5771, #5797) @cherniavskii
+- [core] Various TS improvements (#5556) @flaviendelangle
+- [license] Give more context in the missing license (#5731) @oliviertassinari
+- [license] Only log an error type once (#5730) @oliviertassinari
+- [test] Increase timeout to take print screenshot (#5799) @m4theushw
+
+## 5.15.2
+
+_Aug 11, 2022_
+
+We'd like to offer a big thanks to the 7 contributors who made this release possible. Here are some highlights ✨:
+
+- ✨ Improve quick filtering with row grouping (#5701) @alexfauquette
+- 📚 Documentation improvements
+- 🐞 Bugfixes
+
+### `@mui/x-data-grid@v5.15.2` / `@mui/x-data-grid-pro@v5.15.2` / `@mui/x-data-grid-premium@v5.15.2`
+
+#### Changes
+
+- [DataGrid] Catch errors if rows freezing is not supported (#5711) @cherniavskii
+- [DataGrid] Preserve cell mode when entering edit mode while commiting (#5686) @m4theushw
+- [DataGridPremium] Let quick filter search in row grouping children (#5701) @alexfauquette
+
+### `@mui/x-date-pickers@v5.0.0-beta.5` / `@mui/x-date-picker-pro@5.0.0-beta.5`
+
+#### Changes
+
+- [pickers] Add `react-dom` to peerDependencies (#5752) @cherniavskii
+- [TimePicker] Set clock focus outline to `none` (#5758) @LukasTy
+- [pickers] Fix theme augmentation with TypeScript (#5596) @alexfauquette
+- [pickers] Reset input value when locale is modified (#5310) @alexfauquette
+- [pickers] Support `disableHighlightToday` on `MonthPicker` and `YearPicker` (#5562) @flaviendelangle
+- [pickers] Fallback to desktop mode when `matchMedia` is unavailable (#5684) @LukasTy
+- [pickers] Trigger `onChange` when clearing or accepting `Invalid date` (#5740) @LukasTy
+
+### Docs
+
+- [docs] Add RFC GH issue template (#5739) @bytasv
+- [docs] Add description to the `GridExportStateParams` page (#5654) @oliviertassinari
+- [docs] Improve the Events page (#5413) @flaviendelangle
+- [docs] Use new editing API in the introduction demos (#5728) @oliviertassinari
+
+### Core
+
+- [core] Remove duplicated `FUNDING.yml` file (#5656) @oliviertassinari
+- [core] Remove outdated Next.js options (#5727) @oliviertassinari
+- [core] Update tooling to run with React 18 (#4155) @m4theushw
+- [test] Fix failing dynamic row height tests on Edge (#5707) @m4theushw
+
+## 5.15.1
+
+_Aug 4, 2022_
+
+We'd like to offer a big thanks to the 10 contributors who made this release possible. Here are some highlights ✨:
+
+- 📚 New [page presenting the `apiRef`](https://mui.com/x/react-data-grid/api-object/) (#5273) @flaviendelangle
+- ✨ Better keyboard support for start editing cells (#5511) @oliviertassinari
+- 🌍 Improvements to different locales
+- 🐞 Bugfixes
+
+### `@mui/x-data-grid@v5.15.1` / `@mui/x-data-grid-pro@v5.15.1` / `@mui/x-data-grid-premium@v5.15.1`
+
+#### Changes
+
+- [DataGrid] Improve start edit UX (#5511) @oliviertassinari
+- [DataGrid] Add `initialOpen` prop to `GridEditSingleSelectCell` to allow overriding initial open state (#5645) @shapaaa
+- [DataGrid] Forward `ref` to root element in `GridEditInputCell` (#5631) @Zenoo
+- [DataGrid] Toggle open state when clicking on buttons in the `GridToolbar` (#5503) @cherniavskii
+- [DataGrid] Improve German (de-DE) locale (#5586) @sebastianfrey
+- [DataGrid] Improve Korean (ko-KR) locale (#5668) @Einere
+- [DataGrid] Complete Italian (it-IT) locale (#5487) @mamodev
+
+### `@mui/x-date-pickers@v5.0.0-beta.4` / `@mui/x-date-picker-pro@5.0.0-beta.4`
+
+#### Changes
+
+- [DatePicker] Customize day formatter in the calendar (#5373) @alexfauquette
+
+### Docs
+
+- [docs] New location for the legal content (#5595) @oliviertassinari
+- [docs] Update description of `maxDateTime` prop (#5639) @jurecuhalev
+- [docs] Add missing `date-fns` dependency when opening Codesandbox demo (#5692) @cherniavskii
+
+### Core
+
+- [core] Drop usage of `GRID_EXPERIMENTAL_ENABLED` env variable (#5669) @ar7casper
+- [core] Isolate asset loading under /x/ (#5594) @oliviertassinari
+- [core] Upgrade node to v14 (#4999) @cherniavskii
+
+## 5.15.0
+
+_Jul 29, 2022_
+
+We'd like to offer a big thanks to the 6 contributors who made this release possible. Here are some highlights ✨:
+
+- 🎁 Introduce aggregation (#5592) @flaviendelangle
+
+  Premium users can now aggregate data in the grid.
+  Extract information like sum, average, count, and others with a couple of clicks.
+
+  https://user-images.githubusercontent.com/45398769/181581503-77cc412e-9d9e-4de1-8bc3-c3bccc54cdaa.mp4
+
+  To enable this feature, add `experimentalFeatures={{ aggregation: true }}`.
+  Aggregation functions are customizable and they combine well with row grouping.
+  See the [documentation](https://mui.com/x/react-data-grid/aggregation/) to explore everything it has to offer.
+
+- 🚀 Introduce row pinning (#4863) @cherniavskii
+
+  Pro users can now pin rows on top or bottom of the grid.
+
+  https://user-images.githubusercontent.com/45398769/181581493-56c733a3-6dd5-4546-bf8d-3f2dff72b14a.mp4
+
+  To do so, enable the feature with `experimentalFeatures={{ rowPinning: true }}` and provide the pinned rows data to the `pinnedRows` prop.
+  For more details, see the [documentation](https://mui.com/x/react-data-grid/row-pinning/).
+
+- 🌍 Add simplified Chinese (zh-CN) locale to pickers (#5584) @gamecss
+- 📚 Documentation improvements
+
+### `@mui/x-data-grid@v5.15.0` / `@mui/x-data-grid-pro@v5.15.0` / `@mui/x-data-grid-premium@v5.15.0`
+
+#### Changes
+
+- [DataGrid] Add prop to keep modifications while processing props (#5309) @m4theushw
+- [DataGrid] Fix container width change on React 18 (#5566) @m4theushw
+- [DataGrid] Fix ellipsis style convention (#5587) @oliviertassinari
+- [DataGridPro] Implement row pinning (#4863) @cherniavskii
+- [DataGridPremium] Make aggregation public (#5592) @cherniavskii
+- [l10n] Improve simplified Chinese (zh-CN) locale (#5584) @gamecss
+
+### `@mui/x-date-pickers@v5.0.0-beta.3` / `@mui/x-date-picker-pro@5.0.0-beta.3`
+
+#### Changes
+
+- [l10n] Add simplified Chinese (zh-CN) locale (#5584) @gamecss
+
+### Docs
+
+- [docs] Split docs page about rows (#5195) @flaviendelangle
+- [docs] Add warning clarifications (#5399) @alexfauquette
+- [docs] Correct slot CSS classes for Pro and Premium components (#5452) @alexfauquette
+- [docs] Fix internal link to `valueParser` (#5450) @alexfauquette
+
+### Core
+
+- [core] Upgrade monorepo (#5560) @m4theushw
+
+## 5.14.0
+
+_Jul 21, 2022_
+
+We'd like to offer a big thanks to the 10 contributors who made this release possible. Here are some highlights ✨:
+
+- 🧪 Export `GridBooleanCell` component from data grid (#5537) @cliedeman
+- ⚙️ Improve accessibility of the Export menu (#5486) @nogalpaulina
+- 🌍 Improvements to different locales
+- 📚 Documentation improvements
+- 🐞 Bugfixes
+
+### `@mui/x-data-grid@5.14.0` / `@mui/x-data-grid-pro@5.14.0` / `@mui/x-data-grid-premium@5.14.0`
+
+#### Changes
+
+- [DataGrid] Add generics to `GridPreProcessEditCellProps` (#5510) @YunosukeY
+- [DataGrid] Avoid inconsistent state export (#5390) @flaviendelangle
+- [DataGrid] Export `GridBooleanCell` component (#5537) @cliedeman
+- [DataGrid] Fix `date`/`dateTime` edit input font size to match view mode (#5304) @cherniavskii
+- [DataGrid] Fix loading overlay position (#5558) @DanailH
+- [DataGrid] Improve accessibility of the Export menu in the toolbar (#5486) @nogalpaulina
+- [DataGridPremium] Implement Aggregation - not publicly released (#4208) @flaviendelangle
+- [DataGridPremium] Fix crash when exporting all columns to Excel (#5425) @cherniavskii
+- [l10n] Add Traditional Chinese (zh-TW) locale (#5498) @happyincent
+
+### `@mui/x-date-pickers@v5.0.0-beta.2` / `@mui/x-date-picker-pro@5.0.0-beta.2`
+
+#### Changes
+
+- [l10n] Add Norwegian (nb-NO) locale (#5475) @elkebab
+
+### Docs
+
+- [docs] New page presenting the `apiRef` (#5273) @flaviendelangle
+- [docs] Remove blank line @oliviertassinari
+
+### Core
+
+- [core] Add missing comments on zh-TW translation (#5559) @flaviendelangle
+- [core] Polish on the bug issue template (#5525) @oliviertassinari
+- [test] Add more tests related to `isPrintableKey` (#5458) @mnajdova
+
+## 5.13.1
+
+_Jul 15, 2022_
+
+We'd like to offer a big thanks to the 13 contributors who made this release possible. Here are some highlights ✨:
+
+- ✏️ Enter edit mode when pasting in a cell with Ctrl+V (Cmd+V on macOS) (#5405) @alexfauquette
+- 🌍 Many improvements to the locales
+- 📚 Documentation improvements
+- 🐞 Bugfixes
+
+### `@mui/x-data-grid@v5.13.1` / `@mui/x-data-grid-pro@v5.13.1` / `@mui/x-data-grid-premium@v5.13.1`
+
+#### Changes
+
+- [DataGrid] Fix blank space when using dynamic row height with pagination (#5315) @m4theushw
+- [DataGrid] Start editing with uppercase letter and Ctrl+V (#5405) @alexfauquette
+- [DataGrid] Fix some filters being removed from filter model on filter panel open (#5403) @cherniavskii
+- [DataGridPro] Improve pinned column headers accessibility (#5370) @cherniavskii
+- [l10n] Improve Dutch (nl-NL) locale (#5464) @developenguin
+- [l10n] Improve French (fr-FR) locale (#3211) (#5420) @Zenoo
+- [l10n] Improve German (de-DE) locale (#5448) @sebastianfrey
+- [l10n] Improve Brazilian Portuguese (pt-BR) locale (#5394) @andrepxa
+- [l10n] Improve Romanian (ro-RO) locale (#5449) @rolule
+
+### `@mui/x-date-pickers@v5.0.0-beta.1` / `@mui/x-date-picker-pro@5.0.0-beta.1`
+
+#### Changes
+
+- [pickers] Add Italian (it-IT) locale (#5467) @felixh10r
+- [pickers] Add Spanish (es-ES) locale (#5468) @felixh10r
+- [pickers] Improve French (fr-FR) locale (#5446) @Zenoo
+- [pickers] Improve German (de-DE) locale (#5447) @sebastianfrey
+
+### Docs
+
+- [docs] Fix typo in the sorting page (#5431) @JosephMarinier
+- [docs] Fix description for "Striped rows" example (#5432) @lindapaiste
+- [docs] Make a clear difference between the license and license key (#5316) @oliviertassinari
+- [docs] Update pickers README files (#5456) @cherniavskii
+- [docs] Clarify the scope of support for MUI X (#5423) @joserodolfofreitas
+
+### Core
+
+- [core] Add technical support link to \_redirects (#5428) @joserodolfofreitas
+- [core] Improve GitHub bug reproduction template (#5067) @joserodolfofreitas
+- [core] Include playground pages in tsconfig (#5367) @cherniavskii
+- [core] Sort keys like in material-ui @oliviertassinari
+- [test] Wait for flags to load on regression tests (#5473) @m4theushw
+
+## 5.13.0
+
+_Jul 7, 2022_
+
+We'd like to offer a big thanks to the 10 contributors who made this release possible. Here are some highlights ✨:
+
+- 🎁 `@mui/x-date-pickers` and `@mui/x-date-pickers-pro` are now in beta!
+
+- ✨ Allow detail panel's height to match its content (#5163) @m4theushw
+
+  ```tsx
+  <DataGridPro getDetailPanelHeight={() => 'auto'} />
+  ```
+
+- 🌍 Add Romanian (ro-RO) locale on the data grid (#5345) @rolule
+- 📚 Documentation improvements
+- 🐞 Bugfixes
+
+### `@mui/x-data-grid@v5.13.0` / `@mui/x-data-grid-pro@v5.13.0` / `@mui/x-data-grid-premium@v5.13.0`
+
+#### Changes
+
+- [DataGrid] Allows to customize variant of value input in filter panel (#4826) @alexfauquette
+- [DataGrid] Add Romanian (ro-RO) locale (#5345) @rolule
+- [DataGrid] Export Norwegian (nb-NO) locale (#5407) @cherniavskii
+- [DataGrid] Fix broken "start editing" integration with Japanese (#5414) @mnajdova
+- [DataGrid] Fix "stop editing" integration with IME e.g. Japanese (#5257) @Gumichocopengin8
+- [DataGrid] Fix dimensions computation with `autoHeight` and scroll x (#5401) @flaviendelangle
+- [DataGrid] Improve Slovak (sk-SK) locale (#5332) @msidlo
+- [DataGrid] Mention Premium plan in error messages and docs warnings (#5328) @cherniavskii
+- [DataGrid] Remove trailing spaces in filter input (#5279) @alexfauquette
+- [DataGridPro] Allow to infer detail panel height from content (#5163) @m4theushw
+- [DataGridPro] Fix the depth of nodes when switching from a non-flat tree to a flat tree (#5362) @flaviendelangle
+
+### `@mui/x-date-pickers@v5.0.0-beta.0` / `@mui/x-date-picker-pro@5.0.0-beta.0`
+
+#### Changes
+
+- [DateRangePicker] Fix keyboard selection (#5265) @alexfauquette
+- [DayPicker] Remove empty space at the bottom of the day view (#5073) @flaviendelangle
+- [pickers] Add missing type dependencies (#5331) @Methuselah96
+- [pickers] Pass the generics to the components in the theme augmentation (#5199) @toruticas
+
+### Docs
+
+- [docs] Explain how to use hooks inside a cell renderer (#5158) @flaviendelangle
+- [docs] Fix server-side pagination demo (#5361) @cherniavskii
+- [docs] Fix typo in the quick filter docs (#5313) @alexfauquette
+- [docs] Improve the "Getting started" page (#5293) @alexfauquette
+- [docs] New page for the pickers action bar customization (#5267) @flaviendelangle
+- [docs] Revise and split up "Overview" page into "Introduction" (#4692) @samuelsycamore
+- [docs] Use `useKeepGroupedColumnsHiddren` from the grid package on remaining demo (#5382) @flaviendelangle
+
+## v5.12.3
+
+_Jun 23, 2022_
+
+We'd like to offer a big thanks to the 8 contributors who made this release possible. Here are some highlights ✨:
+
+- 🌍 Add Swedish (sv-SE) locale on the data grid and the pickers (#5210) @mrxdst
+- 🌍 Add Dutch (nl-NL) locale on the pickers (#5237) @DDukers
+- 📚 Documentation improvements
+- 🐞 Bugfixes
+
+### `@mui/x-data-grid@v5.12.3` / `@mui/x-data-grid-pro@v5.12.3` / `@mui/x-data-grid-premium@v5.12.3`
+
+#### Changes
+
+- [DataGrid] Do not hide non-hideable column when pressing Hide All button (#5298) @flaviendelangle
+- [DataGrid] Do not regenerate the row tree when the `loading` prop changes (#5213) @flaviendelangle
+- [DataGrid] Fix the default filter operator fallback on state initialization (#5266) @flaviendelangle
+- [DataGrid] Stop using the deprecated `api` prop in the grid components (#5205) @flaviendelangle
+- [DataGrid] Add Swedish (sv-SE) locale (#5210) @mrxdst
+- [DataGridPremium] Fix detail panel on `DataGridPremium` (#5264) @flaviendelangle
+- [DataGridPremium] Fix Excel import with Remix / Vite (#5207) @alexfauquette
+- [DataGridPremium] Fix error with quick filter and grouping rows (#5238) @alexfauquette
+
+### `@mui/x-date-pickers@v5.0.0-alpha.7` / `@mui/x-date-pickers-pro@v5.0.0-alpha.7`
+
+#### Changes
+
+- [pickers] Export adapters from both `@mui/x-date-pickers` and `@mui/x-date-pickers-pro` (#5204) @flaviendelangle
+- [pickers] Add Dutch (nl-NL) locale (#5237) @DDukers
+
+### Docs
+
+- [docs] Add `DataGridPremium` to all API sections (#5196) @flaviendelangle
+- [docs] Add plan badge next to event name in the Events page (#5200) @flaviendelangle
+- [docs] Add section for theme augmentation in the picker docs (#5276) @flaviendelangle
+- [docs] Add waiting for upvote section for row group panel (#5271) @flaviendelangle
+- [docs] Disable ad on main demo page (#5301) @joserodolfofreitas
+- [docs] Fix typo in the `DateRangePicker` documentation (#5259) @flaviendelangle
+
+### Core
+
+- [core] Allow having multiple playgrounds (#5288) @alexfauquette
+- [core] Improve typing of `GridFilterInputMultipleSingleSelect` (#5206) @flaviendelangle
+- [core] Remove arbitrary new lines (#5245) @oliviertassinari
+- [core] Remove dead logic (#5282) @oliviertassinari
+- [test] Fix `inputFormat` when testing with different date adapters (#5291) @cherniavskii
+- [test] Fix date assertion in Safari 13 (#5221) @m4theushw
+- [test] Throw if date adapter is not found (#5289) @cherniavskii
+- [test] Use mock for `ResizeObserver` (#5215) @m4theushw
+
+## v5.12.2
+
+_Jun 16, 2022_
+
+We'd like to offer a big thanks to the 7 contributors who made this release possible. Here are some highlights ✨:
+
+- 🚀 Performance improvement for dynamic row height (#5135) @m4theushw
+- 🕒 Add demo of how to use the data grid with date pickers (#5053) @cherniavskii
+- 📚 Documentation improvements
+- 🐞 Bugfixes
+
+### `@mui/x-data-grid@v5.12.2` / `@mui/x-data-grid-pro@v5.12.2` / `@mui/x-data-grid-premium@v5.12.2`
+
+#### Changes
+
+- [DataGrid] Fix for cosmetic bug on column filter badge (#5170) @simbahandiane
+- [DataGrid] Hide vertical scrollbar if `autoHeight` is enabled (#5164) @m4theushw
+- [DataGrid] Use exponential search to render non-measured rows (#5135) @m4theushw
+- [DataGridPro] Fix label of the detail panel toggle column (#5191) @m4theushw
+- [DataGridPro] Refresh detail panel caches when props change (#5110) @m4theushw
+
+### Docs
+
+- [docs] Add example with custom checkbox column (#5161) @flaviendelangle
+- [docs] Batch small changes (#5177) @oliviertassinari
+- [docs] Fix demo currency format (#5034) @oliviertassinari
+- [docs] Fix outdated license description to match the EULA (#5219) @joserodolfofreitas
+- [docs] Fix redundant headers (#5104) @oliviertassinari
+- [docs] Fix some capitalization to match the guidelines (#5105) @oliviertassinari
+- [docs] Improve the `getRowId` doc section (#5156) @flaviendelangle
+- [docs] Instruction to deal with invalid license message (#5074) @joserodolfofreitas
+- [docs] Use redirection in the code (#5114) @oliviertassinari
+- [docs] Add demo of how to use the data grid with date pickers (#5053) @cherniavskii
+
+### Core
+
+- [core] Improve inline code rendering within the details tag (#5166) @Harmouch101
+- [core] Remove unused props from plugin typing (#5185) @flaviendelangle
+- [core] Use the scrollbar size from `useGridDimensions` on `DataGridProColumnHeaders` (#5201) @flaviendelangle
+- [core] Fix `GridColTypeDef` type (#5167) @cherniavskii
+- [core] Fix `GridColTypeDef` usage in demo (#5197) @cherniavskii
+- [test] Add `waitFor` before asserting height (#5203) @m4theushw
+
+## v5.12.1
+
+_Jun 9, 2022_
+
+We'd like to offer a big thanks to the 10 contributors who made this release possible. Here are some highlights ✨:
+
+- 🎁 Add `reason` to `onFilterModelChange` (#4938) @m4theushw
+- 🔎 Control quick filter input value via model prop (#5013) @alexfauquette
+- 📚 Documentation improvements
+- 🐞 Bugfixes
+
+### `@mui/x-data-grid@v5.12.1` / `@mui/x-data-grid-pro@v5.12.1` / `@mui/x-data-grid-premium@v5.12.1`
+
+#### Changes
+
+- [DataGrid] Add `reason` to `onFilterModelChange` (#4938) @m4theushw
+- [DataGrid] Restore focus after dismissing the column menu (#5027) @m4theushw
+- [DataGrid] Update quick filter input when model is modified (#5013) @alexfauquette
+- [DataGrid] Fix implicit dependency on react-dom (#5121) @oliviertassinari
+- [DataGrid] Support `getRowId` in row reordering (#5093) @flaviendelangle
+- [DataGridPro] Fix column resizing in RTL mode (#4989) @cherniavskii
+- [DataGridPro] Fix column resizing on touchscreen (#5056) @cherniavskii
+- [l10n] Update Japanese (ja-JP) locale (#5122) @hikotq
+- [l10n] Update Russian (ru-RU) locale (#5069) @Artboomy
+
+### `@mui/x-date-pickers@v5.0.0-alpha.6` / `@mui/x-date-pickers-pro@v5.0.0-alpha.6`
+
+#### Changes
+
+- [pickers] Fix usage of `maxDate` / `minDate` / `disableFuture` and `disablePast` (#5081) @flaviendelangle
+- [pickers] Infer mask from `inputFormat` (#5060) @alexfauquette
+- [pickers] Manage input value without using the focus (#4486) @alexfauquette
+- [pickers] Use new localization for doc examples (#5097) @flaviendelangle
+- [pickers] Fix `shouldDisableDate` in range pickers (#5123) @flaviendelangle
+- [l10n] Add Brazilian Portuguese (pt-BR) locale (#5100) @jardelnovaes
+- [l10n] Use `localText` for remaining texts (#4986) @alexfauquette
+
+### Docs
+
+- [docs] Implement the focus management on data grid demo links (#5070) @alexfauquette
+- [docs] Fix `301` link to render cell (#5106) @oliviertassinari
+- [docs] Fix broken anchor link @oliviertassinari
+- [docs] Improve movie dataset (#5142) @flaviendelangle
+- [docs] Move all localization documentation in a unique page (#5072) @alexfauquette
+- [docs] Section for overwriting core components i18n keys (#4998) @DanailH
+- [docs] Small grammar and format fixes for Dynamic Row Height section (#5098) @samuelsycamore
+
+### Core
+
+- [core] Allows to run tests with different date adapters (#5055) @alexfauquette
+- [core] Prettify the l10n issue (#4928) @alexfauquette
+- [core] Set correct `apiRef` type in row reorder pre processors #5125 @DanailH
+- [core] Stop using `GridEvents` in technical doc (#5157) @flaviendelangle
+- [core] Upgrade monorepo (#5101) @oliviertassinari
+- [test] Fix dynamic row height test failing on Chrome (#5147) @m4theushw
+- [test] Remove delay on server demo for regression tests (#5131) @alexfauquette
+
+## v5.12.0
+
+_May 31, 2022_
+
+We'd like to offer a big thanks to the 15 contributors who made this release possible. Here are some highlights ✨:
+
+- 🎁 Introduce support for [dynamic row height](https://mui.com/x/react-data-grid/row-height/#dynamic-row-height) (#4859) @m4theushw
+
+  <img src="https://user-images.githubusercontent.com/42154031/171183167-718d7bcd-ec0f-459e-97fe-0f650abb4a99.gif" width="800">
+
+- ⚠️ Remove deprecated row grouping feature from `@mui/x-data-grid-pro`
+
+  Row grouping is available through the `@mui/x-data-grid-premium` package - see [Premium plan release blogpost](https://mui.com/blog/premium-plan-release/).
+
+- 🐞 Bug fixes and improvements
+
+### `@mui/x-data-grid@v5.12.0` / `@mui/x-data-grid-pro@v5.12.0` / `@mui/x-data-grid-premium@v5.12.0`
+
+#### Changes
+
+- [DataGrid] Support dynamic row height (#4859) @m4theushw
+- [DataGrid] Add `onMenuOpen` and `onMenuClose` props (#4825) @DanailH
+- [DataGrid] Add generics to `GridActionsColDef` to match `GridColDef` (#4982) @subvertallchris
+- [DataGrid] Disable drag event handlers when row or column reorder are disabled (#4857) @DanailH
+- [DataGrid] Allow other attempts to stop edit mode if the first failed (#5016) @m4theushw
+- [DataGrid] Better reflect the dependency on Material UI (#4795) @oliviertassinari
+- [DataGrid] Add an id to the filter item created when opening the filter panel (#5014) @flaviendelangle
+- [DataGrid] Use column visibility model on Hide All / Show All when enabled (#5050) @flaviendelangle
+- [DataGridPro] Unpin columns back to original position (#4512) @m4theushw
+- [DataGridPro] Remove experimental row grouping from Pro plan (#4949) @flaviendelangle
+- [DataGridPro] Allow to scroll detail panel content if it overflows the panel (#4979) @cherniavskii
+- [DataGridPro] Do not call `setRowIndex` when dragging a column over a row (#4987) @flaviendelangle
+- [l10n] Add Norwegian (Bokmål) (nb-NO) locale (#5001) @spiftire
+- [l10n] Add Turkish (tr-TR) locale (#5026) @Rassilion
+
+### `@mui/x-date-pickers@v5.0.0-alpha.5` / `@mui/x-date-pickers-pro@v5.0.0-alpha.5`
+
+#### Breaking changes
+
+- [pickers] Restructure props in `MonthPicker` / `YearPicker` and `DayPicker` (#4814) @flaviendelangle
+
+  The props of `MonthPicker` / `YearPicker` and `DayPicker` have been reworked to make them more consistent for a standalone usage (#4814) @flaviendelangle
+
+  **MonthPicker**: The prop `onMonthChange` has been removed, you can use `onChange` instead since every change is a month change
+
+  **YearPicker**: The prop `onYearChange` has been removed, you can use `onChange` instead since every change is a year change
+
+  **DayPicker**: The prop `isDateDisabled` has been removed, you can now use the same validation props as for the other components (`maxDate`, `minDate`, `shouldDisableDate`, `disableFuture` and `disablePast`)
+
+#### Changes
+
+- [pickers] Add German (de-DE) translations (#4974) @felixh10r
+- [pickers] Support action bar on static pickers and improve typing (#5015) @flaviendelangle
+
+### Docs
+
+- [docs] Add docs sections / pages for upcoming features on pickers (#4603) @flaviendelangle
+- [docs] Add docs for filter panel components (#4919) @m4theushw
+- [docs] Explain how to manage focus with `renderCell` (#4254) @alexfauquette
+- [docs] Fix broken links to GitHub source (#5003) @Edwardveb
+- [docs] Fix navigation links (#4956) @oliviertassinari
+- [docs] Fix typo on rows docs (#4952) @jamesRadicl
+- [docs] New WAI-ARIA guidelines location (#4957) @oliviertassinari
+- [docs] Add "Slots" section to the right nav in the API pages (#4993) @DanailH
+- [docs] Fix docs feedback widget not working (#4905) @cherniavskii
+- [docs] Replace custom notes and warning with callouts (#5008) @flaviendelangle
+
+### Core
+
+- [core] Avoid Order ID to refer to GitHub issues/PRs (#5005) @oliviertassinari
+- [core] Improve the workflow for incomplete issues (#5012) @mnajdova
+- [core] Remove dead code on row grouping tree creation (#4945) @flaviendelangle
+- [core] Use new cache api for the row grouping last model tracking (#4980) @flaviendelangle
+- [core] Ensure that PRs have atleast 1 label (#5011) @DanailH
+- [core] Fix trailing-space @oliviertassinari
+- [core] Stop Renovate PR updates when PR is on hold (#5020) @cherniavskii
+- [license] Remove support for UTF-8 (#4893) @oliviertassinari
+- [license] Tweak error messages (#4907) @mbrookes
+- [test] Skip Safari and Firefox on broken tests (#4994) @alexfauquette
+- [test] Make argos screenshots stable (#5061) @m4theushw
+
+## v5.11.1
+
+_May 20, 2022_
+
+We'd like to offer a big thanks to the 6 contributors who made this release possible. Here are some highlights ✨:
+
+- 🌍 Support localization on the date and time picker components (#4517) @alexfauquette
+
+  Texts can be translated in the pickers components, similar to what can be done in the data grid component. Check the [documentation](https://mui.com/x/react-date-pickers/localization/) for more information.
+
+- 📃 Add support for column spanning when exporting to Excel (#4830) @cherniavskii
+
+  <img src="https://user-images.githubusercontent.com/13808724/167691417-bf6baeb9-d409-4134-acb6-aadaf6434de9.png" width="800">
+
+- 🐞 Bugs fixes
+
+### `@mui/x-data-grid@v5.11.1` / `@mui/x-data-grid-pro@v5.11.1` / `@mui/x-data-grid-premium@v5.11.1`
+
+#### Changes
+
+- [DataGrid] Add a CSS class corresponding to current density (#4858) @m4theushw
+- [DataGrid] Execute the pipe-processors in their initialization order (#4913) @flaviendelangle
+- [DataGrid] Fix rendering of the no rows overlay when the `loading` prop is changed (#4910) @m4theushw
+- [DataGridPremium] Add `exceljs` to the dependencies (#4939) @alexfauquette
+- [DataGridPremium] Support column spanning in the Excel export (#4830) @cherniavskii
+- [l10n] Improve Russian (ru-RU) locale (#4864) @arvkonstantin
+
+### `@mui/x-date-pickers@v5.0.0-alpha.4` / `@mui/x-date-pickers-pro@v5.0.0-alpha.4`
+
+#### Breaking changes
+
+- The props related to the action bar buttons have been removed (`clearable`, `showTodayButton`, `cancelText`, `okText`)
+
+  To decide which button must be displayed and in which order, you can now use the `actions` prop of the `actionBar` component slot props.
+
+  ```jsx
+  <DatePicker
+    componentsProps={{
+      actionBar: {
+        // The actions will be the same between desktop and mobile
+        actions: ['clear'],
+
+        // The actions will be different between desktop and mobile
+        actions: (variant) => (variant === 'desktop' ? [] : ['clear']),
+      },
+    }}
+  />
+  ```
+
+  The build-in `ActionBar` component supports 4 different actions: `'clear'`, `'cancel'`, `'accept'`, and `'today'`.
+  By default, the pickers will render the cancel and accept button on mobile and no action on desktop.
+
+  If you need other actions, you can provide your own component to the `ActionBar` component slot
+
+  ```jsx
+  <DatePicker components={{ ActionBar: CustomActionBar }} />
+  ```
+
+#### Changes
+
+- [DatePicker] Fix keyboard accessibility for first and last year (#4807) @alexfauquette
+- [pickers] Add component slot for action bar (#4778) @alexfauquette
+- [pickers] Add l10n support (#4517) @alexfauquette
+- [pickers] Close Popper when pressing <kbd>Esc</kbd> inside a modal (#4499) @alexfauquette
+- [pickers] Support class slots on toolbar components (#4855) @flaviendelangle
+- [TimePicker] Fix time validation when current date is `null` (#4867) @flaviendelangle
+
+### Docs
+
+- [docs] Add 301 redirect for columns page (#4940) @alexfauquette
+- [docs] Avoid confusion with license key installation (#4891) @oliviertassinari
+- [docs] Complete the instructions for pickers installation in readme (#4852) @alexfauquette
+- [docs] Disable ads on paid-only pages (#4842) @flaviendelangle
+- [docs] Don't redirect to localized doc on deploy preview (#4818) @m4theushw
+- [docs] Limit `LICENSE` file to 80 char per line (#4873) @oliviertassinari
+- [docs] Typo on OrderId @oliviertassinari
+- [docs] Update feature comparison table (#4918) @cherniavskii
+
+### Core
+
+- [core] Add new script to generate tree data rows from file tree (#4902) @flaviendelangle
+- [core] Fix code style (#4874) @oliviertassinari
+- [core] Fix React 18 peer dependency (#4908) @oliviertassinari
+- [core] Fix link to the LICENSE file (#4875) @oliviertassinari
+- [core] Fix transitive babel dependency (#4793) @oliviertassinari
+- [core] New pipe processing `rowHydration` (#4896) @flaviendelangle
+- [core] Remove dead code for the docs (#4791) @oliviertassinari
+- [core] Run `yarn prettier` @oliviertassinari
+- [core] Polishes on `CHANGELOG.md` (#4876) @oliviertassinari
+- [core] Simplify rows cache management (#4933) @flaviendelangle
+- [core] Use internal icons for quick filter (#4912) @alexfauquette
+
+## v5.11.0
+
+_May 13, 2022_
+
+We'd like to offer a big thanks to the 15 contributors who made this release possible. Here are some highlights ✨:
+
+- 🚀 **Premium plan release**. We're happy to announce that the Premium plan is [finally out](https://mui.com/blog/premium-plan-release/)! With it, MUI X officially steps up to the next level, supporting the most advanced use cases for UI components.
+
+  This plan is available through the new `@mui/x-data-grid-premium` package, which contains the row grouping and the Excel export features.
+
+  If you were already using the row grouping feature, you can upgrade by [installing](https://mui.com/x/react-data-grid/getting-started/#installation) `@mui/x-data-grid-premium` and replace `DataGridPro` with `DataGridPremium`, as follows. Note that the experimental flag is not required anymore to use the row grouping.
+
+  ```diff
+  -import { DataGridPro } from '@mui/x-data-grid-pro';
+  +import { DataGridPremium } from '@mui/x-data-grid-premium';
+
+  -<DataGridPro experimentalFeatures={{ rowGrouping: true }} />
+  +<DataGridPremium />
+  ```
+
+  For more information about the revised pricing model please have a look at the [blog post](https://mui.com/blog/premium-plan-release/#the-new-licensing-model).
+
+- 👔 **Excel export**. You can find this new Premium feature at: https://mui.com/x/react-data-grid/export/#excel-export.
+
+- 🔎 **Quick filtering**. You can now add a quick filtering search bar to your grid. To do so, either pass `showQuickFilter` prop to the `<GridToolbar />` or use the `<GridToolbarQuickFilter />` component in your custom toolbar. More information about how to customize the filtering logic is in the [documentation](https://mui.com/x/react-data-grid/filtering/#quick-filter).
+
+  <img src="https://user-images.githubusercontent.com/13808724/167700105-5a5acc7c-5463-4871-8514-3d09e2f365ae.png" width="724">
+
+- 🐞 Bugs fixes
+
+### `@mui/x-data-grid@v5.11.0` / `@mui/x-data-grid-pro@v5.11.0` / `@mui/x-data-grid-premium@v5.11.0`
+
+#### Breaking changes
+
+- Move row grouping to the premium package (#4223) @flaviendelangle
+
+  The use of `rowGrouping` in the `@mui/x-data-grid-pro` package is deprecated. The experimental flag will be removed in an upcoming release.
+
+#### Changes
+
+- [DataGrid] Add TypeScript support to the `sx` prop in inner components (#4743) @lindapaiste
+- [DataGrid] Add props to control cell mode (#4210) @m4theushw
+- [DataGrid] Add quick filtering engine (#4317) @alexfauquette
+- [DataGrid] Check focus validity whenever the rows in state changes (#4683) @flaviendelangle
+- [DataGrid] Fix infinite scroll when dragging column header cell over row cell (#4735) @DjoSmer
+- [DataGrid] Fix scroll jump when using keyboard navigation (#4515) @cherniavskii
+- [DataGrid] Improve sorting accessibility (#4379) @cherniavskii
+- [DataGrid] New `getRowGroupChildren` API method (#4304) @flaviendelangle
+- [DataGrid] Publish `preferencePanelClose` event only once when clicking on another panel button (#4810) @flaviendelangle
+- [DataGrid] Update focused action if the currently focused one is removed (#4694) @m4theushw
+- [DataGrid] Add `onChange` callback to edit components (#4621) @m4theushw
+- [DataGrid] Add `keepNonExistentRowsSelected` prop (#4786) @willsoto
+- [DataGrid] Prevent crash if row is removed with click (#4831) @m4theushw
+- [DataGridPro] Fix detail panel not taking full width (#4610) @cherniavskii
+- [DataGridPremium] Add Excel export (#3981) @alexfauquette
+- [DataGridPremium] Bootstrap `@mui/x-data-grid-premium` (#4223) @flaviendelangle
+- [DataGridPremium] Fix Excel date serialization when row grouping is enabled (#4774) @cherniavskii
+- [l10n] Improve German (de-DE) locale (#4748) @sebastianfrey
+- [l10n] Improve German (de-DE) locale (#4668) @izu-co
+
+### `@mui/x-date-pickers@v5.0.0-alpha.3` / `@mui/x-date-pickers-pro@v5.0.0-alpha.3`
+
+#### Breaking changes
+
+- Rework the auto-closing behavior of the pickers (#4408) @flaviendelangle
+
+  The `disableCloseOnSelect` prop has been replaced by a new `closeOnSelect` prop which has the opposite behavior.
+  The default behavior remains the same (close after the last step on desktop but not on mobile).
+
+  ```diff
+   // If you don't want to close after the last step
+  -<DatePicker disableCloseOnSelect={false} />
+  +<DatePicker closeOnSelect />
+
+   // If you want to close after the last step
+  -<DatePicker disableCloseOnSelect />
+  +<DatePicker closeOnSelect={false} />
+  ```
+
+#### Changes
+
+- [DatePicker] Ignore <kbd>Escape</kbd> when the picker is already closed (#4770) @mikewolfd
+- [DatePicker] Make month year order changeable in header (#4695) @gky360
+- [DateRangePicker] Open view on click, <kbd>Enter</kbd> or <kbd>Space</kbd> instead of focus (#4747) @alexfauquette
+- [DateRangePicker] Refactor tests (#4745) @flaviendelangle
+- [DateRangePicker] Remove `orientation` prop (#4665) @m4theushw
+- [DateTimePicker] `Toolbar` should be visible by default on mobile (#4833) @flaviendelangle
+- [MonthPicker] New prop `shouldDisableMonth` (#4708) @someone635
+- [TimePicker] Disable and invalidate date with minutes not matching `minutesStep` (#4726) @flaviendelangle
+- [TimePicker] Don't merge with previous value when new value is not valid (#4847) @flaviendelangle
+- [TimePicker] Refactor `isTimeDisabled` method (#4688) @flaviendelangle
+- [pickers] Add details in invalid mask error (#4501) @alexfauquette
+- [pickers] Add explicit interfaces for components slots and components slots props (#4589) @flaviendelangle
+- [pickers] Add missing `peerDependencies` for `yarn pnp` users (#4763) @nate-summercook
+- [pickers] Add overrides to `PickersArrowSwitcher` (#4672) @m4theushw
+- [pickers] Clean component interfaces and remove non-implemented props (#4758) @flaviendelangle
+- [pickers] Do not apply the current time when no date provided in `DayPicker` (#4649) @flaviendelangle
+- [pickers] Document and refacto the value manager (#4701) @flaviendelangle
+- [pickers] Drop `allowSameDateSelection` prop (#4808) @flaviendelangle
+- [pickers] Enable mask by default when using `ampm=true` (#4731) @alexfauquette
+- [pickers] Fix `disabled` and `readOnly` behavior on calendar and clock (#4645) @alexfauquette
+- [pickers] Invalid character does not delete last digit (#4839) @alexfauquette
+- [pickers] Rename prop `date` into `parsedValue` when it can contain a range (#4736) @flaviendelangle
+- [pickers] Rework `TDate`, `TInputDate`, `TValue` and `TInputValue` generics (#4617) @flaviendelangle
+- [pickers] Rework the date lifecycle in `usePickerState` (#4408) @flaviendelangle
+
+### Docs
+
+- [docs] Add `scopePathNames` property to column page (#4811) @flaviendelangle
+- [docs] Add label to each demo (#4667) @m4theushw
+- [docs] Correctly capitalize <kbd>Ctrl</kbd> (#4707) @oliviertassinari
+- [docs] Fix documentation on `ampm` prop (#4846) @alexfauquette
+- [docs] Generate the event documentation from `GridEventLookup` (#4725) @flaviendelangle
+- [docs] Keep columns section expanded when switching between pages (#4816) @cherniavskii
+- [docs] Move `useKeepGroupingColumnsHidden` on `@mui/x-data-grid-premium` (#4319) @flaviendelangle
+- [docs] Remove legacy pages for old URLs (#4575) @m4theushw
+- [docs] Remove remaining pages in `docs/pages/api-docs` folder (#4709) @m4theushw
+- [docs] SEO fixes (#4711) @oliviertassinari
+- [docs] Set type number to movie column year (#4753) @flaviendelangle
+- [docs] Simplify server examples (#4186) @alexfauquette
+- [docs] Small typo (#4670) @flaviendelangle
+- [docs] Split the 'Columns' page (#4600) @flaviendelangle
+- [docs] Stop using `GridEvents` enum in documentation (#4699) @flaviendelangle
+- [docs] Update mono repo to get copy code block (#4691) @siriwatknp
+- [docs] Update the feature table in the Getting Started page of the data grid (#4619) @flaviendelangle
+- [docs] Add demo for Premium (#4750) @m4theushw
+
+### Core
+
+- [core] Check if `process` is available (#4193) @m4theushw
+- [core] Fix naming collision (#4853) @alexfauquette
+- [core] Prevent out-of-memory when type-checking in CI (#4697) @flaviendelangle
+- [core] Remove `rowsCache` from state (#4480) @m4theushw
+- [core] Rework `DayPicker` api (#4783) @flaviendelangle
+- [core] Update `x-license-pro` license to handle premium package (#4315) @DanailH
+- [core] Update monorepo & version (#4789) @oliviertassinari
+- [core] Update monorepo (#4772) @flaviendelangle
+- [core] Stop using `GridEvents` enum (#4698, #4696, #4685) @flaviendelangle
+- [core] Update monorepo (#4854) @cherniavskii
+- [license] Allow to limit some packages to a specific license plan (#4651) @flaviendelangle
+- [test] Fix path to detect `DataGrid` tests (#4752) @m4theushw
+- [test] Reset cleanup tracking on Karma tests (#4679) @m4theushw
+- [test] Restore `sinon` sandbox after each `karma` test (#4689) @m4theushw
+
+## v5.10.0
+
+_Apr 25, 2022_
+
+We'd like to offer a big thanks to the 6 contributors who made this release possible. Here are some highlights ✨:
+
+- 🎁 Introduce [Row reorder](https://mui.com/x/react-data-grid/row-ordering/) (#4034) @DanailH
+
+  <img src="https://user-images.githubusercontent.com/5858539/165091263-23472fbb-a989-44b8-849a-d2185adfe13b.gif" width="800">
+
+- 🐞 Bug fixes
+
+### `@mui/x-data-grid@v5.10.0` / `@mui/x-data-grid-pro@v5.10.0`
+
+- [DataGrid] Don't close column menu when updating rows (#4498) @m4theushw
+- [DataGridPro] Introduce row reorder (#4034) @DanailH
+
+### `@mui/x-date-pickers@v5.0.0-alpha.2` / `@mui/x-date-pickers-pro@v5.0.0-alpha.2`
+
+- [pickers] Pass `PaperProps` to `DesktopWrapper` component (#4584) @alexfauquette
+- [TimePicker] Fix bug when time picker clear value (#4582) @alexfauquette
+- [DateRangePicker] Fix missing `clearable` and `clearText` props (#4511) @zigang93
+
+### Docs
+
+- [docs] Add plan in the nav bar for pro-only and premium-only pages (#4591) @flaviendelangle
+- [docs] Clarify where to install the license (#4452) @oliviertassinari
+- [docs] Fix CodeSandbox links for demo with pickers (#4570) @alexfauquette
+- [docs] Include date-fns dependency when opening demos in CodeSandbox (#4508) @m4theushw
+- [docs] Split the 'Group & Pivot' page (#4441) @flaviendelangle
+
+### Core
+
+- [core] Fix the README of the X packages (#4590) @flaviendelangle
+- [test] Fix test to not depend on screen resolution (#4587) @m4theushw
+
+## v5.9.0
+
+_Apr 14, 2022_
+
+We'd like to offer a big thanks to the 9 contributors who made this release possible. Here are some highlights ✨:
+
+- ⚡ Update peer dependencies to support React 18 (#4332) @m4theushw
+
+  Now the data grid and pickers components support the concurrent mode.
+
+- 🎁 Add support for [Column spanning](https://mui.com/x/react-data-grid/column-spanning/) (#4020) @cherniavskii
+
+  <img src="https://user-images.githubusercontent.com/13808724/162926746-93bcb180-3c9d-4eb9-afc7-c3908a5c6406.png" width="788">
+
+- 📚 New standalone documentation for MUI X (#4313) @siriwatknp
+
+  Each MUI product now has its own documentation.
+  More information on our [blog post](https://mui.com/blog/docs-restructure-2022/).
+
+- 🌍 Add Hungarian (hu-HU) locale (#4458) @x22tri
+
+- 🐞 Bug fixes
+
+### `@mui/x-data-grid@v5.9.0` / `@mui/x-data-grid-pro@v5.9.0`
+
+- [DataGrid] Add indexes relative to the filtered rows and the current page to the `getRowClassName` and `getRowSpacing` props (#3882) @flaviendelangle
+- [DataGrid] Add React 18 to peer dependencies (#4332) @m4theushw
+- [DataGrid] Add support for column spanning (#4020) @cherniavskii
+- [DataGrid] Apply filtering before sorting (#4359) @flaviendelangle
+- [DataGrid] Enable using non-native Select in filter panel (#4361) @kyeongsoosoo
+- [DataGrid] Fix `api` prop leaking to DOM (#4384) @m4theushw
+- [DataGrid] Fix column dimensions import/export with flex and resizing (#4311) @flaviendelangle
+- [DataGrid] Fix focus after stopping row edit mode with pagination enabled (#4326) @m4theushw
+- [DataGrid] Fix inconsistent overlay when changing the `loading` prop (#4334) @m4theushw
+- [DataGrid] Fix scrollbar grabbing issue in Safari (#4405) @cherniavskii
+- [DataGrid] `GridCellParams.formattedValue` should be nullable (#4376) @flaviendelangle
+- [DataGrid] Improve accessibility of the `actions` column (#4325) @m4theushw
+- [DataGrid] Pass updated row to edit components (#4392) @m4theushw
+- [DataGrid] Prevent column header scroll (#4280) @m4theushw
+- [DataGridPro] Fix toggling detail panel using keyboard (#4409) @cherniavskii
+- [l10n] Add Hungarian (hu-HU) locale (#4458) @x22tri
+
+### `@mui/x-date-pickers@v5.0.0-alpha.1` / `@mui/x-date-pickers-pro@v5.0.0-alpha.1`
+
+- [ClockPicker] Should call `shouldDisableTime` with the hours with meridiem (#4404) @flaviendelangle
+- [MonthPicker] Clicking on a `PickersMonth` button should not trigger the form submit (#4402) @flaviendelangle
+- [TimePicker] Do not update date when updating input in `TimePicker` (#4398) @flaviendelangle
+- [pickers] Add react-dom to pickers peer deps to satisfy react-transition-group (#4411) @CarsonF
+- [pickers] Add `TDate` generic to `CalendarOrClockPicker` component (#4465) @flaviendelangle
+- [pickers] Fix default props behavior on all pickers (#4451) @flaviendelangle
+- [pickers] Export `MuiPickersAdapterContext` (#4367) @flaviendelangle
+
+### Docs
+
+- [docs] Avoid redirections (#4365) @oliviertassinari
+- [docs] Fix docs about date adapter (#4386) @alexfauquette
+- [docs] Fix small external links issue (#4436) @oliviertassinari
+- [docs] Fix some links to date picker docs (#4362) @oliviertassinari
+- [docs] Fix wrong URL (#4415) @siriwatknp
+- [docs] Go live with the new URLs (#4313) @siriwatknp
+- [docs] Update the product names to be in sync @oliviertassinari
+
+### Core
+
+- [core] Add technical doc for pipe processing and family processing (#4322) @flaviendelangle
+- [core] Don't upgrade CircleCI node (#4457) @m4theushw
+- [core] Fix flaky e2e-website tests in CI (#4136) @cherniavskii
+- [core] Fix license file copying during build (#4462) @flaviendelangle
+- [core] Fix links on v5.8.0 (#4464) @oliviertassinari
+- [core] Fix npm page description mistake (#4364) @oliviertassinari
+- [core] Fix typos and JSDoc (#4406) @flaviendelangle
+- [core] Move away for the event system to trigger pipe processings (#4378) @flaviendelangle
+- [core] Small fixes TS on pickers (#4461) @flaviendelangle
+- [core] Unify tests (#4368) @flaviendelangle
+- [core] Enforce `noImplicitAny` in `docs` folder (#4412) @cherniavskii
+
+## 5.8.0
+
+_Apr 4, 2022_
+
+We'd like to offer a big thanks to the 7 contributors who made this release possible. Here are some highlights ✨:
+
+- 🚀 Expose new methods to save and restore the grid state (#4028) @flaviendelangle
+
+  The different methods to save and restore the data-grid state are now [documented](https://mui.com/x/react-data-grid/state/#save-and-restore-the-state).
+
+- ⌚️ Move date and time picker components from the lab (#3451) @flaviendelangle
+
+  Date and time picker components have been moved to the MUI X repository.
+  They are now accessible in their own packages: `@mui/x-date-pickers` and `@mui/x-date-pickers-pro`.
+  For more information, you can read the [blog article](https://mui.com/blog/lab-date-pickers-to-mui-x/) and the [migration guide](https://mui.com/x/react-date-pickers/migration-lab/).
+
+- 📝 Add `onProcessRowUpdateError` prop to simplify error management in edit mode (#4267) @m4theushw
+- ✨ Add generic typing to `GridColDef` and derived interfaces (#4064) @flaviendelangle
+
+  You can now strongly type all the objects related to the row and the cell values.
+  Here is an example, you can find out more in the description of #4064.
+
+  ```tsx
+  const rows: Movie[] = [];
+
+  return (
+    <DataGrid
+      rows={rows}
+      columns={[
+        {
+          // typeof params.row => Movie (R)
+          valueGetter: (params) => params.row.year,
+        },
+      ]}
+    />
+  );
+  ```
+
+### `@mui/x-data-grid@v5.8.0` / `@mui/x-data-grid-pro@v5.8.0`
+
+#### Changes
+
+- [DataGrid] Add `onProcessRowUpdateError` prop (#4267) @m4theushw
+- [DataGrid] Add generic typing to `GridColDef` and derived interfaces (#4064) @flaviendelangle
+- [DataGrid] Add missing classes on `gridClasses` and `gridPanelClasses` (#4273) @flaviendelangle
+- [DataGrid] Add `onPreferencePanelClose`/`onPreferencePanelOpen` props (#4265) @kyeongsoosoo
+- [DataGrid] Add slot for filter icon button (#4276) @m4theushw
+- [DataGrid] Add the documentation of the portable state (#4028) @flaviendelangle
+- [DataGrid] Allow to use keyboard navigation even with no rows (#4302) @alexfauquette
+- [DataGrid] Fix inconsistency in the border of the last column (#4224) @alexfauquette
+- [DataGrid] Fix overlay blocking scrollbar when rows is empty (#4281) @m4theushw
+- [DataGrid] Improve selection with keyboard (#4157) @flaviendelangle
+- [DataGrid] Scroll to the top of the page when changing page (#4272) @flaviendelangle
+- [l10n] Improve Danish (da-DK) locale (#4271) @simplenotezy
+
+### `@mui/x-date-pickers@v5.0.0-alpha.0` / `@mui/x-date-pickers-pro@v5.0.0-alpha.0`
+
+#### Changes
+
+- [DatePicker] Import date-picker components from the lab (#3451) @flaviendelangle
+
+### Docs
+
+- [docs] Create an home page for "Advanced Components" (#4298) @flaviendelangle
+- [docs] Update installation docs (#4259) @cherniavskii
+- [docs] New page for the migration of date and time pickers from the lab (#4327) @flaviendelangle
+
+### Core
+
+- [core] Fix typo in issue template @oliviertassinari
+- [core] Move last variables outside of the models folder (#4303) @flaviendelangle
+- [core] Remove dead code (#4283) @oliviertassinari
+- [core] Rename the "pre-processing" concept "pipe-processing" (#4261) @flaviendelangle
+- [core] Reuse previous state when updating the columns prop (#4229) @m4theushw
+- [core] Fix Argos flakyness for pickers tests (#4312) @flaviendelangle
+
+## 5.7.0
+
+_Mar 24, 2022_
+
+We'd like to offer a big thanks to the 12 contributors who made this release possible. Here are some highlights ✨:
+
+- ✏ Add a new editing API with better support for server-side persistence and validation (#3963, #4060) @m4theushw
+
+  The new API is stable, but to avoid any breaking changes or conflicts with the old API, you must add the following flag to access it:
+
+  ```tsx
+  <DataGrid experimentalFeatures={{ newEditingApi: true }} />
+  ```
+
+  ⚠ Users relying on the old API (legacy) don't need to worry as it will continue to work until v6.
+
+  The new API also features brand new documentation with more useful demos and guides explaining how to create custom edit components.
+  Visit the new [documentation](https://mui.com/x/react-data-grid/editing/) for more information.
+
+- 📚 Documentation improvements
+- 🐞 Bug and typo fixes
+
+### `@mui/x-data-grid@v5.7.0` / `@mui/x-data-grid-pro@v5.7.0`
+
+#### Changes
+
+- [DataGrid] Add column order and dimensions to the portable state (#3816) @flaviendelangle
+- [DataGrid] Add new editing API (#3963) @m4theushw
+- [DataGrid] Allow to customize `ColumnsPanel` with `componentsProps` prop (#4207) @alexfauquette
+- [DataGrid] Do not unselect row when <kbd>Shift</kbd> + click on the last selected row of a range (#4196) @flaviendelangle
+- [DataGrid] Fix `showCellRightBorder` not working in the last row (#4140) @cherniavskii
+- [DataGrid] Fix error overlay not visible when `autoHeight` is enabled (#4110) @cherniavskii
+- [DataGrid] Fix white blank when scrolling (#4158) @alexfauquette
+- [DataGrid] Adjust type of the `description` prop in `GridColumnHeaderTitle` (#4247) @baahrens
+- [DataGrid] Fix focus after stopping row edit mode (#4252) @m4theushw
+- [DataGridPro] Fix pinned columns edge overflow with custom `borderRadius` (#4188) @socramm9
+- [DataGridPro] Fix tab switching order with pinned columns and `editMode="row"` (#4198) @cherniavskii
+- [l10n] Improve Persian (fa-IR) locale (#4227) @SaeedZhiany
+- [l10n] Improve Polish (pl-PL) locale (#4153) @pbmchc
+- [l10n] Improve Arabic (ar-SD) locale (#4212) @shadigaafar
+- [l10n] Improve Korean (ko-KR) locale (#4245) @kyeongsoosoo
+
+### Docs
+
+- [docs] Clean demo (#4073) @alexfauquette
+- [docs] Delete restore state demos (#4220) @flaviendelangle
+- [docs] Document Print export `X-Frame-Options` limitation (#4222) @DanailH
+- [docs] Add docs for the new editing API (#4060) @m4theushw
+- [docs] Explain how to use `printOptions.pageStyle` (#4138) @alexfauquette
+- [docs] Fix 301 links (#4165) @oliviertassinari
+- [docs] Fix 404 API links (#4164) @oliviertassinari
+- [docs] Fix broken anchor links (#4162) @alexfauquette
+- [docs] Remove useless `apiRef` from demos (#4221) @flaviendelangle
+- [docs] Sync the headers with core (#4195) @oliviertassinari
+
+### Core
+
+- [core] Add CLI to decode license key (#4126) @flaviendelangle
+- [core] Fix Lerna package change detection (#4202) @oliviertassinari
+- [core] Implement strategy pattern for pre-processors (#4030) @flaviendelangle
+- [core] Keep same reference to the column visibility model if no column has changed (#4154) @m4theushw
+- [core] Prepare `@mui/x-license-pro` for date pickers (#4123) @flaviendelangle
+- [core] Remove datagen from `@mui/x-data-grid-generator` bundle (#4163) @m4theushw
+- [core] Remove lodash `isDeepEqual` (#4159) @flaviendelangle
+- [core] Use a pipe processor for `GridPreferencePanel` children (#4216) @flaviendelangle
+- [core] Add markdown documentation for contributors (#3447) @alexfauquette
+- [test] Add regression test for `showCellRightBorder` (#4191) @cherniavskii
+- [test] Mock `getComputedStyle` to speed up unit tests (#4142) @m4theushw
+- [test] Upgrade CircleCI convenience image (#4143) @m4theushw
+
+## 5.6.1
+
+_Mar 10, 2022_
+
+We'd like to offer a big thanks to the 8 contributors who made this release possible. Here are some highlights ✨:
+
+- ✨ Allow to add margins or borders between rows (#3848) @m4theushw
+
+  ```tsx
+  <DataGrid getRowSpacing={() => ({ top: 10, bottom: 10 })} />
+  ```
+
+  Check the [documentation](https://mui.com/x/react-data-grid/row-height/#row-spacing) for more information.
+
+### `@mui/x-data-grid@v5.6.1` / `@mui/x-data-grid-pro@v5.6.1`
+
+#### Changes
+
+- [DataGrid] Display column's filter icon if a filter is applied (#4120) @DanailH
+- [DataGrid] Do not loop through rows to compute top level rows count when the tree is flat (#4081) @flaviendelangle
+- [DataGrid] Rename API method (#4148) @m4theushw
+- [DataGrid] Support extending built-in column types (#4114) @cherniavskii
+- [DataGridPro] Re-export the components removed by mistake during bundle split (#4134) @flaviendelangle
+
+### Docs
+
+- [docs] Fix links to prevent duplicate search result (#4130) @siriwatknp
+- [docs] Fix outdated links to `localeTextConstants.ts` (#4080) @patilvishal755
+- [docs] Neglect e2e tests related to search (#4118) @siriwatknp
+- [docs] Use regex instead of specific url in e2e-website-tests (#4121) @siriwatknp
+
+### Core
+
+- [core] Enforce `noImplicitAny` (#4084) @cherniavskii
+- [core] Improve the Pro support issue template (#4082) @oliviertassinari
+- [core] Initialize remaining states before feature hooks (#4036) @m4theushw
+- [core] Merge `page` and `pageSize` state initializer into a single `pagination` state initializer (#4087) @flaviendelangle
+- [core] Prepare `yarn docs:api:build` scripts for multi packages support (#4111) @flaviendelangle
+- [core] Upgrade `@mui/monorepo` (#4149) @cherniavskii
+- [core] Use `buildWarning` and `wrapWithWarningOnCall` for deprecated methods and wrong usages (#4056) @flaviendelangle
+- [test] Make focus state out-of-sync warning opt-in (#4129) @m4theushw
+- [test] Only test custom input keyboard event in edit mode (#4075) @alexfauquette
+
+## 5.6.0
+
+_Mar 4, 2022_
+
+We'd like to offer a big thanks to the 15 contributors who made this release possible. Here are some highlights ✨:
+
+- 📦 Use the same bundling scripts as those in the [material-ui](https://github.com/mui/material-ui) repository (#3965) @flaviendelangle
+
+  The code structure and the bundling strategy have been modified to provide better isolation between components.
+  The bundle size is slightly reduced, but with tree shaking, the doors are open for significant gains in the future. 🏋
+  We predict that such modifications could potentially impact edge cases.
+  If you encounter problems with your build, please open an issue.
+  These issues will have high priority as part of our risk mitigation strategy.
+
+- 🧼 Clean and document the column selectors (#4010) @flaviendelangle
+
+  Column selectors have been renamed to improve clarity.
+  The old names have been deprecated and will be removed in v6.
+  Here are the new names and the modifications needed to get the same information with the new selectors.
+
+  | Old name                        | New name                                  |
+  | ------------------------------- | ----------------------------------------- |
+  | `allGridColumnsFieldsSelector`  | `gridColumnFieldsSelector`                |
+  | `allGridColumnsSelector`        | `gridColumnDefinitionsSelector`           |
+  | `visibleGridColumnsSelector`    | `gridVisibleColumnDefinitionsSelector`    |
+  | `filterableGridColumnsSelector` | `gridFilterableColumnDefinitionsSelector` |
+
+  ```diff
+  -const { all, lookup, columnVisibilityModel } = gridColumnsSelector(apiRef)
+  +const all = gridColumnFieldsSelector(apiRef)
+  +const lookup = gridColumnLookupSelector(apiRef)
+  +const columnVisibilityModel = gridColumnVisibilityModelSelector(apiRef)
+
+  -const filterableFields = filterableGridColumnsIdsSelector(apiRef);
+  +const lookup = gridFilterableColumnLookupSelector(apiRef);
+  +const filterableFields = gridColumnFieldsSelector(apiRef).filter(field => lookup[field]);
+
+  -const visibleColumnsNumber = visibleGridColumnsLengthSelector(apiRef);
+  +const visibleColumnsNumber = gridVisibleColumnDefinitionsSelector(apiRef).length;
+
+  -const { totalWidth, positions } = gridColumnsMetaSelector(apiRef);
+  +const totalWidth = gridColumnsTotalWidthSelector(apiRef);
+  +const positions = gridColumnPositionsSelector(apiRef);
+  ```
+
+- 📚 Documentation improvements
+- 🐞 Bug and typo fixes
+
+### `@mui/x-data-grid@v5.6.0` / `@mui/x-data-grid-pro@v5.6.0`
+
+#### Changes
+
+- [DataGrid] Add slot for filter panel delete icon (#4069) @Hameezr
+- [DataGrid] Add specific label for `linkOperator` (#3915) @alexfauquette
+- [DataGrid] Allow for truncated and multiline content in grid cells (#3955) @DanailH
+- [DataGrid] Allow to navigate between cells with keyboard once inside an `actions` column (#3375) @m4theushw
+- [DataGrid] Fix desynchronization between rows and header when sorting (#4058) @alexfauquette
+- [DataGrid] Clean and document the columns selector (#4010) @flaviendelangle
+- [DataGrid] Deprecate and stop typing the api params of `GridCellParams`/`GridValueGetterParams` and affiliated (#4089) @ flaviendelangle
+- [DataGrid] Differentiate the Pro and Community versions of `GridState`, `GridApi` and `GridApiRef` (#3648) @flaviendelangle
+- [DataGrid] Fix column selection for print export (#3917) @alexfauquette
+- [DataGrid] Fix horizontal scroll not working on empty grid (#3821) @cherniavskii
+- [DataGrid] Fix input element in custom header (#3624) @alexfauquette
+- [DataGrid] Improve `singleSelect` filter performance (#3956) @cherniavskii
+- [DataGrid] Improve custom overlay slots positioning (#3832) @cherniavskii
+- [DataGrid] Improve `flex` implementation match the W3C standard (#4006) @cherniavskii
+- [DataGrid] Improve the invalid `sortModel` and `filterModel` warnings (#3671) @flaviendelangle
+- [DataGrid] Memoize `Popper` modifiers passed to panel (#3975) @m4theushw
+- [DataGrid] Prevent focus while `Popper` is not fully positioned (#4067) @m4theushw
+- [DataGrid] Remove `GridCell`'s `borderBottom` when it is the last row (#3519) @DanailH
+- [DataGrid] Remove padding from the header title (#3691) @valenfv
+- [DataGrid] Reuse previous `rowNode` when building tree and the new `rowNode` is equal to the previous one (#3961) @flaviendelangle
+- [DataGrid] Remove last filter item when no value to clean and close the filter panel (#3910) @alexfauquette
+- [DataGrid] Send warning when the `rowCount` is not provided while using server pagination (#3902) @alexfauquette
+- [DataGrid] Stop checkbox ripple on blur (#3835) @m4theushw
+- [DataGrid] Stop calling `onRowClick` when clicking in cells with interactive elements (#3929) @m4theushw
+- [DataGrid] Use only `headerName` when available to search column (#3959) @pkratz
+- [DataGrid] Use the bundling scripts as the packages published by the [material-ui](https://github.com/mui/material-ui) repository (#3965) @flaviendelangle
+- [DataGridPro] Add `unstable_setRowHeight` method to `apiRef` (#3751) @cherniavskii
+- [DataGridPro] Always export the `pageSize` and `page` when it has been initialized or is being controlled (#3908) @flaviendelangle
+- [DataGridPro] Disable export for detail panel column (#4057) @gustavhagland
+- [DataGridPremium] Support `valueFormatter` on the grouping column (#4022) @flaviendelangle
+- [l10n] Improve Bulgarian (bg-BG) locale (#3949) @DanailH
+- [l10n] Improve German (de-DE) locale (#4077) @sebastianfrey
+- [l10n] Improve Hebrew (he-IL) locale (#3930) @ColdAtNight
+
+### Docs
+
+- [docs] Add example of custom operator based on built-in ones (#3911) @flaviendelangle
+- [docs] Add missing words in the filtering page (#4079) @flaviendelangle
+- [docs] Avoid crash in demos using row grouping and custom formatted cells (#4065) @m4theushw
+- [docs] Fix `Commodity` and `Employee` CSV export of the `country` column (#3912) @DanailH
+- [docs] Fix links to the GitHub repository (#4005) @oliviertassinari
+- [docs] Fix typo (#3923) @oliviertassinari
+- [docs] Fix typo (#4016) @MathisBurger
+- [docs] Fix typo in client-side validation example (#4066) @krallj
+- [docs] Remove useless hide id column (#4021) @alexfauquette
+
+### Core
+
+- [core] Allows to add custom export item (#3891) @alexfauquette
+- [core] Remove the `_modules_` folder (#3953) @flaviendelangle
+- [core] Fix typo in `useGridScroll.ts` (#3973) @HexM7
+- [core] Fix typos, improve wordings and other various fixes (#4062) @flaviendelangle
+- [core] Initialize states before feature hooks (#3896) @m4theushw
+- [code] Make `@mui/x-data-grid-pro` import shared code from `@mui/x-data-grid` (#3688) @flaviendelangle
+- [core] Migrate `@mui/x-license-pro` to the new bundling strategy (#3738) @flaviendelangle
+- [core] Reduce usage of `useGridSelector` inside feature hooks (#3978) @flaviendelangle
+- [core] Retry l10n CI if 502 returned (#3977) @alexfauquette
+- [core] Update release instructions (#3920) @cherniavskii
+- [core] Use international locale format (#3921) @oliviertassinari
+- [core] Fix license generating script (#4055) @Janpot
+- [test] Add screenshot of the filter panel (#4072) @alexfauquette
+- [test] Reduce memory usage to run unit tests (#4031) @m4theushw
+- [test] Skip test on Firefox (#3926) @m4theushw
+
+## 5.5.1
+
+_Feb 10, 2022_
+
+A big thanks to the 6 contributors who made this release possible. Here are some highlights ✨:
+
+- 🎛 Add props to customize the behavior of the filter panel (#3497) @alexfauquette
+
+  ```tsx
+  <DataGrid
+    componentsProps={{
+      filterPanel: { columnsSort: 'asc' },
+    }}
+  />
+  ```
+
+  Check the [documentation](https://mui.com/x/react-data-grid/filtering/#customize-the-filter-panel-content) to see all available props.
+
+- 📚 Documentation improvements
+- 🐞 Bugfixes
+
+### `@mui/x-data-grid@v5.5.1` / `@mui/x-data-grid-pro@v5.5.1`
+
+- [DataGrid] Add `debounceMs` option to `setEditCellValue` method (#3825) @m4theushw
+- [DataGrid] Allow to translate `checkboxSelection` labels (#3846) @m4theushw
+- [DataGrid] Customize the filter panel with props (#3497) @alexfauquette
+- [DataGrid] Fix filtering of string columns for `value = 0` (#3843) @flaviendelangle
+- [DataGrid] Fix focus when `blur` event rerenders the grid (#3718) @alexfauquette
+- [DataGridPro] Add clear error when the tree data has duplicated paths (#3840) @flaviendelangle
+- [DataGridPro] Avoid imports from `@mui/base` (#3903) @cherniavskii
+- [DataGridPro] Register column pinning after selection (#3887) @m4theushw
+- [l10n] Improve Turkish (tr-TR) locale (#3842) @atillaaliyev
+
+### Docs
+
+- [docs] Update v5 migration docs (#3847) @oliviertassinari
+- [docs] Fix sorting feature link (#3877) @alexfauquette
+- [docs] Migrate content to the new location (#3730) @siriwatknp
+- [docs] Unify multi-filtering introduction with the multi-sorting introduction (#3766) @flaviendelangle
+- [docs] Move row grouping to Premium plan (#3827) @alexfauquette
+- [docs] Reorganize export docs to prepare Excel export doc (#3822) @alexfauquette
+
+### Core
+
+- [core] Add hook `useGridPagination` to call `onGridPage` and `onGridPageSize` (#3880) @flaviendelangle
+- [core] Fix docs deploy script (#3874) @oliviertassinari
+- [core] Move the git repository to a new location (#3872) @oliviertassinari
+- [test] Add `codecov` (#3873) @oliviertassinari
+
+## 5.5.0
+
+_Feb 3, 2022_
+
+A big thanks to the 10 contributors who made this release possible. Here are some highlights ✨:
+
+- 🎁 Add support for [master/detail](https://mui.com/x/react-data-grid/group-pivot/#master-detail) (#3387) @m4theushw
+
+  <img src="https://user-images.githubusercontent.com/42154031/152379354-47120aac-2b37-4a90-b311-64b4522283b9.gif" width="814">
+
+- 🌍 Add Danish (da-DK) locale (#3800) @kasperfilstrup
+- 📚 Documentation improvements
+- 🐞 Bugfixes
+
+### `@mui/x-data-grid@v5.5.0` / `@mui/x-data-grid-pro@v5.5.0`
+
+#### Changes
+
+- [DataGrid] Add methods to import and export the state (#3593) @flaviendelangle
+- [DataGrid] Fix <kbd>PageUp</kbd> jumping directly to the column header skipping the first row (#3761) @cherniavskii
+- [DataGrid] Throw an error if incorrect column type is used (#3757) @DanailH
+- [DataGridPro] Add support for master/detail (#3387) @m4theushw
+- [l10n] Add Danish (da-DK) locale (#3800) @kasperfilstrup
+- [l10n] Improve Dutch (nl-NL) locale (#3724) @MatthijsKok
+- [l10n] Improve Hebrew (he-IL) locale (#3775) @ColdAtNight
+- [l10n] Improve Russian (ru-RU) locale (#3818) @Leniorko
+
+### Docs
+
+- [docs] Add default value for `Row` slot (#3807) @cherniavskii
+- [docs] Extend full width (#3815) @m4theushw
+- [docs] Fix country column sorting not working (#3740) @cherniavskii
+- [docs] Fix custom render cell when row is auto generated (#3810) @alexfauquette
+- [docs] Fix flag layout shift (#3773) @oliviertassinari
+- [docs] Mention row `id` requirement and document `getRowId` prop (#3765) @cherniavskii
+- [docs] Refresh the license key documentation (#3529) @oliviertassinari
+
+### Core
+
+- [core] Clean `filtering.DataGrid.test.tsx` (#3768) @flaviendelangle
+- [core] Improve GitHub label workflows (#3680) @DanailH
+- [core] Isolate selectors called without `useGridSelector` (#3774) @m4theushw
+- [core] Prepare infra for pickers migration (#3714) @flaviendelangle
+- [core] Remove none code related instructions from git (#3794) @oliviertassinari
+- [core] Remove remaining usages of `@mui/styles` (#3769) @m4theushw
+- [core] Remove Stylelint (#3811) @m4theushw
+- [core] Split cell / row editing into different hooks (#3219) @m4theushw
+- [core] Stop using an enum for `GridPreProcessingGroup` (#3798) @flaviendelangle
+- [core] Fix failing tests (#3817) @cherniavskii
+- [code] Fix `docs:api` silent crash (#3808) @cherniavskii
+- [test] Increase timeout for Firefox (#3813) @m4theushw
+
+## 5.4.0
+
+_Jan 28, 2022_
+
+A big thanks to the 9 contributors who made this release possible. Here are some highlights ✨:
+
+- 🚣 Introduce [variable row height](https://mui.com/x/react-data-grid/row-height/#variable-row-height) (#438) @DanailH
+
+  Allows for setting a row-specific height.
+  By default, all rows have the same height, but now you can set the height on a per-row basis.
+
+  ```tsx
+  <DataGrid getRowHeight={({ id }: GridRowHeightParams) => (id % 2 === 0 ? 100 : null)} />
+  ```
+
+- 🎁 Add new CSV export option: [`getRowsToExport`](https://mui.com/x/react-data-grid/export/#custom-exported-content) (#3687) @flaviendelangle
+- 📚 Documentation improvements
+- 🐞 Bugfixes
+
+### `@mui/x-data-grid@v5.4.0` / `@mui/x-data-grid-pro@v5.4.0`
+
+#### Changes
+
+- [DataGrid] Add l10n support for `is any of` (#3746) @alexfauquette
+- [DataGrid] Add new CSV `getRowsToExport` option (#3687) @flaviendelangle
+- [DataGrid] Clean params of `onCellEditCommit` (#3693) @valenfv
+- [DataGrid] Create a new lookup with all the filtered rows, collapsed or not (#3736) @flaviendelangle
+- [DataGrid] Fix Alt+c being ignored on some systems (#3660) @cherniavskii
+- [DataGrid] Fix `isRowSelectable` when `paginationMode='server'` (#3647) @flaviendelangle
+- [DataGrid] Fix browser keyboard shortcuts not working when header cell is focused (#3692) @valenfv
+- [DataGrid] Fix focus on checkbox cells (#3501) @alexfauquette
+- [DataGrid] Only update the visibility status of the updated columns when calling `apiRef.current.updateRows` (#3735) @flaviendelangle
+- [DataGrid] Prevent commit if `preProcessEditCellProps` resolves with an error (#3612) @m4theushw
+- [DataGrid] Update selected rows when turning off `checkboxSelection` (#3684) @m4theushw
+- [DataGrid] Variable row height (#3218) @DanailH
+- [DataGridPro] Call `useGridColumnPinning` before `useGridColumns` (#3676) @flaviendelangle
+- [DataGridPro] Fix grid cell losing focus when scrolling with keyboard (#3667) @cherniavskii
+- [DataGridPro] Fix missing `styleOverrides` on pinned columns (#3733) @alexfauquette
+- [DataGridPro] Remove function overloading for `useGridApiRef` (#3666) @flaviendelangle
+- [l10n] Improve French (fr-FR) locale (#3739) @flaviendelangle
+- [l10n] Improve Italian (it-IT) locale (#3744) @destegabry
+
+### Docs
+
+- [docs] Fix broken code example on the localization page (#3742) @flaviendelangle
+- [docs] Fix typo in column visibility example (#3734) @flaviendelangle
+- [docs] Fix typo on `columnVisibilityModel` (#3723) @alexfauquette
+- [docs] Improve sorting documentation page (#3564) @flaviendelangle
+- [docs] Improve `v5.3.0` release notes (#3722) @cherniavskii
+- [docs] Prepare scripts and E2E tests for migration (#3515) @siriwatknp
+- [docs] Clarify what is the professional support (#3530) @oliviertassinari
+
+### Core
+
+- [core] Add ESLint rule to force default export equals to filename in documentation (#3674) @alexfauquette
+- [core] Fix `l10n` script not updating `cs-CZ` locale (#3748) @cherniavskii
+- [core] Generate CHANGELOG from GitHub API (#3313) @alexfauquette
+- [core] Isolate selectors from different grid instances (#3663) @m4theushw
+- [test] Improve test detection (#3728) @m4theushw
+- [test] Include module augmentation for Chai custom matchers (#3754) @m4theushw
+- [test] Remove a useless `async` (#3675) @alexfauquette
+- [test] Remove remaining `@ts-expect-error` (#3762) @m4theushw
+- [test] Skip test on Firefox (#3752) @m4theushw
+- [test] Wait for flags to load before creating snapshots (#3726) @m4theushw
+- [test] Warn when focusing cells without syncing the state (#3486) @m4theushw
+
+## 5.3.0
+
+_Jan 21, 2022_
+
+A big thanks to the 9 contributors who made this release possible. Here are some highlights ✨:
+
+- 🎁 Allow to group rows based on column value (#3277) @flaviendelangle
+
+  ⚠️ This feature is temporarily available on the Pro plan until the release of the Premium plan.
+
+  To avoid future regression for users of the Pro plan, the feature needs to be explicitly activated using the rowGrouping experimental feature flag.
+
+  ```tsx
+  // To fully control
+  <DataGridPro
+    rowGroupingModel={rowGroupingModel}
+    onRowGroupingModel={newModel => setRowGroupingModel(newModel)}
+    experimentalFeatures={{ rowGrouping: true }}
+  />
+
+  // To initialize without controlling
+  <DataGridPro
+    initialState={{
+      rowGrouping: {
+        model: rowGroupingModel,
+      },
+    }}
+    experimentalFeatures={{ rowGrouping: true }}
+  />
+  ```
+
+  For more details see the [introduction blog post](https://mui.com/blog/introducing-the-row-grouping-feature/) and [documentation](https://mui.com/x/react-data-grid/group-pivot/#row-grouping).
+
+- ⚡ Add `is any of` filter operator (#2874) @alexfauquette
+
+  The new filter operator `is any of` allows the user to provide multiple values. It opens access to complex filtering pattern mixing `AND` and `OR` logic connectors, such as `status is any of filled or rejected, and currency is any of EUR or USD`.
+
+  <img src="https://user-images.githubusercontent.com/45398769/150486348-996a938f-db24-426f-bfe3-c06337f71807.gif" width="770">
+
+- ✨ Introduce a `maxWidth` property in `GridColDef` (#3550) @flaviendelangle
+
+  You can now limit the width of the flex columns and the resizable columns with the new `maxWidth` property on `GridColDef`.
+
+  ```tsx
+  const columns: GridColDef[] = [
+    { field: 'director', flex: 1, maxWidth: 200 }, // will take the free space up to 200px and will not be resizable above 200px
+    { field: 'year', maxWidth: 150 }, // will not be resizable above 150px
+  ];
+  ```
+
+- 🚀 Add component slots for a subset of used `@mui/material` components (#3490) @DanailH
+
+  To make the grid more flexible we added component slots for base `@mui/material` components that we use. Those component slots are prefixed with `Base` to differentiate them from the other grid specific components
+
+  For more information check the documentation [documentation](https://mui.com/x/api/data-grid/data-grid/#slots).
+
+- 🔥 Allow to pass `csvOptions` and `printOptions` to `toolbar` component prop (#3623) @flaviendelangle
+
+  ```tsx
+  const CustomDataGrid = (props: DataGridProps) => {
+    return (
+      <DataGrid {...props} componentsProps={{ toolbar: { csvOptions: { delimiter: ';' } } }} />
+    );
+  };
+  ```
+
+- 🙈 Add controlled behavior for the visible columns (#3554) @flaviendelangle
+
+  ```tsx
+  // To fully control
+  <DataGrid
+    columnVisibilityModel={columnVisibilityModel}
+    onColumnVisilibilityModelChange={newModel => setColumnVisibilityModel(newModel)}
+  />
+
+  // To initialize without controlling
+  <DataGrid
+    initialState={{
+      columns: {
+        columnVisibilityModel
+      }
+    }}
+  />
+  ```
+
+  See the [documentation](https://mui.com/x/react-data-grid/column-visibility/) for more details.
+
+  The `hide` property from `GridColDef` still works but has been deprecated.
+
+- 📚 Documentation improvements
+- 🐞 Bugfixes
+
+### `@mui/x-data-grid@v5.3.0` / `@mui/x-data-grid-pro@v5.3.0`
+
+#### Changes
+
+- [DataGrid] Add component slots for a subset of used `@mui/material` components (#3490) @DanailH
+- [DataGrid] Add controlled behavior for the visible columns (#3554) @flaviendelangle
+- [DataGrid] Add debounce to text input (#3617) @m4theushw
+- [DataGrid] Add `is any of` filter operator (#2874) @alexfauquette
+- [DataGrid] Allow to pass `csvOptions` and `printOptions` to `GridToolbar` (#3623) @flaviendelangle
+- [DataGrid] Disable `Hide` button if there's only one visible column (#3607) @cherniavskii
+- [DataGrid] Fix line break characters breaking CSV rows (#3590) @cherniavskii
+- [DataGrid] Fix potential memory leak warning (#3558) @m4theushw
+- [DataGrid] Introduce a `maxWidth` property in `GridColDef` (#3550) @flaviendelangle
+- [DataGrid] Make row editing work with `preProcessEditCellProps` (#3562) @flaviendelangle
+- [DataGridPro] Export the column pinning selector (#3594) @flaviendelangle
+- [DataGridPro] Keep row children expansion when updating the rows (#3604) @flaviendelangle
+- [DataGridPro] Keep tree data grouping column width when regenerating the columns (#3603) @flaviendelangle
+- [DataGridPremium] Allow to group rows based on column value (#3277) @flaviendelangle
+- [l10n] Improve Finnish (fi-FI) locale (#3621) @MijMa
+- [l10n] Improve Ukrainian (uk-UA) locale (#3586) @Neonin
+- [l10n] Improve Czech (cs-CZ) and Slovak (sk-SK) locale (#3678) @Haaxor1689
+
+### Docs
+
+- [docs] Add doc example for tree data children lazy loading (#3657) @flaviendelangle
+- [docs] Fix typo exchanging `false` and `true` on columns hiding section (#3561) @alexfauquette
+- [docs] Improve filtering documentation page (#3437) @flaviendelangle
+- [docs] Include header badges as in the other components (#3606) @oliviertassinari
+- [docs] Lint markdown in the CI (#3504) @oliviertassinari
+- [docs] Make inputs to extend full height of the cell (#3567) @m4theushw
+- [docs] Add documentation page about the grid state (#3431) @flaviendelangle
+- [docs] Replace `@mui/styles` in `x-data-grid-generator` (#3560) @m4theushw
+- [docs] Update usage of prop/property naming (#3649) @cherniavskii
+
+### Core
+
+- [core] Log the output of the script (#3527) @oliviertassinari
+- [core] Add ESLint rule to prevent direct state access (#3521) @m4theushw
+- [core] Add language to markdown code block (#3651) @m4theushw
+- [core] Add typing to the pre-processors methods (#3595) @flaviendelangle
+- [core] Don't bump peer dependency ranges on dependency updates (#3646) @oliviertassinari
+- [core] Rename more instances of Material UI to MUI (#3525) @oliviertassinari
+- [core] Renovate should not try to update node (#3645) @oliviertassinari
+- [core] Report performance test results on each PR (#3551) @m4theushw
+- [core] Update monorepo (#3653) @m4theushw
+- [core] Update `l10n` issue with a single command line (#3588) @alexfauquette
+- [test] Wait for promise to resolve before expect (#3597) @m4theushw
+- [test] Split cell/row editing tests (#3618) @m4theushw
+- [test] Skip tests on Safari (#3679) @m4theushw
+
+## 5.2.2
+
+_Jan 6, 2022_
+
+A big thanks to the 9 contributors who made this release possible. Here are some highlights ✨:
+
+- 🎁 Add `hideable` option to `GridColDef` (#3433) @m4theushw
+- ⚡ Add support for column-based `sortingOrder` with the new `sortingOrder` option in `GridColDef` (#3449) @Quppa
+- ✨ Allow to initialize the `page` and `pageSize` without controlling them with the `initialState` prop (#3495) @flaviendelangle
+- 🙈 Allow to precisely control which children rows to expand with the new `isGroupExpandedByDefault` prop (#3444) @flaviendelangle
+- 🌍 Add Finnish (fi-FI) locale (#3485) @kurkle
+- 📚 Documentation improvements
+- 🐞 Bugfixes
+
+### `@mui/x-data-grid@v5.2.2` / `@mui/x-data-grid-pro@v5.2.2`
+
+#### Changes
+
+- [DataGrid] Add `hideable` option to GridColDef (#3433) @alexfauquette
+- [DataGrid] Add `sortingOrder` to GridColDef (#3449) @Quppa
+- [DataGrid] Add the page and pageSize to the initialState prop (#3495) @flaviendelangle
+- [DataGrid] Avoid re-render when pressing key inside already focused cell (#3484) @m4theushw
+- [DataGrid] Close other actions menus when opening a new one (#3492) @m4theushw
+- [DataGrid] Deprecate `getValue` param from the cell and row params (#3369) @flaviendelangle
+- [DataGrid] Fix value parsing in date input (#3307) @alexfauquette
+- [DataGrid] Fix can't enter 0 on numeric column (#3491) @m4theushw
+- [DataGrid] Fix scrolling bug when an action is focused (#3483) @alexfauquette
+- [DataGrid] Remove `line-height` from `GridCell` (#3446) @DanailH
+- [DataGridPro] Block edition for auto-generated rows (#3547) @flaviendelangle
+- [DataGridPro] Expose the field of the tree data grouping column as a constant (#3549) @flaviendelangle
+- [DataGridPro] Fix resizing of right pinned columns (#3502) @m4theushw
+- [DataGridPro] Add new prop `isGroupExpandedByDefault` (#3444) @flaviendelangle
+- [l10n] Add Finnish (fi-FI) locale (#3485) @kurkle
+- [l10n] Improve French (fr-FR) locale (#3494) @Zenoo
+- [l10n] Improve Italian (it-IT) locale (#3452) @destegabry
+- [l10n] Improve Vietnamese (vi-VN) locale (#3493) @hckhanh
+
+### Docs
+
+- [docs] Generate imports dynamically from the packages export list (#3488) @flaviendelangle
+- [docs] Make demos compatible with `preProcessEditCellProps` (#3453) @m4theushw
+
+### Core
+
+- [test] Add test for row checkbox toggling using the Space key (#3262) @alexfauquette
+- [core] Increase CI efficiency (#3441) @oliviertassinari
+- [core] Refactor sorting comparator (#3390) @flaviendelangle
+- [core] Update dependency on the core (#3526) @oliviertassinari
+- [core] Update tweet example in release readme (#3481) @DanailH
+
+## 5.2.1
+
+_Dec 17, 2021_
+
+A big thanks to the 8 contributors who made this release possible. Here are some highlights ✨:
+
+- 🖨️ Improve the print export to break the pages correctly (#3302) @flaviendelangle
+- 🎁 Add `pinnable` option to `GridColDef` (#3425) @m4theushw
+- 📚 Documentation improvements
+- 🐞 Bugfixes
+
+### `@mui/x-data-grid@v5.2.1` / `@mui/x-data-grid-pro@v5.2.1`
+
+#### Changes
+
+- [DataGridPro] Add `pinnable` option (#3425) @m4theushw
+- [DataGridPro] Avoid filtering columns if no column is pinned (#3438) @m4theushw
+- [DataGrid] Avoid page break inside a row in the Print Export (#3302) @flaviendelangle
+- [DataGrid] Fix `GridEditDateCell` to handle `editRowsModel` correctly (#3267) @alexfauquette
+- [DataGrid] Refactor keyboard/click event management (#3275) @alexfauquette
+- [DataGrid] Fire change event when the state changes, instead of when the prop changes (#3388) @flaviendelangle
+- [DataGrid] Unsubscribe event listeners registered in uncommitted renders (#3310) @m4theushw
+- [DataGrid] Rework state update methods and deprecate `useGridApi` and `useGridState` (#3325) @flaviendelangle
+- [l10n] Improve German (de-DE) locale (#3430) @sebastianfrey
+- [l10n] Improve Hebrew (he-IL) locale (#3445) @ColdAtNight
+- [l10n] Improve Dutch (nl-NL) locale (#3429) @jaapjr
+
+### Docs
+
+- [docs] Improve pagination documentation page (#3424) @flaviendelangle
+- [docs] Include @mui/x-data-grid as dependency in the CodeSandbox (#3396) @m4theushw
+- [docs] Stop using TypeDoc to generate the API documentation (#3320) @flaviendelangle
+- [docs] Remove column pinning from "Upcoming features" (#3443) @alexfauquette
+
+### Core
+
+- [core] Add sections to some of the feature hooks (#3391) @flaviendelangle
+- [core] Generate exports snapshot for both `x-data-grid` and `x-data-grid-pro` packages (#3427) @flaviendelangle
+- [core] Remove 'x-data-grid' folder from DataGridPro bundle (#3394) @m4theushw
+- [core] Add link to OpenCollective (#3392) @oliviertassinari
+
+## 5.2.0
+
+_Dec 9, 2021_
+
+A big thanks to the 5 contributors who made this release possible. Here are some highlights ✨:
+
+### `@mui/x-data-grid@v5.2.0` / `@mui/x-data-grid-pro@v5.2.0`
+
+- 🚀 Introduce the [column pinning](https://mui.com/x/react-data-grid/column-pinning/) feature (#2946) @m4theushw
+
+  <img src="https://user-images.githubusercontent.com/42154031/145425635-b6314fbe-2f1e-4b73-908f-33ee1fda20c7.gif" width="964" height="657">
+
+- 🔥 Add ability to disable export options (#3270) @alexfauquette
+
+  You can disable either export options by setting `disableToolbarButton` to `true`.
+
+  ```tsx
+  <GridToolbarExport csvOptions={{ disableToolbarButton: true }} />
+  ```
+
+  ```tsx
+  <GridToolbarExport printOptions={{ disableToolbarButton: true }} />
+  ```
+
+- 🙈 Add a new option to hide the amount of descendant on the grouping cells of the Tree Data (#3368) @flaviendelangle
+
+  ```tsx
+  <DataGridPro treeData rows={rows} columns={columns} groupingColDef={{ hideDescendantCount }} />
+  ```
+
+- ⚠️ Deprecate the `getValue` param for the `valueGetter` callback (#3314) @flaviendelangle
+
+  Instead, you can access directly the row in the params
+
+  ```diff
+  -valueGetter: (params) => `${params.getValue(params.id, 'firstName') || ''} ${params.getValue(params.id, 'lastName') || ''}`
+  +valueGetter: (params) => `${params.row.firstName || ''} ${params.row.lastName || ''}`
+  ```
+
+- 📚 Documentation improvements
+- 🐞 Bugfixes
+
+#### Changes
+
+- [DataGridPro] Add column pinning (#2946) @m4theushw
+- [DataGridPro] Add `hideDescendantCount` option to Tree Data (#3368) @flaviendelangle
+- [DataGridPro] Do not expand row children with <kbd>Shift</kbd> + Space (#3380) @flaviendelangle
+- [DataGridPro] Pass a list of `fields` to the callback version of `groupingColDef` (#3316) @flaviendelangle
+- [DataGrid] Deprecate the `getValue` param for the `valueGetter` callback (#3314) @flaviendelangle
+- [DataGrid] Add ability to disable export options (#3270) @alexfauquette
+- [DataGrid] Filter value are conserved when possible (#3198) @alexfauquette
+- [DataGrid] Fix `DatePicker` bug by limiting years to 4 digits (#3222) @alexfauquette
+- [DataGrid] Fix column menu position when closing (#3289) @m4theushw
+- [DataGrid] Fix to not crash when a sort item uses a non-existing column (#3224) @flaviendelangle
+- [DataGrid] Type the `api` param in callback interfaces (#3315) @flaviendelangle
+
+### Docs
+
+- [docs] Always use auto-generated `apiRef` documentation (#3266) @flaviendelangle
+- [docs] Avoid 301 links (#3329) @oliviertassinari
+- [docs] Disable the ad when not MIT (#3334) @oliviertassinari
+- [docs] Fix 404 link to Zendesk @oliviertassinari
+- [docs] Fix dead link on the overview page (#3326) @flaviendelangle
+- [docs] Fix double MUI in the title (#3332) @oliviertassinari
+- [docs] Fix duplicate "the" (#3365) @noam-honig
+- [docs] Update branch to deploy docs (#3321) @m4theushw
+
+### Core
+
+- [core] Add funding field (#3331) @oliviertassinari
+- [core] Fix missing LICENSE file (#3330) @oliviertassinari
+- [core] Fix release month in CHANGELOG (#3367) @m4theushw
+- [core] Fix `yarn prettier` script (#3292) @oliviertassinari
+- [core] Improve tests for Tree Data (#3366) @flaviendelangle
+- [core] Never import directly from the `__modules__` folder in the `x-data-grid-generator` package (#3379) @flaviendelangle
+- [core] Transition to a new Stack Overflow tag (#3308) @oliviertassinari
+- [core] Update monorepo (#3370) @flaviendelangle
+- [core] Use pre-processors for sorting and filtering (#3318) @flaviendelangle
+- [test] Replace `useFakeTimers` (#3323) @m4theushw
+
+## 5.1.0
+
+_Dec 2, 2021_
+
+A big thanks to the 11 contributors who made this release possible. Here are some highlights ✨:
+
+### `@mui/x-data-grid@v5.1.0` / `@mui/x-data-grid-pro@v5.1.0`
+
+- 🚀 Introduce the [tree data](https://mui.com/x/react-data-grid/group-pivot/#tree-data) feature (#2725) @flaviendelangle
+
+  <img src="https://user-images.githubusercontent.com/42154031/144259216-fc4f90ac-4d8b-4253-bc95-009204349a4c.gif" width="854" height="453" />
+
+- 💅 Add support for `sx` prop in the DataGrid and DataGridPro (#3281) @m4theushw
+- 🔦 Improve focus management in the filter panel (#3004) @alexfauquette
+- 🎁 Add strict typing to the event publisher and listener (#3022) (@flaviendelangle)
+
+  The `apiRef.current.subscribeEvent`, `apiRef.current.publishEvent` and `useGridApiEventHandler` are now fully typed and gives you the correct arguments based on the event you are listening to or emitting.
+
+  ```ts
+  const handleRowClick: GridEventListener<'rowClick'> = (
+    params, // has type `GridRowParams`
+    event, // has type `MuiEvent<React.MouseEvent<HTMLElement>>
+    details, // has type `GridCallbackDetails
+  ) => {
+    /* ... */
+  };
+
+  // with string event name
+  apiRef.current.subscribeEvent('rowClick', handleRowClick);
+  useGridApiEventHandler(apiRef, 'rowClick', handleRowClick);
+
+  // or with enum event name
+  apiRef.current.subscribeEvent(GridEvents.rowClick, handleRowClick);
+  useGridApiEventHandler(apiRef, GridEvents.rowClick, handleRowClick);
+  ```
+
+- 🌎 Translation updates for many locales
+
+  If you are using DataGrid or DataGridPro in another language, check [this issue](https://github.com/mui/mui-x/issues/3211) to discover which translations are missing.
+
+- 📚 Documentation improvements
+- 🐞 Bugfixes
+
+#### Changes
+
+- [DataGridPro] Add tree data (#2725) @flaviendelangle
+- [DataGridPro] Remove the callback version of the `groupigColDef` prop (#3317) @flaviendelangle
+- [DataGridPro] Improve license file (#3278) @oliviertassinari
+- [DataGridPro] Add types for event publishers and listeners (#3022) @flaviendelangle
+- [DataGrid] Add support for `sx` prop (#3281) @m4theushw
+- [DataGrid] Do not debounce the initial resizing of the grid (#3213) @flaviendelangle
+- [DataGrid] Fix usage of dynamic columns (#3204) @flaviendelangle
+- [DataGrid] Move focus when selecting option with <kbd>Enter</kbd> in the `singleSelect` (#3220) @m4theushw
+- [DataGrid] Focus on the last value input when a filter is added or removed (#3004) @alexfauquette
+- [DataGrid] Prepare the tree structure for grouping sorting / filtering (#3301) @flaviendelangle
+- [DataGrid] Rework keyboard navigation (#3193) @flaviendelangle
+- [DataGrid] Set minimum dimensions to `GridOverlay` when no row is provided (#3261) @flaviendelangle
+- [DataGrid] Improve German (de-DE) locale (#3271, #3230, #3293) @sebastianfrey
+- [DataGrid] Improve Hebrew (he-IL) locale (#3294) @ColdAtNight
+- [DataGrid] Improve Russian (ru-RU) locale (#3290, #3288) @Alim-El
+- [DataGrid] Improve Korean (ko-KR) locale (#3232, #3273) @zzossig
+- [DataGrid] Improve Greek (el-GR) locale (#3169) @clytras
+
+### Core
+
+- [core] Add script to sync translation files (#3201) @m4theushw
+- [core] Create dedicated `InputComponent` for `singleSelect` and `date` columns #3227 @alexfauquette
+- [core] Fix `EventManager` to not run listeners removed after registration #3206 @flaviendelangle
+- [core] Group Renovate updates (#3263) @flaviendelangle
+- [core] Reflect the change of default branch (#3235) @oliviertassinari
+- [core] Replace @mui/core with @mui/base (#3217) @m4theushw
+- [core] Split docs generation script (#3189) @flaviendelangle
+- [core] Update monorepo (#3303) @m4theushw
+- [test] Improve testing of the keyboard navigation (#3187) @flaviendelangle
+- [test] Force effect to run on location change (#3283) @m4theushw
+- [core] Rework columns state management (#3264) @flaviendelangle
+
+### Docs
+
+- [docs] Improve demo to allow to experiment with `autoHeight` (#3216) @alexfauquette
+- [docs] Fix broken images (#3300) @oliviertassinari
+- [docs] Fix the wrong release date (#3269) @DanailH
+- [docs] Fix typo in CHANGELOG.md (#3214) @gjoseph
+- [docs] Improve plan icon placement (#3298) @oliviertassinari
+- [docs] Improve rows documentation (#3209) @flaviendelangle
+- [docs] Include row pinning (#3191) @oliviertassinari
+- [docs] Fix presentation of key combinations (#3297) @oliviertassinari
+- [docs] Replace @mui/styles on demos (#3274) @m4theushw
+- [docs] Add demos using cell/row editing with server-side persistence (#3124) @flaviendelangle
+- [docs] Use relative links (#3299) @oliviertassinari
+
 ## 5.0.1
 
-_Nov 17, 2021_
+_Nov 23, 2021_
 
 A big thanks to the 3 contributors who made this release possible. Here are some highlights ✨:
 
 - 🎁 New API to validate the editing values (#3006) @m4theushw
- 
+
   You can now use the `preProcessEditCellProps` key in `GridColDef` to synchronously or asynchronously validate the values committed.
 
   ```ts
@@ -28,8 +2250,8 @@ A big thanks to the 3 contributors who made this release possible. Here are some
         const userWithEmail = await fetchUserByEmail(params.value);
         const hasError = !!userWithEmail;
         return { ...params.props, error: hasError };
-      }
-    }
+      },
+    },
   ];
   ```
 
@@ -43,11 +2265,13 @@ A big thanks to the 3 contributors who made this release possible. Here are some
 
 ### `@mui/x-data-grid@v5.0.1` / `@mui/x-data-grid-pro@v5.0.1`
 
-#### Changes
-
 - [DataGrid] New API to validate the editing values (#3006) @m4theushw
 - [DataGrid] Use color-scheme to set dark mode on native components (#3146) @alexfauquette
 - [DataGrid] Fix the `@mui/x-data-grid` type entrypoint (#3196) @flaviendelangle
+
+### Docs
+
+- [docs] Move sentence about disabling multi rows selection (#3167) @alexfauquette
 
 ### Core
 
@@ -57,18 +2281,14 @@ A big thanks to the 3 contributors who made this release possible. Here are some
 - [core] Remove the `index.ts` of the export hooks (#3165) @flaviendelangle
 - [core] Set the correct release date for v5.0.0 in the CHANGELOG.md (#3192) @flaviendelangle
 
-### Docs
-
-- [docs] Move sentence about disabling multi rows selection (#3167) @alexfauquette
-
 ## 5.0.0
 
-_Nov 16, 2021_
+_Nov 23, 2021_
 
-🎉 We are execited to introduce [MUI X v5.0.0](https://mui.com/blog/mui-x-v5/) 🎉!
+🎉 We are excited to introduce [MUI X v5.0.0](https://mui.com/blog/mui-x-v5/) 🎉!
 
-If you want to migrate the DataGrid or DataGridPro from v4 to v5, take a look at the [migration guide](https://mui.com/components/data-grid/migration-v4/).
-This version is fully compatible with `@mui/material@5.X` and can be used with `@material-ui/core@4.x` with some [additional steps](https://mui.com/components/data-grid/migration-v4/#using-mui-x-v5-with-mui-core-v4).
+If you want to migrate the DataGrid or DataGridPro from v4 to v5, take a look at the [migration guide](https://mui.com/x/react-data-grid/migration-v4/).
+This version is fully compatible with `@mui/material@5.X` and can be used with `@material-ui/core@4.x` with some [additional steps](https://mui.com/x/react-data-grid/migration-v4/#using-mui-x-v5-with-mui-core-v4).
 
 A big thanks to the 7 contributors who made this release possible. Here are some highlights ✨:
 
@@ -89,7 +2309,7 @@ A big thanks to the 7 contributors who made this release possible. Here are some
 
 - [DataGrid] The `props.components.Checkbox` and `props.componentsProps.checkbox` props were renamed to `props.components.BaseCheckbox` and `props.componentsProps.baseCheckbox` respectively.
 
-  As a first step for [#3066](https://github.com/mui-org/material-ui-x/issues/3066), these slots were renamed to clearly indicate that they are meant to replace a core component.
+  As a first step for [#3066](https://github.com/mui/mui-x/issues/3066), these slots were renamed to clearly indicate that they are meant to replace a core component.
 
   ```diff
    <DataGrid
@@ -148,7 +2368,7 @@ A big thanks to the 7 contributors who made this release possible. Here are some
 _Nov 4, 2021_
 
 - 💅 Reduce styles specificity to make simpler to override (#3012) @DanailH
-- 🌍 Add Hebrew (heIL) locale (#3028) @ColdAtNight
+- 🌍 Add Hebrew (he-IL) locale (#3028) @ColdAtNight
 - 📚 Documentation improvements
 - 🐞 Bugfixes
 
@@ -185,7 +2405,7 @@ _Nov 4, 2021_
 
 #### Changes
 
-- [DataGrid] Add Hebrew (heIL) locale (#3028) @ColdAtNight
+- [DataGrid] Add Hebrew (he-IL) locale (#3028) @ColdAtNight
 - [DataGrid] Move virtualization logic to hook (#3079) @m4theushw
 - [DataGrid] Revert year change in the MIT license (#3059) @oliviertassinari
 - [DataGrid] Fix filtering of nullish numeric cells (#3070) @flaviendelangle
@@ -383,7 +2603,7 @@ A big thanks to the 5 contributors who made this release possible. Here are some
 - [DataGrid] Remove the `state` prop and use the `initialState` prop (#2848) @flaviendelangle
 
   Note that `initialState` only allows the `preferencePanel`, `filter.filterModel` and `sort.sortModel` keys.
-  To fully control the state, use the the feature's model prop and change callback (e.g. `filterModel` and `onFilterModelChange`).
+  To fully control the state, use the feature's model prop and change callback (e.g. `filterModel` and `onFilterModelChange`).
 
   ```diff
   <DataGrid
@@ -454,7 +2674,7 @@ A big thanks to the 5 contributors who made this release possible. Here are some
 - [core] Remove outdated hooks requirements (#2939) @flaviendelangle
 - [core] Remove test event (#2912) @m4theushw
 - [core] Remove unused `GridSlotComponentProps` interface (#2911) @flaviendelangle
-- [core] Rename 'UNSTABLE_' prefix to 'unstable_' (#2931) @flaviendelangle
+- [core] Rename 'UNSTABLE*' prefix to 'unstable*' (#2931) @flaviendelangle
 - [core] Replace usage of `GridRowData` with `GridRowModel` (#2936) @flaviendelangle
 - [core] Revert hardcoded typings (#2907) @DanailH
 - [core] Simplify the CSV export (#2941) @flaviendelangle
@@ -469,7 +2689,7 @@ A big thanks to the 7 contributors who made this release possible. Here are some
 
 - 🎁 Add the ability to print the grid (#2519) @DanailH
 
-  This new feature adds a button to the toolbar to generate a printer-friendly layout. Check the [documentation](https://mui.com/components/data-grid/export/#print) about it.
+  This new feature adds a button to the toolbar to generate a printer-friendly layout. Check the [documentation](https://mui.com/x/react-data-grid/export/#print) about it.
 
 - 💡 Enhance internal code structure
 - ✨ New slots for `row` and `cell` (#2753) @m4theushw
@@ -494,7 +2714,7 @@ A big thanks to the 7 contributors who made this release possible. Here are some
   - `onRowEnter`
   - `onRowLeave`
 
-  For more information, check [this page](https://mui.com/components/data-grid/components/#row). Example:
+  For more information, check [this page](https://mui.com/x/react-data-grid/components/#row). Example:
 
   ```diff
   -<DataGrid onRowOver={handleRowOver} />;
@@ -639,7 +2859,7 @@ _Oct 7, 2021_
 
 A big thanks to the 9 contributors who made this release possible. Here are some highlights ✨:
 
-- 🌎 Add Persian (faIR) locale (#2712) @devlifeX
+- 🌎 Add Persian (fa-IR) locale (#2712) @devlifeX
 - 🎁 Allow to select range of rows with Shift + click (#2456) @flaviendelangle
 - 🚀 Allow to throttle the row updates with the `throttleRowsMs` prop on `DataGridPro` and remove the default 100ms row update delay (#2561) @flaviendelangle
 - 💡 Enhance internal code structure
@@ -671,7 +2891,7 @@ A big thanks to the 9 contributors who made this release possible. Here are some
 
 #### Changes
 
-- [DataGrid] Add Persian (faIR) locale (#2712) @devlifeX
+- [DataGrid] Add Persian (fa-IR) locale (#2712) @devlifeX
 - [DataGrid] Allow to select range of rows using Shift + click (#2456) @flaviendelangle
 - [DataGrid] Fix numeric column filter to not run when value is empty (#2780) @m4theushw
 - [DataGrid] Export `singleSelect` operators (#2666) @jeremyalan
@@ -711,8 +2931,8 @@ _Sep 24, 2021_
 
 A big thanks to the 5 contributors who made this release possible. Here are some highlights ✨:
 
-- 🇻🇳 Add Vietnamese (viVN) locale (#2668) @tuananh281098
-- 🇵🇱 Improve Polish (plPL) locale (#2632) @michallukowski
+- 🇻🇳 Add Vietnamese (vi-VN) locale (#2668) @tuananh281098
+- 🇵🇱 Improve Polish (pl-PL) locale (#2632) @michallukowski
 - ⚡️ Apply the `valueFormatter` to the `singleSelect` column type (#2581) @DanailH
 
 ### `@mui/x-data-grid@v5.0.0-beta.2` / `@mui/x-data-grid-pro@v5.0.0-beta.2`
@@ -744,10 +2964,10 @@ A big thanks to the 5 contributors who made this release possible. Here are some
 
 #### Changes
 
-- [DataGrid] Add Vietnamese (viVN) locale (#2668) @tuananh281098
+- [DataGrid] Add Vietnamese (vi-VN) locale (#2668) @tuananh281098
 - [DataGrid] Apply the `valueFormatter` to `singleSelect` select options (#2581) @DanailH
 - [DataGrid] Free up column header space when icons are not visible (#2606) @DanailH
-- [DataGrid] Improve Polish (plPL) locale (#2632) @michallukowski
+- [DataGrid] Improve Polish (pl-PL) locale (#2632) @michallukowski
 
 ### Docs
 
@@ -796,7 +3016,7 @@ A big thanks to the 9 contributors who made this release possible. Here are some
 - 📚 Migrate to the new documentation infrastructure and design (#2441) (@DanailH, @m4theushw)
 - 🎁 Add `actions` column type (#2385) @m4theushw
 
-  See the documentation for [more details](https://mui.com/components/data-grid/columns/#column-types).
+  See the documentation for [more details](https://mui.com/x/react-data-grid/column-definition/#column-types).
 
 - 👁 Allow to disable virtualization with the `disableVirtualization` prop (#2326) @m4theushw
 - 🚀 Introduce the new `isRowSelected` api method (#2523) @flaviendelangle
@@ -860,7 +3080,7 @@ A big thanks to the 9 contributors who made this release possible. Here are some
 - [DataGrid] Fix TypeScript type error for toolbar components (#2393) @ZeeshanTamboli
 - [DataGrid] Fix navigation between column headers with rows filtered (#2440) @m4theushw
 - [DataGrid] Force `scrollEndThreshold` to undefined (#2574) @flaviendelangle
-- [DataGrid] Improve jaJP localization (#2502) @daikiojm
+- [DataGrid] Improve ja-JP localization (#2502) @daikiojm
 - [DataGrid] Make `hideFooterRowCount` prop available only for DataGridPro (#2564) @ZeeshanTamboli
 - [DataGrid] Fix a bug where pressing <kbd>Escape</kbd> was not closing the `GridColumnHeaderMenu` (#2463) @DanailH
 - [DataGrid] Prevent scroll when selecting rows (#2558) @m4theushw
@@ -914,25 +3134,25 @@ _Aug 27, 2021_
 
 🎉 This is the first stable release of the data grid component 🎉!
 
-We have been iterating on the component for [18 months](https://github.com/mui-org/material-ui-x/commit/705cb0f387b5f3aa056bf40c4183a2342b317447). With the introduction of the [row edit](https://mui.com/components/data-grid/editing/#row-editing) feature, many bug fixes, and polishing of the documentation, we believe the component is ready for a stable release.
+We have been iterating on the component for [18 months](https://github.com/mui/mui-x/commit/705cb0f387b5f3aa056bf40c4183a2342b317447). With the introduction of the [row edit](https://mui.com/x/react-data-grid/editing/#row-editing) feature, many bug fixes, and polishing of the documentation, we believe the component is ready for a stable release.
 
-The MUI X v4.0.0 release supports [MUI Core](https://github.com/mui-org/material-ui) v4 and has partial support for v5-beta. With the soon-to-be-released v5 version of the core components, we are moving ongoing work to the v5 release line (Core and X).
+The MUI X v4.0.0 release supports [MUI Core](https://github.com/mui/material-ui) v4 and has partial support for v5-beta. With the soon-to-be-released v5 version of the core components, we are moving ongoing work to the v5 release line (Core and X).
 The support for existing projects on MUI v4 won't be a priority going forward. We encourage you to migrate to MUI Core v5-beta and soon MUI X v5-beta. We don't patch, fix, or alter older versions. Using MUI Core v4 with MUI X v5 might lead to extra bundle size and configuration.
 
 A big thanks to the 6 contributors who made this release possible. Here are some highlights ✨:
 
-- 🚀 Introduce the [row editing](https://mui.com/components/data-grid/editing/#row-editing) feature (#2098) @m4theushw
+- 🚀 Introduce the [row editing](https://mui.com/x/react-data-grid/editing/#row-editing) feature (#2098) @m4theushw
 
   <img src="https://user-images.githubusercontent.com/3165635/130665023-3c0730ab-502e-4da1-8bc1-d572427ad2d6.gif" width="851" height="382" />
 
 - ⚡️ Rename the `XGrid` component to `DataGridPro` (#2382) @m4theushw
 
-  This should help clarify the products vs. plans separation. [MUI X](https://github.com/mui-org/material-ui-x) is a product line on its own. It contains MIT and Commercial software. Removing X from the name of the paid components should help remove a possible confusion: the MIT version of X is meant to be valuable enough for developers to use it, without feeling that it's crippled compared to other OSS alternatives.
+  This should help clarify the products vs. plans separation. [MUI X](https://github.com/mui/mui-x) is a product line on its own. It contains MIT and Commercial software. Removing X from the name of the paid components should help remove a possible confusion: the MIT version of X is meant to be valuable enough for developers to use it, without feeling that it's crippled compared to other OSS alternatives.
   The Pro suffix should help make it clear what's MIT and what's not.
 
 - ✨ Rename the `@material-ui` npm scope to `@mui` (#2341) @oliviertassinari
 
-  This is part of the ongoing rebranding of the project and company. Material-UI is our current official name, however, we are going to change it. It's too long to write, read, and pronounce; and it is too closely associated with Material Design. In the near future, the whole project/company is moving to MUI and https://mui.com/.
+  This is part of the ongoing rebranding of the project and company. Material UI is our current official name, however, we are going to change it. It's too long to write, read, and pronounce; and it is too closely associated with Material Design. In the near future, the whole project/company is moving to MUI and https://mui.com/.
 
 - 💡 The `api` property was removed from the callback params. To access the API, use the `DataGridPro` (#2312) @DanailH
 
@@ -1009,7 +3229,7 @@ Big thanks to the 7 contributors who made this release possible. Here are some h
 - 🐞 Fix a regression to not require @material-ui/x-license when using the DataGrid (#2295) @oliviertassinari
 - 👁️ Add `onViewportRowsChange` prop for `XGrid` only (#2038) @DanailH
 - 📃 Translate booleans when exporting rows to CSV (#2296) @m4theushw
-- 🌎 Add Sudanese Arabic (arSD) locale (#2269) @YassinHussein
+- 🌎 Add Sudanese Arabic (ar-SD) locale (#2269) @YassinHussein
 
 This is the last alpha release. We are moving to beta in the next release, next week.
 
@@ -1030,7 +3250,7 @@ This is the last alpha release. We are moving to beta in the next release, next 
 #### Changes
 
 - [DataGrid] Add @material-ui/styles as peer dependency (#2288) @m4theushw
-- [DataGrid] Add Sudanese Arabic (arSD) locale (#2269) @YassinHussein
+- [DataGrid] Add Sudanese Arabic (ar-SD) locale (#2269) @YassinHussein
 - [DataGrid] Add \"is empty\" and \"is not empty\" filter operators to date and number columns (#2274) @flaviendelangle
 - [DataGrid] Avoid crash if `valueOptions` is missing in the `GridColDef` when using `singleSelect` (#2276) @DanailH
 - [DataGrid] Remove the use of the `autoFocus` attribute (#2239) @m4theushw
@@ -1090,7 +3310,7 @@ Big thanks to the 6 contributors who made this release possible. Here are some h
   ```
 
   - [XGrid] The `setEditCellProps` API call is not available anymore.
-    Use the [controlled editing](https://mui.com/components/data-grid/editing/#controlled-editing) or `setEditRowsModel`.
+    Use the [controlled editing](https://mui.com/x/react-data-grid/editing/#controlled-editing) or `setEditRowsModel`.
 
   ```diff
   -apiRef.current.setEditCellProps({ id, field, props: { ...props, error: true } });
@@ -1125,7 +3345,7 @@ Big thanks to the 6 contributors who made this release possible. Here are some h
 - [DataGrid] Canonical controlled state behavior (#2208) @oliviertassinari
 - [DataGrid] Fix filter with extended columns (#2246) @m4theushw
 - [DataGrid] Remove default value of columnTypes prop (#2280) @m4theushw
-- [DataGrid] Add German (deDE) translation for export and isEmpty operator (#2285) @ChristopherBussick
+- [DataGrid] Add German (de-DE) translation for export and isEmpty operator (#2285) @ChristopherBussick
 - [XGrid] Add `details` param to each callback option in `XGrid` (#2236) @DanailH
 
 ### Docs
@@ -1161,6 +3381,7 @@ Big thanks to the 8 contributors who made this release possible. Here are some h
   - The `onEditCellChange` prop was renamed to `onEditCellPropsChange`.
   - The `onEditCellChangeCommitted` prop was renamed to `onCellEditCommit`.
   - The `onEditRowModelChange` prop was removed. Use the new `onEditRowsModelChange` prop.
+
     ```diff
     -onEditRowModelChange?: (params: GridEditRowModelParams)
     +onEditRowsModelChange?: (editRowsModel: GridEditRowsModel)
@@ -1175,7 +3396,7 @@ Big thanks to the 8 contributors who made this release possible. Here are some h
 
 - [DataGrid] Improve controllable pagination (#2099) @flaviendelangle
 
-  - The `pageSize` is now a controlled prop. If you set a value, you also need to handle updates with onPageSizeChange. See [the documentation](https://mui.com/components/data-grid/pagination/#page-size).
+  - The `pageSize` is now a controlled prop. If you set a value, you also need to handle updates with onPageSizeChange. See [the documentation](https://mui.com/x/react-data-grid/pagination/#page-size).
   - Change the controllable API signature:
 
     ```diff
@@ -1229,7 +3450,7 @@ Big thanks to the 8 contributors who made this release possible. Here are some h
 - [test] Sync Karma config (#2191) @m4theushw
 - [test] Test support for theme translations (#2229) @m4theushw
 
-## [4.0.0-alpha.34](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.33...v4.0.0-alpha.34)
+## [4.0.0-alpha.34](https://github.com/mui/mui-x/compare/v4.0.0-alpha.33...v4.0.0-alpha.34)
 
 _July 21, 2021_
 
@@ -1352,7 +3573,7 @@ Big thanks to the 11 contributors who made this release possible. Here are some 
 - [DataGrid] Add \"is empty\" and \"is not empty\" operators (#1997) @m4theushw
 - [DataGrid] Add `minWidth` to `GridColDef` (#2101) @DanailH
 - [DataGrid] Add missing localeText types (#2118) @oliviertassinari
-- [DataGrid] Add missing translations to French (frFR) locale (#2082) @flaviendelangle
+- [DataGrid] Add missing translations to French (fr-FR) locale (#2082) @flaviendelangle
 - [DataGrid] Add quick filter demo (#2149) @dtassone
 - [DataGrid] Allow passing styles and Popper props to GridPanel (#1994) @sebastianfrey
 - [DataGrid] Allow to customize the columns exported as CSV (#2008) @flaviendelangle
@@ -1410,18 +3631,18 @@ Big thanks to the 11 contributors who made this release possible. Here are some 
 - [test] Remove orphan async @oliviertassinari
 - [test] Test the validation before saving a value (#2087) @m4theushw
 
-## [4.0.0-alpha.33](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.32...v4.0.0-alpha.33)
+## [4.0.0-alpha.33](https://github.com/mui/mui-x/compare/v4.0.0-alpha.32...v4.0.0-alpha.33)
 
 _July 1, 2021_
 
 Big thanks to the 6 contributors who made this release possible. Here are some highlights ✨:
 
 - 🐞 As a focus of Q2, we have kept fixing bugs
-- 💅 End users are now allowed to copy the selected rows to the clipboard with <kbd>CTRL</kbd> + <kbd>c</kbd> (#1929) @m4theushw
+- 💅 End users are now allowed to copy the selected rows to the clipboard with <kbd>Ctrl</kbd> + <kbd>c</kbd> (#1929) @m4theushw
 - 🐛 We have fixed the `Select all` checkbox. When triggered, it should only select the filtered rows (#1879) @ZeeshanTamboli
 - ⚡️ We have added a new `singleSelect` column type (#1956) @DanailH
 
-  Using the column `type: 'singleSelect'` defaults to `Select` component when the cell is in `edit` mode. You can find the documentation [following this link](https://mui.com/components/data-grid/columns/#column-types).
+  Using the column `type: 'singleSelect'` defaults to `Select` component when the cell is in `edit` mode. You can find the documentation [following this link](https://mui.com/x/react-data-grid/column-definition/#column-types).
 
   ```jsx
   <DataGrid
@@ -1498,7 +3719,7 @@ Big thanks to the 6 contributors who made this release possible. Here are some h
 - [core] Name variables according to enUS instead of enGB (#1988) @flaviendelangle
 - [test] Test vertical scrollbar (#1932) @oliviertassinari
 
-## [4.0.0-alpha.32](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.31...v4.0.0-alpha.32)
+## [4.0.0-alpha.32](https://github.com/mui/mui-x/compare/v4.0.0-alpha.31...v4.0.0-alpha.32)
 
 _June 18, 2021_
 
@@ -1507,7 +3728,7 @@ Big thanks to the 10 contributors who made this release possible. Here are some 
 - ⚡️ Components that use portals, like `Select` and `Autocomplete`, can now be used in the cell editing (#1772) @m4theushw
 - 📃 Apply the `valueFormatter` to the CSV exporting (#1922) @DanailH
 - 💅 Rename CSS classes to match the convention of the core components (#1872) @DanailH
-- 🌎 Isolate translations from Material-UI Core and Material-UI X (#1913) @DanailH
+- 🌎 Isolate translations from MUI Core and MUI X (#1913) @DanailH
 - 🚀 Improve performance when finding column indexes and updating rows (#1903, #1923) @Janpot @N2D4
 - 🐞 Bugfixes
 
@@ -1516,7 +3737,7 @@ Big thanks to the 10 contributors who made this release possible. Here are some 
 #### Breaking changes
 
 - [DataGrid] The `onEditCellChangeCommitted` prop won't be called with an event when committing changes by clicking outside the cell (#1910) @m4theushw
-- [DataGrid] Translation for Material-UI Core components are no longer included in the Material-UI X translation (#1913) @DanailH
+- [DataGrid] Translation for MUI Core components are no longer included in the MUI X translation (#1913) @DanailH
 
   ```diff
    import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
@@ -1587,11 +3808,11 @@ Big thanks to the 10 contributors who made this release possible. Here are some 
 - [DataGrid] Allow to set the delimiter in `GridExportCsvOptions` (#1859) @michallukowski
 - [DataGrid] Escape regular expression characters in filters (#1899) @ZeeshanTamboli
 - [DataGrid] Fix support for `getRowId` on cell editing (#1917) @m4theushw
-- [DataGrid] Fix typo in French (frFR) locale (#1874) @julien-guillon
-- [DataGrid] Improve Brazilian Portuguese (ptBR) locale (#1861) @aline-matos
+- [DataGrid] Fix typo in French (fr-FR) locale (#1874) @julien-guillon
+- [DataGrid] Improve Brazilian Portuguese (pt-BR) locale (#1861) @aline-matos
 - [DataGrid] Improve type of the blur event (#1918) @oliviertassinari
 - [DataGrid] Improve updateRows performance (#1923) @N2D4
-- [DataGrid] Include Material-UI core component localizations in `localeText` (#1913) @DanailH
+- [DataGrid] Include MUI Core component localizations in `localeText` (#1913) @DanailH
 - [DataGrid] Make the CSV export respect the `valueFormatter` (#1922) @DanailH
 - [DataGrid] Remove `disableClickEventBubbling` (#1910) @m4theushw
 - [DataGrid] Rename CSS classes according to new convention (#1872) @DanailH
@@ -1610,16 +3831,16 @@ Big thanks to the 10 contributors who made this release possible. Here are some 
 - [core] Remove dead logic (#1900) @oliviertassinari
 - [test] Fix tests (#1928) @m4theushw
 
-## [4.0.0-alpha.31](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.30...v4.0.0-alpha.31)
+## [4.0.0-alpha.31](https://github.com/mui/mui-x/compare/v4.0.0-alpha.30...v4.0.0-alpha.31)
 
 _June 9, 2021_
 
 Big thanks to the 6 contributors who made this release possible. Here are some highlights ✨:
 
 - 💅 Allow to customize GridToolbarExport's CSV export (#1695) @michallukowski
-- 🐛 Allow to deselect rows with <kbd>CTRL</kbd> + click (#1813) @ZeeshanTamboli
+- 🐛 Allow to deselect rows with <kbd>Ctrl</kbd> + click (#1813) @ZeeshanTamboli
 - ⚡️ Refactor scroll size detector (#1703) @dtassone
-- 📖 Add [documentation](https://mui.com/api/data-grid/) for interfaces and events (#1529) @m4theushw
+- 📖 Add [documentation](https://mui.com/x/api/data-grid/) for interfaces and events (#1529) @m4theushw
 - 🐞 Bugfixes
 
 ### @material-ui/x-grid@v4.0.0-alpha.31 / @material-ui/data-grid@v4.0.0-alpha.31
@@ -1644,7 +3865,7 @@ Big thanks to the 6 contributors who made this release possible. Here are some h
 
 - [DataGrid] Add `valueParser` to parse values entered by the user (#1785) @m4theushw
 - [DataGrid] Allow to customize GridToolbarExport's CSV export (#1695) @michallukowski
-- [DataGrid] Allow to deselect rows with <kbd>CTRL</kbd> + click (#1813) @ZeeshanTamboli
+- [DataGrid] Allow to deselect rows with <kbd>Ctrl</kbd> + click (#1813) @ZeeshanTamboli
 - [DataGrid] Improve general architecture to better isolate hooks (#1720) @dtassone
 - [DataGrid] Fix cell height after changing grid density (#1819) @DanailH
 - [DataGrid] Fix fluid columns width when available `viewportWidth` < 0 (#1816) @DanailH
@@ -1663,7 +3884,7 @@ Big thanks to the 6 contributors who made this release possible. Here are some h
 - [core] Add `yarn docs:api` @oliviertassinari
 - [test] Improve pagination tests (#1827) @m4theushw
 
-## [4.0.0-alpha.30](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.29...v4.0.0-alpha.30)
+## [4.0.0-alpha.30](https://github.com/mui/mui-x/compare/v4.0.0-alpha.29...v4.0.0-alpha.30)
 
 _May 31, 2021_
 
@@ -1672,7 +3893,7 @@ Big thanks to the 8 contributors who made this release possible. Here are some h
 - 💅 Add `getCellClassName` prop (#1687) @m4theushw
 - 🐛 Fix a regression in the controlled pagination (#1729) @ZeeshanTamboli
 - ⚡️ Remove `cellClassRules` from `GridColDef` (#1716) @m4theushw
-- 🇨🇿 Add csCZ locale (#1765) @Haaxor1689
+- 🇨🇿 Add cs-CZ locale (#1765) @Haaxor1689
 - 🐞 Bugfixes
 
 ### @material-ui/x-grid@v4.0.0-alpha.30 / @material-ui/data-grid@v4.0.0-alpha.30
@@ -1756,12 +3977,12 @@ Big thanks to the 8 contributors who made this release possible. Here are some h
 
 - [DataGrid] Add `getCellClassName` prop (#1687) @m4theushw
 - [DataGrid] Add customizable `aria-label`, `aria-labelledby` field (#1764) @ZeeshanTamboli
-- [DataGrid] Add Czech (csCZ) locale and fix plural rules in Slovak (skSK) locale (#1765) @Haaxor1689
+- [DataGrid] Add Czech (cs-CZ) locale and fix plural rules in Slovak (sk-SK) locale (#1765) @Haaxor1689
 - [DataGrid] Fix cell accessibility aria-colindex (#1669) @ZeeshanTamboli
 - [DataGrid] Fix changing rows per page size (#1729) @ZeeshanTamboli
 - [DataGrid] Fix date operators not working with date-time values (#1722) @m4theushw
 - [DataGrid] Fix `rowCount` prop updates (#1697) @dtassone
-- [DataGrid] Improve German (deDe) translation of "errorOverlayDefaultLabel" (#1718) @sebastianfrey
+- [DataGrid] Improve German (de-DE) translation of "errorOverlayDefaultLabel" (#1718) @sebastianfrey
 - [DataGrid] Fix accessibility of the filter panel textboxes (#1727) @m4theushw
 - [XGrid] Fix `onFilterModelChange` not firing (#1706) @dtassone
 
@@ -1777,11 +3998,11 @@ Big thanks to the 8 contributors who made this release possible. Here are some h
 
 - [core] Batch updates of storybook (#1751) @oliviertassinari
 - [core] Help support different documents (#1754) @oliviertassinari
-- [core] Upgrade Material-UI core v5 to latest version (#1763) @ZeeshanTamboli
+- [core] Upgrade MUI Core v5 to latest version (#1763) @ZeeshanTamboli
 - [test] Reduce flakiness (#1753) @oliviertassinari
 - [test] Remove skip on Edge (#1708) @m4theushw
 
-## [4.0.0-alpha.29](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.28...v4.0.0-alpha.29)
+## [4.0.0-alpha.29](https://github.com/mui/mui-x/compare/v4.0.0-alpha.28...v4.0.0-alpha.29)
 
 _May 19, 2021_
 
@@ -1791,7 +4012,7 @@ Big thanks to the 11 contributors who made this release possible. Here are some 
 - 💅 Add `columnHeader`, `row` and `cell` to the `classes` prop (#1660) @DanailH
 - ✅ Add the `isRowSelectable` prop to disable selection on certain rows (#1659) @m4theushw
 
-  See the documentation for [more details](https://mui.com/components/data-grid/selection/#disable-selection-on-certain-rows).
+  See the documentation for [more details](https://mui.com/x/react-data-grid/selection/#disable-selection-on-certain-rows).
 
 - ⚡️ Add new icon slot to be displayed when the column is unsorted (#1415) @m4theushw
 - ⚙ Improve consistency of the API to prepare for the first beta release
@@ -1858,18 +4079,18 @@ Big thanks to the 11 contributors who made this release possible. Here are some 
 
 #### Changes
 
-- [DataGrid] Add Slovak (skSK) locale (#1634) @martinvysnovsky
+- [DataGrid] Add Slovak (sk-SK) locale (#1634) @martinvysnovsky
 - [DataGrid] Add `columnHeader`, `row` and `cell` in addition to `root` in classes prop (#1660) @DanailH
 - [DataGrid] Add `isRowSelectable` prop (#1659) @m4theushw
 - [DataGrid] Add sort icon for when column is unsorted (#1415) @m4theushw
 - [DataGrid] Fix `id` and `aria-labelledby` attributes on the column menu (#1460) @m4theushw
-- [DataGrid] Fix broken checkbox in Material-UI v5 (#1587) @ZeeshanTamboli
+- [DataGrid] Fix broken checkbox in Material UI v5 (#1587) @ZeeshanTamboli
 - [DataGrid] Fix CSS classes prefix (#1693) @m4theushw
-- [DataGrid] Fix German (deDe) locale (#1624) @klinge27
+- [DataGrid] Fix German (de-DE) locale (#1624) @klinge27
 - [DataGrid] Fix filter with object as value and value getter (#1665) @dtassone
 - [DataGrid] Fix incorrect date selection (#1652) @aTmb405
 - [DataGrid] Fix overflow of maximum page (#1583) @oliviertassinari
-- [DataGrid] Fix typo in Italian (itIT) locale (#1635) @profcav
+- [DataGrid] Fix typo in Italian (it-IT) locale (#1635) @profcav
 - [DataGrid] Improve performance of width resizing (#1686) @dtassone
 - [DataGrid] Make rows immutable for better developer experience (#1661) @ZeeshanTamboli
 - [DataGrid] Pass state values as props (#1628) @m4theushw
@@ -1898,13 +4119,13 @@ Big thanks to the 11 contributors who made this release possible. Here are some 
 - [test] Add constraints on cell render (#1662) @oliviertassinari
 - [test] Catch broken demos (#1692) @oliviertassinari
 
-## [4.0.0-alpha.28](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.27...v4.0.0-alpha.28)
+## [4.0.0-alpha.28](https://github.com/mui/mui-x/compare/v4.0.0-alpha.27...v4.0.0-alpha.28)
 
 _May 10, 2021_
 
 Big thanks to the 5 contributors who made this release possible. Here are some highlights ✨:
 
-- 🇹🇷 Add trTR locale (#1446) @simsek97
+- 🇹🇷 Add tr-TR locale (#1446) @simsek97
 - 🎁 Add support for checkbox component slot (#1528) @ZeeshanTamboli
 - ⚡️ Add `onColumnVisibilityChange` prop (#1578) @DanailH
 - 🐞 Bugfixes
@@ -1929,7 +4150,7 @@ Big thanks to the 5 contributors who made this release possible. Here are some h
 
 #### Changes
 
-- [DataGrid] Add Turkish (trTR) locale (#1526) @simsek97
+- [DataGrid] Add Turkish (tr-TR) locale (#1526) @simsek97
 - [DataGrid] Add `onColumnVisibilityChange` prop (#1578) @DanailH
 - [DataGrid] Fix date input crash (#1570) @dtassone
 - [DataGrid] Fix resulted filter data shows blank screen during pagination (#1571) @ZeeshanTamboli
@@ -1952,7 +4173,7 @@ Big thanks to the 5 contributors who made this release possible. Here are some h
 - [core] Update monorepo (#1530) @oliviertassinari
 - [core] Increase timeout on jsdom (#1532) @oliviertassinari
 
-## [4.0.0-alpha.27](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.26...v4.0.0-alpha.27)
+## [4.0.0-alpha.27](https://github.com/mui/mui-x/compare/v4.0.0-alpha.26...v4.0.0-alpha.27)
 
 _Apr 30, 2021_
 
@@ -1961,8 +4182,8 @@ Big thanks to the 9 contributors who made this release possible. Here are some h
 - 🎁 Add getRowClassName prop (#1448) @m4theushw
 - ⚡️ Drop support for Node v10 (#1499) @ZeeshanTamboli
 - ♿ Make checkbox focusable (#1421) @dtassone
-- 🇮🇹 Add itIT locale (#1446) @profcav
-- 🇷🇺 Add ruRU locale (#1449) @Lukin
+- 🇮🇹 Add it-IT locale (#1446) @profcav
+- 🇷🇺 Add ru-RU locale (#1449) @Lukin
 - 🐞 Bugfixes
 
 ### @material-ui/x-grid@v4.0.0-alpha.27 / @material-ui/data-grid@v4.0.0-alpha.27
@@ -2000,12 +4221,12 @@ Big thanks to the 9 contributors who made this release possible. Here are some h
 
 #### Changes
 
-- [DataGrid] Add Italian (itIT) locale (#1446) @profcav
-- [DataGrid] Add Russian (ruRU) locale (#1449) @Lukin
+- [DataGrid] Add Italian (it-IT) locale (#1446) @profcav
+- [DataGrid] Add Russian (ru-RU) locale (#1449) @Lukin
 - [DataGrid] Add getRowClassName prop (#1448) @m4theushw
 - [DataGrid] Add support for `classes` prop (#1450) @ZeeshanTamboli
 - [DataGrid] Allow to customize the overlay when there're no filtered rows (#1445) @m4theushw
-- [DataGrid] Correct quantities plPL (#1487) @Chriserus
+- [DataGrid] Correct quantities pl-PL (#1487) @Chriserus
 - [DataGrid] Fix autoPageSize with small dataset (#1505) @dtassone
 - [DataGrid] Fix delete key for uneditable cells (#1497) @dtassone
 - [DataGrid] Fix invalid translation key (#1504) @DanailH
@@ -2031,7 +4252,7 @@ Big thanks to the 9 contributors who made this release possible. Here are some h
 - [test] Remove jest (#1467) @dependabot-preview
 - [test] Run more tests in jsdom (#1361) @oliviertassinari
 
-## [4.0.0-alpha.26](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.25...v4.0.0-alpha.26)
+## [4.0.0-alpha.26](https://github.com/mui/mui-x/compare/v4.0.0-alpha.25...v4.0.0-alpha.26)
 
 _Apr 22, 2021_
 
@@ -2039,7 +4260,7 @@ Big thanks to the 7 contributors who made this release possible. Here are some h
 
 - 💄 Release the cell editing feature (#1287) @dtassone
 
-  This is the first release of the Cell editing feature. You can find the documentation [following this link](https://mui.com/components/data-grid/editing/#cell-editing). We have spent the last three months working on it.
+  This is the first release of the Cell editing feature. You can find the documentation [following this link](https://mui.com/x/react-data-grid/editing/). We have spent the last three months working on it.
 
   ![cell edit](https://user-images.githubusercontent.com/3165635/115632215-87994700-a307-11eb-91d9-9f5537df0911.gif)
 
@@ -2048,7 +4269,7 @@ Big thanks to the 7 contributors who made this release possible. Here are some h
 ### @material-ui/x-grid@v4.0.0-alpha.26 / @material-ui/data-grid@v4.0.0-alpha.26
 
 - [DataGrid] Add support for Editable cells (#1287) @dtassone
-- [DataGrid] Add Ukrainian (ukUA) locale (#1418) @Neonin
+- [DataGrid] Add Ukrainian (uk-UA) locale (#1418) @Neonin
 - [DataGrid] Fix 'Hide' menu item with `disableColumnSelector` (#1429) @ZeeshanTamboli
 - [DataGrid] Fix reset of virtualPage (#1451) @dtassone
 - [DataGrid] Fix support for falsy value from valueFormatter (#1425) @zj9495
@@ -2068,7 +4289,7 @@ Big thanks to the 7 contributors who made this release possible. Here are some h
 
   This infrastructure relies on Playwright to control Chrome with the end-to-end API. It differentiates from our current end-to-end tests by running outside of the browser (Karma runs inside). It's slower and doesn't have a great DX, but it allows to test things like the <kbd>Tab</kbd> behavior.
 
-## [4.0.0-alpha.25](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.24...v4.0.0-alpha.25)
+## [4.0.0-alpha.25](https://github.com/mui/mui-x/compare/v4.0.0-alpha.24...v4.0.0-alpha.25)
 
 _Apr 14, 2021_
 
@@ -2144,16 +4365,16 @@ export interface GridFilterModelParams {
 - [core] Variable convention (#1397) @oliviertassinari
 - [license] Use a global storage rather than a module singleton (#1384) @oliviertassinari
 
-## [4.0.0-alpha.24](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.23...v4.0.0-alpha.24)
+## [4.0.0-alpha.24](https://github.com/mui/mui-x/compare/v4.0.0-alpha.23...v4.0.0-alpha.24)
 
 _Apr 2, 2021_
 
 Big thanks to the 8 contributors who made this release possible. Here are some highlights ✨:
 
-- 🇬🇷 Add elGR locale (#1275) @clytras
-- 🇪🇸 Add esES locale (#1286) @WiXSL
-- 🇯🇵 Add jaJP locale (#1283) @seed-of-apricot
-- 🇳🇱 Add nlNL locale (#1273) @wimdetroyer
+- 🇬🇷 Add el-GR locale (#1275) @clytras
+- 🇪🇸 Add es-ES locale (#1286) @WiXSL
+- 🇯🇵 Add ja-JP locale (#1283) @seed-of-apricot
+- 🇳🇱 Add nl-NL locale (#1273) @wimdetroyer
 - 🐞 Bugfixes
 
 ### @material-ui/x-grid@v4.0.0-alpha.24 / @material-ui/data-grid@v4.0.0-alpha.24
@@ -2166,7 +4387,7 @@ Big thanks to the 8 contributors who made this release possible. Here are some h
 - [DataGrid] Rename `useGridBaseComponentProps` hook to `useGridSlotComponentProps` (#1252) @DanailH
 - [DataGrid] Rename modules (#1292) @DanailH
 - [DataGrid] Rename all events related to column reordering, e.g. `GRID_COL_REORDER_START` -> `GRID_COLUMN_REORDER_START` (#1299) @m4theushw
-- [DataGrid] Methods `onColItemDragStart`, `onColHeaderDragOver`, `onColItemDragOver`, `onColItemDragEnter` removed from the grid API. Prefer listening to [column reordering events](https://mui.com/components/data-grid/columns/#column-reorder) (#1299) @m4theushw
+- [DataGrid] Methods `onColItemDragStart`, `onColHeaderDragOver`, `onColItemDragOver`, `onColItemDragEnter` removed from the grid API. Prefer listening to [column reordering events](https://mui.com/x/react-data-grid/column-ordering/) (#1299) @m4theushw
 - [DataGrid] Calling `apiRef.current.getColumnHeaderParams` returns a `GridColumnHeaderParams` instead of `GridColParams` (#1299) @m4theushw
 - [DataGrid] Events that follow the pattern `GRID_COLUMN_HEADER_xxx` will be called with a `GridColumnHeaderParams` instead of `GridColParams` (#1299) @m4theushw
 - [DataGrid] The `renderHeader` will be called with a `GridColumnHeaderParams` instead of `GridColParams` (#1299) @m4theushw
@@ -2183,7 +4404,7 @@ Big thanks to the 8 contributors who made this release possible. Here are some h
 
 - [core] Batch small changes (#1310) @oliviertassinari
 
-## [4.0.0-alpha.23](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.22...v4.0.0-alpha.23)
+## [4.0.0-alpha.23](https://github.com/mui/mui-x/compare/v4.0.0-alpha.22...v4.0.0-alpha.23)
 
 _Mar 22, 2021_
 
@@ -2192,16 +4413,16 @@ Big thanks to the 7 contributors who made this release possible. Here are some h
 - 🎁 Add `onRowsScrollEnd` to support infinite loading (#1199) @DanailH
   This is an XGrid feature. Provides the ability to tap into the `onRowsScrollEnd` which is called when the scroll reaches the bottom of the grid viewport allowing developers to load additional data. It can be used with a combination of `scrollBottomThreshold` to control the area in which the `onRowsScrollEnd` is called.
 
-  See the documentation for [more details](https://mui.com/components/data-grid/rows/#infinite-loading).
+  See the documentation for [more details](https://mui.com/x/react-data-grid/row-updates/#infinite-loading).
 
 - 🕹 Provide the ability to sort by multiple columns using Shift+click (#1203) @dtassone
-- 🇵🇱 Added plPL locale (#1117) @LarsKumbier
+- 🇵🇱 Added pl-PL locale (#1117) @LarsKumbier
 - ⚡️ Edit cell accessibility (#1205) @dtassone
 - 🐞 Bugfixes
 
 ### @material-ui/x-grid@v4.0.0-alpha.23 / @material-ui/data-grid@v4.0.0-alpha.23
 
-- [DataGrid] Add plPL locale (#1274) @michallukowski
+- [DataGrid] Add pl-PL locale (#1274) @michallukowski
 - [DataGrid] Add onRowsScrollEnd to support infinite loading (#1199) @DanailH
 - [DataGrid] Edit Cell Navigation (#1205) @dtassone
 - [DataGrid] Fix Popper z-index (#1240) @m4theushw
@@ -2221,7 +4442,7 @@ Big thanks to the 7 contributors who made this release possible. Here are some h
 - [core] No top-level imports (#1257) @oliviertassinari
 - [core] Remove dead code (#1259) @oliviertassinari
 
-## [4.0.0-alpha.22](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.21...v4.0.0-alpha.22)
+## [4.0.0-alpha.22](https://github.com/mui/mui-x/compare/v4.0.0-alpha.21...v4.0.0-alpha.22)
 
 _Mar 9, 2021_
 
@@ -2229,13 +4450,13 @@ Big thanks to the 6 contributors who made this release possible. Here are some h
 
 - 🎁 Implement base foundation for editing a cell (#1025) @dtassone.
   This is the foundation on which the feature will be built. Currently, the newly added methods aren't yet ready for being used. This feature will be available in the coming weeks.
-- 🇩🇪 Added deDE locale (#1117) @LarsKumbier
+- 🇩🇪 Added de-DE locale (#1117) @LarsKumbier
 - 📜 Fix scrollbar related issue (#1146) @dtassone
 - 🐛 Handle commas in cell values when doing CSV export (#1154) @DanailH
 
 ### @material-ui/x-grid@v4.0.0-alpha.22 / @material-ui/data-grid@v4.0.0-alpha.22
 
-- [DataGrid] Add deDE locale (#1117) @LarsKumbier
+- [DataGrid] Add de-DE locale (#1117) @LarsKumbier
 - [DataGrid] Fix scrollbar on autopageSize (#1146) @dtassone
 - [DataGrid] Fix handling of special chars when doing CSV export (#1154) @DanailH
 - [DataGrid] Implement base foundation for editing a cell (#1025) @dtassone
@@ -2255,7 +4476,7 @@ Big thanks to the 6 contributors who made this release possible. Here are some h
 - [core] Output warnings in the rendered components (#1153) @oliviertassinari
 - [core] Update to the HEAD of the monorepo (#1138) @oliviertassinari
 
-## [4.0.0-alpha.21](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.20...v4.0.0-alpha.21)
+## [4.0.0-alpha.21](https://github.com/mui/mui-x/compare/v4.0.0-alpha.20...v4.0.0-alpha.21)
 
 _Feb 27, 2021_
 
@@ -2264,7 +4485,7 @@ Big thanks to the 7 contributors who made this release possible. Here are some h
 - 🎁 Add support for CSV export (#1030) @DanailH.
   This is the first iteration of the feature. You can either render the `GridToolbarExport` component in the toolbar or use the apiRef `exportDataAsCsv`/`getDataAsCsv` methods.
 
-  See the documentation for [more details](https://mui.com/components/data-grid/export/#csv-export).
+  See the documentation for [more details](https://mui.com/x/react-data-grid/export/#csv-export).
 
 - 🌏 Improve the support for custom locales (#1096, #1079, #1109, #1077)
 - ♿️ Fix a couple of accessibility issues with the popups (#1105, #1102)
@@ -2273,16 +4494,16 @@ Big thanks to the 7 contributors who made this release possible. Here are some h
 
 #### Breaking changes
 
-- [DataGrid] Prefix all public API to fit into the global Material-UI namespace (#1069) @DanailH
-  This change gets the data grid one step closer to a stable release. It allows the data grid to fit into the global namespace of Material-UI. All the exported modules should have a unique name. It allows the search features, in Google, in the docs, and in the codebase to work effectively and efficiently.
+- [DataGrid] Prefix all public API to fit into the global Material UI namespace (#1069) @DanailH
+  This change gets the data grid one step closer to a stable release. It allows the data grid to fit into the global namespace of Material UI. All the exported modules should have a unique name. It allows the search features, in Google, in the docs, and in the codebase to work effectively and efficiently.
 
-  For the mirgration, prefixing a broken import with "grid" is often enough. In the case it's not working, head to the pull request's description. It [details all the changes](https://github.com/mui-org/material-ui-x/pull/1069).
+  For the mirgration, prefixing a broken import with "grid" is often enough. In the case it's not working, head to the pull request's description. It [details all the changes](https://github.com/mui/mui-x/pull/1069).
 
 #### Changes
 
-- [DataGrid] Add frFR locale (#1079) @oliviertassinari
+- [DataGrid] Add fr-FR locale (#1079) @oliviertassinari
 - [DataGrid] Add missing TablePagination localizations (#1109) @DanailH
-- [DataGrid] Add ptBR locale (#1077) @erikian
+- [DataGrid] Add pt-BR locale (#1077) @erikian
 - [DataGrid] Fix checked checkbox when empty rows (#1068) @bigandy
 - [DataGrid] Fix issue with visible rows state (#1113) @dtassone
 - [DataGrid] Fix last row (#1071) @dtassone
@@ -2308,16 +4529,16 @@ Big thanks to the 7 contributors who made this release possible. Here are some h
 - [test] Improve BrowserStack configuration (#1100) @oliviertassinari
 - [test] Speed-up rebuild in Karma (#1064) @oliviertassinari
 
-## [4.0.0-alpha.20](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.19...v4.0.0-alpha.20)
+## [4.0.0-alpha.20](https://github.com/mui/mui-x/compare/v4.0.0-alpha.19...v4.0.0-alpha.20)
 
 _Feb 17, 2021_
 
 Big thanks to the 4 contributors who made this release possible. Here are some highlights ✨:
 
 - 📍 Add support for default locales (#983) @DanailH
-  We have built the infrastructure to support around 100 [default locales](https://mui.com/components/data-grid/localization/#supported-locales). If you have localized the data grid in your application. Please do consider contributing new translations back to Material-UI by opening a pull request.
+  We have built the infrastructure to support around 100 [default locales](https://mui.com/x/react-data-grid/localization/#supported-locales). If you have localized the data grid in your application. Please do consider contributing new translations back to Material UI by opening a pull request.
 - 🎁 Add new `selectionModel` prop (#986) @dtassone
-  The prop can be used to control the selected rows in the data grid. [See the docs](https://mui.com/components/data-grid/selection/#controlled-selection).
+  The prop can be used to control the selected rows in the data grid. [See the docs](https://mui.com/x/react-data-grid/selection/#controlled-selection).
 - 💅 Add support for default props from theme (#1019) @DanailH
 - 🙌 Fix scrollbar size on windows (#1061) @dtassone
 - 🐛 Polish existing features, fix 9 issues.
@@ -2356,7 +4577,7 @@ Big thanks to the 4 contributors who made this release possible. Here are some h
   ```
 
 - [DataGrid] Change page index base, from 1 to 0. (#1021) @dtassone
-  This change is done for consistency with `TablePagination` and JavaScript arrays that are 0-based. Material-UI still uses a 1-base page for the `Pagination` component that matches the URL's query.
+  This change is done for consistency with `TablePagination` and JavaScript arrays that are 0-based. Material UI still uses a 1-base page for the `Pagination` component that matches the URL's query.
 
   ```diff
   -const [page, setPage] = React.useState(1);
@@ -2370,7 +4591,7 @@ Big thanks to the 4 contributors who made this release possible. Here are some h
 
 #### Changes
 
-- [DataGrid] Add bgBG locale (#983) @DanailH
+- [DataGrid] Add bg-BG locale (#983) @DanailH
 - [DataGrid] Add last of the missing translations (#1033) @DanailH
 - [DataGrid] Add support for default props from theme (#1019) @DanailH
 - [DataGrid] Fix controllable filters and select all rows with filters (#1020) @dtassone
@@ -2397,9 +4618,9 @@ Big thanks to the 4 contributors who made this release possible. Here are some h
 - [test] Increase yarn timeout (#1023) @oliviertassinari
 - [test] Link CircleCI URL in BS (#1060) @oliviertassinari
 
-## [4.0.0-alpha.19](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.18...v4.0.0-alpha.19)
+## [4.0.0-alpha.19](https://github.com/mui/mui-x/compare/v4.0.0-alpha.18...v4.0.0-alpha.19)
 
-###### _Feb 5, 2021_
+_Feb 5, 2021_
 
 Big thanks to the 5 contributors who made this release possible. Here are some highlights ✨:
 
@@ -2440,20 +4661,20 @@ Big thanks to the 5 contributors who made this release possible. Here are some h
 - [core] Improve prop-types handling (#978) @oliviertassinari
 - [core] Investigate bundle size (#954) @oliviertassinari
 
-## [4.0.0-alpha.18](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.17...v4.0.0-alpha.18)
+## [4.0.0-alpha.18](https://github.com/mui/mui-x/compare/v4.0.0-alpha.17...v4.0.0-alpha.18)
 
-###### _Jan 26, 2021_
+_Jan 26, 2021_
 
 Big thanks to the 5 contributors who made this release possible. Here are some highlights ✨:
 
-- 🎁 Add support for Material-UI v5-alpha (#855) @DanailH.
-  The data grid supports Material-UI v4 and v5. We aim to retain the support for v4 as long as v5 hasn't reached the beta phase.
-- 💅 Update the customization API to be closer to Material-UI v5.
+- 🎁 Add support for Material UI v5-alpha (#855) @DanailH.
+  The data grid supports Material UI v4 and v5. We aim to retain the support for v4 as long as v5 hasn't reached the beta phase.
+- 💅 Update the customization API to be closer to Material UI v5.
   The data grid accepts two props: `components` and `componentsProps`.
   The first prop allows to swapping specific components used in slots the grid, like the checkboxes.
   The second one allows providing extra props to each slot. It avoids the need for using the React context to access information from outside the data grid.
 
-  See the [RFC](https://github.com/mui-org/material-ui/issues/21453) for more details.
+  See the [RFC](https://github.com/mui/material-ui/issues/21453) for more details.
 
 - 🐛 Polish existing features, fix 3 issues.
 
@@ -2461,9 +4682,9 @@ Big thanks to the 5 contributors who made this release possible. Here are some h
 
 #### Breaking changes
 
-- [DataGrid] Implement customization pattern of Material-UI v5 (#851, #879) @dtassone
+- [DataGrid] Implement customization pattern of Material UI v5 (#851, #879) @dtassone
 
-  - Capitalize the keys of the `components` prop. This change aims to bring consistency with the customization pattern of Material-UI v5:
+  - Capitalize the keys of the `components` prop. This change aims to bring consistency with the customization pattern of Material UI v5:
 
   ```diff
   <DataGrid
@@ -2474,7 +4695,7 @@ Big thanks to the 5 contributors who made this release possible. Here are some h
   />
   ```
 
-  - Move all the icon components overrides in the `components` prop. And added the suffix 'Icon' on each icon component. This change aims to bring consistency with the customization pattern of Material-UI v5:
+  - Move all the icon components overrides in the `components` prop. And added the suffix 'Icon' on each icon component. This change aims to bring consistency with the customization pattern of Material UI v5:
 
   ```diff
   <DataGrid
@@ -2510,7 +4731,7 @@ Big thanks to the 5 contributors who made this release possible. Here are some h
 #### Changes
 
 - [DataGrid] Add customisation on panels (#890) @dtassone
-- [DataGrid] Add support for Material-UI v5-alpha (#855) @DanailH
+- [DataGrid] Add support for Material UI v5-alpha (#855) @DanailH
 - [DataGrid] Fix footer count not shown on small screen (#899) @mnajdova
 - [DataGrid] Fix column selector crash when hiding columns (#875) @DanailH
 - [DataGrid] Fix <kbd>Shift</kbd> + <kbd>Space</kbd> keyboard regression to select row (#897) @dtassone
@@ -2527,14 +4748,14 @@ Big thanks to the 5 contributors who made this release possible. Here are some h
 - [core] Replace commander with yargs (#872) @dependabot-preview
 - [core] Update monorepo (#884) @oliviertassinari
 
-## [4.0.0-alpha.17](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.15...v4.0.0-alpha.17)
+## [4.0.0-alpha.17](https://github.com/mui/mui-x/compare/v4.0.0-alpha.15...v4.0.0-alpha.17)
 
-###### _Jan 14, 2021_
+_Jan 14, 2021_
 
 Big thanks to the 4 contributors who made this release possible. Here are some highlights ✨:
 
 - 🎛 Add support for Column selector (#837) @DanailH @dtassone.
-  The feature can be triggered from the toolbar or the column menu. Check [the documentation](https://mui.com/components/data-grid/columns/#column-selector).
+  The feature can be triggered from the toolbar or the column menu. Check [the documentation](https://mui.com/x/react-data-grid/column-definition/#column-selector).
 
   ![column selector](https://user-images.githubusercontent.com/3165635/104791267-6ff77300-579a-11eb-9338-11a8fde83258.gif)
 
@@ -2557,9 +4778,9 @@ Big thanks to the 4 contributors who made this release possible. Here are some h
 
 - [core] Add tests for Column selector feature (#845) @DanailH
 
-## [4.0.0-alpha.15](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.14...v4.0.0-alpha.15)
+## [4.0.0-alpha.15](https://github.com/mui/mui-x/compare/v4.0.0-alpha.14...v4.0.0-alpha.15)
 
-###### _Jan 7, 2021_
+_Jan 7, 2021_
 
 Big thanks to the 2 contributors who made this release possible. Here are some highlights ✨:
 
@@ -2580,20 +4801,20 @@ Big thanks to the 2 contributors who made this release possible. Here are some h
 - [core] Batch small changes (#800) @oliviertassinari
 - [CHANGELOG] Use the format of the main repository @oliviertassinari
 
-## [4.0.0-alpha.14](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.13...v4.0.0-alpha.14)
+## [4.0.0-alpha.14](https://github.com/mui/mui-x/compare/v4.0.0-alpha.13...v4.0.0-alpha.14)
 
-###### _Dec 31, 2020_
+_Dec 31, 2020_
 
 Big thanks to the 5 contributors who made this release possible. Here are some highlights ✨:
 
 - 🌎 Add support for internationalization (#718) @DanailH
 
   You can use the `localeText` prop to provide custom wordings in the data grid.
-  Check the documentation for [a demo](https://mui.com/components/data-grid/localization/#translation-keys).
+  Check the documentation for [a demo](https://mui.com/x/react-data-grid/localization/#translation-keys).
 
 - 📚 Start documenting the filtering feature 🧪 (#754) @dtassone
 
-  The work in progress filtering feature and documentation can be found following [this link](https://mui.com/components/data-grid/filtering/). Early feedback are welcome.
+  The work in progress filtering feature and documentation can be found following [this link](https://mui.com/x/react-data-grid/filtering/). Early feedback are welcome.
 
 ### @material-ui/x-grid@v4.0.0-alpha.14 / @material-ui/data-grid@v4.0.0-alpha.14
 
@@ -2614,9 +4835,9 @@ Big thanks to the 5 contributors who made this release possible. Here are some h
 - [test] We don't need to wait 100ms (#773) @oliviertassinari
 - [core] Remove useless clone (#757) @oliviertassinari
 
-## [4.0.0-alpha.13](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.12...v4.0.0-alpha.13)
+## [4.0.0-alpha.13](https://github.com/mui/mui-x/compare/v4.0.0-alpha.12...v4.0.0-alpha.13)
 
-###### _Dec 16, 2020_
+_Dec 16, 2020_
 
 Big thanks to the 4 contributors who made this release possible. Here are some highlights ✨:
 
@@ -2643,13 +4864,13 @@ Big thanks to the 4 contributors who made this release possible. Here are some h
 - [test] Split data grid tests in multiple files (#722) @dtassone
 - [test] Add tests for DataGrid filtering feature (#715) @dtassone
 
-## [4.0.0-alpha.12](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.11...v4.0.0-alpha.12)
+## [4.0.0-alpha.12](https://github.com/mui/mui-x/compare/v4.0.0-alpha.11...v4.0.0-alpha.12)
 
-###### _Dec 9, 2020_
+_Dec 9, 2020_
 
 Big thanks to the 6 contributors who made this release possible. Here are some highlights ✨:
 
-- 🔍 Add a new data grid [density selector](https://mui.com/components/data-grid/rendering/#density) feature (#606) @DanailH.
+- 🔍 Add a new data grid [density selector](https://mui.com/x/react-data-grid/accessibility/#density) feature (#606) @DanailH.
 - 💄 A first iteration on the data grid's toolbar.
 - 🧪 Continue the iteration on the data grid filtering feature, soon to be released @dtassone.
 
@@ -2680,9 +4901,9 @@ Big thanks to the 6 contributors who made this release possible. Here are some h
 - [test] Add regression test (#705) @oliviertassinari
 - [test] Allow running all the tests in strict mode (#684) @oliviertassinari
 
-## [4.0.0-alpha.11](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.10...v4.0.0-alpha.11)
+## [4.0.0-alpha.11](https://github.com/mui/mui-x/compare/v4.0.0-alpha.10...v4.0.0-alpha.11)
 
-###### _Dec 2, 2020_
+_Dec 2, 2020_
 
 Big thanks to the 8 contributors who made this release possible. Here are some highlights ✨:
 
@@ -2723,9 +4944,9 @@ Big thanks to the 8 contributors who made this release possible. Here are some h
 
 ### Docs
 
-- [docs] Data Grid depends on side effects (#666) @oliviertassinari
+- [docs] Data grid depends on side effects (#666) @oliviertassinari
 - [docs] Clarify the purpose of x-grid-data-generator (#634) @Elius94
-- [docs] Data Grid is in the lab (#612) @oliviertassinari
+- [docs] Data grid is in the lab (#612) @oliviertassinari
 - [docs] Fix Demo app, downgrade webpack-cli, known issue in latest version (#647) @dtassone
 - [docs] Fix typo in columns.md @stojy
 - [docs] Reduce confusion on /export page (#646) @SerdarMustafa1
@@ -2736,11 +4957,11 @@ Big thanks to the 8 contributors who made this release possible. Here are some h
 - [core] Remove gitHead (#669) @oliviertassinari
 - [core] Remove react-select (#658) @dependabot-preview
 - [core] Replace Storybook knobs for args (#601) @tooppaaa
-- [core] Update to Material-UI v4.11.1 (#636) @oliviertassinari
+- [core] Update to Material UI v4.11.1 (#636) @oliviertassinari
 
-## [4.0.0-alpha.10](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.9...v4.0.0-alpha.10)
+## [4.0.0-alpha.10](https://github.com/mui/mui-x/compare/v4.0.0-alpha.9...v4.0.0-alpha.10)
 
-###### _Nov 20, 2020_
+_Nov 20, 2020_
 
 ### @material-ui/x-grid@v4.0.0-alpha.10 / @material-ui/data-grid@v4.0.0-alpha.10
 
@@ -2760,9 +4981,9 @@ Big thanks to the 8 contributors who made this release possible. Here are some h
 - [core] Fix yarn prettier write @oliviertassinari
 - [test] Share karma setup (#576) @oliviertassinari
 
-## [4.0.0-alpha.9](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.8...v4.0.0-alpha.9)
+## [4.0.0-alpha.9](https://github.com/mui/mui-x/compare/v4.0.0-alpha.8...v4.0.0-alpha.9)
 
-###### _Nov 9, 2020_
+_Nov 9, 2020_
 
 ### @material-ui/x-grid@v4.0.0-alpha.9 / @material-ui/data-grid@v4.0.0-alpha.9
 
@@ -2798,9 +5019,9 @@ Big thanks to the 8 contributors who made this release possible. Here are some h
 - [core] Disable generation of changelogs @oliviertassinari
 - [test] Karma should fail if errors are thrown (#543) @oliviertassinari
 
-## [4.0.0-alpha.8](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.7...v4.0.0-alpha.8)
+## [4.0.0-alpha.8](https://github.com/mui/mui-x/compare/v4.0.0-alpha.7...v4.0.0-alpha.8)
 
-###### _Oct 23, 2020_
+_Oct 23, 2020_
 
 ### @material-ui/x-grid@v4.0.0-alpha.8 / @material-ui/data-grid@v4.0.0-alpha.8
 
@@ -2815,9 +5036,9 @@ Big thanks to the 8 contributors who made this release possible. Here are some h
 - [core] Remove usage of LESS (#467) @dependabot-preview
 - [core] Update to the latest version of the main repo (#456) @oliviertassinari
 
-## [4.0.0-alpha.7](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.6...v4.0.0-alpha.7)
+## [4.0.0-alpha.7](https://github.com/mui/mui-x/compare/v4.0.0-alpha.6...v4.0.0-alpha.7)
 
-###### _Oct 19, 2020_
+_Oct 19, 2020_
 
 ### @material-ui/x-grid@v4.0.0-alpha.7 / @material-ui/data-grid@v4.0.0-alpha.7
 
@@ -2844,9 +5065,9 @@ Big thanks to the 8 contributors who made this release possible. Here are some h
 - [test] Add missing types linting for x-grid (#357) @oliviertassinari
 - [test] Run the karma tests in browserstack (#316) @oliviertassinari
 
-## [4.0.0-alpha.6](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.2...v4.0.0-alpha.6)
+## [4.0.0-alpha.6](https://github.com/mui/mui-x/compare/v4.0.0-alpha.2...v4.0.0-alpha.6)
 
-###### _Sep 25, 2020_
+_Sep 25, 2020_
 
 ### @material-ui/x-grid@v4.0.0-alpha.6 / @material-ui/data-grid@v4.0.0-alpha.6
 
@@ -2861,19 +5082,19 @@ Big thanks to the 8 contributors who made this release possible. Here are some h
 - [docs] Fix layout jump issue (#338) @oliviertassinari
 - [docs] Fix short description warning (#302) @oliviertassinari
 
-## [4.0.0-alpha.2](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.1...v4.0.0-alpha.2)
+## [4.0.0-alpha.2](https://github.com/mui/mui-x/compare/v4.0.0-alpha.1...v4.0.0-alpha.2)
 
-###### _Sep 18, 2020_
+_Sep 18, 2020_
 
 - [DataGrid] Fix wrongly exported types (#298) @dtassone
 
-## [4.0.0-alpha.1](https://github.com/mui-org/material-ui-x/compare/v0.1.67...v4.0.0-alpha.1)
+## [4.0.0-alpha.1](https://github.com/mui/mui-x/compare/v0.1.67...v4.0.0-alpha.1)
 
-###### _Sep 17, 2020_
+_Sep 17, 2020_
 
 This is the first public alpha release of the component after 6 months of development since the initial commit (March 15th 2020).
 `@material-ui/data-grid` is licensed under MIT while `@material-ui/x-grid` is licensed under a commercial license.
-You can find the documentation at this address: https://mui.com/components/data-grid/.
+You can find the documentation at this address: https://mui.com/x/react-data-grid/.
 
 ### @material-ui/x-grid@v4.0.0-alpha.1 / @material-ui/data-grid@v4.0.0-alpha.1
 

@@ -1,7 +1,3 @@
----
-title: Data Grid - Aggregation
----
-
 # Data Grid - Aggregation [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan)
 
 <p class="description">Add aggregation functions to the Data Grid so users can combine row values.</p>
@@ -55,7 +51,6 @@ This will disable all features related to aggregation, even if a model is provid
 ### For some columns
 
 To disable aggregation on a specific column, set the `aggregable` property on its column definition (`GridColDef`) to `false`.
-In the example below, the `title` and `year` columns are blocked from being aggregated:
 
 {{"demo": "AggregationColDefAggregable.js", "bg": "inline", "defaultCodeOpen": false}}
 
@@ -167,6 +162,7 @@ In the example below, the **SUM** function has been removed:
 #### For one column
 
 To limit the aggregation options in a given column, pass the `availableAggregationFunctions` property to the column definition.
+
 This lets you specify which options will be available, as shown below:
 
 ```ts
@@ -184,6 +180,7 @@ In the example below, you can aggregate the **Year** column using the **MAX** an
 ### Create custom functions
 
 Pass custom aggregation functions to the `aggregationFunctions` prop.
+
 An aggregation function is an object with the following shape:
 
 ```ts

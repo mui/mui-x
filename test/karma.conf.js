@@ -6,7 +6,7 @@ const CI = Boolean(process.env.CI);
 // Their CI run will be a branch based run not PR run and therefore won't have a CIRCLE_PR_NUMBER
 const isPR = Boolean(process.env.CIRCLE_PULL_REQUEST);
 
-let build = `material-ui-x local ${new Date().toISOString()}`;
+let build = `mui-x local ${new Date().toISOString()}`;
 
 if (process.env.CIRCLECI) {
   const buildPrefix =
@@ -26,7 +26,7 @@ const browserStack = {
   accessKey: process.env.BROWSERSTACK_ACCESS_KEY,
   build,
   // https://github.com/browserstack/api#timeout300
-  timeout: 6 * 60, // Maximum time before a worker is terminated. Default 5 minutes.
+  timeout: 10 * 60, // Maximum time before a worker is terminated. Default 5 minutes.
 };
 
 process.env.CHROME_BIN = playwright.chromium.executablePath();
@@ -100,7 +100,7 @@ module.exports = function setKarmaConfig(config) {
           {
             test: /\.(js|ts|tsx)$/,
             loader: 'babel-loader',
-            exclude: /node_modules\/(?!@material-ui\/monorepo)/,
+            exclude: /node_modules\/(?!@mui\/monorepo)/,
           },
         ],
       },
@@ -108,7 +108,7 @@ module.exports = function setKarmaConfig(config) {
         extensions: ['.js', '.ts', '.tsx'],
         fallback: {
           fs: false, // Some tests import fs,
-          stream: false,
+          stream: require.resolve('stream-browserify'), // util > inherits breaks with `false`
           path: false,
         },
       },
@@ -120,7 +120,17 @@ module.exports = function setKarmaConfig(config) {
     customLaunchers: {
       chromeHeadless: {
         base: 'ChromeHeadless',
-        flags: ['--no-sandbox'],
+        flags: [
+          '--no-sandbox',
+          // running headless chrome in a virtualized environment forces pointer type to default to `NONE`
+          // to mimic "desktop" environment more correctly we force blink to have `pointer: fine` support
+          // this allows correct pickers behavior, where their rendering depends on this condition
+          // https://github.com/microsoft/playwright/issues/7769#issuecomment-1205106311
+          '--blink-settings=primaryPointerType=4',
+          // increasing default `800x600` size to certain window sizing cases to consider browser as "mobile"
+          // i.e.: date time pickers do check height > 667
+          '--window-size=1000,800',
+        ],
       },
     },
     singleRun: CI,
@@ -132,7 +142,7 @@ module.exports = function setKarmaConfig(config) {
     newConfig = {
       ...baseConfig,
       browserStack,
-      browsers: baseConfig.browsers.concat(['chrome', 'firefox', 'safari', 'edge']),
+      browsers: baseConfig.browsers.concat(['chrome', 'safari', 'edge']),
       plugins: baseConfig.plugins.concat(['karma-browserstack-launcher']),
       customLaunchers: {
         ...baseConfig.customLaunchers,
@@ -146,13 +156,15 @@ module.exports = function setKarmaConfig(config) {
           // TODO: Investigate why.
           browser_version: '87.0',
         },
-        firefox: {
-          base: 'BrowserStack',
-          os: 'Windows',
-          os_version: '10',
-          browser: 'firefox',
-          browser_version: '78.0',
-        },
+        // Firefox tests are flaky and give a missleading information about the state of the code.
+        // Due to this the build on the master branch is aways red.
+        // firefox: {
+        //   base: 'BrowserStack',
+        //   os: 'Windows',
+        //   os_version: '10',
+        //   browser: 'firefox',
+        //   browser_version: '78.0',
+        // },
         safari: {
           base: 'BrowserStack',
           os: 'OS X',

@@ -257,5 +257,109 @@ describe('e2e', () => {
         ),
       ).to.equal(scrollTop);
     });
+
+    it('should edit date cells', async () => {
+      await renderFixture('DataGrid/KeyboardEditDate');
+
+      // Edit date column
+      expect(
+        await page.evaluate(
+          () => document.querySelector('[role="cell"][data-field="birthday"]')!.textContent!,
+        ),
+      ).to.equal('2/29/1984');
+
+      // set 06/25/1986
+      await page.dblclick('[role="cell"][data-field="birthday"]');
+      await page.type('[role="cell"][data-field="birthday"] input', '06251986');
+
+      await page.keyboard.press('Enter');
+
+      expect(
+        await page.evaluate(
+          () => document.querySelector('[role="cell"][data-field="birthday"]')!.textContent!,
+        ),
+      ).to.equal('6/25/1986');
+
+      // Edit dateTime column
+      expect(
+        await page.evaluate(
+          () => document.querySelector('[role="cell"][data-field="lastConnection"]')!.textContent!,
+        ),
+      ).to.equal('2/20/2022, 6:50:00 AM');
+
+      // start editing lastConnection
+      await page.keyboard.press('ArrowRight');
+      await page.keyboard.press('Enter');
+
+      // set 01/31/2025 16:05
+      await page.type('[role="cell"][data-field="lastConnection"] input', '01312025165');
+      await page.keyboard.press('Enter');
+
+      expect(
+        await page.evaluate(
+          () => document.querySelector('[role="cell"][data-field="lastConnection"]')!.textContent!,
+        ),
+      ).to.equal('1/31/2025, 4:05:00 PM');
+    });
+
+    // https://github.com/mui/mui-x/issues/3613
+    it('should not lose cell focus when scrolling with arrow down', async () => {
+      await renderFixture('DataGridPro/KeyboardNavigationFocus');
+
+      async function keyDown() {
+        await page.keyboard.down('ArrowDown');
+        // wait between keydown events for virtualization
+        await sleep(100);
+      }
+
+      await page.keyboard.down('Tab');
+
+      await keyDown(); // 0
+      await keyDown(); // 1
+      await keyDown(); // 2
+      await keyDown(); // 3
+
+      expect(await page.evaluate(() => document.activeElement?.getAttribute('role'))).to.equal(
+        'cell',
+        'Expected cell to be focused',
+      );
+      expect(await page.evaluate(() => document.activeElement?.textContent)).to.equal('3');
+    });
+
+    // https://github.com/mui/mui-x/issues/3795#issuecomment-1025628771
+    it('should allow horizontal scroll when there are more columns and no rows', async () => {
+      await renderFixture('DataGrid/EmptyGrid');
+      await page.mouse.move(150, 150);
+      await page.mouse.wheel(50, 0);
+      await sleep(50);
+
+      const scrollLeft = await page.evaluate(() => {
+        return document.querySelector('.MuiDataGrid-virtualScroller')!.scrollLeft;
+      });
+      expect(scrollLeft).not.to.equal(0);
+    });
+
+    // https://github.com/mui/mui-x/issues/4190
+    it('should move the focus from left pinned column to the cell in main render zone after pressing Tab during row editing', async () => {
+      await renderFixture('DataGridPro/RowEditingWithPinnedColumns');
+
+      await page.dblclick('[role="cell"][data-field="column0"]');
+      await page.keyboard.down('Tab');
+
+      expect(
+        await page.evaluate(() => (document.activeElement as HTMLInputElement).value),
+      ).to.equal('0-1');
+    });
+
+    // https://github.com/mui/mui-x/issues/5590
+    it('should allow to click a button in NoRowsOverlay', async () => {
+      await renderFixture('DataGrid/NoRowsOverlayWithButton');
+
+      await page.click('[data-testid="refresh"]');
+
+      expect(
+        await page.evaluate(() => document.querySelector('[data-testid="refresh"]')!.textContent),
+      ).to.equal('Clicked');
+    });
   });
 });

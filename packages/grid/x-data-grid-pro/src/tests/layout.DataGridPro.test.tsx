@@ -1,8 +1,9 @@
 import * as React from 'react';
-import { createRenderer } from '@material-ui/monorepo/test/utils';
+// @ts-ignore Remove once the test utils are typed
+import { createRenderer, screen, act } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { GridApiRef, useGridApiRef, DataGridPro, ptBR } from '@mui/x-data-grid-pro';
+import { GridApi, useGridApiRef, DataGridPro, ptBR, DataGridProProps } from '@mui/x-data-grid-pro';
 
 describe('<DataGridPro /> - Layout', () => {
   const { render } = createRenderer();
@@ -74,7 +75,6 @@ describe('<DataGridPro /> - Layout', () => {
         </div>,
       );
 
-      // @ts-expect-error need to migrate helpers to TypeScript
       expect(document.querySelector('.MuiDataGrid-root')).toHaveInlineStyle({
         mixBlendMode: 'darken',
       });
@@ -82,10 +82,10 @@ describe('<DataGridPro /> - Layout', () => {
   });
 
   describe('columns width', () => {
-    it('should resize flex: 1 column when changing column visibility to avoid exceeding grid width', () => {
-      let apiRef: GridApiRef;
+    it('should resize flex: 1 column when changing column visibility to avoid exceeding grid width (apiRef setColumnVisibility method call)', () => {
+      let apiRef: React.MutableRefObject<GridApi>;
 
-      const TestCase = (props) => {
+      const TestCase = (props: Omit<DataGridProProps, 'apiRef'>) => {
         apiRef = useGridApiRef();
 
         return (
@@ -117,20 +117,25 @@ describe('<DataGridPro /> - Layout', () => {
           columns={[
             { field: 'id', flex: 1 },
             { field: 'first', width: 100 },
-            { field: 'age', width: 50, hide: true },
+            { field: 'age', width: 50 },
           ]}
+          initialState={{
+            columns: {
+              columnVisibilityModel: {
+                age: false,
+              },
+            },
+          }}
         />,
       );
 
       let firstColumn = document.querySelector('[role="columnheader"][aria-colindex="1"]');
-      // @ts-expect-error need to migrate helpers to TypeScript
       expect(firstColumn).toHaveInlineStyle({
         width: '198px', // because of the 2px border
       });
 
-      apiRef!.current.setColumnVisibility('age', true);
+      act(() => apiRef!.current.setColumnVisibility('age', true));
       firstColumn = document.querySelector('[role="columnheader"][aria-colindex="1"]');
-      // @ts-expect-error need to migrate helpers to TypeScript
       expect(firstColumn).toHaveInlineStyle({
         width: '148px', // because of the 2px border
       });
@@ -146,5 +151,31 @@ describe('<DataGridPro /> - Layout', () => {
       </ThemeProvider>,
     );
     expect(document.querySelector('[title="Ordenar"]')).not.to.equal(null);
+  });
+
+  it('should support the sx prop', function test() {
+    if (/jsdom/.test(window.navigator.userAgent)) {
+      this.skip(); // Doesn't work with mocked window.getComputedStyle
+    }
+
+    const theme = createTheme({
+      palette: {
+        primary: {
+          main: 'rgb(0, 0, 255)',
+        },
+      },
+    });
+
+    render(
+      <ThemeProvider theme={theme}>
+        <div style={{ width: 300, height: 300 }}>
+          <DataGridPro columns={[]} rows={[]} sx={{ color: 'primary.main' }} />
+        </div>
+      </ThemeProvider>,
+    );
+
+    expect(screen.getByRole('grid')).toHaveComputedStyle({
+      color: 'rgb(0, 0, 255)',
+    });
   });
 });

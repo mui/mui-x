@@ -1,10 +1,15 @@
-import { GridRowModel } from '@mui/x-data-grid-pro';
-import asyncWorker from '../asyncWorker';
+import {
+  GridRowModel,
+  GridColumnVisibilityModel,
+  GridInitialState,
+} from '@mui/x-data-grid-premium';
+import asyncWorker from './asyncWorker';
 import { GridColDefGenerator, GridDataGeneratorContext } from './gridColDefGenerator';
 
 export interface GridDemoData {
   rows: GridRowModel[];
   columns: GridColDefGenerator[];
+  initialState?: GridInitialState;
 }
 
 export function getRealGridData(
@@ -41,9 +46,16 @@ export function getRealGridData(
       tasks.current -= 1;
     }
 
+    const columnVisibilityModel: GridColumnVisibilityModel = {};
+    columns.forEach((col) => {
+      if (col.hide) {
+        columnVisibilityModel[col.field] = false;
+      }
+    });
+
     asyncWorker({
       work,
-      done: () => resolve({ columns, rows }),
+      done: () => resolve({ columns, rows, initialState: { columns: { columnVisibilityModel } } }),
       tasks,
     });
   });

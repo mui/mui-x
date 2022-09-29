@@ -8,7 +8,12 @@
   "rebaseWhen": "conflicted",
   "ignoreDeps": [],
   "labels": ["dependencies"],
+  "stopUpdatingLabel": "on hold",
   "packageRules": [
+    {
+      "matchDepTypes": ["peerDependencies"],
+      "rangeStrategy": "widen"
+    },
     {
       "groupName": "babel",
       "matchPackagePatterns": "@babel/*"
@@ -65,8 +70,13 @@
       }
     },
     {
-      "groupName": "storybook",
-      "matchPackagePatterns": "@storybook/*"
+      "groupName": "AG Grid",
+      "matchPackagePatterns": "ag-grid-*"
+    },
+    {
+      "groupName": "node",
+      "matchPackageNames": ["node", "cimg/node"],
+      "enabled": false
     },
     {
       "groupName": "MUI Core",
@@ -74,10 +84,14 @@
         "@mui/material",
         "@mui/joy",
         "@mui/icons-material",
-        "@mui/core",
+        "@mui/base",
         "@mui/system",
         "@mui/utils"
       ]
+    },
+    {
+      "groupName": "Playwright",
+      "matchPackagePatterns": ["playwright", "@playwright/test"]
     }
   ],
   "postUpdateOptions": ["yarnDedupeHighest"],

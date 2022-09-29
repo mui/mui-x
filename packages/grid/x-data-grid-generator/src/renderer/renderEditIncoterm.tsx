@@ -1,58 +1,53 @@
 import * as React from 'react';
-import { GridRenderEditCellParams } from '@mui/x-data-grid';
+import { GridRenderEditCellParams, useGridApiContext } from '@mui/x-data-grid-premium';
 import Select, { SelectProps } from '@mui/material/Select';
 import { MenuProps } from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import { createStyles, makeStyles } from '@mui/styles';
-import { createTheme } from '@mui/material/styles';
 import { INCOTERM_OPTIONS } from '../services/static-data';
 
-const defaultTheme = createTheme();
-const useStyles = makeStyles(
-  (theme) =>
-    createStyles({
-      select: {
-        display: 'flex',
-        alignItems: 'center',
-        paddingLeft: theme.spacing(1),
-      },
-      optionIcon: {
-        minWidth: 40,
-      },
-      optionText: {
-        overflow: 'hidden',
-      },
-    }),
-  { defaultTheme },
-);
+function EditIncoterm(props: GridRenderEditCellParams<string | null>) {
+  const { id, value, field } = props;
 
-function EditIncoterm(props: GridRenderEditCellParams) {
-  const classes = useStyles();
-  const { id, value, api, field } = props;
+  const apiRef = useGridApiContext();
 
   const handleChange: SelectProps['onChange'] = (event) => {
-    api.setEditCellValue({ id, field, value: event.target.value }, event);
-    if (!(event as any).key) {
-      api.commitCellChange({ id, field });
-      api.setCellMode(id, field, 'view');
+    apiRef.current.setEditCellValue({ id, field, value: event.target.value as any }, event);
+    apiRef.current.commitCellChange({ id, field });
+    apiRef.current.setCellMode(id, field, 'view');
+
+    if ((event as any).key) {
+      // TODO v6: remove once we stop ignoring events fired from portals
+      const params = apiRef.current.getCellParams(id, field);
+      apiRef.current.publishEvent(
+        'cellNavigationKeyDown',
+        params,
+        event as any as React.KeyboardEvent<HTMLElement>,
+      );
     }
   };
 
   const handleClose: MenuProps['onClose'] = (event, reason) => {
     if (reason === 'backdropClick') {
-      api.setCellMode(id, field, 'view');
+      apiRef.current.setCellMode(id, field, 'view');
     }
   };
 
   return (
     <Select
       value={value}
-      classes={{ select: classes.select }}
       onChange={handleChange}
       MenuProps={{
         onClose: handleClose,
+      }}
+      sx={{
+        height: '100%',
+        '& .MuiSelect-select': {
+          display: 'flex',
+          alignItems: 'center',
+          pl: 1,
+        },
       }}
       autoFocus
       fullWidth
@@ -64,10 +59,8 @@ function EditIncoterm(props: GridRenderEditCellParams) {
 
         return (
           <MenuItem key={option} value={option}>
-            <ListItemIcon className={classes.optionIcon}>
-              <span>{code}</span>
-            </ListItemIcon>
-            <ListItemText className={classes.optionText} primary={tooltip} />
+            <ListItemIcon sx={{ minWidth: 36 }}>{code}</ListItemIcon>
+            <ListItemText primary={tooltip} sx={{ overflow: 'hidden' }} />
           </MenuItem>
         );
       })}
@@ -75,6 +68,6 @@ function EditIncoterm(props: GridRenderEditCellParams) {
   );
 }
 
-export function renderEditIncoterm(params: GridRenderEditCellParams) {
+export function renderEditIncoterm(params: GridRenderEditCellParams<string | null>) {
   return <EditIncoterm {...params} />;
 }

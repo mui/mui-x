@@ -1,74 +1,71 @@
 import * as React from 'react';
-import { GridRenderEditCellParams } from '@mui/x-data-grid';
-import Autocomplete from '@mui/material/Autocomplete';
+import { GridRenderEditCellParams, useGridApiContext } from '@mui/x-data-grid-premium';
+import Autocomplete, { autocompleteClasses, AutocompleteProps } from '@mui/material/Autocomplete';
 import InputBase from '@mui/material/InputBase';
-import { createStyles, makeStyles } from '@mui/styles';
-import { createTheme } from '@mui/material/styles';
+import Box from '@mui/material/Box';
+import { styled } from '@mui/material/styles';
 import { CURRENCY_OPTIONS } from '../services/static-data';
 
-// ISO 3166-1 alpha-2
-// ⚠️ No support for IE 11
-function countryToFlag(isoCode: string) {
-  return typeof String.fromCodePoint !== 'undefined'
-    ? isoCode
-        .toUpperCase()
-        .replace(/./g, (char) => String.fromCodePoint(char.charCodeAt(0) + 127397))
-    : isoCode;
-}
+const StyledAutocomplete = styled(Autocomplete)(({ theme }) => ({
+  height: '100%',
+  [`& .${autocompleteClasses.inputRoot}`]: {
+    ...theme.typography.body2,
+    padding: '1px 0',
+    height: '100%',
+    '& input': {
+      padding: '0 16px',
+      height: '100%',
+    },
+  },
+})) as typeof Autocomplete;
 
-const defaultTheme = createTheme();
-const useStyles = makeStyles(
-  (theme) =>
-    createStyles({
-      option: {
-        '& > span': {
-          marginRight: 10,
-          fontSize: 18,
-        },
-      },
-      inputRoot: {
-        ...theme.typography.body2,
-        padding: '1px 0',
-        height: '100%',
-        '& input': {
-          padding: '0 16px',
-          height: '100%',
-        },
-      },
-    }),
-  { defaultTheme },
-);
+function EditCurrency(props: GridRenderEditCellParams<string>) {
+  const { id, value, field } = props;
 
-function EditCurrency(props: GridRenderEditCellParams) {
-  const classes = useStyles();
-  const { id, value, api, field } = props;
+  const apiRef = useGridApiContext();
 
-  const handleChange = React.useCallback(
+  const handleChange = React.useCallback<
+    NonNullable<AutocompleteProps<string, false, true, false>['onChange']>
+  >(
     (event, newValue) => {
-      api.setEditCellValue({ id, field, value: newValue.toUpperCase() }, event);
-      if (!event.key) {
-        api.commitCellChange({ id, field });
-        api.setCellMode(id, field, 'view');
+      apiRef.current.setEditCellValue({ id, field, value: newValue.toUpperCase() }, event);
+      if (!(event as any).key) {
+        apiRef.current.commitCellChange({ id, field });
+        apiRef.current.setCellMode(id, field, 'view');
       }
     },
-    [api, field, id],
+    [apiRef, field, id],
   );
 
   return (
-    <Autocomplete
-      value={value as string}
+    <StyledAutocomplete<string, false, true, false>
+      value={value}
       onChange={handleChange}
       options={CURRENCY_OPTIONS}
       autoHighlight
       fullWidth
       open
-      classes={classes}
       disableClearable
-      renderOption={(optionProps, option) => (
-        <li {...optionProps}>
-          <span>{countryToFlag(String(option).slice(0, -1))}</span>
+      renderOption={(optionProps, option: any) => (
+        <Box
+          component="li"
+          sx={{
+            '& > img': {
+              mr: 1.5,
+              flexShrink: 0,
+            },
+          }}
+          {...optionProps}
+        >
+          <img
+            loading="lazy"
+            width="20"
+            src={`https://flagcdn.com/w20/${option.slice(0, -1).toLowerCase()}.png`}
+            srcSet={`https://flagcdn.com/w40/${option.slice(0, -1).toLowerCase()}.png 2x`}
+            alt=""
+          />
           {option}
-        </li>
+        </Box>
       )}
       renderInput={(params) => (
         <InputBase
@@ -86,6 +83,6 @@ function EditCurrency(props: GridRenderEditCellParams) {
   );
 }
 
-export function renderEditCurrency(params: GridRenderEditCellParams) {
+export function renderEditCurrency(params: GridRenderEditCellParams<string>) {
   return <EditCurrency {...params} />;
 }

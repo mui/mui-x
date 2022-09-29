@@ -1,4 +1,4 @@
-const baseline = require('@material-ui/monorepo/prettier.config');
+const baseline = require('@mui/monorepo/prettier.config');
 
 module.exports = {
   ...baseline,

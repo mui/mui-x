@@ -1,0 +1,15 @@
+<Typography>
+  Value outside the field: {value == null ? 'null' : value.format('L')}
+</Typography>
+<LocalizationProvider dateAdapter={AdapterDayjs}>
+  <DateField
+    value={value}
+    onChange={(newValue) => debounceSetValue(newValue)}
+  />
+</LocalizationProvider>
+<Button
+  onClick={() => setValue(today)}
+  disabled={!!value && value.isSame(today)}
+>
+  Set to today
+</Button>

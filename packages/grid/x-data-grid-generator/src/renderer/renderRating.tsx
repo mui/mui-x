@@ -1,41 +1,38 @@
 import * as React from 'react';
-import { createTheme } from '@mui/material/styles';
-import { createStyles, makeStyles } from '@mui/styles';
-import { GridCellParams } from '@mui/x-data-grid-pro';
+import Box from '@mui/material/Box';
+import { GridRenderCellParams, GridRowId } from '@mui/x-data-grid-premium';
 import Rating from '@mui/material/Rating';
 
-const defaultTheme = createTheme();
-const useStyles = makeStyles(
-  (theme) =>
-    createStyles({
-      root: {
-        display: 'flex',
-        alignItems: 'center',
-        lineHeight: '24px',
-        color: theme.palette.text.secondary,
-        '& .MuiRating-root': {
-          marginRight: theme.spacing(1),
-        },
-      },
-    }),
-  { defaultTheme },
-);
-
 interface RatingValueProps {
-  name: string;
   value: number;
 }
 
 const RatingValue = React.memo(function RatingValue(props: RatingValueProps) {
-  const { name, value } = props;
-  const classes = useStyles();
+  const { value } = props;
   return (
-    <div className={classes.root}>
-      <Rating name={name} value={value} readOnly /> {Math.round(Number(value) * 10) / 10}
-    </div>
+    <Box
+      sx={{
+        display: 'flex',
+        alignItems: 'center',
+        lineHeight: '24px',
+        color: 'text.secondary',
+      }}
+    >
+      <Rating value={value} sx={{ mr: 1 }} readOnly /> {Math.round(Number(value) * 10) / 10}
+    </Box>
   );
 });
 
-export function renderRating(params: GridCellParams) {
-  return <RatingValue value={Number(params.value)} name={params.row.id.toString()} />;
+export function renderRating(params: GridRenderCellParams<number, { id: GridRowId }, any>) {
+  if (params.value == null) {
+    return '';
+  }
+
+  // If the aggregated value does not have the same unit as the other cell
+  // Then we fall back to the default rendering based on `valueGetter` instead of rendering the total price UI.
+  if (params.aggregation && !params.aggregation.hasCellUnit) {
+    return null;
+  }
+
+  return <RatingValue value={params.value} />;
 }

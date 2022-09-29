@@ -1,27 +1,24 @@
 import * as React from 'react';
 import clsx from 'clsx';
-import { alpha, createTheme } from '@mui/material/styles';
-import { createStyles, makeStyles } from '@mui/styles';
-import { GridCellParams } from '../../../_modules_/grid';
+import { alpha, styled } from '@mui/material/styles';
+import { GridRenderCellParams } from '@mui/x-data-grid-premium';
 
-const defaultTheme = createTheme();
-const useStyles = makeStyles(
-  (theme) =>
-    createStyles({
-      root: {
-        width: '100%',
-        paddingRight: 8,
-        fontVariantNumeric: 'tabular-nums',
-      },
-      good: {
-        backgroundColor: alpha(theme.palette.success.main, 0.3),
-      },
-      bad: {
-        backgroundColor: alpha(theme.palette.error.main, 0.3),
-      },
-    }),
-  { defaultTheme },
-);
+const Value = styled('div')(({ theme }) => ({
+  width: '100%',
+  height: '100%',
+  lineHeight: '100%',
+  paddingRight: 8,
+  fontVariantNumeric: 'tabular-nums',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'flex-end',
+  '&.good': {
+    backgroundColor: alpha(theme.palette.success.main, 0.3),
+  },
+  '&.bad': {
+    backgroundColor: alpha(theme.palette.error.main, 0.3),
+  },
+}));
 
 interface TotalPriceProps {
   value: number;
@@ -34,19 +31,28 @@ const currencyFormatter = new Intl.NumberFormat('en-US', {
 
 const TotalPrice = React.memo(function TotalPrice(props: TotalPriceProps) {
   const { value } = props;
-  const classes = useStyles();
   return (
-    <div
-      className={clsx(classes.root, {
-        [classes.good]: value > 1000000,
-        [classes.bad]: value < 1000000,
+    <Value
+      className={clsx({
+        good: value > 1000000,
+        bad: value < 1000000,
       })}
     >
       {currencyFormatter.format(value)}
-    </div>
+    </Value>
   );
 });
 
-export function renderTotalPrice(params: GridCellParams) {
-  return <TotalPrice value={params.value as any} />;
+export function renderTotalPrice(params: GridRenderCellParams<number>) {
+  if (params.value == null) {
+    return '';
+  }
+
+  // If the aggregated value does not have the same unit as the other cell
+  // Then we fall back to the default rendering based on `valueGetter` instead of rendering the total price UI.
+  if (params.aggregation && !params.aggregation.hasCellUnit) {
+    return null;
+  }
+
+  return <TotalPrice value={params.value} />;
 }

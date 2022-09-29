@@ -8,7 +8,7 @@ const http = require('http');
 
 const PORT = 1122;
 
-async function delay(ms) {
+function sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
@@ -106,7 +106,7 @@ async function simulateScroll(
         i += 1;
         await Promise.race([
           page.mouse.wheel(fraction * deltaX, fraction * deltaY),
-          delay(interval),
+          sleep(interval),
         ]);
         scroll();
       } else {
@@ -126,7 +126,7 @@ async function runFPSMeasure(browser, testCaseName, testCase, setupTest) {
     const baseUrl = `http://localhost:${PORT}/?${testCase}`;
     const page = await browser.newPage();
     await page.goto(baseUrl);
-    await delay(1000);
+    await sleep(1000);
 
     const devtools = await page.context().newCDPSession(page);
     await devtools.send('Overlay.setShowFPSCounter', { show: true });

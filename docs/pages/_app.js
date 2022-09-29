@@ -1,17 +1,7 @@
-/* eslint-disable import/first */
-import { LicenseInfo } from '@mui/x-data-grid-pro';
-
-// Remove the license warning from demonstration purposes
-LicenseInfo.setLicenseKey(
-  '0f94d8b65161817ca5d7f7af8ac2f042T1JERVI6TVVJLVN0b3J5Ym9vayxFWFBJUlk9MTY1NDg1ODc1MzU1MCxLRVlWRVJTSU9OPTE=',
-);
-
 import 'docs/src/modules/components/bootstrap';
 // --- Post bootstrap -----
-import pages from 'docsx/src/pages'; // DO NOT REMOVE
-import XWrapper from 'docsx/src/modules/XWrapper'; // DO NOT REMOVE
+import pages from 'docsx/data/pages'; // DO NOT REMOVE
 import * as React from 'react';
-import find from 'lodash/find';
 import { loadCSS } from 'fg-loadcss/src/loadCSS';
 import NextHead from 'next/head';
 import PropTypes from 'prop-types';
@@ -20,15 +10,11 @@ import { useRouter } from 'next/router';
 import { ponyfillGlobal } from '@mui/utils';
 import PageContext from 'docs/src/modules/components/PageContext';
 import GoogleAnalytics from 'docs/src/modules/components/GoogleAnalytics';
-import loadScript from 'docs/src/modules/utils/loadScript';
 import { ThemeProvider } from 'docs/src/modules/components/ThemeContext';
 import { pathnameToLanguage, getCookie } from 'docs/src/modules/utils/helpers';
-import { CODE_VARIANTS, LANGUAGES } from 'docs/src/modules/constants';
-import {
-  CodeVariantProvider,
-  useCodeVariant,
-  useSetCodeVariant,
-} from 'docs/src/modules/utils/codeVariant';
+import { LANGUAGES } from 'docs/src/modules/constants';
+import { CodeVariantProvider } from 'docs/src/modules/utils/codeVariant';
+import { CodeCopyProvider } from 'docs/src/modules/utils/CodeCopy';
 import {
   UserLanguageProvider,
   useSetUserLanguage,
@@ -36,27 +22,54 @@ import {
 } from 'docs/src/modules/utils/i18n';
 import DocsStyledEngineProvider from 'docs/src/modules/utils/StyledEngineProvider';
 import createEmotionCache from 'docs/src/createEmotionCache';
+import findActivePage from 'docs/src/modules/utils/findActivePage';
+import { LicenseInfo } from '@mui/x-data-grid-pro';
+
+// Remove the license warning from demonstration purposes
+LicenseInfo.setLicenseKey(process.env.NEXT_PUBLIC_MUI_LICENSE);
 
 function getMuiPackageVersion(packageName, commitRef) {
   if (commitRef === undefined) {
-    return 'latest';
+    // #default-branch-switch with latest for the master branch
+    return 'next';
   }
   const shortSha = commitRef.slice(0, 8);
-  return `https://pkg.csb.dev/mui-org/material-ui-x/commit/${shortSha}/@mui/${packageName}`;
+  return `https://pkg.csb.dev/mui/mui-x/commit/${shortSha}/@mui/${packageName}`;
 }
 
 ponyfillGlobal.muiDocConfig = {
   csbIncludePeerDependencies: (deps, { versions }) => {
     const newDeps = { ...deps };
 
-    if (newDeps['@mui/x-data-grid-pro'] || newDeps['@mui/x-data-grid']) {
+    if (newDeps['@mui/x-data-grid-premium']) {
+      newDeps['@mui/x-data-grid-pro'] = versions['@mui/x-data-grid-pro'];
+      // TODO: remove when https://github.com/mui/material-ui/pull/32492 is released
+      // use `import 'exceljs'` in demonstrations instead
+      newDeps.exceljs = versions.exceljs;
+    }
+
+    if (newDeps['@mui/x-data-grid-pro']) {
+      newDeps['@mui/x-data-grid'] = versions['@mui/x-data-grid'];
+    }
+
+    if (newDeps['@mui/x-data-grid']) {
       newDeps['@mui/material'] = versions['@mui/material'];
-      newDeps['@mui/styles'] = versions['@mui/styles'];
     }
 
     if (newDeps['@mui/x-data-grid-generator']) {
       newDeps['@mui/material'] = versions['@mui/material'];
       newDeps['@mui/icons-material'] = versions['@mui/icons-material'];
+      newDeps['@mui/x-data-grid'] = versions['@mui/x-data-grid']; // TS types are imported from @mui/x-data-grid
+      newDeps['@mui/x-data-grid-pro'] = versions['@mui/x-data-grid-pro']; // Some TS types are imported from @mui/x-data-grid-pro
+    }
+
+    if (newDeps['@mui/x-date-pickers-pro']) {
+      newDeps['@mui/x-date-pickers'] = versions['@mui/x-date-pickers'];
+    }
+
+    if (newDeps['@mui/x-date-pickers']) {
+      newDeps['@mui/material'] = versions['@mui/material'];
+      newDeps['date-fns'] = versions['date-fns'];
     }
 
     return newDeps;
@@ -64,9 +77,14 @@ ponyfillGlobal.muiDocConfig = {
   csbGetVersions: (versions, { muiCommitRef }) => {
     const output = {
       ...versions,
-      '@mui/x-data-grid-pro': getMuiPackageVersion('x-data-grid-pro', muiCommitRef),
-      '@mui/x-data-grid-generator': getMuiPackageVersion('x-data-grid-generator', muiCommitRef),
       '@mui/x-data-grid': getMuiPackageVersion('x-data-grid', muiCommitRef),
+      '@mui/x-data-grid-pro': getMuiPackageVersion('x-data-grid-pro', muiCommitRef),
+      '@mui/x-data-grid-premium': getMuiPackageVersion('x-data-grid-premium', muiCommitRef),
+      '@mui/x-data-grid-generator': getMuiPackageVersion('x-data-grid-generator', muiCommitRef),
+      '@mui/x-date-pickers': getMuiPackageVersion('x-date-pickers', muiCommitRef),
+      '@mui/x-date-pickers-pro': getMuiPackageVersion('x-date-pickers-pro', muiCommitRef),
+      'date-fns': 'latest',
+      exceljs: 'latest',
     };
     return output;
   },
@@ -75,15 +93,7 @@ ponyfillGlobal.muiDocConfig = {
 // Client-side cache, shared for the whole session of the user in the browser.
 const clientSideEmotionCache = createEmotionCache();
 
-function useFirstRender() {
-  const firstRenderRef = React.useRef(true);
-  React.useEffect(() => {
-    firstRenderRef.current = false;
-  }, []);
-
-  return firstRenderRef.current;
-}
-
+// Set the locales that the documentation automatically redirects to.
 acceptLanguage.languages(LANGUAGES);
 
 function LanguageNegotiation() {
@@ -92,119 +102,23 @@ function LanguageNegotiation() {
   const userLanguage = useUserLanguage();
 
   React.useEffect(() => {
-    const { userLanguage: userLanguageUrl, canonical } = pathnameToLanguage(router.asPath);
+    const { userLanguage: userLanguageUrl, canonicalAs } = pathnameToLanguage(router.asPath);
     const preferedLanguage =
       LANGUAGES.find((lang) => lang === getCookie('userLanguage')) ||
       acceptLanguage.get(navigator.language) ||
       userLanguage;
 
-    if (userLanguageUrl === 'en' && userLanguage !== preferedLanguage) {
-      window.location = preferedLanguage === 'en' ? canonical : `/${preferedLanguage}${canonical}`;
+    if (
+      userLanguageUrl === 'en' &&
+      userLanguage !== preferedLanguage &&
+      !process.env.PULL_REQUEST
+    ) {
+      window.location =
+        preferedLanguage === 'en' ? canonicalAs : `/${preferedLanguage}${canonicalAs}`;
     } else if (userLanguage !== userLanguageUrl) {
       setUserLanguage(userLanguageUrl);
     }
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
-
-  return null;
-}
-
-/**
- * Priority: on first render: navigated value, persisted value; otherwise initial value, 'JS'
- * @returns {string} - The persisted variant if the initial value is undefined
- */
-function usePersistCodeVariant() {
-  const initialCodeVariant = useCodeVariant();
-  const setCodeVariant = useSetCodeVariant();
-
-  const isFirstRender = useFirstRender();
-
-  const navigatedCodeVariant = React.useMemo(() => {
-    const navigatedCodeVariantMatch =
-      typeof window !== 'undefined' ? window.location.hash.match(/\.(js|tsx)$/) : null;
-
-    if (navigatedCodeVariantMatch === null) {
-      return undefined;
-    }
-
-    return navigatedCodeVariantMatch[1] === 'tsx' ? CODE_VARIANTS.TS : CODE_VARIANTS.JS;
-  }, []);
-
-  const persistedCodeVariant = React.useMemo(() => {
-    if (typeof window === 'undefined') {
-      return undefined;
-    }
-    return getCookie('codeVariant');
-  }, []);
-
-  /**
-   * we initialize from navigation or cookies. on subsequent renders the store is the
-   * truth
-   */
-  const codeVariant =
-    isFirstRender === true
-      ? navigatedCodeVariant || persistedCodeVariant || initialCodeVariant
-      : initialCodeVariant;
-
-  React.useEffect(() => {
-    if (codeVariant !== initialCodeVariant) {
-      setCodeVariant(codeVariant);
-    }
-  });
-
-  React.useEffect(() => {
-    document.cookie = `codeVariant=${codeVariant};path=/;max-age=31536000`;
-  }, [codeVariant]);
-
-  return codeVariant;
-}
-
-/**
- * basically just a `useAnalytics` hook.
- * However, it needs the redux store which is created
- * in the same component this "hook" is used.
- */
-function Analytics() {
-  React.useEffect(() => {
-    loadScript('https://www.google-analytics.com/analytics.js', document.querySelector('head'));
-  }, []);
-
-  const userLanguage = useUserLanguage();
-
-  const codeVariant = usePersistCodeVariant();
-  React.useEffect(() => {
-    window.ga('set', 'dimension1', codeVariant);
-  }, [codeVariant]);
-
-  React.useEffect(() => {
-    window.ga('set', 'dimension2', userLanguage);
-  }, [userLanguage]);
-
-  React.useEffect(() => {
-    /**
-     * @type {null | MediaQueryList}
-     */
-    let matchMedia = null;
-
-    /**
-     * Based on https://developer.mozilla.org/en-US/docs/Web/API/Window/devicePixelRatio#Monitoring_screen_resolution_or_zoom_level_changes
-     * Adjusted to track 3 or more different ratios
-     */
-    function trackDevicePixelRation() {
-      window.ga('set', 'dimension3', Math.round(window.devicePixelRatio * 10) / 10);
-
-      matchMedia = window.matchMedia(`(resolution: ${window.devicePixelRatio}dppx)`);
-      // Need to setup again.
-      // Otherwise we track only changes from the initial ratio to another.
-      // It would not track 3 or more different monitors/zoom stages
-      matchMedia.addListener(trackDevicePixelRation);
-    }
-
-    trackDevicePixelRation();
-
-    return () => {
-      matchMedia = null;
-    };
-  }, []);
 
   return null;
 }
@@ -291,7 +205,7 @@ function loadDependencies() {
   );
 }
 
-if (process.browser && process.env.NODE_ENV === 'production') {
+if (typeof window !== 'undefined' && process.env.NODE_ENV === 'production') {
   // eslint-disable-next-line no-console
   console.log(
     `%c
@@ -307,35 +221,6 @@ Tip: you can access the documentation \`theme\` object directly in the console.
 `,
     'font-family:monospace;color:#1976d2;font-size:12px;',
   );
-}
-
-function findActivePage(currentPages, pathname) {
-  const activePage = find(currentPages, (page) => {
-    if (page.children && pathname.indexOf(`${page.pathname}/`) === 0) {
-      // Check if one of the children matches (for /components)
-      return findActivePage(page.children, pathname);
-    }
-
-    // Should be an exact match if no children
-    return pathname === page.pathname;
-  });
-
-  if (!activePage) {
-    return null;
-  }
-
-  // We need to drill down
-  if (activePage.pathname !== pathname) {
-    return findActivePage(activePage.children, pathname);
-  }
-
-  if (activePage.pathname === '/api-docs/data-grid') {
-    // If the activePage is returned, it will crash.
-    // <AppLayoutDocsFooter /> won't find the links to the previous and next pages.
-    return activePage.children[0];
-  }
-
-  return activePage;
 }
 
 function AppWrapper(props) {
@@ -371,19 +256,20 @@ function AppWrapper(props) {
         ))}
       </NextHead>
       <UserLanguageProvider defaultUserLanguage={pageProps.userLanguage}>
-        <CodeVariantProvider>
-          <PageContext.Provider value={{ activePage, pages }}>
-            <ThemeProvider>
-              <DocsStyledEngineProvider cacheLtr={emotionCache}>
-                <XWrapper>{children}</XWrapper>
-              </DocsStyledEngineProvider>
-            </ThemeProvider>
-          </PageContext.Provider>
-          <LanguageNegotiation />
-          <Analytics />
-        </CodeVariantProvider>
+        <CodeCopyProvider>
+          <CodeVariantProvider>
+            <PageContext.Provider value={{ activePage, pages }}>
+              <ThemeProvider>
+                <DocsStyledEngineProvider cacheLtr={emotionCache}>
+                  {children}
+                  <GoogleAnalytics />
+                </DocsStyledEngineProvider>
+              </ThemeProvider>
+            </PageContext.Provider>
+            <LanguageNegotiation />
+          </CodeVariantProvider>
+        </CodeCopyProvider>
       </UserLanguageProvider>
-      <GoogleAnalytics key={router.route} />
     </React.Fragment>
   );
 }

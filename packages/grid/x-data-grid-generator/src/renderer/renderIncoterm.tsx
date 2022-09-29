@@ -1,28 +1,15 @@
 import * as React from 'react';
 import Tooltip from '@mui/material/Tooltip';
+import Box from '@mui/material/Box';
 import InfoIcon from '@mui/icons-material/Info';
-import { GridCellParams, GridCellValue } from '@mui/x-data-grid-pro';
-import { makeStyles } from '@mui/styles';
-
-const useStyles = makeStyles({
-  root: {
-    display: 'flex',
-    justifyContent: 'space-between',
-  },
-  icon: {
-    color: '#2196f3',
-    alignSelf: 'center',
-    marginLeft: 8,
-  },
-});
+import { GridRenderCellParams } from '@mui/x-data-grid-premium';
 
 interface IncotermProps {
-  value: GridCellValue;
+  value: string | null | undefined;
 }
 
 const Incoterm = React.memo(function Incoterm(props: IncotermProps) {
   const { value } = props;
-  const classes = useStyles();
 
   if (!value) {
     return null;
@@ -33,15 +20,15 @@ const Incoterm = React.memo(function Incoterm(props: IncotermProps) {
   const code = valueStr.slice(0, valueStr.indexOf('(')).trim();
 
   return (
-    <div className={classes.root}>
+    <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
       <span>{code}</span>
       <Tooltip title={tooltip}>
-        <InfoIcon className={classes.icon} />
+        <InfoIcon sx={{ color: '#2196f3', alignSelf: 'center', ml: '8px' }} />
       </Tooltip>
-    </div>
+    </Box>
   );
 });
 
-export function renderIncoterm(params: GridCellParams) {
-  return <Incoterm value={params.value!} />;
+export function renderIncoterm(params: GridRenderCellParams<string | null, any, any>) {
+  return <Incoterm value={params.value} />;
 }

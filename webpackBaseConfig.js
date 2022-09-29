@@ -13,12 +13,18 @@ module.exports = {
         './packages/grid/x-data-grid-generator/src',
       ),
       '@mui/x-data-grid-pro': path.resolve(__dirname, './packages/grid/x-data-grid-pro/src'),
+      '@mui/x-data-grid-premium': path.resolve(
+        __dirname,
+        './packages/grid/x-data-grid-premium/src',
+      ),
+      '@mui/x-date-pickers': path.resolve(__dirname, './packages/x-date-pickers/src'),
+      '@mui/x-date-pickers-pro': path.resolve(__dirname, './packages/x-date-pickers-pro/src'),
       '@mui/x-license-pro': path.resolve(__dirname, './packages/x-license-pro/src'),
       '@mui/markdown': path.resolve(
         __dirname,
-        './node_modules/@material-ui/monorepo/docs/packages/markdown',
+        './node_modules/@mui/monorepo/docs/packages/markdown',
       ),
-      docs: path.resolve(__dirname, './node_modules/@material-ui/monorepo/docs'),
+      docs: path.resolve(__dirname, './node_modules/@mui/monorepo/docs'),
       docsx: path.resolve(__dirname, './docs'),
     },
     extensions: ['.js', '.ts', '.tsx', '.d.ts'],
@@ -33,7 +39,7 @@ module.exports = {
     rules: [
       {
         test: /\.(js|ts|tsx)$/,
-        exclude: /node_modules\/(?!@material-ui)/,
+        exclude: /node_modules\/(?!@mui)/,
         loader: 'babel-loader',
         options: {
           cacheDirectory: true,
@@ -44,7 +50,7 @@ module.exports = {
         loader: 'raw-loader',
       },
       {
-        test: /\.tsx$/,
+        test: /\.(ts|tsx)$/,
         loader: 'string-replace-loader',
         options: {
           search: '__RELEASE_INFO__',
