@@ -3,7 +3,37 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-## v5.17.4
+## 5.17.5
+
+_Sep 29, 2022_
+
+We'd like to offer a big thanks to the 2 contributors who made this release possible. Here are some highlights ✨:
+
+- 🎁 Add theme augmentation module to DataGridPremium (#6316) @cherniavskii
+- 👀 Fix blank space when changing page with dynamic row height (#6320) @m4theushw
+- 📚 Improve controlled editing demo to make easier to reuse it (#6306) @cherniavskii
+- 🐞 Bugfixes
+
+### `@mui/x-data-grid@v5.17.5` / `@mui/x-data-grid-pro@v5.17.5` / `@mui/x-data-grid-premium@v5.17.5`
+
+#### Changes
+
+- [DataGrid] Fix `GridPagination` props typing (#6295) @cherniavskii
+- [DataGrid] Fix `GridRow` not forwarding `ref` to the root element (#6303) @cherniavskii
+- [DataGrid] Fix `undefined` value being showed in filter button tooltip text (#6271) @cherniavskii
+- [DataGrid] Fix blank space when changing page with dynamic row height (#6320) @m4theushw
+- [DataGrid] Revert cell/row mode if `processRowUpdate` fails (#6319) @m4theushw
+- [DataGridPremium] Add missing `themeAugmentation` module (#6316) @cherniavskii
+
+### Docs
+
+- [docs] Pass model change callbacks in controlled grid editing demos (#6306) @cherniavskii
+
+### Core
+
+- [core] Reduce the amount of updated screenshots reported by Argos (#6310) @cherniavskii
+
+## 5.17.4
 
 _Sep 22, 2022_
 
