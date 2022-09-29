@@ -132,10 +132,6 @@ We'd like to offer a big thanks to the 8 contributors who made this release poss
 - [core] Fix typo in the state updater of `useField` (#6311) @flaviendelangle
 - [core] Remove `GridFeatureModeConstant` (#6077) @DanailH
 - [core] Simplify testing architecture (#6043) @flaviendelangle
-<!-- - Revert "add `onCellFocusIn` prop" @cherniavskii -->
-<!-- - Revert "remove non-existent param from docs" @cherniavskii -->
-<!-- - add `onCellFocusIn` prop @cherniavskii -->
-<!-- - remove non-existent param from docs @cherniavskii -->
 - [test] Skip test in Chrome non-headless and Edge (#6318) @m4theushw
 
 ## 6.0.0-alpha.0
