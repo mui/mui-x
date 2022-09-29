@@ -1,9 +1,11 @@
 <LocalizationProvider dateAdapter={AdapterDayjs}>
-<SingleInputDateRangeField
-  value={value}
-  onChange={(newValue) => setValue(newValue)}
-/>
-LocalizationProvider>
+  <SingleInputDateRangeField
+    value={value}
+    onChange={(newValue) => setValue(newValue)}
+    sx={{ width: 400 }}
+  />
+</LocalizationProvider>
 <Typography>
-    Value: {value.map(date => (date == null ? 'null' : date.format('L'))).join(' – ')}
+  Value:{' '}
+  {value.map((date) => (date == null ? 'null' : date.format('L'))).join(' – ')}
 </Typography>

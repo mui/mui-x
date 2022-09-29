@@ -8,7 +8,7 @@ title: React Fields components
 
 :::warning
 These components are unstable.
-We might do some breaking change on their props to have the best component possible by the time of the stable release.
+We might do some breaking change on their props to have the best components possible by the time of the stable release.
 :::
 
 ## Introduction
@@ -76,3 +76,7 @@ You need to make sure the input is focused before imperatively updating the sele
 For range fields, you will not be able to use the string format since each section is present twice.
 We will add new apis in the future to better support this use case.
 :::
+
+### Headless usage
+
+{{"demo": "CustomUIDateField.js", "defaultCodeOpen": false }}

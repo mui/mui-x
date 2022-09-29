@@ -2,26 +2,32 @@ import * as React from 'react';
 import dayjs from 'dayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { Unstable_DateField as DateField } from '@mui/x-date-pickers/DateField';
+import { Unstable_DateTimeField as DateTimeField } from '@mui/x-date-pickers/DateTimeField';
 import Stack from '@mui/material/Stack';
 
-export default function CustomDateFormat() {
-  const [value, setValue] = React.useState(dayjs('2022-04-07'));
+export default function CustomDateTimeFormat() {
+  const [value, setValue] = React.useState(dayjs('2022-04-07T15:30'));
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <Stack spacing={2} sx={(theme) => ({ width: theme.spacing(48) })}>
-        <DateField
-          label="Dash separator"
+        <DateTimeField
+          label="Format with meridiem"
           value={value}
           onChange={(newValue) => setValue(newValue)}
-          format="MM-DD-YYYY"
+          format="L hh:mm a"
         />
-        <DateField
-          label="Full letter month"
+        <DateTimeField
+          label="Format without meridiem"
           value={value}
           onChange={(newValue) => setValue(newValue)}
-          format="LL"
+          format="L HH:mm"
+        />
+        <DateTimeField
+          label="Localized format with full letter month"
+          value={value}
+          onChange={(newValue) => setValue(newValue)}
+          format="LLL"
         />
       </Stack>
     </LocalizationProvider>
