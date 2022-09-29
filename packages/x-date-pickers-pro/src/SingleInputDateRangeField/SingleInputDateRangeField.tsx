@@ -31,8 +31,9 @@ export const SingleInputDateRangeField = React.forwardRef(function SingleInputDa
   }) as Omit<SingleInputDateRangeFieldProps<TDate>, 'components' | 'componentsProps'>;
 
   const {
-    onKeyDown,
     ref: inputRef,
+    onPaste,
+    inputMode,
     ...fieldProps
   } = useSingleInputDateRangeField<TDate, typeof inputProps>({
     props: inputProps,
@@ -43,7 +44,7 @@ export const SingleInputDateRangeField = React.forwardRef(function SingleInputDa
     <Input
       ref={ref}
       {...fieldProps}
-      inputProps={{ ...fieldProps.inputProps, ref: inputRef, onKeyDown }}
+      inputProps={{ ...fieldProps.inputProps, ref: inputRef, onPaste, inputMode }}
     />
   );
 }) as DateRangeFieldComponent;

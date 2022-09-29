@@ -8,8 +8,8 @@ const formatTokenMap: MuiFormatTokenMap = {
   M: 'month',
   Mo: 'month',
   MM: 'month',
-  MMM: 'month',
-  MMMM: 'month',
+  MMM: { sectionName: 'month', contentType: 'letter' },
+  MMMM: { sectionName: 'month', contentType: 'letter' },
 
   // Day of Month
   D: 'day',
@@ -17,10 +17,10 @@ const formatTokenMap: MuiFormatTokenMap = {
   DD: 'day',
 
   // Year
+  Y: 'year',
   YY: 'year',
   YYYY: 'year',
   YYYYYY: 'year',
-  Y: 'year',
 
   // AM / PM
   A: 'am-pm',
