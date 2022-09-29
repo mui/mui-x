@@ -3,6 +3,110 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 6.0.0-alpha.1
+<!-- generated comparing v6.0.0-alpha.0..next -->
+_Sep 29, 2022_
+
+We'd like to offer a big thanks to the 8 contributors who made this release possible. Here are some highlights ✨:
+
+- 🚀 Better support for custom overlays (#5808) @cherniavskii
+- 🖨️ Improve print export (#6273) @oliviertassinari
+- 🎁 Support slots on the `DateField` component  (#6048) @flaviendelangle
+- 📚 Documentation improvements
+- 🐞 Bugfixes
+
+### `@mui/x-data-grid@v6.0.0-alpha.1` / `@mui/x-data-grid-pro@v6.0.0-alpha.1` / `@mui/x-data-grid-premium@v6.0.0-alpha.1`
+
+#### Breaking changes
+
+- Some selectors related to the rows have been renamed to better describe the type of rows they are returning:
+
+  ```diff
+  -const result = gridRowsIdToIdLookupSelector(apiRef);
+  +const result = gridRowsDataRowIdToIdLookupSelector(apiRef);
+  ```
+
+  ```diff
+  -const result = gridRowTreeDepthSelector(apiRef);
+  +const result = gridRowMaximumTreeDepthSelector(apiRef);
+  ```
+
+  The format of the tree nodes (the element accessible in `params.node` or with the `apiRef.current.getRowNode` method) have changed.
+  You have a new `type` property, which can be useful, for example, to apply custom behavior on groups.
+  Here is an example of the old and new approach showing how to apply a custom value formatter in groups for the grouping column:
+
+  ```diff
+   <DataGridPremium 
+     groupingColDef={() => ({
+       valueFormatter: (params) => {
+         if (params.id == null) {
+           return params.value;
+         }
+
+         const rowNode = apiRef.current.getRowNode(params.id!)!;
+  -      if (rowNode.children?.length) {
+  +      if (rowNode.type === 'group') {
+           return `by ${rowNode.groupingKey ?? ''}`;
+         }
+
+         return params.value;
+       }
+     })}
+   />
+  ```
+
+- The `GridFeatureModeConstant` constant no longer exists.
+
+  ```diff
+  -import { GridFeatureModeConstant } from '@mui/x-data-grid';
+  ```
+
+#### Changes
+
+- [DataGrid] Fix `GridPagination` props typing (#6238) @cherniavskii
+- [DataGrid] Fix `GridRow` not forwarding `ref` to the root element (#6274) @cherniavskii
+- [DataGrid] Fix `undefined` value being showed in filter button tooltip text (#6259) @cherniavskii
+- [DataGrid] Fix blank space when changing page with dynamic row height (#6049) @m4theushw
+- [DataGrid] New internal rows structure for v6 (#4927) @flaviendelangle
+- [DataGrid] Revert cell/row mode if `processRowUpdate` fails (#6185) @m4theushw
+- [DataGrid] Rework overlays layout (#5808) @cherniavskii
+- [DataGrid] Improve print support (#6273) @oliviertassinari
+- [DataGridPremium] Add missing `themeAugmentation` module (#6270) @cherniavskii
+
+### `@mui/x-date-pickers@v6.0.0-alpha.1` / `@mui/x-date-pickers-pro@v6.0.0-alpha.1`
+
+#### Changes
+
+- [DatePicker] Open in a valid month (#6309) @alexfauquette
+- [DateTimePicker] Fix validation with `shouldDisableMonth` and `shouldDisableYear` (#6266) @flaviendelangle
+- [TimePicker] Add support for `disablePast` and `disableFuture` validation props (#6226) @LukasTy
+- [CalendarPicker] Prevent getting focus when `autoFocus=false` (#6304) @alexfauquette
+- [DateField] Extend moment adapter to support `expandFormat` and `formatTokenMap` (#6215) @alexfauquette
+- [pickers] Allow to control the selected sections (#6209, #6307) @flaviendelangle
+- [pickers] Do not loose the value of date sections not present in the format in the new field components (#6141) @flaviendelangle
+- [pickers] Do not support unparsed date formats anymore (#6170) @flaviendelangle
+- [pickers] Support slots on the `DateField` component  (#6048) @flaviendelangle
+- [pickers] Try adapter to luxon v3 (#6069) @alexfauquette
+
+### Docs
+
+- [docs] Fix issue in DataGrid/DataGridPro row styling demo (#6264) @MBilalShafi
+- [docs] Improve pickers Getting Started examples (#6292) @flaviendelangle
+- [docs] Pass model change callbacks in controlled grid editing demos (#6296) @cherniavskii
+- [docs] Update the CodeSandbox to use the `next` branch (#6275) @oliviertassinari
+
+### Core
+
+- [core] Fix typing error (#6291) @flaviendelangle
+- [core] Fix typo in the state updater of `useField` (#6311) @flaviendelangle
+- [core] Remove `GridFeatureModeConstant` (#6077) @DanailH
+- [core] Simplify testing architecture (#6043) @flaviendelangle
+<!-- - Revert "add `onCellFocusIn` prop" @cherniavskii -->
+<!-- - Revert "remove non-existent param from docs" @cherniavskii -->
+<!-- - add `onCellFocusIn` prop @cherniavskii -->
+<!-- - remove non-existent param from docs @cherniavskii -->
+- [test] Skip test in Chrome non-headless and Edge (#6318) @m4theushw
+
 ## 6.0.0-alpha.0
 
 _Sep 22, 2022_
