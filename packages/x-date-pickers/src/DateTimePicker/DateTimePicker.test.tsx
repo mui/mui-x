@@ -41,7 +41,7 @@ describe('<DateTimePicker />', () => {
     render(
       <DateTimePicker
         renderInput={(params) => <TextField {...params} />}
-        onChange={() => { }}
+        onChange={() => {}}
         value={null}
       />,
     );

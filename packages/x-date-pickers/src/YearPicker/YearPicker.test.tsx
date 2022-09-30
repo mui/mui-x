@@ -25,7 +25,7 @@ describe('<YearPicker />', () => {
       minDate={adapterToUse.date(new Date(2019, 0, 1))}
       maxDate={adapterToUse.date(new Date(2029, 0, 1))}
       value={adapterToUse.date()}
-      onChange={() => { }}
+      onChange={() => {}}
     />,
     () => ({
       classes,
@@ -172,7 +172,7 @@ describe('<YearPicker />', () => {
         maxDate={adapterToUse.date(new Date(2020, 3, 1))}
         // date is chose such as replacing year by 2018 or 2020 makes it out of valid range
         value={adapterToUse.date(new Date(2019, 7, 1))}
-        onChange={() => { }}
+        onChange={() => {}}
         autoFocus // needed to allow keyboard navigation
       />,
     );

@@ -24,7 +24,7 @@ describe('<DatePicker />', () => {
         <DatePicker
           inputRef={inputRef}
           value={null}
-          onChange={() => { }}
+          onChange={() => {}}
           renderInput={(params) => <TextField {...params} />}
         />,
       );
@@ -60,7 +60,7 @@ describe('<DatePicker />', () => {
       render(
         <DatePicker
           renderInput={(params) => <TextField {...params} />}
-          onChange={() => { }}
+          onChange={() => {}}
           value={null}
         />,
       );
@@ -77,7 +77,7 @@ describe('<DatePicker />', () => {
       render(
         <DatePicker
           renderInput={(params) => <TextField {...params} />}
-          onChange={() => { }}
+          onChange={() => {}}
           value={new Date(2019, 5, 5)}
           openTo="year"
         />,

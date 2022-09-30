@@ -21,7 +21,7 @@ describe('<TimePicker />', () => {
 
   describeConformance(
     <TimePicker
-      onChange={() => { }}
+      onChange={() => {}}
       renderInput={(props) => <TextField {...props} />}
       value={null}
     />,
@@ -67,7 +67,7 @@ describe('<TimePicker />', () => {
     render(
       <TimePicker
         renderInput={(params) => <TextField {...params} />}
-        onChange={() => { }}
+        onChange={() => {}}
         value={null}
       />,
     );

@@ -43,7 +43,7 @@ describe('<DesktopDatePicker />', () => {
       <DesktopDatePicker
         label="icon test example"
         value={null}
-        onChange={() => { }}
+        onChange={() => {}}
         components={{
           OpenPickerIcon: HomeIcon,
         }}
@@ -67,7 +67,7 @@ describe('<DesktopDatePicker />', () => {
     render(
       <DesktopDatePicker
         renderInput={(params) => <TextField {...params} />}
-        onChange={() => { }}
+        onChange={() => {}}
         value={testDate}
         components={{
           PaperContent: CustomPaperContent,
@@ -88,7 +88,7 @@ describe('<DesktopDatePicker />', () => {
         <DesktopDatePicker
           value={adapterToUse.date(new Date(2019, 0, 1))}
           {...{ [prop]: true }}
-          onChange={() => { }}
+          onChange={() => {}}
           onOpen={handleOpen}
           open={false}
           renderInput={(params) => <TextField {...params} />}
@@ -155,7 +155,7 @@ describe('<DesktopDatePicker />', () => {
       <DesktopDatePicker
         open
         showToolbar
-        onChange={() => { }}
+        onChange={() => {}}
         TransitionComponent={FakeTransitionComponent}
         value={adapterToUse.date(new Date(2018, 0, 1))}
         renderInput={(params) => <TextField {...params} />}
@@ -171,7 +171,7 @@ describe('<DesktopDatePicker />', () => {
       <DesktopDatePicker
         open
         showToolbar
-        onChange={() => { }}
+        onChange={() => {}}
         TransitionComponent={FakeTransitionComponent}
         value={adapterToUse.date(new Date(2018, 0, 1))}
         renderInput={(params) => <TextField {...params} />}
@@ -193,7 +193,7 @@ describe('<DesktopDatePicker />', () => {
       render(
         <DesktopDatePicker
           open
-          onChange={() => { }}
+          onChange={() => {}}
           PopperProps={{
             onClick: handleClick,
             onTouchStart: handleTouchStart,
@@ -221,7 +221,7 @@ describe('<DesktopDatePicker />', () => {
       render(
         <DesktopDatePicker
           open
-          onChange={() => { }}
+          onChange={() => {}}
           PaperProps={{
             onClick: handleClick,
             onTouchStart: handleTouchStart,
@@ -294,7 +294,7 @@ describe('<DesktopDatePicker />', () => {
             <DesktopDatePicker
               value={adapterToUse.date(new Date(2018, 0, 1))}
               OpenPickerButtonProps={{ ref: anchorElRef }}
-              onChange={() => { }}
+              onChange={() => {}}
               onClose={handleClose}
               onOpen={handleOpen}
               renderInput={(params) => <TextField {...params} />}

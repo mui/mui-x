@@ -42,7 +42,7 @@ const testsToRun = {
 export default function describeValidation(minimalElement, getOptions) {
   describe('Pickers validation API', () => {
     const {
-      after: runAfterHook = () => { },
+      after: runAfterHook = () => {},
       props = defaultAvailableProps,
       views = [],
       ignoredProps = [],

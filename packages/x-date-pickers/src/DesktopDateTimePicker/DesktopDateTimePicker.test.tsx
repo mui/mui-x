@@ -40,7 +40,7 @@ describe('<DesktopDateTimePicker />', () => {
         <DesktopDateTimePicker
           value={adapterToUse.date(new Date(2019, 0, 1))}
           {...{ [prop]: true }}
-          onChange={() => { }}
+          onChange={() => {}}
           onOpen={handleOpen}
           open={false}
           renderInput={(params) => <TextField {...params} />}
@@ -79,7 +79,7 @@ describe('<DesktopDateTimePicker />', () => {
       <DesktopDateTimePicker
         open
         openTo="minutes"
-        onChange={() => { }}
+        onChange={() => {}}
         renderInput={(params) => <TextField {...params} />}
         value={adapterToUse.date(new Date(2018, 0, 1, 12))}
         minDateTime={adapterToUse.date(new Date(2018, 0, 1, 12, 30))}
@@ -95,7 +95,7 @@ describe('<DesktopDateTimePicker />', () => {
       <DesktopDateTimePicker
         open
         openTo="hours"
-        onChange={() => { }}
+        onChange={() => {}}
         ampm={false}
         renderInput={(params) => <TextField {...params} />}
         value={adapterToUse.date(new Date(2018, 0, 1))}
@@ -138,7 +138,7 @@ describe('<DesktopDateTimePicker />', () => {
       <DesktopDateTimePicker
         open
         openTo="hours"
-        onChange={() => { }}
+        onChange={() => {}}
         renderInput={(params) => <TextField {...params} />}
         value={adapterToUse.date(new Date(2018, 0, 1))}
       />,
@@ -152,7 +152,7 @@ describe('<DesktopDateTimePicker />', () => {
       <DesktopDateTimePicker
         open
         openTo="hours"
-        onChange={() => { }}
+        onChange={() => {}}
         renderInput={(params) => <TextField {...params} />}
         value={adapterToUse.date(new Date(2018, 0, 1))}
       />,
@@ -250,7 +250,7 @@ describe('<DesktopDateTimePicker />', () => {
       render(
         <DesktopDateTimePicker
           open
-          onChange={() => { }}
+          onChange={() => {}}
           PopperProps={{
             onClick: handleClick,
             onTouchStart: handleTouchStart,
@@ -278,7 +278,7 @@ describe('<DesktopDateTimePicker />', () => {
       render(
         <DesktopDateTimePicker
           open
-          onChange={() => { }}
+          onChange={() => {}}
           PaperProps={{
             onClick: handleClick,
             onTouchStart: handleTouchStart,

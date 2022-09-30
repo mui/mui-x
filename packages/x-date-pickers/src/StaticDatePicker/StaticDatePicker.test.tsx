@@ -24,7 +24,7 @@ describe('<StaticDatePicker />', () => {
     render(
       <StaticDatePicker
         value={adapterToUse.date(new Date(2019, 0, 1))}
-        onChange={() => { }}
+        onChange={() => {}}
         renderInput={(params) => <TextField {...params} />}
       />,
     );
@@ -38,7 +38,7 @@ describe('<StaticDatePicker />', () => {
       <StaticDatePicker
         reduceAnimations
         value={adapterToUse.date(new Date(2019, 0, 1))}
-        onChange={() => { }}
+        onChange={() => {}}
         renderInput={(params) => <TextField {...params} />}
       />,
     );

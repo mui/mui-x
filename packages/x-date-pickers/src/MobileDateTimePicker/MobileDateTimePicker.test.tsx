@@ -36,7 +36,7 @@ describe('<MobileDateTimePicker />', () => {
       <MobileDateTimePicker
         renderInput={(params) => <TextField {...params} />}
         open
-        onChange={() => { }}
+        onChange={() => {}}
         value={adapterToUse.date(new Date(2018, 0, 1))}
       />,
     );
@@ -48,7 +48,7 @@ describe('<MobileDateTimePicker />', () => {
     render(
       <MobileDateTimePicker
         renderInput={(params) => <TextField {...params} />}
-        onChange={() => { }}
+        onChange={() => {}}
         open
         showToolbar
         value={adapterToUse.date(new Date(2021, 10, 20, 10, 1, 22))}
@@ -66,7 +66,7 @@ describe('<MobileDateTimePicker />', () => {
     render(
       <MobileDateTimePicker
         open
-        onChange={() => { }}
+        onChange={() => {}}
         value={adapterToUse.date(new Date(2021, 10, 20, 10, 1, 22))}
         renderInput={(params) => <TextField {...params} />}
       />,
@@ -81,7 +81,7 @@ describe('<MobileDateTimePicker />', () => {
       <MobileDateTimePicker
         open
         showToolbar={false}
-        onChange={() => { }}
+        onChange={() => {}}
         value={adapterToUse.date(new Date(2021, 10, 20, 10, 1, 22))}
         renderInput={(params) => <TextField {...params} />}
       />,
@@ -96,7 +96,7 @@ describe('<MobileDateTimePicker />', () => {
       <MobileDateTimePicker
         open
         hideTabs
-        onChange={() => { }}
+        onChange={() => {}}
         value={adapterToUse.date(new Date(2021, 10, 20, 10, 1, 22))}
         renderInput={(params) => <TextField {...params} />}
       />,
@@ -110,7 +110,7 @@ describe('<MobileDateTimePicker />', () => {
     render(
       <MobileDateTimePicker
         renderInput={(params) => <TextField {...params} />}
-        onChange={() => { }}
+        onChange={() => {}}
         open
         showToolbar
         openTo="seconds"
