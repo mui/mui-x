@@ -350,5 +350,16 @@ describe('e2e', () => {
         await page.evaluate(() => (document.activeElement as HTMLInputElement).value),
       ).to.equal('0-1');
     });
+
+    it('should autofocus the first column switch after columns panel opened', async () => {
+      await renderFixture('DataGrid/ColumnsPanelAutoFocus');
+
+      await page.click('[type="button"][aria-label="Select columns"]');
+      await sleep(50);
+
+      expect(
+        await page.evaluate(() => (document.activeElement as HTMLInputElement).checked),
+      ).to.equal(true);
+    });
   });
 });

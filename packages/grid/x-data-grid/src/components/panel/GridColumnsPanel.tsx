@@ -65,6 +65,12 @@ export interface GridColumnsPanelProps extends GridPanelWrapperProps {
    * If not specified, the order is derived from the `columns` prop.
    */
   sort?: 'asc' | 'desc';
+  /*
+   * whether to autoFocus the column search field by default. If false,
+   * it will autoFocus the first column switch input. This could help to
+   * avoid input keyboard panel to popup automatically for touch devices.
+   */
+  autoFocusSearchField?: boolean;
 }
 
 const collator = new Intl.Collator();
@@ -78,8 +84,9 @@ function GridColumnsPanel(props: GridColumnsPanelProps) {
   const [searchValue, setSearchValue] = React.useState('');
   const ownerState = { classes: rootProps.classes };
   const classes = useUtilityClasses(ownerState);
+  const inputRefs = React.useRef<Record<string, HTMLInputElement>>({});
 
-  const { sort, ...other } = props;
+  const { sort, autoFocusSearchField = true, ...other } = props;
 
   const sortedColumns = React.useMemo(() => {
     switch (sort) {
@@ -149,9 +156,16 @@ function GridColumnsPanel(props: GridColumnsPanelProps) {
     );
   }, [sortedColumns, searchValue]);
 
+  const attachInputRefs = (index: number) => (el: HTMLInputElement) => {
+    inputRefs.current[index] = el;
+  };
   React.useEffect(() => {
-    searchInputRef.current!.focus();
-  }, []);
+    if (autoFocusSearchField) {
+      searchInputRef.current!.focus();
+    } else {
+      inputRefs.current[0].focus();
+    }
+  }, [autoFocusSearchField]);
 
   return (
     <GridPanelWrapper {...other}>
@@ -169,7 +183,7 @@ function GridColumnsPanel(props: GridColumnsPanelProps) {
       </GridPanelHeader>
       <GridPanelContent>
         <GridColumnsPanelRoot className={classes.root}>
-          {currentColumns.map((column) => (
+          {currentColumns.map((column, index) => (
             <GridColumnsPanelRowRoot className={classes.columnsPanelRow} key={column.field}>
               <FormControlLabel
                 control={
@@ -179,6 +193,7 @@ function GridColumnsPanel(props: GridColumnsPanelProps) {
                     onClick={toggleColumn}
                     name={column.field}
                     size="small"
+                    inputRef={attachInputRefs(index)}
                     {...rootProps.componentsProps?.baseSwitch}
                   />
                 }
@@ -223,6 +238,7 @@ GridColumnsPanel.propTypes = {
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
   sort: PropTypes.oneOf(['asc', 'desc']),
+  autoFocusSearchField: PropTypes.bool,
 } as any;
 
 export { GridColumnsPanel };
