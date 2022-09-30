@@ -2,6 +2,7 @@ import * as React from 'react';
 import { MuiDateSectionName, MuiPickerFieldAdapter } from '../../models';
 import { PickerStateValueManager } from '../usePickerState';
 import { InferError, Validator } from '../validation/useValidation';
+import { PickersLocaleText } from '../../../locales/utils/pickersLocaleTextApi';
 
 export interface UseFieldParams<
   TValue,
@@ -79,7 +80,7 @@ export interface FieldSection {
   start: number;
   end: number;
   value: string;
-  emptyValue: string;
+  placeholder: string;
   separator: string | null;
   dateSectionName: MuiDateSectionName;
   contentType: 'digit' | 'letter';
@@ -131,6 +132,7 @@ export interface FieldValueManager<TValue, TDate, TSection extends FieldSection,
    * The `prevSections` are used on the range fields to avoid losing the sections of a partially filled date when editing the other date.
    * @template TValue, TDate, TSection
    * @param {MuiPickersAdapter<TDate>} utils The utils to manipulate the date.
+   * @param {PickersLocaleText<TDate>} localeText The localization object to generate the placeholders.
    * @param {TSection[] | null} prevSections The last section list stored in state.
    * @param {TValue} value The current value to generate sections from.
    * @param {string} format The date format.
@@ -138,6 +140,7 @@ export interface FieldValueManager<TValue, TDate, TSection extends FieldSection,
    */
   getSectionsFromValue: (
     utils: MuiPickerFieldAdapter<TDate>,
+    localeText: PickersLocaleText<TDate>,
     prevSections: TSection[] | null,
     value: TValue,
     format: string,

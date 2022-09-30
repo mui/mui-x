@@ -70,6 +70,15 @@ const frFRPickers: Partial<PickersLocaleText<any>> = {
   // Table labels
   timeTableLabel: "choix de l'heure",
   dateTableLabel: 'choix de la date',
+
+  // Field section placeholders
+  // fieldYearPlaceholder: params => 'Y'.repeat(params.digitAmount),
+  // fieldMonthPlaceholder: params => params.contentType === 'letter' ? 'MMMM' : 'MM',
+  // fieldDayPlaceholder: () => 'DD',
+  // fieldHoursPlaceholder: () => 'hh',
+  // fieldMinutesPlaceholder: () => 'mm',
+  // fieldSecondsPlaceholder: () => 'ss',
+  // fieldMeridiemPlaceholder: () => 'am/pm',
 };
 
 export const frFR = getPickersLocalization(frFRPickers);

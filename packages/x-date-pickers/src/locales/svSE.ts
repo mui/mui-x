@@ -54,6 +54,15 @@ const svSEPickers: Partial<PickersLocaleText<any>> = {
   // Table labels
   timeTableLabel: 'välj tid',
   dateTableLabel: 'välj datum',
+
+  // Field section placeholders
+  // fieldYearPlaceholder: params => 'Y'.repeat(params.digitAmount),
+  // fieldMonthPlaceholder: params => params.contentType === 'letter' ? 'MMMM' : 'MM',
+  // fieldDayPlaceholder: () => 'DD',
+  // fieldHoursPlaceholder: () => 'hh',
+  // fieldMinutesPlaceholder: () => 'mm',
+  // fieldSecondsPlaceholder: () => 'ss',
+  // fieldMeridiemPlaceholder: () => 'am/pm',
 };
 
 export const svSE = getPickersLocalization(svSEPickers);

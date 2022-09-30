@@ -45,7 +45,7 @@ export const dateRangeFieldValueManager: FieldValueManager<
 
     return [prevReferenceValue[1], value[1]];
   },
-  getSectionsFromValue: (utils, prevSections, [start, end], format) => {
+  getSectionsFromValue: (utils, localeText, prevSections, [start, end], format) => {
     const prevDateRangeSections =
       prevSections == null
         ? { startDate: null, endDate: null }
@@ -58,7 +58,7 @@ export const dateRangeFieldValueManager: FieldValueManager<
         return prevDateSections;
       }
 
-      return splitFormatIntoSections(utils, format, newDate);
+      return splitFormatIntoSections(utils, localeText, format, newDate);
     };
 
     const rawSectionsOfStartDate = getSections(start, prevDateRangeSections.startDate);

@@ -1,5 +1,6 @@
 import { FieldSection, AvailableAdjustKeyCode } from './useField.interfaces';
 import { MuiPickerFieldAdapter, MuiDateSectionName } from '../../models';
+import { PickersLocaleText } from '../../../locales/utils/pickersLocaleTextApi';
 
 export const getDateSectionConfigFromFormatToken = <TDate>(
   utils: MuiPickerFieldAdapter<TDate>,
@@ -233,7 +234,7 @@ export const adjustInvalidDateSectionValue = <TDate, TSection extends FieldSecti
 };
 
 export const getSectionVisibleValue = (section: Omit<FieldSection, 'start' | 'end'>) =>
-  section.value || section.emptyValue;
+  section.value || section.placeholder;
 
 export const addPositionPropertiesToSections = <TSection extends FieldSection>(
   sections: Omit<TSection, 'start' | 'end'>[],
@@ -253,20 +254,9 @@ export const addPositionPropertiesToSections = <TSection extends FieldSection>(
   return newSections;
 };
 
-const formatDateWithPlaceholder = <TDate>(
-  utils: MuiPickerFieldAdapter<TDate>,
-  date: TDate | null,
-  format: string,
-) => {
-  if (date == null) {
-    return '';
-  }
-
-  return utils.formatByString(date, format);
-};
-
 export const splitFormatIntoSections = <TDate>(
   utils: MuiPickerFieldAdapter<TDate>,
+  localeText: PickersLocaleText<TDate>,
   format: string,
   date: TDate | null,
 ) => {
@@ -274,52 +264,87 @@ export const splitFormatIntoSections = <TDate>(
   const sections: Omit<FieldSection, 'start' | 'end'>[] = [];
   const expandedFormat = utils.expandFormat(format);
 
+  const commitCurrentToken = () => {
+    if (currentTokenValue === '') {
+      return;
+    }
+
+    const sectionConfig = getDateSectionConfigFromFormatToken(utils, currentTokenValue);
+    const sectionValue = date == null ? '' : utils.formatByString(date, currentTokenValue);
+
+    let placeholder: string;
+    switch (sectionConfig.dateSectionName) {
+      case 'year': {
+        placeholder = localeText.fieldYearPlaceholder({
+          digitAmount: utils.formatByString(utils.date()!, currentTokenValue).length,
+        });
+        break;
+      }
+
+      case 'month': {
+        placeholder = localeText.fieldMonthPlaceholder({
+          contentType: sectionConfig.contentType,
+        });
+        break;
+      }
+
+      case 'day': {
+        placeholder = localeText.fieldDayPlaceholder();
+        break;
+      }
+
+      case 'hour': {
+        placeholder = localeText.fieldHoursPlaceholder();
+        break;
+      }
+
+      case 'minute': {
+        placeholder = localeText.fieldMinutesPlaceholder();
+        break;
+      }
+
+      case 'second': {
+        placeholder = localeText.fieldSecondsPlaceholder();
+        break;
+      }
+
+      case 'am-pm': {
+        placeholder = localeText.fieldMeridiemPlaceholder();
+        break;
+      }
+
+      default: {
+        placeholder = currentTokenValue;
+      }
+    }
+
+    sections.push({
+      ...sectionConfig,
+      formatValue: currentTokenValue,
+      value: sectionValue,
+      placeholder,
+      separator: '',
+      edited: false,
+    });
+
+    currentTokenValue = '';
+  };
+
   for (let i = 0; i < expandedFormat.length; i += 1) {
     const char = expandedFormat[i];
-    if (!char.match(/([A-zÀ-ú]+)/g)) {
-      if (currentTokenValue === '') {
-        sections[sections.length - 1].separator += char;
-      } else {
-        const dateForCurrentToken = formatDateWithPlaceholder(utils, date, currentTokenValue);
-        if (dateForCurrentToken === currentTokenValue) {
-          sections[sections.length - 1].separator += currentTokenValue;
-          currentTokenValue = '';
-        } else {
-          const sectionConfig = getDateSectionConfigFromFormatToken(utils, currentTokenValue);
 
-          sections.push({
-            ...sectionConfig,
-            formatValue: currentTokenValue,
-            value: dateForCurrentToken,
-            emptyValue: sectionConfig.dateSectionName,
-            separator: char,
-            edited: false,
-          });
-          currentTokenValue = '';
-        }
-      }
-    } else {
+    if (char.match(/([A-zÀ-ú]+)/g)) {
       currentTokenValue += char;
-    }
-
-    if (i === expandedFormat.length - 1) {
-      const dateForCurrentToken = formatDateWithPlaceholder(utils, date, currentTokenValue);
-      if (dateForCurrentToken === currentTokenValue) {
-        sections[sections.length - 1].separator += currentTokenValue;
-      } else {
-        const sectionConfig = getDateSectionConfigFromFormatToken(utils, currentTokenValue);
-
-        sections.push({
-          ...sectionConfig,
-          formatValue: currentTokenValue,
-          value: dateForCurrentToken,
-          emptyValue: sectionConfig.dateSectionName,
-          separator: null,
-          edited: false,
-        });
+    } else {
+      if (currentTokenValue !== '') {
+        commitCurrentToken();
       }
+
+      sections[sections.length - 1].separator += char;
     }
   }
+
+  commitCurrentToken();
 
   return sections;
 };

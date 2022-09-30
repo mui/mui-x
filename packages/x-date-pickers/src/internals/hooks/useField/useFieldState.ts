@@ -1,7 +1,7 @@
 import * as React from 'react';
 import useControlled from '@mui/utils/useControlled';
 import { MuiPickerFieldAdapter } from '../../models/muiPickersAdapter';
-import { useUtils } from '../useUtils';
+import { useUtils, useLocaleText } from '../useUtils';
 import {
   FieldSection,
   UseFieldForwardedProps,
@@ -34,6 +34,7 @@ export const useFieldState = <
   params: UseFieldParams<TValue, TDate, TSection, TForwardedProps, TInternalProps>,
 ) => {
   const utils = useUtils<TDate>() as MuiPickerFieldAdapter<TDate>;
+  const localeText = useLocaleText();
 
   const {
     valueManager,
@@ -55,6 +56,7 @@ export const useFieldState = <
   const [state, setState] = React.useState<UseFieldState<TValue, TSection>>(() => {
     const sections = fieldValueManager.getSectionsFromValue(
       utils,
+      localeText,
       null,
       valueFromTheOutside,
       format,
@@ -106,6 +108,7 @@ export const useFieldState = <
   }: Pick<UseFieldState<TValue, TSection>, 'value' | 'referenceValue'>) => {
     const newSections = fieldValueManager.getSectionsFromValue(
       utils,
+      localeText,
       state.sections,
       value,
       format,
@@ -217,6 +220,7 @@ export const useFieldState = <
     if (!valueManager.areValuesEqual(utils, state.value, valueFromTheOutside)) {
       const sections = fieldValueManager.getSectionsFromValue(
         utils,
+        localeText,
         state.sections,
         valueFromTheOutside,
         format,
@@ -237,6 +241,7 @@ export const useFieldState = <
   React.useEffect(() => {
     const sections = fieldValueManager.getSectionsFromValue(
       utils,
+      localeText,
       state.sections,
       state.value,
       format,
