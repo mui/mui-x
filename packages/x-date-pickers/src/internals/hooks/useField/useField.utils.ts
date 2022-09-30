@@ -345,7 +345,10 @@ export const splitFormatIntoSections = <TDate>(
 
   commitCurrentToken();
 
-  return sections;
+  return sections.map((section) => ({
+    ...section,
+    separator: section.separator === '/' ? ' / ' : section.separator,
+  }));
 };
 
 export const createDateStrFromSections = (sections: FieldSection[]) =>

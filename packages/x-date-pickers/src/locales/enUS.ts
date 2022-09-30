@@ -67,7 +67,7 @@ const enUSPickers: PickersLocaleText<any> = {
   fieldHoursPlaceholder: () => 'hh',
   fieldMinutesPlaceholder: () => 'mm',
   fieldSecondsPlaceholder: () => 'ss',
-  fieldMeridiemPlaceholder: () => 'am/pm',
+  fieldMeridiemPlaceholder: () => '(a|p)m',
 };
 
 export const DEFAULT_LOCALE = enUSPickers;
