@@ -739,9 +739,11 @@ describe('<DesktopDateRangePicker />', () => {
       // Dismiss the picker
       const input = document.getElementById('test-id')!;
 
-      fireEvent.mouseDown(input);
-      input.focus();
-      fireEvent.mouseUp(input);
+      act(() => {
+        fireEvent.mouseDown(input);
+        input.focus();
+        fireEvent.mouseUp(input);
+      });
 
       clock.runToLast();
 
@@ -793,7 +795,9 @@ describe('<DesktopDateRangePicker />', () => {
       openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'start' });
       expect(screen.getByRole('tooltip')).toBeVisible();
 
-      screen.getAllByRole('textbox')[0].blur();
+      act(() => {
+        screen.getAllByRole('textbox')[0].blur();
+      });
       clock.runToLast();
 
       expect(onChange.callCount).to.equal(0);
@@ -826,7 +830,9 @@ describe('<DesktopDateRangePicker />', () => {
       userEvent.mousePress(getPickerDay('3'));
       clock.runToLast();
 
-      screen.getAllByRole('textbox')[1].blur();
+      act(() => {
+        screen.getAllByRole('textbox')[1].blur();
+      });
       clock.runToLast();
 
       expect(onChange.callCount).to.equal(1); // Start date change
