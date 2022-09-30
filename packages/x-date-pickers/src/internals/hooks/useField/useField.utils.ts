@@ -365,15 +365,15 @@ export const getMonthsMatchingQuery = <TDate, TSection extends FieldSection>(
   }
 };
 
-export const getSectionValueNumericBoundaries = <TDate>(
+export const getSectionValueNumericBoundaries = <TDate, TSection extends FieldSection>(
   utils: MuiPickerFieldAdapter<TDate>,
   date: TDate,
-  dateSectionName: MuiDateSectionName,
+  section: TSection,
 ) => {
   const dateWithFallback = utils.isValid(date) ? date : utils.date()!;
   const endOfYear = utils.endOfYear(dateWithFallback);
 
-  switch (dateSectionName) {
+  switch (section.dateSectionName) {
     case 'day':
       return {
         minimum: 1,
@@ -387,11 +387,14 @@ export const getSectionValueNumericBoundaries = <TDate>(
       };
     }
 
-    case 'year':
+    case 'year': {
+      const currentYear = utils.formatByString(utils.date()!, section.formatValue);
+
       return {
         minimum: 1,
-        maximum: 9999,
+        maximum: currentYear.length === 4 ? 9999 : 99,
       };
+    }
 
     // TODO: Limit to 11 when using AM-PM
     case 'hour': {
@@ -428,13 +431,13 @@ export const applySectionValueToDate = <TDate>({
   utils,
   dateSectionName,
   date,
-  getSectionValue,
+  getNumericSectionValue,
   getMeridiemSectionValue,
 }: {
   utils: MuiPickerFieldAdapter<TDate>;
   dateSectionName: MuiDateSectionName;
   date: TDate;
-  getSectionValue: (getter: (date: TDate) => number) => number;
+  getNumericSectionValue: (getter: (date: TDate) => number) => number;
   getMeridiemSectionValue: () => string;
 }) => {
   if (dateSectionName === 'meridiem') {
@@ -486,7 +489,7 @@ export const applySectionValueToDate = <TDate>({
   }
 
   if (methods) {
-    return methods.setter(date, getSectionValue(methods.getter));
+    return methods.setter(date, getNumericSectionValue(methods.getter));
   }
 
   return date;

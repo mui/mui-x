@@ -162,11 +162,7 @@ export const useField = <
 
     if (isNumericValue) {
       const getNewSectionValueStr = (date: TDate) => {
-        const boundaries = getSectionValueNumericBoundaries(
-          utils,
-          date,
-          activeSection.dateSectionName,
-        );
+        const boundaries = getSectionValueNumericBoundaries(utils, date, activeSection);
 
         // Remove the trailing `0` (`01` => `1`)
         let newSectionValue = Number(`${activeSection.value}${keyPressed}`).toString();
@@ -197,6 +193,7 @@ export const useField = <
       updateSectionValue({
         activeSection,
         setSectionValueOnDate: (activeDate) => {
+          // TODO: Support digit editing for months displayed in full letter
           if (activeSection.contentType === 'letter') {
             return activeDate;
           }
@@ -205,8 +202,15 @@ export const useField = <
             utils,
             dateSectionName: activeSection.dateSectionName,
             date: activeDate,
-            getSectionValue: (getter) => {
+            getNumericSectionValue: (getter) => {
               const sectionValueStr = getNewSectionValueStr(activeDate);
+
+              // We can't parse the day on the current date, otherwise we might try to parse `31` on a 30-days month.
+              // So we take for granted that for days, we always render `N` or `0N` for the Nth day of the month.
+              if (activeSection.dateSectionName === 'day') {
+                return Number(sectionValueStr);
+              }
+
               const sectionDate = utils.parse(sectionValueStr, activeSection.formatValue)!;
               return getter(sectionDate);
             },
@@ -215,6 +219,7 @@ export const useField = <
           });
         },
         setSectionValueOnSections: (referenceActiveDate) => {
+          // TODO: Support digit editing for months displayed in full letter
           if (activeSection.contentType === 'letter') {
             return activeSection.value;
           }
@@ -277,7 +282,7 @@ export const useField = <
             utils,
             dateSectionName: activeSection.dateSectionName,
             date: activeDate,
-            getSectionValue: (getter) => {
+            getNumericSectionValue: (getter) => {
               const sectionValueStr = getNewSectionValueStr();
               const sectionDate = utils.parse(sectionValueStr, activeSection.formatValue)!;
 
