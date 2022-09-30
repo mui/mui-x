@@ -254,6 +254,51 @@ export const addPositionPropertiesToSections = <TSection extends FieldSection>(
   return newSections;
 };
 
+const getSectionPlaceholder = <TDate>(
+  utils: MuiPickerFieldAdapter<TDate>,
+  localeText: PickersLocaleText<TDate>,
+  sectionConfig: Pick<FieldSection, 'dateSectionName' | 'contentType'>,
+  currentTokenValue: string,
+) => {
+  switch (sectionConfig.dateSectionName) {
+    case 'year': {
+      return localeText.fieldYearPlaceholder({
+        digitAmount: utils.formatByString(utils.date()!, currentTokenValue).length,
+      });
+    }
+
+    case 'month': {
+      return localeText.fieldMonthPlaceholder({
+        contentType: sectionConfig.contentType,
+      });
+    }
+
+    case 'day': {
+      return localeText.fieldDayPlaceholder();
+    }
+
+    case 'hour': {
+      return localeText.fieldHoursPlaceholder();
+    }
+
+    case 'minute': {
+      return localeText.fieldMinutesPlaceholder();
+    }
+
+    case 'second': {
+      return localeText.fieldSecondsPlaceholder();
+    }
+
+    case 'am-pm': {
+      return localeText.fieldMeridiemPlaceholder();
+    }
+
+    default: {
+      return currentTokenValue;
+    }
+  }
+};
+
 export const splitFormatIntoSections = <TDate>(
   utils: MuiPickerFieldAdapter<TDate>,
   localeText: PickersLocaleText<TDate>,
@@ -272,57 +317,11 @@ export const splitFormatIntoSections = <TDate>(
     const sectionConfig = getDateSectionConfigFromFormatToken(utils, currentTokenValue);
     const sectionValue = date == null ? '' : utils.formatByString(date, currentTokenValue);
 
-    let placeholder: string;
-    switch (sectionConfig.dateSectionName) {
-      case 'year': {
-        placeholder = localeText.fieldYearPlaceholder({
-          digitAmount: utils.formatByString(utils.date()!, currentTokenValue).length,
-        });
-        break;
-      }
-
-      case 'month': {
-        placeholder = localeText.fieldMonthPlaceholder({
-          contentType: sectionConfig.contentType,
-        });
-        break;
-      }
-
-      case 'day': {
-        placeholder = localeText.fieldDayPlaceholder();
-        break;
-      }
-
-      case 'hour': {
-        placeholder = localeText.fieldHoursPlaceholder();
-        break;
-      }
-
-      case 'minute': {
-        placeholder = localeText.fieldMinutesPlaceholder();
-        break;
-      }
-
-      case 'second': {
-        placeholder = localeText.fieldSecondsPlaceholder();
-        break;
-      }
-
-      case 'am-pm': {
-        placeholder = localeText.fieldMeridiemPlaceholder();
-        break;
-      }
-
-      default: {
-        placeholder = currentTokenValue;
-      }
-    }
-
     sections.push({
       ...sectionConfig,
       formatValue: currentTokenValue,
       value: sectionValue,
-      placeholder,
+      placeholder: getSectionPlaceholder(utils, localeText, sectionConfig, currentTokenValue),
       separator: '',
       edited: false,
     });
