@@ -62,7 +62,7 @@ const nbNOPickers: Partial<PickersLocaleText<any>> = {
   // fieldHoursPlaceholder: () => 'hh',
   // fieldMinutesPlaceholder: () => 'mm',
   // fieldSecondsPlaceholder: () => 'ss',
-  // fieldMeridiemPlaceholder: () => 'am/pm',
+  // fieldMeridiemPlaceholder: () => '(a|p)m',
 };
 
 export const nbNO = getPickersLocalization(nbNOPickers);

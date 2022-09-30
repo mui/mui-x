@@ -66,7 +66,7 @@ const zhCNPickers: Partial<PickersLocaleText<any>> = {
   // fieldHoursPlaceholder: () => 'hh',
   // fieldMinutesPlaceholder: () => 'mm',
   // fieldSecondsPlaceholder: () => 'ss',
-  // fieldMeridiemPlaceholder: () => 'am/pm',
+  // fieldMeridiemPlaceholder: () => '(a|p)m',
 };
 
 export const zhCN = getPickersLocalization(zhCNPickers);

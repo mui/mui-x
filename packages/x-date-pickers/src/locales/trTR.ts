@@ -50,7 +50,7 @@ const trTRPickers: Partial<PickersLocaleText<any>> = {
   // fieldHoursPlaceholder: () => 'hh',
   // fieldMinutesPlaceholder: () => 'mm',
   // fieldSecondsPlaceholder: () => 'ss',
-  // fieldMeridiemPlaceholder: () => 'am/pm',
+  // fieldMeridiemPlaceholder: () => '(a|p)m',
 };
 
 export const trTR = getPickersLocalization(trTRPickers);

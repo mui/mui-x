@@ -78,7 +78,7 @@ const frFRPickers: Partial<PickersLocaleText<any>> = {
   // fieldHoursPlaceholder: () => 'hh',
   // fieldMinutesPlaceholder: () => 'mm',
   // fieldSecondsPlaceholder: () => 'ss',
-  // fieldMeridiemPlaceholder: () => 'am/pm',
+  // fieldMeridiemPlaceholder: () => '(a|p)m',
 };
 
 export const frFR = getPickersLocalization(frFRPickers);

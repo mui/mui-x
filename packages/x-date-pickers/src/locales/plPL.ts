@@ -62,7 +62,7 @@ const plPLPickers: Partial<PickersLocaleText<any>> = {
   // fieldHoursPlaceholder: () => 'hh',
   // fieldMinutesPlaceholder: () => 'mm',
   // fieldSecondsPlaceholder: () => 'ss',
-  // fieldMeridiemPlaceholder: () => 'am/pm',
+  // fieldMeridiemPlaceholder: () => '(a|p)m',
 };
 
 export const plPL = getPickersLocalization(plPLPickers);
