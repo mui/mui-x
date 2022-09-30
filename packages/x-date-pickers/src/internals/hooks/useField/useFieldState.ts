@@ -185,6 +185,7 @@ export const useFieldState = <
             date: mergedDate,
             dateSectionName: section.dateSectionName,
             getSectionValue: (getter) => getter(newDate),
+            getMeridiemSectionValue: () => (utils.getHours(mergedDate) < 12 ? 'AM' : 'PM'),
           });
         }
       });

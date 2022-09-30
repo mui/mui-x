@@ -23,9 +23,9 @@ const formatTokenMap: MuiFormatTokenMap = {
   hh: 'hour',
   mm: 'minute',
   ss: 'second',
-  a: 'am-pm',
-  aa: 'am-pm',
-  aaa: 'am-pm',
+  a: 'meridiem',
+  aa: 'meridiem',
+  aaa: 'meridiem',
 };
 
 export class AdapterDateFns extends BaseAdapterDateFns implements MuiPickerFieldAdapter<Date> {

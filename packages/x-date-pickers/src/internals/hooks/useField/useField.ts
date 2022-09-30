@@ -169,9 +169,8 @@ export const useField = <
         );
 
         // Remove the trailing `0` (`01` => `1`)
-        const currentSectionValue = Number(activeSection.value).toString();
+        let newSectionValue = Number(`${activeSection.value}${keyPressed}`).toString();
 
-        let newSectionValue = `${currentSectionValue}${keyPressed}`;
         while (newSectionValue.length > 0 && Number(newSectionValue) > boundaries.maximum) {
           newSectionValue = newSectionValue.slice(1);
         }
@@ -179,6 +178,17 @@ export const useField = <
         // In the unlikely scenario where max < 9, we could type a single digit that already exceeds the maximum.
         if (newSectionValue.length === 0) {
           newSectionValue = boundaries.minimum.toString();
+        }
+
+        // We only want to add zeroes to section with trailing zeros.
+        const hasTrailingZeroes =
+          utils.formatByString(
+            utils.parse('1', activeSection.formatValue)!,
+            activeSection.formatValue,
+          ).length > 1;
+
+        if (!hasTrailingZeroes) {
+          return newSectionValue;
         }
 
         return cleanTrailingZeroInNumericSectionValue(newSectionValue, boundaries.maximum);
@@ -200,10 +210,17 @@ export const useField = <
               const sectionDate = utils.parse(sectionValueStr, activeSection.formatValue)!;
               return getter(sectionDate);
             },
+            // Meridiem is not compatible with digit editing, this line should never be called.
+            getMeridiemSectionValue: () => '',
           });
         },
-        setSectionValueOnSections: (referenceActiveDate) =>
-          getNewSectionValueStr(referenceActiveDate),
+        setSectionValueOnSections: (referenceActiveDate) => {
+          if (activeSection.contentType === 'letter') {
+            return activeSection.value;
+          }
+
+          return getNewSectionValueStr(referenceActiveDate);
+        },
       });
     }
     // TODO: Improve condition
@@ -230,7 +247,7 @@ export const useField = <
         const concatenatedQuery = `${currentQuery}${newQuery}`;
         const matchingMonthsWithConcatenatedQuery = getMonthsMatchingQuery(
           utils,
-          activeSection.formatValue,
+          activeSection,
           concatenatedQuery,
         );
         if (matchingMonthsWithConcatenatedQuery.length > 0) {
@@ -241,11 +258,7 @@ export const useField = <
           return matchingMonthsWithConcatenatedQuery[0];
         }
 
-        const matchingMonthsWithNewQuery = getMonthsMatchingQuery(
-          utils,
-          activeSection.formatValue,
-          newQuery,
-        );
+        const matchingMonthsWithNewQuery = getMonthsMatchingQuery(utils, activeSection, newQuery);
         if (matchingMonthsWithNewQuery.length > 0) {
           queryRef.current = {
             dateSectionName: activeSection.dateSectionName,
@@ -267,8 +280,10 @@ export const useField = <
             getSectionValue: (getter) => {
               const sectionValueStr = getNewSectionValueStr();
               const sectionDate = utils.parse(sectionValueStr, activeSection.formatValue)!;
+
               return getter(sectionDate);
             },
+            getMeridiemSectionValue: getNewSectionValueStr,
           }),
         setSectionValueOnSections: () => getNewSectionValueStr(),
       });

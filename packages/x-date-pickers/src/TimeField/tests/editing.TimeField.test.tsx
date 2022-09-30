@@ -5,7 +5,7 @@ import { Unstable_TimeField as TimeField, TimeFieldProps } from '@mui/x-date-pic
 import { screen, act, userEvent, fireEvent } from '@mui/monorepo/test/utils';
 import { createPickerRenderer, adapterToUse } from 'test/utils/pickers-utils';
 
-describe('<TimeField /> - Editing', () => {
+describe.only('<TimeField /> - Editing', () => {
   const { render, clock } = createPickerRenderer({
     clock: 'fake',
     clockConfig: new Date(2022, 5, 15, 14, 25, 32),
@@ -325,6 +325,65 @@ describe('<TimeField /> - Editing', () => {
         readOnly: true,
         inputValue: '1',
         expectedValue: '25',
+      });
+    });
+  });
+
+  describe.only('Letter editing', () => {
+    it('should not edit when props.readOnly = true and no value is provided', () => {
+      testChange({
+        format: adapterToUse.formats.fullTime12h,
+        readOnly: true,
+        inputValue: 'hour:minute a', // Press "a"
+        expectedValue: 'hour:minute meridiem',
+      });
+    });
+
+    it('should not edit value when props.readOnly = true and a value is provided', () => {
+      testChange({
+        format: adapterToUse.formats.fullTime12h,
+        defaultValue: adapterToUse.date(),
+        readOnly: true,
+        inputValue: '02:25 a',
+        expectedValue: '02:25 pm',
+      });
+    });
+
+    it('should set meridiem to AM when pressing "a" and no value is provided', () => {
+      testChange({
+        format: adapterToUse.formats.fullTime12h,
+        cursorPosition: 17,
+        inputValue: 'hour:minute a', // Press "a"
+        expectedValue: 'hour:minute am',
+      });
+    });
+
+    it('should set meridiem to PM when pressing "p" and no value is provided', () => {
+      testChange({
+        format: adapterToUse.formats.fullTime12h,
+        cursorPosition: 17,
+        inputValue: 'hour:minute p', // Press "p"
+        expectedValue: 'hour:minute pm',
+      });
+    });
+
+    it('should set meridiem to AM when pressing "a" and a value is provided', () => {
+      testChange({
+        format: adapterToUse.formats.fullTime12h,
+        defaultValue: adapterToUse.date(),
+        cursorPosition: 17,
+        inputValue: '02:25 a', // Press "a"
+        expectedValue: '02:25 am',
+      });
+    });
+
+    it('should set meridiem to PM when pressing "p" and a value is provided', () => {
+      testChange({
+        format: adapterToUse.formats.fullTime12h,
+        defaultValue: adapterToUse.date(new Date(2022, 5, 15, 2, 25, 32)),
+        cursorPosition: 17,
+        inputValue: '02:25 p', // Press "p"
+        expectedValue: '02:25 pm',
       });
     });
   });
