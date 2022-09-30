@@ -12,6 +12,7 @@ import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
 import { useGridSelector } from '../../../hooks/utils/useGridSelector';
 import { gridFilterModelSelector } from '../../../hooks/features/filter/gridFilterSelector';
 import { gridFilterableColumnDefinitionsSelector } from '../../../hooks/features/columns/gridColumnsSelector';
+import { GridStateColDef } from '../../../models/colDef/gridColDef';
 
 export interface GridFilterPanelProps
   extends Pick<GridFilterFormProps, 'linkOperators' | 'columnsSort'> {
@@ -19,6 +20,12 @@ export interface GridFilterPanelProps
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */
   sx?: SxProps<Theme>;
+  /**
+   * Function that returns next filter item to be picked as default filter
+   * @param {GridFilterItem[]} filterItems
+   * @returns {GridStateColDef<any, any, any>}
+   */
+  getColumnForNewFilter?: (filterItems: GridFilterItem[]) => GridStateColDef<any, any, any>;
   /**
    * Props passed to each filter form.
    */
@@ -50,6 +57,7 @@ const GridFilterPanel = React.forwardRef<HTMLDivElement, GridFilterPanelProps>(
       linkOperators = [GridLinkOperator.And, GridLinkOperator.Or],
       columnsSort,
       filterFormProps,
+      getColumnForNewFilter,
       children,
       ...other
     } = props;
@@ -69,20 +77,20 @@ const GridFilterPanel = React.forwardRef<HTMLDivElement, GridFilterPanelProps>(
     );
 
     const getDefaultItem = React.useCallback((): GridFilterItem | null => {
-      const firstColumnWithOperator = filterableColumns.find(
-        (colDef) => colDef.filterOperators?.length,
-      );
+      const nextItemWithOperator = getColumnForNewFilter
+        ? getColumnForNewFilter(filterModel.items)
+        : filterableColumns.find((colDef) => colDef.filterOperators?.length);
 
-      if (!firstColumnWithOperator) {
+      if (!nextItemWithOperator) {
         return null;
       }
 
       return {
-        columnField: firstColumnWithOperator.field,
-        operatorValue: firstColumnWithOperator.filterOperators![0].value,
+        columnField: nextItemWithOperator.field,
+        operatorValue: nextItemWithOperator.filterOperators![0].value,
         id: Math.round(Math.random() * 1e5),
       };
-    }, [filterableColumns]);
+    }, [filterModel.items, filterableColumns, getColumnForNewFilter]);
 
     const items = React.useMemo<GridFilterItem[]>(() => {
       if (filterModel.items.length) {

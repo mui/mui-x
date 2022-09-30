@@ -10,14 +10,19 @@ import { capitalize, unstable_useId as useId } from '@mui/material/utils';
 import { styled } from '@mui/material/styles';
 import clsx from 'clsx';
 import { gridFilterableColumnDefinitionsSelector } from '../../../hooks/features/columns/gridColumnsSelector';
+import { gridFilterModelSelector } from '../../../hooks/features/filter/gridFilterSelector';
 import { useGridSelector } from '../../../hooks/utils/useGridSelector';
 import { GridFilterItem, GridLinkOperator } from '../../../models/gridFilterItem';
 import { useGridApiContext } from '../../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { getDataGridUtilityClass } from '../../../constants/gridClasses';
-import { GridColDef } from '../../../models/colDef/gridColDef';
+import { GridColDef, GridStateColDef } from '../../../models/colDef/gridColDef';
 
+export interface FilterColumnsProps {
+  filterItems: GridFilterItem[];
+  columnField: string;
+}
 export interface GridFilterFormProps {
   /**
    * The [[GridFilterItem]] representing this form.
@@ -60,6 +65,12 @@ export interface GridFilterFormProps {
    * @param {GridFilterItem} item The deleted [[GridFilterItem]].
    */
   deleteFilter: (item: GridFilterItem) => void;
+  /**
+   * Allows to filter the columns displayed in filter form
+   * @param {FilterColumnsProps} filterColumnsArgs Columns of the grid
+   * @returns {GridStateColDef<any, any, any>[]} Filtered columns
+   */
+  filterColumns?: (filterColumnsArgs: FilterColumnsProps) => GridStateColDef<any, any, any>[];
   /**
    * Sets the available logic operators.
    * @default [GridLinkOperator.And, GridLinkOperator.Or]
@@ -195,6 +206,7 @@ const GridFilterForm = React.forwardRef<HTMLDivElement, GridFilterFormProps>(
       focusElementRef,
       linkOperators = [GridLinkOperator.And, GridLinkOperator.Or],
       columnsSort,
+      filterColumns,
       deleteIconProps = {},
       linkOperatorInputProps = {},
       operatorInputProps = {},
@@ -205,6 +217,7 @@ const GridFilterForm = React.forwardRef<HTMLDivElement, GridFilterFormProps>(
     } = props;
     const apiRef = useGridApiContext();
     const filterableColumns = useGridSelector(apiRef, gridFilterableColumnDefinitionsSelector);
+    const filterItems = useGridSelector(apiRef, gridFilterModelSelector).items;
     const columnSelectId = useId();
     const columnSelectLabelId = useId();
     const operatorSelectId = useId();
@@ -225,22 +238,31 @@ const GridFilterForm = React.forwardRef<HTMLDivElement, GridFilterFormProps>(
 
     const { InputComponentProps, ...valueInputPropsOther } = valueInputProps;
 
-    const sortedFilterableColumns = React.useMemo(() => {
+    const filteredColumns = React.useMemo(
+      () =>
+        filterColumns?.({
+          filterItems,
+          columnField: item.columnField,
+        }) || filterableColumns,
+      [filterColumns, filterItems, filterableColumns, item.columnField],
+    );
+
+    const sortedFilteredColumns = React.useMemo(() => {
       switch (columnsSort) {
         case 'asc':
-          return filterableColumns.sort((a, b) =>
+          return filteredColumns.sort((a, b) =>
             collator.compare(getColumnLabel(a), getColumnLabel(b)),
           );
 
         case 'desc':
-          return filterableColumns.sort(
+          return filteredColumns.sort(
             (a, b) => -collator.compare(getColumnLabel(a), getColumnLabel(b)),
           );
 
         default:
-          return filterableColumns;
+          return filteredColumns;
       }
-    }, [filterableColumns, columnsSort]);
+    }, [filteredColumns, columnsSort]);
 
     const currentColumn = item.columnField ? apiRef.current.getColumn(item.columnField) : null;
 
@@ -422,7 +444,7 @@ const GridFilterForm = React.forwardRef<HTMLDivElement, GridFilterFormProps>(
             native={isBaseSelectNative}
             {...rootProps.componentsProps?.baseSelect}
           >
-            {sortedFilterableColumns.map((col) => (
+            {sortedFilteredColumns.map((col) => (
               <OptionComponent key={col.field} value={col.field}>
                 {getColumnLabel(col)}
               </OptionComponent>
