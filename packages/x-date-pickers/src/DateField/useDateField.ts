@@ -26,7 +26,7 @@ export const dateFieldValueManager: FieldValueManager<any, any, FieldSection, Da
       value == null || !utils.isValid(value) ? prevReferenceValue : value,
     getSectionsFromValue: (utils, localeText, prevSections, date, format) =>
       addPositionPropertiesToSections(splitFormatIntoSections(utils, localeText, format, date)),
-    getValueStrFromSections: (sections) => createDateStrFromSections(sections),
+    getValueStrFromSections: (sections) => createDateStrFromSections(sections, false),
     getActiveDateSections: (sections) => sections,
     getActiveDateManager: (state) => ({
       activeDate: state.value,

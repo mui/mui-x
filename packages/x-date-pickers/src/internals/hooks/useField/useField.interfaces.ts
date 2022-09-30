@@ -81,7 +81,15 @@ export interface FieldSection {
   end: number;
   value: string;
   placeholder: string;
+  /**
+   * Separator used in the input
+   */
   separator: string | null;
+  /**
+   * Separator used to recreate the date from the sections
+   * @default `section.separator`
+   */
+  dateSeparator?: string;
   dateSectionName: MuiDateSectionName;
   contentType: 'digit' | 'letter';
   formatValue: string;

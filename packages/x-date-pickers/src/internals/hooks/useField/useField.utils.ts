@@ -345,19 +345,32 @@ export const splitFormatIntoSections = <TDate>(
 
   commitCurrentToken();
 
-  return sections.map((section) => ({
-    ...section,
-    separator: section.separator === '/' ? ' / ' : section.separator,
-  }));
+  return sections.map((section) => {
+    if (section.separator !== '/') {
+      return section;
+    }
+    return {
+      ...section,
+      separator: ' / ',
+      dateSeparator: '/',
+    };
+  });
 };
 
-export const createDateStrFromSections = (sections: FieldSection[]) =>
+export const createDateStrFromSections = (
+  sections: FieldSection[],
+  shouldUseDateSeparator: boolean,
+) =>
   sections
     .map((section) => {
       let sectionValueStr = getSectionVisibleValue(section);
 
-      if (section.separator != null) {
-        sectionValueStr += section.separator;
+      const separator = shouldUseDateSeparator
+        ? section.dateSeparator ?? section.separator
+        : section.separator;
+
+      if (separator != null) {
+        sectionValueStr += separator;
       }
 
       return sectionValueStr;
