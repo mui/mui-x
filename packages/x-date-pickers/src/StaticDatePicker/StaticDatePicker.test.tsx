@@ -4,7 +4,7 @@ import TextField from '@mui/material/TextField';
 import { fireEvent, screen } from '@mui/monorepo/test/utils';
 import { StaticDatePicker } from '@mui/x-date-pickers/StaticDatePicker';
 import { createPickerRenderer, adapterToUse, withPickerControls } from 'test/utils/pickers-utils';
-import describeValidation from '@mui/x-date-pickers/internals/utils/describeValidation';
+import describeValidation from '@mui/x-date-pickers/tests/describeValidation';
 
 const WrappedStaticDatePicker = withPickerControls(StaticDatePicker)({
   renderInput: (params) => <TextField {...params} />,
@@ -24,7 +24,7 @@ describe('<StaticDatePicker />', () => {
     render(
       <StaticDatePicker
         value={adapterToUse.date(new Date(2019, 0, 1))}
-        onChange={() => {}}
+        onChange={() => { }}
         renderInput={(params) => <TextField {...params} />}
       />,
     );
@@ -38,7 +38,7 @@ describe('<StaticDatePicker />', () => {
       <StaticDatePicker
         reduceAnimations
         value={adapterToUse.date(new Date(2019, 0, 1))}
-        onChange={() => {}}
+        onChange={() => { }}
         renderInput={(params) => <TextField {...params} />}
       />,
     );

@@ -5,7 +5,7 @@ import { spy } from 'sinon';
 import { fireEvent, screen } from '@mui/monorepo/test/utils';
 import { StaticDateTimePicker } from '@mui/x-date-pickers/StaticDateTimePicker';
 import { adapterToUse, createPickerRenderer, withPickerControls } from 'test/utils/pickers-utils';
-import describeValidation from '@mui/x-date-pickers/internals/utils/describeValidation';
+import describeValidation from '@mui/x-date-pickers/tests/describeValidation';
 import { DateTimePickerTabs, DateTimePickerTabsProps } from '../DateTimePicker';
 
 const WrappedStaticDateTimePicker = withPickerControls(StaticDateTimePicker)({
@@ -42,7 +42,7 @@ describe('<StaticDateTimePicker />', () => {
   it('should render toolbar and tabs by default', () => {
     render(
       <StaticDateTimePicker
-        onChange={() => {}}
+        onChange={() => { }}
         value={adapterToUse.date(new Date(2021, 10, 20, 10, 1, 22))}
         renderInput={(params) => <TextField {...params} />}
       />,
@@ -56,7 +56,7 @@ describe('<StaticDateTimePicker />', () => {
     render(
       <StaticDateTimePicker
         showToolbar={false}
-        onChange={() => {}}
+        onChange={() => { }}
         value={adapterToUse.date(new Date(2021, 10, 20, 10, 1, 22))}
         renderInput={(params) => <TextField {...params} />}
       />,
@@ -70,7 +70,7 @@ describe('<StaticDateTimePicker />', () => {
     render(
       <StaticDateTimePicker
         hideTabs
-        onChange={() => {}}
+        onChange={() => { }}
         value={adapterToUse.date(new Date(2021, 10, 20, 10, 1, 22))}
         renderInput={(params) => <TextField {...params} />}
       />,
@@ -90,7 +90,7 @@ describe('<StaticDateTimePicker />', () => {
     render(
       <StaticDateTimePicker
         hideTabs={false}
-        onChange={() => {}}
+        onChange={() => { }}
         value={adapterToUse.date(new Date(2021, 10, 20, 10, 1, 22))}
         renderInput={(params) => <TextField {...params} />}
         components={{ Tabs: CustomPickerTabs }}
@@ -106,7 +106,7 @@ describe('<StaticDateTimePicker />', () => {
       render(
         <StaticDateTimePicker
           displayStaticWrapperAs="desktop"
-          onChange={() => {}}
+          onChange={() => { }}
           value={adapterToUse.date(new Date(2021, 10, 20, 10, 1, 22))}
           renderInput={(params) => <TextField {...params} />}
         />,
@@ -121,7 +121,7 @@ describe('<StaticDateTimePicker />', () => {
         <StaticDateTimePicker
           displayStaticWrapperAs="desktop"
           hideTabs={false}
-          onChange={() => {}}
+          onChange={() => { }}
           value={adapterToUse.date(new Date(2021, 10, 20, 10, 1, 22))}
           renderInput={(params) => <TextField {...params} />}
         />,
@@ -136,7 +136,7 @@ describe('<StaticDateTimePicker />', () => {
         <StaticDateTimePicker
           displayStaticWrapperAs="desktop"
           showToolbar
-          onChange={() => {}}
+          onChange={() => { }}
           value={adapterToUse.date(new Date(2021, 10, 20, 10, 1, 22))}
           renderInput={(params) => <TextField {...params} />}
         />,

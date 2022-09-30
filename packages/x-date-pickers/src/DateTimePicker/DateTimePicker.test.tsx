@@ -4,7 +4,7 @@ import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { fireEvent, screen } from '@mui/monorepo/test/utils/createRenderer';
 import { expect } from 'chai';
 import { createPickerRenderer, stubMatchMedia } from 'test/utils/pickers-utils';
-import describeValidation from '@mui/x-date-pickers/internals/utils/describeValidation';
+import describeValidation from '@mui/x-date-pickers/tests/describeValidation';
 
 describe('<DateTimePicker />', () => {
   const ControlledDateTimePicker = () => {
@@ -41,7 +41,7 @@ describe('<DateTimePicker />', () => {
     render(
       <DateTimePicker
         renderInput={(params) => <TextField {...params} />}
-        onChange={() => {}}
+        onChange={() => { }}
         value={null}
       />,
     );

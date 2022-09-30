@@ -4,7 +4,7 @@ import TextField from '@mui/material/TextField';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { fireEvent, screen } from '@mui/monorepo/test/utils/createRenderer';
 import { createPickerRenderer, stubMatchMedia } from 'test/utils/pickers-utils';
-import describeValidation from '@mui/x-date-pickers/internals/utils/describeValidation';
+import describeValidation from '@mui/x-date-pickers/tests/describeValidation';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
@@ -24,7 +24,7 @@ describe('<DatePicker />', () => {
         <DatePicker
           inputRef={inputRef}
           value={null}
-          onChange={() => {}}
+          onChange={() => { }}
           renderInput={(params) => <TextField {...params} />}
         />,
       );
@@ -60,7 +60,7 @@ describe('<DatePicker />', () => {
       render(
         <DatePicker
           renderInput={(params) => <TextField {...params} />}
-          onChange={() => {}}
+          onChange={() => { }}
           value={null}
         />,
       );
@@ -77,7 +77,7 @@ describe('<DatePicker />', () => {
       render(
         <DatePicker
           renderInput={(params) => <TextField {...params} />}
-          onChange={() => {}}
+          onChange={() => { }}
           value={new Date(2019, 5, 5)}
           openTo="year"
         />,

@@ -5,7 +5,7 @@ import { fireEvent, screen } from '@mui/monorepo/test/utils/createRenderer';
 import { TimePicker } from '@mui/x-date-pickers/TimePicker';
 import { expect } from 'chai';
 import { createPickerRenderer, stubMatchMedia, wrapPickerMount } from 'test/utils/pickers-utils';
-import describeValidation from '@mui/x-date-pickers/internals/utils/describeValidation';
+import describeValidation from '@mui/x-date-pickers/tests/describeValidation';
 
 describe('<TimePicker />', () => {
   const ControlledTimePicker = () => {
@@ -21,7 +21,7 @@ describe('<TimePicker />', () => {
 
   describeConformance(
     <TimePicker
-      onChange={() => {}}
+      onChange={() => { }}
       renderInput={(props) => <TextField {...props} />}
       value={null}
     />,
@@ -67,7 +67,7 @@ describe('<TimePicker />', () => {
     render(
       <TimePicker
         renderInput={(params) => <TextField {...params} />}
-        onChange={() => {}}
+        onChange={() => { }}
         value={null}
       />,
     );

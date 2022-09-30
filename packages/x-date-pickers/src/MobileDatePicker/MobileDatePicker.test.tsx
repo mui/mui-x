@@ -13,7 +13,7 @@ import {
   withPickerControls,
   openPicker,
 } from 'test/utils/pickers-utils';
-import describeValidation from '@mui/x-date-pickers/internals/utils/describeValidation';
+import describeValidation from '@mui/x-date-pickers/tests/describeValidation';
 
 const WrappedMobileDatePicker = withPickerControls(MobileDatePicker)({
   DialogProps: { TransitionComponent: FakeTransitionComponent },
@@ -53,7 +53,7 @@ describe('<MobileDatePicker />', () => {
         open
         reduceAnimations
         value={null}
-        onChange={() => {}}
+        onChange={() => { }}
         openTo="year"
         minDate={adapterToUse.date(new Date(2000, 0, 1))}
         maxDate={adapterToUse.date(new Date(2010, 0, 1))}
@@ -72,7 +72,7 @@ describe('<MobileDatePicker />', () => {
         open
         toolbarTitle="test"
         label="something"
-        onChange={() => {}}
+        onChange={() => { }}
         value={adapterToUse.date(new Date(2018, 0, 1))}
       />,
     );
@@ -85,7 +85,7 @@ describe('<MobileDatePicker />', () => {
       <MobileDatePicker
         open
         label="Default label"
-        onChange={() => {}}
+        onChange={() => { }}
         renderInput={(params) => <TextField {...params} />}
         value={adapterToUse.date(new Date(2018, 0, 1))}
       />,
@@ -99,7 +99,7 @@ describe('<MobileDatePicker />', () => {
       <MobileDatePicker
         renderInput={(params) => <TextField {...params} />}
         open
-        onChange={() => {}}
+        onChange={() => { }}
         toolbarFormat="MMMM"
         value={adapterToUse.date(new Date(2018, 0, 1))}
       />,
@@ -114,7 +114,7 @@ describe('<MobileDatePicker />', () => {
       <MobileDatePicker
         open
         renderInput={(params) => <TextField {...params} />}
-        onChange={() => {}}
+        onChange={() => { }}
         onMonthChange={onMonthChangeMock}
         value={adapterToUse.date(new Date(2018, 0, 1))}
       />,
@@ -130,7 +130,7 @@ describe('<MobileDatePicker />', () => {
         open
         loading
         renderInput={(params) => <TextField {...params} />}
-        onChange={() => {}}
+        onChange={() => { }}
         value={adapterToUse.date(new Date(2018, 0, 1))}
       />,
     );
@@ -145,7 +145,7 @@ describe('<MobileDatePicker />', () => {
         loading
         renderLoading={() => <CalendarPickerSkeleton data-testid="custom-loading" />}
         open
-        onChange={() => {}}
+        onChange={() => { }}
         renderInput={(params) => <TextField {...params} />}
         value={adapterToUse.date(new Date(2018, 0, 1))}
       />,
@@ -161,7 +161,7 @@ describe('<MobileDatePicker />', () => {
         renderInput={(params) => <TextField {...params} />}
         open
         value={adapterToUse.date()}
-        onChange={() => {}}
+        onChange={() => { }}
         ToolbarComponent={() => <div data-testid="custom-toolbar" />}
       />,
     );
@@ -175,7 +175,7 @@ describe('<MobileDatePicker />', () => {
         renderInput={(params) => <TextField {...params} />}
         open
         value={adapterToUse.date(new Date(2018, 0, 1))}
-        onChange={() => {}}
+        onChange={() => { }}
         renderDay={(day, _selected, pickersDayProps) => (
           <PickersDay {...pickersDayProps} data-testid="test-day" />
         )}
@@ -191,7 +191,7 @@ describe('<MobileDatePicker />', () => {
         renderInput={(params) => <TextField {...params} />}
         open
         value={null}
-        onChange={() => {}}
+        onChange={() => { }}
         defaultCalendarMonth={adapterToUse.date(new Date(2018, 6, 1))}
       />,
     );
@@ -227,7 +227,7 @@ describe('<MobileDatePicker />', () => {
       <MobileDatePicker
         open
         showToolbar
-        onChange={() => {}}
+        onChange={() => { }}
         value={null}
         renderInput={(params) => <TextField {...params} />}
       />,
@@ -243,7 +243,7 @@ describe('<MobileDatePicker />', () => {
         <MobileDatePicker
           value={adapterToUse.date(new Date(2019, 0, 1))}
           {...{ [prop]: true }}
-          onChange={() => {}}
+          onChange={() => { }}
           onOpen={handleOpen}
           open={false}
           renderInput={(params) => <TextField {...params} />}

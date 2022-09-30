@@ -15,7 +15,7 @@ import {
   openPicker,
   getClockMouseEvent,
 } from 'test/utils/pickers-utils';
-import describeValidation from '@mui/x-date-pickers/internals/utils/describeValidation';
+import describeValidation from '@mui/x-date-pickers/tests/describeValidation';
 
 const WrappedDesktopTimePicker = withPickerControls(DesktopTimePicker)({
   DialogProps: { TransitionComponent: FakeTransitionComponent },
@@ -36,7 +36,7 @@ describe('<DesktopTimePicker />', () => {
 
   describeConformance(
     <DesktopTimePicker
-      onChange={() => {}}
+      onChange={() => { }}
       renderInput={(props) => <TextField {...props} />}
       value={null}
     />,
@@ -66,7 +66,7 @@ describe('<DesktopTimePicker />', () => {
         <DesktopTimePicker
           value={adapterToUse.date(new Date(2019, 0, 1))}
           {...{ [prop]: true }}
-          onChange={() => {}}
+          onChange={() => { }}
           onOpen={handleOpen}
           open={false}
           renderInput={(params) => <TextField {...params} />}
@@ -87,7 +87,7 @@ describe('<DesktopTimePicker />', () => {
         open
         views={['hours', 'minutes', 'seconds']}
         value={adapterToUse.date(new Date(2018, 0, 1))}
-        onChange={() => {}}
+        onChange={() => { }}
         renderInput={(params) => <TextField {...params} />}
       />,
     );
@@ -271,7 +271,7 @@ describe('<DesktopTimePicker />', () => {
       render(
         <DesktopTimePicker
           open
-          onChange={() => {}}
+          onChange={() => { }}
           PopperProps={{
             onClick: handleClick,
             onTouchStart: handleTouchStart,
@@ -299,7 +299,7 @@ describe('<DesktopTimePicker />', () => {
       render(
         <DesktopTimePicker
           open
-          onChange={() => {}}
+          onChange={() => { }}
           PaperProps={{
             onClick: handleClick,
             onTouchStart: handleTouchStart,

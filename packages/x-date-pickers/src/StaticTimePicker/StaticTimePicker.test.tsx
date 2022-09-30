@@ -16,7 +16,7 @@ import {
   withPickerControls,
 } from 'test/utils/pickers-utils';
 import { StaticTimePicker } from '@mui/x-date-pickers/StaticTimePicker';
-import describeValidation from '@mui/x-date-pickers/internals/utils/describeValidation';
+import describeValidation from '@mui/x-date-pickers/tests/describeValidation';
 
 const WrappedStaticTimePicker = withPickerControls(StaticTimePicker)({
   renderInput: (params) => <TextField {...params} />,
@@ -34,7 +34,7 @@ describe('<StaticTimePicker />', () => {
 
   describeConformance(
     <StaticTimePicker
-      onChange={() => {}}
+      onChange={() => { }}
       renderInput={(props) => <TextField {...props} />}
       value={null}
     />,
