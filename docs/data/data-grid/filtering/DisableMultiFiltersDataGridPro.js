@@ -1,5 +1,10 @@
 import * as React from 'react';
-import { DataGridPro, GridToolbar, useGridApiRef } from '@mui/x-data-grid-pro';
+import {
+  DataGridPro,
+  GridToolbar,
+  useGridApiRef,
+  gridFilterModelSelector,
+} from '@mui/x-data-grid-pro';
 import { useDemoData } from '@mui/x-data-grid-generator';
 
 const VISIBLE_FIELDS = ['name', 'rating', 'country', 'dateCreated', 'isAdmin'];
@@ -12,26 +17,31 @@ export default function DisableMultiFiltersDataGridPro() {
     rowLength: 100,
   });
 
-  const filterColumns = ({ filterItems, columnField }) => {
-    // remove already filtered fields from list of columns
-    const colDefs = apiRef.current.getAllColumns();
-    const filteredFields = filterItems.map((item) => item.columnField);
-    return colDefs.filter(
-      (colDef) =>
-        colDef.filterable &&
-        (colDef.field === columnField || !filteredFields.includes(colDef.field)),
-    );
-  };
+  const filterColumns = React.useCallback(
+    ({ columnField }) => {
+      // remove already filtered fields from list of columns
+      const colDefs = apiRef.current.getAllColumns();
+      const filterModel = gridFilterModelSelector(apiRef);
+      const filteredFields = filterModel.items?.map((item) => item.columnField);
+      return colDefs.filter(
+        (colDef) =>
+          colDef.filterable &&
+          (colDef.field === columnField || !filteredFields.includes(colDef.field)),
+      );
+    },
+    [apiRef],
+  );
 
-  const getColumnForNewFilter = (filterItems) => {
+  const getColumnForNewFilter = React.useCallback(() => {
     const colDefs = apiRef.current.getAllColumns();
-    const filteredFields = filterItems.map((item) => item.columnField);
+    const filterModel = gridFilterModelSelector(apiRef);
+    const filteredFields = filterModel.items?.map((item) => item.columnField);
     return colDefs
       .filter(
         (colDef) => colDef.filterable && !filteredFields.includes(colDef.field),
       )
       .find((colDef) => colDef.filterOperators?.length);
-  };
+  }, [apiRef]);
 
   return (
     <div style={{ height: 400, width: '100%' }}>

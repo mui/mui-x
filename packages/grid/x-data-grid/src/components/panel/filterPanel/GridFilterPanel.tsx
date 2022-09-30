@@ -22,10 +22,9 @@ export interface GridFilterPanelProps
   sx?: SxProps<Theme>;
   /**
    * Function that returns next filter item to be picked as default filter
-   * @param {GridFilterItem[]} filterItems
-   * @returns {GridStateColDef<any, any, any>}
+   * @returns {GridStateColDef<any, any, any>} Column to be used as next filter
    */
-  getColumnForNewFilter?: (filterItems: GridFilterItem[]) => GridStateColDef<any, any, any>;
+  getColumnForNewFilter?: () => GridStateColDef<any, any, any>;
   /**
    * Props passed to each filter form.
    */
@@ -78,7 +77,7 @@ const GridFilterPanel = React.forwardRef<HTMLDivElement, GridFilterPanelProps>(
 
     const getDefaultItem = React.useCallback((): GridFilterItem | null => {
       const nextItemWithOperator = getColumnForNewFilter
-        ? getColumnForNewFilter(filterModel.items)
+        ? getColumnForNewFilter()
         : filterableColumns.find((colDef) => colDef.filterOperators?.length);
 
       if (!nextItemWithOperator) {
@@ -90,7 +89,7 @@ const GridFilterPanel = React.forwardRef<HTMLDivElement, GridFilterPanelProps>(
         operatorValue: nextItemWithOperator.filterOperators![0].value,
         id: Math.round(Math.random() * 1e5),
       };
-    }, [filterModel.items, filterableColumns, getColumnForNewFilter]);
+    }, [filterableColumns, getColumnForNewFilter]);
 
     const items = React.useMemo<GridFilterItem[]>(() => {
       if (filterModel.items.length) {
