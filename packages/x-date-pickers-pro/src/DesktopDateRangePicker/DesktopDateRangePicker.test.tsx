@@ -697,10 +697,12 @@ describe('<DesktopDateRangePicker />', () => {
       // Dismiss the picker
       const input = document.getElementById('test-id')!;
 
-      fireEvent.mouseDown(input);
-      input.focus();
-      fireEvent.mouseUp(input);
-      clock.runToLast();
+      act(() => {
+        fireEvent.mouseDown(input);
+        input.focus();
+        fireEvent.mouseUp(input);
+        clock.runToLast();
+      });
 
       expect(onChange.callCount).to.equal(0);
       expect(onAccept.callCount).to.equal(0);
