@@ -116,7 +116,7 @@ describe('<DateField /> - Selection', () => {
       expect(getSelectedContent(input)).to.equal('year');
     });
 
-    it('should select the first section when all the sections are selected', () => {
+    it('should select the last section when all the sections are selected', () => {
       render(<DateField />);
       const input = screen.getByRole('textbox');
       clickOnInput(input, 1);
@@ -126,7 +126,7 @@ describe('<DateField /> - Selection', () => {
       expect(getSelectedContent(input)).to.equal('month/day/year');
 
       userEvent.keyPress(input, { key: 'ArrowRight' });
-      expect(getSelectedContent(input)).to.equal('month');
+      expect(getSelectedContent(input)).to.equal('year');
     });
   });
 
@@ -149,7 +149,7 @@ describe('<DateField /> - Selection', () => {
       expect(getSelectedContent(input)).to.equal('month');
     });
 
-    it('should select the last section when all the sections are selected', () => {
+    it('should select the first section when all the sections are selected', () => {
       render(<DateField />);
       const input = screen.getByRole('textbox');
       clickOnInput(input, 1);
@@ -159,7 +159,7 @@ describe('<DateField /> - Selection', () => {
       expect(getSelectedContent(input)).to.equal('month/day/year');
 
       userEvent.keyPress(input, { key: 'ArrowLeft' });
-      expect(getSelectedContent(input)).to.equal('year');
+      expect(getSelectedContent(input)).to.equal('month');
     });
   });
 });

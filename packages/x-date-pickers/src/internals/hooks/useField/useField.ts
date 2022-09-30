@@ -305,7 +305,7 @@ export const useField = <
         if (selectedSectionIndexes == null) {
           setSelectedSections(0);
         } else if (selectedSectionIndexes.startIndex !== selectedSectionIndexes.endIndex) {
-          setSelectedSections(selectedSectionIndexes.startIndex);
+          setSelectedSections(selectedSectionIndexes.endIndex);
         } else if (selectedSectionIndexes.startIndex < state.sections.length - 1) {
           setSelectedSections(selectedSectionIndexes.startIndex + 1);
         }
@@ -319,7 +319,7 @@ export const useField = <
         if (selectedSectionIndexes == null) {
           setSelectedSections(state.sections.length - 1);
         } else if (selectedSectionIndexes.startIndex !== selectedSectionIndexes.endIndex) {
-          setSelectedSections(selectedSectionIndexes.endIndex);
+          setSelectedSections(selectedSectionIndexes.startIndex);
         } else if (selectedSectionIndexes.startIndex > 0) {
           setSelectedSections(selectedSectionIndexes.startIndex - 1);
         }
