@@ -5,6 +5,5 @@
     "skipLibCheck": true,
     "types": ["react", "mocha", "node"]
   },
-  "include": ["src/**/*", "../../node_modules/@mui/monorepo/test/utils/initMatchers.ts"],
-  "exclude": ["src/internals/utils/testValidation/**/*"]
+  "include": ["src/**/*", "../../node_modules/@mui/monorepo/test/utils/initMatchers.ts"]
 }
