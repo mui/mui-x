@@ -25,6 +25,8 @@ We are currently building new picker components based on those fields.
 
 ### Fields to edit a range
 
+All fields to edit a range are available in a single input version and in a multi input version.
+
 {{"demo": "DateRangeFieldExamples.js", "defaultCodeOpen": false}}
 
 ## Form props
