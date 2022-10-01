@@ -81,22 +81,6 @@ It can then be restored by either passing the returned value to the `initialStat
 Watch out for controlled models and their callbacks (`onFilterModelChange` if you use `filterModel`, for instance), as the Data Grid calls those callbacks when restoring the state.
 But if the callback is not defined or if calling it does not update the prop value, then the restored value will not be applied.
 
-:::warning
-To avoid breaking changes, the Data Grid only saves the column visibility if you are using the [newer API](/x/react-data-grid/column-visibility/#initialize-the-visible-columns)
-Make sure to initialize `props.initialState.columns.columnVisibilityModel` or to control `props.columnVisibilityModel`.
-
-The easier way is to initialize the model with an empty object:
-
-```tsx
-<DataGrid
-  initialState={{
-    columns: { columnVisibilityModel: {} },
-  }}
-/>
-```
-
-:::
-
 ### Restore the state with initialState
 
 You can pass the state returned by `apiRef.current.exportState()` to the `initialState` prop.
