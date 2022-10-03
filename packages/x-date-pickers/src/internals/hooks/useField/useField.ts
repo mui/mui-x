@@ -199,11 +199,14 @@ export const useField = <
               const sectionValueStr = getNewSectionValueStr(activeDate);
 
               // We can't parse the day on the current date, otherwise we might try to parse `31` on a 30-days month.
-              // So we take for granted that for days, we always render `N` or `0N` for the Nth day of the month.
+              // So we take for granted that for days, the digit rendered is always 1-indexed, just like the digit stored in the date.
               if (activeSection.dateSectionName === 'day') {
                 return Number(sectionValueStr);
               }
 
+              // The month is stored as 0-indexed in the date (0 = January, 1 = February, ...).
+              // But it is often rendered as 1-indexed in the input (1 = January, 2 = February, ...).
+              // This parsing makes sure that we store the digit according to the date index and not the input index.
               const sectionDate = utils.parse(sectionValueStr, activeSection.formatValue)!;
               return getter(sectionDate);
             },
