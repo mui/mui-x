@@ -336,14 +336,44 @@ describe('<DateField /> - Editing', () => {
       const input = screen.getByRole('textbox');
       clickOnInput(input, 1);
 
-      fireEvent.change(input, { target: { value: '2' } });
+      fireEvent.change(input, { target: { value: '2' } }); // Press "2"
       expectInputValue(input, '02');
 
-      fireEvent.change(input, { target: { value: '2' } });
+      fireEvent.change(input, { target: { value: '2' } }); // Press "2"
       expectInputValue(input, '22');
 
-      fireEvent.change(input, { target: { value: '3' } });
+      fireEvent.change(input, { target: { value: '3' } }); // Press "3"
       expectInputValue(input, '23');
+    });
+
+    it('should support 4-digits year format', () => {
+      render(<DateField format={adapterToUse.formats.year} />);
+      const input = screen.getByRole('textbox');
+      clickOnInput(input, 1);
+
+      fireEvent.change(input, { target: { value: '2' } }); // Press "2"
+      expectInputValue(input, '0002');
+
+      fireEvent.change(input, { target: { value: '0' } }); // Press "0"
+      expectInputValue(input, '0020');
+
+      fireEvent.change(input, { target: { value: '2' } }); // Press "2"
+      expectInputValue(input, '0202');
+
+      fireEvent.change(input, { target: { value: '2' } }); // Press "2"
+      expectInputValue(input, '2022');
+
+      fireEvent.change(input, { target: { value: '2' } }); // Press "2"
+      expectInputValue(input, '0222');
+
+      fireEvent.change(input, { target: { value: '0' } }); // Press "0"
+      expectInputValue(input, '2220');
+
+      fireEvent.change(input, { target: { value: '2' } }); // Press "2"
+      expectInputValue(input, '2202');
+
+      fireEvent.change(input, { target: { value: '3' } }); // Press "3"
+      expectInputValue(input, '2023');
     });
 
     it('should support month without trailing zeros format', () => {
@@ -355,13 +385,13 @@ describe('<DateField /> - Editing', () => {
       const input = screen.getByRole('textbox');
       clickOnInput(input, 1);
 
-      fireEvent.change(input, { target: { value: '1' } });
+      fireEvent.change(input, { target: { value: '1' } }); // Press "1"
       expectInputValue(input, '1');
 
-      fireEvent.change(input, { target: { value: '1' } });
+      fireEvent.change(input, { target: { value: '1' } }); // Press "1"
       expectInputValue(input, '11');
 
-      fireEvent.change(input, { target: { value: '2' } });
+      fireEvent.change(input, { target: { value: '2' } }); // Press "2"
       expectInputValue(input, '12');
     });
 
