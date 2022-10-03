@@ -146,12 +146,12 @@ const PickersCalendarWeekNumberLabel = styled(Typography, {
   slot: 'WeekNumberLabel',
   overridesResolver: (_, styles) => styles.weekNumberLabel,
 })(({ theme }) => ({
-  width: 18,
+  width: 36,
   height: 40,
   margin: '0 2px',
-  paddingRight: '2px',
+  textAlign: 'center',
   display: 'flex',
-  justifyContent: 'end',
+  justifyContent: 'center',
   alignItems: 'center',
   color: theme.palette.text.disabled,
 }));
@@ -161,14 +161,16 @@ const PickersCalendarWeekNumber = styled(Typography, {
   slot: 'WeekNumber',
   overridesResolver: (_, styles) => styles.weekNumber,
 })(({ theme }: { theme: Theme }) => ({
-  width: 18,
+  ...theme.typography.caption,
+  width: DAY_SIZE,
   height: DAY_SIZE,
   padding: 0,
-  paddingRight: '2px',
+  margin: `0 ${DAY_MARGIN}px`,
   color: theme.palette.text.disabled,
-  textAlign: 'end',
-  lineHeight: `${DAY_SIZE}px`,
   fontSize: '0.75rem',
+  alignItems: 'center',
+  justifyContent: 'center',
+  display: 'inline-flex',
 }));
 
 const PickersCalendarLoadingContainer = styled('div', {
