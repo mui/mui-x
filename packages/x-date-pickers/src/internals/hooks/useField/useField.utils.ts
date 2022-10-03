@@ -335,10 +335,7 @@ export const splitFormatIntoSections = <TDate>(
     if (char.match(/([A-zÀ-ú]+)/g)) {
       currentTokenValue += char;
     } else {
-      if (currentTokenValue !== '') {
-        commitCurrentToken();
-      }
-
+      commitCurrentToken();
       sections[sections.length - 1].separator += char;
     }
   }
@@ -359,15 +356,15 @@ export const splitFormatIntoSections = <TDate>(
 
 export const createDateStrFromSections = (
   sections: FieldSection[],
-  shouldUseDateSeparator: boolean,
+  willBeRenderedInInput: boolean,
 ) =>
   sections
     .map((section) => {
       let sectionValueStr = getSectionVisibleValue(section);
 
-      const separator = shouldUseDateSeparator
-        ? section.dateSeparator ?? section.separator
-        : section.separator;
+      const separator = willBeRenderedInInput
+        ? section.separator
+        : section.dateSeparator ?? section.separator;
 
       if (separator != null) {
         sectionValueStr += separator;

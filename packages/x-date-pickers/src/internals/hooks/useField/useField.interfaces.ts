@@ -82,11 +82,13 @@ export interface FieldSection {
   value: string;
   placeholder: string;
   /**
-   * Separator used in the input
+   * Separator used in the input.
    */
   separator: string | null;
   /**
-   * Separator used to recreate the date from the sections
+   * Separator used to recreate the date from the sections.
+   * Can be useful when the separator rendered in the input is not the same as the one used for parsing.
+   * e.g: ` / ` in the input and `/` in parsing.
    * @default `section.separator`
    */
   dateSeparator?: string;
