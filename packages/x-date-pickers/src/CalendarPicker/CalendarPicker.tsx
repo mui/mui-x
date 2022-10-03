@@ -439,8 +439,13 @@ export const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
     },
   );
 
+  const prevOpenViewRef = React.useRef(openView);
   React.useEffect(() => {
     // Set focus to the button when switching from a view to another
+    if (prevOpenViewRef.current === openView) {
+      return;
+    }
+    prevOpenViewRef.current = openView;
     handleFocusedViewChange(openView)(true);
   }, [openView, handleFocusedViewChange]);
 

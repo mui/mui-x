@@ -3,6 +3,7 @@ import { SlideDirection } from './PickersSlideTransition';
 import { useIsDateDisabled } from '../internals/hooks/validation/useDateValidation';
 import { useUtils, useNow } from '../internals/hooks/useUtils';
 import { MuiPickersAdapter } from '../internals/models';
+import { clamp } from '../internals/utils/date-utils';
 import type { CalendarPickerDefaultizedProps } from './CalendarPicker';
 
 interface CalendarState<TDate> {
@@ -132,7 +133,9 @@ export const useCalendarState = <TDate extends unknown>({
   const [calendarState, dispatch] = React.useReducer(reducerFn, {
     isMonthSwitchingAnimating: false,
     focusedDay: value || now,
-    currentMonth: utils.startOfMonth(value ?? defaultCalendarMonth ?? now),
+    currentMonth: utils.startOfMonth(
+      value ?? defaultCalendarMonth ?? clamp(utils, now, minDate, maxDate),
+    ),
     slideDirection: 'left',
   });
 

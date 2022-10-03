@@ -12,6 +12,8 @@ export interface PickersProComponentNameToClassKey {
   MuiDateRangePickerViewDesktop: DateRangePickerViewDesktopClassKey;
   MuiDesktopDateRangePicker: never;
   MuiMobileDateRangePicker: never;
+  MuiMultiInputDateRangeField: never;
+  MuiSingleInputDateRangeField: never;
   MuiStaticDateRangePicker: never;
 }
 
