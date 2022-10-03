@@ -16,7 +16,7 @@ describe('<DateField /> - Selection', () => {
       input.select();
     });
 
-    expect(input.value).to.equal('month/day/year');
+    expect(input.value).to.equal('MM / DD / YYYY');
     expect(input.selectionStart).to.equal(0);
     expect(input.selectionEnd).to.equal(input.value.length);
   });
@@ -27,13 +27,13 @@ describe('<DateField /> - Selection', () => {
     // Simulate a touch focus interaction on mobile
     act(() => {
       input.focus();
-      input.setSelectionRange(7, 9);
+      input.setSelectionRange(6, 8);
       clock.runToLast();
     });
 
-    expect(input.value).to.equal('month/day/year');
-    expect(input.selectionStart).to.equal(6);
-    expect(input.selectionEnd).to.equal(9);
+    expect(input.value).to.equal('MM / DD / YYYY');
+    expect(input.selectionStart).to.equal(5);
+    expect(input.selectionEnd).to.equal(7);
   });
 
   it('should select day on desktop', () => {
@@ -42,12 +42,12 @@ describe('<DateField /> - Selection', () => {
     // Simulate a click focus interaction on desktop
     act(() => {
       input.focus();
-      input.setSelectionRange(7, 7);
+      input.setSelectionRange(6, 6);
       clock.runToLast();
     });
 
-    expect(input.value).to.equal('month/day/year');
-    expect(input.selectionStart).to.equal(6);
-    expect(input.selectionEnd).to.equal(9);
+    expect(input.value).to.equal('MM / DD / YYYY');
+    expect(input.selectionStart).to.equal(5);
+    expect(input.selectionEnd).to.equal(7);
   });
 });
