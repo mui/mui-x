@@ -410,7 +410,7 @@ describe('<DateField /> - Editing', () => {
     });
   });
 
-  describe.only('Pasting', () => {
+  describe('Pasting', () => {
     const firePasteEvent = (input: HTMLInputElement, pastedValue: string) => {
       act(() => {
         const clipboardEvent = new Event('paste', {
