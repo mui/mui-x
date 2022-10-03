@@ -410,6 +410,42 @@ describe('<DateField /> - Editing', () => {
     });
   });
 
+  describe.only('Pasting', () => {
+    const firePasteEvent = (input: HTMLInputElement, pastedValue: string) => {
+      const clipboardEvent = new Event('paste', {
+        bubbles: true,
+        cancelable: true,
+        composed: true,
+      });
+
+      // @ts-ignore
+      clipboardEvent.clipboardData = {
+        getData: () => pastedValue,
+      };
+      input.dispatchEvent(clipboardEvent);
+    };
+
+    it('should set the date when the pasted value is valid and a value is provided', () => {
+      const onChange = spy();
+
+      render(<DateField onChange={onChange} defaultValue={adapterToUse.date()} />);
+      const input = screen.getByRole('textbox');
+      firePasteEvent(input, '09/16/2022');
+      expect(onChange.callCount).to.equal(1);
+      expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2022, 8, 16));
+    });
+
+    it('should set the date when the pasted value is valid and no value is provided', () => {
+      const onChange = spy();
+
+      render(<DateField onChange={onChange} />);
+      const input = screen.getByRole('textbox');
+      firePasteEvent(input, '09/16/2022');
+      expect(onChange.callCount).to.equal(1);
+      expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2022, 8, 16));
+    });
+  });
+
   describe('Do not loose missing section values ', () => {
     it('should not loose time information when a value is provided', () => {
       const onChange = spy();

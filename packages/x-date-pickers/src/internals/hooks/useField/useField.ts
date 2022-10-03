@@ -49,6 +49,7 @@ export const useField = <
     clearValue,
     clearActiveSection,
     updateSectionValue,
+    updateValueFromValueStr,
     setTempAndroidValueStr,
   } = useFieldState(params);
 
@@ -111,13 +112,13 @@ export const useField = <
   });
 
   const handleInputPaste = useEventCallback((event: React.ClipboardEvent<HTMLInputElement>) => {
-    if (readOnly || selectedSectionIndexes == null) {
+    if (readOnly) {
       return;
     }
 
     event.preventDefault();
     const pastedValue = event.clipboardData.getData('text');
-    throw new Error(`Pasting is not implemented yet, the value to paste would be "${pastedValue}"`);
+    updateValueFromValueStr(pastedValue);
   });
 
   const handleInputChange = useEventCallback((event: React.ChangeEvent<HTMLInputElement>) => {

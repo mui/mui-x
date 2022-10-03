@@ -491,4 +491,30 @@ export const validateSections = <TSection extends FieldSection>(
   }
 };
 
+export const mergeDateIntoReferenceDate = <
+  TDate,
+  TSection extends Omit<FieldSection, 'start' | 'end'>,
+>(
+  utils: MuiPickerFieldAdapter<TDate>,
+  date: TDate,
+  sections: TSection[],
+  referenceDate: TDate,
+  shouldLimitToEditedSections: boolean,
+) => {
+  let mergedDate = referenceDate;
+
+  sections.forEach((section) => {
+    if (!shouldLimitToEditedSections || section.edited) {
+      mergedDate = applySectionValueToDate({
+        utils,
+        date: mergedDate,
+        dateSectionName: section.dateSectionName,
+        getSectionValue: (getter) => getter(date),
+      });
+    }
+  });
+
+  return mergedDate;
+};
+
 export const isAndroid = () => navigator.userAgent.toLowerCase().indexOf('android') > -1;

@@ -172,6 +172,18 @@ export interface FieldValueManager<TValue, TDate, TSection extends FieldSection,
     activeSection: TSection,
   ) => FieldActiveDateManager<TValue, TDate>;
   /**
+   *
+   * @param utils
+   * @param valueStr
+   * @param format
+   * @param referenceValue
+   */
+  parseValue: (
+    valueStr: string,
+    referenceValue: TValue,
+    getValueFromDateStr: (dateStr: string, referenceDate: TDate) => TDate | null,
+  ) => TValue;
+  /**
    * Update the reference value with the new value.
    * This method must make sure that no date inside the returned `referenceValue` is invalid.
    * @template TValue, TDate
