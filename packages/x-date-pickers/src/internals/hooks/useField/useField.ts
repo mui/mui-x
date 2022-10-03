@@ -176,14 +176,7 @@ export const useField = <
           newSectionValue = boundaries.minimum.toString();
         }
 
-        // We only want to add zeroes to section with trailing zeros.
-        const hasTrailingZeroes =
-          utils.formatByString(
-            utils.parse('1', activeSection.formatValue)!,
-            activeSection.formatValue,
-          ).length > 1;
-
-        if (!hasTrailingZeroes) {
+        if (!activeSection.hasTrailingZeroes) {
           return newSectionValue;
         }
 
