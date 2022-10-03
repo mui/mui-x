@@ -11,7 +11,7 @@ In `package.json`, change the version of the data grid package to `next`.
 +"@mui/x-data-grid": "next",
 ```
 
-Using `next` ensures that it will always use the latest v6 alpha release, but you can also use a fixed version.
+Using `next` ensures that it will always use the latest v6 alpha release, but you can also use a fixed version, like `6.0.0-alpha.0`.
 
 ## Breaking changes
 
