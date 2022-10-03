@@ -13,7 +13,6 @@ export default function FormProps() {
       <Stack spacing={2} sx={(theme) => ({ width: theme.spacing(48) })}>
         <DateField label="Disabled" defaultValue={defaultValue} disabled />
         <DateField label="Read only" defaultValue={defaultValue} readOnly />
-        <DateField label="Required" defaultValue={defaultValue} required />
       </Stack>
     </LocalizationProvider>
   );

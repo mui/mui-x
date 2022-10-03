@@ -86,7 +86,3 @@ You need to make sure the input is focused before imperatively updating the sele
 For range fields, you will not be able to use the string format since each section is present twice.
 We will add new apis in the future to better support this use case.
 :::
-
-### Headless usage
-
-{{"demo": "CustomUIDateField.js", "defaultCodeOpen": false }}
