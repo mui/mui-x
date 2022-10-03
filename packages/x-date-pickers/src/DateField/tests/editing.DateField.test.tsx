@@ -346,6 +346,25 @@ describe('<DateField /> - Editing', () => {
       expectInputValue(input, '23');
     });
 
+    it('should support month without trailing zeros format', () => {
+      render(
+        <DateField
+          format="M" // This format is not present in any of the adapter formats
+        />,
+      );
+      const input = screen.getByRole('textbox');
+      clickOnInput(input, 1);
+
+      fireEvent.change(input, { target: { value: '1' } });
+      expectInputValue(input, '1');
+
+      fireEvent.change(input, { target: { value: '1' } });
+      expectInputValue(input, '11');
+
+      fireEvent.change(input, { target: { value: '2' } });
+      expectInputValue(input, '12');
+    });
+
     it('should not edit when props.readOnly = true and no value is provided', () => {
       testChange({
         format: adapterToUse.formats.year,

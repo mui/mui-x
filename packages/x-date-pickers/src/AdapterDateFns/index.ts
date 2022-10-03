@@ -9,6 +9,7 @@ const formatTokenMap: MuiFormatTokenMap = {
   yy: 'year',
   yyy: 'year',
   yyyy: 'year',
+  M: 'month',
   MM: 'month',
   MMMM: { sectionName: 'month', contentType: 'letter' },
   MMM: { sectionName: 'month', contentType: 'letter' },
