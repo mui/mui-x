@@ -150,25 +150,39 @@ const pages: MuiPage[] = [
     children: [
       { pathname: '/x/react-date-pickers/getting-started' },
       { pathname: '/x/react-date-pickers/migration-lab', title: 'Migration from the lab' },
-      { pathname: '/x/react-date-pickers/date-picker' },
       {
-        pathname: '/x/react-date-pickers/date-range-picker',
-        plan: 'pro',
+        pathname: '/react-date-pickers/pickers',
+        title: 'Picker components',
+        scopePathnames: [
+          '/x/react-date-pickers/date-picker',
+          '/x/react-date-pickers/date-range-picker',
+          '/x/react-date-pickers/date-time-picker',
+          '/x/react-date-pickers/date-time-range-picker',
+          '/x/react-date-pickers/time-picker',
+          '/x/react-date-pickers/time-range-picker',
+        ],
+        children: [
+          { pathname: '/x/react-date-pickers/date-picker' },
+          {
+            pathname: '/x/react-date-pickers/date-range-picker',
+            plan: 'pro',
+          },
+          { pathname: '/x/react-date-pickers/date-time-picker' },
+          {
+            pathname: '/x/react-date-pickers/date-time-range-picker',
+            title: 'Date time range picker 🚧',
+            plan: 'pro',
+          },
+          { pathname: '/x/react-date-pickers/time-picker' },
+          {
+            pathname: '/x/react-date-pickers/time-range-picker',
+            title: 'Time range picker 🚧',
+            plan: 'pro',
+          },
+        ],
       },
-      { pathname: '/x/react-date-pickers/date-time-picker' },
-      { pathname: '/x/react-date-pickers/time-picker' },
       { pathname: '/x/react-date-pickers/localization' },
       { pathname: '/x/react-date-pickers/custom-components' },
-      {
-        pathname: '/x/react-date-pickers/date-time-range-picker',
-        title: 'Date time range picker 🚧',
-        plan: 'pro',
-      },
-      {
-        pathname: '/x/react-date-pickers/time-range-picker',
-        title: 'Time range picker 🚧',
-        plan: 'pro',
-      },
       {
         pathname: '/x/api/date-pickers',
         title: 'API Reference',
