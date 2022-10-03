@@ -127,7 +127,7 @@ describe('<TimeField /> - Editing', () => {
         testKeyPress({
           format: adapterToUse.formats.fullTime12h,
           key: 'ArrowDown',
-          expectedValue: 'hour:minute pm',
+          expectedValue: 'hh:mm pm',
           cursorPosition: 14,
         });
       });
@@ -235,7 +235,7 @@ describe('<TimeField /> - Editing', () => {
         testKeyPress({
           format: adapterToUse.formats.fullTime12h,
           key: 'ArrowUp',
-          expectedValue: 'hour:minute am',
+          expectedValue: 'hh:mm am',
           cursorPosition: 14,
         });
       });
@@ -314,7 +314,7 @@ describe('<TimeField /> - Editing', () => {
         format: adapterToUse.formats.minutes,
         readOnly: true,
         inputValue: '1',
-        expectedValue: 'minute',
+        expectedValue: 'mm',
       });
     });
 
@@ -362,8 +362,8 @@ describe('<TimeField /> - Editing', () => {
       userEvent.keyPress(input, { key: 'a', ctrlKey: true });
       userEvent.keyPress(input, { key: 'Backspace' });
 
-      fireEvent.change(input, { target: { value: '3:minute' } }); // Press "3"
-      expect(input.value).to.equal('03:minute');
+      fireEvent.change(input, { target: { value: '3:mm' } }); // Press "3"
+      expect(input.value).to.equal('03:mm');
 
       userEvent.keyPress(input, { key: 'ArrowRight' });
       fireEvent.change(input, { target: { value: '03:4' } }); // Press "3"
