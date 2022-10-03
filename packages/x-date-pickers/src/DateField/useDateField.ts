@@ -37,8 +37,8 @@ export const dateFieldValueManager: FieldValueManager<any, any, FieldSection, Da
       }),
       setActiveDateAsInvalid: () => null,
     }),
-    parseValue: (valueStr, referenceValue, getValueFromDateStr) =>
-      getValueFromDateStr(valueStr.trim(), referenceValue),
+    parseValueStr: (valueStr, referenceValue, parseDate) =>
+      parseDate(valueStr.trim(), referenceValue),
     hasError: (error) => error != null,
     isSameError: isSameDateError,
   };

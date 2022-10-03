@@ -172,16 +172,18 @@ export interface FieldValueManager<TValue, TDate, TSection extends FieldSection,
     activeSection: TSection,
   ) => FieldActiveDateManager<TValue, TDate>;
   /**
-   *
-   * @param utils
-   * @param valueStr
-   * @param format
-   * @param referenceValue
+   * Parses a string version (most of the time coming from the input).
+   * This method should only be used when the change does not come from a single section.
+   * @template TValue, TDate
+   * @param {string} valueStr The string value to parse.
+   * @param {TValue} referenceValue The reference value currently stored in state.
+   * @param {(dateStr: string, referenceDate: TDate) => TDate | null} parseDate A method to convert a string date into a parsed one.
+   * @returns {TValue} The new parsed value.
    */
-  parseValue: (
+  parseValueStr: (
     valueStr: string,
     referenceValue: TValue,
-    getValueFromDateStr: (dateStr: string, referenceDate: TDate) => TDate | null,
+    parseDate: (dateStr: string, referenceDate: TDate) => TDate | null,
   ) => TValue;
   /**
    * Update the reference value with the new value.

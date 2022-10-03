@@ -179,7 +179,7 @@ export const useFieldState = <
       return mergeDateIntoReferenceDate(utils, date, sections, referenceDate, false);
     };
 
-    const newValue = fieldValueManager.parseValue(
+    const newValue = fieldValueManager.parseValueStr(
       valueStr,
       state.referenceValue,
       getValueFromDateStr,
