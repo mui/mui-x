@@ -3,6 +3,314 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 6.0.0-alpha.1
+
+_Sep 29, 2022_
+
+We'd like to offer a big thanks to the 8 contributors who made this release possible. Here are some highlights ✨:
+
+- 🚀 Better support for custom overlays (#5808) @cherniavskii
+- 🖨️ Improve print export (#6273) @oliviertassinari
+- 🎁 Reduce confusion when initializing pickers with a date value (#6170) @flaviendelangle
+- 📚 Documentation improvements
+- 🐞 Bugfixes
+
+### `@mui/x-data-grid@v6.0.0-alpha.1` / `@mui/x-data-grid-pro@v6.0.0-alpha.1` / `@mui/x-data-grid-premium@v6.0.0-alpha.1`
+
+#### Breaking changes
+
+- New internal rows structure for v6 (#4927) @flaviendelangle
+
+  Some selectors related to the rows have been renamed to better describe the type of rows they are returning:
+
+  ```diff
+  -const result = gridRowsIdToIdLookupSelector(apiRef);
+  +const result = gridRowsDataRowIdToIdLookupSelector(apiRef);
+  ```
+
+  ```diff
+  -const result = gridRowTreeDepthSelector(apiRef);
+  +const result = gridRowMaximumTreeDepthSelector(apiRef);
+  ```
+
+  The format of the tree nodes (the element accessible in `params.node` or with the `apiRef.current.getRowNode` method) have changed.
+  You have a new `type` property, which can be useful, for example, to apply custom behavior on groups.
+  Here is an example of the old and new approach showing how to apply a custom value formatter in groups for the grouping column:
+
+  ```diff
+   <DataGridPremium 
+     groupingColDef={() => ({
+       valueFormatter: (params) => {
+         if (params.id == null) {
+           return params.value;
+         }
+
+         const rowNode = apiRef.current.getRowNode(params.id!)!;
+  -      if (rowNode.children?.length) {
+  +      if (rowNode.type === 'group') {
+           return `by ${rowNode.groupingKey ?? ''}`;
+         }
+
+         return params.value;
+       }
+     })}
+   />
+  ```
+
+- The `GridFeatureModeConstant` constant no longer exists (#6077) @DanailH
+
+  ```diff
+  -import { GridFeatureModeConstant } from '@mui/x-data-grid';
+  ```
+
+#### Changes
+
+- [DataGrid] Fix `GridPagination` props typing (#6238) @cherniavskii
+- [DataGrid] Fix `GridRow` not forwarding `ref` to the root element (#6274) @cherniavskii
+- [DataGrid] Fix `undefined` value being showed in filter button tooltip text (#6259) @cherniavskii
+- [DataGrid] Fix blank space when changing page with dynamic row height (#6049) @m4theushw
+- [DataGrid] New internal rows structure for v6 (#4927) @flaviendelangle
+- [DataGrid] Revert cell/row mode if `processRowUpdate` fails (#6185) @m4theushw
+- [DataGrid] Rework overlays layout (#5808) @cherniavskii
+- [DataGrid] Improve print support (#6273) @oliviertassinari
+- [DataGridPremium] Add missing `themeAugmentation` module (#6270) @cherniavskii
+
+### `@mui/x-date-pickers@v6.0.0-alpha.1` / `@mui/x-date-pickers-pro@v6.0.0-alpha.1`
+
+#### Breaking changes
+
+- [pickers] Do not support unparsed date formats anymore (#6170) @flaviendelangle
+
+  The `value` prop of the pickers now expects a parsed value.
+  Until now, it was possible to provide any format that your date management library was able to parse.
+  For instance, you could pass `value={new Date()}` when using `AdapterDayjs`.
+
+  This brought a lot of confusion so we decided to remove this behavior.
+  The format expected by the `value` prop is now the same as for any other prop holding a date.
+  Here is the syntax to initialize a date picker at the current date for each adapter:
+
+  ```tsx
+  // Date-fns
+  <DatePicker value={new Date()} />
+
+  // Dayjs
+  import dayjs from 'dayjs'
+  <DatePicker value={dayjs()} />
+
+  // Moment
+  import moment from 'moment'
+  <DatePicker value={moment()} />
+
+  // Luxon
+  import { DateTime } from 'luxon'
+  <DatePicker value={DateTime.now()} />
+  ```
+
+#### Changes
+
+- [DatePicker] Respect `minDate` and `maxDate` when opening a `DatePicker` or `DateTimePicker` (#6309) @alexfauquette
+- [DateTimePicker] Fix validation with `shouldDisableMonth` and `shouldDisableYear` (#6266) @flaviendelangle
+- [TimePicker] Add support for `disablePast` and `disableFuture` validation props (#6226) @LukasTy
+- [CalendarPicker] Prevent getting focus when `autoFocus=false` (#6304) @alexfauquette
+- [DateField] Extend moment adapter to support `expandFormat` and `formatTokenMap` (#6215) @alexfauquette
+- [pickers] Allow to control the selected sections (#6209, #6307) @flaviendelangle
+- [pickers] Do not loose the value of date sections not present in the format in the new field components (#6141) @flaviendelangle
+- [pickers] Do not support unparsed date formats anymore (#6170) @flaviendelangle
+- [pickers] Support slots on the `DateField` component  (#6048) @flaviendelangle
+- [pickers] Support Luxon v3 in `AdapterLuxon` (#6069) @alexfauquette
+- [pickers] New components `TimeField` and `DateTimeField` (#6312) @flaviendelangle
+- [pickers] Support basic mobile edition on new field components (#5958) @flaviendelangle
+
+### Docs
+
+- [docs] Fix issue in DataGrid/DataGridPro row styling demo (#6264) @MBilalShafi
+- [docs] Improve pickers Getting Started examples (#6292) @flaviendelangle
+- [docs] Pass model change callbacks in controlled grid editing demos (#6296) @cherniavskii
+- [docs] Update the CodeSandbox to use the `next` branch (#6275) @oliviertassinari
+
+### Core
+
+- [core] Fix typing error (#6291) @flaviendelangle
+- [core] Fix typo in the state updater of `useField` (#6311) @flaviendelangle
+- [core] Remove `GridFeatureModeConstant` (#6077) @DanailH
+- [core] Simplify testing architecture (#6043) @flaviendelangle
+- [test] Skip test in Chrome non-headless and Edge (#6318) @m4theushw
+
+## 6.0.0-alpha.0
+
+_Sep 22, 2022_
+
+We'd like to offer a big thanks to the 12 contributors who made this release possible. Here are some highlights ✨:
+
+- 🌍 Add a `localeText` prop to all pickers to customize the translations (#6212) @flaviendelangle
+- 🌍 Add Finnish (fi-FI) locale to the pickers (#6219) @PetroSilenius
+- 🌍 Add Persian (fa-IR) locale to the pickers (#6181) @fakhamatia
+- 📚 Documentation improvements
+- 🐞 Bugfixes
+
+### `@mui/x-data-grid@v6.0.0-alpha.0` / `@mui/x-data-grid-pro@v6.0.0-alpha.0` / `@mui/x-data-grid-premium@v6.0.0-alpha.0`
+
+#### Breaking changes
+
+- The deprecated `hide` column property has been removed in favor of the `columnVisibilityModel` prop and initial state.
+
+  ```diff
+  <DataGrid
+    columns={[
+      field: 'id,
+  -   hide: true,
+    ]}
+  +  initialState={{
+  +    columns: {
+  +      columnVisibilityModel: { id: false },
+  +    }
+  +  }}
+  />
+  ```
+
+  You can find more information about this new API on our [documentation](https://next.mui.com/x/react-data-grid/column-visibility/).
+
+- The `GridEvents` enum is now a TypeScript type.
+
+  ```diff
+  - apiRef.current.subscribeEvent(GridEvents.rowClick', handleRowClick)
+  + apiRef.current.subscribeEvent('rowClick', handleRowClick)
+  ```
+
+#### Changes
+
+- [DataGrid] Do not publish `cellFocusOut` event if the row was removed (#6251) @cherniavskii
+- [DataGrid] Fix scroll anchoring with master details (#6054) @oliviertassinari
+- [DataGrid] Improve Polish (pl-PL) locale on the data grid (#6245) @grzegorz-bach
+- [DataGrid] Remove the `GridEvents` enum (#6003) @flaviendelangle
+- [DataGrid] Remove the deprecated `hide` column property (#5999) @flaviendelangle
+
+### `@mui/x-date-pickers@v6.0.0-alpha.0` / `@mui/x-date-pickers-pro@v6.0.0-alpha.0`
+
+#### Breaking changes
+
+- All the deprecated props that allowed you to set the text displayed in the pickers have been removed.
+
+  You can now use the `localText` prop available on all picker components:
+
+  | Removed prop                 | Property in the new `localText` prop                                              |
+  |------------------------------|-----------------------------------------------------------------------------------|
+  | `endText`                    | `end`                                                                             |
+  | `getClockLabelText`          | `clockLabelText`                                                                  |
+  | `getHoursClockNumberText`    | `hoursClockNumberText`                                                            |
+  | `getMinutesClockNumberText`  | `minutesClockNumberText`                                                          |
+  | `getSecondsClockNumberText`  | `secondsClockNumberText`                                                          |
+  | `getViewSwitchingButtonText` | `calendarViewSwitchingButtonAriaLabel`                                            |
+  | `leftArrowButtonText`        | `openPreviousView` (or `previousMonth` when the button changes the visible month) |
+  | `rightArrowButtonText`       | `openNextView` (or `nextMonth` when the button changes the visible month)         |
+  | `startText`                  | `start`                                                                           |
+
+  For instance if you want to replace the `startText` / `endText`
+
+  ```diff
+  <DateRangePicker
+  -  startText="From"
+  -  endText="To"
+  +  localeText={{
+  +    start: 'From',
+  +    end: 'To',
+  +  }}
+  />
+  ```
+
+You can find more information about the new api, including how to set those translations on all your components at once in the [documentation](https://next.mui.com/x/react-date-pickers/localization/)
+
+- The component slots `LeftArrowButton` and `RightArrowButton` have been renamed `PreviousIconButton` and `NextIconButton` to better describe there usage:
+
+  ```diff
+  <DatePicker 
+    components={{
+  -   LeftArrowButton: CustomButton,  
+  +   PreviousIconButton: CustomButton,
+
+  -   RightArrowButton: CustomButton,
+  +   NextIconButton: CustomButton,
+    }}
+
+    componentsProps={{
+  -   leftArrowButton: {},  
+  +   previousIconButton: {},
+
+  -   rightArrowButton: {},
+  +   nextIconButton: {},
+    }}
+  />
+  ```
+
+- The `date` prop has been renamed `value` on  `MonthPicker` / `YearPicker`, `ClockPicker` and `CalendarPicker`.
+
+  ```diff
+  - <MonthPicker date={dayjs()} onChange={handleMonthChange} />
+  + <MonthPicker value={dayjs()} onChange={handleMonthChange} />
+
+  - <YearPicker date={dayjs()} onChange={handleYearChange} />
+  + <YearPicker value={dayjs()} onChange={handleYearChange} />
+
+  - <ClockPicker date={dayjs()} onChange={handleTimeChange} />
+  + <ClockPicker value={dayjs()} onChange={handleTimeChange} />
+
+  - <CalendarPicker date={dayjs()} onChange={handleDateChange} />
+  + <CalendarPicker value={dayjs()} onChange={handleDateChange} />
+  ```
+
+#### Changes
+
+- [CalendarPicker] Don't move to closest enabled date when `props.date` contains a disabled date (#6146) @flaviendelangle
+- [DateRangePicker] Switch to new month when changing the value from the outside (#6166) @flaviendelangle
+- [pickers] Add a `localeText` prop to all pickers to customize the translations (#6212) @flaviendelangle
+- [pickers] Add Finnish (fi-FI) locale to the pickers (#6219) (#6230) @PetroSilenius
+- [pickers] Add Persian (fa-IR) locale to the pickers (#6181) @fakhamatia
+- [pickers] Allow nested `LocalizationProvider` (#6011) @flaviendelangle
+- [pickers] Clean slots on `PickersArrowSwitcher` component (#5890) @flaviendelangle
+- [pickers] Fix invalid date error when decreasing `DateField` day (#6071) @alexfauquette
+- [pickers] Fix mobile section selection (#6207) @oliviertassinari
+- [pickers] Fix usage with Typescript 4.8 (#6229) @flaviendelangle
+- [pickers] Improve error message when no adapter context is found (#6211) @flaviendelangle
+- [pickers] Remove `valueStr` from the field state (#6142) @flaviendelangle
+- [pickers] Remove remaining deprecated locale props (#6233) @flaviendelangle
+- [pickers] Rename the `date` prop `value` on `MonthPicker` / `YearPicker`, `ClockPicker` and `CalendarPicker` (#6128) @flaviendelangle
+- [pickers] Rename the `onClose` prop of  `PickersPopper` `onDismiss` to simplify typing (#6155) @flaviendelangle
+- [pickers] Support the `sx` prop on all public component with a root HTML elements (#5944) @flaviendelangle
+- [pickers] Unify `PickersMonth` and `PickersYear` behaviors (#6034) @flaviendelangle
+- [pickers] Use `shouldDisableMonth` and `shouldDisableYear` for date validation (#6066) @flaviendelangle
+- [YearPicker] Scroll to the current year even with `autoFocus=false` (#6224) @alexfauquette
+
+### Docs
+
+- [docs] Add automatic vale check (#5429) @alexfauquette
+- [docs] Add Pro logo in "column ordering" link (#6127) @alexfauquette
+- [docs] Fix 301 link (#6239) @oliviertassinari
+- [docs] Fix broken link (#6163) @alexfauquette
+- [docs] Fix broken links (#6101) @alexfauquette
+- [docs] Fix demonstration date to avoid hydration errors (#6032) @alexfauquette
+- [docs] Fix hidden popper in restore state example (#6191) @heyfirst
+- [docs] Fix invalid links causing 404 & 301 errors (#6105) @oliviertassinari
+- [docs] Fix npm repository url in the pickers `package.json` (#6172) @oliviertassinari
+- [docs] Fix typo in linked issue (#6162) @flaviendelangle
+- [docs] Import `generateUtilityClass` from `@mui/utils` (#6216) @michaldudak
+- [docs] Improve Upgrade plan docs (#6018) @oliviertassinari
+- [docs] Link the OpenSSF Best Practices card (#6171) @oliviertassinari
+
+### Core
+
+- [core] Add `v5.17.3` changelog to next branch (#6250) @flaviendelangle
+- [core] Add link to the security page on the `README` (#6073) @oliviertassinari
+- [core] Fix scroll restoration in the docs (#5938) @oliviertassinari
+- [core] Remove the Storybook (#6099) @flaviendelangle
+- [core] Tag release as `next` in NPM (#6256) @m4theushw
+- [core] Update monorepo (#6180) @flaviendelangle
+- [core] Use the `next` branch for Prettier (#6097) @flaviendelangle
+- [core] Use the official repository for `@mui/monorepo` instead of a fork (#6189) @oliviertassinari
+- [test] Fix logic to skip column pinning tests (#6133) @m4theushw
+- [test] Hide the date on the print regression test (#6120) @flaviendelangle
+- [test] Skip tests for column pinning and dynamic row height (#5997) @m4theushw
+- [website] Improve security header @oliviertassinari
+
 ## v5.17.4
 
 _Sep 22, 2022_
@@ -135,7 +443,7 @@ We'd like to offer a big thanks to the 3 contributors who made this release poss
 
 _Sep 2, 2022_
 
-🎉 We are excited to finally introduce a stable release (v5.0.0) for the `@mui/x-date-pickers` and `@mui/x-date-pickers-pro` packages!
+🎉 We are excited to finally introduce a stable release (v5.0.0) for the `@mui/x-date-pickers` and  `@mui/x-date-pickers-pro` packages!
 
 If you are still using picker components from the `lab`, take a look at the [migration guide](https://mui.com/x/react-date-pickers/migration-lab/).
 
@@ -1440,7 +1748,7 @@ We'd like to offer a big thanks to the 15 contributors who made this release pos
 - [DataGrid] Stop checkbox ripple on blur (#3835) @m4theushw
 - [DataGrid] Stop calling `onRowClick` when clicking in cells with interactive elements (#3929) @m4theushw
 - [DataGrid] Use only `headerName` when available to search column (#3959) @pkratz
-- [DataGrid] Use the bundling scripts as the packages published by the [https://github.com/mui/material-ui](material-ui) repository (#3965) @flaviendelangle
+- [DataGrid] Use the bundling scripts as the packages published by the [material-ui](https://github.com/mui/material-ui) repository (#3965) @flaviendelangle
 - [DataGridPro] Add `unstable_setRowHeight` method to `apiRef` (#3751) @cherniavskii
 - [DataGridPro] Always export the `pageSize` and `page` when it has been initialized or is being controlled (#3908) @flaviendelangle
 - [DataGridPro] Disable export for detail panel column (#4057) @gustavhagland
@@ -4085,7 +4393,7 @@ Big thanks to the 7 contributors who made this release possible. Here are some h
 
 - 💄 Release the cell editing feature (#1287) @dtassone
 
-  This is the first release of the Cell editing feature. You can find the documentation [following this link](https://mui.com/x/react-data-grid/editing/#cell-editing). We have spent the last three months working on it.
+  This is the first release of the Cell editing feature. You can find the documentation [following this link](https://mui.com/x/react-data-grid/editing/). We have spent the last three months working on it.
 
   ![cell edit](https://user-images.githubusercontent.com/3165635/115632215-87994700-a307-11eb-91d9-9f5537df0911.gif)
 
@@ -4695,7 +5003,7 @@ _Dec 9, 2020_
 
 Big thanks to the 6 contributors who made this release possible. Here are some highlights ✨:
 
-- 🔍 Add a new data grid [density selector](https://mui.com/x/react-data-grid/rendering/#density) feature (#606) @DanailH.
+- 🔍 Add a new data grid [density selector](https://mui.com/x/react-data-grid/accessibility/#density) feature (#606) @DanailH.
 - 💄 A first iteration on the data grid's toolbar.
 - 🧪 Continue the iteration on the data grid filtering feature, soon to be released @dtassone.
 
