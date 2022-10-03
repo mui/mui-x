@@ -30,7 +30,7 @@ export interface GridExperimentalProFeatures extends GridExperimentalFeatures {
    */
   lazyLoading: boolean;
   /**
-   * Enables the the ability for rows to be pinned in data grid.
+   * Enables the ability for rows to be pinned in data grid.
    */
   rowPinning: boolean;
 }

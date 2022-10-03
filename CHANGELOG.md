@@ -712,7 +712,7 @@ We'd like to offer a big thanks to the 6 contributors who made this release poss
 
   https://user-images.githubusercontent.com/45398769/181581503-77cc412e-9d9e-4de1-8bc3-c3bccc54cdaa.mp4
 
-  To enable this feature, add `experimentalFeatures={{ aggregation: true }}`.
+  To enable this feature, add ``.
   Aggregation functions are customizable and they combine well with row grouping.
   See the [documentation](https://mui.com/x/react-data-grid/aggregation/) to explore everything it has to offer.
 
