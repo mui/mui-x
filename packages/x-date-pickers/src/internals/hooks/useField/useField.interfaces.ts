@@ -91,7 +91,7 @@ export interface FieldSection {
    * e.g: ` / ` in the input and `/` in parsing.
    * @default `section.separator`
    */
-  dateSeparator?: string;
+  parsingSeparator?: string;
   dateSectionName: MuiDateSectionName;
   contentType: 'digit' | 'letter';
   formatValue: string;

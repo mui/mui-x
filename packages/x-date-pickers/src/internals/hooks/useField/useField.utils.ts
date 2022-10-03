@@ -349,7 +349,7 @@ export const splitFormatIntoSections = <TDate>(
     return {
       ...section,
       separator: ' / ',
-      dateSeparator: '/',
+      parsingSeparator: '/',
     };
   });
 };
@@ -364,7 +364,7 @@ export const createDateStrFromSections = (
 
       const separator = willBeRenderedInInput
         ? section.separator
-        : section.dateSeparator ?? section.separator;
+        : section.parsingSeparator ?? section.separator;
 
       if (separator != null) {
         sectionValueStr += separator;
