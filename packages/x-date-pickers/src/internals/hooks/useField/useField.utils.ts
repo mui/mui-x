@@ -517,11 +517,7 @@ export const applySectionValueToDate = <TDate>({
     throw new Error(`MUI: The section name ${dateSectionName} can't be applied to a date`);
   }
 
-  if (methods) {
-    return methods.setter(date, getNumericSectionValue(methods.getter));
-  }
-
-  return date;
+  return methods.setter(date, getNumericSectionValue(methods.getter));
 };
 
 export const cleanTrailingZeroInNumericSectionValue = (value: string, maximum: number) => {
