@@ -1,7 +1,8 @@
 /* eslint-disable class-methods-use-this */
-import { Dayjs } from 'dayjs';
+import defaultDayjs, { Dayjs } from 'dayjs';
 import weekOfYear from 'dayjs/plugin/weekOfYear';
 import BaseAdapterDayjs from '@date-io/dayjs';
+import { DateIOFormats } from '@date-io/core/IUtils';
 import { MuiFormatTokenMap, MuiPickerFieldAdapter } from '../internals/models';
 
 const formatTokenMap: MuiFormatTokenMap = {
@@ -25,9 +26,16 @@ const formatTokenMap: MuiFormatTokenMap = {
   a: 'am-pm',
 };
 
+interface Opts {
+  locale?: string;
+  /** Make sure that your dayjs instance extends customParseFormat and advancedFormat */
+  instance?: typeof defaultDayjs;
+  formats?: Partial<DateIOFormats>;
+}
+
 export class AdapterDayjs extends BaseAdapterDayjs implements MuiPickerFieldAdapter<Dayjs> {
-  constructor(...args) {
-    super(...args);
+  constructor(options: Opts) {
+    super(options);
     this.rawDayJsInstance.extend(weekOfYear);
   }
 
