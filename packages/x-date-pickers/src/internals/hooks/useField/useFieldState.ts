@@ -73,12 +73,22 @@ export const useFieldState = <
     };
   });
 
-  const [selectedSections, setSelectedSection] = useControlled({
+  const [selectedSections, innerSetSelectedSections] = useControlled({
     controlled: selectedSectionsProp,
     default: null,
     name: 'useField',
     state: 'selectedSectionIndexes',
   });
+
+  const setSelectedSections = (newSelectedSections: FieldSelectedSections) => {
+    innerSetSelectedSections(newSelectedSections);
+    onSelectedSectionsChange?.(newSelectedSections);
+
+    setState((prevState) => ({
+      ...prevState,
+      selectedSectionQuery: null,
+    }));
+  };
 
   const selectedSectionIndexes = React.useMemo<FieldSelectedSectionsIndexes | null>(() => {
     if (selectedSections == null) {
@@ -164,6 +174,13 @@ export const useFieldState = <
   }: UpdateSectionValueParams<TDate, TSection>) => {
     const activeDateManager = fieldValueManager.getActiveDateManager(state, activeSection);
 
+    if (
+      selectedSectionIndexes &&
+      selectedSectionIndexes.startIndex !== selectedSectionIndexes.endIndex
+    ) {
+      setSelectedSections(selectedSectionIndexes.startIndex);
+    }
+
     if (activeDateManager.activeDate != null && utils.isValid(activeDateManager.activeDate)) {
       const newDate = setSectionValueOnDate(activeDateManager.activeDate);
       return publishValue(activeDateManager.getNewValueFromNewActiveDate(newDate));
@@ -197,16 +214,6 @@ export const useFieldState = <
       sections: newSections,
       value: activeDateManager.setActiveDateAsInvalid(),
       tempValueStrAndroid: null,
-    }));
-  };
-
-  const setSelectedSections = (newSelectedSections: FieldSelectedSections) => {
-    setSelectedSection(newSelectedSections);
-    onSelectedSectionsChange?.(newSelectedSections);
-
-    setState((prevState) => ({
-      ...prevState,
-      selectedSectionQuery: null,
     }));
   };
 
