@@ -29,7 +29,7 @@ describe('<TimeField /> - Editing', () => {
     const input = screen.getByRole('textbox');
     clickOnInput(input, cursorPosition);
     userEvent.keyPress(input, { key });
-    expect(input.value.replaceAll('‎', '')).to.equal(expectedValue);
+    expect(input.value.replaceAll(/‎/g, '')).to.equal(expectedValue);
   };
 
   const testChange = <TDate extends unknown>({
@@ -46,7 +46,7 @@ describe('<TimeField /> - Editing', () => {
     const input = screen.getByRole('textbox');
     clickOnInput(input, cursorPosition);
     fireEvent.change(input, { target: { value: inputValue } });
-    expect(input.value.replaceAll('‎', '')).to.equal(expectedValue);
+    expect(input.value.replaceAll(/‎/g, '')).to.equal(expectedValue);
   };
 
   describe('key: ArrowDown', () => {
