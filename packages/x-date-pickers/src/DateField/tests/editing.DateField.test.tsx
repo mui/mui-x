@@ -46,7 +46,7 @@ describe('<DateField /> - Editing', () => {
     const input = screen.getByRole('textbox');
     clickOnInput(input, cursorPosition);
     fireEvent.change(input, { target: { value: inputValue } });
-    expect(input.value.replaceAll(/‎/g, '')).to.equal(expectedValue);
+    expect(input.value.replace(/‎/g, '')).to.equal(expectedValue);
   };
 
   describe('key: ArrowDown', () => {
