@@ -85,6 +85,7 @@ export interface FieldSection {
   contentType: 'digit' | 'letter';
   formatValue: string;
   edited: boolean;
+  hasTrailingZeroes: boolean;
 }
 
 /**

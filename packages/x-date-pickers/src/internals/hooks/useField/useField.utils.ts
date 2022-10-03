@@ -232,8 +232,23 @@ export const adjustInvalidDateSectionValue = <TDate, TSection extends FieldSecti
   }
 };
 
-export const getSectionVisibleValue = (section: Omit<FieldSection, 'start' | 'end'>) =>
-  section.value || section.emptyValue;
+export const getSectionVisibleValue = (
+  section: Omit<FieldSection, 'start' | 'end'>,
+  willBeRenderedInInput: boolean,
+) => {
+  const value = section.value || section.emptyValue;
+
+  // In the input, we add an empty character at the end of each section without trailing zeros.
+  // This make sure that `onChange` will always be fired.
+  // Otherwise, when your input value equals `1/dd/yyyy` (format `M/DD/YYYY` on DayJs),
+  // If you press `1`, on the first section, the new value is also `1/dd/yyyy`,
+  // So the browser will not fire the input `onChange`.
+  if (willBeRenderedInInput && section.contentType === 'digit' && !section.hasTrailingZeroes) {
+    return `${value}‎`;
+  }
+
+  return value;
+};
 
 export const addPositionPropertiesToSections = <TSection extends FieldSection>(
   sections: Omit<TSection, 'start' | 'end'>[],
@@ -244,7 +259,7 @@ export const addPositionPropertiesToSections = <TSection extends FieldSection>(
   for (let i = 0; i < sections.length; i += 1) {
     const section = sections[i];
     const end =
-      position + getSectionVisibleValue(section).length + (section.separator?.length ?? 0);
+      position + getSectionVisibleValue(section, true).length + (section.separator?.length ?? 0);
 
     newSections.push({ ...section, start: position, end } as TSection);
     position = end;
@@ -287,12 +302,18 @@ export const splitFormatIntoSections = <TDate>(
         } else {
           const sectionConfig = getDateSectionConfigFromFormatToken(utils, currentTokenValue);
 
+          const hasTrailingZeroes =
+            sectionConfig.contentType === 'digit' &&
+            utils.formatByString(utils.parse('1', currentTokenValue)!, currentTokenValue).length >
+              1;
+
           sections.push({
             ...sectionConfig,
             formatValue: currentTokenValue,
             value: dateForCurrentToken,
             emptyValue: sectionConfig.dateSectionName,
             separator: char,
+            hasTrailingZeroes,
             edited: false,
           });
           currentTokenValue = '';
@@ -309,12 +330,17 @@ export const splitFormatIntoSections = <TDate>(
       } else {
         const sectionConfig = getDateSectionConfigFromFormatToken(utils, currentTokenValue);
 
+        const hasTrailingZeroes =
+          sectionConfig.contentType === 'digit' &&
+          utils.formatByString(utils.parse('1', currentTokenValue)!, currentTokenValue).length > 1;
+
         sections.push({
           ...sectionConfig,
           formatValue: currentTokenValue,
           value: dateForCurrentToken,
           emptyValue: sectionConfig.dateSectionName,
           separator: null,
+          hasTrailingZeroes,
           edited: false,
         });
       }
@@ -324,10 +350,13 @@ export const splitFormatIntoSections = <TDate>(
   return sections;
 };
 
-export const createDateStrFromSections = (sections: FieldSection[]) =>
+export const createDateStrFromSections = (
+  sections: FieldSection[],
+  willBeRenderedInInput: boolean,
+) =>
   sections
     .map((section) => {
-      let sectionValueStr = getSectionVisibleValue(section);
+      let sectionValueStr = getSectionVisibleValue(section, willBeRenderedInInput);
 
       if (section.separator != null) {
         sectionValueStr += section.separator;

@@ -173,7 +173,7 @@ export const useFieldState = <
     const newSectionValue = setSectionValueOnSections(activeDateManager.referenceActiveDate);
     const newSections = setSectionValue(selectedSectionIndexes!.startIndex, newSectionValue);
     const activeDateSections = fieldValueManager.getActiveDateSections(newSections, activeSection);
-    const newDate = utils.parse(createDateStrFromSections(activeDateSections), format);
+    const newDate = utils.parse(createDateStrFromSections(activeDateSections, false), format);
 
     if (newDate != null && utils.isValid(newDate)) {
       let mergedDate = activeDateManager.referenceActiveDate;

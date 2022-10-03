@@ -406,7 +406,7 @@ export const useField = <
     const lastSelectedSection = state.sections[selectedSectionIndexes.endIndex];
     updateSelectionRangeIfChanged(
       firstSelectedSection.start,
-      lastSelectedSection.start + getSectionVisibleValue(lastSelectedSection).length,
+      lastSelectedSection.start + getSectionVisibleValue(lastSelectedSection, true).length,
     );
   });
 

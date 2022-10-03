@@ -5,7 +5,7 @@ import { Unstable_TimeField as TimeField, TimeFieldProps } from '@mui/x-date-pic
 import { screen, act, userEvent, fireEvent } from '@mui/monorepo/test/utils';
 import { createPickerRenderer, adapterToUse } from 'test/utils/pickers-utils';
 
-describe.only('<TimeField /> - Editing', () => {
+describe('<TimeField /> - Editing', () => {
   const { render, clock } = createPickerRenderer({
     clock: 'fake',
     clockConfig: new Date(2022, 5, 15, 14, 25, 32),
@@ -29,7 +29,7 @@ describe.only('<TimeField /> - Editing', () => {
     const input = screen.getByRole('textbox');
     clickOnInput(input, cursorPosition);
     userEvent.keyPress(input, { key });
-    expect(input.value).to.equal(expectedValue);
+    expect(input.value.replaceAll('‎', '')).to.equal(expectedValue);
   };
 
   const testChange = <TDate extends unknown>({
@@ -46,7 +46,7 @@ describe.only('<TimeField /> - Editing', () => {
     const input = screen.getByRole('textbox');
     clickOnInput(input, cursorPosition);
     fireEvent.change(input, { target: { value: inputValue } });
-    expect(input.value).to.equal(expectedValue);
+    expect(input.value.replaceAll('‎', '')).to.equal(expectedValue);
   };
 
   describe('key: ArrowDown', () => {
@@ -329,7 +329,7 @@ describe.only('<TimeField /> - Editing', () => {
     });
   });
 
-  describe.only('Letter editing', () => {
+  describe('Letter editing', () => {
     it('should not edit when props.readOnly = true and no value is provided', () => {
       testChange({
         format: adapterToUse.formats.fullTime12h,

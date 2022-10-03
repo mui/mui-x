@@ -88,8 +88,8 @@ export const dateRangeFieldValueManager: FieldValueManager<
   },
   getValueStrFromSections: (sections) => {
     const dateRangeSections = splitDateRangeSections(sections);
-    const startDateStr = createDateStrFromSections(dateRangeSections.startDate);
-    const endDateStr = createDateStrFromSections(dateRangeSections.endDate);
+    const startDateStr = createDateStrFromSections(dateRangeSections.startDate, true);
+    const endDateStr = createDateStrFromSections(dateRangeSections.endDate, true);
 
     return `${startDateStr}${endDateStr}`;
   },
