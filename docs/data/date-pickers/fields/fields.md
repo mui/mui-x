@@ -15,10 +15,6 @@ We might do some breaking change on their props to have the best components poss
 
 The fields are React components that lets you enter a date with the keyboard, without any modal or drop down UI.
 
-:::info
-We are currently building new picker components based on those fields.
-:::
-
 ### Fields to edit a single element
 
 {{"demo": "SingleDateFieldExamples.js", "defaultCodeOpen": false}}
@@ -28,6 +24,12 @@ We are currently building new picker components based on those fields.
 All fields to edit a range are available in a single input version and in a multi input version.
 
 {{"demo": "DateRangeFieldExamples.js", "defaultCodeOpen": false}}
+
+### Usage with the pickers
+
+The picker components (`DatePicker`, `DestkopDatePicker`, `MobileDatePicker`, `DateTimePicker`, ...) do not use the field components yet.
+
+New pickers using them will be released in a few months.
 
 ## Form props
 
