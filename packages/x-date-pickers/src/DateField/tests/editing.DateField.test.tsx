@@ -412,17 +412,19 @@ describe('<DateField /> - Editing', () => {
 
   describe.only('Pasting', () => {
     const firePasteEvent = (input: HTMLInputElement, pastedValue: string) => {
-      const clipboardEvent = new Event('paste', {
-        bubbles: true,
-        cancelable: true,
-        composed: true,
-      });
+      act(() => {
+        const clipboardEvent = new Event('paste', {
+          bubbles: true,
+          cancelable: true,
+          composed: true,
+        });
 
-      // @ts-ignore
-      clipboardEvent.clipboardData = {
-        getData: () => pastedValue,
-      };
-      input.dispatchEvent(clipboardEvent);
+        // @ts-ignore
+        clipboardEvent.clipboardData = {
+          getData: () => pastedValue,
+        };
+        input.dispatchEvent(clipboardEvent);
+      });
     };
 
     it('should set the date when the pasted value is valid and a value is provided', () => {
