@@ -31,7 +31,7 @@ GridItem.propTypes = {
 const date1 = dayjs('2022-04-07T14:30:22');
 const date2 = dayjs('2022-04-12T18:25:14');
 
-export default function SingleDateFieldExamples() {
+export default function DateRangeFieldExamples() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <Grid container spacing={4} width={550}>

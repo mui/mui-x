@@ -1,10 +1,9 @@
 import * as React from 'react';
+import Stack from '@mui/material/Stack';
 import dayjs, { Dayjs } from 'dayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { Unstable_DateField as DateField } from '@mui/x-date-pickers/DateField';
-import Stack from '@mui/material/Stack';
-import { Unstable_TimeField as TimeField } from '@mui/x-date-pickers/TimeField';
 
 export default function CustomDateFormat() {
   const [value, setValue] = React.useState<Dayjs | null>(dayjs('2022-04-07'));

@@ -31,7 +31,7 @@ All fields to edit a range are available in a single input version and in a mult
 
 ## Form props
 
-The standard form attributes (`disabled`, `readOnly`, `required`) are supported by all the field components:
+The standard form attributes (`disabled`, `readOnly`) are supported by all the field components:
 
 {{"demo": "FormProps.js", "defaultCodeOpen": false}}
 
