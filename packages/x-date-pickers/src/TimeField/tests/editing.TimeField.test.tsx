@@ -5,6 +5,9 @@ import { Unstable_TimeField as TimeField, TimeFieldProps } from '@mui/x-date-pic
 import { screen, act, userEvent, fireEvent } from '@mui/monorepo/test/utils';
 import { createPickerRenderer, adapterToUse } from 'test/utils/pickers-utils';
 
+const expectInputValue = (input: HTMLInputElement, expectedValue: string) =>
+  expect(input.value.replace(/‎/g, '')).to.equal(expectedValue);
+
 describe('<TimeField /> - Editing', () => {
   const { render, clock } = createPickerRenderer({
     clock: 'fake',
@@ -29,7 +32,7 @@ describe('<TimeField /> - Editing', () => {
     const input = screen.getByRole('textbox');
     clickOnInput(input, cursorPosition);
     userEvent.keyPress(input, { key });
-    expect(input.value.replace(/‎/g, '')).to.equal(expectedValue);
+    expectInputValue(input, expectedValue);
   };
 
   const testChange = <TDate extends unknown>({
@@ -46,7 +49,7 @@ describe('<TimeField /> - Editing', () => {
     const input = screen.getByRole('textbox');
     clickOnInput(input, cursorPosition);
     fireEvent.change(input, { target: { value: inputValue } });
-    expect(input.value.replace(/‎/g, '')).to.equal(expectedValue);
+    expectInputValue(input, expectedValue);
   };
 
   describe('key: ArrowDown', () => {
@@ -422,11 +425,11 @@ describe('<TimeField /> - Editing', () => {
       userEvent.keyPress(input, { key: 'Backspace' });
 
       fireEvent.change(input, { target: { value: '3:minute' } }); // Press "3"
-      expect(input.value).to.equal('03:minute');
+      expectInputValue(input, '03:minute');
 
       userEvent.keyPress(input, { key: 'ArrowRight' });
       fireEvent.change(input, { target: { value: '03:4' } }); // Press "3"
-      expect(input.value).to.equal('03:04');
+      expectInputValue(input, '03:04');
 
       expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2010, 3, 3, 3, 4, 3));
     });
