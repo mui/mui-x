@@ -55,7 +55,7 @@ export const useField = <
   const {
     inputRef: inputRefProp,
     internalProps: { readOnly = false },
-    forwardedProps: { onClick, onKeyDown, onFocus, onBlur, ...otherForwardedProps },
+    forwardedProps: { onClick, onKeyDown, onFocus, onBlur, onMouseUp, ...otherForwardedProps },
     fieldValueManager,
     validator,
   } = params;
@@ -65,7 +65,7 @@ export const useField = <
 
   const focusTimeoutRef = React.useRef<NodeJS.Timeout | undefined>(undefined);
 
-  const syncSelectionWithDOM = () => {
+  const syncSelectionFromDOM = () => {
     const nextSectionIndex = state.sections.findIndex(
       (section) => section.start > (inputRef.current!.selectionStart ?? 0),
     );
@@ -75,7 +75,14 @@ export const useField = <
 
   const handleInputClick = useEventCallback((...args) => {
     onClick?.(...(args as []));
-    syncSelectionWithDOM();
+    syncSelectionFromDOM();
+  });
+
+  const handleInputMouseUp = useEventCallback((event: React.MouseEvent) => {
+    onMouseUp?.(event);
+
+    // Without this, the browser will remove the selected when clicking inside an already-selected section.
+    event.preventDefault();
   });
 
   const handleInputFocus = useEventCallback((...args) => {
@@ -90,14 +97,10 @@ export const useField = <
         return;
       }
 
-      if (selectedSectionIndexes != null) {
-        return;
-      }
-
       if (Number(input.selectionEnd) - Number(input.selectionStart) === input.value.length) {
         setSelectedSections({ startIndex: 0, endIndex: state.sections.length - 1 });
       } else {
-        syncSelectionWithDOM();
+        syncSelectionFromDOM();
       }
     });
   });
@@ -301,10 +304,10 @@ export const useField = <
 
         if (selectedSectionIndexes == null) {
           setSelectedSections(0);
-        } else if (selectedSectionIndexes.startIndex < state.sections.length - 1) {
-          setSelectedSections(selectedSectionIndexes.startIndex + 1);
         } else if (selectedSectionIndexes.startIndex !== selectedSectionIndexes.endIndex) {
           setSelectedSections(selectedSectionIndexes.endIndex);
+        } else if (selectedSectionIndexes.startIndex < state.sections.length - 1) {
+          setSelectedSections(selectedSectionIndexes.startIndex + 1);
         }
         break;
       }
@@ -438,6 +441,7 @@ export const useField = <
     onPaste: handleInputPaste,
     onChange: handleInputChange,
     onKeyDown: handleInputKeyDown,
+    onMouseUp: handleInputMouseUp,
     error: inputError,
     ref: handleRef,
   };
