@@ -172,13 +172,20 @@ const pages: MuiPage[] = [
       {
         pathname: '/x/react-date-pickers/fields',
         title: 'Field components',
+        scopePathnames: [
+          '/x/react-date-pickers/fields',
+          '/x/react-date-pickers/date-field',
+          '/x/react-date-pickers/date-range',
+          '/x/react-date-pickers/date-time-field',
+          '/x/react-date-pickers/time-field',
+        ],
         newFeature: true,
         children: [
           { pathname: '/x/react-date-pickers/fields', title: 'Getting started' },
           { pathname: '/x/react-date-pickers/date-field' },
+          { pathname: '/x/react-date-pickers/date-range-field', plan: 'pro' },
           { pathname: '/x/react-date-pickers/date-time-field' },
           { pathname: '/x/react-date-pickers/time-field' },
-          { pathname: '/x/react-date-pickers/date-range-field', plan: 'pro' },
         ],
       },
       {

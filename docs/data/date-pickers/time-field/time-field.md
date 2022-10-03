@@ -21,7 +21,7 @@ The component can be controlled or uncontrolled
 
 {{"demo": "TimeFieldValue.js"}}
 
-## Customize the date format
+## Customize the time format
 
 {{"demo": "CustomTimeFormat.js"}}
 

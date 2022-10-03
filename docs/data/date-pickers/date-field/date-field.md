@@ -23,7 +23,7 @@ The component can be controlled or uncontrolled
 
 ## Customize the date format
 
-{{"demo": "CustomTimeFormat.js"}}
+{{"demo": "CustomDateFormat.js"}}
 
 ## Localization
 
