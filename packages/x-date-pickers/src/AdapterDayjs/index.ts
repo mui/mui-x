@@ -26,8 +26,8 @@ const formatTokenMap: MuiFormatTokenMap = {
 };
 
 export class AdapterDayjs extends BaseAdapterDayjs implements MuiPickerFieldAdapter<Dayjs> {
-  constructor() {
-    super();
+  constructor(...args) {
+    super(...args);
     this.rawDayJsInstance.extend(weekOfYear);
   }
 
