@@ -541,7 +541,7 @@ describe('<DateField /> - Editing', () => {
     });
   });
 
-  describe.only('Imperative change (without any section selected)', () => {
+  describe('Imperative change (without any section selected)', () => {
     it('should set the date when the change value is valid and no value is provided', () => {
       const onChange = spy();
       render(<DateField onChange={onChange} />);
