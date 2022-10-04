@@ -11,16 +11,17 @@ import {
   DayPicker,
   defaultReduceAnimations,
   PickersArrowSwitcher,
+  PickersCalendarHeader,
   useCalendarState,
   useDefaultDates,
   useLocaleText,
   useNextMonthDisabled,
   usePreviousMonthDisabled,
   useUtils,
+  WrapperVariantContext,
 } from '@mui/x-date-pickers/internals';
 import { getReleaseInfo } from '../internal/utils/releaseInfo';
 import { getCalendarRangePickerUtilityClass } from './calendarRangePickerClasses';
-import { ExportedDateRangePickerViewDesktopProps } from '../DateRangePicker/DateRangePickerViewDesktop';
 import {
   CalendarRangePickerProps,
   CalendarRangePickerDefaultizedProps,
@@ -34,22 +35,6 @@ import {
 import { calculateRangeChange, calculateRangePreview } from '../DateRangePicker/date-range-manager';
 import { DateRange } from '../internal/models';
 import { DateRangePickerDay } from '../DateRangePickerDay';
-
-function getCalendarsArray(
-  calendars: ExportedDateRangePickerViewDesktopProps<unknown>['calendars'],
-) {
-  switch (calendars) {
-    case 1:
-      return [0];
-    case 2:
-      return [0, 0];
-    case 3:
-      return [0, 0, 0];
-    // this will not work in IE11, but allows to support any amount of calendars
-    default:
-      return new Array(calendars).fill(0);
-  }
-}
 
 const releaseInfo = getReleaseInfo();
 
@@ -99,15 +84,16 @@ function useCalendarRangePickerDefaultizedProps<TDate>(
   });
 
   return {
-    loading: false,
-    disablePast: false,
-    disableFuture: false,
-    reduceAnimations: defaultReduceAnimations,
-    renderLoading: () => <span data-mui-test="loading-progress">...</span>,
     ...themeProps,
+    renderLoading:
+      themeProps.renderLoading ?? (() => <span data-mui-test="loading-progress">...</span>),
+    reduceAnimations: themeProps.reduceAnimations ?? defaultReduceAnimations,
+    loading: props.loading ?? false,
+    disablePast: props.disablePast ?? false,
+    disableFuture: props.disableFuture ?? false,
     minDate: applyDefaultDate(utils, themeProps.minDate, defaultDates.minDate),
     maxDate: applyDefaultDate(utils, themeProps.maxDate, defaultDates.maxDate),
-    calendars: 2,
+    calendars: themeProps.calendars ?? 2,
   };
 }
 
@@ -130,6 +116,7 @@ export function CalendarRangePicker<TDate>(inProps: CalendarRangePickerProps<TDa
 
   const ownerState = props;
   const classes = useUtilityClasses(ownerState);
+  const isMobile = React.useContext(WrapperVariantContext) === 'mobile';
 
   const {
     className,
@@ -162,19 +149,24 @@ export function CalendarRangePicker<TDate>(inProps: CalendarRangePickerProps<TDa
     shouldDisableDate &&
     ((dayToTest: TDate) => shouldDisableDate?.(dayToTest, currentDatePosition));
 
-  const { changeMonth, calendarState, onMonthSwitchingAnimationEnd, changeFocusedDay } =
-    useCalendarState<TDate>({
-      value: value[0] || value[1],
-      defaultCalendarMonth,
-      disableFuture,
-      disablePast,
-      disableSwitchToMonthOnDayFocus: true,
-      maxDate,
-      minDate,
-      onMonthChange,
-      reduceAnimations,
-      shouldDisableDate: wrappedShouldDisableDate,
-    });
+  const {
+    calendarState,
+    changeFocusedDay,
+    changeMonth,
+    handleChangeMonth,
+    onMonthSwitchingAnimationEnd,
+  } = useCalendarState<TDate>({
+    value: value[0] || value[1],
+    defaultCalendarMonth,
+    disableFuture,
+    disablePast,
+    disableSwitchToMonthOnDayFocus: true,
+    maxDate,
+    minDate,
+    onMonthChange,
+    reduceAnimations,
+    shouldDisableDate: wrappedShouldDisableDate,
+  });
 
   const handleSelectedDayChange = useEventCallback((newDate: TDate | null) => {
     const { nextSelection, newRange } = calculateRangeChange({
@@ -221,6 +213,10 @@ export function CalendarRangePicker<TDate>(inProps: CalendarRangePickerProps<TDa
     disabled,
   };
 
+  // When disabled, limit the view to the selected date
+  const minDateWithDisabled = (disabled && value[0]) || minDate;
+  const maxDateWithDisabled = (disabled && value[1]) || maxDate;
+
   const [rangePreviewDay, setRangePreviewDay] = React.useState<TDate | null>(null);
 
   const CalendarTransitionProps = React.useMemo(
@@ -248,7 +244,7 @@ export function CalendarRangePicker<TDate>(inProps: CalendarRangePickerProps<TDa
   return (
     <CalendarRangePickerRoot className={clsx(className, classes.root)}>
       <Watermark packageName="x-date-pickers-pro" releaseInfo={releaseInfo} />
-      {getCalendarsArray(calendars).map((_, index) => {
+      {Array.from({ length: calendars }).map((_, index) => {
         const monthOnIteration = utils.setMonth(
           calendarState.currentMonth,
           utils.getMonth(calendarState.currentMonth) + index,
@@ -256,20 +252,37 @@ export function CalendarRangePicker<TDate>(inProps: CalendarRangePickerProps<TDa
 
         return (
           <CalendarRangePickerMonthContainer key={index} className={classes.container}>
-            <CalendarRangePickerArrowSwitcher
-              onGoToPrevious={selectPreviousMonth}
-              onGoToNext={selectNextMonth}
-              isPreviousHidden={index !== 0}
-              isPreviousDisabled={isPreviousMonthDisabled}
-              previousLabel={localeText.previousMonth}
-              isNextHidden={index !== calendars - 1}
-              isNextDisabled={isNextMonthDisabled}
-              nextLabel={localeText.nextMonth}
-              components={components}
-              componentsProps={componentsProps}
-            >
-              {utils.format(monthOnIteration, 'monthAndYear')}
-            </CalendarRangePickerArrowSwitcher>
+            {calendars === 1 ? (
+              <PickersCalendarHeader
+                views={['day']}
+                openView={'day'}
+                currentMonth={calendarState.currentMonth}
+                onMonthChange={(newMonth, direction) => handleChangeMonth({ newMonth, direction })}
+                minDate={minDateWithDisabled}
+                maxDate={maxDateWithDisabled}
+                disabled={disabled}
+                disablePast={disablePast}
+                disableFuture={disableFuture}
+                reduceAnimations={reduceAnimations}
+                components={components}
+                componentsProps={componentsProps}
+              />
+            ) : (
+              <CalendarRangePickerArrowSwitcher
+                onGoToPrevious={selectPreviousMonth}
+                onGoToNext={selectNextMonth}
+                isPreviousHidden={index !== 0}
+                isPreviousDisabled={isPreviousMonthDisabled}
+                previousLabel={localeText.previousMonth}
+                isNextHidden={index !== calendars - 1}
+                isNextDisabled={isNextMonthDisabled}
+                nextLabel={localeText.nextMonth}
+                components={components}
+                componentsProps={componentsProps}
+              >
+                {utils.format(monthOnIteration, 'monthAndYear')}
+              </CalendarRangePickerArrowSwitcher>
+            )}
             <CalendarRangeDayPicker<TDate>
               key={index}
               {...calendarState}
@@ -289,9 +302,11 @@ export function CalendarRangePicker<TDate>(inProps: CalendarRangePickerProps<TDa
               renderLoading={renderLoading}
               renderDay={(day, __, DayProps) =>
                 renderDay(day, {
-                  isPreviewing: isWithinRange(utils, day, previewingRange),
-                  isStartOfPreviewing: isStartOfRange(utils, day, previewingRange),
-                  isEndOfPreviewing: isEndOfRange(utils, day, previewingRange),
+                  isPreviewing: isMobile ? false : isWithinRange(utils, day, previewingRange),
+                  isStartOfPreviewing: isMobile
+                    ? false
+                    : isStartOfRange(utils, day, previewingRange),
+                  isEndOfPreviewing: isMobile ? false : isEndOfRange(utils, day, previewingRange),
                   isHighlighting: isWithinRange(utils, day, value),
                   isStartOfHighlighting: isStartOfRange(utils, day, value),
                   isEndOfHighlighting: isEndOfRange(utils, day, value),

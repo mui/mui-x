@@ -42,7 +42,7 @@ export interface CalendarRangePickerProps<TDate>
   currentDatePosition: 'start' | 'end';
   onCurrentDatePositionChange: (newPosition: 'start' | 'end') => void;
   /**
-   * The number of calendars that render on **desktop**.
+   * The number of calendars to render.
    * @default 2
    */
   calendars?: 1 | 2 | 3;

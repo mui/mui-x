@@ -19,6 +19,11 @@ export interface DesktopDateRangePicker2SlotsComponentsProps
 
 export interface DesktopDateRangePicker2Props<TDate> extends BaseDateRangePicker2Props<TDate> {
   /**
+   * The number of calendars to render on **desktop**.
+   * @default 2
+   */
+  calendars?: 1 | 2 | 3;
+  /**
    * Overrideable components.
    * @default {}
    */
