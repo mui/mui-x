@@ -34,10 +34,8 @@ export interface DateRangePickerToolbarProps<TDate>
       | 'toggleMobileKeyboardView'
       | 'toolbarTitle'
       | 'toolbarFormat'
-      | 'parsedValue'
+      | 'value'
     > {
-  startText: React.ReactNode;
-  endText: React.ReactNode;
   classes?: Partial<DateRangePickerToolbarClasses>;
 }
 
@@ -73,11 +71,9 @@ export const DateRangePickerToolbar = React.forwardRef(function DateRangePickerT
 
   const {
     currentlySelectingRangeEnd,
-    parsedValue: [start, end],
-    endText,
+    value: [start, end],
     isMobileKeyboardViewOpen,
     setCurrentlySelectingRangeEnd,
-    startText,
     toggleMobileKeyboardView,
     toolbarFormat,
     toolbarTitle: toolbarTitleProp,
@@ -88,11 +84,11 @@ export const DateRangePickerToolbar = React.forwardRef(function DateRangePickerT
 
   const startDateValue = start
     ? utils.formatByString(start, toolbarFormat || utils.formats.shortDate)
-    : startText;
+    : localeText.start;
 
   const endDateValue = end
     ? utils.formatByString(end, toolbarFormat || utils.formats.shortDate)
-    : endText;
+    : localeText.end;
 
   const ownerState = props;
   const classes = useUtilityClasses(ownerState);

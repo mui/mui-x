@@ -9,8 +9,8 @@ import {
   getMaskFromCurrentFormat,
 } from '../utils/text-field-helper';
 
-type MaskedInputProps<TInputDate, TDate> = Omit<
-  DateInputProps<TInputDate, TDate>,
+type MaskedInputProps<TDate> = Omit<
+  DateInputProps<TDate>,
   | 'adornmentPosition'
   | 'disableOpenPicker'
   | 'getOpenDialogAriaText'
@@ -22,7 +22,7 @@ type MaskedInputProps<TInputDate, TDate> = Omit<
   | 'renderInput'
 > & { inputProps?: Partial<React.HTMLProps<HTMLInputElement>> };
 
-export const useMaskedInput = <TInputDate, TDate>({
+export const useMaskedInput = <TDate extends unknown>({
   acceptRegex = /[\d]/gi,
   disabled,
   disableMaskedInput,
@@ -32,12 +32,12 @@ export const useMaskedInput = <TInputDate, TDate>({
   label,
   mask,
   onChange,
-  rawValue,
+  value,
   readOnly,
   rifmFormatter,
   TextFieldProps,
   validationError,
-}: MaskedInputProps<TInputDate, TDate>): MuiTextFieldProps => {
+}: MaskedInputProps<TDate>): MuiTextFieldProps => {
   const utils = useUtils<TDate>();
 
   const formatHelperText = utils.getFormatHelperText(inputFormat);
@@ -68,43 +68,39 @@ export const useMaskedInput = <TInputDate, TDate>({
     [acceptRegex, maskToUse, shouldUseMaskedInput],
   );
 
-  // TODO: Implement with controlled vs uncontrolled `rawValue`
-  const parsedValue = rawValue === null ? null : utils.date(rawValue);
-
   // Track the value of the input
-  const [innerInputValue, setInnerInputValue] = React.useState<TDate | null>(parsedValue);
+  const [innerInputValue, setInnerInputValue] = React.useState<TDate | null>(value);
   // control the input text
   const [innerDisplayedInputValue, setInnerDisplayedInputValue] = React.useState<string>(
-    getDisplayDate(utils, rawValue, inputFormat),
+    getDisplayDate(utils, value, inputFormat),
   );
 
   // Inspired from autocomplete: https://github.com/mui/material-ui/blob/2c89d036dc2e16f100528f161600dffc83241768/packages/mui-base/src/AutocompleteUnstyled/useAutocomplete.js#L185:L201
-  const prevRawValue = React.useRef<TInputDate>();
+  const prevValue = React.useRef<TDate | null>(null);
   const prevLocale = React.useRef<Locale | string>(utils.locale);
 
   React.useEffect(() => {
-    const rawValueHasChanged = rawValue !== prevRawValue.current;
+    const valueHasChanged = value !== prevValue.current;
     const localeHasChanged = utils.locale !== prevLocale.current;
-    prevRawValue.current = rawValue;
+    prevValue.current = value;
     prevLocale.current = utils.locale;
 
-    if (!rawValueHasChanged && !localeHasChanged) {
+    if (!valueHasChanged && !localeHasChanged) {
       return;
     }
 
-    const newParsedValue = rawValue === null ? null : utils.date(rawValue);
-    const isAcceptedValue = rawValue === null || utils.isValid(newParsedValue);
+    const isAcceptedValue = value === null || utils.isValid(value);
 
-    if (!localeHasChanged && (!isAcceptedValue || utils.isEqual(innerInputValue, newParsedValue))) {
+    if (!localeHasChanged && (!isAcceptedValue || utils.isEqual(innerInputValue, value))) {
       return;
     }
 
     // When dev set a new valid value, we trust them
-    const newDisplayDate = getDisplayDate(utils, rawValue, inputFormat);
+    const newDisplayDate = getDisplayDate(utils, value, inputFormat);
 
-    setInnerInputValue(newParsedValue);
+    setInnerInputValue(value);
     setInnerDisplayedInputValue(newDisplayDate);
-  }, [utils, rawValue, inputFormat, innerInputValue]);
+  }, [utils, value, inputFormat, innerInputValue]);
 
   const handleChange = (text: string) => {
     const finalString = text === '' || text === mask ? '' : text;

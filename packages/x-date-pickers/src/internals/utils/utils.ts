@@ -30,3 +30,6 @@ export const executeInTheNextEventLoopTick = (fn: () => void) => {
 };
 
 export const doNothing = () => {};
+
+export const clamp = (value: number, min: number, max: number) =>
+  Math.max(min, Math.min(max, value));

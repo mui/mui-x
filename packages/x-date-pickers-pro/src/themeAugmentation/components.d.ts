@@ -36,6 +36,16 @@ export interface PickersProComponents<Theme = unknown> {
     styleOverrides?: ComponentsOverrides<Theme>['MuiMobileDateRangePicker'];
     variants?: ComponentsVariants['MuiMobileDateRangePicker'];
   };
+  MuiMultiInputDateRangeField?: {
+    defaultProps?: ComponentsProps['MuiMultiInputDateRangeField'];
+    styleOverrides?: ComponentsOverrides['MuiMultiInputDateRangeField'];
+    variants?: ComponentsVariants['MuiMultiInputDateRangeField'];
+  };
+  MuiSingleInputDateRangeField?: {
+    defaultProps?: ComponentsProps['MuiSingleInputDateRangeField'];
+    styleOverrides?: ComponentsOverrides['MuiSingleInputDateRangeField'];
+    variants?: ComponentsVariants['MuiSingleInputDateRangeField'];
+  };
   MuiStaticDateRangePicker?: {
     defaultProps?: ComponentsProps['MuiStaticDateRangePicker'];
     styleOverrides?: ComponentsOverrides<Theme>['MuiStaticDateRangePicker'];

@@ -7,14 +7,15 @@ import {
   useUtils,
   useLocaleText,
   PickersArrowSwitcher,
-  ExportedArrowSwitcherProps,
   usePreviousMonthDisabled,
   useNextMonthDisabled,
   DayPicker,
-  buildDeprecatedPropsWarning,
   DayPickerProps,
   DAY_MARGIN,
   DayValidationProps,
+  ExportedPickersArrowSwitcherProps,
+  PickersArrowSwitcherSlotsComponent,
+  PickersArrowSwitcherSlotsComponentsProps,
 } from '@mui/x-date-pickers/internals';
 import { calculateRangePreview } from './date-range-manager';
 import { DateRange } from '../internal/models';
@@ -26,7 +27,7 @@ import {
   getDateRangePickerViewDesktopUtilityClass,
 } from './dateRangePickerViewDesktopClasses';
 
-const useUtilityClasses = (ownerState: DesktopDateRangeCalendarProps<any>) => {
+const useUtilityClasses = (ownerState: DateRangePickerViewDesktopProps<any>) => {
   const { classes } = ownerState;
   const slots = {
     root: ['root'],
@@ -36,7 +37,7 @@ const useUtilityClasses = (ownerState: DesktopDateRangeCalendarProps<any>) => {
   return composeClasses(slots, getDateRangePickerViewDesktopUtilityClass, classes);
 };
 
-export interface ExportedDesktopDateRangeCalendarProps<TDate> {
+export interface ExportedDateRangePickerViewDesktopProps<TDate> {
   /**
    * The number of calendars that render on **desktop**.
    * @default 2
@@ -53,13 +54,29 @@ export interface ExportedDesktopDateRangeCalendarProps<TDate> {
   renderDay?: (day: TDate, dateRangePickerDayProps: DateRangePickerDayProps<TDate>) => JSX.Element;
 }
 
-export interface DesktopDateRangeCalendarProps<TDate>
-  extends ExportedDesktopDateRangeCalendarProps<TDate>,
+export interface DesktopDateRangeCalendarSlotsComponent
+  extends PickersArrowSwitcherSlotsComponent {}
+
+export interface DesktopDateRangeCalendarSlotsComponentsProps
+  extends PickersArrowSwitcherSlotsComponentsProps {}
+
+export interface DateRangePickerViewDesktopProps<TDate>
+  extends ExportedDateRangePickerViewDesktopProps<TDate>,
     Omit<DayPickerProps<TDate>, 'selectedDays' | 'renderDay' | 'onFocusedDayChange' | 'classes'>,
     DayValidationProps<TDate>,
-    ExportedArrowSwitcherProps {
+    ExportedPickersArrowSwitcherProps {
+  /**
+   * Overrideable components.
+   * @default {}
+   */
+  components?: Partial<DesktopDateRangeCalendarSlotsComponent>;
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  componentsProps?: Partial<DesktopDateRangeCalendarSlotsComponentsProps>;
   calendars: 1 | 2 | 3;
-  parsedValue: DateRange<TDate>;
+  value: DateRange<TDate>;
   changeMonth: (date: TDate) => void;
   currentlySelectingRangeEnd: 'start' | 'end';
   classes?: Partial<DateRangePickerViewDesktopClasses>;
@@ -100,7 +117,9 @@ const DateRangePickerViewDesktopArrowSwitcher = styled(PickersArrowSwitcher)({
   justifyContent: 'space-between',
 });
 
-function getCalendarsArray(calendars: ExportedDesktopDateRangeCalendarProps<unknown>['calendars']) {
+function getCalendarsArray(
+  calendars: ExportedDateRangePickerViewDesktopProps<unknown>['calendars'],
+) {
   switch (calendars) {
     case 1:
       return [0];
@@ -114,14 +133,10 @@ function getCalendarsArray(calendars: ExportedDesktopDateRangeCalendarProps<unkn
   }
 }
 
-const deprecatedPropsWarning = buildDeprecatedPropsWarning(
-  'Props for translation are deprecated. See https://mui.com/x/react-date-pickers/localization for more information.',
-);
-
 /**
  * @ignore - internal component.
  */
-export function DateRangePickerViewDesktop<TDate>(inProps: DesktopDateRangeCalendarProps<TDate>) {
+export function DateRangePickerViewDesktop<TDate>(inProps: DateRangePickerViewDesktopProps<TDate>) {
   const props = useThemeProps({ props: inProps, name: 'MuiDateRangePickerViewDesktop' });
   const {
     calendars,
@@ -130,30 +145,20 @@ export function DateRangePickerViewDesktop<TDate>(inProps: DesktopDateRangeCalen
     componentsProps,
     currentlySelectingRangeEnd,
     currentMonth,
-    parsedValue,
+    value,
     disableFuture,
     disablePast,
-    leftArrowButtonText: leftArrowButtonTextProp,
     maxDate: maxDateProp,
     minDate: minDateProp,
     onSelectedDaysChange,
     renderDay = (_, dateRangeProps) => <DateRangePickerDay {...dateRangeProps} />,
-    rightArrowButtonText: rightArrowButtonTextProp,
     className,
     // excluding classes from `other` to avoid passing them down to children
     classes: providedClasses,
     ...other
   } = props;
 
-  deprecatedPropsWarning({
-    leftArrowButtonText: leftArrowButtonTextProp,
-    rightArrowButtonText: rightArrowButtonTextProp,
-  });
-
   const localeText = useLocaleText();
-
-  const leftArrowButtonText = leftArrowButtonTextProp ?? localeText.previousMonth;
-  const rightArrowButtonText = rightArrowButtonTextProp ?? localeText.nextMonth;
 
   const utils = useUtils<TDate>();
   const classes = useUtilityClasses(props);
@@ -168,7 +173,7 @@ export function DateRangePickerViewDesktop<TDate>(inProps: DesktopDateRangeCalen
 
   const previewingRange = calculateRangePreview({
     utils,
-    range: parsedValue,
+    range: value,
     newDate: rangePreviewDay,
     currentlySelectingRangeEnd,
   });
@@ -182,7 +187,7 @@ export function DateRangePickerViewDesktop<TDate>(inProps: DesktopDateRangeCalen
   );
 
   const handlePreviewDayChange = (newPreviewRequest: TDate) => {
-    if (!isWithinRange(utils, newPreviewRequest, parsedValue)) {
+    if (!isWithinRange(utils, newPreviewRequest, value)) {
       setRangePreviewDay(newPreviewRequest);
     } else {
       setRangePreviewDay(null);
@@ -212,16 +217,16 @@ export function DateRangePickerViewDesktop<TDate>(inProps: DesktopDateRangeCalen
         return (
           <DateRangePickerViewDesktopContainer key={index} className={classes.container}>
             <DateRangePickerViewDesktopArrowSwitcher
-              onLeftClick={selectPreviousMonth}
-              onRightClick={selectNextMonth}
-              isLeftHidden={index !== 0}
-              isRightHidden={index !== calendars - 1}
-              isLeftDisabled={isPreviousMonthDisabled}
-              isRightDisabled={isNextMonthDisabled}
-              leftArrowButtonText={leftArrowButtonText}
+              onGoToPrevious={selectPreviousMonth}
+              onGoToNext={selectNextMonth}
+              isPreviousHidden={index !== 0}
+              isPreviousDisabled={isPreviousMonthDisabled}
+              previousLabel={localeText.previousMonth}
+              isNextHidden={index !== calendars - 1}
+              isNextDisabled={isNextMonthDisabled}
+              nextLabel={localeText.nextMonth}
               components={components}
               componentsProps={componentsProps}
-              rightArrowButtonText={rightArrowButtonText}
             >
               {utils.format(monthOnIteration, 'monthAndYear')}
             </DateRangePickerViewDesktopArrowSwitcher>
@@ -232,7 +237,7 @@ export function DateRangePickerViewDesktop<TDate>(inProps: DesktopDateRangeCalen
               disablePast={disablePast}
               disableFuture={disableFuture}
               key={index}
-              selectedDays={parsedValue}
+              selectedDays={value}
               onFocusedDayChange={doNothing}
               onSelectedDaysChange={handleSelectedDayChange}
               currentMonth={monthOnIteration}
@@ -242,9 +247,9 @@ export function DateRangePickerViewDesktop<TDate>(inProps: DesktopDateRangeCalen
                   isPreviewing: isWithinRange(utils, day, previewingRange),
                   isStartOfPreviewing: isStartOfRange(utils, day, previewingRange),
                   isEndOfPreviewing: isEndOfRange(utils, day, previewingRange),
-                  isHighlighting: isWithinRange(utils, day, parsedValue),
-                  isStartOfHighlighting: isStartOfRange(utils, day, parsedValue),
-                  isEndOfHighlighting: isEndOfRange(utils, day, parsedValue),
+                  isHighlighting: isWithinRange(utils, day, value),
+                  isStartOfHighlighting: isStartOfRange(utils, day, value),
+                  isEndOfHighlighting: isEndOfRange(utils, day, value),
                   onMouseEnter: () => handlePreviewDayChange(day),
                   ...DayProps,
                 })

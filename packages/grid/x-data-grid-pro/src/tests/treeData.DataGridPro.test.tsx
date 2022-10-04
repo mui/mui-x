@@ -14,9 +14,9 @@ import {
   DataGridProProps,
   GRID_TREE_DATA_GROUPING_FIELD,
   GridApi,
+  GridGroupNode,
   GridLinkOperator,
   GridRowsProp,
-  GridRowTreeNodeConfig,
   useGridApiRef,
 } from '@mui/x-data-grid-pro';
 
@@ -167,16 +167,12 @@ describe('<DataGridPro /> - Tree Data', () => {
     });
 
     it('should keep children expansion when changing some of the rows', () => {
-      const { setProps } = render(
-        <Test disableVirtualization rows={[{ name: 'A' }, { name: 'A.A' }]} />,
-      );
+      render(<Test disableVirtualization rows={[{ name: 'A' }, { name: 'A.A' }]} />);
       expect(getColumnValues(1)).to.deep.equal(['A']);
       act(() => apiRef.current.setRowChildrenExpansion('A', true));
       clock.runToLast();
       expect(getColumnValues(1)).to.deep.equal(['A', 'A.A']);
-      setProps({
-        rows: [{ name: 'A' }, { name: 'A.A' }, { name: 'B' }, { name: 'B.A' }],
-      });
+      act(() => apiRef.current.updateRows([{ name: 'B' }]));
       expect(getColumnValues(1)).to.deep.equal(['A', 'A.A', 'B']);
     });
   });
@@ -285,11 +281,12 @@ describe('<DataGridPro /> - Tree Data', () => {
 
   describe('prop: isGroupExpandedByDefault', () => {
     it('should expand groups according to isGroupExpandedByDefault when defined', () => {
-      const isGroupExpandedByDefault = spy((node: GridRowTreeNodeConfig) => node.id === 'A');
+      const isGroupExpandedByDefault = spy((node: GridGroupNode) => node.id === 'A');
 
       render(<Test isGroupExpandedByDefault={isGroupExpandedByDefault} />);
       expect(isGroupExpandedByDefault.callCount).to.equal(8); // Should not be called on leaves
-      const { childrenExpanded, ...node } = apiRef.current.state.rows.tree.A;
+      const { childrenExpanded, children, childrenFromPath, ...node } = apiRef.current.state.rows
+        .tree.A as GridGroupNode;
       const callForNodeA = isGroupExpandedByDefault
         .getCalls()
         .find((call) => call.firstArg.id === node.id)!;
@@ -298,7 +295,7 @@ describe('<DataGridPro /> - Tree Data', () => {
     });
 
     it('should have priority over defaultGroupingExpansionDepth when both defined', () => {
-      const isGroupExpandedByDefault = (node: GridRowTreeNodeConfig) => node.id === 'A';
+      const isGroupExpandedByDefault = (node: GridGroupNode) => node.id === 'A';
 
       render(
         <Test

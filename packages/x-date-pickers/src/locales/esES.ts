@@ -50,13 +50,13 @@ const esESPickers: Partial<PickersLocaleText<any>> = {
   secondsClockNumberText: (seconds) => `${seconds} segundos`,
 
   // Open picker labels
-  openDatePickerDialogue: (rawValue, utils) =>
-    rawValue && utils.isValid(utils.date(rawValue))
-      ? `Elige la fecha, la fecha elegida es ${utils.format(utils.date(rawValue)!, 'fullDate')}`
+  openDatePickerDialogue: (value, utils) =>
+    value !== null && utils.isValid(value)
+      ? `Elige la fecha, la fecha elegida es ${utils.format(value, 'fullDate')}`
       : 'Elige la fecha',
-  openTimePickerDialogue: (rawValue, utils) =>
-    rawValue && utils.isValid(utils.date(rawValue))
-      ? `Elige la hora, la hora elegido es ${utils.format(utils.date(rawValue)!, 'fullTime')}`
+  openTimePickerDialogue: (value, utils) =>
+    value !== null && utils.isValid(value)
+      ? `Elige la hora, la hora elegido es ${utils.format(value, 'fullTime')}`
       : 'Elige la hora',
 
   // Table labels
