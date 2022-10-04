@@ -12,7 +12,7 @@ import {
 } from './pickerStaticWrapperClasses';
 import { PickersActionBar, PickersActionBarProps } from '../../../PickersActionBar';
 import { PickerStateWrapperProps } from '../../hooks/usePickerState';
-import { PickersSlotsComponent } from '../wrappers/WrapperProps';
+import { PickersWrapperSlotsComponent } from '../wrappers/WrapperProps';
 import { PickersInputLocaleText } from '../../../locales/utils/pickersLocaleTextApi';
 import { LocalizationProvider } from '../../../LocalizationProvider';
 
@@ -26,7 +26,7 @@ const useUtilityClasses = <TDate extends unknown>(ownerState: PickerStaticWrappe
   return composeClasses(slots, getStaticWrapperUtilityClass, classes);
 };
 
-export interface PickersStaticWrapperSlotsComponent extends PickersSlotsComponent {}
+export interface PickersStaticWrapperSlotsComponent extends PickersWrapperSlotsComponent {}
 
 export interface PickersStaticWrapperSlotsComponentsProps {
   actionBar: Omit<PickersActionBarProps, 'onAccept' | 'onClear' | 'onCancel' | 'onSetToday'>;

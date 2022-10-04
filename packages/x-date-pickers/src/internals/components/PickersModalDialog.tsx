@@ -5,10 +5,10 @@ import { styled } from '@mui/material/styles';
 import { DIALOG_WIDTH } from '../constants/dimensions';
 import { PickersActionBar, PickersActionBarProps } from '../../PickersActionBar';
 import { PickerStateWrapperProps } from '../hooks/usePickerState';
-import { PickersSlotsComponent } from './wrappers/WrapperProps';
+import { PickersWrapperSlotsComponent } from './wrappers/WrapperProps';
 
 export interface PickersModalDialogSlotsComponent
-  extends Omit<PickersSlotsComponent, 'PaperContent'> {}
+  extends Omit<PickersWrapperSlotsComponent, 'PaperContent'> {}
 
 export interface PickersModalDialogSlotsComponentsProps {
   actionBar: Omit<PickersActionBarProps, 'onAccept' | 'onClear' | 'onCancel' | 'onSetToday'>;
