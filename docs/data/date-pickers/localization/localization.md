@@ -124,6 +124,7 @@ import bgLocale from 'date-fns/locale/bg';
 | German                  | de-DE               | `deDE`      |
 | Icelandic               | is-IS               | `isIS`      |
 | Italian                 | it-IT               | `itIT`      |
+| Japanese                | ja-JP               | `jaJP`      |
 | Korean                  | ko-KR               | `koKR`      |
 | Norwegian (Bokmål)      | nb-NO               | `nbNO`      |
 | Persian                 | fa-IR               | `faIR`      |
