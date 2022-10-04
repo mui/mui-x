@@ -32,7 +32,7 @@ The following demo lets you filter the rows according to several criteria at the
 
 {{"demo": "BasicExampleDataGridPro.js", "bg": "inline", "defaultCodeOpen": false}}
 
-### One filter per column
+### One filter per column [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
 
 You can also limit multi-filters for a single column using custom prop `filterColumns`, sometimes it's a limitation of some server-side filtering APIs to only allow one filter per column.
 

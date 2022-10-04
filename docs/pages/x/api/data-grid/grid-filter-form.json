@@ -11,6 +11,11 @@
       },
       "required": true
     },
+    "filterColumns": {
+      "type": {
+        "name": "func"
+      }
+    },
     "columnInputProps": { "type": { "name": "any" }, "default": "{}" },
     "columnsSort": { "type": { "name": "enum", "description": "'asc'<br>&#124;&nbsp;'desc'" } },
     "deleteIconProps": { "type": { "name": "any" }, "default": "{}" },

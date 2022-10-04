@@ -18,7 +18,7 @@ export default function DisableMultiFiltersDataGridPro() {
   });
 
   const filterColumns = React.useCallback(
-    ({ columnField }) => {
+    (columnField) => {
       // remove already filtered fields from list of columns
       const colDefs = apiRef.current.getAllColumns();
       const filterModel = gridFilterModelSelector(apiRef);
@@ -32,16 +32,19 @@ export default function DisableMultiFiltersDataGridPro() {
     [apiRef],
   );
 
-  const getColumnForNewFilter = React.useCallback(() => {
-    const colDefs = apiRef.current.getAllColumns();
-    const filterModel = gridFilterModelSelector(apiRef);
-    const filteredFields = filterModel.items?.map((item) => item.columnField);
-    return colDefs
-      .filter(
-        (colDef) => colDef.filterable && !filteredFields.includes(colDef.field),
-      )
-      .find((colDef) => colDef.filterOperators?.length);
-  }, [apiRef]);
+  const getColumnForNewFilter = React.useCallback(
+    (currentFilters) => {
+      console.log('i am called with current filters', currentFilters);
+      const colDefs = apiRef.current.getAllColumns();
+      const filteredFields = currentFilters?.map((item) => item.columnField);
+      return colDefs
+        .filter(
+          (colDef) => colDef.filterable && !filteredFields.includes(colDef.field),
+        )
+        .find((colDef) => colDef.filterOperators?.length);
+    },
+    [apiRef],
+  );
 
   return (
     <div style={{ height: 400, width: '100%' }}>

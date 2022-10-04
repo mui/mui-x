@@ -11,6 +11,9 @@
       "type": { "name": "arrayOf", "description": "Array&lt;'and'<br>&#124;&nbsp;'or'&gt;" },
       "default": "[GridLinkOperator.And, GridLinkOperator.Or]"
     },
+    "getColumnForNewFilter": {
+      "type": { "name": "func" }
+    },
     "sx": {
       "type": {
         "name": "union",

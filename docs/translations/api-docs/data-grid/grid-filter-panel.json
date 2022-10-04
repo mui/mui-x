@@ -3,6 +3,7 @@
   "propDescriptions": {
     "columnsSort": "Changes how the options in the columns selector should be ordered. If not specified, the order is derived from the <code>columns</code> prop.",
     "filterFormProps": "Props passed to each filter form.",
+    "getColumnForNewFilter": "Optional callback to allow user to pass a column to be used as next filter. Should return object of type <code>GridColDef</code>.<br><br><strong>Signature:</strong><br><code>function(currentFilters: GridFilterItem[]) =&gt; GridColDef<any, any, any></code><br><em>currentFilters:</em> Currently configured Filters that is array of type <a href=\"/x/api/data-grid/grid-filter-item/\">GridFilterItem</a>.<br><em>Response:</em> An object of type <a href=\"/x/api/data-grid/grid-col-def/\">GridColDef</a> which should be used as next Filter.",
     "linkOperators": "Sets the available logic operators.",
     "sx": "The system prop that allows defining system overrides as well as additional CSS styles. See the <a href=\"/system/getting-started/the-sx-prop/\">`sx` page</a> for more details."
   },

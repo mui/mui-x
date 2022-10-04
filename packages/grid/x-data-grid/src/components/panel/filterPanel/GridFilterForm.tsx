@@ -546,6 +546,12 @@ GridFilterForm.propTypes = {
    */
   disableMultiFilterOperator: PropTypes.bool,
   /**
+   * Allows to filter the columns displayed in filter form
+   * @param {string} columnField Columns of the grid
+   * @returns {GridStateColDef<any, any, any>[]} Filtered columns
+   */
+  filterColumns: PropTypes.func,
+  /**
    * A ref allowing to set imperative focus.
    * It can be passed to the el
    */

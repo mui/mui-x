@@ -22,9 +22,10 @@ export interface GridFilterPanelProps
   sx?: SxProps<Theme>;
   /**
    * Function that returns next filter item to be picked as default filter
+   * @param {GridFilterItem[]} currentFilters Currently configured filters
    * @returns {GridStateColDef<any, any, any>} Column to be used as next filter
    */
-  getColumnForNewFilter?: () => GridStateColDef<any, any, any>;
+  getColumnForNewFilter?: (currentFilters: GridFilterItem[]) => GridStateColDef<any, any, any>;
   /**
    * Props passed to each filter form.
    */
@@ -75,40 +76,41 @@ const GridFilterPanel = React.forwardRef<HTMLDivElement, GridFilterPanelProps>(
       [apiRef],
     );
 
-    const getDefaultItem = React.useCallback((): GridFilterItem | null => {
-      const nextItemWithOperator = getColumnForNewFilter
-        ? getColumnForNewFilter()
-        : filterableColumns.find((colDef) => colDef.filterOperators?.length);
+    const getDefaultFilter = React.useCallback((): GridFilterItem | null => {
+      const computedColumn = filterableColumns.find((colDef) => colDef.filterOperators?.length);
+      const nextColumnWithOperator = getColumnForNewFilter
+        ? getColumnForNewFilter(filterModel.items.length ? filterModel.items : [computedColumn])
+        : computedColumn;
 
-      if (!nextItemWithOperator) {
+      if (!nextColumnWithOperator) {
         return null;
       }
 
       return {
-        columnField: nextItemWithOperator.field,
-        operatorValue: nextItemWithOperator.filterOperators![0].value,
+        columnField: nextColumnWithOperator.field,
+        operatorValue: nextColumnWithOperator.filterOperators![0].value,
         id: Math.round(Math.random() * 1e5),
       };
-    }, [filterableColumns, getColumnForNewFilter]);
+    }, [filterModel.items, filterableColumns, getColumnForNewFilter]);
 
     const items = React.useMemo<GridFilterItem[]>(() => {
       if (filterModel.items.length) {
         return filterModel.items;
       }
 
-      const defaultItem = getDefaultItem();
+      const defaultFilter = getDefaultFilter();
 
-      return defaultItem ? [defaultItem] : [];
-    }, [filterModel.items, getDefaultItem]);
+      return defaultFilter ? [defaultFilter] : [];
+    }, [filterModel.items, getDefaultFilter]);
 
     const hasMultipleFilters = items.length > 1;
 
     const addNewFilter = () => {
-      const defaultItem = getDefaultItem();
-      if (!defaultItem) {
+      const defaultFilter = getDefaultFilter();
+      if (!defaultFilter) {
         return;
       }
-      apiRef.current.upsertFilterItems([...items, defaultItem]);
+      apiRef.current.upsertFilterItems([...items, defaultFilter]);
     };
 
     const deleteFilter = React.useCallback(
@@ -200,6 +202,12 @@ GridFilterPanel.propTypes = {
     operatorInputProps: PropTypes.any,
     valueInputProps: PropTypes.any,
   }),
+  /**
+   * Function that returns next filter item to be picked as default filter
+   * @param {GridFilterItem[]} currentFilters Currently configured filters
+   * @returns {GridStateColDef<any, any, any>} Column to be used as next filter
+   */
+  getColumnForNewFilter: PropTypes.func,
   /**
    * Sets the available logic operators.
    * @default [GridLinkOperator.And, GridLinkOperator.Or]
