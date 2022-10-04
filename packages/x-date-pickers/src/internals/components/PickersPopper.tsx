@@ -51,6 +51,7 @@ export interface PickerPopperProps
   components?: Partial<PickersPopperSlotsComponent>;
   componentsProps?: Partial<PickersPopperSlotsComponentsProps>;
   classes?: Partial<PickersPopperClasses>;
+  shouldRestoreFocus?: () => boolean;
 }
 
 const useUtilityClasses = (ownerState: PickerPopperProps) => {
@@ -236,6 +237,7 @@ export function PickersPopper(inProps: PickerPopperProps) {
     anchorEl,
     children,
     containerRef = null,
+    shouldRestoreFocus,
     onBlur,
     onDismiss,
     onClear,
@@ -269,7 +271,7 @@ export function PickersPopper(inProps: PickerPopperProps) {
 
   const lastFocusedElementRef = React.useRef<Element | null>(null);
   React.useEffect(() => {
-    if (role === 'tooltip') {
+    if (role === 'tooltip' || (shouldRestoreFocus && !shouldRestoreFocus())) {
       return;
     }
 
@@ -287,7 +289,7 @@ export function PickersPopper(inProps: PickerPopperProps) {
         }
       });
     }
-  }, [open, role]);
+  }, [open, role, shouldRestoreFocus]);
 
   const [clickAwayRef, onPaperClick, onPaperTouchStart] = useClickAwayListener(
     open,

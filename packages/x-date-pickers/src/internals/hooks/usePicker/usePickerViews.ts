@@ -1,10 +1,19 @@
 import * as React from 'react';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
+import useEventCallback from '@mui/utils/useEventCallback';
 import { CalendarOrClockPickerView } from '../../models';
 import { useViews } from '../useViews';
 import { PickerSelectionState } from '../usePickerState';
 import { useIsLandscape } from '../useIsLandscape';
 import { UseFieldInternalProps } from '../useField';
+
+function raf() {
+  return new Promise<void>((resolve) => {
+    requestAnimationFrame(() => {
+      resolve();
+    });
+  });
+}
 
 export type PickerViewRenderer<TValue, TView extends CalendarOrClockPickerView> = (
   props: PickerViewsRendererProps<TValue, TView>,
@@ -68,6 +77,7 @@ export interface UsePickerViewsResponse {
   hasFieldView: boolean;
   hasPopperView: boolean;
   renderViews: () => React.ReactNode;
+  shouldRestoreFocus: () => boolean;
 }
 
 export interface PickerViewsRendererProps<TValue, TView extends CalendarOrClockPickerView>
@@ -136,16 +146,23 @@ export const usePickerViews = <TValue, TView extends CalendarOrClockPickerView>(
     };
   }, [inputSectionModelLookup, views]);
 
+  const shouldRestoreFocus = useEventCallback(() => {
+    const openViewMode = viewModeResponse.sectionModeLookup[openView];
+    return openViewMode !== 'field';
+  });
+
   useEnhancedEffect(() => {
     const openViewMode = viewModeResponse.sectionModeLookup[openView];
     if (openViewMode === 'field' && open) {
       onClose();
+      onSelectedSectionsChange('hour');
+
+      raf().then(() => {
+        document.querySelectorAll('input')[1]!.focus();
+      });
 
       // TODO: Remove setTimeout and stop hard-coding the section to select
-      setTimeout(() => {
-        document.querySelectorAll('input')[1]!.focus();
-        onSelectedSectionsChange('hour');
-      }, 100);
+      setTimeout(() => {}, 100);
     }
   }, [openView]); // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -173,6 +190,7 @@ export const usePickerViews = <TValue, TView extends CalendarOrClockPickerView>(
 
   return {
     ...viewModeResponse,
+    shouldRestoreFocus,
     renderViews: () =>
       renderViews({
         view: viewInPopper,

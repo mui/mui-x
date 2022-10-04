@@ -34,6 +34,7 @@ export const useDesktopPicker = <TValue, TDate, TView extends CalendarOrClockPic
     actions,
     open,
     hasPopperView,
+    shouldRestoreFocus,
   } = usePicker({
     props,
     valueManager,
@@ -131,6 +132,7 @@ export const useDesktopPicker = <TValue, TDate, TView extends CalendarOrClockPic
         open={open}
         components={components}
         componentsProps={componentsProps}
+        shouldRestoreFocus={shouldRestoreFocus}
       >
         {renderViews()}
       </PickersPopper>
