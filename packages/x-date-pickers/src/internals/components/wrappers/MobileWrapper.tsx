@@ -13,7 +13,9 @@ import { LocalizationProvider } from '../../../LocalizationProvider';
 import { PickersInputLocaleText } from '../../../locales/utils/pickersLocaleTextApi';
 import { ExportedPickerPaperProps } from '../PickersPopper';
 
-export interface MobileWrapperProps<TDate> extends ExportedPickerModalProps, ExportedPickerPaperProps {
+export interface MobileWrapperProps<TDate>
+  extends ExportedPickerModalProps,
+    ExportedPickerPaperProps {
   children?: React.ReactNode;
   /**
    * Locale for components texts
@@ -70,7 +72,7 @@ export function MobileWrapper<TDate>(props: InternalMobileWrapperProps<TDate>) {
           components={components}
           componentsProps={componentsProps}
           PaperProps={PaperProps}
-      >
+        >
           {children}
         </PickersModalDialog>
       </WrapperVariantContext.Provider>
