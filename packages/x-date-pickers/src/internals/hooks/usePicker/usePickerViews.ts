@@ -7,14 +7,6 @@ import { PickerSelectionState } from '../usePickerState';
 import { useIsLandscape } from '../useIsLandscape';
 import { UseFieldInternalProps } from '../useField';
 
-function raf() {
-  return new Promise<void>((resolve) => {
-    requestAnimationFrame(() => {
-      resolve();
-    });
-  });
-}
-
 export type PickerViewRenderer<TValue, TView extends CalendarOrClockPickerView> = (
   props: PickerViewsRendererProps<TValue, TView>,
 ) => React.ReactElement;
@@ -66,6 +58,7 @@ interface UsePickerViewParams<TValue, TView extends CalendarOrClockPickerView> {
   props: UsePickerViewsProps<TValue, TView>;
   renderViews: PickerViewRenderer<TValue, TView>;
   sectionModeLookup?: PickerDateSectionModeLookup<TView>;
+  inputRef: React.RefObject<HTMLInputElement>;
   open: boolean;
   onClose: () => void;
   onSelectedSectionsChange: NonNullable<
@@ -96,6 +89,7 @@ export const usePickerViews = <TValue, TView extends CalendarOrClockPickerView>(
   props,
   renderViews,
   sectionModeLookup: inputSectionModelLookup,
+  inputRef,
   open,
   onClose,
   onSelectedSectionsChange,
@@ -146,23 +140,18 @@ export const usePickerViews = <TValue, TView extends CalendarOrClockPickerView>(
     };
   }, [inputSectionModelLookup, views]);
 
-  const shouldRestoreFocus = useEventCallback(() => {
-    const openViewMode = viewModeResponse.sectionModeLookup[openView];
-    return openViewMode !== 'field';
-  });
+  const isFieldView = viewModeResponse.sectionModeLookup[openView] === 'field';
+
+  const shouldRestoreFocus = useEventCallback(() => !isFieldView);
 
   useEnhancedEffect(() => {
-    const openViewMode = viewModeResponse.sectionModeLookup[openView];
-    if (openViewMode === 'field' && open) {
+    if (isFieldView && open) {
       onClose();
       onSelectedSectionsChange('hour');
 
-      raf().then(() => {
-        document.querySelectorAll('input')[1]!.focus();
+      setTimeout(() => {
+        inputRef.current!.focus();
       });
-
-      // TODO: Remove setTimeout and stop hard-coding the section to select
-      setTimeout(() => {}, 100);
     }
   }, [openView]); // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -171,8 +160,7 @@ export const usePickerViews = <TValue, TView extends CalendarOrClockPickerView>(
       return;
     }
 
-    const openViewMode = viewModeResponse.sectionModeLookup[openView];
-    if (openViewMode === 'field' && viewModeResponse.hasPopperView) {
+    if (!isFieldView && viewModeResponse.hasPopperView) {
       setOpenView(openTo);
     }
   }, [open]); // eslint-disable-line react-hooks/exhaustive-deps
@@ -191,7 +179,7 @@ export const usePickerViews = <TValue, TView extends CalendarOrClockPickerView>(
   return {
     ...viewModeResponse,
     shouldRestoreFocus,
-    renderViews: () =>
+    renderViews: (additionalProps) =>
       renderViews({
         view: viewInPopper,
         onViewChange: setOpenView,
@@ -199,6 +187,7 @@ export const usePickerViews = <TValue, TView extends CalendarOrClockPickerView>(
         views,
         isLandscape,
         ...other,
+        ...additionalProps,
       }),
   };
 };

@@ -20,8 +20,8 @@ export interface UseMobilePickerSlotsComponentsProps
   input?: Record<string, any>;
 }
 
-export interface UseMobilePickerProps<TValue, TView extends CalendarOrClockPickerView>
-  extends BasePickerProps2<TValue, TView> {
+export interface UseMobilePickerProps<TDate, TView extends CalendarOrClockPickerView>
+  extends BasePickerProps2<TDate | null, TDate, TView> {
   /**
    * Overrideable components.
    * @default {}
@@ -34,8 +34,11 @@ export interface UseMobilePickerProps<TValue, TView extends CalendarOrClockPicke
   componentsProps?: UseMobilePickerSlotsComponentsProps;
 }
 
-export interface UseMobilePickerParams<TValue, TDate, TView extends CalendarOrClockPickerView>
-  extends Omit<UsePickerParams<TValue, TDate, TView>, 'props' | 'wrapperVariant'> {
-  props: UseMobilePickerProps<TValue, TView>;
+export interface UseMobilePickerParams<TDate, TView extends CalendarOrClockPickerView>
+  extends Omit<
+    UsePickerParams<TDate | null, TDate, TView>,
+    'props' | 'wrapperVariant' | 'inputRef'
+  > {
+  props: UseMobilePickerProps<TDate, TView>;
   getOpenDialogAriaText: (date: TDate, utils: MuiPickersAdapter<TDate>) => string;
 }

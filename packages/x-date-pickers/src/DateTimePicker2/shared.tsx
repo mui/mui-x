@@ -27,7 +27,7 @@ import { UsePickerProps } from '../internals/hooks/usePicker';
 
 export interface BaseDateTimePicker2Props<TDate>
   extends MakeOptional<
-      BasePickerProps2<TDate | null, CalendarOrClockPickerView>,
+      BasePickerProps2<TDate | null, TDate, CalendarOrClockPickerView>,
       'views' | 'openTo'
     >,
     Omit<ExportedCalendarPickerProps<TDate>, 'onViewChange'>,

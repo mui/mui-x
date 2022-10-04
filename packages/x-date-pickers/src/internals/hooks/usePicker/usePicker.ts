@@ -8,6 +8,7 @@ export const usePicker = <TValue, TDate, TView extends CalendarOrClockPickerView
   valueManager,
   wrapperVariant,
   sectionModeLookup,
+  inputRef,
   renderViews: renderViewsParam,
 }: UsePickerParams<TValue, TDate, TView>): UsePickerResponse<TValue> => {
   const { field, views, actions, open } = usePickerValue(props, valueManager, wrapperVariant);
@@ -16,6 +17,7 @@ export const usePicker = <TValue, TDate, TView extends CalendarOrClockPickerView
     props: { ...props, ...views },
     renderViews: renderViewsParam,
     sectionModeLookup,
+    inputRef,
     open,
     onClose: actions.onClose,
     onSelectedSectionsChange: field.onSelectedSectionsChange,

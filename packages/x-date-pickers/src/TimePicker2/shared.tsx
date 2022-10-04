@@ -11,7 +11,7 @@ import { BasePickerProps2 } from '../internals/models/props/basePickerProps';
 import { BaseTimeValidationProps } from '../internals/hooks/validation/models';
 
 export interface BaseTimePicker2Props<TDate>
-  extends MakeOptional<BasePickerProps2<TDate | null, ClockPickerView>, 'views' | 'openTo'>,
+  extends MakeOptional<BasePickerProps2<TDate | null, TDate, ClockPickerView>, 'views' | 'openTo'>,
     ExportedClockPickerProps<TDate>,
     ValidationCommonPropsOptionalValue<DateValidationError, TDate | null> {
   /**

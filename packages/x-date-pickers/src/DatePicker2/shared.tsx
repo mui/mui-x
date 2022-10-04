@@ -13,7 +13,10 @@ import { applyDefaultDate } from '../internals/utils/date-utils';
 import { BaseDateValidationProps } from '../internals';
 
 export interface BaseDatePicker2Props<TDate>
-  extends MakeOptional<BasePickerProps2<TDate | null, CalendarPickerView>, 'views' | 'openTo'>,
+  extends MakeOptional<
+      BasePickerProps2<TDate | null, TDate, CalendarPickerView>,
+      'views' | 'openTo'
+    >,
     ExportedCalendarPickerProps<TDate>,
     ValidationCommonPropsOptionalValue<DateValidationError, TDate | null> {
   /**

@@ -1,23 +1,33 @@
 import * as React from 'react';
 import { useSlotProps } from '@mui/base/utils';
 import { TextFieldProps } from '@mui/material/TextField';
+import useForkRef from '@mui/utils/useForkRef';
 import { PickersModalDialog } from '../../components/PickersModalDialog';
 import { CalendarOrClockPickerView } from '../../models';
 import { UseMobilePickerParams } from './useMobilePicker.types';
 import { usePicker } from '../usePicker';
 import { onSpaceOrEnter } from '../../utils/utils';
 import { useUtils } from '../useUtils';
+import { LocalizationProvider } from '../../../LocalizationProvider';
+import { WrapperVariantContext } from '../../components/wrappers/WrapperVariantContext';
 
-export const useMobilePicker = <TValue, TDate, TView extends CalendarOrClockPickerView>({
+/**
+ * Hook managing all the single-date mobile pickers:
+ * - MobileDatePicker
+ * - MobileDateTimePicker
+ * - MobileTimePicker
+ */
+export const useMobilePicker = <TDate, TView extends CalendarOrClockPickerView>({
   props,
   valueManager,
   renderViews: renderViewsParam,
   getOpenDialogAriaText,
   sectionModeLookup,
-}: UseMobilePickerParams<TValue, TDate, TView>) => {
-  const { components, componentsProps = {}, className, inputFormat, disabled } = props;
+}: UseMobilePickerParams<TDate, TView>) => {
+  const { components, componentsProps = {}, className, inputFormat, disabled, localeText } = props;
 
   const utils = useUtils<TDate>();
+  const inputRef = React.useRef<HTMLInputElement>(null);
 
   const {
     field: headlessPickerFieldResponse,
@@ -30,6 +40,7 @@ export const useMobilePicker = <TValue, TDate, TView extends CalendarOrClockPick
     wrapperVariant: 'mobile',
     renderViews: renderViewsParam,
     sectionModeLookup,
+    inputRef,
   });
 
   const Field = components.Field;
@@ -65,24 +76,37 @@ export const useMobilePicker = <TValue, TDate, TView extends CalendarOrClockPick
     'aria-label': getOpenDialogAriaText(fieldProps.value as any as TDate, utils),
   };
 
+  // TODO: Correctly type the field slot
+  const handleInputRef = useForkRef(inputRef, (fieldProps as any).inputRef);
+
   const renderPicker = () => (
-    <React.Fragment>
-      <Field
-        {...fieldProps}
-        components={{
-          Input: components.Input,
-        }}
-        componentsProps={{ input: { ...inputProps, inputProps: htmlInputProps } }}
-      />
-      <PickersModalDialog
-        {...actions}
-        open={open}
-        components={components}
-        componentsProps={componentsProps}
-      >
-        {renderViews()}
-      </PickersModalDialog>
-    </React.Fragment>
+    <LocalizationProvider localeText={localeText}>
+      <WrapperVariantContext.Provider value="desktop">
+        <Field
+          {...fieldProps}
+          components={{
+            ...(fieldProps as any).components,
+            Input: components.Input,
+          }}
+          componentsProps={{
+            input: {
+              ...(fieldProps as any).componentsProps,
+              ...inputProps,
+              inputProps: htmlInputProps,
+            },
+          }}
+          inputRef={handleInputRef}
+        />
+        <PickersModalDialog
+          {...actions}
+          open={open}
+          components={components}
+          componentsProps={componentsProps}
+        >
+          {renderViews()}
+        </PickersModalDialog>
+      </WrapperVariantContext.Provider>
+    </LocalizationProvider>
   );
 
   return { renderPicker };

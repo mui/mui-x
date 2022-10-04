@@ -20,6 +20,7 @@ export interface UsePickerParams<TValue, TDate, TView extends CalendarOrClockPic
   wrapperVariant: WrapperVariant;
   renderViews: (props: PickerViewsRendererProps<TValue, TView>) => React.ReactElement;
   sectionModeLookup?: PickerDateSectionModeLookup<TView>;
+  inputRef: React.RefObject<HTMLInputElement>;
 }
 
 export interface UsePickerResponse<TValue>

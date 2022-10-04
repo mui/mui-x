@@ -23,6 +23,11 @@ export type {
   PickersArrowSwitcherSlotsComponent,
   PickersArrowSwitcherSlotsComponentsProps,
 } from './components/PickersArrowSwitcher';
+export { PickersPopper } from './components/PickersPopper';
+export type {
+  PickersPopperSlotsComponent,
+  PickersPopperSlotsComponentsProps,
+} from './components/PickersPopper';
 export { PickerStaticWrapper } from './components/PickerStaticWrapper/PickerStaticWrapper';
 export type { PickerStaticWrapperProps } from './components/PickerStaticWrapper/PickerStaticWrapper';
 export type {
@@ -79,6 +84,9 @@ export { DAY_MARGIN } from './constants/dimensions';
 
 export { useMaskedInput } from './hooks/useMaskedInput';
 export { usePickerState } from './hooks/usePickerState';
+export { usePicker } from './hooks/usePicker';
+export type { UsePickerResponse } from './hooks/usePicker';
+export type { UsePickerParams } from './hooks/usePicker';
 export type { PickerStateProps, PickerStatePickerProps } from './hooks/usePickerState';
 export type { PickerStateValueManager, PickerSelectionState } from './hooks/usePickerState';
 export { useLocalizationContext, useDefaultDates, useUtils, useLocaleText } from './hooks/useUtils';
@@ -86,6 +94,7 @@ export type { BaseDateValidationProps, DayValidationProps } from './hooks/valida
 export { useValidation } from './hooks/validation/useValidation';
 export type {
   ValidationCommonProps,
+  ValidationCommonPropsOptionalValue,
   ValidationProps,
   Validator,
 } from './hooks/validation/useValidation';
@@ -93,11 +102,12 @@ export { validateDate } from './hooks/validation/useDateValidation';
 export type { DateValidationError } from './hooks/validation/useDateValidation';
 export { usePreviousMonthDisabled, useNextMonthDisabled } from './hooks/date-helpers-hooks';
 
-export type { BasePickerProps } from './models/props/basePickerProps';
+export type { BasePickerProps, BasePickerProps2 } from './models/props/basePickerProps';
 export type { StaticPickerProps } from './models/props/staticPickerProps';
 export type { BaseToolbarProps } from './models/props/baseToolbarProps';
 export type { MuiPickersAdapter } from './models/muiPickersAdapter';
 export type { DefaultizedProps, MakeOptional } from './models/helpers';
+export type { CalendarOrClockPickerView, CalendarPickerView } from './models/views';
 
 export { applyDefaultDate, replaceInvalidDateByNull } from './utils/date-utils';
 export { executeInTheNextEventLoopTick, onSpaceOrEnter } from './utils/utils';
@@ -112,7 +122,7 @@ export type {
 } from '../CalendarPicker/PickersCalendarHeader';
 
 export { DayPicker } from '../CalendarPicker/DayPicker';
-export type { DayPickerProps } from '../CalendarPicker/DayPicker';
+export type { DayPickerProps, ExportedDayPickerProps } from '../CalendarPicker/DayPicker';
 
 export { areDayPropsEqual } from '../PickersDay/PickersDay';
 

@@ -8,14 +8,22 @@ import { CalendarOrClockPickerView } from '../../models/views';
 import { UseDesktopPickerParams } from './useDesktopPicker.types';
 import { useUtils } from '../useUtils';
 import { usePicker } from '../usePicker';
+import { LocalizationProvider } from '../../../LocalizationProvider';
+import { WrapperVariantContext } from '../../components/wrappers/WrapperVariantContext';
 
-export const useDesktopPicker = <TValue, TDate, TView extends CalendarOrClockPickerView>({
+/**
+ * Hook managing all the single-date desktop pickers:
+ * - DesktopDatePicker
+ * - DesktopDateTimePicker
+ * - DesktopTimePicker
+ */
+export const useDesktopPicker = <TDate, TView extends CalendarOrClockPickerView>({
   props,
   valueManager,
   renderViews: renderViewsParam,
   getOpenDialogAriaText,
   sectionModeLookup,
-}: UseDesktopPickerParams<TValue, TDate, TView>) => {
+}: UseDesktopPickerParams<TDate, TView>) => {
   const {
     components,
     componentsProps = {},
@@ -24,9 +32,11 @@ export const useDesktopPicker = <TValue, TDate, TView extends CalendarOrClockPic
     readOnly,
     disabled,
     disableOpenPicker,
+    localeText,
   } = props;
 
   const utils = useUtils<TDate>();
+  const inputRef = React.useRef<HTMLInputElement>(null);
 
   const {
     field: headlessPickerFieldResponse,
@@ -41,6 +51,7 @@ export const useDesktopPicker = <TValue, TDate, TView extends CalendarOrClockPic
     wrapperVariant: 'desktop',
     renderViews: renderViewsParam,
     sectionModeLookup,
+    inputRef,
   });
 
   const Field = components.Field;
@@ -111,32 +122,34 @@ export const useDesktopPicker = <TValue, TDate, TView extends CalendarOrClockPic
     ownerState: {},
   });
 
-  const inputRef = React.useRef<HTMLInputElement>(null);
   // TODO: Correctly type the field slot
   const handleInputRef = useForkRef(inputRef, (fieldProps as any).inputRef);
 
   const renderPicker = () => (
-    <React.Fragment>
-      <Field
-        {...fieldProps}
-        components={{
-          Input: components.Input,
-        }}
-        componentsProps={{ input: inputProps }}
-        inputRef={handleInputRef}
-      />
-      <PickersPopper
-        role="dialog"
-        anchorEl={inputRef.current}
-        {...actions}
-        open={open}
-        components={components}
-        componentsProps={componentsProps}
-        shouldRestoreFocus={shouldRestoreFocus}
-      >
-        {renderViews()}
-      </PickersPopper>
-    </React.Fragment>
+    <LocalizationProvider localeText={localeText}>
+      <WrapperVariantContext.Provider value="desktop">
+        <Field
+          {...fieldProps}
+          components={{
+            ...(fieldProps as any).components,
+            Input: components.Input,
+          }}
+          componentsProps={{ ...(fieldProps as any).componentsProps, input: inputProps }}
+          inputRef={handleInputRef}
+        />
+        <PickersPopper
+          role="dialog"
+          anchorEl={inputRef.current}
+          {...actions}
+          open={open}
+          components={components}
+          componentsProps={componentsProps}
+          shouldRestoreFocus={shouldRestoreFocus}
+        >
+          {renderViews()}
+        </PickersPopper>
+      </WrapperVariantContext.Provider>
+    </LocalizationProvider>
   );
 
   return { renderPicker };

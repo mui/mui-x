@@ -102,7 +102,6 @@ const DateRangePickerViewDesktopContainer = styled('div', {
 }));
 
 const DAY_RANGE_SIZE = 40;
-
 const weeksContainerHeight = (DAY_RANGE_SIZE + DAY_MARGIN * 2) * 6;
 
 const DateRangePickerViewDesktopCalendar = styled(DayPicker)({

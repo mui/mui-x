@@ -43,9 +43,9 @@ interface DesktopOnlyPickerProps {
   disableOpenPicker?: boolean;
 }
 
-export interface UseDesktopPickerProps<TValue, TView extends CalendarOrClockPickerView>
+export interface UseDesktopPickerProps<TDate, TView extends CalendarOrClockPickerView>
   extends DesktopOnlyPickerProps,
-    BasePickerProps2<TValue, TView> {
+    BasePickerProps2<TDate | null, TDate, TView> {
   /**
    * Overrideable components.
    * @default {}
@@ -58,8 +58,11 @@ export interface UseDesktopPickerProps<TValue, TView extends CalendarOrClockPick
   componentsProps?: UseDesktopPickerSlotsComponentsProps;
 }
 
-export interface UseDesktopPickerParams<TValue, TDate, TView extends CalendarOrClockPickerView>
-  extends Omit<UsePickerParams<TValue, TDate, TView>, 'props' | 'wrapperVariant'> {
-  props: UseDesktopPickerProps<TValue, TView>;
+export interface UseDesktopPickerParams<TDate, TView extends CalendarOrClockPickerView>
+  extends Pick<
+    UsePickerParams<TDate | null, TDate, TView>,
+    'props' | 'valueManager' | 'sectionModeLookup' | 'renderViews'
+  > {
+  props: UseDesktopPickerProps<TDate, TView>;
   getOpenDialogAriaText: (date: TDate, utils: MuiPickersAdapter<TDate>) => string;
 }
