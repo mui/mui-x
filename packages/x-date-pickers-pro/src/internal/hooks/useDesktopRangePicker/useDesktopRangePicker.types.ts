@@ -5,7 +5,6 @@ import {
   BasePickerProps2,
   PickersPopperSlotsComponent,
   PickersPopperSlotsComponentsProps,
-  MuiPickersAdapter,
 } from '@mui/x-date-pickers/internals';
 import { DateRange } from '../../models';
 
