@@ -19,5 +19,17 @@ export * from './TimePicker';
 export * from './YearPicker';
 export * from './locales';
 
+export * from './DatePicker2';
+export * from './DesktopDatePicker2';
+export * from './MobileDatePicker2';
+
+// export * from './DateTimePicker2'
+export * from './DesktopDateTimePicker2';
+// export * from './MobileDateTimePicker2'
+
+// export * from './TimePicker2'
+export * from './DesktopTimePicker2';
+// export * from './MobileTimePicker2'
+
 export { PickerStaticWrapper } from './internals/components/PickerStaticWrapper';
 export type { MuiDateSectionName } from './internals/models/muiPickersAdapter';
