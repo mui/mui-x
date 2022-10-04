@@ -5,17 +5,17 @@ import {
 } from '../internal/hooks/useDesktopRangePicker';
 import { BaseDateRangePicker2Props } from '../DateRangePicker2/shared';
 import {
-  CalendarRangePickerSlotsComponent,
-  CalendarRangePickerSlotsComponentsProps,
-} from '../CalendarRangePicker';
+  DateRangeCalendarSlotsComponent,
+  DateRangeCalendarSlotsComponentsProps,
+} from '../DateRangeCalendar';
 
 export interface DesktopDateRangePicker2SlotsComponent
   extends MakeOptional<UseDesktopRangePickerSlotsComponent, 'Field'>,
-    CalendarRangePickerSlotsComponent {}
+    DateRangeCalendarSlotsComponent {}
 
 export interface DesktopDateRangePicker2SlotsComponentsProps
   extends UseDesktopRangePickerSlotsComponentsProps,
-    CalendarRangePickerSlotsComponentsProps {}
+    DateRangeCalendarSlotsComponentsProps {}
 
 export interface DesktopDateRangePicker2Props<TDate> extends BaseDateRangePicker2Props<TDate> {
   /**

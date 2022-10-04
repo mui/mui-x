@@ -141,7 +141,7 @@ module.exports = {
               'useDatePicker2DefaultizedProps',
               'useTimePicker2DefaultizedProps',
               'useDateTimePicker2DefaultizedProps',
-              'useCalendarRangePickerDefaultizedProps',
+              'useDateRangeCalendarDefaultizedProps',
             ],
           },
         ],

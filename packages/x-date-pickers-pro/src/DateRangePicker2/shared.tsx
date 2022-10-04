@@ -10,16 +10,19 @@ import {
   ValidationCommonPropsOptionalValue,
 } from '@mui/x-date-pickers/internals';
 import { DateRangeValidationError } from '../internal/hooks/validation/useDateRangeValidation';
-import { ExportedDateRangePickerViewProps } from '../DateRangePicker/DateRangePickerView';
 import { DateRange } from '../internal/models';
-import { CalendarRangePicker, CalendarRangePickerProps } from '../CalendarRangePicker';
+import {
+  DateRangeCalendar,
+  DateRangeCalendarProps,
+  ExportedDateRangeCalendarProps,
+} from '../DateRangeCalendar';
 
 export interface BaseDateRangePicker2Props<TDate>
   extends Omit<
       BasePickerProps2<DateRange<TDate>, TDate, any>,
       'views' | 'openTo' | 'onViewChange' | 'orientation'
     >,
-    ExportedDateRangePickerViewProps<TDate>,
+    ExportedDateRangeCalendarProps<TDate>,
     BaseDateValidationProps<TDate>,
     ValidationCommonPropsOptionalValue<DateRangeValidationError, DateRange<TDate>> {}
 
@@ -45,5 +48,5 @@ export function useDatePicker2DefaultizedProps<
 }
 
 export const renderDateRangeViews = <TDate extends unknown>(
-  props: CalendarRangePickerProps<TDate>,
-) => <CalendarRangePicker {...props} />;
+  props: DateRangeCalendarProps<TDate>,
+) => <DateRangeCalendar {...props} />;

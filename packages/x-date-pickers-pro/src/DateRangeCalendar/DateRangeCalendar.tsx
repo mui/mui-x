@@ -21,11 +21,11 @@ import {
   WrapperVariantContext,
 } from '@mui/x-date-pickers/internals';
 import { getReleaseInfo } from '../internal/utils/releaseInfo';
-import { getCalendarRangePickerUtilityClass } from './calendarRangePickerClasses';
+import { getDateRangeCalendarUtilityClass } from './dateRangeCalendarClasses';
 import {
-  CalendarRangePickerProps,
-  CalendarRangePickerDefaultizedProps,
-} from './CalendarRangePicker.types';
+  DateRangeCalendarProps,
+  DateRangeCalendarDefaultizedProps,
+} from './DateRangeCalendar.types';
 import {
   isEndOfRange,
   isRangeValid,
@@ -38,26 +38,26 @@ import { DateRangePickerDay } from '../DateRangePickerDay';
 
 const releaseInfo = getReleaseInfo();
 
-const CalendarRangePickerRoot = styled('div', {
-  name: 'MuiCalendarRangePicker',
+const DateRangeCalendarRoot = styled('div', {
+  name: 'MuiDateRangeCalendar',
   slot: 'Root',
   overridesResolver: (_, styles) => styles.root,
-})({
+})<{ ownerState: DateRangeCalendarProps<any> }>({
   display: 'flex',
   flexDirection: 'row',
 });
 
-const CalendarRangePickerMonthContainer = styled('div', {
-  name: 'MuiCalendarRangePicker',
+const DateRangeCalendarMonthContainer = styled('div', {
+  name: 'MuiDateRangeCalendar',
   slot: 'Container',
-  overridesResolver: (_, styles) => styles.container,
+  overridesResolver: (_, styles) => styles.monthContainer,
 })(({ theme }) => ({
   '&:not(:last-of-type)': {
     borderRight: `2px solid ${theme.palette.divider}`,
   },
 }));
 
-const CalendarRangePickerArrowSwitcher = styled(PickersArrowSwitcher)({
+const DateRangeCalendarArrowSwitcher = styled(PickersArrowSwitcher)({
   padding: '16px 16px 8px 16px',
   display: 'flex',
   alignItems: 'center',
@@ -67,15 +67,15 @@ const CalendarRangePickerArrowSwitcher = styled(PickersArrowSwitcher)({
 const DAY_RANGE_SIZE = 40;
 const weeksContainerHeight = (DAY_RANGE_SIZE + DAY_MARGIN * 2) * 6;
 
-const CalendarRangeDayPicker = styled(DayPicker)({
+const DateRangeCalendarDayPicker = styled(DayPicker)({
   minWidth: 312,
   minHeight: weeksContainerHeight,
 }) as typeof DayPicker;
 
-function useCalendarRangePickerDefaultizedProps<TDate>(
-  props: CalendarRangePickerProps<TDate>,
+function useDateRangeCalendarDefaultizedProps<TDate>(
+  props: DateRangeCalendarProps<TDate>,
   name: string,
-): CalendarRangePickerDefaultizedProps<TDate> {
+): DateRangeCalendarDefaultizedProps<TDate> {
   const utils = useUtils<TDate>();
   const defaultDates = useDefaultDates<TDate>();
   const themeProps = useThemeProps({
@@ -97,22 +97,29 @@ function useCalendarRangePickerDefaultizedProps<TDate>(
   };
 }
 
-const useUtilityClasses = (ownerState: CalendarRangePickerProps<any>) => {
+const useUtilityClasses = (ownerState: DateRangeCalendarProps<any>) => {
   const { classes } = ownerState;
   const slots = {
     root: ['root'],
-    container: ['container'],
+    monthContainer: ['monthContainer'],
   };
 
-  return composeClasses(slots, getCalendarRangePickerUtilityClass, classes);
+  return composeClasses(slots, getDateRangeCalendarUtilityClass, classes);
 };
 
-export function CalendarRangePicker<TDate>(inProps: CalendarRangePickerProps<TDate>) {
+type DateRangeCalendarComponent = (<TDate>(
+  props: DateRangeCalendarProps<TDate> & React.RefAttributes<HTMLDivElement>,
+) => JSX.Element) & { propTypes?: any };
+
+export const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
+  inProps: DateRangeCalendarProps<TDate>,
+  ref: React.Ref<HTMLDivElement>,
+) {
   const utils = useUtils<TDate>();
   const localeText = useLocaleText<TDate>();
 
   // TODO: Add theme augmentation
-  const props = useCalendarRangePickerDefaultizedProps(inProps, 'MuiCalendarRangePicker');
+  const props = useDateRangeCalendarDefaultizedProps(inProps, 'MuiDateRangeCalendar');
 
   const ownerState = props;
   const classes = useUtilityClasses(ownerState);
@@ -143,6 +150,7 @@ export function CalendarRangePicker<TDate>(inProps: CalendarRangePickerProps<TDa
     renderDay = (_, dateRangeProps) => <DateRangePickerDay {...dateRangeProps} />,
     showDaysOutsideCurrentMonth,
     dayOfWeekFormatter,
+    sx,
   } = props;
 
   const wrappedShouldDisableDate =
@@ -242,7 +250,12 @@ export function CalendarRangePicker<TDate>(inProps: CalendarRangePickerProps<TDa
   };
 
   return (
-    <CalendarRangePickerRoot className={clsx(className, classes.root)}>
+    <DateRangeCalendarRoot
+      ref={ref}
+      className={clsx(className, classes.root)}
+      ownerState={ownerState}
+      sx={sx}
+    >
       <Watermark packageName="x-date-pickers-pro" releaseInfo={releaseInfo} />
       {Array.from({ length: calendars }).map((_, index) => {
         const monthOnIteration = utils.setMonth(
@@ -251,7 +264,7 @@ export function CalendarRangePicker<TDate>(inProps: CalendarRangePickerProps<TDa
         );
 
         return (
-          <CalendarRangePickerMonthContainer key={index} className={classes.container}>
+          <DateRangeCalendarMonthContainer key={index} className={classes.monthContainer}>
             {calendars === 1 ? (
               <PickersCalendarHeader
                 views={['day']}
@@ -268,7 +281,7 @@ export function CalendarRangePicker<TDate>(inProps: CalendarRangePickerProps<TDa
                 componentsProps={componentsProps}
               />
             ) : (
-              <CalendarRangePickerArrowSwitcher
+              <DateRangeCalendarArrowSwitcher
                 onGoToPrevious={selectPreviousMonth}
                 onGoToNext={selectNextMonth}
                 isPreviousHidden={index !== 0}
@@ -281,9 +294,9 @@ export function CalendarRangePicker<TDate>(inProps: CalendarRangePickerProps<TDa
                 componentsProps={componentsProps}
               >
                 {utils.format(monthOnIteration, 'monthAndYear')}
-              </CalendarRangePickerArrowSwitcher>
+              </DateRangeCalendarArrowSwitcher>
             )}
-            <CalendarRangeDayPicker<TDate>
+            <DateRangeCalendarDayPicker<TDate>
               key={index}
               {...calendarState}
               {...baseDateValidationProps}
@@ -315,9 +328,9 @@ export function CalendarRangePicker<TDate>(inProps: CalendarRangePickerProps<TDa
                 })
               }
             />
-          </CalendarRangePickerMonthContainer>
+          </DateRangeCalendarMonthContainer>
         );
       })}
-    </CalendarRangePickerRoot>
+    </DateRangeCalendarRoot>
   );
-}
+}) as DateRangeCalendarComponent;
