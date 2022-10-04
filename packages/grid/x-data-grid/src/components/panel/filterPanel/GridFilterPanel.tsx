@@ -45,6 +45,12 @@ export interface GridFilterPanelProps
   children?: React.ReactNode;
 }
 
+const getGridFilter = (col: GridStateColDef<any, any, any>): GridFilterItem => ({
+  columnField: col.field,
+  operatorValue: col.filterOperators![0].value,
+  id: Math.round(Math.random() * 1e5),
+});
+
 const GridFilterPanel = React.forwardRef<HTMLDivElement, GridFilterPanelProps>(
   function GridFilterPanel(props, ref) {
     const apiRef = useGridApiContext();
@@ -77,21 +83,38 @@ const GridFilterPanel = React.forwardRef<HTMLDivElement, GridFilterPanelProps>(
     );
 
     const getDefaultFilter = React.useCallback((): GridFilterItem | null => {
-      const computedColumn = filterableColumns.find((colDef) => colDef.filterOperators?.length);
-      const nextColumnWithOperator = getColumnForNewFilter
-        ? getColumnForNewFilter(filterModel.items.length ? filterModel.items : [computedColumn])
-        : computedColumn;
+      const nextColumnWithOperator = filterableColumns.find(
+        (colDef) => colDef.filterOperators?.length,
+      );
 
       if (!nextColumnWithOperator) {
         return null;
       }
 
-      return {
-        columnField: nextColumnWithOperator.field,
-        operatorValue: nextColumnWithOperator.filterOperators![0].value,
-        id: Math.round(Math.random() * 1e5),
-      };
-    }, [filterModel.items, filterableColumns, getColumnForNewFilter]);
+      return getGridFilter(nextColumnWithOperator);
+    }, [filterableColumns]);
+
+    const getNewFilter = React.useCallback((): GridFilterItem | null => {
+      const defaultFilter = getDefaultFilter()
+      if (getColumnForNewFilter === undefined || typeof getColumnForNewFilter !== 'function') {
+        return defaultFilter;
+      }
+
+      const defaultItems = defaultFilter ? [defaultFilter] : []
+
+      // If no items are there in filterModel, we have to pass defaultFilter
+      const nextColumnWithOperator = getColumnForNewFilter(
+        filterModel.items.length
+          ? filterModel.items
+          : defaultItems,
+      );
+
+      if (!nextColumnWithOperator) {
+        return null;
+      }
+
+      return getGridFilter(nextColumnWithOperator);
+    }, [filterModel.items, getColumnForNewFilter, getDefaultFilter]);
 
     const items = React.useMemo<GridFilterItem[]>(() => {
       if (filterModel.items.length) {
@@ -106,11 +129,11 @@ const GridFilterPanel = React.forwardRef<HTMLDivElement, GridFilterPanelProps>(
     const hasMultipleFilters = items.length > 1;
 
     const addNewFilter = () => {
-      const defaultFilter = getDefaultFilter();
-      if (!defaultFilter) {
+      const newFilter = getNewFilter();
+      if (!newFilter) {
         return;
       }
-      apiRef.current.upsertFilterItems([...items, defaultFilter]);
+      apiRef.current.upsertFilterItems([...items, newFilter]);
     };
 
     const deleteFilter = React.useCallback(

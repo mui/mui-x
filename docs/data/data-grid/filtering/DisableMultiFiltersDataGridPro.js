@@ -34,14 +34,14 @@ export default function DisableMultiFiltersDataGridPro() {
 
   const getColumnForNewFilter = React.useCallback(
     (currentFilters) => {
-      console.log('i am called with current filters', currentFilters);
       const colDefs = apiRef.current.getAllColumns();
-      const filteredFields = currentFilters?.map((item) => item.columnField);
-      return colDefs
+      const filteredFields = currentFilters?.map(({ columnField }) => columnField);
+      const columnForNewFilter = colDefs
         .filter(
           (colDef) => colDef.filterable && !filteredFields.includes(colDef.field),
         )
         .find((colDef) => colDef.filterOperators?.length);
+      return columnForNewFilter;
     },
     [apiRef],
   );
