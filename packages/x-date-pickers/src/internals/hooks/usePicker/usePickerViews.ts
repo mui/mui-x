@@ -7,8 +7,8 @@ import { PickerSelectionState } from '../usePickerState';
 import { useIsLandscape } from '../useIsLandscape';
 import { UseFieldInternalProps } from '../useField';
 
-export type PickerViewRenderer<TValue, TView extends CalendarOrClockPickerView> = (
-  props: PickerViewsRendererProps<TValue, TView>,
+type PickerViewRenderer<TValue, TView extends CalendarOrClockPickerView, TViewProps extends {}> = (
+  props: PickerViewsRendererProps<TValue, TView, TViewProps>,
 ) => React.ReactElement;
 
 export type PickerDateSectionModeLookup<TView extends CalendarOrClockPickerView> = Record<
@@ -54,11 +54,16 @@ export interface UsePickerViewsProps<TValue, TView extends CalendarOrClockPicker
   value: TValue;
 }
 
-interface UsePickerViewParams<TValue, TView extends CalendarOrClockPickerView> {
+interface UsePickerViewParams<
+  TValue,
+  TView extends CalendarOrClockPickerView,
+  TViewProps extends {},
+> {
   props: UsePickerViewsProps<TValue, TView>;
-  renderViews: PickerViewRenderer<TValue, TView>;
+  renderViews: PickerViewRenderer<TValue, TView, TViewProps>;
   sectionModeLookup?: PickerDateSectionModeLookup<TView>;
-  inputRef: React.RefObject<HTMLInputElement>;
+  additionalViewProps: TViewProps;
+  inputRef?: React.RefObject<HTMLInputElement>;
   open: boolean;
   onClose: () => void;
   onSelectedSectionsChange: NonNullable<
@@ -73,27 +78,36 @@ export interface UsePickerViewsResponse {
   shouldRestoreFocus: () => boolean;
 }
 
-export interface PickerViewsRendererProps<TValue, TView extends CalendarOrClockPickerView>
-  extends Pick<
+export type PickerViewsRendererProps<
+  TValue,
+  TView extends CalendarOrClockPickerView,
+  TViewProps extends {},
+> = TViewProps &
+  Pick<
     UsePickerViewsProps<TValue, TView>,
     'value' | 'onChange' | 'views' | 'onViewChange' | 'autoFocus'
-  > {
-  view: TView;
-  value: TValue;
-  isLandscape: boolean;
-}
+  > & {
+    view: TView;
+    value: TValue;
+    isLandscape: boolean;
+  };
 
 let warnedOnceNotValidOpenTo = false;
 
-export const usePickerViews = <TValue, TView extends CalendarOrClockPickerView>({
+export const usePickerViews = <
+  TValue,
+  TView extends CalendarOrClockPickerView,
+  TViewProps extends {},
+>({
   props,
   renderViews,
   sectionModeLookup: inputSectionModelLookup,
+  additionalViewProps,
   inputRef,
   open,
   onClose,
   onSelectedSectionsChange,
-}: UsePickerViewParams<TValue, TView>): UsePickerViewsResponse => {
+}: UsePickerViewParams<TValue, TView, TViewProps>): UsePickerViewsResponse => {
   const { views, openTo, onViewChange, onChange, orientation, ...other } = props;
 
   const isLandscape = useIsLandscape(views, orientation);
@@ -150,7 +164,7 @@ export const usePickerViews = <TValue, TView extends CalendarOrClockPickerView>(
       onSelectedSectionsChange('hour');
 
       setTimeout(() => {
-        inputRef.current!.focus();
+        inputRef?.current!.focus();
       });
     }
   }, [openView]); // eslint-disable-line react-hooks/exhaustive-deps
@@ -179,7 +193,7 @@ export const usePickerViews = <TValue, TView extends CalendarOrClockPickerView>(
   return {
     ...viewModeResponse,
     shouldRestoreFocus,
-    renderViews: (additionalProps) =>
+    renderViews: () =>
       renderViews({
         view: viewInPopper,
         onViewChange: setOpenView,
@@ -187,7 +201,7 @@ export const usePickerViews = <TValue, TView extends CalendarOrClockPickerView>(
         views,
         isLandscape,
         ...other,
-        ...additionalProps,
+        ...additionalViewProps,
       }),
   };
 };

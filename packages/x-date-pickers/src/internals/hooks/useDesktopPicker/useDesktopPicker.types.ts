@@ -60,7 +60,7 @@ export interface UseDesktopPickerProps<TDate, TView extends CalendarOrClockPicke
 
 export interface UseDesktopPickerParams<TDate, TView extends CalendarOrClockPickerView>
   extends Pick<
-    UsePickerParams<TDate | null, TDate, TView>,
+    UsePickerParams<TDate | null, TDate, TView, {}>,
     'props' | 'valueManager' | 'sectionModeLookup' | 'renderViews'
   > {
   props: UseDesktopPickerProps<TDate, TView>;

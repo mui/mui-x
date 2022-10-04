@@ -222,6 +222,14 @@ export function CalendarRangePicker<TDate>(inProps: CalendarRangePickerProps<TDa
   };
 
   const [rangePreviewDay, setRangePreviewDay] = React.useState<TDate | null>(null);
+
+  const CalendarTransitionProps = React.useMemo(
+    () => ({
+      onMouseLeave: () => setRangePreviewDay(null),
+    }),
+    [],
+  );
+
   const previewingRange = calculateRangePreview({
     utils,
     range: value,
@@ -263,6 +271,7 @@ export function CalendarRangePicker<TDate>(inProps: CalendarRangePickerProps<TDa
               {utils.format(monthOnIteration, 'monthAndYear')}
             </CalendarRangePickerArrowSwitcher>
             <CalendarRangeDayPicker<TDate>
+              key={index}
               {...calendarState}
               {...baseDateValidationProps}
               {...commonViewProps}
@@ -271,6 +280,8 @@ export function CalendarRangePicker<TDate>(inProps: CalendarRangePickerProps<TDa
               reduceAnimations={reduceAnimations}
               selectedDays={value}
               onSelectedDaysChange={handleSelectedDayChange}
+              currentMonth={monthOnIteration}
+              TransitionProps={CalendarTransitionProps}
               shouldDisableDate={wrappedShouldDisableDate}
               showDaysOutsideCurrentMonth={showDaysOutsideCurrentMonth}
               dayOfWeekFormatter={dayOfWeekFormatter}

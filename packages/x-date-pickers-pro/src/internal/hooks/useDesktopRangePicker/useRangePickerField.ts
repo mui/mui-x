@@ -10,6 +10,8 @@ interface UseRangePickerFieldParams<TDate>
   Input: React.ElementType;
   externalInputProps?: Record<string, any>;
   onBlur: () => void;
+  currentDatePosition: 'start' | 'end';
+  onCurrentDatePositionChange: (newPosition: 'start' | 'end') => void;
 }
 
 export const useRangePickerField = <TDate>({
@@ -20,35 +22,33 @@ export const useRangePickerField = <TDate>({
   Input,
   externalInputProps,
   onBlur,
+  currentDatePosition,
+  onCurrentDatePositionChange,
 }: UseRangePickerFieldParams<TDate>) => {
   const startRef = React.useRef<HTMLInputElement>(null);
   const endRef = React.useRef<HTMLInputElement>(null);
-
-  const [currentlySelectingRangeEnd, setCurrentlySelectingRangeEnd] = React.useState<
-    'start' | 'end'
-  >('start');
 
   React.useEffect(() => {
     if (!open) {
       return;
     }
 
-    if (currentlySelectingRangeEnd === 'start') {
+    if (currentDatePosition === 'start') {
       startRef.current?.focus();
-    } else if (currentlySelectingRangeEnd === 'end') {
+    } else if (currentDatePosition === 'end') {
       endRef.current?.focus();
     }
-  }, [currentlySelectingRangeEnd, open]);
+  }, [currentDatePosition, open]);
 
   const openRangeStartSelection = () => {
-    setCurrentlySelectingRangeEnd('start');
+    onCurrentDatePositionChange('start');
     if (!readOnly && !disableOpenPicker) {
       actions.onOpen();
     }
   };
 
   const openRangeEndSelection = () => {
-    setCurrentlySelectingRangeEnd('end');
+    onCurrentDatePositionChange('end');
     if (!readOnly && !disableOpenPicker) {
       actions.onOpen();
     }
@@ -56,13 +56,13 @@ export const useRangePickerField = <TDate>({
 
   const focusOnRangeStart = () => {
     if (open) {
-      setCurrentlySelectingRangeEnd('start');
+      onCurrentDatePositionChange('start');
     }
   };
 
   const focusOnRangeEnd = () => {
     if (open) {
-      setCurrentlySelectingRangeEnd('end');
+      onCurrentDatePositionChange('end');
     }
   };
 

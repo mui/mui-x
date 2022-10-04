@@ -44,9 +44,14 @@ export interface UseDesktopRangePickerProps<TDate, TView extends CalendarOrClock
   componentsProps?: UseDesktopRangePickerSlotsComponentsProps;
 }
 
+interface DesktopRangePickerAdditionalViewProps {
+  currentDatePosition: 'start' | 'end';
+  onCurrentDatePositionChange: (newPosition: 'start' | 'end') => void;
+}
+
 export interface UseDesktopRangePickerParams<TDate, TView extends CalendarOrClockPickerView>
   extends Pick<
-    UsePickerParams<DateRange<TDate>, TDate, TView>,
+    UsePickerParams<DateRange<TDate>, TDate, TView, DesktopRangePickerAdditionalViewProps>,
     'props' | 'valueManager' | 'sectionModeLookup' | 'renderViews'
   > {
   props: UseDesktopRangePickerProps<TDate, TView>;

@@ -30,8 +30,8 @@ export const useDesktopRangePicker = <TDate, TView extends CalendarOrClockPicker
   } = props;
 
   const fieldRef = React.useRef<HTMLDivElement>(null);
-
   const popperRef = React.useRef<HTMLDivElement>(null);
+  const [currentDatePosition, setCurrentDatePosition] = React.useState<'start' | 'end'>('start');
 
   const {
     field: headlessPickerFieldResponse,
@@ -45,7 +45,10 @@ export const useDesktopRangePicker = <TDate, TView extends CalendarOrClockPicker
     wrapperVariant: 'desktop',
     renderViews: renderViewsParam,
     sectionModeLookup,
-    // inputRef,
+    additionalViewProps: {
+      currentDatePosition,
+      onCurrentDatePositionChange: setCurrentDatePosition,
+    },
   });
 
   const handleBlur = () => {
@@ -69,6 +72,8 @@ export const useDesktopRangePicker = <TDate, TView extends CalendarOrClockPicker
     Input: components.Input!,
     externalInputProps: componentsProps.input,
     onBlur: handleBlur,
+    currentDatePosition,
+    onCurrentDatePositionChange: setCurrentDatePosition,
   });
 
   const Field = components.Field;

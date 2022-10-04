@@ -24,8 +24,6 @@ const DesktopDateRangePicker2 = React.forwardRef(function DesktopDateRangePicker
   const {
     components: inComponents,
     componentsProps: inComponentsProps,
-    inputRef,
-    label,
     ...other
   } = props;
 
@@ -39,8 +37,6 @@ const DesktopDateRangePicker2 = React.forwardRef(function DesktopDateRangePicker
     field: (ownerState: any) => ({
       ...resolveComponentProps(inComponentsProps?.field, ownerState),
       ref,
-      inputRef,
-      label,
     }),
   };
 

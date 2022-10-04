@@ -111,7 +111,7 @@ export function useDateTimePicker2DefaultizedProps<
 
 interface DateTimePickerViewsProps<TDate>
   extends Omit<BaseDateTimePicker2Props<TDate>, keyof UsePickerProps<any, any>>,
-    PickerViewsRendererProps<TDate | null, CalendarOrClockPickerView> {
+    PickerViewsRendererProps<TDate | null, CalendarOrClockPickerView, {}> {
   openTo?: CalendarOrClockPickerView;
   components?: CalendarPickerProps<TDate>['components'] & ClockPickerProps<TDate>['components'];
   componentsProps?: CalendarPickerProps<TDate>['componentsProps'] &

@@ -52,6 +52,7 @@ export const useDesktopPicker = <TDate, TView extends CalendarOrClockPickerView>
     renderViews: renderViewsParam,
     sectionModeLookup,
     inputRef,
+    additionalViewProps: {},
   });
 
   const Field = components.Field;

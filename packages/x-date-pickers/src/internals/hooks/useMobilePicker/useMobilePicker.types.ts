@@ -35,10 +35,10 @@ export interface UseMobilePickerProps<TDate, TView extends CalendarOrClockPicker
 }
 
 export interface UseMobilePickerParams<TDate, TView extends CalendarOrClockPickerView>
-  extends Omit<
-    UsePickerParams<TDate | null, TDate, TView>,
-    'props' | 'wrapperVariant' | 'inputRef'
-  > {
+  extends Pick<
+      UsePickerParams<TDate | null, TDate, TView, {}>,
+      'props' | 'valueManager' | 'sectionModeLookup' | 'renderViews'
+      > {
   props: UseMobilePickerProps<TDate, TView>;
   getOpenDialogAriaText: (date: TDate, utils: MuiPickersAdapter<TDate>) => string;
 }
