@@ -216,7 +216,7 @@ however you'll be required to renew your license if you need to continue develop
 #### Out of scope license key
 
 This error indicates that the component you are trying to use is not included in your license.
-This can happen if you try to use `DataGridPremium` with a pro license.
+This can happen if you try to use `DataGridPremium` with a Pro license.
 
 #### Invalid license key
 
