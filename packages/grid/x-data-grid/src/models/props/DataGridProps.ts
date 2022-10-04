@@ -34,10 +34,6 @@ import { GridColumnGroupingModel } from '../gridColumnGrouping';
 
 export interface GridExperimentalFeatures {
   /**
-   * Will be part of the premium-plan when fully ready.
-   */
-  preventCommitWhileValidating: boolean;
-  /**
    * Enables the column grouping.
    */
   columnGrouping: boolean;

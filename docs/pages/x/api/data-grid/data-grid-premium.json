@@ -73,7 +73,7 @@
     "experimentalFeatures": {
       "type": {
         "name": "shape",
-        "description": "{ aggregation?: bool, columnGrouping?: bool, lazyLoading?: bool, preventCommitWhileValidating?: bool, rowPinning?: bool, warnIfFocusStateIsNotSynced?: bool }"
+        "description": "{ aggregation?: bool, columnGrouping?: bool, lazyLoading?: bool, rowPinning?: bool, warnIfFocusStateIsNotSynced?: bool }"
       }
     },
     "filterMode": {

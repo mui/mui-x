@@ -33,7 +33,7 @@ export interface GridEditingSharedApi {
    * Commonly used inside the edit cell component.
    * @param {GridEditCellValueParams} params Contains the id, field and value to set.
    * @param {React.SyntheticEvent} event The event to pass forward.
-   * @returns {Promise<boolean> | void} A promise with the validation status if `preventCommitWhileValidating` is `true`. Otherwise, void.
+   * @returns {Promise<boolean> | void} A promise with the validation status.
    */
   setEditCellValue: (
     params: GridEditCellValueParams,
