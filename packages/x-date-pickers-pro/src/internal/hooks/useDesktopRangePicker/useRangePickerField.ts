@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useSlotProps } from '@mui/base/utils';
-import { onSpaceOrEnter, UsePickerResponse } from '@mui/x-date-pickers/internals';
+import { onSpaceOrEnter, useLocaleText, UsePickerResponse } from '@mui/x-date-pickers/internals';
 import { DateRange } from '../../models';
 
 interface UseRangePickerFieldParams<TDate>
@@ -25,6 +25,8 @@ export const useRangePickerField = <TDate>({
   currentDatePosition,
   onCurrentDatePositionChange,
 }: UseRangePickerFieldParams<TDate>) => {
+  const localeText = useLocaleText();
+
   const startRef = React.useRef<HTMLInputElement>(null);
   const endRef = React.useRef<HTMLInputElement>(null);
 
@@ -70,10 +72,12 @@ export const useRangePickerField = <TDate>({
     elementType: Input,
     externalSlotProps: externalInputProps,
     additionalProps: {
+      label: localeText.start,
       onBlur,
       onClick: openRangeStartSelection,
       onKeyDown: onSpaceOrEnter(openRangeStartSelection),
       onFocus: focusOnRangeStart,
+      focused: open && currentDatePosition === 'start',
     },
     // TODO: Pass owner state
     ownerState: {},
@@ -83,10 +87,12 @@ export const useRangePickerField = <TDate>({
     elementType: Input,
     externalSlotProps: externalInputProps,
     additionalProps: {
+      label: localeText.end,
       onBlur,
       onClick: openRangeEndSelection,
       onKeyDown: onSpaceOrEnter(openRangeEndSelection),
       onFocus: focusOnRangeEnd,
+      focused: open && currentDatePosition === 'end',
     },
     // TODO: Pass owner state
     ownerState: {},

@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { useSlotProps } from '@mui/base/utils';
+import { useLicenseVerifier } from '@mui/x-license-pro';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import {
   CalendarOrClockPickerView,
@@ -10,6 +11,9 @@ import {
 } from '@mui/x-date-pickers/internals';
 import { UseDesktopRangePickerParams } from './useDesktopRangePicker.types';
 import { useRangePickerField } from './useRangePickerField';
+import { getReleaseInfo } from '../../utils/releaseInfo';
+
+const releaseInfo = getReleaseInfo();
 
 export const useDesktopRangePicker = <TDate, TView extends CalendarOrClockPickerView>({
   props,
@@ -18,6 +22,8 @@ export const useDesktopRangePicker = <TDate, TView extends CalendarOrClockPicker
   getOpenDialogAriaText,
   sectionModeLookup,
 }: UseDesktopRangePickerParams<TDate, TView>) => {
+  useLicenseVerifier('x-date-pickers-pro', releaseInfo);
+
   const {
     components,
     componentsProps = {},
