@@ -12,8 +12,7 @@ import {
 import { DateRangeValidationError } from '../internal/hooks/validation/useDateRangeValidation';
 import { ExportedDateRangePickerViewProps } from '../DateRangePicker/DateRangePickerView';
 import { DateRange } from '../internal/models';
-import { CalendarRangePickerProps } from './CalendarRangePicker.types';
-import { CalendarRangePicker } from './CalendarRangePicker';
+import { CalendarRangePicker, CalendarRangePickerProps } from '../CalendarRangePicker';
 
 export interface BaseDateRangePicker2Props<TDate>
   extends Omit<
