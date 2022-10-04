@@ -26,7 +26,7 @@ export function showOutOfScopeLicenseError() {
     '',
     'Your MUI X license key isn\'t valid. You are rendering a DataGridPremium component that requires a license key with the "premium" feature scope but your license key has the "pro" feature scope.',
     '',
-    'You can solve the issue by purchasing a premium license at https://mui.com/r/x-get-license?scope=premium',
+    'You can solve the issue by purchasing a Premium license at https://mui.com/r/x-get-license?scope=premium',
     'Alternatively, you can replace the import on DataGridPremium with DataGridPro.',
   ]);
 }
