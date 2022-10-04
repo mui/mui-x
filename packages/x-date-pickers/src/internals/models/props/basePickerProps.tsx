@@ -1,7 +1,7 @@
 import { PickerStateProps } from '../../hooks/usePickerState';
 import { UsePickerProps } from '../../hooks/usePicker';
 import { CalendarOrClockPickerView } from '../views';
-import { PickersInputLocaleText } from '@mui/x-date-pickers';
+import { PickersInputLocaleText } from '../../../locales';
 
 export interface BasePickerProps<TValue> extends PickerStateProps<TValue> {
   /**

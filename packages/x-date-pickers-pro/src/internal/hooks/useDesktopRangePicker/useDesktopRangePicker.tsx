@@ -19,7 +19,6 @@ export const useDesktopRangePicker = <TDate, TView extends CalendarOrClockPicker
   props,
   valueManager,
   renderViews: renderViewsParam,
-  getOpenDialogAriaText,
   sectionModeLookup,
 }: UseDesktopRangePickerParams<TDate, TView>) => {
   useLicenseVerifier('x-date-pickers-pro', releaseInfo);

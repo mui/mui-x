@@ -55,5 +55,4 @@ export interface UseDesktopRangePickerParams<TDate, TView extends CalendarOrCloc
     'props' | 'valueManager' | 'sectionModeLookup' | 'renderViews'
   > {
   props: UseDesktopRangePickerProps<TDate, TView>;
-  getOpenDialogAriaText: (date: TDate, utils: MuiPickersAdapter<TDate>) => string;
 }
