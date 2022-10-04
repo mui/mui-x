@@ -294,14 +294,14 @@ This property works like the `renderCell` property, which is rendered while cell
 
 ```tsx
 function CustomEditComponent(props: GridRenderEditCellParams) {
-  return <input type="text" value={params.value} onValueChange={...}>;
+  return <input type="text" value={params.value} onValueChange={...} />;
 }
 
 const columns: GridColDef[] = [
   {
     field: 'firstName',
     renderEditCell: (params: GridRenderEditCellParams) => (
-      return <CustomEditComponent {...params} />;
+      <CustomEditComponent {...params} />
     ),
   },
 ];
@@ -329,7 +329,7 @@ function CustomEditComponent(props: GridRenderEditCellParams) {
     apiRef.current.setEditCellValue({ id, field, value: newValue });
   };
 
-  return <input type="text" value={value} onValueChange={handleValueChange}>;
+  return <input type="text" value={value} onChange={handleValueChange} />;
 }
 ```
 
@@ -405,7 +405,7 @@ The following demo implements an edit component with auto-stop, based on a nativ
 {{"demo": "AutoStopEditComponent.js", "bg": "inline", "defaultCodeOpen": false}}
 
 :::warning
-We don't recommend using edit components with auto-stop in columns that use long-running `preProcessEditCellProps` because the UI will freeze while waiting for `apiRef.current.setEditCellValue`.
+Avoid using edit components with auto-stop in columns that use long-running `preProcessEditCellProps` because the UI will freeze while waiting for `apiRef.current.setEditCellValue`.
 Instead, use the provided interactions to exit edit mode.
 :::
 

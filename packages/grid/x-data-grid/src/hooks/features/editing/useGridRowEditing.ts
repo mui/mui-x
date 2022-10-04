@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { unstable_useEventCallback as useEventCallback } from '@mui/utils';
 import {
   useGridApiEventHandler,
   useGridApiOptionHandler,
@@ -29,7 +30,7 @@ import { isPrintableKey } from '../../../utils/keyboardUtils';
 import { gridColumnFieldsSelector } from '../columns/gridColumnsSelector';
 import { GridCellParams } from '../../../models/params/gridCellParams';
 import { buildWarning } from '../../../utils/warning';
-import { gridRowsIdToIdLookupSelector } from '../rows/gridRowsSelector';
+import { gridRowsDataRowIdToIdLookupSelector } from '../rows/gridRowsSelector';
 import { deepClone } from '../../../utils/utils';
 import {
   GridRowEditStopParams,
@@ -219,6 +220,10 @@ export const useGridRowEditing = (
       } else if (params.isEditable) {
         let reason: GridRowEditStartReasons | undefined;
 
+        if (event.key === ' ' && event.shiftKey) {
+          return; // Shift + Space is used to select the row
+        }
+
         if (isPrintableKey(event)) {
           reason = GridRowEditStartReasons.printableKeyDown;
         } else if ((event.ctrlKey || event.metaKey) && event.key === 'v') {
@@ -311,25 +316,22 @@ export const useGridRowEditing = (
     [apiRef, props.editMode],
   );
 
-  const updateRowModesModel = React.useCallback(
-    (newModel: GridRowModesModel) => {
-      const isNewModelDifferentFromProp = newModel !== props.rowModesModel;
+  const updateRowModesModel = useEventCallback((newModel: GridRowModesModel) => {
+    const isNewModelDifferentFromProp = newModel !== props.rowModesModel;
 
-      if (onRowModesModelChange && isNewModelDifferentFromProp) {
-        const details = signature === GridSignature.DataGridPro ? { api: apiRef.current } : {};
-        onRowModesModelChange(newModel, details);
-      }
+    if (onRowModesModelChange && isNewModelDifferentFromProp) {
+      const details = signature === GridSignature.DataGridPro ? { api: apiRef.current } : {};
+      onRowModesModelChange(newModel, details);
+    }
 
-      if (props.rowModesModel && isNewModelDifferentFromProp) {
-        return; // The prop always win
-      }
+    if (props.rowModesModel && isNewModelDifferentFromProp) {
+      return; // The prop always win
+    }
 
-      setRowModesModel(newModel);
-      rowModesModelRef.current = newModel;
-      apiRef.current.publishEvent('rowModesModelChange', newModel);
-    },
-    [apiRef, onRowModesModelChange, props.rowModesModel, signature],
-  );
+    setRowModesModel(newModel);
+    rowModesModelRef.current = newModel;
+    apiRef.current.publishEvent('rowModesModelChange', newModel);
+  });
 
   const updateRowInRowModesModel = React.useCallback(
     (id: GridRowId, newProps: GridRowModesModelProps | null) => {
@@ -396,7 +398,7 @@ export const useGridRowEditing = (
     [throwIfNotInMode, updateRowInRowModesModel],
   );
 
-  const updateStateToStartRowEditMode = React.useCallback<GridRowEditingApi['startRowEditMode']>(
+  const updateStateToStartRowEditMode = useEventCallback<[GridStartRowEditModeParams], void>(
     (params) => {
       const { id, fieldToFocus, deleteValue } = params;
 
@@ -425,8 +427,7 @@ export const useGridRowEditing = (
         apiRef.current.setCellFocus(id, fieldToFocus);
       }
     },
-    [apiRef, updateOrDeleteRowState],
-  );
+  ) as GridRowEditingApi['stopRowEditMode'];
 
   const stopRowEditMode = React.useCallback<GridRowEditingApi['stopRowEditMode']>(
     (params) => {
@@ -439,7 +440,7 @@ export const useGridRowEditing = (
     [throwIfNotInMode, updateRowInRowModesModel],
   );
 
-  const updateStateToStopRowEditMode = React.useCallback<GridRowEditingApi['stopRowEditMode']>(
+  const updateStateToStopRowEditMode = useEventCallback<[GridStopRowEditModeParams], void>(
     (params) => {
       const { id, ignoreModifications, field: focusedField, cellToFocusAfter = 'none' } = params;
 
@@ -486,6 +487,8 @@ export const useGridRowEditing = (
       if (processRowUpdate) {
         const handleError = (errorThrown: any) => {
           prevRowModesModel.current[id].mode = GridRowModes.Edit;
+          // Revert the mode in the rowModesModel prop back to "edit"
+          updateRowInRowModesModel(id, { mode: GridRowModes.Edit });
 
           if (onProcessRowUpdateError) {
             onProcessRowUpdateError(errorThrown);
@@ -509,14 +512,7 @@ export const useGridRowEditing = (
         finishRowEditMode();
       }
     },
-    [
-      apiRef,
-      onProcessRowUpdateError,
-      processRowUpdate,
-      updateOrDeleteRowState,
-      updateRowInRowModesModel,
-    ],
-  );
+  ) as GridRowEditingApi['startRowEditMode'];
 
   const setRowEditingEditCellValue = React.useCallback<
     GridRowEditingApi['unstable_setRowEditingEditCellValue']
@@ -680,7 +676,7 @@ export const useGridRowEditing = (
   }, [rowModesModelProp, updateRowModesModel]);
 
   React.useEffect(() => {
-    const idToIdLookup = gridRowsIdToIdLookupSelector(apiRef);
+    const idToIdLookup = gridRowsDataRowIdToIdLookupSelector(apiRef);
 
     // Update the ref here because updateStateToStopRowEditMode may change it later
     const copyOfPrevRowModesModel = prevRowModesModel.current;

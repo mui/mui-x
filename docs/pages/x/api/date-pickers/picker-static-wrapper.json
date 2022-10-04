@@ -1,12 +1,13 @@
 {
   "props": {
-    "displayStaticWrapperAs": {
-      "type": { "name": "enum", "description": "'desktop'<br>&#124;&nbsp;'mobile'" },
-      "required": true
-    },
     "classes": { "type": { "name": "object" } },
     "components": { "type": { "name": "object" }, "default": "{}" },
     "componentsProps": { "type": { "name": "object" }, "default": "{}" },
+    "displayStaticWrapperAs": {
+      "type": { "name": "enum", "description": "'desktop'<br>&#124;&nbsp;'mobile'" },
+      "default": "\"mobile\""
+    },
+    "localeText": { "type": { "name": "object" } },
     "sx": {
       "type": {
         "name": "union",
