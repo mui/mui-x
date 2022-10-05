@@ -1,7 +1,11 @@
 import * as React from 'react';
 import { SlotComponentProps } from '@mui/base/utils';
 import TextField, { TextFieldProps } from '@mui/material/TextField';
-import { BaseDateValidationProps, DefaultizedProps } from '@mui/x-date-pickers/internals';
+import {
+  BaseDateValidationProps,
+  DefaultizedProps,
+  MakeOptional,
+} from '@mui/x-date-pickers/internals';
 import { UseFieldInternalProps, FieldSection } from '@mui/x-date-pickers/internals-fields';
 import { DateRange, DayRangeValidationProps } from '../internal/models';
 import { DateRangeValidationError } from '../internal/hooks/validation/useDateRangeValidation';
@@ -12,13 +16,13 @@ export interface UseSingleInputDateRangeFieldParams<TDate, TChildProps extends {
 }
 
 export interface UseSingleInputDateRangeFieldProps<TDate>
-  extends UseFieldInternalProps<DateRange<TDate>, DateRangeValidationError>,
+  extends MakeOptional<UseFieldInternalProps<DateRange<TDate>, DateRangeValidationError>, 'format'>,
     DayRangeValidationProps<TDate>,
     BaseDateValidationProps<TDate> {}
 
 export type UseSingleInputDateRangeFieldDefaultizedProps<TDate> = DefaultizedProps<
   UseSingleInputDateRangeFieldProps<TDate>,
-  keyof BaseDateValidationProps<TDate>
+  keyof BaseDateValidationProps<TDate> | 'format'
 >;
 
 export type UseSingleInputDateRangeFieldComponentProps<TDate, TChildProps extends {}> = Omit<

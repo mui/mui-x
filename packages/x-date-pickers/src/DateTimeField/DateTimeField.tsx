@@ -2,20 +2,20 @@ import * as React from 'react';
 import TextField from '@mui/material/TextField';
 import { useThemeProps } from '@mui/material/styles';
 import { useSlotProps } from '@mui/base/utils';
-import { SingleInputDateRangeFieldProps } from './SingleInputDateRangeField.types';
-import { useSingleInputDateRangeField } from './useSingleInputDateRangeField';
+import { DateTimeFieldProps } from './DateTimeField.types';
+import { useDateTimeField } from './useDateTimeField';
 
-type DateRangeFieldComponent = (<TDate>(
-  props: SingleInputDateRangeFieldProps<TDate> & React.RefAttributes<HTMLInputElement>,
+type DateTimeFieldComponent = (<TDate>(
+  props: DateTimeFieldProps<TDate> & React.RefAttributes<HTMLDivElement>,
 ) => JSX.Element) & { propTypes?: any };
 
-export const SingleInputDateRangeField = React.forwardRef(function SingleInputDateRangeField<TDate>(
-  inProps: SingleInputDateRangeFieldProps<TDate>,
-  ref: React.Ref<HTMLInputElement>,
+export const DateTimeField = React.forwardRef(function DateTimeField<TDate>(
+  inProps: DateTimeFieldProps<TDate>,
+  ref: React.Ref<HTMLDivElement>,
 ) {
   const themeProps = useThemeProps({
     props: inProps,
-    name: 'MuiSingleInputDateRangeField',
+    name: 'MuiDateTimeField',
   });
 
   const { components, componentsProps, ...other } = themeProps;
@@ -23,21 +23,21 @@ export const SingleInputDateRangeField = React.forwardRef(function SingleInputDa
   const ownerState = themeProps;
 
   const Input = components?.Input ?? TextField;
-  const inputProps = useSlotProps({
+  const { inputRef: externalInputRef, ...inputProps } = useSlotProps({
     elementType: Input,
     externalSlotProps: componentsProps?.input,
     externalForwardedProps: other,
     ownerState,
-  }) as Omit<SingleInputDateRangeFieldProps<TDate>, 'components' | 'componentsProps'>;
+  }) as Omit<DateTimeFieldProps<TDate>, 'components' | 'componentsProps'>;
 
   const {
     ref: inputRef,
     onPaste,
     inputMode,
     ...fieldProps
-  } = useSingleInputDateRangeField<TDate, typeof inputProps>({
+  } = useDateTimeField<TDate, typeof inputProps>({
     props: inputProps,
-    inputRef: inputProps.inputRef,
+    inputRef: externalInputRef,
   });
 
   return (
@@ -47,4 +47,4 @@ export const SingleInputDateRangeField = React.forwardRef(function SingleInputDa
       inputProps={{ ...fieldProps.inputProps, ref: inputRef, onPaste, inputMode }}
     />
   );
-}) as DateRangeFieldComponent;
+}) as DateTimeFieldComponent;
