@@ -32,7 +32,7 @@ export interface PickersStaticWrapperSlotsComponent {
    */
   ActionBar?: React.ElementType<PickersActionBarProps>;
   /**
-   * Custom component wrapping the views of the picker (it is the direct child of the Paper component).
+   * Custom component wrapping the views of the desktop and static pickers (it is the direct child of the Paper component).
    * @default React.Fragment
    */
   PaperContent?: React.ElementType<{ children: React.ReactNode }>;

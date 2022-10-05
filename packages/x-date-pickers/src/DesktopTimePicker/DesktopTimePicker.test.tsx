@@ -285,7 +285,7 @@ describe('<DesktopTimePicker />', () => {
     });
   });
 
-  describe('componentsProps: paper', () => {
+  describe('componentsProps: desktopPaper', () => {
     it('forwards onClick and onTouchStart', () => {
       const handleClick = spy();
       const handleTouchStart = spy();
@@ -293,7 +293,7 @@ describe('<DesktopTimePicker />', () => {
         <WrappedDesktopTimePicker
           open
           componentsProps={{
-            paper: {
+            desktopPaper: {
               onClick: handleClick,
               onTouchStart: handleTouchStart,
               // @ts-expect-error `data-*` attributes are not recognized in props objects

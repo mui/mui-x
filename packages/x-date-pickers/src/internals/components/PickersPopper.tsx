@@ -2,7 +2,10 @@ import * as React from 'react';
 import { useSlotProps, SlotComponentProps } from '@mui/base/utils';
 import Grow from '@mui/material/Grow';
 import MuiPaper, { PaperProps as MuiPaperProps } from '@mui/material/Paper';
-import MuiPopper, { PopperProps as MuiPopperProps } from '@mui/material/Popper';
+import MuiPopper, {
+  PopperProps as MuiPopperProps,
+  PopperPlacementType,
+} from '@mui/material/Popper';
 import MuiTrapFocus, {
   TrapFocusProps as MuiTrapFocusProps,
 } from '@mui/material/Unstable_TrapFocus';
@@ -21,6 +24,11 @@ export interface PickersPopperSlotsComponent {
    */
   ActionBar?: React.ElementType<PickersActionBarProps>;
   /**
+   * Custom component for the paper rendered inside the desktop picker's Popper.
+   * @default PickersPopperPaper
+   */
+  DesktopPaper?: React.JSXElementConstructor<MuiPaperProps>;
+  /**
    * Custom component for the desktop popper [Transition](https://mui.com/material-ui/transitions).
    * @default Grow from @mui/material
    */
@@ -31,12 +39,7 @@ export interface PickersPopperSlotsComponent {
    */
   DesktopTrapFocus?: React.ElementType<MuiTrapFocusProps>;
   /**
-   * Custom component for the paper rendered inside the picker's Popper.
-   * @default Paper from @mui/material
-   */
-  Paper?: React.JSXElementConstructor<MuiPaperProps>;
-  /**
-   * Custom component wrapping the views of the picker (it is the direct child of the Paper component).
+   * Custom component wrapping the views of the desktop and static pickers (it is the direct child of the Paper component).
    * @default React.Fragment
    */
   PaperContent?: React.ElementType<{ children: React.ReactNode }>;
@@ -53,6 +56,14 @@ export interface PickersPopperSlotsComponentsProps {
    */
   actionBar?: Omit<PickersActionBarProps, 'onAccept' | 'onClear' | 'onCancel' | 'onSetToday'>;
   /**
+   * Props passed down to the desktop [Paper](https://mui.com/material-ui/api/paper/) component.
+   */
+  desktopPaper?: SlotComponentProps<
+    typeof MuiPaper,
+    {},
+    PickerPopperProps & { placement: PopperPlacementType | undefined }
+  >;
+  /**
    * Props passed down to the desktop [Transition](https://mui.com/material-ui/transitions) component.
    */
   desktopTransition?: Partial<MuiTransitionProps>;
@@ -61,10 +72,6 @@ export interface PickersPopperSlotsComponentsProps {
    */
   desktopTrapFocus?: Partial<MuiTrapFocusProps>;
   /**
-   * Props passed down to [Paper](https://mui.com/material-ui/api/paper/) component.
-   */
-  paper?: Partial<MuiPaperProps>;
-  /**
    * Props passed to down the paper content component.
    * Can't be used without a custom PaperContent component since the default one is React.Fragment.
    */
@@ -72,7 +79,7 @@ export interface PickersPopperSlotsComponentsProps {
   /**
    * Props passed down to [Popper](https://mui.com/material-ui/api/popper/) component.
    */
-  popper?: SlotComponentProps<typeof MuiPopper, PickerPopperProps, {}>;
+  popper?: SlotComponentProps<typeof MuiPopper, {}, PickerPopperProps>;
 }
 
 export interface PickerPopperProps extends PickerStateWrapperProps {
@@ -345,17 +352,17 @@ export function PickersPopper(inProps: PickerPopperProps) {
   const Transition = components?.DesktopTransition ?? Grow;
   const TrapFocus = components?.DesktopTrapFocus ?? MuiTrapFocus;
 
-  const Paper = components?.Paper ?? PickersPopperPaper;
+  const Paper = components?.DesktopPaper ?? PickersPopperPaper;
   const paperProps: MuiPaperProps = useSlotProps({
     elementType: Paper,
-    externalSlotProps: componentsProps?.paper,
+    externalSlotProps: componentsProps?.desktopPaper,
     additionalProps: {
       tabIndex: -1,
       elevation: 8,
       ref: handlePaperRef,
     },
     className: classes.paper,
-    ownerState, // Is overridden below to use `placement
+    ownerState: {} as any, // Is overridden below to use `placement
   });
 
   const Popper = components?.Popper ?? PickersPopperRoot;
@@ -391,7 +398,6 @@ export function PickersPopper(inProps: PickerPopperProps) {
           <Transition {...TransitionProps} {...componentsProps?.desktopTransition}>
             <Paper
               {...paperProps}
-              {...componentsProps?.paper}
               onClick={(event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
                 onPaperClick(event);
                 paperProps.onClick?.(event);

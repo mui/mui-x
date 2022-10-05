@@ -21,15 +21,15 @@ export interface PickersModalDialogSlotsComponent {
    */
   Dialog?: React.ElementType<MuiDialogProps>;
   /**
+   * Custom component for the paper rendered inside the mobile picker's Dialog.
+   * @default Paper from @mui/material
+   */
+  MobilePaper?: React.JSXElementConstructor<MuiPaperProps>;
+  /**
    * Custom component for the mobile dialog [Transition](https://mui.com/material-ui/transitions).
    * @default Fade from @mui/material
    */
   MobileTransition?: React.JSXElementConstructor<MuiTransitionProps>;
-  /**
-   * Custom component for the paper rendered inside the picker's Popper.
-   * @default Paper from @mui/material
-   */
-  Paper?: React.JSXElementConstructor<MuiPaperProps>;
 }
 
 export interface PickersModalDialogSlotsComponentsProps {
@@ -42,13 +42,13 @@ export interface PickersModalDialogSlotsComponentsProps {
    */
   dialog?: Partial<MuiDialogProps>;
   /**
+   * Props passed down to the mobile [Paper](https://mui.com/material-ui/api/paper/) component.
+   */
+  mobilePaper?: Partial<MuiPaperProps>;
+  /**
    * Props passed down to the mobile [Transition](https://mui.com/material-ui/transitions) component.
    */
   mobileTransition?: Partial<MuiTransitionProps>;
-  /**
-   * Props passed down to [Paper](https://mui.com/material-ui/api/paper/) component.
-   */
-  paper?: Partial<MuiPaperProps>;
 }
 
 export interface PickersModalDialogProps extends PickerStateWrapperProps {
@@ -104,8 +104,8 @@ export const PickersModalDialog = (props: React.PropsWithChildren<PickersModalDi
       {...componentsProps?.dialog}
       TransitionComponent={Transition}
       TransitionProps={componentsProps?.mobileTransition}
-      PaperComponent={components?.Paper}
-      PaperProps={componentsProps?.paper}
+      PaperComponent={components?.MobilePaper}
+      PaperProps={componentsProps?.mobilePaper}
     >
       <PickersModalDialogContent>{children}</PickersModalDialogContent>
       <ActionBar

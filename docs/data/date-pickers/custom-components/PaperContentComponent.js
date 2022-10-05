@@ -172,7 +172,7 @@ export default function PaperContentComponent() {
           )}
           components={{ PaperContent: RangeShortcutsPanel }}
           componentsProps={{
-            paper: { sx: { display: 'flex', flexDirection: 'row' } },
+            desktopPaper: { sx: { display: 'flex', flexDirection: 'row' } },
             paperContent: { setValue },
           }}
         />

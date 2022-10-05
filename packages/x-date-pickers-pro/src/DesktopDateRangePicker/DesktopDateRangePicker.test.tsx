@@ -327,7 +327,7 @@ describe('<DesktopDateRangePicker />', () => {
     expect(screen.getByRole('tooltip')).toBeVisible();
   });
 
-  it('should respect localeText from the theme', () => {
+  it.only('should respect localeText from the theme', () => {
     const theme = createTheme({
       components: {
         MuiLocalizationProvider: {
@@ -341,13 +341,15 @@ describe('<DesktopDateRangePicker />', () => {
     render(
       <ThemeProvider theme={theme}>
         <LocalizationProvider dateAdapter={AdapterClassToUse}>
-          <WrappedDesktopDateRangePicker initialValue={[null, null]} />
+          <WrappedDesktopDateRangePicker
+            initialValue={[adapterToUse.date(), adapterToUse.date()]}
+          />
         </LocalizationProvider>
       </ThemeProvider>,
     );
 
-    expect(screen.queryByText('Início')).not.to.equal(null);
-    expect(screen.queryByText('Fim')).not.to.equal(null);
+    expect(screen.queryAllByText('Início')[0]).not.to.equal(null);
+    expect(screen.queryAllByText('Fim')[0]).not.to.equal(null);
   });
 
   it('prop: renderDay - should be called and render days', async () => {
