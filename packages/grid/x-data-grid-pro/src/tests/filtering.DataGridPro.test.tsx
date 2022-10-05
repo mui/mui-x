@@ -9,6 +9,9 @@ import {
   SUBMIT_FILTER_STROKE_TIME,
   useGridApiRef,
   DataGridPro,
+  GetColumnForNewFilterArgs,
+  FilterColumnsArgs,
+  GridToolbar,
 } from '@mui/x-data-grid-pro';
 // @ts-ignore Remove once the test utils are typed
 import { createRenderer, fireEvent, screen, act } from '@mui/monorepo/test/utils';
@@ -68,6 +71,53 @@ describe('<DataGridPro /> - Filter', () => {
       },
     ],
   };
+
+  it('componentsProps `filterColumns` and `getColumnForNewFilter` should allow custom filtering', () => {
+    const filterColumns = ({ field, columns, currentFilters }: FilterColumnsArgs) => {
+      // remove already filtered fields from list of columns
+      const filteredFields = currentFilters?.map((item) => item.columnField);
+      return columns
+        .filter(
+          (colDef) =>
+            colDef.filterable && (colDef.field === field || !filteredFields.includes(colDef.field)),
+        )
+        .map((column) => column.field);
+    };
+
+    const getColumnForNewFilter = ({ currentFilters, columns }: GetColumnForNewFilterArgs) => {
+      const filteredFields = currentFilters?.map(({ columnField }) => columnField);
+      const columnForNewFilter = columns
+        .filter((colDef) => colDef.filterable && !filteredFields.includes(colDef.field))
+        .find((colDef) => colDef.filterOperators?.length);
+      return columnForNewFilter?.field;
+    };
+
+    render(
+      <TestCase
+        initialState={{
+          preferencePanel: {
+            open: true,
+            openedPanelValue: GridPreferencePanelsValue.filters,
+          },
+        }}
+        components={{ Toolbar: GridToolbar }}
+        componentsProps={{
+          filterPanel: {
+            filterFormProps: {
+              filterColumns,
+            },
+            getColumnForNewFilter,
+          },
+        }}
+      />,
+    );
+    const addButton = screen.getByRole('button', { name: /Add Filter/i });
+    fireEvent.click(addButton);
+    // Shouldn't allow adding multi-filters for same column
+    // Since we have only one column, filter shouldn't be applied onClick
+    const filterForms = document.querySelectorAll(`.MuiDataGrid-filterForm`);
+    expect(filterForms).to.have.length(1);
+  });
 
   it('should apply the filterModel prop correctly', () => {
     render(<TestCase filterModel={filterModel} />);
