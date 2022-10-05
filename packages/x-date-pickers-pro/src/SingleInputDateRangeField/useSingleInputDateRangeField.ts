@@ -7,13 +7,12 @@ import {
   createDateStrFromSections,
 } from '@mui/x-date-pickers/internals-fields';
 import {
-  DateRangeFieldSection,
   UseSingleInputDateRangeFieldDefaultizedProps,
   UseSingleInputDateRangeFieldParams,
   UseSingleInputDateRangeFieldProps,
 } from './SingleInputDateRangeField.types';
 import { dateRangePickerValueManager } from '../DateRangePicker/shared';
-import { DateRange } from '../internal/models';
+import { DateRange, DateRangeFieldSection } from '../internal/models';
 import { splitDateRangeSections, removeLastSeparator } from './SingleInputDateRangeField.utils';
 import {
   DateRangeValidationError,

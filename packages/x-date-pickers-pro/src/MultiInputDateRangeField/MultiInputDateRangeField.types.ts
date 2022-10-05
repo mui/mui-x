@@ -4,14 +4,10 @@ import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import { UseSingleInputDateRangeFieldProps } from '../SingleInputDateRangeField';
+import { UseMultiInputRangeFieldParams } from '../internal/hooks/useMultiInputRangeField';
 
-export interface UseMultiInputDateRangeFieldParams<TDate, TChildProps extends {}> {
-  sharedProps: UseMultiInputDateRangeFieldComponentProps<TDate, {}>;
-  startInputProps: TChildProps;
-  endInputProps: TChildProps;
-  startInputRef?: React.Ref<HTMLInputElement>;
-  endInputRef?: React.Ref<HTMLInputElement>;
-}
+export interface UseMultiInputDateRangeFieldParams<TDate, TChildProps extends {}>
+  extends UseMultiInputRangeFieldParams<UseMultiInputDateRangeFieldProps<TDate>, TChildProps> {}
 
 export interface UseMultiInputDateRangeFieldProps<TDate>
   extends UseSingleInputDateRangeFieldProps<TDate> {}

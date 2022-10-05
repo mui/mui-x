@@ -6,7 +6,7 @@ import {
   DefaultizedProps,
   MakeOptional,
 } from '@mui/x-date-pickers/internals';
-import { UseFieldInternalProps, FieldSection } from '@mui/x-date-pickers/internals-fields';
+import { UseFieldInternalProps } from '@mui/x-date-pickers/internals-fields';
 import { DateRange, DayRangeValidationProps } from '../internal/models';
 import { DateRangeValidationError } from '../internal/hooks/validation/useDateRangeValidation';
 
@@ -57,8 +57,4 @@ export interface SingleInputDateRangeFieldSlotsComponent {
 
 export interface SingleInputDateRangeFieldSlotsComponentsProps<TDate> {
   input?: SlotComponentProps<typeof TextField, {}, SingleInputDateRangeFieldOwnerState<TDate>>;
-}
-
-export interface DateRangeFieldSection extends FieldSection {
-  dateName: 'start' | 'end';
 }
