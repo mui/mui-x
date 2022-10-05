@@ -172,7 +172,10 @@ export default function PaperContentComponent() {
             </React.Fragment>
           )}
           components={{ PaperContent: RangeShortcutsPanel }}
-          componentsProps={{ paper: { sx: { display: 'flex', flexDirection: 'row' } }, paperContent: { setValue } }}
+          componentsProps={{
+            paper: { sx: { display: 'flex', flexDirection: 'row' } },
+            paperContent: { setValue },
+          }}
         />
         <StaticDateRangePicker
           displayStaticWrapperAs="desktop"

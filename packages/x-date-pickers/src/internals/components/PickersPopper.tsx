@@ -1,12 +1,11 @@
 import * as React from 'react';
 import { useSlotProps, SlotComponentProps } from '@mui/base/utils';
 import Grow from '@mui/material/Grow';
-import MuiPaper, { PaperProps } from '@mui/material/Paper';
+import MuiPaper, { PaperProps as MuiPaperProps } from '@mui/material/Paper';
 import MuiPopper, { PopperProps as MuiPopperProps } from '@mui/material/Popper';
 import MuiTrapFocus, {
   TrapFocusProps as MuiTrapFocusProps,
 } from '@mui/material/Unstable_TrapFocus';
-import { PaperProps as MuiPaperProps } from '@mui/material/Paper/Paper';
 import { useForkRef, useEventCallback, ownerDocument } from '@mui/material/utils';
 import { styled, useThemeProps } from '@mui/material/styles';
 import { unstable_composeClasses as composeClasses } from '@mui/material';
@@ -27,10 +26,15 @@ export interface PickersPopperSlotsComponent {
    */
   DesktopTransition?: React.JSXElementConstructor<MuiTransitionProps>;
   /**
+   * Custom component for trapping the focus inside the views on desktop.
+   * @default TrapFocus from @mui/material
+   */
+  DesktopTrapFocus?: React.ElementType<MuiTrapFocusProps>;
+  /**
    * Custom component for the paper rendered inside the picker's Popper.
    * @default Paper from @mui/material
    */
-  Paper?: React.ElementType<MuiPaperProps>;
+  Paper?: React.JSXElementConstructor<MuiPaperProps>;
   /**
    * Custom component wrapping the views of the picker (it is the direct child of the Paper component).
    * @default React.Fragment
@@ -41,11 +45,6 @@ export interface PickersPopperSlotsComponent {
    * @default Popper from @mui/material
    */
   Popper?: React.ElementType<MuiPopperProps>;
-  /**
-   * Custom component for trapping the focus inside the views.
-   * @default TrapFocus from @mui/material
-   */
-  TrapFocus?: React.ElementType<MuiTrapFocusProps>;
 }
 
 export interface PickersPopperSlotsComponentsProps {
@@ -57,6 +56,10 @@ export interface PickersPopperSlotsComponentsProps {
    * Props passed down to the desktop [Transition](https://mui.com/material-ui/transitions) component.
    */
   desktopTransition?: Partial<MuiTransitionProps>;
+  /**
+   * Props passed down to the TrapFocus component on desktop.
+   */
+  desktopTrapFocus?: Partial<MuiTrapFocusProps>;
   /**
    * Props passed down to [Paper](https://mui.com/material-ui/api/paper/) component.
    */
@@ -70,10 +73,6 @@ export interface PickersPopperSlotsComponentsProps {
    * Props passed down to [Popper](https://mui.com/material-ui/api/popper/) component.
    */
   popper?: SlotComponentProps<typeof MuiPopper, PickerPopperProps, {}>;
-  /**
-   * Props passed down to the TrapFocus component.
-   */
-  trapFocus?: Partial<MuiTrapFocusProps>;
 }
 
 export interface PickerPopperProps extends PickerStateWrapperProps {
@@ -344,10 +343,10 @@ export function PickersPopper(inProps: PickerPopperProps) {
   const ActionBar = components?.ActionBar ?? PickersActionBar;
   const PaperContent = components?.PaperContent ?? React.Fragment;
   const Transition = components?.DesktopTransition ?? Grow;
-  const TrapFocus = components?.TrapFocus ?? MuiTrapFocus;
+  const TrapFocus = components?.DesktopTrapFocus ?? MuiTrapFocus;
 
   const Paper = components?.Paper ?? PickersPopperPaper;
-  const paperProps: PaperProps = useSlotProps({
+  const paperProps: MuiPaperProps = useSlotProps({
     elementType: Paper,
     externalSlotProps: componentsProps?.paper,
     additionalProps: {
@@ -387,6 +386,7 @@ export function PickersPopper(inProps: PickerPopperProps) {
           disableEnforceFocus={role === 'tooltip'}
           isEnabled={() => true}
           {...TrapFocusProps}
+          {...componentsProps?.desktopTrapFocus}
         >
           <Transition {...TransitionProps} {...componentsProps?.desktopTransition}>
             <Paper

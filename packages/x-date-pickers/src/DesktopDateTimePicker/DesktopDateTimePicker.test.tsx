@@ -244,12 +244,12 @@ describe('<DesktopDateTimePicker />', () => {
         <WrappedDesktopDateTimePicker
           open
           componentsProps={{
-            popper:{
+            popper: {
               onClick: handleClick,
               onTouchStart: handleTouchStart,
               // @ts-expect-error `data-*` attributes are not recognized in props objects
               'data-testid': 'popper',
-            }
+            },
           }}
           initialValue={null}
         />,
@@ -277,7 +277,7 @@ describe('<DesktopDateTimePicker />', () => {
               onTouchStart: handleTouchStart,
               // @ts-expect-error `data-*` attributes are not recognized in props objects
               'data-testid': 'paper',
-            }
+            },
           }}
           initialValue={null}
         />,
