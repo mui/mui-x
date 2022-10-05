@@ -147,3 +147,30 @@ function ColumnPropTest() {
     </div>
   );
 }
+
+function ApiRefPrivateMethods() {
+  const apiRef = useGridApiRef();
+
+  React.useEffect(() => {
+    // @ts-expect-error Property 'updateControlState' does not exist on type 'GridApiCommunity'
+    apiRef.current.updateControlState();
+    // @ts-expect-error Property 'registerControlState' does not exist on type 'GridApiCommunity'
+    apiRef.current.registerControlState();
+  });
+
+  return null;
+}
+
+function ApiRefProMethods() {
+  const apiRef = useGridApiRef();
+
+  React.useEffect(() => {
+    // available only in Pro and Premium
+    // @ts-expect-error Property 'selectRows' does not exist on type 'GridApiCommunity'
+    apiRef.current.selectRows([]);
+    // @ts-expect-error Property 'selectRowRange' does not exist on type 'GridApiCommunity'
+    apiRef.current.selectRowRange({ startId: 0, endId: 1 });
+  });
+
+  return null;
+}
