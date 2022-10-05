@@ -29,7 +29,7 @@ describe('<DateCalendar />', () => {
       'componentsProp',
       'propsSpread',
       'reactTestRenderer',
-      // TODO: Fix CalendarPicker is not spreading props on root
+      // TODO: Fix DateCalendar is not spreading props on root
       'themeDefaultProps',
       'themeVariants',
     ],

@@ -216,7 +216,7 @@ type DateCalendarComponent = (<TDate>(
  *
  * API:
  *
- * - [CalendarPicker API](https://mui.com/x/api/date-pickers/calendar-picker/)
+ * - [DateCalendar API](https://mui.com/x/api/date-pickers/date-calendar/)
  */
 export const DateCalendar = React.forwardRef(function DateCalendar<TDate>(
   inProps: DateCalendarProps<TDate>,

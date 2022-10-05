@@ -5,7 +5,7 @@ import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
 
 const adapterToUse = new AdapterDateFns();
 
-export default function CalendarPickerYearOnly() {
+export default function DateCalendarYearOnly() {
   return (
     <LocalizationProvider dateAdapter={AdapterDateFns}>
       <DateCalendar

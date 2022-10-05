@@ -4,8 +4,8 @@
 
 ## Components
 
-- [CalendarPicker](/x/api/date-pickers/calendar-picker/)
 - [ClockPicker](/x/api/date-pickers/clock-picker/)
+- [DateCalendar](/x/api/date-pickers/date-calendar/)
 - [DatePicker](/x/api/date-pickers/date-picker/)
 - [DateRangePicker](/x/api/date-pickers/date-range-picker/)
 - [DateRangePickerDay](/x/api/date-pickers/date-range-picker-day/)
