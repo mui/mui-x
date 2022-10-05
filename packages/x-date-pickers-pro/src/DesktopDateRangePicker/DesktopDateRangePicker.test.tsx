@@ -141,7 +141,7 @@ describe('<DesktopDateRangePicker />', () => {
     expect(screen.getAllByMuiTest('DateRangeHighlight')).to.have.length(31);
   });
 
-  // TODO: Move to DayPicker test file ?
+  // TODO: Move to DayCalendar test file ?
   describe('selection behavior', () => {
     it('should select the range from the next month', () => {
       const handleChange = spy();

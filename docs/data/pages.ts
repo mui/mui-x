@@ -174,12 +174,8 @@ const pages: MuiPage[] = [
         title: 'API Reference',
         children: [
           { pathname: '/x/api/date-pickers', title: 'Index' },
-          { pathname: '/x/api/date-pickers/calendar-picker', title: 'CalendarPicker' },
-          {
-            pathname: '/x/api/date-pickers/calendar-picker-skeleton',
-            title: 'CalendarPickerSkeleton',
-          },
           { pathname: '/x/api/date-pickers/clock-picker', title: 'ClockPicker' },
+          { pathname: '/x/api/date-pickers/date-calendar', title: 'DateCalendar' },
           { pathname: '/x/api/date-pickers/date-picker', title: 'DatePicker' },
           {
             pathname: '/x/api/date-pickers/date-range-picker',
@@ -192,6 +188,10 @@ const pages: MuiPage[] = [
             plan: 'pro',
           },
           { pathname: '/x/api/date-pickers/date-time-picker', title: 'DateTimePicker' },
+          {
+            pathname: '/x/api/date-pickers/day-calendar-skeleton',
+            title: 'DayCalendarSkeleton',
+          },
           { pathname: '/x/api/date-pickers/desktop-date-picker', title: 'DesktopDatePicker' },
           {
             pathname: '/x/api/date-pickers/desktop-date-range-picker',
@@ -215,7 +215,7 @@ const pages: MuiPage[] = [
             title: 'MobileDateTimePicker',
           },
           { pathname: '/x/api/date-pickers/mobile-time-picker', title: 'MobileTimePicker' },
-          { pathname: '/x/api/date-pickers/month-picker', title: 'MonthPicker' },
+          { pathname: '/x/api/date-pickers/month-calendar', title: 'MonthCalendar' },
           { pathname: '/x/api/date-pickers/pickers-day', title: 'PickersDay' },
           { pathname: '/x/api/date-pickers/static-date-picker', title: 'StaticDatePicker' },
           {
@@ -229,7 +229,7 @@ const pages: MuiPage[] = [
           },
           { pathname: '/x/api/date-pickers/static-time-picker', title: 'StaticTimePicker' },
           { pathname: '/x/api/date-pickers/time-picker', title: 'TimePicker' },
-          { pathname: '/x/api/date-pickers/year-picker', title: 'YearPicker' },
+          { pathname: '/x/api/date-pickers/year-calendar', title: 'YearCalendar' },
         ],
       },
     ],

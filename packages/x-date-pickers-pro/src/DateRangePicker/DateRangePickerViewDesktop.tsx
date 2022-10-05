@@ -9,8 +9,8 @@ import {
   PickersArrowSwitcher,
   usePreviousMonthDisabled,
   useNextMonthDisabled,
-  DayPicker,
-  DayPickerProps,
+  DayCalendar,
+  DayCalendarProps,
   DAY_MARGIN,
   DayValidationProps,
   ExportedPickersArrowSwitcherProps,
@@ -62,7 +62,7 @@ export interface DesktopDateRangeCalendarSlotsComponentsProps
 
 export interface DateRangePickerViewDesktopProps<TDate>
   extends ExportedDateRangePickerViewDesktopProps<TDate>,
-    Omit<DayPickerProps<TDate>, 'selectedDays' | 'renderDay' | 'onFocusedDayChange' | 'classes'>,
+    Omit<DayCalendarProps<TDate>, 'selectedDays' | 'renderDay' | 'onFocusedDayChange' | 'classes'>,
     DayValidationProps<TDate>,
     ExportedPickersArrowSwitcherProps {
   /**
@@ -102,13 +102,12 @@ const DateRangePickerViewDesktopContainer = styled('div', {
 }));
 
 const DAY_RANGE_SIZE = 40;
-
 const weeksContainerHeight = (DAY_RANGE_SIZE + DAY_MARGIN * 2) * 6;
 
-const DateRangePickerViewDesktopCalendar = styled(DayPicker)({
+const DateRangePickerViewDesktopCalendar = styled(DayCalendar)({
   minWidth: 312,
   minHeight: weeksContainerHeight,
-}) as typeof DayPicker;
+}) as typeof DayCalendar;
 
 const DateRangePickerViewDesktopArrowSwitcher = styled(PickersArrowSwitcher)({
   padding: '16px 16px 8px 16px',
@@ -178,7 +177,9 @@ export function DateRangePickerViewDesktop<TDate>(inProps: DateRangePickerViewDe
     currentlySelectingRangeEnd,
   });
 
-  const handleSelectedDayChange = React.useCallback<DayPickerProps<TDate>['onSelectedDaysChange']>(
+  const handleSelectedDayChange = React.useCallback<
+    DayCalendarProps<TDate>['onSelectedDaysChange']
+  >(
     (day) => {
       setRangePreviewDay(null);
       onSelectedDaysChange(day);

@@ -1,7 +1,7 @@
 ---
 product: date-pickers
 title: React Date Picker component
-components: CalendarPicker, CalendarPickerSkeleton, DatePicker, DesktopDatePicker, MobileDatePicker, MonthPicker, PickersDay, StaticDatePicker, YearPicker
+components: DateCalendar, DatePicker, DayCalendarSkeleton, DesktopDatePicker, MobileDatePicker, MonthCalendar, PickersDay, StaticDatePicker, YearCalendar
 githubLabel: 'component: DatePicker'
 packageName: '@mui/x-date-pickers'
 materialDesign: https://material.io/components/date-pickers
@@ -73,7 +73,7 @@ For ease of use, the date picker will automatically change the layout between po
 
 ## Sub-components
 
-Some lower-level sub-components (`CalendarPicker`, `MonthPicker`, and `YearPicker`) are also exported.
+Some lower-level sub-components (`DateCalendar`, `MonthCalendar`, and `YearCalendar`) are also exported.
 
 {{"demo": "SubComponentsPickers.js"}}
 

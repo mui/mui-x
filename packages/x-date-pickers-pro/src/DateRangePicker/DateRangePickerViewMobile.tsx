@@ -4,8 +4,8 @@ import {
   ExportedCalendarHeaderProps,
   useDefaultDates,
   useUtils,
-  DayPicker,
-  DayPickerProps,
+  DayCalendar,
+  DayCalendarProps,
   PickersCalendarHeaderSlotsComponent,
   PickersCalendarHeaderSlotsComponentsProps,
   DayValidationProps,
@@ -27,7 +27,7 @@ export interface ExportedMobileDateRangeCalendarProps<TDate>
 
 interface DesktopDateRangeCalendarProps<TDate>
   extends ExportedMobileDateRangeCalendarProps<TDate>,
-    Omit<DayPickerProps<TDate>, 'selectedDays' | 'renderDay' | 'onFocusedDayChange' | 'classes'>,
+    Omit<DayCalendarProps<TDate>, 'selectedDays' | 'renderDay' | 'onFocusedDayChange' | 'classes'>,
     DayValidationProps<TDate>,
     ExportedCalendarHeaderProps<TDate> {
   /**
@@ -89,7 +89,7 @@ export function DateRangePickerViewMobile<TDate>(props: DesktopDateRangeCalendar
         disabled={disabled}
         {...other}
       />
-      <DayPicker<TDate>
+      <DayCalendar<TDate>
         {...other}
         minDate={minDate}
         maxDate={maxDate}
