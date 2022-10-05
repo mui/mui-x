@@ -36,7 +36,7 @@ export interface GridSelectionApi {
   setSelectionModel: (rowIds: GridRowId[]) => void;
 }
 
-export interface GridSelectionPrivateApi {
+export interface GridMultiSelectionApi {
   /**
    * Change the selection state of multiple rows.
    * @param {GridRowId[]} ids The row ids.

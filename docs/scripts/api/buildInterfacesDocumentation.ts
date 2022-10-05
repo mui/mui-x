@@ -37,6 +37,7 @@ interface ParsedProperty {
 
 const GRID_API_INTERFACES_WITH_DEDICATED_PAGES = [
   'GridSelectionApi',
+  'GridMultiSelectionApi',
   'GridFilterApi',
   'GridSortApi',
   'GridPaginationApi',

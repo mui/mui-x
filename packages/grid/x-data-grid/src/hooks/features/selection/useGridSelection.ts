@@ -2,7 +2,7 @@ import * as React from 'react';
 import { GridEventListener } from '../../../models/events';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
-import { GridSelectionApi, GridSelectionPrivateApi } from '../../../models/api/gridSelectionApi';
+import { GridSelectionApi, GridMultiSelectionApi } from '../../../models/api/gridSelectionApi';
 import { GridRowId } from '../../../models/gridRows';
 import { GridSignature, useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
@@ -203,7 +203,7 @@ export const useGridSelection = (
     [apiRef, logger, canHaveMultipleSelection],
   );
 
-  const selectRows = React.useCallback<GridSelectionPrivateApi['selectRows']>(
+  const selectRows = React.useCallback<GridMultiSelectionApi['selectRows']>(
     (ids: GridRowId[], isSelected = true, resetSelection = false) => {
       logger.debug(`Setting selection for several rows`);
 
@@ -237,7 +237,7 @@ export const useGridSelection = (
     [apiRef, logger, canHaveMultipleSelection],
   );
 
-  const selectRowRange = React.useCallback<GridSelectionPrivateApi['selectRowRange']>(
+  const selectRowRange = React.useCallback<GridMultiSelectionApi['selectRowRange']>(
     (
       {
         startId,
@@ -274,7 +274,7 @@ export const useGridSelection = (
     isRowSelectable,
   };
 
-  const selectionPrivateApi: GridSelectionPrivateApi = {
+  const selectionPrivateApi: GridMultiSelectionApi = {
     selectRows,
     selectRowRange,
   };

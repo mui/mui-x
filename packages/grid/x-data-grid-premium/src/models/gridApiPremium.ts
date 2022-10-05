@@ -1,9 +1,10 @@
-import { GridPrivateOnlyApiCommon, GridSelectionPrivateApi } from '@mui/x-data-grid/internals';
+import { GridPrivateOnlyApiCommon } from '@mui/x-data-grid/internals';
 import {
   GridApiCommon,
   GridColumnPinningApi,
   GridDetailPanelApi,
   GridRowPinningApi,
+  GridMultiSelectionApi,
 } from '@mui/x-data-grid-pro';
 import { GridInitialStatePremium, GridStatePremium } from './gridStatePremium';
 import type { GridRowGroupingApi, GridExcelExportApi, GridAggregationApi } from '../hooks';
@@ -21,7 +22,7 @@ export interface GridApiPremium
     GridAggregationApi,
     GridRowPinningApi,
     // it's private in Community plan, but public in Pro and Premium plans
-    GridSelectionPrivateApi {}
+    GridMultiSelectionApi {}
 
 export interface GridPrivateOnlyApiPremium
   extends GridPrivateOnlyApiCommon<GridApiPremium, GridPrivateApiPremium> {}
