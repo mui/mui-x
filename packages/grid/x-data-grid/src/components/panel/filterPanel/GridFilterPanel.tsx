@@ -14,6 +14,11 @@ import { gridFilterModelSelector } from '../../../hooks/features/filter/gridFilt
 import { gridFilterableColumnDefinitionsSelector } from '../../../hooks/features/columns/gridColumnsSelector';
 import { GridStateColDef } from '../../../models/colDef/gridColDef';
 
+export interface GetColumnForNewFilterArgs {
+  currentFilters: GridFilterItem[];
+  columns: GridStateColDef<any, any, any>[];
+}
+
 export interface GridFilterPanelProps
   extends Pick<GridFilterFormProps, 'linkOperators' | 'columnsSort'> {
   /**
@@ -21,11 +26,11 @@ export interface GridFilterPanelProps
    */
   sx?: SxProps<Theme>;
   /**
-   * Function that returns next filter item to be picked as default filter
-   * @param {GridFilterItem[]} currentFilters Currently configured filters
-   * @returns {GridStateColDef<any, any, any>} Column to be used as next filter
+   * Function that returns the next filter item to be picked as default filter
+   * @param {GetColumnForNewFilterArgs} args Currently configured filters and columns
+   * @returns {string} The field to be used as next filter
    */
-  getColumnForNewFilter?: (currentFilters: GridFilterItem[]) => GridStateColDef<any, any, any>;
+  getColumnForNewFilter?: (args: GetColumnForNewFilterArgs) => string;
   /**
    * Props passed to each filter form.
    */
@@ -95,18 +100,21 @@ const GridFilterPanel = React.forwardRef<HTMLDivElement, GridFilterPanelProps>(
     }, [filterableColumns]);
 
     const getNewFilter = React.useCallback((): GridFilterItem | null => {
-      const defaultFilter = getDefaultFilter()
+      const defaultFilter = getDefaultFilter();
       if (getColumnForNewFilter === undefined || typeof getColumnForNewFilter !== 'function') {
         return defaultFilter;
       }
 
-      const defaultItems = defaultFilter ? [defaultFilter] : []
+      const defaultItems = defaultFilter ? [defaultFilter] : [];
 
       // If no items are there in filterModel, we have to pass defaultFilter
-      const nextColumnWithOperator = getColumnForNewFilter(
-        filterModel.items.length
-          ? filterModel.items
-          : defaultItems,
+      const nextColumnFieldName = getColumnForNewFilter({
+        currentFilters: filterModel.items.length ? filterModel.items : defaultItems,
+        columns: filterableColumns,
+      });
+
+      const nextColumnWithOperator = filterableColumns.find(
+        ({ field }) => field === nextColumnFieldName,
       );
 
       if (!nextColumnWithOperator) {
@@ -114,7 +122,7 @@ const GridFilterPanel = React.forwardRef<HTMLDivElement, GridFilterPanelProps>(
       }
 
       return getGridFilter(nextColumnWithOperator);
-    }, [filterModel.items, getColumnForNewFilter, getDefaultFilter]);
+    }, [filterModel.items, filterableColumns, getColumnForNewFilter, getDefaultFilter]);
 
     const items = React.useMemo<GridFilterItem[]>(() => {
       if (filterModel.items.length) {
@@ -226,9 +234,9 @@ GridFilterPanel.propTypes = {
     valueInputProps: PropTypes.any,
   }),
   /**
-   * Function that returns next filter item to be picked as default filter
-   * @param {GridFilterItem[]} currentFilters Currently configured filters
-   * @returns {GridStateColDef<any, any, any>} Column to be used as next filter
+   * Function that returns the next filter item to be picked as default filter
+   * @param {GetColumnForNewFilterArgs} args Currently configured filters and columns
+   * @returns {string} The field to be used as next filter
    */
   getColumnForNewFilter: PropTypes.func,
   /**

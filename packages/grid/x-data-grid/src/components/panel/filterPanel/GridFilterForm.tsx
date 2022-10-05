@@ -10,6 +10,7 @@ import { capitalize, unstable_useId as useId } from '@mui/material/utils';
 import { styled } from '@mui/material/styles';
 import clsx from 'clsx';
 import { gridFilterableColumnDefinitionsSelector } from '../../../hooks/features/columns/gridColumnsSelector';
+import { gridFilterModelSelector } from '../../../hooks/features/filter/gridFilterSelector';
 import { useGridSelector } from '../../../hooks/utils/useGridSelector';
 import { GridFilterItem, GridLinkOperator } from '../../../models/gridFilterItem';
 import { useGridApiContext } from '../../../hooks/utils/useGridApiContext';
@@ -17,6 +18,12 @@ import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { getDataGridUtilityClass } from '../../../constants/gridClasses';
 import { GridColDef, GridStateColDef } from '../../../models/colDef/gridColDef';
+
+export interface FilterColumnsArgs {
+  field: string;
+  columns: GridStateColDef<any, any, any>[];
+  currentFilters: GridFilterItem[];
+}
 
 export interface GridFilterFormProps {
   /**
@@ -61,11 +68,11 @@ export interface GridFilterFormProps {
    */
   deleteFilter: (item: GridFilterItem) => void;
   /**
-   * Allows to filter the columns displayed in filter form
-   * @param {string} columnField Columns of the grid
-   * @returns {GridStateColDef<any, any, any>[]} Filtered columns
+   * Allows to filter the columns displayed in the filter form.
+   * @param {FilterColumnsArgs} args The columns of the grid and name of field.
+   * @returns {string[]} The filtered fields array.
    */
-  filterColumns?: (columnField: string) => GridStateColDef<any, any, any>[];
+  filterColumns?: (args: FilterColumnsArgs) => string[];
   /**
    * Sets the available logic operators.
    * @default [GridLinkOperator.And, GridLinkOperator.Or]
@@ -212,6 +219,7 @@ const GridFilterForm = React.forwardRef<HTMLDivElement, GridFilterFormProps>(
     } = props;
     const apiRef = useGridApiContext();
     const filterableColumns = useGridSelector(apiRef, gridFilterableColumnDefinitionsSelector);
+    const filterModel = useGridSelector(apiRef, gridFilterModelSelector);
     const columnSelectId = useId();
     const columnSelectLabelId = useId();
     const operatorSelectId = useId();
@@ -232,10 +240,19 @@ const GridFilterForm = React.forwardRef<HTMLDivElement, GridFilterFormProps>(
 
     const { InputComponentProps, ...valueInputPropsOther } = valueInputProps;
 
-    const filteredColumns = React.useMemo(
-      () => filterColumns?.(item.columnField) || filterableColumns,
-      [filterColumns, filterableColumns, item.columnField],
-    );
+    const filteredColumns = React.useMemo(() => {
+      if (filterColumns === undefined || typeof filterColumns !== 'function') {
+        return filterableColumns;
+      }
+
+      const filteredFields = filterColumns({
+        field: item.columnField,
+        columns: filterableColumns,
+        currentFilters: filterModel?.items || [],
+      });
+
+      return filterableColumns.filter((column) => filteredFields.includes(column.field));
+    }, [filterColumns, filterModel?.items, filterableColumns, item.columnField]);
 
     const sortedFilteredColumns = React.useMemo(() => {
       switch (columnsSort) {
@@ -546,9 +563,9 @@ GridFilterForm.propTypes = {
    */
   disableMultiFilterOperator: PropTypes.bool,
   /**
-   * Allows to filter the columns displayed in filter form
-   * @param {string} columnField Columns of the grid
-   * @returns {GridStateColDef<any, any, any>[]} Filtered columns
+   * Allows to filter the columns displayed in the filter form.
+   * @param {FilterColumnsArgs} args The columns of the grid and name of field.
+   * @returns {string[]} The filtered fields array.
    */
   filterColumns: PropTypes.func,
   /**

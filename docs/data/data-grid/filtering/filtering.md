@@ -34,7 +34,16 @@ The following demo lets you filter the rows according to several criteria at the
 
 ### One filter per column [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
 
-You can also limit multi-filters for a single column using custom prop `filterColumns`, sometimes it's a limitation of some server-side filtering APIs to only allow one filter per column.
+You can also limit multi-filters for a single column using custom props [`filterColumns`](/x/api/data-grid/grid-filter-form/) and [`getColumnForNewFilter`](/x/api/data-grid/grid-filter-panel/).
+
+#### Usecases
+
+- Sometimes it's a limitation of some server-side filtering APIs to only allow one filter per column.
+- You can also write custom logic to prevent some columns from being shown as possible filters.
+
+#### Demo
+
+This demo implements a basic use case to prevent showing multiple filters for one column.
 
 {{"demo": "DisableMultiFiltersDataGridPro.js", "bg": "inline", "defaultCodeOpen": false}}
 
