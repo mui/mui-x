@@ -344,10 +344,10 @@ export default function buildInterfacesDocumentation(options: BuildInterfacesDoc
         path.resolve(documentationRoot, project.documentationFolderName, `${slug}.js`),
         `import * as React from 'react';
     import MarkdownDocs from '@mui/monorepo/docs/src/modules/components/MarkdownDocs';
-    import { demos, docs, demoComponents } from './${slug}.md?@mui/markdown';
+    import * as pageProps from './${slug}.md?@mui/markdown';
 
     export default function Page() {
-      return <MarkdownDocs demos={demos} docs={docs} demoComponents={demoComponents} />;
+      return <MarkdownDocs {...pageProps} />;
     }
         `,
         project,
