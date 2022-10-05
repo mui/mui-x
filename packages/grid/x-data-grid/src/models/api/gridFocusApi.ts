@@ -19,7 +19,7 @@ export interface GridFocusApi {
    * Sets the focus to the column group header at the given `field` and given depth.
    * @param {string} field The column field.
    * @param {number} depth The group depth.
-   * @param {string} event The event that triggers the action.
+   * @param {object} event The event that triggers the action.
    */
   unstable_setColumnGroupHeaderFocus: (field: string, depth: number, event?: MuiBaseEvent) => void;
   /**

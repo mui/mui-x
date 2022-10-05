@@ -540,7 +540,7 @@ describe('<DataGrid /> - Keyboard', () => {
       expect(document.activeElement!).toHaveAccessibleName('prices');
     });
 
-    it('should move to the group header bellow when pressing "ArrowDown" on a column group header', () => {
+    it('should move to the group header below when pressing "ArrowDown" on a column group header', () => {
       render(<NavigationTestGroupingCaseNoScrollX />);
 
       act(() => getColumnHeaderCell(2, 0).focus());

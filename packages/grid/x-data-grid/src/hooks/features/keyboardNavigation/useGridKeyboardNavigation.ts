@@ -17,6 +17,7 @@ import { GridRowEntry, GridRowId } from '../../../models';
 import { gridPinnedRowsSelector } from '../rows/gridRowsSelector';
 import { unstable_gridFocusColumnGroupHeaderSelector } from '../focus';
 import { gridColumnGroupsHeaderMaxDepthSelector } from '../columnGrouping/gridColumnGroupsSelector';
+import { useGridSelector } from '../../utils/useGridSelector';
 
 function enrichPageRowsWithPinnedRows(
   apiRef: React.MutableRefObject<GridApiCommunity>,
@@ -93,7 +94,7 @@ export const useGridKeyboardNavigation = (
     (colIndex: number, depth: number, event: React.SyntheticEvent<Element>) => {
       logger.debug(`Navigating to header col ${colIndex}`);
       apiRef.current.scrollToIndexes({ colIndex });
-      const field = apiRef.current.getVisibleColumns()[colIndex].field;
+      const { field } = apiRef.current.getVisibleColumns()[colIndex];
       apiRef.current.unstable_setColumnGroupHeaderFocus(field, depth, event);
     },
     [apiRef, logger],
@@ -341,7 +342,7 @@ export const useGridKeyboardNavigation = (
     [apiRef, currentPageRows.length, goToCell, getRowIdFromIndex, goToHeader, goToGroupHeader],
   );
 
-  const focusedColumnGroup = unstable_gridFocusColumnGroupHeaderSelector(apiRef);
+  const focusedColumnGroup = useGridSelector(apiRef, unstable_gridFocusColumnGroupHeaderSelector);
   const handleColumnGroupHeaderKeyDown = React.useCallback<
     GridEventListener<'columnGroupHeaderKeyDown'>
   >(
