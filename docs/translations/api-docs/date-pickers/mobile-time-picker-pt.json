@@ -48,6 +48,7 @@
     "ActionBar": "Custom component for the action bar, it is placed bellow the picker views.",
     "Dialog": "Custom component for the dialog inside which the views are rendered on mobile.",
     "MobileTransition": "Custom component for the mobile dialog <a href=\"https://mui.com/material-ui/transitions\">Transition</a>.",
+    "Paper": "Custom component for the paper rendered inside the picker&#39;s Popper.",
     "OpenPickerIcon": "Icon displayed in the open picker button.",
     "PreviousIconButton": "Button allowing to switch to the left view.",
     "NextIconButton": "Button allowing to switch to the right view.",

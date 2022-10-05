@@ -74,6 +74,7 @@
     "MobileTransition": { "default": "Fade from @mui/material", "type": { "name": "elementType" } },
     "NextIconButton": { "default": "IconButton", "type": { "name": "elementType" } },
     "OpenPickerIcon": { "default": "Calendar or Clock", "type": { "name": "elementType" } },
+    "Paper": { "default": "Paper from @mui/material", "type": { "name": "elementType" } },
     "PreviousIconButton": { "default": "IconButton", "type": { "name": "elementType" } },
     "RightArrowIcon": { "default": "ArrowRight", "type": { "name": "elementType" } }
   },

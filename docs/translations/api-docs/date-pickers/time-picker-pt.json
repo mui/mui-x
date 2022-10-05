@@ -49,15 +49,15 @@
     "ActionBar": "Custom component for the action bar, it is placed bellow the picker views.",
     "Dialog": "Custom component for the dialog inside which the views are rendered on mobile.",
     "MobileTransition": "Custom component for the mobile dialog <a href=\"https://mui.com/material-ui/transitions\">Transition</a>.",
+    "Paper": "Custom component for the paper rendered inside the picker&#39;s Popper.",
     "OpenPickerIcon": "Icon displayed in the open picker button.",
     "PreviousIconButton": "Button allowing to switch to the left view.",
     "NextIconButton": "Button allowing to switch to the right view.",
     "LeftArrowIcon": "Icon displayed in the left view switch button.",
     "RightArrowIcon": "Icon displayed in the right view switch button.",
     "DesktopTransition": "Custom component for the desktop popper <a href=\"https://mui.com/material-ui/transitions\">Transition</a>.",
-    "Paper": "Custom component for the paper rendered inside the picker&#39;s Popper.",
+    "DesktopTrapFocus": "Custom component for trapping the focus inside the views on desktop.",
     "PaperContent": "Custom component wrapping the views of the picker (it is the direct child of the Paper component).",
-    "Popper": "Custom component for the popper inside which the views are rendered on desktop.",
-    "TrapFocus": "Custom component for trapping the focus inside the views."
+    "Popper": "Custom component for the popper inside which the views are rendered on desktop."
   }
 }

@@ -110,6 +110,10 @@
       "default": "Grow from @mui/material",
       "type": { "name": "elementType" }
     },
+    "DesktopTrapFocus": {
+      "default": "TrapFocus from @mui/material",
+      "type": { "name": "elementType" }
+    },
     "LeftArrowIcon": { "default": "ArrowLeft", "type": { "name": "elementType" } },
     "NextIconButton": { "default": "IconButton", "type": { "name": "elementType" } },
     "OpenPickerIcon": { "default": "Calendar or Clock", "type": { "name": "elementType" } },
@@ -120,8 +124,7 @@
     "RightArrowIcon": { "default": "ArrowRight", "type": { "name": "elementType" } },
     "SwitchViewButton": { "default": "IconButton", "type": { "name": "elementType" } },
     "SwitchViewIcon": { "default": "ArrowDropDown", "type": { "name": "elementType" } },
-    "Tabs": { "default": "DateTimePickerTabs", "type": { "name": "elementType" } },
-    "TrapFocus": { "default": "TrapFocus from @mui/material", "type": { "name": "elementType" } }
+    "Tabs": { "default": "DateTimePickerTabs", "type": { "name": "elementType" } }
   },
   "name": "DesktopDateTimePicker",
   "styles": { "classes": [], "globalClasses": {}, "name": "MuiDesktopDateTimePicker" },
