@@ -6,15 +6,11 @@ import { PaperProps as MuiPaperProps } from '@mui/material/Paper/Paper';
 import { TransitionProps as MuiTransitionProps } from '@mui/material/transitions/transition';
 import { styled } from '@mui/material/styles';
 import { DIALOG_WIDTH } from '../constants/dimensions';
-import { PickersActionBar, PickersActionBarProps } from '../../PickersActionBar';
+import { PickersActionBar } from '../../PickersActionBar';
 import { PickerStateWrapperProps } from '../hooks/usePickerState';
+import { PickersSlotsComponent, PickersSlotsComponentsProps } from './wrappers/WrapperProps';
 
-export interface PickersModalDialogSlotsComponent {
-  /**
-   * Custom component for the action bar, it is placed bellow the picker views.
-   * @default PickersActionBar
-   */
-  ActionBar?: React.ElementType<PickersActionBarProps>;
+export interface PickersModalDialogSlotsComponent extends Pick<PickersSlotsComponent, 'ActionBar'> {
   /**
    * Custom component for the dialog inside which the views are rendered on mobile.
    * @default PickersModalDialogRoot
@@ -32,11 +28,8 @@ export interface PickersModalDialogSlotsComponent {
   MobileTransition?: React.JSXElementConstructor<MuiTransitionProps>;
 }
 
-export interface PickersModalDialogSlotsComponentsProps {
-  /**
-   * Props passed down to the action bar component.
-   */
-  actionBar?: Omit<PickersActionBarProps, 'onAccept' | 'onClear' | 'onCancel' | 'onSetToday'>;
+export interface PickersModalDialogSlotsComponentsProps
+  extends Pick<PickersSlotsComponentsProps, 'actionBar'> {
   /**
    * Props passed down to the [`Dialog`](https://mui.com/material-ui/api/dialog/) component.
    */

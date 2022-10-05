@@ -10,10 +10,11 @@ import {
   getStaticWrapperUtilityClass,
   PickerStaticWrapperClasses,
 } from './pickerStaticWrapperClasses';
-import { PickersActionBar, PickersActionBarProps } from '../../../PickersActionBar';
+import { PickersActionBar } from '../../../PickersActionBar';
 import { PickerStateWrapperProps } from '../../hooks/usePickerState';
 import { PickersInputLocaleText } from '../../../locales/utils/pickersLocaleTextApi';
 import { LocalizationProvider } from '../../../LocalizationProvider';
+import { PickersSlotsComponent, PickersSlotsComponentsProps } from '../wrappers/WrapperProps';
 
 const useUtilityClasses = <TDate extends unknown>(ownerState: PickerStaticWrapperProps<TDate>) => {
   const { classes } = ownerState;
@@ -25,23 +26,11 @@ const useUtilityClasses = <TDate extends unknown>(ownerState: PickerStaticWrappe
   return composeClasses(slots, getStaticWrapperUtilityClass, classes);
 };
 
-export interface PickersStaticWrapperSlotsComponent {
-  /**
-   * Custom component for the action bar, it is placed bellow the picker views.
-   * @default PickersActionBar
-   */
-  ActionBar?: React.ElementType<PickersActionBarProps>;
-  /**
-   * Custom component wrapping the views of the desktop and static pickers (it is the direct child of the Paper component).
-   * @default React.Fragment
-   */
-  PaperContent?: React.ElementType<{ children: React.ReactNode }>;
-}
+export interface PickersStaticWrapperSlotsComponent
+  extends Pick<PickersSlotsComponent, 'ActionBar' | 'PaperContent'> {}
 
-export interface PickersStaticWrapperSlotsComponentsProps {
-  actionBar: Omit<PickersActionBarProps, 'onAccept' | 'onClear' | 'onCancel' | 'onSetToday'>;
-  paperContent: Record<string, any>;
-}
+export interface PickersStaticWrapperSlotsComponentsProps
+  extends Pick<PickersSlotsComponentsProps, 'actionBar' | 'paperContent'> {}
 
 export interface ExportedPickerStaticWrapperProps<TDate> {
   /**

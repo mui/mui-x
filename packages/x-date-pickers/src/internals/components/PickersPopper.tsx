@@ -13,16 +13,13 @@ import { useForkRef, useEventCallback, ownerDocument } from '@mui/material/utils
 import { styled, useThemeProps } from '@mui/material/styles';
 import { unstable_composeClasses as composeClasses } from '@mui/material';
 import { TransitionProps as MuiTransitionProps } from '@mui/material/transitions';
-import { PickersActionBar, PickersActionBarProps } from '../../PickersActionBar';
+import { PickersActionBar } from '../../PickersActionBar';
 import { PickerStateWrapperProps } from '../hooks/usePickerState';
 import { getPickersPopperUtilityClass, PickersPopperClasses } from './pickersPopperClasses';
+import { PickersSlotsComponent, PickersSlotsComponentsProps } from './wrappers/WrapperProps';
 
-export interface PickersPopperSlotsComponent {
-  /**
-   * Custom component for the action bar, it is placed bellow the picker views.
-   * @default PickersActionBar
-   */
-  ActionBar?: React.ElementType<PickersActionBarProps>;
+export interface PickersPopperSlotsComponent
+  extends Pick<PickersSlotsComponent, 'ActionBar' | 'PaperContent'> {
   /**
    * Custom component for the paper rendered inside the desktop picker's Popper.
    * @default PickersPopperPaper
@@ -39,22 +36,14 @@ export interface PickersPopperSlotsComponent {
    */
   DesktopTrapFocus?: React.ElementType<MuiTrapFocusProps>;
   /**
-   * Custom component wrapping the views of the desktop and static pickers (it is the direct child of the Paper component).
-   * @default React.Fragment
-   */
-  PaperContent?: React.ElementType<{ children: React.ReactNode }>;
-  /**
    * Custom component for the popper inside which the views are rendered on desktop.
    * @default Popper from @mui/material
    */
   Popper?: React.ElementType<MuiPopperProps>;
 }
 
-export interface PickersPopperSlotsComponentsProps {
-  /**
-   * Props passed down to the action bar component.
-   */
-  actionBar?: Omit<PickersActionBarProps, 'onAccept' | 'onClear' | 'onCancel' | 'onSetToday'>;
+export interface PickersPopperSlotsComponentsProps
+  extends Pick<PickersSlotsComponentsProps, 'actionBar' | 'paperContent'> {
   /**
    * Props passed down to the desktop [Paper](https://mui.com/material-ui/api/paper/) component.
    */
@@ -71,11 +60,6 @@ export interface PickersPopperSlotsComponentsProps {
    * Props passed down to the TrapFocus component on desktop.
    */
   desktopTrapFocus?: Partial<MuiTrapFocusProps>;
-  /**
-   * Props passed to down the paper content component.
-   * Can't be used without a custom PaperContent component since the default one is React.Fragment.
-   */
-  paperContent?: Record<string, any>;
   /**
    * Props passed down to [Popper](https://mui.com/material-ui/api/popper/) component.
    */
