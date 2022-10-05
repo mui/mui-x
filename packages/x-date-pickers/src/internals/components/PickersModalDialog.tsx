@@ -1,27 +1,47 @@
 import * as React from 'react';
 import DialogContent from '@mui/material/DialogContent';
-import Dialog, { DialogProps as MuiDialogProps, dialogClasses } from '@mui/material/Dialog';
+import Fade from '@mui/material/Fade';
+import MuiDialog, { DialogProps as MuiDialogProps, dialogClasses } from '@mui/material/Dialog';
+import { TransitionProps as MuiTransitionProps } from '@mui/material/transitions/transition';
 import { styled } from '@mui/material/styles';
 import { DIALOG_WIDTH } from '../constants/dimensions';
 import { PickersActionBar, PickersActionBarProps } from '../../PickersActionBar';
 import { PickerStateWrapperProps } from '../hooks/usePickerState';
-import { PickersWrapperSlotsComponent } from './wrappers/WrapperProps';
 
-export interface PickersModalDialogSlotsComponent
-  extends Omit<PickersWrapperSlotsComponent, 'PaperContent'> {}
+export interface PickersModalDialogSlotsComponent {
+  /**
+   * Custom component for the action bar, it is placed bellow the picker views.
+   * @default PickersActionBar
+   */
+  ActionBar?: React.ElementType<PickersActionBarProps>;
+  /**
+   * Custom component for the dialog inside which the views are rendered on mobile.
+   * @default PickersModalDialogRoot
+   */
+  Dialog?: React.ElementType<MuiDialogProps>;
+  /**
+   * Custom component for the mobile dialog [Transition](https://mui.com/material-ui/transitions).
+   * @default Fade from @mui/material
+   */
+  MobileTransition?: React.JSXElementConstructor<MuiTransitionProps>;
+}
 
 export interface PickersModalDialogSlotsComponentsProps {
-  actionBar: Omit<PickersActionBarProps, 'onAccept' | 'onClear' | 'onCancel' | 'onSetToday'>;
-}
-
-export interface ExportedPickerModalProps {
   /**
-   * Props applied to the [`Dialog`](https://mui.com/material-ui/api/dialog/) element.
+   * Props passed down to the action bar component.
    */
-  DialogProps?: Partial<MuiDialogProps>;
+  actionBar?: Omit<PickersActionBarProps, 'onAccept' | 'onClear' | 'onCancel' | 'onSetToday'>;
+  /**
+   * Props passed down to the [`Dialog`](https://mui.com/material-ui/api/dialog/) component.
+   */
+  dialog?: Partial<MuiDialogProps>;
+  /**
+   * Props passed down to the mobile [Transition](https://mui.com/material-ui/transitions) component.
+   */
+  mobileTransition?: Partial<MuiTransitionProps>;
 }
 
-export interface PickersModalDialogProps extends ExportedPickerModalProps, PickerStateWrapperProps {
+export interface PickersModalDialogProps extends PickerStateWrapperProps {
   /**
    * Overrideable components.
    * @default {}
@@ -34,7 +54,7 @@ export interface PickersModalDialogProps extends ExportedPickerModalProps, Picke
   componentsProps?: Partial<PickersModalDialogSlotsComponentsProps>;
 }
 
-const PickersModalDialogRoot = styled(Dialog)({
+const PickersModalDialogRoot = styled(MuiDialog)({
   [`& .${dialogClasses.container}`]: {
     outline: 0,
   },
@@ -53,7 +73,6 @@ const PickersModalDialogContent = styled(DialogContent)({
 export const PickersModalDialog = (props: React.PropsWithChildren<PickersModalDialogProps>) => {
   const {
     children,
-    DialogProps = {},
     onAccept,
     onClear,
     onDismiss,
@@ -65,9 +84,17 @@ export const PickersModalDialog = (props: React.PropsWithChildren<PickersModalDi
   } = props;
 
   const ActionBar = components?.ActionBar ?? PickersActionBar;
+  const Dialog = components?.Dialog ?? PickersModalDialogRoot;
+  const Transition = components?.MobileTransition ?? Fade;
 
   return (
-    <PickersModalDialogRoot open={open} onClose={onDismiss} {...DialogProps}>
+    <Dialog
+      open={open}
+      onClose={onDismiss}
+      {...componentsProps?.dialog}
+      TransitionComponent={Transition}
+      TransitionProps={componentsProps?.mobileTransition}
+    >
       <PickersModalDialogContent>{children}</PickersModalDialogContent>
       <ActionBar
         onAccept={onAccept}
@@ -77,6 +104,6 @@ export const PickersModalDialog = (props: React.PropsWithChildren<PickersModalDi
         actions={['cancel', 'accept']}
         {...componentsProps?.actionBar}
       />
-    </PickersModalDialogRoot>
+    </Dialog>
   );
 };

@@ -155,7 +155,10 @@ export const getClockTouchEvent = () => {
 };
 
 export const withPickerControls =
-  <TValue, Props extends { value: TValue; onChange: Function }>(
+  <
+    TValue,
+    Props extends { value: TValue; onChange: Function; components?: {}; componentsProps?: {} },
+  >(
     Component: React.ComponentType<Props>,
   ) =>
   <DefaultProps extends Partial<Props>>(defaultProps: DefaultProps) => {
@@ -185,7 +188,14 @@ export const withPickerControls =
       );
 
       return (
-        <Component {...defaultProps} {...(other as any)} value={value} onChange={handleChange} />
+        <Component
+          {...defaultProps}
+          {...(other as any)}
+          components={{ ...defaultProps.components, ...(other as any).components }}
+          componentsProps={{ ...defaultProps.componentsProps, ...(other as any).componentsProps }}
+          value={value}
+          onChange={handleChange}
+        />
       );
     };
   };

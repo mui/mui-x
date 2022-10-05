@@ -12,7 +12,6 @@ import {
 } from './pickerStaticWrapperClasses';
 import { PickersActionBar, PickersActionBarProps } from '../../../PickersActionBar';
 import { PickerStateWrapperProps } from '../../hooks/usePickerState';
-import { PickersWrapperSlotsComponent } from '../wrappers/WrapperProps';
 import { PickersInputLocaleText } from '../../../locales/utils/pickersLocaleTextApi';
 import { LocalizationProvider } from '../../../LocalizationProvider';
 
@@ -26,7 +25,18 @@ const useUtilityClasses = <TDate extends unknown>(ownerState: PickerStaticWrappe
   return composeClasses(slots, getStaticWrapperUtilityClass, classes);
 };
 
-export interface PickersStaticWrapperSlotsComponent extends PickersWrapperSlotsComponent {}
+export interface PickersStaticWrapperSlotsComponent {
+  /**
+   * Custom component for the action bar, it is placed bellow the picker views.
+   * @default PickersActionBar
+   */
+  ActionBar?: React.ElementType<PickersActionBarProps>;
+  /**
+   * Custom component wrapping the views of the picker (it is the direct child of the Paper component).
+   * @default React.Fragment
+   */
+  PaperContent?: React.ElementType<{ children: React.ReactNode }>;
+}
 
 export interface PickersStaticWrapperSlotsComponentsProps {
   actionBar: Omit<PickersActionBarProps, 'onAccept' | 'onClear' | 'onCancel' | 'onSetToday'>;
@@ -110,8 +120,9 @@ function PickerStaticWrapper<TDate>(inProps: PickerStaticWrapperProps<TDate>) {
   } = props;
 
   const classes = useUtilityClasses(props);
+
   const ActionBar = components?.ActionBar ?? PickersActionBar;
-  const PaperContent = components?.PaperContent || React.Fragment;
+  const PaperContent = components?.PaperContent ?? React.Fragment;
 
   return (
     <LocalizationProvider localeText={localeText}>

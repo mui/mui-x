@@ -24,7 +24,7 @@ import {
 } from 'test/utils/pickers-utils';
 
 const WrappedDesktopDateRangePicker = withPickerControls(DesktopDateRangePicker)({
-  DialogProps: { TransitionComponent: FakeTransitionComponent },
+  components: { DesktopTransition: FakeTransitionComponent },
   renderInput: (startProps, endProps) => (
     <React.Fragment>
       <TextField {...startProps} />
@@ -341,17 +341,7 @@ describe('<DesktopDateRangePicker />', () => {
     render(
       <ThemeProvider theme={theme}>
         <LocalizationProvider dateAdapter={AdapterClassToUse}>
-          <DesktopDateRangePicker
-            renderInput={(startProps, endProps) => (
-              <React.Fragment>
-                <TextField {...startProps} variant="standard" />
-                <TextField {...endProps} variant="standard" />
-              </React.Fragment>
-            )}
-            onChange={() => {}}
-            TransitionComponent={FakeTransitionComponent}
-            value={[null, null]}
-          />
+          <WrappedDesktopDateRangePicker initialValue={[null, null]} />
         </LocalizationProvider>
       </ThemeProvider>,
     );
@@ -458,22 +448,22 @@ describe('<DesktopDateRangePicker />', () => {
     });
   });
 
-  describe('prop: PopperProps', () => {
+  describe('componentsProps: popper', () => {
     it('should forward onClick and onTouchStart', () => {
       const handleClick = spy();
       const handleTouchStart = spy();
       render(
-        <DesktopDateRangePicker
+        <WrappedDesktopDateRangePicker
           open
-          onChange={() => {}}
-          PopperProps={{
-            onClick: handleClick,
-            onTouchStart: handleTouchStart,
-            // @ts-expect-error `data-*` attributes are not recognized in props objects
-            'data-testid': 'popper',
+          initialValue={[null, null]}
+          componentsProps={{
+            popper: {
+              onClick: handleClick,
+              onTouchStart: handleTouchStart,
+              // @ts-expect-error `data-*` attributes are not recognized in props objects
+              'data-testid': 'popper',
+            },
           }}
-          renderInput={(params) => <TextField {...params} />}
-          value={[null, null]}
         />,
       );
       const popper = screen.getByTestId('popper');

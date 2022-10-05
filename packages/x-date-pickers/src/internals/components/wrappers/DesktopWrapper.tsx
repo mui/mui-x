@@ -56,9 +56,6 @@ export function DesktopWrapper<TDate>(props: InternalDesktopWrapperProps<TDate>)
     onAccept,
     onSetToday,
     open,
-    PopperProps,
-    PaperProps,
-    TransitionComponent,
     components,
     componentsProps,
     localeText,
@@ -74,9 +71,6 @@ export function DesktopWrapper<TDate>(props: InternalDesktopWrapperProps<TDate>)
           role="dialog"
           open={open}
           anchorEl={ownInputRef.current}
-          TransitionComponent={TransitionComponent}
-          PopperProps={PopperProps}
-          PaperProps={PaperProps}
           onDismiss={onDismiss}
           onCancel={onCancel}
           onClear={onClear}

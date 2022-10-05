@@ -88,17 +88,7 @@ export const DesktopDateRangePicker = React.forwardRef(function DesktopDateRange
     dateRangePickerValueManager,
   );
 
-  const {
-    value,
-    onChange,
-    PopperProps,
-    PaperProps,
-    TransitionComponent,
-    components,
-    componentsProps,
-    localeText,
-    ...other
-  } = props;
+  const { value, onChange, components, componentsProps, localeText, ...other } = props;
   const DateInputProps = {
     ...inputProps,
     ...other,
@@ -115,9 +105,6 @@ export const DesktopDateRangePicker = React.forwardRef(function DesktopDateRange
       {...wrapperProps}
       DateInputProps={DateInputProps}
       KeyboardDateInputComponent={KeyboardDateInputComponent}
-      PopperProps={PopperProps}
-      PaperProps={PaperProps}
-      TransitionComponent={TransitionComponent}
       components={components}
       componentsProps={componentsProps}
       localeText={localeText}
@@ -327,14 +314,6 @@ DesktopDateRangePicker.propTypes = {
    */
   OpenPickerButtonProps: PropTypes.object,
   /**
-   * Paper props passed down to [Paper](https://mui.com/material-ui/api/paper/) component.
-   */
-  PaperProps: PropTypes.object,
-  /**
-   * Popper props passed down to [Popper](https://mui.com/material-ui/api/popper/) component.
-   */
-  PopperProps: PropTypes.object,
-  /**
    * Make picker read only.
    * @default false
    */
@@ -437,10 +416,6 @@ DesktopDateRangePicker.propTypes = {
    * @default 'Select date range'
    */
   toolbarTitle: PropTypes.node,
-  /**
-   * Custom component for popper [Transition](https://mui.com/material-ui/transitions/#transitioncomponent-prop).
-   */
-  TransitionComponent: PropTypes.elementType,
   /**
    * The value of the picker.
    */

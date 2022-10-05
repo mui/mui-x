@@ -52,8 +52,6 @@
     "onViewChange": { "type": { "name": "func" } },
     "open": { "type": { "name": "bool" } },
     "OpenPickerButtonProps": { "type": { "name": "object" } },
-    "PaperProps": { "type": { "name": "object" } },
-    "PopperProps": { "type": { "name": "object" } },
     "readOnly": { "type": { "name": "bool" } },
     "reduceAnimations": {
       "type": { "name": "bool" },
@@ -77,19 +75,25 @@
       }
     },
     "toolbarFormat": { "type": { "name": "string" } },
-    "toolbarTitle": { "type": { "name": "node" }, "default": "'Select date range'" },
-    "TransitionComponent": { "type": { "name": "elementType" } }
+    "toolbarTitle": { "type": { "name": "node" }, "default": "'Select date range'" }
   },
   "slots": {
     "ActionBar": { "default": "PickersActionBar", "type": { "name": "elementType" } },
+    "DesktopTransition": {
+      "default": "Grow from @mui/material",
+      "type": { "name": "elementType" }
+    },
     "LeftArrowIcon": { "default": "ArrowLeft", "type": { "name": "elementType" } },
     "NextIconButton": { "default": "IconButton", "type": { "name": "elementType" } },
     "OpenPickerIcon": { "default": "Calendar or Clock", "type": { "name": "elementType" } },
+    "Paper": { "default": "Paper from @mui/material", "type": { "name": "elementType" } },
     "PaperContent": { "default": "React.Fragment", "type": { "name": "elementType" } },
+    "Popper": { "default": "Popper from @mui/material", "type": { "name": "elementType" } },
     "PreviousIconButton": { "default": "IconButton", "type": { "name": "elementType" } },
     "RightArrowIcon": { "default": "ArrowRight", "type": { "name": "elementType" } },
     "SwitchViewButton": { "default": "IconButton", "type": { "name": "elementType" } },
-    "SwitchViewIcon": { "default": "ArrowDropDown", "type": { "name": "elementType" } }
+    "SwitchViewIcon": { "default": "ArrowDropDown", "type": { "name": "elementType" } },
+    "TrapFocus": { "default": "TrapFocus from @mui/material", "type": { "name": "elementType" } }
   },
   "name": "DesktopDateRangePicker",
   "styles": { "classes": [], "globalClasses": {}, "name": "MuiDesktopDateRangePicker" },

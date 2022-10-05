@@ -10,7 +10,6 @@
     "dayOfWeekFormatter": "Formats the day of week displayed in the calendar header.<br><br><strong>Signature:</strong><br><code>function(day: string) =&gt; string</code><br><em>day:</em> The day of week provided by the adapter&#39;s method <code>getWeekdays</code>.<br> <em>returns</em> (string): The name to display.",
     "defaultCalendarMonth": "Default calendar month displayed when <code>value={null}</code>.",
     "desktopModeMediaQuery": "CSS media query when <code>Mobile</code> mode will be changed to <code>Desktop</code>.",
-    "DialogProps": "Props applied to the <a href=\"https://mui.com/material-ui/api/dialog/\"><code>Dialog</code></a> element.",
     "disableAutoMonthSwitching": "If <code>true</code>, after selecting <code>start</code> date calendar will not automatically switch to the month of <code>end</code> date.",
     "disabled": "If <code>true</code>, the picker and text field are disabled.",
     "disableFuture": "If <code>true</code> disable values before the current time",
@@ -36,8 +35,6 @@
     "onViewChange": "Callback fired on view change.<br><br><strong>Signature:</strong><br><code>function(view: CalendarPickerView) =&gt; void</code><br><em>view:</em> The new view.",
     "open": "Control the popup or dialog open state.",
     "OpenPickerButtonProps": "Props to pass to keyboard adornment button.",
-    "PaperProps": "Paper props passed down to <a href=\"https://mui.com/material-ui/api/paper/\">Paper</a> component.",
-    "PopperProps": "Popper props passed down to <a href=\"https://mui.com/material-ui/api/popper/\">Popper</a> component.",
     "readOnly": "Make picker read only.",
     "reduceAnimations": "Disable heavy animations.",
     "renderDay": "Custom renderer for <code>&lt;DateRangePicker /&gt;</code> days. @DateIOType<br><br><strong>Signature:</strong><br><code>function(day: TDate, dateRangePickerDayProps: DateRangePickerDayProps&lt;TDate&gt;) =&gt; JSX.Element</code><br><em>day:</em> The day to render.<br><em>dateRangePickerDayProps:</em> The props of the day to render.<br> <em>returns</em> (JSX.Element): The element representing the day.",
@@ -52,12 +49,13 @@
     "sx": "The system prop that allows defining system overrides as well as additional CSS styles. See the <a href=\"/system/getting-started/the-sx-prop/\">`sx` page</a> for more details.",
     "toolbarFormat": "Date format, that is displaying in toolbar.",
     "toolbarTitle": "Mobile picker title, displaying in the toolbar.",
-    "TransitionComponent": "Custom component for popper <a href=\"https://mui.com/material-ui/transitions/#transitioncomponent-prop\">Transition</a>.",
     "value": "The value of the picker."
   },
   "classDescriptions": {},
   "slotDescriptions": {
-    "ActionBar": "The action bar placed bellow picker views.",
+    "ActionBar": "Custom component for the action bar, it is placed bellow the picker views.",
+    "Dialog": "Custom component for the dialog inside which the views are rendered on mobile.",
+    "MobileTransition": "Custom component for the mobile dialog <a href=\"https://mui.com/material-ui/transitions\">Transition</a>.",
     "OpenPickerIcon": "Icon displayed in the open picker button.",
     "SwitchViewButton": "Button displayed to switch between different calendar views.",
     "SwitchViewIcon": "Icon displayed in the SwitchViewButton. Rotated by 180° when the open view is &#39;year&#39;.",
@@ -65,6 +63,10 @@
     "NextIconButton": "Button allowing to switch to the right view.",
     "LeftArrowIcon": "Icon displayed in the left view switch button.",
     "RightArrowIcon": "Icon displayed in the right view switch button.",
-    "PaperContent": "The content of the Paper wrapping views."
+    "DesktopTransition": "Custom component for the desktop popper <a href=\"https://mui.com/material-ui/transitions\">Transition</a>.",
+    "Paper": "Custom component for the paper rendered inside the picker&#39;s Popper.",
+    "PaperContent": "Custom component wrapping the views of the picker (it is the direct child of the Paper component).",
+    "Popper": "Custom component for the popper inside which the views are rendered on desktop.",
+    "TrapFocus": "Custom component for trapping the focus inside the views."
   }
 }
