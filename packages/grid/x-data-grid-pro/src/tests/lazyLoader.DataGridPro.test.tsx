@@ -6,8 +6,10 @@ import { expect } from 'chai';
 import {
   DataGridPro,
   DataGridProProps,
+  GRID_ROOT_GROUP_ID,
   GridApi,
   GridColumns,
+  GridGroupNode,
   GridRowModel,
   GridRowsProp,
   useGridApiRef,
@@ -100,7 +102,7 @@ describe('<DataGridPro /> - Lazy loader', () => {
       { id: 5, name: 'Mac' },
     ];
 
-    const initialAllRows = apiRef.current.state.rows.ids;
+    const initialAllRows = apiRef.current.getRowNode<GridGroupNode>(GRID_ROOT_GROUP_ID)!.children;
     expect(initialAllRows.slice(3, 6)).to.deep.equal([
       'auto-generated-skeleton-row-root-0',
       'auto-generated-skeleton-row-root-1',
@@ -108,7 +110,7 @@ describe('<DataGridPro /> - Lazy loader', () => {
     ]);
     act(() => apiRef.current.unstable_replaceRows(4, newRows));
 
-    const updatedAllRows = apiRef.current.state.rows.ids;
+    const updatedAllRows = apiRef.current.getRowNode<GridGroupNode>(GRID_ROOT_GROUP_ID)!.children;
     expect(updatedAllRows.slice(4, 6)).to.deep.equal([4, 5]);
   });
 
@@ -140,7 +142,7 @@ describe('<DataGridPro /> - Lazy loader', () => {
       { clientId: 5, name: 'Mac' },
     ];
 
-    const initialAllRows = apiRef.current.state.rows.ids;
+    const initialAllRows = apiRef.current.getRowNode<GridGroupNode>(GRID_ROOT_GROUP_ID)!.children;
     expect(initialAllRows.slice(3, 6)).to.deep.equal([
       'auto-generated-skeleton-row-root-0',
       'auto-generated-skeleton-row-root-1',
@@ -148,7 +150,7 @@ describe('<DataGridPro /> - Lazy loader', () => {
     ]);
     act(() => apiRef.current.unstable_replaceRows(4, newRows));
 
-    const updatedAllRows = apiRef.current.state.rows.ids;
+    const updatedAllRows = apiRef.current.getRowNode<GridGroupNode>(GRID_ROOT_GROUP_ID)!.children;
     expect(updatedAllRows.slice(4, 6)).to.deep.equal([4, 5]);
 
     expect(apiRef.current.getRowNode(4)).to.not.equal(null);

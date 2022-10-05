@@ -17,8 +17,12 @@ export type {
   CalendarOrClockPickerClassKey,
   CalendarOrClockPickerClasses,
 } from './components/CalendarOrClockPicker/calendarOrClockPickerClasses';
-export { PickersArrowSwitcher } from './components/PickersArrowSwitcher';
-export type { ExportedArrowSwitcherProps } from './components/PickersArrowSwitcher';
+export { PickersArrowSwitcher } from './components/PickersArrowSwitcher/PickersArrowSwitcher';
+export type {
+  ExportedPickersArrowSwitcherProps,
+  PickersArrowSwitcherSlotsComponent,
+  PickersArrowSwitcherSlotsComponentsProps,
+} from './components/PickersArrowSwitcher';
 export { PickerStaticWrapper } from './components/PickerStaticWrapper/PickerStaticWrapper';
 export type { PickerStaticWrapperProps } from './components/PickerStaticWrapper/PickerStaticWrapper';
 export type {
@@ -44,11 +48,11 @@ export type {
   PickersToolbarTextClassKey,
   PickersToolbarTextClasses,
 } from './components/pickersToolbarTextClasses';
-export { pickersArrowSwitcherClasses } from './components/pickersArrowSwitcherClasses';
+export { pickersArrowSwitcherClasses } from './components/PickersArrowSwitcher/pickersArrowSwitcherClasses';
 export type {
   PickersArrowSwitcherClassKey,
   PickersArrowSwitcherClasses,
-} from './components/pickersArrowSwitcherClasses';
+} from './components/PickersArrowSwitcher/pickersArrowSwitcherClasses';
 export type { PickerPopperProps } from './components/PickersPopper';
 export { pickersPopperClasses } from './components/pickersPopperClasses';
 export type {
@@ -80,22 +84,22 @@ export type { PickerStateValueManager, PickerSelectionState } from './hooks/useP
 export { useLocalizationContext, useDefaultDates, useUtils, useLocaleText } from './hooks/useUtils';
 export type { BaseDateValidationProps, DayValidationProps } from './hooks/validation/models';
 export { useValidation } from './hooks/validation/useValidation';
-export type { ValidationProps, Validator } from './hooks/validation/useValidation';
-export { validateDate } from './hooks/validation/useDateValidation';
 export type {
-  DateValidationProps,
-  DateValidationError,
-  ExportedDateValidationProps,
-} from './hooks/validation/useDateValidation';
+  ValidationCommonProps,
+  ValidationProps,
+  Validator,
+} from './hooks/validation/useValidation';
+export { validateDate } from './hooks/validation/useDateValidation';
+export type { DateValidationError } from './hooks/validation/useDateValidation';
 export { usePreviousMonthDisabled, useNextMonthDisabled } from './hooks/date-helpers-hooks';
 
 export type { BasePickerProps } from './models/props/basePickerProps';
 export type { StaticPickerProps } from './models/props/staticPickerProps';
 export type { BaseToolbarProps } from './models/props/baseToolbarProps';
 export type { MuiPickersAdapter } from './models/muiPickersAdapter';
-export type { DefaultizedProps } from './models/helpers';
+export type { DefaultizedProps, MakeOptional } from './models/helpers';
 
-export { parseNonNullablePickerDate } from './utils/date-utils';
+export { applyDefaultDate, replaceInvalidDateByNull } from './utils/date-utils';
 export { executeInTheNextEventLoopTick, onSpaceOrEnter } from './utils/utils';
 export { defaultReduceAnimations } from './utils/defaultReduceAnimations';
 export { buildDeprecatedPropsWarning } from './utils/warning';

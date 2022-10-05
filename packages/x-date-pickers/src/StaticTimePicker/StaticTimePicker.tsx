@@ -30,8 +30,8 @@ export interface StaticTimePickerSlotsComponentsProps
   extends PickersStaticWrapperSlotsComponentsProps,
     ClockPickerSlotsComponentsProps {}
 
-export interface StaticTimePickerProps<TInputDate, TDate>
-  extends StaticPickerProps<BaseTimePickerProps<TInputDate, TDate>> {
+export interface StaticTimePickerProps<TDate>
+  extends StaticPickerProps<TDate, BaseTimePickerProps<TDate>> {
   /**
    * Overrideable components.
    * @default {}
@@ -44,8 +44,8 @@ export interface StaticTimePickerProps<TInputDate, TDate>
   componentsProps?: Partial<StaticTimePickerSlotsComponentsProps>;
 }
 
-type StaticTimePickerComponent = (<TInputDate, TDate = TInputDate>(
-  props: StaticTimePickerProps<TInputDate, TDate> & React.RefAttributes<HTMLDivElement>,
+type StaticTimePickerComponent = (<TDate>(
+  props: StaticTimePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
 ) => JSX.Element) & { propTypes?: any };
 
 /**
@@ -58,23 +58,23 @@ type StaticTimePickerComponent = (<TInputDate, TDate = TInputDate>(
  *
  * - [StaticTimePicker API](https://mui.com/x/api/date-pickers/static-time-picker/)
  */
-export const StaticTimePicker = React.forwardRef(function StaticTimePicker<
-  TInputDate,
-  TDate = TInputDate,
->(inProps: StaticTimePickerProps<TInputDate, TDate>, ref: React.Ref<HTMLDivElement>) {
-  const props = useTimePickerDefaultizedProps<
-    TInputDate,
-    TDate,
-    StaticTimePickerProps<TInputDate, TDate>
-  >(inProps, 'MuiStaticTimePicker');
+export const StaticTimePicker = React.forwardRef(function StaticTimePicker<TDate>(
+  inProps: StaticTimePickerProps<TDate>,
+  ref: React.Ref<HTMLDivElement>,
+) {
+  const props = useTimePickerDefaultizedProps<TDate, StaticTimePickerProps<TDate>>(
+    inProps,
+    'MuiStaticTimePicker',
+  );
 
   const {
-    displayStaticWrapperAs = 'mobile',
+    displayStaticWrapperAs,
     onChange,
     ToolbarComponent = TimePickerToolbar,
     value,
     components,
     componentsProps,
+    localeText,
     sx,
     className,
     ...other
@@ -97,6 +97,7 @@ export const StaticTimePicker = React.forwardRef(function StaticTimePicker<
       displayStaticWrapperAs={displayStaticWrapperAs}
       components={components}
       componentsProps={componentsProps}
+      localeText={localeText}
       sx={sx}
       className={className}
       {...wrapperProps}
@@ -159,6 +160,11 @@ StaticTimePicker.propTypes = {
    */
   disabled: PropTypes.bool,
   /**
+   * If `true` disable values before the current time
+   * @default false
+   */
+  disableFuture: PropTypes.bool,
+  /**
    * Do not ignore date part when validating min/max time.
    * @default false
    */
@@ -174,35 +180,22 @@ StaticTimePicker.propTypes = {
    */
   disableOpenPicker: PropTypes.bool,
   /**
+   * If `true` disable values after the current time.
+   * @default false
+   */
+  disablePast: PropTypes.bool,
+  /**
    * Force static wrapper inner components to be rendered in mobile or desktop mode.
-   * @default 'mobile'
+   * @default "mobile"
    */
   displayStaticWrapperAs: PropTypes.oneOf(['desktop', 'mobile']),
   /**
-   * Accessible text that helps user to understand which time and view is selected.
-   * @template TDate
-   * @param {ClockPickerView} view The current view rendered.
-   * @param {TDate | null} time The current time.
-   * @param {MuiPickersAdapter<TDate>} adapter The current date adapter.
-   * @returns {string} The clock label.
-   * @deprecated Use the `localeText` prop of `LocalizationProvider` instead, see https://mui.com/x/react-date-pickers/localization
-   * @default <TDate extends any>(
-   *   view: ClockView,
-   *   time: TDate | null,
-   *   adapter: MuiPickersAdapter<TDate>,
-   * ) =>
-   *   `Select ${view}. ${
-   *     time === null ? 'No time selected' : `Selected time is ${adapter.format(time, 'fullTime')}`
-   *   }`
-   */
-  getClockLabelText: PropTypes.func,
-  /**
    * Get aria-label text for control that opens picker dialog. Aria-label text must include selected date. @DateIOType
-   * @template TInputDate, TDate
-   * @param {TInputDate} date The date from which we want to add an aria-text.
+   * @template TDate
+   * @param {TDate | null} date The date from which we want to add an aria-text.
    * @param {MuiPickersAdapter<TDate>} utils The utils to manipulate the date.
    * @returns {string} The aria-text to render inside the dialog.
-   * @default (date, utils) => `Choose date, selected date is ${utils.format(utils.date(date), 'fullDate')}`
+   * @default (date, utils) => `Choose date, selected date is ${utils.format(date, 'fullDate')}`
    */
   getOpenDialogAriaText: PropTypes.func,
   ignoreInvalidInputs: PropTypes.bool,
@@ -225,6 +218,10 @@ StaticTimePicker.propTypes = {
     }),
   ]),
   label: PropTypes.node,
+  /**
+   * Locale for components texts
+   */
+  localeText: PropTypes.object,
   /**
    * Custom mask. Can be used to override generate from format. (e.g. `__/__/____ __:__` or `__/__/____ __:__ _M`).
    */
@@ -253,7 +250,7 @@ StaticTimePicker.propTypes = {
   /**
    * Callback fired when the value (the selected date) changes @DateIOType.
    * @template TValue
-   * @param {TValue} value The new parsed value.
+   * @param {TValue} value The new value.
    * @param {string} keyboardInputValue The current value of the keyboard input.
    */
   onChange: PropTypes.func.isRequired,
@@ -265,9 +262,9 @@ StaticTimePicker.propTypes = {
    * [Read the guide](https://next.material-ui-pickers.dev/guides/forms) about form integration and error displaying.
    * @DateIOType
    *
-   * @template TError, TInputValue
+   * @template TError, TValue
    * @param {TError} reason The reason why the current value is not valid.
-   * @param {TInputValue} value The invalid value.
+   * @param {TValue} value The invalid value.
    */
   onError: PropTypes.func,
   /**

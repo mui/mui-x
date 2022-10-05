@@ -156,6 +156,7 @@ describe('<DesktopDateRangePicker />', () => {
       openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'start' });
 
       fireEvent.click(getPickerDay('1', 'January 2019'));
+
       // FIXME use `getByRole(role, {hidden: false})` and skip JSDOM once this suite can run in JSDOM
       const [visibleButton] = screen.getAllByRole('button', {
         hidden: true,
@@ -986,6 +987,21 @@ describe('<DesktopDateRangePicker />', () => {
       expect(getPickerDay('15')).not.to.have.attribute('disabled');
       expect(getPickerDay('16')).to.have.attribute('disabled');
       expect(getPickerDay('17')).to.have.attribute('disabled');
+    });
+  });
+
+  describe('localization', () => {
+    it('should respect the `localeText` prop', () => {
+      render(
+        <WrappedDesktopDateRangePicker
+          initialValue={[null, null]}
+          localeText={{ cancelButtonLabel: 'Custom cancel' }}
+          componentsProps={{ actionBar: { actions: () => ['cancel'] } }}
+        />,
+      );
+      openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'start' });
+
+      expect(screen.queryByText('Custom cancel')).not.to.equal(null);
     });
   });
 });

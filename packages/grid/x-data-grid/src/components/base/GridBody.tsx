@@ -4,7 +4,6 @@ import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { ElementSize } from '../../models/elementSize';
 import { GridMainContainer } from '../containers/GridMainContainer';
 import { GridAutoSizer } from '../GridAutoSizer';
-import { GridOverlays } from './GridOverlays';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { useGridSelector } from '../../hooks/utils/useGridSelector';
 import { gridTotalHeaderHeightSelector } from '../../hooks/features/columnGrouping/gridColumnGroupsSelector';
@@ -75,7 +74,6 @@ function GridBody(props: GridBodyProps) {
 
   return (
     <GridMainContainer>
-      <GridOverlays />
       <ColumnHeadersComponent ref={columnsContainerRef} innerRef={columnHeadersRef} />
       <GridAutoSizer
         nonce={rootProps.nonce}

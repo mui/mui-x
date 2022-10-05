@@ -76,7 +76,12 @@ describe('<DataGrid /> - Column Headers', () => {
         <div style={{ width: 300, height: 300 }}>
           <DataGrid
             {...baselineProps}
-            columns={[{ field: 'id' }, { field: 'brand', headerClassName: 'foobar', hide: true }]}
+            columns={[{ field: 'id' }, { field: 'brand', headerClassName: 'foobar' }]}
+            initialState={{
+              columns: {
+                columnVisibilityModel: { brand: false },
+              },
+            }}
           />
         </div>,
       );

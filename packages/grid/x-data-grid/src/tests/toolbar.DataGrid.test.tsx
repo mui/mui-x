@@ -184,36 +184,6 @@ describe('<DataGrid /> - Toolbar', () => {
       expect(getColumnHeadersTextContent()).to.deep.equal([]);
     });
 
-    it('should show all columns when clicking "SHOW ALL" from the column selector (deprecated)', () => {
-      const customColumns = [
-        {
-          field: 'id',
-          hide: true,
-        },
-        {
-          field: 'brand',
-          hide: true,
-        },
-      ];
-
-      const { getByText } = render(
-        <div style={{ width: 300, height: 300 }}>
-          <DataGrid
-            {...baselineProps}
-            columns={customColumns}
-            components={{
-              Toolbar: GridToolbar,
-            }}
-          />
-        </div>,
-      );
-
-      fireEvent.click(getByText('Columns'));
-      fireEvent.click(getByText('Show all'));
-
-      expect(getColumnHeadersTextContent()).to.deep.equal(['id', 'brand']);
-    });
-
     it('should show all columns when clicking "SHOW ALL" from the column selector', () => {
       const customColumns = [
         {

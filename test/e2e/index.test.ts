@@ -350,5 +350,16 @@ describe('e2e', () => {
         await page.evaluate(() => (document.activeElement as HTMLInputElement).value),
       ).to.equal('0-1');
     });
+
+    // https://github.com/mui/mui-x/issues/5590
+    it('should allow to click a button in NoRowsOverlay', async () => {
+      await renderFixture('DataGrid/NoRowsOverlayWithButton');
+
+      await page.click('[data-testid="refresh"]');
+
+      expect(
+        await page.evaluate(() => document.querySelector('[data-testid="refresh"]')!.textContent),
+      ).to.equal('Clicked');
+    });
   });
 });

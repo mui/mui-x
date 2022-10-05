@@ -112,6 +112,7 @@ export default function CustomInputComponent() {
         initialState={{
           ...data.initialState,
           filter: {
+            ...data.initialState?.filter,
             filterModel: {
               items: [
                 { id: 1, columnField: 'rating', value: '3.5', operatorValue: '>=' },
