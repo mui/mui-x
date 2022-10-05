@@ -391,6 +391,7 @@ export function PickersPopper(inProps: PickerPopperProps) {
           <Transition {...TransitionProps} {...componentsProps?.desktopTransition}>
             <Paper
               {...paperProps}
+              {...componentsProps?.paper}
               onClick={(event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
                 onPaperClick(event);
                 paperProps.onClick?.(event);
