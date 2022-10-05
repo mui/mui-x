@@ -45,7 +45,7 @@
   "classDescriptions": {},
   "slotDescriptions": {
     "ActionBar": "Custom component for the action bar, it is placed bellow the picker views.",
-    "PaperContent": "Custom component wrapping the views of the picker (it is the direct child of the Paper component).",
+    "PaperContent": "Custom component wrapping the views of the desktop and static pickers (it is the direct child of the Paper component).",
     "PreviousIconButton": "Button allowing to switch to the left view.",
     "NextIconButton": "Button allowing to switch to the right view.",
     "LeftArrowIcon": "Icon displayed in the left view switch button.",

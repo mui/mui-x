@@ -57,10 +57,10 @@
   "classDescriptions": {},
   "slotDescriptions": {
     "ActionBar": "Custom component for the action bar, it is placed bellow the picker views.",
+    "DesktopPaper": "Custom component for the paper rendered inside the desktop picker&#39;s Popper.",
     "DesktopTransition": "Custom component for the desktop popper <a href=\"https://mui.com/material-ui/transitions\">Transition</a>.",
     "DesktopTrapFocus": "Custom component for trapping the focus inside the views on desktop.",
-    "Paper": "Custom component for the paper rendered inside the picker&#39;s Popper.",
-    "PaperContent": "Custom component wrapping the views of the picker (it is the direct child of the Paper component).",
+    "PaperContent": "Custom component wrapping the views of the desktop and static pickers (it is the direct child of the Paper component).",
     "Popper": "Custom component for the popper inside which the views are rendered on desktop.",
     "OpenPickerIcon": "Icon displayed in the open picker button.",
     "SwitchViewButton": "Button displayed to switch between different calendar views.",

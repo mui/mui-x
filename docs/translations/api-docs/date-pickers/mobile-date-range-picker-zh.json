@@ -54,8 +54,8 @@
   "slotDescriptions": {
     "ActionBar": "Custom component for the action bar, it is placed bellow the picker views.",
     "Dialog": "Custom component for the dialog inside which the views are rendered on mobile.",
+    "MobilePaper": "Custom component for the paper rendered inside the mobile picker&#39;s Dialog.",
     "MobileTransition": "Custom component for the mobile dialog <a href=\"https://mui.com/material-ui/transitions\">Transition</a>.",
-    "Paper": "Custom component for the paper rendered inside the picker&#39;s Popper.",
     "OpenPickerIcon": "Icon displayed in the open picker button.",
     "SwitchViewButton": "Button displayed to switch between different calendar views.",
     "SwitchViewIcon": "Icon displayed in the SwitchViewButton. Rotated by 180° when the open view is &#39;year&#39;.",
