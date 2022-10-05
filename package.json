@@ -50,7 +50,7 @@
     "test:performance:server": "serve test/performance -p 5001",
     "test:argos": "node ./scripts/pushArgos.js",
     "typescript": "lerna run --no-bail --parallel typescript",
-    "typescript:ci": "lerna run --concurrency 7 --scope \"@mui/*\" --no-bail --no-sort typescript",
+    "typescript:ci": "lerna run --concurrency 7 --no-bail --no-sort typescript",
     "build:codesandbox": "yarn release:build",
     "install:codesandbox": "PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1 yarn install --ignore-engines",
     "release:changelog": "node scripts/releaseChangelog",
