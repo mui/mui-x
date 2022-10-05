@@ -389,7 +389,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
             ),
           };
         })
-        .filter(groupStructure => groupStructure.columnFields.length > 0);
+        .filter((groupStructure) => groupStructure.columnFields.length > 0);
 
       const leftOverflow =
         visibleColumnGroupHeader[0].columnFields.indexOf(firstColumnFieldToRender);

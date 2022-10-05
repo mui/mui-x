@@ -129,7 +129,6 @@ const GridRow = React.forwardRef<
   const headerGroupingMaxDepth = useGridSelector(apiRef, gridColumnGroupsHeaderMaxDepthSelector);
   const handleRef = useForkRef(ref, refProp);
 
-
   const ariaRowIndex = index + headerGroupingMaxDepth + 2; // 1 for the header row and 1 as it's 1-based
   const { hasScrollX, hasScrollY } = apiRef.current.getRootDimensions() ?? {
     hasScrollX: false,
@@ -190,9 +189,9 @@ const GridRow = React.forwardRef<
 
   const publish = React.useCallback(
     (
-      eventName: keyof GridRowEventLookup,
-      propHandler: React.MouseEventHandler<HTMLDivElement> | undefined,
-    ): React.MouseEventHandler<HTMLDivElement> =>
+        eventName: keyof GridRowEventLookup,
+        propHandler: React.MouseEventHandler<HTMLDivElement> | undefined,
+      ): React.MouseEventHandler<HTMLDivElement> =>
       (event) => {
         // Ignore portal
         // The target is not an element when triggered by a Select inside the cell
@@ -332,9 +331,9 @@ const GridRow = React.forwardRef<
 
       const tabIndex =
         cellTabIndex !== null &&
-          cellTabIndex.id === rowId &&
-          cellTabIndex.field === column.field &&
-          cellParams.cellMode === 'view'
+        cellTabIndex.id === rowId &&
+        cellTabIndex.field === column.field &&
+        cellParams.cellMode === 'view'
           ? 0
           : -1;
 
@@ -474,11 +473,11 @@ const GridRow = React.forwardRef<
 
   const eventHandlers = row
     ? {
-      onClick: publishClick,
-      onDoubleClick: publish('rowDoubleClick', onDoubleClick),
-      onMouseEnter: publish('rowMouseEnter', onMouseEnter),
-      onMouseLeave: publish('rowMouseLeave', onMouseLeave),
-    }
+        onClick: publishClick,
+        onDoubleClick: publish('rowDoubleClick', onDoubleClick),
+        onMouseEnter: publish('rowMouseEnter', onMouseEnter),
+        onMouseLeave: publish('rowMouseLeave', onMouseLeave),
+      }
     : null;
 
   return (
