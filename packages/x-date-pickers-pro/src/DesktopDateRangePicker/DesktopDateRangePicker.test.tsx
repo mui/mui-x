@@ -327,7 +327,7 @@ describe('<DesktopDateRangePicker />', () => {
     expect(screen.getByRole('tooltip')).toBeVisible();
   });
 
-  it.only('should respect localeText from the theme', () => {
+  it('should respect localeText from the theme', () => {
     const theme = createTheme({
       components: {
         MuiLocalizationProvider: {
@@ -342,7 +342,14 @@ describe('<DesktopDateRangePicker />', () => {
       <ThemeProvider theme={theme}>
         <LocalizationProvider dateAdapter={AdapterClassToUse}>
           <WrappedDesktopDateRangePicker
-            initialValue={[adapterToUse.date(), adapterToUse.date()]}
+            initialValue={[null, null]}
+            // We set the variant to standard to avoid having the label rendered in two places.
+            renderInput={(startProps, endProps) => (
+              <React.Fragment>
+                <TextField {...startProps} variant="standard" />
+                <TextField {...endProps} variant="standard" />
+              </React.Fragment>
+            )}
           />
         </LocalizationProvider>
       </ThemeProvider>,
