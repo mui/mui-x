@@ -355,8 +355,8 @@ describe('<DesktopDateRangePicker />', () => {
       </ThemeProvider>,
     );
 
-    expect(screen.queryAllByText('Início')[0]).not.to.equal(null);
-    expect(screen.queryAllByText('Fim')[0]).not.to.equal(null);
+    expect(screen.queryByText('Início')).not.to.equal(null);
+    expect(screen.queryByText('Fim')).not.to.equal(null);
   });
 
   it('prop: renderDay - should be called and render days', async () => {
