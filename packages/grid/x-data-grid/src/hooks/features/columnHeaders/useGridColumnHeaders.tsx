@@ -388,7 +388,8 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
               (field) => columnVisibility[field] !== false,
             ),
           };
-        });
+        })
+        .filter(groupStructure => groupStructure.columnFields.length > 0);
 
       const leftOverflow =
         visibleColumnGroupHeader[0].columnFields.indexOf(firstColumnFieldToRender);
