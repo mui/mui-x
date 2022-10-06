@@ -359,17 +359,21 @@ describe('<DesktopDateRangePicker />', () => {
     expect(screen.queryByText('Fim')).not.to.equal(null);
   });
 
-  it('prop: renderDay - should be called and render days', async () => {
-    render(
-      <WrappedDesktopDateRangePicker
-        renderDay={(day) => <div key={String(day)} data-testid="renderDayCalled" />}
-        initialValue={[null, null]}
-      />,
-    );
+  describe('Component slots', () => {
+    it('slot: `Day` - renders custom day', () => {
+      render(
+        <WrappedDesktopDateRangePicker
+          components={{
+            Day: (day) => <div key={String(day)} data-testid="slot used" />,
+          }}
+          initialValue={[null, null]}
+        />,
+      );
 
-    openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'start' });
+      openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'start' });
 
-    expect(screen.getAllByTestId('renderDayCalled')).not.to.have.length(0);
+      expect(screen.getAllByTestId('slot used')).not.to.have.length(0);
+    });
   });
 
   it('prop: calendars - should render the provided amount of calendars', () => {
@@ -680,19 +684,28 @@ describe('<DesktopDateRangePicker />', () => {
       const onClose = spy();
 
       render(
-        <WrappedDesktopDateRangePicker
-          onChange={onChange}
-          onAccept={onAccept}
-          onClose={onClose}
-          initialValue={[null, null]}
-        />,
+        <div>
+          <WrappedDesktopDateRangePicker
+            onChange={onChange}
+            onAccept={onAccept}
+            onClose={onClose}
+            initialValue={[null, null]}
+          />
+          <input id="test-id" />
+        </div>,
       );
 
       openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'start' });
 
       // Dismiss the picker
-      userEvent.mousePress(document.body);
-      clock.runToLast();
+      const input = document.getElementById('test-id')!;
+
+      act(() => {
+        fireEvent.mouseDown(input);
+        input.focus();
+        fireEvent.mouseUp(input);
+        clock.runToLast();
+      });
 
       expect(onChange.callCount).to.equal(0);
       expect(onAccept.callCount).to.equal(0);
@@ -709,21 +722,32 @@ describe('<DesktopDateRangePicker />', () => {
       ];
 
       render(
-        <WrappedDesktopDateRangePicker
-          onChange={onChange}
-          onAccept={onAccept}
-          onClose={onClose}
-          initialValue={initialValue}
-        />,
+        <div>
+          <WrappedDesktopDateRangePicker
+            onChange={onChange}
+            onAccept={onAccept}
+            onClose={onClose}
+            initialValue={initialValue}
+          />
+          <input id="test-id" />
+        </div>,
       );
 
       openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'start' });
 
       // Change the start date (already tested)
       userEvent.mousePress(getPickerDay('3'));
+      clock.runToLast();
 
       // Dismiss the picker
-      userEvent.mousePress(document.body);
+      const input = document.getElementById('test-id')!;
+
+      act(() => {
+        fireEvent.mouseDown(input);
+        input.focus();
+        fireEvent.mouseUp(input);
+      });
+
       clock.runToLast();
 
       expect(onChange.callCount).to.equal(1); // Start date change
@@ -774,7 +798,9 @@ describe('<DesktopDateRangePicker />', () => {
       openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'start' });
       expect(screen.getByRole('tooltip')).toBeVisible();
 
-      fireEvent.blur(screen.getAllByRole('textbox')[0]);
+      act(() => {
+        screen.getAllByRole('textbox')[0].blur();
+      });
       clock.runToLast();
 
       expect(onChange.callCount).to.equal(0);
@@ -805,8 +831,11 @@ describe('<DesktopDateRangePicker />', () => {
 
       // Change the start date (already tested)
       userEvent.mousePress(getPickerDay('3'));
+      clock.runToLast();
 
-      fireEvent.blur(screen.getAllByRole('textbox')[0]);
+      act(() => {
+        screen.getAllByRole('textbox')[1].blur();
+      });
       clock.runToLast();
 
       expect(onChange.callCount).to.equal(1); // Start date change

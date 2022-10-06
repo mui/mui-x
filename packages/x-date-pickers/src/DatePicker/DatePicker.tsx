@@ -15,13 +15,13 @@ import {
   MobileDatePickerSlotsComponentsProps,
 } from '../MobileDatePicker';
 
-export interface DatePickerSlotsComponent
-  extends MobileDatePickerSlotsComponent,
-    DesktopDatePickerSlotsComponent {}
+export interface DatePickerSlotsComponent<TDate>
+  extends MobileDatePickerSlotsComponent<TDate>,
+    DesktopDatePickerSlotsComponent<TDate> {}
 
-export interface DatePickerSlotsComponentsProps
-  extends MobileDatePickerSlotsComponentsProps,
-    DesktopDatePickerSlotsComponentsProps {}
+export interface DatePickerSlotsComponentsProps<TDate>
+  extends MobileDatePickerSlotsComponentsProps<TDate>,
+    DesktopDatePickerSlotsComponentsProps<TDate> {}
 
 export interface DatePickerProps<TDate>
   extends Omit<DesktopDatePickerProps<TDate>, 'components' | 'componentsProps'>,
@@ -36,12 +36,12 @@ export interface DatePickerProps<TDate>
    * Overrideable components.
    * @default {}
    */
-  components?: Partial<DatePickerSlotsComponent>;
+  components?: Partial<DatePickerSlotsComponent<TDate>>;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  componentsProps?: Partial<DatePickerSlotsComponentsProps>;
+  componentsProps?: Partial<DatePickerSlotsComponentsProps<TDate>>;
 }
 
 type DatePickerComponent = (<TDate>(
@@ -287,15 +287,6 @@ DatePicker.propTypes = {
    * @default typeof navigator !== 'undefined' && /(android)/i.test(navigator.userAgent)
    */
   reduceAnimations: PropTypes.bool,
-  /**
-   * Custom renderer for day. Check the [PickersDay](https://mui.com/x/api/date-pickers/pickers-day/) component.
-   * @template TDate
-   * @param {TDate} day The day to render.
-   * @param {Array<TDate | null>} selectedDays The days currently selected.
-   * @param {PickersDayProps<TDate>} pickersDayProps The props of the day to render.
-   * @returns {JSX.Element} The element representing the day.
-   */
-  renderDay: PropTypes.func,
   /**
    * The `renderInput` prop allows you to customize the rendered input.
    * The `props` argument of this render prop contains props of [TextField](https://mui.com/material-ui/api/text-field/#props) that you need to forward.

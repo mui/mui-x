@@ -76,7 +76,6 @@
       "type": { "name": "bool" },
       "default": "typeof navigator !== 'undefined' && /(android)/i.test(navigator.userAgent)"
     },
-    "renderDay": { "type": { "name": "func" } },
     "renderLoading": {
       "type": { "name": "func" },
       "default": "() => <span data-mui-test=\"loading-progress\">...</span>"
@@ -110,6 +109,7 @@
   },
   "slots": {
     "ActionBar": { "default": "PickersActionBar", "type": { "name": "elementType" } },
+    "Day": { "default": "PickersDay", "type": { "name": "elementType" } },
     "DesktopPaper": { "default": "PickersPopperPaper", "type": { "name": "elementType" } },
     "DesktopTransition": {
       "default": "Grow from @mui/material",
