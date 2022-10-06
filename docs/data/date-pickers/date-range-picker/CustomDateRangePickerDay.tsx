@@ -13,15 +13,22 @@ import { DateRange } from '@mui/x-date-pickers-pro/DateRangePicker';
 import { Dayjs } from 'dayjs';
 
 const DateRangePickerDay = styled(MuiDateRangePickerDay)(
-  ({ theme, isHighlighting, isStartOfHighlighting, isEndOfHighlighting }) => ({
-    ...(isHighlighting && {
-      borderRadius: 0,
-      backgroundColor: theme.palette.primary.main,
-      color: theme.palette.common.white,
-      '&:hover, &:focus': {
-        backgroundColor: theme.palette.primary.dark,
-      },
-    }),
+  ({
+    theme,
+    isHighlighting,
+    isStartOfHighlighting,
+    isEndOfHighlighting,
+    outsideCurrentMonth,
+  }) => ({
+    ...(!outsideCurrentMonth &&
+      isHighlighting && {
+        borderRadius: 0,
+        backgroundColor: theme.palette.primary.main,
+        color: theme.palette.common.white,
+        '&:hover, &:focus': {
+          backgroundColor: theme.palette.primary.dark,
+        },
+      }),
     ...(isStartOfHighlighting && {
       borderTopLeftRadius: '50%',
       borderBottomLeftRadius: '50%',

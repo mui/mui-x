@@ -3,7 +3,6 @@ import { GridEventListener } from '../../../models/events';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridFilterApi } from '../../../models/api/gridFilterApi';
-import { GridFeatureModeConstant } from '../../../models/gridFeatureMode';
 import { GridFilterItem } from '../../../models/gridFilterItem';
 import { GridGroupNode, GridRowId, GridRowModel } from '../../../models/gridRows';
 import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
@@ -79,9 +78,7 @@ export const useGridFilter = (
     apiRef.current.setState((state) => {
       const filterModel = gridFilterModelSelector(state, apiRef.current.instanceId);
       const isRowMatchingFilters =
-        props.filterMode === GridFeatureModeConstant.client
-          ? buildAggregatedFilterApplier(filterModel, apiRef)
-          : null;
+        props.filterMode === 'client' ? buildAggregatedFilterApplier(filterModel, apiRef) : null;
 
       const filteringResult = apiRef.current.unstable_applyStrategyProcessor('filtering', {
         isRowMatchingFilters,
@@ -344,7 +341,7 @@ export const useGridFilter = (
 
   const flatFilteringMethod = React.useCallback<GridStrategyProcessor<'filtering'>>(
     (params) => {
-      if (props.filterMode === GridFeatureModeConstant.client && params.isRowMatchingFilters) {
+      if (props.filterMode === 'client' && params.isRowMatchingFilters) {
         const tree = gridRowTreeSelector(apiRef);
         const rowIds = (tree[GRID_ROOT_GROUP_ID] as GridGroupNode).children;
         const filteredRowsLookup: Record<GridRowId, boolean> = {};

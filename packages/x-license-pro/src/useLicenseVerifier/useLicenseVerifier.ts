@@ -5,6 +5,7 @@ import {
   showExpiredLicenseError,
   showInvalidLicenseError,
   showNotFoundLicenseError,
+  showOutOfScopeLicenseError,
 } from '../utils/licenseErrorMessageUtils';
 import { LicenseStatus } from '../utils/licenseStatus';
 import { LicenseScope } from '../utils/licenseScope';
@@ -47,6 +48,8 @@ export function useLicenseVerifier(
 
     if (licenseStatus === LicenseStatus.Invalid) {
       showInvalidLicenseError();
+    } else if (licenseStatus === LicenseStatus.OutOfScope) {
+      showOutOfScopeLicenseError();
     } else if (licenseStatus === LicenseStatus.NotFound) {
       showNotFoundLicenseError({ plan, packageName: `@mui/${packageName}` });
     } else if (licenseStatus === LicenseStatus.Expired) {
