@@ -3,6 +3,36 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 5.17.6
+
+_Oct 6, 2022_
+
+We'd like to offer a big thanks to the 7 contributors who made this release possible. Here are some highlights ✨:
+
+- 🌍 Add Japanese (ja-JP) locale to pickers (#6365) @sho918
+- 🎁 Improve support for theme augmentation in the DataGrid (#6406) @cherniavskii
+- 🐞 Bugfixes
+
+### `@mui/x-data-grid@v5.17.6` / `@mui/x-data-grid-pro@v5.17.6` / `@mui/x-data-grid-premium@v5.17.6`
+
+#### Changes
+
+- [DataGrid] Add missing `valueOptions` (#6400) @DanailH
+- [DataGrid] Don't start edit mode when pressing <kbd>Shift</kbd> + <kbd>Space</kbd> (#6380) @m4theushw
+- [DataGrid] Pass generics to the components in the theme augmentation (#6406) @cherniavskii
+
+### `@mui/x-date-pickers@v5.0.4` / `@mui/x-date-pickers-pro@v5.0.4`
+
+#### Changes
+
+- [l10n] Add Japanese (ja-JP) locale to pickers (#6365) (#6382) @sho918
+- [pickers] Prevent `CalendarPicker` getting focus when `autoFocus=false` (#6304) (#6362) @alexfauquette
+- [pickers] Fix git repository location @oliviertassinari
+
+### Docs
+
+- [docs] Fix customized day rendering demo style (#6342) @Ambrish-git
+
 ## 5.17.5
 
 _Sep 29, 2022_
