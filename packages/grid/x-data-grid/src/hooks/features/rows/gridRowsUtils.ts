@@ -13,7 +13,7 @@ import {
   GridTreeNode,
 } from '../../../models';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
-import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
+import { GridApiCommunity, GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import {
   GridRowsFullUpdate,
   GridRowsInternalCache,
@@ -127,11 +127,11 @@ export const getRowsStateFromCache = ({
   previousTree,
   previousTreeDepths,
 }: Pick<GridRowTreeCreationParams, 'previousTree' | 'previousTreeDepths'> & {
-  apiRef: React.MutableRefObject<GridApiCommunity>;
+  apiRef: React.MutableRefObject<GridPrivateApiCommunity>;
   rowCountProp: number | undefined;
   loadingProp: boolean | undefined;
 }): GridRowsState => {
-  const cache = apiRef.current.unstable_caches.rows;
+  const cache = apiRef.current.caches.rows;
 
   // 1. Apply the "rowTreeCreation" family processing.
   const {
@@ -157,7 +157,7 @@ export const getRowsStateFromCache = ({
   });
 
   // 3. Reset the cache updates
-  apiRef.current.unstable_caches.rows.updates = {
+  apiRef.current.caches.rows.updates = {
     type: 'partial',
     actions: {
       insert: [],

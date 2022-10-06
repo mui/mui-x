@@ -6,7 +6,7 @@ import {
 } from '@mui/x-data-grid-pro';
 import { GridStateInitializer } from '@mui/x-data-grid-pro/internals';
 import { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
-import { GridApiPremium, GridPrivateApiPremium } from '../../../models/gridApiPremium';
+import { GridPrivateApiPremium } from '../../../models/gridApiPremium';
 import { gridAggregationModelSelector } from './gridAggregationSelectors';
 import { GridAggregationApi } from './gridAggregationInterfaces';
 import {
@@ -18,9 +18,9 @@ import { createAggregationLookup } from './createAggregationLookup';
 
 export const aggregationStateInitializer: GridStateInitializer<
   Pick<DataGridPremiumProcessedProps, 'aggregationModel' | 'initialState'>,
-  GridApiPremium
+  GridPrivateApiPremium
 > = (state, props, apiRef) => {
-  apiRef.current.unstable_caches.aggregation = {
+  apiRef.current.caches.aggregation = {
     rulesOnLastColumnHydration: {},
     rulesOnLastRowHydration: {},
   };
@@ -99,7 +99,7 @@ export const useGridAggregation = (
    */
   const checkAggregationRulesDiff = React.useCallback(() => {
     const { rulesOnLastRowHydration, rulesOnLastColumnHydration } =
-      apiRef.current.unstable_caches.aggregation;
+      apiRef.current.caches.aggregation;
 
     const aggregationRules = props.disableAggregation
       ? {}

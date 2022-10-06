@@ -62,6 +62,10 @@ function ApiRefPrivateMethods() {
     apiRef.current.updateControlState();
     // @ts-expect-error Property 'registerControlState' does not exist on type 'GridApiPro'
     apiRef.current.registerControlState();
+    // @ts-expect-error Property 'caches' does not exist on type 'GridApiPro'
+    apiRef.current.caches;
+    // @ts-expect-error Property 'eventManager' does not exist on type 'GridApiPro'
+    apiRef.current.eventManager;
   });
 
   return null;

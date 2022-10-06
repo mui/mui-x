@@ -36,10 +36,10 @@ import {
   getCellGroupingCriteria,
   getGroupingRules,
 } from './gridRowGroupingUtils';
-import { GridApiPremium } from '../../../models/gridApiPremium';
+import { GridPrivateApiPremium } from '../../../models/gridApiPremium';
 
 export const useGridRowGroupingPreProcessors = (
-  apiRef: React.MutableRefObject<GridApiPremium>,
+  apiRef: React.MutableRefObject<GridPrivateApiPremium>,
   props: Pick<
     DataGridPremiumProcessedProps,
     | 'disableRowGrouping'
@@ -144,7 +144,7 @@ export const useGridRowGroupingPreProcessors = (
         sanitizedRowGroupingModel,
         columnsLookup,
       });
-      apiRef.current.unstable_caches.rowGrouping.rulesOnLastRowTreeCreation = groupingRules;
+      apiRef.current.caches.rowGrouping.rulesOnLastRowTreeCreation = groupingRules;
 
       const getRowTreeBuilderNode = (rowId: GridRowId) => {
         const row = params.dataRowIdToModelLookup[rowId];

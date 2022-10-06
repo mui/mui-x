@@ -42,7 +42,7 @@ export const rowPinningStateInitializer: GridStateInitializer<
     return state;
   }
 
-  apiRef.current.unstable_caches.pinnedRows = createPinnedRowsInternalCache(
+  apiRef.current.caches.pinnedRows = createPinnedRowsInternalCache(
     props.pinnedRows,
     props.getRowId,
   );
@@ -69,7 +69,7 @@ export const useGridRowPinning = (
         return;
       }
 
-      apiRef.current.unstable_caches.pinnedRows = createPinnedRowsInternalCache(
+      apiRef.current.caches.pinnedRows = createPinnedRowsInternalCache(
         newPinnedRows,
         props.getRowId,
       );

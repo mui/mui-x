@@ -37,7 +37,7 @@ const Divider = () => <MuiDivider onClick={(event) => event.stopPropagation()} /
 export const rowGroupingStateInitializer: GridStateInitializer<
   Pick<DataGridPremiumProcessedProps, 'rowGroupingModel' | 'initialState'>
 > = (state, props, apiRef) => {
-  apiRef.current.unstable_caches.rowGrouping = {
+  apiRef.current.caches.rowGrouping = {
     rulesOnLastRowTreeCreation: [],
   };
 
@@ -258,7 +258,7 @@ export const useGridRowGrouping = (
   >(() => {
     const sanitizedRowGroupingModel = gridRowGroupingSanitizedModelSelector(apiRef);
     const rulesOnLastRowTreeCreation =
-      apiRef.current.unstable_caches.rowGrouping.rulesOnLastRowTreeCreation;
+      apiRef.current.caches.rowGrouping.rulesOnLastRowTreeCreation;
 
     const groupingRules = getGroupingRules({
       sanitizedRowGroupingModel,
@@ -266,7 +266,7 @@ export const useGridRowGrouping = (
     });
 
     if (!areGroupingRulesEqual(rulesOnLastRowTreeCreation, groupingRules)) {
-      apiRef.current.unstable_caches.rowGrouping.rulesOnLastRowTreeCreation = groupingRules;
+      apiRef.current.caches.rowGrouping.rulesOnLastRowTreeCreation = groupingRules;
       apiRef.current.unstable_requestPipeProcessorsApplication('hydrateColumns');
       setStrategyAvailability(apiRef, props.disableRowGrouping);
 

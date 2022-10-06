@@ -35,7 +35,7 @@ const Divider = () => <MuiDivider onClick={(event) => event.stopPropagation()} /
 export const columnPinningStateInitializer: GridStateInitializer<
   Pick<DataGridProProcessedProps, 'pinnedColumns' | 'initialState' | 'disableColumnPinning'>
 > = (state, props, apiRef) => {
-  apiRef.current.unstable_caches.columnPinning = {
+  apiRef.current.caches.columnPinning = {
     orderedFieldsBeforePinningColumns: null,
   };
 
@@ -350,7 +350,7 @@ export const useGridColumnPinning = (
 
   const handleColumnOrderChange = React.useCallback<GridEventListener<'columnOrderChange'>>(
     (params) => {
-      if (!apiRef.current.unstable_caches.columnPinning.orderedFieldsBeforePinningColumns) {
+      if (!apiRef.current.caches.columnPinning.orderedFieldsBeforePinningColumns) {
         return;
       }
 
@@ -379,7 +379,7 @@ export const useGridColumnPinning = (
       const siblingField = latestColumnFields[targetIndex - delta];
 
       const newOrderedFieldsBeforePinningColumns = [
-        ...apiRef.current.unstable_caches.columnPinning.orderedFieldsBeforePinningColumns,
+        ...apiRef.current.caches.columnPinning.orderedFieldsBeforePinningColumns,
       ];
 
       // The index to start swapping fields
@@ -407,7 +407,7 @@ export const useGridColumnPinning = (
         j = i + delta;
       }
 
-      apiRef.current.unstable_caches.columnPinning.orderedFieldsBeforePinningColumns =
+      apiRef.current.caches.columnPinning.orderedFieldsBeforePinningColumns =
         newOrderedFieldsBeforePinningColumns;
     },
 
