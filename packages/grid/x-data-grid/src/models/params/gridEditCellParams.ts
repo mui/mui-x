@@ -65,6 +65,10 @@ export interface GridCellEditStartParams<V = any, R extends GridValidRowModel = 
    * Only applied if `props.experimentalFeatures.newEditingApi: true`.
    */
   reason?: GridCellEditStartReasons;
+  /**
+   * If the reason is related to a keyboard event, it contains which key was pressed.
+   */
+  key?: string;
 }
 
 enum GridCellEditStopReasons {
