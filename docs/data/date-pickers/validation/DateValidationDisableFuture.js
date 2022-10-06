@@ -10,9 +10,11 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { DateRangePicker } from '@mui/x-date-pickers-pro/DateRangePicker';
+import { TimePicker } from '@mui/x-date-pickers';
 
 const today = dayjs();
 const tomorrow = dayjs().add(1, 'day');
+const todayEndOfTheDay = today.endOf('day');
 
 const GridItem = ({ label, children, spacing = 1 }) => {
   return (
@@ -36,6 +38,8 @@ export default function DateValidationDisableFuture() {
 
   const [dateTimePickerValue, setDateTimePickerValue] = React.useState(tomorrow);
 
+  const [timePickerValue, setTimePickerValue] = React.useState(todayEndOfTheDay);
+
   const [dateRangePickerValue, setDateRangePickerValue] = React.useState([
     today,
     tomorrow,
@@ -57,6 +61,14 @@ export default function DateValidationDisableFuture() {
             disableFuture
             value={dateTimePickerValue}
             onChange={(newValue) => setDateTimePickerValue(newValue)}
+            renderInput={(params) => <TextField {...params} />}
+          />
+        </GridItem>
+        <GridItem label="TimePicker">
+          <TimePicker
+            disableFuture
+            value={timePickerValue}
+            onChange={(newValue) => setTimePickerValue(newValue)}
             renderInput={(params) => <TextField {...params} />}
           />
         </GridItem>

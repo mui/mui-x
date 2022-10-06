@@ -31,11 +31,9 @@ On the calendar and clock views—the invalid values are displayed as disabled t
 
 {{"demo": "ValidationBehaviorView.js", "defaultCodeOpen": false}}
 
-## Date validation
+## Past and future validation
 
-All the props described below are available on all the components supporting date edition.
-
-### Disable past or future dates
+All pickers support the past and future validation.
 
 The `disablePast` prop prevents the selection of all values before today.
 
@@ -50,6 +48,10 @@ The `disableFuture` prop prevents the selection of all values after today.
 - On the `month` and `year` views—all the values beginning after today won't be selectable.
 
 {{"demo": "DateValidationDisableFuture.js", "defaultCodeOpen": false}}
+
+## Date validation
+
+All the props described below are available on all the components supporting date edition.
 
 ### Set date boundaries
 
