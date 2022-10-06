@@ -19,7 +19,8 @@ let globalId = 0;
 const wrapPublicApi = <PrivateApi extends GridPrivateApiCommon, PublicApi extends GridApiCommon>(
   publicApi: PublicApi,
 ) => {
-  const privateOnlyApi = {} as GridPrivateOnlyApiCommon<PublicApi, PrivateApi>;
+  type PrivateOnlyApi = GridPrivateOnlyApiCommon<PublicApi, PrivateApi>;
+  const privateOnlyApi = {} as PrivateOnlyApi;
 
   privateOnlyApi.getPublicApi = () => publicApi;
 
@@ -27,36 +28,23 @@ const wrapPublicApi = <PrivateApi extends GridPrivateApiCommon, PublicApi extend
     Object.keys(methods).forEach((methodName) => {
       if (visibility === 'public') {
         if (!publicApi.hasOwnProperty(methodName)) {
-          // TODO: Fix
-          // @ts-expect-error
-          publicApi[methodName] = methods[methodName];
+          publicApi[methodName as keyof PublicApi] = (methods as any)[methodName];
         }
       } else if (!privateOnlyApi.hasOwnProperty(methodName)) {
-        // TODO: Fix
-        // @ts-expect-error
-        privateOnlyApi[methodName] = methods[methodName];
+        privateOnlyApi[methodName as keyof PrivateOnlyApi] = (methods as any)[methodName];
       }
     });
   };
 
   const handler: ProxyHandler<GridApiCommon> = {
     get: (obj, prop) => {
-      // TODO: Fix
-      // @ts-expect-error
-      if (obj[prop] !== undefined) {
-        // TODO: Fix
-        // @ts-expect-error
-        return obj[prop];
+      if (prop in obj) {
+        return obj[prop as keyof typeof obj];
       }
-
-      // TODO: Fix
-      // @ts-expect-error
-      return privateOnlyApi[prop];
+      return privateOnlyApi[prop as keyof PrivateOnlyApi];
     },
     set: (obj, prop, value) => {
-      // TODO: Fix
-      // @ts-expect-error
-      obj[prop] = value;
+      obj[prop as keyof typeof obj] = value;
       return true;
     },
   };
