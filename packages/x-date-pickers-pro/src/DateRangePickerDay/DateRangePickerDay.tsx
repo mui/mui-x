@@ -363,7 +363,7 @@ DateRangePickerDayRaw.propTypes = {
    */
   selected: PropTypes.bool,
   /**
-   * The days currently selected.
+   * Currently selected days.
    */
   selectedDays: PropTypes.array.isRequired,
   /**
