@@ -4,6 +4,7 @@
   aggregationFunctions={{
     ...GRID_AGGREGATION_FUNCTIONS,
     firstAlphabetical: firstAlphabeticalAggregation,
+    lastAlphabetical: lastAlphabeticalAggregation,
   }}
   initialState={{
     aggregation: {

@@ -1,4 +1,5 @@
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import dayjs from 'dayjs';
 import Badge from '@mui/material/Badge';
 import TextField from '@mui/material/TextField';
@@ -33,6 +34,35 @@ function fakeFetch(date, { signal }) {
 }
 
 const initialValue = dayjs('2022-04-07');
+
+function ServerDay(props) {
+  const { highlightedDays = [], day, outsideCurrentMonth, ...other } = props;
+
+  const isSelected =
+    !props.outsideCurrentMonth && highlightedDays.indexOf(props.day.date()) > 0;
+
+  return (
+    <Badge
+      key={props.day.toString()}
+      overlap="circular"
+      badgeContent={isSelected ? '🌚' : undefined}
+    >
+      <PickersDay {...other} outsideCurrentMonth={outsideCurrentMonth} day={day} />
+    </Badge>
+  );
+}
+
+ServerDay.propTypes = {
+  /**
+   * The date to show.
+   */
+  day: PropTypes.object.isRequired,
+  highlightedDays: PropTypes.arrayOf(PropTypes.number),
+  /**
+   * If `true`, day is outside of month and will be hidden.
+   */
+  outsideCurrentMonth: PropTypes.bool.isRequired,
+};
 
 export default function ServerRequestDatePicker() {
   const requestAbortController = React.useRef(null);
@@ -88,20 +118,13 @@ export default function ServerRequestDatePicker() {
         onMonthChange={handleMonthChange}
         renderInput={(params) => <TextField {...params} />}
         renderLoading={() => <CalendarPickerSkeleton />}
-        renderDay={(day, _value, DayComponentProps) => {
-          const isSelected =
-            !DayComponentProps.outsideCurrentMonth &&
-            highlightedDays.indexOf(day.date()) > 0;
-
-          return (
-            <Badge
-              key={day.toString()}
-              overlap="circular"
-              badgeContent={isSelected ? '🌚' : undefined}
-            >
-              <PickersDay {...DayComponentProps} />
-            </Badge>
-          );
+        components={{
+          Day: ServerDay,
+        }}
+        componentsProps={{
+          day: {
+            highlightedDays,
+          },
         }}
       />
     </LocalizationProvider>

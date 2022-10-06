@@ -86,7 +86,13 @@ export interface FieldSection {
   contentType: 'digit' | 'letter';
   formatValue: string;
   edited: boolean;
+  hasTrailingZeroes: boolean;
 }
+
+export type FieldBoundaries<TDate, TSection extends FieldSection> = Record<
+  MuiDateSectionName,
+  (currentDate: TDate | null, section: TSection) => { minimum: number; maximum: number }
+>;
 
 /**
  * Object used to access and update the active value.
@@ -110,12 +116,6 @@ interface FieldActiveDateManager<TValue, TDate> {
   getNewValueFromNewActiveDate: (
     newActiveDate: TDate | null,
   ) => Pick<UseFieldState<TValue, any>, 'value' | 'referenceValue'>;
-  /**
-   * Creates a value with an invalid active date (represented by a `null`) without losing any other date on the range fields.
-   * @template TValue
-   * @returns {TValue} The value containing the invalid date.
-   */
-  setActiveDateAsInvalid: () => TValue;
 }
 
 export type FieldSelectedSectionsIndexes = { startIndex: number; endIndex: number };
@@ -163,11 +163,13 @@ export interface FieldValueManager<TValue, TDate, TSection extends FieldSection,
   /**
    * Returns the manager of the active date.
    * @template TValue, TDate, TSection
+   * @param {MuiPickersAdapter<TDate>} utils The utils to manipulate the date.
    * @param {UseFieldState<TValue, TSection>} state The current state of the field.
    * @param {TSection} activeSection The active section.
    * @returns {FieldActiveDateManager<TValue, TDate>} The manager of the active date.
    */
   getActiveDateManager: (
+    utils: MuiPickerFieldAdapter<TDate>,
     state: UseFieldState<TValue, TSection>,
     activeSection: TSection,
   ) => FieldActiveDateManager<TValue, TDate>;
