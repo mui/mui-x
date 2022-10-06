@@ -38,6 +38,11 @@ export interface DateRangeCalendarProps<TDate>
    * @default {}
    */
   componentsProps?: Partial<DateRangeCalendarSlotsComponentsProps>;
+  /**
+   * If `true`, after selecting `start` date calendar will not automatically switch to the month of `end` date.
+   * @default false
+   */
+  disableAutoMonthSwitching?: boolean;
   value: DateRange<TDate>;
   /**
    * Default calendar month displayed when `value={[null, null]}`.

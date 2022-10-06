@@ -150,6 +150,7 @@ export const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDa
     renderDay = (_, dateRangeProps) => <DateRangePickerDay {...dateRangeProps} />,
     showDaysOutsideCurrentMonth,
     dayOfWeekFormatter,
+    disableAutoMonthSwitching,
     sx,
   } = props;
 
@@ -175,6 +176,42 @@ export const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDa
     reduceAnimations,
     shouldDisableDate: wrappedShouldDisableDate,
   });
+
+  const prevValue = React.useRef<DateRange<TDate> | null>(null);
+  React.useEffect(() => {
+    const date = currentDatePosition === 'start' ? value[0] : value[1];
+    if (!date || !utils.isValid(date)) {
+      return;
+    }
+
+    const prevDate =
+      currentDatePosition === 'start' ? prevValue.current?.[0] : prevValue.current?.[1];
+    prevValue.current = value;
+
+    // The current date did not change, this call comes either from a `currentlySelectingRangeEnd` change or a change in the other date.
+    // In both cases, we don't want to change the visible month(s).
+    if (disableAutoMonthSwitching && prevDate && utils.isEqual(prevDate, date)) {
+      return;
+    }
+
+    const displayingMonthRange = calendars - 1;
+    const currentMonthNumber = utils.getMonth(calendarState.currentMonth);
+    const requestedMonthNumber = utils.getMonth(date);
+
+    if (
+      !utils.isSameYear(calendarState.currentMonth, date) ||
+      requestedMonthNumber < currentMonthNumber ||
+      requestedMonthNumber > currentMonthNumber + displayingMonthRange
+    ) {
+      const newMonth =
+        currentDatePosition === 'start'
+          ? date
+          : // If need to focus end, scroll to the state when "end" is displaying in the last calendar
+            utils.addMonths(date, -displayingMonthRange);
+
+      changeMonth(newMonth);
+    }
+  }, [currentDatePosition, value]); // eslint-disable-line
 
   const handleSelectedDayChange = useEventCallback((newDate: TDate | null) => {
     const { nextSelection, newRange } = calculateRangeChange({
