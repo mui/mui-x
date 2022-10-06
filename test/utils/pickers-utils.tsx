@@ -163,8 +163,11 @@ export const withPickerControls =
   ) =>
   <DefaultProps extends Partial<Props>>(defaultProps: DefaultProps) => {
     return (
-      props: Omit<Props, 'value' | 'onChange' | keyof DefaultProps> &
-        Partial<DefaultProps> & {
+      props: Omit<
+        Props,
+        'value' | 'onChange' | Exclude<keyof DefaultProps, 'components' | 'componentsProps'>
+      > &
+        Partial<Omit<DefaultProps, 'components' | 'componentsProps'>> & {
           initialValue?: TValue;
           value?: TValue;
           onChange?: any;
