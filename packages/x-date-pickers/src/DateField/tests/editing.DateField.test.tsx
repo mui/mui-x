@@ -16,8 +16,14 @@ describe('<DateField /> - Editing', () => {
 
   const clickOnInput = (input: HTMLInputElement, cursorPosition: number) => {
     act(() => {
-      input.focus();
+      fireEvent.mouseDown(input);
+      if (document.activeElement !== input) {
+        input.focus();
+      }
+      fireEvent.mouseUp(input);
       input.setSelectionRange(cursorPosition, cursorPosition);
+      fireEvent.click(input);
+
       clock.runToLast();
     });
   };
