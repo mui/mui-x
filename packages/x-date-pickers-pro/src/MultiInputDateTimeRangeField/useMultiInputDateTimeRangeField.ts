@@ -1,7 +1,7 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import * as React from 'react';
 import { applyDefaultDate, useDefaultDates, useUtils } from '@mui/x-date-pickers/internals';
-import { dateTimeRangeFieldValueManager } from '../internal/hooks/valueManager/dateTimeRangeValidationManager';
+import { dateTimeRangeFieldValueManager } from '../internal/hooks/valueManager/dateTimeRangeValueManager';
 import { useMultiInputRangeField } from '../internal/hooks/useMultiInputRangeField';
 import {
   UseMultiInputDateTimeRangeFieldProps,
@@ -10,10 +10,10 @@ import {
 } from './MultiInputDateTimeRangeField.types';
 import { dateRangePickerValueManager } from '../DateRangePicker/shared';
 import {
-  DateRangeComponentValidationProps,
-  DateRangeValidationError,
-  validateDateRange,
-} from '../internal/hooks/validation/useDateRangeValidation';
+  DateTimeRangeComponentValidationProps,
+  DateTimeRangeValidationError,
+  validateDateTimeRange,
+} from '../internal/hooks/validation/useDateTimeRangeValidation';
 
 export const useDefaultizedDateTimeRangeFieldProps = <TDate, AdditionalProps extends {}>(
   props: UseMultiInputDateTimeRangeFieldProps<TDate>,
@@ -21,15 +21,19 @@ export const useDefaultizedDateTimeRangeFieldProps = <TDate, AdditionalProps ext
   const utils = useUtils<TDate>();
   const defaultDates = useDefaultDates<TDate>();
 
+  const ampm = props.ampm ?? utils.is12HourCycleInCurrentLocale();
+
   return {
     ...props,
     disablePast: props.disablePast ?? false,
     disableFuture: props.disableFuture ?? false,
-    format: props.format ?? utils.formats.keyboardDateTime,
+    format:
+      props.format ?? ampm ? utils.formats.keyboardDateTime12h : utils.formats.keyboardDateTime24h,
     minDate: applyDefaultDate(utils, props.minDateTime ?? props.minDate, defaultDates.minDate),
     maxDate: applyDefaultDate(utils, props.maxDateTime ?? props.maxDate, defaultDates.maxDate),
     minTime: props.minDateTime ?? props.minTime,
     maxTime: props.maxDateTime ?? props.maxTime,
+    disableIgnoringDatePartForTimeValidation: Boolean(props.minDateTime || props.maxDateTime),
   } as any;
 };
 
@@ -40,13 +44,13 @@ export const useMultiInputDateTimeRangeField = <TDate, TChildProps extends {}>(
 
   return useMultiInputRangeField<
     TDate,
-    DateRangeValidationError,
-    DateRangeComponentValidationProps<TDate>,
+    DateTimeRangeValidationError,
+    DateTimeRangeComponentValidationProps<TDate>,
     UseMultiInputDateTimeRangeFieldDefaultizedProps<TDate> & TChildProps,
     TChildProps
   >(
     { ...params, sharedProps },
-    validateDateRange,
+    validateDateTimeRange,
     dateRangePickerValueManager,
     dateTimeRangeFieldValueManager,
   );

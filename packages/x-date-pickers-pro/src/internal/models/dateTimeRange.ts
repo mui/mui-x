@@ -25,9 +25,14 @@ export interface UseDateTimeRangeFieldProps<TDate>
    * Maximal selectable moment of time with binding to date, to set max time in each day use `maxTime`.
    */
   maxDateTime?: TDate;
+  /**
+   * 12h/24h view for hour selection clock.
+   * @default `utils.is12HourCycleInCurrentLocale()`
+   */
+  ampm?: boolean;
 }
 
 export type UseDateTimeRangeFieldDefaultizedProps<TDate> = DefaultizedProps<
   UseDateTimeRangeFieldProps<TDate>,
-  keyof BaseDateValidationProps<TDate> | 'format'
+  keyof BaseDateValidationProps<TDate> | 'format' | 'disableIgnoringDatePartForTimeValidation'
 >;
