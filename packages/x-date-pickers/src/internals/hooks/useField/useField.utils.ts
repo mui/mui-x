@@ -304,7 +304,7 @@ const getSectionPlaceholder = <TDate>(
       return localeText.fieldSecondsPlaceholder();
     }
 
-    case 'am-pm': {
+    case 'meridiem': {
       return localeText.fieldMeridiemPlaceholder();
     }
 
