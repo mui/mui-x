@@ -19,8 +19,8 @@ const formatTokenMap: MuiFormatTokenMap = {
   mm: 'minute',
   s: 'second',
   ss: 'second',
-  A: 'am-pm',
-  a: 'am-pm',
+  A: 'meridiem',
+  a: 'meridiem',
 };
 
 export class AdapterDayjs extends BaseAdapterDayjs implements MuiPickerFieldAdapter<Dayjs> {

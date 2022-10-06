@@ -82,13 +82,14 @@ You can customize the rendering of the input with the `renderInput` prop. 请确
 
 ## 自定义日期渲染
 
-你可以通过 `renderDay` 函数属性来自定义所显示的日期。 You can take advantage of the [PickersDay](/x/api/date-pickers/pickers-day/) component.
+The displayed days are customizable with the `Day` component slot.
+You can take advantage of the [PickersDay](/x/api/date-pickers/pickers-day/) component.
 
 {{"demo": "CustomDay.js"}}
 
 ## 动态数据
 
-有些时候可能有在日历中显示额外信息的需求。 下面是一个使用 `onMonthChange`、`loading` 和 `renderDay` 属性来预取并显示服务器端数据的例子。
+有些时候可能有在日历中显示额外信息的需求。 下面是一个使用 `onMonthChange`、`loading` 和 `components.Day` 属性来预取并显示服务器端数据的例子。
 
 {{"demo": "ServerRequestDatePicker.js"}}
 

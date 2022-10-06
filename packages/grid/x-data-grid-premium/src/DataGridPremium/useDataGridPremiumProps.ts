@@ -56,8 +56,6 @@ export const useDataGridPremiumProps = (inProps: DataGridPremiumProps) => {
     () => ({
       ...DATA_GRID_PREMIUM_PROPS_DEFAULT_VALUES,
       ...themedProps,
-      disableAggregation:
-        themedProps.disableAggregation || !themedProps.experimentalFeatures?.aggregation,
       localeText,
       components,
       signature: 'DataGridPremium',

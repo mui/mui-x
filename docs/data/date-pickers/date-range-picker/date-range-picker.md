@@ -64,7 +64,7 @@ If you need to render custom inputs make sure to spread `ref` and `inputProps` c
 
 ## Customized day rendering
 
-The displayed days are customizable with the `renderDay` function prop.
+The displayed days are customizable with the `Day` component slot.
 You can take advantage of the internal [DateRangePickerDay](/x/api/date-pickers/date-range-picker-day/) component.
 
 {{"demo": "CustomDateRangePickerDay.js"}}

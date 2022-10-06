@@ -8,7 +8,13 @@ import { useControlled, unstable_useId as useId, useEventCallback } from '@mui/m
 import { useCalendarState } from './useCalendarState';
 import { useDefaultDates, useUtils } from '../internals/hooks/useUtils';
 import { PickersFadeTransitionGroup } from './PickersFadeTransitionGroup';
-import { DayCalendar, DayCalendarProps, ExportedDayCalendarProps } from './DayCalendar';
+import {
+  DayCalendar,
+  DayCalendarProps,
+  DayCalendarSlotsComponent,
+  DayCalendarSlotsComponentsProps,
+  ExportedDayCalendarProps,
+} from './DayCalendar';
 import { MonthCalendar, MonthCalendarProps } from '../MonthCalendar';
 import { YearCalendar, YearCalendarProps } from '../YearCalendar/YearCalendar';
 import { PickerOnChangeFn, useViews } from '../internals/hooks/useViews';
@@ -31,10 +37,13 @@ import {
 } from '../internals/hooks/validation/models';
 import { DefaultizedProps } from '../internals/models/helpers';
 
-export interface DateCalendarSlotsComponent extends PickersCalendarHeaderSlotsComponent {}
+export interface DateCalendarSlotsComponent<TDate>
+  extends PickersCalendarHeaderSlotsComponent,
+    DayCalendarSlotsComponent<TDate> {}
 
-export interface DateCalendarSlotsComponentsProps
-  extends PickersCalendarHeaderSlotsComponentsProps {}
+export interface DateCalendarSlotsComponentsProps<TDate>
+  extends PickersCalendarHeaderSlotsComponentsProps,
+    DayCalendarSlotsComponentsProps<TDate> {}
 
 export interface DateCalendarProps<TDate>
   extends ExportedDayCalendarProps<TDate>,
@@ -54,12 +63,12 @@ export interface DateCalendarProps<TDate>
    * Overrideable components.
    * @default {}
    */
-  components?: Partial<DateCalendarSlotsComponent>;
+  components?: Partial<DateCalendarSlotsComponent<TDate>>;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  componentsProps?: Partial<DateCalendarSlotsComponentsProps>;
+  componentsProps?: Partial<DateCalendarSlotsComponentsProps<TDate>>;
   value: TDate | null;
   /**
    * Default calendar month displayed when `value={null}`.
@@ -253,7 +262,6 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate>(
     onFocusedViewChange,
     showDaysOutsideCurrentMonth,
     dayOfWeekFormatter,
-    renderDay,
     components,
     componentsProps,
     loading,
@@ -505,7 +513,7 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate>(
           )}
 
           {openView === 'day' && (
-            <DayCalendar
+            <DayCalendar<TDate>
               {...calendarState}
               {...baseDateValidationProps}
               {...commonViewProps}
@@ -523,7 +531,8 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate>(
               gridLabelId={gridLabelId}
               showDaysOutsideCurrentMonth={showDaysOutsideCurrentMonth}
               dayOfWeekFormatter={dayOfWeekFormatter}
-              renderDay={renderDay}
+              components={components}
+              componentsProps={componentsProps}
               loading={loading}
               renderLoading={renderLoading}
             />
@@ -636,15 +645,6 @@ DateCalendar.propTypes = {
    * @default typeof navigator !== 'undefined' && /(android)/i.test(navigator.userAgent)
    */
   reduceAnimations: PropTypes.bool,
-  /**
-   * Custom renderer for day. Check the [PickersDay](https://mui.com/x/api/date-pickers/pickers-day/) component.
-   * @template TDate
-   * @param {TDate} day The day to render.
-   * @param {Array<TDate | null>} selectedDays The days currently selected.
-   * @param {PickersDayProps<TDate>} pickersDayProps The props of the day to render.
-   * @returns {JSX.Element} The element representing the day.
-   */
-  renderDay: PropTypes.func,
   /**
    * Component displaying when passed `loading` true.
    * @returns {React.ReactNode} The node to render when loading.

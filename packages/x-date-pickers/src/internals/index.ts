@@ -112,7 +112,11 @@ export type {
 } from '../DateCalendar/PickersCalendarHeader';
 
 export { DayCalendar } from '../DateCalendar/DayCalendar';
-export type { DayCalendarProps } from '../DateCalendar/DayCalendar';
+export type {
+  DayCalendarProps,
+  DayCalendarSlotsComponent,
+  DayCalendarSlotsComponentsProps,
+} from '../DateCalendar/DayCalendar';
 
 export { areDayPropsEqual } from '../PickersDay/PickersDay';
 
