@@ -1,4 +1,5 @@
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import dayjs from 'dayjs';
 import isBetweenPlugin from 'dayjs/plugin/isBetween';
 import { styled } from '@mui/material/styles';
@@ -32,31 +33,44 @@ const CustomPickersDay = styled(PickersDay, {
   }),
 }));
 
+function Day(props) {
+  const { day, selectedDays } = props;
+
+  if (selectedDays.length === 0) {
+    return <PickersDay {...props} />;
+  }
+
+  const start = selectedDays[0].startOf('week');
+  const end = selectedDays[0].endOf('week');
+
+  const dayIsBetween = day.isBetween(start, end, null, '[]');
+  const isFirstDay = day.isSame(start, 'day');
+  const isLastDay = day.isSame(end, 'day');
+
+  return (
+    <CustomPickersDay
+      {...props}
+      disableMargin
+      dayIsBetween={dayIsBetween}
+      isFirstDay={isFirstDay}
+      isLastDay={isLastDay}
+    />
+  );
+}
+
+Day.propTypes = {
+  /**
+   * The date to show.
+   */
+  day: PropTypes.object.isRequired,
+  /**
+   * Currently selected days.
+   */
+  selectedDays: PropTypes.arrayOf(PropTypes.object).isRequired,
+};
+
 export default function CustomDay() {
   const [value, setValue] = React.useState(dayjs('2022-04-07'));
-
-  const renderWeekPickerDay = (date, selectedDates, pickersDayProps) => {
-    if (!value) {
-      return <PickersDay {...pickersDayProps} />;
-    }
-
-    const start = value.startOf('week');
-    const end = value.endOf('week');
-
-    const dayIsBetween = date.isBetween(start, end, null, '[]');
-    const isFirstDay = date.isSame(start, 'day');
-    const isLastDay = date.isSame(end, 'day');
-
-    return (
-      <CustomPickersDay
-        {...pickersDayProps}
-        disableMargin
-        dayIsBetween={dayIsBetween}
-        isFirstDay={isFirstDay}
-        isLastDay={isLastDay}
-      />
-    );
-  };
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -67,7 +81,9 @@ export default function CustomDay() {
         onChange={(newValue) => {
           setValue(newValue);
         }}
-        renderDay={renderWeekPickerDay}
+        components={{
+          Day,
+        }}
         renderInput={(params) => <TextField {...params} />}
         inputFormat="'Week of' MMM d"
       />
