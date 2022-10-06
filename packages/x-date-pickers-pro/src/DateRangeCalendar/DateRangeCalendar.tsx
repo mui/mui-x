@@ -1,7 +1,7 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import useEventCallback from '@mui/utils/useEventCallback';
-import {resolveComponentProps} from "@mui/base/utils";
+import { resolveComponentProps } from '@mui/base/utils';
 import { styled, useThemeProps } from '@mui/material/styles';
 import { unstable_composeClasses as composeClasses } from '@mui/material';
 import { Watermark } from '@mui/x-license-pro';
@@ -9,7 +9,9 @@ import {
   applyDefaultDate,
   BaseDateValidationProps,
   DAY_MARGIN,
-  DayPicker, DayPickerSlotsComponent, DayPickerSlotsComponentsProps,
+  DayPicker,
+  DayPickerSlotsComponent,
+  DayPickerSlotsComponentsProps,
   defaultReduceAnimations,
   PickersArrowSwitcher,
   PickersCalendarHeader,
@@ -298,9 +300,7 @@ export const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDa
 
       return {
         isPreviewing: isMobile ? false : isWithinRange(utils, day, previewingRange),
-        isStartOfPreviewing: isMobile
-            ? false
-            : isStartOfRange(utils, day, previewingRange),
+        isStartOfPreviewing: isMobile ? false : isStartOfRange(utils, day, previewingRange),
         isEndOfPreviewing: isMobile ? false : isEndOfRange(utils, day, previewingRange),
         isHighlighting: isWithinRange(utils, day, value),
         isStartOfHighlighting: isStartOfRange(utils, day, value),
