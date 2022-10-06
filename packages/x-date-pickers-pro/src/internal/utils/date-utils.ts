@@ -19,11 +19,13 @@ export const isWithinDayRange = <TDate>(
   range: DateRange<TDate> | null,
 ) => {
   if (!isRangeValid(utils, range)) {
-    return false
+    return false;
   }
 
-  const cleanRange = [utils.startOfDay(range[0]), utils.endOfDay(range[1])] as NonEmptyDateRange<TDate>
-
+  const cleanRange = [
+    utils.startOfDay(range[0]),
+    utils.endOfDay(range[1]),
+  ] as NonEmptyDateRange<TDate>;
   return utils.isWithinRange(day, cleanRange);
 };
 

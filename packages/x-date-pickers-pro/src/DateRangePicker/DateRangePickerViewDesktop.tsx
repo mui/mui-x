@@ -20,7 +20,7 @@ import {
 import { calculateRangePreview } from './date-range-manager';
 import { DateRange } from '../internal/models';
 import { DateRangePickerDay, DateRangePickerDayProps } from '../DateRangePickerDay';
-import { isWithinRange, isStartOfRange, isEndOfRange } from '../internal/utils/date-utils';
+import { isWithinDayRange, isStartOfRange, isEndOfRange } from '../internal/utils/date-utils';
 import { doNothing } from '../internal/utils/utils';
 import {
   DateRangePickerViewDesktopClasses,
@@ -187,7 +187,7 @@ export function DateRangePickerViewDesktop<TDate>(inProps: DateRangePickerViewDe
   );
 
   const handlePreviewDayChange = (newPreviewRequest: TDate) => {
-    if (!isWithinRange(utils, newPreviewRequest, value)) {
+    if (!isWithinDayRange(utils, newPreviewRequest, value)) {
       setRangePreviewDay(newPreviewRequest);
     } else {
       setRangePreviewDay(null);
@@ -244,10 +244,10 @@ export function DateRangePickerViewDesktop<TDate>(inProps: DateRangePickerViewDe
               TransitionProps={CalendarTransitionProps}
               renderDay={(day, __, DayProps) =>
                 renderDay(day, {
-                  isPreviewing: isWithinRange(utils, day, previewingRange),
+                  isPreviewing: isWithinDayRange(utils, day, previewingRange),
                   isStartOfPreviewing: isStartOfRange(utils, day, previewingRange),
                   isEndOfPreviewing: isEndOfRange(utils, day, previewingRange),
-                  isHighlighting: isWithinRange(utils, day, value),
+                  isHighlighting: isWithinDayRange(utils, day, value),
                   isStartOfHighlighting: isStartOfRange(utils, day, value),
                   isEndOfHighlighting: isEndOfRange(utils, day, value),
                   onMouseEnter: () => handlePreviewDayChange(day),
