@@ -107,6 +107,7 @@ export { clamp, isDeepEqual, isNumber, isFunction } from '../utils/utils';
 export { buildWarning } from '../utils/warning';
 export { exportAs } from '../utils/exportAs';
 export type { GridPrivateOnlyApiCommon } from '../models/api/gridApiCommon';
+export { useGridPrivateApiContext } from '../hooks/utils/useGridPrivateApiContext';
 
 export type { GridApiCommunity } from '../models/api/gridApiCommunity';
 export type { GridApiCaches } from '../models/gridApiCaches';
