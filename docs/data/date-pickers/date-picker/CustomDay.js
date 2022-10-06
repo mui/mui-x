@@ -64,7 +64,7 @@ Day.propTypes = {
    */
   day: PropTypes.object.isRequired,
   /**
-   * The days currently selected.
+   * Currently selected days.
    */
   selectedDays: PropTypes.arrayOf(PropTypes.object).isRequired,
 };
