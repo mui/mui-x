@@ -79,6 +79,6 @@ export const useTimeField = <TDate, TChildProps extends {}>({
     valueManager: timePickerValueManager,
     fieldValueManager: timeFieldValueManager,
     validator: validateTime,
-    supportedDateSections: ['hour', 'minute', 'second', 'am-pm'],
+    supportedDateSections: ['hour', 'minute', 'second', 'meridiem'],
   });
 };

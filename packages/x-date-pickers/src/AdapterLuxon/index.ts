@@ -20,7 +20,7 @@ const formatTokenMap: MuiFormatTokenMap = {
   h: 'hour',
   hh: 'hour',
 
-  a: 'am-pm',
+  a: 'meridiem',
 
   d: 'day',
   dd: 'day',
