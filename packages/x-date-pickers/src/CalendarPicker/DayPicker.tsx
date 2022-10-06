@@ -3,7 +3,6 @@ import Typography from '@mui/material/Typography';
 import { SlotComponentProps } from '@mui/base';
 import { useSlotProps } from '@mui/base/utils';
 import { styled, useTheme, useThemeProps } from '@mui/material/styles';
-import ButtonBase from '@mui/material/ButtonBase';
 import { unstable_composeClasses as composeClasses } from '@mui/material';
 import clsx from 'clsx';
 import { PickersDay, PickersDayProps } from '../PickersDay/PickersDay';
@@ -27,11 +26,16 @@ import { findClosestEnabledDate } from '../internals/utils/date-utils';
 import { DayPickerClasses, getDayPickerUtilityClass } from './dayPickerClasses';
 
 export interface DayPickerSlotsComponent<TDate> {
+  /**
+   * Custom component for day.
+   * Check the [PickersDay](https://mui.com/x/api/date-pickers/pickers-day/) component.
+   * @default PickersDay
+   */
   Day?: React.ElementType<PickersDayProps<TDate>>;
 }
 
 export interface DayPickerSlotsComponentsProps<TDate> {
-  day?: SlotComponentProps<typeof ButtonBase, undefined, DayPickerProps<TDate> & { day: TDate }>;
+  day?: SlotComponentProps<typeof PickersDay, {}, DayPickerProps<TDate> & { day: TDate }>;
 }
 
 export interface ExportedDayPickerProps<TDate>

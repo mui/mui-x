@@ -43,9 +43,7 @@ export default function CustomDateRangePickerDay() {
         label="date range"
         value={value}
         onChange={(newValue) => setValue(newValue)}
-        components={{
-          Day: DateRangePickerDay,
-        }}
+        components={{ Day: DateRangePickerDay }}
         renderInput={(startProps, endProps) => (
           <React.Fragment>
             <TextField {...startProps} />

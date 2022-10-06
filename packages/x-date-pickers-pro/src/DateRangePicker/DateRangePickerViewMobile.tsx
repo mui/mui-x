@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { resolveComponentProps } from '@mui/base/utils';
+import { resolveComponentProps, SlotComponentProps } from '@mui/base/utils';
 import {
   PickersCalendarHeader,
   ExportedCalendarHeaderProps,
@@ -21,12 +21,19 @@ import { isWithinRange, isStartOfRange, isEndOfRange } from '../internal/utils/d
 export interface DateRangePickerViewMobileSlotsComponent<TDate>
   extends PickersCalendarHeaderSlotsComponent,
     Omit<DayPickerSlotsComponent<TDate>, 'Day'> {
+  /**
+   * Custom component for day in range pickers.
+   * Check the [DateRangePickersDay](https://mui.com/x/api/date-pickers/date-range-picker-day/) component.
+   * @default DateRangePickersDay
+   */
   Day?: React.ElementType<DateRangePickerDayProps<TDate>>;
 }
 
 export interface DateRangePickerViewMobileSlotsComponentsProps<TDate>
   extends PickersCalendarHeaderSlotsComponentsProps,
-    DayPickerSlotsComponentsProps<TDate> {}
+    Omit<DayPickerSlotsComponentsProps<TDate>, 'day'> {
+  day?: SlotComponentProps<typeof DateRangePickerDay, {}, DayPickerProps<TDate> & { day: TDate }>;
+}
 
 interface DesktopDateRangeCalendarProps<TDate>
   extends Omit<
@@ -80,7 +87,7 @@ export function DateRangePickerViewMobile<TDate>(props: DesktopDateRangeCalendar
   const minDateWithDisabled = (disabled && start) || minDate;
   const maxDateWithDisabled = (disabled && end) || maxDate;
 
-  const componentsFromDayPicker = {
+  const componentsForDayPicker = {
     Day: DateRangePickerDay,
     ...components,
   } as Partial<DayPickerSlotsComponent<TDate>>;
@@ -124,7 +131,7 @@ export function DateRangePickerViewMobile<TDate>(props: DesktopDateRangeCalendar
         selectedDays={value}
         onSelectedDaysChange={onSelectedDaysChange}
         onFocusedDayChange={doNothing}
-        components={componentsFromDayPicker}
+        components={componentsForDayPicker}
         componentsProps={componentsPropsForDayPicker}
       />
     </React.Fragment>

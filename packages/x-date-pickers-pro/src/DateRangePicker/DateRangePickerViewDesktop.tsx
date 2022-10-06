@@ -2,7 +2,7 @@ import * as React from 'react';
 import clsx from 'clsx';
 import { styled, useThemeProps } from '@mui/material/styles';
 import { unstable_composeClasses as composeClasses } from '@mui/material';
-import { resolveComponentProps } from '@mui/base/utils';
+import { resolveComponentProps, SlotComponentProps } from '@mui/base/utils';
 import {
   useDefaultDates,
   useUtils,
@@ -51,12 +51,19 @@ export interface ExportedDateRangePickerViewDesktopProps {
 export interface DesktopDateRangeCalendarSlotsComponent<TDate>
   extends PickersArrowSwitcherSlotsComponent,
     Omit<DayPickerSlotsComponent<TDate>, 'Day'> {
+  /**
+   * Custom component for day in range pickers.
+   * Check the [DateRangePickersDay](https://mui.com/x/api/date-pickers/date-range-picker-day/) component.
+   * @default DateRangePickersDay
+   */
   Day?: React.ElementType<DateRangePickerDayProps<TDate>>;
 }
 
 export interface DesktopDateRangeCalendarSlotsComponentsProps<TDate>
   extends PickersArrowSwitcherSlotsComponentsProps,
-    DayPickerSlotsComponentsProps<TDate> {}
+    Omit<DayPickerSlotsComponentsProps<TDate>, 'day'> {
+  day?: SlotComponentProps<typeof DateRangePickerDay, {}, DayPickerProps<TDate> & { day: TDate }>;
+}
 
 export interface DateRangePickerViewDesktopProps<TDate>
   extends ExportedDateRangePickerViewDesktopProps,
@@ -207,7 +214,7 @@ export function DateRangePickerViewDesktop<TDate>(inProps: DateRangePickerViewDe
     changeMonth(utils.getPreviousMonth(currentMonth));
   }, [changeMonth, currentMonth, utils]);
 
-  const componentsFromDayPicker = {
+  const componentsForDayPicker = {
     Day: DateRangePickerDay,
     ...components,
   } as Partial<DayPickerSlotsComponent<TDate>>;
@@ -263,7 +270,7 @@ export function DateRangePickerViewDesktop<TDate>(inProps: DateRangePickerViewDe
               onSelectedDaysChange={handleSelectedDayChange}
               currentMonth={monthOnIteration}
               TransitionProps={CalendarTransitionProps}
-              components={componentsFromDayPicker}
+              components={componentsForDayPicker}
               componentsProps={componentsPropsForDayPicker}
             />
           </DateRangePickerViewDesktopContainer>
