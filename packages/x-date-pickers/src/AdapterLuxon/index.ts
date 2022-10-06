@@ -9,36 +9,33 @@ const luxonVersionWarning = buildWarning([
 ]);
 
 const formatTokenMap: MuiFormatTokenMap = {
-  // seconds
   s: 'second',
   ss: 'second',
-  // minutes
+
   m: 'minute',
   mm: 'minute',
-  // hours
+
   H: 'hour',
   HH: 'hour',
   h: 'hour',
   hh: 'hour',
-  // meridiems
-  a: 'am-pm',
-  // dates
+
+  a: 'meridiem',
+
   d: 'day',
   dd: 'day',
 
   L: 'month',
   LL: 'month',
-  LLL: 'month',
-  LLLL: 'month',
-  LLLLL: 'month',
-  // months - format
+  LLL: { sectionName: 'month', contentType: 'letter' },
+  LLLL: { sectionName: 'month', contentType: 'letter' },
+  LLLLL: { sectionName: 'month', contentType: 'letter' },
   M: 'month',
   MM: 'month',
-  MMM: 'month',
-  MMMM: 'month',
-  MMMMM: 'month',
+  MMM: { sectionName: 'month', contentType: 'letter' },
+  MMMM: { sectionName: 'month', contentType: 'letter' },
+  MMMMM: { sectionName: 'month', contentType: 'letter' },
 
-  // years
   y: 'year',
   yy: 'year',
   yyyy: 'year',

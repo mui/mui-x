@@ -21,6 +21,7 @@ export interface UseFieldParams<
     InferError<TInternalProps>,
     UseFieldValidationProps<TValue, TInternalProps>
   >;
+  supportedDateSections: MuiDateSectionName[];
 }
 
 export interface UseFieldInternalProps<TValue, TError> {
@@ -31,7 +32,7 @@ export interface UseFieldInternalProps<TValue, TError> {
    * The default value. Use when the component is not controlled.
    */
   defaultValue?: TValue;
-  format?: string;
+  format: string;
   /**
    * It prevents the user from changing the value of the field
    * (not from interacting with the field).
@@ -57,6 +58,7 @@ export interface UseFieldInternalProps<TValue, TError> {
 
 export interface UseFieldForwardedProps {
   onKeyDown?: React.KeyboardEventHandler;
+  onMouseUp?: React.MouseEventHandler;
   onClick?: () => void;
   onFocus?: () => void;
   onBlur?: () => void;
@@ -66,10 +68,11 @@ export type UseFieldResponse<TForwardedProps extends UseFieldForwardedProps> = O
   TForwardedProps,
   keyof UseFieldForwardedProps
 > &
-  Required<UseFieldForwardedProps> & {
+  Required<UseFieldForwardedProps> &
+  Pick<React.HTMLAttributes<HTMLInputElement>, 'autoCorrect' | 'inputMode'> & {
     ref: React.Ref<HTMLInputElement>;
     value: string;
-    onChange: () => void;
+    onChange: React.ChangeEventHandler<HTMLInputElement>;
     error: boolean;
   };
 
@@ -80,9 +83,16 @@ export interface FieldSection {
   emptyValue: string;
   separator: string | null;
   dateSectionName: MuiDateSectionName;
+  contentType: 'digit' | 'letter';
   formatValue: string;
   edited: boolean;
+  hasTrailingZeroes: boolean;
 }
+
+export type FieldBoundaries<TDate, TSection extends FieldSection> = Record<
+  MuiDateSectionName,
+  (currentDate: TDate | null, section: TSection) => { minimum: number; maximum: number }
+>;
 
 /**
  * Object used to access and update the active value.
@@ -106,12 +116,6 @@ interface FieldActiveDateManager<TValue, TDate> {
   getNewValueFromNewActiveDate: (
     newActiveDate: TDate | null,
   ) => Pick<UseFieldState<TValue, any>, 'value' | 'referenceValue'>;
-  /**
-   * Creates a value with an invalid active date (represented by a `null`) without losing any other date on the range fields.
-   * @template TValue
-   * @returns {TValue} The value containing the invalid date.
-   */
-  setActiveDateAsInvalid: () => TValue;
 }
 
 export type FieldSelectedSectionsIndexes = { startIndex: number; endIndex: number };
@@ -159,11 +163,13 @@ export interface FieldValueManager<TValue, TDate, TSection extends FieldSection,
   /**
    * Returns the manager of the active date.
    * @template TValue, TDate, TSection
+   * @param {MuiPickersAdapter<TDate>} utils The utils to manipulate the date.
    * @param {UseFieldState<TValue, TSection>} state The current state of the field.
    * @param {TSection} activeSection The active section.
    * @returns {FieldActiveDateManager<TValue, TDate>} The manager of the active date.
    */
   getActiveDateManager: (
+    utils: MuiPickerFieldAdapter<TDate>,
     state: UseFieldState<TValue, TSection>,
     activeSection: TSection,
   ) => FieldActiveDateManager<TValue, TDate>;
@@ -206,6 +212,25 @@ export interface UseFieldState<TValue, TSection extends FieldSection> {
    */
   referenceValue: TValue;
   sections: TSection[];
+  /**
+   * Android `onChange` behavior when the input selection is not empty is quite different from a desktop behavior.
+   * There are two `onChange` calls:
+   * 1. A call with the selected content removed.
+   * 2. A call with the key pressed added to the value.
+   **
+   * For instance, if the input value equals `month / day / year` and `day` is selected.
+   * The pressing `1` will have the following behavior:
+   * 1. A call with `month /  / year`.
+   * 2. A call with `month / 1 / year`.
+   *
+   * But if you don't update the input with the value passed on the first `onChange`.
+   * Then the second `onChange` will add the key press at the beginning of the selected value.
+   * 1. A call with `month / / year` that we don't set into state.
+   * 2. A call with `month / 1day / year`.
+   *
+   * The property below allows us to set the first `onChange` value into state waiting for the second one.
+   */
+  tempValueStrAndroid: string | null;
 }
 
 export type UseFieldValidationProps<

@@ -90,17 +90,14 @@ export type {
   Validator,
 } from './hooks/validation/useValidation';
 export { validateDate } from './hooks/validation/useDateValidation';
-export type {
-  DateComponentDefaultizedValidationProps,
-  DateValidationError,
-} from './hooks/validation/useDateValidation';
+export type { DateValidationError } from './hooks/validation/useDateValidation';
 export { usePreviousMonthDisabled, useNextMonthDisabled } from './hooks/date-helpers-hooks';
 
 export type { BasePickerProps } from './models/props/basePickerProps';
 export type { StaticPickerProps } from './models/props/staticPickerProps';
 export type { BaseToolbarProps } from './models/props/baseToolbarProps';
 export type { MuiPickersAdapter } from './models/muiPickersAdapter';
-export type { DefaultizedProps } from './models/helpers';
+export type { DefaultizedProps, MakeOptional } from './models/helpers';
 
 export { applyDefaultDate, replaceInvalidDateByNull } from './utils/date-utils';
 export { executeInTheNextEventLoopTick, onSpaceOrEnter } from './utils/utils';

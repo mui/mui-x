@@ -180,7 +180,7 @@ export const DateRangePickerInput = React.forwardRef(function DateRangePickerInp
     validationError: startValidationError !== null,
     TextFieldProps: {
       ...TextFieldProps,
-      ref: startRef,
+      inputRef: startRef,
       focused: open && currentlySelectingRangeEnd === 'start',
     },
     inputProps: {
@@ -199,7 +199,7 @@ export const DateRangePickerInput = React.forwardRef(function DateRangePickerInp
     validationError: endValidationError !== null,
     TextFieldProps: {
       ...TextFieldProps,
-      ref: endRef,
+      inputRef: endRef,
       focused: open && currentlySelectingRangeEnd === 'end',
     },
     inputProps: {

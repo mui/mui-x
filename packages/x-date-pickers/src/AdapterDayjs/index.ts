@@ -7,8 +7,8 @@ const formatTokenMap: MuiFormatTokenMap = {
   YYYY: 'year',
   M: 'month',
   MM: 'month',
-  MMM: 'month',
-  MMMM: 'month',
+  MMM: { sectionName: 'month', contentType: 'letter' },
+  MMMM: { sectionName: 'month', contentType: 'letter' },
   D: 'day',
   DD: 'day',
   H: 'hour',
@@ -19,8 +19,8 @@ const formatTokenMap: MuiFormatTokenMap = {
   mm: 'minute',
   s: 'second',
   ss: 'second',
-  A: 'am-pm',
-  a: 'am-pm',
+  A: 'meridiem',
+  a: 'meridiem',
 };
 
 export class AdapterDayjs extends BaseAdapterDayjs implements MuiPickerFieldAdapter<Dayjs> {

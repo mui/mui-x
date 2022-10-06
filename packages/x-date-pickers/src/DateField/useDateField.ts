@@ -20,25 +20,30 @@ import {
 import { applyDefaultDate } from '../internals/utils/date-utils';
 import { useUtils, useDefaultDates } from '../internals/hooks/useUtils';
 
-const dateRangeFieldValueManager: FieldValueManager<any, any, FieldSection, DateValidationError> = {
-  updateReferenceValue: (utils, value, prevReferenceValue) =>
-    value == null || !utils.isValid(value) ? prevReferenceValue : value,
-  getSectionsFromValue: (utils, prevSections, date, format) =>
-    addPositionPropertiesToSections(splitFormatIntoSections(utils, format, date)),
-  getValueStrFromSections: (sections) => createDateStrFromSections(sections),
-  getActiveDateSections: (sections) => sections,
-  getActiveDateManager: (state) => ({
-    activeDate: state.value,
-    referenceActiveDate: state.referenceValue,
-    getNewValueFromNewActiveDate: (newActiveDate) => ({
-      value: newActiveDate,
-      referenceValue: newActiveDate == null ? state.referenceValue : newActiveDate,
+export const dateFieldValueManager: FieldValueManager<any, any, FieldSection, DateValidationError> =
+  {
+    updateReferenceValue: (utils, value, prevReferenceValue) =>
+      value == null || !utils.isValid(value) ? prevReferenceValue : value,
+    getSectionsFromValue: (utils, prevSections, date, format) =>
+      addPositionPropertiesToSections(splitFormatIntoSections(utils, format, date)),
+    getValueStrFromSections: (sections) => createDateStrFromSections(sections, true),
+    getActiveDateSections: (sections) => sections,
+    getActiveDateManager: (utils, state) => ({
+      activeDate: state.value,
+      referenceActiveDate: state.referenceValue,
+      getNewValueFromNewActiveDate: (newActiveDate) => {
+        return {
+          value: newActiveDate,
+          referenceValue:
+            newActiveDate == null || !utils.isValid(newActiveDate)
+              ? state.referenceValue
+              : newActiveDate,
+        };
+      },
     }),
-    setActiveDateAsInvalid: () => null,
-  }),
-  hasError: (error) => error != null,
-  isSameError: isSameDateError,
-};
+    hasError: (error) => error != null,
+    isSameError: isSameDateError,
+  };
 
 const useDefaultizedDateField = <TDate, AdditionalProps extends {}>(
   props: UseDateFieldProps<TDate>,
@@ -47,9 +52,10 @@ const useDefaultizedDateField = <TDate, AdditionalProps extends {}>(
   const defaultDates = useDefaultDates<TDate>();
 
   return {
-    disablePast: false,
-    disableFuture: false,
     ...props,
+    disablePast: props.disablePast ?? false,
+    disableFuture: props.disableFuture ?? false,
+    format: props.format ?? utils.formats.keyboardDate,
     minDate: applyDefaultDate(utils, props.minDate, defaultDates.minDate),
     maxDate: applyDefaultDate(utils, props.maxDate, defaultDates.maxDate),
   } as any;
@@ -100,8 +106,8 @@ export const useDateField = <TDate, TChildProps extends {}>({
       inputRef,
     },
     valueManager: datePickerValueManager,
-    fieldValueManager: dateRangeFieldValueManager,
-    // TODO: Support time validation.
+    fieldValueManager: dateFieldValueManager,
     validator: validateDate,
+    supportedDateSections: ['year', 'month', 'day'],
   });
 };

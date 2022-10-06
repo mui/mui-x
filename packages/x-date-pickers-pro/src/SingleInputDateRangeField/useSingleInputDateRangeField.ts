@@ -88,8 +88,8 @@ export const dateRangeFieldValueManager: FieldValueManager<
   },
   getValueStrFromSections: (sections) => {
     const dateRangeSections = splitDateRangeSections(sections);
-    const startDateStr = createDateStrFromSections(dateRangeSections.startDate);
-    const endDateStr = createDateStrFromSections(dateRangeSections.endDate);
+    const startDateStr = createDateStrFromSections(dateRangeSections.startDate, true);
+    const endDateStr = createDateStrFromSections(dateRangeSections.endDate, true);
 
     return `${startDateStr}${endDateStr}`;
   },
@@ -101,7 +101,7 @@ export const dateRangeFieldValueManager: FieldValueManager<
       ? removeLastSeparator(dateRangeSections.startDate)
       : dateRangeSections.endDate;
   },
-  getActiveDateManager: (state, activeSection) => {
+  getActiveDateManager: (utils, state, activeSection) => {
     const index = activeSection.dateName === 'start' ? 0 : 1;
 
     const updateDateInRange = (newDate: any, prevDateRange: DateRange<any>) =>
@@ -113,17 +113,10 @@ export const dateRangeFieldValueManager: FieldValueManager<
       getNewValueFromNewActiveDate: (newActiveDate) => ({
         value: updateDateInRange(newActiveDate, state.value),
         referenceValue:
-          newActiveDate == null
+          newActiveDate == null || !utils.isValid(newActiveDate)
             ? state.referenceValue
             : updateDateInRange(newActiveDate, state.referenceValue),
       }),
-      setActiveDateAsInvalid: () => {
-        if (index === 0) {
-          return [null, state.value[1]];
-        }
-
-        return [state.value[0], null];
-      },
     };
   },
   hasError: (error) => error[0] != null || error[1] != null,
@@ -137,9 +130,10 @@ export const useDefaultizedDateRangeFieldProps = <TDate, AdditionalProps extends
   const defaultDates = useDefaultDates<TDate>();
 
   return {
-    disablePast: false,
-    disableFuture: false,
     ...props,
+    disablePast: props.disablePast ?? false,
+    disableFuture: props.disableFuture ?? false,
+    format: props.format ?? utils.formats.keyboardDate,
     minDate: applyDefaultDate(utils, props.minDate, defaultDates.minDate),
     maxDate: applyDefaultDate(utils, props.maxDate, defaultDates.maxDate),
   } as any;
@@ -188,5 +182,6 @@ export const useSingleInputDateRangeField = <TDate, TChildProps extends {}>({
     valueManager: dateRangePickerValueManager,
     fieldValueManager: dateRangeFieldValueManager,
     validator: validateDateRange,
+    supportedDateSections: ['year', 'month', 'day'],
   });
 };

@@ -68,9 +68,6 @@ describe('<DataGridPremium /> - State Persistence', () => {
           {...props}
           defaultGroupingExpansionDepth={-1}
           groupingColDef={{ headerName: 'Group' }}
-          experimentalFeatures={{
-            aggregation: true,
-          }}
         />
       </div>
     );

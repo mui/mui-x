@@ -3,7 +3,7 @@ import { SlotComponentProps } from '@mui/base/utils';
 import TextField, { TextFieldProps } from '@mui/material/TextField';
 import { UseFieldInternalProps } from '../internals/hooks/useField';
 import { DateValidationError } from '../internals/hooks/validation/useDateValidation';
-import { DefaultizedProps } from '../internals/models/helpers';
+import { DefaultizedProps, MakeOptional } from '../internals/models/helpers';
 import {
   BaseDateValidationProps,
   DayValidationProps,
@@ -17,7 +17,7 @@ export interface UseDateFieldParams<TDate, TChildProps extends {}> {
 }
 
 export interface UseDateFieldProps<TDate>
-  extends UseFieldInternalProps<TDate | null, DateValidationError>,
+  extends MakeOptional<UseFieldInternalProps<TDate | null, DateValidationError>, 'format'>,
     DayValidationProps<TDate>,
     MonthValidationProps<TDate>,
     YearValidationProps<TDate>,
@@ -25,7 +25,7 @@ export interface UseDateFieldProps<TDate>
 
 export type UseDateFieldDefaultizedProps<TDate> = DefaultizedProps<
   UseDateFieldProps<TDate>,
-  'minDate' | 'maxDate' | 'disableFuture' | 'disablePast'
+  keyof BaseDateValidationProps<TDate> | 'format'
 >;
 
 export type UseDateFieldComponentProps<TDate, TChildProps extends {}> = Omit<
