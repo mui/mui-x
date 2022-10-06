@@ -12,7 +12,7 @@ import {
   Validator,
 } from '@mui/x-date-pickers/internals';
 import { DateRange } from '../models';
-import { DateRangeFieldSection } from '../models/dateRange';
+import { DateRangeFieldSection } from '../models/range';
 
 export interface UseMultiInputRangeFieldParams<TParentProps extends {}, TChildProps extends {}> {
   sharedProps: Omit<TChildProps, keyof TParentProps> & TParentProps;

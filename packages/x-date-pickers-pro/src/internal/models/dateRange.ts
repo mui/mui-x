@@ -1,16 +1,11 @@
-import { FieldSection } from '@mui/x-date-pickers/internals-fields';
-
-export type DateRange<TDate> = [TDate | null, TDate | null];
-export type NonEmptyDateRange<TDate> = [TDate, TDate];
-
-export interface CurrentlySelectingRangeEndProps {
-  currentlySelectingRangeEnd: 'start' | 'end';
-  setCurrentlySelectingRangeEnd: (newSelectingEnd: 'start' | 'end') => void;
-}
-
-export interface DateRangeFieldSection extends FieldSection {
-  dateName: 'start' | 'end';
-}
+import {
+  BaseDateValidationProps,
+  TimeValidationProps,
+  DefaultizedProps,
+} from '@mui/x-date-pickers/internals';
+import { UseFieldInternalProps } from '@mui/x-date-pickers/internals-fields';
+import { DateRange } from './range';
+import type { DateRangeValidationError } from '../hooks/validation/useDateRangeValidation';
 
 /**
  * Props used to validate a day value in range pickers.
@@ -25,3 +20,14 @@ export interface DayRangeValidationProps<TDate> {
    */
   shouldDisableDate?: (day: TDate, position: 'start' | 'end') => boolean;
 }
+
+export interface UseDateRangeFieldProps<TDate>
+  extends UseFieldInternalProps<DateRange<TDate>, DateRangeValidationError>,
+    DayRangeValidationProps<TDate>,
+    TimeValidationProps<TDate>,
+    BaseDateValidationProps<TDate> {}
+
+export type UseDateRangeFieldDefaultizedProps<TDate> = DefaultizedProps<
+  UseDateRangeFieldProps<TDate>,
+  'minDate' | 'maxDate' | 'disableFuture' | 'disablePast'
+>;

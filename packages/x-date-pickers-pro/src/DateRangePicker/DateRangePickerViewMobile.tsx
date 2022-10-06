@@ -11,7 +11,7 @@ import {
   DayValidationProps,
 } from '@mui/x-date-pickers/internals';
 import { doNothing } from '../internal/utils/utils';
-import { DateRange } from '../internal/models/dateRange';
+import { DateRange } from '../internal/models/range';
 import { DateRangePickerDay } from '../DateRangePickerDay';
 import { ExportedDateRangePickerViewDesktopProps } from './DateRangePickerViewDesktop';
 import { isWithinRange, isStartOfRange, isEndOfRange } from '../internal/utils/date-utils';
