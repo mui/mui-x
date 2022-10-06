@@ -111,13 +111,13 @@ export const useGridAggregation = (
 
     // Re-apply the row hydration to add / remove the aggregation footers
     if (!areAggregationRulesEqual(rulesOnLastRowHydration, aggregationRules)) {
-      apiRef.current.unstable_requestPipeProcessorsApplication('hydrateRows');
+      apiRef.current.requestPipeProcessorsApplication('hydrateRows');
       applyAggregation();
     }
 
     // Re-apply the column hydration to wrap / unwrap the aggregated columns
     if (!areAggregationRulesEqual(rulesOnLastColumnHydration, aggregationRules)) {
-      apiRef.current.unstable_requestPipeProcessorsApplication('hydrateColumns');
+      apiRef.current.requestPipeProcessorsApplication('hydrateColumns');
     }
   }, [apiRef, applyAggregation, props.aggregationFunctions, props.disableAggregation]);
 

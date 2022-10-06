@@ -197,7 +197,7 @@ export const useGridDetailPanel = (
         };
       });
 
-      apiRef.current.unstable_requestPipeProcessorsApplication('rowHeight');
+      apiRef.current.requestPipeProcessorsApplication('rowHeight');
     },
     [apiRef],
   );

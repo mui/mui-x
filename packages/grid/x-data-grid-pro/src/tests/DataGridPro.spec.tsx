@@ -66,9 +66,21 @@ function ApiRefPrivateMethods() {
     apiRef.current.caches;
     // @ts-expect-error Property 'eventManager' does not exist on type 'GridApiPro'
     apiRef.current.eventManager;
+    // @ts-expect-error Property 'registerPipeProcessor' does not exist on type 'GridApiPro'
+    apiRef.current.registerPipeProcessor();
+    // @ts-expect-error Property 'registerPipeApplier' does not exist on type 'GridApiPro'
+    apiRef.current.registerPipeApplier();
+    // @ts-expect-error Property 'requestPipeProcessorsApplication' does not exist on type 'GridApiPro'
+    apiRef.current.requestPipeProcessorsApplication();
   });
 
   return null;
+}
+
+function ApiRefPublicMethods() {
+  const apiRef = useGridApiRef();
+
+  apiRef.current.unstable_applyPipeProcessors('exportMenu', [], {});
 }
 
 function ApiRefProMethods() {

@@ -257,8 +257,7 @@ export const useGridRowGrouping = (
     GridEventListener<'columnsChange'>
   >(() => {
     const sanitizedRowGroupingModel = gridRowGroupingSanitizedModelSelector(apiRef);
-    const rulesOnLastRowTreeCreation =
-      apiRef.current.caches.rowGrouping.rulesOnLastRowTreeCreation;
+    const rulesOnLastRowTreeCreation = apiRef.current.caches.rowGrouping.rulesOnLastRowTreeCreation;
 
     const groupingRules = getGroupingRules({
       sanitizedRowGroupingModel,
@@ -267,7 +266,7 @@ export const useGridRowGrouping = (
 
     if (!areGroupingRulesEqual(rulesOnLastRowTreeCreation, groupingRules)) {
       apiRef.current.caches.rowGrouping.rulesOnLastRowTreeCreation = groupingRules;
-      apiRef.current.unstable_requestPipeProcessorsApplication('hydrateColumns');
+      apiRef.current.requestPipeProcessorsApplication('hydrateColumns');
       setStrategyAvailability(apiRef, props.disableRowGrouping);
 
       // Refresh the row tree creation strategy processing

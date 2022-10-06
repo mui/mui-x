@@ -74,7 +74,7 @@ export const useGridRowPinning = (
         props.getRowId,
       );
 
-      apiRef.current.unstable_requestPipeProcessorsApplication('hydrateRows');
+      apiRef.current.requestPipeProcessorsApplication('hydrateRows');
     },
     [apiRef, props.experimentalFeatures?.rowPinning, props.getRowId],
   );

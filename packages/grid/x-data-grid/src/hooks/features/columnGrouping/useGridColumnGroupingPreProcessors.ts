@@ -1,12 +1,12 @@
 import * as React from 'react';
 import { GridPipeProcessor, useGridRegisterPipeProcessor } from '../../core/pipeProcessing';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
-import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
+import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { isDeepEqual } from '../../../utils/utils';
 import { unwrapGroupingColumnModel, hasGroupPath } from './useGridColumnGrouping';
 
 export const useGridColumnGroupingPreProcessors = (
-  apiRef: React.MutableRefObject<GridApiCommunity>,
+  privateApiRef: React.MutableRefObject<GridPrivateApiCommunity>,
   props: DataGridProcessedProps,
 ) => {
   const addHeaderGroups = React.useCallback<GridPipeProcessor<'hydrateColumns'>>(
@@ -34,5 +34,5 @@ export const useGridColumnGroupingPreProcessors = (
     [props.columnGroupingModel, props.experimentalFeatures?.columnGrouping],
   );
 
-  useGridRegisterPipeProcessor(apiRef, 'hydrateColumns', addHeaderGroups);
+  useGridRegisterPipeProcessor(privateApiRef, 'hydrateColumns', addHeaderGroups);
 };

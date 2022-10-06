@@ -5,7 +5,7 @@ import { GridPipeProcessor, useGridRegisterPipeProcessor } from '../../core/pipe
 import { getDataGridUtilityClass } from '../../../constants';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { GRID_CHECKBOX_SELECTION_COL_DEF, GRID_CHECKBOX_SELECTION_FIELD } from '../../../colDef';
-import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
+import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 
 type OwnerState = { classes: DataGridProcessedProps['classes'] };
 
@@ -23,7 +23,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 };
 
 export const useGridSelectionPreProcessors = (
-  apiRef: React.MutableRefObject<GridApiCommunity>,
+  privateApiRef: React.MutableRefObject<GridPrivateApiCommunity>,
   props: DataGridProcessedProps,
 ) => {
   const ownerState = { classes: props.classes };
@@ -35,7 +35,7 @@ export const useGridSelectionPreProcessors = (
         ...GRID_CHECKBOX_SELECTION_COL_DEF,
         cellClassName: classes.cellCheckbox,
         headerClassName: classes.columnHeaderCheckbox,
-        headerName: apiRef.current.getLocaleText('checkboxSelectionHeaderName'),
+        headerName: privateApiRef.current.getLocaleText('checkboxSelectionHeaderName'),
       };
 
       const shouldHaveSelectionColumn = props.checkboxSelection;
@@ -58,8 +58,8 @@ export const useGridSelectionPreProcessors = (
 
       return columnsState;
     },
-    [apiRef, classes, props.checkboxSelection],
+    [privateApiRef, classes, props.checkboxSelection],
   );
 
-  useGridRegisterPipeProcessor(apiRef, 'hydrateColumns', updateSelectionColumn);
+  useGridRegisterPipeProcessor(privateApiRef, 'hydrateColumns', updateSelectionColumn);
 };
