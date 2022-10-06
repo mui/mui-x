@@ -158,6 +158,10 @@ export const useGridCellEditing = (
       } else if (params.isEditable) {
         let reason: GridCellEditStartReasons | undefined;
 
+        if (event.key === ' ' && event.shiftKey) {
+          return; // Shift + Space is used to select the row
+        }
+
         if (isPrintableKey(event)) {
           reason = GridCellEditStartReasons.printableKeyDown;
         } else if ((event.ctrlKey || event.metaKey) && event.key === 'v') {

@@ -10,18 +10,21 @@ import {
   UseFieldState,
   FieldSelectedSectionsIndexes,
   FieldSelectedSections,
+  FieldBoundaries,
 } from './useField.interfaces';
 import {
   addPositionPropertiesToSections,
   applySectionValueToDate,
+  clampDaySection,
   createDateStrFromSections,
+  getSectionBoundaries,
   validateSections,
 } from './useField.utils';
 
-interface UpdateSectionValueParams<TDate, TSection> {
+interface UpdateSectionValueParams<TDate, TSection extends FieldSection> {
   activeSection: TSection;
-  setSectionValueOnDate: (activeDate: TDate) => TDate;
-  setSectionValueOnSections: (referenceActiveDate: TDate) => string;
+  setSectionValueOnDate: (activeDate: TDate, boundaries: FieldBoundaries<TDate, TSection>) => TDate;
+  setSectionValueOnSections: (boundaries: FieldBoundaries<TDate, TSection>) => string;
 }
 
 export const useFieldState = <
@@ -52,6 +55,7 @@ export const useFieldState = <
 
   const firstDefaultValue = React.useRef(defaultValue);
   const valueFromTheOutside = valueProp ?? firstDefaultValue.current ?? valueManager.emptyValue;
+  const boundaries = React.useMemo(() => getSectionBoundaries<TDate, TSection>(utils), [utils]);
 
   const [state, setState] = React.useState<UseFieldState<TValue, TSection>>(() => {
     const sections = fieldValueManager.getSectionsFromValue(
@@ -159,14 +163,14 @@ export const useFieldState = <
     }
 
     const activeSection = state.sections[selectedSectionIndexes.startIndex];
-    const activeDateManager = fieldValueManager.getActiveDateManager(state, activeSection);
+    const activeDateManager = fieldValueManager.getActiveDateManager(utils, state, activeSection);
 
     const newSections = setSectionValue(selectedSectionIndexes.startIndex, '');
 
     return setState((prevState) => ({
       ...prevState,
       sections: newSections,
-      value: activeDateManager.setActiveDateAsInvalid(),
+      ...activeDateManager.getNewValueFromNewActiveDate(null),
     }));
   };
 
@@ -175,7 +179,7 @@ export const useFieldState = <
     setSectionValueOnDate,
     setSectionValueOnSections,
   }: UpdateSectionValueParams<TDate, TSection>) => {
-    const activeDateManager = fieldValueManager.getActiveDateManager(state, activeSection);
+    const activeDateManager = fieldValueManager.getActiveDateManager(utils, state, activeSection);
 
     if (
       selectedSectionIndexes &&
@@ -185,15 +189,28 @@ export const useFieldState = <
     }
 
     if (activeDateManager.activeDate != null && utils.isValid(activeDateManager.activeDate)) {
-      const newDate = setSectionValueOnDate(activeDateManager.activeDate);
+      const newDate = setSectionValueOnDate(activeDateManager.activeDate, boundaries);
       return publishValue(activeDateManager.getNewValueFromNewActiveDate(newDate));
     }
 
     // The date is not valid, we have to update the section value rather than date itself.
-    const newSectionValue = setSectionValueOnSections(activeDateManager.referenceActiveDate);
+    const newSectionValue = setSectionValueOnSections(boundaries);
     const newSections = setSectionValue(selectedSectionIndexes!.startIndex, newSectionValue);
     const activeDateSections = fieldValueManager.getActiveDateSections(newSections, activeSection);
-    const newDate = utils.parse(createDateStrFromSections(activeDateSections, false), format);
+    let newDate = utils.parse(createDateStrFromSections(activeDateSections, false), format);
+
+    // When all the sections are filled but the date is invalid, it can be because the month has fewer days than asked.
+    // We can try to set the day to the maximum boundary.
+    if (
+      !utils.isValid(newDate) &&
+      activeDateSections.every((section) => section.value !== '') &&
+      activeDateSections.some((section) => section.dateSectionName === 'day')
+    ) {
+      const cleanSections = clampDaySection(utils, activeDateSections, boundaries, format);
+      if (cleanSections != null) {
+        newDate = utils.parse(createDateStrFromSections(cleanSections, false), format);
+      }
+    }
 
     if (newDate != null && utils.isValid(newDate)) {
       let mergedDate = activeDateManager.referenceActiveDate;
@@ -204,7 +221,8 @@ export const useFieldState = <
             utils,
             date: mergedDate,
             dateSectionName: section.dateSectionName,
-            getSectionValue: (getter) => getter(newDate),
+            getNumericSectionValue: (getter) => getter(newDate!),
+            getMeridiemSectionValue: () => (utils.getHours(mergedDate) < 12 ? 'AM' : 'PM'),
           });
         }
       });
@@ -215,8 +233,8 @@ export const useFieldState = <
     return setState((prevState) => ({
       ...prevState,
       sections: newSections,
-      value: activeDateManager.setActiveDateAsInvalid(),
       tempValueStrAndroid: null,
+      ...activeDateManager.getNewValueFromNewActiveDate(newDate),
     }));
   };
 

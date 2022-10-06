@@ -49,9 +49,6 @@ export default function AggregationFiltering() {
           },
         }}
         aggregationRowsScope="all"
-        experimentalFeatures={{
-          aggregation: true,
-        }}
       />
     </div>
   );
