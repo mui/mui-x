@@ -3,14 +3,13 @@ import { SlotComponentProps } from '@mui/base/utils';
 import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
-import { UseSingleInputDateRangeFieldProps } from '../SingleInputDateRangeField';
+import { UseDateRangeFieldProps } from '../internal/models/dateRange';
 import { UseMultiInputRangeFieldParams } from '../internal/hooks/useMultiInputRangeField';
 
 export interface UseMultiInputDateRangeFieldParams<TDate, TChildProps extends {}>
   extends UseMultiInputRangeFieldParams<UseMultiInputDateRangeFieldProps<TDate>, TChildProps> {}
 
-export interface UseMultiInputDateRangeFieldProps<TDate>
-  extends UseSingleInputDateRangeFieldProps<TDate> {}
+export interface UseMultiInputDateRangeFieldProps<TDate> extends UseDateRangeFieldProps<TDate> {}
 
 export type UseMultiInputDateRangeFieldComponentProps<TDate, TChildProps extends {}> = Omit<
   TChildProps,
