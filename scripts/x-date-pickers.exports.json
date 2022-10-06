@@ -93,6 +93,7 @@
   { "name": "getYearPickerUtilityClass", "kind": "Function" },
   { "name": "isIS", "kind": "Variable" },
   { "name": "itIT", "kind": "Variable" },
+  { "name": "jaJP", "kind": "Variable" },
   { "name": "koKR", "kind": "Variable" },
   { "name": "LocalizationProvider", "kind": "Function" },
   { "name": "LocalizationProviderProps", "kind": "Interface" },
