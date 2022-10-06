@@ -48,7 +48,7 @@ export const useGridTreeDataPreProcessors = (
   >,
 ) => {
   const setStrategyAvailability = React.useCallback(() => {
-    privateApiRef.current.unstable_setStrategyAvailability(
+    privateApiRef.current.setStrategyAvailability(
       'rowTree',
       TREE_DATA_STRATEGY,
       props.treeData ? () => true : () => false,

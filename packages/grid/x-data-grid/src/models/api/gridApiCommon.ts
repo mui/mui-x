@@ -38,7 +38,6 @@ export interface GridApiCommon<
 > extends GridCoreApi,
     GridLoggerApi,
     GridPipeProcessingApi,
-    GridStrategyProcessingApi,
     GridDensityApi,
     GridDimensionsApi,
     GridRowApi,
@@ -70,7 +69,8 @@ export interface GridPrivateOnlyApiCommon<
   PrivateApi extends GridPrivateApiCommon,
 > extends GridCorePrivateApi<Api, PrivateApi>,
     GridStatePrivateApi<PrivateApi['state']>,
-    GridPipeProcessingPrivateApi {}
+    GridPipeProcessingPrivateApi,
+    GridStrategyProcessingApi {}
 
 export interface GridPrivateApiCommon
   extends GridApiCommon,

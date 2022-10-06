@@ -139,7 +139,7 @@ export const getRowsStateFromCache = ({
     treeDepths: unProcessedTreeDepths,
     dataRowIds: unProcessedDataRowIds,
     groupingName,
-  } = apiRef.current.unstable_applyStrategyProcessor('rowTreeCreation', {
+  } = apiRef.current.applyStrategyProcessor('rowTreeCreation', {
     previousTree,
     previousTreeDepths,
     updates: cache.updates,

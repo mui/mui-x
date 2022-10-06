@@ -166,6 +166,14 @@ function ApiRefPrivateMethods() {
     apiRef.current.registerPipeApplier();
     // @ts-expect-error Property 'requestPipeProcessorsApplication' does not exist on type 'GridApiCommunity'
     apiRef.current.requestPipeProcessorsApplication();
+    // @ts-expect-error Property 'registerStrategyProcessor' does not exist on type 'GridApiCommunity'
+    apiRef.current.registerStrategyProcessor();
+    // @ts-expect-error Property 'setStrategyAvailability' does not exist on type 'GridApiCommunity'
+    apiRef.current.setStrategyAvailability();
+    // @ts-expect-error Property 'getActiveStrategy' does not exist on type 'GridApiCommunity'
+    apiRef.current.getActiveStrategy();
+    // @ts-expect-error Property 'applyStrategyProcessor' does not exist on type 'GridApiCommunity'
+    apiRef.current.applyStrategyProcessor();
   });
 
   return null;
