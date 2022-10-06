@@ -157,7 +157,7 @@ describe('<DataGridPro /> - Filter', () => {
           },
         }}
         components={{ Toolbar: GridToolbar }}
-        componentsProps= {{
+        componentsProps={{
           filterPanel: {
             filterFormProps: {
               filterColumns,
