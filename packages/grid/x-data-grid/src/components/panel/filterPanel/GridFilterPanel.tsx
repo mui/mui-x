@@ -12,11 +12,11 @@ import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
 import { useGridSelector } from '../../../hooks/utils/useGridSelector';
 import { gridFilterModelSelector } from '../../../hooks/features/filter/gridFilterSelector';
 import { gridFilterableColumnDefinitionsSelector } from '../../../hooks/features/columns/gridColumnsSelector';
-import { GridStateColDef } from '../../../models/colDef/gridColDef';
+import { GridColDef, GridStateColDef } from '../../../models/colDef/gridColDef';
 
 export interface GetColumnForNewFilterArgs {
   currentFilters: GridFilterItem[];
-  columns: GridStateColDef<any, any, any>[];
+  columns: GridStateColDef[];
 }
 
 export interface GridFilterPanelProps
@@ -28,9 +28,9 @@ export interface GridFilterPanelProps
   /**
    * Function that returns the next filter item to be picked as default filter
    * @param {GetColumnForNewFilterArgs} args Currently configured filters and columns
-   * @returns {string} The field to be used as next filter
+   * @returns {GridColDef['field']} The field to be used for the next filter
    */
-  getColumnForNewFilter?: (args: GetColumnForNewFilterArgs) => string;
+  getColumnForNewFilter?: (args: GetColumnForNewFilterArgs) => GridColDef['field'];
   /**
    * Props passed to each filter form.
    */
@@ -50,7 +50,7 @@ export interface GridFilterPanelProps
   children?: React.ReactNode;
 }
 
-const getGridFilter = (col: GridStateColDef<any, any, any>): GridFilterItem => ({
+const getGridFilter = (col: GridStateColDef): GridFilterItem => ({
   columnField: col.field,
   operatorValue: col.filterOperators![0].value,
   id: Math.round(Math.random() * 1e5),

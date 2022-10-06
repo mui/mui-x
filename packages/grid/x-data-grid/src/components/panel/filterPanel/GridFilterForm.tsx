@@ -20,8 +20,8 @@ import { getDataGridUtilityClass } from '../../../constants/gridClasses';
 import { GridColDef, GridStateColDef } from '../../../models/colDef/gridColDef';
 
 export interface FilterColumnsArgs {
-  field: string;
-  columns: GridStateColDef<any, any, any>[];
+  field: GridColDef['field'];
+  columns: GridStateColDef[];
   currentFilters: GridFilterItem[];
 }
 
@@ -70,9 +70,9 @@ export interface GridFilterFormProps {
   /**
    * Allows to filter the columns displayed in the filter form.
    * @param {FilterColumnsArgs} args The columns of the grid and name of field.
-   * @returns {string[]} The filtered fields array.
+   * @returns {GridColDef['field'][]} The filtered fields array.
    */
-  filterColumns?: (args: FilterColumnsArgs) => string[];
+  filterColumns?: (args: FilterColumnsArgs) => GridColDef['field'][];
   /**
    * Sets the available logic operators.
    * @default [GridLinkOperator.And, GridLinkOperator.Or]
@@ -565,7 +565,7 @@ GridFilterForm.propTypes = {
   /**
    * Allows to filter the columns displayed in the filter form.
    * @param {FilterColumnsArgs} args The columns of the grid and name of field.
-   * @returns {string[]} The filtered fields array.
+   * @returns {GridColDef['field'][]} The filtered fields array.
    */
   filterColumns: PropTypes.func,
   /**
