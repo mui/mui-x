@@ -1,4 +1,4 @@
-import { FieldSection, AvailableAdjustKeyCode } from './useField.interfaces';
+import { FieldSection, AvailableAdjustKeyCode, FieldBoundaries } from './useField.interfaces';
 import { MuiPickerFieldAdapter, MuiDateSectionName } from '../../models';
 
 export const getDateSectionConfigFromFormatToken = <TDate>(
@@ -394,66 +394,55 @@ export const getMonthsMatchingQuery = <TDate, TSection extends FieldSection>(
   }
 };
 
-export const getSectionValueNumericBoundaries = <TDate, TSection extends FieldSection>(
+export const getSectionBoundaries = <TDate, TSection extends FieldSection>(
   utils: MuiPickerFieldAdapter<TDate>,
-  date: TDate,
-  section: TSection,
-) => {
-  const dateWithFallback = utils.isValid(date) ? date : utils.date()!;
-  const endOfYear = utils.endOfYear(dateWithFallback);
+): FieldBoundaries<TDate, TSection> => {
+  const today = utils.date()!;
 
-  switch (section.dateSectionName) {
-    case 'day':
-      return {
-        minimum: 1,
-        maximum: utils.getDaysInMonth(dateWithFallback),
-      };
+  const endOfYear = utils.endOfYear(today);
 
-    case 'month': {
-      return {
-        minimum: 1,
-        maximum: utils.getMonth(endOfYear) + 1,
-      };
-    }
+  const maxDaysInMonth = utils.getMonthArray(today).reduce((acc, month) => {
+    const daysInMonth = utils.getDaysInMonth(month);
+    return Math.max(acc, daysInMonth);
+  }, 0);
 
-    case 'year': {
-      const currentYear = utils.formatByString(utils.date()!, section.formatValue);
-
-      return {
-        minimum: 1,
-        maximum: currentYear.length === 4 ? 9999 : 99,
-      };
-    }
-
-    // TODO: Limit to 11 when using AM-PM
-    case 'hour': {
-      return {
-        minimum: 0,
-        maximum: utils.getHours(endOfYear),
-      };
-    }
-
-    case 'minute': {
-      return {
-        minimum: 0,
-        maximum: utils.getMinutes(endOfYear),
-      };
-    }
-
-    case 'second': {
-      return {
-        minimum: 0,
-        maximum: utils.getSeconds(endOfYear),
-      };
-    }
-
-    default: {
-      return {
-        minimum: 0,
-        maximum: 0,
-      };
-    }
-  }
+  return {
+    year: (currentDate, section) => ({
+      minimum: 1,
+      maximum: utils.formatByString(today, section.formatValue).length === 4 ? 9999 : 99,
+    }),
+    month: () => ({
+      minimum: 1,
+      // Assumption: All years have the same amount of months
+      maximum: utils.getMonth(endOfYear) + 1,
+    }),
+    day: (currentDate) => ({
+      minimum: 1,
+      maximum:
+        currentDate != null && utils.isValid(currentDate)
+          ? utils.getDaysInMonth(currentDate)
+          : maxDaysInMonth,
+    }),
+    hour: () => ({
+      minimum: 0,
+      // Assumption: All days have the same amount of hours
+      maximum: utils.getHours(endOfYear),
+    }),
+    minute: () => ({
+      minimum: 0,
+      // Assumption: All years have the same amount of minutes
+      maximum: utils.getMinutes(endOfYear),
+    }),
+    second: () => ({
+      minimum: 0,
+      // Assumption: All years have the same amount of seconds
+      maximum: utils.getSeconds(endOfYear),
+    }),
+    meridiem: () => ({
+      minimum: 0,
+      maximum: 0,
+    }),
+  };
 };
 
 export const applySectionValueToDate = <TDate>({
@@ -559,3 +548,56 @@ export const validateSections = <TSection extends FieldSection>(
 };
 
 export const isAndroid = () => navigator.userAgent.toLowerCase().indexOf('android') > -1;
+
+export const clampDaySection = <TDate, TSection extends FieldSection>(
+  utils: MuiPickerFieldAdapter<TDate>,
+  sections: TSection[],
+  boundaries: FieldBoundaries<TDate, TSection>,
+  format: string,
+) => {
+  // We try to generate a valid date representing the start of the month of the invalid date typed by the user.
+  const sectionsForStartOfMonth = sections.map((section) => {
+    if (section.dateSectionName !== 'day') {
+      return section;
+    }
+
+    const dayBoundaries = boundaries.day(null, section);
+
+    return {
+      ...section,
+      value: section.hasTrailingZeroes
+        ? cleanTrailingZeroInNumericSectionValue(
+            dayBoundaries.minimum.toString(),
+            dayBoundaries.maximum,
+          )
+        : dayBoundaries.minimum.toString(),
+    };
+  });
+
+  const startOfMonth = utils.parse(
+    createDateStrFromSections(sectionsForStartOfMonth, false),
+    format,
+  );
+
+  // Even the start of the month is invalid, we probably have other invalid sections, the clamping failed.
+  if (startOfMonth == null || !utils.isValid(startOfMonth)) {
+    return null;
+  }
+
+  // The only invalid section was the day of the month, we replace its value with the maximum boundary for the correct month.
+  return sections.map((section) => {
+    if (section.dateSectionName !== 'day') {
+      return section;
+    }
+
+    const dayBoundaries = boundaries.day(startOfMonth, section);
+    if (Number(section.value) <= dayBoundaries.maximum) {
+      return section;
+    }
+
+    return {
+      ...section,
+      value: dayBoundaries.maximum.toString(),
+    };
+  });
+};

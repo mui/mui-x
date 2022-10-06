@@ -12,10 +12,10 @@ import {
   UseFieldForwardedProps,
   UseFieldInternalProps,
   AvailableAdjustKeyCode,
+  FieldBoundaries,
 } from './useField.interfaces';
 import {
   getMonthsMatchingQuery,
-  getSectionValueNumericBoundaries,
   getSectionVisibleValue,
   adjustDateSectionValue,
   adjustInvalidDateSectionValue,
@@ -62,7 +62,6 @@ export const useField = <
 
   const inputRef = React.useRef<HTMLInputElement>(null);
   const handleRef = useForkRef(inputRefProp, inputRef);
-
   const focusTimeoutRef = React.useRef<NodeJS.Timeout | undefined>(undefined);
 
   const syncSelectionFromDOM = () => {
@@ -170,31 +169,34 @@ export const useField = <
     const isNumericValue = !Number.isNaN(Number(keyPressed));
 
     if (isNumericValue) {
-      const getNewSectionValueStr = (date: TDate) => {
-        const boundaries = getSectionValueNumericBoundaries(utils, date, activeSection);
+      const getNewSectionValueStr = (
+        date: TDate | null,
+        boundaries: FieldBoundaries<TDate, TSection>,
+      ) => {
+        const sectionBoundaries = boundaries[activeSection.dateSectionName](date, activeSection);
 
         // Remove the trailing `0` (`01` => `1`)
         let newSectionValue = Number(`${activeSection.value}${keyPressed}`).toString();
 
-        while (newSectionValue.length > 0 && Number(newSectionValue) > boundaries.maximum) {
+        while (newSectionValue.length > 0 && Number(newSectionValue) > sectionBoundaries.maximum) {
           newSectionValue = newSectionValue.slice(1);
         }
 
         // In the unlikely scenario where max < 9, we could type a single digit that already exceeds the maximum.
         if (newSectionValue.length === 0) {
-          newSectionValue = boundaries.minimum.toString();
+          newSectionValue = sectionBoundaries.minimum.toString();
         }
 
         if (!activeSection.hasTrailingZeroes) {
           return newSectionValue;
         }
 
-        return cleanTrailingZeroInNumericSectionValue(newSectionValue, boundaries.maximum);
+        return cleanTrailingZeroInNumericSectionValue(newSectionValue, sectionBoundaries.maximum);
       };
 
       updateSectionValue({
         activeSection,
-        setSectionValueOnDate: (activeDate) => {
+        setSectionValueOnDate: (activeDate, boundaries) => {
           // TODO: Support digit editing for months displayed in full letter
           if (activeSection.contentType === 'letter') {
             return activeDate;
@@ -205,7 +207,7 @@ export const useField = <
             dateSectionName: activeSection.dateSectionName,
             date: activeDate,
             getNumericSectionValue: (getter) => {
-              const sectionValueStr = getNewSectionValueStr(activeDate);
+              const sectionValueStr = getNewSectionValueStr(activeDate, boundaries);
 
               // We can't parse the day on the current date, otherwise we might try to parse `31` on a 30-days month.
               // So we take for granted that for days, the digit rendered is always 1-indexed, just like the digit stored in the date.
@@ -223,13 +225,13 @@ export const useField = <
             getMeridiemSectionValue: () => '',
           });
         },
-        setSectionValueOnSections: (referenceActiveDate) => {
+        setSectionValueOnSections: (boundaries) => {
           // TODO: Support digit editing for months displayed in full letter
           if (activeSection.contentType === 'letter') {
             return activeSection.value;
           }
 
-          return getNewSectionValueStr(referenceActiveDate);
+          return getNewSectionValueStr(null, boundaries);
         },
       });
     }

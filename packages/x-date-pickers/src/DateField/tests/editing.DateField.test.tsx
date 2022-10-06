@@ -481,6 +481,35 @@ describe('<DateField /> - Editing', () => {
     });
   });
 
+  describe('Full editing scenarios', () => {
+    it('should move to the last day of the month when the current day exceeds it', () => {
+      const onChange = spy();
+
+      render(<DateField onChange={onChange} />);
+      const input = screen.getByRole('textbox');
+      clickOnInput(input, 1);
+
+      fireEvent.change(input, { target: { value: '2/day/year' } }); // Press "2"
+      expectInputValue(input, '02/day/year');
+
+      userEvent.keyPress(input, { key: 'ArrowRight' });
+      fireEvent.change(input, { target: { value: '02/3/year' } }); // Press "3"
+      expectInputValue(input, '02/03/year');
+      fireEvent.change(input, { target: { value: '02/1/year' } }); // Press "3"
+      expectInputValue(input, '02/31/year');
+
+      userEvent.keyPress(input, { key: 'ArrowRight' });
+      fireEvent.change(input, { target: { value: '02/31/2' } }); // Press "2"
+      expectInputValue(input, '02/28/0002'); // Has moved to the last day of the February
+      fireEvent.change(input, { target: { value: '02/28/0' } }); // Press "0"
+      fireEvent.change(input, { target: { value: '02/28/2' } }); // Press "2"
+      fireEvent.change(input, { target: { value: '02/28/2' } }); // Press "2"
+      expectInputValue(input, '02/28/2022');
+
+      expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2022, 1, 28, 0, 0, 0));
+    });
+  });
+
   describe('Do not loose missing section values ', () => {
     it('should not loose time information when a value is provided', () => {
       const onChange = spy();

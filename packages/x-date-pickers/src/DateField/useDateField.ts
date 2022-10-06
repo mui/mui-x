@@ -28,14 +28,18 @@ export const dateFieldValueManager: FieldValueManager<any, any, FieldSection, Da
       addPositionPropertiesToSections(splitFormatIntoSections(utils, format, date)),
     getValueStrFromSections: (sections) => createDateStrFromSections(sections, true),
     getActiveDateSections: (sections) => sections,
-    getActiveDateManager: (state) => ({
+    getActiveDateManager: (utils, state) => ({
       activeDate: state.value,
       referenceActiveDate: state.referenceValue,
-      getNewValueFromNewActiveDate: (newActiveDate) => ({
-        value: newActiveDate,
-        referenceValue: newActiveDate == null ? state.referenceValue : newActiveDate,
-      }),
-      setActiveDateAsInvalid: () => null,
+      getNewValueFromNewActiveDate: (newActiveDate) => {
+        return {
+          value: newActiveDate,
+          referenceValue:
+            newActiveDate == null || !utils.isValid(newActiveDate)
+              ? state.referenceValue
+              : newActiveDate,
+        };
+      },
     }),
     hasError: (error) => error != null,
     isSameError: isSameDateError,
