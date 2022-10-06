@@ -67,6 +67,7 @@ const getLeafProperties = (leafColDef: GridColDef): Partial<GridColDef> => ({
   headerName: leafColDef.headerName ?? leafColDef.field,
   sortable: leafColDef.sortable,
   filterable: leafColDef.filterable,
+  valueOptions: leafColDef.valueOptions,
   filterOperators: leafColDef.filterOperators?.map((operator) => ({
     ...operator,
     getApplyFilterFn: (filterItem, column) => {
@@ -97,6 +98,7 @@ const getGroupingCriteriaProperties = (
   const properties: Partial<GridColDef> = {
     sortable: groupedByColDef.sortable,
     filterable: groupedByColDef.filterable,
+    valueOptions: groupedByColDef.valueOptions,
     sortComparator: (v1, v2, cellParams1, cellParams2) => {
       // We only want to sort the groups of the current grouping criteria
       if (
