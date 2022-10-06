@@ -50,7 +50,7 @@
     "@mui/x-date-pickers": "6.0.0-alpha.1",
     "@mui/x-license-pro": "6.0.0-alpha.0",
     "clsx": "^1.2.1",
-    "prop-types": "^15.7.2",
+    "prop-types": "^15.8.1",
     "react-transition-group": "^4.4.5",
     "rifm": "^0.12.1"
   },
