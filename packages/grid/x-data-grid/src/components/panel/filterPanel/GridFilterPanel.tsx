@@ -88,28 +88,40 @@ const GridFilterPanel = React.forwardRef<HTMLDivElement, GridFilterPanelProps>(
     );
 
     const getDefaultFilter = React.useCallback((): GridFilterItem | null => {
-      const nextColumnWithOperator = filterableColumns.find(
-        (colDef) => colDef.filterOperators?.length,
-      );
+      let nextColumnWithOperator;
+      if (getColumnForNewFilter && typeof getColumnForNewFilter === 'function') {
+        // To allow override the column for default (first) filter
+        const nextColumnFieldName = getColumnForNewFilter({
+          currentFilters: filterModel?.items || [],
+          columns: filterableColumns,
+        });
+
+        nextColumnWithOperator = filterableColumns.find(
+          ({ field }) => field === nextColumnFieldName,
+        );
+      } else {
+        nextColumnWithOperator = filterableColumns.find((colDef) => colDef.filterOperators?.length);
+      }
 
       if (!nextColumnWithOperator) {
         return null;
       }
 
       return getGridFilter(nextColumnWithOperator);
-    }, [filterableColumns]);
+    }, [filterModel?.items, filterableColumns, getColumnForNewFilter]);
 
     const getNewFilter = React.useCallback((): GridFilterItem | null => {
-      const defaultFilter = getDefaultFilter();
       if (getColumnForNewFilter === undefined || typeof getColumnForNewFilter !== 'function') {
-        return defaultFilter;
+        return getDefaultFilter();
       }
 
-      const defaultItems = defaultFilter ? [defaultFilter] : [];
+      const currentFilters = filterModel.items.length
+        ? filterModel.items
+        : [getDefaultFilter()].filter(Boolean);
 
       // If no items are there in filterModel, we have to pass defaultFilter
       const nextColumnFieldName = getColumnForNewFilter({
-        currentFilters: filterModel.items.length ? filterModel.items : defaultItems,
+        currentFilters: currentFilters as GridFilterItem[],
         columns: filterableColumns,
       });
 
