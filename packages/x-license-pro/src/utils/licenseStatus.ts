@@ -3,6 +3,7 @@ enum LicenseStatus {
   Invalid = 'Invalid',
   Expired = 'Expired',
   Valid = 'Valid',
+  OutOfScope = 'OutOfScope',
 }
 
 export { LicenseStatus };
