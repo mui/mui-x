@@ -337,8 +337,8 @@ describe('<TimeField /> - Editing', () => {
       testChange({
         format: adapterToUse.formats.fullTime12h,
         readOnly: true,
-        inputValue: 'hour:minute a', // Press "a"
-        expectedValue: 'hour:minute meridiem',
+        inputValue: 'hh:mm a', // Press "a"
+        expectedValue: 'hh:mm aa',
       });
     });
 
@@ -356,8 +356,8 @@ describe('<TimeField /> - Editing', () => {
       testChange({
         format: adapterToUse.formats.fullTime12h,
         cursorPosition: 17,
-        inputValue: 'hour:minute a', // Press "a"
-        expectedValue: 'hour:minute am',
+        inputValue: 'hh:mm a', // Press "a"
+        expectedValue: 'hh:mm am',
       });
     });
 
@@ -365,8 +365,8 @@ describe('<TimeField /> - Editing', () => {
       testChange({
         format: adapterToUse.formats.fullTime12h,
         cursorPosition: 17,
-        inputValue: 'hour:minute p', // Press "p"
-        expectedValue: 'hour:minute pm',
+        inputValue: 'hh:mm p', // Press "p"
+        expectedValue: 'hh:mm pm',
       });
     });
 
