@@ -76,7 +76,7 @@ const fiFIPickers: Partial<PickersLocaleText<any>> = {
   // fieldHoursPlaceholder: () => 'hh',
   // fieldMinutesPlaceholder: () => 'mm',
   // fieldSecondsPlaceholder: () => 'ss',
-  // fieldMeridiemPlaceholder: () => '(a|p)m',
+  // fieldMeridiemPlaceholder: () => 'aa',
 };
 
 export const fiFI = getPickersLocalization(fiFIPickers);

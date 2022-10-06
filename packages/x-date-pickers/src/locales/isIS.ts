@@ -70,7 +70,7 @@ const isISPickers: Partial<PickersLocaleText<any>> = {
   // fieldHoursPlaceholder: () => 'hh',
   // fieldMinutesPlaceholder: () => 'mm',
   // fieldSecondsPlaceholder: () => 'ss',
-  // fieldMeridiemPlaceholder: () => '(a|p)m',
+  // fieldMeridiemPlaceholder: () => 'aa',
 };
 
 export const isIS = getPickersLocalization(isISPickers);
