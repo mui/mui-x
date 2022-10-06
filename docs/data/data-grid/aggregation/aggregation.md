@@ -10,16 +10,6 @@ You can aggregate rows through the grid interface by opening the column menu and
 
 The aggregated values are rendered in a footer row at the bottom of the grid.
 
-:::warning
-This feature is experimental.
-To activate it, use the `aggregation` experimental feature flag:
-
-```tsx
-<DataGridPremium experimentalFeatures={{ aggregation: true }} {...otherProps} />
-```
-
-:::
-
 {{"demo": "AggregationInitialState.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ## Pass aggregation to the Data Grid

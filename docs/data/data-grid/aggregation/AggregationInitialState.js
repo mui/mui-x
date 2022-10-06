@@ -41,7 +41,6 @@ export default function AggregationInitialState() {
             },
           },
         }}
-        experimentalFeatures={{ aggregation: true }}
       />
     </div>
   );
