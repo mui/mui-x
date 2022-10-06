@@ -34,7 +34,6 @@
     "orientation": "Force rendering in particular orientation.",
     "readOnly": "Make picker read only.",
     "reduceAnimations": "Disable heavy animations.",
-    "renderDay": "Custom renderer for day. Check the <a href=\"https://mui.com/x/api/date-pickers/pickers-day/\">PickersDay</a> component.<br><br><strong>Signature:</strong><br><code>function(day: TDate, selectedDays: Array&lt;TDate | null&gt;, pickersDayProps: PickersDayProps&lt;TDate&gt;) =&gt; JSX.Element</code><br><em>day:</em> The day to render.<br><em>selectedDays:</em> The days currently selected.<br><em>pickersDayProps:</em> The props of the day to render.<br> <em>returns</em> (JSX.Element): The element representing the day.",
     "renderLoading": "Component displaying when passed <code>loading</code> true.<br><br><strong>Signature:</strong><br><code>function() =&gt; React.ReactNode</code><br><br> <em>returns</em> (React.ReactNode): The node to render when loading.",
     "selectedSections": "The currently selected sections. This prop accept four formats: 1. If a number is provided, the section at this index will be selected. 2. If an object with a <code>startIndex</code> and <code>endIndex</code> properties are provided, the sections between those two indexes will be selected. 3. If a string of type <code>MuiDateSectionName</code> is provided, the first section with that name will be selected. 4. If <code>null</code> is provided, no section will be selected If not provided, the selected sections will be handled internally.",
     "shouldDisableDate": "Disable specific date. @DateIOType<br><br><strong>Signature:</strong><br><code>function(day: TDate) =&gt; boolean</code><br><em>day:</em> The date to test.<br> <em>returns</em> (boolean): Returns <code>true</code> if the date should be disabled.",
@@ -59,6 +58,7 @@
     "PreviousIconButton": "Button allowing to switch to the left view.",
     "NextIconButton": "Button allowing to switch to the right view.",
     "LeftArrowIcon": "Icon displayed in the left view switch button.",
-    "RightArrowIcon": "Icon displayed in the right view switch button."
+    "RightArrowIcon": "Icon displayed in the right view switch button.",
+    "Day": "Custom component for day.\nCheck the <a href=\"https://mui.com/x/api/date-pickers/pickers-day/\">PickersDay</a> component."
   }
 }

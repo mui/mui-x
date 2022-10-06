@@ -9,23 +9,23 @@ import {
   CalendarPickerSlotsComponentsProps,
 } from '../CalendarPicker';
 
-export interface MobileDatePicker2SlotsComponent
+export interface MobileDatePicker2SlotsComponent<TDate>
   extends MakeOptional<UseMobilePickerSlotsComponent, 'Field'>,
-    CalendarPickerSlotsComponent {}
+    CalendarPickerSlotsComponent<TDate> {}
 
-export interface MobileDatePicker2SlotsComponentsProps
+export interface MobileDatePicker2SlotsComponentsProps<TDate>
   extends UseMobilePickerSlotsComponentsProps,
-    CalendarPickerSlotsComponentsProps {}
+    CalendarPickerSlotsComponentsProps<TDate> {}
 
 export interface MobileDatePicker2Props<TDate> extends BaseDatePicker2Props<TDate> {
   /**
    * Overrideable components.
    * @default {}
    */
-  components?: MobileDatePicker2SlotsComponent;
+  components?: MobileDatePicker2SlotsComponent<TDate>;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  componentsProps?: MobileDatePicker2SlotsComponentsProps;
+  componentsProps?: MobileDatePicker2SlotsComponentsProps<TDate>;
 }

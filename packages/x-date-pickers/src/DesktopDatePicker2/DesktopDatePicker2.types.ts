@@ -9,23 +9,23 @@ import {
   CalendarPickerSlotsComponentsProps,
 } from '../CalendarPicker';
 
-export interface DesktopDatePicker2SlotsComponent
+export interface DesktopDatePicker2SlotsComponent<TDate>
   extends MakeOptional<UseDesktopPickerSlotsComponent, 'Field' | 'OpenPickerIcon'>,
-    CalendarPickerSlotsComponent {}
+    CalendarPickerSlotsComponent<TDate> {}
 
-export interface DesktopDatePicker2SlotsComponentsProps
+export interface DesktopDatePicker2SlotsComponentsProps<TDate>
   extends UseDesktopPickerSlotsComponentsProps,
-    CalendarPickerSlotsComponentsProps {}
+    CalendarPickerSlotsComponentsProps<TDate> {}
 
 export interface DesktopDatePicker2Props<TDate> extends BaseDatePicker2Props<TDate> {
   /**
    * Overrideable components.
    * @default {}
    */
-  components?: DesktopDatePicker2SlotsComponent;
+  components?: DesktopDatePicker2SlotsComponent<TDate>;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  componentsProps?: DesktopDatePicker2SlotsComponentsProps;
+  componentsProps?: DesktopDatePicker2SlotsComponentsProps<TDate>;
 }

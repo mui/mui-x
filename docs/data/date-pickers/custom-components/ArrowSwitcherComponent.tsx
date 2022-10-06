@@ -15,7 +15,7 @@ import { StaticTimePicker } from '@mui/x-date-pickers/StaticTimePicker';
 import { StaticDateRangePicker } from '@mui/x-date-pickers-pro/StaticDateRangePicker';
 import { DateRange } from '@mui/x-date-pickers-pro';
 
-const components: DatePickerProps<any>['components'] = {
+const components: Omit<DatePickerProps<any>['components'], 'Day'> = {
   LeftArrowIcon: ArrowLeft,
   RightArrowIcon: ArrowRight,
 };

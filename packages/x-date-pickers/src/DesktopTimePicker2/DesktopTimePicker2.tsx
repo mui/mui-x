@@ -11,8 +11,8 @@ import { useDesktopPicker } from '../internals/hooks/useDesktopPicker';
 import { PickerDateSectionModeLookup } from '../internals/hooks/usePicker';
 import { ClockPickerView } from '../internals/models';
 
-type DesktopTimePickerComponent = (<TTime>(
-  props: DesktopTimePicker2Props<TTime> & React.RefAttributes<HTMLDivElement>,
+type DesktopTimePickerComponent = (<TDate>(
+  props: DesktopTimePicker2Props<TDate> & React.RefAttributes<HTMLDivElement>,
 ) => JSX.Element) & { propTypes?: any };
 
 const SECTION_MODE_LOOKUP: PickerDateSectionModeLookup<ClockPickerView> = {
@@ -21,12 +21,12 @@ const SECTION_MODE_LOOKUP: PickerDateSectionModeLookup<ClockPickerView> = {
   seconds: 'field',
 };
 
-const DesktopTimePicker2 = React.forwardRef(function DesktopTimePicker2<TTime>(
-  inProps: DesktopTimePicker2Props<TTime>,
+const DesktopTimePicker2 = React.forwardRef(function DesktopTimePicker2<TDate>(
+  inProps: DesktopTimePicker2Props<TDate>,
   ref: React.Ref<HTMLDivElement>,
 ) {
   const localeText = useLocaleText();
-  const props = useTimePicker2DefaultizedProps<TTime, DesktopTimePicker2Props<TTime>>(
+  const props = useTimePicker2DefaultizedProps<TDate, DesktopTimePicker2Props<TDate>>(
     inProps,
     'MuiDesktopTimePicker2',
   );
@@ -236,7 +236,7 @@ DesktopTimePicker2.propTypes = {
    * If not provided, the selected sections will be handled internally.
    */
   selectedSections: PropTypes.oneOfType([
-    PropTypes.oneOf(['am-pm', 'day', 'hour', 'minute', 'month', 'second', 'year']),
+    PropTypes.oneOf(['day', 'hour', 'meridiem', 'minute', 'month', 'second', 'year']),
     PropTypes.number,
     PropTypes.shape({
       endIndex: PropTypes.number.isRequired,

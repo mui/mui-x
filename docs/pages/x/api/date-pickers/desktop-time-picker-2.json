@@ -44,7 +44,7 @@
     "selectedSections": {
       "type": {
         "name": "union",
-        "description": "'am-pm'<br>&#124;&nbsp;'day'<br>&#124;&nbsp;'hour'<br>&#124;&nbsp;'minute'<br>&#124;&nbsp;'month'<br>&#124;&nbsp;'second'<br>&#124;&nbsp;'year'<br>&#124;&nbsp;number<br>&#124;&nbsp;{ endIndex: number, startIndex: number }"
+        "description": "'day'<br>&#124;&nbsp;'hour'<br>&#124;&nbsp;'meridiem'<br>&#124;&nbsp;'minute'<br>&#124;&nbsp;'month'<br>&#124;&nbsp;'second'<br>&#124;&nbsp;'year'<br>&#124;&nbsp;number<br>&#124;&nbsp;{ endIndex: number, startIndex: number }"
       }
     },
     "shouldDisableTime": { "type": { "name": "func" } },
@@ -58,6 +58,7 @@
   },
   "slots": {
     "ActionBar": { "default": "PickersActionBar", "type": { "name": "elementType" } },
+    "Day": { "default": "PickersDay", "type": { "name": "elementType" } },
     "Field": { "type": { "name": "elementType" } },
     "Input": { "type": { "name": "elementType" } },
     "InputAdornment": { "default": "InputAdornment", "type": { "name": "elementType" } },

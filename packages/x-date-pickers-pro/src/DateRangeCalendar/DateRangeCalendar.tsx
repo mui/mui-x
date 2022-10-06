@@ -1,6 +1,7 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import useEventCallback from '@mui/utils/useEventCallback';
+import {resolveComponentProps} from "@mui/base/utils";
 import { styled, useThemeProps } from '@mui/material/styles';
 import { unstable_composeClasses as composeClasses } from '@mui/material';
 import { Watermark } from '@mui/x-license-pro';
@@ -8,7 +9,7 @@ import {
   applyDefaultDate,
   BaseDateValidationProps,
   DAY_MARGIN,
-  DayPicker,
+  DayPicker, DayPickerSlotsComponent, DayPickerSlotsComponentsProps,
   defaultReduceAnimations,
   PickersArrowSwitcher,
   PickersCalendarHeader,
@@ -147,7 +148,6 @@ export const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDa
     disableHighlightToday,
     readOnly,
     disabled,
-    renderDay = (_, dateRangeProps) => <DateRangePickerDay {...dateRangeProps} />,
     showDaysOutsideCurrentMonth,
     dayOfWeekFormatter,
     disableAutoMonthSwitching,
@@ -286,6 +286,31 @@ export const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDa
     }
   };
 
+  const componentsForDayPicker = {
+    Day: DateRangePickerDay,
+    ...components,
+  } as Partial<DayPickerSlotsComponent<TDate>>;
+
+  const componentsPropsForDayPicker = {
+    ...componentsProps,
+    day: (dayOwnerState) => {
+      const { day } = dayOwnerState;
+
+      return {
+        isPreviewing: isMobile ? false : isWithinRange(utils, day, previewingRange),
+        isStartOfPreviewing: isMobile
+            ? false
+            : isStartOfRange(utils, day, previewingRange),
+        isEndOfPreviewing: isMobile ? false : isEndOfRange(utils, day, previewingRange),
+        isHighlighting: isWithinRange(utils, day, value),
+        isStartOfHighlighting: isStartOfRange(utils, day, value),
+        isEndOfHighlighting: isEndOfRange(utils, day, value),
+        onMouseEnter: () => handlePreviewDayChange(day),
+        ...(resolveComponentProps(componentsProps?.day, dayOwnerState) ?? {}),
+      };
+    },
+  } as Partial<DayPickerSlotsComponentsProps<TDate>>;
+
   return (
     <DateRangeCalendarRoot
       ref={ref}
@@ -350,20 +375,8 @@ export const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDa
               dayOfWeekFormatter={dayOfWeekFormatter}
               loading={loading}
               renderLoading={renderLoading}
-              renderDay={(day, __, DayProps) =>
-                renderDay(day, {
-                  isPreviewing: isMobile ? false : isWithinRange(utils, day, previewingRange),
-                  isStartOfPreviewing: isMobile
-                    ? false
-                    : isStartOfRange(utils, day, previewingRange),
-                  isEndOfPreviewing: isMobile ? false : isEndOfRange(utils, day, previewingRange),
-                  isHighlighting: isWithinRange(utils, day, value),
-                  isStartOfHighlighting: isStartOfRange(utils, day, value),
-                  isEndOfHighlighting: isEndOfRange(utils, day, value),
-                  onMouseEnter: () => handlePreviewDayChange(day),
-                  ...DayProps,
-                })
-              }
+              components={componentsForDayPicker}
+              componentsProps={componentsPropsForDayPicker}
             />
           </DateRangeCalendarMonthContainer>
         );

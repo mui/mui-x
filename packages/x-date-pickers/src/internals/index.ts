@@ -122,7 +122,12 @@ export type {
 } from '../CalendarPicker/PickersCalendarHeader';
 
 export { DayPicker } from '../CalendarPicker/DayPicker';
-export type { DayPickerProps, ExportedDayPickerProps } from '../CalendarPicker/DayPicker';
+export type {
+  DayPickerProps,
+  ExportedDayPickerProps,
+  DayPickerSlotsComponent,
+  DayPickerSlotsComponentsProps,
+} from '../CalendarPicker/DayPicker';
 
 export { areDayPropsEqual } from '../PickersDay/PickersDay';
 

@@ -35,32 +35,29 @@ import { getReleaseInfo } from '../internal/utils/releaseInfo';
 
 const releaseInfo = getReleaseInfo();
 
-export interface DateRangePickerViewSlotsComponent
-  extends DateRangePickerViewMobileSlotsComponent {}
+export interface DateRangePickerViewSlotsComponent<TDate>
+  extends DateRangePickerViewMobileSlotsComponent<TDate> {}
 
-export interface DateRangePickerViewSlotsComponentsProps
-  extends DateRangePickerViewMobileSlotsComponentsProps {}
+export interface DateRangePickerViewSlotsComponentsProps<TDate>
+  extends DateRangePickerViewMobileSlotsComponentsProps<TDate> {}
 
 export interface ExportedDateRangePickerViewProps<TDate>
-  extends ExportedDateRangePickerViewDesktopProps<TDate>,
+  extends ExportedDateRangePickerViewDesktopProps,
     DayRangeValidationProps<TDate>,
     Omit<
       ExportedCalendarPickerProps<TDate>,
-      | 'onYearChange'
-      | 'renderDay'
-      | keyof BaseDateValidationProps<TDate>
-      | keyof DayValidationProps<TDate>
+      'onYearChange' | keyof BaseDateValidationProps<TDate> | keyof DayValidationProps<TDate>
     > {
   /**
    * Overrideable components.
    * @default {}
    */
-  components?: Partial<DateRangePickerViewSlotsComponent>;
+  components?: Partial<DateRangePickerViewSlotsComponent<TDate>>;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  componentsProps?: Partial<DateRangePickerViewSlotsComponentsProps>;
+  componentsProps?: Partial<DateRangePickerViewSlotsComponentsProps<TDate>>;
   /**
    * If `true`, after selecting `start` date calendar will not automatically switch to the month of `end` date.
    * @default false

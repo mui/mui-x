@@ -1,9 +1,12 @@
+import * as React from 'react';
 import { SxProps } from '@mui/system';
 import { Theme } from '@mui/material/styles';
 import {
   BaseDateValidationProps,
   DefaultizedProps,
   ExportedDayPickerProps,
+  DayPickerSlotsComponent,
+  DayPickerSlotsComponentsProps,
   PickersArrowSwitcherSlotsComponent,
   PickersArrowSwitcherSlotsComponentsProps,
   PickerSelectionState,
@@ -12,13 +15,23 @@ import { DateRange, DayRangeValidationProps } from '../internal/models';
 import { DateRangeCalendarClasses } from './dateRangeCalendarClasses';
 import { DateRangePickerDayProps } from '../DateRangePickerDay';
 
-export interface DateRangeCalendarSlotsComponent extends PickersArrowSwitcherSlotsComponent {}
+export interface DateRangeCalendarSlotsComponent<TDate>
+  extends PickersArrowSwitcherSlotsComponent,
+    Omit<DayPickerSlotsComponent<TDate>, 'Day'> {
+  /**
+   * Custom component for day in range pickers.
+   * Check the [DateRangePickersDay](https://mui.com/x/api/date-pickers/date-range-picker-day/) component.
+   * @default DateRangePickersDay
+   */
+  Day?: React.ElementType<DateRangePickerDayProps<TDate>>;
+}
 
-export interface DateRangeCalendarSlotsComponentsProps
-  extends PickersArrowSwitcherSlotsComponentsProps {}
+export interface DateRangeCalendarSlotsComponentsProps<TDate>
+  extends PickersArrowSwitcherSlotsComponentsProps,
+    Omit<DayPickerSlotsComponentsProps<TDate>, 'Day'> {}
 
 export interface DateRangeCalendarProps<TDate>
-  extends Omit<ExportedDayPickerProps<TDate>, 'renderDay'>,
+  extends ExportedDayPickerProps<TDate>,
     BaseDateValidationProps<TDate>,
     DayRangeValidationProps<TDate> {
   autoFocus?: boolean;
@@ -32,12 +45,12 @@ export interface DateRangeCalendarProps<TDate>
    * Overrideable components.
    * @default {}
    */
-  components?: Partial<DateRangeCalendarSlotsComponent>;
+  components?: Partial<DateRangeCalendarSlotsComponent<TDate>>;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  componentsProps?: Partial<DateRangeCalendarSlotsComponentsProps>;
+  componentsProps?: Partial<DateRangeCalendarSlotsComponentsProps<TDate>>;
   /**
    * If `true`, after selecting `start` date calendar will not automatically switch to the month of `end` date.
    * @default false
@@ -64,15 +77,6 @@ export interface DateRangeCalendarProps<TDate>
    * @default typeof navigator !== 'undefined' && /(android)/i.test(navigator.userAgent)
    */
   reduceAnimations?: boolean;
-  /**
-   * Custom renderer for `<DateRangePicker />` days. @DateIOType
-   * @example (date, dateRangePickerDayProps) => <DateRangePickerDay {...dateRangePickerDayProps} />
-   * @template TDate
-   * @param {TDate} day The day to render.
-   * @param {DateRangePickerDayProps<TDate>} dateRangePickerDayProps The props of the day to render.
-   * @returns {JSX.Element} The element representing the day.
-   */
-  renderDay?: (day: TDate, dateRangePickerDayProps: DateRangePickerDayProps<TDate>) => JSX.Element;
   /**
    * Callback firing on month change @DateIOType.
    * @template TDate

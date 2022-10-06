@@ -9,13 +9,13 @@ import {
   DateRangeCalendarSlotsComponentsProps,
 } from '../DateRangeCalendar';
 
-export interface DesktopDateRangePicker2SlotsComponent
+export interface DesktopDateRangePicker2SlotsComponent<TDate>
   extends MakeOptional<UseDesktopRangePickerSlotsComponent, 'Field'>,
-    DateRangeCalendarSlotsComponent {}
+    DateRangeCalendarSlotsComponent<TDate> {}
 
-export interface DesktopDateRangePicker2SlotsComponentsProps
+export interface DesktopDateRangePicker2SlotsComponentsProps<TDate>
   extends UseDesktopRangePickerSlotsComponentsProps,
-    DateRangeCalendarSlotsComponentsProps {}
+    DateRangeCalendarSlotsComponentsProps<TDate> {}
 
 export interface DesktopDateRangePicker2Props<TDate> extends BaseDateRangePicker2Props<TDate> {
   /**
@@ -27,10 +27,10 @@ export interface DesktopDateRangePicker2Props<TDate> extends BaseDateRangePicker
    * Overrideable components.
    * @default {}
    */
-  components?: DesktopDateRangePicker2SlotsComponent;
+  components?: DesktopDateRangePicker2SlotsComponent<TDate>;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  componentsProps?: DesktopDateRangePicker2SlotsComponentsProps;
+  componentsProps?: DesktopDateRangePicker2SlotsComponentsProps<TDate>;
 }

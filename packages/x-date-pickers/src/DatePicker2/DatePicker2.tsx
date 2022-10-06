@@ -212,15 +212,6 @@ DatePicker2.propTypes = {
    */
   reduceAnimations: PropTypes.bool,
   /**
-   * Custom renderer for day. Check the [PickersDay](https://mui.com/x/api/date-pickers/pickers-day/) component.
-   * @template TDate
-   * @param {TDate} day The day to render.
-   * @param {Array<TDate | null>} selectedDays The days currently selected.
-   * @param {PickersDayProps<TDate>} pickersDayProps The props of the day to render.
-   * @returns {JSX.Element} The element representing the day.
-   */
-  renderDay: PropTypes.func,
-  /**
    * Component displaying when passed `loading` true.
    * @returns {React.ReactNode} The node to render when loading.
    * @default () => <span data-mui-test="loading-progress">...</span>
@@ -236,7 +227,7 @@ DatePicker2.propTypes = {
    * If not provided, the selected sections will be handled internally.
    */
   selectedSections: PropTypes.oneOfType([
-    PropTypes.oneOf(['am-pm', 'day', 'hour', 'minute', 'month', 'second', 'year']),
+    PropTypes.oneOf(['day', 'hour', 'meridiem', 'minute', 'month', 'second', 'year']),
     PropTypes.number,
     PropTypes.shape({
       endIndex: PropTypes.number.isRequired,

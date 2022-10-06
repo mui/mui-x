@@ -92,6 +92,11 @@ DesktopDateRangePicker2.propTypes = {
    */
   defaultValue: PropTypes.arrayOf(PropTypes.any),
   /**
+   * If `true`, after selecting `start` date calendar will not automatically switch to the month of `end` date.
+   * @default false
+   */
+  disableAutoMonthSwitching: PropTypes.bool,
+  /**
    * If `true`, the picker and text field are disabled.
    * @default false
    */
@@ -195,15 +200,6 @@ DesktopDateRangePicker2.propTypes = {
    */
   reduceAnimations: PropTypes.bool,
   /**
-   * Custom renderer for `<DateRangePicker />` days. @DateIOType
-   * @example (date, dateRangePickerDayProps) => <DateRangePickerDay {...dateRangePickerDayProps} />
-   * @template TDate
-   * @param {TDate} day The day to render.
-   * @param {DateRangePickerDayProps<TDate>} dateRangePickerDayProps The props of the day to render.
-   * @returns {JSX.Element} The element representing the day.
-   */
-  renderDay: PropTypes.func,
-  /**
    * Component displaying when passed `loading` true.
    * @returns {React.ReactNode} The node to render when loading.
    * @default () => "..."
@@ -219,7 +215,7 @@ DesktopDateRangePicker2.propTypes = {
    * If not provided, the selected sections will be handled internally.
    */
   selectedSections: PropTypes.oneOfType([
-    PropTypes.oneOf(['am-pm', 'day', 'hour', 'minute', 'month', 'second', 'year']),
+    PropTypes.oneOf(['day', 'hour', 'meridiem', 'minute', 'month', 'second', 'year']),
     PropTypes.number,
     PropTypes.shape({
       endIndex: PropTypes.number.isRequired,

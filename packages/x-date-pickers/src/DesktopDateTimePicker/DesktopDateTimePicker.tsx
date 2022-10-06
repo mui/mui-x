@@ -23,14 +23,14 @@ import { usePickerState } from '../internals/hooks/usePickerState';
 import { DateInputSlotsComponent } from '../internals/components/PureDateInput';
 import { DateTimePickerTabs } from '../DateTimePicker/DateTimePickerTabs';
 
-export interface DesktopDateTimePickerSlotsComponent
+export interface DesktopDateTimePickerSlotsComponent<TDate>
   extends DesktopWrapperSlotsComponent,
-    CalendarOrClockPickerSlotsComponent,
+    CalendarOrClockPickerSlotsComponent<TDate>,
     DateInputSlotsComponent {}
 
-export interface DesktopDateTimePickerSlotsComponentsProps
+export interface DesktopDateTimePickerSlotsComponentsProps<TDate>
   extends DesktopWrapperSlotsComponentsProps,
-    CalendarOrClockPickerSlotsComponentsProps {}
+    CalendarOrClockPickerSlotsComponentsProps<TDate> {}
 
 export interface DesktopDateTimePickerProps<TDate>
   extends BaseDateTimePickerProps<TDate>,
@@ -39,12 +39,12 @@ export interface DesktopDateTimePickerProps<TDate>
    * Overrideable components.
    * @default {}
    */
-  components?: Partial<DesktopDateTimePickerSlotsComponent>;
+  components?: Partial<DesktopDateTimePickerSlotsComponent<TDate>>;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  componentsProps?: Partial<DesktopDateTimePickerSlotsComponentsProps>;
+  componentsProps?: Partial<DesktopDateTimePickerSlotsComponentsProps<TDate>>;
 }
 
 type DesktopDateTimePickerComponent = (<TDate>(
@@ -391,15 +391,6 @@ DesktopDateTimePicker.propTypes = {
    * @default typeof navigator !== 'undefined' && /(android)/i.test(navigator.userAgent)
    */
   reduceAnimations: PropTypes.bool,
-  /**
-   * Custom renderer for day. Check the [PickersDay](https://mui.com/x/api/date-pickers/pickers-day/) component.
-   * @template TDate
-   * @param {TDate} day The day to render.
-   * @param {Array<TDate | null>} selectedDays The days currently selected.
-   * @param {PickersDayProps<TDate>} pickersDayProps The props of the day to render.
-   * @returns {JSX.Element} The element representing the day.
-   */
-  renderDay: PropTypes.func,
   /**
    * The `renderInput` prop allows you to customize the rendered input.
    * The `props` argument of this render prop contains props of [TextField](https://mui.com/material-ui/api/text-field/#props) that you need to forward.
