@@ -1,14 +1,8 @@
 import { TextFieldProps } from '@mui/material/TextField';
-import {
-  UseDateTimeRangeFieldProps,
-  UseDateTimeRangeFieldDefaultizedProps,
-} from '../internal/models';
+import { UseDateTimeRangeFieldProps } from '../internal/models';
 
 export interface UseMultiInputDateTimeRangeFieldProps<TDate>
   extends UseDateTimeRangeFieldProps<TDate> {}
-
-export type UseMultiInputDateTimeRangeFieldDefaultizedProps<TDate> =
-  UseDateTimeRangeFieldDefaultizedProps<TDate>;
 
 export type UseMultiInputDateTimeRangeFieldComponentProps<TDate, ChildProps extends {}> = Omit<
   ChildProps,

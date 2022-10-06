@@ -3,9 +3,11 @@ import { SlotComponentProps } from '@mui/base/utils';
 import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
-import { DefaultizedProps } from '@mui/x-date-pickers/internals';
 import { UseMultiInputRangeFieldParams } from '../internal/hooks/useMultiInputRangeField';
-import { UseDateTimeRangeFieldProps } from '../internal/models/dateTimeRange';
+import {
+  UseDateTimeRangeFieldDefaultizedProps,
+  UseDateTimeRangeFieldProps,
+} from '../internal/models/dateTimeRange';
 
 export interface UseMultiInputDateTimeRangeFieldParams<TDate, TChildProps extends {}>
   extends UseMultiInputRangeFieldParams<UseMultiInputDateTimeRangeFieldProps<TDate>, TChildProps> {}
@@ -68,7 +70,5 @@ export interface MultiInputDateTimeRangeFieldSlotsComponentsProps<TDate> {
   >;
 }
 
-export type UseMultiInputDateTimeRangeFieldDefaultizedProps<TDate> = DefaultizedProps<
-  UseMultiInputDateTimeRangeFieldProps<TDate>,
-  'minDate' | 'maxDate' | 'disableFuture' | 'disablePast'
->;
+export type UseMultiInputDateTimeRangeFieldDefaultizedProps<TDate> =
+  UseDateTimeRangeFieldDefaultizedProps<TDate>;

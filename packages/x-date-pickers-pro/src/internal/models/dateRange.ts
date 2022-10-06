@@ -1,7 +1,7 @@
 import {
   BaseDateValidationProps,
-  TimeValidationProps,
   DefaultizedProps,
+  MakeOptional,
 } from '@mui/x-date-pickers/internals';
 import { UseFieldInternalProps } from '@mui/x-date-pickers/internals-fields';
 import { DateRange } from './range';
@@ -22,12 +22,11 @@ export interface DayRangeValidationProps<TDate> {
 }
 
 export interface UseDateRangeFieldProps<TDate>
-  extends UseFieldInternalProps<DateRange<TDate>, DateRangeValidationError>,
+  extends MakeOptional<UseFieldInternalProps<DateRange<TDate>, DateRangeValidationError>, 'format'>,
     DayRangeValidationProps<TDate>,
-    TimeValidationProps<TDate>,
     BaseDateValidationProps<TDate> {}
 
 export type UseDateRangeFieldDefaultizedProps<TDate> = DefaultizedProps<
   UseDateRangeFieldProps<TDate>,
-  'minDate' | 'maxDate' | 'disableFuture' | 'disablePast'
+  keyof BaseDateValidationProps<TDate> | 'format'
 >;

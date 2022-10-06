@@ -1,29 +1,17 @@
 import * as React from 'react';
 import { SlotComponentProps } from '@mui/base/utils';
 import TextField, { TextFieldProps } from '@mui/material/TextField';
-import {
-  BaseDateValidationProps,
-  DefaultizedProps,
-  MakeOptional,
-} from '@mui/x-date-pickers/internals';
-import { UseFieldInternalProps } from '@mui/x-date-pickers/internals-fields';
-import { DateRange, DayRangeValidationProps } from '../internal/models';
-import { DateRangeValidationError } from '../internal/hooks/validation/useDateRangeValidation';
+import { UseDateRangeFieldDefaultizedProps, UseDateRangeFieldProps } from '../internal/models';
 
 export interface UseSingleInputDateRangeFieldParams<TDate, TChildProps extends {}> {
   props: UseSingleInputDateRangeFieldComponentProps<TDate, TChildProps>;
   inputRef?: React.Ref<HTMLInputElement>;
 }
 
-export interface UseSingleInputDateRangeFieldProps<TDate>
-  extends MakeOptional<UseFieldInternalProps<DateRange<TDate>, DateRangeValidationError>, 'format'>,
-    DayRangeValidationProps<TDate>,
-    BaseDateValidationProps<TDate> {}
+export interface UseSingleInputDateRangeFieldProps<TDate> extends UseDateRangeFieldProps<TDate> {}
 
-export type UseSingleInputDateRangeFieldDefaultizedProps<TDate> = DefaultizedProps<
-  UseSingleInputDateRangeFieldProps<TDate>,
-  keyof BaseDateValidationProps<TDate> | 'format'
->;
+export type UseSingleInputDateRangeFieldDefaultizedProps<TDate> =
+  UseDateRangeFieldDefaultizedProps<TDate>;
 
 export type UseSingleInputDateRangeFieldComponentProps<TDate, TChildProps extends {}> = Omit<
   TChildProps,

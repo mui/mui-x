@@ -3,13 +3,17 @@ import {
   BaseDateValidationProps,
   TimeValidationProps,
   DefaultizedProps,
+  MakeOptional,
 } from '@mui/x-date-pickers/internals';
 import { DayRangeValidationProps } from './dateRange';
 import { DateRange } from './range';
 import { DateTimeRangeValidationError } from '../hooks/validation/useDateTimeRangeValidation';
 
 export interface UseDateTimeRangeFieldProps<TDate>
-  extends UseFieldInternalProps<DateRange<TDate>, DateTimeRangeValidationError>,
+  extends MakeOptional<
+      UseFieldInternalProps<DateRange<TDate>, DateTimeRangeValidationError>,
+      'format'
+    >,
     DayRangeValidationProps<TDate>,
     TimeValidationProps<TDate>,
     BaseDateValidationProps<TDate> {
@@ -25,5 +29,5 @@ export interface UseDateTimeRangeFieldProps<TDate>
 
 export type UseDateTimeRangeFieldDefaultizedProps<TDate> = DefaultizedProps<
   UseDateTimeRangeFieldProps<TDate>,
-  'minDate' | 'maxDate' | 'disableFuture' | 'disablePast'
+  keyof BaseDateValidationProps<TDate> | 'format'
 >;
