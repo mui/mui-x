@@ -14,7 +14,7 @@ import {
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { useGridLogger } from '../../utils/useGridLogger';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
-import { GridDimensions, GridDimensionsApi } from './gridDimensionsApi';
+import { GridDimensions, GridDimensionsApi, GridDimensionsPrivateApi } from './gridDimensionsApi';
 import { gridColumnsTotalWidthSelector } from '../columns';
 import { gridDensityTotalHeaderHeightSelector, gridDensityRowHeightSelector } from '../density';
 import { useGridSelector } from '../../utils';
@@ -194,11 +194,15 @@ export function useGridDimensions(
   const dimensionsApi: GridDimensionsApi = {
     resize,
     getRootDimensions,
-    unstable_getViewportPageSize: getViewportPageSize,
-    unstable_updateGridDimensionsRef: updateGridDimensionsRef,
+  };
+
+  const dimensionsPrivateApi: GridDimensionsPrivateApi = {
+    getViewportPageSize,
+    updateGridDimensionsRef,
   };
 
   useGridApiMethod(apiRef, dimensionsApi, 'public');
+  useGridApiMethod(apiRef, dimensionsPrivateApi, 'private');
 
   const debounceResize = React.useMemo(() => debounce(resize, 60), [resize]);
 

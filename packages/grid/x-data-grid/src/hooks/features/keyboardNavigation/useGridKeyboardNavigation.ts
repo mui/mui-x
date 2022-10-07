@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { GridEventListener } from '../../../models/events';
-import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
+import { GridApiCommunity, GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridCellParams } from '../../../models/params/gridCellParams';
 import { gridVisibleColumnDefinitionsSelector } from '../columns/gridColumnsSelector';
 import { useGridLogger } from '../../utils/useGridLogger';
@@ -35,7 +35,7 @@ function enrichPageRowsWithPinnedRows(
  * @requires useGridColumnSpanning (method) - can be after
  */
 export const useGridKeyboardNavigation = (
-  apiRef: React.MutableRefObject<GridApiCommunity>,
+  apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
   props: Pick<DataGridProcessedProps, 'pagination' | 'paginationMode' | 'getRowId'>,
 ): void => {
   const logger = useGridLogger(apiRef, 'useGridKeyboardNavigation');
@@ -101,7 +101,7 @@ export const useGridKeyboardNavigation = (
         return;
       }
 
-      const viewportPageSize = apiRef.current.unstable_getViewportPageSize();
+      const viewportPageSize = apiRef.current.getViewportPageSize();
 
       const colIndexBefore = (params as GridCellParams).field
         ? apiRef.current.getColumnIndex((params as GridCellParams).field)
@@ -245,7 +245,7 @@ export const useGridKeyboardNavigation = (
         return;
       }
 
-      const viewportPageSize = apiRef.current.unstable_getViewportPageSize();
+      const viewportPageSize = apiRef.current.getViewportPageSize();
       const colIndexBefore = params.field ? apiRef.current.getColumnIndex(params.field) : 0;
       const firstRowIndexInPage = 0;
       const lastRowIndexInPage = currentPageRows.length - 1;

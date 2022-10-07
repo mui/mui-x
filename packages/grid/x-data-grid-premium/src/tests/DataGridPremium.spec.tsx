@@ -86,6 +86,10 @@ function ApiRefPrivateMethods() {
     apiRef.current.rowHasAutoHeight;
     // @ts-expect-error Property 'getLastMeasuredRowIndex' does not exist on type 'GridApiPremium'
     apiRef.current.getLastMeasuredRowIndex;
+    // @ts-expect-error Property 'getViewportPageSize' does not exist on type 'GridApiPremium'
+    apiRef.current.getViewportPageSize;
+    // @ts-expect-error Property 'updateGridDimensionsRef' does not exist on type 'GridApiPremium'
+    apiRef.current.updateGridDimensionsRef;
   });
 
   return null;
