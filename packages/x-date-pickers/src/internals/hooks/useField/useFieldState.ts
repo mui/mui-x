@@ -14,8 +14,9 @@ import {
 } from './useField.interfaces';
 import {
   addPositionPropertiesToSections,
-  applySectionValueToDate,
+  splitFormatIntoSections,
   clampDaySection,
+  mergeDateIntoReferenceDate,
   createDateStrFromSections,
   getSectionBoundaries,
   validateSections,
@@ -171,6 +172,35 @@ export const useFieldState = <
     }));
   };
 
+  const updateValueFromValueStr = (valueStr: string) => {
+    const getValueFromDateStr = (dateStr: string, referenceDate: TDate) => {
+      const date = utils.parse(dateStr, format);
+      if (date == null || !utils.isValid(date)) {
+        return null;
+      }
+
+      const sections = splitFormatIntoSections(utils, format, date);
+      return mergeDateIntoReferenceDate(utils, date, sections, referenceDate, false);
+    };
+
+    const newValue = fieldValueManager.parseValueStr(
+      valueStr,
+      state.referenceValue,
+      getValueFromDateStr,
+    );
+
+    const newReferenceValue = fieldValueManager.updateReferenceValue(
+      utils,
+      newValue,
+      state.referenceValue,
+    );
+
+    publishValue({
+      value: newValue,
+      referenceValue: newReferenceValue,
+    });
+  };
+
   const updateSectionValue = ({
     activeSection,
     setSectionValueOnDate,
@@ -210,19 +240,13 @@ export const useFieldState = <
     }
 
     if (newDate != null && utils.isValid(newDate)) {
-      let mergedDate = activeDateManager.referenceActiveDate;
-
-      activeDateSections.forEach((section) => {
-        if (section.edited) {
-          mergedDate = applySectionValueToDate({
-            utils,
-            date: mergedDate,
-            dateSectionName: section.dateSectionName,
-            getNumericSectionValue: (getter) => getter(newDate!),
-            getMeridiemSectionValue: () => (utils.getHours(mergedDate) < 12 ? 'AM' : 'PM'),
-          });
-        }
-      });
+      const mergedDate = mergeDateIntoReferenceDate(
+        utils,
+        newDate,
+        activeDateSections,
+        activeDateManager.referenceActiveDate,
+        true,
+      );
 
       return publishValue(activeDateManager.getNewValueFromNewActiveDate(mergedDate));
     }
@@ -280,6 +304,7 @@ export const useFieldState = <
     clearValue,
     clearActiveSection,
     updateSectionValue,
+    updateValueFromValueStr,
     setTempAndroidValueStr,
   };
 };

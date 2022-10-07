@@ -7,14 +7,9 @@ import {
 import { DateRange, DateRangeFieldSection } from '../../models/range';
 import { splitDateRangeSections, removeLastSeparator } from '../../utils/date-fields-utils';
 
-export const rangeFieldValueManager: Pick<
+export const rangeFieldValueManager: Omit<
   FieldValueManager<DateRange<any>, any, DateRangeFieldSection, any>,
-  | 'updateReferenceValue'
-  | 'getSectionsFromValue'
-  | 'getValueStrFromSections'
-  | 'getActiveDateSections'
-  | 'getActiveDateManager'
-  | 'hasError'
+  'isSameError'
 > = {
   updateReferenceValue: (utils, value, prevReferenceValue) => {
     const shouldKeepStartDate = value[0] != null && utils.isValid(value[0]);
@@ -89,6 +84,18 @@ export const rangeFieldValueManager: Pick<
     return index === 0
       ? removeLastSeparator(dateRangeSections.startDate)
       : dateRangeSections.endDate;
+  },
+  parseValueStr: (valueStr, referenceValue, parseDate) => {
+    // TODO: Improve because it would not work if the date format has `–` as a separator.
+    const [startStr, endStr] = valueStr.split('–');
+
+    return [startStr, endStr].map((dateStr, index) => {
+      if (dateStr == null) {
+        return null;
+      }
+
+      return parseDate(dateStr.trim(), referenceValue[index]);
+    }) as DateRange<any>;
   },
   getActiveDateManager: (utils, state, activeSection) => {
     const index = activeSection.dateName === 'start' ? 0 : 1;

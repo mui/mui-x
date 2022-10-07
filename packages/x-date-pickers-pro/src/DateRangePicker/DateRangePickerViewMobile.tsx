@@ -93,6 +93,16 @@ export function DateRangePickerViewMobile<TDate>(props: DesktopDateRangeCalendar
     ...components,
   } as Partial<DayPickerSlotsComponent<TDate>>;
 
+  // Range going for the start of the start day to the end of the end day.
+  // This makes sure that `isWithinRange` works with any time in the start and end day.
+  const valueDayRange = React.useMemo<DateRange<TDate>>(
+    () => [
+      value[0] == null || !utils.isValid(value[0]) ? value[0] : utils.startOfDay(value[0]),
+      value[1] == null || !utils.isValid(value[1]) ? value[1] : utils.endOfDay(value[1]),
+    ],
+    [value, utils],
+  );
+
   const componentsPropsForDayPicker = {
     ...componentsProps,
     day: (dayOwnerState) => {
@@ -102,9 +112,9 @@ export function DateRangePickerViewMobile<TDate>(props: DesktopDateRangeCalendar
         isPreviewing: false,
         isStartOfPreviewing: false,
         isEndOfPreviewing: false,
-        isHighlighting: isWithinRange(utils, day, value),
-        isStartOfHighlighting: isStartOfRange(utils, day, value),
-        isEndOfHighlighting: isEndOfRange(utils, day, value),
+        isHighlighting: isWithinRange(utils, day, valueDayRange),
+        isStartOfHighlighting: isStartOfRange(utils, day, valueDayRange),
+        isEndOfHighlighting: isEndOfRange(utils, day, valueDayRange),
         ...(resolveComponentProps(componentsProps?.day, dayOwnerState) ?? {}),
       };
     },
