@@ -297,15 +297,25 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
     [],
   );
 
+  // Range going for the start of the start day to the end of the end day.
+  // This makes sure that `isWithinRange` works with any time in the start and end day.
+  const valueDayRange = React.useMemo<DateRange<TDate>>(
+    () => [
+      value[0] == null || !utils.isValid(value[0]) ? value[0] : utils.startOfDay(value[0]),
+      value[1] == null || !utils.isValid(value[1]) ? value[1] : utils.endOfDay(value[1]),
+    ],
+    [value, utils],
+  );
+
   const previewingRange = calculateRangePreview({
     utils,
-    range: value,
+    range: valueDayRange,
     newDate: rangePreviewDay,
     currentlySelectingRangeEnd: currentDatePosition,
   });
 
   const handlePreviewDayChange = (newPreviewRequest: TDate) => {
-    if (!isWithinRange(utils, newPreviewRequest, value)) {
+    if (!isWithinRange(utils, newPreviewRequest, valueDayRange)) {
       setRangePreviewDay(newPreviewRequest);
     } else {
       setRangePreviewDay(null);
@@ -326,9 +336,9 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
         isPreviewing: isMobile ? false : isWithinRange(utils, day, previewingRange),
         isStartOfPreviewing: isMobile ? false : isStartOfRange(utils, day, previewingRange),
         isEndOfPreviewing: isMobile ? false : isEndOfRange(utils, day, previewingRange),
-        isHighlighting: isWithinRange(utils, day, value),
-        isStartOfHighlighting: isStartOfRange(utils, day, value),
-        isEndOfHighlighting: isEndOfRange(utils, day, value),
+        isHighlighting: isWithinRange(utils, day, valueDayRange),
+        isStartOfHighlighting: isStartOfRange(utils, day, valueDayRange),
+        isEndOfHighlighting: isEndOfRange(utils, day, valueDayRange),
         onMouseEnter: () => handlePreviewDayChange(day),
         ...(resolveComponentProps(componentsProps?.day, dayOwnerState) ?? {}),
       };
