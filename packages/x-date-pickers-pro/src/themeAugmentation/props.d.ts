@@ -8,8 +8,10 @@ import { SingleInputDateRangeFieldProps } from '../SingleInputDateRangeField/Sin
 import { DesktopDateRangePickerProps } from '../DesktopDateRangePicker';
 import { MobileDateRangePickerProps } from '../MobileDateRangePicker';
 import { StaticDateRangePickerProps } from '../StaticDateRangePicker';
+import { DateRangeCalendarProps } from '../DateRangeCalendar';
 
 export interface PickersProComponentsPropsList {
+  MuiDateRangeCalendar: DateRangeCalendarProps<unknown>;
   MuiDateRangePicker: DateRangePickerProps<unknown>;
   MuiDateRangePickerDay: DateRangePickerDayProps<unknown>;
   MuiDateRangePickerInput: DateRangePickerInputProps<unknown>;
