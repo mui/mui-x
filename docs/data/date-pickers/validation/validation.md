@@ -124,7 +124,7 @@ The `shouldDisableYear` prop prevents the selection of all dates in years for wh
 
 ## Time validation
 
-### Set time boundaries
+### Minimum and maximum time
 
 The `minTime` prop prevents the selection of all values between midnight and `props.minTime`.
 
