@@ -167,7 +167,7 @@ describe('<DataGridPro /> - Filter', () => {
         columns={[...baselineProps.columns, { field: 'testField' }]}
       />,
     );
-    
+
     const selectListOfColumns = document.querySelectorAll('.MuiDataGrid-filterFormColumnInput')[0];
     const availableColumns = within(selectListOfColumns).getAllByRole('option');
     expect(availableColumns.length).to.equal(1);
