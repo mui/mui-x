@@ -6,7 +6,6 @@ import {
 } from '@mui/x-date-pickers/TimeField';
 import { useUtils, useValidation } from '@mui/x-date-pickers/internals';
 import { DateRange } from '../../models/range';
-import { UseMultiInputTimeRangeFieldProps } from '../../../MultiInputTimeRangeField';
 import {
   TimeRangeValidationError,
   TimeRangeComponentValidationProps,
@@ -15,6 +14,7 @@ import {
 import {
   UseMultiInputTimeRangeFieldDefaultizedProps,
   UseMultiInputTimeRangeFieldParams,
+  UseMultiInputTimeRangeFieldProps,
 } from '../../../MultiInputTimeRangeField/MultiInputTimeRangeField.types';
 import { dateRangePickerValueManager } from '../../../DateRangePicker/shared';
 import { timeRangeFieldValueManager } from '../valueManager/timeRangeValueManager';
@@ -35,14 +35,6 @@ export const useDefaultizedTimeRangeFieldProps = <TDate, AdditionalProps extends
     maxTime: props.maxTime,
   } as any;
 };
-
-export interface UseMultiInputRangeFieldParams<TParents extends {}, TChildProps extends {}> {
-  sharedProps: Omit<TChildProps, keyof TParents> & TParents;
-  startInputProps: TChildProps;
-  endInputProps: TChildProps;
-  startInputRef?: React.Ref<HTMLInputElement>;
-  endInputRef?: React.Ref<HTMLInputElement>;
-}
 
 export const useMultiInputTimeRangeField = <TDate, TChildProps extends {}>({
   sharedProps: inSharedProps,
