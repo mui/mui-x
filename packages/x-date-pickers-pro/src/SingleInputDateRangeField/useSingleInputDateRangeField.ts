@@ -119,6 +119,18 @@ export const dateRangeFieldValueManager: FieldValueManager<
       }),
     };
   },
+  parseValueStr: (valueStr, referenceValue, parseDate) => {
+    // TODO: Improve because it would not work if the date format has `–` as a separator.
+    const [startStr, endStr] = valueStr.split('–');
+
+    return [startStr, endStr].map((dateStr, index) => {
+      if (dateStr == null) {
+        return null;
+      }
+
+      return parseDate(dateStr.trim(), referenceValue[index]);
+    }) as DateRange<any>;
+  },
   hasError: (error) => error[0] != null || error[1] != null,
   isSameError: isSameDateRangeError,
 };
