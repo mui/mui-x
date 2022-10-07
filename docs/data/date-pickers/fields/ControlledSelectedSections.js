@@ -39,7 +39,6 @@ export default function ControlledSelectedSections() {
           </Button>
         </Stack>
         <DateField
-          label="Basic date field"
           inputRef={inputRef}
           selectedSections={selectedSections}
           onSelectedSectionsChange={setSelectedSections}
