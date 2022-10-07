@@ -126,6 +126,7 @@ describe('<DesktopDateRangePicker />', () => {
     });
   });
 
+  // TODO: Remove on new pickers, has been moved to `DateRangeCalendar` tests
   it('should highlight the selected range of dates', () => {
     render(
       <WrappedDesktopDateRangePicker
@@ -141,7 +142,7 @@ describe('<DesktopDateRangePicker />', () => {
     expect(screen.getAllByMuiTest('DateRangeHighlight')).to.have.length(31);
   });
 
-  // TODO: Move to DayPicker test file ?
+  // TODO: Remove on new pickers, has been moved to `DateRangeCalendar` tests
   describe('selection behavior', () => {
     it('should select the range from the next month', () => {
       const handleChange = spy();
@@ -360,6 +361,7 @@ describe('<DesktopDateRangePicker />', () => {
     expect(screen.queryByText('Fim')).not.to.equal(null);
   });
 
+  // TODO: Remove on new pickers, has been moved to `DateRangeCalendar` tests
   describe('Component slots', () => {
     it('slot: `Day` - renders custom day', () => {
       render(
@@ -377,6 +379,7 @@ describe('<DesktopDateRangePicker />', () => {
     });
   });
 
+  // TODO: Remove on new pickers, has been moved to `DateRangeCalendar` tests
   it('prop: calendars - should render the provided amount of calendars', () => {
     render(<WrappedDesktopDateRangePicker calendars={3} initialValue={[null, null]} />);
 
@@ -411,6 +414,7 @@ describe('<DesktopDateRangePicker />', () => {
     expect(screen.queryByRole('dialog')).to.equal(null);
   });
 
+  // TODO: Remove on new pickers, has been moved to `DateRangeCalendar` tests
   describe('prop: disableAutoMonthSwitching', () => {
     it('should go to the month of the end date when changing the start date', () => {
       render(
