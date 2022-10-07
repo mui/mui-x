@@ -8,9 +8,8 @@ import { GridMultiSelectionApi } from './gridSelectionApi';
 export interface GridApiCommunity
   extends GridApiCommon<GridStateCommunity, GridInitialStateCommunity> {}
 
-export interface GridPrivateOnlyApiCommunity
-  extends GridPrivateOnlyApiCommon<GridApiCommunity, GridPrivateApiCommunity>,
+export interface GridPrivateApiCommunity
+  extends GridApiCommunity,
+    GridPrivateOnlyApiCommon<GridApiCommunity, GridPrivateApiCommunity>,
     // it's private in Community plan, but public in Pro and Premium plans
     GridMultiSelectionApi {}
-
-export interface GridPrivateApiCommunity extends GridApiCommunity, GridPrivateOnlyApiCommunity {}

@@ -13,8 +13,6 @@ export interface GridApiPro
     GridRowPinningApi,
     // it's private in Community plan, but public in Pro and Premium plans
     GridMultiSelectionApi {}
-
-export interface GridPrivateOnlyApiPro
-  extends GridPrivateOnlyApiCommon<GridApiPro, GridPrivateApiPro> {}
-
-export interface GridPrivateApiPro extends GridApiPro, GridPrivateOnlyApiPro {}
+export interface GridPrivateApiPro
+  extends GridApiPro,
+    GridPrivateOnlyApiCommon<GridApiPro, GridPrivateApiPro> {}

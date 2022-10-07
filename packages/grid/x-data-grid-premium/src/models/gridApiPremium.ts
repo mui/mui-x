@@ -24,7 +24,6 @@ export interface GridApiPremium
     // it's private in Community plan, but public in Pro and Premium plans
     GridMultiSelectionApi {}
 
-export interface GridPrivateOnlyApiPremium
-  extends GridPrivateOnlyApiCommon<GridApiPremium, GridPrivateApiPremium> {}
-
-export interface GridPrivateApiPremium extends GridApiPremium, GridPrivateOnlyApiPremium {}
+export interface GridPrivateApiPremium
+  extends GridApiPremium,
+    GridPrivateOnlyApiCommon<GridApiPremium, GridPrivateApiPremium> {}
