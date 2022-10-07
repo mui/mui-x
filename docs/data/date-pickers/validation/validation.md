@@ -35,19 +35,29 @@ On the calendar and clock views—the invalid values are displayed as disabled t
 
 All pickers support the past and future validation.
 
-The `disablePast` prop prevents the selection of all values before today.
+The `disablePast` prop prevents the selection all values before today for date pickers and the selection of all values before the current time for time pickers.
+For date time pickers, it will combine both.
 
 - On the `day` view—all the days before today won't be selectable.
 - On the `month` and `year` views—all the values ending before today won't be selectable.
+- On the `hours` and `minutes` views—all the values ending before the current time won't be selectable.
+- On the `seconds` view—all the values before the current second won't be selectable.
 
 {{"demo": "DateValidationDisablePast.js", "defaultCodeOpen": false}}
 
-The `disableFuture` prop prevents the selection of all values after today.
+The `disableFuture` prop prevents the selection all values after today for date pickers and the selection of all values after the current time for time pickers.
+For date time pickers, it will combine both.
 
 - On the `day` view—all the days after today won't be selectable.
 - On the `month` and `year` views—all the values beginning after today won't be selectable.
+- On the `hours` and `minutes` views—all the values beginning after the current time won't be selectable.
+- On the `seconds` view—all the values after the current second won't be selectable.
 
 {{"demo": "DateValidationDisableFuture.js", "defaultCodeOpen": false}}
+
+:::info
+The current time is computed during the first render of the `LocalizationProvider`, it will not change during the lifetime of the component.
+:::
 
 ## Date validation
 
@@ -166,6 +176,9 @@ The `maxDateTime` prop prevents the selection of all values after `props.maxDate
 
 :::warning
 If you want to put time boundaries independent of the date—use the [`time boundaries`](#set-time-boundaries) instead.
+
+For now, you can not use `maxDateTime` and `maxTime` together.
+`maxDateTime` will override the `maxTime` behavior—Same for `minDateTime`/`minTime`
 
 ```tsx
 // Disable the values between 6 PM and midnight for every day (tomorrow 5 PM is not disabled).
