@@ -16,7 +16,7 @@ import {
 import { doNothing } from '../internal/utils/utils';
 import { DateRange } from '../internal/models/dateRange';
 import { DateRangePickerDay, DateRangePickerDayProps } from '../DateRangePickerDay';
-import { isWithinDayRange, isStartOfRange, isEndOfRange } from '../internal/utils/date-utils';
+import { isWithinRange, isStartOfRange, isEndOfRange } from '../internal/utils/date-utils';
 
 export interface DateRangePickerViewMobileSlotsComponent<TDate>
   extends PickersCalendarHeaderSlotsComponent,
@@ -101,7 +101,7 @@ export function DateRangePickerViewMobile<TDate>(props: DesktopDateRangeCalendar
         isPreviewing: false,
         isStartOfPreviewing: false,
         isEndOfPreviewing: false,
-        isHighlighting: isWithinDayRange(utils, day, value),
+        isHighlighting: isWithinRange(utils, day, value),
         isStartOfHighlighting: isStartOfRange(utils, day, value),
         isEndOfHighlighting: isEndOfRange(utils, day, value),
         ...(resolveComponentProps(componentsProps?.day, dayOwnerState) ?? {}),

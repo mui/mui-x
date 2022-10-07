@@ -23,7 +23,7 @@ import {
 import { calculateRangePreview } from './date-range-manager';
 import { DateRange } from '../internal/models';
 import { DateRangePickerDay, DateRangePickerDayProps } from '../DateRangePickerDay';
-import { isWithinDayRange, isStartOfRange, isEndOfRange } from '../internal/utils/date-utils';
+import { isWithinRange, isStartOfRange, isEndOfRange } from '../internal/utils/date-utils';
 import { doNothing } from '../internal/utils/utils';
 import {
   DateRangePickerViewDesktopClasses,
@@ -176,9 +176,19 @@ export function DateRangePickerViewDesktop<TDate>(inProps: DateRangePickerViewDe
   const isNextMonthDisabled = useNextMonthDisabled(currentMonth, { disableFuture, maxDate });
   const isPreviousMonthDisabled = usePreviousMonthDisabled(currentMonth, { disablePast, minDate });
 
+  // Range going for the start of the start day to the end of the end day.
+  // This makes sure that `isWithinRange` works with any time in the start and end day.
+  const valueDayRange = React.useMemo<DateRange<TDate>>(
+    () => [
+      value[0] == null || !utils.isValid(value[0]) ? value[0] : utils.startOfDay(value[0]),
+      value[1] == null || !utils.isValid(value[1]) ? value[1] : utils.endOfDay(value[1]),
+    ],
+    [value, utils],
+  );
+
   const previewingRange = calculateRangePreview({
     utils,
-    range: value,
+    range: valueDayRange,
     newDate: rangePreviewDay,
     currentlySelectingRangeEnd,
   });
@@ -192,7 +202,7 @@ export function DateRangePickerViewDesktop<TDate>(inProps: DateRangePickerViewDe
   );
 
   const handlePreviewDayChange = (newPreviewRequest: TDate) => {
-    if (!isWithinDayRange(utils, newPreviewRequest, value)) {
+    if (!isWithinRange(utils, newPreviewRequest, valueDayRange)) {
       setRangePreviewDay(newPreviewRequest);
     } else {
       setRangePreviewDay(null);
@@ -225,12 +235,12 @@ export function DateRangePickerViewDesktop<TDate>(inProps: DateRangePickerViewDe
       const { day } = dayOwnerState;
 
       return {
-        isPreviewing: isWithinDayRange(utils, day, previewingRange),
+        isPreviewing: isWithinRange(utils, day, previewingRange),
         isStartOfPreviewing: isStartOfRange(utils, day, previewingRange),
         isEndOfPreviewing: isEndOfRange(utils, day, previewingRange),
-        isHighlighting: isWithinDayRange(utils, day, value),
-        isStartOfHighlighting: isStartOfRange(utils, day, value),
-        isEndOfHighlighting: isEndOfRange(utils, day, value),
+        isHighlighting: isWithinRange(utils, day, valueDayRange),
+        isStartOfHighlighting: isStartOfRange(utils, day, valueDayRange),
+        isEndOfHighlighting: isEndOfRange(utils, day, valueDayRange),
         onMouseEnter: () => handlePreviewDayChange(day),
         ...(resolveComponentProps(componentsProps?.day, dayOwnerState) ?? {}),
       };

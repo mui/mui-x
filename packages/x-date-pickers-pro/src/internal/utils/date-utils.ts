@@ -13,20 +13,12 @@ export const isRangeValid = <TDate>(
   return Boolean(range && range[0] && range[1] && !utils.isBefore(range[1], range[0]));
 };
 
-export const isWithinDayRange = <TDate>(
+export const isWithinRange = <TDate>(
   utils: MuiPickersAdapter<TDate>,
   day: TDate,
   range: DateRange<TDate> | null,
 ) => {
-  if (!isRangeValid(utils, range)) {
-    return false;
-  }
-
-  const cleanRange = [
-    utils.startOfDay(range[0]),
-    utils.endOfDay(range[1]),
-  ] as NonEmptyDateRange<TDate>;
-  return utils.isWithinRange(day, cleanRange);
+  return isRangeValid(utils, range) && utils.isWithinRange(day, range);
 };
 
 export const isStartOfRange = <TDate>(
