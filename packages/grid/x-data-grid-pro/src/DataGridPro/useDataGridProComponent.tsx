@@ -42,7 +42,7 @@ import {
   columnGroupsStateInitializer,
   useGridColumnGroupingPreProcessors,
 } from '@mui/x-data-grid/internals';
-import { GridApiPro } from '../models/gridApiPro';
+import { GridApiPro, GridPrivateApiPro } from '../models/gridApiPro';
 import { DataGridProProcessedProps } from '../models/dataGridProProps';
 // Pro-only features
 import { useGridInfiniteLoader } from '../hooks/features/infiniteLoader/useGridInfiniteLoader';
@@ -80,7 +80,7 @@ export const useDataGridProComponent = (
   inputApiRef: React.MutableRefObject<GridApiPro> | undefined,
   props: DataGridProProcessedProps,
 ) => {
-  const apiRef = useGridInitialization(inputApiRef, props);
+  const apiRef = useGridInitialization<GridPrivateApiPro, GridApiPro>(inputApiRef, props);
 
   /**
    * Register all pre-processors called during state initialization here.

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { GridStateCommunity } from '../../../models/gridStateCommunity';
-import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
+import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { GridPageSizeApi } from './gridPaginationInterfaces';
 import {
@@ -30,7 +30,7 @@ const mergeStateWithPageSize =
  * @requires useGridDimensions (event) - can be after
  */
 export const useGridPageSize = (
-  apiRef: React.MutableRefObject<GridApiCommunity>,
+  apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
   props: Pick<
     DataGridProcessedProps,
     'pageSize' | 'onPageSizeChange' | 'autoPageSize' | 'initialState'
@@ -39,7 +39,7 @@ export const useGridPageSize = (
   const logger = useGridLogger(apiRef, 'useGridPageSize');
   const rowHeight = useGridSelector(apiRef, gridDensityRowHeightSelector);
 
-  apiRef.current.unstable_registerControlState({
+  apiRef.current.registerControlState({
     stateId: 'pageSize',
     propModel: props.pageSize,
     propOnChange: props.onPageSizeChange,
@@ -68,7 +68,7 @@ export const useGridPageSize = (
     setPageSize,
   };
 
-  useGridApiMethod(apiRef, pageSizeApi, 'GridPageSizeApi');
+  useGridApiMethod(apiRef, pageSizeApi, 'public');
 
   /**
    * PRE-PROCESSING

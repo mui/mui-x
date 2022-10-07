@@ -106,6 +106,8 @@ export { isNavigationKey } from '../utils/keyboardUtils';
 export { clamp, isDeepEqual, isNumber, isFunction } from '../utils/utils';
 export { buildWarning } from '../utils/warning';
 export { exportAs } from '../utils/exportAs';
+export type { GridPrivateOnlyApiCommon } from '../models/api/gridApiCommon';
+export { GridSelectionPrivateApi } from '../models/api/gridSelectionApi';
 
 export type { GridApiCommunity } from '../models/api/gridApiCommunity';
 export type { GridApiCaches } from '../models/gridApiCaches';

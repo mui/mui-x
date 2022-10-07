@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
+import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { useGridLogger, useGridApiMethod, useGridApiEventHandler } from '../../utils';
 import { gridColumnMenuSelector } from './columnMenuSelector';
 import { GridColumnMenuApi, GridEventListener } from '../../../models';
@@ -15,7 +15,9 @@ export const columnMenuStateInitializer: GridStateInitializer = (state) => ({
  * @requires useGridColumnResize (event)
  * @requires useGridInfiniteLoader (event)
  */
-export const useGridColumnMenu = (apiRef: React.MutableRefObject<GridApiCommunity>): void => {
+export const useGridColumnMenu = (
+  apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
+): void => {
   const logger = useGridLogger(apiRef, 'useGridColumnMenu');
 
   /**
@@ -82,7 +84,7 @@ export const useGridColumnMenu = (apiRef: React.MutableRefObject<GridApiCommunit
     toggleColumnMenu,
   };
 
-  useGridApiMethod(apiRef, columnMenuApi, 'GridColumnMenuApi');
+  useGridApiMethod(apiRef, columnMenuApi, 'public');
 
   /**
    * EVENTS

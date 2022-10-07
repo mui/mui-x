@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
+import { GridPrivateApiCommon } from '../../../models/api/gridApiCommon';
 import {
   GridStrategyProcessor,
   GridStrategyProcessorName,
@@ -63,7 +63,7 @@ type UntypedStrategyProcessors = {
  * - sorting algorithm.
  * - filtering algorithm.
  */
-export const useGridStrategyProcessing = (apiRef: React.MutableRefObject<GridApiCommunity>) => {
+export const useGridStrategyProcessing = (apiRef: React.MutableRefObject<GridPrivateApiCommon>) => {
   const availableStrategies = React.useRef(
     new Map<string, { group: GridStrategyGroup; isAvailable: () => boolean }>(),
   );
@@ -163,5 +163,5 @@ export const useGridStrategyProcessing = (apiRef: React.MutableRefObject<GridApi
     unstable_setStrategyAvailability: setStrategyAvailability,
   };
 
-  useGridApiMethod(apiRef, strategyProcessingApi, 'GridStrategyProcessing');
+  useGridApiMethod(apiRef, strategyProcessingApi, 'public');
 };

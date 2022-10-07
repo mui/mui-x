@@ -12,7 +12,7 @@ import {
   GridRestoreStatePreProcessingContext,
   GridStateInitializer,
 } from '@mui/x-data-grid-pro/internals';
-import { GridApiPremium } from '../../../models/gridApiPremium';
+import { GridPrivateApiPremium } from '../../../models/gridApiPremium';
 import {
   gridRowGroupingModelSelector,
   gridRowGroupingSanitizedModelSelector,
@@ -55,7 +55,7 @@ export const rowGroupingStateInitializer: GridStateInitializer<
  * @requires useGridParamsApi (method) - can be after, async only
  */
 export const useGridRowGrouping = (
-  apiRef: React.MutableRefObject<GridApiPremium>,
+  apiRef: React.MutableRefObject<GridPrivateApiPremium>,
   props: Pick<
     DataGridPremiumProcessedProps,
     | 'initialState'
@@ -68,7 +68,7 @@ export const useGridRowGrouping = (
     | 'disableRowGrouping'
   >,
 ) => {
-  apiRef.current.unstable_registerControlState({
+  apiRef.current.registerControlState({
     stateId: 'rowGrouping',
     propModel: props.rowGroupingModel,
     propOnChange: props.onRowGroupingModelChange,
@@ -150,7 +150,7 @@ export const useGridRowGrouping = (
     setRowGroupingCriteriaIndex,
   };
 
-  useGridApiMethod(apiRef, rowGroupingApi, 'GridRowGroupingApi');
+  useGridApiMethod(apiRef, rowGroupingApi, 'public');
 
   /**
    * PRE-PROCESSING

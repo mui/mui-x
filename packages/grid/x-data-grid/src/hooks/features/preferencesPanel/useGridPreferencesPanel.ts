@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
+import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { useGridLogger } from '../../utils/useGridLogger';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
@@ -19,7 +19,7 @@ export const preferencePanelStateInitializer: GridStateInitializer<
  * TODO: Add a single `setPreferencePanel` method to avoid multiple `setState`
  */
 export const useGridPreferencesPanel = (
-  apiRef: React.MutableRefObject<GridApiCommunity>,
+  apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
   props: Pick<DataGridProcessedProps, 'initialState'>,
 ): void => {
   const logger = useGridLogger(apiRef, 'useGridPreferencesPanel');
@@ -78,7 +78,7 @@ export const useGridPreferencesPanel = (
       showPreferences,
       hidePreferences: hidePreferencesDelayed,
     },
-    'ColumnMenuApi',
+    'public',
   );
 
   /**

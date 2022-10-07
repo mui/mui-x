@@ -27,12 +27,12 @@ const DataGridPremiumRaw = React.forwardRef(function DataGridPremium<R extends G
   ref: React.Ref<HTMLDivElement>,
 ) {
   const props = useDataGridPremiumProps(inProps);
-  const apiRef = useDataGridPremiumComponent(props.apiRef, props);
+  const privateApiRef = useDataGridPremiumComponent(props.apiRef, props);
 
   useLicenseVerifier('x-data-grid-premium', releaseInfo);
 
   return (
-    <GridContextProvider apiRef={apiRef} props={props}>
+    <GridContextProvider privateApiRef={privateApiRef} props={props}>
       <GridRoot className={props.className} style={props.style} sx={props.sx} ref={ref}>
         <GridErrorHandler>
           <GridHeaderPlaceholder />

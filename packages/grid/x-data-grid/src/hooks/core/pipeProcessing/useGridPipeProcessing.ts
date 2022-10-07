@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
+import { GridPrivateApiCommon } from '../../../models/api/gridApiCommon';
 import {
   GridPipeProcessingApi,
   GridPipeProcessor,
@@ -43,7 +43,7 @@ interface GridPipeGroupCache {
  *   * a processor is registered.
  *   * `apiRef.current.unstable_requestPipeProcessorsApplication` is called for the given group.
  */
-export const useGridPipeProcessing = (apiRef: React.MutableRefObject<GridApiCommunity>) => {
+export const useGridPipeProcessing = (apiRef: React.MutableRefObject<GridPrivateApiCommon>) => {
   const processorsCache = React.useRef<{
     [G in GridPipeProcessorGroup]?: GridPipeGroupCache;
   }>({});
@@ -137,5 +137,5 @@ export const useGridPipeProcessing = (apiRef: React.MutableRefObject<GridApiComm
     unstable_applyPipeProcessors: applyPipeProcessors,
   };
 
-  useGridApiMethod(apiRef, preProcessingApi, 'GridPipeProcessingApi');
+  useGridApiMethod(apiRef, preProcessingApi, 'public');
 };

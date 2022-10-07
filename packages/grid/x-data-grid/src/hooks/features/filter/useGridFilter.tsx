@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { GridEventListener } from '../../../models/events';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
-import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
+import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridFilterApi } from '../../../models/api/gridFilterApi';
 import { GridFilterItem } from '../../../models/gridFilterItem';
 import { GridGroupNode, GridRowId, GridRowModel } from '../../../models/gridRows';
@@ -52,7 +52,7 @@ export const filterStateInitializer: GridStateInitializer<
  * @requires useGridRows (event)
  */
 export const useGridFilter = (
-  apiRef: React.MutableRefObject<GridApiCommunity>,
+  apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
   props: Pick<
     DataGridProcessedProps,
     | 'initialState'
@@ -66,7 +66,7 @@ export const useGridFilter = (
 ): void => {
   const logger = useGridLogger(apiRef, 'useGridFilter');
 
-  apiRef.current.unstable_registerControlState({
+  apiRef.current.registerControlState({
     stateId: 'filter',
     propModel: props.filterModel,
     propOnChange: props.onFilterModelChange,
@@ -245,7 +245,7 @@ export const useGridFilter = (
       const currentModel = gridFilterModelSelector(apiRef);
       if (currentModel !== model) {
         logger.debug('Setting filter model');
-        apiRef.current.unstable_updateControlState(
+        apiRef.current.updateControlState(
           'filter',
           mergeStateWithFilterModel(model, props.disableMultipleColumnsFiltering, apiRef),
           reason,
@@ -274,7 +274,7 @@ export const useGridFilter = (
     setQuickFilterValues,
   };
 
-  useGridApiMethod(apiRef, filterApi, 'GridFilterApi');
+  useGridApiMethod(apiRef, filterApi, 'public');
 
   /**
    * PRE-PROCESSING
@@ -313,7 +313,7 @@ export const useGridFilter = (
       if (filterModel == null) {
         return params;
       }
-      apiRef.current.unstable_updateControlState(
+      apiRef.current.updateControlState(
         'filter',
         mergeStateWithFilterModel(filterModel, props.disableMultipleColumnsFiltering, apiRef),
         'restoreState',

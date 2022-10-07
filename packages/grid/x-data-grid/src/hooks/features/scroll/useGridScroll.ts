@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { GridCellIndexCoordinates } from '../../../models/gridCell';
-import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
+import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { useGridLogger } from '../../utils/useGridLogger';
 import {
   gridColumnPositionsSelector,
@@ -51,7 +51,7 @@ function scrollIntoView(dimensions: {
  * @requires useGridColumnSpanning (method)
  */
 export const useGridScroll = (
-  apiRef: React.MutableRefObject<GridApiCommunity>,
+  apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
   props: Pick<DataGridProcessedProps, 'pagination'>,
 ): void => {
   const logger = useGridLogger(apiRef, 'useGridScroll');
@@ -174,5 +174,5 @@ export const useGridScroll = (
     scrollToIndexes,
     getScrollPosition,
   };
-  useGridApiMethod(apiRef, scrollApi, 'GridScrollApi');
+  useGridApiMethod(apiRef, scrollApi, 'public');
 };

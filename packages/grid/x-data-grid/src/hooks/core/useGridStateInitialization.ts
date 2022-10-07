@@ -1,23 +1,23 @@
 import * as React from 'react';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
-import { GridApiCommon } from '../../models/api/gridApiCommon';
-import { GridStateApi } from '../../models/api/gridStateApi';
+import type { GridPrivateApiCommon } from '../../models/api/gridApiCommon';
+import { GridStateApi, GridStatePrivateApi } from '../../models/api/gridStateApi';
 import { GridControlStateItem } from '../../models/controlStateItem';
 import { GridSignature } from '../utils/useGridApiEventHandler';
 import { useGridApiMethod } from '../utils';
 import { isFunction } from '../../utils/utils';
 
-export const useGridStateInitialization = <Api extends GridApiCommon>(
-  apiRef: React.MutableRefObject<Api>,
+export const useGridStateInitialization = <PrivateApi extends GridPrivateApiCommon>(
+  apiRef: React.MutableRefObject<PrivateApi>,
   props: Pick<DataGridProcessedProps, 'signature'>,
 ) => {
-  const controlStateMapRef = React.useRef<Record<string, GridControlStateItem<Api['state'], any>>>(
-    {},
-  );
-  const [, rawForceUpdate] = React.useState<Api['state']>();
+  const controlStateMapRef = React.useRef<
+    Record<string, GridControlStateItem<PrivateApi['state'], any>>
+  >({});
+  const [, rawForceUpdate] = React.useState<PrivateApi['state']>();
 
   const registerControlState = React.useCallback<
-    GridStateApi<Api['state']>['unstable_registerControlState']
+    GridStatePrivateApi<PrivateApi['state']>['registerControlState']
   >((controlStateItem) => {
     const { stateId, ...others } = controlStateItem;
 
@@ -27,9 +27,9 @@ export const useGridStateInitialization = <Api extends GridApiCommon>(
     };
   }, []);
 
-  const setState = React.useCallback<GridStateApi<Api['state']>['setState']>(
+  const setState = React.useCallback<GridStateApi<PrivateApi['state']>['setState']>(
     (state, reason) => {
-      let newState: Api['state'];
+      let newState: PrivateApi['state'];
       if (isFunction(state)) {
         newState = state(apiRef.current.state);
       } else {
@@ -113,10 +113,10 @@ export const useGridStateInitialization = <Api extends GridApiCommon>(
   );
 
   const updateControlState = React.useCallback<
-    GridStateApi<Api['state']>['unstable_updateControlState']
+    GridStatePrivateApi<PrivateApi['state']>['updateControlState']
   >(
     (key, state, reason) => {
-      return apiRef.current.setState((previousState: Api['state']) => {
+      return apiRef.current.setState((previousState: PrivateApi['state']) => {
         return { ...previousState, [key]: state(previousState[key]) };
       }, reason);
     },
@@ -125,12 +125,16 @@ export const useGridStateInitialization = <Api extends GridApiCommon>(
 
   const forceUpdate = React.useCallback(() => rawForceUpdate(() => apiRef.current.state), [apiRef]);
 
-  const stateApi: any = {
+  const publicStateApi: Omit<GridStateApi<PrivateApi['state']>, 'state'> = {
     setState,
     forceUpdate,
-    unstable_updateControlState: updateControlState,
-    unstable_registerControlState: registerControlState,
   };
 
-  useGridApiMethod(apiRef, stateApi, 'GridStateApi');
+  const privateStateApi: GridStatePrivateApi<PrivateApi['state']> = {
+    updateControlState,
+    registerControlState,
+  };
+
+  useGridApiMethod(apiRef, publicStateApi as any, 'public');
+  useGridApiMethod(apiRef, privateStateApi as any, 'private');
 };

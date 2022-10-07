@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
+import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { GridStateInitializer } from '../../utils/useGridInitializeState';
 import {
@@ -118,7 +118,7 @@ export const columnGroupsStateInitializer: GridStateInitializer<
  * @requires useGridParamsApi (method)
  */
 export const useGridColumnGrouping = (
-  apiRef: React.MutableRefObject<GridApiCommunity>,
+  apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
   props: Pick<DataGridProcessedProps, 'columnGroupingModel' | 'experimentalFeatures'>,
 ) => {
   /**
@@ -147,7 +147,7 @@ export const useGridColumnGrouping = (
     unstable_getAllGroupDetails: getAllGroupDetails,
   };
 
-  useGridApiMethod(apiRef, columnGroupingApi, 'GridColumnGroupingApi');
+  useGridApiMethod(apiRef, columnGroupingApi, 'public');
 
   /**
    * EFFECTS
