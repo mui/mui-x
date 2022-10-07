@@ -82,13 +82,14 @@ You can customize the rendering of the input with the `renderInput` prop. Certif
 
 ## Renderização customizada do dia
 
-Os dias exibidos são customizados com uma função na propriedade `renderDay`. You can take advantage of the [PickersDay](/x/api/date-pickers/pickers-day/) component.
+The displayed days are customizable with the `Day` component slot.
+You can take advantage of the [PickersDay](/x/api/date-pickers/pickers-day/) component.
 
 {{"demo": "CustomDay.js"}}
 
 ## Dados dinâmicos
 
-Às vezes, pode ser necessário exibir informação adicional diretamente no calendário. Aqui está um exemplo de pré-busca e exibição de dados do servidor usando as propriedades `onMonthChange`, `loading`, e `renderDay`.
+Às vezes, pode ser necessário exibir informação adicional diretamente no calendário. Aqui está um exemplo de pré-busca e exibição de dados do servidor usando as propriedades `onMonthChange`, `loading`, e `components.Day`.
 
 {{"demo": "ServerRequestDatePicker.js"}}
 

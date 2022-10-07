@@ -10,6 +10,7 @@ const formatTokenMap: MuiFormatTokenMap = {
   yy: 'year',
   yyy: 'year',
   yyyy: 'year',
+  M: 'month',
   MM: 'month',
   MMMM: { sectionName: 'month', contentType: 'letter' },
   MMM: { sectionName: 'month', contentType: 'letter' },
@@ -24,9 +25,9 @@ const formatTokenMap: MuiFormatTokenMap = {
   hh: 'hour',
   mm: 'minute',
   ss: 'second',
-  a: 'am-pm',
-  aa: 'am-pm',
-  aaa: 'am-pm',
+  a: 'meridiem',
+  aa: 'meridiem',
+  aaa: 'meridiem',
 };
 
 export class AdapterDateFns extends BaseAdapterDateFns implements MuiPickerFieldAdapter<Date> {

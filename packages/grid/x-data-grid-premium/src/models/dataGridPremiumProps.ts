@@ -16,12 +16,7 @@ import type {
 import { GridInitialStatePremium } from './gridStatePremium';
 import { GridApiPremium } from './gridApiPremium';
 
-export interface GridExperimentalPremiumFeatures extends GridExperimentalProFeatures {
-  /**
-   * Enables the aggregation feature.
-   */
-  aggregation: boolean;
-}
+export interface GridExperimentalPremiumFeatures extends GridExperimentalProFeatures {}
 
 /**
  * The props users can give to the `DataGridProProps` component.

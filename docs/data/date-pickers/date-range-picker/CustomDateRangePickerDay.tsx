@@ -13,15 +13,22 @@ import { DateRange } from '@mui/x-date-pickers-pro/DateRangePicker';
 import { Dayjs } from 'dayjs';
 
 const DateRangePickerDay = styled(MuiDateRangePickerDay)(
-  ({ theme, isHighlighting, isStartOfHighlighting, isEndOfHighlighting }) => ({
-    ...(isHighlighting && {
-      borderRadius: 0,
-      backgroundColor: theme.palette.primary.main,
-      color: theme.palette.common.white,
-      '&:hover, &:focus': {
-        backgroundColor: theme.palette.primary.dark,
-      },
-    }),
+  ({
+    theme,
+    isHighlighting,
+    isStartOfHighlighting,
+    isEndOfHighlighting,
+    outsideCurrentMonth,
+  }) => ({
+    ...(!outsideCurrentMonth &&
+      isHighlighting && {
+        borderRadius: 0,
+        backgroundColor: theme.palette.primary.main,
+        color: theme.palette.common.white,
+        '&:hover, &:focus': {
+          backgroundColor: theme.palette.primary.dark,
+        },
+      }),
     ...(isStartOfHighlighting && {
       borderTopLeftRadius: '50%',
       borderBottomLeftRadius: '50%',
@@ -36,13 +43,6 @@ const DateRangePickerDay = styled(MuiDateRangePickerDay)(
 export default function CustomDateRangePickerDay() {
   const [value, setValue] = React.useState<DateRange<Dayjs>>([null, null]);
 
-  const renderWeekPickerDay = (
-    date: Dayjs,
-    dateRangePickerDayProps: DateRangePickerDayProps<Dayjs>,
-  ) => {
-    return <DateRangePickerDay {...dateRangePickerDayProps} />;
-  };
-
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <StaticDateRangePicker
@@ -50,7 +50,7 @@ export default function CustomDateRangePickerDay() {
         label="date range"
         value={value}
         onChange={(newValue) => setValue(newValue)}
-        renderDay={renderWeekPickerDay}
+        components={{ Day: DateRangePickerDay }}
         renderInput={(startProps, endProps) => (
           <React.Fragment>
             <TextField {...startProps} />

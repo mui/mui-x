@@ -24,8 +24,8 @@ const formatTokenMap: MuiFormatTokenMap = {
   YYYYYY: 'year',
 
   // AM / PM
-  A: 'am-pm',
-  a: 'am-pm',
+  A: 'meridiem',
+  a: 'meridiem',
 
   // Hour
   H: 'hour',

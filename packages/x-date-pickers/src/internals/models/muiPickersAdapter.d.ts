@@ -7,7 +7,14 @@ export type MuiPickersAdapter<TDate> = IUtils<TDate> & {
   getWeekNumber?: (date: TDate) => string;
 };
 
-export type MuiDateSectionName = 'year' | 'month' | 'day' | 'hour' | 'minute' | 'second' | 'am-pm';
+export type MuiDateSectionName =
+  | 'year'
+  | 'month'
+  | 'day'
+  | 'hour'
+  | 'minute'
+  | 'second'
+  | 'meridiem';
 
 export type MuiFormatTokenMap = {
   [formatToken: string]:
