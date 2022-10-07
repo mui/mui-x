@@ -69,7 +69,7 @@ But changing the value of an end date section will not fire `onChange` until the
 
 Use the `selectedSections` and `onSelectedSectionsChange` props to control which sections are currently being selected.
 
-This prop accept four formats:
+This prop accepts four formats:
 
 1. If a number is provided, the section at this index will be selected.
 2. If an object with a `startIndex` and `endIndex` properties are provided, the sections between those two indexes will be selected.
