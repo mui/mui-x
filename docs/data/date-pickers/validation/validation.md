@@ -63,7 +63,7 @@ The current time is computed during the first render of the `LocalizationProvide
 
 All the props described below are available on all the components supporting date edition.
 
-### Set date boundaries
+### Minimum and maximum date
 
 The `minDate` prop prevents the selection of all values before `props.minDate`.
 
@@ -124,7 +124,7 @@ The `shouldDisableYear` prop prevents the selection of all dates in years for wh
 
 ## Time validation
 
-### Set time boundaries
+### Minimum and maximum time
 
 The `minTime` prop prevents the selection of all values between midnight and `props.minTime`.
 
@@ -164,7 +164,7 @@ In the example below—the last quarter of each hour is not selectable.
 
 ## Date and time validation
 
-### Set date and time boundaries
+### Minimum and maximum date time
 
 The `minDateTime` prop prevents the selection of all values after `props.minDateTime`.
 
