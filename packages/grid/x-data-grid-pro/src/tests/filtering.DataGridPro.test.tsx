@@ -146,7 +146,7 @@ describe('<DataGridPro /> - Filter', () => {
     expect(getColumnForNewFilter.callCount).to.equal(6);
   });
 
-  it('should pass columns filtered by `filterColumns` to filters column list', () => {
+  it.only('should pass columns filtered by `filterColumns` to filters column list', () => {
     const filterColumns = () => ['testField'];
     render(
       <TestCase
@@ -167,8 +167,7 @@ describe('<DataGridPro /> - Filter', () => {
         columns={[...baselineProps.columns, { field: 'testField' }]}
       />,
     );
-    const defaultFilterForm = document.querySelectorAll(`.MuiDataGrid-filterForm`)[0];
-    const selectListOfColumns = within(defaultFilterForm).getAllByRole('combobox')[0];
+    const selectListOfColumns = document.querySelectorAll('.MuiDataGrid-filterFormColumnInput')[0];
     const availableColumns = within(selectListOfColumns).getAllByRole('option');
     expect(availableColumns.length).to.equal(1);
   });
