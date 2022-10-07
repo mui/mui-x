@@ -246,9 +246,9 @@ GridFilterPanel.propTypes = {
     valueInputProps: PropTypes.any,
   }),
   /**
-   * Function that returns the next filter item to be picked as default filter
-   * @param {GetColumnForNewFilterArgs} args Currently configured filters and columns
-   * @returns {GridColDef['field']} The field to be used for the next filter
+   * Function that returns the next filter item to be picked as default filter.
+   * @param {GetColumnForNewFilterArgs} args Currently configured filters and columns.
+   * @returns {GridColDef['field']} The field to be used for the next filter.
    */
   getColumnForNewFilter: PropTypes.func,
   /**
