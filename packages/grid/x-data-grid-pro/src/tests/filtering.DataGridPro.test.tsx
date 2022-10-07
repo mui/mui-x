@@ -168,7 +168,7 @@ describe('<DataGridPro /> - Filter', () => {
       />,
     );
     const defaultFilterForm = document.querySelectorAll(`.MuiDataGrid-filterForm`)[0];
-    const selectListOfColumns = within(defaultFilterForm).getAllByRole('combobox')[1];
+    const selectListOfColumns = within(defaultFilterForm).getAllByRole('combobox')[0];
     const availableColumns = within(selectListOfColumns).getAllByRole('option');
     expect(availableColumns.length).to.equal(1);
   });
