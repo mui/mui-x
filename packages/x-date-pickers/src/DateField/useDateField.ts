@@ -41,6 +41,8 @@ export const dateFieldValueManager: FieldValueManager<any, any, FieldSection, Da
         };
       },
     }),
+    parseValueStr: (valueStr, referenceValue, parseDate) =>
+      parseDate(valueStr.trim(), referenceValue),
     hasError: (error) => error != null,
     isSameError: isSameDateError,
   };

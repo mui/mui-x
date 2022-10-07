@@ -50,7 +50,7 @@ describe('<DataGrid /> - Column grouping', () => {
       expect(screen.queryAllByRole('row')).to.have.length(3);
     });
 
-    it('should add header rows to match max depth oc column groups', () => {
+    it('should add header rows to match max depth of column groups', () => {
       render(
         <TestDataGrid
           nbColumns={3}
@@ -260,6 +260,31 @@ describe('<DataGrid /> - Column grouping', () => {
       expect(
         Array.from(row2Headers).map((header) => header.getAttribute('aria-colindex')),
       ).to.deep.equal(['1', '3']);
+    });
+
+    it('should not throw warning when all columns are hidden', () => {
+      const { setProps } = render(
+        <TestDataGrid
+          nbColumns={3}
+          columnGroupingModel={[
+            {
+              groupId: 'col123',
+              children: [
+                { groupId: 'A', children: [{ field: 'col1' }, { field: 'col2' }] },
+                { field: 'col3' },
+              ],
+            },
+          ]}
+        />,
+      );
+
+      setProps({
+        columnVisibilityModel: {
+          col1: false,
+          col2: false,
+          col3: false,
+        },
+      });
     });
   });
 

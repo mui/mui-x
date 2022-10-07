@@ -16,15 +16,15 @@ import {
 import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import {
-  GridNewRowEditingApi,
-  GridNewEditingSharedApi,
+  GridRowEditingApi,
+  GridEditingSharedApi,
   GridStopRowEditModeParams,
   GridStartRowEditModeParams,
   GridRowModesModel,
   GridRowModesModelProps,
 } from '../../../models/api/gridEditingApi';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
-import { gridEditRowsStateSelector } from './gridEditRowsSelector';
+import { gridEditRowsStateSelector } from './gridEditingSelectors';
 import { GridRowId } from '../../../models/gridRows';
 import { isPrintableKey } from '../../../utils/keyboardUtils';
 import { gridColumnFieldsSelector } from '../columns/gridColumnsSelector';
@@ -312,7 +312,7 @@ export const useGridRowEditing = (
   useGridApiOptionHandler(apiRef, 'rowEditStart', props.onRowEditStart);
   useGridApiOptionHandler(apiRef, 'rowEditStop', props.onRowEditStop);
 
-  const getRowMode = React.useCallback<GridNewRowEditingApi['getRowMode']>(
+  const getRowMode = React.useCallback<GridRowEditingApi['getRowMode']>(
     (id) => {
       if (props.editMode === GridEditModes.Cell) {
         return GridRowModes.View;
@@ -395,7 +395,7 @@ export const useGridRowEditing = (
     [apiRef],
   );
 
-  const startRowEditMode = React.useCallback<GridNewRowEditingApi['startRowEditMode']>(
+  const startRowEditMode = React.useCallback<GridRowEditingApi['startRowEditMode']>(
     (params) => {
       const { id, ...other } = params;
 
@@ -438,9 +438,9 @@ export const useGridRowEditing = (
         apiRef.current.setCellFocus(id, fieldToFocus);
       }
     },
-  ) as GridNewRowEditingApi['stopRowEditMode'];
+  ) as GridRowEditingApi['stopRowEditMode'];
 
-  const stopRowEditMode = React.useCallback<GridNewRowEditingApi['stopRowEditMode']>(
+  const stopRowEditMode = React.useCallback<GridRowEditingApi['stopRowEditMode']>(
     (params) => {
       const { id, ...other } = params;
 
@@ -523,10 +523,10 @@ export const useGridRowEditing = (
         finishRowEditMode();
       }
     },
-  ) as GridNewRowEditingApi['startRowEditMode'];
+  ) as GridRowEditingApi['startRowEditMode'];
 
   const setRowEditingEditCellValue = React.useCallback<
-    GridNewRowEditingApi['unstable_setRowEditingEditCellValue']
+    GridRowEditingApi['unstable_setRowEditingEditCellValue']
   >(
     (params) => {
       const { id, field, value, debounceMs, unstable_skipValueParser: skipValueParser } = params;
@@ -646,7 +646,7 @@ export const useGridRowEditing = (
   );
 
   const getRowWithUpdatedValuesFromRowEditing = React.useCallback<
-    GridNewRowEditingApi['unstable_getRowWithUpdatedValuesFromRowEditing']
+    GridRowEditingApi['unstable_getRowWithUpdatedValuesFromRowEditing']
   >(
     (id) => {
       const editingState = gridEditRowsStateSelector(apiRef.current.state);
@@ -670,7 +670,7 @@ export const useGridRowEditing = (
     [apiRef],
   );
 
-  const editingApi: Omit<GridNewRowEditingApi, keyof GridNewEditingSharedApi> = {
+  const editingApi: Omit<GridRowEditingApi, keyof GridEditingSharedApi> = {
     getRowMode,
     startRowEditMode,
     stopRowEditMode,
