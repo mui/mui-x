@@ -111,21 +111,28 @@ export const useField = <
   });
 
   const handleInputPaste = useEventCallback((event: React.ClipboardEvent<HTMLInputElement>) => {
-    event.preventDefault();
-
     if (readOnly) {
-      return;
-    }
-
-    // TODO: Implement single section paste
-    if (
-      selectedSectionIndexes &&
-      selectedSectionIndexes.startIndex === selectedSectionIndexes.endIndex
-    ) {
+      event.preventDefault();
       return;
     }
 
     const pastedValue = event.clipboardData.getData('text');
+    if (
+      selectedSectionIndexes &&
+      selectedSectionIndexes.startIndex === selectedSectionIndexes.endIndex
+    ) {
+      const activeSection = state.sections[selectedSectionIndexes.startIndex];
+      const isValidPastedValue =
+        (activeSection.contentType === 'letter' && /^[a-zA-Z]+$/.test(pastedValue)) ||
+        (activeSection.contentType === 'digit' && /^[0-9]+$/.test(pastedValue));
+      if (isValidPastedValue) {
+        // Early return to let the paste update section, value
+        return;
+      }
+      event.preventDefault();
+      return;
+    }
+
     updateValueFromValueStr(pastedValue);
   });
 
