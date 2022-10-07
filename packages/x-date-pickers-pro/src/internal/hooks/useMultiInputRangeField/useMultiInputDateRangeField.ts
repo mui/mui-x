@@ -18,7 +18,6 @@ import {
 } from '../validation/useDateRangeValidation';
 import { dateRangePickerValueManager } from '../../../DateRangePicker/shared';
 
-
 export const useMultiInputDateRangeField = <TDate, TChildProps extends {}>({
   sharedProps: inSharedProps,
   startInputProps: inStartInputProps,
@@ -35,7 +34,7 @@ export const useMultiInputDateRangeField = <TDate, TChildProps extends {}>({
   // TODO: Maybe export utility from `useField` instead of copy/pasting the logic
   const buildChangeHandler = (index: 0 | 1) => {
     if (!onChange) {
-      return () => { };
+      return () => {};
     }
 
     return (newDate: TDate | null) => {

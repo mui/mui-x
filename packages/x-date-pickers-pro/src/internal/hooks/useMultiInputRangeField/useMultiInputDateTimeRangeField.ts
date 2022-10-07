@@ -62,7 +62,7 @@ export const useMultiInputDateTimeRangeField = <TDate, TChildProps extends {}>({
   // TODO: Maybe export utility from `useField` instead of copy/pasting the logic
   const buildChangeHandler = (index: 0 | 1) => {
     if (!onChange) {
-      return () => { };
+      return () => {};
     }
 
     return (newDate: TDate | null) => {

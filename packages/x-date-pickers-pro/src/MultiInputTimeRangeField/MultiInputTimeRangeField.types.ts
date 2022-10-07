@@ -9,14 +9,15 @@ import {
 } from '../internal/models/timeRange';
 
 export interface UseMultiInputTimeRangeFieldParams<TDate, TChildProps extends {}> {
-  sharedProps: Omit<TChildProps, keyof UseMultiInputTimeRangeFieldProps<TDate>> & UseMultiInputTimeRangeFieldProps<TDate>;
+  sharedProps: Omit<TChildProps, keyof UseMultiInputTimeRangeFieldProps<TDate>> &
+    UseMultiInputTimeRangeFieldProps<TDate>;
   startInputProps: TChildProps;
   endInputProps: TChildProps;
   startInputRef?: React.Ref<HTMLInputElement>;
   endInputRef?: React.Ref<HTMLInputElement>;
 }
 
-export interface UseMultiInputTimeRangeFieldProps<TDate> extends UseTimeRangeFieldProps<TDate> { }
+export interface UseMultiInputTimeRangeFieldProps<TDate> extends UseTimeRangeFieldProps<TDate> {}
 
 export type UseMultiInputTimeRangeFieldComponentProps<TDate, TChildProps extends {}> = Omit<
   TChildProps,
