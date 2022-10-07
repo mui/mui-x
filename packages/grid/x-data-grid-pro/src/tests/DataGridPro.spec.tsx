@@ -59,27 +59,31 @@ function ApiRefPrivateMethods() {
 
   React.useEffect(() => {
     // @ts-expect-error Property 'updateControlState' does not exist on type 'GridApiPro'
-    apiRef.current.updateControlState();
+    apiRef.current.updateControlState;
     // @ts-expect-error Property 'registerControlState' does not exist on type 'GridApiPro'
-    apiRef.current.registerControlState();
+    apiRef.current.registerControlState;
     // @ts-expect-error Property 'caches' does not exist on type 'GridApiPro'
     apiRef.current.caches;
     // @ts-expect-error Property 'eventManager' does not exist on type 'GridApiPro'
     apiRef.current.eventManager;
     // @ts-expect-error Property 'registerPipeProcessor' does not exist on type 'GridApiPro'
-    apiRef.current.registerPipeProcessor();
+    apiRef.current.registerPipeProcessor;
     // @ts-expect-error Property 'registerPipeApplier' does not exist on type 'GridApiPro'
-    apiRef.current.registerPipeApplier();
+    apiRef.current.registerPipeApplier;
     // @ts-expect-error Property 'requestPipeProcessorsApplication' does not exist on type 'GridApiPro'
-    apiRef.current.requestPipeProcessorsApplication();
+    apiRef.current.requestPipeProcessorsApplication;
     // @ts-expect-error Property 'registerStrategyProcessor' does not exist on type 'GridApiPro'
-    apiRef.current.registerStrategyProcessor();
+    apiRef.current.registerStrategyProcessor;
     // @ts-expect-error Property 'setStrategyAvailability' does not exist on type 'GridApiPro'
-    apiRef.current.setStrategyAvailability();
+    apiRef.current.setStrategyAvailability;
     // @ts-expect-error Property 'getActiveStrategy' does not exist on type 'GridApiPro'
-    apiRef.current.getActiveStrategy();
+    apiRef.current.getActiveStrategy;
     // @ts-expect-error Property 'applyStrategyProcessor' does not exist on type 'GridApiPro'
-    apiRef.current.applyStrategyProcessor();
+    apiRef.current.applyStrategyProcessor;
+    // @ts-expect-error Property 'storeDetailPanelHeight' does not exist on type 'GridApiPro'
+    apiRef.current.storeDetailPanelHeight;
+    // @ts-expect-error Property 'detailPanelHasAutoHeight' does not exist on type 'GridApiPro'
+    apiRef.current.detailPanelHasAutoHeight;
   });
 
   return null;
