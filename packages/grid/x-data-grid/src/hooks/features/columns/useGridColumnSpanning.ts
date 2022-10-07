@@ -2,7 +2,10 @@ import * as React from 'react';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { GridColumnIndex, GridCellColSpanInfo } from '../../../models/gridColumnSpanning';
 import { GridRowId } from '../../../models/gridRows';
-import { GridColumnSpanningApi } from '../../../models/api/gridColumnSpanning';
+import {
+  GridColumnSpanningApi,
+  GridColumnSpanningPrivateApi,
+} from '../../../models/api/gridColumnSpanning';
 import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridStateColDef } from '../../../models/colDef';
@@ -90,7 +93,7 @@ export const useGridColumnSpanning = (apiRef: React.MutableRefObject<GridPrivate
   );
 
   // Calculate `colSpan` for each cell in the row
-  const calculateColSpan = React.useCallback<GridColumnSpanningApi['unstable_calculateColSpan']>(
+  const calculateColSpan = React.useCallback<GridColumnSpanningPrivateApi['calculateColSpan']>(
     ({ rowId, minFirstColumn, maxLastColumn, columns }) => {
       for (let i = minFirstColumn; i < maxLastColumn; i += 1) {
         const cellProps = calculateCellColSpan({
@@ -108,12 +111,16 @@ export const useGridColumnSpanning = (apiRef: React.MutableRefObject<GridPrivate
     [calculateCellColSpan],
   );
 
-  const columnSpanningApi: GridColumnSpanningApi = {
+  const columnSpanningPublicApi: GridColumnSpanningApi = {
     unstable_getCellColSpanInfo: getCellColSpanInfo,
-    unstable_calculateColSpan: calculateColSpan,
   };
 
-  useGridApiMethod(apiRef, columnSpanningApi, 'public');
+  const columnSpanningPrivateApi: GridColumnSpanningPrivateApi = {
+    calculateColSpan,
+  };
+
+  useGridApiMethod(apiRef, columnSpanningPublicApi, 'public');
+  useGridApiMethod(apiRef, columnSpanningPrivateApi, 'private');
 
   const handleColumnReorderChange = React.useCallback(() => {
     // `colSpan` needs to be recalculated after column reordering

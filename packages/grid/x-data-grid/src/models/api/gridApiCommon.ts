@@ -24,7 +24,7 @@ import type {
   GridPipeProcessingApi,
   GridPipeProcessingPrivateApi,
 } from '../../hooks/core/pipeProcessing';
-import { GridColumnSpanningApi } from './gridColumnSpanning';
+import { GridColumnSpanningApi, GridColumnSpanningPrivateApi } from './gridColumnSpanning';
 import type { GridStrategyProcessingApi } from '../../hooks/core/strategyProcessing';
 import type { GridDimensionsApi } from '../../hooks/features/dimensions';
 import type { GridPaginationApi } from '../../hooks/features/pagination';
@@ -70,7 +70,8 @@ export interface GridPrivateOnlyApiCommon<
 > extends GridCorePrivateApi<Api, PrivateApi>,
     GridStatePrivateApi<PrivateApi['state']>,
     GridPipeProcessingPrivateApi,
-    GridStrategyProcessingApi {}
+    GridStrategyProcessingApi,
+    GridColumnSpanningPrivateApi {}
 
 export interface GridPrivateApiCommon
   extends GridApiCommon,

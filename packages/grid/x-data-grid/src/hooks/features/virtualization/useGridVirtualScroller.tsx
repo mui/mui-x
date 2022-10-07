@@ -1,7 +1,7 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { useForkRef } from '@mui/material/utils';
-import { useGridApiContext } from '../../utils/useGridApiContext';
+import { useGridPrivateApiContext } from '../../utils/useGridPrivateApiContext';
 import { useGridRootProps } from '../../utils/useGridRootProps';
 import { useGridSelector } from '../../utils/useGridSelector';
 import {
@@ -84,7 +84,7 @@ interface UseGridVirtualScrollerProps {
 }
 
 export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
-  const apiRef = useGridApiContext();
+  const apiRef = useGridPrivateApiContext();
   const rootProps = useGridRootProps();
   const visibleColumns = useGridSelector(apiRef, gridVisibleColumnDefinitionsSelector);
 
@@ -415,7 +415,7 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
     if (params.rows) {
       params.rows.forEach((row) => {
         renderedRows.push(row);
-        apiRef.current.unstable_calculateColSpan({
+        apiRef.current.calculateColSpan({
           rowId: row.id,
           minFirstColumn,
           maxLastColumn,
@@ -430,7 +430,7 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
       for (let i = firstRowToRender; i < lastRowToRender; i += 1) {
         const row = currentPage.rows[i];
         renderedRows.push(row);
-        apiRef.current.unstable_calculateColSpan({
+        apiRef.current.calculateColSpan({
           rowId: row.id,
           minFirstColumn,
           maxLastColumn,

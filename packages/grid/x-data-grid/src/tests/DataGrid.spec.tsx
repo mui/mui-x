@@ -178,6 +178,8 @@ function ApiRefPrivateMethods() {
     apiRef.current.storeDetailPanelHeight;
     // @ts-expect-error Property 'detailPanelHasAutoHeight' does not exist on type 'GridApiCommunity'
     apiRef.current.detailPanelHasAutoHeight;
+    // @ts-expect-error Property 'calculateColSpan' does not exist on type 'GridApiCommunity'
+    apiRef.current.calculateColSpan;
   });
 
   return null;
