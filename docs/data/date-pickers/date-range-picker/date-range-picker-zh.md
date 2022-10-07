@@ -55,6 +55,7 @@ The date range picker component can be disabled or read-only.
 
 ## 自定义日期渲染
 
-你可以通过 `renderDay` 函数属性来自定义所显示的日期。 You can take advantage of the internal [DateRangePickerDay](/x/api/date-pickers/date-range-picker-day/) component.
+The displayed days are customizable with the `Day` component slot.
+You can take advantage of the internal [DateRangePickerDay](/x/api/date-pickers/date-range-picker-day/) component.
 
 {{"demo": "CustomDateRangePickerDay.js"}}

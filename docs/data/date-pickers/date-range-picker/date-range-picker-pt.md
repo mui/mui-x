@@ -55,6 +55,7 @@ Observe que a propriedade `calendars` só funciona no modo desktop.
 
 ## Renderização customizada do dia
 
-Os dias exibidos são customizados com uma função na propriedade `renderDay`. You can take advantage of the internal [DateRangePickerDay](/x/api/date-pickers/date-range-picker-day/) component.
+The displayed days are customizable with the `Day` component slot.
+You can take advantage of the internal [DateRangePickerDay](/x/api/date-pickers/date-range-picker-day/) component.
 
 {{"demo": "CustomDateRangePickerDay.js"}}

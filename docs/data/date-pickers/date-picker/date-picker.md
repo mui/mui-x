@@ -89,14 +89,14 @@ You can customize the rendering of the input with the `renderInput` prop. Make s
 
 ## Customized day rendering
 
-The displayed days are customizable with the `renderDay` function prop.
+The displayed days are customizable with the `Day` component slot.
 You can take advantage of the [PickersDay](/x/api/date-pickers/pickers-day/) component.
 
 {{"demo": "CustomDay.js"}}
 
 ## Dynamic data
 
-Sometimes it may be necessary to display additional info right in the calendar. Here's an example of prefetching and displaying server-side data using the `onMonthChange`, `loading`, and `renderDay` props.
+Sometimes it may be necessary to display additional info right in the calendar. Here's an example of prefetching and displaying server-side data using the `onMonthChange`, `loading`, and `components.Day` props.
 
 {{"demo": "ServerRequestDatePicker.js"}}
 
