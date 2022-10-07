@@ -5,7 +5,7 @@ export type { GridCoreApi } from './gridCoreApi';
 export * from './gridColumnApi';
 export * from './gridDensityApi';
 export * from './gridRowApi';
-export * from './gridRowsMetaApi';
+export type { GridRowsMetaApi } from './gridRowsMetaApi';
 export * from './gridSelectionApi';
 export * from './gridSortApi';
 export type { GridStateApi } from './gridStateApi';

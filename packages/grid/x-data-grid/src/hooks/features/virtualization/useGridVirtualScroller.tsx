@@ -116,7 +116,7 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
 
   const getNearestIndexToRender = React.useCallback(
     (offset: number) => {
-      const lastMeasuredIndexRelativeToAllRows = apiRef.current.unstable_getLastMeasuredRowIndex();
+      const lastMeasuredIndexRelativeToAllRows = apiRef.current.getLastMeasuredRowIndex();
       let allRowsMeasured = lastMeasuredIndexRelativeToAllRows === Infinity;
       if (currentPage.range?.lastRowIndex && !allRowsMeasured) {
         // Check if all rows in this page are already measured
@@ -178,7 +178,7 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
 
     for (let i = firstRowToRender; i < lastRowToRender && !hasRowWithAutoHeight; i += 1) {
       const row = currentPage.rows[i];
-      hasRowWithAutoHeight = apiRef.current.unstable_rowHasAutoHeight(row.id);
+      hasRowWithAutoHeight = apiRef.current.rowHasAutoHeight(row.id);
     }
 
     if (!hasRowWithAutoHeight) {
@@ -462,7 +462,7 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
     for (let i = 0; i < renderedRows.length; i += 1) {
       const { id, model } = renderedRows[i];
       const lastVisibleRowIndex = firstRowToRender + i === currentPage.rows.length - 1;
-      const baseRowHeight = !apiRef.current.unstable_rowHasAutoHeight(id)
+      const baseRowHeight = !apiRef.current.rowHasAutoHeight(id)
         ? apiRef.current.unstable_getRowHeight(id)
         : 'auto';
 

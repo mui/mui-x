@@ -13,7 +13,7 @@ import { GridPreferencesPanelApi } from './gridPreferencesPanelApi';
 import { GridPrintExportApi } from './gridPrintExportApi';
 import { GridDisableVirtualizationApi } from './gridDisableVirtualizationApi';
 import { GridRowApi } from './gridRowApi';
-import { GridRowsMetaApi } from './gridRowsMetaApi';
+import { GridRowsMetaApi, GridRowsMetaPrivateApi } from './gridRowsMetaApi';
 import { GridSelectionApi } from './gridSelectionApi';
 import { GridSortApi } from './gridSortApi';
 import { GridStateApi, GridStatePrivateApi } from './gridStateApi';
@@ -71,7 +71,8 @@ export interface GridPrivateOnlyApiCommon<
     GridStatePrivateApi<PrivateApi['state']>,
     GridPipeProcessingPrivateApi,
     GridStrategyProcessingApi,
-    GridColumnSpanningPrivateApi {}
+    GridColumnSpanningPrivateApi,
+    GridRowsMetaPrivateApi {}
 
 export interface GridPrivateApiCommon
   extends GridApiCommon,
