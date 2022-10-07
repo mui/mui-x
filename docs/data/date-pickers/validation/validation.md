@@ -164,7 +164,7 @@ In the example below—the last quarter of each hour is not selectable.
 
 ## Date and time validation
 
-### Set date and time boundaries
+### Minimum and maximum date time
 
 The `minDateTime` prop prevents the selection of all values after `props.minDateTime`.
 
