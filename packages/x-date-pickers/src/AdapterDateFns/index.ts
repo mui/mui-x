@@ -59,6 +59,6 @@ export class AdapterDateFns extends BaseAdapterDateFns implements MuiPickerField
   };
 
   public getWeekNumber = (date: Date) => {
-    return `${getWeek(date, { locale: this.locale })}`;
+    return getWeek(date, { locale: this.locale });
   };
 }

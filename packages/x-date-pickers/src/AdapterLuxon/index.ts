@@ -67,6 +67,6 @@ export class AdapterLuxon extends BaseAdapterLuxon implements MuiPickerFieldAdap
   };
 
   public getWeekNumber = (date: DateTime) => {
-    return `${date.weekNumber}`;
+    return date.weekNumber;
   };
 }

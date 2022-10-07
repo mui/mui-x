@@ -94,7 +94,8 @@ You can take advantage of the [PickersDay](/x/api/date-pickers/pickers-day/) com
 
 To display week number, use the `displayWeekNumber`.
 You also need to provide the method `getWeekNumber`.
-It takes the first day of the week as an input and returns the string displayed in week number column.
+It takes the first day of the week as an input and returns the week number.
+You can customize the string displayed with `localeText.calendarWeekNumberText`.
 
 The four supported libraries ([dayjs](https://day.js.org/docs/en/get-set/week),
 [date-fns](https://date-fns.org/v2.29.2/docs/getWeek),

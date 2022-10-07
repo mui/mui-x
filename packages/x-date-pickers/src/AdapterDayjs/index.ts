@@ -74,6 +74,6 @@ export class AdapterDayjs extends BaseAdapterDayjs implements MuiPickerFieldAdap
   };
 
   public getWeekNumber = (date: Dayjs) => {
-    return `${date.week()}`;
+    return date.week();
   };
 }

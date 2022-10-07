@@ -15,6 +15,8 @@ export interface PickersLocaleText<TDate> {
   end: string;
   calendarWeekNumberHeaderLabel: string;
   calendarWeekNumberHeaderText: string;
+  calendarWeekNumberAriaLabelText: (weekNumber: number) => string;
+  calendarWeekNumberText: (weekNumber: number) => string;
   calendarViewSwitchingButtonAriaLabel: (currentView: CalendarPickerView) => string;
   inputModeToggleButtonAriaLabel: (
     isKeyboardInputOpen: boolean,

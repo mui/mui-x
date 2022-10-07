@@ -77,6 +77,6 @@ export class AdapterMoment
   };
 
   public getWeekNumber = (date: defaultMoment.Moment) => {
-    return `${date.week()}`;
+    return date.week();
   };
 }
