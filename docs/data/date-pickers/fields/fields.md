@@ -13,7 +13,7 @@ We might do some breaking change on their props to have the best components poss
 
 ## Introduction
 
-The fields are React components that lets you enter a date with the keyboard, without any modal or drop down UI.
+The fields are React components that lets you enter a date with the keyboard, without any modal or dropdown UI.
 
 ### Fields to edit a single element
 
