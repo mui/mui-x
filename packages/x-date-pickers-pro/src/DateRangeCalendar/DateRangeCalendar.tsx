@@ -1,6 +1,8 @@
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import useEventCallback from '@mui/utils/useEventCallback';
+import useControlled from '@mui/utils/useControlled';
 import { resolveComponentProps } from '@mui/base/utils';
 import { styled, useThemeProps } from '@mui/material/styles';
 import { unstable_composeClasses as composeClasses } from '@mui/material';
@@ -28,6 +30,7 @@ import { getDateRangeCalendarUtilityClass } from './dateRangeCalendarClasses';
 import {
   DateRangeCalendarProps,
   DateRangeCalendarDefaultizedProps,
+  DateRangePosition,
 } from './DateRangeCalendar.types';
 import {
   isEndOfRange,
@@ -38,6 +41,7 @@ import {
 import { calculateRangeChange, calculateRangePreview } from '../DateRangePicker/date-range-manager';
 import { DateRange } from '../internal/models';
 import { DateRangePickerDay } from '../DateRangePickerDay';
+import { dateRangePickerValueManager } from '../DateRangePicker/shared';
 
 const releaseInfo = getReleaseInfo();
 
@@ -114,14 +118,13 @@ type DateRangeCalendarComponent = (<TDate>(
   props: DateRangeCalendarProps<TDate> & React.RefAttributes<HTMLDivElement>,
 ) => JSX.Element) & { propTypes?: any };
 
-export const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
+const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
   inProps: DateRangeCalendarProps<TDate>,
   ref: React.Ref<HTMLDivElement>,
 ) {
   const utils = useUtils<TDate>();
   const localeText = useLocaleText<TDate>();
 
-  // TODO: Add theme augmentation
   const props = useDateRangeCalendarDefaultizedProps(inProps, 'MuiDateRangeCalendar');
 
   const ownerState = props;
@@ -129,9 +132,10 @@ export const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDa
   const isMobile = React.useContext(WrapperVariantContext) === 'mobile';
 
   const {
-    className,
-    value,
+    value: valueProp,
+    defaultValue,
     onChange,
+    className,
     disableFuture,
     disablePast,
     minDate,
@@ -140,7 +144,7 @@ export const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDa
     reduceAnimations,
     onMonthChange,
     defaultCalendarMonth,
-    currentDatePosition,
+    currentDatePosition: currentDatePositionProp,
     onCurrentDatePositionChange,
     calendars,
     components,
@@ -154,7 +158,24 @@ export const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDa
     dayOfWeekFormatter,
     disableAutoMonthSwitching,
     sx,
+    autoFocus,
+    classes: propClasses,
+    ...other
   } = props;
+
+  const [value, setValue] = useControlled<DateRange<TDate>>({
+    controlled: valueProp,
+    default: defaultValue ?? dateRangePickerValueManager.emptyValue,
+    name: 'DateRangeCalendar',
+    state: 'value',
+  });
+
+  const [currentDatePosition, setCurrentDatePosition] = useControlled<DateRangePosition>({
+    controlled: currentDatePositionProp,
+    default: 'start',
+    name: 'DateRangeCalendar',
+    state: 'currentDatePosition',
+  });
 
   const wrappedShouldDisableDate =
     shouldDisableDate &&
@@ -223,11 +244,13 @@ export const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDa
       currentlySelectingRangeEnd: currentDatePosition,
     });
 
-    onCurrentDatePositionChange(nextSelection);
+    setCurrentDatePosition(nextSelection);
+    onCurrentDatePositionChange?.(nextSelection);
 
     const isFullRangeSelected = currentDatePosition === 'end' && isRangeValid(utils, newRange);
 
-    onChange(newRange as DateRange<TDate>, isFullRangeSelected ? 'finish' : 'partial');
+    setValue(newRange);
+    onChange?.(newRange, isFullRangeSelected ? 'finish' : 'partial');
   });
 
   const selectNextMonth = React.useCallback(() => {
@@ -242,6 +265,7 @@ export const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDa
     disableFuture,
     maxDate,
   });
+
   const isPreviousMonthDisabled = usePreviousMonthDisabled(calendarState.currentMonth, {
     disablePast,
     minDate,
@@ -317,6 +341,7 @@ export const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDa
       className={clsx(className, classes.root)}
       ownerState={ownerState}
       sx={sx}
+      {...other}
     >
       <Watermark packageName="x-date-pickers-pro" releaseInfo={releaseInfo} />
       {Array.from({ length: calendars }).map((_, index) => {
@@ -326,7 +351,11 @@ export const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDa
         );
 
         return (
-          <DateRangeCalendarMonthContainer key={index} className={classes.monthContainer}>
+          <DateRangeCalendarMonthContainer
+            key={index}
+            className={classes.monthContainer}
+            {...other}
+          >
             {calendars === 1 ? (
               <PickersCalendarHeader
                 views={['day']}
@@ -358,6 +387,7 @@ export const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDa
                 {utils.format(monthOnIteration, 'monthAndYear')}
               </DateRangeCalendarArrowSwitcher>
             )}
+
             <DateRangeCalendarDayPicker<TDate>
               key={index}
               {...calendarState}
@@ -377,6 +407,7 @@ export const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDa
               renderLoading={renderLoading}
               components={componentsForDayPicker}
               componentsProps={componentsPropsForDayPicker}
+              autoFocus={autoFocus}
             />
           </DateRangeCalendarMonthContainer>
         );
@@ -384,3 +415,129 @@ export const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDa
     </DateRangeCalendarRoot>
   );
 }) as DateRangeCalendarComponent;
+
+DateRangeCalendar.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // ----------------------------------------------------------------------
+  autoFocus: PropTypes.bool,
+  /**
+   * The number of calendars to render.
+   * @default 2
+   */
+  calendars: PropTypes.oneOf([1, 2, 3]),
+  classes: PropTypes.object,
+  className: PropTypes.string,
+  /**
+   * Overrideable components.
+   * @default {}
+   */
+  components: PropTypes.object,
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  componentsProps: PropTypes.object,
+  currentDatePosition: PropTypes.oneOf(['end', 'start']),
+  /**
+   * Formats the day of week displayed in the calendar header.
+   * @param {string} day The day of week provided by the adapter's method `getWeekdays`.
+   * @returns {string} The name to display.
+   * @default (day) => day.charAt(0).toUpperCase()
+   */
+  dayOfWeekFormatter: PropTypes.func,
+  /**
+   * Default calendar month displayed when `value={[null, null]}`.
+   */
+  defaultCalendarMonth: PropTypes.any,
+  defaultValue: PropTypes.arrayOf(PropTypes.any),
+  /**
+   * If `true`, after selecting `start` date calendar will not automatically switch to the month of `end` date.
+   * @default false
+   */
+  disableAutoMonthSwitching: PropTypes.bool,
+  /**
+   * If `true`, the picker and text field are disabled.
+   * @default false
+   */
+  disabled: PropTypes.bool,
+  /**
+   * If `true` disable values before the current time
+   * @default false
+   */
+  disableFuture: PropTypes.bool,
+  /**
+   * If `true`, today's date is rendering without highlighting with circle.
+   * @default false
+   */
+  disableHighlightToday: PropTypes.bool,
+  /**
+   * If `true` disable values after the current time.
+   * @default false
+   */
+  disablePast: PropTypes.bool,
+  /**
+   * If `true` renders `LoadingComponent` in calendar instead of calendar view.
+   * Can be used to preload information and show it in calendar.
+   * @default false
+   */
+  loading: PropTypes.bool,
+  /**
+   * Maximal selectable date. @DateIOType
+   */
+  maxDate: PropTypes.any,
+  /**
+   * Minimal selectable date. @DateIOType
+   */
+  minDate: PropTypes.any,
+  onChange: PropTypes.func,
+  onCurrentDatePositionChange: PropTypes.func,
+  /**
+   * Callback firing on month change @DateIOType.
+   * @template TDate
+   * @param {TDate} month The new month.
+   * @returns {void|Promise} -
+   */
+  onMonthChange: PropTypes.func,
+  /**
+   * Make picker read only.
+   * @default false
+   */
+  readOnly: PropTypes.bool,
+  /**
+   * Disable heavy animations.
+   * @default typeof navigator !== 'undefined' && /(android)/i.test(navigator.userAgent)
+   */
+  reduceAnimations: PropTypes.bool,
+  /**
+   * Component displaying when passed `loading` true.
+   * @returns {React.ReactNode} The node to render when loading.
+   * @default () => "..."
+   */
+  renderLoading: PropTypes.func,
+  /**
+   * Disable specific date. @DateIOType
+   * @template TDate
+   * @param {TDate} day The date to test.
+   * @param {string} position The date to test, 'start' or 'end'.
+   * @returns {boolean} Returns `true` if the date should be disabled.
+   */
+  shouldDisableDate: PropTypes.func,
+  /**
+   * If `true`, days that have `outsideCurrentMonth={true}` are displayed.
+   * @default false
+   */
+  showDaysOutsideCurrentMonth: PropTypes.bool,
+  /**
+   * The system prop that allows defining system overrides as well as additional CSS styles.
+   */
+  sx: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
+    PropTypes.func,
+    PropTypes.object,
+  ]),
+  value: PropTypes.arrayOf(PropTypes.any),
+} as any;
+
+export { DateRangeCalendar };

@@ -10,3 +10,6 @@ export * from './StaticDateRangePicker';
 // export * from './DateRangePicker2'
 export * from './DesktopDateRangePicker2';
 // export * from './DateRangePicker2'
+
+// Calendars
+export * from './DateRangeCalendar';

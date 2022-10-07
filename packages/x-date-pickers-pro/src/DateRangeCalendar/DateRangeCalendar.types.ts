@@ -15,6 +15,8 @@ import { DateRange, DayRangeValidationProps } from '../internal/models';
 import { DateRangeCalendarClasses } from './dateRangeCalendarClasses';
 import { DateRangePickerDayProps } from '../DateRangePickerDay';
 
+export type DateRangePosition = 'start' | 'end';
+
 export interface DateRangeCalendarSlotsComponent<TDate>
   extends PickersArrowSwitcherSlotsComponent,
     Omit<DayPickerSlotsComponent<TDate>, 'Day'> {
@@ -34,6 +36,9 @@ export interface DateRangeCalendarProps<TDate>
   extends ExportedDayPickerProps<TDate>,
     BaseDateValidationProps<TDate>,
     DayRangeValidationProps<TDate> {
+  value?: DateRange<TDate>;
+  defaultValue?: DateRange<TDate>;
+  onChange?: (newValue: DateRange<TDate>, selectionState?: PickerSelectionState) => void;
   autoFocus?: boolean;
   className?: string;
   classes?: Partial<DateRangeCalendarClasses>;
@@ -56,7 +61,6 @@ export interface DateRangeCalendarProps<TDate>
    * @default false
    */
   disableAutoMonthSwitching?: boolean;
-  value: DateRange<TDate>;
   /**
    * Default calendar month displayed when `value={[null, null]}`.
    */
@@ -66,7 +70,6 @@ export interface DateRangeCalendarProps<TDate>
    * @default false
    */
   disabled?: boolean;
-  onChange: (newValue: DateRange<TDate>, selectionState?: PickerSelectionState) => void;
   /**
    * Make picker read only.
    * @default false
@@ -84,8 +87,8 @@ export interface DateRangeCalendarProps<TDate>
    * @returns {void|Promise} -
    */
   onMonthChange?: (month: TDate) => void | Promise<void>;
-  currentDatePosition: 'start' | 'end';
-  onCurrentDatePositionChange: (newPosition: 'start' | 'end') => void;
+  currentDatePosition?: DateRangePosition;
+  onCurrentDatePositionChange?: (newPosition: DateRangePosition) => void;
   /**
    * The number of calendars to render.
    * @default 2
