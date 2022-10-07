@@ -4,7 +4,7 @@ title: React Date Field component
 
 # Date field
 
-<p class="description">The date time field let the user select a date and a time with the keyboard.</p>
+<p class="description">The date time field lets the user select a date and a time with the keyboard.</p>
 
 :::warning
 This component is unstable.
