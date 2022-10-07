@@ -47,7 +47,6 @@ We'd like to offer a big thanks to the 10 contributors who made this release pos
 - The `renderDay` prop has been replaced by a `Day` component slot.
   You can find more information about this pattern in the [MUI Base documentation](https://mui.com/base/getting-started/usage/#shared-props).
 
-
   ```diff
   // Same for any other date, date time or date range picker.
   <DatePicker
