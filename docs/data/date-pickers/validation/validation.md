@@ -63,7 +63,7 @@ The current time is computed during the first render of the `LocalizationProvide
 
 All the props described below are available on all the components supporting date edition.
 
-### Set date boundaries
+### Minimum and maximum date
 
 The `minDate` prop prevents the selection of all values before `props.minDate`.
 
