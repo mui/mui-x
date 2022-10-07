@@ -1,17 +1,17 @@
 import { FieldValueManager } from '@mui/x-date-pickers/internals-fields';
 import { DateRange, DateRangeFieldSection } from '../../models/range';
 import {
-  DateTimeRangeValidationError,
-  isSameDateTimeRangeError,
-} from '../validation/useDateTimeRangeValidation';
+  DateRangeValidationError,
+  isSameDateRangeError,
+} from '../validation/useDateRangeValidation';
 import { rangeFieldValueManager } from './common';
 
-export const dateTimeRangeFieldValueManager: FieldValueManager<
+export const dateRangeFieldValueManager: FieldValueManager<
   DateRange<any>,
   any,
   DateRangeFieldSection,
-  DateTimeRangeValidationError
+  DateRangeValidationError
 > = {
   ...rangeFieldValueManager,
-  isSameError: isSameDateTimeRangeError,
+  isSameError: isSameDateRangeError,
 };

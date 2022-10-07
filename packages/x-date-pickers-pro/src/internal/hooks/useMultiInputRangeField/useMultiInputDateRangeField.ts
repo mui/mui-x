@@ -5,10 +5,7 @@ import {
   UseDateFieldComponentProps,
 } from '@mui/x-date-pickers/DateField';
 import { useValidation } from '@mui/x-date-pickers/internals';
-import {
-  dateRangeFieldValueManager,
-  useDefaultizedDateRangeFieldProps,
-} from '../../../SingleInputDateRangeField/useSingleInputDateRangeField';
+import { useDefaultizedDateRangeFieldProps } from '../../../SingleInputDateRangeField/useSingleInputDateRangeField';
 import { UseMultiInputDateRangeFieldParams } from '../../../MultiInputDateRangeField/MultiInputDateRangeField.types';
 import { DateRange } from '../../models/range';
 import {
@@ -17,6 +14,7 @@ import {
   validateDateRange,
 } from '../validation/useDateRangeValidation';
 import { dateRangePickerValueManager } from '../../../DateRangePicker/shared';
+import { dateRangeFieldValueManager } from '../valueManager/dateRangeValueManager';
 
 export const useMultiInputDateRangeField = <TDate, TChildProps extends {}>({
   sharedProps: inSharedProps,
