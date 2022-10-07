@@ -146,7 +146,7 @@ describe('<DataGridPro /> - Filter', () => {
     expect(getColumnForNewFilter.callCount).to.equal(6);
   });
 
-  it.only('should pass columns filtered by `filterColumns` to filters column list', () => {
+  it('should pass columns filtered by `filterColumns` to filters column list', () => {
     const filterColumns = () => ['testField'];
     render(
       <TestCase
