@@ -240,7 +240,7 @@ StaticDateTimePicker.propTypes = {
   /**
    * Get the week number form keek first day
    * @param {TDate} date The first day of the week.
-   * @returns {string} The displayed week number
+   * @returns {number} The displayed week number
    */
   getWeekNumber: PropTypes.func,
   /**

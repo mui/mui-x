@@ -67,9 +67,9 @@ export interface ExportedDayPickerProps<TDate>
   /**
    * Get the week number form keek first day
    * @param {TDate} date The first day of the week.
-   * @returns {string} The displayed week number
+   * @returns {number} The displayed week number
    */
-  getWeekNumber?: (date: TDate) => string;
+  getWeekNumber?: (date: TDate) => number;
 }
 
 export interface DayPickerProps<TDate>
@@ -535,8 +535,12 @@ export function DayPicker<TDate>(inProps: DayPickerProps<TDate>) {
                 className={classes.weekContainer}
               >
                 {displayWeekNumber && getWeekNumber && (
-                  <PickersCalendarWeekNumber className={classes.weekNumber} role="rowheader">
-                    {getWeekNumber(week[0])}
+                  <PickersCalendarWeekNumber
+                    className={classes.weekNumber}
+                    role="rowheader"
+                    aria-label={localeText.calendarWeekNumberAriaLabelText(getWeekNumber(week[0]))}
+                  >
+                    {localeText.calendarWeekNumberText(getWeekNumber(week[0]))}
                   </PickersCalendarWeekNumber>
                 )}
                 {week.map((day) => (
