@@ -49,12 +49,7 @@ describe('<DataGridPro /> - Edit Components', () => {
     apiRef = useGridApiRef();
     return (
       <div style={{ width: 300, height: 300 }}>
-        <DataGridPro
-          apiRef={apiRef}
-          experimentalFeatures={{ newEditingApi: true }}
-          {...defaultData}
-          {...props}
-        />
+        <DataGridPro apiRef={apiRef} {...defaultData} {...props} />
       </div>
     );
   };
