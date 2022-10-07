@@ -66,6 +66,7 @@ export default function DateValidationDisablePast() {
             value={dateTimePickerValue}
             onChange={(newValue) => setDateTimePickerValue(newValue)}
             renderInput={(params) => <TextField {...params} />}
+            views={['year', 'month', 'day', 'hours', 'minutes']}
           />
         </GridItem>
         <GridItem label="TimePicker">
