@@ -493,7 +493,6 @@
   { "name": "GridValueSetterParams", "kind": "Interface" },
   { "name": "GridViewHeadlineIcon", "kind": "Variable" },
   { "name": "GridViewStreamIcon", "kind": "Variable" },
-  { "name": "GridVirtualScrollerApi", "kind": "Interface" },
   { "name": "gridVisibleColumnDefinitionsSelector", "kind": "Variable" },
   { "name": "gridVisibleColumnFieldsSelector", "kind": "Variable" },
   { "name": "gridVisibleRowCountSelector", "kind": "Variable" },

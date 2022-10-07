@@ -20,7 +20,6 @@ export * from './gridDisableVirtualizationApi';
 export * from './gridClipboardApi';
 export * from './gridCallbackDetails';
 export * from './gridScrollApi';
-export * from './gridVirtualScrollerApi';
 export type { GridApiCommon } from './gridApiCommon';
 
 export type { GridEditingApi, GridCellModesModel, GridRowModesModel } from './gridEditingApi';

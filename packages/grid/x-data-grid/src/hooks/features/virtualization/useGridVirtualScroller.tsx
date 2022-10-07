@@ -542,7 +542,7 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
     return prevRenderContext.current!;
   }, []);
 
-  apiRef.current.unstable_getRenderContext = getRenderContext;
+  apiRef.current.getRenderContext = getRenderContext;
 
   return {
     renderContext,

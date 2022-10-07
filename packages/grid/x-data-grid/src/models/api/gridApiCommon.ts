@@ -58,7 +58,6 @@ export interface GridApiCommon<
     GridPreferencesPanelApi,
     GridPrintExportApi,
     GridDisableVirtualizationApi,
-    GridVirtualScrollerApi,
     GridLocaleTextApi,
     GridClipboardApi,
     GridScrollApi,
@@ -76,7 +75,8 @@ export interface GridPrivateOnlyApiCommon<
     GridStrategyProcessingApi,
     GridColumnSpanningPrivateApi,
     GridRowsMetaPrivateApi,
-    GridDimensionsPrivateApi {}
+    GridDimensionsPrivateApi,
+    GridVirtualScrollerApi {}
 
 export interface GridPrivateApiCommon
   extends GridApiCommon,

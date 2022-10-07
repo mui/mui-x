@@ -90,6 +90,8 @@ function ApiRefPrivateMethods() {
     apiRef.current.getViewportPageSize;
     // @ts-expect-error Property 'updateGridDimensionsRef' does not exist on type 'GridApiPremium'
     apiRef.current.updateGridDimensionsRef;
+    // @ts-expect-error Property 'getRenderContext' does not exist on type 'GridApiPremium'
+    apiRef.current.getRenderContext;
   });
 
   return null;

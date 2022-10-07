@@ -111,7 +111,7 @@ export const useGridLazyLoader = (
   const { lazyLoading } = (props.experimentalFeatures ?? {}) as GridExperimentalProFeatures;
 
   const getCurrentIntervalToRender = React.useCallback(() => {
-    const currentRenderContext = privateApiRef.current.unstable_getRenderContext();
+    const currentRenderContext = privateApiRef.current.getRenderContext();
     const [firstRowToRender, lastRowToRender] = getRenderableIndexes({
       firstIndex: currentRenderContext.firstRowIndex,
       lastIndex: currentRenderContext.lastRowIndex,
