@@ -52,14 +52,7 @@ describe('<DataGridPremium /> - Aggregation', () => {
 
     return (
       <div style={{ width: 300, height: 300 }}>
-        <DataGridPremium
-          {...baselineProps}
-          apiRef={apiRef}
-          {...props}
-          experimentalFeatures={{
-            aggregation: true,
-          }}
-        />
+        <DataGridPremium {...baselineProps} apiRef={apiRef} {...props} />
       </div>
     );
   };
