@@ -4,12 +4,17 @@ import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import { UseDateRangeFieldProps } from '../internal/models/dateRange';
-import { UseMultiInputRangeFieldParams } from '../internal/hooks/useMultiInputRangeField';
 
-export interface UseMultiInputDateRangeFieldParams<TDate, TChildProps extends {}>
-  extends UseMultiInputRangeFieldParams<UseMultiInputDateRangeFieldProps<TDate>, TChildProps> {}
 
-export interface UseMultiInputDateRangeFieldProps<TDate> extends UseDateRangeFieldProps<TDate> {}
+export interface UseMultiInputDateRangeFieldParams<TDate, TChildProps extends {}> {
+  sharedProps: Omit<TChildProps, keyof UseMultiInputDateRangeFieldProps<TDate>> & UseMultiInputDateRangeFieldProps<TDate>;
+  startInputProps: TChildProps;
+  endInputProps: TChildProps;
+  startInputRef?: React.Ref<HTMLInputElement>;
+  endInputRef?: React.Ref<HTMLInputElement>;
+}
+
+export interface UseMultiInputDateRangeFieldProps<TDate> extends UseDateRangeFieldProps<TDate> { }
 
 export type UseMultiInputDateRangeFieldComponentProps<TDate, TChildProps extends {}> = Omit<
   TChildProps,

@@ -78,8 +78,8 @@ export const dateTimeRangeFieldValueManager: FieldValueManager<
   },
   getValueStrFromSections: (sections) => {
     const dateRangeSections = splitDateRangeSections(sections);
-    const startDateStr = createDateStrFromSections(dateRangeSections.startDate);
-    const endDateStr = createDateStrFromSections(dateRangeSections.endDate);
+    const startDateStr = createDateStrFromSections(dateRangeSections.startDate, true);
+    const endDateStr = createDateStrFromSections(dateRangeSections.endDate, true);
 
     return `${startDateStr}${endDateStr}`;
   },
@@ -91,7 +91,7 @@ export const dateTimeRangeFieldValueManager: FieldValueManager<
       ? removeLastSeparator(dateRangeSections.startDate)
       : dateRangeSections.endDate;
   },
-  getActiveDateManager: (state, activeSection) => {
+  getActiveDateManager: (utils, state, activeSection) => {
     const index = activeSection.dateName === 'start' ? 0 : 1;
 
     const updateDateInRange = (newDate: any, prevDateRange: DateRange<any>) =>
@@ -103,7 +103,7 @@ export const dateTimeRangeFieldValueManager: FieldValueManager<
       getNewValueFromNewActiveDate: (newActiveDate) => ({
         value: updateDateInRange(newActiveDate, state.value),
         referenceValue:
-          newActiveDate == null
+          newActiveDate == null || !utils.isValid(newActiveDate)
             ? state.referenceValue
             : updateDateInRange(newActiveDate, state.referenceValue),
       }),

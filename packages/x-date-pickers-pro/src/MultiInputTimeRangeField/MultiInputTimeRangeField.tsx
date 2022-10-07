@@ -5,7 +5,7 @@ import Typography, { TypographyProps } from '@mui/material/Typography';
 import { styled, useThemeProps } from '@mui/material/styles';
 import { useSlotProps } from '@mui/base/utils';
 import { MultiInputTimeRangeFieldProps } from './MultiInputTimeRangeField.types';
-import { useMultiInputTimeRangeField } from './useMultiInputTimeRangeField';
+import { useMultiInputTimeRangeField } from '../internal/hooks/useMultiInputRangeField/useMultiInputTimeRangeField';
 
 const MultiInputTimeRangeFieldRoot = styled(
   React.forwardRef((props: StackProps, ref: React.Ref<HTMLDivElement>) => (
