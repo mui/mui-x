@@ -92,6 +92,16 @@ function ApiRefPrivateMethods() {
     apiRef.current.updateGridDimensionsRef;
     // @ts-expect-error Property 'getRenderContext' does not exist on type 'GridApiPremium'
     apiRef.current.getRenderContext;
+    // @ts-expect-error Property 'setCellEditingEditCellValue' does not exist on type 'GridApiPremium'
+    apiRef.current.setCellEditingEditCellValue;
+    // @ts-expect-error Property 'getRowWithUpdatedValuesFromCellEditing' does not exist on type 'GridApiPremium'
+    apiRef.current.getRowWithUpdatedValuesFromCellEditing;
+    // @ts-expect-error Property 'setRowEditingEditCellValue' does not exist on type 'GridApiPremium'
+    apiRef.current.setRowEditingEditCellValue;
+    // @ts-expect-error Property 'getRowWithUpdatedValuesFromRowEditing' does not exist on type 'GridApiPremium'
+    apiRef.current.getRowWithUpdatedValuesFromRowEditing;
+    // @ts-expect-error Property 'runPendingEditCellValueMutation' does not exist on type 'GridApiPremium'
+    apiRef.current.runPendingEditCellValueMutation;
   });
 
   return null;

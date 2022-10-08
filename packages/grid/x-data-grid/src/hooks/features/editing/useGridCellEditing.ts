@@ -21,6 +21,8 @@ import {
   GridCellModesModel,
   GridCellModesModelProps,
   GridEditingSharedApi,
+  GridCellEditingPrivateApi,
+  GridEditingSharedPrivateApi,
 } from '../../../models/api/gridEditingApi';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { gridEditRowsStateSelector } from './gridEditingSelectors';
@@ -204,7 +206,7 @@ export const useGridCellEditing = (
     (params) => {
       const { id, field, reason } = params;
 
-      apiRef.current.unstable_runPendingEditCellValueMutation(id, field);
+      apiRef.current.runPendingEditCellValueMutation(id, field);
 
       let cellToFocusAfter: GridStopCellEditModeParams['cellToFocusAfter'];
       if (reason === GridCellEditStopReasons.enterKeyDown) {
@@ -359,7 +361,7 @@ export const useGridCellEditing = (
 
       throwIfNotInMode(id, field, GridCellModes.Edit);
 
-      apiRef.current.unstable_runPendingEditCellValueMutation(id, field);
+      apiRef.current.runPendingEditCellValueMutation(id, field);
 
       const finishCellEditMode = () => {
         updateOrDeleteFieldState(id, field, null);
@@ -386,7 +388,7 @@ export const useGridCellEditing = (
         return;
       }
 
-      const rowUpdate = apiRef.current.unstable_getRowWithUpdatedValuesFromCellEditing(id, field);
+      const rowUpdate = apiRef.current.getRowWithUpdatedValuesFromCellEditing(id, field);
 
       if (processRowUpdate) {
         const handleError = (errorThrown: any) => {
@@ -420,7 +422,7 @@ export const useGridCellEditing = (
   ) as GridCellEditingApi['stopCellEditMode'];
 
   const setCellEditingEditCellValue = React.useCallback<
-    GridCellEditingApi['unstable_setCellEditingEditCellValue']
+    GridCellEditingPrivateApi['setCellEditingEditCellValue']
   >(
     async (params) => {
       const { id, field, value, debounceMs, unstable_skipValueParser: skipValueParser } = params;
@@ -475,7 +477,7 @@ export const useGridCellEditing = (
   );
 
   const getRowWithUpdatedValuesFromCellEditing = React.useCallback<
-    GridCellEditingApi['unstable_getRowWithUpdatedValuesFromCellEditing']
+    GridCellEditingPrivateApi['getRowWithUpdatedValuesFromCellEditing']
   >(
     (id, field) => {
       const column = apiRef.current.getColumn(field);
@@ -491,11 +493,15 @@ export const useGridCellEditing = (
     getCellMode,
     startCellEditMode,
     stopCellEditMode,
-    unstable_setCellEditingEditCellValue: setCellEditingEditCellValue,
-    unstable_getRowWithUpdatedValuesFromCellEditing: getRowWithUpdatedValuesFromCellEditing,
+  };
+
+  const editingPrivateApi: Omit<GridCellEditingPrivateApi, keyof GridEditingSharedPrivateApi> = {
+    setCellEditingEditCellValue,
+    getRowWithUpdatedValuesFromCellEditing,
   };
 
   useGridApiMethod(apiRef, editingApi, 'public');
+  useGridApiMethod(apiRef, editingPrivateApi, 'private');
 
   React.useEffect(() => {
     if (cellModesModelProp) {

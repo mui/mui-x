@@ -4,7 +4,7 @@ import { GridCoreApi, GridCorePrivateApi } from './gridCoreApi';
 import { GridClipboardApi } from './gridClipboardApi';
 import { GridCsvExportApi } from './gridCsvExportApi';
 import { GridDensityApi } from './gridDensityApi';
-import { GridEditingApi } from './gridEditingApi';
+import { GridEditingApi, GridEditingPrivateApi } from './gridEditingApi';
 import { GridFilterApi } from './gridFilterApi';
 import { GridFocusApi } from './gridFocusApi';
 import { GridLocaleTextApi } from './gridLocaleTextApi';
@@ -76,7 +76,8 @@ export interface GridPrivateOnlyApiCommon<
     GridColumnSpanningPrivateApi,
     GridRowsMetaPrivateApi,
     GridDimensionsPrivateApi,
-    GridVirtualScrollerApi {}
+    GridVirtualScrollerApi,
+    GridEditingPrivateApi {}
 
 export interface GridPrivateApiCommon
   extends GridApiCommon,
