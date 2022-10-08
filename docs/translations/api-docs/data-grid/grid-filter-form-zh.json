@@ -8,6 +8,7 @@
     "deleteFilter": "Callback called when the delete button is clicked.<br><br><strong>Signature:</strong><br><code>function(item: GridFilterItem) =&gt; void</code><br><em>item:</em> The deleted <a href=\"/x/api/data-grid/grid-filter-item/\">GridFilterItem</a>.",
     "deleteIconProps": "Props passed to the delete icon.",
     "disableMultiFilterOperator": "If <code>true</code>, disables the logic operator field but still renders it.",
+    "filterColumns": "Allows to filter the columns displayed in the filter form.<br><br><strong>Signature:</strong><br><code>function(args: FilterColumnsArgs) =&gt; void</code><br><em>args:</em> The columns of the grid and name of field.",
     "focusElementRef": "A ref allowing to set imperative focus. It can be passed to the el",
     "hasMultipleFilters": "If <code>true</code>, the logic operator field is rendered. The field will be invisible if <code>showMultiFilterOperators</code> is also <code>true</code>.",
     "item": "The <a href=\"/x/api/data-grid/grid-filter-item/\">GridFilterItem</a> representing this form.",
