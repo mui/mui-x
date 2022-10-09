@@ -183,6 +183,7 @@ jobs:
           command: git diff --exit-code
   test_browser:
     <<: *defaults
+    resource_class: 'medium+'
     docker:
       - image: mcr.microsoft.com/playwright@sha256:c3c8a833254aaad31b2d336e67b0dbb9af744a12ab486e18f230033b99649c4f
         environment:

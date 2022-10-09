@@ -30,6 +30,7 @@ const browserStack = {
 };
 
 process.env.CHROME_BIN = playwright.chromium.executablePath();
+process.env.FIREFOX_BIN = playwright.firefox.executablePath();
 
 // BrowserStack rate limit after 1600 calls every 5 minutes.
 // Per second, https://www.browserstack.com/docs/automate/api-reference/selenium/introduction#rest-api-projects
@@ -44,7 +45,7 @@ const MAX_CIRCLE_CI_CONCURRENCY = 83;
 module.exports = function setKarmaConfig(config) {
   const baseConfig = {
     basePath: '../',
-    browsers: ['chromeHeadless'],
+    browsers: ['chromeHeadless', 'Firefox'],
     browserDisconnectTimeout: 3 * 60 * 1000, // default 2000
     browserDisconnectTolerance: 1, // default 0
     browserNoActivityTimeout: 6 * 60 * 1000, // default 10000
@@ -64,7 +65,13 @@ module.exports = function setKarmaConfig(config) {
         included: true,
       },
     ],
-    plugins: ['karma-mocha', 'karma-chrome-launcher', 'karma-sourcemap-loader', 'karma-webpack'],
+    plugins: [
+      'karma-mocha',
+      'karma-chrome-launcher',
+      'karma-sourcemap-loader',
+      'karma-webpack',
+      'karma-firefox-launcher',
+    ],
     /**
      * possible values:
      * - config.LOG_DISABLE

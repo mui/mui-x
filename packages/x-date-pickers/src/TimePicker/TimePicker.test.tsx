@@ -4,7 +4,7 @@ import { describeConformance } from '@mui/monorepo/test/utils';
 import { fireEvent, screen } from '@mui/monorepo/test/utils/createRenderer';
 import { expect } from 'chai';
 import { createPickerRenderer, stubMatchMedia, wrapPickerMount } from 'test/utils/pickers-utils';
-import { TimePicker } from './TimePicker';
+import { TimePicker } from '@mui/x-date-pickers/TimePicker';
 
 describe('<TimePicker />', () => {
   const ControlledTimePicker = () => {
