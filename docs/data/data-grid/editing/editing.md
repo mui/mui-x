@@ -6,22 +6,6 @@ title: Data Grid - Editing
 
 <p class="description">The data grid has built-in support for cell and row editing.</p>
 
-:::warning
-This page refers to the new editing API, which is not enabled by default.
-To use it, add the following flag:
-
-```tsx
-<DataGrid experimentalFeatures={{ newEditingApi: true }} />
-```
-
-This additional step is required because the default editing API has a couple of issues that can only be fixed with breaking changes, that will only be possible in v6.
-To avoid having to wait for the next major release window, all breaking changes needed were included inside this flag.
-
-If you are looking for the documentation for the default editing API, visit [the docs of the legacy API](/x/react-data-grid/editing-legacy/).
-Note that it is encouraged to migrate to the new editing API since it will be enabled by default in v6.
-Although it says "experimental," you can consider it stable.
-:::
-
 ## Making a column editable
 
 You can make a column editable by enabling the `editable` property in its [column definition](/x/api/data-grid/grid-col-def/):
@@ -310,14 +294,14 @@ This property works like the `renderCell` property, which is rendered while cell
 
 ```tsx
 function CustomEditComponent(props: GridRenderEditCellParams) {
-  return <input type="text" value={params.value} onValueChange={...}>;
+  return <input type="text" value={params.value} onValueChange={...} />;
 }
 
 const columns: GridColDef[] = [
   {
     field: 'firstName',
     renderEditCell: (params: GridRenderEditCellParams) => (
-      return <CustomEditComponent {...params} />;
+      <CustomEditComponent {...params} />
     ),
   },
 ];
@@ -345,7 +329,7 @@ function CustomEditComponent(props: GridRenderEditCellParams) {
     apiRef.current.setEditCellValue({ id, field, value: newValue });
   };
 
-  return <input type="text" value={value} onValueChange={handleValueChange}>;
+  return <input type="text" value={value} onChange={handleValueChange} />;
 }
 ```
 
@@ -421,7 +405,7 @@ The following demo implements an edit component with auto-stop, based on a nativ
 {{"demo": "AutoStopEditComponent.js", "bg": "inline", "defaultCodeOpen": false}}
 
 :::warning
-We don't recommend using edit components with auto-stop in columns that use long-running `preProcessEditCellProps` because the UI will freeze while waiting for `apiRef.current.setEditCellValue`.
+Avoid using edit components with auto-stop in columns that use long-running `preProcessEditCellProps` because the UI will freeze while waiting for `apiRef.current.setEditCellValue`.
 Instead, use the provided interactions to exit edit mode.
 :::
 

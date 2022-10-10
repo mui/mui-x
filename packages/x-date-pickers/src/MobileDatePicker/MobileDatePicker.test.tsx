@@ -162,20 +162,22 @@ describe('<MobileDatePicker />', () => {
     expect(screen.getByTestId('custom-toolbar')).toBeVisible();
   });
 
-  it('prop `renderDay` – renders custom day', () => {
-    render(
-      <MobileDatePicker
-        renderInput={(params) => <TextField {...params} />}
-        open
-        value={adapterToUse.date(new Date(2018, 0, 1))}
-        onChange={() => {}}
-        renderDay={(day, _selected, pickersDayProps) => (
-          <PickersDay {...pickersDayProps} data-testid="test-day" />
-        )}
-      />,
-    );
+  describe('Component slots', () => {
+    it('slot `Day` – renders custom day', () => {
+      render(
+        <MobileDatePicker
+          renderInput={(params) => <TextField {...params} />}
+          open
+          value={adapterToUse.date(new Date(2018, 0, 1))}
+          onChange={() => {}}
+          components={{
+            Day: (props) => <PickersDay {...props} data-testid="test-day" />,
+          }}
+        />,
+      );
 
-    expect(screen.getAllByTestId('test-day')).to.have.length(31);
+      expect(screen.getAllByTestId('test-day')).to.have.length(31);
+    });
   });
 
   it('prop `defaultCalendarMonth` – opens on provided month if date is `null`', () => {
@@ -456,5 +458,19 @@ describe('<MobileDatePicker />', () => {
     // TODO: Write test
     // it('should call onClose and onAccept with the live value when clicking outside of the picker', () => {
     // })
+  });
+
+  describe('localization', () => {
+    it('should respect the `localeText` prop', () => {
+      render(
+        <WrappedMobileDatePicker
+          initialValue={null}
+          localeText={{ cancelButtonLabel: 'Custom cancel' }}
+        />,
+      );
+      openPicker({ type: 'date', variant: 'mobile' });
+
+      expect(screen.queryByText('Custom cancel')).not.to.equal(null);
+    });
   });
 });

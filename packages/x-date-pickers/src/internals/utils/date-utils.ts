@@ -32,13 +32,13 @@ export const findClosestEnabledDate = <TDate>({
   let forward: TDate | null = date;
   let backward: TDate | null = date;
   if (utils.isBefore(date, minDate)) {
-    forward = utils.date(minDate);
+    forward = minDate;
     backward = null;
   }
 
   if (utils.isAfter(date, maxDate)) {
     if (backward) {
-      backward = utils.date(maxDate);
+      backward = maxDate;
     }
 
     forward = null;
@@ -70,30 +70,34 @@ export const findClosestEnabledDate = <TDate>({
   return null;
 };
 
-export const parsePickerInputValue = <TDate>(
+export const clamp = <TDate>(
   utils: MuiPickersAdapter<TDate>,
-  value: TDate | null,
-): TDate | null => {
-  const parsedValue = utils.date(value);
-
-  return utils.isValid(parsedValue) ? parsedValue : null;
+  value: TDate,
+  minDate: TDate,
+  maxDate: TDate,
+): TDate => {
+  if (utils.isBefore(value, minDate)) {
+    return minDate;
+  }
+  if (utils.isAfter(value, maxDate)) {
+    return maxDate;
+  }
+  return value;
 };
 
-export const parseNonNullablePickerDate = <TDate>(
+export const replaceInvalidDateByNull = <TDate>(
+  utils: MuiPickersAdapter<TDate>,
+  value: TDate | null,
+) => (value == null || !utils.isValid(value) ? null : value);
+
+export const applyDefaultDate = <TDate>(
   utils: MuiPickersAdapter<TDate>,
   value: TDate | null | undefined,
   defaultValue: TDate,
 ): TDate => {
-  if (value == null) {
+  if (value == null || !utils.isValid(value)) {
     return defaultValue;
   }
 
-  const parsedValue = utils.date(value);
-  const isDateValid = utils.isValid(parsedValue);
-
-  if (isDateValid) {
-    return parsedValue as TDate;
-  }
-
-  return defaultValue;
+  return value;
 };

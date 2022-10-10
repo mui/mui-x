@@ -193,8 +193,6 @@ DataGridRaw.propTypes = {
    */
   experimentalFeatures: PropTypes.shape({
     columnGrouping: PropTypes.bool,
-    newEditingApi: PropTypes.bool,
-    preventCommitWhileValidating: PropTypes.bool,
     warnIfFocusStateIsNotSynced: PropTypes.bool,
   }),
   /**
@@ -349,13 +347,6 @@ DataGridRaw.propTypes = {
    */
   onCellDoubleClick: PropTypes.func,
   /**
-   * Callback fired when the cell changes are committed.
-   * @param {GridCellEditCommitParams} params With all properties from [[GridCellEditCommitParams]].
-   * @param {MuiEvent<MuiBaseEvent>} event The event that caused this prop to be called.
-   * @param {GridCallbackDetails} details Additional details for this callback.
-   */
-  onCellEditCommit: PropTypes.func,
-  /**
    * Callback fired when the cell turns to edit mode.
    * @param {GridCellParams} params With all properties from [[GridCellParams]].
    * @param {MuiEvent<React.KeyboardEvent | React.MouseEvent>} event The event that caused this prop to be called.
@@ -437,28 +428,11 @@ DataGridRaw.propTypes = {
    */
   onColumnOrderChange: PropTypes.func,
   /**
-   * Callback fired when a column visibility changes.
-   * Only works when no `columnVisibilityModel` is provided and if we change the visibility of a single column at a time.
-   * @param {GridColumnVisibilityChangeParams} params With all properties from [[GridColumnVisibilityChangeParams]].
-   * @param {MuiEvent<{}>} event The event object.
-   * @param {GridCallbackDetails} details Additional details for this callback.
-   * @deprecated Use `onColumnVisibilityModelChange` instead.
-   */
-  onColumnVisibilityChange: PropTypes.func,
-  /**
    * Callback fired when the column visibility model changes.
    * @param {GridColumnVisibilityModel} model The new model.
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onColumnVisibilityModelChange: PropTypes.func,
-  /**
-   * Callback fired when the edit cell value changes.
-   * @param {GridEditCellPropsParams} params With all properties from [[GridEditCellPropsParams]].
-   * @param {MuiEvent<React.SyntheticEvent>} event The event that caused this prop to be called.
-   * @param {GridCallbackDetails} details Additional details for this callback.
-   * @deprecated use `preProcessEditCellProps` from the [`GridColDef`](/x/api/data-grid/grid-col-def/)
-   */
-  onEditCellPropsChange: PropTypes.func,
   /**
    * Callback fired when the `editRowsModel` changes.
    * @param {GridEditRowsModel} editRowsModel With all properties from [[GridEditRowsModel]].
@@ -634,7 +608,6 @@ DataGridRaw.propTypes = {
   paginationMode: PropTypes.oneOf(['client', 'server']),
   /**
    * Callback called before updating a row with new values in the row and cell editing.
-   * Only applied if `props.experimentalFeatures.newEditingApi: true`.
    * @template R
    * @param {R} newRow Row object with the new values.
    * @param {R} oldRow Row object with the old values.

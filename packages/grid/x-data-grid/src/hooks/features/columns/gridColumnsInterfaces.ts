@@ -19,10 +19,6 @@ export interface GridColumnsState {
   columnVisibilityModel: GridColumnVisibilityModel;
 }
 
-export interface GridColumnsInternalCache {
-  isUsingColumnVisibilityModel: boolean;
-}
-
 export type GridColumnDimensions = { [key in GridColumnDimensionProperties]?: number };
 
 export interface GridColumnsInitialState {
@@ -35,6 +31,6 @@ export type GridColumnsRawState = Omit<GridColumnsState, 'lookup'> & {
   lookup: GridColumnRawLookup;
 };
 
-export type GridHydrateColumnsValue = Omit<GridColumnsRawState, 'columnVisibilityModel'>;
+export type GridHydrateColumnsValue = GridColumnsRawState;
 
 export type GridColumnVisibilityModel = Record<GridRowId, boolean>;

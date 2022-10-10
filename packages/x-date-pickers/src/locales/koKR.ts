@@ -50,24 +50,27 @@ const koKRPickers: Partial<PickersLocaleText<any>> = {
   secondsClockNumberText: (seconds) => `${seconds}초`,
 
   // Open picker labels
-  openDatePickerDialogue: (rawValue, utils) =>
-    rawValue && utils.isValid(utils.date(rawValue))
-      ? `날짜를 선택하세요. 현재 선택된 날짜는 ${utils.format(
-          utils.date(rawValue)!,
-          'fullDate',
-        )}입니다.`
+  openDatePickerDialogue: (value, utils) =>
+    value !== null && utils.isValid(value)
+      ? `날짜를 선택하세요. 현재 선택된 날짜는 ${utils.format(value, 'fullDate')}입니다.`
       : '날짜를 선택하세요',
-  openTimePickerDialogue: (rawValue, utils) =>
-    rawValue && utils.isValid(utils.date(rawValue))
-      ? `시간을 선택하세요. 현재 선택된 시간은 ${utils.format(
-          utils.date(rawValue)!,
-          'fullTime',
-        )}입니다.`
+  openTimePickerDialogue: (value, utils) =>
+    value !== null && utils.isValid(value)
+      ? `시간을 선택하세요. 현재 선택된 시간은 ${utils.format(value, 'fullTime')}입니다.`
       : '시간을 선택하세요',
 
   // Table labels
   timeTableLabel: '선택한 시간',
   dateTableLabel: '선택한 날짜',
+
+  // Field section placeholders
+  // fieldYearPlaceholder: params => 'Y'.repeat(params.digitAmount),
+  // fieldMonthPlaceholder: params => params.contentType === 'letter' ? 'MMMM' : 'MM',
+  // fieldDayPlaceholder: () => 'DD',
+  // fieldHoursPlaceholder: () => 'hh',
+  // fieldMinutesPlaceholder: () => 'mm',
+  // fieldSecondsPlaceholder: () => 'ss',
+  // fieldMeridiemPlaceholder: () => 'aa',
 };
 
 export const koKR = getPickersLocalization(koKRPickers);

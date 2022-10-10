@@ -32,6 +32,19 @@ The following demo lets you filter the rows according to several criteria at the
 
 {{"demo": "BasicExampleDataGridPro.js", "bg": "inline", "defaultCodeOpen": false}}
 
+### One filter per column [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
+
+You can also limit to only one filter per column while still allowing to filter other columns. For this, use the [`filterColumns`](/x/api/data-grid/grid-filter-form/) and [`getColumnForNewFilter`](/x/api/data-grid/grid-filter-panel/) props available in `componentsProps.filterPanel`.
+
+#### Use cases
+
+- Sometimes it's a limitation of some server-side filtering APIs to only allow one filter per column.
+- You can also write custom logic to prevent some columns from being shown as possible filters.
+
+This demo implements a basic use case to prevent showing multiple filters for one column.
+
+{{"demo": "DisableMultiFiltersDataGridPro.js", "bg": "inline", "defaultCodeOpen": false}}
+
 ## Pass filters to the grid
 
 ### Structure of the model
@@ -44,7 +57,7 @@ The filter model is composed of a list of `items` and a `linkOperator`:
 
 A filter item represents a filtering rule and is composed of several elements:
 
-- `filterItem.columnField`: the field on which we want to apply the rule.
+- `filterItem.columnField`: the field on which the rule applies.
 - `filterItem.value`: the value to look for.
 - `filterItem.operatorValue`: name of the operator method to use (e.g. _contains_), matches the `value` key of the operator object.
 - `filterItem.id` ([<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)): only useful when multiple filters are used.
@@ -299,7 +312,7 @@ More details are available in the demo.
 | `operatorInputProps`     | `MuiDataGrid-filterFormOperatorInput`     |
 | `valueInputProps`        | `MuiDataGrid-filterFormValueInput`        |
 
-The value input is a special case, because it can contain a wide variety of components (the one we provide or [your custom `InputComponent`](#create-a-custom-operator)).
+The value input is a special case, because it can contain a wide variety of components (the one provided or [your custom `InputComponent`](#create-a-custom-operator)).
 To pass props directly to the `InputComponent` and not its wrapper, you can use `valueInputProps.InputComponentProps`.
 
 {{"demo": "CustomFilterPanelContent.js", "bg": "inline"}}
@@ -369,7 +382,7 @@ getApplyQuickFilterFn: (value: string) => {
 
 To remove the quick filtering on a given column set `getApplyQuickFilterFn: undefined`.
 
-In the demo bellow, the column "Name" is not searchable with the quick filter, and 4 digits figures will be compared to the year of column "Created on".
+In the demo bellow, the column "Name" is not searchable with the quick filter, and 4 digits figures will be compared to the year of column "Created on."
 
 {{"demo": "QuickFilteringCustomLogic.js", "bg": "inline", "defaultCodeOpen": false}}
 
@@ -409,7 +422,7 @@ Only use this API as the last option. Give preference to the props to control th
 
 ## Selectors [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
 
-{{"demo": "FilterSelectorsNoSnap.js", "bg": "inline", "hideToolbar": true}}
+{{"component": "modules/components/SelectorsDocs.js", "category": "Filtering"}}
 
 More information about the selectors and how to use them on the [dedicated page](/x/react-data-grid/state/#access-the-state)
 

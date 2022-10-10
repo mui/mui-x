@@ -50,18 +50,27 @@ const itITPickers: Partial<PickersLocaleText<any>> = {
   secondsClockNumberText: (seconds) => `${seconds} secondi`,
 
   // Open picker labels
-  openDatePickerDialogue: (rawValue, utils) =>
-    rawValue && utils.isValid(utils.date(rawValue))
-      ? `Scegli la data, la data selezionata è ${utils.format(utils.date(rawValue)!, 'fullDate')}`
+  openDatePickerDialogue: (value, utils) =>
+    value !== null && utils.isValid(value)
+      ? `Scegli la data, la data selezionata è ${utils.format(value, 'fullDate')}`
       : 'Scegli la data',
-  openTimePickerDialogue: (rawValue, utils) =>
-    rawValue && utils.isValid(utils.date(rawValue))
-      ? `Scegli l'ora, l'ora selezionata è ${utils.format(utils.date(rawValue)!, 'fullTime')}`
+  openTimePickerDialogue: (value, utils) =>
+    value !== null && utils.isValid(value)
+      ? `Scegli l'ora, l'ora selezionata è ${utils.format(value, 'fullTime')}`
       : "Scegli l'ora",
 
   // Table labels
   timeTableLabel: 'scegli un ora',
   dateTableLabel: 'scegli una data',
+
+  // Field section placeholders
+  // fieldYearPlaceholder: params => 'Y'.repeat(params.digitAmount),
+  // fieldMonthPlaceholder: params => params.contentType === 'letter' ? 'MMMM' : 'MM',
+  // fieldDayPlaceholder: () => 'DD',
+  // fieldHoursPlaceholder: () => 'hh',
+  // fieldMinutesPlaceholder: () => 'mm',
+  // fieldSecondsPlaceholder: () => 'ss',
+  // fieldMeridiemPlaceholder: () => 'aa',
 };
 
 export const itIT = getPickersLocalization(itITPickers);

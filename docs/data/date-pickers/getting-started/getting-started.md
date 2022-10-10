@@ -55,10 +55,12 @@ After installation completed, you have to set the `dateAdapter` prop of the `Loc
 The supported adapters are exported from both the `@mui/x-date-pickers` and `@mui/x-date-pickers-pro`.
 
 ```js
-// date-fns
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
-// or for Day.js
+import { LocalizationProvider } from '@mui/x-date-pickers';
+
+// Day.js
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+// or for date-fns
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 // or for Luxon
 import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon';
 // or for Moment.js
@@ -76,6 +78,7 @@ function App({ children }) {
 If you use another library you should import the adapter directly from the `@date-io` package as follow.
 
 ```jsx
+import { LocalizationProvider } from '@mui/x-date-pickers';
 import AdapterJalaali from '@date-io/jalaali';
 
 function App({ children }) {
@@ -86,6 +89,24 @@ function App({ children }) {
   );
 }
 ```
+
+:::info
+If you are using range pickers, you can import the provided and the adapter directly from `@mui/x-date-pickers-pro`:
+
+```js
+import { LocalizationProvider } from '@mui/x-date-pickers-pro';
+import { AdapterDayjs } from '@mui/x-date-pickers-pro/AdapterDayjs';
+
+function App({ children }) {
+  return (
+    <LocalizationProvider dateAdapter={AdapterDayjs}>
+      {children}
+    </LocalizationProvider>
+  );
+}
+```
+
+:::
 
 ### Unsupported libraries
 

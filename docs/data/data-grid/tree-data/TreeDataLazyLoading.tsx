@@ -1,3 +1,4 @@
+// TODO rows v6: Adapt to new lazy loading api
 import * as React from 'react';
 import {
   DataGridPro,
@@ -9,6 +10,7 @@ import {
   GridRenderCellParams,
   GridRowModel,
   GridRowsProp,
+  GridGroupNode,
   useGridApiContext,
   useGridApiRef,
   useGridRootProps,
@@ -171,7 +173,8 @@ const useUtilityClasses = (ownerState: { classes: DataGridProProps['classes'] })
   return composeClasses(slots, getDataGridUtilityClass, classes);
 };
 
-interface GroupingCellWithLazyLoadingProps extends GridRenderCellParams {
+interface GroupingCellWithLazyLoadingProps
+  extends GridRenderCellParams<any, any, any, GridGroupNode> {
   hideDescendantCount?: boolean;
 }
 
@@ -235,7 +238,9 @@ const GroupingCellWithLazyLoading = (props: GroupingCellWithLazyLoadingProps) =>
 };
 
 const CUSTOM_GROUPING_COL_DEF: GridGroupingColDefOverride = {
-  renderCell: (params) => <GroupingCellWithLazyLoading {...params} />,
+  renderCell: (params) => (
+    <GroupingCellWithLazyLoading {...(params as GroupingCellWithLazyLoadingProps)} />
+  ),
 };
 
 export default function TreeDataLazyLoading() {
@@ -286,7 +291,7 @@ export default function TreeDataLazyLoading() {
 
         apiRef.current.setRowChildrenExpansion(
           params.id,
-          !params.rowNode.childrenExpanded,
+          !(params.rowNode as GridGroupNode).childrenExpanded,
         );
       }
     };

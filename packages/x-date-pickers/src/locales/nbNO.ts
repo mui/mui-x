@@ -42,18 +42,27 @@ const nbNOPickers: Partial<PickersLocaleText<any>> = {
   secondsClockNumberText: (seconds) => `${seconds} sekunder`,
 
   // Open picker labels
-  openDatePickerDialogue: (rawValue, utils) =>
-    rawValue && utils.isValid(utils.date(rawValue))
-      ? `Velg dato, valgt dato er ${utils.format(utils.date(rawValue)!, 'fullDate')}`
+  openDatePickerDialogue: (value, utils) =>
+    value !== null && utils.isValid(value)
+      ? `Velg dato, valgt dato er ${utils.format(value, 'fullDate')}`
       : 'Velg dato',
-  openTimePickerDialogue: (rawValue, utils) =>
-    rawValue && utils.isValid(utils.date(rawValue))
-      ? `Velg tid, valgt tid er ${utils.format(utils.date(rawValue)!, 'fullTime')}`
+  openTimePickerDialogue: (value, utils) =>
+    value !== null && utils.isValid(value)
+      ? `Velg tid, valgt tid er ${utils.format(value, 'fullTime')}`
       : 'Velg tid',
 
   // Table labels
   timeTableLabel: 'velg tid',
   dateTableLabel: 'velg dato',
+
+  // Field section placeholders
+  // fieldYearPlaceholder: params => 'Y'.repeat(params.digitAmount),
+  // fieldMonthPlaceholder: params => params.contentType === 'letter' ? 'MMMM' : 'MM',
+  // fieldDayPlaceholder: () => 'DD',
+  // fieldHoursPlaceholder: () => 'hh',
+  // fieldMinutesPlaceholder: () => 'mm',
+  // fieldSecondsPlaceholder: () => 'ss',
+  // fieldMeridiemPlaceholder: () => 'aa',
 };
 
 export const nbNO = getPickersLocalization(nbNOPickers);

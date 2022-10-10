@@ -73,7 +73,7 @@
     "experimentalFeatures": {
       "type": {
         "name": "shape",
-        "description": "{ aggregation?: bool, columnGrouping?: bool, lazyLoading?: bool, newEditingApi?: bool, preventCommitWhileValidating?: bool, rowPinning?: bool, warnIfFocusStateIsNotSynced?: bool }"
+        "description": "{ columnGrouping?: bool, lazyLoading?: bool, rowPinning?: bool, warnIfFocusStateIsNotSynced?: bool }"
       }
     },
     "filterMode": {
@@ -133,7 +133,6 @@
     "onAggregationModelChange": { "type": { "name": "func" } },
     "onCellClick": { "type": { "name": "func" } },
     "onCellDoubleClick": { "type": { "name": "func" } },
-    "onCellEditCommit": { "type": { "name": "func" } },
     "onCellEditStart": { "type": { "name": "func" } },
     "onCellEditStop": { "type": { "name": "func" } },
     "onCellFocusOut": { "type": { "name": "func" } },
@@ -147,19 +146,9 @@
     "onColumnHeaderOver": { "type": { "name": "func" } },
     "onColumnOrderChange": { "type": { "name": "func" } },
     "onColumnResize": { "type": { "name": "func" } },
-    "onColumnVisibilityChange": {
-      "type": { "name": "func" },
-      "deprecated": true,
-      "deprecationInfo": "Use <code>onColumnVisibilityModelChange</code> instead."
-    },
     "onColumnVisibilityModelChange": { "type": { "name": "func" } },
     "onColumnWidthChange": { "type": { "name": "func" } },
     "onDetailPanelExpandedRowIdsChange": { "type": { "name": "func" } },
-    "onEditCellPropsChange": {
-      "type": { "name": "func" },
-      "deprecated": true,
-      "deprecationInfo": "use <code>preProcessEditCellProps</code> from the <a href=\"/x/api/data-grid/grid-col-def/\"><code>GridColDef</code></a>"
-    },
     "onEditRowsModelChange": { "type": { "name": "func" } },
     "onError": { "type": { "name": "func" } },
     "onFetchRows": { "type": { "name": "func" } },
@@ -417,6 +406,8 @@
       "menuIconButton",
       "menuOpen",
       "menuList",
+      "overlayWrapper",
+      "overlayWrapperInner",
       "overlay",
       "virtualScroller",
       "virtualScrollerContent",
@@ -465,6 +456,6 @@
   },
   "forwardsRefTo": "GridRoot",
   "filename": "/packages/grid/x-data-grid-premium/src/DataGridPremium/DataGridPremium.tsx",
-  "demos": "<ul><li><a href=\"/x/react-data-grid#commercial-version\">DataGridPremium</a></li></ul>",
+  "demos": "<ul><li><a href=\"/x/react-data-grid/#commercial-version\">DataGridPremium</a></li></ul>",
   "packages": ["@mui/x-data-grid-premium"]
 }

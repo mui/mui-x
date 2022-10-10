@@ -104,7 +104,7 @@ For more information regarding server-side pagination in combination with contro
 - Add an `onPageChange` callback to load the rows when the page changes
 
 Since `rowCount` prop is used to compute the number of available pages, switching it to `undefined` during loading reset page to zero.
-To avoid this problem, we recommend to keep the previous value of `rowCount` while loading as follow:
+To avoid this problem, you can keep the previous value of `rowCount` while loading as follow:
 
 ```jsx
 const [rowCountState, setRowCountState] = React.useState(rowCount);
@@ -140,7 +140,7 @@ Only use this API as the last option. Give preference to the props to control th
 
 ## Selectors [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
 
-{{"demo": "PaginationSelectorsNoSnap.js", "bg": "inline", "hideToolbar": true}}
+{{"component": "modules/components/SelectorsDocs.js", "category": "Pagination"}}
 
 More information about the selectors and how to use them on the [dedicated page](/x/react-data-grid/state/#access-the-state)
 

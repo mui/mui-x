@@ -120,3 +120,20 @@ This can be used in combination with `componentsProps`.
 In the example below, the tabs are using different icons and have an additional component:
 
 {{"demo": "Tabs.js", "disableAd": true}}
+
+## Arrow switcher
+
+The following slots let you customize how to render the buttons and icons for an arrow switcher component—the component
+to navigate to the "Previous" and "Next" steps of the picker: `PreviousIconButton`, `NextIconButton`, `LeftArrowIcon`, `RightArrowIcon`.
+
+### Component props
+
+You can pass props to the icons and buttons as shown below:
+
+{{"demo": "ArrowSwitcherComponentProps.js", "defaultCodeOpen": false, "disableAd": true}}
+
+### Component
+
+You can pass custom components—to replace the icons, for example—as shown below:
+
+{{"demo": "ArrowSwitcherComponent.js", "defaultCodeOpen": false, "disableAd": true}}

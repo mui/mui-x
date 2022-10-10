@@ -6,6 +6,7 @@ import {
   GridComparatorFn,
   GridRenderCellParams,
   GridGroupingColDefOverride,
+  GridGroupNode,
 } from '@mui/x-data-grid-pro';
 import { GridColumnRawLookup } from '@mui/x-data-grid-pro/internals';
 import { GridApiPremium } from '../../../models/gridApiPremium';
@@ -39,8 +40,9 @@ const groupingFieldIndexComparator: GridComparatorFn = (v1, v2, cellParams1, cel
     cellParams1.api.state,
     cellParams1.api.instanceId,
   );
-  const groupingField1 = cellParams1.rowNode.groupingField;
-  const groupingField2 = cellParams2.rowNode.groupingField;
+
+  const groupingField1 = (cellParams1.rowNode as GridGroupNode).groupingField ?? null;
+  const groupingField2 = (cellParams2.rowNode as GridGroupNode).groupingField ?? null;
 
   if (groupingField1 === groupingField2) {
     return 0;
@@ -65,6 +67,7 @@ const getLeafProperties = (leafColDef: GridColDef): Partial<GridColDef> => ({
   headerName: leafColDef.headerName ?? leafColDef.field,
   sortable: leafColDef.sortable,
   filterable: leafColDef.filterable,
+  valueOptions: leafColDef.valueOptions,
   filterOperators: leafColDef.filterOperators?.map((operator) => ({
     ...operator,
     getApplyFilterFn: (filterItem, column) => {
@@ -80,7 +83,7 @@ const getLeafProperties = (leafColDef: GridColDef): Partial<GridColDef> => ({
   })),
   sortComparator: (v1, v2, cellParams1, cellParams2) => {
     // We only want to sort the leaves
-    if (cellParams1.rowNode.groupingField === null && cellParams2.rowNode.groupingField === null) {
+    if (cellParams1.rowNode.type === 'leaf' && cellParams2.rowNode.type === 'leaf') {
       return leafColDef.sortComparator!(v1, v2, cellParams1, cellParams2);
     }
 
@@ -95,10 +98,13 @@ const getGroupingCriteriaProperties = (
   const properties: Partial<GridColDef> = {
     sortable: groupedByColDef.sortable,
     filterable: groupedByColDef.filterable,
+    valueOptions: groupedByColDef.valueOptions,
     sortComparator: (v1, v2, cellParams1, cellParams2) => {
       // We only want to sort the groups of the current grouping criteria
       if (
+        cellParams1.rowNode.type === 'group' &&
         cellParams1.rowNode.groupingField === groupedByColDef.field &&
+        cellParams2.rowNode.type === 'group' &&
         cellParams2.rowNode.groupingField === groupedByColDef.field
       ) {
         return groupedByColDef.sortComparator!(v1, v2, cellParams1, cellParams2);
@@ -166,12 +172,12 @@ export const createGroupingColDefForOneGroupingCriteria = ({
     ),
     renderCell: (params) => {
       // Render footer
-      if (params.rowNode.position === 'footer') {
+      if (params.rowNode.type === 'footer' || params.rowNode.type === 'pinnedRow') {
         return <GridGroupingColumnFooterCell {...params} />;
       }
 
       // Render leaves
-      if (params.rowNode.groupingField == null) {
+      if (params.rowNode.type === 'leaf') {
         if (leafColDef) {
           const leafParams: GridRenderCellParams = {
             ...params.api.getCellParams(params.id, leafField!),
@@ -189,17 +195,26 @@ export const createGroupingColDefForOneGroupingCriteria = ({
 
       // Render current grouping criteria groups
       if (params.rowNode.groupingField === groupingCriteria) {
-        return <GridGroupingCriteriaCell {...params} hideDescendantCount={hideDescendantCount} />;
+        return (
+          <GridGroupingCriteriaCell
+            {...(params as GridRenderCellParams<any, any, any, GridGroupNode>)}
+            hideDescendantCount={hideDescendantCount}
+          />
+        );
       }
 
       return '';
     },
     valueGetter: (params) => {
-      if (!params.rowNode) {
+      if (
+        !params.rowNode ||
+        params.rowNode.type === 'footer' ||
+        params.rowNode.type === 'pinnedRow'
+      ) {
         return undefined;
       }
 
-      if (params.rowNode.groupingField == null) {
+      if (params.rowNode.type === 'leaf') {
         if (leafColDef) {
           return params.api.getCellValue(params.id, leafField!);
         }
@@ -287,12 +302,12 @@ export const createGroupingColDefForAllGroupingCriteria = ({
     ),
     renderCell: (params) => {
       // Render footer
-      if (params.rowNode.position === 'footer') {
+      if (params.rowNode.type === 'footer' || params.rowNode.type === 'pinnedRow') {
         return <GridGroupingColumnFooterCell {...params} />;
       }
 
       // Render the leaves
-      if (params.rowNode.groupingField == null) {
+      if (params.rowNode.type === 'leaf') {
         if (leafColDef) {
           const leafParams: GridRenderCellParams = {
             ...params.api.getCellParams(params.id, leafField!),
@@ -309,14 +324,23 @@ export const createGroupingColDefForAllGroupingCriteria = ({
       }
 
       // Render the groups
-      return <GridGroupingCriteriaCell {...params} hideDescendantCount={hideDescendantCount} />;
+      return (
+        <GridGroupingCriteriaCell
+          {...(params as GridRenderCellParams<any, any, any, GridGroupNode>)}
+          hideDescendantCount={hideDescendantCount}
+        />
+      );
     },
     valueGetter: (params) => {
-      if (!params.rowNode) {
+      if (
+        !params.rowNode ||
+        params.rowNode.type === 'footer' ||
+        params.rowNode.type === 'pinnedRow'
+      ) {
         return undefined;
       }
 
-      if (params.rowNode.groupingField == null) {
+      if (params.rowNode.type === 'leaf') {
         if (leafColDef) {
           return params.api.getCellValue(params.id, leafField!);
         }

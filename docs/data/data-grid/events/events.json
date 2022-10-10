@@ -24,14 +24,6 @@
   },
   {
     "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
-    "name": "cellEditCommit",
-    "description": "Fired when the props of the edit input are committed.",
-    "params": "GridCellEditCommitParams",
-    "event": "MuiEvent<MuiBaseEvent>",
-    "componentProp": "onCellEditCommit"
-  },
-  {
-    "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
     "name": "cellEditStart",
     "description": "Fired when the cell turns to edit mode.",
     "params": "GridCellEditStartParams",
@@ -152,14 +144,6 @@
   },
   {
     "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
-    "name": "columnVisibilityChange",
-    "description": "Fired when a column visibility changes.\nIt is not fired when the <code>columnVisibilityModel</code> is controlled or initialized.\nIt is not fired when toggling all column&#39;s visibility at once.",
-    "params": "GridColumnVisibilityChangeParams",
-    "event": "MuiEvent<{}>",
-    "componentProp": "onColumnVisibilityChange"
-  },
-  {
-    "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
     "name": "columnVisibilityModelChange",
     "description": "Fired when the column visibility model changes.",
     "params": "GridColumnVisibilityModel",
@@ -188,14 +172,6 @@
     "params": "ElementSize",
     "event": "MuiEvent<{}>",
     "componentProp": "onResize"
-  },
-  {
-    "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
-    "name": "editCellPropsChange",
-    "description": "Fired when the props of the edit cell changes.",
-    "params": "GridEditCellPropsParams",
-    "event": "MuiEvent<React.SyntheticEvent<HTMLElement> | {}>",
-    "componentProp": "onEditCellPropsChange"
   },
   {
     "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],

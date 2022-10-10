@@ -29,38 +29,35 @@ import {
 import { DateRangePickerInput, DateRangePickerInputProps } from './DateRangePickerInput';
 import {
   DateRangePickerViewDesktop,
-  ExportedDesktopDateRangeCalendarProps,
+  ExportedDateRangePickerViewDesktopProps,
 } from './DateRangePickerViewDesktop';
 import { getReleaseInfo } from '../internal/utils/releaseInfo';
 
 const releaseInfo = getReleaseInfo();
 
-export interface DateRangePickerViewSlotsComponent
-  extends DateRangePickerViewMobileSlotsComponent {}
+export interface DateRangePickerViewSlotsComponent<TDate>
+  extends DateRangePickerViewMobileSlotsComponent<TDate> {}
 
-export interface DateRangePickerViewSlotsComponentsProps
-  extends DateRangePickerViewMobileSlotsComponentsProps {}
+export interface DateRangePickerViewSlotsComponentsProps<TDate>
+  extends DateRangePickerViewMobileSlotsComponentsProps<TDate> {}
 
 export interface ExportedDateRangePickerViewProps<TDate>
-  extends ExportedDesktopDateRangeCalendarProps<TDate>,
+  extends ExportedDateRangePickerViewDesktopProps,
     DayRangeValidationProps<TDate>,
     Omit<
       ExportedCalendarPickerProps<TDate>,
-      | 'onYearChange'
-      | 'renderDay'
-      | keyof BaseDateValidationProps<TDate>
-      | keyof DayValidationProps<TDate>
+      'onYearChange' | keyof BaseDateValidationProps<TDate> | keyof DayValidationProps<TDate>
     > {
   /**
    * Overrideable components.
    * @default {}
    */
-  components?: Partial<DateRangePickerViewSlotsComponent>;
+  components?: Partial<DateRangePickerViewSlotsComponent<TDate>>;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  componentsProps?: Partial<DateRangePickerViewSlotsComponentsProps>;
+  componentsProps?: Partial<DateRangePickerViewSlotsComponentsProps<TDate>>;
   /**
    * If `true`, after selecting `start` date calendar will not automatically switch to the month of `end` date.
    * @default false
@@ -85,40 +82,35 @@ export interface ExportedDateRangePickerViewProps<TDate>
   className?: string;
 }
 
-interface DateRangePickerViewProps<TInputDate, TDate>
+interface DateRangePickerViewProps<TDate>
   extends CurrentlySelectingRangeEndProps,
     ExportedDateRangePickerViewProps<TDate>,
     PickerStatePickerProps<DateRange<TDate>>,
     Required<BaseDateValidationProps<TDate>> {
   calendars: 1 | 2 | 3;
   open: boolean;
-  startText: React.ReactNode;
-  endText: React.ReactNode;
-  DateInputProps: DateRangePickerInputProps<TInputDate, TDate>;
+  DateInputProps: DateRangePickerInputProps<TDate>;
 }
 
-type DateRangePickerViewComponent = (<TInputDate, TDate = TInputDate>(
-  props: DateRangePickerViewProps<TInputDate, TDate>,
+type DateRangePickerViewComponent = (<TDate>(
+  props: DateRangePickerViewProps<TDate>,
 ) => JSX.Element) & { propTypes?: any };
 
 /**
  * @ignore - internal component.
  */
-function DateRangePickerViewRaw<TInputDate, TDate>(
-  props: DateRangePickerViewProps<TInputDate, TDate>,
-) {
+function DateRangePickerViewRaw<TDate>(props: DateRangePickerViewProps<TDate>) {
   const {
     calendars,
     className,
     currentlySelectingRangeEnd,
-    parsedValue,
+    value,
     DateInputProps,
     defaultCalendarMonth,
     disableAutoMonthSwitching = false,
     disableFuture,
     disableHighlightToday,
     disablePast,
-    endText,
     isMobileKeyboardViewOpen,
     maxDate,
     minDate,
@@ -129,7 +121,6 @@ function DateRangePickerViewRaw<TInputDate, TDate>(
     setCurrentlySelectingRangeEnd,
     shouldDisableDate,
     showToolbar,
-    startText,
     toggleMobileKeyboardView,
     toolbarFormat,
     toolbarTitle,
@@ -143,9 +134,9 @@ function DateRangePickerViewRaw<TInputDate, TDate>(
     shouldDisableDate &&
     ((dayToTest: TDate) => shouldDisableDate?.(dayToTest, currentlySelectingRangeEnd));
 
-  const [start, end] = parsedValue;
+  const [start, end] = value;
   const { changeMonth, calendarState, onMonthSwitchingAnimationEnd, changeFocusedDay } =
-    useCalendarState({
+    useCalendarState<TDate>({
       value: start || end,
       defaultCalendarMonth,
       disableFuture,
@@ -169,7 +160,7 @@ function DateRangePickerViewRaw<TInputDate, TDate>(
 
     const prevDate =
       currentlySelectingRangeEnd === 'start' ? prevValue.current?.[0] : prevValue.current?.[1];
-    prevValue.current = parsedValue;
+    prevValue.current = value;
 
     // The current date did not change, this call comes either from a `currentlySelectingRangeEnd` change or a change in the other date.
     // In both cases, we don't want to change the visible month(s).
@@ -194,14 +185,14 @@ function DateRangePickerViewRaw<TInputDate, TDate>(
 
       changeMonth(newMonth);
     }
-  }, [currentlySelectingRangeEnd, parsedValue]); // eslint-disable-line
+  }, [currentlySelectingRangeEnd, value]); // eslint-disable-line
 
   const handleSelectedDayChange = React.useCallback<DayPickerProps<TDate>['onSelectedDaysChange']>(
     (newDate) => {
       const { nextSelection, newRange } = calculateRangeChange({
         newDate,
         utils,
-        range: parsedValue,
+        range: value,
         currentlySelectingRangeEnd,
       });
 
@@ -218,7 +209,7 @@ function DateRangePickerViewRaw<TInputDate, TDate>(
     },
     [
       currentlySelectingRangeEnd,
-      parsedValue,
+      value,
       onDateChange,
       setCurrentlySelectingRangeEnd,
       utils,
@@ -228,7 +219,7 @@ function DateRangePickerViewRaw<TInputDate, TDate>(
 
   const renderView = () => {
     const sharedCalendarProps = {
-      parsedValue,
+      value,
       changeFocusedDay,
       onSelectedDaysChange: handleSelectedDayChange,
       reduceAnimations,
@@ -261,13 +252,11 @@ function DateRangePickerViewRaw<TInputDate, TDate>(
       <Watermark packageName="x-date-pickers-pro" releaseInfo={releaseInfo} />
       {toShowToolbar && (
         <DateRangePickerToolbar
-          parsedValue={parsedValue}
+          value={value}
           isMobileKeyboardViewOpen={isMobileKeyboardViewOpen}
           toggleMobileKeyboardView={toggleMobileKeyboardView}
           currentlySelectingRangeEnd={currentlySelectingRangeEnd}
           setCurrentlySelectingRangeEnd={setCurrentlySelectingRangeEnd}
-          startText={startText}
-          endText={endText}
           toolbarTitle={toolbarTitle}
           toolbarFormat={toolbarFormat}
         />

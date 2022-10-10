@@ -22,31 +22,31 @@ import { StaticPickerProps } from '../internals/models/props/staticPickerProps';
 import { DateInputSlotsComponent } from '../internals/components/PureDateInput';
 import { DateTimePickerTabs } from '../DateTimePicker/DateTimePickerTabs';
 
-export interface StaticDateTimePickerSlotsComponent
+export interface StaticDateTimePickerSlotsComponent<TDate>
   extends PickersStaticWrapperSlotsComponent,
-    CalendarOrClockPickerSlotsComponent,
+    CalendarOrClockPickerSlotsComponent<TDate>,
     DateInputSlotsComponent {}
 
-export interface StaticDateTimePickerSlotsComponentsProps
+export interface StaticDateTimePickerSlotsComponentsProps<TDate>
   extends PickersStaticWrapperSlotsComponentsProps,
-    CalendarOrClockPickerSlotsComponentsProps {}
+    CalendarOrClockPickerSlotsComponentsProps<TDate> {}
 
-export interface StaticDateTimePickerProps<TInputDate, TDate>
-  extends StaticPickerProps<BaseDateTimePickerProps<TInputDate, TDate>> {
+export interface StaticDateTimePickerProps<TDate>
+  extends StaticPickerProps<TDate, BaseDateTimePickerProps<TDate>> {
   /**
    * Overrideable components.
    * @default {}
    */
-  components?: Partial<StaticDateTimePickerSlotsComponent>;
+  components?: Partial<StaticDateTimePickerSlotsComponent<TDate>>;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  componentsProps?: Partial<StaticDateTimePickerSlotsComponentsProps>;
+  componentsProps?: Partial<StaticDateTimePickerSlotsComponentsProps<TDate>>;
 }
 
-type StaticDateTimePickerComponent = (<TInputDate, TDate = TInputDate>(
-  props: StaticDateTimePickerProps<TInputDate, TDate> & React.RefAttributes<HTMLDivElement>,
+type StaticDateTimePickerComponent = (<TDate>(
+  props: StaticDateTimePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
 ) => JSX.Element) & { propTypes?: any };
 
 /**
@@ -59,25 +59,25 @@ type StaticDateTimePickerComponent = (<TInputDate, TDate = TInputDate>(
  *
  * - [StaticDateTimePicker API](https://mui.com/x/api/date-pickers/static-date-time-picker/)
  */
-export const StaticDateTimePicker = React.forwardRef(function StaticDateTimePicker<
-  TInputDate,
-  TDate = TInputDate,
->(inProps: StaticDateTimePickerProps<TInputDate, TDate>, ref: React.Ref<HTMLDivElement>) {
-  const props = useDateTimePickerDefaultizedProps<
-    TInputDate,
-    TDate,
-    StaticDateTimePickerProps<TInputDate, TDate>
-  >(inProps, 'MuiStaticDateTimePicker');
+export const StaticDateTimePicker = React.forwardRef(function StaticDateTimePicker<TDate>(
+  inProps: StaticDateTimePickerProps<TDate>,
+  ref: React.Ref<HTMLDivElement>,
+) {
+  const props = useDateTimePickerDefaultizedProps<TDate, StaticDateTimePickerProps<TDate>>(
+    inProps,
+    'MuiStaticDateTimePicker',
+  );
 
   // Note that we are passing down all the value without spread.
   // It saves us >1kb gzip and make any prop available automatically on any level down.
   const {
-    displayStaticWrapperAs = 'mobile',
+    displayStaticWrapperAs,
     onChange,
     ToolbarComponent = DateTimePickerToolbar,
     value,
     components: providedComponents,
     componentsProps,
+    localeText,
     sx,
     hideTabs = displayStaticWrapperAs === 'desktop',
     className,
@@ -90,7 +90,7 @@ export const StaticDateTimePicker = React.forwardRef(function StaticDateTimePick
   );
 
   const validationError = useDateTimeValidation(props) !== null;
-  const components = React.useMemo<StaticDateTimePickerProps<TInputDate, TDate>['components']>(
+  const components = React.useMemo<StaticDateTimePickerProps<TDate>['components']>(
     () => ({ Tabs: DateTimePickerTabs, ...providedComponents }),
     [providedComponents],
   );
@@ -109,6 +109,7 @@ export const StaticDateTimePicker = React.forwardRef(function StaticDateTimePick
       displayStaticWrapperAs={displayStaticWrapperAs}
       components={components}
       componentsProps={componentsProps}
+      localeText={localeText}
       sx={sx}
       className={className}
       {...wrapperProps}
@@ -188,7 +189,7 @@ StaticDateTimePicker.propTypes = {
    */
   disabled: PropTypes.bool,
   /**
-   * If `true` future days are disabled.
+   * If `true` disable values before the current time
    * @default false
    */
   disableFuture: PropTypes.bool,
@@ -213,49 +214,24 @@ StaticDateTimePicker.propTypes = {
    */
   disableOpenPicker: PropTypes.bool,
   /**
-   * If `true` past days are disabled.
+   * If `true` disable values after the current time.
    * @default false
    */
   disablePast: PropTypes.bool,
   /**
    * Force static wrapper inner components to be rendered in mobile or desktop mode.
-   * @default 'mobile'
+   * @default "mobile"
    */
   displayStaticWrapperAs: PropTypes.oneOf(['desktop', 'mobile']),
   /**
-   * Accessible text that helps user to understand which time and view is selected.
-   * @template TDate
-   * @param {ClockPickerView} view The current view rendered.
-   * @param {TDate | null} time The current time.
-   * @param {MuiPickersAdapter<TDate>} adapter The current date adapter.
-   * @returns {string} The clock label.
-   * @deprecated Use the `localeText` prop of `LocalizationProvider` instead, see https://mui.com/x/react-date-pickers/localization
-   * @default <TDate extends any>(
-   *   view: ClockView,
-   *   time: TDate | null,
-   *   adapter: MuiPickersAdapter<TDate>,
-   * ) =>
-   *   `Select ${view}. ${
-   *     time === null ? 'No time selected' : `Selected time is ${adapter.format(time, 'fullTime')}`
-   *   }`
-   */
-  getClockLabelText: PropTypes.func,
-  /**
    * Get aria-label text for control that opens picker dialog. Aria-label text must include selected date. @DateIOType
-   * @template TInputDate, TDate
-   * @param {TInputDate} date The date from which we want to add an aria-text.
+   * @template TDate
+   * @param {TDate | null} date The date from which we want to add an aria-text.
    * @param {MuiPickersAdapter<TDate>} utils The utils to manipulate the date.
    * @returns {string} The aria-text to render inside the dialog.
-   * @default (date, utils) => `Choose date, selected date is ${utils.format(utils.date(date), 'fullDate')}`
+   * @default (date, utils) => `Choose date, selected date is ${utils.format(date, 'fullDate')}`
    */
   getOpenDialogAriaText: PropTypes.func,
-  /**
-   * Get aria-label text for switching between views button.
-   * @param {CalendarPickerView} currentView The view from which we want to get the button text.
-   * @returns {string} The label of the view.
-   * @deprecated Use the `localeText` prop of `LocalizationProvider` instead, see https://mui.com/x/react-date-pickers/localization
-   */
-  getViewSwitchingButtonText: PropTypes.func,
   /**
    * Toggles visibility of date time switching tabs
    * @default false for mobile, true for desktop
@@ -282,16 +258,15 @@ StaticDateTimePicker.propTypes = {
   ]),
   label: PropTypes.node,
   /**
-   * Left arrow icon aria-label text.
-   * @deprecated
-   */
-  leftArrowButtonText: PropTypes.string,
-  /**
    * If `true` renders `LoadingComponent` in calendar instead of calendar view.
    * Can be used to preload information and show it in calendar.
    * @default false
    */
   loading: PropTypes.bool,
+  /**
+   * Locale for components texts
+   */
+  localeText: PropTypes.object,
   /**
    * Custom mask. Can be used to override generate from format. (e.g. `__/__/____ __:__` or `__/__/____ __:__ _M`).
    */
@@ -336,7 +311,7 @@ StaticDateTimePicker.propTypes = {
   /**
    * Callback fired when the value (the selected date) changes @DateIOType.
    * @template TValue
-   * @param {TValue} value The new parsed value.
+   * @param {TValue} value The new value.
    * @param {string} keyboardInputValue The current value of the keyboard input.
    */
   onChange: PropTypes.func.isRequired,
@@ -348,9 +323,9 @@ StaticDateTimePicker.propTypes = {
    * [Read the guide](https://next.material-ui-pickers.dev/guides/forms) about form integration and error displaying.
    * @DateIOType
    *
-   * @template TError, TInputValue
+   * @template TError, TValue
    * @param {TError} reason The reason why the current value is not valid.
-   * @param {TInputValue} value The invalid value.
+   * @param {TValue} value The invalid value.
    */
   onError: PropTypes.func,
   /**
@@ -396,15 +371,6 @@ StaticDateTimePicker.propTypes = {
    */
   reduceAnimations: PropTypes.bool,
   /**
-   * Custom renderer for day. Check the [PickersDay](https://mui.com/x/api/date-pickers/pickers-day/) component.
-   * @template TDate
-   * @param {TDate} day The day to render.
-   * @param {Array<TDate | null>} selectedDays The days currently selected.
-   * @param {PickersDayProps<TDate>} pickersDayProps The props of the day to render.
-   * @returns {JSX.Element} The element representing the day.
-   */
-  renderDay: PropTypes.func,
-  /**
    * The `renderInput` prop allows you to customize the rendered input.
    * The `props` argument of this render prop contains props of [TextField](https://mui.com/material-ui/api/text-field/#props) that you need to forward.
    * Pay specific attention to the `ref` and `inputProps` keys.
@@ -428,11 +394,6 @@ StaticDateTimePicker.propTypes = {
    */
   rifmFormatter: PropTypes.func,
   /**
-   * Right arrow icon aria-label text.
-   * @deprecated
-   */
-  rightArrowButtonText: PropTypes.string,
-  /**
    * Disable specific date. @DateIOType
    * @template TDate
    * @param {TDate} day The date to test.
@@ -451,7 +412,7 @@ StaticDateTimePicker.propTypes = {
    * Dynamically check if time is disabled or not.
    * If returns `false` appropriate time point will ot be acceptable.
    * @param {number} timeValue The value to check.
-   * @param {ClockPickerView} clockType The clock type of the timeValue.
+   * @param {ClockPickerView} view The clock type of the timeValue.
    * @returns {boolean} Returns `true` if the time should be disabled
    */
   shouldDisableTime: PropTypes.func,

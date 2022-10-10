@@ -37,15 +37,6 @@ The date time picker component can be disabled or read-only.
 
 {{"demo": "FormPropsDateTimePickers.js"}}
 
-## Validação de data e hora
-
-É possível restringir a seleção de data e hora de duas maneiras:
-
-- por meio de `minDateTime`/`maxDateTime` é possível restringir a seleção de tempo para antes ou após um determinado momento no tempo
-- usando `minTime`/`maxTime`, você pode desabilitar selecionar horas antes ou depois de um certo tempo a cada dia, respectivamente
-
-{{"demo": "DateTimeValidation.js"}}
-
 ## Modo estático
 
 It's possible to render any date & time picker inline. Isto permitirá construir contêineres customizados de popover/modal.

@@ -44,18 +44,27 @@ const ptBRPickers: Partial<PickersLocaleText<any>> = {
   secondsClockNumberText: (seconds) => `${seconds} segundos`,
 
   // Open picker labels
-  openDatePickerDialogue: (rawValue, utils) =>
-    rawValue && utils.isValid(utils.date(rawValue))
-      ? `Escolha uma data, data selecionada ${utils.format(utils.date(rawValue)!, 'fullDate')}`
+  openDatePickerDialogue: (value, utils) =>
+    value !== null && utils.isValid(value)
+      ? `Escolha uma data, data selecionada ${utils.format(value, 'fullDate')}`
       : 'Escolha uma data',
-  openTimePickerDialogue: (rawValue, utils) =>
-    rawValue && utils.isValid(utils.date(rawValue))
-      ? `Escolha uma hora, hora selecionada ${utils.format(utils.date(rawValue)!, 'fullTime')}`
+  openTimePickerDialogue: (value, utils) =>
+    value !== null && utils.isValid(value)
+      ? `Escolha uma hora, hora selecionada ${utils.format(value, 'fullTime')}`
       : 'Escolha uma hora',
 
   // Table labels
   timeTableLabel: 'escolha uma hora',
   dateTableLabel: 'escolha uma data',
+
+  // Field section placeholders
+  // fieldYearPlaceholder: params => 'Y'.repeat(params.digitAmount),
+  // fieldMonthPlaceholder: params => params.contentType === 'letter' ? 'MMMM' : 'MM',
+  // fieldDayPlaceholder: () => 'DD',
+  // fieldHoursPlaceholder: () => 'hh',
+  // fieldMinutesPlaceholder: () => 'mm',
+  // fieldSecondsPlaceholder: () => 'ss',
+  // fieldMeridiemPlaceholder: () => 'aa',
 };
 
 export const ptBR = getPickersLocalization(ptBRPickers);

@@ -78,13 +78,13 @@ describe('<DataGridPro /> - Rows', () => {
         );
       };
       render(<Test />);
-      act(() => apiRef!.current.setCellMode('c2', 'first', 'edit'));
+      act(() => apiRef!.current.startCellEditMode({ id: 'c2', field: 'first' }));
       const cell = getCell(1, 1);
 
       expect(cell).to.have.class('MuiDataGrid-cell--editable');
       expect(cell).to.have.class('MuiDataGrid-cell--editing');
       expect(cell.querySelector('input')!.value).to.equal('Jack');
-      act(() => apiRef!.current.setCellMode('c2', 'first', 'view'));
+      act(() => apiRef!.current.stopCellEditMode({ id: 'c2', field: 'first' }));
 
       expect(cell).to.have.class('MuiDataGrid-cell--editable');
       expect(cell).not.to.have.class('MuiDataGrid-cell--editing');
@@ -796,6 +796,24 @@ describe('<DataGridPro /> - Rows', () => {
         fireEvent.mouseEnter(cell);
         act(() => apiRef.current.updateRows([{ id: 1, _action: 'delete' }]));
         fireEvent.mouseLeave(cell);
+      }).not.to.throw();
+    });
+
+    // See https://github.com/mui/mui-x/issues/5742
+    it('should not crash when focusing header after row is removed during the click', () => {
+      expect(() => {
+        render(
+          <TestCase
+            rows={baselineProps.rows}
+            onCellClick={() => {
+              apiRef.current.updateRows([{ id: 1, _action: 'delete' }]);
+            }}
+          />,
+        );
+        const cell = getCell(0, 0);
+        userEvent.mousePress(cell);
+        const columnHeaderCell = getColumnHeaderCell(0);
+        fireEvent.focus(columnHeaderCell);
       }).not.to.throw();
     });
   });

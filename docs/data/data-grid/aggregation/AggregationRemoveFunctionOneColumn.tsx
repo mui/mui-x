@@ -48,7 +48,6 @@ export default function AggregationRemoveFunctionOneColumn() {
             },
           },
         }}
-        experimentalFeatures={{ aggregation: true }}
       />
     </div>
   );
