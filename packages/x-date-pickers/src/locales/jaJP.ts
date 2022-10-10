@@ -72,6 +72,15 @@ const jaJPPickers: Partial<PickersLocaleText<any>> = {
   // Table labels
   timeTableLabel: '時間を選択',
   dateTableLabel: '日付を選択',
+
+  // Field section placeholders
+  // fieldYearPlaceholder: params => 'Y'.repeat(params.digitAmount),
+  // fieldMonthPlaceholder: params => params.contentType === 'letter' ? 'MMMM' : 'MM',
+  // fieldDayPlaceholder: () => 'DD',
+  // fieldHoursPlaceholder: () => 'hh',
+  // fieldMinutesPlaceholder: () => 'mm',
+  // fieldSecondsPlaceholder: () => 'ss',
+  // fieldMeridiemPlaceholder: () => 'aa',
 };
 
 export const jaJP = getPickersLocalization(jaJPPickers);

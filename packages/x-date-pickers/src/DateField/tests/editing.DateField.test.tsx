@@ -135,7 +135,7 @@ describe('<DateField /> - Editing', () => {
         format: adapterToUse.formats.year,
         readOnly: true,
         key: 'ArrowDown',
-        expectedValue: 'year',
+        expectedValue: 'YYYY',
       });
     });
 
@@ -227,7 +227,7 @@ describe('<DateField /> - Editing', () => {
         format: adapterToUse.formats.year,
         readOnly: true,
         key: 'ArrowUp',
-        expectedValue: 'year',
+        expectedValue: 'YYYY',
       });
     });
 
@@ -249,11 +249,11 @@ describe('<DateField /> - Editing', () => {
       clickOnInput(input, 1);
 
       // Set a value for the "month" section
-      fireEvent.change(input, { target: { value: 'j year' } }); // press "j"
-      expectInputValue(input, 'January year');
+      fireEvent.change(input, { target: { value: 'j YYYY' } }); // press "j"
+      expectInputValue(input, 'January YYYY');
 
       userEvent.keyPress(input, { key: 'Backspace' });
-      expectInputValue(input, 'month year');
+      expectInputValue(input, 'MMMM YYYY');
     });
 
     it('should clear the selected section when all sections are completed', () => {
@@ -261,7 +261,7 @@ describe('<DateField /> - Editing', () => {
         format: adapterToUse.formats.monthAndYear,
         defaultValue: adapterToUse.date(),
         key: 'Backspace',
-        expectedValue: 'month 2022',
+        expectedValue: 'MMMM 2022',
       });
     });
 
@@ -276,7 +276,7 @@ describe('<DateField /> - Editing', () => {
       userEvent.keyPress(input, { key: 'a', ctrlKey: true });
 
       userEvent.keyPress(input, { key: 'Backspace' });
-      expectInputValue(input, 'month year');
+      expectInputValue(input, 'MMMM YYYY');
     });
 
     it('should clear all the sections when all sections are selected and not all sections are completed', () => {
@@ -285,14 +285,14 @@ describe('<DateField /> - Editing', () => {
       clickOnInput(input, 1);
 
       // Set a value for the "month" section
-      fireEvent.change(input, { target: { value: 'j year' } }); // Press "j"
-      expectInputValue(input, 'January year');
+      fireEvent.change(input, { target: { value: 'j YYYY' } }); // Press "j"
+      expectInputValue(input, 'January YYYY');
 
       // Select all sections
       userEvent.keyPress(input, { key: 'a', ctrlKey: true });
 
       userEvent.keyPress(input, { key: 'Backspace' });
-      expectInputValue(input, 'month year');
+      expectInputValue(input, 'MMMM YYYY');
     });
 
     it('should not clear the sections when props.readOnly = true', () => {
@@ -406,7 +406,7 @@ describe('<DateField /> - Editing', () => {
         format: adapterToUse.formats.year,
         readOnly: true,
         inputValue: '1',
-        expectedValue: 'year',
+        expectedValue: 'YYYY',
       });
     });
 
@@ -466,7 +466,7 @@ describe('<DateField /> - Editing', () => {
         format: adapterToUse.formats.month,
         readOnly: true,
         key: '1',
-        expectedValue: 'month',
+        expectedValue: 'MMMM',
       });
     });
 
@@ -489,22 +489,22 @@ describe('<DateField /> - Editing', () => {
       const input = screen.getByRole('textbox');
       clickOnInput(input, 1);
 
-      fireEvent.change(input, { target: { value: '2/day/year' } }); // Press "2"
-      expectInputValue(input, '02/day/year');
+      fireEvent.change(input, { target: { value: '2 / DD / YYYY' } }); // Press "2"
+      expectInputValue(input, '02 / DD / YYYY');
 
       userEvent.keyPress(input, { key: 'ArrowRight' });
-      fireEvent.change(input, { target: { value: '02/3/year' } }); // Press "3"
-      expectInputValue(input, '02/03/year');
-      fireEvent.change(input, { target: { value: '02/1/year' } }); // Press "3"
-      expectInputValue(input, '02/31/year');
+      fireEvent.change(input, { target: { value: '02 / 3 / YYYY' } }); // Press "3"
+      expectInputValue(input, '02 / 03 / YYYY');
+      fireEvent.change(input, { target: { value: '02 / 1 / YYYY' } }); // Press "3"
+      expectInputValue(input, '02 / 31 / YYYY');
 
       userEvent.keyPress(input, { key: 'ArrowRight' });
-      fireEvent.change(input, { target: { value: '02/31/2' } }); // Press "2"
-      expectInputValue(input, '02/28/0002'); // Has moved to the last day of the February
-      fireEvent.change(input, { target: { value: '02/28/0' } }); // Press "0"
-      fireEvent.change(input, { target: { value: '02/28/2' } }); // Press "2"
-      fireEvent.change(input, { target: { value: '02/28/2' } }); // Press "2"
-      expectInputValue(input, '02/28/2022');
+      fireEvent.change(input, { target: { value: '02 / 31 / 2' } }); // Press "2"
+      expectInputValue(input, '02 / 28 / 0002'); // Has moved to the last day of the February
+      fireEvent.change(input, { target: { value: '02 / 28 / 0' } }); // Press "0"
+      fireEvent.change(input, { target: { value: '02 / 28 / 2' } }); // Press "2"
+      fireEvent.change(input, { target: { value: '02 / 28 / 2' } }); // Press "2"
+      expectInputValue(input, '02 / 28 / 2022');
 
       expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2022, 1, 28, 0, 0, 0));
     });
@@ -565,7 +565,7 @@ describe('<DateField /> - Editing', () => {
       userEvent.keyPress(input, { key: 'a', ctrlKey: true });
 
       firePasteEvent(input, 'Some invalid content');
-      expectInputValue(input, 'month/day/year');
+      expectInputValue(input, 'MM / DD / YYYY');
     });
 
     it('should not set the date when all sections are selected and props.readOnly = true', () => {
@@ -593,7 +593,7 @@ describe('<DateField /> - Editing', () => {
         />,
       );
       const input = screen.getByRole('textbox');
-      clickOnInput(input, 8);
+      clickOnInput(input, 10);
       userEvent.keyPress(input, { key: 'ArrowDown' });
 
       expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2009, 3, 3, 3, 3, 3));
@@ -614,19 +614,19 @@ describe('<DateField /> - Editing', () => {
       userEvent.keyPress(input, { key: 'a', ctrlKey: true });
       userEvent.keyPress(input, { key: 'Backspace' });
 
-      fireEvent.change(input, { target: { value: '4/day/year' } }); // Press "4"
-      expectInputValue(input, '04/day/year');
+      fireEvent.change(input, { target: { value: '4 / DD / YYYY' } }); // Press "4"
+      expectInputValue(input, '04 / DD / YYYY');
 
       userEvent.keyPress(input, { key: 'ArrowRight' });
-      fireEvent.change(input, { target: { value: '04/3/year' } }); // Press "3"
-      expectInputValue(input, '04/03/year');
+      fireEvent.change(input, { target: { value: '04 / 3 / YYYY' } }); // Press "3"
+      expectInputValue(input, '04 / 03 / YYYY');
 
       userEvent.keyPress(input, { key: 'ArrowRight' });
-      fireEvent.change(input, { target: { value: '04/03/2' } }); // Press "2"
-      fireEvent.change(input, { target: { value: '04/03/0' } }); // Press "0"
-      fireEvent.change(input, { target: { value: '04/03/0' } }); // Press "0"
-      fireEvent.change(input, { target: { value: '04/03/9' } }); // Press "9"
-      expectInputValue(input, '04/03/2009');
+      fireEvent.change(input, { target: { value: '04 / 03 / 2' } }); // Press "2"
+      fireEvent.change(input, { target: { value: '04 / 03 / 0' } }); // Press "0"
+      fireEvent.change(input, { target: { value: '04 / 03 / 0' } }); // Press "0"
+      fireEvent.change(input, { target: { value: '04 / 03 / 9' } }); // Press "9"
+      expectInputValue(input, '04 / 03 / 2009');
 
       expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2009, 3, 3, 3, 3, 3));
     });
