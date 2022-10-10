@@ -84,7 +84,7 @@ The following demo shows the prop in action:
 
 {{"demo": "ControlledSelectionServerPaginationGrid.js", "bg": "inline"}}
 
-## apiRef [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
+## apiRef
 
 The grid exposes a set of methods that enables all of these features using the imperative apiRef.
 
