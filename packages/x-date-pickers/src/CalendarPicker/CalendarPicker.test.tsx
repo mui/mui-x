@@ -167,10 +167,7 @@ describe('<CalendarPicker />', () => {
           value={adapterToUse.date(new Date(2019, 0, 1))}
           onChange={() => {}}
           displayWeekNumber
-          // TODO: remove `getWeekNumber` when all adapters support it
-          getWeekNumber={() => 'x'}
         />
-        ,
       </LocalizationProvider>,
     );
 
