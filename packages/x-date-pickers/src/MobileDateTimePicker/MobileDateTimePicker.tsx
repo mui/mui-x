@@ -22,14 +22,14 @@ import { DateInputSlotsComponent, PureDateInput } from '../internals/components/
 import { usePickerState } from '../internals/hooks/usePickerState';
 import { DateTimePickerTabs } from '../DateTimePicker/DateTimePickerTabs';
 
-export interface MobileDateTimePickerSlotsComponent
+export interface MobileDateTimePickerSlotsComponent<TDate>
   extends MobileWrapperSlotsComponent,
-    CalendarOrClockPickerSlotsComponent,
+    CalendarOrClockPickerSlotsComponent<TDate>,
     DateInputSlotsComponent {}
 
-export interface MobileDateTimePickerSlotsComponentsProps
+export interface MobileDateTimePickerSlotsComponentsProps<TDate>
   extends MobileWrapperSlotsComponentsProps,
-    CalendarOrClockPickerSlotsComponentsProps {}
+    CalendarOrClockPickerSlotsComponentsProps<TDate> {}
 
 export interface MobileDateTimePickerProps<TDate>
   extends BaseDateTimePickerProps<TDate>,
@@ -38,12 +38,12 @@ export interface MobileDateTimePickerProps<TDate>
    * Overrideable components.
    * @default {}
    */
-  components?: Partial<MobileDateTimePickerSlotsComponent>;
+  components?: Partial<MobileDateTimePickerSlotsComponent<TDate>>;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  componentsProps?: Partial<MobileDateTimePickerSlotsComponentsProps>;
+  componentsProps?: Partial<MobileDateTimePickerSlotsComponentsProps<TDate>>;
 }
 
 type MobileDateTimePickerComponent = (<TDate>(
@@ -383,15 +383,6 @@ MobileDateTimePicker.propTypes = {
    */
   reduceAnimations: PropTypes.bool,
   /**
-   * Custom renderer for day. Check the [PickersDay](https://mui.com/x/api/date-pickers/pickers-day/) component.
-   * @template TDate
-   * @param {TDate} day The day to render.
-   * @param {Array<TDate | null>} selectedDays The days currently selected.
-   * @param {PickersDayProps<TDate>} pickersDayProps The props of the day to render.
-   * @returns {JSX.Element} The element representing the day.
-   */
-  renderDay: PropTypes.func,
-  /**
    * The `renderInput` prop allows you to customize the rendered input.
    * The `props` argument of this render prop contains props of [TextField](https://mui.com/material-ui/api/text-field/#props) that you need to forward.
    * Pay specific attention to the `ref` and `inputProps` keys.
@@ -433,7 +424,7 @@ MobileDateTimePicker.propTypes = {
    * Dynamically check if time is disabled or not.
    * If returns `false` appropriate time point will ot be acceptable.
    * @param {number} timeValue The value to check.
-   * @param {ClockPickerView} clockType The clock type of the timeValue.
+   * @param {ClockPickerView} view The clock type of the timeValue.
    * @returns {boolean} Returns `true` if the time should be disabled
    */
   shouldDisableTime: PropTypes.func,

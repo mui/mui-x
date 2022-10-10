@@ -24,19 +24,25 @@ export const dateFieldValueManager: FieldValueManager<any, any, FieldSection, Da
   {
     updateReferenceValue: (utils, value, prevReferenceValue) =>
       value == null || !utils.isValid(value) ? prevReferenceValue : value,
-    getSectionsFromValue: (utils, prevSections, date, format) =>
-      addPositionPropertiesToSections(splitFormatIntoSections(utils, format, date)),
-    getValueStrFromSections: (sections) => createDateStrFromSections(sections),
+    getSectionsFromValue: (utils, localeText, prevSections, date, format) =>
+      addPositionPropertiesToSections(splitFormatIntoSections(utils, localeText, format, date)),
+    getValueStrFromSections: (sections) => createDateStrFromSections(sections, true),
     getActiveDateSections: (sections) => sections,
-    getActiveDateManager: (state) => ({
+    getActiveDateManager: (utils, state) => ({
       activeDate: state.value,
       referenceActiveDate: state.referenceValue,
-      getNewValueFromNewActiveDate: (newActiveDate) => ({
-        value: newActiveDate,
-        referenceValue: newActiveDate == null ? state.referenceValue : newActiveDate,
-      }),
-      setActiveDateAsInvalid: () => null,
+      getNewValueFromNewActiveDate: (newActiveDate) => {
+        return {
+          value: newActiveDate,
+          referenceValue:
+            newActiveDate == null || !utils.isValid(newActiveDate)
+              ? state.referenceValue
+              : newActiveDate,
+        };
+      },
     }),
+    parseValueStr: (valueStr, referenceValue, parseDate) =>
+      parseDate(valueStr.trim(), referenceValue),
     hasError: (error) => error != null,
     isSameError: isSameDateError,
   };

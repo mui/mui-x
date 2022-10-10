@@ -59,6 +59,15 @@ const enUSPickers: PickersLocaleText<any> = {
   // Table labels
   timeTableLabel: 'pick time',
   dateTableLabel: 'pick date',
+
+  // Field section placeholders
+  fieldYearPlaceholder: (params) => 'Y'.repeat(params.digitAmount),
+  fieldMonthPlaceholder: (params) => (params.contentType === 'letter' ? 'MMMM' : 'MM'),
+  fieldDayPlaceholder: () => 'DD',
+  fieldHoursPlaceholder: () => 'hh',
+  fieldMinutesPlaceholder: () => 'mm',
+  fieldSecondsPlaceholder: () => 'ss',
+  fieldMeridiemPlaceholder: () => 'aa',
 };
 
 export const DEFAULT_LOCALE = enUSPickers;

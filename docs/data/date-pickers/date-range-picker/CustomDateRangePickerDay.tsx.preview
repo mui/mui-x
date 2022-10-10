@@ -4,7 +4,7 @@
     label="date range"
     value={value}
     onChange={(newValue) => setValue(newValue)}
-    renderDay={renderWeekPickerDay}
+    components={{ Day: DateRangePickerDay }}
     renderInput={(startProps, endProps) => (
       <React.Fragment>
         <TextField {...startProps} />

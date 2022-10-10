@@ -4,5 +4,4 @@
   columns={COLUMNS}
   disableSelectionOnClick
   initialState={initialState}
-  experimentalFeatures={{ aggregation: true }}
 />
