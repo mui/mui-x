@@ -53,11 +53,11 @@ export interface PickersPopperSlotsComponentsProps
     PickerPopperProps & { placement: PopperPlacementType | undefined }
   >;
   /**
-   * Props passed down to the desktop [Transition](https://mui.com/material-ui/transitions) component.
+   * Props passed down to the desktop [Transition](https://mui.com/material-ui/transitions/) component.
    */
   desktopTransition?: Partial<MuiTransitionProps>;
   /**
-   * Props passed down to the TrapFocus component on desktop.
+   * Props passed down to the [TrapFocus](https://mui.com/base/react-focus-trap/) component on desktop.
    */
   desktopTrapFocus?: Partial<MuiTrapFocusProps>;
   /**
@@ -68,7 +68,6 @@ export interface PickersPopperSlotsComponentsProps
 
 export interface PickerPopperProps extends PickerStateWrapperProps {
   role: 'tooltip' | 'dialog';
-  TrapFocusProps?: Partial<MuiTrapFocusProps>;
   anchorEl: MuiPopperProps['anchorEl'];
   open: MuiPopperProps['open'];
   containerRef?: React.Ref<HTMLDivElement>;
@@ -270,7 +269,6 @@ export function PickersPopper(inProps: PickerPopperProps) {
     onSetToday,
     open,
     role,
-    TrapFocusProps,
     components,
     componentsProps,
   } = props;
@@ -376,7 +374,6 @@ export function PickersPopper(inProps: PickerPopperProps) {
           disableRestoreFocus
           disableEnforceFocus={role === 'tooltip'}
           isEnabled={() => true}
-          {...TrapFocusProps}
           {...componentsProps?.desktopTrapFocus}
         >
           <Transition {...TransitionProps} {...componentsProps?.desktopTransition}>
