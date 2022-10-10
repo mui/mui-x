@@ -5,7 +5,7 @@ import { buildWarning } from '../internals/utils/warning';
 
 const localeNotFoundWarning = buildWarning([
   'Your locale has not been found.',
-  'Either the locale key is nt a support one. Locales supported by dayjs are available here: https://github.com/iamkun/dayjs/tree/dev/src/locale',
+  'Either the locale key is not a supported one. Locales supported by dayjs are available here: https://github.com/iamkun/dayjs/tree/dev/src/locale',
   "Or you forget to import the locale with `require('dayjs/locale/{localeUsed}')`",
   'fallback on English locale',
 ]);
