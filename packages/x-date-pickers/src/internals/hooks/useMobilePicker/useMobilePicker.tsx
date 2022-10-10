@@ -1,6 +1,5 @@
 import * as React from 'react';
-import { useSlotProps } from '@mui/base/utils';
-import { TextFieldProps } from '@mui/material/TextField';
+import { resolveComponentProps, useSlotProps } from '@mui/base/utils';
 import useForkRef from '@mui/utils/useForkRef';
 import { PickersModalDialog } from '../../components/PickersModalDialog';
 import { CalendarOrClockPickerView } from '../../models';
@@ -10,6 +9,7 @@ import { onSpaceOrEnter } from '../../utils/utils';
 import { useUtils } from '../useUtils';
 import { LocalizationProvider } from '../../../LocalizationProvider';
 import { WrapperVariantContext } from '../../components/wrappers/WrapperVariantContext';
+import { BaseFieldProps } from '../../models/fields';
 
 /**
  * Hook managing all the single-date mobile pickers:
@@ -30,7 +30,7 @@ export const useMobilePicker = <TDate, TView extends CalendarOrClockPickerView>(
   const inputRef = React.useRef<HTMLInputElement>(null);
 
   const {
-    field: headlessPickerFieldResponse,
+    fieldProps: pickerFieldProps,
     renderViews,
     actions,
     open,
@@ -45,11 +45,11 @@ export const useMobilePicker = <TDate, TView extends CalendarOrClockPickerView>(
   });
 
   const Field = components.Field;
-  const fieldProps = useSlotProps({
+  const fieldProps: BaseFieldProps<TDate | null, unknown> = useSlotProps({
     elementType: Field,
     externalSlotProps: componentsProps.field,
     additionalProps: {
-      ...headlessPickerFieldResponse,
+      ...pickerFieldProps,
       readOnly: true,
       disabled,
       className,
@@ -59,43 +59,38 @@ export const useMobilePicker = <TDate, TView extends CalendarOrClockPickerView>(
     ownerState: {},
   });
 
-  const Input = components.Input!;
-  const inputProps: TextFieldProps = useSlotProps({
-    elementType: Input,
-    externalSlotProps: componentsProps.input,
-    additionalProps: {
-      onClick: props.readOnly ? undefined : actions.onOpen,
-      onKeyDown: onSpaceOrEnter(actions.onOpen),
+  const componentsPropsForField: BaseFieldProps<TDate, unknown>['componentsProps'] = {
+    ...fieldProps.componentsProps,
+    input: (ownerState) => {
+      const externalInputProps = resolveComponentProps(componentsProps.input, ownerState);
+      return {
+        ...fieldProps.componentsProps?.input,
+        ...externalInputProps,
+        onClick: props.readOnly ? undefined : actions.onOpen,
+        onKeyDown: onSpaceOrEnter(actions.onOpen),
+        inputProps: {
+          ...externalInputProps?.inputProps,
+          'aria-label': getOpenDialogAriaText(pickerFieldProps.value, utils),
+        },
+      };
     },
-    // TODO: Pass owner state
-    ownerState: {},
-  });
+  };
 
-  const htmlInputProps = {
-    ...inputProps.inputProps,
-    // TODO: Correctly support date range
-    'aria-label': getOpenDialogAriaText(fieldProps.value as any as TDate, utils),
+  const componentsForField: BaseFieldProps<TDate, unknown>['components'] = {
+    ...fieldProps.components,
+    Input: components.Input,
   };
 
   // TODO: Correctly type the field slot
-  const handleInputRef = useForkRef(inputRef, (fieldProps as any).inputRef);
+  const handleInputRef = useForkRef(inputRef, fieldProps.inputRef);
 
   const renderPicker = () => (
     <LocalizationProvider localeText={localeText}>
       <WrapperVariantContext.Provider value="desktop">
         <Field
           {...fieldProps}
-          components={{
-            ...(fieldProps as any).components,
-            Input: components.Input,
-          }}
-          componentsProps={{
-            input: {
-              ...(fieldProps as any).componentsProps,
-              ...inputProps,
-              inputProps: htmlInputProps,
-            },
-          }}
+          components={componentsForField}
+          componentsProps={componentsPropsForField}
           inputRef={handleInputRef}
         />
         <PickersModalDialog

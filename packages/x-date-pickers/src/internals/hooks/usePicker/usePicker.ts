@@ -17,18 +17,22 @@ export const usePicker = <
   renderViews: renderViewsParam,
   additionalViewProps,
 }: UsePickerParams<TValue, TDate, TView, TViewProps>): UsePickerResponse<TValue> => {
-  const { field, views, actions, open } = usePickerValue(props, valueManager, wrapperVariant);
+  const { fieldProps, viewProps, actions, open } = usePickerValue({
+    props,
+    valueManager,
+    wrapperVariant,
+  });
 
-  const { renderViews, hasFieldView, hasPopperView, shouldRestoreFocus } = usePickerViews({
-    props: { ...props, ...views },
+  const { renderViews, hasPopperView, shouldRestoreFocus } = usePickerViews({
+    props: { ...props, ...viewProps },
+    additionalViewProps,
     renderViews: renderViewsParam,
     sectionModeLookup,
     inputRef,
     open,
     onClose: actions.onClose,
-    onSelectedSectionsChange: field.onSelectedSectionsChange,
-    additionalViewProps,
+    onSelectedSectionsChange: fieldProps.onSelectedSectionsChange,
   });
 
-  return { field, actions, renderViews, open, hasFieldView, hasPopperView, shouldRestoreFocus };
+  return { fieldProps, actions, renderViews, open, hasPopperView, shouldRestoreFocus };
 };

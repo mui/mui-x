@@ -10,6 +10,7 @@ import { useUtils } from '../useUtils';
 import { usePicker } from '../usePicker';
 import { LocalizationProvider } from '../../../LocalizationProvider';
 import { WrapperVariantContext } from '../../components/wrappers/WrapperVariantContext';
+import { BaseFieldProps } from '../../models/fields';
 
 /**
  * Hook managing all the single-date desktop pickers:
@@ -39,7 +40,7 @@ export const useDesktopPicker = <TDate, TView extends CalendarOrClockPickerView>
   const inputRef = React.useRef<HTMLInputElement>(null);
 
   const {
-    field: headlessPickerFieldResponse,
+    fieldProps: pickerFieldProps,
     renderViews,
     actions,
     open,
@@ -56,11 +57,11 @@ export const useDesktopPicker = <TDate, TView extends CalendarOrClockPickerView>
   });
 
   const Field = components.Field;
-  const fieldProps = useSlotProps({
+  const fieldProps: BaseFieldProps<TDate | null, unknown> = useSlotProps({
     elementType: Field,
     externalSlotProps: componentsProps.field,
     additionalProps: {
-      ...headlessPickerFieldResponse,
+      ...pickerFieldProps,
       readOnly,
       disabled,
       className,
@@ -88,8 +89,7 @@ export const useDesktopPicker = <TDate, TView extends CalendarOrClockPickerView>
     additionalProps: {
       disabled: disabled || readOnly || !hasPopperView,
       onClick: actions.onOpen,
-      // TODO: Correctly support date range
-      'aria-label': getOpenDialogAriaText(fieldProps.value as any as TDate, utils),
+      'aria-label': getOpenDialogAriaText(pickerFieldProps.value, utils),
       edge: inputAdornmentProps.position,
     },
     // TODO: Pass owner state
@@ -104,38 +104,36 @@ export const useDesktopPicker = <TDate, TView extends CalendarOrClockPickerView>
     ownerState: {},
   });
 
-  const Input = components.Input!;
-  const inputProps = useSlotProps({
-    elementType: Input,
-    externalSlotProps: componentsProps.input,
-    additionalProps: {
-      InputProps: {
-        [`${inputAdornmentProps.position}Adornment`]: disableOpenPicker ? undefined : (
-          <InputAdornment {...inputAdornmentProps}>
-            <OpenPickerButton {...openPickerButtonProps}>
-              <OpenPickerIcon {...openPickerIconProps} />
-            </OpenPickerButton>
-          </InputAdornment>
-        ),
-      },
+  const componentsPropsForField: BaseFieldProps<TDate, unknown>['componentsProps'] = {
+    ...fieldProps.componentsProps,
+    input: {
+      [`${inputAdornmentProps.position}Adornment`]: disableOpenPicker ? undefined : (
+        <InputAdornment {...inputAdornmentProps}>
+          <OpenPickerButton {...openPickerButtonProps}>
+            <OpenPickerIcon {...openPickerIconProps} />
+          </OpenPickerButton>
+        </InputAdornment>
+      ),
+      ...fieldProps.componentsProps?.input,
+      ...componentsProps?.input,
     },
-    // TODO: Pass owner state
-    ownerState: {},
-  });
+  };
+
+  const componentsForField: BaseFieldProps<TDate, unknown>['components'] = {
+    ...fieldProps.components,
+    Input: components.Input,
+  };
 
   // TODO: Correctly type the field slot
-  const handleInputRef = useForkRef(inputRef, (fieldProps as any).inputRef);
+  const handleInputRef = useForkRef(inputRef, fieldProps.inputRef);
 
   const renderPicker = () => (
     <LocalizationProvider localeText={localeText}>
       <WrapperVariantContext.Provider value="desktop">
         <Field
           {...fieldProps}
-          components={{
-            ...(fieldProps as any).components,
-            Input: components.Input,
-          }}
-          componentsProps={{ ...(fieldProps as any).componentsProps, input: inputProps }}
+          components={componentsForField}
+          componentsProps={componentsPropsForField}
           inputRef={handleInputRef}
         />
         <PickersPopper

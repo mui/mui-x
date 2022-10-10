@@ -3,11 +3,14 @@ import PropTypes from 'prop-types';
 import { resolveComponentProps } from '@mui/base/utils';
 import { useMobilePicker } from '../internals/hooks/useMobilePicker';
 import { datePickerValueManager } from '../DatePicker/shared';
-import { Unstable_DateField as DateField } from '../DateField';
-import { MobileDatePicker2Props } from './MobileDatePicker2.types';
+import {
+  MobileDatePicker2Props,
+  MobileDatePicker2SlotsComponentsProps,
+} from './MobileDatePicker2.types';
 import { useDatePicker2DefaultizedProps, renderDateViews } from '../DatePicker2/shared';
 import { useLocaleText } from '../internals';
 import { Calendar } from '../internals/components/icons';
+import { Unstable_DateField as DateField } from '../DateField';
 
 type MobileDatePickerComponent = (<TDate>(
   props: MobileDatePicker2Props<TDate> & React.RefAttributes<HTMLDivElement>,
@@ -24,23 +27,23 @@ const MobileDatePicker2 = React.forwardRef(function MobileDatePicker2<TDate>(
   );
 
   const {
-    components: inComponents,
-    componentsProps: inComponentsProps,
+    components: providedComponents,
+    componentsProps: providedComponentsProps,
     inputRef,
     label,
     ...other
   } = props;
 
   const components = {
-    Field: DateField,
     OpenPickerIcon: Calendar,
-    ...inComponents,
+    Field: DateField,
+    ...providedComponents,
   };
 
-  const componentsProps = {
-    ...inComponentsProps,
+  const componentsProps: MobileDatePicker2SlotsComponentsProps<TDate> = {
+    ...providedComponentsProps,
     field: (ownerState: any) => ({
-      ...resolveComponentProps(inComponentsProps?.field, ownerState),
+      ...resolveComponentProps(providedComponentsProps?.field, ownerState),
       ref,
       inputRef,
       label,

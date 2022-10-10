@@ -1,12 +1,12 @@
-import * as React from 'react';
-import { WrapperVariant } from '../../components/wrappers/WrapperVariantContext';
 import { CalendarOrClockPickerView } from '../../models/views';
-import { PickerStateValueManager } from '../usePickerState';
-import { UsePickerValueProps, UsePickerValueResponse } from './usePickerValue';
+import {
+  UsePickerValueParams,
+  UsePickerValueProps,
+  UsePickerValueResponse,
+} from './usePickerValue';
 import {
   ExportedUsePickerViewProps,
-  PickerDateSectionModeLookup,
-  PickerViewsRendererProps,
+  UsePickerViewParams,
   UsePickerViewsResponse,
 } from './usePickerViews';
 
@@ -19,16 +19,14 @@ export interface UsePickerParams<
   TDate,
   TView extends CalendarOrClockPickerView,
   TViewProps extends {},
-> {
+> extends Pick<UsePickerValueParams<TValue, TDate>, 'valueManager' | 'wrapperVariant'>,
+    Pick<
+      UsePickerViewParams<TValue, TView, TViewProps>,
+      'renderViews' | 'sectionModeLookup' | 'additionalViewProps' | 'inputRef'
+    > {
   props: UsePickerProps<TValue, TView>;
-  valueManager: PickerStateValueManager<TValue, TDate>;
-  wrapperVariant: WrapperVariant;
-  renderViews: (props: PickerViewsRendererProps<TValue, TView, TViewProps>) => React.ReactElement;
-  sectionModeLookup?: PickerDateSectionModeLookup<TView>;
-  inputRef?: React.RefObject<HTMLInputElement>;
-  additionalViewProps: TViewProps;
 }
 
 export interface UsePickerResponse<TValue>
-  extends Omit<UsePickerValueResponse<TValue>, 'views'>,
+  extends Omit<UsePickerValueResponse<TValue>, 'viewProps'>,
     UsePickerViewsResponse {}

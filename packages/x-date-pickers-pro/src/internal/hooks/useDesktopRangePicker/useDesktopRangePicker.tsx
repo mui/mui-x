@@ -39,7 +39,7 @@ export const useDesktopRangePicker = <TDate, TView extends CalendarOrClockPicker
   const [currentDatePosition, setCurrentDatePosition] = React.useState<'start' | 'end'>('start');
 
   const {
-    field: headlessPickerFieldResponse,
+    fieldProps: headlessPickerFieldResponse,
     renderViews,
     actions,
     open,

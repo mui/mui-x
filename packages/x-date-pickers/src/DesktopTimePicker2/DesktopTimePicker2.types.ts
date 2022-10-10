@@ -14,7 +14,7 @@ export interface DesktopTimePicker2SlotsComponent<TDate>
     CalendarPickerSlotsComponent<TDate> {}
 
 export interface DesktopTimePicker2SlotsComponentsProps<TDate>
-  extends UseDesktopPickerSlotsComponentsProps,
+  extends UseDesktopPickerSlotsComponentsProps<TDate>,
     CalendarPickerSlotsComponentsProps<TDate> {}
 
 export interface DesktopTimePicker2Props<TDate> extends BaseTimePicker2Props<TDate> {

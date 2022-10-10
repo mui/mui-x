@@ -1,4 +1,8 @@
 import * as React from 'react';
+import { IconButtonProps } from '@mui/material/IconButton';
+import { InputAdornmentProps } from '@mui/material/InputAdornment';
+import TextField, { TextFieldProps } from '@mui/material/TextField';
+import { SlotComponentProps } from '@mui/base/utils';
 import { CalendarOrClockPickerView, MuiPickersAdapter } from '../../models';
 import { BasePickerProps2 } from '../../models/props/basePickerProps';
 import {
@@ -6,10 +10,11 @@ import {
   PickersPopperSlotsComponentsProps,
 } from '../../components/PickersPopper';
 import { UsePickerParams } from '../usePicker';
+import { BaseFieldProps } from '../../models/fields';
 
 export interface UseDesktopPickerSlotsComponent extends PickersPopperSlotsComponent {
   Field: React.ElementType;
-  Input?: React.ElementType;
+  Input?: React.ElementType<TextFieldProps>;
   /**
    * Component disabled on the start or end input adornment used to open the picker.
    * @default InputAdornment
@@ -26,12 +31,12 @@ export interface UseDesktopPickerSlotsComponent extends PickersPopperSlotsCompon
   OpenPickerIcon: React.ElementType;
 }
 
-// TODO: Type props of all slots
-export interface UseDesktopPickerSlotsComponentsProps extends PickersPopperSlotsComponentsProps {
-  field?: Record<string, any>;
-  input?: Record<string, any>;
-  inputAdornment?: Record<string, any>;
-  openPickerButton?: Record<string, any>;
+export interface UseDesktopPickerSlotsComponentsProps<TDate>
+  extends PickersPopperSlotsComponentsProps {
+  field?: SlotComponentProps<React.ElementType<BaseFieldProps<TDate | null, unknown>>, {}, unknown>;
+  input?: SlotComponentProps<typeof TextField, {}, unknown>;
+  inputAdornment?: Partial<InputAdornmentProps>;
+  openPickerButton?: Partial<IconButtonProps>;
   openPickerIcon?: Record<string, any>;
 }
 
@@ -55,7 +60,7 @@ export interface UseDesktopPickerProps<TDate, TView extends CalendarOrClockPicke
    * The props used for each component slot.
    * @default {}
    */
-  componentsProps?: UseDesktopPickerSlotsComponentsProps;
+  componentsProps?: UseDesktopPickerSlotsComponentsProps<TDate>;
 }
 
 export interface UseDesktopPickerParams<TDate, TView extends CalendarOrClockPickerView>
@@ -64,5 +69,5 @@ export interface UseDesktopPickerParams<TDate, TView extends CalendarOrClockPick
     'props' | 'valueManager' | 'sectionModeLookup' | 'renderViews'
   > {
   props: UseDesktopPickerProps<TDate, TView>;
-  getOpenDialogAriaText: (date: TDate, utils: MuiPickersAdapter<TDate>) => string;
+  getOpenDialogAriaText: (date: TDate | null, utils: MuiPickersAdapter<TDate>) => string;
 }

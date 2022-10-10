@@ -3,19 +3,19 @@ import {
   UseDesktopPickerSlotsComponentsProps,
 } from '../internals/hooks/useDesktopPicker';
 import { MakeOptional } from '../internals/models/helpers';
-import { BaseDatePicker2Props } from '../DatePicker2/shared';
 import {
-  CalendarPickerSlotsComponent,
-  CalendarPickerSlotsComponentsProps,
-} from '../CalendarPicker';
+  BaseDatePicker2Props,
+  BaseDatePicker2SlotsComponent,
+  BaseDatePicker2SlotsComponentsProps,
+} from '../DatePicker2/shared';
 
 export interface DesktopDatePicker2SlotsComponent<TDate>
-  extends MakeOptional<UseDesktopPickerSlotsComponent, 'Field' | 'OpenPickerIcon'>,
-    CalendarPickerSlotsComponent<TDate> {}
+  extends BaseDatePicker2SlotsComponent<TDate>,
+    MakeOptional<UseDesktopPickerSlotsComponent, 'Field' | 'OpenPickerIcon'> {}
 
 export interface DesktopDatePicker2SlotsComponentsProps<TDate>
-  extends UseDesktopPickerSlotsComponentsProps,
-    CalendarPickerSlotsComponentsProps<TDate> {}
+  extends BaseDatePicker2SlotsComponentsProps<TDate>,
+    UseDesktopPickerSlotsComponentsProps<TDate> {}
 
 export interface DesktopDatePicker2Props<TDate> extends BaseDatePicker2Props<TDate> {
   /**

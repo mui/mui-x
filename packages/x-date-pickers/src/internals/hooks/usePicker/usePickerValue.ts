@@ -109,6 +109,12 @@ export interface UsePickerValueProps<TValue>
   onOpen?: () => void;
 }
 
+export interface UsePickerValueParams<TValue, TDate> {
+  props: UsePickerValueProps<TValue>;
+  valueManager: PickerStateValueManager<TValue, TDate>;
+  wrapperVariant: WrapperVariant;
+}
+
 export interface UsePickerValueActions {
   onAccept: () => void;
   onClear: () => void;
@@ -133,16 +139,16 @@ type UsePickerValueViewsResponse<TValue> = Pick<
 
 export interface UsePickerValueResponse<TValue> {
   actions: UsePickerValueActions;
-  views: UsePickerValueViewsResponse<TValue>;
-  field: UsePickerValueFieldResponse<TValue>;
+  viewProps: UsePickerValueViewsResponse<TValue>;
+  fieldProps: UsePickerValueFieldResponse<TValue>;
   open: boolean;
 }
 
-export const usePickerValue = <TValue, TDate>(
-  props: UsePickerValueProps<TValue>,
-  valueManager: PickerStateValueManager<TValue, TDate>,
-  wrapperVariant: WrapperVariant,
-): UsePickerValueResponse<TValue> => {
+export const usePickerValue = <TValue, TDate>({
+  props,
+  valueManager,
+  wrapperVariant,
+}: UsePickerValueParams<TValue, TDate>): UsePickerValueResponse<TValue> => {
   const {
     onAccept: onAcceptProp,
     onChange,
@@ -336,8 +342,8 @@ export const usePickerValue = <TValue, TDate>(
 
   return {
     open: isOpen,
-    field: fieldResponse,
-    views: viewResponse,
+    fieldProps: fieldResponse,
+    viewProps: viewResponse,
     actions,
   };
 };

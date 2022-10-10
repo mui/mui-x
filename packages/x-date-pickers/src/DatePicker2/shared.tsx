@@ -1,7 +1,13 @@
 import * as React from 'react';
 import { useThemeProps } from '@mui/material/styles';
 import { DefaultizedProps, MakeOptional } from '../internals/models/helpers';
-import { CalendarPicker, CalendarPickerProps, CalendarPickerView } from '../CalendarPicker';
+import {
+  CalendarPicker,
+  CalendarPickerProps,
+  CalendarPickerSlotsComponent,
+  CalendarPickerSlotsComponentsProps,
+  CalendarPickerView,
+} from '../CalendarPicker';
 import { useDefaultDates, useUtils } from '../internals/hooks/useUtils';
 import { isYearAndMonthViews, isYearOnlyView } from '../internals/utils/views';
 import { ValidationCommonPropsOptionalValue } from '../internals/hooks/validation/useValidation';
@@ -11,6 +17,12 @@ import { PickerViewContainer } from '../internals/components/PickerViewContainer
 import { BasePickerProps2 } from '../internals/models/props/basePickerProps';
 import { applyDefaultDate } from '../internals/utils/date-utils';
 import { BaseDateValidationProps } from '../internals';
+
+export interface BaseDatePicker2SlotsComponent<TDate>
+  extends Partial<CalendarPickerSlotsComponent<TDate>> {}
+
+export interface BaseDatePicker2SlotsComponentsProps<TDate>
+  extends Partial<CalendarPickerSlotsComponentsProps<TDate>> {}
 
 export interface BaseDatePicker2Props<TDate>
   extends MakeOptional<
@@ -27,15 +39,19 @@ export interface BaseDatePicker2Props<TDate>
    * Pass a ref to the `input` element.
    */
   inputRef?: React.Ref<HTMLInputElement>;
-  components?: {
-    Field?: React.ElementType;
-  };
+  components?: BaseDatePicker2SlotsComponent<TDate>;
+  componentsProps?: BaseDatePicker2SlotsComponentsProps<TDate>;
 }
+
+type UseDatePicker2DefaultizedProps<
+  TDate,
+  Props extends BaseDatePicker2Props<TDate>,
+> = DefaultizedProps<Props, 'views' | 'openTo' | keyof BaseDateValidationProps<TDate>>;
 
 export function useDatePicker2DefaultizedProps<TDate, Props extends BaseDatePicker2Props<TDate>>(
   props: Props,
   name: string,
-): DefaultizedProps<Props, 'views' | 'openTo' | keyof BaseDateValidationProps<TDate>> {
+): UseDatePicker2DefaultizedProps<TDate, Props> {
   const utils = useUtils<TDate>();
   const defaultDates = useDefaultDates<TDate>();
   const themeProps = useThemeProps({

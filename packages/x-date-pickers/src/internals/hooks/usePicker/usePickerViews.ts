@@ -54,7 +54,7 @@ export interface UsePickerViewsProps<TValue, TView extends CalendarOrClockPicker
   value: TValue;
 }
 
-interface UsePickerViewParams<
+export interface UsePickerViewParams<
   TValue,
   TView extends CalendarOrClockPickerView,
   TViewProps extends {},
@@ -72,7 +72,6 @@ interface UsePickerViewParams<
 }
 
 export interface UsePickerViewsResponse {
-  hasFieldView: boolean;
   hasPopperView: boolean;
   renderViews: () => React.ReactNode;
   shouldRestoreFocus: () => boolean;
@@ -132,15 +131,12 @@ export const usePickerViews = <
   });
 
   const viewModeResponse = React.useMemo(() => {
-    let hasFieldView = false;
     let hasPopperView = false;
     const sectionModeLookup = {} as PickerDateSectionModeLookup<TView>;
 
     views.forEach((view) => {
       const viewMode: 'field' | 'popper' = inputSectionModelLookup?.[view] ?? 'popper';
-      if (viewMode === 'field') {
-        hasFieldView = true;
-      } else {
+      if (viewMode === 'popper') {
         hasPopperView = true;
       }
 
@@ -148,7 +144,6 @@ export const usePickerViews = <
     });
 
     return {
-      hasFieldView,
       hasPopperView,
       sectionModeLookup,
     };
