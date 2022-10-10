@@ -182,7 +182,7 @@ export const useFieldState = <
         return null;
       }
 
-      const sections = splitFormatIntoSections(utils, format, date);
+      const sections = splitFormatIntoSections(utils, localeText, format, date);
       return mergeDateIntoReferenceDate(utils, date, sections, referenceDate, false);
     };
 
