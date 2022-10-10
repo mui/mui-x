@@ -39,7 +39,6 @@ export interface GridApiCommon<
   GridState extends GridStateCommunity = any,
   GridInitialState extends GridInitialStateCommunity = any,
 > extends GridCoreApi,
-    GridLoggerApi,
     GridPipeProcessingApi,
     GridDensityApi,
     GridDimensionsApi,
@@ -77,7 +76,8 @@ export interface GridPrivateOnlyApiCommon<
     GridRowsMetaPrivateApi,
     GridDimensionsPrivateApi,
     GridVirtualScrollerApi,
-    GridEditingPrivateApi {}
+    GridEditingPrivateApi,
+    GridLoggerApi {}
 
 export interface GridPrivateApiCommon
   extends GridApiCommon,

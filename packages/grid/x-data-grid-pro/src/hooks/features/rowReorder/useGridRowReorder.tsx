@@ -13,7 +13,7 @@ import {
   gridEditRowsStateSelector,
 } from '@mui/x-data-grid';
 import { GridRowOrderChangeParams } from '../../../models/gridRowOrderChangeParams';
-import { GridApiPro } from '../../../models/gridApiPro';
+import { GridPrivateApiPro } from '../../../models/gridApiPro';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 
 type OwnerState = { classes: DataGridProProcessedProps['classes'] };
@@ -33,7 +33,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
  * @requires useGridRows (method)
  */
 export const useGridRowReorder = (
-  apiRef: React.MutableRefObject<GridApiPro>,
+  apiRef: React.MutableRefObject<GridPrivateApiPro>,
   props: Pick<DataGridProProcessedProps, 'rowReordering' | 'onRowOrderChange' | 'classes'>,
 ): void => {
   const logger = useGridLogger(apiRef, 'useGridRowReorder');

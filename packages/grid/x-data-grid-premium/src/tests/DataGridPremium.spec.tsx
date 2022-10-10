@@ -102,6 +102,8 @@ function ApiRefPrivateMethods() {
     apiRef.current.getRowWithUpdatedValuesFromRowEditing;
     // @ts-expect-error Property 'runPendingEditCellValueMutation' does not exist on type 'GridApiPremium'
     apiRef.current.runPendingEditCellValueMutation;
+    // @ts-expect-error Property 'getLogger' does not exist on type 'GridApiPremium'
+    apiRef.current.getLogger;
   });
 
   return null;
