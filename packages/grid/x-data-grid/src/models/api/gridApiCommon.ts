@@ -27,13 +27,12 @@ import type { GridDimensionsApi } from '../../hooks/features/dimensions';
 import type { GridPaginationApi } from '../../hooks/features/pagination';
 import type { GridStatePersistenceApi } from '../../hooks/features/statePersistence';
 import { GridColumnGroupingApi } from './gridColumnGroupingApi';
+import type { GridInitialStateCommunity, GridStateCommunity } from '../gridStateCommunity';
 
-type GridStateApiUntyped = {
-  [key in keyof (GridStateApi<any> & GridStatePersistenceApi<any>)]: any;
-};
-
-export interface GridApiCommon
-  extends GridCoreApi,
+export interface GridApiCommon<
+  GridState extends GridStateCommunity = any,
+  GridInitialState extends GridInitialStateCommunity = any,
+> extends GridCoreApi,
     GridLoggerApi,
     GridPipeProcessingApi,
     GridStrategyProcessingApi,
@@ -59,5 +58,6 @@ export interface GridApiCommon
     GridClipboardApi,
     GridScrollApi,
     GridColumnSpanningApi,
-    GridStateApiUntyped,
+    GridStateApi<GridState>,
+    GridStatePersistenceApi<GridInitialState>,
     GridColumnGroupingApi {}

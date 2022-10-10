@@ -43,8 +43,6 @@ const GRID_API_INTERFACES_WITH_DEDICATED_PAGES = [
   'GridCsvExportApi',
   'GridScrollApi',
   'GridEditingApi',
-  'GridOldEditingApi',
-  'GridNewEditingApi',
   'GridRowGroupingApi',
   'GridColumnPinningApi',
   'GridDetailPanelApi',
@@ -194,7 +192,7 @@ function generateMarkdownFromProperties(
         ' [<span class="plan-pro" title="Pro plan"></span>](/x/introduction/licensing/#pro-plan)';
     } else if (property.projects.includes('x-data-grid-premium')) {
       planImg =
-        ' [<span class="plan-premium" title="Premium plan"></span>](https://mui.com/x/introduction/licensing/#premium-plan)';
+        ' [<span class="plan-premium" title="Premium plan"></span>](/x/introduction/licensing/#premium-plan)';
     } else {
       throw new Error(`No valid plan found for ${property.name} property in ${object.name}`);
     }
