@@ -22,6 +22,7 @@ Below are described the steps you need to make to migrate from v5 to v6.
 :::info
 The list is currently empty, but as we move forward with development during the alpha and beta phases, we'll feed this page with all changes in the API.
 :::
+
 <!--
 ### CSS classes
 
