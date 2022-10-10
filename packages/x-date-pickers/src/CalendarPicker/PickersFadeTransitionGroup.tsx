@@ -2,7 +2,7 @@ import * as React from 'react';
 import clsx from 'clsx';
 import Fade from '@mui/material/Fade';
 import { styled, useThemeProps } from '@mui/material/styles';
-import { unstable_composeClasses as composeClasses } from '@mui/material';
+import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { TransitionGroup } from 'react-transition-group';
 import {
   getPickersFadeTransitionGroupUtilityClass,

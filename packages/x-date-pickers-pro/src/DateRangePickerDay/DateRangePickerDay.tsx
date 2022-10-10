@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { useLicenseVerifier } from '@mui/x-license-pro';
 import { alpha, styled, useThemeProps } from '@mui/material/styles';
-import { unstable_composeClasses as composeClasses } from '@mui/material';
+import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { DAY_MARGIN, useUtils, areDayPropsEqual } from '@mui/x-date-pickers/internals';
 import { PickersDay, PickersDayProps } from '@mui/x-date-pickers/PickersDay';
 import {

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import { styled, useThemeProps } from '@mui/material/styles';
-import { unstable_composeClasses as composeClasses } from '@mui/material';
+import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { CLOCK_WIDTH, CLOCK_HOUR_WIDTH } from './shared';
 import { ClockPickerView } from '../internals/models';
 import { ClockPointerClasses, getClockPointerUtilityClass } from './clockPointerClasses';

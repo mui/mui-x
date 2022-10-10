@@ -1,4 +1,7 @@
-import { generateUtilityClass, generateUtilityClasses } from '@mui/material';
+import {
+  unstable_generateUtilityClass as generateUtilityClass,
+  unstable_generateUtilityClasses as generateUtilityClasses,
+} from '@mui/utils';
 
 export function getMonthPickerUtilityClass(slot: string) {
   return generateUtilityClass('MuiMonthPicker', slot);

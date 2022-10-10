@@ -5,7 +5,7 @@ import Popper, { PopperProps as MuiPopperProps } from '@mui/material/Popper';
 import TrapFocus, { TrapFocusProps as MuiTrapFocusProps } from '@mui/material/Unstable_TrapFocus';
 import { useForkRef, useEventCallback, ownerDocument } from '@mui/material/utils';
 import { styled, useThemeProps } from '@mui/material/styles';
-import { unstable_composeClasses as composeClasses } from '@mui/material';
+import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { TransitionProps as MuiTransitionProps } from '@mui/material/transitions';
 import { PickersActionBar, PickersActionBarProps } from '../../PickersActionBar';
 import { PickersSlotsComponent } from './wrappers/WrapperProps';

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { styled, useThemeProps } from '@mui/material/styles';
-import { unstable_composeClasses as composeClasses } from '@mui/material';
+import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { DateTimePickerTabsProps } from '../../../DateTimePicker';
 import { useViews, PickerOnChangeFn } from '../../hooks/useViews';
 import { ClockPicker, ExportedClockPickerProps } from '../../../ClockPicker/ClockPicker';

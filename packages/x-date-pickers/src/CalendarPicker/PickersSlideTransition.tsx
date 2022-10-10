@@ -1,7 +1,7 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import { styled } from '@mui/material/styles';
-import { unstable_composeClasses as composeClasses } from '@mui/material';
+import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { CSSTransitionProps } from 'react-transition-group/CSSTransition';
 import { TransitionGroupProps } from 'react-transition-group/TransitionGroup';

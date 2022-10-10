@@ -2,7 +2,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { styled, Theme, useThemeProps } from '@mui/material/styles';
 import { SxProps } from '@mui/system';
-import { unstable_composeClasses as composeClasses } from '@mui/material';
+import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import clsx from 'clsx';
 import { DIALOG_WIDTH } from '../../constants/dimensions';
 import { WrapperVariantContext } from '../wrappers/WrapperVariantContext';
