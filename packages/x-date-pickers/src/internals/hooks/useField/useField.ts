@@ -49,6 +49,7 @@ export const useField = <
     clearValue,
     clearActiveSection,
     updateSectionValue,
+    updateValueFromValueStr,
     setTempAndroidValueStr,
   } = useFieldState(params);
 
@@ -114,22 +115,39 @@ export const useField = <
   });
 
   const handleInputPaste = useEventCallback((event: React.ClipboardEvent<HTMLInputElement>) => {
-    if (readOnly || selectedSectionIndexes == null) {
+    event.preventDefault();
+
+    if (readOnly) {
       return;
     }
 
-    event.preventDefault();
+    // TODO: Implement single section paste
+    if (
+      selectedSectionIndexes &&
+      selectedSectionIndexes.startIndex === selectedSectionIndexes.endIndex
+    ) {
+      return;
+    }
+
     const pastedValue = event.clipboardData.getData('text');
-    throw new Error(`Pasting is not implemented yet, the value to paste would be "${pastedValue}"`);
+    updateValueFromValueStr(pastedValue);
   });
 
   const handleInputChange = useEventCallback((event: React.ChangeEvent<HTMLInputElement>) => {
-    if (readOnly || selectedSectionIndexes == null) {
+    if (readOnly) {
+      return;
+    }
+
+    const valueStr = event.target.value;
+
+    // If no section is selected, we just try to parse the new value
+    // This line is mostly triggered by imperative code / application tests.
+    if (selectedSectionIndexes == null) {
+      updateValueFromValueStr(valueStr);
       return;
     }
 
     const prevValueStr = fieldValueManager.getValueStrFromSections(state.sections);
-    const valueStr = event.target.value;
 
     let startOfDiffIndex = -1;
     let endOfDiffIndex = -1;

@@ -42,7 +42,7 @@
     "experimentalFeatures": {
       "type": {
         "name": "shape",
-        "description": "{ columnGrouping?: bool, newEditingApi?: bool, preventCommitWhileValidating?: bool, warnIfFocusStateIsNotSynced?: bool }"
+        "description": "{ columnGrouping?: bool, warnIfFocusStateIsNotSynced?: bool }"
       }
     },
     "filterMode": {
@@ -89,7 +89,6 @@
     "nonce": { "type": { "name": "string" } },
     "onCellClick": { "type": { "name": "func" } },
     "onCellDoubleClick": { "type": { "name": "func" } },
-    "onCellEditCommit": { "type": { "name": "func" } },
     "onCellEditStart": { "type": { "name": "func" } },
     "onCellEditStop": { "type": { "name": "func" } },
     "onCellFocusOut": { "type": { "name": "func" } },
@@ -103,11 +102,6 @@
     "onColumnHeaderOver": { "type": { "name": "func" } },
     "onColumnOrderChange": { "type": { "name": "func" } },
     "onColumnVisibilityModelChange": { "type": { "name": "func" } },
-    "onEditCellPropsChange": {
-      "type": { "name": "func" },
-      "deprecated": true,
-      "deprecationInfo": "use <code>preProcessEditCellProps</code> from the <a href=\"/x/api/data-grid/grid-col-def/\"><code>GridColDef</code></a>"
-    },
     "onEditRowsModelChange": { "type": { "name": "func" } },
     "onError": { "type": { "name": "func" } },
     "onFilterModelChange": { "type": { "name": "func" } },

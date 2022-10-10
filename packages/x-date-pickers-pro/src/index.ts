@@ -13,3 +13,5 @@ export * from './DesktopDateRangePicker2';
 
 // Calendars
 export * from './DateRangeCalendar';
+
+export type { DateRangeValidationError } from './internal/hooks/validation/useDateRangeValidation';

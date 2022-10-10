@@ -48,6 +48,10 @@ The date picker component can be disabled or read-only.
 
 {{"demo": "FormPropsDatePickers.js"}}
 
+## Validation
+
+You can find the documentation in the [Validation page](/react-date-pickers/validation/)
+
 ## Localization
 
 Use `LocalizationProvider` to change the date-library locale that is used to render the date picker.

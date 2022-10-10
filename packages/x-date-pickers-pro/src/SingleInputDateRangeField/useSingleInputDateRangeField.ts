@@ -45,7 +45,7 @@ export const dateRangeFieldValueManager: FieldValueManager<
 
     return [prevReferenceValue[1], value[1]];
   },
-  getSectionsFromValue: (utils, prevSections, [start, end], format) => {
+  getSectionsFromValue: (utils, localeText, prevSections, [start, end], format) => {
     const prevDateRangeSections =
       prevSections == null
         ? { startDate: null, endDate: null }
@@ -58,7 +58,7 @@ export const dateRangeFieldValueManager: FieldValueManager<
         return prevDateSections;
       }
 
-      return splitFormatIntoSections(utils, format, newDate);
+      return splitFormatIntoSections(utils, localeText, format, newDate);
     };
 
     const rawSectionsOfStartDate = getSections(start, prevDateRangeSections.startDate);
@@ -118,6 +118,18 @@ export const dateRangeFieldValueManager: FieldValueManager<
             : updateDateInRange(newActiveDate, state.referenceValue),
       }),
     };
+  },
+  parseValueStr: (valueStr, referenceValue, parseDate) => {
+    // TODO: Improve because it would not work if the date format has `–` as a separator.
+    const [startStr, endStr] = valueStr.split('–');
+
+    return [startStr, endStr].map((dateStr, index) => {
+      if (dateStr == null) {
+        return null;
+      }
+
+      return parseDate(dateStr.trim(), referenceValue[index]);
+    }) as DateRange<any>;
   },
   hasError: (error) => error[0] != null || error[1] != null,
   isSameError: isSameDateRangeError,
