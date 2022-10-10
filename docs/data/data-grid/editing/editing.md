@@ -6,22 +6,6 @@ title: Data Grid - Editing
 
 <p class="description">The data grid has built-in support for cell and row editing.</p>
 
-:::warning
-This page refers to the new editing API, which is not enabled by default.
-To use it, add the following flag:
-
-```tsx
-<DataGrid experimentalFeatures={{ newEditingApi: true }} />
-```
-
-This additional step is required because the default editing API has a couple of issues that can only be fixed with breaking changes, that will only be possible in v6.
-To avoid having to wait for the next major release window, all breaking changes needed were included inside this flag.
-
-If you are looking for the documentation for the default editing API, visit [the docs of the legacy API](/x/react-data-grid/editing-legacy/).
-Note that it is encouraged to migrate to the new editing API since it will be enabled by default in v6.
-Although it says "experimental," you can consider it stable.
-:::
-
 ## Making a column editable
 
 You can make a column editable by enabling the `editable` property in its [column definition](/x/api/data-grid/grid-col-def/):

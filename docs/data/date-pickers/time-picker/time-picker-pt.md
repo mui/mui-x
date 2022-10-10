@@ -47,10 +47,6 @@ Use `LocalizationProvider` para alterar a date-library de localização que é u
 
 {{"demo": "LocalizedTimePicker.js"}}
 
-## Validação de hora
-
-{{"demo": "TimeValidationTimePicker.js"}}
-
 ## Paisagem
 
 {{"demo": "StaticTimePickerLandscape.js", "bg": true}}

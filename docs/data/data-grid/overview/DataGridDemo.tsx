@@ -56,7 +56,6 @@ export default function DataGridDemo() {
         rowsPerPageOptions={[5]}
         checkboxSelection
         disableSelectionOnClick
-        experimentalFeatures={{ newEditingApi: true }}
       />
     </Box>
   );
