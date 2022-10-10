@@ -510,6 +510,78 @@ describe('<DateField /> - Editing', () => {
     });
   });
 
+  describe('Pasting', () => {
+    const firePasteEvent = (input: HTMLInputElement, pastedValue: string) => {
+      act(() => {
+        const clipboardEvent = new Event('paste', {
+          bubbles: true,
+          cancelable: true,
+          composed: true,
+        });
+
+        // @ts-ignore
+        clipboardEvent.clipboardData = {
+          getData: () => pastedValue,
+        };
+        input.dispatchEvent(clipboardEvent);
+      });
+    };
+
+    it('should set the date when all sections are selected, the pasted value is valid and a value is provided', () => {
+      const onChange = spy();
+      render(<DateField onChange={onChange} defaultValue={adapterToUse.date()} />);
+      const input = screen.getByRole('textbox');
+      clickOnInput(input, 1);
+
+      // Select all sections
+      userEvent.keyPress(input, { key: 'a', ctrlKey: true });
+
+      firePasteEvent(input, '09/16/2022');
+      expect(onChange.callCount).to.equal(1);
+      expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2022, 8, 16));
+    });
+
+    it('should set the date when all sections are selected, the pasted value is valid and no value is provided', () => {
+      const onChange = spy();
+      render(<DateField onChange={onChange} />);
+      const input = screen.getByRole('textbox');
+      clickOnInput(input, 1);
+
+      // Select all sections
+      userEvent.keyPress(input, { key: 'a', ctrlKey: true });
+
+      firePasteEvent(input, '09/16/2022');
+      expect(onChange.callCount).to.equal(1);
+      expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2022, 8, 16));
+    });
+
+    it('should not set the date when all sections are selected and the pasted value is not valid', () => {
+      const onChange = spy();
+      render(<DateField onChange={onChange} />);
+      const input = screen.getByRole('textbox');
+      clickOnInput(input, 1);
+
+      // Select all sections
+      userEvent.keyPress(input, { key: 'a', ctrlKey: true });
+
+      firePasteEvent(input, 'Some invalid content');
+      expectInputValue(input, 'month/day/year');
+    });
+
+    it('should not set the date when all sections are selected and props.readOnly = true', () => {
+      const onChange = spy();
+      render(<DateField onChange={onChange} readOnly />);
+      const input = screen.getByRole('textbox');
+      clickOnInput(input, 1);
+
+      // Select all sections
+      userEvent.keyPress(input, { key: 'a', ctrlKey: true });
+
+      firePasteEvent(input, '09/16/2022');
+      expect(onChange.callCount).to.equal(0);
+    });
+  });
+
   describe('Do not loose missing section values ', () => {
     it('should not loose time information when a value is provided', () => {
       const onChange = spy();
@@ -591,6 +663,31 @@ describe('<DateField /> - Editing', () => {
       userEvent.keyPress(input, { key: 'ArrowDown' });
 
       expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2010, 2, 3, 3, 3, 3));
+    });
+  });
+
+  describe('Imperative change (without any section selected)', () => {
+    it('should set the date when the change value is valid and no value is provided', () => {
+      const onChange = spy();
+      render(<DateField onChange={onChange} />);
+      const input = screen.getByRole('textbox');
+      fireEvent.change(input, { target: { value: '09/16/2022' } });
+      expect(onChange.callCount).to.equal(1);
+      expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2022, 8, 16));
+    });
+
+    it('should set the date when the change value is valid and a value is provided', () => {
+      const onChange = spy();
+      render(
+        <DateField
+          defaultValue={adapterToUse.date(new Date(2010, 3, 3, 3, 3, 3))}
+          onChange={onChange}
+        />,
+      );
+      const input = screen.getByRole('textbox');
+      fireEvent.change(input, { target: { value: '09/16/2022' } });
+      expect(onChange.callCount).to.equal(1);
+      expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2022, 8, 16, 3, 3, 3));
     });
   });
 });

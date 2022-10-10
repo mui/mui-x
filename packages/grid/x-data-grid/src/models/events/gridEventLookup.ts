@@ -1,10 +1,8 @@
 import * as React from 'react';
 import type {
-  GridCellEditCommitParams,
   GridColumnHeaderParams,
   GridColumnOrderChangeParams,
   GridColumnResizeParams,
-  GridEditCellPropsParams,
   GridHeaderSelectionCheckboxParams,
   GridMenuParams,
   GridPreferencePanelParams,
@@ -405,17 +403,6 @@ export interface GridEventLookup
   cellEditStop: {
     params: GridCellEditStopParams;
     event: MuiBaseEvent;
-  };
-  /**
-   * Fired when the props of the edit input are committed.
-   */
-  cellEditCommit: { params: GridCellEditCommitParams; event: MuiBaseEvent };
-  /**
-   * Fired when the props of the edit cell changes.
-   */
-  editCellPropsChange: {
-    params: GridEditCellPropsParams;
-    event: React.SyntheticEvent<HTMLElement> | {};
   };
   /**
    * Fired when the row turns to edit mode.

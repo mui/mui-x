@@ -575,6 +575,33 @@ export const validateSections = <TSection extends FieldSection>(
   }
 };
 
+export const mergeDateIntoReferenceDate = <
+  TDate,
+  TSection extends Omit<FieldSection, 'start' | 'end'>,
+>(
+  utils: MuiPickerFieldAdapter<TDate>,
+  date: TDate,
+  sections: TSection[],
+  referenceDate: TDate,
+  shouldLimitToEditedSections: boolean,
+) => {
+  let mergedDate = referenceDate;
+
+  sections.forEach((section) => {
+    if (!shouldLimitToEditedSections || section.edited) {
+      mergedDate = applySectionValueToDate({
+        utils,
+        date: mergedDate,
+        dateSectionName: section.dateSectionName,
+        getNumericSectionValue: (getter) => getter(date),
+        getMeridiemSectionValue: () => (utils.getHours(mergedDate) < 12 ? 'AM' : 'PM'),
+      });
+    }
+  });
+
+  return mergedDate;
+};
+
 export const isAndroid = () => navigator.userAgent.toLowerCase().indexOf('android') > -1;
 
 export const clampDaySection = <TDate, TSection extends FieldSection>(

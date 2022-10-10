@@ -38,10 +38,6 @@ const DateRangePickerDay = styled(MuiDateRangePickerDay)(
 export default function CustomDateRangePickerDay() {
   const [value, setValue] = React.useState([null, null]);
 
-  const renderWeekPickerDay = (date, dateRangePickerDayProps) => {
-    return <DateRangePickerDay {...dateRangePickerDayProps} />;
-  };
-
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <StaticDateRangePicker
@@ -49,7 +45,7 @@ export default function CustomDateRangePickerDay() {
         label="date range"
         value={value}
         onChange={(newValue) => setValue(newValue)}
-        renderDay={renderWeekPickerDay}
+        components={{ Day: DateRangePickerDay }}
         renderInput={(startProps, endProps) => (
           <React.Fragment>
             <TextField {...startProps} />
