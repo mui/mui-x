@@ -65,6 +65,12 @@ export interface GridColumnsPanelProps extends GridPanelWrapperProps {
    * If not specified, the order is derived from the `columns` prop.
    */
   sort?: 'asc' | 'desc';
+  /*
+   * whether to autoFocus the column search field by default.
+   * If `false`, it will autoFocus the first column switch input.
+   * This helps to avoid input keyboard panel to popup automatically on touch devices.
+   */
+  autoFocusSearchField?: boolean;
 }
 
 const collator = new Intl.Collator();
@@ -79,7 +85,7 @@ function GridColumnsPanel(props: GridColumnsPanelProps) {
   const ownerState = { classes: rootProps.classes };
   const classes = useUtilityClasses(ownerState);
 
-  const { sort, ...other } = props;
+  const { sort, autoFocusSearchField = true, ...other } = props;
 
   const sortedColumns = React.useMemo(() => {
     switch (sort) {
@@ -136,9 +142,15 @@ function GridColumnsPanel(props: GridColumnsPanelProps) {
     );
   }, [sortedColumns, searchValue]);
 
+  const firstSwitchRef = React.useRef<HTMLInputElement>(null);
+
   React.useEffect(() => {
-    searchInputRef.current!.focus();
-  }, []);
+    if (autoFocusSearchField) {
+      searchInputRef.current!.focus();
+    } else if (firstSwitchRef.current && typeof firstSwitchRef.current.focus === 'function') {
+      firstSwitchRef.current.focus();
+    }
+  }, [autoFocusSearchField]);
 
   return (
     <GridPanelWrapper {...other}>
@@ -156,7 +168,7 @@ function GridColumnsPanel(props: GridColumnsPanelProps) {
       </GridPanelHeader>
       <GridPanelContent>
         <GridColumnsPanelRoot className={classes.root}>
-          {currentColumns.map((column) => (
+          {currentColumns.map((column, index) => (
             <GridColumnsPanelRowRoot className={classes.columnsPanelRow} key={column.field}>
               <FormControlLabel
                 control={
@@ -166,6 +178,7 @@ function GridColumnsPanel(props: GridColumnsPanelProps) {
                     onClick={toggleColumn}
                     name={column.field}
                     size="small"
+                    inputRef={index === 0 ? firstSwitchRef : undefined}
                     {...rootProps.componentsProps?.baseSwitch}
                   />
                 }
@@ -209,6 +222,7 @@ GridColumnsPanel.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
+  autoFocusSearchField: PropTypes.bool,
   sort: PropTypes.oneOf(['asc', 'desc']),
 } as any;
 

@@ -216,4 +216,23 @@ describe('<DataGridPro /> - Columns Visibility', () => {
       expect(getColumnHeadersTextContent()).to.deep.equal([]);
     });
   });
+
+  it('should autofocus the first switch element in columns panel when `autoFocusSearchField` disabled', () => {
+    render(
+      <TestDataGrid
+        components={{
+          Toolbar: GridToolbar,
+        }}
+        componentsProps={{
+          columnsPanel: {
+            autoFocusSearchField: false,
+          },
+        }}
+      />,
+    );
+
+    fireEvent.click(screen.getByRole('button', { name: 'Select columns' }));
+
+    expect((document.activeElement as HTMLInputElement).checked).to.equal(true);
+  });
 });
