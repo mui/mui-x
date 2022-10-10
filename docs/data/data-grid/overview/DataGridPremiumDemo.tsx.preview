@@ -5,5 +5,4 @@
   disableSelectionOnClick
   initialState={initialState}
   components={{ Toolbar: GridToolbar }}
-  experimentalFeatures={{ newEditingApi: true }}
 />

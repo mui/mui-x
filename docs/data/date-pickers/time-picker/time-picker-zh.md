@@ -47,10 +47,6 @@ The time picker component can be disabled or read-only.
 
 {{"demo": "LocalizedTimePicker.js"}}
 
-## 验证时间
-
-{{"demo": "TimeValidationTimePicker.js"}}
-
 ## 横屏
 
 {{"demo": "StaticTimePickerLandscape.js", "bg": true}}

@@ -68,6 +68,15 @@ const isISPickers: Partial<PickersLocaleText<any>> = {
   // Table labels
   timeTableLabel: 'velja tíma',
   dateTableLabel: 'velja dagsetningu',
+
+  // Field section placeholders
+  // fieldYearPlaceholder: params => 'Y'.repeat(params.digitAmount),
+  // fieldMonthPlaceholder: params => params.contentType === 'letter' ? 'MMMM' : 'MM',
+  // fieldDayPlaceholder: () => 'DD',
+  // fieldHoursPlaceholder: () => 'hh',
+  // fieldMinutesPlaceholder: () => 'mm',
+  // fieldSecondsPlaceholder: () => 'ss',
+  // fieldMeridiemPlaceholder: () => 'aa',
 };
 
 export const isIS = getPickersLocalization(isISPickers);

@@ -62,6 +62,15 @@ const nlNLPickers: Partial<PickersLocaleText<any>> = {
   // Table labels
   timeTableLabel: 'kies tijd',
   dateTableLabel: 'kies datum',
+
+  // Field section placeholders
+  // fieldYearPlaceholder: params => 'Y'.repeat(params.digitAmount),
+  // fieldMonthPlaceholder: params => params.contentType === 'letter' ? 'MMMM' : 'MM',
+  // fieldDayPlaceholder: () => 'DD',
+  // fieldHoursPlaceholder: () => 'hh',
+  // fieldMinutesPlaceholder: () => 'mm',
+  // fieldSecondsPlaceholder: () => 'ss',
+  // fieldMeridiemPlaceholder: () => 'aa',
 };
 
 export const nlNL = getPickersLocalization(nlNLPickers);

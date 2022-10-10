@@ -60,6 +60,15 @@ const plPLPickers: Partial<PickersLocaleText<any>> = {
   // Table labels
   timeTableLabel: 'wybierz czas',
   dateTableLabel: 'wybierz datę',
+
+  // Field section placeholders
+  // fieldYearPlaceholder: params => 'Y'.repeat(params.digitAmount),
+  // fieldMonthPlaceholder: params => params.contentType === 'letter' ? 'MMMM' : 'MM',
+  // fieldDayPlaceholder: () => 'DD',
+  // fieldHoursPlaceholder: () => 'hh',
+  // fieldMinutesPlaceholder: () => 'mm',
+  // fieldSecondsPlaceholder: () => 'ss',
+  // fieldMeridiemPlaceholder: () => 'aa',
 };
 
 export const plPL = getPickersLocalization(plPLPickers);
