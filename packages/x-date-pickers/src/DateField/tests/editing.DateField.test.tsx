@@ -565,7 +565,7 @@ describe('<DateField /> - Editing', () => {
       userEvent.keyPress(input, { key: 'a', ctrlKey: true });
 
       firePasteEvent(input, 'Some invalid content');
-      expectInputValue(input, 'month/day/year');
+      expectInputValue(input, 'MM / DD / YYYY');
     });
 
     it('should not set the date when all sections are selected and props.readOnly = true', () => {
