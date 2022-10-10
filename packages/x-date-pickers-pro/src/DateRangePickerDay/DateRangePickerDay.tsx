@@ -207,27 +207,29 @@ const DateRangePickerDayDay = styled(PickersDay, {
   ],
 })<{
   ownerState: OwnerState;
-}>(({ theme, ownerState }) => ({
-  // Required to overlap preview border
-  transform: 'scale(1.1)',
-  '& > *': {
-    transform: 'scale(0.9)',
-  },
-  ...(!ownerState.selected && {
-    backgroundColor: 'transparent',
-  }),
-  ...(!ownerState.isHighlighting && {
-    '&:hover': {
-      border: `1px solid ${theme.palette.grey[500]}`,
-    },
-  }),
-  ...(!ownerState.selected &&
-    ownerState.isHighlighting && {
-      color: theme.palette.getContrastText(alpha(theme.palette.primary.light, 0.6)),
-    }),
-})) as unknown as <TDate>(
-  props: PickersDayProps<TDate> & { ownerState: OwnerState },
-) => JSX.Element;
+}>(({ theme, ownerState }) =>
+  ownerState.outsideCurrentMonth && !ownerState.showDaysOutsideCurrentMonth
+    ? {}
+    : {
+        // Required to overlap preview border
+        transform: 'scale(1.1)',
+        '& > *': {
+          transform: 'scale(0.9)',
+        },
+        ...(!ownerState.selected && {
+          backgroundColor: 'transparent',
+        }),
+        ...(!ownerState.isHighlighting && {
+          '&:hover': {
+            border: `1px solid ${theme.palette.grey[500]}`,
+          },
+        }),
+        ...(!ownerState.selected &&
+          ownerState.isHighlighting && {
+            color: theme.palette.getContrastText(alpha(theme.palette.primary.light, 0.6)),
+          }),
+      },
+) as unknown as <TDate>(props: PickersDayProps<TDate> & { ownerState: OwnerState }) => JSX.Element;
 
 type DateRangePickerDayComponent = <TDate>(
   props: DateRangePickerDayProps<TDate> & React.RefAttributes<HTMLButtonElement>,
