@@ -24,8 +24,6 @@ export default function ViewsDatePicker() {
         <DatePicker
           views={['year', 'month']}
           label="Year and Month"
-          minDate={dayjs('2012-03-01')}
-          maxDate={dayjs('2023-06-01')}
           value={value}
           onChange={(newValue) => {
             setValue(newValue);
