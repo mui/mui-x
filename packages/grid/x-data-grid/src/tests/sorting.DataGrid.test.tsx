@@ -1,8 +1,8 @@
 import * as React from 'react';
 // @ts-ignore Remove once the test utils are typed
-import { createRenderer, fireEvent, screen } from '@mui/monorepo/test/utils';
+import { createRenderer, fireEvent, screen, act } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
-import { DataGrid, DataGridProps, GridSortModel } from '@mui/x-data-grid';
+import { DataGrid, DataGridProps, GridSortModel, useGridApiRef, GridApi } from '@mui/x-data-grid';
 import { getColumnValues, getColumnHeaderCell } from 'test/utils/helperFn';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
@@ -518,5 +518,25 @@ describe('<DataGrid /> - Sorting', () => {
         'MUI: The `sortModel` can only contain a single item when the `disableMultipleColumnsSorting` prop is set to `true`.',
       );
     });
+  });
+
+  it('should apply the sortModel prop correctly on GridApiRef update row data', () => {
+    let apiRef: React.MutableRefObject<GridApi>;
+    const TestCase = () => {
+      apiRef = useGridApiRef();
+
+      const sortModel: GridSortModel = [{ field: 'brand', sort: 'asc' }];
+
+      return (
+        <div style={{ width: 300, height: 300 }}>
+          <DataGrid {...baselineProps} apiRef={apiRef} sortModel={sortModel} />
+        </div>
+      );
+    };
+
+    render(<TestCase />);
+    act(() => apiRef.current.updateRows([{ id: 1, brand: 'Fila' }]));
+    act(() => apiRef.current.updateRows([{ id: 0, brand: 'Patagonia' }]));
+    expect(getColumnValues(0)).to.deep.equal(['Fila', 'Patagonia', 'Puma']);
   });
 });

@@ -21,7 +21,7 @@ const DataGridRaw = React.forwardRef(function DataGrid<R extends GridValidRowMod
   ref: React.Ref<HTMLDivElement>,
 ) {
   const props = useDataGridProps(inProps);
-  const privateApiRef = useDataGridComponent(props);
+  const privateApiRef = useDataGridComponent(props.apiRef, props);
 
   return (
     <GridContextProvider privateApiRef={privateApiRef} props={props}>
@@ -53,6 +53,12 @@ DataGridRaw.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
+  /**
+   * The ref object that allows grid manipulation. Can be instantiated with [[useGridApiRef()]].
+   */
+  apiRef: PropTypes.shape({
+    current: PropTypes.object.isRequired,
+  }),
   /**
    * The label of the grid.
    */
