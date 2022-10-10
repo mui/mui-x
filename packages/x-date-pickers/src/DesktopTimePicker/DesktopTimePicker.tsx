@@ -4,8 +4,9 @@ import {
   BaseTimePickerProps,
   useTimePickerDefaultizedProps,
   timePickerValueManager,
+  BaseTimePickerSlotsComponentsProps,
+  BaseTimePickerSlotsComponent,
 } from '../TimePicker/shared';
-import { TimePickerToolbar } from '../TimePicker/TimePickerToolbar';
 import {
   DesktopWrapper,
   DesktopWrapperProps,
@@ -16,20 +17,16 @@ import { CalendarOrClockPicker } from '../internals/components/CalendarOrClockPi
 import { useTimeValidation } from '../internals/hooks/validation/useTimeValidation';
 import { KeyboardDateInput } from '../internals/components/KeyboardDateInput';
 import { usePickerState } from '../internals/hooks/usePickerState';
-import {
-  ClockPickerSlotsComponent,
-  ClockPickerSlotsComponentsProps,
-} from '../ClockPicker/ClockPicker';
 import { DateInputSlotsComponent } from '../internals/components/PureDateInput';
 
-export interface DesktopTimePickerSlotsComponent
-  extends DesktopWrapperSlotsComponent,
-    ClockPickerSlotsComponent,
+export interface DesktopTimePickerSlotsComponent<TDate>
+  extends BaseTimePickerSlotsComponent<TDate>,
+    DesktopWrapperSlotsComponent,
     DateInputSlotsComponent {}
 
 export interface DesktopTimePickerSlotsComponentsProps
-  extends DesktopWrapperSlotsComponentsProps,
-    ClockPickerSlotsComponentsProps {}
+  extends BaseTimePickerSlotsComponentsProps,
+    DesktopWrapperSlotsComponentsProps {}
 
 export interface DesktopTimePickerProps<TDate>
   extends BaseTimePickerProps<TDate>,
@@ -38,7 +35,7 @@ export interface DesktopTimePickerProps<TDate>
    * Overrideable components.
    * @default {}
    */
-  components?: Partial<DesktopTimePickerSlotsComponent>;
+  components?: Partial<DesktopTimePickerSlotsComponent<TDate>>;
   /**
    * The props used for each component slot.
    * @default {}
@@ -76,7 +73,6 @@ export const DesktopTimePicker = React.forwardRef(function DesktopTimePicker<TDa
     onChange,
     PaperProps,
     PopperProps,
-    ToolbarComponent = TimePickerToolbar,
     TransitionComponent,
     value,
     components,
@@ -84,6 +80,7 @@ export const DesktopTimePicker = React.forwardRef(function DesktopTimePicker<TDa
     localeText,
     ...other
   } = props;
+
   const DateInputProps = {
     ...inputProps,
     ...other,
@@ -108,8 +105,6 @@ export const DesktopTimePicker = React.forwardRef(function DesktopTimePicker<TDa
       <CalendarOrClockPicker
         {...pickerProps}
         autoFocus
-        toolbarTitle={props.label || props.toolbarTitle}
-        ToolbarComponent={ToolbarComponent}
         DateInputProps={DateInputProps}
         components={components}
         componentsProps={componentsProps}
@@ -342,16 +337,6 @@ DesktopTimePicker.propTypes = {
    * If `true`, show the toolbar even in desktop mode.
    */
   showToolbar: PropTypes.bool,
-  /**
-   * Component that will replace default toolbar renderer.
-   * @default TimePickerToolbar
-   */
-  ToolbarComponent: PropTypes.elementType,
-  /**
-   * Mobile picker title, displaying in the toolbar.
-   * @default 'Select time'
-   */
-  toolbarTitle: PropTypes.node,
   /**
    * Custom component for popper [Transition](https://mui.com/material-ui/transitions/#transitioncomponent-prop).
    */

@@ -97,10 +97,6 @@
       }
     },
     "timeIcon": { "type": { "name": "node" } },
-    "ToolbarComponent": { "type": { "name": "elementType" }, "default": "DateTimePickerToolbar" },
-    "toolbarFormat": { "type": { "name": "string" } },
-    "toolbarPlaceholder": { "type": { "name": "node" }, "default": "'–'" },
-    "toolbarTitle": { "type": { "name": "node" }, "default": "'Select date & time'" },
     "TransitionComponent": { "type": { "name": "elementType" } },
     "value": { "type": { "name": "any" } },
     "views": {
@@ -122,7 +118,8 @@
     "RightArrowIcon": { "default": "ArrowRight", "type": { "name": "elementType" } },
     "SwitchViewButton": { "default": "IconButton", "type": { "name": "elementType" } },
     "SwitchViewIcon": { "default": "ArrowDropDown", "type": { "name": "elementType" } },
-    "Tabs": { "default": "DateTimePickerTabs", "type": { "name": "elementType" } }
+    "Tabs": { "default": "DateTimePickerTabs", "type": { "name": "elementType" } },
+    "Toolbar": { "default": "DateTimePickerToolbar", "type": { "name": "elementType" } }
   },
   "name": "DateTimePicker",
   "styles": { "classes": [], "globalClasses": {}, "name": "MuiDateTimePicker" },

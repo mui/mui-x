@@ -6,7 +6,8 @@ import type { ExportedClockPickerProps } from '../../../ClockPicker/ClockPicker'
 import { PickerStatePickerProps } from '../../hooks/usePickerState';
 
 export interface BaseToolbarProps<TDate, TValue>
-  extends ExportedCalendarPickerProps<TDate>,
+  extends ExportedBaseToolbarProps,
+    ExportedCalendarPickerProps<TDate>,
     ExportedClockPickerProps<TDate>,
     Omit<PickerStatePickerProps<TValue>, 'onDateChange'> {
   ampmInClock?: boolean;
@@ -16,8 +17,21 @@ export interface BaseToolbarProps<TDate, TValue>
   openView: CalendarOrClockPickerView;
   setOpenView: (view: CalendarOrClockPickerView) => void;
   timeIcon?: React.ReactNode;
-  toolbarFormat?: string;
-  toolbarPlaceholder?: React.ReactNode;
-  toolbarTitle?: React.ReactNode;
   views: readonly CalendarOrClockPickerView[];
+}
+
+export interface ExportedBaseToolbarProps {
+  /**
+   * Date format.
+   */
+  toolbarFormat?: string;
+  /**
+   * Mobile picker date value placeholder, it is displayed when `value` === `null`.
+   * @default '–'
+   */
+  toolbarPlaceholder?: React.ReactNode;
+  /**
+   * Mobile picker title.
+   */
+  toolbarTitle?: React.ReactNode;
 }

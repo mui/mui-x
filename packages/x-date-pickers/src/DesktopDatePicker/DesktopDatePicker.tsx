@@ -4,8 +4,9 @@ import {
   BaseDatePickerProps,
   useDatePickerDefaultizedProps,
   datePickerValueManager,
+  BaseDatePickerSlotsComponent,
+  BaseDatePickerSlotsComponentsProps,
 } from '../DatePicker/shared';
-import { DatePickerToolbar } from '../DatePicker/DatePickerToolbar';
 import {
   DesktopWrapper,
   DesktopWrapperProps,
@@ -16,18 +17,14 @@ import { CalendarOrClockPicker } from '../internals/components/CalendarOrClockPi
 import { useDateValidation } from '../internals/hooks/validation/useDateValidation';
 import { KeyboardDateInput } from '../internals/components/KeyboardDateInput';
 import { usePickerState } from '../internals/hooks/usePickerState';
-import {
-  CalendarPickerSlotsComponent,
-  CalendarPickerSlotsComponentsProps,
-} from '../CalendarPicker';
 
 export interface DesktopDatePickerSlotsComponent<TDate>
-  extends DesktopWrapperSlotsComponent,
-    CalendarPickerSlotsComponent<TDate> {}
+  extends BaseDatePickerSlotsComponent<TDate>,
+    DesktopWrapperSlotsComponent {}
 
 export interface DesktopDatePickerSlotsComponentsProps<TDate>
-  extends DesktopWrapperSlotsComponentsProps,
-    CalendarPickerSlotsComponentsProps<TDate> {}
+  extends BaseDatePickerSlotsComponentsProps<TDate>,
+    DesktopWrapperSlotsComponentsProps {}
 
 export interface DesktopDatePickerProps<TDate>
   extends Omit<BaseDatePickerProps<TDate>, 'components' | 'componentsProps'>,
@@ -74,7 +71,6 @@ export const DesktopDatePicker = React.forwardRef(function DesktopDatePicker<TDa
     onChange,
     PopperProps,
     PaperProps,
-    ToolbarComponent = DatePickerToolbar,
     TransitionComponent,
     value,
     components,
@@ -82,6 +78,7 @@ export const DesktopDatePicker = React.forwardRef(function DesktopDatePicker<TDa
     localeText,
     ...other
   } = props;
+
   const AllDateInputProps = {
     ...inputProps,
     ...other,
@@ -106,8 +103,6 @@ export const DesktopDatePicker = React.forwardRef(function DesktopDatePicker<TDa
       <CalendarOrClockPicker
         {...pickerProps}
         autoFocus
-        toolbarTitle={props.label || props.toolbarTitle}
-        ToolbarComponent={ToolbarComponent}
         DateInputProps={AllDateInputProps}
         components={components}
         componentsProps={componentsProps}
@@ -393,25 +388,6 @@ DesktopDatePicker.propTypes = {
     PropTypes.func,
     PropTypes.object,
   ]),
-  /**
-   * Component that will replace default toolbar renderer.
-   * @default DatePickerToolbar
-   */
-  ToolbarComponent: PropTypes.elementType,
-  /**
-   * Date format, that is displaying in toolbar.
-   */
-  toolbarFormat: PropTypes.string,
-  /**
-   * Mobile picker date value placeholder, displaying if `value` === `null`.
-   * @default '–'
-   */
-  toolbarPlaceholder: PropTypes.node,
-  /**
-   * Mobile picker title, displaying in the toolbar.
-   * @default 'Select date'
-   */
-  toolbarTitle: PropTypes.node,
   /**
    * Custom component for popper [Transition](https://mui.com/material-ui/transitions/#transitioncomponent-prop).
    */

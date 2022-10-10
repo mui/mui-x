@@ -396,15 +396,6 @@ StaticDateRangePicker.propTypes = {
     PropTypes.object,
   ]),
   /**
-   * Date format, that is displaying in toolbar.
-   */
-  toolbarFormat: PropTypes.string,
-  /**
-   * Mobile picker title, displaying in the toolbar.
-   * @default 'Select date range'
-   */
-  toolbarTitle: PropTypes.node,
-  /**
    * The value of the picker.
    */
   value: PropTypes.arrayOf(PropTypes.any).isRequired,

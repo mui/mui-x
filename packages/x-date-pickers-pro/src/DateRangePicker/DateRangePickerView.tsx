@@ -12,6 +12,7 @@ import {
   DayPickerProps,
   BaseDateValidationProps,
   DayValidationProps,
+  ExportedBaseToolbarProps,
 } from '@mui/x-date-pickers/internals';
 import {
   DateRange,
@@ -20,7 +21,6 @@ import {
 } from '../internal/models/dateRange';
 import { isRangeValid } from '../internal/utils/date-utils';
 import { calculateRangeChange } from './date-range-manager';
-import { DateRangePickerToolbar } from './DateRangePickerToolbar';
 import {
   DateRangePickerViewMobile,
   DateRangePickerViewMobileSlotsComponent,
@@ -32,14 +32,23 @@ import {
   ExportedDateRangePickerViewDesktopProps,
 } from './DateRangePickerViewDesktop';
 import { getReleaseInfo } from '../internal/utils/releaseInfo';
+import { DateRangePickerToolbarProps } from './DateRangePickerToolbar';
 
 const releaseInfo = getReleaseInfo();
 
 export interface DateRangePickerViewSlotsComponent<TDate>
-  extends DateRangePickerViewMobileSlotsComponent<TDate> {}
+  extends DateRangePickerViewMobileSlotsComponent<TDate> {
+  /**
+   * Custom component for the toolbar rendered above the views.
+   * @default DateRangePickerToolbar
+   */
+  Toolbar?: React.JSXElementConstructor<DateRangePickerToolbarProps<TDate>>;
+}
 
 export interface DateRangePickerViewSlotsComponentsProps<TDate>
-  extends DateRangePickerViewMobileSlotsComponentsProps<TDate> {}
+  extends DateRangePickerViewMobileSlotsComponentsProps<TDate> {
+  toolbar?: ExportedBaseToolbarProps;
+}
 
 export interface ExportedDateRangePickerViewProps<TDate>
   extends ExportedDateRangePickerViewDesktopProps,
@@ -63,15 +72,6 @@ export interface ExportedDateRangePickerViewProps<TDate>
    * @default false
    */
   disableAutoMonthSwitching?: boolean;
-  /**
-   * Mobile picker title, displaying in the toolbar.
-   * @default 'Select date range'
-   */
-  toolbarTitle?: React.ReactNode;
-  /**
-   * Date format, that is displaying in toolbar.
-   */
-  toolbarFormat?: string;
   /**
    * If `true`, show the toolbar even in desktop mode.
    */
@@ -122,8 +122,8 @@ function DateRangePickerViewRaw<TDate>(props: DateRangePickerViewProps<TDate>) {
     shouldDisableDate,
     showToolbar,
     toggleMobileKeyboardView,
-    toolbarFormat,
-    toolbarTitle,
+    components,
+    componentsProps,
     ...other
   } = props;
 
@@ -148,8 +148,6 @@ function DateRangePickerViewRaw<TDate>(props: DateRangePickerViewProps<TDate>) {
       reduceAnimations,
       shouldDisableDate: wrappedShouldDisableDate,
     });
-
-  const toShowToolbar = showToolbar ?? wrapperVariant !== 'desktop';
 
   const prevValue = React.useRef<DateRange<TDate> | null>(null);
   React.useEffect(() => {
@@ -217,6 +215,9 @@ function DateRangePickerViewRaw<TDate>(props: DateRangePickerViewProps<TDate>) {
     ],
   );
 
+  const shouldRenderToolbar = showToolbar ?? wrapperVariant !== 'desktop';
+  const Toolbar = components?.Toolbar;
+
   const renderView = () => {
     const sharedCalendarProps = {
       value,
@@ -231,6 +232,8 @@ function DateRangePickerViewRaw<TDate>(props: DateRangePickerViewProps<TDate>) {
       disablePast,
       minDate,
       maxDate,
+      components,
+      componentsProps,
       shouldDisableDate: wrappedShouldDisableDate,
       ...calendarState,
       ...other,
@@ -250,15 +253,14 @@ function DateRangePickerViewRaw<TDate>(props: DateRangePickerViewProps<TDate>) {
   return (
     <div className={className}>
       <Watermark packageName="x-date-pickers-pro" releaseInfo={releaseInfo} />
-      {toShowToolbar && (
-        <DateRangePickerToolbar
+      {shouldRenderToolbar && !!Toolbar && (
+        <Toolbar
+          {...componentsProps?.toolbar}
           value={value}
           isMobileKeyboardViewOpen={isMobileKeyboardViewOpen}
           toggleMobileKeyboardView={toggleMobileKeyboardView}
           currentlySelectingRangeEnd={currentlySelectingRangeEnd}
           setCurrentlySelectingRangeEnd={setCurrentlySelectingRangeEnd}
-          toolbarTitle={toolbarTitle}
-          toolbarFormat={toolbarFormat}
         />
       )}
 

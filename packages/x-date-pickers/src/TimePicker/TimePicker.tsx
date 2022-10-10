@@ -15,9 +15,9 @@ import {
   MobileTimePickerSlotsComponentsProps,
 } from '../MobileTimePicker';
 
-export interface TimePickerSlotsComponent
+export interface TimePickerSlotsComponent<TDate>
   extends MobileTimePickerSlotsComponent,
-    DesktopTimePickerSlotsComponent {}
+    DesktopTimePickerSlotsComponent<TDate> {}
 
 export interface TimePickerSlotsComponentsProps
   extends MobileTimePickerSlotsComponentsProps,
@@ -36,7 +36,7 @@ export interface TimePickerProps<TDate>
    * Overrideable components.
    * @default {}
    */
-  components?: Partial<TimePickerSlotsComponent>;
+  components?: Partial<TimePickerSlotsComponent<TDate>>;
   /**
    * The props used for each component slot.
    * @default {}
@@ -322,16 +322,6 @@ TimePicker.propTypes = {
    * If `true`, show the toolbar even in desktop mode.
    */
   showToolbar: PropTypes.bool,
-  /**
-   * Component that will replace default toolbar renderer.
-   * @default TimePickerToolbar
-   */
-  ToolbarComponent: PropTypes.elementType,
-  /**
-   * Mobile picker title, displaying in the toolbar.
-   * @default 'Select time'
-   */
-  toolbarTitle: PropTypes.node,
   /**
    * Custom component for popper [Transition](https://mui.com/material-ui/transitions/#transitioncomponent-prop).
    */
