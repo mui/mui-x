@@ -450,7 +450,7 @@ export const useGridRowEditing = (
 
       const finishRowEditMode = () => {
         if (cellToFocusAfter !== 'none' && focusedField) {
-          apiRef.current.unstable_moveFocusToRelativeCell(id, focusedField, cellToFocusAfter);
+          apiRef.current.moveFocusToRelativeCell(id, focusedField, cellToFocusAfter);
         }
         updateOrDeleteRowState(id, null);
         updateRowInRowModesModel(id, null);

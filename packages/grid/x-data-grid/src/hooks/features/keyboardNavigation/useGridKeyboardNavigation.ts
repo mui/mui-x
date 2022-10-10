@@ -50,7 +50,7 @@ export const useGridKeyboardNavigation = (
    * @param {number} colIndex Index of the column to focus
    * @param {number} rowIndex index of the row to focus
    * @param {string} closestColumnToUse Which closest column cell to use when the cell is spanned by `colSpan`.
-   * TODO replace with apiRef.current.unstable_moveFocusToRelativeCell()
+   * TODO replace with apiRef.current.moveFocusToRelativeCell()
    */
   const goToCell = React.useCallback(
     (colIndex: number, rowId: GridRowId, closestColumnToUse: 'left' | 'right' = 'left') => {

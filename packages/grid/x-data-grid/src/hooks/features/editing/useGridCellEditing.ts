@@ -367,7 +367,7 @@ export const useGridCellEditing = (
         updateOrDeleteFieldState(id, field, null);
         updateFieldInCellModesModel(id, field, null);
         if (cellToFocusAfter !== 'none') {
-          apiRef.current.unstable_moveFocusToRelativeCell(id, field, cellToFocusAfter);
+          apiRef.current.moveFocusToRelativeCell(id, field, cellToFocusAfter);
         }
       };
 

@@ -2,7 +2,7 @@ import * as React from 'react';
 import { ownerDocument } from '@mui/material/utils';
 import { GridEventListener, GridEventLookup } from '../../../models/events';
 import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
-import { GridFocusApi } from '../../../models/api/gridFocusApi';
+import { GridFocusApi, GridFocusPrivateApi } from '../../../models/api/gridFocusApi';
 import { GridCellParams } from '../../../models/params/gridCellParams';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { useGridLogger } from '../../utils/useGridLogger';
@@ -104,9 +104,7 @@ export const useGridFocus = (
     [apiRef, logger, publishCellFocusOut],
   );
 
-  const moveFocusToRelativeCell = React.useCallback<
-    GridFocusApi['unstable_moveFocusToRelativeCell']
-  >(
+  const moveFocusToRelativeCell = React.useCallback<GridFocusPrivateApi['moveFocusToRelativeCell']>(
     (id, field, direction) => {
       let columnIndexToFocus = apiRef.current.getColumnIndex(field);
       let rowIndexToFocus = apiRef.current.getRowIndexRelativeToVisibleRows(id);
@@ -270,15 +268,17 @@ export const useGridFocus = (
     }
   }, [apiRef]);
 
-  useGridApiMethod(
-    apiRef,
-    {
-      setCellFocus,
-      setColumnHeaderFocus,
-      unstable_moveFocusToRelativeCell: moveFocusToRelativeCell,
-    },
-    'public',
-  );
+  const focusApi: GridFocusApi = {
+    setCellFocus,
+    setColumnHeaderFocus,
+  };
+
+  const focusPrivateApi: GridFocusPrivateApi = {
+    moveFocusToRelativeCell,
+  };
+
+  useGridApiMethod(apiRef, focusApi, 'public');
+  useGridApiMethod(apiRef, focusPrivateApi, 'private');
 
   React.useEffect(() => {
     const doc = ownerDocument(apiRef.current.rootElementRef!.current);

@@ -108,6 +108,8 @@ function ApiRefPrivateMethods() {
     apiRef.current.runPendingEditCellValueMutation;
     // @ts-expect-error Property 'getLogger' does not exist on type 'GridApiPro'
     apiRef.current.getLogger;
+    // @ts-expect-error Property 'moveFocusToRelativeCell' does not exist on type 'GridApiPro'
+    apiRef.current.moveFocusToRelativeCell;
   });
 
   return null;
