@@ -1,0 +1,9 @@
+<LocalizationProvider dateAdapter={AdapterDayjs}>
+  <DesktopDatePicker
+    disableFuture
+    disableOpenPicker
+    value={value}
+    onChange={(newValue) => setValue(newValue)}
+    renderInput={(params) => <TextField {...params} />}
+  />
+</LocalizationProvider>
