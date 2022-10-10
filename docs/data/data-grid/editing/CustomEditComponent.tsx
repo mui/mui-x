@@ -49,11 +49,7 @@ const renderRatingEditInputCell: GridColDef['renderCell'] = (params) => {
 export default function CustomEditComponent() {
   return (
     <div style={{ height: 250, width: '100%' }}>
-      <DataGrid
-        rows={rows}
-        columns={columns}
-        experimentalFeatures={{ newEditingApi: true }}
-      />
+      <DataGrid rows={rows} columns={columns} />
     </div>
   );
 }

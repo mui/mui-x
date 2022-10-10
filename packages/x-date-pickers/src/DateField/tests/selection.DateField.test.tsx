@@ -34,7 +34,7 @@ describe('<DateField /> - Selection', () => {
         input.select();
       });
 
-      expect(input.value).to.equal('month/day/year');
+      expect(input.value).to.equal('MM / DD / YYYY');
       expect(input.selectionStart).to.equal(0);
       expect(input.selectionEnd).to.equal(input.value.length);
     });
@@ -45,22 +45,22 @@ describe('<DateField /> - Selection', () => {
       // Simulate a touch focus interaction on mobile
       act(() => {
         input.focus();
-        input.setSelectionRange(7, 9);
+        input.setSelectionRange(6, 8);
         clock.runToLast();
       });
 
-      expect(input.value).to.equal('month/day/year');
-      expect(input.selectionStart).to.equal(6);
-      expect(input.selectionEnd).to.equal(9);
+      expect(input.value).to.equal('MM / DD / YYYY');
+      expect(input.selectionStart).to.equal(5);
+      expect(input.selectionEnd).to.equal(7);
     });
 
     it('should select day on desktop', () => {
       render(<DateField />);
       const input = screen.getByRole('textbox');
-      clickOnInput(input, 7);
+      clickOnInput(input, 6);
 
-      expect(input.value).to.equal('month/day/year');
-      expect(getSelectedContent(input)).to.equal('day');
+      expect(input.value).to.equal('MM / DD / YYYY');
+      expect(getSelectedContent(input)).to.equal('DD');
     });
   });
 
@@ -69,20 +69,20 @@ describe('<DateField /> - Selection', () => {
       render(<DateField />);
       const input = screen.getByRole('textbox');
       clickOnInput(input, 7);
-      expect(getSelectedContent(input)).to.equal('day');
+      expect(getSelectedContent(input)).to.equal('DD');
 
       clickOnInput(input, 1);
-      expect(getSelectedContent(input)).to.equal('month');
+      expect(getSelectedContent(input)).to.equal('MM');
     });
 
     it('should not change the selection when clicking on the only already selected section', () => {
       render(<DateField />);
       const input = screen.getByRole('textbox');
       clickOnInput(input, 7);
-      expect(getSelectedContent(input)).to.equal('day');
+      expect(getSelectedContent(input)).to.equal('DD');
 
       clickOnInput(input, 8);
-      expect(getSelectedContent(input)).to.equal('day');
+      expect(getSelectedContent(input)).to.equal('DD');
     });
   });
 
@@ -93,7 +93,7 @@ describe('<DateField /> - Selection', () => {
       clickOnInput(input, 1);
 
       userEvent.keyPress(input, { key: 'a', ctrlKey: true });
-      expect(getSelectedContent(input)).to.equal('month/day/year');
+      expect(getSelectedContent(input)).to.equal('MM / DD / YYYY');
     });
   });
 
@@ -102,18 +102,18 @@ describe('<DateField /> - Selection', () => {
       render(<DateField />);
       const input = screen.getByRole('textbox');
       clickOnInput(input, 7);
-      expect(getSelectedContent(input)).to.equal('day');
+      expect(getSelectedContent(input)).to.equal('DD');
       userEvent.keyPress(input, { key: 'ArrowRight' });
-      expect(getSelectedContent(input)).to.equal('year');
+      expect(getSelectedContent(input)).to.equal('YYYY');
     });
 
     it('should stay on the current section when the last section is selected', () => {
       render(<DateField />);
       const input = screen.getByRole('textbox');
       clickOnInput(input, 11);
-      expect(getSelectedContent(input)).to.equal('year');
+      expect(getSelectedContent(input)).to.equal('YYYY');
       userEvent.keyPress(input, { key: 'ArrowRight' });
-      expect(getSelectedContent(input)).to.equal('year');
+      expect(getSelectedContent(input)).to.equal('YYYY');
     });
 
     it('should select the last section when all the sections are selected', () => {
@@ -123,10 +123,10 @@ describe('<DateField /> - Selection', () => {
 
       // Select all sections
       userEvent.keyPress(input, { key: 'a', ctrlKey: true });
-      expect(getSelectedContent(input)).to.equal('month/day/year');
+      expect(getSelectedContent(input)).to.equal('MM / DD / YYYY');
 
       userEvent.keyPress(input, { key: 'ArrowRight' });
-      expect(getSelectedContent(input)).to.equal('year');
+      expect(getSelectedContent(input)).to.equal('YYYY');
     });
   });
 
@@ -135,18 +135,18 @@ describe('<DateField /> - Selection', () => {
       render(<DateField />);
       const input = screen.getByRole('textbox');
       clickOnInput(input, 7);
-      expect(getSelectedContent(input)).to.equal('day');
+      expect(getSelectedContent(input)).to.equal('DD');
       userEvent.keyPress(input, { key: 'ArrowLeft' });
-      expect(getSelectedContent(input)).to.equal('month');
+      expect(getSelectedContent(input)).to.equal('MM');
     });
 
     it('should stay on the current section when the first section is selected', () => {
       render(<DateField />);
       const input = screen.getByRole('textbox');
       clickOnInput(input, 1);
-      expect(getSelectedContent(input)).to.equal('month');
+      expect(getSelectedContent(input)).to.equal('MM');
       userEvent.keyPress(input, { key: 'ArrowLeft' });
-      expect(getSelectedContent(input)).to.equal('month');
+      expect(getSelectedContent(input)).to.equal('MM');
     });
 
     it('should select the first section when all the sections are selected', () => {
@@ -156,10 +156,10 @@ describe('<DateField /> - Selection', () => {
 
       // Select all sections
       userEvent.keyPress(input, { key: 'a', ctrlKey: true });
-      expect(getSelectedContent(input)).to.equal('month/day/year');
+      expect(getSelectedContent(input)).to.equal('MM / DD / YYYY');
 
       userEvent.keyPress(input, { key: 'ArrowLeft' });
-      expect(getSelectedContent(input)).to.equal('month');
+      expect(getSelectedContent(input)).to.equal('MM');
     });
   });
 });
