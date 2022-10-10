@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useSlotProps } from '@mui/base/utils';
+import { resolveComponentProps, useSlotProps } from '@mui/base/utils';
 import MuiInputAdornment from '@mui/material/InputAdornment';
 import IconButton from '@mui/material/IconButton';
 import useForkRef from '@mui/utils/useForkRef';
@@ -106,16 +106,28 @@ export const useDesktopPicker = <TDate, TView extends CalendarOrClockPickerView>
 
   const componentsPropsForField: BaseFieldProps<TDate, unknown>['componentsProps'] = {
     ...fieldProps.componentsProps,
-    input: {
-      [`${inputAdornmentProps.position}Adornment`]: disableOpenPicker ? undefined : (
-        <InputAdornment {...inputAdornmentProps}>
-          <OpenPickerButton {...openPickerButtonProps}>
-            <OpenPickerIcon {...openPickerIconProps} />
-          </OpenPickerButton>
-        </InputAdornment>
-      ),
-      ...fieldProps.componentsProps?.input,
-      ...componentsProps?.input,
+    input: (ownerState) => {
+      const externalInputProps = resolveComponentProps(componentsProps.input, ownerState);
+      const inputPropsPassedByField = resolveComponentProps(
+        fieldProps.componentsProps?.input,
+        ownerState,
+      );
+
+      return {
+        ...inputPropsPassedByField,
+        ...externalInputProps,
+        InputProps: {
+          [`${inputAdornmentProps.position}Adornment`]: disableOpenPicker ? undefined : (
+            <InputAdornment {...inputAdornmentProps}>
+              <OpenPickerButton {...openPickerButtonProps}>
+                <OpenPickerIcon {...openPickerIconProps} />
+              </OpenPickerButton>
+            </InputAdornment>
+          ),
+          ...inputPropsPassedByField?.InputProps,
+          ...externalInputProps?.InputProps,
+        },
+      };
     },
   };
 

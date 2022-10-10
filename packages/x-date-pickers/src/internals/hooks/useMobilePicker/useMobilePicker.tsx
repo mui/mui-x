@@ -63,14 +63,20 @@ export const useMobilePicker = <TDate, TView extends CalendarOrClockPickerView>(
     ...fieldProps.componentsProps,
     input: (ownerState) => {
       const externalInputProps = resolveComponentProps(componentsProps.input, ownerState);
+      const inputPropsPassedByField = resolveComponentProps(
+        fieldProps.componentsProps?.input,
+        ownerState,
+      );
+
       return {
-        ...fieldProps.componentsProps?.input,
+        ...inputPropsPassedByField,
         ...externalInputProps,
         onClick: props.readOnly ? undefined : actions.onOpen,
         onKeyDown: onSpaceOrEnter(actions.onOpen),
         inputProps: {
-          ...externalInputProps?.inputProps,
           'aria-label': getOpenDialogAriaText(pickerFieldProps.value, utils),
+          ...inputPropsPassedByField?.inputProps,
+          ...externalInputProps?.inputProps,
         },
       };
     },

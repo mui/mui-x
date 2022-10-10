@@ -88,6 +88,6 @@ export const renderDateViews = <TDate extends unknown>(
   props: CalendarPickerProps<TDate> & { isLandscape: boolean },
 ) => (
   <PickerViewContainer isLandscape={props.isLandscape}>
-    <CalendarPicker<TDate> {...props} />
+    <CalendarPicker<TDate> {...props} focusedView={props.view} />
   </PickerViewContainer>
 );
