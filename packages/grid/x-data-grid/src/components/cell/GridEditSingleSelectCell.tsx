@@ -112,34 +112,7 @@ function GridEditSingleSelectCell(props: GridEditSingleSelectCellProps) {
       await onValueChange(event, formattedTargetValue);
     }
 
-    const isValid = await apiRef.current.setEditCellValue(
-      { id, field, value: formattedTargetValue },
-      event,
-    );
-
-    if (rootProps.experimentalFeatures?.newEditingApi) {
-      return;
-    }
-
-    // We use isValid === false because the default return is undefined which evaluates to true with !isValid
-    if (rootProps.editMode === GridEditModes.Row || isValid === false) {
-      return;
-    }
-
-    const canCommit = await Promise.resolve(apiRef.current.commitCellChange({ id, field }, event));
-    if (canCommit) {
-      apiRef.current.setCellMode(id, field, 'view');
-
-      if ((event as any).key) {
-        // TODO v6: remove once we stop ignoring events fired from portals
-        const params = apiRef.current.getCellParams(id, field);
-        apiRef.current.publishEvent(
-          'cellNavigationKeyDown',
-          params,
-          event as any as React.KeyboardEvent<HTMLElement>,
-        );
-      }
-    }
+    await apiRef.current.setEditCellValue({ id, field, value: formattedTargetValue }, event);
   };
 
   const handleClose = (event: React.KeyboardEvent, reason: string) => {
@@ -148,11 +121,7 @@ function GridEditSingleSelectCell(props: GridEditSingleSelectCellProps) {
       return;
     }
     if (reason === 'backdropClick' || isEscapeKey(event.key)) {
-      if (rootProps.experimentalFeatures?.newEditingApi) {
-        apiRef.current.stopCellEditMode({ id, field, ignoreModifications: true });
-      } else {
-        apiRef.current.setCellMode(id, field, 'view');
-      }
+      apiRef.current.stopCellEditMode({ id, field, ignoreModifications: true });
     }
   };
 
