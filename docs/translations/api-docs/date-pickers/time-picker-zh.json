@@ -53,6 +53,8 @@
     "PreviousIconButton": "Button allowing to switch to the left view.",
     "NextIconButton": "Button allowing to switch to the right view.",
     "LeftArrowIcon": "Icon displayed in the left view switch button.",
-    "RightArrowIcon": "Icon displayed in the right view switch button."
+    "RightArrowIcon": "Icon displayed in the right view switch button.",
+    "Toolbar": "Custom component for the toolbar rendered above the views.",
+    "PaperContent": "The content of the Paper wrapping views."
   }
 }
