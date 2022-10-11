@@ -5,7 +5,7 @@ import {
   PickersFadeTransitionGroupClassKey,
   PickersSlideTransitionClassKey,
 } from '../DateCalendar';
-import { CalendarPickerSkeletonClassKey } from '../DayCalendarSkeleton';
+import { DayCalendarSkeletonClassKey } from '../DayCalendarSkeleton';
 import {
   ClockClassKey,
   ClockNumberClassKey,
@@ -31,12 +31,11 @@ import {
 // prettier-ignore
 export interface PickersComponentNameToClassKey {
   MuiCalendarOrClockPicker: CalendarOrClockPickerClassKey;
-  MuiDateCalendar: DateCalendarClassKey;
-  MuiDayCalendarSkeleton: CalendarPickerSkeletonClassKey;
   MuiClock: ClockClassKey;
   MuiClockNumber: ClockNumberClassKey;
   MuiClockPicker: ClockPickerClassKey;
   MuiClockPointer: ClockPointerClassKey;
+  MuiDateCalendar: DateCalendarClassKey;
   MuiDateField: never;
   MuiDatePicker: never;
   MuiDatePickerToolbar: DatePickerToolbarClassKey;
@@ -44,6 +43,7 @@ export interface PickersComponentNameToClassKey {
   MuiDateTimePickerTabs: DateTimePickerTabsClassKey;
   MuiDateTimePickerToolbar: DateTimePickerToolbarClassKey;
   MuiDayCalendar: DayCalendarClassKey;
+  MuiDayCalendarSkeleton: DayCalendarSkeletonClassKey;
   MuiDesktopDatePicker: never;
   MuiDesktopDateTimePicker: never;
   MuiDesktopTimePicker: never;

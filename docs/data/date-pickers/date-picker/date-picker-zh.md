@@ -72,7 +72,7 @@ For ease of use, the date picker will automatically change the layout between po
 
 Some lower-level sub-components (`DateCalendar`, `MonthCalendar`, and `YearCalendar`) are also exported. 这些都是在没有包装器或外部逻辑（屏蔽输入、日期值解析和验证等）的情况下渲染的。 这些都是在没有包装器或外部逻辑（屏蔽输入、日期值解析和验证等）的情况下渲染的。
 
-{{"demo": "SubComponentsPickers.js"}}
+{{"demo": "SubComponentsCalendars.js"}}
 
 ## 自定义输入组件
 

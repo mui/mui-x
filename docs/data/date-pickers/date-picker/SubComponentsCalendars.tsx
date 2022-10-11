@@ -10,7 +10,7 @@ import { YearCalendar } from '@mui/x-date-pickers/YearCalendar';
 const minDate = dayjs('2020-01-01T00:00:00.000');
 const maxDate = dayjs('2034-01-01T00:00:00.000');
 
-export default function SubComponentsPickers() {
+export default function SubComponentsCalendars() {
   const [value, setValue] = React.useState<Dayjs | null>(dayjs('2022-04-07'));
 
   return (

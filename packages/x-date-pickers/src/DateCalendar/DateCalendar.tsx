@@ -16,7 +16,7 @@ import {
   ExportedDayCalendarProps,
 } from './DayCalendar';
 import { MonthCalendar, MonthCalendarProps } from '../MonthCalendar';
-import { YearCalendar, YearCalendarProps } from '../YearCalendar/YearCalendar';
+import { YearCalendar, YearCalendarProps } from '../YearCalendar';
 import { PickerOnChangeFn, useViews } from '../internals/hooks/useViews';
 import {
   PickersCalendarHeader,

@@ -5,7 +5,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { StaticDatePicker } from '@mui/x-date-pickers/StaticDatePicker';
 
-export default function CustomizeDayCalendar() {
+export default function CustomizedStaticDatePicker() {
   const [value, setValue] = React.useState(dayjs('2022-04-07'));
 
   return (

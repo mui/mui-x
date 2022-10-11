@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { CalendarOrClockPickerView } from '../views';
 import type { PickerOnChangeFn } from '../../hooks/useViews';
-import { ExportedDateCalendarProps } from '../../../DateCalendar/DateCalendar';
+import type { ExportedDateCalendarProps } from '../../../DateCalendar/DateCalendar';
 import type { ExportedClockPickerProps } from '../../../ClockPicker/ClockPicker';
 import { PickerStatePickerProps } from '../../hooks/usePickerState';
 

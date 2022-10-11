@@ -7,6 +7,6 @@ export {
   getDayCalendarSkeletonUtilityClass,
 } from './dayCalendarSkeletonClasses';
 export type {
-  CalendarPickerSkeletonClassKey,
+  DayCalendarSkeletonClassKey,
   DayCalendarSkeletonClasses,
 } from './dayCalendarSkeletonClasses';

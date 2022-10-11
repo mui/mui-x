@@ -9,7 +9,7 @@ export interface DayCalendarSkeletonClasses {
   daySkeleton: string;
 }
 
-export type CalendarPickerSkeletonClassKey = keyof DayCalendarSkeletonClasses;
+export type DayCalendarSkeletonClassKey = keyof DayCalendarSkeletonClasses;
 
 export const getDayCalendarSkeletonUtilityClass = (slot: string) =>
   generateUtilityClass('MuiDayCalendarSkeleton', slot);

@@ -1,5 +1,4 @@
 [
-  { "name": "CalendarPickerSkeletonClassKey", "kind": "TypeAlias" },
   { "name": "CalendarPickerView", "kind": "TypeAlias" },
   { "name": "clockClasses", "kind": "Variable" },
   { "name": "ClockClasses", "kind": "Interface" },
@@ -50,6 +49,7 @@
   { "name": "DayCalendarSkeleton", "kind": "Function" },
   { "name": "dayCalendarSkeletonClasses", "kind": "Variable" },
   { "name": "DayCalendarSkeletonClasses", "kind": "Interface" },
+  { "name": "DayCalendarSkeletonClassKey", "kind": "TypeAlias" },
   { "name": "DayCalendarSkeletonProps", "kind": "Interface" },
   { "name": "dayPickerClasses", "kind": "Variable" },
   { "name": "deDE", "kind": "Variable" },

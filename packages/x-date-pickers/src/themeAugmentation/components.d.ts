@@ -6,16 +6,6 @@ export interface PickerComponents<Theme = unknown> {
     styleOverrides?: ComponentsOverrides<Theme>['MuiCalendarOrClockPicker'];
     variants?: ComponentsVariants['MuiCalendarOrClockPicker'];
   };
-  MuiDateCalendar?: {
-    defaultProps?: ComponentsProps['MuiDateCalendar'];
-    styleOverrides?: ComponentsOverrides<Theme>['MuiDateCalendar'];
-    variants?: ComponentsVariants['MuiDateCalendar'];
-  };
-  MuiDayCalendarSkeleton?: {
-    defaultProps?: ComponentsProps['MuiDayCalendarSkeleton'];
-    styleOverrides?: ComponentsOverrides<Theme>['MuiDayCalendarSkeleton'];
-    variants?: ComponentsVariants['MuiDayCalendarSkeleton'];
-  };
   MuiClock?: {
     defaultProps?: ComponentsProps['MuiClock'];
     styleOverrides?: ComponentsOverrides<Theme>['MuiClock'];
@@ -35,6 +25,11 @@ export interface PickerComponents<Theme = unknown> {
     defaultProps?: ComponentsProps['MuiClockPointer'];
     styleOverrides?: ComponentsOverrides<Theme>['MuiClockPointer'];
     variants?: ComponentsVariants['MuiClockPointer'];
+  };
+  MuiDateCalendar?: {
+    defaultProps?: ComponentsProps['MuiDateCalendar'];
+    styleOverrides?: ComponentsOverrides<Theme>['MuiDateCalendar'];
+    variants?: ComponentsVariants['MuiDateCalendar'];
   };
   MuiDateField?: {
     defaultProps?: ComponentsProps['MuiDateField'];
@@ -70,6 +65,11 @@ export interface PickerComponents<Theme = unknown> {
     defaultProps?: ComponentsProps['MuiDayCalendar'];
     styleOverrides?: ComponentsOverrides<Theme>['MuiDayCalendar'];
     variants?: ComponentsVariants['MuiDayCalendar'];
+  };
+  MuiDayCalendarSkeleton?: {
+    defaultProps?: ComponentsProps['MuiDayCalendarSkeleton'];
+    styleOverrides?: ComponentsOverrides<Theme>['MuiDayCalendarSkeleton'];
+    variants?: ComponentsVariants['MuiDayCalendarSkeleton'];
   };
   MuiDesktopDatePicker?: {
     defaultProps?: ComponentsProps['MuiDesktopDatePicker'];
