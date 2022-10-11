@@ -104,21 +104,22 @@ export { executeInTheNextEventLoopTick, onSpaceOrEnter } from './utils/utils';
 export { defaultReduceAnimations } from './utils/defaultReduceAnimations';
 export { buildDeprecatedPropsWarning } from './utils/warning';
 
-export { PickersCalendarHeader } from '../CalendarPicker/PickersCalendarHeader';
+export { PickersCalendarHeader } from '../DateCalendar/PickersCalendarHeader';
 export type {
   ExportedCalendarHeaderProps,
   PickersCalendarHeaderSlotsComponent,
   PickersCalendarHeaderSlotsComponentsProps,
-} from '../CalendarPicker/PickersCalendarHeader';
+} from '../DateCalendar/PickersCalendarHeader';
 
-export { DayPicker } from '../CalendarPicker/DayPicker';
+export { DayCalendar } from '../DateCalendar/DayCalendar';
 export type {
-  DayPickerProps,
-  DayPickerSlotsComponent,
-  DayPickerSlotsComponentsProps,
-} from '../CalendarPicker/DayPicker';
+  DayCalendarProps,
+  DayCalendarSlotsComponent,
+  DayCalendarSlotsComponentsProps,
+  ExportedDayCalendarProps,
+} from '../DateCalendar/DayCalendar';
 
 export { areDayPropsEqual } from '../PickersDay/PickersDay';
 
-export type { ExportedCalendarPickerProps } from '../CalendarPicker/CalendarPicker';
-export { useCalendarState } from '../CalendarPicker/useCalendarState';
+export type { ExportedDateCalendarProps } from '../DateCalendar/DateCalendar';
+export { useCalendarState } from '../DateCalendar/useCalendarState';

@@ -16,18 +16,15 @@ import { CalendarOrClockPicker } from '../internals/components/CalendarOrClockPi
 import { useDateValidation } from '../internals/hooks/validation/useDateValidation';
 import { PureDateInput } from '../internals/components/PureDateInput';
 import { usePickerState } from '../internals/hooks/usePickerState';
-import {
-  CalendarPickerSlotsComponent,
-  CalendarPickerSlotsComponentsProps,
-} from '../CalendarPicker/CalendarPicker';
+import { DateCalendarSlotsComponent, DateCalendarSlotsComponentsProps } from '../DateCalendar';
 
 export interface MobileDatePickerSlotsComponent<TDate>
   extends MobileWrapperSlotsComponent,
-    CalendarPickerSlotsComponent<TDate> {}
+    DateCalendarSlotsComponent<TDate> {}
 
 export interface MobileDatePickerSlotsComponentsProps<TDate>
   extends MobileWrapperSlotsComponentsProps,
-    CalendarPickerSlotsComponentsProps<TDate> {}
+    DateCalendarSlotsComponentsProps<TDate> {}
 
 export interface MobileDatePickerProps<TDate>
   extends BaseDatePickerProps<TDate>,
@@ -157,10 +154,6 @@ MobileDatePicker.propTypes = {
    * Default calendar month displayed when `value={null}`.
    */
   defaultCalendarMonth: PropTypes.any,
-  /**
-   * Props applied to the [`Dialog`](https://mui.com/material-ui/api/dialog/) element.
-   */
-  DialogProps: PropTypes.object,
   /**
    * If `true`, the picker and text field are disabled.
    * @default false
