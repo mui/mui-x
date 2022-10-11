@@ -30,7 +30,7 @@ const GridItem = ({
 };
 
 // TODO: Use the same structure as on the other `XXXFieldValue` demos when using the single input version.
-export default function DateDateTimeRangeFieldValue() {
+export default function DateTimeRangeFieldValue() {
   const [value, setValue] = React.useState<DateRange<Dayjs>>(() => [
     dayjs('2022-04-07T15:30'),
     dayjs('2022-04-13T18:30'),

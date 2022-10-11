@@ -30,7 +30,7 @@ GridItem.propTypes = {
   spacing: PropTypes.number,
 };
 
-export default function DateDateTimeRangeFieldValue() {
+export default function DateTimeRangeFieldValue() {
   const [value, setValue] = React.useState(() => [
     dayjs('2022-04-07T15:30'),
     dayjs('2022-04-13T18:30'),
