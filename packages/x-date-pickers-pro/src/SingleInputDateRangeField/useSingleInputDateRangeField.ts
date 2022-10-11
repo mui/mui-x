@@ -45,7 +45,7 @@ export const dateRangeFieldValueManager: FieldValueManager<
 
     return [prevReferenceValue[1], value[1]];
   },
-  getSectionsFromValue: (utils, prevSections, [start, end], format) => {
+  getSectionsFromValue: (utils, localeText, prevSections, [start, end], format) => {
     const prevDateRangeSections =
       prevSections == null
         ? { startDate: null, endDate: null }
@@ -58,7 +58,7 @@ export const dateRangeFieldValueManager: FieldValueManager<
         return prevDateSections;
       }
 
-      return splitFormatIntoSections(utils, format, newDate);
+      return splitFormatIntoSections(utils, localeText, format, newDate);
     };
 
     const rawSectionsOfStartDate = getSections(start, prevDateRangeSections.startDate);
@@ -88,8 +88,8 @@ export const dateRangeFieldValueManager: FieldValueManager<
   },
   getValueStrFromSections: (sections) => {
     const dateRangeSections = splitDateRangeSections(sections);
-    const startDateStr = createDateStrFromSections(dateRangeSections.startDate);
-    const endDateStr = createDateStrFromSections(dateRangeSections.endDate);
+    const startDateStr = createDateStrFromSections(dateRangeSections.startDate, true);
+    const endDateStr = createDateStrFromSections(dateRangeSections.endDate, true);
 
     return `${startDateStr}${endDateStr}`;
   },
@@ -101,7 +101,7 @@ export const dateRangeFieldValueManager: FieldValueManager<
       ? removeLastSeparator(dateRangeSections.startDate)
       : dateRangeSections.endDate;
   },
-  getActiveDateManager: (state, activeSection) => {
+  getActiveDateManager: (utils, state, activeSection) => {
     const index = activeSection.dateName === 'start' ? 0 : 1;
 
     const updateDateInRange = (newDate: any, prevDateRange: DateRange<any>) =>
@@ -113,18 +113,23 @@ export const dateRangeFieldValueManager: FieldValueManager<
       getNewValueFromNewActiveDate: (newActiveDate) => ({
         value: updateDateInRange(newActiveDate, state.value),
         referenceValue:
-          newActiveDate == null
+          newActiveDate == null || !utils.isValid(newActiveDate)
             ? state.referenceValue
             : updateDateInRange(newActiveDate, state.referenceValue),
       }),
-      setActiveDateAsInvalid: () => {
-        if (index === 0) {
-          return [null, state.value[1]];
-        }
-
-        return [state.value[0], null];
-      },
     };
+  },
+  parseValueStr: (valueStr, referenceValue, parseDate) => {
+    // TODO: Improve because it would not work if the date format has `–` as a separator.
+    const [startStr, endStr] = valueStr.split('–');
+
+    return [startStr, endStr].map((dateStr, index) => {
+      if (dateStr == null) {
+        return null;
+      }
+
+      return parseDate(dateStr.trim(), referenceValue[index]);
+    }) as DateRange<any>;
   },
   hasError: (error) => error[0] != null || error[1] != null,
   isSameError: isSameDateRangeError,

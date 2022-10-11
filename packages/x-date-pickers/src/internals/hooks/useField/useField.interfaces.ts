@@ -2,6 +2,7 @@ import * as React from 'react';
 import { MuiDateSectionName, MuiPickerFieldAdapter } from '../../models';
 import { PickerStateValueManager } from '../usePickerState';
 import { InferError, Validator } from '../validation/useValidation';
+import { PickersLocaleText } from '../../../locales/utils/pickersLocaleTextApi';
 
 export interface UseFieldParams<
   TValue,
@@ -80,13 +81,29 @@ export interface FieldSection {
   start: number;
   end: number;
   value: string;
-  emptyValue: string;
+  placeholder: string;
+  /**
+   * Separator used in the input.
+   */
   separator: string | null;
+  /**
+   * Separator used to recreate the date from the sections.
+   * Can be useful when the separator rendered in the input is not the same as the one used for parsing.
+   * e.g: ` / ` in the input and `/` in parsing.
+   * @default `section.separator`
+   */
+  parsingSeparator?: string;
   dateSectionName: MuiDateSectionName;
   contentType: 'digit' | 'letter';
   formatValue: string;
   edited: boolean;
+  hasTrailingZeroes: boolean;
 }
+
+export type FieldBoundaries<TDate, TSection extends FieldSection> = Record<
+  MuiDateSectionName,
+  (currentDate: TDate | null, section: TSection) => { minimum: number; maximum: number }
+>;
 
 /**
  * Object used to access and update the active value.
@@ -110,12 +127,6 @@ interface FieldActiveDateManager<TValue, TDate> {
   getNewValueFromNewActiveDate: (
     newActiveDate: TDate | null,
   ) => Pick<UseFieldState<TValue, any>, 'value' | 'referenceValue'>;
-  /**
-   * Creates a value with an invalid active date (represented by a `null`) without losing any other date on the range fields.
-   * @template TValue
-   * @returns {TValue} The value containing the invalid date.
-   */
-  setActiveDateAsInvalid: () => TValue;
 }
 
 export type FieldSelectedSectionsIndexes = { startIndex: number; endIndex: number };
@@ -132,6 +143,7 @@ export interface FieldValueManager<TValue, TDate, TSection extends FieldSection,
    * The `prevSections` are used on the range fields to avoid losing the sections of a partially filled date when editing the other date.
    * @template TValue, TDate, TSection
    * @param {MuiPickersAdapter<TDate>} utils The utils to manipulate the date.
+   * @param {PickersLocaleText<TDate>} localeText The localization object to generate the placeholders.
    * @param {TSection[] | null} prevSections The last section list stored in state.
    * @param {TValue} value The current value to generate sections from.
    * @param {string} format The date format.
@@ -139,6 +151,7 @@ export interface FieldValueManager<TValue, TDate, TSection extends FieldSection,
    */
   getSectionsFromValue: (
     utils: MuiPickerFieldAdapter<TDate>,
+    localeText: PickersLocaleText<TDate>,
     prevSections: TSection[] | null,
     value: TValue,
     format: string,
@@ -163,14 +176,30 @@ export interface FieldValueManager<TValue, TDate, TSection extends FieldSection,
   /**
    * Returns the manager of the active date.
    * @template TValue, TDate, TSection
+   * @param {MuiPickersAdapter<TDate>} utils The utils to manipulate the date.
    * @param {UseFieldState<TValue, TSection>} state The current state of the field.
    * @param {TSection} activeSection The active section.
    * @returns {FieldActiveDateManager<TValue, TDate>} The manager of the active date.
    */
   getActiveDateManager: (
+    utils: MuiPickerFieldAdapter<TDate>,
     state: UseFieldState<TValue, TSection>,
     activeSection: TSection,
   ) => FieldActiveDateManager<TValue, TDate>;
+  /**
+   * Parses a string version (most of the time coming from the input).
+   * This method should only be used when the change does not come from a single section.
+   * @template TValue, TDate
+   * @param {string} valueStr The string value to parse.
+   * @param {TValue} referenceValue The reference value currently stored in state.
+   * @param {(dateStr: string, referenceDate: TDate) => TDate | null} parseDate A method to convert a string date into a parsed one.
+   * @returns {TValue} The new parsed value.
+   */
+  parseValueStr: (
+    valueStr: string,
+    referenceValue: TValue,
+    parseDate: (dateStr: string, referenceDate: TDate) => TDate | null,
+  ) => TValue;
   /**
    * Update the reference value with the new value.
    * This method must make sure that no date inside the returned `referenceValue` is invalid.

@@ -15,6 +15,7 @@
     "columnsSort": { "type": { "name": "enum", "description": "'asc'<br>&#124;&nbsp;'desc'" } },
     "deleteIconProps": { "type": { "name": "any" }, "default": "{}" },
     "disableMultiFilterOperator": { "type": { "name": "bool" } },
+    "filterColumns": { "type": { "name": "func" } },
     "focusElementRef": { "type": { "name": "union", "description": "func<br>&#124;&nbsp;object" } },
     "linkOperatorInputProps": { "type": { "name": "any" }, "default": "{}" },
     "linkOperators": {

@@ -346,7 +346,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
     }
     const columnsToRender = getColumnsToRender(params);
 
-    if (columnsToRender == null) {
+    if (columnsToRender == null || columnsToRender.renderedColumns.length === 0) {
       return null;
     }
 
