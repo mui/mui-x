@@ -38,7 +38,7 @@ export const useFieldState = <
   params: UseFieldParams<TValue, TDate, TSection, TForwardedProps, TInternalProps>,
 ) => {
   const utils = useUtils<TDate>() as MuiPickerFieldAdapter<TDate>;
-  const localeText = useLocaleText();
+  const localeText = useLocaleText<TDate>();
 
   const {
     valueManager,

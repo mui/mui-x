@@ -8,9 +8,8 @@ interface CalculateRangePreviewOptions<TDate> {
   currentlySelectingRangeEnd: 'start' | 'end';
 }
 
-interface CalculateRangeChangeOptions<TDate> extends CalculateRangePreviewOptions<TDate> {
-  newDate: TDate;
-}
+interface CalculateRangeChangeOptions<TDate> extends CalculateRangePreviewOptions<TDate> {}
+
 export function calculateRangeChange<TDate>({
   utils,
   range,
@@ -23,12 +22,12 @@ export function calculateRangeChange<TDate>({
   const [start, end] = range;
 
   if (currentlySelectingRangeEnd === 'start') {
-    return Boolean(end) && utils.isAfter(selectedDate, end!)
+    return Boolean(end) && utils.isAfter(selectedDate!, end!)
       ? { nextSelection: 'end', newRange: [selectedDate, null] }
       : { nextSelection: 'end', newRange: [selectedDate, end] };
   }
 
-  return Boolean(start) && utils.isBefore(selectedDate, start!)
+  return Boolean(start) && utils.isBefore(selectedDate!, start!)
     ? { nextSelection: 'end', newRange: [selectedDate, null] }
     : { nextSelection: 'start', newRange: [start, selectedDate] };
 }

@@ -168,7 +168,7 @@ describe('<DateCalendar />', () => {
   it('should render week number when `displayWeekNumber=true`', () => {
     render(
       <LocalizationProvider dateAdapter={AdapterClassToUse}>
-        <CalendarPicker
+        <DateCalendar
           value={adapterToUse.date(new Date(2019, 0, 1))}
           onChange={() => {}}
           displayWeekNumber
