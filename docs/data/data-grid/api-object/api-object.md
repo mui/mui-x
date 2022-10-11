@@ -7,10 +7,7 @@ The API object is an interface containing the state and all the methods availabl
 You can find the list of all the API methods on the [GridApi page](/x/api/data-grid/grid-api/).
 
 :::warning
-All methods prefixed by `unstable_` are private and should not be used.
-They may be removed, renamed, or reworked at any time.
-If you need to use a private method, please [open a GitHub issue](https://github.com/mui/mui-x/issues/new/choose) describing your use case.
-Our team will help you to achieve the same goal with public methods, or else discuss making this specific method public.
+All methods prefixed by `unstable_` are related to experimental features and may be removed, renamed, or reworked at any time.
 :::
 
 ## How to use the API object
