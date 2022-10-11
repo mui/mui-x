@@ -5,6 +5,7 @@ import { expect } from 'chai';
 import { act, describeConformance, fireEvent, screen, userEvent } from '@mui/monorepo/test/utils';
 import { DesktopTimePicker } from '@mui/x-date-pickers/DesktopTimePicker';
 import { TimePickerProps } from '@mui/x-date-pickers/TimePicker';
+import { inputBaseClasses } from '@mui/material/InputBase';
 import {
   wrapPickerMount,
   createPickerRenderer,
@@ -16,12 +17,15 @@ import {
 } from 'test/utils/pickers-utils';
 
 const WrappedDesktopTimePicker = withPickerControls(DesktopTimePicker)({
-  DialogProps: { TransitionComponent: FakeTransitionComponent },
+  components: { DesktopTransition: FakeTransitionComponent },
   renderInput: (params) => <TextField {...params} />,
 });
 
 describe('<DesktopTimePicker />', () => {
-  const { render } = createPickerRenderer({ clock: 'fake' });
+  const { render } = createPickerRenderer({
+    clock: 'fake',
+    clockConfig: new Date('2018-01-01T10:05:05.000'),
+  });
 
   describeConformance(
     <DesktopTimePicker
@@ -201,8 +205,7 @@ describe('<DesktopTimePicker />', () => {
       }),
     );
 
-    const shouldDisableTime: TimePickerProps<any, any>['shouldDisableTime'] = (value) =>
-      value === 10;
+    const shouldDisableTime: TimePickerProps<any>['shouldDisableTime'] = (value) => value === 10;
 
     [
       { expectedError: 'invalidDate', props: { disableMaskedInput: true }, input: 'invalidText' },
@@ -218,6 +221,8 @@ describe('<DesktopTimePicker />', () => {
       },
       { expectedError: 'shouldDisableTime-hours', props: { shouldDisableTime }, input: '10:00' },
       { expectedError: 'shouldDisableTime-minutes', props: { shouldDisableTime }, input: '00:10' },
+      { expectedError: 'disableFuture', props: { disableFuture: true }, input: '10:06' },
+      { expectedError: 'disablePast', props: { disablePast: true }, input: '10:05' },
     ].forEach(({ props, input, expectedError }) => {
       it(`should dispatch "${expectedError}" error`, () => {
         const onErrorMock = spy();
@@ -252,22 +257,22 @@ describe('<DesktopTimePicker />', () => {
     });
   });
 
-  describe('prop: PopperProps', () => {
+  describe('componentsProps: popper', () => {
     it('forwards onClick and onTouchStart', () => {
       const handleClick = spy();
       const handleTouchStart = spy();
       render(
-        <DesktopTimePicker
+        <WrappedDesktopTimePicker
           open
-          onChange={() => {}}
-          PopperProps={{
-            onClick: handleClick,
-            onTouchStart: handleTouchStart,
-            // @ts-expect-error `data-*` attributes are not recognized in props objects
-            'data-testid': 'popper',
+          componentsProps={{
+            popper: {
+              onClick: handleClick,
+              onTouchStart: handleTouchStart,
+              // @ts-expect-error `data-*` attributes are not recognized in props objects
+              'data-testid': 'popper',
+            },
           }}
-          renderInput={(params) => <TextField {...params} />}
-          value={null}
+          initialValue={null}
         />,
       );
       const popper = screen.getByTestId('popper');
@@ -280,22 +285,22 @@ describe('<DesktopTimePicker />', () => {
     });
   });
 
-  describe('prop: PaperProps', () => {
+  describe('componentsProps: desktopPaper', () => {
     it('forwards onClick and onTouchStart', () => {
       const handleClick = spy();
       const handleTouchStart = spy();
       render(
-        <DesktopTimePicker
+        <WrappedDesktopTimePicker
           open
-          onChange={() => {}}
-          PaperProps={{
-            onClick: handleClick,
-            onTouchStart: handleTouchStart,
-            // @ts-expect-error `data-*` attributes are not recognized in props objects
-            'data-testid': 'paper',
+          componentsProps={{
+            desktopPaper: {
+              onClick: handleClick,
+              onTouchStart: handleTouchStart,
+              // @ts-expect-error `data-*` attributes are not recognized in props objects
+              'data-testid': 'paper',
+            },
           }}
-          renderInput={(params) => <TextField {...params} />}
-          value={null}
+          initialValue={null}
         />,
       );
       const paper = screen.getByTestId('paper');
@@ -520,6 +525,83 @@ describe('<DesktopTimePicker />', () => {
       expect(onAccept.callCount).to.equal(1);
       expect(onAccept.lastCall.args[0]).to.equal(null);
       expect(onClose.callCount).to.equal(1);
+    });
+
+    it('should respect `disableFuture` prop', async () => {
+      const onChange = spy();
+      render(
+        <WrappedDesktopTimePicker
+          initialValue={adapterToUse.date(new Date('2018-01-01T11:00:00.000'))}
+          onChange={onChange}
+          ampm={false}
+          disableFuture
+        />,
+      );
+
+      expect(screen.getByRole('textbox').parentElement).to.have.class(inputBaseClasses.error);
+
+      openPicker({ type: 'time', variant: 'desktop' });
+
+      expect(screen.getByRole('option', { name: '11 hours' })).to.have.class(
+        inputBaseClasses.disabled,
+      );
+      expect(screen.getByRole('option', { name: '12 hours' })).to.have.class(
+        inputBaseClasses.disabled,
+      );
+
+      // click on `10 hours`
+      fireEvent(screen.getByMuiTest('clock'), getClockMouseEvent('mousemove', 30, 65));
+      fireEvent(screen.getByMuiTest('clock'), getClockMouseEvent('mouseup', 30, 65));
+      expect(screen.getByRole('option', { name: '10 minutes' })).to.have.class(
+        inputBaseClasses.disabled,
+      );
+
+      // click on `05 minutes`
+      fireEvent(screen.getByMuiTest('clock'), getClockMouseEvent('mousemove', 155, 30));
+      fireEvent(screen.getByMuiTest('clock'), getClockMouseEvent('mouseup', 155, 30));
+
+      expect(screen.getByRole('textbox').parentElement).not.to.have.class(inputBaseClasses.error);
+      expect(onChange.lastCall.args[0]).toEqualDateTime(new Date('2018-01-01T10:05:00.000'));
+    });
+
+    it('should respect `disablePast` prop', () => {
+      const onChange = spy();
+      render(
+        <WrappedDesktopTimePicker
+          initialValue={adapterToUse.date(new Date('2018-01-01T09:00:00.000'))}
+          onChange={onChange}
+          ampm={false}
+          disablePast
+        />,
+      );
+
+      openPicker({ type: 'time', variant: 'desktop' });
+
+      expect(screen.getByRole('textbox').parentElement).to.have.class(inputBaseClasses.error);
+
+      expect(screen.getByRole('option', { name: '8 hours' })).to.have.class(
+        inputBaseClasses.disabled,
+      );
+      expect(screen.getByRole('option', { name: '9 hours' })).to.have.class(
+        inputBaseClasses.disabled,
+      );
+
+      // click on `10 hours`
+      fireEvent(screen.getByMuiTest('clock'), getClockMouseEvent('mousemove', 30, 65));
+      fireEvent(screen.getByMuiTest('clock'), getClockMouseEvent('mouseup', 30, 65));
+      expect(screen.getByRole('option', { name: '00 minutes' })).to.have.class(
+        inputBaseClasses.disabled,
+      );
+      expect(screen.getByRole('option', { name: '05 minutes' })).to.have.class(
+        inputBaseClasses.disabled,
+      );
+
+      // click minutes
+      fireEvent(screen.getByMuiTest('clock'), getClockMouseEvent('mousemove'));
+      fireEvent(screen.getByMuiTest('clock'), getClockMouseEvent('mouseup'));
+
+      expect(screen.getByRole('textbox').parentElement).not.to.have.class(inputBaseClasses.error);
+      expect(onChange.lastCall.args[0]).toEqualDateTime(new Date('2018-01-01T10:53:00.000'));
     });
   });
 

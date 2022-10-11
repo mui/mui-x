@@ -1,7 +1,7 @@
 import {
   GridRowTreeCreationParams,
   GridRowTreeCreationValue,
-} from '../../features/rows/gridRowsState';
+} from '../../features/rows/gridRowsInterfaces';
 import {
   GridFilteringMethodParams,
   GridFilteringMethodValue,

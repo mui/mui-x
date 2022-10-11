@@ -9,7 +9,13 @@ import { MonthPicker, MonthPickerProps } from '../MonthPicker/MonthPicker';
 import { useCalendarState } from './useCalendarState';
 import { useDefaultDates, useUtils } from '../internals/hooks/useUtils';
 import { PickersFadeTransitionGroup } from './PickersFadeTransitionGroup';
-import { DayPicker, DayPickerProps, ExportedDayPickerProps } from './DayPicker';
+import {
+  DayPicker,
+  DayPickerProps,
+  DayPickerSlotsComponent,
+  DayPickerSlotsComponentsProps,
+  ExportedDayPickerProps,
+} from './DayPicker';
 import { PickerOnChangeFn, useViews } from '../internals/hooks/useViews';
 import {
   PickersCalendarHeader,
@@ -18,7 +24,7 @@ import {
   PickersCalendarHeaderSlotsComponentsProps,
 } from './PickersCalendarHeader';
 import { YearPicker, YearPickerProps } from '../YearPicker/YearPicker';
-import { findClosestEnabledDate, parseNonNullablePickerDate } from '../internals/utils/date-utils';
+import { findClosestEnabledDate, applyDefaultDate } from '../internals/utils/date-utils';
 import { CalendarPickerView } from '../internals/models';
 import { PickerViewRoot } from '../internals/components/PickerViewRoot';
 import { defaultReduceAnimations } from '../internals/utils/defaultReduceAnimations';
@@ -31,10 +37,13 @@ import {
 } from '../internals/hooks/validation/models';
 import { DefaultizedProps } from '../internals/models/helpers';
 
-export interface CalendarPickerSlotsComponent extends PickersCalendarHeaderSlotsComponent {}
+export interface CalendarPickerSlotsComponent<TDate>
+  extends PickersCalendarHeaderSlotsComponent,
+    DayPickerSlotsComponent<TDate> {}
 
-export interface CalendarPickerSlotsComponentsProps
-  extends PickersCalendarHeaderSlotsComponentsProps {}
+export interface CalendarPickerSlotsComponentsProps<TDate>
+  extends PickersCalendarHeaderSlotsComponentsProps,
+    DayPickerSlotsComponentsProps<TDate> {}
 
 export interface CalendarPickerProps<TDate>
   extends ExportedDayPickerProps<TDate>,
@@ -54,12 +63,12 @@ export interface CalendarPickerProps<TDate>
    * Overrideable components.
    * @default {}
    */
-  components?: Partial<CalendarPickerSlotsComponent>;
+  components?: Partial<CalendarPickerSlotsComponent<TDate>>;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  componentsProps?: Partial<CalendarPickerSlotsComponentsProps>;
+  componentsProps?: Partial<CalendarPickerSlotsComponentsProps<TDate>>;
   value: TDate | null;
   /**
    * Default calendar month displayed when `value={null}`.
@@ -184,8 +193,8 @@ function useCalendarPickerDefaultizedProps<TDate>(
     reduceAnimations: defaultReduceAnimations,
     renderLoading: () => <span data-mui-test="loading-progress">...</span>,
     ...themeProps,
-    minDate: parseNonNullablePickerDate(utils, themeProps.minDate, defaultDates.minDate),
-    maxDate: parseNonNullablePickerDate(utils, themeProps.maxDate, defaultDates.maxDate),
+    minDate: applyDefaultDate(utils, themeProps.minDate, defaultDates.minDate),
+    maxDate: applyDefaultDate(utils, themeProps.maxDate, defaultDates.maxDate),
   };
 }
 
@@ -253,7 +262,6 @@ export const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
     onFocusedViewChange,
     showDaysOutsideCurrentMonth,
     dayOfWeekFormatter,
-    renderDay,
     components,
     componentsProps,
     loading,
@@ -437,8 +445,13 @@ export const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
     },
   );
 
+  const prevOpenViewRef = React.useRef(openView);
   React.useEffect(() => {
     // Set focus to the button when switching from a view to another
+    if (prevOpenViewRef.current === openView) {
+      return;
+    }
+    prevOpenViewRef.current = openView;
     handleFocusedViewChange(openView)(true);
   }, [openView, handleFocusedViewChange]);
 
@@ -500,7 +513,7 @@ export const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
           )}
 
           {openView === 'day' && (
-            <DayPicker
+            <DayPicker<TDate>
               {...calendarState}
               {...baseDateValidationProps}
               {...commonViewProps}
@@ -518,7 +531,8 @@ export const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
               gridLabelId={gridLabelId}
               showDaysOutsideCurrentMonth={showDaysOutsideCurrentMonth}
               dayOfWeekFormatter={dayOfWeekFormatter}
-              renderDay={renderDay}
+              components={components}
+              componentsProps={componentsProps}
               loading={loading}
               renderLoading={renderLoading}
             />
@@ -564,7 +578,7 @@ CalendarPicker.propTypes = {
    */
   disabled: PropTypes.bool,
   /**
-   * If `true` future days are disabled.
+   * If `true` disable values before the current time
    * @default false
    */
   disableFuture: PropTypes.bool,
@@ -574,7 +588,7 @@ CalendarPicker.propTypes = {
    */
   disableHighlightToday: PropTypes.bool,
   /**
-   * If `true` past days are disabled.
+   * If `true` disable values after the current time.
    * @default false
    */
   disablePast: PropTypes.bool,
@@ -631,15 +645,6 @@ CalendarPicker.propTypes = {
    * @default typeof navigator !== 'undefined' && /(android)/i.test(navigator.userAgent)
    */
   reduceAnimations: PropTypes.bool,
-  /**
-   * Custom renderer for day. Check the [PickersDay](https://mui.com/x/api/date-pickers/pickers-day/) component.
-   * @template TDate
-   * @param {TDate} day The day to render.
-   * @param {Array<TDate | null>} selectedDays The days currently selected.
-   * @param {PickersDayProps<TDate>} pickersDayProps The props of the day to render.
-   * @returns {JSX.Element} The element representing the day.
-   */
-  renderDay: PropTypes.func,
   /**
    * Component displaying when passed `loading` true.
    * @returns {React.ReactNode} The node to render when loading.

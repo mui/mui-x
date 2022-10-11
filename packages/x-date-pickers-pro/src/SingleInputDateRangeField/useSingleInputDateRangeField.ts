@@ -1,8 +1,4 @@
-import {
-  useUtils,
-  useDefaultDates,
-  parseNonNullablePickerDate,
-} from '@mui/x-date-pickers/internals';
+import { useUtils, useDefaultDates, applyDefaultDate } from '@mui/x-date-pickers/internals';
 import {
   useField,
   FieldValueManager,
@@ -13,11 +9,12 @@ import {
 import {
   DateRangeFieldSection,
   UseSingleInputDateRangeFieldDefaultizedProps,
+  UseSingleInputDateRangeFieldParams,
   UseSingleInputDateRangeFieldProps,
-} from './SingleInputDateRangeField.interfaces';
+} from './SingleInputDateRangeField.types';
 import { dateRangePickerValueManager } from '../DateRangePicker/shared';
 import { DateRange } from '../internal/models';
-import { splitDateRangeSections } from './SingleInputDateRangeField.utils';
+import { splitDateRangeSections, removeLastSeparator } from './SingleInputDateRangeField.utils';
 import {
   DateRangeValidationError,
   isSameDateRangeError,
@@ -30,7 +27,25 @@ export const dateRangeFieldValueManager: FieldValueManager<
   DateRangeFieldSection,
   DateRangeValidationError
 > = {
-  getSectionsFromValue: (utils, prevSections, [start, end], format) => {
+  updateReferenceValue: (utils, value, prevReferenceValue) => {
+    const shouldKeepStartDate = value[0] != null && utils.isValid(value[0]);
+    const shouldKeepEndDate = value[1] != null && utils.isValid(value[1]);
+
+    if (!shouldKeepStartDate && !shouldKeepEndDate) {
+      return prevReferenceValue;
+    }
+
+    if (shouldKeepStartDate && shouldKeepEndDate) {
+      return value;
+    }
+
+    if (shouldKeepStartDate) {
+      return [value[0], prevReferenceValue[0]];
+    }
+
+    return [prevReferenceValue[1], value[1]];
+  },
+  getSectionsFromValue: (utils, localeText, prevSections, [start, end], format) => {
     const prevDateRangeSections =
       prevSections == null
         ? { startDate: null, endDate: null }
@@ -43,7 +58,7 @@ export const dateRangeFieldValueManager: FieldValueManager<
         return prevDateSections;
       }
 
-      return splitFormatIntoSections(utils, format, newDate);
+      return splitFormatIntoSections(utils, localeText, format, newDate);
     };
 
     const rawSectionsOfStartDate = getSections(start, prevDateRangeSections.startDate);
@@ -73,91 +88,73 @@ export const dateRangeFieldValueManager: FieldValueManager<
   },
   getValueStrFromSections: (sections) => {
     const dateRangeSections = splitDateRangeSections(sections);
-    const startDateStr = createDateStrFromSections(dateRangeSections.startDate);
-    const endDateStr = createDateStrFromSections(dateRangeSections.endDate);
+    const startDateStr = createDateStrFromSections(dateRangeSections.startDate, true);
+    const endDateStr = createDateStrFromSections(dateRangeSections.endDate, true);
 
     return `${startDateStr}${endDateStr}`;
   },
-  getValueFromSections: (utils, prevSections, newSections, format) => {
-    const removeLastSeparator = (sections: DateRangeFieldSection[]) =>
-      sections.map((section, sectionIndex) => {
-        if (sectionIndex === sections.length - 1) {
-          return { ...section, separator: null };
-        }
+  getActiveDateSections: (sections, activeSection) => {
+    const index = activeSection.dateName === 'start' ? 0 : 1;
+    const dateRangeSections = splitDateRangeSections(sections);
 
-        return section;
-      });
+    return index === 0
+      ? removeLastSeparator(dateRangeSections.startDate)
+      : dateRangeSections.endDate;
+  },
+  getActiveDateManager: (utils, state, activeSection) => {
+    const index = activeSection.dateName === 'start' ? 0 : 1;
 
-    const prevDateRangeSections = splitDateRangeSections(prevSections);
-    const dateRangeSections = splitDateRangeSections(newSections);
-
-    const startDateStr = createDateStrFromSections(
-      removeLastSeparator(dateRangeSections.startDate),
-    );
-    const endDateStr = createDateStrFromSections(dateRangeSections.endDate);
-
-    const startDate = utils.parse(startDateStr, format);
-    const endDate = utils.parse(endDateStr, format);
-
-    const shouldPublish =
-      (startDateStr !==
-        createDateStrFromSections(removeLastSeparator(prevDateRangeSections.startDate)) &&
-        utils.isValid(startDate)) ||
-      (endDateStr !== createDateStrFromSections(prevDateRangeSections.endDate) &&
-        utils.isValid(endDate));
+    const updateDateInRange = (newDate: any, prevDateRange: DateRange<any>) =>
+      (index === 0 ? [newDate, prevDateRange[1]] : [prevDateRange[0], newDate]) as DateRange<any>;
 
     return {
-      value: [startDate, endDate] as DateRange<any>,
-      shouldPublish,
+      activeDate: state.value[index],
+      referenceActiveDate: state.referenceValue[index],
+      getNewValueFromNewActiveDate: (newActiveDate) => ({
+        value: updateDateInRange(newActiveDate, state.value),
+        referenceValue:
+          newActiveDate == null || !utils.isValid(newActiveDate)
+            ? state.referenceValue
+            : updateDateInRange(newActiveDate, state.referenceValue),
+      }),
     };
   },
-  getActiveDateFromActiveSection: (value, activeSection) => {
-    const updateActiveDate = (dateName: 'start' | 'end') => (newActiveDate: any) => {
-      if (dateName === 'start') {
-        return [newActiveDate, value[1]] as DateRange<any>;
+  parseValueStr: (valueStr, referenceValue, parseDate) => {
+    // TODO: Improve because it would not work if the date format has `–` as a separator.
+    const [startStr, endStr] = valueStr.split('–');
+
+    return [startStr, endStr].map((dateStr, index) => {
+      if (dateStr == null) {
+        return null;
       }
 
-      return [value[0], newActiveDate] as DateRange<any>;
-    };
-
-    if (activeSection.dateName === 'start') {
-      return {
-        value: value[0],
-        update: updateActiveDate('start'),
-      };
-    }
-
-    return {
-      value: value[1],
-      update: updateActiveDate('end'),
-    };
+      return parseDate(dateStr.trim(), referenceValue[index]);
+    }) as DateRange<any>;
   },
   hasError: (error) => error[0] != null || error[1] != null,
   isSameError: isSameDateRangeError,
 };
 
-export const useDefaultizedDateRangeFieldProps = <TInputDate, TDate, AdditionalProps extends {}>(
-  props: UseSingleInputDateRangeFieldProps<TInputDate, TDate>,
-): UseSingleInputDateRangeFieldDefaultizedProps<TInputDate, TDate> & AdditionalProps => {
+export const useDefaultizedDateRangeFieldProps = <TDate, AdditionalProps extends {}>(
+  props: UseSingleInputDateRangeFieldProps<TDate>,
+): UseSingleInputDateRangeFieldDefaultizedProps<TDate> & AdditionalProps => {
   const utils = useUtils<TDate>();
   const defaultDates = useDefaultDates<TDate>();
 
   return {
-    disablePast: false,
-    disableFuture: false,
     ...props,
-    minDate: parseNonNullablePickerDate(utils, props.minDate, defaultDates.minDate),
-    maxDate: parseNonNullablePickerDate(utils, props.maxDate, defaultDates.maxDate),
+    disablePast: props.disablePast ?? false,
+    disableFuture: props.disableFuture ?? false,
+    format: props.format ?? utils.formats.keyboardDate,
+    minDate: applyDefaultDate(utils, props.minDate, defaultDates.minDate),
+    maxDate: applyDefaultDate(utils, props.maxDate, defaultDates.maxDate),
   } as any;
 };
 
-export const useSingleInputDateRangeField = <
-  TInputDate,
-  TDate,
-  TProps extends UseSingleInputDateRangeFieldProps<TInputDate, TDate>,
->(
-  inProps: TProps,
-) => {
+export const useSingleInputDateRangeField = <TDate, TChildProps extends {}>({
+  props,
+  inputRef,
+}: UseSingleInputDateRangeFieldParams<TDate, TChildProps>) => {
   const {
     value,
     defaultValue,
@@ -170,10 +167,13 @@ export const useSingleInputDateRangeField = <
     maxDate,
     disableFuture,
     disablePast,
+    selectedSections,
+    onSelectedSectionsChange,
     ...other
-  } = useDefaultizedDateRangeFieldProps<TInputDate, TDate, TProps>(inProps);
+  } = useDefaultizedDateRangeFieldProps<TDate, TChildProps>(props);
 
   return useField({
+    inputRef,
     forwardedProps: other,
     internalProps: {
       value,
@@ -187,9 +187,13 @@ export const useSingleInputDateRangeField = <
       maxDate,
       disableFuture,
       disablePast,
+      selectedSections,
+      onSelectedSectionsChange,
+      inputRef,
     },
     valueManager: dateRangePickerValueManager,
     fieldValueManager: dateRangeFieldValueManager,
-    validator: validateDateRange as any,
+    validator: validateDateRange,
+    supportedDateSections: ['year', 'month', 'day'],
   });
 };

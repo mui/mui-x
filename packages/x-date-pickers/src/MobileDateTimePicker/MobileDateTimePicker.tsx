@@ -22,32 +22,32 @@ import { DateInputSlotsComponent, PureDateInput } from '../internals/components/
 import { usePickerState } from '../internals/hooks/usePickerState';
 import { DateTimePickerTabs } from '../DateTimePicker/DateTimePickerTabs';
 
-export interface MobileDateTimePickerSlotsComponent
+export interface MobileDateTimePickerSlotsComponent<TDate>
   extends MobileWrapperSlotsComponent,
-    CalendarOrClockPickerSlotsComponent,
+    CalendarOrClockPickerSlotsComponent<TDate>,
     DateInputSlotsComponent {}
 
-export interface MobileDateTimePickerSlotsComponentsProps
+export interface MobileDateTimePickerSlotsComponentsProps<TDate>
   extends MobileWrapperSlotsComponentsProps,
-    CalendarOrClockPickerSlotsComponentsProps {}
+    CalendarOrClockPickerSlotsComponentsProps<TDate> {}
 
-export interface MobileDateTimePickerProps<TInputDate, TDate>
-  extends BaseDateTimePickerProps<TInputDate, TDate>,
+export interface MobileDateTimePickerProps<TDate>
+  extends BaseDateTimePickerProps<TDate>,
     MobileWrapperProps<TDate> {
   /**
    * Overrideable components.
    * @default {}
    */
-  components?: Partial<MobileDateTimePickerSlotsComponent>;
+  components?: Partial<MobileDateTimePickerSlotsComponent<TDate>>;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  componentsProps?: Partial<MobileDateTimePickerSlotsComponentsProps>;
+  componentsProps?: Partial<MobileDateTimePickerSlotsComponentsProps<TDate>>;
 }
 
-type MobileDateTimePickerComponent = (<TInputDate, TDate = TInputDate>(
-  props: MobileDateTimePickerProps<TInputDate, TDate> & React.RefAttributes<HTMLDivElement>,
+type MobileDateTimePickerComponent = (<TDate>(
+  props: MobileDateTimePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
 ) => JSX.Element) & { propTypes?: any };
 
 /**
@@ -60,15 +60,14 @@ type MobileDateTimePickerComponent = (<TInputDate, TDate = TInputDate>(
  *
  * - [MobileDateTimePicker API](https://mui.com/x/api/date-pickers/mobile-date-time-picker/)
  */
-export const MobileDateTimePicker = React.forwardRef(function MobileDateTimePicker<
-  TInputDate,
-  TDate = TInputDate,
->(inProps: MobileDateTimePickerProps<TInputDate, TDate>, ref: React.Ref<HTMLDivElement>) {
-  const props = useDateTimePickerDefaultizedProps<
-    TInputDate,
-    TDate,
-    MobileDateTimePickerProps<TInputDate, TDate>
-  >(inProps, 'MuiMobileDateTimePicker');
+export const MobileDateTimePicker = React.forwardRef(function MobileDateTimePicker<TDate>(
+  inProps: MobileDateTimePickerProps<TDate>,
+  ref: React.Ref<HTMLDivElement>,
+) {
+  const props = useDateTimePickerDefaultizedProps<TDate, MobileDateTimePickerProps<TDate>>(
+    inProps,
+    'MuiMobileDateTimePicker',
+  );
 
   const validationError = useDateTimeValidation(props) !== null;
   const { pickerProps, inputProps, wrapperProps } = usePickerState(
@@ -88,7 +87,7 @@ export const MobileDateTimePicker = React.forwardRef(function MobileDateTimePick
     hideTabs = false,
     ...other
   } = props;
-  const components = React.useMemo<MobileDateTimePickerProps<TInputDate, TDate>['components']>(
+  const components = React.useMemo<MobileDateTimePickerProps<TDate>['components']>(
     () => ({ Tabs: DateTimePickerTabs, ...providedComponents }),
     [providedComponents],
   );
@@ -184,16 +183,12 @@ MobileDateTimePicker.propTypes = {
    */
   defaultCalendarMonth: PropTypes.any,
   /**
-   * Props applied to the [`Dialog`](https://mui.com/material-ui/api/dialog/) element.
-   */
-  DialogProps: PropTypes.object,
-  /**
    * If `true`, the picker and text field are disabled.
    * @default false
    */
   disabled: PropTypes.bool,
   /**
-   * If `true` future days are disabled.
+   * If `true` disable values before the current time
    * @default false
    */
   disableFuture: PropTypes.bool,
@@ -218,17 +213,17 @@ MobileDateTimePicker.propTypes = {
    */
   disableOpenPicker: PropTypes.bool,
   /**
-   * If `true` past days are disabled.
+   * If `true` disable values after the current time.
    * @default false
    */
   disablePast: PropTypes.bool,
   /**
    * Get aria-label text for control that opens picker dialog. Aria-label text must include selected date. @DateIOType
-   * @template TInputDate, TDate
-   * @param {TInputDate} date The date from which we want to add an aria-text.
+   * @template TDate
+   * @param {TDate | null} date The date from which we want to add an aria-text.
    * @param {MuiPickersAdapter<TDate>} utils The utils to manipulate the date.
    * @returns {string} The aria-text to render inside the dialog.
-   * @default (date, utils) => `Choose date, selected date is ${utils.format(utils.date(date), 'fullDate')}`
+   * @default (date, utils) => `Choose date, selected date is ${utils.format(date, 'fullDate')}`
    */
   getOpenDialogAriaText: PropTypes.func,
   /**
@@ -310,7 +305,7 @@ MobileDateTimePicker.propTypes = {
   /**
    * Callback fired when the value (the selected date) changes @DateIOType.
    * @template TValue
-   * @param {TValue} value The new parsed value.
+   * @param {TValue} value The new value.
    * @param {string} keyboardInputValue The current value of the keyboard input.
    */
   onChange: PropTypes.func.isRequired,
@@ -327,9 +322,9 @@ MobileDateTimePicker.propTypes = {
    * [Read the guide](https://next.material-ui-pickers.dev/guides/forms) about form integration and error displaying.
    * @DateIOType
    *
-   * @template TError, TInputValue
+   * @template TError, TValue
    * @param {TError} reason The reason why the current value is not valid.
-   * @param {TInputValue} value The invalid value.
+   * @param {TValue} value The invalid value.
    */
   onError: PropTypes.func,
   /**
@@ -384,15 +379,6 @@ MobileDateTimePicker.propTypes = {
    */
   reduceAnimations: PropTypes.bool,
   /**
-   * Custom renderer for day. Check the [PickersDay](https://mui.com/x/api/date-pickers/pickers-day/) component.
-   * @template TDate
-   * @param {TDate} day The day to render.
-   * @param {Array<TDate | null>} selectedDays The days currently selected.
-   * @param {PickersDayProps<TDate>} pickersDayProps The props of the day to render.
-   * @returns {JSX.Element} The element representing the day.
-   */
-  renderDay: PropTypes.func,
-  /**
    * The `renderInput` prop allows you to customize the rendered input.
    * The `props` argument of this render prop contains props of [TextField](https://mui.com/material-ui/api/text-field/#props) that you need to forward.
    * Pay specific attention to the `ref` and `inputProps` keys.
@@ -434,7 +420,7 @@ MobileDateTimePicker.propTypes = {
    * Dynamically check if time is disabled or not.
    * If returns `false` appropriate time point will ot be acceptable.
    * @param {number} timeValue The value to check.
-   * @param {ClockPickerView} clockType The clock type of the timeValue.
+   * @param {ClockPickerView} view The clock type of the timeValue.
    * @returns {boolean} Returns `true` if the time should be disabled
    */
   shouldDisableTime: PropTypes.func,

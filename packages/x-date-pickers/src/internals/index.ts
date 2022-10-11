@@ -84,22 +84,22 @@ export type { PickerStateValueManager, PickerSelectionState } from './hooks/useP
 export { useLocalizationContext, useDefaultDates, useUtils, useLocaleText } from './hooks/useUtils';
 export type { BaseDateValidationProps, DayValidationProps } from './hooks/validation/models';
 export { useValidation } from './hooks/validation/useValidation';
-export type { ValidationProps, Validator } from './hooks/validation/useValidation';
-export { validateDate } from './hooks/validation/useDateValidation';
 export type {
-  DateValidationProps,
-  DateValidationError,
-  ExportedDateValidationProps,
-} from './hooks/validation/useDateValidation';
+  ValidationCommonProps,
+  ValidationProps,
+  Validator,
+} from './hooks/validation/useValidation';
+export { validateDate } from './hooks/validation/useDateValidation';
+export type { DateValidationError } from './hooks/validation/useDateValidation';
 export { usePreviousMonthDisabled, useNextMonthDisabled } from './hooks/date-helpers-hooks';
 
 export type { BasePickerProps } from './models/props/basePickerProps';
 export type { StaticPickerProps } from './models/props/staticPickerProps';
 export type { BaseToolbarProps } from './models/props/baseToolbarProps';
 export type { MuiPickersAdapter } from './models/muiPickersAdapter';
-export type { DefaultizedProps } from './models/helpers';
+export type { DefaultizedProps, MakeOptional } from './models/helpers';
 
-export { parseNonNullablePickerDate } from './utils/date-utils';
+export { applyDefaultDate, replaceInvalidDateByNull } from './utils/date-utils';
 export { executeInTheNextEventLoopTick, onSpaceOrEnter } from './utils/utils';
 export { defaultReduceAnimations } from './utils/defaultReduceAnimations';
 export { buildDeprecatedPropsWarning } from './utils/warning';
@@ -112,7 +112,12 @@ export type {
 } from '../CalendarPicker/PickersCalendarHeader';
 
 export { DayPicker } from '../CalendarPicker/DayPicker';
-export type { DayPickerProps } from '../CalendarPicker/DayPicker';
+export type {
+  DayPickerProps,
+  DayPickerSlotsComponent,
+  DayPickerSlotsComponentsProps,
+  ExportedDayPickerProps,
+} from '../CalendarPicker/DayPicker';
 
 export { areDayPropsEqual } from '../PickersDay/PickersDay';
 

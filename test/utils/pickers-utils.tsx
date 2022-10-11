@@ -125,10 +125,11 @@ export const openPicker = (params: OpenPickerParams) => {
 };
 
 // TODO: Handle dynamic values
-export const getClockMouseEvent = (type: 'mousedown' | 'mousemove' | 'mouseup') => {
-  const offsetX = 20;
-  const offsetY = 15;
-
+export const getClockMouseEvent = (
+  type: 'mousedown' | 'mousemove' | 'mouseup',
+  offsetX = 20,
+  offsetY = 15,
+) => {
   const event = new window.MouseEvent(type, {
     bubbles: true,
     cancelable: true,
@@ -154,13 +155,19 @@ export const getClockTouchEvent = () => {
 };
 
 export const withPickerControls =
-  <TValue, Props extends { value: TValue; onChange: Function }>(
+  <
+    TValue,
+    Props extends { value: TValue; onChange: Function; components?: {}; componentsProps?: {} },
+  >(
     Component: React.ComponentType<Props>,
   ) =>
   <DefaultProps extends Partial<Props>>(defaultProps: DefaultProps) => {
     return (
-      props: Omit<Props, 'value' | 'onChange' | keyof DefaultProps> &
-        Partial<DefaultProps> & {
+      props: Omit<
+        Props,
+        'value' | 'onChange' | Exclude<keyof DefaultProps, 'components' | 'componentsProps'>
+      > &
+        Partial<Omit<DefaultProps, 'components' | 'componentsProps'>> & {
           initialValue?: TValue;
           value?: TValue;
           onChange?: any;
@@ -184,7 +191,14 @@ export const withPickerControls =
       );
 
       return (
-        <Component {...defaultProps} {...(other as any)} value={value} onChange={handleChange} />
+        <Component
+          {...defaultProps}
+          {...(other as any)}
+          components={{ ...defaultProps.components, ...(other as any).components }}
+          componentsProps={{ ...defaultProps.componentsProps, ...(other as any).componentsProps }}
+          value={value}
+          onChange={handleChange}
+        />
       );
     };
   };

@@ -1,11 +1,11 @@
 import * as React from 'react';
 import {
-  GridRowTreeNodeConfig,
   GridEventListener,
   GridCallbackDetails,
   GridRowParams,
   GridRowId,
   GridValidRowModel,
+  GridGroupNode,
   GridFeatureMode,
 } from '@mui/x-data-grid';
 import {
@@ -30,7 +30,7 @@ export interface GridExperimentalProFeatures extends GridExperimentalFeatures {
    */
   lazyLoading: boolean;
   /**
-   * Enables the the ability for rows to be pinned in data grid.
+   * Enables the ability for rows to be pinned in data grid.
    */
   rowPinning: boolean;
 }
@@ -81,10 +81,10 @@ export interface DataGridProPropsWithDefaultValue extends DataGridPropsWithDefau
   /**
    * Determines if a group should be expanded after its creation.
    * This prop takes priority over the `defaultGroupingExpansionDepth` prop.
-   * @param {GridRowTreeNodeConfig} node The node of the group to test.
+   * @param {GridGroupNode} node The node of the group to test.
    * @returns {boolean} A boolean indicating if the group is expanded.
    */
-  isGroupExpandedByDefault?: (node: GridRowTreeNodeConfig) => boolean;
+  isGroupExpandedByDefault?: (node: GridGroupNode) => boolean;
   /**
    * If `true`, the column pinning is disabled.
    * @default false

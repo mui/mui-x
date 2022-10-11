@@ -137,6 +137,7 @@ export default function StartEditButtonGrid() {
         columns={columns}
         onCellKeyDown={handleCellKeyDown}
         cellModesModel={cellModesModel}
+        onCellModesModelChange={(model) => setCellModesModel(model)}
         components={{
           Toolbar: EditToolbar,
         }}
@@ -152,7 +153,6 @@ export default function StartEditButtonGrid() {
             onFocus: handleCellFocus,
           },
         }}
-        experimentalFeatures={{ newEditingApi: true }}
       />
     </div>
   );

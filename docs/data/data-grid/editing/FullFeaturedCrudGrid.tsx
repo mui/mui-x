@@ -138,6 +138,10 @@ export default function FullFeaturedCrudGrid() {
     return updatedRow;
   };
 
+  const handleRowModesModelChange = (newRowModesModel: GridRowModesModel) => {
+    setRowModesModel(newRowModesModel);
+  };
+
   const columns: GridColumns = [
     { field: 'name', headerName: 'Name', width: 180, editable: true },
     { field: 'age', headerName: 'Age', type: 'number', editable: true },
@@ -218,6 +222,7 @@ export default function FullFeaturedCrudGrid() {
         columns={columns}
         editMode="row"
         rowModesModel={rowModesModel}
+        onRowModesModelChange={handleRowModesModelChange}
         onRowEditStart={handleRowEditStart}
         onRowEditStop={handleRowEditStop}
         processRowUpdate={processRowUpdate}
@@ -227,7 +232,6 @@ export default function FullFeaturedCrudGrid() {
         componentsProps={{
           toolbar: { setRows, setRowModesModel },
         }}
-        experimentalFeatures={{ newEditingApi: true }}
       />
     </Box>
   );

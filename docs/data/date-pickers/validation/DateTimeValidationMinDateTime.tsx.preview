@@ -1,0 +1,10 @@
+<LocalizationProvider dateAdapter={AdapterDayjs}>
+  <GridItem label="DateTimePicker">
+    <DateTimePicker
+      minDateTime={todayAt3PM}
+      value={value}
+      onChange={(newValue) => setValue(newValue)}
+      renderInput={(params) => <TextField {...params} />}
+    />
+  </GridItem>
+</LocalizationProvider>

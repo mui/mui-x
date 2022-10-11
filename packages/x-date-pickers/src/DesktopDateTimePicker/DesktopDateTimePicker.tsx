@@ -23,32 +23,32 @@ import { usePickerState } from '../internals/hooks/usePickerState';
 import { DateInputSlotsComponent } from '../internals/components/PureDateInput';
 import { DateTimePickerTabs } from '../DateTimePicker/DateTimePickerTabs';
 
-export interface DesktopDateTimePickerSlotsComponent
+export interface DesktopDateTimePickerSlotsComponent<TDate>
   extends DesktopWrapperSlotsComponent,
-    CalendarOrClockPickerSlotsComponent,
+    CalendarOrClockPickerSlotsComponent<TDate>,
     DateInputSlotsComponent {}
 
-export interface DesktopDateTimePickerSlotsComponentsProps
+export interface DesktopDateTimePickerSlotsComponentsProps<TDate>
   extends DesktopWrapperSlotsComponentsProps,
-    CalendarOrClockPickerSlotsComponentsProps {}
+    CalendarOrClockPickerSlotsComponentsProps<TDate> {}
 
-export interface DesktopDateTimePickerProps<TInputDate, TDate>
-  extends BaseDateTimePickerProps<TInputDate, TDate>,
+export interface DesktopDateTimePickerProps<TDate>
+  extends BaseDateTimePickerProps<TDate>,
     DesktopWrapperProps<TDate> {
   /**
    * Overrideable components.
    * @default {}
    */
-  components?: Partial<DesktopDateTimePickerSlotsComponent>;
+  components?: Partial<DesktopDateTimePickerSlotsComponent<TDate>>;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  componentsProps?: Partial<DesktopDateTimePickerSlotsComponentsProps>;
+  componentsProps?: Partial<DesktopDateTimePickerSlotsComponentsProps<TDate>>;
 }
 
-type DesktopDateTimePickerComponent = (<TInputDate, TDate = TInputDate>(
-  props: DesktopDateTimePickerProps<TInputDate, TDate> & React.RefAttributes<HTMLDivElement>,
+type DesktopDateTimePickerComponent = (<TDate>(
+  props: DesktopDateTimePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
 ) => JSX.Element) & { propTypes?: any };
 
 /**
@@ -61,15 +61,14 @@ type DesktopDateTimePickerComponent = (<TInputDate, TDate = TInputDate>(
  *
  * - [DesktopDateTimePicker API](https://mui.com/x/api/date-pickers/desktop-date-time-picker/)
  */
-export const DesktopDateTimePicker = React.forwardRef(function DesktopDateTimePicker<
-  TInputDate,
-  TDate = TInputDate,
->(inProps: DesktopDateTimePickerProps<TInputDate, TDate>, ref: React.Ref<HTMLDivElement>) {
-  const props = useDateTimePickerDefaultizedProps<
-    TInputDate,
-    TDate,
-    DesktopDateTimePickerProps<TInputDate, TDate>
-  >(inProps, 'MuiDesktopDateTimePicker');
+export const DesktopDateTimePicker = React.forwardRef(function DesktopDateTimePicker<TDate>(
+  inProps: DesktopDateTimePickerProps<TDate>,
+  ref: React.Ref<HTMLDivElement>,
+) {
+  const props = useDateTimePickerDefaultizedProps<TDate, DesktopDateTimePickerProps<TDate>>(
+    inProps,
+    'MuiDesktopDateTimePicker',
+  );
 
   const validationError = useDateTimeValidation(props) !== null;
 
@@ -80,10 +79,7 @@ export const DesktopDateTimePicker = React.forwardRef(function DesktopDateTimePi
 
   const {
     onChange,
-    PaperProps,
-    PopperProps,
     ToolbarComponent = DateTimePickerToolbar,
-    TransitionComponent,
     value,
     components: providedComponents,
     componentsProps,
@@ -91,7 +87,7 @@ export const DesktopDateTimePicker = React.forwardRef(function DesktopDateTimePi
     hideTabs = true,
     ...other
   } = props;
-  const components = React.useMemo<DesktopDateTimePickerProps<TInputDate, TDate>['components']>(
+  const components = React.useMemo<DesktopDateTimePickerProps<TDate>['components']>(
     () => ({ Tabs: DateTimePickerTabs, ...providedComponents }),
     [providedComponents],
   );
@@ -110,9 +106,6 @@ export const DesktopDateTimePicker = React.forwardRef(function DesktopDateTimePi
       {...wrapperProps}
       DateInputProps={AllDateInputProps}
       KeyboardDateInputComponent={KeyboardDateInput}
-      PopperProps={PopperProps}
-      PaperProps={PaperProps}
-      TransitionComponent={TransitionComponent}
       components={components}
       componentsProps={componentsProps}
       localeText={localeText}
@@ -194,7 +187,7 @@ DesktopDateTimePicker.propTypes = {
    */
   disabled: PropTypes.bool,
   /**
-   * If `true` future days are disabled.
+   * If `true` disable values before the current time
    * @default false
    */
   disableFuture: PropTypes.bool,
@@ -219,17 +212,17 @@ DesktopDateTimePicker.propTypes = {
    */
   disableOpenPicker: PropTypes.bool,
   /**
-   * If `true` past days are disabled.
+   * If `true` disable values after the current time.
    * @default false
    */
   disablePast: PropTypes.bool,
   /**
    * Get aria-label text for control that opens picker dialog. Aria-label text must include selected date. @DateIOType
-   * @template TInputDate, TDate
-   * @param {TInputDate} date The date from which we want to add an aria-text.
+   * @template TDate
+   * @param {TDate | null} date The date from which we want to add an aria-text.
    * @param {MuiPickersAdapter<TDate>} utils The utils to manipulate the date.
    * @returns {string} The aria-text to render inside the dialog.
-   * @default (date, utils) => `Choose date, selected date is ${utils.format(utils.date(date), 'fullDate')}`
+   * @default (date, utils) => `Choose date, selected date is ${utils.format(date, 'fullDate')}`
    */
   getOpenDialogAriaText: PropTypes.func,
   /**
@@ -311,7 +304,7 @@ DesktopDateTimePicker.propTypes = {
   /**
    * Callback fired when the value (the selected date) changes @DateIOType.
    * @template TValue
-   * @param {TValue} value The new parsed value.
+   * @param {TValue} value The new value.
    * @param {string} keyboardInputValue The current value of the keyboard input.
    */
   onChange: PropTypes.func.isRequired,
@@ -328,9 +321,9 @@ DesktopDateTimePicker.propTypes = {
    * [Read the guide](https://next.material-ui-pickers.dev/guides/forms) about form integration and error displaying.
    * @DateIOType
    *
-   * @template TError, TInputValue
+   * @template TError, TValue
    * @param {TError} reason The reason why the current value is not valid.
-   * @param {TInputValue} value The invalid value.
+   * @param {TValue} value The invalid value.
    */
   onError: PropTypes.func,
   /**
@@ -375,14 +368,6 @@ DesktopDateTimePicker.propTypes = {
    */
   orientation: PropTypes.oneOf(['landscape', 'portrait']),
   /**
-   * Paper props passed down to [Paper](https://mui.com/material-ui/api/paper/) component.
-   */
-  PaperProps: PropTypes.object,
-  /**
-   * Popper props passed down to [Popper](https://mui.com/material-ui/api/popper/) component.
-   */
-  PopperProps: PropTypes.object,
-  /**
    * Make picker read only.
    * @default false
    */
@@ -392,15 +377,6 @@ DesktopDateTimePicker.propTypes = {
    * @default typeof navigator !== 'undefined' && /(android)/i.test(navigator.userAgent)
    */
   reduceAnimations: PropTypes.bool,
-  /**
-   * Custom renderer for day. Check the [PickersDay](https://mui.com/x/api/date-pickers/pickers-day/) component.
-   * @template TDate
-   * @param {TDate} day The day to render.
-   * @param {Array<TDate | null>} selectedDays The days currently selected.
-   * @param {PickersDayProps<TDate>} pickersDayProps The props of the day to render.
-   * @returns {JSX.Element} The element representing the day.
-   */
-  renderDay: PropTypes.func,
   /**
    * The `renderInput` prop allows you to customize the rendered input.
    * The `props` argument of this render prop contains props of [TextField](https://mui.com/material-ui/api/text-field/#props) that you need to forward.
@@ -443,7 +419,7 @@ DesktopDateTimePicker.propTypes = {
    * Dynamically check if time is disabled or not.
    * If returns `false` appropriate time point will ot be acceptable.
    * @param {number} timeValue The value to check.
-   * @param {ClockPickerView} clockType The clock type of the timeValue.
+   * @param {ClockPickerView} view The clock type of the timeValue.
    * @returns {boolean} Returns `true` if the time should be disabled
    */
   shouldDisableTime: PropTypes.func,
@@ -495,10 +471,6 @@ DesktopDateTimePicker.propTypes = {
    * @default 'Select date & time'
    */
   toolbarTitle: PropTypes.node,
-  /**
-   * Custom component for popper [Transition](https://mui.com/material-ui/transitions/#transitioncomponent-prop).
-   */
-  TransitionComponent: PropTypes.elementType,
   /**
    * The value of the picker.
    */

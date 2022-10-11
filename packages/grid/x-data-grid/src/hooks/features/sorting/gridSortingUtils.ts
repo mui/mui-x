@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { GridSortingModelApplier } from './gridSortingState';
-import type { GridRowId, GridRowTreeNodeConfig } from '../../../models';
+import type { GridRowId, GridTreeNode } from '../../../models';
 import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridStateCommunity } from '../../../models/gridStateCommunity';
 import {
@@ -83,7 +83,7 @@ const parseSortItem = (
 
 interface GridRowAggregatedSortingParams {
   params: GridSortCellParams[];
-  node: GridRowTreeNodeConfig;
+  node: GridTreeNode;
 }
 
 /**
@@ -135,7 +135,7 @@ export const buildAggregatedSortingApplier = (
     return null;
   }
 
-  return (rowList: GridRowTreeNodeConfig[]) =>
+  return (rowList: GridTreeNode[]) =>
     rowList
       .map((node) => ({
         node,

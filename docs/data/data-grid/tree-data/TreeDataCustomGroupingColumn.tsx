@@ -39,6 +39,10 @@ const CustomGridTreeDataGroupingCell = (props: GridRenderCellParams) => {
   };
 
   const handleClick: ButtonProps['onClick'] = (event) => {
+    if (rowNode.type !== 'group') {
+      return;
+    }
+
     apiRef.current.setRowChildrenExpansion(id, !rowNode.childrenExpanded);
     apiRef.current.setCellFocus(id, field);
     event.stopPropagation();

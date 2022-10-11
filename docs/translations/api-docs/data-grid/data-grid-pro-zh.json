@@ -59,7 +59,7 @@
     "hideFooterSelectedRowCount": "If <code>true</code>, the selected row count in the footer is hidden.",
     "initialState": "The initial state of the DataGridPro. The data in it will be set in the state on initialization but will not be controlled. If one of the data in <code>initialState</code> is also being controlled, then the control state wins.",
     "isCellEditable": "Callback fired when a cell is rendered, returns true if the cell is editable.<br><br><strong>Signature:</strong><br><code>function(params: GridCellParams) =&gt; boolean</code><br><em>params:</em> With all properties from <a href=\"/x/api/data-grid/grid-cell-params/\">GridCellParams</a>.<br> <em>returns</em> (boolean): A boolean indicating if the cell is editable.",
-    "isGroupExpandedByDefault": "Determines if a group should be expanded after its creation. This prop takes priority over the <code>defaultGroupingExpansionDepth</code> prop.<br><br><strong>Signature:</strong><br><code>function(node: GridRowTreeNodeConfig) =&gt; boolean</code><br><em>node:</em> The node of the group to test.<br> <em>returns</em> (boolean): A boolean indicating if the group is expanded.",
+    "isGroupExpandedByDefault": "Determines if a group should be expanded after its creation. This prop takes priority over the <code>defaultGroupingExpansionDepth</code> prop.<br><br><strong>Signature:</strong><br><code>function(node: GridGroupNode) =&gt; boolean</code><br><em>node:</em> The node of the group to test.<br> <em>returns</em> (boolean): A boolean indicating if the group is expanded.",
     "isRowSelectable": "Determines if a row can be selected.<br><br><strong>Signature:</strong><br><code>function(params: GridRowParams) =&gt; boolean</code><br><em>params:</em> With all properties from <a href=\"/x/api/data-grid/grid-row-params/\">GridRowParams</a>.<br> <em>returns</em> (boolean): A boolean indicating if the cell is selectable.",
     "keepNonExistentRowsSelected": "If <code>true</code>, the selection model will retain selected rows that do not exist. Useful when using server side pagination and row selections need to be retained when changing pages.",
     "loading": "If <code>true</code>, a  loading overlay is displayed.",
@@ -69,7 +69,6 @@
     "nonce": "Nonce of the inline styles for <a href=\"https://www.w3.org/TR/2016/REC-CSP2-20161215/#script-src-the-nonce-attribute\">Content Security Policy</a>.",
     "onCellClick": "Callback fired when any cell is clicked.<br><br><strong>Signature:</strong><br><code>function(params: GridCellParams, event: MuiEvent&lt;React.MouseEvent&gt;, details: GridCallbackDetails) =&gt; void</code><br><em>params:</em> With all properties from <a href=\"/x/api/data-grid/grid-cell-params/\">GridCellParams</a>.<br><em>event:</em> The event object.<br><em>details:</em> Additional details for this callback.",
     "onCellDoubleClick": "Callback fired when a double click event comes from a cell element.<br><br><strong>Signature:</strong><br><code>function(params: GridCellParams, event: MuiEvent&lt;React.MouseEvent&gt;, details: GridCallbackDetails) =&gt; void</code><br><em>params:</em> With all properties from <a href=\"/x/api/data-grid/grid-cell-params/\">GridCellParams</a>.<br><em>event:</em> The event object.<br><em>details:</em> Additional details for this callback.",
-    "onCellEditCommit": "Callback fired when the cell changes are committed.<br><br><strong>Signature:</strong><br><code>function(params: GridCellEditCommitParams, event: MuiEvent&lt;MuiBaseEvent&gt;, details: GridCallbackDetails) =&gt; void</code><br><em>params:</em> With all properties from GridCellEditCommitParams.<br><em>event:</em> The event that caused this prop to be called.<br><em>details:</em> Additional details for this callback.",
     "onCellEditStart": "Callback fired when the cell turns to edit mode.<br><br><strong>Signature:</strong><br><code>function(params: GridCellParams, event: MuiEvent&lt;React.KeyboardEvent | React.MouseEvent&gt;) =&gt; void</code><br><em>params:</em> With all properties from <a href=\"/x/api/data-grid/grid-cell-params/\">GridCellParams</a>.<br><em>event:</em> The event that caused this prop to be called.",
     "onCellEditStop": "Callback fired when the cell turns to view mode.<br><br><strong>Signature:</strong><br><code>function(params: GridCellParams, event: MuiEvent&lt;MuiBaseEvent&gt;) =&gt; void</code><br><em>params:</em> With all properties from <a href=\"/x/api/data-grid/grid-cell-params/\">GridCellParams</a>.<br><em>event:</em> The event that caused this prop to be called.",
     "onCellFocusOut": "Callback fired when a cell loses focus.<br><br><strong>Signature:</strong><br><code>function(params: GridCellParams, event: MuiEvent&lt;MuiBaseEvent&gt;, details: GridCallbackDetails) =&gt; void</code><br><em>params:</em> With all properties from <a href=\"/x/api/data-grid/grid-cell-params/\">GridCellParams</a>.<br><em>event:</em> The event object.<br><em>details:</em> Additional details for this callback.",
@@ -86,7 +85,6 @@
     "onColumnVisibilityModelChange": "Callback fired when the column visibility model changes.<br><br><strong>Signature:</strong><br><code>function(model: GridColumnVisibilityModel, details: GridCallbackDetails) =&gt; void</code><br><em>model:</em> The new model.<br><em>details:</em> Additional details for this callback.",
     "onColumnWidthChange": "Callback fired when the width of a column is changed.<br><br><strong>Signature:</strong><br><code>function(params: GridColumnResizeParams, event: MuiEvent&lt;React.MouseEvent&gt;, details: GridCallbackDetails) =&gt; void</code><br><em>params:</em> With all properties from GridColumnResizeParams.<br><em>event:</em> The event object.<br><em>details:</em> Additional details for this callback.",
     "onDetailPanelExpandedRowIdsChange": "Callback fired when the detail panel of a row is opened or closed.<br><br><strong>Signature:</strong><br><code>function(ids: Array&lt;GridRowId&gt;, details: GridCallbackDetails) =&gt; void</code><br><em>ids:</em> The ids of the rows which have the detail panel open.<br><em>details:</em> Additional details for this callback.",
-    "onEditCellPropsChange": "Callback fired when the edit cell value changes.<br><br><strong>Signature:</strong><br><code>function(params: GridEditCellPropsParams, event: MuiEvent&lt;React.SyntheticEvent&gt;, details: GridCallbackDetails) =&gt; void</code><br><em>params:</em> With all properties from GridEditCellPropsParams.<br><em>event:</em> The event that caused this prop to be called.<br><em>details:</em> Additional details for this callback.",
     "onEditRowsModelChange": "Callback fired when the <code>editRowsModel</code> changes.<br><br><strong>Signature:</strong><br><code>function(editRowsModel: GridEditRowsModel, details: GridCallbackDetails) =&gt; void</code><br><em>editRowsModel:</em> With all properties from GridEditRowsModel.<br><em>details:</em> Additional details for this callback.",
     "onError": "Callback fired when an exception is thrown in the grid.<br><br><strong>Signature:</strong><br><code>function(args: any, event: MuiEvent&lt;{}&gt;, details: GridCallbackDetails) =&gt; void</code><br><em>args:</em> The arguments passed to the <code>showError</code> call.<br><em>event:</em> The event object.<br><em>details:</em> Additional details for this callback.",
     "onFetchRows": "Callback fired when rowCount is set and the next batch of virtualized rows is rendered.<br><br><strong>Signature:</strong><br><code>function(params: GridFetchRowsParams, event: MuiEvent&lt;{}&gt;, details: GridCallbackDetails) =&gt; void</code><br><em>params:</em> With all properties from GridFetchRowsParams.<br><em>event:</em> The event object.<br><em>details:</em> Additional details for this callback.",
@@ -116,7 +114,7 @@
     "paginationMode": "Pagination can be processed on the server or client-side. Set it to &#39;client&#39; if you would like to handle the pagination on the client-side. Set it to &#39;server&#39; if you would like to handle the pagination on the server-side.",
     "pinnedColumns": "The column fields to display pinned to left or right.",
     "pinnedRows": "Rows data to pin on top or bottom.",
-    "processRowUpdate": "Callback called before updating a row with new values in the row and cell editing. Only applied if <code>props.experimentalFeatures.newEditingApi: true</code>.<br><br><strong>Signature:</strong><br><code>function(newRow: R, oldRow: R) =&gt; Promise&lt;R&gt; | R</code><br><em>newRow:</em> Row object with the new values.<br><em>oldRow:</em> Row object with the old values.<br> <em>returns</em> (Promise<R> | R): The final values to update the row.",
+    "processRowUpdate": "Callback called before updating a row with new values in the row and cell editing.<br><br><strong>Signature:</strong><br><code>function(newRow: R, oldRow: R) =&gt; Promise&lt;R&gt; | R</code><br><em>newRow:</em> Row object with the new values.<br><em>oldRow:</em> Row object with the old values.<br> <em>returns</em> (Promise<R> | R): The final values to update the row.",
     "rowBuffer": "Number of extra rows to be rendered before/after the visible slice.",
     "rowCount": "Set the total number of rows, if it is different from the length of the value <code>rows</code> prop. If some rows have children (for instance in the tree data), this number represents the amount of top level rows.",
     "rowHeight": "Set the height in pixel of a row in the grid.",
@@ -135,7 +133,7 @@
     "sortingMode": "Sorting can be processed on the server or client-side. Set it to &#39;client&#39; if you would like to handle sorting on the client-side. Set it to &#39;server&#39; if you would like to handle sorting on the server-side.",
     "sortingOrder": "The order of the sorting sequence.",
     "sortModel": "Set the sort model of the grid.",
-    "sx": "The system prop that allows defining system overrides as well as additional CSS styles. See the <a href=\"/system/the-sx-prop/\">`sx` page</a> for more details.",
+    "sx": "The system prop that allows defining system overrides as well as additional CSS styles. See the <a href=\"/system/getting-started/the-sx-prop/\">`sx` page</a> for more details.",
     "throttleRowsMs": "If positive, the Grid will throttle updates coming from <code>apiRef.current.updateRows</code> and <code>apiRef.current.setRows</code>. It can be useful if you have a high update rate but do not want to do heavy work like filtering / sorting or rendering on each  individual update.",
     "treeData": "If <code>true</code>, the rows will be gathered in a tree structure according to the <code>getTreeDataPath</code> prop."
   },
@@ -471,6 +469,14 @@
     "menuList": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the menu list element"
+    },
+    "overlayWrapper": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the overlay wrapper element"
+    },
+    "overlayWrapperInner": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the overlay wrapper inner element"
     },
     "overlay": {
       "description": "Styles applied to {{nodeName}}.",

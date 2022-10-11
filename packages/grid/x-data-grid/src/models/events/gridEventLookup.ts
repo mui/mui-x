@@ -1,10 +1,8 @@
 import * as React from 'react';
 import type {
-  GridCellEditCommitParams,
   GridColumnHeaderParams,
   GridColumnOrderChangeParams,
   GridColumnResizeParams,
-  GridEditCellPropsParams,
   GridHeaderSelectionCheckboxParams,
   GridMenuParams,
   GridPreferencePanelParams,
@@ -21,7 +19,7 @@ import type { GridEditRowsModel } from '../gridEditRowModel';
 import type { GridSelectionModel } from '../gridSelectionModel';
 import type { ElementSize } from '../elementSize';
 import type { MuiBaseEvent } from '../muiEvent';
-import type { GridRowId, GridRowTreeNodeConfig } from '../gridRows';
+import type { GridGroupNode, GridRowId } from '../gridRows';
 import type { GridColumnVisibilityModel } from '../../hooks/features/columns';
 import type { GridStrategyProcessorName } from '../../hooks/core/strategyProcessing';
 import { GridRowEditStartParams, GridRowEditStopParams } from '../params/gridRowParams';
@@ -369,10 +367,10 @@ export interface GridEventLookup
    */
   sortedRowsSet: {};
   /**
-   * Fired when the expansion of a row is changed. Called with a [[GridRowTreeNodeConfig]] object.
+   * Fired when the expansion of a row is changed. Called with a [[GridGroupNode]] object.
    * @ignore - do not document.
    */
-  rowExpansionChange: { params: GridRowTreeNodeConfig };
+  rowExpansionChange: { params: GridGroupNode };
   /**
    * Fired when the rendered rows index interval changes. Called with a [[GridRenderedRowsIntervalChangeParams]] object.
    */
@@ -405,17 +403,6 @@ export interface GridEventLookup
   cellEditStop: {
     params: GridCellEditStopParams;
     event: MuiBaseEvent;
-  };
-  /**
-   * Fired when the props of the edit input are committed.
-   */
-  cellEditCommit: { params: GridCellEditCommitParams; event: MuiBaseEvent };
-  /**
-   * Fired when the props of the edit cell changes.
-   */
-  editCellPropsChange: {
-    params: GridEditCellPropsParams;
-    event: React.SyntheticEvent<HTMLElement> | {};
   };
   /**
    * Fired when the row turns to edit mode.
