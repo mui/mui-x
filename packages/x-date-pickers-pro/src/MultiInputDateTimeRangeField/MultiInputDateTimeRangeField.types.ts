@@ -10,7 +10,7 @@ import {
 
 export interface UseMultiInputDateTimeRangeFieldParams<TDate, TChildProps extends {}> {
   sharedProps: Omit<TChildProps, keyof UseMultiInputDateTimeRangeFieldProps<TDate>> &
-  UseMultiInputDateTimeRangeFieldProps<TDate>;
+    UseMultiInputDateTimeRangeFieldProps<TDate>;
   startInputProps: TChildProps;
   endInputProps: TChildProps;
   startInputRef?: React.Ref<HTMLInputElement>;

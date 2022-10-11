@@ -25,7 +25,13 @@ export interface UseDateTimeFieldProps<TDate>
     YearValidationProps<TDate>,
     BaseDateValidationProps<TDate>,
     TimeValidationProps<TDate>,
-    BaseTimeValidationProps {}
+    BaseTimeValidationProps {
+  /**
+   * 12h/24h view for hour selection clock.
+   * @default `utils.is12HourCycleInCurrentLocale()`
+   */
+  ampm?: boolean;
+}
 
 export type UseDateTimeFieldDefaultizedProps<TDate> = DefaultizedProps<
   UseDateTimeFieldProps<TDate>,
