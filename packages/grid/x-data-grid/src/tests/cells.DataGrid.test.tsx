@@ -156,7 +156,7 @@ describe('<DataGrid /> - Cells', () => {
     expect(valueFormatter.lastCall.args[0].value).to.equal(true);
   });
 
-  it('should throw when focusing cell without updating the state', function test() {
+  it('should throw when focusing cell without updating the state', () => {
     render(
       <div style={{ width: 300, height: 500 }}>
         <DataGrid
