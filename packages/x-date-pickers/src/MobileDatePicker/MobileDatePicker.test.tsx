@@ -27,6 +27,7 @@ describe('<MobileDatePicker />', () => {
     render,
     clock,
     views: ['year', 'month', 'day'],
+    isLegacyPicker: true,
   }));
 
   it('allows to change only year', () => {

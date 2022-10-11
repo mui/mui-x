@@ -11,6 +11,5 @@ describe('<DateField /> validation', () => {
     views: ['year', 'month', 'day'],
     skip: ['day', 'month', 'year'],
     ignoredProps: ['minTime', 'maxTime'],
-    isFieldComponent: true,
   }));
 });

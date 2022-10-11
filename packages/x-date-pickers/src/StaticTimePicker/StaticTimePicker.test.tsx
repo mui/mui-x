@@ -28,8 +28,9 @@ describe('<StaticTimePicker />', () => {
   describeValidation(StaticTimePicker, () => ({
     render,
     clock,
-    views: ['hour', 'minutes'],
+    views: ['hours', 'minutes'],
     skip: ['textField'],
+    isLegacyPicker: true,
   }));
 
   describeConformance(

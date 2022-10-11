@@ -30,7 +30,8 @@ describe('<DesktopDateTimePicker />', () => {
   describeValidation(DesktopDateTimePicker, () => ({
     render,
     clock,
-    views: ['year', 'month', 'day', 'hour', 'minutes'],
+    views: ['year', 'month', 'day', 'hours', 'minutes'],
+    isLegacyPicker: true,
   }));
 
   ['readOnly', 'disabled'].forEach((prop) => {

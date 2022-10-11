@@ -11,6 +11,5 @@ describe('<TimeField /> validation', () => {
     views: ['hours', 'minutes'],
     skip: ['day', 'month', 'year'],
     ignoredProps: ['minDate', 'maxDate', 'shouldDisableDate'],
-    isFieldComponent: true,
   }));
 });

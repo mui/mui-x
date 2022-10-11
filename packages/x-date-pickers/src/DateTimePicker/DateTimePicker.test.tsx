@@ -23,7 +23,8 @@ describe('<DateTimePicker />', () => {
   describeValidation(DateTimePicker, () => ({
     render,
     clock,
-    views: ['year', 'month', 'day', 'hour', 'minutes'],
+    views: ['year', 'month', 'day', 'hours', 'minutes'],
+    isLegacyPicker: true,
   }));
 
   it('should handle controlled `onChange` in desktop mode', () => {

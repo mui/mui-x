@@ -28,7 +28,8 @@ describe('<MobileDateTimePicker />', () => {
   describeValidation(MobileDateTimePicker, () => ({
     render,
     clock,
-    views: ['year', 'month', 'day', 'hour', 'minutes'],
+    views: ['year', 'month', 'day', 'hours', 'minutes'],
+    isLegacyPicker: true,
   }));
 
   it('prop: open – overrides open state', () => {

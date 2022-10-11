@@ -20,8 +20,9 @@ describe('<StaticDateTimePicker />', () => {
   describeValidation(StaticDateTimePicker, () => ({
     render,
     clock,
-    views: ['year', 'month', 'day', 'hour', 'minutes'],
+    views: ['year', 'month', 'day', 'hours', 'minutes'],
     skip: ['textField'],
+    isLegacyPicker: true,
   }));
   it('should allow to select the same day and move to the next view', () => {
     const onChangeMock = spy();

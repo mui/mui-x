@@ -28,6 +28,7 @@ describe('<DesktopDatePicker />', () => {
     render,
     clock,
     views: ['year', 'month', 'day'],
+    isLegacyPicker: true,
   }));
 
   it('prop: components.OpenPickerIcon', () => {

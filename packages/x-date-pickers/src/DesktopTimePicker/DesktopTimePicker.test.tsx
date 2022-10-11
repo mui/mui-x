@@ -31,7 +31,8 @@ describe('<DesktopTimePicker />', () => {
   describeValidation(DesktopTimePicker, () => ({
     render,
     clock,
-    views: ['hour', 'minutes'],
+    views: ['hours', 'minutes'],
+    isLegacyPicker: true,
   }));
 
   describeConformance(

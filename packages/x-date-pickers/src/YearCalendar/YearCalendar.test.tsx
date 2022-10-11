@@ -16,7 +16,6 @@ describe('<YearCalendar />', () => {
     clock,
     views: ['year'],
     skip: ['textField'],
-    overrideDefault: { renderInput: undefined },
     name: 'YearPicker',
   }));
 

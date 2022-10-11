@@ -10,6 +10,5 @@ describe('<DateTimeField /> validation', () => {
     clock,
     views: ['year', 'month', 'day', 'hours', 'minutes'],
     skip: ['day', 'month', 'year'],
-    isFieldComponent: true,
   }));
 });

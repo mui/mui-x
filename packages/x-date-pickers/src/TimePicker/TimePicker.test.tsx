@@ -49,7 +49,8 @@ describe('<TimePicker />', () => {
   describeValidation(TimePicker, () => ({
     render,
     clock,
-    views: ['hour', 'minutes'],
+    views: ['hours', 'minutes'],
+    isLegacyPicker: true,
   }));
 
   it('should handle controlled `onChange` in desktop mode', () => {

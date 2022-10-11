@@ -31,7 +31,8 @@ describe('<MobileTimePicker />', () => {
   describeValidation(MobileTimePicker, () => ({
     render,
     clock,
-    views: ['hour', 'minutes'],
+    views: ['hours', 'minutes'],
+    isLegacyPicker: true,
   }));
 
   describeConformance(

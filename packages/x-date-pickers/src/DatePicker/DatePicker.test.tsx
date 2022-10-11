@@ -15,6 +15,7 @@ describe('<DatePicker />', () => {
     render,
     clock,
     views: ['year', 'month', 'day'],
+    isLegacyPicker: true,
   }));
 
   describe('prop: inputRef', () => {

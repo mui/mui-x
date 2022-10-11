@@ -6,16 +6,16 @@ import { adapterToUse } from 'test/utils/pickers-utils';
 
 function testTextFieldValidation(ElementToTest, propsToTest, getOptions) {
   describe('validation in textfield:', () => {
-    const { isFieldComponent } = getOptions();
+    const { isLegacyPicker } = getOptions();
 
-    const defaultProps = isFieldComponent
-      ? {}
-      : {
+    const defaultProps = isLegacyPicker
+      ? {
           onChange: () => {},
           renderInput: (params) => <TextField {...params} />,
           reduceAnimations: true,
           showToolbar: false,
-        };
+        }
+      : {};
 
     if (propsToTest.includes('shouldDisableDate')) {
       it('should apply shouldDisableDate', function test() {

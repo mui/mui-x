@@ -18,6 +18,7 @@ describe('<StaticDatePicker />', () => {
     clock,
     views: ['year', 'month', 'day'],
     skip: ['textField'],
+    isLegacyPicker: true,
   }));
 
   it('render proper month', () => {

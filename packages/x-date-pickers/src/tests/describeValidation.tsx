@@ -3,8 +3,27 @@ import testDayViewValidation from './testValidation/testDayViewValidation';
 import testMonthViewValidation from './testValidation/testMonthViewValidation';
 import testTextFieldValidation from './testValidation/testTextFieldValidation';
 import testYearViewValidation from './testValidation/testYearViewValidation';
+import {
+  BaseTimeValidationProps,
+  TimeValidationProps,
+  BaseDateValidationProps,
+  DayValidationProps,
+  MonthValidationProps,
+  YearValidationProps,
+} from '../internals/hooks/validation/models';
+import { CalendarOrClockPickerView } from '../internals/models/views';
 
-const defaultAvailableProps = [
+type ValidationProps =
+  | keyof (BaseTimeValidationProps &
+      TimeValidationProps<any> &
+      BaseDateValidationProps<any> &
+      DayValidationProps<any> &
+      MonthValidationProps<any> &
+      YearValidationProps<any>)
+  | 'minDateTime'
+  | 'maxDateTime';
+
+const defaultAvailableProps: ValidationProps[] = [
   // from now
   'disablePast',
   'disableFuture',
@@ -26,6 +45,8 @@ const defaultAvailableProps = [
   'minutesStep',
 ];
 
+type AvailableTests = 'year' | 'month' | 'day' | 'textField';
+
 const testsToRun = {
   year: testYearViewValidation,
   month: testMonthViewValidation,
@@ -33,13 +54,24 @@ const testsToRun = {
   textField: testTextFieldValidation,
 };
 
+interface ConformanceOptions {
+  render: any;
+  clock: any;
+  after?: () => void;
+  props?: any;
+  views?: CalendarOrClockPickerView[];
+  ignoredProps?: ValidationProps[];
+  skip?: AvailableTests[];
+  isLegacyPicker?: boolean;
+}
+
 /**
  * Tests various aspects of picker validation
  * components.
  * @param {React.ReactElement} minimalElement - the picker to test
  * @param {() => ConformanceOptions} getOptions
  */
-export default function describeValidation(minimalElement, getOptions) {
+export default function describeValidation(minimalElement, getOptions: () => ConformanceOptions) {
   describe('Pickers validation API', () => {
     const {
       after: runAfterHook = () => {},
@@ -50,7 +82,7 @@ export default function describeValidation(minimalElement, getOptions) {
     } = getOptions();
 
     const filteredTestsToRun = Object.keys(testsToRun).filter(
-      (testKey) => skip.indexOf(testKey) === -1,
+      (testKey) => skip.indexOf(testKey as AvailableTests) === -1,
     );
 
     after(runAfterHook);
@@ -60,7 +92,7 @@ export default function describeValidation(minimalElement, getOptions) {
         ...getOptions(),
         views,
         withDate: views.includes('year') || views.includes('month') || views.includes('day'),
-        withTime: views.includes('hour') || views.includes('minutes') || views.includes('secondes'),
+        withTime: views.includes('hours') || views.includes('minutes') || views.includes('seconds'),
       };
     }
 
