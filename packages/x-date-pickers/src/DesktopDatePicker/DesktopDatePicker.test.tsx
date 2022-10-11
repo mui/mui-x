@@ -14,14 +14,22 @@ import {
   withPickerControls,
   openPicker,
 } from 'test/utils/pickers-utils';
+import describeValidation from '@mui/x-date-pickers/tests/describeValidation';
 
 const WrappedDesktopDatePicker = withPickerControls(DesktopDatePicker)({
-  DialogProps: { TransitionComponent: FakeTransitionComponent },
+  components: { DesktopTransition: FakeTransitionComponent },
   renderInput: (params) => <TextField {...params} />,
 });
 
 describe('<DesktopDatePicker />', () => {
-  const { render } = createPickerRenderer({ clock: 'fake' });
+  const { render, clock } = createPickerRenderer({ clock: 'fake' });
+
+  describeValidation(DesktopDatePicker, () => ({
+    render,
+    clock,
+    views: ['year', 'month', 'day'],
+    isLegacyPicker: true,
+  }));
 
   it('prop: components.OpenPickerIcon', () => {
     function HomeIcon(props: SvgIconProps) {
@@ -145,13 +153,10 @@ describe('<DesktopDatePicker />', () => {
 
   it('prop `showToolbar` – renders toolbar in desktop mode', () => {
     render(
-      <DesktopDatePicker
+      <WrappedDesktopDatePicker
         open
         showToolbar
-        onChange={() => {}}
-        TransitionComponent={FakeTransitionComponent}
-        value={adapterToUse.date(new Date(2018, 0, 1))}
-        renderInput={(params) => <TextField {...params} />}
+        initialValue={adapterToUse.date(new Date(2018, 0, 1))}
       />,
     );
 
@@ -161,12 +166,10 @@ describe('<DesktopDatePicker />', () => {
   it('switches between views uncontrolled', () => {
     const handleViewChange = spy();
     render(
-      <DesktopDatePicker
+      <WrappedDesktopDatePicker
         open
         showToolbar
-        onChange={() => {}}
-        TransitionComponent={FakeTransitionComponent}
-        value={adapterToUse.date(new Date(2018, 0, 1))}
+        initialValue={adapterToUse.date(new Date(2018, 0, 1))}
         renderInput={(params) => <TextField {...params} />}
         onViewChange={handleViewChange}
       />,
@@ -179,22 +182,22 @@ describe('<DesktopDatePicker />', () => {
     expect(screen.getByLabelText('year view is open, switch to calendar view')).toBeVisible();
   });
 
-  describe('prop: PopperProps', () => {
+  describe('componentsProps: popper', () => {
     it('forwards onClick and onTouchStart', () => {
       const handleClick = spy();
       const handleTouchStart = spy();
       render(
-        <DesktopDatePicker
+        <WrappedDesktopDatePicker
           open
-          onChange={() => {}}
-          PopperProps={{
-            onClick: handleClick,
-            onTouchStart: handleTouchStart,
-            // @ts-expect-error `data-*` attributes are not recognized in props objects
-            'data-testid': 'popper',
+          componentsProps={{
+            popper: {
+              onClick: handleClick,
+              onTouchStart: handleTouchStart,
+              // @ts-expect-error `data-*` attributes are not recognized in props objects
+              'data-testid': 'popper',
+            },
           }}
-          renderInput={(params) => <TextField {...params} />}
-          value={null}
+          initialValue={null}
         />,
       );
       const popper = screen.getByTestId('popper');
@@ -207,22 +210,22 @@ describe('<DesktopDatePicker />', () => {
     });
   });
 
-  describe('prop: PaperProps', () => {
+  describe('componentsProps: desktopPaper', () => {
     it('forwards onClick and onTouchStart', () => {
       const handleClick = spy();
       const handleTouchStart = spy();
       render(
-        <DesktopDatePicker
+        <WrappedDesktopDatePicker
           open
-          onChange={() => {}}
-          PaperProps={{
-            onClick: handleClick,
-            onTouchStart: handleTouchStart,
-            // @ts-expect-error `data-*` attributes are not recognized in props objects
-            'data-testid': 'paper',
+          componentsProps={{
+            desktopPaper: {
+              onClick: handleClick,
+              onTouchStart: handleTouchStart,
+              // @ts-expect-error `data-*` attributes are not recognized in props objects
+              'data-testid': 'paper',
+            },
           }}
-          renderInput={(params) => <TextField {...params} />}
-          value={null}
+          initialValue={null}
         />,
       );
       const paper = screen.getByTestId('paper');
@@ -284,14 +287,14 @@ describe('<DesktopDatePicker />', () => {
         return (
           <React.Fragment>
             <div style={{ height: '200vh' }}>Spacer</div>
-            <DesktopDatePicker
-              value={adapterToUse.date(new Date(2018, 0, 1))}
+            <WrappedDesktopDatePicker
+              initialValue={adapterToUse.date(new Date(2018, 0, 1))}
               OpenPickerButtonProps={{ ref: anchorElRef }}
-              onChange={() => {}}
               onClose={handleClose}
               onOpen={handleOpen}
-              renderInput={(params) => <TextField {...params} />}
-              TransitionComponent={NoTransition}
+              components={{
+                DesktopTransition: NoTransition,
+              }}
             />
           </React.Fragment>
         );

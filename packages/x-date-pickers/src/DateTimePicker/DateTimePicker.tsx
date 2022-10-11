@@ -64,29 +64,16 @@ const DateTimePicker = React.forwardRef(function DateTimePicker<TDate>(
   ref: React.Ref<HTMLDivElement>,
 ) {
   const props = useThemeProps({ props: inProps, name: 'MuiDateTimePicker' });
-  const {
-    desktopModeMediaQuery = '@media (pointer: fine)',
-    DialogProps,
-    PopperProps,
-    TransitionComponent,
-    ...other
-  } = props;
+  const { desktopModeMediaQuery = '@media (pointer: fine)', ...other } = props;
 
   // defaults to `true` in environments where `window.matchMedia` would not be available (i.e. test/jsdom)
   const isDesktop = useMediaQuery(desktopModeMediaQuery, { defaultMatches: true });
 
   if (isDesktop) {
-    return (
-      <DesktopDateTimePicker
-        ref={ref}
-        PopperProps={PopperProps}
-        TransitionComponent={TransitionComponent}
-        {...other}
-      />
-    );
+    return <DesktopDateTimePicker ref={ref} {...other} />;
   }
 
-  return <MobileDateTimePicker ref={ref} DialogProps={DialogProps} {...other} />;
+  return <MobileDateTimePicker ref={ref} {...other} />;
 }) as DateTimePickerComponent;
 
 DateTimePicker.propTypes = {
@@ -151,10 +138,6 @@ DateTimePicker.propTypes = {
    * @example '@media (min-width: 720px)' or theme.breakpoints.up("sm")
    */
   desktopModeMediaQuery: PropTypes.string,
-  /**
-   * Props applied to the [`Dialog`](https://mui.com/material-ui/api/dialog/) element.
-   */
-  DialogProps: PropTypes.object,
   /**
    * If `true`, the picker and text field are disabled.
    * @default false
@@ -353,14 +336,6 @@ DateTimePicker.propTypes = {
    */
   orientation: PropTypes.oneOf(['landscape', 'portrait']),
   /**
-   * Paper props passed down to [Paper](https://mui.com/material-ui/api/paper/) component.
-   */
-  PaperProps: PropTypes.object,
-  /**
-   * Popper props passed down to [Popper](https://mui.com/material-ui/api/popper/) component.
-   */
-  PopperProps: PropTypes.object,
-  /**
    * Make picker read only.
    * @default false
    */
@@ -464,10 +439,6 @@ DateTimePicker.propTypes = {
    * @default 'Select date & time'
    */
   toolbarTitle: PropTypes.node,
-  /**
-   * Custom component for popper [Transition](https://mui.com/material-ui/transitions/#transitioncomponent-prop).
-   */
-  TransitionComponent: PropTypes.elementType,
   /**
    * The value of the picker.
    */

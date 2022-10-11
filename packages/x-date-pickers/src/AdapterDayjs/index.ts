@@ -4,6 +4,14 @@ import weekOfYear from 'dayjs/plugin/weekOfYear';
 import BaseAdapterDayjs from '@date-io/dayjs';
 import { DateIOFormats } from '@date-io/core/IUtils';
 import { MuiFormatTokenMap, MuiPickerFieldAdapter } from '../internals/models';
+import { buildWarning } from '../internals/utils/warning';
+
+const localeNotFoundWarning = buildWarning([
+  'Your locale has not been found.',
+  'Either the locale key is not a supported one. Locales supported by dayjs are available here: https://github.com/iamkun/dayjs/tree/dev/src/locale',
+  "Or you forget to import the locale with `require('dayjs/locale/{localeUsed}')`",
+  'fallback on English locale',
+]);
 
 const formatTokenMap: MuiFormatTokenMap = {
   YY: 'year',
@@ -46,7 +54,13 @@ export class AdapterDayjs extends BaseAdapterDayjs implements MuiPickerFieldAdap
    * We should use this one in the future to support all localized formats.
    */
   public expandFormat = (format: string) => {
-    const localeFormats = this.rawDayJsInstance.Ls[this.locale || 'en']?.formats;
+    const localeObject = this.rawDayJsInstance.Ls[this.locale || 'en'];
+
+    if (localeObject === undefined) {
+      localeNotFoundWarning();
+    }
+    const localeFormats =
+      localeObject === undefined ? this.rawDayJsInstance.Ls.en.formats : localeObject.formats;
 
     // @see https://github.com/iamkun/dayjs/blob/dev/src/plugin/localizedFormat/index.js
     const t = (formatBis: string) =>
