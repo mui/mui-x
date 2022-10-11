@@ -16,7 +16,7 @@ import {
 } from '../MobileTimePicker';
 
 export interface TimePickerSlotsComponent<TDate>
-  extends MobileTimePickerSlotsComponent,
+  extends MobileTimePickerSlotsComponent<TDate>,
     DesktopTimePickerSlotsComponent<TDate> {}
 
 export interface TimePickerSlotsComponentsProps

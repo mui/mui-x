@@ -263,11 +263,6 @@ function DateRangePickerViewRaw<TDate>(props: DateRangePickerViewProps<TDate>) {
           toggleMobileKeyboardView={toggleMobileKeyboardView}
           currentlySelectingRangeEnd={currentlySelectingRangeEnd}
           setCurrentlySelectingRangeEnd={setCurrentlySelectingRangeEnd}
-          isLandscape={false}
-          onChange={(newValue) => onDateChange(newValue, wrapperVariant, 'finish')}
-          view="day"
-          views={['day']}
-          onViewChange={() => {}}
         />
       )}
 

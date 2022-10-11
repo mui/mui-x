@@ -28,7 +28,10 @@ const useUtilityClasses = (ownerState: DateRangePickerToolbarProps<any>) => {
 };
 
 export interface DateRangePickerToolbarProps<TDate>
-  extends BaseToolbarProps<DateRange<TDate>>,
+  extends Omit<
+      BaseToolbarProps<DateRange<TDate>>,
+      'views' | 'view' | 'onViewChange' | 'onChange' | 'isLandscape'
+    >,
     CurrentlySelectingRangeEndProps {
   classes?: Partial<DateRangePickerToolbarClasses>;
 }
