@@ -225,12 +225,12 @@ export function DateRangePickerViewDesktop<TDate>(inProps: DateRangePickerViewDe
     changeMonth(utils.getPreviousMonth(currentMonth));
   }, [changeMonth, currentMonth, utils]);
 
-  const componentsForDayPicker = {
+  const componentsForDayCalendar = {
     Day: DateRangePickerDay,
     ...components,
   } as Partial<DayCalendarSlotsComponent<TDate>>;
 
-  const componentsPropsForDayPicker = {
+  const componentsPropsForDayCalendar = {
     ...componentsProps,
     day: (dayOwnerState) => {
       const { day } = dayOwnerState;
@@ -281,8 +281,8 @@ export function DateRangePickerViewDesktop<TDate>(inProps: DateRangePickerViewDe
               onSelectedDaysChange={handleSelectedDayChange}
               currentMonth={monthOnIteration}
               TransitionProps={CalendarTransitionProps}
-              components={componentsForDayPicker}
-              componentsProps={componentsPropsForDayPicker}
+              components={componentsForDayCalendar}
+              componentsProps={componentsPropsForDayCalendar}
             />
           </DateRangePickerViewDesktopContainer>
         );

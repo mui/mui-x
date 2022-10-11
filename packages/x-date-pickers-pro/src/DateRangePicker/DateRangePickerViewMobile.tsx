@@ -87,7 +87,7 @@ export function DateRangePickerViewMobile<TDate>(props: DesktopDateRangeCalendar
   const minDateWithDisabled = (disabled && start) || minDate;
   const maxDateWithDisabled = (disabled && end) || maxDate;
 
-  const componentsForDayPicker = {
+  const componentsForDayCalendar = {
     Day: DateRangePickerDay,
     ...components,
   } as Partial<DayCalendarSlotsComponent<TDate>>;
@@ -102,7 +102,7 @@ export function DateRangePickerViewMobile<TDate>(props: DesktopDateRangeCalendar
     [value, utils],
   );
 
-  const componentsPropsForDayPicker = {
+  const componentsPropsForDayCalendar = {
     ...componentsProps,
     day: (dayOwnerState) => {
       const { day } = dayOwnerState;
@@ -141,8 +141,8 @@ export function DateRangePickerViewMobile<TDate>(props: DesktopDateRangeCalendar
         selectedDays={value}
         onSelectedDaysChange={onSelectedDaysChange}
         onFocusedDayChange={doNothing}
-        components={componentsForDayPicker}
-        componentsProps={componentsPropsForDayPicker}
+        components={componentsForDayCalendar}
+        componentsProps={componentsPropsForDayCalendar}
       />
     </React.Fragment>
   );
