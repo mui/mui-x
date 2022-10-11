@@ -217,7 +217,7 @@ describe('<DateCalendar />', () => {
 
     it('should complet weeks when showDaysOutsideCurrentMonth=true', () => {
       render(
-        <CalendarPicker
+        <DateCalendar
           value={adapterToUse.date(new Date(2018, 0, 3, 11, 11, 11, 111))}
           onChange={() => {}}
           defaultCalendarMonth={adapterToUse.date(new Date(2018, 0, 1))}
@@ -230,7 +230,7 @@ describe('<DateCalendar />', () => {
 
     it('should complet weeks up to match `fixedWeekNumber`', () => {
       render(
-        <CalendarPicker
+        <DateCalendar
           value={adapterToUse.date(new Date(2018, 0, 3, 11, 11, 11, 111))}
           onChange={() => {}}
           defaultCalendarMonth={adapterToUse.date(new Date(2018, 0, 1))}
