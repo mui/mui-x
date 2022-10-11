@@ -59,6 +59,15 @@ const faIRPickers: Partial<PickersLocaleText<any>> = {
   // Table labels
   timeTableLabel: 'انتخاب تاریخ',
   dateTableLabel: 'انتخاب ساعت',
+
+  // Field section placeholders
+  // fieldYearPlaceholder: params => 'Y'.repeat(params.digitAmount),
+  // fieldMonthPlaceholder: params => params.contentType === 'letter' ? 'MMMM' : 'MM',
+  // fieldDayPlaceholder: () => 'DD',
+  // fieldHoursPlaceholder: () => 'hh',
+  // fieldMinutesPlaceholder: () => 'mm',
+  // fieldSecondsPlaceholder: () => 'ss',
+  // fieldMeridiemPlaceholder: () => 'aa',
 };
 
 export const faIR = getPickersLocalization(faIRPickers);

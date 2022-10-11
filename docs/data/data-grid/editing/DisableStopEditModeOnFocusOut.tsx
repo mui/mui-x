@@ -19,7 +19,6 @@ export default function DisableStopEditModeOnFocusOut() {
       <DataGrid
         rows={rows}
         columns={columns}
-        experimentalFeatures={{ newEditingApi: true }}
         onCellEditStop={(params: GridCellEditStopParams, event: MuiEvent) => {
           if (params.reason === GridCellEditStopReasons.cellFocusOut) {
             event.defaultMuiPrevented = true;

@@ -24,9 +24,9 @@ We'd like to offer a big thanks to the 10 contributors who made this release pos
   You can now use the aggregation without the `experimentalFeatures.aggregation` flag enabled.
 
   ```diff
-  <DataGridPremium
+   <DataGridPremium
   -  experimentalFeatures={{ aggregation: true }}
-  />
+   />
   ```
 
   The aggregation of the columns through the column menu is now enabled by default on `DataGridPremium`. You can set `disableAggregation={true}` to disable it.
@@ -49,10 +49,10 @@ We'd like to offer a big thanks to the 10 contributors who made this release pos
 
   ```diff
   // Same for any other date, date time or date range picker.
-  <DatePicker
+   <DatePicker
   -  renderDay={(_, dayProps) => <CustomDay {...dayProps} />}
   +  components={{ Day: CustomDay }}
-  />
+   />
   ```
 
 #### Changes
@@ -114,7 +114,7 @@ We'd like to offer a big thanks to the 8 contributors who made this release poss
   Here is an example of the old and new approach showing how to apply a custom value formatter in groups for the grouping column:
 
   ```diff
-   <DataGridPremium 
+   <DataGridPremium
      groupingColDef={() => ({
        valueFormatter: (params) => {
          if (params.id == null) {
@@ -299,9 +299,9 @@ You can find more information about the new api, including how to set those tran
 - The component slots `LeftArrowButton` and `RightArrowButton` have been renamed `PreviousIconButton` and `NextIconButton` to better describe there usage:
 
   ```diff
-  <DatePicker 
+  <DatePicker
     components={{
-  -   LeftArrowButton: CustomButton,  
+  -   LeftArrowButton: CustomButton,
   +   PreviousIconButton: CustomButton,
 
   -   RightArrowButton: CustomButton,
@@ -309,7 +309,7 @@ You can find more information about the new api, including how to set those tran
     }}
 
     componentsProps={{
-  -   leftArrowButton: {},  
+  -   leftArrowButton: {},
   +   previousIconButton: {},
 
   -   rightArrowButton: {},

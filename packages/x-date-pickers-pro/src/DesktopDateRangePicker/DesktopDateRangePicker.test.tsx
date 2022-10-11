@@ -24,7 +24,7 @@ import {
 } from 'test/utils/pickers-utils';
 
 const WrappedDesktopDateRangePicker = withPickerControls(DesktopDateRangePicker)({
-  DialogProps: { TransitionComponent: FakeTransitionComponent },
+  components: { DesktopTransition: FakeTransitionComponent },
   renderInput: (startProps, endProps) => (
     <React.Fragment>
       <TextField {...startProps} />
@@ -126,6 +126,7 @@ describe('<DesktopDateRangePicker />', () => {
     });
   });
 
+  // TODO: Remove on new pickers, has been moved to `DateRangeCalendar` tests
   it('should highlight the selected range of dates', () => {
     render(
       <WrappedDesktopDateRangePicker
@@ -141,7 +142,7 @@ describe('<DesktopDateRangePicker />', () => {
     expect(screen.getAllByMuiTest('DateRangeHighlight')).to.have.length(31);
   });
 
-  // TODO: Move to DayPicker test file ?
+  // TODO: Remove on new pickers, has been moved to `DateRangeCalendar` tests
   describe('selection behavior', () => {
     it('should select the range from the next month', () => {
       const handleChange = spy();
@@ -341,16 +342,15 @@ describe('<DesktopDateRangePicker />', () => {
     render(
       <ThemeProvider theme={theme}>
         <LocalizationProvider dateAdapter={AdapterClassToUse}>
-          <DesktopDateRangePicker
+          <WrappedDesktopDateRangePicker
+            initialValue={[null, null]}
+            // We set the variant to standard to avoid having the label rendered in two places.
             renderInput={(startProps, endProps) => (
               <React.Fragment>
                 <TextField {...startProps} variant="standard" />
                 <TextField {...endProps} variant="standard" />
               </React.Fragment>
             )}
-            onChange={() => {}}
-            TransitionComponent={FakeTransitionComponent}
-            value={[null, null]}
           />
         </LocalizationProvider>
       </ThemeProvider>,
@@ -360,6 +360,7 @@ describe('<DesktopDateRangePicker />', () => {
     expect(screen.queryByText('Fim')).not.to.equal(null);
   });
 
+  // TODO: Remove on new pickers, has been moved to `DateRangeCalendar` tests
   describe('Component slots', () => {
     it('slot: `Day` - renders custom day', () => {
       render(
@@ -377,6 +378,7 @@ describe('<DesktopDateRangePicker />', () => {
     });
   });
 
+  // TODO: Remove on new pickers, has been moved to `DateRangeCalendar` tests
   it('prop: calendars - should render the provided amount of calendars', () => {
     render(<WrappedDesktopDateRangePicker calendars={3} initialValue={[null, null]} />);
 
@@ -411,6 +413,7 @@ describe('<DesktopDateRangePicker />', () => {
     expect(screen.queryByRole('dialog')).to.equal(null);
   });
 
+  // TODO: Remove on new pickers, has been moved to `DateRangeCalendar` tests
   describe('prop: disableAutoMonthSwitching', () => {
     it('should go to the month of the end date when changing the start date', () => {
       render(
@@ -462,22 +465,22 @@ describe('<DesktopDateRangePicker />', () => {
     });
   });
 
-  describe('prop: PopperProps', () => {
+  describe('componentsProps: popper', () => {
     it('should forward onClick and onTouchStart', () => {
       const handleClick = spy();
       const handleTouchStart = spy();
       render(
-        <DesktopDateRangePicker
+        <WrappedDesktopDateRangePicker
           open
-          onChange={() => {}}
-          PopperProps={{
-            onClick: handleClick,
-            onTouchStart: handleTouchStart,
-            // @ts-expect-error `data-*` attributes are not recognized in props objects
-            'data-testid': 'popper',
+          initialValue={[null, null]}
+          componentsProps={{
+            popper: {
+              onClick: handleClick,
+              onTouchStart: handleTouchStart,
+              // @ts-expect-error `data-*` attributes are not recognized in props objects
+              'data-testid': 'popper',
+            },
           }}
-          renderInput={(params) => <TextField {...params} />}
-          value={[null, null]}
         />,
       );
       const popper = screen.getByTestId('popper');

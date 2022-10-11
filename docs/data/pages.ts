@@ -23,6 +23,7 @@ const pages: MuiPage[] = [
       { pathname: '/x/react-data-grid/demo' },
       { pathname: '/x/react-data-grid/getting-started' },
       { pathname: '/x/react-data-grid/migration-v4', title: 'Migration from v4' },
+      { pathname: '/x/react-data-grid/migration-v5', title: 'Migration from v5' },
       { pathname: '/x/react-data-grid/layout' },
       {
         pathname: '/x/react-data-grid/columns',
@@ -157,6 +158,7 @@ const pages: MuiPage[] = [
       },
       { pathname: '/x/react-date-pickers/date-time-picker' },
       { pathname: '/x/react-date-pickers/time-picker' },
+      { pathname: '/x/react-date-pickers/validation' },
       { pathname: '/x/react-date-pickers/localization' },
       { pathname: '/x/react-date-pickers/custom-components' },
       {

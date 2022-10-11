@@ -29,7 +29,7 @@ export const rangeFieldValueManager: Omit<
 
     return [prevReferenceValue[1], value[1]];
   },
-  getSectionsFromValue: (utils, prevSections, [start, end], format) => {
+  getSectionsFromValue: (utils, localeText, prevSections, [start, end], format) => {
     const prevDateRangeSections =
       prevSections == null
         ? { startDate: null, endDate: null }
@@ -42,7 +42,7 @@ export const rangeFieldValueManager: Omit<
         return prevDateSections;
       }
 
-      return splitFormatIntoSections(utils, format, newDate);
+      return splitFormatIntoSections(utils, localeText, format, newDate);
     };
 
     const rawSectionsOfStartDate = getSections(start, prevDateRangeSections.startDate);
@@ -113,13 +113,6 @@ export const rangeFieldValueManager: Omit<
             ? state.referenceValue
             : updateDateInRange(newActiveDate, state.referenceValue),
       }),
-      setActiveDateAsInvalid: () => {
-        if (index === 0) {
-          return [null, state.value[1]];
-        }
-
-        return [state.value[0], null];
-      },
     };
   },
   hasError: (error) => error[0] != null || error[1] != null,
