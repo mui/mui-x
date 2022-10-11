@@ -7,4 +7,7 @@ export * from './DesktopDateRangePicker';
 export * from './MobileDateRangePicker';
 export * from './StaticDateRangePicker';
 
+// Calendars
+export * from './DateRangeCalendar';
+
 export type { DateRangeValidationError } from './internal/hooks/validation/useDateRangeValidation';
