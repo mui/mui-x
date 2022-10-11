@@ -16,18 +16,15 @@ import { CalendarOrClockPicker } from '../internals/components/CalendarOrClockPi
 import { useDateValidation } from '../internals/hooks/validation/useDateValidation';
 import { KeyboardDateInput } from '../internals/components/KeyboardDateInput';
 import { usePickerState } from '../internals/hooks/usePickerState';
-import {
-  CalendarPickerSlotsComponent,
-  CalendarPickerSlotsComponentsProps,
-} from '../CalendarPicker';
+import { DateCalendarSlotsComponent, DateCalendarSlotsComponentsProps } from '../DateCalendar';
 
 export interface DesktopDatePickerSlotsComponent<TDate>
   extends DesktopWrapperSlotsComponent,
-    CalendarPickerSlotsComponent<TDate> {}
+    DateCalendarSlotsComponent<TDate> {}
 
 export interface DesktopDatePickerSlotsComponentsProps<TDate>
   extends DesktopWrapperSlotsComponentsProps,
-    CalendarPickerSlotsComponentsProps<TDate> {}
+    DateCalendarSlotsComponentsProps<TDate> {}
 
 export interface DesktopDatePickerProps<TDate>
   extends Omit<BaseDatePickerProps<TDate>, 'components' | 'componentsProps'>,

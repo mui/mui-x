@@ -41,8 +41,11 @@ const useDefaultizedDateTimeField = <TDate, AdditionalProps extends {}>(
     disablePast: props.disablePast ?? false,
     disableFuture: props.disableFuture ?? false,
     format: props.format ?? defaultFormat,
-    minDate: applyDefaultDate(utils, props.minDate, defaultDates.minDate),
-    maxDate: applyDefaultDate(utils, props.maxDate, defaultDates.maxDate),
+    disableIgnoringDatePartForTimeValidation: Boolean(props.minDateTime || props.maxDateTime),
+    minDate: applyDefaultDate(utils, props.minDateTime ?? props.minDate, defaultDates.minDate),
+    maxDate: applyDefaultDate(utils, props.maxDateTime ?? props.maxDate, defaultDates.maxDate),
+    minTime: props.minDateTime ?? props.minTime,
+    maxTime: props.maxDateTime ?? props.maxTime,
   } as any;
 };
 
@@ -66,6 +69,8 @@ export const useDateTimeField = <TDate, TChildProps extends {}>({
     disablePast,
     minTime,
     maxTime,
+    minDateTime,
+    maxDateTime,
     minutesStep,
     disableIgnoringDatePartForTimeValidation,
     shouldDisableTime,

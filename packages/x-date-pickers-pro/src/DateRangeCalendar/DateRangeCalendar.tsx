@@ -11,9 +11,9 @@ import {
   applyDefaultDate,
   BaseDateValidationProps,
   DAY_MARGIN,
-  DayPicker,
-  DayPickerSlotsComponent,
-  DayPickerSlotsComponentsProps,
+  DayCalendar,
+  DayCalendarSlotsComponent,
+  DayCalendarSlotsComponentsProps,
   defaultReduceAnimations,
   PickersArrowSwitcher,
   PickersCalendarHeader,
@@ -74,10 +74,10 @@ const DateRangeCalendarArrowSwitcher = styled(PickersArrowSwitcher)({
 const DAY_RANGE_SIZE = 40;
 const weeksContainerHeight = (DAY_RANGE_SIZE + DAY_MARGIN * 2) * 6;
 
-const DateRangeCalendarDayPicker = styled(DayPicker)({
+const DayCalendarForRange = styled(DayCalendar)({
   minWidth: 312,
   minHeight: weeksContainerHeight,
-}) as typeof DayPicker;
+}) as typeof DayCalendar;
 
 function useDateRangeCalendarDefaultizedProps<TDate>(
   props: DateRangeCalendarProps<TDate>,
@@ -322,12 +322,12 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
     }
   };
 
-  const componentsForDayPicker = {
+  const componentsForDayCalendar = {
     Day: DateRangePickerDay,
     ...components,
-  } as Partial<DayPickerSlotsComponent<TDate>>;
+  } as Partial<DayCalendarSlotsComponent<TDate>>;
 
-  const componentsPropsForDayPicker = {
+  const componentsPropsForDayCalendar = {
     ...componentsProps,
     day: (dayOwnerState) => {
       const { day } = dayOwnerState;
@@ -343,7 +343,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
         ...(resolveComponentProps(componentsProps?.day, dayOwnerState) ?? {}),
       };
     },
-  } as Partial<DayPickerSlotsComponentsProps<TDate>>;
+  } as Partial<DayCalendarSlotsComponentsProps<TDate>>;
 
   return (
     <DateRangeCalendarRoot
@@ -398,7 +398,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
               </DateRangeCalendarArrowSwitcher>
             )}
 
-            <DateRangeCalendarDayPicker<TDate>
+            <DayCalendarForRange<TDate>
               key={index}
               {...calendarState}
               {...baseDateValidationProps}
@@ -415,8 +415,8 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
               dayOfWeekFormatter={dayOfWeekFormatter}
               loading={loading}
               renderLoading={renderLoading}
-              components={componentsForDayPicker}
-              componentsProps={componentsPropsForDayPicker}
+              components={componentsForDayCalendar}
+              componentsProps={componentsPropsForDayCalendar}
               autoFocus={autoFocus}
             />
           </DateRangeCalendarMonthContainer>

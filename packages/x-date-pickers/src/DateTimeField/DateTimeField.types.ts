@@ -31,6 +31,14 @@ export interface UseDateTimeFieldProps<TDate>
    * @default `utils.is12HourCycleInCurrentLocale()`
    */
   ampm?: boolean;
+  /**
+   * Minimal selectable moment of time with binding to date, to set min time in each day use `minTime`.
+   */
+  minDateTime?: TDate;
+  /**
+   * Maximal selectable moment of time with binding to date, to set max time in each day use `maxTime`.
+   */
+  maxDateTime?: TDate;
 }
 
 export type UseDateTimeFieldDefaultizedProps<TDate> = DefaultizedProps<
