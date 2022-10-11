@@ -130,7 +130,6 @@ export const useField = <
         return;
       }
       event.preventDefault();
-      return;
     }
 
     updateValueFromValueStr(pastedValue);
@@ -266,11 +265,6 @@ export const useField = <
         setSelectedSections(selectedSectionIndexes.startIndex + 1);
       }
     } else {
-      if (keyPressed.length > 1) {
-        // TODO: Might be able to support it in some scenario
-        return;
-      }
-
       const getNewSectionValueStr = (): string => {
         if (activeSection.contentType === 'digit') {
           return activeSection.value;
