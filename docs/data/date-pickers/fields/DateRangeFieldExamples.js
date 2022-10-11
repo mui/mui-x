@@ -8,6 +8,8 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { Unstable_SingleInputDateRangeField as SingleInputDateRangeField } from '@mui/x-date-pickers-pro/SingleInputDateRangeField';
 import { Unstable_MultiInputDateRangeField as MultiInputDateRangeField } from '@mui/x-date-pickers-pro/MultiInputDateRangeField';
+import { Unstable_MultiInputTimeRangeField as MultiInputTimeRangeField } from '@mui/x-date-pickers-pro/MultiInputTimeRangeField';
+import { Unstable_MultiInputDateTimeRangeField as MultiInputDateTimeRangeField } from '@mui/x-date-pickers-pro/MultiInputDateTimeRangeField';
 
 const GridItem = ({ label, children, spacing = 1 }) => {
   return (
@@ -40,6 +42,12 @@ export default function DateRangeFieldExamples() {
         </GridItem>
         <GridItem label="MultiInputDateRangeField">
           <MultiInputDateRangeField defaultValue={[date1, date2]} />
+        </GridItem>
+        <GridItem label="MultiInputTimeRangeField">
+          <MultiInputTimeRangeField defaultValue={[date1, date2]} />
+        </GridItem>
+        <GridItem label="MultiInputDateTimeRangeField">
+          <MultiInputDateTimeRangeField defaultValue={[date1, date2]} />
         </GridItem>
       </Grid>
     </LocalizationProvider>

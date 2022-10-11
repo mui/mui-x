@@ -2,13 +2,13 @@
 title: React Date Field component
 ---
 
-# Date field
+# Date Field
 
-<p class="description">The date field let the user select a date with the keyboard.</p>
+<p class="description">The Date Field let the user select a date with the keyboard.</p>
 
 :::warning
 This component is unstable.
-We might do some breaking change on its props to have the best component possible by the time of the stable release.
+They might receive breaking changes on their props to have the best components possible by the time of the stable release.
 :::
 
 ## Basic usage

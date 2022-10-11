@@ -4,7 +4,7 @@ title: React Fields components
 
 # Fields
 
-<p class="description">The fields components let the user select a date / date range with the keyboard.</p>
+<p class="description">The field components let the user input date and time values with a keyboard and refined keyboard navigation.</p>
 
 :::warning
 These components are unstable.
@@ -13,7 +13,8 @@ We might do some breaking change on their props to have the best components poss
 
 ## Introduction
 
-The fields are React components that lets you enter a date with the keyboard, without any modal or dropdown UI.
+The fields are React components that let you enter a date or time with the keyboard, without using any modal or dropdown UI.
+They provide refined navigation through arrow keys and support advanced behaviors like localization and validation.
 
 ### Fields to edit a single element
 
@@ -22,6 +23,10 @@ The fields are React components that lets you enter a date with the keyboard, wi
 ### Fields to edit a range
 
 All fields to edit a range are available in a single input version and in a multi input version.
+
+:::info
+The single input version of the Time Range Field and the Date Time Range Field will soon be available.
+:::
 
 {{"demo": "DateRangeFieldExamples.js", "defaultCodeOpen": false}}
 
@@ -83,6 +88,6 @@ You need to make sure the input is focused before imperatively updating the sele
 {{"demo": "ControlledSelectedSections.js", "defaultCodeOpen": false }}
 
 :::warning
-For range fields, you will not be able to use the string format since each section is present twice.
+For range fields, you can't use the string format since each section is present twice.
 We will add new apis in the future to better support this use case.
 :::

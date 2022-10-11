@@ -2,13 +2,13 @@
 title: React Time Field component
 ---
 
-# Time field
+# Time Field
 
-<p class="description">The time field lets the user select a time with the keyboard.</p>
+<p class="description">The Time Field lets the user select a time with the keyboard.</p>
 
 :::warning
 This component is unstable.
-We might do some breaking change on its props to have the best component possible by the time of the stable release.
+They might receive breaking changes on their props to have the best components possible by the time of the stable release.
 :::
 
 ## Basic usage
