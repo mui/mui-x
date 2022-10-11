@@ -202,13 +202,14 @@ export function CalendarOrClockPicker<TDate, View extends CalendarOrClockPickerV
       {shouldRenderToolbar && !!Toolbar && (
         <Toolbar
           {...componentsProps?.toolbar}
-          {...other}
-          views={views}
           isLandscape={isLandscape}
-          value={value}
           onChange={handleDateChange}
-          setOpenView={setOpenView as (view: CalendarOrClockPickerView) => void}
-          openView={openView}
+          value={value}
+          view={openView}
+          onViewChange={setOpenView as (view: CalendarOrClockPickerView) => void}
+          views={views}
+          disabled={other.disabled}
+          readOnly={other.readOnly}
           isMobileKeyboardViewOpen={isMobileKeyboardViewOpen}
           toggleMobileKeyboardView={toggleMobileKeyboardView}
         />

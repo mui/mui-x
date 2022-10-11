@@ -10,10 +10,6 @@ import { ExportedDateInputProps } from '../internals/components/PureDateInput';
 import { CalendarOrClockPickerView } from '../internals/models';
 import { PickerStateValueManager } from '../internals/hooks/usePickerState';
 import { applyDefaultDate, replaceInvalidDateByNull } from '../internals/utils/date-utils';
-import {
-  BaseToolbarProps,
-  ExportedBaseToolbarProps,
-} from '../internals/models/props/baseToolbarProps';
 import { DefaultizedProps } from '../internals/models/helpers';
 import {
   BaseDateValidationProps,
@@ -23,7 +19,11 @@ import {
   CalendarOrClockPickerSlotsComponent,
   CalendarOrClockPickerSlotsComponentsProps,
 } from '../internals/components/CalendarOrClockPicker';
-import { DateTimePickerToolbar } from './DateTimePickerToolbar';
+import {
+  DateTimePickerToolbar,
+  DateTimePickerToolbarProps,
+  ExportedDateTimeToolbarProps,
+} from './DateTimePickerToolbar';
 
 export interface BaseDateTimePickerSlotsComponent<TDate>
   extends CalendarOrClockPickerSlotsComponent<TDate> {
@@ -31,12 +31,12 @@ export interface BaseDateTimePickerSlotsComponent<TDate>
    * Custom component for the toolbar rendered above the views.
    * @default DateTimePickerToolbar
    */
-  Toolbar?: React.JSXElementConstructor<BaseToolbarProps<TDate, TDate | null>>;
+  Toolbar?: React.JSXElementConstructor<DateTimePickerToolbarProps<TDate>>;
 }
 
 export interface BaseDateTimePickerSlotsComponentsProps<TDate>
   extends CalendarOrClockPickerSlotsComponentsProps<TDate> {
-  toolbar?: ExportedBaseToolbarProps;
+  toolbar?: ExportedDateTimeToolbarProps;
 }
 
 export interface BaseDateTimePickerProps<TDate>
@@ -158,7 +158,12 @@ export function useDateTimePickerDefaultizedProps<
     },
     componentsProps: {
       ...themeProps.componentsProps,
-      toolbar: { toolbarTitle: themeProps.label, ...themeProps.componentsProps?.toolbar },
+      toolbar: {
+        toolbarTitle: themeProps.label,
+        ampm,
+        ampmInClock: themeProps.ampmInClock,
+        ...themeProps.componentsProps?.toolbar,
+      },
     },
   };
 }

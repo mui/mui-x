@@ -13,25 +13,25 @@ import { BasePickerProps } from '../internals/models/props/basePickerProps';
 import { ExportedDateInputProps } from '../internals/components/PureDateInput';
 import { ClockPickerView } from '../internals/models';
 import { PickerStateValueManager } from '../internals/hooks/usePickerState';
-import {
-  BaseToolbarProps,
-  ExportedBaseToolbarProps,
-} from '../internals/models/props/baseToolbarProps';
 import { DefaultizedProps } from '../internals/models/helpers';
 import { replaceInvalidDateByNull } from '../internals/utils/date-utils';
 import { BaseTimeValidationProps } from '../internals/hooks/validation/models';
-import { TimePickerToolbar } from './TimePickerToolbar';
+import {
+  TimePickerToolbarProps,
+  ExportedTimePickerToolbarProps,
+  TimePickerToolbar,
+} from './TimePickerToolbar';
 
 export interface BaseTimePickerSlotsComponent<TDate> extends ClockPickerSlotsComponent {
   /**
    * Custom component for the toolbar rendered above the views.
    * @default TimePickerToolbar
    */
-  Toolbar?: React.JSXElementConstructor<BaseToolbarProps<TDate, TDate | null>>;
+  Toolbar?: React.JSXElementConstructor<TimePickerToolbarProps<TDate>>;
 }
 
 export interface BaseTimePickerSlotsComponentsProps extends ClockPickerSlotsComponentsProps {
-  toolbar?: ExportedBaseToolbarProps;
+  toolbar?: ExportedTimePickerToolbarProps;
 }
 
 export interface BaseTimePickerProps<TDate>
@@ -109,7 +109,12 @@ export function useTimePickerDefaultizedProps<TDate, Props extends BaseTimePicke
     },
     componentsProps: {
       ...themeProps.componentsProps,
-      toolbar: { toolbarTitle: themeProps.label, ...themeProps.componentsProps?.toolbar },
+      toolbar: {
+        toolbarTitle: themeProps.label,
+        ampm,
+        ampmInClock: themeProps.ampmInClock,
+        ...themeProps.componentsProps?.toolbar,
+      },
     },
   };
 }

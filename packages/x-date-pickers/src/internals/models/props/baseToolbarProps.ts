@@ -1,21 +1,20 @@
 import * as React from 'react';
 import { CalendarOrClockPickerView } from '../views';
 import type { PickerOnChangeFn } from '../../hooks/useViews';
-import type { ExportedDateCalendarProps } from '../../../DateCalendar/DateCalendar';
-import type { ExportedClockPickerProps } from '../../../ClockPicker/ClockPicker';
-import { PickerStatePickerProps } from '../../hooks/usePickerState';
 
-export interface BaseToolbarProps<TDate, TValue>
-  extends ExportedBaseToolbarProps,
-    ExportedDateCalendarProps<TDate>,
-    ExportedClockPickerProps<TDate>,
-    Omit<PickerStatePickerProps<TValue>, 'onDateChange'> {
-  ampmInClock?: boolean;
+export interface BaseToolbarProps<TDate, TValue> extends ExportedBaseToolbarProps {
   isLandscape: boolean;
   onChange: PickerOnChangeFn<TDate>;
-  openView: CalendarOrClockPickerView;
-  setOpenView: (view: CalendarOrClockPickerView) => void;
+  value: TValue;
+  view: CalendarOrClockPickerView;
+  onViewChange: (view: CalendarOrClockPickerView) => void;
   views: readonly CalendarOrClockPickerView[];
+  disabled?: boolean;
+  readOnly?: boolean;
+  // TODO v6: Remove
+  isMobileKeyboardViewOpen: boolean;
+  // TODO v6: Remove
+  toggleMobileKeyboardView: () => void;
 }
 
 export interface ExportedBaseToolbarProps {

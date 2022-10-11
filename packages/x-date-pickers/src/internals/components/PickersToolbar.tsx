@@ -17,11 +17,10 @@ import {
 export interface PickersToolbarProps<TDate, TValue>
   extends Pick<
     BaseToolbarProps<TDate, TValue>,
-    'isMobileKeyboardViewOpen' | 'toggleMobileKeyboardView'
+    'isMobileKeyboardViewOpen' | 'toggleMobileKeyboardView' | 'isLandscape'
   > {
   className?: string;
   viewType?: 'calendar' | 'clock';
-  isLandscape: boolean;
   landscapeDirection?: 'row' | 'column';
   toolbarTitle: React.ReactNode;
   classes?: Partial<PickersToolbarClasses>;

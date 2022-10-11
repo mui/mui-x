@@ -13,13 +13,13 @@ import { ExportedDateInputProps } from '../internals/components/PureDateInput';
 import { BasePickerProps } from '../internals/models/props/basePickerProps';
 import { PickerStateValueManager } from '../internals/hooks/usePickerState';
 import { applyDefaultDate, replaceInvalidDateByNull } from '../internals/utils/date-utils';
-import {
-  BaseToolbarProps,
-  ExportedBaseToolbarProps,
-} from '../internals/models/props/baseToolbarProps';
 import { DefaultizedProps } from '../internals/models/helpers';
 import { BaseDateValidationProps } from '../internals/hooks/validation/models';
-import { DatePickerToolbar } from './DatePickerToolbar';
+import {
+  DatePickerToolbar,
+  DatePickerToolbarProps,
+  ExportedDatePickerToolbarProps,
+} from './DatePickerToolbar';
 import { isYearOnlyView, isYearAndMonthViews } from '../internals/utils/views';
 
 export interface BaseDatePickerSlotsComponent<TDate> extends DateCalendarSlotsComponent<TDate> {
@@ -27,12 +27,12 @@ export interface BaseDatePickerSlotsComponent<TDate> extends DateCalendarSlotsCo
    * Custom component for the toolbar rendered above the views.
    * @default DatePickerToolbar
    */
-  Toolbar?: React.JSXElementConstructor<BaseToolbarProps<TDate, TDate | null>>;
+  Toolbar?: React.JSXElementConstructor<DatePickerToolbarProps<TDate>>;
 }
 
 export interface BaseDatePickerSlotsComponentsProps<TDate>
   extends DateCalendarSlotsComponentsProps<TDate> {
-  toolbar?: ExportedBaseToolbarProps;
+  toolbar?: ExportedDatePickerToolbarProps;
 }
 
 export interface BaseDatePickerProps<TDate>
