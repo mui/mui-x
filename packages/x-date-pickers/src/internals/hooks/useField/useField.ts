@@ -122,16 +122,25 @@ export const useField = <
       selectedSectionIndexes.startIndex === selectedSectionIndexes.endIndex
     ) {
       const activeSection = state.sections[selectedSectionIndexes.startIndex];
+
+      const lettersOnly = /^[a-zA-Z]+$/.test(pastedValue);
+      const digitsOnly = /^[0-9]+$/.test(pastedValue);
       const isValidPastedValue =
-        (activeSection.contentType === 'letter' && /^[a-zA-Z]+$/.test(pastedValue)) ||
-        (activeSection.contentType === 'digit' && /^[0-9]+$/.test(pastedValue));
+        (activeSection.contentType === 'letter' && lettersOnly) ||
+        (activeSection.contentType === 'digit' && digitsOnly);
       if (isValidPastedValue) {
         // Early return to let the paste update section, value
         return;
       }
-      event.preventDefault();
+      if (lettersOnly || digitsOnly) {
+        // The pasted value correspond to a single section but not the expected type
+        // skip the modification
+        event.preventDefault();
+        return;
+      }
     }
 
+    event.preventDefault();
     updateValueFromValueStr(pastedValue);
   });
 
