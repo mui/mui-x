@@ -4,7 +4,7 @@ import { spy } from 'sinon';
 import TextField from '@mui/material/TextField';
 import { fireEvent, screen, userEvent } from '@mui/monorepo/test/utils';
 import { PickersDay } from '@mui/x-date-pickers/PickersDay';
-import { CalendarPickerSkeleton } from '@mui/x-date-pickers/CalendarPickerSkeleton';
+import { DayCalendarSkeleton } from '@mui/x-date-pickers/DayCalendarSkeleton';
 import { MobileDatePicker } from '@mui/x-date-pickers/MobileDatePicker';
 import {
   createPickerRenderer,
@@ -93,7 +93,7 @@ describe('<MobileDatePicker />', () => {
     render(
       <MobileDatePicker
         loading
-        renderLoading={() => <CalendarPickerSkeleton data-testid="custom-loading" />}
+        renderLoading={() => <DayCalendarSkeleton data-testid="custom-loading" />}
         open
         onChange={() => {}}
         renderInput={(params) => <TextField {...params} />}

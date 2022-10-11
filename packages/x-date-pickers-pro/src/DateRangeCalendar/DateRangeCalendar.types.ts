@@ -4,9 +4,9 @@ import { Theme } from '@mui/material/styles';
 import {
   BaseDateValidationProps,
   DefaultizedProps,
-  ExportedDayPickerProps,
-  DayPickerSlotsComponent,
-  DayPickerSlotsComponentsProps,
+  ExportedDayCalendarProps,
+  DayCalendarSlotsComponent,
+  DayCalendarSlotsComponentsProps,
   PickersArrowSwitcherSlotsComponent,
   PickersArrowSwitcherSlotsComponentsProps,
   PickerSelectionState,
@@ -19,7 +19,7 @@ export type DateRangePosition = 'start' | 'end';
 
 export interface DateRangeCalendarSlotsComponent<TDate>
   extends PickersArrowSwitcherSlotsComponent,
-    Omit<DayPickerSlotsComponent<TDate>, 'Day'> {
+    Omit<DayCalendarSlotsComponent<TDate>, 'Day'> {
   /**
    * Custom component for day in range pickers.
    * Check the [DateRangePickersDay](https://mui.com/x/api/date-pickers/date-range-picker-day/) component.
@@ -30,10 +30,10 @@ export interface DateRangeCalendarSlotsComponent<TDate>
 
 export interface DateRangeCalendarSlotsComponentsProps<TDate>
   extends PickersArrowSwitcherSlotsComponentsProps,
-    Omit<DayPickerSlotsComponentsProps<TDate>, 'Day'> {}
+    Omit<DayCalendarSlotsComponentsProps<TDate>, 'Day'> {}
 
 export interface DateRangeCalendarProps<TDate>
-  extends ExportedDayPickerProps<TDate>,
+  extends ExportedDayCalendarProps<TDate>,
     BaseDateValidationProps<TDate>,
     DayRangeValidationProps<TDate> {
   value?: DateRange<TDate>;

@@ -3,10 +3,10 @@ import { useThemeProps } from '@mui/material/styles';
 import { useDefaultDates, useUtils } from '../internals/hooks/useUtils';
 import { CalendarPickerView, MuiPickersAdapter } from '../internals/models';
 import {
-  CalendarPickerSlotsComponent,
-  CalendarPickerSlotsComponentsProps,
-  ExportedCalendarPickerProps,
-} from '../CalendarPicker/CalendarPicker';
+  DateCalendarSlotsComponent,
+  DateCalendarSlotsComponentsProps,
+  ExportedDateCalendarProps,
+} from '../DateCalendar/DateCalendar';
 import { DateValidationError } from '../internals/hooks/validation/useDateValidation';
 import { ValidationCommonProps } from '../internals/hooks/validation/useValidation';
 import { ExportedDateInputProps } from '../internals/components/PureDateInput';
@@ -22,7 +22,7 @@ import { BaseDateValidationProps } from '../internals/hooks/validation/models';
 import { DatePickerToolbar } from './DatePickerToolbar';
 import { isYearOnlyView, isYearAndMonthViews } from '../internals/utils/views';
 
-export interface BaseDatePickerSlotsComponent<TDate> extends CalendarPickerSlotsComponent<TDate> {
+export interface BaseDatePickerSlotsComponent<TDate> extends DateCalendarSlotsComponent<TDate> {
   /**
    * Custom component for the toolbar rendered above the views.
    * @default DatePickerToolbar
@@ -31,12 +31,12 @@ export interface BaseDatePickerSlotsComponent<TDate> extends CalendarPickerSlots
 }
 
 export interface BaseDatePickerSlotsComponentsProps<TDate>
-  extends CalendarPickerSlotsComponentsProps<TDate> {
+  extends DateCalendarSlotsComponentsProps<TDate> {
   toolbar?: ExportedBaseToolbarProps;
 }
 
 export interface BaseDatePickerProps<TDate>
-  extends ExportedCalendarPickerProps<TDate>,
+  extends ExportedDateCalendarProps<TDate>,
     BasePickerProps<TDate | null>,
     ValidationCommonProps<DateValidationError, TDate | null>,
     ExportedDateInputProps<TDate> {

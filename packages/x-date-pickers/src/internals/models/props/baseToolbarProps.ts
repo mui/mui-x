@@ -1,13 +1,13 @@
 import * as React from 'react';
 import { CalendarOrClockPickerView } from '../views';
 import type { PickerOnChangeFn } from '../../hooks/useViews';
-import type { ExportedCalendarPickerProps } from '../../../CalendarPicker/CalendarPicker';
+import type { ExportedDateCalendarProps } from '../../../DateCalendar/DateCalendar';
 import type { ExportedClockPickerProps } from '../../../ClockPicker/ClockPicker';
 import { PickerStatePickerProps } from '../../hooks/usePickerState';
 
 export interface BaseToolbarProps<TDate, TValue>
   extends ExportedBaseToolbarProps,
-    ExportedCalendarPickerProps<TDate>,
+    ExportedDateCalendarProps<TDate>,
     ExportedClockPickerProps<TDate>,
     Omit<PickerStatePickerProps<TValue>, 'onDateChange'> {
   ampmInClock?: boolean;
