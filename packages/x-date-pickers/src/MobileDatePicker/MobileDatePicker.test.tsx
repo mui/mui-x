@@ -15,7 +15,7 @@ import {
 } from 'test/utils/pickers-utils';
 
 const WrappedMobileDatePicker = withPickerControls(MobileDatePicker)({
-  DialogProps: { TransitionComponent: FakeTransitionComponent },
+  components: { MobileTransition: FakeTransitionComponent },
   renderInput: (params) => <TextField {...params} />,
 });
 
@@ -198,12 +198,10 @@ describe('<MobileDatePicker />', () => {
     const onCloseMock = spy();
     const handleChange = spy();
     render(
-      <MobileDatePicker
-        renderInput={(params) => <TextField {...params} />}
+      <WrappedMobileDatePicker
         onClose={onCloseMock}
         onChange={handleChange}
-        value={adapterToUse.date(new Date(2018, 0, 1))}
-        DialogProps={{ TransitionComponent: FakeTransitionComponent }}
+        initialValue={adapterToUse.date(new Date(2018, 0, 1))}
         componentsProps={{ actionBar: { actions: ['today'] } }}
       />,
     );
