@@ -18,6 +18,7 @@ import {
   openPicker,
   getClockTouchEvent,
 } from 'test/utils/pickers-utils';
+import describeValidation from '@mui/x-date-pickers/tests/describeValidation';
 
 const WrappedMobileTimePicker = withPickerControls(MobileTimePicker)({
   components: { MobileTransition: FakeTransitionComponent },
@@ -25,7 +26,14 @@ const WrappedMobileTimePicker = withPickerControls(MobileTimePicker)({
 });
 
 describe('<MobileTimePicker />', () => {
-  const { render } = createPickerRenderer();
+  const { render, clock } = createPickerRenderer({ clock: 'fake' });
+
+  describeValidation(MobileTimePicker, () => ({
+    render,
+    clock,
+    views: ['hours', 'minutes'],
+    isLegacyPicker: true,
+  }));
 
   describeConformance(
     <MobileTimePicker

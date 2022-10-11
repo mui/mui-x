@@ -10,11 +10,19 @@ import {
   wrapPickerMount,
   createPickerRenderer,
 } from 'test/utils/pickers-utils';
+import describeValidation from '@mui/x-date-pickers/tests/describeValidation';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
 describe('<DateCalendar />', () => {
   const { render, clock } = createPickerRenderer({ clock: 'fake' });
+
+  describeValidation(DateCalendar, () => ({
+    render,
+    clock,
+    views: ['year', 'month', 'day'],
+    skip: ['textField'],
+  }));
 
   describeConformance(<DateCalendar value={adapterToUse.date()} onChange={() => {}} />, () => ({
     classes,

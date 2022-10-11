@@ -25,7 +25,16 @@ export interface UseDateTimeFieldProps<TDate>
     YearValidationProps<TDate>,
     BaseDateValidationProps<TDate>,
     TimeValidationProps<TDate>,
-    BaseTimeValidationProps {}
+    BaseTimeValidationProps {
+  /**
+   * Minimal selectable moment of time with binding to date, to set min time in each day use `minTime`.
+   */
+  minDateTime?: TDate;
+  /**
+   * Maximal selectable moment of time with binding to date, to set max time in each day use `maxTime`.
+   */
+  maxDateTime?: TDate;
+}
 
 export type UseDateTimeFieldDefaultizedProps<TDate> = DefaultizedProps<
   UseDateTimeFieldProps<TDate>,
