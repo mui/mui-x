@@ -3,8 +3,6 @@ import { useForkRef } from '@mui/material/utils';
 import { WrapperVariantContext } from './WrapperVariantContext';
 import {
   PickersPopper,
-  ExportedPickerPopperProps,
-  ExportedPickerPaperProps,
   PickersPopperSlotsComponent,
   PickersPopperSlotsComponentsProps,
 } from '../PickersPopper';
@@ -14,9 +12,7 @@ import { DateInputSlotsComponent } from '../PureDateInput';
 import { LocalizationProvider } from '../../../LocalizationProvider';
 import { PickersInputLocaleText } from '../../../locales/utils/pickersLocaleTextApi';
 
-export interface DesktopWrapperProps<TDate>
-  extends ExportedPickerPopperProps,
-    ExportedPickerPaperProps {
+export interface DesktopWrapperProps<TDate> {
   children?: React.ReactNode;
   /**
    * Locale for components texts
@@ -60,9 +56,6 @@ export function DesktopWrapper<TDate>(props: InternalDesktopWrapperProps<TDate>)
     onAccept,
     onSetToday,
     open,
-    PopperProps,
-    PaperProps,
-    TransitionComponent,
     components,
     componentsProps,
     localeText,
@@ -78,9 +71,6 @@ export function DesktopWrapper<TDate>(props: InternalDesktopWrapperProps<TDate>)
           role="dialog"
           open={open}
           anchorEl={ownInputRef.current}
-          TransitionComponent={TransitionComponent}
-          PopperProps={PopperProps}
-          PaperProps={PaperProps}
           onDismiss={onDismiss}
           onCancel={onCancel}
           onClear={onClear}

@@ -67,17 +67,7 @@ export const DesktopDatePicker = React.forwardRef(function DesktopDatePicker<TDa
   const validationError = useDateValidation(props) !== null;
   const { pickerProps, inputProps, wrapperProps } = usePickerState(props, datePickerValueManager);
 
-  const {
-    onChange,
-    PopperProps,
-    PaperProps,
-    TransitionComponent,
-    value,
-    components,
-    componentsProps,
-    localeText,
-    ...other
-  } = props;
+  const { onChange, value, components, componentsProps, localeText, ...other } = props;
 
   const AllDateInputProps = {
     ...inputProps,
@@ -93,9 +83,6 @@ export const DesktopDatePicker = React.forwardRef(function DesktopDatePicker<TDa
       {...wrapperProps}
       DateInputProps={AllDateInputProps}
       KeyboardDateInputComponent={KeyboardDateInput}
-      PopperProps={PopperProps}
-      PaperProps={PaperProps}
-      TransitionComponent={TransitionComponent}
       components={components}
       componentsProps={componentsProps}
       localeText={localeText}
@@ -308,14 +295,6 @@ DesktopDatePicker.propTypes = {
    */
   orientation: PropTypes.oneOf(['landscape', 'portrait']),
   /**
-   * Paper props passed down to [Paper](https://mui.com/material-ui/api/paper/) component.
-   */
-  PaperProps: PropTypes.object,
-  /**
-   * Popper props passed down to [Popper](https://mui.com/material-ui/api/popper/) component.
-   */
-  PopperProps: PropTypes.object,
-  /**
    * Make picker read only.
    * @default false
    */
@@ -388,10 +367,6 @@ DesktopDatePicker.propTypes = {
     PropTypes.func,
     PropTypes.object,
   ]),
-  /**
-   * Custom component for popper [Transition](https://mui.com/material-ui/transitions/#transitioncomponent-prop).
-   */
-  TransitionComponent: PropTypes.elementType,
   /**
    * The value of the picker.
    */

@@ -146,10 +146,6 @@ MobileTimePicker.propTypes = {
    */
   componentsProps: PropTypes.object,
   /**
-   * Props applied to the [`Dialog`](https://mui.com/material-ui/api/dialog/) element.
-   */
-  DialogProps: PropTypes.object,
-  /**
    * If `true`, the picker and text field are disabled.
    * @default false
    */

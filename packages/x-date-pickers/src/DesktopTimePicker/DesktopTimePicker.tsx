@@ -69,17 +69,7 @@ export const DesktopTimePicker = React.forwardRef(function DesktopTimePicker<TDa
   const validationError = useTimeValidation(props) !== null;
   const { pickerProps, inputProps, wrapperProps } = usePickerState(props, timePickerValueManager);
 
-  const {
-    onChange,
-    PaperProps,
-    PopperProps,
-    TransitionComponent,
-    value,
-    components,
-    componentsProps,
-    localeText,
-    ...other
-  } = props;
+  const { onChange, value, components, componentsProps, localeText, ...other } = props;
 
   const DateInputProps = {
     ...inputProps,
@@ -95,9 +85,6 @@ export const DesktopTimePicker = React.forwardRef(function DesktopTimePicker<TDa
       {...wrapperProps}
       DateInputProps={DateInputProps}
       KeyboardDateInputComponent={KeyboardDateInput}
-      PopperProps={PopperProps}
-      PaperProps={PaperProps}
-      TransitionComponent={TransitionComponent}
       components={components}
       componentsProps={componentsProps}
       localeText={localeText}
@@ -296,14 +283,6 @@ DesktopTimePicker.propTypes = {
    */
   orientation: PropTypes.oneOf(['landscape', 'portrait']),
   /**
-   * Paper props passed down to [Paper](https://mui.com/material-ui/api/paper/) component.
-   */
-  PaperProps: PropTypes.object,
-  /**
-   * Popper props passed down to [Popper](https://mui.com/material-ui/api/popper/) component.
-   */
-  PopperProps: PropTypes.object,
-  /**
    * Make picker read only.
    * @default false
    */
@@ -337,10 +316,6 @@ DesktopTimePicker.propTypes = {
    * If `true`, show the toolbar even in desktop mode.
    */
   showToolbar: PropTypes.bool,
-  /**
-   * Custom component for popper [Transition](https://mui.com/material-ui/transitions/#transitioncomponent-prop).
-   */
-  TransitionComponent: PropTypes.elementType,
   /**
    * The value of the picker.
    */

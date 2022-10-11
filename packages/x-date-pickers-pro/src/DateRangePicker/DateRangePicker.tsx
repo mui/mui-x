@@ -69,31 +69,16 @@ export const DateRangePicker = React.forwardRef(function DateRangePicker<TDate>(
   const props = useThemeProps({ props: inProps, name: 'MuiDateRangePicker' });
   useLicenseVerifier('x-date-pickers-pro', releaseInfo);
 
-  const {
-    desktopModeMediaQuery = '@media (pointer: fine)',
-    DialogProps,
-    PopperProps,
-    PaperProps,
-    TransitionComponent,
-    ...other
-  } = props;
+  const { desktopModeMediaQuery = '@media (pointer: fine)', ...other } = props;
 
   // defaults to `true` in environments where `window.matchMedia` would not be available (i.e. test/jsdom)
   const isDesktop = useMediaQuery(desktopModeMediaQuery, { defaultMatches: true });
 
   if (isDesktop) {
-    return (
-      <DesktopDateRangePicker
-        ref={ref}
-        PopperProps={PopperProps}
-        PaperProps={PaperProps}
-        TransitionComponent={TransitionComponent}
-        {...other}
-      />
-    );
+    return <DesktopDateRangePicker ref={ref} {...other} />;
   }
 
-  return <MobileDateRangePicker ref={ref} DialogProps={DialogProps} {...other} />;
+  return <MobileDateRangePicker ref={ref} {...other} />;
 }) as DateRangePickerComponent;
 
 DateRangePicker.propTypes = {
@@ -149,10 +134,6 @@ DateRangePicker.propTypes = {
    * @example '@media (min-width: 720px)' or theme.breakpoints.up("sm")
    */
   desktopModeMediaQuery: PropTypes.string,
-  /**
-   * Props applied to the [`Dialog`](https://mui.com/material-ui/api/dialog/) element.
-   */
-  DialogProps: PropTypes.object,
   /**
    * If `true`, after selecting `start` date calendar will not automatically switch to the month of `end` date.
    * @default false
@@ -297,14 +278,6 @@ DateRangePicker.propTypes = {
    */
   OpenPickerButtonProps: PropTypes.object,
   /**
-   * Paper props passed down to [Paper](https://mui.com/material-ui/api/paper/) component.
-   */
-  PaperProps: PropTypes.object,
-  /**
-   * Popper props passed down to [Popper](https://mui.com/material-ui/api/popper/) component.
-   */
-  PopperProps: PropTypes.object,
-  /**
    * Make picker read only.
    * @default false
    */
@@ -389,10 +362,6 @@ DateRangePicker.propTypes = {
     PropTypes.func,
     PropTypes.object,
   ]),
-  /**
-   * Custom component for popper [Transition](https://mui.com/material-ui/transitions/#transitioncomponent-prop).
-   */
-  TransitionComponent: PropTypes.elementType,
   /**
    * The value of the picker.
    */
