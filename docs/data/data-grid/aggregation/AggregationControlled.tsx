@@ -45,7 +45,6 @@ export default function AggregationControlled() {
         columns={COLUMNS}
         aggregationModel={aggregationModel}
         onAggregationModelChange={(newModel) => setAggregationModel(newModel)}
-        experimentalFeatures={{ aggregation: true }}
       />
     </div>
   );

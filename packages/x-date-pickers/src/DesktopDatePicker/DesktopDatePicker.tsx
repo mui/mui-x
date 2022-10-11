@@ -16,18 +16,15 @@ import { CalendarOrClockPicker } from '../internals/components/CalendarOrClockPi
 import { useDateValidation } from '../internals/hooks/validation/useDateValidation';
 import { KeyboardDateInput } from '../internals/components/KeyboardDateInput';
 import { usePickerState } from '../internals/hooks/usePickerState';
-import {
-  CalendarPickerSlotsComponent,
-  CalendarPickerSlotsComponentsProps,
-} from '../CalendarPicker';
+import { DateCalendarSlotsComponent, DateCalendarSlotsComponentsProps } from '../DateCalendar';
 
-export interface DesktopDatePickerSlotsComponent
+export interface DesktopDatePickerSlotsComponent<TDate>
   extends DesktopWrapperSlotsComponent,
-    CalendarPickerSlotsComponent {}
+    DateCalendarSlotsComponent<TDate> {}
 
-export interface DesktopDatePickerSlotsComponentsProps
+export interface DesktopDatePickerSlotsComponentsProps<TDate>
   extends DesktopWrapperSlotsComponentsProps,
-    CalendarPickerSlotsComponentsProps {}
+    DateCalendarSlotsComponentsProps<TDate> {}
 
 export interface DesktopDatePickerProps<TDate>
   extends Omit<BaseDatePickerProps<TDate>, 'components' | 'componentsProps'>,
@@ -36,12 +33,12 @@ export interface DesktopDatePickerProps<TDate>
    * Overrideable components.
    * @default {}
    */
-  components?: Partial<DesktopDatePickerSlotsComponent>;
+  components?: Partial<DesktopDatePickerSlotsComponent<TDate>>;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  componentsProps?: Partial<DesktopDatePickerSlotsComponentsProps>;
+  componentsProps?: Partial<DesktopDatePickerSlotsComponentsProps<TDate>>;
 }
 
 type DesktopDatePickerComponent = (<TDate>(
@@ -72,10 +69,7 @@ export const DesktopDatePicker = React.forwardRef(function DesktopDatePicker<TDa
 
   const {
     onChange,
-    PopperProps,
-    PaperProps,
     ToolbarComponent = DatePickerToolbar,
-    TransitionComponent,
     value,
     components,
     componentsProps,
@@ -96,9 +90,6 @@ export const DesktopDatePicker = React.forwardRef(function DesktopDatePicker<TDa
       {...wrapperProps}
       DateInputProps={AllDateInputProps}
       KeyboardDateInputComponent={KeyboardDateInput}
-      PopperProps={PopperProps}
-      PaperProps={PaperProps}
-      TransitionComponent={TransitionComponent}
       components={components}
       componentsProps={componentsProps}
       localeText={localeText}
@@ -319,14 +310,6 @@ DesktopDatePicker.propTypes = {
    */
   orientation: PropTypes.oneOf(['landscape', 'portrait']),
   /**
-   * Paper props passed down to [Paper](https://mui.com/material-ui/api/paper/) component.
-   */
-  PaperProps: PropTypes.object,
-  /**
-   * Popper props passed down to [Popper](https://mui.com/material-ui/api/popper/) component.
-   */
-  PopperProps: PropTypes.object,
-  /**
    * Make picker read only.
    * @default false
    */
@@ -336,15 +319,6 @@ DesktopDatePicker.propTypes = {
    * @default typeof navigator !== 'undefined' && /(android)/i.test(navigator.userAgent)
    */
   reduceAnimations: PropTypes.bool,
-  /**
-   * Custom renderer for day. Check the [PickersDay](https://mui.com/x/api/date-pickers/pickers-day/) component.
-   * @template TDate
-   * @param {TDate} day The day to render.
-   * @param {Array<TDate | null>} selectedDays The days currently selected.
-   * @param {PickersDayProps<TDate>} pickersDayProps The props of the day to render.
-   * @returns {JSX.Element} The element representing the day.
-   */
-  renderDay: PropTypes.func,
   /**
    * The `renderInput` prop allows you to customize the rendered input.
    * The `props` argument of this render prop contains props of [TextField](https://mui.com/material-ui/api/text-field/#props) that you need to forward.
@@ -427,10 +401,6 @@ DesktopDatePicker.propTypes = {
    * @default 'Select date'
    */
   toolbarTitle: PropTypes.node,
-  /**
-   * Custom component for popper [Transition](https://mui.com/material-ui/transitions/#transitioncomponent-prop).
-   */
-  TransitionComponent: PropTypes.elementType,
   /**
    * The value of the picker.
    */

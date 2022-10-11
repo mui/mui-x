@@ -24,14 +24,14 @@ import {
 
 const releaseInfo = getReleaseInfo();
 
-export interface StaticDateRangePickerSlotsComponent
+export interface StaticDateRangePickerSlotsComponent<TDate>
   extends PickersStaticWrapperSlotsComponent,
-    DateRangePickerViewSlotsComponent,
+    DateRangePickerViewSlotsComponent<TDate>,
     DateInputSlotsComponent {}
 
-export interface StaticDateRangePickersSlotsComponentsProps
+export interface StaticDateRangePickersSlotsComponentsProps<TDate>
   extends PickersStaticWrapperSlotsComponentsProps,
-    DateRangePickerViewSlotsComponentsProps {}
+    DateRangePickerViewSlotsComponentsProps<TDate> {}
 
 export interface StaticDateRangePickerProps<TDate>
   extends StaticPickerProps<TDate, BaseDateRangePickerProps<TDate>> {
@@ -39,12 +39,12 @@ export interface StaticDateRangePickerProps<TDate>
    * Overrideable components.
    * @default {}
    */
-  components?: Partial<StaticDateRangePickerSlotsComponent>;
+  components?: Partial<StaticDateRangePickerSlotsComponent<TDate>>;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  componentsProps?: Partial<StaticDateRangePickersSlotsComponentsProps>;
+  componentsProps?: Partial<StaticDateRangePickersSlotsComponentsProps<TDate>>;
 }
 
 type StaticDateRangePickerComponent = (<TDate>(
@@ -326,15 +326,6 @@ StaticDateRangePicker.propTypes = {
    * @default typeof navigator !== 'undefined' && /(android)/i.test(navigator.userAgent)
    */
   reduceAnimations: PropTypes.bool,
-  /**
-   * Custom renderer for `<DateRangePicker />` days. @DateIOType
-   * @example (date, dateRangePickerDayProps) => <DateRangePickerDay {...dateRangePickerDayProps} />
-   * @template TDate
-   * @param {TDate} day The day to render.
-   * @param {DateRangePickerDayProps<TDate>} dateRangePickerDayProps The props of the day to render.
-   * @returns {JSX.Element} The element representing the day.
-   */
-  renderDay: PropTypes.func,
   /**
    * The `renderInput` prop allows you to customize the rendered input.
    * The `startProps` and `endProps` arguments of this render prop contains props of [TextField](https://mui.com/material-ui/api/text-field/#props),

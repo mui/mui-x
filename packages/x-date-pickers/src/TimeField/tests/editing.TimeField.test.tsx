@@ -2,8 +2,11 @@ import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
 import { Unstable_TimeField as TimeField, TimeFieldProps } from '@mui/x-date-pickers/TimeField';
-import { screen, act, userEvent } from '@mui/monorepo/test/utils';
+import { screen, act, userEvent, fireEvent } from '@mui/monorepo/test/utils';
 import { createPickerRenderer, adapterToUse } from 'test/utils/pickers-utils';
+
+const expectInputValue = (input: HTMLInputElement, expectedValue: string) =>
+  expect(input.value.replace(/‎/g, '')).to.equal(expectedValue);
 
 describe('<TimeField /> - Editing', () => {
   const { render, clock } = createPickerRenderer({
@@ -29,7 +32,24 @@ describe('<TimeField /> - Editing', () => {
     const input = screen.getByRole('textbox');
     clickOnInput(input, cursorPosition);
     userEvent.keyPress(input, { key });
-    expect(input.value).to.equal(expectedValue);
+    expectInputValue(input, expectedValue);
+  };
+
+  const testChange = <TDate extends unknown>({
+    inputValue,
+    expectedValue,
+    cursorPosition = 1,
+    ...props
+  }: TimeFieldProps<TDate> & {
+    inputValue: string;
+    expectedValue: string;
+    cursorPosition?: number;
+  }) => {
+    render(<TimeField {...props} />);
+    const input = screen.getByRole('textbox');
+    clickOnInput(input, cursorPosition);
+    fireEvent.change(input, { target: { value: inputValue } });
+    expectInputValue(input, expectedValue);
   };
 
   describe('key: ArrowDown', () => {
@@ -110,7 +130,7 @@ describe('<TimeField /> - Editing', () => {
         testKeyPress({
           format: adapterToUse.formats.fullTime12h,
           key: 'ArrowDown',
-          expectedValue: 'hour:minute pm',
+          expectedValue: 'hh:mm pm',
           cursorPosition: 14,
         });
       });
@@ -218,7 +238,7 @@ describe('<TimeField /> - Editing', () => {
         testKeyPress({
           format: adapterToUse.formats.fullTime12h,
           key: 'ArrowUp',
-          expectedValue: 'hour:minute am',
+          expectedValue: 'hh:mm am',
           cursorPosition: 14,
         });
       });
@@ -265,6 +285,112 @@ describe('<TimeField /> - Editing', () => {
     });
   });
 
+  describe('Digit editing', () => {
+    it('should set the day to the digit pressed when no digit no value is provided', () => {
+      testChange({
+        format: adapterToUse.formats.minutes,
+        inputValue: '1',
+        expectedValue: '01',
+      });
+    });
+
+    it('should concatenate the digit pressed to the current section value if the output is valid', () => {
+      testChange({
+        format: adapterToUse.formats.minutes,
+        defaultValue: adapterToUse.date(new Date(2022, 5, 15, 14, 3, 32)),
+        inputValue: '1',
+        expectedValue: '31',
+      });
+    });
+
+    it('should set the day to the digit pressed if the concatenate exceeds the maximum value for the section', () => {
+      testChange({
+        format: adapterToUse.formats.minutes,
+        defaultValue: adapterToUse.date(new Date(2022, 5, 15, 14, 8, 32)),
+        inputValue: '1',
+        expectedValue: '01',
+      });
+    });
+
+    it('should not edit when props.readOnly = true and no value is provided', () => {
+      testChange({
+        format: adapterToUse.formats.minutes,
+        readOnly: true,
+        inputValue: '1',
+        expectedValue: 'mm',
+      });
+    });
+
+    it('should not edit value when props.readOnly = true and a value is provided', () => {
+      testChange({
+        format: adapterToUse.formats.minutes,
+        defaultValue: adapterToUse.date(),
+        readOnly: true,
+        inputValue: '1',
+        expectedValue: '25',
+      });
+    });
+  });
+
+  describe('Letter editing', () => {
+    it('should not edit when props.readOnly = true and no value is provided', () => {
+      testChange({
+        format: adapterToUse.formats.fullTime12h,
+        readOnly: true,
+        inputValue: 'hh:mm a', // Press "a"
+        expectedValue: 'hh:mm aa',
+      });
+    });
+
+    it('should not edit value when props.readOnly = true and a value is provided', () => {
+      testChange({
+        format: adapterToUse.formats.fullTime12h,
+        defaultValue: adapterToUse.date(),
+        readOnly: true,
+        inputValue: '02:25 a',
+        expectedValue: '02:25 pm',
+      });
+    });
+
+    it('should set meridiem to AM when pressing "a" and no value is provided', () => {
+      testChange({
+        format: adapterToUse.formats.fullTime12h,
+        cursorPosition: 17,
+        inputValue: 'hh:mm a', // Press "a"
+        expectedValue: 'hh:mm am',
+      });
+    });
+
+    it('should set meridiem to PM when pressing "p" and no value is provided', () => {
+      testChange({
+        format: adapterToUse.formats.fullTime12h,
+        cursorPosition: 17,
+        inputValue: 'hh:mm p', // Press "p"
+        expectedValue: 'hh:mm pm',
+      });
+    });
+
+    it('should set meridiem to AM when pressing "a" and a value is provided', () => {
+      testChange({
+        format: adapterToUse.formats.fullTime12h,
+        defaultValue: adapterToUse.date(),
+        cursorPosition: 17,
+        inputValue: '02:25 a', // Press "a"
+        expectedValue: '02:25 am',
+      });
+    });
+
+    it('should set meridiem to PM when pressing "p" and a value is provided', () => {
+      testChange({
+        format: adapterToUse.formats.fullTime12h,
+        defaultValue: adapterToUse.date(new Date(2022, 5, 15, 2, 25, 32)),
+        cursorPosition: 17,
+        inputValue: '02:25 p', // Press "p"
+        expectedValue: '02:25 pm',
+      });
+    });
+  });
+
   describe('Do not loose missing section values ', () => {
     it('should not loose date information when a value is provided', () => {
       const onChange = spy();
@@ -298,12 +424,12 @@ describe('<TimeField /> - Editing', () => {
       userEvent.keyPress(input, { key: 'a', ctrlKey: true });
       userEvent.keyPress(input, { key: 'Backspace' });
 
-      userEvent.keyPress(input, { key: '3' });
-      expect(input.value).to.equal('03:minute');
+      fireEvent.change(input, { target: { value: '3:mm' } }); // Press "3"
+      expectInputValue(input, '03:mm');
 
       userEvent.keyPress(input, { key: 'ArrowRight' });
-      userEvent.keyPress(input, { key: '4' });
-      expect(input.value).to.equal('03:04');
+      fireEvent.change(input, { target: { value: '03:4' } }); // Press "3"
+      expectInputValue(input, '03:04');
 
       expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2010, 3, 3, 3, 4, 3));
     });
