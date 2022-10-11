@@ -11,12 +11,10 @@ export interface BaseToolbarProps<TDate, TValue>
     ExportedClockPickerProps<TDate>,
     Omit<PickerStatePickerProps<TValue>, 'onDateChange'> {
   ampmInClock?: boolean;
-  dateRangeIcon?: React.ReactNode;
   isLandscape: boolean;
   onChange: PickerOnChangeFn<TDate>;
   openView: CalendarOrClockPickerView;
   setOpenView: (view: CalendarOrClockPickerView) => void;
-  timeIcon?: React.ReactNode;
   views: readonly CalendarOrClockPickerView[];
 }
 
