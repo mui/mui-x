@@ -31,13 +31,15 @@ export const useDefaultizedDateTimeRangeFieldProps = <TDate, AdditionalProps ext
   const defaultDates = useDefaultDates<TDate>();
 
   const ampm = props.ampm ?? utils.is12HourCycleInCurrentLocale();
+  const defaultFormat = ampm
+    ? utils.formats.keyboardDateTime12h
+    : utils.formats.keyboardDateTime24h;
 
   return {
     ...props,
     disablePast: props.disablePast ?? false,
     disableFuture: props.disableFuture ?? false,
-    format:
-      props.format ?? ampm ? utils.formats.keyboardDateTime12h : utils.formats.keyboardDateTime24h,
+    format: props.format ?? defaultFormat,
     minDate: applyDefaultDate(utils, props.minDateTime ?? props.minDate, defaultDates.minDate),
     maxDate: applyDefaultDate(utils, props.maxDateTime ?? props.maxDate, defaultDates.maxDate),
     minTime: props.minDateTime ?? props.minTime,

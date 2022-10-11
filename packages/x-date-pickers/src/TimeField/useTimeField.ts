@@ -25,12 +25,13 @@ const useDefaultizedTimeField = <TDate, AdditionalProps extends {}>(
   const utils = useUtils<TDate>();
 
   const ampm = props.ampm ?? utils.is12HourCycleInCurrentLocale();
+  const defaultFormat = ampm ? utils.formats.fullTime12h : utils.formats.fullTime24h;
 
   return {
     ...props,
     disablePast: props.disablePast ?? false,
     disableFuture: props.disableFuture ?? false,
-    format: props.format ?? ampm ? utils.formats.fullTime12h : utils.formats.fullTime24h,
+    format: props.format ?? defaultFormat,
   } as any;
 };
 
