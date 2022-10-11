@@ -3,6 +3,82 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## v6.0.0-alpha.2
+
+_Oct 7, 2022_
+
+We'd like to offer a big thanks to the 10 contributors who made this release possible. Here are some highlights ✨:
+
+- 🚀 Further progress on stabilizing new date field components
+- 🎁 Improve support for theme augmentation in the DataGrid (#6269) @cherniavskii
+- 🌍 Add Japanese (ja-JP) locale to pickers (#6365) @sho918
+- 📚 Documentation improvements
+- 🐞 Bugfixes
+
+### `@mui/x-data-grid@v6.0.0-alpha.2` / `@mui/x-data-grid-pro@v6.0.0-alpha.2` / `@mui/x-data-grid-premium@v6.0.0-alpha.2`
+
+#### Breaking changes
+
+- 🎁 The aggregation is no longer experimental.
+
+  You can now use the aggregation without the `experimentalFeatures.aggregation` flag enabled.
+
+  ```diff
+   <DataGridPremium
+  -  experimentalFeatures={{ aggregation: true }}
+   />
+  ```
+
+  The aggregation of the columns through the column menu is now enabled by default on `DataGridPremium`. You can set `disableAggregation={true}` to disable it.
+
+#### Changes
+
+- [DataGrid] Add filter item ID to `.MuiDataGrid-filterForm` (#6313) @m4theushw
+- [DataGrid] Add missing `valueOptions` (#6401) @DanailH
+- [DataGrid] Don't start edit mode when pressing Shift + Space (#6228) @m4theushw
+- [DataGrid] Fix error when using column grouping with all columns hidden (#6405) @alexfauquette
+- [DataGrid] Pass generics to the components in the theme augmentation (#6269) @cherniavskii
+- [DataGridPremium] Remove the aggregation from the experimental features (#6372) @flaviendelangle
+
+### `@mui/x-date-pickers@v6.0.0-alpha.2` / `@mui/x-date-pickers-pro@v6.0.0-alpha.2`
+
+#### Breaking changes
+
+- The `renderDay` prop has been replaced by a `Day` component slot.
+  You can find more information about this pattern in the [MUI Base documentation](https://mui.com/base/getting-started/usage/#shared-props).
+
+  ```diff
+  // Same for any other date, date time or date range picker.
+   <DatePicker
+  -  renderDay={(_, dayProps) => <CustomDay {...dayProps} />}
+  +  components={{ Day: CustomDay }}
+   />
+  ```
+
+#### Changes
+
+- [DateRangePicker] Fix the shape of the first selected day when the start date has an hour set (#6403) @flaviendelangle
+- [l10n] Add Japanese (ja-JP) locale to pickers (#6365) @sho918
+- [DateRangePicker] Force focus to stay on inputs (#6324) @alexfauquette
+- [pickers] Improve edition on field components (#6339) @flaviendelangle
+- [pickers] Improve field selection behaviors (#6317) @flaviendelangle
+- [pickers] Replace the `renderDay` prop with a `Day` component slot (#6293) @flaviendelangle
+
+### Docs
+
+- [docs] Apply style guide to Data Grid Aggregation page (#5781) @samuelsycamore
+- [docs] Fix code examples of editing cells (#6004) @TiagoPortfolio
+- [docs] Fix customized day rendering demo style (#6342) (#6399) @Ambrish-git
+- [docs] Implement Style Guide on "Advanced" Data Grid doc pages (#6331) @samuelsycamore
+- [docs] Use components instead of demos for `SelectorsDocs` (#6103) @flaviendelangle
+- [license] Add new license status 'Out of scope' (#5260) @flaviendelangle
+
+### Core
+
+- [core] Speedup of yarn install in the CI (#6395) @oliviertassinari
+- [test] Remove redundant test clean-ups (#6377) @oliviertassinari
+- [test] Replace `React.render` with `React.createRoot` in e2e tests (#6393) @m4theushw
+
 ## 6.0.0-alpha.1
 
 _Sep 29, 2022_
@@ -38,7 +114,7 @@ We'd like to offer a big thanks to the 8 contributors who made this release poss
   Here is an example of the old and new approach showing how to apply a custom value formatter in groups for the grouping column:
 
   ```diff
-   <DataGridPremium 
+   <DataGridPremium
      groupingColDef={() => ({
        valueFormatter: (params) => {
          if (params.id == null) {
@@ -223,9 +299,9 @@ You can find more information about the new api, including how to set those tran
 - The component slots `LeftArrowButton` and `RightArrowButton` have been renamed `PreviousIconButton` and `NextIconButton` to better describe there usage:
 
   ```diff
-  <DatePicker 
+  <DatePicker
     components={{
-  -   LeftArrowButton: CustomButton,  
+  -   LeftArrowButton: CustomButton,
   +   PreviousIconButton: CustomButton,
 
   -   RightArrowButton: CustomButton,
@@ -233,7 +309,7 @@ You can find more information about the new api, including how to set those tran
     }}
 
     componentsProps={{
-  -   leftArrowButton: {},  
+  -   leftArrowButton: {},
   +   previousIconButton: {},
 
   -   rightArrowButton: {},

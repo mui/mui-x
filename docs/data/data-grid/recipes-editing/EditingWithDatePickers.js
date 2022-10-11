@@ -326,11 +326,7 @@ export default function EditingWithDatePickers() {
   return (
     <div style={{ height: 300, width: '100%' }}>
       <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={locale}>
-        <DataGrid
-          rows={rows}
-          columns={columns}
-          experimentalFeatures={{ newEditingApi: true }}
-        />
+        <DataGrid rows={rows} columns={columns} />
       </LocalizationProvider>
     </div>
   );

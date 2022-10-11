@@ -72,6 +72,15 @@ const deDEPickers: Partial<PickersLocaleText<any>> = {
   // Table labels
   timeTableLabel: 'Uhrzeit auswählen',
   dateTableLabel: 'Datum auswählen',
+
+  // Field section placeholders
+  // fieldYearPlaceholder: params => 'Y'.repeat(params.digitAmount),
+  // fieldMonthPlaceholder: params => params.contentType === 'letter' ? 'MMMM' : 'MM',
+  // fieldDayPlaceholder: () => 'DD',
+  // fieldHoursPlaceholder: () => 'hh',
+  // fieldMinutesPlaceholder: () => 'mm',
+  // fieldSecondsPlaceholder: () => 'ss',
+  // fieldMeridiemPlaceholder: () => 'aa',
 };
 
 export const deDE = getPickersLocalization(deDEPickers);

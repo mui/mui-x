@@ -6,10 +6,10 @@ import {
   WrapperVariantContext,
   MobileKeyboardInputView,
   defaultReduceAnimations,
-  ExportedCalendarPickerProps,
+  ExportedDateCalendarProps,
   useCalendarState,
   PickerStatePickerProps,
-  DayPickerProps,
+  DayCalendarProps,
   BaseDateValidationProps,
   DayValidationProps,
 } from '@mui/x-date-pickers/internals';
@@ -35,32 +35,29 @@ import { getReleaseInfo } from '../internal/utils/releaseInfo';
 
 const releaseInfo = getReleaseInfo();
 
-export interface DateRangePickerViewSlotsComponent
-  extends DateRangePickerViewMobileSlotsComponent {}
+export interface DateRangePickerViewSlotsComponent<TDate>
+  extends DateRangePickerViewMobileSlotsComponent<TDate> {}
 
-export interface DateRangePickerViewSlotsComponentsProps
-  extends DateRangePickerViewMobileSlotsComponentsProps {}
+export interface DateRangePickerViewSlotsComponentsProps<TDate>
+  extends DateRangePickerViewMobileSlotsComponentsProps<TDate> {}
 
 export interface ExportedDateRangePickerViewProps<TDate>
-  extends ExportedDateRangePickerViewDesktopProps<TDate>,
+  extends ExportedDateRangePickerViewDesktopProps,
     DayRangeValidationProps<TDate>,
     Omit<
-      ExportedCalendarPickerProps<TDate>,
-      | 'onYearChange'
-      | 'renderDay'
-      | keyof BaseDateValidationProps<TDate>
-      | keyof DayValidationProps<TDate>
+      ExportedDateCalendarProps<TDate>,
+      'onYearChange' | keyof BaseDateValidationProps<TDate> | keyof DayValidationProps<TDate>
     > {
   /**
    * Overrideable components.
    * @default {}
    */
-  components?: Partial<DateRangePickerViewSlotsComponent>;
+  components?: Partial<DateRangePickerViewSlotsComponent<TDate>>;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  componentsProps?: Partial<DateRangePickerViewSlotsComponentsProps>;
+  componentsProps?: Partial<DateRangePickerViewSlotsComponentsProps<TDate>>;
   /**
    * If `true`, after selecting `start` date calendar will not automatically switch to the month of `end` date.
    * @default false
@@ -190,7 +187,9 @@ function DateRangePickerViewRaw<TDate>(props: DateRangePickerViewProps<TDate>) {
     }
   }, [currentlySelectingRangeEnd, value]); // eslint-disable-line
 
-  const handleSelectedDayChange = React.useCallback<DayPickerProps<TDate>['onSelectedDaysChange']>(
+  const handleSelectedDayChange = React.useCallback<
+    DayCalendarProps<TDate>['onSelectedDaysChange']
+  >(
     (newDate) => {
       const { nextSelection, newRange } = calculateRangeChange({
         newDate,

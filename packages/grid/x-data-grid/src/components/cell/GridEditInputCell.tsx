@@ -9,7 +9,6 @@ import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { GridLoadIcon } from '../icons/index';
-import { SUBMIT_FILTER_STROKE_TIME } from '../panel/filterPanel/GridFilterInputValue';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 
 type OwnerState = { classes: DataGridProcessedProps['classes'] };
@@ -72,7 +71,7 @@ const GridEditInputCell = React.forwardRef<HTMLInputElement, GridEditInputCellPr
       hasFocus,
       getValue,
       isValidating,
-      debounceMs = rootProps.experimentalFeatures?.newEditingApi ? 200 : SUBMIT_FILTER_STROKE_TIME,
+      debounceMs = 200,
       isProcessingProps,
       onValueChange,
       ...other
@@ -95,7 +94,7 @@ const GridEditInputCell = React.forwardRef<HTMLInputElement, GridEditInputCellPr
         const column = apiRef.current.getColumn(field);
 
         let parsedValue = newValue;
-        if (column.valueParser && rootProps.experimentalFeatures?.newEditingApi) {
+        if (column.valueParser) {
           parsedValue = column.valueParser(newValue, apiRef.current.getCellParams(id, field));
         }
 
@@ -105,7 +104,7 @@ const GridEditInputCell = React.forwardRef<HTMLInputElement, GridEditInputCellPr
           event,
         );
       },
-      [apiRef, debounceMs, field, id, onValueChange, rootProps.experimentalFeatures?.newEditingApi],
+      [apiRef, debounceMs, field, id, onValueChange],
     );
 
     const meta = apiRef.current.unstable_getEditCellMeta

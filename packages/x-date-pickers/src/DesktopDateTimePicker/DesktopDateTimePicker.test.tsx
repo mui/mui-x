@@ -17,7 +17,7 @@ import {
 import describeValidation from '@mui/x-date-pickers/tests/describeValidation';
 
 const WrappedDesktopDateTimePicker = withPickerControls(DesktopDateTimePicker)({
-  DialogProps: { TransitionComponent: FakeTransitionComponent },
+  components: { DesktopTransition: FakeTransitionComponent },
   renderInput: (params) => <TextField {...params} />,
 });
 
@@ -243,22 +243,22 @@ describe('<DesktopDateTimePicker />', () => {
     expect(onChange.lastCall.args[0]).toEqualDateTime(new Date('2018-01-01T10:53:00.000'));
   });
 
-  describe('prop: PopperProps', () => {
+  describe('componentsProps: popper', () => {
     it('forwards onClick and onTouchStart', () => {
       const handleClick = spy();
       const handleTouchStart = spy();
       render(
-        <DesktopDateTimePicker
+        <WrappedDesktopDateTimePicker
           open
-          onChange={() => {}}
-          PopperProps={{
-            onClick: handleClick,
-            onTouchStart: handleTouchStart,
-            // @ts-expect-error `data-*` attributes are not recognized in props objects
-            'data-testid': 'popper',
+          componentsProps={{
+            popper: {
+              onClick: handleClick,
+              onTouchStart: handleTouchStart,
+              // @ts-expect-error `data-*` attributes are not recognized in props objects
+              'data-testid': 'popper',
+            },
           }}
-          renderInput={(params) => <TextField {...params} />}
-          value={null}
+          initialValue={null}
         />,
       );
       const popper = screen.getByTestId('popper');
@@ -271,22 +271,22 @@ describe('<DesktopDateTimePicker />', () => {
     });
   });
 
-  describe('prop: PaperProps', () => {
+  describe('componentsProps: desktopPaper', () => {
     it('forwards onClick and onTouchStart', () => {
       const handleClick = spy();
       const handleTouchStart = spy();
       render(
-        <DesktopDateTimePicker
+        <WrappedDesktopDateTimePicker
           open
-          onChange={() => {}}
-          PaperProps={{
-            onClick: handleClick,
-            onTouchStart: handleTouchStart,
-            // @ts-expect-error `data-*` attributes are not recognized in props objects
-            'data-testid': 'paper',
+          componentsProps={{
+            desktopPaper: {
+              onClick: handleClick,
+              onTouchStart: handleTouchStart,
+              // @ts-expect-error `data-*` attributes are not recognized in props objects
+              'data-testid': 'paper',
+            },
           }}
-          renderInput={(params) => <TextField {...params} />}
-          value={null}
+          initialValue={null}
         />,
       );
       const paper = screen.getByTestId('paper');

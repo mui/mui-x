@@ -156,10 +156,6 @@ MobileTimePicker.propTypes = {
    */
   componentsProps: PropTypes.object,
   /**
-   * Props applied to the [`Dialog`](https://mui.com/material-ui/api/dialog/) element.
-   */
-  DialogProps: PropTypes.object,
-  /**
    * If `true`, the picker and text field are disabled.
    * @default false
    */
@@ -326,7 +322,7 @@ MobileTimePicker.propTypes = {
    * Dynamically check if time is disabled or not.
    * If returns `false` appropriate time point will ot be acceptable.
    * @param {number} timeValue The value to check.
-   * @param {ClockPickerView} clockType The clock type of the timeValue.
+   * @param {ClockPickerView} view The clock type of the timeValue.
    * @returns {boolean} Returns `true` if the time should be disabled
    */
   shouldDisableTime: PropTypes.func,

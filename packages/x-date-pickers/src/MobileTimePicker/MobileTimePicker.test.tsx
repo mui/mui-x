@@ -21,7 +21,7 @@ import {
 import describeValidation from '@mui/x-date-pickers/tests/describeValidation';
 
 const WrappedMobileTimePicker = withPickerControls(MobileTimePicker)({
-  DialogProps: { TransitionComponent: FakeTransitionComponent },
+  components: { MobileTransition: FakeTransitionComponent },
   renderInput: (params) => <TextField {...params} />,
 });
 

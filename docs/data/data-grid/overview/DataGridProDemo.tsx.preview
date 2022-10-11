@@ -4,5 +4,4 @@
   rowHeight={38}
   checkboxSelection
   disableSelectionOnClick
-  experimentalFeatures={{ newEditingApi: true }}
 />

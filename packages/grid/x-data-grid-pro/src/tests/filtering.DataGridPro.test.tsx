@@ -9,9 +9,12 @@ import {
   SUBMIT_FILTER_STROKE_TIME,
   useGridApiRef,
   DataGridPro,
+  GetColumnForNewFilterArgs,
+  FilterColumnsArgs,
+  GridToolbar,
 } from '@mui/x-data-grid-pro';
 // @ts-ignore Remove once the test utils are typed
-import { createRenderer, fireEvent, screen, act } from '@mui/monorepo/test/utils';
+import { createRenderer, fireEvent, screen, act, within } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
 import * as React from 'react';
 import { spy } from 'sinon';
@@ -68,6 +71,107 @@ describe('<DataGridPro /> - Filter', () => {
       },
     ],
   };
+
+  it('componentsProps `filterColumns` and `getColumnForNewFilter` should allow custom filtering', () => {
+    const filterColumns = ({ field, columns, currentFilters }: FilterColumnsArgs) => {
+      // remove already filtered fields from list of columns
+      const filteredFields = currentFilters?.map((item) => item.columnField);
+      return columns
+        .filter(
+          (colDef) =>
+            colDef.filterable && (colDef.field === field || !filteredFields.includes(colDef.field)),
+        )
+        .map((column) => column.field);
+    };
+
+    const getColumnForNewFilter = ({ currentFilters, columns }: GetColumnForNewFilterArgs) => {
+      const filteredFields = currentFilters?.map(({ columnField }) => columnField);
+      const columnForNewFilter = columns
+        .filter((colDef) => colDef.filterable && !filteredFields.includes(colDef.field))
+        .find((colDef) => colDef.filterOperators?.length);
+      return columnForNewFilter?.field;
+    };
+
+    render(
+      <TestCase
+        initialState={{
+          preferencePanel: {
+            open: true,
+            openedPanelValue: GridPreferencePanelsValue.filters,
+          },
+        }}
+        components={{ Toolbar: GridToolbar }}
+        componentsProps={{
+          filterPanel: {
+            filterFormProps: {
+              filterColumns,
+            },
+            getColumnForNewFilter,
+          },
+        }}
+      />,
+    );
+    const addButton = screen.getByRole('button', { name: /Add Filter/i });
+    fireEvent.click(addButton);
+    // Shouldn't allow adding multi-filters for same column
+    // Since we have only one column, filter shouldn't be applied onClick
+    const filterForms = document.querySelectorAll(`.MuiDataGrid-filterForm`);
+    expect(filterForms).to.have.length(1);
+  });
+
+  it('should call `getColumnForNewFilter` when filters are added', () => {
+    const getColumnForNewFilter = spy();
+    render(
+      <TestCase
+        initialState={{
+          preferencePanel: {
+            open: true,
+            openedPanelValue: GridPreferencePanelsValue.filters,
+          },
+        }}
+        components={{ Toolbar: GridToolbar }}
+        componentsProps={{
+          filterPanel: {
+            getColumnForNewFilter,
+          },
+        }}
+      />,
+    );
+    // TODO: Debug two calls each filter
+    expect(getColumnForNewFilter.callCount).to.equal(2);
+    const addButton = screen.getByRole('button', { name: /Add Filter/i });
+    fireEvent.click(addButton);
+    expect(getColumnForNewFilter.callCount).to.equal(4);
+    fireEvent.click(addButton);
+    expect(getColumnForNewFilter.callCount).to.equal(6);
+  });
+
+  it('should pass columns filtered by `filterColumns` to filters column list', () => {
+    const filterColumns = () => ['testField'];
+    render(
+      <TestCase
+        initialState={{
+          preferencePanel: {
+            open: true,
+            openedPanelValue: GridPreferencePanelsValue.filters,
+          },
+        }}
+        components={{ Toolbar: GridToolbar }}
+        componentsProps={{
+          filterPanel: {
+            filterFormProps: {
+              filterColumns,
+            },
+          },
+        }}
+        columns={[...baselineProps.columns, { field: 'testField' }]}
+      />,
+    );
+
+    const selectListOfColumns = document.querySelectorAll('.MuiDataGrid-filterFormColumnInput')[0];
+    const availableColumns = within(selectListOfColumns).getAllByRole('option');
+    expect(availableColumns.length).to.equal(1);
+  });
 
   it('should apply the filterModel prop correctly', () => {
     render(<TestCase filterModel={filterModel} />);
