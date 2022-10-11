@@ -32,7 +32,7 @@ export interface CalendarOrClockPickerSlotsComponent<TDate>
    * @default DateTimePickerTabs
    */
   Tabs?: React.ElementType<DateTimePickerTabsProps>;
-  Toolbar?: React.JSXElementConstructor<BaseToolbarProps<TDate, TDate | null>>;
+  Toolbar?: React.JSXElementConstructor<BaseToolbarProps<TDate | null>>;
 }
 
 export interface CalendarOrClockPickerSlotsComponentsProps<TDate>

@@ -15,7 +15,7 @@ import {
   getDateTimePickerToolbarUtilityClass,
 } from './dateTimePickerToolbarClasses';
 
-export interface DateTimePickerToolbarProps<TDate> extends BaseToolbarProps<TDate, TDate | null> {
+export interface DateTimePickerToolbarProps<TDate> extends BaseToolbarProps<TDate | null> {
   ampm?: boolean;
   ampmInClock?: boolean;
   classes?: Partial<DateTimePickerToolbarClasses>;

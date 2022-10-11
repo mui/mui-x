@@ -87,7 +87,7 @@
     "RightArrowIcon": { "default": "ArrowRight", "type": { "name": "elementType" } },
     "SwitchViewButton": { "default": "IconButton", "type": { "name": "elementType" } },
     "SwitchViewIcon": { "default": "ArrowDropDown", "type": { "name": "elementType" } },
-    "Toolbar": { "default": "DateRangePickerToolbar", "type": { "name": "elementType" } }
+    "Toolbar": { "type": { "name": "elementType" } }
   },
   "name": "MobileDateRangePicker",
   "styles": { "classes": [], "globalClasses": {}, "name": "MuiMobileDateRangePicker" },

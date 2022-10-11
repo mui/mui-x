@@ -18,7 +18,7 @@ import {
   TimePickerToolbarClasses,
 } from './timePickerToolbarClasses';
 
-export interface TimePickerToolbarProps<TDate> extends BaseToolbarProps<TDate, TDate | null> {
+export interface TimePickerToolbarProps<TDate> extends BaseToolbarProps<TDate | null> {
   ampm?: boolean;
   ampmInClock?: boolean;
   classes?: Partial<TimePickerToolbarClasses>;

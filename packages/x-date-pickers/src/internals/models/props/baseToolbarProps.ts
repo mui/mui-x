@@ -1,10 +1,9 @@
 import * as React from 'react';
 import { CalendarOrClockPickerView } from '../views';
-import type { PickerOnChangeFn } from '../../hooks/useViews';
 
-export interface BaseToolbarProps<TDate, TValue> extends ExportedBaseToolbarProps {
+export interface BaseToolbarProps<TValue> extends ExportedBaseToolbarProps {
   isLandscape: boolean;
-  onChange: PickerOnChangeFn<TDate>;
+  onChange: (newValue: TValue) => void;
   value: TValue;
   view: CalendarOrClockPickerView;
   onViewChange: (view: CalendarOrClockPickerView) => void;

@@ -1,3 +1,4 @@
+import * as React from 'react';
 import {
   BasePickerProps,
   PickerStateValueManager,
@@ -18,13 +19,21 @@ import { DateRangeValidationError } from '../internal/hooks/validation/useDateRa
 import { DateRange } from '../internal/models';
 import { ExportedDateRangePickerInputProps } from './DateRangePickerInput';
 import { replaceInvalidDatesByNull } from '../internal/utils/date-utils';
-import { DateRangePickerToolbar } from './DateRangePickerToolbar';
+import {
+  DateRangePickerToolbar,
+  DateRangePickerToolbarProps,
+  ExportedDateRangePickerToolbarProps,
+} from './DateRangePickerToolbar';
 
 export interface BaseDateRangePickerSlotsComponent<TDate>
-  extends DateRangePickerViewSlotsComponent<TDate> {}
+  extends DateRangePickerViewSlotsComponent<TDate> {
+  Toolbar?: React.JSXElementConstructor<DateRangePickerToolbarProps<TDate>>;
+}
 
 export interface BaseDateRangePickerSlotsComponentsProps<TDate>
-  extends DateRangePickerViewSlotsComponentsProps<TDate> {}
+  extends DateRangePickerViewSlotsComponentsProps<TDate> {
+  toolbar?: ExportedDateRangePickerToolbarProps;
+}
 
 export interface BaseDateRangePickerProps<TDate>
   extends Omit<BasePickerProps<DateRange<TDate>>, 'orientation'>,

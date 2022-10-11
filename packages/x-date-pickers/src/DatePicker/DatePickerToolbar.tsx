@@ -16,7 +16,7 @@ import {
   getDatePickerToolbarUtilityClass,
 } from './datePickerToolbarClasses';
 
-export interface DatePickerToolbarProps<TDate> extends BaseToolbarProps<TDate, TDate | null> {
+export interface DatePickerToolbarProps<TDate> extends BaseToolbarProps<TDate | null> {
   classes?: Partial<DatePickerToolbarClasses>;
 }
 

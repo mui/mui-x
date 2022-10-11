@@ -6,32 +6,30 @@ import {
   usePickerState,
   StaticPickerProps,
   PickersStaticWrapperSlotsComponent,
-  DateInputSlotsComponent,
   PickersStaticWrapperSlotsComponentsProps,
+  DateInputSlotsComponent,
 } from '@mui/x-date-pickers/internals';
 import { useDateRangeValidation } from '../internal/hooks/validation/useDateRangeValidation';
-import {
-  DateRangePickerView,
-  DateRangePickerViewSlotsComponent,
-  DateRangePickerViewSlotsComponentsProps,
-} from '../DateRangePicker/DateRangePickerView';
+import { DateRangePickerView } from '../DateRangePicker/DateRangePickerView';
 import { getReleaseInfo } from '../internal/utils/releaseInfo';
 import {
   useDateRangePickerDefaultizedProps,
   BaseDateRangePickerProps,
   dateRangePickerValueManager,
+  BaseDateRangePickerSlotsComponent,
+  BaseDateRangePickerSlotsComponentsProps,
 } from '../DateRangePicker/shared';
 
 const releaseInfo = getReleaseInfo();
 
 export interface StaticDateRangePickerSlotsComponent<TDate>
-  extends PickersStaticWrapperSlotsComponent,
-    DateRangePickerViewSlotsComponent<TDate>,
+  extends BaseDateRangePickerSlotsComponent<TDate>,
+    PickersStaticWrapperSlotsComponent,
     DateInputSlotsComponent {}
 
 export interface StaticDateRangePickersSlotsComponentsProps<TDate>
-  extends PickersStaticWrapperSlotsComponentsProps,
-    DateRangePickerViewSlotsComponentsProps<TDate> {}
+  extends BaseDateRangePickerSlotsComponentsProps<TDate>,
+    PickersStaticWrapperSlotsComponentsProps {}
 
 export interface StaticDateRangePickerProps<TDate>
   extends StaticPickerProps<TDate, BaseDateRangePickerProps<TDate>> {

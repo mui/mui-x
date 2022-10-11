@@ -2,6 +2,8 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import {
   BaseTimePickerProps,
+  BaseTimePickerSlotsComponent,
+  BaseTimePickerSlotsComponentsProps,
   useTimePickerDefaultizedProps,
   timePickerValueManager,
 } from '../TimePicker/shared';
@@ -15,19 +17,15 @@ import { CalendarOrClockPicker } from '../internals/components/CalendarOrClockPi
 import { useTimeValidation } from '../internals/hooks/validation/useTimeValidation';
 import { DateInputSlotsComponent, PureDateInput } from '../internals/components/PureDateInput';
 import { usePickerState } from '../internals/hooks/usePickerState';
-import {
-  ClockPickerSlotsComponent,
-  ClockPickerSlotsComponentsProps,
-} from '../ClockPicker/ClockPicker';
 
-export interface MobileTimePickerSlotsComponent
-  extends MobileWrapperSlotsComponent,
-    ClockPickerSlotsComponent,
+export interface MobileTimePickerSlotsComponent<TDate>
+  extends BaseTimePickerSlotsComponent<TDate>,
+    MobileWrapperSlotsComponent,
     DateInputSlotsComponent {}
 
 export interface MobileTimePickerSlotsComponentsProps
-  extends MobileWrapperSlotsComponentsProps,
-    ClockPickerSlotsComponentsProps {}
+  extends BaseTimePickerSlotsComponentsProps,
+    MobileWrapperSlotsComponentsProps {}
 
 export interface MobileTimePickerProps<TDate>
   extends BaseTimePickerProps<TDate>,
@@ -36,7 +34,7 @@ export interface MobileTimePickerProps<TDate>
    * Overrideable components.
    * @default {}
    */
-  components?: Partial<MobileTimePickerSlotsComponent>;
+  components?: Partial<MobileTimePickerSlotsComponent<TDate>>;
   /**
    * The props used for each component slot.
    * @default {}
