@@ -81,7 +81,7 @@ describe('<DataGridPro /> - Print export', () => {
     allBooleanConfigurations.forEach(({ printVisible, gridVisible }) => {
       it(`should have 'currencyPair' ${printVisible ? "'visible'" : "'hidden'"} in print and ${
         gridVisible ? "'visible'" : "'hidden'"
-      } in screen`, async function test() {
+      } in screen`, async () => {
         const onColumnVisibilityModelChange = spy();
 
         render(
@@ -123,7 +123,7 @@ describe('<DataGridPro /> - Print export', () => {
   });
 
   describe('columns to print', () => {
-    it(`should ignore 'allColumns' if 'fields' is provided`, async function test() {
+    it(`should ignore 'allColumns' if 'fields' is provided`, async () => {
       const onColumnVisibilityModelChange = spy();
 
       render(<Test onColumnVisibilityModelChange={onColumnVisibilityModelChange} />);
@@ -138,7 +138,7 @@ describe('<DataGridPro /> - Print export', () => {
       });
     });
 
-    it(`should ignore 'disableExport' if 'fields' is provided`, async function test() {
+    it(`should ignore 'disableExport' if 'fields' is provided`, async () => {
       const onColumnVisibilityModelChange = spy();
 
       render(
@@ -158,7 +158,7 @@ describe('<DataGridPro /> - Print export', () => {
       });
     });
 
-    it(`should apply 'disableExport' even if 'allColumns' is set`, async function test() {
+    it(`should apply 'disableExport' even if 'allColumns' is set`, async () => {
       const onColumnVisibilityModelChange = spy();
 
       render(
@@ -178,7 +178,7 @@ describe('<DataGridPro /> - Print export', () => {
       });
     });
 
-    it(`should print hidden columns if 'allColumns' set to true`, async function test() {
+    it(`should print hidden columns if 'allColumns' set to true`, async () => {
       const onColumnVisibilityModelChange = spy();
 
       render(

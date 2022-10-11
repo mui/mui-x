@@ -37,7 +37,7 @@ describe('<DataGrid /> - Export', () => {
   });
 
   describe('component: GridToolbar', () => {
-    it('should export with the default csvOptions', async function test() {
+    it('should export with the default csvOptions', async () => {
       render(<TestCase components={{ Toolbar: GridToolbar }} />);
       fireEvent.click(screen.queryByRole('button', { name: 'Export' }));
       clock.runToLast();
@@ -48,7 +48,7 @@ describe('<DataGrid /> - Export', () => {
       expect(csv).to.equal(['id,Currency Pair', '0,USDGBP', '1,USDEUR', '2,GBPEUR'].join('\r\n'));
     });
 
-    it('should apply custom csvOptions', async function test() {
+    it('should apply custom csvOptions', async () => {
       render(
         <TestCase
           components={{ Toolbar: GridToolbar }}
@@ -79,7 +79,7 @@ describe('<DataGrid /> - Export', () => {
   });
 
   describe('component: GridToolbarExport', () => {
-    it('should export with the default csvOptions', async function test() {
+    it('should export with the default csvOptions', async () => {
       render(<TestCase components={{ Toolbar: () => <GridToolbarExport /> }} />);
       fireEvent.click(screen.queryByRole('button', { name: 'Export' }));
       clock.runToLast();
@@ -90,7 +90,7 @@ describe('<DataGrid /> - Export', () => {
       expect(csv).to.equal(['id,Currency Pair', '0,USDGBP', '1,USDEUR', '2,GBPEUR'].join('\r\n'));
     });
 
-    it('should apply custom csvOptions', async function test() {
+    it('should apply custom csvOptions', async () => {
       render(
         <TestCase
           components={{ Toolbar: () => <GridToolbarExport csvOptions={{ delimiter: ';' }} /> }}

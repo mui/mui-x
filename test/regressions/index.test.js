@@ -136,7 +136,7 @@ async function main() {
       });
     });
 
-    it('should position the headers matching the columns', async function test() {
+    it('should position the headers matching the columns', async () => {
       const route = `${baseUrl}/docs-data-grid-virtualization/ColumnVirtualizationGrid`;
       const screenshotPath = path.resolve(
         screenshotDir,
