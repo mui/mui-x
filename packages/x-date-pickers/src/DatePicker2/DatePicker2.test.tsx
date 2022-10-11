@@ -2,7 +2,7 @@ import * as React from 'react';
 import { expect } from 'chai';
 import { DatePicker2 } from '@mui/x-date-pickers/DatePicker2';
 import { fireEvent, screen } from '@mui/monorepo/test/utils/createRenderer';
-import {createPickerRenderer, openPicker, stubMatchMedia} from 'test/utils/pickers-utils';
+import { createPickerRenderer, openPicker, stubMatchMedia } from 'test/utils/pickers-utils';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
@@ -44,7 +44,7 @@ describe.only('<DatePicker2 />', () => {
       }
       render(<DatePicker2 defaultValue={new Date(2019, 5, 5)} openTo="year" />);
 
-      openPicker({ type: 'date', variant: 'desktop' })
+      openPicker({ type: 'date', variant: 'desktop' });
       expect(document.activeElement).to.have.text('2019');
 
       fireEvent.click(screen.getByText('2020'));
