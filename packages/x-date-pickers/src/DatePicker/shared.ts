@@ -2,7 +2,7 @@ import * as React from 'react';
 import { useThemeProps } from '@mui/material/styles';
 import { useDefaultDates, useUtils } from '../internals/hooks/useUtils';
 import { CalendarPickerView, MuiPickersAdapter } from '../internals/models';
-import { ExportedCalendarPickerProps } from '../CalendarPicker/CalendarPicker';
+import { ExportedDateCalendarProps } from '../DateCalendar/DateCalendar';
 import { DateValidationError } from '../internals/hooks/validation/useDateValidation';
 import { ValidationCommonProps } from '../internals/hooks/validation/useValidation';
 import { ExportedDateInputProps } from '../internals/components/PureDateInput';
@@ -14,7 +14,7 @@ import { DefaultizedProps } from '../internals/models/helpers';
 import { BaseDateValidationProps } from '../internals/hooks/validation/models';
 
 export interface BaseDatePickerProps<TDate>
-  extends ExportedCalendarPickerProps<TDate>,
+  extends ExportedDateCalendarProps<TDate>,
     BasePickerProps<TDate | null>,
     ValidationCommonProps<DateValidationError, TDate | null>,
     ExportedDateInputProps<TDate> {
