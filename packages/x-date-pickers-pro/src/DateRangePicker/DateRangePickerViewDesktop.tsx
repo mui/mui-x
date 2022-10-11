@@ -21,7 +21,7 @@ import {
   DayCalendarSlotsComponentsProps,
 } from '@mui/x-date-pickers/internals';
 import { calculateRangePreview } from './date-range-manager';
-import { DateRange } from '../internal/models';
+import { DateRange } from '../internal/models/range';
 import { DateRangePickerDay, DateRangePickerDayProps } from '../DateRangePickerDay';
 import { isWithinRange, isStartOfRange, isEndOfRange } from '../internal/utils/date-utils';
 import { doNothing } from '../internal/utils/utils';

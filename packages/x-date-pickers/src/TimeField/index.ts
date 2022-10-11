@@ -1,5 +1,5 @@
 export { TimeField as Unstable_TimeField } from './TimeField';
-export { useTimeField as unstable_useDateTimeField } from './useTimeField';
+export { useTimeField as unstable_useTimeField } from './useTimeField';
 export type {
   UseTimeFieldProps,
   UseTimeFieldComponentProps,

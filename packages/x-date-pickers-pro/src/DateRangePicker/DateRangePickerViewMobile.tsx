@@ -14,8 +14,9 @@ import {
   DayCalendarSlotsComponentsProps,
 } from '@mui/x-date-pickers/internals';
 import { doNothing } from '../internal/utils/utils';
-import { DateRange } from '../internal/models/dateRange';
+import { DateRange } from '../internal/models/range';
 import { DateRangePickerDay, DateRangePickerDayProps } from '../DateRangePickerDay';
+
 import { isWithinRange, isStartOfRange, isEndOfRange } from '../internal/utils/date-utils';
 
 export interface DateRangePickerViewMobileSlotsComponent<TDate>
