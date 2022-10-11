@@ -2,34 +2,33 @@ import * as React from 'react';
 import { useThemeProps } from '@mui/material/styles';
 import { DefaultizedProps, MakeOptional } from '../internals/models/helpers';
 import {
-  CalendarPicker,
-  CalendarPickerProps,
-  CalendarPickerSlotsComponent,
-  CalendarPickerSlotsComponentsProps,
-  CalendarPickerView,
-} from '../CalendarPicker';
+  DateCalendar,
+  DateCalendarProps,
+  DateCalendarSlotsComponent,
+  DateCalendarSlotsComponentsProps,
+  ExportedDateCalendarProps,
+} from '../DateCalendar/DateCalendar';
 import { useDefaultDates, useUtils } from '../internals/hooks/useUtils';
 import { isYearAndMonthViews, isYearOnlyView } from '../internals/utils/views';
 import { ValidationCommonPropsOptionalValue } from '../internals/hooks/validation/useValidation';
 import { DateValidationError } from '../internals/hooks/validation/useDateValidation';
-import { ExportedCalendarPickerProps } from '../CalendarPicker/CalendarPicker';
 import { PickerViewContainer } from '../internals/components/PickerViewContainer';
 import { BasePickerProps2 } from '../internals/models/props/basePickerProps';
 import { applyDefaultDate } from '../internals/utils/date-utils';
-import { BaseDateValidationProps } from '../internals';
+import { BaseDateValidationProps, CalendarPickerView } from '../internals';
 
 export interface BaseDatePicker2SlotsComponent<TDate>
-  extends Partial<CalendarPickerSlotsComponent<TDate>> {}
+  extends Partial<DateCalendarSlotsComponent<TDate>> {}
 
 export interface BaseDatePicker2SlotsComponentsProps<TDate>
-  extends Partial<CalendarPickerSlotsComponentsProps<TDate>> {}
+  extends Partial<DateCalendarSlotsComponentsProps<TDate>> {}
 
 export interface BaseDatePicker2Props<TDate>
   extends MakeOptional<
       BasePickerProps2<TDate | null, TDate, CalendarPickerView>,
       'views' | 'openTo'
     >,
-    ExportedCalendarPickerProps<TDate>,
+    ExportedDateCalendarProps<TDate>,
     ValidationCommonPropsOptionalValue<DateValidationError, TDate | null> {
   /**
    * The label content.
@@ -85,9 +84,9 @@ export function useDatePicker2DefaultizedProps<TDate, Props extends BaseDatePick
 }
 
 export const renderDateViews = <TDate extends unknown>(
-  props: CalendarPickerProps<TDate> & { isLandscape: boolean },
+  props: DateCalendarProps<TDate> & { isLandscape: boolean },
 ) => (
   <PickerViewContainer isLandscape={props.isLandscape}>
-    <CalendarPicker<TDate> {...props} focusedView={props.view} />
+    <DateCalendar<TDate> {...props} focusedView={props.view} />
   </PickerViewContainer>
 );

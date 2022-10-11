@@ -10,12 +10,12 @@ import { useDefaultDates, useUtils } from '../internals/hooks/useUtils';
 import { ValidationCommonPropsOptionalValue } from '../internals/hooks/validation/useValidation';
 import { DateValidationError } from '../internals/hooks/validation/useDateValidation';
 import {
-  CalendarPicker,
-  CalendarPickerProps,
-  CalendarPickerSlotsComponent,
-  CalendarPickerSlotsComponentsProps,
-  ExportedCalendarPickerProps,
-} from '../CalendarPicker/CalendarPicker';
+  DateCalendar,
+  DateCalendarProps,
+  DateCalendarSlotsComponent,
+  DateCalendarSlotsComponentsProps,
+  ExportedDateCalendarProps,
+} from '../DateCalendar/DateCalendar';
 import {
   ClockPicker,
   ClockPickerProps,
@@ -32,7 +32,7 @@ import { PickerViewLayout, PickerViewLayoutProps } from '../internals/components
 import { DateTimePickerTabsProps } from '../DateTimePicker/DateTimePickerTabs';
 
 export interface BaseDateTimePicker2SlotsComponent<TDate>
-  extends Partial<CalendarPickerSlotsComponent<TDate>>,
+  extends Partial<DateCalendarSlotsComponent<TDate>>,
     Partial<ClockPickerSlotsComponent> {
   /**
    * Tabs enabling toggling between date and time pickers.
@@ -42,7 +42,7 @@ export interface BaseDateTimePicker2SlotsComponent<TDate>
 }
 
 export interface BaseDateTimePicker2SlotsComponentsProps<TDate>
-  extends Partial<CalendarPickerSlotsComponentsProps<TDate>>,
+  extends Partial<DateCalendarSlotsComponentsProps<TDate>>,
     Partial<ClockPickerSlotsComponentsProps> {
   /**
    * Props passed down to the tabs component.
@@ -55,7 +55,7 @@ export interface BaseDateTimePicker2Props<TDate>
       BasePickerProps2<TDate | null, TDate, CalendarOrClockPickerView>,
       'views' | 'openTo'
     >,
-    Omit<ExportedCalendarPickerProps<TDate>, 'onViewChange'>,
+    Omit<ExportedDateCalendarProps<TDate>, 'onViewChange'>,
     ExportedClockPickerProps<TDate>,
     ValidationCommonPropsOptionalValue<DateValidationError, TDate | null> {
   /**
@@ -138,10 +138,10 @@ interface DateTimePickerViewsProps<TDate>
   extends Omit<BaseDateTimePicker2Props<TDate>, keyof UsePickerProps<any, any>>,
     PickerViewsRendererProps<TDate | null, CalendarOrClockPickerView, {}> {
   openTo?: CalendarOrClockPickerView;
-  components?: CalendarPickerProps<TDate>['components'] &
+  components?: DateCalendarProps<TDate>['components'] &
     ClockPickerProps<TDate>['components'] &
     PickerViewLayoutProps<CalendarOrClockPickerView>['components'];
-  componentsProps?: CalendarPickerProps<TDate>['componentsProps'] &
+  componentsProps?: DateCalendarProps<TDate>['componentsProps'] &
     ClockPickerProps<TDate>['componentsProps'] &
     PickerViewLayoutProps<CalendarOrClockPickerView>['componentsProps'];
 }
@@ -192,7 +192,7 @@ export const renderDateTimeViews = <TDate extends unknown>(
         onViewChange={onViewChange}
       >
         {isDatePickerView(view) && (
-          <CalendarPicker
+          <DateCalendar
             views={views.filter(isDatePickerView)}
             onViewChange={onViewChange as (view: CalendarPickerView) => void}
             view={view}

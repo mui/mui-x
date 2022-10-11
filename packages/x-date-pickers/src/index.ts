@@ -1,5 +1,4 @@
-export * from './CalendarPicker';
-export * from './CalendarPickerSkeleton';
+export * from './DateCalendar';
 export * from './ClockPicker';
 export * from './DatePicker';
 export * from './DateTimePicker';
@@ -10,15 +9,19 @@ export * from './LocalizationProvider';
 export * from './MobileDatePicker';
 export * from './MobileDateTimePicker';
 export * from './MobileTimePicker';
-export * from './MonthPicker';
 export * from './PickersDay';
 export * from './StaticDatePicker';
 export * from './StaticDateTimePicker';
 export * from './StaticTimePicker';
 export * from './TimePicker';
-export * from './YearPicker';
 export * from './locales';
 
+// Calendars
+export * from './MonthCalendar';
+export * from './YearCalendar';
+export * from './DayCalendarSkeleton';
+
+// Pickers
 export * from './DatePicker2';
 export * from './DesktopDatePicker2';
 export * from './MobileDatePicker2';

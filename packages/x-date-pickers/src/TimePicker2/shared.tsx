@@ -5,10 +5,18 @@ import { ClockPicker, ClockPickerProps, ClockPickerView } from '../ClockPicker';
 import { useUtils } from '../internals/hooks/useUtils';
 import { ValidationCommonPropsOptionalValue } from '../internals/hooks/validation/useValidation';
 import { DateValidationError } from '../internals/hooks/validation/useDateValidation';
-import { ExportedClockPickerProps } from '../ClockPicker/ClockPicker';
+import {
+  ClockPickerSlotsComponent,
+  ClockPickerSlotsComponentsProps,
+  ExportedClockPickerProps
+} from '../ClockPicker/ClockPicker';
 import { PickerViewContainer } from '../internals/components/PickerViewContainer';
 import { BasePickerProps2 } from '../internals/models/props/basePickerProps';
 import { BaseTimeValidationProps } from '../internals/hooks/validation/models';
+
+export interface BaseTimePicker2SlotsComponent extends Partial<ClockPickerSlotsComponent> {}
+
+export interface BaseTimePicker2SlotsComponentsProps extends Partial<ClockPickerSlotsComponentsProps> {}
 
 export interface BaseTimePicker2Props<TDate>
   extends MakeOptional<BasePickerProps2<TDate | null, TDate, ClockPickerView>, 'views' | 'openTo'>,

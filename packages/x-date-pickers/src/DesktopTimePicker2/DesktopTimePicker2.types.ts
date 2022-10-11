@@ -3,26 +3,19 @@ import {
   UseDesktopPickerSlotsComponentsProps,
 } from '../internals/hooks/useDesktopPicker';
 import { MakeOptional } from '../internals/models/helpers';
-import { BaseTimePicker2Props } from '../TimePicker2/shared';
-import {
-  CalendarPickerSlotsComponent,
-  CalendarPickerSlotsComponentsProps,
-} from '../CalendarPicker';
+import { BaseTimePicker2Props, BaseTimePicker2SlotsComponent, BaseTimePicker2SlotsComponentsProps } from '../TimePicker2/shared';
 
-export interface DesktopTimePicker2SlotsComponent<TDate>
-  extends MakeOptional<UseDesktopPickerSlotsComponent, 'Field' | 'OpenPickerIcon'>,
-    CalendarPickerSlotsComponent<TDate> {}
+export interface DesktopTimePicker2SlotsComponent
+  extends BaseTimePicker2SlotsComponent, MakeOptional<UseDesktopPickerSlotsComponent, 'Field' | 'OpenPickerIcon'> {}
 
-export interface DesktopTimePicker2SlotsComponentsProps<TDate>
-  extends UseDesktopPickerSlotsComponentsProps<TDate>,
-    CalendarPickerSlotsComponentsProps<TDate> {}
+export interface DesktopTimePicker2SlotsComponentsProps<TDate> extends BaseTimePicker2SlotsComponentsProps, UseDesktopPickerSlotsComponentsProps<TDate> {}
 
 export interface DesktopTimePicker2Props<TDate> extends BaseTimePicker2Props<TDate> {
   /**
    * Overrideable components.
    * @default {}
    */
-  components?: DesktopTimePicker2SlotsComponent<TDate>;
+  components?: DesktopTimePicker2SlotsComponent;
   /**
    * The props used for each component slot.
    * @default {}

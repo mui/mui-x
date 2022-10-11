@@ -5,11 +5,11 @@ import { DateTimePickerTabsProps } from '../../../DateTimePicker';
 import { useViews, PickerOnChangeFn } from '../../hooks/useViews';
 import { ClockPicker, ExportedClockPickerProps } from '../../../ClockPicker/ClockPicker';
 import {
-  CalendarPicker,
-  CalendarPickerSlotsComponent,
-  CalendarPickerSlotsComponentsProps,
-  ExportedCalendarPickerProps,
-} from '../../../CalendarPicker/CalendarPicker';
+  DateCalendar,
+  DateCalendarSlotsComponent,
+  DateCalendarSlotsComponentsProps,
+} from '../../../DateCalendar';
+import { ExportedDateCalendarProps } from '../../../DateCalendar/DateCalendar';
 import { KeyboardDateInput } from '../KeyboardDateInput';
 import { useIsLandscape } from '../../hooks/useIsLandscape';
 import { WrapperVariantContext } from '../wrappers/WrapperVariantContext';
@@ -26,7 +26,7 @@ import {
 } from './calendarOrClockPickerClasses';
 
 export interface CalendarOrClockPickerSlotsComponent<TDate>
-  extends CalendarPickerSlotsComponent<TDate> {
+  extends DateCalendarSlotsComponent<TDate> {
   /**
    * Tabs enabling toggling between date and time pickers.
    * @default DateTimePickerTabs
@@ -35,13 +35,13 @@ export interface CalendarOrClockPickerSlotsComponent<TDate>
 }
 
 export interface CalendarOrClockPickerSlotsComponentsProps<TDate>
-  extends CalendarPickerSlotsComponentsProps<TDate> {
+  extends DateCalendarSlotsComponentsProps<TDate> {
   tabs: Omit<DateTimePickerTabsProps, 'onViewChange' | 'view'>;
 }
 
 export interface ExportedCalendarOrClockPickerProps<TDate, View extends CalendarOrClockPickerView>
   extends Omit<BasePickerProps<TDate | null>, 'value' | 'onChange'>,
-    Omit<ExportedCalendarPickerProps<TDate>, 'onViewChange' | 'openTo' | 'view'>,
+    Omit<ExportedDateCalendarProps<TDate>, 'onViewChange' | 'openTo' | 'view'>,
     ExportedClockPickerProps<TDate> {
   dateRangeIcon?: React.ReactNode;
   /**
@@ -240,7 +240,7 @@ export function CalendarOrClockPicker<TDate, View extends CalendarOrClockPickerV
         ) : (
           <React.Fragment>
             {isDatePickerView(openView) && (
-              <CalendarPicker
+              <DateCalendar
                 autoFocus={autoFocus}
                 value={value}
                 onViewChange={setOpenView as (view: CalendarPickerView) => void}

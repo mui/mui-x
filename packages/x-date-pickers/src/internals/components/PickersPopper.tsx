@@ -77,7 +77,6 @@ export interface PickerPopperProps extends PickerStateWrapperProps {
   componentsProps?: Partial<PickersPopperSlotsComponentsProps>;
   classes?: Partial<PickersPopperClasses>;
   shouldRestoreFocus?: () => boolean;
-  isNewPicker?: boolean;
 }
 
 const useUtilityClasses = (ownerState: PickerPopperProps) => {
@@ -274,7 +273,6 @@ export function PickersPopper(inProps: PickerPopperProps) {
     role,
     components,
     componentsProps,
-    isNewPicker,
   } = props;
 
   React.useEffect(() => {

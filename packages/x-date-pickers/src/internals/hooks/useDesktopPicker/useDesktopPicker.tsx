@@ -156,7 +156,6 @@ export const useDesktopPicker = <TDate, TView extends CalendarOrClockPickerView>
           components={components}
           componentsProps={componentsProps}
           shouldRestoreFocus={shouldRestoreFocus}
-          isNewPicker
         >
           {renderViews()}
         </PickersPopper>
