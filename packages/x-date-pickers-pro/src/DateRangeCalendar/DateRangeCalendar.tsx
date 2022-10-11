@@ -488,6 +488,17 @@ DateRangeCalendar.propTypes = {
    */
   disablePast: PropTypes.bool,
   /**
+   * If `true`, the week number will be display in the calendar.
+   * Needs to provide `getWeekNumber` if the adapter does not support `getWeekNumber`
+   */
+  displayWeekNumber: PropTypes.bool,
+  /**
+   * Get the week number form keek first day
+   * @param {TDate} date The first day of the week.
+   * @returns {number} The displayed week number
+   */
+  getWeekNumber: PropTypes.func,
+  /**
    * If `true` renders `LoadingComponent` in calendar instead of calendar view.
    * Can be used to preload information and show it in calendar.
    * @default false
