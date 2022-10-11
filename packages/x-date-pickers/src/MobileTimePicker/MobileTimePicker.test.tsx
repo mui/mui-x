@@ -20,7 +20,7 @@ import {
 } from 'test/utils/pickers-utils';
 
 const WrappedMobileTimePicker = withPickerControls(MobileTimePicker)({
-  DialogProps: { TransitionComponent: FakeTransitionComponent },
+  components: { MobileTransition: FakeTransitionComponent },
   renderInput: (params) => <TextField {...params} />,
 });
 

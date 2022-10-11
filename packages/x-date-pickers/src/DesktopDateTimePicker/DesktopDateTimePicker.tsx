@@ -79,10 +79,7 @@ export const DesktopDateTimePicker = React.forwardRef(function DesktopDateTimePi
 
   const {
     onChange,
-    PaperProps,
-    PopperProps,
     ToolbarComponent = DateTimePickerToolbar,
-    TransitionComponent,
     value,
     components: providedComponents,
     componentsProps,
@@ -109,9 +106,6 @@ export const DesktopDateTimePicker = React.forwardRef(function DesktopDateTimePi
       {...wrapperProps}
       DateInputProps={AllDateInputProps}
       KeyboardDateInputComponent={KeyboardDateInput}
-      PopperProps={PopperProps}
-      PaperProps={PaperProps}
-      TransitionComponent={TransitionComponent}
       components={components}
       componentsProps={componentsProps}
       localeText={localeText}
@@ -374,14 +368,6 @@ DesktopDateTimePicker.propTypes = {
    */
   orientation: PropTypes.oneOf(['landscape', 'portrait']),
   /**
-   * Paper props passed down to [Paper](https://mui.com/material-ui/api/paper/) component.
-   */
-  PaperProps: PropTypes.object,
-  /**
-   * Popper props passed down to [Popper](https://mui.com/material-ui/api/popper/) component.
-   */
-  PopperProps: PropTypes.object,
-  /**
    * Make picker read only.
    * @default false
    */
@@ -485,10 +471,6 @@ DesktopDateTimePicker.propTypes = {
    * @default 'Select date & time'
    */
   toolbarTitle: PropTypes.node,
-  /**
-   * Custom component for popper [Transition](https://mui.com/material-ui/transitions/#transitioncomponent-prop).
-   */
-  TransitionComponent: PropTypes.elementType,
   /**
    * The value of the picker.
    */
