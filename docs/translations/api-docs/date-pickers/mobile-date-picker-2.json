@@ -52,8 +52,11 @@
     "LeftArrowIcon": "Icon displayed in the left view switch button.",
     "RightArrowIcon": "Icon displayed in the right view switch button.",
     "Day": "Custom component for day.\nCheck the <a href=\"https://mui.com/x/api/date-pickers/pickers-day/\">PickersDay</a> component.",
+    "ActionBar": "Custom component for the action bar, it is placed bellow the picker views.",
     "Input": "",
-    "ActionBar": "The action bar placed bellow picker views.",
+    "Dialog": "Custom component for the dialog inside which the views are rendered on mobile.",
+    "MobilePaper": "Custom component for the paper rendered inside the mobile picker&#39;s Dialog.",
+    "MobileTransition": "Custom component for the mobile dialog <a href=\"https://mui.com/material-ui/transitions\">Transition</a>.",
     "Field": ""
   }
 }

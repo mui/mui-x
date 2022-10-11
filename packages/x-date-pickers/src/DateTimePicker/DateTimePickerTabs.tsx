@@ -44,7 +44,7 @@ export interface DateTimePickerTabsProps {
    * Callback called when tab is clicked
    * @param {CalendarOrClockPickerView} view Picker view that was clicked
    */
-  onChange: (view: CalendarOrClockPickerView) => void;
+  onViewChange: (view: CalendarOrClockPickerView) => void;
   /**
    * Time tab icon.
    * @default Time
@@ -78,6 +78,7 @@ const DateTimePickerTabsRoot = styled(Tabs, {
 })<{ ownerState: OwnerState }>(({ ownerState, theme }) => ({
   boxShadow: `0 -1px 0 0 inset ${theme.palette.divider}`,
   ...(ownerState.wrapperVariant === 'desktop' && {
+    // TODO v6: Drop order when the old pickers are removed
     order: 1,
     boxShadow: `0 1px 0 0 inset ${theme.palette.divider}`,
     [`& .${tabsClasses.indicator}`]: {
@@ -89,7 +90,7 @@ const DateTimePickerTabsRoot = styled(Tabs, {
 
 const DateTimePickerTabs = function DateTimePickerTabs(inProps: DateTimePickerTabsProps) {
   const props = useThemeProps({ props: inProps, name: 'MuiDateTimePickerTabs' });
-  const { dateRangeIcon = <DateRange />, onChange, timeIcon = <Time />, view } = props;
+  const { dateRangeIcon = <DateRange />, onViewChange, timeIcon = <Time />, view } = props;
 
   const localeText = useLocaleText();
   const wrapperVariant = React.useContext(WrapperVariantContext);
@@ -97,7 +98,7 @@ const DateTimePickerTabs = function DateTimePickerTabs(inProps: DateTimePickerTa
   const classes = useUtilityClasses(ownerState);
 
   const handleChange = (event: React.SyntheticEvent, value: TabValue) => {
-    onChange(tabToView(value));
+    onViewChange(tabToView(value));
   };
 
   return (
@@ -140,7 +141,7 @@ DateTimePickerTabs.propTypes = {
    * Callback called when tab is clicked
    * @param {CalendarOrClockPickerView} view Picker view that was clicked
    */
-  onChange: PropTypes.func.isRequired,
+  onViewChange: PropTypes.func.isRequired,
   /**
    * Time tab icon.
    * @default Time

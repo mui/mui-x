@@ -36,7 +36,7 @@ export interface CalendarOrClockPickerSlotsComponent<TDate>
 
 export interface CalendarOrClockPickerSlotsComponentsProps<TDate>
   extends CalendarPickerSlotsComponentsProps<TDate> {
-  tabs: Omit<DateTimePickerTabsProps, 'onChange' | 'view'>;
+  tabs: Omit<DateTimePickerTabsProps, 'onViewChange' | 'view'>;
 }
 
 export interface ExportedCalendarOrClockPickerProps<TDate, View extends CalendarOrClockPickerView>
@@ -222,7 +222,7 @@ export function CalendarOrClockPicker<TDate, View extends CalendarOrClockPickerV
           dateRangeIcon={dateRangeIcon}
           timeIcon={timeIcon}
           view={openView}
-          onChange={setOpenView as (view: CalendarOrClockPickerView) => void}
+          onViewChange={setOpenView as (view: CalendarOrClockPickerView) => void}
           {...other.componentsProps?.tabs}
         />
       )}

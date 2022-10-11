@@ -90,6 +90,15 @@
   "slots": {
     "ActionBar": { "default": "PickersActionBar", "type": { "name": "elementType" } },
     "Day": { "default": "PickersDay", "type": { "name": "elementType" } },
+    "DesktopPaper": { "default": "PickersPopperPaper", "type": { "name": "elementType" } },
+    "DesktopTransition": {
+      "default": "Grow from @mui/material",
+      "type": { "name": "elementType" }
+    },
+    "DesktopTrapFocus": {
+      "default": "TrapFocus from @mui/material",
+      "type": { "name": "elementType" }
+    },
     "Field": { "type": { "name": "elementType" } },
     "Input": { "type": { "name": "elementType" } },
     "InputAdornment": { "default": "InputAdornment", "type": { "name": "elementType" } },
@@ -98,10 +107,12 @@
     "OpenPickerButton": { "default": "IconButton", "type": { "name": "elementType" } },
     "OpenPickerIcon": { "type": { "name": "elementType" } },
     "PaperContent": { "default": "React.Fragment", "type": { "name": "elementType" } },
+    "Popper": { "default": "Popper from @mui/material", "type": { "name": "elementType" } },
     "PreviousIconButton": { "default": "IconButton", "type": { "name": "elementType" } },
     "RightArrowIcon": { "default": "ArrowRight", "type": { "name": "elementType" } },
     "SwitchViewButton": { "default": "IconButton", "type": { "name": "elementType" } },
-    "SwitchViewIcon": { "default": "ArrowDropDown", "type": { "name": "elementType" } }
+    "SwitchViewIcon": { "default": "ArrowDropDown", "type": { "name": "elementType" } },
+    "Tabs": { "default": "DateTimePickerTabs", "type": { "name": "elementType" } }
   },
   "name": "DesktopDateTimePicker2",
   "styles": { "classes": [], "globalClasses": {}, "name": "MuiDesktopDateTimePicker2" },

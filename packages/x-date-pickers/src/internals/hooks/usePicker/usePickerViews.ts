@@ -6,6 +6,8 @@ import { useViews } from '../useViews';
 import { PickerSelectionState } from '../usePickerState';
 import { useIsLandscape } from '../useIsLandscape';
 import { UseFieldInternalProps } from '../useField';
+import { WrapperVariant } from '../../components/wrappers/WrapperVariantContext';
+import type { UsePickerValueActions } from './usePickerValue';
 
 type PickerViewRenderer<TValue, TView extends CalendarOrClockPickerView, TViewProps extends {}> = (
   props: PickerViewsRendererProps<TValue, TView, TViewProps>,
@@ -64,6 +66,8 @@ export interface UsePickerViewParams<
   sectionModeLookup?: PickerDateSectionModeLookup<TView>;
   additionalViewProps: TViewProps;
   inputRef?: React.RefObject<HTMLInputElement>;
+  wrapperVariant: WrapperVariant;
+  actions: UsePickerValueActions;
   open: boolean;
   onClose: () => void;
   onSelectedSectionsChange: NonNullable<
@@ -82,13 +86,13 @@ export type PickerViewsRendererProps<
   TView extends CalendarOrClockPickerView,
   TViewProps extends {},
 > = TViewProps &
-  Pick<
-    UsePickerViewsProps<TValue, TView>,
-    'value' | 'onChange' | 'views' | 'onViewChange' | 'autoFocus'
-  > & {
+  UsePickerValueActions &
+  Pick<UsePickerViewsProps<TValue, TView>, 'value' | 'onChange' | 'views' | 'autoFocus'> & {
     view: TView;
+    onViewChange: (view: TView) => void;
     value: TValue;
     isLandscape: boolean;
+    wrapperVariant: WrapperVariant;
   };
 
 let warnedOnceNotValidOpenTo = false;
@@ -103,6 +107,8 @@ export const usePickerViews = <
   sectionModeLookup: inputSectionModelLookup,
   additionalViewProps,
   inputRef,
+  wrapperVariant,
+  actions,
   open,
   onClose,
   onSelectedSectionsChange,
@@ -195,6 +201,8 @@ export const usePickerViews = <
         onChange: handleChangeAndOpenNext,
         views,
         isLandscape,
+        wrapperVariant,
+        ...actions,
         ...other,
         ...additionalViewProps,
       }),

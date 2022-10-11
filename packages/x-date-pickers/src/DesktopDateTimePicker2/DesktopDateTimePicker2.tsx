@@ -10,6 +10,7 @@ import { Calendar } from '../internals/components/icons';
 import { useDesktopPicker } from '../internals/hooks/useDesktopPicker';
 import { PickerDateSectionModeLookup } from '../internals/hooks/usePicker';
 import { CalendarOrClockPickerView } from '../internals/models';
+import { DateTimePickerTabs } from '../DateTimePicker/DateTimePickerTabs';
 
 type DesktopDateTimePickerComponent = (<TDate>(
   props: DesktopDateTimePicker2Props<TDate> & React.RefAttributes<HTMLDivElement>,
@@ -45,6 +46,7 @@ const DesktopDateTimePicker2 = React.forwardRef(function DesktopDateTimePicker2<
   const components = {
     Field: DateTimeField,
     OpenPickerIcon: Calendar,
+    Tabs: DateTimePickerTabs,
     ...inComponents,
   };
 

@@ -54,19 +54,24 @@
   },
   "classDescriptions": {},
   "slotDescriptions": {
-    "Input": "",
-    "InputAdornment": "Component disabled on the start or end input adornment used to open the picker.",
-    "OpenPickerButton": "Button to open the picker.",
-    "ActionBar": "The action bar placed bellow picker views.",
-    "PaperContent": "The content of the Paper wrapping views.",
-    "Field": "",
-    "OpenPickerIcon": "Icon displayed in the open picker button.",
+    "Tabs": "Tabs enabling toggling between date and time pickers.",
     "SwitchViewButton": "Button displayed to switch between different calendar views.",
     "SwitchViewIcon": "Icon displayed in the SwitchViewButton. Rotated by 180° when the open view is &#39;year&#39;.",
     "PreviousIconButton": "Button allowing to switch to the left view.",
     "NextIconButton": "Button allowing to switch to the right view.",
     "LeftArrowIcon": "Icon displayed in the left view switch button.",
     "RightArrowIcon": "Icon displayed in the right view switch button.",
-    "Day": "Custom component for day.\nCheck the <a href=\"https://mui.com/x/api/date-pickers/pickers-day/\">PickersDay</a> component."
+    "Day": "Custom component for day.\nCheck the <a href=\"https://mui.com/x/api/date-pickers/pickers-day/\">PickersDay</a> component.",
+    "ActionBar": "Custom component for the action bar, it is placed bellow the picker views.",
+    "PaperContent": "Custom component wrapping the views of the desktop and static pickers (it is the direct child of the Paper component).",
+    "Input": "",
+    "InputAdornment": "Component disabled on the start or end input adornment used to open the picker.",
+    "OpenPickerButton": "Button to open the picker.",
+    "DesktopPaper": "Custom component for the paper rendered inside the desktop picker&#39;s Popper.",
+    "DesktopTransition": "Custom component for the desktop popper <a href=\"https://mui.com/material-ui/transitions\">Transition</a>.",
+    "DesktopTrapFocus": "Custom component for trapping the focus inside the views on desktop.",
+    "Popper": "Custom component for the popper inside which the views are rendered on desktop.",
+    "Field": "",
+    "OpenPickerIcon": "Icon displayed in the open picker button."
   }
 }

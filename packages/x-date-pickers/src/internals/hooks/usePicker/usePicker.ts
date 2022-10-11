@@ -29,9 +29,11 @@ export const usePicker = <
     renderViews: renderViewsParam,
     sectionModeLookup,
     inputRef,
+    wrapperVariant,
     open,
     onClose: actions.onClose,
     onSelectedSectionsChange: fieldProps.onSelectedSectionsChange,
+    actions,
   });
 
   return { fieldProps, actions, renderViews, open, hasPopperView, shouldRestoreFocus };
