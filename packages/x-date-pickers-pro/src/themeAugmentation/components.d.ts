@@ -1,6 +1,11 @@
 import { ComponentsProps, ComponentsOverrides, ComponentsVariants } from '@mui/material/styles';
 
 export interface PickersProComponents<Theme = unknown> {
+  MuiDateRangeCalendar?: {
+    defaultProps?: ComponentsProps['MuiDateRangeCalendar'];
+    styleOverrides?: ComponentsOverrides<Theme>['MuiDateRangeCalendar'];
+    variants?: ComponentsVariants['MuiDateRangeCalendar'];
+  };
   MuiDateRangePicker?: {
     defaultProps?: ComponentsProps['MuiDateRangePicker'];
     styleOverrides?: ComponentsOverrides<Theme>['MuiDateRangePicker'];
