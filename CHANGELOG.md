@@ -304,7 +304,7 @@ You can find more information about the new api, including how to set those tran
   +  adapterLocale="fr"
   >
     {children}
-  </LocalizationProvider
+  </LocalizationProvider>
   ```
 
 - The component slots `LeftArrowButton` and `RightArrowButton` have been renamed `PreviousIconButton` and `NextIconButton` to better describe there usage:
