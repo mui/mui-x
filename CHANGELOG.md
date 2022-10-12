@@ -295,9 +295,7 @@ We'd like to offer a big thanks to the 12 contributors who made this release pos
 
 You can find more information about the new api, including how to set those translations on all your components at once in the [documentation](https://next.mui.com/x/react-date-pickers/localization/)
 
-- The deprecated `locale` prop of the `LocalizationProvider` component have been 
-
-  You can now use the `adapterLocale` prop instead:
+- The deprecated `locale` prop of the `LocalizationProvider` component have been renamed `adapterLocale`.
 
   ```diff
   <LocalizationProvider 
