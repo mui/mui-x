@@ -90,7 +90,12 @@ export type { UsePickerParams } from './hooks/usePicker';
 export type { PickerStateProps, PickerStatePickerProps } from './hooks/usePickerState';
 export type { PickerStateValueManager, PickerSelectionState } from './hooks/usePickerState';
 export { useLocalizationContext, useDefaultDates, useUtils, useLocaleText } from './hooks/useUtils';
-export type { BaseDateValidationProps, DayValidationProps } from './hooks/validation/models';
+export type {
+  BaseDateValidationProps,
+  BaseTimeValidationProps,
+  TimeValidationProps,
+  DayValidationProps,
+} from './hooks/validation/models';
 export { useValidation } from './hooks/validation/useValidation';
 export type {
   ValidationCommonProps,
@@ -99,7 +104,11 @@ export type {
   Validator,
 } from './hooks/validation/useValidation';
 export { validateDate } from './hooks/validation/useDateValidation';
+export { validateTime } from './hooks/validation/useTimeValidation';
+export { validateDateTime } from './hooks/validation/useDateTimeValidation';
 export type { DateValidationError } from './hooks/validation/useDateValidation';
+export type { TimeValidationError } from './hooks/validation/useTimeValidation';
+export type { DateTimeValidationError } from './hooks/validation/useDateTimeValidation';
 export { usePreviousMonthDisabled, useNextMonthDisabled } from './hooks/date-helpers-hooks';
 
 export type { BasePickerProps, BasePickerProps2 } from './models/props/basePickerProps';

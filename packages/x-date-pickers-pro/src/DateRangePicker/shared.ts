@@ -67,6 +67,7 @@ export function useDateRangePickerDefaultizedProps<
   };
 }
 
+// What about renaming it `rangePickerValueManager` such that it's clear this manager is common to date, time and dateTime?
 export const dateRangePickerValueManager: PickerStateValueManager<[any, any], any> = {
   emptyValue: [null, null],
   getTodayValue: (utils) => [utils.date()!, utils.date()!],

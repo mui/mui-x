@@ -6,11 +6,18 @@ import { Unstable_MultiInputDateRangeField as MultiInputDateRangeField } from '@
 import { Unstable_SingleInputDateRangeField as SingleInputDateRangeField } from '@mui/x-date-pickers-pro/SingleInputDateRangeField';
 
 export default function BasicDateRangeField() {
+  const [value, setValue] = React.useState([null, null]);
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <Stack spacing={4}>
-        <MultiInputDateRangeField />
-        <SingleInputDateRangeField />
+        <MultiInputDateRangeField
+          value={value}
+          onChange={(newValue) => setValue(newValue)}
+        />
+        <SingleInputDateRangeField
+          value={value}
+          onChange={(newValue) => setValue(newValue)}
+        />
       </Stack>
     </LocalizationProvider>
   );
