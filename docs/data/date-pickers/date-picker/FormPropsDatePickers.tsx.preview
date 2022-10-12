@@ -1,6 +1,4 @@
 <LocalizationProvider dateAdapter={AdapterDayjs}>
-  <Stack spacing={3}>
-    <DatePicker {...defaultProps} label="disabled" disabled />
-    <DatePicker {...defaultProps} label="read-only" readOnly />
-  </Stack>
+  <DatePicker {...defaultProps} label="disabled" disabled />
+  <DatePicker {...defaultProps} label="read-only" readOnly />
 </LocalizationProvider>
