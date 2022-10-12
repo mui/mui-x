@@ -7,7 +7,7 @@ import describeValidation from '@mui/x-date-pickers/tests/describeValidation';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
-describe.only('<DatePicker2 />', () => {
+describe('<DatePicker2 />', () => {
   const { render, clock } = createPickerRenderer({ clock: 'fake' });
 
   describeValidation(DatePicker2, () => ({
