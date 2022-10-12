@@ -1,10 +1,15 @@
 import * as React from 'react';
 import { useSlotProps } from '@mui/base/utils';
-import { onSpaceOrEnter, useLocaleText, UsePickerResponse } from '@mui/x-date-pickers/internals';
+import {
+  CalendarOrClockPickerView,
+  onSpaceOrEnter,
+  useLocaleText,
+  UsePickerResponse,
+} from '@mui/x-date-pickers/internals';
 import { DateRange } from '../../models';
 
-interface UseRangePickerFieldParams<TDate>
-  extends Pick<UsePickerResponse<DateRange<TDate>>, 'open' | 'actions'> {
+interface UseRangePickerFieldParams<TDate, TView extends CalendarOrClockPickerView>
+  extends Pick<UsePickerResponse<DateRange<TDate>, TView>, 'open' | 'actions'> {
   readOnly?: boolean;
   disableOpenPicker?: boolean;
   Input: React.ElementType;
@@ -14,7 +19,7 @@ interface UseRangePickerFieldParams<TDate>
   onCurrentDatePositionChange: (newPosition: 'start' | 'end') => void;
 }
 
-export const useRangePickerField = <TDate>({
+export const useRangePickerField = <TDate, TView extends CalendarOrClockPickerView>({
   open,
   actions,
   readOnly,
@@ -24,7 +29,7 @@ export const useRangePickerField = <TDate>({
   onBlur,
   currentDatePosition,
   onCurrentDatePositionChange,
-}: UseRangePickerFieldParams<TDate>) => {
+}: UseRangePickerFieldParams<TDate, TView>) => {
   const localeText = useLocaleText();
 
   const startRef = React.useRef<HTMLInputElement>(null);
