@@ -12,11 +12,11 @@ import {
   DesktopWrapperSlotsComponent,
   DesktopWrapperSlotsComponentsProps,
 } from '../internals/components/wrappers/DesktopWrapper';
-import { CalendarOrClockPicker } from '../internals/components/CalendarOrClockPicker';
 import { useDateValidation } from '../internals/hooks/validation/useDateValidation';
 import { KeyboardDateInput } from '../internals/components/KeyboardDateInput';
 import { usePickerState } from '../internals/hooks/usePickerState';
 import { DateCalendarSlotsComponent, DateCalendarSlotsComponentsProps } from '../DateCalendar';
+import { PickerLayout } from '../internals/components/PickerLayout';
 
 export interface DesktopDatePickerSlotsComponent<TDate>
   extends DesktopWrapperSlotsComponent,
@@ -94,7 +94,7 @@ export const DesktopDatePicker = React.forwardRef(function DesktopDatePicker<TDa
       componentsProps={componentsProps}
       localeText={localeText}
     >
-      <CalendarOrClockPicker
+      <PickerLayout
         {...pickerProps}
         autoFocus
         toolbarTitle={props.label || props.toolbarTitle}

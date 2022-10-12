@@ -12,7 +12,6 @@ import {
   MobileWrapperSlotsComponent,
   MobileWrapperSlotsComponentsProps,
 } from '../internals/components/wrappers/MobileWrapper';
-import { CalendarOrClockPicker } from '../internals/components/CalendarOrClockPicker';
 import { useTimeValidation } from '../internals/hooks/validation/useTimeValidation';
 import { DateInputSlotsComponent, PureDateInput } from '../internals/components/PureDateInput';
 import { usePickerState } from '../internals/hooks/usePickerState';
@@ -20,6 +19,7 @@ import {
   ClockPickerSlotsComponent,
   ClockPickerSlotsComponentsProps,
 } from '../ClockPicker/ClockPicker';
+import { PickerLayout } from '../internals/components/PickerLayout';
 
 export interface MobileTimePickerSlotsComponent
   extends MobileWrapperSlotsComponent,
@@ -101,7 +101,7 @@ export const MobileTimePicker = React.forwardRef(function MobileTimePicker<TDate
       componentsProps={componentsProps}
       localeText={localeText}
     >
-      <CalendarOrClockPicker
+      <PickerLayout
         {...pickerProps}
         autoFocus
         toolbarTitle={props.label || props.toolbarTitle}

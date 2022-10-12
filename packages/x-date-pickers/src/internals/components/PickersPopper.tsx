@@ -13,7 +13,6 @@ import { useForkRef, useEventCallback, ownerDocument } from '@mui/material/utils
 import { styled, useThemeProps } from '@mui/material/styles';
 import { unstable_composeClasses as composeClasses } from '@mui/material';
 import { TransitionProps as MuiTransitionProps } from '@mui/material/transitions';
-import { PickersActionBar } from '../../PickersActionBar';
 import { PickerStateWrapperProps } from '../hooks/usePickerState';
 import { getPickersPopperUtilityClass, PickersPopperClasses } from './pickersPopperClasses';
 import { PickersSlotsComponent, PickersSlotsComponentsProps } from './wrappers/WrapperProps';
@@ -263,10 +262,6 @@ export function PickersPopper(inProps: PickerPopperProps) {
     containerRef = null,
     onBlur,
     onDismiss,
-    onClear,
-    onAccept,
-    onCancel,
-    onSetToday,
     open,
     role,
     components,
@@ -329,7 +324,6 @@ export function PickersPopper(inProps: PickerPopperProps) {
     }
   };
 
-  const ActionBar = components?.ActionBar ?? PickersActionBar;
   const PaperContent = components?.PaperContent ?? React.Fragment;
   const Transition = components?.DesktopTransition ?? Grow;
   const TrapFocus = components?.DesktopTrapFocus ?? MuiTrapFocus;
@@ -389,17 +383,7 @@ export function PickersPopper(inProps: PickerPopperProps) {
               }}
               ownerState={{ ...ownerState, placement }}
             >
-              <PaperContent {...componentsProps?.paperContent}>
-                {children}
-                <ActionBar
-                  onAccept={onAccept}
-                  onClear={onClear}
-                  onCancel={onCancel}
-                  onSetToday={onSetToday}
-                  actions={[]}
-                  {...componentsProps?.actionBar}
-                />
-              </PaperContent>
+              <PaperContent {...componentsProps?.paperContent}>{children}</PaperContent>
             </Paper>
           </Transition>
         </TrapFocus>

@@ -6,7 +6,6 @@ import { PaperProps as MuiPaperProps } from '@mui/material/Paper/Paper';
 import { TransitionProps as MuiTransitionProps } from '@mui/material/transitions/transition';
 import { styled } from '@mui/material/styles';
 import { DIALOG_WIDTH } from '../constants/dimensions';
-import { PickersActionBar } from '../../PickersActionBar';
 import { PickerStateWrapperProps } from '../hooks/usePickerState';
 import { PickersSlotsComponent, PickersSlotsComponentsProps } from './wrappers/WrapperProps';
 
@@ -73,20 +72,9 @@ const PickersModalDialogContent = styled(DialogContent)({
   },
 });
 
-export const PickersModalDialog = (props: React.PropsWithChildren<PickersModalDialogProps>) => {
-  const {
-    children,
-    onAccept,
-    onClear,
-    onDismiss,
-    onCancel,
-    onSetToday,
-    open,
-    components,
-    componentsProps,
-  } = props;
+export function PickersModalDialog(props: React.PropsWithChildren<PickersModalDialogProps>) {
+  const { children, onDismiss, open, components, componentsProps } = props;
 
-  const ActionBar = components?.ActionBar ?? PickersActionBar;
   const Dialog = components?.Dialog ?? PickersModalDialogRoot;
   const Transition = components?.MobileTransition ?? Fade;
 
@@ -101,14 +89,6 @@ export const PickersModalDialog = (props: React.PropsWithChildren<PickersModalDi
       PaperProps={componentsProps?.mobilePaper}
     >
       <PickersModalDialogContent>{children}</PickersModalDialogContent>
-      <ActionBar
-        onAccept={onAccept}
-        onClear={onClear}
-        onCancel={onCancel}
-        onSetToday={onSetToday}
-        actions={['cancel', 'accept']}
-        {...componentsProps?.actionBar}
-      />
     </Dialog>
   );
-};
+}

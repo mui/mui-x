@@ -38,11 +38,7 @@ export function MobileWrapper<TDate>(props: InternalMobileWrapperProps<TDate>) {
   const {
     children,
     DateInputProps,
-    onAccept,
-    onClear,
     onDismiss,
-    onCancel,
-    onSetToday,
     open,
     PureDateInputComponent,
     components,
@@ -56,11 +52,7 @@ export function MobileWrapper<TDate>(props: InternalMobileWrapperProps<TDate>) {
       <WrapperVariantContext.Provider value="mobile">
         <PureDateInputComponent components={components} {...other} {...DateInputProps} />
         <PickersModalDialog
-          onAccept={onAccept}
-          onClear={onClear}
           onDismiss={onDismiss}
-          onCancel={onCancel}
-          onSetToday={onSetToday}
           open={open}
           components={components}
           componentsProps={componentsProps}

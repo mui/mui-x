@@ -12,7 +12,6 @@ import {
   PickerStaticWrapper,
 } from '../internals/components/PickerStaticWrapper/PickerStaticWrapper';
 import {
-  CalendarOrClockPicker,
   CalendarOrClockPickerSlotsComponent,
   CalendarOrClockPickerSlotsComponentsProps,
 } from '../internals/components/CalendarOrClockPicker';
@@ -21,6 +20,7 @@ import { usePickerState } from '../internals/hooks/usePickerState';
 import { StaticPickerProps } from '../internals/models/props/staticPickerProps';
 import { DateInputSlotsComponent } from '../internals/components/PureDateInput';
 import { DateTimePickerTabs } from '../DateTimePicker/DateTimePickerTabs';
+import { PickerLayout } from '../internals/components/PickerLayout';
 
 export interface StaticDateTimePickerSlotsComponent<TDate>
   extends PickersStaticWrapperSlotsComponent,
@@ -114,7 +114,7 @@ export const StaticDateTimePicker = React.forwardRef(function StaticDateTimePick
       className={className}
       {...wrapperProps}
     >
-      <CalendarOrClockPicker
+      <PickerLayout
         {...pickerProps}
         toolbarTitle={props.label || props.toolbarTitle}
         ToolbarComponent={ToolbarComponent}

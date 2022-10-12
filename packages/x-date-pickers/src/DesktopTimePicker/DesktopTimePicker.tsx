@@ -21,6 +21,7 @@ import {
   ClockPickerSlotsComponentsProps,
 } from '../ClockPicker/ClockPicker';
 import { DateInputSlotsComponent } from '../internals/components/PureDateInput';
+import { PickerLayout } from '../internals/components/PickerLayout';
 
 export interface DesktopTimePickerSlotsComponent
   extends DesktopWrapperSlotsComponent,
@@ -99,7 +100,7 @@ export const DesktopTimePicker = React.forwardRef(function DesktopTimePicker<TDa
       componentsProps={componentsProps}
       localeText={localeText}
     >
-      <CalendarOrClockPicker
+      <PickerLayout
         {...pickerProps}
         autoFocus
         toolbarTitle={props.label || props.toolbarTitle}

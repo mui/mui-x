@@ -12,11 +12,7 @@ export function DesktopTooltipWrapper<TDate>(props: InternalDesktopWrapperProps<
     DateInputProps,
     KeyboardDateInputComponent,
     open,
-    onClear,
     onDismiss,
-    onCancel,
-    onAccept,
-    onSetToday,
     components,
     componentsProps,
     localeText,
@@ -54,10 +50,6 @@ export function DesktopTooltipWrapper<TDate>(props: InternalDesktopWrapperProps<
           anchorEl={inputContainerRef.current}
           onBlur={handleBlur}
           onDismiss={onDismiss}
-          onClear={onClear}
-          onCancel={onCancel}
-          onAccept={onAccept}
-          onSetToday={onSetToday}
           components={components}
           componentsProps={componentsProps}
         >

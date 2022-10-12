@@ -185,6 +185,11 @@ export interface PickerComponents<Theme = unknown> {
     styleOverrides?: ComponentsOverrides<Theme>['PrivatePickersYear'];
     variants?: ComponentsVariants['PrivatePickersYear'];
   };
+  MuiPickerLayout?: {
+    defaultProps?: ComponentsProps['MuiPickerLayout'];
+    styleOverrides?: ComponentsOverrides<Theme>['MuiPickerLayout'];
+    variants?: ComponentsVariants['MuiPickerLayout'];
+  };
 }
 
 declare module '@mui/material/styles' {

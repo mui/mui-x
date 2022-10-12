@@ -161,14 +161,14 @@ export interface PickerStatePickerProps<TValue> {
     wrapperVariant: WrapperVariant,
     selectionState?: PickerSelectionState,
   ) => void;
+  onCancel: () => void;
+  onClear: () => void;
+  onAcceptCommittedValue: () => void;
+  onSetToday: () => void;
 }
 
 export interface PickerStateWrapperProps {
-  onAccept: () => void;
-  onClear: () => void;
   onDismiss: () => void;
-  onCancel: () => void;
-  onSetToday: () => void;
   open: boolean;
 }
 
@@ -262,39 +262,13 @@ export const usePickerState = <TValue, TDate>(
   const wrapperProps = React.useMemo<PickerStateWrapperProps>(
     () => ({
       open: isOpen,
-      onClear: () => {
-        // Reset all date in state to the empty value and close picker.
-        setDate({
-          value: valueManager.emptyValue,
-          action: 'acceptAndClose',
-          // force `onChange` in cases like input (value) === `Invalid date`
-          forceOnChangeCall: !valueManager.areValuesEqual(utils, rawValue, valueManager.emptyValue),
-        });
-      },
-      onAccept: () => {
-        // Set all date in state to equal the current draft value and close picker.
-        setDate({
-          value: dateState.draft,
-          action: 'acceptAndClose',
-          forceOnChangeCall: !valueManager.areValuesEqual(utils, rawValue, value),
-        });
-      },
       onDismiss: () => {
         // Set all dates in state to equal the last committed date.
         // e.g. Reset the state to the last committed value.
         setDate({ value: dateState.committed, action: 'acceptAndClose' });
       },
-      onCancel: () => {
-        // Set all dates in state to equal the last accepted date and close picker.
-        // e.g. Reset the state to the last accepted value
-        setDate({ value: dateState.resetFallback, action: 'acceptAndClose' });
-      },
-      onSetToday: () => {
-        // Set all dates in state to equal today and close picker.
-        setDate({ value: valueManager.getTodayValue(utils), action: 'acceptAndClose' });
-      },
     }),
-    [setDate, isOpen, utils, dateState, valueManager, value, rawValue],
+    [isOpen, setDate, dateState.committed],
   );
 
   // Mobile keyboard view is a special case.
@@ -337,8 +311,44 @@ export const usePickerState = <TValue, TDate>(
           }
         }
       },
+      onClear: () => {
+        // Reset all date in state to the empty value and close picker.
+        setDate({
+          value: valueManager.emptyValue,
+          action: 'acceptAndClose',
+          // force `onChange` in cases like input (value) === `Invalid date`
+          forceOnChangeCall: !valueManager.areValuesEqual(utils, rawValue, valueManager.emptyValue),
+        });
+      },
+      onAcceptCommittedValue: () => {
+        // Set all date in state to equal the current draft value and close picker.
+        setDate({
+          value: dateState.draft,
+          action: 'acceptAndClose',
+          forceOnChangeCall: !valueManager.areValuesEqual(utils, rawValue, value),
+        });
+      },
+      onCancel: () => {
+        // Set all dates in state to equal the last accepted date and close picker.
+        // e.g. Reset the state to the last accepted value
+        setDate({ value: dateState.resetFallback, action: 'acceptAndClose' });
+      },
+      onSetToday: () => {
+        // Set all dates in state to equal today and close picker.
+        setDate({ value: valueManager.getTodayValue(utils), action: 'acceptAndClose' });
+      },
     }),
-    [setDate, isMobileKeyboardViewOpen, dateState.draft, closeOnSelect],
+    [
+      dateState.draft,
+      dateState.resetFallback,
+      isMobileKeyboardViewOpen,
+      setDate,
+      closeOnSelect,
+      valueManager,
+      utils,
+      rawValue,
+      value,
+    ],
   );
 
   const handleInputChange = React.useCallback(

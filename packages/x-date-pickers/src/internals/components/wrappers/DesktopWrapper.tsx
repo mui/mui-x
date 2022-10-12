@@ -50,11 +50,7 @@ export function DesktopWrapper<TDate>(props: InternalDesktopWrapperProps<TDate>)
     children,
     DateInputProps,
     KeyboardDateInputComponent,
-    onClear,
     onDismiss,
-    onCancel,
-    onAccept,
-    onSetToday,
     open,
     components,
     componentsProps,
@@ -72,10 +68,6 @@ export function DesktopWrapper<TDate>(props: InternalDesktopWrapperProps<TDate>)
           open={open}
           anchorEl={ownInputRef.current}
           onDismiss={onDismiss}
-          onCancel={onCancel}
-          onClear={onClear}
-          onAccept={onAccept}
-          onSetToday={onSetToday}
           components={components}
           componentsProps={componentsProps}
         >

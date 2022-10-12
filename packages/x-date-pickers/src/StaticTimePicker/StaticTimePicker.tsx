@@ -15,11 +15,11 @@ import {
   PickersStaticWrapperSlotsComponentsProps,
   PickerStaticWrapper,
 } from '../internals/components/PickerStaticWrapper/PickerStaticWrapper';
-import { CalendarOrClockPicker } from '../internals/components/CalendarOrClockPicker';
 import { useTimeValidation } from '../internals/hooks/validation/useTimeValidation';
 import { usePickerState } from '../internals/hooks/usePickerState';
 import { StaticPickerProps } from '../internals/models/props/staticPickerProps';
 import { DateInputSlotsComponent } from '../internals/components/PureDateInput';
+import { PickerLayout } from '../internals/components/PickerLayout';
 
 export interface StaticTimePickerSlotsComponents
   extends PickersStaticWrapperSlotsComponent,
@@ -102,7 +102,7 @@ export const StaticTimePicker = React.forwardRef(function StaticTimePicker<TDate
       className={className}
       {...wrapperProps}
     >
-      <CalendarOrClockPicker
+      <PickerLayout
         {...pickerProps}
         toolbarTitle={props.label || props.toolbarTitle}
         ToolbarComponent={ToolbarComponent}

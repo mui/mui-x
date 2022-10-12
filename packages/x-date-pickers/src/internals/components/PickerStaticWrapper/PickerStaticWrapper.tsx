@@ -10,7 +10,6 @@ import {
   getStaticWrapperUtilityClass,
   PickerStaticWrapperClasses,
 } from './pickerStaticWrapperClasses';
-import { PickersActionBar } from '../../../PickersActionBar';
 import { PickerStateWrapperProps } from '../../hooks/usePickerState';
 import { PickersInputLocaleText } from '../../../locales/utils/pickersLocaleTextApi';
 import { LocalizationProvider } from '../../../LocalizationProvider';
@@ -94,10 +93,6 @@ function PickerStaticWrapper<TDate>(inProps: PickerStaticWrapperProps<TDate>) {
   const props = useThemeProps({ props: inProps, name: 'MuiPickerStaticWrapper' });
   const {
     displayStaticWrapperAs = 'mobile',
-    onAccept,
-    onClear,
-    onCancel,
-    onSetToday,
     children,
     onDismiss,
     open,
@@ -110,7 +105,6 @@ function PickerStaticWrapper<TDate>(inProps: PickerStaticWrapperProps<TDate>) {
 
   const classes = useUtilityClasses(props);
 
-  const ActionBar = components?.ActionBar ?? PickersActionBar;
   const PaperContent = components?.PaperContent ?? React.Fragment;
 
   return (
@@ -120,14 +114,6 @@ function PickerStaticWrapper<TDate>(inProps: PickerStaticWrapperProps<TDate>) {
           <PickerStaticWrapperContent className={classes.content}>
             <PaperContent {...componentsProps?.paperContent}>{children}</PaperContent>
           </PickerStaticWrapperContent>
-          <ActionBar
-            onAccept={onAccept}
-            onClear={onClear}
-            onCancel={onCancel}
-            onSetToday={onSetToday}
-            actions={displayStaticWrapperAs === 'desktop' ? [] : ['cancel', 'accept']}
-            {...componentsProps?.actionBar}
-          />
         </PickerStaticWrapperRoot>
       </WrapperVariantContext.Provider>
     </LocalizationProvider>
@@ -164,11 +150,7 @@ PickerStaticWrapper.propTypes = {
    * Locale for components texts
    */
   localeText: PropTypes.object,
-  onAccept: PropTypes.func.isRequired,
-  onCancel: PropTypes.func.isRequired,
-  onClear: PropTypes.func.isRequired,
   onDismiss: PropTypes.func.isRequired,
-  onSetToday: PropTypes.func.isRequired,
   open: PropTypes.bool.isRequired,
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
