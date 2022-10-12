@@ -900,7 +900,7 @@ describe('<DataGridPro /> - Rows', () => {
     };
 
     it('should not show `rowCount` if it equals `rows.length`', () => {
-      const { rows, columns } = getData(10, 2);
+      const { rows, columns } = getBasicGridData(10, 2);
       const rowCount = rows.length;
       render(<TestCase rows={rows} columns={columns} rowCount={rowCount} />);
 
@@ -909,7 +909,7 @@ describe('<DataGridPro /> - Rows', () => {
     });
 
     it('should show `rowCount` if it is different than `rows.length`', () => {
-      const { rows, columns } = getData(10, 2);
+      const { rows, columns } = getBasicGridData(10, 2);
       const rowCount = rows.length + 10;
       render(<TestCase rows={rows} columns={columns} rowCount={rowCount} />);
 
@@ -918,7 +918,7 @@ describe('<DataGridPro /> - Rows', () => {
     });
 
     it('should reflect `rowCount` change if it is different than `rows.length`', () => {
-      const { rows, columns } = getData(10, 2);
+      const { rows, columns } = getBasicGridData(10, 2);
       let rowCount = rows.length + 10;
       const { setProps } = render(<TestCase rows={rows} columns={columns} rowCount={rowCount} />);
       rowCount += 1;
