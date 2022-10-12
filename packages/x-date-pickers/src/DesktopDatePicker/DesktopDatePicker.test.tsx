@@ -14,6 +14,7 @@ import {
   withPickerControls,
   openPicker,
 } from 'test/utils/pickers-utils';
+import describeValidation from '@mui/x-date-pickers/tests/describeValidation';
 
 const WrappedDesktopDatePicker = withPickerControls(DesktopDatePicker)({
   components: { DesktopTransition: FakeTransitionComponent },
@@ -21,7 +22,14 @@ const WrappedDesktopDatePicker = withPickerControls(DesktopDatePicker)({
 });
 
 describe('<DesktopDatePicker />', () => {
-  const { render } = createPickerRenderer({ clock: 'fake' });
+  const { render, clock } = createPickerRenderer({ clock: 'fake' });
+
+  describeValidation(DesktopDatePicker, () => ({
+    render,
+    clock,
+    views: ['year', 'month', 'day'],
+    isLegacyPicker: true,
+  }));
 
   describe('Component slots: OpenPickerIcon', () => {
     it('should render custom component', () => {
