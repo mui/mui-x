@@ -16,6 +16,18 @@ We might do some breaking change on their props to have the best components poss
 The fields are React components that let you enter a date or time with the keyboard, without using any modal or dropdown UI.
 They provide refined navigation through arrow keys and support advanced behaviors like localization and validation.
 
+:::warning
+The field components requires adapters imported from `@mui/x-date-pickers` or `@mui/x-date-pickers-pro`.
+
+```diff
+-import AdapterDayjs from '@date-io/dayjs';
++import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
+```
+
+For now, only 4 adapters are exported: `AdapterDayjs`, `AdapterDateFns`, `AdapterLuxon` and `AdapterMoment`.
+Support for the Jalali and Hijri adapters will come in the future.
+:::
+
 ### Fields to edit a single element
 
 {{"demo": "SingleDateFieldExamples.js", "defaultCodeOpen": false}}
