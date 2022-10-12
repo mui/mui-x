@@ -17,6 +17,7 @@ import {
   DataGridProProps,
   GridApi,
   gridFocusCellSelector,
+  gridClasses,
 } from '@mui/x-data-grid-pro';
 import { useBasicDemoData, getBasicGridData } from '@mui/x-data-grid-generator';
 
@@ -886,6 +887,45 @@ describe('<DataGridPro /> - Rows', () => {
 
       expect(row.clientHeight).to.equal(100);
       expect(getRowHeight.neverCalledWithMatch({ id: resizedRowId })).to.equal(true);
+    });
+  });
+
+  describe('prop: rowCount', () => {
+    const TestCase = (props: DataGridProProps) => {
+      return (
+        <div style={{ width: 300, height: 300 }}>
+          <DataGridPro {...props} />
+        </div>
+      );
+    };
+
+    it('should not show `rowCount` if it equals `rows.length`', () => {
+      const { rows, columns } = getData(10, 2);
+      const rowCount = rows.length;
+      render(<TestCase rows={rows} columns={columns} rowCount={rowCount} />);
+
+      const rowCountElement = document.querySelector(`.${gridClasses.rowCount}`) as HTMLElement;
+      expect(rowCountElement.textContent).to.equal(`Total Rows: ${rows.length}`);
+    });
+
+    it('should show `rowCount` if it is different than `rows.length`', () => {
+      const { rows, columns } = getData(10, 2);
+      const rowCount = rows.length + 10;
+      render(<TestCase rows={rows} columns={columns} rowCount={rowCount} />);
+
+      const rowCountElement = document.querySelector(`.${gridClasses.rowCount}`) as HTMLElement;
+      expect(rowCountElement.textContent).to.equal(`Total Rows: ${rows.length} of ${rowCount}`);
+    });
+
+    it('should reflect `rowCount` change if it is different than `rows.length`', () => {
+      const { rows, columns } = getData(10, 2);
+      let rowCount = rows.length + 10;
+      const { setProps } = render(<TestCase rows={rows} columns={columns} rowCount={rowCount} />);
+      rowCount += 1;
+      setProps({ rowCount });
+
+      const rowCountElement = document.querySelector(`.${gridClasses.rowCount}`) as HTMLElement;
+      expect(rowCountElement.textContent).to.equal(`Total Rows: ${rows.length} of ${rowCount}`);
     });
   });
 });
