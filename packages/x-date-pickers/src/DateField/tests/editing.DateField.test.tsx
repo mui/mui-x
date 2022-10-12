@@ -598,11 +598,11 @@ describe('<DateField /> - Editing', () => {
       const input = screen.getByRole('textbox');
       clickOnInput(input, 1);
 
-      expectInputValue(input, 'month/day/year');
+      expectInputValue(input, 'MM / DD / YYYY');
       firePasteEvent(input, '12');
 
       expect(onChange.callCount).to.equal(0);
-      expectInputValue(input, '12/day/year');
+      expectInputValue(input, '12 / DD / YYYY');
     });
 
     it('should set the section when one section is selected, the pasted value has the correct type and value is provided', () => {
@@ -613,9 +613,9 @@ describe('<DateField /> - Editing', () => {
       const input = screen.getByRole('textbox');
       clickOnInput(input, 1);
 
-      expectInputValue(input, '01/13/2018');
+      expectInputValue(input, '01 / 13 / 2018');
       firePasteEvent(input, '12');
-      expectInputValue(input, '12/13/2018');
+      expectInputValue(input, '12 / 13 / 2018');
       expect(onChange.callCount).to.equal(1);
       expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2018, 11, 13));
     });
@@ -628,9 +628,9 @@ describe('<DateField /> - Editing', () => {
       const input = screen.getByRole('textbox');
       clickOnInput(input, 1);
 
-      expectInputValue(input, '01/13/2018');
+      expectInputValue(input, '01 / 13 / 2018');
       firePasteEvent(input, 'Jun');
-      expectInputValue(input, '01/13/2018');
+      expectInputValue(input, '01 / 13 / 2018');
       expect(onChange.callCount).to.equal(0);
     });
   });
