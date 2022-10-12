@@ -11,6 +11,7 @@
     "disabled": "If <code>true</code>, the picker and text field are disabled.",
     "disableFuture": "If <code>true</code> disable values before the current time",
     "disableIgnoringDatePartForTimeValidation": "Do not ignore date part when validating min/max time.",
+    "disableOpenPicker": "Do not render open picker button (renders only the field).",
     "disablePast": "If <code>true</code> disable values after the current time.",
     "inputFormat": "Format of the date when rendered in the input(s).",
     "inputRef": "Pass a ref to the <code>input</code> element.",

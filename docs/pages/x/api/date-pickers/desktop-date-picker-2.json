@@ -16,7 +16,9 @@
     "disabled": { "type": { "name": "bool" } },
     "disableFuture": { "type": { "name": "bool" } },
     "disableHighlightToday": { "type": { "name": "bool" } },
+    "disableOpenPicker": { "type": { "name": "bool" } },
     "disablePast": { "type": { "name": "bool" } },
+    "fixedWeekNumber": { "type": { "name": "number" }, "default": "undefined" },
     "inputFormat": { "type": { "name": "string" } },
     "inputRef": {
       "type": { "name": "union", "description": "func<br>&#124;&nbsp;{ current?: object }" }
@@ -41,9 +43,6 @@
         "name": "enum",
         "description": "'day'<br>&#124;&nbsp;'month'<br>&#124;&nbsp;'year'"
       }
-    },
-    "orientation": {
-      "type": { "name": "enum", "description": "'landscape'<br>&#124;&nbsp;'portrait'" }
     },
     "readOnly": { "type": { "name": "bool" } },
     "reduceAnimations": {

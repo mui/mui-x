@@ -19,7 +19,9 @@
     "disableFuture": { "type": { "name": "bool" } },
     "disableHighlightToday": { "type": { "name": "bool" } },
     "disableIgnoringDatePartForTimeValidation": { "type": { "name": "bool" } },
+    "disableOpenPicker": { "type": { "name": "bool" } },
     "disablePast": { "type": { "name": "bool" } },
+    "fixedWeekNumber": { "type": { "name": "number" }, "default": "undefined" },
     "inputFormat": { "type": { "name": "string" } },
     "inputRef": {
       "type": { "name": "union", "description": "func<br>&#124;&nbsp;{ current?: object }" }
@@ -51,7 +53,8 @@
       }
     },
     "orientation": {
-      "type": { "name": "enum", "description": "'landscape'<br>&#124;&nbsp;'portrait'" }
+      "type": { "name": "enum", "description": "'landscape'<br>&#124;&nbsp;'portrait'" },
+      "default": "\"portrait\""
     },
     "readOnly": { "type": { "name": "bool" } },
     "reduceAnimations": {

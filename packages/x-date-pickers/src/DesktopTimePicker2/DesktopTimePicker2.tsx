@@ -123,6 +123,11 @@ DesktopTimePicker2.propTypes = {
    */
   disableIgnoringDatePartForTimeValidation: PropTypes.bool,
   /**
+   * Do not render open picker button (renders only the field).
+   * @default false
+   */
+  disableOpenPicker: PropTypes.bool,
+  /**
    * If `true` disable values after the current time.
    * @default false
    */
@@ -219,6 +224,7 @@ DesktopTimePicker2.propTypes = {
   openTo: PropTypes.oneOf(['hours', 'minutes', 'seconds']),
   /**
    * Force rendering in particular orientation.
+   * @default "portrait"
    */
   orientation: PropTypes.oneOf(['landscape', 'portrait']),
   /**

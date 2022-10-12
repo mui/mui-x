@@ -112,10 +112,21 @@ DesktopDateRangePicker2.propTypes = {
    */
   disableHighlightToday: PropTypes.bool,
   /**
+   * Do not render open picker button (renders only the field).
+   * @default false
+   */
+  disableOpenPicker: PropTypes.bool,
+  /**
    * If `true` disable values after the current time.
    * @default false
    */
   disablePast: PropTypes.bool,
+  /**
+   * Calendar will show more weeks in order to match this value.
+   * Put it to 6 for having fix number of week in Gregorian calendars
+   * @default undefined
+   */
+  fixedWeekNumber: PropTypes.number,
   /**
    * Format of the date when rendered in the input(s).
    */

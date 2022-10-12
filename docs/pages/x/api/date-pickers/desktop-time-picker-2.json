@@ -13,6 +13,7 @@
     "disabled": { "type": { "name": "bool" } },
     "disableFuture": { "type": { "name": "bool" } },
     "disableIgnoringDatePartForTimeValidation": { "type": { "name": "bool" } },
+    "disableOpenPicker": { "type": { "name": "bool" } },
     "disablePast": { "type": { "name": "bool" } },
     "inputFormat": { "type": { "name": "string" } },
     "inputRef": {
@@ -38,7 +39,8 @@
       }
     },
     "orientation": {
-      "type": { "name": "enum", "description": "'landscape'<br>&#124;&nbsp;'portrait'" }
+      "type": { "name": "enum", "description": "'landscape'<br>&#124;&nbsp;'portrait'" },
+      "default": "\"portrait\""
     },
     "readOnly": { "type": { "name": "bool" } },
     "selectedSections": {
