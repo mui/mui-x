@@ -31,19 +31,19 @@ Here is the syntax to initialize a date picker at the current date for each adap
 
 ```tsx
 // Date-fns
-<DatePicker value={new Date()} />
+<DatePicker value={new Date()} />;
 
 // Dayjs
 import dayjs from 'dayjs';
-<DatePicker value={dayjs()} />
+<DatePicker value={dayjs()} />;
 
 // Moment
 import moment from 'moment';
-<DatePicker value={moment()} />
+<DatePicker value={moment()} />;
 
 // Luxon
 import { DateTime } from 'luxon';
-<DatePicker value={DateTime.now()} />
+<DatePicker value={DateTime.now()} />;
 ```
 
 ### Rename the `LeftArrowButton` slot
@@ -69,7 +69,6 @@ The component slot `LeftArrowButton` has been renamed `PreviousIconButton` on al
 The component slot `RightArrowButton` has been renamed `NextIconButton` on all pickers:
 
 ```diff
-// Same on all pickers.
 <DatePicker
   components={{
 -   RightArrowButton: CustomButton,
@@ -88,7 +87,6 @@ The component slot `RightArrowButton` has been renamed `NextIconButton` on all p
 The `DialogProps` prop has been replaced by a `dialog` component props slot on all responsive and mobile pickers:
 
 ```diff
-// Same on all mobile and responsive pickers.
 <DatePicker
 -  DialogProps={{ backgroundColor: 'red' }}
 +  componentsProps={{ dialog: { backgroundColor: 'red }}}
@@ -100,7 +98,6 @@ The `DialogProps` prop has been replaced by a `dialog` component props slot on a
 The `PaperProps` prop has been replaced by a `desktopPaper` component props slot on all responsive and desktop pickers:
 
 ```diff
-// Same on all desktop and responsive pickers.
 <DatePicker
 -  PaperProps={{ backgroundColor: 'red' }}
 +  componentsProps={{ desktopPaper: { backgroundColor: 'red }}}
@@ -109,10 +106,9 @@ The `PaperProps` prop has been replaced by a `desktopPaper` component props slot
 
 ### Replace the `PopperProps` prop
 
-The `PopperProps` prop has been replaced by a `popper` component  props slot on all responsive and desktop pickers:
+The `PopperProps` prop has been replaced by a `popper` component props slot on all responsive and desktop pickers:
 
 ```diff
-// Same on all desktop and responsive pickers.
 <DatePicker
 -  PopperProps={{ onClick: handleClick }}
 +  componentsProps={{ popper: { onClick: handleClick }}}
@@ -124,7 +120,6 @@ The `PopperProps` prop has been replaced by a `popper` component  props slot on 
 The `TransitionComponent` prop has been replaced by a `desktopTransition` component slot on all responsive and desktop pickers:
 
 ```diff
-// Same on all desktop and responsive pickers.
 <DatePicker
 -  TransitionComponent={Fade}
 +  components={{ desktopTransition: Fade }}
@@ -136,7 +131,6 @@ The `TransitionComponent` prop has been replaced by a `desktopTransition` compon
 The `TrapFocusProps` prop has been replaced by a `desktopTrapFocus` component props slot on all responsive and desktop pickers:
 
 ```diff
-// Same on all desktop and responsive pickers.
 <DatePicker
 -  TrapFocusProps={{ isEnabled: () => false }}
 +  componentsProps={{ desktopTrapFocus: { isEnabled: () => false }}}
@@ -148,7 +142,6 @@ The `TrapFocusProps` prop has been replaced by a `desktopTrapFocus` component pr
 The `renderDay` prop has been replaced by a `Day` component slot on all date, date time and date range pickers:
 
 ```diff
-// Same on all date, date time and date range pickers.
 <DatePicker
 -  renderDay={(_, dayProps) => <CustomDay {...dayProps} />}
 +  components={{ Day: CustomDay }}
@@ -160,7 +153,7 @@ The `renderDay` prop has been replaced by a `Day` component slot on all date, da
 The props used to set the text displayed in the pickers have been replaced by keys inside the `localeText` prop:
 
 | Removed prop                 | Property in the new `localText` prop                                              |
-|------------------------------|-----------------------------------------------------------------------------------|
+| ---------------------------- | --------------------------------------------------------------------------------- |
 | `endText`                    | `end`                                                                             |
 | `getClockLabelText`          | `clockLabelText`                                                                  |
 | `getHoursClockNumberText`    | `hoursClockNumberText`                                                            |
@@ -189,9 +182,9 @@ For instance if you want to replace the `startText` / `endText`
 The `locale` prop of the `LocalizationProvider` component have been renamed `adapterLcoale`:
 
 ```diff
-<LocalizationProvider 
+<LocalizationProvider
   dateAdapter={AdapterDayjs}
--  locale="fr" 
+-  locale="fr"
 +  adapterLocale="fr"
 >
   {children}
@@ -256,7 +249,7 @@ Component names in the theme have changed as well:
 
 ### Rename `date` prop to `value` on view components
 
-The `date` prop has been renamed `value` on  `MonthPicker`, `YearPicker`, `ClockPicker` and `CalendarPicker`:
+The `date` prop has been renamed `value` on `MonthPicker`, `YearPicker`, `ClockPicker` and `CalendarPicker`:
 
 ```diff
 - <MonthPicker date={dayjs()} onChange={handleMonthChange} />
