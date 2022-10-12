@@ -25,7 +25,7 @@ The `value` prop of the pickers now expects a parsed value.
 Until now, it was possible to provide any format that your date management library was able to parse.
 For instance, you could pass `value={new Date()}` when using `AdapterDayjs`.
 
-This brought a lot of confusion so we decided to remove this behavior.
+This behavior brought a lot of confusion and was removed.
 The format expected by the `value` prop is now the same as for any other prop holding a date.
 Here is the syntax to initialize a date picker at the current date for each adapter:
 
