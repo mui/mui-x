@@ -9,27 +9,19 @@ import Stack from '@mui/material/Stack';
 export default function FormPropsDatePickers() {
   const [value, setValue] = React.useState(null);
 
+  const defaultProps = {
+    value,
+    onChange: (newValue) => {
+      setValue(newValue);
+    },
+    renderInput: (params) => <TextField {...params} />,
+  };
+
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <Stack spacing={3}>
-        <DatePicker
-          label="disabled"
-          disabled
-          value={value}
-          onChange={(newValue) => {
-            setValue(newValue);
-          }}
-          renderInput={(params) => <TextField {...params} />}
-        />
-        <DatePicker
-          label="read-only"
-          readOnly
-          value={value}
-          onChange={(newValue) => {
-            setValue(newValue);
-          }}
-          renderInput={(params) => <TextField {...params} />}
-        />
+        <DatePicker {...defaultProps} label="disabled" disabled />
+        <DatePicker {...defaultProps} label="read-only" readOnly />
       </Stack>
     </LocalizationProvider>
   );
