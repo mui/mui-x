@@ -1,6 +1,7 @@
 import { promises as fs } from 'fs';
 import path from 'path';
 import kebabCase from 'lodash/kebabCase';
+import capitalize from 'lodash/capitalize';
 
 const EXPECTED_DIFF = [
   // Mask props
@@ -36,6 +37,8 @@ const PICKERS = [
 ];
 
 const main = async () => {
+  let message = '';
+
   // eslint-disable-next-line no-restricted-syntax
   for (const pickerName of PICKERS) {
     const slug = kebabCase(pickerName);
@@ -46,8 +49,7 @@ const main = async () => {
       'utf-8',
     );
 
-    // eslint-disable-next-line no-console
-    console.log(`${slug.replace(/-/g, ' ').toUpperCase()}: `);
+    message += '<details>\n';
 
     try {
       // eslint-disable-next-line no-await-in-loop
@@ -64,6 +66,7 @@ const main = async () => {
 
       const missingProps: string[] = [];
       const removedProps: string[] = [];
+      const addedProps: string[] = [];
       propKeys.forEach((propKey) => {
         if (!newProps[propKey]) {
           if (EXPECTED_DIFF.includes(propKey)) {
@@ -72,24 +75,37 @@ const main = async () => {
             missingProps.push(propKey);
           }
         }
+
+        // `label` is not added to the old picker json file, don't know why
+        if (!oldProps[propKey] && propKey !== 'label') {
+          addedProps.push(propKey);
+        }
       });
 
+      message += `<summary>${slug.split('-').map(capitalize).join(' ')} (${
+        missingProps.length
+      } missing, ${removedProps.length} removed, ${addedProps.length} added)</summary>\n`;
+
       if (missingProps.length > 0) {
-        // eslint-disable-next-line no-console
-        console.log(`\nMissing props:\n${missingProps.map((prop) => `- ${prop}`).join('\n')}`);
+        message += `\n#### Missing props:\n${missingProps.map((prop) => `- ${prop}`).join('\n')}\n`;
       }
-      if (missingProps.length > 0) {
+      if (removedProps.length > 0) {
+        message += `\n#### Removed props:\n${removedProps.map((prop) => `- ${prop}`).join('\n')}\n`;
+      }
+      if (addedProps.length > 0) {
         // eslint-disable-next-line no-console
-        console.log(`\nRemoved props:\n${removedProps.map((prop) => `- ${prop}`).join('\n')}`);
+        message += `\n#### Added props:\n${addedProps.map((prop) => `- ${prop}`).join('\n')}\n`;
       }
     } catch {
-      // eslint-disable-next-line no-console
-      console.log('To do');
+      message += `<summary>${slug.split('-').map(capitalize).join(' ')} (to do)</summary>\n`;
+      message += 'Component not developped yet\n';
     }
 
-    // eslint-disable-next-line no-console
-    console.log('____');
+    message += '</details>\n\n';
   }
+
+  // eslint-disable-next-line no-console
+  console.log(message);
 };
 
 main();

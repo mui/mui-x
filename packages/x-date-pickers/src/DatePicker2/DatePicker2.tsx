@@ -209,6 +209,10 @@ DatePicker2.propTypes = {
    */
   openTo: PropTypes.oneOf(['day', 'month', 'year']),
   /**
+   * Force rendering in particular orientation.
+   */
+  orientation: PropTypes.oneOf(['landscape', 'portrait']),
+  /**
    * Make picker read only.
    * @default false
    */

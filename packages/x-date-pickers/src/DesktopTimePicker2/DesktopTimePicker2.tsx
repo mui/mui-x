@@ -224,7 +224,6 @@ DesktopTimePicker2.propTypes = {
   openTo: PropTypes.oneOf(['hours', 'minutes', 'seconds']),
   /**
    * Force rendering in particular orientation.
-   * @default "portrait"
    */
   orientation: PropTypes.oneOf(['landscape', 'portrait']),
   /**

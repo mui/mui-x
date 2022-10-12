@@ -81,11 +81,6 @@ export interface BaseDateTimePicker2Props<TDate>
    * Maximal selectable moment of time with binding to date, to set max time in each day use `maxTime`.
    */
   maxDateTime?: TDate;
-  /**
-   * Force rendering in particular orientation.
-   * @default "portrait"
-   */
-  orientation?: 'portrait' | 'landscape';
 }
 
 export function useDateTimePicker2DefaultizedProps<
@@ -193,6 +188,7 @@ export const renderDateTimeViews = <TDate extends unknown>(
           view={view}
           components={components}
           componentsProps={componentsProps}
+          autoFocus
           // focusedView={focusedView}
           // onFocusedViewChange={setFocusedView}
           {...other}
@@ -206,6 +202,7 @@ export const renderDateTimeViews = <TDate extends unknown>(
           view={view}
           components={components}
           componentsProps={componentsProps}
+          autoFocus
           // showViewSwitcher={wrapperVariant === 'desktop'}
         />
       )}

@@ -3,11 +3,19 @@ import { expect } from 'chai';
 import { DatePicker2 } from '@mui/x-date-pickers/DatePicker2';
 import { fireEvent, screen } from '@mui/monorepo/test/utils/createRenderer';
 import { createPickerRenderer, openPicker, stubMatchMedia } from 'test/utils/pickers-utils';
+import describeValidation from '@mui/x-date-pickers/tests/describeValidation';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
 describe.only('<DatePicker2 />', () => {
-  const { render } = createPickerRenderer();
+  const { render, clock } = createPickerRenderer({ clock: 'fake' });
+
+  describeValidation(DatePicker2, () => ({
+    render,
+    clock,
+    skip: ['textField'],
+    views: ['year', 'month', 'day'],
+  }));
 
   describe('prop: inputRef', () => {
     it('should forward ref to the text box', () => {
@@ -38,7 +46,7 @@ describe.only('<DatePicker2 />', () => {
       window.matchMedia = originalMatchMedia;
     });
 
-    it.only('should keep focus when switching views', function test() {
+    it('should keep focus when switching views', function test() {
       if (isJSDOM) {
         this.skip();
       }

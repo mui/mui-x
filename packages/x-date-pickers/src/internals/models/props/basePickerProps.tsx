@@ -46,4 +46,8 @@ export interface BasePickerProps2<TValue, TDate, TView extends CalendarOrClockPi
    * Locale for components texts
    */
   localeText?: PickersInputLocaleText<TDate>;
+  /**
+   * Force rendering in particular orientation.
+   */
+  orientation?: 'portrait' | 'landscape';
 }

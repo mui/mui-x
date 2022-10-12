@@ -35,11 +35,6 @@ export interface BaseTimePicker2Props<TDate>
    * Pass a ref to the `input` element.
    */
   inputRef?: React.Ref<HTMLInputElement>;
-  /**
-   * Force rendering in particular orientation.
-   * @default "portrait"
-   */
-  orientation?: 'portrait' | 'landscape';
 }
 
 export function useTimePicker2DefaultizedProps<TDate, Props extends BaseTimePicker2Props<TDate>>(
@@ -77,5 +72,5 @@ export function useTimePicker2DefaultizedProps<TDate, Props extends BaseTimePick
 }
 
 export const renderTimeViews = <TDate extends unknown>(props: ClockPickerProps<TDate>) => (
-  <ClockPicker<TDate> {...props} />
+  <ClockPicker<TDate> {...props} autoFocus />
 );

@@ -286,7 +286,6 @@ DesktopDateTimePicker2.propTypes = {
   openTo: PropTypes.oneOf(['day', 'hours', 'minutes', 'month', 'seconds', 'year']),
   /**
    * Force rendering in particular orientation.
-   * @default "portrait"
    */
   orientation: PropTypes.oneOf(['landscape', 'portrait']),
   /**

@@ -3,20 +3,16 @@ import { styled } from '@mui/material/styles';
 import { useIsLandscape } from '../hooks/useIsLandscape';
 import { CalendarOrClockPickerView } from '../models/views';
 
-export interface ExportedPickerViewContainerProps {
-  /**
-   * Force rendering in particular orientation.
-   */
-  orientation?: 'portrait' | 'landscape';
-}
-
-export interface PickerViewContainerProps<TView extends CalendarOrClockPickerView>
-  extends ExportedPickerViewContainerProps {
+export interface PickerViewContainerProps<TView extends CalendarOrClockPickerView> {
   children: React.ReactNode;
   /**
    * Array of views to show.
    */
   views: readonly TView[];
+  /**
+   * Force rendering in particular orientation.
+   */
+  orientation?: 'portrait' | 'landscape';
 }
 
 export const PickerViewContainerRoot = styled('div')<{ ownerState: { isLandscape: boolean } }>(

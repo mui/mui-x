@@ -33,6 +33,7 @@
     "onYearChange": "Callback firing on year change @DateIOType.<br><br><strong>Signature:</strong><br><code>function(year: TDate) =&gt; void</code><br><em>year:</em> The new year.",
     "open": "Control the popup or dialog open state.",
     "openTo": "First view to show.",
+    "orientation": "Force rendering in particular orientation.",
     "readOnly": "Make picker read only.",
     "reduceAnimations": "Disable heavy animations.",
     "renderLoading": "Component displaying when passed <code>loading</code> true.<br><br><strong>Signature:</strong><br><code>function() =&gt; React.ReactNode</code><br><br> <em>returns</em> (React.ReactNode): The node to render when loading.",

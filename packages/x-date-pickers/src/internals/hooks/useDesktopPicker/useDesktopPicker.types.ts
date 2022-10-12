@@ -46,10 +46,6 @@ interface UseDesktopPickerProps<TDate, TView extends CalendarOrClockPickerView>
   extends ExportedUseDesktopPickerProps,
     BasePickerProps2<TDate | null, TDate, TView> {
   /**
-   * Force rendering in particular orientation.
-   */
-  orientation?: 'portrait' | 'landscape';
-  /**
    * Overrideable components.
    * @default {}
    */

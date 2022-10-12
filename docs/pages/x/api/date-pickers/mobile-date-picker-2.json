@@ -44,6 +44,9 @@
         "description": "'day'<br>&#124;&nbsp;'month'<br>&#124;&nbsp;'year'"
       }
     },
+    "orientation": {
+      "type": { "name": "enum", "description": "'landscape'<br>&#124;&nbsp;'portrait'" }
+    },
     "readOnly": { "type": { "name": "bool" } },
     "reduceAnimations": {
       "type": { "name": "bool" },

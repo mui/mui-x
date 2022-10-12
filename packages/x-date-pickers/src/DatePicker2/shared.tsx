@@ -83,5 +83,5 @@ export function useDatePicker2DefaultizedProps<TDate, Props extends BaseDatePick
 }
 
 export const renderDateViews = <TDate extends unknown>(props: DateCalendarProps<TDate>) => (
-  <DateCalendar<TDate> {...props} focusedView={props.view} />
+  <DateCalendar<TDate> {...props} focusedView={props.view} autoFocus />
 );

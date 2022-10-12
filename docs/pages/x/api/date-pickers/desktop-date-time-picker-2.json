@@ -53,8 +53,7 @@
       }
     },
     "orientation": {
-      "type": { "name": "enum", "description": "'landscape'<br>&#124;&nbsp;'portrait'" },
-      "default": "\"portrait\""
+      "type": { "name": "enum", "description": "'landscape'<br>&#124;&nbsp;'portrait'" }
     },
     "readOnly": { "type": { "name": "bool" } },
     "reduceAnimations": {
