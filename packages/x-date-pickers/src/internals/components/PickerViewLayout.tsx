@@ -1,11 +1,10 @@
 import * as React from 'react';
 import { PickersActionBar, PickersActionBarProps } from '@mui/x-date-pickers/PickersActionBar';
-import { WrapperVariant } from './wrappers/WrapperVariantContext';
-import { UsePickerValueActions } from '../hooks/usePicker/usePickerValue';
 import { CalendarOrClockPickerView } from '../models/views';
-import { PickerViewsRendererProps } from '../hooks/usePicker/usePickerViews';
+import { BaseToolbarProps2, ExportedBaseToolbarProps } from '../models/props/baseToolbarProps';
+import { UsePickerLayoutResponse } from '../hooks/usePicker/usePicker.types';
 
-export interface PickerViewLayoutSlotsComponent<TView extends CalendarOrClockPickerView> {
+export interface PickerViewLayoutSlotsComponent<TValue> {
   /**
    * Custom component for the action bar, it is placed bellow the picker views.
    * @default PickersActionBar
@@ -15,6 +14,11 @@ export interface PickerViewLayoutSlotsComponent<TView extends CalendarOrClockPic
    * Tabs enabling toggling between views.
    */
   Tabs?: React.ElementType;
+  /**
+   * Custom component for the toolbar.
+   * It is placed above the picker views.
+   */
+  Toolbar?: React.JSXElementConstructor<BaseToolbarProps2<TValue>>;
 }
 
 export interface PickerViewLayoutSlotsComponentsProps {
@@ -26,35 +30,40 @@ export interface PickerViewLayoutSlotsComponentsProps {
    * Props passed down to the tabs component.
    */
   tabs?: Record<string, any>;
+  /**
+   * Props passed down to the toolbar component.
+   */
+  toolbar?: ExportedBaseToolbarProps;
 }
 
-export interface PickerViewLayoutProps<TView extends CalendarOrClockPickerView>
-  extends UsePickerValueActions,
-    Pick<PickerViewsRendererProps<any, TView, {}>, 'view' | 'onViewChange'> {
+export interface PickerViewLayoutProps<TValue, TView extends CalendarOrClockPickerView>
+  extends UsePickerLayoutResponse<TValue, TView> {
   children: React.ReactNode;
   /**
    * Overrideable components.
    * @default {}
    */
-  components?: PickerViewLayoutSlotsComponent<TView>;
+  components?: PickerViewLayoutSlotsComponent<TValue>;
   /**
    * The props used for each component slot.
    * @default {}
    */
   componentsProps?: PickerViewLayoutSlotsComponentsProps;
-  wrapperVariant: WrapperVariant;
   hideTabs?: boolean;
 }
 
 // For now the `ActionBar` is rendered on the variant wrapper.
 const shouldRenderActionBar = false;
 
+// TODO v6: Clean
+const showToolbar = true;
+
 /**
  * TODO: Add `ActionBar` here once it has been removed from the `PickersPopper`, `PickersModalDialog` and `PickersStaticWrapper`.
  * @constructor
  */
-export const PickerViewLayout = <TView extends CalendarOrClockPickerView>(
-  props: PickerViewLayoutProps<TView>,
+export const PickerViewLayout = <TValue, TView extends CalendarOrClockPickerView>(
+  props: PickerViewLayoutProps<TValue, TView>,
 ) => {
   const {
     components,
@@ -67,17 +76,43 @@ export const PickerViewLayout = <TView extends CalendarOrClockPickerView>(
     onCancel,
     onSetToday,
     view,
+    views,
     onViewChange,
+    value,
+    onChange,
+    isLandscape,
+    disabled,
+    readOnly,
   } = props;
 
   const ActionBar = components?.ActionBar ?? PickersActionBar;
 
-  const Tabs = components?.Tabs;
   const shouldRenderTabs = !hideTabs && typeof window !== 'undefined' && window.innerHeight > 667;
+  const Tabs = components?.Tabs;
+
+  const shouldRenderToolbar = showToolbar ?? wrapperVariant !== 'desktop';
+  const Toolbar = components?.Toolbar;
+
+  if (view == null) {
+    return null;
+  }
 
   return (
     <React.Fragment>
       {children}
+      {shouldRenderToolbar && !!Toolbar && (
+        <Toolbar
+          {...componentsProps?.toolbar}
+          isLandscape={isLandscape}
+          onChange={onChange}
+          value={value}
+          view={view}
+          onViewChange={onViewChange as (view: CalendarOrClockPickerView) => void}
+          views={views}
+          disabled={disabled}
+          readOnly={readOnly}
+        />
+      )}
       {shouldRenderTabs && !!Tabs && (
         <Tabs view={view} onViewChange={onViewChange} {...componentsProps?.tabs} />
       )}

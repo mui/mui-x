@@ -1,7 +1,11 @@
 import * as React from 'react';
 import { useThemeProps } from '@mui/material/styles';
 import { Clock } from '../internals/components/icons';
-import { ExportedClockPickerProps } from '../ClockPicker/ClockPicker';
+import {
+  ClockPickerSlotsComponent,
+  ClockPickerSlotsComponentsProps,
+  ExportedClockPickerProps,
+} from '../ClockPicker/ClockPicker';
 import { useLocaleText, useUtils } from '../internals/hooks/useUtils';
 import { ValidationCommonProps } from '../internals/hooks/validation/useValidation';
 import { TimeValidationError } from '../internals/hooks/validation/useTimeValidation';
@@ -9,10 +13,26 @@ import { BasePickerProps } from '../internals/models/props/basePickerProps';
 import { ExportedDateInputProps } from '../internals/components/PureDateInput';
 import { ClockPickerView } from '../internals/models';
 import { PickerStateValueManager } from '../internals/hooks/usePickerState';
-import { BaseToolbarProps } from '../internals/models/props/baseToolbarProps';
 import { DefaultizedProps } from '../internals/models/helpers';
 import { replaceInvalidDateByNull } from '../internals/utils/date-utils';
 import { BaseTimeValidationProps } from '../internals/hooks/validation/models';
+import {
+  TimePickerToolbarProps,
+  ExportedTimePickerToolbarProps,
+  TimePickerToolbar,
+} from './TimePickerToolbar';
+
+export interface BaseTimePickerSlotsComponent<TDate> extends ClockPickerSlotsComponent {
+  /**
+   * Custom component for the toolbar rendered above the views.
+   * @default TimePickerToolbar
+   */
+  Toolbar?: React.JSXElementConstructor<TimePickerToolbarProps<TDate>>;
+}
+
+export interface BaseTimePickerSlotsComponentsProps extends ClockPickerSlotsComponentsProps {
+  toolbar?: ExportedTimePickerToolbarProps;
+}
 
 export interface BaseTimePickerProps<TDate>
   extends ExportedClockPickerProps<TDate>,
@@ -36,21 +56,20 @@ export interface BaseTimePickerProps<TDate>
    */
   openTo?: ClockPickerView;
   /**
-   * Component that will replace default toolbar renderer.
-   * @default TimePickerToolbar
-   */
-  ToolbarComponent?: React.JSXElementConstructor<BaseToolbarProps<TDate, TDate | null>>;
-  /**
-   * Mobile picker title, displaying in the toolbar.
-   * @default 'Select time'
-   */
-  toolbarTitle?: React.ReactNode;
-  /**
    * Array of views to show.
    * @default ['hours', 'minutes']
    */
   views?: readonly ClockPickerView[];
-  components?: any;
+  /**
+   * Overrideable components.
+   * @default {}
+   */
+  components?: Partial<BaseTimePickerSlotsComponent<TDate>> & { OpenPickerIcon?: any };
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  componentsProps?: Partial<BaseTimePickerSlotsComponentsProps>;
 }
 
 export function useTimePickerDefaultizedProps<TDate, Props extends BaseTimePickerProps<TDate>>(
@@ -85,7 +104,17 @@ export function useTimePickerDefaultizedProps<TDate, Props extends BaseTimePicke
     ...themeProps,
     components: {
       OpenPickerIcon: Clock,
+      Toolbar: TimePickerToolbar,
       ...themeProps.components,
+    },
+    componentsProps: {
+      ...themeProps.componentsProps,
+      toolbar: {
+        toolbarTitle: themeProps.label,
+        ampm,
+        ampmInClock: themeProps.ampmInClock,
+        ...themeProps.componentsProps?.toolbar,
+      },
     },
   };
 }

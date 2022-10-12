@@ -93,7 +93,6 @@ const main = async () => {
         message += `\n#### Removed props:\n${removedProps.map((prop) => `- ${prop}`).join('\n')}\n`;
       }
       if (addedProps.length > 0) {
-        // eslint-disable-next-line no-console
         message += `\n#### Added props:\n${addedProps.map((prop) => `- ${prop}`).join('\n')}\n`;
       }
     } catch {

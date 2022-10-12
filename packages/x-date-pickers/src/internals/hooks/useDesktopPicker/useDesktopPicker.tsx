@@ -12,6 +12,7 @@ import { LocalizationProvider } from '../../../LocalizationProvider';
 import { WrapperVariantContext } from '../../components/wrappers/WrapperVariantContext';
 import { BaseFieldProps } from '../../models/fields';
 import { PickerViewContainer } from '../../components/PickerViewContainer';
+import { PickerViewLayout } from '../../components/PickerViewLayout';
 
 /**
  * Hook managing all the single-date desktop pickers:
@@ -41,11 +42,13 @@ export const useDesktopPicker = <TDate, TView extends CalendarOrClockPickerView>
 
   const {
     fieldProps: pickerFieldProps,
+    layoutProps,
     renderViews,
     actions,
     open,
     hasPopperView,
     shouldRestoreFocus,
+    isLandscape,
   } = usePicker({
     props,
     valueManager,
@@ -157,8 +160,8 @@ export const useDesktopPicker = <TDate, TView extends CalendarOrClockPickerView>
           componentsProps={componentsProps}
           shouldRestoreFocus={shouldRestoreFocus}
         >
-          <PickerViewContainer views={props.views} orientation={props.orientation}>
-            {renderViews()}
+          <PickerViewContainer isLandscape={isLandscape}>
+            <PickerViewLayout {...layoutProps}>{renderViews()}</PickerViewLayout>
           </PickerViewContainer>
         </PickersPopper>
       </WrapperVariantContext.Provider>

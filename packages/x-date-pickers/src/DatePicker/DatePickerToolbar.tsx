@@ -5,17 +5,22 @@ import { unstable_composeClasses as composeClasses } from '@mui/material';
 import { PickersToolbar } from '../internals/components/PickersToolbar';
 import { pickersToolbarClasses } from '../internals/components/pickersToolbarClasses';
 import { useLocaleText, useUtils } from '../internals/hooks/useUtils';
-import { BaseToolbarProps } from '../internals/models/props/baseToolbarProps';
-import { isYearAndMonthViews, isYearOnlyView } from './shared';
+import {
+  BaseToolbarProps,
+  ExportedBaseToolbarProps,
+} from '../internals/models/props/baseToolbarProps';
+import { isYearOnlyView, isYearAndMonthViews } from '../internals/utils/views';
 import { CalendarPickerView } from '../internals/models';
 import {
   DatePickerToolbarClasses,
   getDatePickerToolbarUtilityClass,
 } from './datePickerToolbarClasses';
 
-export interface DatePickerToolbarProps<TDate> extends BaseToolbarProps<TDate, TDate | null> {
+export interface DatePickerToolbarProps<TDate> extends BaseToolbarProps<TDate | null> {
   classes?: Partial<DatePickerToolbarClasses>;
 }
+
+export interface ExportedDatePickerToolbarProps extends ExportedBaseToolbarProps {}
 
 const useUtilityClasses = (ownerState: DatePickerToolbarProps<any>) => {
   const { classes } = ownerState;

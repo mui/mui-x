@@ -9,6 +9,7 @@ import {
   useUtils,
   BaseToolbarProps,
   useLocaleText,
+  ExportedBaseToolbarProps,
 } from '@mui/x-date-pickers/internals';
 import { DateRange, CurrentlySelectingRangeEndProps } from '../internal/models';
 import {
@@ -27,17 +28,15 @@ const useUtilityClasses = (ownerState: DateRangePickerToolbarProps<any>) => {
 };
 
 export interface DateRangePickerToolbarProps<TDate>
-  extends CurrentlySelectingRangeEndProps,
-    Pick<
-      BaseToolbarProps<TDate, DateRange<TDate>>,
-      | 'isMobileKeyboardViewOpen'
-      | 'toggleMobileKeyboardView'
-      | 'toolbarTitle'
-      | 'toolbarFormat'
-      | 'value'
-    > {
+  extends Omit<
+      BaseToolbarProps<DateRange<TDate>>,
+      'views' | 'view' | 'onViewChange' | 'onChange' | 'isLandscape'
+    >,
+    CurrentlySelectingRangeEndProps {
   classes?: Partial<DateRangePickerToolbarClasses>;
 }
+
+export interface ExportedDateRangePickerToolbarProps extends ExportedBaseToolbarProps {}
 
 const DateRangePickerToolbarRoot = styled(PickersToolbar, {
   name: 'MuiDateRangePickerToolbar',

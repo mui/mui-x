@@ -69,16 +69,16 @@ export interface UsePickerViewParams<
   wrapperVariant: WrapperVariant;
   actions: UsePickerValueActions;
   open: boolean;
-  onClose: () => void;
   onSelectedSectionsChange: NonNullable<
     UseFieldInternalProps<TValue, unknown>['onSelectedSectionsChange']
   >;
 }
 
-export interface UsePickerViewsResponse {
+export interface UsePickerViewsResponse<TView extends CalendarOrClockPickerView> {
   hasPopperView: boolean;
   renderViews: () => React.ReactNode;
   shouldRestoreFocus: () => boolean;
+  layoutProps: UsePickerViewsLayoutResponse<TView>;
 }
 
 export type PickerViewsRendererProps<
@@ -92,6 +92,12 @@ export type PickerViewsRendererProps<
     value: TValue;
     wrapperVariant: WrapperVariant;
   };
+
+export interface UsePickerViewsLayoutResponse<TView extends CalendarOrClockPickerView> {
+  view: TView | null;
+  onViewChange: (view: TView) => void;
+  views: readonly TView[];
+}
 
 let warnedOnceNotValidOpenTo = false;
 
@@ -108,9 +114,8 @@ export const usePickerViews = <
   wrapperVariant,
   actions,
   open,
-  onClose,
   onSelectedSectionsChange,
-}: UsePickerViewParams<TValue, TView, TViewProps>): UsePickerViewsResponse => {
+}: UsePickerViewParams<TValue, TView, TViewProps>): UsePickerViewsResponse<TView> => {
   const { views, openTo, onViewChange, onChange, disableOpenPicker, ...other } = props;
 
   if (process.env.NODE_ENV !== 'production') {
@@ -169,7 +174,7 @@ export const usePickerViews = <
 
   useEnhancedEffect(() => {
     if (currentViewMode === 'field' && open) {
-      onClose();
+      actions.onClose();
       onSelectedSectionsChange('hour');
 
       setTimeout(() => {
@@ -188,9 +193,16 @@ export const usePickerViews = <
     }
   }, [open]); // eslint-disable-line react-hooks/exhaustive-deps
 
+  const layoutProps: UsePickerViewsLayoutResponse<TView> = {
+    views,
+    view: popperView,
+    onViewChange: setOpenView,
+  };
+
   return {
     ...viewModeResponse,
     shouldRestoreFocus,
+    layoutProps,
     renderViews: () => {
       if (popperView == null) {
         return null;

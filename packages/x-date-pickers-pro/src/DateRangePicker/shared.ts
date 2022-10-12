@@ -1,3 +1,4 @@
+import * as React from 'react';
 import {
   BasePickerProps,
   PickerStateValueManager,
@@ -9,11 +10,30 @@ import {
   BaseDateValidationProps,
 } from '@mui/x-date-pickers/internals';
 import { useThemeProps } from '@mui/material/styles';
-import { ExportedDateRangePickerViewProps } from './DateRangePickerView';
+import {
+  DateRangePickerViewSlotsComponent,
+  DateRangePickerViewSlotsComponentsProps,
+  ExportedDateRangePickerViewProps,
+} from './DateRangePickerView';
 import { DateRangeValidationError } from '../internal/hooks/validation/useDateRangeValidation';
 import { DateRange } from '../internal/models';
 import { ExportedDateRangePickerInputProps } from './DateRangePickerInput';
 import { replaceInvalidDatesByNull } from '../internal/utils/date-utils';
+import {
+  DateRangePickerToolbar,
+  DateRangePickerToolbarProps,
+  ExportedDateRangePickerToolbarProps,
+} from './DateRangePickerToolbar';
+
+export interface BaseDateRangePickerSlotsComponent<TDate>
+  extends DateRangePickerViewSlotsComponent<TDate> {
+  Toolbar?: React.JSXElementConstructor<DateRangePickerToolbarProps<TDate>>;
+}
+
+export interface BaseDateRangePickerSlotsComponentsProps<TDate>
+  extends DateRangePickerViewSlotsComponentsProps<TDate> {
+  toolbar?: ExportedDateRangePickerToolbarProps;
+}
 
 export interface BaseDateRangePickerProps<TDate>
   extends Omit<BasePickerProps<DateRange<TDate>>, 'orientation'>,
@@ -33,6 +53,16 @@ export interface BaseDateRangePickerProps<TDate>
    * @param {string} keyboardInputValue The current value of the keyboard input.
    */
   onChange: (date: DateRange<TDate>, keyboardInputValue?: string) => void;
+  /**
+   * Overrideable components.
+   * @default {}
+   */
+  components?: Partial<BaseDateRangePickerSlotsComponent<TDate>>;
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  componentsProps?: Partial<BaseDateRangePickerSlotsComponentsProps<TDate>>;
 }
 
 export function useDateRangePickerDefaultizedProps<
@@ -64,6 +94,11 @@ export function useDateRangePickerDefaultizedProps<
     ...themeProps,
     minDate: applyDefaultDate(utils, themeProps.minDate, defaultDates.minDate),
     maxDate: applyDefaultDate(utils, themeProps.maxDate, defaultDates.maxDate),
+    components: { Toolbar: DateRangePickerToolbar, ...themeProps.components },
+    componentsProps: {
+      ...themeProps.componentsProps,
+      toolbar: { toolbarTitle: themeProps.label, ...themeProps.componentsProps?.toolbar },
+    },
   };
 }
 

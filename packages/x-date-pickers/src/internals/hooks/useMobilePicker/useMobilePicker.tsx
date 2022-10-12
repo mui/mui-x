@@ -11,6 +11,7 @@ import { LocalizationProvider } from '../../../LocalizationProvider';
 import { WrapperVariantContext } from '../../components/wrappers/WrapperVariantContext';
 import { BaseFieldProps } from '../../models/fields';
 import { PickerViewContainer } from '../../components/PickerViewContainer';
+import { PickerViewLayout } from '../../components/PickerViewLayout';
 
 /**
  * Hook managing all the single-date mobile pickers:
@@ -32,9 +33,11 @@ export const useMobilePicker = <TDate, TView extends CalendarOrClockPickerView>(
 
   const {
     fieldProps: pickerFieldProps,
+    layoutProps,
     renderViews,
     actions,
     open,
+    isLandscape,
   } = usePicker({
     props,
     valueManager,
@@ -106,8 +109,8 @@ export const useMobilePicker = <TDate, TView extends CalendarOrClockPickerView>(
           components={components}
           componentsProps={componentsProps}
         >
-          <PickerViewContainer views={props.views} orientation={props.orientation}>
-            {renderViews()}
+          <PickerViewContainer isLandscape={isLandscape}>
+            <PickerViewLayout {...layoutProps}>{renderViews()}</PickerViewLayout>
           </PickerViewContainer>
         </PickersModalDialog>
       </WrapperVariantContext.Provider>

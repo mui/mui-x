@@ -3,16 +3,21 @@ import {
   UsePickerValueParams,
   UsePickerValueProps,
   UsePickerValueResponse,
+  UsePickerValueLayoutResponse,
 } from './usePickerValue';
 import {
   ExportedUsePickerViewProps,
   UsePickerViewParams,
   UsePickerViewsResponse,
+  UsePickerViewsLayoutResponse,
 } from './usePickerViews';
+import { WrapperVariant } from '../../components/wrappers/WrapperVariantContext';
 
 export interface UsePickerProps<TValue, TView extends CalendarOrClockPickerView>
   extends UsePickerValueProps<TValue>,
-    ExportedUsePickerViewProps<TView> {}
+    ExportedUsePickerViewProps<TView> {
+  orientation?: 'portrait' | 'landscape';
+}
 
 export interface UsePickerParams<
   TValue,
@@ -27,6 +32,18 @@ export interface UsePickerParams<
   props: UsePickerProps<TValue, TView>;
 }
 
-export interface UsePickerResponse<TValue>
-  extends Omit<UsePickerValueResponse<TValue>, 'viewProps'>,
-    UsePickerViewsResponse {}
+export interface UsePickerLayoutResponse<TValue, TView extends CalendarOrClockPickerView>
+  extends UsePickerValueLayoutResponse<TValue>,
+    UsePickerViewsLayoutResponse<TView> {
+  isLandscape: boolean;
+  disabled?: boolean;
+  readOnly?: boolean;
+  wrapperVariant: WrapperVariant;
+}
+
+export interface UsePickerResponse<TValue, TView extends CalendarOrClockPickerView>
+  extends Omit<UsePickerValueResponse<TValue>, 'viewProps' | 'layoutProps'>,
+    Omit<UsePickerViewsResponse<TView>, 'layoutProps'> {
+  isLandscape: boolean;
+  layoutProps: UsePickerLayoutResponse<TValue, TView>;
+}

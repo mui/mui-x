@@ -10,12 +10,34 @@ import { ExportedDateInputProps } from '../internals/components/PureDateInput';
 import { CalendarOrClockPickerView } from '../internals/models';
 import { PickerStateValueManager } from '../internals/hooks/usePickerState';
 import { applyDefaultDate, replaceInvalidDateByNull } from '../internals/utils/date-utils';
-import { BaseToolbarProps } from '../internals/models/props/baseToolbarProps';
 import { DefaultizedProps } from '../internals/models/helpers';
 import {
   BaseDateValidationProps,
   BaseTimeValidationProps,
 } from '../internals/hooks/validation/models';
+import {
+  CalendarOrClockPickerSlotsComponent,
+  CalendarOrClockPickerSlotsComponentsProps,
+} from '../internals/components/CalendarOrClockPicker';
+import {
+  DateTimePickerToolbar,
+  DateTimePickerToolbarProps,
+  ExportedDateTimeToolbarProps,
+} from './DateTimePickerToolbar';
+
+export interface BaseDateTimePickerSlotsComponent<TDate>
+  extends CalendarOrClockPickerSlotsComponent<TDate> {
+  /**
+   * Custom component for the toolbar rendered above the views.
+   * @default DateTimePickerToolbar
+   */
+  Toolbar?: React.JSXElementConstructor<DateTimePickerToolbarProps<TDate>>;
+}
+
+export interface BaseDateTimePickerSlotsComponentsProps<TDate>
+  extends CalendarOrClockPickerSlotsComponentsProps<TDate> {
+  toolbar?: ExportedDateTimeToolbarProps;
+}
 
 export interface BaseDateTimePickerProps<TDate>
   extends ExportedClockPickerProps<TDate>,
@@ -61,29 +83,20 @@ export interface BaseDateTimePickerProps<TDate>
    */
   openTo?: CalendarOrClockPickerView;
   /**
-   * Component that will replace default toolbar renderer.
-   * @default DateTimePickerToolbar
-   */
-  ToolbarComponent?: React.JSXElementConstructor<BaseToolbarProps<TDate, TDate | null>>;
-  /**
-   * Mobile picker title, displaying in the toolbar.
-   * @default 'Select date & time'
-   */
-  toolbarTitle?: React.ReactNode;
-  /**
-   * Date format, that is displaying in toolbar.
-   */
-  toolbarFormat?: string;
-  /**
-   * Mobile picker date value placeholder, displaying if `value` === `null`.
-   * @default '–'
-   */
-  toolbarPlaceholder?: React.ReactNode;
-  /**
    * Array of views to show.
    * @default ['year', 'day', 'hours', 'minutes']
    */
   views?: readonly CalendarOrClockPickerView[];
+  /**
+   * Overrideable components.
+   * @default {}
+   */
+  components?: Partial<BaseDateTimePickerSlotsComponent<TDate>>;
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  componentsProps?: Partial<BaseDateTimePickerSlotsComponentsProps<TDate>>;
 }
 
 export function useDateTimePickerDefaultizedProps<
@@ -139,6 +152,19 @@ export function useDateTimePickerDefaultizedProps<
     ),
     minTime: themeProps.minDateTime ?? themeProps.minTime,
     maxTime: themeProps.maxDateTime ?? themeProps.maxTime,
+    components: {
+      Toolbar: DateTimePickerToolbar,
+      ...themeProps.components,
+    },
+    componentsProps: {
+      ...themeProps.componentsProps,
+      toolbar: {
+        toolbarTitle: themeProps.label,
+        ampm,
+        ampmInClock: themeProps.ampmInClock,
+        ...themeProps.componentsProps?.toolbar,
+      },
+    },
   };
 }
 

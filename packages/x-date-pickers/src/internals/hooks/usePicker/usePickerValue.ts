@@ -132,15 +132,21 @@ type UsePickerValueFieldResponse<TValue> = Required<
   >
 >;
 
-type UsePickerValueViewsResponse<TValue> = Pick<
+export type UsePickerValueViewsResponse<TValue> = Pick<
   UsePickerViewsProps<TValue, any>,
   'value' | 'onChange'
 >;
+
+export interface UsePickerValueLayoutResponse<TValue> extends UsePickerValueActions {
+  value: TValue;
+  onChange: (newValue: TValue) => void;
+}
 
 export interface UsePickerValueResponse<TValue> {
   actions: UsePickerValueActions;
   viewProps: UsePickerValueViewsResponse<TValue>;
   fieldProps: UsePickerValueFieldResponse<TValue>;
+  layoutProps: UsePickerValueLayoutResponse<TValue>;
   open: boolean;
 }
 
@@ -307,7 +313,7 @@ export const usePickerValue = <TValue, TDate>({
     },
   );
 
-  const handleFieldChange = useEventCallback((newValue: TValue) =>
+  const handleChangeAndCommit = useEventCallback((newValue: TValue) =>
     setDate({ action: 'setCommitted', value: newValue }),
   );
 
@@ -317,18 +323,6 @@ export const usePickerValue = <TValue, TDate>({
       onSelectedSectionsChange?.(newSelectedSections);
     },
   );
-
-  const fieldResponse: UsePickerValueFieldResponse<TValue> = {
-    value: dateState.draft,
-    onChange: handleFieldChange,
-    selectedSections,
-    onSelectedSectionsChange: handleFieldSelectedSectionsChange,
-  };
-
-  const viewResponse: UsePickerValueViewsResponse<TValue> = {
-    value: dateState.draft,
-    onChange: handleChange,
-  };
 
   const actions: UsePickerValueActions = {
     onClear: handleClear,
@@ -340,10 +334,29 @@ export const usePickerValue = <TValue, TDate>({
     onClose: handleClose,
   };
 
+  const fieldResponse: UsePickerValueFieldResponse<TValue> = {
+    value: dateState.draft,
+    onChange: handleChangeAndCommit,
+    selectedSections,
+    onSelectedSectionsChange: handleFieldSelectedSectionsChange,
+  };
+
+  const viewResponse: UsePickerValueViewsResponse<TValue> = {
+    value: dateState.draft,
+    onChange: handleChange,
+  };
+
+  const layoutResponse: UsePickerValueLayoutResponse<TValue> = {
+    value: dateState.draft,
+    onChange: handleChangeAndCommit,
+    ...actions,
+  };
+
   return {
     open: isOpen,
     fieldProps: fieldResponse,
     viewProps: viewResponse,
+    layoutProps: layoutResponse,
     actions,
   };
 };
