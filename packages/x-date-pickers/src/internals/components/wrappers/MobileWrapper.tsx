@@ -30,8 +30,8 @@ export interface InternalMobileWrapperProps<TDate>
     PickerStateWrapperProps {
   DateInputProps: DateInputPropsLike & { ref?: React.Ref<HTMLDivElement> };
   PureDateInputComponent: React.JSXElementConstructor<DateInputPropsLike>;
-  components?: Partial<MobileWrapperSlotsComponent>;
-  componentsProps?: Partial<MobileWrapperSlotsComponentsProps>;
+  components?: MobileWrapperSlotsComponent;
+  componentsProps?: MobileWrapperSlotsComponentsProps;
 }
 
 export function MobileWrapper<TDate>(props: InternalMobileWrapperProps<TDate>) {

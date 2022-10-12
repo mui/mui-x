@@ -61,12 +61,12 @@ export interface PickerStaticWrapperProps<TDate>
    * Overrideable components.
    * @default {}
    */
-  components?: Partial<PickersStaticWrapperSlotsComponent>;
+  components?: PickersStaticWrapperSlotsComponent;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  componentsProps?: Partial<PickersStaticWrapperSlotsComponentsProps>;
+  componentsProps?: PickersStaticWrapperSlotsComponentsProps;
 }
 
 const PickerStaticWrapperRoot = styled('div', {
