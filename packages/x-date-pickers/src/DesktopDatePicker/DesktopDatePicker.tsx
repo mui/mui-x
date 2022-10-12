@@ -16,18 +16,15 @@ import { CalendarOrClockPicker } from '../internals/components/CalendarOrClockPi
 import { useDateValidation } from '../internals/hooks/validation/useDateValidation';
 import { KeyboardDateInput } from '../internals/components/KeyboardDateInput';
 import { usePickerState } from '../internals/hooks/usePickerState';
-import {
-  CalendarPickerSlotsComponent,
-  CalendarPickerSlotsComponentsProps,
-} from '../CalendarPicker';
+import { DateCalendarSlotsComponent, DateCalendarSlotsComponentsProps } from '../DateCalendar';
 
 export interface DesktopDatePickerSlotsComponent<TDate>
   extends DesktopWrapperSlotsComponent,
-    CalendarPickerSlotsComponent<TDate> {}
+    DateCalendarSlotsComponent<TDate> {}
 
 export interface DesktopDatePickerSlotsComponentsProps<TDate>
   extends DesktopWrapperSlotsComponentsProps,
-    CalendarPickerSlotsComponentsProps<TDate> {}
+    DateCalendarSlotsComponentsProps<TDate> {}
 
 export interface DesktopDatePickerProps<TDate>
   extends Omit<BaseDatePickerProps<TDate>, 'components' | 'componentsProps'>,
@@ -183,6 +180,12 @@ DesktopDatePicker.propTypes = {
    * @default false
    */
   disablePast: PropTypes.bool,
+  /**
+   * Calendar will show more weeks in order to match this value.
+   * Put it to 6 for having fix number of week in Gregorian calendars
+   * @default undefined
+   */
+  fixedWeekNumber: PropTypes.number,
   /**
    * Get aria-label text for control that opens picker dialog. Aria-label text must include selected date. @DateIOType
    * @template TDate

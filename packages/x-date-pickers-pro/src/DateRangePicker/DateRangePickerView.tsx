@@ -6,18 +6,15 @@ import {
   WrapperVariantContext,
   MobileKeyboardInputView,
   defaultReduceAnimations,
-  ExportedCalendarPickerProps,
+  ExportedDateCalendarProps,
   useCalendarState,
   PickerStatePickerProps,
-  DayPickerProps,
+  DayCalendarProps,
   BaseDateValidationProps,
   DayValidationProps,
 } from '@mui/x-date-pickers/internals';
-import {
-  DateRange,
-  CurrentlySelectingRangeEndProps,
-  DayRangeValidationProps,
-} from '../internal/models/dateRange';
+import { DateRange, CurrentlySelectingRangeEndProps } from '../internal/models/range';
+import { DayRangeValidationProps } from '../internal/models/dateRange';
 import { isRangeValid } from '../internal/utils/date-utils';
 import { calculateRangeChange } from './date-range-manager';
 import { DateRangePickerToolbar } from './DateRangePickerToolbar';
@@ -45,7 +42,7 @@ export interface ExportedDateRangePickerViewProps<TDate>
   extends ExportedDateRangePickerViewDesktopProps,
     DayRangeValidationProps<TDate>,
     Omit<
-      ExportedCalendarPickerProps<TDate>,
+      ExportedDateCalendarProps<TDate>,
       'onYearChange' | keyof BaseDateValidationProps<TDate> | keyof DayValidationProps<TDate>
     > {
   /**
@@ -187,7 +184,9 @@ function DateRangePickerViewRaw<TDate>(props: DateRangePickerViewProps<TDate>) {
     }
   }, [currentlySelectingRangeEnd, value]); // eslint-disable-line
 
-  const handleSelectedDayChange = React.useCallback<DayPickerProps<TDate>['onSelectedDaysChange']>(
+  const handleSelectedDayChange = React.useCallback<
+    DayCalendarProps<TDate>['onSelectedDaysChange']
+  >(
     (newDate) => {
       const { nextSelection, newRange } = calculateRangeChange({
         newDate,
