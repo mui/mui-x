@@ -57,7 +57,7 @@ You can find the documentation in the [Validation page](/react-date-pickers/vali
 
 Some lower-level sub-components (`ClockPicker`) are also exported.
 
-{{"demo": "SubComponentsTimePickers.js"}}
+{{"demo": "SubComponentsTimeCalendars.js"}}
 
 ## Seconds
 

@@ -12,17 +12,25 @@ import {
   getClockTouchEvent,
   withPickerControls,
 } from 'test/utils/pickers-utils';
+import describeValidation from '@mui/x-date-pickers/tests/describeValidation';
 
 const WrappedMobileDateTimePicker = withPickerControls(MobileDateTimePicker)({
-  DialogProps: { TransitionComponent: FakeTransitionComponent },
+  components: { MobileTransition: FakeTransitionComponent },
   renderInput: (params) => <TextField {...params} />,
 });
 
 describe('<MobileDateTimePicker />', () => {
-  const { render } = createPickerRenderer({
+  const { render, clock } = createPickerRenderer({
     clock: 'fake',
     clockConfig: new Date('2018-01-01T00:00:00.000'),
   });
+
+  describeValidation(MobileDateTimePicker, () => ({
+    render,
+    clock,
+    views: ['year', 'month', 'day', 'hours', 'minutes'],
+    isLegacyPicker: true,
+  }));
 
   it('prop: open – overrides open state', () => {
     render(

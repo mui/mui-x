@@ -19,6 +19,7 @@
     "disableOpenPicker": "Do not render open picker button (renders only text field with validation).",
     "disablePast": "If <code>true</code> disable values after the current time.",
     "displayStaticWrapperAs": "Force static wrapper inner components to be rendered in mobile or desktop mode.",
+    "fixedWeekNumber": "Calendar will show more weeks in order to match this value. Put it to 6 for having fix number of week in Gregorian calendars",
     "getOpenDialogAriaText": "Get aria-label text for control that opens picker dialog. Aria-label text must include selected date. @DateIOType<br><br><strong>Signature:</strong><br><code>function(date: TDate | null, utils: MuiPickersAdapter&lt;TDate&gt;) =&gt; string</code><br><em>date:</em> The date from which we want to add an aria-text.<br><em>utils:</em> The utils to manipulate the date.<br> <em>returns</em> (string): The aria-text to render inside the dialog.",
     "hideTabs": "Toggles visibility of date time switching tabs",
     "InputAdornmentProps": "Props to pass to keyboard input adornment.",
@@ -65,8 +66,8 @@
   },
   "classDescriptions": {},
   "slotDescriptions": {
-    "ActionBar": "The action bar placed bellow picker views.",
-    "PaperContent": "The content of the Paper wrapping views.",
+    "ActionBar": "Custom component for the action bar, it is placed bellow the picker views.",
+    "PaperContent": "Custom component wrapping the views of the desktop and static pickers (it is the direct child of the Paper component).",
     "Tabs": "Tabs enabling toggling between date and time pickers.",
     "SwitchViewButton": "Button displayed to switch between different calendar views.",
     "SwitchViewIcon": "Icon displayed in the SwitchViewButton. Rotated by 180° when the open view is &#39;year&#39;.",
