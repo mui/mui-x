@@ -4,40 +4,39 @@ import TextField, { TextFieldProps } from '@mui/material/TextField';
 import Typography, { TypographyProps } from '@mui/material/Typography';
 import { styled, useThemeProps } from '@mui/material/styles';
 import { useSlotProps } from '@mui/base/utils';
-import { MultiInputDateRangeFieldProps } from './MultiInputDateRangeField.types';
-import { useMultiInputDateRangeField } from '../internal/hooks/useMultiInputRangeField/useMultiInputDateRangeField';
+import { MultiInputDateTimeRangeFieldProps } from './MultiInputDateTimeRangeField.types';
+import { useMultiInputDateTimeRangeField } from '../internal/hooks/useMultiInputRangeField/useMultiInputDateTimeRangeField';
 
-const MultiInputDateRangeFieldRoot = styled(
+const MultiInputDateTimeRangeFieldRoot = styled(
   React.forwardRef((props: StackProps, ref: React.Ref<HTMLDivElement>) => (
     <Stack ref={ref} {...props} spacing={2} direction="row" alignItems="center" />
   )),
   {
-    name: 'MuiMultiInputDateRangeField',
+    name: 'MuiMultiInputDateTimeRangeField',
     slot: 'Root',
     overridesResolver: (props, styles) => styles.root,
   },
 )({});
 
-const MultiInputDateRangeFieldSeparator = styled(
+const MultiInputDateTimeRangeFieldSeparator = styled(
   (props: TypographyProps) => <Typography {...props}>{props.children ?? ' — '}</Typography>,
   {
-    name: 'MuiMultiInputDateRangeField',
+    name: 'MuiMultiInputDateTimeRangeField',
     slot: 'Separator',
     overridesResolver: (props, styles) => styles.separator,
   },
 )({});
 
-type MultiInputDateRangeFieldComponent = (<TDate>(
-  props: MultiInputDateRangeFieldProps<TDate> & React.RefAttributes<HTMLInputElement>,
+type MultiInputDateTimeRangeFieldComponent = (<TDate>(
+  props: MultiInputDateTimeRangeFieldProps<TDate> & React.RefAttributes<HTMLInputElement>,
 ) => JSX.Element) & { propTypes?: any };
 
-export const MultiInputDateRangeField = React.forwardRef(function MultiInputDateRangeField<TDate>(
-  inProps: MultiInputDateRangeFieldProps<TDate>,
-  ref: React.Ref<HTMLInputElement>,
-) {
+export const MultiInputDateTimeRangeField = React.forwardRef(function MultiInputDateTimeRangeField<
+  TDate,
+>(inProps: MultiInputDateTimeRangeFieldProps<TDate>, ref: React.Ref<HTMLInputElement>) {
   const themeProps = useThemeProps({
     props: inProps,
-    name: 'MuiMultiInputDateRangeField',
+    name: 'MuiMultiInputDateTimeRangeField',
   });
 
   const {
@@ -52,6 +51,12 @@ export const MultiInputDateRangeField = React.forwardRef(function MultiInputDate
     shouldDisableDate,
     minDate,
     maxDate,
+    minTime,
+    maxTime,
+    minDateTime,
+    maxDateTime,
+    minutesStep,
+    shouldDisableTime,
     disableFuture,
     disablePast,
     ...other
@@ -59,7 +64,7 @@ export const MultiInputDateRangeField = React.forwardRef(function MultiInputDate
 
   const ownerState = themeProps;
 
-  const Root = components?.Root ?? MultiInputDateRangeFieldRoot;
+  const Root = components?.Root ?? MultiInputDateTimeRangeFieldRoot;
   const rootProps = useSlotProps({
     elementType: Root,
     externalSlotProps: componentsProps?.root,
@@ -82,7 +87,7 @@ export const MultiInputDateRangeField = React.forwardRef(function MultiInputDate
     ownerState: { ...ownerState, position: 'end' },
   });
 
-  const Separator = components?.Separator ?? MultiInputDateRangeFieldSeparator;
+  const Separator = components?.Separator ?? MultiInputDateTimeRangeFieldSeparator;
   const separatorProps = useSlotProps({
     elementType: Separator,
     externalSlotProps: componentsProps?.separator,
@@ -92,7 +97,7 @@ export const MultiInputDateRangeField = React.forwardRef(function MultiInputDate
   const {
     startDate: { onKeyDown: onStartInputKeyDown, ref: startInputRef, ...startDateProps },
     endDate: { onKeyDown: onEndInputKeyDown, ref: endInputRef, ...endDateProps },
-  } = useMultiInputDateRangeField<TDate, TextFieldProps>({
+  } = useMultiInputDateTimeRangeField<TDate, TextFieldProps>({
     sharedProps: {
       value,
       defaultValue,
@@ -103,6 +108,12 @@ export const MultiInputDateRangeField = React.forwardRef(function MultiInputDate
       shouldDisableDate,
       minDate,
       maxDate,
+      minTime,
+      maxTime,
+      minDateTime,
+      maxDateTime,
+      minutesStep,
+      shouldDisableTime,
       disableFuture,
       disablePast,
     },
@@ -133,4 +144,4 @@ export const MultiInputDateRangeField = React.forwardRef(function MultiInputDate
       />
     </Root>
   );
-}) as MultiInputDateRangeFieldComponent;
+}) as MultiInputDateTimeRangeFieldComponent;

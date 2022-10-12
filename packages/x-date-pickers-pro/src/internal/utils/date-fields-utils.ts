@@ -1,4 +1,4 @@
-import { DateRangeFieldSection } from '../internal/models';
+import { DateRangeFieldSection } from '../models/range';
 
 export const splitDateRangeSections = (sections: DateRangeFieldSection[]) => {
   const startDateSections: DateRangeFieldSection[] = [];
