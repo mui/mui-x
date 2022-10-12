@@ -140,7 +140,7 @@ const getComponentPaths =
       const componentFiles = getComponentFilesInFolder(path.join(project.rootPath, folder));
       componentFiles.forEach((file) => {
         const componentName = path.basename(file).replace('.tsx', '');
-        const isExported = !!project.exports[componentName];
+        const isExported = !!project.exports[componentName] || !!project.exports[`Unstable_${componentName}`];
         if (isExported) {
           paths.push(file);
         }

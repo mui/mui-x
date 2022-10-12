@@ -1,0 +1,26 @@
+{
+  "props": {
+    "components": { "type": { "name": "object" }, "default": "{}" },
+    "componentsProps": { "type": { "name": "object" }, "default": "{}" },
+    "defaultValue": { "type": { "name": "arrayOf", "description": "Array&lt;any&gt;" } },
+    "disableFuture": { "type": { "name": "bool" } },
+    "disablePast": { "type": { "name": "bool" } },
+    "maxDate": { "type": { "name": "any" } },
+    "minDate": { "type": { "name": "any" } },
+    "onSelectedSectionsChange": { "type": { "name": "func" } },
+    "readOnly": { "type": { "name": "bool" } },
+    "selectedSections": {
+      "type": {
+        "name": "union",
+        "description": "'day'<br>&#124;&nbsp;'hour'<br>&#124;&nbsp;'meridiem'<br>&#124;&nbsp;'minute'<br>&#124;&nbsp;'month'<br>&#124;&nbsp;'second'<br>&#124;&nbsp;'year'<br>&#124;&nbsp;number<br>&#124;&nbsp;{ endIndex: number, startIndex: number }"
+      }
+    },
+    "shouldDisableDate": { "type": { "name": "func" } }
+  },
+  "slots": { "Input": { "default": "TextField", "type": { "name": "elementType" } } },
+  "name": "SingleInputDateRangeField",
+  "styles": { "classes": [], "globalClasses": {}, "name": "MuiSingleInputDateRangeField" },
+  "filename": "/packages/x-date-pickers-pro/src/SingleInputDateRangeField/SingleInputDateRangeField.tsx",
+  "demos": "<ul></ul>",
+  "packages": []
+}
