@@ -155,9 +155,8 @@ We'd like to offer a big thanks to the 8 contributors who made this release poss
 
 #### Breaking changes
 
-- [pickers] Do not support unparsed date formats anymore (#6170) @flaviendelangle
+- The `value` prop of the pickers now expects a parsed value.
 
-  The `value` prop of the pickers now expects a parsed value.
   Until now, it was possible to provide any format that your date management library was able to parse.
   For instance, you could pass `value={new Date()}` when using `AdapterDayjs`.
 
