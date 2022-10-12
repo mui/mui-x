@@ -16,9 +16,9 @@ export * from './TimePicker';
 export * from './locales';
 
 // Fields
-export * from './DateField'
-export * from './TimeField'
-export * from './DateTimeField'
+export * from './DateField';
+export * from './TimeField';
+export * from './DateTimeField';
 export type { FieldSection, FieldSelectedSections } from './internals/hooks/useField';
 
 // Calendars

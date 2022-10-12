@@ -8,10 +8,10 @@ export * from './MobileDateRangePicker';
 export * from './StaticDateRangePicker';
 
 // Fields
-export * from './MultiInputDateRangeField'
-export * from './MultiInputTimeRangeField'
-export * from './MultiInputDateTimeRangeField'
-export * from './SingleInputDateRangeField'
+export * from './MultiInputDateRangeField';
+export * from './MultiInputTimeRangeField';
+export * from './MultiInputDateTimeRangeField';
+export * from './SingleInputDateRangeField';
 export type { DateRangeFieldSection } from './internal/models/range';
 
 // Calendars
