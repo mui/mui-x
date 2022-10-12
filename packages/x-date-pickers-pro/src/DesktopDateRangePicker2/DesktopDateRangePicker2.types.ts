@@ -1,13 +1,14 @@
 import { MakeOptional } from '@mui/x-date-pickers/internals';
 import {
+  ExportedUseDesktopRangePickerProps,
   UseDesktopRangePickerSlotsComponent,
   UseDesktopRangePickerSlotsComponentsProps,
 } from '../internal/hooks/useDesktopRangePicker';
-import { BaseDateRangePicker2Props } from '../DateRangePicker2/shared';
 import {
   DateRangeCalendarSlotsComponent,
   DateRangeCalendarSlotsComponentsProps,
 } from '../DateRangeCalendar';
+import { BaseDateRangePicker2Props } from '../DateRangePicker2/shared';
 
 export interface DesktopDateRangePicker2SlotsComponent<TDate>
   extends MakeOptional<UseDesktopRangePickerSlotsComponent, 'Field'>,
@@ -17,7 +18,9 @@ export interface DesktopDateRangePicker2SlotsComponentsProps<TDate>
   extends UseDesktopRangePickerSlotsComponentsProps,
     DateRangeCalendarSlotsComponentsProps<TDate> {}
 
-export interface DesktopDateRangePicker2Props<TDate> extends BaseDateRangePicker2Props<TDate> {
+export interface DesktopDateRangePicker2Props<TDate>
+  extends BaseDateRangePicker2Props<TDate>,
+    ExportedUseDesktopRangePickerProps {
   /**
    * The number of calendars to render on **desktop**.
    * @default 2

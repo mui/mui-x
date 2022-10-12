@@ -25,11 +25,13 @@ import {
 } from '../ClockPicker/ClockPicker';
 import { BasePickerProps2 } from '../internals/models/props/basePickerProps';
 import { applyDefaultDate } from '../internals/utils/date-utils';
-import { PickerViewContainer } from '../internals/components/PickerViewContainer';
 import { PickerViewsRendererProps } from '../internals/hooks/usePicker/usePickerViews';
 import { UsePickerProps } from '../internals/hooks/usePicker';
-import { PickerViewLayout, PickerViewLayoutProps } from '../internals/components/PickerViewLayout';
 import { DateTimePickerTabsProps } from '../DateTimePicker/DateTimePickerTabs';
+import {
+  BaseDateValidationProps,
+  BaseTimeValidationProps,
+} from '../internals/hooks/validation/models';
 
 export interface BaseDateTimePicker2SlotsComponent<TDate>
   extends Partial<DateCalendarSlotsComponent<TDate>>,
@@ -79,12 +81,30 @@ export interface BaseDateTimePicker2Props<TDate>
    * Maximal selectable moment of time with binding to date, to set max time in each day use `maxTime`.
    */
   maxDateTime?: TDate;
+  /**
+   * Force rendering in particular orientation.
+   * @default "portrait"
+   */
+  orientation?: 'portrait' | 'landscape';
 }
 
 export function useDateTimePicker2DefaultizedProps<
   TDate,
   Props extends BaseDateTimePicker2Props<TDate>,
->(props: Props, name: string): DefaultizedProps<Props, 'views' | 'openTo'> {
+>(
+  props: Props,
+  name: string,
+): DefaultizedProps<
+  Props,
+  | 'views'
+  | 'openTo'
+  | 'orientation'
+  | 'ampmInClock'
+  | 'ampm'
+  | 'inputFormat'
+  | keyof BaseDateValidationProps<TDate>
+  | keyof BaseTimeValidationProps
+> {
   const utils = useUtils<TDate>();
   const defaultDates = useDefaultDates<TDate>();
   const themeProps = useThemeProps({
@@ -138,12 +158,9 @@ interface DateTimePickerViewsProps<TDate>
   extends Omit<BaseDateTimePicker2Props<TDate>, keyof UsePickerProps<any, any>>,
     PickerViewsRendererProps<TDate | null, CalendarOrClockPickerView, {}> {
   openTo?: CalendarOrClockPickerView;
-  components?: DateCalendarProps<TDate>['components'] &
-    ClockPickerProps<TDate>['components'] &
-    PickerViewLayoutProps<CalendarOrClockPickerView>['components'];
+  components?: DateCalendarProps<TDate>['components'] & ClockPickerProps<TDate>['components'];
   componentsProps?: DateCalendarProps<TDate>['componentsProps'] &
-    ClockPickerProps<TDate>['componentsProps'] &
-    PickerViewLayoutProps<CalendarOrClockPickerView>['componentsProps'];
+    ClockPickerProps<TDate>['componentsProps'];
 }
 
 const isDatePickerView = (view: CalendarOrClockPickerView): view is CalendarPickerView =>
@@ -156,65 +173,42 @@ export const renderDateTimeViews = <TDate extends unknown>(
   props: DateTimePickerViewsProps<TDate>,
 ) => {
   const {
-    isLandscape,
     views,
     view,
     onViewChange,
     // We don't want to pass this prop to the views because it can cause proptypes warnings
     openTo,
     wrapperVariant,
-    onAccept,
-    onClear,
-    onCancel,
-    onSetToday,
-    onOpen,
-    onClose,
-    onDismiss,
     components,
     componentsProps,
     ...other
   } = props;
 
   return (
-    <PickerViewContainer isLandscape={isLandscape}>
-      <PickerViewLayout
-        wrapperVariant={wrapperVariant}
-        onOpen={onOpen}
-        onClose={onClose}
-        onAccept={onAccept}
-        onClear={onClear}
-        onCancel={onCancel}
-        onSetToday={onSetToday}
-        onDismiss={onDismiss}
-        components={components}
-        componentsProps={componentsProps}
-        view={view}
-        onViewChange={onViewChange}
-      >
-        {isDatePickerView(view) && (
-          <DateCalendar
-            views={views.filter(isDatePickerView)}
-            onViewChange={onViewChange as (view: CalendarPickerView) => void}
-            view={view}
-            components={components}
-            componentsProps={componentsProps}
-            // focusedView={focusedView}
-            // onFocusedViewChange={setFocusedView}
-            {...other}
-          />
-        )}
-        {isTimePickerView(view) && (
-          <ClockPicker
-            {...other}
-            views={views.filter(isTimePickerView)}
-            onViewChange={onViewChange as (view: ClockPickerView) => void}
-            view={view}
-            components={components}
-            componentsProps={componentsProps}
-            // showViewSwitcher={wrapperVariant === 'desktop'}
-          />
-        )}
-      </PickerViewLayout>
-    </PickerViewContainer>
+    <React.Fragment>
+      {isDatePickerView(view) && (
+        <DateCalendar
+          views={views.filter(isDatePickerView)}
+          onViewChange={onViewChange as (view: CalendarPickerView) => void}
+          view={view}
+          components={components}
+          componentsProps={componentsProps}
+          // focusedView={focusedView}
+          // onFocusedViewChange={setFocusedView}
+          {...other}
+        />
+      )}
+      {isTimePickerView(view) && (
+        <ClockPicker
+          {...other}
+          views={views.filter(isTimePickerView)}
+          onViewChange={onViewChange as (view: ClockPickerView) => void}
+          view={view}
+          components={components}
+          componentsProps={componentsProps}
+          // showViewSwitcher={wrapperVariant === 'desktop'}
+        />
+      )}
+    </React.Fragment>
   );
 };

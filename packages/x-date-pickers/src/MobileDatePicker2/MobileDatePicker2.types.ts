@@ -1,13 +1,14 @@
 import {
+  ExportedUseMobilePickerProps,
   UseMobilePickerSlotsComponent,
   UseMobilePickerSlotsComponentsProps,
 } from '../internals/hooks/useMobilePicker';
-import { MakeOptional } from '../internals/models/helpers';
 import {
   BaseDatePicker2Props,
   BaseDatePicker2SlotsComponent,
   BaseDatePicker2SlotsComponentsProps,
 } from '../DatePicker2/shared';
+import { MakeOptional } from '../internals/models/helpers';
 
 export interface MobileDatePicker2SlotsComponent<TDate>
   extends BaseDatePicker2SlotsComponent<TDate>,
@@ -17,7 +18,9 @@ export interface MobileDatePicker2SlotsComponentsProps<TDate>
   extends BaseDatePicker2SlotsComponentsProps<TDate>,
     UseMobilePickerSlotsComponentsProps<TDate> {}
 
-export interface MobileDatePicker2Props<TDate> extends BaseDatePicker2Props<TDate> {
+export interface MobileDatePicker2Props<TDate>
+  extends BaseDatePicker2Props<TDate>,
+    ExportedUseMobilePickerProps {
   /**
    * Overrideable components.
    * @default {}

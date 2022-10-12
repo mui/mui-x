@@ -8,15 +8,15 @@ import { DateValidationError } from '../internals/hooks/validation/useDateValida
 import {
   ClockPickerSlotsComponent,
   ClockPickerSlotsComponentsProps,
-  ExportedClockPickerProps
+  ExportedClockPickerProps,
 } from '../ClockPicker/ClockPicker';
-import { PickerViewContainer } from '../internals/components/PickerViewContainer';
 import { BasePickerProps2 } from '../internals/models/props/basePickerProps';
 import { BaseTimeValidationProps } from '../internals/hooks/validation/models';
 
 export interface BaseTimePicker2SlotsComponent extends Partial<ClockPickerSlotsComponent> {}
 
-export interface BaseTimePicker2SlotsComponentsProps extends Partial<ClockPickerSlotsComponentsProps> {}
+export interface BaseTimePicker2SlotsComponentsProps
+  extends Partial<ClockPickerSlotsComponentsProps> {}
 
 export interface BaseTimePicker2Props<TDate>
   extends MakeOptional<BasePickerProps2<TDate | null, TDate, ClockPickerView>, 'views' | 'openTo'>,
@@ -35,6 +35,11 @@ export interface BaseTimePicker2Props<TDate>
    * Pass a ref to the `input` element.
    */
   inputRef?: React.Ref<HTMLInputElement>;
+  /**
+   * Force rendering in particular orientation.
+   * @default "portrait"
+   */
+  orientation?: 'portrait' | 'landscape';
 }
 
 export function useTimePicker2DefaultizedProps<TDate, Props extends BaseTimePicker2Props<TDate>>(
@@ -71,10 +76,6 @@ export function useTimePicker2DefaultizedProps<TDate, Props extends BaseTimePick
   };
 }
 
-export const renderTimeViews = <TDate extends unknown>(
-  props: ClockPickerProps<TDate> & { isLandscape: boolean },
-) => (
-  <PickerViewContainer isLandscape={props.isLandscape}>
-    <ClockPicker<TDate> {...props} />
-  </PickerViewContainer>
+export const renderTimeViews = <TDate extends unknown>(props: ClockPickerProps<TDate>) => (
+  <ClockPicker<TDate> {...props} />
 );

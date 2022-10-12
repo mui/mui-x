@@ -4,7 +4,6 @@ import useEventCallback from '@mui/utils/useEventCallback';
 import { CalendarOrClockPickerView } from '../../models';
 import { useViews } from '../useViews';
 import { PickerSelectionState } from '../usePickerState';
-import { useIsLandscape } from '../useIsLandscape';
 import { UseFieldInternalProps } from '../useField';
 import { WrapperVariant } from '../../components/wrappers/WrapperVariantContext';
 import type { UsePickerValueActions } from './usePickerValue';
@@ -31,10 +30,6 @@ export interface ExportedUsePickerViewProps<TView extends CalendarOrClockPickerV
    */
   disabled?: boolean;
   /**
-   * Force rendering in particular orientation.
-   */
-  orientation?: 'portrait' | 'landscape';
-  /**
    * First view to show.
    */
   openTo: TView;
@@ -48,6 +43,11 @@ export interface ExportedUsePickerViewProps<TView extends CalendarOrClockPickerV
    * Array of views to show.
    */
   views: readonly TView[];
+  /**
+   * Do not render open picker button (renders only the field).
+   * @default false
+   */
+  disableOpenPicker?: boolean;
 }
 
 export interface UsePickerViewsProps<TValue, TView extends CalendarOrClockPickerView>
@@ -86,12 +86,10 @@ export type PickerViewsRendererProps<
   TView extends CalendarOrClockPickerView,
   TViewProps extends {},
 > = TViewProps &
-  UsePickerValueActions &
   Pick<UsePickerViewsProps<TValue, TView>, 'value' | 'onChange' | 'views' | 'autoFocus'> & {
     view: TView;
     onViewChange: (view: TView) => void;
     value: TValue;
-    isLandscape: boolean;
     wrapperVariant: WrapperVariant;
   };
 
@@ -113,9 +111,7 @@ export const usePickerViews = <
   onClose,
   onSelectedSectionsChange,
 }: UsePickerViewParams<TValue, TView, TViewProps>): UsePickerViewsResponse => {
-  const { views, openTo, onViewChange, onChange, orientation, ...other } = props;
-
-  const isLandscape = useIsLandscape(views, orientation);
+  const { views, openTo, onViewChange, onChange, disableOpenPicker, ...other } = props;
 
   if (process.env.NODE_ENV !== 'production') {
     if (!warnedOnceNotValidOpenTo && !views.includes(openTo)) {
@@ -128,7 +124,7 @@ export const usePickerViews = <
   }
 
   // TODO: Stop using `useViews` ?
-  const { openView, setOpenView, handleChangeAndOpenNext } = useViews<TValue, TView>({
+  const { openView, setOpenView, handleChangeAndOpenNext } = useViews({
     view: undefined,
     views,
     openTo,
@@ -141,7 +137,13 @@ export const usePickerViews = <
     const sectionModeLookup = {} as PickerDateSectionModeLookup<TView>;
 
     views.forEach((view) => {
-      const viewMode: 'field' | 'popper' = inputSectionModelLookup?.[view] ?? 'popper';
+      let viewMode: 'field' | 'popper';
+      if (disableOpenPicker) {
+        viewMode = 'field';
+      } else {
+        viewMode = inputSectionModelLookup?.[view] ?? 'popper';
+      }
+
       if (viewMode === 'popper') {
         hasPopperView = true;
       }
@@ -153,14 +155,20 @@ export const usePickerViews = <
       hasPopperView,
       sectionModeLookup,
     };
-  }, [inputSectionModelLookup, views]);
+  }, [disableOpenPicker, inputSectionModelLookup, views]);
 
-  const isFieldView = viewModeResponse.sectionModeLookup[openView] === 'field';
+  const currentViewMode = viewModeResponse.sectionModeLookup[openView];
+  const shouldRestoreFocus = useEventCallback(() => currentViewMode === 'popper');
 
-  const shouldRestoreFocus = useEventCallback(() => !isFieldView);
+  const [popperView, setPopperView] = React.useState<TView | null>(
+    currentViewMode === 'popper' ? openView : null,
+  );
+  if (popperView !== openView && viewModeResponse.sectionModeLookup[openView] === 'popper') {
+    setPopperView(openView);
+  }
 
   useEnhancedEffect(() => {
-    if (isFieldView && open) {
+    if (currentViewMode === 'field' && open) {
       onClose();
       onSelectedSectionsChange('hour');
 
@@ -175,36 +183,29 @@ export const usePickerViews = <
       return;
     }
 
-    if (!isFieldView && viewModeResponse.hasPopperView) {
-      setOpenView(openTo);
+    if (currentViewMode === 'field' && popperView != null) {
+      setOpenView(popperView);
     }
   }, [open]); // eslint-disable-line react-hooks/exhaustive-deps
-
-  const lastOpenView = React.useRef(openTo);
-
-  const viewInPopper = React.useMemo(() => {
-    if (viewModeResponse.sectionModeLookup[openView] === 'field') {
-      return lastOpenView.current;
-    }
-
-    lastOpenView.current = openView;
-    return openView;
-  }, [openView, viewModeResponse.sectionModeLookup]);
 
   return {
     ...viewModeResponse,
     shouldRestoreFocus,
-    renderViews: () =>
-      renderViews({
-        view: viewInPopper,
+    renderViews: () => {
+      if (popperView == null) {
+        return null;
+      }
+
+      return renderViews({
+        view: popperView,
         onViewChange: setOpenView,
         onChange: handleChangeAndOpenNext,
         views,
-        isLandscape,
         wrapperVariant,
         ...actions,
         ...other,
         ...additionalViewProps,
-      }),
+      });
+    },
   };
 };

@@ -40,17 +40,15 @@ export interface UseDesktopPickerSlotsComponentsProps<TDate>
   openPickerIcon?: Record<string, any>;
 }
 
-interface DesktopOnlyPickerProps {
-  /**
-   * Do not render open picker button (renders only the field).
-   * @default false
-   */
-  disableOpenPicker?: boolean;
-}
+export interface ExportedUseDesktopPickerProps {}
 
-export interface UseDesktopPickerProps<TDate, TView extends CalendarOrClockPickerView>
-  extends DesktopOnlyPickerProps,
+interface UseDesktopPickerProps<TDate, TView extends CalendarOrClockPickerView>
+  extends ExportedUseDesktopPickerProps,
     BasePickerProps2<TDate | null, TDate, TView> {
+  /**
+   * Force rendering in particular orientation.
+   */
+  orientation?: 'portrait' | 'landscape';
   /**
    * Overrideable components.
    * @default {}

@@ -11,6 +11,7 @@ import { usePicker } from '../usePicker';
 import { LocalizationProvider } from '../../../LocalizationProvider';
 import { WrapperVariantContext } from '../../components/wrappers/WrapperVariantContext';
 import { BaseFieldProps } from '../../models/fields';
+import { PickerViewContainer } from '../../components/PickerViewContainer';
 
 /**
  * Hook managing all the single-date desktop pickers:
@@ -32,7 +33,6 @@ export const useDesktopPicker = <TDate, TView extends CalendarOrClockPickerView>
     inputFormat,
     readOnly,
     disabled,
-    disableOpenPicker,
     localeText,
   } = props;
 
@@ -87,7 +87,7 @@ export const useDesktopPicker = <TDate, TView extends CalendarOrClockPickerView>
     elementType: OpenPickerButton,
     externalSlotProps: componentsProps.openPickerButton,
     additionalProps: {
-      disabled: disabled || readOnly || !hasPopperView,
+      disabled: disabled || readOnly,
       onClick: actions.onOpen,
       'aria-label': getOpenDialogAriaText(pickerFieldProps.value, utils),
       edge: inputAdornmentProps.position,
@@ -117,13 +117,13 @@ export const useDesktopPicker = <TDate, TView extends CalendarOrClockPickerView>
         ...inputPropsPassedByField,
         ...externalInputProps,
         InputProps: {
-          [`${inputAdornmentProps.position}Adornment`]: disableOpenPicker ? undefined : (
+          [`${inputAdornmentProps.position}Adornment`]: hasPopperView ? (
             <InputAdornment {...inputAdornmentProps}>
               <OpenPickerButton {...openPickerButtonProps}>
                 <OpenPickerIcon {...openPickerIconProps} />
               </OpenPickerButton>
             </InputAdornment>
-          ),
+          ) : undefined,
           ...inputPropsPassedByField?.InputProps,
           ...externalInputProps?.InputProps,
         },
@@ -157,7 +157,9 @@ export const useDesktopPicker = <TDate, TView extends CalendarOrClockPickerView>
           componentsProps={componentsProps}
           shouldRestoreFocus={shouldRestoreFocus}
         >
-          {renderViews()}
+          <PickerViewContainer views={props.views} orientation={props.orientation}>
+            {renderViews()}
+          </PickerViewContainer>
         </PickersPopper>
       </WrapperVariantContext.Provider>
     </LocalizationProvider>

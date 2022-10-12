@@ -20,16 +20,10 @@ export interface UseDesktopRangePickerSlotsComponentsProps
   input?: Record<string, any>;
 }
 
-interface DesktopOnlyRangePickerProps {
-  /**
-   * Do not render open picker button (renders only the field).
-   * @default false
-   */
-  disableOpenPicker?: boolean;
-}
+export interface ExportedUseDesktopRangePickerProps {}
 
-export interface UseDesktopRangePickerProps<TDate, TView extends CalendarOrClockPickerView>
-  extends DesktopOnlyRangePickerProps,
+interface UseDesktopRangePickerProps<TDate, TView extends CalendarOrClockPickerView>
+  extends ExportedUseDesktopRangePickerProps,
     BasePickerProps2<DateRange<TDate>, TDate, TView> {
   /**
    * Overrideable components.

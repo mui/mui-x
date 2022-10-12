@@ -1,9 +1,22 @@
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
+import { useIsLandscape } from '../hooks/useIsLandscape';
+import { CalendarOrClockPickerView } from '../models/views';
 
-interface PickerViewContainerProps {
-  isLandscape: boolean;
+export interface ExportedPickerViewContainerProps {
+  /**
+   * Force rendering in particular orientation.
+   */
+  orientation?: 'portrait' | 'landscape';
+}
+
+export interface PickerViewContainerProps<TView extends CalendarOrClockPickerView>
+  extends ExportedPickerViewContainerProps {
   children: React.ReactNode;
+  /**
+   * Array of views to show.
+   */
+  views: readonly TView[];
 }
 
 export const PickerViewContainerRoot = styled('div')<{ ownerState: { isLandscape: boolean } }>(
@@ -16,8 +29,11 @@ export const PickerViewContainerRoot = styled('div')<{ ownerState: { isLandscape
   }),
 );
 
-export function PickerViewContainer(props: PickerViewContainerProps) {
-  const { isLandscape, children } = props;
+export function PickerViewContainer<TView extends CalendarOrClockPickerView>(
+  props: PickerViewContainerProps<TView>,
+) {
+  const { orientation, views, children } = props;
+  const isLandscape = useIsLandscape(views, orientation);
 
   return <PickerViewContainerRoot ownerState={{ isLandscape }}>{children}</PickerViewContainerRoot>;
 }

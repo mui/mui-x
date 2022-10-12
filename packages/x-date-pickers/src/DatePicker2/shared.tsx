@@ -12,7 +12,6 @@ import { useDefaultDates, useUtils } from '../internals/hooks/useUtils';
 import { isYearAndMonthViews, isYearOnlyView } from '../internals/utils/views';
 import { ValidationCommonPropsOptionalValue } from '../internals/hooks/validation/useValidation';
 import { DateValidationError } from '../internals/hooks/validation/useDateValidation';
-import { PickerViewContainer } from '../internals/components/PickerViewContainer';
 import { BasePickerProps2 } from '../internals/models/props/basePickerProps';
 import { applyDefaultDate } from '../internals/utils/date-utils';
 import { BaseDateValidationProps, CalendarPickerView } from '../internals';
@@ -83,10 +82,6 @@ export function useDatePicker2DefaultizedProps<TDate, Props extends BaseDatePick
   };
 }
 
-export const renderDateViews = <TDate extends unknown>(
-  props: DateCalendarProps<TDate> & { isLandscape: boolean },
-) => (
-  <PickerViewContainer isLandscape={props.isLandscape}>
-    <DateCalendar<TDate> {...props} focusedView={props.view} />
-  </PickerViewContainer>
+export const renderDateViews = <TDate extends unknown>(props: DateCalendarProps<TDate>) => (
+  <DateCalendar<TDate> {...props} focusedView={props.view} />
 );
