@@ -18,12 +18,12 @@ export interface BaseToolbarProps<TValue> extends ExportedBaseToolbarProps {
 
 export interface ExportedBaseToolbarProps {
   /**
-   * Date format.
+   * Toolbar date format.
    */
   toolbarFormat?: string;
   /**
-   * Mobile picker date value placeholder, it is displayed when `value` === `null`.
-   * @default '–'
+   * Toolbar value placeholder—it is displayed when the value is empty.
+   * @default "––"
    */
   toolbarPlaceholder?: React.ReactNode;
   /**
