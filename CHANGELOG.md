@@ -9,11 +9,23 @@ _Oct 13, 2022_
 
 We'd like to offer a big thanks to the 8 contributors who made this release possible. Here are some highlights ✨:
 
-
+- 🚀 Simplify `useGridApiContext` and `useGridApiRef` type overrides (#6423) @cherniavskii
+- 📝 Allow to limit to one filter per column for `DataGridPro` and `DataGridPremium` (#6333) @MBilalShafi
+- 🎁 Support pasting in pickers @flaviendelangle
 - 📚 Documentation improvements
+- 🐞 Bugfixes
 
-From https://github.com/mui/mui-x/pull/6381
+### `@mui/x-data-grid@v6.0.0-alpha.3` / `@mui/x-data-grid-pro@v6.0.0-alpha.3` / `@mui/x-data-grid-premium@v6.0.0-alpha.3`
 
+#### Changes
+
+- [DataGrid] Fix start edit mode with printable character in React 18 (#6257) @m4theushw
+- [DataGrid] Remove legacy editing API (#6016) @m4theushw
+- [DataGrid] Simplify `useGridApiContext` and `useGridApiRef` type overrides (#6423) @cherniavskii
+- [DataGrid] Use generics instead of verbose state overrides (#6409) @cherniavskii
+- [DataGridPro] Allow to limit to one filter per column (#6333) @MBilalShafi
+
+### `@mui/x-date-pickers@v6.0.0-alpha.3` / `@mui/x-date-pickers-pro@v6.0.0-alpha.3`
 
 #### Breaking changes
 
@@ -75,12 +87,6 @@ From https://github.com/mui/mui-x/pull/6381
   +  componentsProps={{ desktopTrapFocus: { isEnabled: () => false }}}
   />
   ```
- 
-From https://github.com/mui/mui-x/pull/6389
-
-
-#### Breaking changes
-
 - The view components allowing to pick a date or parts of a date without an input have been renamed to better fit their usage:
 
   ```diff
@@ -134,17 +140,6 @@ From https://github.com/mui/mui-x/pull/6389
   -MuiYearPicker: {
   +MuiYearCalendar: {
   ```
-### `@mui/x-data-grid@v__VERSION__` / `@mui/x-data-grid-pro@v__VERSION__` / `@mui/x-data-grid-premium@v__VERSION__`
-
-#### Changes
-
-- [DataGrid] Fix start edit mode with printable character in React 18 (#6257) @m4theushw
-- [DataGrid] Remove legacy editing API (#6016) @m4theushw
-- [DataGrid] Allow to limit to one filter per column (#6333) @MBilalShafi
-- [DataGrid] Simplify `useGridApiContext` and `useGridApiRef` type overrides (#6423) @cherniavskii
-- [DataGrid] Use generics instead of verbose state overrides (#6409) @cherniavskii
-
-### `@mui/x-date-pickers@v__PICKERS_VERSION__` / `@mui/x-date-pickers-pro@v__PICKERS_VERSION__`
 
 #### Changes
 
@@ -178,6 +173,7 @@ From https://github.com/mui/mui-x/pull/6389
 - [core] Test validation on textfield and date views (#6265) @alexfauquette
 - New components: `MultiInputDateTimeRangePicker` and `MultiInputTimeRangePicker` (#6392) @alexfauquette
 - [test] Sync comment with monorepo @oliviertassinari
+
 ## v6.0.0-alpha.2
 
 _Oct 7, 2022_
