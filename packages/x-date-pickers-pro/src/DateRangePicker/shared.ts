@@ -57,12 +57,12 @@ export interface BaseDateRangePickerProps<TDate>
    * Overrideable components.
    * @default {}
    */
-  components?: Partial<BaseDateRangePickerSlotsComponent<TDate>>;
+  components?: BaseDateRangePickerSlotsComponent<TDate>;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  componentsProps?: Partial<BaseDateRangePickerSlotsComponentsProps<TDate>>;
+  componentsProps?: BaseDateRangePickerSlotsComponentsProps<TDate>;
 }
 
 export function useDateRangePickerDefaultizedProps<

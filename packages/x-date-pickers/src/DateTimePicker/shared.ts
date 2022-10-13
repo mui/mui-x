@@ -91,12 +91,12 @@ export interface BaseDateTimePickerProps<TDate>
    * Overrideable components.
    * @default {}
    */
-  components?: Partial<BaseDateTimePickerSlotsComponent<TDate>>;
+  components?: BaseDateTimePickerSlotsComponent<TDate>;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  componentsProps?: Partial<BaseDateTimePickerSlotsComponentsProps<TDate>>;
+  componentsProps?: BaseDateTimePickerSlotsComponentsProps<TDate>;
 }
 
 export function useDateTimePickerDefaultizedProps<

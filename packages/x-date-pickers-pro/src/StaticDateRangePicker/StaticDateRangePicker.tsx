@@ -37,12 +37,12 @@ export interface StaticDateRangePickerProps<TDate>
    * Overrideable components.
    * @default {}
    */
-  components?: Partial<StaticDateRangePickerSlotsComponent<TDate>>;
+  components?: StaticDateRangePickerSlotsComponent<TDate>;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  componentsProps?: Partial<StaticDateRangePickersSlotsComponentsProps<TDate>>;
+  componentsProps?: StaticDateRangePickersSlotsComponentsProps<TDate>;
 }
 
 type StaticDateRangePickerComponent = (<TDate>(

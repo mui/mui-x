@@ -60,12 +60,12 @@ export interface BaseDatePickerProps<TDate>
    * Overrideable components.
    * @default {}
    */
-  components?: Partial<BaseDatePickerSlotsComponent<TDate>>;
+  components?: BaseDatePickerSlotsComponent<TDate>;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  componentsProps?: Partial<BaseDatePickerSlotsComponentsProps<TDate>>;
+  componentsProps?: BaseDatePickerSlotsComponentsProps<TDate>;
 }
 
 const getFormatAndMaskByViews = <TDate>(

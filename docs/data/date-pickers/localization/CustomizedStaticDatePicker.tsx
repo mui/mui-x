@@ -18,11 +18,7 @@ export default function CustomizedStaticDatePicker() {
         }}
         renderInput={(params) => <TextField {...params} />}
         dayOfWeekFormatter={(day) => `${day}.`}
-        componentsProps={{
-          toolbar: {
-            toolbarFormat: 'ddd DD MMMM',
-          },
-        }}
+        componentsProps={{ toolbar: { toolbarFormat: 'ddd DD MMMM' } }}
         showToolbar
       />
     </LocalizationProvider>
