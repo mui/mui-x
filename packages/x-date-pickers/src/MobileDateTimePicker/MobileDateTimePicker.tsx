@@ -38,12 +38,12 @@ export interface MobileDateTimePickerProps<TDate>
    * Overrideable components.
    * @default {}
    */
-  components?: Partial<MobileDateTimePickerSlotsComponent<TDate>>;
+  components?: MobileDateTimePickerSlotsComponent<TDate>;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  componentsProps?: Partial<MobileDateTimePickerSlotsComponentsProps<TDate>>;
+  componentsProps?: MobileDateTimePickerSlotsComponentsProps<TDate>;
 }
 
 type MobileDateTimePickerComponent = (<TDate>(
