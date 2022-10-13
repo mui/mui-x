@@ -22,6 +22,7 @@ We'd like to offer a big thanks to the 8 contributors who made this release poss
   They might receive breaking changes on their props to have the best components possible by the time of the stable release.
 
 - 📝 Allow to limit to one filter per column for `DataGridPro` and `DataGridPremium` (#6333) @MBilalShafi
+- 📚 New [page describing the validation props on each picker](https://next.mui.com/x/react-date-pickers/validation/) (#6064) @flaviendelangle
 - 📚 Documentation improvements
 - 🐞 Bugfixes
 
@@ -50,6 +51,7 @@ We'd like to offer a big thanks to the 8 contributors who made this release poss
     - Use `apiRef.current.stopRowEditMode` to replace `apiRef.current.commitRowChange`
     - Use `apiRef.current.startRowMode` to replace `apiRef.current.setRowMode(id, 'edit')`
     - Use the [`cellModesModel`](https://next.mui.com/x/react-data-grid/editing/#controlled-mode) or [`rowModesModel`](https://next.mui.com/x/react-data-grid/editing/#controlled-mode) props to replace `apiRef.current.setEditRowsModel`
+
 #### Changes
 
 - [DataGrid] Fix start edit mode with printable character in React 18 (#6257) @m4theushw
@@ -120,6 +122,7 @@ We'd like to offer a big thanks to the 8 contributors who made this release poss
   +  componentsProps={{ desktopTrapFocus: { isEnabled: () => false }}}
   />
   ```
+  
 - The view components allowing to pick a date or parts of a date without an input have been renamed to better fit their usage:
 
   ```diff
