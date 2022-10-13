@@ -1,6 +1,6 @@
 # Migration from v5 to v6
 
-<p class="description">This guide describes the changes needed to migrate from v5 to v6.</p>
+<p class="description">This guide describes the changes needed to migrate the data grid from v5 to v6.</p>
 
 ## Start using the alpha release
 
