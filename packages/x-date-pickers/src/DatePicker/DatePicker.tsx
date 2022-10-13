@@ -15,13 +15,13 @@ import {
   MobileDatePickerSlotsComponentsProps,
 } from '../MobileDatePicker';
 
-export interface DatePickerSlotsComponent
-  extends MobileDatePickerSlotsComponent,
-    DesktopDatePickerSlotsComponent {}
+export interface DatePickerSlotsComponent<TDate>
+  extends MobileDatePickerSlotsComponent<TDate>,
+    DesktopDatePickerSlotsComponent<TDate> {}
 
-export interface DatePickerSlotsComponentsProps
-  extends MobileDatePickerSlotsComponentsProps,
-    DesktopDatePickerSlotsComponentsProps {}
+export interface DatePickerSlotsComponentsProps<TDate>
+  extends MobileDatePickerSlotsComponentsProps<TDate>,
+    DesktopDatePickerSlotsComponentsProps<TDate> {}
 
 export interface DatePickerProps<TDate>
   extends Omit<DesktopDatePickerProps<TDate>, 'components' | 'componentsProps'>,
@@ -36,12 +36,12 @@ export interface DatePickerProps<TDate>
    * Overrideable components.
    * @default {}
    */
-  components?: Partial<DatePickerSlotsComponent>;
+  components?: DatePickerSlotsComponent<TDate>;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  componentsProps?: Partial<DatePickerSlotsComponentsProps>;
+  componentsProps?: DatePickerSlotsComponentsProps<TDate>;
 }
 
 type DatePickerComponent = (<TDate>(
@@ -64,29 +64,16 @@ export const DatePicker = React.forwardRef(function DatePicker<TDate>(
   ref: React.Ref<HTMLDivElement>,
 ) {
   const props = useThemeProps({ props: inProps, name: 'MuiDatePicker' });
-  const {
-    desktopModeMediaQuery = '@media (pointer: fine)',
-    DialogProps,
-    PopperProps,
-    TransitionComponent,
-    ...other
-  } = props;
+  const { desktopModeMediaQuery = '@media (pointer: fine)', ...other } = props;
 
   // defaults to `true` in environments where `window.matchMedia` would not be available (i.e. test/jsdom)
   const isDesktop = useMediaQuery(desktopModeMediaQuery, { defaultMatches: true });
 
   if (isDesktop) {
-    return (
-      <DesktopDatePicker
-        ref={ref}
-        PopperProps={PopperProps}
-        TransitionComponent={TransitionComponent}
-        {...other}
-      />
-    );
+    return <DesktopDatePicker ref={ref} {...other} />;
   }
 
-  return <MobileDatePicker ref={ref} DialogProps={DialogProps} {...other} />;
+  return <MobileDatePicker ref={ref} {...other} />;
 }) as DatePickerComponent;
 
 DatePicker.propTypes = {
@@ -138,10 +125,6 @@ DatePicker.propTypes = {
    */
   desktopModeMediaQuery: PropTypes.string,
   /**
-   * Props applied to the [`Dialog`](https://mui.com/material-ui/api/dialog/) element.
-   */
-  DialogProps: PropTypes.object,
-  /**
    * If `true`, the picker and text field are disabled.
    * @default false
    */
@@ -171,6 +154,12 @@ DatePicker.propTypes = {
    * @default false
    */
   disablePast: PropTypes.bool,
+  /**
+   * Calendar will show more weeks in order to match this value.
+   * Put it to 6 for having fix number of week in Gregorian calendars
+   * @default undefined
+   */
+  fixedWeekNumber: PropTypes.number,
   /**
    * Get aria-label text for control that opens picker dialog. Aria-label text must include selected date. @DateIOType
    * @template TDate
@@ -295,14 +284,6 @@ DatePicker.propTypes = {
    */
   orientation: PropTypes.oneOf(['landscape', 'portrait']),
   /**
-   * Paper props passed down to [Paper](https://mui.com/material-ui/api/paper/) component.
-   */
-  PaperProps: PropTypes.object,
-  /**
-   * Popper props passed down to [Popper](https://mui.com/material-ui/api/popper/) component.
-   */
-  PopperProps: PropTypes.object,
-  /**
    * Make picker read only.
    * @default false
    */
@@ -312,15 +293,6 @@ DatePicker.propTypes = {
    * @default typeof navigator !== 'undefined' && /(android)/i.test(navigator.userAgent)
    */
   reduceAnimations: PropTypes.bool,
-  /**
-   * Custom renderer for day. Check the [PickersDay](https://mui.com/x/api/date-pickers/pickers-day/) component.
-   * @template TDate
-   * @param {TDate} day The day to render.
-   * @param {Array<TDate | null>} selectedDays The days currently selected.
-   * @param {PickersDayProps<TDate>} pickersDayProps The props of the day to render.
-   * @returns {JSX.Element} The element representing the day.
-   */
-  renderDay: PropTypes.func,
   /**
    * The `renderInput` prop allows you to customize the rendered input.
    * The `props` argument of this render prop contains props of [TextField](https://mui.com/material-ui/api/text-field/#props) that you need to forward.
@@ -403,10 +375,6 @@ DatePicker.propTypes = {
    * @default 'Select date'
    */
   toolbarTitle: PropTypes.node,
-  /**
-   * Custom component for popper [Transition](https://mui.com/material-ui/transitions/#transitioncomponent-prop).
-   */
-  TransitionComponent: PropTypes.elementType,
   /**
    * The value of the picker.
    */

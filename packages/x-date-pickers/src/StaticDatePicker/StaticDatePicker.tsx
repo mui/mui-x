@@ -16,19 +16,16 @@ import { useDateValidation } from '../internals/hooks/validation/useDateValidati
 import { usePickerState } from '../internals/hooks/usePickerState';
 import { StaticPickerProps } from '../internals/models/props/staticPickerProps';
 import { DateInputSlotsComponent } from '../internals/components/PureDateInput';
-import {
-  CalendarPickerSlotsComponent,
-  CalendarPickerSlotsComponentsProps,
-} from '../CalendarPicker';
+import { DateCalendarSlotsComponent, DateCalendarSlotsComponentsProps } from '../DateCalendar';
 
-export interface StaticDatePickerSlotsComponent
+export interface StaticDatePickerSlotsComponent<TDate>
   extends PickersStaticWrapperSlotsComponent,
-    CalendarPickerSlotsComponent,
+    DateCalendarSlotsComponent<TDate>,
     DateInputSlotsComponent {}
 
-export interface StaticDatePickerSlotsComponentsProps
+export interface StaticDatePickerSlotsComponentsProps<TDate>
   extends PickersStaticWrapperSlotsComponentsProps,
-    CalendarPickerSlotsComponentsProps {}
+    DateCalendarSlotsComponentsProps<TDate> {}
 
 export interface StaticDatePickerProps<TDate>
   extends StaticPickerProps<TDate, BaseDatePickerProps<TDate>> {
@@ -36,12 +33,12 @@ export interface StaticDatePickerProps<TDate>
    * Overrideable components.
    * @default {}
    */
-  components?: Partial<StaticDatePickerSlotsComponent>;
+  components?: StaticDatePickerSlotsComponent<TDate>;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  componentsProps?: Partial<StaticDatePickerSlotsComponentsProps>;
+  componentsProps?: StaticDatePickerSlotsComponentsProps<TDate>;
 }
 
 type StaticDatePickerComponent = (<TDate>(
@@ -187,6 +184,12 @@ StaticDatePicker.propTypes = {
    */
   displayStaticWrapperAs: PropTypes.oneOf(['desktop', 'mobile']),
   /**
+   * Calendar will show more weeks in order to match this value.
+   * Put it to 6 for having fix number of week in Gregorian calendars
+   * @default undefined
+   */
+  fixedWeekNumber: PropTypes.number,
+  /**
    * Get aria-label text for control that opens picker dialog. Aria-label text must include selected date. @DateIOType
    * @template TDate
    * @param {TDate | null} date The date from which we want to add an aria-text.
@@ -305,15 +308,6 @@ StaticDatePicker.propTypes = {
    * @default typeof navigator !== 'undefined' && /(android)/i.test(navigator.userAgent)
    */
   reduceAnimations: PropTypes.bool,
-  /**
-   * Custom renderer for day. Check the [PickersDay](https://mui.com/x/api/date-pickers/pickers-day/) component.
-   * @template TDate
-   * @param {TDate} day The day to render.
-   * @param {Array<TDate | null>} selectedDays The days currently selected.
-   * @param {PickersDayProps<TDate>} pickersDayProps The props of the day to render.
-   * @returns {JSX.Element} The element representing the day.
-   */
-  renderDay: PropTypes.func,
   /**
    * The `renderInput` prop allows you to customize the rendered input.
    * The `props` argument of this render prop contains props of [TextField](https://mui.com/material-ui/api/text-field/#props) that you need to forward.

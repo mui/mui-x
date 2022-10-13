@@ -1,6 +1,6 @@
 ---
 title: React Date Picker（日期选择器）组件
-components: CalendarPicker, CalendarPickerSkeleton, DatePicker, DesktopDatePicker, MobileDatePicker, MonthPicker, PickersDay, StaticDatePicker, YearPicker
+components: DateCalendar, DatePicker, DesktopDatePicker, DayCalendarSkeleton, MobileDatePicker, MonthCalendar, PickersDay, StaticDatePicker, YearCalendar
 githubLabel: 'component: DatePicker'
 packageName: '@mui/x-date-pickers'
 materialDesign: https://material.io/components/date-pickers
@@ -70,9 +70,9 @@ For ease of use, the date picker will automatically change the layout between po
 
 ## 子组件
 
-Some lower-level sub-components (`CalendarPicker`, `MonthPicker`, and `YearPicker`) are also exported. 这些都是在没有包装器或外部逻辑（屏蔽输入、日期值解析和验证等）的情况下渲染的。 这些都是在没有包装器或外部逻辑（屏蔽输入、日期值解析和验证等）的情况下渲染的。
+Some lower-level sub-components (`DateCalendar`, `MonthCalendar`, and `YearCalendar`) are also exported. 这些都是在没有包装器或外部逻辑（屏蔽输入、日期值解析和验证等）的情况下渲染的。 这些都是在没有包装器或外部逻辑（屏蔽输入、日期值解析和验证等）的情况下渲染的。
 
-{{"demo": "SubComponentsPickers.js"}}
+{{"demo": "SubComponentsCalendars.js"}}
 
 ## 自定义输入组件
 
@@ -82,13 +82,14 @@ You can customize the rendering of the input with the `renderInput` prop. 请确
 
 ## 自定义日期渲染
 
-你可以通过 `renderDay` 函数属性来自定义所显示的日期。 You can take advantage of the [PickersDay](/x/api/date-pickers/pickers-day/) component.
+The displayed days are customizable with the `Day` component slot.
+You can take advantage of the [PickersDay](/x/api/date-pickers/pickers-day/) component.
 
 {{"demo": "CustomDay.js"}}
 
 ## 动态数据
 
-有些时候可能有在日历中显示额外信息的需求。 下面是一个使用 `onMonthChange`、`loading` 和 `renderDay` 属性来预取并显示服务器端数据的例子。
+有些时候可能有在日历中显示额外信息的需求。 下面是一个使用 `onMonthChange`、`loading` 和 `components.Day` 属性来预取并显示服务器端数据的例子。
 
 {{"demo": "ServerRequestDatePicker.js"}}
 

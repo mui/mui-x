@@ -42,7 +42,15 @@ export default function UncontrolledDateTimePicker() {
         desktopModeMediaQuery={mode === 'desktop' ? desktopMediaQuery : `not(${desktopMediaQuery})`}
         onChange={() => {}}
         renderInput={(params) => <TextField {...params} />}
-        TransitionComponent={NoTransition}
+        components={{
+          DesktopTransition: NoTransition,
+        }}
+        componentsProps={{
+          popper: {
+            // @ts-expect-error
+            'data-testid': 'screenshot-target',
+          },
+        }}
         value={null}
       />
     </LocalizationProvider>

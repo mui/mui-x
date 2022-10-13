@@ -47,12 +47,6 @@ The date range picker component can be disabled or read-only.
 
 {{"demo": "CalendarsDateRangePicker.js"}}
 
-## 禁用日期
-
-禁用日期的行为与 `DatePicker` 相同。
-
-{{"demo": "MinMaxDateRangePicker.js"}}
-
 ## 自定义输入组件
 
 你可以使用 `renderInput` 属性来渲染自定义的输入。 对于 `DateRangePicker`，它需要**两个**参数 – 分别是开始和结束输入。 如果你需要渲染自定义的输入，请确保将 `ref` 和 `inputProps` 都正确地传入到输入组件中。
@@ -61,6 +55,7 @@ The date range picker component can be disabled or read-only.
 
 ## 自定义日期渲染
 
-你可以通过 `renderDay` 函数属性来自定义所显示的日期。 You can take advantage of the internal [DateRangePickerDay](/x/api/date-pickers/date-range-picker-day/) component.
+The displayed days are customizable with the `Day` component slot.
+You can take advantage of the internal [DateRangePickerDay](/x/api/date-pickers/date-range-picker-day/) component.
 
 {{"demo": "CustomDateRangePickerDay.js"}}

@@ -3,6 +3,214 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## v6.0.0-alpha.2
+
+_Oct 7, 2022_
+
+We'd like to offer a big thanks to the 10 contributors who made this release possible. Here are some highlights ✨:
+
+- 🚀 Further progress on stabilizing new date field components
+- 🎁 Improve support for theme augmentation in the DataGrid (#6269) @cherniavskii
+- 🌍 Add Japanese (ja-JP) locale to pickers (#6365) @sho918
+- 📚 Documentation improvements
+- 🐞 Bugfixes
+
+### `@mui/x-data-grid@v6.0.0-alpha.2` / `@mui/x-data-grid-pro@v6.0.0-alpha.2` / `@mui/x-data-grid-premium@v6.0.0-alpha.2`
+
+#### Breaking changes
+
+- 🎁 The aggregation is no longer experimental.
+
+  You can now use the aggregation without the `experimentalFeatures.aggregation` flag enabled.
+
+  ```diff
+   <DataGridPremium
+  -  experimentalFeatures={{ aggregation: true }}
+   />
+  ```
+
+  The aggregation of the columns through the column menu is now enabled by default on `DataGridPremium`. You can set `disableAggregation={true}` to disable it.
+
+#### Changes
+
+- [DataGrid] Add filter item ID to `.MuiDataGrid-filterForm` (#6313) @m4theushw
+- [DataGrid] Add missing `valueOptions` (#6401) @DanailH
+- [DataGrid] Don't start edit mode when pressing Shift + Space (#6228) @m4theushw
+- [DataGrid] Fix error when using column grouping with all columns hidden (#6405) @alexfauquette
+- [DataGrid] Pass generics to the components in the theme augmentation (#6269) @cherniavskii
+- [DataGridPremium] Remove the aggregation from the experimental features (#6372) @flaviendelangle
+
+### `@mui/x-date-pickers@v6.0.0-alpha.2` / `@mui/x-date-pickers-pro@v6.0.0-alpha.2`
+
+#### Breaking changes
+
+- The `renderDay` prop has been replaced by a `Day` component slot.
+  You can find more information about this pattern in the [MUI Base documentation](https://mui.com/base/getting-started/usage/#shared-props).
+
+  ```diff
+  // Same for any other date, date time or date range picker.
+   <DatePicker
+  -  renderDay={(_, dayProps) => <CustomDay {...dayProps} />}
+  +  components={{ Day: CustomDay }}
+   />
+  ```
+
+#### Changes
+
+- [DateRangePicker] Fix the shape of the first selected day when the start date has an hour set (#6403) @flaviendelangle
+- [l10n] Add Japanese (ja-JP) locale to pickers (#6365) @sho918
+- [DateRangePicker] Force focus to stay on inputs (#6324) @alexfauquette
+- [pickers] Improve edition on field components (#6339) @flaviendelangle
+- [pickers] Improve field selection behaviors (#6317) @flaviendelangle
+- [pickers] Replace the `renderDay` prop with a `Day` component slot (#6293) @flaviendelangle
+
+### Docs
+
+- [docs] Apply style guide to Data Grid Aggregation page (#5781) @samuelsycamore
+- [docs] Fix code examples of editing cells (#6004) @TiagoPortfolio
+- [docs] Fix customized day rendering demo style (#6342) (#6399) @Ambrish-git
+- [docs] Implement Style Guide on "Advanced" Data Grid doc pages (#6331) @samuelsycamore
+- [docs] Use components instead of demos for `SelectorsDocs` (#6103) @flaviendelangle
+- [license] Add new license status 'Out of scope' (#5260) @flaviendelangle
+
+### Core
+
+- [core] Speedup of yarn install in the CI (#6395) @oliviertassinari
+- [test] Remove redundant test clean-ups (#6377) @oliviertassinari
+- [test] Replace `React.render` with `React.createRoot` in e2e tests (#6393) @m4theushw
+
+## 6.0.0-alpha.1
+
+_Sep 29, 2022_
+
+We'd like to offer a big thanks to the 8 contributors who made this release possible. Here are some highlights ✨:
+
+- 🚀 Better support for custom overlays (#5808) @cherniavskii
+- 🖨️ Improve print export (#6273) @oliviertassinari
+- 🎁 Reduce confusion when initializing pickers with a date value (#6170) @flaviendelangle
+- 📚 Documentation improvements
+- 🐞 Bugfixes
+
+### `@mui/x-data-grid@v6.0.0-alpha.1` / `@mui/x-data-grid-pro@v6.0.0-alpha.1` / `@mui/x-data-grid-premium@v6.0.0-alpha.1`
+
+#### Breaking changes
+
+- New internal rows structure for v6 (#4927) @flaviendelangle
+
+  Some selectors related to the rows have been renamed to better describe the type of rows they are returning:
+
+  ```diff
+  -const result = gridRowsIdToIdLookupSelector(apiRef);
+  +const result = gridRowsDataRowIdToIdLookupSelector(apiRef);
+  ```
+
+  ```diff
+  -const result = gridRowTreeDepthSelector(apiRef);
+  +const result = gridRowMaximumTreeDepthSelector(apiRef);
+  ```
+
+  The format of the tree nodes (the element accessible in `params.node` or with the `apiRef.current.getRowNode` method) have changed.
+  You have a new `type` property, which can be useful, for example, to apply custom behavior on groups.
+  Here is an example of the old and new approach showing how to apply a custom value formatter in groups for the grouping column:
+
+  ```diff
+   <DataGridPremium
+     groupingColDef={() => ({
+       valueFormatter: (params) => {
+         if (params.id == null) {
+           return params.value;
+         }
+
+         const rowNode = apiRef.current.getRowNode(params.id!)!;
+  -      if (rowNode.children?.length) {
+  +      if (rowNode.type === 'group') {
+           return `by ${rowNode.groupingKey ?? ''}`;
+         }
+
+         return params.value;
+       }
+     })}
+   />
+  ```
+
+- The `GridFeatureModeConstant` constant no longer exists (#6077) @DanailH
+
+  ```diff
+  -import { GridFeatureModeConstant } from '@mui/x-data-grid';
+  ```
+
+#### Changes
+
+- [DataGrid] Fix `GridPagination` props typing (#6238) @cherniavskii
+- [DataGrid] Fix `GridRow` not forwarding `ref` to the root element (#6274) @cherniavskii
+- [DataGrid] Fix `undefined` value being showed in filter button tooltip text (#6259) @cherniavskii
+- [DataGrid] Fix blank space when changing page with dynamic row height (#6049) @m4theushw
+- [DataGrid] New internal rows structure for v6 (#4927) @flaviendelangle
+- [DataGrid] Revert cell/row mode if `processRowUpdate` fails (#6185) @m4theushw
+- [DataGrid] Rework overlays layout (#5808) @cherniavskii
+- [DataGrid] Improve print support (#6273) @oliviertassinari
+- [DataGridPremium] Add missing `themeAugmentation` module (#6270) @cherniavskii
+
+### `@mui/x-date-pickers@v6.0.0-alpha.1` / `@mui/x-date-pickers-pro@v6.0.0-alpha.1`
+
+#### Breaking changes
+
+- The `value` prop of the pickers now expects a parsed value.
+
+  Until now, it was possible to provide any format that your date management library was able to parse.
+  For instance, you could pass `value={new Date()}` when using `AdapterDayjs`.
+
+  This brought a lot of confusion so we decided to remove this behavior.
+  The format expected by the `value` prop is now the same as for any other prop holding a date.
+  Here is the syntax to initialize a date picker at the current date for each adapter:
+
+  ```tsx
+  // Date-fns
+  <DatePicker value={new Date()} />
+
+  // Dayjs
+  import dayjs from 'dayjs'
+  <DatePicker value={dayjs()} />
+
+  // Moment
+  import moment from 'moment'
+  <DatePicker value={moment()} />
+
+  // Luxon
+  import { DateTime } from 'luxon'
+  <DatePicker value={DateTime.now()} />
+  ```
+
+#### Changes
+
+- [DatePicker] Respect `minDate` and `maxDate` when opening a `DatePicker` or `DateTimePicker` (#6309) @alexfauquette
+- [DateTimePicker] Fix validation with `shouldDisableMonth` and `shouldDisableYear` (#6266) @flaviendelangle
+- [TimePicker] Add support for `disablePast` and `disableFuture` validation props (#6226) @LukasTy
+- [CalendarPicker] Prevent getting focus when `autoFocus=false` (#6304) @alexfauquette
+- [DateField] Extend moment adapter to support `expandFormat` and `formatTokenMap` (#6215) @alexfauquette
+- [pickers] Allow to control the selected sections (#6209, #6307) @flaviendelangle
+- [pickers] Do not loose the value of date sections not present in the format in the new field components (#6141) @flaviendelangle
+- [pickers] Do not support unparsed date formats anymore (#6170) @flaviendelangle
+- [pickers] Support slots on the `DateField` component  (#6048) @flaviendelangle
+- [pickers] Support Luxon v3 in `AdapterLuxon` (#6069) @alexfauquette
+- [pickers] New components `TimeField` and `DateTimeField` (#6312) @flaviendelangle
+- [pickers] Support basic mobile edition on new field components (#5958) @flaviendelangle
+
+### Docs
+
+- [docs] Fix issue in DataGrid/DataGridPro row styling demo (#6264) @MBilalShafi
+- [docs] Improve pickers Getting Started examples (#6292) @flaviendelangle
+- [docs] Pass model change callbacks in controlled grid editing demos (#6296) @cherniavskii
+- [docs] Update the CodeSandbox to use the `next` branch (#6275) @oliviertassinari
+
+### Core
+
+- [core] Fix typing error (#6291) @flaviendelangle
+- [core] Fix typo in the state updater of `useField` (#6311) @flaviendelangle
+- [core] Remove `GridFeatureModeConstant` (#6077) @DanailH
+- [core] Simplify testing architecture (#6043) @flaviendelangle
+- [test] Skip test in Chrome non-headless and Edge (#6318) @m4theushw
+
 ## 6.0.0-alpha.0
 
 _Sep 22, 2022_
@@ -87,12 +295,24 @@ We'd like to offer a big thanks to the 12 contributors who made this release pos
 
 You can find more information about the new api, including how to set those translations on all your components at once in the [documentation](https://next.mui.com/x/react-date-pickers/localization/)
 
+- The deprecated `locale` prop of the `LocalizationProvider` component have been renamed `adapterLocale`:
+
+  ```diff
+  <LocalizationProvider 
+    dateAdapter={AdapterDayjs}
+  -  locale="fr" 
+  +  adapterLocale="fr"
+  >
+    {children}
+  </LocalizationProvider>
+  ```
+
 - The component slots `LeftArrowButton` and `RightArrowButton` have been renamed `PreviousIconButton` and `NextIconButton` to better describe there usage:
 
   ```diff
-  <DatePicker 
+  <DatePicker
     components={{
-  -   LeftArrowButton: CustomButton,  
+  -   LeftArrowButton: CustomButton,
   +   PreviousIconButton: CustomButton,
 
   -   RightArrowButton: CustomButton,
@@ -100,7 +320,7 @@ You can find more information about the new api, including how to set those tran
     }}
 
     componentsProps={{
-  -   leftArrowButton: {},  
+  -   leftArrowButton: {},
   +   previousIconButton: {},
 
   -   rightArrowButton: {},

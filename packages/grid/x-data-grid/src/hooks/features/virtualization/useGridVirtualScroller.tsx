@@ -10,7 +10,7 @@ import {
   gridColumnPositionsSelector,
 } from '../columns/gridColumnsSelector';
 import { gridFocusCellSelector, gridTabIndexCellSelector } from '../focus/gridFocusStateSelector';
-import { gridEditRowsStateSelector } from '../editRows/gridEditRowsSelector';
+import { gridEditRowsStateSelector } from '../editing/gridEditingSelectors';
 import { useGridVisibleRows } from '../../utils/useGridVisibleRows';
 import { GridEventListener } from '../../../models/events';
 import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
@@ -117,17 +117,19 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
   const getNearestIndexToRender = React.useCallback(
     (offset: number) => {
       const lastMeasuredIndexRelativeToAllRows = apiRef.current.unstable_getLastMeasuredRowIndex();
-      const lastMeasuredIndexRelativeToCurrentPage =
-        lastMeasuredIndexRelativeToAllRows - (currentPage.range?.firstRowIndex || 0);
-      const lastMeasuredIndex = Math.max(0, lastMeasuredIndexRelativeToCurrentPage);
-
-      let allRowsMeasured = lastMeasuredIndex === Infinity;
+      let allRowsMeasured = lastMeasuredIndexRelativeToAllRows === Infinity;
       if (currentPage.range?.lastRowIndex && !allRowsMeasured) {
         // Check if all rows in this page are already measured
-        allRowsMeasured = lastMeasuredIndex >= currentPage.range.lastRowIndex;
+        allRowsMeasured = lastMeasuredIndexRelativeToAllRows >= currentPage.range.lastRowIndex;
       }
 
-      if (allRowsMeasured || rowsMeta.positions[lastMeasuredIndex] >= offset) {
+      const lastMeasuredIndexRelativeToCurrentPage = clamp(
+        lastMeasuredIndexRelativeToAllRows - (currentPage.range?.firstRowIndex || 0),
+        0,
+        rowsMeta.positions.length,
+      );
+
+      if (allRowsMeasured || rowsMeta.positions[lastMeasuredIndexRelativeToCurrentPage] >= offset) {
         // If all rows were measured (when no row has "auto" as height) or all rows before the offset
         // were measured, then use a binary search because it's faster.
         return binarySearch(offset, rowsMeta.positions);
@@ -137,7 +139,7 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
       // If rows have "auto" as height, their positions will be based on estimated heights.
       // In this case, we can skip several steps until we find a position higher than the offset.
       // Inspired by https://github.com/bvaughn/react-virtualized/blob/master/source/Grid/utils/CellSizeAndPositionManager.js
-      return exponentialSearch(offset, rowsMeta.positions, lastMeasuredIndex);
+      return exponentialSearch(offset, rowsMeta.positions, lastMeasuredIndexRelativeToCurrentPage);
     },
     [apiRef, currentPage.range?.firstRowIndex, currentPage.range?.lastRowIndex, rowsMeta.positions],
   );

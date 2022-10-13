@@ -67,6 +67,10 @@ export interface PickersDayProps<TDate>
    * @default false
    */
   today?: boolean;
+  /**
+   * Currently selected days.
+   */
+  selectedDays: TDate[];
 }
 
 type OwnerState = Partial<PickersDayProps<any>>;
@@ -180,6 +184,7 @@ const PickersDayFiller = styled('div', {
   ...styleArg({ theme, ownerState }),
   // visibility: 'hidden' does not work here as it hides the element from screen readers as well
   opacity: 0,
+  pointerEvents: 'none',
 }));
 
 const noop = () => {};
@@ -217,6 +222,7 @@ const PickersDayRaw = React.forwardRef(function PickersDay<TDate>(
     showDaysOutsideCurrentMonth = false,
     children,
     today: isToday = false,
+    selectedDays,
     ...other
   } = props;
   const ownerState = {
@@ -283,7 +289,6 @@ const PickersDayRaw = React.forwardRef(function PickersDay<TDate>(
   return (
     <PickersDayRoot
       className={clsx(classes.root, className)}
-      ownerState={ownerState}
       ref={handleRef}
       centerRipple
       data-mui-test="day"
@@ -295,6 +300,7 @@ const PickersDayRaw = React.forwardRef(function PickersDay<TDate>(
       onClick={handleClick}
       onMouseDown={handleMouseDown}
       {...other}
+      ownerState={ownerState}
     >
       {!children ? utils.format(day, 'dayOfMonth') : children}
     </PickersDayRoot>
@@ -365,6 +371,10 @@ PickersDayRaw.propTypes = {
    * @default false
    */
   selected: PropTypes.bool,
+  /**
+   * Currently selected days.
+   */
+  selectedDays: PropTypes.array.isRequired,
   /**
    * If `true`, days that have `outsideCurrentMonth={true}` are displayed.
    * @default false

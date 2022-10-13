@@ -11,7 +11,7 @@ import {
   onSpaceOrEnter,
   useLocaleText,
 } from '@mui/x-date-pickers/internals';
-import { CurrentlySelectingRangeEndProps, DateRange } from '../internal/models/dateRange';
+import { CurrentlySelectingRangeEndProps, DateRange } from '../internal/models/range';
 import { DateRangeValidationError } from '../internal/hooks/validation/useDateRangeValidation';
 import {
   DateRangePickerInputClasses,
@@ -180,7 +180,7 @@ export const DateRangePickerInput = React.forwardRef(function DateRangePickerInp
     validationError: startValidationError !== null,
     TextFieldProps: {
       ...TextFieldProps,
-      ref: startRef,
+      inputRef: startRef,
       focused: open && currentlySelectingRangeEnd === 'start',
     },
     inputProps: {
@@ -199,7 +199,7 @@ export const DateRangePickerInput = React.forwardRef(function DateRangePickerInp
     validationError: endValidationError !== null,
     TextFieldProps: {
       ...TextFieldProps,
-      ref: endRef,
+      inputRef: endRef,
       focused: open && currentlySelectingRangeEnd === 'end',
     },
     inputProps: {

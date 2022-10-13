@@ -1,6 +1,6 @@
 ---
 title: Componente React Seletor de data
-components: CalendarPicker, CalendarPickerSkeleton, DatePicker, DesktopDatePicker, MobileDatePicker, MonthPicker, PickersDay, StaticDatePicker, YearPicker
+components: DateCalendar, DatePicker, DayCalendarSkeleton, DesktopDatePicker, MobileDatePicker, MonthCalendar, PickersDay, StaticDatePicker, YearCalendar
 githubLabel: 'component: DatePicker'
 packageName: '@mui/x-date-pickers'
 materialDesign: https://material.io/components/date-pickers
@@ -70,9 +70,9 @@ For ease of use, the date picker will automatically change the layout between po
 
 ## Subcomponentes
 
-Some lower-level sub-components (`CalendarPicker`, `MonthPicker`, and `YearPicker`) are also exported. Estes são renderizados sem estar encapsulado ou lógica exterior (campo com mascara, valores de data e validação, etc.).
+Some lower-level sub-components (`DateCalendar`, `MonthCalendar`, and `YearCalendar`) are also exported. Estes são renderizados sem estar encapsulado ou lógica exterior (campo com mascara, valores de data e validação, etc.).
 
-{{"demo": "SubComponentsPickers.js"}}
+{{"demo": "SubComponentsCalendars.js"}}
 
 ## Componente de entrada customizado
 
@@ -82,13 +82,14 @@ You can customize the rendering of the input with the `renderInput` prop. Certif
 
 ## Renderização customizada do dia
 
-Os dias exibidos são customizados com uma função na propriedade `renderDay`. You can take advantage of the [PickersDay](/x/api/date-pickers/pickers-day/) component.
+The displayed days are customizable with the `Day` component slot.
+You can take advantage of the [PickersDay](/x/api/date-pickers/pickers-day/) component.
 
 {{"demo": "CustomDay.js"}}
 
 ## Dados dinâmicos
 
-Às vezes, pode ser necessário exibir informação adicional diretamente no calendário. Aqui está um exemplo de pré-busca e exibição de dados do servidor usando as propriedades `onMonthChange`, `loading`, e `renderDay`.
+Às vezes, pode ser necessário exibir informação adicional diretamente no calendário. Aqui está um exemplo de pré-busca e exibição de dados do servidor usando as propriedades `onMonthChange`, `loading`, e `components.Day`.
 
 {{"demo": "ServerRequestDatePicker.js"}}
 

@@ -36,12 +36,12 @@ export interface StaticTimePickerProps<TDate>
    * Overrideable components.
    * @default {}
    */
-  components?: Partial<StaticTimePickerSlotsComponents>;
+  components?: StaticTimePickerSlotsComponents;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  componentsProps?: Partial<StaticTimePickerSlotsComponentsProps>;
+  componentsProps?: StaticTimePickerSlotsComponentsProps;
 }
 
 type StaticTimePickerComponent = (<TDate>(
@@ -312,7 +312,7 @@ StaticTimePicker.propTypes = {
    * Dynamically check if time is disabled or not.
    * If returns `false` appropriate time point will ot be acceptable.
    * @param {number} timeValue The value to check.
-   * @param {ClockPickerView} clockType The clock type of the timeValue.
+   * @param {ClockPickerView} view The clock type of the timeValue.
    * @returns {boolean} Returns `true` if the time should be disabled
    */
   shouldDisableTime: PropTypes.func,

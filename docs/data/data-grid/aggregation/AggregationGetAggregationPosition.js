@@ -69,7 +69,6 @@ export default function AggregationGetAggregationPosition() {
         getAggregationPosition={(groupNode) =>
           groupNode.depth === -1 ? null : 'footer'
         }
-        experimentalFeatures={{ aggregation: true }}
       />
     </div>
   );

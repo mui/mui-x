@@ -47,10 +47,6 @@ Use `LocalizationProvider` para alterar a date-library de localização que é u
 
 {{"demo": "LocalizedTimePicker.js"}}
 
-## Validação de hora
-
-{{"demo": "TimeValidationTimePicker.js"}}
-
 ## Paisagem
 
 {{"demo": "StaticTimePickerLandscape.js", "bg": true}}
@@ -59,7 +55,7 @@ Use `LocalizationProvider` para alterar a date-library de localização que é u
 
 Some lower-level sub-components (`ClockPicker`) are also exported. Estes são renderizados sem estar encapsulado ou lógica exterior (campo com mascara, valores de data e validação, etc.).
 
-{{"demo": "SubComponentsTimePickers.js"}}
+{{"demo": "SubComponentsTimeCalendars.js"}}
 
 ## Segundos
 
