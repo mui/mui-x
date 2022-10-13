@@ -5,6 +5,3 @@ export type {
   UseTimeFieldComponentProps,
   TimeFieldProps,
 } from './TimeField.types';
-
-// Shared interfaces to expose
-export type { FieldSection, FieldSelectedSections } from '../internals/hooks/useField';
