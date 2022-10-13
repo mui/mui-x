@@ -12,24 +12,24 @@ import {
   PickerStaticWrapper,
 } from '../internals/components/PickerStaticWrapper/PickerStaticWrapper';
 import {
-  CalendarOrClockPickerSlotsComponent,
-  CalendarOrClockPickerSlotsComponentsProps,
-} from '../internals/components/CalendarOrClockPicker';
+  PickerLayout,
+  PickerLayoutSlotsComponent,
+  PickerLayoutSlotsComponentsProps,
+} from '../internals/components/PickerLayout';
 import { useDateTimeValidation } from '../internals/hooks/validation/useDateTimeValidation';
 import { usePickerState } from '../internals/hooks/usePickerState';
 import { StaticPickerProps } from '../internals/models/props/staticPickerProps';
 import { DateInputSlotsComponent } from '../internals/components/PureDateInput';
 import { DateTimePickerTabs } from '../DateTimePicker/DateTimePickerTabs';
-import { PickerLayout } from '../internals/components/PickerLayout';
 
 export interface StaticDateTimePickerSlotsComponent<TDate>
   extends PickersStaticWrapperSlotsComponent,
-    CalendarOrClockPickerSlotsComponent<TDate>,
-    DateInputSlotsComponent {}
+  PickerLayoutSlotsComponent<TDate>,
+  DateInputSlotsComponent { }
 
 export interface StaticDateTimePickerSlotsComponentsProps<TDate>
   extends PickersStaticWrapperSlotsComponentsProps,
-    CalendarOrClockPickerSlotsComponentsProps<TDate> {}
+  PickerLayoutSlotsComponentsProps<TDate> { }
 
 export interface StaticDateTimePickerProps<TDate>
   extends StaticPickerProps<TDate, BaseDateTimePickerProps<TDate>> {

@@ -12,7 +12,6 @@ import {
   DesktopWrapperSlotsComponent,
   DesktopWrapperSlotsComponentsProps,
 } from '../internals/components/wrappers/DesktopWrapper';
-import { CalendarOrClockPicker } from '../internals/components/CalendarOrClockPicker';
 import { useTimeValidation } from '../internals/hooks/validation/useTimeValidation';
 import { KeyboardDateInput } from '../internals/components/KeyboardDateInput';
 import { usePickerState } from '../internals/hooks/usePickerState';
@@ -25,16 +24,16 @@ import { PickerLayout } from '../internals/components/PickerLayout';
 
 export interface DesktopTimePickerSlotsComponent
   extends DesktopWrapperSlotsComponent,
-    ClockPickerSlotsComponent,
-    DateInputSlotsComponent {}
+  ClockPickerSlotsComponent,
+  DateInputSlotsComponent { }
 
 export interface DesktopTimePickerSlotsComponentsProps
   extends DesktopWrapperSlotsComponentsProps,
-    ClockPickerSlotsComponentsProps {}
+  ClockPickerSlotsComponentsProps { }
 
 export interface DesktopTimePickerProps<TDate>
   extends BaseTimePickerProps<TDate>,
-    DesktopWrapperProps<TDate> {
+  DesktopWrapperProps<TDate> {
   /**
    * Overrideable components.
    * @default {}

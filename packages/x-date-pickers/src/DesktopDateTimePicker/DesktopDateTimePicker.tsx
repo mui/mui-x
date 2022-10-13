@@ -13,28 +13,28 @@ import {
   DesktopWrapperSlotsComponentsProps,
 } from '../internals/components/wrappers/DesktopWrapper';
 import {
-  CalendarOrClockPickerSlotsComponent,
-  CalendarOrClockPickerSlotsComponentsProps,
-} from '../internals/components/CalendarOrClockPicker';
+  PickerLayout,
+  PickerLayoutSlotsComponent,
+  PickerLayoutSlotsComponentsProps,
+} from '../internals/components/PickerLayout';
 import { useDateTimeValidation } from '../internals/hooks/validation/useDateTimeValidation';
 import { KeyboardDateInput } from '../internals/components/KeyboardDateInput';
 import { usePickerState } from '../internals/hooks/usePickerState';
 import { DateInputSlotsComponent } from '../internals/components/PureDateInput';
 import { DateTimePickerTabs } from '../DateTimePicker/DateTimePickerTabs';
-import { PickerLayout } from '../internals/components/PickerLayout';
 
 export interface DesktopDateTimePickerSlotsComponent<TDate>
   extends DesktopWrapperSlotsComponent,
-    CalendarOrClockPickerSlotsComponent<TDate>,
-    DateInputSlotsComponent {}
+  PickerLayoutSlotsComponent<TDate>,
+  DateInputSlotsComponent { }
 
 export interface DesktopDateTimePickerSlotsComponentsProps<TDate>
   extends DesktopWrapperSlotsComponentsProps,
-    CalendarOrClockPickerSlotsComponentsProps<TDate> {}
+  PickerLayoutSlotsComponentsProps<TDate> { }
 
 export interface DesktopDateTimePickerProps<TDate>
   extends BaseDateTimePickerProps<TDate>,
-    DesktopWrapperProps<TDate> {
+  DesktopWrapperProps<TDate> {
   /**
    * Overrideable components.
    * @default {}
