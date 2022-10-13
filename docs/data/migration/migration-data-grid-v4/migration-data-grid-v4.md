@@ -19,7 +19,7 @@ Most breaking changes are renaming of CSS classes or variables to improve the co
 Using MUI Core v4 with v5 can be achieved with the following steps:
 
 1. First, make sure you have MUI Core v5 installed. If not, install it with these [instructions](/material-ui/getting-started/installation/).
-1. Add a custom [`createGenerateClassName`](/system/styles/api/#heading-creategenerateclassname-options-class-name-generator) to disable the generation of global class names in JSS.
+1. Add a custom [`createGenerateClassName`](/system/styles/api/#creategenerateclassname-options-class-name-generator) to disable the generation of global class names in JSS.
 
 ```jsx
 import { createGenerateClassName } from '@material-ui/core/styles';
