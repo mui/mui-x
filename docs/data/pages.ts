@@ -177,9 +177,11 @@ const pages: MuiPage[] = [
         scopePathnames: [
           '/x/react-date-pickers/fields',
           '/x/react-date-pickers/date-field',
-          '/x/react-date-pickers/date-range',
-          '/x/react-date-pickers/date-time-field',
           '/x/react-date-pickers/time-field',
+          '/x/react-date-pickers/date-time-field',
+          '/x/react-date-pickers/date-range-field',
+          '/x/react-date-pickers/time-range-field',
+          '/x/react-date-pickers/date-time-range-field',
         ],
         newFeature: true,
         children: [
