@@ -69,12 +69,12 @@ export interface ClockPickerProps<TDate> extends ExportedClockPickerProps<TDate>
    * Overrideable components.
    * @default {}
    */
-  components?: Partial<ClockPickerSlotsComponent>;
+  components?: ClockPickerSlotsComponent;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  componentsProps?: Partial<ClockPickerSlotsComponentsProps>;
+  componentsProps?: ClockPickerSlotsComponentsProps;
   /**
    * Selected date @DateIOType.
    */

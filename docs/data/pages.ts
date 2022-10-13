@@ -172,6 +172,41 @@ const pages: MuiPage[] = [
         plan: 'pro',
       },
       {
+        pathname: '/x/react-date-pickers/fields',
+        title: 'Field components',
+        scopePathnames: [
+          '/x/react-date-pickers/fields',
+          '/x/react-date-pickers/date-field',
+          '/x/react-date-pickers/time-field',
+          '/x/react-date-pickers/date-time-field',
+          '/x/react-date-pickers/date-range-field',
+          '/x/react-date-pickers/time-range-field',
+          '/x/react-date-pickers/date-time-range-field',
+        ],
+        newFeature: true,
+        children: [
+          { pathname: '/x/react-date-pickers/fields', title: 'Getting started' },
+          { pathname: '/x/react-date-pickers/date-field', title: 'Date Field' },
+          { pathname: '/x/react-date-pickers/time-field', title: 'Time Field' },
+          { pathname: '/x/react-date-pickers/date-time-field', title: 'Date Time Field' },
+          {
+            pathname: '/x/react-date-pickers/date-range-field',
+            title: 'Date Range Field',
+            plan: 'pro',
+          },
+          {
+            pathname: '/x/react-date-pickers/time-range-field',
+            title: 'Time Range Field',
+            plan: 'pro',
+          },
+          {
+            pathname: '/x/react-date-pickers/date-time-range-field',
+            title: 'Date Time Range Field',
+            plan: 'pro',
+          },
+        ],
+      },
+      {
         pathname: '/x/api/date-pickers',
         title: 'API Reference',
         children: [

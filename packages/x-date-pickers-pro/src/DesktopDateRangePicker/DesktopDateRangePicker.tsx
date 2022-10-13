@@ -42,12 +42,12 @@ export interface DesktopDateRangePickerProps<TDate>
    * Overrideable components.
    * @default {}
    */
-  components?: Partial<DesktopDateRangePickerSlotsComponent<TDate>>;
+  components?: DesktopDateRangePickerSlotsComponent<TDate>;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  componentsProps?: Partial<DesktopDateRangePickerSlotsComponentsProps<TDate>>;
+  componentsProps?: DesktopDateRangePickerSlotsComponentsProps<TDate>;
 }
 
 type DesktopDateRangePickerComponent = (<TDate>(

@@ -64,12 +64,12 @@ export interface BaseTimePickerProps<TDate>
    * Overrideable components.
    * @default {}
    */
-  components?: Partial<BaseTimePickerSlotsComponent<TDate>> & { OpenPickerIcon?: any };
+  components?: BaseTimePickerSlotsComponent<TDate> & { OpenPickerIcon?: any };
   /**
    * The props used for each component slot.
    * @default {}
    */
-  componentsProps?: Partial<BaseTimePickerSlotsComponentsProps>;
+  componentsProps?: BaseTimePickerSlotsComponentsProps;
 }
 
 export function useTimePickerDefaultizedProps<TDate, Props extends BaseTimePickerProps<TDate>>(

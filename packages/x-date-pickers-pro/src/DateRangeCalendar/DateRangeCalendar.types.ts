@@ -50,12 +50,12 @@ export interface DateRangeCalendarProps<TDate>
    * Overrideable components.
    * @default {}
    */
-  components?: Partial<DateRangeCalendarSlotsComponent<TDate>>;
+  components?: DateRangeCalendarSlotsComponent<TDate>;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  componentsProps?: Partial<DateRangeCalendarSlotsComponentsProps<TDate>>;
+  componentsProps?: DateRangeCalendarSlotsComponentsProps<TDate>;
   /**
    * If `true`, after selecting `start` date calendar will not automatically switch to the month of `end` date.
    * @default false
