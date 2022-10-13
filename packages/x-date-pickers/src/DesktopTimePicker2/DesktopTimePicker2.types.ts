@@ -10,8 +10,8 @@ import {
 } from '../TimePicker2/shared';
 import { MakeOptional } from '../internals/models/helpers';
 
-export interface DesktopTimePicker2SlotsComponent
-  extends BaseTimePicker2SlotsComponent,
+export interface DesktopTimePicker2SlotsComponent<TDate>
+  extends BaseTimePicker2SlotsComponent<TDate>,
     MakeOptional<UseDesktopPickerSlotsComponent, 'Field' | 'OpenPickerIcon'> {}
 
 export interface DesktopTimePicker2SlotsComponentsProps<TDate>
@@ -25,7 +25,7 @@ export interface DesktopTimePicker2Props<TDate>
    * Overrideable components.
    * @default {}
    */
-  components?: DesktopTimePicker2SlotsComponent;
+  components?: DesktopTimePicker2SlotsComponent<TDate>;
   /**
    * The props used for each component slot.
    * @default {}

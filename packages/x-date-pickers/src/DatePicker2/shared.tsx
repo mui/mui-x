@@ -16,11 +16,24 @@ import { BasePickerProps2 } from '../internals/models/props/basePickerProps';
 import { applyDefaultDate } from '../internals/utils/date-utils';
 import { BaseDateValidationProps, CalendarPickerView } from '../internals';
 import { LocalizedComponent, PickersInputLocaleText } from '../locales/utils/pickersLocaleTextApi';
+import {
+  DatePickerToolbar,
+  DatePickerToolbarProps,
+  ExportedDatePickerToolbarProps,
+} from '../DatePicker/DatePickerToolbar';
 
-export interface BaseDatePicker2SlotsComponent<TDate> extends DateCalendarSlotsComponent<TDate> {}
+export interface BaseDatePicker2SlotsComponent<TDate> extends DateCalendarSlotsComponent<TDate> {
+  /**
+   * Custom component for the toolbar rendered above the views.
+   * @default DatePickerToolbar
+   */
+  Toolbar?: React.JSXElementConstructor<DatePickerToolbarProps<TDate>>;
+}
 
 export interface BaseDatePicker2SlotsComponentsProps<TDate>
-  extends DateCalendarSlotsComponentsProps<TDate> {}
+  extends DateCalendarSlotsComponentsProps<TDate> {
+  toolbar?: ExportedDatePickerToolbarProps;
+}
 
 export interface BaseDatePicker2Props<TDate>
   extends MakeOptional<
@@ -37,7 +50,15 @@ export interface BaseDatePicker2Props<TDate>
    * Pass a ref to the `input` element.
    */
   inputRef?: React.Ref<HTMLInputElement>;
+  /**
+   * Overrideable components.
+   * @default {}
+   */
   components?: BaseDatePicker2SlotsComponent<TDate>;
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
   componentsProps?: BaseDatePicker2SlotsComponentsProps<TDate>;
 }
 
@@ -94,6 +115,7 @@ export function useDatePicker2DefaultizedProps<TDate, Props extends BaseDatePick
     disablePast: themeProps.disablePast ?? false,
     minDate: applyDefaultDate(utils, themeProps.minDate, defaultDates.minDate),
     maxDate: applyDefaultDate(utils, themeProps.maxDate, defaultDates.maxDate),
+    components: { Toolbar: DatePickerToolbar, ...themeProps.components },
   };
 }
 

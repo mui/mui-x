@@ -23,7 +23,12 @@ const DesktopDateRangePicker2 = React.forwardRef(function DesktopDateRangePicker
     'MuiDesktopDateRangePicker2',
   );
 
-  const { components: inComponents, componentsProps: inComponentsProps, ...other } = props;
+  const {
+    components: inComponents,
+    componentsProps: inComponentsProps,
+    calendars = 2,
+    ...other
+  } = props;
 
   const components = {
     Field: MultiInputDateRangeField,
@@ -42,7 +47,7 @@ const DesktopDateRangePicker2 = React.forwardRef(function DesktopDateRangePicker
     props: { ...other, components, componentsProps, views: ['day'], openTo: 'day' },
     valueManager: dateRangePickerValueManager,
     renderViews: (viewProps) =>
-      renderDateRangeViews({ ...other, ...viewProps, components, componentsProps }),
+      renderDateRangeViews({ calendars, ...other, ...viewProps, components, componentsProps }),
   });
 
   return renderPicker();

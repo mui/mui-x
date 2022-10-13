@@ -13,10 +13,23 @@ import {
 import { BasePickerProps2 } from '../internals/models/props/basePickerProps';
 import { BaseTimeValidationProps } from '../internals/hooks/validation/models';
 import { LocalizedComponent, PickersInputLocaleText } from '../locales/utils/pickersLocaleTextApi';
+import {
+  TimePickerToolbarProps,
+  ExportedTimePickerToolbarProps,
+  TimePickerToolbar,
+} from '../TimePicker/TimePickerToolbar';
 
-export interface BaseTimePicker2SlotsComponent extends ClockPickerSlotsComponent {}
+export interface BaseTimePicker2SlotsComponent<TDate> extends ClockPickerSlotsComponent {
+  /**
+   * Custom component for the toolbar rendered above the views.
+   * @default TimePickerToolbar
+   */
+  Toolbar?: React.JSXElementConstructor<TimePickerToolbarProps<TDate>>;
+}
 
-export interface BaseTimePicker2SlotsComponentsProps extends ClockPickerSlotsComponentsProps {}
+export interface BaseTimePicker2SlotsComponentsProps extends ClockPickerSlotsComponentsProps {
+  toolbar?: ExportedTimePickerToolbarProps;
+}
 
 export interface BaseTimePicker2Props<TDate>
   extends MakeOptional<BasePickerProps2<TDate | null, TDate, ClockPickerView>, 'views' | 'openTo'>,
@@ -35,6 +48,16 @@ export interface BaseTimePicker2Props<TDate>
    * Pass a ref to the `input` element.
    */
   inputRef?: React.Ref<HTMLInputElement>;
+  /**
+   * Overrideable components.
+   * @default {}
+   */
+  components?: BaseTimePicker2SlotsComponent<TDate>;
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  componentsProps?: BaseTimePicker2SlotsComponentsProps;
 }
 
 type UseTimePicker2DefaultizedProps<
@@ -88,6 +111,18 @@ export function useTimePicker2DefaultizedProps<TDate, Props extends BaseTimePick
     openTo: themeProps.openTo ?? 'hours',
     disableFuture: themeProps.disableFuture ?? false,
     disablePast: themeProps.disablePast ?? false,
+    components: {
+      Toolbar: TimePickerToolbar,
+      ...themeProps.components,
+    },
+    componentsProps: {
+      ...themeProps.componentsProps,
+      toolbar: {
+        ampm,
+        ampmInClock: themeProps.ampmInClock,
+        ...themeProps.componentsProps?.toolbar,
+      },
+    },
   };
 }
 

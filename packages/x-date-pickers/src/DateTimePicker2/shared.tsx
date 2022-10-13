@@ -33,6 +33,11 @@ import {
   BaseTimeValidationProps,
 } from '../internals/hooks/validation/models';
 import { LocalizedComponent, PickersInputLocaleText } from '../locales/utils/pickersLocaleTextApi';
+import {
+  DateTimePickerToolbar,
+  DateTimePickerToolbarProps,
+  ExportedDateTimeToolbarProps,
+} from '../DateTimePicker/DateTimePickerToolbar';
 
 export interface BaseDateTimePicker2SlotsComponent<TDate>
   extends DateCalendarSlotsComponent<TDate>,
@@ -42,6 +47,11 @@ export interface BaseDateTimePicker2SlotsComponent<TDate>
    * @default DateTimePickerTabs
    */
   Tabs?: React.ElementType<unknown>;
+  /**
+   * Custom component for the toolbar rendered above the views.
+   * @default DateTimePickerToolbar
+   */
+  Toolbar?: React.JSXElementConstructor<DateTimePickerToolbarProps<TDate>>;
 }
 
 export interface BaseDateTimePicker2SlotsComponentsProps<TDate>
@@ -51,6 +61,7 @@ export interface BaseDateTimePicker2SlotsComponentsProps<TDate>
    * Props passed down to the tabs component.
    */
   tabs?: Omit<DateTimePickerTabsProps, 'onViewChange' | 'view'>;
+  toolbar?: ExportedDateTimeToolbarProps;
 }
 
 export interface BaseDateTimePicker2Props<TDate>
@@ -82,6 +93,16 @@ export interface BaseDateTimePicker2Props<TDate>
    * Maximal selectable moment of time with binding to date, to set max time in each day use `maxTime`.
    */
   maxDateTime?: TDate;
+  /**
+   * Overrideable components.
+   * @default {}
+   */
+  components?: BaseDateTimePicker2SlotsComponent<TDate>;
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  componentsProps?: BaseDateTimePicker2SlotsComponentsProps<TDate>;
 }
 
 type UseDateTimePicker2DefaultizedProps<
@@ -164,6 +185,18 @@ export function useDateTimePicker2DefaultizedProps<
     ),
     minTime: themeProps.minDateTime ?? themeProps.minTime,
     maxTime: themeProps.maxDateTime ?? themeProps.maxTime,
+    components: {
+      Toolbar: DateTimePickerToolbar,
+      ...themeProps.components,
+    },
+    componentsProps: {
+      ...themeProps.componentsProps,
+      toolbar: {
+        ampm,
+        ampmInClock: themeProps.ampmInClock,
+        ...themeProps.componentsProps?.toolbar,
+      },
+    },
   };
 }
 

@@ -14,9 +14,22 @@ import { DateRangeValidationError } from '../internal/hooks/validation/useDateRa
 import { DateRange } from '../internal/models';
 import {
   DateRangeCalendar,
-  DateRangeCalendarProps,
+  DateRangeCalendarProps, DateRangeCalendarSlotsComponent, DateRangeCalendarSlotsComponentsProps,
   ExportedDateRangeCalendarProps,
 } from '../DateRangeCalendar';
+import {
+  DateRangePickerToolbar,
+  DateRangePickerToolbarProps,
+  ExportedDateRangePickerToolbarProps
+} from '../DateRangePicker/DateRangePickerToolbar';
+
+export interface BaseDateRangePicker2SlotsComponent<TDate> extends DateRangeCalendarSlotsComponent<TDate> {
+  Toolbar?: React.JSXElementConstructor<DateRangePickerToolbarProps<TDate>>;
+}
+
+export interface BaseDateRangePicker2SlotsComponentsProps<TDate> extends DateRangeCalendarSlotsComponentsProps<TDate> {
+  toolbar?: ExportedDateRangePickerToolbarProps;
+}
 
 export interface BaseDateRangePicker2Props<TDate>
   extends Omit<
@@ -25,7 +38,18 @@ export interface BaseDateRangePicker2Props<TDate>
     >,
     ExportedDateRangeCalendarProps<TDate>,
     BaseDateValidationProps<TDate>,
-    ValidationCommonPropsOptionalValue<DateRangeValidationError, DateRange<TDate>> {}
+    ValidationCommonPropsOptionalValue<DateRangeValidationError, DateRange<TDate>> {
+  /**
+   * Overrideable components.
+   * @default {}
+   */
+  components?: BaseDateRangePicker2SlotsComponent<TDate>;
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  componentsProps?: BaseDateRangePicker2SlotsComponentsProps<TDate>;
+}
 
 type UseDateRangePicker2DefaultizedProps<
   TDate,
@@ -62,6 +86,7 @@ export function useDateRangePicker2DefaultizedProps<
     inputFormat: themeProps.inputFormat ?? utils.formats.keyboardDate,
     minDate: applyDefaultDate(utils, themeProps.minDate, defaultDates.minDate),
     maxDate: applyDefaultDate(utils, themeProps.maxDate, defaultDates.maxDate),
+    components: { Toolbar: DateRangePickerToolbar, ...themeProps.components },
   };
 }
 
