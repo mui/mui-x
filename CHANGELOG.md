@@ -3,6 +3,181 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## v6.0.0-alpha.3
+
+_Oct 13, 2022_
+
+We'd like to offer a big thanks to the 8 contributors who made this release possible. Here are some highlights ✨:
+
+
+- 📚 Documentation improvements
+
+From https://github.com/mui/mui-x/pull/6381
+
+
+#### Breaking changes
+
+- All the props used by the mobile and desktop wrappers to override components or components props has been replaced by component slots. You can find more information about this pattern in the [MUI Base documentation](https://mui.com/base/getting-started/usage/#shared-props).
+
+  Some of the names have also been prefixed by `desktop` when it was unclear that the behavior was only applied on the desktop version of the pickers (or the responsive version when used on a desktop).
+
+  The `DialogProps` prop has been replaced by a `dialog` component props slot on a responsive an mobile pickers:
+
+  ```diff
+  // Same on MobileDatePicker, DateTimePicker, MobileDateTimePicker, 
+  // TimePicker, MobileTimePicker, DateRangePicker and MobileDateRangePicker.
+  <DatePicker
+  -  DialogProps={{ backgroundColor: 'red' }}
+  +  componentsProps={{ dialog: { backgroundColor: 'red }}}
+  />
+  ```
+
+  The `PaperProps` prop has been replaced by a `desktopPaper` component props slot on all responsive and desktop pickers:
+
+  ```diff
+  // Same on DesktopDatePicker, DateTimePicker, DesktopDateTimePicker, 
+  // TimePicker, DesktopTimePicker, DateRangePicker and DesktopDateRangePicker.
+  <DatePicker
+  -  PaperProps={{ backgroundColor: 'red' }}
+  +  componentsProps={{ desktopPaper: { backgroundColor: 'red }}}
+  />
+  ```
+
+  The `PopperProps` prop has been replaced by a `popper` component  props slot on all responsive and desktop pickers:
+
+  ```diff
+  // Same on DesktopDatePicker, DateTimePicker, DesktopDateTimePicker, 
+  // TimePicker, DesktopTimePicker, DateRangePicker and DesktopDateRangePicker.
+  <DatePicker
+  -  PopperProps={{ onClick: handleClick }}
+  +  componentsProps={{ popper: { onClick: handleClick }}}
+  />
+  ```
+
+  The `TransitionComponent` prop has been replaced by a `DesktopTransition` component slot on all responsive and desktop pickers:
+
+  ```diff
+  // Same on DesktopDatePicker, DateTimePicker, DesktopDateTimePicker, 
+  // TimePicker, DesktopTimePicker, DateRangePicker and DesktopDateRangePicker.
+  <DatePicker
+  -  TransitionComponent={Fade}
+  +  components={{ DesktopTransition: Fade }}
+  />
+  ```
+
+  The `TrapFocusProps` prop has been replaced by a `desktopTrapFocus` component props slot on all responsive and desktop pickers:
+
+  ```diff
+  // Same on DesktopDatePicker, DateTimePicker, DesktopDateTimePicker, 
+  // TimePicker, DesktopTimePicker, DateRangePicker and DesktopDateRangePicker.
+  <DatePicker
+  -  TrapFocusProps={{ isEnabled: () => false }}
+  +  componentsProps={{ desktopTrapFocus: { isEnabled: () => false }}}
+  />
+  ```
+ 
+From https://github.com/mui/mui-x/pull/6389
+
+
+#### Breaking changes
+
+- The view components allowing to pick a date or parts of a date without an input have been renamed to better fit their usage:
+
+  ```diff
+  -<CalendarPicker {...props} />
+  +<DateCalendar  {...props} />
+  ```
+
+  ```diff
+  -<DayPicker {...props} />
+  +<DayCalendar  {...props} />
+  ```
+
+  ```diff
+  -<CalendarPickerSkeleton {...props} />
+  +<DayCalendarSkeleton  {...props} />
+  ```
+
+  ```diff
+  -<MonthPicker {...props} />
+  +<MonthCalendar  {...props} />
+  ```
+
+  ```diff
+  -<YearPicker {...props} />
+  +<YearCalendar  {...props} />
+  ```
+
+- Component names in the theme have changed as well:
+
+  ```diff
+  -MuiCalendarPicker: {
+  +MuiDateCalendar: {
+  ```
+
+  ```diff
+  -MuiDayPicker: {
+  +MuiDayCalendar: {
+  ```
+
+  ```diff
+  -MuiCalendarPickerSkeleton: {
+  +MuiDayCalendarSkeleton: {
+  ```
+
+  ```diff
+  -MuiMonthPicker: {
+  +MuiMonthCalendar: {
+  ```
+
+  ```diff
+  -MuiYearPicker: {
+  +MuiYearCalendar: {
+  ```
+### `@mui/x-data-grid@v__VERSION__` / `@mui/x-data-grid-pro@v__VERSION__` / `@mui/x-data-grid-premium@v__VERSION__`
+
+#### Changes
+
+- [DataGrid] Fix start edit mode with printable character in React 18 (#6257) @m4theushw
+- [DataGrid] Remove legacy editing API (#6016) @m4theushw
+- [DataGrid] Allow to limit to one filter per column (#6333) @MBilalShafi
+- [DataGrid] Simplify `useGridApiContext` and `useGridApiRef` type overrides (#6423) @cherniavskii
+- [DataGrid] Use generics instead of verbose state overrides (#6409) @cherniavskii
+
+### `@mui/x-date-pickers@v__PICKERS_VERSION__` / `@mui/x-date-pickers-pro@v__PICKERS_VERSION__`
+
+#### Changes
+
+- [DatePicker] Allows to fix the number of week displayed (#6299) @alexfauquette
+- [DateRangePicker] Fix calendar day outside of month layout shifting on hover (#6448) @alexfauquette
+- [fields] Prepare the field exports for the public release (#6467) @flaviendelangle
+- [fields] Support paste in single section (#6422) @alexfauquette
+- [pickers] Add field placeholders to the locale (#6337) @flaviendelangle
+- [pickers] Do not use `Partial` for `components` and `componentsProps` props (#6463) @flaviendelangle
+- [pickers] New component: `DateRangeCalendar` (#6416) @flaviendelangle
+- [pickers] Replace the `Picker` prefix in the view component by `Calendar` (eg: `MonthPicker` => `MonthCalendar`) (#6389) @flaviendelangle
+- [pickers] Support pasting on fields (#6364) @flaviendelangle
+- [pickers] Use slots in the mobile and desktop wrappers instead of `XXXComponent` and `XXXProps` (#6381) @flaviendelangle
+
+### Docs
+
+- [docs] Add migration to DataGrid v6 page (#6235) @m4theushw
+- [docs] Create first publishable version of the field doc (#6323) @flaviendelangle
+- [docs] Fix trailing spaces in the readme @oliviertassinari
+- [docs] New page for the pickers: Validation (#6064) @flaviendelangle
+
+### Core
+
+- [core] Add CodeQL workflow (#6387) @DanailH
+- [core] Add missing breaking change to the changelog (#6471) @flaviendelangle
+- [core] Fix playground structure (#6466) @LukasTy
+- [core] Fix tests for pasting on fields (#6465) @flaviendelangle
+- [core] Remove absolute link (#6420) @flaviendelangle
+- [core] Remove unused `react-text-mask` package (#6408) @LukasTy
+- [core] Send explicit warning when dayjs locale is not found (#6424) @alexfauquette
+- [core] Test validation on textfield and date views (#6265) @alexfauquette
+- New components: `MultiInputDateTimeRangePicker` and `MultiInputTimeRangePicker` (#6392) @alexfauquette
+- [test] Sync comment with monorepo @oliviertassinari
 ## v6.0.0-alpha.2
 
 _Oct 7, 2022_
