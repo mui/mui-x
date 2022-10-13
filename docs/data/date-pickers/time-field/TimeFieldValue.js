@@ -10,7 +10,7 @@ export default function TimeFieldValue() {
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <Stack spacing={2} direction="row">
+      <Stack spacing={{ xs: 4, lg: 2 }} direction={{ xs: 'column', lg: 'row' }}>
         <TimeField
           label="Uncontrolled field"
           defaultValue={dayjs('2022-04-07T15:30')}

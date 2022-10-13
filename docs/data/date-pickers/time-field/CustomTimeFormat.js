@@ -10,7 +10,7 @@ export default function CustomTimeFormat() {
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <Stack spacing={2} sx={(theme) => ({ width: theme.spacing(48) })}>
+      <Stack spacing={4}>
         <TimeField
           label="Format with meridiem"
           value={value}
