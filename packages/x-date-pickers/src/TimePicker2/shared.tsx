@@ -12,11 +12,11 @@ import {
 } from '../ClockPicker/ClockPicker';
 import { BasePickerProps2 } from '../internals/models/props/basePickerProps';
 import { BaseTimeValidationProps } from '../internals/hooks/validation/models';
+import { LocalizedComponent, PickersInputLocaleText } from '../locales/utils/pickersLocaleTextApi';
 
-export interface BaseTimePicker2SlotsComponent extends Partial<ClockPickerSlotsComponent> {}
+export interface BaseTimePicker2SlotsComponent extends ClockPickerSlotsComponent {}
 
-export interface BaseTimePicker2SlotsComponentsProps
-  extends Partial<ClockPickerSlotsComponentsProps> {}
+export interface BaseTimePicker2SlotsComponentsProps extends ClockPickerSlotsComponentsProps {}
 
 export interface BaseTimePicker2Props<TDate>
   extends MakeOptional<BasePickerProps2<TDate | null, TDate, ClockPickerView>, 'views' | 'openTo'>,
@@ -37,10 +37,18 @@ export interface BaseTimePicker2Props<TDate>
   inputRef?: React.Ref<HTMLInputElement>;
 }
 
+type UseTimePicker2DefaultizedProps<
+  TDate,
+  Props extends BaseTimePicker2Props<TDate>,
+> = LocalizedComponent<
+  TDate,
+  DefaultizedProps<Props, 'views' | 'openTo' | keyof BaseTimeValidationProps>
+>;
+
 export function useTimePicker2DefaultizedProps<TDate, Props extends BaseTimePicker2Props<TDate>>(
   props: Props,
   name: string,
-): DefaultizedProps<Props, 'views' | 'openTo' | keyof BaseTimeValidationProps> {
+): UseTimePicker2DefaultizedProps<TDate, Props> {
   const utils = useUtils<TDate>();
   const themeProps = useThemeProps({
     props,
@@ -49,6 +57,17 @@ export function useTimePicker2DefaultizedProps<TDate, Props extends BaseTimePick
 
   const views = themeProps.views ?? ['hours', 'minutes'];
   const ampm = themeProps.ampm ?? utils.is12HourCycleInCurrentLocale();
+
+  const localeText = React.useMemo<PickersInputLocaleText<TDate> | undefined>(() => {
+    if (themeProps.localeText?.toolbarTitle == null) {
+      return themeProps.localeText;
+    }
+
+    return {
+      ...themeProps.localeText,
+      timePickerDefaultToolbarTitle: themeProps.localeText.toolbarTitle,
+    };
+  }, [themeProps.localeText]);
 
   // TODO: Move logic inside `TimeField` if it supports the `ampm` prop.
   let inputFormat: string;
@@ -64,6 +83,7 @@ export function useTimePicker2DefaultizedProps<TDate, Props extends BaseTimePick
     ...themeProps,
     ampm,
     inputFormat,
+    localeText,
     views,
     openTo: themeProps.openTo ?? 'hours',
     disableFuture: themeProps.disableFuture ?? false,

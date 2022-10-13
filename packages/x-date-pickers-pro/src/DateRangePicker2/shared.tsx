@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { useThemeProps } from '@mui/material/styles';
+import { LocalizedComponent, PickersInputLocaleText } from '@mui/x-date-pickers';
 import {
   BasePickerProps2,
   DefaultizedProps,
@@ -26,10 +27,15 @@ export interface BaseDateRangePicker2Props<TDate>
     BaseDateValidationProps<TDate>,
     ValidationCommonPropsOptionalValue<DateRangeValidationError, DateRange<TDate>> {}
 
-export function useDatePicker2DefaultizedProps<
+type UseDateRangePicker2DefaultizedProps<
   TDate,
   Props extends BaseDateRangePicker2Props<TDate>,
->(props: Props, name: string): DefaultizedProps<Props, keyof BaseDateValidationProps<TDate>> {
+> = LocalizedComponent<TDate, DefaultizedProps<Props, keyof BaseDateValidationProps<TDate>>>;
+
+export function useDateRangePicker2DefaultizedProps<
+  TDate,
+  Props extends BaseDateRangePicker2Props<TDate>,
+>(props: Props, name: string): UseDateRangePicker2DefaultizedProps<TDate, Props> {
   const utils = useUtils<TDate>();
   const defaultDates = useDefaultDates<TDate>();
   const themeProps = useThemeProps({
@@ -37,8 +43,20 @@ export function useDatePicker2DefaultizedProps<
     name,
   });
 
+  const localeText = React.useMemo<PickersInputLocaleText<TDate> | undefined>(() => {
+    if (themeProps.localeText?.toolbarTitle == null) {
+      return themeProps.localeText;
+    }
+
+    return {
+      ...themeProps.localeText,
+      dateRangePickerDefaultToolbarTitle: themeProps.localeText.toolbarTitle,
+    };
+  }, [themeProps.localeText]);
+
   return {
     ...themeProps,
+    localeText,
     disableFuture: themeProps.disableFuture ?? false,
     disablePast: themeProps.disablePast ?? false,
     inputFormat: themeProps.inputFormat ?? utils.formats.keyboardDate,

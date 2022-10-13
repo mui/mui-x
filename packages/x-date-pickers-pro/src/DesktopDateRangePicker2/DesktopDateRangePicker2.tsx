@@ -3,7 +3,10 @@ import PropTypes from 'prop-types';
 import { resolveComponentProps } from '@mui/base/utils';
 import { dateRangePickerValueManager } from '../DateRangePicker/shared';
 import { DesktopDateRangePicker2Props } from './DesktopDateRangePicker2.types';
-import { useDatePicker2DefaultizedProps, renderDateRangeViews } from '../DateRangePicker2/shared';
+import {
+  useDateRangePicker2DefaultizedProps,
+  renderDateRangeViews,
+} from '../DateRangePicker2/shared';
 import { useDesktopRangePicker } from '../internal/hooks/useDesktopRangePicker';
 import { Unstable_MultiInputDateRangeField as MultiInputDateRangeField } from '../MultiInputDateRangeField';
 
@@ -15,7 +18,7 @@ const DesktopDateRangePicker2 = React.forwardRef(function DesktopDateRangePicker
   inProps: DesktopDateRangePicker2Props<TDate>,
   ref: React.Ref<HTMLDivElement>,
 ) {
-  const props = useDatePicker2DefaultizedProps<TDate, DesktopDateRangePicker2Props<TDate>>(
+  const props = useDateRangePicker2DefaultizedProps<TDate, DesktopDateRangePicker2Props<TDate>>(
     inProps,
     'MuiDesktopDateRangePicker2',
   );

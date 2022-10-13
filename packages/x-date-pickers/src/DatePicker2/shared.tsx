@@ -15,12 +15,12 @@ import { DateValidationError } from '../internals/hooks/validation/useDateValida
 import { BasePickerProps2 } from '../internals/models/props/basePickerProps';
 import { applyDefaultDate } from '../internals/utils/date-utils';
 import { BaseDateValidationProps, CalendarPickerView } from '../internals';
+import { LocalizedComponent, PickersInputLocaleText } from '../locales/utils/pickersLocaleTextApi';
 
-export interface BaseDatePicker2SlotsComponent<TDate>
-  extends Partial<DateCalendarSlotsComponent<TDate>> {}
+export interface BaseDatePicker2SlotsComponent<TDate> extends DateCalendarSlotsComponent<TDate> {}
 
 export interface BaseDatePicker2SlotsComponentsProps<TDate>
-  extends Partial<DateCalendarSlotsComponentsProps<TDate>> {}
+  extends DateCalendarSlotsComponentsProps<TDate> {}
 
 export interface BaseDatePicker2Props<TDate>
   extends MakeOptional<
@@ -44,7 +44,10 @@ export interface BaseDatePicker2Props<TDate>
 type UseDatePicker2DefaultizedProps<
   TDate,
   Props extends BaseDatePicker2Props<TDate>,
-> = DefaultizedProps<Props, 'views' | 'openTo' | keyof BaseDateValidationProps<TDate>>;
+> = LocalizedComponent<
+  TDate,
+  DefaultizedProps<Props, 'views' | 'openTo' | keyof BaseDateValidationProps<TDate>>
+>;
 
 export function useDatePicker2DefaultizedProps<TDate, Props extends BaseDatePicker2Props<TDate>>(
   props: Props,
@@ -70,10 +73,22 @@ export function useDatePicker2DefaultizedProps<TDate, Props extends BaseDatePick
     inputFormat = undefined;
   }
 
+  const localeText = React.useMemo<PickersInputLocaleText<TDate> | undefined>(() => {
+    if (themeProps.localeText?.toolbarTitle == null) {
+      return themeProps.localeText;
+    }
+
+    return {
+      ...themeProps.localeText,
+      datePickerDefaultToolbarTitle: themeProps.localeText.toolbarTitle,
+    };
+  }, [themeProps.localeText]);
+
   return {
     ...themeProps,
     inputFormat,
     views,
+    localeText,
     openTo: themeProps.openTo ?? 'day',
     disableFuture: themeProps.disableFuture ?? false,
     disablePast: themeProps.disablePast ?? false,

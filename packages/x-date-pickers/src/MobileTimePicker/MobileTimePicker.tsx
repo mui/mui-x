@@ -29,7 +29,7 @@ export interface MobileTimePickerSlotsComponentsProps
 
 export interface MobileTimePickerProps<TDate>
   extends BaseTimePickerProps<TDate>,
-    MobileWrapperProps<TDate> {
+    MobileWrapperProps {
   /**
    * Overrideable components.
    * @default {}

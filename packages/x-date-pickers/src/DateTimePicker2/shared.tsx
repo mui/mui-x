@@ -32,10 +32,11 @@ import {
   BaseDateValidationProps,
   BaseTimeValidationProps,
 } from '../internals/hooks/validation/models';
+import { LocalizedComponent, PickersInputLocaleText } from '../locales/utils/pickersLocaleTextApi';
 
 export interface BaseDateTimePicker2SlotsComponent<TDate>
-  extends Partial<DateCalendarSlotsComponent<TDate>>,
-    Partial<ClockPickerSlotsComponent> {
+  extends DateCalendarSlotsComponent<TDate>,
+    ClockPickerSlotsComponent {
   /**
    * Tabs enabling toggling between date and time pickers.
    * @default DateTimePickerTabs
@@ -44,8 +45,8 @@ export interface BaseDateTimePicker2SlotsComponent<TDate>
 }
 
 export interface BaseDateTimePicker2SlotsComponentsProps<TDate>
-  extends Partial<DateCalendarSlotsComponentsProps<TDate>>,
-    Partial<ClockPickerSlotsComponentsProps> {
+  extends DateCalendarSlotsComponentsProps<TDate>,
+    ClockPickerSlotsComponentsProps {
   /**
    * Props passed down to the tabs component.
    */
@@ -83,23 +84,28 @@ export interface BaseDateTimePicker2Props<TDate>
   maxDateTime?: TDate;
 }
 
+type UseDateTimePicker2DefaultizedProps<
+  TDate,
+  Props extends BaseDateTimePicker2Props<TDate>,
+> = LocalizedComponent<
+  TDate,
+  DefaultizedProps<
+    Props,
+    | 'views'
+    | 'openTo'
+    | 'orientation'
+    | 'ampmInClock'
+    | 'ampm'
+    | 'inputFormat'
+    | keyof BaseDateValidationProps<TDate>
+    | keyof BaseTimeValidationProps
+  >
+>;
+
 export function useDateTimePicker2DefaultizedProps<
   TDate,
   Props extends BaseDateTimePicker2Props<TDate>,
->(
-  props: Props,
-  name: string,
-): DefaultizedProps<
-  Props,
-  | 'views'
-  | 'openTo'
-  | 'orientation'
-  | 'ampmInClock'
-  | 'ampm'
-  | 'inputFormat'
-  | keyof BaseDateValidationProps<TDate>
-  | keyof BaseTimeValidationProps
-> {
+>(props: Props, name: string): UseDateTimePicker2DefaultizedProps<TDate, Props> {
   const utils = useUtils<TDate>();
   const defaultDates = useDefaultDates<TDate>();
   const themeProps = useThemeProps({
@@ -120,11 +126,23 @@ export function useDateTimePicker2DefaultizedProps<
     inputFormat = utils.formats.keyboardDateTime24h;
   }
 
+  const localeText = React.useMemo<PickersInputLocaleText<TDate> | undefined>(() => {
+    if (themeProps.localeText?.toolbarTitle == null) {
+      return themeProps.localeText;
+    }
+
+    return {
+      ...themeProps.localeText,
+      dateTimePickerDefaultToolbarTitle: themeProps.localeText.toolbarTitle,
+    };
+  }, [themeProps.localeText]);
+
   return {
     ...themeProps,
     inputFormat,
     views,
     ampm,
+    localeText,
     orientation: themeProps.orientation ?? 'portrait',
     ampmInClock: themeProps.ampmInClock ?? true,
     openTo: themeProps.openTo ?? 'day',

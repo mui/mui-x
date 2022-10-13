@@ -37,7 +37,7 @@ export interface MobileDateRangePickerSlotsComponentsProps<TDate>
 
 export interface MobileDateRangePickerProps<TDate>
   extends BaseDateRangePickerProps<TDate>,
-    MobileWrapperProps<TDate> {
+    MobileWrapperProps {
   /**
    * Overrideable components.
    * @default {}

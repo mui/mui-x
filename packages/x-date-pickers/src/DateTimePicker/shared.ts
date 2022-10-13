@@ -24,6 +24,7 @@ import {
   DateTimePickerToolbarProps,
   ExportedDateTimeToolbarProps,
 } from './DateTimePickerToolbar';
+import { LocalizedComponent, PickersInputLocaleText } from '../locales/utils/pickersLocaleTextApi';
 
 export interface BaseDateTimePickerSlotsComponent<TDate>
   extends CalendarOrClockPickerSlotsComponent<TDate> {
@@ -42,7 +43,7 @@ export interface BaseDateTimePickerSlotsComponentsProps<TDate>
 export interface BaseDateTimePickerProps<TDate>
   extends ExportedClockPickerProps<TDate>,
     ExportedDateCalendarProps<TDate>,
-    BasePickerProps<TDate | null>,
+    BasePickerProps<TDate | null, TDate>,
     ValidationCommonProps<DateTimeValidationError, TDate | null>,
     ExportedDateInputProps<TDate> {
   /**
@@ -105,10 +106,13 @@ export function useDateTimePickerDefaultizedProps<
 >(
   props: Props,
   name: string,
-): DefaultizedProps<
-  Props,
-  'openTo' | 'views' | keyof BaseDateValidationProps<TDate> | keyof BaseTimeValidationProps,
-  { inputFormat: string }
+): LocalizedComponent<
+  TDate,
+  DefaultizedProps<
+    Props,
+    'openTo' | 'views' | keyof BaseDateValidationProps<TDate> | keyof BaseTimeValidationProps,
+    { inputFormat: string }
+  >
 > {
   // This is technically unsound if the type parameters appear in optional props.
   // Optional props can be filled by `useThemeProps` with types that don't match the type parameters.
@@ -124,6 +128,17 @@ export function useDateTimePickerDefaultizedProps<
   if (themeProps.orientation != null && themeProps.orientation !== 'portrait') {
     throw new Error('We are not supporting custom orientation for DateTimePicker yet :(');
   }
+
+  const localeText = React.useMemo<PickersInputLocaleText<TDate> | undefined>(() => {
+    if (themeProps.localeText?.toolbarTitle == null) {
+      return themeProps.localeText;
+    }
+
+    return {
+      ...themeProps.localeText,
+      dateTimePickerDefaultToolbarTitle: themeProps.localeText.toolbarTitle,
+    };
+  }, [themeProps.localeText]);
 
   return {
     ampm,
@@ -152,6 +167,7 @@ export function useDateTimePickerDefaultizedProps<
     ),
     minTime: themeProps.minDateTime ?? themeProps.minTime,
     maxTime: themeProps.maxDateTime ?? themeProps.maxTime,
+    localeText,
     components: {
       Toolbar: DateTimePickerToolbar,
       ...themeProps.components,
@@ -159,7 +175,6 @@ export function useDateTimePickerDefaultizedProps<
     componentsProps: {
       ...themeProps.componentsProps,
       toolbar: {
-        toolbarTitle: themeProps.label,
         ampm,
         ampmInClock: themeProps.ampmInClock,
         ...themeProps.componentsProps?.toolbar,

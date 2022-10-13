@@ -29,8 +29,4 @@ export interface ExportedBaseToolbarProps {
    * @default "––"
    */
   toolbarPlaceholder?: React.ReactNode;
-  /**
-   * Mobile picker title.
-   */
-  toolbarTitle?: React.ReactNode;
 }

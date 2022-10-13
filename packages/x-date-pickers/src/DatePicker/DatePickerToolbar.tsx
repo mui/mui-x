@@ -73,15 +73,12 @@ export const DatePickerToolbar = React.forwardRef(function DatePickerToolbar<TDa
     toggleMobileKeyboardView,
     toolbarFormat,
     toolbarPlaceholder = '––',
-    toolbarTitle: toolbarTitleProp,
     views,
     ...other
   } = props;
   const utils = useUtils<TDate>();
   const localeText = useLocaleText();
   const classes = useUtilityClasses(props);
-
-  const toolbarTitle = toolbarTitleProp ?? localeText.datePickerDefaultToolbarTitle;
 
   const dateText = React.useMemo(() => {
     if (!value) {
@@ -113,7 +110,7 @@ export const DatePickerToolbar = React.forwardRef(function DatePickerToolbar<TDa
   return (
     <DatePickerToolbarRoot
       ref={ref}
-      toolbarTitle={toolbarTitle}
+      toolbarTitle={localeText.datePickerDefaultToolbarTitle}
       isMobileKeyboardViewOpen={isMobileKeyboardViewOpen}
       toggleMobileKeyboardView={toggleMobileKeyboardView}
       isLandscape={isLandscape}

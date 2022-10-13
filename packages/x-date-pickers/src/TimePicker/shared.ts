@@ -21,6 +21,7 @@ import {
   ExportedTimePickerToolbarProps,
   TimePickerToolbar,
 } from './TimePickerToolbar';
+import { LocalizedComponent, PickersInputLocaleText } from '../locales/utils/pickersLocaleTextApi';
 
 export interface BaseTimePickerSlotsComponent<TDate> extends ClockPickerSlotsComponent {
   /**
@@ -36,7 +37,7 @@ export interface BaseTimePickerSlotsComponentsProps extends ClockPickerSlotsComp
 
 export interface BaseTimePickerProps<TDate>
   extends ExportedClockPickerProps<TDate>,
-    BasePickerProps<TDate | null>,
+    BasePickerProps<TDate | null, TDate>,
     ValidationCommonProps<TimeValidationError, TDate | null>,
     ExportedDateInputProps<TDate> {
   /**
@@ -75,21 +76,34 @@ export interface BaseTimePickerProps<TDate>
 export function useTimePickerDefaultizedProps<TDate, Props extends BaseTimePickerProps<TDate>>(
   props: Props,
   name: string,
-): DefaultizedProps<
-  Props,
-  'openTo' | 'views' | keyof BaseTimeValidationProps,
-  { inputFormat: string }
+): LocalizedComponent<
+  TDate,
+  DefaultizedProps<
+    Props,
+    'openTo' | 'views' | keyof BaseTimeValidationProps,
+    { inputFormat: string }
+  >
 > {
   // This is technically unsound if the type parameters appear in optional props.
   // Optional props can be filled by `useThemeProps` with types that don't match the type parameters.
   const themeProps = useThemeProps({ props, name });
 
   const utils = useUtils<TDate>();
+  const localeTextFromContext = useLocaleText();
   const ampm = themeProps.ampm ?? utils.is12HourCycleInCurrentLocale();
 
-  const localeText = useLocaleText();
+  const getOpenDialogAriaText = localeTextFromContext.openTimePickerDialogue;
 
-  const getOpenDialogAriaText = localeText.openTimePickerDialogue;
+  const localeText = React.useMemo<PickersInputLocaleText<TDate> | undefined>(() => {
+    if (themeProps.localeText?.toolbarTitle == null) {
+      return themeProps.localeText;
+    }
+
+    return {
+      ...themeProps.localeText,
+      timePickerDefaultToolbarTitle: themeProps.localeText.toolbarTitle,
+    };
+  }, [themeProps.localeText]);
 
   return {
     ampm,
@@ -102,6 +116,7 @@ export function useTimePickerDefaultizedProps<TDate, Props extends BaseTimePicke
     getOpenDialogAriaText,
     inputFormat: ampm ? utils.formats.fullTime12h : utils.formats.fullTime24h,
     ...themeProps,
+    localeText,
     components: {
       OpenPickerIcon: Clock,
       Toolbar: TimePickerToolbar,
@@ -110,7 +125,6 @@ export function useTimePickerDefaultizedProps<TDate, Props extends BaseTimePicke
     componentsProps: {
       ...themeProps.componentsProps,
       toolbar: {
-        toolbarTitle: themeProps.label,
         ampm,
         ampmInClock: themeProps.ampmInClock,
         ...themeProps.componentsProps?.toolbar,
