@@ -111,10 +111,6 @@ export function useDateRangePickerDefaultizedProps<
     maxDate: applyDefaultDate(utils, themeProps.maxDate, defaultDates.maxDate),
     localeText,
     components: { Toolbar: DateRangePickerToolbar, ...themeProps.components },
-    componentsProps: {
-      ...themeProps.componentsProps,
-      toolbar: { toolbarTitle: themeProps.label, ...themeProps.componentsProps?.toolbar },
-    },
   };
 }
 
