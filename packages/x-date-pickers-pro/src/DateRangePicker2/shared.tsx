@@ -14,20 +14,24 @@ import { DateRangeValidationError } from '../internal/hooks/validation/useDateRa
 import { DateRange } from '../internal/models';
 import {
   DateRangeCalendar,
-  DateRangeCalendarProps, DateRangeCalendarSlotsComponent, DateRangeCalendarSlotsComponentsProps,
+  DateRangeCalendarProps,
+  DateRangeCalendarSlotsComponent,
+  DateRangeCalendarSlotsComponentsProps,
   ExportedDateRangeCalendarProps,
 } from '../DateRangeCalendar';
 import {
   DateRangePickerToolbar,
   DateRangePickerToolbarProps,
-  ExportedDateRangePickerToolbarProps
+  ExportedDateRangePickerToolbarProps,
 } from '../DateRangePicker/DateRangePickerToolbar';
 
-export interface BaseDateRangePicker2SlotsComponent<TDate> extends DateRangeCalendarSlotsComponent<TDate> {
+export interface BaseDateRangePicker2SlotsComponent<TDate>
+  extends DateRangeCalendarSlotsComponent<TDate> {
   Toolbar?: React.JSXElementConstructor<DateRangePickerToolbarProps<TDate>>;
 }
 
-export interface BaseDateRangePicker2SlotsComponentsProps<TDate> extends DateRangeCalendarSlotsComponentsProps<TDate> {
+export interface BaseDateRangePicker2SlotsComponentsProps<TDate>
+  extends DateRangeCalendarSlotsComponentsProps<TDate> {
   toolbar?: ExportedDateRangePickerToolbarProps;
 }
 

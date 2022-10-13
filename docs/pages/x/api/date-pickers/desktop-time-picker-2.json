@@ -78,7 +78,8 @@
     "PaperContent": { "default": "React.Fragment", "type": { "name": "elementType" } },
     "Popper": { "default": "Popper from @mui/material", "type": { "name": "elementType" } },
     "PreviousIconButton": { "default": "IconButton", "type": { "name": "elementType" } },
-    "RightArrowIcon": { "default": "ArrowRight", "type": { "name": "elementType" } }
+    "RightArrowIcon": { "default": "ArrowRight", "type": { "name": "elementType" } },
+    "Toolbar": { "default": "TimePickerToolbar", "type": { "name": "elementType" } }
   },
   "name": "DesktopTimePicker2",
   "styles": { "classes": [], "globalClasses": {}, "name": "MuiDesktopTimePicker2" },
