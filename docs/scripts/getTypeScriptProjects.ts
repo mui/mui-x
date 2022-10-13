@@ -3,7 +3,7 @@ import fs from 'fs';
 import * as ts from 'typescript';
 import { getComponentFilesInFolder } from './utils';
 
-const workspaceRoot = path.resolve(__dirname, '../../');
+export const workspaceRoot = path.resolve(__dirname, '../../');
 
 export interface Project {
   name: ProjectNames;
@@ -63,7 +63,7 @@ interface CreateProgramOptions
   entryPointPath?: string;
 }
 
-const createProject = (options: CreateProgramOptions): Project => {
+export const createProject = (options: CreateProgramOptions): Project => {
   const {
     rootPath,
     tsConfigPath: inputTsConfigPath = 'tsconfig.build.json',
