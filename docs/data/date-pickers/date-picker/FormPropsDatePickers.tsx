@@ -21,7 +21,7 @@ export default function FormPropsDatePickers() {
     <Stack spacing={3}>
       <LocalizationProvider dateAdapter={AdapterDayjs}>
         <DatePicker {...defaultProps} label="disabled" disabled />
-        <DatePicker {...defaultProps} label="read-only" readOnly />
+        <DatePicker {...defaultProps} label="readOnly" readOnly />
       </LocalizationProvider>
     </Stack>
   );
