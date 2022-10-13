@@ -97,7 +97,7 @@ export function useDateRangePickerDefaultizedProps<
 
     return {
       ...themeProps.localeText,
-      datePickerDefaultToolbarTitle: themeProps.localeText.toolbarTitle,
+      dateRangePickerDefaultToolbarTitle: themeProps.localeText.toolbarTitle,
     };
   }, [themeProps.localeText]);
 
