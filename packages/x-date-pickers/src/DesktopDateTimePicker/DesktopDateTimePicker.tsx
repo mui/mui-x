@@ -31,7 +31,7 @@ export interface DesktopDateTimePickerSlotsComponentsProps<TDate>
 
 export interface DesktopDateTimePickerProps<TDate>
   extends BaseDateTimePickerProps<TDate>,
-    DesktopWrapperProps<TDate> {
+    DesktopWrapperProps {
   /**
    * Overrideable components.
    * @default {}

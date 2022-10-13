@@ -28,7 +28,7 @@ export interface DesktopDatePickerSlotsComponentsProps<TDate>
 
 export interface DesktopDatePickerProps<TDate>
   extends Omit<BaseDatePickerProps<TDate>, 'components' | 'componentsProps'>,
-    DesktopWrapperProps<TDate> {
+    DesktopWrapperProps {
   /**
    * Overrideable components.
    * @default {}

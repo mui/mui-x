@@ -1,8 +1,14 @@
 import { CalendarPickerView, ClockPickerView, MuiPickersAdapter } from '../../internals/models';
-/**
- * Set the types of the texts in the grid.
- */
-export interface PickersLocaleText<TDate> {
+
+export interface PickersComponentSpecificLocaleText {
+  // Toolbar titles
+  datePickerDefaultToolbarTitle: string;
+  dateTimePickerDefaultToolbarTitle: string;
+  timePickerDefaultToolbarTitle: string;
+  dateRangePickerDefaultToolbarTitle: string;
+}
+
+export interface PickersComponentAgnosticLocaleText<TDate> {
   // Calendar navigation
   previousMonth: string;
   nextMonth: string;
@@ -25,12 +31,6 @@ export interface PickersLocaleText<TDate> {
   clearButtonLabel: string;
   okButtonLabel: string;
   todayButtonLabel: string;
-
-  // Toolbar titles
-  datePickerDefaultToolbarTitle: string;
-  dateTimePickerDefaultToolbarTitle: string;
-  timePickerDefaultToolbarTitle: string;
-  dateRangePickerDefaultToolbarTitle: string;
 
   // Clock labels
   clockLabelText: (
@@ -60,6 +60,25 @@ export interface PickersLocaleText<TDate> {
   fieldMeridiemPlaceholder: () => string;
 }
 
+export interface PickersLocaleText<TDate>
+  extends PickersComponentAgnosticLocaleText<TDate>,
+    PickersComponentSpecificLocaleText {}
+
 export type PickersInputLocaleText<TDate> = Partial<PickersLocaleText<TDate>>;
 
+/**
+ * Translations that can be provided directly to the picker components.
+ * It contains some generic translations like `toolbarTitle`
+ * which will be dispatched to various translations keys in `PickersLocaleText`, depending on the pickers received them.
+ */
+export interface PickersInputComponentLocaleText<TDate>
+  extends Partial<PickersComponentAgnosticLocaleText<TDate>> {
+  toolbarTitle?: string;
+}
+
 export type PickersTranslationKeys = keyof PickersLocaleText<any>;
+
+export type LocalizedComponent<
+  TDate,
+  Props extends { localeText?: PickersInputComponentLocaleText<TDate> },
+> = Omit<Props, 'localeText'> & { localeText?: PickersInputLocaleText<TDate> };

@@ -147,39 +147,6 @@ describe('<MobileDatePicker />', () => {
 
       expect(screen.getByMuiTest('datepicker-toolbar-date').textContent).to.equal('January');
     });
-
-    it('should render title from the `toolbarTitle` prop', () => {
-      render(
-        <MobileDatePicker
-          renderInput={(params) => <TextField {...params} />}
-          open
-          label="something"
-          onChange={() => {}}
-          value={adapterToUse.date(new Date(2018, 0, 1))}
-          componentsProps={{
-            toolbar: {
-              toolbarTitle: 'test',
-            },
-          }}
-        />,
-      );
-
-      expect(screen.getByMuiTest('picker-toolbar-title').textContent).to.equal('test');
-    });
-
-    it('should use the label as a title if no `toolbarTitle` prop is provided', () => {
-      render(
-        <MobileDatePicker
-          open
-          label="Default label"
-          onChange={() => {}}
-          renderInput={(params) => <TextField {...params} />}
-          value={adapterToUse.date(new Date(2018, 0, 1))}
-        />,
-      );
-
-      expect(screen.getByMuiTest('picker-toolbar-title').textContent).to.equal('Default label');
-    });
   });
 
   describe('Component slots: Day', () => {
@@ -489,6 +456,23 @@ describe('<MobileDatePicker />', () => {
       openPicker({ type: 'date', variant: 'mobile' });
 
       expect(screen.queryByText('Custom cancel')).not.to.equal(null);
+    });
+
+    it('should render title from the `toolbarTitle` locale key', () => {
+      render(
+        <MobileDatePicker
+          renderInput={(params) => <TextField {...params} />}
+          open
+          label="something"
+          onChange={() => {}}
+          value={adapterToUse.date(new Date(2018, 0, 1))}
+          localeText={{
+            toolbarTitle: 'test',
+          }}
+        />,
+      );
+
+      expect(screen.getByMuiTest('picker-toolbar-title').textContent).to.equal('test');
     });
   });
 });

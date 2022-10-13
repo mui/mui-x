@@ -21,6 +21,7 @@ import {
   ExportedDatePickerToolbarProps,
 } from './DatePickerToolbar';
 import { isYearOnlyView, isYearAndMonthViews } from '../internals/utils/views';
+import { LocalizedComponent, PickersInputLocaleText } from '../locales/utils/pickersLocaleTextApi';
 
 export interface BaseDatePickerSlotsComponent<TDate> extends DateCalendarSlotsComponent<TDate> {
   /**
@@ -37,7 +38,7 @@ export interface BaseDatePickerSlotsComponentsProps<TDate>
 
 export interface BaseDatePickerProps<TDate>
   extends ExportedDateCalendarProps<TDate>,
-    BasePickerProps<TDate | null>,
+    BasePickerProps<TDate | null, TDate>,
     ValidationCommonProps<DateValidationError, TDate | null>,
     ExportedDateInputProps<TDate> {
   /**
@@ -93,10 +94,13 @@ const getFormatAndMaskByViews = <TDate>(
 export function useDatePickerDefaultizedProps<TDate, Props extends BaseDatePickerProps<TDate>>(
   props: Props,
   name: string,
-): DefaultizedProps<
-  Props,
-  'openTo' | 'views' | keyof BaseDateValidationProps<TDate>,
-  { inputFormat: string }
+): LocalizedComponent<
+  TDate,
+  DefaultizedProps<
+    Props,
+    'openTo' | 'views' | keyof BaseDateValidationProps<TDate>,
+    { inputFormat: string }
+  >
 > {
   const utils = useUtils<TDate>();
   const defaultDates = useDefaultDates<TDate>();
@@ -110,6 +114,17 @@ export function useDatePickerDefaultizedProps<TDate, Props extends BaseDatePicke
 
   const views = themeProps.views ?? ['year', 'day'];
 
+  const localeText = React.useMemo<PickersInputLocaleText<TDate> | undefined>(() => {
+    if (themeProps.localeText?.toolbarTitle == null) {
+      return themeProps.localeText;
+    }
+
+    return {
+      ...themeProps.localeText,
+      datePickerDefaultToolbarTitle: themeProps.localeText.toolbarTitle,
+    };
+  }, [themeProps.localeText]);
+
   return {
     openTo: 'day',
     disableFuture: false,
@@ -119,11 +134,8 @@ export function useDatePickerDefaultizedProps<TDate, Props extends BaseDatePicke
     views,
     minDate: applyDefaultDate(utils, themeProps.minDate, defaultDates.minDate),
     maxDate: applyDefaultDate(utils, themeProps.maxDate, defaultDates.maxDate),
+    localeText,
     components: { Toolbar: DatePickerToolbar, ...themeProps.components },
-    componentsProps: {
-      ...themeProps.componentsProps,
-      toolbar: { toolbarTitle: themeProps.label, ...themeProps.componentsProps?.toolbar },
-    },
   };
 }
 

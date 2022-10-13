@@ -134,7 +134,6 @@ export function TimePickerToolbar<TDate extends unknown>(inProps: TimePickerTool
     view,
     onViewChange,
     toggleMobileKeyboardView,
-    toolbarTitle: toolbarTitleProp,
     views,
     disabled,
     readOnly,
@@ -143,7 +142,6 @@ export function TimePickerToolbar<TDate extends unknown>(inProps: TimePickerTool
   const utils = useUtils<TDate>();
   const localeText = useLocaleText();
 
-  const toolbarTitle = toolbarTitleProp ?? localeText.timePickerDefaultToolbarTitle;
   const theme = useTheme();
   const showAmPmControl = Boolean(ampm && !ampmInClock);
   const { meridiemMode, handleMeridiemChange } = useMeridiemMode(value, ampm, onChange);
@@ -168,7 +166,7 @@ export function TimePickerToolbar<TDate extends unknown>(inProps: TimePickerTool
     <TimePickerToolbarRoot
       viewType="clock"
       landscapeDirection="row"
-      toolbarTitle={toolbarTitle}
+      toolbarTitle={localeText.timePickerDefaultToolbarTitle}
       isLandscape={isLandscape}
       isMobileKeyboardViewOpen={isMobileKeyboardViewOpen}
       toggleMobileKeyboardView={toggleMobileKeyboardView}

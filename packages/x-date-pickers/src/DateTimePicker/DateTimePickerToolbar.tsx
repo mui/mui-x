@@ -99,7 +99,6 @@ export function DateTimePickerToolbar<TDate extends unknown>(
     toggleMobileKeyboardView,
     toolbarFormat,
     toolbarPlaceholder = '––',
-    toolbarTitle: toolbarTitleProp,
     views,
     ...other
   } = props;
@@ -107,8 +106,6 @@ export function DateTimePickerToolbar<TDate extends unknown>(
   const utils = useUtils<TDate>();
   const localeText = useLocaleText();
   const classes = useUtilityClasses(ownerState);
-
-  const toolbarTitle = toolbarTitleProp ?? localeText.dateTimePickerDefaultToolbarTitle;
 
   const formatHours = (time: TDate) =>
     ampm ? utils.format(time, 'hours12h') : utils.format(time, 'hours24h');
@@ -127,7 +124,7 @@ export function DateTimePickerToolbar<TDate extends unknown>(
 
   return (
     <DateTimePickerToolbarRoot
-      toolbarTitle={toolbarTitle}
+      toolbarTitle={localeText.dateTimePickerDefaultToolbarTitle}
       isMobileKeyboardViewOpen={isMobileKeyboardViewOpen}
       toggleMobileKeyboardView={toggleMobileKeyboardView}
       className={classes.root}
