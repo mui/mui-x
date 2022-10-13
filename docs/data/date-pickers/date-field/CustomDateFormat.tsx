@@ -10,7 +10,7 @@ export default function CustomDateFormat() {
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <Stack spacing={2} sx={(theme) => ({ width: theme.spacing(48) })}>
+      <Stack spacing={{ xs: 4, lg: 2 }} direction={{ xs: 'column', lg: 'row' }}>
         <DateField
           label="Dash separator"
           value={value}

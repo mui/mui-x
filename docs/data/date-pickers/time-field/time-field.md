@@ -8,7 +8,7 @@ title: React Time Field component
 
 :::warning
 This component is unstable.
-They might receive breaking changes on their props to have the best components possible by the time of the stable release.
+It might receive breaking changes on its props to have the best component possible by the time of the stable release.
 :::
 
 ## Basic usage
