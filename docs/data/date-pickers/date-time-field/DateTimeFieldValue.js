@@ -2,15 +2,11 @@ import * as React from 'react';
 import dayjs from 'dayjs';
 import Stack from '@mui/material/Stack';
 import { LocalizationProvider } from '@mui/x-date-pickers';
-
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { Unstable_SingleInputDateRangeField as SingleInputDateRangeField } from '@mui/x-date-pickers-pro/SingleInputDateRangeField';
+import { Unstable_DateTimeField as DateTimeField } from '@mui/x-date-pickers/DateTimeField';
 
-export default function DateRangeFieldValue() {
-  const [value, setValue] = React.useState(() => [
-    dayjs('2022-04-07'),
-    dayjs('2022-04-13'),
-  ]);
+export default function DateTimeFieldValue() {
+  const [value, setValue] = React.useState(dayjs('2022-04-07T15:30'));
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -19,11 +15,11 @@ export default function DateRangeFieldValue() {
         direction={{ xs: 'column', xl: 'row' }}
         sx={{ '& > *': { width: 300 } }}
       >
-        <SingleInputDateRangeField
+        <DateTimeField
           label="Uncontrolled field"
-          defaultValue={[dayjs('2022-04-07'), dayjs('2022-04-13')]}
+          defaultValue={dayjs('2022-04-07T15:30')}
         />
-        <SingleInputDateRangeField
+        <DateTimeField
           label="Controlled field"
           value={value}
           onChange={(newValue) => setValue(newValue)}

@@ -2,9 +2,9 @@
 title: React Date Field component
 ---
 
-# Date Field
+# Date Time Field
 
-<p class="description">The Date Field let the user select a date with the keyboard.</p>
+<p class="description">The Date Time Field lets the user select a date and a time with the keyboard.</p>
 
 :::warning
 This component is unstable.
@@ -13,21 +13,21 @@ It might receive breaking changes on its props to have the best component possib
 
 ## Basic usage
 
-{{"demo": "BasicDateField.js"}}
+{{"demo": "BasicDateTimeField.js"}}
 
 ## Uncontrolled vs. Controlled
 
 The component can be controlled or uncontrolled
 
-{{"demo": "DateFieldValue.js"}}
+{{"demo": "DateTimeFieldValue.js"}}
 
-## Customize the date format
+## Customize the date time format
 
-{{"demo": "CustomDateFormat.js"}}
+{{"demo": "CustomDateTimeFormat.js"}}
 
 ## Localization
 
-Use the `LocalizationProvider` to change the date-library locale used in the time field.
+Use the `LocalizationProvider` to change the date-library locale used in the date time field.
 
 See the [localization documentation page](/react-date-pickers/localization/) for more details.
 

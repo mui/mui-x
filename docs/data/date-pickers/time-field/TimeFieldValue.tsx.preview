@@ -1,10 +1,10 @@
 <LocalizationProvider dateAdapter={AdapterDayjs}>
-  <Stack spacing={2} direction="row">
-    <SingleInputDateRangeField
+  <Stack spacing={{ xs: 4, lg: 2 }} direction={{ xs: 'column', lg: 'row' }}>
+    <TimeField
       label="Uncontrolled field"
-      defaultValue={[dayjs('2022-04-07'), dayjs('2022-04-13')]}
+      defaultValue={dayjs('2022-04-07T15:30')}
     />
-    <SingleInputDateRangeField
+    <TimeField
       label="Controlled field"
       value={value}
       onChange={(newValue) => setValue(newValue)}

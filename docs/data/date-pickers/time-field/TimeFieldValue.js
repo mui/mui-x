@@ -1,27 +1,24 @@
 import * as React from 'react';
+import dayjs from 'dayjs';
 import Stack from '@mui/material/Stack';
-import dayjs, { Dayjs } from 'dayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { Unstable_DateField as DateField } from '@mui/x-date-pickers/DateField';
+import { Unstable_TimeField as TimeField } from '@mui/x-date-pickers/TimeField';
 
-export default function CustomDateFormat() {
-  const [value, setValue] = React.useState<Dayjs | null>(dayjs('2022-04-07'));
+export default function TimeFieldValue() {
+  const [value, setValue] = React.useState(dayjs('2022-04-07T15:30'));
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <Stack spacing={{ xs: 4, lg: 2 }} direction={{ xs: 'column', lg: 'row' }}>
-        <DateField
-          label="Dash separator"
-          value={value}
-          onChange={(newValue) => setValue(newValue)}
-          format="MM-DD-YYYY"
+        <TimeField
+          label="Uncontrolled field"
+          defaultValue={dayjs('2022-04-07T15:30')}
         />
-        <DateField
-          label="Full letter month"
+        <TimeField
+          label="Controlled field"
           value={value}
           onChange={(newValue) => setValue(newValue)}
-          format="LL"
         />
       </Stack>
     </LocalizationProvider>
