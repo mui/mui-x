@@ -15,7 +15,7 @@ We'd like to offer a big thanks to the 2 contributors who made this release poss
 
 #### Changes
 
-- [DataGrid] Fix error when using columnGrouping with all columns hidden (#6425) @alexfauquette
+- [DataGrid] Fix error when using column grouping with all columns hidden (#6425) @alexfauquette
 - [DataGrid] Fix start edit mode with printable character in React 18 (#6478) @m4theushw
 
 ## 5.17.6
