@@ -2507,8 +2507,8 @@ _Nov 23, 2021_
 
 🎉 We are excited to introduce [MUI X v5.0.0](https://mui.com/blog/mui-x-v5/) 🎉!
 
-If you want to migrate the DataGrid or DataGridPro from v4 to v5, take a look at the [migration guide](https://mui.com/x/react-data-grid/migration-v4/).
-This version is fully compatible with `@mui/material@5.X` and can be used with `@material-ui/core@4.x` with some [additional steps](https://mui.com/x/react-data-grid/migration-v4/#using-mui-x-v5-with-mui-core-v4).
+If you want to migrate the DataGrid or DataGridPro from v4 to v5, take a look at the [migration guide](https://mui.com/x/migration/migration-data-grid-v4/).
+This version is fully compatible with `@mui/material@5.X` and can be used with `@material-ui/core@4.x` with some [additional steps](https://mui.com/x/migration/migration-data-grid-v4/#using-mui-x-v5-with-mui-core-v4).
 
 A big thanks to the 7 contributors who made this release possible. Here are some highlights ✨:
 
