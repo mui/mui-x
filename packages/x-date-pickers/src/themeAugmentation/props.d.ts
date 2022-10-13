@@ -31,8 +31,8 @@ import {
   PickersToolbarProps,
   PickerStaticWrapperProps,
   ExportedCalendarHeaderProps,
-  CalendarOrClockPickerView,
 } from '../internals';
+import { CalendarOrClockPickerView } from '../internals/models';
 
 export interface PickersComponentsPropsList {
   MuiCalendarOrClockPicker: CalendarOrClockPickerProps<unknown, CalendarOrClockPickerView>;
@@ -52,7 +52,7 @@ export interface PickersComponentsPropsList {
   MuiDesktopDatePicker: DesktopDatePickerProps<unknown>;
   MuiDesktopDateTimePicker: DesktopDateTimePickerProps<unknown>;
   MuiDesktopTimePicker: DesktopTimePickerProps<unknown>;
-  MuiLocalizationProvider: LocalizationProviderProps;
+  MuiLocalizationProvider: LocalizationProviderProps<unknown>;
   MuiMobileDatePicker: MobileDatePickerProps<unknown>;
   MuiMobileDateTimePicker: MobileDateTimePickerProps<unknown>;
   MuiMobileTimePicker: MobileTimePickerProps<unknown>;
