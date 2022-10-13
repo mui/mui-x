@@ -182,7 +182,7 @@ export const useGridColumnResize = (
     // eslint-disable-next-line @typescript-eslint/no-use-before-define
     stopListening();
 
-    apiRef.current.updateColumn(colDefRef.current!);
+    apiRef.current.updateColumns([colDefRef.current!]);
 
     clearTimeout(stopResizeEventTimeout.current);
     stopResizeEventTimeout.current = setTimeout(() => {
@@ -289,7 +289,7 @@ export const useGridColumnResize = (
     // eslint-disable-next-line @typescript-eslint/no-use-before-define
     stopListening();
 
-    apiRef.current.updateColumn(colDefRef.current!);
+    apiRef.current.updateColumns([colDefRef.current!]);
 
     clearTimeout(stopResizeEventTimeout.current);
     stopResizeEventTimeout.current = setTimeout(() => {

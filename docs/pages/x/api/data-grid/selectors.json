@@ -77,6 +77,13 @@
     "supportsApiRef": true
   },
   {
+    "name": "gridColumnsStateSelector",
+    "returnType": "GridColumnsState",
+    "category": "Columns",
+    "description": "Get the columns state",
+    "supportsApiRef": false
+  },
+  {
     "name": "gridColumnsTotalWidthSelector",
     "returnType": "number",
     "category": "Visible Columns",

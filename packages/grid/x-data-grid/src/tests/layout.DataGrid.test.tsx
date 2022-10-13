@@ -5,7 +5,6 @@ import { stub, spy } from 'sinon';
 import { expect } from 'chai';
 import {
   DataGrid,
-  GridValueGetterParams,
   GridToolbar,
   DataGridProps,
   ptBR,
@@ -160,38 +159,6 @@ describe('<DataGrid /> - Layout & Warnings', () => {
         expect(document.querySelector(`.${className}`)).to.equal(container.firstChild.firstChild);
       });
 
-      it('should support columns.valueGetter using `getValue` (deprecated)', () => {
-        const columns = [
-          { field: 'id' },
-          { field: 'firstName' },
-          { field: 'lastName' },
-          {
-            field: 'fullName',
-            valueGetter: (params: GridValueGetterParams) =>
-              `${params.getValue(params.id, 'firstName') || ''} ${
-                params.getValue(params.id, 'lastName') || ''
-              }`,
-          },
-        ];
-
-        const rows = [
-          { id: 1, lastName: 'Snow', firstName: 'Jon' },
-          { id: 2, lastName: 'Lannister', firstName: 'Cersei' },
-        ];
-
-        expect(() => {
-          render(
-            <div style={{ width: 300, height: 300 }}>
-              <DataGrid rows={rows} columns={columns} />
-            </div>,
-          );
-
-          expect(getColumnValues(3)).to.deep.equal(['Jon Snow', 'Cersei Lannister']);
-        }).toWarnDev(
-          'MUI: You are calling getValue. This method is deprecated and will be removed in the next major version.',
-        );
-      });
-
       it('should support columns.valueGetter using direct row access', () => {
         const columns: GridColumns = [
           { field: 'id' },
@@ -247,28 +214,6 @@ describe('<DataGrid /> - Layout & Warnings', () => {
         }).toErrorDev(
           'MUI: useResizeContainer - The parent DOM element of the data grid has an empty width',
         );
-      });
-
-      it('should warn when GridCellParams.valueGetter is called with a missing column', () => {
-        const rows = [
-          { id: 1, age: 1 },
-          { id: 2, age: 2 },
-        ];
-        const columns = [
-          { field: 'id' },
-          {
-            field: 'fullName',
-            valueGetter: (params: GridValueGetterParams) => params.getValue(params.id, 'age'),
-          },
-        ];
-        expect(() => {
-          render(
-            <div style={{ width: 300, height: 300 }}>
-              <DataGrid rows={rows} columns={columns} />
-            </div>,
-          );
-        }).toWarnDev(["You are calling getValue('age') but the column `age` is not defined"]);
-        expect(getColumnValues(1)).to.deep.equal(['1', '2']);
       });
     });
 

@@ -9,8 +9,8 @@ import {
   gridColumnFieldsSelector,
   gridColumnDefinitionsSelector,
   gridColumnLookupSelector,
-  gridColumnsMetaSelector,
-  gridColumnsSelector,
+  gridColumnsTotalWidthSelector,
+  gridColumnsStateSelector,
   gridColumnVisibilityModelSelector,
   gridVisibleColumnDefinitionsSelector,
   gridColumnPositionsSelector,
@@ -125,7 +125,10 @@ export function useGridColumns(
   );
 
   const getColumnsMeta = React.useCallback<GridColumnApi['getColumnsMeta']>(
-    () => gridColumnsMetaSelector(apiRef),
+    () => ({
+      totalWidth: gridColumnsTotalWidthSelector(apiRef),
+      positions: gridColumnPositionsSelector(apiRef),
+    }),
     [apiRef],
   );
 
@@ -183,11 +186,6 @@ export function useGridColumns(
     [apiRef, setGridColumnsState, columnTypes],
   );
 
-  const updateColumn = React.useCallback<GridColumnApi['updateColumn']>(
-    (column) => apiRef.current.updateColumns([column]),
-    [apiRef],
-  );
-
   const setColumnVisibility = React.useCallback<GridColumnApi['setColumnVisibility']>(
     (field, isVisible) => {
       const columnVisibilityModel = gridColumnVisibilityModelSelector(apiRef);
@@ -216,7 +214,10 @@ export function useGridColumns(
       const updatedColumns = [...allColumns];
       const fieldRemoved = updatedColumns.splice(oldIndexPosition, 1)[0];
       updatedColumns.splice(targetIndexPosition, 0, fieldRemoved);
-      setGridColumnsState({ ...gridColumnsSelector(apiRef.current.state), all: updatedColumns });
+      setGridColumnsState({
+        ...gridColumnsStateSelector(apiRef.current.state),
+        all: updatedColumns,
+      });
 
       const params: GridColumnOrderChangeParams = {
         field,
@@ -254,7 +255,6 @@ export function useGridColumns(
     getColumnPosition,
     getVisibleColumns,
     getColumnsMeta,
-    updateColumn,
     updateColumns,
     setColumnVisibilityModel,
     setColumnVisibility,
@@ -371,7 +371,10 @@ export function useGridColumns(
     if (prevInnerWidth.current !== viewportInnerSize.width) {
       prevInnerWidth.current = viewportInnerSize.width;
       setGridColumnsState(
-        hydrateColumnsWidth(gridColumnsSelector(apiRef.current.state), viewportInnerSize.width),
+        hydrateColumnsWidth(
+          gridColumnsStateSelector(apiRef.current.state),
+          viewportInnerSize.width,
+        ),
       );
     }
   };

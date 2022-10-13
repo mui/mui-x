@@ -5,4 +5,3 @@ export type {
   GridColumnsInitialState,
   GridColumnVisibilityModel,
 } from './gridColumnsInterfaces';
-export { getGridColDef } from './gridColumnsUtils';

@@ -64,14 +64,6 @@ export interface GridCellParams<
    * the tabIndex value.
    */
   tabIndex: 0 | -1;
-  /**
-   * Get the cell value of a row and field.
-   * @param {GridRowId} id The row id.
-   * @param {string} field The field.
-   * @returns {any} The cell value.
-   * @deprecated Use `params.row` to directly access the fields you want instead.
-   */
-  getValue: (id: GridRowId, field: string) => any;
 }
 
 export interface FocusElement {
@@ -89,7 +81,6 @@ export interface GridRenderCellParams<
 > extends GridCellParams<V, R, F, N> {
   /**
    * GridApi that let you manipulate the grid.
-   * @deprecated Use the `apiRef` returned by `useGridApiContext` or `useGridApiRef` (only available in `@mui/x-data-grid-pro`)
    */
   api: any;
   /**
@@ -112,7 +103,6 @@ export interface GridRenderEditCellParams<
     GridEditCellProps<V> {
   /**
    * GridApi that let you manipulate the grid.
-   * @deprecated Use the `apiRef` returned by `useGridApiContext` or `useGridApiRef` (only available in `@mui/x-data-grid-pro`)
    */
   api: any;
 }
@@ -127,7 +117,6 @@ export interface GridValueGetterParams<
 > extends Omit<GridCellParams<V, R, any, N>, 'formattedValue' | 'isEditable'> {
   /**
    * GridApi that let you manipulate the grid.
-   * @deprecated Use the `apiRef` returned by `useGridApiContext` or `useGridApiRef` (only available in `@mui/x-data-grid-pro`)
    */
   api: any;
   /**
@@ -169,7 +158,6 @@ export interface GridValueFormatterParams<V = any> {
   value: V;
   /**
    * GridApi that let you manipulate the grid.
-   * @deprecated Use the `apiRef` returned by `useGridApiContext` or `useGridApiRef` (only available in `@mui/x-data-grid-pro`)
    */
   api: any;
 }

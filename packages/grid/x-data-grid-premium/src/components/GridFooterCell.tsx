@@ -41,7 +41,6 @@ const GridFooterCell = (props: GridFooterCellProps) => {
     cellMode,
     row,
     api,
-    getValue,
     id,
     value,
     rowNode,
