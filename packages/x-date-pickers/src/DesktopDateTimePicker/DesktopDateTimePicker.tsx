@@ -39,12 +39,12 @@ export interface DesktopDateTimePickerProps<TDate>
    * Overrideable components.
    * @default {}
    */
-  components?: Partial<DesktopDateTimePickerSlotsComponent<TDate>>;
+  components?: DesktopDateTimePickerSlotsComponent<TDate>;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  componentsProps?: Partial<DesktopDateTimePickerSlotsComponentsProps<TDate>>;
+  componentsProps?: DesktopDateTimePickerSlotsComponentsProps<TDate>;
 }
 
 type DesktopDateTimePickerComponent = (<TDate>(

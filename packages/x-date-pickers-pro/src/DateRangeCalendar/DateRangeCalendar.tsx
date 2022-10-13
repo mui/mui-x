@@ -325,7 +325,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
   const componentsForDayCalendar = {
     Day: DateRangePickerDay,
     ...components,
-  } as Partial<DayCalendarSlotsComponent<TDate>>;
+  } as DayCalendarSlotsComponent<TDate>;
 
   const componentsPropsForDayCalendar = {
     ...componentsProps,
@@ -343,7 +343,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
         ...(resolveComponentProps(componentsProps?.day, dayOwnerState) ?? {}),
       };
     },
-  } as Partial<DayCalendarSlotsComponentsProps<TDate>>;
+  } as DayCalendarSlotsComponentsProps<TDate>;
 
   return (
     <DateRangeCalendarRoot

@@ -31,12 +31,12 @@ export interface CalendarOrClockPickerSlotsComponent<TDate>
    * Tabs enabling toggling between date and time pickers.
    * @default DateTimePickerTabs
    */
-  Tabs: React.ElementType<DateTimePickerTabsProps>;
+  Tabs?: React.ElementType<DateTimePickerTabsProps>;
 }
 
 export interface CalendarOrClockPickerSlotsComponentsProps<TDate>
   extends DateCalendarSlotsComponentsProps<TDate> {
-  tabs: Omit<DateTimePickerTabsProps, 'onChange' | 'view'>;
+  tabs?: Omit<DateTimePickerTabsProps, 'onChange' | 'view'>;
 }
 
 export interface ExportedCalendarOrClockPickerProps<TDate, View extends CalendarOrClockPickerView>
@@ -63,12 +63,12 @@ export interface ExportedCalendarOrClockPickerProps<TDate, View extends Calendar
    * Overrideable components.
    * @default {}
    */
-  components?: Partial<CalendarOrClockPickerSlotsComponent<TDate>>;
+  components?: CalendarOrClockPickerSlotsComponent<TDate>;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  componentsProps?: Partial<CalendarOrClockPickerSlotsComponentsProps<TDate>>;
+  componentsProps?: CalendarOrClockPickerSlotsComponentsProps<TDate>;
   toolbarFormat?: string;
   toolbarPlaceholder?: React.ReactNode;
   toolbarTitle?: React.ReactNode;
