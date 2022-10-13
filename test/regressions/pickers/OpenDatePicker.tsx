@@ -29,12 +29,16 @@ export default function OpenDatePicker() {
       <DatePicker
         onChange={() => {}}
         open
-        PopperProps={{
-          // @ts-expect-error
-          'data-testid': 'screenshot-target',
+        components={{
+          DesktopTransition: NoTransition,
+        }}
+        componentsProps={{
+          popper: {
+            // @ts-expect-error
+            'data-testid': 'screenshot-target',
+          },
         }}
         renderInput={(params) => <TextField {...params} />}
-        TransitionComponent={NoTransition}
         value={adapterToUse.date('2019-01-01T00:00:00.000')}
       />
     </LocalizationProvider>

@@ -16,18 +16,15 @@ import { CalendarOrClockPicker } from '../internals/components/CalendarOrClockPi
 import { useDateValidation } from '../internals/hooks/validation/useDateValidation';
 import { KeyboardDateInput } from '../internals/components/KeyboardDateInput';
 import { usePickerState } from '../internals/hooks/usePickerState';
-import {
-  CalendarPickerSlotsComponent,
-  CalendarPickerSlotsComponentsProps,
-} from '../CalendarPicker';
+import { DateCalendarSlotsComponent, DateCalendarSlotsComponentsProps } from '../DateCalendar';
 
 export interface DesktopDatePickerSlotsComponent<TDate>
   extends DesktopWrapperSlotsComponent,
-    CalendarPickerSlotsComponent<TDate> {}
+    DateCalendarSlotsComponent<TDate> {}
 
 export interface DesktopDatePickerSlotsComponentsProps<TDate>
   extends DesktopWrapperSlotsComponentsProps,
-    CalendarPickerSlotsComponentsProps<TDate> {}
+    DateCalendarSlotsComponentsProps<TDate> {}
 
 export interface DesktopDatePickerProps<TDate>
   extends Omit<BaseDatePickerProps<TDate>, 'components' | 'componentsProps'>,
@@ -36,12 +33,12 @@ export interface DesktopDatePickerProps<TDate>
    * Overrideable components.
    * @default {}
    */
-  components?: Partial<DesktopDatePickerSlotsComponent<TDate>>;
+  components?: DesktopDatePickerSlotsComponent<TDate>;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  componentsProps?: Partial<DesktopDatePickerSlotsComponentsProps<TDate>>;
+  componentsProps?: DesktopDatePickerSlotsComponentsProps<TDate>;
 }
 
 type DesktopDatePickerComponent = (<TDate>(
@@ -72,10 +69,7 @@ export const DesktopDatePicker = React.forwardRef(function DesktopDatePicker<TDa
 
   const {
     onChange,
-    PopperProps,
-    PaperProps,
     ToolbarComponent = DatePickerToolbar,
-    TransitionComponent,
     value,
     components,
     componentsProps,
@@ -96,9 +90,6 @@ export const DesktopDatePicker = React.forwardRef(function DesktopDatePicker<TDa
       {...wrapperProps}
       DateInputProps={AllDateInputProps}
       KeyboardDateInputComponent={KeyboardDateInput}
-      PopperProps={PopperProps}
-      PaperProps={PaperProps}
-      TransitionComponent={TransitionComponent}
       components={components}
       componentsProps={componentsProps}
       localeText={localeText}
@@ -189,6 +180,12 @@ DesktopDatePicker.propTypes = {
    * @default false
    */
   disablePast: PropTypes.bool,
+  /**
+   * Calendar will show more weeks in order to match this value.
+   * Put it to 6 for having fix number of week in Gregorian calendars
+   * @default undefined
+   */
+  fixedWeekNumber: PropTypes.number,
   /**
    * Get aria-label text for control that opens picker dialog. Aria-label text must include selected date. @DateIOType
    * @template TDate
@@ -313,14 +310,6 @@ DesktopDatePicker.propTypes = {
    */
   orientation: PropTypes.oneOf(['landscape', 'portrait']),
   /**
-   * Paper props passed down to [Paper](https://mui.com/material-ui/api/paper/) component.
-   */
-  PaperProps: PropTypes.object,
-  /**
-   * Popper props passed down to [Popper](https://mui.com/material-ui/api/popper/) component.
-   */
-  PopperProps: PropTypes.object,
-  /**
    * Make picker read only.
    * @default false
    */
@@ -412,10 +401,6 @@ DesktopDatePicker.propTypes = {
    * @default 'Select date'
    */
   toolbarTitle: PropTypes.node,
-  /**
-   * Custom component for popper [Transition](https://mui.com/material-ui/transitions/#transitioncomponent-prop).
-   */
-  TransitionComponent: PropTypes.elementType,
   /**
    * The value of the picker.
    */

@@ -38,12 +38,12 @@ export interface DesktopTimePickerProps<TDate>
    * Overrideable components.
    * @default {}
    */
-  components?: Partial<DesktopTimePickerSlotsComponent>;
+  components?: DesktopTimePickerSlotsComponent;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  componentsProps?: Partial<DesktopTimePickerSlotsComponentsProps>;
+  componentsProps?: DesktopTimePickerSlotsComponentsProps;
 }
 
 type DesktopTimePickerComponent = (<TDate>(
@@ -74,10 +74,7 @@ export const DesktopTimePicker = React.forwardRef(function DesktopTimePicker<TDa
 
   const {
     onChange,
-    PaperProps,
-    PopperProps,
     ToolbarComponent = TimePickerToolbar,
-    TransitionComponent,
     value,
     components,
     componentsProps,
@@ -98,9 +95,6 @@ export const DesktopTimePicker = React.forwardRef(function DesktopTimePicker<TDa
       {...wrapperProps}
       DateInputProps={DateInputProps}
       KeyboardDateInputComponent={KeyboardDateInput}
-      PopperProps={PopperProps}
-      PaperProps={PaperProps}
-      TransitionComponent={TransitionComponent}
       components={components}
       componentsProps={componentsProps}
       localeText={localeText}
@@ -301,14 +295,6 @@ DesktopTimePicker.propTypes = {
    */
   orientation: PropTypes.oneOf(['landscape', 'portrait']),
   /**
-   * Paper props passed down to [Paper](https://mui.com/material-ui/api/paper/) component.
-   */
-  PaperProps: PropTypes.object,
-  /**
-   * Popper props passed down to [Popper](https://mui.com/material-ui/api/popper/) component.
-   */
-  PopperProps: PropTypes.object,
-  /**
    * Make picker read only.
    * @default false
    */
@@ -352,10 +338,6 @@ DesktopTimePicker.propTypes = {
    * @default 'Select time'
    */
   toolbarTitle: PropTypes.node,
-  /**
-   * Custom component for popper [Transition](https://mui.com/material-ui/transitions/#transitioncomponent-prop).
-   */
-  TransitionComponent: PropTypes.elementType,
   /**
    * The value of the picker.
    */

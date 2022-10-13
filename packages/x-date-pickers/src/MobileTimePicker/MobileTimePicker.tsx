@@ -37,12 +37,12 @@ export interface MobileTimePickerProps<TDate>
    * Overrideable components.
    * @default {}
    */
-  components?: Partial<MobileTimePickerSlotsComponent>;
+  components?: MobileTimePickerSlotsComponent;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  componentsProps?: Partial<MobileTimePickerSlotsComponentsProps>;
+  componentsProps?: MobileTimePickerSlotsComponentsProps;
 }
 
 type MobileTimePickerComponent = (<TDate>(
@@ -155,10 +155,6 @@ MobileTimePicker.propTypes = {
    * @default {}
    */
   componentsProps: PropTypes.object,
-  /**
-   * Props applied to the [`Dialog`](https://mui.com/material-ui/api/dialog/) element.
-   */
-  DialogProps: PropTypes.object,
   /**
    * If `true`, the picker and text field are disabled.
    * @default false

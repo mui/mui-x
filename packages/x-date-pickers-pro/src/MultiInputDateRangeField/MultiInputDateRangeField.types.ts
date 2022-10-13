@@ -3,18 +3,18 @@ import { SlotComponentProps } from '@mui/base/utils';
 import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
-import { UseSingleInputDateRangeFieldProps } from '../SingleInputDateRangeField';
+import { UseDateRangeFieldProps } from '../internal/models/dateRange';
 
 export interface UseMultiInputDateRangeFieldParams<TDate, TChildProps extends {}> {
-  sharedProps: UseMultiInputDateRangeFieldComponentProps<TDate, {}>;
+  sharedProps: Omit<TChildProps, keyof UseMultiInputDateRangeFieldProps<TDate>> &
+    UseMultiInputDateRangeFieldProps<TDate>;
   startInputProps: TChildProps;
   endInputProps: TChildProps;
   startInputRef?: React.Ref<HTMLInputElement>;
   endInputRef?: React.Ref<HTMLInputElement>;
 }
 
-export interface UseMultiInputDateRangeFieldProps<TDate>
-  extends UseSingleInputDateRangeFieldProps<TDate> {}
+export interface UseMultiInputDateRangeFieldProps<TDate> extends UseDateRangeFieldProps<TDate> {}
 
 export type UseMultiInputDateRangeFieldComponentProps<TDate, TChildProps extends {}> = Omit<
   TChildProps,

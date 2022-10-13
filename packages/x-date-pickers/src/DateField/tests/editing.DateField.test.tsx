@@ -523,7 +523,18 @@ describe('<DateField /> - Editing', () => {
         clipboardEvent.clipboardData = {
           getData: () => pastedValue,
         };
-        input.dispatchEvent(clipboardEvent);
+        // canContinue is `false` if default have been prevented
+        const canContinue = input.dispatchEvent(clipboardEvent);
+        if (!canContinue) {
+          return;
+        }
+
+        const prevValue = input.value;
+        const nextValue = `${prevValue.slice(
+          0,
+          input.selectionStart || 0,
+        )}${pastedValue}${prevValue.slice(input.selectionEnd || 0)}`;
+        fireEvent.change(input, { target: { value: nextValue } });
       });
     };
 
@@ -578,6 +589,48 @@ describe('<DateField /> - Editing', () => {
       userEvent.keyPress(input, { key: 'a', ctrlKey: true });
 
       firePasteEvent(input, '09/16/2022');
+      expect(onChange.callCount).to.equal(0);
+    });
+
+    it('should set the section when one section is selected, the pasted value has the correct type and no value is provided', () => {
+      const onChange = spy();
+      render(<DateField onChange={onChange} />);
+      const input = screen.getByRole('textbox');
+      clickOnInput(input, 1);
+
+      expectInputValue(input, 'MM / DD / YYYY');
+      firePasteEvent(input, '12');
+
+      expect(onChange.callCount).to.equal(0);
+      expectInputValue(input, '12 / DD / YYYY');
+    });
+
+    it('should set the section when one section is selected, the pasted value has the correct type and value is provided', () => {
+      const onChange = spy();
+      render(
+        <DateField onChange={onChange} defaultValue={adapterToUse.date(new Date(2018, 0, 13))} />,
+      );
+      const input = screen.getByRole('textbox');
+      clickOnInput(input, 1);
+
+      expectInputValue(input, '01 / 13 / 2018');
+      firePasteEvent(input, '12');
+      expectInputValue(input, '12 / 13 / 2018');
+      expect(onChange.callCount).to.equal(1);
+      expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2018, 11, 13));
+    });
+
+    it('should not update the section when one section is selected and the pasted value has incorrect type', () => {
+      const onChange = spy();
+      render(
+        <DateField onChange={onChange} defaultValue={adapterToUse.date(new Date(2018, 0, 13))} />,
+      );
+      const input = screen.getByRole('textbox');
+      clickOnInput(input, 1);
+
+      expectInputValue(input, '01 / 13 / 2018');
+      firePasteEvent(input, 'Jun');
+      expectInputValue(input, '01 / 13 / 2018');
       expect(onChange.callCount).to.equal(0);
     });
   });

@@ -4,7 +4,7 @@ import { spy } from 'sinon';
 import TextField from '@mui/material/TextField';
 import { fireEvent, screen, userEvent } from '@mui/monorepo/test/utils';
 import { PickersDay } from '@mui/x-date-pickers/PickersDay';
-import { CalendarPickerSkeleton } from '@mui/x-date-pickers/CalendarPickerSkeleton';
+import { DayCalendarSkeleton } from '@mui/x-date-pickers/DayCalendarSkeleton';
 import { MobileDatePicker } from '@mui/x-date-pickers/MobileDatePicker';
 import {
   createPickerRenderer,
@@ -13,14 +13,22 @@ import {
   withPickerControls,
   openPicker,
 } from 'test/utils/pickers-utils';
+import describeValidation from '@mui/x-date-pickers/tests/describeValidation';
 
 const WrappedMobileDatePicker = withPickerControls(MobileDatePicker)({
-  DialogProps: { TransitionComponent: FakeTransitionComponent },
+  components: { MobileTransition: FakeTransitionComponent },
   renderInput: (params) => <TextField {...params} />,
 });
 
 describe('<MobileDatePicker />', () => {
-  const { clock, render } = createPickerRenderer({ clock: 'fake', clockConfig: new Date() });
+  const { render, clock } = createPickerRenderer({ clock: 'fake', clockConfig: new Date() });
+
+  describeValidation(MobileDatePicker, () => ({
+    render,
+    clock,
+    views: ['year', 'month', 'day'],
+    isLegacyPicker: true,
+  }));
 
   it('allows to change only year', () => {
     const onChangeMock = spy();
@@ -136,7 +144,7 @@ describe('<MobileDatePicker />', () => {
     render(
       <MobileDatePicker
         loading
-        renderLoading={() => <CalendarPickerSkeleton data-testid="custom-loading" />}
+        renderLoading={() => <DayCalendarSkeleton data-testid="custom-loading" />}
         open
         onChange={() => {}}
         renderInput={(params) => <TextField {...params} />}
@@ -198,12 +206,10 @@ describe('<MobileDatePicker />', () => {
     const onCloseMock = spy();
     const handleChange = spy();
     render(
-      <MobileDatePicker
-        renderInput={(params) => <TextField {...params} />}
+      <WrappedMobileDatePicker
         onClose={onCloseMock}
         onChange={handleChange}
-        value={adapterToUse.date(new Date(2018, 0, 1))}
-        DialogProps={{ TransitionComponent: FakeTransitionComponent }}
+        initialValue={adapterToUse.date(new Date(2018, 0, 1))}
         componentsProps={{ actionBar: { actions: ['today'] } }}
       />,
     );
