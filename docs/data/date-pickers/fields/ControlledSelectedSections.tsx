@@ -3,11 +3,8 @@ import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { MuiDateSectionName } from '@mui/x-date-pickers';
-import {
-  Unstable_DateField as DateField,
-  FieldSelectedSections,
-} from '@mui/x-date-pickers/DateField';
+import { MuiDateSectionName, FieldSelectedSections } from '@mui/x-date-pickers';
+import { Unstable_DateField as DateField } from '@mui/x-date-pickers/DateField';
 
 export default function ControlledSelectedSections() {
   const [selectedSections, setSelectedSections] =
