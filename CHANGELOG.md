@@ -9,7 +9,18 @@ _Oct 13, 2022_
 
 We'd like to offer a big thanks to the 8 contributors who made this release possible. Here are some highlights ✨:
 
-- 🚀 Simplify `useGridApiContext` and `useGridApiRef` type overrides (#6423) @cherniavskii
+- ⌚️ New components to edit date and time with <kbd>keyboard</kbd>—without using any modal or dropdown UI.
+  Please check out our [documentation](https://next.mui.com/x/react-date-pickers/fields/) to discover those new components.
+  - [`DateField`](https://next.mui.com/x/react-date-pickers/date-field/) to edit date
+  - [`TimeField`](https://next.mui.com/x/react-date-pickers/time-field/)  to edit time
+  - [`DateTimeField`](https://next.mui.com/x/react-date-pickers/date-time-field/)  to edit date and time
+  - [`MultiInputDateRangeField` / `SingleInputDateRangeField`](https://next.mui.com/x/react-date-pickers/date-range-field/) to edit date range
+  - [`MultiInputTimeRangeField`](https://next.mui.com/x/react-date-pickers/time-range-field/) to edit time range with two inputs
+  - [`MultiInputDateTimeRangeField`](https://next.mui.com/x/react-date-pickers/date-time-range-field/) to edit date and time range with two inputs
+  
+  ⚠️ These components are unstable.
+  They might receive breaking changes on their props to have the best components possible by the time of the stable release.
+
 - 📝 Allow to limit to one filter per column for `DataGridPro` and `DataGridPremium` (#6333) @MBilalShafi
 - 🎁 Support pasting in pickers @flaviendelangle
 - 📚 Documentation improvements
@@ -17,6 +28,29 @@ We'd like to offer a big thanks to the 8 contributors who made this release poss
 
 ### `@mui/x-data-grid@v6.0.0-alpha.3` / `@mui/x-data-grid-pro@v6.0.0-alpha.3` / `@mui/x-data-grid-premium@v6.0.0-alpha.3`
 
+#### Breaking changes
+
+- [DataGrid] Remove legacy editing API
+
+  The editing API that is enabled by default was replaced with a new API that contains better support for server-side persistence, validation and customization. This new editing feature was already available in v5 under the `newEditingApi` experimental flag. In v6, this flag can be removed.
+
+  ```diff
+   <DataGrid
+  -  experimentalFeatures={{ newEditingApi: true }}
+   />
+  ```
+
+  For users that didn't migrate to the new editing API in v5, additional work may be needed because the new API is not equivalent to the legacy API. Although, some migration steps are available to help in this task.
+
+  - The `editCellPropsChange` event was removed. If you still need it please file a new issue so we can propose an alternative.
+  - The `cellEditCommit` event was removed and the `processRowUpdate` prop can be used in place. More information, check the [docs](https://mui.com/x/react-data-grid/editing/#persistence) section about the topic.
+  - The `editRowsModel` and `onEditRowsModelChange` props were removed. The [`cellModesModel`](https://mui.com/x/react-data-grid/editing/#controlled-mode) or [`rowModesModel`](https://mui.com/x/react-data-grid/editing/#controlled-mode) props can be used to achieve the same goal.
+  - The following API methods were removed:
+    - Use `apiRef.current.stopCellEditMode` to replace `apiRef.current.commitCellChange`
+    - Use `apiRef.current.startCellEditMode` to replace `apiRef.current.setCellMode(id, field, 'edit')`
+    - Use `apiRef.current.stopRowEditMode` to replace `apiRef.current.commitRowChange`
+    - Use `apiRef.current.startRowMode` to replace `apiRef.current.setRowMode(id, 'edit')`
+    - Use the [`cellModesModel`](https://mui.com/x/react-data-grid/editing/#controlled-mode) or [`rowModesModel`](https://mui.com/x/react-data-grid/editing/#controlled-mode) props to replace `apiRef.current.setEditRowsModel`
 #### Changes
 
 - [DataGrid] Fix start edit mode with printable character in React 18 (#6257) @m4theushw
@@ -29,11 +63,11 @@ We'd like to offer a big thanks to the 8 contributors who made this release poss
 
 #### Breaking changes
 
-- All the props used by the mobile and desktop wrappers to override components or components props has been replaced by component slots. You can find more information about this pattern in the [MUI Base documentation](https://mui.com/base/getting-started/usage/#shared-props).
+- All the props used by the mobile and desktop wrappers to override components or components' props have been replaced by component slots. You can find more information about this pattern in the [MUI Base documentation](https://mui.com/base/getting-started/usage/#shared-props).
 
   Some of the names have also been prefixed by `desktop` when it was unclear that the behavior was only applied on the desktop version of the pickers (or the responsive version when used on a desktop).
 
-  The `DialogProps` prop has been replaced by a `dialog` component props slot on a responsive an mobile pickers:
+  The `DialogProps` prop has been replaced by a `dialog` component props slot on responsive and mobile pickers:
 
   ```diff
   // Same on MobileDatePicker, DateTimePicker, MobileDateTimePicker, 
@@ -145,6 +179,7 @@ We'd like to offer a big thanks to the 8 contributors who made this release poss
 
 - [DatePicker] Allows to fix the number of week displayed (#6299) @alexfauquette
 - [DateRangePicker] Fix calendar day outside of month layout shifting on hover (#6448) @alexfauquette
+- [fields] New components: `MultiInputDateTimeRangePicker` and `MultiInputTimeRangePicker` (#6392) @alexfauquette
 - [fields] Prepare the field exports for the public release (#6467) @flaviendelangle
 - [fields] Support paste in single section (#6422) @alexfauquette
 - [pickers] Add field placeholders to the locale (#6337) @flaviendelangle
@@ -171,7 +206,6 @@ We'd like to offer a big thanks to the 8 contributors who made this release poss
 - [core] Remove unused `react-text-mask` package (#6408) @LukasTy
 - [core] Send explicit warning when dayjs locale is not found (#6424) @alexfauquette
 - [core] Test validation on textfield and date views (#6265) @alexfauquette
-- New components: `MultiInputDateTimeRangePicker` and `MultiInputTimeRangePicker` (#6392) @alexfauquette
 - [test] Sync comment with monorepo @oliviertassinari
 
 ## v6.0.0-alpha.2
