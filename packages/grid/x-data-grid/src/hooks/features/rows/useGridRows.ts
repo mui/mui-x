@@ -160,16 +160,18 @@ export const useGridRows = (
   const setRows = React.useCallback<GridRowApi['setRows']>(
     (rows) => {
       logger.debug(`Updating all rows, new length ${rows.length}`);
-      throttledRowsChange({
-        cache: createRowsInternalCache({
-          rows,
-          getRowId: props.getRowId,
-          loading: props.loading,
-        }),
-        throttle: true,
+
+      const cache = createRowsInternalCache({
+        rows,
+        getRowId: props.getRowId,
+        loading: props.loading,
       });
+      const prevCache = apiRef.current.unstable_caches.rows;
+      cache.rowsBeforePartialUpdates = prevCache.rowsBeforePartialUpdates;
+
+      throttledRowsChange({ cache, throttle: true });
     },
-    [logger, props.getRowId, props.loading, throttledRowsChange],
+    [logger, props.getRowId, props.loading, throttledRowsChange, apiRef],
   );
 
   const updateRows = React.useCallback<GridRowApi['updateRows']>(
