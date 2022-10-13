@@ -255,7 +255,7 @@ const pages: MuiPage[] = [
           },
           {
             pathname: '/x/migration/migration-data-grid-v4',
-            title: 'Migration from v4 to v5 (data grid)',
+            title: 'Migration from v4 to v5 (Data Grid)',
           },
         ],
       },
