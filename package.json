@@ -13,6 +13,7 @@
     "docs:importDocsStatic": "node scripts/importDocsStatic.js",
     "docs:size-why": "cross-env DOCS_STATS_ENABLED=true yarn docs:build",
     "docs:deploy": "yarn workspace docs deploy",
+    "docs:link-check": "yarn workspace docs link-check",
     "deduplicate": "node scripts/deduplicate.js",
     "dataset:file-tree": "babel-node -x .ts ./scripts/treeDataFromFileTree.ts",
     "l10n": "babel-node -x .ts ./scripts/l10n.ts",
