@@ -22,7 +22,6 @@ We'd like to offer a big thanks to the 8 contributors who made this release poss
   They might receive breaking changes on their props to have the best components possible by the time of the stable release.
 
 - 📝 Allow to limit to one filter per column for `DataGridPro` and `DataGridPremium` (#6333) @MBilalShafi
-- 🎁 Support pasting in pickers @flaviendelangle
 - 📚 Documentation improvements
 - 🐞 Bugfixes
 
@@ -43,14 +42,14 @@ We'd like to offer a big thanks to the 8 contributors who made this release poss
   For users that didn't migrate to the new editing API in v5, additional work may be needed because the new API is not equivalent to the legacy API. Although, some migration steps are available to help in this task.
 
   - The `editCellPropsChange` event was removed. If you still need it please file a new issue so we can propose an alternative.
-  - The `cellEditCommit` event was removed and the `processRowUpdate` prop can be used in place. More information, check the [docs](https://mui.com/x/react-data-grid/editing/#persistence) section about the topic.
-  - The `editRowsModel` and `onEditRowsModelChange` props were removed. The [`cellModesModel`](https://mui.com/x/react-data-grid/editing/#controlled-mode) or [`rowModesModel`](https://mui.com/x/react-data-grid/editing/#controlled-mode) props can be used to achieve the same goal.
+  - The `cellEditCommit` event was removed and the `processRowUpdate` prop can be used in place. More information, check the [docs](https://next.mui.com/x/react-data-grid/editing/#persistence) section about the topic.
+  - The `editRowsModel` and `onEditRowsModelChange` props were removed. The [`cellModesModel`](https://next.mui.com/x/react-data-grid/editing/#controlled-mode) or [`rowModesModel`](https://next.mui.com/x/react-data-grid/editing/#controlled-mode) props can be used to achieve the same goal.
   - The following API methods were removed:
     - Use `apiRef.current.stopCellEditMode` to replace `apiRef.current.commitCellChange`
     - Use `apiRef.current.startCellEditMode` to replace `apiRef.current.setCellMode(id, field, 'edit')`
     - Use `apiRef.current.stopRowEditMode` to replace `apiRef.current.commitRowChange`
     - Use `apiRef.current.startRowMode` to replace `apiRef.current.setRowMode(id, 'edit')`
-    - Use the [`cellModesModel`](https://mui.com/x/react-data-grid/editing/#controlled-mode) or [`rowModesModel`](https://mui.com/x/react-data-grid/editing/#controlled-mode) props to replace `apiRef.current.setEditRowsModel`
+    - Use the [`cellModesModel`](https://next.mui.com/x/react-data-grid/editing/#controlled-mode) or [`rowModesModel`](https://next.mui.com/x/react-data-grid/editing/#controlled-mode) props to replace `apiRef.current.setEditRowsModel`
 #### Changes
 
 - [DataGrid] Fix start edit mode with printable character in React 18 (#6257) @m4theushw
@@ -89,7 +88,7 @@ We'd like to offer a big thanks to the 8 contributors who made this release poss
   />
   ```
 
-  The `PopperProps` prop has been replaced by a `popper` component  props slot on all responsive and desktop pickers:
+  The `PopperProps` prop has been replaced by a `popper` component props slot on all responsive and desktop pickers:
 
   ```diff
   // Same on DesktopDatePicker, DateTimePicker, DesktopDateTimePicker, 
@@ -195,6 +194,7 @@ We'd like to offer a big thanks to the 8 contributors who made this release poss
 - [docs] Create first publishable version of the field doc (#6323) @flaviendelangle
 - [docs] Fix trailing spaces in the readme @oliviertassinari
 - [docs] New page for the pickers: Validation (#6064) @flaviendelangle
+- [docs] Organize migration pages (#6480) @flaviendelangle
 
 ### Core
 
