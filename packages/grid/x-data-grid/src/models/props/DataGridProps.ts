@@ -143,6 +143,11 @@ export interface DataGridPropsWithDefaultValues {
    */
   rowBuffer: number;
   /**
+   * If `false`, the row selection mode is disabled.
+   * @default true
+   */
+  rowSelection: boolean;
+  /**
    * Number of rows from the `rowBuffer` that can be visible before a new slice is rendered.
    * @default 3
    */

@@ -37,6 +37,7 @@ export const DATA_GRID_PROPS_DEFAULT_VALUES: DataGridPropsWithDefaultValues = {
   rowBuffer: 3,
   columnThreshold: 3,
   rowThreshold: 3,
+  rowSelection: true,
   density: GridDensityTypes.Standard,
   disableExtendRowFullWidth: false,
   disableColumnFilter: false,

@@ -93,6 +93,7 @@
     "rowHeight": "Set the height in pixel of a row in the grid.",
     "rowModesModel": "Controls the modes of the rows.",
     "rows": "Set of rows of type GridRowsProp.",
+    "rowSelection": "If <code>false</code>, the row selection mode is disabled.",
     "rowSpacingType": "Sets the type of space between rows added by <code>getRowSpacing</code>.",
     "rowsPerPageOptions": "Select the pageSize dynamically using the component UI.",
     "rowThreshold": "Number of rows from the <code>rowBuffer</code> that can be visible before a new slice is rendered.",

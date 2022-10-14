@@ -44,10 +44,10 @@ const getSelectionModelPropValue = (
 };
 
 export const selectionStateInitializer: GridStateInitializer<
-  Pick<DataGridProcessedProps, 'selectionModel'>
+  Pick<DataGridProcessedProps, 'selectionModel' | 'rowSelection'>
 > = (state, props) => ({
   ...state,
-  selection: getSelectionModelPropValue(props.selectionModel) ?? [],
+  selection: props.rowSelection ? getSelectionModelPropValue(props.selectionModel) ?? [] : [],
 });
 
 /**
@@ -71,9 +71,18 @@ export const useGridSelection = (
     | 'paginationMode'
     | 'classes'
     | 'keepNonExistentRowsSelected'
+    | 'rowSelection'
   >,
 ): void => {
   const logger = useGridLogger(apiRef, 'useGridSelection');
+
+  const runIfRowSelectionIsEnabled =
+    <Args extends any[]>(callback: (...args: Args) => void) =>
+    (...args: Args) => {
+      if (props.rowSelection) {
+        callback(...args);
+      }
+    };
 
   const propSelectionModel = React.useMemo(() => {
     return getSelectionModelPropValue(
@@ -485,29 +494,47 @@ export const useGridSelection = (
     [apiRef, handleSingleRowSelection, selectRows, visibleRows.rows, canHaveMultipleSelection],
   );
 
-  useGridApiEventHandler(apiRef, 'sortedRowsSet', removeOutdatedSelection);
-  useGridApiEventHandler(apiRef, 'cellClick', handleCellClick);
-  useGridApiEventHandler(apiRef, 'rowSelectionCheckboxChange', handleRowSelectionCheckboxChange);
+  useGridApiEventHandler(
+    apiRef,
+    'sortedRowsSet',
+    runIfRowSelectionIsEnabled(removeOutdatedSelection),
+  );
+  useGridApiEventHandler(apiRef, 'cellClick', runIfRowSelectionIsEnabled(handleCellClick));
+  useGridApiEventHandler(
+    apiRef,
+    'rowSelectionCheckboxChange',
+    runIfRowSelectionIsEnabled(handleRowSelectionCheckboxChange),
+  );
   useGridApiEventHandler(
     apiRef,
     'headerSelectionCheckboxChange',
     handleHeaderSelectionCheckboxChange,
   );
-  useGridApiEventHandler(apiRef, 'cellMouseDown', preventSelectionOnShift);
-  useGridApiEventHandler(apiRef, 'cellKeyDown', handleCellKeyDown);
+  useGridApiEventHandler(
+    apiRef,
+    'cellMouseDown',
+    runIfRowSelectionIsEnabled(preventSelectionOnShift),
+  );
+  useGridApiEventHandler(apiRef, 'cellKeyDown', runIfRowSelectionIsEnabled(handleCellKeyDown));
 
   /**
    * EFFECTS
    */
   React.useEffect(() => {
-    if (propSelectionModel !== undefined) {
+    if (propSelectionModel !== undefined && props.rowSelection) {
       apiRef.current.setSelectionModel(propSelectionModel);
     }
-  }, [apiRef, propSelectionModel]);
+  }, [apiRef, propSelectionModel, props.rowSelection]);
+
+  React.useEffect(() => {
+    if (!props.rowSelection) {
+      apiRef.current.setSelectionModel([]);
+    }
+  }, [apiRef, props.rowSelection]);
 
   const isStateControlled = propSelectionModel != null;
   React.useEffect(() => {
-    if (isStateControlled) {
+    if (isStateControlled || !props.rowSelection) {
       return;
     }
 
@@ -521,9 +548,13 @@ export const useGridSelection = (
         apiRef.current.setSelectionModel(newSelection);
       }
     }
-  }, [apiRef, isRowSelectable, isStateControlled]);
+  }, [apiRef, isRowSelectable, isStateControlled, props.rowSelection]);
 
   React.useEffect(() => {
+    if (!props.rowSelection) {
+      return;
+    }
+
     const currentSelection = gridSelectionStateSelector(apiRef.current.state);
 
     if (!canHaveMultipleSelection && currentSelection.length > 1) {
@@ -560,5 +591,6 @@ export const useGridSelection = (
     isRowSelectable,
     pagination,
     paginationMode,
+    props.rowSelection,
   ]);
 };

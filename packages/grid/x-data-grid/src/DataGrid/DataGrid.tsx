@@ -638,6 +638,11 @@ DataGridRaw.propTypes = {
    */
   rows: PropTypes.arrayOf(PropTypes.object).isRequired,
   /**
+   * If `false`, the row selection mode is disabled.
+   * @default true
+   */
+  rowSelection: PropTypes.bool,
+  /**
    * Sets the type of space between rows added by `getRowSpacing`.
    * @default "margin"
    */

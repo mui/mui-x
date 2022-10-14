@@ -798,6 +798,11 @@ DataGridProRaw.propTypes = {
    */
   rows: PropTypes.arrayOf(PropTypes.object).isRequired,
   /**
+   * If `false`, the row selection mode is disabled.
+   * @default true
+   */
+  rowSelection: PropTypes.bool,
+  /**
    * Loading rows can be processed on the server or client-side.
    * Set it to 'client' if you would like enable infnite loading.
    * Set it to 'server' if you would like to enable lazy loading.
