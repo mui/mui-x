@@ -1,5 +1,5 @@
 import { useUtils, useDefaultDates, applyDefaultDate } from '@mui/x-date-pickers/internals';
-import { useField } from '@mui/x-date-pickers/internals-fields';
+import { useField, UseFieldResponse } from '@mui/x-date-pickers/internals-fields';
 import {
   UseSingleInputDateRangeFieldDefaultizedProps,
   UseSingleInputDateRangeFieldParams,
@@ -11,7 +11,7 @@ import { dateRangeFieldValueManager } from '../internal/hooks/valueManager/dateR
 
 export const useDefaultizedDateRangeFieldProps = <TDate, AdditionalProps extends {}>(
   props: UseSingleInputDateRangeFieldProps<TDate>,
-): UseSingleInputDateRangeFieldDefaultizedProps<TDate> & AdditionalProps => {
+): UseSingleInputDateRangeFieldDefaultizedProps<TDate, AdditionalProps> => {
   const utils = useUtils<TDate>();
   const defaultDates = useDefaultDates<TDate>();
 
@@ -28,7 +28,7 @@ export const useDefaultizedDateRangeFieldProps = <TDate, AdditionalProps extends
 export const useSingleInputDateRangeField = <TDate, TChildProps extends {}>({
   props,
   inputRef,
-}: UseSingleInputDateRangeFieldParams<TDate, TChildProps>) => {
+}: UseSingleInputDateRangeFieldParams<TDate, TChildProps>): UseFieldResponse<TChildProps> => {
   const {
     value,
     defaultValue,
@@ -69,5 +69,5 @@ export const useSingleInputDateRangeField = <TDate, TChildProps extends {}>({
     fieldValueManager: dateRangeFieldValueManager,
     validator: validateDateRange,
     supportedDateSections: ['year', 'month', 'day'],
-  });
+  }) as any;
 };

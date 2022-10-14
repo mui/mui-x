@@ -69,5 +69,5 @@ export interface MultiInputTimeRangeFieldSlotsComponentsProps<TDate> {
   separator?: SlotComponentProps<typeof Typography, {}, MultiInputTimeRangeFieldOwnerState<TDate>>;
 }
 
-export type UseMultiInputTimeRangeFieldDefaultizedProps<TDate> =
-  UseTimeRangeFieldDefaultizedProps<TDate>;
+export type UseMultiInputTimeRangeFieldDefaultizedProps<TDate, AdditionalProps extends {}> =
+  UseTimeRangeFieldDefaultizedProps<TDate> & AdditionalProps;
