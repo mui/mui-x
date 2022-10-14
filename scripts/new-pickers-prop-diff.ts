@@ -20,14 +20,12 @@ const EXPECTED_DIFF: { [propKey: string]: string | ((pickerName: string) => stri
     getOpenDialogAriaText: 'replaced by each picker translation key',
 
     children: 'never used even in v5',
-    inputRef: (componentName) =>
-      componentName.includes('Range') ? 'never used even in v5' : undefined,
-    label: (componentName) =>
-      componentName.includes('Range') ? 'never used even in v5' : undefined,
-    onViewChange: (componentName) =>
-      componentName.includes('Range') ? 'never used even in v5' : undefined,
-    'components.OpenPickerIcon': (componentName) =>
-      componentName.includes('Range') ? 'never used even in v5' : undefined,
+    inputRef: (pickerName) => (pickerName.includes('Range') ? 'never used even in v5' : undefined),
+    label: (pickerName) => (pickerName.includes('Range') ? 'never used even in v5' : undefined),
+    onViewChange: (pickerName) =>
+      pickerName.includes('Range') ? 'never used even in v5' : undefined,
+    'components.OpenPickerIcon': (pickerName) =>
+      pickerName.includes('Range') || pickerName.includes('Mobile') ? 'never used even in v5' : undefined,
   };
 
 const getExpectedDiffMessage = (pickerName: string, propKey: string) => {
