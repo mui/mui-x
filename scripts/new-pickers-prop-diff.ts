@@ -49,8 +49,26 @@ const main = async () => {
     const properties = project.checker.getDeclaredTypeOfSymbol(symbol).getProperties();
     const props = {};
 
+    const getSubProperties = (property: ts.Symbol) => {
+      const declaration = property.declarations?.[0];
+      if (declaration && ts.isPropertySignature(declaration) && declaration.type) {
+        const slots = project.checker.getTypeFromTypeNode(declaration.type).getProperties();
+        slots.forEach((slot) => {
+          props[`${property.escapedName!}.${slot.escapedName!}`] = true;
+        });
+      }
+    };
+
     properties.forEach((property) => {
       props[property.escapedName!] = true;
+
+      if (property.escapedName === 'components') {
+        getSubProperties(property);
+      }
+
+      if (property.escapedName === 'componentsProps') {
+        getSubProperties(property);
+      }
     });
 
     return props;
@@ -99,17 +117,17 @@ const main = async () => {
 
       if (missingProps.length > 0) {
         message += `\n#### Missing props:\n${missingProps
-          .map((propKey) => `- ${propKey}`)
+          .map((propKey) => `- \`${propKey}\``)
           .join('\n')}\n`;
       }
       if (removedProps.length > 0) {
         message += `\n#### Removed props:\n${removedProps
-          .map((propKey) => `- ${propKey} (${EXPECTED_DIFF[propKey]})`)
+          .map((propKey) => `- \`${propKey}\` (${EXPECTED_DIFF[propKey]})`)
           .join('\n')}\n`;
       }
       if (addedProps.length > 0) {
         message += `\n#### Added props:\n${addedProps
-          .map((propKey) => `- ${propKey}`)
+          .map((propKey) => `- \`${propKey}\``)
           .join('\n')}\n`;
       }
     }
