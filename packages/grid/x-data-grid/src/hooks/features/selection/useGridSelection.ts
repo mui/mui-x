@@ -147,11 +147,14 @@ export const useGridSelection = (
       const currentModel = gridSelectionStateSelector(apiRef.current.state);
       if (currentModel !== model) {
         logger.debug(`Setting selection model`);
-        apiRef.current.setState((state) => ({ ...state, selection: model }));
+        apiRef.current.setState((state) => ({
+          ...state,
+          selection: props.rowSelection ? model : [],
+        }));
         apiRef.current.forceUpdate();
       }
     },
-    [apiRef, logger],
+    [apiRef, logger, props.rowSelection],
   );
 
   const isRowSelected = React.useCallback<GridSelectionApi['isRowSelected']>(
@@ -521,7 +524,7 @@ export const useGridSelection = (
    * EFFECTS
    */
   React.useEffect(() => {
-    if (propSelectionModel !== undefined && props.rowSelection) {
+    if (propSelectionModel !== undefined) {
       apiRef.current.setSelectionModel(propSelectionModel);
     }
   }, [apiRef, propSelectionModel, props.rowSelection]);
