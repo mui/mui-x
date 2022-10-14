@@ -37,12 +37,12 @@ export interface InternalDesktopWrapperProps<TDate>
    * Overrideable components.
    * @default {}
    */
-  components?: Partial<DesktopWrapperSlotsComponent>;
+  components?: DesktopWrapperSlotsComponent;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  componentsProps?: Partial<DesktopWrapperSlotsComponentsProps>;
+  componentsProps?: DesktopWrapperSlotsComponentsProps;
 }
 
 export function DesktopWrapper<TDate>(props: InternalDesktopWrapperProps<TDate>) {

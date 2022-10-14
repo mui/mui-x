@@ -11,17 +11,17 @@ import {
   TimeRangeComponentValidationProps,
   validateTimeRange,
 } from '../validation/useTimeRangeValidation';
-import {
+import type {
   UseMultiInputTimeRangeFieldDefaultizedProps,
   UseMultiInputTimeRangeFieldParams,
   UseMultiInputTimeRangeFieldProps,
 } from '../../../MultiInputTimeRangeField/MultiInputTimeRangeField.types';
 import { dateRangePickerValueManager } from '../../../DateRangePicker/shared';
-import { timeRangeFieldValueManager } from '../valueManager/timeRangeValueManager';
+import type { UseMultiInputRangeFieldResponse } from './useMultiInputRangeField.types';
 
 export const useDefaultizedTimeRangeFieldProps = <TDate, AdditionalProps extends {}>(
   props: UseMultiInputTimeRangeFieldProps<TDate>,
-): UseMultiInputTimeRangeFieldDefaultizedProps<TDate> & AdditionalProps => {
+): UseMultiInputTimeRangeFieldDefaultizedProps<TDate, AdditionalProps> => {
   const utils = useUtils<TDate>();
 
   const ampm = props.ampm ?? utils.is12HourCycleInCurrentLocale();
@@ -43,7 +43,10 @@ export const useMultiInputTimeRangeField = <TDate, TChildProps extends {}>({
   endInputProps: inEndInputProps,
   startInputRef,
   endInputRef,
-}: UseMultiInputTimeRangeFieldParams<TDate, TChildProps>) => {
+}: UseMultiInputTimeRangeFieldParams<
+  TDate,
+  TChildProps
+>): UseMultiInputRangeFieldResponse<TChildProps> => {
   const sharedProps = useDefaultizedTimeRangeFieldProps<TDate, TChildProps>(inSharedProps);
 
   const { value: valueProp, defaultValue, format, onChange } = sharedProps;
@@ -102,19 +105,15 @@ export const useMultiInputTimeRangeField = <TDate, TChildProps extends {}>({
     TimeRangeValidationError,
     TimeRangeComponentValidationProps
   >({ ...sharedProps, value }, validateTimeRange, () => true);
-  const inputError = React.useMemo(
-    () => timeRangeFieldValueManager.hasError(validationError),
-    [validationError],
-  );
 
   const startDateResponse = {
     ...rawStartDateResponse,
-    error: inputError,
+    error: !!validationError[0],
   };
 
   const endDateResponse = {
     ...rawEndDateResponse,
-    error: inputError,
+    error: !!validationError[1],
   };
 
   return { startDate: startDateResponse, endDate: endDateResponse };
