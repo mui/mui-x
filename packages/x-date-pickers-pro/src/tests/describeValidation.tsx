@@ -13,6 +13,9 @@ const defaultAvailableProps: ValidationProps[] = [
   // date range
   'minDate',
   'maxDate',
+  // time range
+  'minDate',
+  'maxDate',
   // specific date
   'shouldDisableDate',
 ];
