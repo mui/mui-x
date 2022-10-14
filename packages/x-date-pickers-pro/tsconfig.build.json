@@ -15,5 +15,5 @@
     { "path": "../x-license-pro/tsconfig.build.json" }
   ],
   "include": ["src/**/*.ts*"],
-  "exclude": ["src/**/*.spec.ts*", "src/**/*.test.ts*"]
+  "exclude": ["src/**/*.spec.ts*", "src/**/*.test.ts*", "src/tests/**/*"]
 }
