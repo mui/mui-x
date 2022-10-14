@@ -6,7 +6,6 @@ import {
   splitFormatIntoSections,
   addPositionPropertiesToSections,
   createDateStrFromSections,
-  UseFieldResponse,
 } from '../internals/hooks/useField';
 import {
   UseDateFieldProps,
@@ -67,7 +66,7 @@ const useDefaultizedDateField = <TDate, AdditionalProps extends {}>(
 export const useDateField = <TDate, TChildProps extends {}>({
   props,
   inputRef,
-}: UseDateFieldParams<TDate, TChildProps>): UseFieldResponse<TChildProps> => {
+}: UseDateFieldParams<TDate, TChildProps>) => {
   const {
     value,
     defaultValue,
@@ -89,7 +88,7 @@ export const useDateField = <TDate, TChildProps extends {}>({
 
   return useField({
     inputRef,
-    forwardedProps: other,
+    forwardedProps: other as unknown as TChildProps,
     internalProps: {
       value,
       defaultValue,
@@ -106,11 +105,10 @@ export const useDateField = <TDate, TChildProps extends {}>({
       disablePast,
       selectedSections,
       onSelectedSectionsChange,
-      inputRef,
     },
     valueManager: datePickerValueManager,
     fieldValueManager: dateFieldValueManager,
     validator: validateDate,
     supportedDateSections: ['year', 'month', 'day'],
-  }) as any;
+  });
 };

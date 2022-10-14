@@ -1,10 +1,5 @@
 import { timePickerValueManager } from '../TimePicker/shared';
-import {
-  useField,
-  FieldValueManager,
-  FieldSection,
-  UseFieldResponse,
-} from '../internals/hooks/useField';
+import { useField, FieldValueManager, FieldSection } from '../internals/hooks/useField';
 import {
   UseTimeFieldProps,
   UseTimeFieldDefaultizedProps,
@@ -43,7 +38,7 @@ const useDefaultizedTimeField = <TDate, AdditionalProps extends {}>(
 export const useTimeField = <TDate, TChildProps extends {}>({
   props,
   inputRef,
-}: UseTimeFieldParams<TDate, TChildProps>): UseFieldResponse<TChildProps> => {
+}: UseTimeFieldParams<TDate, TChildProps>) => {
   const {
     value,
     defaultValue,
@@ -66,7 +61,7 @@ export const useTimeField = <TDate, TChildProps extends {}>({
 
   return useField({
     inputRef,
-    forwardedProps: other,
+    forwardedProps: other as unknown as TChildProps,
     internalProps: {
       value,
       defaultValue,
@@ -83,12 +78,11 @@ export const useTimeField = <TDate, TChildProps extends {}>({
       disableIgnoringDatePartForTimeValidation,
       selectedSections,
       onSelectedSectionsChange,
-      inputRef,
       ampm,
     },
     valueManager: timePickerValueManager,
     fieldValueManager: timeFieldValueManager,
     validator: validateTime,
     supportedDateSections: ['hour', 'minute', 'second', 'meridiem'],
-  }) as any;
+  });
 };

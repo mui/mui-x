@@ -1,10 +1,5 @@
 import { dateTimePickerValueManager } from '../DateTimePicker/shared';
-import {
-  useField,
-  FieldValueManager,
-  FieldSection,
-  UseFieldResponse,
-} from '../internals/hooks/useField';
+import { useField, FieldValueManager, FieldSection } from '../internals/hooks/useField';
 import {
   UseDateTimeFieldProps,
   UseDateTimeFieldDefaultizedProps,
@@ -57,7 +52,7 @@ const useDefaultizedDateTimeField = <TDate, AdditionalProps extends {}>(
 export const useDateTimeField = <TDate, TChildProps extends {}>({
   props,
   inputRef,
-}: UseDateTimeFieldParams<TDate, TChildProps>): UseFieldResponse<TChildProps> => {
+}: UseDateTimeFieldParams<TDate, TChildProps>) => {
   const {
     value,
     defaultValue,
@@ -87,7 +82,7 @@ export const useDateTimeField = <TDate, TChildProps extends {}>({
 
   return useField({
     inputRef,
-    forwardedProps: other,
+    forwardedProps: other as unknown as TChildProps,
     internalProps: {
       value,
       defaultValue,
@@ -109,12 +104,11 @@ export const useDateTimeField = <TDate, TChildProps extends {}>({
       disableIgnoringDatePartForTimeValidation,
       selectedSections,
       onSelectedSectionsChange,
-      inputRef,
       ampm,
     },
     valueManager: dateTimePickerValueManager,
     fieldValueManager: dateTimeFieldValueManager,
     validator: validateDateTime,
     supportedDateSections: ['year', 'month', 'day', 'hour', 'minute', 'second', 'meridiem'],
-  }) as any;
+  });
 };
