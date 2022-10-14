@@ -51,6 +51,8 @@ export const usePicker = <
       wrapperVariant,
       disabled: props.disabled,
       readOnly: props.readOnly,
+      showToolbar: props.showToolbar,
+      hideTabs: props.hideTabs,
       ...pickerValueResponse.layoutProps,
       ...pickerViewsResponse.layoutProps,
     },

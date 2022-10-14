@@ -54,4 +54,9 @@ export interface BasePickerProps2<TValue, TDate, TView extends CalendarOrClockPi
    * Force rendering in particular orientation.
    */
   orientation?: 'portrait' | 'landscape';
+  /**
+   * If `true`, the toolbar will be visible.
+   * @default `true` for mobile, `false` for desktop
+   */
+  showToolbar?: boolean;
 }

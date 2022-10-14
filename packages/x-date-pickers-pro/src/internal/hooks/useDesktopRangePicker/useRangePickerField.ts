@@ -103,8 +103,5 @@ export const useRangePickerField = <TDate, TView extends CalendarOrClockPickerVi
     ownerState: {},
   });
 
-  const inputProps = ({ position }: { position: 'start' | 'end' }) =>
-    position === 'start' ? startInputProps : endInputProps;
-
-  return { inputProps };
+  return { startInputProps, endInputProps };
 };

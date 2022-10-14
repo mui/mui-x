@@ -30,9 +30,9 @@
     "open": "Control the popup or dialog open state.",
     "openTo": "First view to show.",
     "orientation": "Force rendering in particular orientation.",
-    "readOnly": "Make picker read only.",
     "selectedSections": "The currently selected sections. This prop accept four formats: 1. If a number is provided, the section at this index will be selected. 2. If an object with a <code>startIndex</code> and <code>endIndex</code> properties are provided, the sections between those two indexes will be selected. 3. If a string of type <code>MuiDateSectionName</code> is provided, the first section with that name will be selected. 4. If <code>null</code> is provided, no section will be selected If not provided, the selected sections will be handled internally.",
     "shouldDisableTime": "Dynamically check if time is disabled or not. If returns <code>false</code> appropriate time point will ot be acceptable.<br><br><strong>Signature:</strong><br><code>function(timeValue: number, view: ClockPickerView) =&gt; boolean</code><br><em>timeValue:</em> The value to check.<br><em>view:</em> The clock type of the timeValue.<br> <em>returns</em> (boolean): Returns <code>true</code> if the time should be disabled",
+    "showToolbar": "If <code>true</code>, the toolbar will be visible.",
     "value": "The value of the picker.",
     "views": "Array of views to show."
   },

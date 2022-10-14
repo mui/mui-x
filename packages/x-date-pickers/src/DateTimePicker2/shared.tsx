@@ -94,6 +94,11 @@ export interface BaseDateTimePicker2Props<TDate>
    */
   maxDateTime?: TDate;
   /**
+   * Toggles visibility of date time switching tabs
+   * @default `false` for mobile, `true` for desktop
+   */
+  hideTabs?: boolean;
+  /**
    * Overrideable components.
    * @default {}
    */

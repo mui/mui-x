@@ -133,6 +133,7 @@ MobileDatePicker2.propTypes = {
    * @default undefined
    */
   fixedWeekNumber: PropTypes.number,
+  hideTabs: PropTypes.bool,
   /**
    * Format of the date when rendered in the input(s).
    */
@@ -239,10 +240,6 @@ MobileDatePicker2.propTypes = {
    * Force rendering in particular orientation.
    */
   orientation: PropTypes.oneOf(['landscape', 'portrait']),
-  /**
-   * Make picker read only.
-   * @default false
-   */
   readOnly: PropTypes.bool,
   /**
    * Disable heavy animations.
@@ -300,6 +297,11 @@ MobileDatePicker2.propTypes = {
    * @default false
    */
   showDaysOutsideCurrentMonth: PropTypes.bool,
+  /**
+   * If `true`, the toolbar will be visible.
+   * @default `true` for mobile, `false` for desktop
+   */
+  showToolbar: PropTypes.bool,
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */

@@ -132,6 +132,7 @@ DesktopTimePicker2.propTypes = {
    * @default false
    */
   disablePast: PropTypes.bool,
+  hideTabs: PropTypes.bool,
   /**
    * Format of the date when rendered in the input(s).
    */
@@ -226,10 +227,6 @@ DesktopTimePicker2.propTypes = {
    * Force rendering in particular orientation.
    */
   orientation: PropTypes.oneOf(['landscape', 'portrait']),
-  /**
-   * Make picker read only.
-   * @default false
-   */
   readOnly: PropTypes.bool,
   /**
    * The currently selected sections.
@@ -256,6 +253,11 @@ DesktopTimePicker2.propTypes = {
    * @returns {boolean} Returns `true` if the time should be disabled
    */
   shouldDisableTime: PropTypes.func,
+  /**
+   * If `true`, the toolbar will be visible.
+   * @default `true` for mobile, `false` for desktop
+   */
+  showToolbar: PropTypes.bool,
   /**
    * The value of the picker.
    */

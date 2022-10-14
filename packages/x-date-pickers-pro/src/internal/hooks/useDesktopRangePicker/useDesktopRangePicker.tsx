@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useSlotProps } from '@mui/base/utils';
+import { resolveComponentProps, useSlotProps } from '@mui/base/utils';
 import { useLicenseVerifier } from '@mui/x-license-pro';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import {
@@ -8,10 +8,13 @@ import {
   usePicker,
   WrapperVariantContext,
   PickersPopper,
+  PickerViewLayout,
 } from '@mui/x-date-pickers/internals';
 import { UseDesktopRangePickerParams } from './useDesktopRangePicker.types';
 import { useRangePickerField } from './useRangePickerField';
 import { getReleaseInfo } from '../../utils/releaseInfo';
+import { DateRange } from '../../models/range';
+import { BaseMultiInputFieldProps } from '../../models/fields';
 
 const releaseInfo = getReleaseInfo();
 
@@ -39,7 +42,8 @@ export const useDesktopRangePicker = <TDate, TView extends CalendarOrClockPicker
   const [currentDatePosition, setCurrentDatePosition] = React.useState<'start' | 'end'>('start');
 
   const {
-    fieldProps: headlessPickerFieldResponse,
+    fieldProps: pickerFieldProps,
+    layoutProps,
     renderViews,
     actions,
     open,
@@ -69,7 +73,7 @@ export const useDesktopRangePicker = <TDate, TView extends CalendarOrClockPicker
     });
   };
 
-  const { inputProps } = useRangePickerField({
+  const { startInputProps, endInputProps } = useRangePickerField({
     open,
     actions,
     readOnly,
@@ -82,11 +86,11 @@ export const useDesktopRangePicker = <TDate, TView extends CalendarOrClockPicker
   });
 
   const Field = components.Field;
-  const fieldProps = useSlotProps({
+  const fieldProps: BaseMultiInputFieldProps<DateRange<TDate>, unknown> = useSlotProps({
     elementType: Field,
     externalSlotProps: componentsProps.field,
     additionalProps: {
-      ...headlessPickerFieldResponse,
+      ...pickerFieldProps,
       readOnly,
       disabled,
       className,
@@ -97,16 +101,38 @@ export const useDesktopRangePicker = <TDate, TView extends CalendarOrClockPicker
     ownerState: {},
   });
 
+  const componentsForField: BaseMultiInputFieldProps<DateRange<TDate>, unknown>['components'] = {
+    ...fieldProps.components,
+    Input: components.Input,
+  };
+
+  const componentsPropsForField: BaseMultiInputFieldProps<
+    DateRange<TDate>,
+    unknown
+  >['componentsProps'] = {
+    ...fieldProps.componentsProps,
+    input: (ownerState) => {
+      const externalInputProps = resolveComponentProps(componentsProps.input, ownerState);
+      const inputPropsPassedByField = resolveComponentProps(
+        fieldProps.componentsProps?.input,
+        ownerState,
+      );
+
+      return {
+        ...inputPropsPassedByField,
+        ...externalInputProps,
+        ...(ownerState.position === 'start' ? startInputProps : endInputProps),
+      };
+    },
+  };
+
   const renderPicker = () => (
     <LocalizationProvider localeText={localeText}>
       <WrapperVariantContext.Provider value="desktop">
         <Field
           {...fieldProps}
-          components={{
-            ...(fieldProps as any).components,
-            Input: components.Input,
-          }}
-          componentsProps={{ ...(fieldProps as any).componentsProps, input: inputProps }}
+          components={componentsForField}
+          componentsProps={componentsPropsForField}
         />
         <PickersPopper
           role="tooltip"
@@ -119,7 +145,13 @@ export const useDesktopRangePicker = <TDate, TView extends CalendarOrClockPicker
           componentsProps={componentsProps}
           shouldRestoreFocus={shouldRestoreFocus}
         >
-          {renderViews()}
+          <PickerViewLayout
+            {...layoutProps}
+            components={components}
+            componentsProps={componentsProps}
+          >
+            {renderViews()}
+          </PickerViewLayout>
         </PickersPopper>
       </WrapperVariantContext.Provider>
     </LocalizationProvider>

@@ -41,7 +41,6 @@
     "orientation": {
       "type": { "name": "enum", "description": "'landscape'<br>&#124;&nbsp;'portrait'" }
     },
-    "readOnly": { "type": { "name": "bool" } },
     "selectedSections": {
       "type": {
         "name": "union",
@@ -49,6 +48,10 @@
       }
     },
     "shouldDisableTime": { "type": { "name": "func" } },
+    "showToolbar": {
+      "type": { "name": "bool" },
+      "default": "`true` for mobile, `false` for desktop"
+    },
     "value": { "type": { "name": "any" } },
     "views": {
       "type": {

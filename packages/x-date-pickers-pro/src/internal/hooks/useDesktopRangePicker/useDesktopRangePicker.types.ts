@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { TextFieldProps } from '@mui/material/TextField';
 import {
   CalendarOrClockPickerView,
   UsePickerParams,
@@ -10,7 +11,7 @@ import { DateRange } from '../../models';
 
 export interface UseDesktopRangePickerSlotsComponent extends PickersPopperSlotsComponent {
   Field: React.ElementType;
-  Input?: React.ElementType;
+  Input?: React.ElementType<TextFieldProps>;
 }
 
 // TODO: Type props of all slots

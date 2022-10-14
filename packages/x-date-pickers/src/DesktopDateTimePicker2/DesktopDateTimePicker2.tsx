@@ -30,41 +30,36 @@ const DesktopDateTimePicker2 = React.forwardRef(function DesktopDateTimePicker2<
   ref: React.Ref<HTMLDivElement>,
 ) {
   const localeText = useLocaleText();
-  const props = useDateTimePicker2DefaultizedProps<TDate, DesktopDateTimePicker2Props<TDate>>(
-    inProps,
-    'MuiDesktopDateTimePicker2',
-  );
+  const defaultizedProps = useDateTimePicker2DefaultizedProps<
+    TDate,
+    DesktopDateTimePicker2Props<TDate>
+  >(inProps, 'MuiDesktopDateTimePicker2');
 
-  const {
-    components: inComponents,
-    componentsProps: inComponentsProps,
-    inputRef,
-    label,
-    ...other
-  } = props;
-
-  const components = {
-    Field: DateTimeField,
-    OpenPickerIcon: Calendar,
-    Tabs: DateTimePickerTabs,
-    ...inComponents,
-  };
-
-  const componentsProps = {
-    ...inComponentsProps,
-    field: (ownerState: any) => ({
-      ...resolveComponentProps(inComponentsProps?.field, ownerState),
-      ref,
-      inputRef,
-      label,
-    }),
+  const props = {
+    ...defaultizedProps,
+    showToolbar: defaultizedProps.showToolbar ?? false,
+    hideTabs: defaultizedProps.hideTabs ?? true,
+    components: {
+      Field: DateTimeField,
+      OpenPickerIcon: Calendar,
+      Tabs: DateTimePickerTabs,
+      ...defaultizedProps.components,
+    },
+    componentsProps: {
+      ...defaultizedProps.componentsProps,
+      field: (ownerState: any) => ({
+        ...resolveComponentProps(defaultizedProps.componentsProps?.field, ownerState),
+        ref,
+        inputRef: defaultizedProps.inputRef,
+        label: defaultizedProps.label,
+      }),
+    },
   };
 
   const { renderPicker } = useDesktopPicker({
-    props: { ...other, components, componentsProps },
+    props,
     valueManager: datePickerValueManager,
-    renderViews: (viewProps) =>
-      renderDateTimeViews({ ...other, ...viewProps, components, componentsProps }),
+    renderViews: (viewProps) => renderDateTimeViews({ ...props, ...viewProps }),
     getOpenDialogAriaText: localeText.openDatePickerDialogue,
     sectionModeLookup: SECTION_MODE_LOOKUP,
   });
@@ -159,6 +154,11 @@ DesktopDateTimePicker2.propTypes = {
    * @default undefined
    */
   fixedWeekNumber: PropTypes.number,
+  /**
+   * Toggles visibility of date time switching tabs
+   * @default `false` for mobile, `true` for desktop
+   */
+  hideTabs: PropTypes.bool,
   /**
    * Format of the date when rendered in the input(s).
    */
@@ -288,10 +288,6 @@ DesktopDateTimePicker2.propTypes = {
    * Force rendering in particular orientation.
    */
   orientation: PropTypes.oneOf(['landscape', 'portrait']),
-  /**
-   * Make picker read only.
-   * @default false
-   */
   readOnly: PropTypes.bool,
   /**
    * Disable heavy animations.
@@ -357,6 +353,11 @@ DesktopDateTimePicker2.propTypes = {
    * @default false
    */
   showDaysOutsideCurrentMonth: PropTypes.bool,
+  /**
+   * If `true`, the toolbar will be visible.
+   * @default `true` for mobile, `false` for desktop
+   */
+  showToolbar: PropTypes.bool,
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */

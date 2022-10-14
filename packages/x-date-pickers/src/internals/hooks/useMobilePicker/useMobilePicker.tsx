@@ -91,7 +91,6 @@ export const useMobilePicker = <TDate, TView extends CalendarOrClockPickerView>(
     Input: components.Input,
   };
 
-  // TODO: Correctly type the field slot
   const handleInputRef = useForkRef(inputRef, fieldProps.inputRef);
 
   const renderPicker = () => (
@@ -110,7 +109,13 @@ export const useMobilePicker = <TDate, TView extends CalendarOrClockPickerView>(
           componentsProps={componentsProps}
         >
           <PickerViewContainer isLandscape={isLandscape}>
-            <PickerViewLayout {...layoutProps}>{renderViews()}</PickerViewLayout>
+            <PickerViewLayout
+              {...layoutProps}
+              components={components}
+              componentsProps={componentsProps}
+            >
+              {renderViews()}
+            </PickerViewLayout>
           </PickerViewContainer>
         </PickersModalDialog>
       </WrapperVariantContext.Provider>

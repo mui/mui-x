@@ -37,7 +37,6 @@
     "onOpen": { "type": { "name": "func" } },
     "onSelectedSectionsChange": { "type": { "name": "func" } },
     "open": { "type": { "name": "bool" } },
-    "readOnly": { "type": { "name": "bool" } },
     "reduceAnimations": {
       "type": { "name": "bool" },
       "default": "typeof navigator !== 'undefined' && /(android)/i.test(navigator.userAgent)"
@@ -51,6 +50,10 @@
     },
     "shouldDisableDate": { "type": { "name": "func" } },
     "showDaysOutsideCurrentMonth": { "type": { "name": "bool" } },
+    "showToolbar": {
+      "type": { "name": "bool" },
+      "default": "`true` for mobile, `false` for desktop"
+    },
     "sx": {
       "type": {
         "name": "union",
@@ -78,7 +81,10 @@
     "PaperContent": { "default": "React.Fragment", "type": { "name": "elementType" } },
     "Popper": { "default": "Popper from @mui/material", "type": { "name": "elementType" } },
     "PreviousIconButton": { "default": "IconButton", "type": { "name": "elementType" } },
-    "RightArrowIcon": { "default": "ArrowRight", "type": { "name": "elementType" } }
+    "RightArrowIcon": { "default": "ArrowRight", "type": { "name": "elementType" } },
+    "SwitchViewButton": { "default": "IconButton", "type": { "name": "elementType" } },
+    "SwitchViewIcon": { "default": "ArrowDropDown", "type": { "name": "elementType" } },
+    "Toolbar": { "default": "DateTimePickerToolbar", "type": { "name": "elementType" } }
   },
   "name": "DesktopDateRangePicker2",
   "styles": { "classes": [], "globalClasses": {}, "name": "MuiDesktopDateRangePicker2" },

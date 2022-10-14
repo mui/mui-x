@@ -4,19 +4,40 @@ import kebabCase from 'lodash/kebabCase';
 import capitalize from 'lodash/capitalize';
 import { createProject, workspaceRoot } from '../docs/scripts/getTypeScriptProjects';
 
-const EXPECTED_DIFF = {
-  mask: 'no more mask input',
-  disableMaskedInput: 'no more mask input',
-  acceptRegex: 'no more mask input',
-  rifmFormatter: 'no more mask input',
-  ignoreInvalidInputs: 'no more mask input',
+const EXPECTED_DIFF: { [propKey: string]: string | ((pickerName: string) => string | undefined) } =
+  {
+    mask: 'no more mask input',
+    disableMaskedInput: 'no more mask input',
+    acceptRegex: 'no more mask input',
+    rifmFormatter: 'no more mask input',
+    ignoreInvalidInputs: 'no more mask input',
 
-  renderInput: 'replaced by `components.Field` and `components.Input`',
-  InputAdornmentProps: 'replaced by `componentsProps.InputAdornment`',
-  OpenPickerButtonProps: 'replaced by `componentsProps.OpenPickerButton`',
-  InputProps: 'replaced by `componentsProps.input.InputProps`',
+    renderInput: 'replaced by `components.Field` and `components.Input`',
+    InputAdornmentProps: 'replaced by `componentsProps.InputAdornment`',
+    OpenPickerButtonProps: 'replaced by `componentsProps.OpenPickerButton`',
+    InputProps: 'replaced by `componentsProps.input.InputProps`',
 
-  getOpenDialogAriaText: 'replaced by each picker translation key',
+    getOpenDialogAriaText: 'replaced by each picker translation key',
+
+    children: 'never used even in v5',
+    inputRef: (componentName) =>
+      componentName.includes('Range') ? 'never used even in v5' : undefined,
+    label: (componentName) =>
+      componentName.includes('Range') ? 'never used even in v5' : undefined,
+    onViewChange: (componentName) =>
+      componentName.includes('Range') ? 'never used even in v5' : undefined,
+    'components.OpenPickerIcon': (componentName) =>
+      componentName.includes('Range') ? 'never used even in v5' : undefined,
+  };
+
+const getExpectedDiffMessage = (pickerName: string, propKey: string) => {
+  const message = EXPECTED_DIFF[propKey];
+
+  if (typeof message === 'function') {
+    return message(pickerName);
+  }
+
+  return message;
 };
 
 const PICKERS = [
@@ -99,7 +120,7 @@ const main = async () => {
       const addedProps: string[] = [];
       propKeys.forEach((propKey) => {
         if (!newComponentProps[propKey]) {
-          if (EXPECTED_DIFF[propKey]) {
+          if (getExpectedDiffMessage(pickerName, propKey)) {
             removedProps.push(propKey);
           } else {
             missingProps.push(propKey);
@@ -122,7 +143,7 @@ const main = async () => {
       }
       if (removedProps.length > 0) {
         message += `\n#### Removed props:\n${removedProps
-          .map((propKey) => `- \`${propKey}\` (${EXPECTED_DIFF[propKey]})`)
+          .map((propKey) => `- \`${propKey}\` (${getExpectedDiffMessage(pickerName, propKey)})`)
           .join('\n')}\n`;
       }
       if (addedProps.length > 0) {

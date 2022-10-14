@@ -20,11 +20,6 @@ export type PickerDateSectionModeLookup<TView extends CalendarOrClockPickerView>
 export interface ExportedUsePickerViewProps<TView extends CalendarOrClockPickerView> {
   autoFocus?: boolean;
   /**
-   * Make picker read only.
-   * @default false
-   */
-  readOnly?: boolean;
-  /**
    * If `true`, the picker and text field are disabled.
    * @default false
    */

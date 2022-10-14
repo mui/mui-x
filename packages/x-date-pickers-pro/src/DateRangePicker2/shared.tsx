@@ -27,6 +27,10 @@ import {
 
 export interface BaseDateRangePicker2SlotsComponent<TDate>
   extends DateRangeCalendarSlotsComponent<TDate> {
+  /**
+   * Custom component for the toolbar rendered above the views.
+   * @default DateTimePickerToolbar
+   */
   Toolbar?: React.JSXElementConstructor<DateRangePickerToolbarProps<TDate>>;
 }
 

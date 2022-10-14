@@ -22,6 +22,7 @@
     "disableOpenPicker": { "type": { "name": "bool" } },
     "disablePast": { "type": { "name": "bool" } },
     "fixedWeekNumber": { "type": { "name": "number" }, "default": "undefined" },
+    "hideTabs": { "type": { "name": "bool" }, "default": "`false` for mobile, `true` for desktop" },
     "inputFormat": { "type": { "name": "string" } },
     "inputRef": {
       "type": { "name": "union", "description": "func<br>&#124;&nbsp;{ current?: object }" }
@@ -55,7 +56,6 @@
     "orientation": {
       "type": { "name": "enum", "description": "'landscape'<br>&#124;&nbsp;'portrait'" }
     },
-    "readOnly": { "type": { "name": "bool" } },
     "reduceAnimations": {
       "type": { "name": "bool" },
       "default": "typeof navigator !== 'undefined' && /(android)/i.test(navigator.userAgent)"
@@ -75,6 +75,10 @@
     "shouldDisableTime": { "type": { "name": "func" } },
     "shouldDisableYear": { "type": { "name": "func" } },
     "showDaysOutsideCurrentMonth": { "type": { "name": "bool" } },
+    "showToolbar": {
+      "type": { "name": "bool" },
+      "default": "`true` for mobile, `false` for desktop"
+    },
     "sx": {
       "type": {
         "name": "union",

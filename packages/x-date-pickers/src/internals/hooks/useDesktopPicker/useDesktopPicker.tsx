@@ -107,7 +107,12 @@ export const useDesktopPicker = <TDate, TView extends CalendarOrClockPickerView>
     ownerState: {},
   });
 
-  const componentsPropsForField: BaseFieldProps<TDate, unknown>['componentsProps'] = {
+  const componentsForField: BaseFieldProps<TDate | null, unknown>['components'] = {
+    ...fieldProps.components,
+    Input: components.Input,
+  };
+
+  const componentsPropsForField: BaseFieldProps<TDate | null, unknown>['componentsProps'] = {
     ...fieldProps.componentsProps,
     input: (ownerState) => {
       const externalInputProps = resolveComponentProps(componentsProps.input, ownerState);
@@ -134,12 +139,6 @@ export const useDesktopPicker = <TDate, TView extends CalendarOrClockPickerView>
     },
   };
 
-  const componentsForField: BaseFieldProps<TDate, unknown>['components'] = {
-    ...fieldProps.components,
-    Input: components.Input,
-  };
-
-  // TODO: Correctly type the field slot
   const handleInputRef = useForkRef(inputRef, fieldProps.inputRef);
 
   const renderPicker = () => (
@@ -161,7 +160,13 @@ export const useDesktopPicker = <TDate, TView extends CalendarOrClockPickerView>
           shouldRestoreFocus={shouldRestoreFocus}
         >
           <PickerViewContainer isLandscape={isLandscape}>
-            <PickerViewLayout {...layoutProps}>{renderViews()}</PickerViewLayout>
+            <PickerViewLayout
+              {...layoutProps}
+              components={components}
+              componentsProps={componentsProps}
+            >
+              {renderViews()}
+            </PickerViewLayout>
           </PickerViewContainer>
         </PickersPopper>
       </WrapperVariantContext.Provider>

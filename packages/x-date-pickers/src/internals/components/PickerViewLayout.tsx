@@ -49,14 +49,10 @@ export interface PickerViewLayoutProps<TValue, TView extends CalendarOrClockPick
    * @default {}
    */
   componentsProps?: PickerViewLayoutSlotsComponentsProps;
-  hideTabs?: boolean;
 }
 
 // For now the `ActionBar` is rendered on the variant wrapper.
 const shouldRenderActionBar = false;
-
-// TODO v6: Clean
-const showToolbar = true;
 
 /**
  * TODO: Add `ActionBar` here once it has been removed from the `PickersPopper`, `PickersModalDialog` and `PickersStaticWrapper`.
@@ -83,6 +79,7 @@ export const PickerViewLayout = <TValue, TView extends CalendarOrClockPickerView
     isLandscape,
     disabled,
     readOnly,
+    showToolbar,
   } = props;
 
   const ActionBar = components?.ActionBar ?? PickersActionBar;
@@ -99,7 +96,6 @@ export const PickerViewLayout = <TValue, TView extends CalendarOrClockPickerView
 
   return (
     <React.Fragment>
-      {children}
       {shouldRenderToolbar && !!Toolbar && (
         <Toolbar
           {...componentsProps?.toolbar}
@@ -116,6 +112,7 @@ export const PickerViewLayout = <TValue, TView extends CalendarOrClockPickerView
       {shouldRenderTabs && !!Tabs && (
         <Tabs view={view} onViewChange={onViewChange} {...componentsProps?.tabs} />
       )}
+      {children}
       {shouldRenderActionBar && (
         <ActionBar
           onAccept={onAccept}

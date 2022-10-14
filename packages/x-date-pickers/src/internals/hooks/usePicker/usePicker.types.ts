@@ -15,7 +15,8 @@ import { WrapperVariant } from '../../components/wrappers/WrapperVariantContext'
 
 export interface UsePickerProps<TValue, TView extends CalendarOrClockPickerView>
   extends UsePickerValueProps<TValue>,
-    ExportedUsePickerViewProps<TView> {
+    ExportedUsePickerViewProps<TView>,
+    UsePickerLayoutForwardedProps {
   orientation?: 'portrait' | 'landscape';
 }
 
@@ -32,12 +33,18 @@ export interface UsePickerParams<
   props: UsePickerProps<TValue, TView>;
 }
 
-export interface UsePickerLayoutResponse<TValue, TView extends CalendarOrClockPickerView>
-  extends UsePickerValueLayoutResponse<TValue>,
-    UsePickerViewsLayoutResponse<TView> {
-  isLandscape: boolean;
+interface UsePickerLayoutForwardedProps {
   disabled?: boolean;
   readOnly?: boolean;
+  hideTabs?: boolean;
+  showToolbar?: boolean;
+}
+
+export interface UsePickerLayoutResponse<TValue, TView extends CalendarOrClockPickerView>
+  extends UsePickerValueLayoutResponse<TValue>,
+    UsePickerViewsLayoutResponse<TView>,
+    UsePickerLayoutForwardedProps {
+  isLandscape: boolean;
   wrapperVariant: WrapperVariant;
 }
 
