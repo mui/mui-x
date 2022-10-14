@@ -11,7 +11,7 @@ import { dateRangeFieldValueManager } from '../internal/hooks/valueManager/dateR
 
 export const useDefaultizedDateRangeFieldProps = <TDate, AdditionalProps extends {}>(
   props: UseSingleInputDateRangeFieldProps<TDate>,
-): UseSingleInputDateRangeFieldDefaultizedProps<TDate> & AdditionalProps => {
+): UseSingleInputDateRangeFieldDefaultizedProps<TDate, AdditionalProps> => {
   const utils = useUtils<TDate>();
   const defaultDates = useDefaultDates<TDate>();
 
@@ -48,7 +48,7 @@ export const useSingleInputDateRangeField = <TDate, TChildProps extends {}>({
 
   return useField({
     inputRef,
-    forwardedProps: other,
+    forwardedProps: other as unknown as TChildProps,
     internalProps: {
       value,
       defaultValue,
@@ -63,7 +63,6 @@ export const useSingleInputDateRangeField = <TDate, TChildProps extends {}>({
       disablePast,
       selectedSections,
       onSelectedSectionsChange,
-      inputRef,
     },
     valueManager: dateRangePickerValueManager,
     fieldValueManager: dateRangeFieldValueManager,
