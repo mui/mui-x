@@ -36,7 +36,7 @@ const DesktopDatePicker2 = React.forwardRef(function DesktopDatePicker2<TDate>(
     },
     componentsProps: {
       ...defaultizedProps.componentsProps,
-      field: (ownerState) => ({
+      field: (ownerState: any) => ({
         ...resolveComponentProps(defaultizedProps.componentsProps?.field, ownerState),
         ref,
         inputRef: defaultizedProps.inputRef,

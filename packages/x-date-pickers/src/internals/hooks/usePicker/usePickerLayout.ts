@@ -9,23 +9,26 @@ export interface ExportedUsePickerLayoutProps {
   showToolbar?: boolean;
 }
 
-export interface UsePickerLayoutProps<TValue, TView extends CalendarOrClockPickerView>
-  extends ExportedUsePickerLayoutProps,
-    UsePickerValueLayoutResponse<TValue>,
-    UsePickerViewsLayoutResponse<TView> {
+export interface UsePickerLayoutProps extends ExportedUsePickerLayoutProps {
   hideTabs?: boolean;
 }
+
+export interface UsePickerLayoutParamsProps<TValue, TView extends CalendarOrClockPickerView>
+  extends UsePickerLayoutProps,
+    UsePickerValueLayoutResponse<TValue>,
+    UsePickerViewsLayoutResponse<TView> {}
 
 export interface UsePickerLayoutResponse<TValue, TView extends CalendarOrClockPickerView>
   extends UsePickerValueLayoutResponse<TValue>,
     UsePickerViewsLayoutResponse<TView>,
-    UsePickerLayoutProps<TValue, TView> {
+    UsePickerLayoutParamsProps<TValue, TView>,
+    UsePickerValueActions {
   isLandscape: boolean;
   wrapperVariant: WrapperVariant;
 }
 
 export interface UsePickerLayoutParams<TValue, TView extends CalendarOrClockPickerView> {
-  props: UsePickerLayoutProps<TValue, TView>;
+  props: UsePickerLayoutParamsProps<TValue, TView>;
   wrapperVariant: WrapperVariant;
   actions: UsePickerValueActions;
   isLandscape: boolean;
@@ -35,8 +38,10 @@ export const usePickerLayout = <TValue, TView extends CalendarOrClockPickerView>
   props,
   wrapperVariant,
   isLandscape,
+  actions,
 }: UsePickerLayoutParams<TValue, TView>): UsePickerLayoutResponse<TValue, TView> => {
   return {
+    ...actions,
     isLandscape,
     wrapperVariant,
     disabled: props.disabled,

@@ -26,7 +26,7 @@ import {
 import { BasePickerProps2 } from '../internals/models/props/basePickerProps';
 import { applyDefaultDate } from '../internals/utils/date-utils';
 import { PickerViewsRendererProps } from '../internals/hooks/usePicker/usePickerViews';
-import { UsePickerProps } from '../internals/hooks/usePicker';
+import { ExportedUsePickerProps } from '../internals/hooks/usePicker';
 import { DateTimePickerTabsProps } from '../DateTimePicker/DateTimePickerTabs';
 import {
   BaseDateValidationProps,
@@ -206,7 +206,7 @@ export function useDateTimePicker2DefaultizedProps<
 }
 
 interface DateTimePickerViewsProps<TDate>
-  extends Omit<BaseDateTimePicker2Props<TDate>, keyof UsePickerProps<any, any>>,
+  extends Omit<BaseDateTimePicker2Props<TDate>, keyof ExportedUsePickerProps<any, any>>,
     PickerViewsRendererProps<TDate | null, CalendarOrClockPickerView, {}> {
   openTo?: CalendarOrClockPickerView;
   components?: DateCalendarProps<TDate>['components'] & ClockPickerProps<TDate>['components'];

@@ -10,8 +10,8 @@ import {
   UsePickerViewsResponse,
 } from './usePickerViews';
 import {
-  UsePickerLayoutProps,
   ExportedUsePickerLayoutProps,
+  UsePickerLayoutProps,
   UsePickerLayoutResponse,
 } from './usePickerLayout';
 

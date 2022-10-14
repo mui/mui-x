@@ -1,5 +1,5 @@
 import { PickerStateProps } from '../../hooks/usePickerState';
-import { UsePickerProps } from '../../hooks/usePicker';
+import { ExportedUsePickerProps } from '../../hooks/usePicker';
 import { CalendarOrClockPickerView } from '../views';
 import { PickersInputComponentLocaleText } from '../../../locales/utils/pickersLocaleTextApi';
 
@@ -37,7 +37,7 @@ export interface BasePickerProps<TValue, TDate> extends PickerStateProps<TValue>
 }
 
 export interface BasePickerProps2<TValue, TDate, TView extends CalendarOrClockPickerView>
-  extends UsePickerProps<TValue, TView> {
+  extends ExportedUsePickerProps<TValue, TView> {
   /**
    * Class name applied to the root element.
    */
