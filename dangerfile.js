@@ -1,4 +1,4 @@
-const { markdown } = require('danger');
+const { markdown, message } = require('danger');
 const fse = require('fs-extra');
 const path = require('path');
 const prettier = require('prettier');
@@ -36,6 +36,9 @@ ${headers}\n`;
 }
 
 async function run() {
+  const netlifyPreview = `https://deploy-preview-${process.env.CIRCLE_PR_NUMBER}--material-ui-x.netlify.app/`;
+  message(`Netlify deploy preview: <a href="${netlifyPreview}">${netlifyPreview}</a>`);
+
   switch (dangerCommand) {
     case 'reportPerformance':
       await reportBundleSize();
