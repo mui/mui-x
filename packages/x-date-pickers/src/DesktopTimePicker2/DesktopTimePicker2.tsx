@@ -26,40 +26,38 @@ const DesktopTimePicker2 = React.forwardRef(function DesktopTimePicker2<TDate>(
   ref: React.Ref<HTMLDivElement>,
 ) {
   const localeText = useLocaleText();
-  const props = useTimePicker2DefaultizedProps<TDate, DesktopTimePicker2Props<TDate>>(
+
+  // Props with the default values common to all time pickers
+  const defaultizedProps = useTimePicker2DefaultizedProps<TDate, DesktopTimePicker2Props<TDate>>(
     inProps,
     'MuiDesktopTimePicker2',
   );
 
-  const {
-    components: inComponents,
-    componentsProps: inComponentsProps,
-    inputRef,
-    label,
-    ...other
-  } = props;
-
-  const components = {
-    Field: TimeField,
-    OpenPickerIcon: Clock,
-    ...inComponents,
-  };
-
-  const componentsProps = {
-    ...inComponentsProps,
-    field: (ownerState: any) => ({
-      ...resolveComponentProps(inComponentsProps?.field, ownerState),
-      ref,
-      inputRef,
-      label,
-    }),
+  // Props with the default values specific to the desktop variant
+  const props = {
+    ...defaultizedProps,
+    showToolbar: defaultizedProps.showToolbar ?? false,
+    hideTabs: defaultizedProps.hideTabs ?? true,
+    components: {
+      Field: TimeField,
+      OpenPickerIcon: Clock,
+      ...defaultizedProps.components,
+    },
+    componentsProps: {
+      ...defaultizedProps.componentsProps,
+      field: (ownerState: any) => ({
+        ...resolveComponentProps(defaultizedProps.componentsProps?.field, ownerState),
+        ref,
+        inputRef: defaultizedProps.inputRef,
+        label: defaultizedProps.label,
+      }),
+    },
   };
 
   const { renderPicker } = useDesktopPicker({
-    props: { ...other, components, componentsProps },
+    props,
     valueManager: timePickerValueManager,
-    renderViews: (viewProps) =>
-      renderTimeViews({ ...other, ...viewProps, components, componentsProps }),
+    renderViews: (viewProps) => renderTimeViews({ ...props, ...viewProps }),
     getOpenDialogAriaText: localeText.openTimePickerDialogue,
     sectionModeLookup: SECTION_MODE_LOOKUP,
   });
@@ -132,7 +130,6 @@ DesktopTimePicker2.propTypes = {
    * @default false
    */
   disablePast: PropTypes.bool,
-  hideTabs: PropTypes.bool,
   /**
    * Format of the date when rendered in the input(s).
    */

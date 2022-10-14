@@ -3,13 +3,9 @@ import PropTypes from 'prop-types';
 import { resolveComponentProps } from '@mui/base/utils';
 import { useMobilePicker } from '../internals/hooks/useMobilePicker';
 import { datePickerValueManager } from '../DatePicker/shared';
-import {
-  MobileDatePicker2Props,
-  MobileDatePicker2SlotsComponentsProps,
-} from './MobileDatePicker2.types';
+import { MobileDatePicker2Props } from './MobileDatePicker2.types';
 import { useDatePicker2DefaultizedProps, renderDateViews } from '../DatePicker2/shared';
 import { useLocaleText } from '../internals';
-import { Calendar } from '../internals/components/icons';
 import { Unstable_DateField as DateField } from '../DateField';
 
 type MobileDatePickerComponent = (<TDate>(
@@ -21,10 +17,31 @@ const MobileDatePicker2 = React.forwardRef(function MobileDatePicker2<TDate>(
   ref: React.Ref<HTMLDivElement>,
 ) {
   const localeText = useLocaleText();
-  const props = useDatePicker2DefaultizedProps<TDate, MobileDatePicker2Props<TDate>>(
+
+  // Props with the default values common to all date pickers
+  const defaultizedProps = useDatePicker2DefaultizedProps<TDate, MobileDatePicker2Props<TDate>>(
     inProps,
     'MuiMobileDatePicker2',
   );
+
+  // Props with the default values specific to the desktop variant
+  const props = {
+    ...defaultizedProps,
+    showToolbar: defaultizedProps.showToolbar ?? true,
+    components: {
+      Field: DateField,
+      ...defaultizedProps.components,
+    },
+    componentsProps: {
+      ...defaultizedProps.componentsProps,
+      field: (ownerState: any) => ({
+        ...resolveComponentProps(defaultizedProps.componentsProps?.field, ownerState),
+        ref,
+        inputRef: defaultizedProps.inputRef,
+        label: defaultizedProps.label,
+      }),
+    },
+  };
 
   const {
     components: providedComponents,
@@ -34,27 +51,10 @@ const MobileDatePicker2 = React.forwardRef(function MobileDatePicker2<TDate>(
     ...other
   } = props;
 
-  const components = {
-    OpenPickerIcon: Calendar,
-    Field: DateField,
-    ...providedComponents,
-  };
-
-  const componentsProps: MobileDatePicker2SlotsComponentsProps<TDate> = {
-    ...providedComponentsProps,
-    field: (ownerState: any) => ({
-      ...resolveComponentProps(providedComponentsProps?.field, ownerState),
-      ref,
-      inputRef,
-      label,
-    }),
-  };
-
   const { renderPicker } = useMobilePicker({
-    props: { ...other, components, componentsProps },
+    props,
     valueManager: datePickerValueManager,
-    renderViews: (viewProps) =>
-      renderDateViews({ ...other, ...viewProps, components, componentsProps }),
+    renderViews: (viewProps) => renderDateViews({ ...other, ...viewProps }),
     getOpenDialogAriaText: localeText.openDatePickerDialogue,
   });
 
@@ -133,7 +133,6 @@ MobileDatePicker2.propTypes = {
    * @default undefined
    */
   fixedWeekNumber: PropTypes.number,
-  hideTabs: PropTypes.bool,
   /**
    * Format of the date when rendered in the input(s).
    */

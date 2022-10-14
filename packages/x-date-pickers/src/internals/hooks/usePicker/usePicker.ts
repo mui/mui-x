@@ -3,6 +3,7 @@ import { usePickerValue } from './usePickerValue';
 import { UsePickerParams, UsePickerResponse } from './usePicker.types';
 import { usePickerViews } from './usePickerViews';
 import { useIsLandscape } from '../useIsLandscape';
+import { usePickerLayout } from './usePickerLayout';
 
 export const usePicker = <
   TValue,
@@ -38,23 +39,21 @@ export const usePicker = <
 
   const isLandscape = useIsLandscape(props.views, props.orientation);
 
+  const pickerLayoutResponse = usePickerLayout({
+    props: { ...props, ...pickerValueResponse.layoutProps, ...pickerViewsResponse.layoutProps },
+    actions: pickerValueResponse.actions,
+    wrapperVariant,
+    isLandscape,
+  });
+
   return {
     isLandscape,
+    open: pickerValueResponse.open,
     actions: pickerValueResponse.actions,
     fieldProps: pickerValueResponse.fieldProps,
+    layoutProps: pickerLayoutResponse,
     renderViews: pickerViewsResponse.renderViews,
-    open: pickerValueResponse.open,
     hasPopperView: pickerViewsResponse.hasPopperView,
     shouldRestoreFocus: pickerViewsResponse.shouldRestoreFocus,
-    layoutProps: {
-      isLandscape,
-      wrapperVariant,
-      disabled: props.disabled,
-      readOnly: props.readOnly,
-      showToolbar: props.showToolbar,
-      hideTabs: props.hideTabs,
-      ...pickerValueResponse.layoutProps,
-      ...pickerViewsResponse.layoutProps,
-    },
   };
 };

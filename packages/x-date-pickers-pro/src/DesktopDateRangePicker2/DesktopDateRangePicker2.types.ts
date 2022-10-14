@@ -16,7 +16,7 @@ export interface DesktopDateRangePicker2SlotsComponent<TDate>
 
 export interface DesktopDateRangePicker2SlotsComponentsProps<TDate>
   extends BaseDateRangePicker2SlotsComponentsProps<TDate>,
-    UseDesktopRangePickerSlotsComponentsProps {}
+    UseDesktopRangePickerSlotsComponentsProps<TDate> {}
 
 export interface DesktopDateRangePicker2Props<TDate>
   extends BaseDateRangePicker2Props<TDate>,

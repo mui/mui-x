@@ -16,17 +16,17 @@ export interface UseDesktopPickerSlotsComponent extends PickersPopperSlotsCompon
   Field: React.ElementType;
   Input?: React.ElementType<TextFieldProps>;
   /**
-   * Component disabled on the start or end input adornment used to open the picker.
+   * Component displayed on the start or end input adornment used to open the picker on desktop.
    * @default InputAdornment
    */
   InputAdornment?: React.ElementType;
   /**
-   * Button to open the picker.
+   * Button to open the picker on desktop.
    * @default IconButton
    */
   OpenPickerButton?: React.ElementType;
   /**
-   * Icon displayed in the open picker button.
+   * Icon displayed in the open picker button on desktop.
    */
   OpenPickerIcon: React.ElementType;
 }

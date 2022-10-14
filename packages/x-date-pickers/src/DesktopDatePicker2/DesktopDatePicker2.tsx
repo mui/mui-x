@@ -2,10 +2,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { resolveComponentProps } from '@mui/base/utils';
 import { datePickerValueManager } from '../DatePicker/shared';
-import {
-  DesktopDatePicker2Props,
-  DesktopDatePicker2SlotsComponentsProps,
-} from './DesktopDatePicker2.types';
+import { DesktopDatePicker2Props } from './DesktopDatePicker2.types';
 import { useDatePicker2DefaultizedProps, renderDateViews } from '../DatePicker2/shared';
 import { useLocaleText } from '../internals';
 import { useDesktopPicker } from '../internals/hooks/useDesktopPicker';
@@ -21,40 +18,37 @@ const DesktopDatePicker2 = React.forwardRef(function DesktopDatePicker2<TDate>(
   ref: React.Ref<HTMLDivElement>,
 ) {
   const localeText = useLocaleText();
-  const props = useDatePicker2DefaultizedProps<TDate, DesktopDatePicker2Props<TDate>>(
+
+  // Props with the default values common to all date pickers
+  const defaultizedProps = useDatePicker2DefaultizedProps<TDate, DesktopDatePicker2Props<TDate>>(
     inProps,
     'MuiDesktopDatePicker2',
   );
 
-  const {
-    components: providedComponents,
-    componentsProps: providedComponentsProps,
-    inputRef,
-    label,
-    ...other
-  } = props;
-
-  const components = {
-    OpenPickerIcon: Calendar,
-    Field: DateField,
-    ...providedComponents,
-  };
-
-  const componentsProps: DesktopDatePicker2SlotsComponentsProps<TDate> = {
-    ...providedComponentsProps,
-    field: (ownerState) => ({
-      ...resolveComponentProps(providedComponentsProps?.field, ownerState),
-      ref,
-      inputRef,
-      label,
-    }),
+  // Props with the default values specific to the desktop variant
+  const props = {
+    ...defaultizedProps,
+    showToolbar: defaultizedProps.showToolbar ?? false,
+    components: {
+      OpenPickerIcon: Calendar,
+      Field: DateField,
+      ...defaultizedProps.components,
+    },
+    componentsProps: {
+      ...defaultizedProps.componentsProps,
+      field: (ownerState) => ({
+        ...resolveComponentProps(defaultizedProps.componentsProps?.field, ownerState),
+        ref,
+        inputRef: defaultizedProps.inputRef,
+        label: defaultizedProps.label,
+      }),
+    },
   };
 
   const { renderPicker } = useDesktopPicker({
-    props: { ...other, components, componentsProps },
+    props,
     valueManager: datePickerValueManager,
-    renderViews: (viewProps) =>
-      renderDateViews({ ...other, ...viewProps, components, componentsProps }),
+    renderViews: (viewProps) => renderDateViews({ ...props, ...viewProps }),
     getOpenDialogAriaText: localeText.openDatePickerDialogue,
   });
 
@@ -133,7 +127,6 @@ DesktopDatePicker2.propTypes = {
    * @default undefined
    */
   fixedWeekNumber: PropTypes.number,
-  hideTabs: PropTypes.bool,
   /**
    * Format of the date when rendered in the input(s).
    */

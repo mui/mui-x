@@ -25,7 +25,9 @@ const EXPECTED_DIFF: { [propKey: string]: string | ((pickerName: string) => stri
     onViewChange: (pickerName) =>
       pickerName.includes('Range') ? 'never used even in v5' : undefined,
     'components.OpenPickerIcon': (pickerName) =>
-      pickerName.includes('Range') || pickerName.includes('Mobile') ? 'never used even in v5' : undefined,
+      pickerName.includes('Range') || pickerName.includes('Mobile')
+        ? 'never used even in v5'
+        : undefined,
   };
 
 const getExpectedDiffMessage = (pickerName: string, propKey: string) => {

@@ -2,7 +2,7 @@ import * as React from 'react';
 import { PickersActionBar, PickersActionBarProps } from '@mui/x-date-pickers/PickersActionBar';
 import { CalendarOrClockPickerView } from '../models/views';
 import { BaseToolbarProps2, ExportedBaseToolbarProps } from '../models/props/baseToolbarProps';
-import { UsePickerLayoutResponse } from '../hooks/usePicker/usePicker.types';
+import { UsePickerLayoutResponse } from '../hooks/usePicker/usePickerLayout';
 
 export interface PickerViewLayoutSlotsComponent<TValue> {
   /**

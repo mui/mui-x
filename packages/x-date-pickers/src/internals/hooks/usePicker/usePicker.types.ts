@@ -3,22 +3,28 @@ import {
   UsePickerValueParams,
   UsePickerValueProps,
   UsePickerValueResponse,
-  UsePickerValueLayoutResponse,
 } from './usePickerValue';
 import {
   ExportedUsePickerViewProps,
   UsePickerViewParams,
   UsePickerViewsResponse,
-  UsePickerViewsLayoutResponse,
 } from './usePickerViews';
-import { WrapperVariant } from '../../components/wrappers/WrapperVariantContext';
+import {
+  UsePickerLayoutProps,
+  ExportedUsePickerLayoutProps,
+  UsePickerLayoutResponse,
+} from './usePickerLayout';
 
-export interface UsePickerProps<TValue, TView extends CalendarOrClockPickerView>
+export interface ExportedUsePickerProps<TValue, TView extends CalendarOrClockPickerView>
   extends UsePickerValueProps<TValue>,
     ExportedUsePickerViewProps<TView>,
-    UsePickerLayoutForwardedProps {
+    ExportedUsePickerLayoutProps {
   orientation?: 'portrait' | 'landscape';
 }
+
+export interface UsePickerProps<TValue, TView extends CalendarOrClockPickerView>
+  extends ExportedUsePickerProps<TValue, TView>,
+    UsePickerLayoutProps {}
 
 export interface UsePickerParams<
   TValue,
@@ -31,21 +37,6 @@ export interface UsePickerParams<
       'renderViews' | 'sectionModeLookup' | 'additionalViewProps' | 'inputRef'
     > {
   props: UsePickerProps<TValue, TView>;
-}
-
-interface UsePickerLayoutForwardedProps {
-  disabled?: boolean;
-  readOnly?: boolean;
-  hideTabs?: boolean;
-  showToolbar?: boolean;
-}
-
-export interface UsePickerLayoutResponse<TValue, TView extends CalendarOrClockPickerView>
-  extends UsePickerValueLayoutResponse<TValue>,
-    UsePickerViewsLayoutResponse<TView>,
-    UsePickerLayoutForwardedProps {
-  isLandscape: boolean;
-  wrapperVariant: WrapperVariant;
 }
 
 export interface UsePickerResponse<TValue, TView extends CalendarOrClockPickerView>

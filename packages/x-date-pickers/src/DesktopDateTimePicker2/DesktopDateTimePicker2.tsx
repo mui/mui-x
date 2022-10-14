@@ -30,15 +30,17 @@ const DesktopDateTimePicker2 = React.forwardRef(function DesktopDateTimePicker2<
   ref: React.Ref<HTMLDivElement>,
 ) {
   const localeText = useLocaleText();
+
+  // Props with the default values common to all date time pickers
   const defaultizedProps = useDateTimePicker2DefaultizedProps<
     TDate,
     DesktopDateTimePicker2Props<TDate>
   >(inProps, 'MuiDesktopDateTimePicker2');
 
+  // Props with the default values specific to the desktop variant
   const props = {
     ...defaultizedProps,
     showToolbar: defaultizedProps.showToolbar ?? false,
-    hideTabs: defaultizedProps.hideTabs ?? true,
     components: {
       Field: DateTimeField,
       OpenPickerIcon: Calendar,

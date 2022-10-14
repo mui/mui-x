@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { TextFieldProps } from '@mui/material/TextField';
+import TextField, { TextFieldProps } from '@mui/material/TextField';
+import { SlotComponentProps } from '@mui/base/utils';
 import {
   CalendarOrClockPickerView,
   UsePickerParams,
@@ -8,6 +9,7 @@ import {
   PickersPopperSlotsComponentsProps,
 } from '@mui/x-date-pickers/internals';
 import { DateRange } from '../../models';
+import { BaseMultiInputFieldProps } from '../../models/fields';
 
 export interface UseDesktopRangePickerSlotsComponent extends PickersPopperSlotsComponent {
   Field: React.ElementType;
@@ -15,10 +17,14 @@ export interface UseDesktopRangePickerSlotsComponent extends PickersPopperSlotsC
 }
 
 // TODO: Type props of all slots
-export interface UseDesktopRangePickerSlotsComponentsProps
+export interface UseDesktopRangePickerSlotsComponentsProps<TDate>
   extends PickersPopperSlotsComponentsProps {
-  field?: Record<string, any>;
-  input?: Record<string, any>;
+  field?: SlotComponentProps<
+    React.ElementType<BaseMultiInputFieldProps<DateRange<TDate>, unknown>>,
+    {},
+    unknown
+  >;
+  input?: SlotComponentProps<typeof TextField, {}, unknown>;
 }
 
 export interface ExportedUseDesktopRangePickerProps {}
@@ -35,7 +41,7 @@ interface UseDesktopRangePickerProps<TDate, TView extends CalendarOrClockPickerV
    * The props used for each component slot.
    * @default {}
    */
-  componentsProps?: UseDesktopRangePickerSlotsComponentsProps;
+  componentsProps?: UseDesktopRangePickerSlotsComponentsProps<TDate>;
 }
 
 interface DesktopRangePickerAdditionalViewProps {

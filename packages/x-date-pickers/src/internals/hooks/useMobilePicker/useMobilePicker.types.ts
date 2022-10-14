@@ -15,7 +15,6 @@ export interface UseMobilePickerSlotsComponent extends PickersModalDialogSlotsCo
   Input?: React.ElementType<TextFieldProps>;
 }
 
-// TODO: Type props of all slots
 export interface UseMobilePickerSlotsComponentsProps<TDate>
   extends PickersModalDialogSlotsComponentsProps {
   field?: SlotComponentProps<React.ElementType<BaseFieldProps<TDate | null, unknown>>, {}, unknown>;

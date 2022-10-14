@@ -137,7 +137,7 @@ export type UsePickerValueViewsResponse<TValue> = Pick<
   'value' | 'onChange'
 >;
 
-export interface UsePickerValueLayoutResponse<TValue> extends UsePickerValueActions {
+export interface UsePickerValueLayoutResponse<TValue> {
   value: TValue;
   onChange: (newValue: TValue) => void;
 }
@@ -349,7 +349,6 @@ export const usePickerValue = <TValue, TDate>({
   const layoutResponse: UsePickerValueLayoutResponse<TValue> = {
     value: dateState.draft,
     onChange: handleChangeAndCommit,
-    ...actions,
   };
 
   return {

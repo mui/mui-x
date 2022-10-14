@@ -106,7 +106,6 @@ DatePicker2.propTypes = {
    * @default undefined
    */
   fixedWeekNumber: PropTypes.number,
-  hideTabs: PropTypes.bool,
   /**
    * Format of the date when rendered in the input(s).
    */

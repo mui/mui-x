@@ -18,36 +18,35 @@ const DesktopDateRangePicker2 = React.forwardRef(function DesktopDateRangePicker
   inProps: DesktopDateRangePicker2Props<TDate>,
   ref: React.Ref<HTMLDivElement>,
 ) {
-  const props = useDateRangePicker2DefaultizedProps<TDate, DesktopDateRangePicker2Props<TDate>>(
-    inProps,
-    'MuiDesktopDateRangePicker2',
-  );
+  // Props with the default values common to all date time pickers
+  const defaultizedProps = useDateRangePicker2DefaultizedProps<
+    TDate,
+    DesktopDateRangePicker2Props<TDate>
+  >(inProps, 'MuiDesktopDateRangePicker2');
 
-  const {
-    components: inComponents,
-    componentsProps: inComponentsProps,
-    calendars = 2,
-    ...other
-  } = props;
-
-  const components = {
-    Field: MultiInputDateRangeField,
-    ...inComponents,
-  };
-
-  const componentsProps = {
-    ...inComponentsProps,
-    field: (ownerState: any) => ({
-      ...resolveComponentProps(inComponentsProps?.field, ownerState),
-      ref,
-    }),
+  const props = {
+    ...defaultizedProps,
+    calendars: defaultizedProps.calendars ?? 2,
+    views: ['day'] as const,
+    openTo: 'day' as const,
+    showToolbar: defaultizedProps.showToolbar ?? false,
+    components: {
+      Field: MultiInputDateRangeField,
+      ...defaultizedProps.components,
+    },
+    componentsProps: {
+      ...defaultizedProps.componentsProps,
+      field: (ownerState: any) => ({
+        ...resolveComponentProps(defaultizedProps.componentsProps?.field, ownerState),
+        ref,
+      }),
+    },
   };
 
   const { renderPicker } = useDesktopRangePicker({
-    props: { ...other, components, componentsProps, views: ['day'], openTo: 'day' },
+    props,
     valueManager: dateRangePickerValueManager,
-    renderViews: (viewProps) =>
-      renderDateRangeViews({ calendars, ...other, ...viewProps, components, componentsProps }),
+    renderViews: (viewProps) => renderDateRangeViews({ ...props, ...viewProps }),
   });
 
   return renderPicker();
@@ -135,7 +134,6 @@ DesktopDateRangePicker2.propTypes = {
    * @default undefined
    */
   fixedWeekNumber: PropTypes.number,
-  hideTabs: PropTypes.bool,
   /**
    * Format of the date when rendered in the input(s).
    */
