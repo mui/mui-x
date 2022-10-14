@@ -11,7 +11,7 @@ import {
   useValidation,
 } from '@mui/x-date-pickers/internals';
 import { DateRange } from '../../models/range';
-import {
+import type {
   UseMultiInputDateTimeRangeFieldDefaultizedProps,
   UseMultiInputDateTimeRangeFieldParams,
   UseMultiInputDateTimeRangeFieldProps,
@@ -22,10 +22,11 @@ import {
   validateDateTimeRange,
 } from '../validation/useDateTimeRangeValidation';
 import { dateRangePickerValueManager } from '../../../DateRangePicker/shared';
+import type { UseMultiInputRangeFieldResponse } from './useMultiInputRangeField.types';
 
 export const useDefaultizedDateTimeRangeFieldProps = <TDate, AdditionalProps extends {}>(
   props: UseMultiInputDateTimeRangeFieldProps<TDate>,
-): UseMultiInputDateTimeRangeFieldDefaultizedProps<TDate> & AdditionalProps => {
+): UseMultiInputDateTimeRangeFieldDefaultizedProps<TDate, AdditionalProps> => {
   const utils = useUtils<TDate>();
   const defaultDates = useDefaultDates<TDate>();
 
@@ -53,7 +54,10 @@ export const useMultiInputDateTimeRangeField = <TDate, TChildProps extends {}>({
   endInputProps: inEndInputProps,
   startInputRef,
   endInputRef,
-}: UseMultiInputDateTimeRangeFieldParams<TDate, TChildProps>) => {
+}: UseMultiInputDateTimeRangeFieldParams<
+  TDate,
+  TChildProps
+>): UseMultiInputRangeFieldResponse<TChildProps> => {
   const sharedProps = useDefaultizedDateTimeRangeFieldProps<TDate, TChildProps>(inSharedProps);
 
   const { value: valueProp, defaultValue, format, onChange } = sharedProps;
@@ -112,17 +116,15 @@ export const useMultiInputDateTimeRangeField = <TDate, TChildProps extends {}>({
     DateTimeRangeValidationError,
     DateTimeRangeComponentValidationProps<TDate>
   >({ ...sharedProps, value }, validateDateTimeRange, () => true);
-  const startInputError = React.useMemo(() => validationError[0] !== null, [validationError]);
-  const endInputError = React.useMemo(() => validationError[1] !== null, [validationError]);
 
   const startDateResponse = {
     ...rawStartDateResponse,
-    error: startInputError,
+    error: !!validationError[0],
   };
 
   const endDateResponse = {
     ...rawEndDateResponse,
-    error: endInputError,
+    error: !!validationError[1],
   };
 
   return { startDate: startDateResponse, endDate: endDateResponse };

@@ -14,6 +14,7 @@ import {
   validateDateRange,
 } from '../validation/useDateRangeValidation';
 import { dateRangePickerValueManager } from '../../../DateRangePicker/shared';
+import type { UseMultiInputRangeFieldResponse } from './useMultiInputRangeField.types';
 
 export const useMultiInputDateRangeField = <TDate, TChildProps extends {}>({
   sharedProps: inSharedProps,
@@ -21,7 +22,10 @@ export const useMultiInputDateRangeField = <TDate, TChildProps extends {}>({
   endInputProps: inEndInputProps,
   startInputRef,
   endInputRef,
-}: UseMultiInputDateRangeFieldParams<TDate, TChildProps>) => {
+}: UseMultiInputDateRangeFieldParams<
+  TDate,
+  TChildProps
+>): UseMultiInputRangeFieldResponse<TChildProps> => {
   const sharedProps = useDefaultizedDateRangeFieldProps<TDate, TChildProps>(inSharedProps);
 
   const { value: valueProp, defaultValue, format, onChange } = sharedProps;
@@ -80,17 +84,15 @@ export const useMultiInputDateRangeField = <TDate, TChildProps extends {}>({
     DateRangeValidationError,
     DateRangeComponentValidationProps<TDate>
   >({ ...sharedProps, value }, validateDateRange, () => true);
-  const startInputError = React.useMemo(() => validationError[0] !== null, [validationError]);
-  const endInputError = React.useMemo(() => validationError[1] !== null, [validationError]);
 
   const startDateResponse = {
     ...rawStartDateResponse,
-    error: startInputError,
+    error: !!validationError[0],
   };
 
   const endDateResponse = {
     ...rawEndDateResponse,
-    error: endInputError,
+    error: !!validationError[1],
   };
 
   return { startDate: startDateResponse, endDate: endDateResponse };
