@@ -4,7 +4,6 @@ import {
   GridColDef,
   GridValueGetterParams,
   GridValueSetterParams,
-  GridCellValue,
 } from '@mui/x-data-grid';
 
 function getFullName(params: GridValueGetterParams) {
@@ -16,7 +15,7 @@ function setFullName(params: GridValueSetterParams) {
   return { ...params.row, firstName, lastName };
 }
 
-function parseFullName(value: GridCellValue) {
+function parseFullName(value: any) {
   return String(value)
     .split(' ')
     .map((str) => (str.length > 0 ? str[0].toUpperCase() + str.slice(1) : ''))

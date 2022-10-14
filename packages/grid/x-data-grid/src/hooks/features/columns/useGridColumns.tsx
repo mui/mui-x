@@ -9,7 +9,6 @@ import {
   gridColumnFieldsSelector,
   gridColumnDefinitionsSelector,
   gridColumnLookupSelector,
-  gridColumnsTotalWidthSelector,
   gridColumnsStateSelector,
   gridColumnVisibilityModelSelector,
   gridVisibleColumnDefinitionsSelector,
@@ -121,14 +120,6 @@ export function useGridColumns(
 
   const getVisibleColumns = React.useCallback<GridColumnApi['getVisibleColumns']>(
     () => gridVisibleColumnDefinitionsSelector(apiRef),
-    [apiRef],
-  );
-
-  const getColumnsMeta = React.useCallback<GridColumnApi['getColumnsMeta']>(
-    () => ({
-      totalWidth: gridColumnsTotalWidthSelector(apiRef),
-      positions: gridColumnPositionsSelector(apiRef),
-    }),
     [apiRef],
   );
 
@@ -254,7 +245,6 @@ export function useGridColumns(
     getColumnIndex,
     getColumnPosition,
     getVisibleColumns,
-    getColumnsMeta,
     updateColumns,
     setColumnVisibilityModel,
     setColumnVisibility,

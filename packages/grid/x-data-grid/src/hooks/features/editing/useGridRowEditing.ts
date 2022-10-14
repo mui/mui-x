@@ -3,7 +3,6 @@ import { unstable_useEventCallback as useEventCallback } from '@mui/utils';
 import {
   useGridApiEventHandler,
   useGridApiOptionHandler,
-  GridSignature,
 } from '../../utils/useGridApiEventHandler';
 import { GridEventListener } from '../../../models/events/gridEventListener';
 import {
@@ -74,7 +73,6 @@ export const useGridRowEditing = (
     onProcessRowUpdateError,
     rowModesModel: rowModesModelProp,
     onRowModesModelChange,
-    signature,
   } = props;
 
   const runIfEditModeIsRow =
@@ -320,8 +318,7 @@ export const useGridRowEditing = (
     const isNewModelDifferentFromProp = newModel !== props.rowModesModel;
 
     if (onRowModesModelChange && isNewModelDifferentFromProp) {
-      const details = signature === GridSignature.DataGridPro ? { api: apiRef.current } : {};
-      onRowModesModelChange(newModel, details);
+      onRowModesModelChange(newModel, {});
     }
 
     if (props.rowModesModel && isNewModelDifferentFromProp) {

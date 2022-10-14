@@ -1,4 +1,4 @@
-import { GridColDef, GridColumnsMeta, GridStateColDef } from '../colDef/gridColDef';
+import { GridColDef, GridStateColDef } from '../colDef/gridColDef';
 import type { GridColumnVisibilityModel } from '../../hooks/features/columns/gridColumnsInterfaces';
 
 /**
@@ -22,12 +22,6 @@ export interface GridColumnApi {
    * @returns {GridStateColDef[]} An array of [[GridStateColDef]].
    */
   getVisibleColumns: () => GridStateColDef[];
-  /**
-   * Returns the [[GridColumnsMeta]] for each column.
-   * @returns {GridColumnsMeta[]} All [[GridColumnsMeta]] objects.
-   * @deprecatedUse Use `gridColumnsTotalWidthSelector` or `gridColumnPositionsSelector` selectors instead.
-   */
-  getColumnsMeta: () => GridColumnsMeta;
   /**
    * Returns the index position of a column. By default, only the visible columns are considered.
    * Pass `false` to `useVisibleColumns` to consider all columns.
