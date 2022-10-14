@@ -5,6 +5,7 @@ import { DateRangePicker } from '@mui/x-date-pickers-pro/DateRangePicker';
 import { fireEvent, screen } from '@mui/monorepo/test/utils/createRenderer';
 import { expect } from 'chai';
 import { createPickerRenderer, stubMatchMedia, wrapPickerMount } from 'test/utils/pickers-utils';
+import describeValidation from '../tests/describeValidation';
 
 describe('<DateRangePicker />', () => {
   const { render, clock } = createPickerRenderer({ clock: 'fake' });
@@ -33,6 +34,13 @@ describe('<DateRangePicker />', () => {
       ],
     }),
   );
+
+  describeValidation(DateRangePicker, () => ({
+    render,
+    clock,
+    isLegacyPicker: true,
+    withDate: true,
+  }));
 
   it('should not open mobile picker dialog when clicked on input', () => {
     render(

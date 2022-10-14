@@ -17,7 +17,6 @@ import {
   UseMultiInputTimeRangeFieldProps,
 } from '../../../MultiInputTimeRangeField/MultiInputTimeRangeField.types';
 import { dateRangePickerValueManager } from '../../../DateRangePicker/shared';
-import { timeRangeFieldValueManager } from '../valueManager/timeRangeValueManager';
 
 export const useDefaultizedTimeRangeFieldProps = <TDate, AdditionalProps extends {}>(
   props: UseMultiInputTimeRangeFieldProps<TDate>,
@@ -102,19 +101,17 @@ export const useMultiInputTimeRangeField = <TDate, TChildProps extends {}>({
     TimeRangeValidationError,
     TimeRangeComponentValidationProps
   >({ ...sharedProps, value }, validateTimeRange, () => true);
-  const inputError = React.useMemo(
-    () => timeRangeFieldValueManager.hasError(validationError),
-    [validationError],
-  );
+  const startInputError = React.useMemo(() => validationError[0] !== null, [validationError]);
+  const endInputError = React.useMemo(() => validationError[1] !== null, [validationError]);
 
   const startDateResponse = {
     ...rawStartDateResponse,
-    error: inputError,
+    error: startInputError,
   };
 
   const endDateResponse = {
     ...rawEndDateResponse,
-    error: inputError,
+    error: endInputError,
   };
 
   return { startDate: startDateResponse, endDate: endDateResponse };
