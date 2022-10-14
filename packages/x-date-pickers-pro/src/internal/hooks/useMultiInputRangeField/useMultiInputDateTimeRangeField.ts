@@ -22,7 +22,6 @@ import {
   validateDateTimeRange,
 } from '../validation/useDateTimeRangeValidation';
 import { dateRangePickerValueManager } from '../../../DateRangePicker/shared';
-import { dateTimeRangeFieldValueManager } from '../valueManager/dateTimeRangeValueManager';
 
 export const useDefaultizedDateTimeRangeFieldProps = <TDate, AdditionalProps extends {}>(
   props: UseMultiInputDateTimeRangeFieldProps<TDate>,
@@ -113,19 +112,15 @@ export const useMultiInputDateTimeRangeField = <TDate, TChildProps extends {}>({
     DateTimeRangeValidationError,
     DateTimeRangeComponentValidationProps<TDate>
   >({ ...sharedProps, value }, validateDateTimeRange, () => true);
-  const inputError = React.useMemo(
-    () => dateTimeRangeFieldValueManager.hasError(validationError),
-    [validationError],
-  );
 
   const startDateResponse = {
     ...rawStartDateResponse,
-    error: inputError,
+    error: !!validationError[0],
   };
 
   const endDateResponse = {
     ...rawEndDateResponse,
-    error: inputError,
+    error: !!validationError[1],
   };
 
   return { startDate: startDateResponse, endDate: endDateResponse };
