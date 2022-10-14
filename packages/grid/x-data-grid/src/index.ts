@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { GridApiCommunity } from './models/api/gridApiCommunity';
 import { GridInitialStateCommunity, GridStateCommunity } from './models/gridStateCommunity';
 
@@ -35,8 +34,3 @@ export type GridState = GridStateCommunity;
  * The initial state of `DataGrid`.
  */
 export type GridInitialState = GridInitialStateCommunity;
-
-/**
- * @deprecated Use `React.MutableRefObject<GridApi>` instead
- */
-export type GridApiRef = React.MutableRefObject<GridApiCommunity>;

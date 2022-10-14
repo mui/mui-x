@@ -100,14 +100,6 @@ export const gridFilteredSortedRowIdsSelector = createSelector(
 );
 
 /**
- * @category Filtering
- * @deprecated Use `gridVisibleSortedRowIdsSelector` instead
- * @ignore - do not document.
- * TODO: Add deprecation warning once we have the new selectors without the "visible" keyword.
- */
-export const gridVisibleRowsSelector = gridVisibleSortedRowIdsSelector;
-
-/**
  * Get the id and the model of the top level rows accessible after the filtering process.
  * @category Filtering
  */
