@@ -1,6 +1,6 @@
 # Migration from v4 to v5
 
-<p class="description">MUI X v5 is now stable!</p>
+<p class="description">This guide describes the changes needed to migrate the Data Grid from v4 to v5.</p>
 
 ## Introduction
 
