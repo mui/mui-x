@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
-// import { GridStateInitializer } from '../../utils/useGridInitializeState';
+import { GridStateInitializer } from '../../utils/useGridInitializeState';
 import { GridColumnNode, isLeaf } from '../../../models/gridColumnGrouping';
 import {
   gridColumnGroupsLookupSelector,
@@ -47,6 +47,38 @@ const createGroupLookup = (columnGroupingModel: GridColumnNode[]): GridColumnGro
   });
 
   return { ...groupLookup };
+};
+
+export const columnGroupsStateInitializer: GridStateInitializer<
+  Pick<DataGridProcessedProps, 'columnGroupingModel' | 'experimentalFeatures'>
+> = (state, props, apiRef) => {
+  if (!props.experimentalFeatures?.columnGrouping) {
+    return state;
+  }
+
+  const columnFields = gridColumnFieldsSelector(apiRef);
+  const visibleColumnFields = gridVisibleColumnFieldsSelector(apiRef);
+
+  const groupLookup = createGroupLookup(props.columnGroupingModel ?? []);
+  const unwrappedGroupingModel = unwrapGroupingColumnModel(props.columnGroupingModel ?? []);
+  const columnGroupsHeaderStructure = getColumnGroupsHeaderStructure(
+    columnFields,
+    unwrappedGroupingModel,
+  );
+  const maxDepth =
+    visibleColumnFields.length === 0
+      ? 0
+      : Math.max(...visibleColumnFields.map((field) => unwrappedGroupingModel[field]?.length ?? 0));
+
+  return {
+    ...state,
+    columnGrouping: {
+      lookup: groupLookup,
+      unwrappedGroupingModel,
+      headerStructure: columnGroupsHeaderStructure,
+      maxDepth,
+    },
+  };
 };
 
 /**

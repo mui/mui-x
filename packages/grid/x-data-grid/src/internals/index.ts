@@ -21,7 +21,10 @@ export {
 } from '../hooks/features/columnMenu/useGridColumnMenu';
 export { useGridColumns, columnsStateInitializer } from '../hooks/features/columns/useGridColumns';
 export { useGridColumnSpanning } from '../hooks/features/columns/useGridColumnSpanning';
-export { useGridColumnGrouping } from '../hooks/features/columnGrouping/useGridColumnGrouping';
+export {
+  useGridColumnGrouping,
+  columnGroupsStateInitializer,
+} from '../hooks/features/columnGrouping/useGridColumnGrouping';
 export type {
   GridColumnRawLookup,
   GridColumnsRawState,

@@ -38,7 +38,10 @@ import { useGridDimensions } from '../hooks/features/dimensions/useGridDimension
 import { rowsMetaStateInitializer, useGridRowsMeta } from '../hooks/features/rows/useGridRowsMeta';
 import { useGridStatePersistence } from '../hooks/features/statePersistence/useGridStatePersistence';
 import { useGridColumnSpanning } from '../hooks/features/columns/useGridColumnSpanning';
-import { useGridColumnGrouping } from '../hooks/features/columnGrouping/useGridColumnGrouping';
+import {
+  useGridColumnGrouping,
+  columnGroupsStateInitializer,
+} from '../hooks/features/columnGrouping/useGridColumnGrouping';
 
 export const useDataGridComponent = (props: DataGridProcessedProps) => {
   const apiRef = useGridInitialization<GridApiCommunity>(undefined, props);
@@ -64,6 +67,7 @@ export const useDataGridComponent = (props: DataGridProcessedProps) => {
   useGridInitializeState(paginationStateInitializer, apiRef, props);
   useGridInitializeState(rowsMetaStateInitializer, apiRef, props);
   useGridInitializeState(columnMenuStateInitializer, apiRef, props);
+  useGridInitializeState(columnGroupsStateInitializer, apiRef, props);
 
   useGridKeyboardNavigation(apiRef, props);
   useGridSelection(apiRef, props);
