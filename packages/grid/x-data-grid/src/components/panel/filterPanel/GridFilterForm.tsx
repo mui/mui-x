@@ -373,7 +373,13 @@ const GridFilterForm = React.forwardRef<HTMLDivElement, GridFilterFormProps>(
     );
 
     return (
-      <GridFilterFormRoot ref={ref} className={classes.root} ownerState={ownerState} data-id={item.id} {...other}>
+      <GridFilterFormRoot
+        ref={ref}
+        className={classes.root}
+        ownerState={ownerState}
+        data-id={item.id}
+        {...other}
+      >
         <FilterFormDeleteIcon
           variant="standard"
           as={rootProps.components.BaseFormControl}
