@@ -99,7 +99,7 @@ As with row grouping, you can display the aggregated values either in the footer
 :::info
 If the aggregated value is displayed in the grouping row, it always has priority over the row data.
 
-This means that the data from groups explicitly provided in the dataset are ignored in favor of their aggregated values.  
+This means that the data from groups explicitly provided in the dataset are ignored in favor of their aggregated values.
 :::
 
 The demo below shows the **SUM** aggregation on the **Size** column and the **MAX** aggregation on the **Last modification** column:
