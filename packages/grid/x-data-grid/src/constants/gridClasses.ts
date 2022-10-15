@@ -70,6 +70,10 @@ export interface GridClasses {
    */
   cellCheckbox: string;
   /**
+   * Styles applied to the skeleton cell element.
+   */
+  cellSkeleton: string;
+  /**
    * Styles applied to the selection checkbox element.
    */
   checkboxInput: string;
@@ -314,6 +318,14 @@ export interface GridClasses {
    */
   menuList: string;
   /**
+   * Styles applied to the overlay wrapper element.
+   */
+  overlayWrapper: string;
+  /**
+   * Styles applied to the overlay wrapper inner element.
+   */
+  overlayWrapperInner: string;
+  /**
    * Styles applied to the overlay element.
    */
   overlay: string;
@@ -507,6 +519,7 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'cell',
   'cellContent',
   'cellCheckbox',
+  'cellSkeleton',
   'checkboxInput',
   'columnHeader--alignCenter',
   'columnHeader--alignLeft',

@@ -11,18 +11,26 @@ import {
   openPicker,
   getClockTouchEvent,
   withPickerControls,
-} from '../../../../test/utils/pickers-utils';
+} from 'test/utils/pickers-utils';
+import describeValidation from '@mui/x-date-pickers/tests/describeValidation';
 
 const WrappedMobileDateTimePicker = withPickerControls(MobileDateTimePicker)({
-  DialogProps: { TransitionComponent: FakeTransitionComponent },
+  components: { MobileTransition: FakeTransitionComponent },
   renderInput: (params) => <TextField {...params} />,
 });
 
 describe('<MobileDateTimePicker />', () => {
-  const { render } = createPickerRenderer({
+  const { render, clock } = createPickerRenderer({
     clock: 'fake',
     clockConfig: new Date('2018-01-01T00:00:00.000'),
   });
+
+  describeValidation(MobileDateTimePicker, () => ({
+    render,
+    clock,
+    views: ['year', 'month', 'day', 'hours', 'minutes'],
+    isLegacyPicker: true,
+  }));
 
   it('prop: open – overrides open state', () => {
     render(
@@ -55,18 +63,48 @@ describe('<MobileDateTimePicker />', () => {
     expect(screen.getByMuiTest('datetimepicker-toolbar-day')).to.have.text('Nov 20');
   });
 
-  it('prop `showToolbar` – renders toolbar in MobileDateTimePicker', () => {
+  it('should render toolbar and tabs by default', () => {
     render(
       <MobileDateTimePicker
         open
-        showToolbar
         onChange={() => {}}
         value={adapterToUse.date(new Date(2021, 10, 20, 10, 1, 22))}
         renderInput={(params) => <TextField {...params} />}
       />,
     );
 
-    expect(screen.getByMuiTest('picker-toolbar')).toBeVisible();
+    expect(screen.getByRole('button', { name: /go to text input view/i })).not.to.equal(null);
+    expect(screen.getByRole('tab', { name: 'pick date' })).not.to.equal(null);
+  });
+
+  it('should not render only toolbar when `showToolbar` is `false`', () => {
+    render(
+      <MobileDateTimePicker
+        open
+        showToolbar={false}
+        onChange={() => {}}
+        value={adapterToUse.date(new Date(2021, 10, 20, 10, 1, 22))}
+        renderInput={(params) => <TextField {...params} />}
+      />,
+    );
+
+    expect(screen.queryByRole('button', { name: /go to text input view/i })).to.equal(null);
+    expect(screen.getByRole('tab', { name: 'pick date' })).not.to.equal(null);
+  });
+
+  it('should not render tabs when `hideTabs` is `true`', () => {
+    render(
+      <MobileDateTimePicker
+        open
+        hideTabs
+        onChange={() => {}}
+        value={adapterToUse.date(new Date(2021, 10, 20, 10, 1, 22))}
+        renderInput={(params) => <TextField {...params} />}
+      />,
+    );
+
+    expect(screen.getByRole('button', { name: /go to text input view/i })).not.to.equal(null);
+    expect(screen.queryByRole('tab', { name: 'pick date' })).to.equal(null);
   });
 
   it('can render seconds on view', () => {
@@ -76,6 +114,7 @@ describe('<MobileDateTimePicker />', () => {
         onChange={() => {}}
         open
         showToolbar
+        openTo="seconds"
         views={['seconds']}
         value={adapterToUse.date(new Date(2021, 10, 20, 10, 1, 22))}
       />,
@@ -320,5 +359,19 @@ describe('<MobileDateTimePicker />', () => {
     // TODO: Write test
     // it('should call onClose and onAccept with the live value when clicking outside of the picker', () => {
     // })
+  });
+
+  describe('localization', () => {
+    it('should respect the `localeText` prop', () => {
+      render(
+        <WrappedMobileDateTimePicker
+          initialValue={null}
+          localeText={{ cancelButtonLabel: 'Custom cancel' }}
+        />,
+      );
+      openPicker({ type: 'date-time', variant: 'mobile' });
+
+      expect(screen.queryByText('Custom cancel')).not.to.equal(null);
+    });
   });
 });

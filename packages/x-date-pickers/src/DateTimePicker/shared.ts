@@ -2,31 +2,35 @@ import * as React from 'react';
 import { useThemeProps } from '@mui/material/styles';
 import { useDefaultDates, useUtils } from '../internals/hooks/useUtils';
 import { ExportedClockPickerProps } from '../ClockPicker/ClockPicker';
-import { ExportedCalendarPickerProps } from '../CalendarPicker/CalendarPicker';
+import { ExportedDateCalendarProps } from '../DateCalendar/DateCalendar';
 import { DateTimeValidationError } from '../internals/hooks/validation/useDateTimeValidation';
-import { ValidationProps } from '../internals/hooks/validation/useValidation';
+import { ValidationCommonProps } from '../internals/hooks/validation/useValidation';
 import { BasePickerProps } from '../internals/models/props/basePickerProps';
 import { ExportedDateInputProps } from '../internals/components/PureDateInput';
 import { CalendarOrClockPickerView } from '../internals/models';
 import { PickerStateValueManager } from '../internals/hooks/usePickerState';
-import { parsePickerInputValue, parseNonNullablePickerDate } from '../internals/utils/date-utils';
+import { applyDefaultDate, replaceInvalidDateByNull } from '../internals/utils/date-utils';
 import { BaseToolbarProps } from '../internals/models/props/baseToolbarProps';
 import { DefaultizedProps } from '../internals/models/helpers';
-import { BaseDateValidationProps } from '../internals/hooks/validation/models';
+import {
+  BaseDateValidationProps,
+  BaseTimeValidationProps,
+} from '../internals/hooks/validation/models';
 
-export interface BaseDateTimePickerProps<TInputDate, TDate>
+export interface BaseDateTimePickerProps<TDate>
   extends ExportedClockPickerProps<TDate>,
-    ExportedCalendarPickerProps<TDate>,
-    BasePickerProps<TInputDate | null, TDate | null>,
-    ValidationProps<DateTimeValidationError, TInputDate | null>,
-    ExportedDateInputProps<TInputDate, TDate> {
+    ExportedDateCalendarProps<TDate>,
+    BasePickerProps<TDate | null>,
+    ValidationCommonProps<DateTimeValidationError, TDate | null>,
+    ExportedDateInputProps<TDate> {
   /**
    * 12h/24h view for hour selection clock.
    * @default `utils.is12HourCycleInCurrentLocale()`
    */
   ampm?: boolean;
   /**
-   * To show tabs.
+   * Toggles visibility of date time switching tabs
+   * @default false for mobile, true for desktop
    */
   hideTabs?: boolean;
   /**
@@ -52,6 +56,8 @@ export interface BaseDateTimePickerProps<TInputDate, TDate>
   onViewChange?: (view: CalendarOrClockPickerView) => void;
   /**
    * First view to show.
+   * Must be a valid option from `views` list
+   * @default 'day'
    */
   openTo?: CalendarOrClockPickerView;
   /**
@@ -75,20 +81,20 @@ export interface BaseDateTimePickerProps<TInputDate, TDate>
   toolbarPlaceholder?: React.ReactNode;
   /**
    * Array of views to show.
+   * @default ['year', 'day', 'hours', 'minutes']
    */
   views?: readonly CalendarOrClockPickerView[];
 }
 
 export function useDateTimePickerDefaultizedProps<
-  TInputDate,
   TDate,
-  Props extends BaseDateTimePickerProps<TInputDate, TDate>,
+  Props extends BaseDateTimePickerProps<TDate>,
 >(
   props: Props,
   name: string,
 ): DefaultizedProps<
   Props,
-  'openTo' | 'views' | keyof BaseDateValidationProps<TDate>,
+  'openTo' | 'views' | keyof BaseDateValidationProps<TDate> | keyof BaseTimeValidationProps,
   { inputFormat: string }
 > {
   // This is technically unsound if the type parameters appear in optional props.
@@ -121,12 +127,12 @@ export function useDateTimePickerDefaultizedProps<
     disablePast: false,
     disableFuture: false,
     ...themeProps,
-    minDate: parseNonNullablePickerDate(
+    minDate: applyDefaultDate(
       utils,
       themeProps.minDateTime ?? themeProps.minDate,
       defaultDates.minDate,
     ),
-    maxDate: parseNonNullablePickerDate(
+    maxDate: applyDefaultDate(
       utils,
       themeProps.maxDateTime ?? themeProps.maxDate,
       defaultDates.maxDate,
@@ -136,9 +142,9 @@ export function useDateTimePickerDefaultizedProps<
   };
 }
 
-export const dateTimePickerValueManager: PickerStateValueManager<any, any, any> = {
+export const dateTimePickerValueManager: PickerStateValueManager<any, any> = {
   emptyValue: null,
   getTodayValue: (utils) => utils.date()!,
-  parseInput: parsePickerInputValue,
+  cleanValue: replaceInvalidDateByNull,
   areValuesEqual: (utils, a, b) => utils.isEqual(a, b),
 };

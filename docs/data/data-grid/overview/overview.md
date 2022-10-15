@@ -40,7 +40,7 @@ The commercial version is available in the form of two plans: Pro and Premium.
 #### Pro Plan [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
 
 The Pro version extends the features available in the MIT version, by allowing to sort and filter multiple columns at the same time.
-It also brings new features, e.g. column groups, column pinning, tree data, row and column reordering, etc.
+It also brings new features, e.g. column groups, column pinning, tree data, row, and column reordering, etc.
 Finally, the Pro version leverages virtualization to handle bigger datasets.
 The following grid displays 31 columns and 100,000 rows - over 3 million cells in total.
 
@@ -106,7 +106,6 @@ You can find more details on, the [feature comparison](/x/react-data-grid/gettin
 
 Here are some resources you might be interested in to learn more about the grid:
 
-- The storybook used for [internal development](https://material-ui-x.netlify.app/storybook/)
 - The [source on GitHub](https://github.com/mui/mui-x/tree/master/packages/)
 - The [Material Design specification](https://material.io/components/data-tables) specification
 - The accessibility [WAI-ARIA authoring practices](https://www.w3.org/WAI/ARIA/apg/patterns/grid/)

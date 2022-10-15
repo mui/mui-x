@@ -45,9 +45,9 @@ The time picker component can be disabled or read-only.
 
 {{"demo": "FormPropsTimePickers.js"}}
 
-## Time validation
+## Validation
 
-{{"demo": "TimeValidationTimePicker.js"}}
+You can find the documentation in the [Validation page](/react-date-pickers/validation/)
 
 ## Landscape
 
@@ -55,9 +55,9 @@ The time picker component can be disabled or read-only.
 
 ## Sub-components
 
-Some lower-level sub-components (`ClockPicker`) are also exported. These are rendered without a wrapper or outer logic (masked input, date values parsing and validation, etc.).
+Some lower-level sub-components (`ClockPicker`) are also exported.
 
-{{"demo": "SubComponentsTimePickers.js"}}
+{{"demo": "SubComponentsTimeCalendars.js"}}
 
 ## Seconds
 

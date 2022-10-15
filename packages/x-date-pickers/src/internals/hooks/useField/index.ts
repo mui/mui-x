@@ -2,9 +2,11 @@ export { useField } from './useField';
 export type {
   FieldValueManager,
   FieldSection,
-  UseFieldProps,
+  UseFieldInternalProps,
+  UseFieldForwardedProps,
   UseFieldParams,
   UseFieldResponse,
+  FieldSelectedSections,
 } from './useField.interfaces';
 export {
   splitFormatIntoSections,

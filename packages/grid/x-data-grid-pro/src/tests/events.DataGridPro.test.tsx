@@ -1,6 +1,6 @@
 import * as React from 'react';
 // @ts-ignore Remove once the test utils are typed
-import { createRenderer, fireEvent, screen, waitFor, act } from '@mui/monorepo/test/utils';
+import { createRenderer, fireEvent, screen, act } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
 import {
   DataGridPro,
@@ -218,23 +218,19 @@ describe('<DataGridPro /> - Events Params', () => {
     });
 
     it('should allow to prevent the default behavior while allowing the event to propagate', async () => {
-      const handleEditCellPropsChange = spy((params, event) => {
+      const handleCellEditStop = spy((params, event) => {
         event.defaultMuiPrevented = true;
       });
-      render(<TestEvents onEditCellPropsChange={handleEditCellPropsChange} />);
+      render(<TestEvents onCellEditStop={handleCellEditStop} />);
       const cell = getCell(1, 1);
+      expect(cell).not.to.have.class(gridClasses['cell--editing']);
       fireEvent.doubleClick(cell);
+      expect(cell).to.have.class(gridClasses['cell--editing']);
+
       const input = cell.querySelector('input')!;
-
-      fireEvent.change(input, { target: { value: 'Lisa' } });
-
-      clock.tick(500);
-      expect(handleEditCellPropsChange.callCount).to.equal(1);
       fireEvent.keyDown(input, { key: 'Enter' });
-
-      await waitFor(() => {
-        expect(cell).to.have.text('Jack');
-      });
+      expect(handleCellEditStop.callCount).to.equal(1);
+      expect(cell).to.have.class(gridClasses['cell--editing']);
     });
 
     it('should select a row by default', () => {
@@ -334,6 +330,24 @@ describe('<DataGridPro /> - Events Params', () => {
     render(<TestEvents onRowsScrollEnd={handleRowsScrollEnd} />);
     act(() => apiRef.current.publishEvent('rowsScroll', { left: 0, top: 3 * 52 }));
     expect(handleRowsScrollEnd.callCount).to.equal(1);
+  });
+
+  it('publishing GRID_ROWS_SCROLL should call onFetchRows callback when rows lazy loading is enabled', () => {
+    const handleFetchRows = spy();
+    render(
+      <TestEvents
+        experimentalFeatures={{
+          lazyLoading: true,
+        }}
+        onFetchRows={handleFetchRows}
+        sortingMode="server"
+        filterMode="server"
+        rowsLoadingMode="server"
+        rowCount={50}
+      />,
+    );
+    act(() => apiRef.current.publishEvent('rowsScroll', { left: 0, top: 3 * 52 }));
+    expect(handleFetchRows.callCount).to.equal(1);
   });
 
   it('call onRowsScrollEnd when viewport scroll reaches the bottom', function test() {

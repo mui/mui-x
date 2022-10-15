@@ -43,8 +43,6 @@ const GRID_API_INTERFACES_WITH_DEDICATED_PAGES = [
   'GridCsvExportApi',
   'GridScrollApi',
   'GridEditingApi',
-  'GridOldEditingApi',
-  'GridNewEditingApi',
   'GridRowGroupingApi',
   'GridColumnPinningApi',
   'GridDetailPanelApi',
@@ -194,7 +192,7 @@ function generateMarkdownFromProperties(
         ' [<span class="plan-pro" title="Pro plan"></span>](/x/introduction/licensing/#pro-plan)';
     } else if (property.projects.includes('x-data-grid-premium')) {
       planImg =
-        ' [<span class="plan-premium" title="Premium plan"></span>](https://mui.com/store/items/material-ui-premium/)';
+        ' [<span class="plan-premium" title="Premium plan"></span>](/x/introduction/licensing/#premium-plan)';
     } else {
       throw new Error(`No valid plan found for ${property.name} property in ${object.name}`);
     }
@@ -346,10 +344,10 @@ export default function buildInterfacesDocumentation(options: BuildInterfacesDoc
         path.resolve(documentationRoot, project.documentationFolderName, `${slug}.js`),
         `import * as React from 'react';
     import MarkdownDocs from '@mui/monorepo/docs/src/modules/components/MarkdownDocs';
-    import { demos, docs, demoComponents } from './${slug}.md?@mui/markdown';
+    import * as pageProps from './${slug}.md?@mui/markdown';
 
     export default function Page() {
-      return <MarkdownDocs demos={demos} docs={docs} demoComponents={demoComponents} />;
+      return <MarkdownDocs {...pageProps} />;
     }
         `,
         project,

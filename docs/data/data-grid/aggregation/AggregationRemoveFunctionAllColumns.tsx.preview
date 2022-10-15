@@ -1,0 +1,16 @@
+<DataGridPremium
+  rows={data.rows}
+  columns={COLUMNS}
+  aggregationFunctions={Object.fromEntries(
+    Object.entries(GRID_AGGREGATION_FUNCTIONS).filter(
+      ([name]) => name !== 'sum',
+    ),
+  )}
+  initialState={{
+    aggregation: {
+      model: {
+        gross: 'max',
+      },
+    },
+  }}
+/>

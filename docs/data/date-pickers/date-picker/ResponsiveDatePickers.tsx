@@ -9,7 +9,7 @@ import { MobileDatePicker } from '@mui/x-date-pickers/MobileDatePicker';
 import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
 
 export default function ResponsiveDatePickers() {
-  const [value, setValue] = React.useState<Dayjs | null>(dayjs());
+  const [value, setValue] = React.useState<Dayjs | null>(dayjs('2022-04-07'));
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -25,14 +25,12 @@ export default function ResponsiveDatePickers() {
         <DesktopDatePicker
           label="For desktop"
           value={value}
-          minDate={dayjs('2017-01-01')}
           onChange={(newValue) => {
             setValue(newValue);
           }}
           renderInput={(params) => <TextField {...params} />}
         />
         <DatePicker
-          disableFuture
           label="Responsive"
           openTo="year"
           views={['year', 'month', 'day']}

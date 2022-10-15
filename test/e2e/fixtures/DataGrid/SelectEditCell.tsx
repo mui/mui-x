@@ -7,10 +7,9 @@ const SelectEditInputCell = (props: GridRenderEditCellParams) => {
   const { id, value, field } = props;
   const apiRef = useGridApiContext();
 
-  const handleChange = (event) => {
-    apiRef.current.setEditCellValue({ id, field, value: event.target.value }, event);
-    apiRef.current.commitCellChange({ id, field });
-    apiRef.current.setCellMode(id, field, 'view');
+  const handleChange = async (event) => {
+    await apiRef.current.setEditCellValue({ id, field, value: event.target.value }, event);
+    apiRef.current.stopCellEditMode({ id, field });
   };
 
   return (

@@ -94,9 +94,8 @@ describe('e2e', () => {
     it('should select the first column header when pressing tab key', async () => {
       await renderFixture('DataGrid/KeyboardNavigationFocus');
 
-      expect(
-        await page.evaluate(() => document.activeElement?.getAttribute('data-testid')),
-      ).to.equal('initial-focus');
+      const button = page.locator('text=initial focus');
+      expect(await button.evaluate((node) => document.activeElement === node));
 
       await page.keyboard.press('Tab');
       expect(await page.evaluate(() => document.activeElement?.textContent)).to.equal('brand');
@@ -105,9 +104,9 @@ describe('e2e', () => {
     it('should implement the roving tabindex pattern', async () => {
       await renderFixture('DataGrid/KeyboardNavigationFocus');
 
-      expect(
-        await page.evaluate(() => document.activeElement?.getAttribute('data-testid')),
-      ).to.equal('initial-focus');
+      const button = page.locator('text=initial focus');
+      expect(await button.evaluate((node) => document.activeElement === node));
+
       await page.keyboard.press('Tab');
       await waitFor(async () => {
         expect(await page.evaluate(() => document.activeElement?.textContent)).to.equal('brand');
@@ -153,11 +152,9 @@ describe('e2e', () => {
 
     it('should display the rows', async () => {
       await renderFixture('DataGrid/ConcurrentReactUpdate');
-      expect(
-        await page.evaluate(() =>
-          Array.from(document.querySelectorAll('[role="cell"]')).map((node) => node.textContent),
-        ),
-      ).to.deep.equal(['1', '2']);
+      const cells = page.locator('[role="cell"]');
+      await cells.first().waitFor();
+      expect(await cells.allTextContents()).to.deep.equal(['1', '2']);
     });
 
     it('should work with a select as the edit cell', async () => {
@@ -174,9 +171,7 @@ describe('e2e', () => {
 
     it('should reorder columns by dropping into the header', async () => {
       await renderFixture('DataGrid/ColumnReorder');
-      expect(
-        await page.evaluate(() => document.querySelector('[role="row"]')!.textContent!),
-      ).to.equal('brandyear');
+      expect(await page.locator('[role="row"]').first().textContent()).to.equal('brandyear');
       const brand = await page.$('[role="columnheader"][aria-colindex="1"] > [draggable]');
       const brandBoundingBox = await brand?.boundingBox();
       const year = await page.$('[role="columnheader"][aria-colindex="2"] > [draggable]');
@@ -203,9 +198,7 @@ describe('e2e', () => {
 
     it('should reorder columns by dropping into the body', async () => {
       await renderFixture('DataGrid/ColumnReorder');
-      expect(
-        await page.evaluate(() => document.querySelector('[role="row"]')!.textContent!),
-      ).to.equal('brandyear');
+      expect(await page.locator('[role="row"]').first().textContent()).to.equal('brandyear');
       const brand = await page.$('[role="columnheader"][aria-colindex="1"] > [draggable]');
       const brandBoundingBox = await brand?.boundingBox();
       const cell = await page.$('[role="row"][data-rowindex="0"] [role="cell"][data-colindex="1"]');
@@ -225,9 +218,7 @@ describe('e2e', () => {
         );
         await page.mouse.up();
       }
-      expect(
-        await page.evaluate(() => document.querySelector('[role="row"]')!.textContent!),
-      ).to.equal('yearbrand');
+      expect(await page.locator('[role="row"]').first().textContent()).to.equal('yearbrand');
     });
 
     it('should select one row', async () => {
@@ -262,11 +253,9 @@ describe('e2e', () => {
       await renderFixture('DataGrid/KeyboardEditDate');
 
       // Edit date column
-      expect(
-        await page.evaluate(
-          () => document.querySelector('[role="cell"][data-field="birthday"]')!.textContent!,
-        ),
-      ).to.equal('2/29/1984');
+      expect(await page.locator('[role="cell"][data-field="birthday"]').textContent()).to.equal(
+        '2/29/1984',
+      );
 
       // set 06/25/1986
       await page.dblclick('[role="cell"][data-field="birthday"]');
@@ -274,17 +263,13 @@ describe('e2e', () => {
 
       await page.keyboard.press('Enter');
 
-      expect(
-        await page.evaluate(
-          () => document.querySelector('[role="cell"][data-field="birthday"]')!.textContent!,
-        ),
-      ).to.equal('6/25/1986');
+      expect(await page.locator('[role="cell"][data-field="birthday"]').textContent()).to.equal(
+        '6/25/1986',
+      );
 
       // Edit dateTime column
       expect(
-        await page.evaluate(
-          () => document.querySelector('[role="cell"][data-field="lastConnection"]')!.textContent!,
-        ),
+        await page.locator('[role="cell"][data-field="lastConnection"]').textContent(),
       ).to.equal('2/20/2022, 6:50:00 AM');
 
       // start editing lastConnection
@@ -296,9 +281,7 @@ describe('e2e', () => {
       await page.keyboard.press('Enter');
 
       expect(
-        await page.evaluate(
-          () => document.querySelector('[role="cell"][data-field="lastConnection"]')!.textContent!,
-        ),
+        await page.locator('[role="cell"][data-field="lastConnection"]').textContent(),
       ).to.equal('1/31/2025, 4:05:00 PM');
     });
 
@@ -311,6 +294,9 @@ describe('e2e', () => {
         // wait between keydown events for virtualization
         await sleep(100);
       }
+
+      const button = page.locator('text=initial focus');
+      expect(await button.evaluate((node) => document.activeElement === node));
 
       await page.keyboard.down('Tab');
 
@@ -349,6 +335,32 @@ describe('e2e', () => {
       expect(
         await page.evaluate(() => (document.activeElement as HTMLInputElement).value),
       ).to.equal('0-1');
+    });
+
+    // https://github.com/mui/mui-x/issues/5590
+    it('should allow to click a button in NoRowsOverlay', async () => {
+      await renderFixture('DataGrid/NoRowsOverlayWithButton');
+
+      await page.click('[data-testid="refresh"]');
+
+      expect(
+        await page.evaluate(() => document.querySelector('[data-testid="refresh"]')!.textContent),
+      ).to.equal('Clicked');
+    });
+
+    it('should start editing a cell when a printable char is pressed', async () => {
+      await renderFixture('DataGrid/KeyboardEditInput');
+
+      expect(await page.locator('[role="cell"][data-field="brand"]').textContent()).to.equal(
+        'Nike',
+      );
+
+      await page.click('[role="cell"][data-field="brand"]');
+      await page.type('[role="cell"][data-field="brand"]', 'p');
+
+      expect(await page.locator('[role="cell"][data-field="brand"] input').inputValue()).to.equal(
+        'p',
+      );
     });
   });
 });

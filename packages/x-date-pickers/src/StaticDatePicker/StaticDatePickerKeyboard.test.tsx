@@ -3,7 +3,7 @@ import { expect } from 'chai';
 import TextField from '@mui/material/TextField';
 import { act, fireEvent, screen } from '@mui/monorepo/test/utils';
 import { StaticDatePicker } from '@mui/x-date-pickers/StaticDatePicker';
-import { adapterToUse, createPickerRenderer } from '../../../../test/utils/pickers-utils';
+import { adapterToUse, createPickerRenderer } from 'test/utils/pickers-utils';
 import { CalendarPickerView } from '../internals/models/views';
 
 describe('<StaticDatePicker /> keyboard interactions', () => {
@@ -110,7 +110,7 @@ describe('<StaticDatePicker /> keyboard interactions', () => {
     expect(document.activeElement).toHaveAccessibleName('13');
   });
 
-  describe('YearPicker keyboard navigation', () => {
+  describe('YearCalendar keyboard navigation', () => {
     [
       { key: 'ArrowLeft', expectFocusedYear: '2019' },
       { key: 'ArrowUp', expectFocusedYear: '2016' },
@@ -137,7 +137,7 @@ describe('<StaticDatePicker /> keyboard interactions', () => {
       });
     });
   });
-  describe('MonthPicker keyboard navigation', () => {
+  describe('MonthCalendar keyboard navigation', () => {
     [
       { key: 'ArrowLeft', expectFocusedMonth: 'Jul' },
       { key: 'ArrowUp', expectFocusedMonth: 'May' },
@@ -166,7 +166,7 @@ describe('<StaticDatePicker /> keyboard interactions', () => {
     });
   });
 
-  describe('DayPicker keyboard navigation', () => {
+  describe('DayCalendar keyboard navigation', () => {
     [
       { key: 'ArrowLeft', expectFocusedDay: '12' },
       { key: 'ArrowUp', expectFocusedDay: '6' },

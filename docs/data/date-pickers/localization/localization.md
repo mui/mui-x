@@ -30,21 +30,24 @@ To customize the date format used in the toolbar, you can use prop `toolbarForma
 To customize day names in calendar header, you can use `dayOfWeekFormatter` which takes as an input the short name of the day provided by the date-library and returns it's formatted version.
 The default formatter only keeps the first letter and capitalises it.
 
-In the example bellow, we add a dot at the end of each day in the calendar header, and use `eee dd MMMM` format for the toolbar.
+The example bellow adds a dot at the end of each day in the calendar header, and uses `eee dd MMMM` format for the toolbar.
 
-{{"demo": "CustomizeDayPicker.js"}}
+{{"demo": "CustomizedStaticDatePicker.js"}}
 
-## Translation keys
+## Text translations
 
 As the rest of MUI components, you can modify text and translations.
 You can find all the translation keys supported in [the source](https://github.com/mui/mui-x/blob/HEAD/packages/x-date-pickers/src/locales/utils/pickersLocaleTextApi.ts)
 in the GitHub repository.
 
-You can set the locale text by using the theme provider.
+### Using the theme
+
+To translate all your components from `@mui/x-date-pickers` and `@mui/x-date-pickers-pro`,
+you just have to import the locale from `@mui/x-date-pikers` (see the [list of supported locales below](#supported-locales)).
 
 ```jsx
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { CalendarPicker, LocalizationProvider, bgBG } from '@mui/x-date-pickers';
+import { DateCalendar, LocalizationProvider, bgBG } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import bgLocale from 'date-fns/locale/bg';
 
@@ -62,7 +65,7 @@ const theme = createTheme(
     dateAdapter={AdapterDayjs}
     adapterLocale={bgLocale} // use 'bg' locale for date parser/formatter
   >
-    <CalendarPicker />
+    <DateCalendar />
   </LocalizationProvider>
 </ThemeProvider>;
 ```
@@ -76,7 +79,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { DataGrid, bgBG as dataGridBgBG } from '@mui/x-data-grid';
 import { bgBG as coreBgBG } from '@mui/material/locale';
 import bgLocale from 'date-fns/locale/bg';
-import { CalendarPicker, LocalizationProvider, bgBG } from '@mui/x-date-pickers';
+import { DateCalendar, LocalizationProvider, bgBG } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 
 const theme = createTheme(
@@ -92,17 +95,20 @@ const theme = createTheme(
 
 <ThemeProvider theme={theme}>
   <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale={bgLocale}>
-    <CalendarPicker />
+    <DateCalendar />
     <DataGrid />
   </LocalizationProvider>
 </ThemeProvider>;
 ```
 
-If you want to pass language translations without using `createTheme` and `ThemeProvider`, you can directly load the language translations from the `@mui/x-date-pickers` or `@mui/x-date-pickers-pro` package and pass them to the `LocalizationProvider`.
+### Using the localization provider
+
+If you want to pass language translations without using `createTheme` and `ThemeProvider`,
+you can directly load the language translations from the `@mui/x-date-pickers` or `@mui/x-date-pickers-pro` package and pass them to the `LocalizationProvider`.
 
 ```jsx
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { CalendarPicker, LocalizationProvider, bgBG } from '@mui/x-date-pickers';
+import { DateCalendar, LocalizationProvider, bgBG } from '@mui/x-date-pickers';
 import bgLocale from 'date-fns/locale/bg';
 
 <LocalizationProvider
@@ -110,20 +116,32 @@ import bgLocale from 'date-fns/locale/bg';
   adapterLocale={bgLocale}
   localeText={bgBG.components.MuiLocalizationProvider.defaultProps.localeText}
 >
-  <CalendarPicker />
+  <DateCalendar />
 </LocalizationProvider>;
 ```
 
-## Supported locales
+### Using props
+
+If you want to customize some translations on specific component, you can use the `localeText` prop exposed by all our pickers.
+
+```jsx
+<DatePicker localeText={{ clearButtonLabel: 'Empty' }} />
+```
+
+### Supported locales
 
 | Locale                  | BCP 47 language tag | Import name |
 | :---------------------- | :------------------ | :---------- |
 | English (United States) | en-US               | `enUS`      |
+| Finnish                 | fi-FI               | `fiFI`      |
 | French                  | fr-FR               | `frFR`      |
 | German                  | de-DE               | `deDE`      |
+| Icelandic               | is-IS               | `isIS`      |
 | Italian                 | it-IT               | `itIT`      |
+| Japanese                | ja-JP               | `jaJP`      |
 | Korean                  | ko-KR               | `koKR`      |
 | Norwegian (Bokmål)      | nb-NO               | `nbNO`      |
+| Persian                 | fa-IR               | `faIR`      |
 | Polish                  | pl-PL               | `plPL`      |
 | Spanish                 | es-ES               | `esES`      |
 | Swedish                 | sv-SE               | `svSE`      |

@@ -9,15 +9,29 @@ import {
   getAllByRole,
   fireEvent,
 } from '@mui/monorepo/test/utils';
-import { StaticTimePicker } from './StaticTimePicker';
 import {
   adapterToUse,
   wrapPickerMount,
   createPickerRenderer,
-} from '../../../../test/utils/pickers-utils';
+  withPickerControls,
+} from 'test/utils/pickers-utils';
+import { StaticTimePicker } from '@mui/x-date-pickers/StaticTimePicker';
+import describeValidation from '@mui/x-date-pickers/tests/describeValidation';
+
+const WrappedStaticTimePicker = withPickerControls(StaticTimePicker)({
+  renderInput: (params) => <TextField {...params} />,
+});
 
 describe('<StaticTimePicker />', () => {
-  const { render } = createPickerRenderer({ clock: 'fake' });
+  const { render, clock } = createPickerRenderer({ clock: 'fake' });
+
+  describeValidation(StaticTimePicker, () => ({
+    render,
+    clock,
+    views: ['hours', 'minutes'],
+    skip: ['textField'],
+    isLegacyPicker: true,
+  }));
 
   describeConformance(
     <StaticTimePicker
@@ -149,5 +163,18 @@ describe('<StaticTimePicker />', () => {
     // meridiem are disabled
     expect(screen.getByRole('button', { name: /AM/i }).getAttribute('disabled')).to.not.equal(null);
     expect(screen.getByRole('button', { name: /PM/i }).getAttribute('disabled')).to.not.equal(null);
+  });
+
+  describe('localization', () => {
+    it('should respect the `localeText` prop', () => {
+      render(
+        <WrappedStaticTimePicker
+          initialValue={null}
+          localeText={{ cancelButtonLabel: 'Custom cancel' }}
+        />,
+      );
+
+      expect(screen.queryByText('Custom cancel')).not.to.equal(null);
+    });
   });
 });

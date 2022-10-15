@@ -82,58 +82,6 @@ describe('<DataGridPro /> - Layout', () => {
   });
 
   describe('columns width', () => {
-    it('should resize flex: 1 column when changing column visibility to avoid exceeding grid width (apiRef setColumnVisibility method call with GridColDef.hide: deprecated)', () => {
-      let apiRef: React.MutableRefObject<GridApi>;
-
-      const TestCase = (props: DataGridProProps) => {
-        apiRef = useGridApiRef();
-
-        return (
-          <div style={{ width: 300, height: 500 }}>
-            <DataGridPro {...props} apiRef={apiRef} />
-          </div>
-        );
-      };
-
-      render(
-        <TestCase
-          rows={[
-            {
-              id: 1,
-              first: 'Mike',
-              age: 11,
-            },
-            {
-              id: 2,
-              first: 'Jack',
-              age: 11,
-            },
-            {
-              id: 3,
-              first: 'Mike',
-              age: 20,
-            },
-          ]}
-          columns={[
-            { field: 'id', flex: 1 },
-            { field: 'first', width: 100 },
-            { field: 'age', width: 50, hide: true },
-          ]}
-        />,
-      );
-
-      let firstColumn = document.querySelector('[role="columnheader"][aria-colindex="1"]');
-      expect(firstColumn).toHaveInlineStyle({
-        width: '198px', // because of the 2px border
-      });
-
-      act(() => apiRef!.current.setColumnVisibility('age', true));
-      firstColumn = document.querySelector('[role="columnheader"][aria-colindex="1"]');
-      expect(firstColumn).toHaveInlineStyle({
-        width: '148px', // because of the 2px border
-      });
-    });
-
     it('should resize flex: 1 column when changing column visibility to avoid exceeding grid width (apiRef setColumnVisibility method call)', () => {
       let apiRef: React.MutableRefObject<GridApi>;
 

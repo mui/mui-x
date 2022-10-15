@@ -56,39 +56,41 @@ Premium npm package:
 The features exclusive to the Premium version are marked with the <span class="plan-premium"></span> icon throughout the documentation.
 :::
 
-## Upgrading from Community
+## Upgrading
 
-When you purchase a license for MUI X (Pro or Premium), it will unlock new [packages](#plans) you can use on your project.
+The npm packages of any given plan are a **superset** of the packages on the plan below.
+So to upgrade, replace the [npm packages](#plans) and the components' imports with the ones from the target plan.
 
-If you're using the data grid, the commercial npm packages (`@mui/x-data-grid-pro` and `@mui/x-data-grid-premium`) are a superset of the community.
+For example, when you want to upgrade the Data Grid:
 
-You can upgrade the dependency on `@mui/x-data-grid` to the respective package of your plan, and replace all your imports.
+- **Upgrading from Community to Pro.**
 
-```diff
-//diff when upgrading to Pro
+  `@mui/x-data-grid-pro` is a superset of `@mui/x-data-grid`, so you can upgrade from the Community to the Pro plan like this:
 
--import { DataGrid } from '@mui/x-data-grid';
-+import { DataGridPro } from '@mui/x-data-grid-pro';
-```
+  ```diff
+  -import { DataGrid } from '@mui/x-data-grid';
+  +import { DataGridPro } from '@mui/x-data-grid-pro';
+  ```
+
+  :::warning
+  ⚠️ However, there is an exception to the superset rule. The default value of the `pagination` prop changes, [see the docs of the pagination](https://mui.com/x/react-data-grid/pagination/).
+  :::
+
+- **Upgrading from Pro to Premium.**
+
+  `@mui/x-data-grid-premium` is a superset of `@mui/x-data-grid-pro`, so you can upgrade from Pro to Premium like this:
+
+  ```diff
+  -import { DataGridPro } from '@mui/x-data-grid-pro';
+  +import { DataGridPremium } from '@mui/x-data-grid-premium';
+  ```
+
+  :::info
+  If you are looking for upgrading from Pro to Premium, please contact us at [sales@mui.com](mailto:sales@mui.com?subject=My%20upgrade%20discount%20to%20Premium).
+  We'll provide you with a discount based on the remaining time of your current license term.
+  :::
 
 For more details on how to install the packages, please check out our [package installation guide](/x/introduction/installation/).
-
-## Upgrading from Pro to Premium
-
-When upgrading from Pro, you can upgrade the dependency on `@mui/x-data-grid-pro` to `@mui/x-data-grid-premium` and replace all your data grid imports.
-
-```diff
-//diff when upgrading from Pro to Premium
-
--import { DataGridPro } from '@mui/x-data-grid-pro';
-+import { DataGridPremium } from '@mui/x-data-grid-premium';
-```
-
-:::info
-You can use your Pro license as a credit when purchasing MUI X Premium.
-We'll provide you with a discount based on the remaining time that your current license is valid.
-Please contact us at [sales@mui.com](mailto:sales@mui.com?subject=My%20upgrade%20discount%20to%20Premium) to upgrade.
-:::
 
 ## Evaluation (trial) licenses
 
@@ -210,6 +212,11 @@ In this case, the component will display a watermark and a console warning, stat
 For example, if you purchase a one-year license today, you will be able to update to any version—including major versions—released in the next twelve months.
 Those versions will always be available for use in a deployed application,
 however you'll be required to renew your license if you need to continue development with a version released after twelve months.
+
+#### Out of scope license key
+
+This error indicates that the component you are trying to use is not included in your license.
+This can happen if you try to use `DataGridPremium` with a Pro license.
 
 #### Invalid license key
 

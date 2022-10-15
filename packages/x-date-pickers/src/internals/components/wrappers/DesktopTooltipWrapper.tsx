@@ -4,16 +4,14 @@ import { WrapperVariantContext } from './WrapperVariantContext';
 import { executeInTheNextEventLoopTick } from '../../utils/utils';
 import { PickersPopper } from '../PickersPopper';
 import { InternalDesktopWrapperProps } from './DesktopWrapper';
+import { LocalizationProvider } from '../../../LocalizationProvider';
 
-export function DesktopTooltipWrapper(props: InternalDesktopWrapperProps) {
+export function DesktopTooltipWrapper<TDate>(props: InternalDesktopWrapperProps<TDate>) {
   const {
     children,
     DateInputProps,
     KeyboardDateInputComponent,
     open,
-    PopperProps,
-    PaperProps,
-    TransitionComponent,
     onClear,
     onDismiss,
     onCancel,
@@ -21,6 +19,7 @@ export function DesktopTooltipWrapper(props: InternalDesktopWrapperProps) {
     onSetToday,
     components,
     componentsProps,
+    localeText,
   } = props;
   const inputContainerRef = React.useRef<HTMLDivElement>(null);
   const popperRef = React.useRef<HTMLDivElement>(null);
@@ -41,27 +40,30 @@ export function DesktopTooltipWrapper(props: InternalDesktopWrapperProps) {
   const inputComponentRef = useForkRef(DateInputProps.ref, inputContainerRef);
 
   return (
-    <WrapperVariantContext.Provider value="desktop">
-      <KeyboardDateInputComponent {...DateInputProps} ref={inputComponentRef} onBlur={handleBlur} />
-      <PickersPopper
-        role="tooltip"
-        open={open}
-        containerRef={popperRef}
-        anchorEl={inputContainerRef.current}
-        TransitionComponent={TransitionComponent}
-        PopperProps={PopperProps}
-        PaperProps={PaperProps}
-        onBlur={handleBlur}
-        onClose={onDismiss}
-        onClear={onClear}
-        onCancel={onCancel}
-        onAccept={onAccept}
-        onSetToday={onSetToday}
-        components={components}
-        componentsProps={componentsProps}
-      >
-        {children}
-      </PickersPopper>
-    </WrapperVariantContext.Provider>
+    <LocalizationProvider localeText={localeText}>
+      <WrapperVariantContext.Provider value="desktop">
+        <KeyboardDateInputComponent
+          {...DateInputProps}
+          ref={inputComponentRef}
+          onBlur={handleBlur}
+        />
+        <PickersPopper
+          role="tooltip"
+          open={open}
+          containerRef={popperRef}
+          anchorEl={inputContainerRef.current}
+          onBlur={handleBlur}
+          onDismiss={onDismiss}
+          onClear={onClear}
+          onCancel={onCancel}
+          onAccept={onAccept}
+          onSetToday={onSetToday}
+          components={components}
+          componentsProps={componentsProps}
+        >
+          {children}
+        </PickersPopper>
+      </WrapperVariantContext.Provider>
+    </LocalizationProvider>
   );
 }

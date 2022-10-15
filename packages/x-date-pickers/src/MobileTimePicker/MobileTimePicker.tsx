@@ -30,23 +30,23 @@ export interface MobileTimePickerSlotsComponentsProps
   extends MobileWrapperSlotsComponentsProps,
     ClockPickerSlotsComponentsProps {}
 
-export interface MobileTimePickerProps<TInputDate, TDate>
-  extends BaseTimePickerProps<TInputDate, TDate>,
-    MobileWrapperProps {
+export interface MobileTimePickerProps<TDate>
+  extends BaseTimePickerProps<TDate>,
+    MobileWrapperProps<TDate> {
   /**
    * Overrideable components.
    * @default {}
    */
-  components?: Partial<MobileTimePickerSlotsComponent>;
+  components?: MobileTimePickerSlotsComponent;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  componentsProps?: Partial<MobileTimePickerSlotsComponentsProps>;
+  componentsProps?: MobileTimePickerSlotsComponentsProps;
 }
 
-type MobileTimePickerComponent = (<TInputDate, TDate = TInputDate>(
-  props: MobileTimePickerProps<TInputDate, TDate> & React.RefAttributes<HTMLDivElement>,
+type MobileTimePickerComponent = (<TDate>(
+  props: MobileTimePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
 ) => JSX.Element) & { propTypes?: any };
 
 /**
@@ -59,15 +59,14 @@ type MobileTimePickerComponent = (<TInputDate, TDate = TInputDate>(
  *
  * - [MobileTimePicker API](https://mui.com/x/api/date-pickers/mobile-time-picker/)
  */
-export const MobileTimePicker = React.forwardRef(function MobileTimePicker<
-  TInputDate,
-  TDate = TInputDate,
->(inProps: MobileTimePickerProps<TInputDate, TDate>, ref: React.Ref<HTMLDivElement>) {
-  const props = useTimePickerDefaultizedProps<
-    TInputDate,
-    TDate,
-    MobileTimePickerProps<TInputDate, TDate>
-  >(inProps, 'MuiMobileTimePicker');
+export const MobileTimePicker = React.forwardRef(function MobileTimePicker<TDate>(
+  inProps: MobileTimePickerProps<TDate>,
+  ref: React.Ref<HTMLDivElement>,
+) {
+  const props = useTimePickerDefaultizedProps<TDate, MobileTimePickerProps<TDate>>(
+    inProps,
+    'MuiMobileTimePicker',
+  );
 
   const validationError = useTimeValidation(props) !== null;
   const { pickerProps, inputProps, wrapperProps } = usePickerState(props, timePickerValueManager);
@@ -80,6 +79,7 @@ export const MobileTimePicker = React.forwardRef(function MobileTimePicker<
     onChange,
     components,
     componentsProps,
+    localeText,
     ...other
   } = props;
   const DateInputProps = {
@@ -99,6 +99,7 @@ export const MobileTimePicker = React.forwardRef(function MobileTimePicker<
       PureDateInputComponent={PureDateInput}
       components={components}
       componentsProps={componentsProps}
+      localeText={localeText}
     >
       <CalendarOrClockPicker
         {...pickerProps}
@@ -155,14 +156,15 @@ MobileTimePicker.propTypes = {
    */
   componentsProps: PropTypes.object,
   /**
-   * Props applied to the [`Dialog`](https://mui.com/material-ui/api/dialog/) element.
-   */
-  DialogProps: PropTypes.object,
-  /**
    * If `true`, the picker and text field are disabled.
    * @default false
    */
   disabled: PropTypes.bool,
+  /**
+   * If `true` disable values before the current time
+   * @default false
+   */
+  disableFuture: PropTypes.bool,
   /**
    * Do not ignore date part when validating min/max time.
    * @default false
@@ -179,30 +181,17 @@ MobileTimePicker.propTypes = {
    */
   disableOpenPicker: PropTypes.bool,
   /**
-   * Accessible text that helps user to understand which time and view is selected.
-   * @template TDate
-   * @param {ClockPickerView} view The current view rendered.
-   * @param {TDate | null} time The current time.
-   * @param {MuiPickersAdapter<TDate>} adapter The current date adapter.
-   * @returns {string} The clock label.
-   * @deprecated Use the `localeText` prop of `LocalizationProvider` instead, see https://mui.com/x/react-date-pickers/localization
-   * @default <TDate extends any>(
-   *   view: ClockView,
-   *   time: TDate | null,
-   *   adapter: MuiPickersAdapter<TDate>,
-   * ) =>
-   *   `Select ${view}. ${
-   *     time === null ? 'No time selected' : `Selected time is ${adapter.format(time, 'fullTime')}`
-   *   }`
+   * If `true` disable values after the current time.
+   * @default false
    */
-  getClockLabelText: PropTypes.func,
+  disablePast: PropTypes.bool,
   /**
    * Get aria-label text for control that opens picker dialog. Aria-label text must include selected date. @DateIOType
-   * @template TInputDate, TDate
-   * @param {TInputDate} date The date from which we want to add an aria-text.
+   * @template TDate
+   * @param {TDate | null} date The date from which we want to add an aria-text.
    * @param {MuiPickersAdapter<TDate>} utils The utils to manipulate the date.
    * @returns {string} The aria-text to render inside the dialog.
-   * @default (date, utils) => `Choose date, selected date is ${utils.format(utils.date(date), 'fullDate')}`
+   * @default (date, utils) => `Choose date, selected date is ${utils.format(date, 'fullDate')}`
    */
   getOpenDialogAriaText: PropTypes.func,
   ignoreInvalidInputs: PropTypes.bool,
@@ -225,6 +214,10 @@ MobileTimePicker.propTypes = {
     }),
   ]),
   label: PropTypes.node,
+  /**
+   * Locale for components texts
+   */
+  localeText: PropTypes.object,
   /**
    * Custom mask. Can be used to override generate from format. (e.g. `__/__/____ __:__` or `__/__/____ __:__ _M`).
    */
@@ -253,7 +246,7 @@ MobileTimePicker.propTypes = {
   /**
    * Callback fired when the value (the selected date) changes @DateIOType.
    * @template TValue
-   * @param {TValue} value The new parsed value.
+   * @param {TValue} value The new value.
    * @param {string} keyboardInputValue The current value of the keyboard input.
    */
   onChange: PropTypes.func.isRequired,
@@ -270,9 +263,9 @@ MobileTimePicker.propTypes = {
    * [Read the guide](https://next.material-ui-pickers.dev/guides/forms) about form integration and error displaying.
    * @DateIOType
    *
-   * @template TError, TInputValue
+   * @template TError, TValue
    * @param {TError} reason The reason why the current value is not valid.
-   * @param {TInputValue} value The invalid value.
+   * @param {TValue} value The invalid value.
    */
   onError: PropTypes.func,
   /**
@@ -295,6 +288,8 @@ MobileTimePicker.propTypes = {
   OpenPickerButtonProps: PropTypes.object,
   /**
    * First view to show.
+   * Must be a valid option from `views` list
+   * @default 'hours'
    */
   openTo: PropTypes.oneOf(['hours', 'minutes', 'seconds']),
   /**
@@ -327,7 +322,7 @@ MobileTimePicker.propTypes = {
    * Dynamically check if time is disabled or not.
    * If returns `false` appropriate time point will ot be acceptable.
    * @param {number} timeValue The value to check.
-   * @param {ClockPickerView} clockType The clock type of the timeValue.
+   * @param {ClockPickerView} view The clock type of the timeValue.
    * @returns {boolean} Returns `true` if the time should be disabled
    */
   shouldDisableTime: PropTypes.func,
@@ -351,6 +346,7 @@ MobileTimePicker.propTypes = {
   value: PropTypes.any,
   /**
    * Array of views to show.
+   * @default ['hours', 'minutes']
    */
   views: PropTypes.arrayOf(PropTypes.oneOf(['hours', 'minutes', 'seconds']).isRequired),
 } as any;

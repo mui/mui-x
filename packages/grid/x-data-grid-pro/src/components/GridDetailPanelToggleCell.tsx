@@ -7,7 +7,6 @@ import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { DataGridProProcessedProps } from '../models/dataGridProProps';
 import { gridDetailPanelExpandedRowsContentCacheSelector } from '../hooks/features/detailPanel/gridDetailPanelSelector';
-import { GridApiPro } from '../models/gridApiPro';
 
 type OwnerState = { classes: DataGridProProcessedProps['classes']; isExpanded: boolean };
 
@@ -25,7 +24,7 @@ const GridDetailPanelToggleCell = (props: GridRenderCellParams) => {
   const { id, value: isExpanded } = props;
 
   const rootProps = useGridRootProps();
-  const apiRef = useGridApiContext<GridApiPro>();
+  const apiRef = useGridApiContext();
   const ownerState: OwnerState = { classes: rootProps.classes, isExpanded };
   const classes = useUtilityClasses(ownerState);
 
@@ -115,7 +114,7 @@ GridDetailPanelToggleCell.propTypes = {
   /**
    * The row model of the row that the current cell belongs to.
    */
-  row: PropTypes.object.isRequired,
+  row: PropTypes.any.isRequired,
   /**
    * The node of the row that the current cell belongs to.
    */

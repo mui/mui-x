@@ -35,8 +35,8 @@ Hold down the <kbd class="key">Ctrl</kbd> or <kbd class="key">Shift</kbd> (use <
 The sort model is a list of sorting items.
 Each item represents a sorting rule and is composed of several elements:
 
-- `sortingItem.field`: the field on which we want to apply the rule
-- `sortingItem.sort`: the direction of the sorting (`'asc'`, `'desc'`, `null` or `undefined`). If `null` or `undefined`, the rule will not be applied.
+- `sortingItem.field`: the field on which the rule applies.
+- `sortingItem.sort`: the direction of the sorting (`'asc'`, `'desc'`, `null` or `undefined`). If `null` or `undefined`, the rule doesn't apply.
 
 ### Initialize the sort model
 
@@ -148,7 +148,7 @@ Only use this API as the last option. Give preference to the props to control th
 
 ## Selectors [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
 
-{{"demo": "SortingSelectorsNoSnap.js", "bg": "inline", "hideToolbar": true}}
+{{"component": "modules/components/SelectorsDocs.js", "category": "Sorting"}}
 
 More information about the selectors and how to use them on the [dedicated page](/x/react-data-grid/state/#access-the-state)
 

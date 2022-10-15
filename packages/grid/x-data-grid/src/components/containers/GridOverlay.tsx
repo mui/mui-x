@@ -29,12 +29,8 @@ const GridOverlayRoot = styled('div', {
   slot: 'Overlay',
   overridesResolver: (props, styles) => styles.overlay,
 })<{ ownerState: OwnerState }>(({ theme }) => ({
-  position: 'absolute',
-  top: 0,
-  zIndex: 4, // should be above pinned columns, pinned rows and detail panel
   width: '100%',
   height: '100%',
-  pointerEvents: 'none',
   display: 'flex',
   alignSelf: 'center',
   alignItems: 'center',

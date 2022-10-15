@@ -3,24 +3,33 @@ import { expect } from 'chai';
 import { spy } from 'sinon';
 import TextField from '@mui/material/TextField';
 import { TransitionProps } from '@mui/material/transitions';
+import { inputBaseClasses } from '@mui/material/InputBase';
+import SvgIcon, { SvgIconProps } from '@mui/material/SvgIcon';
 import { fireEvent, screen, userEvent } from '@mui/monorepo/test/utils';
 import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
-import SvgIcon, { SvgIconProps } from '@mui/material/SvgIcon';
 import {
   createPickerRenderer,
   FakeTransitionComponent,
   adapterToUse,
   withPickerControls,
   openPicker,
-} from '../../../../test/utils/pickers-utils';
+} from 'test/utils/pickers-utils';
+import describeValidation from '@mui/x-date-pickers/tests/describeValidation';
 
 const WrappedDesktopDatePicker = withPickerControls(DesktopDatePicker)({
-  DialogProps: { TransitionComponent: FakeTransitionComponent },
+  components: { DesktopTransition: FakeTransitionComponent },
   renderInput: (params) => <TextField {...params} />,
 });
 
 describe('<DesktopDatePicker />', () => {
-  const { render } = createPickerRenderer({ clock: 'fake' });
+  const { render, clock } = createPickerRenderer({ clock: 'fake' });
+
+  describeValidation(DesktopDatePicker, () => ({
+    render,
+    clock,
+    views: ['year', 'month', 'day'],
+    isLegacyPicker: true,
+  }));
 
   it('prop: components.OpenPickerIcon', () => {
     function HomeIcon(props: SvgIconProps) {
@@ -144,13 +153,10 @@ describe('<DesktopDatePicker />', () => {
 
   it('prop `showToolbar` – renders toolbar in desktop mode', () => {
     render(
-      <DesktopDatePicker
+      <WrappedDesktopDatePicker
         open
         showToolbar
-        onChange={() => {}}
-        TransitionComponent={FakeTransitionComponent}
-        value={adapterToUse.date(new Date(2018, 0, 1))}
-        renderInput={(params) => <TextField {...params} />}
+        initialValue={adapterToUse.date(new Date(2018, 0, 1))}
       />,
     );
 
@@ -160,12 +166,10 @@ describe('<DesktopDatePicker />', () => {
   it('switches between views uncontrolled', () => {
     const handleViewChange = spy();
     render(
-      <DesktopDatePicker
+      <WrappedDesktopDatePicker
         open
         showToolbar
-        onChange={() => {}}
-        TransitionComponent={FakeTransitionComponent}
-        value={adapterToUse.date(new Date(2018, 0, 1))}
+        initialValue={adapterToUse.date(new Date(2018, 0, 1))}
         renderInput={(params) => <TextField {...params} />}
         onViewChange={handleViewChange}
       />,
@@ -178,22 +182,22 @@ describe('<DesktopDatePicker />', () => {
     expect(screen.getByLabelText('year view is open, switch to calendar view')).toBeVisible();
   });
 
-  describe('prop: PopperProps', () => {
+  describe('componentsProps: popper', () => {
     it('forwards onClick and onTouchStart', () => {
       const handleClick = spy();
       const handleTouchStart = spy();
       render(
-        <DesktopDatePicker
+        <WrappedDesktopDatePicker
           open
-          onChange={() => {}}
-          PopperProps={{
-            onClick: handleClick,
-            onTouchStart: handleTouchStart,
-            // @ts-expect-error `data-*` attributes are not recognized in props objects
-            'data-testid': 'popper',
+          componentsProps={{
+            popper: {
+              onClick: handleClick,
+              onTouchStart: handleTouchStart,
+              // @ts-expect-error `data-*` attributes are not recognized in props objects
+              'data-testid': 'popper',
+            },
           }}
-          renderInput={(params) => <TextField {...params} />}
-          value={null}
+          initialValue={null}
         />,
       );
       const popper = screen.getByTestId('popper');
@@ -206,22 +210,22 @@ describe('<DesktopDatePicker />', () => {
     });
   });
 
-  describe('prop: PaperProps', () => {
+  describe('componentsProps: desktopPaper', () => {
     it('forwards onClick and onTouchStart', () => {
       const handleClick = spy();
       const handleTouchStart = spy();
       render(
-        <DesktopDatePicker
+        <WrappedDesktopDatePicker
           open
-          onChange={() => {}}
-          PaperProps={{
-            onClick: handleClick,
-            onTouchStart: handleTouchStart,
-            // @ts-expect-error `data-*` attributes are not recognized in props objects
-            'data-testid': 'paper',
+          componentsProps={{
+            desktopPaper: {
+              onClick: handleClick,
+              onTouchStart: handleTouchStart,
+              // @ts-expect-error `data-*` attributes are not recognized in props objects
+              'data-testid': 'paper',
+            },
           }}
-          renderInput={(params) => <TextField {...params} />}
-          value={null}
+          initialValue={null}
         />,
       );
       const paper = screen.getByTestId('paper');
@@ -283,14 +287,14 @@ describe('<DesktopDatePicker />', () => {
         return (
           <React.Fragment>
             <div style={{ height: '200vh' }}>Spacer</div>
-            <DesktopDatePicker
-              value={adapterToUse.date(new Date(2018, 0, 1))}
+            <WrappedDesktopDatePicker
+              initialValue={adapterToUse.date(new Date(2018, 0, 1))}
               OpenPickerButtonProps={{ ref: anchorElRef }}
-              onChange={() => {}}
               onClose={handleClose}
               onOpen={handleOpen}
-              renderInput={(params) => <TextField {...params} />}
-              TransitionComponent={NoTransition}
+              components={{
+                DesktopTransition: NoTransition,
+              }}
             />
           </React.Fragment>
         );
@@ -728,6 +732,64 @@ describe('<DesktopDatePicker />', () => {
 
       expect(screen.getByLabelText('Previous month')).not.to.have.attribute('disabled');
       expect(screen.getByLabelText('Next month')).not.to.have.attribute('disabled');
+    });
+  });
+
+  describe('Validation', () => {
+    it('should enable the input error state when the current date has an invalid day', () => {
+      render(
+        <WrappedDesktopDatePicker
+          initialValue={adapterToUse.date(new Date(2018, 5, 1))}
+          shouldDisableDate={() => true}
+        />,
+      );
+
+      expect(document.querySelector(`.${inputBaseClasses.error}`)).to.not.equal(null);
+    });
+
+    it('should enable the input error state when the current date has an invalid month', () => {
+      render(
+        <WrappedDesktopDatePicker
+          initialValue={adapterToUse.date(new Date(2018, 5, 1))}
+          shouldDisableMonth={() => true}
+        />,
+      );
+
+      expect(document.querySelector(`.${inputBaseClasses.error}`)).to.not.equal(null);
+    });
+
+    it('should enable the input error state when the current date has an invalid year', () => {
+      render(
+        <WrappedDesktopDatePicker
+          initialValue={adapterToUse.date(new Date(2018, 1, 1))}
+          shouldDisableMonth={() => true}
+        />,
+      );
+
+      expect(document.querySelector(`.${inputBaseClasses.error}`)).to.not.equal(null);
+    });
+  });
+
+  it('should throw console warning when invalid `openTo` prop is provided', () => {
+    expect(() => {
+      render(<WrappedDesktopDatePicker initialValue={null} openTo="month" />);
+
+      openPicker({ type: 'date', variant: 'desktop' });
+    }).toWarnDev('MUI: `openTo="month"` is not a valid prop.');
+  });
+
+  describe('localization', () => {
+    it('should respect the `localeText` prop', () => {
+      render(
+        <WrappedDesktopDatePicker
+          initialValue={null}
+          localeText={{ cancelButtonLabel: 'Custom cancel' }}
+          componentsProps={{ actionBar: { actions: () => ['cancel'] } }}
+        />,
+      );
+      openPicker({ type: 'date', variant: 'desktop' });
+
+      expect(screen.queryByText('Custom cancel')).not.to.equal(null);
     });
   });
 });

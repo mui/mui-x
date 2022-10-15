@@ -21,10 +21,10 @@ import {
   AdapterClassToUse,
   withPickerControls,
   openPicker,
-} from '../../../../test/utils/pickers-utils';
+} from 'test/utils/pickers-utils';
 
 const WrappedDesktopDateRangePicker = withPickerControls(DesktopDateRangePicker)({
-  DialogProps: { TransitionComponent: FakeTransitionComponent },
+  components: { DesktopTransition: FakeTransitionComponent },
   renderInput: (startProps, endProps) => (
     <React.Fragment>
       <TextField {...startProps} />
@@ -126,6 +126,7 @@ describe('<DesktopDateRangePicker />', () => {
     });
   });
 
+  // TODO: Remove on new pickers, has been moved to `DateRangeCalendar` tests
   it('should highlight the selected range of dates', () => {
     render(
       <WrappedDesktopDateRangePicker
@@ -141,7 +142,7 @@ describe('<DesktopDateRangePicker />', () => {
     expect(screen.getAllByMuiTest('DateRangeHighlight')).to.have.length(31);
   });
 
-  // TODO: Move to DayPicker test file ?
+  // TODO: Remove on new pickers, has been moved to `DateRangeCalendar` tests
   describe('selection behavior', () => {
     it('should select the range from the next month', () => {
       const handleChange = spy();
@@ -156,6 +157,7 @@ describe('<DesktopDateRangePicker />', () => {
       openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'start' });
 
       fireEvent.click(getPickerDay('1', 'January 2019'));
+
       // FIXME use `getByRole(role, {hidden: false})` and skip JSDOM once this suite can run in JSDOM
       const [visibleButton] = screen.getAllByRole('button', {
         hidden: true,
@@ -326,7 +328,7 @@ describe('<DesktopDateRangePicker />', () => {
     expect(screen.getByRole('tooltip')).toBeVisible();
   });
 
-  it('respect localeText', () => {
+  it('should respect localeText from the theme', () => {
     const theme = createTheme({
       components: {
         MuiLocalizationProvider: {
@@ -334,22 +336,21 @@ describe('<DesktopDateRangePicker />', () => {
             localeText: { start: 'Início', end: 'Fim' },
           },
         },
-      } as any,
+      },
     });
 
     render(
       <ThemeProvider theme={theme}>
         <LocalizationProvider dateAdapter={AdapterClassToUse}>
-          <DesktopDateRangePicker
+          <WrappedDesktopDateRangePicker
+            initialValue={[null, null]}
+            // We set the variant to standard to avoid having the label rendered in two places.
             renderInput={(startProps, endProps) => (
               <React.Fragment>
                 <TextField {...startProps} variant="standard" />
                 <TextField {...endProps} variant="standard" />
               </React.Fragment>
             )}
-            onChange={() => {}}
-            TransitionComponent={FakeTransitionComponent}
-            value={[null, null]}
           />
         </LocalizationProvider>
       </ThemeProvider>,
@@ -359,19 +360,25 @@ describe('<DesktopDateRangePicker />', () => {
     expect(screen.queryByText('Fim')).not.to.equal(null);
   });
 
-  it('prop: renderDay - should be called and render days', async () => {
-    render(
-      <WrappedDesktopDateRangePicker
-        renderDay={(day) => <div key={String(day)} data-testid="renderDayCalled" />}
-        initialValue={[null, null]}
-      />,
-    );
+  // TODO: Remove on new pickers, has been moved to `DateRangeCalendar` tests
+  describe('Component slots', () => {
+    it('slot: `Day` - renders custom day', () => {
+      render(
+        <WrappedDesktopDateRangePicker
+          components={{
+            Day: (day) => <div key={String(day)} data-testid="slot used" />,
+          }}
+          initialValue={[null, null]}
+        />,
+      );
 
-    openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'start' });
+      openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'start' });
 
-    expect(screen.getAllByTestId('renderDayCalled')).not.to.have.length(0);
+      expect(screen.getAllByTestId('slot used')).not.to.have.length(0);
+    });
   });
 
+  // TODO: Remove on new pickers, has been moved to `DateRangeCalendar` tests
   it('prop: calendars - should render the provided amount of calendars', () => {
     render(<WrappedDesktopDateRangePicker calendars={3} initialValue={[null, null]} />);
 
@@ -406,22 +413,74 @@ describe('<DesktopDateRangePicker />', () => {
     expect(screen.queryByRole('dialog')).to.equal(null);
   });
 
-  describe('prop: PopperProps', () => {
+  // TODO: Remove on new pickers, has been moved to `DateRangeCalendar` tests
+  describe('prop: disableAutoMonthSwitching', () => {
+    it('should go to the month of the end date when changing the start date', () => {
+      render(
+        <WrappedDesktopDateRangePicker
+          initialValue={[
+            adapterToUse.date(new Date(2018, 0, 1)),
+            adapterToUse.date(new Date(2018, 6, 1)),
+          ]}
+        />,
+      );
+
+      openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'start' });
+      fireEvent.click(getPickerDay('5', 'January 2018'));
+      clock.runToLast();
+      expect(getPickerDay('1', 'July 2018')).not.to.equal(null);
+    });
+
+    it('should not go to the month of the end date when changing the start date and props.disableAutoMonthSwitching = true', () => {
+      render(
+        <WrappedDesktopDateRangePicker
+          initialValue={[
+            adapterToUse.date(new Date(2018, 0, 1)),
+            adapterToUse.date(new Date(2018, 6, 1)),
+          ]}
+          disableAutoMonthSwitching
+        />,
+      );
+
+      openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'start' });
+      fireEvent.click(getPickerDay('5', 'January 2018'));
+      clock.runToLast();
+      expect(getPickerDay('1', 'January 2018')).not.to.equal(null);
+    });
+
+    it('should go to the month of the start date when changing both date from the outside', () => {
+      const { setProps } = render(
+        <WrappedDesktopDateRangePicker
+          value={[adapterToUse.date(new Date(2018, 0, 1)), adapterToUse.date(new Date(2018, 6, 1))]}
+        />,
+      );
+
+      openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'start' });
+
+      setProps({
+        value: [adapterToUse.date(new Date(2018, 3, 1)), adapterToUse.date(new Date(2018, 3, 1))],
+      });
+      clock.runToLast();
+      expect(getPickerDay('1', 'April 2018')).not.to.equal(null);
+    });
+  });
+
+  describe('componentsProps: popper', () => {
     it('should forward onClick and onTouchStart', () => {
       const handleClick = spy();
       const handleTouchStart = spy();
       render(
-        <DesktopDateRangePicker
+        <WrappedDesktopDateRangePicker
           open
-          onChange={() => {}}
-          PopperProps={{
-            onClick: handleClick,
-            onTouchStart: handleTouchStart,
-            // @ts-expect-error `data-*` attributes are not recognized in props objects
-            'data-testid': 'popper',
+          initialValue={[null, null]}
+          componentsProps={{
+            popper: {
+              onClick: handleClick,
+              onTouchStart: handleTouchStart,
+              // @ts-expect-error `data-*` attributes are not recognized in props objects
+              'data-testid': 'popper',
+            },
           }}
-          renderInput={(params) => <TextField {...params} />}
-          value={[null, null]}
         />,
       );
       const popper = screen.getByTestId('popper');
@@ -629,19 +688,28 @@ describe('<DesktopDateRangePicker />', () => {
       const onClose = spy();
 
       render(
-        <WrappedDesktopDateRangePicker
-          onChange={onChange}
-          onAccept={onAccept}
-          onClose={onClose}
-          initialValue={[null, null]}
-        />,
+        <div>
+          <WrappedDesktopDateRangePicker
+            onChange={onChange}
+            onAccept={onAccept}
+            onClose={onClose}
+            initialValue={[null, null]}
+          />
+          <input id="test-id" />
+        </div>,
       );
 
       openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'start' });
 
       // Dismiss the picker
-      userEvent.mousePress(document.body);
-      clock.runToLast();
+      const input = document.getElementById('test-id')!;
+
+      act(() => {
+        fireEvent.mouseDown(input);
+        input.focus();
+        fireEvent.mouseUp(input);
+        clock.runToLast();
+      });
 
       expect(onChange.callCount).to.equal(0);
       expect(onAccept.callCount).to.equal(0);
@@ -658,21 +726,32 @@ describe('<DesktopDateRangePicker />', () => {
       ];
 
       render(
-        <WrappedDesktopDateRangePicker
-          onChange={onChange}
-          onAccept={onAccept}
-          onClose={onClose}
-          initialValue={initialValue}
-        />,
+        <div>
+          <WrappedDesktopDateRangePicker
+            onChange={onChange}
+            onAccept={onAccept}
+            onClose={onClose}
+            initialValue={initialValue}
+          />
+          <input id="test-id" />
+        </div>,
       );
 
       openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'start' });
 
       // Change the start date (already tested)
       userEvent.mousePress(getPickerDay('3'));
+      clock.runToLast();
 
       // Dismiss the picker
-      userEvent.mousePress(document.body);
+      const input = document.getElementById('test-id')!;
+
+      act(() => {
+        fireEvent.mouseDown(input);
+        input.focus();
+        fireEvent.mouseUp(input);
+      });
+
       clock.runToLast();
 
       expect(onChange.callCount).to.equal(1); // Start date change
@@ -723,7 +802,9 @@ describe('<DesktopDateRangePicker />', () => {
       openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'start' });
       expect(screen.getByRole('tooltip')).toBeVisible();
 
-      fireEvent.blur(screen.getAllByRole('textbox')[0]);
+      act(() => {
+        screen.getAllByRole('textbox')[0].blur();
+      });
       clock.runToLast();
 
       expect(onChange.callCount).to.equal(0);
@@ -754,8 +835,11 @@ describe('<DesktopDateRangePicker />', () => {
 
       // Change the start date (already tested)
       userEvent.mousePress(getPickerDay('3'));
+      clock.runToLast();
 
-      fireEvent.blur(screen.getAllByRole('textbox')[0]);
+      act(() => {
+        screen.getAllByRole('textbox')[1].blur();
+      });
       clock.runToLast();
 
       expect(onChange.callCount).to.equal(1); // Start date change
@@ -935,6 +1019,21 @@ describe('<DesktopDateRangePicker />', () => {
       expect(getPickerDay('15')).not.to.have.attribute('disabled');
       expect(getPickerDay('16')).to.have.attribute('disabled');
       expect(getPickerDay('17')).to.have.attribute('disabled');
+    });
+  });
+
+  describe('localization', () => {
+    it('should respect the `localeText` prop', () => {
+      render(
+        <WrappedDesktopDateRangePicker
+          initialValue={[null, null]}
+          localeText={{ cancelButtonLabel: 'Custom cancel' }}
+          componentsProps={{ actionBar: { actions: () => ['cancel'] } }}
+        />,
+      );
+      openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'start' });
+
+      expect(screen.queryByText('Custom cancel')).not.to.equal(null);
     });
   });
 });

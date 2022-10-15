@@ -61,7 +61,6 @@ export default function AggregationRowGrouping() {
         columns={COLUMNS}
         disableSelectionOnClick
         initialState={initialState}
-        experimentalFeatures={{ aggregation: true }}
       />
     </div>
   );

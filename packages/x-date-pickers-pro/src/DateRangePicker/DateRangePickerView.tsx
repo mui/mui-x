@@ -6,18 +6,15 @@ import {
   WrapperVariantContext,
   MobileKeyboardInputView,
   defaultReduceAnimations,
-  ExportedCalendarPickerProps,
+  ExportedDateCalendarProps,
   useCalendarState,
   PickerStatePickerProps,
-  DayPickerProps,
+  DayCalendarProps,
   BaseDateValidationProps,
   DayValidationProps,
 } from '@mui/x-date-pickers/internals';
-import {
-  DateRange,
-  CurrentlySelectingRangeEndProps,
-  DayRangeValidationProps,
-} from '../internal/models/dateRange';
+import { DateRange, CurrentlySelectingRangeEndProps } from '../internal/models/range';
+import { DayRangeValidationProps } from '../internal/models/dateRange';
 import { isRangeValid } from '../internal/utils/date-utils';
 import { calculateRangeChange } from './date-range-manager';
 import { DateRangePickerToolbar } from './DateRangePickerToolbar';
@@ -26,41 +23,38 @@ import {
   DateRangePickerViewMobileSlotsComponent,
   DateRangePickerViewMobileSlotsComponentsProps,
 } from './DateRangePickerViewMobile';
-import { DateRangePickerInput, DateRangeInputProps } from './DateRangePickerInput';
+import { DateRangePickerInput, DateRangePickerInputProps } from './DateRangePickerInput';
 import {
   DateRangePickerViewDesktop,
-  ExportedDesktopDateRangeCalendarProps,
+  ExportedDateRangePickerViewDesktopProps,
 } from './DateRangePickerViewDesktop';
 import { getReleaseInfo } from '../internal/utils/releaseInfo';
 
 const releaseInfo = getReleaseInfo();
 
-export interface DateRangePickerViewSlotsComponent
-  extends DateRangePickerViewMobileSlotsComponent {}
+export interface DateRangePickerViewSlotsComponent<TDate>
+  extends DateRangePickerViewMobileSlotsComponent<TDate> {}
 
-export interface DateRangePickerViewSlotsComponentsProps
-  extends DateRangePickerViewMobileSlotsComponentsProps {}
+export interface DateRangePickerViewSlotsComponentsProps<TDate>
+  extends DateRangePickerViewMobileSlotsComponentsProps<TDate> {}
 
 export interface ExportedDateRangePickerViewProps<TDate>
-  extends ExportedDesktopDateRangeCalendarProps<TDate>,
+  extends ExportedDateRangePickerViewDesktopProps,
     DayRangeValidationProps<TDate>,
     Omit<
-      ExportedCalendarPickerProps<TDate>,
-      | 'onYearChange'
-      | 'renderDay'
-      | keyof BaseDateValidationProps<TDate>
-      | keyof DayValidationProps<TDate>
+      ExportedDateCalendarProps<TDate>,
+      'onYearChange' | keyof BaseDateValidationProps<TDate> | keyof DayValidationProps<TDate>
     > {
   /**
    * Overrideable components.
    * @default {}
    */
-  components?: Partial<DateRangePickerViewSlotsComponent>;
+  components?: DateRangePickerViewSlotsComponent<TDate>;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  componentsProps?: Partial<DateRangePickerViewSlotsComponentsProps>;
+  componentsProps?: DateRangePickerViewSlotsComponentsProps<TDate>;
   /**
    * If `true`, after selecting `start` date calendar will not automatically switch to the month of `end` date.
    * @default false
@@ -85,40 +79,35 @@ export interface ExportedDateRangePickerViewProps<TDate>
   className?: string;
 }
 
-interface DateRangePickerViewProps<TInputDate, TDate>
+interface DateRangePickerViewProps<TDate>
   extends CurrentlySelectingRangeEndProps,
     ExportedDateRangePickerViewProps<TDate>,
     PickerStatePickerProps<DateRange<TDate>>,
     Required<BaseDateValidationProps<TDate>> {
   calendars: 1 | 2 | 3;
   open: boolean;
-  startText: React.ReactNode;
-  endText: React.ReactNode;
-  DateInputProps: DateRangeInputProps<TInputDate, TDate>;
+  DateInputProps: DateRangePickerInputProps<TDate>;
 }
 
-type DateRangePickerViewComponent = (<TInputDate, TDate = TInputDate>(
-  props: DateRangePickerViewProps<TInputDate, TDate>,
+type DateRangePickerViewComponent = (<TDate>(
+  props: DateRangePickerViewProps<TDate>,
 ) => JSX.Element) & { propTypes?: any };
 
 /**
  * @ignore - internal component.
  */
-function DateRangePickerViewRaw<TInputDate, TDate>(
-  props: DateRangePickerViewProps<TInputDate, TDate>,
-) {
+function DateRangePickerViewRaw<TDate>(props: DateRangePickerViewProps<TDate>) {
   const {
     calendars,
     className,
     currentlySelectingRangeEnd,
-    parsedValue,
+    value,
     DateInputProps,
     defaultCalendarMonth,
     disableAutoMonthSwitching = false,
     disableFuture,
     disableHighlightToday,
     disablePast,
-    endText,
     isMobileKeyboardViewOpen,
     maxDate,
     minDate,
@@ -129,7 +118,6 @@ function DateRangePickerViewRaw<TInputDate, TDate>(
     setCurrentlySelectingRangeEnd,
     shouldDisableDate,
     showToolbar,
-    startText,
     toggleMobileKeyboardView,
     toolbarFormat,
     toolbarTitle,
@@ -143,72 +131,67 @@ function DateRangePickerViewRaw<TInputDate, TDate>(
     shouldDisableDate &&
     ((dayToTest: TDate) => shouldDisableDate?.(dayToTest, currentlySelectingRangeEnd));
 
-  const [start, end] = parsedValue;
-  const {
-    changeMonth,
-    calendarState,
-    isDateDisabled,
-    onMonthSwitchingAnimationEnd,
-    changeFocusedDay,
-  } = useCalendarState({
-    date: start || end,
-    defaultCalendarMonth,
-    disableFuture,
-    disablePast,
-    disableSwitchToMonthOnDayFocus: true,
-    maxDate,
-    minDate,
-    onMonthChange,
-    reduceAnimations,
-    shouldDisableDate: wrappedShouldDisableDate,
-  });
+  const [start, end] = value;
+  const { changeMonth, calendarState, onMonthSwitchingAnimationEnd, changeFocusedDay } =
+    useCalendarState<TDate>({
+      value: start || end,
+      defaultCalendarMonth,
+      disableFuture,
+      disablePast,
+      disableSwitchToMonthOnDayFocus: true,
+      maxDate,
+      minDate,
+      onMonthChange,
+      reduceAnimations,
+      shouldDisableDate: wrappedShouldDisableDate,
+    });
 
   const toShowToolbar = showToolbar ?? wrapperVariant !== 'desktop';
 
-  const scrollToDayIfNeeded = (day: TDate | null) => {
-    if (!day || !utils.isValid(day) || isDateDisabled(day)) {
+  const prevValue = React.useRef<DateRange<TDate> | null>(null);
+  React.useEffect(() => {
+    const date = currentlySelectingRangeEnd === 'start' ? start : end;
+    if (!date || !utils.isValid(date)) {
       return;
     }
 
-    const currentlySelectedDate = currentlySelectingRangeEnd === 'start' ? start : end;
-    if (currentlySelectedDate === null) {
-      // do not scroll if one of ages is not selected
+    const prevDate =
+      currentlySelectingRangeEnd === 'start' ? prevValue.current?.[0] : prevValue.current?.[1];
+    prevValue.current = value;
+
+    // The current date did not change, this call comes either from a `currentlySelectingRangeEnd` change or a change in the other date.
+    // In both cases, we don't want to change the visible month(s).
+    if (disableAutoMonthSwitching && prevDate && utils.isEqual(prevDate, date)) {
       return;
     }
 
     const displayingMonthRange = wrapperVariant === 'mobile' ? 0 : calendars - 1;
     const currentMonthNumber = utils.getMonth(calendarState.currentMonth);
-    const requestedMonthNumber = utils.getMonth(day);
+    const requestedMonthNumber = utils.getMonth(date);
 
     if (
-      !utils.isSameYear(calendarState.currentMonth, day) ||
+      !utils.isSameYear(calendarState.currentMonth, date) ||
       requestedMonthNumber < currentMonthNumber ||
       requestedMonthNumber > currentMonthNumber + displayingMonthRange
     ) {
       const newMonth =
         currentlySelectingRangeEnd === 'start'
-          ? currentlySelectedDate
+          ? date
           : // If need to focus end, scroll to the state when "end" is displaying in the last calendar
-            utils.addMonths(currentlySelectedDate, -displayingMonthRange);
+            utils.addMonths(date, -displayingMonthRange);
 
       changeMonth(newMonth);
     }
-  };
+  }, [currentlySelectingRangeEnd, value]); // eslint-disable-line
 
-  React.useEffect(() => {
-    if (disableAutoMonthSwitching || !open) {
-      return;
-    }
-
-    scrollToDayIfNeeded(currentlySelectingRangeEnd === 'start' ? start : end);
-  }, [currentlySelectingRangeEnd, parsedValue]); // eslint-disable-line
-
-  const handleSelectedDayChange = React.useCallback<DayPickerProps<TDate>['onSelectedDaysChange']>(
+  const handleSelectedDayChange = React.useCallback<
+    DayCalendarProps<TDate>['onSelectedDaysChange']
+  >(
     (newDate) => {
       const { nextSelection, newRange } = calculateRangeChange({
         newDate,
         utils,
-        range: parsedValue,
+        range: value,
         currentlySelectingRangeEnd,
       });
 
@@ -225,7 +208,7 @@ function DateRangePickerViewRaw<TInputDate, TDate>(
     },
     [
       currentlySelectingRangeEnd,
-      parsedValue,
+      value,
       onDateChange,
       setCurrentlySelectingRangeEnd,
       utils,
@@ -235,7 +218,7 @@ function DateRangePickerViewRaw<TInputDate, TDate>(
 
   const renderView = () => {
     const sharedCalendarProps = {
-      parsedValue,
+      value,
       changeFocusedDay,
       onSelectedDaysChange: handleSelectedDayChange,
       reduceAnimations,
@@ -268,13 +251,11 @@ function DateRangePickerViewRaw<TInputDate, TDate>(
       <Watermark packageName="x-date-pickers-pro" releaseInfo={releaseInfo} />
       {toShowToolbar && (
         <DateRangePickerToolbar
-          parsedValue={parsedValue}
+          value={value}
           isMobileKeyboardViewOpen={isMobileKeyboardViewOpen}
           toggleMobileKeyboardView={toggleMobileKeyboardView}
           currentlySelectingRangeEnd={currentlySelectingRangeEnd}
           setCurrentlySelectingRangeEnd={setCurrentlySelectingRangeEnd}
-          startText={startText}
-          endText={endText}
           toolbarTitle={toolbarTitle}
           toolbarFormat={toolbarFormat}
         />

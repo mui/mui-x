@@ -3,10 +3,16 @@ import { getPickersLocalization } from './utils/getPickersLocalization';
 import { CalendarPickerView } from '../internals/models';
 
 // maps ClockPickerView to its translation
-const views = {
+const clockViews = {
   hours: 'Stunden',
   minutes: 'Minuten',
   seconds: 'Sekunden',
+};
+
+// maps PickersToolbar["viewType"] to its translation
+const pickerViews = {
+  calendar: 'Kalenderansicht',
+  clock: 'Uhransicht',
 };
 
 const deDEPickers: Partial<PickersLocaleText<any>> = {
@@ -21,7 +27,10 @@ const deDEPickers: Partial<PickersLocaleText<any>> = {
     view === 'year'
       ? 'Jahresansicht ist geöffnet, zur Kalenderansicht wechseln'
       : 'Kalenderansicht ist geöffnet, zur Jahresansicht wechseln',
-  // inputModeToggleButtonAriaLabel: (isKeyboardInputOpen: boolean, viewType: 'calendar' | 'clock') => isKeyboardInputOpen ? `text input view is open, go to ${viewType} view` : `${viewType} view is open, go to text input view`,
+  inputModeToggleButtonAriaLabel: (isKeyboardInputOpen: boolean, viewType: 'calendar' | 'clock') =>
+    isKeyboardInputOpen
+      ? `Texteingabeansicht ist geöffnet, zur ${pickerViews[viewType]} wechseln`
+      : `${pickerViews[viewType]} ist geöffnet, zur Texteingabeansicht wechseln`,
 
   // DateRange placeholders
   start: 'Beginn',
@@ -34,35 +43,44 @@ const deDEPickers: Partial<PickersLocaleText<any>> = {
   todayButtonLabel: 'Heute',
 
   // Toolbar titles
-  // datePickerDefaultToolbarTitle: 'Select date',
-  // dateTimePickerDefaultToolbarTitle: 'Select date & time',
-  // timePickerDefaultToolbarTitle: 'Select time',
-  // dateRangePickerDefaultToolbarTitle: 'Select date range',
+  datePickerDefaultToolbarTitle: 'Datum auswählen',
+  dateTimePickerDefaultToolbarTitle: 'Datum & Uhrzeit auswählen',
+  timePickerDefaultToolbarTitle: 'Uhrzeit auswählen',
+  dateRangePickerDefaultToolbarTitle: 'Datumsbereich auswählen',
 
   // Clock labels
   clockLabelText: (view, time, adapter) =>
-    `${views[view] ?? view} auswählen. ${
+    `${clockViews[view] ?? view} auswählen. ${
       time === null
         ? 'Keine Uhrzeit ausgewählt'
         : `Gewählte Uhrzeit ist ${adapter.format(time, 'fullTime')}`
     }`,
-  hoursClockNumberText: (hours) => `${hours} ${views.hours}`,
-  minutesClockNumberText: (minutes) => `${minutes} ${views.minutes}`,
-  secondsClockNumberText: (seconds) => `${seconds}  ${views.seconds}`,
+  hoursClockNumberText: (hours) => `${hours} ${clockViews.hours}`,
+  minutesClockNumberText: (minutes) => `${minutes} ${clockViews.minutes}`,
+  secondsClockNumberText: (seconds) => `${seconds}  ${clockViews.seconds}`,
 
   // Open picker labels
-  openDatePickerDialogue: (rawValue, utils) =>
-    rawValue && utils.isValid(utils.date(rawValue))
-      ? `Datum auswählen, gewähltes Datum ist ${utils.format(utils.date(rawValue)!, 'fullDate')}`
+  openDatePickerDialogue: (value, utils) =>
+    value !== null && utils.isValid(value)
+      ? `Datum auswählen, gewähltes Datum ist ${utils.format(value, 'fullDate')}`
       : 'Datum auswählen',
-  openTimePickerDialogue: (rawValue, utils) =>
-    rawValue && utils.isValid(utils.date(rawValue))
-      ? `Uhrzeit auswählen, gewählte Uhrzeit ist ${utils.format(utils.date(rawValue)!, 'fullTime')}`
+  openTimePickerDialogue: (value, utils) =>
+    value !== null && utils.isValid(value)
+      ? `Uhrzeit auswählen, gewählte Uhrzeit ist ${utils.format(value, 'fullTime')}`
       : 'Uhrzeit auswählen',
 
   // Table labels
   timeTableLabel: 'Uhrzeit auswählen',
   dateTableLabel: 'Datum auswählen',
+
+  // Field section placeholders
+  // fieldYearPlaceholder: params => 'Y'.repeat(params.digitAmount),
+  // fieldMonthPlaceholder: params => params.contentType === 'letter' ? 'MMMM' : 'MM',
+  // fieldDayPlaceholder: () => 'DD',
+  // fieldHoursPlaceholder: () => 'hh',
+  // fieldMinutesPlaceholder: () => 'mm',
+  // fieldSecondsPlaceholder: () => 'ss',
+  // fieldMeridiemPlaceholder: () => 'aa',
 };
 
 export const deDE = getPickersLocalization(deDEPickers);

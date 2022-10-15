@@ -148,8 +148,10 @@ async function main(argv) {
         break;
       case 'DatePicker':
       case 'TimePicker':
+      case 'DateTimePicker':
       case 'DateRangePicker':
       case 'pickers':
+      case 'fields':
         pickersCommits.push(commitItem);
         break;
       case 'docs':
@@ -237,7 +239,7 @@ yargs
         })
         .option('release', {
           // #default-branch-switch
-          default: 'master',
+          default: 'next',
           describe: 'Ref which we want to release',
           type: 'string',
         });

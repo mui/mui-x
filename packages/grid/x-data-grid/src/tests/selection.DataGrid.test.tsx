@@ -1,8 +1,15 @@
 import * as React from 'react';
+import { expect } from 'chai';
+import { spy } from 'sinon';
 // @ts-expect-error Remove once the test utils are typed
 import { createRenderer, fireEvent, screen, act, userEvent } from '@mui/monorepo/test/utils';
-import { expect } from 'chai';
-import { DataGrid, DataGridProps, GridInputSelectionModel, GridRowId } from '@mui/x-data-grid';
+import {
+  DataGrid,
+  DataGridProps,
+  GridInputSelectionModel,
+  GridRowId,
+  GridEditModes,
+} from '@mui/x-data-grid';
 import {
   getCell,
   getRow,
@@ -11,8 +18,7 @@ import {
   getColumnHeadersTextContent,
   getActiveCell,
 } from 'test/utils/helperFn';
-import { getData } from 'storybook/src/data/data-service';
-import { spy } from 'sinon';
+import { getBasicGridData } from '@mui/x-data-grid-generator';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
@@ -30,18 +36,15 @@ function getSelectedRowIds() {
 describe('<DataGrid /> - Selection', () => {
   const { render, clock } = createRenderer();
 
-  const defaultData = getData(4, 2);
+  const defaultData = getBasicGridData(4, 2);
 
-  const TestDataGridSelection = (
-    props: Omit<DataGridProps, 'rows' | 'columns'> &
-      Partial<Pick<DataGridProps, 'rows' | 'columns'>>,
-  ) => (
+  const TestDataGridSelection = (props: Partial<DataGridProps>) => (
     <div style={{ width: 300, height: 300 }}>
       <DataGrid
         {...defaultData}
         {...props}
         autoHeight={isJSDOM}
-        experimentalFeatures={{ warnIfFocusStateIsNotSynced: true }}
+        experimentalFeatures={{ warnIfFocusStateIsNotSynced: true, ...props.experimentalFeatures }}
       />
     </div>
   );
@@ -105,38 +108,41 @@ describe('<DataGrid /> - Selection', () => {
       expect(getSelectedRowIds()).to.deep.equal([1]);
     });
 
-    it('should select row on Shift + Space without starting editing the cell', () => {
-      const onCellEditStart = spy();
-      render(
-        <TestDataGridSelection
-          columns={[
-            { field: 'id', type: 'number' },
-            { field: 'name', editable: true },
-          ]}
-          rows={[
-            { id: 0, name: 'React' },
-            { id: 1, name: 'Vue' },
-          ]}
-          onCellEditStart={onCellEditStart}
-          disableSelectionOnClick
-        />,
-      );
-      expect(onCellEditStart.callCount).to.equal(0);
+    [GridEditModes.Cell, GridEditModes.Row].forEach((editMode) => {
+      it(`should select row on Shift + Space without starting editing the ${editMode}`, () => {
+        const onCellEditStart = spy();
+        render(
+          <TestDataGridSelection
+            columns={[
+              { field: 'id', type: 'number' },
+              { field: 'name', editable: true },
+            ]}
+            rows={[
+              { id: 0, name: 'React' },
+              { id: 1, name: 'Vue' },
+            ]}
+            onCellEditStart={onCellEditStart}
+            editMode={editMode}
+            disableSelectionOnClick
+          />,
+        );
+        expect(onCellEditStart.callCount).to.equal(0);
 
-      const cell01 = getCell(0, 1);
-      userEvent.mousePress(cell01);
+        const cell01 = getCell(0, 1);
+        userEvent.mousePress(cell01);
 
-      fireEvent.keyDown(cell01, { key: ' ', shiftKey: true });
+        fireEvent.keyDown(cell01, { key: ' ', shiftKey: true });
 
-      expect(onCellEditStart.callCount).to.equal(0);
-      expect(getSelectedRowIds()).to.deep.equal([0]);
+        expect(onCellEditStart.callCount).to.equal(0);
+        expect(getSelectedRowIds()).to.deep.equal([0]);
 
-      const cell11 = getCell(1, 1);
-      userEvent.mousePress(cell11);
-      fireEvent.keyDown(cell11, { key: ' ', shiftKey: true });
+        const cell11 = getCell(1, 1);
+        userEvent.mousePress(cell11);
+        fireEvent.keyDown(cell11, { key: ' ', shiftKey: true });
 
-      expect(onCellEditStart.callCount).to.equal(0);
-      expect(getSelectedRowIds()).to.deep.equal([1]);
+        expect(onCellEditStart.callCount).to.equal(0);
+        expect(getSelectedRowIds()).to.deep.equal([1]);
+      });
     });
 
     it(`should deselect the selected row on Shift + Space`, () => {
@@ -409,7 +415,7 @@ describe('<DataGrid /> - Selection', () => {
       if (isJSDOM) {
         this.skip(); // HTMLElement.focus() only scrolls to the element on a real browser
       }
-      const data = getData(20, 1);
+      const data = getBasicGridData(20, 1);
       render(<TestDataGridSelection {...data} rowHeight={50} checkboxSelection hideFooter />);
       const checkboxes = screen.queryAllByRole('checkbox', { name: /select row/i });
       userEvent.mousePress(checkboxes[0]);
@@ -550,7 +556,7 @@ describe('<DataGrid /> - Selection', () => {
 
   describe('prop: rows', () => {
     it('should remove the outdated selected rows when rows prop changes', () => {
-      const data = getData(4, 2);
+      const data = getBasicGridData(4, 2);
 
       const { setProps } = render(
         <TestDataGridSelection selectionModel={[0, 1, 2]} checkboxSelection {...data} />,
@@ -564,7 +570,7 @@ describe('<DataGrid /> - Selection', () => {
     });
 
     it('should retain the outdated selected rows when the rows prop changes when keepNonExistentRowsSelected is true', () => {
-      const data = getData(10, 2);
+      const data = getBasicGridData(10, 2);
       const onSelectionModelChange = spy();
 
       const { setProps } = render(

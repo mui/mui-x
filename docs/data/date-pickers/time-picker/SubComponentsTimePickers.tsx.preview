@@ -1,3 +1,0 @@
-<LocalizationProvider dateAdapter={AdapterDayjs}>
-  <ClockPicker date={date} onChange={(newDate) => setDate(newDate)} />
-</LocalizationProvider>

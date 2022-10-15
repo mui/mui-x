@@ -1,6 +1,6 @@
-<LocalizationProvider dateAdapter={AdapterDateFns}>
+<LocalizationProvider dateAdapter={AdapterDayjs}>
   <Stack spacing={2} direction="row">
-    <DateField label="Uncontrolled field" defaultValue={new Date()} />
+    <DateField label="Uncontrolled field" defaultValue={dayjs('2022-04-07')} />
     <DateField
       label="Controlled field"
       value={value}

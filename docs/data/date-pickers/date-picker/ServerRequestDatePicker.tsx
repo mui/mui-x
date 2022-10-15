@@ -4,9 +4,9 @@ import Badge from '@mui/material/Badge';
 import TextField from '@mui/material/TextField';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { PickersDay } from '@mui/x-date-pickers/PickersDay';
+import { PickersDay, PickersDayProps } from '@mui/x-date-pickers/PickersDay';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { CalendarPickerSkeleton } from '@mui/x-date-pickers/CalendarPickerSkeleton';
+import { DayCalendarSkeleton } from '@mui/x-date-pickers/DayCalendarSkeleton';
 
 function getRandomNumber(min: number, max: number) {
   return Math.round(Math.random() * (max - min) + min);
@@ -32,7 +32,24 @@ function fakeFetch(date: Dayjs, { signal }: { signal: AbortSignal }) {
   });
 }
 
-const initialValue = dayjs();
+const initialValue = dayjs('2022-04-07');
+
+function ServerDay(props: PickersDayProps<Dayjs> & { highlightedDays?: number[] }) {
+  const { highlightedDays = [], day, outsideCurrentMonth, ...other } = props;
+
+  const isSelected =
+    !props.outsideCurrentMonth && highlightedDays.indexOf(props.day.date()) > 0;
+
+  return (
+    <Badge
+      key={props.day.toString()}
+      overlap="circular"
+      badgeContent={isSelected ? '🌚' : undefined}
+    >
+      <PickersDay {...other} outsideCurrentMonth={outsideCurrentMonth} day={day} />
+    </Badge>
+  );
+}
 
 export default function ServerRequestDatePicker() {
   const requestAbortController = React.useRef<AbortController | null>(null);
@@ -87,21 +104,14 @@ export default function ServerRequestDatePicker() {
         }}
         onMonthChange={handleMonthChange}
         renderInput={(params) => <TextField {...params} />}
-        renderLoading={() => <CalendarPickerSkeleton />}
-        renderDay={(day, _value, DayComponentProps) => {
-          const isSelected =
-            !DayComponentProps.outsideCurrentMonth &&
-            highlightedDays.indexOf(day.date()) > 0;
-
-          return (
-            <Badge
-              key={day.toString()}
-              overlap="circular"
-              badgeContent={isSelected ? '🌚' : undefined}
-            >
-              <PickersDay {...DayComponentProps} />
-            </Badge>
-          );
+        renderLoading={() => <DayCalendarSkeleton />}
+        components={{
+          Day: ServerDay,
+        }}
+        componentsProps={{
+          day: {
+            highlightedDays,
+          } as any,
         }}
       />
     </LocalizationProvider>

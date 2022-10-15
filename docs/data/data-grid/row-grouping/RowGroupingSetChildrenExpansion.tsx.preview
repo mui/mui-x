@@ -1,4 +1,4 @@
-<Button size="small" onClick={toggleSecondRow}>
+<Button size="small" onClick={toggle2ndGroup}>
   Toggle 2nd row expansion
 </Button>
 <Box sx={{ height: 400, pt: 1 }}>
