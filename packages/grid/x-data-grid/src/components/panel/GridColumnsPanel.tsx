@@ -66,9 +66,10 @@ export interface GridColumnsPanelProps extends GridPanelWrapperProps {
    */
   sort?: 'asc' | 'desc';
   /*
-   * whether to autoFocus the column search field by default.
-   * If `false`, it will autoFocus the first column switch input.
+   * If `true`, column search field will be focused automatically.
+   * If `false`, first column switch input will be focused automatically.
    * This helps to avoid input keyboard panel to popup automatically on touch devices.
+   * @default false
    */
   autoFocusSearchField?: boolean;
 }
@@ -151,6 +152,15 @@ function GridColumnsPanel(props: GridColumnsPanelProps) {
       firstSwitchRef.current.focus();
     }
   }, [autoFocusSearchField]);
+  
+  let firstHideableColumnFound = false;
+  const isFirstHideableColumn = (column: GridStateColDef) => {
+    if (firstHideableColumnFound === false && column.hideable !== false) {
+      firstHideableColumnFound = true;
+      return true;
+    }
+    return false;
+  };
 
   return (
     <GridPanelWrapper {...other}>
@@ -178,7 +188,7 @@ function GridColumnsPanel(props: GridColumnsPanelProps) {
                     onClick={toggleColumn}
                     name={column.field}
                     size="small"
-                    inputRef={index === 0 ? firstSwitchRef : undefined}
+                    inputRef={isFirstHideableColumn(column) ? firstSwitchRef : undefined}
                     {...rootProps.componentsProps?.baseSwitch}
                   />
                 }

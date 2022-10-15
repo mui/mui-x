@@ -233,6 +233,8 @@ describe('<DataGridPro /> - Columns Visibility', () => {
 
     fireEvent.click(screen.getByRole('button', { name: 'Select columns' }));
 
-    expect((document.activeElement as HTMLInputElement).checked).to.equal(true);
+    const activeElement = document.activeElement as HTMLInputElement;
+    expect(activeElement.name).to.equal(columns[0].field);
+    expect(activeElement.type).to.equal("checkbox");
   });
 });
