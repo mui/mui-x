@@ -235,6 +235,6 @@ describe('<DataGridPro /> - Columns Visibility', () => {
 
     const activeElement = document.activeElement as HTMLInputElement;
     expect(activeElement.name).to.equal(columns[0].field);
-    expect(activeElement.type).to.equal("checkbox");
+    expect(activeElement.type).to.equal('checkbox');
   });
 });
