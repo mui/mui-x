@@ -14,7 +14,7 @@ import {
 } from 'test/utils/pickers-utils';
 
 const WrappedMobileDateRangePicker = withPickerControls(MobileDateRangePicker)({
-  DialogProps: { TransitionComponent: FakeTransitionComponent },
+  components: { MobileTransition: FakeTransitionComponent },
   renderInput: (startProps, endProps) => (
     <React.Fragment>
       <TextField {...startProps} />

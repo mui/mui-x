@@ -24,8 +24,8 @@ export const dateFieldValueManager: FieldValueManager<any, any, FieldSection, Da
   {
     updateReferenceValue: (utils, value, prevReferenceValue) =>
       value == null || !utils.isValid(value) ? prevReferenceValue : value,
-    getSectionsFromValue: (utils, prevSections, date, format) =>
-      addPositionPropertiesToSections(splitFormatIntoSections(utils, format, date)),
+    getSectionsFromValue: (utils, localeText, prevSections, date, format) =>
+      addPositionPropertiesToSections(splitFormatIntoSections(utils, localeText, format, date)),
     getValueStrFromSections: (sections) => createDateStrFromSections(sections, true),
     getActiveDateSections: (sections) => sections,
     getActiveDateManager: (utils, state) => ({
@@ -88,7 +88,7 @@ export const useDateField = <TDate, TChildProps extends {}>({
 
   return useField({
     inputRef,
-    forwardedProps: other,
+    forwardedProps: other as unknown as TChildProps,
     internalProps: {
       value,
       defaultValue,
@@ -105,7 +105,6 @@ export const useDateField = <TDate, TChildProps extends {}>({
       disablePast,
       selectedSections,
       onSelectedSectionsChange,
-      inputRef,
     },
     valueManager: datePickerValueManager,
     fieldValueManager: dateFieldValueManager,

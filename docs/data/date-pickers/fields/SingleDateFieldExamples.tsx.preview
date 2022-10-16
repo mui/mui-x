@@ -1,0 +1,13 @@
+<LocalizationProvider dateAdapter={AdapterDayjs}>
+  <Grid container spacing={4} width={550}>
+    <GridItem label="DateField">
+      <DateField defaultValue={date1} />
+    </GridItem>
+    <GridItem label="TimeField">
+      <TimeField defaultValue={date1} />
+    </GridItem>
+    <GridItem label="DateTimeField">
+      <DateTimeField defaultValue={date1} />
+    </GridItem>
+  </Grid>
+</LocalizationProvider>

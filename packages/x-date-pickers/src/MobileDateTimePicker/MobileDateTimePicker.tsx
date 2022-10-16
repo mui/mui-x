@@ -38,12 +38,12 @@ export interface MobileDateTimePickerProps<TDate>
    * Overrideable components.
    * @default {}
    */
-  components?: Partial<MobileDateTimePickerSlotsComponent<TDate>>;
+  components?: MobileDateTimePickerSlotsComponent<TDate>;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  componentsProps?: Partial<MobileDateTimePickerSlotsComponentsProps<TDate>>;
+  componentsProps?: MobileDateTimePickerSlotsComponentsProps<TDate>;
 }
 
 type MobileDateTimePickerComponent = (<TDate>(
@@ -183,10 +183,6 @@ MobileDateTimePicker.propTypes = {
    */
   defaultCalendarMonth: PropTypes.any,
   /**
-   * Props applied to the [`Dialog`](https://mui.com/material-ui/api/dialog/) element.
-   */
-  DialogProps: PropTypes.object,
-  /**
    * If `true`, the picker and text field are disabled.
    * @default false
    */
@@ -221,6 +217,12 @@ MobileDateTimePicker.propTypes = {
    * @default false
    */
   disablePast: PropTypes.bool,
+  /**
+   * Calendar will show more weeks in order to match this value.
+   * Put it to 6 for having fix number of week in Gregorian calendars
+   * @default undefined
+   */
+  fixedWeekNumber: PropTypes.number,
   /**
    * Get aria-label text for control that opens picker dialog. Aria-label text must include selected date. @DateIOType
    * @template TDate
@@ -424,7 +426,7 @@ MobileDateTimePicker.propTypes = {
    * Dynamically check if time is disabled or not.
    * If returns `false` appropriate time point will ot be acceptable.
    * @param {number} timeValue The value to check.
-   * @param {ClockPickerView} clockType The clock type of the timeValue.
+   * @param {ClockPickerView} view The clock type of the timeValue.
    * @returns {boolean} Returns `true` if the time should be disabled
    */
   shouldDisableTime: PropTypes.func,

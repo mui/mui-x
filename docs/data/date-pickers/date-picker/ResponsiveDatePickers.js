@@ -25,14 +25,12 @@ export default function ResponsiveDatePickers() {
         <DesktopDatePicker
           label="For desktop"
           value={value}
-          minDate={dayjs('2017-01-01')}
           onChange={(newValue) => {
             setValue(newValue);
           }}
           renderInput={(params) => <TextField {...params} />}
         />
         <DatePicker
-          disableFuture
           label="Responsive"
           openTo="year"
           views={['year', 'month', 'day']}

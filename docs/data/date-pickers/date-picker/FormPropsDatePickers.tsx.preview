@@ -1,0 +1,4 @@
+<LocalizationProvider dateAdapter={AdapterDayjs}>
+  <DatePicker {...defaultProps} label="disabled" disabled />
+  <DatePicker {...defaultProps} label="readOnly" readOnly />
+</LocalizationProvider>

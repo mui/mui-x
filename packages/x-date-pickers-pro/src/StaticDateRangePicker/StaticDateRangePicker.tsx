@@ -39,12 +39,12 @@ export interface StaticDateRangePickerProps<TDate>
    * Overrideable components.
    * @default {}
    */
-  components?: Partial<StaticDateRangePickerSlotsComponent<TDate>>;
+  components?: StaticDateRangePickerSlotsComponent<TDate>;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  componentsProps?: Partial<StaticDateRangePickersSlotsComponentsProps<TDate>>;
+  componentsProps?: StaticDateRangePickersSlotsComponentsProps<TDate>;
 }
 
 type StaticDateRangePickerComponent = (<TDate>(
@@ -216,6 +216,12 @@ StaticDateRangePicker.propTypes = {
    * @default "mobile"
    */
   displayStaticWrapperAs: PropTypes.oneOf(['desktop', 'mobile']),
+  /**
+   * Calendar will show more weeks in order to match this value.
+   * Put it to 6 for having fix number of week in Gregorian calendars
+   * @default undefined
+   */
+  fixedWeekNumber: PropTypes.number,
   /**
    * Get aria-label text for control that opens picker dialog. Aria-label text must include selected date. @DateIOType
    * @template TDate
