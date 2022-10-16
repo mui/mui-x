@@ -19,6 +19,7 @@ import { GridPanelWrapper, GridPanelWrapperProps } from './GridPanelWrapper';
 import { GRID_EXPERIMENTAL_ENABLED } from '../../constants/envConstants';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
+import type { GridStateColDef } from '../../models/colDef/gridColDef';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
 
 type OwnerState = { classes: DataGridProcessedProps['classes'] };
@@ -152,7 +153,7 @@ function GridColumnsPanel(props: GridColumnsPanelProps) {
       firstSwitchRef.current.focus();
     }
   }, [autoFocusSearchField]);
-  
+
   let firstHideableColumnFound = false;
   const isFirstHideableColumn = (column: GridStateColDef) => {
     if (firstHideableColumnFound === false && column.hideable !== false) {
@@ -178,7 +179,7 @@ function GridColumnsPanel(props: GridColumnsPanelProps) {
       </GridPanelHeader>
       <GridPanelContent>
         <GridColumnsPanelRoot className={classes.root}>
-          {currentColumns.map((column, index) => (
+          {currentColumns.map((column) => (
             <GridColumnsPanelRowRoot className={classes.columnsPanelRow} key={column.field}>
               <FormControlLabel
                 control={
