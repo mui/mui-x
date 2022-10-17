@@ -4,7 +4,10 @@ import { BaseDateValidationProps } from '@mui/x-date-pickers/internals';
 import testTextFieldValidation from './testValidation/testTextFieldValidation';
 import { DayRangeValidationProps } from '../internal/models';
 
-type ValidationProps = keyof (DayRangeValidationProps<any> & BaseDateValidationProps<any>);
+type ValidationProps =
+  | keyof (DayRangeValidationProps<any> & BaseDateValidationProps<any>)
+  | 'minDateTime'
+  | 'maxDateTime';
 
 const defaultAvailableProps: ValidationProps[] = [
   // from now
@@ -16,7 +19,10 @@ const defaultAvailableProps: ValidationProps[] = [
   // time range
   'minDate',
   'maxDate',
-  // specific date
+  // date time range
+  'minDateTime',
+  'maxDateTime',
+  // specific moment
   'shouldDisableDate',
 ];
 

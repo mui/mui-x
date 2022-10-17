@@ -401,7 +401,7 @@ function testTextFieldValidation(ElementToTest, propsToTest, getOptions) {
         });
         testInvalidStatus([false, false], isSingleInput);
       });
-      it.only('should ignore date when applying minTime', function test() {
+      it('should ignore date when applying minTime', function test() {
         const { render, withTime, isSingleInput } = getOptions();
         if (!withTime) {
           return;
@@ -464,7 +464,7 @@ function testTextFieldValidation(ElementToTest, propsToTest, getOptions) {
         });
         testInvalidStatus([true, true], isSingleInput);
       });
-      it.only('should ignore date when applying maxTime', function test() {
+      it('should ignore date when applying maxTime', function test() {
         const { render, withTime, isSingleInput } = getOptions();
         if (!withTime) {
           return;
@@ -489,6 +489,62 @@ function testTextFieldValidation(ElementToTest, propsToTest, getOptions) {
           ]),
         });
         testInvalidStatus([true, true], isSingleInput);
+      });
+    }
+
+    if (propsToTest.includes('maxDateTime')) {
+      it('should apply maxDateTime', function test() {
+        const { render, isSingleInput, withDate, withTime } = getOptions();
+        if (!withDate || !withTime) {
+          // prop only available on DateTime pickers
+          return;
+        }
+
+        const { setProps } = render(
+          <ElementToTest
+            {...defaultProps}
+            value={dateParser([
+              [2018, 2, 1, 9, 0, 0],
+              [2018, 2, 2, 12, 0, 0],
+            ])}
+            maxDateTime={adapterToUse.date(new Date(2018, 2, 2, 13, 0))}
+          />,
+        );
+        testInvalidStatus([false, false], isSingleInput);
+
+        setProps({ maxDateTime: adapterToUse.date(new Date(2018, 2, 2, 8, 0)) });
+        testInvalidStatus([false, true], isSingleInput);
+
+        setProps({ maxDateTime: adapterToUse.date(new Date(2018, 2, 1, 5, 0)) });
+        testInvalidStatus([true, true], isSingleInput);
+      });
+    }
+
+    if (propsToTest.includes('minDateTime')) {
+      it('should apply minDateTime', function test() {
+        const { render, isSingleInput, withDate, withTime } = getOptions();
+        if (!withDate || !withTime) {
+          // prop only available on DateTime pickers
+          return;
+        }
+
+        const { setProps } = render(
+          <ElementToTest
+            {...defaultProps}
+            value={dateParser([
+              [2018, 2, 1, 9, 0, 0],
+              [2018, 2, 2, 12, 0, 0],
+            ])}
+            minDateTime={adapterToUse.date(new Date(2018, 2, 2, 13, 0))}
+          />,
+        );
+        testInvalidStatus([true, true], isSingleInput);
+
+        setProps({ minDateTime: adapterToUse.date(new Date(2018, 2, 2, 8, 0)) });
+        testInvalidStatus([true, false], isSingleInput);
+
+        setProps({ minDateTime: adapterToUse.date(new Date(2018, 2, 1, 5, 0)) });
+        testInvalidStatus([false, false], isSingleInput);
       });
     }
   });
