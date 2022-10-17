@@ -35,10 +35,10 @@ const isISPickers: Partial<PickersLocaleText<any>> = {
   todayButtonLabel: 'Í dag',
 
   // Toolbar titles
-  datePickerDefaultToolbarTitle: 'Velja dagsetningu',
-  dateTimePickerDefaultToolbarTitle: 'Velja dagsetningu og tíma',
-  timePickerDefaultToolbarTitle: 'Velja tíma',
-  dateRangePickerDefaultToolbarTitle: 'Velja tímabil',
+  datePickerToolbarTitle: 'Velja dagsetningu',
+  dateTimePickerToolbarTitle: 'Velja dagsetningu og tíma',
+  timePickerToolbarTitle: 'Velja tíma',
+  dateRangePickerToolbarTitle: 'Velja tímabil',
 
   // Clock labels
   clockLabelText: (view, time, adapter) =>

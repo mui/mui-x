@@ -1,11 +1,26 @@
 import { CalendarPickerView, ClockPickerView, MuiPickersAdapter } from '../../internals/models';
 
 export interface PickersComponentSpecificLocaleText {
-  // Toolbar titles
-  datePickerDefaultToolbarTitle: string;
-  dateTimePickerDefaultToolbarTitle: string;
-  timePickerDefaultToolbarTitle: string;
-  dateRangePickerDefaultToolbarTitle: string;
+  /**
+   * Title displayed in the toolbar of the `DatePicker` and its variants.
+   * Will be overridden by the `toolbarTitle` translation key passed directly on the picker.
+   */
+  datePickerToolbarTitle: string;
+  /**
+   * Title displayed in the toolbar of the `TimePicker` and its variants.
+   * Will be overridden by the `toolbarTitle` translation key passed directly on the picker.
+   */
+  timePickerToolbarTitle: string;
+  /**
+   * Title displayed in the toolbar of the `DateTimePicker` and its variants.
+   * Will be overridden by the `toolbarTitle` translation key passed directly on the picker.
+   */
+  dateTimePickerToolbarTitle: string;
+  /**
+   * Title displayed in the toolbar of the `DateRangePicker` and its variants.
+   * Will be overridden by the `toolbarTitle` translation key passed directly on the picker.
+   */
+  dateRangePickerToolbarTitle: string;
 }
 
 export interface PickersComponentAgnosticLocaleText<TDate> {
@@ -73,6 +88,10 @@ export type PickersInputLocaleText<TDate> = Partial<PickersLocaleText<TDate>>;
  */
 export interface PickersInputComponentLocaleText<TDate>
   extends Partial<PickersComponentAgnosticLocaleText<TDate>> {
+  /**
+   * Title displayed in the toolbar of this picker.
+   * Will override the global translation keys like `datePickerToolbarTitle` passed to the `LocalizationProvider`.
+   */
   toolbarTitle?: string;
 }
 
