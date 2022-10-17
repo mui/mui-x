@@ -7,6 +7,13 @@ export * from './DesktopDateRangePicker';
 export * from './MobileDateRangePicker';
 export * from './StaticDateRangePicker';
 
+// Fields
+export * from './MultiInputDateRangeField';
+export * from './MultiInputTimeRangeField';
+export * from './MultiInputDateTimeRangeField';
+export * from './SingleInputDateRangeField';
+export type { DateRangeFieldSection } from './internal/models/range';
+
 // Calendars
 export * from './DateRangeCalendar';
 

@@ -36,12 +36,12 @@ export interface DatePickerProps<TDate>
    * Overrideable components.
    * @default {}
    */
-  components?: Partial<DatePickerSlotsComponent<TDate>>;
+  components?: DatePickerSlotsComponent<TDate>;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  componentsProps?: Partial<DatePickerSlotsComponentsProps<TDate>>;
+  componentsProps?: DatePickerSlotsComponentsProps<TDate>;
 }
 
 type DatePickerComponent = (<TDate>(
@@ -356,25 +356,6 @@ DatePicker.propTypes = {
     PropTypes.func,
     PropTypes.object,
   ]),
-  /**
-   * Component that will replace default toolbar renderer.
-   * @default DatePickerToolbar
-   */
-  ToolbarComponent: PropTypes.elementType,
-  /**
-   * Date format, that is displaying in toolbar.
-   */
-  toolbarFormat: PropTypes.string,
-  /**
-   * Mobile picker date value placeholder, displaying if `value` === `null`.
-   * @default '–'
-   */
-  toolbarPlaceholder: PropTypes.node,
-  /**
-   * Mobile picker title, displaying in the toolbar.
-   * @default 'Select date'
-   */
-  toolbarTitle: PropTypes.node,
   /**
    * The value of the picker.
    */

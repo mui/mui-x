@@ -40,12 +40,12 @@ export interface DateRangePickerProps<TDate>
    * Overrideable components.
    * @default {}
    */
-  components?: Partial<DateRangePickerSlotsComponent<TDate>>;
+  components?: DateRangePickerSlotsComponent<TDate>;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  componentsProps?: Partial<DateRangePickerSlotsComponentsProps<TDate>>;
+  componentsProps?: DateRangePickerSlotsComponentsProps<TDate>;
 }
 
 type DateRangePickerComponent = (<TDate>(
@@ -368,15 +368,6 @@ DateRangePicker.propTypes = {
     PropTypes.func,
     PropTypes.object,
   ]),
-  /**
-   * Date format, that is displaying in toolbar.
-   */
-  toolbarFormat: PropTypes.string,
-  /**
-   * Mobile picker title, displaying in the toolbar.
-   * @default 'Select date range'
-   */
-  toolbarTitle: PropTypes.node,
   /**
    * The value of the picker.
    */

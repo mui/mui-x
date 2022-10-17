@@ -31,55 +31,59 @@ describe('<DesktopDatePicker />', () => {
     isLegacyPicker: true,
   }));
 
-  it('prop: components.OpenPickerIcon', () => {
-    function HomeIcon(props: SvgIconProps) {
-      return (
-        <SvgIcon data-testid="component-test" {...props}>
-          <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z" />
-        </SvgIcon>
+  describe('Component slots: OpenPickerIcon', () => {
+    it('should render custom component', () => {
+      function HomeIcon(props: SvgIconProps) {
+        return (
+          <SvgIcon data-testid="component-test" {...props}>
+            <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z" />
+          </SvgIcon>
+        );
+      }
+
+      const { getByTestId } = render(
+        <DesktopDatePicker
+          label="icon test example"
+          value={null}
+          onChange={() => {}}
+          components={{
+            OpenPickerIcon: HomeIcon,
+          }}
+          renderInput={(params) => <TextField {...params} />}
+        />,
       );
-    }
 
-    const { getByTestId } = render(
-      <DesktopDatePicker
-        label="icon test example"
-        value={null}
-        onChange={() => {}}
-        components={{
-          OpenPickerIcon: HomeIcon,
-        }}
-        renderInput={(params) => <TextField {...params} />}
-      />,
-    );
-
-    expect(getByTestId('component-test')).not.to.equal(null);
+      expect(getByTestId('component-test')).not.to.equal(null);
+    });
   });
 
-  it('prop: components.PaperContent', () => {
-    function CustomPaperContent({ children }) {
-      return (
-        <div>
-          <p>test custom content</p>
-          {children}
-        </div>
+  describe('Component slots: PaperContent', () => {
+    it('should render custom component', () => {
+      function CustomPaperContent({ children }) {
+        return (
+          <div>
+            <p>test custom content</p>
+            {children}
+          </div>
+        );
+      }
+      const testDate = adapterToUse.date(new Date(2000, 0, 1));
+      render(
+        <DesktopDatePicker
+          renderInput={(params) => <TextField {...params} />}
+          onChange={() => {}}
+          value={testDate}
+          components={{
+            PaperContent: CustomPaperContent,
+          }}
+        />,
       );
-    }
-    const testDate = adapterToUse.date(new Date(2000, 0, 1));
-    render(
-      <DesktopDatePicker
-        renderInput={(params) => <TextField {...params} />}
-        onChange={() => {}}
-        value={testDate}
-        components={{
-          PaperContent: CustomPaperContent,
-        }}
-      />,
-    );
 
-    openPicker({ type: 'date', variant: 'desktop' });
+      openPicker({ type: 'date', variant: 'desktop' });
 
-    expect(screen.getByText('test custom content')).not.equal(null);
-    expect(screen.getByText(adapterToUse.format(testDate, 'monthAndYear'))).not.equal(null);
+      expect(screen.getByText('test custom content')).not.equal(null);
+      expect(screen.getByText(adapterToUse.format(testDate, 'monthAndYear'))).not.equal(null);
+    });
   });
 
   ['readOnly', 'disabled'].forEach((prop) => {

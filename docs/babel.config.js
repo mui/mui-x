@@ -12,7 +12,7 @@ const alias = {
   '@mui/markdown': '../node_modules/@mui/monorepo/docs/packages/markdown',
   '@mui/monorepo': '../node_modules/@mui/monorepo',
   '@mui/joy': '../node_modules/@mui/monorepo/packages/mui-joy/src',
-  docs: '../node_modules/@mui/monorepo/docs', // TODO remove
+  docs: '../node_modules/@mui/monorepo/docs',
   docsx: './',
 };
 

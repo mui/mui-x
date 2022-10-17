@@ -1,23 +1,29 @@
 import * as React from 'react';
 import { CalendarOrClockPickerView } from '../views';
-import type { PickerOnChangeFn } from '../../hooks/useViews';
-import type { ExportedDateCalendarProps } from '../../../DateCalendar/DateCalendar';
-import type { ExportedClockPickerProps } from '../../../ClockPicker/ClockPicker';
-import { PickerStatePickerProps } from '../../hooks/usePickerState';
 
-export interface BaseToolbarProps<TDate, TValue>
-  extends ExportedDateCalendarProps<TDate>,
-    ExportedClockPickerProps<TDate>,
-    Omit<PickerStatePickerProps<TValue>, 'onDateChange'> {
-  ampmInClock?: boolean;
-  dateRangeIcon?: React.ReactNode;
+export interface BaseToolbarProps<TValue> extends ExportedBaseToolbarProps {
   isLandscape: boolean;
-  onChange: PickerOnChangeFn<TDate>;
-  openView: CalendarOrClockPickerView;
-  setOpenView: (view: CalendarOrClockPickerView) => void;
-  timeIcon?: React.ReactNode;
-  toolbarFormat?: string;
-  toolbarPlaceholder?: React.ReactNode;
-  toolbarTitle?: React.ReactNode;
+  onChange: (newValue: TValue) => void;
+  value: TValue;
+  view: CalendarOrClockPickerView;
+  onViewChange: (view: CalendarOrClockPickerView) => void;
   views: readonly CalendarOrClockPickerView[];
+  disabled?: boolean;
+  readOnly?: boolean;
+  // TODO v6: Remove
+  isMobileKeyboardViewOpen: boolean;
+  // TODO v6: Remove
+  toggleMobileKeyboardView: () => void;
+}
+
+export interface ExportedBaseToolbarProps {
+  /**
+   * Toolbar date format.
+   */
+  toolbarFormat?: string;
+  /**
+   * Toolbar value placeholder—it is displayed when the value is empty.
+   * @default "––"
+   */
+  toolbarPlaceholder?: React.ReactNode;
 }
