@@ -74,19 +74,7 @@ export const DesktopDateTimePicker = React.forwardRef(function DesktopDateTimePi
     dateTimePickerValueManager,
   );
 
-  const {
-    onChange,
-    value,
-    components: providedComponents,
-    componentsProps,
-    localeText,
-    hideTabs = true,
-    ...other
-  } = props;
-  const components = React.useMemo<DesktopDateTimePickerProps<TDate>['components']>(
-    () => ({ Tabs: DateTimePickerTabs, ...providedComponents }),
-    [providedComponents],
-  );
+  const { onChange, value, components, componentsProps, localeText, ...other } = props;
 
   const AllDateInputProps = {
     ...inputProps,
@@ -112,7 +100,6 @@ export const DesktopDateTimePicker = React.forwardRef(function DesktopDateTimePi
         DateInputProps={AllDateInputProps}
         components={components}
         componentsProps={componentsProps}
-        hideTabs={hideTabs}
         {...other}
       />
     </DesktopWrapper>
@@ -225,11 +212,6 @@ DesktopDateTimePicker.propTypes = {
    * @default (date, utils) => `Choose date, selected date is ${utils.format(date, 'fullDate')}`
    */
   getOpenDialogAriaText: PropTypes.func,
-  /**
-   * Toggles visibility of date time switching tabs
-   * @default false for mobile, true for desktop
-   */
-  hideTabs: PropTypes.bool,
   ignoreInvalidInputs: PropTypes.bool,
   /**
    * Props to pass to keyboard input adornment.

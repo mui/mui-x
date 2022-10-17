@@ -20,7 +20,6 @@ export default function CustomDateTimePicker() {
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <Stack spacing={3}>
         <DateTimePicker
-          hideTabs
           openTo="hours"
           value={dateWithInitialValue}
           onChange={(newValue) => {

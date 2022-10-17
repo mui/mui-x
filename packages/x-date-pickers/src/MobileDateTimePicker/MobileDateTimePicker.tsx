@@ -17,7 +17,6 @@ import { CalendarOrClockPicker } from '../internals/components/CalendarOrClockPi
 import { useDateTimeValidation } from '../internals/hooks/validation/useDateTimeValidation';
 import { DateInputSlotsComponent, PureDateInput } from '../internals/components/PureDateInput';
 import { usePickerState } from '../internals/hooks/usePickerState';
-import { DateTimePickerTabs } from '../DateTimePicker/DateTimePickerTabs';
 
 export interface MobileDateTimePickerSlotsComponent<TDate>
   extends BaseDateTimePickerSlotsComponent<TDate>,
@@ -74,19 +73,7 @@ export const MobileDateTimePicker = React.forwardRef(function MobileDateTimePick
 
   // Note that we are passing down all the value without spread.
   // It saves us >1kb gzip and make any prop available automatically on any level down.
-  const {
-    value,
-    onChange,
-    components: providedComponents,
-    componentsProps,
-    localeText,
-    hideTabs = false,
-    ...other
-  } = props;
-  const components = React.useMemo<MobileDateTimePickerProps<TDate>['components']>(
-    () => ({ Tabs: DateTimePickerTabs, ...providedComponents }),
-    [providedComponents],
-  );
+  const { value, onChange, components, componentsProps, localeText, ...other } = props;
 
   const DateInputProps = {
     ...inputProps,
@@ -113,7 +100,6 @@ export const MobileDateTimePicker = React.forwardRef(function MobileDateTimePick
         DateInputProps={DateInputProps}
         components={components}
         componentsProps={componentsProps}
-        hideTabs={hideTabs}
         {...other}
       />
     </MobileWrapper>
@@ -226,11 +212,6 @@ MobileDateTimePicker.propTypes = {
    * @default (date, utils) => `Choose date, selected date is ${utils.format(date, 'fullDate')}`
    */
   getOpenDialogAriaText: PropTypes.func,
-  /**
-   * Toggles visibility of date time switching tabs
-   * @default false for mobile, true for desktop
-   */
-  hideTabs: PropTypes.bool,
   ignoreInvalidInputs: PropTypes.bool,
   /**
    * Props to pass to keyboard input adornment.

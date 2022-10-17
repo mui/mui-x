@@ -30,10 +30,10 @@ export default function Tabs() {
         onChange={(newValue) => {
           setValue(newValue);
         }}
-        hideTabs={false}
         components={{ Tabs: CustomTabs }}
         componentsProps={{
           tabs: {
+            hidden: false,
             dateRangeIcon: <LightModeIcon />,
             timeIcon: <AcUnitIcon />,
           },

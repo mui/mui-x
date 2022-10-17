@@ -65,7 +65,6 @@ export interface ExportedCalendarOrClockPickerProps<TDate, View extends Calendar
    * @default {}
    */
   componentsProps?: CalendarOrClockPickerSlotsComponentsProps<TDate>;
-  hideTabs?: boolean;
 }
 
 export interface CalendarOrClockPickerProps<TDate, View extends CalendarOrClockPickerView>
@@ -133,7 +132,6 @@ export function CalendarOrClockPicker<TDate, View extends CalendarOrClockPickerV
     showToolbar,
     toggleMobileKeyboardView,
     views,
-    hideTabs,
     components,
     componentsProps,
     // excluding classes from `other` to avoid passing them down to children
@@ -183,7 +181,6 @@ export function CalendarOrClockPicker<TDate, View extends CalendarOrClockPickerV
 
   const { focusedView, setFocusedView } = useFocusManagement({ autoFocus, openView });
 
-  const shouldRenderTabs = !hideTabs && typeof window !== 'undefined' && window.innerHeight > 667;
   const Tabs = components?.Tabs;
 
   const shouldRenderToolbar = showToolbar ?? wrapperVariant !== 'desktop';
@@ -206,7 +203,7 @@ export function CalendarOrClockPicker<TDate, View extends CalendarOrClockPickerV
           toggleMobileKeyboardView={toggleMobileKeyboardView}
         />
       )}
-      {shouldRenderTabs && !!Tabs && (
+      {!!Tabs && (
         <Tabs
           view={openView}
           onViewChange={setOpenView as (view: CalendarOrClockPickerView) => void}
