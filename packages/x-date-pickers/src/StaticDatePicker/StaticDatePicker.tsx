@@ -4,8 +4,9 @@ import {
   BaseDatePickerProps,
   useDatePickerDefaultizedProps,
   datePickerValueManager,
+  BaseDatePickerSlotsComponent,
+  BaseDatePickerSlotsComponentsProps,
 } from '../DatePicker/shared';
-import { DatePickerToolbar } from '../DatePicker/DatePickerToolbar';
 import {
   PickerStaticWrapper,
   PickersStaticWrapperSlotsComponentsProps,
@@ -16,16 +17,15 @@ import { useDateValidation } from '../internals/hooks/validation/useDateValidati
 import { usePickerState } from '../internals/hooks/usePickerState';
 import { StaticPickerProps } from '../internals/models/props/staticPickerProps';
 import { DateInputSlotsComponent } from '../internals/components/PureDateInput';
-import { DateCalendarSlotsComponent, DateCalendarSlotsComponentsProps } from '../DateCalendar';
 
 export interface StaticDatePickerSlotsComponent<TDate>
-  extends PickersStaticWrapperSlotsComponent,
-    DateCalendarSlotsComponent<TDate>,
+  extends BaseDatePickerSlotsComponent<TDate>,
+    PickersStaticWrapperSlotsComponent,
     DateInputSlotsComponent {}
 
 export interface StaticDatePickerSlotsComponentsProps<TDate>
-  extends PickersStaticWrapperSlotsComponentsProps,
-    DateCalendarSlotsComponentsProps<TDate> {}
+  extends BaseDatePickerSlotsComponentsProps<TDate>,
+    PickersStaticWrapperSlotsComponentsProps {}
 
 export interface StaticDatePickerProps<TDate>
   extends StaticPickerProps<TDate, BaseDatePickerProps<TDate>> {
@@ -67,7 +67,6 @@ export const StaticDatePicker = React.forwardRef(function StaticDatePicker<TDate
   // Note that we are passing down all the value without spread.
   // It saves us >1kb gzip and make any prop available automatically on any level down.
   const {
-    ToolbarComponent = DatePickerToolbar,
     value,
     onChange,
     displayStaticWrapperAs,
@@ -96,8 +95,6 @@ export const StaticDatePicker = React.forwardRef(function StaticDatePicker<TDate
     >
       <CalendarOrClockPicker
         {...pickerProps}
-        toolbarTitle={props.label || props.toolbarTitle}
-        ToolbarComponent={ToolbarComponent}
         DateInputProps={DateInputProps}
         components={components}
         componentsProps={componentsProps}
@@ -371,25 +368,6 @@ StaticDatePicker.propTypes = {
     PropTypes.func,
     PropTypes.object,
   ]),
-  /**
-   * Component that will replace default toolbar renderer.
-   * @default DatePickerToolbar
-   */
-  ToolbarComponent: PropTypes.elementType,
-  /**
-   * Date format, that is displaying in toolbar.
-   */
-  toolbarFormat: PropTypes.string,
-  /**
-   * Mobile picker date value placeholder, displaying if `value` === `null`.
-   * @default '–'
-   */
-  toolbarPlaceholder: PropTypes.node,
-  /**
-   * Mobile picker title, displaying in the toolbar.
-   * @default 'Select date'
-   */
-  toolbarTitle: PropTypes.node,
   /**
    * The value of the picker.
    */

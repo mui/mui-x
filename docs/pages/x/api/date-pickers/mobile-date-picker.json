@@ -79,10 +79,6 @@
         "description": "Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object"
       }
     },
-    "ToolbarComponent": { "type": { "name": "elementType" }, "default": "DatePickerToolbar" },
-    "toolbarFormat": { "type": { "name": "string" } },
-    "toolbarPlaceholder": { "type": { "name": "node" }, "default": "'–'" },
-    "toolbarTitle": { "type": { "name": "node" }, "default": "'Select date'" },
     "value": { "type": { "name": "any" } },
     "views": {
       "type": {
@@ -104,7 +100,8 @@
     "PreviousIconButton": { "default": "IconButton", "type": { "name": "elementType" } },
     "RightArrowIcon": { "default": "ArrowRight", "type": { "name": "elementType" } },
     "SwitchViewButton": { "default": "IconButton", "type": { "name": "elementType" } },
-    "SwitchViewIcon": { "default": "ArrowDropDown", "type": { "name": "elementType" } }
+    "SwitchViewIcon": { "default": "ArrowDropDown", "type": { "name": "elementType" } },
+    "Toolbar": { "default": "DatePickerToolbar", "type": { "name": "elementType" } }
   },
   "name": "MobileDatePicker",
   "styles": { "classes": [], "globalClasses": {}, "name": "MuiMobileDatePicker" },
