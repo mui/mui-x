@@ -92,7 +92,7 @@ export const DateRangePickerToolbar = React.forwardRef(function DateRangePickerT
 
   return (
     <DateRangePickerToolbarRoot
-      toolbarTitle={localeText.dateRangePickerDefaultToolbarTitle}
+      toolbarTitle={localeText.dateRangePickerToolbarTitle}
       isMobileKeyboardViewOpen={isMobileKeyboardViewOpen}
       toggleMobileKeyboardView={toggleMobileKeyboardView}
       isLandscape={false}

@@ -124,7 +124,7 @@ export function DateTimePickerToolbar<TDate extends unknown>(
 
   return (
     <DateTimePickerToolbarRoot
-      toolbarTitle={localeText.dateTimePickerDefaultToolbarTitle}
+      toolbarTitle={localeText.dateTimePickerToolbarTitle}
       isMobileKeyboardViewOpen={isMobileKeyboardViewOpen}
       toggleMobileKeyboardView={toggleMobileKeyboardView}
       className={classes.root}

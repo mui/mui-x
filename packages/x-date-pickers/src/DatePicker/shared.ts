@@ -121,7 +121,7 @@ export function useDatePickerDefaultizedProps<TDate, Props extends BaseDatePicke
 
     return {
       ...themeProps.localeText,
-      datePickerDefaultToolbarTitle: themeProps.localeText.toolbarTitle,
+      datePickerToolbarTitle: themeProps.localeText.toolbarTitle,
     };
   }, [themeProps.localeText]);
 

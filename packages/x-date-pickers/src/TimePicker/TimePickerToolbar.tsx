@@ -166,7 +166,7 @@ export function TimePickerToolbar<TDate extends unknown>(inProps: TimePickerTool
     <TimePickerToolbarRoot
       viewType="clock"
       landscapeDirection="row"
-      toolbarTitle={localeText.timePickerDefaultToolbarTitle}
+      toolbarTitle={localeText.timePickerToolbarTitle}
       isLandscape={isLandscape}
       isMobileKeyboardViewOpen={isMobileKeyboardViewOpen}
       toggleMobileKeyboardView={toggleMobileKeyboardView}
