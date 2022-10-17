@@ -49,12 +49,12 @@ export interface ExportedDateRangePickerViewProps<TDate>
    * Overrideable components.
    * @default {}
    */
-  components?: Partial<DateRangePickerViewSlotsComponent<TDate>>;
+  components?: DateRangePickerViewSlotsComponent<TDate>;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  componentsProps?: Partial<DateRangePickerViewSlotsComponentsProps<TDate>>;
+  componentsProps?: DateRangePickerViewSlotsComponentsProps<TDate>;
   /**
    * If `true`, after selecting `start` date calendar will not automatically switch to the month of `end` date.
    * @default false

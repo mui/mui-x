@@ -42,16 +42,16 @@ const EventRow = ({ event }) => {
           .join(', ')})
 <DataGrid
   ${event.componentProp}={handleEvent}
-  {...other} 
+  {...other}
 />`
       : '';
 
     return `
 const handleEvent: GridEventListener<'${event.name}'> = (
   ${args.join('\n  ')}
-) => {...}    
-  
-// Imperative subscription    
+) => {...}
+
+// Imperative subscription
 apiRef.current.subscribeEvent(
   '${event.name}',
   handleEvent,
