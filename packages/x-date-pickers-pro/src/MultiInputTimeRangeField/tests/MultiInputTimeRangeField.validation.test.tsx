@@ -1,6 +1,6 @@
 import { Unstable_MultiInputTimeRangeField as MultiInputTimeRangeField } from '@mui/x-date-pickers-pro/MultiInputTimeRangeField';
+import describeValidation from '@mui/x-date-pickers-pro/tests/describeValidation';
 import { createPickerRenderer } from 'test/utils/pickers-utils';
-import describeValidation from '../../tests/describeValidation';
 
 describe('<MultiInputTimeRangeField />', () => {
   const { render, clock } = createPickerRenderer({ clock: 'fake' });

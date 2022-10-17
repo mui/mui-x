@@ -13,6 +13,7 @@ import TextField from '@mui/material/TextField';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { DesktopDateRangePicker } from '@mui/x-date-pickers-pro/DesktopDateRangePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers-pro';
+import describeValidation from '@mui/x-date-pickers-pro/tests/describeValidation';
 import {
   wrapPickerMount,
   createPickerRenderer,
@@ -22,7 +23,6 @@ import {
   withPickerControls,
   openPicker,
 } from 'test/utils/pickers-utils';
-import describeValidation from '../tests/describeValidation';
 
 const WrappedDesktopDateRangePicker = withPickerControls(DesktopDateRangePicker)({
   components: { DesktopTransition: FakeTransitionComponent },

@@ -4,6 +4,7 @@ import { expect } from 'chai';
 import TextField from '@mui/material/TextField';
 import { describeConformance, screen, userEvent } from '@mui/monorepo/test/utils';
 import { MobileDateRangePicker } from '@mui/x-date-pickers-pro/MobileDateRangePicker';
+import describeValidation from '@mui/x-date-pickers-pro/tests/describeValidation';
 import {
   wrapPickerMount,
   createPickerRenderer,
@@ -12,7 +13,6 @@ import {
   adapterToUse,
   openPicker,
 } from 'test/utils/pickers-utils';
-import describeValidation from '../tests/describeValidation';
 
 const WrappedMobileDateRangePicker = withPickerControls(MobileDateRangePicker)({
   components: { MobileTransition: FakeTransitionComponent },
