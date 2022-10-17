@@ -904,8 +904,8 @@ describe('<DataGridPro /> - Rows', () => {
       const rowCount = rows.length;
       render(<TestCase rows={rows} columns={columns} rowCount={rowCount} />);
 
-      const rowCountElement = document.querySelector(`.${gridClasses.rowCount}`) as HTMLElement;
-      expect(rowCountElement.textContent).to.equal(`Total Rows: ${rows.length}`);
+      const rowCountElement = document.querySelector<HTMLElement>(`.${gridClasses.rowCount}`);
+      expect(rowCountElement!.textContent).to.equal(`Total Rows: ${rows.length}`);
     });
 
     it('should show `rowCount` if it is different than `rows.length`', () => {
@@ -913,8 +913,8 @@ describe('<DataGridPro /> - Rows', () => {
       const rowCount = rows.length + 10;
       render(<TestCase rows={rows} columns={columns} rowCount={rowCount} />);
 
-      const rowCountElement = document.querySelector(`.${gridClasses.rowCount}`) as HTMLElement;
-      expect(rowCountElement.textContent).to.equal(`Total Rows: ${rows.length} of ${rowCount}`);
+      const rowCountElement = document.querySelector<HTMLElement>(`.${gridClasses.rowCount}`);
+      expect(rowCountElement!.textContent).to.equal(`Total Rows: ${rows.length} of ${rowCount}`);
     });
 
     it('should reflect `rowCount` change if it is different than `rows.length`', () => {
@@ -924,8 +924,8 @@ describe('<DataGridPro /> - Rows', () => {
       rowCount += 1;
       setProps({ rowCount });
 
-      const rowCountElement = document.querySelector(`.${gridClasses.rowCount}`) as HTMLElement;
-      expect(rowCountElement.textContent).to.equal(`Total Rows: ${rows.length} of ${rowCount}`);
+      const rowCountElement = document.querySelector<HTMLElement>(`.${gridClasses.rowCount}`);
+      expect(rowCountElement!.textContent).to.equal(`Total Rows: ${rows.length} of ${rowCount}`);
     });
   });
 });
