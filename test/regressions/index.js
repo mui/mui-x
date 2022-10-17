@@ -74,6 +74,12 @@ const tests = requireDocs.keys().reduce((res, path) => {
     return res;
   }
 
+  // TODO: Why does webpack include a key for the absolute and relative path?
+  // We just want the relative path
+  if (!path.startsWith('./')) {
+    return res;
+  }
+
   res.push({
     path,
     suite,

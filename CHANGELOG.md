@@ -17,7 +17,7 @@ We'd like to offer a big thanks to the 8 contributors who made this release poss
   - [`MultiInputDateRangeField` / `SingleInputDateRangeField`](https://next.mui.com/x/react-date-pickers/date-range-field/) to edit date range
   - [`MultiInputTimeRangeField`](https://next.mui.com/x/react-date-pickers/time-range-field/) to edit time range with two inputs
   - [`MultiInputDateTimeRangeField`](https://next.mui.com/x/react-date-pickers/date-time-range-field/) to edit date and time range with two inputs
-  
+
   ⚠️ These components are unstable.
   They might receive breaking changes on their props to have the best components possible by the time of the stable release.
 
@@ -71,7 +71,7 @@ We'd like to offer a big thanks to the 8 contributors who made this release poss
   The `DialogProps` prop has been replaced by a `dialog` component props slot on responsive and mobile pickers:
 
   ```diff
-  // Same on MobileDatePicker, DateTimePicker, MobileDateTimePicker, 
+  // Same on MobileDatePicker, DateTimePicker, MobileDateTimePicker,
   // TimePicker, MobileTimePicker, DateRangePicker and MobileDateRangePicker.
   <DatePicker
   -  DialogProps={{ backgroundColor: 'red' }}
@@ -82,7 +82,7 @@ We'd like to offer a big thanks to the 8 contributors who made this release poss
   The `PaperProps` prop has been replaced by a `desktopPaper` component props slot on all responsive and desktop pickers:
 
   ```diff
-  // Same on DesktopDatePicker, DateTimePicker, DesktopDateTimePicker, 
+  // Same on DesktopDatePicker, DateTimePicker, DesktopDateTimePicker,
   // TimePicker, DesktopTimePicker, DateRangePicker and DesktopDateRangePicker.
   <DatePicker
   -  PaperProps={{ backgroundColor: 'red' }}
@@ -93,7 +93,7 @@ We'd like to offer a big thanks to the 8 contributors who made this release poss
   The `PopperProps` prop has been replaced by a `popper` component props slot on all responsive and desktop pickers:
 
   ```diff
-  // Same on DesktopDatePicker, DateTimePicker, DesktopDateTimePicker, 
+  // Same on DesktopDatePicker, DateTimePicker, DesktopDateTimePicker,
   // TimePicker, DesktopTimePicker, DateRangePicker and DesktopDateRangePicker.
   <DatePicker
   -  PopperProps={{ onClick: handleClick }}
@@ -104,7 +104,7 @@ We'd like to offer a big thanks to the 8 contributors who made this release poss
   The `TransitionComponent` prop has been replaced by a `DesktopTransition` component slot on all responsive and desktop pickers:
 
   ```diff
-  // Same on DesktopDatePicker, DateTimePicker, DesktopDateTimePicker, 
+  // Same on DesktopDatePicker, DateTimePicker, DesktopDateTimePicker,
   // TimePicker, DesktopTimePicker, DateRangePicker and DesktopDateRangePicker.
   <DatePicker
   -  TransitionComponent={Fade}
@@ -115,14 +115,14 @@ We'd like to offer a big thanks to the 8 contributors who made this release poss
   The `TrapFocusProps` prop has been replaced by a `desktopTrapFocus` component props slot on all responsive and desktop pickers:
 
   ```diff
-  // Same on DesktopDatePicker, DateTimePicker, DesktopDateTimePicker, 
+  // Same on DesktopDatePicker, DateTimePicker, DesktopDateTimePicker,
   // TimePicker, DesktopTimePicker, DateRangePicker and DesktopDateRangePicker.
   <DatePicker
   -  TrapFocusProps={{ isEnabled: () => false }}
   +  componentsProps={{ desktopTrapFocus: { isEnabled: () => false }}}
   />
   ```
-  
+
 - The view components allowing to pick a date or parts of a date without an input have been renamed to better fit their usage:
 
   ```diff
@@ -506,9 +506,9 @@ You can find more information about the new api, including how to set those tran
 - The deprecated `locale` prop of the `LocalizationProvider` component have been renamed `adapterLocale`:
 
   ```diff
-  <LocalizationProvider 
+  <LocalizationProvider
     dateAdapter={AdapterDayjs}
-  -  locale="fr" 
+  -  locale="fr"
   +  adapterLocale="fr"
   >
     {children}
