@@ -106,7 +106,7 @@ export type FieldBoundaries<TDate, TSection extends FieldSection> = Record<
 >;
 
 export interface FieldChangeHandlerContext<TError> {
-  validationError: TError | null;
+  validationError: TError;
 }
 
 /**
