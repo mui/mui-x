@@ -23,14 +23,14 @@ import {
   validateSections,
 } from './useField.utils';
 
+type InferErrorFromInternalProps<TInternalProps extends UseFieldInternalProps<any, any>> =
+  TInternalProps extends UseFieldInternalProps<any, infer TError> ? TError : never;
+
 interface UpdateSectionValueParams<TDate, TSection extends FieldSection> {
   activeSection: TSection;
   setSectionValueOnDate: (activeDate: TDate, boundaries: FieldBoundaries<TDate, TSection>) => TDate;
   setSectionValueOnSections: (boundaries: FieldBoundaries<TDate, TSection>) => string;
 }
-
-type InferError<TInternalProps extends UseFieldInternalProps<any, any>> =
-  TInternalProps extends UseFieldInternalProps<any, infer TError> ? TError : never;
 
 export const useFieldState = <
   TValue,
@@ -145,7 +145,7 @@ export const useFieldState = <
     }));
 
     if (onChange) {
-      const context: FieldChangeHandlerContext<InferError<TInternalProps>> = {
+      const context: FieldChangeHandlerContext<InferErrorFromInternalProps<TInternalProps>> = {
         validationError: validator({ adapter, value, props: { ...internalProps, value } }),
       };
 
