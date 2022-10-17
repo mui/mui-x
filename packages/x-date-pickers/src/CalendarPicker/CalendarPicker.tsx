@@ -375,24 +375,6 @@ export const CalendarPicker = React.forwardRef(function CalendarPicker<TDate>(
   );
 
   React.useEffect(() => {
-    if (date && isDateDisabled(date)) {
-      const closestEnabledDate = findClosestEnabledDate({
-        utils,
-        date,
-        minDate,
-        maxDate,
-        disablePast,
-        disableFuture,
-        isDateDisabled,
-      });
-
-      onChange(closestEnabledDate, 'partial');
-    }
-    // This call is too expensive to run it on each prop change.
-    // So just ensure that we are not rendering disabled as selected on mount.
-  }, []); // eslint-disable-line
-
-  React.useEffect(() => {
     if (date) {
       changeMonth(date);
     }
