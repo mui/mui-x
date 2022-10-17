@@ -13,11 +13,8 @@ import {
   BaseDateValidationProps,
   DayValidationProps,
 } from '@mui/x-date-pickers/internals';
-import {
-  DateRange,
-  CurrentlySelectingRangeEndProps,
-  DayRangeValidationProps,
-} from '../internal/models/dateRange';
+import { DateRange, CurrentlySelectingRangeEndProps } from '../internal/models/range';
+import { DayRangeValidationProps } from '../internal/models/dateRange';
 import { isRangeValid } from '../internal/utils/date-utils';
 import { calculateRangeChange } from './date-range-manager';
 import { DateRangePickerToolbar } from './DateRangePickerToolbar';
@@ -52,12 +49,12 @@ export interface ExportedDateRangePickerViewProps<TDate>
    * Overrideable components.
    * @default {}
    */
-  components?: Partial<DateRangePickerViewSlotsComponent<TDate>>;
+  components?: DateRangePickerViewSlotsComponent<TDate>;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  componentsProps?: Partial<DateRangePickerViewSlotsComponentsProps<TDate>>;
+  componentsProps?: DateRangePickerViewSlotsComponentsProps<TDate>;
   /**
    * If `true`, after selecting `start` date calendar will not automatically switch to the month of `end` date.
    * @default false

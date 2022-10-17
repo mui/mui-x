@@ -31,11 +31,16 @@ const useDefaultizedDateTimeField = <TDate, AdditionalProps extends {}>(
   const utils = useUtils<TDate>();
   const defaultDates = useDefaultDates<TDate>();
 
+  const ampm = props.ampm ?? utils.is12HourCycleInCurrentLocale();
+  const defaultFormat = ampm
+    ? utils.formats.keyboardDateTime12h
+    : utils.formats.keyboardDateTime24h;
+
   return {
     ...props,
     disablePast: props.disablePast ?? false,
     disableFuture: props.disableFuture ?? false,
-    format: props.format ?? utils.formats.keyboardDateTime,
+    format: props.format ?? defaultFormat,
     disableIgnoringDatePartForTimeValidation: Boolean(props.minDateTime || props.maxDateTime),
     minDate: applyDefaultDate(utils, props.minDateTime ?? props.minDate, defaultDates.minDate),
     maxDate: applyDefaultDate(utils, props.maxDateTime ?? props.maxDate, defaultDates.maxDate),
@@ -71,12 +76,13 @@ export const useDateTimeField = <TDate, TChildProps extends {}>({
     shouldDisableTime,
     selectedSections,
     onSelectedSectionsChange,
+    ampm,
     ...other
   } = useDefaultizedDateTimeField<TDate, TChildProps>(props);
 
   return useField({
     inputRef,
-    forwardedProps: other,
+    forwardedProps: other as unknown as TChildProps,
     internalProps: {
       value,
       defaultValue,
@@ -98,7 +104,7 @@ export const useDateTimeField = <TDate, TChildProps extends {}>({
       disableIgnoringDatePartForTimeValidation,
       selectedSections,
       onSelectedSectionsChange,
-      inputRef,
+      ampm,
     },
     valueManager: dateTimePickerValueManager,
     fieldValueManager: dateTimeFieldValueManager,

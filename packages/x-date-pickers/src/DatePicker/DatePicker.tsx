@@ -36,12 +36,12 @@ export interface DatePickerProps<TDate>
    * Overrideable components.
    * @default {}
    */
-  components?: Partial<DatePickerSlotsComponent<TDate>>;
+  components?: DatePickerSlotsComponent<TDate>;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  componentsProps?: Partial<DatePickerSlotsComponentsProps<TDate>>;
+  componentsProps?: DatePickerSlotsComponentsProps<TDate>;
 }
 
 type DatePickerComponent = (<TDate>(
@@ -154,6 +154,12 @@ DatePicker.propTypes = {
    * @default false
    */
   disablePast: PropTypes.bool,
+  /**
+   * Calendar will show more weeks in order to match this value.
+   * Put it to 6 for having fix number of week in Gregorian calendars
+   * @default undefined
+   */
+  fixedWeekNumber: PropTypes.number,
   /**
    * Get aria-label text for control that opens picker dialog. Aria-label text must include selected date. @DateIOType
    * @template TDate

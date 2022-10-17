@@ -24,11 +24,14 @@ const useDefaultizedTimeField = <TDate, AdditionalProps extends {}>(
 ): AdditionalProps & UseTimeFieldDefaultizedProps<TDate> => {
   const utils = useUtils<TDate>();
 
+  const ampm = props.ampm ?? utils.is12HourCycleInCurrentLocale();
+  const defaultFormat = ampm ? utils.formats.fullTime12h : utils.formats.fullTime24h;
+
   return {
     ...props,
     disablePast: props.disablePast ?? false,
     disableFuture: props.disableFuture ?? false,
-    format: props.format ?? utils.formats.fullTime,
+    format: props.format ?? defaultFormat,
   } as any;
 };
 
@@ -52,12 +55,13 @@ export const useTimeField = <TDate, TChildProps extends {}>({
     disableIgnoringDatePartForTimeValidation,
     selectedSections,
     onSelectedSectionsChange,
+    ampm,
     ...other
   } = useDefaultizedTimeField<TDate, TChildProps>(props);
 
   return useField({
     inputRef,
-    forwardedProps: other,
+    forwardedProps: other as unknown as TChildProps,
     internalProps: {
       value,
       defaultValue,
@@ -74,7 +78,7 @@ export const useTimeField = <TDate, TChildProps extends {}>({
       disableIgnoringDatePartForTimeValidation,
       selectedSections,
       onSelectedSectionsChange,
-      inputRef,
+      ampm,
     },
     valueManager: timePickerValueManager,
     fieldValueManager: timeFieldValueManager,

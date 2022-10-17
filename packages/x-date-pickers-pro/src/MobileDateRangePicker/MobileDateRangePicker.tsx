@@ -44,12 +44,12 @@ export interface MobileDateRangePickerProps<TDate>
    * Overrideable components.
    * @default {}
    */
-  components?: Partial<MobileDateRangePickerSlotsComponent<TDate>>;
+  components?: MobileDateRangePickerSlotsComponent<TDate>;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  componentsProps?: Partial<MobileDateRangePickerSlotsComponentsProps<TDate>>;
+  componentsProps?: MobileDateRangePickerSlotsComponentsProps<TDate>;
 }
 
 type MobileDateRangePickerComponent = (<TDate>(
@@ -213,6 +213,12 @@ MobileDateRangePicker.propTypes = {
    * @default false
    */
   disablePast: PropTypes.bool,
+  /**
+   * Calendar will show more weeks in order to match this value.
+   * Put it to 6 for having fix number of week in Gregorian calendars
+   * @default undefined
+   */
+  fixedWeekNumber: PropTypes.number,
   /**
    * Get aria-label text for control that opens picker dialog. Aria-label text must include selected date. @DateIOType
    * @template TDate

@@ -14,8 +14,9 @@ import {
   DayCalendarSlotsComponentsProps,
 } from '@mui/x-date-pickers/internals';
 import { doNothing } from '../internal/utils/utils';
-import { DateRange } from '../internal/models/dateRange';
+import { DateRange } from '../internal/models/range';
 import { DateRangePickerDay, DateRangePickerDayProps } from '../DateRangePickerDay';
+
 import { isWithinRange, isStartOfRange, isEndOfRange } from '../internal/utils/date-utils';
 
 export interface DateRangePickerViewMobileSlotsComponent<TDate>
@@ -46,12 +47,12 @@ interface DesktopDateRangeCalendarProps<TDate>
    * Overrideable components.
    * @default {}
    */
-  components?: Partial<DateRangePickerViewMobileSlotsComponent<TDate>>;
+  components?: DateRangePickerViewMobileSlotsComponent<TDate>;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  componentsProps?: Partial<DateRangePickerViewMobileSlotsComponentsProps<TDate>>;
+  componentsProps?: DateRangePickerViewMobileSlotsComponentsProps<TDate>;
   value: DateRange<TDate>;
   changeMonth: (date: TDate) => void;
 }
@@ -90,7 +91,7 @@ export function DateRangePickerViewMobile<TDate>(props: DesktopDateRangeCalendar
   const componentsForDayCalendar = {
     Day: DateRangePickerDay,
     ...components,
-  } as Partial<DayCalendarSlotsComponent<TDate>>;
+  } as DayCalendarSlotsComponent<TDate>;
 
   // Range going for the start of the start day to the end of the end day.
   // This makes sure that `isWithinRange` works with any time in the start and end day.
@@ -117,7 +118,7 @@ export function DateRangePickerViewMobile<TDate>(props: DesktopDateRangeCalendar
         ...(resolveComponentProps(componentsProps?.day, dayOwnerState) ?? {}),
       };
     },
-  } as Partial<DayCalendarSlotsComponentsProps<TDate>>;
+  } as DayCalendarSlotsComponentsProps<TDate>;
 
   return (
     <React.Fragment>

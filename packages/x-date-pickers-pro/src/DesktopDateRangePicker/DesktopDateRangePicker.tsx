@@ -44,12 +44,12 @@ export interface DesktopDateRangePickerProps<TDate>
    * Overrideable components.
    * @default {}
    */
-  components?: Partial<DesktopDateRangePickerSlotsComponent<TDate>>;
+  components?: DesktopDateRangePickerSlotsComponent<TDate>;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  componentsProps?: Partial<DesktopDateRangePickerSlotsComponentsProps<TDate>>;
+  componentsProps?: DesktopDateRangePickerSlotsComponentsProps<TDate>;
 }
 
 type DesktopDateRangePickerComponent = (<TDate>(
@@ -205,6 +205,12 @@ DesktopDateRangePicker.propTypes = {
    * @default false
    */
   disablePast: PropTypes.bool,
+  /**
+   * Calendar will show more weeks in order to match this value.
+   * Put it to 6 for having fix number of week in Gregorian calendars
+   * @default undefined
+   */
+  fixedWeekNumber: PropTypes.number,
   /**
    * Get aria-label text for control that opens picker dialog. Aria-label text must include selected date. @DateIOType
    * @template TDate
