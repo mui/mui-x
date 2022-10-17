@@ -15,6 +15,7 @@ import {
   DateTimePickerTabsClasses,
   getDateTimePickerTabsUtilityClass,
 } from './dateTimePickerTabsClasses';
+import { BaseTabsProps, ExportedBaseTabsProps } from '../internals/models/props/tabs';
 
 type TabValue = 'date' | 'time';
 
@@ -34,26 +35,20 @@ const tabToView = (tab: TabValue): CalendarOrClockPickerView => {
   return 'hours';
 };
 
-export interface DateTimePickerTabsProps {
+export interface ExportedDateTimePickerTabsProps extends ExportedBaseTabsProps {
   /**
    * Date tab icon.
    * @default DateRange
    */
   dateRangeIcon?: React.ReactNode;
   /**
-   * Callback called when tab is clicked
-   * @param {CalendarOrClockPickerView} view Picker view that was clicked
-   */
-  onChange: (view: CalendarOrClockPickerView) => void;
-  /**
    * Time tab icon.
    * @default Time
    */
   timeIcon?: React.ReactNode;
-  /**
-   * Open picker view
-   */
-  view: CalendarOrClockPickerView;
+}
+
+export interface DateTimePickerTabsProps extends ExportedDateTimePickerTabsProps, BaseTabsProps {
   /**
    * Override or extend the styles applied to the component.
    */
@@ -89,7 +84,7 @@ const DateTimePickerTabsRoot = styled(Tabs, {
 
 const DateTimePickerTabs = function DateTimePickerTabs(inProps: DateTimePickerTabsProps) {
   const props = useThemeProps({ props: inProps, name: 'MuiDateTimePickerTabs' });
-  const { dateRangeIcon = <DateRange />, onChange, timeIcon = <Time />, view } = props;
+  const { dateRangeIcon = <DateRange />, onViewChange, timeIcon = <Time />, view } = props;
 
   const localeText = useLocaleText();
   const wrapperVariant = React.useContext(WrapperVariantContext);
@@ -97,7 +92,7 @@ const DateTimePickerTabs = function DateTimePickerTabs(inProps: DateTimePickerTa
   const classes = useUtilityClasses(ownerState);
 
   const handleChange = (event: React.SyntheticEvent, value: TabValue) => {
-    onChange(tabToView(value));
+    onViewChange(tabToView(value));
   };
 
   return (
@@ -137,17 +132,17 @@ DateTimePickerTabs.propTypes = {
    */
   dateRangeIcon: PropTypes.node,
   /**
-   * Callback called when tab is clicked
-   * @param {CalendarOrClockPickerView} view Picker view that was clicked
+   * Callback called when a tab is clicked
+   * @param {CalendarOrClockPickerView} view The view to open
    */
-  onChange: PropTypes.func.isRequired,
+  onViewChange: PropTypes.func.isRequired,
   /**
    * Time tab icon.
    * @default Time
    */
   timeIcon: PropTypes.node,
   /**
-   * Open picker view
+   * View currently visible in the picker.
    */
   view: PropTypes.oneOf(['day', 'hours', 'minutes', 'month', 'seconds', 'year']).isRequired,
 } as any;

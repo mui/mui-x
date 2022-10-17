@@ -5,7 +5,14 @@ export interface BaseToolbarProps<TValue> extends ExportedBaseToolbarProps {
   isLandscape: boolean;
   onChange: (newValue: TValue) => void;
   value: TValue;
+  /**
+   * View currently visible in the picker.
+   */
   view: CalendarOrClockPickerView;
+  /**
+   * Callback called when a tab is clicked
+   * @param {CalendarOrClockPickerView} view The view to open
+   */
   onViewChange: (view: CalendarOrClockPickerView) => void;
   views: readonly CalendarOrClockPickerView[];
   disabled?: boolean;

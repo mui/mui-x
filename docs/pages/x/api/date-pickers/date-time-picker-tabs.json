@@ -1,6 +1,6 @@
 {
   "props": {
-    "onChange": { "type": { "name": "func" }, "required": true },
+    "onViewChange": { "type": { "name": "func" }, "required": true },
     "view": {
       "type": {
         "name": "enum",

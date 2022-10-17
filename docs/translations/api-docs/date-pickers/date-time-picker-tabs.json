@@ -3,9 +3,9 @@
   "propDescriptions": {
     "classes": "Override or extend the styles applied to the component. See <a href=\"#css\">CSS API</a> below for more details.",
     "dateRangeIcon": "Date tab icon.",
-    "onChange": "Callback called when tab is clicked<br><br><strong>Signature:</strong><br><code>function(view: CalendarOrClockPickerView) =&gt; void</code><br><em>view:</em> Picker view that was clicked",
+    "onViewChange": "Callback called when a tab is clicked<br><br><strong>Signature:</strong><br><code>function(view: CalendarOrClockPickerView) =&gt; void</code><br><em>view:</em> The view to open",
     "timeIcon": "Time tab icon.",
-    "view": "Open picker view"
+    "view": "View currently visible in the picker."
   },
   "classDescriptions": { "root": { "description": "Styles applied to the root element." } },
   "slotDescriptions": {}
