@@ -332,6 +332,7 @@ export const useGridRows = (
           ids: updatedRows,
         },
       }));
+      apiRef.current.unstable_caches.rows.ids = updatedRows;
       apiRef.current.publishEvent('rowsSet');
     },
     [apiRef, logger],
