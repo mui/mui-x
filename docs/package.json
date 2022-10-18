@@ -29,7 +29,7 @@
     "@mui/icons-material": "^5.10.9",
     "@mui/joy": "^5.0.0-alpha.49",
     "@mui/material": "^5.10.9",
-    "@mui/styles": "^5.10.8",
+    "@mui/styles": "^5.10.10",
     "@mui/utils": "^5.10.9",
     "@trendmicro/react-interpolate": "^0.5.5",
     "@types/lodash": "^4.14.186",
