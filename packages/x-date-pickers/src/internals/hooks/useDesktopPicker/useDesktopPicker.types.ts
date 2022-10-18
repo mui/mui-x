@@ -40,11 +40,8 @@ export interface UseDesktopPickerSlotsComponentsProps<TDate>
   openPickerIcon?: Record<string, any>;
 }
 
-export interface ExportedUseDesktopPickerProps {}
-
 interface UseDesktopPickerProps<TDate, TView extends CalendarOrClockPickerView>
-  extends ExportedUseDesktopPickerProps,
-    BasePickerProps2<TDate | null, TDate, TView> {
+  extends BasePickerProps2<TDate | null, TDate, TView> {
   /**
    * Overrideable components.
    * @default {}

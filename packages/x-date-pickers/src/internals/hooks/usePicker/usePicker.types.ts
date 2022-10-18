@@ -9,22 +9,12 @@ import {
   UsePickerViewParams,
   UsePickerViewsResponse,
 } from './usePickerViews';
-import {
-  ExportedUsePickerLayoutProps,
-  UsePickerLayoutProps,
-  UsePickerLayoutResponse,
-} from './usePickerLayout';
-
-export interface ExportedUsePickerProps<TValue, TView extends CalendarOrClockPickerView>
-  extends UsePickerValueProps<TValue>,
-    ExportedUsePickerViewProps<TView>,
-    ExportedUsePickerLayoutProps {
-  orientation?: 'portrait' | 'landscape';
-}
+import { ExportedUsePickerLayoutProps, UsePickerLayoutResponse } from './usePickerLayout';
 
 export interface UsePickerProps<TValue, TView extends CalendarOrClockPickerView>
-  extends ExportedUsePickerProps<TValue, TView>,
-    UsePickerLayoutProps {}
+  extends UsePickerValueProps<TValue>,
+    ExportedUsePickerViewProps<TView>,
+    ExportedUsePickerLayoutProps {}
 
 export interface UsePickerParams<
   TValue,
@@ -41,7 +31,5 @@ export interface UsePickerParams<
 
 export interface UsePickerResponse<TValue, TView extends CalendarOrClockPickerView>
   extends Omit<UsePickerValueResponse<TValue>, 'viewProps' | 'layoutProps'>,
-    Omit<UsePickerViewsResponse<TView>, 'layoutProps'> {
-  isLandscape: boolean;
-  layoutProps: UsePickerLayoutResponse<TValue, TView>;
-}
+    Omit<UsePickerViewsResponse<TView>, 'layoutProps'>,
+    UsePickerLayoutResponse<TValue, TView> {}

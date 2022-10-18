@@ -6,7 +6,6 @@ import { useOpenState } from '../useOpenState';
 import { useUtils } from '../useUtils';
 import { PickerStateValueManager } from '../usePickerState';
 import { FieldSelectedSections, UseFieldInternalProps } from '../useField';
-import { UsePickerViewsProps } from './usePickerViews';
 
 export type PickerSelectionState = 'partial' | 'shallow' | 'finish';
 
@@ -62,6 +61,10 @@ interface UsePickerValueAction<DraftValue> {
   forceOnChangeCall?: boolean;
 }
 
+/**
+ * Props used to handle the value of the pickers.
+ * Those props are exposed on all the pickers.
+ */
 export interface UsePickerValueProps<TValue>
   extends Pick<
     UseFieldInternalProps<TValue, unknown>,
@@ -132,11 +135,19 @@ type UsePickerValueFieldResponse<TValue> = Required<
   >
 >;
 
-export type UsePickerValueViewsResponse<TValue> = Pick<
-  UsePickerViewsProps<TValue, any>,
-  'value' | 'onChange'
->;
+/**
+ * Props passed to `usePickerViews`.
+ */
+export interface UsePickerValueViewsResponse<TValue> {
+  onChange: (value: TValue, selectionState?: PickerSelectionState) => void;
+  value: TValue;
+  open: boolean;
+  onSelectedSectionsChange: (newValue: FieldSelectedSections) => void;
+}
 
+/**
+ * Props passed to `usePickerLayout`.
+ */
 export interface UsePickerValueLayoutResponse<TValue> {
   value: TValue;
   onChange: (newValue: TValue) => void;
@@ -344,6 +355,8 @@ export const usePickerValue = <TValue, TDate>({
   const viewResponse: UsePickerValueViewsResponse<TValue> = {
     value: dateState.draft,
     onChange: handleChange,
+    open: isOpen,
+    onSelectedSectionsChange: handleFieldSelectedSectionsChange,
   };
 
   const layoutResponse: UsePickerValueLayoutResponse<TValue> = {

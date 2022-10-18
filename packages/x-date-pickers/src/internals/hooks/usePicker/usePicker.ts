@@ -1,8 +1,7 @@
 import { CalendarOrClockPickerView } from '../../models';
-import { usePickerValue } from './usePickerValue';
 import { UsePickerParams, UsePickerResponse } from './usePicker.types';
+import { usePickerValue } from './usePickerValue';
 import { usePickerViews } from './usePickerViews';
-import { useIsLandscape } from '../useIsLandscape';
 import { usePickerLayout } from './usePickerLayout';
 
 export const usePicker = <
@@ -16,7 +15,7 @@ export const usePicker = <
   wrapperVariant,
   sectionModeLookup,
   inputRef,
-  renderViews: renderViewsParam,
+  renderViews,
   additionalViewProps,
 }: UsePickerParams<TValue, TDate, TView, TViewProps>): UsePickerResponse<TValue, TView> => {
   const pickerValueResponse = usePickerValue({
@@ -28,32 +27,32 @@ export const usePicker = <
   const pickerViewsResponse = usePickerViews({
     props: { ...props, ...pickerValueResponse.viewProps },
     additionalViewProps,
-    renderViews: renderViewsParam,
     sectionModeLookup,
     inputRef,
     wrapperVariant,
-    open: pickerValueResponse.open,
-    onSelectedSectionsChange: pickerValueResponse.fieldProps.onSelectedSectionsChange,
+    renderViews,
     actions: pickerValueResponse.actions,
   });
-
-  const isLandscape = useIsLandscape(props.views, props.orientation);
 
   const pickerLayoutResponse = usePickerLayout({
     props: { ...props, ...pickerValueResponse.layoutProps, ...pickerViewsResponse.layoutProps },
     actions: pickerValueResponse.actions,
     wrapperVariant,
-    isLandscape,
   });
 
   return {
-    isLandscape,
+    // Picker value
     open: pickerValueResponse.open,
     actions: pickerValueResponse.actions,
     fieldProps: pickerValueResponse.fieldProps,
-    layoutProps: pickerLayoutResponse,
+
+    // Picker views
     renderViews: pickerViewsResponse.renderViews,
     hasPopperView: pickerViewsResponse.hasPopperView,
     shouldRestoreFocus: pickerViewsResponse.shouldRestoreFocus,
+
+    // Picker layout
+    isLandscape: pickerLayoutResponse.isLandscape,
+    layoutProps: pickerLayoutResponse.layoutProps,
   };
 };

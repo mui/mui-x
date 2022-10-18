@@ -3,20 +3,22 @@ import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import useEventCallback from '@mui/utils/useEventCallback';
 import { CalendarOrClockPickerView } from '../../models';
 import { useViews } from '../useViews';
-import { PickerSelectionState } from '../usePickerState';
-import { UseFieldInternalProps } from '../useField';
 import { WrapperVariant } from '../../components/wrappers/WrapperVariantContext';
-import type { UsePickerValueActions } from './usePickerValue';
+import type { UsePickerValueActions, UsePickerValueViewsResponse } from './usePickerValue';
 
 type PickerViewRenderer<TValue, TView extends CalendarOrClockPickerView, TViewProps extends {}> = (
   props: PickerViewsRendererProps<TValue, TView, TViewProps>,
-) => React.ReactElement;
+) => React.ReactNode;
 
 export type PickerDateSectionModeLookup<TView extends CalendarOrClockPickerView> = Record<
   TView,
   'field' | 'popper'
 >;
 
+/**
+ * Props used to handle the views of the pickers.
+ * Those props are exposed on all the pickers.
+ */
 export interface ExportedUsePickerViewProps<TView extends CalendarOrClockPickerView> {
   autoFocus?: boolean;
   /**
@@ -45,11 +47,13 @@ export interface ExportedUsePickerViewProps<TView extends CalendarOrClockPickerV
   disableOpenPicker?: boolean;
 }
 
+/**
+ * Props received by `usePickerViews`.
+ * It contains both the props passed by the pickers and the props passed by `usePickerValue`.
+ */
 export interface UsePickerViewsProps<TValue, TView extends CalendarOrClockPickerView>
-  extends ExportedUsePickerViewProps<TView> {
-  onChange: (value: TValue, selectionState?: PickerSelectionState) => void;
-  value: TValue;
-}
+  extends ExportedUsePickerViewProps<TView>,
+    UsePickerValueViewsResponse<TValue> {}
 
 export interface UsePickerViewParams<
   TValue,
@@ -63,10 +67,6 @@ export interface UsePickerViewParams<
   inputRef?: React.RefObject<HTMLInputElement>;
   wrapperVariant: WrapperVariant;
   actions: UsePickerValueActions;
-  open: boolean;
-  onSelectedSectionsChange: NonNullable<
-    UseFieldInternalProps<TValue, unknown>['onSelectedSectionsChange']
-  >;
 }
 
 export interface UsePickerViewsResponse<TView extends CalendarOrClockPickerView> {
@@ -108,8 +108,6 @@ export const usePickerViews = <
   inputRef,
   wrapperVariant,
   actions,
-  open,
-  onSelectedSectionsChange,
 }: UsePickerViewParams<TValue, TView, TViewProps>): UsePickerViewsResponse<TView> => {
   const { views, openTo, onViewChange, onChange, disableOpenPicker, ...other } = props;
 
@@ -123,7 +121,9 @@ export const usePickerViews = <
     }
   }
 
-  // TODO: Stop using `useViews` ?
+  // TODO v6: Support focus management
+
+  // TODO v6: Stop using `useViews` ?
   const { openView, setOpenView, handleChangeAndOpenNext } = useViews({
     view: undefined,
     views,
@@ -168,9 +168,9 @@ export const usePickerViews = <
   }
 
   useEnhancedEffect(() => {
-    if (currentViewMode === 'field' && open) {
+    if (currentViewMode === 'field' && props.open) {
       actions.onClose();
-      onSelectedSectionsChange('hour');
+      props.onSelectedSectionsChange('hour');
 
       setTimeout(() => {
         inputRef?.current!.focus();
@@ -179,14 +179,14 @@ export const usePickerViews = <
   }, [openView]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEnhancedEffect(() => {
-    if (!open) {
+    if (!props.open) {
       return;
     }
 
     if (currentViewMode === 'field' && popperView != null) {
       setOpenView(popperView);
     }
-  }, [open]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [props.open]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const layoutProps: UsePickerViewsLayoutResponse<TView> = {
     views,

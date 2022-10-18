@@ -21,14 +21,8 @@ export interface UseMobilePickerSlotsComponentsProps<TDate>
   input?: SlotComponentProps<typeof TextField, {}, unknown>;
 }
 
-export interface ExportedUseMobilePickerProps {}
-
 interface UseMobilePickerProps<TDate, TView extends CalendarOrClockPickerView>
   extends BasePickerProps2<TDate | null, TDate, TView> {
-  /**
-   * Force rendering in particular orientation.
-   */
-  orientation?: 'portrait' | 'landscape';
   /**
    * Overrideable components.
    * @default {}

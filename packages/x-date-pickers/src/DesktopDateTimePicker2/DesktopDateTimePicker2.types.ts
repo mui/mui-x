@@ -1,5 +1,4 @@
 import {
-  ExportedUseDesktopPickerProps,
   UseDesktopPickerSlotsComponent,
   UseDesktopPickerSlotsComponentsProps,
 } from '../internals/hooks/useDesktopPicker';
@@ -18,9 +17,7 @@ export interface DesktopDateTimePicker2SlotsComponentsProps<TDate>
   extends BaseDateTimePicker2SlotsComponentsProps<TDate>,
     UseDesktopPickerSlotsComponentsProps<TDate> {}
 
-export interface DesktopDateTimePicker2Props<TDate>
-  extends BaseDateTimePicker2Props<TDate>,
-    ExportedUseDesktopPickerProps {
+export interface DesktopDateTimePicker2Props<TDate> extends BaseDateTimePicker2Props<TDate> {
   /**
    * Overrideable components.
    * @default {}

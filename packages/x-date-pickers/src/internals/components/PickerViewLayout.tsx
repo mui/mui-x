@@ -3,7 +3,7 @@ import { PickersActionBar, PickersActionBarProps } from '@mui/x-date-pickers/Pic
 import { CalendarOrClockPickerView } from '../models/views';
 import { BaseToolbarProps2, ExportedBaseToolbarProps } from '../models/props/toolbar';
 import { BaseTabsProps, ExportedBaseTabsProps } from '../models/props/tabs';
-import { UsePickerLayoutResponse } from '../hooks/usePicker/usePickerLayout';
+import { UsePickerLayoutResponseLayoutProps } from '../hooks/usePicker/usePickerLayout';
 
 export interface PickerViewLayoutSlotsComponent<TValue> {
   /**
@@ -38,7 +38,7 @@ export interface PickerViewLayoutSlotsComponentsProps {
 }
 
 export interface PickerViewLayoutProps<TValue, TView extends CalendarOrClockPickerView>
-  extends UsePickerLayoutResponse<TValue, TView> {
+  extends UsePickerLayoutResponseLayoutProps<TValue, TView> {
   children: React.ReactNode;
   /**
    * Overrideable components.
@@ -67,7 +67,6 @@ export const PickerViewLayout = <TValue, TView extends CalendarOrClockPickerView
     componentsProps,
     wrapperVariant,
     children,
-    hideTabs,
     onAccept,
     onClear,
     onCancel,
@@ -84,8 +83,6 @@ export const PickerViewLayout = <TValue, TView extends CalendarOrClockPickerView
   } = props;
 
   const ActionBar = components?.ActionBar ?? PickersActionBar;
-
-  const shouldRenderTabs = !hideTabs && typeof window !== 'undefined' && window.innerHeight > 667;
   const Tabs = components?.Tabs;
 
   const shouldRenderToolbar = showToolbar ?? wrapperVariant !== 'desktop';
@@ -110,7 +107,7 @@ export const PickerViewLayout = <TValue, TView extends CalendarOrClockPickerView
           readOnly={readOnly}
         />
       )}
-      {shouldRenderTabs && !!Tabs && (
+      {!!Tabs && (
         <Tabs
           view={view}
           onViewChange={onViewChange as (view: CalendarOrClockPickerView) => void}
