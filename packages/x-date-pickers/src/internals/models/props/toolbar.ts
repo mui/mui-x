@@ -10,7 +10,7 @@ export interface BaseToolbarProps<TValue> extends ExportedBaseToolbarProps {
    */
   view: CalendarOrClockPickerView;
   /**
-   * Callback called when a tab is clicked
+   * Callback called when a toolbar is clicked
    * @param {CalendarOrClockPickerView} view The view to open
    */
   onViewChange: (view: CalendarOrClockPickerView) => void;
