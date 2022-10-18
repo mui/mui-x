@@ -23,14 +23,13 @@ export interface BaseToolbarProps<TValue> extends ExportedBaseToolbarProps {
   toggleMobileKeyboardView: () => void;
 }
 
+export interface BaseToolbarProps2<TValue>
+  extends Omit<BaseToolbarProps<TValue>, 'isMobileKeyboardViewOpen' | 'toggleMobileKeyboardView'> {}
+
 export interface ExportedBaseToolbarProps {
   /**
    * Toolbar date format.
    */
   toolbarFormat?: string;
-  /**
-   * Toolbar value placeholder—it is displayed when the value is empty.
-   * @default "––"
-   */
   toolbarPlaceholder?: React.ReactNode;
 }

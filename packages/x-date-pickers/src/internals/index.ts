@@ -107,6 +107,7 @@ export type { StaticPickerProps } from './models/props/staticPickerProps';
 export type { BaseToolbarProps, ExportedBaseToolbarProps } from './models/props/toolbar';
 export type { MuiPickersAdapter } from './models/muiPickersAdapter';
 export type { DefaultizedProps, MakeOptional } from './models/helpers';
+export type { CalendarOrClockPickerView, CalendarPickerView } from './models/views';
 
 export { applyDefaultDate, replaceInvalidDateByNull } from './utils/date-utils';
 export { executeInTheNextEventLoopTick, onSpaceOrEnter } from './utils/utils';

@@ -1,4 +1,6 @@
 import { PickerStateProps } from '../../hooks/usePickerState';
+import { UsePickerProps } from '../../hooks/usePicker';
+import { CalendarOrClockPickerView } from '../views';
 import { PickersInputComponentLocaleText } from '../../../locales/utils/pickersLocaleTextApi';
 
 export interface BasePickerProps<TValue, TDate> extends PickerStateProps<TValue> {
@@ -26,6 +28,30 @@ export interface BasePickerProps<TValue, TDate> extends PickerStateProps<TValue>
   readOnly?: boolean;
   /**
    * If `true`, show the toolbar even in desktop mode.
+   */
+  showToolbar?: boolean;
+  /**
+   * Locale for components texts
+   */
+  localeText?: PickersInputComponentLocaleText<TDate>;
+}
+
+/**
+ * Props common to all pickers.
+ */
+export interface BasePickerProps2<TValue, TDate, TView extends CalendarOrClockPickerView>
+  extends UsePickerProps<TValue, TView> {
+  /**
+   * Class name applied to the root element.
+   */
+  className?: string;
+  /**
+   * Format of the date when rendered in the input(s).
+   */
+  inputFormat?: string;
+  /**
+   * If `true`, the toolbar will be visible.
+   * @default `true` for mobile, `false` for desktop
    */
   showToolbar?: boolean;
   /**
