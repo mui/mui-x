@@ -31,6 +31,11 @@ const EXPECTED_DIFF: { [propKey: string]: string | ((pickerName: string) => stri
       pickerName.includes('Range') || pickerName.includes('Mobile')
         ? 'never used even in v5'
         : undefined,
+
+    shouldDisableMonth: (pickerName) =>
+      pickerName.includes('Range') ? 'never used even in v5' : undefined,
+    shouldDisableYear: (pickerName) =>
+      pickerName.includes('Range') ? 'never used even in v5' : undefined,
   };
 
 const getExpectedDiffMessage = (pickerName: string, propKey: string) => {
