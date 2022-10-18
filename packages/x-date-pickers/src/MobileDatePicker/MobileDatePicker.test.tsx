@@ -66,49 +66,6 @@ describe('<MobileDatePicker />', () => {
     expect(screen.getByMuiTest('datepicker-toolbar-date')).to.have.text('Fri, Jan 1');
   });
 
-  it('prop `toolbarTitle` – should render title from the prop', () => {
-    render(
-      <MobileDatePicker
-        renderInput={(params) => <TextField {...params} />}
-        open
-        toolbarTitle="test"
-        label="something"
-        onChange={() => {}}
-        value={adapterToUse.date(new Date(2018, 0, 1))}
-      />,
-    );
-
-    expect(screen.getByMuiTest('picker-toolbar-title').textContent).to.equal('test');
-  });
-
-  it('prop `toolbarTitle` – should use label if no toolbar title', () => {
-    render(
-      <MobileDatePicker
-        open
-        label="Default label"
-        onChange={() => {}}
-        renderInput={(params) => <TextField {...params} />}
-        value={adapterToUse.date(new Date(2018, 0, 1))}
-      />,
-    );
-
-    expect(screen.getByMuiTest('picker-toolbar-title').textContent).to.equal('Default label');
-  });
-
-  it('prop `toolbarFormat` – should format toolbar according to passed format', () => {
-    render(
-      <MobileDatePicker
-        renderInput={(params) => <TextField {...params} />}
-        open
-        onChange={() => {}}
-        toolbarFormat="MMMM"
-        value={adapterToUse.date(new Date(2018, 0, 1))}
-      />,
-    );
-
-    expect(screen.getByMuiTest('datepicker-toolbar-date').textContent).to.equal('January');
-  });
-
   it('prop `onMonthChange` – dispatches callback when months switching', () => {
     const onMonthChangeMock = spy();
     render(
@@ -156,22 +113,44 @@ describe('<MobileDatePicker />', () => {
     expect(screen.getByTestId('custom-loading')).toBeVisible();
   });
 
-  it('prop `ToolbarComponent` – render custom toolbar component', () => {
-    render(
-      <MobileDatePicker
-        renderInput={(params) => <TextField {...params} />}
-        open
-        value={adapterToUse.date()}
-        onChange={() => {}}
-        ToolbarComponent={() => <div data-testid="custom-toolbar" />}
-      />,
-    );
+  describe('Component slots: Toolbar', () => {
+    it('should render custom toolbar component', () => {
+      render(
+        <MobileDatePicker
+          renderInput={(params) => <TextField {...params} />}
+          open
+          value={adapterToUse.date()}
+          onChange={() => {}}
+          components={{
+            Toolbar: () => <div data-testid="custom-toolbar" />,
+          }}
+        />,
+      );
 
-    expect(screen.getByTestId('custom-toolbar')).toBeVisible();
+      expect(screen.getByTestId('custom-toolbar')).toBeVisible();
+    });
+
+    it('should format toolbar according to `toolbarFormat` prop', () => {
+      render(
+        <MobileDatePicker
+          renderInput={(params) => <TextField {...params} />}
+          open
+          onChange={() => {}}
+          value={adapterToUse.date(new Date(2018, 0, 1))}
+          componentsProps={{
+            toolbar: {
+              toolbarFormat: 'MMMM',
+            },
+          }}
+        />,
+      );
+
+      expect(screen.getByMuiTest('datepicker-toolbar-date').textContent).to.equal('January');
+    });
   });
 
-  describe('Component slots', () => {
-    it('slot `Day` – renders custom day', () => {
+  describe('Component slots: Day', () => {
+    it('should render custom day', () => {
       render(
         <MobileDatePicker
           renderInput={(params) => <TextField {...params} />}
@@ -477,6 +456,23 @@ describe('<MobileDatePicker />', () => {
       openPicker({ type: 'date', variant: 'mobile' });
 
       expect(screen.queryByText('Custom cancel')).not.to.equal(null);
+    });
+
+    it('should render title from the `toolbarTitle` locale key', () => {
+      render(
+        <MobileDatePicker
+          renderInput={(params) => <TextField {...params} />}
+          open
+          label="something"
+          onChange={() => {}}
+          value={adapterToUse.date(new Date(2018, 0, 1))}
+          localeText={{
+            toolbarTitle: 'test',
+          }}
+        />,
+      );
+
+      expect(screen.getByMuiTest('picker-toolbar-title').textContent).to.equal('test');
     });
   });
 });
