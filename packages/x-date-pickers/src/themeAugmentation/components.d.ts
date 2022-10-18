@@ -151,6 +151,11 @@ export interface PickerComponents<Theme = unknown> {
     styleOverrides?: ComponentsOverrides<Theme>['MuiPickersToolbarText'];
     variants?: ComponentsVariants['MuiPickersToolbarText'];
   };
+  MuiPickersYear?: {
+    defaultProps?: ComponentsProps['MuiPickersYear'];
+    styleOverrides?: ComponentsOverrides<Theme>['MuiPickersYear'];
+    variants?: ComponentsVariants['MuiPickersYear'];
+  };
   MuiStaticDatePicker?: {
     defaultProps?: ComponentsProps['MuiStaticDatePicker'];
     styleOverrides?: ComponentsOverrides<Theme>['MuiStaticDatePicker'];
@@ -175,12 +180,6 @@ export interface PickerComponents<Theme = unknown> {
     defaultProps?: ComponentsProps['MuiYearCalendar'];
     styleOverrides?: ComponentsOverrides<Theme>['MuiYearCalendar'];
     variants?: ComponentsVariants['MuiYearCalendar'];
-  };
-  // TODO v6: Rename 'PrivatePickersYear' to 'MuiPickersYear' to follow convention
-  PrivatePickersYear?: {
-    defaultProps?: ComponentsProps['PrivatePickersYear'];
-    styleOverrides?: ComponentsOverrides<Theme>['PrivatePickersYear'];
-    variants?: ComponentsVariants['PrivatePickersYear'];
   };
 }
 

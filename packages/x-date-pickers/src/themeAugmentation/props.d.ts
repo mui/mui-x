@@ -22,7 +22,7 @@ import { StaticDatePickerProps } from '../StaticDatePicker';
 import { StaticDateTimePickerProps } from '../StaticDateTimePicker';
 import { StaticTimePickerProps } from '../StaticTimePicker';
 import { TimePickerProps, TimePickerToolbarProps } from '../TimePicker';
-import { YearCalendarProps } from '../YearCalendar';
+import { ExportedPickersYearProps, YearCalendarProps } from '../YearCalendar';
 import { DateFieldProps } from '../DateField';
 import { LocalizationProviderProps } from '../LocalizationProvider';
 import { DesktopDatePickerProps } from '../DesktopDatePicker';
@@ -73,14 +73,13 @@ export interface PickersComponentsPropsList {
   MuiPickersToolbar: PickersToolbarProps<unknown>;
   MuiPickersToolbarButton: PickersToolbarButtonProps;
   MuiPickersToolbarText: ExportedPickersToolbarTextProps;
+  MuiPickersYear: ExportedPickersYearProps;
   MuiStaticDatePicker: StaticDatePickerProps<unknown>;
   MuiStaticDateTimePicker: StaticDateTimePickerProps<unknown>;
   MuiStaticTimePicker: StaticTimePickerProps<unknown>;
   MuiTimePicker: TimePickerProps<unknown>;
   MuiTimePickerToolbar: TimePickerToolbarProps<unknown>;
   MuiYearCalendar: YearCalendarProps<unknown>;
-  // TODO v6: add `PickersYearProps` once component is renamed to `MuiPickersYear`
-  PrivatePickersYear: never;
 }
 
 declare module '@mui/material/styles' {

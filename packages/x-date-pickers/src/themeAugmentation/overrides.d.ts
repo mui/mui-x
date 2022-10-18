@@ -63,13 +63,13 @@ export interface PickersComponentNameToClassKey {
   MuiPickersToolbar: PickersToolbarClassKey;
   MuiPickersToolbarButton: PickersToolbarButtonClassKey;
   MuiPickersToolbarText: PickersToolbarTextClassKey;
+  MuiPickersYear: PickersYearClassKey;
   MuiStaticDatePicker: never;
   MuiStaticDateTimePicker: never;
   MuiStaticTimePicker: never;
   MuiTimePicker: never;
   MuiTimePickerToolbar: TimePickerToolbarClassKey;
   MuiYearCalendar: YearCalendarClassKey;
-  PrivatePickersYear: PickersYearClassKey;
 }
 
 declare module '@mui/material/styles' {

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import { capitalize } from '@mui/material/utils';
-import { alpha, styled } from '@mui/material/styles';
+import { alpha, styled, useThemeProps } from '@mui/material/styles';
 import { unstable_composeClasses as composeClasses } from '@mui/material';
 import {
   WrapperVariant,
@@ -13,12 +13,15 @@ import {
   PickersYearClasses,
 } from './pickersYearClasses';
 
-export interface PickersYearProps {
+export interface ExportedPickersYearProps {
+  classes?: Partial<PickersYearClasses>;
+  className?: string;
+}
+
+export interface PickersYearProps extends ExportedPickersYearProps {
   'aria-current'?: React.AriaAttributes['aria-current'];
   autoFocus?: boolean;
   children: React.ReactNode;
-  classes?: Partial<PickersYearClasses>;
-  className?: string;
   disabled?: boolean;
   onClick: (event: React.MouseEvent, year: number) => void;
   onKeyDown: (event: React.KeyboardEvent, year: number) => void;
@@ -45,7 +48,7 @@ const useUtilityClasses = (ownerState: PickersYearOwnerState) => {
 };
 
 const PickersYearRoot = styled('div', {
-  name: 'PrivatePickersYear',
+  name: 'MuiPickersYear',
   slot: 'Root',
   overridesResolver: (_, styles) => [
     styles.root,
@@ -63,10 +66,10 @@ const PickersYearRoot = styled('div', {
 }));
 
 const PickersYearButton = styled('button', {
-  name: 'PrivatePickersYear',
-  slot: 'Button',
+  name: 'MuiPickersYear',
+  slot: 'YearButton',
   overridesResolver: (_, styles) => [
-    styles.button,
+    styles.yearButton,
     { [`&.${pickersYearClasses.disabled}`]: styles.disabled },
     { [`&.${pickersYearClasses.selected}`]: styles.selected },
   ],
@@ -106,8 +109,11 @@ const PickersYearButton = styled('button', {
 /**
  * @ignore - internal component.
  */
-const PickersYearRaw = (props: PickersYearProps) => {
-  // TODO v6: add 'useThemeProps' once the component class names are aligned
+const PickersYear = React.memo(function PickersYear(inProps: PickersYearProps) {
+  const props = useThemeProps({
+    props: inProps,
+    name: 'MuiPickersYear',
+  });
   const {
     autoFocus,
     className,
@@ -165,9 +171,6 @@ const PickersYearRaw = (props: PickersYearProps) => {
       </PickersYearButton>
     </PickersYearRoot>
   );
-};
+});
 
-/**
- * @ignore - do not document.
- */
-export const PickersYear = React.memo(PickersYearRaw);
+export { PickersYear };

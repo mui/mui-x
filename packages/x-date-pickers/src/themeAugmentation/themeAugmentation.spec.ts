@@ -396,6 +396,18 @@ createTheme({
         },
       },
     },
+    MuiPickersYear: {
+      defaultProps: {
+        className: 'klass',
+        // @ts-expect-error invalid MuiPickersYear prop
+        someRandomProp: true,
+      },
+      styleOverrides: {
+        yearButton: {
+          backgroundColor: 'red',
+        },
+      },
+    },
     MuiStaticDatePicker: {
       defaultProps: {
         disabled: true,
