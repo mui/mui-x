@@ -6,7 +6,7 @@ export interface BaseToolbarProps<TValue> extends ExportedBaseToolbarProps {
   onChange: (newValue: TValue) => void;
   value: TValue;
   /**
-   * Currently visible picker view..
+   * Currently visible picker view.
    */
   view: CalendarOrClockPickerView;
   /**

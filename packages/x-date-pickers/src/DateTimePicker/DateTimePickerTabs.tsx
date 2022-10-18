@@ -162,7 +162,7 @@ DateTimePickerTabs.propTypes = {
    */
   timeIcon: PropTypes.node,
   /**
-   * Currently visible picker view..
+   * Currently visible picker view.
    */
   view: PropTypes.oneOf(['day', 'hours', 'minutes', 'month', 'seconds', 'year']).isRequired,
 } as any;
