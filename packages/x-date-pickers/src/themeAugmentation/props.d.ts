@@ -35,6 +35,7 @@ import {
   PickersToolbarProps,
   PickerStaticWrapperProps,
   ExportedCalendarHeaderProps,
+  ExportedPickersToolbarTextProps,
 } from '../internals';
 import { CalendarOrClockPickerView } from '../internals/models';
 
@@ -71,14 +72,13 @@ export interface PickersComponentsPropsList {
   MuiPickerStaticWrapper: PickerStaticWrapperProps<unknown>;
   MuiPickersToolbar: PickersToolbarProps<unknown>;
   MuiPickersToolbarButton: PickersToolbarButtonProps;
+  MuiPickersToolbarText: ExportedPickersToolbarTextProps;
   MuiStaticDatePicker: StaticDatePickerProps<unknown>;
   MuiStaticDateTimePicker: StaticDateTimePickerProps<unknown>;
   MuiStaticTimePicker: StaticTimePickerProps<unknown>;
   MuiTimePicker: TimePickerProps<unknown>;
   MuiTimePickerToolbar: TimePickerToolbarProps<unknown>;
   MuiYearCalendar: YearCalendarProps<unknown>;
-  // TODO v6: add `PickersToolbarTextProps` once component is renamed to `MuiPickersToolbarText`
-  PrivatePickersToolbarText: never;
   // TODO v6: add `PickersYearProps` once component is renamed to `MuiPickersYear`
   PrivatePickersYear: never;
 }

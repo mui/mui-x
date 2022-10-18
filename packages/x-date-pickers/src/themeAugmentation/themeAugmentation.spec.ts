@@ -384,6 +384,18 @@ createTheme({
         },
       },
     },
+    MuiPickersToolbarText: {
+      defaultProps: {
+        className: 'klass',
+        // @ts-expect-error invalid MuiPickersToolbarText prop
+        someRandomProp: true,
+      },
+      styleOverrides: {
+        root: {
+          backgroundColor: 'red',
+        },
+      },
+    },
     MuiStaticDatePicker: {
       defaultProps: {
         disabled: true,

@@ -62,13 +62,13 @@ export interface PickersComponentNameToClassKey {
   MuiPickerStaticWrapper: PickerStaticWrapperClassKey;
   MuiPickersToolbar: PickersToolbarClassKey;
   MuiPickersToolbarButton: PickersToolbarButtonClassKey;
+  MuiPickersToolbarText: PickersToolbarTextClassKey;
   MuiStaticDatePicker: never;
   MuiStaticDateTimePicker: never;
   MuiStaticTimePicker: never;
   MuiTimePicker: never;
   MuiTimePickerToolbar: TimePickerToolbarClassKey;
   MuiYearCalendar: YearCalendarClassKey;
-  PrivatePickersToolbarText: PickersToolbarTextClassKey;
   PrivatePickersYear: PickersYearClassKey;
 }
 
