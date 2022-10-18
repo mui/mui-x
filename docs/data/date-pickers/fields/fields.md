@@ -87,7 +87,7 @@ But changing the value of an end date section will not fire `onChange` until the
 The `onChange` callback received a 2nd parameter containing the validation error associated to the current value.
 If you only want to update your state when the value is valid, you can ignore any `onChange` call with a non-null `validationError`.
 
-In the example below, `onChange` will only be fired if the date is valid and in April 2022:
+In the example below, `onChange` will only be fired if the date is valid and its year is 2022:
 
 {{"demo": "LifeCycleIgnoreInvalidValue.js"}}
 

@@ -19,8 +19,8 @@ export default function LifeCycleIgnoreInvalidValue() {
               setValue(newValue);
             }
           }}
-          minDate={dayjs('2022-04-01')}
-          maxDate={dayjs('2022-04-30')}
+          minDate={dayjs('2022-01-01')}
+          maxDate={dayjs('2022-12-31')}
         />
       </LocalizationProvider>
       <Typography>Value: {value == null ? 'null' : value.format('L')}</Typography>
