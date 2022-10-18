@@ -171,7 +171,7 @@ export function CalendarOrClockPicker<TDate, View extends CalendarOrClockPickerV
     }
   }
 
-  const { openView, setOpenView, handleChangeAndOpenNext } = useViews<TDate, View>({
+  const { openView, setOpenView, handleChangeAndOpenNext } = useViews<TDate | null, View>({
     view: undefined,
     views,
     openTo,
