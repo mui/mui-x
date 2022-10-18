@@ -53,7 +53,7 @@ interface ConformanceOptions {
  * @param {() => ConformanceOptions} getOptions
  */
 export default function describeValidation(minimalElement, getOptions: () => ConformanceOptions) {
-  describe('RangePickers validation API', () => {
+  describe('Range pickers validation API', () => {
     const {
       after: runAfterHook = () => {},
       props = defaultAvailableProps,
