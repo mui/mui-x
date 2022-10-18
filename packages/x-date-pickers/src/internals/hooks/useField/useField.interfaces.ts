@@ -27,7 +27,7 @@ export interface UseFieldParams<
 
 export interface UseFieldInternalProps<TValue, TError> {
   value?: TValue;
-  onChange?: (value: TValue) => void;
+  onChange?: FieldChangeHandler<TValue, TError>;
   onError?: (error: TError, value: TValue) => void;
   /**
    * The default value. Use when the component is not controlled.
@@ -104,6 +104,15 @@ export type FieldBoundaries<TDate, TSection extends FieldSection> = Record<
   MuiDateSectionName,
   (currentDate: TDate | null, section: TSection) => { minimum: number; maximum: number }
 >;
+
+export type FieldChangeHandler<TValue, TError> = (
+  value: TValue,
+  context: FieldChangeHandlerContext<TError>,
+) => void;
+
+export interface FieldChangeHandlerContext<TError> {
+  validationError: TError;
+}
 
 /**
  * Object used to access and update the active value.
