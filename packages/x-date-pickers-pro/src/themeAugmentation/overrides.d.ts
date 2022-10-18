@@ -2,9 +2,11 @@ import { DateRangePickerInputClassKey } from '../DateRangePicker/dateRangePicker
 import { DateRangePickerToolbarClassKey } from '../DateRangePicker/dateRangePickerToolbarClasses';
 import { DateRangePickerViewDesktopClassKey } from '../DateRangePicker/dateRangePickerViewDesktopClasses';
 import { DateRangePickerDayClassKey } from '../DateRangePickerDay';
+import { DateRangeCalendarClassKey } from '../DateRangeCalendar/dateRangeCalendarClasses';
 
 // prettier-ignore
 export interface PickersProComponentNameToClassKey {
+  MuiDateRangeCalendar: DateRangeCalendarClassKey
   MuiDateRangePicker: never;
   MuiDateRangePickerDay: DateRangePickerDayClassKey;
   MuiDateRangePickerInput: DateRangePickerInputClassKey;

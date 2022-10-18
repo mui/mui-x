@@ -16,6 +16,7 @@
     "disableMaskedInput": "Disable mask on the keyboard, this should be used rarely. Consider passing proper mask for your format.",
     "disableOpenPicker": "Do not render open picker button (renders only text field with validation).",
     "disablePast": "If <code>true</code> disable values after the current time.",
+    "fixedWeekNumber": "Calendar will show more weeks in order to match this value. Put it to 6 for having fix number of week in Gregorian calendars",
     "getOpenDialogAriaText": "Get aria-label text for control that opens picker dialog. Aria-label text must include selected date. @DateIOType<br><br><strong>Signature:</strong><br><code>function(date: TDate | null, utils: MuiPickersAdapter&lt;TDate&gt;) =&gt; string</code><br><em>date:</em> The date from which we want to add an aria-text.<br><em>utils:</em> The utils to manipulate the date.<br> <em>returns</em> (string): The aria-text to render inside the dialog.",
     "InputAdornmentProps": "Props to pass to keyboard input adornment.",
     "inputFormat": "Format string.",
@@ -34,8 +35,6 @@
     "onViewChange": "Callback fired on view change.<br><br><strong>Signature:</strong><br><code>function(view: CalendarPickerView) =&gt; void</code><br><em>view:</em> The new view.",
     "open": "Control the popup or dialog open state.",
     "OpenPickerButtonProps": "Props to pass to keyboard adornment button.",
-    "PaperProps": "Paper props passed down to <a href=\"https://mui.com/material-ui/api/paper/\">Paper</a> component.",
-    "PopperProps": "Popper props passed down to <a href=\"https://mui.com/material-ui/api/popper/\">Popper</a> component.",
     "readOnly": "Make picker read only.",
     "reduceAnimations": "Disable heavy animations.",
     "renderInput": "The <code>renderInput</code> prop allows you to customize the rendered input. The <code>startProps</code> and <code>endProps</code> arguments of this render prop contains props of <a href=\"https://mui.com/material-ui/api/text-field/#props\">TextField</a>, that you need to forward to the range start/end inputs respectively. Pay specific attention to the <code>ref</code> and <code>inputProps</code> keys.<br><br><strong>Signature:</strong><br><code>function(startProps: MuiTextFieldProps, endProps: MuiTextFieldProps) =&gt; React.ReactElement</code><br><em>startProps:</em> Props that you need to forward to the range start input.<br><em>endProps:</em> Props that you need to forward to the range end input.<br> <em>returns</em> (React.ReactElement): The range input to render.",
@@ -47,22 +46,24 @@
     "showDaysOutsideCurrentMonth": "If <code>true</code>, days that have <code>outsideCurrentMonth={true}</code> are displayed.",
     "showToolbar": "If <code>true</code>, show the toolbar even in desktop mode.",
     "sx": "The system prop that allows defining system overrides as well as additional CSS styles. See the <a href=\"/system/getting-started/the-sx-prop/\">`sx` page</a> for more details.",
-    "toolbarFormat": "Date format, that is displaying in toolbar.",
-    "toolbarTitle": "Mobile picker title, displaying in the toolbar.",
-    "TransitionComponent": "Custom component for popper <a href=\"https://mui.com/material-ui/transitions/#transitioncomponent-prop\">Transition</a>.",
     "value": "The value of the picker."
   },
   "classDescriptions": {},
   "slotDescriptions": {
-    "ActionBar": "The action bar placed bellow picker views.",
-    "PaperContent": "The content of the Paper wrapping views.",
-    "OpenPickerIcon": "Icon displayed in the open picker button.",
+    "Toolbar": "Custom component for the toolbar rendered above the views.",
     "Day": "Custom component for day in range pickers.\nCheck the <a href=\"https://mui.com/x/api/date-pickers/date-range-picker-day/\">DateRangePickersDay</a> component.",
     "SwitchViewButton": "Button displayed to switch between different calendar views.",
     "SwitchViewIcon": "Icon displayed in the SwitchViewButton. Rotated by 180° when the open view is &#39;year&#39;.",
     "PreviousIconButton": "Button allowing to switch to the left view.",
     "NextIconButton": "Button allowing to switch to the right view.",
     "LeftArrowIcon": "Icon displayed in the left view switch button.",
-    "RightArrowIcon": "Icon displayed in the right view switch button."
+    "RightArrowIcon": "Icon displayed in the right view switch button.",
+    "DesktopPaper": "Custom component for the paper rendered inside the desktop picker&#39;s Popper.",
+    "DesktopTransition": "Custom component for the desktop popper <a href=\"https://mui.com/material-ui/transitions\">Transition</a>.",
+    "DesktopTrapFocus": "Custom component for trapping the focus inside the views on desktop.",
+    "Popper": "Custom component for the popper inside which the views are rendered on desktop.",
+    "ActionBar": "Custom component for the action bar, it is placed bellow the picker views.",
+    "PaperContent": "Custom component wrapping the views of the desktop and static pickers (it is the direct child of the Paper component).",
+    "OpenPickerIcon": "Icon displayed in the open picker button."
   }
 }

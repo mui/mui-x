@@ -53,7 +53,6 @@ import {
   useGridColumnSpanning,
   useGridRowReorder,
   useGridRowReorderPreProcessors,
-  useGridColumnGroupingPreProcessors,
   useGridRowPinning,
   useGridRowPinningPreProcessors,
   rowPinningStateInitializer,
@@ -87,7 +86,6 @@ export const useDataGridPremiumComponent = (
   /**
    * Register all pre-processors called during state initialization here.
    */
-  useGridColumnGroupingPreProcessors(privateApiRef, props);
   useGridSelectionPreProcessors(privateApiRef, props);
   useGridRowReorderPreProcessors(privateApiRef, props);
   useGridRowGroupingPreProcessors(privateApiRef, props);

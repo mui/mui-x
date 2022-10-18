@@ -11,7 +11,7 @@ import {
   gridColumnDefinitionsSelector,
   gridColumnVisibilityModelSelector,
 } from '../columns/gridColumnsSelector';
-import { gridDensityTotalHeaderHeightSelector } from '../density/densitySelector';
+import { gridTotalHeaderHeightSelector } from '../columnGrouping/gridColumnGroupsSelector';
 import { gridClasses } from '../../../constants/gridClasses';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { gridRowsMetaSelector } from '../rows/gridRowsMetaSelector';
@@ -113,7 +113,7 @@ export const useGridPrintExport = (
         return;
       }
 
-      const totalHeaderHeight = gridDensityTotalHeaderHeightSelector(apiRef);
+      const totalHeaderHeight = gridTotalHeaderHeightSelector(apiRef);
       const rowsMeta = gridRowsMetaSelector(apiRef.current.state);
 
       const gridRootElement = apiRef.current.rootElementRef!.current;

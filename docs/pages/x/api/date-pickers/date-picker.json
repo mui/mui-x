@@ -22,13 +22,13 @@
       "type": { "name": "string" },
       "default": "'@media (pointer: fine)'"
     },
-    "DialogProps": { "type": { "name": "object" } },
     "disabled": { "type": { "name": "bool" } },
     "disableFuture": { "type": { "name": "bool" } },
     "disableHighlightToday": { "type": { "name": "bool" } },
     "disableMaskedInput": { "type": { "name": "bool" } },
     "disableOpenPicker": { "type": { "name": "bool" } },
     "disablePast": { "type": { "name": "bool" } },
+    "fixedWeekNumber": { "type": { "name": "number" }, "default": "undefined" },
     "getOpenDialogAriaText": {
       "type": { "name": "func" },
       "default": "(date, utils) => `Choose date, selected date is ${utils.format(date, 'fullDate')}`"
@@ -62,8 +62,6 @@
     "orientation": {
       "type": { "name": "enum", "description": "'landscape'<br>&#124;&nbsp;'portrait'" }
     },
-    "PaperProps": { "type": { "name": "object" } },
-    "PopperProps": { "type": { "name": "object" } },
     "readOnly": { "type": { "name": "bool" } },
     "reduceAnimations": {
       "type": { "name": "bool" },
@@ -85,11 +83,6 @@
         "description": "Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object"
       }
     },
-    "ToolbarComponent": { "type": { "name": "elementType" }, "default": "DatePickerToolbar" },
-    "toolbarFormat": { "type": { "name": "string" } },
-    "toolbarPlaceholder": { "type": { "name": "node" }, "default": "'–'" },
-    "toolbarTitle": { "type": { "name": "node" }, "default": "'Select date'" },
-    "TransitionComponent": { "type": { "name": "elementType" } },
     "value": { "type": { "name": "any" } },
     "views": {
       "type": {
@@ -102,14 +95,28 @@
   "slots": {
     "ActionBar": { "default": "PickersActionBar", "type": { "name": "elementType" } },
     "Day": { "default": "PickersDay", "type": { "name": "elementType" } },
+    "DesktopPaper": { "default": "PickersPopperPaper", "type": { "name": "elementType" } },
+    "DesktopTransition": {
+      "default": "Grow from @mui/material",
+      "type": { "name": "elementType" }
+    },
+    "DesktopTrapFocus": {
+      "default": "TrapFocus from @mui/material",
+      "type": { "name": "elementType" }
+    },
+    "Dialog": { "default": "PickersModalDialogRoot", "type": { "name": "elementType" } },
     "LeftArrowIcon": { "default": "ArrowLeft", "type": { "name": "elementType" } },
+    "MobilePaper": { "default": "Paper from @mui/material", "type": { "name": "elementType" } },
+    "MobileTransition": { "default": "Fade from @mui/material", "type": { "name": "elementType" } },
     "NextIconButton": { "default": "IconButton", "type": { "name": "elementType" } },
     "OpenPickerIcon": { "default": "Calendar or Clock", "type": { "name": "elementType" } },
     "PaperContent": { "default": "React.Fragment", "type": { "name": "elementType" } },
+    "Popper": { "default": "Popper from @mui/material", "type": { "name": "elementType" } },
     "PreviousIconButton": { "default": "IconButton", "type": { "name": "elementType" } },
     "RightArrowIcon": { "default": "ArrowRight", "type": { "name": "elementType" } },
     "SwitchViewButton": { "default": "IconButton", "type": { "name": "elementType" } },
-    "SwitchViewIcon": { "default": "ArrowDropDown", "type": { "name": "elementType" } }
+    "SwitchViewIcon": { "default": "ArrowDropDown", "type": { "name": "elementType" } },
+    "Toolbar": { "default": "DatePickerToolbar", "type": { "name": "elementType" } }
   },
   "name": "DatePicker",
   "styles": { "classes": [], "globalClasses": {}, "name": "MuiDatePicker" },

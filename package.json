@@ -1,5 +1,5 @@
 {
-  "version": "6.0.0-alpha.2",
+  "version": "6.0.0-alpha.3",
   "private": true,
   "scripts": {
     "start": "yarn docs:dev",
@@ -19,7 +19,7 @@
     "jsonlint": "node ./scripts/jsonlint.js",
     "eslint": "eslint . --cache --report-unused-disable-directives --ext .js,.ts,.tsx --max-warnings 0",
     "eslint:ci": "eslint . --report-unused-disable-directives --ext .js,.ts,.tsx --max-warnings 0",
-    "markdownlint": "markdownlint '**/*.md' --config .markdownlint.jsonc",
+    "markdownlint": "markdownlint-cli2 \"**/*.md\"",
     "prettier": "node ./scripts/prettier.js --branch next",
     "prettier:all": "node ./scripts/prettier.js write",
     "proptypes": "cross-env BABEL_ENV=development babel-node -i \"/node_modules/(?!@mui)/\" -x .ts,.tsx,.js ./docs/scripts/generateProptypes.ts",
@@ -50,7 +50,7 @@
     "test:performance:server": "serve test/performance -p 5001",
     "test:argos": "node ./scripts/pushArgos.js",
     "typescript": "lerna run --no-bail --parallel typescript",
-    "typescript:ci": "lerna run --concurrency 7 --no-bail --no-sort typescript",
+    "typescript:ci": "lerna run --concurrency 6 --no-bail --no-sort typescript",
     "build:codesandbox": "yarn release:build",
     "install:codesandbox": "PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1 yarn install --ignore-engines",
     "release:changelog": "node scripts/releaseChangelog",
@@ -80,10 +80,10 @@
     "@emotion/react": "^11.10.4",
     "@emotion/styled": "^11.10.4",
     "@mnajdova/enzyme-adapter-react-18": "^0.2.0",
-    "@mui/icons-material": "^5.10.6",
-    "@mui/material": "^5.10.6",
+    "@mui/icons-material": "^5.10.9",
+    "@mui/material": "^5.10.9",
     "@mui/monorepo": "https://github.com/mui/material-ui.git#master",
-    "@mui/utils": "^5.10.6",
+    "@mui/utils": "^5.10.9",
     "@octokit/plugin-retry": "^3.0.9",
     "@octokit/rest": "^18.12.0",
     "@playwright/test": "1.21.1",
@@ -94,7 +94,7 @@
     "@types/enzyme": "^3.10.12",
     "@types/mocha": "^10.0.0",
     "@types/node": "^18.8.3",
-    "@types/prettier": "^2.7.0",
+    "@types/prettier": "^2.7.1",
     "@types/react": "^18.0.21",
     "@types/react-dom": "^18.0.6",
     "@types/requestidlecallback": "^0.3.5",
@@ -117,7 +117,7 @@
     "compression-webpack-plugin": "^10.0.0",
     "concurrently": "^7.4.0",
     "cross-env": "^7.0.3",
-    "danger": "^11.1.2",
+    "danger": "^11.1.4",
     "enzyme": "^3.11.0",
     "eslint": "^8.25.0",
     "eslint-config-airbnb-typescript": "^12.3.1",
@@ -133,6 +133,7 @@
     "eslint-plugin-react-hooks": "^4.6.0",
     "format-util": "^1.0.5",
     "glob-gitignore": "^1.0.14",
+    "html-webpack-plugin": "^5.5.0",
     "jsdom": "^20.0.1",
     "jss": "^10.9.2",
     "jss-plugin-template": "^10.9.2",
@@ -144,11 +145,12 @@
     "karma-sourcemap-loader": "^0.3.8",
     "karma-webpack": "^5.0.0",
     "lerna": "^5.6.2",
-    "markdownlint-cli": "^0.31.1",
+    "markdownlint-cli2": "^0.5.1",
     "mocha": "^10.0.0",
     "nyc": "^15.1.0",
     "playwright": "^1.21.1",
     "prettier": "^2.7.1",
+    "process": "^0.11.10",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "serve": "^14.0.1",
@@ -177,9 +179,7 @@
       "**/@mui/monorepo"
     ]
   },
-  "dependencies": {
-    "html-webpack-plugin": "^5.5.0"
-  },
+  "dependencies": {},
   "resolutions": {
     "**/react-is": "^18.2.0"
   }

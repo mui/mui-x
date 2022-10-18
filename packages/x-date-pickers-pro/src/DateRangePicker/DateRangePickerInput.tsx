@@ -11,7 +11,7 @@ import {
   onSpaceOrEnter,
   useLocaleText,
 } from '@mui/x-date-pickers/internals';
-import { CurrentlySelectingRangeEndProps, DateRange } from '../internal/models/dateRange';
+import { CurrentlySelectingRangeEndProps, DateRange } from '../internal/models/range';
 import { DateRangeValidationError } from '../internal/hooks/validation/useDateRangeValidation';
 import {
   DateRangePickerInputClasses,

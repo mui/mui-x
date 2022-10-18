@@ -10,11 +10,7 @@ import {
   DesktopWrapperSlotsComponentsProps,
   DateInputSlotsComponent,
 } from '@mui/x-date-pickers/internals';
-import {
-  DateRangePickerView,
-  DateRangePickerViewSlotsComponent,
-  DateRangePickerViewSlotsComponentsProps,
-} from '../DateRangePicker/DateRangePickerView';
+import { DateRangePickerView } from '../DateRangePicker/DateRangePickerView';
 import { DateRangePickerInput } from '../DateRangePicker/DateRangePickerInput';
 import { useDateRangeValidation } from '../internal/hooks/validation/useDateRangeValidation';
 import { getReleaseInfo } from '../internal/utils/releaseInfo';
@@ -22,6 +18,8 @@ import {
   BaseDateRangePickerProps,
   useDateRangePickerDefaultizedProps,
   dateRangePickerValueManager,
+  BaseDateRangePickerSlotsComponent,
+  BaseDateRangePickerSlotsComponentsProps,
 } from '../DateRangePicker/shared';
 
 const releaseInfo = getReleaseInfo();
@@ -29,27 +27,27 @@ const releaseInfo = getReleaseInfo();
 const KeyboardDateInputComponent = DateRangePickerInput as unknown as React.FC<DateInputPropsLike>;
 
 export interface DesktopDateRangePickerSlotsComponent<TDate>
-  extends DesktopWrapperSlotsComponent,
-    DateRangePickerViewSlotsComponent<TDate>,
+  extends BaseDateRangePickerSlotsComponent<TDate>,
+    DesktopWrapperSlotsComponent,
     DateInputSlotsComponent {}
 
 export interface DesktopDateRangePickerSlotsComponentsProps<TDate>
-  extends DesktopWrapperSlotsComponentsProps,
-    DateRangePickerViewSlotsComponentsProps<TDate> {}
+  extends BaseDateRangePickerSlotsComponentsProps<TDate>,
+    DesktopWrapperSlotsComponentsProps {}
 
 export interface DesktopDateRangePickerProps<TDate>
   extends BaseDateRangePickerProps<TDate>,
-    DesktopWrapperProps<TDate> {
+    DesktopWrapperProps {
   /**
    * Overrideable components.
    * @default {}
    */
-  components?: Partial<DesktopDateRangePickerSlotsComponent<TDate>>;
+  components?: DesktopDateRangePickerSlotsComponent<TDate>;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  componentsProps?: Partial<DesktopDateRangePickerSlotsComponentsProps<TDate>>;
+  componentsProps?: DesktopDateRangePickerSlotsComponentsProps<TDate>;
 }
 
 type DesktopDateRangePickerComponent = (<TDate>(
@@ -88,17 +86,7 @@ export const DesktopDateRangePicker = React.forwardRef(function DesktopDateRange
     dateRangePickerValueManager,
   );
 
-  const {
-    value,
-    onChange,
-    PopperProps,
-    PaperProps,
-    TransitionComponent,
-    components,
-    componentsProps,
-    localeText,
-    ...other
-  } = props;
+  const { value, onChange, components, componentsProps, localeText, ...other } = props;
   const DateInputProps = {
     ...inputProps,
     ...other,
@@ -115,9 +103,6 @@ export const DesktopDateRangePicker = React.forwardRef(function DesktopDateRange
       {...wrapperProps}
       DateInputProps={DateInputProps}
       KeyboardDateInputComponent={KeyboardDateInputComponent}
-      PopperProps={PopperProps}
-      PaperProps={PaperProps}
-      TransitionComponent={TransitionComponent}
       components={components}
       componentsProps={componentsProps}
       localeText={localeText}
@@ -218,6 +203,12 @@ DesktopDateRangePicker.propTypes = {
    * @default false
    */
   disablePast: PropTypes.bool,
+  /**
+   * Calendar will show more weeks in order to match this value.
+   * Put it to 6 for having fix number of week in Gregorian calendars
+   * @default undefined
+   */
+  fixedWeekNumber: PropTypes.number,
   /**
    * Get aria-label text for control that opens picker dialog. Aria-label text must include selected date. @DateIOType
    * @template TDate
@@ -327,14 +318,6 @@ DesktopDateRangePicker.propTypes = {
    */
   OpenPickerButtonProps: PropTypes.object,
   /**
-   * Paper props passed down to [Paper](https://mui.com/material-ui/api/paper/) component.
-   */
-  PaperProps: PropTypes.object,
-  /**
-   * Popper props passed down to [Popper](https://mui.com/material-ui/api/popper/) component.
-   */
-  PopperProps: PropTypes.object,
-  /**
    * Make picker read only.
    * @default false
    */
@@ -419,19 +402,6 @@ DesktopDateRangePicker.propTypes = {
     PropTypes.func,
     PropTypes.object,
   ]),
-  /**
-   * Date format, that is displaying in toolbar.
-   */
-  toolbarFormat: PropTypes.string,
-  /**
-   * Mobile picker title, displaying in the toolbar.
-   * @default 'Select date range'
-   */
-  toolbarTitle: PropTypes.node,
-  /**
-   * Custom component for popper [Transition](https://mui.com/material-ui/transitions/#transitioncomponent-prop).
-   */
-  TransitionComponent: PropTypes.elementType,
   /**
    * The value of the picker.
    */

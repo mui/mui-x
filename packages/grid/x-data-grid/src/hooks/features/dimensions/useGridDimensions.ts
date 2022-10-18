@@ -16,11 +16,12 @@ import { useGridLogger } from '../../utils/useGridLogger';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { GridDimensions, GridDimensionsApi } from './gridDimensionsApi';
 import { gridColumnsTotalWidthSelector } from '../columns';
-import { gridDensityTotalHeaderHeightSelector, gridDensityRowHeightSelector } from '../density';
+import { gridDensityRowHeightSelector } from '../density';
 import { useGridSelector } from '../../utils';
 import { getVisibleRows } from '../../utils/useGridVisibleRows';
 import { gridRowsMetaSelector } from '../rows/gridRowsMetaSelector';
 import { calculatePinnedRowsHeight } from '../rows/gridRowsUtils';
+import { gridTotalHeaderHeightSelector } from '../columnGrouping/gridColumnGroupsSelector';
 
 const isTestEnvironment = process.env.NODE_ENV === 'test';
 
@@ -63,7 +64,7 @@ export function useGridDimensions(
   const rootDimensionsRef = React.useRef<ElementSize | null>(null);
   const fullDimensionsRef = React.useRef<GridDimensions | null>(null);
   const rowsMeta = useGridSelector(apiRef, gridRowsMetaSelector);
-  const totalHeaderHeight = useGridSelector(apiRef, gridDensityTotalHeaderHeightSelector);
+  const totalHeaderHeight = useGridSelector(apiRef, gridTotalHeaderHeightSelector);
 
   const updateGridDimensionsRef = React.useCallback(() => {
     const rootElement = apiRef.current.rootElementRef?.current;

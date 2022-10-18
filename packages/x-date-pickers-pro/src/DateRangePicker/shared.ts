@@ -1,3 +1,5 @@
+import * as React from 'react';
+import { LocalizedComponent, PickersInputLocaleText } from '@mui/x-date-pickers';
 import {
   BasePickerProps,
   PickerStateValueManager,
@@ -9,14 +11,33 @@ import {
   BaseDateValidationProps,
 } from '@mui/x-date-pickers/internals';
 import { useThemeProps } from '@mui/material/styles';
-import { ExportedDateRangePickerViewProps } from './DateRangePickerView';
+import {
+  DateRangePickerViewSlotsComponent,
+  DateRangePickerViewSlotsComponentsProps,
+  ExportedDateRangePickerViewProps,
+} from './DateRangePickerView';
 import { DateRangeValidationError } from '../internal/hooks/validation/useDateRangeValidation';
 import { DateRange } from '../internal/models';
 import { ExportedDateRangePickerInputProps } from './DateRangePickerInput';
 import { replaceInvalidDatesByNull } from '../internal/utils/date-utils';
+import {
+  DateRangePickerToolbar,
+  DateRangePickerToolbarProps,
+  ExportedDateRangePickerToolbarProps,
+} from './DateRangePickerToolbar';
+
+export interface BaseDateRangePickerSlotsComponent<TDate>
+  extends DateRangePickerViewSlotsComponent<TDate> {
+  Toolbar?: React.JSXElementConstructor<DateRangePickerToolbarProps<TDate>>;
+}
+
+export interface BaseDateRangePickerSlotsComponentsProps<TDate>
+  extends DateRangePickerViewSlotsComponentsProps<TDate> {
+  toolbar?: ExportedDateRangePickerToolbarProps;
+}
 
 export interface BaseDateRangePickerProps<TDate>
-  extends Omit<BasePickerProps<DateRange<TDate>>, 'orientation'>,
+  extends Omit<BasePickerProps<DateRange<TDate>, TDate>, 'orientation'>,
     ExportedDateRangePickerViewProps<TDate>,
     BaseDateValidationProps<TDate>,
     ValidationCommonProps<DateRangeValidationError, DateRange<TDate>>,
@@ -33,6 +54,16 @@ export interface BaseDateRangePickerProps<TDate>
    * @param {string} keyboardInputValue The current value of the keyboard input.
    */
   onChange: (date: DateRange<TDate>, keyboardInputValue?: string) => void;
+  /**
+   * Overrideable components.
+   * @default {}
+   */
+  components?: BaseDateRangePickerSlotsComponent<TDate>;
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  componentsProps?: BaseDateRangePickerSlotsComponentsProps<TDate>;
 }
 
 export function useDateRangePickerDefaultizedProps<
@@ -41,10 +72,13 @@ export function useDateRangePickerDefaultizedProps<
 >(
   props: Props,
   name: string,
-): DefaultizedProps<
-  Props,
-  'calendars' | keyof BaseDateValidationProps<TDate>,
-  { inputFormat: string }
+): LocalizedComponent<
+  TDate,
+  DefaultizedProps<
+    Props,
+    'calendars' | keyof BaseDateValidationProps<TDate>,
+    { inputFormat: string }
+  >
 > {
   const utils = useUtils<TDate>();
   const defaultDates = useDefaultDates<TDate>();
@@ -56,6 +90,17 @@ export function useDateRangePickerDefaultizedProps<
     name,
   });
 
+  const localeText = React.useMemo<PickersInputLocaleText<TDate> | undefined>(() => {
+    if (themeProps.localeText?.toolbarTitle == null) {
+      return themeProps.localeText;
+    }
+
+    return {
+      ...themeProps.localeText,
+      dateRangePickerToolbarTitle: themeProps.localeText.toolbarTitle,
+    };
+  }, [themeProps.localeText]);
+
   return {
     disableFuture: false,
     disablePast: false,
@@ -64,9 +109,12 @@ export function useDateRangePickerDefaultizedProps<
     ...themeProps,
     minDate: applyDefaultDate(utils, themeProps.minDate, defaultDates.minDate),
     maxDate: applyDefaultDate(utils, themeProps.maxDate, defaultDates.maxDate),
+    localeText,
+    components: { Toolbar: DateRangePickerToolbar, ...themeProps.components },
   };
 }
 
+// What about renaming it `rangePickerValueManager` such that it's clear this manager is common to date, time and dateTime?
 export const dateRangePickerValueManager: PickerStateValueManager<[any, any], any> = {
   emptyValue: [null, null],
   getTodayValue: (utils) => [utils.date()!, utils.date()!],

@@ -15,9 +15,9 @@ import {
   MobileTimePickerSlotsComponentsProps,
 } from '../MobileTimePicker';
 
-export interface TimePickerSlotsComponent
-  extends MobileTimePickerSlotsComponent,
-    DesktopTimePickerSlotsComponent {}
+export interface TimePickerSlotsComponent<TDate>
+  extends MobileTimePickerSlotsComponent<TDate>,
+    DesktopTimePickerSlotsComponent<TDate> {}
 
 export interface TimePickerSlotsComponentsProps
   extends MobileTimePickerSlotsComponentsProps,
@@ -36,12 +36,12 @@ export interface TimePickerProps<TDate>
    * Overrideable components.
    * @default {}
    */
-  components?: Partial<TimePickerSlotsComponent>;
+  components?: TimePickerSlotsComponent<TDate>;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  componentsProps?: Partial<TimePickerSlotsComponentsProps>;
+  componentsProps?: TimePickerSlotsComponentsProps;
 }
 
 type TimePickerComponent = (<TDate>(
@@ -64,29 +64,16 @@ export const TimePicker = React.forwardRef(function TimePicker<TDate>(
   ref: React.Ref<HTMLDivElement>,
 ) {
   const props = useThemeProps({ props: inProps, name: 'MuiTimePicker' });
-  const {
-    desktopModeMediaQuery = '@media (pointer: fine)',
-    DialogProps,
-    PopperProps,
-    TransitionComponent,
-    ...other
-  } = props;
+  const { desktopModeMediaQuery = '@media (pointer: fine)', ...other } = props;
 
   // defaults to `true` in environments where `window.matchMedia` would not be available (i.e. test/jsdom)
   const isDesktop = useMediaQuery(desktopModeMediaQuery, { defaultMatches: true });
 
   if (isDesktop) {
-    return (
-      <DesktopTimePicker
-        ref={ref}
-        PopperProps={PopperProps}
-        TransitionComponent={TransitionComponent}
-        {...other}
-      />
-    );
+    return <DesktopTimePicker ref={ref} {...other} />;
   }
 
-  return <MobileTimePicker ref={ref} DialogProps={DialogProps} {...other} />;
+  return <MobileTimePicker ref={ref} {...other} />;
 }) as TimePickerComponent;
 
 TimePicker.propTypes = {
@@ -135,10 +122,6 @@ TimePicker.propTypes = {
    * @example '@media (min-width: 720px)' or theme.breakpoints.up("sm")
    */
   desktopModeMediaQuery: PropTypes.string,
-  /**
-   * Props applied to the [`Dialog`](https://mui.com/material-ui/api/dialog/) element.
-   */
-  DialogProps: PropTypes.object,
   /**
    * If `true`, the picker and text field are disabled.
    * @default false
@@ -281,14 +264,6 @@ TimePicker.propTypes = {
    */
   orientation: PropTypes.oneOf(['landscape', 'portrait']),
   /**
-   * Paper props passed down to [Paper](https://mui.com/material-ui/api/paper/) component.
-   */
-  PaperProps: PropTypes.object,
-  /**
-   * Popper props passed down to [Popper](https://mui.com/material-ui/api/popper/) component.
-   */
-  PopperProps: PropTypes.object,
-  /**
    * Make picker read only.
    * @default false
    */
@@ -322,20 +297,6 @@ TimePicker.propTypes = {
    * If `true`, show the toolbar even in desktop mode.
    */
   showToolbar: PropTypes.bool,
-  /**
-   * Component that will replace default toolbar renderer.
-   * @default TimePickerToolbar
-   */
-  ToolbarComponent: PropTypes.elementType,
-  /**
-   * Mobile picker title, displaying in the toolbar.
-   * @default 'Select time'
-   */
-  toolbarTitle: PropTypes.node,
-  /**
-   * Custom component for popper [Transition](https://mui.com/material-ui/transitions/#transitioncomponent-prop).
-   */
-  TransitionComponent: PropTypes.elementType,
   /**
    * The value of the picker.
    */

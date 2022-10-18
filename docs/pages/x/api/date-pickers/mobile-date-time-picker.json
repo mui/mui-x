@@ -21,7 +21,6 @@
       "default": "(day) => day.charAt(0).toUpperCase()"
     },
     "defaultCalendarMonth": { "type": { "name": "any" } },
-    "DialogProps": { "type": { "name": "object" } },
     "disabled": { "type": { "name": "bool" } },
     "disableFuture": { "type": { "name": "bool" } },
     "disableHighlightToday": { "type": { "name": "bool" } },
@@ -29,11 +28,11 @@
     "disableMaskedInput": { "type": { "name": "bool" } },
     "disableOpenPicker": { "type": { "name": "bool" } },
     "disablePast": { "type": { "name": "bool" } },
+    "fixedWeekNumber": { "type": { "name": "number" }, "default": "undefined" },
     "getOpenDialogAriaText": {
       "type": { "name": "func" },
       "default": "(date, utils) => `Choose date, selected date is ${utils.format(date, 'fullDate')}`"
     },
-    "hideTabs": { "type": { "name": "bool" }, "default": "false for mobile, true for desktop" },
     "InputAdornmentProps": { "type": { "name": "object" } },
     "inputFormat": { "type": { "name": "string" } },
     "inputRef": {
@@ -91,10 +90,6 @@
       }
     },
     "timeIcon": { "type": { "name": "node" } },
-    "ToolbarComponent": { "type": { "name": "elementType" }, "default": "DateTimePickerToolbar" },
-    "toolbarFormat": { "type": { "name": "string" } },
-    "toolbarPlaceholder": { "type": { "name": "node" }, "default": "'–'" },
-    "toolbarTitle": { "type": { "name": "node" }, "default": "'Select date & time'" },
     "value": { "type": { "name": "any" } },
     "views": {
       "type": {
@@ -107,14 +102,18 @@
   "slots": {
     "ActionBar": { "default": "PickersActionBar", "type": { "name": "elementType" } },
     "Day": { "default": "PickersDay", "type": { "name": "elementType" } },
+    "Dialog": { "default": "PickersModalDialogRoot", "type": { "name": "elementType" } },
     "LeftArrowIcon": { "default": "ArrowLeft", "type": { "name": "elementType" } },
+    "MobilePaper": { "default": "Paper from @mui/material", "type": { "name": "elementType" } },
+    "MobileTransition": { "default": "Fade from @mui/material", "type": { "name": "elementType" } },
     "NextIconButton": { "default": "IconButton", "type": { "name": "elementType" } },
     "OpenPickerIcon": { "default": "Calendar or Clock", "type": { "name": "elementType" } },
     "PreviousIconButton": { "default": "IconButton", "type": { "name": "elementType" } },
     "RightArrowIcon": { "default": "ArrowRight", "type": { "name": "elementType" } },
     "SwitchViewButton": { "default": "IconButton", "type": { "name": "elementType" } },
     "SwitchViewIcon": { "default": "ArrowDropDown", "type": { "name": "elementType" } },
-    "Tabs": { "default": "DateTimePickerTabs", "type": { "name": "elementType" } }
+    "Tabs": { "default": "DateTimePickerTabs", "type": { "name": "elementType" } },
+    "Toolbar": { "default": "DateTimePickerToolbar", "type": { "name": "elementType" } }
   },
   "name": "MobileDateTimePicker",
   "styles": { "classes": [], "globalClasses": {}, "name": "MuiMobileDateTimePicker" },

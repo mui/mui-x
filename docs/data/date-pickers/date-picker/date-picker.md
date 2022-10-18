@@ -1,7 +1,7 @@
 ---
 product: date-pickers
 title: React Date Picker component
-components: CalendarPicker, CalendarPickerSkeleton, DatePicker, DesktopDatePicker, MobileDatePicker, MonthPicker, PickersDay, StaticDatePicker, YearPicker
+components: DateCalendar, DatePicker, DayCalendarSkeleton, DesktopDatePicker, MobileDatePicker, MonthCalendar, PickersDay, StaticDatePicker, YearCalendar
 githubLabel: 'component: DatePicker'
 packageName: '@mui/x-date-pickers'
 materialDesign: https://material.io/components/date-pickers
@@ -50,7 +50,7 @@ The date picker component can be disabled or read-only.
 
 ## Validation
 
-You can find the documentation in the [Validation page](/react-date-pickers/validation/)
+You can find the documentation in the [Validation page](/x/react-date-pickers/validation/)
 
 ## Localization
 
@@ -77,9 +77,9 @@ For ease of use, the date picker will automatically change the layout between po
 
 ## Sub-components
 
-Some lower-level sub-components (`CalendarPicker`, `MonthPicker`, and `YearPicker`) are also exported.
+Some lower-level sub-components (`DateCalendar`, `MonthCalendar`, and `YearCalendar`) are also exported.
 
-{{"demo": "SubComponentsPickers.js"}}
+{{"demo": "SubComponentsCalendars.js"}}
 
 ## Custom input component
 
@@ -93,6 +93,17 @@ The displayed days are customizable with the `Day` component slot.
 You can take advantage of the [PickersDay](/x/api/date-pickers/pickers-day/) component.
 
 {{"demo": "CustomDay.js"}}
+
+## Customize month layout
+
+You can customize the month layout with some props.
+
+To shows all days of displayed weeks, included those outside of the current month, use `showDaysOutsideCurrentMonth`.
+
+By default, only weeks of the current month are displayed, but you can provide a total number of week to display with `fixedWeekNumber` prop.
+This value is usually set to `6` for Gregorian calendars, because months display can vary between 4 and 6 weeks.
+
+{{"demo": "CustomMonthLayout.js"}}
 
 ## Dynamic data
 

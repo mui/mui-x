@@ -42,7 +42,6 @@ import {
   useGridColumnGrouping,
   columnGroupsStateInitializer,
 } from '../hooks/features/columnGrouping/useGridColumnGrouping';
-import { useGridColumnGroupingPreProcessors } from '../hooks/features/columnGrouping/useGridColumnGroupingPreProcessors';
 
 export const useDataGridComponent = (props: DataGridProcessedProps) => {
   const privateApiRef = useGridInitialization<GridPrivateApiCommunity, GridApiCommunity>(
@@ -53,7 +52,6 @@ export const useDataGridComponent = (props: DataGridProcessedProps) => {
   /**
    * Register all pre-processors called during state initialization here.
    */
-  useGridColumnGroupingPreProcessors(privateApiRef, props);
   useGridSelectionPreProcessors(privateApiRef, props);
   useGridRowsPreProcessors(privateApiRef);
 
@@ -62,7 +60,6 @@ export const useDataGridComponent = (props: DataGridProcessedProps) => {
    */
   useGridInitializeState(selectionStateInitializer, privateApiRef, props);
   useGridInitializeState(columnsStateInitializer, privateApiRef, props);
-  useGridInitializeState(columnGroupsStateInitializer, privateApiRef, props);
   useGridInitializeState(rowsStateInitializer, privateApiRef, props);
   useGridInitializeState(editingStateInitializer, privateApiRef, props);
   useGridInitializeState(focusStateInitializer, privateApiRef, props);
@@ -73,6 +70,7 @@ export const useDataGridComponent = (props: DataGridProcessedProps) => {
   useGridInitializeState(paginationStateInitializer, privateApiRef, props);
   useGridInitializeState(rowsMetaStateInitializer, privateApiRef, props);
   useGridInitializeState(columnMenuStateInitializer, privateApiRef, props);
+  useGridInitializeState(columnGroupsStateInitializer, privateApiRef, props);
 
   useGridKeyboardNavigation(privateApiRef, props);
   useGridSelection(privateApiRef, props);

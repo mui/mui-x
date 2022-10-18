@@ -6,7 +6,7 @@ import IconButton from '@mui/material/IconButton';
 import { styled, useThemeProps } from '@mui/material/styles';
 import { unstable_composeClasses as composeClasses } from '@mui/material';
 import { Pen, Calendar, Clock } from './icons';
-import { BaseToolbarProps } from '../models/props/baseToolbarProps';
+import { BaseToolbarProps } from '../models/props/toolbar';
 import { useLocaleText } from '../hooks/useUtils';
 import {
   getPickersToolbarUtilityClass,
@@ -14,20 +14,19 @@ import {
   PickersToolbarClasses,
 } from './pickersToolbarClasses';
 
-export interface PickersToolbarProps<TDate, TValue>
+export interface PickersToolbarProps<TValue>
   extends Pick<
-    BaseToolbarProps<TDate, TValue>,
-    'isMobileKeyboardViewOpen' | 'toggleMobileKeyboardView'
+    BaseToolbarProps<TValue>,
+    'isMobileKeyboardViewOpen' | 'toggleMobileKeyboardView' | 'isLandscape'
   > {
   className?: string;
   viewType?: 'calendar' | 'clock';
-  isLandscape: boolean;
   landscapeDirection?: 'row' | 'column';
   toolbarTitle: React.ReactNode;
   classes?: Partial<PickersToolbarClasses>;
 }
 
-const useUtilityClasses = (ownerState: PickersToolbarProps<any, any>) => {
+const useUtilityClasses = (ownerState: PickersToolbarProps<any>) => {
   const { classes, isLandscape } = ownerState;
   const slots = {
     root: ['root'],
@@ -43,7 +42,7 @@ const PickersToolbarRoot = styled('div', {
   slot: 'Root',
   overridesResolver: (props, styles) => styles.root,
 })<{
-  ownerState: PickersToolbarProps<any, any>;
+  ownerState: PickersToolbarProps<any>;
 }>(({ theme, ownerState }) => ({
   display: 'flex',
   flexDirection: 'column',
@@ -64,7 +63,7 @@ const PickersToolbarContent = styled(Grid, {
   slot: 'Content',
   overridesResolver: (props, styles) => styles.content,
 })<{
-  ownerState: PickersToolbarProps<any, any>;
+  ownerState: PickersToolbarProps<any>;
 }>({
   flex: 1,
 });
@@ -77,19 +76,18 @@ const PickersToolbarPenIconButton = styled(IconButton, {
     styles.penIconButton,
   ],
 })<{
-  ownerState: PickersToolbarProps<any, any>;
+  ownerState: PickersToolbarProps<any>;
 }>({});
 
 const getViewTypeIcon = (viewType: 'calendar' | 'clock') =>
   viewType === 'clock' ? <Clock color="inherit" /> : <Calendar color="inherit" />;
 
-type PickersToolbarComponent = (<TDate, TValue>(
-  props: React.PropsWithChildren<PickersToolbarProps<TDate, TValue>> &
-    React.RefAttributes<HTMLDivElement>,
+type PickersToolbarComponent = (<TValue>(
+  props: React.PropsWithChildren<PickersToolbarProps<TValue>> & React.RefAttributes<HTMLDivElement>,
 ) => JSX.Element) & { propTypes?: any };
 
-export const PickersToolbar = React.forwardRef(function PickersToolbar<TDate, TValue>(
-  inProps: React.PropsWithChildren<PickersToolbarProps<TDate, TValue>>,
+export const PickersToolbar = React.forwardRef(function PickersToolbar<TValue>(
+  inProps: React.PropsWithChildren<PickersToolbarProps<TValue>>,
   ref: React.Ref<HTMLDivElement>,
 ) {
   const props = useThemeProps({ props: inProps, name: 'MuiPickersToolbar' });

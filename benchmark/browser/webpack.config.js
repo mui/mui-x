@@ -43,11 +43,12 @@ module.exports = {
   resolve: {
     extensions: ['.js', '.ts', '.tsx'],
   },
-  target: 'web',
   plugins: [
     new HtmlWebpackPlugin({
       hash: true, // Avoid doing benchmark with cached files
       template: path.resolve(__dirname, './index.html'),
     }),
   ],
+  // TODO: 'browserslist:modern'
+  target: 'web',
 };
