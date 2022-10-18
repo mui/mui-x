@@ -265,8 +265,8 @@ describe('<DesktopTimePicker />', () => {
     });
   });
 
-  describe('componentsProps: popper', () => {
-    it('forwards onClick and onTouchStart', () => {
+  describe('Component slots: Popper', () => {
+    it('should forward onClick and onTouchStart', () => {
       const handleClick = spy();
       const handleTouchStart = spy();
       render(
@@ -293,8 +293,8 @@ describe('<DesktopTimePicker />', () => {
     });
   });
 
-  describe('componentsProps: desktopPaper', () => {
-    it('forwards onClick and onTouchStart', () => {
+  describe('Component slots: DesktopPaper', () => {
+    it('should forward onClick and onTouchStart', () => {
       const handleClick = spy();
       const handleTouchStart = spy();
       render(

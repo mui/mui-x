@@ -188,11 +188,6 @@ DateTimePicker.propTypes = {
    * @default (date, utils) => `Choose date, selected date is ${utils.format(date, 'fullDate')}`
    */
   getOpenDialogAriaText: PropTypes.func,
-  /**
-   * Toggles visibility of date time switching tabs
-   * @default false for mobile, true for desktop
-   */
-  hideTabs: PropTypes.bool,
   ignoreInvalidInputs: PropTypes.bool,
   /**
    * Props to pass to keyboard input adornment.
