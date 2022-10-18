@@ -58,6 +58,7 @@ export interface PickersComponentNameToClassKey {
   MuiPickersFadeTransitionGroup: PickersFadeTransitionGroupClassKey;
   MuiPickersMonth: PickersMonthClassKey;
   MuiPickersPopper: PickersPopperClassKey;
+  MuiPickersSlideTransition: PickersSlideTransitionClassKey;
   MuiPickerStaticWrapper: PickerStaticWrapperClassKey;
   MuiPickersToolbar: PickersToolbarClassKey;
   MuiPickersToolbarButton: PickersToolbarButtonClassKey;
@@ -67,7 +68,6 @@ export interface PickersComponentNameToClassKey {
   MuiTimePicker: never;
   MuiTimePickerToolbar: TimePickerToolbarClassKey;
   MuiYearCalendar: YearCalendarClassKey;
-  PrivatePickersSlideTransition: PickersSlideTransitionClassKey;
   PrivatePickersToolbarText: PickersToolbarTextClassKey;
   PrivatePickersYear: PickersYearClassKey;
 }

@@ -20,12 +20,10 @@ export interface PickersSlideTransitionClasses {
 export type PickersSlideTransitionClassKey = keyof PickersSlideTransitionClasses;
 
 export const getPickersSlideTransitionUtilityClass = (slot: string) =>
-  // TODO v6: Rename 'PrivatePickersSlideTransition' to 'MuiPickersSlideTransition' to follow convention
-  generateUtilityClass('PrivatePickersSlideTransition', slot);
+  generateUtilityClass('MuiPickersSlideTransition', slot);
 
 export const pickersSlideTransitionClasses: PickersSlideTransitionClasses = generateUtilityClasses(
-  // TODO v6: Rename 'PrivatePickersSlideTransition' to 'MuiPickersSlideTransition' to follow convention
-  'PrivatePickersSlideTransition',
+  'MuiPickersSlideTransition',
   [
     'root',
     'slideEnter-left',

@@ -3,6 +3,7 @@ import {
   dateCalendarClasses,
   dayPickerClasses,
   pickersCalendarHeaderClasses,
+  pickersSlideTransitionClasses,
 } from '../DateCalendar';
 import { dayCalendarSkeletonClasses } from '../DayCalendarSkeleton';
 import {
@@ -319,6 +320,23 @@ createTheme({
         root: {
           backgroundColor: 'red',
           [`.${pickersPopperClasses.paper}`]: {
+            backgroundColor: 'green',
+          },
+        },
+      },
+    },
+    MuiPickersSlideTransition: {
+      defaultProps: {
+        classes: {
+          slideExit: 'exit',
+          // @ts-expect-error invalid MuiPickersSlideTransition prop
+          someRandomProp: true,
+        },
+      },
+      styleOverrides: {
+        root: {
+          backgroundColor: 'red',
+          [`.${pickersSlideTransitionClasses.slideExit}`]: {
             backgroundColor: 'green',
           },
         },
