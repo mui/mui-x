@@ -44,7 +44,6 @@ const formatTokenMap: MuiFormatTokenMap = {
 export class AdapterLuxon extends BaseAdapterLuxon implements MuiPickerFieldAdapter<DateTime> {
   public formatTokenMap = formatTokenMap;
 
-  // eslint-disable-next-line class-methods-use-this
   public expandFormat = (format: string) => {
     if (!DateTime.expandFormat) {
       throw Error(
