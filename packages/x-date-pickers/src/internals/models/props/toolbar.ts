@@ -31,5 +31,9 @@ export interface ExportedBaseToolbarProps {
    * Toolbar date format.
    */
   toolbarFormat?: string;
+  /**
+   * Toolbar value placeholder—it is displayed when the value is empty.
+   * @default "––"
+   */
   toolbarPlaceholder?: React.ReactNode;
 }
