@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { PickersActionBar, PickersActionBarProps } from '@mui/x-date-pickers/PickersActionBar';
 import { CalendarOrClockPickerView } from '../models/views';
-import { BaseToolbarProps2, ExportedBaseToolbarProps } from '../models/props/baseToolbarProps';
+import { BaseToolbarProps2, ExportedBaseToolbarProps } from '../models/props/toolbar';
+import { BaseTabsProps, ExportedBaseTabsProps } from '../models/props/tabs';
 import { UsePickerLayoutResponse } from '../hooks/usePicker/usePickerLayout';
 
 export interface PickerViewLayoutSlotsComponent<TValue> {
@@ -13,7 +14,7 @@ export interface PickerViewLayoutSlotsComponent<TValue> {
   /**
    * Tabs enabling toggling between views.
    */
-  Tabs?: React.ElementType;
+  Tabs?: React.ElementType<BaseTabsProps>;
   /**
    * Custom component for the toolbar.
    * It is placed above the picker views.
@@ -29,7 +30,7 @@ export interface PickerViewLayoutSlotsComponentsProps {
   /**
    * Props passed down to the tabs component.
    */
-  tabs?: Record<string, any>;
+  tabs?: ExportedBaseTabsProps;
   /**
    * Props passed down to the toolbar component.
    */
@@ -110,7 +111,11 @@ export const PickerViewLayout = <TValue, TView extends CalendarOrClockPickerView
         />
       )}
       {shouldRenderTabs && !!Tabs && (
-        <Tabs view={view} onViewChange={onViewChange} {...componentsProps?.tabs} />
+        <Tabs
+          view={view}
+          onViewChange={onViewChange as (view: CalendarOrClockPickerView) => void}
+          {...componentsProps?.tabs}
+        />
       )}
       {children}
       {shouldRenderActionBar && (

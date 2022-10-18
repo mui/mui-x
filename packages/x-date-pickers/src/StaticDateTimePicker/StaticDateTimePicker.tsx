@@ -17,7 +17,6 @@ import { useDateTimeValidation } from '../internals/hooks/validation/useDateTime
 import { usePickerState } from '../internals/hooks/usePickerState';
 import { StaticPickerProps } from '../internals/models/props/staticPickerProps';
 import { DateInputSlotsComponent } from '../internals/components/PureDateInput';
-import { DateTimePickerTabs } from '../DateTimePicker/DateTimePickerTabs';
 
 export interface StaticDateTimePickerSlotsComponent<TDate>
   extends BaseDateTimePickerSlotsComponent<TDate>,
@@ -71,11 +70,10 @@ export const StaticDateTimePicker = React.forwardRef(function StaticDateTimePick
     displayStaticWrapperAs,
     onChange,
     value,
-    components: providedComponents,
-    componentsProps,
+    components,
+    componentsProps: providedComponentsProps,
     localeText,
     sx,
-    hideTabs = displayStaticWrapperAs === 'desktop',
     className,
     ...other
   } = props;
@@ -86,10 +84,14 @@ export const StaticDateTimePicker = React.forwardRef(function StaticDateTimePick
   );
 
   const validationError = useDateTimeValidation(props) !== null;
-  const components = React.useMemo<StaticDateTimePickerProps<TDate>['components']>(
-    () => ({ Tabs: DateTimePickerTabs, ...providedComponents }),
-    [providedComponents],
-  );
+
+  const componentsProps: StaticDateTimePickerProps<TDate>['componentsProps'] = {
+    ...providedComponentsProps,
+    tabs: {
+      hidden: displayStaticWrapperAs === 'desktop',
+      ...providedComponentsProps?.tabs,
+    },
+  };
 
   const DateInputProps = {
     ...inputProps,
@@ -115,7 +117,6 @@ export const StaticDateTimePicker = React.forwardRef(function StaticDateTimePick
         DateInputProps={DateInputProps}
         components={components}
         componentsProps={componentsProps}
-        hideTabs={hideTabs}
         {...other}
       />
     </PickerStaticWrapper>
@@ -232,11 +233,6 @@ StaticDateTimePicker.propTypes = {
    * @default (date, utils) => `Choose date, selected date is ${utils.format(date, 'fullDate')}`
    */
   getOpenDialogAriaText: PropTypes.func,
-  /**
-   * Toggles visibility of date time switching tabs
-   * @default false for mobile, true for desktop
-   */
-  hideTabs: PropTypes.bool,
   ignoreInvalidInputs: PropTypes.bool,
   /**
    * Props to pass to keyboard input adornment.

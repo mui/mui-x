@@ -21,7 +21,6 @@
     "disablePast": "If <code>true</code> disable values after the current time.",
     "fixedWeekNumber": "Calendar will show more weeks in order to match this value. Put it to 6 for having fix number of week in Gregorian calendars",
     "getOpenDialogAriaText": "Get aria-label text for control that opens picker dialog. Aria-label text must include selected date. @DateIOType<br><br><strong>Signature:</strong><br><code>function(date: TDate | null, utils: MuiPickersAdapter&lt;TDate&gt;) =&gt; string</code><br><em>date:</em> The date from which we want to add an aria-text.<br><em>utils:</em> The utils to manipulate the date.<br> <em>returns</em> (string): The aria-text to render inside the dialog.",
-    "hideTabs": "Toggles visibility of date time switching tabs",
     "InputAdornmentProps": "Props to pass to keyboard input adornment.",
     "inputFormat": "Format string.",
     "inputRef": "Pass a ref to the <code>input</code> element.",

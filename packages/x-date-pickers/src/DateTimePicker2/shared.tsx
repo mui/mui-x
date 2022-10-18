@@ -27,7 +27,10 @@ import { BasePickerProps2 } from '../internals/models/props/basePickerProps';
 import { applyDefaultDate } from '../internals/utils/date-utils';
 import { PickerViewsRendererProps } from '../internals/hooks/usePicker/usePickerViews';
 import { ExportedUsePickerProps } from '../internals/hooks/usePicker';
-import { DateTimePickerTabsProps } from '../DateTimePicker/DateTimePickerTabs';
+import {
+  DateTimePickerTabsProps,
+  ExportedDateTimePickerTabsProps,
+} from '../DateTimePicker/DateTimePickerTabs';
 import {
   BaseDateValidationProps,
   BaseTimeValidationProps,
@@ -36,7 +39,7 @@ import { LocalizedComponent, PickersInputLocaleText } from '../locales/utils/pic
 import {
   DateTimePickerToolbar,
   DateTimePickerToolbarProps,
-  ExportedDateTimeToolbarProps,
+  ExportedDateTimePickerToolbarProps,
 } from '../DateTimePicker/DateTimePickerToolbar';
 
 export interface BaseDateTimePicker2SlotsComponent<TDate>
@@ -46,7 +49,7 @@ export interface BaseDateTimePicker2SlotsComponent<TDate>
    * Tabs enabling toggling between date and time pickers.
    * @default DateTimePickerTabs
    */
-  Tabs?: React.ElementType<unknown>;
+  Tabs?: React.ElementType<DateTimePickerTabsProps>;
   /**
    * Custom component for the toolbar rendered above the views.
    * @default DateTimePickerToolbar
@@ -60,8 +63,11 @@ export interface BaseDateTimePicker2SlotsComponentsProps<TDate>
   /**
    * Props passed down to the tabs component.
    */
-  tabs?: Omit<DateTimePickerTabsProps, 'onViewChange' | 'view'>;
-  toolbar?: ExportedDateTimeToolbarProps;
+  tabs?: ExportedDateTimePickerTabsProps;
+  /**
+   * Props passed down to the toolbar component.
+   */
+  toolbar?: ExportedDateTimePickerToolbarProps;
 }
 
 export interface BaseDateTimePicker2Props<TDate>

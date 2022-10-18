@@ -115,7 +115,7 @@ export { usePreviousMonthDisabled, useNextMonthDisabled } from './hooks/date-hel
 export type { BaseFieldProps } from './models/fields';
 export type { BasePickerProps, BasePickerProps2 } from './models/props/basePickerProps';
 export type { StaticPickerProps } from './models/props/staticPickerProps';
-export type { BaseToolbarProps, ExportedBaseToolbarProps } from './models/props/baseToolbarProps';
+export type { BaseToolbarProps, ExportedBaseToolbarProps } from './models/props/toolbar';
 export type { MuiPickersAdapter } from './models/muiPickersAdapter';
 export type { DefaultizedProps, MakeOptional } from './models/helpers';
 export type { CalendarOrClockPickerView, CalendarPickerView } from './models/views';

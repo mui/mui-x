@@ -6,7 +6,7 @@ import IconButton from '@mui/material/IconButton';
 import { styled, useThemeProps } from '@mui/material/styles';
 import { unstable_composeClasses as composeClasses } from '@mui/material';
 import { Pen, Calendar, Clock } from './icons';
-import { BaseToolbarProps } from '../models/props/baseToolbarProps';
+import { BaseToolbarProps } from '../models/props/toolbar';
 import { useLocaleText } from '../hooks/useUtils';
 import {
   getPickersToolbarUtilityClass,
