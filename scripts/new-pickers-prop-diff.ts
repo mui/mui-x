@@ -19,6 +19,9 @@ const EXPECTED_DIFF: { [propKey: string]: string | ((pickerName: string) => stri
 
     getOpenDialogAriaText: 'replaced by each picker translation key',
 
+    dateRangeIcon: 'replaces by `componentsProps.tabs.dateRangeIcon`',
+    timeIcon: 'replaces by `componentsProps.tabs.timeIcon`',
+
     children: 'never used even in v5',
     inputRef: (pickerName) => (pickerName.includes('Range') ? 'never used even in v5' : undefined),
     label: (pickerName) => (pickerName.includes('Range') ? 'never used even in v5' : undefined),
