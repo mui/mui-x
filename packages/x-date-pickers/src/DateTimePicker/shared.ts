@@ -22,8 +22,13 @@ import {
 import {
   DateTimePickerToolbar,
   DateTimePickerToolbarProps,
-  ExportedDateTimeToolbarProps,
+  ExportedDateTimePickerToolbarProps,
 } from './DateTimePickerToolbar';
+import {
+  DateTimePickerTabs,
+  DateTimePickerTabsProps,
+  ExportedDateTimePickerTabsProps,
+} from './DateTimePickerTabs';
 import { LocalizedComponent, PickersInputLocaleText } from '../locales/utils/pickersLocaleTextApi';
 
 export interface BaseDateTimePickerSlotsComponent<TDate>
@@ -33,11 +38,17 @@ export interface BaseDateTimePickerSlotsComponent<TDate>
    * @default DateTimePickerToolbar
    */
   Toolbar?: React.JSXElementConstructor<DateTimePickerToolbarProps<TDate>>;
+  /**
+   * Tabs enabling toggling between date and time pickers.
+   * @default DateTimePickerTabs
+   */
+  Tabs?: React.JSXElementConstructor<DateTimePickerTabsProps>;
 }
 
 export interface BaseDateTimePickerSlotsComponentsProps<TDate>
   extends CalendarOrClockPickerSlotsComponentsProps<TDate> {
-  toolbar?: ExportedDateTimeToolbarProps;
+  toolbar?: ExportedDateTimePickerToolbarProps;
+  tabs?: ExportedDateTimePickerTabsProps;
 }
 
 export interface BaseDateTimePickerProps<TDate>
@@ -51,11 +62,6 @@ export interface BaseDateTimePickerProps<TDate>
    * @default `utils.is12HourCycleInCurrentLocale()`
    */
   ampm?: boolean;
-  /**
-   * Toggles visibility of date time switching tabs
-   * @default false for mobile, true for desktop
-   */
-  hideTabs?: boolean;
   /**
    * Date tab icon.
    */
@@ -170,6 +176,7 @@ export function useDateTimePickerDefaultizedProps<
     localeText,
     components: {
       Toolbar: DateTimePickerToolbar,
+      Tabs: DateTimePickerTabs,
       ...themeProps.components,
     },
     componentsProps: {

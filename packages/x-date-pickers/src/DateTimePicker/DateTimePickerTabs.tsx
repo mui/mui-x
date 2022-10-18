@@ -15,6 +15,7 @@ import {
   DateTimePickerTabsClasses,
   getDateTimePickerTabsUtilityClass,
 } from './dateTimePickerTabsClasses';
+import { BaseTabsProps, ExportedBaseTabsProps } from '../internals/models/props/tabs';
 
 type TabValue = 'date' | 'time';
 
@@ -34,26 +35,25 @@ const tabToView = (tab: TabValue): CalendarOrClockPickerView => {
   return 'hours';
 };
 
-export interface DateTimePickerTabsProps {
+export interface ExportedDateTimePickerTabsProps extends ExportedBaseTabsProps {
+  /**
+   * Toggles visibility of the tabs allowing view switching.
+   * @default `window.innerHeight < 667` for `DesktopDateTimePicker` and `MobileDateTimePicker`, `displayStaticWrapperAs === 'desktop'` for `StaticDateTimePicker`
+   */
+  hidden?: boolean;
   /**
    * Date tab icon.
    * @default DateRange
    */
   dateRangeIcon?: React.ReactNode;
   /**
-   * Callback called when tab is clicked
-   * @param {CalendarOrClockPickerView} view Picker view that was clicked
-   */
-  onChange: (view: CalendarOrClockPickerView) => void;
-  /**
    * Time tab icon.
    * @default Time
    */
   timeIcon?: React.ReactNode;
-  /**
-   * Open picker view
-   */
-  view: CalendarOrClockPickerView;
+}
+
+export interface DateTimePickerTabsProps extends ExportedDateTimePickerTabsProps, BaseTabsProps {
   /**
    * Override or extend the styles applied to the component.
    */
@@ -89,7 +89,13 @@ const DateTimePickerTabsRoot = styled(Tabs, {
 
 const DateTimePickerTabs = function DateTimePickerTabs(inProps: DateTimePickerTabsProps) {
   const props = useThemeProps({ props: inProps, name: 'MuiDateTimePickerTabs' });
-  const { dateRangeIcon = <DateRange />, onChange, timeIcon = <Time />, view } = props;
+  const {
+    dateRangeIcon = <DateRange />,
+    onViewChange,
+    timeIcon = <Time />,
+    view,
+    hidden = typeof window === 'undefined' || window.innerHeight < 667,
+  } = props;
 
   const localeText = useLocaleText();
   const wrapperVariant = React.useContext(WrapperVariantContext);
@@ -97,8 +103,12 @@ const DateTimePickerTabs = function DateTimePickerTabs(inProps: DateTimePickerTa
   const classes = useUtilityClasses(ownerState);
 
   const handleChange = (event: React.SyntheticEvent, value: TabValue) => {
-    onChange(tabToView(value));
+    onViewChange(tabToView(value));
   };
+
+  if (hidden) {
+    return null;
+  }
 
   return (
     <DateTimePickerTabsRoot
@@ -137,17 +147,22 @@ DateTimePickerTabs.propTypes = {
    */
   dateRangeIcon: PropTypes.node,
   /**
-   * Callback called when tab is clicked
-   * @param {CalendarOrClockPickerView} view Picker view that was clicked
+   * Toggles visibility of the tabs allowing view switching.
+   * @default `window.innerHeight < 667` for `DesktopDateTimePicker` and `MobileDateTimePicker`, `displayStaticWrapperAs === 'desktop'` for `StaticDateTimePicker`
    */
-  onChange: PropTypes.func.isRequired,
+  hidden: PropTypes.bool,
+  /**
+   * Callback called when a tab is clicked
+   * @param {CalendarOrClockPickerView} view The view to open
+   */
+  onViewChange: PropTypes.func.isRequired,
   /**
    * Time tab icon.
    * @default Time
    */
   timeIcon: PropTypes.node,
   /**
-   * Open picker view
+   * Currently visible picker view.
    */
   view: PropTypes.oneOf(['day', 'hours', 'minutes', 'month', 'seconds', 'year']).isRequired,
 } as any;
