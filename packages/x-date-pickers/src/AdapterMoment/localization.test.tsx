@@ -32,9 +32,8 @@ describe('<AdapterMoment />', () => {
         adapterName: 'moment',
         locale: localeObject,
       });
-      it('should have correct placeholder', () => {
-        // eslint-disable-next-line global-require
 
+      it('should have correct placeholder', () => {
         render(
           <DateTimePicker
             renderInput={(params) => <TextField {...params} />}
