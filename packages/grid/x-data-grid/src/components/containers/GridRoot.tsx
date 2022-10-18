@@ -16,10 +16,8 @@ import { useGridSelector } from '../../hooks/utils/useGridSelector';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
-import {
-  gridDensityHeaderGroupingMaxDepthSelector,
-  gridDensityValueSelector,
-} from '../../hooks/features/density/densitySelector';
+import { gridDensityValueSelector } from '../../hooks/features/density/densitySelector';
+import { gridColumnGroupsHeaderMaxDepthSelector } from '../../hooks/features/columnGrouping/gridColumnGroupsSelector';
 import {
   gridPinnedRowsCountSelector,
   gridRowCountSelector,
@@ -57,7 +55,7 @@ const GridRoot = React.forwardRef<HTMLDivElement, GridRootProps>(function GridRo
   const visibleColumns = useGridSelector(apiRef, gridVisibleColumnDefinitionsSelector);
   const totalRowCount = useGridSelector(apiRef, gridRowCountSelector);
   const densityValue = useGridSelector(apiRef, gridDensityValueSelector);
-  const headerGroupingMaxDepth = useGridSelector(apiRef, gridDensityHeaderGroupingMaxDepthSelector);
+  const headerGroupingMaxDepth = useGridSelector(apiRef, gridColumnGroupsHeaderMaxDepthSelector);
   const rootContainerRef: GridRootContainerRef = React.useRef<HTMLDivElement>(null);
   const handleRef = useForkRef(rootContainerRef, ref);
   const pinnedRowsCount = useGridSelector(apiRef, gridPinnedRowsCountSelector);
