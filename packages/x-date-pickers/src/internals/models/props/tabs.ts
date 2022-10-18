@@ -2,7 +2,7 @@ import { CalendarOrClockPickerView } from '../views';
 
 export interface BaseTabsProps {
   /**
-   * View currently visible in the picker.
+   * Currently visible picker view..
    */
   view: CalendarOrClockPickerView;
   /**

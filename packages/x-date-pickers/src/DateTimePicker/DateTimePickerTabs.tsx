@@ -37,7 +37,7 @@ const tabToView = (tab: TabValue): CalendarOrClockPickerView => {
 
 export interface ExportedDateTimePickerTabsProps extends ExportedBaseTabsProps {
   /**
-   * Toggles visibility of the view switching tabs.
+   * Toggles visibility of the tabs allowing view switching.
    * @default `window.innerHeight < 667` for `DesktopDateTimePicker` and `MobileDateTimePicker`, `displayStaticWrapperAs === 'desktop'` for `StaticDateTimePicker`
    */
   hidden?: boolean;
@@ -147,7 +147,7 @@ DateTimePickerTabs.propTypes = {
    */
   dateRangeIcon: PropTypes.node,
   /**
-   * Toggles visibility of the view switching tabs.
+   * Toggles visibility of the tabs allowing view switching.
    * @default `window.innerHeight < 667` for `DesktopDateTimePicker` and `MobileDateTimePicker`, `displayStaticWrapperAs === 'desktop'` for `StaticDateTimePicker`
    */
   hidden: PropTypes.bool,
@@ -162,7 +162,7 @@ DateTimePickerTabs.propTypes = {
    */
   timeIcon: PropTypes.node,
   /**
-   * View currently visible in the picker.
+   * Currently visible picker view..
    */
   view: PropTypes.oneOf(['day', 'hours', 'minutes', 'month', 'seconds', 'year']).isRequired,
 } as any;
