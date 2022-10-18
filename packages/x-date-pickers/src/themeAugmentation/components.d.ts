@@ -116,6 +116,11 @@ export interface PickerComponents<Theme = unknown> {
     styleOverrides?: ComponentsOverrides<Theme>['MuiPickersFadeTransitionGroup'];
     variants?: ComponentsVariants['MuiPickersFadeTransitionGroup'];
   };
+  MuiPickersMonth?: {
+    defaultProps?: ComponentsProps['MuiPickersMonth'];
+    styleOverrides?: ComponentsOverrides<Theme>['MuiPickersMonth'];
+    variants?: ComponentsVariants['MuiPickersMonth'];
+  };
   MuiPickersPopper?: {
     defaultProps?: ComponentsProps['MuiPickersPopper'];
     styleOverrides?: ComponentsOverrides<Theme>['MuiPickersPopper'];
@@ -160,12 +165,6 @@ export interface PickerComponents<Theme = unknown> {
     defaultProps?: ComponentsProps['MuiYearCalendar'];
     styleOverrides?: ComponentsOverrides<Theme>['MuiYearCalendar'];
     variants?: ComponentsVariants['MuiYearCalendar'];
-  };
-  // TODO v6: Rename 'PrivatePickersMonth' to 'MuiPickersMonth' to follow convention
-  PrivatePickersMonth?: {
-    defaultProps?: ComponentsProps['PrivatePickersMonth'];
-    styleOverrides?: ComponentsOverrides<Theme>['PrivatePickersMonth'];
-    variants?: ComponentsVariants['PrivatePickersMonth'];
   };
   // TODO v6: Rename 'PrivatePickersSlideTransition' to 'MuiPickersSlideTransition' to follow convention
   PrivatePickersSlideTransition?: {

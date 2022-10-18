@@ -18,12 +18,10 @@ export interface PickersMonthClasses {
 export type PickersMonthClassKey = keyof PickersMonthClasses;
 
 export function getPickersMonthUtilityClass(slot: string) {
-  // TODO v6 Rename 'PrivatePickersMonth' to 'MuiPickersMonth' to follow convention
-  return generateUtilityClass('PrivatePickersMonth', slot);
+  return generateUtilityClass('MuiPickersMonth', slot);
 }
 
 export const pickersMonthClasses = generateUtilityClasses<PickersMonthClassKey>(
-  // TODO v6 Rename 'PrivatePickersMonth' to 'MuiPickersMonth' to follow convention
-  'PrivatePickersMonth',
+  'MuiPickersMonth',
   ['root', 'modeMobile', 'modeDesktop', 'monthButton', 'disabled', 'selected'],
 );

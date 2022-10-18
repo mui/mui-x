@@ -22,6 +22,7 @@ import {
 } from '../internals';
 import { pickersDayClasses } from '../PickersDay';
 import { timePickerToolbarClasses } from '../TimePicker';
+import { pickersMonthClasses } from '../MonthCalendar';
 
 createTheme({
   components: {
@@ -286,6 +287,23 @@ createTheme({
         root: {
           backgroundColor: 'red',
           [`.${pickersDayClasses.today}`]: {
+            backgroundColor: 'green',
+          },
+        },
+      },
+    },
+    MuiPickersMonth: {
+      defaultProps: {
+        classes: {
+          selected: 'test',
+          // @ts-expect-error invalid MuiPickersMonth prop
+          someRandomProp: true,
+        },
+      },
+      styleOverrides: {
+        root: {
+          backgroundColor: 'red',
+          [`.${pickersMonthClasses.monthButton}`]: {
             backgroundColor: 'green',
           },
         },

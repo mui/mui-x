@@ -12,7 +12,7 @@ import { DesktopTimePickerProps } from '../DesktopTimePicker';
 import { MobileDatePickerProps } from '../MobileDatePicker';
 import { MobileDateTimePickerProps } from '../MobileDateTimePicker';
 import { MobileTimePickerProps } from '../MobileTimePicker';
-import { MonthCalendarProps } from '../MonthCalendar';
+import { ExportedPickersMonthProps, MonthCalendarProps } from '../MonthCalendar';
 import { PickersDayProps } from '../PickersDay';
 import { StaticDatePickerProps } from '../StaticDatePicker';
 import { StaticDateTimePickerProps } from '../StaticDateTimePicker';
@@ -61,6 +61,7 @@ export interface PickersComponentsPropsList {
   MuiPickersCalendarHeader: ExportedCalendarHeaderProps<unknown>;
   MuiPickersDay: PickersDayProps<unknown>;
   MuiPickersFadeTransitionGroup: PickersFadeTransitionGroupProps;
+  MuiPickersMonth: ExportedPickersMonthProps;
   MuiPickersPopper: PickerPopperProps;
   MuiPickerStaticWrapper: PickerStaticWrapperProps<unknown>;
   MuiPickersToolbar: PickersToolbarProps<unknown>;
@@ -71,8 +72,6 @@ export interface PickersComponentsPropsList {
   MuiTimePicker: TimePickerProps<unknown>;
   MuiTimePickerToolbar: TimePickerToolbarProps<unknown>;
   MuiYearCalendar: YearCalendarProps<unknown>;
-  // TODO v6: add `PrivatePickersMonth` once component is renamed to `MuiPickersMonth`
-  PrivatePickersMonth: never;
   // TODO v6: add `PrivatePickersSlideTransition` once component is renamed to `MuiPickersSlideTransition`
   PrivatePickersSlideTransition: never;
   // TODO v6: add `PickersToolbarTextProps` once component is renamed to `MuiPickersToolbarText`
