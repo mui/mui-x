@@ -43,10 +43,10 @@ const jaJPPickers: Partial<PickersLocaleText<any>> = {
   todayButtonLabel: '今日',
 
   // Toolbar titles
-  datePickerDefaultToolbarTitle: '日付を選択',
-  dateTimePickerDefaultToolbarTitle: '日時を選択',
-  timePickerDefaultToolbarTitle: '時間を選択',
-  dateRangePickerDefaultToolbarTitle: '日付の範囲を選択',
+  datePickerToolbarTitle: '日付を選択',
+  dateTimePickerToolbarTitle: '日時を選択',
+  timePickerToolbarTitle: '時間を選択',
+  dateRangePickerToolbarTitle: '日付の範囲を選択',
 
   // Clock labels
   clockLabelText: (view, time, adapter) =>
