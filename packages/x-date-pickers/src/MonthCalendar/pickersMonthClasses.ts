@@ -21,7 +21,11 @@ export function getPickersMonthUtilityClass(slot: string) {
   return generateUtilityClass('MuiPickersMonth', slot);
 }
 
-export const pickersMonthClasses = generateUtilityClasses<PickersMonthClassKey>(
-  'MuiPickersMonth',
-  ['root', 'modeMobile', 'modeDesktop', 'monthButton', 'disabled', 'selected'],
-);
+export const pickersMonthClasses = generateUtilityClasses<PickersMonthClassKey>('MuiPickersMonth', [
+  'root',
+  'modeMobile',
+  'modeDesktop',
+  'monthButton',
+  'disabled',
+  'selected',
+]);
