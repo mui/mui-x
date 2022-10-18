@@ -21,7 +21,7 @@ const ContextListener = ({
   return null;
 };
 
-describe('component <LocalizationProvider />', () => {
+describe('<LocalizationProvider />', () => {
   const { render } = createRenderer();
 
   it('should respect localeText from the theme', () => {

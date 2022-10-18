@@ -361,8 +361,8 @@ describe('<DesktopDateRangePicker />', () => {
   });
 
   // TODO: Remove on new pickers, has been moved to `DateRangeCalendar` tests
-  describe('Component slots', () => {
-    it('slot: `Day` - renders custom day', () => {
+  describe('Component slots: Day', () => {
+    it('should render custom day component', () => {
       render(
         <WrappedDesktopDateRangePicker
           components={{
@@ -385,32 +385,6 @@ describe('<DesktopDateRangePicker />', () => {
     openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'start' });
 
     expect(screen.getAllByMuiTest('pickers-calendar')).to.have.length(3);
-  });
-
-  it('componentsProps `actionBar` - allows to renders clear button in Desktop mode', () => {
-    function DesktopDateRangePickerClearable() {
-      return (
-        <WrappedDesktopDateRangePicker
-          initialValue={[
-            adapterToUse.date(new Date(2018, 0, 1)),
-            adapterToUse.date(new Date(2018, 0, 31)),
-          ]}
-          componentsProps={{ actionBar: { actions: ['clear'] } }}
-        />
-      );
-    }
-    render(<DesktopDateRangePickerClearable />);
-
-    openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'start' });
-
-    expect(screen.getAllByRole('textbox')[0]).to.have.value('01/01/2018');
-    expect(screen.getAllByRole('textbox')[1]).to.have.value('01/31/2018');
-
-    fireEvent.click(screen.getByText('Clear'));
-
-    expect(screen.getAllByRole('textbox')[0]).to.have.value('');
-    expect(screen.getAllByRole('textbox')[1]).to.have.value('');
-    expect(screen.queryByRole('dialog')).to.equal(null);
   });
 
   // TODO: Remove on new pickers, has been moved to `DateRangeCalendar` tests
@@ -465,7 +439,35 @@ describe('<DesktopDateRangePicker />', () => {
     });
   });
 
-  describe('componentsProps: popper', () => {
+  describe('Component slots: ActionBar', () => {
+    it('should render custom actions', () => {
+      function DesktopDateRangePickerClearable() {
+        return (
+          <WrappedDesktopDateRangePicker
+            initialValue={[
+              adapterToUse.date(new Date(2018, 0, 1)),
+              adapterToUse.date(new Date(2018, 0, 31)),
+            ]}
+            componentsProps={{ actionBar: { actions: ['clear'] } }}
+          />
+        );
+      }
+      render(<DesktopDateRangePickerClearable />);
+
+      openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'start' });
+
+      expect(screen.getAllByRole('textbox')[0]).to.have.value('01/01/2018');
+      expect(screen.getAllByRole('textbox')[1]).to.have.value('01/31/2018');
+
+      fireEvent.click(screen.getByText('Clear'));
+
+      expect(screen.getAllByRole('textbox')[0]).to.have.value('');
+      expect(screen.getAllByRole('textbox')[1]).to.have.value('');
+      expect(screen.queryByRole('dialog')).to.equal(null);
+    });
+  });
+
+  describe('Component slots: Popper', () => {
     it('should forward onClick and onTouchStart', () => {
       const handleClick = spy();
       const handleTouchStart = spy();
