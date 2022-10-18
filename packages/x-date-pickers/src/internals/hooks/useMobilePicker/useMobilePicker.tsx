@@ -10,7 +10,6 @@ import { useUtils } from '../useUtils';
 import { LocalizationProvider } from '../../../LocalizationProvider';
 import { WrapperVariantContext } from '../../components/wrappers/WrapperVariantContext';
 import { BaseFieldProps } from '../../models/fields';
-import { PickerViewContainer } from '../../components/PickerViewContainer';
 import { PickerViewLayout } from '../../components/PickerViewLayout';
 
 /**
@@ -37,7 +36,6 @@ export const useMobilePicker = <TDate, TView extends CalendarOrClockPickerView>(
     renderViews,
     actions,
     open,
-    isLandscape,
   } = usePicker({
     props,
     valueManager,
@@ -108,15 +106,13 @@ export const useMobilePicker = <TDate, TView extends CalendarOrClockPickerView>(
           components={components}
           componentsProps={componentsProps}
         >
-          <PickerViewContainer isLandscape={isLandscape}>
-            <PickerViewLayout
-              {...layoutProps}
-              components={components}
-              componentsProps={componentsProps}
-            >
-              {renderViews()}
-            </PickerViewLayout>
-          </PickerViewContainer>
+          <PickerViewLayout
+            {...layoutProps}
+            components={components}
+            componentsProps={componentsProps}
+          >
+            {renderViews()}
+          </PickerViewLayout>
         </PickersModalDialog>
       </WrapperVariantContext.Provider>
     </LocalizationProvider>

@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { PickersActionBar, PickersActionBarProps } from '@mui/x-date-pickers/PickersActionBar';
+import { styled } from '@mui/material/styles';
+import { PickersActionBar, PickersActionBarProps } from '../../PickersActionBar';
 import { CalendarOrClockPickerView } from '../models/views';
 import { BaseToolbarProps2, ExportedBaseToolbarProps } from '../models/props/toolbar';
 import { BaseTabsProps, ExportedBaseTabsProps } from '../models/props/tabs';
@@ -52,6 +53,16 @@ export interface PickerViewLayoutProps<TValue, TView extends CalendarOrClockPick
   componentsProps?: PickerViewLayoutSlotsComponentsProps;
 }
 
+export const PickerViewLayoutContainer = styled('div')<{ ownerState: { isLandscape: boolean } }>(
+  ({ ownerState }) => ({
+    display: 'flex',
+    flexDirection: 'column',
+    ...(ownerState.isLandscape && {
+      flexDirection: 'row',
+    }),
+  }),
+);
+
 // For now the `ActionBar` is rendered on the variant wrapper.
 const shouldRenderActionBar = false;
 
@@ -93,7 +104,7 @@ export const PickerViewLayout = <TValue, TView extends CalendarOrClockPickerView
   }
 
   return (
-    <React.Fragment>
+    <PickerViewLayoutContainer ownerState={{ isLandscape }}>
       {shouldRenderToolbar && !!Toolbar && (
         <Toolbar
           {...componentsProps?.toolbar}
@@ -125,6 +136,6 @@ export const PickerViewLayout = <TValue, TView extends CalendarOrClockPickerView
           {...componentsProps?.actionBar}
         />
       )}
-    </React.Fragment>
+    </PickerViewLayoutContainer>
   );
 };

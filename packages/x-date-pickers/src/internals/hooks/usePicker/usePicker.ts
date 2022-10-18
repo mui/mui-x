@@ -52,7 +52,6 @@ export const usePicker = <
     shouldRestoreFocus: pickerViewsResponse.shouldRestoreFocus,
 
     // Picker layout
-    isLandscape: pickerLayoutResponse.isLandscape,
     layoutProps: pickerLayoutResponse.layoutProps,
   };
 };

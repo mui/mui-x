@@ -11,7 +11,6 @@ import { usePicker } from '../usePicker';
 import { LocalizationProvider } from '../../../LocalizationProvider';
 import { WrapperVariantContext } from '../../components/wrappers/WrapperVariantContext';
 import { BaseFieldProps } from '../../models/fields';
-import { PickerViewContainer } from '../../components/PickerViewContainer';
 import { PickerViewLayout } from '../../components/PickerViewLayout';
 
 /**
@@ -48,7 +47,6 @@ export const useDesktopPicker = <TDate, TView extends CalendarOrClockPickerView>
     open,
     hasPopperView,
     shouldRestoreFocus,
-    isLandscape,
   } = usePicker({
     props,
     valueManager,
@@ -159,15 +157,13 @@ export const useDesktopPicker = <TDate, TView extends CalendarOrClockPickerView>
           componentsProps={componentsProps}
           shouldRestoreFocus={shouldRestoreFocus}
         >
-          <PickerViewContainer isLandscape={isLandscape}>
-            <PickerViewLayout
-              {...layoutProps}
-              components={components}
-              componentsProps={componentsProps}
-            >
-              {renderViews()}
-            </PickerViewLayout>
-          </PickerViewContainer>
+          <PickerViewLayout
+            {...layoutProps}
+            components={components}
+            componentsProps={componentsProps}
+          >
+            {renderViews()}
+          </PickerViewLayout>
         </PickersPopper>
       </WrapperVariantContext.Provider>
     </LocalizationProvider>
