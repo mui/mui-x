@@ -67,27 +67,6 @@ describe('<StaticDateTimePicker />', () => {
     expect(screen.getByRole('tab', { name: 'pick date' })).not.to.equal(null);
   });
 
-  it('should render custom `picker tabs` component', () => {
-    const CustomPickerTabs = (props: DateTimePickerTabsProps) => (
-      <React.Fragment>
-        <DateTimePickerTabs {...props} />
-        <span>test-custom-picker-tabs</span>
-      </React.Fragment>
-    );
-    render(
-      <StaticDateTimePicker
-        displayStaticWrapperAs="desktop"
-        onChange={() => {}}
-        value={adapterToUse.date(new Date(2021, 10, 20, 10, 1, 22))}
-        renderInput={(params) => <TextField {...params} />}
-        components={{ Tabs: CustomPickerTabs }}
-      />,
-    );
-
-    expect(screen.getByRole('tab', { name: 'pick date' })).not.to.equal(null);
-    expect(screen.getByText('test-custom-picker-tabs')).not.to.equal(null);
-  });
-
   describe('prop: displayStaticWrapperAs', () => {
     it('should not render toolbar and tabs by default', () => {
       render(
@@ -122,7 +101,6 @@ describe('<StaticDateTimePicker />', () => {
     it('should not render tabs when `hidden` is `true`', () => {
       render(
         <WrappedStaticDateTimePicker
-          displayStaticWrapperAs="desktop"
           componentsProps={{
             tabs: { hidden: true },
           }}
@@ -136,6 +114,7 @@ describe('<StaticDateTimePicker />', () => {
     it('should render tabs when `hidden` is `false`', () => {
       render(
         <WrappedStaticDateTimePicker
+          displayStaticWrapperAs="desktop"
           componentsProps={{
             tabs: { hidden: false },
           }}
@@ -144,6 +123,27 @@ describe('<StaticDateTimePicker />', () => {
 
       expect(screen.queryByRole('button', { name: /go to text input view/i })).to.equal(null);
       expect(screen.getByRole('tab', { name: 'pick date' })).not.to.equal(null);
+    });
+
+    it('should render custom component', () => {
+      const CustomPickerTabs = (props: DateTimePickerTabsProps) => (
+        <React.Fragment>
+          <DateTimePickerTabs {...props} />
+          <span>test-custom-picker-tabs</span>
+        </React.Fragment>
+      );
+      render(
+        <StaticDateTimePicker
+          displayStaticWrapperAs="mobile"
+          onChange={() => {}}
+          value={adapterToUse.date(new Date(2021, 10, 20, 10, 1, 22))}
+          renderInput={(params) => <TextField {...params} />}
+          components={{ Tabs: CustomPickerTabs }}
+        />,
+      );
+
+      expect(screen.getByRole('tab', { name: 'pick date' })).not.to.equal(null);
+      expect(screen.getByText('test-custom-picker-tabs')).not.to.equal(null);
     });
   });
 
