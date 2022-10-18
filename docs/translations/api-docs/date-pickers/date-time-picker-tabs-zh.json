@@ -6,7 +6,7 @@
     "hidden": "Toggles visibility of the tabs allowing view switching.",
     "onViewChange": "Callback called when a tab is clicked<br><br><strong>Signature:</strong><br><code>function(view: CalendarOrClockPickerView) =&gt; void</code><br><em>view:</em> The view to open",
     "timeIcon": "Time tab icon.",
-    "view": "Currently visible picker view.."
+    "view": "Currently visible picker view."
   },
   "classDescriptions": { "root": { "description": "Styles applied to the root element." } },
   "slotDescriptions": {}
