@@ -28,10 +28,10 @@ const DesktopTimePicker2 = React.forwardRef(function DesktopTimePicker2<TDate>(
   const localeText = useLocaleText();
 
   // Props with the default values common to all time pickers
-  const defaultizedProps = useTimePicker2DefaultizedProps<TDate, DesktopTimePicker2Props<TDate>>(
-    inProps,
-    'MuiDesktopTimePicker2',
-  );
+  const { className, sx, ...defaultizedProps } = useTimePicker2DefaultizedProps<
+    TDate,
+    DesktopTimePicker2Props<TDate>
+  >(inProps, 'MuiDesktopTimePicker2');
 
   // Props with the default values specific to the desktop variant
   const props = {
@@ -47,6 +47,8 @@ const DesktopTimePicker2 = React.forwardRef(function DesktopTimePicker2<TDate>(
       field: (ownerState: any) => ({
         ...resolveComponentProps(defaultizedProps.componentsProps?.field, ownerState),
         ref,
+        className,
+        sx,
         inputRef: defaultizedProps.inputRef,
         label: defaultizedProps.label,
       }),
@@ -254,6 +256,14 @@ DesktopTimePicker2.propTypes = {
    * @default `true` for mobile, `false` for desktop
    */
   showToolbar: PropTypes.bool,
+  /**
+   * The system prop that allows defining system overrides as well as additional CSS styles.
+   */
+  sx: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
+    PropTypes.func,
+    PropTypes.object,
+  ]),
   /**
    * The value of the picker.
    */

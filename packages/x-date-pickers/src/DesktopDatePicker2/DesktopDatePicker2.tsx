@@ -20,10 +20,10 @@ const DesktopDatePicker2 = React.forwardRef(function DesktopDatePicker2<TDate>(
   const localeText = useLocaleText();
 
   // Props with the default values common to all date pickers
-  const defaultizedProps = useDatePicker2DefaultizedProps<TDate, DesktopDatePicker2Props<TDate>>(
-    inProps,
-    'MuiDesktopDatePicker2',
-  );
+  const { className, sx, ...defaultizedProps } = useDatePicker2DefaultizedProps<
+    TDate,
+    DesktopDatePicker2Props<TDate>
+  >(inProps, 'MuiDesktopDatePicker2');
 
   // Props with the default values specific to the desktop variant
   const props = {
@@ -39,6 +39,8 @@ const DesktopDatePicker2 = React.forwardRef(function DesktopDatePicker2<TDate>(
       field: (ownerState: any) => ({
         ...resolveComponentProps(defaultizedProps.componentsProps?.field, ownerState),
         ref,
+        className,
+        sx,
         inputRef: defaultizedProps.inputRef,
         label: defaultizedProps.label,
       }),

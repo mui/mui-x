@@ -52,6 +52,12 @@
       "type": { "name": "bool" },
       "default": "`true` for mobile, `false` for desktop"
     },
+    "sx": {
+      "type": {
+        "name": "union",
+        "description": "Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object"
+      }
+    },
     "value": { "type": { "name": "any" } },
     "views": {
       "type": {
@@ -78,7 +84,6 @@
     "NextIconButton": { "default": "IconButton", "type": { "name": "elementType" } },
     "OpenPickerButton": { "default": "IconButton", "type": { "name": "elementType" } },
     "OpenPickerIcon": { "type": { "name": "elementType" } },
-    "PaperContent": { "default": "React.Fragment", "type": { "name": "elementType" } },
     "Popper": { "default": "Popper from @mui/material", "type": { "name": "elementType" } },
     "PreviousIconButton": { "default": "IconButton", "type": { "name": "elementType" } },
     "RightArrowIcon": { "default": "ArrowRight", "type": { "name": "elementType" } },

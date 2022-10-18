@@ -19,10 +19,10 @@ const MobileDatePicker2 = React.forwardRef(function MobileDatePicker2<TDate>(
   const localeText = useLocaleText();
 
   // Props with the default values common to all date pickers
-  const defaultizedProps = useDatePicker2DefaultizedProps<TDate, MobileDatePicker2Props<TDate>>(
-    inProps,
-    'MuiMobileDatePicker2',
-  );
+  const { className, sx, ...defaultizedProps } = useDatePicker2DefaultizedProps<
+    TDate,
+    MobileDatePicker2Props<TDate>
+  >(inProps, 'MuiMobileDatePicker2');
 
   // Props with the default values specific to the desktop variant
   const props = {
@@ -37,6 +37,8 @@ const MobileDatePicker2 = React.forwardRef(function MobileDatePicker2<TDate>(
       field: (ownerState: any) => ({
         ...resolveComponentProps(defaultizedProps.componentsProps?.field, ownerState),
         ref,
+        className,
+        sx,
         inputRef: defaultizedProps.inputRef,
         label: defaultizedProps.label,
       }),

@@ -25,7 +25,7 @@ export const useMobilePicker = <TDate, TView extends CalendarOrClockPickerView>(
   getOpenDialogAriaText,
   sectionModeLookup,
 }: UseMobilePickerParams<TDate, TView>) => {
-  const { components, componentsProps = {}, className, inputFormat, disabled, localeText } = props;
+  const { components, componentsProps, className, inputFormat, disabled, localeText } = props;
 
   const utils = useUtils<TDate>();
   const inputRef = React.useRef<HTMLInputElement>(null);
@@ -49,7 +49,7 @@ export const useMobilePicker = <TDate, TView extends CalendarOrClockPickerView>(
   const Field = components.Field;
   const fieldProps: BaseFieldProps<TDate | null, unknown> = useSlotProps({
     elementType: Field,
-    externalSlotProps: componentsProps.field,
+    externalSlotProps: componentsProps?.field,
     additionalProps: {
       ...pickerFieldProps,
       readOnly: true,
@@ -64,7 +64,7 @@ export const useMobilePicker = <TDate, TView extends CalendarOrClockPickerView>(
   const componentsPropsForField: BaseFieldProps<TDate, unknown>['componentsProps'] = {
     ...fieldProps.componentsProps,
     input: (ownerState) => {
-      const externalInputProps = resolveComponentProps(componentsProps.input, ownerState);
+      const externalInputProps = resolveComponentProps(componentsProps?.input, ownerState);
       const inputPropsPassedByField = resolveComponentProps(
         fieldProps.componentsProps?.input,
         ownerState,
@@ -103,8 +103,18 @@ export const useMobilePicker = <TDate, TView extends CalendarOrClockPickerView>(
         <PickersModalDialog
           {...actions}
           open={open}
-          components={components}
-          componentsProps={componentsProps}
+          // TODO v6: Pass all slots once `PickersModalDialog`  does not handle the layouting parts
+          components={{
+            Dialog: components.Dialog,
+            MobilePaper: components.MobilePaper,
+            MobileTransition: components.MobileTransition,
+          }}
+          // TODO v6: Pass all slots once `PickersModalDialog`  does not handle the layouting parts
+          componentsProps={{
+            dialog: componentsProps?.dialog,
+            mobilePaper: componentsProps?.mobilePaper,
+            mobileTransition: componentsProps?.mobileTransition,
+          }}
         >
           <PickerViewLayout
             {...layoutProps}

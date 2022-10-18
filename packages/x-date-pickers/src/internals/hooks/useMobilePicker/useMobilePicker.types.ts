@@ -9,14 +9,26 @@ import {
 } from '../../components/PickersModalDialog';
 import { UsePickerParams } from '../usePicker';
 import { BaseFieldProps } from '../../models/fields';
+import {
+  ExportedPickerViewLayoutSlotsComponent,
+  ExportedPickerViewLayoutSlotsComponentsProps,
+} from '../../components/PickerViewLayout';
 
-export interface UseMobilePickerSlotsComponent extends PickersModalDialogSlotsComponent {
+export interface UseMobilePickerSlotsComponent
+  // TODO v6: Remove `Pick` once `PickersModalDialog` does not handle the layouting parts
+  extends Pick<PickersModalDialogSlotsComponent, 'Dialog' | 'MobilePaper' | 'MobileTransition'>,
+    ExportedPickerViewLayoutSlotsComponent {
   Field: React.ElementType;
   Input?: React.ElementType<TextFieldProps>;
 }
 
 export interface UseMobilePickerSlotsComponentsProps<TDate>
-  extends PickersModalDialogSlotsComponentsProps {
+  // TODO v6: Remove `Pick` once `PickersModalDialog` does not handle the layouting parts
+  extends Pick<
+      PickersModalDialogSlotsComponentsProps,
+      'dialog' | 'mobilePaper' | 'mobileTransition'
+    >,
+    ExportedPickerViewLayoutSlotsComponentsProps {
   field?: SlotComponentProps<React.ElementType<BaseFieldProps<TDate | null, unknown>>, {}, unknown>;
   input?: SlotComponentProps<typeof TextField, {}, unknown>;
 }
