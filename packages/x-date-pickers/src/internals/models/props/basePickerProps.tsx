@@ -1,3 +1,5 @@
+import { Theme } from '@mui/material/styles';
+import { SxProps } from '@mui/system';
 import { PickerStateProps } from '../../hooks/usePickerState';
 import { UsePickerProps } from '../../hooks/usePicker';
 import { CalendarOrClockPickerView } from '../views';
@@ -45,6 +47,10 @@ export interface BasePickerProps2<TValue, TDate, TView extends CalendarOrClockPi
    * Class name applied to the root element.
    */
   className?: string;
+  /**
+   * The system prop that allows defining system overrides as well as additional CSS styles.
+   */
+  sx?: SxProps<Theme>;
   /**
    * Format of the date when rendered in the input(s).
    */
