@@ -202,7 +202,7 @@ function testDayViewValidation(ElementToTest, propsToTest, getOptions) {
         expect(screen.getByLabelText('Next month')).to.have.attribute('disabled');
       });
     }
-    if (propsToTest.includes('minTime')) {
+    if (propsToTest.includes('minTime') && (getOptions().isLegacyPicker || getOptions().withTime)) {
       it('should apply minTime', function test() {
         const { render } = getOptions();
 
@@ -220,7 +220,7 @@ function testDayViewValidation(ElementToTest, propsToTest, getOptions) {
         expect(screen.getByText('30')).not.to.have.attribute('disabled');
       });
     }
-    if (propsToTest.includes('maxTime')) {
+    if (propsToTest.includes('maxTime') && (getOptions().isLegacyPicker || getOptions().withTime)) {
       it('should apply maxTime', function test() {
         const { render } = getOptions();
 

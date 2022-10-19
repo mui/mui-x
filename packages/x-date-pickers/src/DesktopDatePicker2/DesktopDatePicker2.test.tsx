@@ -9,14 +9,13 @@ import { DesktopDatePicker2 } from '@mui/x-date-pickers/DesktopDatePicker2';
 import { createPickerRenderer, adapterToUse, openPicker } from 'test/utils/pickers-utils';
 import describeValidation from '@mui/x-date-pickers/tests/describeValidation';
 
-describe('<DesktopDatePicker2 />', () => {
+describe.only('<DesktopDatePicker2 />', () => {
   const { render, clock } = createPickerRenderer({ clock: 'fake' });
 
   describeValidation(DesktopDatePicker2, () => ({
     render,
     clock,
     views: ['year', 'month', 'day'],
-    ignoredProps: ['minTime', 'maxTime'],
   }));
 
   describe('Component slots: OpenPickerIcon', () => {
