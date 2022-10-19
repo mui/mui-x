@@ -11,8 +11,18 @@ import {
 } from '../../components/PickersPopper';
 import { UsePickerParams } from '../usePicker';
 import { BaseFieldProps } from '../../models/fields';
+import {
+  ExportedPickerViewLayoutSlotsComponent,
+  ExportedPickerViewLayoutSlotsComponentsProps,
+} from '../../components/PickerViewLayout';
 
-export interface UseDesktopPickerSlotsComponent extends PickersPopperSlotsComponent {
+export interface UseDesktopPickerSlotsComponent
+  // TODO v6: Remove `Pick` once `PickerPoppers` does not handle the layouting parts
+  extends Pick<
+      PickersPopperSlotsComponent,
+      'DesktopPaper' | 'DesktopTransition' | 'DesktopTrapFocus' | 'Popper'
+    >,
+    ExportedPickerViewLayoutSlotsComponent {
   Field: React.ElementType;
   Input?: React.ElementType<TextFieldProps>;
   /**
@@ -32,7 +42,12 @@ export interface UseDesktopPickerSlotsComponent extends PickersPopperSlotsCompon
 }
 
 export interface UseDesktopPickerSlotsComponentsProps<TDate>
-  extends PickersPopperSlotsComponentsProps {
+  // TODO v6: Remove `Pick` once `PickerPoppers` does not handle the layouting parts
+  extends Pick<
+      PickersPopperSlotsComponentsProps,
+      'desktopPaper' | 'desktopTransition' | 'desktopTrapFocus' | 'popper'
+    >,
+    ExportedPickerViewLayoutSlotsComponentsProps {
   field?: SlotComponentProps<React.ElementType<BaseFieldProps<TDate | null, unknown>>, {}, unknown>;
   input?: SlotComponentProps<typeof TextField, {}, unknown>;
   inputAdornment?: Partial<InputAdornmentProps>;

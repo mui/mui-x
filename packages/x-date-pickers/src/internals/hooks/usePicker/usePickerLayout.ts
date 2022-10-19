@@ -38,7 +38,6 @@ export interface UsePickerLayoutResponseLayoutProps<TValue, TView extends Calend
 
 export interface UsePickerLayoutResponse<TValue, TView extends CalendarOrClockPickerView> {
   layoutProps: UsePickerLayoutResponseLayoutProps<TValue, TView>;
-  isLandscape: boolean;
 }
 
 export interface UsePickerLayoutParams<TValue, TView extends CalendarOrClockPickerView> {
@@ -70,6 +69,5 @@ export const usePickerLayout = <TValue, TView extends CalendarOrClockPickerView>
 
   return {
     layoutProps,
-    isLandscape,
   };
 };

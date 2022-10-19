@@ -26,15 +26,8 @@ export const useDesktopPicker = <TDate, TView extends CalendarOrClockPickerView>
   getOpenDialogAriaText,
   sectionModeLookup,
 }: UseDesktopPickerParams<TDate, TView>) => {
-  const {
-    components,
-    componentsProps = {},
-    className,
-    inputFormat,
-    readOnly,
-    disabled,
-    localeText,
-  } = props;
+  const { components, componentsProps, className, inputFormat, readOnly, disabled, localeText } =
+    props;
 
   const utils = useUtils<TDate>();
   const inputRef = React.useRef<HTMLInputElement>(null);
@@ -60,7 +53,7 @@ export const useDesktopPicker = <TDate, TView extends CalendarOrClockPickerView>
   const Field = components.Field;
   const fieldProps: BaseFieldProps<TDate | null, unknown> = useSlotProps({
     elementType: Field,
-    externalSlotProps: componentsProps.field,
+    externalSlotProps: componentsProps?.field,
     additionalProps: {
       ...pickerFieldProps,
       readOnly,
@@ -75,7 +68,7 @@ export const useDesktopPicker = <TDate, TView extends CalendarOrClockPickerView>
   const InputAdornment = components.InputAdornment ?? MuiInputAdornment;
   const inputAdornmentProps = useSlotProps({
     elementType: InputAdornment,
-    externalSlotProps: componentsProps.inputAdornment,
+    externalSlotProps: componentsProps?.inputAdornment,
     additionalProps: {
       position: 'end',
     },
@@ -86,7 +79,7 @@ export const useDesktopPicker = <TDate, TView extends CalendarOrClockPickerView>
   const OpenPickerButton = components.OpenPickerButton ?? IconButton;
   const { ownerState: openPickerButtonOwnerState, ...openPickerButtonProps } = useSlotProps({
     elementType: OpenPickerButton,
-    externalSlotProps: componentsProps.openPickerButton,
+    externalSlotProps: componentsProps?.openPickerButton,
     additionalProps: {
       disabled: disabled || readOnly,
       onClick: actions.onOpen,
@@ -100,7 +93,7 @@ export const useDesktopPicker = <TDate, TView extends CalendarOrClockPickerView>
   const OpenPickerIcon = components.OpenPickerIcon;
   const { ownerState: openPickerIconOwnerState, ...openPickerIconProps } = useSlotProps({
     elementType: OpenPickerIcon,
-    externalSlotProps: componentsProps.openPickerIcon,
+    externalSlotProps: componentsProps?.openPickerIcon,
     // TODO: Pass owner state
     ownerState: {},
   });
@@ -113,7 +106,7 @@ export const useDesktopPicker = <TDate, TView extends CalendarOrClockPickerView>
   const componentsPropsForField: BaseFieldProps<TDate | null, unknown>['componentsProps'] = {
     ...fieldProps.componentsProps,
     input: (ownerState) => {
-      const externalInputProps = resolveComponentProps(componentsProps.input, ownerState);
+      const externalInputProps = resolveComponentProps(componentsProps?.input, ownerState);
       const inputPropsPassedByField = resolveComponentProps(
         fieldProps.componentsProps?.input,
         ownerState,
@@ -153,8 +146,20 @@ export const useDesktopPicker = <TDate, TView extends CalendarOrClockPickerView>
           anchorEl={inputRef.current}
           {...actions}
           open={open}
-          components={components}
-          componentsProps={componentsProps}
+          // TODO v6: Pass all slots once `PickersPopper`  does not handle the layouting parts
+          components={{
+            DesktopPaper: components.DesktopPaper,
+            DesktopTransition: components.DesktopTransition,
+            DesktopTrapFocus: components.DesktopTrapFocus,
+            Popper: components.Popper,
+          }}
+          // TODO v6: Pass all slots once `PickersPopper`  does not handle the layouting parts
+          componentsProps={{
+            desktopPaper: componentsProps?.desktopPaper,
+            desktopTransition: componentsProps?.desktopTransition,
+            desktopTrapFocus: componentsProps?.desktopTrapFocus,
+            popper: componentsProps?.popper,
+          }}
           shouldRestoreFocus={shouldRestoreFocus}
         >
           <PickerViewLayout
