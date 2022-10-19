@@ -36,6 +36,7 @@ const DesktopTimePicker2 = React.forwardRef(function DesktopTimePicker2<TDate>(
   const props = {
     ...defaultizedProps,
     showToolbar: defaultizedProps.showToolbar ?? false,
+    autoFocus: true,
     components: {
       Field: TimeField,
       OpenPickerIcon: Clock,

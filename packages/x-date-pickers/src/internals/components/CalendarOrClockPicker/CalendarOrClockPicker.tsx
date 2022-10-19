@@ -179,7 +179,10 @@ export function CalendarOrClockPicker<TDate, View extends CalendarOrClockPickerV
     onViewChange: handleViewChange,
   });
 
-  const { focusedView, setFocusedView } = useFocusManagement({ autoFocus, openView });
+  const { focusedView, setFocusedView } = useFocusManagement<CalendarPickerView>({
+    autoFocus,
+    openView,
+  });
 
   const Tabs = components?.Tabs;
 

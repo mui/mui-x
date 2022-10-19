@@ -42,6 +42,7 @@ const DesktopDateTimePicker2 = React.forwardRef(function DesktopDateTimePicker2<
     ...defaultizedProps,
     showToolbar: defaultizedProps.showToolbar ?? false,
     hideTabs: defaultizedProps.hideTabs ?? true,
+    autoFocus: true,
     components: {
       Field: DateTimeField,
       OpenPickerIcon: Calendar,

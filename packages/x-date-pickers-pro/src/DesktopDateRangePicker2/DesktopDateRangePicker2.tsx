@@ -33,6 +33,7 @@ const DesktopDateRangePicker2 = React.forwardRef(function DesktopDateRangePicker
     views: ['day'] as const,
     openTo: 'day' as const,
     showToolbar: defaultizedProps.showToolbar ?? false,
+    autoFocus: true,
     components: {
       Field: MultiInputDateRangeField,
       ...defaultizedProps.components,

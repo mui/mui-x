@@ -36,6 +36,7 @@ const MobileDatePicker2 = React.forwardRef(function MobileDatePicker2<TDate>(
   const props = {
     ...defaultizedProps,
     showToolbar: defaultizedProps.showToolbar ?? true,
+    autoFocus: true,
     components: {
       Field: DateField,
       ...defaultizedProps.components,

@@ -20,10 +20,11 @@ const isTimePickerView = (view: CalendarOrClockPickerView): view is ClockPickerV
   view === 'hours' || view === 'minutes' || view === 'seconds';
 
 interface DateViewRendererProps<TDate>
-  extends Omit<DateCalendarProps<TDate>, 'views' | 'openTo' | 'view'> {
+  extends Omit<DateCalendarProps<TDate>, 'views' | 'openTo' | 'view' | 'focusedView'> {
   view: CalendarOrClockPickerView;
   views: readonly CalendarOrClockPickerView[];
   wrapperVariant: WrapperVariant;
+  focusedView: CalendarOrClockPickerView | null;
 }
 
 export const renderDateView = <TDate extends unknown>(props: DateViewRendererProps<TDate>) => (
@@ -32,6 +33,7 @@ export const renderDateView = <TDate extends unknown>(props: DateViewRendererPro
     autoFocus
     view={props.view as CalendarPickerView}
     views={props.views.filter(isDatePickerView)}
+    focusedView={props.focusedView as CalendarPickerView | null}
   />
 );
 

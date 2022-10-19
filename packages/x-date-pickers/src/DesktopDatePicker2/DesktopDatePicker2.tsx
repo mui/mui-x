@@ -37,6 +37,7 @@ const DesktopDatePicker2 = React.forwardRef(function DesktopDatePicker2<TDate>(
   const props = {
     ...defaultizedProps,
     showToolbar: defaultizedProps.showToolbar ?? false,
+    autoFocus: true,
     components: {
       OpenPickerIcon: Calendar,
       Field: DateField,

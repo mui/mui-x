@@ -5,6 +5,7 @@ import { CalendarOrClockPickerView } from '../../models';
 import { useViews } from '../useViews';
 import { WrapperVariant } from '../../components/wrappers/WrapperVariantContext';
 import type { UsePickerValueActions, UsePickerValueViewsResponse } from './usePickerValue';
+import { useFocusManagement } from '../../components/CalendarOrClockPicker/useFocusManagement';
 
 type PickerViewRenderer<
   TValue,
@@ -93,6 +94,8 @@ export type PickerViewsRendererProps<
     view: TView;
     views: readonly TView[];
     wrapperVariant: WrapperVariant;
+    focusedView: TView | null;
+    onFocusedViewChange?: (view: TView) => (newHasFocus: boolean) => void;
   };
 
 export interface UsePickerViewsLayoutResponse<TView extends CalendarOrClockPickerView> {
@@ -123,7 +126,7 @@ export const usePickerViews = <
   TAdditionalProps
 >): UsePickerViewsResponse<TView> => {
   const { onChange, open, onSelectedSectionsChange } = propsFromPickerValue;
-  const { views, openTo, onViewChange, disableOpenPicker } = props;
+  const { views, openTo, onViewChange, disableOpenPicker, autoFocus } = props;
 
   if (process.env.NODE_ENV !== 'production') {
     if (!warnedOnceNotValidOpenTo && !views.includes(openTo)) {
@@ -135,9 +138,6 @@ export const usePickerViews = <
     }
   }
 
-  // TODO v6: Support focus management
-
-  // TODO v6: Stop using `useViews` ?
   const { openView, setOpenView, handleChangeAndOpenNext } = useViews({
     view: undefined,
     views,
@@ -145,6 +145,9 @@ export const usePickerViews = <
     onChange,
     onViewChange,
   });
+
+  // TODO v6: Move `useFocusManagement` here
+  const { focusedView, setFocusedView } = useFocusManagement<TView>({ autoFocus, openView });
 
   const { hasPopperView, viewModeLookup } = React.useMemo(() => {
     let tempHasPopperView = false;
@@ -229,6 +232,8 @@ export const usePickerViews = <
         view: popperView,
         views,
         onChange: handleChangeAndOpenNext,
+        focusedView,
+        onFocusedViewChange: setFocusedView,
       });
     },
   };
