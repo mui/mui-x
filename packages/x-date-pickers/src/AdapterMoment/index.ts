@@ -62,7 +62,9 @@ export class AdapterMoment
       .map((token) => {
         const firstCharacter = token[0];
         if (firstCharacter === 'L' || firstCharacter === ';') {
-          return this.moment.localeData().longDateFormat(token as LongDateFormatKey);
+          return this.moment
+            .localeData(this.getCurrentLocaleCode())
+            .longDateFormat(token as LongDateFormatKey);
         }
 
         return token;

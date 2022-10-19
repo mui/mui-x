@@ -163,5 +163,5 @@ Native date (`type="date"`), time (`type="time"`) and date&time (`type="datetime
 Some test environments (i.e. `jsdom`) do not support media query. In such cases, components will be rendered in desktop mode. To modify this behavior you can fake the `window.matchMedia`.
 :::
 
-Be aware that running tests in headless browsers might not pass our default mediaQuery (`pointer: fine`).  
+Be aware that running tests in headless browsers might not pass the default mediaQuery (`pointer: fine`).
 In such case you can [force pointer precision](https://github.com/microsoft/playwright/issues/7769#issuecomment-1205106311) via browser flags or preferences.
