@@ -30,7 +30,6 @@ export * from './DayCalendarSkeleton';
 // New Pickers
 export * from './DesktopDatePicker2';
 
-
 export { PickerStaticWrapper } from './internals/components/PickerStaticWrapper';
 export type { MuiDateSectionName } from './internals/models/muiPickersAdapter';
 export type { DateValidationError } from './internals/hooks/validation/useDateValidation';
