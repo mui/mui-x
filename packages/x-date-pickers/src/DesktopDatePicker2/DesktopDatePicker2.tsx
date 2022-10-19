@@ -9,7 +9,7 @@ import { useDesktopPicker } from '../internals/hooks/useDesktopPicker';
 import { Calendar } from '../internals/components/icons';
 import { Unstable_DateField as DateField } from '../DateField';
 import { extractValidationProps } from '../internals/utils/validation';
-import { renderDateView } from '../internals/utils/views';
+import { renderDateView } from '../internals/utils/viewRenderers';
 
 type DesktopDatePickerComponent = (<TDate>(
   props: DesktopDatePicker2Props<TDate> & React.RefAttributes<HTMLDivElement>,

@@ -8,7 +8,7 @@ import { useDatePicker2DefaultizedProps } from '../DatePicker2/shared';
 import { CalendarPickerView, useLocaleText } from '../internals';
 import { Unstable_DateField as DateField } from '../DateField';
 import { extractValidationProps } from '../internals/utils/validation';
-import { renderDateView } from '../internals/utils/views';
+import { renderDateView } from '../internals/utils/viewRenderers';
 
 type MobileDatePickerComponent = (<TDate>(
   props: MobileDatePicker2Props<TDate> & React.RefAttributes<HTMLDivElement>,

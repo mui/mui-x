@@ -229,9 +229,10 @@ export const usePickerViews = <
         ...additionalViewProps,
         ...propsFromPickerValue,
         wrapperVariant,
-        view: popperView,
         views,
         onChange: handleChangeAndOpenNext,
+        view: popperView,
+        onViewChange: setOpenView,
         focusedView,
         onFocusedViewChange: setFocusedView,
       });

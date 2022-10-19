@@ -5,7 +5,7 @@ import { useDatePicker2DefaultizedProps } from '../DatePicker2/shared';
 import { datePickerValueManager } from '../DatePicker/shared';
 import { useStaticPicker } from '../internals/hooks/useStaticPicker';
 import { CalendarPickerView } from '../internals/models';
-import { renderDateView } from '../internals/utils/views';
+import { renderDateView } from '../internals/utils/viewRenderers';
 
 type StaticDatePickerComponent = (<TDate>(
   props: StaticDatePicker2Props<TDate> & React.RefAttributes<HTMLDivElement>,

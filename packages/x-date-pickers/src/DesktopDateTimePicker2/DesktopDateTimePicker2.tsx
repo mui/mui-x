@@ -10,7 +10,7 @@ import { Calendar } from '../internals/components/icons';
 import { useDesktopPicker } from '../internals/hooks/useDesktopPicker';
 import { DateTimePickerTabs } from '../DateTimePicker/DateTimePickerTabs';
 import { extractValidationProps } from '../internals/utils/validation';
-import { renderDateView } from '../internals/utils/views';
+import { renderDateView } from '../internals/utils/viewRenderers';
 
 type DesktopDateTimePickerComponent = (<TDate>(
   props: DesktopDateTimePicker2Props<TDate> & React.RefAttributes<HTMLDivElement>,
