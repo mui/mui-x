@@ -125,16 +125,21 @@ export const PickersToolbar = React.forwardRef(function PickersToolbar<TValue>(
         alignItems={isLandscape ? 'flex-start' : 'flex-end'}
       >
         {children}
-        <PickersToolbarPenIconButton
-          onClick={toggleMobileKeyboardView}
-          className={classes.penIconButton}
-          ownerState={ownerState}
-          color="inherit"
-          data-mui-test="toggle-mobile-keyboard-view"
-          aria-label={localeText.inputModeToggleButtonAriaLabel(isMobileKeyboardViewOpen, viewType)}
-        >
-          {isMobileKeyboardViewOpen ? getViewTypeIcon(viewType) : <Pen color="inherit" />}
-        </PickersToolbarPenIconButton>
+        {isMobileKeyboardViewOpen != null && toggleMobileKeyboardView != null && (
+          <PickersToolbarPenIconButton
+            onClick={toggleMobileKeyboardView}
+            className={classes.penIconButton}
+            ownerState={ownerState}
+            color="inherit"
+            data-mui-test="toggle-mobile-keyboard-view"
+            aria-label={localeText.inputModeToggleButtonAriaLabel(
+              isMobileKeyboardViewOpen,
+              viewType,
+            )}
+          >
+            {isMobileKeyboardViewOpen ? getViewTypeIcon(viewType) : <Pen color="inherit" />}
+          </PickersToolbarPenIconButton>
+        )}
       </PickersToolbarContent>
     </PickersToolbarRoot>
   );
