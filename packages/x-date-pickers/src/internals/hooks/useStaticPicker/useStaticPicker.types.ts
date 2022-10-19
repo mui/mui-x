@@ -5,11 +5,18 @@ import {
 import { CalendarOrClockPickerView } from '../../models';
 import { BasePickerProps2 } from '../../models/props/basePickerProps';
 import { UsePickerParams } from '../usePicker';
+import {
+  PickersSlotsComponent,
+  PickersSlotsComponentsProps,
+} from '../../components/wrappers/WrapperProps';
 
-export interface UseStaticPickerSlotsComponent extends ExportedPickerViewLayoutSlotsComponent {}
+export interface UseStaticPickerSlotsComponent
+  extends ExportedPickerViewLayoutSlotsComponent,
+    Pick<PickersSlotsComponent, 'PaperContent'> {}
 
 export interface UseStaticPickerSlotsComponentsProps
-  extends ExportedPickerViewLayoutSlotsComponentsProps {}
+  extends ExportedPickerViewLayoutSlotsComponentsProps,
+    Pick<PickersSlotsComponentsProps, 'paperContent'> {}
 
 export interface StaticOnlyPickerProps {
   /**

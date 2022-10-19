@@ -20,7 +20,7 @@ export interface UseDesktopPickerSlotsComponent
   // TODO v6: Remove `Pick` once `PickerPoppers` does not handle the layouting parts
   extends Pick<
       PickersPopperSlotsComponent,
-      'DesktopPaper' | 'DesktopTransition' | 'DesktopTrapFocus' | 'Popper'
+      'DesktopPaper' | 'DesktopTransition' | 'DesktopTrapFocus' | 'Popper' | 'PaperContent'
     >,
     ExportedPickerViewLayoutSlotsComponent {
   Field: React.ElementType;

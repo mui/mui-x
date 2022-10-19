@@ -123,6 +123,7 @@ export type { CalendarOrClockPickerView, CalendarPickerView } from './models/vie
 export { applyDefaultDate, replaceInvalidDateByNull } from './utils/date-utils';
 export { executeInTheNextEventLoopTick, onSpaceOrEnter } from './utils/utils';
 export { defaultReduceAnimations } from './utils/defaultReduceAnimations';
+export { extractValidationProps } from './utils/validation';
 export { buildDeprecatedPropsWarning } from './utils/warning';
 
 export { PickersCalendarHeader } from '../DateCalendar/PickersCalendarHeader';

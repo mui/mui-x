@@ -18,13 +18,10 @@ export interface BaseToolbarProps<TValue> extends ExportedBaseToolbarProps {
   disabled?: boolean;
   readOnly?: boolean;
   // TODO v6: Remove
-  isMobileKeyboardViewOpen: boolean;
+  isMobileKeyboardViewOpen?: boolean;
   // TODO v6: Remove
-  toggleMobileKeyboardView: () => void;
+  toggleMobileKeyboardView?: () => void;
 }
-
-export interface BaseToolbarProps2<TValue>
-  extends Omit<BaseToolbarProps<TValue>, 'isMobileKeyboardViewOpen' | 'toggleMobileKeyboardView'> {}
 
 export interface ExportedBaseToolbarProps {
   /**

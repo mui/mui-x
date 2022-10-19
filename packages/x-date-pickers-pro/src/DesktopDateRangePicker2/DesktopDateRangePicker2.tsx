@@ -1,5 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import { extractValidationProps } from '@mui/x-date-pickers/internals';
 import { resolveComponentProps } from '@mui/base/utils';
 import { dateRangePickerValueManager } from '../DateRangePicker/shared';
 import { DesktopDateRangePicker2Props } from './DesktopDateRangePicker2.types';
@@ -38,6 +39,7 @@ const DesktopDateRangePicker2 = React.forwardRef(function DesktopDateRangePicker
       ...defaultizedProps.componentsProps,
       field: (ownerState: any) => ({
         ...resolveComponentProps(defaultizedProps.componentsProps?.field, ownerState),
+        ...extractValidationProps(defaultizedProps),
         className,
         sx,
         ref,

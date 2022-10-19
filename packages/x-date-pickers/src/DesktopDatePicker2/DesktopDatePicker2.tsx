@@ -8,6 +8,7 @@ import { useLocaleText } from '../internals';
 import { useDesktopPicker } from '../internals/hooks/useDesktopPicker';
 import { Calendar } from '../internals/components/icons';
 import { Unstable_DateField as DateField } from '../DateField';
+import { extractValidationProps } from '../internals/utils/validation';
 
 type DesktopDatePickerComponent = (<TDate>(
   props: DesktopDatePicker2Props<TDate> & React.RefAttributes<HTMLDivElement>,
@@ -38,6 +39,7 @@ const DesktopDatePicker2 = React.forwardRef(function DesktopDatePicker2<TDate>(
       ...defaultizedProps.componentsProps,
       field: (ownerState: any) => ({
         ...resolveComponentProps(defaultizedProps.componentsProps?.field, ownerState),
+        ...extractValidationProps(defaultizedProps),
         ref,
         className,
         sx,

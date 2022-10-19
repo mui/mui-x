@@ -11,6 +11,7 @@ import { useDesktopPicker } from '../internals/hooks/useDesktopPicker';
 import { PickerDateSectionModeLookup } from '../internals/hooks/usePicker';
 import { CalendarOrClockPickerView } from '../internals/models';
 import { DateTimePickerTabs } from '../DateTimePicker/DateTimePickerTabs';
+import { extractValidationProps } from '../internals/utils/validation';
 
 type DesktopDateTimePickerComponent = (<TDate>(
   props: DesktopDateTimePicker2Props<TDate> & React.RefAttributes<HTMLDivElement>,
@@ -52,6 +53,7 @@ const DesktopDateTimePicker2 = React.forwardRef(function DesktopDateTimePicker2<
       ...defaultizedProps.componentsProps,
       field: (ownerState: any) => ({
         ...resolveComponentProps(defaultizedProps.componentsProps?.field, ownerState),
+        ...extractValidationProps(defaultizedProps),
         ref,
         className,
         sx,

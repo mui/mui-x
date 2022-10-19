@@ -7,6 +7,7 @@ import { MobileDatePicker2Props } from './MobileDatePicker2.types';
 import { useDatePicker2DefaultizedProps, renderDateViews } from '../DatePicker2/shared';
 import { useLocaleText } from '../internals';
 import { Unstable_DateField as DateField } from '../DateField';
+import { extractValidationProps } from '../internals/utils/validation';
 
 type MobileDatePickerComponent = (<TDate>(
   props: MobileDatePicker2Props<TDate> & React.RefAttributes<HTMLDivElement>,
@@ -36,6 +37,7 @@ const MobileDatePicker2 = React.forwardRef(function MobileDatePicker2<TDate>(
       ...defaultizedProps.componentsProps,
       field: (ownerState: any) => ({
         ...resolveComponentProps(defaultizedProps.componentsProps?.field, ownerState),
+        ...extractValidationProps(defaultizedProps),
         ref,
         className,
         sx,
