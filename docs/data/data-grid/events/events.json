@@ -347,6 +347,13 @@
   },
   {
     "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
+    "name": "rowSelectionChange",
+    "description": "Fired when the selection state of one or multiple rows changes.",
+    "params": "GridRowSelectionModel",
+    "event": "MuiEvent<{}>"
+  },
+  {
+    "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
     "name": "rowSelectionCheckboxChange",
     "description": "Fired when the value of the selection checkbox of a row is changed",
     "params": "GridRowSelectionCheckboxParams",
@@ -366,13 +373,6 @@
     "params": "GridRowScrollEndParams",
     "event": "MuiEvent<{}>",
     "componentProp": "onRowsScrollEnd"
-  },
-  {
-    "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
-    "name": "selectionChange",
-    "description": "Fired when the selection state of one or multiple rows changes.",
-    "params": "GridSelectionModel",
-    "event": "MuiEvent<{}>"
   },
   {
     "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],

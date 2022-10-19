@@ -9,7 +9,7 @@ import {
   useGridApiRef,
   DataGridPro,
   DataGridProProps,
-  GridSelectionModel,
+  GridRowSelectionModel,
 } from '@mui/x-data-grid-pro';
 import { getBasicGridData } from '@mui/x-data-grid-generator';
 
@@ -24,7 +24,7 @@ function getSelectedRowIds() {
     );
 }
 
-describe('<DataGridPro /> - Selection', () => {
+describe('<DataGridPro /> - Row Selection', () => {
   const { render } = createRenderer();
 
   let apiRef: React.MutableRefObject<GridApi>;
@@ -201,10 +201,10 @@ describe('<DataGridPro /> - Selection', () => {
   });
 
   describe('apiRef: getSelectedRows', () => {
-    it('should handle the event internally before triggering onSelectionModelChange', () => {
+    it('should handle the event internally before triggering onRowSelectionModelChange', () => {
       render(
         <TestDataGridSelection
-          onSelectionModelChange={(model) => {
+          onRowSelectionModelChange={(model) => {
             expect(apiRef.current.getSelectedRows()).to.have.length(1);
             expect(model).to.deep.equal([1]);
           }}
@@ -229,8 +229,8 @@ describe('<DataGridPro /> - Selection', () => {
       expect(apiRef.current.isRowSelected(1)).to.equal(true);
     });
 
-    it('should check if the rows selected with the selectionModel prop are selected', () => {
-      render(<TestDataGridSelection selectionModel={[1]} />);
+    it('should check if the rows selected with the rowSelectionModel prop are selected', () => {
+      render(<TestDataGridSelection rowSelectionModel={[1]} />);
 
       expect(apiRef.current.isRowSelected(0)).to.equal(false);
       expect(apiRef.current.isRowSelected(1)).to.equal(true);
@@ -238,69 +238,69 @@ describe('<DataGridPro /> - Selection', () => {
   });
 
   describe('apiRef: selectRow', () => {
-    it('should call onSelectionModelChange with the ids selected', () => {
-      const handleSelectionModelChange = spy();
-      render(<TestDataGridSelection onSelectionModelChange={handleSelectionModelChange} />);
+    it('should call onRowSelectionModelChange with the ids selected', () => {
+      const handleRowSelectionModelChange = spy();
+      render(<TestDataGridSelection onRowSelectionModelChange={handleRowSelectionModelChange} />);
       act(() => apiRef.current.selectRow(1));
-      expect(handleSelectionModelChange.lastCall.args[0]).to.deep.equal([1]);
+      expect(handleRowSelectionModelChange.lastCall.args[0]).to.deep.equal([1]);
       // Reset old selection
       act(() => apiRef.current.selectRow(2, true, true));
-      expect(handleSelectionModelChange.lastCall.args[0]).to.deep.equal([2]);
+      expect(handleRowSelectionModelChange.lastCall.args[0]).to.deep.equal([2]);
       // Keep old selection
       act(() => apiRef.current.selectRow(3));
-      expect(handleSelectionModelChange.lastCall.args[0]).to.deep.equal([2, 3]);
+      expect(handleRowSelectionModelChange.lastCall.args[0]).to.deep.equal([2, 3]);
       act(() => apiRef.current.selectRow(3, false));
-      expect(handleSelectionModelChange.lastCall.args[0]).to.deep.equal([2]);
+      expect(handleRowSelectionModelChange.lastCall.args[0]).to.deep.equal([2]);
     });
 
-    it('should not call onSelectionModelChange if the row is unselectable', () => {
-      const handleSelectionModelChange = spy();
+    it('should not call onRowSelectionModelChange if the row is unselectable', () => {
+      const handleRowSelectionModelChange = spy();
       render(
         <TestDataGridSelection
           isRowSelectable={(params) => params.id > 0}
-          onSelectionModelChange={handleSelectionModelChange}
+          onRowSelectionModelChange={handleRowSelectionModelChange}
         />,
       );
       act(() => apiRef.current.selectRow(0));
-      expect(handleSelectionModelChange.callCount).to.equal(0);
+      expect(handleRowSelectionModelChange.callCount).to.equal(0);
       act(() => apiRef.current.selectRow(1));
-      expect(handleSelectionModelChange.callCount).to.equal(1);
+      expect(handleRowSelectionModelChange.callCount).to.equal(1);
     });
   });
 
   describe('apiRef: selectRows', () => {
-    it('should call onSelectionModelChange with the ids selected', () => {
-      const handleSelectionModelChange = spy();
-      render(<TestDataGridSelection onSelectionModelChange={handleSelectionModelChange} />);
+    it('should call onRowSelectionModelChange with the ids selected', () => {
+      const handleRowSelectionModelChange = spy();
+      render(<TestDataGridSelection onRowSelectionModelChange={handleRowSelectionModelChange} />);
 
       act(() => apiRef.current.selectRows([1, 2]));
-      expect(handleSelectionModelChange.lastCall.args[0]).to.deep.equal([1, 2]);
+      expect(handleRowSelectionModelChange.lastCall.args[0]).to.deep.equal([1, 2]);
 
       act(() => apiRef.current.selectRows([3]));
-      expect(handleSelectionModelChange.lastCall.args[0]).to.deep.equal([1, 2, 3]);
+      expect(handleRowSelectionModelChange.lastCall.args[0]).to.deep.equal([1, 2, 3]);
 
       act(() => apiRef.current.selectRows([1, 2], false));
-      expect(handleSelectionModelChange.lastCall.args[0]).to.deep.equal([3]);
+      expect(handleRowSelectionModelChange.lastCall.args[0]).to.deep.equal([3]);
 
       // Deselect others
       act(() => apiRef.current.selectRows([4, 5], true, true));
-      expect(handleSelectionModelChange.lastCall.args[0]).to.deep.equal([4, 5]);
+      expect(handleRowSelectionModelChange.lastCall.args[0]).to.deep.equal([4, 5]);
     });
 
-    it('should filter out unselectable rows before calling onSelectionModelChange', () => {
-      const handleSelectionModelChange = spy();
+    it('should filter out unselectable rows before calling onRowSelectionModelChange', () => {
+      const handleRowSelectionModelChange = spy();
       render(
         <TestDataGridSelection
           isRowSelectable={(params) => params.id > 0}
-          onSelectionModelChange={handleSelectionModelChange}
+          onRowSelectionModelChange={handleRowSelectionModelChange}
         />,
       );
       act(() => apiRef.current.selectRows([0, 1, 2]));
-      expect(handleSelectionModelChange.lastCall.args[0]).to.deep.equal([1, 2]);
+      expect(handleRowSelectionModelChange.lastCall.args[0]).to.deep.equal([1, 2]);
     });
 
-    it('should not select a range of several elements when disableMultipleSelection = true', () => {
-      render(<TestDataGridSelection disableMultipleSelection />);
+    it('should not select a range of several elements when disableMultipleRowSelection = true', () => {
+      render(<TestDataGridSelection disableMultipleRowSelection />);
 
       act(() => apiRef.current.selectRows([0, 1, 2], true));
       expect(getSelectedRowIds()).to.deep.equal([]);
@@ -318,7 +318,7 @@ describe('<DataGridPro /> - Selection', () => {
     it('should unselect all the rows in the range', () => {
       render(<TestDataGridSelection />);
 
-      act(() => apiRef.current.setSelectionModel([2, 3]));
+      act(() => apiRef.current.setRowSelectionModel([2, 3]));
       expect(getSelectedRowIds()).to.deep.equal([2, 3]);
       act(() => apiRef.current.selectRowRange({ startId: 0, endId: 3 }, false));
       expect(getSelectedRowIds()).to.deep.equal([]);
@@ -328,7 +328,7 @@ describe('<DataGridPro /> - Selection', () => {
       render(<TestDataGridSelection />);
 
       act(() => {
-        apiRef.current.setSelectionModel([2]);
+        apiRef.current.setRowSelectionModel([2]);
         apiRef.current.selectRowRange({ startId: 1, endId: 3 }, true);
       });
       expect(getSelectedRowIds()).to.deep.equal([1, 2, 3]);
@@ -338,7 +338,7 @@ describe('<DataGridPro /> - Selection', () => {
       render(<TestDataGridSelection />);
 
       act(() => {
-        apiRef.current.setSelectionModel([0]);
+        apiRef.current.setRowSelectionModel([0]);
         apiRef.current.selectRowRange({ startId: 2, endId: 3 }, true, false);
       });
       expect(getSelectedRowIds()).to.deep.equal([0, 2, 3]);
@@ -348,7 +348,7 @@ describe('<DataGridPro /> - Selection', () => {
       render(<TestDataGridSelection />);
 
       act(() => {
-        apiRef.current.setSelectionModel([0]);
+        apiRef.current.setRowSelectionModel([0]);
         apiRef.current.selectRowRange({ startId: 2, endId: 3 }, true, true);
       });
       expect(getSelectedRowIds()).to.deep.equal([2, 3]);
@@ -361,8 +361,8 @@ describe('<DataGridPro /> - Selection', () => {
       expect(getSelectedRowIds()).to.deep.equal([1, 3]);
     });
 
-    it('should not select a range of several elements when disableMultipleSelection = true', () => {
-      render(<TestDataGridSelection disableMultipleSelection />);
+    it('should not select a range of several elements when disableMultipleRowSelection = true', () => {
+      render(<TestDataGridSelection disableMultipleRowSelection />);
 
       act(() => apiRef.current.selectRowRange({ startId: 1, endId: 3 }, true));
       expect(getSelectedRowIds()).to.deep.equal([]);
@@ -407,24 +407,24 @@ describe('<DataGridPro /> - Selection', () => {
   });
 
   describe('controlled selection', () => {
-    it('should not publish GRID_SELECTION_CHANGE if the selection state did not change ', () => {
+    it('should not publish "rowSelectionChange" if the selection state did not change ', () => {
       const handleSelectionChange = spy();
-      const selectionModel: GridSelectionModel = [];
-      render(<TestDataGridSelection selectionModel={selectionModel} />);
-      apiRef.current.subscribeEvent('selectionChange', handleSelectionChange);
-      apiRef.current.setSelectionModel(selectionModel);
+      const rowSelectionModel: GridRowSelectionModel = [];
+      render(<TestDataGridSelection rowSelectionModel={rowSelectionModel} />);
+      apiRef.current.subscribeEvent('rowSelectionChange', handleSelectionChange);
+      apiRef.current.setRowSelectionModel(rowSelectionModel);
       expect(handleSelectionChange.callCount).to.equal(0);
     });
 
-    it('should not call onSelectionModelChange on initialization if selectionModel contains more than one id and checkboxSelection=false', () => {
-      const onSelectionModelChange = spy();
+    it('should not call onRowSelectionModelChange on initialization if rowSelectionModel contains more than one id and checkboxSelection=false', () => {
+      const onRowSelectionModelChange = spy();
       render(
         <TestDataGridSelection
-          onSelectionModelChange={onSelectionModelChange}
-          selectionModel={[0, 1]}
+          onRowSelectionModelChange={onRowSelectionModelChange}
+          rowSelectionModel={[0, 1]}
         />,
       );
-      expect(onSelectionModelChange.callCount).to.equal(0);
+      expect(onRowSelectionModelChange.callCount).to.equal(0);
     });
   });
 });

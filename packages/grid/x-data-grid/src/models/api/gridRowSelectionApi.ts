@@ -3,7 +3,7 @@ import { GridRowId, GridRowModel } from '../gridRows';
 /**
  * The selection API interface that is available in the grid [[apiRef]].
  */
-export interface GridSelectionApi {
+export interface GridRowSelectionApi {
   /**
    * Change the selection state of a row.
    * @param {GridRowId} id The id of the row.
@@ -53,5 +53,5 @@ export interface GridSelectionApi {
    * Any row already selected will be unselected.
    * @param {GridRowId[]} rowIds The row ids to select.
    */
-  setSelectionModel: (rowIds: GridRowId[]) => void;
+  setRowSelectionModel: (rowIds: GridRowId[]) => void;
 }
