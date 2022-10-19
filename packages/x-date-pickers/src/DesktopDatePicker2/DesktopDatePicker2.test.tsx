@@ -9,7 +9,7 @@ import { DesktopDatePicker2 } from '@mui/x-date-pickers/DesktopDatePicker2';
 import { createPickerRenderer, adapterToUse, openPicker } from 'test/utils/pickers-utils';
 import describeValidation from '@mui/x-date-pickers/tests/describeValidation';
 
-describe.only('<DesktopDatePicker2 />', () => {
+describe('<DesktopDatePicker2 />', () => {
   const { render, clock } = createPickerRenderer({ clock: 'fake' });
 
   describeValidation(DesktopDatePicker2, () => ({
@@ -41,7 +41,7 @@ describe.only('<DesktopDatePicker2 />', () => {
     });
   });
 
-  describe.skip('Component slots: PaperContent', () => {
+  describe('Component slots: PaperContent', () => {
     it('should render custom component', () => {
       function CustomPaperContent({ children }) {
         return (

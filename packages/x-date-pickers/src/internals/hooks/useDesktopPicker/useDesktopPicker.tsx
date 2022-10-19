@@ -152,6 +152,7 @@ export const useDesktopPicker = <TDate, TView extends CalendarOrClockPickerView>
             DesktopTransition: components.DesktopTransition,
             DesktopTrapFocus: components.DesktopTrapFocus,
             Popper: components.Popper,
+            PaperContent: components.PaperContent,
           }}
           // TODO v6: Pass all slots once `PickersPopper`  does not handle the layouting parts
           componentsProps={{
@@ -159,6 +160,7 @@ export const useDesktopPicker = <TDate, TView extends CalendarOrClockPickerView>
             desktopTransition: componentsProps?.desktopTransition,
             desktopTrapFocus: componentsProps?.desktopTrapFocus,
             popper: componentsProps?.popper,
+            paperContent: components.paperContent,
           }}
           shouldRestoreFocus={shouldRestoreFocus}
         >
