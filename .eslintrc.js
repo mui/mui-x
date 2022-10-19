@@ -139,6 +139,7 @@ module.exports = {
               'useMonthCalendarDefaultizedProps',
               'useYearCalendarDefaultizedProps',
               'useDateRangeCalendarDefaultizedProps',
+              'useDatePicker2DefaultizedProps',
             ],
           },
         ],
