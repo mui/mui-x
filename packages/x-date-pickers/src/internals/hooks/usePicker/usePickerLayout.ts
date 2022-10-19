@@ -8,7 +8,7 @@ import { WrapperVariant } from '../../components/wrappers/WrapperVariantContext'
  * Props used to create the layout of the views.
  * Those props are exposed on all the pickers.
  */
-export interface ExportedUsePickerLayoutProps {
+export interface UsePickerLayoutProps {
   disabled?: boolean;
   readOnly?: boolean;
   showToolbar?: boolean;
@@ -18,19 +18,10 @@ export interface ExportedUsePickerLayoutProps {
   orientation?: 'portrait' | 'landscape';
 }
 
-/**
- * Props received by `usePickerLayout`.
- * It contains both the props passed by the pickers and the props passed by `usePickerValue` and `usePickerViews`.
- */
-interface UsePickerLayoutProps<TValue, TView extends CalendarOrClockPickerView>
-  extends ExportedUsePickerLayoutProps,
-    UsePickerValueLayoutResponse<TValue>,
-    UsePickerViewsLayoutResponse<TView> {}
-
 export interface UsePickerLayoutResponseLayoutProps<TValue, TView extends CalendarOrClockPickerView>
   extends UsePickerValueLayoutResponse<TValue>,
     UsePickerViewsLayoutResponse<TView>,
-    UsePickerLayoutProps<TValue, TView>,
+    UsePickerLayoutProps,
     UsePickerValueActions {
   isLandscape: boolean;
   wrapperVariant: WrapperVariant;
@@ -41,17 +32,24 @@ export interface UsePickerLayoutResponse<TValue, TView extends CalendarOrClockPi
 }
 
 export interface UsePickerLayoutParams<TValue, TView extends CalendarOrClockPickerView> {
-  props: UsePickerLayoutProps<TValue, TView>;
+  props: UsePickerLayoutProps;
+  propsFromPickerValue: UsePickerValueLayoutResponse<TValue>;
+  propsFromPickerViews: UsePickerViewsLayoutResponse<TView>;
   wrapperVariant: WrapperVariant;
   actions: UsePickerValueActions;
 }
 
 export const usePickerLayout = <TValue, TView extends CalendarOrClockPickerView>({
   props,
+  propsFromPickerValue,
+  propsFromPickerViews,
   wrapperVariant,
   actions,
 }: UsePickerLayoutParams<TValue, TView>): UsePickerLayoutResponse<TValue, TView> => {
-  const isLandscape = useIsLandscape(props.views, props.orientation);
+  const { orientation } = props;
+  const { onChange, value } = propsFromPickerValue;
+  const { views, view, onViewChange } = propsFromPickerViews;
+  const isLandscape = useIsLandscape(views, orientation);
 
   const layoutProps: UsePickerLayoutResponseLayoutProps<TValue, TView> = {
     ...actions,
@@ -60,11 +58,11 @@ export const usePickerLayout = <TValue, TView extends CalendarOrClockPickerView>
     disabled: props.disabled,
     readOnly: props.readOnly,
     showToolbar: props.showToolbar,
-    onChange: props.onChange,
-    value: props.value,
-    view: props.view,
-    onViewChange: props.onViewChange,
-    views: props.views,
+    onChange,
+    value,
+    view,
+    onViewChange,
+    views,
   };
 
   return {

@@ -5,7 +5,7 @@ import IconButton from '@mui/material/IconButton';
 import useForkRef from '@mui/utils/useForkRef';
 import { PickersPopper } from '../../components/PickersPopper';
 import { CalendarOrClockPickerView } from '../../models/views';
-import { UseDesktopPickerParams } from './useDesktopPicker.types';
+import { UseDesktopPickerParams, UseDesktopPickerProps } from './useDesktopPicker.types';
 import { useUtils } from '../useUtils';
 import { usePicker } from '../usePicker';
 import { LocalizationProvider } from '../../../LocalizationProvider';
@@ -19,13 +19,16 @@ import { PickerViewLayout } from '../../components/PickerViewLayout';
  * - DesktopDateTimePicker
  * - DesktopTimePicker
  */
-export const useDesktopPicker = <TDate, TView extends CalendarOrClockPickerView>({
+export const useDesktopPicker = <
+  TDate,
+  TView extends CalendarOrClockPickerView,
+  TExternalProps extends UseDesktopPickerProps<TDate, TView>,
+>({
   props,
   valueManager,
-  renderViews: renderViewsParam,
   getOpenDialogAriaText,
-  sectionModeLookup,
-}: UseDesktopPickerParams<TDate, TView>) => {
+  viewLookup,
+}: UseDesktopPickerParams<TDate, TView, TExternalProps>) => {
   const { components, componentsProps, className, inputFormat, readOnly, disabled, localeText } =
     props;
 
@@ -44,8 +47,7 @@ export const useDesktopPicker = <TDate, TView extends CalendarOrClockPickerView>
     props,
     valueManager,
     wrapperVariant: 'desktop',
-    renderViews: renderViewsParam,
-    sectionModeLookup,
+    viewLookup,
     inputRef,
     additionalViewProps: {},
   });

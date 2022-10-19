@@ -2,8 +2,6 @@ import * as React from 'react';
 import { useThemeProps } from '@mui/material/styles';
 import { DefaultizedProps, MakeOptional } from '../internals/models/helpers';
 import {
-  DateCalendar,
-  DateCalendarProps,
   DateCalendarSlotsComponent,
   DateCalendarSlotsComponentsProps,
   ExportedDateCalendarProps,
@@ -118,7 +116,3 @@ export function useDatePicker2DefaultizedProps<TDate, Props extends BaseDatePick
     components: { Toolbar: DatePickerToolbar, ...themeProps.components },
   };
 }
-
-export const renderDateViews = <TDate extends unknown>(props: DateCalendarProps<TDate>) => (
-  <DateCalendar<TDate> {...props} focusedView={props.view} autoFocus />
-);

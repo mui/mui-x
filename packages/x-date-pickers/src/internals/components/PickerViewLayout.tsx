@@ -2,7 +2,7 @@ import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import { PickersActionBar, PickersActionBarProps } from '../../PickersActionBar';
 import { CalendarOrClockPickerView } from '../models/views';
-import { BaseToolbarProps2, ExportedBaseToolbarProps } from '../models/props/toolbar';
+import { BaseToolbarProps, ExportedBaseToolbarProps } from '../models/props/toolbar';
 import { BaseTabsProps, ExportedBaseTabsProps } from '../models/props/tabs';
 import { UsePickerLayoutResponseLayoutProps } from '../hooks/usePicker/usePickerLayout';
 
@@ -31,7 +31,7 @@ export interface PickerViewLayoutSlotsComponent<TValue>
    * Custom component for the toolbar.
    * It is placed above the picker views.
    */
-  Toolbar?: React.JSXElementConstructor<BaseToolbarProps2<TValue>>;
+  Toolbar?: React.JSXElementConstructor<BaseToolbarProps<TValue>>;
 }
 
 export interface PickerViewLayoutSlotsComponentsProps
@@ -46,8 +46,9 @@ export interface PickerViewLayoutSlotsComponentsProps
   toolbar?: ExportedBaseToolbarProps;
 }
 
-export interface PickerViewLayoutProps<TValue, TView extends CalendarOrClockPickerView>
+interface PickerViewLayoutProps<TValue, TView extends CalendarOrClockPickerView>
   extends UsePickerLayoutResponseLayoutProps<TValue, TView> {
+  className?: string;
   children: React.ReactNode;
   /**
    * Overrideable components.
@@ -61,20 +62,27 @@ export interface PickerViewLayoutProps<TValue, TView extends CalendarOrClockPick
   componentsProps?: PickerViewLayoutSlotsComponentsProps;
 }
 
-export const PickerViewLayoutContainer = styled('div')<{ ownerState: { isLandscape: boolean } }>(
-  ({ ownerState }) => ({
-    display: 'flex',
-    flexDirection: 'column',
-    ...(ownerState.isLandscape && {
-      flexDirection: 'row',
-    }),
-  }),
-);
+export const PickerViewLayoutRoot = styled('div', {
+  name: 'MuiPickerViewLayout',
+  slot: 'Root',
+  overridesResolver: (props, styles) => styles.root,
+})({
+  display: 'flex',
+  flexDirection: 'column',
+});
 
-/**
- * TODO: Add `ActionBar` here once it has been removed from the `PickersPopper`, `PickersModalDialog` and `PickersStaticWrapper`.
- * @constructor
- */
+export const PickerViewLayoutContent = styled('div', {
+  name: 'MuiPickerViewLayout',
+  slot: 'Content',
+  overridesResolver: (props, styles) => styles.content,
+})<{ ownerState: { isLandscape: boolean } }>(({ ownerState }) => ({
+  display: 'flex',
+  flexDirection: 'column',
+  ...(ownerState.isLandscape && {
+    flexDirection: 'row',
+  }),
+}));
+
 export const PickerViewLayout = <TValue, TView extends CalendarOrClockPickerView>(
   props: PickerViewLayoutProps<TValue, TView>,
 ) => {
@@ -96,6 +104,7 @@ export const PickerViewLayout = <TValue, TView extends CalendarOrClockPickerView
     disabled,
     readOnly,
     showToolbar,
+    className,
   } = props;
 
   const ActionBar = components?.ActionBar ?? PickersActionBar;
@@ -109,28 +118,30 @@ export const PickerViewLayout = <TValue, TView extends CalendarOrClockPickerView
   }
 
   return (
-    <PickerViewLayoutContainer ownerState={{ isLandscape }}>
-      {shouldRenderToolbar && !!Toolbar && (
-        <Toolbar
-          {...componentsProps?.toolbar}
-          isLandscape={isLandscape}
-          onChange={onChange}
-          value={value}
-          view={view}
-          onViewChange={onViewChange as (view: CalendarOrClockPickerView) => void}
-          views={views}
-          disabled={disabled}
-          readOnly={readOnly}
-        />
-      )}
-      {!!Tabs && (
-        <Tabs
-          view={view}
-          onViewChange={onViewChange as (view: CalendarOrClockPickerView) => void}
-          {...componentsProps?.tabs}
-        />
-      )}
-      {children}
+    <PickerViewLayoutRoot className={className}>
+      <PickerViewLayoutContent ownerState={{ isLandscape }}>
+        {shouldRenderToolbar && !!Toolbar && (
+          <Toolbar
+            {...componentsProps?.toolbar}
+            isLandscape={isLandscape}
+            onChange={onChange}
+            value={value}
+            view={view}
+            onViewChange={onViewChange as (view: CalendarOrClockPickerView) => void}
+            views={views}
+            disabled={disabled}
+            readOnly={readOnly}
+          />
+        )}
+        {!!Tabs && (
+          <Tabs
+            view={view}
+            onViewChange={onViewChange as (view: CalendarOrClockPickerView) => void}
+            {...componentsProps?.tabs}
+          />
+        )}
+        {children}
+      </PickerViewLayoutContent>
       <ActionBar
         onAccept={onAccept}
         onClear={onClear}
@@ -139,6 +150,6 @@ export const PickerViewLayout = <TValue, TView extends CalendarOrClockPickerView
         actions={wrapperVariant === 'desktop' ? [] : ['cancel', 'accept']}
         {...componentsProps?.actionBar}
       />
-    </PickerViewLayoutContainer>
+    </PickerViewLayoutRoot>
   );
 };

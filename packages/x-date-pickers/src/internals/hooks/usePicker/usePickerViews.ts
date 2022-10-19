@@ -6,20 +6,29 @@ import { useViews } from '../useViews';
 import { WrapperVariant } from '../../components/wrappers/WrapperVariantContext';
 import type { UsePickerValueActions, UsePickerValueViewsResponse } from './usePickerValue';
 
-type PickerViewRenderer<TValue, TView extends CalendarOrClockPickerView, TViewProps extends {}> = (
-  props: PickerViewsRendererProps<TValue, TView, TViewProps>,
+type PickerViewRenderer<
+  TValue,
+  TView extends CalendarOrClockPickerView,
+  TExternalProps extends UsePickerViewsProps<TView>,
+  TAdditionalProps extends {},
+> = (
+  props: PickerViewsRendererProps<TValue, TView, TExternalProps, TAdditionalProps>,
 ) => React.ReactNode;
 
-export type PickerDateSectionModeLookup<TView extends CalendarOrClockPickerView> = Record<
-  TView,
-  'field' | 'popper'
->;
+export type PickerViewRendererLookup<
+  TValue,
+  TView extends CalendarOrClockPickerView,
+  TExternalProps extends UsePickerViewsProps<TView>,
+  TAdditionalProps extends {},
+> = {
+  [K in TView]: PickerViewRenderer<TValue, TView, TExternalProps, TAdditionalProps> | null;
+};
 
 /**
  * Props used to handle the views of the pickers.
  * Those props are exposed on all the pickers.
  */
-export interface ExportedUsePickerViewProps<TView extends CalendarOrClockPickerView> {
+export interface UsePickerViewsProps<TView extends CalendarOrClockPickerView> {
   autoFocus?: boolean;
   /**
    * If `true`, the picker and text field are disabled.
@@ -47,23 +56,20 @@ export interface ExportedUsePickerViewProps<TView extends CalendarOrClockPickerV
   disableOpenPicker?: boolean;
 }
 
-/**
- * Props received by `usePickerViews`.
- * It contains both the props passed by the pickers and the props passed by `usePickerValue`.
- */
-export interface UsePickerViewsProps<TValue, TView extends CalendarOrClockPickerView>
-  extends ExportedUsePickerViewProps<TView>,
-    UsePickerValueViewsResponse<TValue> {}
-
 export interface UsePickerViewParams<
   TValue,
   TView extends CalendarOrClockPickerView,
-  TViewProps extends {},
+  TExternalProps extends UsePickerViewsProps<TView>,
+  TAdditionalProps extends {},
 > {
-  props: UsePickerViewsProps<TValue, TView>;
-  renderViews: PickerViewRenderer<TValue, TView, TViewProps>;
-  sectionModeLookup?: PickerDateSectionModeLookup<TView>;
-  additionalViewProps: TViewProps;
+  props: TExternalProps;
+  propsFromPickerValue: UsePickerValueViewsResponse<TValue>;
+  /**
+   * Define the view renderer for each section.
+   * If no component is defined, then the view will be editing with the field.
+   */
+  viewLookup: PickerViewRendererLookup<TValue, TView, TExternalProps, TAdditionalProps>;
+  additionalViewProps: TAdditionalProps;
   inputRef?: React.RefObject<HTMLInputElement>;
   wrapperVariant: WrapperVariant;
   actions: UsePickerValueActions;
@@ -79,12 +85,13 @@ export interface UsePickerViewsResponse<TView extends CalendarOrClockPickerView>
 export type PickerViewsRendererProps<
   TValue,
   TView extends CalendarOrClockPickerView,
-  TViewProps extends {},
-> = TViewProps &
-  Pick<UsePickerViewsProps<TValue, TView>, 'value' | 'onChange' | 'views' | 'autoFocus'> & {
+  TExternalProps extends UsePickerViewsProps<TView>,
+  TAdditionalProps extends {},
+> = TExternalProps &
+  TAdditionalProps &
+  UsePickerValueViewsResponse<TValue> & {
     view: TView;
-    onViewChange: (view: TView) => void;
-    value: TValue;
+    views: readonly TView[];
     wrapperVariant: WrapperVariant;
   };
 
@@ -99,17 +106,24 @@ let warnedOnceNotValidOpenTo = false;
 export const usePickerViews = <
   TValue,
   TView extends CalendarOrClockPickerView,
-  TViewProps extends {},
+  TExternalProps extends UsePickerViewsProps<TView>,
+  TAdditionalProps extends {},
 >({
   props,
-  renderViews,
-  sectionModeLookup: inputSectionModelLookup,
+  propsFromPickerValue,
+  viewLookup,
   additionalViewProps,
   inputRef,
   wrapperVariant,
   actions,
-}: UsePickerViewParams<TValue, TView, TViewProps>): UsePickerViewsResponse<TView> => {
-  const { views, openTo, onViewChange, onChange, disableOpenPicker, ...other } = props;
+}: UsePickerViewParams<
+  TValue,
+  TView,
+  TExternalProps,
+  TAdditionalProps
+>): UsePickerViewsResponse<TView> => {
+  const { onChange, open, onSelectedSectionsChange } = propsFromPickerValue;
+  const { views, openTo, onViewChange, disableOpenPicker } = props;
 
   if (process.env.NODE_ENV !== 'production') {
     if (!warnedOnceNotValidOpenTo && !views.includes(openTo)) {
@@ -132,45 +146,44 @@ export const usePickerViews = <
     onViewChange,
   });
 
-  const viewModeResponse = React.useMemo(() => {
-    let hasPopperView = false;
-    const sectionModeLookup = {} as PickerDateSectionModeLookup<TView>;
+  const { hasPopperView, viewModeLookup } = React.useMemo(() => {
+    let tempHasPopperView = false;
+    const tempViewModeLookup = {} as Record<TView, 'field' | 'popper'>;
 
     views.forEach((view) => {
       let viewMode: 'field' | 'popper';
       if (disableOpenPicker) {
         viewMode = 'field';
+      } else if (viewLookup[view] != null) {
+        viewMode = 'popper';
       } else {
-        viewMode = inputSectionModelLookup?.[view] ?? 'popper';
+        viewMode = 'field';
       }
 
       if (viewMode === 'popper') {
-        hasPopperView = true;
+        tempHasPopperView = true;
       }
 
-      sectionModeLookup[view] = viewMode;
+      tempViewModeLookup[view] = viewMode;
     });
 
-    return {
-      hasPopperView,
-      sectionModeLookup,
-    };
-  }, [disableOpenPicker, inputSectionModelLookup, views]);
+    return { hasPopperView: tempHasPopperView, viewModeLookup: tempViewModeLookup };
+  }, [disableOpenPicker, viewLookup, views]);
 
-  const currentViewMode = viewModeResponse.sectionModeLookup[openView];
+  const currentViewMode = viewModeLookup[openView];
   const shouldRestoreFocus = useEventCallback(() => currentViewMode === 'popper');
 
   const [popperView, setPopperView] = React.useState<TView | null>(
     currentViewMode === 'popper' ? openView : null,
   );
-  if (popperView !== openView && viewModeResponse.sectionModeLookup[openView] === 'popper') {
+  if (popperView !== openView && viewModeLookup[openView] === 'popper') {
     setPopperView(openView);
   }
 
   useEnhancedEffect(() => {
-    if (currentViewMode === 'field' && props.open) {
+    if (currentViewMode === 'field' && open) {
       actions.onClose();
-      props.onSelectedSectionsChange('hour');
+      onSelectedSectionsChange('hour');
 
       setTimeout(() => {
         inputRef?.current!.focus();
@@ -179,14 +192,14 @@ export const usePickerViews = <
   }, [openView]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEnhancedEffect(() => {
-    if (!props.open) {
+    if (!open) {
       return;
     }
 
     if (currentViewMode === 'field' && popperView != null) {
       setOpenView(popperView);
     }
-  }, [props.open]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [open]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const layoutProps: UsePickerViewsLayoutResponse<TView> = {
     views,
@@ -195,7 +208,7 @@ export const usePickerViews = <
   };
 
   return {
-    ...viewModeResponse,
+    hasPopperView,
     shouldRestoreFocus,
     layoutProps,
     renderViews: () => {
@@ -203,15 +216,19 @@ export const usePickerViews = <
         return null;
       }
 
-      return renderViews({
-        view: popperView,
-        onViewChange: setOpenView,
-        onChange: handleChangeAndOpenNext,
-        views,
-        wrapperVariant,
-        ...actions,
-        ...other,
+      const renderer = viewLookup?.[popperView];
+      if (renderer == null) {
+        return null;
+      }
+
+      return renderer({
+        ...props,
         ...additionalViewProps,
+        ...propsFromPickerValue,
+        wrapperVariant,
+        view: popperView,
+        views,
+        onChange: handleChangeAndOpenNext,
       });
     },
   };

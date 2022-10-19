@@ -4,29 +4,26 @@ import {
   UsePickerValueProps,
   UsePickerValueResponse,
 } from './usePickerValue';
-import {
-  ExportedUsePickerViewProps,
-  UsePickerViewParams,
-  UsePickerViewsResponse,
-} from './usePickerViews';
-import { ExportedUsePickerLayoutProps, UsePickerLayoutResponse } from './usePickerLayout';
+import { UsePickerViewsProps, UsePickerViewParams, UsePickerViewsResponse } from './usePickerViews';
+import { UsePickerLayoutProps, UsePickerLayoutResponse } from './usePickerLayout';
 
 export interface UsePickerProps<TValue, TView extends CalendarOrClockPickerView>
   extends UsePickerValueProps<TValue>,
-    ExportedUsePickerViewProps<TView>,
-    ExportedUsePickerLayoutProps {}
+    UsePickerViewsProps<TView>,
+    UsePickerLayoutProps {}
 
 export interface UsePickerParams<
   TValue,
   TDate,
   TView extends CalendarOrClockPickerView,
-  TViewProps extends {},
+  TExternalProps extends UsePickerProps<TValue, TView>,
+  TAdditionalProps extends {},
 > extends Pick<UsePickerValueParams<TValue, TDate>, 'valueManager' | 'wrapperVariant'>,
     Pick<
-      UsePickerViewParams<TValue, TView, TViewProps>,
-      'renderViews' | 'sectionModeLookup' | 'additionalViewProps' | 'inputRef'
+      UsePickerViewParams<TValue, TView, TExternalProps, TAdditionalProps>,
+      'viewLookup' | 'additionalViewProps' | 'inputRef'
     > {
-  props: UsePickerProps<TValue, TView>;
+  props: TExternalProps;
 }
 
 export interface UsePickerResponse<TValue, TView extends CalendarOrClockPickerView>
