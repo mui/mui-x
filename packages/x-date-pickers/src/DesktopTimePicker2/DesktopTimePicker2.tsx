@@ -4,22 +4,20 @@ import { resolveComponentProps } from '@mui/base/utils';
 import { timePickerValueManager } from '../TimePicker/shared';
 import { Unstable_TimeField as TimeField } from '../TimeField';
 import { DesktopTimePicker2Props } from './DesktopTimePicker2.types';
-import { useTimePicker2DefaultizedProps, renderTimeViews } from '../TimePicker2/shared';
+import { useTimePicker2DefaultizedProps } from '../TimePicker2/shared';
 import { useLocaleText } from '../internals';
 import { Clock } from '../internals/components/icons';
 import { useDesktopPicker } from '../internals/hooks/useDesktopPicker';
-import { PickerDateSectionModeLookup } from '../internals/hooks/usePicker';
-import { ClockPickerView } from '../internals/models';
 import { extractValidationProps } from '../internals/utils/validation';
 
 type DesktopTimePickerComponent = (<TDate>(
   props: DesktopTimePicker2Props<TDate> & React.RefAttributes<HTMLDivElement>,
 ) => JSX.Element) & { propTypes?: any };
 
-const SECTION_MODE_LOOKUP: PickerDateSectionModeLookup<ClockPickerView> = {
-  hours: 'field',
-  minutes: 'field',
-  seconds: 'field',
+const VIEW_LOOKUP = {
+  hours: null,
+  minutes: null,
+  seconds: null,
 };
 
 const DesktopTimePicker2 = React.forwardRef(function DesktopTimePicker2<TDate>(
@@ -60,9 +58,8 @@ const DesktopTimePicker2 = React.forwardRef(function DesktopTimePicker2<TDate>(
   const { renderPicker } = useDesktopPicker({
     props,
     valueManager: timePickerValueManager,
-    renderViews: (viewProps) => renderTimeViews({ ...props, ...viewProps }),
     getOpenDialogAriaText: localeText.openTimePickerDialogue,
-    sectionModeLookup: SECTION_MODE_LOOKUP,
+    viewLookup: VIEW_LOOKUP,
   });
 
   return renderPicker();

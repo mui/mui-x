@@ -4,26 +4,25 @@ import { resolveComponentProps } from '@mui/base/utils';
 import { datePickerValueManager } from '../DatePicker/shared';
 import { Unstable_DateTimeField as DateTimeField } from '../DateTimeField';
 import { DesktopDateTimePicker2Props } from './DesktopDateTimePicker2.types';
-import { useDateTimePicker2DefaultizedProps, renderDateTimeViews } from '../DateTimePicker2/shared';
-import { useLocaleText } from '../internals';
+import { useDateTimePicker2DefaultizedProps } from '../DateTimePicker2/shared';
+import { CalendarOrClockPickerView, useLocaleText } from '../internals';
 import { Calendar } from '../internals/components/icons';
 import { useDesktopPicker } from '../internals/hooks/useDesktopPicker';
-import { PickerDateSectionModeLookup } from '../internals/hooks/usePicker';
-import { CalendarOrClockPickerView } from '../internals/models';
 import { DateTimePickerTabs } from '../DateTimePicker/DateTimePickerTabs';
 import { extractValidationProps } from '../internals/utils/validation';
+import { renderDateView } from '../internals/utils/views';
 
 type DesktopDateTimePickerComponent = (<TDate>(
   props: DesktopDateTimePicker2Props<TDate> & React.RefAttributes<HTMLDivElement>,
 ) => JSX.Element) & { propTypes?: any };
 
-const SECTION_MODE_LOOKUP: PickerDateSectionModeLookup<CalendarOrClockPickerView> = {
-  year: 'popper',
-  month: 'popper',
-  day: 'popper',
-  hours: 'field',
-  minutes: 'field',
-  seconds: 'field',
+const VIEW_LOOKUP = {
+  day: renderDateView,
+  month: renderDateView,
+  year: renderDateView,
+  hours: null,
+  minutes: null,
+  seconds: null,
 };
 
 const DesktopDateTimePicker2 = React.forwardRef(function DesktopDateTimePicker2<TDate>(
@@ -63,12 +62,11 @@ const DesktopDateTimePicker2 = React.forwardRef(function DesktopDateTimePicker2<
     },
   };
 
-  const { renderPicker } = useDesktopPicker({
+  const { renderPicker } = useDesktopPicker<TDate, CalendarOrClockPickerView, typeof props>({
     props,
     valueManager: datePickerValueManager,
-    renderViews: (viewProps) => renderDateTimeViews({ ...props, ...viewProps }),
     getOpenDialogAriaText: localeText.openDatePickerDialogue,
-    sectionModeLookup: SECTION_MODE_LOOKUP,
+    viewLookup: VIEW_LOOKUP,
   });
 
   return renderPicker();

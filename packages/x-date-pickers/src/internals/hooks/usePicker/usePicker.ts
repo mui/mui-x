@@ -1,5 +1,5 @@
 import { CalendarOrClockPickerView } from '../../models';
-import { UsePickerParams, UsePickerResponse } from './usePicker.types';
+import { UsePickerParams, UsePickerProps, UsePickerResponse } from './usePicker.types';
 import { usePickerValue } from './usePickerValue';
 import { usePickerViews } from './usePickerViews';
 import { usePickerLayout } from './usePickerLayout';
@@ -8,16 +8,19 @@ export const usePicker = <
   TValue,
   TDate,
   TView extends CalendarOrClockPickerView,
-  TViewProps extends {},
+  TExternalProps extends UsePickerProps<TValue, TView>,
+  TAdditionalProps extends {},
 >({
   props,
   valueManager,
   wrapperVariant,
-  sectionModeLookup,
+  viewLookup,
   inputRef,
-  renderViews,
   additionalViewProps,
-}: UsePickerParams<TValue, TDate, TView, TViewProps>): UsePickerResponse<TValue, TView> => {
+}: UsePickerParams<TValue, TDate, TView, TExternalProps, TAdditionalProps>): UsePickerResponse<
+  TValue,
+  TView
+> => {
   const pickerValueResponse = usePickerValue({
     props,
     valueManager,
@@ -25,17 +28,19 @@ export const usePicker = <
   });
 
   const pickerViewsResponse = usePickerViews({
-    props: { ...props, ...pickerValueResponse.viewProps },
+    props,
+    propsFromPickerValue: pickerValueResponse.viewProps,
     additionalViewProps,
-    sectionModeLookup,
+    viewLookup,
     inputRef,
     wrapperVariant,
-    renderViews,
     actions: pickerValueResponse.actions,
   });
 
   const pickerLayoutResponse = usePickerLayout({
-    props: { ...props, ...pickerValueResponse.layoutProps, ...pickerViewsResponse.layoutProps },
+    props,
+    propsFromPickerValue: pickerValueResponse.layoutProps,
+    propsFromPickerViews: pickerViewsResponse.layoutProps,
     actions: pickerValueResponse.actions,
     wrapperVariant,
   });

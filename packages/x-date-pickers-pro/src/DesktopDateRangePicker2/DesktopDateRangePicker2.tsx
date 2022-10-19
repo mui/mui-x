@@ -4,16 +4,18 @@ import { extractValidationProps } from '@mui/x-date-pickers/internals';
 import { resolveComponentProps } from '@mui/base/utils';
 import { dateRangePickerValueManager } from '../DateRangePicker/shared';
 import { DesktopDateRangePicker2Props } from './DesktopDateRangePicker2.types';
-import {
-  useDateRangePicker2DefaultizedProps,
-  renderDateRangeViews,
-} from '../DateRangePicker2/shared';
+import { useDateRangePicker2DefaultizedProps } from '../DateRangePicker2/shared';
 import { useDesktopRangePicker } from '../internal/hooks/useDesktopRangePicker';
 import { Unstable_MultiInputDateRangeField as MultiInputDateRangeField } from '../MultiInputDateRangeField';
+import { renderDateRangeView } from '../internal/utils/views';
 
 type DesktopDateRangePickerComponent = (<TDate>(
   props: DesktopDateRangePicker2Props<TDate> & React.RefAttributes<HTMLDivElement>,
 ) => JSX.Element) & { propTypes?: any };
+
+const VIEW_LOOKUP = {
+  day: renderDateRangeView,
+};
 
 const DesktopDateRangePicker2 = React.forwardRef(function DesktopDateRangePicker2<TDate>(
   inProps: DesktopDateRangePicker2Props<TDate>,
@@ -47,10 +49,10 @@ const DesktopDateRangePicker2 = React.forwardRef(function DesktopDateRangePicker
     },
   };
 
-  const { renderPicker } = useDesktopRangePicker({
+  const { renderPicker } = useDesktopRangePicker<TDate, 'day', typeof props>({
     props,
     valueManager: dateRangePickerValueManager,
-    renderViews: (viewProps) => renderDateRangeViews({ ...props, ...viewProps }),
+    viewLookup: VIEW_LOOKUP,
   });
 
   return renderPicker();

@@ -10,7 +10,10 @@ import {
   PickersPopper,
   PickerViewLayout,
 } from '@mui/x-date-pickers/internals';
-import { UseDesktopRangePickerParams } from './useDesktopRangePicker.types';
+import {
+  UseDesktopRangePickerParams,
+  UseDesktopRangePickerProps,
+} from './useDesktopRangePicker.types';
 import { useRangePickerField } from './useRangePickerField';
 import { getReleaseInfo } from '../../utils/releaseInfo';
 import { DateRange } from '../../models/range';
@@ -18,12 +21,15 @@ import { BaseMultiInputFieldProps } from '../../models/fields';
 
 const releaseInfo = getReleaseInfo();
 
-export const useDesktopRangePicker = <TDate, TView extends CalendarOrClockPickerView>({
+export const useDesktopRangePicker = <
+  TDate,
+  TView extends CalendarOrClockPickerView,
+  TExternalProps extends UseDesktopRangePickerProps<TDate, TView>,
+>({
   props,
   valueManager,
-  renderViews: renderViewsParam,
-  sectionModeLookup,
-}: UseDesktopRangePickerParams<TDate, TView>) => {
+  viewLookup,
+}: UseDesktopRangePickerParams<TDate, TView, TExternalProps>) => {
   useLicenseVerifier('x-date-pickers-pro', releaseInfo);
 
   const {
@@ -52,8 +58,7 @@ export const useDesktopRangePicker = <TDate, TView extends CalendarOrClockPicker
     props,
     valueManager,
     wrapperVariant: 'desktop',
-    renderViews: renderViewsParam,
-    sectionModeLookup,
+    viewLookup,
     additionalViewProps: {
       currentDatePosition,
       onCurrentDatePositionChange: setCurrentDatePosition,

@@ -3,16 +3,23 @@ import PropTypes from 'prop-types';
 import { resolveComponentProps } from '@mui/base/utils';
 import { datePickerValueManager } from '../DatePicker/shared';
 import { DesktopDatePicker2Props } from './DesktopDatePicker2.types';
-import { useDatePicker2DefaultizedProps, renderDateViews } from '../DatePicker2/shared';
-import { useLocaleText } from '../internals';
+import { useDatePicker2DefaultizedProps } from '../DatePicker2/shared';
+import { CalendarPickerView, useLocaleText } from '../internals';
 import { useDesktopPicker } from '../internals/hooks/useDesktopPicker';
 import { Calendar } from '../internals/components/icons';
 import { Unstable_DateField as DateField } from '../DateField';
 import { extractValidationProps } from '../internals/utils/validation';
+import { renderDateView } from '../internals/utils/views';
 
 type DesktopDatePickerComponent = (<TDate>(
   props: DesktopDatePicker2Props<TDate> & React.RefAttributes<HTMLDivElement>,
 ) => JSX.Element) & { propTypes?: any };
+
+const VIEW_LOOKUP = {
+  day: renderDateView,
+  month: renderDateView,
+  year: renderDateView,
+};
 
 const DesktopDatePicker2 = React.forwardRef(function DesktopDatePicker2<TDate>(
   inProps: DesktopDatePicker2Props<TDate>,
@@ -49,11 +56,11 @@ const DesktopDatePicker2 = React.forwardRef(function DesktopDatePicker2<TDate>(
     },
   };
 
-  const { renderPicker } = useDesktopPicker({
+  const { renderPicker } = useDesktopPicker<TDate, CalendarPickerView, typeof props>({
     props,
     valueManager: datePickerValueManager,
-    renderViews: (viewProps) => renderDateViews({ ...props, ...viewProps }),
     getOpenDialogAriaText: localeText.openDatePickerDialogue,
+    viewLookup: VIEW_LOOKUP,
   });
 
   return renderPicker();

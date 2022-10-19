@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useThemeProps } from '@mui/material/styles';
 import { DefaultizedProps, MakeOptional } from '../internals/models/helpers';
-import { ClockPicker, ClockPickerProps, ClockPickerView } from '../ClockPicker';
+import { ClockPickerView } from '../ClockPicker';
 import { useUtils } from '../internals/hooks/useUtils';
 import { ValidationCommonPropsOptionalValue } from '../internals/hooks/validation/useValidation';
 import { DateValidationError } from '../internals/hooks/validation/useDateValidation';
@@ -125,7 +125,3 @@ export function useTimePicker2DefaultizedProps<TDate, Props extends BaseTimePick
     },
   };
 }
-
-export const renderTimeViews = <TDate extends unknown>(props: ClockPickerProps<TDate>) => (
-  <ClockPicker<TDate> {...props} autoFocus />
-);

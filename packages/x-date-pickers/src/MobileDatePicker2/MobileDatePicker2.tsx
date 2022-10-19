@@ -4,14 +4,21 @@ import { resolveComponentProps } from '@mui/base/utils';
 import { useMobilePicker } from '../internals/hooks/useMobilePicker';
 import { datePickerValueManager } from '../DatePicker/shared';
 import { MobileDatePicker2Props } from './MobileDatePicker2.types';
-import { useDatePicker2DefaultizedProps, renderDateViews } from '../DatePicker2/shared';
-import { useLocaleText } from '../internals';
+import { useDatePicker2DefaultizedProps } from '../DatePicker2/shared';
+import { CalendarPickerView, useLocaleText } from '../internals';
 import { Unstable_DateField as DateField } from '../DateField';
 import { extractValidationProps } from '../internals/utils/validation';
+import { renderDateView } from '../internals/utils/views';
 
 type MobileDatePickerComponent = (<TDate>(
   props: MobileDatePicker2Props<TDate> & React.RefAttributes<HTMLDivElement>,
 ) => JSX.Element) & { propTypes?: any };
+
+const VIEW_LOOKUP = {
+  day: renderDateView,
+  month: renderDateView,
+  year: renderDateView,
+};
 
 const MobileDatePicker2 = React.forwardRef(function MobileDatePicker2<TDate>(
   inProps: MobileDatePicker2Props<TDate>,
@@ -47,19 +54,11 @@ const MobileDatePicker2 = React.forwardRef(function MobileDatePicker2<TDate>(
     },
   };
 
-  const {
-    components: providedComponents,
-    componentsProps: providedComponentsProps,
-    inputRef,
-    label,
-    ...other
-  } = props;
-
-  const { renderPicker } = useMobilePicker({
+  const { renderPicker } = useMobilePicker<TDate, CalendarPickerView, typeof props>({
     props,
     valueManager: datePickerValueManager,
-    renderViews: (viewProps) => renderDateViews({ ...other, ...viewProps }),
     getOpenDialogAriaText: localeText.openDatePickerDialogue,
+    viewLookup: VIEW_LOOKUP,
   });
 
   return renderPicker();

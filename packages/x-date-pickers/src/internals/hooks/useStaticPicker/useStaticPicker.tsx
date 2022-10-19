@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import { CalendarOrClockPickerView } from '../../models/views';
-import { UseStaticPickerParams } from './useStaticPicker.types';
+import { UseStaticPickerParams, UseStaticPickerProps } from './useStaticPicker.types';
 import { usePicker } from '../usePicker';
 import { LocalizationProvider } from '../../../LocalizationProvider';
 import { WrapperVariantContext } from '../../components/wrappers/WrapperVariantContext';
@@ -20,18 +20,22 @@ const PickerStaticViewLayout = styled(PickerViewLayout)(({ theme }) => ({
  * - StaticDateTimePicker
  * - StaticTimePicker
  */
-export const useStaticPicker = <TDate, TView extends CalendarOrClockPickerView>({
+export const useStaticPicker = <
+  TDate,
+  TView extends CalendarOrClockPickerView,
+  TExternalProps extends UseStaticPickerProps<TDate, TView>,
+>({
   props,
   valueManager,
-  renderViews: renderViewsParam,
-}: UseStaticPickerParams<TDate, TView>) => {
+  viewLookup,
+}: UseStaticPickerParams<TDate, TView, TExternalProps>) => {
   const { localeText, components, componentsProps, displayStaticWrapperAs } = props;
 
   const { layoutProps, renderViews } = usePicker({
     props,
     valueManager,
+    viewLookup,
     wrapperVariant: displayStaticWrapperAs,
-    renderViews: renderViewsParam,
     additionalViewProps: {},
   });
 

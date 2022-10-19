@@ -13,8 +13,6 @@ import {
 import { DateRangeValidationError } from '../internal/hooks/validation/useDateRangeValidation';
 import { DateRange } from '../internal/models';
 import {
-  DateRangeCalendar,
-  DateRangeCalendarProps,
   DateRangeCalendarSlotsComponent,
   DateRangeCalendarSlotsComponentsProps,
   ExportedDateRangeCalendarProps,
@@ -97,7 +95,3 @@ export function useDateRangePicker2DefaultizedProps<
     components: { Toolbar: DateRangePickerToolbar, ...themeProps.components },
   };
 }
-
-export const renderDateRangeViews = <TDate extends unknown>(
-  props: DateRangeCalendarProps<TDate>,
-) => <DateRangeCalendar {...props} />;

@@ -3,7 +3,7 @@ import { resolveComponentProps, useSlotProps } from '@mui/base/utils';
 import useForkRef from '@mui/utils/useForkRef';
 import { PickersModalDialog } from '../../components/PickersModalDialog';
 import { CalendarOrClockPickerView } from '../../models';
-import { UseMobilePickerParams } from './useMobilePicker.types';
+import { UseMobilePickerParams, UseMobilePickerProps } from './useMobilePicker.types';
 import { usePicker } from '../usePicker';
 import { onSpaceOrEnter } from '../../utils/utils';
 import { useUtils } from '../useUtils';
@@ -18,13 +18,16 @@ import { PickerViewLayout } from '../../components/PickerViewLayout';
  * - MobileDateTimePicker
  * - MobileTimePicker
  */
-export const useMobilePicker = <TDate, TView extends CalendarOrClockPickerView>({
+export const useMobilePicker = <
+  TDate,
+  TView extends CalendarOrClockPickerView,
+  TExternalProps extends UseMobilePickerProps<TDate, TView>,
+>({
   props,
   valueManager,
-  renderViews: renderViewsParam,
   getOpenDialogAriaText,
-  sectionModeLookup,
-}: UseMobilePickerParams<TDate, TView>) => {
+  viewLookup,
+}: UseMobilePickerParams<TDate, TView, TExternalProps>) => {
   const { components, componentsProps, className, inputFormat, disabled, localeText } = props;
 
   const utils = useUtils<TDate>();
@@ -40,8 +43,7 @@ export const useMobilePicker = <TDate, TView extends CalendarOrClockPickerView>(
     props,
     valueManager,
     wrapperVariant: 'mobile',
-    renderViews: renderViewsParam,
-    sectionModeLookup,
+    viewLookup,
     inputRef,
     additionalViewProps: {},
   });

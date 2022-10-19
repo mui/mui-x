@@ -1,20 +1,28 @@
 import * as React from 'react';
 import { StaticDatePicker2Props } from './StaticDatePicker2.types';
-import { renderDateViews, useDatePicker2DefaultizedProps } from '../DatePicker2/shared';
+import { useDatePicker2DefaultizedProps } from '../DatePicker2/shared';
 import { datePickerValueManager } from '../DatePicker/shared';
 import { useStaticPicker } from '../internals/hooks/useStaticPicker';
+import { CalendarPickerView } from '../internals/models';
+import { renderDateView } from '../internals/utils/views';
 
 type StaticDatePickerComponent = (<TDate>(
   props: StaticDatePicker2Props<TDate> & React.RefAttributes<HTMLDivElement>,
 ) => JSX.Element) & { propTypes?: any };
 
+const VIEW_LOOKUP = {
+  day: renderDateView,
+  month: renderDateView,
+  year: renderDateView,
+};
+
 export const StaticDatePicker2 = React.forwardRef(function StaticDatePicker2<TDate>(
   inProps: StaticDatePicker2Props<TDate>,
 ) {
-  const { className, sx, ...defaultizedProps } = useDatePicker2DefaultizedProps<
-    TDate,
-    StaticDatePicker2Props<TDate>
-  >(inProps, 'MuiStaticDatePicker2');
+  const defaultizedProps = useDatePicker2DefaultizedProps<TDate, StaticDatePicker2Props<TDate>>(
+    inProps,
+    'MuiStaticDatePicker2',
+  );
 
   const displayStaticWrapperAs = defaultizedProps.displayStaticWrapperAs ?? 'mobile';
 
@@ -25,10 +33,10 @@ export const StaticDatePicker2 = React.forwardRef(function StaticDatePicker2<TDa
     showToolbar: defaultizedProps.showToolbar ?? displayStaticWrapperAs === 'mobile',
   };
 
-  const { renderPicker } = useStaticPicker({
-    props: { ...props, className, sx },
+  const { renderPicker } = useStaticPicker<TDate, CalendarPickerView, typeof props>({
+    props,
     valueManager: datePickerValueManager,
-    renderViews: (viewProps) => renderDateViews({ ...props, ...viewProps }),
+    viewLookup: VIEW_LOOKUP,
   });
 
   return renderPicker();

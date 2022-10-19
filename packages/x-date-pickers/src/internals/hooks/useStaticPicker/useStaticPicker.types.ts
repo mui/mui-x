@@ -41,10 +41,13 @@ export interface UseStaticPickerProps<TDate, TView extends CalendarOrClockPicker
   componentsProps?: UseStaticPickerSlotsComponentsProps;
 }
 
-export interface UseStaticPickerParams<TDate, TView extends CalendarOrClockPickerView>
-  extends Pick<
-    UsePickerParams<TDate | null, TDate, TView, {}>,
-    'props' | 'valueManager' | 'renderViews'
+export interface UseStaticPickerParams<
+  TDate,
+  TView extends CalendarOrClockPickerView,
+  TExternalProps extends UseStaticPickerProps<TDate, TView>,
+> extends Pick<
+    UsePickerParams<TDate | null, TDate, TView, TExternalProps, {}>,
+    'valueManager' | 'viewLookup'
   > {
-  props: UseStaticPickerProps<TDate, TView>;
+  props: TExternalProps;
 }

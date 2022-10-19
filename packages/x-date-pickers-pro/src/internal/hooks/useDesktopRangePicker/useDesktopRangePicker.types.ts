@@ -16,7 +16,6 @@ export interface UseDesktopRangePickerSlotsComponent extends PickersPopperSlotsC
   Input?: React.ElementType<TextFieldProps>;
 }
 
-// TODO: Type props of all slots
 export interface UseDesktopRangePickerSlotsComponentsProps<TDate>
   extends PickersPopperSlotsComponentsProps {
   field?: SlotComponentProps<
@@ -29,7 +28,7 @@ export interface UseDesktopRangePickerSlotsComponentsProps<TDate>
 
 export interface ExportedUseDesktopRangePickerProps {}
 
-interface UseDesktopRangePickerProps<TDate, TView extends CalendarOrClockPickerView>
+export interface UseDesktopRangePickerProps<TDate, TView extends CalendarOrClockPickerView>
   extends ExportedUseDesktopRangePickerProps,
     BasePickerProps2<DateRange<TDate>, TDate, TView> {
   /**
@@ -49,10 +48,19 @@ interface DesktopRangePickerAdditionalViewProps {
   onCurrentDatePositionChange: (newPosition: 'start' | 'end') => void;
 }
 
-export interface UseDesktopRangePickerParams<TDate, TView extends CalendarOrClockPickerView>
-  extends Pick<
-    UsePickerParams<DateRange<TDate>, TDate, TView, DesktopRangePickerAdditionalViewProps>,
-    'props' | 'valueManager' | 'sectionModeLookup' | 'renderViews'
+export interface UseDesktopRangePickerParams<
+  TDate,
+  TView extends CalendarOrClockPickerView,
+  TExternalProps extends UseDesktopRangePickerProps<TDate, TView>,
+> extends Pick<
+    UsePickerParams<
+      DateRange<TDate>,
+      TDate,
+      TView,
+      TExternalProps,
+      DesktopRangePickerAdditionalViewProps
+    >,
+    'valueManager' | 'viewLookup'
   > {
-  props: UseDesktopRangePickerProps<TDate, TView>;
+  props: TExternalProps;
 }

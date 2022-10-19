@@ -1,31 +1,22 @@
 import * as React from 'react';
 import { useThemeProps } from '@mui/material/styles';
 import { DefaultizedProps, MakeOptional } from '../internals/models/helpers';
-import {
-  CalendarOrClockPickerView,
-  CalendarPickerView,
-  ClockPickerView,
-} from '../internals/models';
+import { CalendarOrClockPickerView } from '../internals/models';
 import { useDefaultDates, useUtils } from '../internals/hooks/useUtils';
 import { ValidationCommonPropsOptionalValue } from '../internals/hooks/validation/useValidation';
 import { DateValidationError } from '../internals/hooks/validation/useDateValidation';
 import {
-  DateCalendar,
-  DateCalendarProps,
   DateCalendarSlotsComponent,
   DateCalendarSlotsComponentsProps,
   ExportedDateCalendarProps,
 } from '../DateCalendar/DateCalendar';
 import {
-  ClockPicker,
-  ClockPickerProps,
   ClockPickerSlotsComponent,
   ClockPickerSlotsComponentsProps,
   ExportedClockPickerProps,
 } from '../ClockPicker/ClockPicker';
 import { BasePickerProps2 } from '../internals/models/props/basePickerProps';
 import { applyDefaultDate } from '../internals/utils/date-utils';
-import { PickerViewsRendererProps } from '../internals/hooks/usePicker/usePickerViews';
 import {
   DateTimePickerTabsProps,
   ExportedDateTimePickerTabsProps,
@@ -209,68 +200,3 @@ export function useDateTimePicker2DefaultizedProps<
     },
   };
 }
-
-type DateTimePickerViewBlacklist =
-  | 'view'
-  | 'views'
-  | 'onViewChange'
-  | 'openTo'
-  | 'components'
-  | 'componentsProps'
-  | 'classes';
-
-interface DateTimePickerViewsProps<TDate>
-  extends Omit<DateCalendarProps<TDate>, DateTimePickerViewBlacklist>,
-    Omit<ClockPickerProps<TDate>, DateTimePickerViewBlacklist>,
-    PickerViewsRendererProps<TDate | null, CalendarOrClockPickerView, {}> {
-  components?: DateCalendarProps<TDate>['components'] & ClockPickerProps<TDate>['components'];
-  componentsProps?: DateCalendarProps<TDate>['componentsProps'] &
-    ClockPickerProps<TDate>['componentsProps'];
-}
-
-const isDatePickerView = (view: CalendarOrClockPickerView): view is CalendarPickerView =>
-  view === 'year' || view === 'month' || view === 'day';
-
-const isTimePickerView = (view: CalendarOrClockPickerView): view is ClockPickerView =>
-  view === 'hours' || view === 'minutes' || view === 'seconds';
-
-export const renderDateTimeViews = <TDate extends unknown>(
-  props: DateTimePickerViewsProps<TDate>,
-) => {
-  const {
-    views,
-    view,
-    // We don't want to pass this prop to the views because it can cause proptypes warnings
-    // @ts-ignore
-    openTo,
-    wrapperVariant,
-    ...other
-  } = props;
-
-  if (isDatePickerView(view)) {
-    return (
-      <DateCalendar
-        views={views.filter(isDatePickerView)}
-        view={view}
-        autoFocus
-        // focusedView={focusedView}
-        // onFocusedViewChange={setFocusedView}
-        {...other}
-      />
-    );
-  }
-
-  if (isTimePickerView(view)) {
-    return (
-      <ClockPicker
-        {...other}
-        views={views.filter(isTimePickerView)}
-        view={view}
-        autoFocus
-        // showViewSwitcher={wrapperVariant === 'desktop'}
-      />
-    );
-  }
-
-  return null;
-};
