@@ -8,6 +8,7 @@ import { useLocaleText } from '../internals';
 import { useDesktopPicker } from '../internals/hooks/useDesktopPicker';
 import { Calendar } from '../internals/components/icons';
 import { Unstable_DateField as DateField } from '../DateField';
+import { extractValidationProps } from '../internals/utils/validation';
 
 type DesktopDatePickerComponent = (<TDate>(
   props: DesktopDatePicker2Props<TDate> & React.RefAttributes<HTMLDivElement>,
@@ -20,10 +21,10 @@ const DesktopDatePicker2 = React.forwardRef(function DesktopDatePicker2<TDate>(
   const localeText = useLocaleText();
 
   // Props with the default values common to all date pickers
-  const defaultizedProps = useDatePicker2DefaultizedProps<TDate, DesktopDatePicker2Props<TDate>>(
-    inProps,
-    'MuiDesktopDatePicker2',
-  );
+  const { className, sx, ...defaultizedProps } = useDatePicker2DefaultizedProps<
+    TDate,
+    DesktopDatePicker2Props<TDate>
+  >(inProps, 'MuiDesktopDatePicker2');
 
   // Props with the default values specific to the desktop variant
   const props = {
@@ -38,7 +39,10 @@ const DesktopDatePicker2 = React.forwardRef(function DesktopDatePicker2<TDate>(
       ...defaultizedProps.componentsProps,
       field: (ownerState: any) => ({
         ...resolveComponentProps(defaultizedProps.componentsProps?.field, ownerState),
+        ...extractValidationProps(defaultizedProps),
         ref,
+        className,
+        sx,
         inputRef: defaultizedProps.inputRef,
         label: defaultizedProps.label,
       }),
