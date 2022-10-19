@@ -102,6 +102,7 @@
     "NextIconButton": { "default": "IconButton", "type": { "name": "elementType" } },
     "OpenPickerButton": { "default": "IconButton", "type": { "name": "elementType" } },
     "OpenPickerIcon": { "type": { "name": "elementType" } },
+    "PaperContent": { "default": "React.Fragment", "type": { "name": "elementType" } },
     "Popper": { "default": "Popper from @mui/material", "type": { "name": "elementType" } },
     "PreviousIconButton": { "default": "IconButton", "type": { "name": "elementType" } },
     "RightArrowIcon": { "default": "ArrowRight", "type": { "name": "elementType" } },
@@ -112,6 +113,7 @@
   "name": "DesktopDatePicker2",
   "styles": { "classes": [], "globalClasses": {}, "name": "MuiDesktopDatePicker2" },
   "filename": "/packages/x-date-pickers/src/DesktopDatePicker2/DesktopDatePicker2.tsx",
+  "inheritance": null,
   "demos": "<ul></ul>",
   "packages": ["@mui/x-date-pickers-pro", "@mui/x-date-pickers"]
 }

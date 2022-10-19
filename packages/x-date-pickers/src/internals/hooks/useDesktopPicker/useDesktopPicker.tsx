@@ -160,7 +160,7 @@ export const useDesktopPicker = <TDate, TView extends CalendarOrClockPickerView>
             desktopTransition: componentsProps?.desktopTransition,
             desktopTrapFocus: componentsProps?.desktopTrapFocus,
             popper: componentsProps?.popper,
-            paperContent: componentsProps.paperContent,
+            paperContent: componentsProps?.paperContent,
           }}
           shouldRestoreFocus={shouldRestoreFocus}
         >
