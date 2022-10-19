@@ -16,11 +16,13 @@ export const StaticDatePicker2 = React.forwardRef(function StaticDatePicker2<TDa
     StaticDatePicker2Props<TDate>
   >(inProps, 'MuiStaticDatePicker2');
 
+  const displayStaticWrapperAs = defaultizedProps.displayStaticWrapperAs ?? 'mobile';
+
   // Props with the default values specific to the static variant
   const props = {
     ...defaultizedProps,
-    showToolbar:
-      defaultizedProps.showToolbar ?? defaultizedProps.displayStaticWrapperAs === 'mobile',
+    displayStaticWrapperAs,
+    showToolbar: defaultizedProps.showToolbar ?? displayStaticWrapperAs === 'mobile',
   };
 
   const { renderPicker } = useStaticPicker({

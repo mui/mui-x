@@ -17,7 +17,7 @@ export const useStaticPicker = <TDate, TView extends CalendarOrClockPickerView>(
   valueManager,
   renderViews: renderViewsParam,
 }: UseStaticPickerParams<TDate, TView>) => {
-  const { localeText, components, componentsProps, displayStaticWrapperAs = 'mobile' } = props;
+  const { localeText, components, componentsProps, displayStaticWrapperAs } = props;
 
   const { layoutProps, renderViews } = usePicker({
     props,

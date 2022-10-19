@@ -2,7 +2,7 @@ import {
   ExportedPickerViewLayoutSlotsComponent,
   ExportedPickerViewLayoutSlotsComponentsProps,
 } from '../../components/PickerViewLayout';
-import { CalendarOrClockPickerView, MuiPickersAdapter } from '../../models';
+import { CalendarOrClockPickerView } from '../../models';
 import { BasePickerProps2 } from '../../models/props/basePickerProps';
 import { UsePickerParams } from '../usePicker';
 
@@ -16,7 +16,7 @@ export interface StaticOnlyPickerProps {
    * Force static wrapper inner components to be rendered in mobile or desktop mode.
    * @default "mobile"
    */
-  displayStaticWrapperAs?: 'desktop' | 'mobile';
+  displayStaticWrapperAs: 'desktop' | 'mobile';
 }
 
 export interface UseStaticPickerProps<TDate, TView extends CalendarOrClockPickerView>

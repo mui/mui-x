@@ -8,6 +8,7 @@ import {
   UseStaticPickerSlotsComponent,
   UseStaticPickerSlotsComponentsProps,
 } from '../internals/hooks/useStaticPicker';
+import { MakeOptional } from '../internals';
 
 export interface StaticDatePicker2SlotsComponent<TDate>
   extends BaseDatePicker2SlotsComponent<TDate>,
@@ -19,7 +20,7 @@ export interface StaticDatePicker2SlotsComponentsProps<TDate>
 
 export interface StaticDatePicker2Props<TDate>
   extends BaseDatePicker2Props<TDate>,
-    StaticOnlyPickerProps {
+    MakeOptional<StaticOnlyPickerProps, 'displayStaticWrapperAs'> {
   /**
    * Overrideable components.
    * @default {}
