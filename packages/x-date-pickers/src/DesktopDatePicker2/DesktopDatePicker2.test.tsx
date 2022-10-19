@@ -16,6 +16,7 @@ describe('<DesktopDatePicker2 />', () => {
     render,
     clock,
     views: ['year', 'month', 'day'],
+    ignoredProps: ['minTime', 'maxTime'],
   }));
 
   describe('Component slots: OpenPickerIcon', () => {
