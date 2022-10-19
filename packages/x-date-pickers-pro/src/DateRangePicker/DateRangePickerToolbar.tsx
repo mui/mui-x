@@ -9,6 +9,7 @@ import {
   useUtils,
   BaseToolbarProps,
   useLocaleText,
+  ExportedBaseToolbarProps,
 } from '@mui/x-date-pickers/internals';
 import { DateRange, CurrentlySelectingRangeEndProps } from '../internal/models';
 import {
@@ -27,17 +28,15 @@ const useUtilityClasses = (ownerState: DateRangePickerToolbarProps<any>) => {
 };
 
 export interface DateRangePickerToolbarProps<TDate>
-  extends CurrentlySelectingRangeEndProps,
-    Pick<
-      BaseToolbarProps<TDate, DateRange<TDate>>,
-      | 'isMobileKeyboardViewOpen'
-      | 'toggleMobileKeyboardView'
-      | 'toolbarTitle'
-      | 'toolbarFormat'
-      | 'value'
-    > {
+  extends Omit<
+      BaseToolbarProps<DateRange<TDate>>,
+      'views' | 'view' | 'onViewChange' | 'onChange' | 'isLandscape'
+    >,
+    CurrentlySelectingRangeEndProps {
   classes?: Partial<DateRangePickerToolbarClasses>;
 }
+
+export interface ExportedDateRangePickerToolbarProps extends ExportedBaseToolbarProps {}
 
 const DateRangePickerToolbarRoot = styled(PickersToolbar, {
   name: 'MuiDateRangePickerToolbar',
@@ -76,11 +75,9 @@ export const DateRangePickerToolbar = React.forwardRef(function DateRangePickerT
     setCurrentlySelectingRangeEnd,
     toggleMobileKeyboardView,
     toolbarFormat,
-    toolbarTitle: toolbarTitleProp,
   } = props;
 
   const localeText = useLocaleText();
-  const toolbarTitle = toolbarTitleProp ?? localeText.dateRangePickerDefaultToolbarTitle;
 
   const startDateValue = start
     ? utils.formatByString(start, toolbarFormat || utils.formats.shortDate)
@@ -95,7 +92,7 @@ export const DateRangePickerToolbar = React.forwardRef(function DateRangePickerT
 
   return (
     <DateRangePickerToolbarRoot
-      toolbarTitle={toolbarTitle}
+      toolbarTitle={localeText.dateRangePickerToolbarTitle}
       isMobileKeyboardViewOpen={isMobileKeyboardViewOpen}
       toggleMobileKeyboardView={toggleMobileKeyboardView}
       isLandscape={false}

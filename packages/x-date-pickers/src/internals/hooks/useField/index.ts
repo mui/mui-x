@@ -7,6 +7,8 @@ export type {
   UseFieldParams,
   UseFieldResponse,
   FieldSelectedSections,
+  FieldChangeHandler,
+  FieldChangeHandlerContext,
 } from './useField.interfaces';
 export {
   splitFormatIntoSections,

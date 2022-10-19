@@ -3,7 +3,7 @@ export * from './columnMenu';
 export * from './columns';
 export * from './columnGrouping';
 export * from './density';
-export * from './editRows';
+export * from './editing';
 export * from './filter';
 export * from './focus';
 export * from './pagination';

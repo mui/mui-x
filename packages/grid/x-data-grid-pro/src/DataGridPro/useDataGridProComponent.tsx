@@ -16,10 +16,8 @@ import {
   useGridPagination,
   paginationStateInitializer,
   useGridPreferencesPanel,
-  useGridEditing_new,
-  useGridEditing_old,
-  editingStateInitializer_old,
-  editingStateInitializer_new,
+  useGridEditing,
+  editingStateInitializer,
   useGridRows,
   useGridRowsPreProcessors,
   rowsStateInitializer,
@@ -42,7 +40,6 @@ import {
   selectionStateInitializer,
   useGridColumnGrouping,
   columnGroupsStateInitializer,
-  useGridColumnGroupingPreProcessors,
 } from '@mui/x-data-grid/internals';
 import { GridApiPro } from '../models/gridApiPro';
 import { DataGridProProcessedProps } from '../models/dataGridProProps';
@@ -87,7 +84,6 @@ export const useDataGridProComponent = (
   /**
    * Register all pre-processors called during state initialization here.
    */
-  useGridColumnGroupingPreProcessors(apiRef, props);
   useGridSelectionPreProcessors(apiRef, props);
   useGridRowReorderPreProcessors(apiRef, props);
   useGridTreeDataPreProcessors(apiRef, props);
@@ -108,13 +104,7 @@ export const useDataGridProComponent = (
   useGridInitializeState(columnsStateInitializer, apiRef, props);
   useGridInitializeState(rowPinningStateInitializer, apiRef, props);
   useGridInitializeState(rowsStateInitializer, apiRef, props);
-  useGridInitializeState(
-    props.experimentalFeatures?.newEditingApi
-      ? editingStateInitializer_new
-      : editingStateInitializer_old,
-    apiRef,
-    props,
-  );
+  useGridInitializeState(editingStateInitializer, apiRef, props);
   useGridInitializeState(focusStateInitializer, apiRef, props);
   useGridInitializeState(sortingStateInitializer, apiRef, props);
   useGridInitializeState(preferencePanelStateInitializer, apiRef, props);
@@ -138,12 +128,7 @@ export const useDataGridProComponent = (
   useGridDetailPanel(apiRef, props);
   useGridColumnSpanning(apiRef);
   useGridColumnGrouping(apiRef, props);
-
-  const useGridEditing = props.experimentalFeatures?.newEditingApi
-    ? useGridEditing_new
-    : useGridEditing_old;
   useGridEditing(apiRef, props);
-
   useGridFocus(apiRef, props);
   useGridPreferencesPanel(apiRef, props);
   useGridFilter(apiRef, props);

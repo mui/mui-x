@@ -43,10 +43,10 @@ const jaJPPickers: Partial<PickersLocaleText<any>> = {
   todayButtonLabel: '今日',
 
   // Toolbar titles
-  datePickerDefaultToolbarTitle: '日付を選択',
-  dateTimePickerDefaultToolbarTitle: '日時を選択',
-  timePickerDefaultToolbarTitle: '時間を選択',
-  dateRangePickerDefaultToolbarTitle: '日付の範囲を選択',
+  datePickerToolbarTitle: '日付を選択',
+  dateTimePickerToolbarTitle: '日時を選択',
+  timePickerToolbarTitle: '時間を選択',
+  dateRangePickerToolbarTitle: '日付の範囲を選択',
 
   // Clock labels
   clockLabelText: (view, time, adapter) =>
@@ -72,6 +72,15 @@ const jaJPPickers: Partial<PickersLocaleText<any>> = {
   // Table labels
   timeTableLabel: '時間を選択',
   dateTableLabel: '日付を選択',
+
+  // Field section placeholders
+  // fieldYearPlaceholder: params => 'Y'.repeat(params.digitAmount),
+  // fieldMonthPlaceholder: params => params.contentType === 'letter' ? 'MMMM' : 'MM',
+  // fieldDayPlaceholder: () => 'DD',
+  // fieldHoursPlaceholder: () => 'hh',
+  // fieldMinutesPlaceholder: () => 'mm',
+  // fieldSecondsPlaceholder: () => 'ss',
+  // fieldMeridiemPlaceholder: () => 'aa',
 };
 
 export const jaJP = getPickersLocalization(jaJPPickers);

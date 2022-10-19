@@ -47,12 +47,6 @@ Observe que a propriedade `calendars` só funciona no modo desktop.
 
 {{"demo": "CalendarsDateRangePicker.js"}}
 
-## Desabilitando datas
-
-Desabilitar datas se comporta da mesma forma que `DatePicker`.
-
-{{"demo": "MinMaxDateRangePicker.js"}}
-
 ## Componente de entrada customizado
 
 É possível customizar o componente de entrada renderizado com a propriedade `renderInput`. Para o `DateRangePicker` ele recebe **2** parâmetros– para o campo inicial e final, respectivamente. Se você precisar renderizar campos de entrada customizados, certifique-se de encaminhar `ref` e `inputProps` corretamente para os componentes de entrada.

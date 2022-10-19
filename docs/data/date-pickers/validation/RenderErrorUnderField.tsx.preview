@@ -1,0 +1,14 @@
+<LocalizationProvider dateAdapter={AdapterDayjs}>
+  <Box width={300}>
+    <DatePicker
+      value={value}
+      onChange={(newValue) => setValue(newValue)}
+      onError={(newError) => setError(newError)}
+      renderInput={(params) => (
+        <TextField {...params} helperText={errorMessage} fullWidth />
+      )}
+      minDate={startOfQ12022}
+      maxDate={endOfQ12022}
+    />
+  </Box>
+</LocalizationProvider>

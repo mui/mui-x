@@ -1,10 +1,10 @@
 import { createTheme } from '@mui/material/styles';
 import {
-  calendarPickerClasses,
+  dateCalendarClasses,
   dayPickerClasses,
   pickersCalendarHeaderClasses,
-} from '../CalendarPicker';
-import { calendarPickerSkeletonClasses } from '../CalendarPickerSkeleton';
+} from '../DateCalendar';
+import { dayCalendarSkeletonClasses } from '../DayCalendarSkeleton';
 import {
   clockClasses,
   clockNumberClasses,
@@ -40,31 +40,31 @@ createTheme({
         },
       },
     },
-    MuiCalendarPicker: {
+    MuiDateCalendar: {
       defaultProps: {
         view: 'day',
-        // @ts-expect-error invalid MuiCalendarPicker prop
+        // @ts-expect-error invalid MuiDateCalendar prop
         someRandomProp: true,
       },
       styleOverrides: {
         root: {
           backgroundColor: 'red',
-          [`.${calendarPickerClasses.viewTransitionContainer}`]: {
+          [`.${dateCalendarClasses.viewTransitionContainer}`]: {
             backgroundColor: 'green',
           },
         },
       },
     },
-    MuiCalendarPickerSkeleton: {
+    MuiDayCalendarSkeleton: {
       defaultProps: {
         className: 'class',
-        // @ts-expect-error invalid MuiCalendarPickerSkeleton prop
+        // @ts-expect-error invalid MuiDayCalendarSkeleton prop
         someRandomProp: true,
       },
       styleOverrides: {
         root: {
           backgroundColor: 'red',
-          [`.${calendarPickerSkeletonClasses.week}`]: {
+          [`.${dayCalendarSkeletonClasses.week}`]: {
             backgroundColor: 'green',
           },
         },
@@ -186,10 +186,10 @@ createTheme({
         },
       },
     },
-    MuiDayPicker: {
+    MuiDayCalendar: {
       defaultProps: {
         disabled: true,
-        // @ts-expect-error invalid MuiDayPicker prop
+        // @ts-expect-error invalid MuiDayCalendar prop
         someRandomProp: true,
       },
       styleOverrides: {
@@ -222,10 +222,10 @@ createTheme({
         someRandomProp: true,
       },
     },
-    MuiMonthPicker: {
+    MuiMonthCalendar: {
       defaultProps: {
         disableFuture: true,
-        // @ts-expect-error invalid MuiMonthPicker prop
+        // @ts-expect-error invalid MuiMonthCalendar prop
         someRandomProp: true,
       },
       styleOverrides: {
@@ -384,10 +384,10 @@ createTheme({
         },
       },
     },
-    MuiYearPicker: {
+    MuiYearCalendar: {
       defaultProps: {
         disableFuture: true,
-        // @ts-expect-error invalid MuiYearPicker prop
+        // @ts-expect-error invalid MuiYearCalendar prop
         someRandomProp: true,
       },
       styleOverrides: {

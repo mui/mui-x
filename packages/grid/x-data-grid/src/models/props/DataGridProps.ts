@@ -34,14 +34,6 @@ import { GridColumnGroupingModel } from '../gridColumnGrouping';
 
 export interface GridExperimentalFeatures {
   /**
-   * Will be part of the premium-plan when fully ready.
-   */
-  preventCommitWhileValidating: boolean;
-  /**
-   * Enables the new API for cell editing and row editing.
-   */
-  newEditingApi: boolean;
-  /**
    * Enables the column grouping.
    */
   columnGrouping: boolean;
@@ -426,21 +418,6 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
    */
   isRowSelectable?: (params: GridRowParams<R>) => boolean;
   /**
-   * Callback fired when the edit cell value changes.
-   * @param {GridEditCellPropsParams} params With all properties from [[GridEditCellPropsParams]].
-   * @param {MuiEvent<React.SyntheticEvent>} event The event that caused this prop to be called.
-   * @param {GridCallbackDetails} details Additional details for this callback.
-   * @deprecated use `preProcessEditCellProps` from the [`GridColDef`](/x/api/data-grid/grid-col-def/)
-   */
-  onEditCellPropsChange?: GridEventListener<'editCellPropsChange'>;
-  /**
-   * Callback fired when the cell changes are committed.
-   * @param {GridCellEditCommitParams} params With all properties from [[GridCellEditCommitParams]].
-   * @param {MuiEvent<MuiBaseEvent>} event The event that caused this prop to be called.
-   * @param {GridCallbackDetails} details Additional details for this callback.
-   */
-  onCellEditCommit?: GridEventListener<'cellEditCommit'>;
-  /**
    * Callback fired when the cell turns to edit mode.
    * @param {GridCellParams} params With all properties from [[GridCellParams]].
    * @param {MuiEvent<React.KeyboardEvent | React.MouseEvent>} event The event that caused this prop to be called.
@@ -768,7 +745,6 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
   experimentalFeatures?: Partial<GridExperimentalFeatures>;
   /**
    * Callback called before updating a row with new values in the row and cell editing.
-   * Only applied if `props.experimentalFeatures.newEditingApi: true`.
    * @template R
    * @param {R} newRow Row object with the new values.
    * @param {R} oldRow Row object with the old values.

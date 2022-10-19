@@ -9,12 +9,7 @@ import {
 export default function BasicRowEditingGrid() {
   return (
     <div style={{ height: 300, width: '100%' }}>
-      <DataGrid
-        editMode="row"
-        rows={rows}
-        columns={columns}
-        experimentalFeatures={{ newEditingApi: true }}
-      />
+      <DataGrid editMode="row" rows={rows} columns={columns} />
     </div>
   );
 }

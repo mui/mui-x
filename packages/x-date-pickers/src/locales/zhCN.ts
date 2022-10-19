@@ -31,10 +31,10 @@ const zhCNPickers: Partial<PickersLocaleText<any>> = {
   todayButtonLabel: '今天',
 
   // Toolbar titles
-  // datePickerDefaultToolbarTitle: 'Select date',
-  // dateTimePickerDefaultToolbarTitle: 'Select date & time',
-  // timePickerDefaultToolbarTitle: 'Select time',
-  // dateRangePickerDefaultToolbarTitle: 'Select date range',
+  // datePickerToolbarTitle: 'Select date',
+  // dateTimePickerToolbarTitle: 'Select date & time',
+  // timePickerToolbarTitle: 'Select time',
+  // dateRangePickerToolbarTitle: 'Select date range',
 
   // Clock labels
   clockLabelText: (view, time, adapter) =>
@@ -58,6 +58,15 @@ const zhCNPickers: Partial<PickersLocaleText<any>> = {
   // Table labels
   timeTableLabel: '选择时间',
   dateTableLabel: '选择日期',
+
+  // Field section placeholders
+  // fieldYearPlaceholder: params => 'Y'.repeat(params.digitAmount),
+  // fieldMonthPlaceholder: params => params.contentType === 'letter' ? 'MMMM' : 'MM',
+  // fieldDayPlaceholder: () => 'DD',
+  // fieldHoursPlaceholder: () => 'hh',
+  // fieldMinutesPlaceholder: () => 'mm',
+  // fieldSecondsPlaceholder: () => 'ss',
+  // fieldMeridiemPlaceholder: () => 'aa',
 };
 
 export const zhCN = getPickersLocalization(zhCNPickers);

@@ -43,17 +43,15 @@ The date range picker component can be disabled or read-only.
 
 {{"demo": "FormPropsDateRangePickers.js"}}
 
+## Validation
+
+You can find the documentation in the [Validation page](/x/react-date-pickers/validation/)
+
 ## Different number of months
 
 Note that the `calendars` prop only works in desktop mode.
 
 {{"demo": "CalendarsDateRangePicker.js"}}
-
-## Disabling dates
-
-Disabling dates behaves the same as the simple `DatePicker`.
-
-{{"demo": "MinMaxDateRangePicker.js"}}
 
 ## Custom input component
 

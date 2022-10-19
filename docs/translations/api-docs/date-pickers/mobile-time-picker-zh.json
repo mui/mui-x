@@ -8,7 +8,6 @@
     "closeOnSelect": "If <code>true</code> the popup or dialog will immediately close after submitting full date.",
     "components": "Overrideable components.",
     "componentsProps": "The props used for each component slot.",
-    "DialogProps": "Props applied to the <a href=\"https://mui.com/material-ui/api/dialog/\"><code>Dialog</code></a> element.",
     "disabled": "If <code>true</code>, the picker and text field are disabled.",
     "disableFuture": "If <code>true</code> disable values before the current time",
     "disableIgnoringDatePartForTimeValidation": "Do not ignore date part when validating min/max time.",
@@ -37,20 +36,22 @@
     "readOnly": "Make picker read only.",
     "renderInput": "The <code>renderInput</code> prop allows you to customize the rendered input. The <code>props</code> argument of this render prop contains props of <a href=\"https://mui.com/material-ui/api/text-field/#props\">TextField</a> that you need to forward. Pay specific attention to the <code>ref</code> and <code>inputProps</code> keys.<br><br><strong>Signature:</strong><br><code>function(props: MuiTextFieldPropsType) =&gt; React.ReactNode</code><br><em>props:</em> The props of the input.<br> <em>returns</em> (React.ReactNode): The node to render as the input.",
     "rifmFormatter": "Custom formatter to be passed into Rifm component.<br><br><strong>Signature:</strong><br><code>function(str: string) =&gt; string</code><br><em>str:</em> The un-formatted string.<br> <em>returns</em> (string): The formatted string.",
-    "shouldDisableTime": "Dynamically check if time is disabled or not. If returns <code>false</code> appropriate time point will ot be acceptable.<br><br><strong>Signature:</strong><br><code>function(timeValue: number, clockType: ClockPickerView) =&gt; boolean</code><br><em>timeValue:</em> The value to check.<br><em>clockType:</em> The clock type of the timeValue.<br> <em>returns</em> (boolean): Returns <code>true</code> if the time should be disabled",
+    "shouldDisableTime": "Dynamically check if time is disabled or not. If returns <code>false</code> appropriate time point will ot be acceptable.<br><br><strong>Signature:</strong><br><code>function(timeValue: number, view: ClockPickerView) =&gt; boolean</code><br><em>timeValue:</em> The value to check.<br><em>view:</em> The clock type of the timeValue.<br> <em>returns</em> (boolean): Returns <code>true</code> if the time should be disabled",
     "showToolbar": "If <code>true</code>, show the toolbar even in desktop mode.",
-    "ToolbarComponent": "Component that will replace default toolbar renderer.",
-    "toolbarTitle": "Mobile picker title, displaying in the toolbar.",
     "value": "The value of the picker.",
     "views": "Array of views to show."
   },
   "classDescriptions": {},
   "slotDescriptions": {
-    "ActionBar": "The action bar placed bellow picker views.",
-    "OpenPickerIcon": "Icon displayed in the open picker button.",
+    "Toolbar": "Custom component for the toolbar rendered above the views.",
     "PreviousIconButton": "Button allowing to switch to the left view.",
     "NextIconButton": "Button allowing to switch to the right view.",
     "LeftArrowIcon": "Icon displayed in the left view switch button.",
-    "RightArrowIcon": "Icon displayed in the right view switch button."
+    "RightArrowIcon": "Icon displayed in the right view switch button.",
+    "Dialog": "Custom component for the dialog inside which the views are rendered on mobile.",
+    "MobilePaper": "Custom component for the paper rendered inside the mobile picker&#39;s Dialog.",
+    "MobileTransition": "Custom component for the mobile dialog <a href=\"https://mui.com/material-ui/transitions\">Transition</a>.",
+    "ActionBar": "Custom component for the action bar, it is placed bellow the picker views.",
+    "OpenPickerIcon": "Icon displayed in the open picker button."
   }
 }

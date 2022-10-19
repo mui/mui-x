@@ -69,7 +69,6 @@ export default function ServerSidePersistence() {
         columns={columns}
         processRowUpdate={processRowUpdate}
         onProcessRowUpdateError={handleProcessRowUpdateError}
-        experimentalFeatures={{ newEditingApi: true }}
       />
       {!!snackbar && (
         <Snackbar

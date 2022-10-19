@@ -217,7 +217,6 @@ describe('<DataGrid /> - Column Spanning', () => {
             columns={editableColumns}
             autoHeight={isJSDOM}
             disableVirtualization={isJSDOM}
-            experimentalFeatures={{ newEditingApi: true }}
           />
         </div>,
       );
@@ -237,12 +236,7 @@ describe('<DataGrid /> - Column Spanning', () => {
       const editableColumns = columns.map((column) => ({ ...column, editable: true }));
       render(
         <div style={{ width: 500, height: 300 }}>
-          <DataGrid
-            {...baselineProps}
-            columns={editableColumns}
-            disableVirtualization={isJSDOM}
-            experimentalFeatures={{ newEditingApi: true }}
-          />
+          <DataGrid {...baselineProps} columns={editableColumns} disableVirtualization={isJSDOM} />
         </div>,
       );
 
@@ -260,12 +254,7 @@ describe('<DataGrid /> - Column Spanning', () => {
       const editableColumns = columns.map((column) => ({ ...column, editable: true }));
       render(
         <div style={{ width: 500, height: 300 }}>
-          <DataGrid
-            {...baselineProps}
-            columns={editableColumns}
-            disableVirtualization={isJSDOM}
-            experimentalFeatures={{ newEditingApi: true }}
-          />
+          <DataGrid {...baselineProps} columns={editableColumns} disableVirtualization={isJSDOM} />
         </div>,
       );
 

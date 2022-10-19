@@ -16,13 +16,22 @@ import {
   withPickerControls,
 } from 'test/utils/pickers-utils';
 import { StaticTimePicker } from '@mui/x-date-pickers/StaticTimePicker';
+import describeValidation from '@mui/x-date-pickers/tests/describeValidation';
 
 const WrappedStaticTimePicker = withPickerControls(StaticTimePicker)({
   renderInput: (params) => <TextField {...params} />,
 });
 
 describe('<StaticTimePicker />', () => {
-  const { render } = createPickerRenderer({ clock: 'fake' });
+  const { render, clock } = createPickerRenderer({ clock: 'fake' });
+
+  describeValidation(StaticTimePicker, () => ({
+    render,
+    clock,
+    views: ['hours', 'minutes'],
+    skip: ['textField'],
+    isLegacyPicker: true,
+  }));
 
   describeConformance(
     <StaticTimePicker

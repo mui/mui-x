@@ -20,21 +20,16 @@ export default function CustomDateTimePicker() {
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <Stack spacing={3}>
         <DateTimePicker
-          disableFuture
-          hideTabs
           openTo="hours"
           value={dateWithInitialValue}
           onChange={(newValue) => {
             setDateWithInitialValue(newValue);
           }}
-          minDate={dayjs('2018-01-01')}
           components={{
             LeftArrowIcon: AlarmIcon,
             RightArrowIcon: SnoozeIcon,
             OpenPickerIcon: ClockIcon,
           }}
-          minTime={dayjs('2018-01-01T09:00')}
-          maxTime={dayjs('2018-01-01T20:00')}
           renderInput={(params) => (
             <TextField {...params} helperText="Hardcoded helper text" />
           )}
@@ -46,7 +41,6 @@ export default function CustomDateTimePicker() {
           }}
           label="With error handler"
           onError={console.log}
-          minDate={dayjs('2018-01-01T00:00')}
           inputFormat="YYYY/MM/DD hh:mm a"
           mask="____/__/__ __:__ _M"
           renderInput={(params) => <TextField {...params} />}

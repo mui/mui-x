@@ -32,7 +32,7 @@ The default formatter only keeps the first letter and capitalises it.
 
 The example bellow adds a dot at the end of each day in the calendar header, and uses `eee dd MMMM` format for the toolbar.
 
-{{"demo": "CustomizeDayPicker.js"}}
+{{"demo": "CustomizedStaticDatePicker.js"}}
 
 ## Text translations
 
@@ -47,7 +47,7 @@ you just have to import the locale from `@mui/x-date-pikers` (see the [list of s
 
 ```jsx
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { CalendarPicker, LocalizationProvider, bgBG } from '@mui/x-date-pickers';
+import { DateCalendar, LocalizationProvider, bgBG } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import bgLocale from 'date-fns/locale/bg';
 
@@ -65,7 +65,7 @@ const theme = createTheme(
     dateAdapter={AdapterDayjs}
     adapterLocale={bgLocale} // use 'bg' locale for date parser/formatter
   >
-    <CalendarPicker />
+    <DateCalendar />
   </LocalizationProvider>
 </ThemeProvider>;
 ```
@@ -79,7 +79,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { DataGrid, bgBG as dataGridBgBG } from '@mui/x-data-grid';
 import { bgBG as coreBgBG } from '@mui/material/locale';
 import bgLocale from 'date-fns/locale/bg';
-import { CalendarPicker, LocalizationProvider, bgBG } from '@mui/x-date-pickers';
+import { DateCalendar, LocalizationProvider, bgBG } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 
 const theme = createTheme(
@@ -95,7 +95,7 @@ const theme = createTheme(
 
 <ThemeProvider theme={theme}>
   <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale={bgLocale}>
-    <CalendarPicker />
+    <DateCalendar />
     <DataGrid />
   </LocalizationProvider>
 </ThemeProvider>;
@@ -108,7 +108,7 @@ you can directly load the language translations from the `@mui/x-date-pickers` o
 
 ```jsx
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { CalendarPicker, LocalizationProvider, bgBG } from '@mui/x-date-pickers';
+import { DateCalendar, LocalizationProvider, bgBG } from '@mui/x-date-pickers';
 import bgLocale from 'date-fns/locale/bg';
 
 <LocalizationProvider
@@ -116,7 +116,7 @@ import bgLocale from 'date-fns/locale/bg';
   adapterLocale={bgLocale}
   localeText={bgBG.components.MuiLocalizationProvider.defaultProps.localeText}
 >
-  <CalendarPicker />
+  <DateCalendar />
 </LocalizationProvider>;
 ```
 

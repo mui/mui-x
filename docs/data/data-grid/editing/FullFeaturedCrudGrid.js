@@ -220,7 +220,6 @@ export default function FullFeaturedCrudGrid() {
         componentsProps={{
           toolbar: { setRows, setRowModesModel },
         }}
-        experimentalFeatures={{ newEditingApi: true }}
       />
     </Box>
   );

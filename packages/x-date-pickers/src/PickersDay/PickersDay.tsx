@@ -186,6 +186,7 @@ const PickersDayFiller = styled('div', {
   ...styleArg({ theme, ownerState }),
   // visibility: 'hidden' does not work here as it hides the element from screen readers as well
   opacity: 0,
+  pointerEvents: 'none',
 }));
 
 const noop = () => {};

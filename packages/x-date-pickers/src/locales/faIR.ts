@@ -30,10 +30,10 @@ const faIRPickers: Partial<PickersLocaleText<any>> = {
   todayButtonLabel: 'امروز',
 
   // Toolbar titles
-  datePickerDefaultToolbarTitle: 'تاریخ را انتخاب کنید',
-  dateTimePickerDefaultToolbarTitle: 'تاریخ و ساعت را انتخاب کنید',
-  timePickerDefaultToolbarTitle: 'ساعت را انتخاب کنید',
-  dateRangePickerDefaultToolbarTitle: 'محدوده تاریخ را انتخاب کنید',
+  datePickerToolbarTitle: 'تاریخ را انتخاب کنید',
+  dateTimePickerToolbarTitle: 'تاریخ و ساعت را انتخاب کنید',
+  timePickerToolbarTitle: 'ساعت را انتخاب کنید',
+  dateRangePickerToolbarTitle: 'محدوده تاریخ را انتخاب کنید',
 
   // Clock labels
   clockLabelText: (view, time, adapter) =>
@@ -59,6 +59,15 @@ const faIRPickers: Partial<PickersLocaleText<any>> = {
   // Table labels
   timeTableLabel: 'انتخاب تاریخ',
   dateTableLabel: 'انتخاب ساعت',
+
+  // Field section placeholders
+  // fieldYearPlaceholder: params => 'Y'.repeat(params.digitAmount),
+  // fieldMonthPlaceholder: params => params.contentType === 'letter' ? 'MMMM' : 'MM',
+  // fieldDayPlaceholder: () => 'DD',
+  // fieldHoursPlaceholder: () => 'hh',
+  // fieldMinutesPlaceholder: () => 'mm',
+  // fieldSecondsPlaceholder: () => 'ss',
+  // fieldMeridiemPlaceholder: () => 'aa',
 };
 
 export const faIR = getPickersLocalization(faIRPickers);

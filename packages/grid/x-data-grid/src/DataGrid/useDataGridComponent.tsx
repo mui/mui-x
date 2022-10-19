@@ -22,14 +22,7 @@ import {
   useGridPreferencesPanel,
   preferencePanelStateInitializer,
 } from '../hooks/features/preferencesPanel/useGridPreferencesPanel';
-import {
-  useGridEditing as useGridEditing_old,
-  editingStateInitializer as editingStateInitializer_old,
-} from '../hooks/features/editRows/useGridEditing.old';
-import {
-  useGridEditing as useGridEditing_new,
-  editingStateInitializer as editingStateInitializer_new,
-} from '../hooks/features/editRows/useGridEditing.new';
+import { useGridEditing, editingStateInitializer } from '../hooks/features/editing/useGridEditing';
 import { useGridRows, rowsStateInitializer } from '../hooks/features/rows/useGridRows';
 import { useGridRowsPreProcessors } from '../hooks/features/rows/useGridRowsPreProcessors';
 import { useGridParamsApi } from '../hooks/features/rows/useGridParamsApi';
@@ -49,7 +42,6 @@ import {
   useGridColumnGrouping,
   columnGroupsStateInitializer,
 } from '../hooks/features/columnGrouping/useGridColumnGrouping';
-import { useGridColumnGroupingPreProcessors } from '../hooks/features/columnGrouping/useGridColumnGroupingPreProcessors';
 
 export const useDataGridComponent = (props: DataGridProcessedProps) => {
   const apiRef = useGridInitialization<GridApiCommunity>(undefined, props);
@@ -57,7 +49,6 @@ export const useDataGridComponent = (props: DataGridProcessedProps) => {
   /**
    * Register all pre-processors called during state initialization here.
    */
-  useGridColumnGroupingPreProcessors(apiRef, props);
   useGridSelectionPreProcessors(apiRef, props);
   useGridRowsPreProcessors(apiRef);
 
@@ -66,15 +57,8 @@ export const useDataGridComponent = (props: DataGridProcessedProps) => {
    */
   useGridInitializeState(selectionStateInitializer, apiRef, props);
   useGridInitializeState(columnsStateInitializer, apiRef, props);
-  useGridInitializeState(columnGroupsStateInitializer, apiRef, props);
   useGridInitializeState(rowsStateInitializer, apiRef, props);
-  useGridInitializeState(
-    props.experimentalFeatures?.newEditingApi
-      ? editingStateInitializer_new
-      : editingStateInitializer_old,
-    apiRef,
-    props,
-  );
+  useGridInitializeState(editingStateInitializer, apiRef, props);
   useGridInitializeState(focusStateInitializer, apiRef, props);
   useGridInitializeState(sortingStateInitializer, apiRef, props);
   useGridInitializeState(preferencePanelStateInitializer, apiRef, props);
@@ -83,6 +67,7 @@ export const useDataGridComponent = (props: DataGridProcessedProps) => {
   useGridInitializeState(paginationStateInitializer, apiRef, props);
   useGridInitializeState(rowsMetaStateInitializer, apiRef, props);
   useGridInitializeState(columnMenuStateInitializer, apiRef, props);
+  useGridInitializeState(columnGroupsStateInitializer, apiRef, props);
 
   useGridKeyboardNavigation(apiRef, props);
   useGridSelection(apiRef, props);
@@ -91,12 +76,7 @@ export const useDataGridComponent = (props: DataGridProcessedProps) => {
   useGridParamsApi(apiRef);
   useGridColumnSpanning(apiRef);
   useGridColumnGrouping(apiRef, props);
-
-  const useGridEditing = props.experimentalFeatures?.newEditingApi
-    ? useGridEditing_new
-    : useGridEditing_old;
   useGridEditing(apiRef, props);
-
   useGridFocus(apiRef, props);
   useGridPreferencesPanel(apiRef, props);
   useGridFilter(apiRef, props);

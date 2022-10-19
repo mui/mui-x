@@ -47,10 +47,6 @@ The time picker component can be disabled or read-only.
 
 {{"demo": "LocalizedTimePicker.js"}}
 
-## 验证时间
-
-{{"demo": "TimeValidationTimePicker.js"}}
-
 ## 横屏
 
 {{"demo": "StaticTimePickerLandscape.js", "bg": true}}
@@ -59,7 +55,7 @@ The time picker component can be disabled or read-only.
 
 Some lower-level sub-components (`ClockPicker`) are also exported. 这些都是在没有包装器或外部逻辑（屏蔽输入、日期值解析和验证等）的情况下渲染的。 These are rendered without a wrapper or outer logic (masked input, date values parsing and validation, etc.).
 
-{{"demo": "SubComponentsTimePickers.js"}}
+{{"demo": "SubComponentsTimeCalendars.js"}}
 
 ## 秒
 

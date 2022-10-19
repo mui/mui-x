@@ -1,0 +1,30 @@
+{
+  "props": {
+    "onChange": { "type": { "name": "func" }, "required": true },
+    "classes": { "type": { "name": "object" } },
+    "className": { "type": { "name": "string" } },
+    "disabled": { "type": { "name": "bool" } },
+    "disableFuture": { "type": { "name": "bool" } },
+    "disableHighlightToday": { "type": { "name": "bool" } },
+    "disablePast": { "type": { "name": "bool" } },
+    "maxDate": { "type": { "name": "any" } },
+    "minDate": { "type": { "name": "any" } },
+    "readOnly": { "type": { "name": "bool" } },
+    "shouldDisableYear": { "type": { "name": "func" } },
+    "sx": {
+      "type": {
+        "name": "union",
+        "description": "Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object"
+      }
+    }
+  },
+  "slots": {},
+  "name": "YearCalendar",
+  "styles": { "classes": ["root"], "globalClasses": {}, "name": "MuiYearCalendar" },
+  "spread": true,
+  "forwardsRefTo": "HTMLDivElement",
+  "filename": "/packages/x-date-pickers/src/YearCalendar/YearCalendar.tsx",
+  "inheritance": null,
+  "demos": "<ul></ul>",
+  "packages": ["@mui/x-date-pickers-pro", "@mui/x-date-pickers"]
+}

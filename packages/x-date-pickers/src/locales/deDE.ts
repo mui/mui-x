@@ -43,10 +43,10 @@ const deDEPickers: Partial<PickersLocaleText<any>> = {
   todayButtonLabel: 'Heute',
 
   // Toolbar titles
-  datePickerDefaultToolbarTitle: 'Datum auswählen',
-  dateTimePickerDefaultToolbarTitle: 'Datum & Uhrzeit auswählen',
-  timePickerDefaultToolbarTitle: 'Uhrzeit auswählen',
-  dateRangePickerDefaultToolbarTitle: 'Datumsbereich auswählen',
+  datePickerToolbarTitle: 'Datum auswählen',
+  dateTimePickerToolbarTitle: 'Datum & Uhrzeit auswählen',
+  timePickerToolbarTitle: 'Uhrzeit auswählen',
+  dateRangePickerToolbarTitle: 'Datumsbereich auswählen',
 
   // Clock labels
   clockLabelText: (view, time, adapter) =>
@@ -72,6 +72,15 @@ const deDEPickers: Partial<PickersLocaleText<any>> = {
   // Table labels
   timeTableLabel: 'Uhrzeit auswählen',
   dateTableLabel: 'Datum auswählen',
+
+  // Field section placeholders
+  // fieldYearPlaceholder: params => 'Y'.repeat(params.digitAmount),
+  // fieldMonthPlaceholder: params => params.contentType === 'letter' ? 'MMMM' : 'MM',
+  // fieldDayPlaceholder: () => 'DD',
+  // fieldHoursPlaceholder: () => 'hh',
+  // fieldMinutesPlaceholder: () => 'mm',
+  // fieldSecondsPlaceholder: () => 'ss',
+  // fieldMeridiemPlaceholder: () => 'aa',
 };
 
 export const deDE = getPickersLocalization(deDEPickers);

@@ -1,11 +1,12 @@
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import Stack, { StackProps } from '@mui/material/Stack';
 import TextField, { TextFieldProps } from '@mui/material/TextField';
 import Typography, { TypographyProps } from '@mui/material/Typography';
 import { styled, useThemeProps } from '@mui/material/styles';
 import { useSlotProps } from '@mui/base/utils';
 import { MultiInputDateRangeFieldProps } from './MultiInputDateRangeField.types';
-import { useMultiInputDateRangeField } from './useMultiInputDateRangeField';
+import { useMultiInputDateRangeField } from '../internal/hooks/useMultiInputRangeField/useMultiInputDateRangeField';
 
 const MultiInputDateRangeFieldRoot = styled(
   React.forwardRef((props: StackProps, ref: React.Ref<HTMLDivElement>) => (
@@ -31,7 +32,7 @@ type MultiInputDateRangeFieldComponent = (<TDate>(
   props: MultiInputDateRangeFieldProps<TDate> & React.RefAttributes<HTMLInputElement>,
 ) => JSX.Element) & { propTypes?: any };
 
-export const MultiInputDateRangeField = React.forwardRef(function MultiInputDateRangeField<TDate>(
+const MultiInputDateRangeField = React.forwardRef(function MultiInputDateRangeField<TDate>(
   inProps: MultiInputDateRangeFieldProps<TDate>,
   ref: React.Ref<HTMLInputElement>,
 ) {
@@ -76,6 +77,7 @@ export const MultiInputDateRangeField = React.forwardRef(function MultiInputDate
     externalSlotProps: componentsProps?.input,
     ownerState: { ...ownerState, position: 'start' },
   });
+
   const endInputProps: TextFieldProps = useSlotProps({
     elementType: Input,
     externalSlotProps: componentsProps?.input,
@@ -134,3 +136,84 @@ export const MultiInputDateRangeField = React.forwardRef(function MultiInputDate
     </Root>
   );
 }) as MultiInputDateRangeFieldComponent;
+
+MultiInputDateRangeField.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // ----------------------------------------------------------------------
+  /**
+   * Overrideable components.
+   * @default {}
+   */
+  components: PropTypes.object,
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  componentsProps: PropTypes.object,
+  /**
+   * The default value. Use when the component is not controlled.
+   */
+  defaultValue: PropTypes.arrayOf(PropTypes.any),
+  /**
+   * If `true` disable values before the current time
+   * @default false
+   */
+  disableFuture: PropTypes.bool,
+  /**
+   * If `true` disable values after the current time.
+   * @default false
+   */
+  disablePast: PropTypes.bool,
+  format: PropTypes.string,
+  /**
+   * Maximal selectable date. @DateIOType
+   */
+  maxDate: PropTypes.any,
+  /**
+   * Minimal selectable date. @DateIOType
+   */
+  minDate: PropTypes.any,
+  onChange: PropTypes.func,
+  onError: PropTypes.func,
+  /**
+   * Callback fired when the selected sections change.
+   * @param {FieldSelectedSections} newValue The new selected sections.
+   */
+  onSelectedSectionsChange: PropTypes.func,
+  /**
+   * It prevents the user from changing the value of the field
+   * (not from interacting with the field).
+   * @default false
+   */
+  readOnly: PropTypes.bool,
+  /**
+   * The currently selected sections.
+   * This prop accept four formats:
+   * 1. If a number is provided, the section at this index will be selected.
+   * 2. If an object with a `startIndex` and `endIndex` properties are provided, the sections between those two indexes will be selected.
+   * 3. If a string of type `MuiDateSectionName` is provided, the first section with that name will be selected.
+   * 4. If `null` is provided, no section will be selected
+   * If not provided, the selected sections will be handled internally.
+   */
+  selectedSections: PropTypes.oneOfType([
+    PropTypes.oneOf(['day', 'hour', 'meridiem', 'minute', 'month', 'second', 'year']),
+    PropTypes.number,
+    PropTypes.shape({
+      endIndex: PropTypes.number.isRequired,
+      startIndex: PropTypes.number.isRequired,
+    }),
+  ]),
+  /**
+   * Disable specific date. @DateIOType
+   * @template TDate
+   * @param {TDate} day The date to test.
+   * @param {string} position The date to test, 'start' or 'end'.
+   * @returns {boolean} Returns `true` if the date should be disabled.
+   */
+  shouldDisableDate: PropTypes.func,
+  value: PropTypes.arrayOf(PropTypes.any),
+} as any;
+
+export { MultiInputDateRangeField };

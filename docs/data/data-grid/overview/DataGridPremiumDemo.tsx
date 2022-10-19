@@ -52,7 +52,6 @@ export default function DataGridPremiumDemo() {
         disableSelectionOnClick
         initialState={initialState}
         components={{ Toolbar: GridToolbar }}
-        experimentalFeatures={{ newEditingApi: true }}
       />
     </Box>
   );

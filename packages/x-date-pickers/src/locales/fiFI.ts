@@ -41,10 +41,10 @@ const fiFIPickers: Partial<PickersLocaleText<any>> = {
   todayButtonLabel: 'Tänään',
 
   // Toolbar titles
-  datePickerDefaultToolbarTitle: 'Valitse päivä',
-  dateTimePickerDefaultToolbarTitle: 'Valitse päivä ja aika',
-  timePickerDefaultToolbarTitle: 'Valitse aika',
-  dateRangePickerDefaultToolbarTitle: 'Valitse aikaväli',
+  datePickerToolbarTitle: 'Valitse päivä',
+  dateTimePickerToolbarTitle: 'Valitse päivä ja aika',
+  timePickerToolbarTitle: 'Valitse aika',
+  dateRangePickerToolbarTitle: 'Valitse aikaväli',
 
   // Clock labels
   clockLabelText: (view, time, adapter) =>
@@ -68,6 +68,15 @@ const fiFIPickers: Partial<PickersLocaleText<any>> = {
   // Table labels
   timeTableLabel: 'valitse aika',
   dateTableLabel: 'valitse päivä',
+
+  // Field section placeholders
+  // fieldYearPlaceholder: params => 'Y'.repeat(params.digitAmount),
+  // fieldMonthPlaceholder: params => params.contentType === 'letter' ? 'MMMM' : 'MM',
+  // fieldDayPlaceholder: () => 'DD',
+  // fieldHoursPlaceholder: () => 'hh',
+  // fieldMinutesPlaceholder: () => 'mm',
+  // fieldSecondsPlaceholder: () => 'ss',
+  // fieldMeridiemPlaceholder: () => 'aa',
 };
 
 export const fiFI = getPickersLocalization(fiFIPickers);

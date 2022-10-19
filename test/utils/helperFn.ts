@@ -71,6 +71,7 @@ export function getColumnHeaderCell(colIndex: number, rowIndex?: number): HTMLEl
   const columnHeader = document.querySelector<HTMLElement>(
     `${headerRowSelector}${headerCellSelector}`,
   );
+
   if (columnHeader == null) {
     throw new Error(`columnheader ${colIndex} not found`);
   }

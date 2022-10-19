@@ -25,7 +25,6 @@ export {
   useGridColumnGrouping,
   columnGroupsStateInitializer,
 } from '../hooks/features/columnGrouping/useGridColumnGrouping';
-export { useGridColumnGroupingPreProcessors } from '../hooks/features/columnGrouping/useGridColumnGroupingPreProcessors';
 export type {
   GridColumnRawLookup,
   GridColumnsRawState,
@@ -47,14 +46,7 @@ export {
   useGridPreferencesPanel,
   preferencePanelStateInitializer,
 } from '../hooks/features/preferencesPanel/useGridPreferencesPanel';
-export {
-  useGridEditing as useGridEditing_new,
-  editingStateInitializer as editingStateInitializer_new,
-} from '../hooks/features/editRows/useGridEditing.new';
-export {
-  useGridEditing as useGridEditing_old,
-  editingStateInitializer as editingStateInitializer_old,
-} from '../hooks/features/editRows/useGridEditing.old';
+export { useGridEditing, editingStateInitializer } from '../hooks/features/editing/useGridEditing';
 export { useGridRows, rowsStateInitializer } from '../hooks/features/rows/useGridRows';
 export { useGridRowsPreProcessors } from '../hooks/features/rows/useGridRowsPreProcessors';
 export type {

@@ -14,7 +14,13 @@ export interface UseTimeFieldParams<TDate, TChildProps extends {}> {
 export interface UseTimeFieldProps<TDate>
   extends MakeOptional<UseFieldInternalProps<TDate | null, TimeValidationError>, 'format'>,
     TimeValidationProps<TDate>,
-    BaseTimeValidationProps {}
+    BaseTimeValidationProps {
+  /**
+   * 12h/24h view for hour selection clock.
+   * @default `utils.is12HourCycleInCurrentLocale()`
+   */
+  ampm?: boolean;
+}
 
 export type UseTimeFieldDefaultizedProps<TDate> = DefaultizedProps<
   UseTimeFieldProps<TDate>,

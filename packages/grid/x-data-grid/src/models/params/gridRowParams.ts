@@ -79,14 +79,16 @@ export interface GridRowEditStartParams<R extends GridValidRowModel = any>
   extends GridRowParams<R> {
   /**
    * Which field triggered this event.
-   * Only applied if `props.experimentalFeatures.newEditingApi: true`.
    */
   field?: string;
   /**
    * The reason for this event to be triggered.
-   * Only applied if `props.experimentalFeatures.newEditingApi: true`.
    */
   reason?: GridRowEditStartReasons;
+  /**
+   * If the reason is related to a keyboard event, it contains which key was pressed.
+   */
+  key?: string;
 }
 
 enum GridRowEditStopReasons {
@@ -100,12 +102,10 @@ enum GridRowEditStopReasons {
 export interface GridRowEditStopParams<R extends GridValidRowModel = any> extends GridRowParams<R> {
   /**
    * Which field triggered this event.
-   * Only applied if `props.experimentalFeatures.newEditingApi: true`.
    */
   field?: string;
   /**
    * The reason for this event to be triggered.
-   * Only applied if `props.experimentalFeatures.newEditingApi: true`.
    */
   reason?: GridRowEditStopReasons;
 }

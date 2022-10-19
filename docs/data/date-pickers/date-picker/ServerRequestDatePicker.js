@@ -7,7 +7,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { PickersDay } from '@mui/x-date-pickers/PickersDay';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { CalendarPickerSkeleton } from '@mui/x-date-pickers/CalendarPickerSkeleton';
+import { DayCalendarSkeleton } from '@mui/x-date-pickers/DayCalendarSkeleton';
 
 function getRandomNumber(min, max) {
   return Math.round(Math.random() * (max - min) + min);
@@ -117,7 +117,7 @@ export default function ServerRequestDatePicker() {
         }}
         onMonthChange={handleMonthChange}
         renderInput={(params) => <TextField {...params} />}
-        renderLoading={() => <CalendarPickerSkeleton />}
+        renderLoading={() => <DayCalendarSkeleton />}
         components={{
           Day: ServerDay,
         }}

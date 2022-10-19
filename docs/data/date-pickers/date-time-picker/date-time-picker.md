@@ -42,14 +42,9 @@ The date time picker component can be disabled or read-only.
 
 {{"demo": "FormPropsDateTimePickers.js"}}
 
-## Date and time validation
+## Validation
 
-It is possible to restrict date and time selection in two ways:
-
-- by using `minDateTime`/`maxDateTime` its possible to restrict time selection to before or after a particular moment in time
-- using `minTime`/`maxTime`, you can disable selecting times before or after a certain time each day respectively
-
-{{"demo": "DateTimeValidation.js"}}
+You can find the documentation in the [Validation page](/x/react-date-pickers/validation/)
 
 ## Static mode
 

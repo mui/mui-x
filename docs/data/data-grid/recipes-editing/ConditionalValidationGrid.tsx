@@ -88,12 +88,7 @@ export default function ConditionalValidationGrid() {
 
   return (
     <StyledBox>
-      <DataGrid
-        rows={rows}
-        columns={columns}
-        editMode="row"
-        experimentalFeatures={{ newEditingApi: true }}
-      />
+      <DataGrid rows={rows} columns={columns} editMode="row" />
     </StyledBox>
   );
 }

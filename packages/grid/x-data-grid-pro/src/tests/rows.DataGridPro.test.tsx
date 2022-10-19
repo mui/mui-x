@@ -78,13 +78,13 @@ describe('<DataGridPro /> - Rows', () => {
         );
       };
       render(<Test />);
-      act(() => apiRef!.current.setCellMode('c2', 'first', 'edit'));
+      act(() => apiRef!.current.startCellEditMode({ id: 'c2', field: 'first' }));
       const cell = getCell(1, 1);
 
       expect(cell).to.have.class('MuiDataGrid-cell--editable');
       expect(cell).to.have.class('MuiDataGrid-cell--editing');
       expect(cell.querySelector('input')!.value).to.equal('Jack');
-      act(() => apiRef!.current.setCellMode('c2', 'first', 'view'));
+      act(() => apiRef!.current.stopCellEditMode({ id: 'c2', field: 'first' }));
 
       expect(cell).to.have.class('MuiDataGrid-cell--editable');
       expect(cell).not.to.have.class('MuiDataGrid-cell--editing');

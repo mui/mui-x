@@ -24,14 +24,6 @@
   },
   {
     "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
-    "name": "cellEditCommit",
-    "description": "Fired when the props of the edit input are committed.",
-    "params": "GridCellEditCommitParams",
-    "event": "MuiEvent<MuiBaseEvent>",
-    "componentProp": "onCellEditCommit"
-  },
-  {
-    "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
     "name": "cellEditStart",
     "description": "Fired when the cell turns to edit mode.",
     "params": "GridCellEditStartParams",
@@ -89,6 +81,13 @@
     "description": "Fired when a <code>mouseup</code> event happens in a cell.",
     "params": "GridCellParams",
     "event": "MuiEvent<React.MouseEvent<HTMLElement>>"
+  },
+  {
+    "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
+    "name": "columnGroupHeaderKeyDown",
+    "description": "Fired when a key is pressed in a column group header. It&#39;s mapped do the <code>keydown</code> DOM event.",
+    "params": "GridColumnGroupHeaderParams",
+    "event": "MuiEvent<React.KeyboardEvent<HTMLElement>>"
   },
   {
     "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
@@ -180,14 +179,6 @@
     "params": "ElementSize",
     "event": "MuiEvent<{}>",
     "componentProp": "onResize"
-  },
-  {
-    "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
-    "name": "editCellPropsChange",
-    "description": "Fired when the props of the edit cell changes.",
-    "params": "GridEditCellPropsParams",
-    "event": "MuiEvent<React.SyntheticEvent<HTMLElement> | {}>",
-    "componentProp": "onEditCellPropsChange"
   },
   {
     "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],

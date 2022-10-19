@@ -1,0 +1,16 @@
+<DataGridPro
+  rows={rows}
+  columns={columns}
+  editMode="row"
+  rowModesModel={rowModesModel}
+  onRowModesModelChange={handleRowModesModelChange}
+  onRowEditStart={handleRowEditStart}
+  onRowEditStop={handleRowEditStop}
+  processRowUpdate={processRowUpdate}
+  components={{
+    Toolbar: EditToolbar,
+  }}
+  componentsProps={{
+    toolbar: { setRows, setRowModesModel },
+  }}
+/>

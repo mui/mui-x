@@ -18,7 +18,7 @@
     "onViewChange": "Callback fired on view change.<br><br><strong>Signature:</strong><br><code>function(view: ClockPickerView) =&gt; void</code><br><em>view:</em> The new view.",
     "openTo": "Initially open view.",
     "readOnly": "Make picker read only.",
-    "shouldDisableTime": "Dynamically check if time is disabled or not. If returns <code>false</code> appropriate time point will ot be acceptable.<br><br><strong>Signature:</strong><br><code>function(timeValue: number, clockType: ClockPickerView) =&gt; boolean</code><br><em>timeValue:</em> The value to check.<br><em>clockType:</em> The clock type of the timeValue.<br> <em>returns</em> (boolean): Returns <code>true</code> if the time should be disabled",
+    "shouldDisableTime": "Dynamically check if time is disabled or not. If returns <code>false</code> appropriate time point will ot be acceptable.<br><br><strong>Signature:</strong><br><code>function(timeValue: number, view: ClockPickerView) =&gt; boolean</code><br><em>timeValue:</em> The value to check.<br><em>view:</em> The clock type of the timeValue.<br> <em>returns</em> (boolean): Returns <code>true</code> if the time should be disabled",
     "sx": "The system prop that allows defining system overrides as well as additional CSS styles. See the <a href=\"/system/getting-started/the-sx-prop/\">`sx` page</a> for more details.",
     "value": "Selected date @DateIOType.",
     "view": "Controlled open view.",

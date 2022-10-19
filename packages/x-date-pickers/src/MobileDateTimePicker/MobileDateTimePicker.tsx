@@ -4,46 +4,42 @@ import {
   BaseDateTimePickerProps,
   useDateTimePickerDefaultizedProps,
   dateTimePickerValueManager,
+  BaseDateTimePickerSlotsComponent,
+  BaseDateTimePickerSlotsComponentsProps,
 } from '../DateTimePicker/shared';
-import { DateTimePickerToolbar } from '../DateTimePicker/DateTimePickerToolbar';
 import {
   MobileWrapper,
   MobileWrapperProps,
   MobileWrapperSlotsComponent,
   MobileWrapperSlotsComponentsProps,
 } from '../internals/components/wrappers/MobileWrapper';
-import {
-  CalendarOrClockPicker,
-  CalendarOrClockPickerSlotsComponent,
-  CalendarOrClockPickerSlotsComponentsProps,
-} from '../internals/components/CalendarOrClockPicker';
+import { CalendarOrClockPicker } from '../internals/components/CalendarOrClockPicker';
 import { useDateTimeValidation } from '../internals/hooks/validation/useDateTimeValidation';
 import { DateInputSlotsComponent, PureDateInput } from '../internals/components/PureDateInput';
 import { usePickerState } from '../internals/hooks/usePickerState';
-import { DateTimePickerTabs } from '../DateTimePicker/DateTimePickerTabs';
 
 export interface MobileDateTimePickerSlotsComponent<TDate>
-  extends MobileWrapperSlotsComponent,
-    CalendarOrClockPickerSlotsComponent<TDate>,
+  extends BaseDateTimePickerSlotsComponent<TDate>,
+    MobileWrapperSlotsComponent,
     DateInputSlotsComponent {}
 
 export interface MobileDateTimePickerSlotsComponentsProps<TDate>
-  extends MobileWrapperSlotsComponentsProps,
-    CalendarOrClockPickerSlotsComponentsProps<TDate> {}
+  extends BaseDateTimePickerSlotsComponentsProps<TDate>,
+    MobileWrapperSlotsComponentsProps {}
 
 export interface MobileDateTimePickerProps<TDate>
   extends BaseDateTimePickerProps<TDate>,
-    MobileWrapperProps<TDate> {
+    MobileWrapperProps {
   /**
    * Overrideable components.
    * @default {}
    */
-  components?: Partial<MobileDateTimePickerSlotsComponent<TDate>>;
+  components?: MobileDateTimePickerSlotsComponent<TDate>;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  componentsProps?: Partial<MobileDateTimePickerSlotsComponentsProps<TDate>>;
+  componentsProps?: MobileDateTimePickerSlotsComponentsProps<TDate>;
 }
 
 type MobileDateTimePickerComponent = (<TDate>(
@@ -77,20 +73,7 @@ export const MobileDateTimePicker = React.forwardRef(function MobileDateTimePick
 
   // Note that we are passing down all the value without spread.
   // It saves us >1kb gzip and make any prop available automatically on any level down.
-  const {
-    ToolbarComponent = DateTimePickerToolbar,
-    value,
-    onChange,
-    components: providedComponents,
-    componentsProps,
-    localeText,
-    hideTabs = false,
-    ...other
-  } = props;
-  const components = React.useMemo<MobileDateTimePickerProps<TDate>['components']>(
-    () => ({ Tabs: DateTimePickerTabs, ...providedComponents }),
-    [providedComponents],
-  );
+  const { value, onChange, components, componentsProps, localeText, ...other } = props;
 
   const DateInputProps = {
     ...inputProps,
@@ -114,12 +97,9 @@ export const MobileDateTimePicker = React.forwardRef(function MobileDateTimePick
       <CalendarOrClockPicker
         {...pickerProps}
         autoFocus
-        toolbarTitle={props.label || props.toolbarTitle}
-        ToolbarComponent={ToolbarComponent}
         DateInputProps={DateInputProps}
         components={components}
         componentsProps={componentsProps}
-        hideTabs={hideTabs}
         {...other}
       />
     </MobileWrapper>
@@ -183,10 +163,6 @@ MobileDateTimePicker.propTypes = {
    */
   defaultCalendarMonth: PropTypes.any,
   /**
-   * Props applied to the [`Dialog`](https://mui.com/material-ui/api/dialog/) element.
-   */
-  DialogProps: PropTypes.object,
-  /**
    * If `true`, the picker and text field are disabled.
    * @default false
    */
@@ -222,6 +198,12 @@ MobileDateTimePicker.propTypes = {
    */
   disablePast: PropTypes.bool,
   /**
+   * Calendar will show more weeks in order to match this value.
+   * Put it to 6 for having fix number of week in Gregorian calendars
+   * @default undefined
+   */
+  fixedWeekNumber: PropTypes.number,
+  /**
    * Get aria-label text for control that opens picker dialog. Aria-label text must include selected date. @DateIOType
    * @template TDate
    * @param {TDate | null} date The date from which we want to add an aria-text.
@@ -230,11 +212,6 @@ MobileDateTimePicker.propTypes = {
    * @default (date, utils) => `Choose date, selected date is ${utils.format(date, 'fullDate')}`
    */
   getOpenDialogAriaText: PropTypes.func,
-  /**
-   * Toggles visibility of date time switching tabs
-   * @default false for mobile, true for desktop
-   */
-  hideTabs: PropTypes.bool,
   ignoreInvalidInputs: PropTypes.bool,
   /**
    * Props to pass to keyboard input adornment.
@@ -424,7 +401,7 @@ MobileDateTimePicker.propTypes = {
    * Dynamically check if time is disabled or not.
    * If returns `false` appropriate time point will ot be acceptable.
    * @param {number} timeValue The value to check.
-   * @param {ClockPickerView} clockType The clock type of the timeValue.
+   * @param {ClockPickerView} view The clock type of the timeValue.
    * @returns {boolean} Returns `true` if the time should be disabled
    */
   shouldDisableTime: PropTypes.func,
@@ -457,25 +434,6 @@ MobileDateTimePicker.propTypes = {
    * Time tab icon.
    */
   timeIcon: PropTypes.node,
-  /**
-   * Component that will replace default toolbar renderer.
-   * @default DateTimePickerToolbar
-   */
-  ToolbarComponent: PropTypes.elementType,
-  /**
-   * Date format, that is displaying in toolbar.
-   */
-  toolbarFormat: PropTypes.string,
-  /**
-   * Mobile picker date value placeholder, displaying if `value` === `null`.
-   * @default '–'
-   */
-  toolbarPlaceholder: PropTypes.node,
-  /**
-   * Mobile picker title, displaying in the toolbar.
-   * @default 'Select date & time'
-   */
-  toolbarTitle: PropTypes.node,
   /**
    * The value of the picker.
    */

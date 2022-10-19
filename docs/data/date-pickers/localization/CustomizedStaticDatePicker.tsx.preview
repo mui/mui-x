@@ -1,0 +1,13 @@
+<LocalizationProvider dateAdapter={AdapterDayjs}>
+  <StaticDatePicker
+    displayStaticWrapperAs="desktop"
+    value={value}
+    onChange={(newValue) => {
+      setValue(newValue);
+    }}
+    renderInput={(params) => <TextField {...params} />}
+    dayOfWeekFormatter={(day) => `${day}.`}
+    componentsProps={{ toolbar: { toolbarFormat: 'ddd DD MMMM' } }}
+    showToolbar
+  />
+</LocalizationProvider>

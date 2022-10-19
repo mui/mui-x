@@ -49,11 +49,13 @@ export const useField = <
     clearValue,
     clearActiveSection,
     updateSectionValue,
+    updateValueFromValueStr,
     setTempAndroidValueStr,
   } = useFieldState(params);
 
   const {
     inputRef: inputRefProp,
+    internalProps,
     internalProps: { readOnly = false },
     forwardedProps: { onClick, onKeyDown, onFocus, onBlur, onMouseUp, ...otherForwardedProps },
     fieldValueManager,
@@ -110,22 +112,54 @@ export const useField = <
   });
 
   const handleInputPaste = useEventCallback((event: React.ClipboardEvent<HTMLInputElement>) => {
-    if (readOnly || selectedSectionIndexes == null) {
+    if (readOnly) {
+      event.preventDefault();
       return;
     }
 
-    event.preventDefault();
     const pastedValue = event.clipboardData.getData('text');
-    throw new Error(`Pasting is not implemented yet, the value to paste would be "${pastedValue}"`);
+    if (
+      selectedSectionIndexes &&
+      selectedSectionIndexes.startIndex === selectedSectionIndexes.endIndex
+    ) {
+      const activeSection = state.sections[selectedSectionIndexes.startIndex];
+
+      const lettersOnly = /^[a-zA-Z]+$/.test(pastedValue);
+      const digitsOnly = /^[0-9]+$/.test(pastedValue);
+      const isValidPastedValue =
+        (activeSection.contentType === 'letter' && lettersOnly) ||
+        (activeSection.contentType === 'digit' && digitsOnly);
+      if (isValidPastedValue) {
+        // Early return to let the paste update section, value
+        return;
+      }
+      if (lettersOnly || digitsOnly) {
+        // The pasted value correspond to a single section but not the expected type
+        // skip the modification
+        event.preventDefault();
+        return;
+      }
+    }
+
+    event.preventDefault();
+    updateValueFromValueStr(pastedValue);
   });
 
   const handleInputChange = useEventCallback((event: React.ChangeEvent<HTMLInputElement>) => {
-    if (readOnly || selectedSectionIndexes == null) {
+    if (readOnly) {
+      return;
+    }
+
+    const valueStr = event.target.value;
+
+    // If no section is selected, we just try to parse the new value
+    // This line is mostly triggered by imperative code / application tests.
+    if (selectedSectionIndexes == null) {
+      updateValueFromValueStr(valueStr);
       return;
     }
 
     const prevValueStr = fieldValueManager.getValueStrFromSections(state.sections);
-    const valueStr = event.target.value;
 
     let startOfDiffIndex = -1;
     let endOfDiffIndex = -1;
@@ -241,11 +275,6 @@ export const useField = <
         setSelectedSections(selectedSectionIndexes.startIndex + 1);
       }
     } else {
-      if (keyPressed.length > 1) {
-        // TODO: Might be able to support it in some scenario
-        return;
-      }
-
       const getNewSectionValueStr = (): string => {
         if (activeSection.contentType === 'digit') {
           return activeSection.value;
@@ -418,7 +447,7 @@ export const useField = <
   });
 
   const validationError = useValidation(
-    { ...params.internalProps, value: state.value },
+    { ...internalProps, value: state.value },
     validator,
     fieldValueManager.isSameError,
   );

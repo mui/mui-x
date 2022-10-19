@@ -137,7 +137,6 @@ export default function LinkedFieldsCellEditing() {
         onCellEditStart={handleCellEditStart}
         onCellEditStop={handleCellEditStop}
         processRowUpdate={processRowUpdate}
-        experimentalFeatures={{ newEditingApi: true }}
       />
     </Box>
   );

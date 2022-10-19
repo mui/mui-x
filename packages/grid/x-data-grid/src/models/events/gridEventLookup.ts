@@ -1,10 +1,8 @@
 import * as React from 'react';
 import type {
-  GridCellEditCommitParams,
   GridColumnHeaderParams,
   GridColumnOrderChangeParams,
   GridColumnResizeParams,
-  GridEditCellPropsParams,
   GridHeaderSelectionCheckboxParams,
   GridMenuParams,
   GridPreferencePanelParams,
@@ -12,6 +10,7 @@ import type {
   GridRowParams,
   GridRowSelectionCheckboxParams,
   GridScrollParams,
+  GridColumnGroupHeaderParams,
 } from '../params';
 import { GridCellEditStartParams, GridCellEditStopParams } from '../params/gridEditCellParams';
 import { GridCellParams } from '../params/gridCellParams';
@@ -186,6 +185,31 @@ export interface GridColumnHeaderEventLookup {
   };
 }
 
+export interface GridColumnGroupHeaderEventLookup {
+  /**
+   * Fired when a key is pressed in a column group header. It's mapped do the `keydown` DOM event.
+   */
+  columnGroupHeaderKeyDown: {
+    params: GridColumnGroupHeaderParams;
+    event: React.KeyboardEvent<HTMLElement>;
+  };
+  /**
+   * Fired when a column group header gains focus.
+   * @ignore - do not document.
+   */
+  columnGroupHeaderFocus: {
+    params: GridColumnGroupHeaderParams;
+    event: React.FocusEvent<HTMLElement>;
+  };
+  /**
+   * Fired when a column group header loses focus.
+   * @ignore - do not document.
+   */
+  columnGroupHeaderBlur: {
+    params: GridColumnGroupHeaderParams;
+    event: React.FocusEvent<HTMLElement>;
+  };
+}
 export interface GridCellEventLookup {
   /**
    * Fired when a cell is clicked.
@@ -284,6 +308,7 @@ export interface GridControlledStateReasonLookup {
 export interface GridEventLookup
   extends GridRowEventLookup,
     GridColumnHeaderEventLookup,
+    GridColumnGroupHeaderEventLookup,
     GridCellEventLookup,
     GridControlledStateEventLookup {
   /**
@@ -405,17 +430,6 @@ export interface GridEventLookup
   cellEditStop: {
     params: GridCellEditStopParams;
     event: MuiBaseEvent;
-  };
-  /**
-   * Fired when the props of the edit input are committed.
-   */
-  cellEditCommit: { params: GridCellEditCommitParams; event: MuiBaseEvent };
-  /**
-   * Fired when the props of the edit cell changes.
-   */
-  editCellPropsChange: {
-    params: GridEditCellPropsParams;
-    event: React.SyntheticEvent<HTMLElement> | {};
   };
   /**
    * Fired when the row turns to edit mode.

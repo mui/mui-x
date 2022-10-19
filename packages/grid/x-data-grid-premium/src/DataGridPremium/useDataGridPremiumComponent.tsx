@@ -16,10 +16,8 @@ import {
   useGridPagination,
   paginationStateInitializer,
   useGridPreferencesPanel,
-  useGridEditing_new,
-  useGridEditing_old,
-  editingStateInitializer_old,
-  editingStateInitializer_new,
+  useGridEditing,
+  editingStateInitializer,
   useGridRows,
   useGridRowsPreProcessors,
   rowsStateInitializer,
@@ -55,7 +53,6 @@ import {
   useGridColumnSpanning,
   useGridRowReorder,
   useGridRowReorderPreProcessors,
-  useGridColumnGroupingPreProcessors,
   useGridRowPinning,
   useGridRowPinningPreProcessors,
   rowPinningStateInitializer,
@@ -86,7 +83,6 @@ export const useDataGridPremiumComponent = (
   /**
    * Register all pre-processors called during state initialization here.
    */
-  useGridColumnGroupingPreProcessors(apiRef, props);
   useGridSelectionPreProcessors(apiRef, props);
   useGridRowReorderPreProcessors(apiRef, props);
   useGridRowGroupingPreProcessors(apiRef, props);
@@ -110,13 +106,7 @@ export const useDataGridPremiumComponent = (
   useGridInitializeState(columnsStateInitializer, apiRef, props);
   useGridInitializeState(rowPinningStateInitializer, apiRef, props);
   useGridInitializeState(rowsStateInitializer, apiRef, props);
-  useGridInitializeState(
-    props.experimentalFeatures?.newEditingApi
-      ? editingStateInitializer_new
-      : editingStateInitializer_old,
-    apiRef,
-    props,
-  );
+  useGridInitializeState(editingStateInitializer, apiRef, props);
   useGridInitializeState(focusStateInitializer, apiRef, props);
   useGridInitializeState(sortingStateInitializer, apiRef, props);
   useGridInitializeState(preferencePanelStateInitializer, apiRef, props);
@@ -142,12 +132,7 @@ export const useDataGridPremiumComponent = (
   useGridDetailPanel(apiRef, props);
   useGridColumnSpanning(apiRef);
   useGridColumnGrouping(apiRef, props);
-
-  const useGridEditing = props.experimentalFeatures?.newEditingApi
-    ? useGridEditing_new
-    : useGridEditing_old;
   useGridEditing(apiRef, props);
-
   useGridFocus(apiRef, props);
   useGridPreferencesPanel(apiRef, props);
   useGridFilter(apiRef, props);

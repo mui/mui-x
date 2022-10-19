@@ -42,10 +42,10 @@ export interface TimeValidationProps<TDate> {
    * Dynamically check if time is disabled or not.
    * If returns `false` appropriate time point will ot be acceptable.
    * @param {number} timeValue The value to check.
-   * @param {ClockPickerView} clockType The clock type of the timeValue.
+   * @param {ClockPickerView} view The clock type of the timeValue.
    * @returns {boolean} Returns `true` if the time should be disabled
    */
-  shouldDisableTime?: (timeValue: number, clockType: ClockPickerView) => boolean;
+  shouldDisableTime?: (timeValue: number, view: ClockPickerView) => boolean;
   /**
    * Do not ignore date part when validating min/max time.
    * @default false

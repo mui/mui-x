@@ -4,12 +4,9 @@ import {
   BaseTimePickerProps,
   useTimePickerDefaultizedProps,
   timePickerValueManager,
+  BaseTimePickerSlotsComponent,
+  BaseTimePickerSlotsComponentsProps,
 } from '../TimePicker/shared';
-import { TimePickerToolbar } from '../TimePicker/TimePickerToolbar';
-import {
-  ClockPickerSlotsComponent,
-  ClockPickerSlotsComponentsProps,
-} from '../ClockPicker/ClockPicker';
 import {
   PickersStaticWrapperSlotsComponent,
   PickersStaticWrapperSlotsComponentsProps,
@@ -21,14 +18,14 @@ import { usePickerState } from '../internals/hooks/usePickerState';
 import { StaticPickerProps } from '../internals/models/props/staticPickerProps';
 import { DateInputSlotsComponent } from '../internals/components/PureDateInput';
 
-export interface StaticTimePickerSlotsComponents
-  extends PickersStaticWrapperSlotsComponent,
-    ClockPickerSlotsComponent,
+export interface StaticTimePickerSlotsComponents<TDate>
+  extends BaseTimePickerSlotsComponent<TDate>,
+    PickersStaticWrapperSlotsComponent,
     DateInputSlotsComponent {}
 
 export interface StaticTimePickerSlotsComponentsProps
-  extends PickersStaticWrapperSlotsComponentsProps,
-    ClockPickerSlotsComponentsProps {}
+  extends BaseTimePickerSlotsComponentsProps,
+    PickersStaticWrapperSlotsComponentsProps {}
 
 export interface StaticTimePickerProps<TDate>
   extends StaticPickerProps<TDate, BaseTimePickerProps<TDate>> {
@@ -36,12 +33,12 @@ export interface StaticTimePickerProps<TDate>
    * Overrideable components.
    * @default {}
    */
-  components?: Partial<StaticTimePickerSlotsComponents>;
+  components?: StaticTimePickerSlotsComponents<TDate>;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  componentsProps?: Partial<StaticTimePickerSlotsComponentsProps>;
+  componentsProps?: StaticTimePickerSlotsComponentsProps;
 }
 
 type StaticTimePickerComponent = (<TDate>(
@@ -70,7 +67,6 @@ export const StaticTimePicker = React.forwardRef(function StaticTimePicker<TDate
   const {
     displayStaticWrapperAs,
     onChange,
-    ToolbarComponent = TimePickerToolbar,
     value,
     components,
     componentsProps,
@@ -104,8 +100,6 @@ export const StaticTimePicker = React.forwardRef(function StaticTimePicker<TDate
     >
       <CalendarOrClockPicker
         {...pickerProps}
-        toolbarTitle={props.label || props.toolbarTitle}
-        ToolbarComponent={ToolbarComponent}
         DateInputProps={DateInputProps}
         components={components}
         componentsProps={componentsProps}
@@ -312,7 +306,7 @@ StaticTimePicker.propTypes = {
    * Dynamically check if time is disabled or not.
    * If returns `false` appropriate time point will ot be acceptable.
    * @param {number} timeValue The value to check.
-   * @param {ClockPickerView} clockType The clock type of the timeValue.
+   * @param {ClockPickerView} view The clock type of the timeValue.
    * @returns {boolean} Returns `true` if the time should be disabled
    */
   shouldDisableTime: PropTypes.func,
@@ -328,16 +322,6 @@ StaticTimePicker.propTypes = {
     PropTypes.func,
     PropTypes.object,
   ]),
-  /**
-   * Component that will replace default toolbar renderer.
-   * @default TimePickerToolbar
-   */
-  ToolbarComponent: PropTypes.elementType,
-  /**
-   * Mobile picker title, displaying in the toolbar.
-   * @default 'Select time'
-   */
-  toolbarTitle: PropTypes.node,
   /**
    * The value of the picker.
    */

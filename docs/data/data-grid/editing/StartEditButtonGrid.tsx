@@ -153,7 +153,6 @@ export default function StartEditButtonGrid() {
             onFocus: handleCellFocus,
           },
         }}
-        experimentalFeatures={{ newEditingApi: true }}
       />
     </div>
   );

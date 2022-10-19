@@ -35,10 +35,10 @@ const isISPickers: Partial<PickersLocaleText<any>> = {
   todayButtonLabel: 'Í dag',
 
   // Toolbar titles
-  datePickerDefaultToolbarTitle: 'Velja dagsetningu',
-  dateTimePickerDefaultToolbarTitle: 'Velja dagsetningu og tíma',
-  timePickerDefaultToolbarTitle: 'Velja tíma',
-  dateRangePickerDefaultToolbarTitle: 'Velja tímabil',
+  datePickerToolbarTitle: 'Velja dagsetningu',
+  dateTimePickerToolbarTitle: 'Velja dagsetningu og tíma',
+  timePickerToolbarTitle: 'Velja tíma',
+  dateRangePickerToolbarTitle: 'Velja tímabil',
 
   // Clock labels
   clockLabelText: (view, time, adapter) =>
@@ -62,6 +62,15 @@ const isISPickers: Partial<PickersLocaleText<any>> = {
   // Table labels
   timeTableLabel: 'velja tíma',
   dateTableLabel: 'velja dagsetningu',
+
+  // Field section placeholders
+  // fieldYearPlaceholder: params => 'Y'.repeat(params.digitAmount),
+  // fieldMonthPlaceholder: params => params.contentType === 'letter' ? 'MMMM' : 'MM',
+  // fieldDayPlaceholder: () => 'DD',
+  // fieldHoursPlaceholder: () => 'hh',
+  // fieldMinutesPlaceholder: () => 'mm',
+  // fieldSecondsPlaceholder: () => 'ss',
+  // fieldMeridiemPlaceholder: () => 'aa',
 };
 
 export const isIS = getPickersLocalization(isISPickers);

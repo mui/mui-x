@@ -122,7 +122,6 @@ describe('<DataGrid /> - Selection', () => {
               { id: 1, name: 'Vue' },
             ]}
             onCellEditStart={onCellEditStart}
-            experimentalFeatures={{ newEditingApi: true }}
             editMode={editMode}
             disableSelectionOnClick
           />,
