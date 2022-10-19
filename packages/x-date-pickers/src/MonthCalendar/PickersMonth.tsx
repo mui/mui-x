@@ -1,4 +1,5 @@
 import * as React from 'react';
+import clsx from 'clsx';
 import { styled, alpha, useThemeProps } from '@mui/material/styles';
 import { unstable_composeClasses as composeClasses } from '@mui/material';
 import { capitalize, unstable_useEnhancedEffect as useEnhancedEffect } from '@mui/material/utils';
@@ -14,6 +15,7 @@ import {
 
 export interface ExportedPickersMonthProps {
   classes?: Partial<PickersMonthClasses>;
+  className?: string;
 }
 
 interface PickersMonthProps extends ExportedPickersMonthProps {
@@ -114,6 +116,7 @@ const PickersMonth = React.memo(function PickersMonth(inProps: PickersMonthProps
     name: 'MuiPickersMonth',
   });
   const {
+    className,
     autoFocus,
     children,
     disabled,
@@ -144,7 +147,7 @@ const PickersMonth = React.memo(function PickersMonth(inProps: PickersMonthProps
   return (
     <PickersMonthRoot
       data-mui-test="month"
-      className={classes.root}
+      className={clsx(classes.root, className)}
       ownerState={ownerState}
       {...other}
     >
