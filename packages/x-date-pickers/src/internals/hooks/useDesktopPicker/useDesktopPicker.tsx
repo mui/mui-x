@@ -146,7 +146,7 @@ export const useDesktopPicker = <TDate, TView extends CalendarOrClockPickerView>
           anchorEl={inputRef.current}
           {...actions}
           open={open}
-          // TODO v6: Pass all slots once `PickersPopper`  does not handle the layouting parts
+          // TODO v6: Pass all slots once `PickersPopper` does not handle the layouting parts
           components={{
             DesktopPaper: components.DesktopPaper,
             DesktopTransition: components.DesktopTransition,
@@ -154,7 +154,7 @@ export const useDesktopPicker = <TDate, TView extends CalendarOrClockPickerView>
             Popper: components.Popper,
             PaperContent: components.PaperContent,
           }}
-          // TODO v6: Pass all slots once `PickersPopper`  does not handle the layouting parts
+          // TODO v6: Pass all slots once `PickersPopper` does not handle the layouting parts
           componentsProps={{
             desktopPaper: componentsProps?.desktopPaper,
             desktopTransition: componentsProps?.desktopTransition,
