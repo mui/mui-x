@@ -32,16 +32,12 @@ export interface PickersStaticWrapperSlotsComponent
 export interface PickersStaticWrapperSlotsComponentsProps
   extends Pick<PickersSlotsComponentsProps, 'actionBar' | 'paperContent'> {}
 
-export interface ExportedPickerStaticWrapperProps<TDate> {
+export interface ExportedPickerStaticWrapperProps {
   /**
    * Force static wrapper inner components to be rendered in mobile or desktop mode.
    * @default "mobile"
    */
   displayStaticWrapperAs?: 'desktop' | 'mobile';
-  /**
-   * Locale for components texts
-   */
-  localeText?: PickersInputLocaleText<TDate>;
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */
@@ -50,7 +46,7 @@ export interface ExportedPickerStaticWrapperProps<TDate> {
 
 export interface PickerStaticWrapperProps<TDate>
   extends PickerStateWrapperProps,
-    ExportedPickerStaticWrapperProps<TDate> {
+    ExportedPickerStaticWrapperProps {
   className?: string;
   children?: React.ReactNode;
   /**
@@ -61,12 +57,16 @@ export interface PickerStaticWrapperProps<TDate>
    * Overrideable components.
    * @default {}
    */
-  components?: Partial<PickersStaticWrapperSlotsComponent>;
+  components?: PickersStaticWrapperSlotsComponent;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  componentsProps?: Partial<PickersStaticWrapperSlotsComponentsProps>;
+  componentsProps?: PickersStaticWrapperSlotsComponentsProps;
+  /**
+   * Locale for components texts
+   */
+  localeText?: PickersInputLocaleText<TDate>;
 }
 
 const PickerStaticWrapperRoot = styled('div', {

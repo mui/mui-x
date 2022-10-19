@@ -2,10 +2,11 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import {
   BaseTimePickerProps,
+  BaseTimePickerSlotsComponent,
+  BaseTimePickerSlotsComponentsProps,
   useTimePickerDefaultizedProps,
   timePickerValueManager,
 } from '../TimePicker/shared';
-import { TimePickerToolbar } from '../TimePicker/TimePickerToolbar';
 import {
   MobileWrapper,
   MobileWrapperProps,
@@ -16,33 +17,29 @@ import { CalendarOrClockPicker } from '../internals/components/CalendarOrClockPi
 import { useTimeValidation } from '../internals/hooks/validation/useTimeValidation';
 import { DateInputSlotsComponent, PureDateInput } from '../internals/components/PureDateInput';
 import { usePickerState } from '../internals/hooks/usePickerState';
-import {
-  ClockPickerSlotsComponent,
-  ClockPickerSlotsComponentsProps,
-} from '../ClockPicker/ClockPicker';
 
-export interface MobileTimePickerSlotsComponent
-  extends MobileWrapperSlotsComponent,
-    ClockPickerSlotsComponent,
+export interface MobileTimePickerSlotsComponent<TDate>
+  extends BaseTimePickerSlotsComponent<TDate>,
+    MobileWrapperSlotsComponent,
     DateInputSlotsComponent {}
 
 export interface MobileTimePickerSlotsComponentsProps
-  extends MobileWrapperSlotsComponentsProps,
-    ClockPickerSlotsComponentsProps {}
+  extends BaseTimePickerSlotsComponentsProps,
+    MobileWrapperSlotsComponentsProps {}
 
 export interface MobileTimePickerProps<TDate>
   extends BaseTimePickerProps<TDate>,
-    MobileWrapperProps<TDate> {
+    MobileWrapperProps {
   /**
    * Overrideable components.
    * @default {}
    */
-  components?: Partial<MobileTimePickerSlotsComponent>;
+  components?: MobileTimePickerSlotsComponent<TDate>;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  componentsProps?: Partial<MobileTimePickerSlotsComponentsProps>;
+  componentsProps?: MobileTimePickerSlotsComponentsProps;
 }
 
 type MobileTimePickerComponent = (<TDate>(
@@ -73,15 +70,8 @@ export const MobileTimePicker = React.forwardRef(function MobileTimePicker<TDate
 
   // Note that we are passing down all the value without spread.
   // It saves us >1kb gzip and make any prop available automatically on any level down.
-  const {
-    ToolbarComponent = TimePickerToolbar,
-    value,
-    onChange,
-    components,
-    componentsProps,
-    localeText,
-    ...other
-  } = props;
+  const { value, onChange, components, componentsProps, localeText, ...other } = props;
+
   const DateInputProps = {
     ...inputProps,
     ...other,
@@ -104,8 +94,6 @@ export const MobileTimePicker = React.forwardRef(function MobileTimePicker<TDate
       <CalendarOrClockPicker
         {...pickerProps}
         autoFocus
-        toolbarTitle={props.label || props.toolbarTitle}
-        ToolbarComponent={ToolbarComponent}
         DateInputProps={DateInputProps}
         components={components}
         componentsProps={componentsProps}
@@ -330,16 +318,6 @@ MobileTimePicker.propTypes = {
    * If `true`, show the toolbar even in desktop mode.
    */
   showToolbar: PropTypes.bool,
-  /**
-   * Component that will replace default toolbar renderer.
-   * @default TimePickerToolbar
-   */
-  ToolbarComponent: PropTypes.elementType,
-  /**
-   * Mobile picker title, displaying in the toolbar.
-   * @default 'Select time'
-   */
-  toolbarTitle: PropTypes.node,
   /**
    * The value of the picker.
    */

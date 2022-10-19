@@ -63,12 +63,12 @@ export interface DateCalendarProps<TDate>
    * Overrideable components.
    * @default {}
    */
-  components?: Partial<DateCalendarSlotsComponent<TDate>>;
+  components?: DateCalendarSlotsComponent<TDate>;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  componentsProps?: Partial<DateCalendarSlotsComponentsProps<TDate>>;
+  componentsProps?: DateCalendarSlotsComponentsProps<TDate>;
   value: TDate | null;
   /**
    * Default calendar month displayed when `value={null}`.

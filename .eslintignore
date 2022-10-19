@@ -1,9 +1,10 @@
 /.git
 /docs/.next
 /docs/export
+/docs/pages/playground/
 /lerna.json
 /packages/grid/x-data-grid/src/lib
+build
 CHANGELOG.md
 dist
 node_modules
-build

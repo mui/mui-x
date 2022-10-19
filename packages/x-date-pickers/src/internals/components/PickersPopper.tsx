@@ -73,8 +73,8 @@ export interface PickerPopperProps extends PickerStateWrapperProps {
   containerRef?: React.Ref<HTMLDivElement>;
   children?: React.ReactNode;
   onBlur?: () => void;
-  components?: Partial<PickersPopperSlotsComponent>;
-  componentsProps?: Partial<PickersPopperSlotsComponentsProps>;
+  components?: PickersPopperSlotsComponent;
+  componentsProps?: PickersPopperSlotsComponentsProps;
   classes?: Partial<PickersPopperClasses>;
 }
 

@@ -347,5 +347,20 @@ describe('e2e', () => {
         await page.evaluate(() => document.querySelector('[data-testid="refresh"]')!.textContent),
       ).to.equal('Clicked');
     });
+
+    it('should start editing a cell when a printable char is pressed', async () => {
+      await renderFixture('DataGrid/KeyboardEditInput');
+
+      expect(await page.locator('[role="cell"][data-field="brand"]').textContent()).to.equal(
+        'Nike',
+      );
+
+      await page.click('[role="cell"][data-field="brand"]');
+      await page.type('[role="cell"][data-field="brand"]', 'p');
+
+      expect(await page.locator('[role="cell"][data-field="brand"] input').inputValue()).to.equal(
+        'p',
+      );
+    });
   });
 });
