@@ -1,9 +1,9 @@
+import { Theme } from '@mui/material/styles';
+import { SxProps } from '@mui/system';
 import { PickerStateProps } from '../../hooks/usePickerState';
 import { UsePickerProps } from '../../hooks/usePicker';
 import { CalendarOrClockPickerView } from '../views';
 import { PickersInputComponentLocaleText } from '../../../locales/utils/pickersLocaleTextApi';
-import { SxProps } from '@mui/system';
-import { Theme } from '@mui/material/styles';
 
 export interface BasePickerProps<TValue, TDate> extends PickerStateProps<TValue> {
   /**
