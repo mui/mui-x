@@ -10,7 +10,7 @@ _Oct 20, 2022_
 We'd like to offer a big thanks to the 5 contributors who made this release possible. Here are some highlights ✨:
 
 - 🐞 Bugfixes
-- 🌍 Turkish (tr-TR) locale on the data grid and pickers (#6573) @ramazansancar
+- 🌍 Improve Turkish (tr-TR) locale on the data grid and pickers (#6573) @ramazansancar
 
 ### `@mui/x-data-grid@v5.17.8` / `@mui/x-data-grid-pro@v5.17.8` / `@mui/x-data-grid-premium@v5.17.8`
 
@@ -27,7 +27,7 @@ We'd like to offer a big thanks to the 5 contributors who made this release poss
 
 - [CalendarPicker] Don't move to closest enabled date when `props.date` contains a disabled date (#6537) @flaviendelangle
 - [DateRangePicker] Fix calendar day outside of month layout shifting on hover (pick #6448) (#6538) @alexfauquette
-- [pickers] Fix TS type issues (#6510) @LukasTy
+- [pickers] Fix typescript issues (#6510) @flaviendelangle
 
 ### Docs
 
