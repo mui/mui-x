@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { capitalize } from '@mui/material';
+import { unstable_capitalize as capitalize } from '@mui/utils';
 import {
   GridColDef,
   GridFooterNode,
