@@ -3,7 +3,7 @@ import Typography from '@mui/material/Typography';
 import { SlotComponentProps } from '@mui/base';
 import { useSlotProps } from '@mui/base/utils';
 import { styled, useTheme, useThemeProps } from '@mui/material/styles';
-import { unstable_composeClasses as composeClasses } from '@mui/material';
+import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import clsx from 'clsx';
 import { PickersDay, PickersDayProps } from '../PickersDay/PickersDay';
 import { useUtils, useNow } from '../internals/hooks/useUtils';

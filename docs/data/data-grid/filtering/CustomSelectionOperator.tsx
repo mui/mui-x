@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {
   DataGrid,
-  GridSelectionModel,
+  GridRowSelectionModel,
   GridFilterModel,
   GridFilterItem,
   GridRowId,
@@ -25,7 +25,7 @@ export default function CustomSelectionOperator() {
   });
 
   const [models, setModels] = React.useState<{
-    selectionModel: GridSelectionModel;
+    rowSelectionModel: GridRowSelectionModel;
     filterModel: GridFilterModel;
   }>(() => ({
     filterModel: {
@@ -37,21 +37,25 @@ export default function CustomSelectionOperator() {
         },
       ],
     },
-    selectionModel: [5],
+    rowSelectionModel: [5],
   }));
 
-  const selectionModelLookup = React.useMemo(
+  const rowSelectionModelLookup = React.useMemo(
     () =>
-      models.selectionModel.reduce<Record<GridRowId, GridRowId>>((lookup, rowId) => {
-        lookup[rowId] = rowId;
-        return lookup;
-      }, {}),
-    [models.selectionModel],
+      models.rowSelectionModel.reduce<Record<GridRowId, GridRowId>>(
+        (lookup, rowId) => {
+          lookup[rowId] = rowId;
+          return lookup;
+        },
+        {},
+      ),
+    [models.rowSelectionModel],
   );
 
-  const selectionModelLookupRef =
-    React.useRef<Record<GridRowId, GridRowId>>(selectionModelLookup);
-  selectionModelLookupRef.current = selectionModelLookup;
+  const rowSelectionModelLookupRef = React.useRef<Record<GridRowId, GridRowId>>(
+    rowSelectionModelLookup,
+  );
+  rowSelectionModelLookupRef.current = rowSelectionModelLookup;
 
   const columns = React.useMemo(() => {
     /**
@@ -68,7 +72,7 @@ export default function CustomSelectionOperator() {
         }
 
         return (params: GridCellParams) => {
-          if (selectionModelLookupRef.current[params.id]) {
+          if (rowSelectionModelLookupRef.current[params.id]) {
             return true;
           }
 
@@ -94,11 +98,11 @@ export default function CustomSelectionOperator() {
     });
   }, [data.columns]);
 
-  const handleSelectionModelChange = React.useCallback(
-    (newSelectionModel: GridSelectionModel) =>
+  const handleRowSelectionModelChange = React.useCallback(
+    (newRowSelectionModel: GridRowSelectionModel) =>
       setModels((prev) => ({
         ...prev,
-        selectionModel: newSelectionModel,
+        rowSelectionModel: newRowSelectionModel,
         // Forces the re-application of the filtering process
         filterModel: { ...prev.filterModel },
       })),
@@ -116,7 +120,7 @@ export default function CustomSelectionOperator() {
       <DataGrid
         {...data}
         columns={columns}
-        onSelectionModelChange={handleSelectionModelChange}
+        onRowSelectionModelChange={handleRowSelectionModelChange}
         onFilterModelChange={handleFilterModelChange}
       />
     </div>

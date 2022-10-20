@@ -277,14 +277,14 @@
     "supportsApiRef": true
   },
   {
-    "name": "gridRowsMetaSelector",
-    "returnType": "GridRowsMetaState",
+    "name": "gridRowSelectionStateSelector",
+    "returnType": "GridRowSelectionModel",
     "description": "",
     "supportsApiRef": false
   },
   {
-    "name": "gridSelectionStateSelector",
-    "returnType": "GridSelectionModel",
+    "name": "gridRowsMetaSelector",
+    "returnType": "GridRowsMetaState",
     "description": "",
     "supportsApiRef": false
   },

@@ -17,7 +17,7 @@ import { GridCellParams } from '../params/gridCellParams';
 import type { GridFilterModel } from '../gridFilterModel';
 import type { GridSortModel } from '../gridSortModel';
 import type { GridEditRowsModel } from '../gridEditRowModel';
-import type { GridSelectionModel } from '../gridSelectionModel';
+import type { GridRowSelectionModel } from '../gridRowSelectionModel';
 import type { ElementSize } from '../elementSize';
 import type { MuiBaseEvent } from '../muiEvent';
 import type { GridGroupNode, GridRowId } from '../gridRows';
@@ -289,7 +289,7 @@ export interface GridControlledStateEventLookup {
   /**
    * Fired when the selection state of one or multiple rows changes.
    */
-  selectionChange: { params: GridSelectionModel };
+  rowSelectionChange: { params: GridRowSelectionModel };
   /**
    * Fired when the column visibility model changes.
    */

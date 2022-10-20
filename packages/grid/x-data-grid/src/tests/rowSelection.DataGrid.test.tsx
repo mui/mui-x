@@ -6,7 +6,7 @@ import { createRenderer, fireEvent, screen, act, userEvent } from '@mui/monorepo
 import {
   DataGrid,
   DataGridProps,
-  GridInputSelectionModel,
+  GridInputRowSelectionModel,
   GridRowId,
   GridEditModes,
 } from '@mui/x-data-grid';
@@ -33,7 +33,7 @@ function getSelectedRowIds() {
     );
 }
 
-describe('<DataGrid /> - Selection', () => {
+describe('<DataGrid /> - Row Selection', () => {
   const { render, clock } = createRenderer();
 
   const defaultData = getBasicGridData(4, 2);
@@ -95,7 +95,7 @@ describe('<DataGrid /> - Selection', () => {
 
   describe('prop: checkboxSelection = false (single selection), with keyboard events', () => {
     it('should select one row at a time on Shift + Space', () => {
-      render(<TestDataGridSelection disableSelectionOnClick />);
+      render(<TestDataGridSelection disableRowSelectionOnClick />);
 
       const cell0 = getCell(0, 0);
       userEvent.mousePress(cell0);
@@ -123,7 +123,7 @@ describe('<DataGrid /> - Selection', () => {
             ]}
             onCellEditStart={onCellEditStart}
             editMode={editMode}
-            disableSelectionOnClick
+            disableRowSelectionOnClick
           />,
         );
         expect(onCellEditStart.callCount).to.equal(0);
@@ -146,7 +146,7 @@ describe('<DataGrid /> - Selection', () => {
     });
 
     it(`should deselect the selected row on Shift + Space`, () => {
-      render(<TestDataGridSelection disableSelectionOnClick />);
+      render(<TestDataGridSelection disableRowSelectionOnClick />);
       const cell00 = getCell(0, 0);
       userEvent.mousePress(cell00);
 
@@ -158,7 +158,7 @@ describe('<DataGrid /> - Selection', () => {
     });
 
     it('should not select a range with shift pressed', () => {
-      render(<TestDataGridSelection disableSelectionOnClick />);
+      render(<TestDataGridSelection disableRowSelectionOnClick />);
       const cell00 = getCell(0, 0);
       userEvent.mousePress(cell00);
 
@@ -389,7 +389,7 @@ describe('<DataGrid /> - Selection', () => {
     });
 
     it('should add new row to the selection when pressing Shift+Space', () => {
-      render(<TestDataGridSelection checkboxSelection disableSelectionOnClick />);
+      render(<TestDataGridSelection checkboxSelection disableRowSelectionOnClick />);
 
       expect(getSelectedRowIds()).to.deep.equal([]);
 
@@ -503,24 +503,24 @@ describe('<DataGrid /> - Selection', () => {
       expect(getSelectedRowIds()).to.deep.equal([0]);
     });
 
-    it('should not select unselectable rows given in selectionModel', () => {
+    it('should not select unselectable rows given in rowSelectionModel', () => {
       const { setProps } = render(
         <TestDataGridSelection
-          selectionModel={[0, 1]}
+          rowSelectionModel={[0, 1]}
           isRowSelectable={(params) => Number(params.id) % 2 === 0}
           checkboxSelection
         />,
       );
 
       expect(getSelectedRowIds()).to.deep.equal([0]);
-      setProps({ selectionModel: [0, 1, 2, 3] });
+      setProps({ rowSelectionModel: [0, 1, 2, 3] });
       expect(getSelectedRowIds()).to.deep.equal([0, 2]);
     });
 
-    it('should filter out unselectable rows when the selectionModel prop changes', () => {
+    it('should filter out unselectable rows when the rowSelectionModel prop changes', () => {
       const { setProps } = render(
         <TestDataGridSelection
-          selectionModel={[1]}
+          rowSelectionModel={[1]}
           isRowSelectable={(params) => params.id > 0}
           checkboxSelection
         />,
@@ -531,7 +531,7 @@ describe('<DataGrid /> - Selection', () => {
         'true',
       );
 
-      setProps({ selectionModel: [0] });
+      setProps({ rowSelectionModel: [0] });
       expect(getColumnHeaderCell(0).querySelector('input')).to.have.attr(
         'data-indeterminate',
         'false',
@@ -545,7 +545,7 @@ describe('<DataGrid /> - Selection', () => {
           <TestDataGridSelection
             paginationMode="server"
             rowCount={4}
-            selectionModel={[1, 4]}
+            rowSelectionModel={[1, 4]}
             isRowSelectable={(params) => params.id > 0}
             checkboxSelection
           />,
@@ -559,7 +559,7 @@ describe('<DataGrid /> - Selection', () => {
       const data = getBasicGridData(4, 2);
 
       const { setProps } = render(
-        <TestDataGridSelection selectionModel={[0, 1, 2]} checkboxSelection {...data} />,
+        <TestDataGridSelection rowSelectionModel={[0, 1, 2]} checkboxSelection {...data} />,
       );
       expect(getSelectedRowIds()).to.deep.equal([0, 1, 2]);
 
@@ -571,14 +571,14 @@ describe('<DataGrid /> - Selection', () => {
 
     it('should retain the outdated selected rows when the rows prop changes when keepNonExistentRowsSelected is true', () => {
       const data = getBasicGridData(10, 2);
-      const onSelectionModelChange = spy();
+      const onRowSelectionModelChange = spy();
 
       const { setProps } = render(
         <TestDataGridSelection
-          selectionModel={[0, 1, 2]}
+          rowSelectionModel={[0, 1, 2]}
           checkboxSelection
           keepNonExistentRowsSelected
-          onSelectionModelChange={onSelectionModelChange}
+          onRowSelectionModelChange={onRowSelectionModelChange}
           {...data}
         />,
       );
@@ -590,88 +590,88 @@ describe('<DataGrid /> - Selection', () => {
       // Check number of selected rows in the footer
       expect(() => screen.getByText('3 rows selected')).not.to.throw();
       // The callback should not be called when the selection changes
-      expect(onSelectionModelChange.getCalls()).to.have.length(0);
+      expect(onRowSelectionModelChange.getCalls()).to.have.length(0);
     });
   });
 
-  describe('prop: selectionModel and onSelectionModelChange', () => {
+  describe('prop: rowSelectionModel and onRowSelectionModelChange', () => {
     it('should select rows when initialised (array-version)', () => {
-      render(<TestDataGridSelection selectionModel={[1]} />);
+      render(<TestDataGridSelection rowSelectionModel={[1]} />);
       expect(getSelectedRowIds()).to.deep.equal([1]);
     });
 
     it('should select rows when initialised (non-array version)', () => {
-      render(<TestDataGridSelection selectionModel={1} />);
+      render(<TestDataGridSelection rowSelectionModel={1} />);
       expect(getSelectedRowIds()).to.deep.equal([1]);
     });
 
-    it('should allow to switch selectionModel from array version to non-array version', () => {
-      const { setProps } = render(<TestDataGridSelection selectionModel={[1]} />);
+    it('should allow to switch rowSelectionModel from array version to non-array version', () => {
+      const { setProps } = render(<TestDataGridSelection rowSelectionModel={[1]} />);
       expect(getSelectedRowIds()).to.deep.equal([1]);
 
-      setProps({ selectionModel: 1 });
+      setProps({ rowSelectionModel: 1 });
       expect(getSelectedRowIds()).to.deep.equal([1]);
     });
 
-    it('should not call onSelectionModelChange on initialization or on selectionModel prop change', () => {
-      const onSelectionModelChange = spy();
+    it('should not call onRowSelectionModelChange on initialization or on rowSelectionModel prop change', () => {
+      const onRowSelectionModelChange = spy();
 
       const { setProps } = render(
         <TestDataGridSelection
-          onSelectionModelChange={onSelectionModelChange}
-          selectionModel={0}
+          onRowSelectionModelChange={onRowSelectionModelChange}
+          rowSelectionModel={0}
         />,
       );
-      expect(onSelectionModelChange.callCount).to.equal(0);
-      setProps({ selectionModel: 1 });
-      expect(onSelectionModelChange.callCount).to.equal(0);
+      expect(onRowSelectionModelChange.callCount).to.equal(0);
+      setProps({ rowSelectionModel: 1 });
+      expect(onRowSelectionModelChange.callCount).to.equal(0);
     });
 
-    it('should call onSelectionModelChange with an empty array if no row is selectable in the current page when turning off checkboxSelection', () => {
-      const onSelectionModelChange = spy();
+    it('should call onRowSelectionModelChange with an empty array if no row is selectable in the current page when turning off checkboxSelection', () => {
+      const onRowSelectionModelChange = spy();
       const { setProps } = render(
         <TestDataGridSelection
           checkboxSelection
           pagination
           pageSize={2}
           rowsPerPageOptions={[2]}
-          onSelectionModelChange={onSelectionModelChange}
+          onRowSelectionModelChange={onRowSelectionModelChange}
         />,
       );
       fireEvent.click(getCell(0, 0).querySelector('input'));
-      expect(onSelectionModelChange.lastCall.args[0]).to.deep.equal([0]);
+      expect(onRowSelectionModelChange.lastCall.args[0]).to.deep.equal([0]);
       fireEvent.click(screen.getByRole('button', { name: /next page/i }));
       fireEvent.click(getCell(2, 0).querySelector('input'));
-      expect(onSelectionModelChange.lastCall.args[0]).to.deep.equal([0, 2]);
+      expect(onRowSelectionModelChange.lastCall.args[0]).to.deep.equal([0, 2]);
       setProps({ checkboxSelection: false, isRowSelectable: () => false });
-      expect(onSelectionModelChange.lastCall.args[0]).to.deep.equal([]);
+      expect(onRowSelectionModelChange.lastCall.args[0]).to.deep.equal([]);
     });
 
-    it('should call onSelectionModelChange with an empty array if there is no selected row in the current page when turning off checkboxSelection', () => {
-      const onSelectionModelChange = spy();
+    it('should call onRowSelectionModelChange with an empty array if there is no selected row in the current page when turning off checkboxSelection', () => {
+      const onRowSelectionModelChange = spy();
       const { setProps } = render(
         <TestDataGridSelection
           checkboxSelection
           pagination
           pageSize={2}
           rowsPerPageOptions={[2]}
-          onSelectionModelChange={onSelectionModelChange}
+          onRowSelectionModelChange={onRowSelectionModelChange}
         />,
       );
       fireEvent.click(getCell(0, 0).querySelector('input'));
       fireEvent.click(getCell(1, 0).querySelector('input'));
-      expect(onSelectionModelChange.lastCall.args[0]).to.deep.equal([0, 1]);
+      expect(onRowSelectionModelChange.lastCall.args[0]).to.deep.equal([0, 1]);
       fireEvent.click(screen.getByRole('button', { name: /next page/i }));
       setProps({ checkboxSelection: false });
-      expect(onSelectionModelChange.lastCall.args[0]).to.deep.equal([]);
+      expect(onRowSelectionModelChange.lastCall.args[0]).to.deep.equal([]);
     });
 
-    it('should deselect the old selected rows when updating selectionModel', () => {
-      const { setProps } = render(<TestDataGridSelection selectionModel={[0]} />);
+    it('should deselect the old selected rows when updating rowSelectionModel', () => {
+      const { setProps } = render(<TestDataGridSelection rowSelectionModel={[0]} />);
 
       expect(getSelectedRowIds()).to.deep.equal([0]);
 
-      setProps({ selectionModel: [1] });
+      setProps({ rowSelectionModel: [1] });
       expect(getSelectedRowIds()).to.deep.equal([1]);
     });
 
@@ -681,9 +681,9 @@ describe('<DataGrid /> - Selection', () => {
       expect(getSelectedRowIds()).to.deep.equal([0]);
     });
 
-    it('should not update the selection model when the selectionModelProp is set', () => {
-      const selectionModel: GridInputSelectionModel = [1];
-      render(<TestDataGridSelection selectionModel={selectionModel} />);
+    it('should not update the selection model when the rowSelectionModel prop is set', () => {
+      const rowSelectionModel: GridInputRowSelectionModel = [1];
+      render(<TestDataGridSelection rowSelectionModel={rowSelectionModel} />);
       expect(getSelectedRowIds()).to.deep.equal([1]);
 
       fireEvent.click(getCell(0, 0));
@@ -692,7 +692,7 @@ describe('<DataGrid /> - Selection', () => {
 
     it('should update the selection when the model is not set, but the onChange is set', () => {
       const onModelChange = spy();
-      render(<TestDataGridSelection onSelectionModelChange={onModelChange} />);
+      render(<TestDataGridSelection onRowSelectionModelChange={onModelChange} />);
 
       fireEvent.click(getCell(0, 0));
       expect(getSelectedRowIds()).to.deep.equal([0]);
@@ -702,20 +702,20 @@ describe('<DataGrid /> - Selection', () => {
 
     it('should control selection state when the model and the onChange are set', () => {
       const ControlCase = () => {
-        const [selectionModel, setSelectionModel] = React.useState<any>([]);
+        const [rowSelectionModel, setRowSelectionModel] = React.useState<any>([]);
 
-        const handleSelectionChange: DataGridProps['onSelectionModelChange'] = (newModel) => {
+        const handleSelectionChange: DataGridProps['onRowSelectionModelChange'] = (newModel) => {
           if (newModel.length) {
-            setSelectionModel([...newModel, 2]);
+            setRowSelectionModel([...newModel, 2]);
             return;
           }
-          setSelectionModel(newModel);
+          setRowSelectionModel(newModel);
         };
 
         return (
           <TestDataGridSelection
-            selectionModel={selectionModel}
-            onSelectionModelChange={handleSelectionChange}
+            rowSelectionModel={rowSelectionModel}
+            onRowSelectionModelChange={handleSelectionChange}
             checkboxSelection
           />
         );
@@ -729,27 +729,27 @@ describe('<DataGrid /> - Selection', () => {
   });
 
   describe('console error', () => {
-    it('should throw console error when selectionModel contains more than 1 item in DataGrid without checkbox selection', () => {
-      const onSelectionModelChange = spy();
+    it('should throw console error when rowSelectionModel contains more than 1 item in DataGrid without checkbox selection', () => {
+      const onRowSelectionModelChange = spy();
       expect(() => {
         render(
           <TestDataGridSelection
-            selectionModel={[0, 1]}
-            onSelectionModelChange={onSelectionModelChange}
+            rowSelectionModel={[0, 1]}
+            onRowSelectionModelChange={onRowSelectionModelChange}
           />,
         );
-      }).toErrorDev('selectionModel can only be of 1 item in DataGrid');
+      }).toErrorDev('rowSelectionModel can only be of 1 item in DataGrid');
 
-      // We also assert that onSelectionModelChange was called here because each
+      // We also assert that onRowSelectionModelChange was called here because each
       // error coming from PropTypes is only sent once. We can't have two tests
       // checking if a given error occured.
       // See https://github.com/facebook/react/issues/18251
-      expect(onSelectionModelChange.lastCall.args[0]).to.deep.equal([0]);
+      expect(onRowSelectionModelChange.lastCall.args[0]).to.deep.equal([0]);
     });
 
-    it('should not throw console error when selectionModel contains more than 1 item in DataGrid with checkbox selection', () => {
+    it('should not throw console error when rowSelectionModel contains more than 1 item in DataGrid with checkbox selection', () => {
       expect(() => {
-        render(<TestDataGridSelection selectionModel={[0, 1]} checkboxSelection />);
+        render(<TestDataGridSelection rowSelectionModel={[0, 1]} checkboxSelection />);
       }).not.toErrorDev();
     });
   });

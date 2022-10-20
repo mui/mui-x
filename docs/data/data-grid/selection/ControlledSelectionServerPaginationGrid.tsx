@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { DataGrid, GridRowsProp, GridSelectionModel } from '@mui/x-data-grid';
+import { DataGrid, GridRowsProp, GridRowSelectionModel } from '@mui/x-data-grid';
 import { GridDemoData, useDemoData } from '@mui/x-data-grid-generator';
 
 function loadServerRows(page: number, data: GridDemoData): Promise<any> {
@@ -20,7 +20,8 @@ export default function ControlledSelectionServerPaginationGrid() {
   const [page, setPage] = React.useState(0);
   const [rows, setRows] = React.useState<GridRowsProp>([]);
   const [loading, setLoading] = React.useState(false);
-  const [selectionModel, setSelectionModel] = React.useState<GridSelectionModel>([]);
+  const [rowSelectionModel, setRowSelectionModel] =
+    React.useState<GridRowSelectionModel>([]);
 
   React.useEffect(() => {
     let active = true;
@@ -56,10 +57,10 @@ export default function ControlledSelectionServerPaginationGrid() {
         onPageChange={(newPage) => {
           setPage(newPage);
         }}
-        onSelectionModelChange={(newSelectionModel) => {
-          setSelectionModel(newSelectionModel);
+        onRowSelectionModelChange={(newRowSelectionModel) => {
+          setRowSelectionModel(newRowSelectionModel);
         }}
-        selectionModel={selectionModel}
+        rowSelectionModel={rowSelectionModel}
         loading={loading}
         keepNonExistentRowsSelected
       />

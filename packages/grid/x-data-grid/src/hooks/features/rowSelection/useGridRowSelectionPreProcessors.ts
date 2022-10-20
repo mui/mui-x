@@ -22,7 +22,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   }, [classes]);
 };
 
-export const useGridSelectionPreProcessors = (
+export const useGridRowSelectionPreProcessors = (
   apiRef: React.MutableRefObject<GridApiCommunity>,
   props: DataGridProcessedProps,
 ) => {
