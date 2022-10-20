@@ -1,6 +1,6 @@
 import type { GridInitialStateCommunity, GridStateCommunity } from '../gridStateCommunity';
 import type { GridApiCommon, GridPrivateOnlyApiCommon } from './gridApiCommon';
-import { GridMultiSelectionApi } from './gridSelectionApi';
+import { GridMultiSelectionApi } from './gridRowSelectionApi';
 
 /**
  * The api of `DataGrid`.

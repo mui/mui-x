@@ -27,10 +27,10 @@ import { useGridRows, rowsStateInitializer } from '../hooks/features/rows/useGri
 import { useGridRowsPreProcessors } from '../hooks/features/rows/useGridRowsPreProcessors';
 import { useGridParamsApi } from '../hooks/features/rows/useGridParamsApi';
 import {
-  selectionStateInitializer,
-  useGridSelection,
-} from '../hooks/features/selection/useGridSelection';
-import { useGridSelectionPreProcessors } from '../hooks/features/selection/useGridSelectionPreProcessors';
+  rowSelectionStateInitializer,
+  useGridRowSelection,
+} from '../hooks/features/rowSelection/useGridRowSelection';
+import { useGridRowSelectionPreProcessors } from '../hooks/features/rowSelection/useGridRowSelectionPreProcessors';
 import { useGridSorting, sortingStateInitializer } from '../hooks/features/sorting/useGridSorting';
 import { useGridScroll } from '../hooks/features/scroll/useGridScroll';
 import { useGridEvents } from '../hooks/features/events/useGridEvents';
@@ -52,13 +52,13 @@ export const useDataGridComponent = (props: DataGridProcessedProps) => {
   /**
    * Register all pre-processors called during state initialization here.
    */
-  useGridSelectionPreProcessors(privateApiRef, props);
+  useGridRowSelectionPreProcessors(privateApiRef, props);
   useGridRowsPreProcessors(privateApiRef);
 
   /**
    * Register all state initializers here.
    */
-  useGridInitializeState(selectionStateInitializer, privateApiRef, props);
+  useGridInitializeState(rowSelectionStateInitializer, privateApiRef, props);
   useGridInitializeState(columnsStateInitializer, privateApiRef, props);
   useGridInitializeState(rowsStateInitializer, privateApiRef, props);
   useGridInitializeState(editingStateInitializer, privateApiRef, props);
@@ -73,7 +73,7 @@ export const useDataGridComponent = (props: DataGridProcessedProps) => {
   useGridInitializeState(columnGroupsStateInitializer, privateApiRef, props);
 
   useGridKeyboardNavigation(privateApiRef, props);
-  useGridSelection(privateApiRef, props);
+  useGridRowSelection(privateApiRef, props);
   useGridColumns(privateApiRef, props);
   useGridRows(privateApiRef, props);
   useGridParamsApi(privateApiRef);

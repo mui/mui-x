@@ -23,21 +23,21 @@ import {
   rowsStateInitializer,
   useGridRowsMeta,
   useGridParamsApi,
-  useGridSelection,
+  useGridRowSelection,
   useGridSorting,
   sortingStateInitializer,
   useGridScroll,
   useGridEvents,
   useGridDimensions,
   useGridStatePersistence,
-  useGridSelectionPreProcessors,
+  useGridRowSelectionPreProcessors,
   useGridColumnSpanning,
   columnMenuStateInitializer,
   densityStateInitializer,
   focusStateInitializer,
   preferencePanelStateInitializer,
   rowsMetaStateInitializer,
-  selectionStateInitializer,
+  rowSelectionStateInitializer,
   useGridColumnGrouping,
   columnGroupsStateInitializer,
 } from '@mui/x-data-grid/internals';
@@ -84,7 +84,7 @@ export const useDataGridProComponent = (
   /**
    * Register all pre-processors called during state initialization here.
    */
-  useGridSelectionPreProcessors(apiRef, props);
+  useGridRowSelectionPreProcessors(apiRef, props);
   useGridRowReorderPreProcessors(apiRef, props);
   useGridTreeDataPreProcessors(apiRef, props);
   useGridLazyLoaderPreProcessors(apiRef, props);
@@ -98,7 +98,7 @@ export const useDataGridProComponent = (
   /**
    * Register all state initializers here.
    */
-  useGridInitializeState(selectionStateInitializer, apiRef, props);
+  useGridInitializeState(rowSelectionStateInitializer, apiRef, props);
   useGridInitializeState(detailPanelStateInitializer, apiRef, props);
   useGridInitializeState(columnPinningStateInitializer, apiRef, props);
   useGridInitializeState(columnsStateInitializer, apiRef, props);
@@ -119,7 +119,7 @@ export const useDataGridProComponent = (
 
   useGridTreeData(apiRef);
   useGridKeyboardNavigation(apiRef, props);
-  useGridSelection(apiRef, props);
+  useGridRowSelection(apiRef, props);
   useGridColumnPinning(apiRef, props);
   useGridRowPinning(apiRef, props);
   useGridColumns(apiRef, props);

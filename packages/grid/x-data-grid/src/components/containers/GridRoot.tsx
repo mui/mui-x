@@ -93,7 +93,7 @@ const GridRoot = React.forwardRef<HTMLDivElement, GridRootProps>(function GridRo
       role="grid"
       aria-colcount={visibleColumns.length}
       aria-rowcount={headerGroupingMaxDepth + 1 + pinnedRowsCount + totalRowCount}
-      aria-multiselectable={!rootProps.disableMultipleSelection}
+      aria-multiselectable={!rootProps.disableMultipleRowSelection}
       aria-label={rootProps['aria-label']}
       aria-labelledby={rootProps['aria-labelledby']}
       {...other}

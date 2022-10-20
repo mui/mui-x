@@ -9,7 +9,7 @@ export default function RowGroupingInitialState() {
     <div style={{ height: 400, width: '100%' }}>
       <DataGridPremium
         {...data}
-        disableSelectionOnClick
+        disableRowSelectionOnClick
         initialState={{
           rowGrouping: {
             model: ['company', 'director'],

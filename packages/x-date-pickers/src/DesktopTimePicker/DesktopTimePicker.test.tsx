@@ -160,7 +160,7 @@ describe('<DesktopTimePicker />', () => {
     expect(handleChange.lastCall.args[0]).toEqualDateTime(new Date(2019, 0, 1, 19));
   });
 
-  it('should keep the date when time value is cleaned', function test() {
+  it('should keep the date when time value is cleaned', () => {
     const handleChange = spy();
 
     render(

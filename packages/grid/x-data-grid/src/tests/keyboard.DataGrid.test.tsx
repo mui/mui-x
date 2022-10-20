@@ -700,7 +700,7 @@ describe('<DataGrid /> - Keyboard', () => {
   });
 
   it('should select a row when pressing Space key + shiftKey', () => {
-    render(<NavigationTestCaseNoScrollX disableSelectionOnClick />);
+    render(<NavigationTestCaseNoScrollX disableRowSelectionOnClick />);
     const cell = getCell(0, 0);
     userEvent.mousePress(cell);
     expect(getActiveCell()).to.equal('0-0');

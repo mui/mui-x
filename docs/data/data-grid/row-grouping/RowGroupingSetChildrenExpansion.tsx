@@ -45,7 +45,7 @@ export default function RowGroupingSetChildrenExpansion() {
         <DataGridPremium
           {...data}
           apiRef={apiRef}
-          disableSelectionOnClick
+          disableRowSelectionOnClick
           initialState={initialState}
         />
       </Box>

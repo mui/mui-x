@@ -309,7 +309,7 @@ export default function FullFeaturedDemo() {
         }}
         loading={loading}
         checkboxSelection
-        disableSelectionOnClick
+        disableRowSelectionOnClick
         rowThreshold={0}
         initialState={{
           ...data.initialState,
