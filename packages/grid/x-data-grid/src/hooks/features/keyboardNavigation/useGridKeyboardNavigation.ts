@@ -247,7 +247,7 @@ export const useGridKeyboardNavigation = (
 
       const viewportPageSize = apiRef.current.unstable_getViewportPageSize();
       const colIndexBefore = params.field ? apiRef.current.getColumnIndex(params.field) : 0;
-      const firstRowIndexInPage = currentPageRows.length > 0 ? 0 : null;
+      const firstRowIndexInPage = currentPageRows.length > 0 ? 0 : -1;
       const lastRowIndexInPage = currentPageRows.length - 1;
       const firstColIndex = 0;
       const lastColIndex = gridVisibleColumnDefinitionsSelector(apiRef).length - 1;
@@ -255,7 +255,7 @@ export const useGridKeyboardNavigation = (
 
       switch (event.key) {
         case 'ArrowDown': {
-          if (firstRowIndexInPage !== null) {
+          if (firstRowIndexInPage >= 0) {
             goToCell(colIndexBefore, getRowIdFromIndex(firstRowIndexInPage));
           }
           break;
@@ -276,7 +276,7 @@ export const useGridKeyboardNavigation = (
         }
 
         case 'PageDown': {
-          if (firstRowIndexInPage !== null && lastRowIndexInPage !== null) {
+          if (firstRowIndexInPage >= 0 && lastRowIndexInPage >= 0) {
             goToCell(
               colIndexBefore,
               getRowIdFromIndex(
