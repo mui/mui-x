@@ -1,11 +1,11 @@
 /* eslint-env mocha */
-import { BaseDateValidationProps } from '@mui/x-date-pickers/internals';
+import { BaseDateValidationProps, TimeValidationProps } from '@mui/x-date-pickers/internals';
 // import testDayViewValidation from './testValidation/testDayViewValidation';
 import testTextFieldValidation from './testValidation/testTextFieldValidation';
 import { DayRangeValidationProps } from '../internal/models';
 
 type ValidationProps =
-  | keyof (DayRangeValidationProps<any> & BaseDateValidationProps<any>)
+  | keyof (DayRangeValidationProps<any> & BaseDateValidationProps<any> & TimeValidationProps<any>)
   | 'minDateTime'
   | 'maxDateTime';
 
@@ -17,8 +17,8 @@ const defaultAvailableProps: ValidationProps[] = [
   'minDate',
   'maxDate',
   // time range
-  'minDate',
-  'maxDate',
+  'minTime',
+  'maxTime',
   // date time range
   'minDateTime',
   'maxDateTime',

@@ -325,6 +325,50 @@ function testTextFieldValidation(ElementToTest, propsToTest, getOptions) {
         });
         testInvalidStatus([false, false], isSingleInput);
       });
+
+      it('should apply minDate when only first field is filled', function test() {
+        const { render, withDate, isSingleInput } = getOptions();
+        if (!withDate) {
+          return;
+        }
+
+        const { setProps } = render(
+          <ElementToTest
+            {...defaultProps}
+            value={dateParser([[2018, 2, 9], null])}
+            minDate={adapterToUse.date(new Date(2018, 2, 11))}
+          />,
+        );
+
+        testInvalidStatus([true, false], isSingleInput);
+
+        setProps({
+          value: dateParser([[2018, 2, 16], null]),
+        });
+        testInvalidStatus([false, false], isSingleInput);
+      });
+
+      it('should apply minDate when only second field is filled', function test() {
+        const { render, withDate, isSingleInput } = getOptions();
+        if (!withDate) {
+          return;
+        }
+
+        const { setProps } = render(
+          <ElementToTest
+            {...defaultProps}
+            value={dateParser([null, [2018, 2, 9]])}
+            minDate={adapterToUse.date(new Date(2018, 2, 15))}
+          />,
+        );
+
+        testInvalidStatus([false, true], isSingleInput);
+
+        setProps({
+          value: dateParser([null, [2018, 2, 16]]),
+        });
+        testInvalidStatus([false, false], isSingleInput);
+      });
     }
 
     if (propsToTest.includes('maxDate')) {
@@ -427,7 +471,52 @@ function testTextFieldValidation(ElementToTest, propsToTest, getOptions) {
         });
         testInvalidStatus([false, false], isSingleInput);
       });
+
+      it('should apply minTime when only first field is filled', function test() {
+        const { render, withTime, isSingleInput } = getOptions();
+        if (!withTime) {
+          return;
+        }
+
+        const { setProps } = render(
+          <ElementToTest
+            {...defaultProps}
+            value={dateParser([[2018, 1, 1, 15], null])}
+            minTime={adapterToUse.date(new Date(2018, 1, 1, 12))}
+          />,
+        );
+
+        testInvalidStatus([false, false], isSingleInput);
+
+        setProps({
+          value: dateParser([[2018, 1, 1, 5], null]),
+        });
+        testInvalidStatus([true, false], isSingleInput);
+      });
+
+      it('should apply minTime when only second field is filled', function test() {
+        const { render, withTime, isSingleInput } = getOptions();
+        if (!withTime) {
+          return;
+        }
+
+        const { setProps } = render(
+          <ElementToTest
+            {...defaultProps}
+            value={dateParser([null, [2018, 1, 1, 15]])}
+            minTime={adapterToUse.date(new Date(2018, 1, 1, 12))}
+          />,
+        );
+
+        testInvalidStatus([false, false], isSingleInput);
+
+        setProps({
+          value: dateParser([null, [2018, 1, 1, 5]]),
+        });
+        testInvalidStatus([false, true], isSingleInput);
+      });
     }
+
     if (propsToTest.includes('maxTime')) {
       it('should apply maxTime', function test() {
         const { render, withTime, isSingleInput } = getOptions();

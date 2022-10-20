@@ -30,13 +30,13 @@ export const validateDate: Validator<
   DateValidationError,
   DateComponentValidationProps<any>
 > = ({ props, value, adapter }): DateValidationError => {
-  const now = adapter.utils.date()!;
-  const minDate = applyDefaultDate(adapter.utils, props.minDate, adapter.defaultDates.minDate);
-  const maxDate = applyDefaultDate(adapter.utils, props.maxDate, adapter.defaultDates.maxDate);
-
   if (value === null) {
     return null;
   }
+
+  const now = adapter.utils.date()!;
+  const minDate = applyDefaultDate(adapter.utils, props.minDate, adapter.defaultDates.minDate);
+  const maxDate = applyDefaultDate(adapter.utils, props.maxDate, adapter.defaultDates.maxDate);
 
   switch (true) {
     case !adapter.utils.isValid(value):
