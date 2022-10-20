@@ -78,7 +78,7 @@ function testTextFieldValidation(ElementToTest, propsToTest, getOptions) {
               [2018, 2, 10],
             ])}
             shouldDisableDate={(date) =>
-              adapterToUse.isAfter(date as any, adapterToUse.date(new Date(2018, 2, 10)))
+              adapterToUse.isAfter(date, adapterToUse.date(new Date(2018, 2, 10)))
             }
           />,
         );
@@ -108,7 +108,7 @@ function testTextFieldValidation(ElementToTest, propsToTest, getOptions) {
             [2018, 2, 13],
           ]),
           shouldDisableDate: (date) =>
-            adapterToUse.isBefore(date as any, adapterToUse.date(new Date(2018, 2, 10))),
+            adapterToUse.isBefore(date, adapterToUse.date(new Date(2018, 2, 10))),
         });
         testInvalidStatus([true, false], isSingleInput);
       });
@@ -128,7 +128,7 @@ function testTextFieldValidation(ElementToTest, propsToTest, getOptions) {
             ])}
             shouldDisableDate={(date, position) =>
               position === 'end'
-                ? adapterToUse.isAfter(date as any, adapterToUse.date(new Date(2018, 2, 10)))
+                ? adapterToUse.isAfter(date, adapterToUse.date(new Date(2018, 2, 10)))
                 : false
             }
           />,
@@ -159,7 +159,7 @@ function testTextFieldValidation(ElementToTest, propsToTest, getOptions) {
           ]),
           shouldDisableDate: (date, position) =>
             position === 'end'
-              ? adapterToUse.isBefore(date as any, adapterToUse.date(new Date(2018, 2, 10)))
+              ? adapterToUse.isBefore(date, adapterToUse.date(new Date(2018, 2, 10)))
               : false,
         });
         testInvalidStatus([false, false], isSingleInput);
@@ -180,7 +180,7 @@ function testTextFieldValidation(ElementToTest, propsToTest, getOptions) {
             ])}
             shouldDisableDate={(date, position) =>
               position === 'start'
-                ? adapterToUse.isAfter(date as any, adapterToUse.date(new Date(2018, 2, 10)))
+                ? adapterToUse.isAfter(date, adapterToUse.date(new Date(2018, 2, 10)))
                 : false
             }
           />,
@@ -211,7 +211,7 @@ function testTextFieldValidation(ElementToTest, propsToTest, getOptions) {
           ]),
           shouldDisableDate: (date, position) =>
             position === 'start'
-              ? adapterToUse.isBefore(date as any, adapterToUse.date(new Date(2018, 2, 10)))
+              ? adapterToUse.isBefore(date, adapterToUse.date(new Date(2018, 2, 10)))
               : false,
         });
         testInvalidStatus([true, false], isSingleInput);
