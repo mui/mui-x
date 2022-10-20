@@ -39,6 +39,7 @@ export interface GridRowsInternalCache extends Omit<GridRowTreeCreationParams, '
    * The value of the `loading` prop since the last time that the rows state was updated.
    */
   loadingPropBeforePartialUpdates: DataGridProcessedProps['loading'];
+  rowCountPropBeforePartialUpdates: DataGridProcessedProps['rowCount'];
 }
 
 export interface GridRowsState extends GridRowTreeCreationValue {
