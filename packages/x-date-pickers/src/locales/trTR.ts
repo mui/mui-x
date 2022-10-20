@@ -30,10 +30,10 @@ const trTRPickers: Partial<PickersLocaleText<any>> = {
   todayButtonLabel: 'Bugün',
 
   // Toolbar titles
-  datePickerToolbarTitle: 'Tarih Seç',
-  dateTimePickerToolbarTitle: 'Tarih & Saat seç',
-  timePickerToolbarTitle: 'Saat seç',
-  dateRangePickerToolbarTitle: 'Tarih aralığı seçin',
+  datePickerDefaultToolbarTitle: 'Tarih Seç',
+  dateTimePickerDefaultToolbarTitle: 'Tarih & Saat seç',
+  timePickerDefaultToolbarTitle: 'Saat seç',
+  dateRangePickerDefaultToolbarTitle: 'Tarih aralığı seçin',
 
   // Clock labels
   clockLabelText: (view, time, adapter) =>
