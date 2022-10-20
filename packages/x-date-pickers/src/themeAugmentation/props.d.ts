@@ -33,6 +33,7 @@ import {
   ExportedCalendarHeaderProps,
 } from '../internals';
 import { CalendarOrClockPickerView } from '../internals/models';
+import { PickerViewLayoutProps } from '../internals/components/PickerViewLayout';
 
 export interface PickersComponentsPropsList {
   MuiCalendarOrClockPicker: CalendarOrClockPickerProps<unknown, CalendarOrClockPickerView>;
@@ -65,6 +66,7 @@ export interface PickersComponentsPropsList {
   MuiPickerStaticWrapper: PickerStaticWrapperProps<unknown>;
   MuiPickersToolbar: PickersToolbarProps<unknown>;
   MuiPickersToolbarButton: PickersToolbarButtonProps;
+  MuiPickerViewLayout: PickerViewLayoutProps<unknown, CalendarOrClockPickerView>;
   MuiStaticDatePicker: StaticDatePickerProps<unknown>;
   MuiStaticDateTimePicker: StaticDateTimePickerProps<unknown>;
   MuiStaticTimePicker: StaticTimePickerProps<unknown>;

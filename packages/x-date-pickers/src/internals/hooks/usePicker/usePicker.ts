@@ -29,20 +29,18 @@ export const usePicker = <
 
   const pickerViewsResponse = usePickerViews({
     props,
-    propsFromPickerValue: pickerValueResponse.viewProps,
-    additionalViewProps,
-    viewLookup,
     inputRef,
+    viewLookup,
     wrapperVariant,
-    actions: pickerValueResponse.actions,
+    additionalViewProps,
+    propsFromPickerValue: pickerValueResponse.viewProps,
   });
 
   const pickerLayoutResponse = usePickerLayout({
     props,
+    wrapperVariant,
     propsFromPickerValue: pickerValueResponse.layoutProps,
     propsFromPickerViews: pickerViewsResponse.layoutProps,
-    actions: pickerValueResponse.actions,
-    wrapperVariant,
   });
 
   return {
@@ -52,8 +50,8 @@ export const usePicker = <
     fieldProps: pickerValueResponse.fieldProps,
 
     // Picker views
-    renderViews: pickerViewsResponse.renderViews,
-    hasPopperView: pickerViewsResponse.hasPopperView,
+    renderCurrentView: pickerViewsResponse.renderCurrentView,
+    hasUIView: pickerViewsResponse.hasUIView,
     shouldRestoreFocus: pickerViewsResponse.shouldRestoreFocus,
 
     // Picker layout

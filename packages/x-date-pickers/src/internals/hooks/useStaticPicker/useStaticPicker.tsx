@@ -31,12 +31,12 @@ export const useStaticPicker = <
 }: UseStaticPickerParams<TDate, TView, TExternalProps>) => {
   const { localeText, components, componentsProps, displayStaticWrapperAs } = props;
 
-  const { layoutProps, renderViews } = usePicker({
+  const { layoutProps, renderCurrentView } = usePicker({
     props,
-    valueManager,
     viewLookup,
-    wrapperVariant: displayStaticWrapperAs,
+    valueManager,
     additionalViewProps: {},
+    wrapperVariant: displayStaticWrapperAs,
   });
 
   const renderPicker = () => (
@@ -47,7 +47,7 @@ export const useStaticPicker = <
           components={components}
           componentsProps={componentsProps}
         >
-          {renderViews()}
+          {renderCurrentView()}
         </PickerStaticViewLayout>
       </WrapperVariantContext.Provider>
     </LocalizationProvider>

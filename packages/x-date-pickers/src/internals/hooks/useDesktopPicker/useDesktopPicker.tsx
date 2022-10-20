@@ -36,20 +36,20 @@ export const useDesktopPicker = <
   const inputRef = React.useRef<HTMLInputElement>(null);
 
   const {
-    fieldProps: pickerFieldProps,
-    layoutProps,
-    renderViews,
-    actions,
     open,
-    hasPopperView,
+    actions,
+    hasUIView,
+    layoutProps,
+    renderCurrentView,
     shouldRestoreFocus,
+    fieldProps: pickerFieldProps,
   } = usePicker({
     props,
-    valueManager,
-    wrapperVariant: 'desktop',
-    viewLookup,
     inputRef,
+    viewLookup,
+    valueManager,
     additionalViewProps: {},
+    wrapperVariant: 'desktop',
   });
 
   const Field = components.Field;
@@ -118,7 +118,7 @@ export const useDesktopPicker = <
         ...inputPropsPassedByField,
         ...externalInputProps,
         InputProps: {
-          [`${inputAdornmentProps.position}Adornment`]: hasPopperView ? (
+          [`${inputAdornmentProps.position}Adornment`]: hasUIView ? (
             <InputAdornment {...inputAdornmentProps}>
               <OpenPickerButton {...openPickerButtonProps}>
                 <OpenPickerIcon {...openPickerIconProps} />
@@ -171,7 +171,7 @@ export const useDesktopPicker = <
             components={components}
             componentsProps={componentsProps}
           >
-            {renderViews()}
+            {renderCurrentView()}
           </PickerViewLayout>
         </PickersPopper>
       </WrapperVariantContext.Provider>

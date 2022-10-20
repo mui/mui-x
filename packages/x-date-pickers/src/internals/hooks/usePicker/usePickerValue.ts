@@ -118,7 +118,7 @@ export interface UsePickerValueParams<TValue, TDate> {
   wrapperVariant: WrapperVariant;
 }
 
-export interface UsePickerValueActions {
+interface UsePickerValueActions {
   onAccept: () => void;
   onClear: () => void;
   onDismiss: () => void;
@@ -139,28 +139,32 @@ type UsePickerValueFieldResponse<TValue> = Required<
  * Props passed to `usePickerViews`.
  */
 export interface UsePickerValueViewsResponse<TValue> {
-  onChange: (value: TValue, selectionState?: PickerSelectionState) => void;
   value: TValue;
+  onChange: (value: TValue, selectionState?: PickerSelectionState) => void;
   open: boolean;
+  onClose: () => void;
   onSelectedSectionsChange: (newValue: FieldSelectedSections) => void;
 }
 
 /**
  * Props passed to `usePickerLayout`.
  */
-export interface UsePickerValueLayoutResponse<TValue> {
+export interface UsePickerValueLayoutResponse<TValue> extends UsePickerValueActions {
   value: TValue;
   onChange: (newValue: TValue) => void;
 }
 
 export interface UsePickerValueResponse<TValue> {
+  open: boolean;
   actions: UsePickerValueActions;
   viewProps: UsePickerValueViewsResponse<TValue>;
   fieldProps: UsePickerValueFieldResponse<TValue>;
   layoutProps: UsePickerValueLayoutResponse<TValue>;
-  open: boolean;
 }
 
+/**
+ * Manage the value lifecycle of all the pickers.
+ */
 export const usePickerValue = <TValue, TDate>({
   props,
   valueManager,
@@ -355,11 +359,13 @@ export const usePickerValue = <TValue, TDate>({
   const viewResponse: UsePickerValueViewsResponse<TValue> = {
     value: dateState.draft,
     onChange: handleChange,
+    onClose: handleClose,
     open: isOpen,
     onSelectedSectionsChange: handleFieldSelectedSectionsChange,
   };
 
   const layoutResponse: UsePickerValueLayoutResponse<TValue> = {
+    ...actions,
     value: dateState.draft,
     onChange: handleChangeAndCommit,
   };

@@ -48,12 +48,12 @@ export const useDesktopRangePicker = <
   const [currentDatePosition, setCurrentDatePosition] = React.useState<'start' | 'end'>('start');
 
   const {
-    fieldProps: pickerFieldProps,
-    layoutProps,
-    renderViews,
-    actions,
     open,
+    actions,
+    layoutProps,
+    renderCurrentView,
     shouldRestoreFocus,
+    fieldProps: pickerFieldProps,
   } = usePicker({
     props,
     valueManager,
@@ -155,7 +155,7 @@ export const useDesktopRangePicker = <
             components={components}
             componentsProps={componentsProps}
           >
-            {renderViews()}
+            {renderCurrentView()}
           </PickerViewLayout>
         </PickersPopper>
       </WrapperVariantContext.Provider>

@@ -136,6 +136,11 @@ export interface PickerComponents<Theme = unknown> {
     styleOverrides?: ComponentsOverrides<Theme>['MuiPickersToolbarButton'];
     variants?: ComponentsVariants['MuiPickersToolbarButton'];
   };
+  MuiPickerViewLayout?: {
+    defaultProps?: ComponentsProps['MuiPickerViewLayout'];
+    styleOverrides?: ComponentsOverrides<Theme>['MuiPickerViewLayout'];
+    variants?: ComponentsVariants['MuiPickerViewLayout'];
+  };
   MuiStaticDatePicker?: {
     defaultProps?: ComponentsProps['MuiStaticDatePicker'];
     styleOverrides?: ComponentsOverrides<Theme>['MuiStaticDatePicker'];

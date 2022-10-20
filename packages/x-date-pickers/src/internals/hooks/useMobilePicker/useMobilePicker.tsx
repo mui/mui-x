@@ -34,18 +34,18 @@ export const useMobilePicker = <
   const inputRef = React.useRef<HTMLInputElement>(null);
 
   const {
-    fieldProps: pickerFieldProps,
-    layoutProps,
-    renderViews,
-    actions,
     open,
+    actions,
+    layoutProps,
+    renderCurrentView,
+    fieldProps: pickerFieldProps,
   } = usePicker({
     props,
-    valueManager,
-    wrapperVariant: 'mobile',
-    viewLookup,
     inputRef,
+    viewLookup,
+    valueManager,
     additionalViewProps: {},
+    wrapperVariant: 'mobile',
   });
 
   const Field = components.Field;
@@ -123,7 +123,7 @@ export const useMobilePicker = <
             components={components}
             componentsProps={componentsProps}
           >
-            {renderViews()}
+            {renderCurrentView()}
           </PickerViewLayout>
         </PickersModalDialog>
       </WrapperVariantContext.Provider>
