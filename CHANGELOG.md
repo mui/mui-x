@@ -54,7 +54,7 @@ We'd like to offer a big thanks to the 9 contributors who made this release poss
   />
   ```
 
-- The `toolbarPlaceholder` and `toolbarFormat` props have moved to the `toolbar` components props slot:
+- The `toolbarPlaceholder` and `toolbarFormat` props have been moved to the `toolbar` components props slot:
 
   ```diff
   // Same on all other pickers
@@ -70,7 +70,7 @@ We'd like to offer a big thanks to the 9 contributors who made this release poss
   />
   ```
 
-- The `toolbarTitle` prop has moved to the localization object:
+- The `toolbarTitle` prop has been moved to the localization object:
 
   ```diff
   // Same on all other pickers
@@ -101,7 +101,7 @@ We'd like to offer a big thanks to the 9 contributors who made this release poss
   />
   ```
 
-- The `onChange` / `openView` props on the toolbar has been renamed `onViewChange` / `view`
+- The `onChange` / `openView` props on the toolbar have been renamed `onViewChange` / `view`
 
 #### Changes
 
@@ -123,7 +123,7 @@ We'd like to offer a big thanks to the 9 contributors who made this release poss
 
 ### Core
 
-- [core] Avoid slower CI run statues @oliviertassinari
+- [core] Run CodeQL only on schedule @oliviertassinari
 - [core] Fix trailing spaces and git diff format (#6523) @oliviertassinari
 - [core] Harden GitHub Actions permissions (#6396) @step-security-bot
 - [core] Improve the playground DX (#6514) @oliviertassinari
