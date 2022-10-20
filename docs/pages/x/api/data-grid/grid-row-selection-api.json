@@ -23,16 +23,6 @@
       "type": "(id: GridRowId, isSelected?: boolean, resetSelection?: boolean) => void"
     },
     {
-      "name": "selectRowRange",
-      "description": "Change the selection state of all the selectable rows in a range.",
-      "type": "(range: { startId: GridRowId; endId: GridRowId }, isSelected?: boolean, resetSelection?: boolean) => void"
-    },
-    {
-      "name": "selectRows",
-      "description": "Change the selection state of multiple rows.",
-      "type": "(ids: GridRowId[], isSelected?: boolean, resetSelection?: boolean) => void"
-    },
-    {
       "name": "setRowSelectionModel",
       "description": "Updates the selected rows to be those passed to the <code>rowIds</code> argument.\nAny row already selected will be unselected.",
       "type": "(rowIds: GridRowId[]) => void"
