@@ -22,8 +22,6 @@ const pages: MuiPage[] = [
       { pathname: '/x/react-data-grid', title: 'Overview' },
       { pathname: '/x/react-data-grid/demo' },
       { pathname: '/x/react-data-grid/getting-started' },
-      { pathname: '/x/react-data-grid/migration-v4', title: 'Migration from v4' },
-      { pathname: '/x/react-data-grid/migration-v5', title: 'Migration from v5' },
       { pathname: '/x/react-data-grid/layout' },
       {
         pathname: '/x/react-data-grid/columns',
@@ -150,7 +148,6 @@ const pages: MuiPage[] = [
     icon: 'DatePickerIcon',
     children: [
       { pathname: '/x/react-date-pickers/getting-started' },
-      { pathname: '/x/react-date-pickers/migration-lab', title: 'Migration from the lab' },
       { pathname: '/x/react-date-pickers/date-picker' },
       {
         pathname: '/x/react-date-pickers/date-range-picker',
@@ -267,6 +264,34 @@ const pages: MuiPage[] = [
           { pathname: '/x/api/date-pickers/static-time-picker', title: 'StaticTimePicker' },
           { pathname: '/x/api/date-pickers/time-picker', title: 'TimePicker' },
           { pathname: '/x/api/date-pickers/year-calendar', title: 'YearCalendar' },
+        ],
+      },
+    ],
+  },
+  {
+    pathname: '/x/migration',
+    title: 'Migration',
+    icon: 'BookIcon',
+    children: [
+      {
+        pathname: '/x/migration',
+        subheader: 'Upgrade to v6',
+        children: [
+          { pathname: '/x/migration/migration-data-grid-v5', title: 'Breaking changes: Data Grid' },
+        ],
+      },
+      {
+        pathname: '/x/migration',
+        subheader: 'Earlier versions',
+        children: [
+          {
+            pathname: '/x/migration/migration-pickers-lab',
+            title: 'Migration from lab to v5 (pickers)',
+          },
+          {
+            pathname: '/x/migration/migration-data-grid-v4',
+            title: 'Migration from v4 to v5 (Data Grid)',
+          },
         ],
       },
     ],

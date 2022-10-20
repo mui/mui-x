@@ -1,6 +1,6 @@
 <DataGridPremium
   {...data}
   apiRef={apiRef}
-  disableSelectionOnClick
+  disableRowSelectionOnClick
   initialState={initialState}
 />

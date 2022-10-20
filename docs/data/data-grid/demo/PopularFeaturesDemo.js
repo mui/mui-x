@@ -360,7 +360,7 @@ export default function PopularFeaturesDemo() {
       <DataGridPremium
         apiRef={apiRef}
         autoHeight
-        disableSelectionOnClick
+        disableRowSelectionOnClick
         onRowClick={onRowClick}
         components={{
           Toolbar: CustomToolbar,

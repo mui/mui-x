@@ -1,10 +1,12 @@
 {
-  "version": "6.0.0-alpha.2",
+  "version": "6.0.0-alpha.3",
   "private": true,
   "scripts": {
-    "start": "yarn docs:dev",
+    "start": "yarn && yarn docs:dev",
     "benchmark:browser": "yarn workspace benchmark browser",
     "docs:dev": "yarn workspace docs dev",
+    "docs:start": "yarn workspace docs start",
+    "docs:create-playground": "yarn workspace docs create-playground",
     "docs:api": "yarn docs:api:build",
     "docs:api:build": "cross-env BABEL_ENV=development babel-node -i \"/node_modules/(?!@mui)/\" -x .ts,.tsx,.js ./docs/scripts/api/buildApi.ts",
     "docs:build": "yarn workspace docs build",
@@ -19,7 +21,7 @@
     "jsonlint": "node ./scripts/jsonlint.js",
     "eslint": "eslint . --cache --report-unused-disable-directives --ext .js,.ts,.tsx --max-warnings 0",
     "eslint:ci": "eslint . --report-unused-disable-directives --ext .js,.ts,.tsx --max-warnings 0",
-    "markdownlint": "markdownlint '**/*.md' --config .markdownlint.jsonc",
+    "markdownlint": "markdownlint-cli2 \"**/*.md\"",
     "prettier": "node ./scripts/prettier.js --branch next",
     "prettier:all": "node ./scripts/prettier.js write",
     "proptypes": "cross-env BABEL_ENV=development babel-node -i \"/node_modules/(?!@mui)/\" -x .ts,.tsx,.js ./docs/scripts/generateProptypes.ts",
@@ -133,22 +135,23 @@
     "eslint-plugin-react-hooks": "^4.6.0",
     "format-util": "^1.0.5",
     "glob-gitignore": "^1.0.14",
+    "html-webpack-plugin": "^5.5.0",
     "jsdom": "^20.0.1",
     "jss": "^10.9.2",
     "jss-plugin-template": "^10.9.2",
     "jss-rtl": "^0.3.0",
     "karma": "^6.4.1",
-    "karma-browserstack-launcher": "^1.6.0",
     "karma-chrome-launcher": "^3.1.1",
     "karma-mocha": "^2.0.1",
     "karma-sourcemap-loader": "^0.3.8",
     "karma-webpack": "^5.0.0",
     "lerna": "^5.6.2",
-    "markdownlint-cli": "^0.31.1",
+    "markdownlint-cli2": "^0.5.1",
     "mocha": "^10.0.0",
     "nyc": "^15.1.0",
     "playwright": "^1.21.1",
     "prettier": "^2.7.1",
+    "process": "^0.11.10",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "serve": "^14.0.1",
@@ -177,9 +180,7 @@
       "**/@mui/monorepo"
     ]
   },
-  "dependencies": {
-    "html-webpack-plugin": "^5.5.0"
-  },
+  "dependencies": {},
   "resolutions": {
     "**/react-is": "^18.2.0"
   }

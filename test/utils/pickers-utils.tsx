@@ -6,11 +6,12 @@ import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon';
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
+import { MuiPickersAdapter } from '@mui/x-date-pickers/internals';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import sinon from 'sinon';
 import { useControlled } from '@mui/material/utils';
 
-const availableAdapters = {
+const availableAdapters: { [key: string]: new (...args: any) => MuiPickersAdapter<any> } = {
   'date-fns': AdapterDateFns,
   dayjs: AdapterDayjs,
   luxon: AdapterLuxon,
@@ -61,6 +62,7 @@ export const FakeTransitionComponent = React.forwardRef<HTMLDivElement, Transiti
 interface CreatePickerRendererOptions extends CreateRendererOptions {
   // Set-up locale with date-fns object. Other are deduced from `locale.code`
   locale?: Locale;
+  adapterName?: 'date-fns' | 'dayjs' | 'luxon' | 'moment';
 }
 
 export function wrapPickerMount(mount: (node: React.ReactNode) => import('enzyme').ReactWrapper) {
@@ -70,18 +72,25 @@ export function wrapPickerMount(mount: (node: React.ReactNode) => import('enzyme
 
 export function createPickerRenderer({
   locale,
+  adapterName,
   ...createRendererOptions
 }: CreatePickerRendererOptions = {}) {
   const { clock, render: clientRender } = createRenderer(createRendererOptions);
 
-  let adapterLocale = adapterToUse.lib === 'date-fns' ? locale : locale?.code;
+  let adapterLocale = (adapterName ?? adapterToUse.lib) === 'date-fns' ? locale : locale?.code;
 
   if (typeof adapterLocale === 'string' && adapterLocale.length > 2) {
     adapterLocale = adapterLocale.slice(0, 2);
   }
+  const adapter = adapterName
+    ? new availableAdapters[adapterName]({ locale: adapterLocale })
+    : new AdapterClassToUse({ locale: adapterLocale });
   function Wrapper({ children }: { children?: React.ReactNode }) {
     return (
-      <LocalizationProvider adapterLocale={adapterLocale} dateAdapter={AdapterClassToUse}>
+      <LocalizationProvider
+        adapterLocale={adapterLocale}
+        dateAdapter={adapterName ? availableAdapters[adapterName] : AdapterClassToUse}
+      >
         {children}
       </LocalizationProvider>
     );
@@ -92,6 +101,7 @@ export function createPickerRenderer({
     render(node: React.ReactElement, options?: Omit<RenderOptions, 'wrapper'>) {
       return clientRender(node, { ...options, wrapper: Wrapper });
     },
+    adapter,
   };
 }
 

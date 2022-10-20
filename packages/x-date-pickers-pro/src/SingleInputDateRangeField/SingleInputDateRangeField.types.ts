@@ -10,8 +10,10 @@ export interface UseSingleInputDateRangeFieldParams<TDate, TChildProps extends {
 
 export interface UseSingleInputDateRangeFieldProps<TDate> extends UseDateRangeFieldProps<TDate> {}
 
-export type UseSingleInputDateRangeFieldDefaultizedProps<TDate> =
-  UseDateRangeFieldDefaultizedProps<TDate>;
+export type UseSingleInputDateRangeFieldDefaultizedProps<
+  TDate,
+  AdditionalProps extends {},
+> = UseDateRangeFieldDefaultizedProps<TDate> & AdditionalProps;
 
 export type UseSingleInputDateRangeFieldComponentProps<TDate, TChildProps extends {}> = Omit<
   TChildProps,
