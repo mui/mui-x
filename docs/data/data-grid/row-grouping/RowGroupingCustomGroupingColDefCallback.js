@@ -50,7 +50,7 @@ export default function RowGroupingCustomGroupingColDefCallback() {
         <DataGridPremium
           {...data}
           apiRef={apiRef}
-          disableSelectionOnClick
+          disableRowSelectionOnClick
           rowGroupingModel={rowGroupingModel}
           initialState={initialState}
           groupingColDef={(params) => {

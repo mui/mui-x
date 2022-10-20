@@ -70,10 +70,10 @@ export {
 } from '../hooks/features/rows/gridRowsSelector';
 export { calculatePinnedRowsHeight } from '../hooks/features/rows/gridRowsUtils';
 export {
-  useGridSelection,
-  selectionStateInitializer,
-} from '../hooks/features/selection/useGridSelection';
-export { useGridSelectionPreProcessors } from '../hooks/features/selection/useGridSelectionPreProcessors';
+  useGridRowSelection,
+  rowSelectionStateInitializer,
+} from '../hooks/features/rowSelection/useGridRowSelection';
+export { useGridRowSelectionPreProcessors } from '../hooks/features/rowSelection/useGridRowSelectionPreProcessors';
 export { useGridSorting, sortingStateInitializer } from '../hooks/features/sorting/useGridSorting';
 export type { GridSortingModelApplier } from '../hooks/features/sorting/gridSortingState';
 export { useGridScroll } from '../hooks/features/scroll/useGridScroll';

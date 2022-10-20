@@ -14,7 +14,7 @@ import { GridPrintExportApi } from './gridPrintExportApi';
 import { GridDisableVirtualizationApi } from './gridDisableVirtualizationApi';
 import { GridRowApi } from './gridRowApi';
 import { GridRowsMetaApi } from './gridRowsMetaApi';
-import { GridSelectionApi } from './gridSelectionApi';
+import { GridRowSelectionApi } from './gridRowSelectionApi';
 import { GridSortApi } from './gridSortApi';
 import { GridStateApi } from './gridStateApi';
 import { GridLoggerApi } from './gridLoggerApi';
@@ -43,7 +43,7 @@ export interface GridApiCommon<
     GridEditingApi,
     GridParamsApi,
     GridColumnApi,
-    GridSelectionApi,
+    GridRowSelectionApi,
     GridSortApi,
     GridPaginationApi,
     GridCsvExportApi,
