@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import Tab from '@mui/material/Tab';
 import Tabs, { tabsClasses } from '@mui/material/Tabs';
 import { styled, useThemeProps } from '@mui/material/styles';
-import { unstable_composeClasses as composeClasses } from '@mui/material';
+import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { Time, DateRange } from '../internals/components/icons';
 import {
   WrapperVariantContext,
