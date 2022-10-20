@@ -899,7 +899,7 @@ describe('<DataGridPro /> - Rows', () => {
       );
     };
 
-    it('should not show `rowCount` if it equals `rows.length`', () => {
+    it('should not show total row count in footer if `rowCount === rows.length`', () => {
       const { rows, columns } = getBasicGridData(10, 2);
       const rowCount = rows.length;
       render(<TestCase rows={rows} columns={columns} rowCount={rowCount} />);
@@ -908,7 +908,7 @@ describe('<DataGridPro /> - Rows', () => {
       expect(rowCountElement!.textContent).to.equal(`Total Rows: ${rows.length}`);
     });
 
-    it('should show `rowCount` if it is different than `rows.length`', () => {
+    it('should show total row count in footer if `rowCount !== rows.length`', () => {
       const { rows, columns } = getBasicGridData(10, 2);
       const rowCount = rows.length + 10;
       render(<TestCase rows={rows} columns={columns} rowCount={rowCount} />);
@@ -917,9 +917,9 @@ describe('<DataGridPro /> - Rows', () => {
       expect(rowCountElement!.textContent).to.equal(`Total Rows: ${rows.length} of ${rowCount}`);
     });
 
-    it('should reflect `rowCount` change if it is different than `rows.length`', () => {
+    it('should update total row count in footer on `rowCount` prop change', () => {
       const { rows, columns } = getBasicGridData(10, 2);
-      let rowCount = rows.length + 10;
+      let rowCount = rows.length;
       const { setProps } = render(<TestCase rows={rows} columns={columns} rowCount={rowCount} />);
       rowCount += 1;
       setProps({ rowCount });
