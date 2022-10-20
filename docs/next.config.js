@@ -72,6 +72,14 @@ module.exports = {
     return {
       ...config,
       plugins,
+      resolve: {
+        ...config.resolve,
+        alias: {
+          ...config.resolve.alias,
+          docs: path.resolve(__dirname, '../node_modules/@mui/monorepo/docs'),
+          docsx: path.resolve(__dirname, '../docs'),
+        },
+      },
       module: {
         ...config.module,
         rules: config.module.rules.concat([
