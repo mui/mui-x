@@ -89,7 +89,7 @@ export const useGridKeyboardNavigation = (
 
   const getRowIdFromIndex = React.useCallback(
     (rowIndex: number) => {
-      return currentPageRows[rowIndex]?.id;
+      return currentPageRows[rowIndex].id;
     },
     [currentPageRows],
   );
