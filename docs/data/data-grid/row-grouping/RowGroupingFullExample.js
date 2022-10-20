@@ -35,7 +35,7 @@ export default function RowGroupingFullExample() {
         {...data}
         apiRef={apiRef}
         loading={loading}
-        disableSelectionOnClick
+        disableRowSelectionOnClick
         initialState={initialState}
         groupingColDef={{
           leafField: 'traderEmail',

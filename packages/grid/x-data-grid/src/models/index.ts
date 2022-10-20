@@ -8,7 +8,7 @@ export * from './gridFilterModel';
 export * from './gridRootContainerRef';
 export * from './gridRenderContextProps';
 export * from './gridRows';
-export * from './gridSelectionModel';
+export * from './gridRowSelectionModel';
 export * from './params';
 export * from './gridCellClass';
 export * from './gridCell';

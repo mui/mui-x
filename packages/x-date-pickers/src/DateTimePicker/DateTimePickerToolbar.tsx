@@ -1,29 +1,29 @@
 import * as React from 'react';
 import { styled, useThemeProps } from '@mui/material/styles';
-import { unstable_composeClasses as composeClasses } from '@mui/material';
+import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { PickersToolbarText } from '../internals/components/PickersToolbarText';
 import { PickersToolbar } from '../internals/components/PickersToolbar';
 import { pickersToolbarClasses } from '../internals/components/pickersToolbarClasses';
 import { PickersToolbarButton } from '../internals/components/PickersToolbarButton';
 import { useLocaleText, useUtils } from '../internals/hooks/useUtils';
-import {
-  BaseToolbarProps,
-  ExportedBaseToolbarProps,
-} from '../internals/models/props/baseToolbarProps';
+import { BaseToolbarProps, ExportedBaseToolbarProps } from '../internals/models/props/toolbar';
 import {
   DateTimePickerToolbarClasses,
   getDateTimePickerToolbarUtilityClass,
 } from './dateTimePickerToolbarClasses';
 
-export interface DateTimePickerToolbarProps<TDate> extends BaseToolbarProps<TDate | null> {
+export interface ExportedDateTimePickerToolbarProps extends ExportedBaseToolbarProps {
   ampm?: boolean;
   ampmInClock?: boolean;
-  classes?: Partial<DateTimePickerToolbarClasses>;
 }
 
-export interface ExportedDateTimeToolbarProps extends ExportedBaseToolbarProps {
-  ampm?: boolean;
-  ampmInClock?: boolean;
+export interface DateTimePickerToolbarProps<TDate>
+  extends ExportedDateTimePickerToolbarProps,
+    BaseToolbarProps<TDate | null> {
+  /**
+   * Override or extend the styles applied to the component.
+   */
+  classes?: Partial<DateTimePickerToolbarClasses>;
 }
 
 const useUtilityClasses = (ownerState: DateTimePickerToolbarProps<any>) => {

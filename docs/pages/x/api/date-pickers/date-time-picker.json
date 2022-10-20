@@ -37,7 +37,6 @@
       "type": { "name": "func" },
       "default": "(date, utils) => `Choose date, selected date is ${utils.format(date, 'fullDate')}`"
     },
-    "hideTabs": { "type": { "name": "bool" }, "default": "false for mobile, true for desktop" },
     "InputAdornmentProps": { "type": { "name": "object" } },
     "inputFormat": { "type": { "name": "string" } },
     "inputRef": {

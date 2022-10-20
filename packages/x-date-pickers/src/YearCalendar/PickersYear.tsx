@@ -2,7 +2,7 @@ import * as React from 'react';
 import clsx from 'clsx';
 import { capitalize } from '@mui/material/utils';
 import { alpha, styled, useThemeProps } from '@mui/material/styles';
-import { unstable_composeClasses as composeClasses } from '@mui/material';
+import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import {
   WrapperVariant,
   WrapperVariantContext,

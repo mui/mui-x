@@ -94,8 +94,6 @@ In the examples below we provide ways of implementing date range shortcuts using
 ## Tabs
 
 The tabs are available on all date time picker components.
-By default, it is `hidden` on desktop, and `visible` on mobile.
-This behavior can be overridden by setting `hideTabs` prop.
 
 ### Component props
 
@@ -107,6 +105,19 @@ You can override the icons displayed by passing props to the `tabs` within `comp
     tabs: {
       dateRangeIcon: <LightModeIcon />,
       timeIcon: <AcUnitIcon />,
+    },
+  }}
+/>
+```
+
+By default, the tabs are `hidden` on desktop, and `visible` on mobile.
+This behavior can be overridden by setting the `hidden` prop:
+
+```jsx
+<DateTimePicker
+  componentsProps={{
+    tabs: {
+      hidden: false,
     },
   }}
 />
