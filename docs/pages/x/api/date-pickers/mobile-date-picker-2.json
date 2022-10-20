@@ -88,7 +88,7 @@
     "Day": { "default": "PickersDay", "type": { "name": "elementType" } },
     "Dialog": { "default": "PickersModalDialogRoot", "type": { "name": "elementType" } },
     "Field": { "type": { "name": "elementType" } },
-    "Input": { "type": { "name": "elementType" } },
+    "Input": { "default": "TextField", "type": { "name": "elementType" } },
     "LeftArrowIcon": { "default": "ArrowLeft", "type": { "name": "elementType" } },
     "MobilePaper": { "default": "Paper from @mui/material", "type": { "name": "elementType" } },
     "MobileTransition": { "default": "Fade from @mui/material", "type": { "name": "elementType" } },

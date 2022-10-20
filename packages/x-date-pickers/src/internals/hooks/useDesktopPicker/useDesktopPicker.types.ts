@@ -17,11 +17,7 @@ import {
 } from '../../components/PickerViewLayout';
 
 export interface UseDesktopPickerSlotsComponent<TDate>
-  // TODO v6: Remove `Pick` once `PickerPoppers` does not handle the layouting parts
-  extends Pick<
-      PickersPopperSlotsComponent,
-      'DesktopPaper' | 'DesktopTransition' | 'DesktopTrapFocus' | 'Popper' | 'PaperContent'
-    >,
+  extends  PickersPopperSlotsComponent,
     ExportedPickerViewLayoutSlotsComponent {
   /**
    * Component used to enter the date with the keyboard.

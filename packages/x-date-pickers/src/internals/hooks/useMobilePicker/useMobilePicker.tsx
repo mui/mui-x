@@ -104,18 +104,12 @@ export const useMobilePicker = <
         <PickersModalDialog
           {...actions}
           open={open}
-          // TODO v6: Pass all slots once `PickersModalDialog`  does not handle the layouting parts
           components={{
-            Dialog: components.Dialog,
-            MobilePaper: components.MobilePaper,
-            MobileTransition: components.MobileTransition,
+            ...components,
+            // Avoids to render 2 action bar, will be removed once `PickersModalDialog` stop displaying the action bar.
+            ActionBar: () => null,
           }}
-          // TODO v6: Pass all slots once `PickersModalDialog`  does not handle the layouting parts
-          componentsProps={{
-            dialog: componentsProps?.dialog,
-            mobilePaper: componentsProps?.mobilePaper,
-            mobileTransition: componentsProps?.mobileTransition,
-          }}
+          componentsProps={componentsProps}
         >
           <PickerViewLayout
             {...layoutProps}

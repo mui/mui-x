@@ -139,22 +139,12 @@ export const useDesktopPicker = <
           anchorEl={inputRef.current}
           {...actions}
           open={open}
-          // TODO v6: Pass all slots once `PickersPopper` does not handle the layouting parts
           components={{
-            DesktopPaper: components.DesktopPaper,
-            DesktopTransition: components.DesktopTransition,
-            DesktopTrapFocus: components.DesktopTrapFocus,
-            Popper: components.Popper,
-            PaperContent: components.PaperContent,
+            ...components,
+            // Avoids to render 2 action bar, will be removed once `PickersPopper` stop displaying the action bar.
+            ActionBar: () => null,
           }}
-          // TODO v6: Pass all slots once `PickersPopper` does not handle the layouting parts
-          componentsProps={{
-            desktopPaper: componentsProps?.desktopPaper,
-            desktopTransition: componentsProps?.desktopTransition,
-            desktopTrapFocus: componentsProps?.desktopTrapFocus,
-            popper: componentsProps?.popper,
-            paperContent: componentsProps?.paperContent,
-          }}
+          componentsProps={componentsProps}
           shouldRestoreFocus={shouldRestoreFocus}
         >
           <PickerViewLayout

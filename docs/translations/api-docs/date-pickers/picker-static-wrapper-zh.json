@@ -16,7 +16,7 @@
     }
   },
   "slotDescriptions": {
-    "PaperContent": "Custom component wrapping the views of the desktop and static pickers (it is the direct child of the Paper component).",
-    "ActionBar": "Custom component for the action bar, it is placed bellow the picker views."
+    "ActionBar": "Custom component for the action bar, it is placed bellow the picker views.",
+    "PaperContent": "Custom component wrapping the views of the desktop and static pickers (it is the direct child of the Paper component)."
   }
 }

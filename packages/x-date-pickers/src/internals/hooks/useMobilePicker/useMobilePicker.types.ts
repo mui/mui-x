@@ -15,8 +15,7 @@ import {
 } from '../../components/PickerViewLayout';
 
 export interface UseMobilePickerSlotsComponent<TDate>
-  // TODO v6: Remove `Pick` once `PickersModalDialog` does not handle the layouting parts
-  extends Pick<PickersModalDialogSlotsComponent, 'Dialog' | 'MobilePaper' | 'MobileTransition'>,
+  extends PickersModalDialogSlotsComponent,
     ExportedPickerViewLayoutSlotsComponent {
   /**
    * Component used to enter the date with the keyboard.

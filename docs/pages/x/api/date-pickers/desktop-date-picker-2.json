@@ -96,7 +96,7 @@
       "type": { "name": "elementType" }
     },
     "Field": { "type": { "name": "elementType" } },
-    "Input": { "type": { "name": "elementType" } },
+    "Input": { "default": "TextField", "type": { "name": "elementType" } },
     "InputAdornment": { "default": "InputAdornment", "type": { "name": "elementType" } },
     "LeftArrowIcon": { "default": "ArrowLeft", "type": { "name": "elementType" } },
     "NextIconButton": { "default": "IconButton", "type": { "name": "elementType" } },
