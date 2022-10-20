@@ -295,11 +295,9 @@ createTheme({
     },
     MuiPickersMonth: {
       defaultProps: {
-        classes: {
-          selected: 'test',
-          // @ts-expect-error invalid MuiPickersMonth prop
-          someRandomProp: true,
-        },
+        classes: { selected: 'test' },
+        // @ts-expect-error invalid MuiPickersMonth prop
+        someRandomProp: true,
       },
       styleOverrides: {
         root: {
@@ -327,11 +325,9 @@ createTheme({
     },
     MuiPickersSlideTransition: {
       defaultProps: {
-        classes: {
-          slideExit: 'exit',
-          // @ts-expect-error invalid MuiPickersSlideTransition prop
-          someRandomProp: true,
-        },
+        classes: { slideExit: 'exit' },
+        // @ts-expect-error invalid MuiPickersSlideTransition prop
+        someRandomProp: true,
       },
       styleOverrides: {
         root: {
@@ -398,7 +394,7 @@ createTheme({
     },
     MuiPickersYear: {
       defaultProps: {
-        className: 'klass',
+        classes: { yearButton: 'test' },
         // @ts-expect-error invalid MuiPickersYear prop
         someRandomProp: true,
       },

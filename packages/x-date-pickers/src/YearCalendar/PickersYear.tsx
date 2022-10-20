@@ -15,13 +15,13 @@ import {
 
 export interface ExportedPickersYearProps {
   classes?: Partial<PickersYearClasses>;
-  className?: string;
 }
 
 export interface PickersYearProps extends ExportedPickersYearProps {
   'aria-current'?: React.AriaAttributes['aria-current'];
   autoFocus?: boolean;
   children: React.ReactNode;
+  className?: string;
   disabled?: boolean;
   onClick: (event: React.MouseEvent, year: number) => void;
   onKeyDown: (event: React.KeyboardEvent, year: number) => void;
