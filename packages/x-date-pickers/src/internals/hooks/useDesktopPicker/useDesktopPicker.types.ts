@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { IconButtonProps } from '@mui/material/IconButton';
+import IconButton, { IconButtonProps } from '@mui/material/IconButton';
 import { InputAdornmentProps } from '@mui/material/InputAdornment';
 import TextField, { TextFieldProps } from '@mui/material/TextField';
 import { SlotComponentProps } from '@mui/base/utils';
@@ -9,32 +9,35 @@ import {
   PickersPopperSlotsComponent,
   PickersPopperSlotsComponentsProps,
 } from '../../components/PickersPopper';
-import { UsePickerParams } from '../usePicker';
+import { UsePickerParams, UsePickerProps } from '../usePicker';
 import { BaseFieldProps } from '../../models/fields';
 import {
   ExportedPickerViewLayoutSlotsComponent,
   ExportedPickerViewLayoutSlotsComponentsProps,
 } from '../../components/PickerViewLayout';
 
-export interface UseDesktopPickerSlotsComponent
-  // TODO v6: Remove `Pick` once `PickerPoppers` does not handle the layouting parts
-  extends Pick<
-      PickersPopperSlotsComponent,
-      'DesktopPaper' | 'DesktopTransition' | 'DesktopTrapFocus' | 'Popper' | 'PaperContent'
-    >,
+export interface UseDesktopPickerSlotsComponent<TDate>
+  extends PickersPopperSlotsComponent,
     ExportedPickerViewLayoutSlotsComponent {
-  Field: React.ElementType;
+  /**
+   * Component used to enter the date with the keyboard.
+   */
+  Field: React.ElementType<BaseFieldProps<TDate | null, any>>;
+  /**
+   * Component used to render an HTML input inside the field.
+   * @default TextField
+   */
   Input?: React.ElementType<TextFieldProps>;
   /**
    * Component displayed on the start or end input adornment used to open the picker on desktop.
    * @default InputAdornment
    */
-  InputAdornment?: React.ElementType;
+  InputAdornment?: React.ElementType<InputAdornmentProps>;
   /**
    * Button to open the picker on desktop.
    * @default IconButton
    */
-  OpenPickerButton?: React.ElementType;
+  OpenPickerButton?: React.ElementType<IconButtonProps>;
   /**
    * Icon displayed in the open picker button on desktop.
    */
@@ -48,10 +51,14 @@ export interface UseDesktopPickerSlotsComponentsProps<TDate>
       'desktopPaper' | 'desktopTransition' | 'desktopTrapFocus' | 'popper' | 'paperContent'
     >,
     ExportedPickerViewLayoutSlotsComponentsProps {
-  field?: SlotComponentProps<React.ElementType<BaseFieldProps<TDate | null, unknown>>, {}, unknown>;
-  input?: SlotComponentProps<typeof TextField, {}, unknown>;
+  field?: SlotComponentProps<
+    React.ElementType<BaseFieldProps<TDate | null, unknown>>,
+    {},
+    UsePickerProps<TDate | null, any>
+  >;
+  input?: SlotComponentProps<typeof TextField, {}, Record<string, any>>;
   inputAdornment?: Partial<InputAdornmentProps>;
-  openPickerButton?: Partial<IconButtonProps>;
+  openPickerButton?: SlotComponentProps<typeof IconButton, {}, UseDesktopPickerProps<TDate, any>>;
   openPickerIcon?: Record<string, any>;
 }
 
@@ -61,7 +68,7 @@ export interface UseDesktopPickerProps<TDate, TView extends CalendarOrClockPicke
    * Overrideable components.
    * @default {}
    */
-  components: UseDesktopPickerSlotsComponent;
+  components: UseDesktopPickerSlotsComponent<TDate>;
   /**
    * The props used for each component slot.
    * @default {}

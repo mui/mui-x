@@ -36,20 +36,20 @@ export const useDesktopPicker = <
   const inputRef = React.useRef<HTMLInputElement>(null);
 
   const {
-    fieldProps: pickerFieldProps,
-    layoutProps,
-    renderViews,
-    actions,
     open,
-    hasPopperView,
+    actions,
+    hasUIView,
+    layoutProps,
+    renderCurrentView,
     shouldRestoreFocus,
+    fieldProps: pickerFieldProps,
   } = usePicker({
     props,
-    valueManager,
-    wrapperVariant: 'desktop',
-    viewLookup,
     inputRef,
+    viewLookup,
+    valueManager,
     additionalViewProps: {},
+    wrapperVariant: 'desktop',
   });
 
   const Field = components.Field;
@@ -63,8 +63,7 @@ export const useDesktopPicker = <
       className,
       format: inputFormat,
     },
-    // TODO: Pass owner state
-    ownerState: {},
+    ownerState: props,
   });
 
   const InputAdornment = components.InputAdornment ?? MuiInputAdornment;
@@ -72,10 +71,9 @@ export const useDesktopPicker = <
     elementType: InputAdornment,
     externalSlotProps: componentsProps?.inputAdornment,
     additionalProps: {
-      position: 'end',
+      position: 'end' as const,
     },
-    // TODO: Pass owner state
-    ownerState: {},
+    ownerState: props,
   });
 
   const OpenPickerButton = components.OpenPickerButton ?? IconButton;
@@ -88,17 +86,10 @@ export const useDesktopPicker = <
       'aria-label': getOpenDialogAriaText(pickerFieldProps.value, utils),
       edge: inputAdornmentProps.position,
     },
-    // TODO: Pass owner state
-    ownerState: {},
+    ownerState: props,
   });
 
   const OpenPickerIcon = components.OpenPickerIcon;
-  const { ownerState: openPickerIconOwnerState, ...openPickerIconProps } = useSlotProps({
-    elementType: OpenPickerIcon,
-    externalSlotProps: componentsProps?.openPickerIcon,
-    // TODO: Pass owner state
-    ownerState: {},
-  });
 
   const componentsForField: BaseFieldProps<TDate | null, unknown>['components'] = {
     ...fieldProps.components,
@@ -118,10 +109,10 @@ export const useDesktopPicker = <
         ...inputPropsPassedByField,
         ...externalInputProps,
         InputProps: {
-          [`${inputAdornmentProps.position}Adornment`]: hasPopperView ? (
+          [`${inputAdornmentProps.position}Adornment`]: hasUIView ? (
             <InputAdornment {...inputAdornmentProps}>
               <OpenPickerButton {...openPickerButtonProps}>
-                <OpenPickerIcon {...openPickerIconProps} />
+                <OpenPickerIcon {...componentsProps?.openPickerIcon} />
               </OpenPickerButton>
             </InputAdornment>
           ) : undefined,
@@ -148,22 +139,12 @@ export const useDesktopPicker = <
           anchorEl={inputRef.current}
           {...actions}
           open={open}
-          // TODO v6: Pass all slots once `PickersPopper` does not handle the layouting parts
           components={{
-            DesktopPaper: components.DesktopPaper,
-            DesktopTransition: components.DesktopTransition,
-            DesktopTrapFocus: components.DesktopTrapFocus,
-            Popper: components.Popper,
-            PaperContent: components.PaperContent,
+            ...components,
+            // Avoids to render 2 action bar, will be removed once `PickersPopper` stop displaying the action bar.
+            ActionBar: () => null,
           }}
-          // TODO v6: Pass all slots once `PickersPopper` does not handle the layouting parts
-          componentsProps={{
-            desktopPaper: componentsProps?.desktopPaper,
-            desktopTransition: componentsProps?.desktopTransition,
-            desktopTrapFocus: componentsProps?.desktopTrapFocus,
-            popper: componentsProps?.popper,
-            paperContent: componentsProps?.paperContent,
-          }}
+          componentsProps={componentsProps}
           shouldRestoreFocus={shouldRestoreFocus}
         >
           <PickerViewLayout
@@ -171,7 +152,7 @@ export const useDesktopPicker = <
             components={components}
             componentsProps={componentsProps}
           >
-            {renderViews()}
+            {renderCurrentView()}
           </PickerViewLayout>
         </PickersPopper>
       </WrapperVariantContext.Provider>

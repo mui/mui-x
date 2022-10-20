@@ -4,7 +4,7 @@ import useEventCallback from '@mui/utils/useEventCallback';
 import { CalendarOrClockPickerView } from '../../models';
 import { useViews } from '../useViews';
 import { WrapperVariant } from '../../components/wrappers/WrapperVariantContext';
-import type { UsePickerValueActions, UsePickerValueViewsResponse } from './usePickerValue';
+import type { UsePickerValueViewsResponse } from './usePickerValue';
 import { useFocusManagement } from '../../components/CalendarOrClockPicker/useFocusManagement';
 
 type PickerViewRenderer<
@@ -73,12 +73,15 @@ export interface UsePickerViewParams<
   additionalViewProps: TAdditionalProps;
   inputRef?: React.RefObject<HTMLInputElement>;
   wrapperVariant: WrapperVariant;
-  actions: UsePickerValueActions;
 }
 
 export interface UsePickerViewsResponse<TView extends CalendarOrClockPickerView> {
-  hasPopperView: boolean;
-  renderViews: () => React.ReactNode;
+  /**
+   * Does the picker have at least one view that should be rendered in UI mode ?
+   * If not, we can hide the icon to open the picker.
+   */
+  hasUIView: boolean;
+  renderCurrentView: () => React.ReactNode;
   shouldRestoreFocus: () => boolean;
   layoutProps: UsePickerViewsLayoutResponse<TView>;
 }
@@ -106,6 +109,12 @@ export interface UsePickerViewsLayoutResponse<TView extends CalendarOrClockPicke
 
 let warnedOnceNotValidOpenTo = false;
 
+/**
+ * Manage the views of all the pickers:
+ * - Handles the view switch
+ * - Handles the switch between UI views and field views
+ * - Handles the focus management when switching views
+ */
 export const usePickerViews = <
   TValue,
   TView extends CalendarOrClockPickerView,
@@ -118,14 +127,13 @@ export const usePickerViews = <
   additionalViewProps,
   inputRef,
   wrapperVariant,
-  actions,
 }: UsePickerViewParams<
   TValue,
   TView,
   TExternalProps,
   TAdditionalProps
 >): UsePickerViewsResponse<TView> => {
-  const { onChange, open, onSelectedSectionsChange } = propsFromPickerValue;
+  const { onChange, open, onSelectedSectionsChange, onClose } = propsFromPickerValue;
   const { views, openTo, onViewChange, disableOpenPicker, autoFocus } = props;
 
   if (process.env.NODE_ENV !== 'production') {
@@ -149,43 +157,43 @@ export const usePickerViews = <
   // TODO v6: Move `useFocusManagement` here
   const { focusedView, setFocusedView } = useFocusManagement<TView>({ autoFocus, openView });
 
-  const { hasPopperView, viewModeLookup } = React.useMemo(() => {
-    let tempHasPopperView = false;
-    const tempViewModeLookup = {} as Record<TView, 'field' | 'popper'>;
+  const { hasUIView, viewModeLookup } = React.useMemo(() => {
+    let tempHasUIView = false;
+    const tempViewModeLookup = {} as Record<TView, 'field' | 'UI'>;
 
     views.forEach((view) => {
-      let viewMode: 'field' | 'popper';
+      let viewMode: 'field' | 'UI';
       if (disableOpenPicker) {
         viewMode = 'field';
       } else if (viewLookup[view] != null) {
-        viewMode = 'popper';
+        viewMode = 'UI';
       } else {
         viewMode = 'field';
       }
 
-      if (viewMode === 'popper') {
-        tempHasPopperView = true;
+      if (viewMode === 'UI') {
+        tempHasUIView = true;
       }
 
       tempViewModeLookup[view] = viewMode;
     });
 
-    return { hasPopperView: tempHasPopperView, viewModeLookup: tempViewModeLookup };
+    return { hasUIView: tempHasUIView, viewModeLookup: tempViewModeLookup };
   }, [disableOpenPicker, viewLookup, views]);
 
   const currentViewMode = viewModeLookup[openView];
-  const shouldRestoreFocus = useEventCallback(() => currentViewMode === 'popper');
+  const shouldRestoreFocus = useEventCallback(() => currentViewMode === 'UI');
 
   const [popperView, setPopperView] = React.useState<TView | null>(
-    currentViewMode === 'popper' ? openView : null,
+    currentViewMode === 'UI' ? openView : null,
   );
-  if (popperView !== openView && viewModeLookup[openView] === 'popper') {
+  if (popperView !== openView && viewModeLookup[openView] === 'UI') {
     setPopperView(openView);
   }
 
   useEnhancedEffect(() => {
     if (currentViewMode === 'field' && open) {
-      actions.onClose();
+      onClose();
       onSelectedSectionsChange('hour');
 
       setTimeout(() => {
@@ -211,10 +219,10 @@ export const usePickerViews = <
   };
 
   return {
-    hasPopperView,
+    hasUIView,
     shouldRestoreFocus,
     layoutProps,
-    renderViews: () => {
+    renderCurrentView: () => {
       if (popperView == null) {
         return null;
       }
