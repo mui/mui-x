@@ -18,7 +18,7 @@ We'd like to offer a big thanks to the 9 contributors who made this release poss
 #### Breaking changes
 
 - To avoid confusion with the props that will be added for the cell selection feature, some props related to row selection were renamed to have "row" in their name.
-The renamed props are the following:
+  The renamed props are the following:
 
   | Old name                   | New name                      |
   |----------------------------|-------------------------------|
@@ -44,7 +44,7 @@ The renamed props are the following:
 #### Breaking changes
 
 - The `ToolbarComponent` has been replaced by a `Toolbar` component slot.
-You can find more information about this pattern in the [MUI Base documentation](https://mui.com/base/getting-started/usage/#shared-props):
+  You can find more information about this pattern in the [MUI Base documentation](https://mui.com/base/getting-started/usage/#shared-props):
 
   ```diff
   // Same on all other pickers
@@ -109,7 +109,7 @@ You can find more information about this pattern in the [MUI Base documentation]
 - [fields] Distinguish start and end input error on multi input fields (#6503) @flaviendelangle
 - [pickers] Clean the `Tabs` component slot (#6543) @flaviendelangle
 - [pickers] Fix localisation of the placeholder (#6547) @alexfauquette
-- [pickers] Fix TS type issues (#6322) @flaviendelangle
+- [pickers] Fix typescript issues (#6322) @flaviendelangle
 - [pickers] Improve error consistency between single and multiple range pickers (#6561) @alexfauquette
 - [pickers] Refactor `@mui/material` imports to `@mui/utils` (#6443) @LukasTy
 - [pickers] Replace toolbar's props by a component slot (#6445) @flaviendelangle
