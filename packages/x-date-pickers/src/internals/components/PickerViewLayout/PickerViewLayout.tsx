@@ -79,7 +79,7 @@ export function PickerViewLayout<TValue, TView extends CalendarOrClockPickerView
     return null;
   }
 
-  console.log(className)
+  console.log(className);
 
   return (
     <PickerViewLayoutRoot className={clsx(className, classes.root)}>

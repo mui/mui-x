@@ -17,7 +17,7 @@ import {
 } from '../../components/PickerViewLayout';
 
 export interface UseDesktopPickerSlotsComponent<TDate>
-  extends  PickersPopperSlotsComponent,
+  extends PickersPopperSlotsComponent,
     ExportedPickerViewLayoutSlotsComponent {
   /**
    * Component used to enter the date with the keyboard.
