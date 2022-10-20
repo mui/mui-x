@@ -280,7 +280,7 @@ const pages: MuiPage[] = [
           { pathname: '/x/migration/migration-data-grid-v5', title: 'Breaking changes: Data Grid' },
           {
             pathname: '/x/migration/migration-pickers-v5',
-            title: 'Breaking changes: Date & Time Pickers',
+            title: 'Breaking changes: Date and Time Pickers',
           },
         ],
       },

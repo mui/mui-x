@@ -4,7 +4,7 @@
 
 ## Start using the alpha release
 
-In `package.json`, change the version of the data grid package to `next`.
+In `package.json`, change the version of the date pickers package to `next`.
 
 ```diff
 -"@mui/x-date-pickers": "latest",
@@ -21,12 +21,11 @@ Below are described the steps you need to make to migrate from v5 to v6.
 
 ### Update the format of the `value` prop
 
-The `value` prop of the pickers now expects a parsed value.
-Until now, it was possible to provide any format that your date management library was able to parse.
+Previously, it was possible to provide any format that your date management library was able to parse.
 For instance, you could pass `value={new Date()}` when using `AdapterDayjs`.
+This behavior brought a lot of confusion.
 
-This behavior brought a lot of confusion and was removed.
-The format expected by the `value` prop is now the same as for any other prop holding a date.
+In v6, the format expected by the `value` prop is the same as for any other prop holding a date.
 Here is the syntax to initialize a date picker at the current date for each adapter:
 
 ```tsx
@@ -84,7 +83,7 @@ The component slot `RightArrowButton` has been renamed `NextIconButton` on all p
 
 ### Replace the `DialogProps` prop
 
-The `DialogProps` prop has been replaced by a `dialog` component props slot on all responsive and mobile pickers:
+The `DialogProps` prop has been replaced by a `dialog` component props on all responsive and mobile pickers:
 
 ```diff
 <DatePicker
@@ -95,7 +94,7 @@ The `DialogProps` prop has been replaced by a `dialog` component props slot on a
 
 ### Replace the `PaperProps` prop
 
-The `PaperProps` prop has been replaced by a `desktopPaper` component props slot on all responsive and desktop pickers:
+The `PaperProps` prop has been replaced by a `desktopPaper` component props on all responsive and desktop pickers:
 
 ```diff
 <DatePicker
@@ -106,7 +105,7 @@ The `PaperProps` prop has been replaced by a `desktopPaper` component props slot
 
 ### Replace the `PopperProps` prop
 
-The `PopperProps` prop has been replaced by a `popper` component props slot on all responsive and desktop pickers:
+The `PopperProps` prop has been replaced by a `popper` component props on all responsive and desktop pickers:
 
 ```diff
 <DatePicker
@@ -117,18 +116,18 @@ The `PopperProps` prop has been replaced by a `popper` component props slot on a
 
 ### Replace the `TransitionComponent` prop
 
-The `TransitionComponent` prop has been replaced by a `desktopTransition` component slot on all responsive and desktop pickers:
+The `TransitionComponent` prop has been replaced by a `DesktopTransition` component slot on all responsive and desktop pickers:
 
 ```diff
 <DatePicker
 -  TransitionComponent={Fade}
-+  components={{ desktopTransition: Fade }}
++  components={{ DesktopTransition: Fade }}
 />
 ```
 
 ### Replace the `TrapFocusProps` prop
 
-The `TrapFocusProps` prop has been replaced by a `desktopTrapFocus` component props slot on all responsive and desktop pickers:
+The `TrapFocusProps` prop has been replaced by a `desktopTrapFocus` component props on all responsive and desktop pickers:
 
 ```diff
 <DatePicker
@@ -225,24 +224,16 @@ Component names in the theme have changed as well:
 ```diff
 -MuiCalendarPicker: {
 +MuiDateCalendar: {
-```
 
-```diff
 -MuiDayPicker: {
 +MuiDayCalendar: {
-```
 
-```diff
 -MuiCalendarPickerSkeleton: {
 +MuiDayCalendarSkeleton: {
-```
 
-```diff
 -MuiMonthPicker: {
 +MuiMonthCalendar: {
-```
 
-```diff
 -MuiYearPicker: {
 +MuiYearCalendar: {
 ```
