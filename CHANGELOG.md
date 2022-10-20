@@ -34,7 +34,7 @@ We'd like to offer a big thanks to the 9 contributors who made this release poss
 #### Changes
 
 - [DataGrid] Add `searchPredicate` prop to `GridColumnsPanel` component (#6557) @cherniavskii
-- [DataGrid] Allows keyboard navigation in group header (#5947) @alexfauquette
+- [DataGrid] Support keyboard navigation in column group header (#5947) @alexfauquette
 - [DataGrid] Fix grid not updating state on `rowCount` prop change (#5982) @cherniavskii
 - [DataGrid] Rename selection props (#6556) @m4theushw
 - [l10n] Improve Turkish (tr-TR) locale on the data grid and pickers (#6542) @ramazansancar
@@ -108,8 +108,8 @@ We'd like to offer a big thanks to the 9 contributors who made this release poss
 - [fields] Add a `validationError` property to the `onChange` callback (#6539) @flaviendelangle
 - [fields] Distinguish start and end input error on multi input fields (#6503) @flaviendelangle
 - [pickers] Clean the `Tabs` component slot (#6543) @flaviendelangle
-- [pickers] Fix localisation of the placeholder (#6547) @alexfauquette
-- [pickers] Fix typescript issues (#6322) @flaviendelangle
+- [pickers] Fix localization of the placeholder (#6547) @alexfauquette
+- [pickers] Fix TypeScript issues (#6322) @flaviendelangle
 - [pickers] Improve error consistency between single and multiple range pickers (#6561) @alexfauquette
 - [pickers] Refactor `@mui/material` imports to `@mui/utils` (#6443) @LukasTy
 - [pickers] Replace toolbar's props by a component slot (#6445) @flaviendelangle
