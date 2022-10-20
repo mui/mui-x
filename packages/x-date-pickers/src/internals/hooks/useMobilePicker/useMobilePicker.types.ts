@@ -7,18 +7,25 @@ import {
   PickersModalDialogSlotsComponent,
   PickersModalDialogSlotsComponentsProps,
 } from '../../components/PickersModalDialog';
-import { UsePickerParams } from '../usePicker';
+import { UsePickerParams, UsePickerProps } from '../usePicker';
 import { BaseFieldProps } from '../../models/fields';
 import {
   ExportedPickerViewLayoutSlotsComponent,
   ExportedPickerViewLayoutSlotsComponentsProps,
 } from '../../components/PickerViewLayout';
 
-export interface UseMobilePickerSlotsComponent
+export interface UseMobilePickerSlotsComponent<TDate>
   // TODO v6: Remove `Pick` once `PickersModalDialog` does not handle the layouting parts
   extends Pick<PickersModalDialogSlotsComponent, 'Dialog' | 'MobilePaper' | 'MobileTransition'>,
     ExportedPickerViewLayoutSlotsComponent {
-  Field: React.ElementType;
+  /**
+   * Component used to enter the date with the keyboard.
+   */
+  Field: React.ElementType<BaseFieldProps<TDate | null, any>>;
+  /**
+   * Component used to render an HTML input inside the field.
+   * @default TextField
+   */
   Input?: React.ElementType<TextFieldProps>;
 }
 
@@ -29,8 +36,12 @@ export interface UseMobilePickerSlotsComponentsProps<TDate>
       'dialog' | 'mobilePaper' | 'mobileTransition'
     >,
     ExportedPickerViewLayoutSlotsComponentsProps {
-  field?: SlotComponentProps<React.ElementType<BaseFieldProps<TDate | null, unknown>>, {}, unknown>;
-  input?: SlotComponentProps<typeof TextField, {}, unknown>;
+  field?: SlotComponentProps<
+    React.ElementType<BaseFieldProps<TDate | null, unknown>>,
+    {},
+    UsePickerProps<TDate | null, any>
+  >;
+  input?: SlotComponentProps<typeof TextField, {}, Record<string, any>>;
 }
 
 export interface UseMobilePickerProps<TDate, TView extends CalendarOrClockPickerView>
@@ -39,7 +50,7 @@ export interface UseMobilePickerProps<TDate, TView extends CalendarOrClockPicker
    * Overrideable components.
    * @default {}
    */
-  components: UseMobilePickerSlotsComponent;
+  components: UseMobilePickerSlotsComponent<TDate>;
   /**
    * The props used for each component slot.
    * @default {}

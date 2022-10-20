@@ -63,8 +63,7 @@ export const useDesktopPicker = <
       className,
       format: inputFormat,
     },
-    // TODO: Pass owner state
-    ownerState: {},
+    ownerState: props,
   });
 
   const InputAdornment = components.InputAdornment ?? MuiInputAdornment;
@@ -72,10 +71,9 @@ export const useDesktopPicker = <
     elementType: InputAdornment,
     externalSlotProps: componentsProps?.inputAdornment,
     additionalProps: {
-      position: 'end',
+      position: 'end' as const,
     },
-    // TODO: Pass owner state
-    ownerState: {},
+    ownerState: props,
   });
 
   const OpenPickerButton = components.OpenPickerButton ?? IconButton;
@@ -88,17 +86,10 @@ export const useDesktopPicker = <
       'aria-label': getOpenDialogAriaText(pickerFieldProps.value, utils),
       edge: inputAdornmentProps.position,
     },
-    // TODO: Pass owner state
-    ownerState: {},
+    ownerState: props,
   });
 
   const OpenPickerIcon = components.OpenPickerIcon;
-  const { ownerState: openPickerIconOwnerState, ...openPickerIconProps } = useSlotProps({
-    elementType: OpenPickerIcon,
-    externalSlotProps: componentsProps?.openPickerIcon,
-    // TODO: Pass owner state
-    ownerState: {},
-  });
 
   const componentsForField: BaseFieldProps<TDate | null, unknown>['components'] = {
     ...fieldProps.components,
@@ -121,7 +112,7 @@ export const useDesktopPicker = <
           [`${inputAdornmentProps.position}Adornment`]: hasUIView ? (
             <InputAdornment {...inputAdornmentProps}>
               <OpenPickerButton {...openPickerButtonProps}>
-                <OpenPickerIcon {...openPickerIconProps} />
+                <OpenPickerIcon {...componentsProps?.openPickerIcon} />
               </OpenPickerButton>
             </InputAdornment>
           ) : undefined,

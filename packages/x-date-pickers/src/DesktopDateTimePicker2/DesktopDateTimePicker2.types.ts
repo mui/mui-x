@@ -11,7 +11,7 @@ import { MakeOptional } from '../internals/models/helpers';
 
 export interface DesktopDateTimePicker2SlotsComponent<TDate>
   extends BaseDateTimePicker2SlotsComponent<TDate>,
-    MakeOptional<UseDesktopPickerSlotsComponent, 'Field' | 'OpenPickerIcon'> {}
+    MakeOptional<UseDesktopPickerSlotsComponent<TDate>, 'Field' | 'OpenPickerIcon'> {}
 
 export interface DesktopDateTimePicker2SlotsComponentsProps<TDate>
   extends BaseDateTimePicker2SlotsComponentsProps<TDate>,

@@ -11,7 +11,7 @@ import { MakeOptional } from '../internals/models/helpers';
 
 export interface MobileDatePicker2SlotsComponent<TDate>
   extends BaseDatePicker2SlotsComponent<TDate>,
-    MakeOptional<UseMobilePickerSlotsComponent, 'Field'> {}
+    MakeOptional<UseMobilePickerSlotsComponent<TDate>, 'Field'> {}
 
 export interface MobileDatePicker2SlotsComponentsProps<TDate>
   extends BaseDatePicker2SlotsComponentsProps<TDate>,

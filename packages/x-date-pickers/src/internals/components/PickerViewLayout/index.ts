@@ -5,4 +5,4 @@ export type {
   ExportedPickerViewLayoutSlotsComponentsProps,
 } from './PickerViewLayout.types';
 
-export { PickerViewLayoutClassKey } from './pickerViewLayoutClasses';
+export type { PickerViewLayoutClassKey } from './pickerViewLayoutClasses';

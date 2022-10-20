@@ -59,8 +59,7 @@ export const useMobilePicker = <
       className,
       format: inputFormat,
     },
-    // TODO: Pass owner state
-    ownerState: {},
+    ownerState: props,
   });
 
   const componentsPropsForField: BaseFieldProps<TDate, unknown>['componentsProps'] = {
