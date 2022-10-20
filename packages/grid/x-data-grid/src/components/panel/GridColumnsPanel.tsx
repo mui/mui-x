@@ -20,6 +20,7 @@ import { GRID_EXPERIMENTAL_ENABLED } from '../../constants/envConstants';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
+import { GridStateColDef } from '../../models/colDef/gridColDef';
 
 type OwnerState = { classes: DataGridProcessedProps['classes'] };
 
@@ -65,9 +66,17 @@ export interface GridColumnsPanelProps extends GridPanelWrapperProps {
    * If not specified, the order is derived from the `columns` prop.
    */
   sort?: 'asc' | 'desc';
+  searchPredicate?: (column: GridStateColDef, searchValue: string) => boolean;
 }
 
 const collator = new Intl.Collator();
+
+const defaultSearchPredicate: NonNullable<GridColumnsPanelProps['searchPredicate']> = (
+  column,
+  searchValue,
+) => {
+  return (column.headerName || column.field).toLowerCase().indexOf(searchValue) > -1;
+};
 
 function GridColumnsPanel(props: GridColumnsPanelProps) {
   const apiRef = useGridApiContext();
@@ -79,7 +88,7 @@ function GridColumnsPanel(props: GridColumnsPanelProps) {
   const ownerState = { classes: rootProps.classes };
   const classes = useUtilityClasses(ownerState);
 
-  const { sort, ...other } = props;
+  const { sort, searchPredicate = defaultSearchPredicate, ...other } = props;
 
   const sortedColumns = React.useMemo(() => {
     switch (sort) {
@@ -143,11 +152,8 @@ function GridColumnsPanel(props: GridColumnsPanelProps) {
       return sortedColumns;
     }
     const searchValueToCheck = searchValue.toLowerCase();
-    return sortedColumns.filter(
-      (column) =>
-        (column.headerName || column.field).toLowerCase().indexOf(searchValueToCheck) > -1,
-    );
-  }, [sortedColumns, searchValue]);
+    return sortedColumns.filter((column) => searchPredicate(column, searchValueToCheck));
+  }, [sortedColumns, searchValue, searchPredicate]);
 
   React.useEffect(() => {
     searchInputRef.current!.focus();
@@ -222,6 +228,7 @@ GridColumnsPanel.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
+  searchPredicate: PropTypes.func,
   sort: PropTypes.oneOf(['asc', 'desc']),
 } as any;
 
