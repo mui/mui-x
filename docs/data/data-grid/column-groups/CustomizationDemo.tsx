@@ -112,7 +112,7 @@ export default function CustomizationDemo() {
         columns={columns}
         experimentalFeatures={{ columnGrouping: true }}
         checkboxSelection
-        disableSelectionOnClick
+        disableRowSelectionOnClick
         columnGroupingModel={columnGroupingModel}
       />
     </Box>

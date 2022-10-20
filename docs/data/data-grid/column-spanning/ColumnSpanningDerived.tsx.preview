@@ -8,7 +8,7 @@
   }}
   autoHeight
   disableExtendRowFullWidth
-  disableSelectionOnClick
+  disableRowSelectionOnClick
   hideFooter
   showCellRightBorder
   showColumnRightBorder

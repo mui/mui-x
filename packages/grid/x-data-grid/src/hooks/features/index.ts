@@ -9,7 +9,7 @@ export * from './focus';
 export * from './pagination';
 export * from './preferencesPanel';
 export * from './rows';
-export * from './selection';
+export * from './rowSelection';
 export * from './sorting';
 export * from './dimensions';
 export * from './statePersistence';

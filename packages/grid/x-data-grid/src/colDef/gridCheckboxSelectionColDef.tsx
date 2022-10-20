@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { GridCellCheckboxRenderer } from '../components/columnSelection/GridCellCheckboxRenderer';
 import { GridHeaderCheckbox } from '../components/columnSelection/GridHeaderCheckbox';
-import { selectedIdsLookupSelector } from '../hooks/features/selection/gridSelectionSelector';
+import { selectedIdsLookupSelector } from '../hooks/features/rowSelection/gridRowSelectionSelector';
 import { GridColDef } from '../models/colDef/gridColDef';
 import { GRID_BOOLEAN_COL_DEF } from './gridBooleanColDef';
 
