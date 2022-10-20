@@ -908,7 +908,7 @@ describe('<DataGridPro /> - Cell Editing', () => {
         expect(spiedStartCellEditMode.lastCall.args[0]).to.deep.equal({
           id: 0,
           field: 'currencyPair',
-          deleteValue: true,
+          initialValue: 'a',
         });
       });
 

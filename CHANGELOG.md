@@ -3,6 +3,21 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 5.17.7
+
+_Oct 13, 2022_
+
+We'd like to offer a big thanks to the 2 contributors who made this release possible. Here are some highlights ✨:
+
+- 🐞 Bugfixes
+
+### `@mui/x-data-grid@v5.17.7` / `@mui/x-data-grid-pro@v5.17.7` / `@mui/x-data-grid-premium@v5.17.7`
+
+#### Changes
+
+- [DataGrid] Fix error when using column grouping with all columns hidden (#6425) @alexfauquette
+- [DataGrid] Fix start edit mode with printable character in React 18 (#6478) @m4theushw
+
 ## 5.17.6
 
 _Oct 6, 2022_

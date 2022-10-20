@@ -160,22 +160,6 @@ describe('<CalendarPicker />', () => {
     });
   });
 
-  it('should select the closest enabled date if the prop.date contains a disabled date', () => {
-    const onChange = spy();
-
-    render(
-      <CalendarPicker
-        date={adapterToUse.date(new Date(2019, 0, 1))}
-        onChange={onChange}
-        maxDate={adapterToUse.date(new Date(2018, 0, 1))}
-      />,
-    );
-
-    // onChange must be dispatched with newly selected date
-    expect(onChange.callCount).to.equal(React.version.startsWith('18') ? 2 : 1); // Strict Effects run mount effects twice
-    expect(onChange.lastCall.args[0]).toEqualDateTime(new Date(2018, 0, 1));
-  });
-
   describe('view: day', () => {
     it('renders day calendar standalone', () => {
       render(<CalendarPicker date={adapterToUse.date(new Date(2019, 0, 1))} onChange={() => {}} />);
