@@ -33,7 +33,6 @@
       "type": { "name": "func" },
       "default": "(date, utils) => `Choose date, selected date is ${utils.format(date, 'fullDate')}`"
     },
-    "hideTabs": { "type": { "name": "bool" }, "default": "false for mobile, true for desktop" },
     "InputAdornmentProps": { "type": { "name": "object" } },
     "inputFormat": { "type": { "name": "string" } },
     "inputRef": {
@@ -91,10 +90,6 @@
       }
     },
     "timeIcon": { "type": { "name": "node" } },
-    "ToolbarComponent": { "type": { "name": "elementType" }, "default": "DateTimePickerToolbar" },
-    "toolbarFormat": { "type": { "name": "string" } },
-    "toolbarPlaceholder": { "type": { "name": "node" }, "default": "'–'" },
-    "toolbarTitle": { "type": { "name": "node" }, "default": "'Select date & time'" },
     "value": { "type": { "name": "any" } },
     "views": {
       "type": {
@@ -117,7 +112,8 @@
     "RightArrowIcon": { "default": "ArrowRight", "type": { "name": "elementType" } },
     "SwitchViewButton": { "default": "IconButton", "type": { "name": "elementType" } },
     "SwitchViewIcon": { "default": "ArrowDropDown", "type": { "name": "elementType" } },
-    "Tabs": { "default": "DateTimePickerTabs", "type": { "name": "elementType" } }
+    "Tabs": { "default": "DateTimePickerTabs", "type": { "name": "elementType" } },
+    "Toolbar": { "default": "DateTimePickerToolbar", "type": { "name": "elementType" } }
   },
   "name": "MobileDateTimePicker",
   "styles": { "classes": [], "globalClasses": {}, "name": "MuiMobileDateTimePicker" },

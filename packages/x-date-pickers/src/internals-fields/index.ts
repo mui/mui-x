@@ -12,4 +12,6 @@ export type {
   UseFieldResponse,
   FieldValueManager,
   FieldSection,
+  FieldChangeHandler,
+  FieldChangeHandlerContext,
 } from '../internals/hooks/useField';

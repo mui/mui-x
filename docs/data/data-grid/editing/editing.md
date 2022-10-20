@@ -371,8 +371,8 @@ Modify the edit component to enable this feature:
 +    setValue(valueProp);
 +  }, [valueProp]);
 +
-   return <input type="text" value={value} onChange={handleChange}>;
-}
+   return <input type="text" value={value} onChange={handleChange} />;
+ }
 ```
 
 ### With auto-stop

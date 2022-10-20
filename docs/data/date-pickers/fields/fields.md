@@ -82,6 +82,15 @@ But changing the value of an end date section will not fire `onChange` until the
 
 {{"demo": "LifeCycleDateRangeField.js", "defaultCodeOpen": false}}
 
+#### Only update when the value is valid
+
+The `onChange` callback received a 2nd parameter containing the validation error associated to the current value.
+If you only want to update your state when the value is valid, you can ignore any `onChange` call with a non-null `validationError`.
+
+In the example below, `onChange` will only be fired if the date is valid and its year is 2022:
+
+{{"demo": "LifeCycleIgnoreInvalidValue.js"}}
+
 ### Control the selected sections
 
 Use the `selectedSections` and `onSelectedSectionsChange` props to control which sections are currently being selected.

@@ -9,16 +9,16 @@ export default function ControlledSelectionGrid() {
     maxColumns: 6,
   });
 
-  const [selectionModel, setSelectionModel] = React.useState([]);
+  const [rowSelectionModel, setRowSelectionModel] = React.useState([]);
 
   return (
     <div style={{ height: 400, width: '100%' }}>
       <DataGrid
         checkboxSelection
-        onSelectionModelChange={(newSelectionModel) => {
-          setSelectionModel(newSelectionModel);
+        onRowSelectionModelChange={(newRowSelectionModel) => {
+          setRowSelectionModel(newRowSelectionModel);
         }}
-        selectionModel={selectionModel}
+        rowSelectionModel={rowSelectionModel}
         {...data}
       />
     </div>

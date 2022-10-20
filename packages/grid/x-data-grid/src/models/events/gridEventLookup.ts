@@ -10,13 +10,14 @@ import type {
   GridRowParams,
   GridRowSelectionCheckboxParams,
   GridScrollParams,
+  GridColumnGroupHeaderParams,
 } from '../params';
 import { GridCellEditStartParams, GridCellEditStopParams } from '../params/gridEditCellParams';
 import { GridCellParams } from '../params/gridCellParams';
 import type { GridFilterModel } from '../gridFilterModel';
 import type { GridSortModel } from '../gridSortModel';
 import type { GridEditRowsModel } from '../gridEditRowModel';
-import type { GridSelectionModel } from '../gridSelectionModel';
+import type { GridRowSelectionModel } from '../gridRowSelectionModel';
 import type { ElementSize } from '../elementSize';
 import type { MuiBaseEvent } from '../muiEvent';
 import type { GridGroupNode, GridRowId } from '../gridRows';
@@ -184,6 +185,31 @@ export interface GridColumnHeaderEventLookup {
   };
 }
 
+export interface GridColumnGroupHeaderEventLookup {
+  /**
+   * Fired when a key is pressed in a column group header. It's mapped do the `keydown` DOM event.
+   */
+  columnGroupHeaderKeyDown: {
+    params: GridColumnGroupHeaderParams;
+    event: React.KeyboardEvent<HTMLElement>;
+  };
+  /**
+   * Fired when a column group header gains focus.
+   * @ignore - do not document.
+   */
+  columnGroupHeaderFocus: {
+    params: GridColumnGroupHeaderParams;
+    event: React.FocusEvent<HTMLElement>;
+  };
+  /**
+   * Fired when a column group header loses focus.
+   * @ignore - do not document.
+   */
+  columnGroupHeaderBlur: {
+    params: GridColumnGroupHeaderParams;
+    event: React.FocusEvent<HTMLElement>;
+  };
+}
 export interface GridCellEventLookup {
   /**
    * Fired when a cell is clicked.
@@ -263,7 +289,7 @@ export interface GridControlledStateEventLookup {
   /**
    * Fired when the selection state of one or multiple rows changes.
    */
-  selectionChange: { params: GridSelectionModel };
+  rowSelectionChange: { params: GridRowSelectionModel };
   /**
    * Fired when the column visibility model changes.
    */
@@ -282,6 +308,7 @@ export interface GridControlledStateReasonLookup {
 export interface GridEventLookup
   extends GridRowEventLookup,
     GridColumnHeaderEventLookup,
+    GridColumnGroupHeaderEventLookup,
     GridCellEventLookup,
     GridControlledStateEventLookup {
   /**

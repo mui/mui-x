@@ -47,7 +47,7 @@ The time picker component can be disabled or read-only.
 
 ## Validation
 
-You can find the documentation in the [Validation page](/react-date-pickers/validation/)
+You can find the documentation in the [Validation page](/x/react-date-pickers/validation/)
 
 ## Landscape
 

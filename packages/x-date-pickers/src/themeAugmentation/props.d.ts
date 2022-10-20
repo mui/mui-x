@@ -63,7 +63,7 @@ export interface PickersComponentsPropsList {
   MuiPickersFadeTransitionGroup: PickersFadeTransitionGroupProps;
   MuiPickersPopper: PickerPopperProps;
   MuiPickerStaticWrapper: PickerStaticWrapperProps<unknown>;
-  MuiPickersToolbar: PickersToolbarProps<unknown, unknown>;
+  MuiPickersToolbar: PickersToolbarProps<unknown>;
   MuiPickersToolbarButton: PickersToolbarButtonProps;
   MuiStaticDatePicker: StaticDatePickerProps<unknown>;
   MuiStaticDateTimePicker: StaticDateTimePickerProps<unknown>;
