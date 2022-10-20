@@ -256,7 +256,7 @@ GridEditSingleSelectCell.propTypes = {
   /**
    * The row model of the row that the current cell belongs to.
    */
-  row: PropTypes.object.isRequired,
+  row: PropTypes.any.isRequired,
   /**
    * The node of the row that the current cell belongs to.
    */
