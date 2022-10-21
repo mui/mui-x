@@ -93,6 +93,7 @@ export interface DayCalendarProps<TDate>
   classes?: Partial<DayCalendarClasses>;
   components?: DayCalendarSlotsComponent<TDate>;
   componentsProps?: DayCalendarSlotsComponentsProps<TDate>;
+  isDragging?: boolean;
 }
 
 const useUtilityClasses = (ownerState: DayCalendarProps<any>) => {
@@ -203,6 +204,7 @@ const WrappedDay = <TDate extends unknown>({
     hasFocus,
     components,
     componentsProps,
+    isDragging,
   } = parentProps;
 
   const isFocusableDay = focusableDay !== null && utils.isSameDay(day, focusableDay);
@@ -223,6 +225,8 @@ const WrappedDay = <TDate extends unknown>({
       role: 'gridcell',
       isAnimating: isMonthSwitchingAnimating,
       selectedDays,
+      isDragging,
+      'data-timestamp': utils.toJsDate(day).valueOf(),
     },
     ownerState: { ...parentProps, day },
   });
