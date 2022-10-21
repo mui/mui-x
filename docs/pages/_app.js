@@ -33,7 +33,7 @@ import { ACTION_TYPES, CODE_VARIANTS } from 'docs/src/modules/constants';
 
 function getMuiPackageVersion(packageName, commitRef) {
   if (commitRef === undefined) {
-    return 'latest';
+    return '^4.0.0';
   }
   const shortSha = commitRef.slice(0, 8);
   return `https://pkg.csb.dev/mui-org/material-ui-x/commit/${shortSha}/@material-ui/${packageName}`;
