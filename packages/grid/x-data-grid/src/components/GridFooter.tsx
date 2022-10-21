@@ -2,7 +2,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useGridSelector } from '../hooks/utils/useGridSelector';
 import { gridTopLevelRowCountSelector } from '../hooks/features/rows/gridRowsSelector';
-import { selectedGridRowsCountSelector } from '../hooks/features/selection/gridSelectionSelector';
+import { selectedGridRowsCountSelector } from '../hooks/features/rowSelection/gridRowSelectionSelector';
 import { gridVisibleTopLevelRowCountSelector } from '../hooks/features/filter/gridFilterSelector';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { GridRowCount } from './GridRowCount';

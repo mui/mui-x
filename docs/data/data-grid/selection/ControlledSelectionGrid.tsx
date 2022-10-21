@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { DataGrid, GridSelectionModel } from '@mui/x-data-grid';
+import { DataGrid, GridRowSelectionModel } from '@mui/x-data-grid';
 import { useDemoData } from '@mui/x-data-grid-generator';
 
 export default function ControlledSelectionGrid() {
@@ -9,16 +9,17 @@ export default function ControlledSelectionGrid() {
     maxColumns: 6,
   });
 
-  const [selectionModel, setSelectionModel] = React.useState<GridSelectionModel>([]);
+  const [rowSelectionModel, setRowSelectionModel] =
+    React.useState<GridRowSelectionModel>([]);
 
   return (
     <div style={{ height: 400, width: '100%' }}>
       <DataGrid
         checkboxSelection
-        onSelectionModelChange={(newSelectionModel) => {
-          setSelectionModel(newSelectionModel);
+        onRowSelectionModelChange={(newRowSelectionModel) => {
+          setRowSelectionModel(newRowSelectionModel);
         }}
-        selectionModel={selectionModel}
+        rowSelectionModel={rowSelectionModel}
         {...data}
       />
     </div>

@@ -485,7 +485,7 @@ describe('<DataGridPro /> - Filter', () => {
     render(<TestCase checkboxSelection filterModel={newModel} />);
     const checkAllCell = getColumnHeaderCell(0).querySelector('input');
     fireEvent.click(checkAllCell);
-    expect(apiRef.current.state.selection).to.deep.equal([1]);
+    expect(apiRef.current.state.rowSelection).to.deep.equal([1]);
   });
 
   it('should allow to clear filters by passing an empty filter model', () => {

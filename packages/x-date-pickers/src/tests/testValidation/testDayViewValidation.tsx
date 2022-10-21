@@ -27,7 +27,7 @@ function testDayViewValidation(ElementToTest, propsToTest, getOptions) {
             {...defaultProps}
             value={adapterToUse.date(new Date(2018, 2, 12))}
             shouldDisableDate={(date) =>
-              adapterToUse.isAfter(date as any, adapterToUse.date(new Date(2018, 2, 10)))
+              adapterToUse.isAfter(date, adapterToUse.date(new Date(2018, 2, 10)))
             }
           />,
         );
