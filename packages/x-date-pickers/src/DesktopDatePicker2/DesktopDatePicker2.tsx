@@ -163,7 +163,8 @@ DesktopDatePicker2.propTypes = {
    */
   loading: PropTypes.bool,
   /**
-   * Locale for components texts
+   * Locale for components texts.
+   * Allows overriding texts coming from `LocalizationProvider` and `theme`.
    */
   localeText: PropTypes.object,
   /**

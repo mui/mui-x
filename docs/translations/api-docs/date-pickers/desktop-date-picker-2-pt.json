@@ -18,7 +18,7 @@
     "inputRef": "Pass a ref to the <code>input</code> element.",
     "label": "The label content.",
     "loading": "If <code>true</code> renders <code>LoadingComponent</code> in calendar instead of calendar view. Can be used to preload information and show it in calendar.",
-    "localeText": "Locale for components texts",
+    "localeText": "Locale for components texts. Allows overriding texts coming from <code>LocalizationProvider</code> and <code>theme</code>.",
     "maxDate": "Maximal selectable date. @DateIOType",
     "minDate": "Minimal selectable date. @DateIOType",
     "onAccept": "Callback fired when date is accepted @DateIOType.<br><br><strong>Signature:</strong><br><code>function(value: TValue) =&gt; void</code><br><em>value:</em> The value that was just accepted.",
