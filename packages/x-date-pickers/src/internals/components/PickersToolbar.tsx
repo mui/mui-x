@@ -13,10 +13,11 @@ import {
   pickersToolbarClasses,
   PickersToolbarClasses,
 } from './pickersToolbarClasses';
+import { CalendarOrClockPickerView } from '../models/views';
 
-export interface PickersToolbarProps<TValue>
+export interface PickersToolbarProps<TValue, TView extends CalendarOrClockPickerView>
   extends Pick<
-    BaseToolbarProps<TValue>,
+    BaseToolbarProps<TValue, TView>,
     'isMobileKeyboardViewOpen' | 'toggleMobileKeyboardView' | 'isLandscape'
   > {
   className?: string;
@@ -26,7 +27,7 @@ export interface PickersToolbarProps<TValue>
   classes?: Partial<PickersToolbarClasses>;
 }
 
-const useUtilityClasses = (ownerState: PickersToolbarProps<any>) => {
+const useUtilityClasses = (ownerState: PickersToolbarProps<any, any>) => {
   const { classes, isLandscape } = ownerState;
   const slots = {
     root: ['root'],
@@ -42,7 +43,7 @@ const PickersToolbarRoot = styled('div', {
   slot: 'Root',
   overridesResolver: (props, styles) => styles.root,
 })<{
-  ownerState: PickersToolbarProps<any>;
+  ownerState: PickersToolbarProps<any, any>;
 }>(({ theme, ownerState }) => ({
   display: 'flex',
   flexDirection: 'column',
@@ -63,7 +64,7 @@ const PickersToolbarContent = styled(Grid, {
   slot: 'Content',
   overridesResolver: (props, styles) => styles.content,
 })<{
-  ownerState: PickersToolbarProps<any>;
+  ownerState: PickersToolbarProps<any, any>;
 }>({
   flex: 1,
 });
@@ -76,18 +77,22 @@ const PickersToolbarPenIconButton = styled(IconButton, {
     styles.penIconButton,
   ],
 })<{
-  ownerState: PickersToolbarProps<any>;
+  ownerState: PickersToolbarProps<any, any>;
 }>({});
 
 const getViewTypeIcon = (viewType: 'calendar' | 'clock') =>
   viewType === 'clock' ? <Clock color="inherit" /> : <Calendar color="inherit" />;
 
-type PickersToolbarComponent = (<TValue>(
-  props: React.PropsWithChildren<PickersToolbarProps<TValue>> & React.RefAttributes<HTMLDivElement>,
+type PickersToolbarComponent = (<TValue, TView extends CalendarOrClockPickerView>(
+  props: React.PropsWithChildren<PickersToolbarProps<TValue, TView>> &
+    React.RefAttributes<HTMLDivElement>,
 ) => JSX.Element) & { propTypes?: any };
 
-export const PickersToolbar = React.forwardRef(function PickersToolbar<TValue>(
-  inProps: React.PropsWithChildren<PickersToolbarProps<TValue>>,
+export const PickersToolbar = React.forwardRef(function PickersToolbar<
+  TValue,
+  TView extends CalendarOrClockPickerView,
+>(
+  inProps: React.PropsWithChildren<PickersToolbarProps<TValue, TView>>,
   ref: React.Ref<HTMLDivElement>,
 ) {
   const props = useThemeProps({ props: inProps, name: 'MuiPickersToolbar' });

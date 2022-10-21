@@ -8,7 +8,7 @@ export interface PickerViewLayoutClasses {
   root: string;
   /** Styles applied to the content element (which contains the toolbar, tabs and the view itself). */
   content: string;
-  /** Style applied to the content element when the orientation is landscape */
+  /** Style applied to the content element in landscape orientation */
   'content--landscape': string;
 }
 

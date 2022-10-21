@@ -1,6 +1,6 @@
 import * as React from 'react';
 import clsx from 'clsx';
-import { unstable_composeClasses as composeClasses } from '@mui/material';
+import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { styled, useThemeProps } from '@mui/material/styles';
 import { PickersActionBar } from '../../../PickersActionBar';
 import { CalendarOrClockPickerView } from '../../models/views';
@@ -89,19 +89,13 @@ export function PickerViewLayout<TValue, TView extends CalendarOrClockPickerView
             onChange={onChange}
             value={value}
             view={view}
-            onViewChange={onViewChange as (view: CalendarOrClockPickerView) => void}
+            onViewChange={onViewChange}
             views={views}
             disabled={disabled}
             readOnly={readOnly}
           />
         )}
-        {!!Tabs && (
-          <Tabs
-            view={view}
-            onViewChange={onViewChange as (view: CalendarOrClockPickerView) => void}
-            {...componentsProps?.tabs}
-          />
-        )}
+        {!!Tabs && <Tabs view={view} onViewChange={onViewChange} {...componentsProps?.tabs} />}
         {children}
       </PickerViewLayoutContent>
       <ActionBar

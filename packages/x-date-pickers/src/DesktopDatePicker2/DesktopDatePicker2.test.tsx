@@ -598,7 +598,7 @@ describe('<DesktopDatePicker2 />', () => {
       expect(screen.getByLabelText('Previous month')).not.to.have.attribute('disabled');
     });
 
-    it('should not allow to navigate to previous month if props.maxDate is before the last date of the next month', () => {
+    it('should not allow to navigate to next month if props.maxDate is before the last date of the next month', () => {
       render(
         <DesktopDatePicker2
           defaultValue={adapterToUse.date(new Date(2018, 1, 10))}
@@ -661,7 +661,7 @@ describe('<DesktopDatePicker2 />', () => {
       render(
         <DesktopDatePicker2
           defaultValue={adapterToUse.date(new Date(2018, 1, 1))}
-          shouldDisableMonth={() => true}
+          shouldDisableYear={() => true}
         />,
       );
 

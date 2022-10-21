@@ -99,7 +99,7 @@ export function useDatePicker2DefaultizedProps<TDate, Props extends BaseDatePick
 
     return {
       ...themeProps.localeText,
-      datePickerDefaultToolbarTitle: themeProps.localeText.toolbarTitle,
+      datePickerToolbarTitle: themeProps.localeText.toolbarTitle,
     };
   }, [themeProps.localeText]);
 

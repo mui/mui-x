@@ -12,16 +12,16 @@ export type PickerSelectionState = 'partial' | 'shallow' | 'finish';
 interface UsePickerValueState<TValue> {
   /**
    * Date internally used on the picker and displayed in the input.
-   * It is updates whenever the user validates a step.
+   * It is updated whenever the user modifies a step.
    */
   draft: TValue;
   /**
    * Last full date provided by the user
-   * Is not updated when validating a step of a multistep picker (e.g. validating the date of a date time picker)
+   * It is not updated when validating a step of a multistep picker (e.g. validating the date of a date time picker)
    */
   committed: TValue;
   /**
-   * Date that will be used if the pickers tries to reset its value
+   * Date that will be used if the picker tries to reset its value
    */
   resetFallback: TValue;
 }
@@ -86,12 +86,13 @@ export interface UsePickerValueProps<TValue>
    */
   onChange?: (value: TValue) => void;
   /**
-   * If `true` the popup or dialog will immediately close after submitting full date.
+   * If `true` the popup or dialog will close after submitting full date.
    * @default `true` for Desktop, `false` for Mobile (based on the chosen wrapper and `desktopModeMediaQuery` prop).
    */
   closeOnSelect?: boolean;
   /**
    * Control the popup or dialog open state.
+   * @default false
    */
   open?: boolean;
   /**
