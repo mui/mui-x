@@ -19,11 +19,6 @@ export const validateTimeRange: Validator<
 > = ({ props, value, adapter }) => {
   const [start, end] = value;
 
-  // for partial input
-  if (start === null || end === null) {
-    return [null, null];
-  }
-
   const dateTimeValidations: [TimeRangeValidationErrorValue, TimeRangeValidationErrorValue] = [
     validateTime({
       adapter,
@@ -39,6 +34,11 @@ export const validateTimeRange: Validator<
 
   if (dateTimeValidations[0] || dateTimeValidations[1]) {
     return dateTimeValidations;
+  }
+
+  // for partial input
+  if (start === null || end === null) {
+    return [null, null];
   }
 
   if (!isRangeValid(adapter.utils, value)) {
