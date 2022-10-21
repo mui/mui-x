@@ -16,25 +16,18 @@ function updatedDate<TDate>(
   switch (sectionName) {
     case 'year':
       return adapter.addYears(date, diff);
-      break;
     case 'month':
       return adapter.addMonths(date, diff);
-      break;
     case 'day':
       return adapter.addDays(date, diff);
-      break;
     case 'hour':
       return adapter.addHours(date, diff);
-      break;
     case 'minute':
       return adapter.addMinutes(date, diff);
-      break;
     case 'second':
       return adapter.addSeconds(date, diff);
-      break;
     case 'meridiem':
       return adapter.setHours(date, (adapter.getHours(date) + 12 * diff) % 24);
-      break;
     default:
       return null;
   }
@@ -43,12 +36,12 @@ function updatedDate<TDate>(
 const expectInputValue = (input: HTMLInputElement, expectedValue: string) =>
   expect(input.value.replace(/‎/g, '')).to.equal(expectedValue);
 
-const adapterToTest: ("luxon" | "date-fns" | "dayjs" | "moment")[] = ['luxon', 'date-fns', 'dayjs', 'moment']
-
-// const adapterToTest: ("luxon" | "date-fns" | "dayjs" | "moment")[] = ['luxon'];
-// const adapterToTest: ('luxon' | 'date-fns' | 'dayjs' | 'moment')[] = ['date-fns'];
-// const adapterToTest: ("luxon" | "date-fns" | "dayjs" | "moment")[] = ['dayjs'];
-// const adapterToTest: ("luxon" | "date-fns" | "dayjs" | "moment")[] = ['moment'];
+const adapterToTest: ('luxon' | 'date-fns' | 'dayjs' | 'moment')[] = [
+  'luxon',
+  'date-fns',
+  'dayjs',
+  'moment',
+];
 
 adapterToTest.forEach((adapterName) => {
   describe(`test keyboard interaction with ${adapterName} adapter`, () => {
