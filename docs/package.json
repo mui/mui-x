@@ -14,8 +14,7 @@
     "icons": "rimraf public/static/icons/* && node ./scripts/buildIcons.js",
     "typescript": "tsc -p tsconfig.json",
     "typescript:transpile": "cross-env BABEL_ENV=development babel-node --extensions \".tsx,.ts,.js\" scripts/formattedTSDemos",
-    "typescript:transpile:dev": "cross-env BABEL_ENV=development babel-node --extensions \".tsx,.ts,.js\" scripts/formattedTSDemos --watch",
-    "link-check": "node ./scripts/reportBrokenLinks.js"
+    "typescript:transpile:dev": "cross-env BABEL_ENV=development babel-node --extensions \".tsx,.ts,.js\" scripts/formattedTSDemos --watch"
   },
   "dependencies": {
     "@babel/core": "^7.19.3",
