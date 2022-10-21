@@ -13,14 +13,20 @@ const EXPECTED_DIFF: { [propKey: string]: string | ((pickerName: string) => stri
     ignoreInvalidInputs: 'no more mask input',
 
     renderInput: 'replaced by `components.Field` and `components.Input`',
-    InputAdornmentProps: 'replaced by `componentsProps.InputAdornment`',
-    OpenPickerButtonProps: 'replaced by `componentsProps.OpenPickerButton`',
+    InputAdornmentProps: (pickerName) =>
+      pickerName.includes('Mobile')
+        ? 'never used even in v5'
+        : 'replaced by `componentsProps.InputAdornment`',
+    OpenPickerButtonProps: (pickerName) =>
+      pickerName.includes('Mobile')
+        ? 'never used even in v5'
+        : 'replaced by `componentsProps.OpenPickerButton`',
     InputProps: 'replaced by `componentsProps.input.InputProps`',
 
     getOpenDialogAriaText: 'replaced by each picker translation key',
 
-    dateRangeIcon: 'replaces by `componentsProps.tabs.dateRangeIcon`',
-    timeIcon: 'replaces by `componentsProps.tabs.timeIcon`',
+    dateRangeIcon: 'replaced by `componentsProps.tabs.dateRangeIcon`',
+    timeIcon: 'replaced by `componentsProps.tabs.timeIcon`',
 
     children: 'never used even in v5',
     inputRef: (pickerName) => (pickerName.includes('Range') ? 'never used even in v5' : undefined),

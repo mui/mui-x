@@ -24,11 +24,6 @@ export const validateDateTimeRange: Validator<
 > = ({ props, value, adapter }) => {
   const [start, end] = value;
 
-  // for partial input
-  if (start === null || end === null) {
-    return [null, null];
-  }
-
   const { shouldDisableDate, ...otherProps } = props;
 
   const dateTimeValidations: [
@@ -55,6 +50,11 @@ export const validateDateTimeRange: Validator<
 
   if (dateTimeValidations[0] || dateTimeValidations[1]) {
     return dateTimeValidations;
+  }
+
+  // for partial input
+  if (start === null || end === null) {
+    return [null, null];
   }
 
   if (!isRangeValid(adapter.utils, value)) {

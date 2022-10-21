@@ -40,7 +40,7 @@ export * from './DesktopTimePicker2';
 
 // export * from './DateTimePicker2'
 export * from './DesktopDateTimePicker2';
-// export * from './MobileDateTimePicker2'
+export * from './MobileDateTimePicker2';
 // export * from './StaticDateTimePicker2'
 
 export { PickerStaticWrapper } from './internals/components/PickerStaticWrapper';
