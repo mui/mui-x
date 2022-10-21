@@ -68,10 +68,10 @@ export interface GridColumnsPanelProps extends GridPanelWrapperProps {
   sort?: 'asc' | 'desc';
   searchPredicate?: (column: GridStateColDef, searchValue: string) => boolean;
   /*
-   * If `true`, column search field will be focused automatically.
-   * If `false`, first column switch input will be focused automatically.
+   * If `true`, the column search field will be focused automatically.
+   * If `false`, the first column switch input will be focused automatically.
    * This helps to avoid input keyboard panel to popup automatically on touch devices.
-   * @default false
+   * @default true
    */
   autoFocusSearchField?: boolean;
 }
