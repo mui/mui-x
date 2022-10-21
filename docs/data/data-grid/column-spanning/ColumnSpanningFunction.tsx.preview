@@ -2,7 +2,7 @@
   autoHeight
   disableExtendRowFullWidth
   disableColumnFilter
-  disableSelectionOnClick
+  disableRowSelectionOnClick
   hideFooter
   showCellRightBorder
   showColumnRightBorder

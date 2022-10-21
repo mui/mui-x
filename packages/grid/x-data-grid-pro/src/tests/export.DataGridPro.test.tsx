@@ -256,7 +256,7 @@ describe('<DataGridPro /> - Export', () => {
                   brand: 'Adidas',
                 },
               ]}
-              selectionModel={[0]}
+              rowSelectionModel={[0]}
             />
           </div>
         );

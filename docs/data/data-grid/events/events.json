@@ -84,6 +84,13 @@
   },
   {
     "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
+    "name": "columnGroupHeaderKeyDown",
+    "description": "Fired when a key is pressed in a column group header. It&#39;s mapped do the <code>keydown</code> DOM event.",
+    "params": "GridColumnGroupHeaderParams",
+    "event": "MuiEvent<React.KeyboardEvent<HTMLElement>>"
+  },
+  {
+    "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
     "name": "columnHeaderClick",
     "description": "Fired when a column header is clicked",
     "params": "GridColumnHeaderParams",
@@ -340,6 +347,13 @@
   },
   {
     "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
+    "name": "rowSelectionChange",
+    "description": "Fired when the selection state of one or multiple rows changes.",
+    "params": "GridRowSelectionModel",
+    "event": "MuiEvent<{}>"
+  },
+  {
+    "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
     "name": "rowSelectionCheckboxChange",
     "description": "Fired when the value of the selection checkbox of a row is changed",
     "params": "GridRowSelectionCheckboxParams",
@@ -359,13 +373,6 @@
     "params": "GridRowScrollEndParams",
     "event": "MuiEvent<{}>",
     "componentProp": "onRowsScrollEnd"
-  },
-  {
-    "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
-    "name": "selectionChange",
-    "description": "Fired when the selection state of one or multiple rows changes.",
-    "params": "GridSelectionModel",
-    "event": "MuiEvent<{}>"
   },
   {
     "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],

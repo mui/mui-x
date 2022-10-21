@@ -97,8 +97,8 @@ describe('<DateRangeCalendar />', () => {
     });
   });
 
-  describe('Component slots', () => {
-    it('slot: `Day` - renders custom day', () => {
+  describe('Component slots: Day', () => {
+    it('should render custom day component', () => {
       render(
         <DateRangeCalendar
           components={{

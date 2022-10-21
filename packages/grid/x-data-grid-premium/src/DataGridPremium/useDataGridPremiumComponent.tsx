@@ -23,20 +23,20 @@ import {
   rowsStateInitializer,
   useGridRowsMeta,
   useGridParamsApi,
-  useGridSelection,
+  useGridRowSelection,
   useGridSorting,
   sortingStateInitializer,
   useGridScroll,
   useGridEvents,
   useGridDimensions,
   useGridStatePersistence,
-  useGridSelectionPreProcessors,
+  useGridRowSelectionPreProcessors,
   columnMenuStateInitializer,
   densityStateInitializer,
   focusStateInitializer,
   preferencePanelStateInitializer,
   rowsMetaStateInitializer,
-  selectionStateInitializer,
+  rowSelectionStateInitializer,
   useGridColumnReorder,
   columnReorderStateInitializer,
   useGridColumnResize,
@@ -53,7 +53,6 @@ import {
   useGridColumnSpanning,
   useGridRowReorder,
   useGridRowReorderPreProcessors,
-  useGridColumnGroupingPreProcessors,
   useGridRowPinning,
   useGridRowPinningPreProcessors,
   rowPinningStateInitializer,
@@ -84,8 +83,7 @@ export const useDataGridPremiumComponent = (
   /**
    * Register all pre-processors called during state initialization here.
    */
-  useGridColumnGroupingPreProcessors(apiRef, props);
-  useGridSelectionPreProcessors(apiRef, props);
+  useGridRowSelectionPreProcessors(apiRef, props);
   useGridRowReorderPreProcessors(apiRef, props);
   useGridRowGroupingPreProcessors(apiRef, props);
   useGridTreeDataPreProcessors(apiRef, props);
@@ -102,7 +100,7 @@ export const useDataGridPremiumComponent = (
    */
   useGridInitializeState(rowGroupingStateInitializer, apiRef, props);
   useGridInitializeState(aggregationStateInitializer, apiRef, props);
-  useGridInitializeState(selectionStateInitializer, apiRef, props);
+  useGridInitializeState(rowSelectionStateInitializer, apiRef, props);
   useGridInitializeState(detailPanelStateInitializer, apiRef, props);
   useGridInitializeState(columnPinningStateInitializer, apiRef, props);
   useGridInitializeState(columnsStateInitializer, apiRef, props);
@@ -125,7 +123,7 @@ export const useDataGridPremiumComponent = (
   useGridTreeData(apiRef);
   useGridAggregation(apiRef, props);
   useGridKeyboardNavigation(apiRef, props);
-  useGridSelection(apiRef, props);
+  useGridRowSelection(apiRef, props);
   useGridColumnPinning(apiRef, props);
   useGridRowPinning(apiRef, props);
   useGridColumns(apiRef, props);

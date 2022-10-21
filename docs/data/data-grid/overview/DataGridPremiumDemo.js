@@ -50,7 +50,7 @@ export default function DataGridPremiumDemo() {
         {...data}
         apiRef={apiRef}
         loading={loading}
-        disableSelectionOnClick
+        disableRowSelectionOnClick
         initialState={initialState}
         components={{ Toolbar: GridToolbar }}
       />

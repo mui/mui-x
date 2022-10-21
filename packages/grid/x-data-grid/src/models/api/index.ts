@@ -6,7 +6,7 @@ export * from './gridColumnApi';
 export * from './gridDensityApi';
 export * from './gridRowApi';
 export * from './gridRowsMetaApi';
-export * from './gridSelectionApi';
+export * from './gridRowSelectionApi';
 export * from './gridSortApi';
 export * from './gridStateApi';
 export * from './gridLocaleTextApi';

@@ -1,4 +1,5 @@
 export * from './gridColumnHeaderParams';
+export * from './gridColumnGroupHeaderParams';
 export * from './gridColumnOrderChangeParams';
 export * from './gridColumnResizeParams';
 export * from './gridEditCellParams';
