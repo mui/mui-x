@@ -59,7 +59,5 @@ export const usePickerLayout = <TValue, TView extends CalendarOrClockPickerView>
     showToolbar: props.showToolbar,
   };
 
-  return {
-    layoutProps,
-  };
+  return { layoutProps };
 };

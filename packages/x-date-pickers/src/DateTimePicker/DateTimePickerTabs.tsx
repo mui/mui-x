@@ -53,7 +53,9 @@ export interface ExportedDateTimePickerTabsProps extends ExportedBaseTabsProps {
   timeIcon?: React.ReactNode;
 }
 
-export interface DateTimePickerTabsProps extends ExportedDateTimePickerTabsProps, BaseTabsProps {
+export interface DateTimePickerTabsProps
+  extends ExportedDateTimePickerTabsProps,
+    BaseTabsProps<CalendarOrClockPickerView> {
   /**
    * Override or extend the styles applied to the component.
    */
@@ -154,7 +156,8 @@ DateTimePickerTabs.propTypes = {
   hidden: PropTypes.bool,
   /**
    * Callback called when a tab is clicked
-   * @param {CalendarOrClockPickerView} view The view to open
+   * @template TView
+   * @param {TView} view The view to open
    */
   onViewChange: PropTypes.func.isRequired,
   /**

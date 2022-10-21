@@ -157,29 +157,30 @@ export const usePickerViews = <
   // TODO v6: Move `useFocusManagement` here
   const { focusedView, setFocusedView } = useFocusManagement<TView>({ autoFocus, openView });
 
-  const { hasUIView, viewModeLookup } = React.useMemo(() => {
-    let tempHasUIView = false;
-    const tempViewModeLookup = {} as Record<TView, 'field' | 'UI'>;
+  const { hasUIView, viewModeLookup } = React.useMemo(
+    () =>
+      views.reduce(
+        (acc, view) => {
+          let viewMode: 'field' | 'UI';
+          if (disableOpenPicker) {
+            viewMode = 'field';
+          } else if (viewLookup[view] != null) {
+            viewMode = 'UI';
+          } else {
+            viewMode = 'field';
+          }
 
-    views.forEach((view) => {
-      let viewMode: 'field' | 'UI';
-      if (disableOpenPicker) {
-        viewMode = 'field';
-      } else if (viewLookup[view] != null) {
-        viewMode = 'UI';
-      } else {
-        viewMode = 'field';
-      }
+          acc.viewModeLookup[view] = viewMode;
+          if (viewMode === 'UI') {
+            acc.hasUIView = true;
+          }
 
-      if (viewMode === 'UI') {
-        tempHasUIView = true;
-      }
-
-      tempViewModeLookup[view] = viewMode;
-    });
-
-    return { hasUIView: tempHasUIView, viewModeLookup: tempViewModeLookup };
-  }, [disableOpenPicker, viewLookup, views]);
+          return acc;
+        },
+        { hasUIView: false, viewModeLookup: {} as Record<TView, 'field' | 'UI'> },
+      ),
+    [disableOpenPicker, viewLookup, views],
+  );
 
   const currentViewMode = viewModeLookup[openView];
   const shouldRestoreFocus = useEventCallback(() => currentViewMode === 'UI');

@@ -20,14 +20,10 @@ type ValidationPropNames = typeof VALIDATION_PROP_NAMES[number];
  * Extract the validation props for the props received by a component.
  * Limit the risk of forgetting some of them and reduce the bundle size.
  */
-export const extractValidationProps = <Props extends { [key: string]: any }>(props: Props) => {
-  const validationProps = {} as Pick<Props, ValidationPropNames>;
-
-  VALIDATION_PROP_NAMES.forEach((propName) => {
+export const extractValidationProps = <Props extends { [key: string]: any }>(props: Props) =>
+  VALIDATION_PROP_NAMES.reduce((extractedProps, propName) => {
     if (props.hasOwnProperty(propName)) {
-      validationProps[propName] = props[propName];
+      extractedProps[propName] = props[propName];
     }
-  });
-
-  return validationProps;
-};
+    return extractedProps;
+  }, {} as Pick<Props, ValidationPropNames>);

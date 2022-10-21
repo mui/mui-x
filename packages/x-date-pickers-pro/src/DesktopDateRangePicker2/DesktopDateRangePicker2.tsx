@@ -75,7 +75,7 @@ DesktopDateRangePicker2.propTypes = {
    */
   className: PropTypes.string,
   /**
-   * If `true` the popup or dialog will immediately close after submitting full date.
+   * If `true` the popup or dialog will close after submitting full date.
    * @default `true` for Desktop, `false` for Mobile (based on the chosen wrapper and `desktopModeMediaQuery` prop).
    */
   closeOnSelect: PropTypes.bool,
@@ -152,7 +152,8 @@ DesktopDateRangePicker2.propTypes = {
    */
   loading: PropTypes.bool,
   /**
-   * Locale for components texts
+   * Locale for components texts.
+   * Allows overriding texts coming from `LocalizationProvider` and `theme`.
    */
   localeText: PropTypes.object,
   /**
@@ -212,6 +213,7 @@ DesktopDateRangePicker2.propTypes = {
   onSelectedSectionsChange: PropTypes.func,
   /**
    * Control the popup or dialog open state.
+   * @default false
    */
   open: PropTypes.bool,
   readOnly: PropTypes.bool,

@@ -14,8 +14,10 @@ import {
   timePickerToolbarClasses,
   TimePickerToolbarClasses,
 } from './timePickerToolbarClasses';
+import { ClockPickerView } from '../internals/models';
 
-export interface TimePickerToolbarProps<TDate> extends BaseToolbarProps<TDate | null> {
+export interface TimePickerToolbarProps<TDate>
+  extends BaseToolbarProps<TDate | null, ClockPickerView> {
   ampm?: boolean;
   ampmInClock?: boolean;
   classes?: Partial<TimePickerToolbarClasses>;

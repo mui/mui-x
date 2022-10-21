@@ -88,7 +88,7 @@ export function useTimePicker2DefaultizedProps<TDate, Props extends BaseTimePick
 
     return {
       ...themeProps.localeText,
-      timePickerDefaultToolbarTitle: themeProps.localeText.toolbarTitle,
+      timePickerToolbarTitle: themeProps.localeText.toolbarTitle,
     };
   }, [themeProps.localeText]);
 

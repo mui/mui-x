@@ -80,7 +80,7 @@ export function useDateRangePicker2DefaultizedProps<
 
     return {
       ...themeProps.localeText,
-      dateRangePickerDefaultToolbarTitle: themeProps.localeText.toolbarTitle,
+      dateRangePickerToolbarTitle: themeProps.localeText.toolbarTitle,
     };
   }, [themeProps.localeText]);
 

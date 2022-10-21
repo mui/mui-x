@@ -155,7 +155,7 @@ export function useDateTimePicker2DefaultizedProps<
 
     return {
       ...themeProps.localeText,
-      dateTimePickerDefaultToolbarTitle: themeProps.localeText.toolbarTitle,
+      dateTimePickerToolbarTitle: themeProps.localeText.toolbarTitle,
     };
   }, [themeProps.localeText]);
 
