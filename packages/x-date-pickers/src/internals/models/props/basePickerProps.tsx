@@ -61,7 +61,8 @@ export interface BasePickerProps2<TValue, TDate, TView extends CalendarOrClockPi
    */
   showToolbar?: boolean;
   /**
-   * Locale for components texts
+   * Locale for components texts.
+   * Allows overriding texts coming from `LocalizationProvider` and `theme`.
    */
   localeText?: PickersInputComponentLocaleText<TDate>;
 }
