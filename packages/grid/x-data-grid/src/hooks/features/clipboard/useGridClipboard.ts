@@ -25,6 +25,22 @@ function writeToClipboardPolyfill(data: string) {
   }
 }
 
+function hasNativeSelection() {
+  if (window.getSelection()?.toString() !== '') {
+    return true;
+  }
+
+  const activeElement = document.activeElement as HTMLInputElement;
+  // In Firefox `window.getSelection().toString()` returns empty string if
+  // text is selected inside of a form field.
+  // This is another way of checking if text is selected in an input.
+  if ((activeElement.selectionEnd || 0) - (activeElement.selectionStart || 0) > 0) {
+    return true;
+  }
+
+  return false;
+}
+
 /**
  * @requires useGridCsvExport (method)
  * @requires useGridSelection (method)
@@ -65,7 +81,7 @@ export const useGridClipboard = (apiRef: React.MutableRefObject<GridApiCommunity
       }
 
       // Do nothing if there's a native selection
-      if (window.getSelection()?.toString() !== '') {
+      if (hasNativeSelection()) {
         return;
       }
 
