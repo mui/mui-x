@@ -36,12 +36,7 @@ function updatedDate<TDate>(
 const expectInputValue = (input: HTMLInputElement, expectedValue: string) =>
   expect(input.value.replace(/‎/g, '')).to.equal(expectedValue);
 
-const adapterToTest: ('luxon' | 'date-fns' | 'dayjs' | 'moment')[] = [
-  'luxon',
-  'date-fns',
-  'dayjs',
-  'moment',
-];
+const adapterToTest = ['luxon', 'date-fns', 'dayjs', 'moment'] as const;
 
 adapterToTest.forEach((adapterName) => {
   describe(`test keyboard interaction with ${adapterName} adapter`, () => {
