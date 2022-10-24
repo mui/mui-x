@@ -81,21 +81,28 @@ export const useMaskedInput = <TInputDate, TDate>({
   // Inspired from autocomplete: https://github.com/mui/material-ui/blob/2c89d036dc2e16f100528f161600dffc83241768/packages/mui-base/src/AutocompleteUnstyled/useAutocomplete.js#L185:L201
   const prevRawValue = React.useRef<TInputDate>();
   const prevLocale = React.useRef<Locale | string>(utils.locale);
+  const prevInputFormat = React.useRef<string>(inputFormat);
 
   React.useEffect(() => {
     const rawValueHasChanged = rawValue !== prevRawValue.current;
     const localeHasChanged = utils.locale !== prevLocale.current;
+    const inputFormatHasChanged = inputFormat !== prevInputFormat.current;
     prevRawValue.current = rawValue;
     prevLocale.current = utils.locale;
+    prevInputFormat.current = inputFormat;
 
-    if (!rawValueHasChanged && !localeHasChanged) {
+    if (!rawValueHasChanged && !localeHasChanged && !inputFormatHasChanged) {
       return;
     }
 
     const newParsedValue = rawValue === null ? null : utils.date(rawValue);
     const isAcceptedValue = rawValue === null || utils.isValid(newParsedValue);
 
-    if (!localeHasChanged && (!isAcceptedValue || utils.isEqual(innerInputValue, newParsedValue))) {
+    if (
+      !localeHasChanged &&
+      !inputFormatHasChanged &&
+      (!isAcceptedValue || utils.isEqual(innerInputValue, newParsedValue))
+    ) {
       return;
     }
 
