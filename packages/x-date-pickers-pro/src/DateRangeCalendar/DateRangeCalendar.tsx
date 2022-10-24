@@ -42,6 +42,7 @@ import { calculateRangeChange, calculateRangePreview } from '../DateRangePicker/
 import { DateRange } from '../internal/models';
 import { DateRangePickerDay } from '../DateRangePickerDay';
 import { dateRangePickerValueManager } from '../DateRangePicker/shared';
+import { useDragRange } from './useDragRange';
 
 const releaseInfo = getReleaseInfo();
 
@@ -131,7 +132,6 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
   const ownerState = props;
   const classes = useUtilityClasses(ownerState);
   const isMobile = React.useContext(WrapperVariantContext) === 'mobile';
-  const [isDragging, setIsDragging] = React.useState(false);
 
   const {
     value: valueProp,
@@ -325,84 +325,13 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
     }
   };
 
-  const handleDragStart = useEventCallback((event: React.DragEvent<HTMLButtonElement>) => {
-    const timestampString = (event.target as HTMLButtonElement).dataset.timestamp;
-    if (timestampString) {
-      const timestamp = +timestampString;
-      setRangePreviewDay(utils.date(new Date(timestamp)));
-    }
-    event.dataTransfer.setData('datePosition', currentDatePosition);
-    event.dataTransfer.effectAllowed = 'move';
-    setIsDragging(true);
+  const { isDragging, ...dragEventHandlers } = useDragRange({
+    currentDatePosition,
+    disableDragEditing,
+    handleSelectedDayChange,
+    setRangePreviewDay,
+    utils
   });
-  const handleDragEnter = useEventCallback((event: React.DragEvent<HTMLButtonElement>) => {
-    event.preventDefault();
-    event.stopPropagation();
-    event.dataTransfer.dropEffect = 'move';
-    const timestampString = (event.target as HTMLButtonElement).dataset.timestamp;
-    if (timestampString) {
-      const timestamp = +timestampString;
-      setRangePreviewDay(utils.date(new Date(timestamp)));
-    }
-  });
-  const handleDragLeave = useEventCallback((event: React.DragEvent<HTMLButtonElement>) => {
-    event.preventDefault();
-    event.stopPropagation();
-    setRangePreviewDay(null);
-  });
-  const handleDragOver = useEventCallback((event: React.DragEvent<HTMLButtonElement>) => {
-    event.preventDefault();
-    event.stopPropagation();
-    event.dataTransfer.dropEffect = 'move';
-  });
-  const handleDragEnd = useEventCallback((event: React.DragEvent<HTMLButtonElement>) => {
-    event.preventDefault();
-    event.stopPropagation();
-    setRangePreviewDay(null);
-    setIsDragging(false);
-  });
-  const handleDrop = useEventCallback((event: React.DragEvent<HTMLButtonElement>) => {
-    event.preventDefault();
-    event.stopPropagation();
-    const timestampString = (event.target as HTMLButtonElement).dataset.timestamp;
-    if (timestampString) {
-      const timestamp = +timestampString;
-      const newDate = utils.date(new Date(timestamp));
-      if (newDate) {
-        handleSelectedDayChange(newDate);
-      }
-    }
-  });
-
-  const dragEventHandlers = React.useMemo<{
-    onDragStart?: React.DragEventHandler<HTMLButtonElement>;
-    onDragEnter?: React.DragEventHandler<HTMLButtonElement>;
-    onDragLeave?: React.DragEventHandler<HTMLButtonElement>;
-    onDragOver?: React.DragEventHandler<HTMLButtonElement>;
-    onDragEnd?: React.DragEventHandler<HTMLButtonElement>;
-    onDrop?: React.DragEventHandler<HTMLButtonElement>;
-  }>(
-    () =>
-      !disableDragEditing
-        ? {
-            onDragStart: handleDragStart,
-            onDragEnter: handleDragEnter,
-            onDragLeave: handleDragLeave,
-            onDragOver: handleDragOver,
-            onDragEnd: handleDragEnd,
-            onDrop: handleDrop,
-          }
-        : {},
-    [
-      disableDragEditing,
-      handleDragEnd,
-      handleDragEnter,
-      handleDragLeave,
-      handleDragOver,
-      handleDragStart,
-      handleDrop,
-    ],
-  );
 
   const componentsForDayCalendar = {
     Day: DateRangePickerDay,
