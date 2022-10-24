@@ -1,5 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import Divider from '@mui/material/Divider';
 import { GridColumnMenuContainer } from './GridColumnMenuContainer';
 import { GridColumnMenuProps } from './GridColumnMenuProps';
 import { GridColumnsMenuItem } from './GridColumnsMenuItem';
@@ -10,7 +11,7 @@ import { useGridApiContext } from '../../../hooks/utils/useGridApiContext';
 
 const GridColumnMenu = React.forwardRef<HTMLUListElement, GridColumnMenuProps>(
   function GridColumnMenu(props: GridColumnMenuProps, ref) {
-    const { hideMenu, currentColumn } = props;
+    const { hideMenu, currentColumn, condensed } = props;
     const apiRef = useGridApiContext();
 
     const defaultButtons = [
@@ -20,9 +21,19 @@ const GridColumnMenu = React.forwardRef<HTMLUListElement, GridColumnMenuProps>(
       <GridColumnsMenuItem onClick={hideMenu} column={currentColumn!} />,
     ];
 
+    const condensedButtons = [
+      <HideGridColMenuItem onClick={hideMenu} column={currentColumn!} condensed={condensed} />,
+      <Divider />,
+      <SortGridMenuItems onClick={hideMenu} column={currentColumn!} condensed={condensed} />,
+      <Divider sx={{ my: 1 }} />,
+      <GridFilterMenuItem onClick={hideMenu} column={currentColumn!} condensed={condensed} />,
+      <Divider />,
+      <GridColumnsMenuItem onClick={hideMenu} column={currentColumn!} condensed={condensed} />,
+    ];
+
     const preProcessedButtons = apiRef.current.unstable_applyPipeProcessors(
       'columnMenu',
-      defaultButtons,
+      condensed ? condensedButtons : defaultButtons,
       currentColumn,
     );
 

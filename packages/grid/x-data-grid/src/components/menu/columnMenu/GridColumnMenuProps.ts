@@ -7,4 +7,5 @@ export interface GridColumnMenuProps extends React.HTMLAttributes<HTMLUListEleme
   open: boolean;
   id?: string;
   labelledby?: string;
+  condensed?: boolean;
 }

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import MuiDivider from '@mui/material/Divider';
+import MuiDivider, { DividerProps } from '@mui/material/Divider';
 import {
   GridEventListener,
   useGridApiEventHandler,
@@ -32,7 +32,9 @@ import { GridRowGroupableColumnMenuItems } from '../../../components/GridRowGrou
 import { GridRowGroupingColumnMenuItems } from '../../../components/GridRowGroupingColumnMenuItems';
 import { GridInitialStatePremium } from '../../../models/gridStatePremium';
 
-const Divider = () => <MuiDivider onClick={(event) => event.stopPropagation()} />;
+const Divider = (props: DividerProps) => (
+  <MuiDivider {...props} onClick={(event) => event.stopPropagation()} />
+);
 
 export const rowGroupingStateInitializer: GridStateInitializer<
   Pick<DataGridPremiumProcessedProps, 'rowGroupingModel' | 'initialState'>
@@ -174,7 +176,7 @@ export const useGridRowGrouping = (
         return initialValue;
       }
 
-      return [...initialValue, <Divider />, menuItems];
+      return [...initialValue, <Divider sx={{ py: '6px' }} />, menuItems];
     },
     [props.disableRowGrouping],
   );

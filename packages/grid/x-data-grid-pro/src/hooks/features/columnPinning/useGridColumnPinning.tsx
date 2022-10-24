@@ -1,5 +1,5 @@
 import * as React from 'react';
-import MuiDivider from '@mui/material/Divider';
+import MuiDivider, { DividerProps } from '@mui/material/Divider';
 import {
   useGridSelector,
   gridVisibleColumnDefinitionsSelector,
@@ -30,7 +30,9 @@ import {
 import { gridPinnedColumnsSelector } from './gridColumnPinningSelector';
 import { filterColumns } from '../../../components/DataGridProVirtualScroller';
 
-const Divider = () => <MuiDivider onClick={(event) => event.stopPropagation()} />;
+const Divider = (props: DividerProps) => (
+  <MuiDivider {...props} onClick={(event) => event.stopPropagation()} />
+);
 
 export const columnPinningStateInitializer: GridStateInitializer<
   Pick<DataGridProProcessedProps, 'pinnedColumns' | 'initialState' | 'disableColumnPinning'>
@@ -64,7 +66,11 @@ export const useGridColumnPinning = (
   apiRef: React.MutableRefObject<GridApiPro>,
   props: Pick<
     DataGridProProcessedProps,
-    'disableColumnPinning' | 'initialState' | 'pinnedColumns' | 'onPinnedColumnsChange'
+    | 'disableColumnPinning'
+    | 'initialState'
+    | 'pinnedColumns'
+    | 'onPinnedColumnsChange'
+    | 'componentsProps'
   >,
 ): void => {
   const pinnedColumns = useGridSelector(apiRef, gridPinnedColumnsSelector);
@@ -170,19 +176,33 @@ export const useGridColumnPinning = (
     [apiRef, pinnedColumns, props.disableColumnPinning],
   );
 
-  const addColumnMenuButtons = React.useCallback<GridPipeProcessor<'columnMenu'>>(
-    (initialValue, column) => {
+  const addColumnMenuItems = React.useCallback<GridPipeProcessor<'columnMenu'>>(
+    (columnMenuItems, column) => {
       if (props.disableColumnPinning) {
-        return initialValue;
+        return columnMenuItems;
       }
 
       if (column.pinnable === false) {
-        return initialValue;
+        return columnMenuItems;
       }
+      const condensed = props.componentsProps?.columnMenu?.condensed ?? false;
 
-      return [...initialValue, <Divider />, <GridColumnPinningMenuItems />];
+      // Insert `pin to` after `sort by`, researching alternate solution
+      return columnMenuItems.reduce((finalItems, columnMenuItem: any) => {
+        if (columnMenuItem?.type?.name === 'SortGridMenuItems') {
+          return [
+            ...finalItems,
+            columnMenuItem,
+            <Divider sx={{ my: 1 }} />,
+            <GridColumnPinningMenuItems condensed={condensed} />,
+          ];
+        }
+        return [...finalItems, columnMenuItem];
+      }, [] as any);
+
+      // return [...initialValue, <Divider />, <GridColumnPinningMenuItems condensed={condensed} />];
     },
-    [props.disableColumnPinning],
+    [props.componentsProps?.columnMenu?.condensed, props.disableColumnPinning],
   );
 
   const checkIfCanBeReordered = React.useCallback<GridPipeProcessor<'canBeReordered'>>(
@@ -252,7 +272,7 @@ export const useGridColumnPinning = (
   );
 
   useGridRegisterPipeProcessor(apiRef, 'scrollToIndexes', calculateScrollLeft);
-  useGridRegisterPipeProcessor(apiRef, 'columnMenu', addColumnMenuButtons);
+  useGridRegisterPipeProcessor(apiRef, 'columnMenu', addColumnMenuItems);
   useGridRegisterPipeProcessor(apiRef, 'canBeReordered', checkIfCanBeReordered);
   useGridRegisterPipeProcessor(apiRef, 'exportState', stateExportPreProcessing);
   useGridRegisterPipeProcessor(apiRef, 'restoreState', stateRestorePreProcessing);

@@ -28,7 +28,7 @@ export const useGridAggregationPreProcessors = (
   apiRef: React.MutableRefObject<GridApiPremium>,
   props: Pick<
     DataGridPremiumProcessedProps,
-    'aggregationFunctions' | 'disableAggregation' | 'getAggregationPosition'
+    'aggregationFunctions' | 'disableAggregation' | 'getAggregationPosition' | 'componentsProps'
   >,
 ) => {
   const updateAggregatedColumns = React.useCallback<GridPipeProcessor<'hydrateColumns'>>(
@@ -108,9 +108,9 @@ export const useGridAggregationPreProcessors = (
   );
 
   const addColumnMenuButtons = React.useCallback<GridPipeProcessor<'columnMenu'>>(
-    (initialValue, column) => {
+    (columnMenuItems, column) => {
       if (props.disableAggregation) {
-        return initialValue;
+        return columnMenuItems;
       }
 
       const availableAggregationFunctions = getAvailableAggregationFunctions({
@@ -119,16 +119,19 @@ export const useGridAggregationPreProcessors = (
       });
 
       if (availableAggregationFunctions.length === 0) {
-        return initialValue;
+        return columnMenuItems;
       }
 
+      const condensed = props.componentsProps?.columnMenu?.condensed ?? false;
+
       return [
-        ...initialValue,
+        ...columnMenuItems,
         <Divider />,
         <GridAggregationColumnMenuItem
           column={column}
           label={apiRef.current.getLocaleText('aggregationMenuItemHeader')}
           availableAggregationFunctions={availableAggregationFunctions}
+          condensed={condensed}
         />,
       ];
     },

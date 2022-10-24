@@ -49,6 +49,9 @@ const GridMenuRoot = styled(Popper, {
   [`& .${gridClasses.menuList}`]: {
     outline: 0,
   },
+  '& .MuiPaper-root': {
+    borderRadius: '10px',
+  },
 }));
 
 export interface GridMenuProps extends Omit<PopperProps, 'onKeyDown' | 'children'> {

@@ -1,13 +1,16 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import MenuItem from '@mui/material/MenuItem';
+import ViewWeekIcon from '@mui/icons-material/ViewWeek';
+import ListItemText from '@mui/material/ListItemText';
+import ListItemIcon from '@mui/material/ListItemIcon';
 import { GridPreferencePanelsValue } from '../../../hooks/features/preferencesPanel/gridPreferencePanelsValue';
 import { useGridApiContext } from '../../../hooks/utils/useGridApiContext';
 import { GridFilterItemProps } from './GridFilterItemProps';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
 
 const GridColumnsMenuItem = (props: GridFilterItemProps) => {
-  const { onClick } = props;
+  const { onClick, condensed } = props;
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
 
@@ -21,6 +24,31 @@ const GridColumnsMenuItem = (props: GridFilterItemProps) => {
 
   if (rootProps.disableColumnSelector) {
     return null;
+  }
+
+  if (condensed) {
+    return (
+      <MenuItem
+        onClick={showColumns}
+        sx={{
+          color: 'common.black',
+          '& .MuiSvgIcon-root': {
+            color: 'grey.700',
+          },
+          '& .MuiListItemIcon-root': {
+            minWidth: '29px',
+          },
+          '& .MuiTypography-root': {
+            fontSize: '16px',
+          },
+        }}
+      >
+        <ListItemIcon>
+          <ViewWeekIcon fontSize="small" />
+        </ListItemIcon>
+        <ListItemText>{apiRef.current.getLocaleText('columnMenuShowColumns')}</ListItemText>
+      </MenuItem>
+    );
   }
 
   return (

@@ -80,9 +80,12 @@ export const GRID_DEFAULT_LOCALE_TEXT: GridLocaleText = {
   columnMenuShowColumns: 'Show columns',
   columnMenuFilter: 'Filter',
   columnMenuHideColumn: 'Hide',
+  columnMenuHideColumnCondensed: 'Hide column',
   columnMenuUnsort: 'Unsort',
   columnMenuSortAsc: 'Sort by ASC',
   columnMenuSortDesc: 'Sort by DESC',
+  columnMenuSortCondensedAsc: 'ASC',
+  columnMenuSortCondensedDesc: 'DESC',
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count) =>
@@ -119,7 +122,9 @@ export const GRID_DEFAULT_LOCALE_TEXT: GridLocaleText = {
 
   // Column pinning text
   pinToLeft: 'Pin to left',
+  pinToLeftCondensed: 'Left',
   pinToRight: 'Pin to right',
+  pinToRightCondensed: 'Right',
   unpin: 'Unpin',
 
   // Tree Data

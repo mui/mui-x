@@ -1,13 +1,16 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import MenuItem from '@mui/material/MenuItem';
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
+import ListItemText from '@mui/material/ListItemText';
+import ListItemIcon from '@mui/material/ListItemIcon';
 import { GridFilterItemProps } from './GridFilterItemProps';
 import { useGridApiContext } from '../../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
 import { gridVisibleColumnDefinitionsSelector } from '../../../hooks/features/columns';
 
 const HideGridColMenuItem = (props: GridFilterItemProps) => {
-  const { column, onClick } = props;
+  const { column, onClick, condensed } = props;
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
   const timeoutRef = React.useRef<any>();
@@ -46,6 +49,17 @@ const HideGridColMenuItem = (props: GridFilterItemProps) => {
 
   if (column.hideable === false) {
     return null;
+  }
+
+  if (condensed) {
+    return (
+      <MenuItem onClick={toggleColumn} disabled={disabled}>
+        <ListItemIcon>
+          <VisibilityOffIcon fontSize="small" />
+        </ListItemIcon>
+        <ListItemText>{apiRef.current.getLocaleText('columnMenuHideColumnCondensed')}</ListItemText>
+      </MenuItem>
+    );
   }
 
   return (
