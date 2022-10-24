@@ -26,7 +26,7 @@ function testTextFieldValidation(ElementToTest, propsToTest, getOptions) {
             {...defaultProps}
             value={adapterToUse.date(new Date(2018, 2, 12))}
             shouldDisableDate={(date) =>
-              adapterToUse.isAfter(date as any, adapterToUse.date(new Date(2018, 2, 10)))
+              adapterToUse.isAfter(date, adapterToUse.date(new Date(2018, 2, 10)))
             }
           />,
         );
@@ -192,9 +192,13 @@ function testTextFieldValidation(ElementToTest, propsToTest, getOptions) {
         expect(screen.getByRole('textbox')).to.have.attribute('aria-invalid', 'false');
       });
     }
-    if (propsToTest.includes('minTime') && (getOptions().isLegacyPicker || getOptions().withTime)) {
+    if (propsToTest.includes('minTime')) {
       it('should apply minTime', function test() {
         const { render, withTime } = getOptions();
+
+        if (!isLegacyPicker && !withTime) {
+          return;
+        }
 
         const { setProps } = render(
           <ElementToTest
@@ -213,9 +217,13 @@ function testTextFieldValidation(ElementToTest, propsToTest, getOptions) {
         expect(screen.getByRole('textbox')).to.have.attribute('aria-invalid', 'false');
       });
     }
-    if (propsToTest.includes('maxTime') && (getOptions().isLegacyPicker || getOptions().withTime)) {
+    if (propsToTest.includes('maxTime')) {
       it('should apply maxTime', function test() {
         const { render, withTime } = getOptions();
+
+        if (!isLegacyPicker && !withTime) {
+          return;
+        }
 
         const { setProps } = render(
           <ElementToTest
