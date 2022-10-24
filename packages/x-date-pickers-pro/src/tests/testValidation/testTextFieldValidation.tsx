@@ -409,7 +409,7 @@ function testTextFieldValidation(ElementToTest, propsToTest, getOptions) {
       });
     }
 
-    if (propsToTest.includes('minTime') && (getOptions().isLegacyPicker || getOptions().withTime)) {
+    if (propsToTest.includes('minTime')) {
       it('should apply minTime', function test() {
         const { render, withTime, isSingleInput } = getOptions();
         if (!withTime) {
@@ -517,7 +517,7 @@ function testTextFieldValidation(ElementToTest, propsToTest, getOptions) {
       });
     }
 
-    if (propsToTest.includes('maxTime') && (getOptions().isLegacyPicker || getOptions().withTime)) {
+    if (propsToTest.includes('maxTime')) {
       it('should apply maxTime', function test() {
         const { render, withTime, isSingleInput } = getOptions();
         if (!withTime) {
