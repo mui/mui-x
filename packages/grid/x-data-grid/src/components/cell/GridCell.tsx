@@ -178,7 +178,7 @@ function GridCell(props: GridCellProps) {
     maxHeight: height === 'auto' ? 'none' : height, // max-height doesn't support "auto"
   };
 
-  React.useLayoutEffect(() => {
+  React.useEffect(() => {
     if (!hasFocus || cellMode === GridCellModes.Edit) {
       return;
     }
