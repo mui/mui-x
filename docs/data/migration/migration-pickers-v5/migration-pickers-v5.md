@@ -50,17 +50,17 @@ import { DateTime } from 'luxon';
 The component slot `LeftArrowButton` has been renamed `PreviousIconButton` on all pickers:
 
 ```diff
-<DatePicker
-  components={{
--   LeftArrowButton: CustomButton,
-+   PreviousIconButton: CustomButton,
-  }}
+ <DatePicker
+   components={{
+-    LeftArrowButton: CustomButton,
++    PreviousIconButton: CustomButton,
+   }}
 
-  componentsProps={{
--   leftArrowButton: {},
-+   previousIconButton: {},
-  }}
-/>
+   componentsProps={{
+-    leftArrowButton: {},
++    previousIconButton: {},
+   }}
+ />
 ```
 
 ### Rename the `RightArrowButton` slot
@@ -68,17 +68,17 @@ The component slot `LeftArrowButton` has been renamed `PreviousIconButton` on al
 The component slot `RightArrowButton` has been renamed `NextIconButton` on all pickers:
 
 ```diff
-<DatePicker
-  components={{
--   RightArrowButton: CustomButton,
-+   NextIconButton: CustomButton,
-  }}
+ <DatePicker
+   components={{
+-    RightArrowButton: CustomButton,
++    NextIconButton: CustomButton,
+   }}
 
-  componentsProps={{
--   rightArrowButton: {},
-+   nextIconButton: {},
-  }}
-/>
+   componentsProps={{
+-    rightArrowButton: {},
++    nextIconButton: {},
+   }}
+ />
 ```
 
 ### Replace the `DialogProps` prop
@@ -86,10 +86,10 @@ The component slot `RightArrowButton` has been renamed `NextIconButton` on all p
 The `DialogProps` prop has been replaced by a `dialog` component props on all responsive and mobile pickers:
 
 ```diff
-<DatePicker
+ <DatePicker
 -  DialogProps={{ backgroundColor: 'red' }}
 +  componentsProps={{ dialog: { backgroundColor: 'red }}}
-/>
+ />
 ```
 
 ### Replace the `PaperProps` prop
@@ -97,10 +97,10 @@ The `DialogProps` prop has been replaced by a `dialog` component props on all re
 The `PaperProps` prop has been replaced by a `desktopPaper` component props on all responsive and desktop pickers:
 
 ```diff
-<DatePicker
+ <DatePicker
 -  PaperProps={{ backgroundColor: 'red' }}
 +  componentsProps={{ desktopPaper: { backgroundColor: 'red }}}
-/>
+ />
 ```
 
 ### Replace the `PopperProps` prop
@@ -108,10 +108,10 @@ The `PaperProps` prop has been replaced by a `desktopPaper` component props on a
 The `PopperProps` prop has been replaced by a `popper` component props on all responsive and desktop pickers:
 
 ```diff
-<DatePicker
+ <DatePicker
 -  PopperProps={{ onClick: handleClick }}
 +  componentsProps={{ popper: { onClick: handleClick }}}
-/>
+ />
 ```
 
 ### Replace the `TransitionComponent` prop
@@ -119,10 +119,10 @@ The `PopperProps` prop has been replaced by a `popper` component props on all re
 The `TransitionComponent` prop has been replaced by a `DesktopTransition` component slot on all responsive and desktop pickers:
 
 ```diff
-<DatePicker
+ <DatePicker
 -  TransitionComponent={Fade}
 +  components={{ DesktopTransition: Fade }}
-/>
+ />
 ```
 
 ### Replace the `TrapFocusProps` prop
@@ -130,10 +130,10 @@ The `TransitionComponent` prop has been replaced by a `DesktopTransition` compon
 The `TrapFocusProps` prop has been replaced by a `desktopTrapFocus` component props on all responsive and desktop pickers:
 
 ```diff
-<DatePicker
+ <DatePicker
 -  TrapFocusProps={{ isEnabled: () => false }}
 +  componentsProps={{ desktopTrapFocus: { isEnabled: () => false }}}
-/>
+ />
 ```
 
 ### Replace the `renderDay` prop
@@ -141,10 +141,10 @@ The `TrapFocusProps` prop has been replaced by a `desktopTrapFocus` component pr
 The `renderDay` prop has been replaced by a `Day` component slot on all date, date time and date range pickers:
 
 ```diff
-<DatePicker
+ <DatePicker
 -  renderDay={(_, dayProps) => <CustomDay {...dayProps} />}
 +  components={{ Day: CustomDay }}
-/>
+ />
 ```
 
 ### Rename the localization props
@@ -166,14 +166,14 @@ The props used to set the text displayed in the pickers have been replaced by ke
 For instance if you want to replace the `startText` / `endText`
 
 ```diff
-<DateRangePicker
+ <DateRangePicker
 -  startText="From"
 -  endText="To"
 +  localeText={{
 +    start: 'From',
 +    end: 'To',
 +  }}
-/>
+ />
 ```
 
 ### Rename the `locale` prop on `LocalizationProvider`
@@ -181,13 +181,13 @@ For instance if you want to replace the `startText` / `endText`
 The `locale` prop of the `LocalizationProvider` component have been renamed `adapterLcoale`:
 
 ```diff
-<LocalizationProvider
-  dateAdapter={AdapterDayjs}
+ <LocalizationProvider
+   dateAdapter={AdapterDayjs}
 -  locale="fr"
 +  adapterLocale="fr"
->
-  {children}
-</LocalizationProvider
+ >
+   {children}
+ </LocalizationProvider
 ```
 
 ### Rename the view components
@@ -243,17 +243,17 @@ Component names in the theme have changed as well:
 The `date` prop has been renamed `value` on `MonthPicker`, `YearPicker`, `ClockPicker` and `CalendarPicker`:
 
 ```diff
-- <MonthPicker date={dayjs()} onChange={handleMonthChange} />
-+ <MonthPicker value={dayjs()} onChange={handleMonthChange} />
+-<MonthPicker date={dayjs()} onChange={handleMonthChange} />
++<MonthPicker value={dayjs()} onChange={handleMonthChange} />
 
-- <YearPicker date={dayjs()} onChange={handleYearChange} />
-+ <YearPicker value={dayjs()} onChange={handleYearChange} />
+-<YearPicker date={dayjs()} onChange={handleYearChange} />
++<YearPicker value={dayjs()} onChange={handleYearChange} />
 
-- <ClockPicker date={dayjs()} onChange={handleTimeChange} />
-+ <ClockPicker value={dayjs()} onChange={handleTimeChange} />
+-<ClockPicker date={dayjs()} onChange={handleTimeChange} />
++<ClockPicker value={dayjs()} onChange={handleTimeChange} />
 
-- <CalendarPicker date={dayjs()} onChange={handleDateChange} />
-+ <CalendarPicker value={dayjs()} onChange={handleDateChange} />
+-<CalendarPicker date={dayjs()} onChange={handleDateChange} />
++<CalendarPicker value={dayjs()} onChange={handleDateChange} />
 ```
 
 ### Rename remaining `private` components
@@ -285,24 +285,24 @@ Manual style overriding will need to use updated classes:
 Component name changes are also reflected in `themeAugmentation`:
 
 ```diff
-const theme = createTheme({
-  components: {
--   PrivatePickersMonth: {
-+   MuiPickersMonth: {
-      // overrides
-    },
--   PrivatePickersSlideTransition: {
-+   MuiPickersSlideTransition: {
-      // overrides
-    },
--   PrivatePickersToolbarText: {
-+   MuiPickersToolbarText: {
-      // overrides
-    },
--   PrivatePickersYear: {
-+   MuiPickersYear: {
-      // overrides
-    },
-  },
-});
+ const theme = createTheme({
+   components: {
+-    PrivatePickersMonth: {
++    MuiPickersMonth: {
+       // overrides
+     },
+-    PrivatePickersSlideTransition: {
++    MuiPickersSlideTransition: {
+       // overrides
+     },
+-    PrivatePickersToolbarText: {
++    MuiPickersToolbarText: {
+       // overrides
+     },
+-    PrivatePickersYear: {
++    MuiPickersYear: {
+       // overrides
+     },
+   },
+ });
 ```
