@@ -21,6 +21,18 @@ interface UseDragRangeResponse {
   isDragging?: boolean;
 }
 
+const resolveDateFromEvent = <TDate>(
+  event: React.DragEvent<HTMLButtonElement>,
+  utils: MuiPickersAdapter<TDate>,
+) => {
+  const timestampString = (event.target as HTMLButtonElement).dataset.timestamp;
+  if (timestampString) {
+    const timestamp = +timestampString;
+    return utils.date(new Date(timestamp));
+  }
+  return null;
+};
+
 export const useDragRange = <TDate>({
   disableDragEditing,
   utils,
@@ -31,24 +43,19 @@ export const useDragRange = <TDate>({
   const [isDragging, setIsDragging] = React.useState(false);
 
   const handleDragStart = useEventCallback((event: React.DragEvent<HTMLButtonElement>) => {
-    const timestampString = (event.target as HTMLButtonElement).dataset.timestamp;
-    if (timestampString) {
-      const timestamp = +timestampString;
-      setRangePreviewDay(utils.date(new Date(timestamp)));
+    const newDate = resolveDateFromEvent(event, utils);
+    if (newDate) {
+      setRangePreviewDay(newDate);
+      event.dataTransfer.setData('datePosition', currentDatePosition);
+      event.dataTransfer.effectAllowed = 'move';
+      setIsDragging(true);
     }
-    event.dataTransfer.setData('datePosition', currentDatePosition);
-    event.dataTransfer.effectAllowed = 'move';
-    setIsDragging(true);
   });
   const handleDragEnter = useEventCallback((event: React.DragEvent<HTMLButtonElement>) => {
     event.preventDefault();
     event.stopPropagation();
     event.dataTransfer.dropEffect = 'move';
-    const timestampString = (event.target as HTMLButtonElement).dataset.timestamp;
-    if (timestampString) {
-      const timestamp = +timestampString;
-      setRangePreviewDay(utils.date(new Date(timestamp)));
-    }
+    setRangePreviewDay(resolveDateFromEvent(event, utils));
   });
   const handleDragLeave = useEventCallback((event: React.DragEvent<HTMLButtonElement>) => {
     event.preventDefault();
@@ -69,13 +76,9 @@ export const useDragRange = <TDate>({
   const handleDrop = useEventCallback((event: React.DragEvent<HTMLButtonElement>) => {
     event.preventDefault();
     event.stopPropagation();
-    const timestampString = (event.target as HTMLButtonElement).dataset.timestamp;
-    if (timestampString) {
-      const timestamp = +timestampString;
-      const newDate = utils.date(new Date(timestamp));
-      if (newDate) {
-        handleSelectedDayChange(newDate);
-      }
+    const newDate = resolveDateFromEvent(event, utils);
+    if (newDate) {
+      handleSelectedDayChange(newDate);
     }
   });
 
