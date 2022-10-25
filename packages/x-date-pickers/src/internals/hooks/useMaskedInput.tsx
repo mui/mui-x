@@ -95,7 +95,13 @@ export const useMaskedInput = <TInputDate, TDate>({
     const newParsedValue = rawValue === null ? null : utils.date(rawValue);
     const isAcceptedValue = rawValue === null || utils.isValid(newParsedValue);
 
-    if (!localeHasChanged && (!isAcceptedValue || utils.isEqual(innerInputValue, newParsedValue))) {
+    const innerEqualsParsed =
+      innerInputValue === null
+        ? newParsedValue === null
+        : newParsedValue !== null &&
+          Math.abs(utils.getDiff(innerInputValue, newParsedValue, 'seconds')) === 0;
+
+    if (!localeHasChanged && (!isAcceptedValue || innerEqualsParsed)) {
       return;
     }
 
