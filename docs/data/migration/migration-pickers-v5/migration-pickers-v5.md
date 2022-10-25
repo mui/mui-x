@@ -260,6 +260,7 @@ The `date` prop has been renamed `value` on `MonthPicker`, `YearPicker`, `ClockP
 
 Previously we had 4 component names with `Private` prefix in order to avoid breaking changes in v5.
 These components were renamed:
+
 - `PrivatePickersMonth` -> `MuiPickersMonth`
 - `PrivatePickersSlideTransition` -> `MuiPickersSlideTransition`
 - `PrivatePickersToolbarText` -> `MuiPickersToolbarText`
