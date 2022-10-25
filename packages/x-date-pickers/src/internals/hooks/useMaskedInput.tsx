@@ -91,7 +91,13 @@ export const useMaskedInput = <TDate extends unknown>({
 
     const isAcceptedValue = value === null || utils.isValid(value);
 
-    if (!localeHasChanged && (!isAcceptedValue || utils.isEqual(innerInputValue, value))) {
+    const innerEqualsProvided =
+      innerInputValue === null
+        ? value === null
+        : value !== null &&
+        Math.abs(utils.getDiff(innerInputValue, value, 'seconds')) === 0;
+
+    if (!localeHasChanged && (!isAcceptedValue || innerEqualsProvided)) {
       return;
     }
 
@@ -124,11 +130,11 @@ export const useMaskedInput = <TDate extends unknown>({
   const inputStateArgs = shouldUseMaskedInput
     ? rifmProps
     : {
-        value: innerDisplayedInputValue,
-        onChange: (event: React.ChangeEvent<HTMLInputElement>) => {
-          handleChange(event.currentTarget.value);
-        },
-      };
+      value: innerDisplayedInputValue,
+      onChange: (event: React.ChangeEvent<HTMLInputElement>) => {
+        handleChange(event.currentTarget.value);
+      },
+    };
 
   return {
     label,
