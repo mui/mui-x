@@ -56,20 +56,20 @@ export interface PickersComponentNameToClassKey {
   MuiPickersCalendarHeader: PickersCalendarHeaderClassKey;
   MuiPickersDay: PickersDayClassKey;
   MuiPickersFadeTransitionGroup: PickersFadeTransitionGroupClassKey;
+  MuiPickersMonth: PickersMonthClassKey;
   MuiPickersPopper: PickersPopperClassKey;
+  MuiPickersSlideTransition: PickersSlideTransitionClassKey;
   MuiPickerStaticWrapper: PickerStaticWrapperClassKey;
   MuiPickersToolbar: PickersToolbarClassKey;
   MuiPickersToolbarButton: PickersToolbarButtonClassKey;
+  MuiPickersToolbarText: PickersToolbarTextClassKey;
+  MuiPickersYear: PickersYearClassKey;
   MuiStaticDatePicker: never;
   MuiStaticDateTimePicker: never;
   MuiStaticTimePicker: never;
   MuiTimePicker: never;
   MuiTimePickerToolbar: TimePickerToolbarClassKey;
   MuiYearCalendar: YearCalendarClassKey;
-  PrivatePickersMonth: PickersMonthClassKey;
-  PrivatePickersSlideTransition: PickersSlideTransitionClassKey;
-  PrivatePickersToolbarText: PickersToolbarTextClassKey;
-  PrivatePickersYear: PickersYearClassKey;
 }
 
 declare module '@mui/material/styles' {

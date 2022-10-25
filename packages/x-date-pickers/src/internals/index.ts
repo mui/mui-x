@@ -42,7 +42,10 @@ export type {
   PickersToolbarButtonClassKey,
   PickersToolbarButtonClasses,
 } from './components/pickersToolbarButtonClasses';
-export type { PickersToolbarTextProps } from './components/PickersToolbarText';
+export type {
+  PickersToolbarTextProps,
+  ExportedPickersToolbarTextProps,
+} from './components/PickersToolbarText';
 export { pickersToolbarTextClasses } from './components/pickersToolbarTextClasses';
 export type {
   PickersToolbarTextClassKey,
