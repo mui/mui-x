@@ -8,6 +8,7 @@ interface UseDragRange<TDate> {
   utils: MuiPickersAdapter<TDate>;
   currentDatePosition: DateRangePosition;
   setRangePreviewDay: (value: React.SetStateAction<TDate | null>) => void;
+  setCurrentDatePosition: (value: React.SetStateAction<DateRangePosition>) => void;
   handleSelectedDayChange: (newDate: TDate | null) => void;
 }
 
@@ -37,6 +38,7 @@ export const useDragRange = <TDate>({
   disableDragEditing,
   utils,
   currentDatePosition,
+  setCurrentDatePosition,
   setRangePreviewDay,
   handleSelectedDayChange,
 }: UseDragRange<TDate>): UseDragRangeResponse => {
@@ -46,9 +48,12 @@ export const useDragRange = <TDate>({
     const newDate = resolveDateFromEvent(event, utils);
     if (newDate) {
       setRangePreviewDay(newDate);
-      event.dataTransfer.setData('datePosition', currentDatePosition);
       event.dataTransfer.effectAllowed = 'move';
       setIsDragging(true);
+      const datePosition = (event.target as HTMLButtonElement).dataset.position as DateRangePosition;
+      if (datePosition && currentDatePosition !== datePosition) {
+        setCurrentDatePosition(datePosition);
+      }
     }
   });
   const handleDragEnter = useEventCallback((event: React.DragEvent<HTMLButtonElement>) => {
