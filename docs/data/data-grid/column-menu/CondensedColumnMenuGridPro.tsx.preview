@@ -1,0 +1,4 @@
+<DataGridPremium 
+  {...data} 
+  componentsProps={{ columnMenu: { condensed: true } }}
+/>
