@@ -255,3 +255,53 @@ The `date` prop has been renamed `value` on `MonthPicker`, `YearPicker`, `ClockP
 - <CalendarPicker date={dayjs()} onChange={handleDateChange} />
 + <CalendarPicker value={dayjs()} onChange={handleDateChange} />
 ```
+
+### Rename remaining `private` components
+
+Previously we had 4 component names with `Private` prefix in order to avoid breaking changes in v5.
+These components were renamed:
+- `PrivatePickersMonth` -> `MuiPickersMonth`
+- `PrivatePickersSlideTransition` -> `MuiPickersSlideTransition`
+- `PrivatePickersToolbarText` -> `MuiPickersToolbarText`
+- `PrivatePickersYear` -> `MuiPickersYear`
+
+Manual style overriding will need to use updated classes:
+
+```diff
+-.PrivatePickersMonth-root {
++.MuiPickersMonth-root {
+
+-.PrivatePickersSlideTransition-root {
++.MuiPickersSlideTransition-root {
+
+-.PrivatePickersToolbarText-root {
++.MuiPickersToolbarText-root {
+
+-.PrivatePickersYear-root {
++.MuiPickersYear-root {
+```
+
+Component name changes are also reflected in `themeAugmentation`:
+
+```diff
+const theme = createTheme({
+  components: {
+-   PrivatePickersMonth: {
++   MuiPickersMonth: {
+      // overrides
+    },
+-   PrivatePickersSlideTransition: {
++   MuiPickersSlideTransition: {
+      // overrides
+    },
+-   PrivatePickersToolbarText: {
++   MuiPickersToolbarText: {
+      // overrides
+    },
+-   PrivatePickersYear: {
++   MuiPickersYear: {
+      // overrides
+    },
+  },
+});
+```
