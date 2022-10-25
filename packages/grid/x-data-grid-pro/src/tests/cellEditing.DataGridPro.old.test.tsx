@@ -382,13 +382,12 @@ describe('<DataGridPro /> - Cell Editing', () => {
     expect(cell.querySelector('input')!.value).to.equal('n');
     clock.tick(500);
     fireEvent.keyDown(input, { key: 'Enter' });
+    await act(() => Promise.resolve());
 
-    await waitFor(() => {
-      expect(cell).to.have.class('MuiDataGrid-cell--editable');
-      expect(cell).not.to.have.class('MuiDataGrid-cell--editing');
-      expect(cell).to.have.text('n');
-      expect(getActiveCell()).to.equal('2-0');
-    });
+    expect(cell).to.have.class('MuiDataGrid-cell--editable');
+    expect(cell).not.to.have.class('MuiDataGrid-cell--editing');
+    expect(cell).to.have.text('n');
+    expect(getActiveCell()).to.equal('2-0');
   });
 
   it('should allow to save an edit changes using Tab', async () => {
