@@ -181,6 +181,11 @@ jobs:
       - run:
           name: '`yarn l10n` changes committed?'
           command: git diff --exit-code
+      - run:
+          name: '`yarn docs:link-check` changes committed?'
+          command: |
+            yarn docs:link-check
+            git diff --exit-code
   test_browser:
     <<: *defaults
     docker:

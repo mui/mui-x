@@ -1,5 +1,5 @@
 {
-  "version": "6.0.0-alpha.3",
+  "version": "6.0.0-alpha.4",
   "private": true,
   "scripts": {
     "start": "yarn && yarn docs:dev",
@@ -9,6 +9,7 @@
     "docs:create-playground": "yarn workspace docs create-playground",
     "docs:api": "yarn docs:api:build",
     "docs:api:build": "cross-env BABEL_ENV=development babel-node -i \"/node_modules/(?!@mui)/\" -x .ts,.tsx,.js ./docs/scripts/api/buildApi.ts",
+    "docs:link-check": "cross-env BABEL_ENV=development babel-node -i \"/node_modules/(?!@mui)/\" --extensions \".tsx,.ts,.js\" ./docs/scripts/reportBrokenLinks.js",
     "docs:build": "yarn workspace docs build",
     "docs:export": "yarn workspace docs export",
     "docs:typescript:formatted": "yarn workspace docs typescript:transpile",
