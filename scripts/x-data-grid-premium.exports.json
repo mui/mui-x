@@ -545,6 +545,7 @@
   { "name": "heIL", "kind": "Variable" },
   { "name": "HideGridColMenuItem", "kind": "Variable" },
   { "name": "huHU", "kind": "Variable" },
+  { "name": "insertItemsInMenu", "kind": "Variable" },
   { "name": "isLeaf", "kind": "Function" },
   { "name": "itIT", "kind": "Variable" },
   { "name": "jaJP", "kind": "Variable" },
