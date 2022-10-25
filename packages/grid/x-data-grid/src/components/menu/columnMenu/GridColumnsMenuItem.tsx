@@ -70,6 +70,7 @@ GridColumnsMenuItem.propTypes = {
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
   column: PropTypes.object.isRequired,
+  condensed: PropTypes.bool,
   onClick: PropTypes.func.isRequired,
 } as any;
 

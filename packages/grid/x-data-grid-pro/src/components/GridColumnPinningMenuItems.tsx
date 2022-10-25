@@ -123,6 +123,7 @@ GridColumnPinningMenuItems.propTypes = {
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
   column: PropTypes.object,
+  condensed: PropTypes.bool,
   onClick: PropTypes.func,
 } as any;
 
