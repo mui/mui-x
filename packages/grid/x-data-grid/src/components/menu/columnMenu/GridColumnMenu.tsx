@@ -22,12 +22,12 @@ const GridColumnMenu = React.forwardRef<HTMLUListElement, GridColumnMenuProps>(
     ];
 
     const condensedButtons = [
-      <HideGridColMenuItem onClick={hideMenu} column={currentColumn!} condensed={condensed} />,
-      <Divider />,
       <SortGridMenuItems onClick={hideMenu} column={currentColumn!} condensed={condensed} />,
       <Divider sx={{ my: 1 }} />,
       <GridFilterMenuItem onClick={hideMenu} column={currentColumn!} condensed={condensed} />,
       <Divider />,
+      <HideGridColMenuItem onClick={hideMenu} column={currentColumn!} condensed={condensed} />,
+      <Divider sx={{ borderColor: 'grey.400' }} />,
       <GridColumnsMenuItem onClick={hideMenu} column={currentColumn!} condensed={condensed} />,
     ];
 

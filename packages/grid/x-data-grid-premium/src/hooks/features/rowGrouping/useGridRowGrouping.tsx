@@ -5,6 +5,7 @@ import {
   useGridApiEventHandler,
   useGridApiMethod,
   gridColumnLookupSelector,
+  insertItemsInMenu,
 } from '@mui/x-data-grid-pro';
 import {
   useGridRegisterPipeProcessor,
@@ -163,20 +164,25 @@ export const useGridRowGrouping = (
         return initialValue;
       }
 
-      let menuItems: React.ReactNode;
+      let menuItem: React.ReactNode;
       if (isGroupingColumn(column.field)) {
-        menuItems = <GridRowGroupingColumnMenuItems />;
+        menuItem = <GridRowGroupingColumnMenuItems />;
       } else if (column.groupable) {
-        menuItems = <GridRowGroupableColumnMenuItems />;
+        menuItem = <GridRowGroupableColumnMenuItems />;
       } else {
-        menuItems = null;
+        menuItem = null;
       }
 
-      if (menuItems == null) {
+      if (menuItem == null) {
         return initialValue;
       }
 
-      return [...initialValue, <Divider sx={{ py: '6px' }} />, menuItems];
+      return insertItemsInMenu(
+        initialValue,
+        [<Divider sx={{ my: '9px' }} />, menuItem],
+        'GridAggregationColumnMenuItem',
+      );
+      // return [...initialValue, <Divider sx={{ py: '6px' }} />, menuItem];
     },
     [props.disableRowGrouping],
   );

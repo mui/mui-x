@@ -31,12 +31,18 @@ const GridColumnsMenuItem = (props: GridFilterItemProps) => {
       <MenuItem
         onClick={showColumns}
         sx={{
+          py: 0,
           color: 'common.black',
+          display: 'flex',
+          justifyContent: 'center',
           '& .MuiSvgIcon-root': {
             color: 'grey.700',
           },
           '& .MuiListItemIcon-root': {
             minWidth: '29px',
+          },
+          '& .MuiListItemText-root': {
+            flex: 'none',
           },
           '& .MuiTypography-root': {
             fontSize: '16px',

@@ -1,9 +1,11 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import MenuItem from '@mui/material/MenuItem';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
+import Button from '@mui/material/Button';
+import IconButton from '@mui/material/IconButton';
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
+import ClearIcon from '@mui/icons-material/Clear';
+import Stack from '@mui/material/Stack';
 import { useGridApiContext } from '../../../hooks/utils/useGridApiContext';
 import { useGridSelector } from '../../../hooks/utils/useGridSelector';
 import { gridFilterModelSelector } from '../../../hooks/features/filter/gridFilterSelector';
@@ -16,6 +18,13 @@ const GridFilterMenuItem = (props: GridFilterItemProps) => {
   const rootProps = useGridRootProps();
   const filterModel = useGridSelector(apiRef, gridFilterModelSelector);
 
+  const isColumnFiltered = React.useMemo(() => {
+    if (filterModel.items.length <= 0) {
+      return false;
+    }
+    return filterModel.items.some((item) => item.columnField === column.field);
+  }, [column.field, filterModel.items]);
+
   const showFilter = React.useCallback(
     (event: React.MouseEvent<HTMLElement>) => {
       onClick(event);
@@ -24,32 +33,54 @@ const GridFilterMenuItem = (props: GridFilterItemProps) => {
     [apiRef, column?.field, onClick],
   );
 
+  const clearFilters = React.useCallback(() => {
+    if (isColumnFiltered) {
+      apiRef.current.upsertFilterItems(
+        filterModel.items.filter((item) => item.columnField !== column.field),
+      );
+    }
+  }, [apiRef, column.field, filterModel.items, isColumnFiltered]);
+
   if (rootProps.disableColumnFilter || !column?.filterable) {
     return null;
   }
 
   if (condensed) {
     return (
-      <MenuItem
-        onClick={showFilter}
+      <Stack
+        px={1.5}
+        direction="row"
+        justifyContent="space-between"
         sx={{
-          color: filterModel.items?.length > 0 ? 'primary.main' : 'common.black',
-          '& .MuiSvgIcon-root': {
-            color: filterModel.items?.length > 0 ? 'primary.main' : 'grey.700',
-          },
-          '& .MuiListItemIcon-root': {
-            minWidth: '29px',
-          },
-          '& .MuiTypography-root': {
+          '& .MuiButton-root': {
             fontSize: '16px',
+            fontWeight: '400',
+            textTransform: 'none',
           },
         }}
       >
-        <ListItemIcon>
-          <FilterAltIcon fontSize="small" />
-        </ListItemIcon>
-        <ListItemText>{apiRef.current.getLocaleText('columnMenuFilter')}</ListItemText>
-      </MenuItem>
+        <Button
+          onClick={showFilter}
+          startIcon={<FilterAltIcon fontSize="small" />}
+          sx={{
+            color: isColumnFiltered ? 'primary.main' : 'common.black',
+            '& .MuiSvgIcon-root': {
+              transform: 'rotate(30deg)',
+              color: isColumnFiltered ? 'primary.main' : 'grey.700',
+            },
+          }}
+        >
+          {apiRef.current.getLocaleText('columnMenuFilter')}
+        </Button>
+        <IconButton
+          aria-label="clear aggregate"
+          onClick={clearFilters}
+          disabled={!isColumnFiltered}
+          sx={{ color: 'grey.700' }}
+        >
+          <ClearIcon fontSize="small" />
+        </IconButton>
+      </Stack>
     );
   }
 

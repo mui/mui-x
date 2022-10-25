@@ -1,6 +1,6 @@
 import * as React from 'react';
-import MuiDivider from '@mui/material/Divider';
-import { gridColumnLookupSelector } from '@mui/x-data-grid-pro';
+import MuiDivider, { DividerProps } from '@mui/material/Divider';
+import { gridColumnLookupSelector, insertItemsInMenu } from '@mui/x-data-grid-pro';
 import {
   GridPipeProcessor,
   GridRestoreStatePreProcessingContext,
@@ -22,7 +22,9 @@ import { GridAggregationColumnMenuItem } from '../../../components/GridAggregati
 import { gridAggregationModelSelector } from './gridAggregationSelectors';
 import { GridInitialStatePremium } from '../../../models/gridStatePremium';
 
-const Divider = () => <MuiDivider onClick={(event) => event.stopPropagation()} />;
+const Divider = (props: DividerProps) => (
+  <MuiDivider {...props} onClick={(event) => event.stopPropagation()} />
+);
 
 export const useGridAggregationPreProcessors = (
   apiRef: React.MutableRefObject<GridApiPremium>,
@@ -124,18 +126,37 @@ export const useGridAggregationPreProcessors = (
 
       const condensed = props.componentsProps?.columnMenu?.condensed ?? false;
 
-      return [
-        ...columnMenuItems,
-        <Divider />,
-        <GridAggregationColumnMenuItem
-          column={column}
-          label={apiRef.current.getLocaleText('aggregationMenuItemHeader')}
-          availableAggregationFunctions={availableAggregationFunctions}
-          condensed={condensed}
-        />,
-      ];
+      return insertItemsInMenu(
+        columnMenuItems,
+        [
+          <Divider sx={{ mt: '6px' }} />,
+          <GridAggregationColumnMenuItem
+            column={column}
+            label={apiRef.current.getLocaleText('aggregationMenuItemHeader')}
+            availableAggregationFunctions={availableAggregationFunctions}
+            condensed={condensed}
+          />,
+        ],
+        'GridFilterMenuItem',
+      );
+
+      // return [
+      //   ...columnMenuItems,
+      //   <Divider />,
+      //   <GridAggregationColumnMenuItem
+      //     column={column}
+      //     label={apiRef.current.getLocaleText('aggregationMenuItemHeader')}
+      //     availableAggregationFunctions={availableAggregationFunctions}
+      //     condensed={condensed}
+      //   />,
+      // ];
     },
-    [apiRef, props.aggregationFunctions, props.disableAggregation],
+    [
+      apiRef,
+      props.aggregationFunctions,
+      props.componentsProps?.columnMenu?.condensed,
+      props.disableAggregation,
+    ],
   );
 
   const stateExportPreProcessing = React.useCallback<GridPipeProcessor<'exportState'>>(

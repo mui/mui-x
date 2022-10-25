@@ -2,9 +2,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
-import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
-import ClearIcon from '@mui/icons-material/Clear';
 import MenuItem from '@mui/material/MenuItem';
 import PushPinIcon from '@mui/icons-material/PushPin';
 import { GridColDef } from '@mui/x-data-grid';
@@ -24,7 +22,7 @@ const GridColumnPinningMenuItems = (props: GridColumnPinningMenuItemsProps) => {
   const pinColumn = (side: GridPinnedPosition) => (event: React.MouseEvent<HTMLElement>) => {
     apiRef.current.pinColumn(column!.field, side);
 
-    if (onClick && !condensed) {
+    if (onClick) {
       onClick(event);
     }
   };
@@ -32,7 +30,7 @@ const GridColumnPinningMenuItems = (props: GridColumnPinningMenuItemsProps) => {
   const unpinColumn = (event: React.MouseEvent<HTMLElement>) => {
     apiRef.current.unpinColumn(column!.field);
 
-    if (onClick && !condensed) {
+    if (onClick) {
       onClick(event);
     }
   };
@@ -49,59 +47,46 @@ const GridColumnPinningMenuItems = (props: GridColumnPinningMenuItemsProps) => {
         <Typography color="text.secondary" fontSize="12px">
           Pin to
         </Typography>
-        <Stack direction="row" justifyContent="space-between" minWidth={'248px'}>
-          <Stack
-            direction="row"
+        <Stack
+          direction="row"
+          sx={{
+            '& .MuiButton-root': {
+              fontSize: '16px',
+              fontWeight: '400',
+              textTransform: 'none',
+            },
+          }}
+        >
+          <Button
+            onClick={
+              side === GridPinnedPosition.left ? unpinColumn : pinColumn(GridPinnedPosition.left)
+            }
+            startIcon={<PushPinIcon />}
             sx={{
-              '& .MuiButton-root': {
-                fontSize: '16px',
-                fontWeight: '400',
-                color: 'common.black',
-                '&.Mui-disabled': {
-                  color: 'primary.main',
-                  '& .MuiSvgIcon-root': {
-                    color: 'primary.main',
-                  },
-                },
-                '& .MuiSvgIcon-root': {
-                  color: 'grey.700',
-                },
+              color: side === GridPinnedPosition.left ? 'primary.main' : 'common.black',
+              '& .MuiSvgIcon-root': {
+                transform: 'rotate(30deg)',
+                color: side === GridPinnedPosition.left ? 'primary.main' : 'grey.700',
               },
             }}
           >
-            <Button
-              onClick={pinColumn(GridPinnedPosition.left)}
-              startIcon={<PushPinIcon />}
-              disabled={side === GridPinnedPosition.left}
-              sx={{
-                '& .MuiSvgIcon-root': {
-                  transform: 'rotate(30deg)',
-                },
-              }}
-            >
-              {apiRef.current.getLocaleText('pinToLeftCondensed')}
-            </Button>
-            <Button
-              onClick={pinColumn(GridPinnedPosition.right)}
-              startIcon={<PushPinIcon />}
-              disabled={side === GridPinnedPosition.right}
-              sx={{
-                '& .MuiSvgIcon-root': {
-                  transform: 'rotate(-30deg)',
-                },
-              }}
-            >
-              {apiRef.current.getLocaleText('pinToRightCondensed')}
-            </Button>
-          </Stack>
-          <IconButton
-            aria-label="unpin"
-            onClick={unpinColumn}
-            disabled={!side}
-            sx={{ color: 'grey.700' }}
+            {apiRef.current.getLocaleText('pinToLeftCondensed')}
+          </Button>
+          <Button
+            onClick={
+              side === GridPinnedPosition.right ? unpinColumn : pinColumn(GridPinnedPosition.right)
+            }
+            startIcon={<PushPinIcon />}
+            sx={{
+              color: side === GridPinnedPosition.right ? 'primary.main' : 'common.black',
+              '& .MuiSvgIcon-root': {
+                transform: 'rotate(-30deg)',
+                color: side === GridPinnedPosition.right ? 'primary.main' : 'grey.700',
+              },
+            }}
           >
-            <ClearIcon fontSize="small" />
-          </IconButton>
+            {apiRef.current.getLocaleText('pinToRightCondensed')}
+          </Button>
         </Stack>
       </Stack>
     );

@@ -1,0 +1,1 @@
+export { insertItemsInMenu } from './insertItemsInMenu';

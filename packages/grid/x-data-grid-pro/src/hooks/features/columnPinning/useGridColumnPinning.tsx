@@ -29,6 +29,7 @@ import {
 } from './gridColumnPinningInterface';
 import { gridPinnedColumnsSelector } from './gridColumnPinningSelector';
 import { filterColumns } from '../../../components/DataGridProVirtualScroller';
+import { insertItemsInMenu } from '../../../utils';
 
 const Divider = (props: DividerProps) => (
   <MuiDivider {...props} onClick={(event) => event.stopPropagation()} />
@@ -188,17 +189,22 @@ export const useGridColumnPinning = (
       const condensed = props.componentsProps?.columnMenu?.condensed ?? false;
 
       // Insert `pin to` after `sort by`, researching alternate solution
-      return columnMenuItems.reduce((finalItems, columnMenuItem: any) => {
-        if (columnMenuItem?.type?.name === 'SortGridMenuItems') {
-          return [
-            ...finalItems,
-            columnMenuItem,
-            <Divider sx={{ my: 1 }} />,
-            <GridColumnPinningMenuItems condensed={condensed} />,
-          ];
-        }
-        return [...finalItems, columnMenuItem];
-      }, [] as any);
+      return insertItemsInMenu(
+        columnMenuItems,
+        [<Divider sx={{ my: 1 }} />, <GridColumnPinningMenuItems condensed={condensed} />],
+        'SortGridMenuItems',
+      );
+      // return columnMenuItems.reduce((finalItems, columnMenuItem: any) => {
+      //   if (columnMenuItem?.type?.name === 'SortGridMenuItems') {
+      //     return [
+      //       ...finalItems,
+      //       columnMenuItem,
+      //       <Divider sx={{ my: 1 }} variant="middle" />,
+      //       <GridColumnPinningMenuItems condensed={condensed} />,
+      //     ];
+      //   }
+      //   return [...finalItems, columnMenuItem];
+      // }, [] as any);
 
       // return [...initialValue, <Divider />, <GridColumnPinningMenuItems condensed={condensed} />];
     },

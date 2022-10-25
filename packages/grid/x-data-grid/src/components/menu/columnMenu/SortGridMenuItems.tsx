@@ -2,12 +2,10 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
-import IconButton from '@mui/material/IconButton';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
-import ClearIcon from '@mui/icons-material/Clear';
 import MenuItem from '@mui/material/MenuItem';
-import { Typography } from '@mui/material';
+import Typography from '@mui/material/Typography';
 import { useGridSelector } from '../../../hooks/utils/useGridSelector';
 import { gridSortModelSelector } from '../../../hooks/features/sorting/gridSortingSelector';
 import { GridSortDirection } from '../../../models/gridSortModel';
@@ -34,9 +32,12 @@ const SortGridMenuItems = (props: GridFilterItemProps) => {
         onClick(event);
       }
       const direction = event.currentTarget.getAttribute('data-value') || null;
-      apiRef.current.sortColumn(column!, direction as GridSortDirection);
+      apiRef.current.sortColumn(
+        column!,
+        (direction === sortDirection ? null : direction) as GridSortDirection,
+      );
     },
-    [apiRef, column, onClick, condensed],
+    [apiRef, column, onClick, sortDirection, condensed],
   );
 
   if (!column || !column.sortable) {
@@ -49,44 +50,31 @@ const SortGridMenuItems = (props: GridFilterItemProps) => {
         <Typography color="text.secondary" fontSize="12px">
           Sort by
         </Typography>
-        <Stack direction="row" justifyContent="space-between" minWidth={'248px'}>
-          <Stack
-            direction="row"
-            sx={{
-              '& .MuiButton-root': {
-                fontSize: '16px',
-                fontWeight: '400',
-                color: 'common.black',
-                '&.Mui-disabled': { color: 'primary.main' },
-              },
-            }}
-          >
-            <Button
-              onClick={onSortMenuItemClick}
-              data-value="asc"
-              startIcon={<ArrowUpwardIcon fontSize="small" />}
-              disabled={sortDirection === 'asc'}
-            >
-              {apiRef.current.getLocaleText('columnMenuSortCondensedAsc')}
-            </Button>
-            <Button
-              onClick={onSortMenuItemClick}
-              data-value="desc"
-              startIcon={<ArrowDownwardIcon />}
-              disabled={sortDirection === 'desc'}
-            >
-              {apiRef.current.getLocaleText('columnMenuSortCondensedDesc')}
-            </Button>
-          </Stack>
-          <IconButton
-            aria-label="unsort"
+        <Stack
+          direction="row"
+          sx={{
+            '& .MuiButton-root': {
+              fontSize: '16px',
+              fontWeight: '400',
+            },
+          }}
+        >
+          <Button
             onClick={onSortMenuItemClick}
-            disabled={sortDirection == null}
-            sx={{ color: 'grey.700' }}
-            centerRipple={false}
+            data-value="asc"
+            startIcon={<ArrowUpwardIcon fontSize="small" />}
+            sx={{ color: sortDirection === 'asc' ? 'primary.main' : 'common.black' }}
           >
-            <ClearIcon fontSize="small" />
-          </IconButton>
+            {apiRef.current.getLocaleText('columnMenuSortCondensedAsc')}
+          </Button>
+          <Button
+            onClick={onSortMenuItemClick}
+            data-value="desc"
+            startIcon={<ArrowDownwardIcon />}
+            sx={{ color: sortDirection === 'desc' ? 'primary.main' : 'common.black' }}
+          >
+            {apiRef.current.getLocaleText('columnMenuSortCondensedDesc')}
+          </Button>
         </Stack>
       </Stack>
     );

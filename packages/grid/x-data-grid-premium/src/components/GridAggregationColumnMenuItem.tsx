@@ -100,7 +100,7 @@ export const GridAggregationColumnMenuItem = (props: GridAggregationColumnMenuIt
   );
   if (condensed) {
     return (
-      <Stack justifyContent="space-between" direction="row" px="12px">
+      <Stack justifyContent="space-between" direction="row" px="12px" alignItems="flex-end">
         {renderFormControl()}
         <IconButton
           aria-label="clear aggregate"
