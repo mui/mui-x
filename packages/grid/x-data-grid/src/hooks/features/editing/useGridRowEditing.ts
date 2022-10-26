@@ -60,7 +60,6 @@ export const useGridRowEditing = (
     | 'rowModesModel'
     | 'onRowModesModelChange'
     | 'signature'
-    | 'disableIgnoreModificationsIfProcessingProps'
   >,
 ) => {
   const [rowModesModel, setRowModesModel] = React.useState<GridRowModesModel>({});
@@ -286,19 +285,11 @@ export const useGridRowEditing = (
         cellToFocusAfter = 'left';
       }
 
-      let ignoreModifications = reason === 'escapeKeyDown';
-      const editingState = gridEditRowsStateSelector(apiRef.current.state);
-      if (!ignoreModifications && !props.disableIgnoreModificationsIfProcessingProps) {
-        // The user wants to stop editing the cell but we can't wait for the props to be processed.
-        // In this case, discard the modifications if any field is processing its props.
-        ignoreModifications = Object.values(editingState[id]).some((fieldProps) => {
-          return fieldProps.isProcessingProps;
-        });
-      }
+      const ignoreModifications = reason === 'escapeKeyDown';
 
       apiRef.current.stopRowEditMode({ id, ignoreModifications, field, cellToFocusAfter });
     },
-    [apiRef, props.disableIgnoreModificationsIfProcessingProps],
+    [apiRef],
   );
 
   useGridApiEventHandler(apiRef, 'cellDoubleClick', runIfEditModeIsRow(handleCellDoubleClick));
