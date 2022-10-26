@@ -23,6 +23,6 @@ jobs:
         with:
           dirtyLabel: 'PR: out-of-date'
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
-          commentOnDirty: "This pull request has conflicts, please resolve those before we can evaluate the pull request."
+          commentOnDirty: 'This pull request has conflicts, please resolve those before we can evaluate the pull request.'
           retryAfter: 130
           retryMax: 10
