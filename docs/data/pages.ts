@@ -156,8 +156,6 @@ const pages: MuiPage[] = [
       { pathname: '/x/react-date-pickers/date-time-picker' },
       { pathname: '/x/react-date-pickers/time-picker' },
       { pathname: '/x/react-date-pickers/validation' },
-      { pathname: '/x/react-date-pickers/localization' },
-      { pathname: '/x/react-date-pickers/adapters' },
       { pathname: '/x/react-date-pickers/custom-components' },
       {
         pathname: '/x/react-date-pickers/date-time-range-picker',
@@ -201,6 +199,22 @@ const pages: MuiPage[] = [
             pathname: '/x/react-date-pickers/date-time-range-field',
             title: 'Date Time Range Field',
             plan: 'pro',
+          },
+        ],
+      },
+      {
+        pathname: '/x/react-date-pickers/localization',
+        title: 'Localization / date manipulation',
+        scopePathnames: ['/x/react-date-pickers/adapters-locale'],
+        children: [
+          { pathname: '/x/react-date-pickers/adapters', title: 'Library to manipulate dates' },
+          {
+            pathname: '/x/react-date-pickers/adapters-locale',
+            title: 'Localized dates',
+          },
+          {
+            pathname: '/x/react-date-pickers/localization',
+            title: 'Translated components',
           },
         ],
       },
