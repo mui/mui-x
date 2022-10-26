@@ -234,10 +234,6 @@ GridActionsCell.propTypes = {
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
   /**
-   * GridApi that let you manipulate the grid.
-   */
-  api: PropTypes.any.isRequired,
-  /**
    * The mode of the cell.
    */
   cellMode: PropTypes.oneOf(['edit', 'view']).isRequired,
