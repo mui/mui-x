@@ -101,7 +101,7 @@ export function useGridColumns(
 
       apiRef.current.setState(mergeColumnsState(columnsState));
       apiRef.current.forceUpdate();
-      apiRef.current.publishEvent('columnsChange', columnsState.all);
+      apiRef.current.publishEvent('columnsChange', columnsState.orderedFields);
     },
     [logger, apiRef],
   );
@@ -216,7 +216,10 @@ export function useGridColumns(
       const updatedColumns = [...allColumns];
       const fieldRemoved = updatedColumns.splice(oldIndexPosition, 1)[0];
       updatedColumns.splice(targetIndexPosition, 0, fieldRemoved);
-      setGridColumnsState({ ...gridColumnsSelector(apiRef.current.state), all: updatedColumns });
+      setGridColumnsState({
+        ...gridColumnsSelector(apiRef.current.state),
+        orderedFields: updatedColumns,
+      });
 
       const params: GridColumnOrderChangeParams = {
         field,
@@ -337,7 +340,7 @@ export function useGridColumns(
       apiRef.current.setState(mergeColumnsState(columnsState));
 
       if (initialState != null) {
-        apiRef.current.publishEvent('columnsChange', columnsState.all);
+        apiRef.current.publishEvent('columnsChange', columnsState.orderedFields);
       }
 
       return params;

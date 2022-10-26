@@ -278,6 +278,10 @@ const pages: MuiPage[] = [
         subheader: 'Upgrade to v6',
         children: [
           { pathname: '/x/migration/migration-data-grid-v5', title: 'Breaking changes: Data Grid' },
+          {
+            pathname: '/x/migration/migration-pickers-v5',
+            title: 'Breaking changes: Date and Time Pickers',
+          },
         ],
       },
       {
@@ -286,7 +290,7 @@ const pages: MuiPage[] = [
         children: [
           {
             pathname: '/x/migration/migration-pickers-lab',
-            title: 'Migration from lab to v5 (pickers)',
+            title: 'Migration from lab to v5 (Date & Time Pickers)',
           },
           {
             pathname: '/x/migration/migration-data-grid-v4',
