@@ -257,10 +257,12 @@ export const useGridRowEditing = (
       const startRowEditModeParams: GridStartRowEditModeParams = { id, fieldToFocus: field };
 
       if (reason === GridRowEditStartReasons.printableKeyDown) {
-        if (React.version.startsWith('18')) {
-          startRowEditModeParams.initialValue = key; // In React 17, cleaning the input is enough
-        } else {
+        if (React.version.startsWith('17')) {
+          // In React 17, cleaning the input is enough.
+          // The sequence of events makes the key pressed by the end-users update the textbox directly.
           startRowEditModeParams.deleteValue = !!field;
+        } else {
+          startRowEditModeParams.initialValue = key;
         }
       } else if (reason === GridRowEditStartReasons.deleteKeyDown) {
         startRowEditModeParams.deleteValue = !!field;
