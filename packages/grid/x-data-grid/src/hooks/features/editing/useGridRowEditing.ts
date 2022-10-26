@@ -235,7 +235,12 @@ export const useGridRowEditing = (
 
         if (reason) {
           const rowParams = apiRef.current.getRowParams(params.id);
-          const newParams: GridRowEditStartParams = { ...rowParams, field: params.field, reason };
+          const newParams: GridRowEditStartParams = {
+            ...rowParams,
+            field: params.field,
+            key: event.key,
+            reason,
+          };
           apiRef.current.publishEvent('rowEditStart', newParams, event);
         }
       }
@@ -245,14 +250,17 @@ export const useGridRowEditing = (
 
   const handleRowEditStart = React.useCallback<GridEventListener<'rowEditStart'>>(
     (params) => {
-      const { id, field, reason } = params;
+      const { id, field, reason, key } = params;
 
       const startRowEditModeParams: GridStartRowEditModeParams = { id, fieldToFocus: field };
 
-      if (
-        reason === GridRowEditStartReasons.deleteKeyDown ||
-        reason === GridRowEditStartReasons.printableKeyDown
-      ) {
+      if (reason === GridRowEditStartReasons.printableKeyDown) {
+        if (React.version.startsWith('18')) {
+          startRowEditModeParams.initialValue = key; // In React 17, cleaning the input is enough
+        } else {
+          startRowEditModeParams.deleteValue = !!field;
+        }
+      } else if (reason === GridRowEditStartReasons.deleteKeyDown) {
         startRowEditModeParams.deleteValue = !!field;
       }
 
@@ -397,7 +405,7 @@ export const useGridRowEditing = (
 
   const updateStateToStartRowEditMode = useEventCallback<[GridStartRowEditModeParams], void>(
     (params) => {
-      const { id, fieldToFocus, deleteValue } = params;
+      const { id, fieldToFocus, deleteValue, initialValue } = params;
 
       const columnFields = gridColumnFieldsSelector(apiRef);
 
@@ -407,10 +415,13 @@ export const useGridRowEditing = (
           return acc;
         }
 
-        const shouldDeleteValue = deleteValue && fieldToFocus === field;
+        let newValue = apiRef.current.getCellValue(id, field);
+        if (fieldToFocus === field && (deleteValue || initialValue)) {
+          newValue = deleteValue ? '' : initialValue;
+        }
 
         acc[field] = {
-          value: shouldDeleteValue ? '' : apiRef.current.getCellValue(id, field),
+          value: newValue,
           error: false,
           isProcessingProps: false,
         };

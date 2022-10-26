@@ -4,7 +4,15 @@ import {
   unstable_useDateField as useDateField,
   UseDateFieldComponentProps,
 } from '@mui/x-date-pickers/DateField';
-import { useValidation } from '@mui/x-date-pickers/internals';
+import {
+  DateValidationError,
+  useLocalizationContext,
+  useValidation,
+} from '@mui/x-date-pickers/internals';
+import {
+  FieldChangeHandler,
+  FieldChangeHandlerContext,
+} from '@mui/x-date-pickers/internals-fields';
 import { useDefaultizedDateRangeFieldProps } from '../../../SingleInputDateRangeField/useSingleInputDateRangeField';
 import { UseMultiInputDateRangeFieldParams } from '../../../MultiInputDateRangeField/MultiInputDateRangeField.types';
 import { DateRange } from '../../models/range';
@@ -14,7 +22,7 @@ import {
   validateDateRange,
 } from '../validation/useDateRangeValidation';
 import { dateRangePickerValueManager } from '../../../DateRangePicker/shared';
-import { dateRangeFieldValueManager } from '../valueManager/dateRangeValueManager';
+import type { UseMultiInputRangeFieldResponse } from './useMultiInputRangeField.types';
 
 export const useMultiInputDateRangeField = <TDate, TChildProps extends {}>({
   sharedProps: inSharedProps,
@@ -22,26 +30,41 @@ export const useMultiInputDateRangeField = <TDate, TChildProps extends {}>({
   endInputProps: inEndInputProps,
   startInputRef,
   endInputRef,
-}: UseMultiInputDateRangeFieldParams<TDate, TChildProps>) => {
+}: UseMultiInputDateRangeFieldParams<
+  TDate,
+  TChildProps
+>): UseMultiInputRangeFieldResponse<TChildProps> => {
   const sharedProps = useDefaultizedDateRangeFieldProps<TDate, TChildProps>(inSharedProps);
+  const adapter = useLocalizationContext<TDate>();
 
   const { value: valueProp, defaultValue, format, onChange } = sharedProps;
 
   const firstDefaultValue = React.useRef(defaultValue);
 
   // TODO: Maybe export utility from `useField` instead of copy/pasting the logic
-  const buildChangeHandler = (index: 0 | 1) => {
+  const buildChangeHandler = (
+    index: 0 | 1,
+  ): FieldChangeHandler<TDate | null, DateValidationError> => {
     if (!onChange) {
       return () => {};
     }
 
-    return (newDate: TDate | null) => {
+    return (newDate, rawContext) => {
       const currentDateRange =
         valueProp ?? firstDefaultValue.current ?? dateRangePickerValueManager.emptyValue;
       const newDateRange: DateRange<TDate> =
         index === 0 ? [newDate, currentDateRange[1]] : [currentDateRange[0], newDate];
 
-      onChange(newDateRange);
+      const context: FieldChangeHandlerContext<DateRangeValidationError> = {
+        ...rawContext,
+        validationError: validateDateRange({
+          adapter,
+          value: newDateRange,
+          props: { ...sharedProps, value: newDateRange },
+        }),
+      };
+
+      onChange(newDateRange, context);
     };
   };
 
@@ -81,19 +104,15 @@ export const useMultiInputDateRangeField = <TDate, TChildProps extends {}>({
     DateRangeValidationError,
     DateRangeComponentValidationProps<TDate>
   >({ ...sharedProps, value }, validateDateRange, () => true);
-  const inputError = React.useMemo(
-    () => dateRangeFieldValueManager.hasError(validationError),
-    [validationError],
-  );
 
   const startDateResponse = {
     ...rawStartDateResponse,
-    error: inputError,
+    error: !!validationError[0],
   };
 
   const endDateResponse = {
     ...rawEndDateResponse,
-    error: inputError,
+    error: !!validationError[1],
   };
 
   return { startDate: startDateResponse, endDate: endDateResponse };

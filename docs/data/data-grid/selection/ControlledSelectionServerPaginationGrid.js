@@ -20,7 +20,7 @@ export default function ControlledSelectionServerPaginationGrid() {
   const [page, setPage] = React.useState(0);
   const [rows, setRows] = React.useState([]);
   const [loading, setLoading] = React.useState(false);
-  const [selectionModel, setSelectionModel] = React.useState([]);
+  const [rowSelectionModel, setRowSelectionModel] = React.useState([]);
 
   React.useEffect(() => {
     let active = true;
@@ -56,10 +56,10 @@ export default function ControlledSelectionServerPaginationGrid() {
         onPageChange={(newPage) => {
           setPage(newPage);
         }}
-        onSelectionModelChange={(newSelectionModel) => {
-          setSelectionModel(newSelectionModel);
+        onRowSelectionModelChange={(newRowSelectionModel) => {
+          setRowSelectionModel(newRowSelectionModel);
         }}
-        selectionModel={selectionModel}
+        rowSelectionModel={rowSelectionModel}
         loading={loading}
         keepNonExistentRowsSelected
       />

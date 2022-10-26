@@ -1,9 +1,8 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
-import { unstable_useId as useId } from '@mui/material/utils';
 import { styled, Theme, useThemeProps } from '@mui/material/styles';
-import { unstable_composeClasses as composeClasses } from '@mui/material';
+import { unstable_composeClasses as composeClasses, unstable_useId as useId } from '@mui/utils';
 import { SxProps } from '@mui/system';
 import { Clock, ClockProps } from './Clock';
 import { useUtils, useNow, useLocaleText } from '../internals/hooks/useUtils';
@@ -69,12 +68,12 @@ export interface ClockPickerProps<TDate> extends ExportedClockPickerProps<TDate>
    * Overrideable components.
    * @default {}
    */
-  components?: Partial<ClockPickerSlotsComponent>;
+  components?: ClockPickerSlotsComponent;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  componentsProps?: Partial<ClockPickerSlotsComponentsProps>;
+  componentsProps?: ClockPickerSlotsComponentsProps;
   /**
    * Selected date @DateIOType.
    */

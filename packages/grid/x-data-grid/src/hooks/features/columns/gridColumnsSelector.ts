@@ -14,7 +14,7 @@ export const gridColumnsStateSelector = (state: GridStateCommunity) => state.col
  */
 export const gridColumnFieldsSelector = createSelector(
   gridColumnsStateSelector,
-  (columnsState) => columnsState.all,
+  (columnsState) => columnsState.orderedFields,
 );
 
 /**

@@ -12,12 +12,8 @@ import { DateInputSlotsComponent } from '../PureDateInput';
 import { LocalizationProvider } from '../../../LocalizationProvider';
 import { PickersInputLocaleText } from '../../../locales/utils/pickersLocaleTextApi';
 
-export interface DesktopWrapperProps<TDate> {
+export interface DesktopWrapperProps {
   children?: React.ReactNode;
-  /**
-   * Locale for components texts
-   */
-  localeText?: PickersInputLocaleText<TDate>;
 }
 
 export interface DesktopWrapperSlotsComponent
@@ -27,7 +23,7 @@ export interface DesktopWrapperSlotsComponent
 export interface DesktopWrapperSlotsComponentsProps extends PickersPopperSlotsComponentsProps {}
 
 export interface InternalDesktopWrapperProps<TDate>
-  extends DesktopWrapperProps<TDate>,
+  extends DesktopWrapperProps,
     PickerStateWrapperProps {
   DateInputProps: DateInputPropsLike & { ref?: React.Ref<HTMLDivElement> };
   KeyboardDateInputComponent: React.JSXElementConstructor<
@@ -37,12 +33,16 @@ export interface InternalDesktopWrapperProps<TDate>
    * Overrideable components.
    * @default {}
    */
-  components?: Partial<DesktopWrapperSlotsComponent>;
+  components?: DesktopWrapperSlotsComponent;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  componentsProps?: Partial<DesktopWrapperSlotsComponentsProps>;
+  componentsProps?: DesktopWrapperSlotsComponentsProps;
+  /**
+   * Locale for components texts
+   */
+  localeText?: PickersInputLocaleText<TDate>;
 }
 
 export function DesktopWrapper<TDate>(props: InternalDesktopWrapperProps<TDate>) {

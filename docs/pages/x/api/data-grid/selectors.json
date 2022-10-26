@@ -26,8 +26,26 @@
     "supportsApiRef": true
   },
   {
+    "name": "gridColumnGroupsHeaderMaxDepthSelector",
+    "returnType": "number",
+    "description": "",
+    "supportsApiRef": true
+  },
+  {
+    "name": "gridColumnGroupsHeaderStructureSelector",
+    "returnType": "GridGroupingStructure[][]",
+    "description": "",
+    "supportsApiRef": true
+  },
+  {
     "name": "gridColumnGroupsLookupSelector",
     "returnType": "GridColumnGroupLookup",
+    "description": "",
+    "supportsApiRef": true
+  },
+  {
+    "name": "gridColumnGroupsUnwrappedModelSelector",
+    "returnType": "{ [columnField: string]: string[] }",
     "description": "",
     "supportsApiRef": true
   },
@@ -97,12 +115,6 @@
     "supportsApiRef": true
   },
   {
-    "name": "gridDensityHeaderGroupingMaxDepthSelector",
-    "returnType": "number",
-    "description": "",
-    "supportsApiRef": true
-  },
-  {
     "name": "gridDensityHeaderHeightSelector",
     "returnType": "number",
     "description": "",
@@ -119,12 +131,6 @@
     "returnType": "GridDensityState",
     "description": "",
     "supportsApiRef": false
-  },
-  {
-    "name": "gridDensityTotalHeaderHeightSelector",
-    "returnType": "number",
-    "description": "",
-    "supportsApiRef": true
   },
   {
     "name": "gridDensityValueSelector",
@@ -278,14 +284,14 @@
     "supportsApiRef": true
   },
   {
-    "name": "gridRowsMetaSelector",
-    "returnType": "GridRowsMetaState",
+    "name": "gridRowSelectionStateSelector",
+    "returnType": "GridRowSelectionModel",
     "description": "",
     "supportsApiRef": false
   },
   {
-    "name": "gridSelectionStateSelector",
-    "returnType": "GridSelectionModel",
+    "name": "gridRowsMetaSelector",
+    "returnType": "GridRowsMetaState",
     "description": "",
     "supportsApiRef": false
   },
@@ -327,6 +333,12 @@
     "returnType": "GridTabIndexState",
     "description": "",
     "supportsApiRef": false
+  },
+  {
+    "name": "gridTotalHeaderHeightSelector",
+    "returnType": "number",
+    "description": "",
+    "supportsApiRef": true
   },
   {
     "name": "gridVisibleColumnDefinitionsSelector",
@@ -392,6 +404,18 @@
   {
     "name": "selectedIdsLookupSelector",
     "returnType": "Record<GridRowId, GridRowId>",
+    "description": "",
+    "supportsApiRef": true
+  },
+  {
+    "name": "unstable_gridFocusColumnGroupHeaderSelector",
+    "returnType": "GridColumnGroupIdentifier | null",
+    "description": "",
+    "supportsApiRef": true
+  },
+  {
+    "name": "unstable_gridTabIndexColumnGroupHeaderSelector",
+    "returnType": "GridColumnGroupIdentifier | null",
     "description": "",
     "supportsApiRef": true
   }

@@ -82,7 +82,7 @@ describe('<DataGridPro /> - Clipboard', () => {
 
     ['ctrlKey', 'metaKey'].forEach((key) => {
       it(`should copy the selected rows to the clipboard when ${key} + C is pressed`, () => {
-        render(<Test disableSelectionOnClick />);
+        render(<Test disableRowSelectionOnClick />);
         act(() => apiRef.current.selectRows([0, 1]));
         const cell = getCell(0, 0);
         userEvent.mousePress(cell);

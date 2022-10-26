@@ -172,7 +172,7 @@ export const useGridCellEditing = (
         }
 
         if (reason) {
-          const newParams: GridCellEditStartParams = { ...params, reason };
+          const newParams: GridCellEditStartParams = { ...params, reason, key: event.key };
           apiRef.current.publishEvent('cellEditStart', newParams, event);
         }
       }
@@ -182,14 +182,17 @@ export const useGridCellEditing = (
 
   const handleCellEditStart = React.useCallback<GridEventListener<'cellEditStart'>>(
     (params) => {
-      const { id, field, reason } = params;
+      const { id, field, reason, key } = params;
 
       const startCellEditModeParams: GridStartCellEditModeParams = { id, field };
 
-      if (
-        reason === GridCellEditStartReasons.deleteKeyDown ||
-        reason === GridCellEditStartReasons.printableKeyDown
-      ) {
+      if (reason === GridCellEditStartReasons.printableKeyDown) {
+        if (React.version.startsWith('18')) {
+          startCellEditModeParams.initialValue = key; // In React 17, cleaning the input is enough
+        } else {
+          startCellEditModeParams.deleteValue = true;
+        }
+      } else if (reason === GridCellEditStartReasons.deleteKeyDown) {
         startCellEditModeParams.deleteValue = true;
       }
 
@@ -325,10 +328,15 @@ export const useGridCellEditing = (
 
   const updateStateToStartCellEditMode = useEventCallback<[GridStartCellEditModeParams], void>(
     (params) => {
-      const { id, field, deleteValue } = params;
+      const { id, field, deleteValue, initialValue } = params;
+
+      let newValue = apiRef.current.getCellValue(id, field);
+      if (deleteValue || initialValue) {
+        newValue = deleteValue ? '' : initialValue;
+      }
 
       const newProps = {
-        value: deleteValue ? '' : apiRef.current.getCellValue(id, field),
+        value: newValue,
         error: false,
         isProcessingProps: false,
       };

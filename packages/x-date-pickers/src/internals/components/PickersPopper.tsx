@@ -11,7 +11,7 @@ import MuiTrapFocus, {
 } from '@mui/material/Unstable_TrapFocus';
 import { useForkRef, useEventCallback, ownerDocument } from '@mui/material/utils';
 import { styled, useThemeProps } from '@mui/material/styles';
-import { unstable_composeClasses as composeClasses } from '@mui/material';
+import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { TransitionProps as MuiTransitionProps } from '@mui/material/transitions';
 import { PickersActionBar } from '../../PickersActionBar';
 import { PickerStateWrapperProps } from '../hooks/usePickerState';
@@ -73,8 +73,8 @@ export interface PickerPopperProps extends PickerStateWrapperProps {
   containerRef?: React.Ref<HTMLDivElement>;
   children?: React.ReactNode;
   onBlur?: () => void;
-  components?: Partial<PickersPopperSlotsComponent>;
-  componentsProps?: Partial<PickersPopperSlotsComponentsProps>;
+  components?: PickersPopperSlotsComponent;
+  componentsProps?: PickersPopperSlotsComponentsProps;
   classes?: Partial<PickersPopperClasses>;
 }
 

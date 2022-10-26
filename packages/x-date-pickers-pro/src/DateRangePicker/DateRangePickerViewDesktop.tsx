@@ -1,7 +1,7 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import { styled, useThemeProps } from '@mui/material/styles';
-import { unstable_composeClasses as composeClasses } from '@mui/material';
+import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { resolveComponentProps, SlotComponentProps } from '@mui/base/utils';
 import {
   useDefaultDates,
@@ -77,12 +77,12 @@ export interface DateRangePickerViewDesktopProps<TDate>
    * Overrideable components.
    * @default {}
    */
-  components?: Partial<DesktopDateRangeCalendarSlotsComponent<TDate>>;
+  components?: DesktopDateRangeCalendarSlotsComponent<TDate>;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  componentsProps?: Partial<DesktopDateRangeCalendarSlotsComponentsProps<TDate>>;
+  componentsProps?: DesktopDateRangeCalendarSlotsComponentsProps<TDate>;
   calendars: 1 | 2 | 3;
   value: DateRange<TDate>;
   changeMonth: (date: TDate) => void;
@@ -228,7 +228,7 @@ export function DateRangePickerViewDesktop<TDate>(inProps: DateRangePickerViewDe
   const componentsForDayCalendar = {
     Day: DateRangePickerDay,
     ...components,
-  } as Partial<DayCalendarSlotsComponent<TDate>>;
+  } as DayCalendarSlotsComponent<TDate>;
 
   const componentsPropsForDayCalendar = {
     ...componentsProps,
@@ -246,7 +246,7 @@ export function DateRangePickerViewDesktop<TDate>(inProps: DateRangePickerViewDe
         ...(resolveComponentProps(componentsProps?.day, dayOwnerState) ?? {}),
       };
     },
-  } as Partial<DayCalendarSlotsComponentsProps<TDate>>;
+  } as DayCalendarSlotsComponentsProps<TDate>;
 
   return (
     <DateRangePickerViewDesktopRoot className={clsx(className, classes.root)}>

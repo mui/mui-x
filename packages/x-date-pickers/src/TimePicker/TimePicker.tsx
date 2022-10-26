@@ -15,9 +15,9 @@ import {
   MobileTimePickerSlotsComponentsProps,
 } from '../MobileTimePicker';
 
-export interface TimePickerSlotsComponent
-  extends MobileTimePickerSlotsComponent,
-    DesktopTimePickerSlotsComponent {}
+export interface TimePickerSlotsComponent<TDate>
+  extends MobileTimePickerSlotsComponent<TDate>,
+    DesktopTimePickerSlotsComponent<TDate> {}
 
 export interface TimePickerSlotsComponentsProps
   extends MobileTimePickerSlotsComponentsProps,
@@ -36,12 +36,12 @@ export interface TimePickerProps<TDate>
    * Overrideable components.
    * @default {}
    */
-  components?: Partial<TimePickerSlotsComponent>;
+  components?: TimePickerSlotsComponent<TDate>;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  componentsProps?: Partial<TimePickerSlotsComponentsProps>;
+  componentsProps?: TimePickerSlotsComponentsProps;
 }
 
 type TimePickerComponent = (<TDate>(
@@ -297,16 +297,6 @@ TimePicker.propTypes = {
    * If `true`, show the toolbar even in desktop mode.
    */
   showToolbar: PropTypes.bool,
-  /**
-   * Component that will replace default toolbar renderer.
-   * @default TimePickerToolbar
-   */
-  ToolbarComponent: PropTypes.elementType,
-  /**
-   * Mobile picker title, displaying in the toolbar.
-   * @default 'Select time'
-   */
-  toolbarTitle: PropTypes.node,
   /**
    * The value of the picker.
    */

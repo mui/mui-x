@@ -174,7 +174,7 @@ export default function ColumnSpanningDerived() {
         }}
         autoHeight
         disableExtendRowFullWidth
-        disableSelectionOnClick
+        disableRowSelectionOnClick
         hideFooter
         showCellRightBorder
         showColumnRightBorder

@@ -3,8 +3,10 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { CSSInterpolation } from '@mui/system';
 import ButtonBase, { ButtonBaseProps } from '@mui/material/ButtonBase';
-import { unstable_useEnhancedEffect as useEnhancedEffect } from '@mui/utils';
-import { unstable_composeClasses as composeClasses } from '@mui/material';
+import {
+  unstable_useEnhancedEffect as useEnhancedEffect,
+  unstable_composeClasses as composeClasses,
+} from '@mui/utils';
 import { alpha, styled, useThemeProps, Theme } from '@mui/material/styles';
 import { useForkRef } from '@mui/material/utils';
 import { ExtendMui } from '../internals/models/helpers';
@@ -184,6 +186,7 @@ const PickersDayFiller = styled('div', {
   ...styleArg({ theme, ownerState }),
   // visibility: 'hidden' does not work here as it hides the element from screen readers as well
   opacity: 0,
+  pointerEvents: 'none',
 }));
 
 const noop = () => {};

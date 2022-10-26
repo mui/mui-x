@@ -1,7 +1,7 @@
 import * as React from 'react';
 import Fade from '@mui/material/Fade';
 import { styled, useThemeProps } from '@mui/material/styles';
-import { unstable_composeClasses as composeClasses } from '@mui/material';
+import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import IconButton from '@mui/material/IconButton';
 import { SlideDirection } from './PickersSlideTransition';
 import { useLocaleText, useUtils } from '../internals/hooks/useUtils';
@@ -31,12 +31,12 @@ export interface PickersCalendarHeaderSlotsComponent extends PickersArrowSwitche
    * Button displayed to switch between different calendar views.
    * @default IconButton
    */
-  SwitchViewButton: React.ElementType;
+  SwitchViewButton?: React.ElementType;
   /**
    * Icon displayed in the SwitchViewButton. Rotated by 180° when the open view is 'year'.
    * @default ArrowDropDown
    */
-  SwitchViewIcon: React.ElementType;
+  SwitchViewIcon?: React.ElementType;
 }
 
 // We keep the interface to allow module augmentation
@@ -44,7 +44,7 @@ export interface PickersCalendarHeaderComponentsPropsOverrides {}
 
 export interface PickersCalendarHeaderSlotsComponentsProps
   extends PickersArrowSwitcherSlotsComponentsProps {
-  switchViewButton: React.ComponentPropsWithRef<typeof IconButton> &
+  switchViewButton?: React.ComponentPropsWithRef<typeof IconButton> &
     PickersCalendarHeaderComponentsPropsOverrides;
 }
 
@@ -55,12 +55,12 @@ export interface PickersCalendarHeaderProps<TDate>
    * Overrideable components.
    * @default {}
    */
-  components?: Partial<PickersCalendarHeaderSlotsComponent>;
+  components?: PickersCalendarHeaderSlotsComponent;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  componentsProps?: Partial<PickersCalendarHeaderSlotsComponentsProps>;
+  componentsProps?: PickersCalendarHeaderSlotsComponentsProps;
   currentMonth: TDate;
   disabled?: boolean;
   views: readonly CalendarPickerView[];

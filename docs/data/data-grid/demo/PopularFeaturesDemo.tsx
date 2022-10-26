@@ -77,7 +77,7 @@ export const featuresSet: Row[] = [
   {
     id: 4,
     name: 'Lazy Loading',
-    description: 'Easily paginate your rows and only fetqch what you need',
+    description: 'Easily paginate your rows and only fetch what you need',
     plan: 'Pro',
     detailPage: '/pagination/',
     newBadge: true,
@@ -372,7 +372,7 @@ export default function PopularFeaturesDemo() {
       <DataGridPremium
         apiRef={apiRef}
         autoHeight
-        disableSelectionOnClick
+        disableRowSelectionOnClick
         onRowClick={onRowClick}
         components={{
           Toolbar: CustomToolbar,

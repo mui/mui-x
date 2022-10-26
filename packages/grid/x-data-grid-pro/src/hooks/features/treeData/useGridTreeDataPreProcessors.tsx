@@ -105,16 +105,18 @@ export const useGridTreeDataPreProcessors = (
         }
         columnsState.lookup[groupingColDefField] = newGroupingColumn;
         if (prevGroupingColumn == null) {
-          const index = columnsState.all[0] === GRID_CHECKBOX_SELECTION_FIELD ? 1 : 0;
-          columnsState.all = [
-            ...columnsState.all.slice(0, index),
+          const index = columnsState.orderedFields[0] === GRID_CHECKBOX_SELECTION_FIELD ? 1 : 0;
+          columnsState.orderedFields = [
+            ...columnsState.orderedFields.slice(0, index),
             groupingColDefField,
-            ...columnsState.all.slice(index),
+            ...columnsState.orderedFields.slice(index),
           ];
         }
       } else if (!shouldHaveGroupingColumn && prevGroupingColumn) {
         delete columnsState.lookup[groupingColDefField];
-        columnsState.all = columnsState.all.filter((field) => field !== groupingColDefField);
+        columnsState.orderedFields = columnsState.orderedFields.filter(
+          (field) => field !== groupingColDefField,
+        );
       }
 
       return columnsState;

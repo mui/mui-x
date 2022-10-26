@@ -3,8 +3,12 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { styled, Theme, useThemeProps } from '@mui/material/styles';
 import { SxProps } from '@mui/system';
-import { unstable_composeClasses as composeClasses } from '@mui/material';
-import { useControlled, unstable_useId as useId, useEventCallback } from '@mui/material/utils';
+import {
+  unstable_composeClasses as composeClasses,
+  unstable_useId as useId,
+  unstable_useEventCallback as useEventCallback,
+  unstable_useControlled as useControlled,
+} from '@mui/utils';
 import { useCalendarState } from './useCalendarState';
 import { useDefaultDates, useUtils } from '../internals/hooks/useUtils';
 import { PickersFadeTransitionGroup } from './PickersFadeTransitionGroup';
@@ -63,12 +67,12 @@ export interface DateCalendarProps<TDate>
    * Overrideable components.
    * @default {}
    */
-  components?: Partial<DateCalendarSlotsComponent<TDate>>;
+  components?: DateCalendarSlotsComponent<TDate>;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  componentsProps?: Partial<DateCalendarSlotsComponentsProps<TDate>>;
+  componentsProps?: DateCalendarSlotsComponentsProps<TDate>;
   value: TDate | null;
   /**
    * Default calendar month displayed when `value={null}`.

@@ -234,21 +234,26 @@ describe('<DataGridPro /> - Events Params', () => {
     });
 
     it('should select a row by default', () => {
-      const handleSelection = spy();
-      render(<TestEvents onSelectionModelChange={handleSelection} />);
+      const handleRowSelectionModelChange = spy();
+      render(<TestEvents onRowSelectionModelChange={handleRowSelectionModelChange} />);
 
       const cell11 = getCell(1, 1);
       fireEvent.click(cell11);
-      expect(handleSelection.callCount).to.equal(1);
-      expect(handleSelection.lastCall.firstArg).to.deep.equal([2]);
+      expect(handleRowSelectionModelChange.callCount).to.equal(1);
+      expect(handleRowSelectionModelChange.lastCall.firstArg).to.deep.equal([2]);
     });
 
-    it('should not select a row if props.disableSelectionOnClick', () => {
-      const handleSelection = spy();
-      render(<TestEvents onSelectionModelChange={handleSelection} disableSelectionOnClick />);
+    it('should not select a row if props.disableRowSelectionOnClick', () => {
+      const handleRowSelectionModelChange = spy();
+      render(
+        <TestEvents
+          onRowSelectionModelChange={handleRowSelectionModelChange}
+          disableRowSelectionOnClick
+        />,
+      );
       const cell11 = getCell(1, 1);
       fireEvent.click(cell11);
-      expect(handleSelection.callCount).to.equal(0);
+      expect(handleRowSelectionModelChange.callCount).to.equal(0);
     });
   });
 
