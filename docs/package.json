@@ -35,7 +35,6 @@
     "@types/lodash": "^4.14.184",
     "@types/react-dom": "^18.0.6",
     "@types/react-router-dom": "^5.3.3",
-    "accept-language": "^3.0.18",
     "address": "^1.2.0",
     "ast-types": "^0.14.2",
     "autoprefixer": "^10.4.8",
