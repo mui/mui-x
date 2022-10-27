@@ -7,7 +7,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 _Oct 28, 2022_
 
-We'd like to offer a big thanks to the 4 contributors who made this release possible. Here are some highlights ✨:
+We'd like to offer a big thanks to the 6 contributors who made this release possible. Here are some highlights ✨:
 
 - ⚡ Fix memory leak during unmount of the DataGrid (#6579) @cherniavskii
 - 🎁 Allow to disable the autofocus of the search field when opening the column visibility panel (#6630) @e-cloud
