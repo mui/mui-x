@@ -56,26 +56,26 @@ We'd like to offer a big thanks to the 9 contributors who made this release poss
   Component name changes are also reflected in `themeAugmentation`:
 
   ```diff
-  const theme = createTheme({
-    components: {
+   const theme = createTheme({
+     components: {
   -    PrivatePickersMonth: {
   +    MuiPickersMonth: {
-        // overrides
-      },
+         // overrides
+       },
   -    PrivatePickersSlideTransition: {
   +    MuiPickersSlideTransition: {
-        // overrides
-      },
+         // overrides
+       },
   -    PrivatePickersToolbarText: {
   +    MuiPickersToolbarText: {
         // overrides
-      },
+       },
   -    PrivatePickersYear: {
   +    MuiPickersYear: {
-        // overrides
-      },
-    },
-  });
+         // overrides
+       },
+     },
+   });
   ```
 
 #### Changes
