@@ -3,7 +3,7 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-## v6.0.0-alpha.5
+## 6.0.0-alpha.5
 
 _Oct 27, 2022_
 
@@ -102,7 +102,7 @@ We'd like to offer a big thanks to the 9 contributors who made this release poss
 - [license] Improve the license content (#6459) @oliviertassinari
 - [test] Test Arrow up/down on every token (#6563) @alexfauquette
 
-## v6.0.0-alpha.4
+## 6.0.0-alpha.4
 
 _Oct 20, 2022_
 
@@ -233,7 +233,7 @@ We'd like to offer a big thanks to the 9 contributors who made this release poss
 - [test] Add validation test on range pickers (#6504) @alexfauquette
 - [test] Remove BrowserStack (#6263) @DanailH
 
-## v6.0.0-alpha.3
+## 6.0.0-alpha.3
 
 _Oct 13, 2022_
 
@@ -441,7 +441,7 @@ We'd like to offer a big thanks to the 8 contributors who made this release poss
 - [core] Test validation on textfield and date views (#6265) @alexfauquette
 - [test] Sync comment with monorepo @oliviertassinari
 
-## v6.0.0-alpha.2
+## 6.0.0-alpha.2
 
 _Oct 7, 2022_
 
@@ -835,7 +835,7 @@ You can find more information about the new api, including how to set those tran
 - [test] Skip tests for column pinning and dynamic row height (#5997) @m4theushw
 - [website] Improve security header @oliviertassinari
 
-## v5.17.4
+## 5.17.4
 
 _Sep 22, 2022_
 
