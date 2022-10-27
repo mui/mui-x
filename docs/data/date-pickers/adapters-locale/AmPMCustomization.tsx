@@ -1,22 +1,23 @@
 import * as React from 'react';
-import { DateTime } from 'luxon';
+import dayjs from 'dayjs';
+import {} from 'dayjs/locale/de';
+import {} from 'dayjs/locale/en-gb';
 import Stack from '@mui/material/Stack';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
-import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon';
-import { Unstable_DateField as DateField } from '@mui/x-date-pickers/DateField';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { Unstable_TimeField as TimeField } from '@mui/x-date-pickers/TimeField';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 
-const locales = ['en-us', 'en-gb', 'de'];
+const locales = ['en', 'en-gb', 'de'];
 
 type LocaleKey = typeof locales[number];
 
-export default function LocalizationLuxon() {
-  const [locale, setLocale] = React.useState<LocaleKey>('en-us');
+export default function AmPMCustomization() {
+  const [locale, setLocale] = React.useState<LocaleKey>('en');
 
   return (
-    <LocalizationProvider dateAdapter={AdapterLuxon} adapterLocale={locale}>
+    <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale={locale}>
       <Stack spacing={3}>
         <ToggleButtonGroup
           value={locale}
@@ -30,10 +31,12 @@ export default function LocalizationLuxon() {
             </ToggleButton>
           ))}
         </ToggleButtonGroup>
-        <DateField label="Date" defaultValue={DateTime.fromISO('2022-04-07')} />
+        <TimeField label="Locale default" defaultValue={dayjs('2022-04-07T18:30')} />
+        <TimeField label="AM / PM" defaultValue={dayjs('2022-04-07T18:30')} ampm />
         <TimeField
-          label="Time"
-          defaultValue={DateTime.fromISO('2022-04-07T18:30')}
+          label="24 hours"
+          defaultValue={dayjs('2022-04-07T18:30')}
+          ampm={false}
         />
       </Stack>
     </LocalizationProvider>

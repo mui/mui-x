@@ -22,13 +22,14 @@ export default function LocalizationDateFns() {
       adapterLocale={locales[locale]}
     >
       <Stack spacing={3}>
-        <ToggleButtonGroup value={locale} exclusive fullWidth>
+        <ToggleButtonGroup
+          value={locale}
+          exclusive
+          fullWidth
+          onChange={(event, newLocale) => setLocale(newLocale)}
+        >
           {Object.keys(locales).map((localeItem) => (
-            <ToggleButton
-              key={localeItem}
-              value={localeItem}
-              onClick={() => setLocale(localeItem as LocaleKey)}
-            >
+            <ToggleButton key={localeItem} value={localeItem}>
               {localeItem}
             </ToggleButton>
           ))}

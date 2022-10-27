@@ -24,13 +24,14 @@ export default function LocalizationMoment() {
   return (
     <LocalizationProvider dateAdapter={AdapterMoment} adapterLocale={locale}>
       <Stack spacing={3}>
-        <ToggleButtonGroup value={locale} exclusive fullWidth>
+        <ToggleButtonGroup
+          value={locale}
+          exclusive
+          fullWidth
+          onChange={(event, newLocale) => setLocale(newLocale)}
+        >
           {locales.map((localeItem) => (
-            <ToggleButton
-              key={localeItem}
-              value={localeItem}
-              onClick={() => setLocale(localeItem)}
-            >
+            <ToggleButton key={localeItem} value={localeItem}>
               {localeItem}
             </ToggleButton>
           ))}

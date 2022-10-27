@@ -45,11 +45,30 @@ import de from 'date-fns/locale/de';
 
 ### With `luxon`
 
+For `luxon`, you have to pass the locale name to `LocalizationProvider`:
+
+```tsx
+import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon';
+
+<LocalizationProvider dateAdapter={AdapterLuxon} adapterLocale="de">
+  {children}
+</LocalizationProvider>;
+```
+
 {{"demo": "LocalizationLuxon.js"}}
 
 ### With `moment`
 
 For `moment`, you have to import the locale and then pass its name to `LocalizationProvider`:
+
+```tsx
+import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
+import 'moment/locale/de';
+
+<LocalizationProvider dateAdapter={AdapterMoment} adapterLocale="de">
+  {children}
+</LocalizationProvider>;
+```
 
 {{"demo": "LocalizationMoment.js"}}
 
@@ -78,4 +97,9 @@ function App({ children }) {
 
 :::
 
-## Set a custom date format
+## AM / PM or 24 hours time
+
+All the time and datetime components support both AM / PM and 24 hours formats.
+The default format will respect your local, but you can override this behavior using the `ampm` prop:
+
+{{"demo": "AmPMCustomization.js"}}

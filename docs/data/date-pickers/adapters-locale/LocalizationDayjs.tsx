@@ -10,23 +10,24 @@ import { Unstable_DateField as DateField } from '@mui/x-date-pickers/DateField';
 import { Unstable_TimeField as TimeField } from '@mui/x-date-pickers/TimeField';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 
-const locales = ['en-us', 'en-gb', 'de'];
+const locales = ['en', 'en-gb', 'de'];
 
 type LocaleKey = typeof locales[number];
 
 export default function LocalizationDayjs() {
-  const [locale, setLocale] = React.useState<LocaleKey>('en-us');
+  const [locale, setLocale] = React.useState<LocaleKey>('en');
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale={locale}>
       <Stack spacing={3}>
-        <ToggleButtonGroup value={locale} exclusive fullWidth>
+        <ToggleButtonGroup
+          value={locale}
+          exclusive
+          fullWidth
+          onChange={(event, newLocale) => setLocale(newLocale)}
+        >
           {locales.map((localeItem) => (
-            <ToggleButton
-              key={localeItem}
-              value={localeItem}
-              onClick={() => setLocale(localeItem)}
-            >
+            <ToggleButton key={localeItem} value={localeItem}>
               {localeItem}
             </ToggleButton>
           ))}
