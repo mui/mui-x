@@ -10,7 +10,7 @@ _Oct 27, 2022_
 We'd like to offer a big thanks to the 9 contributors who made this release possible. Here are some highlights ✨:
 
 - ⚡ Fix memory leak during unmount of the DataGrid (#6620) @cherniavskii
-- 📝 New guide about migrating pickers from v5 to v6 (#6472) @flaviendelangle
+- 📝 New guide for migrating pickers from v5 to v6 (#6472) @flaviendelangle
 - 🎁 Allow to disable the autofocus of the search field when opening the column visibility panel (#6444) @e-cloud
 - 🐞 Bugfixes
 
