@@ -4,6 +4,7 @@ import MenuItem from '@mui/material/MenuItem';
 import ListItemText from '@mui/material/ListItemText';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import GroupWorkIcon from '@mui/icons-material/GroupWork';
+import WorkspacesIcon from '@mui/icons-material/Workspaces';
 import { gridColumnLookupSelector, useGridSelector, GridColDef } from '@mui/x-data-grid-pro';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { gridRowGroupingSanitizedModelSelector } from '../hooks/features/rowGrouping/gridRowGroupingSelector';
@@ -56,7 +57,7 @@ const GridRowGroupableColumnMenuItems = (props: GridRowGroupableColumnMenuItemsP
       return (
         <MenuItem onClick={ungroupColumn} key={column.field}>
           <ListItemIcon>
-            <GroupWorkIcon fontSize="small" />
+            <WorkspacesIcon fontSize="small" />
           </ListItemIcon>
           <ListItemText>{apiRef.current.getLocaleText('unGroupColumn')(name)}</ListItemText>
         </MenuItem>
