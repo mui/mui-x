@@ -52,7 +52,7 @@ export interface DateRangeCalendarProps<TDate>
    * @param {DateRange<TDate>} value The new value.
    * @param {PickerSelectionState | undefined} selectionState Indicates if the date range selection is complete.
    */
-  onChange?: (value: TDate | null, selectionState?: PickerSelectionState) => void;
+  onChange?: (value: DateRange<TDate>, selectionState?: PickerSelectionState) => void;
   autoFocus?: boolean;
   className?: string;
   classes?: Partial<DateRangeCalendarClasses>;
