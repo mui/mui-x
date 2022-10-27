@@ -4,12 +4,12 @@ import clsx from 'clsx';
 import { MUIStyledCommonProps } from '@mui/system';
 import { styled, Theme } from '@mui/material/styles';
 import { unstable_generateUtilityClasses as generateUtilityClasses } from '@mui/utils';
-import { InternalStandardProps as StandardProps } from '@mui/material';
 import ClickAwayListener from '@mui/material/ClickAwayListener';
 import Paper from '@mui/material/Paper';
 import Popper, { PopperProps } from '@mui/material/Popper';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { isEscapeKey } from '../../utils/keyboardUtils';
+import { StandardProps } from '../../models';
 
 export interface GridPanelClasses {
   /** Styles applied to the root element. */
