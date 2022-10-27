@@ -4,12 +4,16 @@ title: Localized dates
 
 # Localized dates
 
-<p class="description">Use localized format to render your dates.</p>
+<p class="description">Date and Time pickers allow to support formats from different locales.</p>
 
 ## Getting started
 
-The Date and Time Pickers allow you to override the locale used to format the dates.
-By default, each library uses the `en-US` locale.
+The default locale of MUI is English (United States). If you want to use other locales, follow the instructions below.
+
+:::warning
+This page focuses on the date format localization.
+If you want to translate the texts inside the components, have a look at the [Translated components](/x/react-date-pickers/localization/) page.
+:::
 
 ## Set a custom locale
 
@@ -97,9 +101,20 @@ function App({ children }) {
 
 :::
 
-## AM / PM or 24 hours time
+## 12h/24h format
 
-All the time and datetime components support both AM / PM and 24 hours formats.
-The default format will respect your local, but you can override this behavior using the `ampm` prop:
+All the time and datetime components will automatically adjust to the locale's time setting, i.e. the 12-hour or 24-hour format.
+This can be overridden by using the `ampm` prop:
 
 {{"demo": "AmPMCustomization.js"}}
+
+## Advanced customization
+
+To customize the date format used in the toolbar, you can use prop `toolbarFormat`.
+
+To customize day names in calendar header, you can use `dayOfWeekFormatter` which takes as an input the short name of the day provided by the date-library and returns it's formatted version.
+The default formatter only keeps the first letter and capitalises it.
+
+The example bellow adds a dot at the end of each day in the calendar header, and uses `eee dd MMMM` format for the toolbar.
+
+{{"demo": "CustomizedStaticDatePicker.js"}}

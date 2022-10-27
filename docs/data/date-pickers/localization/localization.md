@@ -4,41 +4,20 @@ title: Date and Time pickers - Localization
 
 # Date and Time pickers - Localization
 
-<p class="description">Date and Time pickers allow to support users from different locales, with formatting, RTL, and localized strings.</p>
-
-The default locale of MUI is English (United States). If you want to use other locales, follow the instructions below.
-
-Localization can impact pickers components rendering in two distincts ways: The date format, and the components attributes such as `aria-label`.
-
-## Date-library locale
-
-Use `LocalizationProvider` to change the date-library locale that is used to render pickers. Here is an example of changing the locale for the `dayjs` adapter:
-
-{{"demo": "LocalizedDatePicker.js"}}
-
-### 12h/24h format
-
-The time picker will automatically adjust to the locale's time setting, i.e. the 12-hour or 24-hour format.
-This can be overridden by using the `ampm` prop.
-
-{{"demo": "LocalizedTimePicker.js"}}
-
-### Advanced customization
-
-To customize the date format used in the toolbar, you can use prop `toolbarFormat`.
-
-To customize day names in calendar header, you can use `dayOfWeekFormatter` which takes as an input the short name of the day provided by the date-library and returns it's formatted version.
-The default formatter only keeps the first letter and capitalises it.
-
-The example bellow adds a dot at the end of each day in the calendar header, and uses `eee dd MMMM` format for the toolbar.
-
-{{"demo": "CustomizedStaticDatePicker.js"}}
-
-## Text translations
+<p class="description">Date and Time pickers allow to support translations from different languages.</p>
 
 As the rest of MUI components, you can modify text and translations.
 You can find all the translation keys supported in [the source](https://github.com/mui/mui-x/blob/HEAD/packages/x-date-pickers/src/locales/utils/pickersLocaleTextApi.ts)
 in the GitHub repository.
+
+The default locale of MUI is English (United States). If you want to use other locales, follow the instructions below.
+
+:::warning
+This page focuses on the translations of the texts inside the Date and Time Pickers.
+If you want to format the text based on some locale, have a look at the [Localized dates](/x/react-date-pickers/adapters-locale/) page.
+:::
+
+## Set translations globally
 
 ### Using the theme
 
@@ -101,7 +80,7 @@ const theme = createTheme(
 </ThemeProvider>;
 ```
 
-### Using the localization provider
+### Using `LocalizationProvider`
 
 If you want to pass language translations without using `createTheme` and `ThemeProvider`,
 you can directly load the language translations from the `@mui/x-date-pickers` or `@mui/x-date-pickers-pro` package and pass them to the `LocalizationProvider`.
@@ -120,7 +99,7 @@ import bgLocale from 'date-fns/locale/bg';
 </LocalizationProvider>;
 ```
 
-### Using props
+## Set translations locally
 
 If you want to customize some translations on specific component, you can use the `localeText` prop exposed by all our pickers.
 
@@ -128,7 +107,7 @@ If you want to customize some translations on specific component, you can use th
 <DatePicker localeText={{ clearButtonLabel: 'Empty' }} />
 ```
 
-### Supported locales
+## Supported locales
 
 | Locale                  | BCP 47 language tag | Import name |
 | :---------------------- | :------------------ | :---------- |

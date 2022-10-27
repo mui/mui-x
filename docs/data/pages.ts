@@ -205,7 +205,11 @@ const pages: MuiPage[] = [
       {
         pathname: '/x/react-date-pickers/localization',
         title: 'Localization / date manipulation',
-        scopePathnames: ['/x/react-date-pickers/adapters-locale'],
+        scopePathnames: [
+          '/x/react-date-pickers/adapters',
+          '/x/react-date-pickers/adapters-locale',
+          '/x/react-date-pickers/localization',
+        ],
         children: [
           { pathname: '/x/react-date-pickers/adapters', title: 'Library to manipulate dates' },
           {
