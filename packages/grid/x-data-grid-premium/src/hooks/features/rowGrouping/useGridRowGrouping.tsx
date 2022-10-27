@@ -5,7 +5,7 @@ import {
   useGridApiEventHandler,
   useGridApiMethod,
   gridColumnLookupSelector,
-  insertItemsInMenu,
+  insertItemsInColumnMenu,
 } from '@mui/x-data-grid-pro';
 import {
   useGridRegisterPipeProcessor,
@@ -69,6 +69,7 @@ export const useGridRowGrouping = (
     | 'groupingColDef'
     | 'rowGroupingColumnMode'
     | 'disableRowGrouping'
+    | 'componentsProps'
   >,
 ) => {
   apiRef.current.unstable_registerControlState({
@@ -164,11 +165,19 @@ export const useGridRowGrouping = (
         return initialValue;
       }
 
-      let menuItem: React.ReactNode;
+      const condensed = props.componentsProps?.columnMenu?.condensed ?? false;
+
+      let menuItem;
       if (isGroupingColumn(column.field)) {
-        menuItem = <GridRowGroupingColumnMenuItems />;
+        menuItem = {
+          displayName: 'GridRowGroupingColumnMenuItems',
+          component: <GridRowGroupingColumnMenuItems condensed={condensed} />,
+        };
       } else if (column.groupable) {
-        menuItem = <GridRowGroupableColumnMenuItems />;
+        menuItem = {
+          displayName: 'GridRowGroupableColumnMenuItems',
+          component: <GridRowGroupableColumnMenuItems condensed={condensed} />,
+        };
       } else {
         menuItem = null;
       }
@@ -177,14 +186,14 @@ export const useGridRowGrouping = (
         return initialValue;
       }
 
-      return insertItemsInMenu(
-        initialValue,
-        [<Divider sx={{ my: '9px' }} />, menuItem],
-        'GridAggregationColumnMenuItem',
-      );
-      // return [...initialValue, <Divider sx={{ py: '6px' }} />, menuItem];
+      const nodesToInsert = [
+        { displayName: 'divider', component: <Divider sx={{ my: '9px' }} /> },
+        menuItem,
+      ];
+
+      return insertItemsInColumnMenu(initialValue, nodesToInsert, 'GridAggregationColumnMenuItem');
     },
-    [props.disableRowGrouping],
+    [props.componentsProps?.columnMenu?.condensed, props.disableRowGrouping],
   );
 
   const stateExportPreProcessing = React.useCallback<GridPipeProcessor<'exportState'>>(

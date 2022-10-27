@@ -49,6 +49,7 @@ const GridFilterMenuItem = (props: GridFilterItemProps) => {
     return (
       <Stack
         px={1.5}
+        py={0.5}
         direction="row"
         justifyContent="space-between"
         sx={{
@@ -65,21 +66,21 @@ const GridFilterMenuItem = (props: GridFilterItemProps) => {
           sx={{
             color: isColumnFiltered ? 'primary.main' : 'common.black',
             '& .MuiSvgIcon-root': {
-              transform: 'rotate(30deg)',
               color: isColumnFiltered ? 'primary.main' : 'grey.700',
             },
           }}
         >
           {apiRef.current.getLocaleText('columnMenuFilter')}
         </Button>
-        <IconButton
-          aria-label="clear aggregate"
-          onClick={clearFilters}
-          disabled={!isColumnFiltered}
-          sx={{ color: 'grey.700' }}
-        >
-          <ClearIcon fontSize="small" />
-        </IconButton>
+        {isColumnFiltered && (
+          <IconButton
+            aria-label="clear aggregate"
+            onClick={clearFilters}
+            sx={{ color: 'grey.700' }}
+          >
+            <ClearIcon fontSize="small" />
+          </IconButton>
+        )}
       </Stack>
     );
   }

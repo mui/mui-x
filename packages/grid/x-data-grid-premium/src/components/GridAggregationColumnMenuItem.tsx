@@ -3,8 +3,6 @@ import { GridColDef, useGridSelector } from '@mui/x-data-grid-pro';
 import MenuItem from '@mui/material/MenuItem';
 import Stack from '@mui/material/Stack';
 import FormControl from '@mui/material/FormControl';
-import IconButton from '@mui/material/IconButton';
-import ClearIcon from '@mui/icons-material/Clear';
 import InputLabel from '@mui/material/InputLabel';
 import { unstable_useId as useId } from '@mui/material/utils';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
@@ -65,20 +63,15 @@ export const GridAggregationColumnMenuItem = (props: GridAggregationColumnMenuIt
     }
   };
 
-  const handleClearClick = () => {
-    const currentModel = gridAggregationModelSelector(apiRef);
-    const { [column.field]: columnItem, ...otherColumnItems } = currentModel;
-    apiRef.current.setAggregationModel(otherColumnItems);
-  };
-
   const renderFormControl = () => (
-    <FormControl variant="standard" size="small" sx={{ width: 150 }}>
+    <FormControl variant="standard" size="small" fullWidth>
       <InputLabel id={`${id}-label`}>{label}</InputLabel>
       <Select
         labelId={`${id}-label`}
         id={`${id}-input`}
         value={selectedAggregationRule}
         label={label}
+        color="primary"
         onChange={handleAggregationItemChange}
         onBlur={(e) => e.stopPropagation()}
         fullWidth
@@ -100,16 +93,8 @@ export const GridAggregationColumnMenuItem = (props: GridAggregationColumnMenuIt
   );
   if (condensed) {
     return (
-      <Stack justifyContent="space-between" direction="row" px="12px" alignItems="flex-end">
+      <Stack px={1.5} py={1}>
         {renderFormControl()}
-        <IconButton
-          aria-label="clear aggregate"
-          onClick={handleClearClick}
-          disabled={selectedAggregationRule === ''}
-          sx={{ color: 'grey.700' }}
-        >
-          <ClearIcon fontSize="small" />
-        </IconButton>
       </Stack>
     );
   }

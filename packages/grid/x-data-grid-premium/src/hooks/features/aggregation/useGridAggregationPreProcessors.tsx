@@ -1,6 +1,6 @@
 import * as React from 'react';
 import MuiDivider, { DividerProps } from '@mui/material/Divider';
-import { gridColumnLookupSelector, insertItemsInMenu } from '@mui/x-data-grid-pro';
+import { gridColumnLookupSelector, insertItemsInColumnMenu } from '@mui/x-data-grid-pro';
 import {
   GridPipeProcessor,
   GridRestoreStatePreProcessingContext,
@@ -126,30 +126,22 @@ export const useGridAggregationPreProcessors = (
 
       const condensed = props.componentsProps?.columnMenu?.condensed ?? false;
 
-      return insertItemsInMenu(
-        columnMenuItems,
-        [
-          <Divider sx={{ mt: '6px' }} />,
-          <GridAggregationColumnMenuItem
-            column={column}
-            label={apiRef.current.getLocaleText('aggregationMenuItemHeader')}
-            availableAggregationFunctions={availableAggregationFunctions}
-            condensed={condensed}
-          />,
-        ],
-        'GridFilterMenuItem',
-      );
+      const nodesToInsert = [
+        { displayName: 'divider', component: <Divider /> },
+        {
+          displayName: 'GridAggregationColumnMenuItem',
+          component: (
+            <GridAggregationColumnMenuItem
+              column={column}
+              label={apiRef.current.getLocaleText('aggregationMenuItemHeader')}
+              availableAggregationFunctions={availableAggregationFunctions}
+              condensed={condensed}
+            />
+          ),
+        },
+      ];
 
-      // return [
-      //   ...columnMenuItems,
-      //   <Divider />,
-      //   <GridAggregationColumnMenuItem
-      //     column={column}
-      //     label={apiRef.current.getLocaleText('aggregationMenuItemHeader')}
-      //     availableAggregationFunctions={availableAggregationFunctions}
-      //     condensed={condensed}
-      //   />,
-      // ];
+      return insertItemsInColumnMenu(columnMenuItems, nodesToInsert, 'GridFilterMenuItem');
     },
     [
       apiRef,

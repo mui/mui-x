@@ -46,7 +46,7 @@ const SortGridMenuItems = (props: GridFilterItemProps) => {
 
   if (condensed) {
     return (
-      <Stack px={1.5}>
+      <Stack px={1.5} pb={1}>
         <Typography color="text.secondary" fontSize="12px">
           Sort by
         </Typography>

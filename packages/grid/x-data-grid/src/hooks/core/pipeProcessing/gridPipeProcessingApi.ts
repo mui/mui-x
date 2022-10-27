@@ -7,6 +7,7 @@ import {
   GridRestoreStatePreProcessingValue,
 } from '../../features/statePersistence/gridStatePersistenceInterface';
 import { GridHydrateColumnsValue } from '../../features/columns/gridColumnsInterfaces';
+import { GridColumnMenuValue } from '../../features/columnMenu/columnMenuInterfaces';
 import { GridRowEntry, GridRowId } from '../../../models/gridRows';
 import { GridHydrateRowsValue } from '../../features/rows/gridRowsInterfaces';
 import { GridPreferencePanelsValue } from '../../features/preferencesPanel';
@@ -14,7 +15,7 @@ import { GridPreferencePanelsValue } from '../../features/preferencesPanel';
 export type GridPipeProcessorGroup = keyof GridPipeProcessingLookup;
 
 export interface GridPipeProcessingLookup {
-  columnMenu: { value: React.ReactNode[]; context: GridColDef };
+  columnMenu: { value: GridColumnMenuValue; context: GridColDef };
   exportState: { value: GridInitialStateCommunity; context: GridExportStateParams };
   hydrateColumns: {
     value: GridHydrateColumnsValue;

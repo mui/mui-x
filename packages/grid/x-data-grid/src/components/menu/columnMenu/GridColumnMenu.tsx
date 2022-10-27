@@ -1,6 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import Divider from '@mui/material/Divider';
+import { GridColumnMenuValue } from '../../../hooks/features/columnMenu';
 import { GridColumnMenuContainer } from './GridColumnMenuContainer';
 import { GridColumnMenuProps } from './GridColumnMenuProps';
 import { GridColumnsMenuItem } from './GridColumnsMenuItem';
@@ -9,38 +10,47 @@ import { HideGridColMenuItem } from './HideGridColMenuItem';
 import { SortGridMenuItems } from './SortGridMenuItems';
 import { useGridApiContext } from '../../../hooks/utils/useGridApiContext';
 
+const getColumnMenuValue = (components: Array<React.ReactNode | any>): GridColumnMenuValue =>
+  components?.map((component) => ({ displayName: component?.type?.name, component })) || [];
+
 const GridColumnMenu = React.forwardRef<HTMLUListElement, GridColumnMenuProps>(
   function GridColumnMenu(props: GridColumnMenuProps, ref) {
     const { hideMenu, currentColumn, condensed } = props;
     const apiRef = useGridApiContext();
 
-    const defaultButtons = [
+    const defaultMenuItems = [
       <SortGridMenuItems onClick={hideMenu} column={currentColumn!} />, // TODO update types to allow `onClick` and `column` to be optional
       <GridFilterMenuItem onClick={hideMenu} column={currentColumn!} />,
       <HideGridColMenuItem onClick={hideMenu} column={currentColumn!} />,
       <GridColumnsMenuItem onClick={hideMenu} column={currentColumn!} />,
     ];
 
-    const condensedButtons = [
+    const condensedMenuItems = [
       <SortGridMenuItems onClick={hideMenu} column={currentColumn!} condensed={condensed} />,
-      <Divider sx={{ my: 1 }} />,
+      <Divider />,
       <GridFilterMenuItem onClick={hideMenu} column={currentColumn!} condensed={condensed} />,
       <Divider />,
       <HideGridColMenuItem onClick={hideMenu} column={currentColumn!} condensed={condensed} />,
-      <Divider sx={{ borderColor: 'grey.400' }} />,
+      <Divider />,
       <GridColumnsMenuItem onClick={hideMenu} column={currentColumn!} condensed={condensed} />,
     ];
 
-    const preProcessedButtons = apiRef.current.unstable_applyPipeProcessors(
+    const columnMenuValue = getColumnMenuValue(condensed ? condensedMenuItems : defaultMenuItems);
+
+    const preProcessedValue = apiRef.current.unstable_applyPipeProcessors(
       'columnMenu',
-      condensed ? condensedButtons : defaultButtons,
+      columnMenuValue,
       currentColumn,
     );
 
     return (
       <GridColumnMenuContainer ref={ref} {...props}>
-        {preProcessedButtons.map((button: any, index: number) =>
-          React.cloneElement(button, { key: index, onClick: hideMenu, column: currentColumn }),
+        {preProcessedValue.map((item: any, index: number) =>
+          React.cloneElement(item.component, {
+            key: index,
+            onClick: hideMenu,
+            column: currentColumn,
+          }),
         )}
       </GridColumnMenuContainer>
     );

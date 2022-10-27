@@ -1,7 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import MenuItem from '@mui/material/MenuItem';
-import ViewWeekIcon from '@mui/icons-material/ViewWeek';
+import ViewWeekIcon from '@mui/icons-material/ViewColumn';
 import ListItemText from '@mui/material/ListItemText';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import { GridPreferencePanelsValue } from '../../../hooks/features/preferencesPanel/gridPreferencePanelsValue';
@@ -30,27 +30,21 @@ const GridColumnsMenuItem = (props: GridFilterItemProps) => {
     return (
       <MenuItem
         onClick={showColumns}
+        color="primary"
         sx={{
-          py: 0,
-          color: 'common.black',
-          display: 'flex',
-          justifyContent: 'center',
-          '& .MuiSvgIcon-root': {
-            color: 'grey.700',
-          },
           '& .MuiListItemIcon-root': {
             minWidth: '29px',
           },
-          '& .MuiListItemText-root': {
-            flex: 'none',
-          },
           '& .MuiTypography-root': {
-            fontSize: '16px',
+            fontSize: '13px',
+            fontWeight: '500',
+            textTransform: 'uppercase',
+            color: 'primary.main',
           },
         }}
       >
         <ListItemIcon>
-          <ViewWeekIcon fontSize="small" />
+          <ViewWeekIcon color="primary" fontSize="small" />
         </ListItemIcon>
         <ListItemText>{apiRef.current.getLocaleText('columnMenuShowColumns')}</ListItemText>
       </MenuItem>

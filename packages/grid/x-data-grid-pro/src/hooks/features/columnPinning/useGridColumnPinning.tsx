@@ -29,7 +29,7 @@ import {
 } from './gridColumnPinningInterface';
 import { gridPinnedColumnsSelector } from './gridColumnPinningSelector';
 import { filterColumns } from '../../../components/DataGridProVirtualScroller';
-import { insertItemsInMenu } from '../../../utils';
+import { insertItemsInColumnMenu } from '../../../utils';
 
 const Divider = (props: DividerProps) => (
   <MuiDivider {...props} onClick={(event) => event.stopPropagation()} />
@@ -178,35 +178,26 @@ export const useGridColumnPinning = (
   );
 
   const addColumnMenuItems = React.useCallback<GridPipeProcessor<'columnMenu'>>(
-    (columnMenuItems, column) => {
+    (initialValue, column) => {
       if (props.disableColumnPinning) {
-        return columnMenuItems;
+        return initialValue;
       }
 
       if (column.pinnable === false) {
-        return columnMenuItems;
+        return initialValue;
       }
       const condensed = props.componentsProps?.columnMenu?.condensed ?? false;
 
-      // Insert `pin to` after `sort by`, researching alternate solution
-      return insertItemsInMenu(
-        columnMenuItems,
-        [<Divider sx={{ my: 1 }} />, <GridColumnPinningMenuItems condensed={condensed} />],
-        'SortGridMenuItems',
-      );
-      // return columnMenuItems.reduce((finalItems, columnMenuItem: any) => {
-      //   if (columnMenuItem?.type?.name === 'SortGridMenuItems') {
-      //     return [
-      //       ...finalItems,
-      //       columnMenuItem,
-      //       <Divider sx={{ my: 1 }} variant="middle" />,
-      //       <GridColumnPinningMenuItems condensed={condensed} />,
-      //     ];
-      //   }
-      //   return [...finalItems, columnMenuItem];
-      // }, [] as any);
+      const nodesToInsert = [
+        { displayName: 'divider', component: <Divider /> },
+        {
+          displayName: 'GridColumnPinningMenuItems',
+          component: <GridColumnPinningMenuItems condensed={condensed} />,
+        },
+      ];
 
-      // return [...initialValue, <Divider />, <GridColumnPinningMenuItems condensed={condensed} />];
+      // Insert `pin to` after `sort by`
+      return insertItemsInColumnMenu(initialValue, nodesToInsert, 'SortGridMenuItems');
     },
     [props.componentsProps?.columnMenu?.condensed, props.disableColumnPinning],
   );

@@ -43,7 +43,7 @@ const GridColumnPinningMenuItems = (props: GridColumnPinningMenuItemsProps) => {
 
   if (condensed) {
     return (
-      <Stack px={1.5}>
+      <Stack px={1.5} py={1}>
         <Typography color="text.secondary" fontSize="12px">
           Pin to
         </Typography>
