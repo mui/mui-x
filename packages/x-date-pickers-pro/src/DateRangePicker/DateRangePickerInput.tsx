@@ -181,7 +181,7 @@ export const DateRangePickerInput = React.forwardRef(function DateRangePickerInp
     TextFieldProps: {
       ...TextFieldProps,
       inputRef: startRef,
-      focused: open && currentlySelectingRangeEnd === 'start',
+      focused: open ? currentlySelectingRangeEnd === 'start' : undefined,
     },
     inputProps: {
       onClick: openRangeStartSelection,
@@ -200,7 +200,7 @@ export const DateRangePickerInput = React.forwardRef(function DateRangePickerInp
     TextFieldProps: {
       ...TextFieldProps,
       inputRef: endRef,
-      focused: open && currentlySelectingRangeEnd === 'end',
+      focused: open ? currentlySelectingRangeEnd === 'end' : undefined,
     },
     inputProps: {
       onClick: openRangeEndSelection,
