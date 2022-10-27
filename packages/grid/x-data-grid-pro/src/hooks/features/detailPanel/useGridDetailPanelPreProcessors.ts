@@ -18,7 +18,7 @@ export const useGridDetailPanelPreProcessors = (
         // Remove the toggle column, when it exists
         if (columnsState.lookup[GRID_DETAIL_PANEL_TOGGLE_FIELD]) {
           delete columnsState.lookup[GRID_DETAIL_PANEL_TOGGLE_FIELD];
-          columnsState.all = columnsState.all.filter(
+          columnsState.orderedFields = columnsState.orderedFields.filter(
             (field) => field !== GRID_DETAIL_PANEL_TOGGLE_FIELD,
           );
         }
@@ -32,7 +32,7 @@ export const useGridDetailPanelPreProcessors = (
       }
 
       // Othewise, add the toggle column at the beginning
-      columnsState.all = [GRID_DETAIL_PANEL_TOGGLE_FIELD, ...columnsState.all];
+      columnsState.orderedFields = [GRID_DETAIL_PANEL_TOGGLE_FIELD, ...columnsState.orderedFields];
       columnsState.lookup[GRID_DETAIL_PANEL_TOGGLE_FIELD] = {
         ...GRID_DETAIL_PANEL_TOGGLE_COL_DEF,
         headerName: apiRef.current.getLocaleText('detailPanelToggle'),

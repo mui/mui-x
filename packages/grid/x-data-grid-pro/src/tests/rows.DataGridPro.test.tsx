@@ -346,6 +346,18 @@ describe('<DataGridPro /> - Rows', () => {
       clock.tick(50);
       expect(getColumnValues(0)).to.deep.equal(['Asics']);
     });
+
+    it('should work with `loading` prop change', () => {
+      const { setProps } = render(<TestCase />);
+      expect(getColumnValues(0)).to.deep.equal(['Nike', 'Adidas', 'Puma']);
+
+      const newRows = [{ id: 3, brand: 'Asics' }];
+      setProps({ loading: true });
+      act(() => apiRef.current.setRows(newRows));
+      setProps({ loading: false });
+
+      expect(getColumnValues(0)).to.deep.equal(['Asics']);
+    });
   });
 
   describe('virtualization', () => {

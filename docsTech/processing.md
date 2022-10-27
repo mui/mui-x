@@ -48,13 +48,15 @@ const addCustomFeatureColumn = React.useCallback<GridPipeProcessor<'hydrateColum
 
     if (shouldHaveCustomFeatureColumn && !haveCustomFeatureColumn) {
       columnsState.lookup[customFeatureColumn.field] = customFeatureColumn;
-      columnsState.all = [customFeatureColumn.field, ...columnsState.all];
+      columnsState.orderedFields = [customFeatureColumn.field, ...columnsState.orderedFields];
     }
     // ⚠ The `columnsState` passed to the processors can contain the columns returned by the previous processing.
     // If the plugin is not enabled during the current processing, it must check if its columns are present, and if so remove them.
     else if (!shouldHaveCustomFeatureColumn && haveCustomFeatureColumn) {
       delete columnsState.lookup[customFeatureColumn.field];
-      columnsState.all = columnsState.all.filter((field) => field !== customFeatureColumn.field);
+      columnsState.orderedFields = columnsState.orderedFields.filter(
+        (field) => field !== customFeatureColumn.field,
+      );
     }
 
     return columnsState;
