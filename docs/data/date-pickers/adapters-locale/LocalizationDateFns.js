@@ -1,7 +1,6 @@
 import * as React from 'react';
 import de from 'date-fns/locale/de';
 import enGB from 'date-fns/locale/en-GB';
-import arSA from 'date-fns/locale/ar-SA';
 import Stack from '@mui/material/Stack';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
@@ -10,7 +9,7 @@ import { Unstable_DateField as DateField } from '@mui/x-date-pickers/DateField';
 import { Unstable_TimeField as TimeField } from '@mui/x-date-pickers/TimeField';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 
-const locales = { 'en-us': undefined, 'en-gb': enGB, de, 'ar-sa': arSA };
+const locales = { 'en-us': undefined, 'en-gb': enGB, de };
 
 export default function LocalizationDateFns() {
   const [locale, setLocale] = React.useState('en-us');

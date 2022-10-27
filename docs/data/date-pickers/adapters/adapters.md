@@ -30,11 +30,11 @@ The Date and Time Pickers currently support 4 date-libraries:
 
 ### Recommended library
 
-If you are already using one of these libraries in your application, we recommend using it for our components as well.
+If you are already using one of these libraries in your application, you can keep using it for the Date and Time Pickers as well.
 This will avoid bundling two libraries.
 
 If you are starting a new project without any date manipulation outside of `@mui/x-date-pickers`,
-then we recommend `dayjs` which will have the smallest impact on the bundle size of your application.
+consider using `dayjs` which will have the smallest impact on the bundle size of your application.
 
 Here is the weight added to your gzipped bundle size by each of those libraries.
 
