@@ -121,6 +121,9 @@ GridPanel.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
+  /**
+   * Popper render function or node.
+   */
   children: PropTypes.node,
   /**
    * Override or extend the styles applied to the component.
