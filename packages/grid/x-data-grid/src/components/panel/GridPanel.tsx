@@ -9,7 +9,7 @@ import Paper from '@mui/material/Paper';
 import Popper, { PopperProps } from '@mui/material/Popper';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { isEscapeKey } from '../../utils/keyboardUtils';
-import { StandardProps } from '../../models';
+import { StandardProps } from '../../models/common';
 
 export interface GridPanelClasses {
   /** Styles applied to the root element. */
