@@ -81,6 +81,7 @@ module.exports = {
     'jsdoc/require-returns': ['error', { contexts: ['TSFunctionType'] }],
     'jsdoc/require-returns-type': ['error', { contexts: ['TSFunctionType'] }],
     'jsdoc/require-returns-description': ['error', { contexts: ['TSFunctionType'] }],
+    'react/no-unstable-nested-components': ['error', { allowAsProps: true }],
   },
   overrides: [
     ...baselineOverrides,

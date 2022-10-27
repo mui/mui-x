@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { styled, alpha } from '@mui/material/styles';
+import { styled, alpha, useThemeProps } from '@mui/material/styles';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { capitalize, unstable_useEnhancedEffect as useEnhancedEffect } from '@mui/material/utils';
 import {
@@ -12,11 +12,14 @@ import {
   PickersMonthClasses,
 } from './pickersMonthClasses';
 
-interface PickersMonthProps {
+export interface ExportedPickersMonthProps {
+  classes?: Partial<PickersMonthClasses>;
+}
+
+interface PickersMonthProps extends ExportedPickersMonthProps {
   'aria-current'?: React.AriaAttributes['aria-current'];
   autoFocus: boolean;
   children: React.ReactNode;
-  classes?: Partial<PickersMonthClasses>;
   disabled?: boolean;
   onClick: (event: React.MouseEvent, month: number) => void;
   onKeyDown: (event: React.KeyboardEvent, month: number) => void;
@@ -43,7 +46,7 @@ const useUtilityClasses = (ownerState: PickersMonthOwnerState) => {
 };
 
 const PickersMonthRoot = styled('div', {
-  name: 'PrivatePickersMonth',
+  name: 'MuiPickersMonth',
   slot: 'Root',
   overridesResolver: (_, styles) => [
     styles.root,
@@ -60,7 +63,7 @@ const PickersMonthRoot = styled('div', {
 });
 
 const PickersMonthButton = styled('button', {
-  name: 'PrivatePickersMonth',
+  name: 'MuiPickersMonth',
   slot: 'MonthButton',
   overridesResolver: (_, styles) => [
     styles.monthButton,
@@ -105,8 +108,11 @@ const PickersMonthButton = styled('button', {
 /**
  * @ignore - do not document.
  */
-const PickersMonthRaw = (props: PickersMonthProps) => {
-  // TODO v6 add 'useThemeProps' once the component class names are aligned
+const PickersMonth = React.memo(function PickersMonth(inProps: PickersMonthProps) {
+  const props = useThemeProps({
+    props: inProps,
+    name: 'MuiPickersMonth',
+  });
   const {
     autoFocus,
     children,
@@ -159,9 +165,6 @@ const PickersMonthRaw = (props: PickersMonthProps) => {
       </PickersMonthButton>
     </PickersMonthRoot>
   );
-};
+});
 
-/**
- * @ignore - do not document.
- */
-export const PickersMonth = React.memo(PickersMonthRaw);
+export { PickersMonth };
