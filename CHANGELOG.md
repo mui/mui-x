@@ -3,6 +3,105 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## v6.0.0-alpha.5
+
+_Oct 27, 2022_
+
+We'd like to offer a big thanks to the 9 contributors who made this release possible. Here are some highlights ✨:
+
+- ⚡ Fix memory leak during unmount of the DataGrid (#6620) @cherniavskii
+- 📝 New guide about migrating pickers from v5 to v6 (#6472) @flaviendelangle
+- 🎁 Allow to disable the autofocus of the search field when opening the column visibility panel (#6444) @e-cloud
+- 🐞 Bugfixes
+
+### `@mui/x-data-grid@v6.0.0-alpha.5` / `@mui/x-data-grid-pro@v6.0.0-alpha.5` / `@mui/x-data-grid-premium@v6.0.0-alpha.5`
+
+#### Changes
+
+- [DataGrid] Allow to disable autofocusing the search field in the columns panel (#6444) @e-cloud
+- [DataGrid] Fix `setRows` method not persisting new rows data after `loading` prop change (#6493) @cherniavskii
+- [DataGrid] Fix memory leak on grid unmount (#6620) @cherniavskii
+- [DataGrid] Rename `GridColumnsState['all']` to `GridColumnsState['orderedFields']` (#6562) @DanailH
+- [l10n] Improve Bulgarian (bg-BG) locale (#6578) @AtanasVA
+
+### `@mui/x-date-pickers@v6.0.0-alpha.5` / `@mui/x-date-pickers-pro@v6.0.0-alpha.5`
+
+#### Breaking changes
+
+- [pickers] Rename remaining `private` components (#6550) @LukasTy
+  Previously we had 4 component names with `Private` prefix in order to avoid breaking changes in v5.
+  These components were renamed:
+
+  - `PrivatePickersMonth` -> `MuiPickersMonth`
+  - `PrivatePickersSlideTransition` -> `MuiPickersSlideTransition`
+  - `PrivatePickersToolbarText` -> `MuiPickersToolbarText`
+  - `PrivatePickersYear` -> `MuiPickersYear`
+
+  Manual style overriding will need to use updated classes:
+
+  ```diff
+  -.PrivatePickersMonth-root {
+  +.MuiPickersMonth-root {
+
+  -.PrivatePickersSlideTransition-root {
+  +.MuiPickersSlideTransition-root {
+
+  -.PrivatePickersToolbarText-root {
+  +.MuiPickersToolbarText-root {
+
+  -.PrivatePickersYear-root {
+  +.MuiPickersYear-root {
+  ```
+
+  Component name changes are also reflected in `themeAugmentation`:
+
+  ```diff
+  const theme = createTheme({
+    components: {
+  -    PrivatePickersMonth: {
+  +    MuiPickersMonth: {
+        // overrides
+      },
+  -    PrivatePickersSlideTransition: {
+  +    MuiPickersSlideTransition: {
+        // overrides
+      },
+  -    PrivatePickersToolbarText: {
+  +    MuiPickersToolbarText: {
+        // overrides
+      },
+  -    PrivatePickersYear: {
+  +    MuiPickersYear: {
+        // overrides
+      },
+    },
+  });
+  ```
+
+#### Changes
+
+- [DateTimePicker] Fix toolbar time order when `theme.rtl=true` (#6636) @alexfauquette
+- [pickers] Import fixes for mask editing (#6623) @alexfauquette
+- [pickers] Rename remaining `private` components (#6550) @LukasTy
+
+### Docs
+
+- [docs] Add feedback in next doc (#6591) @alexfauquette
+- [docs] Check link validity in PR (#6497) @alexfauquette
+- [docs] Disable translations (#6560) @cherniavskii
+- [docs] Fix typo in DataGrid demo page (#6632) @banoth-ravinder
+- [docs] New page to migrate pickers from v5 to v6 (#6472) @flaviendelangle
+- [docs] Remove broken welcome page (#6585) @alexfauquette
+
+### Core
+
+- [core] Fix duplicate CodeQL build @oliviertassinari
+- [core] Fix spreading on validation page (#6624) @flaviendelangle
+- [core] Small TypeScript improvements (#6575) @flaviendelangle
+- [core] Upgrade monorepo (#6594) @oliviertassinari
+- [license] Improve the license content (#6459) @oliviertassinari
+- [test] Test Arrow up/down on every token (#6563) @alexfauquette
+
 ## v6.0.0-alpha.4
 
 _Oct 20, 2022_
