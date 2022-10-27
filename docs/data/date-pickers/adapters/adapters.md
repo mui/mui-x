@@ -8,9 +8,8 @@ title: Library to manipulate dates
 
 ## Why do you need a library ?
 
-Just like most pickers, the MUI Date and Time Pickers need a library to manipulate the dates.
-
-TODO
+Like most pickers, the MUI Date and Time Pickers need a library to manipulate the dates.
+It will be used to format, parse and mutate the date inside all of our components.
 
 The specificity of the MUI Date and Time Pickers is to let you choose which library you want to use for the date manipulation.
 This lets you pick the library you already use in your application, without adding an extra one in your bundle.
@@ -18,7 +17,9 @@ This lets you pick the library you already use in your application, without addi
 To achieve this, both `@mui/x-date-pickers` and `@mui/x-date-pickers-pro` exports a set of **adapters** which exposes
 the date manipulation libraries under a unified api.
 
-## Available libraries
+## Choosing a date library
+
+### Available libraries
 
 The Date and Time Pickers currently support 4 date-libraries:
 
@@ -26,6 +27,8 @@ The Date and Time Pickers currently support 4 date-libraries:
 - [date-fns](https://date-fns.org/)
 - [Luxon](https://moment.github.io/luxon/#/)
 - [Moment.js](https://momentjs.com/)
+
+### Recommended library
 
 If you are already using one of these libraries in your application, we recommend using it for our components as well.
 This will avoid bundling two libraries.
@@ -48,6 +51,10 @@ The bundling strategy was taken care of by a _Create React App_ and no locale wa
 
 The results may vary in your application depending on the version of each library, the locale and the bundling strategy used.
 :::
+
+### Using another library ?
+
+TODO
 
 ## Setup a date library
 

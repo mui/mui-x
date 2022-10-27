@@ -313,7 +313,7 @@ export const useFieldState = <
       ...prevState,
       sections,
     }));
-  }, [format]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [format, utils.locale]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return {
     state,

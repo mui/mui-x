@@ -41,6 +41,8 @@ export class AdapterDayjs extends BaseAdapterDayjs implements MuiPickerFieldAdap
   public expandFormat = (format: string) => {
     const localeObject = this.rawDayJsInstance.Ls[this.locale || 'en'];
 
+    console.log('HEY', this.locale);
+
     if (localeObject === undefined) {
       localeNotFoundWarning();
     }
