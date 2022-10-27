@@ -163,6 +163,11 @@ MobileDateTimePicker.propTypes = {
    */
   defaultCalendarMonth: PropTypes.any,
   /**
+   * The default selected value.
+   * Used when the component is not controlled.
+   */
+  defaultValue: PropTypes.any,
+  /**
    * If `true`, the picker and text field are disabled.
    * @default false
    */

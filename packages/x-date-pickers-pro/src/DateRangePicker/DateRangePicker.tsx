@@ -129,6 +129,11 @@ DateRangePicker.propTypes = {
    */
   defaultCalendarMonth: PropTypes.any,
   /**
+   * The default selected value.
+   * Used when the component is not controlled.
+   */
+  defaultValue: PropTypes.any,
+  /**
    * CSS media query when `Mobile` mode will be changed to `Desktop`.
    * @default '@media (pointer: fine)'
    * @example '@media (min-width: 720px)' or theme.breakpoints.up("sm")

@@ -18,6 +18,7 @@
       "default": "(day) => day.charAt(0).toUpperCase()"
     },
     "defaultCalendarMonth": { "type": { "name": "any" } },
+    "defaultValue": { "type": { "name": "any" } },
     "disabled": { "type": { "name": "bool" } },
     "disableFuture": { "type": { "name": "bool" } },
     "disableHighlightToday": { "type": { "name": "bool" } },

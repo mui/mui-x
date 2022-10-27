@@ -23,6 +23,7 @@
       "default": "(day) => day.charAt(0).toUpperCase()"
     },
     "defaultCalendarMonth": { "type": { "name": "any" } },
+    "defaultValue": { "type": { "name": "any" } },
     "desktopModeMediaQuery": {
       "type": { "name": "string" },
       "default": "'@media (pointer: fine)'"

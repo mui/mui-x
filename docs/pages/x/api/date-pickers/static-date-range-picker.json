@@ -23,6 +23,7 @@
       "default": "(day) => day.charAt(0).toUpperCase()"
     },
     "defaultCalendarMonth": { "type": { "name": "any" } },
+    "defaultValue": { "type": { "name": "any" } },
     "disableAutoMonthSwitching": { "type": { "name": "bool" } },
     "disabled": { "type": { "name": "bool" } },
     "disableFuture": { "type": { "name": "bool" } },
