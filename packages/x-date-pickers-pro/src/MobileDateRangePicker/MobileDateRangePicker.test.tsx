@@ -311,6 +311,14 @@ describe('<MobileDateRangePicker />', () => {
 
       expect(screen.getByText('Start', { selector: 'label' })).to.have.class('Mui-focused');
     });
+
+    it('should render "readonly" input elements', () => {
+      render(<WrappedMobileDateRangePicker initialValue={[null, null]} />);
+
+      screen.getAllByRole('textbox').forEach((input) => {
+        expect(input).to.have.attribute('readonly');
+      });
+    });
   });
 
   // TODO: Write test

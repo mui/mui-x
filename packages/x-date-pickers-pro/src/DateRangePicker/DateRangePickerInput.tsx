@@ -77,6 +77,7 @@ export interface DateRangePickerInputProps<TDate>
   validationError: DateRangeValidationError;
   value: DateRange<TDate>;
   classes?: Partial<DateRangePickerInputClasses>;
+  mobile?: boolean;
 }
 
 type DatePickerInputComponent = <TDate>(
@@ -106,6 +107,7 @@ export const DateRangePickerInput = React.forwardRef(function DateRangePickerInp
     TextFieldProps,
     validationError: [startValidationError, endValidationError],
     className,
+    mobile,
     ...other
   } = props;
 
@@ -187,6 +189,7 @@ export const DateRangePickerInput = React.forwardRef(function DateRangePickerInp
       onClick: openRangeStartSelection,
       onKeyDown: onSpaceOrEnter(openRangeStartSelection),
       onFocus: focusOnRangeStart,
+      readOnly: mobile,
     },
   });
 
@@ -206,6 +209,7 @@ export const DateRangePickerInput = React.forwardRef(function DateRangePickerInp
       onClick: openRangeEndSelection,
       onKeyDown: onSpaceOrEnter(openRangeEndSelection),
       onFocus: focusOnRangeEnd,
+      readOnly: mobile,
     },
   });
 
