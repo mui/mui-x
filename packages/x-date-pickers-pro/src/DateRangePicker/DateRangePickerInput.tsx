@@ -144,7 +144,10 @@ export const DateRangePickerInput = React.forwardRef(function DateRangePickerInp
     lazyHandleChangeCallback([start, date], inputString);
   };
 
-  const openRangeStartSelection = () => {
+  const openRangeStartSelection = (
+    event: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>,
+  ) => {
+    event.stopPropagation();
     if (setCurrentlySelectingRangeEnd) {
       setCurrentlySelectingRangeEnd('start');
     }
@@ -153,7 +156,10 @@ export const DateRangePickerInput = React.forwardRef(function DateRangePickerInp
     }
   };
 
-  const openRangeEndSelection = () => {
+  const openRangeEndSelection = (
+    event: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>,
+  ) => {
+    event.stopPropagation();
     if (setCurrentlySelectingRangeEnd) {
       setCurrentlySelectingRangeEnd('end');
     }
@@ -184,6 +190,9 @@ export const DateRangePickerInput = React.forwardRef(function DateRangePickerInp
       ...TextFieldProps,
       inputRef: startRef,
       focused: open ? currentlySelectingRangeEnd === 'start' : undefined,
+      // registering `onClick` listener on the root element as well to correctly handle cases where user is clicking on `label`
+      // which has `pointer-events: none` and due to DOM structure the `input` does not catch the click event
+      ...(!readOnly && !other.disabled && { onClick: openRangeStartSelection }),
     },
     inputProps: {
       onClick: openRangeStartSelection,
@@ -204,6 +213,9 @@ export const DateRangePickerInput = React.forwardRef(function DateRangePickerInp
       ...TextFieldProps,
       inputRef: endRef,
       focused: open ? currentlySelectingRangeEnd === 'end' : undefined,
+      // registering `onClick` listener on the root element as well to correctly handle cases where user is clicking on `label`
+      // which has `pointer-events: none` and due to DOM structure the `input` does not catch the click event
+      ...(!readOnly && !other.disabled && { onClick: openRangeEndSelection }),
     },
     inputProps: {
       onClick: openRangeEndSelection,
