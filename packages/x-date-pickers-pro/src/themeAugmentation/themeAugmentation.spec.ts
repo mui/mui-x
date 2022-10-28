@@ -44,6 +44,13 @@ createTheme({
         someRandomProp: true,
       },
     },
+    MuiDesktopNextDateRangePicker: {
+      defaultProps: {
+        open: true,
+        // @ts-expect-error invalid MuiDesktopNextDateRangePicker prop
+        someRandomProp: true,
+      },
+    },
     MuiMobileDateRangePicker: {
       defaultProps: {
         disableFuture: true,

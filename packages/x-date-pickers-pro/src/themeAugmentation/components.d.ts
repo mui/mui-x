@@ -36,6 +36,11 @@ export interface PickersProComponents<Theme = unknown> {
     styleOverrides?: ComponentsOverrides<Theme>['MuiDesktopDateRangePicker'];
     variants?: ComponentsVariants['MuiDesktopDateRangePicker'];
   };
+  MuiDesktopNextDateRangePicker?: {
+    defaultProps?: ComponentsProps['MuiDesktopNextDateRangePicker'];
+    styleOverrides?: ComponentsOverrides<Theme>['MuiDesktopNextDateRangePicker'];
+    variants?: ComponentsVariants['MuiDesktopNextDateRangePicker'];
+  };
   MuiMobileDateRangePicker?: {
     defaultProps?: ComponentsProps['MuiMobileDateRangePicker'];
     styleOverrides?: ComponentsOverrides<Theme>['MuiMobileDateRangePicker'];
