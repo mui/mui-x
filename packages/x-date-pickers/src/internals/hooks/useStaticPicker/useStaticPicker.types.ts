@@ -3,7 +3,7 @@ import {
   ExportedPickerViewLayoutSlotsComponentsProps,
 } from '../../components/PickerViewLayout';
 import { CalendarOrClockPickerView } from '../../models';
-import { BasePickerProps2 } from '../../models/props/basePickerProps';
+import { BaseNextPickerProps } from '../../models/props/basePickerProps';
 import { UsePickerParams } from '../usePicker';
 import {
   PickersSlotsComponent,
@@ -27,7 +27,7 @@ export interface StaticOnlyPickerProps {
 }
 
 export interface UseStaticPickerProps<TDate, TView extends CalendarOrClockPickerView>
-  extends BasePickerProps2<TDate | null, TDate, TView>,
+  extends BaseNextPickerProps<TDate | null, TDate, TView>,
     StaticOnlyPickerProps {
   /**
    * Overrideable components.

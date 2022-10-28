@@ -2,7 +2,7 @@ import * as React from 'react';
 import TextField, { TextFieldProps } from '@mui/material/TextField';
 import { SlotComponentProps } from '@mui/base/utils';
 import { CalendarOrClockPickerView, MuiPickersAdapter } from '../../models';
-import { BasePickerProps2 } from '../../models/props/basePickerProps';
+import { BaseNextPickerProps } from '../../models/props/basePickerProps';
 import {
   PickersModalDialogSlotsComponent,
   PickersModalDialogSlotsComponentsProps,
@@ -44,7 +44,7 @@ export interface UseMobilePickerSlotsComponentsProps<TDate>
 }
 
 export interface UseMobilePickerProps<TDate, TView extends CalendarOrClockPickerView>
-  extends BasePickerProps2<TDate | null, TDate, TView> {
+  extends BaseNextPickerProps<TDate | null, TDate, TView> {
   /**
    * Overrideable components.
    * @default {}

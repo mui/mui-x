@@ -116,7 +116,7 @@ export type { DateTimeValidationError } from './hooks/validation/useDateTimeVali
 export { usePreviousMonthDisabled, useNextMonthDisabled } from './hooks/date-helpers-hooks';
 
 export type { BaseFieldProps } from './models/fields';
-export type { BasePickerProps, BasePickerProps2 } from './models/props/basePickerProps';
+export type { BasePickerProps, BaseNextPickerProps } from './models/props/basePickerProps';
 export type { StaticPickerProps } from './models/props/staticPickerProps';
 export type { BaseToolbarProps, ExportedBaseToolbarProps } from './models/props/toolbar';
 export type { MuiPickersAdapter } from './models/muiPickersAdapter';

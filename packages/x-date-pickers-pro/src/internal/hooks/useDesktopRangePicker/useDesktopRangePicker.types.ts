@@ -4,7 +4,7 @@ import { SlotComponentProps } from '@mui/base/utils';
 import {
   CalendarOrClockPickerView,
   UsePickerParams,
-  BasePickerProps2,
+  BaseNextPickerProps,
   PickersPopperSlotsComponent,
   PickersPopperSlotsComponentsProps,
 } from '@mui/x-date-pickers/internals';
@@ -30,7 +30,7 @@ export interface ExportedUseDesktopRangePickerProps {}
 
 export interface UseDesktopRangePickerProps<TDate, TView extends CalendarOrClockPickerView>
   extends ExportedUseDesktopRangePickerProps,
-    BasePickerProps2<DateRange<TDate>, TDate, TView> {
+    BaseNextPickerProps<DateRange<TDate>, TDate, TView> {
   /**
    * Overrideable components.
    * @default {}

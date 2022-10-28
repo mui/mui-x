@@ -1,7 +1,7 @@
 <LocalizationProvider dateAdapter={AdapterDayjs}>
   <Stack spacing={4}>
-    <DatePicker2 label="Responsive" />
-    <DesktopDatePicker2 label="Desktop" />
-    <MobileDatePicker2 label="Mobile" />
+    <NextDatePicker label="Responsive" />
+    <DesktopNextDatePicker label="Desktop" />
+    <MobileNextDatePicker label="Mobile" />
   </Stack>
 </LocalizationProvider>

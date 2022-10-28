@@ -41,7 +41,7 @@ export interface BasePickerProps<TValue, TDate> extends PickerStateProps<TValue>
 /**
  * Props common to all pickers.
  */
-export interface BasePickerProps2<TValue, TDate, TView extends CalendarOrClockPickerView>
+export interface BaseNextPickerProps<TValue, TDate, TView extends CalendarOrClockPickerView>
   extends UsePickerProps<TValue, TView> {
   /**
    * Class name applied to the root element.
