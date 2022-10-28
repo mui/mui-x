@@ -153,6 +153,7 @@ export interface DateCalendarProps<TDate>
 
 export type ExportedDateCalendarProps<TDate> = Omit<
   DateCalendarProps<TDate>,
+  | 'defaultValue'
   | 'value'
   | 'view'
   | 'views'

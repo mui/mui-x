@@ -175,11 +175,6 @@ StaticDateRangePicker.propTypes = {
    */
   defaultCalendarMonth: PropTypes.any,
   /**
-   * The default selected value.
-   * Used when the component is not controlled.
-   */
-  defaultValue: PropTypes.any,
-  /**
    * If `true`, after selecting `start` date calendar will not automatically switch to the month of `end` date.
    * @default false
    */
