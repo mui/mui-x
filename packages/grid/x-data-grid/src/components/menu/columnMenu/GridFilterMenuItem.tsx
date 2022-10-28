@@ -63,12 +63,7 @@ const GridFilterMenuItem = (props: GridFilterItemProps) => {
         <Button
           onClick={showFilter}
           startIcon={<FilterAltIcon fontSize="small" />}
-          sx={{
-            color: isColumnFiltered ? 'primary.main' : 'common.black',
-            '& .MuiSvgIcon-root': {
-              color: isColumnFiltered ? 'primary.main' : 'grey.700',
-            },
-          }}
+          color={isColumnFiltered ? 'primary' : 'inherit'}
         >
           {apiRef.current.getLocaleText('columnMenuFilter')}
         </Button>

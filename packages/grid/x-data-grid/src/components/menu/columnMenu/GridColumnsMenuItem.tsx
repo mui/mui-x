@@ -2,8 +2,8 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import MenuItem from '@mui/material/MenuItem';
 import ViewWeekIcon from '@mui/icons-material/ViewColumn';
-import ListItemText from '@mui/material/ListItemText';
-import ListItemIcon from '@mui/material/ListItemIcon';
+import Stack from '@mui/material/Stack';
+import Button from '@mui/material/Button';
 import { GridPreferencePanelsValue } from '../../../hooks/features/preferencesPanel/gridPreferencePanelsValue';
 import { useGridApiContext } from '../../../hooks/utils/useGridApiContext';
 import { GridFilterItemProps } from './GridFilterItemProps';
@@ -28,26 +28,11 @@ const GridColumnsMenuItem = (props: GridFilterItemProps) => {
 
   if (condensed) {
     return (
-      <MenuItem
-        onClick={showColumns}
-        color="primary"
-        sx={{
-          '& .MuiListItemIcon-root': {
-            minWidth: '29px',
-          },
-          '& .MuiTypography-root': {
-            fontSize: '13px',
-            fontWeight: '500',
-            textTransform: 'uppercase',
-            color: 'primary.main',
-          },
-        }}
-      >
-        <ListItemIcon>
-          <ViewWeekIcon color="primary" fontSize="small" />
-        </ListItemIcon>
-        <ListItemText>{apiRef.current.getLocaleText('columnMenuShowColumns')}</ListItemText>
-      </MenuItem>
+      <Stack px={1.5} pt={1} direction="row">
+        <Button onClick={showColumns} startIcon={<ViewWeekIcon fontSize="small" />}>
+          {apiRef.current.getLocaleText('columnMenuShowColumns')}
+        </Button>
+      </Stack>
     );
   }
 

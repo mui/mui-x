@@ -186,10 +186,7 @@ export const useGridRowGrouping = (
         return initialValue;
       }
 
-      const nodesToInsert = [
-        { displayName: 'divider', component: <Divider sx={{ my: '9px' }} /> },
-        menuItem,
-      ];
+      const nodesToInsert = [{ displayName: 'divider', component: <Divider /> }, menuItem];
 
       return insertItemsInColumnMenu(initialValue, nodesToInsert, 'GridAggregationColumnMenuItem');
     },

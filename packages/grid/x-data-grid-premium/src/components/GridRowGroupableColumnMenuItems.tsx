@@ -1,10 +1,10 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import MenuItem from '@mui/material/MenuItem';
-import ListItemText from '@mui/material/ListItemText';
-import ListItemIcon from '@mui/material/ListItemIcon';
 import GroupWorkIcon from '@mui/icons-material/GroupWork';
 import WorkspacesIcon from '@mui/icons-material/Workspaces';
+import Stack from '@mui/material/Stack';
+import Button from '@mui/material/Button';
 import { gridColumnLookupSelector, useGridSelector, GridColDef } from '@mui/x-data-grid-pro';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { gridRowGroupingSanitizedModelSelector } from '../hooks/features/rowGrouping/gridRowGroupingSelector';
@@ -41,26 +41,30 @@ const GridRowGroupableColumnMenuItems = (props: GridRowGroupableColumnMenuItemsP
 
   const name = columnsLookup[column.field].headerName ?? column.field;
 
-  if (condensed) {
-    return (
-      <MenuItem onClick={groupColumn} key={column.field}>
-        <ListItemIcon>
-          <GroupWorkIcon fontSize="small" />
-        </ListItemIcon>
-        <ListItemText>{apiRef.current.getLocaleText('groupColumn')(name)}</ListItemText>
-      </MenuItem>
-    );
-  }
-
   if (rowGroupingModel.includes(column.field)) {
     if (condensed) {
       return (
-        <MenuItem onClick={ungroupColumn} key={column.field}>
-          <ListItemIcon>
-            <WorkspacesIcon fontSize="small" />
-          </ListItemIcon>
-          <ListItemText>{apiRef.current.getLocaleText('unGroupColumn')(name)}</ListItemText>
-        </MenuItem>
+        <Stack
+          px={1.5}
+          py={1}
+          direction="row"
+          sx={{
+            '& .MuiButton-root': {
+              fontSize: '16px',
+              fontWeight: '400',
+              textTransform: 'none',
+            },
+          }}
+        >
+          <Button
+            onClick={ungroupColumn}
+            key={column.field}
+            startIcon={<WorkspacesIcon fontSize="small" />}
+            color="inherit"
+          >
+            {apiRef.current.getLocaleText('unGroupColumn')(name)}
+          </Button>
+        </Stack>
       );
     }
     return (
@@ -71,12 +75,27 @@ const GridRowGroupableColumnMenuItems = (props: GridRowGroupableColumnMenuItemsP
   }
 
   return condensed ? (
-    <MenuItem onClick={groupColumn} key={column.field}>
-      <ListItemIcon>
-        <GroupWorkIcon fontSize="small" />
-      </ListItemIcon>
-      <ListItemText>{apiRef.current.getLocaleText('groupColumn')(name)}</ListItemText>
-    </MenuItem>
+    <Stack
+      px={1.5}
+      py={1}
+      direction="row"
+      sx={{
+        '& .MuiButton-root': {
+          fontSize: '16px',
+          fontWeight: '400',
+          textTransform: 'none',
+        },
+      }}
+    >
+      <Button
+        onClick={groupColumn}
+        key={column.field}
+        startIcon={<GroupWorkIcon fontSize="small" />}
+        color="inherit"
+      >
+        {apiRef.current.getLocaleText('groupColumn')(name)}
+      </Button>
+    </Stack>
   ) : (
     <MenuItem onClick={groupColumn}>{apiRef.current.getLocaleText('groupColumn')(name)}</MenuItem>
   );

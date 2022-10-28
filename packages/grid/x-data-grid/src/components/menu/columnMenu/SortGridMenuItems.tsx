@@ -63,7 +63,7 @@ const SortGridMenuItems = (props: GridFilterItemProps) => {
             onClick={onSortMenuItemClick}
             data-value="asc"
             startIcon={<ArrowUpwardIcon fontSize="small" />}
-            sx={{ color: sortDirection === 'asc' ? 'primary.main' : 'common.black' }}
+            color={sortDirection === 'asc' ? 'primary' : 'inherit'}
           >
             {apiRef.current.getLocaleText('columnMenuSortCondensedAsc')}
           </Button>
@@ -71,7 +71,7 @@ const SortGridMenuItems = (props: GridFilterItemProps) => {
             onClick={onSortMenuItemClick}
             data-value="desc"
             startIcon={<ArrowDownwardIcon />}
-            sx={{ color: sortDirection === 'desc' ? 'primary.main' : 'common.black' }}
+            color={sortDirection === 'desc' ? 'primary' : 'inherit'}
           >
             {apiRef.current.getLocaleText('columnMenuSortCondensedDesc')}
           </Button>

@@ -1,8 +1,8 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import MenuItem from '@mui/material/MenuItem';
-import ListItemText from '@mui/material/ListItemText';
-import ListItemIcon from '@mui/material/ListItemIcon';
+import Stack from '@mui/material/Stack';
+import Button from '@mui/material/Button';
 import WorkspacesIcon from '@mui/icons-material/Workspaces';
 import { useGridSelector, gridColumnLookupSelector, GridColDef } from '@mui/x-data-grid-pro';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
@@ -37,12 +37,27 @@ const GridRowGroupingColumnMenuItems = (props: GridRowGroupingColumnMenuItemsPro
 
     if (condensed) {
       return (
-        <MenuItem onClick={ungroupColumn} key={field}>
-          <ListItemIcon>
-            <WorkspacesIcon fontSize="small" />
-          </ListItemIcon>
-          <ListItemText>{apiRef.current.getLocaleText('unGroupColumn')(name)}</ListItemText>
-        </MenuItem>
+        <Stack
+          px={1.5}
+          py={1}
+          direction="row"
+          sx={{
+            '& .MuiButton-root': {
+              fontSize: '16px',
+              fontWeight: '400',
+              textTransform: 'none',
+            },
+          }}
+        >
+          <Button
+            onClick={ungroupColumn}
+            key={field}
+            startIcon={<WorkspacesIcon fontSize="small" />}
+            color="inherit"
+          >
+            {apiRef.current.getLocaleText('unGroupColumn')(name)}
+          </Button>
+        </Stack>
       );
     }
 

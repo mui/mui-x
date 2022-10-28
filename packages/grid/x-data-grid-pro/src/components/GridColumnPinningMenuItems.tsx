@@ -62,11 +62,10 @@ const GridColumnPinningMenuItems = (props: GridColumnPinningMenuItemsProps) => {
               side === GridPinnedPosition.left ? unpinColumn : pinColumn(GridPinnedPosition.left)
             }
             startIcon={<PushPinIcon />}
+            color={side === GridPinnedPosition.left ? 'primary' : 'inherit'}
             sx={{
-              color: side === GridPinnedPosition.left ? 'primary.main' : 'common.black',
               '& .MuiSvgIcon-root': {
                 transform: 'rotate(30deg)',
-                color: side === GridPinnedPosition.left ? 'primary.main' : 'grey.700',
               },
             }}
           >
@@ -77,11 +76,10 @@ const GridColumnPinningMenuItems = (props: GridColumnPinningMenuItemsProps) => {
               side === GridPinnedPosition.right ? unpinColumn : pinColumn(GridPinnedPosition.right)
             }
             startIcon={<PushPinIcon />}
+            color={side === GridPinnedPosition.right ? 'primary' : 'inherit'}
             sx={{
-              color: side === GridPinnedPosition.right ? 'primary.main' : 'common.black',
               '& .MuiSvgIcon-root': {
                 transform: 'rotate(-30deg)',
-                color: side === GridPinnedPosition.right ? 'primary.main' : 'grey.700',
               },
             }}
           >

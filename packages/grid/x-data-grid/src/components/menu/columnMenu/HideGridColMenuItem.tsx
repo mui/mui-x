@@ -2,8 +2,8 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import MenuItem from '@mui/material/MenuItem';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
-import ListItemText from '@mui/material/ListItemText';
-import ListItemIcon from '@mui/material/ListItemIcon';
+import Stack from '@mui/material/Stack';
+import Button from '@mui/material/Button';
 import { GridFilterItemProps } from './GridFilterItemProps';
 import { useGridApiContext } from '../../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
@@ -53,12 +53,27 @@ const HideGridColMenuItem = (props: GridFilterItemProps) => {
 
   if (condensed) {
     return (
-      <MenuItem onClick={toggleColumn} disabled={disabled}>
-        <ListItemIcon>
-          <VisibilityOffIcon fontSize="small" />
-        </ListItemIcon>
-        <ListItemText>{apiRef.current.getLocaleText('columnMenuHideColumnCondensed')}</ListItemText>
-      </MenuItem>
+      <Stack
+        px={1.5}
+        py={1}
+        direction="row"
+        sx={{
+          '& .MuiButton-root': {
+            fontSize: '16px',
+            fontWeight: '400',
+            textTransform: 'none',
+          },
+        }}
+      >
+        <Button
+          onClick={toggleColumn}
+          disabled={disabled}
+          startIcon={<VisibilityOffIcon fontSize="small" />}
+          color="inherit"
+        >
+          {apiRef.current.getLocaleText('columnMenuHideColumnCondensed')}
+        </Button>
+      </Stack>
     );
   }
 
