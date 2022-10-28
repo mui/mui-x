@@ -117,7 +117,7 @@ export type DateRangeCalendarDefaultizedProps<TDate> = DefaultizedProps<
 
 export type ExportedDateRangeCalendarProps<TDate> = Omit<
   DateRangeCalendarProps<TDate>,
-    | 'defaultValue'
+  | 'defaultValue'
   | 'value'
   | 'onChange'
   | 'changeView'
