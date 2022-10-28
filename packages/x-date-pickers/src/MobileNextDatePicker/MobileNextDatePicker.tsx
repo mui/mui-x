@@ -30,7 +30,7 @@ const MobileNextDatePicker = React.forwardRef(function MobileNextDatePicker<TDat
   const { className, sx, ...defaultizedProps } = useNextDatePickerDefaultizedProps<
     TDate,
     MobileNextDatePickerProps<TDate>
-  >(inProps, 'MuiNextMobileDatePicker');
+  >(inProps, 'MuiMobileNextDatePicker');
 
   // Props with the default values specific to the desktop variant
   const props = {

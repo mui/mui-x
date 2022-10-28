@@ -24,7 +24,7 @@ const VIEW_LOOKUP = {
   seconds: renderTimeView,
 };
 
-const MobileNextDateTimePicker = React.forwardRef(function MobileDateTimePicker<TDate>(
+const MobileNextDateTimePicker = React.forwardRef(function MobileNextDateTimePicker<TDate>(
   inProps: MobileNextDateTimePickerProps<TDate>,
   ref: React.Ref<HTMLDivElement>,
 ) {

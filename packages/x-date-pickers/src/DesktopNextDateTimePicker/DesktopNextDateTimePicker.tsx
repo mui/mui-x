@@ -35,7 +35,7 @@ const DesktopNextDateTimePicker = React.forwardRef(function DesktopNextDateTimeP
   const { className, sx, ...defaultizedProps } = useNextDateTimePickerDefaultizedProps<
     TDate,
     DesktopNextDateTimePickerProps<TDate>
-  >(inProps, 'MuiNextDesktopDateTimePicker');
+  >(inProps, 'MuiDesktopNextDateTimePicker');
 
   // Props with the default values specific to the desktop variant
   const props = {

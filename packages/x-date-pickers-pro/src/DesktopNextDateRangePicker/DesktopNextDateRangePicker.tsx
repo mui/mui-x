@@ -25,7 +25,7 @@ const DesktopNextDateRangePicker = React.forwardRef(function DesktopNextDateRang
   const { className, sx, ...defaultizedProps } = useNextDateRangePickerDefaultizedProps<
     TDate,
     DesktopNextDateRangePickerProps<TDate>
-  >(inProps, 'MuiNextDesktopDateRangePicker');
+  >(inProps, 'MuiDesktopNextDateRangePicker');
 
   const props = {
     ...defaultizedProps,
