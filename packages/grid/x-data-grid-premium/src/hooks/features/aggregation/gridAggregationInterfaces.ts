@@ -1,4 +1,4 @@
-import { GridValueFormatterParams, GridRowId } from '@mui/x-data-grid-pro';
+import { GridValueFormatterParams, GridRowId, GridRowModel } from '@mui/x-data-grid-pro';
 
 export interface GridAggregationState {
   model: GridAggregationModel;
@@ -20,6 +20,13 @@ export interface GridAggregationApi {
    * @param {GridAggregationModel} model The aggregation model.
    */
   setAggregationModel: (model: GridAggregationModel) => void;
+}
+
+export interface GridAggregationGetCellValueParams {
+  /**
+   * The row model of the row that the current cell belongs to.
+   */
+  row: GridRowModel;
 }
 
 /**
@@ -58,6 +65,13 @@ export interface GridAggregationFunction<V = any, AV = V, FAV = AV> {
    * @default `true`
    */
   hasCellUnit?: boolean;
+  /**
+   * Function that allows to redefine the value of the cells used to generate the aggregated value.
+   * Useful for multi-column aggregation when aggregated value is generated from multiple columns.
+   * @param {GridAggregationGetCellValueParams} params The params of the current cell
+   * @returns {V} The value of the cell that will be passed to the aggregation `apply` function
+   */
+  getCellValue?: (params: GridAggregationGetCellValueParams) => V;
 }
 
 interface GridAggregationParams<V = any> {
