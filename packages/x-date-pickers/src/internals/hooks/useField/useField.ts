@@ -55,6 +55,7 @@ export const useField = <
 
   const {
     inputRef: inputRefProp,
+    internalProps,
     internalProps: { readOnly = false },
     forwardedProps: { onClick, onKeyDown, onFocus, onBlur, onMouseUp, ...otherForwardedProps },
     fieldValueManager,
@@ -446,7 +447,7 @@ export const useField = <
   });
 
   const validationError = useValidation(
-    { ...params.internalProps, value: state.value },
+    { ...internalProps, value: state.value },
     validator,
     fieldValueManager.isSameError,
   );

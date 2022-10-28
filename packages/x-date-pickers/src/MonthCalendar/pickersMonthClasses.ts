@@ -1,4 +1,7 @@
-import { generateUtilityClass, generateUtilityClasses } from '@mui/material';
+import {
+  unstable_generateUtilityClass as generateUtilityClass,
+  unstable_generateUtilityClasses as generateUtilityClasses,
+} from '@mui/utils';
 
 export interface PickersMonthClasses {
   /** Styles applied to the root element. */
@@ -18,12 +21,14 @@ export interface PickersMonthClasses {
 export type PickersMonthClassKey = keyof PickersMonthClasses;
 
 export function getPickersMonthUtilityClass(slot: string) {
-  // TODO v6 Rename 'PrivatePickersMonth' to 'MuiPickersMonth' to follow convention
-  return generateUtilityClass('PrivatePickersMonth', slot);
+  return generateUtilityClass('MuiPickersMonth', slot);
 }
 
-export const pickersMonthClasses = generateUtilityClasses<PickersMonthClassKey>(
-  // TODO v6 Rename 'PrivatePickersMonth' to 'MuiPickersMonth' to follow convention
-  'PrivatePickersMonth',
-  ['root', 'modeMobile', 'modeDesktop', 'monthButton', 'disabled', 'selected'],
-);
+export const pickersMonthClasses = generateUtilityClasses<PickersMonthClassKey>('MuiPickersMonth', [
+  'root',
+  'modeMobile',
+  'modeDesktop',
+  'monthButton',
+  'disabled',
+  'selected',
+]);

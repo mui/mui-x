@@ -24,12 +24,12 @@ const SingleInputDateRangeField = React.forwardRef(function SingleInputDateRange
   const ownerState = themeProps;
 
   const Input = components?.Input ?? TextField;
-  const inputProps = useSlotProps({
+  const inputProps: SingleInputDateRangeFieldProps<TDate> = useSlotProps({
     elementType: Input,
     externalSlotProps: componentsProps?.input,
     externalForwardedProps: other,
     ownerState,
-  }) as Omit<SingleInputDateRangeFieldProps<TDate>, 'components' | 'componentsProps'>;
+  });
 
   const {
     ref: inputRef,

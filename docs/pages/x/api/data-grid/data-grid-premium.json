@@ -60,9 +60,9 @@
     "disableIgnoreModificationsIfProcessingProps": { "type": { "name": "bool" } },
     "disableMultipleColumnsFiltering": { "type": { "name": "bool" } },
     "disableMultipleColumnsSorting": { "type": { "name": "bool" } },
-    "disableMultipleSelection": { "type": { "name": "bool" } },
+    "disableMultipleRowSelection": { "type": { "name": "bool" } },
     "disableRowGrouping": { "type": { "name": "bool" } },
-    "disableSelectionOnClick": { "type": { "name": "bool" } },
+    "disableRowSelectionOnClick": { "type": { "name": "bool" } },
     "disableVirtualization": { "type": { "name": "bool" } },
     "editMode": {
       "type": { "name": "enum", "description": "'cell'<br>&#124;&nbsp;'row'" },
@@ -170,8 +170,8 @@
     "onRowGroupingModelChange": { "type": { "name": "func" } },
     "onRowModesModelChange": { "type": { "name": "func" } },
     "onRowOrderChange": { "type": { "name": "func" } },
+    "onRowSelectionModelChange": { "type": { "name": "func" } },
     "onRowsScrollEnd": { "type": { "name": "func" } },
-    "onSelectionModelChange": { "type": { "name": "func" } },
     "onSortModelChange": { "type": { "name": "func" } },
     "page": { "type": { "name": "number" }, "default": "0" },
     "pageSize": { "type": { "name": "number" }, "default": "100" },
@@ -204,6 +204,12 @@
     "rowModesModel": { "type": { "name": "object" } },
     "rowReordering": { "type": { "name": "bool" } },
     "rowSelection": { "type": { "name": "bool" }, "default": "true" },
+    "rowSelectionModel": {
+      "type": {
+        "name": "union",
+        "description": "Array&lt;number<br>&#124;&nbsp;string&gt;<br>&#124;&nbsp;number<br>&#124;&nbsp;string"
+      }
+    },
     "rowsLoadingMode": {
       "type": { "name": "enum", "description": "'client'<br>&#124;&nbsp;'server'" }
     },
@@ -218,12 +224,6 @@
     "rowThreshold": { "type": { "name": "number" }, "default": "3" },
     "scrollbarSize": { "type": { "name": "number" } },
     "scrollEndThreshold": { "type": { "name": "number" }, "default": "80" },
-    "selectionModel": {
-      "type": {
-        "name": "union",
-        "description": "Array&lt;number<br>&#124;&nbsp;string&gt;<br>&#124;&nbsp;number<br>&#124;&nbsp;string"
-      }
-    },
     "showCellRightBorder": { "type": { "name": "bool" } },
     "showColumnRightBorder": { "type": { "name": "bool" } },
     "sortingMode": {

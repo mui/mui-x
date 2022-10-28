@@ -3,6 +3,137 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## v6.0.0-alpha.4
+
+_Oct 20, 2022_
+
+We'd like to offer a big thanks to the 9 contributors who made this release possible. Here are some highlights ✨:
+
+- 📝 Manage pickers' toolbar customization with slots
+- 🐞 Bugfixes
+- 🌍 Improve Turkish (tr-TR) locale on the data grid and pickers (#6542) @ramazansancar
+
+### `@mui/x-data-grid@v6.0.0-alpha.4` / `@mui/x-data-grid-pro@v6.0.0-alpha.4` / `@mui/x-data-grid-premium@v6.0.0-alpha.4`
+
+#### Breaking changes
+
+- To avoid confusion with the props that will be added for the cell selection feature, some props related to row selection were renamed to have "row" in their name.
+  The renamed props are the following:
+
+  | Old name                   | New name                      |
+  |----------------------------|-------------------------------|
+  | `selectionModel`           | `rowSelectionModel`           |
+  | `onSelectionModelChange`   | `onRowSelectionModelChange`   |
+  | `disableSelectionOnClick`  | `disableRowSelectionOnClick`  |
+  | `disableMultipleSelection` | `disableMultipleRowSelection` |
+
+- The `gridSelectionStateSelector` selector was renamed to `gridRowSelectionStateSelector`.
+
+- The `selectionChange` event was renamed to `rowSelectionChange`.
+
+#### Changes
+
+- [DataGrid] Add `searchPredicate` prop to `GridColumnsPanel` component (#6557) @cherniavskii
+- [DataGrid] Support keyboard navigation in column group header (#5947) @alexfauquette
+- [DataGrid] Fix grid not updating state on `rowCount` prop change (#5982) @cherniavskii
+- [DataGrid] Rename selection props (#6556) @m4theushw
+- [l10n] Improve Turkish (tr-TR) locale on the data grid and pickers (#6542) @ramazansancar
+
+### `@mui/x-date-pickers@v6.0.0-alpha.4` / `@mui/x-date-pickers-pro@v6.0.0-alpha.4`
+
+#### Breaking changes
+
+- The `ToolbarComponent` has been replaced by a `Toolbar` component slot.
+  You can find more information about this pattern in the [MUI Base documentation](https://mui.com/base/getting-started/usage/#shared-props):
+
+  ```diff
+   // Same on all other pickers
+   <DatePicker
+  -  ToolbarComponent: MyToolbar,
+  +  components={{ Toolbar: MyToolbar }}
+   />
+  ```
+
+- The `toolbarPlaceholder` and `toolbarFormat` props have been moved to the `toolbar` components props slot:
+
+  ```diff
+   // Same on all other pickers
+   <DatePicker
+  -  toolbarPlaceholder="__"
+  -  toolbarFormat="DD / MM / YYYY"
+  +  componentsProps={{
+  +    toolbar: {
+  +      toolbarPlaceholder: '__',
+  +      toolbarFormat: 'DD / MM / YYYY',
+  +    }
+  +  }}
+   />
+  ```
+
+- The `toolbarTitle` prop has been moved to the localization object:
+
+  ```diff
+   // Same on all other pickers
+   <DatePicker
+  -  toolbarTitle="Title"
+  +  localeText={{ toolbarTitle: 'Title' }}
+   />
+  ```
+
+- The toolbar related translation keys have been renamed to better fit their usage:
+
+  ```diff
+   // Same on all other pickers
+   <DatePicker
+     localeText={{
+  -    datePickerDefaultToolbarTitle: 'Date Picker',
+  +    datePickerToolbarTitle: 'Date Picker',
+
+  -    timePickerDefaultToolbarTitle: 'Time Picker',
+  +    timePickerToolbarTitle: 'Time Picker',
+
+  -    dateTimePickerDefaultToolbarTitle: 'Date Time Picker',
+  +    dateTimePickerToolbarTitle: 'Date Time Picker',
+
+  -    dateRangePickerDefaultToolbarTitle: 'Date Range Picker',
+  +    dateRangePickerToolbarTitle: 'Date Range Picker',
+     }}
+   />
+  ```
+
+- The `onChange` / `openView` props on the toolbar have been renamed `onViewChange` / `view`
+
+#### Changes
+
+- [fields] Add a `validationError` property to the `onChange` callback (#6539) @flaviendelangle
+- [fields] Distinguish start and end input error on multi input fields (#6503) @flaviendelangle
+- [pickers] Clean the `Tabs` component slot (#6543) @flaviendelangle
+- [pickers] Fix localization of the placeholder (#6547) @alexfauquette
+- [pickers] Fix TypeScript issues (#6322) @flaviendelangle
+- [pickers] Improve error consistency between single and multiple range pickers (#6561) @alexfauquette
+- [pickers] Refactor `@mui/material` imports to `@mui/utils` (#6443) @LukasTy
+- [pickers] Replace toolbar's props by a component slot (#6445) @flaviendelangle
+
+### Docs
+
+- [docs] Enable inlined preview for disabled date picker (#6477) @oliviertassinari
+- [docs] Fix 404 errors (#6541) @alexfauquette
+- [docs] Fix broken links on field pages (#6501) @flaviendelangle
+- [docs] Improve markdownlint (#6518) @oliviertassinari
+
+### Core
+
+- [core] Run CodeQL only on schedule @oliviertassinari
+- [core] Fix trailing spaces and git diff format (#6523) @oliviertassinari
+- [core] Harden GitHub Actions permissions (#6396) @step-security-bot
+- [core] Improve the playground DX (#6514) @oliviertassinari
+- [core] Link Netlify in the danger comment (#6513) @oliviertassinari
+- [core] Organize tests for pickers slots (#6546) @flaviendelangle
+- [core] Remove outdated `docsearch.js` dependency (#6242) @oliviertassinari
+- [core] Upgrade monorepo (#6549) @cherniavskii
+- [test] Add validation test on range pickers (#6504) @alexfauquette
+- [test] Remove BrowserStack (#6263) @DanailH
+
 ## v6.0.0-alpha.3
 
 _Oct 13, 2022_
@@ -17,7 +148,7 @@ We'd like to offer a big thanks to the 8 contributors who made this release poss
   - [`MultiInputDateRangeField` / `SingleInputDateRangeField`](https://next.mui.com/x/react-date-pickers/date-range-field/) to edit date range
   - [`MultiInputTimeRangeField`](https://next.mui.com/x/react-date-pickers/time-range-field/) to edit time range with two inputs
   - [`MultiInputDateTimeRangeField`](https://next.mui.com/x/react-date-pickers/date-time-range-field/) to edit date and time range with two inputs
-  
+
   ⚠️ These components are unstable.
   They might receive breaking changes on their props to have the best components possible by the time of the stable release.
 
@@ -71,83 +202,83 @@ We'd like to offer a big thanks to the 8 contributors who made this release poss
   The `DialogProps` prop has been replaced by a `dialog` component props slot on responsive and mobile pickers:
 
   ```diff
-  // Same on MobileDatePicker, DateTimePicker, MobileDateTimePicker, 
-  // TimePicker, MobileTimePicker, DateRangePicker and MobileDateRangePicker.
-  <DatePicker
+   // Same on MobileDatePicker, DateTimePicker, MobileDateTimePicker,
+   // TimePicker, MobileTimePicker, DateRangePicker and MobileDateRangePicker.
+   <DatePicker
   -  DialogProps={{ backgroundColor: 'red' }}
   +  componentsProps={{ dialog: { backgroundColor: 'red }}}
-  />
+   />
   ```
 
   The `PaperProps` prop has been replaced by a `desktopPaper` component props slot on all responsive and desktop pickers:
 
   ```diff
-  // Same on DesktopDatePicker, DateTimePicker, DesktopDateTimePicker, 
-  // TimePicker, DesktopTimePicker, DateRangePicker and DesktopDateRangePicker.
-  <DatePicker
+   // Same on DesktopDatePicker, DateTimePicker, DesktopDateTimePicker,
+   // TimePicker, DesktopTimePicker, DateRangePicker and DesktopDateRangePicker.
+   <DatePicker
   -  PaperProps={{ backgroundColor: 'red' }}
   +  componentsProps={{ desktopPaper: { backgroundColor: 'red }}}
-  />
+   />
   ```
 
   The `PopperProps` prop has been replaced by a `popper` component props slot on all responsive and desktop pickers:
 
   ```diff
-  // Same on DesktopDatePicker, DateTimePicker, DesktopDateTimePicker, 
-  // TimePicker, DesktopTimePicker, DateRangePicker and DesktopDateRangePicker.
-  <DatePicker
+   // Same on DesktopDatePicker, DateTimePicker, DesktopDateTimePicker,
+   // TimePicker, DesktopTimePicker, DateRangePicker and DesktopDateRangePicker.
+   <DatePicker
   -  PopperProps={{ onClick: handleClick }}
   +  componentsProps={{ popper: { onClick: handleClick }}}
-  />
+   />
   ```
 
   The `TransitionComponent` prop has been replaced by a `DesktopTransition` component slot on all responsive and desktop pickers:
 
   ```diff
-  // Same on DesktopDatePicker, DateTimePicker, DesktopDateTimePicker, 
-  // TimePicker, DesktopTimePicker, DateRangePicker and DesktopDateRangePicker.
-  <DatePicker
+   // Same on DesktopDatePicker, DateTimePicker, DesktopDateTimePicker,
+   // TimePicker, DesktopTimePicker, DateRangePicker and DesktopDateRangePicker.
+   <DatePicker
   -  TransitionComponent={Fade}
   +  components={{ DesktopTransition: Fade }}
-  />
+   />
   ```
 
   The `TrapFocusProps` prop has been replaced by a `desktopTrapFocus` component props slot on all responsive and desktop pickers:
 
   ```diff
-  // Same on DesktopDatePicker, DateTimePicker, DesktopDateTimePicker, 
-  // TimePicker, DesktopTimePicker, DateRangePicker and DesktopDateRangePicker.
-  <DatePicker
+   // Same on DesktopDatePicker, DateTimePicker, DesktopDateTimePicker,
+   // TimePicker, DesktopTimePicker, DateRangePicker and DesktopDateRangePicker.
+   <DatePicker
   -  TrapFocusProps={{ isEnabled: () => false }}
   +  componentsProps={{ desktopTrapFocus: { isEnabled: () => false }}}
-  />
+   />
   ```
-  
+
 - The view components allowing to pick a date or parts of a date without an input have been renamed to better fit their usage:
 
   ```diff
   -<CalendarPicker {...props} />
-  +<DateCalendar  {...props} />
+  +<DateCalendar {...props} />
   ```
 
   ```diff
   -<DayPicker {...props} />
-  +<DayCalendar  {...props} />
+  +<DayCalendar {...props} />
   ```
 
   ```diff
   -<CalendarPickerSkeleton {...props} />
-  +<DayCalendarSkeleton  {...props} />
+  +<DayCalendarSkeleton {...props} />
   ```
 
   ```diff
   -<MonthPicker {...props} />
-  +<MonthCalendar  {...props} />
+  +<MonthCalendar {...props} />
   ```
 
   ```diff
   -<YearPicker {...props} />
-  +<YearCalendar  {...props} />
+  +<YearCalendar {...props} />
   ```
 
 - Component names in the theme have changed as well:
@@ -256,7 +387,7 @@ We'd like to offer a big thanks to the 10 contributors who made this release pos
   You can find more information about this pattern in the [MUI Base documentation](https://mui.com/base/getting-started/usage/#shared-props).
 
   ```diff
-  // Same for any other date, date time or date range picker.
+   // Same for any other date, date time or date range picker.
    <DatePicker
   -  renderDay={(_, dayProps) => <CustomDay {...dayProps} />}
   +  components={{ Day: CustomDay }}
@@ -438,17 +569,17 @@ We'd like to offer a big thanks to the 12 contributors who made this release pos
 - The deprecated `hide` column property has been removed in favor of the `columnVisibilityModel` prop and initial state.
 
   ```diff
-  <DataGrid
-    columns={[
-      field: 'id,
-  -   hide: true,
-    ]}
+   <DataGrid
+     columns={[
+       field: 'id,
+  -    hide: true,
+     ]}
   +  initialState={{
   +    columns: {
   +      columnVisibilityModel: { id: false },
-  +    }
+  +    },
   +  }}
-  />
+   />
   ```
 
   You can find more information about this new API on our [documentation](https://next.mui.com/x/react-data-grid/column-visibility/).
@@ -456,8 +587,8 @@ We'd like to offer a big thanks to the 12 contributors who made this release pos
 - The `GridEvents` enum is now a TypeScript type.
 
   ```diff
-  - apiRef.current.subscribeEvent(GridEvents.rowClick', handleRowClick)
-  + apiRef.current.subscribeEvent('rowClick', handleRowClick)
+  -apiRef.current.subscribeEvent(GridEvents.rowClick', handleRowClick);
+  +apiRef.current.subscribeEvent('rowClick', handleRowClick);
   ```
 
 #### Changes
@@ -491,14 +622,14 @@ We'd like to offer a big thanks to the 12 contributors who made this release pos
   For instance if you want to replace the `startText` / `endText`
 
   ```diff
-  <DateRangePicker
+   <DateRangePicker
   -  startText="From"
   -  endText="To"
   +  localeText={{
   +    start: 'From',
   +    end: 'To',
   +  }}
-  />
+   />
   ```
 
 You can find more information about the new api, including how to set those translations on all your components at once in the [documentation](https://next.mui.com/x/react-date-pickers/localization/)
@@ -506,51 +637,50 @@ You can find more information about the new api, including how to set those tran
 - The deprecated `locale` prop of the `LocalizationProvider` component have been renamed `adapterLocale`:
 
   ```diff
-  <LocalizationProvider 
-    dateAdapter={AdapterDayjs}
-  -  locale="fr" 
+   <LocalizationProvider
+     dateAdapter={AdapterDayjs}
+  -  locale="fr"
   +  adapterLocale="fr"
-  >
-    {children}
-  </LocalizationProvider>
+   >
+     {children}
+   </LocalizationProvider>
   ```
 
 - The component slots `LeftArrowButton` and `RightArrowButton` have been renamed `PreviousIconButton` and `NextIconButton` to better describe there usage:
 
   ```diff
-  <DatePicker
-    components={{
-  -   LeftArrowButton: CustomButton,
-  +   PreviousIconButton: CustomButton,
+   <DatePicker
+     components={{
+  -    LeftArrowButton: CustomButton,
+  +    PreviousIconButton: CustomButton,
 
-  -   RightArrowButton: CustomButton,
-  +   NextIconButton: CustomButton,
-    }}
+  -    RightArrowButton: CustomButton,
+  +    NextIconButton: CustomButton,
+     }}
+     componentsProps={{
+  -    leftArrowButton: {},
+  +    previousIconButton: {},
 
-    componentsProps={{
-  -   leftArrowButton: {},
-  +   previousIconButton: {},
-
-  -   rightArrowButton: {},
-  +   nextIconButton: {},
-    }}
-  />
+  -    rightArrowButton: {},
+  +    nextIconButton: {},
+     }}
+   />
   ```
 
 - The `date` prop has been renamed `value` on  `MonthPicker` / `YearPicker`, `ClockPicker` and `CalendarPicker`.
 
   ```diff
-  - <MonthPicker date={dayjs()} onChange={handleMonthChange} />
-  + <MonthPicker value={dayjs()} onChange={handleMonthChange} />
+  -<MonthPicker date={dayjs()} onChange={handleMonthChange} />
+  +<MonthPicker value={dayjs()} onChange={handleMonthChange} />
 
-  - <YearPicker date={dayjs()} onChange={handleYearChange} />
-  + <YearPicker value={dayjs()} onChange={handleYearChange} />
+  -<YearPicker date={dayjs()} onChange={handleYearChange} />
+  +<YearPicker value={dayjs()} onChange={handleYearChange} />
 
-  - <ClockPicker date={dayjs()} onChange={handleTimeChange} />
-  + <ClockPicker value={dayjs()} onChange={handleTimeChange} />
+  -<ClockPicker date={dayjs()} onChange={handleTimeChange} />
+  +<ClockPicker value={dayjs()} onChange={handleTimeChange} />
 
-  - <CalendarPicker date={dayjs()} onChange={handleDateChange} />
-  + <CalendarPicker value={dayjs()} onChange={handleDateChange} />
+  -<CalendarPicker date={dayjs()} onChange={handleDateChange} />
+  +<CalendarPicker value={dayjs()} onChange={handleDateChange} />
   ```
 
 #### Changes
@@ -1994,10 +2124,10 @@ We'd like to offer a big thanks to the 15 contributors who made this release pos
   | `filterableGridColumnsSelector` | `gridFilterableColumnDefinitionsSelector` |
 
   ```diff
-  -const { all, lookup, columnVisibilityModel } = gridColumnsSelector(apiRef)
-  +const all = gridColumnFieldsSelector(apiRef)
-  +const lookup = gridColumnLookupSelector(apiRef)
-  +const columnVisibilityModel = gridColumnVisibilityModelSelector(apiRef)
+  -const { all, lookup, columnVisibilityModel } = gridColumnsSelector(apiRef);
+  +const all = gridColumnFieldsSelector(apiRef);
+  +const lookup = gridColumnLookupSelector(apiRef);
+  +const columnVisibilityModel = gridColumnVisibilityModelSelector(apiRef);
 
   -const filterableFields = filterableGridColumnsIdsSelector(apiRef);
   +const lookup = gridFilterableColumnLookupSelector(apiRef);
@@ -2934,7 +3064,7 @@ A big thanks to the 7 contributors who made this release possible. Here are some
 
   ```diff
   -visibleSortedGridRowsAsArraySelector: (state: GridState) => [GridRowId, GridRowData][];
-  +gridVisibleSortedRowEntriesSelector: (state: GridState) => GridRowEntry[]
+  +gridVisibleSortedRowEntriesSelector: (state: GridState) => GridRowEntry[];
   ```
 
 - [DataGridPro] The `filterGridItemsCounterSelector` selector was removed. (#2942) @flaviendelangle
@@ -3034,15 +3164,15 @@ A big thanks to the 5 contributors who made this release possible. Here are some
   To fully control the state, use the feature's model prop and change callback (e.g. `filterModel` and `onFilterModelChange`).
 
   ```diff
-  <DataGrid
+   <DataGrid
   -  state={{
   +  initialState={{
-      preferencePanel: {
-        open: true,
-        openedPanelValue: GridPreferencePanelsValue.filters,
-      },
-    }}
-  />
+       preferencePanel: {
+         open: true,
+         openedPanelValue: GridPreferencePanelsValue.filters,
+       },
+     }}
+   />
   ```
 
 - [DataGridPro] Remove the `onViewportRowsChange` prop and the `viewportRowsChange` event (#2673) @m4theushw
@@ -3145,12 +3275,12 @@ A big thanks to the 7 contributors who made this release possible. Here are some
   For more information, check [this page](https://mui.com/x/react-data-grid/components/#row). Example:
 
   ```diff
-  -<DataGrid onRowOver={handleRowOver} />;
-  +<DataGrid
+   <DataGrid
+  -  onRowOver={handleRowOver}
   +  componentsProps={{
   +    row: { onMouseOver: handleRowOver },
   +  }}
-  +/>;
+   />;
   ```
 
   The `data-rowindex` and `data-rowselected` attributes were removed from the cell element. Equivalent attributes can be found in the row element.
@@ -3182,33 +3312,33 @@ A big thanks to the 7 contributors who made this release possible. Here are some
 - [DataGrid] The CSS classes constants are not exported anymore. Use `gridClasses` instead. (#2788) @flaviendelangle
 
   ```diff
-  -const columnHeaderClass = GRID_COLUMN_HEADER_CSS_CLASS
-  +const columnHeaderClass = gridClasses.columnHeader
+  -const columnHeaderClass = GRID_COLUMN_HEADER_CSS_CLASS;
+  +const columnHeaderClass = gridClasses.columnHeader;
 
-  -const rowClass = GRID_ROW_CSS_CLASS
-  +const rowClass = gridClasses.row
+  -const rowClass = GRID_ROW_CSS_CLASS;
+  +const rowClass = gridClasses.row;
 
-  -const cellClass = GRID_CELL_CSS_CLASS
-  +const cellClass = gridClasses.cell
+  -const cellClass = GRID_CELL_CSS_CLASS;
+  +const cellClass = gridClasses.cell;
 
-  -const columnSeparatorClass = GRID_COLUMN_HEADER_SEPARATOR_RESIZABLE_CSS_CLASS
-  +const columnSeparatorClass = gridClasses['columnSeparator--resizable']
+  -const columnSeparatorClass = GRID_COLUMN_HEADER_SEPARATOR_RESIZABLE_CSS_CLASS;
+  +const columnSeparatorClass = gridClasses['columnSeparator--resizable'];
 
-  -const columnHeaderTitleClass = GRID_COLUMN_HEADER_TITLE_CSS_CLASS
-  +const columnHeaderTitleClass = gridClasses.columnHeaderTitle
+  -const columnHeaderTitleClass = GRID_COLUMN_HEADER_TITLE_CSS_CLASS;
+  +const columnHeaderTitleClass = gridClasses.columnHeaderTitle;
 
-  -const columnHeaderDropZoneClass = GRID_COLUMN_HEADER_DROP_ZONE_CSS_CLASS
-  +const columnHeaderDropZoneClass = gridClasses.columnHeaderDropZone
+  -const columnHeaderDropZoneClass = GRID_COLUMN_HEADER_DROP_ZONE_CSS_CLASS;
+  +const columnHeaderDropZoneClass = gridClasses.columnHeaderDropZone;
 
-  -const columnHeaderDraggingClass = GRID_COLUMN_HEADER_DRAGGING_CSS_CLASS
-  +const columnHeaderDraggingClass = gridClasses["columnHeader--dragging"]
+  -const columnHeaderDraggingClass = GRID_COLUMN_HEADER_DRAGGING_CSS_CLASS;
+  +const columnHeaderDraggingClass = gridClasses['columnHeader--dragging'];
   ```
 
 - [DataGrid] Rename `gridCheckboxSelectionColDef` to `GRID_CHECKBOX_SELECTION_COL_DEF` (#2793) @flaviendelangle
 
   ```diff
-  - gridCheckboxSelectionColDef
-  + GRID_CHECKBOX_SELECTION_COL_DEF
+  -gridCheckboxSelectionColDef
+  +GRID_CHECKBOX_SELECTION_COL_DEF
   ```
 
 - [DataGrid] The constants referring to the column types were removed (#2791) @flaviendelangle
@@ -3376,7 +3506,7 @@ A big thanks to the 5 contributors who made this release possible. Here are some
   -export type GridValueFormatterParams = Omit<GridRenderCellParams, 'formattedValue' | 'isEditable'>;
   +export interface GridValueFormatterParams {
   +  /**
-  +   * The column field of the cell that triggered the event
+  +   * The column field of the cell that triggered the event.
   +   */
   +  field: string;
   +  /**
@@ -3462,7 +3592,7 @@ A big thanks to the 9 contributors who made this release possible. Here are some
 
   ```diff
   -const state = apiRef.current.getState();
-  +const state = apiRef.current.state
+  +const state = apiRef.current.state;
   ```
 
 - [DataGridPro] The third argument in `apiRef.current.selectRow` is now inverted to keep consistency with other selection APIs. (#2523) @flaviendelangle
@@ -3756,16 +3886,15 @@ Big thanks to the 6 contributors who made this release possible. Here are some h
   - The `width` property of the columns is no longer updated with the actual width of of the column. Use the new `computedWidth` property in the callbacks instead.
 
   ```diff
-  const columns: GridColDef = [
-    {
-    field: "name",
-    width: 100,
-    renderCell: ({ value, colDef }) => {
-    - console.log(colDef.width!)
-    + console.log(colDef.computedWidth)
-      return value
-    }
-  ]
+   const columns: GridColDef = [{
+     field: 'name',
+     width: 100,
+     renderCell: ({ value, colDef }) => {
+  -    console.log(colDef.width!);
+  +    console.log(colDef.computedWidth);
+       return value;
+     },
+   }];
   ```
 
 #### Changes
@@ -3828,21 +3957,21 @@ Big thanks to the 8 contributors who made this release possible. Here are some h
   - Change the controllable API signature:
 
     ```diff
-    // Signature
+     // Signature
     -onPageChange?: (params: GridPageChangeParams) => void;
     +onPageChange?: (page: number) => void;
 
-    // Usage
+     // Usage
     -<DataGrid onPageChange={(params: GridPageChangeParams) => setPage(params.page)} />
     +<DataGrid onPageChange={(page: number) => setPage(page)} />
     ```
 
     ```diff
-    // Signature
+     // Signature
     -onPageSizeChange?: (params: GridPageChangeParams) => void;
     +onPageSizeChange?: (pageSize: number) => void;
 
-    // Usage
+     // Usage
     -<DataGrid onPageSizeChange={(params: GridPageChangeParams) => setPageSize(params.pageSize)} />
     +<DataGrid onPageSizeChange={(pageSize: number) => setPageSize(pageSize)} />
     ```
@@ -3900,7 +4029,7 @@ Big thanks to the 11 contributors who made this release possible. Here are some 
   Remove public `apiRef.current.isColumnVisibleInWindow()` as it servers private use cases.
 
   ```diff
-  -apiRef.current.isColumnVisibleInWindow()
+  -apiRef.current.isColumnVisibleInWindow();
   ```
 
 - [DataGrid] Remove stateId argument from GridApi getState method (#2141) @flaviendelangle
@@ -3947,7 +4076,7 @@ Big thanks to the 11 contributors who made this release possible. Here are some 
 
     ```diff
     +apiRef.current.setCellMode(1, 'name', 'edit');
-    apiRef.current.commitCellChange({ id: 1, field: 'name' });
+     apiRef.current.commitCellChange({ id: 1, field: 'name' });
     ```
 
   - The `setCellValue` was removed from the API. Use `commitCellChange` or `updateRows` in place.
@@ -4738,31 +4867,33 @@ Big thanks to the 5 contributors who made this release possible. Here are some h
 
   - Changes on `apiRef.current`.
 
-```diff
--  getRowModels: () => GridRowModel[];
-+  getRowModels: () => Map<GridRowId, GridRowModel>;
--  getVisibleRowModels: () => GridRowModel[];
-+  getVisibleRowModels: () => Map<GridRowId, GridRowModel>;
--  getSelectedRows: () => GridRowModel[];
-+  getSelectedRows: () => Map<GridRowId, GridRowModel>;
-```
+  ```diff
+  -getRowModels: () => GridRowModel[];
+  +getRowModels: () => Map<GridRowId, GridRowModel>;
 
-- Changes on `GridFilterModelParams`.
+  -getVisibleRowModels: () => GridRowModel[];
+  +getVisibleRowModels: () => Map<GridRowId, GridRowModel>;
 
-```diff
-export interface GridFilterModelParams {
-  /**
-   * The full set of rows.
-   */
--  rows: GridRowModel[];
-+  rows: Map<GridRowId, GridRowModel>;
-  /**
-   * The set of currently visible rows.
-   */
--  visibleRows: GridRowModel[];
-+  visibleRows: Map<GridRowId, GridRowModel>;
-}
-```
+  -getSelectedRows: () => GridRowModel[];
+  +getSelectedRows: () => Map<GridRowId, GridRowModel>;
+  ```
+
+  - Changes on `GridFilterModelParams`.
+
+  ```diff
+   export interface GridFilterModelParams {
+     /**
+      * The full set of rows.
+      */
+  -  rows: GridRowModel[];
+  +  rows: Map<GridRowId, GridRowModel>;
+    /**
+      * The set of currently visible rows.
+      */
+  -  visibleRows: GridRowModel[];
+  +  visibleRows: Map<GridRowId, GridRowModel>;
+   }
+  ```
 
 - [DataGrid] Upgrade mininum supported version of React to 17.0.0 (#1410) @m4theushw
 
@@ -4980,11 +5111,12 @@ Big thanks to the 4 contributors who made this release possible. Here are some h
   ```diff
   -columns[1] = { ...columns[1], sortDirection: 'asc' };
 
-  return (
-    <div>
+   return (
+     <div>
   -   <DataGrid rows={rows} columns={columns} />
   +   <DataGrid rows={rows} columns={columns} sortModel={[{ field: columns[1].field, sort: 'asc' }]} />
-    </div>
+     </div>
+   );
   ```
 
 - [DataGrid] Rename the `onSelectionChange` prop to `onSelectionModelChange` for consistency. (#986) @dtassone
@@ -5011,10 +5143,11 @@ Big thanks to the 4 contributors who made this release possible. Here are some h
   -const [page, setPage] = React.useState(1);
   +const [page, setPage] = React.useState(0);
 
-  return (
-    <div className="grid-container">
-      <DataGrid rows={rows} columns={columns} page={page} />
-    </div>
+   return (
+     <div className="grid-container">
+       <DataGrid rows={rows} columns={columns} page={page} />
+     </div>
+   );
   ```
 
 #### Changes
@@ -5115,25 +5248,25 @@ Big thanks to the 5 contributors who made this release possible. Here are some h
   - Capitalize the keys of the `components` prop. This change aims to bring consistency with the customization pattern of Material UI v5:
 
   ```diff
-  <DataGrid
-    components={{
-  -   noRowsOverlay: CustomNoRowsOverlay,
-  +   NoRowOverlay: CustomNoRowsOverlay,
-    }}
-  />
+   <DataGrid
+     components={{
+  -    noRowsOverlay: CustomNoRowsOverlay,
+  +    NoRowOverlay: CustomNoRowsOverlay,
+     }}
+   />
   ```
 
   - Move all the icon components overrides in the `components` prop. And added the suffix 'Icon' on each icon component. This change aims to bring consistency with the customization pattern of Material UI v5:
 
   ```diff
-  <DataGrid
-  - icons: {{
-  -   ColumnSortedAscending: SortedAscending,
-  - }},
-  + components={{
-  +   ColumnSortedAscendingIcon: SortedAscending,
-  + }}
-  />
+   <DataGrid
+  -  icons: {{
+  -    ColumnSortedAscending: SortedAscending,
+  -  }},
+  +  components={{
+  +    ColumnSortedAscendingIcon: SortedAscending,
+  +  }}
+   />
   ```
 
   - Change the props provided to the component of the `components` prop. Expose the whole state instead of an arbitrary set of props:
@@ -5151,9 +5284,9 @@ Big thanks to the 5 contributors who made this release possible. Here are some h
   +      page={state.pagination.page}
   +      count={state.pagination.pageCount}
 
-  // ...
+   // ...
 
-  <DataGrid components={{ Pagination: CustomPagination }} />
+   <DataGrid components={{ Pagination: CustomPagination }} />
   ```
 
 #### Changes

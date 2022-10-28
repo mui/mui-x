@@ -42,7 +42,10 @@ export type {
   PickersToolbarButtonClassKey,
   PickersToolbarButtonClasses,
 } from './components/pickersToolbarButtonClasses';
-export type { PickersToolbarTextProps } from './components/PickersToolbarText';
+export type {
+  PickersToolbarTextProps,
+  ExportedPickersToolbarTextProps,
+} from './components/PickersToolbarText';
 export { pickersToolbarTextClasses } from './components/pickersToolbarTextClasses';
 export type {
   PickersToolbarTextClassKey,
@@ -104,7 +107,7 @@ export { usePreviousMonthDisabled, useNextMonthDisabled } from './hooks/date-hel
 
 export type { BasePickerProps } from './models/props/basePickerProps';
 export type { StaticPickerProps } from './models/props/staticPickerProps';
-export type { BaseToolbarProps } from './models/props/baseToolbarProps';
+export type { BaseToolbarProps, ExportedBaseToolbarProps } from './models/props/toolbar';
 export type { MuiPickersAdapter } from './models/muiPickersAdapter';
 export type { DefaultizedProps, MakeOptional } from './models/helpers';
 

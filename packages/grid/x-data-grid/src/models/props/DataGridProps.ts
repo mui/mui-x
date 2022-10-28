@@ -25,7 +25,7 @@ import {
 } from '../params';
 import { GridCellParams } from '../params/gridCellParams';
 import { GridFilterModel } from '../gridFilterModel';
-import { GridInputSelectionModel, GridSelectionModel } from '../gridSelectionModel';
+import { GridInputRowSelectionModel, GridRowSelectionModel } from '../gridRowSelectionModel';
 import { GridInitialStateCommunity } from '../gridStateCommunity';
 import { GridSlotsComponentsProps } from '../gridSlotsComponentsProps';
 import { GridColumnVisibilityModel } from '../../hooks/features/columns/gridColumnsInterfaces';
@@ -73,7 +73,7 @@ export type DataGridForcedPropsKey =
   | 'checkboxSelectionVisibleOnly'
   | 'disableMultipleColumnsFiltering'
   | 'disableMultipleColumnsSorting'
-  | 'disableMultipleSelection'
+  | 'disableMultipleRowSelection'
   | 'disableColumnReorder'
   | 'disableColumnResize'
   | 'throttleRowsMs'
@@ -196,7 +196,7 @@ export interface DataGridPropsWithDefaultValues {
    * If `true`, multiple selection using the Ctrl or CMD key is disabled.
    * @default false
    */
-  disableMultipleSelection: boolean;
+  disableMultipleRowSelection: boolean;
   /**
    * If `true`, sorting with multiple columns is disabled.
    * @default false
@@ -206,7 +206,7 @@ export interface DataGridPropsWithDefaultValues {
    * If `true`, the selection on click on a row or cell is disabled.
    * @default false
    */
-  disableSelectionOnClick: boolean;
+  disableRowSelectionOnClick: boolean;
   /**
    * If `true`, the virtualization is disabled.
    * @default false
@@ -661,16 +661,16 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
    */
   onFilterModelChange?: (model: GridFilterModel, details: GridCallbackDetails<'filter'>) => void;
   /**
-   * Set the selection model of the grid.
+   * Sets the row selection model of the grid.
    */
-  selectionModel?: GridInputSelectionModel;
+  rowSelectionModel?: GridInputRowSelectionModel;
   /**
    * Callback fired when the selection state of one or multiple rows changes.
-   * @param {GridSelectionModel} selectionModel With all the row ids [[GridSelectionModel]].
+   * @param {GridRowSelectionModel} rowSelectionModel With all the row ids [[GridSelectionModel]].
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
-  onSelectionModelChange?: (
-    selectionModel: GridSelectionModel,
+  onRowSelectionModelChange?: (
+    rowSelectionModel: GridRowSelectionModel,
     details: GridCallbackDetails,
   ) => void;
   /**

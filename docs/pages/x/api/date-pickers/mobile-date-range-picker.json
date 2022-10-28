@@ -73,9 +73,7 @@
         "name": "union",
         "description": "Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object"
       }
-    },
-    "toolbarFormat": { "type": { "name": "string" } },
-    "toolbarTitle": { "type": { "name": "node" }, "default": "'Select date range'" }
+    }
   },
   "slots": {
     "ActionBar": { "default": "PickersActionBar", "type": { "name": "elementType" } },
@@ -89,7 +87,8 @@
     "PreviousIconButton": { "default": "IconButton", "type": { "name": "elementType" } },
     "RightArrowIcon": { "default": "ArrowRight", "type": { "name": "elementType" } },
     "SwitchViewButton": { "default": "IconButton", "type": { "name": "elementType" } },
-    "SwitchViewIcon": { "default": "ArrowDropDown", "type": { "name": "elementType" } }
+    "SwitchViewIcon": { "default": "ArrowDropDown", "type": { "name": "elementType" } },
+    "Toolbar": { "type": { "name": "elementType" } }
   },
   "name": "MobileDateRangePicker",
   "styles": { "classes": [], "globalClasses": {}, "name": "MuiMobileDateRangePicker" },

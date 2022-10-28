@@ -43,10 +43,10 @@ const deDEPickers: Partial<PickersLocaleText<any>> = {
   todayButtonLabel: 'Heute',
 
   // Toolbar titles
-  datePickerDefaultToolbarTitle: 'Datum auswählen',
-  dateTimePickerDefaultToolbarTitle: 'Datum & Uhrzeit auswählen',
-  timePickerDefaultToolbarTitle: 'Uhrzeit auswählen',
-  dateRangePickerDefaultToolbarTitle: 'Datumsbereich auswählen',
+  datePickerToolbarTitle: 'Datum auswählen',
+  dateTimePickerToolbarTitle: 'Datum & Uhrzeit auswählen',
+  timePickerToolbarTitle: 'Uhrzeit auswählen',
+  dateRangePickerToolbarTitle: 'Datumsbereich auswählen',
 
   // Clock labels
   clockLabelText: (view, time, adapter) =>

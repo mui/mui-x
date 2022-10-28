@@ -22,7 +22,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   }, [classes]);
 };
 
-export const useGridSelectionPreProcessors = (
+export const useGridRowSelectionPreProcessors = (
   apiRef: React.MutableRefObject<GridApiCommunity>,
   props: DataGridProcessedProps,
 ) => {
@@ -43,10 +43,10 @@ export const useGridSelectionPreProcessors = (
 
       if (shouldHaveSelectionColumn && !haveSelectionColumn) {
         columnsState.lookup[GRID_CHECKBOX_SELECTION_FIELD] = selectionColumn;
-        columnsState.all = [GRID_CHECKBOX_SELECTION_FIELD, ...columnsState.all];
+        columnsState.orderedFields = [GRID_CHECKBOX_SELECTION_FIELD, ...columnsState.orderedFields];
       } else if (!shouldHaveSelectionColumn && haveSelectionColumn) {
         delete columnsState.lookup[GRID_CHECKBOX_SELECTION_FIELD];
-        columnsState.all = columnsState.all.filter(
+        columnsState.orderedFields = columnsState.orderedFields.filter(
           (field) => field !== GRID_CHECKBOX_SELECTION_FIELD,
         );
       } else if (shouldHaveSelectionColumn && haveSelectionColumn) {

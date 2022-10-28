@@ -4,8 +4,9 @@ import {
   BaseTimePickerProps,
   useTimePickerDefaultizedProps,
   timePickerValueManager,
+  BaseTimePickerSlotsComponentsProps,
+  BaseTimePickerSlotsComponent,
 } from '../TimePicker/shared';
-import { TimePickerToolbar } from '../TimePicker/TimePickerToolbar';
 import {
   DesktopWrapper,
   DesktopWrapperProps,
@@ -16,29 +17,25 @@ import { CalendarOrClockPicker } from '../internals/components/CalendarOrClockPi
 import { useTimeValidation } from '../internals/hooks/validation/useTimeValidation';
 import { KeyboardDateInput } from '../internals/components/KeyboardDateInput';
 import { usePickerState } from '../internals/hooks/usePickerState';
-import {
-  ClockPickerSlotsComponent,
-  ClockPickerSlotsComponentsProps,
-} from '../ClockPicker/ClockPicker';
 import { DateInputSlotsComponent } from '../internals/components/PureDateInput';
 
-export interface DesktopTimePickerSlotsComponent
-  extends DesktopWrapperSlotsComponent,
-    ClockPickerSlotsComponent,
+export interface DesktopTimePickerSlotsComponent<TDate>
+  extends BaseTimePickerSlotsComponent<TDate>,
+    DesktopWrapperSlotsComponent,
     DateInputSlotsComponent {}
 
 export interface DesktopTimePickerSlotsComponentsProps
-  extends DesktopWrapperSlotsComponentsProps,
-    ClockPickerSlotsComponentsProps {}
+  extends BaseTimePickerSlotsComponentsProps,
+    DesktopWrapperSlotsComponentsProps {}
 
 export interface DesktopTimePickerProps<TDate>
   extends BaseTimePickerProps<TDate>,
-    DesktopWrapperProps<TDate> {
+    DesktopWrapperProps {
   /**
    * Overrideable components.
    * @default {}
    */
-  components?: DesktopTimePickerSlotsComponent;
+  components?: DesktopTimePickerSlotsComponent<TDate>;
   /**
    * The props used for each component slot.
    * @default {}
@@ -72,15 +69,8 @@ export const DesktopTimePicker = React.forwardRef(function DesktopTimePicker<TDa
   const validationError = useTimeValidation(props) !== null;
   const { pickerProps, inputProps, wrapperProps } = usePickerState(props, timePickerValueManager);
 
-  const {
-    onChange,
-    ToolbarComponent = TimePickerToolbar,
-    value,
-    components,
-    componentsProps,
-    localeText,
-    ...other
-  } = props;
+  const { onChange, value, components, componentsProps, localeText, ...other } = props;
+
   const DateInputProps = {
     ...inputProps,
     ...other,
@@ -102,8 +92,6 @@ export const DesktopTimePicker = React.forwardRef(function DesktopTimePicker<TDa
       <CalendarOrClockPicker
         {...pickerProps}
         autoFocus
-        toolbarTitle={props.label || props.toolbarTitle}
-        ToolbarComponent={ToolbarComponent}
         DateInputProps={DateInputProps}
         components={components}
         componentsProps={componentsProps}
@@ -328,16 +316,6 @@ DesktopTimePicker.propTypes = {
    * If `true`, show the toolbar even in desktop mode.
    */
   showToolbar: PropTypes.bool,
-  /**
-   * Component that will replace default toolbar renderer.
-   * @default TimePickerToolbar
-   */
-  ToolbarComponent: PropTypes.elementType,
-  /**
-   * Mobile picker title, displaying in the toolbar.
-   * @default 'Select time'
-   */
-  toolbarTitle: PropTypes.node,
   /**
    * The value of the picker.
    */

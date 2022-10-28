@@ -94,11 +94,11 @@ The `disableCloseOnSelect` prop has been replaced by a new `closeOnSelect` prop 
 The default behavior remains the same (close after the last step on desktop but not on mobile).
 
 ```diff
-// If you don't want to close after the last step
+ // If you don't want to close after the last step
 -<DatePicker disableCloseOnSelect={false} />
 +<DatePicker closeOnSelect />
 
-// If you want to close after the last step
+ // If you want to close after the last step
 -<DatePicker disableCloseOnSelect />
 +<DatePicker closeOnSelect={false} />
 ```

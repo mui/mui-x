@@ -4,37 +4,33 @@ import {
   BaseDateTimePickerProps,
   useDateTimePickerDefaultizedProps,
   dateTimePickerValueManager,
+  BaseDateTimePickerSlotsComponent,
+  BaseDateTimePickerSlotsComponentsProps,
 } from '../DateTimePicker/shared';
-import { DateTimePickerToolbar } from '../DateTimePicker/DateTimePickerToolbar';
 import {
   DesktopWrapper,
   DesktopWrapperProps,
   DesktopWrapperSlotsComponent,
   DesktopWrapperSlotsComponentsProps,
 } from '../internals/components/wrappers/DesktopWrapper';
-import {
-  CalendarOrClockPicker,
-  CalendarOrClockPickerSlotsComponent,
-  CalendarOrClockPickerSlotsComponentsProps,
-} from '../internals/components/CalendarOrClockPicker';
+import { CalendarOrClockPicker } from '../internals/components/CalendarOrClockPicker';
 import { useDateTimeValidation } from '../internals/hooks/validation/useDateTimeValidation';
 import { KeyboardDateInput } from '../internals/components/KeyboardDateInput';
 import { usePickerState } from '../internals/hooks/usePickerState';
 import { DateInputSlotsComponent } from '../internals/components/PureDateInput';
-import { DateTimePickerTabs } from '../DateTimePicker/DateTimePickerTabs';
 
 export interface DesktopDateTimePickerSlotsComponent<TDate>
-  extends DesktopWrapperSlotsComponent,
-    CalendarOrClockPickerSlotsComponent<TDate>,
+  extends BaseDateTimePickerSlotsComponent<TDate>,
+    DesktopWrapperSlotsComponent,
     DateInputSlotsComponent {}
 
 export interface DesktopDateTimePickerSlotsComponentsProps<TDate>
-  extends DesktopWrapperSlotsComponentsProps,
-    CalendarOrClockPickerSlotsComponentsProps<TDate> {}
+  extends BaseDateTimePickerSlotsComponentsProps<TDate>,
+    DesktopWrapperSlotsComponentsProps {}
 
 export interface DesktopDateTimePickerProps<TDate>
   extends BaseDateTimePickerProps<TDate>,
-    DesktopWrapperProps<TDate> {
+    DesktopWrapperProps {
   /**
    * Overrideable components.
    * @default {}
@@ -77,20 +73,7 @@ export const DesktopDateTimePicker = React.forwardRef(function DesktopDateTimePi
     dateTimePickerValueManager,
   );
 
-  const {
-    onChange,
-    ToolbarComponent = DateTimePickerToolbar,
-    value,
-    components: providedComponents,
-    componentsProps,
-    localeText,
-    hideTabs = true,
-    ...other
-  } = props;
-  const components = React.useMemo<DesktopDateTimePickerProps<TDate>['components']>(
-    () => ({ Tabs: DateTimePickerTabs, ...providedComponents }),
-    [providedComponents],
-  );
+  const { onChange, value, components, componentsProps, localeText, ...other } = props;
 
   const AllDateInputProps = {
     ...inputProps,
@@ -113,12 +96,9 @@ export const DesktopDateTimePicker = React.forwardRef(function DesktopDateTimePi
       <CalendarOrClockPicker
         {...pickerProps}
         autoFocus
-        toolbarTitle={props.label || props.toolbarTitle}
-        ToolbarComponent={ToolbarComponent}
         DateInputProps={AllDateInputProps}
         components={components}
         componentsProps={componentsProps}
-        hideTabs={hideTabs}
         {...other}
       />
     </DesktopWrapper>
@@ -231,11 +211,6 @@ DesktopDateTimePicker.propTypes = {
    * @default (date, utils) => `Choose date, selected date is ${utils.format(date, 'fullDate')}`
    */
   getOpenDialogAriaText: PropTypes.func,
-  /**
-   * Toggles visibility of date time switching tabs
-   * @default false for mobile, true for desktop
-   */
-  hideTabs: PropTypes.bool,
   ignoreInvalidInputs: PropTypes.bool,
   /**
    * Props to pass to keyboard input adornment.
@@ -458,25 +433,6 @@ DesktopDateTimePicker.propTypes = {
    * Time tab icon.
    */
   timeIcon: PropTypes.node,
-  /**
-   * Component that will replace default toolbar renderer.
-   * @default DateTimePickerToolbar
-   */
-  ToolbarComponent: PropTypes.elementType,
-  /**
-   * Date format, that is displaying in toolbar.
-   */
-  toolbarFormat: PropTypes.string,
-  /**
-   * Mobile picker date value placeholder, displaying if `value` === `null`.
-   * @default '–'
-   */
-  toolbarPlaceholder: PropTypes.node,
-  /**
-   * Mobile picker title, displaying in the toolbar.
-   * @default 'Select date & time'
-   */
-  toolbarTitle: PropTypes.node,
   /**
    * The value of the picker.
    */
