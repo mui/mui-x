@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { styled, useThemeProps } from '@mui/material/styles';
+import { styled, useThemeProps, useTheme, Theme } from '@mui/material/styles';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { PickersToolbarText } from '../internals/components/PickersToolbarText';
 import { PickersToolbar } from '../internals/components/PickersToolbar';
@@ -27,12 +27,12 @@ export interface DateTimePickerToolbarProps<TDate>
   classes?: Partial<DateTimePickerToolbarClasses>;
 }
 
-const useUtilityClasses = (ownerState: DateTimePickerToolbarProps<any>) => {
-  const { classes } = ownerState;
+const useUtilityClasses = (ownerState: DateTimePickerToolbarProps<any> & { theme: Theme }) => {
+  const { classes, theme } = ownerState;
   const slots = {
     root: ['root'],
     dateContainer: ['dateContainer'],
-    timeContainer: ['timeContainer'],
+    timeContainer: ['timeContainer', theme.direction === 'rtl' && 'timeLabelReverse'],
     separator: ['separator'],
   };
 
@@ -68,9 +68,12 @@ const DateTimePickerToolbarTimeContainer = styled('div', {
   name: 'MuiDateTimePickerToolbar',
   slot: 'TimeContainer',
   overridesResolver: (props, styles) => styles.timeContainer,
-})<{ ownerState: DateTimePickerToolbarProps<any> }>({
+})<{ ownerState: DateTimePickerToolbarProps<any> }>(({ theme }) => ({
   display: 'flex',
-});
+  ...(theme.direction === 'rtl' && {
+    flexDirection: 'row-reverse',
+  }),
+}));
 
 const DateTimePickerToolbarSeparator = styled(PickersToolbarText, {
   name: 'MuiDateTimePickerToolbar',
@@ -105,8 +108,9 @@ export function DateTimePickerToolbar<TDate extends unknown>(
   } = props;
   const ownerState = props;
   const utils = useUtils<TDate>();
+  const theme = useTheme();
   const localeText = useLocaleText();
-  const classes = useUtilityClasses(ownerState);
+  const classes = useUtilityClasses({ ...ownerState, theme });
 
   const formatHours = (time: TDate) =>
     ampm ? utils.format(time, 'hours12h') : utils.format(time, 'hours24h');
