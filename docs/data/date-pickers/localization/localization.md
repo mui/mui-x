@@ -39,19 +39,13 @@ const theme = createTheme(
   bgBG, // use 'bg' locale for UI texts (start, next month, ...)
 );
 
-<ThemeProvider theme={theme}>
-  <LocalizationProvider
-    dateAdapter={AdapterDayjs}
-    adapterLocale={bgLocale} // use 'bg' locale for date parser/formatter
-  >
-    <DateCalendar />
-  </LocalizationProvider>
-</ThemeProvider>;
+function App({ children }) {
+  return <ThemeProvider theme={theme}>{children}</ThemeProvider>;
+}
 ```
 
 Note that `createTheme` accepts any number of arguments.
 If you are already using the [translations of the core components](/material-ui/guides/localization/#locale-text) or the [translations of the data grid](/x/react-data-grid/localization/#locale-text), you can add `bgBG` as a new argument.
-The same import works for `DataGridPro` as it's an extension of `DataGrid`.
 
 ```jsx
 import { createTheme, ThemeProvider } from '@mui/material/styles';
@@ -72,12 +66,9 @@ const theme = createTheme(
   coreBgBG, // core translations
 );
 
-<ThemeProvider theme={theme}>
-  <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale={bgLocale}>
-    <DateCalendar />
-    <DataGrid />
-  </LocalizationProvider>
-</ThemeProvider>;
+function App({ children }) {
+  return <ThemeProvider theme={theme}>{children}</ThemeProvider>;
+}
 ```
 
 ### Using `LocalizationProvider`
@@ -91,21 +82,39 @@ import { DateCalendar, LocalizationProvider, bgBG } from '@mui/x-date-pickers';
 import bgLocale from 'date-fns/locale/bg';
 
 <LocalizationProvider
-  dateAdapter={AdapterDayjs}
-  adapterLocale={bgLocale}
   localeText={bgBG.components.MuiLocalizationProvider.defaultProps.localeText}
 >
-  <DateCalendar />
+  <DatePicker />
 </LocalizationProvider>;
 ```
 
 ## Set translations locally
+
+You can also customize the translations of a single component.
 
 If you want to customize some translations on specific component, you can use the `localeText` prop exposed by all our pickers.
 
 ```jsx
 <DatePicker localeText={{ clearButtonLabel: 'Empty' }} />
 ```
+
+:::info
+This method can be combined with the ones shown above.
+If you pass a locale through `LocalizationProvider` or the theme and a few translation keys through the `localeText` prop of a picker,
+only those translation keys will be overridden.
+
+```tsx
+<LocalizationProvider localeText={frFR}>
+  <DatePicker
+    // ...other props
+    localeText={{
+      clearButtonLabel: 'Vider',
+    }}
+  />
+</LocalizationProvider>
+```
+
+:::
 
 ## Supported locales
 

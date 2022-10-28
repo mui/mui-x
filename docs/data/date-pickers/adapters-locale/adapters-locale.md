@@ -108,13 +108,27 @@ This can be overridden by using the `ampm` prop:
 
 {{"demo": "AmPMCustomization.js"}}
 
-## Advanced customization
+## Custom formats
 
-To customize the date format used in the toolbar, you can use prop `toolbarFormat`.
+### Custom toolbar format
+
+To customize the date format used in the toolbar, you can use prop `toolbarFormat` of the toolbar slot.
+
+:::info
+This prop is available on all the pickers.
+:::
+
+{{"demo": "CustomToolbarFormat.js"}}
+
+### Custom day of week format
 
 To customize day names in calendar header, you can use `dayOfWeekFormatter` which takes as an input the short name of the day provided by the date-library and returns it's formatted version.
 The default formatter only keeps the first letter and capitalises it.
 
-The example bellow adds a dot at the end of each day in the calendar header, and uses `eee dd MMMM` format for the toolbar.
+:::info
+This prop is available on all components rendering a day calendar (`DateCalendar`, all the date pickers, date time pickers and date range pickers)
+:::
 
-{{"demo": "CustomizedStaticDatePicker.js"}}
+The example bellow adds a dot at the end of each day in the calendar header:
+
+{{"demo": "CustomDayOfWeekFormat.js"}}
