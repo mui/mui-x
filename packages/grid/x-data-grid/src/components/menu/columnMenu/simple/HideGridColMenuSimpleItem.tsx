@@ -1,27 +1,12 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
-import Stack from '@mui/material/Stack';
-import Button from '@mui/material/Button';
-import { styled } from '@mui/material';
-import { GridFilterItemProps } from './GridFilterItemProps';
-import { useGridApiContext } from '../../../hooks/utils/useGridApiContext';
-import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
-import { gridVisibleColumnDefinitionsSelector } from '../../../hooks/features/columns';
+import MenuItem from '@mui/material/MenuItem';
+import { GridFilterItemProps } from '../GridFilterItemProps';
+import { useGridApiContext } from '../../../../hooks/utils/useGridApiContext';
+import { useGridRootProps } from '../../../../hooks/utils/useGridRootProps';
+import { gridVisibleColumnDefinitionsSelector } from '../../../../hooks/features/columns';
 
-const StyledStack = styled(Stack)(({ theme }) => ({
-  padding: theme.spacing(0.5, 1.5, 0.5, 1.5),
-  flexDirection: 'row',
-  justifyContent: 'space-between',
-}));
-
-const StyledButton = styled(Button)(() => ({
-  fontSize: '16px',
-  fontWeight: '400',
-  textTransform: 'none',
-}));
-
-const HideGridColMenuItem = (props: GridFilterItemProps) => {
+const HideGridColMenuSimpleItem = (props: GridFilterItemProps) => {
   const { column, onClick } = props;
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
@@ -64,20 +49,13 @@ const HideGridColMenuItem = (props: GridFilterItemProps) => {
   }
 
   return (
-    <StyledStack>
-      <StyledButton
-        onClick={toggleColumn}
-        disabled={disabled}
-        startIcon={<VisibilityOffIcon fontSize="small" />}
-        color="inherit"
-      >
-        {apiRef.current.getLocaleText('columnMenuHideColumnCondensed')}
-      </StyledButton>
-    </StyledStack>
+    <MenuItem onClick={toggleColumn} disabled={disabled}>
+      {apiRef.current.getLocaleText('columnMenuHideColumn')}
+    </MenuItem>
   );
 };
 
-HideGridColMenuItem.propTypes = {
+HideGridColMenuSimpleItem.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
@@ -86,4 +64,4 @@ HideGridColMenuItem.propTypes = {
   onClick: PropTypes.func.isRequired,
 } as any;
 
-export { HideGridColMenuItem };
+export { HideGridColMenuSimpleItem };

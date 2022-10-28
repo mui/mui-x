@@ -1,21 +1,14 @@
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import * as React from 'react';
-import { styled } from '@mui/material/styles';
-import { isHideMenuKey, isTabKey } from '../../../utils/keyboardUtils';
-import { GridColumnMenuProps } from './GridColumnMenuProps';
-import { gridClasses } from '../../../constants/gridClasses';
+import MenuList from '@mui/material/MenuList';
+import { isHideMenuKey, isTabKey } from '../../../../utils/keyboardUtils';
+import { GridColumnMenuSimpleProps } from './GridColumnMenuSimpleProps';
+import { gridClasses } from '../../../../constants/gridClasses';
 
-const GridColumnMenuContainerRoot = styled('div')(({ theme }) => ({
-  display: 'flex',
-  flexDirection: 'column',
-  minWidth: '248px',
-  padding: theme.spacing(1, 0),
-}));
-
-const GridColumnMenuContainer = React.forwardRef<HTMLDivElement, GridColumnMenuProps>(
-  function GridColumnMenuContainer(props: GridColumnMenuProps, ref) {
-    const { hideMenu, currentColumn, id, labelledby, className, children, ...other } = props;
+const GridColumnMenuSimpleContainer = React.forwardRef<HTMLUListElement, GridColumnMenuSimpleProps>(
+  function GridColumnMenuSimpleContainer(props: GridColumnMenuSimpleProps, ref) {
+    const { hideMenu, currentColumn, open, id, labelledby, className, children, ...other } = props;
 
     const handleListKeyDown = React.useCallback(
       (event: React.KeyboardEvent) => {
@@ -30,21 +23,22 @@ const GridColumnMenuContainer = React.forwardRef<HTMLDivElement, GridColumnMenuP
     );
 
     return (
-      <GridColumnMenuContainerRoot
+      <MenuList
         id={id}
         ref={ref}
         className={clsx(gridClasses.menuList, className)}
         aria-labelledby={labelledby}
         onKeyDown={handleListKeyDown}
+        autoFocus={open}
         {...other}
       >
         {children}
-      </GridColumnMenuContainerRoot>
+      </MenuList>
     );
   },
 );
 
-GridColumnMenuContainer.propTypes = {
+GridColumnMenuSimpleContainer.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
@@ -56,4 +50,4 @@ GridColumnMenuContainer.propTypes = {
   open: PropTypes.bool.isRequired,
 } as any;
 
-export { GridColumnMenuContainer };
+export { GridColumnMenuSimpleContainer };

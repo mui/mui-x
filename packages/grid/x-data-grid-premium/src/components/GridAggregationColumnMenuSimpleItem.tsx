@@ -1,12 +1,10 @@
 import * as React from 'react';
 import { GridColDef, useGridSelector } from '@mui/x-data-grid-pro';
 import MenuItem from '@mui/material/MenuItem';
-import Stack from '@mui/material/Stack';
 import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
 import { unstable_useId as useId } from '@mui/material/utils';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
-import { styled } from '@mui/material';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import {
@@ -22,11 +20,7 @@ interface GridAggregationColumnMenuItemsProps {
   availableAggregationFunctions: string[];
 }
 
-const StyledStack = styled(Stack)(({ theme }) => ({
-  padding: theme.spacing(1, 1.5, 1, 1.5),
-}));
-
-export const GridAggregationColumnMenuItem = (props: GridAggregationColumnMenuItemsProps) => {
+export const GridAggregationColumnMenuSimpleItem = (props: GridAggregationColumnMenuItemsProps) => {
   const { column, label, availableAggregationFunctions } = props;
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
@@ -62,10 +56,11 @@ export const GridAggregationColumnMenuItem = (props: GridAggregationColumnMenuIt
         : { ...otherColumnItems, [column.field]: newAggregationItem };
 
     apiRef.current.setAggregationModel(newModel);
+    apiRef.current.hideColumnMenu();
   };
 
   return (
-    <StyledStack>
+    <MenuItem disableRipple>
       <FormControl variant="standard" size="small" fullWidth>
         <InputLabel id={`${id}-label`}>{label}</InputLabel>
         <Select
@@ -92,6 +87,6 @@ export const GridAggregationColumnMenuItem = (props: GridAggregationColumnMenuIt
           ))}
         </Select>
       </FormControl>
-    </StyledStack>
+    </MenuItem>
   );
 };

@@ -3,20 +3,29 @@ import PropTypes from 'prop-types';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
-import MenuItem from '@mui/material/MenuItem';
 import PushPinIcon from '@mui/icons-material/PushPin';
 import { GridColDef } from '@mui/x-data-grid';
+import { styled } from '@mui/material';
 import { GridPinnedPosition } from '../hooks/features/columnPinning';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 
 interface GridColumnPinningMenuItemsProps {
   column?: GridColDef;
   onClick?: (event: React.MouseEvent<any>) => void;
-  condensed?: boolean;
 }
 
+const StyledStack = styled(Stack)(({ theme }) => ({
+  padding: theme.spacing(1, 1.5, 1, 1.5),
+}));
+
+const StyledButton = styled(Button)(() => ({
+  fontSize: '16px',
+  fontWeight: '400',
+  textTransform: 'none',
+}));
+
 const GridColumnPinningMenuItems = (props: GridColumnPinningMenuItemsProps) => {
-  const { column, onClick, condensed } = props;
+  const { column, onClick } = props;
   const apiRef = useGridApiContext();
 
   const pinColumn = (side: GridPinnedPosition) => (event: React.MouseEvent<HTMLElement>) => {
@@ -41,77 +50,42 @@ const GridColumnPinningMenuItems = (props: GridColumnPinningMenuItemsProps) => {
 
   const side = apiRef.current.isColumnPinned(column.field);
 
-  if (condensed) {
-    return (
-      <Stack px={1.5} py={1}>
-        <Typography color="text.secondary" fontSize="12px">
-          Pin to
-        </Typography>
-        <Stack
-          direction="row"
+  return (
+    <StyledStack>
+      <Typography color="text.secondary" fontSize="12px">
+        Pin to
+      </Typography>
+      <Stack direction="row">
+        <StyledButton
+          onClick={
+            side === GridPinnedPosition.left ? unpinColumn : pinColumn(GridPinnedPosition.left)
+          }
+          startIcon={<PushPinIcon />}
+          color={side === GridPinnedPosition.left ? 'primary' : 'inherit'}
           sx={{
-            '& .MuiButton-root': {
-              fontSize: '16px',
-              fontWeight: '400',
-              textTransform: 'none',
+            '& .MuiSvgIcon-root': {
+              transform: 'rotate(30deg)',
             },
           }}
         >
-          <Button
-            onClick={
-              side === GridPinnedPosition.left ? unpinColumn : pinColumn(GridPinnedPosition.left)
-            }
-            startIcon={<PushPinIcon />}
-            color={side === GridPinnedPosition.left ? 'primary' : 'inherit'}
-            sx={{
-              '& .MuiSvgIcon-root': {
-                transform: 'rotate(30deg)',
-              },
-            }}
-          >
-            {apiRef.current.getLocaleText('pinToLeftCondensed')}
-          </Button>
-          <Button
-            onClick={
-              side === GridPinnedPosition.right ? unpinColumn : pinColumn(GridPinnedPosition.right)
-            }
-            startIcon={<PushPinIcon />}
-            color={side === GridPinnedPosition.right ? 'primary' : 'inherit'}
-            sx={{
-              '& .MuiSvgIcon-root': {
-                transform: 'rotate(-30deg)',
-              },
-            }}
-          >
-            {apiRef.current.getLocaleText('pinToRightCondensed')}
-          </Button>
-        </Stack>
+          {apiRef.current.getLocaleText('pinToLeftCondensed')}
+        </StyledButton>
+        <StyledButton
+          onClick={
+            side === GridPinnedPosition.right ? unpinColumn : pinColumn(GridPinnedPosition.right)
+          }
+          startIcon={<PushPinIcon />}
+          color={side === GridPinnedPosition.right ? 'primary' : 'inherit'}
+          sx={{
+            '& .MuiSvgIcon-root': {
+              transform: 'rotate(-30deg)',
+            },
+          }}
+        >
+          {apiRef.current.getLocaleText('pinToRightCondensed')}
+        </StyledButton>
       </Stack>
-    );
-  }
-
-  if (side) {
-    const otherSide =
-      side === GridPinnedPosition.right ? GridPinnedPosition.left : GridPinnedPosition.right;
-    const label = otherSide === GridPinnedPosition.right ? 'pinToRight' : 'pinToLeft';
-
-    return (
-      <React.Fragment>
-        <MenuItem onClick={pinColumn(otherSide)}>{apiRef.current.getLocaleText(label)}</MenuItem>
-        <MenuItem onClick={unpinColumn}>{apiRef.current.getLocaleText('unpin')}</MenuItem>
-      </React.Fragment>
-    );
-  }
-
-  return (
-    <React.Fragment>
-      <MenuItem onClick={pinColumn(GridPinnedPosition.left)}>
-        {apiRef.current.getLocaleText('pinToLeft')}
-      </MenuItem>
-      <MenuItem onClick={pinColumn(GridPinnedPosition.right)}>
-        {apiRef.current.getLocaleText('pinToRight')}
-      </MenuItem>
-    </React.Fragment>
+    </StyledStack>
   );
 };
 
@@ -121,7 +95,6 @@ GridColumnPinningMenuItems.propTypes = {
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
   column: PropTypes.object,
-  condensed: PropTypes.bool,
   onClick: PropTypes.func,
 } as any;
 

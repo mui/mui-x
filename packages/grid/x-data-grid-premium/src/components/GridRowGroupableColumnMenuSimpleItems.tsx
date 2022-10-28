@@ -1,11 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import GroupWorkIcon from '@mui/icons-material/GroupWork';
-import WorkspacesIcon from '@mui/icons-material/Workspaces';
-import Stack from '@mui/material/Stack';
-import Button from '@mui/material/Button';
+import MenuItem from '@mui/material/MenuItem';
 import { gridColumnLookupSelector, useGridSelector, GridColDef } from '@mui/x-data-grid-pro';
-import { styled } from '@mui/material';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { gridRowGroupingSanitizedModelSelector } from '../hooks/features/rowGrouping/gridRowGroupingSelector';
 
@@ -14,18 +10,7 @@ interface GridRowGroupableColumnMenuItemsProps {
   onClick?: (event: React.MouseEvent<any>) => void;
 }
 
-const StyledStack = styled(Stack)(({ theme }) => ({
-  padding: theme.spacing(1, 1.5, 1, 1.5),
-  flexDirection: 'row',
-}));
-
-const StyledButton = styled(Button)(() => ({
-  fontSize: '16px',
-  fontWeight: '400',
-  textTransform: 'none',
-}));
-
-const GridRowGroupableColumnMenuItems = (props: GridRowGroupableColumnMenuItemsProps) => {
+const GridRowGroupableColumnMenuSimpleItems = (props: GridRowGroupableColumnMenuItemsProps) => {
   const { column, onClick } = props;
   const apiRef = useGridApiContext();
   const rowGroupingModel = useGridSelector(apiRef, gridRowGroupingSanitizedModelSelector);
@@ -53,45 +38,18 @@ const GridRowGroupableColumnMenuItems = (props: GridRowGroupableColumnMenuItemsP
 
   if (rowGroupingModel.includes(column.field)) {
     return (
-      <StyledStack>
-        <StyledButton
-          onClick={ungroupColumn}
-          key={column.field}
-          startIcon={<WorkspacesIcon fontSize="small" />}
-          color="inherit"
-        >
-          {apiRef.current.getLocaleText('unGroupColumn')(name)}
-        </StyledButton>
-      </StyledStack>
+      <MenuItem onClick={ungroupColumn}>
+        {apiRef.current.getLocaleText('unGroupColumn')(name)}
+      </MenuItem>
     );
   }
 
   return (
-    <Stack
-      px={1.5}
-      py={1}
-      direction="row"
-      sx={{
-        '& .MuiButton-root': {
-          fontSize: '16px',
-          fontWeight: '400',
-          textTransform: 'none',
-        },
-      }}
-    >
-      <Button
-        onClick={groupColumn}
-        key={column.field}
-        startIcon={<GroupWorkIcon fontSize="small" />}
-        color="inherit"
-      >
-        {apiRef.current.getLocaleText('groupColumn')(name)}
-      </Button>
-    </Stack>
+    <MenuItem onClick={groupColumn}>{apiRef.current.getLocaleText('groupColumn')(name)}</MenuItem>
   );
 };
 
-GridRowGroupableColumnMenuItems.propTypes = {
+GridRowGroupableColumnMenuSimpleItems.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
@@ -100,4 +58,4 @@ GridRowGroupableColumnMenuItems.propTypes = {
   onClick: PropTypes.func,
 } as any;
 
-export { GridRowGroupableColumnMenuItems };
+export { GridRowGroupableColumnMenuSimpleItems };

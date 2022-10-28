@@ -1,3 +1,4 @@
+export * from './simple';
 export * from './GridColumnsMenuItem';
 export * from './GridFilterItemProps';
 export * from './GridFilterMenuItem';

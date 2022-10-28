@@ -22,6 +22,7 @@ import { GridApiPro } from '../../../models/gridApiPro';
 import { GridInitialStatePro, GridStatePro } from '../../../models/gridStatePro';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 import { GridColumnPinningMenuItems } from '../../../components/GridColumnPinningMenuItems';
+import { GridColumnPinningMenuSimpleItems } from '../../../components/GridColumnPinningMenuSimpleItems';
 import {
   GridColumnPinningApi,
   GridPinnedPosition,
@@ -178,28 +179,37 @@ export const useGridColumnPinning = (
   );
 
   const addColumnMenuItems = React.useCallback<GridPipeProcessor<'columnMenu'>>(
-    (initialValue, column) => {
+    (columnMenuItems, column) => {
       if (props.disableColumnPinning) {
-        return initialValue;
+        return columnMenuItems;
       }
 
       if (column.pinnable === false) {
-        return initialValue;
+        return columnMenuItems;
       }
-      const condensed = props.componentsProps?.columnMenu?.condensed ?? false;
+
+      const isSimple = columnMenuItems.some(({ displayName }) =>
+        displayName?.includes('SortGridMenuSimple'),
+      );
+
+      const component = isSimple ? (
+        <GridColumnPinningMenuSimpleItems />
+      ) : (
+        <GridColumnPinningMenuItems />
+      );
 
       const nodesToInsert = [
         { displayName: 'divider', component: <Divider /> },
         {
           displayName: 'GridColumnPinningMenuItems',
-          component: <GridColumnPinningMenuItems condensed={condensed} />,
+          component,
         },
       ];
 
       // Insert `pin to` after `sort by`
-      return insertItemsInColumnMenu(initialValue, nodesToInsert, 'SortGridMenuItems');
+      return insertItemsInColumnMenu(columnMenuItems, nodesToInsert, 'SortGridMenuItems');
     },
-    [props.componentsProps?.columnMenu?.condensed, props.disableColumnPinning],
+    [props.disableColumnPinning],
   );
 
   const checkIfCanBeReordered = React.useCallback<GridPipeProcessor<'canBeReordered'>>(

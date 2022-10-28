@@ -20,21 +20,17 @@ By default, each column header displays a column menu. The column menu allows ac
 
 {{"demo": "DisabledColumnMenuGrid.js", "bg": "inline"}}
 
-## Condensed column menu
+## Column menu with Pro/Premium options [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)[<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan)
 
-In order to have a more viewable column menu you can use `condensed: true` componentProp which is `false` by default.
+You can also access commercial features like column pinning etc from the column menu when using `DataGridPro` or `DataGridPremium`.
 
-```tsx
-<DataGrid {...otherProps} componentsProps={{ columnMenu: { condensed: true } }} />
-```
+{{"demo": "ColumnMenuGridPro.js", "bg": "inline"}}
 
-{{"demo": "CondensedColumnMenuGrid.js", "bg": "inline"}}
+## Simple column menu
 
-### Condensed column menu with Pro/Premium options [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)[<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan)
+In case you like the look and feel of the old column menu, you can replace the default one with `GridColumnMenuSimple` component.
 
-You can also access `Pro` features like column pinning etc from the column menu when using `DataGridPro` or `DataGridPremium`.
-
-{{"demo": "CondensedColumnMenuGridPro.js", "bg": "inline"}}
+{{"demo": "SimpleColumnMenuGrid.js", "bg": "inline"}}
 
 ## API
 

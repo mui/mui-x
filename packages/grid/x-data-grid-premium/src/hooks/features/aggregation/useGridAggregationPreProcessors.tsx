@@ -19,6 +19,7 @@ import {
 } from './wrapColumnWithAggregation';
 import { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
 import { GridAggregationColumnMenuItem } from '../../../components/GridAggregationColumnMenuItem';
+import { GridAggregationColumnMenuSimpleItem } from '../../../components/GridAggregationColumnMenuSimpleItem';
 import { gridAggregationModelSelector } from './gridAggregationSelectors';
 import { GridInitialStatePremium } from '../../../models/gridStatePremium';
 
@@ -124,31 +125,29 @@ export const useGridAggregationPreProcessors = (
         return columnMenuItems;
       }
 
-      const condensed = props.componentsProps?.columnMenu?.condensed ?? false;
+      const aggregationItemProps = {
+        column,
+        label: apiRef.current.getLocaleText('aggregationMenuItemHeader'),
+        availableAggregationFunctions,
+      };
 
-      const nodesToInsert = [
-        { displayName: 'divider', component: <Divider /> },
-        {
-          displayName: 'GridAggregationColumnMenuItem',
-          component: (
-            <GridAggregationColumnMenuItem
-              column={column}
-              label={apiRef.current.getLocaleText('aggregationMenuItemHeader')}
-              availableAggregationFunctions={availableAggregationFunctions}
-              condensed={condensed}
-            />
-          ),
-        },
-      ];
+      const item = columnMenuItems.some(({ displayName }) =>
+        displayName?.includes('GridFilterMenuSimple'),
+      )
+        ? {
+            displayName: 'GridAggregationColumnMenuSimpleItem',
+            component: <GridAggregationColumnMenuSimpleItem {...aggregationItemProps} />,
+          }
+        : {
+            displayName: 'GridAggregationColumnMenuItem',
+            component: <GridAggregationColumnMenuItem {...aggregationItemProps} />,
+          };
+
+      const nodesToInsert = [{ displayName: 'divider', component: <Divider /> }, item];
 
       return insertItemsInColumnMenu(columnMenuItems, nodesToInsert, 'GridFilterMenuItem');
     },
-    [
-      apiRef,
-      props.aggregationFunctions,
-      props.componentsProps?.columnMenu?.condensed,
-      props.disableAggregation,
-    ],
+    [apiRef, props.aggregationFunctions, props.disableAggregation],
   );
 
   const stateExportPreProcessing = React.useCallback<GridPipeProcessor<'exportState'>>(

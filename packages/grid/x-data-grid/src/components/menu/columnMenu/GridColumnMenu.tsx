@@ -10,64 +10,36 @@ import { HideGridColMenuItem } from './HideGridColMenuItem';
 import { SortGridMenuItems } from './SortGridMenuItems';
 import { useGridApiContext } from '../../../hooks/utils/useGridApiContext';
 
-const GridColumnMenu = React.forwardRef<HTMLUListElement, GridColumnMenuProps>(
+const GridColumnMenu = React.forwardRef<HTMLDivElement, GridColumnMenuProps>(
   function GridColumnMenu(props: GridColumnMenuProps, ref) {
-    const { hideMenu, currentColumn, condensed } = props;
+    const { hideMenu, currentColumn } = props;
     const apiRef = useGridApiContext();
 
-    const defaultMenuItems: GridColumnMenuValue = [
+    const menuItems: GridColumnMenuValue = [
       {
         displayName: 'SortGridMenuItems',
         component: <SortGridMenuItems onClick={hideMenu} column={currentColumn!} />,
       },
-      // TODO update types to allow `onClick` and `column` to be optional
+      { displayName: 'divider', component: <Divider /> },
       {
         displayName: 'GridFilterMenuItem',
         component: <GridFilterMenuItem onClick={hideMenu} column={currentColumn!} />,
       },
+      { displayName: 'Divider', component: <Divider /> },
       {
         displayName: 'HideGridColMenuItem',
         component: <HideGridColMenuItem onClick={hideMenu} column={currentColumn!} />,
       },
+      { displayName: 'Divider', component: <Divider /> },
       {
         displayName: 'GridColumnsMenuItem',
         component: <GridColumnsMenuItem onClick={hideMenu} column={currentColumn!} />,
       },
     ];
 
-    const condensedMenuItems: GridColumnMenuValue = [
-      {
-        displayName: 'SortGridMenuItems',
-        component: (
-          <SortGridMenuItems onClick={hideMenu} column={currentColumn!} condensed={condensed} />
-        ),
-      },
-      { displayName: 'divider', component: <Divider /> },
-      {
-        displayName: 'GridFilterMenuItem',
-        component: (
-          <GridFilterMenuItem onClick={hideMenu} column={currentColumn!} condensed={condensed} />
-        ),
-      },
-      { displayName: 'Divider', component: <Divider /> },
-      {
-        displayName: 'HideGridColMenuItem',
-        component: (
-          <HideGridColMenuItem onClick={hideMenu} column={currentColumn!} condensed={condensed} />
-        ),
-      },
-      { displayName: 'Divider', component: <Divider /> },
-      {
-        displayName: 'GridColumnsMenuItem',
-        component: (
-          <GridColumnsMenuItem onClick={hideMenu} column={currentColumn!} condensed={condensed} />
-        ),
-      },
-    ];
-
     const preProcessedValue = apiRef.current.unstable_applyPipeProcessors(
       'columnMenu',
-      condensed ? condensedMenuItems : defaultMenuItems,
+      menuItems,
       currentColumn,
     );
 
@@ -90,7 +62,6 @@ GridColumnMenu.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
-  condensed: PropTypes.bool,
   currentColumn: PropTypes.object.isRequired,
   hideMenu: PropTypes.func.isRequired,
   id: PropTypes.string,

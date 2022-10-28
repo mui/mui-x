@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { DataGridPremium } from '@mui/x-data-grid-premium';
+import { DataGridPremium, frFR } from '@mui/x-data-grid-premium';
 import { useDemoData } from '@mui/x-data-grid-generator';
 
-export default function CondensedColumnMenuGridPro() {
+export default function ColumnMenuGridPro() {
   const { data } = useDemoData({
     dataSet: 'Commodity',
     rowLength: 20,
@@ -13,7 +13,7 @@ export default function CondensedColumnMenuGridPro() {
     <div style={{ height: 400, width: '100%' }}>
       <DataGridPremium
         {...data}
-        componentsProps={{ columnMenu: { condensed: true } }}
+        localeText={frFR.components.MuiDataGrid.defaultProps.localeText}
       />
     </div>
   );

@@ -43,7 +43,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 const GridMenuRoot = styled(Popper, {
   name: 'MuiDataGrid',
   slot: 'Menu',
-  overridesResolver: (props, styles) => styles.menu,
+  overridesResolver: (_, styles) => styles.menu,
 })(({ theme }) => ({
   zIndex: theme.zIndex.modal,
   [`& .${gridClasses.menuList}`]: {
@@ -51,8 +51,16 @@ const GridMenuRoot = styled(Popper, {
   },
   '& .MuiPaper-root': {
     borderRadius: '10px',
-    minWidth: '248px',
+    // minWidth: '248px',
   },
+}));
+
+const StyledPaper = styled(Paper, {
+  name: 'MuiDataGrid',
+  slot: 'Paper',
+  overridesResolver: (_, styles) => styles.paper,
+})(() => ({
+  borderRadius: '10px',
 }));
 
 export interface GridMenuProps extends Omit<PopperProps, 'onKeyDown' | 'children'> {
@@ -119,7 +127,7 @@ const GridMenu = (props: GridMenuProps) => {
             style={{ transformOrigin: transformOrigin[placement as keyof typeof transformOrigin] }}
             onExited={handleExited(TransitionProps?.onExited)}
           >
-            <Paper>{children}</Paper>
+            <StyledPaper>{children}</StyledPaper>
           </Grow>
         </ClickAwayListener>
       )}
