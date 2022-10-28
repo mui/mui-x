@@ -5342,10 +5342,10 @@ chalk@^4.0.0, chalk@^4.0.2, chalk@^4.1.0, chalk@^4.1.1, chalk@^4.1.2:
     ansi-styles "^4.1.0"
     supports-color "^7.1.0"
 
-chance@^1.1.8:
-  version "1.1.8"
-  resolved "https://registry.yarnpkg.com/chance/-/chance-1.1.8.tgz#5d6c2b78c9170bf6eb9df7acdda04363085be909"
-  integrity sha512-v7fi5Hj2VbR6dJEGRWLmJBA83LJMS47pkAbmROFxHWd9qmE1esHRZW8Clf1Fhzr3rjxnNZVCjOEv/ivFxeIMtg==
+chance@^1.1.9:
+  version "1.1.9"
+  resolved "https://registry.yarnpkg.com/chance/-/chance-1.1.9.tgz#fbf409726a956415b4bde0e8db010f60b60fc01b"
+  integrity sha512-TfxnA/DcZXRTA4OekA2zL9GH8qscbbl6X0ZqU4tXhGveVY/mXWvEQLt5GwZcYXTEyEFflVtj+pG8nc8EwSm1RQ==
 
 chardet@^0.7.0:
   version "0.7.0"
