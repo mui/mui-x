@@ -43,7 +43,7 @@ const getSelectionModelPropValue = (
   return [selectionModelProp];
 };
 
-export const selectionStateInitializer: GridStateInitializer<
+export const rowSelectionStateInitializer: GridStateInitializer<
   Pick<DataGridProcessedProps, 'rowSelectionModel' | 'rowSelection'>
 > = (state, props) => ({
   ...state,

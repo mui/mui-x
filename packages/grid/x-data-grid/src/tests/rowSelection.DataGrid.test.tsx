@@ -739,15 +739,15 @@ describe('<DataGrid /> - Row Selection', () => {
     });
 
     it('should not select rows with Shift + Space', () => {
-      render(<TestDataGridSelection rowSelection={false} disableSelectionOnClick />);
+      render(<TestDataGridSelection rowSelection={false} disableRowSelectionOnClick />);
       const cell0 = getCell(0, 0);
       userEvent.mousePress(cell0);
       fireEvent.keyDown(cell0, { key: ' ', shiftKey: true });
       expect(getSelectedRowIds()).to.deep.equal([]);
     });
 
-    it('should not select rows passed in the selectionModel prop', () => {
-      render(<TestDataGridSelection rowSelection={false} selectionModel={[0]} />);
+    it('should not select rows passed in the rowSelectionModel prop', () => {
+      render(<TestDataGridSelection rowSelection={false} rowSelectionModel={[0]} />);
       expect(getSelectedRowIds()).to.deep.equal([]);
     });
   });
