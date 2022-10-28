@@ -233,6 +233,10 @@ In the example below, you can see that all the aggregation functions are rendere
 
 {{"demo": "AggregationRenderCell.js", "bg": "inline", "defaultCodeOpen": false}}
 
+## Multi-column aggregation
+
+{{"demo": "AggregationMultiColumn.js", "bg": "inline", "defaultCodeOpen": false}}
+
 ## API
 
 - [DataGrid](/x/api/data-grid/data-grid/)
