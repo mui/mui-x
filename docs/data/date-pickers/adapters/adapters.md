@@ -36,7 +36,7 @@ This will avoid bundling two libraries.
 If you are starting a new project without any date manipulation outside of `@mui/x-date-pickers`,
 consider using `dayjs` which will have the smallest impact on the bundle size of your application.
 
-Here is the weight added to your gzipped bundle size by each of those libraries.
+Here is the weight added to your gzipped bundle size by each of those libraries when used inside the Date and Time Pickers:
 
 | **Library**       | **Gzipped size** |
 | ----------------- | ---------------- |
