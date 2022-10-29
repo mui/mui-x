@@ -24,14 +24,14 @@ describe('<DataGrid /> - Filter panel', () => {
 
   let apiRef: React.MutableRefObject<GridApi>;
 
-  const TestCase = (props: Partial<DataGridProProps>) => {
+  function TestCase(props: Partial<DataGridProProps>) {
     apiRef = useGridApiRef();
     return (
       <div style={{ width: 300, height: 300 }}>
         <DataGridPro apiRef={apiRef} {...baselineProps} {...props} />
       </div>
     );
-  };
+  }
 
   it('should add an id and operatorValue to the filter item created when opening the filter panel', () => {
     render(<TestCase />);

@@ -16,7 +16,7 @@ const today = dayjs();
 const tomorrow = dayjs().add(1, 'day');
 const todayEndOfTheDay = today.endOf('day');
 
-const GridItem = ({ label, children, spacing = 1 }) => {
+function GridItem({ label, children, spacing = 1 }) {
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column' }}>
       <Typography variant="body2" sx={{ mb: spacing }}>
@@ -25,7 +25,7 @@ const GridItem = ({ label, children, spacing = 1 }) => {
       {children}
     </Box>
   );
-};
+}
 
 GridItem.propTypes = {
   children: PropTypes.node,

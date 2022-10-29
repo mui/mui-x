@@ -29,7 +29,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   return composeClasses(slots, getDataGridUtilityClass, classes);
 };
 
-const GridRowReorderCell = (params: GridRenderCellParams) => {
+function GridRowReorderCell(params: GridRenderCellParams) {
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
   const sortModel = useGridSelector(apiRef, gridSortModelSelector);
@@ -99,7 +99,7 @@ const GridRowReorderCell = (params: GridRenderCellParams) => {
       <div className={classes.placeholder}>{cellValue}</div>
     </div>
   );
-};
+}
 
 export { GridRowReorderCell };
 

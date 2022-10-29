@@ -35,12 +35,12 @@ const expectAriaCoordinate = (
 describe('<DataGrid /> - Keyboard', () => {
   const { render } = createRenderer({ clock: 'fake' });
 
-  const NavigationTestCaseNoScrollX = (
+  function NavigationTestCaseNoScrollX(
     props: Omit<
       DataGridProps,
       'autoHeight' | 'rows' | 'columns' | 'pageSize' | 'rowsPerPageOptions'
     > & {},
-  ) => {
+  ) {
     const data = useBasicDemoData(100, 3);
     const transformColSizes = (columns: GridColumns) =>
       columns.map((column) => ({ ...column, width: 60 }));
@@ -63,7 +63,7 @@ describe('<DataGrid /> - Keyboard', () => {
         />
       </div>
     );
-  };
+  }
 
   /* eslint-disable material-ui/disallow-active-element-as-key-event-target */
   describe('cell navigation', () => {
@@ -463,12 +463,12 @@ describe('<DataGrid /> - Keyboard', () => {
       },
     ];
 
-    const NavigationTestGroupingCaseNoScrollX = (
+    function NavigationTestGroupingCaseNoScrollX(
       props: Omit<
         DataGridProps,
         'autoHeight' | 'rows' | 'columns' | 'pageSize' | 'rowsPerPageOptions'
       > & {},
-    ) => {
+    ) {
       const data = getBasicGridData(10, 10);
       const transformColSizes = (columns: GridColumns) =>
         columns.map((column) => ({ ...column, width: 60 }));
@@ -492,7 +492,7 @@ describe('<DataGrid /> - Keyboard', () => {
           />
         </div>
       );
-    };
+    }
 
     it('should scroll horizontally when navigating between column group headers with arrows', function test() {
       if (isJSDOM) {

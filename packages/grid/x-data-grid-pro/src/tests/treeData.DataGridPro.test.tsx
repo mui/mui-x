@@ -61,7 +61,7 @@ describe('<DataGridPro /> - Tree Data', () => {
 
   let apiRef: React.MutableRefObject<GridApi>;
 
-  const Test = (props: Partial<DataGridProProps>) => {
+  function Test(props: Partial<DataGridProProps>) {
     apiRef = useGridApiRef();
 
     return (
@@ -69,7 +69,7 @@ describe('<DataGridPro /> - Tree Data', () => {
         <DataGridPro {...baselineProps} apiRef={apiRef} {...props} disableVirtualization />
       </div>
     );
-  };
+  }
 
   describe('prop: treeData', () => {
     it('should support tree data toggling', () => {

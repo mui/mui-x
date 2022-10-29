@@ -68,7 +68,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   return composeClasses(slots, getDataGridUtilityClass, classes);
 };
 
-const GridAggregationHeader = (props: GridColumnHeaderParams) => {
+function GridAggregationHeader(props: GridColumnHeaderParams) {
   const { colDef, aggregation } = props;
 
   const apiRef = useGridApiContext();
@@ -99,6 +99,6 @@ const GridAggregationHeader = (props: GridColumnHeaderParams) => {
       </GridAggregationFunctionLabel>
     </GridAggregationHeaderRoot>
   );
-};
+}
 
 export { GridAggregationHeader };

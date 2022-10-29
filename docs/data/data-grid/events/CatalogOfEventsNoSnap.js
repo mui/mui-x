@@ -25,7 +25,7 @@ function getDataGridComponentNameFromProjectName(project) {
 
 const Description = styled(Typography)({ whiteSpace: 'nowrap' });
 
-const EventRow = ({ event }) => {
+function EventRow({ event }) {
   const example = React.useMemo(() => {
     const args = ['details, // GridCallbackDetails'];
     if (event.event) {
@@ -68,7 +68,7 @@ ${propExample}
       <HighlightedCode code={example} language="tsx" />
     </Box>
   );
-};
+}
 
 const COLUMNS = [
   {
@@ -120,11 +120,13 @@ const COLUMNS = [
   },
 ];
 
-const Toolbar = () => (
-  <GridToolbarContainer sx={{ p: 1 }}>
-    <GridToolbarQuickFilter />
-  </GridToolbarContainer>
-);
+function Toolbar() {
+  return (
+    <GridToolbarContainer sx={{ p: 1 }}>
+      <GridToolbarQuickFilter />
+    </GridToolbarContainer>
+  );
+}
 
 export default function CatalogOfEventsNoSnap() {
   return (

@@ -11,7 +11,7 @@ import { Unstable_MultiInputDateRangeField as MultiInputDateRangeField } from '@
 import { Unstable_MultiInputTimeRangeField as MultiInputTimeRangeField } from '@mui/x-date-pickers-pro/MultiInputTimeRangeField';
 import { Unstable_MultiInputDateTimeRangeField as MultiInputDateTimeRangeField } from '@mui/x-date-pickers-pro/MultiInputDateTimeRangeField';
 
-const GridItem = ({ label, children, spacing = 1 }) => {
+function GridItem({ label, children, spacing = 1 }) {
   return (
     <Grid xs={12} item>
       <Box sx={{ display: 'flex', flexDirection: 'column' }}>
@@ -22,7 +22,7 @@ const GridItem = ({ label, children, spacing = 1 }) => {
       </Box>
     </Grid>
   );
-};
+}
 
 GridItem.propTypes = {
   children: PropTypes.node,

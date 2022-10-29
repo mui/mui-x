@@ -16,7 +16,7 @@ const shouldDisableTime: TimePickerProps<Dayjs>['shouldDisableTime'] = (
 
 const defaultValue = dayjs().set('hour', 10).set('minute', 50).startOf('minute');
 
-const GridItem = ({
+function GridItem({
   label,
   children,
   spacing = 1,
@@ -24,7 +24,7 @@ const GridItem = ({
   label: string;
   children: React.ReactNode;
   spacing?: number;
-}) => {
+}) {
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column' }}>
       <Typography variant="body2" sx={{ mb: spacing }}>
@@ -33,7 +33,7 @@ const GridItem = ({
       {children}
     </Box>
   );
-};
+}
 
 export default function TimeValidationShouldDisableTime() {
   const [timePickerValue, setTimePickerValue] = React.useState<Dayjs | null>(

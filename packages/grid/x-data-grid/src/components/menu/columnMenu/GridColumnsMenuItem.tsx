@@ -6,7 +6,7 @@ import { useGridApiContext } from '../../../hooks/utils/useGridApiContext';
 import { GridFilterItemProps } from './GridFilterItemProps';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
 
-const GridColumnsMenuItem = (props: GridFilterItemProps) => {
+function GridColumnsMenuItem(props: GridFilterItemProps) {
   const { onClick } = props;
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
@@ -28,7 +28,7 @@ const GridColumnsMenuItem = (props: GridFilterItemProps) => {
       {apiRef.current.getLocaleText('columnMenuShowColumns')}
     </MenuItem>
   );
-};
+}
 
 GridColumnsMenuItem.propTypes = {
   // ----------------------------- Warning --------------------------------

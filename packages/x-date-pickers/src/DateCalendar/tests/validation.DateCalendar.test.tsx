@@ -4,9 +4,9 @@ import { screen, fireEvent } from '@mui/monorepo/test/utils';
 import { DateCalendar, DateCalendarProps } from '@mui/x-date-pickers/DateCalendar';
 import { createPickerRenderer, adapterToUse } from '../../../../../test/utils/pickers-utils';
 
-const WrappedDateCalendar = <TDate extends any>(
+function WrappedDateCalendar<TDate extends any>(
   props: Omit<DateCalendarProps<TDate>, 'value' | 'onChange'> & { initialValue: TDate },
-) => {
+) {
   const { initialValue, ...other } = props;
 
   const [value, setValue] = React.useState<TDate | null>(initialValue);
@@ -16,7 +16,7 @@ const WrappedDateCalendar = <TDate extends any>(
   }, []);
 
   return <DateCalendar {...other} value={value} onChange={handleChange} />;
-};
+}
 
 describe('<DateCalendar /> - Validation', () => {
   const { render, clock } = createPickerRenderer({ clock: 'fake' });
