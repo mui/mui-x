@@ -5,7 +5,6 @@
 /* eslint-disable react/no-danger */
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { useRouter } from 'next/router';
 import clsx from 'clsx';
 import { exactProp } from '@mui/utils';
 import { alpha, styled } from '@mui/material/styles';
@@ -49,7 +48,6 @@ const Table = styled('table')(({ theme }) => {
 function PropsTable(props) {
   const { componentProps, propDescriptions } = props;
   const t = useTranslate();
-  const router = useRouter();
 
   return (
     <Wrapper>
@@ -104,7 +102,7 @@ function PropsTable(props) {
                     )}
                     <div
                       dangerouslySetInnerHTML={{
-                        __html: propDescriptions[propName],
+                        __html: propDescriptions[propName] || '',
                       }}
                     />
                   </td>
@@ -215,7 +213,6 @@ Heading.propTypes = {
 };
 
 function ApiDocs(props) {
-  const router = useRouter();
   const { descriptions, pageContent } = props;
   const t = useTranslate();
   const userLanguage = useUserLanguage();
