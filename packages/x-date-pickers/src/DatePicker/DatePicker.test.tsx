@@ -27,7 +27,7 @@ describe('<DatePicker />', () => {
   });
 
   describe('rendering', () => {
-    const ControlledDatePicker = () => {
+    function ControlledDatePicker() {
       const [value, setValue] = React.useState<Date | null>(null);
       return (
         <DatePicker
@@ -36,7 +36,7 @@ describe('<DatePicker />', () => {
           onChange={(newValue) => setValue(newValue)}
         />
       );
-    };
+    }
 
     it('should handle controlled `onChange` in desktop mode', () => {
       render(<ControlledDatePicker />);

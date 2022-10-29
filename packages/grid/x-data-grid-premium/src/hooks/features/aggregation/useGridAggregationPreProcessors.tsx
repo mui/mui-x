@@ -24,7 +24,9 @@ import { gridAggregationModelSelector } from './gridAggregationSelectors';
 import { GridInitialStatePremium } from '../../../models/gridStatePremium';
 import { GridAggregationRules } from './gridAggregationInterfaces';
 
-const Divider = () => <MuiDivider onClick={(event) => event.stopPropagation()} />;
+function Divider() {
+  return <MuiDivider onClick={(event) => event.stopPropagation()} />
+}
 
 export const useGridAggregationPreProcessors = (
   apiRef: React.MutableRefObject<GridApiPremium>,

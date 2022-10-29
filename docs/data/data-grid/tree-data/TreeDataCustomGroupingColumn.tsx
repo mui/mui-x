@@ -20,7 +20,7 @@ export const isNavigationKey = (key: string) =>
   key.indexOf('Page') === 0 ||
   key === ' ';
 
-const CustomGridTreeDataGroupingCell = (props: GridRenderCellParams) => {
+function CustomGridTreeDataGroupingCell(props: GridRenderCellParams) {
   const { id, field, rowNode } = props;
   const apiRef = useGridApiContext();
   const filteredDescendantCountLookup = useGridSelector(
@@ -62,7 +62,7 @@ const CustomGridTreeDataGroupingCell = (props: GridRenderCellParams) => {
       </div>
     </Box>
   );
-};
+}
 
 interface Row {
   hierarchy: string[];

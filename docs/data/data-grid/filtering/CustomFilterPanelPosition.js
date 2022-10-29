@@ -9,11 +9,11 @@ import { useDemoData } from '@mui/x-data-grid-generator';
 
 const VISIBLE_FIELDS = ['name', 'rating', 'country', 'dateCreated', 'isAdmin'];
 
-const CustomToolbar = ({ setFilterButtonEl }) => (
-  <GridToolbarContainer>
+function CustomToolbar({ setFilterButtonEl }) {
+  return <GridToolbarContainer>
     <GridToolbarFilterButton ref={setFilterButtonEl} />
   </GridToolbarContainer>
-);
+}
 
 CustomToolbar.propTypes = {
   setFilterButtonEl: PropTypes.func.isRequired,

@@ -29,7 +29,7 @@ interface GridGroupingCriteriaCellProps extends GridRenderCellParams {
   hideDescendantCount?: boolean;
 }
 
-export const GridGroupingCriteriaCell = (props: GridGroupingCriteriaCellProps) => {
+export function GridGroupingCriteriaCell(props: GridGroupingCriteriaCellProps) {
   const { id, field, rowNode, hideDescendantCount, formattedValue } = props;
 
   const rootProps = useGridRootProps();
@@ -86,4 +86,4 @@ export const GridGroupingCriteriaCell = (props: GridGroupingCriteriaCellProps) =
       </span>
     </Box>
   );
-};
+}

@@ -56,14 +56,14 @@ describe('<DataGridPro /> - Events Params', () => {
 
   let apiRef: React.MutableRefObject<GridApi>;
 
-  const TestEvents = (props: Partial<DataGridProProps>) => {
+  function TestEvents(props: Partial<DataGridProProps>) {
     apiRef = useGridApiRef();
     return (
       <div style={{ width: 300, height: 300 }}>
         <DataGridPro apiRef={apiRef} {...baselineProps} {...props} disableVirtualization />
       </div>
     );
-  };
+  }
 
   describe('columnHeaderParams', () => {
     it('should include the correct params', () => {
@@ -367,7 +367,7 @@ describe('<DataGridPro /> - Events Params', () => {
       { id: 5, brand: 'Reebok' },
     ];
     const handleRowsScrollEnd = spy();
-    const TestCase = ({ rows }: { rows: typeof baseRows }) => {
+    function TestCase({ rows }: { rows: typeof baseRows }) {
       return (
         <div style={{ width: 300, height: 300 }}>
           <DataGridPro
@@ -377,7 +377,7 @@ describe('<DataGridPro /> - Events Params', () => {
           />
         </div>
       );
-    };
+    }
     const { container, setProps } = render(<TestCase rows={baseRows} />);
     const virtualScroller = container.querySelector('.MuiDataGrid-virtualScroller');
     // arbitrary number to make sure that the bottom of the grid window is reached.

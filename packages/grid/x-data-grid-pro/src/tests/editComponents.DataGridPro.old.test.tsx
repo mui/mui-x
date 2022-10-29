@@ -86,7 +86,7 @@ describe('<DataGridPro /> - Edit Components', () => {
 
   let apiRef: React.MutableRefObject<GridApi>;
 
-  const TestCase = (props: Partial<DataGridProProps>) => {
+  function TestCase(props: Partial<DataGridProProps>) {
     apiRef = useGridApiRef();
     return (
       <div style={{ width: 300, height: 300 }}>
@@ -98,7 +98,7 @@ describe('<DataGridPro /> - Edit Components', () => {
         />
       </div>
     );
-  };
+  }
 
   describe('column type: singleSelect', () => {
     it('should change cell value correctly when the valueOptions is array of strings', async () => {
@@ -454,7 +454,7 @@ describe('<DataGridPro /> - Edit Components', () => {
 
   describe('column type: number', () => {
     it('should keep the right type', async () => {
-      const Test = (props: Partial<DataGridProProps>) => {
+      function Test(props: Partial<DataGridProProps>) {
         apiRef = useGridApiRef();
         return (
           <div style={{ width: 300, height: 300 }}>
@@ -466,7 +466,7 @@ describe('<DataGridPro /> - Edit Components', () => {
             />
           </div>
         );
-      };
+      }
       render(<Test />);
       expect(screen.queryAllByRole('row')).to.have.length(4);
       const cell = getCell(0, 0);
@@ -484,7 +484,7 @@ describe('<DataGridPro /> - Edit Components', () => {
     });
 
     it('should allow to enter 0', async () => {
-      const Test = (props: Partial<DataGridProProps>) => {
+      function Test(props: Partial<DataGridProProps>) {
         apiRef = useGridApiRef();
         return (
           <div style={{ width: 300, height: 300 }}>
@@ -496,7 +496,7 @@ describe('<DataGridPro /> - Edit Components', () => {
             />
           </div>
         );
-      };
+      }
       render(<Test />);
       const cell = getCell(0, 0);
       fireDoubleClickEvent(cell);
@@ -764,7 +764,7 @@ describe('<DataGridPro /> - Edit Components', () => {
   describe('column type: string', () => {
     it('should debounce calls to preProcessEditCellProps', () => {
       const preProcessEditCellProps = spy(({ props }) => props);
-      const Test = () => {
+      function Test() {
         return (
           <div style={{ width: 300, height: 300 }}>
             <DataGridPro
@@ -775,7 +775,7 @@ describe('<DataGridPro /> - Edit Components', () => {
             />
           </div>
         );
-      };
+      }
       render(<Test />);
       const cell = getCell(0, 0);
       fireDoubleClickEvent(cell);

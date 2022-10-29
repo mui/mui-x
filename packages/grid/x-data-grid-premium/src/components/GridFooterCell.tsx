@@ -34,7 +34,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   return composeClasses(slots, getDataGridUtilityClass, classes);
 };
 
-const GridFooterCell = (props: GridFooterCellProps) => {
+function GridFooterCell(props: GridFooterCellProps) {
   const {
     formattedValue,
     colDef,
@@ -62,6 +62,6 @@ const GridFooterCell = (props: GridFooterCellProps) => {
       {formattedValue}
     </GridFooterCellRoot>
   );
-};
+}
 
 export { GridFooterCell };

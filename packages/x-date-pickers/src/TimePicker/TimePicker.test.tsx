@@ -11,7 +11,7 @@ import {
 import { TimePicker } from './TimePicker';
 
 describe('<TimePicker />', () => {
-  const ControlledTimePicker = () => {
+  function ControlledTimePicker() {
     const [value, setValue] = React.useState<Date | null>(null);
     return (
       <TimePicker
@@ -20,7 +20,7 @@ describe('<TimePicker />', () => {
         onChange={(newValue) => setValue(newValue)}
       />
     );
-  };
+  }
 
   describeConformance(
     <TimePicker

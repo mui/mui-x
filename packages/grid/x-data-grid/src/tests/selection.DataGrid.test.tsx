@@ -38,8 +38,8 @@ describe('<DataGrid /> - Selection', () => {
 
   const defaultData = getBasicGridData(4, 2);
 
-  const TestDataGridSelection = (props: Partial<DataGridProps>) => (
-    <div style={{ width: 300, height: 300 }}>
+  function TestDataGridSelection(props: Partial<DataGridProps>) {
+  return <div style={{ width: 300, height: 300 }}>
       <DataGrid
         {...defaultData}
         {...props}
@@ -47,7 +47,7 @@ describe('<DataGrid /> - Selection', () => {
         experimentalFeatures={{ warnIfFocusStateIsNotSynced: true, ...props.experimentalFeatures }}
       />
     </div>
-  );
+}
 
   describe('prop: checkboxSelection = false (single selection)', () => {
     it('should select one row at a time on click WITHOUT ctrl or meta pressed', () => {
@@ -702,7 +702,7 @@ describe('<DataGrid /> - Selection', () => {
     });
 
     it('should control selection state when the model and the onChange are set', () => {
-      const ControlCase = () => {
+      function ControlCase() {
         const [selectionModel, setSelectionModel] = React.useState<any>([]);
 
         const handleSelectionChange: DataGridProps['onSelectionModelChange'] = (newModel) => {
@@ -720,7 +720,7 @@ describe('<DataGrid /> - Selection', () => {
             checkboxSelection
           />
         );
-      };
+      }
 
       render(<ControlCase />);
       expect(getSelectedRowIds()).to.deep.equal([]);

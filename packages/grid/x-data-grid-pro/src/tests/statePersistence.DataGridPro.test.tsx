@@ -84,7 +84,7 @@ describe('<DataGridPro /> - State Persistence', () => {
 
   let apiRef: React.MutableRefObject<GridApi>;
 
-  const TestCase = (props: Omit<DataGridProProps, 'rows' | 'columns' | 'apiRef'>) => {
+  function TestCase(props: Omit<DataGridProProps, 'rows' | 'columns' | 'apiRef'>) {
     apiRef = useGridApiRef();
 
     return (
@@ -110,7 +110,7 @@ describe('<DataGridPro /> - State Persistence', () => {
         />
       </div>
     );
-  };
+  }
 
   describe('apiRef: exportState', () => {
     it('should export the default values of the models', () => {
@@ -258,7 +258,7 @@ describe('<DataGridPro /> - State Persistence', () => {
     });
 
     it('should restore controlled sub-state', () => {
-      const ControlledTest = () => {
+      function ControlledTest() {
         const [page, setPage] = React.useState(0);
 
         return (
@@ -269,7 +269,7 @@ describe('<DataGridPro /> - State Persistence', () => {
             }}
           />
         );
-      };
+      }
 
       render(<ControlledTest />);
       act(() =>
@@ -285,7 +285,7 @@ describe('<DataGridPro /> - State Persistence', () => {
     });
 
     it('should not restore the column visibility model when using the legacy column visibility', () => {
-      const TestCaseLegacyColumnVisibility = () => {
+      function TestCaseLegacyColumnVisibility() {
         apiRef = useGridApiRef();
 
         return (
@@ -307,7 +307,7 @@ describe('<DataGridPro /> - State Persistence', () => {
             />
           </div>
         );
-      };
+      }
 
       render(<TestCaseLegacyColumnVisibility />);
 

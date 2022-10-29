@@ -10,7 +10,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { unstable_useDateField as useDateField } from '@mui/x-date-pickers/DateField';
 
-const JoyDateField = (props) => {
+function JoyDateField(props) {
   const { inputRef, inputProps } = useDateField(props);
 
   return (
@@ -19,9 +19,9 @@ const JoyDateField = (props) => {
       componentsProps={{ input: { componentsProps: { input: { ref: inputRef } } } }}
     />
   );
-};
+}
 
-const UnstyledDateField = (props) => {
+function UnstyledDateField(props) {
   const { inputRef, inputProps } = useDateField(props);
 
   return (
@@ -30,16 +30,16 @@ const UnstyledDateField = (props) => {
       componentsProps={{ input: { ref: inputRef, style: { width: '100%' } } }}
     />
   );
-};
+}
 
-const BrowserInputDateField = (props) => {
+function BrowserInputDateField(props) {
   const {
     inputRef,
     inputProps: { error, ...inputProps },
   } = useDateField(props);
 
   return <input {...inputProps} ref={inputRef} />;
-};
+}
 
 export default function CustomUIDateField() {
   const [value, setValue] = React.useState(dayjs('2022-04-07'));

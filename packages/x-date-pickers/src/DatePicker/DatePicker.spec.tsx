@@ -19,7 +19,7 @@ import { expectType } from '@mui/types';
 />;
 
 // Inference from the state
-const InferTest = () => {
+function InferTest() {
   const [date, setDate] = React.useState<Moment | null>(moment());
 
   return (
@@ -29,7 +29,7 @@ const InferTest = () => {
       renderInput={() => <input />}
     />
   );
-};
+}
 
 // Allows inferring for side props
 <DatePicker

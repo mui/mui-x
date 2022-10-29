@@ -30,7 +30,7 @@ describe('<DataGridPro /> - Cell Editing', () => {
 
   let columnProps: any = {};
 
-  const TestCase = (props: Partial<DataGridProProps>) => {
+  function TestCase(props: Partial<DataGridProProps>) {
     apiRef = useGridApiRef();
     return (
       <div style={{ width: 300, height: 300 }}>
@@ -47,7 +47,7 @@ describe('<DataGridPro /> - Cell Editing', () => {
         />
       </div>
     );
-  };
+  }
 
   afterEach(() => {
     renderEditCell.resetHistory();
@@ -317,7 +317,7 @@ describe('<DataGridPro /> - Cell Editing', () => {
     });
 
     describe('stopCellEditMode', () => {
-      const CustomEditComponent = ({ hasFocus }: GridCellProps) => {
+      function CustomEditComponent({ hasFocus }: GridCellProps) {
         const ref = React.useRef<HTMLInputElement>(null);
         React.useLayoutEffect(() => {
           if (hasFocus) {
@@ -325,7 +325,7 @@ describe('<DataGridPro /> - Cell Editing', () => {
           }
         }, [hasFocus]);
         return <input ref={ref} />;
-      };
+      }
 
       it('should throw an error when the cell is not in edit mode', () => {
         render(<TestCase />);

@@ -39,7 +39,7 @@ describe('<DataGridPro /> - Lazy loader', () => {
 
   let apiRef: React.MutableRefObject<GridApi>;
 
-  const TestLazyLoader = (props: Partial<DataGridProProps>) => {
+  function TestLazyLoader(props: Partial<DataGridProProps>) {
     apiRef = useGridApiRef();
     return (
       <div style={{ width: 300, height: 300 }}>
@@ -56,7 +56,7 @@ describe('<DataGridPro /> - Lazy loader', () => {
         />
       </div>
     );
-  };
+  }
 
   it('should not call onFetchRows if the viewport is fully loaded', function test() {
     if (isJSDOM) {

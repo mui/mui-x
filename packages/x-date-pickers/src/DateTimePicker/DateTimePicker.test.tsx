@@ -6,7 +6,7 @@ import { expect } from 'chai';
 import { createPickerRenderer, stubMatchMedia } from '../../../../test/utils/pickers-utils';
 
 describe('<DateTimePicker />', () => {
-  const ControlledDateTimePicker = () => {
+  function ControlledDateTimePicker() {
     const [value, setValue] = React.useState<Date | null>(null);
     return (
       <DateTimePicker
@@ -15,7 +15,7 @@ describe('<DateTimePicker />', () => {
         onChange={(newValue) => setValue(newValue)}
       />
     );
-  };
+  }
   const { render } = createPickerRenderer();
 
   it('should handle controlled `onChange` in desktop mode', () => {

@@ -23,7 +23,7 @@ describe('<DataGridPro /> - Row Editing', () => {
 
   const defaultData = getBasicGridData(4, 4);
 
-  const CustomEditComponent = ({ hasFocus }: GridRenderEditCellParams) => {
+  function CustomEditComponent({ hasFocus }: GridRenderEditCellParams) {
     const ref = React.useRef<HTMLInputElement>(null);
     React.useLayoutEffect(() => {
       if (hasFocus) {
@@ -31,7 +31,7 @@ describe('<DataGridPro /> - Row Editing', () => {
       }
     }, [hasFocus]);
     return <input ref={ref} />;
-  };
+  }
 
   const renderEditCell1 = spy((props: GridRenderEditCellParams) => (
     <CustomEditComponent {...props} />
@@ -44,7 +44,7 @@ describe('<DataGridPro /> - Row Editing', () => {
   let column1Props: any = {};
   let column2Props: any = {};
 
-  const TestCase = (props: Partial<DataGridProProps>) => {
+  function TestCase(props: Partial<DataGridProProps>) {
     apiRef = useGridApiRef();
     return (
       <div style={{ width: 300, height: 300 }}>
@@ -77,7 +77,7 @@ describe('<DataGridPro /> - Row Editing', () => {
         />
       </div>
     );
-  };
+  }
 
   afterEach(() => {
     renderEditCell1.resetHistory();

@@ -29,11 +29,11 @@ describe('<DataGridPro /> - Selection', () => {
 
   let apiRef: React.MutableRefObject<GridApi>;
 
-  const TestDataGridSelection = ({
+  function TestDataGridSelection({
     rowLength = 4,
     ...other
   }: Omit<DataGridProProps, 'rows' | 'columns' | 'apiRef'> &
-    Partial<Pick<DataGridProProps, 'rows' | 'columns'>> & { rowLength?: number }) => {
+    Partial<Pick<DataGridProProps, 'rows' | 'columns'>> & { rowLength?: number }) {
     apiRef = useGridApiRef();
 
     const data = React.useMemo(() => getBasicGridData(rowLength, 2), [rowLength]);
@@ -43,7 +43,7 @@ describe('<DataGridPro /> - Selection', () => {
         <DataGridPro {...data} {...other} apiRef={apiRef} disableVirtualization />
       </div>
     );
-  };
+  }
 
   describe('prop: checkboxSelectionVisibleOnly = false', () => {
     it('should select all rows of all pages if no row is selected', () => {

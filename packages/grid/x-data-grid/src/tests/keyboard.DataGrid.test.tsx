@@ -25,12 +25,10 @@ const HEIGHT = 360;
 describe('<DataGrid /> - Keyboard', () => {
   const { render } = createRenderer({ clock: 'fake' });
 
-  const NavigationTestCaseNoScrollX = (
-    props: Omit<
+  function NavigationTestCaseNoScrollX(props: Omit<
       DataGridProps,
       'autoHeight' | 'rows' | 'columns' | 'pageSize' | 'rowsPerPageOptions'
-    > & {},
-  ) => {
+    > & {}) {
     const data = useBasicDemoData(100, 3);
     const transformColSizes = (columns: GridColumns) =>
       columns.map((column) => ({ ...column, width: 60 }));
@@ -53,7 +51,7 @@ describe('<DataGrid /> - Keyboard', () => {
         />
       </div>
     );
-  };
+  }
 
   /* eslint-disable material-ui/disallow-active-element-as-key-event-target */
   describe('cell navigation', () => {

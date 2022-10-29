@@ -9,7 +9,7 @@ import { createRenderer, screen, fireEvent } from '@mui/monorepo/test/utils';
 describe('<DataGrid /> - Export', () => {
   const { render, clock } = createRenderer({ clock: 'fake' });
 
-  const TestCase = (props: Omit<DataGridProps, 'rows' | 'columns'>) => {
+  function TestCase(props: Omit<DataGridProps, 'rows' | 'columns'>) {
     const basicData = useBasicDemoData(3, 2);
 
     return (
@@ -17,7 +17,7 @@ describe('<DataGrid /> - Export', () => {
         <DataGrid {...basicData} {...props} />
       </div>
     );
-  };
+  }
 
   // We need `createObjectURL` to test the downloaded value
   before(function beforeHook() {

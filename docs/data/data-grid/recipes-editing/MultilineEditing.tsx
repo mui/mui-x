@@ -32,7 +32,7 @@ const lines = [
   'Vestibulum pulvinar aliquam turpis, ac faucibus risus varius a.',
 ];
 
-const EditTextarea = (props: GridRenderEditCellParams<string>) => {
+function EditTextarea(props: GridRenderEditCellParams<string>) {
   const { id, field, value, colDef } = props;
   const [valueState, setValueState] = React.useState(value);
   const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>();
@@ -98,7 +98,7 @@ const EditTextarea = (props: GridRenderEditCellParams<string>) => {
       )}
     </div>
   );
-};
+}
 
 const multilineColumn: GridColTypeDef = {
   type: 'string',

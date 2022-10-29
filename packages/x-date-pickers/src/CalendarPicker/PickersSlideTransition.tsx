@@ -100,7 +100,7 @@ const PickersSlideTransitionRoot = styled(TransitionGroup, {
 /**
  * @ignore - do not document.
  */
-export const PickersSlideTransition = (props: SlideTransitionProps) => {
+export function PickersSlideTransition(props: SlideTransitionProps) {
   // TODO v6: add 'useThemeProps' once the component class names are aligned
   const { children, className, reduceAnimations, slideDirection, transKey, ...other } = props;
   const classes = useUtilityClasses(props);
@@ -145,4 +145,4 @@ export const PickersSlideTransition = (props: SlideTransitionProps) => {
       </CSSTransition>
     </PickersSlideTransitionRoot>
   );
-};
+}

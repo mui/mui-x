@@ -43,7 +43,7 @@ describe('<DataGridPro /> - Filter', () => {
     columns: [{ field: 'brand' }],
   };
 
-  const TestCase = (props: Partial<DataGridProProps>) => {
+  function TestCase(props: Partial<DataGridProProps>) {
     const { rows, ...other } = props;
     apiRef = useGridApiRef();
     return (
@@ -57,7 +57,7 @@ describe('<DataGridPro /> - Filter', () => {
         />
       </div>
     );
-  };
+  }
 
   const filterModel = {
     items: [
@@ -637,7 +637,7 @@ describe('<DataGridPro /> - Filter', () => {
     });
 
     it('should control filter state when the model and the onChange are set', () => {
-      const ControlCase = (props: Partial<DataGridProProps>) => {
+      function ControlCase(props: Partial<DataGridProProps>) {
         const { rows, columns, ...others } = props;
         const [caseFilterModel, setFilterModel] = React.useState(getDefaultGridFilterModel);
         const handleFilterChange: DataGridProProps['onFilterModelChange'] = (newModel) => {
@@ -662,7 +662,7 @@ describe('<DataGridPro /> - Filter', () => {
             />
           </div>
         );
-      };
+      }
 
       render(<ControlCase />);
       const addButton = screen.getByRole('button', { name: /Add Filter/i });

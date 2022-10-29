@@ -87,7 +87,7 @@ const buildHandleRangeClick = (setValue) => (range) => {
   }
 };
 
-const RangeShortcutsPanel = ({ setValue, children }) => {
+function RangeShortcutsPanel({ setValue, children }) {
   const handleRangeClick = React.useCallback(
     (range) => setValue && buildHandleRangeClick(setValue)(range),
     [setValue],
@@ -113,14 +113,14 @@ const RangeShortcutsPanel = ({ setValue, children }) => {
       {children}
     </React.Fragment>
   );
-};
+}
 
 RangeShortcutsPanel.propTypes = {
   children: PropTypes.node,
   setValue: PropTypes.func,
 };
 
-const StaticRangeShortcutsPanel = ({ setValue, children, ...other }) => {
+function StaticRangeShortcutsPanel({ setValue, children, ...other }) {
   const handleRangeClick = React.useCallback(
     (range) => setValue && buildHandleRangeClick(setValue)(range),
     [setValue],
@@ -148,7 +148,7 @@ const StaticRangeShortcutsPanel = ({ setValue, children, ...other }) => {
       {children}
     </React.Fragment>
   );
-};
+}
 
 StaticRangeShortcutsPanel.propTypes = {
   children: PropTypes.node,

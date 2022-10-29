@@ -32,7 +32,7 @@ describe('<DesktopDatePicker /> localization', () => {
         PickerProps: Partial<DesktopDatePickerProps<any, any>>;
       }
 
-      const Form = (props: FormProps) => {
+      function Form(props: FormProps) {
         const { Picker, PickerProps } = props;
         const [value, setValue] = React.useState<unknown>(adapterToUse.date('01/01/2020'));
 
@@ -44,7 +44,7 @@ describe('<DesktopDatePicker /> localization', () => {
             {...PickerProps}
           />
         );
-      };
+      }
 
       it(`should set invalid`, () => {
         localizedRender(

@@ -40,7 +40,7 @@ describe('<DataGridPro /> - Column pinning', () => {
 
   let apiRef: React.MutableRefObject<GridApi>;
 
-  const TestCase = ({ nbCols = 20, ...other }: Partial<DataGridProProps> & { nbCols?: number }) => {
+  function TestCase({ nbCols = 20, ...other }: Partial<DataGridProProps> & { nbCols?: number }) {
     apiRef = useGridApiRef();
     const data = useBasicDemoData(1, nbCols);
     return (
@@ -48,7 +48,7 @@ describe('<DataGridPro /> - Column pinning', () => {
         <DataGridPro {...data} apiRef={apiRef} {...other} />
       </div>
     );
-  };
+  }
 
   function ResizeObserverMock(
     callback: (entries: { borderBoxSize: [{ blockSize: number }] }[]) => void,
@@ -269,7 +269,7 @@ describe('<DataGridPro /> - Column pinning', () => {
         this.skip();
       }
 
-      const Test = ({ bioHeight }: { bioHeight: number }) => {
+      function Test({ bioHeight }: { bioHeight: number }) {
         const data = React.useMemo(() => getBasicGridData(1, 2), []);
 
         const columns = [
@@ -285,7 +285,7 @@ describe('<DataGridPro /> - Column pinning', () => {
             initialState={{ pinnedColumns: { left: ['id'], right: ['bio'] } }}
           />
         );
-      };
+      }
 
       render(<Test bioHeight={100} />);
       await act(() => Promise.resolve());
@@ -308,7 +308,7 @@ describe('<DataGridPro /> - Column pinning', () => {
         this.skip();
       }
 
-      const Test = ({ bioHeight }: { bioHeight: number }) => {
+      function Test({ bioHeight }: { bioHeight: number }) {
         const data = React.useMemo(() => getBasicGridData(1, 2), []);
 
         const columns = [
@@ -324,7 +324,7 @@ describe('<DataGridPro /> - Column pinning', () => {
             initialState={{ pinnedColumns: { left: ['id'], right: ['bio'] } }}
           />
         );
-      };
+      }
 
       const { setProps } = render(<Test bioHeight={100} />);
       await act(() => Promise.resolve());

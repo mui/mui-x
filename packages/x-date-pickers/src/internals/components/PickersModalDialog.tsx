@@ -50,7 +50,7 @@ const PickersModalDialogContent = styled(DialogContent)({
   },
 });
 
-export const PickersModalDialog = (props: React.PropsWithChildren<PickersModalDialogProps>) => {
+export function PickersModalDialog(props: React.PropsWithChildren<PickersModalDialogProps>) {
   const {
     children,
     DialogProps = {},
@@ -79,4 +79,4 @@ export const PickersModalDialog = (props: React.PropsWithChildren<PickersModalDi
       />
     </PickersModalDialogRoot>
   );
-};
+}

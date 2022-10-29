@@ -10,7 +10,7 @@ interface GridColumnPinningMenuItemsProps {
   onClick?: (event: React.MouseEvent<any>) => void;
 }
 
-const GridColumnPinningMenuItems = (props: GridColumnPinningMenuItemsProps) => {
+function GridColumnPinningMenuItems(props: GridColumnPinningMenuItemsProps) {
   const { column, onClick } = props;
   const apiRef = useGridApiContext();
 
@@ -59,7 +59,7 @@ const GridColumnPinningMenuItems = (props: GridColumnPinningMenuItemsProps) => {
       </MenuItem>
     </React.Fragment>
   );
-};
+}
 
 GridColumnPinningMenuItems.propTypes = {
   // ----------------------------- Warning --------------------------------

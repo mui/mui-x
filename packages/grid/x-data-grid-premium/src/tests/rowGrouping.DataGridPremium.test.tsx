@@ -66,7 +66,7 @@ describe('<DataGridPremium /> - Row Grouping', () => {
 
   let apiRef: React.MutableRefObject<GridApi>;
 
-  const Test = (props: Partial<DataGridPremiumProps>) => {
+  function Test(props: Partial<DataGridPremiumProps>) {
     apiRef = useGridApiRef();
 
     return (
@@ -74,7 +74,7 @@ describe('<DataGridPremium /> - Row Grouping', () => {
         <DataGridPremium {...baselineProps} apiRef={apiRef} {...props} />
       </div>
     );
-  };
+  }
 
   describe('Setting grouping criteria', () => {
     describe('initialState: rowGrouping.model', () => {

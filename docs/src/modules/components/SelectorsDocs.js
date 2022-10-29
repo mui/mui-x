@@ -31,7 +31,7 @@ export const SelectorExample = styled(HighlightedCode)(({ theme }) => ({
 
 const SELECTOR_NAME_PATTERN = /^grid(.*)Selector/;
 
-const SelectorAccordion = ({ selector }) => {
+function SelectorAccordion({ selector }) {
   let signature = `${selector.name}: (state: GridState) => ${selector.returnType}`;
   if (selector.supportsApiRef) {
     signature = [
@@ -82,7 +82,7 @@ const SelectorAccordion = ({ selector }) => {
       </SelectorDetails>
     </Accordion>
   );
-};
+}
 
 function SelectorCategoryDocs(props) {
   const { selectors, ...other } = props;

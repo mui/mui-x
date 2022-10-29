@@ -81,7 +81,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   return composeClasses(slots, getDataGridUtilityClass, classes);
 };
 
-const EmptyCell = ({ width }: { width: number }) => {
+function EmptyCell({ width }: { width: number }) {
   if (!width) {
     return null;
   }
@@ -89,7 +89,7 @@ const EmptyCell = ({ width }: { width: number }) => {
   const style = { width };
 
   return <div className="MuiDataGrid-cell" style={style} />; // TODO change to .MuiDataGrid-emptyCell or .MuiDataGrid-rowFiller
-};
+}
 
 const GridRow = React.forwardRef<
   HTMLDivElement,

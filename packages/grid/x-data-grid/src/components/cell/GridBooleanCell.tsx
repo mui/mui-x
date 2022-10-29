@@ -25,7 +25,7 @@ interface GridBooleanCellProps
   extends GridRenderCellParams,
     Omit<SvgIconProps, 'tabIndex' | 'id'> {}
 
-const GridBooleanCellRaw = (props: GridBooleanCellProps) => {
+function GridBooleanCellRaw(props: GridBooleanCellProps) {
   const {
     id,
     value,
@@ -65,7 +65,7 @@ const GridBooleanCellRaw = (props: GridBooleanCellProps) => {
       {...other}
     />
   );
-};
+}
 
 GridBooleanCellRaw.propTypes = {
   // ----------------------------- Warning --------------------------------

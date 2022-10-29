@@ -53,7 +53,7 @@ describe('<DataGridPro /> - Row Editing', () => {
 
   let apiRef: React.MutableRefObject<GridApi>;
 
-  const TestCase = (props: Partial<DataGridProProps>) => {
+  function TestCase(props: Partial<DataGridProProps>) {
     apiRef = useGridApiRef();
     return (
       <div style={{ width: 300, height: 300 }}>
@@ -65,7 +65,7 @@ describe('<DataGridPro /> - Row Editing', () => {
         />
       </div>
     );
-  };
+  }
 
   it('should allow to start editing with double-click', () => {
     render(<TestCase editMode="row" />);

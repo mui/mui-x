@@ -109,7 +109,7 @@ describe('<DesktopDatePicker />', () => {
   });
 
   it('should allow to switch from invalid date to null date in the input', () => {
-    const Test = () => {
+    function Test() {
       const [value, setValue] = React.useState(null);
 
       return (
@@ -127,7 +127,7 @@ describe('<DesktopDatePicker />', () => {
           </button>
         </React.Fragment>
       );
-    };
+    }
 
     render(<Test />);
 

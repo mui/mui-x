@@ -51,7 +51,7 @@ describe('<DataGridPro /> - Cell Editing', () => {
 
   let apiRef: React.MutableRefObject<GridApi>;
 
-  const TestCase = (props: Partial<DataGridProProps>) => {
+  function TestCase(props: Partial<DataGridProProps>) {
     apiRef = useGridApiRef();
     return (
       <div style={{ width: 300, height: 300 }}>
@@ -63,7 +63,7 @@ describe('<DataGridPro /> - Cell Editing', () => {
         />
       </div>
     );
-  };
+  }
 
   describe('isCellEditable', () => {
     it('should add the class MuiDataGrid-cell--editable to editable cells but not prevent a cell from switching mode', () => {
