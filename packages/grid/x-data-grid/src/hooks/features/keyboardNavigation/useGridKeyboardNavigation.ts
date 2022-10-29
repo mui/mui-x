@@ -331,7 +331,10 @@ export const useGridKeyboardNavigation = (
       // Get the most recent params because the cell mode may have changed by another listener
       const cellParams = apiRef.current.getCellParams(params.id, params.field);
 
-      if (cellParams.cellMode !== GridCellModes.Edit && isNavigationKey(event.key)) {
+      if (
+        (cellParams.cellMode !== GridCellModes.Edit && isNavigationKey(event.key)) ||
+        event.key === 'Tab'
+      ) {
         apiRef.current.publishEvent('cellNavigationKeyDown', cellParams, event);
       }
     },
