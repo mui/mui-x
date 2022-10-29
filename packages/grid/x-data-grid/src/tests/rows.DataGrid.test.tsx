@@ -68,10 +68,12 @@ describe('<DataGrid /> - Rows', () => {
       const { rows, columns } = getBasicGridData(5, 2);
 
       function Test(props: Pick<DataGridProps, 'rows'>) {
-  return <div style={{ width: 300, height: 300 }}>
-          <DataGrid {...props} columns={columns} disableVirtualization />
-        </div>
-}
+        return (
+          <div style={{ width: 300, height: 300 }}>
+            <DataGrid {...props} columns={columns} disableVirtualization />
+          </div>
+        );
+      }
 
       const { setProps } = render(<Test rows={rows.slice(0, 2)} />);
       expect(getColumnValues(0)).to.deep.equal(['0', '1']);
@@ -83,13 +85,15 @@ describe('<DataGrid /> - Rows', () => {
   it('should ignore events coming from a portal in the cell', () => {
     const handleRowClick = spy();
     function InputCell() {
-  return <input type="text" name="input" />
-}
+      return <input type="text" name="input" />;
+    }
     function PortalCell() {
-  return <Portal>
-        <input type="text" name="portal-input" />
-      </Portal>
-}
+      return (
+        <Portal>
+          <input type="text" name="portal-input" />
+        </Portal>
+      );
+    }
 
     render(
       <div style={{ width: 300, height: 300 }}>
@@ -524,11 +528,13 @@ describe('<DataGrid /> - Rows', () => {
         window.ResizeObserver = originalResizeObserver;
       });
 
-      function TestCase(props: Partial<DataGridProps> & {
+      function TestCase(
+        props: Partial<DataGridProps> & {
           getBioContentHeight: (row: GridRowModel) => number;
           height?: number;
           width?: number;
-        }) {
+        },
+      ) {
         const { getBioContentHeight, width = 300, height = 300, ...other } = props;
 
         const customCellRenderer = React.useCallback(

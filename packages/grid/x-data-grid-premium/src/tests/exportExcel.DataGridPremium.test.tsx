@@ -152,8 +152,8 @@ describe('<DataGridPremium /> - Export Excel', () => {
 
     it(`should not export actions columns`, async () => {
       function Icon() {
-  return <span>i</span>
-}
+        return <span>i</span>;
+      }
       function Test() {
         apiRef = useGridApiRef();
         return (

@@ -121,9 +121,11 @@ const COLUMNS = [
 ];
 
 function Toolbar() {
-  return <GridToolbarContainer sx={{ p: 1 }}>
-    <GridToolbarQuickFilter />
-  </GridToolbarContainer>
+  return (
+    <GridToolbarContainer sx={{ p: 1 }}>
+      <GridToolbarQuickFilter />
+    </GridToolbarContainer>
+  );
 }
 
 export default function CatalogOfEventsNoSnap() {

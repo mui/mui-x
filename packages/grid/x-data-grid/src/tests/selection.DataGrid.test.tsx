@@ -39,15 +39,20 @@ describe('<DataGrid /> - Selection', () => {
   const defaultData = getBasicGridData(4, 2);
 
   function TestDataGridSelection(props: Partial<DataGridProps>) {
-  return <div style={{ width: 300, height: 300 }}>
-      <DataGrid
-        {...defaultData}
-        {...props}
-        autoHeight={isJSDOM}
-        experimentalFeatures={{ warnIfFocusStateIsNotSynced: true, ...props.experimentalFeatures }}
-      />
-    </div>
-}
+    return (
+      <div style={{ width: 300, height: 300 }}>
+        <DataGrid
+          {...defaultData}
+          {...props}
+          autoHeight={isJSDOM}
+          experimentalFeatures={{
+            warnIfFocusStateIsNotSynced: true,
+            ...props.experimentalFeatures,
+          }}
+        />
+      </div>
+    );
+  }
 
   describe('prop: checkboxSelection = false (single selection)', () => {
     it('should select one row at a time on click WITHOUT ctrl or meta pressed', () => {

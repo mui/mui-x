@@ -272,16 +272,18 @@ describe('<DataGridPro /> - Sorting', () => {
       const onSortModelChange = spy();
 
       function Test(props: Partial<DataGridProProps>) {
-  return <div style={{ width: 300, height: 300 }}>
-          <DataGridPro
-            autoHeight={isJSDOM}
-            columns={baselineProps.columns}
-            rows={baselineProps.rows}
-            onSortModelChange={onSortModelChange}
-            {...props}
-          />
-        </div>
-}
+        return (
+          <div style={{ width: 300, height: 300 }}>
+            <DataGridPro
+              autoHeight={isJSDOM}
+              columns={baselineProps.columns}
+              rows={baselineProps.rows}
+              onSortModelChange={onSortModelChange}
+              {...props}
+            />
+          </div>
+        );
+      }
 
       const { setProps } = render(
         <Test

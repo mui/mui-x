@@ -34,7 +34,7 @@ import { GridRowGroupingColumnMenuItems } from '../../../components/GridRowGroup
 import { GridInitialStatePremium } from '../../../models/gridStatePremium';
 
 function Divider() {
-  return <MuiDivider onClick={(event) => event.stopPropagation()} />
+  return <MuiDivider onClick={(event) => event.stopPropagation()} />;
 }
 
 export const rowGroupingStateInitializer: GridStateInitializer<

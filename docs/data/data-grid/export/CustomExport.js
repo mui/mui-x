@@ -76,16 +76,20 @@ JsonExportMenuItem.propTypes = {
 const csvOptions = { delimiter: ';' };
 
 function CustomExportButton(props) {
-  return <GridToolbarExportContainer {...props}>
-    <GridCsvExportMenuItem options={csvOptions} />
-    <JsonExportMenuItem />
-  </GridToolbarExportContainer>
+  return (
+    <GridToolbarExportContainer {...props}>
+      <GridCsvExportMenuItem options={csvOptions} />
+      <JsonExportMenuItem />
+    </GridToolbarExportContainer>
+  );
 }
 
 function CustomToolbar(props) {
-  return <GridToolbarContainer {...props}>
-    <CustomExportButton />
-  </GridToolbarContainer>
+  return (
+    <GridToolbarContainer {...props}>
+      <CustomExportButton />
+    </GridToolbarContainer>
+  );
 }
 
 export default function CustomExport() {

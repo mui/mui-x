@@ -31,8 +31,10 @@ describe('<DataGridPro /> - Columns Visibility', () => {
 
   let apiRef: React.MutableRefObject<GridApi>;
 
-  function TestDataGridPro(props: Omit<DataGridProProps, 'columns' | 'rows' | 'apiRef'> &
-      Partial<Pick<DataGridProProps, 'rows' | 'columns'>>) {
+  function TestDataGridPro(
+    props: Omit<DataGridProProps, 'columns' | 'rows' | 'apiRef'> &
+      Partial<Pick<DataGridProProps, 'rows' | 'columns'>>,
+  ) {
     apiRef = useGridApiRef();
 
     return (

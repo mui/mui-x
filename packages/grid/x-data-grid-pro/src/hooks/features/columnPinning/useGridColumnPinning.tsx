@@ -31,7 +31,7 @@ import { gridPinnedColumnsSelector } from './gridColumnPinningSelector';
 import { filterColumns } from '../../../components/DataGridProVirtualScroller';
 
 function Divider() {
-  return <MuiDivider onClick={(event) => event.stopPropagation()} />
+  return <MuiDivider onClick={(event) => event.stopPropagation()} />;
 }
 
 export const columnPinningStateInitializer: GridStateInitializer<

@@ -11,13 +11,15 @@ import Link from '@mui/material/Link';
 import Typography from '@mui/material/Typography';
 
 function CorrectRenderLink(props: GridRenderCellParams) {
-  return <Link tabIndex={props.tabIndex} href="/#tab-sequence">
-    more info
-  </Link>
+  return (
+    <Link tabIndex={props.tabIndex} href="/#tab-sequence">
+      more info
+    </Link>
+  );
 }
 
 function WrongRenderLink() {
-  return <Link href="/#tab-sequence">more info</Link>
+  return <Link href="/#tab-sequence">more info</Link>;
 }
 
 const correctColumns: GridColumns = [

@@ -113,16 +113,18 @@ describe('<DataGridPro /> - Rows', () => {
       const { rows, columns } = getBasicGridData(5, 2);
 
       function Test(props: Pick<DataGridProProps, 'rows'>) {
-  return <div style={{ width: 300, height: 300 }}>
-          <DataGridPro
-            {...props}
-            columns={columns}
-            autoHeight={isJSDOM}
-            throttleRowsMs={100}
-            disableVirtualization
-          />
-        </div>
-}
+        return (
+          <div style={{ width: 300, height: 300 }}>
+            <DataGridPro
+              {...props}
+              columns={columns}
+              autoHeight={isJSDOM}
+              throttleRowsMs={100}
+              disableVirtualization
+            />
+          </div>
+        );
+      }
 
       const { setProps } = render(<Test rows={rows.slice(0, 2)} />);
 
@@ -369,12 +371,14 @@ describe('<DataGridPro /> - Rows', () => {
     });
 
     let apiRef: React.MutableRefObject<GridApi>;
-    function TestCaseVirtualization(props: Partial<DataGridProProps> & {
+    function TestCaseVirtualization(
+      props: Partial<DataGridProProps> & {
         nbRows?: number;
         nbCols?: number;
         width?: number;
         height?: number;
-      }) {
+      },
+    ) {
       apiRef = useGridApiRef();
       const data = useBasicDemoData(props.nbRows || 100, props.nbCols || 10);
 

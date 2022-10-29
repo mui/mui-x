@@ -44,8 +44,8 @@ describe('<DataGrid /> - Components', () => {
 
     it('should hide custom footer if prop hideFooter is set', () => {
       function CustomFooter() {
-  return <div className="customFooter">Custom Footer</div>
-}
+        return <div className="customFooter">Custom Footer</div>;
+      }
       render(
         <div style={{ width: 300, height: 500 }}>
           <DataGrid {...baselineProps} hideFooter components={{ Footer: CustomFooter }} />

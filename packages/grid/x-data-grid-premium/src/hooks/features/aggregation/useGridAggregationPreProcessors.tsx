@@ -25,7 +25,7 @@ import { GridInitialStatePremium } from '../../../models/gridStatePremium';
 import { GridAggregationRules } from './gridAggregationInterfaces';
 
 function Divider() {
-  return <MuiDivider onClick={(event) => event.stopPropagation()} />
+  return <MuiDivider onClick={(event) => event.stopPropagation()} />;
 }
 
 export const useGridAggregationPreProcessors = (

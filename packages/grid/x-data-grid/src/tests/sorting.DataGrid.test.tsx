@@ -369,10 +369,12 @@ describe('<DataGrid /> - Sorting', () => {
 
   describe('prop: initialState.sorting', () => {
     function Test(props: Partial<DataGridProps>) {
-  return <div style={{ width: 300, height: 300 }}>
-        <DataGrid {...baselineProps} {...props} />
-      </div>
-}
+      return (
+        <div style={{ width: 300, height: 300 }}>
+          <DataGrid {...baselineProps} {...props} />
+        </div>
+      );
+    }
 
     it('should allow to initialize the sortModel', () => {
       render(

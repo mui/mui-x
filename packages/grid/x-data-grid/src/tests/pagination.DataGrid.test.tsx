@@ -410,7 +410,9 @@ describe('<DataGrid /> - Pagination', () => {
       }
     });
 
-    function TestCaseAutoPageSize(props: Omit<DataGridProps, 'rows' | 'columns'> & { height: number; nbRows: number }) {
+    function TestCaseAutoPageSize(
+      props: Omit<DataGridProps, 'rows' | 'columns'> & { height: number; nbRows: number },
+    ) {
       const { height, nbRows, ...other } = props;
 
       const data = useBasicDemoData(nbRows, 10);

@@ -622,10 +622,12 @@ describe('<DataGrid /> - Layout & Warnings', () => {
 
       it('should resize flex: 1 column when setting hide: false on a column to avoid exceeding grid width (deprecated)', () => {
         function TestCase(props: DataGridProps) {
-  return <div style={{ width: 300, height: 500 }}>
-            <DataGrid {...props} />
-          </div>
-}
+          return (
+            <div style={{ width: 300, height: 500 }}>
+              <DataGrid {...props} />
+            </div>
+          );
+        }
 
         const { setProps } = render(
           <TestCase
@@ -675,10 +677,12 @@ describe('<DataGrid /> - Layout & Warnings', () => {
 
       it('should resize flex: 1 column when changing columnVisibilityModel to avoid exceeding grid width', () => {
         function TestCase(props: DataGridProps) {
-  return <div style={{ width: 300, height: 500 }}>
-            <DataGrid {...props} />
-          </div>
-}
+          return (
+            <div style={{ width: 300, height: 500 }}>
+              <DataGrid {...props} />
+            </div>
+          );
+        }
 
         const { setProps } = render(
           <TestCase
@@ -1135,10 +1139,12 @@ describe('<DataGrid /> - Layout & Warnings', () => {
   it('should not render the "no rows" overlay when transitioning the loading prop from false to true', () => {
     const NoRowsOverlay = spy(() => null);
     function TestCase(props: Partial<DataGridProps>) {
-  return <div style={{ width: 300, height: 500 }}>
-        <DataGrid {...baselineProps} components={{ NoRowsOverlay }} {...props} />
-      </div>
-}
+      return (
+        <div style={{ width: 300, height: 500 }}>
+          <DataGrid {...baselineProps} components={{ NoRowsOverlay }} {...props} />
+        </div>
+      );
+    }
     const { setProps } = render(<TestCase rows={[]} loading />);
     expect(NoRowsOverlay.callCount).to.equal(0);
     setProps({ loading: false, rows: [{ id: 1 }] });
@@ -1148,10 +1154,12 @@ describe('<DataGrid /> - Layout & Warnings', () => {
   it('should render the "no rows" overlay when changing the loading to false but not changing the rows prop', () => {
     const NoRowsOverlay = spy(() => null);
     function TestCase(props: Partial<DataGridProps>) {
-  return <div style={{ width: 300, height: 500 }}>
-        <DataGrid {...baselineProps} components={{ NoRowsOverlay }} {...props} />
-      </div>
-}
+      return (
+        <div style={{ width: 300, height: 500 }}>
+          <DataGrid {...baselineProps} components={{ NoRowsOverlay }} {...props} />
+        </div>
+      );
+    }
     const rows: DataGridProps['rows'] = [];
     const { setProps } = render(<TestCase rows={rows} loading />);
     expect(NoRowsOverlay.callCount).to.equal(0);

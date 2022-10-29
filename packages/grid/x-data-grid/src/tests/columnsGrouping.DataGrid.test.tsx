@@ -292,10 +292,12 @@ describe('<DataGrid /> - Column grouping', () => {
   // eslint-disable-next-line mocha/no-skipped-tests
   describe.skip('error messages', () => {
     function TestWithError(props: TestDataGridProps) {
-  return <ErrorBoundary logger={console}>
-        <TestDataGrid {...props} />
-      </ErrorBoundary>
-}
+      return (
+        <ErrorBoundary logger={console}>
+          <TestDataGrid {...props} />
+        </ErrorBoundary>
+      );
+    }
 
     it('should log an error if two groups have the same id', () => {
       expect(() => {
