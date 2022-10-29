@@ -322,7 +322,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
     );
   };
 
-  const getParents = (path: string[] = [], depth: number) => path.slice(0, depth + 1);
+  const getParents = (path: string[] = [], depth: number = 0) => path.slice(0, depth + 1);
 
   const getColumnGroupHeaders = (params?: GetHeadersParams) => {
     if (headerGroupingMaxDepth === 0) {

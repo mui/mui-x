@@ -25,11 +25,11 @@ interface User {
 const useFakeMutation = () => {
   return React.useCallback(
     (user: Partial<User>) =>
-      new Promise<Partial<User>>((resolve) =>
+      new Promise<Partial<User>>((resolve) => {
         setTimeout(() => {
           resolve(user);
-        }, 200),
-      ),
+        }, 200);
+      }),
     [],
   );
 };

@@ -11,11 +11,11 @@ import Alert from '@mui/material/Alert';
 const useFakeMutation = () => {
   return React.useCallback(
     (user) =>
-      new Promise((resolve) =>
+      new Promise((resolve) => {
         setTimeout(() => {
           resolve(user);
-        }, 200),
-      ),
+        }, 200);
+      }),
     [],
   );
 };

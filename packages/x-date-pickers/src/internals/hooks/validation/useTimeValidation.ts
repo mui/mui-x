@@ -57,7 +57,7 @@ export const validateTime: Validator<any, TimeValidationProps<any, any>> = ({
     maxTime,
     minutesStep,
     shouldDisableTime,
-    disableIgnoringDatePartForTimeValidation,
+    disableIgnoringDatePartForTimeValidation = false,
   } = props;
 
   const date = adapter.utils.date(value);

@@ -246,7 +246,7 @@ export const useGridSelection = (
         endId: GridRowId;
       },
       isSelected = true,
-      resetSelection,
+      resetSelection = false,
     ) => {
       if (!apiRef.current.getRow(startId) || !apiRef.current.getRow(endId)) {
         return;

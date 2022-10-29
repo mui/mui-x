@@ -267,7 +267,7 @@ export const useGridRowGrouping = (
       columnsLookup: gridColumnLookupSelector(apiRef),
     });
 
-    if (!areGroupingRulesEqual(rulesOnLastRowTreeCreation, groupingRules)) {
+    if (!areGroupingRulesEqual(rulesOnLastRowTreeCreation || [], groupingRules)) {
       apiRef.current.unstable_caches.rowGrouping.rulesOnLastRowTreeCreation = groupingRules;
       apiRef.current.unstable_requestPipeProcessorsApplication('hydrateColumns');
       setStrategyAvailability(apiRef, props.disableRowGrouping);

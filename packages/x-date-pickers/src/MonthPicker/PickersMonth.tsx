@@ -76,7 +76,7 @@ const noop = () => {};
 /**
  * @ignore - do not document.
  */
-export const PickersMonth: React.FC<MonthProps> = (props) => {
+export function PickersMonth(props: MonthProps) {
   // TODO v6 add 'useThemeProps' once the component class names are aligned
   const {
     disabled,
@@ -120,4 +120,4 @@ export const PickersMonth: React.FC<MonthProps> = (props) => {
       {...other}
     />
   );
-};
+}

@@ -36,10 +36,7 @@ export const getSecondsInDay = <TDate>(date: TDate, utils: MuiPickersAdapter<TDa
 };
 
 export const createIsAfterIgnoreDatePart =
-  <TDate>(
-    disableIgnoringDatePartForTimeValidation: boolean = false,
-    utils: MuiPickersAdapter<TDate>,
-  ) =>
+  <TDate>(disableIgnoringDatePartForTimeValidation: boolean, utils: MuiPickersAdapter<TDate>) =>
   (dateLeft: TDate, dateRight: TDate) => {
     if (disableIgnoringDatePartForTimeValidation) {
       return utils.isAfter(dateLeft, dateRight);

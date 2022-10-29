@@ -25,11 +25,11 @@ interface User {
 const useFakeMutation = () => {
   return React.useCallback(
     (user: User) =>
-      new Promise((resolve) =>
+      new Promise((resolve) => {
         setTimeout(() => {
           resolve(user);
-        }, 200),
-      ),
+        }, 200);
+      }),
     [],
   );
 };

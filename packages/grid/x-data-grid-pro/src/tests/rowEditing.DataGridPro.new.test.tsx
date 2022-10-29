@@ -984,7 +984,9 @@ describe('<DataGridPro /> - Row Editing', () => {
 
       it('should call stopRowEditMode with ignoreModifications=false if the props are being processed and disableIgnoreModificationsIfProcessingProps is true', async () => {
         column1Props.preProcessEditCellProps = ({ props }: GridPreProcessEditCellProps) =>
-          new Promise((resolve) => resolve(props));
+          new Promise((resolve) => {
+            resolve(props);
+          });
         render(<TestCase disableIgnoreModificationsIfProcessingProps />);
         const spiedStopRowEditMode = spy(apiRef.current, 'stopRowEditMode');
         fireEvent.doubleClick(getCell(0, 1));
