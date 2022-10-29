@@ -5,7 +5,6 @@
 /* eslint-disable react/no-danger */
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { useRouter } from 'next/router';
 import clsx from 'clsx';
 import { exactProp } from '@mui/utils';
 import { alpha, styled } from '@mui/material/styles';
@@ -15,7 +14,6 @@ import { useTranslate, useUserLanguage } from 'docs/src/modules/utils/i18n';
 import HighlightedCode from 'docs/src/modules/components/HighlightedCode';
 import MarkdownElement from 'docs/src/modules/components/MarkdownElement';
 import AppLayoutDocs from 'docs/src/modules/components/AppLayoutDocs';
-import replaceHtmlLinks from 'docs/src/modules/utils/replaceHtmlLinks';
 
 const Asterisk = styled('abbr')(({ theme }) => ({ color: theme.palette.error.main }));
 
@@ -50,7 +48,6 @@ const Table = styled('table')(({ theme }) => {
 function PropsTable(props) {
   const { componentProps, propDescriptions } = props;
   const t = useTranslate();
-  const router = useRouter();
 
   return (
     <Wrapper>
@@ -105,7 +102,7 @@ function PropsTable(props) {
                     )}
                     <div
                       dangerouslySetInnerHTML={{
-                        __html: replaceHtmlLinks(propDescriptions[propName] || '', router.asPath),
+                        __html: propDescriptions[propName] || '',
                       }}
                     />
                   </td>
@@ -216,7 +213,6 @@ Heading.propTypes = {
 };
 
 function ApiDocs(props) {
-  const router = useRouter();
   const { descriptions, pageContent } = props;
   const t = useTranslate();
   const userLanguage = useUserLanguage();
@@ -334,7 +330,7 @@ function ApiDocs(props) {
             <br />
             <span
               dangerouslySetInnerHTML={{
-                __html: replaceHtmlLinks(componentDescription, router.asPath),
+                __html: componentDescription,
               }}
             />
           </React.Fragment>
@@ -344,19 +340,16 @@ function ApiDocs(props) {
             <Heading hash="component-name" />
             <span
               dangerouslySetInnerHTML={{
-                __html: replaceHtmlLinks(
-                  t('api-docs.styleOverrides').replace(
-                    /{{componentStyles\.name}}/,
-                    componentStyles.name,
-                  ),
-                  router.asPath,
+                __html: t('api-docs.styleOverrides').replace(
+                  /{{componentStyles\.name}}/,
+                  componentStyles.name,
                 ),
               }}
             />
           </React.Fragment>
         )}
         <Heading hash="props" />
-        <p dangerouslySetInnerHTML={{ __html: replaceHtmlLinks(spreadHint, router.asPath) }} />
+        <p dangerouslySetInnerHTML={{ __html: spreadHint }} />
         <PropsTable componentProps={componentProps} propDescriptions={propDescriptions} />
         <br />
         {Object.keys(slots).length ? (
@@ -382,14 +375,11 @@ function ApiDocs(props) {
             <Heading hash="inheritance" level="h3" />
             <span
               dangerouslySetInnerHTML={{
-                __html: replaceHtmlLinks(
-                  t('api-docs.inheritanceDescription')
-                    .replace(/{{component}}/, inheritance.component)
-                    .replace(/{{pathname}}/, inheritance.pathname)
-                    .replace(/{{suffix}}/, inheritanceSuffix)
-                    .replace(/{{componentName}}/, componentName),
-                  router.asPath,
-                ),
+                __html: t('api-docs.inheritanceDescription')
+                  .replace(/{{component}}/, inheritance.component)
+                  .replace(/{{pathname}}/, inheritance.pathname)
+                  .replace(/{{suffix}}/, inheritanceSuffix)
+                  .replace(/{{componentName}}/, componentName),
               }}
             />
           </React.Fragment>
@@ -410,7 +400,7 @@ function ApiDocs(props) {
           </React.Fragment>
         ) : null}
         <Heading hash="demos" />
-        <span dangerouslySetInnerHTML={{ __html: replaceHtmlLinks(demos, router.asPath) }} />
+        <span dangerouslySetInnerHTML={{ __html: demos }} />
       </MarkdownElement>
       <svg style={{ display: 'none' }} xmlns="http://www.w3.org/2000/svg">
         <symbol id="anchor-link-icon" viewBox="0 0 16 16">
