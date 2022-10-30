@@ -358,12 +358,6 @@ export default function PopularFeaturesDemo() {
     return {
       headerName: 'Grouped by Plan',
       width: 200,
-      valueFormatter: (params: GridValueFormatterParams) => {
-        if (!params.value) {
-          return '';
-        }
-        return <PlanTag plan={params.value} />;
-      },
     };
   }, []);
 
