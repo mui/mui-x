@@ -1,8 +1,4 @@
----
-title: Data Grid - Components
----
-
-# Data grid - Components
+# Data Grid - Components
 
 <p class="description">The grid is highly customizable. Override components using the <code>components</code> prop.</p>
 

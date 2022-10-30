@@ -1,8 +1,4 @@
----
-title: Data Grid - Column visibility
----
-
-# Data grid - Column visibility
+# Data Grid - Column visibility
 
 <p class="description">Define which columns are visible.</p>
 

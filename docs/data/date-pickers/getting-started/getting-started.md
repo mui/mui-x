@@ -1,6 +1,6 @@
 ---
 product: date-pickers
-title: Date picker, Time picker React components
+title: Date Picker, Time Picker React components
 components: DatePicker,DateTimePicker,TimePicker
 githubLabel: 'component: DatePicker'
 materialDesign: https://material.io/components/date-pickers
@@ -8,7 +8,7 @@ waiAria: https://www.w3.org/WAI/ARIA/apg/example-index/dialog-modal/datepicker-d
 packageName: '@mui/x-date-pickers'
 ---
 
-# Date / Time pickers
+# Date / Time Pickers
 
 <p class="description">Date pickers and Time pickers allow selecting a single value from a pre-determined set.</p>
 

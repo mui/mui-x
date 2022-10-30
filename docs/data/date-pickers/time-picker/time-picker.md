@@ -7,7 +7,7 @@ packageName: '@mui/x-date-pickers'
 materialDesign: https://material.io/components/time-pickers
 ---
 
-# Time picker
+# Time Picker
 
 <p class="description">Time pickers allow the user to select a single time.</p>
 
