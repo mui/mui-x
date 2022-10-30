@@ -9,7 +9,7 @@ title: Data Grid - Row height
 ## Static row height
 
 By default, the rows have a height of 52 pixels.
-This matches the normal height in the [Material Design guidelines](https://material.io/components/data-tables).
+This matches the normal height in the [Material Design guidelines](https://m2.material.io/components/data-tables).
 
 Use the `rowHeight` prop to change this default value, as shown below:
 
