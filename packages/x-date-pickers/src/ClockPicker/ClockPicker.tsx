@@ -159,7 +159,7 @@ export const ClockPicker = React.forwardRef(function ClockPicker<TDate extends u
     components,
     componentsProps,
     value,
-    disableIgnoringDatePartForTimeValidation = false,
+    disableIgnoringDatePartForTimeValidation,
     maxTime,
     minTime,
     disableFuture,

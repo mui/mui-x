@@ -30,7 +30,7 @@ export const validateTime: Validator<
     maxTime,
     minutesStep,
     shouldDisableTime,
-    disableIgnoringDatePartForTimeValidation = false,
+    disableIgnoringDatePartForTimeValidation,
     disablePast,
     disableFuture,
   } = props;
