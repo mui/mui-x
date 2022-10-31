@@ -4,7 +4,7 @@ import { InputAdornmentProps } from '@mui/material/InputAdornment';
 import TextField, { TextFieldProps } from '@mui/material/TextField';
 import { SlotComponentProps } from '@mui/base/utils';
 import { CalendarOrClockPickerView, MuiPickersAdapter } from '../../models';
-import { BasePickerProps2 } from '../../models/props/basePickerProps';
+import { BaseNextPickerProps } from '../../models/props/basePickerProps';
 import {
   PickersPopperSlotsComponent,
   PickersPopperSlotsComponentsProps,
@@ -63,7 +63,7 @@ export interface UseDesktopPickerSlotsComponentsProps<TDate>
 }
 
 export interface UseDesktopPickerProps<TDate, TView extends CalendarOrClockPickerView>
-  extends BasePickerProps2<TDate | null, TDate, TView> {
+  extends BaseNextPickerProps<TDate | null, TDate, TView> {
   /**
    * Overrideable components.
    * @default {}

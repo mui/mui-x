@@ -2,8 +2,8 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { resolveComponentProps } from '@mui/base/utils';
 import { datePickerValueManager } from '../DatePicker/shared';
-import { DesktopDatePicker2Props } from './DesktopDatePicker2.types';
-import { useDatePicker2DefaultizedProps } from '../DatePicker2/shared';
+import { DesktopNextDatePickerProps } from './DesktopNextDatePicker.types';
+import { useNextDatePickerDefaultizedProps } from '../NextDatePicker/shared';
 import { CalendarPickerView, useLocaleText } from '../internals';
 import { useDesktopPicker } from '../internals/hooks/useDesktopPicker';
 import { Calendar } from '../internals/components/icons';
@@ -12,7 +12,7 @@ import { extractValidationProps } from '../internals/utils/validation';
 import { renderDateView } from '../internals/utils/viewRenderers';
 
 type DesktopDatePickerComponent = (<TDate>(
-  props: DesktopDatePicker2Props<TDate> & React.RefAttributes<HTMLDivElement>,
+  props: DesktopNextDatePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
 ) => JSX.Element) & { propTypes?: any };
 
 const VIEW_LOOKUP = {
@@ -21,17 +21,17 @@ const VIEW_LOOKUP = {
   year: renderDateView,
 };
 
-const DesktopDatePicker2 = React.forwardRef(function DesktopDatePicker2<TDate>(
-  inProps: DesktopDatePicker2Props<TDate>,
+const DesktopNextDatePicker = React.forwardRef(function DesktopNextDatePicker<TDate>(
+  inProps: DesktopNextDatePickerProps<TDate>,
   ref: React.Ref<HTMLDivElement>,
 ) {
   const localeText = useLocaleText();
 
   // Props with the default values common to all date pickers
-  const { className, sx, ...defaultizedProps } = useDatePicker2DefaultizedProps<
+  const { className, sx, ...defaultizedProps } = useNextDatePickerDefaultizedProps<
     TDate,
-    DesktopDatePicker2Props<TDate>
-  >(inProps, 'MuiDesktopDatePicker2');
+    DesktopNextDatePickerProps<TDate>
+  >(inProps, 'MuiDesktopNextDatePicker');
 
   // Props with the default values specific to the desktop variant
   const props = {
@@ -67,21 +67,12 @@ const DesktopDatePicker2 = React.forwardRef(function DesktopDatePicker2<TDate>(
   return renderPicker();
 }) as DesktopDatePickerComponent;
 
-DesktopDatePicker2.propTypes = {
+DesktopNextDatePicker.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
   autoFocus: PropTypes.bool,
-  /**
-   * Class name applied to the root element.
-   */
-  className: PropTypes.string,
-  /**
-   * If `true` the popup or dialog will close after submitting full date.
-   * @default `true` for Desktop, `false` for Mobile (based on the chosen wrapper and `desktopModeMediaQuery` prop).
-   */
-  closeOnSelect: PropTypes.bool,
   /**
    * Overrideable components.
    * @default {}
@@ -104,11 +95,6 @@ DesktopDatePicker2.propTypes = {
    */
   defaultCalendarMonth: PropTypes.any,
   /**
-   * The default value.
-   * Used when the component is not controlled.
-   */
-  defaultValue: PropTypes.any,
-  /**
    * If `true`, the picker and text field are disabled.
    * @default false
    */
@@ -124,11 +110,6 @@ DesktopDatePicker2.propTypes = {
    */
   disableHighlightToday: PropTypes.bool,
   /**
-   * Do not render open picker button (renders only the field).
-   * @default false
-   */
-  disableOpenPicker: PropTypes.bool,
-  /**
    * If `true` disable values after the current time.
    * @default false
    */
@@ -139,10 +120,6 @@ DesktopDatePicker2.propTypes = {
    * @default undefined
    */
   fixedWeekNumber: PropTypes.number,
-  /**
-   * Format of the date when rendered in the input(s).
-   */
-  inputFormat: PropTypes.string,
   /**
    * Pass a ref to the `input` element.
    */
@@ -163,11 +140,6 @@ DesktopDatePicker2.propTypes = {
    */
   loading: PropTypes.bool,
   /**
-   * Locale for components texts.
-   * Allows overriding texts coming from `LocalizationProvider` and `theme`.
-   */
-  localeText: PropTypes.object,
-  /**
    * Maximal selectable date. @DateIOType
    */
   maxDate: PropTypes.any,
@@ -175,23 +147,6 @@ DesktopDatePicker2.propTypes = {
    * Minimal selectable date. @DateIOType
    */
   minDate: PropTypes.any,
-  /**
-   * Callback fired when date is accepted @DateIOType.
-   * @template TValue
-   * @param {TValue} value The value that was just accepted.
-   */
-  onAccept: PropTypes.func,
-  /**
-   * Callback fired when the value (the selected date) changes.
-   * @template TValue
-   * @param {TValue} value The new value.
-   */
-  onChange: PropTypes.func,
-  /**
-   * Callback fired when the popup requests to be closed.
-   * Use in controlled mode (see open).
-   */
-  onClose: PropTypes.func,
   /**
    * Callback that fired when input value or new `value` prop validation returns **new** validation error (or value is valid after error).
    * In case of validation error detected `reason` prop return non-null value and `TextField` must be displayed in `error` state.
@@ -213,19 +168,8 @@ DesktopDatePicker2.propTypes = {
    */
   onMonthChange: PropTypes.func,
   /**
-   * Callback fired when the popup requests to be opened.
-   * Use in controlled mode (see open).
-   */
-  onOpen: PropTypes.func,
-  /**
-   * Callback fired when the selected sections change.
-   * @param {FieldSelectedSections} newValue The new selected sections.
-   */
-  onSelectedSectionsChange: PropTypes.func,
-  /**
    * Callback fired on view change.
-   * @template View
-   * @param {View} view The new view.
+   * @param {CalendarPickerView} view The new view.
    */
   onViewChange: PropTypes.func,
   /**
@@ -234,19 +178,11 @@ DesktopDatePicker2.propTypes = {
    * @param {TDate} year The new year.
    */
   onYearChange: PropTypes.func,
+  openTo: PropTypes.any.isRequired,
   /**
-   * Control the popup or dialog open state.
+   * Make picker read only.
    * @default false
    */
-  open: PropTypes.bool,
-  /**
-   * First view to show.
-   */
-  openTo: PropTypes.oneOf(['day', 'month', 'year']),
-  /**
-   * Force rendering in particular orientation.
-   */
-  orientation: PropTypes.oneOf(['landscape', 'portrait']),
   readOnly: PropTypes.bool,
   /**
    * Disable heavy animations.
@@ -259,23 +195,6 @@ DesktopDatePicker2.propTypes = {
    * @default () => <span data-mui-test="loading-progress">...</span>
    */
   renderLoading: PropTypes.func,
-  /**
-   * The currently selected sections.
-   * This prop accept four formats:
-   * 1. If a number is provided, the section at this index will be selected.
-   * 2. If an object with a `startIndex` and `endIndex` properties are provided, the sections between those two indexes will be selected.
-   * 3. If a string of type `MuiDateSectionName` is provided, the first section with that name will be selected.
-   * 4. If `null` is provided, no section will be selected
-   * If not provided, the selected sections will be handled internally.
-   */
-  selectedSections: PropTypes.oneOfType([
-    PropTypes.oneOf(['day', 'hour', 'meridiem', 'minute', 'month', 'second', 'year']),
-    PropTypes.number,
-    PropTypes.shape({
-      endIndex: PropTypes.number.isRequired,
-      startIndex: PropTypes.number.isRequired,
-    }),
-  ]),
   /**
    * Disable specific date. @DateIOType
    * @template TDate
@@ -305,11 +224,6 @@ DesktopDatePicker2.propTypes = {
    */
   showDaysOutsideCurrentMonth: PropTypes.bool,
   /**
-   * If `true`, the toolbar will be visible.
-   * @default `true` for mobile, `false` for desktop
-   */
-  showToolbar: PropTypes.bool,
-  /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */
   sx: PropTypes.oneOfType([
@@ -317,14 +231,8 @@ DesktopDatePicker2.propTypes = {
     PropTypes.func,
     PropTypes.object,
   ]),
-  /**
-   * The value of the picker.
-   */
   value: PropTypes.any,
-  /**
-   * Array of views to show.
-   */
-  views: PropTypes.arrayOf(PropTypes.oneOf(['day', 'month', 'year']).isRequired),
+  views: PropTypes.any.isRequired,
 } as any;
 
-export { DesktopDatePicker2 };
+export { DesktopNextDatePicker };
