@@ -33,6 +33,6 @@
   "styles": { "classes": [], "globalClasses": {}, "name": "MuiDataGrid" },
   "forwardsRefTo": "GridRoot",
   "filename": "/packages/grid/x-data-grid/src/components/panel/filterPanel/GridFilterForm.tsx",
-  "demos": "<ul><li><a href=\"/components/data-grid/#mit-version\">DataGrid</a></li>\n<li><a href=\"/components/data-grid/#commercial-version\">DataGridPro</a></li>\n<li><a href=\"/components/data-grid/#commercial-version\">DataGridPremium</a></li></ul>",
+  "demos": "<ul><li><a href=\"/x/react-data-grid/#mit-version\">DataGrid</a></li>\n<li><a href=\"/x/react-data-grid/#commercial-version\">DataGridPro</a></li>\n<li><a href=\"/x/react-data-grid/#commercial-version\">DataGridPremium</a></li></ul>",
   "packages": ["@mui/x-data-grid-premium", "@mui/x-data-grid-pro", "@mui/x-data-grid"]
 }
