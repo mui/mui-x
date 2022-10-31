@@ -38,6 +38,7 @@ import {
   ExportedPickersToolbarTextProps,
 } from '../internals';
 import { CalendarOrClockPickerView } from '../internals/models';
+import { DesktopNextDatePickerProps } from '../DesktopNextDatePicker';
 
 export interface PickersComponentsPropsList {
   MuiCalendarOrClockPicker: CalendarOrClockPickerProps<unknown, CalendarOrClockPickerView>;
@@ -56,6 +57,7 @@ export interface PickersComponentsPropsList {
   MuiDayCalendarSkeleton: DayCalendarSkeletonProps;
   MuiDesktopDatePicker: DesktopDatePickerProps<unknown>;
   MuiDesktopDateTimePicker: DesktopDateTimePickerProps<unknown>;
+  MuiDesktopNextDatePicker: DesktopNextDatePickerProps<unknown>;
   MuiDesktopTimePicker: DesktopTimePickerProps<unknown>;
   MuiLocalizationProvider: LocalizationProviderProps<unknown>;
   MuiMobileDatePicker: MobileDatePickerProps<unknown>;
