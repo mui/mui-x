@@ -195,4 +195,4 @@ GridCellCheckboxForwardRef.propTypes = {
 
 export { GridCellCheckboxForwardRef };
 
-export const GridCellCheckboxRenderer = React.memo(GridCellCheckboxForwardRef);
+export const GridCellCheckboxRenderer = GridCellCheckboxForwardRef;
