@@ -1,8 +1,4 @@
----
-title: Data Grid - Filtering
----
-
-# Data grid - Filtering
+# Data Grid - Filtering
 
 <p class="description">Easily filter your rows based on one or several criteria.</p>
 

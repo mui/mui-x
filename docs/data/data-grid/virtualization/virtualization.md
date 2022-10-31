@@ -1,8 +1,4 @@
----
-title: Data Grid - Virtualization
----
-
-# Data grid - Virtualization
+# Data Grid - Virtualization
 
 <p class="description">The grid is high performing thanks to its rows and columns virtualization engine.</p>
 

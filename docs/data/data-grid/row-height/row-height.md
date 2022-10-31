@@ -1,8 +1,4 @@
----
-title: Data Grid - Row height
----
-
-# Data grid - Row height
+# Data Grid - Row height
 
 <p class="description">Customize the height of your rows.</p>
 

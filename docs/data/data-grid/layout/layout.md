@@ -1,8 +1,4 @@
----
-title: Data Grid - Layout
----
-
-# Data grid - Layout
+# Data Grid - Layout
 
 <p class="description">The data grid offers multiple layout mode.</p>
 
