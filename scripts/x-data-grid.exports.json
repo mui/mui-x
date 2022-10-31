@@ -156,7 +156,6 @@
   { "name": "gridColumnsMetaSelector", "kind": "Variable" },
   { "name": "GridColumnsPanel", "kind": "Function" },
   { "name": "GridColumnsPanelProps", "kind": "Interface" },
-  { "name": "gridColumnsSelector", "kind": "Variable" },
   { "name": "GridColumnsState", "kind": "Interface" },
   { "name": "gridColumnsTotalWidthSelector", "kind": "Variable" },
   { "name": "GridColumnTypesRecord", "kind": "TypeAlias" },
