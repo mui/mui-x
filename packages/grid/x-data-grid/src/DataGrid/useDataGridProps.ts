@@ -48,7 +48,6 @@ export const DATA_GRID_PROPS_DEFAULT_VALUES: DataGridPropsWithDefaultValues = {
   disableMultipleColumnsSorting: false,
   disableRowSelectionOnClick: false,
   disableVirtualization: false,
-  disableIgnoreModificationsIfProcessingProps: false,
   editMode: GridEditModes.Cell,
   filterMode: 'client',
   headerHeight: 56,

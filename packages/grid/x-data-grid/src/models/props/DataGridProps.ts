@@ -208,11 +208,6 @@ export interface DataGridPropsWithDefaultValues {
    */
   disableVirtualization: boolean;
   /**
-   * If `true`, modification to a cell will not be discarded if the mode is changed from "edit" to "view" while processing props.
-   * @default false
-   */
-  disableIgnoreModificationsIfProcessingProps: boolean; // TODO v6: remove prop and make its `true` behavior the default
-  /**
    * Controls whether to use the cell or row editing.
    * @default "cell"
    */
