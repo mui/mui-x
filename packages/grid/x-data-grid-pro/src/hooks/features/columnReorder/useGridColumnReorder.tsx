@@ -308,7 +308,7 @@ export const useGridColumnReorder = (
       }));
       apiRef.current.forceUpdate();
     },
-    [props.disableColumnReorder, logger, apiRef],
+    [props.disableColumnReorder, props.keepColumnPositionIfDraggedOutside, logger, apiRef],
   );
 
   useGridApiEventHandler(apiRef, 'columnHeaderDragStart', handleDragStart);
