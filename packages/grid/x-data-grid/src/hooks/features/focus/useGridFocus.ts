@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { ownerDocument } from '@mui/material/utils';
 import { GridEventListener, GridEventLookup } from '../../../models/events';
-import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
+import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridFocusApi } from '../../../models/api/gridFocusApi';
 import { GridCellParams } from '../../../models/params/gridCellParams';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
@@ -31,7 +31,7 @@ export const focusStateInitializer: GridStateInitializer = (state) => ({
  * @requires useGridEditing (event)
  */
 export const useGridFocus = (
-  apiRef: React.MutableRefObject<GridApiCommunity>,
+  apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
   props: Pick<DataGridProcessedProps, 'pagination' | 'paginationMode'>,
 ): void => {
   const logger = useGridLogger(apiRef, 'useGridFocus');
@@ -334,7 +334,7 @@ export const useGridFocus = (
       unstable_setColumnGroupHeaderFocus: setColumnGroupHeaderFocus,
       unstable_getColumnGroupHeaderFocus: getColumnGroupHeaderFocus,
     },
-    'GridFocusApi',
+    'public',
   );
 
   React.useEffect(() => {

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { GridEventListener } from '../../../models/events';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
-import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
+import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridRowApi } from '../../../models/api/gridRowApi';
 import { GridRowId, GridGroupNode, GridLeafNode } from '../../../models/gridRows';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
@@ -57,7 +57,7 @@ export const rowsStateInitializer: GridStateInitializer<
 };
 
 export const useGridRows = (
-  apiRef: React.MutableRefObject<GridApiCommunity>,
+  apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
   props: Pick<
     DataGridProcessedProps,
     | 'rows'
@@ -161,17 +161,18 @@ export const useGridRows = (
   const setRows = React.useCallback<GridRowApi['setRows']>(
     (rows) => {
       logger.debug(`Updating all rows, new length ${rows.length}`);
-      throttledRowsChange({
-        cache: createRowsInternalCache({
-          rows,
-          getRowId: props.getRowId,
-          loading: props.loading,
-          rowCount: props.rowCount,
-        }),
-        throttle: true,
+      const cache = createRowsInternalCache({
+        rows,
+        getRowId: props.getRowId,
+        loading: props.loading,
+        rowCount: props.rowCount,
       });
+      const prevCache = apiRef.current.unstable_caches.rows;
+      cache.rowsBeforePartialUpdates = prevCache.rowsBeforePartialUpdates;
+
+      throttledRowsChange({ cache, throttle: true });
     },
-    [logger, props.getRowId, props.loading, props.rowCount, throttledRowsChange],
+    [logger, props.getRowId, props.loading, props.rowCount, throttledRowsChange, apiRef],
   );
 
   const updateRows = React.useCallback<GridRowApi['updateRows']>(
@@ -527,7 +528,7 @@ export const useGridRows = (
 
   useGridRegisterPipeApplier(apiRef, 'hydrateRows', applyHydrateRowsProcessor);
 
-  useGridApiMethod(apiRef, rowApi, 'GridRowApi');
+  useGridApiMethod(apiRef, rowApi, 'public');
 
   /**
    * EFFECTS

@@ -1,8 +1,4 @@
----
-title: Data Grid - Localization
----
-
-# Data grid - Localization
+# Data Grid - Localization
 
 <p class="description">The data grid allows to support users from different locales, with formatting, RTL, and localized strings.</p>
 

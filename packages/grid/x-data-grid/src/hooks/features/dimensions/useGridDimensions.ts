@@ -6,7 +6,7 @@ import {
 } from '@mui/material/utils';
 import { GridEventListener } from '../../../models/events';
 import { ElementSize } from '../../../models';
-import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
+import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import {
   useGridApiEventHandler,
   useGridApiOptionHandler,
@@ -53,7 +53,7 @@ const hasScroll = ({
 };
 
 export function useGridDimensions(
-  apiRef: React.MutableRefObject<GridApiCommunity>,
+  apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
   props: Pick<
     DataGridProcessedProps,
     'onResize' | 'scrollbarSize' | 'pagination' | 'paginationMode' | 'autoHeight' | 'getRowHeight'
@@ -199,7 +199,7 @@ export function useGridDimensions(
     unstable_updateGridDimensionsRef: updateGridDimensionsRef,
   };
 
-  useGridApiMethod(apiRef, dimensionsApi, 'GridDimensionsApi');
+  useGridApiMethod(apiRef, dimensionsApi, 'public');
 
   const debounceResize = React.useMemo(() => debounce(resize, 60), [resize]);
 

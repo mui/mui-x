@@ -10,6 +10,8 @@ export interface DateTimePickerToolbarClasses {
   dateContainer: string;
   /** Styles applied to the time container element. */
   timeContainer: string;
+  /** Styles applied to the time container if rtl. */
+  timeLabelReverse: string;
   /** Styles applied to the separator element. */
   separator: string;
 }
@@ -22,5 +24,5 @@ export function getDateTimePickerToolbarUtilityClass(slot: string) {
 
 export const dateTimePickerToolbarClasses: DateTimePickerToolbarClasses = generateUtilityClasses(
   'MuiDateTimePickerToolbar',
-  ['root', 'dateContainer', 'timeContainer', 'separator'],
+  ['root', 'dateContainer', 'timeContainer', 'separator', 'timeLabelReverse'],
 );

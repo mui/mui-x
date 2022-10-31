@@ -2,7 +2,7 @@
 title: Componente React para Data e Hora
 components: TextField
 githubLabel: 'component: DatePicker'
-materialDesign: https://material.io/components/date-pickers
+materialDesign: https://m2.material.io/components/date-pickers
 waiAria: https://www.w3.org/WAI/ARIA/apg/example-index/dialog-modal/datepicker-dialog.html
 packageName: '@mui/x-date-pickers'
 ---

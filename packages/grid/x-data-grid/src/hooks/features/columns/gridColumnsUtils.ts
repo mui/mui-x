@@ -183,7 +183,7 @@ export const hydrateColumnsWidth = (
 
   // For the non-flex columns, compute their width
   // For the flex columns, compute there minimum width and how much width must be allocated during the flex allocation
-  rawState.all.forEach((columnField) => {
+  rawState.orderedFields.forEach((columnField) => {
     const newColumn = { ...rawState.lookup[columnField] } as GridStateColDef;
     if (rawState.columnVisibilityModel[columnField] === false) {
       newColumn.computedWidth = 0;
@@ -261,8 +261,11 @@ export const applyInitialState = (
 
   const newOrderedFields =
     cleanOrderedFields.length === 0
-      ? columnsState.all
-      : [...cleanOrderedFields, ...columnsState.all.filter((field) => !orderedFieldsLookup[field])];
+      ? columnsState.orderedFields
+      : [
+          ...cleanOrderedFields,
+          ...columnsState.orderedFields.filter((field) => !orderedFieldsLookup[field]),
+        ];
 
   const newColumnLookup: GridColumnRawLookup = { ...columnsState.lookup };
   for (let i = 0; i < columnsWithUpdatedDimensions.length; i += 1) {
@@ -282,7 +285,7 @@ export const applyInitialState = (
 
   const newColumnsState: GridColumnsRawState = {
     ...columnsState,
-    all: newOrderedFields,
+    orderedFields: newOrderedFields,
     lookup: newColumnLookup,
   };
 
@@ -341,14 +344,14 @@ export const createColumnsState = ({
   };
   if (isInsideStateInitializer) {
     columnsState = {
-      all: [],
+      orderedFields: [],
       lookup: {},
       columnVisibilityModel,
     };
   } else {
     const currentState = gridColumnsSelector(apiRef.current.state);
     columnsState = {
-      all: keepOnlyColumnsToUpsert ? [] : [...currentState.all],
+      orderedFields: keepOnlyColumnsToUpsert ? [] : [...currentState.orderedFields],
       lookup: { ...currentState.lookup }, // Will be cleaned later if keepOnlyColumnsToUpsert=true
       columnVisibilityModel,
     };
@@ -376,9 +379,9 @@ export const createColumnsState = ({
         field,
         hasBeenResized: false,
       };
-      columnsState.all.push(field);
+      columnsState.orderedFields.push(field);
     } else if (keepOnlyColumnsToUpsert) {
-      columnsState.all.push(field);
+      columnsState.orderedFields.push(field);
     }
 
     let hasBeenResized = existingState.hasBeenResized;
