@@ -52,7 +52,7 @@ export const columnReorderStateInitializer: GridStateInitializer = (state) => ({
  */
 export const useGridColumnReorder = (
   apiRef: React.MutableRefObject<GridApiPro>,
-  props: Pick<DataGridProProcessedProps, 'disableColumnReorder' | 'classes'>,
+  props: Pick<DataGridProProcessedProps, 'disableColumnReorder' | 'keepColumnPositionIfDraggedOutside' | 'classes'>,
 ): void => {
   const logger = useGridLogger(apiRef, 'useGridColumnReorder');
 
