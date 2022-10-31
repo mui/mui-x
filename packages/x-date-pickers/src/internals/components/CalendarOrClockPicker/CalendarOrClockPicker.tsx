@@ -25,10 +25,10 @@ import {
   getCalendarOrClockPickerUtilityClass,
 } from './calendarOrClockPickerClasses';
 
-export interface CalendarOrClockPickerSlotsComponent<TDate>
+export interface CalendarOrClockPickerSlotsComponent<TDate, TView extends CalendarOrClockPickerView>
   extends DateCalendarSlotsComponent<TDate> {
-  Tabs?: React.JSXElementConstructor<BaseTabsProps>;
-  Toolbar?: React.JSXElementConstructor<BaseToolbarProps<TDate | null>>;
+  Tabs?: React.JSXElementConstructor<BaseTabsProps<TView>>;
+  Toolbar?: React.JSXElementConstructor<BaseToolbarProps<TDate | null, TView>>;
 }
 
 export interface CalendarOrClockPickerSlotsComponentsProps<TDate>
@@ -37,7 +37,7 @@ export interface CalendarOrClockPickerSlotsComponentsProps<TDate>
   toolbar?: ExportedBaseToolbarProps;
 }
 
-export interface ExportedCalendarOrClockPickerProps<TDate, View extends CalendarOrClockPickerView>
+export interface ExportedCalendarOrClockPickerProps<TDate, TView extends CalendarOrClockPickerView>
   extends Omit<BasePickerProps<TDate | null, TDate>, 'value' | 'onChange' | 'localeText'>,
     Omit<ExportedDateCalendarProps<TDate>, 'onViewChange' | 'openTo' | 'view'>,
     ExportedClockPickerProps<TDate> {
@@ -46,20 +46,20 @@ export interface ExportedCalendarOrClockPickerProps<TDate, View extends Calendar
    * @template View
    * @param {View} view The new view.
    */
-  onViewChange?: (view: View) => void;
+  onViewChange?: (view: TView) => void;
   /**
    * First view to show.
    */
-  openTo: View;
+  openTo: TView;
   /**
    * Array of views to show.
    */
-  views: readonly View[];
+  views: readonly TView[];
   /**
    * Overrideable components.
    * @default {}
    */
-  components?: CalendarOrClockPickerSlotsComponent<TDate>;
+  components?: CalendarOrClockPickerSlotsComponent<TDate, TView>;
   /**
    * The props used for each component slot.
    * @default {}
@@ -171,7 +171,7 @@ export function CalendarOrClockPicker<TDate, View extends CalendarOrClockPickerV
     }
   }
 
-  const { openView, setOpenView, handleChangeAndOpenNext } = useViews<TDate, View>({
+  const { openView, setOpenView, handleChangeAndOpenNext } = useViews<TDate | null, View>({
     view: undefined,
     views,
     openTo,
@@ -179,7 +179,10 @@ export function CalendarOrClockPicker<TDate, View extends CalendarOrClockPickerV
     onViewChange: handleViewChange,
   });
 
-  const { focusedView, setFocusedView } = useFocusManagement({ autoFocus, openView });
+  const { focusedView, setFocusedView } = useFocusManagement<CalendarPickerView>({
+    autoFocus,
+    openView,
+  });
 
   const Tabs = components?.Tabs;
 

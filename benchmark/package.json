@@ -12,7 +12,7 @@
     "@material-ui/icons": "^5.0.0-beta.5",
     "@mui/material": "^5.10.9",
     "@mui/x-data-grid": "^4.0.0",
-    "@visx/xychart": "^2.15.0",
+    "@visx/xychart": "^2.16.0",
     "ag-grid-community": "^28.2.0",
     "ag-grid-react": "^28.2.0",
     "css-loader": "^6.7.1",

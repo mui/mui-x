@@ -53,7 +53,9 @@ export interface ExportedDateTimePickerTabsProps extends ExportedBaseTabsProps {
   timeIcon?: React.ReactNode;
 }
 
-export interface DateTimePickerTabsProps extends ExportedDateTimePickerTabsProps, BaseTabsProps {
+export interface DateTimePickerTabsProps
+  extends ExportedDateTimePickerTabsProps,
+    BaseTabsProps<CalendarOrClockPickerView> {
   /**
    * Override or extend the styles applied to the component.
    */
@@ -78,6 +80,7 @@ const DateTimePickerTabsRoot = styled(Tabs, {
 })<{ ownerState: OwnerState }>(({ ownerState, theme }) => ({
   boxShadow: `0 -1px 0 0 inset ${theme.palette.divider}`,
   ...(ownerState.wrapperVariant === 'desktop' && {
+    // TODO v6: Drop order when the old pickers are removed
     order: 1,
     boxShadow: `0 1px 0 0 inset ${theme.palette.divider}`,
     [`& .${tabsClasses.indicator}`]: {
@@ -153,7 +156,8 @@ DateTimePickerTabs.propTypes = {
   hidden: PropTypes.bool,
   /**
    * Callback called when a tab is clicked
-   * @param {CalendarOrClockPickerView} view The view to open
+   * @template TView
+   * @param {TView} view The view to open
    */
   onViewChange: PropTypes.func.isRequired,
   /**
