@@ -15,6 +15,9 @@ import { isNavigationKey } from '../../../utils/keyboardUtils';
 import { GRID_DETAIL_PANEL_TOGGLE_FIELD } from '../../../constants/gridDetailPanelToggleField';
 import { GridRowEntry, GridRowId } from '../../../models';
 import { gridPinnedRowsSelector } from '../rows/gridRowsSelector';
+import { unstable_gridFocusColumnGroupHeaderSelector } from '../focus';
+import { gridColumnGroupsHeaderMaxDepthSelector } from '../columnGrouping/gridColumnGroupsSelector';
+import { useGridSelector } from '../../utils/useGridSelector';
 
 function enrichPageRowsWithPinnedRows(
   apiRef: React.MutableRefObject<GridApiCommunity>,
@@ -83,6 +86,16 @@ export const useGridKeyboardNavigation = (
       apiRef.current.scrollToIndexes({ colIndex });
       const field = apiRef.current.getVisibleColumns()[colIndex].field;
       apiRef.current.setColumnHeaderFocus(field, event);
+    },
+    [apiRef, logger],
+  );
+
+  const goToGroupHeader = React.useCallback(
+    (colIndex: number, depth: number, event: React.SyntheticEvent<Element>) => {
+      logger.debug(`Navigating to header col ${colIndex}`);
+      apiRef.current.scrollToIndexes({ colIndex });
+      const { field } = apiRef.current.getVisibleColumns()[colIndex];
+      apiRef.current.setColumnGroupHeaderFocus(field, depth, event);
     },
     [apiRef, logger],
   );
@@ -251,6 +264,7 @@ export const useGridKeyboardNavigation = (
       const lastRowIndexInPage = currentPageRows.length - 1;
       const firstColIndex = 0;
       const lastColIndex = gridVisibleColumnDefinitionsSelector(apiRef).length - 1;
+      const columnGroupMaxDepth = gridColumnGroupsHeaderMaxDepthSelector(apiRef);
       let shouldPreventDefault = true;
 
       switch (event.key) {
@@ -271,6 +285,13 @@ export const useGridKeyboardNavigation = (
         case 'ArrowLeft': {
           if (colIndexBefore > firstColIndex) {
             goToHeader(colIndexBefore - 1, event);
+          }
+          break;
+        }
+
+        case 'ArrowUp': {
+          if (columnGroupMaxDepth > 0) {
+            goToGroupHeader(colIndexBefore, columnGroupMaxDepth - 1, event);
           }
           break;
         }
@@ -318,7 +339,114 @@ export const useGridKeyboardNavigation = (
         event.preventDefault();
       }
     },
-    [apiRef, currentPageRows, goToCell, goToHeader, getRowIdFromIndex],
+    [apiRef, currentPageRows.length, goToCell, getRowIdFromIndex, goToHeader, goToGroupHeader],
+  );
+
+  const focusedColumnGroup = useGridSelector(apiRef, unstable_gridFocusColumnGroupHeaderSelector);
+  const handleColumnGroupHeaderKeyDown = React.useCallback<
+    GridEventListener<'columnGroupHeaderKeyDown'>
+  >(
+    (params, event) => {
+      const dimensions = apiRef.current.getRootDimensions();
+      if (!dimensions) {
+        return;
+      }
+
+      if (focusedColumnGroup === null) {
+        return;
+      }
+      const { field: currentField, depth: currentDepth } = focusedColumnGroup;
+
+      const { fields, depth, maxDepth } = params;
+
+      const viewportPageSize = apiRef.current.getViewportPageSize();
+      const currentColIndex = apiRef.current.getColumnIndex(currentField);
+      const colIndexBefore = currentField ? apiRef.current.getColumnIndex(currentField) : 0;
+      const firstRowIndexInPage = 0;
+      const lastRowIndexInPage = currentPageRows.length - 1;
+      const firstColIndex = 0;
+      const lastColIndex = gridVisibleColumnDefinitionsSelector(apiRef).length - 1;
+
+      let shouldPreventDefault = true;
+
+      switch (event.key) {
+        case 'ArrowDown': {
+          if (depth === maxDepth - 1) {
+            goToHeader(currentColIndex, event);
+          } else {
+            goToGroupHeader(currentColIndex, currentDepth + 1, event);
+          }
+          break;
+        }
+
+        case 'ArrowUp': {
+          if (depth > 0) {
+            goToGroupHeader(currentColIndex, currentDepth - 1, event);
+          }
+          break;
+        }
+
+        case 'ArrowRight': {
+          const remainingRightColumns = fields.length - fields.indexOf(currentField) - 1;
+          if (currentColIndex + remainingRightColumns + 1 <= lastColIndex) {
+            goToGroupHeader(currentColIndex + remainingRightColumns + 1, currentDepth, event);
+          }
+          break;
+        }
+
+        case 'ArrowLeft': {
+          const remainingLeftColumns = fields.indexOf(currentField);
+          if (currentColIndex - remainingLeftColumns - 1 >= firstColIndex) {
+            goToGroupHeader(currentColIndex - remainingLeftColumns - 1, currentDepth, event);
+          }
+          break;
+        }
+
+        case 'PageDown': {
+          if (firstRowIndexInPage !== null && lastRowIndexInPage !== null) {
+            goToCell(
+              colIndexBefore,
+              getRowIdFromIndex(
+                Math.min(firstRowIndexInPage + viewportPageSize, lastRowIndexInPage),
+              ),
+            );
+          }
+          break;
+        }
+
+        case 'Home': {
+          goToGroupHeader(firstColIndex, currentDepth, event);
+          break;
+        }
+
+        case 'End': {
+          goToGroupHeader(lastColIndex, currentDepth, event);
+          break;
+        }
+
+        case ' ': {
+          // prevent Space event from scrolling
+          break;
+        }
+
+        default: {
+          shouldPreventDefault = false;
+        }
+      }
+
+      if (shouldPreventDefault) {
+        event.preventDefault();
+      }
+    },
+    [
+      apiRef,
+      focusedColumnGroup,
+      currentPageRows.length,
+      goToHeader,
+      goToGroupHeader,
+      goToCell,
+      getRowIdFromIndex,
+    ],
   );
 
   const handleCellKeyDown = React.useCallback<GridEventListener<'cellKeyDown'>>(
@@ -340,5 +468,6 @@ export const useGridKeyboardNavigation = (
 
   useGridApiEventHandler(apiRef, 'cellNavigationKeyDown', handleCellNavigationKeyDown);
   useGridApiEventHandler(apiRef, 'columnHeaderKeyDown', handleColumnHeaderKeyDown);
+  useGridApiEventHandler(apiRef, 'columnGroupHeaderKeyDown', handleColumnGroupHeaderKeyDown);
   useGridApiEventHandler(apiRef, 'cellKeyDown', handleCellKeyDown);
 };

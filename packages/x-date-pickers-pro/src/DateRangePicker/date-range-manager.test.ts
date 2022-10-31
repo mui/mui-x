@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import { adapterToUse } from 'test/utils/pickers-utils';
 import { calculateRangeChange, calculateRangePreview } from './date-range-manager';
-import { DateRange } from '../internal/models/dateRange';
+import { DateRange } from '../internal/models/range';
 
 const start2018 = adapterToUse.date(new Date(2018, 0, 1));
 const mid2018 = adapterToUse.date(new Date(2018, 6, 1));

@@ -1,8 +1,4 @@
----
-title: Data Grid - Selection
----
-
-# Data grid - Selection
+# Data Grid - Selection
 
 <p class="description">Selection allows the user to select and highlight a number of rows that they can then take action on.</p>
 
@@ -23,7 +19,7 @@ On the `DataGridPro` component, you can select multiple rows in two ways:
 
 - To select multiple independent rows, hold the <kbd class="key">Ctrl</kbd> key while selecting rows.
 - To select a range of rows, hold the <kbd class="key">SHIFT</kbd> key while selecting rows.
-- To disable multiple row selection, use `disableMultipleSelection={true}`.
+- To disable multiple row selection, use `disableMultipleRowSelection={true}`.
 
 {{"demo": "MultipleRowSelectionGrid.js", "disableAd": true, "bg": "inline"}}
 
@@ -50,7 +46,7 @@ Otherwise, the grid might remove your column.
 
 ## Disable selection on click
 
-You might have interactive content in the cells and need to disable the selection of the row on click. Use the `disableSelectionOnClick` prop in this case.
+You might have interactive content in the cells and need to disable the selection of the row on click. Use the `disableRowSelectionOnClick` prop in this case.
 
 {{"demo": "DisableClickSelectionGrid.js", "bg": "inline"}}
 
@@ -66,16 +62,16 @@ In the demo below only rows with quantity above 50000 can be selected:
 
 ## Controlled selection
 
-Use the `selectionModel` prop to control the selection.
-Each time this prop changes, the `onSelectionModelChange` callback is called with the new selection value.
+Use the `rowSelectionModel` prop to control the selection.
+Each time this prop changes, the `onRowSelectionModelChange` callback is called with the new selection value.
 
 {{"demo": "ControlledSelectionGrid.js", "bg": "inline"}}
 
 ### Usage with server-side pagination
 
 Using the controlled selection with `paginationMode="server"` may result in selected rows being lost when the page is changed.
-This happens because the grid cross-checks with the `rows` prop and only calls `onSelectionModelChange` with existing row IDs.
-Depending on your server-side implementation, when the page changes and the new value for the `rows` prop does not include previously selected rows, the grid will call `onSelectionModelChange` with an empty value.
+This happens because the grid cross-checks with the `rows` prop and only calls `onRowSelectionModelChange` with existing row IDs.
+Depending on your server-side implementation, when the page changes and the new value for the `rows` prop does not include previously selected rows, the grid will call `onRowSelectionModelChange` with an empty value.
 To prevent this, enable the `keepNonExistentRowsSelected` prop to keep the rows selected even if they do not exist.
 
 ```tsx
@@ -83,7 +79,7 @@ To prevent this, enable the `keepNonExistentRowsSelected` prop to keep the rows 
 ```
 
 By using this approach, clicking in the **Select All** checkbox may still leave some rows selected.
-It is up to you to clean the selection model, using the `selectionModel` prop.
+It is up to you to clean the selection model, using the `rowSelectionModel` prop.
 The following demo shows the prop in action:
 
 {{"demo": "ControlledSelectionServerPaginationGrid.js", "bg": "inline"}}

@@ -16,13 +16,12 @@ const pages: MuiPage[] = [
   {
     pathname: '/x/react-data-grid',
     scopePathnames: ['/x/api/data-grid'],
-    title: 'Data grid',
+    title: 'Data Grid',
     icon: 'TableViewIcon',
     children: [
       { pathname: '/x/react-data-grid', title: 'Overview' },
       { pathname: '/x/react-data-grid/demo' },
       { pathname: '/x/react-data-grid/getting-started' },
-      { pathname: '/x/react-data-grid/migration-v4', title: 'Migration from v4' },
       { pathname: '/x/react-data-grid/layout' },
       {
         pathname: '/x/react-data-grid/columns',
@@ -145,42 +144,73 @@ const pages: MuiPage[] = [
   {
     pathname: '/x/react-date-pickers',
     scopePathnames: ['/x/api/date-pickers'],
-    title: 'Date and Time pickers',
+    title: 'Date and Time Pickers',
     icon: 'DatePickerIcon',
     children: [
       { pathname: '/x/react-date-pickers/getting-started' },
-      { pathname: '/x/react-date-pickers/migration-lab', title: 'Migration from the lab' },
-      { pathname: '/x/react-date-pickers/date-picker' },
+      { pathname: '/x/react-date-pickers/date-picker', title: 'Date Picker' },
       {
         pathname: '/x/react-date-pickers/date-range-picker',
+        title: 'Date Range Picker',
         plan: 'pro',
       },
-      { pathname: '/x/react-date-pickers/date-time-picker' },
-      { pathname: '/x/react-date-pickers/time-picker' },
+      { pathname: '/x/react-date-pickers/date-time-picker', title: 'Date Time Picker' },
+      { pathname: '/x/react-date-pickers/time-picker', title: 'Time Picker' },
       { pathname: '/x/react-date-pickers/validation' },
       { pathname: '/x/react-date-pickers/localization' },
       { pathname: '/x/react-date-pickers/custom-components' },
       {
         pathname: '/x/react-date-pickers/date-time-range-picker',
-        title: 'Date time range picker 🚧',
+        title: 'Date Time Range Picker 🚧',
         plan: 'pro',
       },
       {
         pathname: '/x/react-date-pickers/time-range-picker',
-        title: 'Time range picker 🚧',
+        title: 'Time Range Picker 🚧',
         plan: 'pro',
+      },
+      {
+        pathname: '/x/react-date-pickers/fields',
+        title: 'Field components',
+        scopePathnames: [
+          '/x/react-date-pickers/fields',
+          '/x/react-date-pickers/date-field',
+          '/x/react-date-pickers/time-field',
+          '/x/react-date-pickers/date-time-field',
+          '/x/react-date-pickers/date-range-field',
+          '/x/react-date-pickers/time-range-field',
+          '/x/react-date-pickers/date-time-range-field',
+        ],
+        newFeature: true,
+        children: [
+          { pathname: '/x/react-date-pickers/fields', title: 'Getting started' },
+          { pathname: '/x/react-date-pickers/date-field', title: 'Date Field' },
+          { pathname: '/x/react-date-pickers/time-field', title: 'Time Field' },
+          { pathname: '/x/react-date-pickers/date-time-field', title: 'Date Time Field' },
+          {
+            pathname: '/x/react-date-pickers/date-range-field',
+            title: 'Date Range Field',
+            plan: 'pro',
+          },
+          {
+            pathname: '/x/react-date-pickers/time-range-field',
+            title: 'Time Range Field',
+            plan: 'pro',
+          },
+          {
+            pathname: '/x/react-date-pickers/date-time-range-field',
+            title: 'Date Time Range Field',
+            plan: 'pro',
+          },
+        ],
       },
       {
         pathname: '/x/api/date-pickers',
         title: 'API Reference',
         children: [
           { pathname: '/x/api/date-pickers', title: 'Index' },
-          { pathname: '/x/api/date-pickers/calendar-picker', title: 'CalendarPicker' },
-          {
-            pathname: '/x/api/date-pickers/calendar-picker-skeleton',
-            title: 'CalendarPickerSkeleton',
-          },
           { pathname: '/x/api/date-pickers/clock-picker', title: 'ClockPicker' },
+          { pathname: '/x/api/date-pickers/date-calendar', title: 'DateCalendar' },
           { pathname: '/x/api/date-pickers/date-picker', title: 'DatePicker' },
           {
             pathname: '/x/api/date-pickers/date-range-picker',
@@ -193,6 +223,10 @@ const pages: MuiPage[] = [
             plan: 'pro',
           },
           { pathname: '/x/api/date-pickers/date-time-picker', title: 'DateTimePicker' },
+          {
+            pathname: '/x/api/date-pickers/day-calendar-skeleton',
+            title: 'DayCalendarSkeleton',
+          },
           { pathname: '/x/api/date-pickers/desktop-date-picker', title: 'DesktopDatePicker' },
           {
             pathname: '/x/api/date-pickers/desktop-date-range-picker',
@@ -216,7 +250,7 @@ const pages: MuiPage[] = [
             title: 'MobileDateTimePicker',
           },
           { pathname: '/x/api/date-pickers/mobile-time-picker', title: 'MobileTimePicker' },
-          { pathname: '/x/api/date-pickers/month-picker', title: 'MonthPicker' },
+          { pathname: '/x/api/date-pickers/month-calendar', title: 'MonthCalendar' },
           { pathname: '/x/api/date-pickers/pickers-day', title: 'PickersDay' },
           { pathname: '/x/api/date-pickers/static-date-picker', title: 'StaticDatePicker' },
           {
@@ -230,7 +264,39 @@ const pages: MuiPage[] = [
           },
           { pathname: '/x/api/date-pickers/static-time-picker', title: 'StaticTimePicker' },
           { pathname: '/x/api/date-pickers/time-picker', title: 'TimePicker' },
-          { pathname: '/x/api/date-pickers/year-picker', title: 'YearPicker' },
+          { pathname: '/x/api/date-pickers/year-calendar', title: 'YearCalendar' },
+        ],
+      },
+    ],
+  },
+  {
+    pathname: '/x/migration',
+    title: 'Migration',
+    icon: 'BookIcon',
+    children: [
+      {
+        pathname: '/x/migration',
+        subheader: 'Upgrade to v6',
+        children: [
+          { pathname: '/x/migration/migration-data-grid-v5', title: 'Breaking changes: Data Grid' },
+          {
+            pathname: '/x/migration/migration-pickers-v5',
+            title: 'Breaking changes: Date and Time Pickers',
+          },
+        ],
+      },
+      {
+        pathname: '/x/migration',
+        subheader: 'Earlier versions',
+        children: [
+          {
+            pathname: '/x/migration/migration-pickers-lab',
+            title: 'Migration from lab to v5 (Date & Time Pickers)',
+          },
+          {
+            pathname: '/x/migration/migration-data-grid-v4',
+            title: 'Migration from v4 to v5 (Data Grid)',
+          },
         ],
       },
     ],

@@ -1,6 +1,5 @@
 import * as React from 'react';
-import { unstable_useId as useId } from '@mui/utils';
-import { unstable_composeClasses as composeClasses } from '@mui/material';
+import { unstable_useId as useId, unstable_composeClasses as composeClasses } from '@mui/utils';
 import { GridAlignment } from '../../models/colDef/gridColDef';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
@@ -10,6 +9,8 @@ import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridSelector } from '../../hooks/utils/useGridSelector';
 import { GridGenericColumnHeaderItem } from './GridGenericColumnHeaderItem';
 import { GridColumnGroup } from '../../models/gridColumnGrouping';
+import { GridColumnGroupHeaderEventLookup } from '../../models/events';
+import { GridColumnGroupHeaderParams } from '../../models/params';
 
 interface GridColumnGroupHeaderProps {
   groupId: string | null;
@@ -21,6 +22,8 @@ interface GridColumnGroupHeaderProps {
   depth: number;
   maxDepth: number;
   height: number;
+  hasFocus?: boolean;
+  tabIndex: 0 | -1;
 }
 
 type OwnerState = {
@@ -64,12 +67,15 @@ function GridColumnGroupHeader(props: GridColumnGroupHeaderProps) {
     fields,
     height,
     colIndex,
+    hasFocus,
+    tabIndex,
     isLastColumn,
     extendRowFullWidth,
   } = props;
 
   const rootProps = useGridRootProps();
 
+  const headerCellRef = React.useRef<HTMLDivElement>(null);
   const apiRef = useGridApiContext();
   const columnGroupsLookup = useGridSelector(apiRef, gridColumnGroupsLookupSelector);
   const { hasScrollX, hasScrollY } = apiRef.current.getRootDimensions() ?? {
@@ -84,16 +90,19 @@ function GridColumnGroupHeader(props: GridColumnGroupHeaderProps) {
   let headerComponent: React.ReactNode;
 
   const render = groupId && columnGroupsLookup[groupId]?.renderHeaderGroup;
-  const renderParams = {
-    groupId,
-    headerName,
-    description,
-    depth,
-    maxDepth,
-    fields,
-    colIndex,
-    isLastColumn,
-  };
+  const renderParams: GridColumnGroupHeaderParams = React.useMemo(
+    () => ({
+      groupId,
+      headerName,
+      description,
+      depth,
+      maxDepth,
+      fields,
+      colIndex,
+      isLastColumn,
+    }),
+    [groupId, headerName, description, depth, maxDepth, fields, colIndex, isLastColumn],
+  );
   if (groupId && render) {
     headerComponent = render(renderParams);
   }
@@ -121,6 +130,37 @@ function GridColumnGroupHeader(props: GridColumnGroupHeaderProps) {
   const elementId = groupId === null ? `empty-group-cell-${id}` : groupId;
   const classes = useUtilityClasses(ownerState);
 
+  React.useLayoutEffect(() => {
+    if (hasFocus) {
+      const focusableElement = headerCellRef.current!.querySelector<HTMLElement>('[tabindex="0"]');
+      const elementToFocus = focusableElement || headerCellRef.current;
+      elementToFocus?.focus();
+    }
+  }, [apiRef, hasFocus]);
+
+  const publish = React.useCallback(
+    (eventName: keyof GridColumnGroupHeaderEventLookup) => (event: React.SyntheticEvent) => {
+      // Ignore portal
+      // See https://github.com/mui/mui-x/issues/1721
+      if (!event.currentTarget.contains(event.target as Element)) {
+        return;
+      }
+      apiRef.current.publishEvent(eventName, renderParams, event as any);
+    },
+    // For now this is stupid, because renderParams change all the time.
+    // Need to move it's computation in the api, such that for a given depth+columnField, I can get the group parameters
+    [apiRef, renderParams],
+  );
+
+  const mouseEventsHandlers = React.useMemo(
+    () => ({
+      onKeyDown: publish('columnGroupHeaderKeyDown'),
+      onFocus: publish('columnGroupHeaderFocus'),
+      onBlur: publish('columnGroupHeaderBlur'),
+    }),
+    [publish],
+  );
+
   const headerClassName =
     typeof group.headerClassName === 'function'
       ? group.headerClassName(renderParams)
@@ -128,6 +168,7 @@ function GridColumnGroupHeader(props: GridColumnGroupHeaderProps) {
 
   return (
     <GridGenericColumnHeaderItem
+      ref={headerCellRef}
       classes={classes}
       columnMenuOpen={false}
       colIndex={colIndex}
@@ -135,7 +176,7 @@ function GridColumnGroupHeader(props: GridColumnGroupHeaderProps) {
       isResizing={false}
       sortDirection={null}
       hasFocus={false}
-      tabIndex={-1}
+      tabIndex={tabIndex}
       isDraggable={false}
       headerComponent={headerComponent}
       headerClassName={headerClassName}
@@ -150,6 +191,7 @@ function GridColumnGroupHeader(props: GridColumnGroupHeaderProps) {
       // The fields are wrapped between |-...-| to avoid confusion between fields "id" and "id2" when using selector data-fields~=
       data-fields={`|-${fields.join('-|-')}-|`}
       disableHeaderSeparator
+      {...mouseEventsHandlers}
     />
   );
 }

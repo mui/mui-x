@@ -43,7 +43,7 @@ export const useGridAggregationPreProcessors = (
             aggregationFunctions: props.aggregationFunctions,
           });
 
-      columnsState.all.forEach((field) => {
+      columnsState.orderedFields.forEach((field) => {
         const shouldHaveAggregationValue = !!aggregationRules[field];
         const haveAggregationColumnValue = !!rulesOnLastColumnHydration[field];
 

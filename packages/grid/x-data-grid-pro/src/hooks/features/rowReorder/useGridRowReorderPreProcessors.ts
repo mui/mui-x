@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { unstable_composeClasses as composeClasses } from '@mui/material';
+import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { getDataGridUtilityClass, GridColDef } from '@mui/x-data-grid';
 import { GridPipeProcessor, useGridRegisterPipeProcessor } from '@mui/x-data-grid/internals';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
@@ -46,10 +46,12 @@ export const useGridRowReorderPreProcessors = (
 
       if (shouldHaveReorderColumn && !haveReorderColumn) {
         columnsState.lookup[reorderColumn.field] = reorderColumn;
-        columnsState.all = [reorderColumn.field, ...columnsState.all];
+        columnsState.orderedFields = [reorderColumn.field, ...columnsState.orderedFields];
       } else if (!shouldHaveReorderColumn && haveReorderColumn) {
         delete columnsState.lookup[reorderColumn.field];
-        columnsState.all = columnsState.all.filter((field) => field !== reorderColumn.field);
+        columnsState.orderedFields = columnsState.orderedFields.filter(
+          (field) => field !== reorderColumn.field,
+        );
       }
 
       return columnsState;

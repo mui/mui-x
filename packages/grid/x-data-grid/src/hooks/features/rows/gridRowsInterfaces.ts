@@ -17,6 +17,10 @@ export interface GridRowsInternalCache {
    */
   loadingPropBeforePartialUpdates: DataGridProcessedProps['loading'];
   /**
+   * The value of the `rowCount` prop since the last time that the rows state was updated.
+   */
+  rowCountPropBeforePartialUpdates: DataGridProcessedProps['rowCount'];
+  /**
    * Lookup containing the latest model at all time (even those not stored in the state yet).
    */
   dataRowIdToModelLookup: GridRowIdToModelLookup;

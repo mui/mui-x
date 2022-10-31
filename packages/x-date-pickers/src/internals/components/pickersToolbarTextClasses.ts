@@ -1,4 +1,7 @@
-import { generateUtilityClass, generateUtilityClasses } from '@mui/material';
+import {
+  unstable_generateUtilityClass as generateUtilityClass,
+  unstable_generateUtilityClasses as generateUtilityClasses,
+} from '@mui/utils';
 
 export interface PickersToolbarTextClasses {
   /** Styles applied to the root element. */
@@ -10,12 +13,10 @@ export interface PickersToolbarTextClasses {
 export type PickersToolbarTextClassKey = keyof PickersToolbarTextClasses;
 
 export function getPickersToolbarTextUtilityClass(slot: string) {
-  // TODO v6: Rename 'PrivatePickersToolbarText' to 'MuiPickersToolbarText' to follow convention
-  return generateUtilityClass('PrivatePickersToolbarText', slot);
+  return generateUtilityClass('MuiPickersToolbarText', slot);
 }
 
-// TODO v6: Rename 'PrivatePickersToolbarText' to 'MuiPickersToolbarText' to follow convention
-export const pickersToolbarTextClasses = generateUtilityClasses('PrivatePickersToolbarText', [
+export const pickersToolbarTextClasses = generateUtilityClasses('MuiPickersToolbarText', [
   'root',
   'selected',
 ]);

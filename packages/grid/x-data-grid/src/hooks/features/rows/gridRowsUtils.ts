@@ -79,7 +79,11 @@ export const createRowsInternalCache = ({
   rows,
   getRowId,
   loading,
-}: Pick<DataGridProcessedProps, 'rows' | 'getRowId' | 'loading'>): GridRowsInternalCache => {
+  rowCount,
+}: Pick<
+  DataGridProcessedProps,
+  'rows' | 'getRowId' | 'loading' | 'rowCount'
+>): GridRowsInternalCache => {
   const updates: GridRowsFullUpdate = {
     type: 'full',
     rows: [],
@@ -99,6 +103,7 @@ export const createRowsInternalCache = ({
   return {
     rowsBeforePartialUpdates: rows,
     loadingPropBeforePartialUpdates: loading,
+    rowCountPropBeforePartialUpdates: rowCount,
     updates,
     dataRowIdToIdLookup,
     dataRowIdToModelLookup,
@@ -354,6 +359,7 @@ export const updateCacheWithNewRows = ({
     updates: partialUpdates,
     rowsBeforePartialUpdates: previousCache.rowsBeforePartialUpdates,
     loadingPropBeforePartialUpdates: previousCache.loadingPropBeforePartialUpdates,
+    rowCountPropBeforePartialUpdates: previousCache.rowCountPropBeforePartialUpdates,
   };
 };
 

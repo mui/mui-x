@@ -6,7 +6,7 @@ import {
 } from '@mui/x-data-grid-pro';
 import { GridStateInitializer } from '@mui/x-data-grid-pro/internals';
 import { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
-import { GridPrivateApiPremium } from '../../../models/gridApiPremium';
+import { GridApiPremium, GridPrivateApiPremium } from '../../../models/gridApiPremium';
 import { gridAggregationModelSelector } from './gridAggregationSelectors';
 import { GridAggregationApi } from './gridAggregationInterfaces';
 import {

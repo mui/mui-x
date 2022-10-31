@@ -3,7 +3,7 @@ title: Componente React Seletor de hora
 components: DesktopTimePicker, MobileTimePicker, StaticTimePicker, TimePicker, ClockPicker
 githubLabel: 'component: TimePicker'
 packageName: '@mui/x-date-pickers'
-materialDesign: https://material.io/components/time-pickers
+materialDesign: https://m2.material.io/components/time-pickers
 ---
 
 # Seletor de hora
@@ -55,7 +55,7 @@ Use `LocalizationProvider` para alterar a date-library de localização que é u
 
 Some lower-level sub-components (`ClockPicker`) are also exported. Estes são renderizados sem estar encapsulado ou lógica exterior (campo com mascara, valores de data e validação, etc.).
 
-{{"demo": "SubComponentsTimePickers.js"}}
+{{"demo": "SubComponentsTimeCalendars.js"}}
 
 ## Segundos
 

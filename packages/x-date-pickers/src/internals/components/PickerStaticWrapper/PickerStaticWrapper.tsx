@@ -2,7 +2,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { styled, Theme, useThemeProps } from '@mui/material/styles';
 import { SxProps } from '@mui/system';
-import { unstable_composeClasses as composeClasses } from '@mui/material';
+import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import clsx from 'clsx';
 import { DIALOG_WIDTH } from '../../constants/dimensions';
 import { WrapperVariantContext } from '../wrappers/WrapperVariantContext';
@@ -10,11 +10,11 @@ import {
   getStaticWrapperUtilityClass,
   PickerStaticWrapperClasses,
 } from './pickerStaticWrapperClasses';
-import { PickersActionBar, PickersActionBarProps } from '../../../PickersActionBar';
+import { PickersActionBar } from '../../../PickersActionBar';
 import { PickerStateWrapperProps } from '../../hooks/usePickerState';
-import { PickersSlotsComponent } from '../wrappers/WrapperProps';
 import { PickersInputLocaleText } from '../../../locales/utils/pickersLocaleTextApi';
 import { LocalizationProvider } from '../../../LocalizationProvider';
+import { PickersSlotsComponent, PickersSlotsComponentsProps } from '../wrappers/WrapperProps';
 
 const useUtilityClasses = <TDate extends unknown>(ownerState: PickerStaticWrapperProps<TDate>) => {
   const { classes } = ownerState;
@@ -26,23 +26,18 @@ const useUtilityClasses = <TDate extends unknown>(ownerState: PickerStaticWrappe
   return composeClasses(slots, getStaticWrapperUtilityClass, classes);
 };
 
-export interface PickersStaticWrapperSlotsComponent extends PickersSlotsComponent {}
+export interface PickersStaticWrapperSlotsComponent
+  extends Pick<PickersSlotsComponent, 'ActionBar' | 'PaperContent'> {}
 
-export interface PickersStaticWrapperSlotsComponentsProps {
-  actionBar: Omit<PickersActionBarProps, 'onAccept' | 'onClear' | 'onCancel' | 'onSetToday'>;
-  paperContent: Record<string, any>;
-}
+export interface PickersStaticWrapperSlotsComponentsProps
+  extends Pick<PickersSlotsComponentsProps, 'actionBar' | 'paperContent'> {}
 
-export interface ExportedPickerStaticWrapperProps<TDate> {
+export interface ExportedPickerStaticWrapperProps {
   /**
    * Force static wrapper inner components to be rendered in mobile or desktop mode.
    * @default "mobile"
    */
   displayStaticWrapperAs?: 'desktop' | 'mobile';
-  /**
-   * Locale for components texts
-   */
-  localeText?: PickersInputLocaleText<TDate>;
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */
@@ -51,7 +46,7 @@ export interface ExportedPickerStaticWrapperProps<TDate> {
 
 export interface PickerStaticWrapperProps<TDate>
   extends PickerStateWrapperProps,
-    ExportedPickerStaticWrapperProps<TDate> {
+    ExportedPickerStaticWrapperProps {
   className?: string;
   children?: React.ReactNode;
   /**
@@ -62,12 +57,16 @@ export interface PickerStaticWrapperProps<TDate>
    * Overrideable components.
    * @default {}
    */
-  components?: Partial<PickersStaticWrapperSlotsComponent>;
+  components?: PickersStaticWrapperSlotsComponent;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  componentsProps?: Partial<PickersStaticWrapperSlotsComponentsProps>;
+  componentsProps?: PickersStaticWrapperSlotsComponentsProps;
+  /**
+   * Locale for components texts
+   */
+  localeText?: PickersInputLocaleText<TDate>;
 }
 
 const PickerStaticWrapperRoot = styled('div', {
@@ -110,8 +109,9 @@ function PickerStaticWrapper<TDate>(inProps: PickerStaticWrapperProps<TDate>) {
   } = props;
 
   const classes = useUtilityClasses(props);
+
   const ActionBar = components?.ActionBar ?? PickersActionBar;
-  const PaperContent = components?.PaperContent || React.Fragment;
+  const PaperContent = components?.PaperContent ?? React.Fragment;
 
   return (
     <LocalizationProvider localeText={localeText}>

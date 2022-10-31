@@ -128,7 +128,7 @@ export default function ColumnSpanningFunction() {
         autoHeight
         disableExtendRowFullWidth
         disableColumnFilter
-        disableSelectionOnClick
+        disableRowSelectionOnClick
         hideFooter
         showCellRightBorder
         showColumnRightBorder

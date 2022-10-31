@@ -1,6 +1,6 @@
 name: 'Pro plan: question ❔'
 description: I'm a Pro plan user, I can't find a solution to my problem with MUI X.
-title: "[question] "
+title: '[question] '
 labels: ['status: needs triage', 'pro plan', 'support: commercial']
 body:
   - type: markdown

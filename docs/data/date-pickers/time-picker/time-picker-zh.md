@@ -3,7 +3,7 @@ title: React Time Picker（时间选择器）组件
 components: DesktopTimePicker, MobileTimePicker, StaticTimePicker, TimePicker, ClockPicker
 githubLabel: 'component: TimePicker'
 packageName: '@mui/x-date-pickers'
-materialDesign: https://material.io/components/time-pickers
+materialDesign: https://m2.material.io/components/time-pickers
 ---
 
 # Time Picker 时间选择器
@@ -55,7 +55,7 @@ The time picker component can be disabled or read-only.
 
 Some lower-level sub-components (`ClockPicker`) are also exported. 这些都是在没有包装器或外部逻辑（屏蔽输入、日期值解析和验证等）的情况下渲染的。 These are rendered without a wrapper or outer logic (masked input, date values parsing and validation, etc.).
 
-{{"demo": "SubComponentsTimePickers.js"}}
+{{"demo": "SubComponentsTimeCalendars.js"}}
 
 ## 秒
 

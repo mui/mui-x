@@ -6,16 +6,6 @@ export interface PickerComponents<Theme = unknown> {
     styleOverrides?: ComponentsOverrides<Theme>['MuiCalendarOrClockPicker'];
     variants?: ComponentsVariants['MuiCalendarOrClockPicker'];
   };
-  MuiCalendarPicker?: {
-    defaultProps?: ComponentsProps['MuiCalendarPicker'];
-    styleOverrides?: ComponentsOverrides<Theme>['MuiCalendarPicker'];
-    variants?: ComponentsVariants['MuiCalendarPicker'];
-  };
-  MuiCalendarPickerSkeleton?: {
-    defaultProps?: ComponentsProps['MuiCalendarPickerSkeleton'];
-    styleOverrides?: ComponentsOverrides<Theme>['MuiCalendarPickerSkeleton'];
-    variants?: ComponentsVariants['MuiCalendarPickerSkeleton'];
-  };
   MuiClock?: {
     defaultProps?: ComponentsProps['MuiClock'];
     styleOverrides?: ComponentsOverrides<Theme>['MuiClock'];
@@ -35,6 +25,11 @@ export interface PickerComponents<Theme = unknown> {
     defaultProps?: ComponentsProps['MuiClockPointer'];
     styleOverrides?: ComponentsOverrides<Theme>['MuiClockPointer'];
     variants?: ComponentsVariants['MuiClockPointer'];
+  };
+  MuiDateCalendar?: {
+    defaultProps?: ComponentsProps['MuiDateCalendar'];
+    styleOverrides?: ComponentsOverrides<Theme>['MuiDateCalendar'];
+    variants?: ComponentsVariants['MuiDateCalendar'];
   };
   MuiDateField?: {
     defaultProps?: ComponentsProps['MuiDateField'];
@@ -66,10 +61,15 @@ export interface PickerComponents<Theme = unknown> {
     styleOverrides?: ComponentsOverrides<Theme>['MuiDateTimePickerToolbar'];
     variants?: ComponentsVariants['MuiDateTimePickerToolbar'];
   };
-  MuiDayPicker?: {
-    defaultProps?: ComponentsProps['MuiDayPicker'];
-    styleOverrides?: ComponentsOverrides<Theme>['MuiDayPicker'];
-    variants?: ComponentsVariants['MuiDayPicker'];
+  MuiDayCalendar?: {
+    defaultProps?: ComponentsProps['MuiDayCalendar'];
+    styleOverrides?: ComponentsOverrides<Theme>['MuiDayCalendar'];
+    variants?: ComponentsVariants['MuiDayCalendar'];
+  };
+  MuiDayCalendarSkeleton?: {
+    defaultProps?: ComponentsProps['MuiDayCalendarSkeleton'];
+    styleOverrides?: ComponentsOverrides<Theme>['MuiDayCalendarSkeleton'];
+    variants?: ComponentsVariants['MuiDayCalendarSkeleton'];
   };
   MuiDesktopDatePicker?: {
     defaultProps?: ComponentsProps['MuiDesktopDatePicker'];
@@ -81,6 +81,11 @@ export interface PickerComponents<Theme = unknown> {
     styleOverrides?: ComponentsOverrides<Theme>['MuiDesktopDateTimePicker'];
     variants?: ComponentsVariants['MuiDesktopDateTimePicker'];
   };
+  MuiDesktopNextDatePicker?: {
+    defaultProps?: ComponentsProps['MuiDesktopNextDatePicker'];
+    styleOverrides?: ComponentsOverrides<Theme>['MuiDesktopNextDatePicker'];
+    variants?: ComponentsVariants['MuiDesktopNextDatePicker'];
+  };
   MuiDesktopTimePicker?: {
     defaultProps?: ComponentsProps['MuiDesktopTimePicker'];
     styleOverrides?: ComponentsOverrides<Theme>['MuiDesktopTimePicker'];
@@ -91,10 +96,10 @@ export interface PickerComponents<Theme = unknown> {
     styleOverrides?: ComponentsOverrides<Theme>['MuiLocalizationProvider'];
     variants?: ComponentsVariants['MuiLocalizationProvider'];
   };
-  MuiMonthPicker?: {
-    defaultProps?: ComponentsProps['MuiMonthPicker'];
-    styleOverrides?: ComponentsOverrides<Theme>['MuiMonthPicker'];
-    variants?: ComponentsVariants['MuiMonthPicker'];
+  MuiMonthCalendar?: {
+    defaultProps?: ComponentsProps['MuiMonthCalendar'];
+    styleOverrides?: ComponentsOverrides<Theme>['MuiMonthCalendar'];
+    variants?: ComponentsVariants['MuiMonthCalendar'];
   };
   MuiPickersArrowSwitcher?: {
     defaultProps?: ComponentsProps['MuiPickersArrowSwitcher'];
@@ -116,10 +121,20 @@ export interface PickerComponents<Theme = unknown> {
     styleOverrides?: ComponentsOverrides<Theme>['MuiPickersFadeTransitionGroup'];
     variants?: ComponentsVariants['MuiPickersFadeTransitionGroup'];
   };
+  MuiPickersMonth?: {
+    defaultProps?: ComponentsProps['MuiPickersMonth'];
+    styleOverrides?: ComponentsOverrides<Theme>['MuiPickersMonth'];
+    variants?: ComponentsVariants['MuiPickersMonth'];
+  };
   MuiPickersPopper?: {
     defaultProps?: ComponentsProps['MuiPickersPopper'];
     styleOverrides?: ComponentsOverrides<Theme>['MuiPickersPopper'];
     variants?: ComponentsVariants['MuiPickersPopper'];
+  };
+  MuiPickersSlideTransition?: {
+    defaultProps?: ComponentsProps['MuiPickersSlideTransition'];
+    styleOverrides?: ComponentsOverrides<Theme>['MuiPickersSlideTransition'];
+    variants?: ComponentsVariants['MuiPickersSlideTransition'];
   };
   MuiPickerStaticWrapper?: {
     defaultProps?: ComponentsProps['MuiPickerStaticWrapper'];
@@ -135,6 +150,16 @@ export interface PickerComponents<Theme = unknown> {
     defaultProps?: ComponentsProps['MuiPickersToolbarButton'];
     styleOverrides?: ComponentsOverrides<Theme>['MuiPickersToolbarButton'];
     variants?: ComponentsVariants['MuiPickersToolbarButton'];
+  };
+  MuiPickersToolbarText?: {
+    defaultProps?: ComponentsProps['MuiPickersToolbarText'];
+    styleOverrides?: ComponentsOverrides<Theme>['MuiPickersToolbarText'];
+    variants?: ComponentsVariants['MuiPickersToolbarText'];
+  };
+  MuiPickersYear?: {
+    defaultProps?: ComponentsProps['MuiPickersYear'];
+    styleOverrides?: ComponentsOverrides<Theme>['MuiPickersYear'];
+    variants?: ComponentsVariants['MuiPickersYear'];
   };
   MuiStaticDatePicker?: {
     defaultProps?: ComponentsProps['MuiStaticDatePicker'];
@@ -156,34 +181,10 @@ export interface PickerComponents<Theme = unknown> {
     styleOverrides?: ComponentsOverrides<Theme>['MuiTimePickerToolbar'];
     variants?: ComponentsVariants['MuiTimePickerToolbar'];
   };
-  MuiYearPicker?: {
-    defaultProps?: ComponentsProps['MuiYearPicker'];
-    styleOverrides?: ComponentsOverrides<Theme>['MuiYearPicker'];
-    variants?: ComponentsVariants['MuiYearPicker'];
-  };
-  // TODO v6: Rename 'PrivatePickersMonth' to 'MuiPickersMonth' to follow convention
-  PrivatePickersMonth?: {
-    defaultProps?: ComponentsProps['PrivatePickersMonth'];
-    styleOverrides?: ComponentsOverrides<Theme>['PrivatePickersMonth'];
-    variants?: ComponentsVariants['PrivatePickersMonth'];
-  };
-  // TODO v6: Rename 'PrivatePickersSlideTransition' to 'MuiPickersSlideTransition' to follow convention
-  PrivatePickersSlideTransition?: {
-    defaultProps?: ComponentsProps['PrivatePickersSlideTransition'];
-    styleOverrides?: ComponentsOverrides<Theme>['PrivatePickersSlideTransition'];
-    variants?: ComponentsVariants['PrivatePickersSlideTransition'];
-  };
-  // TODO v6: Rename 'PrivatePickersToolbarText' to 'MuiPickersToolbarText' to follow convention
-  PrivatePickersToolbarText?: {
-    defaultProps?: ComponentsProps['PrivatePickersToolbarText'];
-    styleOverrides?: ComponentsOverrides<Theme>['PrivatePickersToolbarText'];
-    variants?: ComponentsVariants['PrivatePickersToolbarText'];
-  };
-  // TODO v6: Rename 'PrivatePickersYear' to 'MuiPickersYear' to follow convention
-  PrivatePickersYear?: {
-    defaultProps?: ComponentsProps['PrivatePickersYear'];
-    styleOverrides?: ComponentsOverrides<Theme>['PrivatePickersYear'];
-    variants?: ComponentsVariants['PrivatePickersYear'];
+  MuiYearCalendar?: {
+    defaultProps?: ComponentsProps['MuiYearCalendar'];
+    styleOverrides?: ComponentsOverrides<Theme>['MuiYearCalendar'];
+    variants?: ComponentsVariants['MuiYearCalendar'];
   };
 }
 

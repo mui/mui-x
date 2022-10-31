@@ -1,8 +1,4 @@
----
-title: Data Grid - Editing recipes
----
-
-# Data grid - Editing recipes
+# Data Grid - Editing recipes
 
 <p class="description">Advanced grid customization recipes.</p>
 

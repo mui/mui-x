@@ -1,8 +1,4 @@
----
-title: Data Grid - Editing
----
-
-# Data grid - Editing
+# Data Grid - Editing
 
 <p class="description">The data grid has built-in support for cell and row editing.</p>
 
@@ -371,8 +367,8 @@ Modify the edit component to enable this feature:
 +    setValue(valueProp);
 +  }, [valueProp]);
 +
-   return <input type="text" value={value} onChange={handleChange}>;
-}
+   return <input type="text" value={value} onChange={handleChange} />;
+ }
 ```
 
 ### With auto-stop

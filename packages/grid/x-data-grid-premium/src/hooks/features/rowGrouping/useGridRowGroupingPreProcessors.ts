@@ -104,7 +104,7 @@ export const useGridRowGroupingPreProcessors = (
       const newColumnsLookup: GridColumnRawLookup = {};
 
       // We only keep the non-grouping columns
-      columnsState.all.forEach((field) => {
+      columnsState.orderedFields.forEach((field) => {
         if (!isGroupingColumn(field)) {
           newColumnFields.push(field);
           newColumnsLookup[field] = columnsState.lookup[field];
@@ -128,7 +128,7 @@ export const useGridRowGroupingPreProcessors = (
         ...newColumnFields.slice(startIndex),
       ];
 
-      columnsState.all = newColumnFields;
+      columnsState.orderedFields = newColumnFields;
       columnsState.lookup = newColumnsLookup;
 
       return columnsState;

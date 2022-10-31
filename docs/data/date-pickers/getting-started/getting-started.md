@@ -1,16 +1,18 @@
 ---
 product: date-pickers
-title: Date picker, Time picker React components
+title: Date Picker, Time Picker React components
 components: DatePicker,DateTimePicker,TimePicker
-githubLabel: 'component: DatePicker'
-materialDesign: https://material.io/components/date-pickers
+githubLabel: 'component: pickers'
+materialDesign: https://m2.material.io/components/date-pickers
 waiAria: https://www.w3.org/WAI/ARIA/apg/example-index/dialog-modal/datepicker-dialog.html
 packageName: '@mui/x-date-pickers'
 ---
 
-# Date / Time pickers
+# Date / Time Pickers
 
 <p class="description">Date pickers and Time pickers allow selecting a single value from a pre-determined set.</p>
+
+{{"component": "modules/components/ComponentLinkHeader.js"}}
 
 - On mobile, pickers are best suited for display in a confirmation dialog.
 - For inline display, such as on a form, consider using compact controls such as segmented dropdown buttons.
@@ -163,5 +165,5 @@ Native date (`type="date"`), time (`type="time"`) and date&time (`type="datetime
 Some test environments (i.e. `jsdom`) do not support media query. In such cases, components will be rendered in desktop mode. To modify this behavior you can fake the `window.matchMedia`.
 :::
 
-Be aware that running tests in headless browsers might not pass our default mediaQuery (`pointer: fine`).  
+Be aware that running tests in headless browsers might not pass the default mediaQuery (`pointer: fine`).
 In such case you can [force pointer precision](https://github.com/microsoft/playwright/issues/7769#issuecomment-1205106311) via browser flags or preferences.

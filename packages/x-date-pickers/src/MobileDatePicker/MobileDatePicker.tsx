@@ -4,8 +4,9 @@ import {
   BaseDatePickerProps,
   useDatePickerDefaultizedProps,
   datePickerValueManager,
+  BaseDatePickerSlotsComponent,
+  BaseDatePickerSlotsComponentsProps,
 } from '../DatePicker/shared';
-import { DatePickerToolbar } from '../DatePicker/DatePickerToolbar';
 import {
   MobileWrapper,
   MobileWrapperProps,
@@ -16,32 +17,28 @@ import { CalendarOrClockPicker } from '../internals/components/CalendarOrClockPi
 import { useDateValidation } from '../internals/hooks/validation/useDateValidation';
 import { PureDateInput } from '../internals/components/PureDateInput';
 import { usePickerState } from '../internals/hooks/usePickerState';
-import {
-  CalendarPickerSlotsComponent,
-  CalendarPickerSlotsComponentsProps,
-} from '../CalendarPicker/CalendarPicker';
 
 export interface MobileDatePickerSlotsComponent<TDate>
-  extends MobileWrapperSlotsComponent,
-    CalendarPickerSlotsComponent<TDate> {}
+  extends BaseDatePickerSlotsComponent<TDate>,
+    MobileWrapperSlotsComponent {}
 
 export interface MobileDatePickerSlotsComponentsProps<TDate>
-  extends MobileWrapperSlotsComponentsProps,
-    CalendarPickerSlotsComponentsProps<TDate> {}
+  extends BaseDatePickerSlotsComponentsProps<TDate>,
+    MobileWrapperSlotsComponentsProps {}
 
 export interface MobileDatePickerProps<TDate>
   extends BaseDatePickerProps<TDate>,
-    MobileWrapperProps<TDate> {
+    MobileWrapperProps {
   /**
    * Overrideable components.
    * @default {}
    */
-  components?: Partial<MobileDatePickerSlotsComponent<TDate>>;
+  components?: MobileDatePickerSlotsComponent<TDate>;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  componentsProps?: Partial<MobileDatePickerSlotsComponentsProps<TDate>>;
+  componentsProps?: MobileDatePickerSlotsComponentsProps<TDate>;
 }
 
 type MobileDatePickerComponent = (<TDate>(
@@ -72,15 +69,7 @@ export const MobileDatePicker = React.forwardRef(function MobileDatePicker<TDate
 
   // Note that we are passing down all the value without spread.
   // It saves us >1kb gzip and make any prop available automatically on any level down.
-  const {
-    ToolbarComponent = DatePickerToolbar,
-    value,
-    onChange,
-    components,
-    componentsProps,
-    localeText,
-    ...other
-  } = props;
+  const { value, onChange, components, componentsProps, localeText, ...other } = props;
 
   const DateInputProps = {
     ...inputProps,
@@ -104,8 +93,6 @@ export const MobileDatePicker = React.forwardRef(function MobileDatePicker<TDate
       <CalendarOrClockPicker
         {...pickerProps}
         autoFocus
-        toolbarTitle={props.label || props.toolbarTitle}
-        ToolbarComponent={ToolbarComponent}
         DateInputProps={DateInputProps}
         components={components}
         componentsProps={componentsProps}
@@ -158,10 +145,6 @@ MobileDatePicker.propTypes = {
    */
   defaultCalendarMonth: PropTypes.any,
   /**
-   * Props applied to the [`Dialog`](https://mui.com/material-ui/api/dialog/) element.
-   */
-  DialogProps: PropTypes.object,
-  /**
    * If `true`, the picker and text field are disabled.
    * @default false
    */
@@ -191,6 +174,12 @@ MobileDatePicker.propTypes = {
    * @default false
    */
   disablePast: PropTypes.bool,
+  /**
+   * Calendar will show more weeks in order to match this value.
+   * Put it to 6 for having fix number of week in Gregorian calendars
+   * @default undefined
+   */
+  fixedWeekNumber: PropTypes.number,
   /**
    * Get aria-label text for control that opens picker dialog. Aria-label text must include selected date. @DateIOType
    * @template TDate
@@ -387,25 +376,6 @@ MobileDatePicker.propTypes = {
     PropTypes.func,
     PropTypes.object,
   ]),
-  /**
-   * Component that will replace default toolbar renderer.
-   * @default DatePickerToolbar
-   */
-  ToolbarComponent: PropTypes.elementType,
-  /**
-   * Date format, that is displaying in toolbar.
-   */
-  toolbarFormat: PropTypes.string,
-  /**
-   * Mobile picker date value placeholder, displaying if `value` === `null`.
-   * @default '–'
-   */
-  toolbarPlaceholder: PropTypes.node,
-  /**
-   * Mobile picker title, displaying in the toolbar.
-   * @default 'Select date'
-   */
-  toolbarTitle: PropTypes.node,
   /**
    * The value of the picker.
    */

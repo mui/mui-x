@@ -25,7 +25,7 @@ createTheme({
     },
     MuiDateRangePickerToolbar: {
       defaultProps: {
-        toolbarTitle: 'test',
+        toolbarPlaceholder: 'empty',
         // @ts-expect-error invalid MuiDateRangePickerToolbar prop
         someRandomProp: true,
       },

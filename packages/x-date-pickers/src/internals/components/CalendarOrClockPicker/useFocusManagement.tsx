@@ -1,18 +1,19 @@
 import * as React from 'react';
-import { CalendarPickerView } from '../../models/views';
+import { CalendarOrClockPickerView } from '../../models/views';
 
 interface FocusStateInput {
   autoFocus?: boolean;
   openView: any;
 }
 
-export const useFocusManagement = ({ autoFocus, openView }: FocusStateInput) => {
-  const [focusedView, setFocusedView] = React.useState<CalendarPickerView | null>(
-    autoFocus ? openView : null,
-  );
+export const useFocusManagement = <TView extends CalendarOrClockPickerView>({
+  autoFocus,
+  openView,
+}: FocusStateInput) => {
+  const [focusedView, setFocusedView] = React.useState<TView | null>(autoFocus ? openView : null);
 
   const setFocusedViewCallback = React.useCallback(
-    (view: CalendarPickerView) => (newHasFocus: boolean) => {
+    (view: TView) => (newHasFocus: boolean) => {
       if (newHasFocus) {
         setFocusedView(view);
       } else {

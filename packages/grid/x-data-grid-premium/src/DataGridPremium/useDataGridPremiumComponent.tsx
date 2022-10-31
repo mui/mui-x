@@ -23,20 +23,20 @@ import {
   rowsStateInitializer,
   useGridRowsMeta,
   useGridParamsApi,
-  useGridSelection,
+  useGridRowSelection,
   useGridSorting,
   sortingStateInitializer,
   useGridScroll,
   useGridEvents,
   useGridDimensions,
   useGridStatePersistence,
-  useGridSelectionPreProcessors,
+  useGridRowSelectionPreProcessors,
   columnMenuStateInitializer,
   densityStateInitializer,
   focusStateInitializer,
   preferencePanelStateInitializer,
   rowsMetaStateInitializer,
-  selectionStateInitializer,
+  rowSelectionStateInitializer,
   useGridColumnReorder,
   columnReorderStateInitializer,
   useGridColumnResize,
@@ -53,7 +53,6 @@ import {
   useGridColumnSpanning,
   useGridRowReorder,
   useGridRowReorderPreProcessors,
-  useGridColumnGroupingPreProcessors,
   useGridRowPinning,
   useGridRowPinningPreProcessors,
   rowPinningStateInitializer,
@@ -87,8 +86,7 @@ export const useDataGridPremiumComponent = (
   /**
    * Register all pre-processors called during state initialization here.
    */
-  useGridColumnGroupingPreProcessors(privateApiRef, props);
-  useGridSelectionPreProcessors(privateApiRef, props);
+  useGridRowSelectionPreProcessors(privateApiRef, props);
   useGridRowReorderPreProcessors(privateApiRef, props);
   useGridRowGroupingPreProcessors(privateApiRef, props);
   useGridTreeDataPreProcessors(privateApiRef, props);
@@ -105,7 +103,7 @@ export const useDataGridPremiumComponent = (
    */
   useGridInitializeState(rowGroupingStateInitializer, privateApiRef, props);
   useGridInitializeState(aggregationStateInitializer, privateApiRef, props);
-  useGridInitializeState(selectionStateInitializer, privateApiRef, props);
+  useGridInitializeState(rowSelectionStateInitializer, privateApiRef, props);
   useGridInitializeState(detailPanelStateInitializer, privateApiRef, props);
   useGridInitializeState(columnPinningStateInitializer, privateApiRef, props);
   useGridInitializeState(columnsStateInitializer, privateApiRef, props);
@@ -128,7 +126,7 @@ export const useDataGridPremiumComponent = (
   useGridTreeData(privateApiRef);
   useGridAggregation(privateApiRef, props);
   useGridKeyboardNavigation(privateApiRef, props);
-  useGridSelection(privateApiRef, props);
+  useGridRowSelection(privateApiRef, props);
   useGridColumnPinning(privateApiRef, props);
   useGridRowPinning(privateApiRef, props);
   useGridColumns(privateApiRef, props);

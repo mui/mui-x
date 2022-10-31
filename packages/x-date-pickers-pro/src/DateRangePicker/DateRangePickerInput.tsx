@@ -1,7 +1,7 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import { styled, useThemeProps } from '@mui/material/styles';
-import { unstable_composeClasses as composeClasses } from '@mui/material';
+import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import {
   executeInTheNextEventLoopTick,
   DateInputProps,
@@ -11,7 +11,7 @@ import {
   onSpaceOrEnter,
   useLocaleText,
 } from '@mui/x-date-pickers/internals';
-import { CurrentlySelectingRangeEndProps, DateRange } from '../internal/models/dateRange';
+import { CurrentlySelectingRangeEndProps, DateRange } from '../internal/models/range';
 import { DateRangeValidationError } from '../internal/hooks/validation/useDateRangeValidation';
 import {
   DateRangePickerInputClasses,

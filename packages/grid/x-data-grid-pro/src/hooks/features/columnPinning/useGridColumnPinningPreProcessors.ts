@@ -28,13 +28,13 @@ export const useGridColumnPinningPreProcessors = (
 
   const reorderPinnedColumns = React.useCallback<GridPipeProcessor<'hydrateColumns'>>(
     (columnsState) => {
-      if (columnsState.all.length === 0 || disableColumnPinning) {
+      if (columnsState.orderedFields.length === 0 || disableColumnPinning) {
         return columnsState;
       }
 
       const [leftPinnedColumns, rightPinnedColumns] = filterColumns(
         pinnedColumns,
-        columnsState.all,
+        columnsState.orderedFields,
       );
 
       let newOrderedFields: string[];
@@ -43,11 +43,11 @@ export const useGridColumnPinningPreProcessors = (
       const { orderedFieldsBeforePinningColumns } = apiRef.current.caches.columnPinning;
 
       if (orderedFieldsBeforePinningColumns) {
-        newOrderedFields = new Array(columnsState.all.length).fill(null);
+        newOrderedFields = new Array(columnsState.orderedFields.length).fill(null);
         const newOrderedFieldsBeforePinningColumns = [...newOrderedFields];
 
         // Contains the fields not added to the orderedFields array yet
-        const remainingFields = [...columnsState.all];
+        const remainingFields = [...columnsState.orderedFields];
 
         // First, we check if the column was unpinned since the last processing.
         // If yes and it still exists, we move it back to the same position it was before pinning
@@ -70,7 +70,7 @@ export const useGridColumnPinningPreProcessors = (
           // In both cases, use the position from the columns array
           // TODO: detect removed columns and decrease the positions after it
           if (index === -1 || index >= newOrderedFieldsBeforePinningColumns.length) {
-            index = columnsState.all.indexOf(field);
+            index = columnsState.orderedFields.indexOf(field);
           }
 
           // The fallback above may make the column to be inserted in a position already occupied
@@ -102,9 +102,9 @@ export const useGridColumnPinningPreProcessors = (
         apiRef.current.caches.columnPinning.orderedFieldsBeforePinningColumns =
           newOrderedFieldsBeforePinningColumns;
       } else {
-        newOrderedFields = [...columnsState.all];
+        newOrderedFields = [...columnsState.orderedFields];
         apiRef.current.caches.columnPinning.orderedFieldsBeforePinningColumns = [
-          ...columnsState.all,
+          ...columnsState.orderedFields,
         ];
       }
 
@@ -116,7 +116,7 @@ export const useGridColumnPinningPreProcessors = (
 
       return {
         ...columnsState,
-        all: [...leftPinnedColumns, ...centerColumns, ...rightPinnedColumns],
+        orderedFields: [...leftPinnedColumns, ...centerColumns, ...rightPinnedColumns],
       };
     },
     [apiRef, disableColumnPinning, pinnedColumns],

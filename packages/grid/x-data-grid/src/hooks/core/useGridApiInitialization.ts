@@ -9,6 +9,7 @@ import type {
   GridPrivateOnlyApiCommon,
 } from '../../models/api/gridApiCommon';
 import { EventManager } from '../../utils/EventManager';
+import { unstable_resetCreateSelectorCache } from '../../utils/createSelector';
 
 const isSyntheticEvent = (event: any): event is React.SyntheticEvent => {
   return event.isPropagationStopped !== undefined;
@@ -122,6 +123,7 @@ export function useGridApiInitialization<
     const api = privateApiRef.current;
 
     return () => {
+      unstable_resetCreateSelectorCache(api.instanceId);
       api.publishEvent('unmount');
     };
   }, [privateApiRef]);

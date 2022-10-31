@@ -4,8 +4,9 @@ import {
   BaseDatePickerProps,
   useDatePickerDefaultizedProps,
   datePickerValueManager,
+  BaseDatePickerSlotsComponent,
+  BaseDatePickerSlotsComponentsProps,
 } from '../DatePicker/shared';
-import { DatePickerToolbar } from '../DatePicker/DatePickerToolbar';
 import {
   DesktopWrapper,
   DesktopWrapperProps,
@@ -16,32 +17,28 @@ import { CalendarOrClockPicker } from '../internals/components/CalendarOrClockPi
 import { useDateValidation } from '../internals/hooks/validation/useDateValidation';
 import { KeyboardDateInput } from '../internals/components/KeyboardDateInput';
 import { usePickerState } from '../internals/hooks/usePickerState';
-import {
-  CalendarPickerSlotsComponent,
-  CalendarPickerSlotsComponentsProps,
-} from '../CalendarPicker';
 
 export interface DesktopDatePickerSlotsComponent<TDate>
-  extends DesktopWrapperSlotsComponent,
-    CalendarPickerSlotsComponent<TDate> {}
+  extends BaseDatePickerSlotsComponent<TDate>,
+    DesktopWrapperSlotsComponent {}
 
 export interface DesktopDatePickerSlotsComponentsProps<TDate>
-  extends DesktopWrapperSlotsComponentsProps,
-    CalendarPickerSlotsComponentsProps<TDate> {}
+  extends BaseDatePickerSlotsComponentsProps<TDate>,
+    DesktopWrapperSlotsComponentsProps {}
 
 export interface DesktopDatePickerProps<TDate>
   extends Omit<BaseDatePickerProps<TDate>, 'components' | 'componentsProps'>,
-    DesktopWrapperProps<TDate> {
+    DesktopWrapperProps {
   /**
    * Overrideable components.
    * @default {}
    */
-  components?: Partial<DesktopDatePickerSlotsComponent<TDate>>;
+  components?: DesktopDatePickerSlotsComponent<TDate>;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  componentsProps?: Partial<DesktopDatePickerSlotsComponentsProps<TDate>>;
+  componentsProps?: DesktopDatePickerSlotsComponentsProps<TDate>;
 }
 
 type DesktopDatePickerComponent = (<TDate>(
@@ -70,18 +67,8 @@ export const DesktopDatePicker = React.forwardRef(function DesktopDatePicker<TDa
   const validationError = useDateValidation(props) !== null;
   const { pickerProps, inputProps, wrapperProps } = usePickerState(props, datePickerValueManager);
 
-  const {
-    onChange,
-    PopperProps,
-    PaperProps,
-    ToolbarComponent = DatePickerToolbar,
-    TransitionComponent,
-    value,
-    components,
-    componentsProps,
-    localeText,
-    ...other
-  } = props;
+  const { onChange, value, components, componentsProps, localeText, ...other } = props;
+
   const AllDateInputProps = {
     ...inputProps,
     ...other,
@@ -96,9 +83,6 @@ export const DesktopDatePicker = React.forwardRef(function DesktopDatePicker<TDa
       {...wrapperProps}
       DateInputProps={AllDateInputProps}
       KeyboardDateInputComponent={KeyboardDateInput}
-      PopperProps={PopperProps}
-      PaperProps={PaperProps}
-      TransitionComponent={TransitionComponent}
       components={components}
       componentsProps={componentsProps}
       localeText={localeText}
@@ -106,8 +90,6 @@ export const DesktopDatePicker = React.forwardRef(function DesktopDatePicker<TDa
       <CalendarOrClockPicker
         {...pickerProps}
         autoFocus
-        toolbarTitle={props.label || props.toolbarTitle}
-        ToolbarComponent={ToolbarComponent}
         DateInputProps={AllDateInputProps}
         components={components}
         componentsProps={componentsProps}
@@ -189,6 +171,12 @@ DesktopDatePicker.propTypes = {
    * @default false
    */
   disablePast: PropTypes.bool,
+  /**
+   * Calendar will show more weeks in order to match this value.
+   * Put it to 6 for having fix number of week in Gregorian calendars
+   * @default undefined
+   */
+  fixedWeekNumber: PropTypes.number,
   /**
    * Get aria-label text for control that opens picker dialog. Aria-label text must include selected date. @DateIOType
    * @template TDate
@@ -313,14 +301,6 @@ DesktopDatePicker.propTypes = {
    */
   orientation: PropTypes.oneOf(['landscape', 'portrait']),
   /**
-   * Paper props passed down to [Paper](https://mui.com/material-ui/api/paper/) component.
-   */
-  PaperProps: PropTypes.object,
-  /**
-   * Popper props passed down to [Popper](https://mui.com/material-ui/api/popper/) component.
-   */
-  PopperProps: PropTypes.object,
-  /**
    * Make picker read only.
    * @default false
    */
@@ -393,29 +373,6 @@ DesktopDatePicker.propTypes = {
     PropTypes.func,
     PropTypes.object,
   ]),
-  /**
-   * Component that will replace default toolbar renderer.
-   * @default DatePickerToolbar
-   */
-  ToolbarComponent: PropTypes.elementType,
-  /**
-   * Date format, that is displaying in toolbar.
-   */
-  toolbarFormat: PropTypes.string,
-  /**
-   * Mobile picker date value placeholder, displaying if `value` === `null`.
-   * @default '–'
-   */
-  toolbarPlaceholder: PropTypes.node,
-  /**
-   * Mobile picker title, displaying in the toolbar.
-   * @default 'Select date'
-   */
-  toolbarTitle: PropTypes.node,
-  /**
-   * Custom component for popper [Transition](https://mui.com/material-ui/transitions/#transitioncomponent-prop).
-   */
-  TransitionComponent: PropTypes.elementType,
   /**
    * The value of the picker.
    */
