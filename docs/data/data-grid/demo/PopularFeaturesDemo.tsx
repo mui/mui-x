@@ -9,7 +9,6 @@ import {
   GridRowParams,
   GridToolbarContainer,
   GridToolbarQuickFilter,
-  GridValueFormatterParams,
   useGridApiRef,
 } from '@mui/x-data-grid-premium';
 import Link from '@mui/material/Link';
