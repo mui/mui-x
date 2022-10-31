@@ -68,9 +68,9 @@ export const GridGroupingCriteriaCell = (props: GridGroupingCriteriaCellProps) =
   if (typeof colDef.renderCell === 'function') {
     cellContent = colDef.renderCell(props);
   } else if (typeof formattedValue !== 'undefined') {
-    cellContent = formattedValue;
+    cellContent = <span>{formattedValue}</span>;
   } else {
-    cellContent = rowNode.groupingKey;
+    cellContent = <span>{rowNode.groupingKey}</span>;
   }
 
   return (
@@ -92,10 +92,10 @@ export const GridGroupingCriteriaCell = (props: GridGroupingCriteriaCellProps) =
           </IconButton>
         )}
       </div>
-      <span>
-        {cellContent}
-        {!hideDescendantCount && filteredDescendantCount > 0 ? ` (${filteredDescendantCount})` : ''}
-      </span>
+      {cellContent}
+      {!hideDescendantCount && filteredDescendantCount > 0 ? (
+        <span style={{ whiteSpace: 'pre' }}> ({filteredDescendantCount})</span>
+      ) : null}
     </Box>
   );
 };
