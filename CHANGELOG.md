@@ -20,7 +20,13 @@ We'd like to offer a big thanks to the 9 contributors who made this release poss
 
 - Stop exporting `gridColumnsSelector` (#6693) @m4theushw
 
-  The `gridColumnsSelector` selector is not exported anymore. Use the following selectors to access the same parts of the state that were returned by the removed selector: `gridColumnFieldsSelector`, to obtain the column fields in the order they appear in the screen; `gridColumnLookupSelector`, to access column definitions by field; and `gridColumnVisibilityModelSelector`, for the visibility state of each column.
+  The `gridColumnsSelector` was deprecated during v5 and is now removed from the export list.
+
+  Please consider using one of the following selectors as a replacement:
+
+  - `gridColumnFieldsSelector`, to obtain the column fields in the order they appear on the screen;
+  - `gridColumnLookupSelector`, to access column definitions by field;
+  - `gridColumnVisibilityModelSelector`, for the visibility state of each column.
 
 #### Changes
 
