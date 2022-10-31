@@ -82,7 +82,7 @@ export const useDateTimeField = <TDate, TChildProps extends {}>({
 
   return useField({
     inputRef,
-    forwardedProps: other,
+    forwardedProps: other as unknown as TChildProps,
     internalProps: {
       value,
       defaultValue,
@@ -104,7 +104,6 @@ export const useDateTimeField = <TDate, TChildProps extends {}>({
       disableIgnoringDatePartForTimeValidation,
       selectedSections,
       onSelectedSectionsChange,
-      inputRef,
       ampm,
     },
     valueManager: dateTimePickerValueManager,

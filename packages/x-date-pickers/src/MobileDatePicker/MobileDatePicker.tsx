@@ -4,8 +4,9 @@ import {
   BaseDatePickerProps,
   useDatePickerDefaultizedProps,
   datePickerValueManager,
+  BaseDatePickerSlotsComponent,
+  BaseDatePickerSlotsComponentsProps,
 } from '../DatePicker/shared';
-import { DatePickerToolbar } from '../DatePicker/DatePickerToolbar';
 import {
   MobileWrapper,
   MobileWrapperProps,
@@ -16,19 +17,18 @@ import { CalendarOrClockPicker } from '../internals/components/CalendarOrClockPi
 import { useDateValidation } from '../internals/hooks/validation/useDateValidation';
 import { PureDateInput } from '../internals/components/PureDateInput';
 import { usePickerState } from '../internals/hooks/usePickerState';
-import { DateCalendarSlotsComponent, DateCalendarSlotsComponentsProps } from '../DateCalendar';
 
 export interface MobileDatePickerSlotsComponent<TDate>
-  extends MobileWrapperSlotsComponent,
-    DateCalendarSlotsComponent<TDate> {}
+  extends BaseDatePickerSlotsComponent<TDate>,
+    MobileWrapperSlotsComponent {}
 
 export interface MobileDatePickerSlotsComponentsProps<TDate>
-  extends MobileWrapperSlotsComponentsProps,
-    DateCalendarSlotsComponentsProps<TDate> {}
+  extends BaseDatePickerSlotsComponentsProps<TDate>,
+    MobileWrapperSlotsComponentsProps {}
 
 export interface MobileDatePickerProps<TDate>
   extends BaseDatePickerProps<TDate>,
-    MobileWrapperProps<TDate> {
+    MobileWrapperProps {
   /**
    * Overrideable components.
    * @default {}
@@ -69,15 +69,7 @@ export const MobileDatePicker = React.forwardRef(function MobileDatePicker<TDate
 
   // Note that we are passing down all the value without spread.
   // It saves us >1kb gzip and make any prop available automatically on any level down.
-  const {
-    ToolbarComponent = DatePickerToolbar,
-    value,
-    onChange,
-    components,
-    componentsProps,
-    localeText,
-    ...other
-  } = props;
+  const { value, onChange, components, componentsProps, localeText, ...other } = props;
 
   const DateInputProps = {
     ...inputProps,
@@ -101,8 +93,6 @@ export const MobileDatePicker = React.forwardRef(function MobileDatePicker<TDate
       <CalendarOrClockPicker
         {...pickerProps}
         autoFocus
-        toolbarTitle={props.label || props.toolbarTitle}
-        ToolbarComponent={ToolbarComponent}
         DateInputProps={DateInputProps}
         components={components}
         componentsProps={componentsProps}
@@ -386,25 +376,6 @@ MobileDatePicker.propTypes = {
     PropTypes.func,
     PropTypes.object,
   ]),
-  /**
-   * Component that will replace default toolbar renderer.
-   * @default DatePickerToolbar
-   */
-  ToolbarComponent: PropTypes.elementType,
-  /**
-   * Date format, that is displaying in toolbar.
-   */
-  toolbarFormat: PropTypes.string,
-  /**
-   * Mobile picker date value placeholder, displaying if `value` === `null`.
-   * @default '–'
-   */
-  toolbarPlaceholder: PropTypes.node,
-  /**
-   * Mobile picker title, displaying in the toolbar.
-   * @default 'Select date'
-   */
-  toolbarTitle: PropTypes.node,
   /**
    * The value of the picker.
    */

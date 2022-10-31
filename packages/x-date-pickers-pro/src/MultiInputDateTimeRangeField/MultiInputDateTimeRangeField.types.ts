@@ -75,5 +75,7 @@ export interface MultiInputDateTimeRangeFieldSlotsComponentsProps<TDate> {
   >;
 }
 
-export type UseMultiInputDateTimeRangeFieldDefaultizedProps<TDate> =
-  UseDateTimeRangeFieldDefaultizedProps<TDate>;
+export type UseMultiInputDateTimeRangeFieldDefaultizedProps<
+  TDate,
+  AdditionalProps extends {},
+> = UseDateTimeRangeFieldDefaultizedProps<TDate> & AdditionalProps;

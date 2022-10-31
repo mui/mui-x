@@ -27,10 +27,10 @@ import { useGridRows, rowsStateInitializer } from '../hooks/features/rows/useGri
 import { useGridRowsPreProcessors } from '../hooks/features/rows/useGridRowsPreProcessors';
 import { useGridParamsApi } from '../hooks/features/rows/useGridParamsApi';
 import {
-  selectionStateInitializer,
-  useGridSelection,
-} from '../hooks/features/selection/useGridSelection';
-import { useGridSelectionPreProcessors } from '../hooks/features/selection/useGridSelectionPreProcessors';
+  rowSelectionStateInitializer,
+  useGridRowSelection,
+} from '../hooks/features/rowSelection/useGridRowSelection';
+import { useGridRowSelectionPreProcessors } from '../hooks/features/rowSelection/useGridRowSelectionPreProcessors';
 import { useGridSorting, sortingStateInitializer } from '../hooks/features/sorting/useGridSorting';
 import { useGridScroll } from '../hooks/features/scroll/useGridScroll';
 import { useGridEvents } from '../hooks/features/events/useGridEvents';
@@ -42,7 +42,6 @@ import {
   useGridColumnGrouping,
   columnGroupsStateInitializer,
 } from '../hooks/features/columnGrouping/useGridColumnGrouping';
-import { useGridColumnGroupingPreProcessors } from '../hooks/features/columnGrouping/useGridColumnGroupingPreProcessors';
 
 export const useDataGridComponent = (props: DataGridProcessedProps) => {
   const apiRef = useGridInitialization<GridApiCommunity>(undefined, props);
@@ -50,16 +49,14 @@ export const useDataGridComponent = (props: DataGridProcessedProps) => {
   /**
    * Register all pre-processors called during state initialization here.
    */
-  useGridColumnGroupingPreProcessors(apiRef, props);
-  useGridSelectionPreProcessors(apiRef, props);
+  useGridRowSelectionPreProcessors(apiRef, props);
   useGridRowsPreProcessors(apiRef);
 
   /**
    * Register all state initializers here.
    */
-  useGridInitializeState(selectionStateInitializer, apiRef, props);
+  useGridInitializeState(rowSelectionStateInitializer, apiRef, props);
   useGridInitializeState(columnsStateInitializer, apiRef, props);
-  useGridInitializeState(columnGroupsStateInitializer, apiRef, props);
   useGridInitializeState(rowsStateInitializer, apiRef, props);
   useGridInitializeState(editingStateInitializer, apiRef, props);
   useGridInitializeState(focusStateInitializer, apiRef, props);
@@ -70,9 +67,10 @@ export const useDataGridComponent = (props: DataGridProcessedProps) => {
   useGridInitializeState(paginationStateInitializer, apiRef, props);
   useGridInitializeState(rowsMetaStateInitializer, apiRef, props);
   useGridInitializeState(columnMenuStateInitializer, apiRef, props);
+  useGridInitializeState(columnGroupsStateInitializer, apiRef, props);
 
   useGridKeyboardNavigation(apiRef, props);
-  useGridSelection(apiRef, props);
+  useGridRowSelection(apiRef, props);
   useGridColumns(apiRef, props);
   useGridRows(apiRef, props);
   useGridParamsApi(apiRef);

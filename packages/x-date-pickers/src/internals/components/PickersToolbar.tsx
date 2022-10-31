@@ -4,24 +4,24 @@ import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import { styled, useThemeProps } from '@mui/material/styles';
-import { unstable_composeClasses as composeClasses } from '@mui/material';
+import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { Pen, Calendar, Clock } from './icons';
-import { BaseToolbarProps } from '../models/props/baseToolbarProps';
+import { BaseToolbarProps } from '../models/props/toolbar';
 import { useLocaleText } from '../hooks/useUtils';
 import {
   getPickersToolbarUtilityClass,
   pickersToolbarClasses,
   PickersToolbarClasses,
 } from './pickersToolbarClasses';
+import { CalendarOrClockPickerView } from '../models/views';
 
-export interface PickersToolbarProps<TDate, TValue>
+export interface PickersToolbarProps<TValue, TView extends CalendarOrClockPickerView>
   extends Pick<
-    BaseToolbarProps<TDate, TValue>,
-    'isMobileKeyboardViewOpen' | 'toggleMobileKeyboardView'
+    BaseToolbarProps<TValue, TView>,
+    'isMobileKeyboardViewOpen' | 'toggleMobileKeyboardView' | 'isLandscape'
   > {
   className?: string;
   viewType?: 'calendar' | 'clock';
-  isLandscape: boolean;
   landscapeDirection?: 'row' | 'column';
   toolbarTitle: React.ReactNode;
   classes?: Partial<PickersToolbarClasses>;
@@ -83,13 +83,16 @@ const PickersToolbarPenIconButton = styled(IconButton, {
 const getViewTypeIcon = (viewType: 'calendar' | 'clock') =>
   viewType === 'clock' ? <Clock color="inherit" /> : <Calendar color="inherit" />;
 
-type PickersToolbarComponent = (<TDate, TValue>(
-  props: React.PropsWithChildren<PickersToolbarProps<TDate, TValue>> &
+type PickersToolbarComponent = (<TValue, TView extends CalendarOrClockPickerView>(
+  props: React.PropsWithChildren<PickersToolbarProps<TValue, TView>> &
     React.RefAttributes<HTMLDivElement>,
 ) => JSX.Element) & { propTypes?: any };
 
-export const PickersToolbar = React.forwardRef(function PickersToolbar<TDate, TValue>(
-  inProps: React.PropsWithChildren<PickersToolbarProps<TDate, TValue>>,
+export const PickersToolbar = React.forwardRef(function PickersToolbar<
+  TValue,
+  TView extends CalendarOrClockPickerView,
+>(
+  inProps: React.PropsWithChildren<PickersToolbarProps<TValue, TView>>,
   ref: React.Ref<HTMLDivElement>,
 ) {
   const props = useThemeProps({ props: inProps, name: 'MuiPickersToolbar' });
@@ -127,16 +130,21 @@ export const PickersToolbar = React.forwardRef(function PickersToolbar<TDate, TV
         alignItems={isLandscape ? 'flex-start' : 'flex-end'}
       >
         {children}
-        <PickersToolbarPenIconButton
-          onClick={toggleMobileKeyboardView}
-          className={classes.penIconButton}
-          ownerState={ownerState}
-          color="inherit"
-          data-mui-test="toggle-mobile-keyboard-view"
-          aria-label={localeText.inputModeToggleButtonAriaLabel(isMobileKeyboardViewOpen, viewType)}
-        >
-          {isMobileKeyboardViewOpen ? getViewTypeIcon(viewType) : <Pen color="inherit" />}
-        </PickersToolbarPenIconButton>
+        {isMobileKeyboardViewOpen != null && toggleMobileKeyboardView != null && (
+          <PickersToolbarPenIconButton
+            onClick={toggleMobileKeyboardView}
+            className={classes.penIconButton}
+            ownerState={ownerState}
+            color="inherit"
+            data-mui-test="toggle-mobile-keyboard-view"
+            aria-label={localeText.inputModeToggleButtonAriaLabel(
+              isMobileKeyboardViewOpen,
+              viewType,
+            )}
+          >
+            {isMobileKeyboardViewOpen ? getViewTypeIcon(viewType) : <Pen color="inherit" />}
+          </PickersToolbarPenIconButton>
+        )}
       </PickersToolbarContent>
     </PickersToolbarRoot>
   );

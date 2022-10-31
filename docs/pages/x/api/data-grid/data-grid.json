@@ -31,7 +31,7 @@
     "disableDensitySelector": { "type": { "name": "bool" } },
     "disableExtendRowFullWidth": { "type": { "name": "bool" } },
     "disableIgnoreModificationsIfProcessingProps": { "type": { "name": "bool" } },
-    "disableSelectionOnClick": { "type": { "name": "bool" } },
+    "disableRowSelectionOnClick": { "type": { "name": "bool" } },
     "disableVirtualization": { "type": { "name": "bool" } },
     "editMode": {
       "type": { "name": "enum", "description": "'cell'<br>&#124;&nbsp;'row'" },
@@ -119,7 +119,7 @@
     "onRowEditStart": { "type": { "name": "func" } },
     "onRowEditStop": { "type": { "name": "func" } },
     "onRowModesModelChange": { "type": { "name": "func" } },
-    "onSelectionModelChange": { "type": { "name": "func" } },
+    "onRowSelectionModelChange": { "type": { "name": "func" } },
     "onSortModelChange": { "type": { "name": "func" } },
     "page": { "type": { "name": "number" }, "default": "0" },
     "pageSize": { "type": { "name": "custom", "description": "number" }, "default": "100" },
@@ -132,6 +132,12 @@
     "rowCount": { "type": { "name": "number" } },
     "rowHeight": { "type": { "name": "number" }, "default": "52" },
     "rowModesModel": { "type": { "name": "object" } },
+    "rowSelectionModel": {
+      "type": {
+        "name": "custom",
+        "description": "number<br>&#124;&nbsp;string<br>&#124;&nbsp;array"
+      }
+    },
     "rowSpacingType": {
       "type": { "name": "enum", "description": "'border'<br>&#124;&nbsp;'margin'" },
       "default": "\"margin\""
@@ -142,12 +148,6 @@
     },
     "rowThreshold": { "type": { "name": "number" }, "default": "3" },
     "scrollbarSize": { "type": { "name": "number" } },
-    "selectionModel": {
-      "type": {
-        "name": "custom",
-        "description": "number<br>&#124;&nbsp;string<br>&#124;&nbsp;array"
-      }
-    },
     "showCellRightBorder": { "type": { "name": "bool" } },
     "showColumnRightBorder": { "type": { "name": "bool" } },
     "sortingMode": {

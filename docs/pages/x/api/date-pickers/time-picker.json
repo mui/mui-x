@@ -60,8 +60,6 @@
     "rifmFormatter": { "type": { "name": "func" } },
     "shouldDisableTime": { "type": { "name": "func" } },
     "showToolbar": { "type": { "name": "bool" } },
-    "ToolbarComponent": { "type": { "name": "elementType" }, "default": "TimePickerToolbar" },
-    "toolbarTitle": { "type": { "name": "node" }, "default": "'Select time'" },
     "value": { "type": { "name": "any" } },
     "views": {
       "type": {
@@ -91,7 +89,8 @@
     "PaperContent": { "default": "React.Fragment", "type": { "name": "elementType" } },
     "Popper": { "default": "Popper from @mui/material", "type": { "name": "elementType" } },
     "PreviousIconButton": { "default": "IconButton", "type": { "name": "elementType" } },
-    "RightArrowIcon": { "default": "ArrowRight", "type": { "name": "elementType" } }
+    "RightArrowIcon": { "default": "ArrowRight", "type": { "name": "elementType" } },
+    "Toolbar": { "default": "TimePickerToolbar", "type": { "name": "elementType" } }
   },
   "name": "TimePicker",
   "styles": { "classes": [], "globalClasses": {}, "name": "MuiTimePicker" },

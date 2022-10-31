@@ -2,6 +2,7 @@ import * as React from 'react';
 import TextField from '@mui/material/TextField';
 import { describeConformance } from '@mui/monorepo/test/utils';
 import { DateRangePicker } from '@mui/x-date-pickers-pro/DateRangePicker';
+import describeValidation from '@mui/x-date-pickers-pro/tests/describeValidation';
 import { fireEvent, screen } from '@mui/monorepo/test/utils/createRenderer';
 import { expect } from 'chai';
 import { createPickerRenderer, stubMatchMedia, wrapPickerMount } from 'test/utils/pickers-utils';
@@ -33,6 +34,13 @@ describe('<DateRangePicker />', () => {
       ],
     }),
   );
+
+  describeValidation(DateRangePicker, () => ({
+    render,
+    clock,
+    isLegacyPicker: true,
+    withDate: true,
+  }));
 
   it('should not open mobile picker dialog when clicked on input', () => {
     render(

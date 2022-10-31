@@ -27,7 +27,7 @@ function testDayViewValidation(ElementToTest, propsToTest, getOptions) {
             {...defaultProps}
             value={adapterToUse.date(new Date(2018, 2, 12))}
             shouldDisableDate={(date) =>
-              adapterToUse.isAfter(date as any, adapterToUse.date(new Date(2018, 2, 10)))
+              adapterToUse.isAfter(date, adapterToUse.date(new Date(2018, 2, 10)))
             }
           />,
         );
@@ -204,7 +204,11 @@ function testDayViewValidation(ElementToTest, propsToTest, getOptions) {
     }
     if (propsToTest.includes('minTime')) {
       it('should apply minTime', function test() {
-        const { render } = getOptions();
+        const { render, withTime, isLegacyPicker } = getOptions();
+
+        if (!isLegacyPicker && !withTime) {
+          return;
+        }
 
         render(
           <ElementToTest
@@ -222,7 +226,11 @@ function testDayViewValidation(ElementToTest, propsToTest, getOptions) {
     }
     if (propsToTest.includes('maxTime')) {
       it('should apply maxTime', function test() {
-        const { render } = getOptions();
+        const { render, withTime, isLegacyPicker } = getOptions();
+
+        if (!isLegacyPicker && !withTime) {
+          return;
+        }
 
         render(
           <ElementToTest

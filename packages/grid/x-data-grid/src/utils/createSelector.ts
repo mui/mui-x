@@ -2,8 +2,10 @@ import * as React from 'react';
 import { createSelector as reselectCreateSelector, Selector, SelectorResultArray } from 'reselect';
 import { buildWarning } from './warning';
 
+type CacheKey = number | string;
+
 interface CacheContainer {
-  cache: Record<number | string, Map<any[], any>> | null;
+  cache: Record<CacheKey, Map<any[], any>> | null;
 }
 
 export interface OutputSelector<State, Result> {
@@ -92,6 +94,12 @@ export const createSelector: CreateSelectorFunction = (...args: any) => {
 };
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const unstable_resetCreateSelectorCache = () => {
-  cacheContainer.cache = null;
+export const unstable_resetCreateSelectorCache = (cacheKey?: CacheKey) => {
+  if (typeof cacheKey !== 'undefined') {
+    if (cacheContainer.cache && cacheContainer.cache[cacheKey]) {
+      delete cacheContainer.cache[cacheKey];
+    }
+  } else {
+    cacheContainer.cache = null;
+  }
 };

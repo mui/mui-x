@@ -27,6 +27,9 @@ export * from './MonthCalendar';
 export * from './YearCalendar';
 export * from './DayCalendarSkeleton';
 
+// New Pickers
+export * from './DesktopNextDatePicker';
+
 export { PickerStaticWrapper } from './internals/components/PickerStaticWrapper';
 export type { MuiDateSectionName } from './internals/models/muiPickersAdapter';
 export type { DateValidationError } from './internals/hooks/validation/useDateValidation';
