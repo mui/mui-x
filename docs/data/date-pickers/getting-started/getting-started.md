@@ -2,8 +2,8 @@
 product: date-pickers
 title: Date Picker, Time Picker React components
 components: DatePicker,DateTimePicker,TimePicker
-githubLabel: 'component: DatePicker'
-materialDesign: https://material.io/components/date-pickers
+githubLabel: 'component: pickers'
+materialDesign: https://m2.material.io/components/date-pickers
 waiAria: https://www.w3.org/WAI/ARIA/apg/example-index/dialog-modal/datepicker-dialog.html
 packageName: '@mui/x-date-pickers'
 ---
@@ -11,6 +11,8 @@ packageName: '@mui/x-date-pickers'
 # Date / Time Pickers
 
 <p class="description">Date pickers and Time pickers allow selecting a single value from a pre-determined set.</p>
+
+{{"component": "modules/components/ComponentLinkHeader.js"}}
 
 - On mobile, pickers are best suited for display in a confirmation dialog.
 - For inline display, such as on a form, consider using compact controls such as segmented dropdown buttons.
