@@ -299,9 +299,9 @@ export const useGridColumnReorder = (
         // Accessing params.field may contain the wrong field as header elements are reused
         apiRef.current.setColumnIndex(dragColField, originColumnIndex.current!);
       }
-  
+
       originColumnIndex.current = null;
-  
+
       apiRef.current.setState((state) => ({
         ...state,
         columnReorder: { ...state.columnReorder, dragCol: '' },
