@@ -18,7 +18,7 @@ import {
   GridRestoreStatePreProcessingContext,
   GridStateInitializer,
 } from '@mui/x-data-grid/internals';
-import { GridApiPro } from '../../../models/gridApiPro';
+import { GridPrivateApiPro } from '../../../models/gridApiPro';
 import { GridInitialStatePro, GridStatePro } from '../../../models/gridStatePro';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 import { GridColumnPinningMenuItems } from '../../../components/GridColumnPinningMenuItems';
@@ -63,7 +63,7 @@ const mergeStateWithPinnedColumns =
   (state: GridStatePro): GridStatePro => ({ ...state, pinnedColumns });
 
 export const useGridColumnPinning = (
-  apiRef: React.MutableRefObject<GridApiPro>,
+  apiRef: React.MutableRefObject<GridPrivateApiPro>,
   props: Pick<
     DataGridProProcessedProps,
     'disableColumnPinning' | 'initialState' | 'pinnedColumns' | 'onPinnedColumnsChange'
@@ -259,7 +259,7 @@ export const useGridColumnPinning = (
   useGridRegisterPipeProcessor(apiRef, 'exportState', stateExportPreProcessing);
   useGridRegisterPipeProcessor(apiRef, 'restoreState', stateRestorePreProcessing);
 
-  apiRef.current.unstable_registerControlState({
+  apiRef.current.registerControlState({
     stateId: 'pinnedColumns',
     propModel: props.pinnedColumns,
     propOnChange: props.onPinnedColumnsChange,
@@ -347,7 +347,8 @@ export const useGridColumnPinning = (
     setPinnedColumns,
     isColumnPinned,
   };
-  useGridApiMethod(apiRef, columnPinningApi, 'columnPinningApi');
+
+  useGridApiMethod(apiRef, columnPinningApi, 'public');
 
   const handleColumnOrderChange = React.useCallback<GridEventListener<'columnOrderChange'>>(
     (params) => {

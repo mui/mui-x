@@ -204,7 +204,11 @@ function testDayViewValidation(ElementToTest, propsToTest, getOptions) {
     }
     if (propsToTest.includes('minTime')) {
       it('should apply minTime', function test() {
-        const { render } = getOptions();
+        const { render, withTime, isLegacyPicker } = getOptions();
+
+        if (!isLegacyPicker && !withTime) {
+          return;
+        }
 
         render(
           <ElementToTest
@@ -222,7 +226,11 @@ function testDayViewValidation(ElementToTest, propsToTest, getOptions) {
     }
     if (propsToTest.includes('maxTime')) {
       it('should apply maxTime', function test() {
-        const { render } = getOptions();
+        const { render, withTime, isLegacyPicker } = getOptions();
+
+        if (!isLegacyPicker && !withTime) {
+          return;
+        }
 
         render(
           <ElementToTest

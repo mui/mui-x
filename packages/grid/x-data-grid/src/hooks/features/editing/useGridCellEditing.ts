@@ -12,7 +12,7 @@ import {
   GridEditingState,
   GridEditCellProps,
 } from '../../../models/gridEditRowModel';
-import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
+import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import {
   GridCellEditingApi,
@@ -46,7 +46,7 @@ const missingOnProcessRowUpdateErrorWarning = buildWarning(
 );
 
 export const useGridCellEditing = (
-  apiRef: React.MutableRefObject<GridApiCommunity>,
+  apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
   props: Pick<
     DataGridProcessedProps,
     | 'editMode'
@@ -503,7 +503,7 @@ export const useGridCellEditing = (
     unstable_getRowWithUpdatedValuesFromCellEditing: getRowWithUpdatedValuesFromCellEditing,
   };
 
-  useGridApiMethod(apiRef, editingApi, 'EditingApi');
+  useGridApiMethod(apiRef, editingApi, 'public');
 
   React.useEffect(() => {
     if (cellModesModelProp) {

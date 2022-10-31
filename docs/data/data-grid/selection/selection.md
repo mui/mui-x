@@ -1,8 +1,4 @@
----
-title: Data Grid - Selection
----
-
-# Data grid - Selection
+# Data Grid - Selection
 
 <p class="description">Selection allows the user to select and highlight a number of rows that they can then take action on.</p>
 

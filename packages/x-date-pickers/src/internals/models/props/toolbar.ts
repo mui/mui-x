@@ -1,26 +1,28 @@
 import * as React from 'react';
 import { CalendarOrClockPickerView } from '../views';
 
-export interface BaseToolbarProps<TValue> extends ExportedBaseToolbarProps {
+export interface BaseToolbarProps<TValue, TView extends CalendarOrClockPickerView>
+  extends ExportedBaseToolbarProps {
   isLandscape: boolean;
   onChange: (newValue: TValue) => void;
   value: TValue;
   /**
    * Currently visible picker view.
    */
-  view: CalendarOrClockPickerView;
+  view: TView;
   /**
    * Callback called when a toolbar is clicked
-   * @param {CalendarOrClockPickerView} view The view to open
+   * @template TView
+   * @param {TView} view The view to open
    */
-  onViewChange: (view: CalendarOrClockPickerView) => void;
+  onViewChange: (view: TView) => void;
   views: readonly CalendarOrClockPickerView[];
   disabled?: boolean;
   readOnly?: boolean;
   // TODO v6: Remove
-  isMobileKeyboardViewOpen: boolean;
+  isMobileKeyboardViewOpen?: boolean;
   // TODO v6: Remove
-  toggleMobileKeyboardView: () => void;
+  toggleMobileKeyboardView?: () => void;
 }
 
 export interface ExportedBaseToolbarProps {

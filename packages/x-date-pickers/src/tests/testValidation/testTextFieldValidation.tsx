@@ -196,6 +196,10 @@ function testTextFieldValidation(ElementToTest, propsToTest, getOptions) {
       it('should apply minTime', function test() {
         const { render, withTime } = getOptions();
 
+        if (!isLegacyPicker && !withTime) {
+          return;
+        }
+
         const { setProps } = render(
           <ElementToTest
             {...defaultProps}
@@ -216,6 +220,10 @@ function testTextFieldValidation(ElementToTest, propsToTest, getOptions) {
     if (propsToTest.includes('maxTime')) {
       it('should apply maxTime', function test() {
         const { render, withTime } = getOptions();
+
+        if (!isLegacyPicker && !withTime) {
+          return;
+        }
 
         const { setProps } = render(
           <ElementToTest
