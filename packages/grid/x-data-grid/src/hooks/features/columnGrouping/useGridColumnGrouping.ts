@@ -123,7 +123,7 @@ export const useGridColumnGrouping = (
     const unwrappedGroupingModel = unwrapGroupingColumnModel(props.columnGroupingModel ?? []);
 
     apiRef.current.setState((state) => {
-      const orderedFields = state.columns?.all ?? [];
+      const orderedFields = state.columns?.orderedFields ?? [];
 
       const columnGroupsHeaderStructure = getColumnGroupsHeaderStructure(
         orderedFields as string[],

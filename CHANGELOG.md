@@ -3,6 +3,137 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## v6.0.0-alpha.4
+
+_Oct 20, 2022_
+
+We'd like to offer a big thanks to the 9 contributors who made this release possible. Here are some highlights ✨:
+
+- 📝 Manage pickers' toolbar customization with slots
+- 🐞 Bugfixes
+- 🌍 Improve Turkish (tr-TR) locale on the data grid and pickers (#6542) @ramazansancar
+
+### `@mui/x-data-grid@v6.0.0-alpha.4` / `@mui/x-data-grid-pro@v6.0.0-alpha.4` / `@mui/x-data-grid-premium@v6.0.0-alpha.4`
+
+#### Breaking changes
+
+- To avoid confusion with the props that will be added for the cell selection feature, some props related to row selection were renamed to have "row" in their name.
+  The renamed props are the following:
+
+  | Old name                   | New name                      |
+  |----------------------------|-------------------------------|
+  | `selectionModel`           | `rowSelectionModel`           |
+  | `onSelectionModelChange`   | `onRowSelectionModelChange`   |
+  | `disableSelectionOnClick`  | `disableRowSelectionOnClick`  |
+  | `disableMultipleSelection` | `disableMultipleRowSelection` |
+
+- The `gridSelectionStateSelector` selector was renamed to `gridRowSelectionStateSelector`.
+
+- The `selectionChange` event was renamed to `rowSelectionChange`.
+
+#### Changes
+
+- [DataGrid] Add `searchPredicate` prop to `GridColumnsPanel` component (#6557) @cherniavskii
+- [DataGrid] Support keyboard navigation in column group header (#5947) @alexfauquette
+- [DataGrid] Fix grid not updating state on `rowCount` prop change (#5982) @cherniavskii
+- [DataGrid] Rename selection props (#6556) @m4theushw
+- [l10n] Improve Turkish (tr-TR) locale on the data grid and pickers (#6542) @ramazansancar
+
+### `@mui/x-date-pickers@v6.0.0-alpha.4` / `@mui/x-date-pickers-pro@v6.0.0-alpha.4`
+
+#### Breaking changes
+
+- The `ToolbarComponent` has been replaced by a `Toolbar` component slot.
+  You can find more information about this pattern in the [MUI Base documentation](https://mui.com/base/getting-started/usage/#shared-props):
+
+  ```diff
+   // Same on all other pickers
+   <DatePicker
+  -  ToolbarComponent: MyToolbar,
+  +  components={{ Toolbar: MyToolbar }}
+   />
+  ```
+
+- The `toolbarPlaceholder` and `toolbarFormat` props have been moved to the `toolbar` components props slot:
+
+  ```diff
+   // Same on all other pickers
+   <DatePicker
+  -  toolbarPlaceholder="__"
+  -  toolbarFormat="DD / MM / YYYY"
+  +  componentsProps={{
+  +    toolbar: {
+  +      toolbarPlaceholder: '__',
+  +      toolbarFormat: 'DD / MM / YYYY',
+  +    }
+  +  }}
+   />
+  ```
+
+- The `toolbarTitle` prop has been moved to the localization object:
+
+  ```diff
+   // Same on all other pickers
+   <DatePicker
+  -  toolbarTitle="Title"
+  +  localeText={{ toolbarTitle: 'Title' }}
+   />
+  ```
+
+- The toolbar related translation keys have been renamed to better fit their usage:
+
+  ```diff
+   // Same on all other pickers
+   <DatePicker
+     localeText={{
+  -    datePickerDefaultToolbarTitle: 'Date Picker',
+  +    datePickerToolbarTitle: 'Date Picker',
+
+  -    timePickerDefaultToolbarTitle: 'Time Picker',
+  +    timePickerToolbarTitle: 'Time Picker',
+
+  -    dateTimePickerDefaultToolbarTitle: 'Date Time Picker',
+  +    dateTimePickerToolbarTitle: 'Date Time Picker',
+
+  -    dateRangePickerDefaultToolbarTitle: 'Date Range Picker',
+  +    dateRangePickerToolbarTitle: 'Date Range Picker',
+     }}
+   />
+  ```
+
+- The `onChange` / `openView` props on the toolbar have been renamed `onViewChange` / `view`
+
+#### Changes
+
+- [fields] Add a `validationError` property to the `onChange` callback (#6539) @flaviendelangle
+- [fields] Distinguish start and end input error on multi input fields (#6503) @flaviendelangle
+- [pickers] Clean the `Tabs` component slot (#6543) @flaviendelangle
+- [pickers] Fix localization of the placeholder (#6547) @alexfauquette
+- [pickers] Fix TypeScript issues (#6322) @flaviendelangle
+- [pickers] Improve error consistency between single and multiple range pickers (#6561) @alexfauquette
+- [pickers] Refactor `@mui/material` imports to `@mui/utils` (#6443) @LukasTy
+- [pickers] Replace toolbar's props by a component slot (#6445) @flaviendelangle
+
+### Docs
+
+- [docs] Enable inlined preview for disabled date picker (#6477) @oliviertassinari
+- [docs] Fix 404 errors (#6541) @alexfauquette
+- [docs] Fix broken links on field pages (#6501) @flaviendelangle
+- [docs] Improve markdownlint (#6518) @oliviertassinari
+
+### Core
+
+- [core] Run CodeQL only on schedule @oliviertassinari
+- [core] Fix trailing spaces and git diff format (#6523) @oliviertassinari
+- [core] Harden GitHub Actions permissions (#6396) @step-security-bot
+- [core] Improve the playground DX (#6514) @oliviertassinari
+- [core] Link Netlify in the danger comment (#6513) @oliviertassinari
+- [core] Organize tests for pickers slots (#6546) @flaviendelangle
+- [core] Remove outdated `docsearch.js` dependency (#6242) @oliviertassinari
+- [core] Upgrade monorepo (#6549) @cherniavskii
+- [test] Add validation test on range pickers (#6504) @alexfauquette
+- [test] Remove BrowserStack (#6263) @DanailH
+
 ## v6.0.0-alpha.3
 
 _Oct 13, 2022_

@@ -1,4 +1,8 @@
-import { DateCalendarProps, PickersFadeTransitionGroupProps } from '../DateCalendar';
+import {
+  DateCalendarProps,
+  ExportedSlideTransitionProps,
+  PickersFadeTransitionGroupProps,
+} from '../DateCalendar';
 import { DayCalendarSkeletonProps } from '../DayCalendarSkeleton';
 import { ClockNumberProps, ClockPickerProps, ClockPointerProps, ClockProps } from '../ClockPicker';
 import { DatePickerProps, DatePickerToolbarProps } from '../DatePicker';
@@ -12,13 +16,13 @@ import { DesktopTimePickerProps } from '../DesktopTimePicker';
 import { MobileDatePickerProps } from '../MobileDatePicker';
 import { MobileDateTimePickerProps } from '../MobileDateTimePicker';
 import { MobileTimePickerProps } from '../MobileTimePicker';
-import { MonthCalendarProps } from '../MonthCalendar';
+import { ExportedPickersMonthProps, MonthCalendarProps } from '../MonthCalendar';
 import { PickersDayProps } from '../PickersDay';
 import { StaticDatePickerProps } from '../StaticDatePicker';
 import { StaticDateTimePickerProps } from '../StaticDateTimePicker';
 import { StaticTimePickerProps } from '../StaticTimePicker';
 import { TimePickerProps, TimePickerToolbarProps } from '../TimePicker';
-import { YearCalendarProps } from '../YearCalendar';
+import { ExportedPickersYearProps, YearCalendarProps } from '../YearCalendar';
 import { DateFieldProps } from '../DateField';
 import { LocalizationProviderProps } from '../LocalizationProvider';
 import { DesktopDatePickerProps } from '../DesktopDatePicker';
@@ -31,6 +35,7 @@ import {
   PickersToolbarProps,
   PickerStaticWrapperProps,
   ExportedCalendarHeaderProps,
+  ExportedPickersToolbarTextProps,
 } from '../internals';
 import { CalendarOrClockPickerView } from '../internals/models';
 
@@ -61,24 +66,20 @@ export interface PickersComponentsPropsList {
   MuiPickersCalendarHeader: ExportedCalendarHeaderProps<unknown>;
   MuiPickersDay: PickersDayProps<unknown>;
   MuiPickersFadeTransitionGroup: PickersFadeTransitionGroupProps;
+  MuiPickersMonth: ExportedPickersMonthProps;
   MuiPickersPopper: PickerPopperProps;
+  MuiPickersSlideTransition: ExportedSlideTransitionProps;
   MuiPickerStaticWrapper: PickerStaticWrapperProps<unknown>;
   MuiPickersToolbar: PickersToolbarProps<unknown, unknown>;
   MuiPickersToolbarButton: PickersToolbarButtonProps;
+  MuiPickersToolbarText: ExportedPickersToolbarTextProps;
+  MuiPickersYear: ExportedPickersYearProps;
   MuiStaticDatePicker: StaticDatePickerProps<unknown>;
   MuiStaticDateTimePicker: StaticDateTimePickerProps<unknown>;
   MuiStaticTimePicker: StaticTimePickerProps<unknown>;
   MuiTimePicker: TimePickerProps<unknown>;
   MuiTimePickerToolbar: TimePickerToolbarProps<unknown>;
   MuiYearCalendar: YearCalendarProps<unknown>;
-  // TODO v6: add `PrivatePickersMonth` once component is renamed to `MuiPickersMonth`
-  PrivatePickersMonth: never;
-  // TODO v6: add `PrivatePickersSlideTransition` once component is renamed to `MuiPickersSlideTransition`
-  PrivatePickersSlideTransition: never;
-  // TODO v6: add `PickersToolbarTextProps` once component is renamed to `MuiPickersToolbarText`
-  PrivatePickersToolbarText: never;
-  // TODO v6: add `PickersYearProps` once component is renamed to `MuiPickersYear`
-  PrivatePickersYear: never;
 }
 
 declare module '@mui/material/styles' {
