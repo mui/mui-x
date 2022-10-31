@@ -30,7 +30,6 @@
     "disableColumnSelector": { "type": { "name": "bool" } },
     "disableDensitySelector": { "type": { "name": "bool" } },
     "disableExtendRowFullWidth": { "type": { "name": "bool" } },
-    "disableIgnoreModificationsIfProcessingProps": { "type": { "name": "bool" } },
     "disableRowSelectionOnClick": { "type": { "name": "bool" } },
     "disableVirtualization": { "type": { "name": "bool" } },
     "editMode": {

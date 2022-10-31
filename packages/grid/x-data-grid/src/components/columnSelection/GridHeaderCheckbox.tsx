@@ -1,6 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { unstable_composeClasses as composeClasses } from '@mui/material';
+import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { useGridSelector } from '../../hooks/utils/useGridSelector';
 import { gridTabIndexColumnHeaderSelector } from '../../hooks/features/focus/gridFocusStateSelector';
 import { gridRowSelectionStateSelector } from '../../hooks/features/rowSelection/gridRowSelectionSelector';

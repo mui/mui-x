@@ -46,6 +46,7 @@ export interface PickersComponentNameToClassKey {
   MuiDayCalendarSkeleton: DayCalendarSkeletonClassKey;
   MuiDesktopDatePicker: never;
   MuiDesktopDateTimePicker: never;
+  MuiDesktopNextDatePicker: never;
   MuiDesktopTimePicker: never;
   MuiLocalizationProvider: never;
   MuiMobileDatePicker: never;

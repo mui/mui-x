@@ -30,7 +30,6 @@
     "disableColumnSelector": "If <code>true</code>, hiding/showing columns is disabled.",
     "disableDensitySelector": "If <code>true</code>, the density selector is disabled.",
     "disableExtendRowFullWidth": "If <code>true</code>, rows will not be extended to fill the full width of the grid container.",
-    "disableIgnoreModificationsIfProcessingProps": "If <code>true</code>, modification to a cell will not be discarded if the mode is changed from &quot;edit&quot; to &quot;view&quot; while processing props.",
     "disableMultipleColumnsFiltering": "If <code>true</code>, filtering with multiple columns is disabled.",
     "disableMultipleColumnsSorting": "If <code>true</code>, sorting with multiple columns is disabled.",
     "disableMultipleRowSelection": "If <code>true</code>, multiple selection using the Ctrl or CMD key is disabled.",

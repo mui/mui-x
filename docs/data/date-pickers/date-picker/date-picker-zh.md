@@ -3,7 +3,7 @@ title: React Date Picker（日期选择器）组件
 components: DateCalendar, DatePicker, DesktopDatePicker, DayCalendarSkeleton, MobileDatePicker, MonthCalendar, PickersDay, StaticDatePicker, YearCalendar
 githubLabel: 'component: DatePicker'
 packageName: '@mui/x-date-pickers'
-materialDesign: https://material.io/components/date-pickers
+materialDesign: https://m2.material.io/components/date-pickers
 ---
 
 # Date Picker 日期选择器

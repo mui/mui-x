@@ -1,10 +1,13 @@
 import * as React from 'react';
 import { GridEventListener } from '../../../models/events';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
-import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
-import { GridRowSelectionApi } from '../../../models/api/gridRowSelectionApi';
+import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
+import {
+  GridRowSelectionApi,
+  GridRowMultiSelectionApi,
+} from '../../../models/api/gridRowSelectionApi';
 import { GridRowId } from '../../../models/gridRows';
-import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
+import { GridSignature, useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { useGridLogger } from '../../utils/useGridLogger';
 import { gridRowsLookupSelector } from '../rows/gridRowsSelector';
@@ -57,7 +60,7 @@ export const rowSelectionStateInitializer: GridStateInitializer<
  * @requires useGridKeyboardNavigation (`cellKeyDown` event must first be consumed by it)
  */
 export const useGridRowSelection = (
-  apiRef: React.MutableRefObject<GridApiCommunity>,
+  apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
   props: Pick<
     DataGridProcessedProps,
     | 'checkboxSelection'
@@ -72,6 +75,7 @@ export const useGridRowSelection = (
     | 'classes'
     | 'keepNonExistentRowsSelected'
     | 'rowSelection'
+    | 'signature'
   >,
 ): void => {
   const logger = useGridLogger(apiRef, 'useGridSelection');
@@ -93,7 +97,7 @@ export const useGridRowSelection = (
 
   const lastRowToggled = React.useRef<GridRowId | null>(null);
 
-  apiRef.current.unstable_registerControlState({
+  apiRef.current.registerControlState({
     stateId: 'rowSelection',
     propModel: propRowSelectionModel,
     propOnChange: props.onRowSelectionModelChange,
@@ -214,7 +218,7 @@ export const useGridRowSelection = (
     [apiRef, logger, canHaveMultipleSelection],
   );
 
-  const selectRows = React.useCallback<GridRowSelectionApi['selectRows']>(
+  const selectRows = React.useCallback<GridRowMultiSelectionApi['selectRows']>(
     (ids: GridRowId[], isSelected = true, resetSelection = false) => {
       logger.debug(`Setting selection for several rows`);
 
@@ -248,7 +252,7 @@ export const useGridRowSelection = (
     [apiRef, logger, canHaveMultipleSelection],
   );
 
-  const selectRowRange = React.useCallback<GridRowSelectionApi['selectRowRange']>(
+  const selectRowRange = React.useCallback<GridRowMultiSelectionApi['selectRowRange']>(
     (
       {
         startId,
@@ -277,17 +281,25 @@ export const useGridRowSelection = (
     [apiRef, logger],
   );
 
-  const selectionApi: GridRowSelectionApi = {
+  const selectionPublicApi: GridRowSelectionApi = {
     selectRow,
-    selectRows,
-    selectRowRange,
     setRowSelectionModel,
     getSelectedRows,
     isRowSelected,
     isRowSelectable,
   };
 
-  useGridApiMethod(apiRef, selectionApi, 'GridSelectionApi');
+  const selectionPrivateApi: GridRowMultiSelectionApi = {
+    selectRows,
+    selectRowRange,
+  };
+
+  useGridApiMethod(apiRef, selectionPublicApi, 'public');
+  useGridApiMethod(
+    apiRef,
+    selectionPrivateApi,
+    props.signature === GridSignature.DataGrid ? 'private' : 'public',
+  );
 
   /**
    * EVENTS

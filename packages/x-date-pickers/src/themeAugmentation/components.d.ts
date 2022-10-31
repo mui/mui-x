@@ -81,6 +81,11 @@ export interface PickerComponents<Theme = unknown> {
     styleOverrides?: ComponentsOverrides<Theme>['MuiDesktopDateTimePicker'];
     variants?: ComponentsVariants['MuiDesktopDateTimePicker'];
   };
+  MuiDesktopNextDatePicker?: {
+    defaultProps?: ComponentsProps['MuiDesktopNextDatePicker'];
+    styleOverrides?: ComponentsOverrides<Theme>['MuiDesktopNextDatePicker'];
+    variants?: ComponentsVariants['MuiDesktopNextDatePicker'];
+  };
   MuiDesktopTimePicker?: {
     defaultProps?: ComponentsProps['MuiDesktopTimePicker'];
     styleOverrides?: ComponentsOverrides<Theme>['MuiDesktopTimePicker'];
