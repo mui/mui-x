@@ -6,7 +6,7 @@ import {
 } from '@mui/x-data-grid-pro';
 import { GridStateInitializer } from '@mui/x-data-grid-pro/internals';
 import { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
-import { GridApiPremium } from '../../../models/gridApiPremium';
+import { GridApiPremium, GridPrivateApiPremium } from '../../../models/gridApiPremium';
 import { gridAggregationModelSelector } from './gridAggregationSelectors';
 import { GridAggregationApi } from './gridAggregationInterfaces';
 import {
@@ -34,7 +34,7 @@ export const aggregationStateInitializer: GridStateInitializer<
 };
 
 export const useGridAggregation = (
-  apiRef: React.MutableRefObject<GridApiPremium>,
+  apiRef: React.MutableRefObject<GridPrivateApiPremium>,
   props: Pick<
     DataGridPremiumProcessedProps,
     | 'onAggregationModelChange'
@@ -47,7 +47,7 @@ export const useGridAggregation = (
     | 'rowGroupingColumnMode'
   >,
 ) => {
-  apiRef.current.unstable_registerControlState({
+  apiRef.current.registerControlState({
     stateId: 'aggregation',
     propModel: props.aggregationModel,
     propOnChange: props.onAggregationModelChange,
@@ -92,7 +92,7 @@ export const useGridAggregation = (
     setAggregationModel,
   };
 
-  useGridApiMethod(apiRef, aggregationApi, 'GridAggregationApi');
+  useGridApiMethod(apiRef, aggregationApi, 'public');
 
   /**
    * EVENTS

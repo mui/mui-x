@@ -2,7 +2,12 @@ import * as React from 'react';
 import { useGridApiMethod } from '../utils/useGridApiMethod';
 import { GridSignature } from '../utils/useGridApiEventHandler';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
-import { GridApiCommon, GridCoreApi } from '../../models';
+import type { GridCoreApi } from '../../models';
+import type {
+  GridApiCommon,
+  GridPrivateApiCommon,
+  GridPrivateOnlyApiCommon,
+} from '../../models/api/gridApiCommon';
 import { EventManager } from '../../utils/EventManager';
 import { unstable_resetCreateSelectorCache } from '../../utils/createSelector';
 
@@ -12,14 +17,53 @@ const isSyntheticEvent = (event: any): event is React.SyntheticEvent => {
 
 let globalId = 0;
 
-export function useGridApiInitialization<Api extends GridApiCommon>(
+const wrapPublicApi = <PrivateApi extends GridPrivateApiCommon, PublicApi extends GridApiCommon>(
+  publicApi: PublicApi,
+) => {
+  type PrivateOnlyApi = GridPrivateOnlyApiCommon<PublicApi, PrivateApi>;
+  const privateOnlyApi = {} as PrivateOnlyApi;
+
+  privateOnlyApi.getPublicApi = () => publicApi;
+
+  privateOnlyApi.register = (visibility, methods) => {
+    Object.keys(methods).forEach((methodName) => {
+      if (visibility === 'public') {
+        if (!publicApi.hasOwnProperty(methodName)) {
+          publicApi[methodName as keyof PublicApi] = (methods as any)[methodName];
+        }
+      } else if (!privateOnlyApi.hasOwnProperty(methodName)) {
+        privateOnlyApi[methodName as keyof PrivateOnlyApi] = (methods as any)[methodName];
+      }
+    });
+  };
+
+  const handler: ProxyHandler<GridApiCommon> = {
+    get: (obj, prop) => {
+      if (prop in obj) {
+        return obj[prop as keyof typeof obj];
+      }
+      return privateOnlyApi[prop as keyof PrivateOnlyApi];
+    },
+    set: (obj, prop, value) => {
+      obj[prop as keyof typeof obj] = value;
+      return true;
+    },
+  };
+
+  return new Proxy(publicApi, handler) as PrivateApi;
+};
+
+export function useGridApiInitialization<
+  PrivateApi extends GridPrivateApiCommon,
+  Api extends GridApiCommon,
+>(
   inputApiRef: React.MutableRefObject<Api> | undefined,
   props: Pick<DataGridProcessedProps, 'signature'>,
-): React.MutableRefObject<Api> {
-  const apiRef = React.useRef() as React.MutableRefObject<Api>;
+): React.MutableRefObject<PrivateApi> {
+  const publicApiRef = React.useRef() as React.MutableRefObject<Api>;
 
-  if (!apiRef.current) {
-    apiRef.current = {
+  if (!publicApiRef.current) {
+    publicApiRef.current = {
       unstable_eventManager: new EventManager(),
       unstable_caches: {} as Api['unstable_caches'],
       state: {} as Api['state'],
@@ -29,7 +73,12 @@ export function useGridApiInitialization<Api extends GridApiCommon>(
     globalId += 1;
   }
 
-  React.useImperativeHandle(inputApiRef, () => apiRef.current, [apiRef]);
+  const privateApiRef = React.useRef() as React.MutableRefObject<PrivateApi>;
+  if (!privateApiRef.current) {
+    privateApiRef.current = wrapPublicApi<PrivateApi, Api>(publicApiRef.current);
+  }
+
+  React.useImperativeHandle(inputApiRef, () => publicApiRef.current, [publicApiRef]);
 
   const publishEvent = React.useCallback<GridCoreApi['publishEvent']>(
     (...args: any[]) => {
@@ -39,40 +88,44 @@ export function useGridApiInitialization<Api extends GridApiCommon>(
       if (isSyntheticEvent(event) && event.isPropagationStopped()) {
         return;
       }
-      const details = props.signature === GridSignature.DataGridPro ? { api: apiRef.current } : {};
-      apiRef.current.unstable_eventManager.emit(name, params, event, details);
+
+      const details =
+        props.signature === GridSignature.DataGridPro
+          ? { api: privateApiRef.current.getPublicApi() }
+          : {};
+      privateApiRef.current.unstable_eventManager.emit(name, params, event, details);
     },
-    [apiRef, props.signature],
+    [privateApiRef, props.signature],
   );
 
   const subscribeEvent = React.useCallback<GridCoreApi['subscribeEvent']>(
     (event, handler, options?) => {
-      apiRef.current.unstable_eventManager.on(event, handler, options);
-      const api = apiRef.current;
+      privateApiRef.current.unstable_eventManager.on(event, handler, options);
+      const api = privateApiRef.current;
       return () => {
         api.unstable_eventManager.removeListener(event, handler);
       };
     },
-    [apiRef],
+    [privateApiRef],
   );
 
   const showError = React.useCallback<GridCoreApi['showError']>(
     (args) => {
-      apiRef.current.publishEvent('componentError', args);
+      privateApiRef.current.publishEvent('componentError', args);
     },
-    [apiRef],
+    [privateApiRef],
   );
 
-  useGridApiMethod(apiRef, { subscribeEvent, publishEvent, showError } as any, 'GridCoreApi');
+  useGridApiMethod(privateApiRef, { subscribeEvent, publishEvent, showError } as any, 'public');
 
   React.useEffect(() => {
-    const api = apiRef.current;
+    const api = privateApiRef.current;
 
     return () => {
       unstable_resetCreateSelectorCache(api.instanceId);
       api.publishEvent('unmount');
     };
-  }, [apiRef]);
+  }, [privateApiRef]);
 
-  return apiRef;
+  return privateApiRef;
 }

@@ -438,6 +438,7 @@
   { "name": "GridRowModelUpdate", "kind": "Interface" },
   { "name": "GridRowModes", "kind": "Enum" },
   { "name": "GridRowModesModel", "kind": "TypeAlias" },
+  { "name": "GridRowMultiSelectionApi", "kind": "Interface" },
   { "name": "GridRowOrderChangeParams", "kind": "Interface" },
   { "name": "GridRowParams", "kind": "Interface" },
   { "name": "GridRowPinningApi", "kind": "Interface" },

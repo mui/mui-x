@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useGridPageSize, defaultPageSize } from './useGridPageSize';
-import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
+import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { useGridPage, getPageCount } from './useGridPage';
 import { GridStateInitializer } from '../../utils/useGridInitializeState';
@@ -33,7 +33,7 @@ export const paginationStateInitializer: GridStateInitializer<
  * @requires useGridDimensions (event) - can be after
  */
 export const useGridPagination = (
-  apiRef: React.MutableRefObject<GridApiCommunity>,
+  apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
   props: Pick<
     DataGridProcessedProps,
     | 'page'

@@ -372,6 +372,7 @@
   { "name": "GridRowModelUpdate", "kind": "Interface" },
   { "name": "GridRowModes", "kind": "Enum" },
   { "name": "GridRowModesModel", "kind": "TypeAlias" },
+  { "name": "GridRowMultiSelectionApi", "kind": "Interface" },
   { "name": "GridRowParams", "kind": "Interface" },
   { "name": "GridRowProps", "kind": "Interface" },
   { "name": "gridRowsDataRowIdToIdLookupSelector", "kind": "Variable" },
