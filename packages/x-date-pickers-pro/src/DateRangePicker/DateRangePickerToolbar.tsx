@@ -29,7 +29,7 @@ const useUtilityClasses = (ownerState: DateRangePickerToolbarProps<any>) => {
 
 export interface DateRangePickerToolbarProps<TDate>
   extends Omit<
-      BaseToolbarProps<DateRange<TDate>>,
+      BaseToolbarProps<DateRange<TDate>, 'day'>,
       'views' | 'view' | 'onViewChange' | 'onChange' | 'isLandscape'
     >,
     CurrentlySelectingRangeEndProps {

@@ -11,6 +11,7 @@ import {
   DateTimePickerToolbarClasses,
   getDateTimePickerToolbarUtilityClass,
 } from './dateTimePickerToolbarClasses';
+import { CalendarOrClockPickerView } from '../internals/models';
 
 export interface ExportedDateTimePickerToolbarProps extends ExportedBaseToolbarProps {
   ampm?: boolean;
@@ -19,7 +20,7 @@ export interface ExportedDateTimePickerToolbarProps extends ExportedBaseToolbarP
 
 export interface DateTimePickerToolbarProps<TDate>
   extends ExportedDateTimePickerToolbarProps,
-    BaseToolbarProps<TDate | null> {
+    BaseToolbarProps<TDate | null, CalendarOrClockPickerView> {
   /**
    * Override or extend the styles applied to the component.
    */
