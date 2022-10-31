@@ -16,6 +16,12 @@ We'd like to offer a big thanks to the 9 contributors who made this release poss
 
 ### `@mui/x-data-grid@v6.0.0-alpha.5` / `@mui/x-data-grid-pro@v6.0.0-alpha.5` / `@mui/x-data-grid-premium@v6.0.0-alpha.5`
 
+#### Breaking changes
+
+- Stop exporting `gridColumnsSelector` (#6693) @m4theushw
+
+  The `gridColumnsSelector` selector is not exported anymore. Use the following selectors to access the same parts of the state that were returned by the removed selector: `gridColumnFieldsSelector`, to obtain the column fields in the order they appear in the screen; `gridColumnLookupSelector`, to access column definitions by field; and `gridColumnVisibilityModelSelector`, for the visibility state of each column.
+
 #### Changes
 
 - [DataGrid] Allow to disable autofocusing the search field in the columns panel (#6444) @e-cloud
@@ -23,6 +29,7 @@ We'd like to offer a big thanks to the 9 contributors who made this release poss
 - [DataGrid] Fix memory leak on grid unmount (#6620) @cherniavskii
 - [DataGrid] Rename `GridColumnsState['all']` to `GridColumnsState['orderedFields']` (#6562) @DanailH
 - [DataGrid] Remove `React.memo` from `GridCellCheckboxRenderer` (#6655) @mattcorner
+- [DataGrid] Stop exporting `gridColumnsSelector` (#6693)
 - [l10n] Improve Bulgarian (bg-BG) locale (#6578) @AtanasVA
 
 ### `@mui/x-date-pickers@v6.0.0-alpha.5` / `@mui/x-date-pickers-pro@v6.0.0-alpha.5`
