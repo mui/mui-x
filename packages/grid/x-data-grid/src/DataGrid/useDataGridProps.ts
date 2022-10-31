@@ -26,6 +26,7 @@ const DATA_GRID_FORCED_PROPS: { [key in DataGridForcedPropsKey]?: DataGridProces
   checkboxSelectionVisibleOnly: false,
   disableColumnReorder: true,
   disableColumnResize: true,
+  keepColumnPositionIfDraggedOutside: false,
   signature: 'DataGrid',
 };
 
