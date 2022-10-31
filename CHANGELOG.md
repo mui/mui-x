@@ -22,6 +22,7 @@ We'd like to offer a big thanks to the 9 contributors who made this release poss
 - [DataGrid] Fix `setRows` method not persisting new rows data after `loading` prop change (#6493) @cherniavskii
 - [DataGrid] Fix memory leak on grid unmount (#6620) @cherniavskii
 - [DataGrid] Rename `GridColumnsState['all']` to `GridColumnsState['orderedFields']` (#6562) @DanailH
+- [DataGrid] Remove `React.memo` from `GridCellCheckboxRenderer` (#6655) @mattcorner
 - [l10n] Improve Bulgarian (bg-BG) locale (#6578) @AtanasVA
 
 ### `@mui/x-date-pickers@v6.0.0-alpha.5` / `@mui/x-date-pickers-pro@v6.0.0-alpha.5`
@@ -83,6 +84,7 @@ We'd like to offer a big thanks to the 9 contributors who made this release poss
 - [DateTimePicker] Fix toolbar time order when `theme.rtl=true` (#6636) @alexfauquette
 - [pickers] Import fixes for mask editing (#6623) @alexfauquette
 - [pickers] Rename remaining `private` components (#6550) @LukasTy
+- [pickers] New `DesktopDatePicker` based on `DateField` (#6548) @flaviendelangle
 
 ### Docs
 
@@ -92,6 +94,8 @@ We'd like to offer a big thanks to the 9 contributors who made this release poss
 - [docs] Fix typo in DataGrid demo page (#6632) @banoth-ravinder
 - [docs] New page to migrate pickers from v5 to v6 (#6472) @flaviendelangle
 - [docs] Remove broken welcome page (#6585) @alexfauquette
+- [docs] Mark data grid column group as available (#6660) @alexfauquette
+- [docs] Fix double space @oliviertassinari
 
 ### Core
 
@@ -99,6 +103,9 @@ We'd like to offer a big thanks to the 9 contributors who made this release poss
 - [core] Fix spreading on validation page (#6624) @flaviendelangle
 - [core] Small TypeScript improvements (#6575) @flaviendelangle
 - [core] Upgrade monorepo (#6594) @oliviertassinari
+- [core] Change reproduction position (#6621) @oliviertassinari
+- [core] Fix permissions in `no-response` workflow (#6658) @cherniavskii
+- [core] Remove legacy migration function (#6669) @oliviertassinari
 - [license] Improve the license content (#6459) @oliviertassinari
 - [test] Test Arrow up/down on every token (#6563) @alexfauquette
 
