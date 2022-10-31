@@ -217,6 +217,13 @@ createTheme({
         someRandomProp: true,
       },
     },
+    MuiDesktopNextDatePicker: {
+      defaultProps: {
+        open: true,
+        // @ts-expect-error invalid MuiDesktopNextDatePicker prop
+        someRandomProp: true,
+      },
+    },
     MuiDesktopTimePicker: {
       defaultProps: {
         open: true,
