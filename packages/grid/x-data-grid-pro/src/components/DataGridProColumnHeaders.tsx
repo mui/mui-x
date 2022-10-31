@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { unstable_composeClasses as composeClasses } from '@mui/material';
+import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { styled, alpha } from '@mui/material/styles';
 import { useEventCallback } from '@mui/material/utils';
 import {
