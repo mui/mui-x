@@ -793,6 +793,11 @@ DataGridProRaw.propTypes = {
    */
   rows: PropTypes.arrayOf(PropTypes.object).isRequired,
   /**
+   * If `false`, the row selection mode is disabled.
+   * @default true
+   */
+  rowSelection: PropTypes.bool,
+  /**
    * Sets the row selection model of the grid.
    */
   rowSelectionModel: PropTypes.oneOfType([

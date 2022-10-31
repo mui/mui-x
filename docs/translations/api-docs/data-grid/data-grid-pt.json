@@ -92,6 +92,7 @@
     "rowHeight": "Set the height in pixel of a row in the grid.",
     "rowModesModel": "Controls the modes of the rows.",
     "rows": "Set of rows of type GridRowsProp.",
+    "rowSelection": "If <code>false</code>, the row selection mode is disabled.",
     "rowSelectionModel": "Sets the row selection model of the grid.",
     "rowSpacingType": "Sets the type of space between rows added by <code>getRowSpacing</code>.",
     "rowsPerPageOptions": "Select the pageSize dynamically using the component UI.",

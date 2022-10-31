@@ -728,6 +728,30 @@ describe('<DataGrid /> - Row Selection', () => {
     });
   });
 
+  describe('prop: rowSelection = false', () => {
+    it('should not select rows when clicking the checkbox', () => {
+      render(<TestDataGridSelection rowSelection={false} checkboxSelection />);
+      expect(getSelectedRowIds()).to.deep.equal([]);
+      expect(getRow(0).querySelector('input')).to.have.property('checked', false);
+      fireEvent.click(getCell(0, 1));
+      expect(getSelectedRowIds()).to.deep.equal([]);
+      expect(getRow(0).querySelector('input')).to.have.property('checked', false);
+    });
+
+    it('should not select rows with Shift + Space', () => {
+      render(<TestDataGridSelection rowSelection={false} disableRowSelectionOnClick />);
+      const cell0 = getCell(0, 0);
+      userEvent.mousePress(cell0);
+      fireEvent.keyDown(cell0, { key: ' ', shiftKey: true });
+      expect(getSelectedRowIds()).to.deep.equal([]);
+    });
+
+    it('should not select rows passed in the rowSelectionModel prop', () => {
+      render(<TestDataGridSelection rowSelection={false} rowSelectionModel={[0]} />);
+      expect(getSelectedRowIds()).to.deep.equal([]);
+    });
+  });
+
   describe('console error', () => {
     it('should throw console error when rowSelectionModel contains more than 1 item in DataGrid without checkbox selection', () => {
       const onRowSelectionModelChange = spy();
