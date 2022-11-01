@@ -31,7 +31,7 @@ const COLUMNS: GridColDef[] = [
     field: 'profit',
     headerName: 'Profit',
     type: 'number',
-    flex: 1,
+    width: 70,
     groupable: false,
     valueGetter: ({ row }) => {
       if (!row.gross || !row.budget) {
