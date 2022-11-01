@@ -2,7 +2,7 @@
 title: Data Grid - Column pinning
 ---
 
-# Data grid - Column pinning [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
+# Data Grid - Column pinning [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
 
 <p class="description">Pin columns to keep them visible at all time.</p>
 

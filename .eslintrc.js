@@ -17,6 +17,10 @@ const buildPackageRestrictedImports = (packageName, root) => ({
             name: packageName,
             message: 'Use relative import instead',
           },
+          {
+            name: '@mui/material',
+            message: 'Use @mui/utils or a more specific import instead',
+          },
         ],
         patterns: [
           {
@@ -47,7 +51,7 @@ const baselineOverrides = baseline.overrides.filter((override) => {
     return true;
   }
 
-  return noRestrictedImports.paths?.every((rulePath) => rulePath.name !== '@mui/material');
+  return noRestrictedImports.paths;
 });
 
 module.exports = {

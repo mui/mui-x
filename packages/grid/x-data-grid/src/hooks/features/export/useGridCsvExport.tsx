@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
+import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { GridCsvExportApi } from '../../../models/api/gridCsvExportApi';
 import { GridCsvExportOptions } from '../../../models/gridExport';
@@ -20,7 +20,7 @@ import {
  * @requires useGridSelection (state)
  * @requires useGridParamsApi (method)
  */
-export const useGridCsvExport = (apiRef: React.MutableRefObject<GridApiCommunity>): void => {
+export const useGridCsvExport = (apiRef: React.MutableRefObject<GridPrivateApiCommunity>): void => {
   const logger = useGridLogger(apiRef, 'useGridCsvExport');
 
   const getDataAsCsv = React.useCallback(
@@ -65,7 +65,7 @@ export const useGridCsvExport = (apiRef: React.MutableRefObject<GridApiCommunity
     exportDataAsCsv,
   };
 
-  useGridApiMethod(apiRef, csvExportApi, 'GridCsvExportApi');
+  useGridApiMethod(apiRef, csvExportApi, 'public');
 
   /**
    * PRE-PROCESSING
