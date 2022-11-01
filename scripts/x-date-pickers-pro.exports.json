@@ -206,6 +206,7 @@
   { "name": "TimePickerToolbarProps", "kind": "Interface" },
   { "name": "TimeValidationError", "kind": "TypeAlias" },
   { "name": "trTR", "kind": "Variable" },
+  { "name": "ukUA", "kind": "Variable" },
   { "name": "Unstable_DateField", "kind": "Variable" },
   { "name": "Unstable_DateTimeField", "kind": "Variable" },
   { "name": "Unstable_DesktopNextDatePicker", "kind": "Variable" },
