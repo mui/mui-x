@@ -75,26 +75,19 @@ const COLUMNS: GridColDef[] = [
 ];
 
 const profit: GridAggregationFunction<{ gross: number; budget: number }, number> = {
-  apply: ({ values }) => {
-    const result = values.reduce<{ gross: number; budget: number }>(
-      (acc, value) => {
-        if (value) {
-          acc.gross += value.gross;
-          acc.budget += value.budget;
-        }
-        return acc;
-      },
-      { gross: 0, budget: 0 },
-    );
-    return calculateProfit(result.gross, result.budget);
-  },
-  getCellValue: ({ row }) => {
-    return {
-      budget: row.budget,
-      gross: row.gross,
-    };
-  },
   label: 'profit',
+  getCellValue: ({ row }) => ({ budget: row.budget, gross: row.gross }),
+  apply: ({ values }) => {
+    let budget = 0;
+    let gross = 0;
+    values.forEach((value) => {
+      if (value) {
+        gross += value.gross;
+        budget += value.budget;
+      }
+    });
+    return calculateProfit(gross, budget);
+  },
   columnTypes: ['number'],
 };
 
