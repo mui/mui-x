@@ -4,7 +4,7 @@ import { CalendarPickerView } from '../internals/models';
 
 // This object is not Partial<PickersLocaleText> because it is the default values
 
-const ukUAPickers: PickersLocaleText<any> = {
+const ukUAPickers: Partial<PickersLocaleText<any>> = {
   // Calendar navigation
   previousMonth: 'Попередній місяць',
   nextMonth: 'Наступний місяць',
@@ -69,7 +69,5 @@ const ukUAPickers: PickersLocaleText<any> = {
   fieldSecondsPlaceholder: () => 'ss',
   fieldMeridiemPlaceholder: () => 'aa',
 };
-
-export const DEFAULT_LOCALE = ukUAPickers;
 
 export const ukUA = getPickersLocalization(ukUAPickers);
