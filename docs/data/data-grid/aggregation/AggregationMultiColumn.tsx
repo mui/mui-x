@@ -28,6 +28,25 @@ const COLUMNS: GridColDef[] = [
     width: 200,
   },
   {
+    field: 'profit',
+    headerName: 'Profit',
+    type: 'number',
+    flex: 1,
+    groupable: false,
+    valueGetter: ({ row }) => {
+      if (!row.gross || !row.budget) {
+        return null;
+      }
+      return calculateProfit(row.gross, row.budget);
+    },
+    valueFormatter: ({ value }) => {
+      if (!value) {
+        return null;
+      }
+      return `${value}%`;
+    },
+  },
+  {
     field: 'gross',
     headerName: 'Gross',
     type: 'number',
@@ -51,25 +70,6 @@ const COLUMNS: GridColDef[] = [
         return value;
       }
       return currencyFormatter.format(value);
-    },
-  },
-  {
-    field: 'profit',
-    headerName: 'Profit',
-    type: 'number',
-    flex: 1,
-    groupable: false,
-    valueGetter: ({ row }) => {
-      if (!row.gross || !row.budget) {
-        return null;
-      }
-      return calculateProfit(row.gross, row.budget);
-    },
-    valueFormatter: ({ value }) => {
-      if (!value) {
-        return null;
-      }
-      return `${value}%`;
     },
   },
 ];
