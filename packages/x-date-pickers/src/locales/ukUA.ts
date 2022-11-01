@@ -32,10 +32,10 @@ const ukUAPickers: Partial<PickersLocaleText<any>> = {
   todayButtonLabel: 'Сьогодні',
 
   // Toolbar titles
-  datePickerToolbarTitle: 'Вибрати дату',
-  dateTimePickerToolbarTitle: 'Вибрати дату і час',
-  timePickerToolbarTitle: 'Вибрати час',
-  dateRangePickerToolbarTitle: 'Вибрати календарний період',
+  datePickerDefaultToolbarTitle: 'Вибрати дату',
+  dateTimePickerDefaultToolbarTitle: 'Вибрати дату і час',
+  timePickerDefaultToolbarTitle: 'Вибрати час',
+  dateRangePickerDefaultToolbarTitle: 'Вибрати календарний період',
 
   // Clock labels
   clockLabelText: (view, time, adapter) =>
@@ -59,15 +59,6 @@ const ukUAPickers: Partial<PickersLocaleText<any>> = {
   // Table labels
   timeTableLabel: 'оберіть час',
   dateTableLabel: 'оберіть дату',
-
-  // Field section placeholders
-  fieldYearPlaceholder: (params) => 'Y'.repeat(params.digitAmount),
-  fieldMonthPlaceholder: (params) => (params.contentType === 'letter' ? 'MMMM' : 'MM'),
-  fieldDayPlaceholder: () => 'DD',
-  fieldHoursPlaceholder: () => 'hh',
-  fieldMinutesPlaceholder: () => 'mm',
-  fieldSecondsPlaceholder: () => 'ss',
-  fieldMeridiemPlaceholder: () => 'aa',
 };
 
 export const ukUA = getPickersLocalization(ukUAPickers);
