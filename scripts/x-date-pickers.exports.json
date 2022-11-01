@@ -141,6 +141,7 @@
   { "name": "TimePickerToolbarClassKey", "kind": "TypeAlias" },
   { "name": "TimePickerToolbarProps", "kind": "Interface" },
   { "name": "trTR", "kind": "Variable" },
+  { "name": "ukUA", "kind": "Variable" },
   { "name": "YearPicker", "kind": "Variable" },
   { "name": "yearPickerClasses", "kind": "Variable" },
   { "name": "YearPickerClasses", "kind": "Interface" },
