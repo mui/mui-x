@@ -203,6 +203,42 @@ In the example below, the Data Grid has two additional custom aggregation functi
 
 {{"demo": "AggregationCustomFunction.js", "bg": "inline", "defaultCodeOpen": false}}
 
+### Aggregating data from multiple row fields
+
+By default, the `apply` method of an aggregation function receives an array of values that represent a single field for each row.
+For example, the `sum` aggregation function receives the values of the `gross` field.
+
+In the demo below, the values in the `Profit` column are derived from the `gross` and `budget` fields of the row:
+
+```tsx
+const profit = Math.round(((row.gross - row.budget) / row.budget) * 100);
+```
+
+To aggregate the `Profit` column, you have to calculate the sum of the `gross` and `budget` fields first, and then use the above formula to calculate the aggregated `Profit` value.
+
+To do so, you can use the `getCellValue` callback on the aggregation function to transform the data that are being passed to the `apply` method:
+
+```tsx
+const profit: GridAggregationFunction<{ gross: number; budget: number }, number> = {
+  label: 'profit',
+  getCellValue: ({ row }) => ({ budget: row.budget, gross: row.gross }),
+  apply: ({ values }) => {
+    let budget = 0;
+    let gross = 0;
+    values.forEach((value) => {
+      if (value) {
+        gross += value.gross;
+        budget += value.budget;
+      }
+    });
+    return Math.round(((gross - budget) / budget) * 100);
+  },
+  columnTypes: ['number'],
+};
+```
+
+{{"demo": "AggregationMultiColumn.js", "bg": "inline", "defaultCodeOpen": false}}
+
 ### Custom value formatter
 
 By default, the aggregated cell uses the value formatter of its column.
@@ -232,10 +268,6 @@ This object contains a `hasCellUnit` which lets you know if the current aggregat
 In the example below, you can see that all the aggregation functions are rendered with the rating UI aside from `size`, because it's not a valid rating:
 
 {{"demo": "AggregationRenderCell.js", "bg": "inline", "defaultCodeOpen": false}}
-
-## Multi-column aggregation
-
-{{"demo": "AggregationMultiColumn.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ## API
 
