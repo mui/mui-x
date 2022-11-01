@@ -47,10 +47,10 @@ const getSelectionModelPropValue = (
 };
 
 export const rowSelectionStateInitializer: GridStateInitializer<
-  Pick<DataGridProcessedProps, 'rowSelectionModel'>
+  Pick<DataGridProcessedProps, 'rowSelectionModel' | 'rowSelection'>
 > = (state, props) => ({
   ...state,
-  rowSelection: getSelectionModelPropValue(props.rowSelectionModel) ?? [],
+  rowSelection: props.rowSelection ? getSelectionModelPropValue(props.rowSelectionModel) ?? [] : [],
 });
 
 /**
@@ -74,10 +74,19 @@ export const useGridRowSelection = (
     | 'paginationMode'
     | 'classes'
     | 'keepNonExistentRowsSelected'
+    | 'rowSelection'
     | 'signature'
   >,
 ): void => {
   const logger = useGridLogger(apiRef, 'useGridSelection');
+
+  const runIfRowSelectionIsEnabled =
+    <Args extends any[]>(callback: (...args: Args) => void) =>
+    (...args: Args) => {
+      if (props.rowSelection) {
+        callback(...args);
+      }
+    };
 
   const propRowSelectionModel = React.useMemo(() => {
     return getSelectionModelPropValue(
@@ -142,11 +151,14 @@ export const useGridRowSelection = (
       const currentModel = gridRowSelectionStateSelector(apiRef.current.state);
       if (currentModel !== model) {
         logger.debug(`Setting selection model`);
-        apiRef.current.setState((state) => ({ ...state, rowSelection: model }));
+        apiRef.current.setState((state) => ({
+          ...state,
+          rowSelection: props.rowSelection ? model : [],
+        }));
         apiRef.current.forceUpdate();
       }
     },
-    [apiRef, logger],
+    [apiRef, logger, props.rowSelection],
   );
 
   const isRowSelected = React.useCallback<GridRowSelectionApi['isRowSelected']>(
@@ -497,16 +509,28 @@ export const useGridRowSelection = (
     [apiRef, handleSingleRowSelection, selectRows, visibleRows.rows, canHaveMultipleSelection],
   );
 
-  useGridApiEventHandler(apiRef, 'sortedRowsSet', removeOutdatedSelection);
-  useGridApiEventHandler(apiRef, 'cellClick', handleCellClick);
-  useGridApiEventHandler(apiRef, 'rowSelectionCheckboxChange', handleRowSelectionCheckboxChange);
+  useGridApiEventHandler(
+    apiRef,
+    'sortedRowsSet',
+    runIfRowSelectionIsEnabled(removeOutdatedSelection),
+  );
+  useGridApiEventHandler(apiRef, 'cellClick', runIfRowSelectionIsEnabled(handleCellClick));
+  useGridApiEventHandler(
+    apiRef,
+    'rowSelectionCheckboxChange',
+    runIfRowSelectionIsEnabled(handleRowSelectionCheckboxChange),
+  );
   useGridApiEventHandler(
     apiRef,
     'headerSelectionCheckboxChange',
     handleHeaderSelectionCheckboxChange,
   );
-  useGridApiEventHandler(apiRef, 'cellMouseDown', preventSelectionOnShift);
-  useGridApiEventHandler(apiRef, 'cellKeyDown', handleCellKeyDown);
+  useGridApiEventHandler(
+    apiRef,
+    'cellMouseDown',
+    runIfRowSelectionIsEnabled(preventSelectionOnShift),
+  );
+  useGridApiEventHandler(apiRef, 'cellKeyDown', runIfRowSelectionIsEnabled(handleCellKeyDown));
 
   /**
    * EFFECTS
@@ -515,11 +539,17 @@ export const useGridRowSelection = (
     if (propRowSelectionModel !== undefined) {
       apiRef.current.setRowSelectionModel(propRowSelectionModel);
     }
-  }, [apiRef, propRowSelectionModel]);
+  }, [apiRef, propRowSelectionModel, props.rowSelection]);
+
+  React.useEffect(() => {
+    if (!props.rowSelection) {
+      apiRef.current.setRowSelectionModel([]);
+    }
+  }, [apiRef, props.rowSelection]);
 
   const isStateControlled = propRowSelectionModel != null;
   React.useEffect(() => {
-    if (isStateControlled) {
+    if (isStateControlled || !props.rowSelection) {
       return;
     }
 
@@ -533,9 +563,13 @@ export const useGridRowSelection = (
         apiRef.current.setRowSelectionModel(newSelection);
       }
     }
-  }, [apiRef, isRowSelectable, isStateControlled]);
+  }, [apiRef, isRowSelectable, isStateControlled, props.rowSelection]);
 
   React.useEffect(() => {
+    if (!props.rowSelection) {
+      return;
+    }
+
     const currentSelection = gridRowSelectionStateSelector(apiRef.current.state);
 
     if (!canHaveMultipleSelection && currentSelection.length > 1) {
@@ -572,5 +606,6 @@ export const useGridRowSelection = (
     isRowSelectable,
     pagination,
     paginationMode,
+    props.rowSelection,
   ]);
 };

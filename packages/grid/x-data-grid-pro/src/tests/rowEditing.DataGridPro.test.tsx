@@ -967,7 +967,7 @@ describe('<DataGridPro /> - Row Editing', () => {
         });
       });
 
-      it('should call stopRowEditMode with ignoreModifications=true if the props are being processed', async () => {
+      it('should call stopRowEditMode with ignoreModifications=false if the props are being processed', async () => {
         column1Props.preProcessEditCellProps = () => new Promise(() => {});
         render(<TestCase />);
         const spiedStopRowEditMode = spy(apiRef.current, 'stopRowEditMode');
@@ -977,24 +977,6 @@ describe('<DataGridPro /> - Row Editing', () => {
         });
         fireEvent.click(getCell(1, 1));
         clock.runToLast();
-        expect(spiedStopRowEditMode.callCount).to.equal(1);
-        expect(spiedStopRowEditMode.lastCall.args[0].ignoreModifications).to.equal(true);
-      });
-
-      it('should call stopRowEditMode with ignoreModifications=false if the props are being processed and disableIgnoreModificationsIfProcessingProps is true', async () => {
-        column1Props.preProcessEditCellProps = ({ props }: GridPreProcessEditCellProps) =>
-          new Promise((resolve) => {
-            resolve(props);
-          });
-        render(<TestCase disableIgnoreModificationsIfProcessingProps />);
-        const spiedStopRowEditMode = spy(apiRef.current, 'stopRowEditMode');
-        fireEvent.doubleClick(getCell(0, 1));
-        await act(() =>
-          apiRef.current.setEditCellValue({ id: 0, field: 'currencyPair', value: 'USD GBP' }),
-        );
-        fireEvent.click(getCell(1, 1));
-        clock.runToLast();
-        await act(() => Promise.resolve());
         expect(spiedStopRowEditMode.callCount).to.equal(1);
         expect(spiedStopRowEditMode.lastCall.args[0].ignoreModifications).to.equal(false);
       });
@@ -1059,7 +1041,7 @@ describe('<DataGridPro /> - Row Editing', () => {
         });
       });
 
-      it('should call stopRowEditMode with ignoreModifications=true if the props are being processed', async () => {
+      it('should call stopRowEditMode with ignoreModifications=false if the props are being processed', async () => {
         column1Props.preProcessEditCellProps = () => new Promise(() => {});
         render(<TestCase />);
         const spiedStopRowEditMode = spy(apiRef.current, 'stopRowEditMode');
@@ -1071,7 +1053,7 @@ describe('<DataGridPro /> - Row Editing', () => {
         });
         fireEvent.keyDown(cell.querySelector('input'), { key: 'Enter' });
         expect(spiedStopRowEditMode.callCount).to.equal(1);
-        expect(spiedStopRowEditMode.lastCall.args[0].ignoreModifications).to.equal(true);
+        expect(spiedStopRowEditMode.lastCall.args[0].ignoreModifications).to.equal(false);
       });
     });
 
@@ -1132,7 +1114,7 @@ describe('<DataGridPro /> - Row Editing', () => {
         });
       });
 
-      it('should call stopRowEditMode with ignoreModifications=true if the props are being processed', async () => {
+      it('should call stopRowEditMode with ignoreModifications=false if the props are being processed', async () => {
         column1Props.preProcessEditCellProps = () => new Promise(() => {});
         render(<TestCase />);
         const spiedStopRowEditMode = spy(apiRef.current, 'stopRowEditMode');
@@ -1144,7 +1126,7 @@ describe('<DataGridPro /> - Row Editing', () => {
         });
         fireEvent.keyDown(cell.querySelector('input'), { key: 'Tab' });
         expect(spiedStopRowEditMode.callCount).to.equal(1);
-        expect(spiedStopRowEditMode.lastCall.args[0].ignoreModifications).to.equal(true);
+        expect(spiedStopRowEditMode.lastCall.args[0].ignoreModifications).to.equal(false);
       });
 
       it('should keep focus on the first column when editing the first column of the first row of the 2nd page', () => {
