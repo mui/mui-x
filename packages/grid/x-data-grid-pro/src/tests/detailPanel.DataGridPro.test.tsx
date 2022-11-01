@@ -497,6 +497,22 @@ describe('<DataGridPro /> - Detail panel', () => {
     expect(getRow(0)).to.have.class(gridClasses['row--detailPanelExpanded']);
   });
 
+  // See https://github.com/mui/mui-x/issues/6694
+  it('should add a bottom margin to the expanded row when using `getRowSpacing`', function test() {
+    if (isJSDOM) {
+      this.skip(); // Doesn't work with mocked window.getComputedStyle
+    }
+
+    render(
+      <TestCase
+        getDetailPanelContent={({ id }) => (id === 0 ? <div /> : null)}
+        getRowSpacing={() => ({ top: 2, bottom: 2 })}
+      />,
+    );
+    fireEvent.click(screen.getAllByRole('button', { name: 'Expand' })[0]);
+    expect(getRow(0)).toHaveComputedStyle({ marginBottom: '502px' }); // 500px + 2px spacing
+  });
+
   describe('prop: onDetailPanelsExpandedRowIds', () => {
     it('shoull call when a row is expanded or closed', () => {
       const handleDetailPanelsExpandedRowIdsChange = spy();
