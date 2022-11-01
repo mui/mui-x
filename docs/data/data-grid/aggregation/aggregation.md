@@ -211,7 +211,7 @@ For example, the `sum` aggregation function receives the values of the `gross` f
 In the demo below, the values in the `Profit` column are derived from the `gross` and `budget` fields of the row:
 
 ```tsx
-const profit = Math.round(((row.gross - row.budget) / row.budget) * 100);
+const profit = (row.gross - row.budget) / row.budget;
 ```
 
 To aggregate the `Profit` column, you have to calculate the sum of the `gross` and `budget` fields first, and then use the above formula to calculate the aggregated `Profit` value.
@@ -231,7 +231,7 @@ const profit: GridAggregationFunction<{ gross: number; budget: number }, number>
         budget += value.budget;
       }
     });
-    return Math.round(((gross - budget) / budget) * 100);
+    return (gross - budget) / budget;
   },
   columnTypes: ['number'],
 };

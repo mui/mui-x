@@ -15,7 +15,7 @@ const currencyFormatter = new Intl.NumberFormat('en-US', {
 });
 
 function calculateProfit(gross, budget) {
-  return Math.round(((gross - budget) / budget) * 100);
+  return (gross - budget) / budget;
 }
 
 const COLUMNS = [
@@ -41,7 +41,7 @@ const COLUMNS = [
       if (!value) {
         return null;
       }
-      return `${value}%`;
+      return `${Math.round(value * 100)}%`;
     },
   },
   {

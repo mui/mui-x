@@ -17,7 +17,7 @@ const currencyFormatter = new Intl.NumberFormat('en-US', {
 });
 
 function calculateProfit(gross: number, budget: number) {
-  return Math.round(((gross - budget) / budget) * 100);
+  return (gross - budget) / budget;
 }
 
 const COLUMNS: GridColDef[] = [
@@ -43,7 +43,7 @@ const COLUMNS: GridColDef[] = [
       if (!value) {
         return null;
       }
-      return `${value}%`;
+      return `${Math.round(value * 100)}%`;
     },
   },
   {
