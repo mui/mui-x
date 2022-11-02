@@ -24,7 +24,7 @@ export interface PickersActionBarProps extends DialogActionsProps {
   onSetToday: () => void;
 }
 
-export const PickersActionBar = (props: PickersActionBarProps) => {
+export function PickersActionBar(props: PickersActionBarProps) {
   const { onAccept, onClear, onCancel, onSetToday, actions, ...other } = props;
   const wrapperVariant = React.useContext(WrapperVariantContext);
 
@@ -68,4 +68,4 @@ export const PickersActionBar = (props: PickersActionBarProps) => {
   });
 
   return <DialogActions {...other}>{buttons}</DialogActions>;
-};
+}

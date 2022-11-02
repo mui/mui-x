@@ -9,7 +9,7 @@ import { Unstable_DateField as DateField } from '@mui/x-date-pickers/DateField';
 import { Unstable_TimeField as TimeField } from '@mui/x-date-pickers/TimeField';
 import { Unstable_DateTimeField as DateTimeField } from '@mui/x-date-pickers/DateTimeField';
 
-const GridItem = ({
+function GridItem({
   label,
   children,
   spacing = 1,
@@ -17,7 +17,7 @@ const GridItem = ({
   label: string;
   children: React.ReactNode;
   spacing?: number;
-}) => {
+}) {
   return (
     <Grid xs={12} item>
       <Box sx={{ display: 'flex', flexDirection: 'column' }}>
@@ -28,7 +28,7 @@ const GridItem = ({
       </Box>
     </Grid>
   );
-};
+}
 
 const date1 = dayjs('2022-04-07T14:30:22');
 

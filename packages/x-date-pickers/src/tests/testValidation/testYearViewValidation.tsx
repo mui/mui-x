@@ -49,10 +49,10 @@ function testYearViewValidation(ElementToTest, propsToTest, getOptions) {
         const { render } = getOptions();
 
         let now;
-        const WithFakeTimer = (props) => {
+        function WithFakeTimer(props) {
           now = adapterToUse.date(new Date());
           return <ElementToTest value={now} {...props} />;
-        };
+        }
         render(<WithFakeTimer {...defaultProps} disablePast />);
 
         const nextYear = adapterToUse.addYears(now, 1);
@@ -75,10 +75,10 @@ function testYearViewValidation(ElementToTest, propsToTest, getOptions) {
         const { render } = getOptions();
 
         let now;
-        const WithFakeTimer = (props) => {
+        function WithFakeTimer(props) {
           now = adapterToUse.date(new Date());
           return <ElementToTest value={now} {...props} />;
-        };
+        }
         render(<WithFakeTimer {...defaultProps} disableFuture />);
 
         const nextYear = adapterToUse.addYears(now, 1);

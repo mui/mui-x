@@ -27,10 +27,10 @@ describe('<DataGridPro /> - Columns Visibility', () => {
 
   let apiRef: React.MutableRefObject<GridApi>;
 
-  const TestDataGridPro = (
+  function TestDataGridPro(
     props: Omit<DataGridProProps, 'columns' | 'rows' | 'apiRef'> &
       Partial<Pick<DataGridProProps, 'rows' | 'columns'>>,
-  ) => {
+  ) {
     apiRef = useGridApiRef();
 
     return (
@@ -44,7 +44,7 @@ describe('<DataGridPro /> - Columns Visibility', () => {
         />
       </div>
     );
-  };
+  }
 
   describe('apiRef: updateColumns', () => {
     it('should not call `onColumnVisibilityModelChange` when no column visibility has changed', () => {
