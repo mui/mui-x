@@ -195,7 +195,7 @@ export const DateRangePickerInput = React.forwardRef(function DateRangePickerInp
     validationError: startValidationError !== null,
     TextFieldProps: {
       ...TextFieldProps,
-      inputRef: startRef,
+      ref: startRef,
       focused: open ? currentlySelectingRangeEnd === 'start' : undefined,
       // registering `onClick` listener on the root element as well to correctly handle cases where user is clicking on `label`
       // which has `pointer-events: none` and due to DOM structure the `input` does not catch the click event
