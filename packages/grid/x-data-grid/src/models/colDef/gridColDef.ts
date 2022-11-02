@@ -246,7 +246,7 @@ export interface GridColDef<R extends GridValidRowModel = any, V = any, F = V> {
    * @param {Array<GridColumnMenuLookup['slot']>} slots Registered column menu item slots.
    * @returns {Array<GridColumnMenuLookup['slot']>} Slots ehich are needed to be shown.
    */
-  filterColumnMenuItems?: (
+  getVisibleColumnMenuItems?: (
     slots: Array<GridColumnMenuLookup['slot']>,
   ) => Array<GridColumnMenuLookup['slot']>;
 }

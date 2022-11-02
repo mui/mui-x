@@ -13,7 +13,7 @@ export interface GridColumnMenuProps extends React.HTMLAttributes<HTMLDivElement
   id?: string;
   labelledby?: string;
   menuItems: GridColumnMenuValue;
-  filterColumnMenuItems?: (
+  getVisibleColumnMenuItems?: (
     items: Array<GridColumnMenuLookup['slot']>,
   ) => Array<GridColumnMenuLookup['slot']>;
   /**

@@ -52,7 +52,8 @@ const GridColumnMenu = (props: GridColumnMenuProps) => {
   }, [preProcessedValue, userItems]);
 
   const filteredColumnMenuItems: GridColumnMenuValue = React.useMemo(() => {
-    const filterCallback = currentColumn.filterColumnMenuItems ?? props.filterColumnMenuItems;
+    const filterCallback =
+      currentColumn.getVisibleColumnMenuItems ?? props.getVisibleColumnMenuItems;
     if (!filterCallback || typeof filterCallback !== 'function') {
       return extendedColumnMenuItems;
     }
@@ -71,7 +72,11 @@ const GridColumnMenu = (props: GridColumnMenuProps) => {
       const item = extendedColumnMenuItems.find((menuItem) => menuItem.slot === slot);
       return item ? [...acc, item] : acc;
     }, [] as GridColumnMenuValue);
-  }, [currentColumn.filterColumnMenuItems, props.filterColumnMenuItems, extendedColumnMenuItems]);
+  }, [
+    currentColumn.getVisibleColumnMenuItems,
+    props.getVisibleColumnMenuItems,
+    extendedColumnMenuItems,
+  ]);
 
   return (
     <React.Fragment>
@@ -125,7 +130,7 @@ GridColumnMenu.propTypes = {
     }).isRequired,
   }),
   currentColumn: PropTypes.object.isRequired,
-  filterColumnMenuItems: PropTypes.func,
+  getVisibleColumnMenuItems: PropTypes.func,
   hideMenu: PropTypes.func.isRequired,
   id: PropTypes.string,
   labelledby: PropTypes.string,

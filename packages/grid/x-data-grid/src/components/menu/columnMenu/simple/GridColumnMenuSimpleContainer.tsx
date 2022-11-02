@@ -12,7 +12,7 @@ interface Props
     | 'hideMenu'
     | 'currentColumn'
     | 'open'
-    | 'filterColumnMenuItems'
+    | 'getVisibleColumnMenuItems'
     | 'id'
     | 'labelledby'
     | 'className'
@@ -57,7 +57,7 @@ GridColumnMenuSimpleContainer.propTypes = {
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
   currentColumn: PropTypes.object.isRequired,
-  filterColumnMenuItems: PropTypes.func,
+  getVisibleColumnMenuItems: PropTypes.func,
   hideMenu: PropTypes.func.isRequired,
   id: PropTypes.string,
   labelledby: PropTypes.string,

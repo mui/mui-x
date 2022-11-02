@@ -26,7 +26,7 @@ export default function ColumnMenuGrid() {
   });
   const columns = data.columns;
   // only show `Manage Columns` for last column
-  columns[4].filterColumnMenuItems = () => ['closeMenu', 'manageColumns'];
+  columns[4].getVisibleColumnMenuItems = () => ['closeMenu', 'manageColumns'];
 
   const columnMenuItems = {
     ['filter']: {
@@ -49,7 +49,7 @@ export default function ColumnMenuGrid() {
         componentsProps={{
           columnMenu: {
             columnMenuItems,
-            filterColumnMenuItems: () => [
+            getVisibleColumnMenuItems: () => [
               'hideColumn',
               'filter',
               'closeMenu',

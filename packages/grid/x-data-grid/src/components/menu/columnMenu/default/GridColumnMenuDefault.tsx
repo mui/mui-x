@@ -12,7 +12,7 @@ import { SortGridMenuItems } from './SortGridMenuItems';
 export interface GridColumnMenuDefaultProps
   extends Pick<
     GridColumnMenuProps,
-    'hideMenu' | 'currentColumn' | 'open' | 'filterColumnMenuItems'
+    'hideMenu' | 'currentColumn' | 'open' | 'getVisibleColumnMenuItems'
   > {}
 
 const GridColumnMenuDefault = React.forwardRef<HTMLDivElement, GridColumnMenuDefaultProps>(
@@ -59,7 +59,7 @@ GridColumnMenuDefault.propTypes = {
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
   currentColumn: PropTypes.object.isRequired,
-  filterColumnMenuItems: PropTypes.func,
+  getVisibleColumnMenuItems: PropTypes.func,
   hideMenu: PropTypes.func.isRequired,
   open: PropTypes.bool.isRequired,
 } as any;

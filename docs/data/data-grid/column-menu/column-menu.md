@@ -35,9 +35,9 @@ You can also customise column menu based on some conditions. Every item in the m
 - Add new items
 - Change display order for items
 
-For that purpose you can use `filterColumnMenuItems` and `columnMenuItems`.
+For that purpose you can use `getVisibleColumnMenuItems` and `columnMenuItems`.
 
-**filterColumnMenuItems**: It is available in both `GridColDef` and `componentsProps.columnMenu`, it receives list of all registered slots and should return a `filtered` and `ordered` list of items that are needed to be shown. It can be used either per-column basis by passing in `GridColDef` or for whole Grid by passing in `componentsProps.columnMenu`. If you have it in both, the preference will be given to the `GridColDef` one.
+**getVisibleColumnMenuItems**: It is available in both `GridColDef` and `componentsProps.columnMenu`, it receives list of all registered slots and should return a `filtered` and `ordered` list of items that are needed to be shown. It can be used either per-column basis by passing in `GridColDef` or for whole Grid by passing in `componentsProps.columnMenu`. If you have it in both, the preference will be given to the `GridColDef` one.
 
 **columnMenuItems**: It could be used to override or register new items to the menu. You can simply pass the object with existing or new items and they will be updated/added to the grid.
 
@@ -57,11 +57,11 @@ const columnMenuItems = {
 }
 
 // add new item in visible items and append it to the last of list
-const filterColumnMenuItems = (defaultItems) => [...defaultItems, 'closeMenu'];
+const getVisibleColumnMenuItems = (defaultItems) => [...defaultItems, 'closeMenu'];
 
 <DataGrid 
   {...data} 
-  componentProps={{ columnMenu: { filterColumnMenuItems, columnMenuItems } }} 
+  componentProps={{ columnMenu: { getVisibleColumnMenuItems, columnMenuItems } }} 
 />
 ```
 
