@@ -79,6 +79,7 @@ export interface DateRangePickerInputProps<TInputDate, TDate>
   validationError: DateRangeValidationError;
   rawValue: DateRange<TInputDate>;
   classes?: Partial<DateRangePickerInputClasses>;
+  mobile?: boolean;
 }
 
 type DatePickerInputComponent = <TInputDate, TDate>(
@@ -113,6 +114,7 @@ export const DateRangePickerInput = React.forwardRef(function DateRangePickerInp
     TextFieldProps,
     validationError: [startValidationError, endValidationError],
     className,
+    mobile,
     ...other
   } = props;
 
@@ -149,7 +151,10 @@ export const DateRangePickerInput = React.forwardRef(function DateRangePickerInp
     lazyHandleChangeCallback([utils.date(start), date], inputString);
   };
 
-  const openRangeStartSelection = () => {
+  const openRangeStartSelection = (
+    event: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>,
+  ) => {
+    event.stopPropagation();
     if (setCurrentlySelectingRangeEnd) {
       setCurrentlySelectingRangeEnd('start');
     }
@@ -158,7 +163,10 @@ export const DateRangePickerInput = React.forwardRef(function DateRangePickerInp
     }
   };
 
-  const openRangeEndSelection = () => {
+  const openRangeEndSelection = (
+    event: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>,
+  ) => {
+    event.stopPropagation();
     if (setCurrentlySelectingRangeEnd) {
       setCurrentlySelectingRangeEnd('end');
     }
@@ -187,13 +195,17 @@ export const DateRangePickerInput = React.forwardRef(function DateRangePickerInp
     validationError: startValidationError !== null,
     TextFieldProps: {
       ...TextFieldProps,
-      ref: startRef,
-      focused: open && currentlySelectingRangeEnd === 'start',
+      inputRef: startRef,
+      focused: open ? currentlySelectingRangeEnd === 'start' : undefined,
+      // registering `onClick` listener on the root element as well to correctly handle cases where user is clicking on `label`
+      // which has `pointer-events: none` and due to DOM structure the `input` does not catch the click event
+      ...(!readOnly && !other.disabled && { onClick: openRangeStartSelection }),
     },
     inputProps: {
       onClick: openRangeStartSelection,
       onKeyDown: onSpaceOrEnter(openRangeStartSelection),
       onFocus: focusOnRangeStart,
+      readOnly: mobile,
     },
   });
 
@@ -207,12 +219,16 @@ export const DateRangePickerInput = React.forwardRef(function DateRangePickerInp
     TextFieldProps: {
       ...TextFieldProps,
       ref: endRef,
-      focused: open && currentlySelectingRangeEnd === 'end',
+      focused: open ? currentlySelectingRangeEnd === 'end' : undefined,
+      // registering `onClick` listener on the root element as well to correctly handle cases where user is clicking on `label`
+      // which has `pointer-events: none` and due to DOM structure the `input` does not catch the click event
+      ...(!readOnly && !other.disabled && { onClick: openRangeEndSelection }),
     },
     inputProps: {
       onClick: openRangeEndSelection,
       onKeyDown: onSpaceOrEnter(openRangeEndSelection),
       onFocus: focusOnRangeEnd,
+      readOnly: mobile,
     },
   });
 

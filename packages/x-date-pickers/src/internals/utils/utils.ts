@@ -10,10 +10,13 @@ export function arrayIncludes<T>(array: T[] | readonly T[], itemOrItems: T | T[]
 }
 
 export const onSpaceOrEnter =
-  (innerFn: () => void, onFocus?: (event: React.KeyboardEvent<any>) => void) =>
+  (
+    innerFn: (ev: React.MouseEvent<any> | React.KeyboardEvent<any>) => void,
+    onFocus?: (event: React.KeyboardEvent<any>) => void,
+  ) =>
   (event: React.KeyboardEvent) => {
     if (event.key === 'Enter' || event.key === ' ') {
-      innerFn();
+      innerFn(event);
 
       // prevent any side effects
       event.preventDefault();

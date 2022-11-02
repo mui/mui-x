@@ -295,6 +295,24 @@ describe('<MobileDateRangePicker />', () => {
       expect(onClose.callCount).to.equal(1);
     });
 
+    it('should correctly set focused styles when input is focused', () => {
+      render(<WrappedMobileDateRangePicker initialValue={[null, null]} />);
+
+      const firstInput = screen.getAllByRole('textbox')[0];
+      fireEvent.focus(firstInput);
+
+      expect(screen.getByText('Start', { selector: 'label' })).to.have.class('Mui-focused');
+    });
+
+    it('should render "readonly" input elements', () => {
+      render(<WrappedMobileDateRangePicker initialValue={[null, null]} />);
+
+      screen.getAllByRole('textbox').forEach((input) => {
+        expect(input).to.have.attribute('readonly');
+      });
+    });
+  });
+
     it('should allow `shouldDisableDate` to depends on start or end date', () => {
       render(
         <WrappedMobileDateRangePicker
