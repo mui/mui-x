@@ -3,7 +3,126 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-## v6.0.0-alpha.4
+## 6.0.0-alpha.5
+
+_Oct 31, 2022_
+
+We'd like to offer a big thanks to the 9 contributors who made this release possible. Here are some highlights ✨:
+
+- ⚡ Fix memory leak during unmount of the DataGrid (#6620) @cherniavskii
+- 📝 New guide for migrating pickers from v5 to v6 (#6472) @flaviendelangle
+- 🎁 Allow to disable the autofocus of the search field when opening the column visibility panel (#6444) @e-cloud
+- 🐞 Bugfixes
+
+### `@mui/x-data-grid@v6.0.0-alpha.5` / `@mui/x-data-grid-pro@v6.0.0-alpha.5` / `@mui/x-data-grid-premium@v6.0.0-alpha.5`
+
+#### Breaking changes
+
+- Stop exporting `gridColumnsSelector` (#6693) @m4theushw
+
+  The `gridColumnsSelector` was deprecated during v5 and is now removed from the export list.
+
+  Please consider using one of the following selectors as a replacement:
+
+  - `gridColumnFieldsSelector`, to obtain the column fields in the order they appear on the screen;
+  - `gridColumnLookupSelector`, to access column definitions by field;
+  - `gridColumnVisibilityModelSelector`, for the visibility state of each column.
+
+#### Changes
+
+- [DataGrid] Allow to disable autofocusing the search field in the columns panel (#6444) @e-cloud
+- [DataGrid] Fix `setRows` method not persisting new rows data after `loading` prop change (#6493) @cherniavskii
+- [DataGrid] Fix memory leak on grid unmount (#6620) @cherniavskii
+- [DataGrid] Rename `GridColumnsState['all']` to `GridColumnsState['orderedFields']` (#6562) @DanailH
+- [DataGrid] Remove `React.memo` from `GridCellCheckboxRenderer` (#6655) @mattcorner
+- [DataGrid] Stop exporting `gridColumnsSelector` (#6693)
+- [l10n] Improve Bulgarian (bg-BG) locale (#6578) @AtanasVA
+
+### `@mui/x-date-pickers@v6.0.0-alpha.5` / `@mui/x-date-pickers-pro@v6.0.0-alpha.5`
+
+#### Breaking changes
+
+- [pickers] Rename remaining `private` components (#6550) @LukasTy
+  Previously we had 4 component names with `Private` prefix in order to avoid breaking changes in v5.
+  These components were renamed:
+
+  - `PrivatePickersMonth` -> `MuiPickersMonth`
+  - `PrivatePickersSlideTransition` -> `MuiPickersSlideTransition`
+  - `PrivatePickersToolbarText` -> `MuiPickersToolbarText`
+  - `PrivatePickersYear` -> `MuiPickersYear`
+
+  Manual style overriding will need to use updated classes:
+
+  ```diff
+  -.PrivatePickersMonth-root {
+  +.MuiPickersMonth-root {
+
+  -.PrivatePickersSlideTransition-root {
+  +.MuiPickersSlideTransition-root {
+
+  -.PrivatePickersToolbarText-root {
+  +.MuiPickersToolbarText-root {
+
+  -.PrivatePickersYear-root {
+  +.MuiPickersYear-root {
+  ```
+
+  Component name changes are also reflected in `themeAugmentation`:
+
+  ```diff
+   const theme = createTheme({
+     components: {
+  -    PrivatePickersMonth: {
+  +    MuiPickersMonth: {
+         // overrides
+       },
+  -    PrivatePickersSlideTransition: {
+  +    MuiPickersSlideTransition: {
+         // overrides
+       },
+  -    PrivatePickersToolbarText: {
+  +    MuiPickersToolbarText: {
+        // overrides
+       },
+  -    PrivatePickersYear: {
+  +    MuiPickersYear: {
+         // overrides
+       },
+     },
+   });
+  ```
+
+#### Changes
+
+- [DateTimePicker] Fix toolbar time order when `theme.rtl=true` (#6636) @alexfauquette
+- [pickers] Import fixes for mask editing (#6623) @alexfauquette
+- [pickers] Rename remaining `private` components (#6550) @LukasTy
+- [pickers] New `DesktopDatePicker` based on `DateField` (#6548) @flaviendelangle
+
+### Docs
+
+- [docs] Add feedback in next doc (#6591) @alexfauquette
+- [docs] Check link validity in PR (#6497) @alexfauquette
+- [docs] Disable translations (#6560) @cherniavskii
+- [docs] Fix typo in DataGrid demo page (#6632) @banoth-ravinder
+- [docs] New page to migrate pickers from v5 to v6 (#6472) @flaviendelangle
+- [docs] Remove broken welcome page (#6585) @alexfauquette
+- [docs] Mark data grid column group as available (#6660) @alexfauquette
+- [docs] Fix double space @oliviertassinari
+
+### Core
+
+- [core] Fix duplicate CodeQL build @oliviertassinari
+- [core] Fix spreading on validation page (#6624) @flaviendelangle
+- [core] Small TypeScript improvements (#6575) @flaviendelangle
+- [core] Upgrade monorepo (#6594) @oliviertassinari
+- [core] Change reproduction position (#6621) @oliviertassinari
+- [core] Fix permissions in `no-response` workflow (#6658) @cherniavskii
+- [core] Remove legacy migration function (#6669) @oliviertassinari
+- [license] Improve the license content (#6459) @oliviertassinari
+- [test] Test Arrow up/down on every token (#6563) @alexfauquette
+
+## 6.0.0-alpha.4
 
 _Oct 20, 2022_
 
@@ -134,7 +253,7 @@ We'd like to offer a big thanks to the 9 contributors who made this release poss
 - [test] Add validation test on range pickers (#6504) @alexfauquette
 - [test] Remove BrowserStack (#6263) @DanailH
 
-## v6.0.0-alpha.3
+## 6.0.0-alpha.3
 
 _Oct 13, 2022_
 
@@ -342,7 +461,7 @@ We'd like to offer a big thanks to the 8 contributors who made this release poss
 - [core] Test validation on textfield and date views (#6265) @alexfauquette
 - [test] Sync comment with monorepo @oliviertassinari
 
-## v6.0.0-alpha.2
+## 6.0.0-alpha.2
 
 _Oct 7, 2022_
 
@@ -736,7 +855,7 @@ You can find more information about the new api, including how to set those tran
 - [test] Skip tests for column pinning and dynamic row height (#5997) @m4theushw
 - [website] Improve security header @oliviertassinari
 
-## v5.17.4
+## 5.17.4
 
 _Sep 22, 2022_
 

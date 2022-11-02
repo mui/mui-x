@@ -143,6 +143,11 @@ export interface DataGridPropsWithDefaultValues {
    */
   rowBuffer: number;
   /**
+   * If `false`, the row selection mode is disabled.
+   * @default true
+   */
+  rowSelection: boolean;
+  /**
    * Number of rows from the `rowBuffer` that can be visible before a new slice is rendered.
    * @default 3
    */
@@ -207,11 +212,6 @@ export interface DataGridPropsWithDefaultValues {
    * @default false
    */
   disableVirtualization: boolean;
-  /**
-   * If `true`, modification to a cell will not be discarded if the mode is changed from "edit" to "view" while processing props.
-   * @default false
-   */
-  disableIgnoreModificationsIfProcessingProps: boolean; // TODO v6: remove prop and make its `true` behavior the default
   /**
    * Controls whether to use the cell or row editing.
    * @default "cell"

@@ -2,7 +2,7 @@
 title: Data Grid - Master detail
 ---
 
-# Data grid - Master detail [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
+# Data Grid - Master detail [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
 
 <p class="description">Expand your rows to display additional information.</p>
 

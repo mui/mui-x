@@ -38,16 +38,17 @@ Below are described the steps you need to make to migrate from v5 to v6.
 
 - The `selectionChange` event was renamed to `rowSelectionChange`.
 
+### Removed props
+
+- The `disableIgnoreModificationsIfProcessingProps` prop was removed and its behavior when `true` was incorporated as the default behavior.
+  The old behavior can be restored by using `apiRef.current.stopRowEditMode({ ignoreModifications: true })` or `apiRef.current.stopCellEditMode({ ignoreModifications: true })`.
+
 <!--
 ### CSS classes
 
 TBD
 
 ### Virtualization
-
-TBD
-
-### Removed props
 
 TBD
 
