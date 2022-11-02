@@ -12,18 +12,27 @@ const EXPECTED_DIFF: { [propKey: string]: string | ((pickerName: string) => stri
     rifmFormatter: 'no more mask input',
     ignoreInvalidInputs: 'no more mask input',
 
-    renderInput: 'replaced by `components.Field` and `components.Input`',
+    renderInput: (pickerName) =>
+      pickerName.includes('Static')
+        ? 'no more keyboard editing on the static pickers'
+        : 'replaced by `components.Field` and `components.Input`',
     InputAdornmentProps: (pickerName) =>
-      pickerName.includes('Mobile')
+      pickerName.includes('Mobile') || pickerName.includes('Static')
         ? 'never used even in v5'
         : 'replaced by `componentsProps.InputAdornment`',
     OpenPickerButtonProps: (pickerName) =>
-      pickerName.includes('Mobile')
+      pickerName.includes('Mobile') || pickerName.includes('Static')
         ? 'never used even in v5'
         : 'replaced by `componentsProps.OpenPickerButton`',
-    InputProps: 'replaced by `componentsProps.input.InputProps`',
+    InputProps: (pickerName) =>
+      pickerName.includes('Static')
+        ? 'no more keyboard editing on the static pickers'
+        : 'replaced by `componentsProps.input.InputProps`',
 
-    getOpenDialogAriaText: 'replaced by each picker translation key',
+    getOpenDialogAriaText: (pickerName) =>
+      pickerName.includes('Static')
+        ? 'never used even in v5'
+        : 'replaced by each picker translation key',
 
     dateRangeIcon: 'replaced by `componentsProps.tabs.dateRangeIcon`',
     timeIcon: 'replaced by `componentsProps.tabs.timeIcon`',

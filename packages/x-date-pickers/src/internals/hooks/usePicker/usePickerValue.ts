@@ -64,11 +64,7 @@ interface UsePickerValueAction<DraftValue> {
 /**
  * Props used to handle the value of the pickers that are common to all pickers.
  */
-export interface UsePickerValueBaseProps<TValue>
-  extends Pick<
-    UseFieldInternalProps<TValue, unknown>,
-    'selectedSections' | 'onSelectedSectionsChange'
-  > {
+export interface UsePickerValueBaseProps<TValue> {
   /**
    * The value of the picker.
    */
@@ -92,7 +88,11 @@ export interface UsePickerValueBaseProps<TValue>
   onAccept?: (value: TValue) => void;
 }
 
-export interface UsePickerValueNonStaticProps {
+export interface UsePickerValueNonStaticProps
+  extends Pick<
+    UseFieldInternalProps<TValue, unknown>,
+    'selectedSections' | 'onSelectedSectionsChange'
+  > {
   /**
    * If `true` the popup or dialog will close after submitting full date.
    * @default `true` for Desktop, `false` for Mobile (based on the chosen wrapper and `desktopModeMediaQuery` prop).
