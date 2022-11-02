@@ -66,7 +66,3 @@ export interface BaseNextPickerProps<TValue, TDate, TView extends CalendarOrCloc
    */
   localeText?: PickersInputComponentLocaleText<TDate>;
 }
-
-/**
- * Props common to all non-static pickers
- */
