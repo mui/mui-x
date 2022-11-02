@@ -240,9 +240,23 @@ export interface GridCellEventLookup {
     event: React.MouseEvent<HTMLElement>;
   };
   /**
+   * Fired when a `mouseover` event happens in a cell.
+   */
+  cellMouseOver: {
+    params: GridCellParams;
+    event: React.MouseEvent<HTMLElement>;
+  };
+  /**
    * Fired when a `keydown` event happens in a cell.
    */
   cellKeyDown: {
+    params: GridCellParams;
+    event: React.KeyboardEvent<HTMLElement>;
+  };
+  /**
+   * Fired when a `keyup` event happens in a cell.
+   */
+  cellKeyUp: {
     params: GridCellParams;
     event: React.KeyboardEvent<HTMLElement>;
   };

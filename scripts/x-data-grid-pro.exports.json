@@ -84,6 +84,7 @@
   { "name": "GridCellCheckboxRenderer", "kind": "Variable" },
   { "name": "GridCellClassFn", "kind": "TypeAlias" },
   { "name": "GridCellClassNamePropType", "kind": "TypeAlias" },
+  { "name": "GridCellCoordinates", "kind": "Interface" },
   { "name": "GridCellEditStartParams", "kind": "Interface" },
   { "name": "GridCellEditStartReasons", "kind": "Enum" },
   { "name": "GridCellEditStopParams", "kind": "Interface" },

@@ -18,6 +18,7 @@ import { GRID_AGGREGATION_FUNCTIONS } from '../hooks/features/aggregation';
  */
 export const DATA_GRID_PREMIUM_PROPS_DEFAULT_VALUES: DataGridPremiumPropsWithDefaultValue = {
   ...DATA_GRID_PRO_PROPS_DEFAULT_VALUES,
+  cellSelection: false,
   disableAggregation: false,
   disableRowGrouping: false,
   rowGroupingColumnMode: 'single',

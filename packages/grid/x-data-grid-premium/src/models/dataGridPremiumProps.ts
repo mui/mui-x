@@ -15,6 +15,7 @@ import type {
 } from '../hooks/features/aggregation';
 import { GridInitialStatePremium } from './gridStatePremium';
 import { GridApiPremium } from './gridApiPremium';
+import { GridCellSelectionModel } from '../hooks/features/cellSelection';
 
 export interface GridExperimentalPremiumFeatures extends GridExperimentalProFeatures {}
 
@@ -51,6 +52,11 @@ export type DataGridPremiumForcedPropsKey = 'signature';
  * The controlled model do not have a default value at the prop processing level, so they must be defined in `DataGridOtherProps`
  */
 export interface DataGridPremiumPropsWithDefaultValue extends DataGridProPropsWithDefaultValue {
+  /**
+   * If `true`, the cell selection mode is enabled.
+   * @default false
+   */
+  cellSelection: boolean;
   /**
    * If `true`, aggregation is disabled.
    * @default false
@@ -120,4 +126,17 @@ export interface DataGridPremiumPropsWithoutDefaultValue<R extends GridValidRowM
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onAggregationModelChange?: (model: GridAggregationModel, details: GridCallbackDetails) => void;
+  /**
+   * Set the cell selection model of the grid.
+   */
+  cellSelectionModel?: GridCellSelectionModel;
+  /**
+   * Callback fired when the selection state of one or multiple cells changes.
+   * @param {GridCellSelectionModel} cellSelectionModel Object in the shape of [[GridCellSelectionModel]] containg the selected cells.
+   * @param {GridCallbackDetails} details Additional details for this callback.
+   */
+  onCellSelectionModelChange?: (
+    cellSelectionModel: GridCellSelectionModel,
+    details: GridCallbackDetails,
+  ) => void;
 }

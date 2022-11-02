@@ -1,5 +1,10 @@
 import * as React from 'react';
-import { GridCellIndexCoordinates, GridScrollParams, GridColDef } from '../../../models';
+import {
+  GridCellIndexCoordinates,
+  GridScrollParams,
+  GridColDef,
+  GridCellCoordinates,
+} from '../../../models';
 import { GridInitialStateCommunity } from '../../../models/gridStateCommunity';
 import {
   GridExportStateParams,
@@ -37,6 +42,8 @@ export interface GridPipeProcessingLookup {
     value: string[];
     context: GridRowId;
   };
+  cellClassName: { value: string[]; context: GridCellCoordinates };
+  isCellSelected: { value: boolean; context: GridCellCoordinates };
 }
 
 export type GridPipeProcessor<P extends GridPipeProcessorGroup> = (

@@ -108,6 +108,15 @@ DataGridPremiumRaw.propTypes = {
    */
   cellModesModel: PropTypes.object,
   /**
+   * If `true`, the cell selection mode is enabled.
+   * @default false
+   */
+  cellSelection: PropTypes.bool,
+  /**
+   * Set the cell selection model of the grid.
+   */
+  cellSelectionModel: PropTypes.object,
+  /**
    * If `true`, the grid get a first column with a checkbox that allows to select rows.
    * @default false
    */
@@ -529,6 +538,12 @@ DataGridPremiumRaw.propTypes = {
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onCellModesModelChange: PropTypes.func,
+  /**
+   * Callback fired when the selection state of one or multiple cells changes.
+   * @param {GridCellSelectionModel} cellSelectionModel Object in the shape of [[GridCellSelectionModel]] containg the selected cells.
+   * @param {GridCallbackDetails} details Additional details for this callback.
+   */
+  onCellSelectionModelChange: PropTypes.func,
   /**
    * Callback fired when a click event comes from a column header element.
    * @param {GridColumnHeaderParams} params With all properties from [[GridColumnHeaderParams]].

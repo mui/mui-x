@@ -281,6 +281,22 @@ export const GridRootStyles = styled('div', {
       display: 'flex',
       alignItems: 'center',
       borderBottom: `1px solid ${borderColor}`,
+      '&.Mui-selected': {
+        backgroundColor: alpha(theme.palette.primary.main, theme.palette.action.selectedOpacity),
+        '&:hover, &.Mui-hovered': {
+          backgroundColor: alpha(
+            theme.palette.primary.main,
+            theme.palette.action.selectedOpacity + theme.palette.action.hoverOpacity,
+          ),
+          // Reset on touch devices, it doesn't add specificity
+          '@media (hover: none)': {
+            backgroundColor: alpha(
+              theme.palette.primary.main,
+              theme.palette.action.selectedOpacity,
+            ),
+          },
+        },
+      },
     },
     [`& .${gridClasses.row}:not(.${gridClasses['row--dynamicHeight']}) > .${gridClasses.cell}`]: {
       overflow: 'hidden',
