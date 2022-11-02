@@ -24,11 +24,6 @@ export interface GridCoreApi {
    */
   columnHeadersElementRef?: React.RefObject<HTMLDivElement>;
   /**
-   * The React ref of the grid window container element.
-   * @ignore - do not document.
-   */
-  windowRef?: React.RefObject<HTMLDivElement>;
-  /**
    * The React ref of the grid header element.
    * @ignore - do not document.
    */
@@ -86,6 +81,10 @@ export interface GridCorePrivateApi<
    * The generic event emitter manager.
    */
   eventManager: EventManager;
+  /**
+   * The React ref of the grid virtual scroller container element.
+   */
+  virtualScrollerRef?: React.RefObject<HTMLDivElement>;
   register: <
     V extends 'public' | 'private',
     T extends V extends 'public'

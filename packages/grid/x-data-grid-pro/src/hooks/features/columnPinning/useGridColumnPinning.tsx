@@ -93,12 +93,15 @@ export const useGridColumnPinning = (
       }
 
       const index = event.currentTarget.dataset.rowindex;
-      const rowElements = apiRef.current.windowRef!.current!.querySelectorAll(
+      const rowElements = apiRef.current.virtualScrollerRef!.current!.querySelectorAll(
         `.${gridClasses.row}[data-rowindex="${index}"]`,
       );
       rowElements.forEach((row) => {
         // Ignore rows from other grid inside the hovered row
-        if (row.closest(`.${gridClasses.virtualScroller}`) === apiRef.current.windowRef!.current!) {
+        if (
+          row.closest(`.${gridClasses.virtualScroller}`) ===
+          apiRef.current.virtualScrollerRef!.current!
+        ) {
           if (event.type === 'mouseenter') {
             row.classList.add('Mui-hovered');
           } else {
@@ -149,8 +152,8 @@ export const useGridColumnPinning = (
       const visibleColumns = gridVisibleColumnDefinitionsSelector(apiRef);
       const columnsTotalWidth = gridColumnsTotalWidthSelector(apiRef);
       const columnPositions = gridColumnPositionsSelector(apiRef);
-      const clientWidth = apiRef.current.windowRef!.current!.clientWidth;
-      const scrollLeft = apiRef.current.windowRef!.current!.scrollLeft;
+      const clientWidth = apiRef.current.virtualScrollerRef!.current!.clientWidth;
+      const scrollLeft = apiRef.current.virtualScrollerRef!.current!.scrollLeft;
       const offsetWidth = visibleColumns[params.colIndex].computedWidth;
       const offsetLeft = columnPositions[params.colIndex];
 

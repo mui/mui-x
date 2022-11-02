@@ -56,6 +56,7 @@ Below are described the steps you need to make to migrate from v5 to v6.
   |                                                   |
   | ------------------------------------------------- |
   | `getLogger`                                       |
+  | `windowRef`                                       |
   | `unstable_caches`                                 |
   | `unstable_eventManager`                           |
   | `unstable_requestPipeProcessorsApplication`       |
