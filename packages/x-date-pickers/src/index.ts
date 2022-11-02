@@ -31,6 +31,7 @@ export * from './DayCalendarSkeleton';
 export * from './NextDatePicker';
 export * from './DesktopNextDatePicker';
 export * from './MobileNextDatePicker';
+export * from './StaticNextDatePicker';
 
 export { PickerStaticWrapper } from './internals/components/PickerStaticWrapper';
 export type { MuiDateSectionName } from './internals/models/muiPickersAdapter';
