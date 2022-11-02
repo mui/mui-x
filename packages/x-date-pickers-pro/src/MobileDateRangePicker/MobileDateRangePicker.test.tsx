@@ -311,7 +311,6 @@ describe('<MobileDateRangePicker />', () => {
         expect(input).to.have.attribute('readonly');
       });
     });
-  });
 
     it('should allow `shouldDisableDate` to depends on start or end date', () => {
       render(
