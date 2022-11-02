@@ -31,10 +31,12 @@ const EXPECTED_DIFF: { [propKey: string]: string | ((pickerName: string) => stri
     children: 'never used even in v5',
     inputRef: (pickerName) => (pickerName.includes('Range') ? 'never used even in v5' : undefined),
     label: (pickerName) => (pickerName.includes('Range') ? 'never used even in v5' : undefined),
+    closeOnSelect: (pickerName) =>
+      pickerName.includes('Static') ? 'never used even in v5' : undefined,
     onViewChange: (pickerName) =>
       pickerName.includes('Range') ? 'never used even in v5' : undefined,
     'components.OpenPickerIcon': (pickerName) =>
-      pickerName.includes('Range') || pickerName.includes('Mobile')
+      pickerName.includes('Range') || pickerName.includes('Mobile') || pickerName.includes('Static')
         ? 'never used even in v5'
         : undefined,
 
@@ -58,15 +60,19 @@ const PICKERS = [
   'DatePicker',
   'DesktopDatePicker',
   'MobileDatePicker',
+  'StaticDatePicker',
   'DateTimePicker',
   'DesktopDateTimePicker',
   'MobileDateTimePicker',
+  'StaticDateTimePicker',
   'TimePicker',
   'DesktopTimePicker',
   'MobileTimePicker',
+  'StaticTimePicker',
   'DateRangePicker',
   'DesktopDateRangePicker',
   'MobileDateRangePicker',
+  'StaticDateRangePicker',
 ];
 
 const main = async () => {
@@ -112,8 +118,19 @@ const main = async () => {
   // eslint-disable-next-line no-restricted-syntax
   for (const pickerName of PICKERS) {
     const slug = kebabCase(pickerName);
+
+    // eslint-disable-next-line no-nested-ternary
+    const newPickerName = pickerName.includes('Mobile')
+      ? `MobileNext${pickerName.replace('Mobile', '')}`
+      : // eslint-disable-next-line no-nested-ternary
+      pickerName.includes('Desktop')
+      ? `DesktopNext${pickerName.replace('Desktop', '')}`
+      : pickerName.includes('Static')
+      ? `StaticNext${pickerName.replace('Static', '')}`
+      : `Next${pickerName}`;
+
     const oldComponentPropsSymbol = project.exports[`${pickerName}Props`];
-    const newComponentPropsSymbol = project.exports[`${pickerName}2Props`];
+    const newComponentPropsSymbol = project.exports[`${newPickerName}Props`];
 
     message += '<details>\n';
 

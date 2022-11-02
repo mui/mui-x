@@ -7,6 +7,7 @@ import {
   BaseNextPickerProps,
   PickersPopperSlotsComponent,
   PickersPopperSlotsComponentsProps,
+  UsePickerValueNonStaticProps,
 } from '@mui/x-date-pickers/internals';
 import { DateRange } from '../../models';
 import { BaseMultiInputFieldProps } from '../../models/fields';
@@ -26,10 +27,10 @@ export interface UseDesktopRangePickerSlotsComponentsProps<TDate>
   input?: SlotComponentProps<typeof TextField, {}, unknown>;
 }
 
-export interface ExportedUseDesktopRangePickerProps {}
+export interface DesktopRangeOnlyPickerProps extends UsePickerValueNonStaticProps {}
 
 export interface UseDesktopRangePickerProps<TDate, TView extends CalendarOrClockPickerView>
-  extends ExportedUseDesktopRangePickerProps,
+  extends DesktopRangeOnlyPickerProps,
     BaseNextPickerProps<DateRange<TDate>, TDate, TView> {
   /**
    * Overrideable components.

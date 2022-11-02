@@ -91,6 +91,7 @@ export { usePickerState } from './hooks/usePickerState';
 export { usePicker } from './hooks/usePicker';
 export type { UsePickerResponse } from './hooks/usePicker';
 export type { UsePickerParams } from './hooks/usePicker';
+export type { UsePickerValueNonStaticProps } from './hooks/usePicker/usePickerValue';
 export type { PickerStateProps, PickerStatePickerProps } from './hooks/usePickerState';
 export type { PickerStateValueManager, PickerSelectionState } from './hooks/usePickerState';
 export { useLocalizationContext, useDefaultDates, useUtils, useLocaleText } from './hooks/useUtils';

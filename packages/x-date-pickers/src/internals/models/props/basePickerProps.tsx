@@ -4,6 +4,7 @@ import { PickerStateProps } from '../../hooks/usePickerState';
 import { UsePickerProps } from '../../hooks/usePicker';
 import { CalendarOrClockPickerView } from '../views';
 import { PickersInputComponentLocaleText } from '../../../locales/utils/pickersLocaleTextApi';
+import { UsePickerBaseProps } from '@mui/x-date-pickers/internals/hooks/usePicker/usePicker.types';
 
 export interface BasePickerProps<TValue, TDate> extends PickerStateProps<TValue> {
   /**
@@ -42,7 +43,7 @@ export interface BasePickerProps<TValue, TDate> extends PickerStateProps<TValue>
  * Props common to all pickers.
  */
 export interface BaseNextPickerProps<TValue, TDate, TView extends CalendarOrClockPickerView>
-  extends UsePickerProps<TValue, TView> {
+  extends UsePickerBaseProps<TValue, TView> {
   /**
    * Class name applied to the root element.
    */
@@ -66,3 +67,7 @@ export interface BaseNextPickerProps<TValue, TDate, TView extends CalendarOrCloc
    */
   localeText?: PickersInputComponentLocaleText<TDate>;
 }
+
+/**
+ * Props common to all non-static pickers
+ */

@@ -15,6 +15,7 @@ import {
   ExportedPickerViewLayoutSlotsComponent,
   ExportedPickerViewLayoutSlotsComponentsProps,
 } from '../../components/PickerViewLayout';
+import { UsePickerValueNonStaticProps } from '../usePicker/usePickerValue';
 
 export interface UseDesktopPickerSlotsComponent<TDate>
   extends PickersPopperSlotsComponent,
@@ -62,8 +63,11 @@ export interface UseDesktopPickerSlotsComponentsProps<TDate>
   openPickerIcon?: Record<string, any>;
 }
 
+export interface DesktopOnlyPickerProps extends UsePickerValueNonStaticProps {}
+
 export interface UseDesktopPickerProps<TDate, TView extends CalendarOrClockPickerView>
-  extends BaseNextPickerProps<TDate | null, TDate, TView> {
+  extends BaseNextPickerProps<TDate | null, TDate, TView>,
+    DesktopOnlyPickerProps {
   /**
    * Overrideable components.
    * @default {}

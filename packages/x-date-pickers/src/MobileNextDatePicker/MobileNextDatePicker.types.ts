@@ -1,6 +1,7 @@
 import {
   UseMobilePickerSlotsComponent,
   UseMobilePickerSlotsComponentsProps,
+  MobileOnlyPickerProps,
 } from '../internals/hooks/useMobilePicker';
 import {
   BaseNextDatePickerProps,
@@ -17,7 +18,9 @@ export interface MobileNextDatePickerSlotsComponentsProps<TDate>
   extends BaseNextDatePickerSlotsComponentsProps<TDate>,
     UseMobilePickerSlotsComponentsProps<TDate> {}
 
-export interface MobileNextDatePickerProps<TDate> extends BaseNextDatePickerProps<TDate> {
+export interface MobileNextDatePickerProps<TDate>
+  extends BaseNextDatePickerProps<TDate>,
+    MobileOnlyPickerProps {
   /**
    * Overrideable components.
    * @default {}

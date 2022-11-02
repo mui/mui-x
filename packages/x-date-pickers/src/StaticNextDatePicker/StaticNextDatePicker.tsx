@@ -54,11 +54,6 @@ StaticNextDatePicker.propTypes = {
    */
   className: PropTypes.string,
   /**
-   * If `true` the popup or dialog will close after submitting full date.
-   * @default `true` for Desktop, `false` for Mobile (based on the chosen wrapper and `desktopModeMediaQuery` prop).
-   */
-  closeOnSelect: PropTypes.bool,
-  /**
    * Overrideable components.
    * @default {}
    */
@@ -169,11 +164,6 @@ StaticNextDatePicker.propTypes = {
    */
   onChange: PropTypes.func,
   /**
-   * Callback fired when the popup requests to be closed.
-   * Use in controlled mode (see open).
-   */
-  onClose: PropTypes.func,
-  /**
    * Callback that fired when input value or new `value` prop validation returns **new** validation error (or value is valid after error).
    * In case of validation error detected `reason` prop return non-null value and `TextField` must be displayed in `error` state.
    * This can be used to render appropriate form error.
@@ -194,11 +184,6 @@ StaticNextDatePicker.propTypes = {
    */
   onMonthChange: PropTypes.func,
   /**
-   * Callback fired when the popup requests to be opened.
-   * Use in controlled mode (see open).
-   */
-  onOpen: PropTypes.func,
-  /**
    * Callback fired when the selected sections change.
    * @param {FieldSelectedSections} newValue The new selected sections.
    */
@@ -215,11 +200,6 @@ StaticNextDatePicker.propTypes = {
    * @param {TDate} year The new year.
    */
   onYearChange: PropTypes.func,
-  /**
-   * Control the popup or dialog open state.
-   * @default false
-   */
-  open: PropTypes.bool,
   /**
    * First view to show.
    */

@@ -62,10 +62,9 @@ interface UsePickerValueAction<DraftValue> {
 }
 
 /**
- * Props used to handle the value of the pickers.
- * Those props are exposed on all the pickers.
+ * Props used to handle the value of the pickers that are common to all pickers.
  */
-export interface UsePickerValueProps<TValue>
+export interface UsePickerValueBaseProps<TValue>
   extends Pick<
     UseFieldInternalProps<TValue, unknown>,
     'selectedSections' | 'onSelectedSectionsChange'
@@ -86,6 +85,15 @@ export interface UsePickerValueProps<TValue>
    */
   onChange?: (value: TValue) => void;
   /**
+   * Callback fired when date is accepted @DateIOType.
+   * @template TValue
+   * @param {TValue} value The value that was just accepted.
+   */
+  onAccept?: (value: TValue) => void;
+}
+
+export interface UsePickerValueNonStaticProps {
+  /**
    * If `true` the popup or dialog will close after submitting full date.
    * @default `true` for Desktop, `false` for Mobile (based on the chosen wrapper and `desktopModeMediaQuery` prop).
    */
@@ -95,12 +103,6 @@ export interface UsePickerValueProps<TValue>
    * @default false
    */
   open?: boolean;
-  /**
-   * Callback fired when date is accepted @DateIOType.
-   * @template TValue
-   * @param {TValue} value The value that was just accepted.
-   */
-  onAccept?: (value: TValue) => void;
   /**
    * Callback fired when the popup requests to be closed.
    * Use in controlled mode (see open).
@@ -112,6 +114,14 @@ export interface UsePickerValueProps<TValue>
    */
   onOpen?: () => void;
 }
+
+/**
+ * Props used to handle the value of the pickers.
+ * Those props are only exposed on the non-static pickers.
+ */
+export interface UsePickerValueProps<TValue>
+  extends UsePickerValueBaseProps<TValue>,
+    UsePickerValueNonStaticProps {}
 
 export interface UsePickerValueParams<TValue, TDate> {
   props: UsePickerValueProps<TValue>;
