@@ -234,7 +234,7 @@ createTheme({
     MuiMobileNextDatePicker: {
       defaultProps: {
         open: true,
-        // @ts-expect-error invalid MuiDesktopNextDatePicker prop
+        // @ts-expect-error invalid MuiMobileNextDatePicker prop
         someRandomProp: true,
       },
     },
@@ -253,7 +253,7 @@ createTheme({
     MuiNextDatePicker: {
       defaultProps: {
         open: true,
-        // @ts-expect-error invalid MuiDesktopNextDatePicker prop
+        // @ts-expect-error invalid MuiNextDatePicker prop
         someRandomProp: true,
       },
     },
