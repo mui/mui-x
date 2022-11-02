@@ -184,11 +184,6 @@ StaticNextDatePicker.propTypes = {
    */
   onMonthChange: PropTypes.func,
   /**
-   * Callback fired when the selected sections change.
-   * @param {FieldSelectedSections} newValue The new selected sections.
-   */
-  onSelectedSectionsChange: PropTypes.func,
-  /**
    * Callback fired on view change.
    * @template View
    * @param {View} view The new view.
@@ -220,23 +215,6 @@ StaticNextDatePicker.propTypes = {
    * @default () => <span data-mui-test="loading-progress">...</span>
    */
   renderLoading: PropTypes.func,
-  /**
-   * The currently selected sections.
-   * This prop accept four formats:
-   * 1. If a number is provided, the section at this index will be selected.
-   * 2. If an object with a `startIndex` and `endIndex` properties are provided, the sections between those two indexes will be selected.
-   * 3. If a string of type `MuiDateSectionName` is provided, the first section with that name will be selected.
-   * 4. If `null` is provided, no section will be selected
-   * If not provided, the selected sections will be handled internally.
-   */
-  selectedSections: PropTypes.oneOfType([
-    PropTypes.oneOf(['day', 'hour', 'meridiem', 'minute', 'month', 'second', 'year']),
-    PropTypes.number,
-    PropTypes.shape({
-      endIndex: PropTypes.number.isRequired,
-      startIndex: PropTypes.number.isRequired,
-    }),
-  ]),
   /**
    * Disable specific date. @DateIOType
    * @template TDate
