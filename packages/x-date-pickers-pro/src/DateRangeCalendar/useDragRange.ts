@@ -9,7 +9,7 @@ interface UseDragRange<TDate> {
   currentDatePosition: DateRangePosition;
   setRangePreviewDay: (value: React.SetStateAction<TDate | null>) => void;
   setCurrentDatePosition: (value: React.SetStateAction<DateRangePosition>) => void;
-  handleSelectedDayChange: (newDate: TDate | null) => void;
+  onDrop: (newDate: TDate) => void;
 }
 
 interface UseDragRangeResponse {
@@ -40,7 +40,7 @@ export const useDragRange = <TDate>({
   currentDatePosition,
   setCurrentDatePosition,
   setRangePreviewDay,
-  handleSelectedDayChange,
+  onDrop,
 }: UseDragRange<TDate>): UseDragRangeResponse => {
   const [isDragging, setIsDragging] = React.useState(false);
 
@@ -50,7 +50,8 @@ export const useDragRange = <TDate>({
       setRangePreviewDay(newDate);
       event.dataTransfer.effectAllowed = 'move';
       setIsDragging(true);
-      const datePosition = (event.target as HTMLButtonElement).dataset.position as DateRangePosition;
+      const datePosition = (event.target as HTMLButtonElement).dataset
+        .position as DateRangePosition;
       if (datePosition && currentDatePosition !== datePosition) {
         setCurrentDatePosition(datePosition);
       }
@@ -83,7 +84,7 @@ export const useDragRange = <TDate>({
     event.stopPropagation();
     const newDate = resolveDateFromEvent(event, utils);
     if (newDate) {
-      handleSelectedDayChange(newDate);
+      onDrop(newDate);
     }
   });
 

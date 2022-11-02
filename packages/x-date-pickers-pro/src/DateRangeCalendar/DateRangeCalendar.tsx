@@ -24,6 +24,7 @@ import {
   usePreviousMonthDisabled,
   useUtils,
   WrapperVariantContext,
+  PickerSelectionState,
 } from '@mui/x-date-pickers/internals';
 import { getReleaseInfo } from '../internal/utils/releaseInfo';
 import { getDateRangeCalendarUtilityClass } from './dateRangeCalendarClasses';
@@ -239,22 +240,29 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
     }
   }, [currentDatePosition, value]); // eslint-disable-line
 
-  const handleSelectedDayChange = useEventCallback((newDate: TDate | null) => {
-    const { nextSelection, newRange } = calculateRangeChange({
-      newDate,
-      utils,
-      range: value,
-      currentlySelectingRangeEnd: currentDatePosition,
-    });
+  const handleSelectedDayChange = useEventCallback(
+    (
+      newDate: TDate | null,
+      selectionState: PickerSelectionState | undefined,
+      allowRangeFlip: boolean = false,
+    ) => {
+      const { nextSelection, newRange } = calculateRangeChange({
+        newDate,
+        utils,
+        range: value,
+        currentlySelectingRangeEnd: currentDatePosition,
+        allowRangeFlip,
+      });
 
-    setCurrentDatePosition(nextSelection);
-    onCurrentDatePositionChange?.(nextSelection);
+      setCurrentDatePosition(nextSelection);
+      onCurrentDatePositionChange?.(nextSelection);
 
-    const isFullRangeSelected = isRangeValid(utils, newRange);
+      const isFullRangeSelected = isRangeValid(utils, newRange);
 
-    setValue(newRange);
-    onChange?.(newRange, isFullRangeSelected ? 'finish' : 'partial');
-  });
+      setValue(newRange);
+      onChange?.(newRange, isFullRangeSelected ? 'finish' : 'partial');
+    },
+  );
 
   const selectNextMonth = React.useCallback(() => {
     changeMonth(utils.getNextMonth(calendarState.currentMonth));
@@ -325,13 +333,17 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
     }
   };
 
+  const handleDrop = useEventCallback((newDate: TDate) => {
+    handleSelectedDayChange(newDate, undefined, true);
+  });
+
   const { isDragging, ...dragEventHandlers } = useDragRange({
     currentDatePosition,
     disableDragEditing,
-    handleSelectedDayChange,
+    onDrop: handleDrop,
     setCurrentDatePosition,
     setRangePreviewDay,
-    utils
+    utils,
   });
 
   const componentsForDayCalendar = {

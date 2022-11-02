@@ -72,7 +72,23 @@ describe('date-range-manager', () => {
       expectedRange: [start2018, mid2018],
       expectedNextSelection: 'start' as const,
     },
-  ].forEach(({ range, selectingEnd, newDate, expectedRange, expectedNextSelection }) => {
+    {
+      range: [start2018, mid2018],
+      selectingEnd: 'start' as const,
+      newDate: end2019,
+      expectedRange: [mid2018, end2019],
+      allowRangeFlip: true,
+      expectedNextSelection: 'start' as const,
+    },
+    {
+      range: [mid2018, end2019],
+      selectingEnd: 'end' as const,
+      newDate: start2018,
+      expectedRange: [start2018, mid2018],
+      allowRangeFlip: true,
+      expectedNextSelection: 'end' as const,
+    },
+  ].forEach(({ range, selectingEnd, newDate, expectedRange, allowRangeFlip, expectedNextSelection }) => {
     it(`calculateRangeChange should return ${expectedRange} when selecting ${selectingEnd} of ${range} with user input ${newDate}`, () => {
       expect(
         calculateRangeChange({
@@ -80,6 +96,7 @@ describe('date-range-manager', () => {
           range: range as DateRange<Date>,
           newDate,
           currentlySelectingRangeEnd: selectingEnd,
+          allowRangeFlip,
         }),
       ).to.deep.equal({
         nextSelection: expectedNextSelection,
