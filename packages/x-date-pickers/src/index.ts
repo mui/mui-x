@@ -28,6 +28,7 @@ export * from './YearCalendar';
 export * from './DayCalendarSkeleton';
 
 // New Pickers
+export * from './NextDatePicker';
 export * from './DesktopNextDatePicker';
 export * from './MobileNextDatePicker';
 

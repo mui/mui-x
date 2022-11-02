@@ -231,6 +231,13 @@ createTheme({
         someRandomProp: true,
       },
     },
+    MuiMobileNextDatePicker: {
+      defaultProps: {
+        open: true,
+        // @ts-expect-error invalid MuiDesktopNextDatePicker prop
+        someRandomProp: true,
+      },
+    },
     MuiMonthCalendar: {
       defaultProps: {
         disableFuture: true,
@@ -241,6 +248,13 @@ createTheme({
         root: {
           backgroundColor: 'red',
         },
+      },
+    },
+    MuiNextDatePicker: {
+      defaultProps: {
+        open: true,
+        // @ts-expect-error invalid MuiDesktopNextDatePicker prop
+        someRandomProp: true,
       },
     },
     MuiPickersArrowSwitcher: {
