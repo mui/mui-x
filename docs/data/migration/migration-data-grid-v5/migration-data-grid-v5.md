@@ -39,7 +39,7 @@ Below are described the steps you need to make to migrate from v5 to v6.
 ### State access
 
 - The `gridSelectionStateSelector` selector was renamed to `gridRowSelectionStateSelector`.
-- The `gridColumnsSelector` selector was renamed to `gridColumnsStateSelector`.
+- The `gridColumnsSelector` selector was removed. Use more specific grid columns selectors instead.
 - The `allGridColumnsFieldsSelector` selector was removed. Use `gridColumnFieldsSelector` instead.
 - The `allGridColumnsSelector` selector was removed. Use `gridColumnDefinitionsSelector` instead.
 - The `visibleGridColumnsSelector` selector was removed. Use `gridVisibleColumnDefinitionsSelector` instead.
