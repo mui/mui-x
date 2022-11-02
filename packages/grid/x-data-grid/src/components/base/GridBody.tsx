@@ -58,12 +58,10 @@ function GridBody(props: GridBodyProps) {
   const columnHeadersRef = React.useRef<HTMLDivElement>(null);
   const columnsContainerRef = React.useRef<HTMLDivElement>(null);
   const windowRef = React.useRef<HTMLDivElement>(null);
-  const renderingZoneRef = React.useRef<HTMLDivElement>(null);
 
   apiRef.current.columnHeadersContainerElementRef = columnsContainerRef;
   apiRef.current.columnHeadersElementRef = columnHeadersRef;
   apiRef.current.windowRef = windowRef; // TODO rename, it's not attached to the window anymore
-  apiRef.current.renderingZoneRef = renderingZoneRef; // TODO remove, nobody should have access to internal parts of the virtualization
 
   const handleResize = React.useCallback(
     (size: ElementSize) => {

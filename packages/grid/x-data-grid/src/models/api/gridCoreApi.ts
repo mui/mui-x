@@ -29,11 +29,6 @@ export interface GridCoreApi {
    */
   windowRef?: React.RefObject<HTMLDivElement>;
   /**
-   * The React ref of the grid data rendering zone.
-   * @ignore - do not document.
-   */
-  renderingZoneRef?: React.RefObject<HTMLDivElement>;
-  /**
    * The React ref of the grid header element.
    * @ignore - do not document.
    */
