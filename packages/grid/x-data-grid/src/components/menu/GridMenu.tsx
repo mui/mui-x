@@ -64,7 +64,7 @@ const transformOrigin = {
   'bottom-end': 'top right',
 };
 
-const GridMenu = (props: GridMenuProps) => {
+function GridMenu(props: GridMenuProps) {
   const { open, target, onClickAway, children, position, className, onExited, ...other } = props;
   const apiRef = useGridApiContext();
   const prevTarget = React.useRef(target);
@@ -120,7 +120,7 @@ const GridMenu = (props: GridMenuProps) => {
       )}
     </GridMenuRoot>
   );
-};
+}
 
 GridMenu.propTypes = {
   // ----------------------------- Warning --------------------------------

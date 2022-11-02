@@ -223,10 +223,10 @@ function testTextFieldValidation(ElementToTest, propsToTest, getOptions) {
         const { render, withDate, isSingleInput } = getOptions();
 
         let now;
-        const WithFakeTimer = (props) => {
+        function WithFakeTimer(props) {
           now = adapterToUse.date(new Date());
           return <ElementToTest value={[now, now]} {...props} />;
-        };
+        }
 
         const { setProps } = render(<WithFakeTimer {...defaultProps} disablePast />);
 
@@ -258,10 +258,10 @@ function testTextFieldValidation(ElementToTest, propsToTest, getOptions) {
         const { render, withDate, isSingleInput } = getOptions();
 
         let now;
-        const WithFakeTimer = (props) => {
+        function WithFakeTimer(props) {
           now = adapterToUse.date(new Date());
           return <ElementToTest value={[now, now]} {...props} />;
-        };
+        }
 
         const { setProps } = render(<WithFakeTimer {...defaultProps} disableFuture />);
 

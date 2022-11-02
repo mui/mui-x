@@ -20,7 +20,7 @@ interface GridAggregationColumnMenuItemsProps {
   availableAggregationFunctions: string[];
 }
 
-export const GridAggregationColumnMenuItem = (props: GridAggregationColumnMenuItemsProps) => {
+export function GridAggregationColumnMenuItem(props: GridAggregationColumnMenuItemsProps) {
   const { column, label, availableAggregationFunctions } = props;
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
@@ -88,4 +88,4 @@ export const GridAggregationColumnMenuItem = (props: GridAggregationColumnMenuIt
       </FormControl>
     </MenuItem>
   );
-};
+}

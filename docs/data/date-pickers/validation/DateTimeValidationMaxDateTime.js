@@ -11,7 +11,7 @@ import Typography from '@mui/material/Typography';
 const todayAtNoon = dayjs().set('hour', 12).startOf('hour');
 const todayAt9AM = dayjs().set('hour', 9).startOf('hour');
 
-const GridItem = ({ label, children, spacing = 1 }) => {
+function GridItem({ label, children, spacing = 1 }) {
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column' }}>
       <Typography variant="body2" sx={{ mb: spacing }}>
@@ -20,7 +20,7 @@ const GridItem = ({ label, children, spacing = 1 }) => {
       {children}
     </Box>
   );
-};
+}
 
 GridItem.propTypes = {
   children: PropTypes.node,

@@ -37,13 +37,13 @@ describe('<DataGrid /> - Filter', () => {
     columns: [{ field: 'brand' }],
   };
 
-  const TestCase = (props: Partial<DataGridProps>) => {
+  function TestCase(props: Partial<DataGridProps>) {
     return (
       <div style={{ width: 300, height: 300 }}>
         <DataGrid {...baselineProps} {...props} />
       </div>
     );
-  };
+  }
 
   describe('prop: filterModel', () => {
     it('should throw for more than one filter item', () => {
