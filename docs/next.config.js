@@ -1,6 +1,7 @@
 const path = require('path');
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 // const withTM = require('next-transpile-modules')(['@mui/monorepo']);
+const withDocsInfra = require('@mui/monorepo/docs/nextConfigDocsInfra');
 const pkg = require('../package.json');
 const dataGridPkg = require('../packages/grid/x-data-grid/package.json');
 const datePickersPkg = require('../packages/x-date-pickers/package.json');
@@ -9,43 +10,14 @@ const { LANGUAGES, LANGUAGES_SSR } = require('./src/modules/constants');
 
 const workspaceRoot = path.join(__dirname, '../');
 
-/**
- * https://github.com/zeit/next.js/blob/287961ed9142a53f8e9a23bafb2f31257339ea98/packages/next/next-server/server/config.ts#L10
- * @typedef {'legacy' | 'blocking' | 'concurrent'} ReactRenderMode
- * legacy - ReactDOM.render(<App />)
- * legacy-strict - ReactDOM.render(<React.StrictMode><App /></React.StrictMode>, Element)
- * blocking - ReactDOM.createSyncRoot(Element).render(<App />)
- * concurrent - ReactDOM.createRoot(Element).render(<App />)
- * @type {ReactRenderMode | 'legacy-strict'}
- */
-const reactStrictMode = true;
-if (reactStrictMode) {
-  // eslint-disable-next-line no-console
-  console.log(`Using React.StrictMode.`);
-}
-
-const isDeployment = process.env.NETLIFY === 'true';
-
-module.exports = {
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
+module.exports = withDocsInfra({
   // Avoid conflicts with the other Next.js apps hosted under https://mui.com/
-  assetPrefix: isDeployment ? '/x' : undefined,
-  typescript: {
-    // Motivated by https://github.com/zeit/next.js/issues/7687
-    ignoreBuildErrors: true,
-  },
+  assetPrefix: process.env.DEPLOY_ENV === 'development' ? '' : '/x',
   env: {
-    COMMIT_REF: process.env.COMMIT_REF,
-    CONTEXT: process.env.CONTEXT,
     ENABLE_AD: process.env.ENABLE_AD,
-    GITHUB_AUTH: process.env.GITHUB_AUTH,
     LIB_VERSION: pkg.version,
     DATA_GRID_VERSION: dataGridPkg.version,
     DATE_PICKERS_VERSION: datePickersPkg.version,
-    PULL_REQUEST: process.env.PULL_REQUEST === 'true',
-    REACT_STRICT_MODE: reactStrictMode,
     FEEDBACK_URL: process.env.FEEDBACK_URL,
     SLACK_FEEDBACKS_TOKEN: process.env.SLACK_FEEDBACKS_TOKEN,
     // #default-branch-switch
@@ -90,7 +62,7 @@ module.exports = {
             oneOf: [
               {
                 resourceQuery: /@mui\/markdown/,
-                use: require.resolve('../node_modules/@mui/monorepo/docs/packages/markdown/loader'),
+                use: require.resolve('@mui/monorepo/docs/packages/markdown/loader'),
               },
             ],
           },
@@ -117,7 +89,6 @@ module.exports = {
       },
     };
   },
-  trailingSlash: true,
   // Next.js provides a `defaultPathMap` argument, we could simplify the logic.
   // However, we don't in order to prevent any regression in the `findPages()` method.
   exportPathMap: () => {
@@ -157,8 +128,7 @@ module.exports = {
 
     return map;
   },
-  reactStrictMode,
-  async rewrites() {
+  rewrites: async () => {
     return [
       { source: `/:lang(${LANGUAGES.join('|')})?/:rest*`, destination: '/:rest*' },
       { source: '/api/:rest*', destination: '/api-docs/:rest*' },
@@ -172,4 +142,4 @@ module.exports = {
       permanent: false,
     },
   ],
-};
+});
