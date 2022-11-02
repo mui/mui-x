@@ -20,7 +20,7 @@ export interface DesktopNextDateRangePickerSlotsComponentsProps<TDate>
 
 export interface DesktopNextDateRangePickerProps<TDate>
   extends BaseNextDateRangePickerProps<TDate>,
-    DesktopRangeOnlyPickerProps {
+    DesktopRangeOnlyPickerProps<TDate> {
   /**
    * The number of calendars to render on **desktop**.
    * @default 2

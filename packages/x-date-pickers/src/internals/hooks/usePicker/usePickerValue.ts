@@ -88,7 +88,7 @@ export interface UsePickerValueBaseProps<TValue> {
   onAccept?: (value: TValue) => void;
 }
 
-export interface UsePickerValueNonStaticProps
+export interface UsePickerValueNonStaticProps<TValue>
   extends Pick<
     UseFieldInternalProps<TValue, unknown>,
     'selectedSections' | 'onSelectedSectionsChange'
@@ -121,7 +121,7 @@ export interface UsePickerValueNonStaticProps
  */
 export interface UsePickerValueProps<TValue>
   extends UsePickerValueBaseProps<TValue>,
-    UsePickerValueNonStaticProps {}
+    UsePickerValueNonStaticProps<TValue> {}
 
 export interface UsePickerValueParams<TValue, TDate> {
   props: UsePickerValueProps<TValue>;

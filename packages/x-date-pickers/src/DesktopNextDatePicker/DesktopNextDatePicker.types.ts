@@ -20,7 +20,7 @@ export interface DesktopNextDatePickerSlotsComponentsProps<TDate>
 
 export interface DesktopNextDatePickerProps<TDate>
   extends BaseNextDatePickerProps<TDate>,
-    DesktopOnlyPickerProps {
+    DesktopOnlyPickerProps<TDate> {
   /**
    * Overrideable components.
    * @default {}

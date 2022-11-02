@@ -44,11 +44,11 @@ export interface UseMobilePickerSlotsComponentsProps<TDate>
   input?: SlotComponentProps<typeof TextField, {}, Record<string, any>>;
 }
 
-export interface MobileOnlyPickerProps extends UsePickerValueNonStaticProps {}
+export interface MobileOnlyPickerProps<TDate> extends UsePickerValueNonStaticProps<TDate | null> {}
 
 export interface UseMobilePickerProps<TDate, TView extends CalendarOrClockPickerView>
   extends BaseNextPickerProps<TDate | null, TDate, TView>,
-    MobileOnlyPickerProps {
+    MobileOnlyPickerProps<TDate> {
   /**
    * Overrideable components.
    * @default {}

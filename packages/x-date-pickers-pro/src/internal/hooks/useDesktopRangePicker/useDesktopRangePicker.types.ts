@@ -27,10 +27,11 @@ export interface UseDesktopRangePickerSlotsComponentsProps<TDate>
   input?: SlotComponentProps<typeof TextField, {}, unknown>;
 }
 
-export interface DesktopRangeOnlyPickerProps extends UsePickerValueNonStaticProps {}
+export interface DesktopRangeOnlyPickerProps<TDate>
+  extends UsePickerValueNonStaticProps<DateRange<TDate>> {}
 
 export interface UseDesktopRangePickerProps<TDate, TView extends CalendarOrClockPickerView>
-  extends DesktopRangeOnlyPickerProps,
+  extends DesktopRangeOnlyPickerProps<TDate>,
     BaseNextPickerProps<DateRange<TDate>, TDate, TView> {
   /**
    * Overrideable components.
