@@ -25,13 +25,17 @@ interface UseDragRangeResponse {
 const resolveDateFromEvent = <TDate>(
   event: React.DragEvent<HTMLButtonElement>,
   utils: MuiPickersAdapter<TDate>,
+  checkEquality?: boolean,
 ) => {
   const timestampString = (event.target as HTMLButtonElement).dataset.timestamp;
-  if (timestampString) {
-    const timestamp = +timestampString;
-    return utils.date(new Date(timestamp));
+  if (
+    !timestampString ||
+    (checkEquality && timestampString === event.dataTransfer.getData('draggingDate'))
+  ) {
+    return null;
   }
-  return null;
+  const timestamp = +timestampString;
+  return utils.date(new Date(timestamp));
 };
 
 export const useDragRange = <TDate>({
@@ -50,8 +54,9 @@ export const useDragRange = <TDate>({
       setRangePreviewDay(newDate);
       event.dataTransfer.effectAllowed = 'move';
       setIsDragging(true);
-      const datePosition = (event.target as HTMLButtonElement).dataset
-        .position as DateRangePosition;
+      const buttonDataset = (event.target as HTMLButtonElement).dataset;
+      event.dataTransfer.setData('draggingDate', buttonDataset.timestamp as string);
+      const datePosition = buttonDataset.position as DateRangePosition;
       if (datePosition && currentDatePosition !== datePosition) {
         setCurrentDatePosition(datePosition);
       }
@@ -82,7 +87,7 @@ export const useDragRange = <TDate>({
   const handleDrop = useEventCallback((event: React.DragEvent<HTMLButtonElement>) => {
     event.preventDefault();
     event.stopPropagation();
-    const newDate = resolveDateFromEvent(event, utils);
+    const newDate = resolveDateFromEvent(event, utils, true);
     if (newDate) {
       onDrop(newDate);
     }
