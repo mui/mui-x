@@ -6,7 +6,7 @@ import {
   GridCellParams,
 } from '@mui/x-data-grid-pro';
 
-const TestEvents = () => {
+function TestEvents() {
   const apiRef = useGridApiContext();
 
   // @ts-expect-error Argument of type '(params: GridRowParams) => void' is not assignable to parameter of type 'GridEventListener<'cellClick'>'.
@@ -57,4 +57,4 @@ const TestEvents = () => {
   useGridApiEventHandler(apiRef, 'cellClick', () => {});
 
   return null;
-};
+}

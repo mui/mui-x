@@ -6,7 +6,7 @@ import { useGridApiContext } from '../../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
 import { gridVisibleColumnDefinitionsSelector } from '../../../hooks/features/columns';
 
-const HideGridColMenuItem = (props: GridFilterItemProps) => {
+function HideGridColMenuItem(props: GridFilterItemProps) {
   const { column, onClick } = props;
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
@@ -53,7 +53,7 @@ const HideGridColMenuItem = (props: GridFilterItemProps) => {
       {apiRef.current.getLocaleText('columnMenuHideColumn')}
     </MenuItem>
   );
-};
+}
 
 HideGridColMenuItem.propTypes = {
   // ----------------------------- Warning --------------------------------

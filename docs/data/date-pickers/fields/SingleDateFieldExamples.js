@@ -10,7 +10,7 @@ import { Unstable_DateField as DateField } from '@mui/x-date-pickers/DateField';
 import { Unstable_TimeField as TimeField } from '@mui/x-date-pickers/TimeField';
 import { Unstable_DateTimeField as DateTimeField } from '@mui/x-date-pickers/DateTimeField';
 
-const GridItem = ({ label, children, spacing = 1 }) => {
+function GridItem({ label, children, spacing = 1 }) {
   return (
     <Grid xs={12} item>
       <Box sx={{ display: 'flex', flexDirection: 'column' }}>
@@ -21,7 +21,7 @@ const GridItem = ({ label, children, spacing = 1 }) => {
       </Box>
     </Grid>
   );
-};
+}
 
 GridItem.propTypes = {
   children: PropTypes.node,

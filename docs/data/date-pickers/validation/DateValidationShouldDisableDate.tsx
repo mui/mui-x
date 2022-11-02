@@ -19,7 +19,7 @@ const isWeekend = (date: Dayjs) => {
   return day === 0 || day === 6;
 };
 
-const GridItem = ({
+function GridItem({
   label,
   children,
   spacing = 1,
@@ -27,7 +27,7 @@ const GridItem = ({
   label: string;
   children: React.ReactNode;
   spacing?: number;
-}) => {
+}) {
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column' }}>
       <Typography variant="body2" sx={{ mb: spacing }}>
@@ -36,7 +36,7 @@ const GridItem = ({
       {children}
     </Box>
   );
-};
+}
 
 export default function DateValidationShouldDisableDate() {
   const [datePickerValue, setDatePickerValue] = React.useState<Dayjs | null>(

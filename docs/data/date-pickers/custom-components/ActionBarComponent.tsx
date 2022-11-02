@@ -12,7 +12,7 @@ import { StaticDatePicker } from '@mui/x-date-pickers/StaticDatePicker';
 import { PickersActionBarProps } from '@mui/x-date-pickers/PickersActionBar';
 import { useLocaleText, WrapperVariantContext } from '@mui/x-date-pickers/internals';
 
-const CustomActionBar = (props: PickersActionBarProps) => {
+function CustomActionBar(props: PickersActionBarProps) {
   const { onAccept, onClear, onCancel, onSetToday, actions } = props;
   const wrapperVariant = React.useContext(WrapperVariantContext);
   const localeText = useLocaleText();
@@ -108,7 +108,7 @@ const CustomActionBar = (props: PickersActionBarProps) => {
       </Menu>
     </DialogActions>
   );
-};
+}
 
 export default function ActionBarComponent() {
   const [value, setValue] = React.useState<Dayjs | null>(() =>
