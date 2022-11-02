@@ -62,7 +62,7 @@ interface UsePickerValueAction<DraftValue> {
 }
 
 /**
- * Props used to handle the value of the pickers that are common to all pickers.
+ * Props used to handle the value that are common to all pickers.
  */
 export interface UsePickerValueBaseProps<TValue> {
   /**

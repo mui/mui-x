@@ -44,14 +44,6 @@ export interface BaseNextTimePickerProps<TDate>
    */
   ampm?: boolean;
   /**
-   * The label content.
-   */
-  label?: React.ReactNode;
-  /**
-   * Pass a ref to the `input` element.
-   */
-  inputRef?: React.Ref<HTMLInputElement>;
-  /**
    * Overrideable components.
    * @default {}
    */
@@ -95,20 +87,9 @@ export function useNextTimePickerDefaultizedProps<
     };
   }, [themeProps.localeText]);
 
-  // TODO: Move logic inside `TimeField` if it supports the `ampm` prop.
-  let inputFormat: string;
-  if (themeProps.inputFormat != null) {
-    inputFormat = themeProps.inputFormat;
-  } else if (ampm) {
-    inputFormat = utils.formats.fullTime12h;
-  } else {
-    inputFormat = utils.formats.fullTime24h;
-  }
-
   return {
     ...themeProps,
     ampm,
-    inputFormat,
     localeText,
     views,
     openTo: themeProps.openTo ?? 'hours',

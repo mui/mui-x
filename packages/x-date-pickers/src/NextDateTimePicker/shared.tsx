@@ -74,14 +74,6 @@ export interface BaseNextDateTimePickerProps<TDate>
    */
   ampm?: boolean;
   /**
-   * The label content.
-   */
-  label?: React.ReactNode;
-  /**
-   * Pass a ref to the `input` element.
-   */
-  inputRef?: React.Ref<HTMLInputElement>;
-  /**
    * Minimal selectable moment of time with binding to date, to set min time in each day use `minTime`.
    */
   minDateTime?: TDate;
@@ -118,7 +110,6 @@ type UseNextDateTimePickerDefaultizedProps<
     | 'orientation'
     | 'ampmInClock'
     | 'ampm'
-    | 'inputFormat'
     | keyof BaseDateValidationProps<TDate>
     | keyof BaseTimeValidationProps
   >
@@ -138,16 +129,6 @@ export function useNextDateTimePickerDefaultizedProps<
   const views = themeProps.views ?? ['year', 'day', 'hours', 'minutes'];
   const ampm = themeProps.ampm ?? utils.is12HourCycleInCurrentLocale();
 
-  // TODO: Move logic inside `DateTimeField` if it supports the `ampm` prop.
-  let inputFormat: string;
-  if (themeProps.inputFormat != null) {
-    inputFormat = themeProps.inputFormat;
-  } else if (ampm) {
-    inputFormat = utils.formats.keyboardDateTime12h;
-  } else {
-    inputFormat = utils.formats.keyboardDateTime24h;
-  }
-
   const localeText = React.useMemo<PickersInputLocaleText<TDate> | undefined>(() => {
     if (themeProps.localeText?.toolbarTitle == null) {
       return themeProps.localeText;
@@ -161,7 +142,6 @@ export function useNextDateTimePickerDefaultizedProps<
 
   return {
     ...themeProps,
-    inputFormat,
     views,
     ampm,
     localeText,

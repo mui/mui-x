@@ -92,6 +92,7 @@ export { usePicker } from './hooks/usePicker';
 export type { UsePickerResponse } from './hooks/usePicker';
 export type { UsePickerParams } from './hooks/usePicker';
 export type { UsePickerValueNonStaticProps } from './hooks/usePicker/usePickerValue';
+export type { UsePickerViewsNonStaticProps } from './hooks/usePicker/usePickerViews';
 export type { PickerStateProps, PickerStatePickerProps } from './hooks/usePickerState';
 export type { PickerStateValueManager, PickerSelectionState } from './hooks/usePickerState';
 export { useLocalizationContext, useDefaultDates, useUtils, useLocaleText } from './hooks/useUtils';
@@ -117,7 +118,11 @@ export type { DateTimeValidationError } from './hooks/validation/useDateTimeVali
 export { usePreviousMonthDisabled, useNextMonthDisabled } from './hooks/date-helpers-hooks';
 
 export type { BaseFieldProps } from './models/fields';
-export type { BasePickerProps, BaseNextPickerProps } from './models/props/basePickerProps';
+export type {
+  BasePickerProps,
+  BaseNextPickerProps,
+  BaseNextNonStaticPickerProps,
+} from './models/props/basePickerProps';
 export type { StaticPickerProps } from './models/props/staticPickerProps';
 export type { BaseToolbarProps, ExportedBaseToolbarProps } from './models/props/toolbar';
 export type { MuiPickersAdapter } from './models/muiPickersAdapter';

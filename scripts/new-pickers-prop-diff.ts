@@ -1,3 +1,4 @@
+/* eslint-disable no-nested-ternary */
 import * as ts from 'typescript';
 import path from 'path';
 import kebabCase from 'lodash/kebabCase';
@@ -16,14 +17,17 @@ const EXPECTED_DIFF: { [propKey: string]: string | ((pickerName: string) => stri
       pickerName.includes('Static')
         ? 'no more keyboard editing on the static pickers'
         : 'replaced by `components.Field` and `components.Input`',
+
     InputAdornmentProps: (pickerName) =>
       pickerName.includes('Mobile') || pickerName.includes('Static')
         ? 'never used even in v5'
         : 'replaced by `componentsProps.InputAdornment`',
+
     OpenPickerButtonProps: (pickerName) =>
       pickerName.includes('Mobile') || pickerName.includes('Static')
         ? 'never used even in v5'
         : 'replaced by `componentsProps.OpenPickerButton`',
+
     InputProps: (pickerName) =>
       pickerName.includes('Static')
         ? 'no more keyboard editing on the static pickers'
@@ -35,15 +39,37 @@ const EXPECTED_DIFF: { [propKey: string]: string | ((pickerName: string) => stri
         : 'replaced by each picker translation key',
 
     dateRangeIcon: 'replaced by `componentsProps.tabs.dateRangeIcon`',
+
     timeIcon: 'replaced by `componentsProps.tabs.timeIcon`',
 
     children: 'never used even in v5',
-    inputRef: (pickerName) => (pickerName.includes('Range') ? 'never used even in v5' : undefined),
-    label: (pickerName) => (pickerName.includes('Range') ? 'never used even in v5' : undefined),
+
+    inputRef: (pickerName) =>
+      pickerName.includes('Range')
+        ? 'never used even in v5'
+        : pickerName.includes('Static')
+        ? 'no more keyboard editing on the static pickers'
+        : undefined,
+
+    label: (pickerName) =>
+      pickerName.includes('Range')
+        ? 'never used even in v5'
+        : pickerName.includes('Static')
+        ? 'no more keyboard editing on the static pickers'
+        : undefined,
+
+    inputFormat: (pickerName) =>
+      pickerName.includes('Static') ? 'no more keyboard editing on the static pickers' : undefined,
+
+    disableOpenPicker: (pickerName) =>
+      pickerName.includes('Static') ? 'never used even in v5' : undefined,
+
     closeOnSelect: (pickerName) =>
       pickerName.includes('Static') ? 'never used even in v5' : undefined,
+
     onViewChange: (pickerName) =>
       pickerName.includes('Range') ? 'never used even in v5' : undefined,
+
     'components.OpenPickerIcon': (pickerName) =>
       pickerName.includes('Range') || pickerName.includes('Mobile') || pickerName.includes('Static')
         ? 'never used even in v5'
@@ -51,6 +77,7 @@ const EXPECTED_DIFF: { [propKey: string]: string | ((pickerName: string) => stri
 
     shouldDisableMonth: (pickerName) =>
       pickerName.includes('Range') ? 'never used even in v5' : undefined,
+
     shouldDisableYear: (pickerName) =>
       pickerName.includes('Range') ? 'never used even in v5' : undefined,
   };
@@ -128,7 +155,6 @@ const main = async () => {
   for (const pickerName of PICKERS) {
     const slug = kebabCase(pickerName);
 
-    // eslint-disable-next-line no-nested-ternary
     const newPickerName = pickerName.includes('Mobile')
       ? `MobileNext${pickerName.replace('Mobile', '')}`
       : // eslint-disable-next-line no-nested-ternary

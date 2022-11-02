@@ -4,8 +4,11 @@ import { resolveComponentProps } from '@mui/base/utils';
 import { useMobilePicker } from '../internals/hooks/useMobilePicker';
 import { datePickerValueManager } from '../DatePicker/shared';
 import { MobileNextDatePickerProps } from './MobileNextDatePicker.types';
-import { useNextDatePickerDefaultizedProps } from '../NextDatePicker/shared';
-import { CalendarPickerView, useLocaleText } from '../internals';
+import {
+  getDatePickerInputFormat,
+  useNextDatePickerDefaultizedProps,
+} from '../NextDatePicker/shared';
+import { CalendarPickerView, useLocaleText, useUtils } from '../internals';
 import { Unstable_DateField as DateField } from '../DateField';
 import { extractValidationProps } from '../internals/utils/validation';
 import { renderDateView } from '../internals/utils/viewRenderers';
@@ -25,6 +28,7 @@ const MobileNextDatePicker = React.forwardRef(function MobileNextDatePicker<TDat
   ref: React.Ref<HTMLDivElement>,
 ) {
   const localeText = useLocaleText();
+  const utils = useUtils();
 
   // Props with the default values common to all date pickers
   const { className, sx, ...defaultizedProps } = useNextDatePickerDefaultizedProps<
@@ -35,6 +39,7 @@ const MobileNextDatePicker = React.forwardRef(function MobileNextDatePicker<TDat
   // Props with the default values specific to the mobile variant
   const props = {
     ...defaultizedProps,
+    inputFormat: getDatePickerInputFormat(utils, defaultizedProps),
     showToolbar: defaultizedProps.showToolbar ?? true,
     autoFocus: true,
     components: {

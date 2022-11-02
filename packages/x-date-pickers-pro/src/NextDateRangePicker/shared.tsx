@@ -89,7 +89,6 @@ export function useNextDateRangePickerDefaultizedProps<
     localeText,
     disableFuture: themeProps.disableFuture ?? false,
     disablePast: themeProps.disablePast ?? false,
-    inputFormat: themeProps.inputFormat ?? utils.formats.keyboardDate,
     minDate: applyDefaultDate(utils, themeProps.minDate, defaultDates.minDate),
     maxDate: applyDefaultDate(utils, themeProps.maxDate, defaultDates.maxDate),
     components: { Toolbar: DateRangePickerToolbar, ...themeProps.components },

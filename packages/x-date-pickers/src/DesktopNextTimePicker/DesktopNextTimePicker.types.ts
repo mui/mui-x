@@ -9,6 +9,7 @@ import {
   BaseNextTimePickerSlotsComponentsProps,
 } from '../NextTimePicker/shared';
 import { MakeOptional } from '../internals/models/helpers';
+import { BaseNextNonStaticPickerExternalProps } from '../internals/models/props/basePickerProps';
 
 export interface DesktopNextTimePickerSlotsComponent<TDate>
   extends BaseNextTimePickerSlotsComponent<TDate>,
@@ -20,7 +21,8 @@ export interface DesktopNextTimePickerSlotsComponentsProps<TDate>
 
 export interface DesktopNextTimePickerProps<TDate>
   extends BaseNextTimePickerProps<TDate>,
-    DesktopOnlyPickerProps<TDate> {
+    DesktopOnlyPickerProps<TDate>,
+    BaseNextNonStaticPickerExternalProps {
   /**
    * Overrideable components.
    * @default {}
