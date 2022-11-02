@@ -211,12 +211,21 @@ For example, the `sum` aggregation function receives the values of the `gross` f
 In the demo below, the values in the `Profit` column are derived from the `gross` and `budget` fields of the row:
 
 ```tsx
-const profit = (row.gross - row.budget) / row.budget;
+{
+  field: 'profit',
+  type: 'number',
+  valueGetter: ({ row }) => {
+    if (!row.gross || !row.budget) {
+      return null;
+    }
+    return (row.gross - row.budget) / row.budget;
+  }
+}
 ```
 
 To aggregate the `Profit` column, you have to calculate the sum of the `gross` and `budget` fields first, and then use the above formula to calculate the aggregated `Profit` value.
 
-To do so, you can use the `getCellValue` callback on the aggregation function to transform the data that are being passed to the `apply` method:
+To do so, use the `getCellValue` callback on the aggregation function and transform the data that are being passed to the `apply` method:
 
 ```tsx
 const profit: GridAggregationFunction<{ gross: number; budget: number }, number> = {
