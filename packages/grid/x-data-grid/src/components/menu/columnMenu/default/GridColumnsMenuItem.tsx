@@ -4,17 +4,17 @@ import ViewWeekIcon from '@mui/icons-material/ViewColumn';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import { styled } from '@mui/material';
-import { GridPreferencePanelsValue } from '../../../hooks/features/preferencesPanel/gridPreferencePanelsValue';
-import { useGridApiContext } from '../../../hooks/utils/useGridApiContext';
-import { GridFilterItemProps } from './GridFilterItemProps';
-import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
+import { GridPreferencePanelsValue } from '../../../../hooks/features/preferencesPanel/gridPreferencePanelsValue';
+import { useGridApiContext } from '../../../../hooks/utils/useGridApiContext';
+import { GridItemProps } from '../GridItemProps';
+import { useGridRootProps } from '../../../../hooks/utils/useGridRootProps';
 
 const StyledStack = styled(Stack)(({ theme }) => ({
   padding: theme.spacing(1, 1.5, 0, 1.5),
   flexDirection: 'row',
 }));
 
-const GridColumnsMenuItem = (props: GridFilterItemProps) => {
+const GridColumnsMenuItem = (props: GridItemProps) => {
   const { onClick } = props;
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();

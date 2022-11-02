@@ -3,11 +3,24 @@ import PropTypes from 'prop-types';
 import * as React from 'react';
 import MenuList from '@mui/material/MenuList';
 import { isHideMenuKey, isTabKey } from '../../../../utils/keyboardUtils';
-import { GridColumnMenuSimpleProps } from './GridColumnMenuSimpleProps';
+import { GridColumnMenuProps } from '../GridColumnMenuProps';
 import { gridClasses } from '../../../../constants/gridClasses';
 
-const GridColumnMenuSimpleContainer = React.forwardRef<HTMLUListElement, GridColumnMenuSimpleProps>(
-  function GridColumnMenuSimpleContainer(props: GridColumnMenuSimpleProps, ref) {
+interface Props
+  extends Pick<
+    GridColumnMenuProps,
+    | 'hideMenu'
+    | 'currentColumn'
+    | 'open'
+    | 'filterColumnMenuItems'
+    | 'id'
+    | 'labelledby'
+    | 'className'
+    | 'children'
+  > {}
+
+const GridColumnMenuSimpleContainer = React.forwardRef<HTMLUListElement, Props>(
+  function GridColumnMenuSimpleContainer(props: Props, ref) {
     const { hideMenu, currentColumn, open, id, labelledby, className, children, ...other } = props;
 
     const handleListKeyDown = React.useCallback(

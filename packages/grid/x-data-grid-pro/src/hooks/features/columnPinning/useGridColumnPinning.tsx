@@ -199,9 +199,10 @@ export const useGridColumnPinning = (
       );
 
       const nodesToInsert = [
-        { displayName: 'divider', component: <Divider /> },
         {
+          slot: 'pinning',
           displayName: 'GridColumnPinningMenuItems',
+          addDivider: true,
           component,
         },
       ];

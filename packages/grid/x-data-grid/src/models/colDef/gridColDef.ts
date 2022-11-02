@@ -2,6 +2,7 @@ import * as React from 'react';
 import { GridCellClassNamePropType } from '../gridCellClass';
 import { GridColumnHeaderClassNamePropType } from '../gridColumnHeaderClass';
 import { GridFilterOperator } from '../gridFilterOperator';
+import { GridColumnMenuLookup } from '../../hooks/features/columnMenu';
 import {
   GridCellParams,
   GridRenderCellParams,
@@ -240,6 +241,14 @@ export interface GridColDef<R extends GridValidRowModel = any, V = any, F = V> {
    * @default 1
    */
   colSpan?: number | ((params: GridCellParams<V, R, F>) => number | undefined);
+  /**
+   * Recieves registered column menu slots and should return the slots which should be shown.
+   * @param {Array<GridColumnMenuLookup['slot']>} slots Registered column menu item slots.
+   * @returns {Array<GridColumnMenuLookup['slot']>} Slots ehich are needed to be shown.
+   */
+  filterColumnMenuItems?: (
+    slots: Array<GridColumnMenuLookup['slot']>,
+  ) => Array<GridColumnMenuLookup['slot']>;
 }
 
 export interface GridActionsColDef<R extends GridValidRowModel = any, V = any, F = V>

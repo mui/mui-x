@@ -1,4 +1,1 @@
-<DataGridPremium
-  {...data}
-  localeText={frFR.components.MuiDataGrid.defaultProps.localeText}
-/>
+<DataGridPremium {...data} />

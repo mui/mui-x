@@ -135,17 +135,17 @@ export const useGridAggregationPreProcessors = (
         displayName?.includes('GridFilterMenuSimple'),
       )
         ? {
+            slot: 'aggregation',
             displayName: 'GridAggregationColumnMenuSimpleItem',
             component: <GridAggregationColumnMenuSimpleItem {...aggregationItemProps} />,
           }
         : {
+            slot: 'aggregation',
             displayName: 'GridAggregationColumnMenuItem',
             component: <GridAggregationColumnMenuItem {...aggregationItemProps} />,
+            addDivider: true,
           };
-
-      const nodesToInsert = [{ displayName: 'divider', component: <Divider /> }, item];
-
-      return insertItemsInColumnMenu(columnMenuItems, nodesToInsert, 'GridFilterMenuItem');
+      return insertItemsInColumnMenu(columnMenuItems, [item], 'GridFilterMenuItem');
     },
     [apiRef, props.aggregationFunctions, props.disableAggregation],
   );

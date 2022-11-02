@@ -4,10 +4,10 @@ import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import { styled } from '@mui/material';
-import { GridFilterItemProps } from './GridFilterItemProps';
-import { useGridApiContext } from '../../../hooks/utils/useGridApiContext';
-import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
-import { gridVisibleColumnDefinitionsSelector } from '../../../hooks/features/columns';
+import { GridItemProps } from '../GridItemProps';
+import { useGridApiContext } from '../../../../hooks/utils/useGridApiContext';
+import { useGridRootProps } from '../../../../hooks/utils/useGridRootProps';
+import { gridVisibleColumnDefinitionsSelector } from '../../../../hooks/features/columns';
 
 const StyledStack = styled(Stack)(({ theme }) => ({
   padding: theme.spacing(0.5, 1.5, 0.5, 1.5),
@@ -21,7 +21,7 @@ const StyledButton = styled(Button)(() => ({
   textTransform: 'none',
 }));
 
-const HideGridColMenuItem = (props: GridFilterItemProps) => {
+const HideGridColMenuItem = (props: GridItemProps) => {
   const { column, onClick } = props;
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();

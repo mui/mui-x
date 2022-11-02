@@ -174,22 +174,28 @@ export const useGridRowGrouping = (
 
       const groupingItem = isSimpleMenu
         ? {
+            slot: 'grouping',
             displayName: 'GridRowGroupingColumnMenuSimpleItems',
             component: <GridRowGroupingColumnMenuSimpleItems />,
           }
         : {
+            slot: 'grouping',
             displayName: 'GridRowGroupingColumnMenuItems',
             component: <GridRowGroupingColumnMenuItems />,
+            addDivider: true,
           };
 
       const groupableItem = isSimpleMenu
         ? {
+            slot: 'groupable',
             displayName: 'GridRowGroupableColumnMenuSimpleItems',
             component: <GridRowGroupableColumnMenuSimpleItems />,
           }
         : {
+            slot: 'groupable',
             displayName: 'GridRowGroupableColumnMenuItems',
             component: <GridRowGroupableColumnMenuItems />,
+            addDivider: true,
           };
 
       let menuItem;
@@ -205,10 +211,7 @@ export const useGridRowGrouping = (
         return columnMenuItems;
       }
 
-      const nodesToInsert: GridColumnMenuValue = [
-        { displayName: 'divider', component: <Divider /> },
-        menuItem,
-      ];
+      const nodesToInsert: GridColumnMenuValue = [menuItem];
 
       return insertItemsInColumnMenu(
         columnMenuItems,

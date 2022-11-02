@@ -49,10 +49,6 @@ const GridMenuRoot = styled(Popper, {
   [`& .${gridClasses.menuList}`]: {
     outline: 0,
   },
-  '& .MuiPaper-root': {
-    borderRadius: '10px',
-    // minWidth: '248px',
-  },
 }));
 
 const StyledPaper = styled(Paper, {

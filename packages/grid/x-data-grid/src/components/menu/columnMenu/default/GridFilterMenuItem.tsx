@@ -6,11 +6,11 @@ import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import ClearIcon from '@mui/icons-material/Clear';
 import Stack from '@mui/material/Stack';
 import { styled } from '@mui/material';
-import { useGridApiContext } from '../../../hooks/utils/useGridApiContext';
-import { useGridSelector } from '../../../hooks/utils/useGridSelector';
-import { gridFilterModelSelector } from '../../../hooks/features/filter/gridFilterSelector';
-import { GridFilterItemProps } from './GridFilterItemProps';
-import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
+import { useGridApiContext } from '../../../../hooks/utils/useGridApiContext';
+import { useGridSelector } from '../../../../hooks/utils/useGridSelector';
+import { gridFilterModelSelector } from '../../../../hooks/features/filter/gridFilterSelector';
+import { GridItemProps } from '../GridItemProps';
+import { useGridRootProps } from '../../../../hooks/utils/useGridRootProps';
 
 const StyledStack = styled(Stack)(({ theme }) => ({
   padding: theme.spacing(0.5, 1.5, 0.5, 1.5),
@@ -24,7 +24,7 @@ const StyledButton = styled(Button)(() => ({
   textTransform: 'none',
 }));
 
-const GridFilterMenuItem = (props: GridFilterItemProps) => {
+const GridFilterMenuItem = (props: GridItemProps) => {
   const { column, onClick } = props;
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();

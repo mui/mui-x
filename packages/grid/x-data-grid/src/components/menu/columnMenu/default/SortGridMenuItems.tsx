@@ -6,11 +6,11 @@ import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import Typography from '@mui/material/Typography';
 import { styled } from '@mui/material';
-import { useGridSelector } from '../../../hooks/utils/useGridSelector';
-import { gridSortModelSelector } from '../../../hooks/features/sorting/gridSortingSelector';
-import { GridSortDirection } from '../../../models/gridSortModel';
-import { useGridApiContext } from '../../../hooks/utils/useGridApiContext';
-import { GridFilterItemProps } from './GridFilterItemProps';
+import { useGridSelector } from '../../../../hooks/utils/useGridSelector';
+import { gridSortModelSelector } from '../../../../hooks/features/sorting/gridSortingSelector';
+import { GridSortDirection } from '../../../../models/gridSortModel';
+import { useGridApiContext } from '../../../../hooks/utils/useGridApiContext';
+import { GridItemProps } from '../GridItemProps';
 
 const StyledStack = styled(Stack)(({ theme }) => ({
   padding: theme.spacing(0.5, 1.5, 0.5, 1.5),
@@ -21,7 +21,7 @@ const StyledButton = styled(Button)(() => ({
   fontWeight: '400',
 }));
 
-const SortGridMenuItems = (props: GridFilterItemProps) => {
+const SortGridMenuItems = (props: GridItemProps) => {
   const { column } = props;
   const apiRef = useGridApiContext();
   const sortModel = useGridSelector(apiRef, gridSortModelSelector);

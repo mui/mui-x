@@ -2,9 +2,9 @@ import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
-import { isHideMenuKey, isTabKey } from '../../../utils/keyboardUtils';
-import { GridColumnMenuProps } from './GridColumnMenuProps';
-import { gridClasses } from '../../../constants/gridClasses';
+import { isHideMenuKey, isTabKey } from '../../../../utils/keyboardUtils';
+import { GridColumnMenuProps } from '../GridColumnMenuProps';
+import { gridClasses } from '../../../../constants/gridClasses';
 
 const GridColumnMenuContainerRoot = styled('div')(({ theme }) => ({
   display: 'flex',
@@ -13,8 +13,21 @@ const GridColumnMenuContainerRoot = styled('div')(({ theme }) => ({
   padding: theme.spacing(1, 0),
 }));
 
-const GridColumnMenuContainer = React.forwardRef<HTMLDivElement, GridColumnMenuProps>(
-  function GridColumnMenuContainer(props: GridColumnMenuProps, ref) {
+export interface GridColumnMenuContainerProps
+  extends Pick<
+    GridColumnMenuProps,
+    | 'hideMenu'
+    | 'currentColumn'
+    | 'open'
+    | 'filterColumnMenuItems'
+    | 'id'
+    | 'labelledby'
+    | 'className'
+    | 'children'
+  > {}
+
+const GridColumnMenuContainer = React.forwardRef<HTMLDivElement, GridColumnMenuContainerProps>(
+  function GridColumnMenuContainer(props: GridColumnMenuContainerProps, ref) {
     const { hideMenu, currentColumn, id, labelledby, className, children, ...other } = props;
 
     const handleListKeyDown = React.useCallback(
