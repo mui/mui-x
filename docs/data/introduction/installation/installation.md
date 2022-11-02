@@ -13,10 +13,10 @@ MUI X components have a peer dependency on `@mui/material`: the installation [in
 
 Note that you only need to install the packages corresponding to the components you're using—e.g. data grid users don't need to install date and time pickers.
 
-### Data grid
+### Data Grid
 
 The installation [instructions](/x/react-data-grid/getting-started/#installation).
 
-### Date and Time pickers
+### Date and Time Pickers
 
 The installation [instructions](/x/react-date-pickers/getting-started/#setup).

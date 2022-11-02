@@ -3,7 +3,7 @@ title: React Date Range Picker（日期范围选择器）组件
 components: DateRangePicker, DateRangePickerDay, DesktopDateRangePicker, MobileDateRangePicker, StaticDateRangePicker
 githubLabel: 'component: DateRangePicker'
 packageName: '@mui/x-date-pickers-pro'
-materialDesign: https://material.io/components/date-pickers
+materialDesign: https://m2.material.io/components/date-pickers
 ---
 
 # Date Range Picker [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)

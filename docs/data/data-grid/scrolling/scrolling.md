@@ -1,8 +1,4 @@
----
-title: Data Grid - Scrolling
----
-
-# Data grid - Scrolling
+# Data Grid - Scrolling
 
 <p class="description">This section presents how to programmatically control the scroll.</p>
 

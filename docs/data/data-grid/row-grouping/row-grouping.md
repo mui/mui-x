@@ -2,7 +2,7 @@
 title: Data Grid - Row grouping
 ---
 
-# Data grid - Row grouping [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan)
+# Data Grid - Row grouping [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan)
 
 <p class="description">Group your rows according to some column values.</p>
 
