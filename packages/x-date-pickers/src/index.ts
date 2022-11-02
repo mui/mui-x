@@ -29,6 +29,7 @@ export * from './DayCalendarSkeleton';
 
 // New Pickers
 export * from './DesktopNextDatePicker';
+export * from './MobileNextDatePicker';
 
 export { PickerStaticWrapper } from './internals/components/PickerStaticWrapper';
 export type { MuiDateSectionName } from './internals/models/muiPickersAdapter';

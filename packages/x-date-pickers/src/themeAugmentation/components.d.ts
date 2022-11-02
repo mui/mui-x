@@ -96,6 +96,11 @@ export interface PickerComponents<Theme = unknown> {
     styleOverrides?: ComponentsOverrides<Theme>['MuiLocalizationProvider'];
     variants?: ComponentsVariants['MuiLocalizationProvider'];
   };
+  MuiMobileNextDatePicker?: {
+    defaultProps?: ComponentsProps['MuiMobileNextDatePicker'];
+    styleOverrides?: ComponentsOverrides<Theme>['MuiMobileNextDatePicker'];
+    variants?: ComponentsVariants['MuiMobileNextDatePicker'];
+  };
   MuiMonthCalendar?: {
     defaultProps?: ComponentsProps['MuiMonthCalendar'];
     styleOverrides?: ComponentsOverrides<Theme>['MuiMonthCalendar'];
