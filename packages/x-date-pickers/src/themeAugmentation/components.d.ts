@@ -126,6 +126,11 @@ export interface PickerComponents<Theme = unknown> {
     styleOverrides?: ComponentsOverrides<Theme>['MuiNextDatePicker'];
     variants?: ComponentsVariants['MuiNextDatePicker'];
   };
+  MuiNextDateTimePicker?: {
+    defaultProps?: ComponentsProps['MuiNextDateTimePicker'];
+    styleOverrides?: ComponentsOverrides<Theme>['MuiNextDateTimePicker'];
+    variants?: ComponentsVariants['MuiNextDateTimePicker'];
+  };
   MuiPickersArrowSwitcher?: {
     defaultProps?: ComponentsProps['MuiPickersArrowSwitcher'];
     styleOverrides?: ComponentsOverrides<Theme>['MuiPickersArrowSwitcher'];

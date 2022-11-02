@@ -38,7 +38,7 @@ export * from './DesktopNextTimePicker';
 // export * from './MobileNextTimePicker'
 // export * from './StaticNextTimePicker'
 
-// export * from './NextDateTimePicker'
+export * from './NextDateTimePicker';
 export * from './DesktopNextDateTimePicker';
 export * from './MobileNextDateTimePicker';
 // export * from './StaticNextDateTimePicker'

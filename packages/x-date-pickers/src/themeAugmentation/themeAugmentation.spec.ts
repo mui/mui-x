@@ -278,6 +278,13 @@ createTheme({
         someRandomProp: true,
       },
     },
+    MuiNextDateTimePicker: {
+      defaultProps: {
+        open: true,
+        // @ts-expect-error invalid MuiNextDatePicker prop
+        someRandomProp: true,
+      },
+    },
     MuiPickersArrowSwitcher: {
       defaultProps: {
         classes: { root: 'test' },
