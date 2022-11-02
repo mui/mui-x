@@ -1,6 +1,5 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import { styled } from '@mui/material';
@@ -68,10 +67,10 @@ const HideGridColMenuItem = (props: GridItemProps) => {
       <StyledButton
         onClick={toggleColumn}
         disabled={disabled}
-        startIcon={<VisibilityOffIcon fontSize="small" />}
+        startIcon={<rootProps.components.ColumnMenuHideIcon fontSize="small" />}
         color="inherit"
       >
-        {apiRef.current.getLocaleText('columnMenuHideColumnCondensed')}
+        {apiRef.current.getLocaleText('columnMenuHideColumnDefault')}
       </StyledButton>
     </StyledStack>
   );

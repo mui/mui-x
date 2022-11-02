@@ -42,6 +42,13 @@ import {
   GridDragIcon,
   GridColumnHeaderFilterIconButton,
   GridSearchIcon,
+  GridVisibilityOffIcon,
+  GridViewColumnIcon,
+  GridPushPinLeftIcon,
+  GridPushPinRightIcon,
+  GridWorkspacesIcon,
+  GridGroupWorkIcon,
+  GridClearIcon,
 } from '../components';
 import { GridColumnUnsortedIcon } from '../components/columnHeaders/GridColumnUnsortedIcon';
 import { ErrorOverlay } from '../components/ErrorOverlay';
@@ -73,6 +80,16 @@ const DEFAULT_GRID_ICON_SLOTS_COMPONENTS: GridIconSlotsComponent = {
   RowReorderIcon: GridDragIcon,
   QuickFilterIcon: GridSearchIcon,
   QuickFilterClearIcon: GridCloseIcon,
+  ColumnMenuHideIcon: GridVisibilityOffIcon,
+  ColumnMenuSortAscendingIcon: GridArrowUpwardIcon,
+  ColumnMenuSortDescendingIcon: GridArrowDownwardIcon,
+  ColumnMenuFilterIcon: GridFilterAltIcon,
+  ColumnMenuManageColumnsIcon: GridViewColumnIcon,
+  ColumnMenuPinRightIcon: GridPushPinRightIcon,
+  ColumnMenuPinLeftIcon: GridPushPinLeftIcon,
+  ColumnMenuUngroupIcon: GridWorkspacesIcon,
+  ColumnMenuGroupIcon: GridGroupWorkIcon,
+  ColumnMenuClearIcon: GridClearIcon,
 };
 
 /**

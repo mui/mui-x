@@ -3,10 +3,10 @@ import PropTypes from 'prop-types';
 import MenuItem from '@mui/material/MenuItem';
 import { GridPreferencePanelsValue } from '../../../../hooks/features/preferencesPanel/gridPreferencePanelsValue';
 import { useGridApiContext } from '../../../../hooks/utils/useGridApiContext';
-import { GridFilterItemProps } from '../GridFilterItemProps';
+import { GridItemProps } from '../GridItemProps';
 import { useGridRootProps } from '../../../../hooks/utils/useGridRootProps';
 
-const GridColumnsMenuSimpleItem = (props: GridFilterItemProps) => {
+const GridColumnsMenuSimpleItem = (props: GridItemProps) => {
   const { onClick } = props;
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
@@ -29,14 +29,5 @@ const GridColumnsMenuSimpleItem = (props: GridFilterItemProps) => {
     </MenuItem>
   );
 };
-
-GridColumnsMenuSimpleItem.propTypes = {
-  // ----------------------------- Warning --------------------------------
-  // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
-  // ----------------------------------------------------------------------
-  column: PropTypes.object.isRequired,
-  onClick: PropTypes.func.isRequired,
-} as any;
 
 export { GridColumnsMenuSimpleItem };

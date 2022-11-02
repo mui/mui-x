@@ -2,10 +2,10 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
-import WorkspacesIcon from '@mui/icons-material/Workspaces';
 import { useGridSelector, gridColumnLookupSelector, GridColDef } from '@mui/x-data-grid-pro';
 import { styled } from '@mui/system';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
+import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import { gridRowGroupingSanitizedModelSelector } from '../hooks/features/rowGrouping/gridRowGroupingSelector';
 import {
   getRowGroupingCriteriaFromGroupingField,
@@ -32,6 +32,7 @@ const StyledButton = styled(Button)(() => ({
 const GridRowGroupingColumnMenuItems = (props: GridRowGroupingColumnMenuItemsProps) => {
   const { column, onClick } = props;
   const apiRef = useGridApiContext();
+  const rootProps = useGridRootProps();
   const rowGroupingModel = useGridSelector(apiRef, gridRowGroupingSanitizedModelSelector);
   const columnsLookup = useGridSelector(apiRef, gridColumnLookupSelector);
 
@@ -50,7 +51,7 @@ const GridRowGroupingColumnMenuItems = (props: GridRowGroupingColumnMenuItemsPro
         <StyledButton
           onClick={ungroupColumn}
           key={field}
-          startIcon={<WorkspacesIcon fontSize="small" />}
+          startIcon={<rootProps.components.ColumnMenuUngroupIcon />}
           color="inherit"
         >
           {apiRef.current.getLocaleText('unGroupColumn')(name)}

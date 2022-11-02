@@ -3,11 +3,11 @@ import PropTypes from 'prop-types';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
-import PushPinIcon from '@mui/icons-material/PushPin';
 import { GridColDef } from '@mui/x-data-grid';
 import { styled } from '@mui/material';
 import { GridPinnedPosition } from '../hooks/features/columnPinning';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
+import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 
 interface GridColumnPinningMenuItemsProps {
   column?: GridColDef;
@@ -27,6 +27,7 @@ const StyledButton = styled(Button)(() => ({
 const GridColumnPinningMenuItems = (props: GridColumnPinningMenuItemsProps) => {
   const { column, onClick } = props;
   const apiRef = useGridApiContext();
+  const rootProps = useGridRootProps();
 
   const pinColumn = (side: GridPinnedPosition) => (event: React.MouseEvent<HTMLElement>) => {
     apiRef.current.pinColumn(column!.field, side);
@@ -60,29 +61,19 @@ const GridColumnPinningMenuItems = (props: GridColumnPinningMenuItemsProps) => {
           onClick={
             side === GridPinnedPosition.left ? unpinColumn : pinColumn(GridPinnedPosition.left)
           }
-          startIcon={<PushPinIcon />}
+          startIcon={<rootProps.components.ColumnMenuPinLeftIcon />}
           color={side === GridPinnedPosition.left ? 'primary' : 'inherit'}
-          sx={{
-            '& .MuiSvgIcon-root': {
-              transform: 'rotate(30deg)',
-            },
-          }}
         >
-          {apiRef.current.getLocaleText('pinToLeftCondensed')}
+          {apiRef.current.getLocaleText('pinToLeftDefault')}
         </StyledButton>
         <StyledButton
           onClick={
             side === GridPinnedPosition.right ? unpinColumn : pinColumn(GridPinnedPosition.right)
           }
-          startIcon={<PushPinIcon />}
+          startIcon={<rootProps.components.ColumnMenuPinRightIcon />}
           color={side === GridPinnedPosition.right ? 'primary' : 'inherit'}
-          sx={{
-            '& .MuiSvgIcon-root': {
-              transform: 'rotate(-30deg)',
-            },
-          }}
         >
-          {apiRef.current.getLocaleText('pinToRightCondensed')}
+          {apiRef.current.getLocaleText('pinToRightDefault')}
         </StyledButton>
       </Stack>
     </StyledStack>

@@ -1,6 +1,5 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import ViewWeekIcon from '@mui/icons-material/ViewColumn';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import { styled } from '@mui/material';
@@ -33,7 +32,10 @@ const GridColumnsMenuItem = (props: GridItemProps) => {
 
   return (
     <StyledStack>
-      <Button onClick={showColumns} startIcon={<ViewWeekIcon fontSize="small" />}>
+      <Button
+        onClick={showColumns}
+        startIcon={<rootProps.components.ColumnMenuManageColumnsIcon />}
+      >
         {apiRef.current.getLocaleText('columnMenuShowColumns')}
       </Button>
     </StyledStack>

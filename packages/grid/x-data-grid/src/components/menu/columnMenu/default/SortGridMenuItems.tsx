@@ -2,14 +2,13 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
-import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
-import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import Typography from '@mui/material/Typography';
 import { styled } from '@mui/material';
 import { useGridSelector } from '../../../../hooks/utils/useGridSelector';
 import { gridSortModelSelector } from '../../../../hooks/features/sorting/gridSortingSelector';
 import { GridSortDirection } from '../../../../models/gridSortModel';
 import { useGridApiContext } from '../../../../hooks/utils/useGridApiContext';
+import { useGridRootProps } from '../../../../hooks/utils/useGridRootProps';
 import { GridItemProps } from '../GridItemProps';
 
 const StyledStack = styled(Stack)(({ theme }) => ({
@@ -24,6 +23,7 @@ const StyledButton = styled(Button)(() => ({
 const SortGridMenuItems = (props: GridItemProps) => {
   const { column } = props;
   const apiRef = useGridApiContext();
+  const rootProps = useGridRootProps();
   const sortModel = useGridSelector(apiRef, gridSortModelSelector);
 
   const sortDirection = React.useMemo(() => {
@@ -58,18 +58,18 @@ const SortGridMenuItems = (props: GridItemProps) => {
         <StyledButton
           onClick={onSortMenuItemClick}
           data-value="asc"
-          startIcon={<ArrowUpwardIcon fontSize="small" />}
+          startIcon={<rootProps.components.ColumnMenuSortAscendingIcon />}
           color={sortDirection === 'asc' ? 'primary' : 'inherit'}
         >
-          {apiRef.current.getLocaleText('columnMenuSortCondensedAsc')}
+          {apiRef.current.getLocaleText('columnMenuSortDefaultAsc')}
         </StyledButton>
         <StyledButton
           onClick={onSortMenuItemClick}
           data-value="desc"
-          startIcon={<ArrowDownwardIcon />}
+          startIcon={<rootProps.components.ColumnMenuSortDescendingIcon />}
           color={sortDirection === 'desc' ? 'primary' : 'inherit'}
         >
-          {apiRef.current.getLocaleText('columnMenuSortCondensedDesc')}
+          {apiRef.current.getLocaleText('columnMenuSortDefaultDesc')}
         </StyledButton>
       </Stack>
     </StyledStack>

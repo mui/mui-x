@@ -1,12 +1,12 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import MenuItem from '@mui/material/MenuItem';
-import { GridFilterItemProps } from '../GridFilterItemProps';
+import { GridItemProps } from '../GridItemProps';
 import { useGridApiContext } from '../../../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../../../hooks/utils/useGridRootProps';
 import { gridVisibleColumnDefinitionsSelector } from '../../../../hooks/features/columns';
 
-const HideGridColMenuSimpleItem = (props: GridFilterItemProps) => {
+const HideGridColMenuSimpleItem = (props: GridItemProps) => {
   const { column, onClick } = props;
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
@@ -54,14 +54,5 @@ const HideGridColMenuSimpleItem = (props: GridFilterItemProps) => {
     </MenuItem>
   );
 };
-
-HideGridColMenuSimpleItem.propTypes = {
-  // ----------------------------- Warning --------------------------------
-  // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
-  // ----------------------------------------------------------------------
-  column: PropTypes.object.isRequired,
-  onClick: PropTypes.func.isRequired,
-} as any;
 
 export { HideGridColMenuSimpleItem };

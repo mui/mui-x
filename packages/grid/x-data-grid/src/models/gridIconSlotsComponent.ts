@@ -130,4 +130,54 @@ export interface GridIconSlotsComponent {
    * @default GridCloseIcon
    */
   QuickFilterClearIcon: React.JSXElementConstructor<any>;
+  /**
+   * Icon displayed in column menu for hiding column
+   * @default GridVisibilityOffIcon
+   */
+  ColumnMenuHideIcon: React.JSXElementConstructor<any>;
+  /**
+   * Icon displayed in column menu for ascending sort
+   * @default GridArrowUpwardIcon
+   */
+  ColumnMenuSortAscendingIcon: React.JSXElementConstructor<any>;
+  /**
+   * Icon displayed in column menu for descending sort
+   * @default GridArrowDownwardIcon
+   */
+  ColumnMenuSortDescendingIcon: React.JSXElementConstructor<any>;
+  /**
+   * Icon displayed in column menu for filter
+   * @default GridFilterAltIcon
+   */
+  ColumnMenuFilterIcon: React.JSXElementConstructor<any>;
+  /**
+   * Icon displayed in column menu for showing all columns
+   * @default GridViewColumnIcon
+   */
+  ColumnMenuManageColumnsIcon: React.JSXElementConstructor<any>;
+  /**
+   * Icon displayed in column menu for left pinning
+   * @default GridPushPinLeftIcon
+   */
+  ColumnMenuPinLeftIcon: React.JSXElementConstructor<any>;
+  /**
+   * Icon displayed in column menu for right pinning
+   * @default GridPushPinRightIcon
+   */
+  ColumnMenuPinRightIcon: React.JSXElementConstructor<any>;
+  /**
+   * Icon displayed in column menu for ungrouping
+   * @default GridWorkspacesIcon
+   */
+  ColumnMenuUngroupIcon: React.JSXElementConstructor<any>;
+  /**
+   * Icon displayed in column menu for grouping
+   * @default GridGroupWorkIcon
+   */
+  ColumnMenuGroupIcon: React.JSXElementConstructor<any>;
+  /**
+   * Icon displayed in column menu for clearing values
+   * @default GridClearIcon
+   */
+  ColumnMenuClearIcon: React.JSXElementConstructor<any>;
 }

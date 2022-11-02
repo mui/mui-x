@@ -1,12 +1,11 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import GroupWorkIcon from '@mui/icons-material/GroupWork';
-import WorkspacesIcon from '@mui/icons-material/Workspaces';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import { gridColumnLookupSelector, useGridSelector, GridColDef } from '@mui/x-data-grid-pro';
 import { styled } from '@mui/material';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
+import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import { gridRowGroupingSanitizedModelSelector } from '../hooks/features/rowGrouping/gridRowGroupingSelector';
 
 interface GridRowGroupableColumnMenuItemsProps {
@@ -28,6 +27,7 @@ const StyledButton = styled(Button)(() => ({
 const GridRowGroupableColumnMenuItems = (props: GridRowGroupableColumnMenuItemsProps) => {
   const { column, onClick } = props;
   const apiRef = useGridApiContext();
+  const rootProps = useGridRootProps();
   const rowGroupingModel = useGridSelector(apiRef, gridRowGroupingSanitizedModelSelector);
   const columnsLookup = useGridSelector(apiRef, gridColumnLookupSelector);
 
@@ -57,7 +57,7 @@ const GridRowGroupableColumnMenuItems = (props: GridRowGroupableColumnMenuItemsP
         <StyledButton
           onClick={ungroupColumn}
           key={column.field}
-          startIcon={<WorkspacesIcon fontSize="small" />}
+          startIcon={<rootProps.components.ColumnMenuUngroupIcon />}
           color="inherit"
         >
           {apiRef.current.getLocaleText('unGroupColumn')(name)}
@@ -82,7 +82,7 @@ const GridRowGroupableColumnMenuItems = (props: GridRowGroupableColumnMenuItemsP
       <Button
         onClick={groupColumn}
         key={column.field}
-        startIcon={<GroupWorkIcon fontSize="small" />}
+        startIcon={<rootProps.components.ColumnMenuGroupIcon />}
         color="inherit"
       >
         {apiRef.current.getLocaleText('groupColumn')(name)}

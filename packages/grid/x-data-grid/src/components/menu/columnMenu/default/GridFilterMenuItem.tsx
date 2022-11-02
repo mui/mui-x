@@ -2,8 +2,6 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
-import FilterAltIcon from '@mui/icons-material/FilterAlt';
-import ClearIcon from '@mui/icons-material/Clear';
 import Stack from '@mui/material/Stack';
 import { styled } from '@mui/material';
 import { useGridApiContext } from '../../../../hooks/utils/useGridApiContext';
@@ -61,7 +59,7 @@ const GridFilterMenuItem = (props: GridItemProps) => {
     <StyledStack>
       <StyledButton
         onClick={showFilter}
-        startIcon={<FilterAltIcon fontSize="small" />}
+        startIcon={<rootProps.components.ColumnMenuFilterIcon />}
         color={isColumnFiltered ? 'primary' : 'inherit'}
         aria-label={apiRef.current.getLocaleText('columnMenuFilter') as string}
       >
@@ -69,7 +67,7 @@ const GridFilterMenuItem = (props: GridItemProps) => {
       </StyledButton>
       {isColumnFiltered && (
         <IconButton aria-label="clear filter" onClick={clearFilters}>
-          <ClearIcon fontSize="small" />
+          <rootProps.components.ColumnMenuClearIcon />
         </IconButton>
       )}
     </StyledStack>

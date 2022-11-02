@@ -59,9 +59,8 @@ GridColumnMenuDefault.propTypes = {
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
   currentColumn: PropTypes.object.isRequired,
+  filterColumnMenuItems: PropTypes.func,
   hideMenu: PropTypes.func.isRequired,
-  id: PropTypes.string,
-  labelledby: PropTypes.string,
   open: PropTypes.bool.isRequired,
 } as any;
 
