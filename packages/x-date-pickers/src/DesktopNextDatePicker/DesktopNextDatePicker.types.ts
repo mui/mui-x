@@ -1,6 +1,7 @@
 import {
   UseDesktopPickerSlotsComponent,
   UseDesktopPickerSlotsComponentsProps,
+  DesktopOnlyPickerProps,
 } from '../internals/hooks/useDesktopPicker';
 import {
   BaseNextDatePickerProps,
@@ -17,7 +18,9 @@ export interface DesktopNextDatePickerSlotsComponentsProps<TDate>
   extends BaseNextDatePickerSlotsComponentsProps<TDate>,
     UseDesktopPickerSlotsComponentsProps<TDate> {}
 
-export interface DesktopNextDatePickerProps<TDate> extends BaseNextDatePickerProps<TDate> {
+export interface DesktopNextDatePickerProps<TDate>
+  extends BaseNextDatePickerProps<TDate>,
+    DesktopOnlyPickerProps {
   /**
    * Overrideable components.
    * @default {}

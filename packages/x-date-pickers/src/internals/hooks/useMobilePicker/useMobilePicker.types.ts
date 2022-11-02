@@ -13,6 +13,7 @@ import {
   ExportedPickerViewLayoutSlotsComponent,
   ExportedPickerViewLayoutSlotsComponentsProps,
 } from '../../components/PickerViewLayout';
+import { UsePickerValueNonStaticProps } from '../usePicker/usePickerValue';
 
 export interface UseMobilePickerSlotsComponent<TDate>
   extends PickersModalDialogSlotsComponent,
@@ -43,8 +44,11 @@ export interface UseMobilePickerSlotsComponentsProps<TDate>
   input?: SlotComponentProps<typeof TextField, {}, Record<string, any>>;
 }
 
+export interface MobileOnlyPickerProps extends UsePickerValueNonStaticProps {}
+
 export interface UseMobilePickerProps<TDate, TView extends CalendarOrClockPickerView>
-  extends BaseNextPickerProps<TDate | null, TDate, TView> {
+  extends BaseNextPickerProps<TDate | null, TDate, TView>,
+    MobileOnlyPickerProps {
   /**
    * Overrideable components.
    * @default {}
