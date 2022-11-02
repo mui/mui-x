@@ -18,8 +18,6 @@ export interface PickersDayClasses {
   selected: string;
   /** State class applied to the root element if `disabled=true`. */
   disabled: string;
-  /** State class applied to the root element if `isDragging=true`. */
-  dragging: string;
 }
 
 export type PickersDayClassKey = keyof PickersDayClasses;
@@ -36,5 +34,4 @@ export const pickersDayClasses = generateUtilityClasses<PickersDayClassKey>('Mui
   'today',
   'selected',
   'disabled',
-  'dragging',
 ]);

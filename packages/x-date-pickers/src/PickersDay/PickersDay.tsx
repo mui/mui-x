@@ -73,10 +73,6 @@ export interface PickersDayProps<TDate>
    * Currently selected days.
    */
   selectedDays: TDate[];
-  /**
-   * Indicates if the day is currently being dragged.
-   */
-  isDragging?: boolean;
 }
 
 type OwnerState = Partial<PickersDayProps<any>>;
@@ -91,7 +87,6 @@ const useUtilityClasses = (ownerState: PickersDayProps<any>) => {
     outsideCurrentMonth,
     showDaysOutsideCurrentMonth,
     classes,
-    isDragging,
   } = ownerState;
 
   const slots = {
@@ -103,7 +98,6 @@ const useUtilityClasses = (ownerState: PickersDayProps<any>) => {
       !disableHighlightToday && today && 'today',
       outsideCurrentMonth && showDaysOutsideCurrentMonth && 'dayOutsideMonth',
       outsideCurrentMonth && !showDaysOutsideCurrentMonth && 'hiddenDaySpacingFiller',
-      isDragging && 'dragging',
     ],
     hiddenDaySpacingFiller: ['hiddenDaySpacingFiller'],
   };
@@ -145,11 +139,6 @@ const styleArg = ({ theme, ownerState }: { theme: Theme; ownerState: OwnerState 
   [`&.${pickersDayClasses.disabled}`]: {
     color: theme.palette.text.disabled,
   },
-  ...(ownerState.isDragging && {
-    [`&.${pickersDayClasses.dragging}`]: {
-      cursor: 'grabbing',
-    },
-  }),
   ...(!ownerState.disableMargin && {
     margin: `0 ${DAY_MARGIN}px`,
   }),
@@ -236,7 +225,6 @@ const PickersDayRaw = React.forwardRef(function PickersDay<TDate>(
     children,
     today: isToday = false,
     selectedDays,
-    isDragging,
     ...other
   } = props;
   const ownerState = {
@@ -248,7 +236,6 @@ const PickersDayRaw = React.forwardRef(function PickersDay<TDate>(
     selected,
     showDaysOutsideCurrentMonth,
     today: isToday,
-    isDragging,
   };
 
   const classes = useUtilityClasses(ownerState);

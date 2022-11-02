@@ -45,6 +45,10 @@ export interface DateRangePickerDayProps<TDate>
    * Override or extend the styles applied to the component.
    */
   classes?: Partial<DateRangePickerDayClasses>;
+  /**
+   * Indicates if the day is currently being dragged.
+   */
+  isDragging?: boolean;
 }
 
 type OwnerState = DateRangePickerDayProps<any> & { isEndOfMonth: boolean; isStartOfMonth: boolean };
@@ -62,6 +66,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
     isEndOfPreviewing,
     selected,
     classes,
+    isDragging,
   } = ownerState;
 
   const slots = {
@@ -82,6 +87,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
       !selected && 'notSelectedDate',
       !isHighlighting && 'dayOutsideRangeInterval',
       !selected && isHighlighting && 'dayInsideRangeInterval',
+      isDragging && 'dayDragging',
     ],
   };
 
@@ -113,6 +119,9 @@ const DateRangePickerDayRoot = styled('div', {
     {
       [`&.${dateRangePickerDayClasses.rangeIntervalDayHighlightEnd}`]:
         styles.rangeIntervalDayHighlightEnd,
+    },
+    {
+      [`&.${dateRangePickerDayClasses.dayDragging}`]: styles.dayDragging,
     },
     styles.root,
   ],
@@ -203,6 +212,7 @@ const DateRangePickerDayDay = styled(PickersDay, {
     { [`&.${dateRangePickerDayClasses.dayInsideRangeInterval}`]: styles.dayInsideRangeInterval },
     { [`&.${dateRangePickerDayClasses.dayOutsideRangeInterval}`]: styles.dayOutsideRangeInterval },
     { [`&.${dateRangePickerDayClasses.notSelectedDate}`]: styles.notSelectedDate },
+    { [`&.${dateRangePickerDayClasses.dayDragging}`]: styles.dayDragging },
     styles.day,
   ],
 })<{
@@ -225,6 +235,9 @@ const DateRangePickerDayDay = styled(PickersDay, {
     ownerState.isHighlighting && {
       color: theme.palette.getContrastText(alpha(theme.palette.primary.light, 0.6)),
     }),
+  ...(ownerState.isDragging && {
+    cursor: 'grabbing',
+  }),
 })) as unknown as <TDate>(
   props: PickersDayProps<TDate> & { ownerState: OwnerState },
 ) => JSX.Element;
