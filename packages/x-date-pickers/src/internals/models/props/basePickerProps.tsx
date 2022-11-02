@@ -1,3 +1,4 @@
+import * as React from 'react';
 import { Theme } from '@mui/material/styles';
 import { SxProps } from '@mui/system';
 import { UsePickerBaseProps } from '../../hooks/usePicker';
@@ -52,10 +53,6 @@ export interface BaseNextPickerProps<TValue, TDate, TView extends CalendarOrCloc
    */
   sx?: SxProps<Theme>;
   /**
-   * Format of the date when rendered in the input(s).
-   */
-  inputFormat?: string;
-  /**
    * If `true`, the toolbar will be visible.
    * @default `true` for mobile, `false` for desktop
    */
@@ -65,4 +62,30 @@ export interface BaseNextPickerProps<TValue, TDate, TView extends CalendarOrCloc
    * Allows overriding texts coming from `LocalizationProvider` and `theme`.
    */
   localeText?: PickersInputComponentLocaleText<TDate>;
+}
+
+/**
+ * Props common to all non-static pickers.
+ * These props are handled by the headless wrappers.
+ */
+export interface BaseNextNonStaticPickerProps {
+  /**
+   * Format of the date when rendered in the input(s).
+   */
+  inputFormat?: string;
+}
+
+/**
+ * Props common to all non-static pickers.
+ * These props are handled by each component, not by the headless wrappers.
+ */
+export interface BaseNextNonStaticPickerExternalProps {
+  /**
+   * The label content.
+   */
+  label?: React.ReactNode;
+  /**
+   * Pass a ref to the `input` element.
+   */
+  inputRef?: React.Ref<HTMLInputElement>;
 }

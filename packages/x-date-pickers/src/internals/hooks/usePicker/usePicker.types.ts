@@ -5,7 +5,12 @@ import {
   UsePickerValueBaseProps,
   UsePickerValueResponse,
 } from './usePickerValue';
-import { UsePickerViewsProps, UsePickerViewParams, UsePickerViewsResponse } from './usePickerViews';
+import {
+  UsePickerViewsProps,
+  UsePickerViewParams,
+  UsePickerViewsResponse,
+  UsePickerViewsBaseProps,
+} from './usePickerViews';
 import { UsePickerLayoutProps, UsePickerLayoutResponse } from './usePickerLayout';
 
 /**
@@ -13,7 +18,7 @@ import { UsePickerLayoutProps, UsePickerLayoutResponse } from './usePickerLayout
  */
 export interface UsePickerBaseProps<TValue, TView extends CalendarOrClockPickerView>
   extends UsePickerValueBaseProps<TValue>,
-    UsePickerViewsProps<TView>,
+    UsePickerViewsBaseProps<TView>,
     UsePickerLayoutProps {}
 
 export interface UsePickerProps<TValue, TView extends CalendarOrClockPickerView>

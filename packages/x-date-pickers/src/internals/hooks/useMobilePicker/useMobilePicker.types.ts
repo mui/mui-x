@@ -2,7 +2,10 @@ import * as React from 'react';
 import TextField, { TextFieldProps } from '@mui/material/TextField';
 import { SlotComponentProps } from '@mui/base/utils';
 import { CalendarOrClockPickerView, MuiPickersAdapter } from '../../models';
-import { BaseNextPickerProps } from '../../models/props/basePickerProps';
+import {
+  BaseNextNonStaticPickerProps,
+  BaseNextPickerProps,
+} from '../../models/props/basePickerProps';
 import {
   PickersModalDialogSlotsComponent,
   PickersModalDialogSlotsComponentsProps,
@@ -14,6 +17,7 @@ import {
   ExportedPickerViewLayoutSlotsComponentsProps,
 } from '../../components/PickerViewLayout';
 import { UsePickerValueNonStaticProps } from '../usePicker/usePickerValue';
+import { UsePickerViewsNonStaticProps } from '../usePicker/usePickerViews';
 
 export interface UseMobilePickerSlotsComponent<TDate>
   extends PickersModalDialogSlotsComponent,
@@ -44,7 +48,10 @@ export interface UseMobilePickerSlotsComponentsProps<TDate>
   input?: SlotComponentProps<typeof TextField, {}, Record<string, any>>;
 }
 
-export interface MobileOnlyPickerProps<TDate> extends UsePickerValueNonStaticProps<TDate | null> {}
+export interface MobileOnlyPickerProps<TDate>
+  extends BaseNextNonStaticPickerProps,
+    UsePickerValueNonStaticProps<TDate | null>,
+    UsePickerViewsNonStaticProps {}
 
 export interface UseMobilePickerProps<TDate, TView extends CalendarOrClockPickerView>
   extends BaseNextPickerProps<TDate | null, TDate, TView>,

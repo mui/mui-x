@@ -95,11 +95,6 @@ StaticNextDatePicker.propTypes = {
    */
   disableHighlightToday: PropTypes.bool,
   /**
-   * Do not render open picker button (renders only the field).
-   * @default false
-   */
-  disableOpenPicker: PropTypes.bool,
-  /**
    * If `true` disable values after the current time.
    * @default false
    */
@@ -115,23 +110,6 @@ StaticNextDatePicker.propTypes = {
    * @default undefined
    */
   fixedWeekNumber: PropTypes.number,
-  /**
-   * Format of the date when rendered in the input(s).
-   */
-  inputFormat: PropTypes.string,
-  /**
-   * Pass a ref to the `input` element.
-   */
-  inputRef: PropTypes.oneOfType([
-    PropTypes.func,
-    PropTypes.shape({
-      current: PropTypes.object,
-    }),
-  ]),
-  /**
-   * The label content.
-   */
-  label: PropTypes.node,
   /**
    * If `true` renders `LoadingComponent` in calendar instead of calendar view.
    * Can be used to preload information and show it in calendar.

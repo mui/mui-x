@@ -3,8 +3,11 @@ import PropTypes from 'prop-types';
 import { resolveComponentProps } from '@mui/base/utils';
 import { datePickerValueManager } from '../DatePicker/shared';
 import { DesktopNextDatePickerProps } from './DesktopNextDatePicker.types';
-import { useNextDatePickerDefaultizedProps } from '../NextDatePicker/shared';
-import { CalendarPickerView, useLocaleText } from '../internals';
+import {
+  getDatePickerInputFormat,
+  useNextDatePickerDefaultizedProps,
+} from '../NextDatePicker/shared';
+import { CalendarPickerView, useLocaleText, useUtils } from '../internals';
 import { useDesktopPicker } from '../internals/hooks/useDesktopPicker';
 import { Calendar } from '../internals/components/icons';
 import { Unstable_DateField as DateField } from '../DateField';
@@ -26,6 +29,7 @@ const DesktopNextDatePicker = React.forwardRef(function DesktopNextDatePicker<TD
   ref: React.Ref<HTMLDivElement>,
 ) {
   const localeText = useLocaleText();
+  const utils = useUtils();
 
   // Props with the default values common to all date pickers
   const { className, sx, ...defaultizedProps } = useNextDatePickerDefaultizedProps<
@@ -36,6 +40,7 @@ const DesktopNextDatePicker = React.forwardRef(function DesktopNextDatePicker<TD
   // Props with the default values specific to the desktop variant
   const props = {
     ...defaultizedProps,
+    inputFormat: getDatePickerInputFormat(utils, defaultizedProps),
     showToolbar: defaultizedProps.showToolbar ?? false,
     autoFocus: true,
     components: {

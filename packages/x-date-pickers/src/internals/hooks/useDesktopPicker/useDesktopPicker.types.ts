@@ -4,7 +4,10 @@ import { InputAdornmentProps } from '@mui/material/InputAdornment';
 import TextField, { TextFieldProps } from '@mui/material/TextField';
 import { SlotComponentProps } from '@mui/base/utils';
 import { CalendarOrClockPickerView, MuiPickersAdapter } from '../../models';
-import { BaseNextPickerProps } from '../../models/props/basePickerProps';
+import {
+  BaseNextNonStaticPickerProps,
+  BaseNextPickerProps,
+} from '../../models/props/basePickerProps';
 import {
   PickersPopperSlotsComponent,
   PickersPopperSlotsComponentsProps,
@@ -16,6 +19,7 @@ import {
   ExportedPickerViewLayoutSlotsComponentsProps,
 } from '../../components/PickerViewLayout';
 import { UsePickerValueNonStaticProps } from '../usePicker/usePickerValue';
+import { UsePickerViewsNonStaticProps } from '../usePicker/usePickerViews';
 
 export interface UseDesktopPickerSlotsComponent<TDate>
   extends PickersPopperSlotsComponent,
@@ -63,7 +67,10 @@ export interface UseDesktopPickerSlotsComponentsProps<TDate>
   openPickerIcon?: Record<string, any>;
 }
 
-export interface DesktopOnlyPickerProps<TDate> extends UsePickerValueNonStaticProps<TDate | null> {}
+export interface DesktopOnlyPickerProps<TDate>
+  extends BaseNextNonStaticPickerProps,
+    UsePickerValueNonStaticProps<TDate | null>,
+    UsePickerViewsNonStaticProps {}
 
 export interface UseDesktopPickerProps<TDate, TView extends CalendarOrClockPickerView>
   extends BaseNextPickerProps<TDate | null, TDate, TView>,
