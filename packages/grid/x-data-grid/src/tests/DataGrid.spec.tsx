@@ -204,6 +204,10 @@ function ApiRefPrivateMethods() {
     apiRef.current.getLogger;
     // @ts-expect-error Property 'moveFocusToRelativeCell' does not exist on type 'GridApiCommunity'
     apiRef.current.moveFocusToRelativeCell;
+    // @ts-expect-error Property 'setColumnGroupHeaderFocus' does not exist on type 'GridApiCommunity'
+    apiRef.current.setColumnGroupHeaderFocus;
+    // @ts-expect-error Property 'getColumnGroupHeaderFocus' does not exist on type 'GridApiCommunity'
+    apiRef.current.getColumnGroupHeaderFocus;
   });
 
   return null;
