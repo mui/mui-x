@@ -88,6 +88,9 @@ export interface UsePickerValueBaseProps<TValue> {
   onAccept?: (value: TValue) => void;
 }
 
+/**
+ * Props used to handle the value of non-static pickers.
+ */
 export interface UsePickerValueNonStaticProps<TValue>
   extends Pick<
     UseFieldInternalProps<TValue, unknown>,
@@ -117,7 +120,6 @@ export interface UsePickerValueNonStaticProps<TValue>
 
 /**
  * Props used to handle the value of the pickers.
- * Those props are only exposed on the non-static pickers.
  */
 export interface UsePickerValueProps<TValue>
   extends UsePickerValueBaseProps<TValue>,
