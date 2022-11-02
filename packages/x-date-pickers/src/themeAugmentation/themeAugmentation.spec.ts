@@ -281,7 +281,7 @@ createTheme({
     MuiNextDateTimePicker: {
       defaultProps: {
         open: true,
-        // @ts-expect-error invalid MuiNextDatePicker prop
+        // @ts-expect-error invalid MuiNextDateTimePicker prop
         someRandomProp: true,
       },
     },
@@ -486,6 +486,13 @@ createTheme({
       defaultProps: {
         disabled: true,
         // @ts-expect-error invalid MuiStaticNextDatePicker prop
+        someRandomProp: true,
+      },
+    },
+    MuiStaticNextDateTimePicker: {
+      defaultProps: {
+        disabled: true,
+        // @ts-expect-error invalid MuiStaticNextDateTimePicker prop
         someRandomProp: true,
       },
     },

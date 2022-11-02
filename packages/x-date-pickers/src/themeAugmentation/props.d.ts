@@ -39,14 +39,18 @@ import {
 } from '../internals';
 import { CalendarOrClockPickerView } from '../internals/models';
 import { PickerViewLayoutProps } from '../internals/components/PickerViewLayout';
+
 import { NextDatePickerProps } from '../NextDatePicker';
 import { DesktopNextDatePickerProps } from '../DesktopNextDatePicker';
 import { MobileNextDatePickerProps } from '../MobileNextDatePicker';
 import { StaticNextDatePickerProps } from '../StaticNextDatePicker';
+
 import { DesktopNextTimePickerProps } from '../DesktopNextTimePicker';
+
 import { NextDateTimePickerProps } from '../NextDateTimePicker';
 import { DesktopNextDateTimePickerProps } from '../DesktopNextDateTimePicker';
 import { MobileNextDateTimePickerProps } from '../MobileNextDateTimePicker';
+import { StaticNextDateTimePickerProps } from '../StaticNextDateTimePicker';
 
 export interface PickersComponentsPropsList {
   MuiCalendarOrClockPicker: CalendarOrClockPickerProps<unknown, CalendarOrClockPickerView>;
@@ -94,6 +98,7 @@ export interface PickersComponentsPropsList {
   MuiStaticDatePicker: StaticDatePickerProps<unknown>;
   MuiStaticDateTimePicker: StaticDateTimePickerProps<unknown>;
   MuiStaticNextDatePicker: StaticNextDatePickerProps<unknown>;
+  MuiStaticNextDateTimePicker: StaticNextDateTimePickerProps<unknown>;
   MuiStaticTimePicker: StaticTimePickerProps<unknown>;
   MuiTimePicker: TimePickerProps<unknown>;
   MuiTimePickerToolbar: TimePickerToolbarProps<unknown>;

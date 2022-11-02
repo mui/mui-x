@@ -211,6 +211,11 @@ export interface PickerComponents<Theme = unknown> {
     styleOverrides?: ComponentsOverrides<Theme>['MuiStaticNextDatePicker'];
     variants?: ComponentsVariants['MuiStaticNextDatePicker'];
   };
+  MuiStaticNextDateTimePicker?: {
+    defaultProps?: ComponentsProps['MuiStaticNextDateTimePicker'];
+    styleOverrides?: ComponentsOverrides<Theme>['MuiStaticNextDateTimePicker'];
+    variants?: ComponentsVariants['MuiStaticNextDateTimePicker'];
+  };
   MuiStaticTimePicker?: {
     defaultProps?: ComponentsProps['MuiStaticTimePicker'];
     styleOverrides?: ComponentsOverrides<Theme>['MuiStaticTimePicker'];

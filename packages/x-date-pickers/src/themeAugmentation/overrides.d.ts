@@ -77,6 +77,7 @@ export interface PickersComponentNameToClassKey {
   MuiStaticDatePicker: never;
   MuiStaticDateTimePicker: never;
   MuiStaticNextDatePicker: never;
+  MuiStaticNextDateTimePicker: never;
   MuiStaticTimePicker: never;
   MuiTimePicker: never;
   MuiTimePickerToolbar: TimePickerToolbarClassKey;
