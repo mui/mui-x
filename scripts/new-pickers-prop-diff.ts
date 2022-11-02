@@ -157,8 +157,7 @@ const main = async () => {
 
     const newPickerName = pickerName.includes('Mobile')
       ? `MobileNext${pickerName.replace('Mobile', '')}`
-      : // eslint-disable-next-line no-nested-ternary
-      pickerName.includes('Desktop')
+      : pickerName.includes('Desktop')
       ? `DesktopNext${pickerName.replace('Desktop', '')}`
       : pickerName.includes('Static')
       ? `StaticNext${pickerName.replace('Static', '')}`

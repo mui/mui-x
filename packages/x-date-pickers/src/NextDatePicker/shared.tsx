@@ -72,9 +72,8 @@ export const getDatePickerInputFormat = (
   }
   if (isYearAndMonthViews(views)) {
     return utils.formats.monthAndYear;
-  } else {
-    return undefined;
   }
+  return undefined;
 };
 
 export function useNextDatePickerDefaultizedProps<
