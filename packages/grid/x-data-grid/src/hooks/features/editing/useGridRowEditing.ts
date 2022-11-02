@@ -62,7 +62,6 @@ export const useGridRowEditing = (
     | 'rowModesModel'
     | 'onRowModesModelChange'
     | 'signature'
-    | 'disableIgnoreModificationsIfProcessingProps'
   >,
 ) => {
   const [rowModesModel, setRowModesModel] = React.useState<GridRowModesModel>({});
@@ -259,10 +258,12 @@ export const useGridRowEditing = (
       const startRowEditModeParams: GridStartRowEditModeParams = { id, fieldToFocus: field };
 
       if (reason === GridRowEditStartReasons.printableKeyDown) {
-        if (React.version.startsWith('18')) {
-          startRowEditModeParams.initialValue = key; // In React 17, cleaning the input is enough
-        } else {
+        if (React.version.startsWith('17')) {
+          // In React 17, cleaning the input is enough.
+          // The sequence of events makes the key pressed by the end-users update the textbox directly.
           startRowEditModeParams.deleteValue = !!field;
+        } else {
+          startRowEditModeParams.initialValue = key;
         }
       } else if (reason === GridRowEditStartReasons.deleteKeyDown) {
         startRowEditModeParams.deleteValue = !!field;
@@ -288,19 +289,11 @@ export const useGridRowEditing = (
         cellToFocusAfter = 'left';
       }
 
-      let ignoreModifications = reason === 'escapeKeyDown';
-      const editingState = gridEditRowsStateSelector(apiRef.current.state);
-      if (!ignoreModifications && !props.disableIgnoreModificationsIfProcessingProps) {
-        // The user wants to stop editing the cell but we can't wait for the props to be processed.
-        // In this case, discard the modifications if any field is processing its props.
-        ignoreModifications = Object.values(editingState[id]).some((fieldProps) => {
-          return fieldProps.isProcessingProps;
-        });
-      }
+      const ignoreModifications = reason === 'escapeKeyDown';
 
       apiRef.current.stopRowEditMode({ id, ignoreModifications, field, cellToFocusAfter });
     },
-    [apiRef, props.disableIgnoreModificationsIfProcessingProps],
+    [apiRef],
   );
 
   useGridApiEventHandler(apiRef, 'cellDoubleClick', runIfEditModeIsRow(handleCellDoubleClick));

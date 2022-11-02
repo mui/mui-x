@@ -23,13 +23,7 @@ export const editingStateInitializer: GridStateInitializer = (state) => ({
 
 export const useGridEditing = (
   apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
-  props: Pick<
-    DataGridProcessedProps,
-    | 'isCellEditable'
-    | 'editMode'
-    | 'processRowUpdate'
-    | 'disableIgnoreModificationsIfProcessingProps'
-  >,
+  props: Pick<DataGridProcessedProps, 'isCellEditable' | 'editMode' | 'processRowUpdate'>,
 ) => {
   useGridCellEditing(apiRef, props);
   useGridRowEditing(apiRef, props);

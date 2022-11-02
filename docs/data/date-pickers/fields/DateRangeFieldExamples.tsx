@@ -10,7 +10,7 @@ import { Unstable_MultiInputDateRangeField as MultiInputDateRangeField } from '@
 import { Unstable_MultiInputTimeRangeField as MultiInputTimeRangeField } from '@mui/x-date-pickers-pro/MultiInputTimeRangeField';
 import { Unstable_MultiInputDateTimeRangeField as MultiInputDateTimeRangeField } from '@mui/x-date-pickers-pro/MultiInputDateTimeRangeField';
 
-const GridItem = ({
+function GridItem({
   label,
   children,
   spacing = 1,
@@ -18,7 +18,7 @@ const GridItem = ({
   label: string;
   children: React.ReactNode;
   spacing?: number;
-}) => {
+}) {
   return (
     <Grid xs={12} item>
       <Box sx={{ display: 'flex', flexDirection: 'column' }}>
@@ -29,7 +29,7 @@ const GridItem = ({
       </Box>
     </Grid>
   );
-};
+}
 
 const date1 = dayjs('2022-04-07T14:30:22');
 const date2 = dayjs('2022-04-12T18:25:14');

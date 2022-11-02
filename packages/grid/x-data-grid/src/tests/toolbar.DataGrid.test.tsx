@@ -135,11 +135,13 @@ describe('<DataGrid /> - Toolbar', () => {
     });
 
     it('should apply to the root element a class corresponding to the current density', () => {
-      const Test = (props: Partial<DataGridProps>) => (
-        <div style={{ width: 300, height: 300 }}>
-          <DataGrid {...baselineProps} {...props} />
-        </div>
-      );
+      function Test(props: Partial<DataGridProps>) {
+        return (
+          <div style={{ width: 300, height: 300 }}>
+            <DataGrid {...baselineProps} {...props} />
+          </div>
+        );
+      }
       const { setProps } = render(<Test />);
       expect(screen.getByRole('grid')).to.have.class(gridClasses['root--densityStandard']);
       setProps({ density: 'compact' });

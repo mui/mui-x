@@ -30,7 +30,9 @@ import {
 import { gridPinnedColumnsSelector } from './gridColumnPinningSelector';
 import { filterColumns } from '../../../components/DataGridProVirtualScroller';
 
-const Divider = () => <MuiDivider onClick={(event) => event.stopPropagation()} />;
+function Divider() {
+  return <MuiDivider onClick={(event) => event.stopPropagation()} />;
+}
 
 export const columnPinningStateInitializer: GridStateInitializer<
   Pick<DataGridProProcessedProps, 'pinnedColumns' | 'initialState' | 'disableColumnPinning'>

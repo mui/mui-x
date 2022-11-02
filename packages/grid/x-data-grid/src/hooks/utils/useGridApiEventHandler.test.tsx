@@ -37,10 +37,10 @@ describe('useGridApiEventHandler', () => {
         current: { subscribeEvent: spy(() => unsubscribe) },
       };
 
-      const Test = () => {
+      function Test() {
         useGridApiEventHandler(apiRef as any, 'cellClick', noop);
         return null;
-      };
+      }
 
       const { unmount } = render(<Test />);
 
@@ -69,10 +69,10 @@ describe('useGridApiEventHandler', () => {
         current: { subscribeEvent: spy(() => unsubscribe) },
       };
 
-      const Test = () => {
+      function Test() {
         useGridApiEventHandler(apiRef as any, 'cellClick', noop);
         return null;
-      };
+      }
 
       const { unmount } = render(<Test />);
 

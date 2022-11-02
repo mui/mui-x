@@ -32,7 +32,9 @@ import { GridRowGroupableColumnMenuItems } from '../../../components/GridRowGrou
 import { GridRowGroupingColumnMenuItems } from '../../../components/GridRowGroupingColumnMenuItems';
 import { GridInitialStatePremium } from '../../../models/gridStatePremium';
 
-const Divider = () => <MuiDivider onClick={(event) => event.stopPropagation()} />;
+function Divider() {
+  return <MuiDivider onClick={(event) => event.stopPropagation()} />;
+}
 
 export const rowGroupingStateInitializer: GridStateInitializer<
   Pick<DataGridPremiumProcessedProps, 'rowGroupingModel' | 'initialState'>

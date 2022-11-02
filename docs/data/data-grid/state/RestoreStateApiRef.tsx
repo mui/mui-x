@@ -130,13 +130,13 @@ const DEMO_INITIAL_STATE: DemoState = {
   activeViewId: null,
 };
 
-const ViewListItem = (props: {
+function ViewListItem(props: {
   view: StateView;
   viewId: string;
   selected: boolean;
   onDelete: (viewId: string) => void;
   onSelect: (viewId: string) => void;
-}) => {
+}) {
   const { view, viewId, selected, onDelete, onSelect, ...other } = props;
 
   return (
@@ -155,16 +155,16 @@ const ViewListItem = (props: {
       </IconButton>
     </MenuItem>
   );
-};
+}
 
-const NewViewListButton = (props: {
+function NewViewListButton(props: {
   label: string;
   onLabelChange: (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => void;
   onSubmit: () => void;
   isValid: boolean;
-}) => {
+}) {
   const { label, onLabelChange, onSubmit, isValid } = props;
   const [isAddingView, setIsAddingView] = React.useState(false);
 
@@ -210,7 +210,7 @@ const NewViewListButton = (props: {
       </Dialog>
     </React.Fragment>
   );
-};
+}
 
 function CustomToolbar() {
   const apiRef = useGridApiContext();
