@@ -1,8 +1,4 @@
----
-title: Data Grid - Styling
----
-
-# Data grid - Styling
+# Data Grid - Styling
 
 <p class="description">The grid CSS can be easily overwritten.</p>
 

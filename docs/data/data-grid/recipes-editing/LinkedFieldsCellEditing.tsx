@@ -40,7 +40,7 @@ interface CustomTypeEditComponentProps extends GridEditSingleSelectCellProps {
   setRows: React.Dispatch<React.SetStateAction<readonly any[]>>;
 }
 
-const CustomTypeEditComponent = (props: CustomTypeEditComponentProps) => {
+function CustomTypeEditComponent(props: CustomTypeEditComponentProps) {
   const { setRows, ...other } = props;
 
   const handleValueChange = () => {
@@ -53,7 +53,7 @@ const CustomTypeEditComponent = (props: CustomTypeEditComponentProps) => {
   };
 
   return <GridEditSingleSelectCell onValueChange={handleValueChange} {...other} />;
-};
+}
 
 export default function LinkedFieldsCellEditing() {
   const editingRow = React.useRef<GridRowModel | null>(null);

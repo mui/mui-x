@@ -2,7 +2,7 @@
 title: Data Grid - Row definition
 ---
 
-# Data grid - Row definition
+# Data Grid - Row definition
 
 <p class="description">Define your rows.</p>
 

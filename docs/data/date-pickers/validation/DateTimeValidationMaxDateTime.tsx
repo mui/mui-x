@@ -10,7 +10,7 @@ import Typography from '@mui/material/Typography';
 const todayAtNoon = dayjs().set('hour', 12).startOf('hour');
 const todayAt9AM = dayjs().set('hour', 9).startOf('hour');
 
-const GridItem = ({
+function GridItem({
   label,
   children,
   spacing = 1,
@@ -18,7 +18,7 @@ const GridItem = ({
   label: string;
   children: React.ReactNode;
   spacing?: number;
-}) => {
+}) {
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column' }}>
       <Typography variant="body2" sx={{ mb: spacing }}>
@@ -27,7 +27,7 @@ const GridItem = ({
       {children}
     </Box>
   );
-};
+}
 
 export default function DateTimeValidationMaxDateTime() {
   const [value, setValue] = React.useState<Dayjs | null>(todayAtNoon);

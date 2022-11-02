@@ -11,7 +11,7 @@ import {
   GridEditingState,
   GridEditCellProps,
 } from '../../../models/gridEditRowModel';
-import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
+import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import {
   GridCellEditingApi,
@@ -45,7 +45,7 @@ const missingOnProcessRowUpdateErrorWarning = buildWarning(
 );
 
 export const useGridCellEditing = (
-  apiRef: React.MutableRefObject<GridApiCommunity>,
+  apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
   props: Pick<
     DataGridProcessedProps,
     | 'editMode'
@@ -56,7 +56,6 @@ export const useGridCellEditing = (
     | 'onCellModesModelChange'
     | 'onProcessRowUpdateError'
     | 'signature'
-    | 'disableIgnoreModificationsIfProcessingProps'
   >,
 ) => {
   const [cellModesModel, setCellModesModel] = React.useState<GridCellModesModel>({});
@@ -187,10 +186,12 @@ export const useGridCellEditing = (
       const startCellEditModeParams: GridStartCellEditModeParams = { id, field };
 
       if (reason === GridCellEditStartReasons.printableKeyDown) {
-        if (React.version.startsWith('18')) {
-          startCellEditModeParams.initialValue = key; // In React 17, cleaning the input is enough
-        } else {
+        if (React.version.startsWith('17')) {
+          // In React 17, cleaning the input is enough.
+          // The sequence of events makes the key pressed by the end-users update the textbox directly.
           startCellEditModeParams.deleteValue = true;
+        } else {
+          startCellEditModeParams.initialValue = key;
         }
       } else if (reason === GridCellEditStartReasons.deleteKeyDown) {
         startCellEditModeParams.deleteValue = true;
@@ -216,16 +217,7 @@ export const useGridCellEditing = (
         cellToFocusAfter = 'left';
       }
 
-      let ignoreModifications = reason === 'escapeKeyDown';
-      const editingState = gridEditRowsStateSelector(apiRef.current.state);
-      if (
-        editingState[id][field].isProcessingProps &&
-        !props.disableIgnoreModificationsIfProcessingProps
-      ) {
-        // The user wants to stop editing the cell but we can't wait for the props to be processed.
-        // In this case, discard the modifications.
-        ignoreModifications = true;
-      }
+      const ignoreModifications = reason === 'escapeKeyDown';
 
       apiRef.current.stopCellEditMode({
         id,
@@ -234,7 +226,7 @@ export const useGridCellEditing = (
         cellToFocusAfter,
       });
     },
-    [apiRef, props.disableIgnoreModificationsIfProcessingProps],
+    [apiRef],
   );
 
   useGridApiEventHandler(apiRef, 'cellDoubleClick', runIfEditModeIsCell(handleCellDoubleClick));
@@ -500,7 +492,7 @@ export const useGridCellEditing = (
     unstable_getRowWithUpdatedValuesFromCellEditing: getRowWithUpdatedValuesFromCellEditing,
   };
 
-  useGridApiMethod(apiRef, editingApi, 'EditingApi');
+  useGridApiMethod(apiRef, editingApi, 'public');
 
   React.useEffect(() => {
     if (cellModesModelProp) {

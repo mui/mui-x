@@ -1,6 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { unstable_composeClasses as composeClasses } from '@mui/material';
+import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { useForkRef } from '@mui/material/utils';
 import { GridRenderCellParams } from '../../models/params/gridCellParams';
 import { isNavigationKey, isSpaceKey } from '../../utils/keyboardUtils';
@@ -185,4 +185,4 @@ GridCellCheckboxForwardRef.propTypes = {
 
 export { GridCellCheckboxForwardRef };
 
-export const GridCellCheckboxRenderer = React.memo(GridCellCheckboxForwardRef);
+export const GridCellCheckboxRenderer = GridCellCheckboxForwardRef;

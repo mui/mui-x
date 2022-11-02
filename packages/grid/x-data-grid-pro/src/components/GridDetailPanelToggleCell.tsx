@@ -1,6 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { unstable_composeClasses as composeClasses } from '@mui/material';
+import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import IconButton from '@mui/material/IconButton';
 import { getDataGridUtilityClass, useGridSelector, GridRenderCellParams } from '@mui/x-data-grid';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
@@ -20,7 +20,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   return composeClasses(slots, getDataGridUtilityClass, classes);
 };
 
-const GridDetailPanelToggleCell = (props: GridRenderCellParams) => {
+function GridDetailPanelToggleCell(props: GridRenderCellParams) {
   const { id, value: isExpanded } = props;
 
   const rootProps = useGridRootProps();
@@ -50,7 +50,7 @@ const GridDetailPanelToggleCell = (props: GridRenderCellParams) => {
       <Icon fontSize="inherit" />
     </IconButton>
   );
-};
+}
 
 GridDetailPanelToggleCell.propTypes = {
   // ----------------------------- Warning --------------------------------

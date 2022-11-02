@@ -70,14 +70,14 @@ describe('<DataGridPro /> - Rows', () => {
       editableProps.columns = editableProps.columns.map((col) => ({ ...col, editable: true }));
       const getRowId: DataGridProProps['getRowId'] = (row) => `${row.clientId}`;
 
-      const Test = () => {
+      function Test() {
         apiRef = useGridApiRef();
         return (
           <div style={{ width: 300, height: 300 }}>
             <DataGridPro {...editableProps} apiRef={apiRef} getRowId={getRowId} />
           </div>
         );
-      };
+      }
       render(<Test />);
       act(() => apiRef!.current.startCellEditMode({ id: 'c2', field: 'first' }));
       const cell = getCell(1, 1);
@@ -95,14 +95,14 @@ describe('<DataGridPro /> - Rows', () => {
     it('should not clone the row', () => {
       const getRowId: DataGridProProps['getRowId'] = (row) => `${row.clientId}`;
       let apiRef: React.MutableRefObject<GridApi>;
-      const Test = () => {
+      function Test() {
         apiRef = useGridApiRef();
         return (
           <div style={{ width: 300, height: 300 }}>
             <DataGridPro {...baselineProps} getRowId={getRowId} apiRef={apiRef} />
           </div>
         );
-      };
+      }
       render(<Test />);
       expect(apiRef!.current.getRow('c1')).to.equal(baselineProps.rows[0]);
     });
@@ -112,17 +112,19 @@ describe('<DataGridPro /> - Rows', () => {
     it('should not throttle even when props.throttleRowsMs is defined', () => {
       const { rows, columns } = getBasicGridData(5, 2);
 
-      const Test = (props: Pick<DataGridProProps, 'rows'>) => (
-        <div style={{ width: 300, height: 300 }}>
-          <DataGridPro
-            {...props}
-            columns={columns}
-            autoHeight={isJSDOM}
-            throttleRowsMs={100}
-            disableVirtualization
-          />
-        </div>
-      );
+      function Test(props: Pick<DataGridProProps, 'rows'>) {
+        return (
+          <div style={{ width: 300, height: 300 }}>
+            <DataGridPro
+              {...props}
+              columns={columns}
+              autoHeight={isJSDOM}
+              throttleRowsMs={100}
+              disableVirtualization
+            />
+          </div>
+        );
+      }
 
       const { setProps } = render(<Test rows={rows.slice(0, 2)} />);
 
@@ -156,14 +158,14 @@ describe('<DataGridPro /> - Rows', () => {
 
     let apiRef: React.MutableRefObject<GridApi>;
 
-    const TestCase = (props: Partial<DataGridProProps>) => {
+    function TestCase(props: Partial<DataGridProProps>) {
       apiRef = useGridApiRef();
       return (
         <div style={{ width: 300, height: 300 }}>
           <DataGridPro {...baselineProps} apiRef={apiRef} {...props} disableVirtualization />
         </div>
       );
-    };
+    }
 
     it('should not throttle by default', () => {
       render(<TestCase />);
@@ -235,7 +237,7 @@ describe('<DataGridPro /> - Rows', () => {
     });
 
     it('update row data should process getRowId', () => {
-      const TestCaseGetRowId = () => {
+      function TestCaseGetRowId() {
         apiRef = useGridApiRef();
         const getRowId = React.useCallback((row: GridRowModel) => row.idField, []);
         return (
@@ -248,7 +250,7 @@ describe('<DataGridPro /> - Rows', () => {
             />
           </div>
         );
-      };
+      }
 
       render(<TestCaseGetRowId />);
       expect(getColumnValues(0)).to.deep.equal(['Nike', 'Adidas', 'Puma']);
@@ -264,14 +266,14 @@ describe('<DataGridPro /> - Rows', () => {
     });
 
     it('should not loose partial updates after a props.loading switch', () => {
-      const Test = (props: Partial<DataGridProProps>) => {
+      function Test(props: Partial<DataGridProProps>) {
         apiRef = useGridApiRef();
         return (
           <div style={{ width: 300, height: 300 }}>
             <DataGridPro {...baselineProps} apiRef={apiRef} {...props} />
           </div>
         );
-      };
+      }
 
       const { setProps } = render(<Test />);
       expect(getColumnValues(0)).to.deep.equal(['Nike', 'Adidas', 'Puma']);
@@ -307,14 +309,14 @@ describe('<DataGridPro /> - Rows', () => {
 
     let apiRef: React.MutableRefObject<GridApi>;
 
-    const TestCase = (props: Partial<DataGridProProps>) => {
+    function TestCase(props: Partial<DataGridProProps>) {
       apiRef = useGridApiRef();
       return (
         <div style={{ width: 300, height: 300 }}>
           <DataGridPro {...baselineProps} apiRef={apiRef} {...props} />
         </div>
       );
-    };
+    }
 
     it('should not throttle by default', () => {
       render(<TestCase />);
@@ -346,6 +348,18 @@ describe('<DataGridPro /> - Rows', () => {
       clock.tick(50);
       expect(getColumnValues(0)).to.deep.equal(['Asics']);
     });
+
+    it('should work with `loading` prop change', () => {
+      const { setProps } = render(<TestCase />);
+      expect(getColumnValues(0)).to.deep.equal(['Nike', 'Adidas', 'Puma']);
+
+      const newRows = [{ id: 3, brand: 'Asics' }];
+      setProps({ loading: true });
+      act(() => apiRef.current.setRows(newRows));
+      setProps({ loading: false });
+
+      expect(getColumnValues(0)).to.deep.equal(['Asics']);
+    });
   });
 
   describe('virtualization', () => {
@@ -357,14 +371,14 @@ describe('<DataGridPro /> - Rows', () => {
     });
 
     let apiRef: React.MutableRefObject<GridApi>;
-    const TestCaseVirtualization = (
+    function TestCaseVirtualization(
       props: Partial<DataGridProProps> & {
         nbRows?: number;
         nbCols?: number;
         width?: number;
         height?: number;
       },
-    ) => {
+    ) {
       apiRef = useGridApiRef();
       const data = useBasicDemoData(props.nbRows || 100, props.nbCols || 10);
 
@@ -373,7 +387,7 @@ describe('<DataGridPro /> - Rows', () => {
           <DataGridPro apiRef={apiRef} columns={data.columns} rows={data.rows} {...props} />
         </div>
       );
-    };
+    }
 
     it('should render last row when scrolling to the bottom', () => {
       const rowHeight = 50;
@@ -628,7 +642,7 @@ describe('<DataGridPro /> - Rows', () => {
   describe('no virtualization', () => {
     let apiRef: React.MutableRefObject<GridApi>;
 
-    const TestCase = (props: Partial<DataGridProProps> & { nbRows?: number; nbCols?: number }) => {
+    function TestCase(props: Partial<DataGridProProps> & { nbRows?: number; nbCols?: number }) {
       apiRef = useGridApiRef();
       const data = useBasicDemoData(props.nbRows || 10, props.nbCols || 10);
       return (
@@ -642,7 +656,7 @@ describe('<DataGridPro /> - Rows', () => {
           />
         </div>
       );
-    };
+    }
 
     it('should allow to disable virtualization', () => {
       render(<TestCase />);
@@ -661,7 +675,7 @@ describe('<DataGridPro /> - Rows', () => {
   describe('Cell focus', () => {
     let apiRef: React.MutableRefObject<GridApi>;
 
-    const TestCase = (props: Partial<DataGridProProps>) => {
+    function TestCase(props: Partial<DataGridProProps>) {
       apiRef = useGridApiRef();
 
       return (
@@ -669,7 +683,7 @@ describe('<DataGridPro /> - Rows', () => {
           <DataGridPro apiRef={apiRef} {...baselineProps} {...props} />
         </div>
       );
-    };
+    }
 
     beforeEach(() => {
       baselineProps = {
@@ -851,14 +865,14 @@ describe('<DataGridPro /> - Rows', () => {
 
     let apiRef: React.MutableRefObject<GridApi>;
 
-    const TestCase = (props: Partial<DataGridProProps>) => {
+    function TestCase(props: Partial<DataGridProProps>) {
       apiRef = useGridApiRef();
       return (
         <div style={{ width: 300, height: 300 }}>
           <DataGridPro {...baselineProps} apiRef={apiRef} rowHeight={ROW_HEIGHT} {...props} />
         </div>
       );
-    };
+    }
 
     it('should change row height', () => {
       const resizedRowId = 1;
@@ -891,13 +905,13 @@ describe('<DataGridPro /> - Rows', () => {
   });
 
   describe('prop: rowCount', () => {
-    const TestCase = (props: DataGridProProps) => {
+    function TestCase(props: DataGridProProps) {
       return (
         <div style={{ width: 300, height: 300 }}>
           <DataGridPro {...props} />
         </div>
       );
-    };
+    }
 
     it('should not show total row count in footer if `rowCount === rows.length`', () => {
       const { rows, columns } = getBasicGridData(10, 2);

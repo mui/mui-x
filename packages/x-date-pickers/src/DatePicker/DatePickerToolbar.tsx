@@ -13,7 +13,8 @@ import {
   getDatePickerToolbarUtilityClass,
 } from './datePickerToolbarClasses';
 
-export interface DatePickerToolbarProps<TDate> extends BaseToolbarProps<TDate | null> {
+export interface DatePickerToolbarProps<TDate>
+  extends BaseToolbarProps<TDate | null, CalendarPickerView> {
   classes?: Partial<DatePickerToolbarClasses>;
 }
 

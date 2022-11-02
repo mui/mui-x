@@ -54,7 +54,7 @@ describe('<DataGridPro /> - Columns reorder', () => {
   it('resizing after columns reorder should respect the new columns order', async () => {
     let apiRef: React.MutableRefObject<GridApi>;
 
-    const TestCase = (props: { width: number }) => {
+    function TestCase(props: { width: number }) {
       const { width } = props;
       apiRef = useGridApiRef();
       return (
@@ -62,7 +62,7 @@ describe('<DataGridPro /> - Columns reorder', () => {
           <DataGridPro apiRef={apiRef} columns={baselineProps.columns} rows={baselineProps.rows} />
         </div>
       );
-    };
+    }
 
     const { setProps } = render(<TestCase width={300} />);
 
@@ -78,7 +78,7 @@ describe('<DataGridPro /> - Columns reorder', () => {
     const rows = [{ id: 0, brand: 'Nike' }];
     const columns = [{ field: 'brand' }, { field: 'desc' }, { field: 'type' }];
 
-    const Test = () => {
+    function Test() {
       apiRef = useGridApiRef();
 
       return (
@@ -86,7 +86,7 @@ describe('<DataGridPro /> - Columns reorder', () => {
           <DataGridPro apiRef={apiRef} rows={rows} columns={columns} />
         </div>
       );
-    };
+    }
 
     const { forceUpdate } = render(<Test />);
     expect(getColumnHeadersTextContent()).to.deep.equal(['brand', 'desc', 'type']);
@@ -101,7 +101,7 @@ describe('<DataGridPro /> - Columns reorder', () => {
     const rows = [{ id: 0, brand: 'Nike' }];
     const columns = [{ field: 'brand' }, { field: 'desc' }, { field: 'type' }];
 
-    const Test = () => {
+    function Test() {
       apiRef = useGridApiRef();
 
       return (
@@ -109,7 +109,7 @@ describe('<DataGridPro /> - Columns reorder', () => {
           <DataGridPro apiRef={apiRef} rows={rows} columns={columns} />
         </div>
       );
-    };
+    }
 
     render(<Test />);
     expect(getColumnHeadersTextContent()).to.deep.equal(['brand', 'desc', 'type']);
@@ -132,7 +132,7 @@ describe('<DataGridPro /> - Columns reorder', () => {
     const rows = [{ id: 0, brand: 'Nike' }];
     const columns = [{ field: 'brand' }, { field: 'desc' }, { field: 'type' }];
 
-    const Test = () => {
+    function Test() {
       apiRef = useGridApiRef();
 
       return (
@@ -140,7 +140,7 @@ describe('<DataGridPro /> - Columns reorder', () => {
           <DataGridPro apiRef={apiRef} rows={rows} columns={columns} />
         </div>
       );
-    };
+    }
 
     render(<Test />);
     expect(getColumnHeadersTextContent()).to.deep.equal(['brand', 'desc', 'type']);
@@ -163,7 +163,7 @@ describe('<DataGridPro /> - Columns reorder', () => {
     const rows = [{ id: 0, brand: 'Nike' }];
     const columns = [{ field: 'brand' }, { field: 'desc' }, { field: 'type' }];
 
-    const Test = () => {
+    function Test() {
       apiRef = useGridApiRef();
 
       return (
@@ -171,7 +171,7 @@ describe('<DataGridPro /> - Columns reorder', () => {
           <DataGridPro apiRef={apiRef} rows={rows} columns={columns} disableColumnReorder />
         </div>
       );
-    };
+    }
 
     render(<Test />);
     expect(getColumnHeadersTextContent()).to.deep.equal(['brand', 'desc', 'type']);
@@ -188,7 +188,7 @@ describe('<DataGridPro /> - Columns reorder', () => {
     const rows = [{ id: 0, brand: 'Nike' }];
     const columns = [{ field: 'brand' }, { field: 'desc' }, { field: 'type' }];
 
-    const Test = () => {
+    function Test() {
       apiRef = useGridApiRef();
 
       return (
@@ -196,7 +196,7 @@ describe('<DataGridPro /> - Columns reorder', () => {
           <DataGridPro apiRef={apiRef} rows={rows} columns={columns} disableColumnReorder />
         </div>
       );
-    };
+    }
 
     render(<Test />);
     expect(getColumnHeadersTextContent()).to.deep.equal(['brand', 'desc', 'type']);
@@ -209,7 +209,7 @@ describe('<DataGridPro /> - Columns reorder', () => {
   it('should call onColumnOrderChange after the column has been reordered', () => {
     const onColumnOrderChange = spy();
     let apiRef: React.MutableRefObject<GridApi>;
-    const Test = () => {
+    function Test() {
       apiRef = useGridApiRef();
       const data = useBasicDemoData(1, 3);
 
@@ -218,7 +218,7 @@ describe('<DataGridPro /> - Columns reorder', () => {
           <DataGridPro apiRef={apiRef} {...data} onColumnOrderChange={onColumnOrderChange} />
         </div>
       );
-    };
+    }
 
     render(<Test />);
 
@@ -250,7 +250,7 @@ describe('<DataGridPro /> - Columns reorder', () => {
         { field: 'type' },
       ];
 
-      const Test = () => {
+      function Test() {
         apiRef = useGridApiRef();
 
         return (
@@ -258,7 +258,7 @@ describe('<DataGridPro /> - Columns reorder', () => {
             <DataGridPro apiRef={apiRef} rows={rows} columns={columns} />
           </div>
         );
-      };
+      }
 
       render(<Test />);
       expect(getColumnHeadersTextContent()).to.deep.equal(['brand', 'desc', 'type']);
@@ -289,7 +289,7 @@ describe('<DataGridPro /> - Columns reorder', () => {
         { field: 'type' },
       ];
 
-      const Test = () => {
+      function Test() {
         apiRef = useGridApiRef();
 
         return (
@@ -297,7 +297,7 @@ describe('<DataGridPro /> - Columns reorder', () => {
             <DataGridPro apiRef={apiRef} rows={rows} columns={columns} />
           </div>
         );
-      };
+      }
 
       render(<Test />);
       expect(getColumnHeadersTextContent()).to.deep.equal(['brand', 'desc', 'type']);
@@ -324,7 +324,7 @@ describe('<DataGridPro /> - Columns reorder', () => {
         { field: 'type', disableReorder: true },
       ];
 
-      const Test = () => {
+      function Test() {
         apiRef = useGridApiRef();
 
         return (
@@ -332,7 +332,7 @@ describe('<DataGridPro /> - Columns reorder', () => {
             <DataGridPro apiRef={apiRef} rows={rows} columns={columns} />
           </div>
         );
-      };
+      }
 
       render(<Test />);
       expect(getColumnHeadersTextContent()).to.deep.equal(['brand', 'desc', 'type']);
@@ -358,13 +358,13 @@ describe('<DataGridPro /> - Columns reorder', () => {
         { field: 'type' },
       ];
 
-      const Test = () => {
+      function Test() {
         return (
           <div style={{ width: 300, height: 300 }}>
             <DataGridPro rows={rows} columns={columns} />
           </div>
         );
-      };
+      }
 
       render(<Test />);
       expect(getColumnHeadersTextContent()).to.deep.equal(['brand', 'desc', 'type']);
@@ -389,7 +389,7 @@ describe('<DataGridPro /> - Columns reorder', () => {
     const handleDragOver = spy();
     const handleDragEnd = spy();
     let apiRef: React.MutableRefObject<GridApi>;
-    const Test = () => {
+    function Test() {
       apiRef = useGridApiRef();
       const data = useBasicDemoData(3, 3);
 
@@ -405,7 +405,7 @@ describe('<DataGridPro /> - Columns reorder', () => {
           <DataGridPro apiRef={apiRef} {...data} rowReordering />
         </div>
       );
-    };
+    }
 
     render(<Test />);
 
@@ -434,7 +434,7 @@ describe('<DataGridPro /> - Columns reorder', () => {
         { groupId: 'col12', children: [{ field: 'col1' }, { field: 'col2' }] },
       ];
 
-      const Test = () => {
+      function Test() {
         return (
           <div style={{ width: 300, height: 300 }}>
             <DataGridPro
@@ -445,7 +445,7 @@ describe('<DataGridPro /> - Columns reorder', () => {
             />
           </div>
         );
-      };
+      }
 
       render(<Test />);
       expect(getColumnHeadersTextContent()).to.deep.equal(['col12', '', 'col1', 'col2', 'col3']);
@@ -477,7 +477,7 @@ describe('<DataGridPro /> - Columns reorder', () => {
           { groupId: 'col23', children: [{ field: 'col2' }, { field: 'col3' }] },
         ];
 
-        const Test = () => {
+        function Test() {
           return (
             <div style={{ width: 300, height: 300 }}>
               <DataGridPro
@@ -489,7 +489,7 @@ describe('<DataGridPro /> - Columns reorder', () => {
               />
             </div>
           );
-        };
+        }
 
         render(<Test />);
         expect(getColumnHeadersTextContent()).to.deep.equal(['col23', '', 'col2', 'col3', 'col4']);
@@ -519,7 +519,7 @@ describe('<DataGridPro /> - Columns reorder', () => {
           { groupId: 'col23', children: [{ field: 'col2' }, { field: 'col3' }] },
         ];
 
-        const Test = (props: any) => {
+        function Test(props: any) {
           return (
             <div style={{ width: 300, height: 300 }}>
               <DataGridPro
@@ -532,7 +532,7 @@ describe('<DataGridPro /> - Columns reorder', () => {
               />
             </div>
           );
-        };
+        }
 
         const { setProps } = render(<Test />);
         expect(getColumnHeadersTextContent()).to.deep.equal(['', 'col23', 'col1', 'col2']);
@@ -559,7 +559,7 @@ describe('<DataGridPro /> - Columns reorder', () => {
         { groupId: 'col12', children: [{ field: 'col1' }, { field: 'col2' }] },
       ];
 
-      const Test = () => {
+      function Test() {
         return (
           <div style={{ width: 300, height: 300 }}>
             <DataGridPro
@@ -570,7 +570,7 @@ describe('<DataGridPro /> - Columns reorder', () => {
             />
           </div>
         );
-      };
+      }
 
       render(<Test />);
       expect(getColumnHeadersTextContent()).to.deep.equal(['col12', '', 'col1', 'col2', 'col3']);
@@ -600,7 +600,7 @@ describe('<DataGridPro /> - Columns reorder', () => {
         },
       ];
 
-      const Test = () => {
+      function Test() {
         return (
           <div style={{ width: 300, height: 300 }}>
             <DataGridPro
@@ -611,7 +611,7 @@ describe('<DataGridPro /> - Columns reorder', () => {
             />
           </div>
         );
-      };
+      }
 
       render(<Test />);
       expect(getColumnHeadersTextContent()).to.deep.equal(['col12', '', 'col1', 'col2', 'col3']);
@@ -659,7 +659,7 @@ describe('<DataGridPro /> - Columns reorder', () => {
         },
       ];
 
-      const Test = () => {
+      function Test() {
         return (
           <div style={{ width: 300, height: 300 }}>
             <DataGridPro
@@ -670,7 +670,7 @@ describe('<DataGridPro /> - Columns reorder', () => {
             />
           </div>
         );
-      };
+      }
 
       render(<Test />);
       expect(getColumnHeadersTextContent()).to.deep.equal(['', 'col23', 'col1', 'col2', 'col3']);
@@ -720,7 +720,7 @@ describe('<DataGridPro /> - Columns reorder', () => {
         },
       ];
 
-      const Test = () => {
+      function Test() {
         return (
           <div style={{ width: 300, height: 300 }}>
             <DataGridPro
@@ -731,7 +731,7 @@ describe('<DataGridPro /> - Columns reorder', () => {
             />
           </div>
         );
-      };
+      }
 
       render(<Test />);
       expect(getColumnHeadersTextContent()).to.deep.equal([
@@ -790,7 +790,7 @@ describe('<DataGridPro /> - Columns reorder', () => {
         },
       ];
 
-      const Test = () => {
+      function Test() {
         return (
           <div style={{ width: 300, height: 300 }}>
             <DataGridPro
@@ -801,7 +801,7 @@ describe('<DataGridPro /> - Columns reorder', () => {
             />
           </div>
         );
-      };
+      }
 
       render(<Test />);
       expect(getColumnHeadersTextContent()).to.deep.equal([

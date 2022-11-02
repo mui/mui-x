@@ -1,7 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { SvgIconProps } from '@mui/material/SvgIcon';
-import { unstable_composeClasses as composeClasses } from '@mui/material';
+import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import { GridRenderCellParams } from '../../models/params/gridCellParams';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
@@ -26,7 +26,7 @@ interface GridBooleanCellProps
   extends GridRenderCellParams,
     Omit<SvgIconProps, 'tabIndex' | 'id'> {}
 
-const GridBooleanCellRaw = (props: GridBooleanCellProps) => {
+function GridBooleanCellRaw(props: GridBooleanCellProps) {
   const {
     id,
     value,
@@ -65,7 +65,7 @@ const GridBooleanCellRaw = (props: GridBooleanCellProps) => {
       {...other}
     />
   );
-};
+}
 
 GridBooleanCellRaw.propTypes = {
   // ----------------------------- Warning --------------------------------

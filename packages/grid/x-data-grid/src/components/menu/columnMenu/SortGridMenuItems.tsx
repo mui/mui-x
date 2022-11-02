@@ -7,7 +7,7 @@ import { GridSortDirection } from '../../../models/gridSortModel';
 import { useGridApiContext } from '../../../hooks/utils/useGridApiContext';
 import { GridFilterItemProps } from './GridFilterItemProps';
 
-const SortGridMenuItems = (props: GridFilterItemProps) => {
+function SortGridMenuItems(props: GridFilterItemProps) {
   const { column, onClick } = props;
   const apiRef = useGridApiContext();
   const sortModel = useGridSelector(apiRef, gridSortModelSelector);
@@ -46,7 +46,7 @@ const SortGridMenuItems = (props: GridFilterItemProps) => {
       </MenuItem>
     </React.Fragment>
   );
-};
+}
 
 SortGridMenuItems.propTypes = {
   // ----------------------------- Warning --------------------------------

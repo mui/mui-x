@@ -24,7 +24,7 @@ interface GridActionsCellProps
   position?: GridMenuProps['position'];
 }
 
-const GridActionsCell = (props: GridActionsCellProps) => {
+function GridActionsCell(props: GridActionsCellProps) {
   const {
     colDef,
     id,
@@ -226,7 +226,7 @@ const GridActionsCell = (props: GridActionsCellProps) => {
       )}
     </div>
   );
-};
+}
 
 GridActionsCell.propTypes = {
   // ----------------------------- Warning --------------------------------

@@ -196,27 +196,27 @@ The view components allowing to pick a date or parts of a date without an input 
 
 ```diff
 -<CalendarPicker {...props} />
-+<DateCalendar  {...props} />
++<DateCalendar {...props} />
 ```
 
 ```diff
 -<DayPicker {...props} />
-+<DayCalendar  {...props} />
++<DayCalendar {...props} />
 ```
 
 ```diff
 -<CalendarPickerSkeleton {...props} />
-+<DayCalendarSkeleton  {...props} />
++<DayCalendarSkeleton {...props} />
 ```
 
 ```diff
 -<MonthPicker {...props} />
-+<MonthCalendar  {...props} />
++<MonthCalendar {...props} />
 ```
 
 ```diff
 -<YearPicker {...props} />
-+<YearCalendar  {...props} />
++<YearCalendar {...props} />
 ```
 
 Component names in the theme have changed as well:

@@ -32,7 +32,7 @@ import {
 import { LocalizedComponent, PickersInputLocaleText } from '../locales/utils/pickersLocaleTextApi';
 
 export interface BaseDateTimePickerSlotsComponent<TDate>
-  extends CalendarOrClockPickerSlotsComponent<TDate> {
+  extends CalendarOrClockPickerSlotsComponent<TDate, CalendarOrClockPickerView> {
   /**
    * Custom component for the toolbar rendered above the views.
    * @default DateTimePickerToolbar

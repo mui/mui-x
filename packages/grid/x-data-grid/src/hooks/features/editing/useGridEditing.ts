@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
+import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridEditingApi, GridEditingSharedApi } from '../../../models/api/gridEditingApi';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
@@ -17,14 +17,8 @@ export const editingStateInitializer: GridStateInitializer = (state) => ({
 });
 
 export const useGridEditing = (
-  apiRef: React.MutableRefObject<GridApiCommunity>,
-  props: Pick<
-    DataGridProcessedProps,
-    | 'isCellEditable'
-    | 'editMode'
-    | 'processRowUpdate'
-    | 'disableIgnoreModificationsIfProcessingProps'
-  >,
+  apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
+  props: Pick<DataGridProcessedProps, 'isCellEditable' | 'editMode' | 'processRowUpdate'>,
 ) => {
   useGridCellEditing(apiRef, props);
   useGridRowEditing(apiRef, props);
@@ -175,5 +169,5 @@ export const useGridEditing = (
     unstable_getEditCellMeta: getEditCellMeta,
   };
 
-  useGridApiMethod(apiRef, editingSharedApi, 'EditingApi');
+  useGridApiMethod(apiRef, editingSharedApi, 'public');
 };

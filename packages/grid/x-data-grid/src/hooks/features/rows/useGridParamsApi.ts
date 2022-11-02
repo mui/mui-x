@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
+import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridParamsApi } from '../../../models/api/gridParamsApi';
 import { GridRowId, GridTreeNodeWithRender } from '../../../models/gridRows';
 import { GridCellParams, GridValueGetterParams } from '../../../models/params/gridCellParams';
@@ -31,7 +31,7 @@ function warnMissingColumn(field: string) {
  * TODO: Impossible priority - useGridEditing also needs to be after useGridParamsApi
  * TODO: Impossible priority - useGridFocus also needs to be after useGridParamsApi
  */
-export function useGridParamsApi(apiRef: React.MutableRefObject<GridApiCommunity>) {
+export function useGridParamsApi(apiRef: React.MutableRefObject<GridPrivateApiCommunity>) {
   const getColumnHeaderParams = React.useCallback<GridParamsApi['getColumnHeaderParams']>(
     (field) => ({
       field,
@@ -193,5 +193,5 @@ export function useGridParamsApi(apiRef: React.MutableRefObject<GridApiCommunity
     getColumnHeaderElement,
   };
 
-  useGridApiMethod(apiRef, paramsApi, 'GridParamsApi');
+  useGridApiMethod(apiRef, paramsApi, 'public');
 }

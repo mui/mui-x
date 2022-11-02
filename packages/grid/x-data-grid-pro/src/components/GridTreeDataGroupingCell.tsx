@@ -1,6 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { unstable_composeClasses as composeClasses } from '@mui/material';
+import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import IconButton from '@mui/material/IconButton';
 import Box from '@mui/material/Box';
 import {
@@ -32,7 +32,7 @@ interface GridTreeDataGroupingCellProps extends GridRenderCellParams<any, any, a
   hideDescendantCount?: boolean;
 }
 
-const GridTreeDataGroupingCell = (props: GridTreeDataGroupingCellProps) => {
+function GridTreeDataGroupingCell(props: GridTreeDataGroupingCellProps) {
   const { id, field, formattedValue, rowNode, hideDescendantCount } = props;
 
   const rootProps = useGridRootProps();
@@ -90,7 +90,7 @@ const GridTreeDataGroupingCell = (props: GridTreeDataGroupingCellProps) => {
       </span>
     </Box>
   );
-};
+}
 
 GridTreeDataGroupingCell.propTypes = {
   // ----------------------------- Warning --------------------------------
