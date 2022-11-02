@@ -63,11 +63,11 @@ export interface UseDesktopPickerSlotsComponentsProps<TDate>
   openPickerIcon?: Record<string, any>;
 }
 
-export interface DesktopOnlyPickerProps extends UsePickerValueNonStaticProps {}
+export interface DesktopOnlyPickerProps<TDate> extends UsePickerValueNonStaticProps<TDate | null> {}
 
 export interface UseDesktopPickerProps<TDate, TView extends CalendarOrClockPickerView>
   extends BaseNextPickerProps<TDate | null, TDate, TView>,
-    DesktopOnlyPickerProps {
+    DesktopOnlyPickerProps<TDate> {
   /**
    * Overrideable components.
    * @default {}
