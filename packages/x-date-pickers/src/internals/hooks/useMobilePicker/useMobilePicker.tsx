@@ -95,7 +95,7 @@ export const useMobilePicker = <
 
   const renderPicker = () => (
     <LocalizationProvider localeText={localeText}>
-      <WrapperVariantContext.Provider value="desktop">
+      <WrapperVariantContext.Provider value="mobile">
         <Field
           {...fieldProps}
           components={componentsForField}

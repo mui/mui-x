@@ -36,7 +36,7 @@ const MobileNextDateTimePicker = React.forwardRef(function MobileNextDateTimePic
     MobileNextDateTimePickerProps<TDate>
   >(inProps, 'MuiMobileNextDateTimePicker');
 
-  // Props with the default values specific to the desktop variant
+  // Props with the default values specific to the mobile variant
   const props = {
     ...defaultizedProps,
     showToolbar: defaultizedProps.showToolbar ?? false,
