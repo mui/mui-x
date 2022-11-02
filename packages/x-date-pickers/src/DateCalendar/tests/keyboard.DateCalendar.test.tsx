@@ -9,13 +9,7 @@ describe('<DateCalendar /> keyboard interactions', () => {
 
   describe('Calendar keyboard navigation', () => {
     it('can autofocus selected day on mount', () => {
-      render(
-        <DateCalendar
-          value={adapterToUse.date(new Date(2020, 7, 13))}
-          autoFocus
-          onChange={() => {}}
-        />,
-      );
+      render(<DateCalendar defaultValue={adapterToUse.date(new Date(2020, 7, 13))} autoFocus />);
 
       expect(screen.getByRole('gridcell', { name: '13' })).toHaveFocus();
     });
@@ -29,9 +23,7 @@ describe('<DateCalendar /> keyboard interactions', () => {
       { key: 'ArrowDown', expectFocusedDay: '20' },
     ].forEach(({ key, expectFocusedDay }) => {
       it(key, () => {
-        render(
-          <DateCalendar value={adapterToUse.date(new Date(2020, 7, 13))} onChange={() => {}} />,
-        );
+        render(<DateCalendar defaultValue={adapterToUse.date(new Date(2020, 7, 13))} />);
 
         act(() => screen.getByText('13').focus());
         // Don't care about what's focused.
@@ -45,7 +37,7 @@ describe('<DateCalendar /> keyboard interactions', () => {
     });
 
     it('should manage a sequence of keyboard interactions', () => {
-      render(<DateCalendar value={adapterToUse.date(new Date(2020, 7, 13))} onChange={() => {}} />);
+      render(<DateCalendar defaultValue={adapterToUse.date(new Date(2020, 7, 13))} />);
 
       act(() => screen.getByText('13').focus());
       const interactions = [
@@ -77,12 +69,7 @@ describe('<DateCalendar /> keyboard interactions', () => {
       { initialDay: 9, key: 'ArrowRight', expectFocusedDay: '10' },
     ].forEach(({ initialDay, key, expectFocusedDay }) => {
       it(key, () => {
-        render(
-          <DateCalendar
-            value={adapterToUse.date(new Date(2020, 7, initialDay))}
-            onChange={() => {}}
-          />,
-        );
+        render(<DateCalendar defaultValue={adapterToUse.date(new Date(2020, 7, initialDay))} />);
 
         act(() => screen.getByText(`${initialDay}`).focus());
         // Don't care about what's focused.
@@ -116,8 +103,7 @@ describe('<DateCalendar /> keyboard interactions', () => {
         it(key, () => {
           render(
             <DateCalendar
-              value={adapterToUse.date(new Date(2020, 0, initialDay))}
-              onChange={() => {}}
+              defaultValue={adapterToUse.date(new Date(2020, 0, initialDay))}
               shouldDisableDate={(date) =>
                 disabledDates.some((disabled) => adapterToUse.isSameDay(date, disabled))
               }

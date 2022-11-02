@@ -8,34 +8,21 @@ import { adapterToUse, wrapPickerMount, createPickerRenderer } from 'test/utils/
 describe('<MonthCalendar />', () => {
   const { render } = createPickerRenderer();
 
-  describeConformance(
-    <MonthCalendar
-      minDate={adapterToUse.date(new Date(2019, 0, 1))}
-      maxDate={adapterToUse.date(new Date(2029, 0, 1))}
-      value={adapterToUse.date()}
-      onChange={() => {}}
-    />,
-    () => ({
-      classes,
-      inheritComponent: 'div',
-      render,
-      wrapMount: wrapPickerMount,
-      muiName: 'MuiMonthCalendar',
-      refInstanceof: window.HTMLDivElement,
-      // cannot test reactTestRenderer because of required context
-      skip: ['componentProp', 'componentsProp', 'reactTestRenderer', 'themeVariants'],
-    }),
-  );
+  describeConformance(<MonthCalendar defaultValue={adapterToUse.date()} />, () => ({
+    classes,
+    inheritComponent: 'div',
+    render,
+    wrapMount: wrapPickerMount,
+    muiName: 'MuiMonthCalendar',
+    refInstanceof: window.HTMLDivElement,
+    // cannot test reactTestRenderer because of required context
+    skip: ['componentProp', 'componentsProp', 'reactTestRenderer', 'themeVariants'],
+  }));
 
   it('allows to pick month standalone', () => {
     const onChangeMock = spy();
     render(
-      <MonthCalendar
-        minDate={adapterToUse.date(new Date(2019, 0, 1))}
-        maxDate={adapterToUse.date(new Date(2029, 0, 1))}
-        value={adapterToUse.date(new Date(2019, 1, 2))}
-        onChange={onChangeMock}
-      />,
+      <MonthCalendar value={adapterToUse.date(new Date(2019, 1, 2))} onChange={onChangeMock} />,
     );
 
     fireEvent.click(screen.getByText('May', { selector: 'button' }));
@@ -46,8 +33,6 @@ describe('<MonthCalendar />', () => {
     const onChangeMock = spy();
     render(
       <MonthCalendar
-        minDate={adapterToUse.date(new Date(2019, 0, 1))}
-        maxDate={adapterToUse.date(new Date(2029, 0, 1))}
         value={adapterToUse.date(new Date(2019, 1, 2))}
         onChange={onChangeMock}
         readOnly
@@ -68,12 +53,7 @@ describe('<MonthCalendar />', () => {
     const onSubmitMock = spy();
     render(
       <form onSubmit={onSubmitMock}>
-        <MonthCalendar
-          minDate={adapterToUse.date(new Date(2019, 0, 1))}
-          maxDate={adapterToUse.date(new Date(2029, 0, 1))}
-          value={adapterToUse.date(new Date(2019, 1, 2))}
-          onChange={() => {}}
-        />
+        <MonthCalendar defaultValue={adapterToUse.date(new Date(2019, 1, 2))} />
       </form>,
     );
 
