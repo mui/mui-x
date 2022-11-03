@@ -10,11 +10,7 @@ type GridContextProviderProps = {
   children: React.ReactNode;
 };
 
-export const GridContextProvider = ({
-  privateApiRef,
-  props,
-  children,
-}: GridContextProviderProps) => {
+export function GridContextProvider({ privateApiRef, props, children }: GridContextProviderProps) {
   const apiRef = React.useRef(privateApiRef.current.getPublicApi());
 
   return (
@@ -24,4 +20,4 @@ export const GridContextProvider = ({
       </GridPrivateApiContext.Provider>
     </GridRootPropsContext.Provider>
   );
-};
+}

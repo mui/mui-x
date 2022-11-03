@@ -26,7 +26,7 @@ describe('<DataGridPro /> - Accessibility', () => {
   const { render } = createRenderer();
 
   it('pinned columns should pass `aria-required-parent` rule', async () => {
-    const TestCase = () => {
+    function TestCase() {
       const data = useBasicDemoData(1, 3);
       return (
         <div style={{ width: 302, height: 300 }}>
@@ -37,7 +37,7 @@ describe('<DataGridPro /> - Accessibility', () => {
           />
         </div>
       );
-    };
+    }
 
     render(<TestCase />);
 

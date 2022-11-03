@@ -51,8 +51,10 @@ export interface PickersComponentNameToClassKey {
   MuiLocalizationProvider: never;
   MuiMobileDatePicker: never;
   MuiMobileDateTimePicker: never;
+  MuiMobileNextDatePicker: never;
   MuiMobileTimePicker: never;
   MuiMonthCalendar: MonthCalendarClassKey;
+  MuiNextDatePicker: never;
   MuiPickersArrowSwitcher: PickersArrowSwitcherClassKey;
   MuiPickersCalendarHeader: PickersCalendarHeaderClassKey;
   MuiPickersDay: PickersDayClassKey;
@@ -67,6 +69,7 @@ export interface PickersComponentNameToClassKey {
   MuiPickersYear: PickersYearClassKey;
   MuiStaticDatePicker: never;
   MuiStaticDateTimePicker: never;
+  MuiStaticNextDatePicker: never;
   MuiStaticTimePicker: never;
   MuiTimePicker: never;
   MuiTimePickerToolbar: TimePickerToolbarClassKey;

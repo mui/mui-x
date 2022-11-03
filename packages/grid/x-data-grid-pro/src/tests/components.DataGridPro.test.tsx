@@ -18,7 +18,7 @@ describe('<DataGridPro/> - Components', () => {
 
   let apiRef: React.MutableRefObject<GridApi>;
 
-  const TestCase = (props: Partial<DataGridProProps>) => {
+  function TestCase(props: Partial<DataGridProProps>) {
     apiRef = useGridApiRef();
     const data = useBasicDemoData(100, 1);
     return (
@@ -26,7 +26,7 @@ describe('<DataGridPro/> - Components', () => {
         <DataGridPro apiRef={apiRef} {...data} disableVirtualization {...props} />
       </div>
     );
-  };
+  }
 
   describe('footer', () => {
     it('should hide the row count if `hideFooterRowCount` prop is set', () => {

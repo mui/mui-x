@@ -198,7 +198,7 @@ export const withPickerControls =
     Component: React.ComponentType<Props>,
   ) =>
   <DefaultProps extends Partial<Props>>(defaultProps: DefaultProps) => {
-    return (
+    return function WithPickerControls(
       props: Omit<
         Props,
         'value' | 'onChange' | Exclude<keyof DefaultProps, 'components' | 'componentsProps'>
@@ -208,7 +208,7 @@ export const withPickerControls =
           value?: TValue;
           onChange?: any;
         },
-    ) => {
+    ) {
       const { initialValue, value: inValue, onChange, ...other } = props;
 
       const [value, setValue] = useControlled({

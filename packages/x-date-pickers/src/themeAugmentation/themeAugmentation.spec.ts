@@ -231,6 +231,13 @@ createTheme({
         someRandomProp: true,
       },
     },
+    MuiMobileNextDatePicker: {
+      defaultProps: {
+        open: true,
+        // @ts-expect-error invalid MuiMobileNextDatePicker prop
+        someRandomProp: true,
+      },
+    },
     MuiMonthCalendar: {
       defaultProps: {
         disableFuture: true,
@@ -241,6 +248,13 @@ createTheme({
         root: {
           backgroundColor: 'red',
         },
+      },
+    },
+    MuiNextDatePicker: {
+      defaultProps: {
+        open: true,
+        // @ts-expect-error invalid MuiNextDatePicker prop
+        someRandomProp: true,
       },
     },
     MuiPickersArrowSwitcher: {
@@ -422,6 +436,13 @@ createTheme({
       defaultProps: {
         disabled: true,
         // @ts-expect-error invalid MuiStaticDateTimePicker prop
+        someRandomProp: true,
+      },
+    },
+    MuiStaticNextDatePicker: {
+      defaultProps: {
+        disabled: true,
+        // @ts-expect-error invalid MuiStaticNextDatePicker prop
         someRandomProp: true,
       },
     },

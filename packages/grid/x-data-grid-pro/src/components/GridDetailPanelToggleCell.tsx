@@ -20,7 +20,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   return composeClasses(slots, getDataGridUtilityClass, classes);
 };
 
-const GridDetailPanelToggleCell = (props: GridRenderCellParams) => {
+function GridDetailPanelToggleCell(props: GridRenderCellParams) {
   const { id, value: isExpanded } = props;
 
   const rootProps = useGridRootProps();
@@ -50,7 +50,7 @@ const GridDetailPanelToggleCell = (props: GridRenderCellParams) => {
       <Icon fontSize="inherit" />
     </IconButton>
   );
-};
+}
 
 GridDetailPanelToggleCell.propTypes = {
   // ----------------------------- Warning --------------------------------
