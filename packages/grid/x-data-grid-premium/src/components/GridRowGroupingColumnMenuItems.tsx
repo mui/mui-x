@@ -15,7 +15,7 @@ interface GridRowGroupingColumnMenuItemsProps {
   onClick?: (event: React.MouseEvent<any>) => void;
 }
 
-const GridRowGroupingColumnMenuItems = (props: GridRowGroupingColumnMenuItemsProps) => {
+function GridRowGroupingColumnMenuItems(props: GridRowGroupingColumnMenuItemsProps) {
   const { column, onClick } = props;
   const apiRef = useGridApiContext();
   const rowGroupingModel = useGridSelector(apiRef, gridRowGroupingSanitizedModelSelector);
@@ -47,7 +47,7 @@ const GridRowGroupingColumnMenuItems = (props: GridRowGroupingColumnMenuItemsPro
   }
 
   return renderUnGroupingMenuItem(getRowGroupingCriteriaFromGroupingField(column.field)!);
-};
+}
 
 GridRowGroupingColumnMenuItems.propTypes = {
   // ----------------------------- Warning --------------------------------

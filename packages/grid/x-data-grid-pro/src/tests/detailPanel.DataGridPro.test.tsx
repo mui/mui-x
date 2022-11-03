@@ -29,7 +29,7 @@ describe('<DataGridPro /> - Detail panel', () => {
 
   let apiRef: React.MutableRefObject<GridApi>;
 
-  const TestCase = ({ nbRows = 20, ...other }: Partial<DataGridProProps> & { nbRows?: number }) => {
+  function TestCase({ nbRows = 20, ...other }: Partial<DataGridProProps> & { nbRows?: number }) {
     apiRef = useGridApiRef();
     const data = useBasicDemoData(nbRows, 1);
     return (
@@ -37,7 +37,7 @@ describe('<DataGridPro /> - Detail panel', () => {
         <DataGridPro {...data} apiRef={apiRef} {...other} />
       </div>
     );
-  };
+  }
 
   it('should add a bottom margin to the expanded row', function test() {
     if (isJSDOM) {

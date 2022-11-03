@@ -4,14 +4,14 @@ import { GridColumnIndex, GridCellColSpanInfo } from '../../../models/gridColumn
 import { GridRowId } from '../../../models/gridRows';
 import { GridColumnSpanningApi } from '../../../models/api/gridColumnSpanning';
 import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
-import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
+import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridStateColDef } from '../../../models/colDef';
 
 /**
  * @requires useGridColumns (method, event)
  * @requires useGridParamsApi (method)
  */
-export const useGridColumnSpanning = (apiRef: React.MutableRefObject<GridApiCommunity>) => {
+export const useGridColumnSpanning = (apiRef: React.MutableRefObject<GridPrivateApiCommunity>) => {
   const lookup = React.useRef<Record<GridRowId, Record<GridColumnIndex, GridCellColSpanInfo>>>({});
 
   const setCellColSpanInfo = React.useCallback(
@@ -113,7 +113,7 @@ export const useGridColumnSpanning = (apiRef: React.MutableRefObject<GridApiComm
     unstable_calculateColSpan: calculateColSpan,
   };
 
-  useGridApiMethod(apiRef, columnSpanningApi, 'GridColumnSpanningAPI');
+  useGridApiMethod(apiRef, columnSpanningApi, 'public');
 
   const handleColumnReorderChange = React.useCallback(() => {
     // `colSpan` needs to be recalculated after column reordering

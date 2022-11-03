@@ -3,7 +3,7 @@ import { DataGrid, GridRenderCellParams } from '@mui/x-data-grid';
 import { GridCellParams } from '../models/params/gridCellParams';
 import { GridActionsColDef, GridColDef, GridColumns, GridRowParams } from '../models';
 
-const RenderCellParamsExplicitTyping = () => {
+function RenderCellParamsExplicitTyping() {
   return (
     <DataGrid
       rows={[]}
@@ -60,9 +60,9 @@ const RenderCellParamsExplicitTyping = () => {
       ]}
     />
   );
-};
+}
 
-const CellParamsFromRowModel = () => {
+function CellParamsFromRowModel() {
   type PriceRowModel = { price1: number; price2: string };
 
   const actionColumn: GridActionsColDef<PriceRowModel> = {
@@ -101,9 +101,9 @@ const CellParamsFromRowModel = () => {
   ];
 
   return <DataGrid rows={[]} columns={columns} />;
-};
+}
 
-const CellParamsValue = () => {
+function CellParamsValue() {
   return (
     <DataGrid
       rows={[]}
@@ -117,9 +117,9 @@ const CellParamsValue = () => {
       }}
     />
   );
-};
+}
 
-const CellParamsRow = () => {
+function CellParamsRow() {
   return (
     <DataGrid
       rows={[]}
@@ -133,9 +133,9 @@ const CellParamsRow = () => {
       }}
     />
   );
-};
+}
 
-const CellParamsFormattedValue = () => {
+function CellParamsFormattedValue() {
   return (
     <DataGrid
       rows={[]}
@@ -149,4 +149,4 @@ const CellParamsFormattedValue = () => {
       }}
     />
   );
-};
+}

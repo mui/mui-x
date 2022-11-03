@@ -1,10 +1,12 @@
 import * as React from 'react';
 import { GridInitialStateCommunity } from '../../../models/gridStateCommunity';
-import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
+import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridStatePersistenceApi } from './gridStatePersistenceInterface';
 import { useGridApiMethod } from '../../utils';
 
-export const useGridStatePersistence = (apiRef: React.MutableRefObject<GridApiCommunity>) => {
+export const useGridStatePersistence = (
+  apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
+) => {
   const exportState = React.useCallback<
     GridStatePersistenceApi<GridInitialStateCommunity>['exportState']
   >(
@@ -44,5 +46,5 @@ export const useGridStatePersistence = (apiRef: React.MutableRefObject<GridApiCo
     restoreState,
   };
 
-  useGridApiMethod(apiRef, statePersistenceApi, 'GridStatePersistenceApi');
+  useGridApiMethod(apiRef, statePersistenceApi, 'public');
 };

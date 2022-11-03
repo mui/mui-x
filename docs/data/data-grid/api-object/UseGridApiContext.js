@@ -4,7 +4,7 @@ import Button from '@mui/material/Button';
 import { DataGrid, GridToolbarContainer, useGridApiContext } from '@mui/x-data-grid';
 import { useDemoData } from '@mui/x-data-grid-generator';
 
-const CustomToolbar = () => {
+function CustomToolbar() {
   const apiRef = useGridApiContext();
 
   const handleGoToPage1 = () => apiRef.current.setPage(1);
@@ -14,7 +14,7 @@ const CustomToolbar = () => {
       <Button onClick={handleGoToPage1}>Go to page 1</Button>
     </GridToolbarContainer>
   );
-};
+}
 
 export default function UseGridApiContext() {
   const { data } = useDemoData({

@@ -135,6 +135,7 @@ only those translation keys will be overridden.
 | Swedish                 | sv-SE               | `svSE`      |
 | Turkish                 | tr-TR               | `trTr`      |
 | Dutch                   | nl-NL               | `nlNL`      |
+| Ukrainian               | uk-UA               | `ukUA`      |
 
 You can [find the source](https://github.com/mui/mui-x/tree/HEAD/packages/x-date-pickers/src/locales) in the GitHub repository.
 

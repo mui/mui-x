@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { debounce, capitalize } from '@mui/material/utils';
-import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
+import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridRowsMetaApi } from '../../../models/api/gridRowsMetaApi';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { useGridVisibleRows } from '../../utils/useGridVisibleRows';
@@ -31,7 +31,7 @@ export const rowsMetaStateInitializer: GridStateInitializer = (state) => ({
  * @requires useGridPage (method)
  */
 export const useGridRowsMeta = (
-  apiRef: React.MutableRefObject<GridApiCommunity>,
+  apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
   props: Pick<
     DataGridProcessedProps,
     'getRowHeight' | 'getEstimatedRowHeight' | 'getRowSpacing' | 'pagination' | 'paginationMode'
@@ -294,5 +294,5 @@ export const useGridRowsMeta = (
     resetRowHeights,
   };
 
-  useGridApiMethod(apiRef, rowsMetaApi, 'GridRowsMetaApi');
+  useGridApiMethod(apiRef, rowsMetaApi, 'public');
 };
