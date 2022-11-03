@@ -19,6 +19,7 @@ const VIEW_LOOKUP = {
 
 const StaticNextDatePicker = React.forwardRef(function StaticNextDatePicker<TDate>(
   inProps: StaticNextDatePickerProps<TDate>,
+  ref: React.Ref<HTMLDivElement>,
 ) {
   const defaultizedProps = useNextDatePickerDefaultizedProps<
     TDate,
@@ -38,6 +39,7 @@ const StaticNextDatePicker = React.forwardRef(function StaticNextDatePicker<TDat
     props,
     valueManager: datePickerValueManager,
     viewLookup: VIEW_LOOKUP,
+    ref,
   });
 
   return renderPicker();
