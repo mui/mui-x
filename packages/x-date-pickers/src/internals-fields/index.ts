@@ -5,6 +5,7 @@ export {
   createDateStrFromSections,
   addPositionPropertiesToSections,
   splitFormatIntoSections,
+  getSectionOrder,
 } from '../internals/hooks/useField';
 export type {
   UseFieldInternalProps,
