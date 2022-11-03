@@ -6,9 +6,8 @@ import { DateRangePosition } from './DateRangeCalendar.types';
 interface UseDragRange<TDate> {
   disableDragEditing?: boolean;
   utils: MuiPickersAdapter<TDate>;
-  currentDatePosition: DateRangePosition;
   setRangePreviewDay: (value: React.SetStateAction<TDate | null>) => void;
-  setCurrentDatePosition: (value: React.SetStateAction<DateRangePosition>) => void;
+  onDragStart: (position: DateRangePosition) => void;
   onDrop: (newDate: TDate) => void;
 }
 
@@ -42,9 +41,8 @@ const isSameAsDraggingDate = (event: React.DragEvent<HTMLButtonElement>) => {
 export const useDragRange = <TDate>({
   disableDragEditing,
   utils,
-  currentDatePosition,
-  setCurrentDatePosition,
   setRangePreviewDay,
+  onDragStart,
   onDrop,
 }: UseDragRange<TDate>): UseDragRangeResponse => {
   const [isDragging, setIsDragging] = React.useState(false);
@@ -57,10 +55,7 @@ export const useDragRange = <TDate>({
       setIsDragging(true);
       const buttonDataset = (event.target as HTMLButtonElement).dataset;
       event.dataTransfer.setData('draggingDate', buttonDataset.timestamp as string);
-      const datePosition = buttonDataset.position as DateRangePosition;
-      if (datePosition && currentDatePosition !== datePosition) {
-        setCurrentDatePosition(datePosition);
-      }
+      onDragStart(buttonDataset.position as DateRangePosition);
     }
   });
   const handleDragEnter = useEventCallback((event: React.DragEvent<HTMLButtonElement>) => {

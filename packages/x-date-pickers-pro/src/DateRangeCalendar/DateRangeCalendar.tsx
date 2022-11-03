@@ -333,15 +333,20 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
     }
   };
 
+  const handleDragStart = useEventCallback((position: DateRangePosition) => {
+    if (position && currentDatePosition !== position) {
+      setCurrentDatePosition(position);
+    }
+  });
+
   const handleDrop = useEventCallback((newDate: TDate) => {
     handleSelectedDayChange(newDate, undefined, true);
   });
 
   const { isDragging, ...dragEventHandlers } = useDragRange({
-    currentDatePosition,
     disableDragEditing,
     onDrop: handleDrop,
-    setCurrentDatePosition,
+    onDragStart: handleDragStart,
     setRangePreviewDay,
     utils,
   });
