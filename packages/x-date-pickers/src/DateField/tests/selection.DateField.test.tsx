@@ -2,7 +2,7 @@ import * as React from 'react';
 import { expect } from 'chai';
 import { Unstable_DateField as DateField } from '@mui/x-date-pickers/DateField';
 import { screen, act, userEvent, fireEvent } from '@mui/monorepo/test/utils';
-import { createPickerRenderer } from 'test/utils/pickers-utils';
+import { createPickerRenderer, expectInputValue } from 'test/utils/pickers-utils';
 
 const getSelectedContent = (input: HTMLInputElement) =>
   input.value.slice(input.selectionStart ?? 0, input.selectionEnd ?? 0);
@@ -34,7 +34,7 @@ describe('<DateField /> - Selection', () => {
         input.select();
       });
 
-      expect(input.value).to.equal('MM / DD / YYYY');
+      expectInputValue(input, 'MM / DD / YYYY');
       expect(input.selectionStart).to.equal(0);
       expect(input.selectionEnd).to.equal(input.value.length);
     });
@@ -45,13 +45,13 @@ describe('<DateField /> - Selection', () => {
       // Simulate a touch focus interaction on mobile
       act(() => {
         input.focus();
-        input.setSelectionRange(6, 8);
+        input.setSelectionRange(7, 9);
         clock.runToLast();
       });
 
-      expect(input.value).to.equal('MM / DD / YYYY');
-      expect(input.selectionStart).to.equal(5);
-      expect(input.selectionEnd).to.equal(7);
+      expectInputValue(input, 'MM / DD / YYYY');
+      expect(input.selectionStart).to.equal(6);
+      expect(input.selectionEnd).to.equal(8);
     });
 
     it('should select day on desktop', () => {
@@ -59,7 +59,7 @@ describe('<DateField /> - Selection', () => {
       const input = screen.getByRole('textbox');
       clickOnInput(input, 6);
 
-      expect(input.value).to.equal('MM / DD / YYYY');
+      expectInputValue(input, 'MM / DD / YYYY');
       expect(getSelectedContent(input)).to.equal('DD');
     });
   });

@@ -3,10 +3,7 @@ import { expect } from 'chai';
 import { spy } from 'sinon';
 import { Unstable_DateField as DateField, DateFieldProps } from '@mui/x-date-pickers/DateField';
 import { screen, act, userEvent, fireEvent } from '@mui/monorepo/test/utils';
-import { createPickerRenderer, adapterToUse } from 'test/utils/pickers-utils';
-
-const expectInputValue = (input: HTMLInputElement, expectedValue: string) =>
-  expect(input.value.replace(/‎/g, '')).to.equal(expectedValue);
+import { createPickerRenderer, adapterToUse, expectInputValue } from 'test/utils/pickers-utils';
 
 describe('<DateField /> - Editing', () => {
   const { render, clock } = createPickerRenderer({
@@ -126,7 +123,7 @@ describe('<DateField /> - Editing', () => {
         key: 'ArrowDown',
         expectedValue: 'May 31',
         // To select the date and not the month
-        cursorPosition: 5,
+        cursorPosition: 9,
       });
     });
 
@@ -218,7 +215,7 @@ describe('<DateField /> - Editing', () => {
         key: 'ArrowUp',
         expectedValue: 'July 1',
         // To select the date and not the month
-        cursorPosition: 5,
+        cursorPosition: 9,
       });
     });
 
@@ -646,7 +643,7 @@ describe('<DateField /> - Editing', () => {
         />,
       );
       const input = screen.getByRole('textbox');
-      clickOnInput(input, 10);
+      clickOnInput(input, 11);
       userEvent.keyPress(input, { key: 'ArrowDown' });
 
       expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2009, 3, 3, 3, 3, 3));

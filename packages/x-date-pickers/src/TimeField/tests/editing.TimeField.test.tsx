@@ -3,10 +3,7 @@ import { expect } from 'chai';
 import { spy } from 'sinon';
 import { Unstable_TimeField as TimeField, TimeFieldProps } from '@mui/x-date-pickers/TimeField';
 import { screen, act, userEvent, fireEvent } from '@mui/monorepo/test/utils';
-import { createPickerRenderer, adapterToUse } from 'test/utils/pickers-utils';
-
-const expectInputValue = (input: HTMLInputElement, expectedValue: string) =>
-  expect(input.value.replace(/‎/g, '')).to.equal(expectedValue);
+import { createPickerRenderer, adapterToUse, expectInputValue } from 'test/utils/pickers-utils';
 
 describe('<TimeField /> - Editing', () => {
   const { render, clock } = createPickerRenderer({
