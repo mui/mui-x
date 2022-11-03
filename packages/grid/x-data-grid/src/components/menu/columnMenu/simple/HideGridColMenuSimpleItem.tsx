@@ -1,12 +1,12 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import MenuItem from '@mui/material/MenuItem';
-import { GridItemProps } from '../GridItemProps';
+import { GridColumnMenuItemProps } from '../GridColumnMenuItemProps';
 import { useGridApiContext } from '../../../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../../../hooks/utils/useGridRootProps';
 import { gridVisibleColumnDefinitionsSelector } from '../../../../hooks/features/columns';
 
-const HideGridColMenuSimpleItem = (props: GridItemProps) => {
+const HideGridColMenuSimpleItem = (props: GridColumnMenuItemProps) => {
   const { column, onClick } = props;
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
@@ -27,10 +27,14 @@ const HideGridColMenuSimpleItem = (props: GridItemProps) => {
       if (disabled) {
         return;
       }
-      onClick(event);
+      if (onClick) {
+        onClick(event);
+      }
       // time for the transition
       timeoutRef.current = setTimeout(() => {
-        apiRef.current.setColumnVisibility(column?.field, false);
+        if (column?.field) {
+          apiRef.current.setColumnVisibility(column.field, false);
+        }
       }, 100);
     },
     [apiRef, column?.field, onClick, disabled],
@@ -44,7 +48,7 @@ const HideGridColMenuSimpleItem = (props: GridItemProps) => {
     return null;
   }
 
-  if (column.hideable === false) {
+  if (column?.hideable === false) {
     return null;
   }
 
@@ -60,8 +64,8 @@ HideGridColMenuSimpleItem.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
-  column: PropTypes.object.isRequired,
-  onClick: PropTypes.func.isRequired,
+  column: PropTypes.object,
+  onClick: PropTypes.func,
 } as any;
 
 export { HideGridColMenuSimpleItem };

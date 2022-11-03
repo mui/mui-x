@@ -5,7 +5,7 @@ import Button from '@mui/material/Button';
 import { styled } from '@mui/material';
 import { GridPreferencePanelsValue } from '../../../../hooks/features/preferencesPanel/gridPreferencePanelsValue';
 import { useGridApiContext } from '../../../../hooks/utils/useGridApiContext';
-import { GridItemProps } from '../GridItemProps';
+import { GridColumnMenuItemProps } from '../GridColumnMenuItemProps';
 import { useGridRootProps } from '../../../../hooks/utils/useGridRootProps';
 
 const StyledStack = styled(Stack)(({ theme }) => ({
@@ -13,14 +13,14 @@ const StyledStack = styled(Stack)(({ theme }) => ({
   flexDirection: 'row',
 }));
 
-const GridColumnsMenuItem = (props: GridItemProps) => {
+const GridColumnsMenuItem = (props: GridColumnMenuItemProps) => {
   const { onClick } = props;
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
 
   const showColumns = React.useCallback(
     (event: React.MouseEvent<HTMLElement>) => {
-      onClick(event);
+      onClick?.(event);
       apiRef.current.showPreferences(GridPreferencePanelsValue.columns);
     },
     [apiRef, onClick],
@@ -47,8 +47,8 @@ GridColumnsMenuItem.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
-  column: PropTypes.object.isRequired,
-  onClick: PropTypes.func.isRequired,
+  column: PropTypes.object,
+  onClick: PropTypes.func,
 } as any;
 
 export { GridColumnsMenuItem };

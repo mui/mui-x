@@ -51,11 +51,7 @@ const GridMenuRoot = styled(Popper, {
   },
 }));
 
-const StyledPaper = styled(Paper, {
-  name: 'MuiDataGrid',
-  slot: 'Paper',
-  overridesResolver: (_, styles) => styles.paper,
-})(() => ({
+const StyledPaper = styled(Paper)(() => ({
   borderRadius: '10px',
 }));
 

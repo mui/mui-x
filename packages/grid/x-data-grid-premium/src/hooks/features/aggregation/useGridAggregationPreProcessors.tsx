@@ -1,6 +1,10 @@
 import * as React from 'react';
-import MuiDivider, { DividerProps } from '@mui/material/Divider';
-import { gridColumnLookupSelector, insertItemsInColumnMenu } from '@mui/x-data-grid-pro';
+import {
+  gridColumnLookupSelector,
+  GridColumnMenuValue,
+  GridColumnMenuLookup,
+  insertSlotsInColumnMenu,
+} from '@mui/x-data-grid-pro';
 import {
   GridPipeProcessor,
   GridRestoreStatePreProcessingContext,
@@ -22,10 +26,6 @@ import { GridAggregationColumnMenuItem } from '../../../components/GridAggregati
 import { GridAggregationColumnMenuSimpleItem } from '../../../components/GridAggregationColumnMenuSimpleItem';
 import { gridAggregationModelSelector } from './gridAggregationSelectors';
 import { GridInitialStatePremium } from '../../../models/gridStatePremium';
-
-const Divider = (props: DividerProps) => (
-  <MuiDivider {...props} onClick={(event) => event.stopPropagation()} />
-);
 
 export const useGridAggregationPreProcessors = (
   apiRef: React.MutableRefObject<GridApiPremium>,
@@ -111,9 +111,9 @@ export const useGridAggregationPreProcessors = (
   );
 
   const addColumnMenuButtons = React.useCallback<GridPipeProcessor<'columnMenu'>>(
-    (columnMenuItems, column) => {
+    (columnMenuValue: GridColumnMenuValue, column) => {
       if (props.disableAggregation) {
-        return columnMenuItems;
+        return columnMenuValue;
       }
 
       const availableAggregationFunctions = getAvailableAggregationFunctions({
@@ -122,7 +122,7 @@ export const useGridAggregationPreProcessors = (
       });
 
       if (availableAggregationFunctions.length === 0) {
-        return columnMenuItems;
+        return columnMenuValue;
       }
 
       const aggregationItemProps = {
@@ -131,21 +131,32 @@ export const useGridAggregationPreProcessors = (
         availableAggregationFunctions,
       };
 
-      const item = columnMenuItems.some(({ displayName }) =>
+      const slot: GridColumnMenuLookup['slot'] = 'aggregation';
+
+      const aggregationItem = columnMenuValue.items.some(({ displayName }) =>
         displayName?.includes('GridFilterMenuSimple'),
       )
         ? {
-            slot: 'aggregation',
+            slot,
             displayName: 'GridAggregationColumnMenuSimpleItem',
             component: <GridAggregationColumnMenuSimpleItem {...aggregationItemProps} />,
           }
         : {
-            slot: 'aggregation',
+            slot,
             displayName: 'GridAggregationColumnMenuItem',
             component: <GridAggregationColumnMenuItem {...aggregationItemProps} />,
             addDivider: true,
           };
-      return insertItemsInColumnMenu(columnMenuItems, [item], 'GridFilterMenuItem');
+
+      const items = [...columnMenuValue.items, aggregationItem];
+
+      const visibleSlots = insertSlotsInColumnMenu(
+        columnMenuValue.visibleSlots,
+        aggregationItem.addDivider ? ['divider', aggregationItem.slot] : [aggregationItem.slot],
+        'filter',
+      );
+
+      return { visibleSlots, items };
     },
     [apiRef, props.aggregationFunctions, props.disableAggregation],
   );

@@ -5,9 +5,9 @@ import { useGridSelector } from '../../../../hooks/utils/useGridSelector';
 import { gridSortModelSelector } from '../../../../hooks/features/sorting/gridSortingSelector';
 import { GridSortDirection } from '../../../../models/gridSortModel';
 import { useGridApiContext } from '../../../../hooks/utils/useGridApiContext';
-import { GridItemProps } from '../GridItemProps';
+import { GridColumnMenuItemProps } from '../GridColumnMenuItemProps';
 
-const SortGridMenuSimpleItems = (props: GridItemProps) => {
+const SortGridMenuSimpleItems = (props: GridColumnMenuItemProps) => {
   const { column, onClick } = props;
   const apiRef = useGridApiContext();
   const sortModel = useGridSelector(apiRef, gridSortModelSelector);
@@ -22,7 +22,7 @@ const SortGridMenuSimpleItems = (props: GridItemProps) => {
 
   const onSortMenuItemClick = React.useCallback(
     (event: React.MouseEvent<HTMLElement>) => {
-      onClick(event);
+      onClick?.(event);
       const direction = event.currentTarget.getAttribute('data-value') || null;
       apiRef.current.sortColumn(
         column!,
@@ -56,8 +56,8 @@ SortGridMenuSimpleItems.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
-  column: PropTypes.object.isRequired,
-  onClick: PropTypes.func.isRequired,
+  column: PropTypes.object,
+  onClick: PropTypes.func,
 } as any;
 
 export { SortGridMenuSimpleItems };

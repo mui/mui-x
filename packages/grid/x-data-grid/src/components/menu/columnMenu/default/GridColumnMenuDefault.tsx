@@ -1,6 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { GridColumnMenuValue } from '../../../../hooks/features/columnMenu';
+import Divider from '@mui/material/Divider';
+import { GridColumnMenuValue, GridColumnMenuLookup } from '../../../../hooks/features/columnMenu';
 import { GridColumnMenuContainer } from './GridColumnMenuContainer';
 import { GridColumnMenu } from '../GridColumnMenu';
 import { GridColumnMenuProps } from '../GridColumnMenuProps';
@@ -10,44 +11,54 @@ import { HideGridColMenuItem } from './HideGridColMenuItem';
 import { SortGridMenuItems } from './SortGridMenuItems';
 
 export interface GridColumnMenuDefaultProps
-  extends Pick<
-    GridColumnMenuProps,
-    'hideMenu' | 'currentColumn' | 'open' | 'getVisibleColumnMenuItems'
-  > {}
+  extends Pick<GridColumnMenuProps, 'hideMenu' | 'currentColumn' | 'open'> {}
+
+const defaultVisibleSlots: Array<GridColumnMenuLookup['slot']> = [
+  'sorting',
+  'divider',
+  'filter',
+  'divider',
+  'hideColumn',
+  'divider',
+  'manageColumns',
+];
 
 const GridColumnMenuDefault = React.forwardRef<HTMLDivElement, GridColumnMenuDefaultProps>(
   function GridColumnMenuDefault(props: GridColumnMenuDefaultProps, ref) {
-    const { hideMenu, currentColumn } = props;
-
-    const menuItems: GridColumnMenuValue = [
+    const defaultMenuItems: GridColumnMenuValue['items'] = [
       {
         slot: 'sorting',
         displayName: 'SortGridMenuItems',
-        component: <SortGridMenuItems onClick={hideMenu} column={currentColumn!} />,
-        addDivider: true,
+        component: <SortGridMenuItems />,
       },
       {
         slot: 'filter',
         displayName: 'GridFilterMenuItem',
-        component: <GridFilterMenuItem onClick={hideMenu} column={currentColumn!} />,
-        addDivider: true,
+        component: <GridFilterMenuItem />,
       },
       {
         slot: 'hideColumn',
         displayName: 'HideGridColMenuItem',
-        component: <HideGridColMenuItem onClick={hideMenu} column={currentColumn!} />,
-        addDivider: true,
+        component: <HideGridColMenuItem />,
       },
       {
         slot: 'manageColumns',
         displayName: 'GridColumnsMenuItem',
-        component: <GridColumnsMenuItem onClick={hideMenu} column={currentColumn!} />,
+        component: <GridColumnsMenuItem />,
+      },
+      {
+        slot: 'divider',
+        component: <Divider />,
       },
     ];
 
     return (
       <GridColumnMenuContainer ref={ref} {...props}>
-        <GridColumnMenu menuItems={menuItems} {...props} />
+        <GridColumnMenu
+          defaultVisibleSlots={defaultVisibleSlots}
+          defaultMenuItems={defaultMenuItems}
+          {...props}
+        />
       </GridColumnMenuContainer>
     );
   },
@@ -59,7 +70,6 @@ GridColumnMenuDefault.propTypes = {
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
   currentColumn: PropTypes.object.isRequired,
-  getVisibleColumnMenuItems: PropTypes.func,
   hideMenu: PropTypes.func.isRequired,
   open: PropTypes.bool.isRequired,
 } as any;

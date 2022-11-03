@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import { styled } from '@mui/material';
-import { GridItemProps } from '../GridItemProps';
+import { GridColumnMenuItemProps } from '../GridColumnMenuItemProps';
 import { useGridApiContext } from '../../../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../../../hooks/utils/useGridRootProps';
 import { gridVisibleColumnDefinitionsSelector } from '../../../../hooks/features/columns';
@@ -20,7 +20,7 @@ const StyledButton = styled(Button)(() => ({
   textTransform: 'none',
 }));
 
-const HideGridColMenuItem = (props: GridItemProps) => {
+const HideGridColMenuItem = (props: GridColumnMenuItemProps) => {
   const { column, onClick } = props;
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
@@ -41,10 +41,12 @@ const HideGridColMenuItem = (props: GridItemProps) => {
       if (disabled) {
         return;
       }
-      onClick(event);
+      onClick?.(event);
       // time for the transition
       timeoutRef.current = setTimeout(() => {
-        apiRef.current.setColumnVisibility(column?.field, false);
+        if (column?.field) {
+          apiRef.current.setColumnVisibility(column.field, false);
+        }
       }, 100);
     },
     [apiRef, column?.field, onClick, disabled],
@@ -58,7 +60,7 @@ const HideGridColMenuItem = (props: GridItemProps) => {
     return null;
   }
 
-  if (column.hideable === false) {
+  if (column?.hideable === false) {
     return null;
   }
 
@@ -81,8 +83,8 @@ HideGridColMenuItem.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
-  column: PropTypes.object.isRequired,
-  onClick: PropTypes.func.isRequired,
+  column: PropTypes.object,
+  onClick: PropTypes.func,
 } as any;
 
 export { HideGridColMenuItem };

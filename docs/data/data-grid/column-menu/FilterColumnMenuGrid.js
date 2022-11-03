@@ -5,7 +5,6 @@ import Stack from '@mui/material/Stack'
 import Button from '@mui/material/Button'
 
 const MenuCloseComponent = props => {
-  console.log(props, 'props')
   return (
     <Stack py={1} px={1.5}>
       <Button color='primary' onClick={props.onClick}>
@@ -21,26 +20,29 @@ const FilterComponent = props => (
   </Stack>
 )
 
-export default function ColumnMenuGrid () {
+export default function FilterColumnMenuGrid () {
   const { data } = useDemoData({
     dataSet: 'Commodity',
     rowLength: 20,
     maxColumns: 5,
   })
   const columns = data.columns
-  // only show `Manage Columns` for last column
-  columns[4].getVisibleColumnMenuItems = () => ['closeMenu', 'manageColumns']
+  // Show specific items for this column
+  columns[4].getVisibleColumnMenuItems = () => [
+    'closeMenu',
+    'divider',
+    'manageColumns',
+  ]
 
   const columnMenuItems = {
-    ['filter']: {
-      // existing slot
+    filter: {
+      // overriding existing item
       component: <FilterComponent />, // overriden property
     },
-    ['closeMenu']: {
-      // registering new slot
+    closeMenu: {
+      // adding new item
       component: <MenuCloseComponent />,
       displayName: 'MenuClose',
-      addDivider: true,
     },
   }
 
@@ -54,8 +56,11 @@ export default function ColumnMenuGrid () {
             columnMenuItems,
             getVisibleColumnMenuItems: () => [
               'hideColumn',
+              'divider',
               'filter',
+              'divider',
               'closeMenu',
+              'divider',
               'manageColumns',
             ],
           },

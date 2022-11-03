@@ -73,6 +73,12 @@ declare module '@mui/x-data-grid-pro' {
   interface GridColumnHeaderParams<V, R, F> extends GridColumnHeaderParamsPremium<V, R, F> {}
 
   interface GridApiCaches extends GridApiCachesPremium {}
+
+  interface GridColumnMenuSlotInternalOverrides {
+    pinning: true;
+    aggregation: true;
+    grouping: true;
+  }
 }
 
 declare module '@mui/x-data-grid-pro/internals' {

@@ -6,7 +6,7 @@ import { isHideMenuKey, isTabKey } from '../../../../utils/keyboardUtils';
 import { GridColumnMenuProps } from '../GridColumnMenuProps';
 import { gridClasses } from '../../../../constants/gridClasses';
 
-interface Props
+interface GridColumnMenuSimpleProps
   extends Pick<
     GridColumnMenuProps,
     | 'hideMenu'
@@ -19,8 +19,8 @@ interface Props
     | 'children'
   > {}
 
-const GridColumnMenuSimpleContainer = React.forwardRef<HTMLUListElement, Props>(
-  function GridColumnMenuSimpleContainer(props: Props, ref) {
+const GridColumnMenuSimpleContainer = React.forwardRef<HTMLUListElement, GridColumnMenuSimpleProps>(
+  function GridColumnMenuSimpleContainer(props: GridColumnMenuSimpleProps, ref) {
     const { hideMenu, currentColumn, open, id, labelledby, className, children, ...other } = props;
 
     const handleListKeyDown = React.useCallback(

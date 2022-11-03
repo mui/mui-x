@@ -1,6 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { GridColumnMenuValue } from '../../../../hooks/features/columnMenu';
+import { GridColumnMenuLookup, GridColumnMenuValue } from '../../../../hooks/features/columnMenu';
 import { GridColumnMenuSimpleContainer } from './GridColumnMenuSimpleContainer';
 import { GridColumnMenuProps } from '../GridColumnMenuProps';
 import { GridColumnsMenuSimpleItem } from './GridColumnsMenuSimpleItem';
@@ -15,37 +15,45 @@ interface Props
     'hideMenu' | 'currentColumn' | 'open' | 'getVisibleColumnMenuItems'
   > {}
 
+const defaultVisibleSlots: Array<GridColumnMenuLookup['slot']> = [
+  'sorting',
+  'filter',
+  'hideColumn',
+  'manageColumns',
+];
+
 const GridColumnMenuSimple = React.forwardRef<HTMLUListElement, Props>(
   function GridColumnMenuSimple(props: Props, ref) {
-    const { hideMenu, currentColumn } = props;
-
-    const menuItems: GridColumnMenuValue = [
+    const defaultMenuItems: GridColumnMenuValue['items'] = [
       {
         slot: 'sorting',
         displayName: 'SortGridMenuSimpleItems',
-        component: <SortGridMenuSimpleItems onClick={hideMenu} column={currentColumn!} />,
+        component: <SortGridMenuSimpleItems />,
       },
-      // TODO update types to allow `onClick` and `column` to be optional
       {
         slot: 'filter',
         displayName: 'GridFilterMenuSimpleItem',
-        component: <GridFilterMenuSimpleItem onClick={hideMenu} column={currentColumn!} />,
+        component: <GridFilterMenuSimpleItem />,
       },
       {
         slot: 'hideColumn',
         displayName: 'HideGridColMenuSimpleItem',
-        component: <HideGridColMenuSimpleItem onClick={hideMenu} column={currentColumn!} />,
+        component: <HideGridColMenuSimpleItem />,
       },
       {
         slot: 'manageColumns',
         displayName: 'GridColumnsMenuSimpleItem',
-        component: <GridColumnsMenuSimpleItem onClick={hideMenu} column={currentColumn!} />,
+        component: <GridColumnsMenuSimpleItem />,
       },
     ];
 
     return (
       <GridColumnMenuSimpleContainer ref={ref} {...props}>
-        <GridColumnMenu menuItems={menuItems} {...props} />
+        <GridColumnMenu
+          defaultMenuItems={defaultMenuItems}
+          defaultVisibleSlots={defaultVisibleSlots}
+          {...props}
+        />
       </GridColumnMenuSimpleContainer>
     );
   },

@@ -41,31 +41,79 @@ For that purpose you can use `getVisibleColumnMenuItems` and `columnMenuItems`.
 
 **columnMenuItems**: It could be used to override or register new items to the menu. You can simply pass the object with existing or new items and they will be updated/added to the grid.
 
+### Hide/Show Specific Items:
+
+For every column menu component there's a default order of items configured by default called `visibleMenuItems`, for default column menu it's:
+
+```tsx
+[
+  'sorting',
+  'divider',
+  'filter',
+  'divider',
+  'hideColumn',
+  'divider',
+  'manageColumns',
+];
+```
+
+Using `getVisibleColumnMenuItems` method, you can override this order based on configured slots for the column menu.
+
+```tsx
+const getVisibleColumnMenuItems = () => ['sorting', 'divider', 'filter']; // only show `sort` & `filter`
+
+return (
+  <DataGrid
+    {...data}
+    componentsProps={{ columnMenu: { getVisibleColumnMenuItems } }}
+  />
+);
+```
+
+### Override default items and add new items:
+
+Using `componentsProps.columnMenu.columnMenuItems`, you can:
+
+1. Override Existing Items
+2. Add new Items
+
 ```tsx
 const columnMenuItems = {
-  ['filter']: { // existing slot
+  ['filter']: {
+    // overiding existing slot
     component: <MyCustomFilter />, // overriden property
-    addDivider: true,
   },
-  ['manageColumns']: { // override another existing slot
-    addDivider: true,
-  },
-  ['closeMenu']: { // registering new slot
+  ['closeMenu']: {
+    // adding new slot
     component: <MenuCloseComponent />,
     displayName: 'MenuClose',
-  }
-}
+  },
+};
 
 // add new item in visible items and append it to the last of list
 const getVisibleColumnMenuItems = (defaultItems) => [...defaultItems, 'closeMenu'];
 
-<DataGrid 
-  {...data} 
-  componentProps={{ columnMenu: { getVisibleColumnMenuItems, columnMenuItems } }} 
-/>
+<DataGrid
+  {...data}
+  componentProps={{ columnMenu: { getVisibleColumnMenuItems, columnMenuItems } }}
+/>;
 ```
 
-Currently available default slots for _DataGridCommunity_ are `filter`, `sorting`, `hideColumn` and `manageColumns`. 
+If you're using TypeScript, for new items that you are adding, you'll need to specify new slots you are registering, using [module augmentation](https://www.typescriptlang.org/docs/handbook/declaration-merging.html#module-augmentation).
+
+```tsx
+declare module '@mui/x-data-grid' {
+  interface GridColumnMenuSlotOverrides {
+    closeMenu: true;
+  }
+}
+```
+
+### Default column menu items
+
+Currently available default slots for **x-data-grid** are `filter`, `sorting`, `hideColumn`, `divider` and `manageColumns`, wheras **x-data-grid-pro** adds `pinning` and **x-data-grid-premium** adds `grouping` and `aggregation` on top of them.
+
+Here's a demo overriding some existing items, adding some new items and displaying different items for a column.
 
 {{"demo": "FilterColumnMenuGrid.js", "bg": "inline"}}
 

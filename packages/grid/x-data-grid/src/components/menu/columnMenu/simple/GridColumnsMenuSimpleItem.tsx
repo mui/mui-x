@@ -3,17 +3,17 @@ import PropTypes from 'prop-types';
 import MenuItem from '@mui/material/MenuItem';
 import { GridPreferencePanelsValue } from '../../../../hooks/features/preferencesPanel/gridPreferencePanelsValue';
 import { useGridApiContext } from '../../../../hooks/utils/useGridApiContext';
-import { GridItemProps } from '../GridItemProps';
+import { GridColumnMenuItemProps } from '../GridColumnMenuItemProps';
 import { useGridRootProps } from '../../../../hooks/utils/useGridRootProps';
 
-const GridColumnsMenuSimpleItem = (props: GridItemProps) => {
+const GridColumnsMenuSimpleItem = (props: GridColumnMenuItemProps) => {
   const { onClick } = props;
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
 
   const showColumns = React.useCallback(
     (event: React.MouseEvent<HTMLElement>) => {
-      onClick(event);
+      onClick?.(event); // hide column menu
       apiRef.current.showPreferences(GridPreferencePanelsValue.columns);
     },
     [apiRef, onClick],
@@ -35,8 +35,8 @@ GridColumnsMenuSimpleItem.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
-  column: PropTypes.object.isRequired,
-  onClick: PropTypes.func.isRequired,
+  column: PropTypes.object,
+  onClick: PropTypes.func,
 } as any;
 
 export { GridColumnsMenuSimpleItem };

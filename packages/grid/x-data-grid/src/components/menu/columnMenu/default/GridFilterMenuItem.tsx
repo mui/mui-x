@@ -7,7 +7,7 @@ import { styled } from '@mui/material';
 import { useGridApiContext } from '../../../../hooks/utils/useGridApiContext';
 import { useGridSelector } from '../../../../hooks/utils/useGridSelector';
 import { gridFilterModelSelector } from '../../../../hooks/features/filter/gridFilterSelector';
-import { GridItemProps } from '../GridItemProps';
+import { GridColumnMenuItemProps } from '../GridColumnMenuItemProps';
 import { useGridRootProps } from '../../../../hooks/utils/useGridRootProps';
 
 const StyledStack = styled(Stack)(({ theme }) => ({
@@ -22,7 +22,7 @@ const StyledButton = styled(Button)(() => ({
   textTransform: 'none',
 }));
 
-const GridFilterMenuItem = (props: GridItemProps) => {
+const GridFilterMenuItem = (props: GridColumnMenuItemProps) => {
   const { column, onClick } = props;
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
@@ -32,12 +32,12 @@ const GridFilterMenuItem = (props: GridItemProps) => {
     if (filterModel.items.length <= 0) {
       return false;
     }
-    return filterModel.items.some((item) => item.columnField === column.field);
-  }, [column.field, filterModel.items]);
+    return filterModel.items.some((item) => item.columnField === column?.field);
+  }, [column?.field, filterModel.items]);
 
   const showFilter = React.useCallback(
     (event: React.MouseEvent<HTMLElement>) => {
-      onClick(event);
+      onClick?.(event);
       apiRef.current.showFilterPanel(column?.field);
     },
     [apiRef, column?.field, onClick],
@@ -46,10 +46,10 @@ const GridFilterMenuItem = (props: GridItemProps) => {
   const clearFilters = React.useCallback(() => {
     if (isColumnFiltered) {
       apiRef.current.upsertFilterItems(
-        filterModel.items.filter((item) => item.columnField !== column.field),
+        filterModel.items.filter((item) => item.columnField !== column?.field),
       );
     }
-  }, [apiRef, column.field, filterModel.items, isColumnFiltered]);
+  }, [apiRef, column?.field, filterModel.items, isColumnFiltered]);
 
   if (rootProps.disableColumnFilter || !column?.filterable) {
     return null;
@@ -79,8 +79,8 @@ GridFilterMenuItem.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
-  column: PropTypes.object.isRequired,
-  onClick: PropTypes.func.isRequired,
+  column: PropTypes.object,
+  onClick: PropTypes.func,
 } as any;
 
 export { GridFilterMenuItem };

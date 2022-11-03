@@ -9,7 +9,7 @@ import { gridSortModelSelector } from '../../../../hooks/features/sorting/gridSo
 import { GridSortDirection } from '../../../../models/gridSortModel';
 import { useGridApiContext } from '../../../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../../../hooks/utils/useGridRootProps';
-import { GridItemProps } from '../GridItemProps';
+import { GridColumnMenuItemProps } from '../GridColumnMenuItemProps';
 
 const StyledStack = styled(Stack)(({ theme }) => ({
   padding: theme.spacing(0.5, 1.5, 0.5, 1.5),
@@ -20,7 +20,7 @@ const StyledButton = styled(Button)(() => ({
   fontWeight: '400',
 }));
 
-const SortGridMenuItems = (props: GridItemProps) => {
+const SortGridMenuItems = (props: GridColumnMenuItemProps) => {
   const { column } = props;
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
@@ -81,8 +81,8 @@ SortGridMenuItems.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
-  column: PropTypes.object.isRequired,
-  onClick: PropTypes.func.isRequired,
+  column: PropTypes.object,
+  onClick: PropTypes.func,
 } as any;
 
 export { SortGridMenuItems };
