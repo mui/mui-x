@@ -1359,6 +1359,20 @@
   dependencies:
     "@date-io/core" "^2.16.0"
 
+"@date-io/hijri@^2.16.0":
+  version "2.16.0"
+  resolved "https://registry.yarnpkg.com/@date-io/hijri/-/hijri-2.16.0.tgz#52dc496798cf0cdb4ac64449ef87e80354ac97fb"
+  integrity sha512-vVh9Twwb93btsyPaWF1PHFHhG6n034oksvFIrXRYdzf+SvEDFxvvQq3WG0UVDv4n3OFhwrs47ePDx8ft6xxQ5A==
+  dependencies:
+    "@date-io/moment" "^2.16.0"
+
+"@date-io/jalaali@^2.16.0":
+  version "2.16.0"
+  resolved "https://registry.yarnpkg.com/@date-io/jalaali/-/jalaali-2.16.0.tgz#19ecdc5fb82b76c43d8c7bf4f03b8ef7b19dd29b"
+  integrity sha512-gJ1mXFHSrwpWsfg4kgWbuyyi9k7VBDy7NI2GYll4z393UkK77D8C7yOLkwj0ZTcUKi5fh5mf6s4sVGcwXFFlBQ==
+  dependencies:
+    "@date-io/moment" "^2.16.0"
+
 "@date-io/luxon@^2.16.0":
   version "2.16.0"
   resolved "https://registry.yarnpkg.com/@date-io/luxon/-/luxon-2.16.0.tgz#97773d56532706c1a68113a1de07eecd0d41bebb"
@@ -6279,6 +6293,11 @@ data-urls@^3.0.2:
     whatwg-mimetype "^3.0.0"
     whatwg-url "^11.0.0"
 
+date-fns-jalali@^2.13.0-0:
+  version "2.13.0-0"
+  resolved "https://registry.yarnpkg.com/date-fns-jalali/-/date-fns-jalali-2.13.0-0.tgz#9e9d9d4a63910654aa72a550c55af9a80e89c060"
+  integrity sha512-yjlI9O18Z6ryGNagryrLO8OQ+3rishM3+A0UOX2UX10cWMn2NTlQcQ+ywTEJvF5IJz0FwX/slt2nCcpyQ/c8gw==
+
 date-fns-jalali@^2.21.3-1:
   version "2.21.3-1"
   resolved "https://registry.yarnpkg.com/date-fns-jalali/-/date-fns-jalali-2.21.3-1.tgz#b87a01c1d7bb2fe827faed34b33478a5fe4aa027"
@@ -8948,6 +8967,11 @@ jake@^10.8.5:
     filelist "^1.0.1"
     minimatch "^3.0.4"
 
+jalaali-js@^1.1.0:
+  version "1.2.6"
+  resolved "https://registry.yarnpkg.com/jalaali-js/-/jalaali-js-1.2.6.tgz#f4ee4bf686ed32bb9656f101225be4b7a1c3fd21"
+  integrity sha512-io974va+Qyu+UfuVX3UIAgJlxLhAMx9Y8VMfh+IG00Js7hXQo1qNQuwSiSa0xxco0SVgx5HWNkaiCcV+aZ8WPw==
+
 java-properties@^1.0.0:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/java-properties/-/java-properties-1.0.2.tgz#ccd1fa73907438a5b5c38982269d0e771fe78211"
@@ -9846,6 +9870,11 @@ lru-cache@^6.0.0:
   resolved "https://registry.yarnpkg.com/luxon/-/luxon-3.0.3.tgz#573e65531efd3d92265feb640f02ba7a192e2388"
   integrity sha512-+EfHWnF+UT7GgTnq5zXg3ldnTKL2zdv7QJgsU5bjjpbH17E3qi/puMhQyJVYuCq+FRkogvB5WB6iVvUr+E4a7w==
 
+luxon@^3.0.2:
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/luxon/-/luxon-3.1.0.tgz#9ac33d7142b7ea18d4ec8583cdeb0b079abef60d"
+  integrity sha512-7w6hmKC0/aoWnEsmPCu5Br54BmbmUp5GfcqBxQngRcXJ+q5fdfjEzn7dxmJh2YdDhgW8PccYtlWKSv4tQkrTQg==
+
 lz-string@^1.4.4:
   version "1.4.4"
   resolved "https://registry.yarnpkg.com/lz-string/-/lz-string-1.4.4.tgz#c0d8eaf36059f705796e1e344811cf4c498d3a26"
@@ -10276,7 +10305,31 @@ modify-values@^1.0.0:
   resolved "https://registry.yarnpkg.com/modify-values/-/modify-values-1.0.1.tgz#b3939fa605546474e3e3e3c63d64bd43b4ee6022"
   integrity sha512-xV2bxeN6F7oYjZWTe/YPAy6MN2M+sL4u/Rlm2AHCIVGfo2p1yGmBHQ6vHehl4bRTZBdHu3TSkWdYgkwpYzAGSw==
 
-moment@^2.29.4:
+moment-hijri@^2.1.2:
+  version "2.1.2"
+  resolved "https://registry.yarnpkg.com/moment-hijri/-/moment-hijri-2.1.2.tgz#ed95fa4f1fec45b41da132c9d4103b2726215225"
+  integrity sha512-p5ZOA1UzBHAAXiePh37XRjjwuyH78+1ShYZ7R6jogxketewG7kTCUjUmcP9c4Qsx8D8cqxwUWrESjtgdT6tNoA==
+  dependencies:
+    moment "^2.24.0"
+
+moment-jalaali@^0.9.0:
+  version "0.9.6"
+  resolved "https://registry.yarnpkg.com/moment-jalaali/-/moment-jalaali-0.9.6.tgz#6c460aedee08a1e45d3f658c7cffd66cd4dca24c"
+  integrity sha512-v8wXjQplvk5ez+sUqgsWIrafwIf1BEXXvzTYwsg1wHcqh27nSgKPCJ6FnZRrCz03MoNyB9N31L0oms+vE8Rq7g==
+  dependencies:
+    jalaali-js "^1.1.0"
+    moment "^2.22.2"
+    moment-timezone "^0.5.21"
+    rimraf "^3.0.2"
+
+moment-timezone@^0.5.21:
+  version "0.5.38"
+  resolved "https://registry.yarnpkg.com/moment-timezone/-/moment-timezone-0.5.38.tgz#9674a5397b8be7c13de820fd387d8afa0f725aad"
+  integrity sha512-nMIrzGah4+oYZPflDvLZUgoVUO4fvAqHstvG3xAUnMolWncuAiLDWNnJZj6EwJGMGfb1ZcuTFE6GI3hNOVWI/Q==
+  dependencies:
+    moment ">= 2.9.0"
+
+"moment@>= 2.9.0", moment@^2.22.2, moment@^2.24.0, moment@^2.29.4:
   version "2.29.4"
   resolved "https://registry.yarnpkg.com/moment/-/moment-2.29.4.tgz#3dbe052889fe7c1b2ed966fcb3a77328964ef108"
   integrity sha512-5LC9SOxjSc2HF6vO2CyuTDNivEdoz2IvyJJGj6X8DJ0eFyfszE0QiEd+iXmBvUP3WHxSjFH/vIsA0EN00cgr8w==
