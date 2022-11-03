@@ -263,6 +263,7 @@ const DateRangePickerDayRaw = React.forwardRef(function DateRangePickerDay<TDate
     isStartOfPreviewing,
     selected = false,
     sx,
+    isDragging,
     ...other
   } = props;
 
@@ -280,6 +281,7 @@ const DateRangePickerDayRaw = React.forwardRef(function DateRangePickerDay<TDate
     selected,
     isStartOfMonth,
     isEndOfMonth,
+    isDragging,
   };
 
   const classes = useUtilityClasses(ownerState);

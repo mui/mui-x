@@ -377,7 +377,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
         onMouseEnter: () => handlePreviewDayChange(day),
         isDragging,
         onDragStart: isElementDraggable ? onDragStart : undefined,
-        onDragEnd: isElementDraggable ? onDragEnd : undefined,
+        onDragEnd,
         'data-position': datePosition,
         ...(shouldInitDragging ? otherDragHandlers : {}),
         draggable: isElementDraggable,
