@@ -1,5 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import Divider from '@mui/material/Divider';
 import { GridColumnMenuLookup, GridColumnMenuValue } from '../../../../hooks/features/columnMenu';
 import { GridColumnMenuSimpleContainer } from './GridColumnMenuSimpleContainer';
 import { GridColumnMenuProps } from '../GridColumnMenuProps';
@@ -44,6 +45,10 @@ const GridColumnMenuSimple = React.forwardRef<HTMLUListElement, Props>(
         slot: 'manageColumns',
         displayName: 'GridColumnsMenuSimpleItem',
         component: <GridColumnsMenuSimpleItem />,
+      },
+      {
+        slot: 'divider',
+        component: <Divider />,
       },
     ];
 

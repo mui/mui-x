@@ -156,26 +156,6 @@ export interface GridIconSlotsComponent {
    */
   ColumnMenuManageColumnsIcon: React.JSXElementConstructor<any>;
   /**
-   * Icon displayed in column menu for left pinning
-   * @default GridPushPinLeftIcon
-   */
-  ColumnMenuPinLeftIcon: React.JSXElementConstructor<any>;
-  /**
-   * Icon displayed in column menu for right pinning
-   * @default GridPushPinRightIcon
-   */
-  ColumnMenuPinRightIcon: React.JSXElementConstructor<any>;
-  /**
-   * Icon displayed in column menu for ungrouping
-   * @default GridWorkspacesIcon
-   */
-  ColumnMenuUngroupIcon: React.JSXElementConstructor<any>;
-  /**
-   * Icon displayed in column menu for grouping
-   * @default GridGroupWorkIcon
-   */
-  ColumnMenuGroupIcon: React.JSXElementConstructor<any>;
-  /**
    * Icon displayed in column menu for clearing values
    * @default GridClearIcon
    */

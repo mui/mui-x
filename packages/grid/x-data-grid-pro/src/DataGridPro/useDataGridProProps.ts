@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { useThemeProps } from '@mui/material/styles';
 import {
-  DATA_GRID_DEFAULT_SLOTS_COMPONENTS,
   GRID_DEFAULT_LOCALE_TEXT,
   GridSlotsComponent,
   DATA_GRID_PROPS_DEFAULT_VALUES,
@@ -12,6 +11,7 @@ import {
   DataGridProProcessedProps,
   DataGridProPropsWithDefaultValue,
 } from '../models/dataGridProProps';
+import { DATA_GRID_PRO_DEFAULT_SLOTS_COMPONENTS } from '../constants';
 
 /**
  * The default values of `DataGridProPropsWithDefaultValue` to inject in the props of DataGridPro.
@@ -41,13 +41,13 @@ export const useDataGridProProps = <R extends GridValidRowModel>(inProps: DataGr
     const overrides = themedProps.components;
 
     if (!overrides) {
-      return { ...DATA_GRID_DEFAULT_SLOTS_COMPONENTS };
+      return { ...DATA_GRID_PRO_DEFAULT_SLOTS_COMPONENTS };
     }
 
     const mergedComponents = {} as GridSlotsComponent;
 
     type GridSlots = keyof GridSlotsComponent;
-    Object.entries(DATA_GRID_DEFAULT_SLOTS_COMPONENTS).forEach(([key, defaultComponent]) => {
+    Object.entries(DATA_GRID_PRO_DEFAULT_SLOTS_COMPONENTS).forEach(([key, defaultComponent]) => {
       mergedComponents[key as GridSlots] =
         overrides[key as GridSlots] === undefined ? defaultComponent : overrides[key as GridSlots];
     });

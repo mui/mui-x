@@ -44,10 +44,6 @@ import {
   GridSearchIcon,
   GridVisibilityOffIcon,
   GridViewColumnIcon,
-  GridPushPinLeftIcon,
-  GridPushPinRightIcon,
-  GridWorkspacesIcon,
-  GridGroupWorkIcon,
   GridClearIcon,
 } from '../components';
 import { GridColumnUnsortedIcon } from '../components/columnHeaders/GridColumnUnsortedIcon';
@@ -85,10 +81,6 @@ const DEFAULT_GRID_ICON_SLOTS_COMPONENTS: GridIconSlotsComponent = {
   ColumnMenuSortDescendingIcon: GridArrowDownwardIcon,
   ColumnMenuFilterIcon: GridFilterAltIcon,
   ColumnMenuManageColumnsIcon: GridViewColumnIcon,
-  ColumnMenuPinRightIcon: GridPushPinRightIcon,
-  ColumnMenuPinLeftIcon: GridPushPinLeftIcon,
-  ColumnMenuUngroupIcon: GridWorkspacesIcon,
-  ColumnMenuGroupIcon: GridGroupWorkIcon,
   ColumnMenuClearIcon: GridClearIcon,
 };
 

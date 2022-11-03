@@ -2,7 +2,6 @@ import * as React from 'react';
 import { useThemeProps } from '@mui/material/styles';
 import {
   DATA_GRID_PRO_PROPS_DEFAULT_VALUES,
-  DATA_GRID_DEFAULT_SLOTS_COMPONENTS,
   GRID_DEFAULT_LOCALE_TEXT,
   GridSlotsComponent,
 } from '@mui/x-data-grid-pro';
@@ -12,6 +11,7 @@ import {
   DataGridPremiumPropsWithDefaultValue,
 } from '../models/dataGridPremiumProps';
 import { GRID_AGGREGATION_FUNCTIONS } from '../hooks/features/aggregation';
+import { DATA_GRID_PREMIUM_DEFAULT_SLOTS_COMPONENTS } from '../constants';
 
 /**
  * The default values of `DataGridPremiumPropsWithDefaultValue` to inject in the props of DataGridPremium.
@@ -38,16 +38,20 @@ export const useDataGridPremiumProps = (inProps: DataGridPremiumProps) => {
     const overrides = themedProps.components;
 
     if (!overrides) {
-      return { ...DATA_GRID_DEFAULT_SLOTS_COMPONENTS };
+      return { ...DATA_GRID_PREMIUM_DEFAULT_SLOTS_COMPONENTS };
     }
 
     const mergedComponents = {} as GridSlotsComponent;
 
     type GridSlots = keyof GridSlotsComponent;
-    Object.entries(DATA_GRID_DEFAULT_SLOTS_COMPONENTS).forEach(([key, defaultComponent]) => {
-      mergedComponents[key as GridSlots] =
-        overrides[key as GridSlots] === undefined ? defaultComponent : overrides[key as GridSlots];
-    });
+    Object.entries(DATA_GRID_PREMIUM_DEFAULT_SLOTS_COMPONENTS).forEach(
+      ([key, defaultComponent]) => {
+        mergedComponents[key as GridSlots] =
+          overrides[key as GridSlots] === undefined
+            ? defaultComponent
+            : overrides[key as GridSlots];
+      },
+    );
 
     return mergedComponents;
   }, [themedProps.components]);
