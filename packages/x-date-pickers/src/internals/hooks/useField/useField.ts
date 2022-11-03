@@ -69,7 +69,7 @@ export const useField = <
 
   const syncSelectionFromDOM = () => {
     const nextSectionIndex = state.sections.findIndex(
-      (section) => section.start > (inputRef.current!.selectionStart ?? 0),
+      (section) => section.startInInput > (inputRef.current!.selectionStart ?? 0),
     );
     const sectionIndex = nextSectionIndex === -1 ? state.sections.length - 1 : nextSectionIndex - 1;
     setSelectedSections(sectionIndex);
@@ -146,12 +146,15 @@ export const useField = <
     updateValueFromValueStr(pastedValue);
   });
 
+  const cleanString = (dirtyString: string) =>
+    dirtyString.replace(/\u2066|\u2067|\u2068|\u2069/g, '');
+
   const handleInputChange = useEventCallback((event: React.ChangeEvent<HTMLInputElement>) => {
     if (readOnly) {
       return;
     }
 
-    const valueStr = event.target.value;
+    const valueStr = cleanString(event.target.value);
 
     // If no section is selected, we just try to parse the new value
     // This line is mostly triggered by imperative code / application tests.
@@ -160,7 +163,7 @@ export const useField = <
       return;
     }
 
-    const prevValueStr = fieldValueManager.getValueStrFromSections(state.sections);
+    const prevValueStr = cleanString(fieldValueManager.getValueStrFromSections(state.sections));
 
     let startOfDiffIndex = -1;
     let endOfDiffIndex = -1;
@@ -193,7 +196,7 @@ export const useField = <
       valueStr.length -
       prevValueStr.length +
       activeSection.end -
-      (activeSection.separator?.length ?? 0);
+      cleanString(activeSection.separator || '').length;
     const keyPressed = valueStr.slice(activeSection.start, activeSectionEndRelativeToNewValue);
 
     if (isAndroid() && keyPressed.length === 0) {
@@ -450,8 +453,8 @@ export const useField = <
     const firstSelectedSection = state.sections[selectedSectionIndexes.startIndex];
     const lastSelectedSection = state.sections[selectedSectionIndexes.endIndex];
     updateSelectionRangeIfChanged(
-      firstSelectedSection.start,
-      lastSelectedSection.start + getSectionVisibleValue(lastSelectedSection, true).length,
+      firstSelectedSection.startInInput,
+      lastSelectedSection.startInInput + getSectionVisibleValue(lastSelectedSection, true).length,
     );
   });
 

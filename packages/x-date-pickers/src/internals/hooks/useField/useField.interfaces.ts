@@ -80,6 +80,8 @@ export type UseFieldResponse<TForwardedProps extends UseFieldForwardedProps> = O
 export interface FieldSection {
   start: number;
   end: number;
+  startInInput: number;
+  endInInput: number;
   value: string;
   placeholder: string;
   /**

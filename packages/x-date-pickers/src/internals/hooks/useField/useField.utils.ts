@@ -234,7 +234,7 @@ export const adjustInvalidDateSectionValue = <TDate, TSection extends FieldSecti
 };
 
 export const getSectionVisibleValue = (
-  section: Omit<FieldSection, 'start' | 'end'>,
+  section: Omit<FieldSection, 'start' | 'end' | 'startInInput' | 'endInInput'>,
   willBeRenderedInInput: boolean,
 ) => {
   const value = section.value || section.placeholder;
@@ -244,26 +244,46 @@ export const getSectionVisibleValue = (
   // Otherwise, when your input value equals `1/dd/yyyy` (format `M/DD/YYYY` on DayJs),
   // If you press `1`, on the first section, the new value is also `1/dd/yyyy`,
   // So the browser will not fire the input `onChange`.
-  if (willBeRenderedInInput && section.contentType === 'digit' && !section.hasTrailingZeroes) {
-    return `${value}‎`;
-  }
+  // Adding the ltr mark is not a problem because it's only for digit (which are always ltr)
+  // if (willBeRenderedInInput && section.contentType === 'digit' && !section.hasTrailingZeroes) {
+  //   return `${value}\u200e`;
+  // }
 
+  if (willBeRenderedInInput && section.contentType === 'digit' && !section.hasTrailingZeroes) {
+    return `\u2068${value}\u2069`;
+  }
   return value;
 };
 
 export const addPositionPropertiesToSections = <TSection extends FieldSection>(
-  sections: Omit<TSection, 'start' | 'end'>[],
+  sections: Omit<TSection, 'start' | 'end' | 'startInInput' | 'endInInput'>[],
 ): TSection[] => {
   let position = 0;
+  let positionInInput = 0;
   const newSections: TSection[] = [];
 
   for (let i = 0; i < sections.length; i += 1) {
     const section = sections[i];
     const end =
-      position + getSectionVisibleValue(section, true).length + (section.separator?.length ?? 0);
+      position +
+      getSectionVisibleValue(section, true).length +
+      (section.separator || '').replace(/\u2066|\u2067|\u2068|\u2069/g, '').length;
 
-    newSections.push({ ...section, start: position, end } as TSection);
+    const endInInput =
+      positionInInput +
+      getSectionVisibleValue(section, true).length +
+      (section.separator?.length ?? 0) +
+      (i === 0 || i === sections.length - 1 ? 1 : 0); // Take into account start and end isolation characters
+
+    newSections.push({
+      ...section,
+      start: position,
+      end,
+      startInInput: positionInInput,
+      endInInput,
+    } as TSection);
     position = end;
+    positionInInput = endInInput;
   }
 
   return newSections;
@@ -321,7 +341,7 @@ export const splitFormatIntoSections = <TDate>(
   date: TDate | null,
 ) => {
   let currentTokenValue = '';
-  const sections: Omit<FieldSection, 'start' | 'end'>[] = [];
+  const sections: Omit<FieldSection, 'start' | 'end' | 'startInInput' | 'endInInput'>[] = [];
   const expandedFormat = utils.expandFormat(format);
 
   const commitCurrentToken = () => {
@@ -364,6 +384,13 @@ export const splitFormatIntoSections = <TDate>(
 
   return sections.map((section) => {
     if (section.separator !== '/') {
+      if (section.separator !== null && section.separator.includes(' ')) {
+        return {
+          ...section,
+          separator: section.separator.replace(' ', '\u2069 \u2066'),
+          parsingSeparator: section.separator,
+        };
+      }
       return section;
     }
     return {
@@ -377,22 +404,31 @@ export const splitFormatIntoSections = <TDate>(
 export const createDateStrFromSections = (
   sections: FieldSection[],
   willBeRenderedInInput: boolean,
-) =>
-  sections
-    .map((section) => {
-      let sectionValueStr = getSectionVisibleValue(section, willBeRenderedInInput);
+) => {
+  const formatedArray = sections.map((section) => {
+    let sectionValueStr = getSectionVisibleValue(section, willBeRenderedInInput);
 
-      const separator = willBeRenderedInInput
-        ? section.separator
-        : section.parsingSeparator ?? section.separator;
+    const separator = willBeRenderedInInput
+      ? section.separator
+      : section.parsingSeparator ?? section.separator;
 
-      if (separator != null) {
-        sectionValueStr += separator;
-      }
+    if (separator != null) {
+      sectionValueStr += separator;
+    }
 
-      return sectionValueStr;
-    })
-    .join('');
+    return `${sectionValueStr}`;
+  });
+
+  if (willBeRenderedInInput) {
+    // \u2066: start left-to-right isolation
+    // \u2067: start right-to-left isolation
+    // \u2068: start first strong character isolation
+    // \u2069: pop isolation
+    // wrap into an isolated group such that separators can split the string in smaller ones by adding \u2069\u2068
+    return `\u2066${formatedArray.join('')}\u2069`;
+  }
+  return formatedArray.join('');
+};
 
 export const getMonthsMatchingQuery = <TDate, TSection extends FieldSection>(
   utils: MuiPickerFieldAdapter<TDate>,
@@ -577,7 +613,7 @@ export const validateSections = <TSection extends FieldSection>(
 
 export const mergeDateIntoReferenceDate = <
   TDate,
-  TSection extends Omit<FieldSection, 'start' | 'end'>,
+  TSection extends Omit<FieldSection, 'start' | 'end' | 'startInInput' | 'endInInput'>,
 >(
   utils: MuiPickerFieldAdapter<TDate>,
   date: TDate,

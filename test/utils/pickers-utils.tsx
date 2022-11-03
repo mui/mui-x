@@ -247,4 +247,4 @@ export const stubMatchMedia = (matches = true) =>
   });
 
 export const expectInputValue = (input: HTMLInputElement, expectedValue: string) =>
-  expect(input.value.replace(/\u200e|\u2068|\u2069/g, '')).to.equal(expectedValue);
+  expect(input.value.replace(/\u200e|\u2066|\u2067|\u2068|\u2069/g, '')).to.equal(expectedValue);
