@@ -33,10 +33,10 @@ export * from './DesktopNextDatePicker';
 export * from './MobileNextDatePicker';
 export * from './StaticNextDatePicker';
 
-// export * from './NextTimePicker'
+export * from './NextTimePicker';
 export * from './DesktopNextTimePicker';
-// export * from './MobileNextTimePicker'
-// export * from './StaticNextTimePicker'
+export * from './MobileNextTimePicker';
+export * from './StaticNextTimePicker';
 
 export * from './NextDateTimePicker';
 export * from './DesktopNextDateTimePicker';

@@ -45,7 +45,10 @@ import { DesktopNextDatePickerProps } from '../DesktopNextDatePicker';
 import { MobileNextDatePickerProps } from '../MobileNextDatePicker';
 import { StaticNextDatePickerProps } from '../StaticNextDatePicker';
 
+import { NextTimePickerProps } from '../NextTimePicker';
 import { DesktopNextTimePickerProps } from '../DesktopNextTimePicker';
+import { MobileNextTimePickerProps } from '../MobileNextTimePicker';
+import { StaticNextTimePickerProps } from '../StaticNextTimePicker';
 
 import { NextDateTimePickerProps } from '../NextDateTimePicker';
 import { DesktopNextDateTimePickerProps } from '../DesktopNextDateTimePicker';
@@ -78,10 +81,12 @@ export interface PickersComponentsPropsList {
   MuiMobileDateTimePicker: MobileDateTimePickerProps<unknown>;
   MuiMobileNextDatePicker: MobileNextDatePickerProps<unknown>;
   MuiMobileNextDateTimePicker: MobileNextDateTimePickerProps<unknown>;
+  MuiMobileNextTimePicker: MobileNextTimePickerProps<unknown>;
   MuiMobileTimePicker: MobileTimePickerProps<unknown>;
   MuiMonthCalendar: MonthCalendarProps<unknown>;
   MuiNextDatePicker: NextDatePickerProps<unknown>;
   MuiNextDateTimePicker: NextDateTimePickerProps<unknown>;
+  MuiNextTimePicker: NextTimePickerProps<unknown>;
   MuiPickersArrowSwitcher: ExportedPickersArrowSwitcherProps;
   MuiPickersCalendarHeader: ExportedCalendarHeaderProps<unknown>;
   MuiPickersDay: PickersDayProps<unknown>;
@@ -99,6 +104,7 @@ export interface PickersComponentsPropsList {
   MuiStaticDateTimePicker: StaticDateTimePickerProps<unknown>;
   MuiStaticNextDatePicker: StaticNextDatePickerProps<unknown>;
   MuiStaticNextDateTimePicker: StaticNextDateTimePickerProps<unknown>;
+  MuiStaticNextTimePicker: StaticNextTimePickerProps<unknown>;
   MuiStaticTimePicker: StaticTimePickerProps<unknown>;
   MuiTimePicker: TimePickerProps<unknown>;
   MuiTimePickerToolbar: TimePickerToolbarProps<unknown>;

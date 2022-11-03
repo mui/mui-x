@@ -259,6 +259,13 @@ createTheme({
         someRandomProp: true,
       },
     },
+    MuiMobileNextTimePicker: {
+      defaultProps: {
+        open: true,
+        // @ts-expect-error invalid MuiMobileNextTimePicker prop
+        someRandomProp: true,
+      },
+    },
     MuiMonthCalendar: {
       defaultProps: {
         disableFuture: true,
@@ -282,6 +289,13 @@ createTheme({
       defaultProps: {
         open: true,
         // @ts-expect-error invalid MuiNextDateTimePicker prop
+        someRandomProp: true,
+      },
+    },
+    MuiNextTimePicker: {
+      defaultProps: {
+        open: true,
+        // @ts-expect-error invalid MuiNextTimePicker prop
         someRandomProp: true,
       },
     },
@@ -482,6 +496,13 @@ createTheme({
         someRandomProp: true,
       },
     },
+    MuiStaticTimePicker: {
+      defaultProps: {
+        disabled: true,
+        // @ts-expect-error invalid MuiStaticTimePicker prop
+        someRandomProp: true,
+      },
+    },
     MuiStaticNextDatePicker: {
       defaultProps: {
         disabled: true,
@@ -496,10 +517,10 @@ createTheme({
         someRandomProp: true,
       },
     },
-    MuiStaticTimePicker: {
+    MuiStaticNextTimePicker: {
       defaultProps: {
         disabled: true,
-        // @ts-expect-error invalid MuiStaticDatePicker prop
+        // @ts-expect-error invalid MuiStaticNextTimePicker prop
         someRandomProp: true,
       },
     },
