@@ -41,6 +41,10 @@ const useUtilityClasses = (ownerState: PickerViewLayoutProps<any, any>) => {
   return composeClasses(slots, getPickerViewLayoutUtilityClass, classes);
 };
 
+type PickerViewLayoutComponent = <TValue, TView extends CalendarOrClockPickerView>(
+  props: PickerViewLayoutProps<TValue, TView> & React.RefAttributes<HTMLDivElement>,
+) => JSX.Element;
+
 export const PickerViewLayout = React.forwardRef(function PickerViewLayout<
   TValue,
   TView extends CalendarOrClockPickerView,
@@ -109,4 +113,4 @@ export const PickerViewLayout = React.forwardRef(function PickerViewLayout<
       />
     </PickerViewLayoutRoot>
   );
-});
+}) as PickerViewLayoutComponent;
