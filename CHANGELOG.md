@@ -21,7 +21,7 @@ We'd like to offer a big thanks to the 8 contributors who made this release poss
 - 📚 Documentation improvements
 - 🐞 Bugfixes
 
-### `@mui/x-data-grid@v__VERSION__` / `@mui/x-data-grid-pro@v__VERSION__` / `@mui/x-data-grid-premium@v__VERSION__`
+### `@mui/x-data-grid@v6.0.0-alpha.6` / `@mui/x-data-grid-pro@v6.0.0-alpha.6` / `@mui/x-data-grid-premium@v6.0.0-alpha.6`
 
 #### Breaking changes
 
@@ -36,7 +36,7 @@ We'd like to offer a big thanks to the 8 contributors who made this release poss
 - [DataGrid] Remove `disableIgnoreModificationsIfProcessingProps` prop (#6640) @m4theushw
 - [DataGrid] Separate private and public `apiRef` properties (#6388) @cherniavskii
 
-### `@mui/x-date-pickers@v__PICKERS_VERSION__` / `@mui/x-date-pickers-pro@v__PICKERS_VERSION__`
+### `@mui/x-date-pickers@v6.0.0-alpha.6` / `@mui/x-date-pickers-pro@v6.0.0-alpha.6`
 
 #### Changes
 
