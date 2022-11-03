@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { GridStateCommunity } from '../../../models/gridStateCommunity';
-import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
+import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import {
   useGridLogger,
   useGridSelector,
@@ -56,7 +56,7 @@ const noRowCountInServerMode = buildWarning(
  * @requires useGridPageSize (event)
  */
 export const useGridPage = (
-  apiRef: React.MutableRefObject<GridApiCommunity>,
+  apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
   props: Pick<
     DataGridProcessedProps,
     'page' | 'onPageChange' | 'rowCount' | 'initialState' | 'paginationMode'
@@ -66,7 +66,7 @@ export const useGridPage = (
 
   const visibleTopLevelRowCount = useGridSelector(apiRef, gridVisibleTopLevelRowCountSelector);
 
-  apiRef.current.unstable_registerControlState({
+  apiRef.current.registerControlState({
     stateId: 'page',
     propModel: props.page,
     propOnChange: props.onPageChange,
@@ -90,7 +90,7 @@ export const useGridPage = (
     setPage,
   };
 
-  useGridApiMethod(apiRef, pageApi, 'GridPageApi');
+  useGridApiMethod(apiRef, pageApi, 'public');
 
   /**
    * PRE-PROCESSING

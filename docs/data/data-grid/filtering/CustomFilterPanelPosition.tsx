@@ -8,13 +8,17 @@ import { useDemoData } from '@mui/x-data-grid-generator';
 
 const VISIBLE_FIELDS = ['name', 'rating', 'country', 'dateCreated', 'isAdmin'];
 
-const CustomToolbar: React.FunctionComponent<{
+interface CustomToolbarProps {
   setFilterButtonEl: React.Dispatch<React.SetStateAction<HTMLButtonElement | null>>;
-}> = ({ setFilterButtonEl }) => (
-  <GridToolbarContainer>
-    <GridToolbarFilterButton ref={setFilterButtonEl} />
-  </GridToolbarContainer>
-);
+}
+
+function CustomToolbar({ setFilterButtonEl }: CustomToolbarProps) {
+  return (
+    <GridToolbarContainer>
+      <GridToolbarFilterButton ref={setFilterButtonEl} />
+    </GridToolbarContainer>
+  );
+}
 
 export default function CustomFilterPanelPosition() {
   const { data } = useDemoData({

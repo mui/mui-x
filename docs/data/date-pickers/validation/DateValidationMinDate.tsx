@@ -13,7 +13,7 @@ import { DateRange, DateRangePicker } from '@mui/x-date-pickers-pro/DateRangePic
 const today = dayjs();
 const tomorrow = dayjs().add(1, 'day');
 
-const GridItem = ({
+function GridItem({
   label,
   children,
   spacing = 1,
@@ -21,7 +21,7 @@ const GridItem = ({
   label: string;
   children: React.ReactNode;
   spacing?: number;
-}) => {
+}) {
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column' }}>
       <Typography variant="body2" sx={{ mb: spacing }}>
@@ -30,7 +30,7 @@ const GridItem = ({
       {children}
     </Box>
   );
-};
+}
 
 export default function DateValidationMinDate() {
   const [datePickerValue, setDatePickerValue] = React.useState<Dayjs | null>(today);

@@ -16,15 +16,15 @@ import Alert from '@mui/material/Alert';
 const useFakeMutation = () => {
   return React.useCallback(
     (user) =>
-      new Promise((resolve, reject) =>
+      new Promise((resolve, reject) => {
         setTimeout(() => {
           if (user.name?.trim() === '') {
             reject();
           } else {
             resolve(user);
           }
-        }, 200),
-      ),
+        }, 200);
+      }),
     [],
   );
 };

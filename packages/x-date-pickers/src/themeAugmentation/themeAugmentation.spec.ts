@@ -3,6 +3,7 @@ import {
   dateCalendarClasses,
   dayPickerClasses,
   pickersCalendarHeaderClasses,
+  pickersSlideTransitionClasses,
 } from '../DateCalendar';
 import { dayCalendarSkeletonClasses } from '../DayCalendarSkeleton';
 import {
@@ -22,6 +23,7 @@ import {
 } from '../internals';
 import { pickersDayClasses } from '../PickersDay';
 import { timePickerToolbarClasses } from '../TimePicker';
+import { pickersMonthClasses } from '../MonthCalendar';
 
 createTheme({
   components: {
@@ -215,10 +217,24 @@ createTheme({
         someRandomProp: true,
       },
     },
+    MuiDesktopNextDatePicker: {
+      defaultProps: {
+        open: true,
+        // @ts-expect-error invalid MuiDesktopNextDatePicker prop
+        someRandomProp: true,
+      },
+    },
     MuiDesktopTimePicker: {
       defaultProps: {
         open: true,
         // @ts-expect-error invalid MuiDesktopTimePicker prop
+        someRandomProp: true,
+      },
+    },
+    MuiMobileNextDatePicker: {
+      defaultProps: {
+        open: true,
+        // @ts-expect-error invalid MuiMobileNextDatePicker prop
         someRandomProp: true,
       },
     },
@@ -232,6 +248,13 @@ createTheme({
         root: {
           backgroundColor: 'red',
         },
+      },
+    },
+    MuiNextDatePicker: {
+      defaultProps: {
+        open: true,
+        // @ts-expect-error invalid MuiNextDatePicker prop
+        someRandomProp: true,
       },
     },
     MuiPickersArrowSwitcher: {
@@ -291,6 +314,21 @@ createTheme({
         },
       },
     },
+    MuiPickersMonth: {
+      defaultProps: {
+        classes: { selected: 'test' },
+        // @ts-expect-error invalid MuiPickersMonth prop
+        someRandomProp: true,
+      },
+      styleOverrides: {
+        root: {
+          backgroundColor: 'red',
+          [`.${pickersMonthClasses.monthButton}`]: {
+            backgroundColor: 'green',
+          },
+        },
+      },
+    },
     MuiPickersPopper: {
       defaultProps: {
         open: true,
@@ -301,6 +339,21 @@ createTheme({
         root: {
           backgroundColor: 'red',
           [`.${pickersPopperClasses.paper}`]: {
+            backgroundColor: 'green',
+          },
+        },
+      },
+    },
+    MuiPickersSlideTransition: {
+      defaultProps: {
+        classes: { slideExit: 'exit' },
+        // @ts-expect-error invalid MuiPickersSlideTransition prop
+        someRandomProp: true,
+      },
+      styleOverrides: {
+        root: {
+          backgroundColor: 'red',
+          [`.${pickersSlideTransitionClasses.slideExit}`]: {
             backgroundColor: 'green',
           },
         },
@@ -348,6 +401,30 @@ createTheme({
         },
       },
     },
+    MuiPickersToolbarText: {
+      defaultProps: {
+        className: 'klass',
+        // @ts-expect-error invalid MuiPickersToolbarText prop
+        someRandomProp: true,
+      },
+      styleOverrides: {
+        root: {
+          backgroundColor: 'red',
+        },
+      },
+    },
+    MuiPickersYear: {
+      defaultProps: {
+        classes: { yearButton: 'test' },
+        // @ts-expect-error invalid MuiPickersYear prop
+        someRandomProp: true,
+      },
+      styleOverrides: {
+        yearButton: {
+          backgroundColor: 'red',
+        },
+      },
+    },
     MuiStaticDatePicker: {
       defaultProps: {
         disabled: true,
@@ -359,6 +436,13 @@ createTheme({
       defaultProps: {
         disabled: true,
         // @ts-expect-error invalid MuiStaticDateTimePicker prop
+        someRandomProp: true,
+      },
+    },
+    MuiStaticNextDatePicker: {
+      defaultProps: {
+        disabled: true,
+        // @ts-expect-error invalid MuiStaticNextDatePicker prop
         someRandomProp: true,
       },
     },

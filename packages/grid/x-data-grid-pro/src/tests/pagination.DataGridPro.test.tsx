@@ -13,7 +13,7 @@ describe('<DataGridPro /> - Pagination', () => {
     it('should apply valid value', () => {
       let apiRef: React.MutableRefObject<GridApi>;
 
-      const GridTest = () => {
+      function GridTest() {
         const basicData = useBasicDemoData(20, 2);
         apiRef = useGridApiRef();
 
@@ -28,7 +28,7 @@ describe('<DataGridPro /> - Pagination', () => {
             />
           </div>
         );
-      };
+      }
 
       render(<GridTest />);
 
@@ -42,7 +42,7 @@ describe('<DataGridPro /> - Pagination', () => {
 
     it('should apply last page if trying to go to a non-existing page', () => {
       let apiRef: React.MutableRefObject<GridApi>;
-      const GridTest = () => {
+      function GridTest() {
         const basicData = useBasicDemoData(20, 2);
         apiRef = useGridApiRef();
 
@@ -57,7 +57,7 @@ describe('<DataGridPro /> - Pagination', () => {
             />
           </div>
         );
-      };
+      }
 
       render(<GridTest />);
 
@@ -73,7 +73,7 @@ describe('<DataGridPro /> - Pagination', () => {
   describe('setPageSize', () => {
     it('should apply value', () => {
       let apiRef: React.MutableRefObject<GridApiPro>;
-      const GridTest = () => {
+      function GridTest() {
         const [pageSize, setPageSize] = React.useState(5);
         const basicData = useBasicDemoData(20, 2);
         apiRef = useGridApiRef();
@@ -91,7 +91,7 @@ describe('<DataGridPro /> - Pagination', () => {
             />
           </div>
         );
-      };
+      }
 
       render(<GridTest />);
       clock.runToLast();

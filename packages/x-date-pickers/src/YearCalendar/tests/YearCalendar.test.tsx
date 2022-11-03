@@ -19,34 +19,21 @@ describe('<YearCalendar />', () => {
     name: 'YearPicker',
   }));
 
-  describeConformance(
-    <YearCalendar
-      minDate={adapterToUse.date(new Date(2019, 0, 1))}
-      maxDate={adapterToUse.date(new Date(2029, 0, 1))}
-      value={adapterToUse.date()}
-      onChange={() => {}}
-    />,
-    () => ({
-      classes,
-      inheritComponent: 'div',
-      wrapMount: wrapPickerMount,
-      render,
-      muiName: 'MuiYearCalendar',
-      refInstanceof: window.HTMLDivElement,
-      // cannot test reactTestRenderer because of required context
-      skip: ['componentProp', 'componentsProp', 'reactTestRenderer', 'themeVariants'],
-    }),
-  );
+  describeConformance(<YearCalendar defaultValue={adapterToUse.date()} />, () => ({
+    classes,
+    inheritComponent: 'div',
+    wrapMount: wrapPickerMount,
+    render,
+    muiName: 'MuiYearCalendar',
+    refInstanceof: window.HTMLDivElement,
+    // cannot test reactTestRenderer because of required context
+    skip: ['componentProp', 'componentsProp', 'reactTestRenderer', 'themeVariants'],
+  }));
 
   it('allows to pick year standalone by click, `Enter` and `Space`', () => {
     const onChangeMock = spy();
     render(
-      <YearCalendar
-        minDate={adapterToUse.date(new Date(2019, 0, 1))}
-        maxDate={adapterToUse.date(new Date(2029, 0, 1))}
-        value={adapterToUse.date(new Date(2019, 1, 2))}
-        onChange={onChangeMock}
-      />,
+      <YearCalendar value={adapterToUse.date(new Date(2019, 1, 2))} onChange={onChangeMock} />,
     );
     const targetYear = screen.getByRole('button', { name: '2025' });
 
@@ -67,8 +54,6 @@ describe('<YearCalendar />', () => {
     const onChangeMock = spy();
     render(
       <YearCalendar
-        minDate={adapterToUse.date(new Date(2019, 0, 1))}
-        maxDate={adapterToUse.date(new Date(2029, 0, 1))}
         value={adapterToUse.date(new Date(2019, 1, 2))}
         onChange={onChangeMock}
         readOnly
@@ -167,11 +152,8 @@ describe('<YearCalendar />', () => {
   it('should allows to focus years when it contains valid date', () => {
     render(
       <YearCalendar
-        minDate={adapterToUse.date(new Date(2018, 10, 1))}
-        maxDate={adapterToUse.date(new Date(2020, 3, 1))}
         // date is chose such as replacing year by 2018 or 2020 makes it out of valid range
-        value={adapterToUse.date(new Date(2019, 7, 1))}
-        onChange={() => {}}
+        defaultValue={adapterToUse.date(new Date(2019, 7, 1))}
         autoFocus // needed to allow keyboard navigation
       />,
     );

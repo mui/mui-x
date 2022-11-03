@@ -57,7 +57,7 @@ const HeaderWithIconRoot = styled('div')(({ theme }) => ({
   },
 }));
 
-const HeaderWithIcon = (props: HeaderWithIconProps) => {
+function HeaderWithIcon(props: HeaderWithIconProps) {
   const { icon, ...params } = props;
 
   return (
@@ -65,7 +65,7 @@ const HeaderWithIcon = (props: HeaderWithIconProps) => {
       <span>{params.headerName ?? params.groupId}</span> {icon}
     </HeaderWithIconRoot>
   );
-};
+}
 
 const columnGroupingModel: GridColumnGroupingModel = [
   {

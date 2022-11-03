@@ -15,4 +15,5 @@ export * from './zhCN';
 export * from './koKR';
 export * from './isIS';
 export * from './jaJP';
+export * from './ukUA';
 export * from './utils/pickersLocaleTextApi';

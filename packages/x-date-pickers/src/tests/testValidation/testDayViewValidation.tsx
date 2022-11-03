@@ -94,10 +94,10 @@ function testDayViewValidation(ElementToTest, propsToTest, getOptions) {
         const { render, clock } = getOptions();
 
         let now;
-        const WithFakeTimer = (props) => {
+        function WithFakeTimer(props) {
           now = adapterToUse.date(new Date());
           return <ElementToTest value={now} {...props} />;
-        };
+        }
         const { setProps } = render(<WithFakeTimer {...defaultProps} disablePast />);
 
         const tomorrow = adapterToUse.addDays(now, 1);
@@ -130,10 +130,10 @@ function testDayViewValidation(ElementToTest, propsToTest, getOptions) {
         const { render, clock } = getOptions();
 
         let now;
-        const WithFakeTimer = (props) => {
+        function WithFakeTimer(props) {
           now = adapterToUse.date(new Date());
           return <ElementToTest value={now} {...props} />;
-        };
+        }
         const { setProps } = render(<WithFakeTimer {...defaultProps} disableFuture />);
 
         const tomorrow = adapterToUse.addDays(now, 1);
@@ -204,7 +204,11 @@ function testDayViewValidation(ElementToTest, propsToTest, getOptions) {
     }
     if (propsToTest.includes('minTime')) {
       it('should apply minTime', function test() {
-        const { render } = getOptions();
+        const { render, withTime, isLegacyPicker } = getOptions();
+
+        if (!isLegacyPicker && !withTime) {
+          return;
+        }
 
         render(
           <ElementToTest
@@ -222,7 +226,11 @@ function testDayViewValidation(ElementToTest, propsToTest, getOptions) {
     }
     if (propsToTest.includes('maxTime')) {
       it('should apply maxTime', function test() {
-        const { render } = getOptions();
+        const { render, withTime, isLegacyPicker } = getOptions();
+
+        if (!isLegacyPicker && !withTime) {
+          return;
+        }
 
         render(
           <ElementToTest

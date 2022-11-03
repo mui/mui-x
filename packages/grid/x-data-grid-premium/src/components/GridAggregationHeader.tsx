@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { unstable_composeClasses as composeClasses } from '@mui/material';
+import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import Box from '@mui/material/Box';
 import { styled } from '@mui/material/styles';
 import {
@@ -68,7 +68,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   return composeClasses(slots, getDataGridUtilityClass, classes);
 };
 
-const GridAggregationHeader = (props: GridColumnHeaderParams) => {
+function GridAggregationHeader(props: GridColumnHeaderParams) {
   const { colDef, aggregation } = props;
 
   const apiRef = useGridApiContext();
@@ -99,6 +99,6 @@ const GridAggregationHeader = (props: GridColumnHeaderParams) => {
       </GridAggregationFunctionLabel>
     </GridAggregationHeaderRoot>
   );
-};
+}
 
 export { GridAggregationHeader };

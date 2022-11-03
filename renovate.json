@@ -92,6 +92,10 @@
     {
       "groupName": "Playwright",
       "matchPackagePatterns": ["playwright", "@playwright/test"]
+    },
+    {
+      "matchDepTypes": ["action"],
+      "pinDigests": true
     }
   ],
   "postUpdateOptions": ["yarnDedupeHighest"],

@@ -16,7 +16,7 @@ const pages: MuiPage[] = [
   {
     pathname: '/x/react-data-grid',
     scopePathnames: ['/x/api/data-grid'],
-    title: 'Data grid',
+    title: 'Data Grid',
     icon: 'TableViewIcon',
     children: [
       { pathname: '/x/react-data-grid', title: 'Overview' },
@@ -145,28 +145,29 @@ const pages: MuiPage[] = [
   {
     pathname: '/x/react-date-pickers',
     scopePathnames: ['/x/api/date-pickers'],
-    title: 'Date and Time pickers',
+    title: 'Date and Time Pickers',
     icon: 'DatePickerIcon',
     children: [
       { pathname: '/x/react-date-pickers/getting-started' },
-      { pathname: '/x/react-date-pickers/date-picker' },
+      { pathname: '/x/react-date-pickers/date-picker', title: 'Date Picker' },
       {
         pathname: '/x/react-date-pickers/date-range-picker',
+        title: 'Date Range Picker',
         plan: 'pro',
       },
-      { pathname: '/x/react-date-pickers/date-time-picker' },
-      { pathname: '/x/react-date-pickers/time-picker' },
+      { pathname: '/x/react-date-pickers/date-time-picker', title: 'Date Time Picker' },
+      { pathname: '/x/react-date-pickers/time-picker', title: 'Time Picker' },
       { pathname: '/x/react-date-pickers/validation' },
       { pathname: '/x/react-date-pickers/localization' },
       { pathname: '/x/react-date-pickers/custom-components' },
       {
         pathname: '/x/react-date-pickers/date-time-range-picker',
-        title: 'Date time range picker 🚧',
+        title: 'Date Time Range Picker 🚧',
         plan: 'pro',
       },
       {
         pathname: '/x/react-date-pickers/time-range-picker',
-        title: 'Time range picker 🚧',
+        title: 'Time Range Picker 🚧',
         plan: 'pro',
       },
       {
@@ -279,6 +280,10 @@ const pages: MuiPage[] = [
         subheader: 'Upgrade to v6',
         children: [
           { pathname: '/x/migration/migration-data-grid-v5', title: 'Breaking changes: Data Grid' },
+          {
+            pathname: '/x/migration/migration-pickers-v5',
+            title: 'Breaking changes: Date and Time Pickers',
+          },
         ],
       },
       {
@@ -287,7 +292,7 @@ const pages: MuiPage[] = [
         children: [
           {
             pathname: '/x/migration/migration-pickers-lab',
-            title: 'Migration from lab to v5 (pickers)',
+            title: 'Migration from lab to v5 (Date & Time Pickers)',
           },
           {
             pathname: '/x/migration/migration-data-grid-v4',
