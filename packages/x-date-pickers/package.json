@@ -108,10 +108,10 @@
     "@types/luxon": "^3.0.2",
     "date-fns": "^2.29.3",
     "dayjs": "^1.11.6",
-    "luxon": "^1.28.0 || ^2.0.0 || ^3.0.2",
+    "luxon": "^3.0.2",
     "moment": "^2.29.4",
     "moment-hijri": "^2.1.2",
-    "moment-jalaali": "^0.7.4 || ^0.8.0 || ^0.9.0",
+    "moment-jalaali": "^0.9.0",
     "date-fns-jalali": "^2.13.0-0"
   },
   "setupFiles": [
