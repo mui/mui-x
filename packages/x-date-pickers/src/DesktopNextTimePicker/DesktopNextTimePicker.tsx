@@ -133,6 +133,7 @@ DesktopNextTimePicker.propTypes = {
   disablePast: PropTypes.bool,
   /**
    * Format of the date when rendered in the input(s).
+   * Defaults to localized format based on the used `views`.
    */
   format: PropTypes.string,
   /**
