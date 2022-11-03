@@ -71,8 +71,9 @@ export interface BaseNextPickerProps<TValue, TDate, TView extends CalendarOrCloc
 export interface BaseNextNonStaticPickerProps {
   /**
    * Format of the date when rendered in the input(s).
+   * Defaults to localized format based on the used `views`.
    */
-  inputFormat?: string;
+  format?: string;
 }
 
 /**
