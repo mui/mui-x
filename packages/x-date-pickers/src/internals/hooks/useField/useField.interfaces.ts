@@ -238,6 +238,12 @@ export interface FieldValueManager<TValue, TDate, TSection extends FieldSection,
    * @returns {boolean} `true` if the new error is different from the previous one.
    */
   isSameError: (error: TError, prevError: TError | null) => boolean;
+  getSectionOrder: (
+    utils: MuiPickerFieldAdapter<TDate>,
+    localeText: PickersLocaleText<TDate>,
+    format: string,
+    isRTL: boolean,
+  ) => any;
 }
 
 export interface UseFieldState<TValue, TSection extends FieldSection> {

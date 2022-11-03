@@ -51,6 +51,7 @@ export const useField = <
     updateSectionValue,
     updateValueFromValueStr,
     setTempAndroidValueStr,
+    sectionOrder,
   } = useFieldState(params);
 
   const {
@@ -350,11 +351,15 @@ export const useField = <
         event.preventDefault();
 
         if (selectedSectionIndexes == null) {
-          setSelectedSections(0);
+          setSelectedSections(sectionOrder.startIndex);
         } else if (selectedSectionIndexes.startIndex !== selectedSectionIndexes.endIndex) {
           setSelectedSections(selectedSectionIndexes.endIndex);
-        } else if (selectedSectionIndexes.startIndex < state.sections.length - 1) {
-          setSelectedSections(selectedSectionIndexes.startIndex + 1);
+        } else {
+          const nextSectionIndex =
+            sectionOrder.neighbors[selectedSectionIndexes.startIndex].rightIndex;
+          if (nextSectionIndex !== null) {
+            setSelectedSections(nextSectionIndex);
+          }
         }
         break;
       }
@@ -364,11 +369,15 @@ export const useField = <
         event.preventDefault();
 
         if (selectedSectionIndexes == null) {
-          setSelectedSections(state.sections.length - 1);
+          setSelectedSections(sectionOrder.endIndex);
         } else if (selectedSectionIndexes.startIndex !== selectedSectionIndexes.endIndex) {
           setSelectedSections(selectedSectionIndexes.startIndex);
-        } else if (selectedSectionIndexes.startIndex > 0) {
-          setSelectedSections(selectedSectionIndexes.startIndex - 1);
+        } else {
+          const nextSectionIndex =
+            sectionOrder.neighbors[selectedSectionIndexes.startIndex].leftIndex;
+          if (nextSectionIndex !== null) {
+            setSelectedSections(nextSectionIndex);
+          }
         }
         break;
       }

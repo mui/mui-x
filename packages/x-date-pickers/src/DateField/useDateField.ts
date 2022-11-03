@@ -19,6 +19,7 @@ import {
 } from '../internals/hooks/validation/useDateValidation';
 import { applyDefaultDate } from '../internals/utils/date-utils';
 import { useUtils, useDefaultDates } from '../internals/hooks/useUtils';
+import { getSectionOrder } from '../internals/hooks/useField/useField.utils';
 
 export const dateFieldValueManager: FieldValueManager<any, any, FieldSection, DateValidationError> =
   {
@@ -45,6 +46,8 @@ export const dateFieldValueManager: FieldValueManager<any, any, FieldSection, Da
       parseDate(valueStr.trim(), referenceValue),
     hasError: (error) => error != null,
     isSameError: isSameDateError,
+    getSectionOrder: (utils, localeText, format, isRTL) =>
+      getSectionOrder(splitFormatIntoSections(utils, localeText, format, null), isRTL),
   };
 
 const useDefaultizedDateField = <TDate, AdditionalProps extends {}>(

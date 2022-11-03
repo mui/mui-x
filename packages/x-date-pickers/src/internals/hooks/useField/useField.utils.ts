@@ -656,3 +656,54 @@ export const clampDaySection = <TDate, TSection extends FieldSection>(
     };
   });
 };
+
+export const getSectionOrder = (
+  sections: Omit<FieldSection, 'start' | 'end' | 'startInInput' | 'endInInput'>[],
+  isRTL: boolean,
+) => {
+  if (!isRTL) {
+    const neighbors = {};
+    sections.forEach((_, index) => {
+      const leftIndex = index === 0 ? null : index - 1;
+      const rightIndex = index === sections.length - 1 ? null : index + 1;
+      neighbors[index] = { leftIndex, rightIndex };
+    });
+    return { neighbors, startIndex: 0, endIndex: sections.length - 1 };
+  }
+  const rtl2ltr = {};
+  const ltr2rtl = {};
+
+  let groupedSectionsStart = 0;
+  let groupedSectionsEnd = 0;
+  let RTLIndex = sections.length - 1;
+
+  while (RTLIndex >= 0) {
+    groupedSectionsEnd = sections.findIndex(
+      // eslint-disable-next-line @typescript-eslint/no-loop-func
+      (section, index) =>
+        index >= groupedSectionsStart &&
+        (section.parsingSeparator ?? section.separator)?.includes(' '),
+    );
+    if (groupedSectionsEnd === -1) {
+      groupedSectionsEnd = sections.length - 1;
+    }
+
+    for (let i = groupedSectionsEnd; i >= groupedSectionsStart; i -= 1) {
+      ltr2rtl[i] = RTLIndex;
+      rtl2ltr[RTLIndex] = i;
+      RTLIndex -= 1;
+    }
+    groupedSectionsStart = groupedSectionsEnd + 1;
+  }
+
+  const neighbors = {};
+  sections.forEach((_, index) => {
+    const rtlIndex = ltr2rtl[index];
+    const leftIndex = rtlIndex === 0 ? null : rtl2ltr[rtlIndex - 1];
+    const rightIndex = rtlIndex === sections.length - 1 ? null : rtl2ltr[rtlIndex + 1];
+
+    neighbors[index] = { leftIndex, rightIndex };
+  });
+
+  return { neighbors, startIndex: rtl2ltr[0], endIndex: rtl2ltr[sections.length - 1] };
+};
