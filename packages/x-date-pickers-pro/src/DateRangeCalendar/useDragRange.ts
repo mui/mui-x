@@ -25,17 +25,18 @@ interface UseDragRangeResponse {
 const resolveDateFromEvent = <TDate>(
   event: React.DragEvent<HTMLButtonElement>,
   utils: MuiPickersAdapter<TDate>,
-  checkEquality?: boolean,
 ) => {
   const timestampString = (event.target as HTMLButtonElement).dataset.timestamp;
-  if (
-    !timestampString ||
-    (checkEquality && timestampString === event.dataTransfer.getData('draggingDate'))
-  ) {
+  if (!timestampString) {
     return null;
   }
   const timestamp = +timestampString;
   return utils.date(new Date(timestamp));
+};
+
+const isSameAsDraggingDate = (event: React.DragEvent<HTMLButtonElement>) => {
+  const timestampString = (event.target as HTMLButtonElement).dataset.timestamp;
+  return timestampString === event.dataTransfer.getData('draggingDate');
 };
 
 export const useDragRange = <TDate>({
@@ -85,9 +86,12 @@ export const useDragRange = <TDate>({
     setIsDragging(false);
   });
   const handleDrop = useEventCallback((event: React.DragEvent<HTMLButtonElement>) => {
+    if (isSameAsDraggingDate(event)) {
+      return;
+    }
     event.preventDefault();
     event.stopPropagation();
-    const newDate = resolveDateFromEvent(event, utils, true);
+    const newDate = resolveDateFromEvent(event, utils);
     if (newDate) {
       onDrop(newDate);
     }
