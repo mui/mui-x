@@ -98,6 +98,10 @@ export const useField = <
         return;
       }
 
+      if (selectedSectionIndexes != null) {
+        return;
+      }
+
       if (Number(input.selectionEnd) - Number(input.selectionStart) === input.value.length) {
         setSelectedSections({ startIndex: 0, endIndex: state.sections.length - 1 });
       } else {
