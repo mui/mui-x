@@ -23,6 +23,8 @@ packageName: '@mui/x-date-pickers'
 
 ### Setup
 
+For more details about the setup of your date library, have a look at the [dedicated page](/x/react-date-pickers/adapters/)
+
 #### Package installation
 
 You need to install 2 different types of package to make the pickers work:
@@ -32,53 +34,14 @@ You need to install 2 different types of package to make the pickers work:
 
 First you have to install the date-library you want to use to manage dates, and the component package:
 
-{{"demo": "InstructionsNoSnap.js", "bg": "inline", "hideToolbar": true, "disableAd": true}}
-
-For more details about the supported date libraries, have a look at the [dedicated page](/x/react-date-pickers/adapters/)
+{{"component": "modules/components/PickersInstallationInstructions.js"}}
 
 #### Code setup
 
 After installation completed, you have to set the `dateAdapter` prop of the `LocalizationProvider` accordingly.
 The supported adapters are exported from both the `@mui/x-date-pickers` and `@mui/x-date-pickers-pro`.
 
-```js
-import { LocalizationProvider } from '@mui/x-date-pickers';
-
-// Day.js
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-// or for date-fns
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
-// or for Luxon
-import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon';
-// or for Moment.js
-import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
-
-function App({ children }) {
-  return (
-    <LocalizationProvider dateAdapter={AdapterDayjs}>
-      {children}
-    </LocalizationProvider>
-  );
-}
-```
-
-:::info
-If you are using range pickers, you can import the provided and the adapter directly from `@mui/x-date-pickers-pro`:
-
-```js
-import { LocalizationProvider } from '@mui/x-date-pickers-pro';
-import { AdapterDayjs } from '@mui/x-date-pickers-pro/AdapterDayjs';
-
-function App({ children }) {
-  return (
-    <LocalizationProvider dateAdapter={AdapterDayjs}>
-      {children}
-    </LocalizationProvider>
-  );
-}
-```
-
-:::
+{{"component": "modules/components/PickersRenderingInstructions.js"}}
 
 ## TypeScript
 

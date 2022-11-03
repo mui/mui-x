@@ -52,76 +52,23 @@ The bundling strategy was taken care of by a _Create React App_ and no locale wa
 The results may vary in your application depending on the version of each library, the locale and the bundling strategy used.
 :::
 
-### Unsupported libraries
-
-If you need to use a date library that is not supported yet, please [open an issue](https://github.com/mui/mui-x/issues/new/choose) in the MUI X issue.
-
 ## Setup a date library
 
 To use a date library inside the Date and Time Pickers, you need to first install it
 
-```sh
-// For Day.js
-yarn add dayjs
-npm install dayjs
-
-// For date-fns
-yarn add date-fns
-npm install date-fns
-
-// For Luxon
-yarn add luxon
-npm install luxon
-
-// For Moment.js
-yarn add moment
-npm install moment
-```
+{{"component": "modules/components/PickersInstallationInstructions.js"}}
 
 You then need to pass its adapter to the `LocalizationProvider`.
 All the pickers rendered inside this provider will have access to the adapter through a React context.
 
 We recommend you to wrap your entire application with a `LocalizationProvider` to be able to use the Date and Time Pickers everywhere.
 
-```tsx
-import { LocalizationProvider } from '@mui/x-date-pickers';
-
-// For Day.js
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-// For date-fns
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
-// For Luxon
-import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon';
-// For Moment.js
-import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
-
-function App({ children }) {
-  return (
-    <LocalizationProvider dateAdapter={AdapterDayjs}>
-      {children}
-    </LocalizationProvider>
-  );
-}
-```
-
-:::info
-If you are using range pickers, you can import the provider and the adapter directly from `@mui/x-date-pickers-pro`:
-
-```js
-import { LocalizationProvider } from '@mui/x-date-pickers-pro';
-import { AdapterDayjs } from '@mui/x-date-pickers-pro/AdapterDayjs';
-
-function App({ children }) {
-  return (
-    <LocalizationProvider dateAdapter={AdapterDayjs}>
-      {children}
-    </LocalizationProvider>
-  );
-}
-```
-
-:::
+{{"component": "modules/components/PickersRenderingInstructions.js"}}
 
 ## Support for other calendar systems
 
 TODO
+
+### Unsupported libraries
+
+If you need to use a date library that is not supported yet, please [open an issue](https://github.com/mui/mui-x/issues/new/choose) in the MUI X issue.

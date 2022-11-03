@@ -6,16 +6,16 @@ import MenuItem from '@mui/material/MenuItem';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import ToggleButton from '@mui/material/ToggleButton';
 
-const libraries = ['date-fns', 'dayjs', 'luxon', 'moment'];
+const libraries = {
+  dayjs: 'AdapterDayjs',
+  'date-fns': 'AdapterDateFns',
+  luxon: 'AdapterLuxon',
+  moment: 'AdapterMoment',
+};
 
-function InstructionsNoSnap() {
+export default function PickersRenderingInstructions() {
   const [licenceType, setLicenceType] = React.useState('community');
-  const [packageManger, setPackageManger] = React.useState('yarn');
-  const [libraryUsed, setLibraryUsed] = React.useState('moment');
-
-  const handlePackageMangerChange = (event, nextPackageManger) => {
-    setPackageManger(nextPackageManger);
-  };
+  const [libraryUsed, setLibraryUsed] = React.useState('dayjs');
 
   const handleLicenceTypeChange = (event, nextLicenceType) => {
     setLicenceType(nextLicenceType);
@@ -25,32 +25,28 @@ function InstructionsNoSnap() {
     setLibraryUsed(event.target.value);
   };
 
-  const installationCLI = packageManger === 'npm' ? 'npm install ' : 'yarn add ';
   const componentPackage =
     licenceType === 'pro' ? '@mui/x-date-pickers-pro' : '@mui/x-date-pickers';
 
+  const adapterName = libraries[libraryUsed];
+
   const commandLines = [
-    `// Install component (${licenceType} version)`,
-    `${installationCLI}${componentPackage}`,
-    `// Install date library (if not already installed)`,
-    `${installationCLI}${libraryUsed}`,
+    `import { LocalizationProvider } from '${componentPackage}';`,
+    `import { ${adapterName} } from '${componentPackage}/${adapterName}'`,
+    '',
+    'function App({ children }) {',
+    '  return (',
+    `    <LocalizationProvider dateAdapter={${adapterName}}>`,
+    '      {children}',
+    '    </LocalizationProvider>',
+    '  );',
+    '}',
   ].join('\n');
 
   return (
     <Stack sx={{ width: '100%' }} px={{ xs: 3, sm: 0 }}>
       <Stack direction="row" spacing={2}>
         <ToggleButtonGroup
-          // orientation="vertical"
-          value={packageManger}
-          exclusive
-          onChange={handlePackageMangerChange}
-          size="small"
-        >
-          <ToggleButton value="yarn">yarn</ToggleButton>
-          <ToggleButton value="npm">npm</ToggleButton>
-        </ToggleButtonGroup>
-        <ToggleButtonGroup
-          // orientation="vertical"
           value={licenceType}
           exclusive
           onChange={handleLicenceTypeChange}
@@ -66,7 +62,7 @@ function InstructionsNoSnap() {
           onChange={handleLibraryUsedChange}
           select
         >
-          {libraries.map((lib) => (
+          {Object.keys(libraries).map((lib) => (
             <MenuItem value={lib}>{lib}</MenuItem>
           ))}
         </TextField>
@@ -75,5 +71,3 @@ function InstructionsNoSnap() {
     </Stack>
   );
 }
-
-export default InstructionsNoSnap;
