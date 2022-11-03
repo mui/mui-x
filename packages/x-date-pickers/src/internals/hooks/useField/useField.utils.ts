@@ -9,7 +9,12 @@ export const getDateSectionConfigFromFormatToken = <TDate>(
   const config = utils.formatTokenMap[formatToken];
 
   if (config == null) {
-    throw new Error(`getDatePartNameFromFormat doesn't understand the format ${formatToken}`);
+    throw new Error(
+      [
+        `The token "${formatToken}" is not supported by the MUI Date and Time Pickers`,
+        'Please try to use another token or open an issue on https://github.com/mui/mui-x/issues/new/choose if you think it should be',
+      ].join('\n'),
+    );
   }
 
   if (typeof config === 'string') {

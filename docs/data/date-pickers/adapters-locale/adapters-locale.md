@@ -110,9 +110,32 @@ This can be overridden by using the `ampm` prop:
 
 ## Custom formats
 
+:::warning
+The format received by the props described below depends on the date library you are using.
+Please refer to each library documentation for the full format table:
+
+- [Day.js](https://day.js.org/docs/display/format)
+- [date-fns](https://date-fns.org/docs/format)
+- [Luxon](https://moment.github.io/luxon/#/formatting?id=table-of-tokens)
+- [Moment.js](https://momentjs.com/docs/#/displaying/format/)
+
+:::
+
+### Custom field format
+
+The fields have a default format that depends on the picker being used, the views enabled and the 12h/24h format.
+
+If this default format does not suit you, you can customize it using the `format` prop:
+
+:::info
+This prop is available on all the fields and all the pickers.
+:::
+
+{{"demo": "CustomFieldFormat.js"}}
+
 ### Custom toolbar format
 
-To customize the date format used in the toolbar, you can use prop `toolbarFormat` of the toolbar slot.
+To customize the format used in the toolbar, you can use the `toolbarFormat` prop of the toolbar slot.
 
 :::info
 This prop is available on all the pickers.
