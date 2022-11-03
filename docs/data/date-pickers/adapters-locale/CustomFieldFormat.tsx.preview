@@ -1,6 +1,14 @@
 <LocalizationProvider dateAdapter={AdapterDayjs}>
-    <Stack spacing={3}>
-        <DateField label="Date Field" format="MM - DD - YYYY" />
-        <NextDatePicker label="Date Picker" inputFormat="MM - DD - YYYY" />
-    </Stack>
+  <Stack spacing={3}>
+    <DateField
+      label="Date Field"
+      format="MM - DD - YYYY"
+      defaultValue={dayjs('2022-04-07')}
+    />
+    <NextDatePicker
+      label="Date Picker"
+      inputFormat="MM - DD - YYYY"
+      defaultValue={dayjs('2022-04-07')}
+    />
+  </Stack>
 </LocalizationProvider>
