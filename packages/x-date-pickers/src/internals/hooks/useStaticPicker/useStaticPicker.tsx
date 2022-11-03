@@ -12,7 +12,7 @@ const PickerStaticViewLayout = styled(PickerViewLayout)(({ theme }) => ({
   overflow: 'hidden',
   minWidth: DIALOG_WIDTH,
   backgroundColor: theme.palette.background.paper,
-})) as typeof PickerViewLayout;
+})) as unknown as typeof PickerViewLayout;
 
 /**
  * Hook managing all the single-date static pickers:
@@ -28,6 +28,7 @@ export const useStaticPicker = <
   props,
   valueManager,
   viewLookup,
+  ref,
 }: UseStaticPickerParams<TDate, TView, TExternalProps>) => {
   const { localeText, components, componentsProps, displayStaticWrapperAs } = props;
 
@@ -46,6 +47,7 @@ export const useStaticPicker = <
           {...layoutProps}
           components={components}
           componentsProps={componentsProps}
+          ref={ref}
         >
           {renderCurrentView()}
         </PickerStaticViewLayout>
