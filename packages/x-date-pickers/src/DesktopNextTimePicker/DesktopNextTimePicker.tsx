@@ -134,7 +134,7 @@ DesktopNextTimePicker.propTypes = {
   /**
    * Format of the date when rendered in the input(s).
    */
-  inputFormat: PropTypes.string,
+  format: PropTypes.string,
   /**
    * Pass a ref to the `input` element.
    */

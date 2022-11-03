@@ -36,7 +36,7 @@ export const useDesktopRangePicker = <
     components,
     componentsProps = {},
     className,
-    inputFormat,
+    format,
     readOnly,
     disabled,
     disableOpenPicker,
@@ -99,7 +99,7 @@ export const useDesktopRangePicker = <
       readOnly,
       disabled,
       className,
-      format: inputFormat,
+      format,
       ref: fieldRef,
     },
     // TODO: Pass owner state

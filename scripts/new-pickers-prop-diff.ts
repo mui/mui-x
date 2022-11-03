@@ -59,7 +59,9 @@ const EXPECTED_DIFF: { [propKey: string]: string | ((pickerName: string) => stri
         : undefined,
 
     inputFormat: (pickerName) =>
-      pickerName.includes('Static') ? 'no more keyboard editing on the static pickers' : undefined,
+      pickerName.includes('Static')
+        ? 'no more keyboard editing on the static pickers'
+        : 'renamed `format`',
 
     disableOpenPicker: (pickerName) =>
       pickerName.includes('Static') ? 'never used even in v5' : undefined,

@@ -60,12 +60,12 @@ type UseNextDatePickerDefaultizedProps<
   DefaultizedProps<Props, 'views' | 'openTo' | keyof BaseDateValidationProps<TDate>>
 >;
 
-export const getDatePickerInputFormat = (
+export const getDatePickerFieldFormat = (
   utils: MuiPickersAdapter<any>,
-  { inputFormat, views }: { inputFormat?: string; views: readonly CalendarPickerView[] },
+  { format, views }: { format?: string; views: readonly CalendarPickerView[] },
 ) => {
-  if (inputFormat != null) {
-    return inputFormat;
+  if (format != null) {
+    return format;
   }
   if (isYearOnlyView(views)) {
     return utils.formats.year;

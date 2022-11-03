@@ -72,7 +72,7 @@ export interface BaseNextNonStaticPickerProps {
   /**
    * Format of the date when rendered in the input(s).
    */
-  inputFormat?: string;
+  format?: string;
 }
 
 /**

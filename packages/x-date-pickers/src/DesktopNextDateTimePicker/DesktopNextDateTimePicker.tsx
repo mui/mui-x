@@ -161,14 +161,14 @@ DesktopNextDateTimePicker.propTypes = {
    */
   fixedWeekNumber: PropTypes.number,
   /**
+   * Format of the date when rendered in the input(s).
+   */
+  format: PropTypes.string,
+  /**
    * Toggles visibility of date time switching tabs
    * @default `false` for mobile, `true` for desktop
    */
   hideTabs: PropTypes.bool,
-  /**
-   * Format of the date when rendered in the input(s).
-   */
-  inputFormat: PropTypes.string,
   /**
    * Pass a ref to the `input` element.
    */

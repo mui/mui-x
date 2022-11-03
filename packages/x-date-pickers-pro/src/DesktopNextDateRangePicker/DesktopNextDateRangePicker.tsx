@@ -144,7 +144,7 @@ DesktopNextDateRangePicker.propTypes = {
   /**
    * Format of the date when rendered in the input(s).
    */
-  inputFormat: PropTypes.string,
+  format: PropTypes.string,
   /**
    * If `true` renders `LoadingComponent` in calendar instead of calendar view.
    * Can be used to preload information and show it in calendar.

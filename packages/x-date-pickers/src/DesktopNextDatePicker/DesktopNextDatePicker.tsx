@@ -4,7 +4,7 @@ import { resolveComponentProps } from '@mui/base/utils';
 import { datePickerValueManager } from '../DatePicker/shared';
 import { DesktopNextDatePickerProps } from './DesktopNextDatePicker.types';
 import {
-  getDatePickerInputFormat,
+  getDatePickerFieldFormat,
   useNextDatePickerDefaultizedProps,
 } from '../NextDatePicker/shared';
 import { CalendarPickerView, useLocaleText, useUtils } from '../internals';
@@ -40,7 +40,7 @@ const DesktopNextDatePicker = React.forwardRef(function DesktopNextDatePicker<TD
   // Props with the default values specific to the desktop variant
   const props = {
     ...defaultizedProps,
-    inputFormat: getDatePickerInputFormat(utils, defaultizedProps),
+    format: getDatePickerFieldFormat(utils, defaultizedProps),
     showToolbar: defaultizedProps.showToolbar ?? false,
     autoFocus: true,
     components: {
@@ -147,7 +147,7 @@ DesktopNextDatePicker.propTypes = {
   /**
    * Format of the date when rendered in the input(s).
    */
-  inputFormat: PropTypes.string,
+  format: PropTypes.string,
   /**
    * Pass a ref to the `input` element.
    */

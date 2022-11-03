@@ -5,7 +5,7 @@ import { useMobilePicker } from '../internals/hooks/useMobilePicker';
 import { datePickerValueManager } from '../DatePicker/shared';
 import { MobileNextDatePickerProps } from './MobileNextDatePicker.types';
 import {
-  getDatePickerInputFormat,
+  getDatePickerFieldFormat,
   useNextDatePickerDefaultizedProps,
 } from '../NextDatePicker/shared';
 import { CalendarPickerView, useLocaleText, useUtils } from '../internals';
@@ -39,7 +39,7 @@ const MobileNextDatePicker = React.forwardRef(function MobileNextDatePicker<TDat
   // Props with the default values specific to the mobile variant
   const props = {
     ...defaultizedProps,
-    inputFormat: getDatePickerInputFormat(utils, defaultizedProps),
+    format: getDatePickerFieldFormat(utils, defaultizedProps),
     showToolbar: defaultizedProps.showToolbar ?? true,
     autoFocus: true,
     components: {
@@ -145,7 +145,7 @@ MobileNextDatePicker.propTypes = {
   /**
    * Format of the date when rendered in the input(s).
    */
-  inputFormat: PropTypes.string,
+  format: PropTypes.string,
   /**
    * Pass a ref to the `input` element.
    */
