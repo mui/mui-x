@@ -62,14 +62,9 @@ interface UsePickerValueAction<DraftValue> {
 }
 
 /**
- * Props used to handle the value of the pickers.
- * Those props are exposed on all the pickers.
+ * Props used to handle the value that are common to all pickers.
  */
-export interface UsePickerValueProps<TValue>
-  extends Pick<
-    UseFieldInternalProps<TValue, unknown>,
-    'selectedSections' | 'onSelectedSectionsChange'
-  > {
+export interface UsePickerValueBaseProps<TValue> {
   /**
    * The value of the picker.
    */
@@ -86,6 +81,22 @@ export interface UsePickerValueProps<TValue>
    */
   onChange?: (value: TValue) => void;
   /**
+   * Callback fired when date is accepted @DateIOType.
+   * @template TValue
+   * @param {TValue} value The value that was just accepted.
+   */
+  onAccept?: (value: TValue) => void;
+}
+
+/**
+ * Props used to handle the value of non-static pickers.
+ */
+export interface UsePickerValueNonStaticProps<TValue>
+  extends Pick<
+    UseFieldInternalProps<TValue, unknown>,
+    'selectedSections' | 'onSelectedSectionsChange'
+  > {
+  /**
    * If `true` the popup or dialog will close after submitting full date.
    * @default `true` for Desktop, `false` for Mobile (based on the chosen wrapper and `desktopModeMediaQuery` prop).
    */
@@ -95,12 +106,6 @@ export interface UsePickerValueProps<TValue>
    * @default false
    */
   open?: boolean;
-  /**
-   * Callback fired when date is accepted @DateIOType.
-   * @template TValue
-   * @param {TValue} value The value that was just accepted.
-   */
-  onAccept?: (value: TValue) => void;
   /**
    * Callback fired when the popup requests to be closed.
    * Use in controlled mode (see open).
@@ -112,6 +117,13 @@ export interface UsePickerValueProps<TValue>
    */
   onOpen?: () => void;
 }
+
+/**
+ * Props used to handle the value of the pickers.
+ */
+export interface UsePickerValueProps<TValue>
+  extends UsePickerValueBaseProps<TValue>,
+    UsePickerValueNonStaticProps<TValue> {}
 
 export interface UsePickerValueParams<TValue, TDate> {
   props: UsePickerValueProps<TValue>;

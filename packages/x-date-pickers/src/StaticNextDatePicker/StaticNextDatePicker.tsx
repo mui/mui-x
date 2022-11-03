@@ -1,20 +1,14 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { resolveComponentProps } from '@mui/base/utils';
-import { useMobilePicker } from '../internals/hooks/useMobilePicker';
+import { StaticNextDatePickerProps } from './StaticNextDatePicker.types';
+import { useNextDatePickerDefaultizedProps } from '../NextDatePicker/shared';
 import { datePickerValueManager } from '../DatePicker/shared';
-import { MobileNextDatePickerProps } from './MobileNextDatePicker.types';
-import {
-  getDatePickerInputFormat,
-  useNextDatePickerDefaultizedProps,
-} from '../NextDatePicker/shared';
-import { CalendarPickerView, useLocaleText, useUtils } from '../internals';
-import { Unstable_DateField as DateField } from '../DateField';
-import { extractValidationProps } from '../internals/utils/validation';
+import { useStaticPicker } from '../internals/hooks/useStaticPicker';
+import { CalendarPickerView } from '../internals/models';
 import { renderDateView } from '../internals/utils/viewRenderers';
 
-type MobileDatePickerComponent = (<TDate>(
-  props: MobileNextDatePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
+type StaticDatePickerComponent = (<TDate>(
+  props: StaticNextDatePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
 ) => JSX.Element) & { propTypes?: any };
 
 const VIEW_LOOKUP = {
@@ -23,54 +17,35 @@ const VIEW_LOOKUP = {
   year: renderDateView,
 };
 
-const MobileNextDatePicker = React.forwardRef(function MobileNextDatePicker<TDate>(
-  inProps: MobileNextDatePickerProps<TDate>,
+const StaticNextDatePicker = React.forwardRef(function StaticNextDatePicker<TDate>(
+  inProps: StaticNextDatePickerProps<TDate>,
   ref: React.Ref<HTMLDivElement>,
 ) {
-  const localeText = useLocaleText();
-  const utils = useUtils();
-
-  // Props with the default values common to all date pickers
-  const { className, sx, ...defaultizedProps } = useNextDatePickerDefaultizedProps<
+  const defaultizedProps = useNextDatePickerDefaultizedProps<
     TDate,
-    MobileNextDatePickerProps<TDate>
-  >(inProps, 'MuiMobileNextDatePicker');
+    StaticNextDatePickerProps<TDate>
+  >(inProps, 'MuiStaticNextDatePicker');
 
-  // Props with the default values specific to the mobile variant
+  const displayStaticWrapperAs = defaultizedProps.displayStaticWrapperAs ?? 'mobile';
+
+  // Props with the default values specific to the static variant
   const props = {
     ...defaultizedProps,
-    inputFormat: getDatePickerInputFormat(utils, defaultizedProps),
-    showToolbar: defaultizedProps.showToolbar ?? true,
-    autoFocus: true,
-    components: {
-      Field: DateField,
-      ...defaultizedProps.components,
-    },
-    componentsProps: {
-      ...defaultizedProps.componentsProps,
-      field: (ownerState: any) => ({
-        ...resolveComponentProps(defaultizedProps.componentsProps?.field, ownerState),
-        ...extractValidationProps(defaultizedProps),
-        ref,
-        className,
-        sx,
-        inputRef: defaultizedProps.inputRef,
-        label: defaultizedProps.label,
-      }),
-    },
+    displayStaticWrapperAs,
+    showToolbar: defaultizedProps.showToolbar ?? displayStaticWrapperAs === 'mobile',
   };
 
-  const { renderPicker } = useMobilePicker<TDate, CalendarPickerView, typeof props>({
+  const { renderPicker } = useStaticPicker<TDate, CalendarPickerView, typeof props>({
     props,
     valueManager: datePickerValueManager,
-    getOpenDialogAriaText: localeText.openDatePickerDialogue,
     viewLookup: VIEW_LOOKUP,
+    ref,
   });
 
   return renderPicker();
-}) as MobileDatePickerComponent;
+}) as StaticDatePickerComponent;
 
-MobileNextDatePicker.propTypes = {
+StaticNextDatePicker.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
@@ -80,11 +55,6 @@ MobileNextDatePicker.propTypes = {
    * Class name applied to the root element.
    */
   className: PropTypes.string,
-  /**
-   * If `true` the popup or dialog will close after submitting full date.
-   * @default `true` for Desktop, `false` for Mobile (based on the chosen wrapper and `desktopModeMediaQuery` prop).
-   */
-  closeOnSelect: PropTypes.bool,
   /**
    * Overrideable components.
    * @default {}
@@ -127,38 +97,21 @@ MobileNextDatePicker.propTypes = {
    */
   disableHighlightToday: PropTypes.bool,
   /**
-   * Do not render open picker button (renders only the field).
-   * @default false
-   */
-  disableOpenPicker: PropTypes.bool,
-  /**
    * If `true` disable values after the current time.
    * @default false
    */
   disablePast: PropTypes.bool,
+  /**
+   * Force static wrapper inner components to be rendered in mobile or desktop mode.
+   * @default "mobile"
+   */
+  displayStaticWrapperAs: PropTypes.oneOf(['desktop', 'mobile']),
   /**
    * Calendar will show more weeks in order to match this value.
    * Put it to 6 for having fix number of week in Gregorian calendars
    * @default undefined
    */
   fixedWeekNumber: PropTypes.number,
-  /**
-   * Format of the date when rendered in the input(s).
-   */
-  inputFormat: PropTypes.string,
-  /**
-   * Pass a ref to the `input` element.
-   */
-  inputRef: PropTypes.oneOfType([
-    PropTypes.func,
-    PropTypes.shape({
-      current: PropTypes.object,
-    }),
-  ]),
-  /**
-   * The label content.
-   */
-  label: PropTypes.node,
   /**
    * If `true` renders `LoadingComponent` in calendar instead of calendar view.
    * Can be used to preload information and show it in calendar.
@@ -191,11 +144,6 @@ MobileNextDatePicker.propTypes = {
    */
   onChange: PropTypes.func,
   /**
-   * Callback fired when the popup requests to be closed.
-   * Use in controlled mode (see open).
-   */
-  onClose: PropTypes.func,
-  /**
    * Callback that fired when input value or new `value` prop validation returns **new** validation error (or value is valid after error).
    * In case of validation error detected `reason` prop return non-null value and `TextField` must be displayed in `error` state.
    * This can be used to render appropriate form error.
@@ -216,16 +164,6 @@ MobileNextDatePicker.propTypes = {
    */
   onMonthChange: PropTypes.func,
   /**
-   * Callback fired when the popup requests to be opened.
-   * Use in controlled mode (see open).
-   */
-  onOpen: PropTypes.func,
-  /**
-   * Callback fired when the selected sections change.
-   * @param {FieldSelectedSections} newValue The new selected sections.
-   */
-  onSelectedSectionsChange: PropTypes.func,
-  /**
    * Callback fired on view change.
    * @template View
    * @param {View} view The new view.
@@ -237,11 +175,6 @@ MobileNextDatePicker.propTypes = {
    * @param {TDate} year The new year.
    */
   onYearChange: PropTypes.func,
-  /**
-   * Control the popup or dialog open state.
-   * @default false
-   */
-  open: PropTypes.bool,
   /**
    * First view to show.
    */
@@ -262,23 +195,6 @@ MobileNextDatePicker.propTypes = {
    * @default () => <span data-mui-test="loading-progress">...</span>
    */
   renderLoading: PropTypes.func,
-  /**
-   * The currently selected sections.
-   * This prop accept four formats:
-   * 1. If a number is provided, the section at this index will be selected.
-   * 2. If an object with a `startIndex` and `endIndex` properties are provided, the sections between those two indexes will be selected.
-   * 3. If a string of type `MuiDateSectionName` is provided, the first section with that name will be selected.
-   * 4. If `null` is provided, no section will be selected
-   * If not provided, the selected sections will be handled internally.
-   */
-  selectedSections: PropTypes.oneOfType([
-    PropTypes.oneOf(['day', 'hour', 'meridiem', 'minute', 'month', 'second', 'year']),
-    PropTypes.number,
-    PropTypes.shape({
-      endIndex: PropTypes.number.isRequired,
-      startIndex: PropTypes.number.isRequired,
-    }),
-  ]),
   /**
    * Disable specific date. @DateIOType
    * @template TDate
@@ -330,4 +246,4 @@ MobileNextDatePicker.propTypes = {
   views: PropTypes.arrayOf(PropTypes.oneOf(['day', 'month', 'year']).isRequired),
 } as any;
 
-export { MobileNextDatePicker };
+export { StaticNextDatePicker };
