@@ -21,7 +21,7 @@ the date manipulation libraries under a unified api.
 
 ### Available libraries
 
-The Date and Time Pickers currently support 4 date-libraries:
+The Date and Time Pickers currently support the following date libraries:
 
 - [Day.js](https://day.js.org/)
 - [date-fns](https://date-fns.org/)
@@ -52,9 +52,9 @@ The bundling strategy was taken care of by a _Create React App_ and no locale wa
 The results may vary in your application depending on the version of each library, the locale and the bundling strategy used.
 :::
 
-### Using another library ?
+### Unsupported libraries
 
-TODO
+If you need to use a date library that is not supported yet, please [open an issue](https://github.com/mui/mui-x/issues/new/choose) in the MUI X issue.
 
 ## Setup a date library
 
