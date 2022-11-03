@@ -3,6 +3,58 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 6.0.0-alpha.6
+
+_Nov 3, 2022_
+
+We'd like to offer a big thanks to the 8 contributors who made this release possible. Here are some highlights ✨:
+
+- 🎁 Allow non-controlled usage of the calendar components (#6643) @flaviendelangle
+
+  ```tsx
+  <DateCalendar defaultValue={dayjs()} />
+  <MonthCalendar defaultValue={dayjs()} />
+  <YearCalendar defaultValue={dayjs()} />
+  ```
+
+- 🌍 Add Ukrainian (uk-UA) locale to pickers (#6661) @Dufran
+- 📚 Documentation improvements
+- 🐞 Bugfixes
+
+### `@mui/x-data-grid@v__VERSION__` / `@mui/x-data-grid-pro@v__VERSION__` / `@mui/x-data-grid-premium@v__VERSION__`
+
+#### Breaking changes
+
+- The `disableIgnoreModificationsIfProcessingProps` prop was removed and its behavior when `true` was incorporated as the default behavior.
+  The old behavior can be restored by using `apiRef.current.stopRowEditMode({ ignoreModifications: true })` or `apiRef.current.stopCellEditMode({ ignoreModifications: true })`.
+
+#### Changes
+
+- [DataGrid] Add `rowSelection` prop (#6499) @m4theushw
+- [DataGrid] Avoid future regression with React 19 (#6638) @oliviertassinari
+- [DataGrid] Refactor `@mui/material` imports to `@mui/utils` (#6569) @LukasTy
+- [DataGrid] Remove `disableIgnoreModificationsIfProcessingProps` prop (#6640) @m4theushw
+- [DataGrid] Separate private and public `apiRef` properties (#6388) @cherniavskii
+
+### `@mui/x-date-pickers@v__PICKERS_VERSION__` / `@mui/x-date-pickers-pro@v__PICKERS_VERSION__`
+
+#### Changes
+
+- [DateRangePicker] Fix input focused style and mobile behaviour (#6645) @LukasTy
+- [fields] Update sections when the locale changes (#6649) @flaviendelangle
+- [pickers] Add Ukrainian (uk-UA) locale on the date picker (#6661) @Dufran
+- [pickers] Allow non-controlled usage of the calendar components (#6643) @flaviendelangle
+- [pickers] Export other adapters derived from moment or date-fns (#6571) @alexfauquette
+- [pickers] New `MobileDatePicker` and `DatePicker` based on `DateField` (#6690) @flaviendelangle
+- [pickers] New `StaticDatePicker` component (#6708) @flaviendelangle
+- [pickers] Rename `inputFormat` prop `format` on the new pickers (#6722) @flaviendelangle
+
+### Core
+
+- [core] Fix `typescript:ci` failures (#6705) @LukasTy
+- [core] Fixes for upcoming eslint upgrade (#6667) @Janpot
+- [core] Pin GitHub Action to digests (#6683) @oliviertassinari
+
 ## 6.0.0-alpha.5
 
 _Oct 31, 2022_
