@@ -249,31 +249,32 @@ export const getSectionVisibleValue = (
   //   return `${value}\u200e`;
   // }
 
-  if (willBeRenderedInInput && section.contentType === 'digit' && !section.hasTrailingZeroes) {
+  if (willBeRenderedInInput) {
     return `\u2068${value}\u2069`;
   }
   return value;
 };
 
+export const cleanString = (dirtyString: string) =>
+  dirtyString.replace(/\u2066|\u2067|\u2068|\u2069/g, '');
+
 export const addPositionPropertiesToSections = <TSection extends FieldSection>(
   sections: Omit<TSection, 'start' | 'end' | 'startInInput' | 'endInInput'>[],
 ): TSection[] => {
   let position = 0;
-  let positionInInput = 0;
+  let positionInInput = 1;
   const newSections: TSection[] = [];
 
   for (let i = 0; i < sections.length; i += 1) {
     const section = sections[i];
     const end =
       position +
-      getSectionVisibleValue(section, true).length +
-      (section.separator || '').replace(/\u2066|\u2067|\u2068|\u2069/g, '').length;
+      cleanString(`${getSectionVisibleValue(section, true)}${section.separator || ''}`).length;
 
     const endInInput =
       positionInInput +
       getSectionVisibleValue(section, true).length +
-      (section.separator?.length ?? 0) +
-      (i === 0 || i === sections.length - 1 ? 1 : 0); // Take into account start and end isolation characters
+      (section.separator?.length ?? 0);
 
     newSections.push({
       ...section,

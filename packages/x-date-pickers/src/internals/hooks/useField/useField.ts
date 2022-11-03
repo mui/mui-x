@@ -22,6 +22,7 @@ import {
   applySectionValueToDate,
   cleanTrailingZeroInNumericSectionValue,
   isAndroid,
+  cleanString,
 } from './useField.utils';
 import { useFieldState } from './useFieldState';
 
@@ -68,8 +69,9 @@ export const useField = <
   const focusTimeoutRef = React.useRef<NodeJS.Timeout | undefined>(undefined);
 
   const syncSelectionFromDOM = () => {
+    const browserStartIndex = inputRef.current!.selectionStart ?? 0;
     const nextSectionIndex = state.sections.findIndex(
-      (section) => section.startInInput > (inputRef.current!.selectionStart ?? 0),
+      (section) => section.startInInput > Math.max(browserStartIndex, 1), // If 0, it starts before the first invisible character
     );
     const sectionIndex = nextSectionIndex === -1 ? state.sections.length - 1 : nextSectionIndex - 1;
     setSelectedSections(sectionIndex);
@@ -145,9 +147,6 @@ export const useField = <
     event.preventDefault();
     updateValueFromValueStr(pastedValue);
   });
-
-  const cleanString = (dirtyString: string) =>
-    dirtyString.replace(/\u2066|\u2067|\u2068|\u2069/g, '');
 
   const handleInputChange = useEventCallback((event: React.ChangeEvent<HTMLInputElement>) => {
     if (readOnly) {
