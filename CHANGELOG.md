@@ -5,7 +5,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ## 6.0.0-alpha.6
 
-_Nov 3, 2022_
+_Nov 4, 2022_
 
 We'd like to offer a big thanks to the 8 contributors who made this release possible. Here are some highlights ✨:
 
