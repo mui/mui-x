@@ -15,7 +15,7 @@ We'd like to offer a big thanks to the 3 contributors who made this release poss
 
 #### Changes
 
-- [DataGrid] Remove `React.memo` from `GridCellCheckboxRenderer` (#6688) @cherniavskii
+- [DataGrid] Remove `React.memo` from `GridCellCheckboxRenderer` (#6688) @mattcorner
 
 ### `@mui/x-date-pickers@v5.0.7` / `@mui/x-date-pickers-pro@v5.0.7`
 
