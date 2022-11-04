@@ -26,6 +26,7 @@ const DATA_GRID_FORCED_PROPS: { [key in DataGridForcedPropsKey]?: DataGridProces
   checkboxSelectionVisibleOnly: false,
   disableColumnReorder: true,
   disableColumnResize: true,
+  keepColumnPositionIfDraggedOutside: false,
   signature: 'DataGrid',
 };
 
@@ -77,6 +78,7 @@ export const DATA_GRID_PROPS_DEFAULT_VALUES: DataGridPropsWithDefaultValues = {
   disableColumnReorder: false,
   disableColumnResize: false,
   keepNonExistentRowsSelected: false,
+  keepColumnPositionIfDraggedOutside: false,
 };
 
 export const useDataGridProps = <R extends GridValidRowModel>(inProps: DataGridProps<R>) => {
