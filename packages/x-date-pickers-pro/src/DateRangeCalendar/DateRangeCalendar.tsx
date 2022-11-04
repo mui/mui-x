@@ -335,6 +335,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
       range: valueDayRange,
       newDate: rangeDragDay,
       currentlySelectingRangeEnd: currentDatePosition,
+      allowRangeFlip: true,
     }).newRange;
   }, [currentDatePosition, rangeDragDay, utils, valueDayRange]);
 
