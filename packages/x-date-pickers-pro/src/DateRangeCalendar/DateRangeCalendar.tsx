@@ -326,12 +326,17 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
     currentlySelectingRangeEnd: currentDatePosition,
   });
 
-  const draggingRange = calculateRangePreview({
-    utils,
-    range: valueDayRange,
-    newDate: rangeDragDay,
-    currentlySelectingRangeEnd: currentDatePosition,
-  });
+  const draggingRange = React.useMemo(() => {
+    if (!valueDayRange[0] || !valueDayRange[1] || !rangeDragDay) {
+      return null;
+    }
+    return calculateRangeChange({
+      utils,
+      range: valueDayRange,
+      newDate: rangeDragDay,
+      currentlySelectingRangeEnd: currentDatePosition,
+    }).newRange;
+  }, [currentDatePosition, rangeDragDay, utils, valueDayRange]);
 
   const handlePreviewDayChange = (newPreviewRequest: TDate) => {
     if (!isWithinRange(utils, newPreviewRequest, valueDayRange)) {
@@ -384,12 +389,13 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
         isPreviewing: isMobile ? false : isWithinRange(utils, day, previewingRange),
         isStartOfPreviewing: isMobile ? false : isStartOfRange(utils, day, previewingRange),
         isEndOfPreviewing: isMobile ? false : isEndOfRange(utils, day, previewingRange),
-        isWithinDragging: !isDragging ? false : isWithinRange(utils, day, draggingRange),
-        isStartOfDragging: !isDragging ? false : isStartOfRange(utils, day, draggingRange),
-        isEndOfDragging: !isDragging ? false : isEndOfRange(utils, day, draggingRange),
-        isHighlighting: isWithinRange(utils, day, valueDayRange),
-        isStartOfHighlighting: isSelectedStartDate,
-        isEndOfHighlighting: isSelectedEndDate,
+        isHighlighting: isWithinRange(utils, day, isDragging ? draggingRange : valueDayRange),
+        isStartOfHighlighting: isDragging
+          ? isStartOfRange(utils, day, draggingRange)
+          : isSelectedStartDate,
+        isEndOfHighlighting: isDragging
+          ? isEndOfRange(utils, day, draggingRange)
+          : isSelectedEndDate,
         onMouseEnter: () => handlePreviewDayChange(day),
         isDragging,
         onDragStart: isElementDraggable ? onDragStart : undefined,

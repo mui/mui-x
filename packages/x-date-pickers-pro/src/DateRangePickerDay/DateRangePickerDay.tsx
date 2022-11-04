@@ -42,18 +42,6 @@ export interface DateRangePickerDayProps<TDate>
    */
   isStartOfPreviewing: boolean;
   /**
-   * Set to `true` if the `day` is in a dragging date range.
-   */
-  isWithinDragging: boolean;
-  /**
-   * Set to `true` if the `day` is the start of a dragging date range.
-   */
-  isEndOfDragging: boolean;
-  /**
-   * Set to `true` if the `day` is the end of a dragging date range.
-   */
-  isStartOfDragging: boolean;
-  /**
    * Override or extend the styles applied to the component.
    */
   classes?: Partial<DateRangePickerDayClasses>;
@@ -76,9 +64,6 @@ const useUtilityClasses = (ownerState: OwnerState) => {
     isPreviewing,
     isStartOfPreviewing,
     isEndOfPreviewing,
-    isWithinDragging,
-    isStartOfDragging,
-    isEndOfDragging,
     selected,
     classes,
     isDragging,
@@ -88,11 +73,8 @@ const useUtilityClasses = (ownerState: OwnerState) => {
     root: [
       'root',
       isHighlighting && !outsideCurrentMonth && 'rangeIntervalDayHighlight',
-      isWithinDragging && !outsideCurrentMonth && 'rangeIntervalDayDragging',
       (isStartOfHighlighting || isStartOfMonth) && 'rangeIntervalDayHighlightStart',
-      (isStartOfDragging || isStartOfMonth) && 'rangeIntervalDayDraggingStart',
       (isEndOfHighlighting || isEndOfMonth) && 'rangeIntervalDayHighlightEnd',
-      (isEndOfDragging || isEndOfMonth) && 'rangeIntervalDayDraggingEnd',
     ],
     rangeIntervalPreview: [
       'rangeIntervalPreview',
@@ -160,24 +142,12 @@ const DateRangePickerDayRoot = styled('div', {
       '&:first-of-type': startBorderStyle,
       '&:last-of-type': endBorderStyle,
     }),
-  ...(ownerState.isWithinDragging &&
-    !ownerState.outsideCurrentMonth && {
-      borderRadius: 0,
-      color: theme.palette.primary.contrastText,
-      backgroundColor: theme.palette.primary.light,
-      '&:first-of-type': startBorderStyle,
-      '&:last-of-type': endBorderStyle,
-    }),
-  ...(((ownerState.isStartOfHighlighting && !ownerState.isEndOfDragging) ||
-    (ownerState.isStartOfDragging && !ownerState.isEndOfHighlighting) ||
-    ownerState.isStartOfMonth) && {
+  ...((ownerState.isStartOfHighlighting || ownerState.isStartOfMonth) && {
     ...startBorderStyle,
     paddingLeft: 0,
     marginLeft: DAY_MARGIN / 2,
   }),
-  ...(((ownerState.isEndOfHighlighting && !ownerState.isStartOfDragging) ||
-    (ownerState.isEndOfDragging && !ownerState.isStartOfHighlighting) ||
-    ownerState.isEndOfMonth) && {
+  ...((ownerState.isEndOfHighlighting || ownerState.isEndOfMonth) && {
     ...endBorderStyle,
     paddingRight: 0,
     marginRight: DAY_MARGIN / 2,
@@ -267,12 +237,6 @@ const DateRangePickerDayDay = styled(PickersDay, {
     }),
   ...(ownerState.isDragging && {
     cursor: 'grabbing',
-  }),
-  ...(((ownerState.isEndOfDragging &&
-    !ownerState.isStartOfDragging &&
-    ownerState.isStartOfHighlighting) ||
-    (ownerState.isStartOfDragging && ownerState.isEndOfHighlighting)) && {
-    borderRadius: 0,
   }),
 })) as unknown as <TDate>(
   props: PickersDayProps<TDate> & { ownerState: OwnerState },
