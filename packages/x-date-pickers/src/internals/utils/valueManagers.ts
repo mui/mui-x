@@ -9,7 +9,7 @@ import {
   FieldSection,
   FieldValueManager,
   splitFormatIntoSections,
-} from '@mui/x-date-pickers/internals/hooks/useField';
+} from '../hooks/useField';
 
 export const singleItemValueManager: PickerStateValueManager<
   any,

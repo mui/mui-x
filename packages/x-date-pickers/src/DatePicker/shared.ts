@@ -7,15 +7,11 @@ import {
   DateCalendarSlotsComponentsProps,
   ExportedDateCalendarProps,
 } from '../DateCalendar/DateCalendar';
-import {
-  DateValidationError,
-  isSameDateError,
-} from '../internals/hooks/validation/useDateValidation';
+import { DateValidationError } from '../internals/hooks/validation/useDateValidation';
 import { ValidationCommonProps } from '../internals/hooks/validation/useValidation';
 import { ExportedDateInputProps } from '../internals/components/PureDateInput';
 import { BasePickerProps } from '../internals/models/props/basePickerProps';
-import { PickerStateValueManager } from '../internals/hooks/usePickerState';
-import { applyDefaultDate, replaceInvalidDateByNull } from '../internals/utils/date-utils';
+import { applyDefaultDate } from '../internals/utils/date-utils';
 import { DefaultizedProps } from '../internals/models/helpers';
 import { BaseDateValidationProps } from '../internals/hooks/validation/models';
 import {
