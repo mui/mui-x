@@ -23,11 +23,23 @@ describe('<TimeField /> - Editing', () => {
     key,
     expectedValue,
     cursorPosition = 1,
+    valueToSelect,
     ...props
-  }: TimeFieldProps<TDate> & { key: string; expectedValue: string; cursorPosition?: number }) => {
+  }: TimeFieldProps<TDate> & {
+    key: string;
+    expectedValue: string;
+    cursorPosition?: number;
+    valueToSelect?: string;
+  }) => {
     render(<TimeField {...props} />);
     const input = screen.getByRole('textbox');
-    clickOnInput(input, cursorPosition);
+    const clickPosition = valueToSelect ? input.value.indexOf(valueToSelect) : cursorPosition;
+    if (clickPosition === -1) {
+      throw new Error(
+        `Failed to find value to select "${valueToSelect}" in input value: ${input.value}`,
+      );
+    }
+    clickOnInput(input, clickPosition);
     userEvent.keyPress(input, { key });
     expectInputValue(input, expectedValue);
   };
@@ -100,7 +112,7 @@ describe('<TimeField /> - Editing', () => {
           defaultValue: adapterToUse.date(new Date(2022, 5, 15, 14, 0, 32)),
           key: 'ArrowDown',
           expectedValue: '13:59',
-          cursorPosition: 4,
+          valueToSelect: '00',
         });
       });
     });
@@ -128,7 +140,7 @@ describe('<TimeField /> - Editing', () => {
           format: adapterToUse.formats.fullTime12h,
           key: 'ArrowDown',
           expectedValue: 'hh:mm pm',
-          cursorPosition: 14,
+          valueToSelect: 'aa',
         });
       });
 
@@ -138,7 +150,7 @@ describe('<TimeField /> - Editing', () => {
           defaultValue: new Date(2022, 5, 15, 2, 25, 32),
           key: 'ArrowDown',
           expectedValue: '02:25 pm',
-          cursorPosition: 14,
+          valueToSelect: 'am',
         });
       });
 
@@ -148,7 +160,7 @@ describe('<TimeField /> - Editing', () => {
           defaultValue: new Date(2022, 5, 15, 14, 25, 32),
           key: 'ArrowDown',
           expectedValue: '02:25 am',
-          cursorPosition: 14,
+          valueToSelect: 'pm',
         });
       });
 
@@ -158,7 +170,7 @@ describe('<TimeField /> - Editing', () => {
           defaultValue: adapterToUse.date(new Date(2022, 5, 15, 0, 0, 32)),
           key: 'ArrowDown',
           expectedValue: '11:59 pm',
-          cursorPosition: 4,
+          cursorPosition: 6,
         });
       });
 
@@ -168,7 +180,7 @@ describe('<TimeField /> - Editing', () => {
           defaultValue: adapterToUse.date(new Date(2022, 5, 15, 12, 0, 32)),
           key: 'ArrowDown',
           expectedValue: '11:59 am',
-          cursorPosition: 4,
+          cursorPosition: 6,
         });
       });
     });
@@ -225,7 +237,7 @@ describe('<TimeField /> - Editing', () => {
           defaultValue: adapterToUse.date(new Date(2022, 5, 15, 14, 59, 32)),
           key: 'ArrowUp',
           expectedValue: '15:00',
-          cursorPosition: 4,
+          valueToSelect: '59',
         });
       });
     });
@@ -266,7 +278,7 @@ describe('<TimeField /> - Editing', () => {
           defaultValue: adapterToUse.date(new Date(2022, 5, 15, 11, 59, 32)),
           key: 'ArrowUp',
           expectedValue: '12:00 pm',
-          cursorPosition: 4,
+          valueToSelect: '59',
         });
       });
 
@@ -276,7 +288,7 @@ describe('<TimeField /> - Editing', () => {
           defaultValue: adapterToUse.date(new Date(2022, 5, 15, 23, 59, 32)),
           key: 'ArrowUp',
           expectedValue: '12:00 am',
-          cursorPosition: 4,
+          valueToSelect: '59',
         });
       });
     });
