@@ -47,7 +47,7 @@ We'd like to offer a big thanks to the 8 contributors who made this release poss
 - [pickers] Export other adapters derived from moment or date-fns (#6571) @alexfauquette
 - [pickers] New `MobileDatePicker` and `DatePicker` based on `DateField` (#6690) @flaviendelangle
 - [pickers] New `StaticDatePicker` component (#6708) @flaviendelangle
-- [pickers] Rename `inputFormat` prop `format` on the new pickers (#6722) @flaviendelangle
+- [pickers] Rename `inputFormat` prop to `format` on the new pickers (#6722) @flaviendelangle
 
 ### Core
 
