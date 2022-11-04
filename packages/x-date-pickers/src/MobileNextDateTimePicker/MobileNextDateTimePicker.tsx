@@ -39,7 +39,7 @@ const MobileNextDateTimePicker = React.forwardRef(function MobileNextDateTimePic
   // Props with the default values specific to the mobile variant
   const props = {
     ...defaultizedProps,
-    showToolbar: defaultizedProps.showToolbar ?? false,
+    showToolbar: defaultizedProps.showToolbar ?? true,
     hideTabs: defaultizedProps.hideTabs ?? true,
     autoFocus: true,
     components: {
