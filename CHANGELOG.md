@@ -7,7 +7,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 _Nov 4, 2022_
 
-We'd like to offer a big thanks to the 3 contributors who made this release possible. Here are some highlights ✨:
+We'd like to offer a big thanks to the 4 contributors who made this release possible. Here are some highlights ✨:
 
 - 🌍 Add Ukrainian (uk-UA) locale to pickers (#6661) @Dufran
 
