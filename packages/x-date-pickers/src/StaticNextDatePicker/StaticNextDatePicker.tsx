@@ -6,8 +6,9 @@ import { datePickerValueManager } from '../DatePicker/shared';
 import { useStaticPicker } from '../internals/hooks/useStaticPicker';
 import { CalendarPickerView } from '../internals/models';
 import { renderDateView } from '../internals/utils/viewRenderers';
+import { validateDate } from '../internals';
 
-type StaticDatePickerComponent = (<TDate>(
+type StaticNextDatePickerComponent = (<TDate>(
   props: StaticNextDatePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
 ) => JSX.Element) & { propTypes?: any };
 
@@ -39,11 +40,12 @@ const StaticNextDatePicker = React.forwardRef(function StaticNextDatePicker<TDat
     props,
     valueManager: datePickerValueManager,
     viewLookup: VIEW_LOOKUP,
+    validator: validateDate,
     ref,
   });
 
   return renderPicker();
-}) as StaticDatePickerComponent;
+}) as StaticNextDatePickerComponent;
 
 StaticNextDatePicker.propTypes = {
   // ----------------------------- Warning --------------------------------
@@ -138,22 +140,17 @@ StaticNextDatePicker.propTypes = {
    */
   onAccept: PropTypes.func,
   /**
-   * Callback fired when the value (the selected date) changes.
-   * @template TValue
+   * Callback fired when the value changes.
+   * @template TValue, TError
    * @param {TValue} value The new value.
+   * @param {FieldChangeHandlerContext<TError>} The context containing the validation result of the current value.
    */
   onChange: PropTypes.func,
   /**
-   * Callback that fired when input value or new `value` prop validation returns **new** validation error (or value is valid after error).
-   * In case of validation error detected `reason` prop return non-null value and `TextField` must be displayed in `error` state.
-   * This can be used to render appropriate form error.
-   *
-   * [Read the guide](https://next.material-ui-pickers.dev/guides/forms) about form integration and error displaying.
-   * @DateIOType
-   *
-   * @template TError, TValue
-   * @param {TError} reason The reason why the current value is not valid.
-   * @param {TValue} value The invalid value.
+   * Callback fired when the error associated to the current value changes.
+   * @template TValue, TError
+   * @param {TError} error The new error.
+   * @param {TValue} value The value associated to the error.
    */
   onError: PropTypes.func,
   /**
@@ -237,7 +234,8 @@ StaticNextDatePicker.propTypes = {
     PropTypes.object,
   ]),
   /**
-   * The value of the picker.
+   * The selected value.
+   * Used when the component is controlled.
    */
   value: PropTypes.any,
   /**

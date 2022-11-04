@@ -26,13 +26,29 @@ export interface UseFieldParams<
 }
 
 export interface UseFieldInternalProps<TValue, TError> {
+  /**
+   * The selected value.
+   * Used when the component is controlled.
+   */
   value?: TValue;
-  onChange?: FieldChangeHandler<TValue, TError>;
-  onError?: (error: TError, value: TValue) => void;
   /**
    * The default value. Use when the component is not controlled.
    */
   defaultValue?: TValue;
+  /**
+   * Callback fired when the value changes.
+   * @template TValue, TError
+   * @param {TValue} value The new value.
+   * @param {FieldChangeHandlerContext<TError>} The context containing the validation result of the current value.
+   */
+  onChange?: FieldChangeHandler<TValue, TError>;
+  /**
+   * Callback fired when the error associated to the current value changes.
+   * @template TValue, TError
+   * @param {TError} error The new error.
+   * @param {TValue} value The value associated to the error.
+   */
+  onError?: (error: TError, value: TValue) => void;
   /**
    * Format of the date when rendered in the input(s).
    */
@@ -274,7 +290,7 @@ export interface UseFieldState<TValue, TSection extends FieldSection> {
 
 export type UseFieldValidationProps<
   TValue,
-  TInternalProps extends UseFieldInternalProps<any, any>,
+  TInternalProps extends { value?: TValue; defaultValue?: TValue },
 > = Omit<TInternalProps, 'value' | 'defaultValue'> & { value: TValue };
 
 export type AvailableAdjustKeyCode =
