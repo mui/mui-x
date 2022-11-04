@@ -300,6 +300,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
   const maxDateWithDisabled = (disabled && value[1]) || maxDate;
 
   const [rangePreviewDay, setRangePreviewDay] = React.useState<TDate | null>(null);
+  const [rangeDragDay, setRangeDragDay] = React.useState<TDate | null>(null);
 
   const CalendarTransitionProps = React.useMemo(
     () => ({
@@ -325,6 +326,13 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
     currentlySelectingRangeEnd: currentDatePosition,
   });
 
+  const draggingRange = calculateRangePreview({
+    utils,
+    range: valueDayRange,
+    newDate: rangeDragDay,
+    currentlySelectingRangeEnd: currentDatePosition,
+  });
+
   const handlePreviewDayChange = (newPreviewRequest: TDate) => {
     if (!isWithinRange(utils, newPreviewRequest, valueDayRange)) {
       setRangePreviewDay(newPreviewRequest);
@@ -347,7 +355,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
     disableDragEditing,
     onDrop: handleDrop,
     onDragStart: handleDragStart,
-    setRangePreviewDay,
+    setRangePreviewDay: setRangeDragDay,
     utils,
   });
 
@@ -376,6 +384,9 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
         isPreviewing: isMobile ? false : isWithinRange(utils, day, previewingRange),
         isStartOfPreviewing: isMobile ? false : isStartOfRange(utils, day, previewingRange),
         isEndOfPreviewing: isMobile ? false : isEndOfRange(utils, day, previewingRange),
+        isWithinDragging: !isDragging ? false : isWithinRange(utils, day, draggingRange),
+        isStartOfDragging: !isDragging ? false : isStartOfRange(utils, day, draggingRange),
+        isEndOfDragging: !isDragging ? false : isEndOfRange(utils, day, draggingRange),
         isHighlighting: isWithinRange(utils, day, valueDayRange),
         isStartOfHighlighting: isSelectedStartDate,
         isEndOfHighlighting: isSelectedEndDate,

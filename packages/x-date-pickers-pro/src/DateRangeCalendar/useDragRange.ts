@@ -67,7 +67,6 @@ export const useDragRange = <TDate>({
   const handleDragLeave = useEventCallback((event: React.DragEvent<HTMLButtonElement>) => {
     event.preventDefault();
     event.stopPropagation();
-    setRangePreviewDay(null);
   });
   const handleDragOver = useEventCallback((event: React.DragEvent<HTMLButtonElement>) => {
     event.preventDefault();
