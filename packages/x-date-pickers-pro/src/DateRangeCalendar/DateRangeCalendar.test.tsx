@@ -95,6 +95,24 @@ describe('<DateRangeCalendar />', () => {
 
       expect(screen.getAllByMuiTest('DateRangeHighlight')).to.have.length(31);
     });
+    it('prop: disableDragEditing - should not allow dragging range', () => {
+      render(
+        <DateRangeCalendar
+          defaultValue={[
+            adapterToUse.date(new Date(2018, 0, 1)),
+            adapterToUse.date(new Date(2018, 0, 31)),
+          ]}
+          disableDragEditing
+        />,
+      );
+
+      expect(screen.getByRole('gridcell', { name: '1', selected: true })).to.not.have.attribute(
+        'draggable',
+      );
+      expect(screen.getByRole('gridcell', { name: '31', selected: true })).to.not.have.attribute(
+        'draggable',
+      );
+    });
   });
 
   describe('Component slots: Day', () => {

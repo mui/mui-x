@@ -403,7 +403,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
         onDragEnd,
         'data-position': datePosition,
         ...(shouldInitDragging ? otherDragHandlers : {}),
-        draggable: isElementDraggable,
+        draggable: isElementDraggable ? true : undefined,
         ...(resolveComponentProps(componentsProps?.day, dayOwnerState) ?? {}),
       };
     },
