@@ -1,15 +1,37 @@
 import {
+  PickerStateValueManager,
+  replaceInvalidDateByNull,
+} from '@mui/x-date-pickers/src/internals';
+import {
   FieldValueManager,
   splitFormatIntoSections,
   addPositionPropertiesToSections,
   createDateStrFromSections,
 } from '@mui/x-date-pickers/internals-fields';
-import { DateRange, DateRangeFieldSection } from '../../models/range';
-import { splitDateRangeSections, removeLastSeparator } from '../../utils/date-fields-utils';
+import { DateRange, DateRangeFieldSection } from '../models/range';
+import { splitDateRangeSections, removeLastSeparator } from './date-fields-utils';
+import { DateRangeValidationError } from '../hooks/validation/useDateRangeValidation';
+import { TimeRangeValidationError } from '../hooks/validation/useTimeRangeValidation';
+import { DateTimeRangeValidationError } from '../hooks/validation/useDateTimeRangeValidation';
 
-export const rangeFieldValueManager: Omit<
-  FieldValueManager<DateRange<any>, any, DateRangeFieldSection, any>,
-  'isSameError'
+export const rangeValueManager: PickerStateValueManager<
+  [any, any],
+  any,
+  DateRangeValidationError | TimeRangeValidationError | DateTimeRangeValidationError
+> = {
+  emptyValue: [null, null],
+  getTodayValue: (utils) => [utils.date()!, utils.date()!],
+  cleanValue: (utils, value) =>
+    value.map((date) => replaceInvalidDateByNull(utils, date)) as DateRange<any>,
+  areValuesEqual: (utils, a, b) => utils.isEqual(a[0], b[0]) && utils.isEqual(a[1], b[1]),
+  isSameError: (a, b) => b !== null && a[1] === b[1] && a[0] === b[0],
+};
+
+export const rangeFieldValueManager: FieldValueManager<
+  DateRange<any>,
+  any,
+  DateRangeFieldSection,
+  DateRangeValidationError | TimeRangeValidationError | DateTimeRangeValidationError
 > = {
   updateReferenceValue: (utils, value, prevReferenceValue) => {
     const shouldKeepStartDate = value[0] != null && utils.isValid(value[0]);

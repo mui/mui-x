@@ -14,7 +14,7 @@ export interface UseFieldParams<
   inputRef?: React.Ref<HTMLInputElement>;
   forwardedProps: TForwardedProps;
   internalProps: TInternalProps;
-  valueManager: PickerStateValueManager<TValue, TDate>;
+  valueManager: PickerStateValueManager<TValue, TDate, InferError<TInternalProps>>;
   fieldValueManager: FieldValueManager<TValue, TDate, TSection, InferError<TInternalProps>>;
   validator: Validator<
     TValue,
@@ -249,14 +249,6 @@ export interface FieldValueManager<TValue, TDate, TSection extends FieldSection,
    * @returns {boolean} `true` if the current error is not empty.
    */
   hasError: (error: TError) => boolean;
-  /**
-   * Compare two errors to know if they are equal.
-   * @template TError
-   * @param {TError} error The new error
-   * @param {TError | null} prevError The previous error
-   * @returns {boolean} `true` if the new error is different from the previous one.
-   */
-  isSameError: (error: TError, prevError: TError | null) => boolean;
 }
 
 export interface UseFieldState<TValue, TSection extends FieldSection> {

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { resolveComponentProps } from '@mui/base/utils';
-import { datePickerValueManager } from '../DatePicker/shared';
+import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { DesktopNextDatePickerProps } from './DesktopNextDatePicker.types';
 import {
   getDatePickerFieldFormat,
@@ -64,7 +64,7 @@ const DesktopNextDatePicker = React.forwardRef(function DesktopNextDatePicker<TD
 
   const { renderPicker } = useDesktopPicker<TDate, CalendarPickerView, typeof props>({
     props,
-    valueManager: datePickerValueManager,
+    valueManager: singleItemValueManager,
     getOpenDialogAriaText: localeText.openDatePickerDialogue,
     viewLookup: VIEW_LOOKUP,
     validator: validateDate,

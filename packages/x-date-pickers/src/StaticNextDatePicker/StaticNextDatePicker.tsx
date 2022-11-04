@@ -2,11 +2,11 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { StaticNextDatePickerProps } from './StaticNextDatePicker.types';
 import { useNextDatePickerDefaultizedProps } from '../NextDatePicker/shared';
-import { datePickerValueManager } from '../DatePicker/shared';
 import { useStaticPicker } from '../internals/hooks/useStaticPicker';
 import { CalendarPickerView } from '../internals/models';
 import { renderDateView } from '../internals/utils/viewRenderers';
 import { validateDate } from '../internals';
+import { singleItemValueManager } from '../internals/utils/valueManagers';
 
 type StaticNextDatePickerComponent = (<TDate>(
   props: StaticNextDatePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
@@ -38,7 +38,7 @@ const StaticNextDatePicker = React.forwardRef(function StaticNextDatePicker<TDat
 
   const { renderPicker } = useStaticPicker<TDate, CalendarPickerView, typeof props>({
     props,
-    valueManager: datePickerValueManager,
+    valueManager: singleItemValueManager,
     viewLookup: VIEW_LOOKUP,
     validator: validateDate,
     ref,

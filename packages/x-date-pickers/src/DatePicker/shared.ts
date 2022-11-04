@@ -7,7 +7,10 @@ import {
   DateCalendarSlotsComponentsProps,
   ExportedDateCalendarProps,
 } from '../DateCalendar/DateCalendar';
-import { DateValidationError } from '../internals/hooks/validation/useDateValidation';
+import {
+  DateValidationError,
+  isSameDateError,
+} from '../internals/hooks/validation/useDateValidation';
 import { ValidationCommonProps } from '../internals/hooks/validation/useValidation';
 import { ExportedDateInputProps } from '../internals/components/PureDateInput';
 import { BasePickerProps } from '../internals/models/props/basePickerProps';
@@ -138,10 +141,3 @@ export function useDatePickerDefaultizedProps<TDate, Props extends BaseDatePicke
     components: { Toolbar: DatePickerToolbar, ...themeProps.components },
   };
 }
-
-export const datePickerValueManager: PickerStateValueManager<any, any> = {
-  emptyValue: null,
-  getTodayValue: (utils) => utils.date()!,
-  cleanValue: replaceInvalidDateByNull,
-  areValuesEqual: (utils, a, b) => utils.isEqual(a, b),
-};

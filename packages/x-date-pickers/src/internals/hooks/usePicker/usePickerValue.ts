@@ -10,7 +10,7 @@ import {
   FieldSelectedSections,
   UseFieldInternalProps,
 } from '../useField';
-import { InferError, Validator } from '../validation/useValidation';
+import { InferError, useValidation, Validator } from '../validation/useValidation';
 import { UseFieldValidationProps } from '../useField/useField.interfaces';
 
 export interface PickerChangeHandlerContext<TError> {
@@ -159,7 +159,7 @@ export interface UsePickerValueParams<
   TExternalProps extends UsePickerValueProps<TValue, any>,
 > {
   props: TExternalProps;
-  valueManager: PickerStateValueManager<TValue, TDate>;
+  valueManager: PickerStateValueManager<TValue, TDate, InferError<TExternalProps>>;
   wrapperVariant: WrapperVariant;
   validator: Validator<
     TValue,
@@ -264,6 +264,8 @@ export const usePickerValue = <
     draft: value,
     resetFallback: value,
   }));
+
+  useValidation({ ...props, value }, validator, valueManager.isSameError);
 
   const setDate = useEventCallback((params: UsePickerValueAction<TValue, TError>) => {
     setDateState((prev) => {

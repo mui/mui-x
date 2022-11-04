@@ -2,7 +2,6 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { resolveComponentProps } from '@mui/base/utils';
 import { useMobilePicker } from '../internals/hooks/useMobilePicker';
-import { datePickerValueManager } from '../DatePicker/shared';
 import { MobileNextDatePickerProps } from './MobileNextDatePicker.types';
 import {
   getDatePickerFieldFormat,
@@ -12,6 +11,7 @@ import { CalendarPickerView, useLocaleText, useUtils, validateDate } from '../in
 import { Unstable_DateField as DateField } from '../DateField';
 import { extractValidationProps } from '../internals/utils/validation';
 import { renderDateView } from '../internals/utils/viewRenderers';
+import { singleItemValueManager } from '../internals/utils/valueManagers';
 
 type MobileDatePickerComponent = (<TDate>(
   props: MobileNextDatePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
@@ -62,7 +62,7 @@ const MobileNextDatePicker = React.forwardRef(function MobileNextDatePicker<TDat
 
   const { renderPicker } = useMobilePicker<TDate, CalendarPickerView, typeof props>({
     props,
-    valueManager: datePickerValueManager,
+    valueManager: singleItemValueManager,
     getOpenDialogAriaText: localeText.openDatePickerDialogue,
     viewLookup: VIEW_LOOKUP,
     validator: validateDate,
