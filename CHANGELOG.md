@@ -42,7 +42,7 @@ We'd like to offer a big thanks to the 8 contributors who made this release poss
 
 - [DateRangePicker] Fix input focused style and mobile behaviour (#6645) @LukasTy
 - [fields] Update sections when the locale changes (#6649) @flaviendelangle
-- [pickers] Add Ukrainian (uk-UA) locale on the date picker (#6661) @Dufran
+- [pickers] Add Ukrainian (uk-UA) locale (#6661) @Dufran
 - [pickers] Allow non-controlled usage of the calendar components (#6643) @flaviendelangle
 - [pickers] Export other adapters derived from moment or date-fns (#6571) @alexfauquette
 - [pickers] New `MobileDatePicker` and `DatePicker` based on `DateField` (#6690) @flaviendelangle
