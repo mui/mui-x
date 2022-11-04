@@ -40,7 +40,7 @@ const MobileNextDateTimePicker = React.forwardRef(function MobileNextDateTimePic
   const props = {
     ...defaultizedProps,
     showToolbar: defaultizedProps.showToolbar ?? true,
-    hideTabs: defaultizedProps.hideTabs ?? true,
+    hideTabs: defaultizedProps.hideTabs ?? false,
     autoFocus: true,
     components: {
       Field: DateTimeField,
