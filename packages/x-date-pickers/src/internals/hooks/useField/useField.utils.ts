@@ -245,9 +245,10 @@ export const getSectionVisibleValue = (
   // If you press `1`, on the first section, the new value is also `1/dd/yyyy`,
   // So the browser will not fire the input `onChange`.
   // Adding the ltr mark is not a problem because it's only for digit (which are always ltr)
-  // if (willBeRenderedInInput && section.contentType === 'digit' && !section.hasTrailingZeroes) {
-  //   return `${value}\u200e`;
-  // }
+  // The \u2068 and \u2069 are cleaned, but not the \u200e to notice that an update with same digit occures
+  if (willBeRenderedInInput && section.contentType === 'digit' && !section.hasTrailingZeroes) {
+    return `\u2068${value}\u200e\u2069`;
+  }
 
   if (willBeRenderedInInput) {
     return `\u2068${value}\u2069`;
