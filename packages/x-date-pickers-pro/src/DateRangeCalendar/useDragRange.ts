@@ -6,7 +6,7 @@ import { DateRangePosition } from './DateRangeCalendar.types';
 interface UseDragRange<TDate> {
   disableDragEditing?: boolean;
   utils: MuiPickersAdapter<TDate>;
-  setRangePreviewDay: (value: React.SetStateAction<TDate | null>) => void;
+  setRangeDragDay: (value: React.SetStateAction<TDate | null>) => void;
   onDragStart: (position: DateRangePosition) => void;
   onDrop: (newDate: TDate) => void;
 }
@@ -41,7 +41,7 @@ const isSameAsDraggingDate = (event: React.DragEvent<HTMLButtonElement>) => {
 export const useDragRange = <TDate>({
   disableDragEditing,
   utils,
-  setRangePreviewDay,
+  setRangeDragDay,
   onDragStart,
   onDrop,
 }: UseDragRange<TDate>): UseDragRangeResponse => {
@@ -50,7 +50,7 @@ export const useDragRange = <TDate>({
   const handleDragStart = useEventCallback((event: React.DragEvent<HTMLButtonElement>) => {
     const newDate = resolveDateFromEvent(event, utils);
     if (newDate) {
-      setRangePreviewDay(newDate);
+      setRangeDragDay(newDate);
       event.dataTransfer.effectAllowed = 'move';
       setIsDragging(true);
       const buttonDataset = (event.target as HTMLButtonElement).dataset;
@@ -62,7 +62,7 @@ export const useDragRange = <TDate>({
     event.preventDefault();
     event.stopPropagation();
     event.dataTransfer.dropEffect = 'move';
-    setRangePreviewDay(resolveDateFromEvent(event, utils));
+    setRangeDragDay(resolveDateFromEvent(event, utils));
   });
   const handleDragLeave = useEventCallback((event: React.DragEvent<HTMLButtonElement>) => {
     event.preventDefault();
@@ -76,7 +76,7 @@ export const useDragRange = <TDate>({
   const handleDragEnd = useEventCallback((event: React.DragEvent<HTMLButtonElement>) => {
     event.preventDefault();
     event.stopPropagation();
-    setRangePreviewDay(null);
+    setRangeDragDay(null);
     setIsDragging(false);
   });
   const handleDrop = useEventCallback((event: React.DragEvent<HTMLButtonElement>) => {
