@@ -1,7 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { unstable_composeClasses as composeClasses } from '@mui/material';
+import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { styled } from '@mui/material/styles';
 import { isOverflown } from '../../utils/domUtils';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';

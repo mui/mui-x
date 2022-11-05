@@ -4,10 +4,10 @@ title: React Date Picker component
 components: DateCalendar, DatePicker, DayCalendarSkeleton, DesktopDatePicker, MobileDatePicker, MonthCalendar, PickersDay, StaticDatePicker, YearCalendar
 githubLabel: 'component: DatePicker'
 packageName: '@mui/x-date-pickers'
-materialDesign: https://material.io/components/date-pickers
+materialDesign: https://m2.material.io/components/date-pickers
 ---
 
-# Date picker
+# Date Picker
 
 <p class="description">The date picker let the user select a date.</p>
 
@@ -50,7 +50,7 @@ The date picker component can be disabled or read-only.
 
 ## Validation
 
-You can find the documentation in the [Validation page](/react-date-pickers/validation/)
+You can find the documentation in the [Validation page](/x/react-date-pickers/validation/)
 
 ## Localization
 

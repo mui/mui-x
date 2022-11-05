@@ -41,10 +41,10 @@ const fiFIPickers: Partial<PickersLocaleText<any>> = {
   todayButtonLabel: 'Tänään',
 
   // Toolbar titles
-  datePickerDefaultToolbarTitle: 'Valitse päivä',
-  dateTimePickerDefaultToolbarTitle: 'Valitse päivä ja aika',
-  timePickerDefaultToolbarTitle: 'Valitse aika',
-  dateRangePickerDefaultToolbarTitle: 'Valitse aikaväli',
+  datePickerToolbarTitle: 'Valitse päivä',
+  dateTimePickerToolbarTitle: 'Valitse päivä ja aika',
+  timePickerToolbarTitle: 'Valitse aika',
+  dateRangePickerToolbarTitle: 'Valitse aikaväli',
 
   // Clock labels
   clockLabelText: (view, time, adapter) =>

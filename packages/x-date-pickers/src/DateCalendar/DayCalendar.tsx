@@ -3,7 +3,7 @@ import Typography from '@mui/material/Typography';
 import { SlotComponentProps } from '@mui/base';
 import { useSlotProps } from '@mui/base/utils';
 import { styled, useTheme, useThemeProps } from '@mui/material/styles';
-import { unstable_composeClasses as composeClasses } from '@mui/material';
+import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import clsx from 'clsx';
 import { PickersDay, PickersDayProps } from '../PickersDay/PickersDay';
 import { useUtils, useNow } from '../internals/hooks/useUtils';
@@ -173,7 +173,7 @@ const PickersCalendarWeek = styled('div', {
   justifyContent: 'center',
 });
 
-const WrappedDay = <TDate extends unknown>({
+function WrappedDay<TDate extends unknown>({
   parentProps,
   day,
   focusableDay,
@@ -191,7 +191,7 @@ const WrappedDay = <TDate extends unknown>({
   selectedDays: TDate[];
   isDateDisabled: (date: TDate | null) => boolean;
   currentMonthNumber: number;
-}) => {
+}) {
   const utils = useUtils<TDate>();
   const now = useNow<TDate>();
 
@@ -241,7 +241,7 @@ const WrappedDay = <TDate extends unknown>({
       aria-current={isToday ? 'date' : undefined}
     />
   );
-};
+}
 
 /**
  * @ignore - do not document.

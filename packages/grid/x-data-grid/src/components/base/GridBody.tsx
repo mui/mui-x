@@ -1,12 +1,12 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
+import { useGridPrivateApiContext } from '../../hooks/utils/useGridPrivateApiContext';
 import { ElementSize } from '../../models/elementSize';
 import { GridMainContainer } from '../containers/GridMainContainer';
 import { GridAutoSizer } from '../GridAutoSizer';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { useGridSelector } from '../../hooks/utils/useGridSelector';
-import { gridDensityTotalHeaderHeightSelector } from '../../hooks/features/density/densitySelector';
+import { gridTotalHeaderHeightSelector } from '../../hooks/features/columnGrouping/gridColumnGroupsSelector';
 
 interface GridBodyProps {
   children?: React.ReactNode;
@@ -27,9 +27,9 @@ interface GridBodyProps {
 
 function GridBody(props: GridBodyProps) {
   const { children, VirtualScrollerComponent, ColumnHeadersComponent } = props;
-  const apiRef = useGridApiContext();
+  const apiRef = useGridPrivateApiContext();
   const rootProps = useGridRootProps();
-  const totalHeaderHeight = useGridSelector(apiRef, gridDensityTotalHeaderHeightSelector);
+  const totalHeaderHeight = useGridSelector(apiRef, gridTotalHeaderHeightSelector);
   const [isVirtualizationDisabled, setIsVirtualizationDisabled] = React.useState(
     rootProps.disableVirtualization,
   );

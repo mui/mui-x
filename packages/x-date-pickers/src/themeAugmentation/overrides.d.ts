@@ -46,30 +46,34 @@ export interface PickersComponentNameToClassKey {
   MuiDayCalendarSkeleton: DayCalendarSkeletonClassKey;
   MuiDesktopDatePicker: never;
   MuiDesktopDateTimePicker: never;
+  MuiDesktopNextDatePicker: never;
   MuiDesktopTimePicker: never;
   MuiLocalizationProvider: never;
   MuiMobileDatePicker: never;
   MuiMobileDateTimePicker: never;
+  MuiMobileNextDatePicker: never;
   MuiMobileTimePicker: never;
   MuiMonthCalendar: MonthCalendarClassKey;
+  MuiNextDatePicker: never;
   MuiPickersArrowSwitcher: PickersArrowSwitcherClassKey;
   MuiPickersCalendarHeader: PickersCalendarHeaderClassKey;
   MuiPickersDay: PickersDayClassKey;
   MuiPickersFadeTransitionGroup: PickersFadeTransitionGroupClassKey;
+  MuiPickersMonth: PickersMonthClassKey;
   MuiPickersPopper: PickersPopperClassKey;
+  MuiPickersSlideTransition: PickersSlideTransitionClassKey;
   MuiPickerStaticWrapper: PickerStaticWrapperClassKey;
   MuiPickersToolbar: PickersToolbarClassKey;
   MuiPickersToolbarButton: PickersToolbarButtonClassKey;
+  MuiPickersToolbarText: PickersToolbarTextClassKey;
+  MuiPickersYear: PickersYearClassKey;
   MuiStaticDatePicker: never;
   MuiStaticDateTimePicker: never;
+  MuiStaticNextDatePicker: never;
   MuiStaticTimePicker: never;
   MuiTimePicker: never;
   MuiTimePickerToolbar: TimePickerToolbarClassKey;
   MuiYearCalendar: YearCalendarClassKey;
-  PrivatePickersMonth: PickersMonthClassKey;
-  PrivatePickersSlideTransition: PickersSlideTransitionClassKey;
-  PrivatePickersToolbarText: PickersToolbarTextClassKey;
-  PrivatePickersYear: PickersYearClassKey;
 }
 
 declare module '@mui/material/styles' {

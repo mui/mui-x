@@ -99,7 +99,7 @@ const bgBGGrid: Partial<GridLocaleText> = {
       : `${count.toLocaleString()} избран ред`,
 
   // Total row amount footer text
-  footerTotalRows: 'Общо Rедове:',
+  footerTotalRows: 'Общо Редове:',
 
   // Total visible row amount footer text
   footerTotalVisibleRows: (visibleCount, totalCount) =>

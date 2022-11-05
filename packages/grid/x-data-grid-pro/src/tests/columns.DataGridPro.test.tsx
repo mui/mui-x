@@ -40,14 +40,14 @@ describe('<DataGridPro /> - Columns', () => {
     columns: [{ field: 'brand' }],
   };
 
-  const Test = (props: Partial<DataGridProProps>) => {
+  function Test(props: Partial<DataGridProProps>) {
     apiRef = useGridApiRef();
     return (
       <div style={{ width: 300, height: 300 }}>
         <DataGridPro apiRef={apiRef} {...baselineProps} {...props} />
       </div>
     );
-  };
+  }
 
   describe('showColumnMenu', () => {
     it('should open the column menu', async () => {

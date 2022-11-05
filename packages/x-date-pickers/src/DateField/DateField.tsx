@@ -24,12 +24,12 @@ const DateField = React.forwardRef(function DateField<TDate>(
   const ownerState = themeProps;
 
   const Input = components?.Input ?? TextField;
-  const { inputRef: externalInputRef, ...inputProps } = useSlotProps({
+  const { inputRef: externalInputRef, ...inputProps }: DateFieldProps<TDate> = useSlotProps({
     elementType: Input,
     externalSlotProps: componentsProps?.input,
     externalForwardedProps: other,
     ownerState,
-  }) as Omit<DateFieldProps<TDate>, 'components' | 'componentsProps'>;
+  });
 
   const {
     ref: inputRef,
@@ -79,6 +79,9 @@ DateField.propTypes = {
    * @default false
    */
   disablePast: PropTypes.bool,
+  /**
+   * Format of the date when rendered in the input(s).
+   */
   format: PropTypes.string,
   /**
    * Maximal selectable date. @DateIOType

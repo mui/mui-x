@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { styled, alpha, Theme } from '@mui/material/styles';
-import { unstable_composeClasses as composeClasses } from '@mui/material';
+import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import {
   useGridSelector,
   getDataGridUtilityClass,

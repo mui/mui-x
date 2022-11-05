@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { GridEventListener } from '../../../models/events';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
-import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
+import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridRowApi } from '../../../models/api/gridRowApi';
 import { GridRowId, GridGroupNode, GridLeafNode } from '../../../models/gridRows';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
@@ -41,6 +41,7 @@ export const rowsStateInitializer: GridStateInitializer<
     rows: props.rows,
     getRowId: props.getRowId,
     loading: props.loading,
+    rowCount: props.rowCount,
   });
 
   return {
@@ -56,7 +57,7 @@ export const rowsStateInitializer: GridStateInitializer<
 };
 
 export const useGridRows = (
-  apiRef: React.MutableRefObject<GridApiCommunity>,
+  apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
   props: Pick<
     DataGridProcessedProps,
     | 'rows'
@@ -160,16 +161,18 @@ export const useGridRows = (
   const setRows = React.useCallback<GridRowApi['setRows']>(
     (rows) => {
       logger.debug(`Updating all rows, new length ${rows.length}`);
-      throttledRowsChange({
-        cache: createRowsInternalCache({
-          rows,
-          getRowId: props.getRowId,
-          loading: props.loading,
-        }),
-        throttle: true,
+      const cache = createRowsInternalCache({
+        rows,
+        getRowId: props.getRowId,
+        loading: props.loading,
+        rowCount: props.rowCount,
       });
+      const prevCache = apiRef.current.unstable_caches.rows;
+      cache.rowsBeforePartialUpdates = prevCache.rowsBeforePartialUpdates;
+
+      throttledRowsChange({ cache, throttle: true });
     },
-    [logger, props.getRowId, props.loading, throttledRowsChange],
+    [logger, props.getRowId, props.loading, props.rowCount, throttledRowsChange, apiRef],
   );
 
   const updateRows = React.useCallback<GridRowApi['updateRows']>(
@@ -454,10 +457,19 @@ export const useGridRows = (
         rows: props.rows,
         getRowId: props.getRowId,
         loading: props.loading,
+        rowCount: props.rowCount,
       });
     }
     throttledRowsChange({ cache, throttle: false });
-  }, [logger, apiRef, props.rows, props.getRowId, props.loading, throttledRowsChange]);
+  }, [
+    logger,
+    apiRef,
+    props.rows,
+    props.getRowId,
+    props.loading,
+    props.rowCount,
+    throttledRowsChange,
+  ]);
 
   const handleStrategyProcessorChange = React.useCallback<
     GridEventListener<'activeStrategyProcessorChange'>
@@ -516,7 +528,7 @@ export const useGridRows = (
 
   useGridRegisterPipeApplier(apiRef, 'hydrateRows', applyHydrateRowsProcessor);
 
-  useGridApiMethod(apiRef, rowApi, 'GridRowApi');
+  useGridApiMethod(apiRef, rowApi, 'public');
 
   /**
    * EFFECTS
@@ -541,7 +553,9 @@ export const useGridRows = (
     const areNewRowsAlreadyInState =
       apiRef.current.unstable_caches.rows.rowsBeforePartialUpdates === props.rows;
     const isNewLoadingAlreadyInState =
-      apiRef.current.unstable_caches.rows!.loadingPropBeforePartialUpdates === props.loading;
+      apiRef.current.unstable_caches.rows.loadingPropBeforePartialUpdates === props.loading;
+    const isNewRowCountAlreadyInState =
+      apiRef.current.unstable_caches.rows.rowCountPropBeforePartialUpdates === props.rowCount;
 
     // The new rows have already been applied (most likely in the `'rowGroupsPreProcessingChange'` listener)
     if (areNewRowsAlreadyInState) {
@@ -555,6 +569,19 @@ export const useGridRows = (
         apiRef.current.forceUpdate();
       }
 
+      if (!isNewRowCountAlreadyInState) {
+        apiRef.current.setState((state) => ({
+          ...state,
+          rows: {
+            ...state.rows,
+            totalRowCount: Math.max(props.rowCount || 0, state.rows.totalRowCount),
+            totalTopLevelRowCount: Math.max(props.rowCount || 0, state.rows.totalTopLevelRowCount),
+          },
+        }));
+        apiRef.current.unstable_caches.rows.rowCountPropBeforePartialUpdates = props.rowCount;
+        apiRef.current.forceUpdate();
+      }
+
       return;
     }
 
@@ -564,6 +591,7 @@ export const useGridRows = (
         rows: props.rows,
         getRowId: props.getRowId,
         loading: props.loading,
+        rowCount: props.rowCount,
       }),
       throttle: false,
     });

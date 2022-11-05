@@ -29,7 +29,7 @@ describe('<DataGridPro /> - Detail panel', () => {
 
   let apiRef: React.MutableRefObject<GridApi>;
 
-  const TestCase = ({ nbRows = 20, ...other }: Partial<DataGridProProps> & { nbRows?: number }) => {
+  function TestCase({ nbRows = 20, ...other }: Partial<DataGridProProps> & { nbRows?: number }) {
     apiRef = useGridApiRef();
     const data = useBasicDemoData(nbRows, 1);
     return (
@@ -37,7 +37,7 @@ describe('<DataGridPro /> - Detail panel', () => {
         <DataGridPro {...data} apiRef={apiRef} {...other} />
       </div>
     );
-  };
+  }
 
   it('should add a bottom margin to the expanded row', function test() {
     if (isJSDOM) {
@@ -456,18 +456,18 @@ describe('<DataGridPro /> - Detail panel', () => {
   });
 
   it('should not select the row when opening the detail panel', () => {
-    const handleSelectionModelChange = spy();
+    const handleRowSelectionModelChange = spy();
     render(
       <TestCase
         getDetailPanelContent={() => <div>Detail</div>}
-        onSelectionModelChange={handleSelectionModelChange}
+        onRowSelectionModelChange={handleRowSelectionModelChange}
         checkboxSelection
       />,
     );
     expect(screen.queryByText('Detail')).to.equal(null);
     const cell = getCell(1, 0);
     userEvent.mousePress(cell);
-    expect(handleSelectionModelChange.callCount).to.equal(0);
+    expect(handleRowSelectionModelChange.callCount).to.equal(0);
   });
 
   // See https://github.com/mui/mui-x/issues/4607

@@ -6,11 +6,13 @@ import Grid from '@mui/material/Grid';
 import Link from '@mui/material/Link';
 import Typography from '@mui/material/Typography';
 
-const CorrectRenderLink = (props) => (
-  <Link tabIndex={props.tabIndex} href="/#tab-sequence">
-    more info
-  </Link>
-);
+function CorrectRenderLink(props) {
+  return (
+    <Link tabIndex={props.tabIndex} href="/#tab-sequence">
+      more info
+    </Link>
+  );
+}
 
 CorrectRenderLink.propTypes = {
   /**
@@ -19,7 +21,9 @@ CorrectRenderLink.propTypes = {
   tabIndex: PropTypes.oneOf([-1, 0]).isRequired,
 };
 
-const WrongRenderLink = () => <Link href="/#tab-sequence">more info</Link>;
+function WrongRenderLink() {
+  return <Link href="/#tab-sequence">more info</Link>;
+}
 
 const correctColumns = [
   { field: 'link', renderCell: CorrectRenderLink, width: 200 },

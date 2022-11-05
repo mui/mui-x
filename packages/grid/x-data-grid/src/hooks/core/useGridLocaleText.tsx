@@ -1,11 +1,11 @@
 import * as React from 'react';
-import { GridApiCommunity } from '../../models/api/gridApiCommunity';
+import { GridPrivateApiCommon } from '../../models/api/gridApiCommon';
 import { GridLocaleTextApi } from '../../models/api/gridLocaleTextApi';
 import { useGridApiMethod } from '../utils/useGridApiMethod';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 
 export const useGridLocaleText = (
-  apiRef: React.MutableRefObject<GridApiCommunity>,
+  apiRef: React.MutableRefObject<GridPrivateApiCommon>,
   props: Pick<DataGridProcessedProps, 'localeText'>,
 ): void => {
   const getLocaleText = React.useCallback<GridLocaleTextApi['getLocaleText']>(
@@ -22,5 +22,5 @@ export const useGridLocaleText = (
     getLocaleText,
   };
 
-  useGridApiMethod(apiRef, localeTextApi, 'LocaleTextApi');
+  useGridApiMethod(apiRef, localeTextApi, 'public');
 };

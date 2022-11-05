@@ -4,6 +4,7 @@ import { expect } from 'chai';
 import TextField from '@mui/material/TextField';
 import { describeConformance, screen, userEvent, fireEvent } from '@mui/monorepo/test/utils';
 import { MobileDateRangePicker } from '@mui/x-date-pickers-pro/MobileDateRangePicker';
+import describeValidation from '@mui/x-date-pickers-pro/tests/describeValidation';
 import {
   wrapPickerMount,
   createPickerRenderer,
@@ -24,7 +25,7 @@ const WrappedMobileDateRangePicker = withPickerControls(MobileDateRangePicker)({
 });
 
 describe('<MobileDateRangePicker />', () => {
-  const { render } = createPickerRenderer({ clock: 'fake' });
+  const { render, clock } = createPickerRenderer({ clock: 'fake' });
 
   describeConformance(
     <MobileDateRangePicker
@@ -50,6 +51,13 @@ describe('<MobileDateRangePicker />', () => {
       ],
     }),
   );
+
+  describeValidation(MobileDateRangePicker, () => ({
+    render,
+    clock,
+    isLegacyPicker: true,
+    withDate: true,
+  }));
 
   describe('picker state', () => {
     it('should open when focusing the start input', () => {
@@ -295,33 +303,21 @@ describe('<MobileDateRangePicker />', () => {
       expect(onClose.callCount).to.equal(1);
     });
 
-    it('should allow `shouldDisableDate` to depends on start or end date', () => {
-      render(
-        <WrappedMobileDateRangePicker
-          initialValue={[
-            adapterToUse.date(new Date(2018, 0, 12)),
-            adapterToUse.date(new Date(2018, 0, 10)),
-          ]}
-          shouldDisableDate={(date, position) => {
-            if (position === 'start') {
-              return adapterToUse.isAfter(date as any, adapterToUse.date(new Date(2018, 0, 15)));
-            }
-            return adapterToUse.isBefore(date as any, adapterToUse.date(new Date(2018, 0, 15)));
-          }}
-        />,
-      );
+    it('should correctly set focused styles when input is focused', () => {
+      render(<WrappedMobileDateRangePicker initialValue={[null, null]} />);
 
-      openPicker({ type: 'date-range', variant: 'mobile', initialFocus: 'start' });
+      const firstInput = screen.getAllByRole('textbox')[0];
+      fireEvent.focus(firstInput);
 
-      const firstPicker = screen.getByText('5');
-      const secondPicker = screen.getByText('25');
+      expect(screen.getByText('Start', { selector: 'label' })).to.have.class('Mui-focused');
+    });
 
-      expect(firstPicker).not.to.have.attribute('disabled');
-      expect(secondPicker).to.have.attribute('disabled');
-      fireEvent.click(firstPicker);
+    it('should render "readonly" input elements', () => {
+      render(<WrappedMobileDateRangePicker initialValue={[null, null]} />);
 
-      expect(firstPicker).to.have.attribute('disabled');
-      expect(secondPicker).not.to.have.attribute('disabled');
+      screen.getAllByRole('textbox').forEach((input) => {
+        expect(input).to.have.attribute('readonly');
+      });
     });
   });
 

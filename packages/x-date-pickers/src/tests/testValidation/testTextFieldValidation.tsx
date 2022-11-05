@@ -26,7 +26,7 @@ function testTextFieldValidation(ElementToTest, propsToTest, getOptions) {
             {...defaultProps}
             value={adapterToUse.date(new Date(2018, 2, 12))}
             shouldDisableDate={(date) =>
-              adapterToUse.isAfter(date as any, adapterToUse.date(new Date(2018, 2, 10)))
+              adapterToUse.isAfter(date, adapterToUse.date(new Date(2018, 2, 10)))
             }
           />,
         );
@@ -101,10 +101,10 @@ function testTextFieldValidation(ElementToTest, propsToTest, getOptions) {
         }
 
         let now;
-        const WithFakeTimer = (props) => {
+        function WithFakeTimer(props) {
           now = adapterToUse.date(new Date());
           return <ElementToTest value={now} {...props} />;
-        };
+        }
 
         const { setProps } = render(<WithFakeTimer {...defaultProps} disablePast />);
 
@@ -129,10 +129,10 @@ function testTextFieldValidation(ElementToTest, propsToTest, getOptions) {
         }
 
         let now;
-        const WithFakeTimer = (props) => {
+        function WithFakeTimer(props) {
           now = adapterToUse.date(new Date());
           return <ElementToTest value={now} {...props} />;
-        };
+        }
 
         const { setProps } = render(<WithFakeTimer {...defaultProps} disableFuture />);
 
@@ -196,6 +196,10 @@ function testTextFieldValidation(ElementToTest, propsToTest, getOptions) {
       it('should apply minTime', function test() {
         const { render, withTime } = getOptions();
 
+        if (!isLegacyPicker && !withTime) {
+          return;
+        }
+
         const { setProps } = render(
           <ElementToTest
             {...defaultProps}
@@ -216,6 +220,10 @@ function testTextFieldValidation(ElementToTest, propsToTest, getOptions) {
     if (propsToTest.includes('maxTime')) {
       it('should apply maxTime', function test() {
         const { render, withTime } = getOptions();
+
+        if (!isLegacyPicker && !withTime) {
+          return;
+        }
 
         const { setProps } = render(
           <ElementToTest

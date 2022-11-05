@@ -19,7 +19,7 @@ Most breaking changes are renaming of CSS classes or variables to improve the co
 Using MUI Core v4 with v5 can be achieved with the following steps:
 
 1. First, make sure you have MUI Core v5 installed. If not, install it with these [instructions](/material-ui/getting-started/installation/).
-1. Add a custom [`createGenerateClassName`](/system/styles/api/#heading-creategenerateclassname-options-class-name-generator) to disable the generation of global class names in JSS.
+1. Add a custom [`createGenerateClassName`](/system/styles/api/#creategenerateclassname-options-class-name-generator) to disable the generation of global class names in JSS.
 
 ```jsx
 import { createGenerateClassName } from '@material-ui/core/styles';
@@ -300,7 +300,7 @@ To use the v5 version of MUI X, you first need to update to the new package name
 
   ```diff
   -visibleSortedGridRowsSelector: (state: GridState) => Map<GridRowId, GridRowModel>;
-  +gridVisibleSortedRowEntriesSelector: (state: GridState) => GridRowEntry[]
+  +gridVisibleSortedRowEntriesSelector: (state: GridState) => GridRowEntry[];
   ```
 
   If you need the old format, you can convert the selector return value as follows:
@@ -316,14 +316,14 @@ To use the v5 version of MUI X, you first need to update to the new package name
 
   ```diff
   -visibleSortedGridRowsAsArraySelector: (state: GridState) => [GridRowId, GridRowData][];
-  +gridVisibleSortedRowEntriesSelector: (state: GridState) => GridRowEntry[]
+  +gridVisibleSortedRowEntriesSelector: (state: GridState) => GridRowEntry[];
   ```
 
   If you need the old format, you can convert the selector return value as follows:
 
   ```diff
   -const rows = visibleSortedGridRowsAsArraySelector(state);
-  +const rows = gridVisibleSortedRowEntriesSelector(state).map(row => [row.id, row.model])
+  +const rows = gridVisibleSortedRowEntriesSelector(state).map(row => [row.id, row.model]);
   ```
 
 ### `apiRef` methods
@@ -356,7 +356,7 @@ To use the v5 version of MUI X, you first need to update to the new package name
   -export type GridValueFormatterParams = Omit<GridRenderCellParams, 'formattedValue' | 'isEditable'>;
   +export interface GridValueFormatterParams {
   +  /**
-  +   * The column field of the cell that triggered the event
+  +   * The column field of the cell that triggered the event.
   +   */
   +  field: string;
   +  /**
@@ -377,26 +377,26 @@ To use the v5 version of MUI X, you first need to update to the new package name
 - The individual string constants have been removed in favor of a single `gridClasses` object
 
   ```diff
-  -const columnHeaderClass = GRID_COLUMN_HEADER_CSS_CLASS
-  +const columnHeaderClass = gridClasses.columnHeader
+  -const columnHeaderClass = GRID_COLUMN_HEADER_CSS_CLASS;
+  +const columnHeaderClass = gridClasses.columnHeader;
 
-  -const rowClass = GRID_ROW_CSS_CLASS
-  +const rowClass = gridClasses.row
+  -const rowClass = GRID_ROW_CSS_CLASS;
+  +const rowClass = gridClasses.row;
 
-  -const cellClass = GRID_CELL_CSS_CLASS
-  +const cellClass = gridClasses.cell
+  -const cellClass = GRID_CELL_CSS_CLASS;
+  +const cellClass = gridClasses.cell;
 
-  -const columnSeparatorClass = GRID_COLUMN_HEADER_SEPARATOR_RESIZABLE_CSS_CLASS
-  +const columnSeparatorClass = gridClasses['columnSeparator--resizable']
+  -const columnSeparatorClass = GRID_COLUMN_HEADER_SEPARATOR_RESIZABLE_CSS_CLASS;
+  +const columnSeparatorClass = gridClasses['columnSeparator--resizable'];
 
-  -const columnHeaderTitleClass = GRID_COLUMN_HEADER_TITLE_CSS_CLASS
-  +const columnHeaderTitleClass = gridClasses.columnHeaderTitle
+  -const columnHeaderTitleClass = GRID_COLUMN_HEADER_TITLE_CSS_CLASS;
+  +const columnHeaderTitleClass = gridClasses.columnHeaderTitle;
 
-  -const columnHeaderDropZoneClass = GRID_COLUMN_HEADER_DROP_ZONE_CSS_CLASS
-  +const columnHeaderDropZoneClass = gridClasses.columnHeaderDropZone
+  -const columnHeaderDropZoneClass = GRID_COLUMN_HEADER_DROP_ZONE_CSS_CLASS;
+  +const columnHeaderDropZoneClass = gridClasses.columnHeaderDropZone;
 
-  -const columnHeaderDraggingClass = GRID_COLUMN_HEADER_DRAGGING_CSS_CLASS
-  +const columnHeaderDraggingClass = gridClasses["columnHeader--dragging"]
+  -const columnHeaderDraggingClass = GRID_COLUMN_HEADER_DRAGGING_CSS_CLASS;
+  +const columnHeaderDraggingClass = gridClasses['columnHeader--dragging'];
   ```
 
 - The constants referring to the column types were removed.

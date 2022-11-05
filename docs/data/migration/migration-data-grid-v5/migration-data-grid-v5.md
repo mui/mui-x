@@ -19,9 +19,29 @@ Since v6 is a major release, it contains some changes that affect the public API
 These changes were done for consistency, improve stability and make room for new features.
 Below are described the steps you need to make to migrate from v5 to v6.
 
-:::info
-The list is currently empty, but as we move forward with development during the alpha and beta phases, we'll feed this page with all changes in the API.
-:::
+### Renamed props
+
+- To avoid confusion with the props that will be added for the cell selection feature, some props related to row selection were renamed to have "row" in their name. The renamed props are the following:
+
+  | Old name                   | New name                      |
+  | -------------------------- | ----------------------------- |
+  | `selectionModel`           | `rowSelectionModel`           |
+  | `onSelectionModelChange`   | `onRowSelectionModelChange`   |
+  | `disableSelectionOnClick`  | `disableRowSelectionOnClick`  |
+  | `disableMultipleSelection` | `disableMultipleRowSelection` |
+
+### State access
+
+- The `gridSelectionStateSelector` selector was renamed to `gridRowSelectionStateSelector`.
+
+### Events
+
+- The `selectionChange` event was renamed to `rowSelectionChange`.
+
+### Removed props
+
+- The `disableIgnoreModificationsIfProcessingProps` prop was removed and its behavior when `true` was incorporated as the default behavior.
+  The old behavior can be restored by using `apiRef.current.stopRowEditMode({ ignoreModifications: true })` or `apiRef.current.stopCellEditMode({ ignoreModifications: true })`.
 
 <!--
 ### CSS classes
@@ -29,14 +49,6 @@ The list is currently empty, but as we move forward with development during the 
 TBD
 
 ### Virtualization
-
-TBD
-
-### Removed props
-
-TBD
-
-### State access
 
 TBD
 

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { ownerDocument } from '@mui/material/utils';
-import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
+import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridPrintExportApi } from '../../../models/api/gridPrintExportApi';
 import { useGridLogger } from '../../utils/useGridLogger';
 import { gridVisibleRowCountSelector } from '../filter/gridFilterSelector';
@@ -11,7 +11,7 @@ import {
   gridColumnDefinitionsSelector,
   gridColumnVisibilityModelSelector,
 } from '../columns/gridColumnsSelector';
-import { gridDensityTotalHeaderHeightSelector } from '../density/densitySelector';
+import { gridTotalHeaderHeightSelector } from '../columnGrouping/gridColumnGroupsSelector';
 import { gridClasses } from '../../../constants/gridClasses';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { gridRowsMetaSelector } from '../rows/gridRowsMetaSelector';
@@ -45,7 +45,7 @@ type PrintWindowOnLoad = (
  * @requires useGridParamsApi (method)
  */
 export const useGridPrintExport = (
-  apiRef: React.MutableRefObject<GridApiCommunity>,
+  apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
   props: Pick<DataGridProcessedProps, 'pagination'>,
 ): void => {
   const logger = useGridLogger(apiRef, 'useGridPrintExport');
@@ -113,7 +113,7 @@ export const useGridPrintExport = (
         return;
       }
 
-      const totalHeaderHeight = gridDensityTotalHeaderHeightSelector(apiRef);
+      const totalHeaderHeight = gridTotalHeaderHeightSelector(apiRef);
       const rowsMeta = gridRowsMetaSelector(apiRef.current.state);
 
       const gridRootElement = apiRef.current.rootElementRef!.current;
@@ -298,7 +298,7 @@ export const useGridPrintExport = (
     exportDataAsPrint,
   };
 
-  useGridApiMethod(apiRef, printExportApi, 'GridPrintExportApi');
+  useGridApiMethod(apiRef, printExportApi, 'public');
 
   /**
    * PRE-PROCESSING

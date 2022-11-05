@@ -56,14 +56,14 @@ describe('<DataGridPro /> - Events Params', () => {
 
   let apiRef: React.MutableRefObject<GridApi>;
 
-  const TestEvents = (props: Partial<DataGridProProps>) => {
+  function TestEvents(props: Partial<DataGridProProps>) {
     apiRef = useGridApiRef();
     return (
       <div style={{ width: 300, height: 300 }}>
         <DataGridPro apiRef={apiRef} {...baselineProps} {...props} disableVirtualization />
       </div>
     );
-  };
+  }
 
   describe('columnHeaderParams', () => {
     it('should include the correct params', () => {
@@ -234,21 +234,26 @@ describe('<DataGridPro /> - Events Params', () => {
     });
 
     it('should select a row by default', () => {
-      const handleSelection = spy();
-      render(<TestEvents onSelectionModelChange={handleSelection} />);
+      const handleRowSelectionModelChange = spy();
+      render(<TestEvents onRowSelectionModelChange={handleRowSelectionModelChange} />);
 
       const cell11 = getCell(1, 1);
       fireEvent.click(cell11);
-      expect(handleSelection.callCount).to.equal(1);
-      expect(handleSelection.lastCall.firstArg).to.deep.equal([2]);
+      expect(handleRowSelectionModelChange.callCount).to.equal(1);
+      expect(handleRowSelectionModelChange.lastCall.firstArg).to.deep.equal([2]);
     });
 
-    it('should not select a row if props.disableSelectionOnClick', () => {
-      const handleSelection = spy();
-      render(<TestEvents onSelectionModelChange={handleSelection} disableSelectionOnClick />);
+    it('should not select a row if props.disableRowSelectionOnClick', () => {
+      const handleRowSelectionModelChange = spy();
+      render(
+        <TestEvents
+          onRowSelectionModelChange={handleRowSelectionModelChange}
+          disableRowSelectionOnClick
+        />,
+      );
       const cell11 = getCell(1, 1);
       fireEvent.click(cell11);
-      expect(handleSelection.callCount).to.equal(0);
+      expect(handleRowSelectionModelChange.callCount).to.equal(0);
     });
   });
 
@@ -363,7 +368,7 @@ describe('<DataGridPro /> - Events Params', () => {
       { id: 5, brand: 'Reebok' },
     ];
     const handleRowsScrollEnd = spy();
-    const TestCase = ({ rows }: { rows: typeof baseRows }) => {
+    function TestCase({ rows }: { rows: typeof baseRows }) {
       return (
         <div style={{ width: 300, height: 300 }}>
           <DataGridPro
@@ -373,7 +378,7 @@ describe('<DataGridPro /> - Events Params', () => {
           />
         </div>
       );
-    };
+    }
     const { container, setProps } = render(<TestCase rows={baseRows} />);
     const virtualScroller = container.querySelector('.MuiDataGrid-virtualScroller');
     // arbitrary number to make sure that the bottom of the grid window is reached.

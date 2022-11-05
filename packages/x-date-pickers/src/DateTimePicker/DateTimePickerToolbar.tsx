@@ -1,27 +1,38 @@
 import * as React from 'react';
-import { styled, useThemeProps } from '@mui/material/styles';
-import { unstable_composeClasses as composeClasses } from '@mui/material';
+import { styled, useThemeProps, useTheme, Theme } from '@mui/material/styles';
+import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { PickersToolbarText } from '../internals/components/PickersToolbarText';
 import { PickersToolbar } from '../internals/components/PickersToolbar';
 import { pickersToolbarClasses } from '../internals/components/pickersToolbarClasses';
 import { PickersToolbarButton } from '../internals/components/PickersToolbarButton';
 import { useLocaleText, useUtils } from '../internals/hooks/useUtils';
-import { BaseToolbarProps } from '../internals/models/props/baseToolbarProps';
+import { BaseToolbarProps, ExportedBaseToolbarProps } from '../internals/models/props/toolbar';
 import {
   DateTimePickerToolbarClasses,
   getDateTimePickerToolbarUtilityClass,
 } from './dateTimePickerToolbarClasses';
+import { CalendarOrClockPickerView } from '../internals/models';
 
-export interface DateTimePickerToolbarProps<TDate> extends BaseToolbarProps<TDate, TDate | null> {
+export interface ExportedDateTimePickerToolbarProps extends ExportedBaseToolbarProps {
+  ampm?: boolean;
+  ampmInClock?: boolean;
+}
+
+export interface DateTimePickerToolbarProps<TDate>
+  extends ExportedDateTimePickerToolbarProps,
+    BaseToolbarProps<TDate | null, CalendarOrClockPickerView> {
+  /**
+   * Override or extend the styles applied to the component.
+   */
   classes?: Partial<DateTimePickerToolbarClasses>;
 }
 
-const useUtilityClasses = (ownerState: DateTimePickerToolbarProps<any>) => {
-  const { classes } = ownerState;
+const useUtilityClasses = (ownerState: DateTimePickerToolbarProps<any> & { theme: Theme }) => {
+  const { classes, theme } = ownerState;
   const slots = {
     root: ['root'],
     dateContainer: ['dateContainer'],
-    timeContainer: ['timeContainer'],
+    timeContainer: ['timeContainer', theme.direction === 'rtl' && 'timeLabelReverse'],
     separator: ['separator'],
   };
 
@@ -57,9 +68,12 @@ const DateTimePickerToolbarTimeContainer = styled('div', {
   name: 'MuiDateTimePickerToolbar',
   slot: 'TimeContainer',
   overridesResolver: (props, styles) => styles.timeContainer,
-})<{ ownerState: DateTimePickerToolbarProps<any> }>({
+})<{ ownerState: DateTimePickerToolbarProps<any> }>(({ theme }) => ({
   display: 'flex',
-});
+  ...(theme.direction === 'rtl' && {
+    flexDirection: 'row-reverse',
+  }),
+}));
 
 const DateTimePickerToolbarSeparator = styled(PickersToolbarText, {
   name: 'MuiDateTimePickerToolbar',
@@ -84,21 +98,19 @@ export function DateTimePickerToolbar<TDate extends unknown>(
     value,
     isMobileKeyboardViewOpen,
     onChange,
-    openView,
-    setOpenView,
+    view,
+    onViewChange,
     toggleMobileKeyboardView,
     toolbarFormat,
     toolbarPlaceholder = '––',
-    toolbarTitle: toolbarTitleProp,
     views,
     ...other
   } = props;
   const ownerState = props;
   const utils = useUtils<TDate>();
+  const theme = useTheme();
   const localeText = useLocaleText();
-  const classes = useUtilityClasses(ownerState);
-
-  const toolbarTitle = toolbarTitleProp ?? localeText.dateTimePickerDefaultToolbarTitle;
+  const classes = useUtilityClasses({ ...ownerState, theme });
 
   const formatHours = (time: TDate) =>
     ampm ? utils.format(time, 'hours12h') : utils.format(time, 'hours24h');
@@ -117,7 +129,7 @@ export function DateTimePickerToolbar<TDate extends unknown>(
 
   return (
     <DateTimePickerToolbarRoot
-      toolbarTitle={toolbarTitle}
+      toolbarTitle={localeText.dateTimePickerToolbarTitle}
       isMobileKeyboardViewOpen={isMobileKeyboardViewOpen}
       toggleMobileKeyboardView={toggleMobileKeyboardView}
       className={classes.root}
@@ -131,8 +143,8 @@ export function DateTimePickerToolbar<TDate extends unknown>(
             tabIndex={-1}
             variant="subtitle1"
             data-mui-test="datetimepicker-toolbar-year"
-            onClick={() => setOpenView('year')}
-            selected={openView === 'year'}
+            onClick={() => onViewChange('year')}
+            selected={view === 'year'}
             value={value ? utils.format(value, 'year') : '–'}
           />
         )}
@@ -141,8 +153,8 @@ export function DateTimePickerToolbar<TDate extends unknown>(
             tabIndex={-1}
             variant="h4"
             data-mui-test="datetimepicker-toolbar-day"
-            onClick={() => setOpenView('day')}
-            selected={openView === 'day'}
+            onClick={() => onViewChange('day')}
+            selected={view === 'day'}
             value={dateText}
           />
         )}
@@ -152,8 +164,8 @@ export function DateTimePickerToolbar<TDate extends unknown>(
           <PickersToolbarButton
             variant="h3"
             data-mui-test="hours"
-            onClick={() => setOpenView('hours')}
-            selected={openView === 'hours'}
+            onClick={() => onViewChange('hours')}
+            selected={view === 'hours'}
             value={value ? formatHours(value) : '--'}
           />
         )}
@@ -168,8 +180,8 @@ export function DateTimePickerToolbar<TDate extends unknown>(
             <PickersToolbarButton
               variant="h3"
               data-mui-test="minutes"
-              onClick={() => setOpenView('minutes')}
-              selected={openView === 'minutes'}
+              onClick={() => onViewChange('minutes')}
+              selected={view === 'minutes'}
               value={value ? utils.format(value, 'minutes') : '--'}
             />
           </React.Fragment>
@@ -185,8 +197,8 @@ export function DateTimePickerToolbar<TDate extends unknown>(
             <PickersToolbarButton
               variant="h3"
               data-mui-test="seconds"
-              onClick={() => setOpenView('seconds')}
-              selected={openView === 'seconds'}
+              onClick={() => onViewChange('seconds')}
+              selected={view === 'seconds'}
               value={value ? utils.format(value, 'seconds') : '--'}
             />
           </React.Fragment>

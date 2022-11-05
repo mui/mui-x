@@ -55,6 +55,7 @@ export const useField = <
 
   const {
     inputRef: inputRefProp,
+    internalProps,
     internalProps: { readOnly = false },
     forwardedProps: { onClick, onKeyDown, onFocus, onBlur, onMouseUp, ...otherForwardedProps },
     fieldValueManager,
@@ -94,6 +95,10 @@ export const useField = <
     focusTimeoutRef.current = setTimeout(() => {
       // The ref changed, the component got remounted, the focus event is no longer relevant.
       if (input !== inputRef.current) {
+        return;
+      }
+
+      if (selectedSectionIndexes != null) {
         return;
       }
 
@@ -446,7 +451,7 @@ export const useField = <
   });
 
   const validationError = useValidation(
-    { ...params.internalProps, value: state.value },
+    { ...internalProps, value: state.value },
     validator,
     fieldValueManager.isSameError,
   );

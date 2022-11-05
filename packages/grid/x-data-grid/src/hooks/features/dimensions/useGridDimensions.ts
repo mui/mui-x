@@ -6,7 +6,7 @@ import {
 } from '@mui/material/utils';
 import { GridEventListener } from '../../../models/events';
 import { ElementSize } from '../../../models';
-import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
+import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import {
   useGridApiEventHandler,
   useGridApiOptionHandler,
@@ -16,11 +16,12 @@ import { useGridLogger } from '../../utils/useGridLogger';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { GridDimensions, GridDimensionsApi } from './gridDimensionsApi';
 import { gridColumnsTotalWidthSelector } from '../columns';
-import { gridDensityTotalHeaderHeightSelector, gridDensityRowHeightSelector } from '../density';
+import { gridDensityRowHeightSelector } from '../density';
 import { useGridSelector } from '../../utils';
 import { getVisibleRows } from '../../utils/useGridVisibleRows';
 import { gridRowsMetaSelector } from '../rows/gridRowsMetaSelector';
 import { calculatePinnedRowsHeight } from '../rows/gridRowsUtils';
+import { gridTotalHeaderHeightSelector } from '../columnGrouping/gridColumnGroupsSelector';
 
 const isTestEnvironment = process.env.NODE_ENV === 'test';
 
@@ -52,7 +53,7 @@ const hasScroll = ({
 };
 
 export function useGridDimensions(
-  apiRef: React.MutableRefObject<GridApiCommunity>,
+  apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
   props: Pick<
     DataGridProcessedProps,
     'onResize' | 'scrollbarSize' | 'pagination' | 'paginationMode' | 'autoHeight' | 'getRowHeight'
@@ -63,7 +64,7 @@ export function useGridDimensions(
   const rootDimensionsRef = React.useRef<ElementSize | null>(null);
   const fullDimensionsRef = React.useRef<GridDimensions | null>(null);
   const rowsMeta = useGridSelector(apiRef, gridRowsMetaSelector);
-  const totalHeaderHeight = useGridSelector(apiRef, gridDensityTotalHeaderHeightSelector);
+  const totalHeaderHeight = useGridSelector(apiRef, gridTotalHeaderHeightSelector);
 
   const updateGridDimensionsRef = React.useCallback(() => {
     const rootElement = apiRef.current.rootElementRef?.current;
@@ -198,7 +199,7 @@ export function useGridDimensions(
     unstable_updateGridDimensionsRef: updateGridDimensionsRef,
   };
 
-  useGridApiMethod(apiRef, dimensionsApi, 'GridDimensionsApi');
+  useGridApiMethod(apiRef, dimensionsApi, 'public');
 
   const debounceResize = React.useMemo(() => debounce(resize, 60), [resize]);
 

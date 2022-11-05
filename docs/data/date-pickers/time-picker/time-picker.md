@@ -4,10 +4,10 @@ title: React Time Picker component
 components: DesktopTimePicker, MobileTimePicker, StaticTimePicker, TimePicker, ClockPicker
 githubLabel: 'component: TimePicker'
 packageName: '@mui/x-date-pickers'
-materialDesign: https://material.io/components/time-pickers
+materialDesign: https://m2.material.io/components/time-pickers
 ---
 
-# Time picker
+# Time Picker
 
 <p class="description">Time pickers allow the user to select a single time.</p>
 
@@ -47,7 +47,7 @@ The time picker component can be disabled or read-only.
 
 ## Validation
 
-You can find the documentation in the [Validation page](/react-date-pickers/validation/)
+You can find the documentation in the [Validation page](/x/react-date-pickers/validation/)
 
 ## Landscape
 

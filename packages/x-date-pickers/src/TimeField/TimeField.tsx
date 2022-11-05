@@ -24,12 +24,12 @@ const TimeField = React.forwardRef(function TimeField<TDate>(
   const ownerState = themeProps;
 
   const Input = components?.Input ?? TextField;
-  const { inputRef: externalInputRef, ...inputProps } = useSlotProps({
+  const { inputRef: externalInputRef, ...inputProps }: TimeFieldProps<TDate> = useSlotProps({
     elementType: Input,
     externalSlotProps: componentsProps?.input,
     externalForwardedProps: other,
     ownerState,
-  }) as Omit<TimeFieldProps<TDate>, 'components' | 'componentsProps'>;
+  });
 
   const {
     ref: inputRef,
@@ -89,6 +89,9 @@ TimeField.propTypes = {
    * @default false
    */
   disablePast: PropTypes.bool,
+  /**
+   * Format of the date when rendered in the input(s).
+   */
   format: PropTypes.string,
   /**
    * Max time acceptable time.

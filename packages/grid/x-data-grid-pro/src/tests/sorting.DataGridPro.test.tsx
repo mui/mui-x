@@ -42,7 +42,7 @@ describe('<DataGridPro /> - Sorting', () => {
 
   let apiRef: React.MutableRefObject<GridApi>;
 
-  const TestCase = (props: Partial<DataGridProProps>) => {
+  function TestCase(props: Partial<DataGridProProps>) {
     const { rows, ...other } = props;
     apiRef = useGridApiRef();
     return (
@@ -55,7 +55,7 @@ describe('<DataGridPro /> - Sorting', () => {
         />
       </div>
     );
-  };
+  }
 
   const renderBrandSortedAsc = () => {
     const sortModel: GridSortModel = [{ field: 'brand', sort: 'asc' }];
@@ -240,7 +240,7 @@ describe('<DataGridPro /> - Sorting', () => {
 
     it('should control sort state when the model and the onChange are set', () => {
       let expectedModel: GridSortModel = [];
-      const ControlCase = (props: Partial<DataGridProProps>) => {
+      function ControlCase(props: Partial<DataGridProProps>) {
         const { rows, columns, ...others } = props;
         const [caseSortModel, setSortModel] = React.useState<GridSortModel>([]);
         const handleSortChange: DataGridProProps['onSortModelChange'] = (newModel) => {
@@ -260,7 +260,7 @@ describe('<DataGridPro /> - Sorting', () => {
             />
           </div>
         );
-      };
+      }
 
       render(<ControlCase />);
       fireEvent.click(getColumnHeaderCell(0));
@@ -271,17 +271,19 @@ describe('<DataGridPro /> - Sorting', () => {
     it('should not call onSortModelChange on initialization or on sortModel prop change', () => {
       const onSortModelChange = spy();
 
-      const Test = (props: Partial<DataGridProProps>) => (
-        <div style={{ width: 300, height: 300 }}>
-          <DataGridPro
-            autoHeight={isJSDOM}
-            columns={baselineProps.columns}
-            rows={baselineProps.rows}
-            onSortModelChange={onSortModelChange}
-            {...props}
-          />
-        </div>
-      );
+      function Test(props: Partial<DataGridProProps>) {
+        return (
+          <div style={{ width: 300, height: 300 }}>
+            <DataGridPro
+              autoHeight={isJSDOM}
+              columns={baselineProps.columns}
+              rows={baselineProps.rows}
+              onSortModelChange={onSortModelChange}
+              {...props}
+            />
+          </div>
+        );
+      }
 
       const { setProps } = render(
         <Test

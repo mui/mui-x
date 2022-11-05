@@ -43,10 +43,10 @@ function testMonthViewValidation(ElementToTest, propsToTest, getOptions) {
         const { render, clock } = getOptions();
 
         let now;
-        const WithFakeTimer = (props) => {
+        function WithFakeTimer(props) {
           now = adapterToUse.date(new Date());
           return <ElementToTest value={now} {...props} />;
-        };
+        }
         const { setProps } = render(<WithFakeTimer {...defaultProps} disablePast />);
 
         const nextMonth = adapterToUse.addMonths(now, 1);
@@ -81,10 +81,10 @@ function testMonthViewValidation(ElementToTest, propsToTest, getOptions) {
         const { render, clock } = getOptions();
 
         let now;
-        const WithFakeTimer = (props) => {
+        function WithFakeTimer(props) {
           now = adapterToUse.date(new Date());
           return <ElementToTest value={now} {...props} />;
-        };
+        }
         const { setProps } = render(<WithFakeTimer {...defaultProps} disableFuture />);
 
         const nextMonth = adapterToUse.addMonths(now, 1);
