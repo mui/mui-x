@@ -260,7 +260,7 @@ export const useGridRowGrouping = (
   >(() => {
     const sanitizedRowGroupingModel = gridRowGroupingSanitizedModelSelector(apiRef);
     const rulesOnLastRowTreeCreation =
-      apiRef.current.unstable_caches.rowGrouping.rulesOnLastRowTreeCreation;
+      apiRef.current.unstable_caches.rowGrouping.rulesOnLastRowTreeCreation || [];
 
     const groupingRules = getGroupingRules({
       sanitizedRowGroupingModel,
