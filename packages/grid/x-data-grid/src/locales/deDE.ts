@@ -128,6 +128,8 @@ const deDEGrid: Partial<GridLocaleText> = {
   // Column pinning text
   pinToLeft: 'Links anheften',
   pinToRight: 'Rechts anheften',
+  // pinToLeftDefault: 'Left',
+  // pinToRightDefault: 'Right',
   unpin: 'Loslösen',
 
   // Tree Data

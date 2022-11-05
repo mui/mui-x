@@ -128,6 +128,8 @@ const nlNLGrid: Partial<GridLocaleText> = {
   // Column pinning text
   pinToLeft: 'Links vastzetten',
   pinToRight: 'Rechts vastzetten',
+  // pinToLeftDefault: 'Left',
+  // pinToRightDefault: 'Right',
   unpin: 'Losmaken',
 
   // Tree Data

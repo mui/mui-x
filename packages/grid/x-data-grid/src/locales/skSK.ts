@@ -160,6 +160,8 @@ const skSKGrid: Partial<GridLocaleText> = {
   // Column pinning text
   pinToLeft: 'Pripnúť na ľavo',
   pinToRight: 'Pripnúť na pravo',
+  // pinToLeftDefault: 'Left',
+  // pinToRightDefault: 'Right',
   unpin: 'Odopnúť',
 
   // Tree Data

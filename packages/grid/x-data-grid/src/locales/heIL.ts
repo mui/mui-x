@@ -126,6 +126,8 @@ const heILGrid: Partial<GridLocaleText> = {
   // Column pinning text
   pinToLeft: 'נעץ משמאל',
   pinToRight: 'נעץ מימין',
+  // pinToLeftDefault: 'Left',
+  // pinToRightDefault: 'Right',
   unpin: 'בטל נעיצה',
 
   // Tree Data

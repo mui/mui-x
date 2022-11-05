@@ -124,6 +124,8 @@ const zhCNGrid: Partial<GridLocaleText> = {
   // Column pinning text
   pinToLeft: '固定到左侧',
   pinToRight: '固定到右侧',
+  // pinToLeftDefault: 'Left',
+  // pinToRightDefault: 'Right',
   unpin: '取消固定',
 
   // Tree Data

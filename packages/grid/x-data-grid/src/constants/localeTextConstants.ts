@@ -123,8 +123,8 @@ export const GRID_DEFAULT_LOCALE_TEXT: GridLocaleText = {
 
   // Column pinning text
   pinToLeft: 'Pin to left',
-  pinToLeftDefault: 'Left',
   pinToRight: 'Pin to right',
+  pinToLeftDefault: 'Left',
   pinToRightDefault: 'Right',
   unpin: 'Unpin',
 

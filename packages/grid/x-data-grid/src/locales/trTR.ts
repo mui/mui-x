@@ -123,6 +123,8 @@ const trTRGrid: Partial<GridLocaleText> = {
   // Column pinning text
   pinToLeft: 'Sola sabitle',
   pinToRight: 'Sağa sabitle',
+  // pinToLeftDefault: 'Left',
+  // pinToRightDefault: 'Right',
   unpin: 'Sabitlemeyi kaldır',
 
   // Tree Data

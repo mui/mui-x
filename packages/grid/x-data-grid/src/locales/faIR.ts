@@ -128,6 +128,8 @@ const faIRGrid: Partial<GridLocaleText> = {
   // Column pinning text
   pinToLeft: 'سنجاق کردن به چپ',
   pinToRight: 'سنجاق کردن به راست',
+  // pinToLeftDefault: 'Left',
+  // pinToRightDefault: 'Right',
   unpin: 'برداشتن سنجاق',
 
   // Tree Data

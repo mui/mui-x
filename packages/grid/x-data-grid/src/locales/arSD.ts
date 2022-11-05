@@ -126,6 +126,8 @@ const arSDGrid: Partial<GridLocaleText> = {
   // Column pinning text
   pinToLeft: 'التدبيس يميناً',
   pinToRight: 'التدبيس يساراً',
+  // pinToLeftDefault: 'Left',
+  // pinToRightDefault: 'Right',
   unpin: 'الغاء التدبيس',
 
   // Tree Data

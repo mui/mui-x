@@ -128,6 +128,8 @@ const fiFIGrid: Partial<GridLocaleText> = {
   // Column pinning text
   pinToLeft: 'Kiinnitä vasemmalle',
   pinToRight: 'Kiinnitä oikealle',
+  // pinToLeftDefault: 'Left',
+  // pinToRightDefault: 'Right',
   unpin: 'Irrota kiinnitys',
 
   // Tree Data

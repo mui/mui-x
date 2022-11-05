@@ -128,6 +128,8 @@ const ptBRGrid: Partial<GridLocaleText> = {
   // Column pinning text
   pinToLeft: 'Fixar à esquerda',
   pinToRight: 'Fixar à direita',
+  // pinToLeftDefault: 'Left',
+  // pinToRightDefault: 'Right',
   unpin: 'Desafixar',
 
   // Tree Data

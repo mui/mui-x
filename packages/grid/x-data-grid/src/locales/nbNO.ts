@@ -126,6 +126,8 @@ const nbNOGrid: Partial<GridLocaleText> = {
   // Column pinning text
   pinToLeft: 'Fest til venstre',
   pinToRight: 'Fest til høyre',
+  // pinToLeftDefault: 'Left',
+  // pinToRightDefault: 'Right',
   unpin: 'Løsne',
 
   // Tree Data

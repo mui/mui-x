@@ -128,6 +128,8 @@ const frFRGrid: Partial<GridLocaleText> = {
   // Column pinning text
   pinToLeft: 'Épingler à gauche',
   pinToRight: 'Épingler à droite',
+  // pinToLeftDefault: 'Left',
+  // pinToRightDefault: 'Right',
   unpin: 'Désépingler',
 
   // Tree Data

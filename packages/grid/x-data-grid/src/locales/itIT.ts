@@ -128,6 +128,8 @@ const itITGrid: Partial<GridLocaleText> = {
   // Column pinning text
   pinToLeft: 'Blocca a sinistra',
   pinToRight: 'Blocca a destra',
+  // pinToLeftDefault: 'Left',
+  // pinToRightDefault: 'Right',
   unpin: 'Sblocca',
 
   // Tree Data

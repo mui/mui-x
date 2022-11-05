@@ -123,6 +123,8 @@ const plPLGrid: Partial<GridLocaleText> = {
   // Column pinning text
   pinToLeft: 'Przypnij do lewej',
   pinToRight: 'Przypnij do prawej',
+  // pinToLeftDefault: 'Left',
+  // pinToRightDefault: 'Right',
   unpin: 'Odepnij',
 
   // Tree Data

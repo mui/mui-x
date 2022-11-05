@@ -160,6 +160,8 @@ const csCZGrid: Partial<GridLocaleText> = {
   // Column pinning text
   pinToLeft: 'Připnout na levo',
   pinToRight: 'Připnout na pravo',
+  // pinToLeftDefault: 'Left',
+  // pinToRightDefault: 'Right',
   unpin: 'Odepnout',
 
   // Tree Data

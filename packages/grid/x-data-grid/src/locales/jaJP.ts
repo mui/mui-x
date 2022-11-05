@@ -123,6 +123,8 @@ const jaJPGrid: Partial<GridLocaleText> = {
   // Column pinning text
   pinToLeft: '左側に固定',
   pinToRight: '右側に固定',
+  // pinToLeftDefault: 'Left',
+  // pinToRightDefault: 'Right',
   unpin: '固定解除',
 
   // Tree Data

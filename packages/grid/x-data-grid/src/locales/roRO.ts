@@ -128,6 +128,8 @@ const roROGrid: Partial<GridLocaleText> = {
   // Column pinning text
   pinToLeft: 'Fixare în stânga',
   pinToRight: 'Fixare în dreapta',
+  // pinToLeftDefault: 'Left',
+  // pinToRightDefault: 'Right',
   unpin: 'Anulare fixare',
 
   // Tree Data

@@ -123,6 +123,8 @@ const huHUGrid: Partial<GridLocaleText> = {
   // Column pinning text
   pinToLeft: 'Rögzítés balra',
   pinToRight: 'Rögzítés jobbra',
+  // pinToLeftDefault: 'Left',
+  // pinToRightDefault: 'Right',
   unpin: 'Rögzítés törlése',
 
   // Tree Data

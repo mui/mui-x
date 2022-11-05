@@ -126,6 +126,8 @@ const bgBGGrid: Partial<GridLocaleText> = {
   // Column pinning text
   pinToLeft: 'Закачи в ляво',
   pinToRight: 'Закачи в дясно',
+  // pinToLeftDefault: 'Left',
+  // pinToRightDefault: 'Right',
   unpin: 'Откачи',
 
   // Tree Data

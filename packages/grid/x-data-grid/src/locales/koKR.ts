@@ -123,6 +123,8 @@ const koKRGrid: Partial<GridLocaleText> = {
   // Column pinning text
   pinToLeft: '왼쪽에 고정',
   pinToRight: '오른쪽에 고정',
+  // pinToLeftDefault: 'Left',
+  // pinToRightDefault: 'Right',
   unpin: '고정 해제',
 
   // Tree Data

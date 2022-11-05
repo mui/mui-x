@@ -123,6 +123,8 @@ const zhTWGrid: Partial<GridLocaleText> = {
   // Column pinning text
   pinToLeft: '釘選在左側',
   pinToRight: '釘選在右側',
+  // pinToLeftDefault: 'Left',
+  // pinToRightDefault: 'Right',
   unpin: '取消釘選',
 
   // Tree Data

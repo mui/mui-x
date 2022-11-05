@@ -157,6 +157,8 @@ const ukUAGrid: Partial<GridLocaleText> = {
   // Column pinning text
   pinToLeft: 'Закріпити ліворуч',
   pinToRight: 'Закріпити праворуч',
+  // pinToLeftDefault: 'Left',
+  // pinToRightDefault: 'Right',
   unpin: 'Відкріпити',
 
   // Tree Data

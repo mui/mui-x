@@ -156,6 +156,8 @@ const ruRUGrid: Partial<GridLocaleText> = {
   // Column pinning text
   pinToLeft: 'Закрепить слева',
   pinToRight: 'Закрепить справа',
+  // pinToLeftDefault: 'Left',
+  // pinToRightDefault: 'Right',
   unpin: 'Открепить',
 
   // Tree Data

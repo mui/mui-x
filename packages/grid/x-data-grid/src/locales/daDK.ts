@@ -126,6 +126,8 @@ const daDKGrid: Partial<GridLocaleText> = {
   // Column pinning text
   pinToLeft: 'Fastgør til venstre',
   pinToRight: 'Fastgør til højre',
+  // pinToLeftDefault: 'Left',
+  // pinToRightDefault: 'Right',
   unpin: 'Frigiv',
 
   // Tree Data

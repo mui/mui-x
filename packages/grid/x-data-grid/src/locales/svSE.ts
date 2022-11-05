@@ -128,6 +128,8 @@ const svSEGrid: Partial<GridLocaleText> = {
   // Column pinning text
   pinToLeft: 'Fäst till vänster',
   pinToRight: 'Fäst till höger',
+  // pinToLeftDefault: 'Left',
+  // pinToRightDefault: 'Right',
   unpin: 'Ta bort fäste',
 
   // Tree Data

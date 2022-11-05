@@ -126,6 +126,8 @@ const viVNGrid: Partial<GridLocaleText> = {
   // Column pinning text
   pinToLeft: 'Ghim cột bên trái',
   pinToRight: 'Ghim cột bên phải',
+  // pinToLeftDefault: 'Left',
+  // pinToRightDefault: 'Right',
   unpin: 'Bỏ ghim',
 
   // Tree Data

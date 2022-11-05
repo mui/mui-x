@@ -128,6 +128,8 @@ const esESGrid: Partial<GridLocaleText> = {
   // Column pinning text
   // pinToLeft: 'Pin to left',
   // pinToRight: 'Pin to right',
+  // pinToLeftDefault: 'Left',
+  // pinToRightDefault: 'Right',
   // unpin: 'Unpin',
 
   // Tree Data
