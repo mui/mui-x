@@ -82,11 +82,15 @@ const ptBRGrid: Partial<GridLocaleText> = {
   // Column menu text
   columnMenuLabel: 'Menu',
   columnMenuShowColumns: 'Exibir colunas',
+  // columnMenuManageColumns: 'Manage columns',
   columnMenuFilter: 'Filtrar',
   columnMenuHideColumn: 'Ocultar',
+  // columnMenuHideColumnDefault: 'Hide column',
   columnMenuUnsort: 'Desfazer ordenação',
   columnMenuSortAsc: 'Ordenar do menor para o maior',
   columnMenuSortDesc: 'Ordenar do maior para o menor',
+  // columnMenuSortDefaultAsc: 'ASC',
+  // columnMenuSortDefaultDesc: 'DESC',
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count) =>

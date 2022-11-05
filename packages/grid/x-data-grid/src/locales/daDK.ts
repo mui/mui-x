@@ -82,11 +82,15 @@ const daDKGrid: Partial<GridLocaleText> = {
   // Column menu text
   columnMenuLabel: 'Menu',
   columnMenuShowColumns: 'Vis Kolonner',
+  // columnMenuManageColumns: 'Manage columns',
   columnMenuFilter: 'Filtre',
   columnMenuHideColumn: 'Skjul',
+  // columnMenuHideColumnDefault: 'Hide column',
   columnMenuUnsort: 'Fjern sortering',
   columnMenuSortAsc: 'Sorter stigende',
   columnMenuSortDesc: 'Sorter faldende',
+  // columnMenuSortDefaultAsc: 'ASC',
+  // columnMenuSortDefaultDesc: 'DESC',
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count) =>

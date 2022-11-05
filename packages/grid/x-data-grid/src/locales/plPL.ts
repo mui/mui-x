@@ -81,11 +81,15 @@ const plPLGrid: Partial<GridLocaleText> = {
   // Column menu text
   columnMenuLabel: 'Menu',
   columnMenuShowColumns: 'Pokaż wszystkie kolumny',
+  // columnMenuManageColumns: 'Manage columns',
   columnMenuFilter: 'Filtr',
   columnMenuHideColumn: 'Ukryj',
+  // columnMenuHideColumnDefault: 'Hide column',
   columnMenuUnsort: 'Anuluj sortowanie',
   columnMenuSortAsc: 'Sortuj rosnąco',
   columnMenuSortDesc: 'Sortuj malejąco',
+  // columnMenuSortDefaultAsc: 'ASC',
+  // columnMenuSortDefaultDesc: 'DESC',
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count) => `Liczba aktywnych filtrów: ${count}`,

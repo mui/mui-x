@@ -82,11 +82,15 @@ const fiFIGrid: Partial<GridLocaleText> = {
   // Column menu text
   columnMenuLabel: 'Valikko',
   columnMenuShowColumns: 'Näytä sarakkeet',
+  // columnMenuManageColumns: 'Manage columns',
   columnMenuFilter: 'Suodata',
   columnMenuHideColumn: 'Piilota',
+  // columnMenuHideColumnDefault: 'Hide column',
   columnMenuUnsort: 'Poista järjestys',
   columnMenuSortAsc: 'Järjestä laskevasti',
   columnMenuSortDesc: 'Järjestä nousevasti',
+  // columnMenuSortDefaultAsc: 'ASC',
+  // columnMenuSortDefaultDesc: 'DESC',
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count) =>

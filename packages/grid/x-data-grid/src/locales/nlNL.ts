@@ -82,11 +82,15 @@ const nlNLGrid: Partial<GridLocaleText> = {
   // Column menu text
   columnMenuLabel: 'Menu',
   columnMenuShowColumns: 'Toon kolommen',
+  // columnMenuManageColumns: 'Manage columns',
   columnMenuFilter: 'Filteren',
   columnMenuHideColumn: 'Verbergen',
+  // columnMenuHideColumnDefault: 'Hide column',
   columnMenuUnsort: 'Annuleer sortering',
   columnMenuSortAsc: 'Oplopend sorteren',
   columnMenuSortDesc: 'Aflopend sorteren',
+  // columnMenuSortDefaultAsc: 'ASC',
+  // columnMenuSortDefaultDesc: 'DESC',
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count) =>

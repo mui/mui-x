@@ -81,11 +81,15 @@ const zhTWGrid: Partial<GridLocaleText> = {
   // Column menu text
   columnMenuLabel: '選單',
   columnMenuShowColumns: '顯示欄位',
+  // columnMenuManageColumns: 'Manage columns',
   columnMenuFilter: '篩選器',
   columnMenuHideColumn: '隱藏',
+  // columnMenuHideColumnDefault: 'Hide column',
   columnMenuUnsort: '預設排序',
   columnMenuSortAsc: '升序',
   columnMenuSortDesc: '降序',
+  // columnMenuSortDefaultAsc: 'ASC',
+  // columnMenuSortDefaultDesc: 'DESC',
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count) => `${count} 個篩選器`,

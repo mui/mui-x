@@ -81,11 +81,15 @@ const bgBGGrid: Partial<GridLocaleText> = {
   // Column menu text
   columnMenuLabel: 'Меню',
   columnMenuShowColumns: 'Покажи колоните',
+  // columnMenuManageColumns: 'Manage columns',
   columnMenuFilter: 'Филтри',
   columnMenuHideColumn: 'Скрий',
+  // columnMenuHideColumnDefault: 'Hide column',
   columnMenuUnsort: 'Отмени сортирането',
   columnMenuSortAsc: 'Сортирай по възходящ ред',
   columnMenuSortDesc: 'Сортирай по низходящ ред',
+  // columnMenuSortDefaultAsc: 'ASC',
+  // columnMenuSortDefaultDesc: 'DESC',
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count) => `${count} активни филтри`,

@@ -81,11 +81,15 @@ const zhCNGrid: Partial<GridLocaleText> = {
   // Column menu text
   columnMenuLabel: '菜单',
   columnMenuShowColumns: '显示',
+  // columnMenuManageColumns: 'Manage columns',
   columnMenuFilter: '筛选器',
   columnMenuHideColumn: '隐藏',
+  // columnMenuHideColumnDefault: 'Hide column',
   columnMenuUnsort: '恢复默认',
   columnMenuSortAsc: '升序',
   columnMenuSortDesc: '降序',
+  // columnMenuSortDefaultAsc: 'ASC',
+  // columnMenuSortDefaultDesc: 'DESC',
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count) =>

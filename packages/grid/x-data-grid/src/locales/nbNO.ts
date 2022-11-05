@@ -82,11 +82,15 @@ const nbNOGrid: Partial<GridLocaleText> = {
   // Column menu text
   columnMenuLabel: 'Meny',
   columnMenuShowColumns: 'Vis kolonner',
+  // columnMenuManageColumns: 'Manage columns',
   columnMenuFilter: 'Filter',
   columnMenuHideColumn: 'Skjul',
+  // columnMenuHideColumnDefault: 'Hide column',
   columnMenuUnsort: 'Usorter',
   columnMenuSortAsc: 'Sorter ØKENDE',
   columnMenuSortDesc: 'Sorter SYNKENDE',
+  // columnMenuSortDefaultAsc: 'ASC',
+  // columnMenuSortDefaultDesc: 'DESC',
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count) =>

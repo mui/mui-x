@@ -81,11 +81,15 @@ const koKRGrid: Partial<GridLocaleText> = {
   // Column menu text
   columnMenuLabel: '메뉴',
   columnMenuShowColumns: '열 표시',
+  // columnMenuManageColumns: 'Manage columns',
   columnMenuFilter: '필터',
   columnMenuHideColumn: '열 숨기기',
+  // columnMenuHideColumnDefault: 'Hide column',
   columnMenuUnsort: '정렬 해제',
   columnMenuSortAsc: '오름차순 정렬',
   columnMenuSortDesc: '내림차순 정렬',
+  // columnMenuSortDefaultAsc: 'ASC',
+  // columnMenuSortDefaultDesc: 'DESC',
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count) => `${count}건의 필터를 적용중`,

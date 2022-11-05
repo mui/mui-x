@@ -82,11 +82,15 @@ const itITGrid: Partial<GridLocaleText> = {
   // Column menu text
   columnMenuLabel: 'Menu',
   columnMenuShowColumns: 'Mostra le colonne',
+  // columnMenuManageColumns: 'Manage columns',
   columnMenuFilter: 'Filtra',
   columnMenuHideColumn: 'Nascondi',
+  // columnMenuHideColumnDefault: 'Hide column',
   columnMenuUnsort: "Annulla l'ordinamento",
   columnMenuSortAsc: 'Ordinamento crescente',
   columnMenuSortDesc: 'Ordinamento decrescente',
+  // columnMenuSortDefaultAsc: 'ASC',
+  // columnMenuSortDefaultDesc: 'DESC',
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count) =>

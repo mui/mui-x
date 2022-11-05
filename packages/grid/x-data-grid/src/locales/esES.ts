@@ -82,11 +82,15 @@ const esESGrid: Partial<GridLocaleText> = {
   // Column menu text
   columnMenuLabel: 'Menú',
   columnMenuShowColumns: 'Mostrar columnas',
+  // columnMenuManageColumns: 'Manage columns',
   columnMenuFilter: 'Filtro',
   columnMenuHideColumn: 'Ocultar',
+  // columnMenuHideColumnDefault: 'Hide column',
   columnMenuUnsort: 'Desordenar',
   columnMenuSortAsc: 'Ordenar ASC',
   columnMenuSortDesc: 'Ordenar DESC',
+  columnMenuSortDefaultAsc: 'ASC',
+  columnMenuSortDefaultDesc: 'DESC',
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count) =>

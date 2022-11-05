@@ -82,11 +82,15 @@ const arSDGrid: Partial<GridLocaleText> = {
   // Column menu text
   columnMenuLabel: 'القائمة',
   columnMenuShowColumns: 'إظهار الأعمدة',
+  // columnMenuManageColumns: 'Manage columns',
   columnMenuFilter: 'المرشِح',
   columnMenuHideColumn: 'إخفاء',
+  // columnMenuHideColumnDefault: 'Hide column',
   columnMenuUnsort: 'الغاء الفرز',
   columnMenuSortAsc: 'الفرز تصاعدياً',
   columnMenuSortDesc: 'الفرز تنازلياً',
+  // columnMenuSortDefaultAsc: 'ASC',
+  // columnMenuSortDefaultDesc: 'DESC',
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count) =>

@@ -81,11 +81,15 @@ const trTRGrid: Partial<GridLocaleText> = {
   // Column menu text
   columnMenuLabel: 'Menü',
   columnMenuShowColumns: 'Sütunları göster',
+  // columnMenuManageColumns: 'Manage columns',
   columnMenuFilter: 'Filtre uygula',
   columnMenuHideColumn: 'Gizle',
+  // columnMenuHideColumnDefault: 'Hide column',
   columnMenuUnsort: 'Sıralama',
   columnMenuSortAsc: 'Sırala - Artan',
   columnMenuSortDesc: 'Sırala - Azalan',
+  // columnMenuSortDefaultAsc: 'ASC',
+  // columnMenuSortDefaultDesc: 'DESC',
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count) => `${count} filtre aktif`,

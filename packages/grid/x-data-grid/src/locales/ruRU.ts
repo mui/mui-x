@@ -92,11 +92,15 @@ const ruRUGrid: Partial<GridLocaleText> = {
   // Column menu text
   columnMenuLabel: 'Меню',
   columnMenuShowColumns: 'Показать столбцы',
+  // columnMenuManageColumns: 'Manage columns',
   columnMenuFilter: 'Фильтр',
   columnMenuHideColumn: 'Скрыть',
+  // columnMenuHideColumnDefault: 'Hide column',
   columnMenuUnsort: 'Отменить сортировку',
   columnMenuSortAsc: 'Сортировать по возрастанию',
   columnMenuSortDesc: 'Сортировать по убыванию',
+  // columnMenuSortDefaultAsc: 'ASC',
+  // columnMenuSortDefaultDesc: 'DESC',
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count) => {

@@ -39,10 +39,6 @@ For that purpose you can use `getVisibleColumnMenuItems` and `columnMenuItems`.
 
 **getVisibleColumnMenuItems**: It is available in both `GridColDef` and `componentsProps.columnMenu`, it receives keys of all registered items and should return a _filtered_ and _ordered_ list of keys that are needed to be shown. It can be used either per-column basis by passing in `GridColDef` or for the whole Grid by passing in `componentsProps.columnMenu`. If you have it in both, the preference will be given to the `GridColDef` one.
 
-```tsx
-
-```
-
 **columnMenuItems**: It could be used to override or register new items to the menu. You can simply pass the object with existing or new items and they will be updated/added to the grid.
 
 ### Hide/Show Specific Items:

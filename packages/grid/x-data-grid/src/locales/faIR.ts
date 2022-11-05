@@ -82,11 +82,15 @@ const faIRGrid: Partial<GridLocaleText> = {
   // Column menu text
   columnMenuLabel: 'فهرست',
   columnMenuShowColumns: 'نمایش ستون‌ها',
+  // columnMenuManageColumns: 'Manage columns',
   columnMenuFilter: 'فیلتر',
   columnMenuHideColumn: 'مخفی',
+  // columnMenuHideColumnDefault: 'Hide column',
   columnMenuUnsort: 'نامرتب‌کردن',
   columnMenuSortAsc: 'مرتب‌کردن صعودی',
   columnMenuSortDesc: 'مرتب‌کردن نزولی',
+  // columnMenuSortDefaultAsc: 'ASC',
+  // columnMenuSortDefaultDesc: 'DESC',
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count) =>

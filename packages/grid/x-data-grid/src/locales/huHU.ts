@@ -81,11 +81,15 @@ const huHUGrid: Partial<GridLocaleText> = {
   // Column menu text
   columnMenuLabel: 'Menü',
   columnMenuShowColumns: 'Oszlopok megjelenítése',
+  // columnMenuManageColumns: 'Manage columns',
   columnMenuFilter: 'Szűrők',
   columnMenuHideColumn: 'Elrejtés',
+  // columnMenuHideColumnDefault: 'Hide column',
   columnMenuUnsort: 'Sorrend visszaállítása',
   columnMenuSortAsc: 'Növekvő sorrendbe',
   columnMenuSortDesc: 'Csökkenő sorrendbe',
+  // columnMenuSortDefaultAsc: 'ASC',
+  // columnMenuSortDefaultDesc: 'DESC',
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count) => `${count} aktív szűrő`,

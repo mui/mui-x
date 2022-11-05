@@ -82,11 +82,15 @@ const heILGrid: Partial<GridLocaleText> = {
   // Column menu text
   columnMenuLabel: 'תפריט',
   columnMenuShowColumns: 'הצג עמודות',
+  // columnMenuManageColumns: 'Manage columns',
   columnMenuFilter: 'סנן',
   columnMenuHideColumn: 'הסתר',
+  // columnMenuHideColumnDefault: 'Hide column',
   columnMenuUnsort: 'בטל מיון',
   columnMenuSortAsc: 'מיין בסדר עולה',
   columnMenuSortDesc: 'מיין בסדר יורד',
+  // columnMenuSortDefaultAsc: 'ASC',
+  // columnMenuSortDefaultDesc: 'DESC',
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count) =>

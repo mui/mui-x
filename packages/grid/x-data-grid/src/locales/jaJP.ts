@@ -81,11 +81,15 @@ const jaJPGrid: Partial<GridLocaleText> = {
   // Column menu text
   columnMenuLabel: 'メニュー',
   columnMenuShowColumns: '列表示',
+  // columnMenuManageColumns: 'Manage columns',
   columnMenuFilter: 'フィルター',
   columnMenuHideColumn: '列非表示',
+  // columnMenuHideColumnDefault: 'Hide column',
   columnMenuUnsort: 'ソート解除',
   columnMenuSortAsc: '昇順ソート',
   columnMenuSortDesc: '降順ソート',
+  // columnMenuSortDefaultAsc: 'ASC',
+  // columnMenuSortDefaultDesc: 'DESC',
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count) => `${count}件のフィルターを適用中`,

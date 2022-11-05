@@ -82,11 +82,15 @@ const viVNGrid: Partial<GridLocaleText> = {
   // Column menu text
   columnMenuLabel: 'Danh mục',
   columnMenuShowColumns: 'Danh sách cột',
+  // columnMenuManageColumns: 'Manage columns',
   columnMenuFilter: 'Bộ lọc',
   columnMenuHideColumn: 'Ẩn cột',
+  // columnMenuHideColumnDefault: 'Hide column',
   columnMenuUnsort: 'Bỏ sắp xếp',
   columnMenuSortAsc: 'Sắp xếp tăng dần',
   columnMenuSortDesc: 'Sắp xếp giảm dần',
+  // columnMenuSortDefaultAsc: 'ASC',
+  // columnMenuSortDefaultDesc: 'DESC',
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count) =>

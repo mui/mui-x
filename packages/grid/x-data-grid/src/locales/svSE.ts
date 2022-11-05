@@ -82,11 +82,15 @@ const svSEGrid: Partial<GridLocaleText> = {
   // Column menu text
   columnMenuLabel: 'Meny',
   columnMenuShowColumns: 'Visa kolumner',
+  // columnMenuManageColumns: 'Manage columns',
   columnMenuFilter: 'Filtrera',
   columnMenuHideColumn: 'Dölj',
+  // columnMenuHideColumnDefault: 'Hide column',
   columnMenuUnsort: 'Osortera',
   columnMenuSortAsc: 'Sortera stigande',
   columnMenuSortDesc: 'Sortera fallande',
+  // columnMenuSortDefaultAsc: 'ASC',
+  // columnMenuSortDefaultDesc: 'DESC',
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count) =>

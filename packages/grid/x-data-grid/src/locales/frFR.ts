@@ -82,11 +82,15 @@ const frFRGrid: Partial<GridLocaleText> = {
   // Column menu text
   columnMenuLabel: 'Menu',
   columnMenuShowColumns: 'Afficher les colonnes',
+  // columnMenuManageColumns: 'Manage columns',
   columnMenuFilter: 'Filtrer',
   columnMenuHideColumn: 'Cacher',
+  // columnMenuHideColumnDefault: 'Hide column',
   columnMenuUnsort: 'Annuler le tri',
   columnMenuSortAsc: 'Tri ascendant',
   columnMenuSortDesc: 'Tri descendant',
+  // columnMenuSortDefaultAsc: 'ASC',
+  // columnMenuSortDefaultDesc: 'DESC',
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count) =>

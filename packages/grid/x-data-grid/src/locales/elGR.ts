@@ -81,11 +81,15 @@ const elGRGrid: Partial<GridLocaleText> = {
   // Column menu text
   columnMenuLabel: 'Μενού',
   columnMenuShowColumns: 'Εμφάνιση στηλών',
+  // columnMenuManageColumns: 'Manage columns',
   columnMenuFilter: 'Φίλτρο',
   columnMenuHideColumn: 'Απόκρυψη',
+  // columnMenuHideColumnDefault: 'Hide column',
   columnMenuUnsort: 'Απενεργοποίηση ταξινόμησης',
   columnMenuSortAsc: 'Ταξινόμηση σε αύξουσα σειρά',
   columnMenuSortDesc: 'Ταξινόμηση σε φθίνουσα σειρά',
+  // columnMenuSortDefaultAsc: 'ASC',
+  // columnMenuSortDefaultDesc: 'DESC',
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count) =>

@@ -105,11 +105,15 @@ const ukUAGrid: Partial<GridLocaleText> = {
   // Column menu text
   columnMenuLabel: 'Меню',
   columnMenuShowColumns: 'Показати стовпці',
+  // columnMenuManageColumns: 'Manage columns',
   columnMenuFilter: 'Фільтр',
   columnMenuHideColumn: 'Приховати',
+  // columnMenuHideColumnDefault: 'Hide column',
   columnMenuUnsort: 'Скасувати сортування',
   columnMenuSortAsc: 'Сортувати за зростанням',
   columnMenuSortDesc: 'Сортувати за спаданням',
+  // columnMenuSortDefaultAsc: 'ASC',
+  // columnMenuSortDefaultDesc: 'DESC',
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count) =>

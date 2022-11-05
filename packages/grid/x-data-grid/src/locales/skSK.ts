@@ -91,11 +91,15 @@ const skSKGrid: Partial<GridLocaleText> = {
   // Column menu text
   columnMenuLabel: 'Menu',
   columnMenuShowColumns: 'Zobraziť stĺpce',
+  // columnMenuManageColumns: 'Manage columns',
   columnMenuFilter: 'Filter',
   columnMenuHideColumn: 'Skryť',
+  // columnMenuHideColumnDefault: 'Hide column',
   columnMenuUnsort: 'Zrušiť filtre',
   columnMenuSortAsc: 'Zoradiť vzostupne',
   columnMenuSortDesc: 'Zoradiť zostupne',
+  // columnMenuSortDefaultAsc: 'ASC',
+  // columnMenuSortDefaultDesc: 'DESC',
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count) => {

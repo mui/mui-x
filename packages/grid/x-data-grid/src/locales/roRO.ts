@@ -82,11 +82,15 @@ const roROGrid: Partial<GridLocaleText> = {
   // Column menu text
   columnMenuLabel: 'Meniu',
   columnMenuShowColumns: 'Afișează toate coloanele',
+  // columnMenuManageColumns: 'Manage columns',
   columnMenuFilter: 'Filtru',
   columnMenuHideColumn: 'Ascunde',
+  // columnMenuHideColumnDefault: 'Hide column',
   columnMenuUnsort: 'Dezactivare sortare',
   columnMenuSortAsc: 'Sortează crescător',
   columnMenuSortDesc: 'Sortează descrescător',
+  // columnMenuSortDefaultAsc: 'ASC',
+  // columnMenuSortDefaultDesc: 'DESC',
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count) =>
