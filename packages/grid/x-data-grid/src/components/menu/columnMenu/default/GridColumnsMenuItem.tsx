@@ -36,7 +36,7 @@ const GridColumnsMenuItem = (props: GridColumnMenuItemProps) => {
         onClick={showColumns}
         startIcon={<rootProps.components.ColumnMenuManageColumnsIcon />}
       >
-        {apiRef.current.getLocaleText('columnMenuShowColumns')}
+        {apiRef.current.getLocaleText('columnMenuManageColumns')}
       </Button>
     </StyledStack>
   );

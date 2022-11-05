@@ -36,7 +36,7 @@ export default function FilterColumnMenuGrid() {
   });
   const columns = data.columns;
   // Show only specific items for this column
-  columns[4].getVisibleColumnMenuItems = () => ['closeMenu', 'manageColumns'];
+  columns[4].getVisibleColumnMenuItems = () => ['closeMenu'];
 
   const columnMenuItems = {
     filter: <FilterComponent />, // overriding existing item

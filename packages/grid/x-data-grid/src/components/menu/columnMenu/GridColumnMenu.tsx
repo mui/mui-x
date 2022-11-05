@@ -17,7 +17,7 @@ const GridColumnMenu = (props: GridColumnMenuProps) => {
 
   const preProcessedValue = apiRef.current.unstable_applyPipeProcessors(
     'columnMenu',
-    { items: defaultMenuItems, visibleItems: defaultVisibleItems },
+    { items: defaultMenuItems, visibleItemKeys: defaultVisibleItems },
     currentColumn,
   );
 
