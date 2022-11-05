@@ -54,7 +54,7 @@ export interface DataGridProProps<R extends GridValidRowModel = any>
 
 interface DataGridProPropsWithComplexDefaultValueAfterProcessing
   extends Omit<DataGridPropsWithComplexDefaultValueAfterProcessing, 'components'> {
-  components?: Partial<GridProSlotsComponent>;
+  components: Partial<GridProSlotsComponent>;
 }
 
 /**

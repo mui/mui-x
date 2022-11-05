@@ -25,7 +25,8 @@ const defaultVisibleItems: Array<GridColumnMenuTypes['key']> = [
 
 const GridColumnMenuDefault = React.forwardRef<HTMLDivElement, GridColumnMenuDefaultProps>(
   function GridColumnMenuDefault(props: GridColumnMenuDefaultProps, ref) {
-    // TODO: Fix typing
+    // TODO: Figure out a workaround
+    // @ts-ignore as it's not getting proper types due to overrides from Pro/Premium
     const defaultMenuItems: GridColumnMenuValue['items'] = {
       sorting: <SortGridMenuItems />,
       filter: <GridFilterMenuItem />,

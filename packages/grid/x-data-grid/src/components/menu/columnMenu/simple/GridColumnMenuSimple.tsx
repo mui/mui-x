@@ -36,7 +36,7 @@ const GridColumnMenuSimple = React.forwardRef<HTMLUListElement, Props>(
     return (
       <GridColumnMenuSimpleContainer ref={ref} {...props}>
         <GridColumnMenu
-          // TODO: Fix type issue here
+          // @ts-ignore as it's not getting proper types due to overrides from Pro/Premium
           defaultMenuItems={defaultMenuItems}
           defaultVisibleItems={defaultVisibleItems}
           {...props}

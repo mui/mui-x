@@ -9,7 +9,7 @@ import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 
 declare module '@mui/x-data-grid' {
-  interface GridColumnMenuSlotOverrides {
+  interface GridColumnMenuKeysOverrides {
     closeMenu: true;
   }
 }
