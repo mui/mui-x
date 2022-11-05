@@ -4,7 +4,7 @@ import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import { GridColDef } from '@mui/x-data-grid';
-import { styled } from '@mui/material';
+import { styled } from '@mui/material/styles';
 import { GridPinnedPosition } from '../hooks/features/columnPinning';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
@@ -51,6 +51,9 @@ const GridColumnPinningMenuItems = (props: GridColumnPinningMenuItemsProps) => {
 
   const side = apiRef.current.isColumnPinned(column.field);
 
+  const LeftIcon = rootProps.components?.ColumnMenuPinLeftIcon;
+  const RightIcon = rootProps.components?.ColumnMenuPinRightIcon;
+
   return (
     <StyledStack>
       <Typography color="text.secondary" fontSize="12px">
@@ -61,7 +64,7 @@ const GridColumnPinningMenuItems = (props: GridColumnPinningMenuItemsProps) => {
           onClick={
             side === GridPinnedPosition.left ? unpinColumn : pinColumn(GridPinnedPosition.left)
           }
-          startIcon={<rootProps.components.ColumnMenuPinLeftIcon />}
+          startIcon={LeftIcon ? <LeftIcon /> : null}
           color={side === GridPinnedPosition.left ? 'primary' : 'inherit'}
         >
           {apiRef.current.getLocaleText('pinToLeftDefault')}
@@ -70,7 +73,7 @@ const GridColumnPinningMenuItems = (props: GridColumnPinningMenuItemsProps) => {
           onClick={
             side === GridPinnedPosition.right ? unpinColumn : pinColumn(GridPinnedPosition.right)
           }
-          startIcon={<rootProps.components.ColumnMenuPinRightIcon />}
+          startIcon={RightIcon ? <RightIcon /> : null}
           color={side === GridPinnedPosition.right ? 'primary' : 'inherit'}
         >
           {apiRef.current.getLocaleText('pinToRightDefault')}

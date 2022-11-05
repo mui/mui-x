@@ -28,39 +28,31 @@ You can replace the default column menu with a simplified one using `GridColumnM
 
 ## Customise column menu items
 
-You can also customise column menu based on some conditions. Every item in the menu is assigned a `slot` using which it's possible to:
+You can also customise column menu based on some conditions. Every item in the menu is assigned a `key` which serves as a unique identifier of that item using which it's possible to:
 
 - Hide/Show specific items
-- Override default items (if you want to override one item and not the whole menu)
+- Override default items (if you want to override some items and not the whole menu)
 - Add new items
-- Change display order for items
+- Configure custom display order for items
 
 For that purpose you can use `getVisibleColumnMenuItems` and `columnMenuItems`.
 
-**getVisibleColumnMenuItems**: It is available in both `GridColDef` and `componentsProps.columnMenu`, it receives list of all registered slots and should return a *filtered* and *ordered* list of items that are needed to be shown. It can be used either per-column basis by passing in `GridColDef` or for the whole Grid by passing in `componentsProps.columnMenu`. If you have it in both, the preference will be given to the `GridColDef` one.
+**getVisibleColumnMenuItems**: It is available in both `GridColDef` and `componentsProps.columnMenu`, it receives keys of all registered items and should return a _filtered_ and _ordered_ list of keys that are needed to be shown. It can be used either per-column basis by passing in `GridColDef` or for the whole Grid by passing in `componentsProps.columnMenu`. If you have it in both, the preference will be given to the `GridColDef` one.
+
+```tsx
+
+```
 
 **columnMenuItems**: It could be used to override or register new items to the menu. You can simply pass the object with existing or new items and they will be updated/added to the grid.
 
 ### Hide/Show Specific Items:
 
-For every column menu component there's a default order of items configured by default called `visibleMenuItems`, for default column menu it's:
+For every column menu component there's a default order of items configured by default called `visibleMenuItems`, for default column menu it's: `['sorting', 'divider', 'filter', 'divider', 'hideColumn', 'divider', 'manageColumns']`
+
+Using `getVisibleColumnMenuItems` method, you can override this order based on configured items for the column menu.
 
 ```tsx
-[
-  'sorting',
-  'divider',
-  'filter',
-  'divider',
-  'hideColumn',
-  'divider',
-  'manageColumns',
-];
-```
-
-Using `getVisibleColumnMenuItems` method, you can override this order based on configured slots for the column menu.
-
-```tsx
-const getVisibleColumnMenuItems = () => ['sorting', 'divider', 'filter']; // only show `sort` & `filter`
+const getVisibleColumnMenuItems = () => ['sorting', 'filter']; // only show `sort` & `filter`
 
 return (
   <DataGrid
@@ -79,15 +71,8 @@ Using `componentsProps.columnMenu.columnMenuItems`, you can:
 
 ```tsx
 const columnMenuItems = {
-  filter: {
-    // overiding existing slot
-    component: <MyCustomFilter />, // overriden property
-  },
-  closeMenu: {
-    // adding new slot
-    component: <MenuCloseComponent />,
-    displayName: 'MenuClose',
-  },
+  filter: <MyCustomFilter />, // override existing item
+  closeMenu: <MenuCloseComponent />, // add new item
 };
 
 // add new item in visible items and append it to the last of list
@@ -99,7 +84,7 @@ const getVisibleColumnMenuItems = (defaultItems) => [...defaultItems, 'closeMenu
 />;
 ```
 
-If you're using TypeScript, for new items that you are adding, you'll need to specify new slots you are registering, using [module augmentation](https://www.typescriptlang.org/docs/handbook/declaration-merging.html#module-augmentation).
+If you're using TypeScript, for new items that you are adding, you'll need to specify new items you are registering, using [module augmentation](https://www.typescriptlang.org/docs/handbook/declaration-merging.html#module-augmentation).
 
 ```tsx
 declare module '@mui/x-data-grid' {
@@ -111,7 +96,7 @@ declare module '@mui/x-data-grid' {
 
 ### Default column menu items
 
-Currently available default slots for **x-data-grid** are `filter`, `sorting`, `hideColumn`, `divider` and `manageColumns`, wheras **x-data-grid-pro** adds `pinning` and **x-data-grid-premium** adds `grouping` and `aggregation` on top of them.
+Default slots for **DataGrid** are `filter`, `sorting`, `hideColumn`, `divider` and `manageColumns`, wheras **DataGridPro** adds `pinning` and **DataGridPremium** adds `grouping` and `aggregation` on top of them.
 
 Here's a demo overriding some existing items, adding some new items and displaying different items for a column.
 
@@ -119,7 +104,7 @@ Here's a demo overriding some existing items, adding some new items and displayi
 
 ## Column menu with Pro/Premium options [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)[<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan)
 
-You can also access commercial features like column pinning etc from the column menu when using `DataGridPro` or `DataGridPremium`.
+You can access commercial features like column pinning etc from the column menu when using `DataGridPro` or `DataGridPremium`.
 
 {{"demo": "ColumnMenuGridPro.js", "bg": "inline"}}
 

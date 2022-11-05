@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import Stack from '@mui/material/Stack';
-import { styled } from '@mui/material';
+import { styled } from '@mui/material/styles';
 import { useGridApiContext } from '../../../../hooks/utils/useGridApiContext';
 import { useGridSelector } from '../../../../hooks/utils/useGridSelector';
 import { gridFilterModelSelector } from '../../../../hooks/features/filter/gridFilterSelector';

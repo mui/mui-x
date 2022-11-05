@@ -2,8 +2,7 @@ import * as React from 'react';
 import {
   gridColumnLookupSelector,
   GridColumnMenuValue,
-  GridColumnMenuLookup,
-  insertSlotsInColumnMenu,
+  insertItemsInColumnMenu,
 } from '@mui/x-data-grid-pro';
 import {
   GridPipeProcessor,
@@ -22,8 +21,6 @@ import {
   unwrapColumnFromAggregation,
 } from './wrapColumnWithAggregation';
 import { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
-import { GridAggregationColumnMenuItem } from '../../../components/GridAggregationColumnMenuItem';
-import { GridAggregationColumnMenuSimpleItem } from '../../../components/GridAggregationColumnMenuSimpleItem';
 import { gridAggregationModelSelector } from './gridAggregationSelectors';
 import { GridInitialStatePremium } from '../../../models/gridStatePremium';
 
@@ -31,7 +28,11 @@ export const useGridAggregationPreProcessors = (
   apiRef: React.MutableRefObject<GridApiPremium>,
   props: Pick<
     DataGridPremiumProcessedProps,
-    'aggregationFunctions' | 'disableAggregation' | 'getAggregationPosition' | 'componentsProps'
+    | 'aggregationFunctions'
+    | 'disableAggregation'
+    | 'getAggregationPosition'
+    | 'componentsProps'
+    | 'components'
   >,
 ) => {
   const updateAggregatedColumns = React.useCallback<GridPipeProcessor<'hydrateColumns'>>(
@@ -131,34 +132,26 @@ export const useGridAggregationPreProcessors = (
         availableAggregationFunctions,
       };
 
-      const slot: GridColumnMenuLookup['slot'] = 'aggregation';
+      const Component = props.components?.ColumnMenuAggregationItem;
+      const items = {
+        ...columnMenuValue.items,
+        aggregation: Component ? <Component {...aggregationItemProps} /> : null,
+      };
 
-      const aggregationItem = columnMenuValue.items.some(({ displayName }) =>
-        displayName?.includes('GridFilterMenuSimple'),
-      )
-        ? {
-            slot,
-            displayName: 'GridAggregationColumnMenuSimpleItem',
-            component: <GridAggregationColumnMenuSimpleItem {...aggregationItemProps} />,
-          }
-        : {
-            slot,
-            displayName: 'GridAggregationColumnMenuItem',
-            component: <GridAggregationColumnMenuItem {...aggregationItemProps} />,
-            addDivider: true,
-          };
-
-      const items = [...columnMenuValue.items, aggregationItem];
-
-      const visibleSlots = insertSlotsInColumnMenu(
-        columnMenuValue.visibleSlots,
-        aggregationItem.addDivider ? ['divider', aggregationItem.slot] : [aggregationItem.slot],
+      const visibleItemKeys = insertItemsInColumnMenu(
+        columnMenuValue.visibleItemKeys,
+        ['divider', 'aggregation'],
         'filter',
       );
 
-      return { visibleSlots, items };
+      return { visibleItemKeys, items };
     },
-    [apiRef, props.aggregationFunctions, props.disableAggregation],
+    [
+      apiRef,
+      props.aggregationFunctions,
+      props.components?.ColumnMenuAggregationItem,
+      props.disableAggregation,
+    ],
   );
 
   const stateExportPreProcessing = React.useCallback<GridPipeProcessor<'exportState'>>(

@@ -11,7 +11,6 @@ import {
   GridEventListener,
   gridColumnFieldsSelector,
   GridColumnMenuValue,
-  GridColumnMenuLookup,
 } from '@mui/x-data-grid';
 import {
   useGridRegisterPipeProcessor,
@@ -22,8 +21,6 @@ import {
 import { GridPrivateApiPro } from '../../../models/gridApiPro';
 import { GridInitialStatePro, GridStatePro } from '../../../models/gridStatePro';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
-import { GridColumnPinningMenuItems } from '../../../components/GridColumnPinningMenuItems';
-import { GridColumnPinningMenuSimpleItems } from '../../../components/GridColumnPinningMenuSimpleItems';
 import {
   GridColumnPinningApi,
   GridPinnedPosition,
@@ -31,7 +28,7 @@ import {
 } from './gridColumnPinningInterface';
 import { gridPinnedColumnsSelector } from './gridColumnPinningSelector';
 import { filterColumns } from '../../../components/DataGridProVirtualScroller';
-import { insertSlotsInColumnMenu } from '../../../utils';
+import { insertItemsInColumnMenu } from '../../../utils';
 
 export const columnPinningStateInitializer: GridStateInitializer<
   Pick<DataGridProProcessedProps, 'pinnedColumns' | 'initialState' | 'disableColumnPinning'>
@@ -70,6 +67,7 @@ export const useGridColumnPinning = (
     | 'pinnedColumns'
     | 'onPinnedColumnsChange'
     | 'componentsProps'
+    | 'components'
   >,
 ): void => {
   const pinnedColumns = useGridSelector(apiRef, gridPinnedColumnsSelector);
@@ -185,32 +183,22 @@ export const useGridColumnPinning = (
         return columnMenuValue;
       }
 
-      const isDefault = columnMenuValue.visibleSlots.some((slot) => slot?.includes('divider'));
+      const Component = props.components?.ColumnMenuPinningItem;
 
-      const component = isDefault ? (
-        <GridColumnPinningMenuItems />
-      ) : (
-        <GridColumnPinningMenuSimpleItems />
-      );
-
-      const items = [
+      const items = {
         ...columnMenuValue.items,
-        {
-          slot: 'pinning' as GridColumnMenuLookup['slot'],
-          displayName: 'GridColumnPinningMenuItems',
-          component,
-        },
-      ];
+        pinning: Component ? <Component /> : null,
+      };
 
-      const visibleSlots = insertSlotsInColumnMenu(
-        columnMenuValue.visibleSlots,
+      const visibleItemKeys = insertItemsInColumnMenu(
+        columnMenuValue.visibleItemKeys,
         ['divider', 'pinning'],
-        isDefault ? 'sorting' : undefined,
+        'sorting',
       );
 
-      return { visibleSlots, items };
+      return { visibleItemKeys, items };
     },
-    [props.disableColumnPinning],
+    [props.disableColumnPinning, props.components],
   );
 
   const checkIfCanBeReordered = React.useCallback<GridPipeProcessor<'canBeReordered'>>(

@@ -50,10 +50,6 @@ const GridMenuRoot = styled(Popper, {
   },
 }));
 
-const StyledPaper = styled(Paper)(() => ({
-  borderRadius: '10px',
-}));
-
 export interface GridMenuProps extends Omit<PopperProps, 'onKeyDown' | 'children'> {
   open: boolean;
   target: HTMLElement | null;
@@ -118,7 +114,7 @@ function GridMenu(props: GridMenuProps) {
             style={{ transformOrigin: transformOrigin[placement as keyof typeof transformOrigin] }}
             onExited={handleExited(TransitionProps?.onExited)}
           >
-            <StyledPaper>{children}</StyledPaper>
+            <Paper>{children}</Paper>
           </Grow>
         </ClickAwayListener>
       )}

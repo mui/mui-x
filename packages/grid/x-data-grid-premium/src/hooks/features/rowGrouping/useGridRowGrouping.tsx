@@ -4,9 +4,8 @@ import {
   useGridApiEventHandler,
   useGridApiMethod,
   gridColumnLookupSelector,
-  insertSlotsInColumnMenu,
+  insertItemsInColumnMenu,
   GridColumnMenuValue,
-  GridColumnMenuLookup,
 } from '@mui/x-data-grid-pro';
 import {
   useGridRegisterPipeProcessor,
@@ -30,10 +29,6 @@ import {
   areGroupingRulesEqual,
 } from './gridRowGroupingUtils';
 import { GridRowGroupingApi } from './gridRowGroupingInterfaces';
-import { GridRowGroupableColumnMenuSimpleItems } from '../../../components/GridRowGroupableColumnMenuSimpleItems';
-import { GridRowGroupableColumnMenuItems } from '../../../components/GridRowGroupableColumnMenuItems';
-import { GridRowGroupingColumnMenuSimpleItems } from '../../../components/GridRowGroupingColumnMenuSimpleItems';
-import { GridRowGroupingColumnMenuItems } from '../../../components/GridRowGroupingColumnMenuItems';
 import { GridInitialStatePremium } from '../../../models/gridStatePremium';
 
 export const rowGroupingStateInitializer: GridStateInitializer<
@@ -69,6 +64,7 @@ export const useGridRowGrouping = (
     | 'rowGroupingColumnMode'
     | 'disableRowGrouping'
     | 'componentsProps'
+    | 'components'
   >,
 ) => {
   apiRef.current.registerControlState({
@@ -164,41 +160,14 @@ export const useGridRowGrouping = (
         return columnMenuValue;
       }
 
-      const isSimpleMenu = columnMenuValue.items.some(({ displayName }) =>
-        displayName?.includes('GridAggregationColumnMenuSimple'),
-      );
-
-      const slot: GridColumnMenuLookup['slot'] = 'grouping';
-
-      const groupingItem = isSimpleMenu
-        ? {
-            slot,
-            displayName: 'GridRowGroupingColumnMenuSimpleItems',
-            component: <GridRowGroupingColumnMenuSimpleItems />,
-          }
-        : {
-            slot,
-            displayName: 'GridRowGroupingColumnMenuItems',
-            component: <GridRowGroupingColumnMenuItems />,
-          };
-
-      const groupableItem = isSimpleMenu
-        ? {
-            slot,
-            displayName: 'GridRowGroupableColumnMenuSimpleItems',
-            component: <GridRowGroupableColumnMenuSimpleItems />,
-          }
-        : {
-            slot,
-            displayName: 'GridRowGroupableColumnMenuItems',
-            component: <GridRowGroupableColumnMenuItems />,
-          };
+      const GroupingComponent = props.components?.ColumnMenuRowGroupingItem;
+      const GroupableComponent = props.components?.ColumnMenuRowGroupableItem;
 
       let menuItem;
       if (isGroupingColumn(column.field)) {
-        menuItem = groupingItem;
+        menuItem = GroupingComponent ? <GroupingComponent /> : null;
       } else if (column.groupable) {
-        menuItem = groupableItem;
+        menuItem = GroupableComponent ? <GroupableComponent /> : null;
       } else {
         menuItem = null;
       }
@@ -207,17 +176,21 @@ export const useGridRowGrouping = (
         return columnMenuValue;
       }
 
-      const items = [...columnMenuValue.items, menuItem];
+      const items = { ...columnMenuValue.items, grouping: menuItem };
 
-      const visibleSlots = insertSlotsInColumnMenu(
-        columnMenuValue.visibleSlots,
-        !isSimpleMenu ? ['divider', slot] : [slot],
+      const visibleItemKeys = insertItemsInColumnMenu(
+        columnMenuValue.visibleItemKeys,
+        ['divider', 'grouping'],
         'aggregation',
       );
 
-      return { visibleSlots, items };
+      return { visibleItemKeys, items };
     },
-    [props.disableRowGrouping],
+    [
+      props.components?.ColumnMenuRowGroupableItem,
+      props.components?.ColumnMenuRowGroupingItem,
+      props.disableRowGrouping,
+    ],
   );
 
   const stateExportPreProcessing = React.useCallback<GridPipeProcessor<'exportState'>>(

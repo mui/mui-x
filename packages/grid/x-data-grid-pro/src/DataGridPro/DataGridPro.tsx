@@ -134,9 +134,6 @@ DataGridProRaw.propTypes = {
    * If defined, the grid will ignore the `hide` property in [[GridColDef]].
    */
   columnVisibilityModel: PropTypes.object,
-  /**
-   * Overrideable components.
-   */
   components: PropTypes.object,
   /**
    * Overrideable components props dynamically passed to the component at rendering.

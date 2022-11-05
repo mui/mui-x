@@ -58,7 +58,7 @@ declare module '@mui/x-data-grid' {
 
   interface GridPipeProcessingLookup extends GridPipeProcessingLookupPro {}
 
-  interface GridColumnMenuSlotInternalOverrides {
+  interface GridColumnMenuKeysInternalOverrides {
     pinning: true;
   }
 }

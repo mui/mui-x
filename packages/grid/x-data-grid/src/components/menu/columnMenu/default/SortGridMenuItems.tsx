@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
-import { styled } from '@mui/material';
+import { styled } from '@mui/material/styles';
 import { useGridSelector } from '../../../../hooks/utils/useGridSelector';
 import { gridSortModelSelector } from '../../../../hooks/features/sorting/gridSortingSelector';
 import { GridSortDirection } from '../../../../models/gridSortModel';

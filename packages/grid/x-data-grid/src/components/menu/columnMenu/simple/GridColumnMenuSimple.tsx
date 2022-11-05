@@ -1,7 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import Divider from '@mui/material/Divider';
-import { GridColumnMenuLookup, GridColumnMenuValue } from '../../../../hooks/features/columnMenu';
+import { GridColumnMenuTypes } from '../../../../hooks/features/columnMenu';
 import { GridColumnMenuSimpleContainer } from './GridColumnMenuSimpleContainer';
 import { GridColumnMenuProps } from '../GridColumnMenuProps';
 import { GridColumnsMenuSimpleItem } from './GridColumnsMenuSimpleItem';
@@ -16,7 +16,7 @@ interface Props
     'hideMenu' | 'currentColumn' | 'open' | 'getVisibleColumnMenuItems'
   > {}
 
-const defaultVisibleSlots: Array<GridColumnMenuLookup['slot']> = [
+const defaultVisibleItems: Array<GridColumnMenuTypes['key']> = [
   'sorting',
   'filter',
   'hideColumn',
@@ -25,38 +25,20 @@ const defaultVisibleSlots: Array<GridColumnMenuLookup['slot']> = [
 
 const GridColumnMenuSimple = React.forwardRef<HTMLUListElement, Props>(
   function GridColumnMenuSimple(props: Props, ref) {
-    const defaultMenuItems: GridColumnMenuValue['items'] = [
-      {
-        slot: 'sorting',
-        displayName: 'SortGridMenuSimpleItems',
-        component: <SortGridMenuSimpleItems />,
-      },
-      {
-        slot: 'filter',
-        displayName: 'GridFilterMenuSimpleItem',
-        component: <GridFilterMenuSimpleItem />,
-      },
-      {
-        slot: 'hideColumn',
-        displayName: 'HideGridColMenuSimpleItem',
-        component: <HideGridColMenuSimpleItem />,
-      },
-      {
-        slot: 'manageColumns',
-        displayName: 'GridColumnsMenuSimpleItem',
-        component: <GridColumnsMenuSimpleItem />,
-      },
-      {
-        slot: 'divider',
-        component: <Divider />,
-      },
-    ];
+    const defaultMenuItems = {
+      sorting: <SortGridMenuSimpleItems />,
+      filter: <GridFilterMenuSimpleItem />,
+      hideColumn: <HideGridColMenuSimpleItem />,
+      manageColumns: <GridColumnsMenuSimpleItem />,
+      divider: <Divider />,
+    };
 
     return (
       <GridColumnMenuSimpleContainer ref={ref} {...props}>
         <GridColumnMenu
+          // TODO: Fix type issue here
           defaultMenuItems={defaultMenuItems}
-          defaultVisibleSlots={defaultVisibleSlots}
+          defaultVisibleItems={defaultVisibleItems}
           {...props}
         />
       </GridColumnMenuSimpleContainer>

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { GridColumnMenuLookup, GridColumnMenuValue } from '../../../hooks/features/columnMenu';
+import { GridColumnMenuTypes, GridColumnMenuValue } from '../../../hooks/features/columnMenu';
 import { GridColumnMenuProps } from './GridColumnMenuProps';
 import { useGridApiContext } from '../../../hooks/utils/useGridApiContext';
 
@@ -9,7 +9,7 @@ const GridColumnMenu = (props: GridColumnMenuProps) => {
     hideMenu,
     currentColumn,
     defaultMenuItems,
-    defaultVisibleSlots,
+    defaultVisibleItems,
     columnMenuItems: userMenuItems,
   } = props;
 
@@ -17,78 +17,48 @@ const GridColumnMenu = (props: GridColumnMenuProps) => {
 
   const preProcessedValue = apiRef.current.unstable_applyPipeProcessors(
     'columnMenu',
-    { items: defaultMenuItems, visibleSlots: defaultVisibleSlots },
+    { items: defaultMenuItems, visibleItems: defaultVisibleItems },
     currentColumn,
   );
 
-  const extendedColumnMenuItems = React.useMemo(() => {
+  const extendedColumnMenuItems: GridColumnMenuValue['items'] = React.useMemo(() => {
     if (!userMenuItems || !Object.keys(userMenuItems).length) {
       return preProcessedValue.items;
     }
-    // Overrides for default items
-    const userSlots = new Set<GridColumnMenuLookup['slot']>(
-      Object.keys(userMenuItems) as Array<GridColumnMenuLookup['slot']>,
-    );
 
-    const overridenItems = preProcessedValue.items.reduce((acc, item) => {
-      if (userSlots.has(item.slot)) {
-        // override
-        userSlots.delete(item.slot);
-        return [...acc, { ...item, ...userMenuItems[item.slot] }];
-      }
-      return [...acc, item];
-    }, [] as GridColumnMenuValue['items']);
-
-    // New items to add
-    // TODO: Handle typings for newly added slots
-    if (userSlots.size > 0) {
-      const newItems = Array.from(userSlots).map((slot: GridColumnMenuLookup['slot']) => ({
-        slot,
-        ...userMenuItems[slot],
-      }));
-
-      return [...overridenItems, ...newItems];
-    }
-    return overridenItems;
+    return { ...preProcessedValue.items, ...userMenuItems };
   }, [preProcessedValue.items, userMenuItems]);
 
-  const filteredColumnMenuItems: GridColumnMenuValue['items'] = React.useMemo(() => {
+  const filteredAndSortedItems = React.useMemo(() => {
     const filterCallback =
       currentColumn.getVisibleColumnMenuItems ?? props.getVisibleColumnMenuItems;
 
-    const menuItemSlots = extendedColumnMenuItems.map((item) => item.slot);
-
-    const filteredSlots: Array<GridColumnMenuLookup['slot']> =
+    const filteredItemKeys =
       !filterCallback || typeof filterCallback !== 'function'
-        ? preProcessedValue.visibleSlots
-        : filterCallback(menuItemSlots);
+        ? preProcessedValue.visibleItemKeys
+        : filterCallback(Object.keys(extendedColumnMenuItems) as Array<GridColumnMenuTypes['key']>);
 
-    if (!filteredSlots?.length) {
-      return extendedColumnMenuItems;
-    }
+    const visibleItems = filteredItemKeys || defaultVisibleItems;
 
-    return filteredSlots.reduce((acc, slot) => {
-      const item = extendedColumnMenuItems.find((menuItem) => menuItem.slot === slot);
-      return item ? [...acc, item] : acc;
-    }, [] as GridColumnMenuValue['items']);
+    return visibleItems.map((itemName) => extendedColumnMenuItems[itemName]);
   }, [
     currentColumn.getVisibleColumnMenuItems,
     props.getVisibleColumnMenuItems,
+    preProcessedValue.visibleItemKeys,
     extendedColumnMenuItems,
-    preProcessedValue.visibleSlots,
+    defaultVisibleItems,
   ]);
 
   return (
     <React.Fragment>
-      {filteredColumnMenuItems.map((item: any, index: number) => {
+      {filteredAndSortedItems.map((component: any, index: number) => {
         const itemProps = {
-          ...item.component.props,
           onClick: hideMenu,
           column: currentColumn,
           key: index,
         };
 
-        return React.cloneElement(item.component, itemProps);
+        return React.cloneElement(component, itemProps);
       })}
     </React.Fragment>
   );
@@ -101,44 +71,28 @@ GridColumnMenu.propTypes = {
   // ----------------------------------------------------------------------
   /**
    * To override existing and add new items in column menu
-   * If the slot is already registered, it will be overwritten otherwise a new slot will be registered
+   * If the item is already registered, it will be overwritten otherwise a new item will be registered
    */
   columnMenuItems: PropTypes.shape({
-    divider: PropTypes.shape({
-      component: PropTypes.node,
-      displayName: PropTypes.string,
-    }).isRequired,
-    filter: PropTypes.shape({
-      component: PropTypes.node,
-      displayName: PropTypes.string,
-    }).isRequired,
-    hideColumn: PropTypes.shape({
-      component: PropTypes.node,
-      displayName: PropTypes.string,
-    }).isRequired,
-    manageColumns: PropTypes.shape({
-      component: PropTypes.node,
-      displayName: PropTypes.string,
-    }).isRequired,
-    sorting: PropTypes.shape({
-      component: PropTypes.node,
-      displayName: PropTypes.string,
-    }).isRequired,
+    divider: PropTypes.node,
+    filter: PropTypes.node,
+    hideColumn: PropTypes.node,
+    manageColumns: PropTypes.node,
+    sorting: PropTypes.node,
   }),
   currentColumn: PropTypes.object.isRequired,
-  defaultMenuItems: PropTypes.arrayOf(
-    PropTypes.shape({
-      component: PropTypes.node,
-      displayName: PropTypes.string,
-      slot: PropTypes.oneOf(['divider', 'filter', 'hideColumn', 'manageColumns', 'sorting'])
-        .isRequired,
-    }),
-  ).isRequired,
+  defaultMenuItems: PropTypes.shape({
+    divider: PropTypes.node,
+    filter: PropTypes.node,
+    hideColumn: PropTypes.node,
+    manageColumns: PropTypes.node,
+    sorting: PropTypes.node,
+  }).isRequired,
   /**
    * Default column menu items in order that needs to be shown
    * Could be overriden by `getVisibleColumnMenuItems`
    */
-  defaultVisibleSlots: PropTypes.arrayOf(
+  defaultVisibleItems: PropTypes.arrayOf(
     PropTypes.oneOf(['divider', 'filter', 'hideColumn', 'manageColumns', 'sorting']).isRequired,
   ).isRequired,
   getVisibleColumnMenuItems: PropTypes.func,

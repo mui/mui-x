@@ -16,11 +16,9 @@ declare module '@mui/x-data-grid' {
 
 const MenuCloseComponent = (props: GridColumnMenuItemProps) => {
   return (
-    <Stack py={1} px={1.5}>
-      <Button color="primary" onClick={props.onClick}>
-        Close Menu
-      </Button>
-    </Stack>
+    <Button color="primary" onClick={props.onClick}>
+      Close Menu
+    </Button>
   );
 };
 
@@ -37,23 +35,12 @@ export default function FilterColumnMenuGrid() {
     maxColumns: 5,
   });
   const columns = data.columns;
-  // Show specific items for this column
-  columns[4].getVisibleColumnMenuItems = () => [
-    'closeMenu',
-    'divider',
-    'manageColumns',
-  ];
+  // Show only specific items for this column
+  columns[4].getVisibleColumnMenuItems = () => ['closeMenu', 'manageColumns'];
 
   const columnMenuItems = {
-    filter: {
-      // overriding existing item
-      component: <FilterComponent />, // overriden property
-    },
-    closeMenu: {
-      // adding new item
-      component: <MenuCloseComponent />,
-      displayName: 'MenuClose',
-    },
+    filter: <FilterComponent />, // overriding existing item
+    closeMenu: <MenuCloseComponent />, // adding new item
   };
 
   return (

@@ -13,18 +13,27 @@ import type {
   GridAggregationFunction,
   GridAggregationPosition,
 } from '../hooks/features/aggregation';
+import { GridPremiumSlotsComponent } from './gridPremiumSlotsComponent';
 import { GridInitialStatePremium } from './gridStatePremium';
 import { GridApiPremium } from './gridApiPremium';
 
 export interface GridExperimentalPremiumFeatures extends GridExperimentalProFeatures {}
 
+export interface DataGridPremiumPropsWithComplexDefaultValueBeforeProcessing
+  extends Pick<DataGridPropsWithComplexDefaultValueBeforeProcessing, 'localeText'> {
+  /**
+   * Overrideable Pro components.
+   */
+  components?: Partial<GridPremiumSlotsComponent>;
+}
+
 /**
- * The props users can give to the `DataGridProProps` component.
+ * The props users can give to the `DataGridPremiumProps` component.
  */
 export interface DataGridPremiumProps<R extends GridValidRowModel = any>
   extends Omit<
     Partial<DataGridPremiumPropsWithDefaultValue> &
-      DataGridPropsWithComplexDefaultValueBeforeProcessing &
+      DataGridPremiumPropsWithComplexDefaultValueBeforeProcessing &
       DataGridPremiumPropsWithoutDefaultValue<R>,
     DataGridPremiumForcedPropsKey
   > {
@@ -35,12 +44,17 @@ export interface DataGridPremiumProps<R extends GridValidRowModel = any>
   experimentalFeatures?: Partial<GridExperimentalPremiumFeatures>;
 }
 
+export interface DataGridPremiumPropsWithComplexDefaultValueAfterProcessing
+  extends Pick<DataGridPropsWithComplexDefaultValueAfterProcessing, 'localeText'> {
+  components?: Partial<GridPremiumSlotsComponent>;
+}
+
 /**
  * The props of the `DataGridPremium` component after the pre-processing phase.
  */
 export interface DataGridPremiumProcessedProps
   extends DataGridPremiumPropsWithDefaultValue,
-    DataGridPropsWithComplexDefaultValueAfterProcessing,
+    DataGridPremiumPropsWithComplexDefaultValueAfterProcessing,
     DataGridPremiumPropsWithoutDefaultValue {}
 
 export type DataGridPremiumForcedPropsKey = 'signature';

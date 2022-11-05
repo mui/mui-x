@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import { gridColumnLookupSelector, useGridSelector, GridColDef } from '@mui/x-data-grid-pro';
-import { styled } from '@mui/material';
+import { styled } from '@mui/material/styles';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import { gridRowGroupingSanitizedModelSelector } from '../hooks/features/rowGrouping/gridRowGroupingSelector';
@@ -51,13 +51,16 @@ const GridRowGroupableColumnMenuItems = (props: GridRowGroupableColumnMenuItemsP
 
   const name = columnsLookup[column.field].headerName ?? column.field;
 
+  const UngroupIcon = rootProps.components?.ColumnMenuUngroupIcon;
+  const GroupIcon = rootProps.components?.ColumnMenuGroupIcon;
+
   if (rowGroupingModel.includes(column.field)) {
     return (
       <StyledStack>
         <StyledButton
           onClick={ungroupColumn}
           key={column.field}
-          startIcon={<rootProps.components.ColumnMenuUngroupIcon />}
+          startIcon={UngroupIcon ? <UngroupIcon /> : null}
           color="inherit"
         >
           {apiRef.current.getLocaleText('unGroupColumn')(name)}
@@ -67,26 +70,15 @@ const GridRowGroupableColumnMenuItems = (props: GridRowGroupableColumnMenuItemsP
   }
 
   return (
-    <Stack
-      px={1.5}
-      py={1}
-      direction="row"
-      sx={{
-        '& .MuiButton-root': {
-          fontSize: '16px',
-          fontWeight: '400',
-          textTransform: 'none',
-        },
-      }}
-    >
-      <Button
+    <Stack px={1.5} py={1} direction="row">
+      <StyledButton
         onClick={groupColumn}
         key={column.field}
-        startIcon={<rootProps.components.ColumnMenuGroupIcon />}
+        startIcon={GroupIcon ? <GroupIcon /> : null}
         color="inherit"
       >
         {apiRef.current.getLocaleText('groupColumn')(name)}
-      </Button>
+      </StyledButton>
     </Stack>
   );
 };

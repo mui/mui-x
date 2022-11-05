@@ -1,7 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import Divider from '@mui/material/Divider';
-import { GridColumnMenuValue, GridColumnMenuLookup } from '../../../../hooks/features/columnMenu';
+import { GridColumnMenuValue, GridColumnMenuTypes } from '../../../../hooks/features/columnMenu';
 import { GridColumnMenuContainer } from './GridColumnMenuContainer';
 import { GridColumnMenu } from '../GridColumnMenu';
 import { GridColumnMenuProps } from '../GridColumnMenuProps';
@@ -13,7 +13,7 @@ import { SortGridMenuItems } from './SortGridMenuItems';
 export interface GridColumnMenuDefaultProps
   extends Pick<GridColumnMenuProps, 'hideMenu' | 'currentColumn' | 'open'> {}
 
-const defaultVisibleSlots: Array<GridColumnMenuLookup['slot']> = [
+const defaultVisibleItems: Array<GridColumnMenuTypes['key']> = [
   'sorting',
   'divider',
   'filter',
@@ -25,37 +25,19 @@ const defaultVisibleSlots: Array<GridColumnMenuLookup['slot']> = [
 
 const GridColumnMenuDefault = React.forwardRef<HTMLDivElement, GridColumnMenuDefaultProps>(
   function GridColumnMenuDefault(props: GridColumnMenuDefaultProps, ref) {
-    const defaultMenuItems: GridColumnMenuValue['items'] = [
-      {
-        slot: 'sorting',
-        displayName: 'SortGridMenuItems',
-        component: <SortGridMenuItems />,
-      },
-      {
-        slot: 'filter',
-        displayName: 'GridFilterMenuItem',
-        component: <GridFilterMenuItem />,
-      },
-      {
-        slot: 'hideColumn',
-        displayName: 'HideGridColMenuItem',
-        component: <HideGridColMenuItem />,
-      },
-      {
-        slot: 'manageColumns',
-        displayName: 'GridColumnsMenuItem',
-        component: <GridColumnsMenuItem />,
-      },
-      {
-        slot: 'divider',
-        component: <Divider />,
-      },
-    ];
+    // TODO: Fix typing
+    const defaultMenuItems: GridColumnMenuValue['items'] = {
+      sorting: <SortGridMenuItems />,
+      filter: <GridFilterMenuItem />,
+      hideColumn: <HideGridColMenuItem />,
+      manageColumns: <GridColumnsMenuItem />,
+      divider: <Divider />,
+    };
 
     return (
       <GridColumnMenuContainer ref={ref} {...props}>
         <GridColumnMenu
-          defaultVisibleSlots={defaultVisibleSlots}
+          defaultVisibleItems={defaultVisibleItems}
           defaultMenuItems={defaultMenuItems}
           {...props}
         />

@@ -1,50 +1,37 @@
-import * as React from 'react'
-import { DataGrid, GridFilterMenuSimpleItem } from '@mui/x-data-grid'
-import { useDemoData } from '@mui/x-data-grid-generator'
-import Stack from '@mui/material/Stack'
-import Button from '@mui/material/Button'
+import * as React from 'react';
+import { DataGrid, GridFilterMenuSimpleItem } from '@mui/x-data-grid';
+import { useDemoData } from '@mui/x-data-grid-generator';
+import Stack from '@mui/material/Stack';
+import Button from '@mui/material/Button';
 
-const MenuCloseComponent = props => {
+const MenuCloseComponent = (props) => {
   return (
-    <Stack py={1} px={1.5}>
-      <Button color='primary' onClick={props.onClick}>
-        Close Menu
-      </Button>
-    </Stack>
-  )
-}
+    <Button color="primary" onClick={props.onClick}>
+      Close Menu
+    </Button>
+  );
+};
 
-const FilterComponent = props => (
+const FilterComponent = (props) => (
   <Stack my={1}>
     <GridFilterMenuSimpleItem {...props} />
   </Stack>
-)
+);
 
-export default function FilterColumnMenuGrid () {
+export default function FilterColumnMenuGrid() {
   const { data } = useDemoData({
     dataSet: 'Commodity',
     rowLength: 20,
     maxColumns: 5,
-  })
-  const columns = data.columns
-  // Show specific items for this column
-  columns[4].getVisibleColumnMenuItems = () => [
-    'closeMenu',
-    'divider',
-    'manageColumns',
-  ]
+  });
+  const columns = data.columns;
+  // Show only specific items for this column
+  columns[4].getVisibleColumnMenuItems = () => [];
 
   const columnMenuItems = {
-    filter: {
-      // overriding existing item
-      component: <FilterComponent />, // overriden property
-    },
-    closeMenu: {
-      // adding new item
-      component: <MenuCloseComponent />,
-      displayName: 'MenuClose',
-    },
-  }
+    filter: <FilterComponent />, // overriding existing item
+    closeMenu: <MenuCloseComponent />, // adding new item
+  };
 
   return (
     <div style={{ height: 400, width: '100%' }}>
@@ -67,5 +54,5 @@ export default function FilterColumnMenuGrid () {
         }}
       />
     </div>
-  )
+  );
 }

@@ -74,7 +74,7 @@ declare module '@mui/x-data-grid-pro' {
 
   interface GridApiCaches extends GridApiCachesPremium {}
 
-  interface GridColumnMenuSlotInternalOverrides {
+  interface GridColumnMenuKeysInternalOverrides {
     pinning: true;
     aggregation: true;
     grouping: true;

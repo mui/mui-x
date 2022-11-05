@@ -154,7 +154,7 @@ DataGridPremiumRaw.propTypes = {
    */
   columnVisibilityModel: PropTypes.object,
   /**
-   * Overrideable components.
+   * Overrideable Pro components.
    */
   components: PropTypes.object,
   /**

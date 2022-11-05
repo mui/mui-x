@@ -2,7 +2,7 @@ import * as React from 'react';
 import { GridCellClassNamePropType } from '../gridCellClass';
 import { GridColumnHeaderClassNamePropType } from '../gridColumnHeaderClass';
 import { GridFilterOperator } from '../gridFilterOperator';
-import { GridColumnMenuLookup } from '../../hooks/features/columnMenu';
+import { GridColumnMenuTypes } from '../../hooks/features/columnMenu';
 import {
   GridCellParams,
   GridRenderCellParams,
@@ -242,13 +242,13 @@ export interface GridColDef<R extends GridValidRowModel = any, V = any, F = V> {
    */
   colSpan?: number | ((params: GridCellParams<V, R, F>) => number | undefined);
   /**
-   * Recieves registered column menu slots and should return the slots which should be shown.
-   * @param {Array<GridColumnMenuLookup['slot']>} slots Registered column menu item slots.
-   * @returns {Array<GridColumnMenuLookup['slot']>} Slots ehich are needed to be shown.
+   * Recieves registered column menu items and should return the items which should be shown.
+   * @param {Array<GridColumnMenuTypes['key']>} keys Registered column menu items.
+   * @returns {Array<GridColumnMenuTypes['key']>} Keys of items which are needed to be shown.
    */
   getVisibleColumnMenuItems?: (
-    slots: Array<GridColumnMenuLookup['slot']>,
-  ) => Array<GridColumnMenuLookup['slot']>;
+    keys: Array<GridColumnMenuTypes['key']>,
+  ) => Array<GridColumnMenuTypes['key']>;
 }
 
 export interface GridActionsColDef<R extends GridValidRowModel = any, V = any, F = V>

@@ -2,7 +2,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
-import { styled } from '@mui/material';
+import { styled } from '@mui/material/styles';
 import { GridColumnMenuItemProps } from '../GridColumnMenuItemProps';
 import { useGridApiContext } from '../../../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../../../hooks/utils/useGridRootProps';

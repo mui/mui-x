@@ -1,4 +1,5 @@
 import { OverridableStringUnion } from '@mui/types';
+import React from 'react';
 
 export interface GridColumnMenuState {
   open: boolean;
@@ -6,27 +7,22 @@ export interface GridColumnMenuState {
 }
 
 // To be used by Pro and Premium packages for overriding
-export interface GridColumnMenuSlotInternalOverrides {}
+export interface GridColumnMenuKeysInternalOverrides {}
 
 // To be used by users for overriding
-export interface GridColumnMenuSlotOverrides {}
+export interface GridColumnMenuKeysOverrides {}
 
-export interface GridColumnMenuLookup {
-  /**
-   * Will be used to filter or override a specific item in `columnMenu`
-   */
-  slot: OverridableStringUnion<
+export interface GridColumnMenuTypes {
+  key: OverridableStringUnion<
     OverridableStringUnion<
       'filter' | 'sorting' | 'hideColumn' | 'manageColumns' | 'divider',
-      GridColumnMenuSlotInternalOverrides
+      GridColumnMenuKeysInternalOverrides
     >,
-    GridColumnMenuSlotOverrides
+    GridColumnMenuKeysOverrides
   >;
-  component: React.ReactNode;
-  displayName?: string;
 }
 
 export interface GridColumnMenuValue {
-  items: Array<GridColumnMenuLookup>;
-  visibleSlots: Array<GridColumnMenuLookup['slot']>;
+  items: { [key in GridColumnMenuTypes['key']]: React.ReactNode };
+  visibleItemKeys: Array<GridColumnMenuTypes['key']>;
 }

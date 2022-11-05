@@ -1,1 +1,1 @@
-export { insertSlotsInColumnMenu } from './insertSlotsInColumnMenu';
+export { insertItemsInColumnMenu } from './insertItemsInColumnMenu';
