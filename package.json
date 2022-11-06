@@ -137,7 +137,7 @@
     "format-util": "^1.0.5",
     "glob-gitignore": "^1.0.14",
     "html-webpack-plugin": "^5.5.0",
-    "jsdom": "^20.0.1",
+    "jsdom": "^20.0.2",
     "jss": "^10.9.2",
     "jss-plugin-template": "^10.9.2",
     "jss-rtl": "^0.3.0",
