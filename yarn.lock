@@ -3585,10 +3585,10 @@
   dependencies:
     "@types/node" "*"
 
-"@types/lodash@^4.14.172", "@types/lodash@^4.14.186":
-  version "4.14.186"
-  resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.186.tgz#862e5514dd7bd66ada6c70ee5fce844b06c8ee97"
-  integrity sha512-eHcVlLXP0c2FlMPm56ITode2AgLMSa6aJ05JTTbYbI+7EMkCEE5qk2E41d5g2lCVTqRe0GnnRFurmlCsDODrPw==
+"@types/lodash@^4.14.172", "@types/lodash@^4.14.188":
+  version "4.14.188"
+  resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.188.tgz#e4990c4c81f7c9b00c5ff8eae389c10f27980da5"
+  integrity sha512-zmEmF5OIM3rb7SbLCFYoQhO4dGt2FRM9AMkxvA3LaADOF1n8in/zGJlWji9fmafLoNyz+FoL6FE0SLtGIArD7w==
 
 "@types/lru-cache@^7.10.9":
   version "7.10.10"
@@ -9865,12 +9865,7 @@ lru-cache@^6.0.0:
   dependencies:
     yallist "^4.0.0"
 
-"luxon@^1.28.0 || ^2.0.0 || ^3.0.2":
-  version "3.0.3"
-  resolved "https://registry.yarnpkg.com/luxon/-/luxon-3.0.3.tgz#573e65531efd3d92265feb640f02ba7a192e2388"
-  integrity sha512-+EfHWnF+UT7GgTnq5zXg3ldnTKL2zdv7QJgsU5bjjpbH17E3qi/puMhQyJVYuCq+FRkogvB5WB6iVvUr+E4a7w==
-
-luxon@^3.0.2:
+"luxon@^1.28.0 || ^2.0.0 || ^3.0.2", luxon@^3.0.2:
   version "3.1.0"
   resolved "https://registry.yarnpkg.com/luxon/-/luxon-3.1.0.tgz#9ac33d7142b7ea18d4ec8583cdeb0b079abef60d"
   integrity sha512-7w6hmKC0/aoWnEsmPCu5Br54BmbmUp5GfcqBxQngRcXJ+q5fdfjEzn7dxmJh2YdDhgW8PccYtlWKSv4tQkrTQg==
