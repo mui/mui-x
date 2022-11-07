@@ -2,10 +2,11 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { StaticNextTimePickerProps } from './StaticNextTimePicker.types';
 import { useNextTimePickerDefaultizedProps } from '../NextTimePicker/shared';
-import { timePickerValueManager } from '../TimePicker/shared';
+import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { useStaticPicker } from '../internals/hooks/useStaticPicker';
 import { ClockPickerView } from '../internals/models';
 import { renderTimeView } from '../internals/utils/viewRenderers';
+import { validateTime } from '../internals/hooks/validation/useTimeValidation';
 
 type StaticTimePickerComponent = (<TTime>(
   props: StaticNextTimePickerProps<TTime> & React.RefAttributes<HTMLDivElement>,
@@ -37,9 +38,10 @@ const StaticNextTimePicker = React.forwardRef(function StaticNextTimePicker<TTim
 
   const { renderPicker } = useStaticPicker<TTime, ClockPickerView, typeof props>({
     props,
-    valueManager: timePickerValueManager,
+    valueManager: singleItemValueManager,
     viewLookup: VIEW_LOOKUP,
     ref,
+    validator: validateTime,
   });
 
   return renderPicker();
