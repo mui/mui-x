@@ -4,7 +4,6 @@ import { StaticNextTimePickerProps } from './StaticNextTimePicker.types';
 import { useNextTimePickerDefaultizedProps } from '../NextTimePicker/shared';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { useStaticPicker } from '../internals/hooks/useStaticPicker';
-import { ClockPickerView } from '../internals/models';
 import { renderTimeView } from '../internals/utils/viewRenderers';
 import { validateTime } from '../internals/hooks/validation/useTimeValidation';
 
@@ -36,7 +35,7 @@ const StaticNextTimePicker = React.forwardRef(function StaticNextTimePicker<TTim
     showToolbar: defaultizedProps.showToolbar ?? displayStaticWrapperAs === 'mobile',
   };
 
-  const { renderPicker } = useStaticPicker<TTime, ClockPickerView, typeof props>({
+  const { renderPicker } = useStaticPicker({
     props,
     valueManager: singleItemValueManager,
     viewLookup: VIEW_LOOKUP,

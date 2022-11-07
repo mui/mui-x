@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { StaticNextDatePickerProps } from './StaticNextDatePicker.types';
 import { useNextDatePickerDefaultizedProps } from '../NextDatePicker/shared';
 import { useStaticPicker } from '../internals/hooks/useStaticPicker';
-import { CalendarPickerView } from '../internals/models';
 import { renderDateView } from '../internals/utils/viewRenderers';
 import { validateDate } from '../internals';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
@@ -36,7 +35,7 @@ const StaticNextDatePicker = React.forwardRef(function StaticNextDatePicker<TDat
     showToolbar: defaultizedProps.showToolbar ?? displayStaticWrapperAs === 'mobile',
   };
 
-  const { renderPicker } = useStaticPicker<TDate, CalendarPickerView, typeof props>({
+  const { renderPicker } = useStaticPicker({
     props,
     valueManager: singleItemValueManager,
     viewLookup: VIEW_LOOKUP,
