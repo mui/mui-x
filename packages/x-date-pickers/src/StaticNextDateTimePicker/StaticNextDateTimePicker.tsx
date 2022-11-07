@@ -133,11 +133,6 @@ StaticNextDateTimePicker.propTypes = {
    */
   fixedWeekNumber: PropTypes.number,
   /**
-   * Toggles visibility of date time switching tabs
-   * @default `false` for mobile, `true` for desktop
-   */
-  hideTabs: PropTypes.bool,
-  /**
    * If `true` renders `LoadingComponent` in calendar instead of calendar view.
    * Can be used to preload information and show it in calendar.
    * @default false

@@ -40,7 +40,6 @@ const DesktopNextDateTimePicker = React.forwardRef(function DesktopNextDateTimeP
   const props = {
     ...defaultizedProps,
     showToolbar: defaultizedProps.showToolbar ?? false,
-    hideTabs: defaultizedProps.hideTabs ?? true,
     autoFocus: true,
     components: {
       Field: DateTimeField,
@@ -164,11 +163,6 @@ DesktopNextDateTimePicker.propTypes = {
    * Defaults to localized format based on the used `views`.
    */
   format: PropTypes.string,
-  /**
-   * Toggles visibility of date time switching tabs
-   * @default `false` for mobile, `true` for desktop
-   */
-  hideTabs: PropTypes.bool,
   /**
    * Pass a ref to the `input` element.
    */
