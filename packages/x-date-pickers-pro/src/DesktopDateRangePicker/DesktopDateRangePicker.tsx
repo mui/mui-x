@@ -14,10 +14,10 @@ import { DateRangePickerView } from '../DateRangePicker/DateRangePickerView';
 import { DateRangePickerInput } from '../DateRangePicker/DateRangePickerInput';
 import { useDateRangeValidation } from '../internal/hooks/validation/useDateRangeValidation';
 import { getReleaseInfo } from '../internal/utils/releaseInfo';
+import { rangeValueManager } from '../internal/utils/valueManagers';
 import {
   BaseDateRangePickerProps,
   useDateRangePickerDefaultizedProps,
-  dateRangePickerValueManager,
   BaseDateRangePickerSlotsComponent,
   BaseDateRangePickerSlotsComponentsProps,
 } from '../DateRangePicker/shared';
@@ -81,10 +81,7 @@ export const DesktopDateRangePicker = React.forwardRef(function DesktopDateRange
 
   const validationError = useDateRangeValidation(props);
 
-  const { pickerProps, inputProps, wrapperProps } = usePickerState(
-    props,
-    dateRangePickerValueManager,
-  );
+  const { pickerProps, inputProps, wrapperProps } = usePickerState(props, rangeValueManager);
 
   const { value, onChange, components, componentsProps, localeText, ...other } = props;
   const DateInputProps = {

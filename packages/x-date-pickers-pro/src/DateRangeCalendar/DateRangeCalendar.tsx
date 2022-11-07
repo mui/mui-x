@@ -42,7 +42,7 @@ import {
 import { calculateRangeChange, calculateRangePreview } from '../DateRangePicker/date-range-manager';
 import { DateRange } from '../internal/models';
 import { DateRangePickerDay } from '../DateRangePickerDay';
-import { dateRangePickerValueManager } from '../DateRangePicker/shared';
+import { rangeValueManager } from '../internal/utils/valueManagers';
 import { useDragRange } from './useDragRange';
 
 const releaseInfo = getReleaseInfo();
@@ -169,7 +169,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
 
   const [value, setValue] = useControlled<DateRange<TDate>>({
     controlled: valueProp,
-    default: defaultValue ?? dateRangePickerValueManager.emptyValue,
+    default: defaultValue ?? rangeValueManager.emptyValue,
     name: 'DateRangeCalendar',
     state: 'value',
   });
