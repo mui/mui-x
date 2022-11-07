@@ -126,7 +126,7 @@ StaticNextTimePicker.propTypes = {
    */
   minutesStep: PropTypes.number,
   /**
-   * Callback fired when date is accepted @DateIOType.
+   * Callback fired when the value is accepted @DateIOType.
    * @template TValue
    * @param {TValue} value The value that was just accepted.
    */

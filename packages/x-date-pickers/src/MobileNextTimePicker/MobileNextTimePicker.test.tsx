@@ -87,7 +87,7 @@ describe('<MobileTimePicker />', () => {
   });
 
   describe('picker state', () => {
-    it('should open when clicking "Choose time"', () => {
+    it('should open when clicking the textbox', () => {
       const onOpen = spy();
 
       render(<MobileNextTimePicker onOpen={onOpen} />);
