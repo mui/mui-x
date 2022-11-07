@@ -444,6 +444,7 @@
   { "name": "GridRowParams", "kind": "Interface" },
   { "name": "GridRowPinningApi", "kind": "Interface" },
   { "name": "GridRowPinningInternalCache", "kind": "Interface" },
+  { "name": "GridRowProApi", "kind": "Interface" },
   { "name": "GridRowProps", "kind": "Interface" },
   { "name": "GridRowScrollEndParams", "kind": "Interface" },
   { "name": "gridRowsDataRowIdToIdLookupSelector", "kind": "Variable" },

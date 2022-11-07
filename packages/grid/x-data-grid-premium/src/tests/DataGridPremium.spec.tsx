@@ -71,6 +71,9 @@ function ApiRefProMethods() {
     apiRef.current.selectRows([]);
     apiRef.current.selectRowRange({ startId: 0, endId: 1 });
     apiRef.current.setColumnIndex;
+    apiRef.current.setRowIndex;
+    apiRef.current.setRowChildrenExpansion;
+    apiRef.current.getRowGroupChildren;
   });
 
   return null;
