@@ -127,11 +127,6 @@ NextDateTimePicker.propTypes = {
    */
   format: PropTypes.string,
   /**
-   * Toggles visibility of date time switching tabs
-   * @default `false` for mobile, `true` for desktop
-   */
-  hideTabs: PropTypes.bool,
-  /**
    * Pass a ref to the `input` element.
    */
   inputRef: PropTypes.oneOfType([

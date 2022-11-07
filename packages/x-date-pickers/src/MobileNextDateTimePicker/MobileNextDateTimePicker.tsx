@@ -39,7 +39,6 @@ const MobileNextDateTimePicker = React.forwardRef(function MobileNextDateTimePic
   const props = {
     ...defaultizedProps,
     showToolbar: defaultizedProps.showToolbar ?? true,
-    hideTabs: defaultizedProps.hideTabs ?? false,
     autoFocus: true,
     components: {
       Field: DateTimeField,
@@ -162,11 +161,6 @@ MobileNextDateTimePicker.propTypes = {
    * Defaults to localized format based on the used `views`.
    */
   format: PropTypes.string,
-  /**
-   * Toggles visibility of date time switching tabs
-   * @default `false` for mobile, `true` for desktop
-   */
-  hideTabs: PropTypes.bool,
   /**
    * Pass a ref to the `input` element.
    */
