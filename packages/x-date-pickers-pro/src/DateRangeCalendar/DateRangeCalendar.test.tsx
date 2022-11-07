@@ -208,7 +208,7 @@ describe('<DateRangeCalendar />', () => {
         );
 
         expect(onChange.callCount).to.equal(2);
-        expect(onChange.lastCall.args[0][0]).toEqualDateTime(new Date(initialValue[0]));
+        expect(onChange.lastCall.args[0][0]).toEqualDateTime(initialValue[0]);
         expect(onChange.lastCall.args[0][1]).toEqualDateTime(new Date(2018, 0, 30));
 
         // test range flip
@@ -220,6 +220,36 @@ describe('<DateRangeCalendar />', () => {
         expect(onChange.callCount).to.equal(3);
         expect(onChange.lastCall.args[0][0]).toEqualDateTime(new Date(2018, 0, 2));
         expect(onChange.lastCall.args[0][1]).toEqualDateTime(initialValue[0]);
+      });
+
+      it('should emit "onChange" when dragging start date', () => {
+        const onChange = spy();
+        const initialValue: [any, any] = [
+          adapterToUse.date(new Date(2018, 0, 1)),
+          adapterToUse.date(new Date(2018, 0, 20)),
+        ];
+        render(<DateRangeCalendar onChange={onChange} defaultValue={initialValue} />);
+
+        // test range reduction
+        executeDateDrag(getPickerDay('1'), getPickerDay('2'), getPickerDay('3'));
+
+        expect(onChange.callCount).to.equal(1);
+        expect(onChange.lastCall.args[0][0]).toEqualDateTime(new Date(2018, 0, 3));
+        expect(onChange.lastCall.args[0][1]).toEqualDateTime(initialValue[1]);
+
+        // test range expansion
+        executeDateDrag(getPickerDay('3'), getPickerDay('1'));
+
+        expect(onChange.callCount).to.equal(2);
+        expect(onChange.lastCall.args[0][0]).toEqualDateTime(initialValue[0]);
+        expect(onChange.lastCall.args[0][1]).toEqualDateTime(initialValue[1]);
+
+        // test range flip
+        executeDateDrag(getPickerDay('1'), getPickerDay('22'));
+
+        expect(onChange.callCount).to.equal(3);
+        expect(onChange.lastCall.args[0][0]).toEqualDateTime(initialValue[1]);
+        expect(onChange.lastCall.args[0][1]).toEqualDateTime(new Date(2018, 0, 22));
       });
     });
   });
