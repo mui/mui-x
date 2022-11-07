@@ -88,22 +88,24 @@ describe('date-range-manager', () => {
       allowRangeFlip: true,
       expectedNextSelection: 'end' as const,
     },
-  ].forEach(({ range, selectingEnd, newDate, expectedRange, allowRangeFlip, expectedNextSelection }) => {
-    it(`calculateRangeChange should return ${expectedRange} when selecting ${selectingEnd} of ${range} with user input ${newDate}`, () => {
-      expect(
-        calculateRangeChange({
-          utils: adapterToUse,
-          range: range as DateRange<Date>,
-          newDate,
-          currentlySelectingRangeEnd: selectingEnd,
-          allowRangeFlip,
-        }),
-      ).to.deep.equal({
-        nextSelection: expectedNextSelection,
-        newRange: expectedRange,
+  ].forEach(
+    ({ range, selectingEnd, newDate, expectedRange, allowRangeFlip, expectedNextSelection }) => {
+      it(`calculateRangeChange should return ${expectedRange} when selecting ${selectingEnd} of ${range} with user input ${newDate}`, () => {
+        expect(
+          calculateRangeChange({
+            utils: adapterToUse,
+            range: range as DateRange<Date>,
+            newDate,
+            currentlySelectingRangeEnd: selectingEnd,
+            allowRangeFlip,
+          }),
+        ).to.deep.equal({
+          nextSelection: expectedNextSelection,
+          newRange: expectedRange,
+        });
       });
-    });
-  });
+    },
+  );
 
   [
     {
