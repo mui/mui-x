@@ -178,7 +178,6 @@ export const useGridRows = (
   const updateRows = React.useCallback<GridRowApi['updateRows']>(
     (updates) => {
       if (props.signature === GridSignature.DataGrid && updates.length > 1) {
-        // TODO: Add test with direct call to `apiRef.current.updateRows` in DataGrid after enabling the `apiRef` on the free plan.
         throw new Error(
           [
             "MUI: You can't update several rows at once in `apiRef.current.updateRows` on the DataGrid.",
