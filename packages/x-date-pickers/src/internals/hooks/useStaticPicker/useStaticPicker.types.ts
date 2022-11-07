@@ -27,8 +27,8 @@ export interface StaticOnlyPickerProps {
   displayStaticWrapperAs: 'desktop' | 'mobile';
 }
 
-export interface UseStaticPickerProps<TDate, TView extends CalendarOrClockPickerView>
-  extends BaseNextPickerProps<TDate | null, TDate, TView>,
+export interface UseStaticPickerProps<TDate, TView extends CalendarOrClockPickerView, TError>
+  extends BaseNextPickerProps<TDate | null, TDate, TView, TError>,
     StaticOnlyPickerProps {
   /**
    * Overrideable components.
@@ -45,10 +45,10 @@ export interface UseStaticPickerProps<TDate, TView extends CalendarOrClockPicker
 export interface UseStaticPickerParams<
   TDate,
   TView extends CalendarOrClockPickerView,
-  TExternalProps extends UseStaticPickerProps<TDate, TView>,
+  TExternalProps extends UseStaticPickerProps<TDate, TView, any>,
 > extends Pick<
     UsePickerParams<TDate | null, TDate, TView, TExternalProps, {}>,
-    'valueManager' | 'viewLookup'
+    'valueManager' | 'viewLookup' | 'validator'
   > {
   props: TExternalProps;
   /**

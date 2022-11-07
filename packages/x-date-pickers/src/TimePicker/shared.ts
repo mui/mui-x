@@ -14,7 +14,6 @@ import { ExportedDateInputProps } from '../internals/components/PureDateInput';
 import { ClockPickerView } from '../internals/models';
 import { PickerStateValueManager } from '../internals/hooks/usePickerState';
 import { DefaultizedProps } from '../internals/models/helpers';
-import { replaceInvalidDateByNull } from '../internals/utils/date-utils';
 import { BaseTimeValidationProps } from '../internals/hooks/validation/models';
 import {
   TimePickerToolbarProps,
@@ -22,6 +21,7 @@ import {
   TimePickerToolbar,
 } from './TimePickerToolbar';
 import { LocalizedComponent, PickersInputLocaleText } from '../locales/utils/pickersLocaleTextApi';
+import { singleItemValueManager } from '../internals/utils/valueManagers';
 
 export interface BaseTimePickerSlotsComponent<TDate> extends ClockPickerSlotsComponent {
   /**
@@ -133,11 +133,9 @@ export function useTimePickerDefaultizedProps<TDate, Props extends BaseTimePicke
   };
 }
 
-export const timePickerValueManager: PickerStateValueManager<any, any> = {
-  emptyValue: null,
-  getTodayValue: (utils) => utils.date()!,
-  cleanValue: replaceInvalidDateByNull,
-  areValuesEqual: (utils, a, b) => utils.isEqual(a, b),
+// TODO v6: Drop, we only need it on the legacy pickers for the custom valueReducer
+export const timeValueManager: PickerStateValueManager<any, any, TimeValidationError> = {
+  ...singleItemValueManager,
   valueReducer: (utils, lastValidValue, newValue) => {
     if (!lastValidValue || !utils.isValid(newValue)) {
       return newValue;

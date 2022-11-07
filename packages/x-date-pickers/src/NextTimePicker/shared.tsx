@@ -3,8 +3,6 @@ import { useThemeProps } from '@mui/material/styles';
 import { DefaultizedProps, MakeOptional } from '../internals/models/helpers';
 import { ClockPickerView } from '../ClockPicker';
 import { useUtils } from '../internals/hooks/useUtils';
-import { ValidationCommonPropsOptionalValue } from '../internals/hooks/validation/useValidation';
-import { DateValidationError } from '../internals/hooks/validation/useDateValidation';
 import {
   ClockPickerSlotsComponent,
   ClockPickerSlotsComponentsProps,
@@ -18,6 +16,7 @@ import {
   ExportedTimePickerToolbarProps,
   TimePickerToolbar,
 } from '../TimePicker/TimePickerToolbar';
+import { TimeValidationError } from '../internals/hooks/validation/useTimeValidation';
 
 export interface BaseNextTimePickerSlotsComponent<TDate> extends ClockPickerSlotsComponent {
   /**
@@ -33,11 +32,10 @@ export interface BaseNextTimePickerSlotsComponentsProps extends ClockPickerSlots
 
 export interface BaseNextTimePickerProps<TDate>
   extends MakeOptional<
-      BaseNextPickerProps<TDate | null, TDate, ClockPickerView>,
+      BaseNextPickerProps<TDate | null, TDate, ClockPickerView, TimeValidationError>,
       'views' | 'openTo'
     >,
-    ExportedClockPickerProps<TDate>,
-    ValidationCommonPropsOptionalValue<DateValidationError, TDate | null> {
+    ExportedClockPickerProps<TDate> {
   /**
    * 12h/24h view for hour selection clock.
    * @default `utils.is12HourCycleInCurrentLocale()`

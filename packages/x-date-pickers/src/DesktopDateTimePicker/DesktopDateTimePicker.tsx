@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import {
   BaseDateTimePickerProps,
   useDateTimePickerDefaultizedProps,
-  dateTimePickerValueManager,
   BaseDateTimePickerSlotsComponent,
   BaseDateTimePickerSlotsComponentsProps,
 } from '../DateTimePicker/shared';
@@ -18,6 +17,7 @@ import { useDateTimeValidation } from '../internals/hooks/validation/useDateTime
 import { KeyboardDateInput } from '../internals/components/KeyboardDateInput';
 import { usePickerState } from '../internals/hooks/usePickerState';
 import { DateInputSlotsComponent } from '../internals/components/PureDateInput';
+import { singleItemValueManager } from '../internals/utils/valueManagers';
 
 export interface DesktopDateTimePickerSlotsComponent<TDate>
   extends BaseDateTimePickerSlotsComponent<TDate>,
@@ -68,10 +68,7 @@ export const DesktopDateTimePicker = React.forwardRef(function DesktopDateTimePi
 
   const validationError = useDateTimeValidation(props) !== null;
 
-  const { pickerProps, inputProps, wrapperProps } = usePickerState(
-    props,
-    dateTimePickerValueManager,
-  );
+  const { pickerProps, inputProps, wrapperProps } = usePickerState(props, singleItemValueManager);
 
   const { onChange, value, components, componentsProps, localeText, ...other } = props;
 
