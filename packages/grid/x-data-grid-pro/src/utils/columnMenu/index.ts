@@ -1,1 +1,1 @@
-export { insertItemsInColumnMenu } from './insertItemsInColumnMenu';
+export * from './insertItemsInColumnMenu';

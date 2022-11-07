@@ -46,7 +46,7 @@ export interface DataGridPremiumProps<R extends GridValidRowModel = any>
 
 export interface DataGridPremiumPropsWithComplexDefaultValueAfterProcessing
   extends Pick<DataGridPropsWithComplexDefaultValueAfterProcessing, 'localeText'> {
-  components: Partial<GridPremiumSlotsComponent>;
+  components: GridPremiumSlotsComponent;
 }
 
 /**
