@@ -1,49 +1,44 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { resolveComponentProps } from '@mui/base/utils';
+import { timePickerValueManager } from '../TimePicker/shared';
+import { Unstable_TimeField as TimeField } from '../TimeField';
+import { MobileNextTimePickerProps } from './MobileNextTimePicker.types';
+import { useNextTimePickerDefaultizedProps } from '../NextTimePicker/shared';
+import { ClockPickerView, useLocaleText } from '../internals';
 import { useMobilePicker } from '../internals/hooks/useMobilePicker';
-import { MobileNextDatePickerProps } from './MobileNextDatePicker.types';
-import {
-  getDatePickerFieldFormat,
-  useNextDatePickerDefaultizedProps,
-} from '../NextDatePicker/shared';
-import { CalendarPickerView, useLocaleText, useUtils, validateDate } from '../internals';
-import { Unstable_DateField as DateField } from '../DateField';
 import { extractValidationProps } from '../internals/utils/validation';
-import { renderDateView } from '../internals/utils/viewRenderers';
-import { singleItemValueManager } from '../internals/utils/valueManagers';
+import { renderTimeView } from '../internals/utils/viewRenderers';
 
-type MobileDatePickerComponent = (<TDate>(
-  props: MobileNextDatePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
+type MobileTimePickerComponent = (<TDate>(
+  props: MobileNextTimePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
 ) => JSX.Element) & { propTypes?: any };
 
 const VIEW_LOOKUP = {
-  day: renderDateView,
-  month: renderDateView,
-  year: renderDateView,
+  hours: renderTimeView,
+  minutes: renderTimeView,
+  seconds: renderTimeView,
 };
 
-const MobileNextDatePicker = React.forwardRef(function MobileNextDatePicker<TDate>(
-  inProps: MobileNextDatePickerProps<TDate>,
+const MobileNextTimePicker = React.forwardRef(function MobileNextTimePicker<TDate>(
+  inProps: MobileNextTimePickerProps<TDate>,
   ref: React.Ref<HTMLDivElement>,
 ) {
   const localeText = useLocaleText();
-  const utils = useUtils();
 
-  // Props with the default values common to all date pickers
-  const { className, sx, ...defaultizedProps } = useNextDatePickerDefaultizedProps<
+  // Props with the default values common to all time pickers
+  const { className, sx, ...defaultizedProps } = useNextTimePickerDefaultizedProps<
     TDate,
-    MobileNextDatePickerProps<TDate>
-  >(inProps, 'MuiMobileNextDatePicker');
+    MobileNextTimePickerProps<TDate>
+  >(inProps, 'MuiMobileNextTimePicker');
 
   // Props with the default values specific to the mobile variant
   const props = {
     ...defaultizedProps,
-    format: getDatePickerFieldFormat(utils, defaultizedProps),
     showToolbar: defaultizedProps.showToolbar ?? true,
     autoFocus: true,
     components: {
-      Field: DateField,
+      Field: TimeField,
       ...defaultizedProps.components,
     },
     componentsProps: {
@@ -60,22 +55,31 @@ const MobileNextDatePicker = React.forwardRef(function MobileNextDatePicker<TDat
     },
   };
 
-  const { renderPicker } = useMobilePicker<TDate, CalendarPickerView, typeof props>({
+  const { renderPicker } = useMobilePicker<TDate, ClockPickerView, typeof props>({
     props,
-    valueManager: singleItemValueManager,
-    getOpenDialogAriaText: localeText.openDatePickerDialogue,
+    valueManager: timePickerValueManager,
+    getOpenDialogAriaText: localeText.openTimePickerDialogue,
     viewLookup: VIEW_LOOKUP,
-    validator: validateDate,
   });
 
   return renderPicker();
-}) as MobileDatePickerComponent;
+}) as MobileTimePickerComponent;
 
-MobileNextDatePicker.propTypes = {
+MobileNextTimePicker.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
+  /**
+   * 12h/24h view for hour selection clock.
+   * @default `utils.is12HourCycleInCurrentLocale()`
+   */
+  ampm: PropTypes.bool,
+  /**
+   * Display ampm controls under the clock (instead of in the toolbar).
+   * @default false
+   */
+  ampmInClock: PropTypes.bool,
   autoFocus: PropTypes.bool,
   /**
    * Class name applied to the root element.
@@ -97,17 +101,6 @@ MobileNextDatePicker.propTypes = {
    */
   componentsProps: PropTypes.object,
   /**
-   * Formats the day of week displayed in the calendar header.
-   * @param {string} day The day of week provided by the adapter's method `getWeekdays`.
-   * @returns {string} The name to display.
-   * @default (day) => day.charAt(0).toUpperCase()
-   */
-  dayOfWeekFormatter: PropTypes.func,
-  /**
-   * Default calendar month displayed when `value={null}`.
-   */
-  defaultCalendarMonth: PropTypes.any,
-  /**
    * The default value.
    * Used when the component is not controlled.
    */
@@ -123,10 +116,10 @@ MobileNextDatePicker.propTypes = {
    */
   disableFuture: PropTypes.bool,
   /**
-   * If `true`, today's date is rendering without highlighting with circle.
+   * Do not ignore date part when validating min/max time.
    * @default false
    */
-  disableHighlightToday: PropTypes.bool,
+  disableIgnoringDatePartForTimeValidation: PropTypes.bool,
   /**
    * Do not render open picker button (renders only the field).
    * @default false
@@ -137,12 +130,6 @@ MobileNextDatePicker.propTypes = {
    * @default false
    */
   disablePast: PropTypes.bool,
-  /**
-   * Calendar will show more weeks in order to match this value.
-   * Put it to 6 for having fix number of week in Gregorian calendars
-   * @default undefined
-   */
-  fixedWeekNumber: PropTypes.number,
   /**
    * Format of the date when rendered in the input(s).
    * Defaults to localized format based on the used `views`.
@@ -162,24 +149,25 @@ MobileNextDatePicker.propTypes = {
    */
   label: PropTypes.node,
   /**
-   * If `true` renders `LoadingComponent` in calendar instead of calendar view.
-   * Can be used to preload information and show it in calendar.
-   * @default false
-   */
-  loading: PropTypes.bool,
-  /**
    * Locale for components texts.
    * Allows overriding texts coming from `LocalizationProvider` and `theme`.
    */
   localeText: PropTypes.object,
   /**
-   * Maximal selectable date. @DateIOType
+   * Max time acceptable time.
+   * For input validation date part of passed object will be ignored if `disableIgnoringDatePartForTimeValidation` not specified.
    */
-  maxDate: PropTypes.any,
+  maxTime: PropTypes.any,
   /**
-   * Minimal selectable date. @DateIOType
+   * Min time acceptable time.
+   * For input validation date part of passed object will be ignored if `disableIgnoringDatePartForTimeValidation` not specified.
    */
-  minDate: PropTypes.any,
+  minTime: PropTypes.any,
+  /**
+   * Step over minutes.
+   * @default 1
+   */
+  minutesStep: PropTypes.number,
   /**
    * Callback fired when the value is accepted @DateIOType.
    * @template TValue
@@ -187,10 +175,9 @@ MobileNextDatePicker.propTypes = {
    */
   onAccept: PropTypes.func,
   /**
-   * Callback fired when the value changes.
-   * @template TValue, TError
+   * Callback fired when the value (the selected date) changes.
+   * @template TValue
    * @param {TValue} value The new value.
-   * @param {FieldChangeHandlerContext<TError>} The context containing the validation result of the current value.
    */
   onChange: PropTypes.func,
   /**
@@ -199,19 +186,18 @@ MobileNextDatePicker.propTypes = {
    */
   onClose: PropTypes.func,
   /**
-   * Callback fired when the error associated to the current value changes.
-   * @template TValue, TError
-   * @param {TError} error The new error.
-   * @param {TValue} value The value associated to the error.
+   * Callback that fired when input value or new `value` prop validation returns **new** validation error (or value is valid after error).
+   * In case of validation error detected `reason` prop return non-null value and `TextField` must be displayed in `error` state.
+   * This can be used to render appropriate form error.
+   *
+   * [Read the guide](https://next.material-ui-pickers.dev/guides/forms) about form integration and error displaying.
+   * @DateIOType
+   *
+   * @template TError, TValue
+   * @param {TError} reason The reason why the current value is not valid.
+   * @param {TValue} value The invalid value.
    */
   onError: PropTypes.func,
-  /**
-   * Callback firing on month change @DateIOType.
-   * @template TDate
-   * @param {TDate} month The new month.
-   * @returns {void|Promise} -
-   */
-  onMonthChange: PropTypes.func,
   /**
    * Callback fired when the popup requests to be opened.
    * Use in controlled mode (see open).
@@ -229,12 +215,6 @@ MobileNextDatePicker.propTypes = {
    */
   onViewChange: PropTypes.func,
   /**
-   * Callback firing on year change @DateIOType.
-   * @template TDate
-   * @param {TDate} year The new year.
-   */
-  onYearChange: PropTypes.func,
-  /**
    * Control the popup or dialog open state.
    * @default false
    */
@@ -242,23 +222,12 @@ MobileNextDatePicker.propTypes = {
   /**
    * First view to show.
    */
-  openTo: PropTypes.oneOf(['day', 'month', 'year']),
+  openTo: PropTypes.oneOf(['hours', 'minutes', 'seconds']),
   /**
    * Force rendering in particular orientation.
    */
   orientation: PropTypes.oneOf(['landscape', 'portrait']),
   readOnly: PropTypes.bool,
-  /**
-   * Disable heavy animations.
-   * @default typeof navigator !== 'undefined' && /(android)/i.test(navigator.userAgent)
-   */
-  reduceAnimations: PropTypes.bool,
-  /**
-   * Component displaying when passed `loading` true.
-   * @returns {React.ReactNode} The node to render when loading.
-   * @default () => <span data-mui-test="loading-progress">...</span>
-   */
-  renderLoading: PropTypes.func,
   /**
    * The currently selected sections.
    * This prop accept four formats:
@@ -277,33 +246,13 @@ MobileNextDatePicker.propTypes = {
     }),
   ]),
   /**
-   * Disable specific date. @DateIOType
-   * @template TDate
-   * @param {TDate} day The date to test.
-   * @returns {boolean} Returns `true` if the date should be disabled.
+   * Dynamically check if time is disabled or not.
+   * If returns `false` appropriate time point will ot be acceptable.
+   * @param {number} timeValue The value to check.
+   * @param {ClockPickerView} view The clock type of the timeValue.
+   * @returns {boolean} Returns `true` if the time should be disabled
    */
-  shouldDisableDate: PropTypes.func,
-  /**
-   * Disable specific months dynamically.
-   * Works like `shouldDisableDate` but for month selection view @DateIOType.
-   * @template TDate
-   * @param {TDate} month The month to check.
-   * @returns {boolean} If `true` the month will be disabled.
-   */
-  shouldDisableMonth: PropTypes.func,
-  /**
-   * Disable specific years dynamically.
-   * Works like `shouldDisableDate` but for year selection view @DateIOType.
-   * @template TDate
-   * @param {TDate} year The year to test.
-   * @returns {boolean} Returns `true` if the year should be disabled.
-   */
-  shouldDisableYear: PropTypes.func,
-  /**
-   * If `true`, days that have `outsideCurrentMonth={true}` are displayed.
-   * @default false
-   */
-  showDaysOutsideCurrentMonth: PropTypes.bool,
+  shouldDisableTime: PropTypes.func,
   /**
    * If `true`, the toolbar will be visible.
    * @default `true` for mobile, `false` for desktop
@@ -318,14 +267,13 @@ MobileNextDatePicker.propTypes = {
     PropTypes.object,
   ]),
   /**
-   * The selected value.
-   * Used when the component is controlled.
+   * The value of the picker.
    */
   value: PropTypes.any,
   /**
    * Array of views to show.
    */
-  views: PropTypes.arrayOf(PropTypes.oneOf(['day', 'month', 'year']).isRequired),
+  views: PropTypes.arrayOf(PropTypes.oneOf(['hours', 'minutes', 'seconds']).isRequired),
 } as any;
 
-export { MobileNextDatePicker };
+export { MobileNextTimePicker };
