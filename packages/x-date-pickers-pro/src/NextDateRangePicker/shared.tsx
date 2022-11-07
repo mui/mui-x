@@ -8,7 +8,6 @@ import {
   useUtils,
   applyDefaultDate,
   BaseDateValidationProps,
-  ValidationCommonPropsOptionalValue,
 } from '@mui/x-date-pickers/internals';
 import { DateRangeValidationError } from '../internal/hooks/validation/useDateRangeValidation';
 import { DateRange } from '../internal/models';
@@ -39,12 +38,11 @@ export interface BaseNextDateRangePickerSlotsComponentsProps<TDate>
 
 export interface BaseNextDateRangePickerProps<TDate>
   extends Omit<
-      BaseNextPickerProps<DateRange<TDate>, TDate, any>,
+      BaseNextPickerProps<DateRange<TDate>, TDate, 'day', DateRangeValidationError>,
       'views' | 'openTo' | 'onViewChange' | 'orientation'
     >,
     ExportedDateRangeCalendarProps<TDate>,
-    BaseDateValidationProps<TDate>,
-    ValidationCommonPropsOptionalValue<DateRangeValidationError, DateRange<TDate>> {
+    BaseDateValidationProps<TDate> {
   /**
    * Overrideable components.
    * @default {}

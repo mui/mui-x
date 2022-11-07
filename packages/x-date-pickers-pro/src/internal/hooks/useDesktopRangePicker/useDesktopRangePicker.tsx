@@ -9,6 +9,7 @@ import {
   WrapperVariantContext,
   PickersPopper,
   PickerViewLayout,
+  InferError,
 } from '@mui/x-date-pickers/internals';
 import {
   UseDesktopRangePickerParams,
@@ -24,11 +25,12 @@ const releaseInfo = getReleaseInfo();
 export const useDesktopRangePicker = <
   TDate,
   TView extends CalendarOrClockPickerView,
-  TExternalProps extends UseDesktopRangePickerProps<TDate, TView>,
+  TExternalProps extends UseDesktopRangePickerProps<TDate, TView, any>,
 >({
   props,
   valueManager,
   viewLookup,
+  validator,
 }: UseDesktopRangePickerParams<TDate, TView, TExternalProps>) => {
   useLicenseVerifier('x-date-pickers-pro', releaseInfo);
 
@@ -59,6 +61,7 @@ export const useDesktopRangePicker = <
     valueManager,
     wrapperVariant: 'desktop',
     viewLookup,
+    validator,
     additionalViewProps: {
       currentDatePosition,
       onCurrentDatePositionChange: setCurrentDatePosition,
@@ -91,7 +94,10 @@ export const useDesktopRangePicker = <
   });
 
   const Field = components.Field;
-  const fieldProps: BaseMultiInputFieldProps<DateRange<TDate>, unknown> = useSlotProps({
+  const fieldProps: BaseMultiInputFieldProps<
+    DateRange<TDate>,
+    InferError<TExternalProps>
+  > = useSlotProps({
     elementType: Field,
     externalSlotProps: componentsProps.field,
     additionalProps: {

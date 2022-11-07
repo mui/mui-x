@@ -34,9 +34,9 @@ export interface DesktopRangeOnlyPickerProps<TDate>
     UsePickerViewsNonStaticProps,
     BaseNextNonStaticPickerProps {}
 
-export interface UseDesktopRangePickerProps<TDate, TView extends CalendarOrClockPickerView>
+export interface UseDesktopRangePickerProps<TDate, TView extends CalendarOrClockPickerView, TError>
   extends DesktopRangeOnlyPickerProps<TDate>,
-    BaseNextPickerProps<DateRange<TDate>, TDate, TView> {
+    BaseNextPickerProps<DateRange<TDate>, TDate, TView, TError> {
   /**
    * Overrideable components.
    * @default {}
@@ -57,7 +57,7 @@ interface DesktopRangePickerAdditionalViewProps {
 export interface UseDesktopRangePickerParams<
   TDate,
   TView extends CalendarOrClockPickerView,
-  TExternalProps extends UseDesktopRangePickerProps<TDate, TView>,
+  TExternalProps extends UseDesktopRangePickerProps<TDate, TView, any>,
 > extends Pick<
     UsePickerParams<
       DateRange<TDate>,
@@ -66,7 +66,7 @@ export interface UseDesktopRangePickerParams<
       TExternalProps,
       DesktopRangePickerAdditionalViewProps
     >,
-    'valueManager' | 'viewLookup'
+    'valueManager' | 'viewLookup' | 'validator'
   > {
   props: TExternalProps;
 }

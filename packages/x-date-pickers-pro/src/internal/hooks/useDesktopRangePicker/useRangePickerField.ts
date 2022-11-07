@@ -9,7 +9,7 @@ import {
 import { DateRange } from '../../models';
 
 interface UseRangePickerFieldParams<TDate, TView extends CalendarOrClockPickerView>
-  extends Pick<UsePickerResponse<DateRange<TDate>, TView>, 'open' | 'actions'> {
+  extends Pick<UsePickerResponse<DateRange<TDate>, TView, any>, 'open' | 'actions'> {
   readOnly?: boolean;
   disableOpenPicker?: boolean;
   Input: React.ElementType;

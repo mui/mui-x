@@ -2,12 +2,13 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { extractValidationProps } from '@mui/x-date-pickers/internals';
 import { resolveComponentProps } from '@mui/base/utils';
-import { dateRangePickerValueManager } from '../DateRangePicker/shared';
+import { rangeValueManager } from '../internal/utils/valueManagers';
 import { DesktopNextDateRangePickerProps } from './DesktopNextDateRangePicker.types';
 import { useNextDateRangePickerDefaultizedProps } from '../NextDateRangePicker/shared';
 import { useDesktopRangePicker } from '../internal/hooks/useDesktopRangePicker';
 import { Unstable_MultiInputDateRangeField as MultiInputDateRangeField } from '../MultiInputDateRangeField';
 import { renderDateRangeView } from '../internal/utils/views';
+import { validateDateRange } from '../internal/hooks/validation/useDateRangeValidation';
 
 type DesktopDateRangePickerComponent = (<TDate>(
   props: DesktopNextDateRangePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
@@ -52,8 +53,9 @@ const DesktopNextDateRangePicker = React.forwardRef(function DesktopNextDateRang
 
   const { renderPicker } = useDesktopRangePicker<TDate, 'day', typeof props>({
     props,
-    valueManager: dateRangePickerValueManager,
+    valueManager: rangeValueManager,
     viewLookup: VIEW_LOOKUP,
+    validator: validateDateRange,
   });
 
   return renderPicker();
@@ -172,9 +174,10 @@ DesktopNextDateRangePicker.propTypes = {
    */
   onAccept: PropTypes.func,
   /**
-   * Callback fired when the value (the selected date) changes.
-   * @template TValue
+   * Callback fired when the value changes.
+   * @template TValue, TError
    * @param {TValue} value The new value.
+   * @param {FieldChangeHandlerContext<TError>} The context containing the validation result of the current value.
    */
   onChange: PropTypes.func,
   /**
@@ -183,16 +186,12 @@ DesktopNextDateRangePicker.propTypes = {
    */
   onClose: PropTypes.func,
   /**
-   * Callback that fired when input value or new `value` prop validation returns **new** validation error (or value is valid after error).
-   * In case of validation error detected `reason` prop return non-null value and `TextField` must be displayed in `error` state.
-   * This can be used to render appropriate form error.
+   * Callback fired when the error associated to the current value changes.
+   * If the error has a non-null value, then the `TextField` will be rendered in `error` state.
    *
-   * [Read the guide](https://next.material-ui-pickers.dev/guides/forms) about form integration and error displaying.
-   * @DateIOType
-   *
-   * @template TError, TValue
-   * @param {TError} reason The reason why the current value is not valid.
-   * @param {TValue} value The invalid value.
+   * @template TValue, TError
+   * @param {TError} error The new error describing why the current value is not valid.
+   * @param {TValue} value The value associated to the error.
    */
   onError: PropTypes.func,
   /**
@@ -273,7 +272,8 @@ DesktopNextDateRangePicker.propTypes = {
     PropTypes.object,
   ]),
   /**
-   * The value of the picker.
+   * The selected value.
+   * Used when the component is controlled.
    */
   value: PropTypes.arrayOf(PropTypes.any),
 } as any;

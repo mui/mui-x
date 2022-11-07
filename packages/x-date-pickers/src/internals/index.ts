@@ -105,9 +105,9 @@ export type {
 export { useValidation } from './hooks/validation/useValidation';
 export type {
   ValidationCommonProps,
-  ValidationCommonPropsOptionalValue,
   ValidationProps,
   Validator,
+  InferError,
 } from './hooks/validation/useValidation';
 export { validateDate } from './hooks/validation/useDateValidation';
 export { validateTime } from './hooks/validation/useTimeValidation';
