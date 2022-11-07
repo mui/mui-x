@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { DataGridPremium } from '@mui/x-data-grid-premium';
+import { DataGridPremium, GridColumnMenuSimple } from '@mui/x-data-grid-premium';
 import { useDemoData } from '@mui/x-data-grid-generator';
 
 export default function ColumnMenuGridPro() {
@@ -11,7 +11,7 @@ export default function ColumnMenuGridPro() {
 
   return (
     <div style={{ height: 400, width: '100%' }}>
-      <DataGridPremium {...data} />
+      <DataGridPremium {...data} components={{ ColumnMenu: GridColumnMenuSimple }} />
     </div>
   );
 }

@@ -10,7 +10,7 @@ interface GridColumnPinningMenuItemsProps {
   onClick?: (event: React.MouseEvent<any>) => void;
 }
 
-const GridColumnPinningMenuSimpleItems = (props: GridColumnPinningMenuItemsProps) => {
+const GridColumnPinningMenuItemsSimple = (props: GridColumnPinningMenuItemsProps) => {
   const { column, onClick } = props;
   const apiRef = useGridApiContext();
 
@@ -61,7 +61,7 @@ const GridColumnPinningMenuSimpleItems = (props: GridColumnPinningMenuItemsProps
   );
 };
 
-GridColumnPinningMenuSimpleItems.propTypes = {
+GridColumnPinningMenuItemsSimple.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
@@ -70,4 +70,4 @@ GridColumnPinningMenuSimpleItems.propTypes = {
   onClick: PropTypes.func,
 } as any;
 
-export { GridColumnPinningMenuSimpleItems };
+export { GridColumnPinningMenuItemsSimple };

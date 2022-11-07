@@ -38,7 +38,7 @@ export interface GridExperimentalProFeatures extends GridExperimentalFeatures {
 
 interface DataGridProPropsWithComplexDefaultValueBeforeProcessing
   extends Omit<DataGridPropsWithComplexDefaultValueBeforeProcessing, 'components'> {
-  components?: GridProSlotsComponent;
+  components?: Partial<GridProSlotsComponent>;
 }
 
 /**

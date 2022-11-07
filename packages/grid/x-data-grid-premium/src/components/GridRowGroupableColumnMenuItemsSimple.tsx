@@ -10,7 +10,7 @@ interface GridRowGroupableColumnMenuItemsProps {
   onClick?: (event: React.MouseEvent<any>) => void;
 }
 
-const GridRowGroupableColumnMenuSimpleItems = (props: GridRowGroupableColumnMenuItemsProps) => {
+const GridRowGroupableColumnMenuItemsSimple = (props: GridRowGroupableColumnMenuItemsProps) => {
   const { column, onClick } = props;
   const apiRef = useGridApiContext();
   const rowGroupingModel = useGridSelector(apiRef, gridRowGroupingSanitizedModelSelector);
@@ -49,7 +49,7 @@ const GridRowGroupableColumnMenuSimpleItems = (props: GridRowGroupableColumnMenu
   );
 };
 
-GridRowGroupableColumnMenuSimpleItems.propTypes = {
+GridRowGroupableColumnMenuItemsSimple.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
@@ -58,4 +58,4 @@ GridRowGroupableColumnMenuSimpleItems.propTypes = {
   onClick: PropTypes.func,
 } as any;
 
-export { GridRowGroupableColumnMenuSimpleItems };
+export { GridRowGroupableColumnMenuItemsSimple };

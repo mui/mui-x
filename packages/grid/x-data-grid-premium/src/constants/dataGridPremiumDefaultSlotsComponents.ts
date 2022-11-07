@@ -1,7 +1,10 @@
 import { DATA_GRID_PRO_DEFAULT_SLOTS_COMPONENTS } from '@mui/x-data-grid-pro';
 import { GridPremiumSlotsComponent, GridPremiumIconSlotsComponent } from '../models';
-import { GridWorkspacesIcon, GridGroupWorkIcon } from '../components';
-import { GridAggregationColumnMenuItem } from '../components/GridAggregationColumnMenuItem';
+import {
+  GridWorkspacesIcon,
+  GridGroupWorkIcon,
+  GridAggregationColumnMenuItem,
+} from '../components';
 import { GridRowGroupableColumnMenuItems } from '../components/GridRowGroupableColumnMenuItems';
 import { GridRowGroupingColumnMenuItems } from '../components/GridRowGroupingColumnMenuItems';
 

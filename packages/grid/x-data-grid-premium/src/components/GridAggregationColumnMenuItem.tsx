@@ -26,7 +26,7 @@ const StyledStack = styled(Stack)(({ theme }) => ({
   padding: theme.spacing(1, 1.5, 1, 1.5),
 }));
 
-export const GridAggregationColumnMenuItem = (props: GridAggregationColumnMenuItemsProps) => {
+const GridAggregationColumnMenuItemRoot = (props: GridAggregationColumnMenuItemsProps) => {
   const { column, label, availableAggregationFunctions } = props;
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
@@ -65,33 +65,42 @@ export const GridAggregationColumnMenuItem = (props: GridAggregationColumnMenuIt
   };
 
   return (
-    <StyledStack>
-      <FormControl variant="standard" size="small" fullWidth>
-        <InputLabel id={`${id}-label`}>{label}</InputLabel>
-        <Select
-          labelId={`${id}-label`}
-          id={`${id}-input`}
-          value={selectedAggregationRule}
-          label={label}
-          color="primary"
-          onChange={handleAggregationItemChange}
-          onBlur={(e) => e.stopPropagation()}
-          fullWidth
-        >
-          <MenuItem value="">...</MenuItem>
-          {availableAggregationFunctions.map((aggFunc) => (
-            <MenuItem key={aggFunc} value={aggFunc}>
-              {getAggregationFunctionLabel({
-                apiRef,
-                aggregationRule: {
-                  aggregationFunctionName: aggFunc,
-                  aggregationFunction: rootProps.aggregationFunctions[aggFunc],
-                },
-              })}
-            </MenuItem>
-          ))}
-        </Select>
-      </FormControl>
-    </StyledStack>
+    <FormControl variant="standard" size="small" fullWidth>
+      <InputLabel id={`${id}-label`}>{label}</InputLabel>
+      <Select
+        labelId={`${id}-label`}
+        id={`${id}-input`}
+        value={selectedAggregationRule}
+        label={label}
+        color="primary"
+        onChange={handleAggregationItemChange}
+        onBlur={(e) => e.stopPropagation()}
+        fullWidth
+      >
+        <MenuItem value="">...</MenuItem>
+        {availableAggregationFunctions.map((aggFunc) => (
+          <MenuItem key={aggFunc} value={aggFunc}>
+            {getAggregationFunctionLabel({
+              apiRef,
+              aggregationRule: {
+                aggregationFunctionName: aggFunc,
+                aggregationFunction: rootProps.aggregationFunctions[aggFunc],
+              },
+            })}
+          </MenuItem>
+        ))}
+      </Select>
+    </FormControl>
   );
 };
+
+export const GridAggregationColumnMenuItem = (props: GridAggregationColumnMenuItemsProps) => (
+  <StyledStack>
+    <GridAggregationColumnMenuItemRoot {...props} />
+  </StyledStack>
+);
+export const GridAggregationColumnMenuItemSimple = (props: GridAggregationColumnMenuItemsProps) => (
+  <MenuItem disableRipple>
+    <GridAggregationColumnMenuItemRoot {...props} />
+  </MenuItem>
+);

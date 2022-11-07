@@ -20,12 +20,6 @@ By default, each column header has the column menu enabled. To disable the colum
 
 {{"demo": "DisabledColumnMenuGrid.js", "bg": "inline"}}
 
-## Simple column menu
-
-You can replace the default column menu with a simplified one using `GridColumnMenuSimple` component.
-
-{{"demo": "SimpleColumnMenuGrid.js", "bg": "inline"}}
-
 ## Customise column menu items
 
 You can also customise column menu based on some conditions. Every item in the menu is assigned a `key` which serves as a unique identifier of that item using which it's possible to:
@@ -84,7 +78,7 @@ If you're using TypeScript, for new items that you are adding, you'll need to sp
 
 ```tsx
 declare module '@mui/x-data-grid' {
-  interface GridColumnMenuSlotOverrides {
+  interface GridColumnMenuKeysOverrides {
     closeMenu: true;
   }
 }
@@ -92,7 +86,7 @@ declare module '@mui/x-data-grid' {
 
 ### Default column menu items
 
-Default slots for **DataGrid** are `filter`, `sorting`, `hideColumn`, `divider` and `manageColumns`, wheras **DataGridPro** adds `pinning` and **DataGridPremium** adds `grouping` and `aggregation` on top of them.
+Default `keys` for **DataGrid** are `filter`, `sorting`, `hideColumn`, `divider` and `manageColumns`, wheras **DataGridPro** adds `pinning` and **DataGridPremium** adds `grouping` and `aggregation` on top of them.
 
 Here's a demo overriding some existing items, adding some new items and displaying different items for a column.
 
@@ -103,6 +97,46 @@ Here's a demo overriding some existing items, adding some new items and displayi
 You can access commercial features like column pinning etc from the column menu when using `DataGridPro` or `DataGridPremium`.
 
 {{"demo": "ColumnMenuGridPro.js", "bg": "inline"}}
+
+## Simple column menu
+
+You can replace the default column menu with a simplified one using `GridColumnMenuSimple` component.
+
+{{"demo": "SimpleColumnMenuGrid.js", "bg": "inline"}}
+
+For _Pro_ and _Premium_ packages you have specific `slot` for each of the column menu item using which you can import simple variant or pass on your own component, or you can also use [column menu customizing](#customise-column-menu-items) to use your custom component based on item `key`.
+
+Here's a list of column menu items and their overridable slots for Commercial features.
+
+| **Item**                | **Package** | **Key**       | **Slot**                     | **Default**                     |
+| ----------------------- | ----------- | ------------- | ---------------------------- | ------------------------------- |
+| Pinning                 | Pro         | 'pinning'     | 'ColumnMenuPinningItem'      | GridColumnPinningMenuItems      |
+| Groupable (not grouped) | Premium     | 'grouping'    | 'ColumnMenuRowGroupableItem' | GridRowGroupableColumnMenuItems |
+| Grouping (grouped)      | Premium     | 'grouping'    | 'ColumnMenuRowGroupingItem'  | GridRowGroupingColumnMenuItems  |
+| Aggregation             | Premium     | 'aggregation' | 'ColumnMenuAggregationItem'  | GridAggregationColumnMenuItem   |
+
+This example is using simple Column Menu for basic menu and overriding some slots for premium items and customizing the display order and the items shown.
+
+```tsx
+<DataGridPremium
+  {...data}
+  componentsProps={{
+    columnMenu: {
+      getVisibleColumnMenuItems: () => [
+        'pinning',
+        'sorting',
+        'filter',
+        'aggregation',
+      ],
+    },
+  }}
+  components={{
+    ColumnMenu: GridColumnMenuSimple,
+    ColumnMenuPinningItem: GridColumnPinningMenuItemsSimple,
+    ColumnMenuAggregationItem: SomeCustomAggregationComponent,
+  }}
+/>
+```
 
 ## API
 
