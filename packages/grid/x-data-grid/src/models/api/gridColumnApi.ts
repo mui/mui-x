@@ -65,15 +65,18 @@ export interface GridColumnApi {
    */
   setColumnVisibility: (field: string, isVisible: boolean) => void;
   /**
-   * Moves a column from its original position to the position given by `targetIndexPosition`.
-   * @param {string} field The field name
-   * @param {number} targetIndexPosition The new position (0-based).
-   */
-  setColumnIndex: (field: string, targetIndexPosition: number) => void;
-  /**
    * Updates the width of a column.
    * @param {string} field The column field.
    * @param {number} width The new width.
    */
   setColumnWidth: (field: string, width: number) => void;
+}
+
+export interface GridColumnReorderApi {
+  /**
+   * Moves a column from its original position to the position given by `targetIndexPosition`.
+   * @param {string} field The field name
+   * @param {number} targetIndexPosition The new position (0-based).
+   */
+  setColumnIndex: (field: string, targetIndexPosition: number) => void;
 }

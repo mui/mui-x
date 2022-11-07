@@ -177,6 +177,7 @@
   { "name": "GridColumnPinningMenuItems", "kind": "Function" },
   { "name": "GridColumnPinningState", "kind": "TypeAlias" },
   { "name": "gridColumnPositionsSelector", "kind": "Variable" },
+  { "name": "GridColumnReorderApi", "kind": "Interface" },
   { "name": "gridColumnReorderDragColSelector", "kind": "Variable" },
   { "name": "gridColumnReorderSelector", "kind": "Variable" },
   { "name": "GridColumnReorderState", "kind": "Interface" },

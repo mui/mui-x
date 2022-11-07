@@ -156,6 +156,8 @@ function ApiRefPrivateMethods() {
     apiRef.current.updateControlState();
     // @ts-expect-error Property 'registerControlState' does not exist on type 'GridApiCommunity'
     apiRef.current.registerControlState();
+    // @ts-expect-error Property 'setColumnIndex' does not exist on type 'GridApiCommunity'
+    apiRef.current.setColumnIndex;
   });
 
   return null;

@@ -147,6 +147,7 @@
   { "name": "GridColumnNode", "kind": "TypeAlias" },
   { "name": "GridColumnOrderChangeParams", "kind": "Interface" },
   { "name": "gridColumnPositionsSelector", "kind": "Variable" },
+  { "name": "GridColumnReorderApi", "kind": "Interface" },
   { "name": "GridColumnResizeParams", "kind": "Interface" },
   { "name": "GridColumns", "kind": "TypeAlias" },
   { "name": "GridColumnsGroupingState", "kind": "Interface" },
