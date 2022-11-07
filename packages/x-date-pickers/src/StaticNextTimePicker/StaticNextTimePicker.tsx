@@ -140,8 +140,10 @@ StaticNextTimePicker.propTypes = {
   onChange: PropTypes.func,
   /**
    * Callback fired when the error associated to the current value changes.
+   * If the error has a non-null value, then the `TextField` will be rendered in `error` state.
+   *
    * @template TValue, TError
-   * @param {TError} error The new error.
+   * @param {TError} error The new error describing why the current value is not valid.
    * @param {TValue} value The value associated to the error.
    */
   onError: PropTypes.func,

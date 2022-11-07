@@ -16,7 +16,7 @@ import {
   ExportedTimePickerToolbarProps,
   TimePickerToolbar,
 } from '../TimePicker/TimePickerToolbar';
-import {TimeValidationError} from "../internals/hooks/validation/useTimeValidation";
+import { TimeValidationError } from '../internals/hooks/validation/useTimeValidation';
 
 export interface BaseNextTimePickerSlotsComponent<TDate> extends ClockPickerSlotsComponent {
   /**
