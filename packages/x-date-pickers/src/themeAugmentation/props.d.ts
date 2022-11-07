@@ -38,10 +38,16 @@ import {
   ExportedPickersToolbarTextProps,
 } from '../internals';
 import { CalendarOrClockPickerView } from '../internals/models';
+
 import { NextDatePickerProps } from '../NextDatePicker';
 import { DesktopNextDatePickerProps } from '../DesktopNextDatePicker';
 import { MobileNextDatePickerProps } from '../MobileNextDatePicker';
 import { StaticNextDatePickerProps } from '../StaticNextDatePicker';
+
+import { NextTimePickerProps } from '../NextTimePicker';
+import { DesktopNextTimePickerProps } from '../DesktopNextTimePicker';
+import { MobileNextTimePickerProps } from '../MobileNextTimePicker';
+import { StaticNextTimePickerProps } from '../StaticNextTimePicker';
 
 export interface PickersComponentsPropsList {
   MuiCalendarOrClockPicker: CalendarOrClockPickerProps<unknown, CalendarOrClockPickerView>;
@@ -61,14 +67,17 @@ export interface PickersComponentsPropsList {
   MuiDesktopDatePicker: DesktopDatePickerProps<unknown>;
   MuiDesktopDateTimePicker: DesktopDateTimePickerProps<unknown>;
   MuiDesktopNextDatePicker: DesktopNextDatePickerProps<unknown>;
+  MuiDesktopNextTimePicker: DesktopNextTimePickerProps<unknown>;
   MuiDesktopTimePicker: DesktopTimePickerProps<unknown>;
   MuiLocalizationProvider: LocalizationProviderProps<unknown>;
   MuiMobileDatePicker: MobileDatePickerProps<unknown>;
   MuiMobileDateTimePicker: MobileDateTimePickerProps<unknown>;
   MuiMobileNextDatePicker: MobileNextDatePickerProps<unknown>;
+  MuiMobileNextTimePicker: MobileNextTimePickerProps<unknown>;
   MuiMobileTimePicker: MobileTimePickerProps<unknown>;
   MuiMonthCalendar: MonthCalendarProps<unknown>;
   MuiNextDatePicker: NextDatePickerProps<unknown>;
+  MuiNextTimePicker: NextTimePickerProps<unknown>;
   MuiPickersArrowSwitcher: ExportedPickersArrowSwitcherProps;
   MuiPickersCalendarHeader: ExportedCalendarHeaderProps<unknown>;
   MuiPickersDay: PickersDayProps<unknown>;
@@ -84,6 +93,7 @@ export interface PickersComponentsPropsList {
   MuiStaticDatePicker: StaticDatePickerProps<unknown>;
   MuiStaticDateTimePicker: StaticDateTimePickerProps<unknown>;
   MuiStaticNextDatePicker: StaticNextDatePickerProps<unknown>;
+  MuiStaticNextTimePicker: StaticNextTimePickerProps<unknown>;
   MuiStaticTimePicker: StaticTimePickerProps<unknown>;
   MuiTimePicker: TimePickerProps<unknown>;
   MuiTimePickerToolbar: TimePickerToolbarProps<unknown>;
