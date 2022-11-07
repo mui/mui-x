@@ -1,4 +1,10 @@
-import { FieldSection, AvailableAdjustKeyCode, FieldBoundaries } from './useField.interfaces';
+import {
+  FieldSection,
+  AvailableAdjustKeyCode,
+  FieldBoundaries,
+  SectionNeighbors,
+  SectionOrdering,
+} from './useField.interfaces';
 import { MuiPickerFieldAdapter, MuiDateSectionName } from '../../models';
 import { PickersLocaleText } from '../../../locales/utils/pickersLocaleTextApi';
 
@@ -698,9 +704,9 @@ export const clampDaySection = <TDate, TSection extends FieldSection>(
 export const getSectionOrder = (
   sections: Omit<FieldSection, 'start' | 'end' | 'startInInput' | 'endInInput'>[],
   isRTL: boolean,
-) => {
+): SectionOrdering => {
+  const neighbors: SectionNeighbors = {};
   if (!isRTL) {
-    const neighbors = {};
     sections.forEach((_, index) => {
       const leftIndex = index === 0 ? null : index - 1;
       const rightIndex = index === sections.length - 1 ? null : index + 1;
@@ -708,8 +714,10 @@ export const getSectionOrder = (
     });
     return { neighbors, startIndex: 0, endIndex: sections.length - 1 };
   }
-  const rtl2ltr = {};
-  const ltr2rtl = {};
+
+  type PotisionMapping = { [from: number]: number };
+  const rtl2ltr: PotisionMapping = {};
+  const ltr2rtl: PotisionMapping = {};
 
   let groupedSectionsStart = 0;
   let groupedSectionsEnd = 0;
@@ -734,7 +742,6 @@ export const getSectionOrder = (
     groupedSectionsStart = groupedSectionsEnd + 1;
   }
 
-  const neighbors = {};
   sections.forEach((_, index) => {
     const rtlIndex = ltr2rtl[index];
     const leftIndex = rtlIndex === 0 ? null : rtl2ltr[rtlIndex - 1];

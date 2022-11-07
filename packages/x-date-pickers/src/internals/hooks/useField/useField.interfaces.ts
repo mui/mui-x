@@ -245,7 +245,7 @@ export interface FieldValueManager<TValue, TDate, TSection extends FieldSection,
     localeText: PickersLocaleText<TDate>,
     format: string,
     isRTL: boolean,
-  ) => any;
+  ) => SectionOrdering;
 }
 
 export interface UseFieldState<TValue, TSection extends FieldSection> {
@@ -289,3 +289,16 @@ export type AvailableAdjustKeyCode =
   | 'PageDown'
   | 'Home'
   | 'End';
+
+export type SectionNeighbors = {
+  [sectionIndex: number]: {
+    leftIndex: number | null;
+    rightIndex: number | null;
+  };
+};
+
+export type SectionOrdering = {
+  neighbors: SectionNeighbors;
+  startIndex: number;
+  endIndex: number;
+};
