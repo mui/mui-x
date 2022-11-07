@@ -8,8 +8,7 @@ import { ValidationCommonProps } from '../internals/hooks/validation/useValidati
 import { BasePickerProps } from '../internals/models/props/basePickerProps';
 import { ExportedDateInputProps } from '../internals/components/PureDateInput';
 import { CalendarOrClockPickerView } from '../internals/models';
-import { PickerStateValueManager } from '../internals/hooks/usePickerState';
-import { applyDefaultDate, replaceInvalidDateByNull } from '../internals/utils/date-utils';
+import { applyDefaultDate } from '../internals/utils/date-utils';
 import { DefaultizedProps } from '../internals/models/helpers';
 import {
   BaseDateValidationProps,
@@ -189,10 +188,3 @@ export function useDateTimePickerDefaultizedProps<
     },
   };
 }
-
-export const dateTimePickerValueManager: PickerStateValueManager<any, any> = {
-  emptyValue: null,
-  getTodayValue: (utils) => utils.date()!,
-  cleanValue: replaceInvalidDateByNull,
-  areValuesEqual: (utils, a, b) => utils.isEqual(a, b),
-};

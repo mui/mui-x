@@ -21,7 +21,7 @@ import {
   DateRangeValidationError,
   validateDateRange,
 } from '../validation/useDateRangeValidation';
-import { dateRangePickerValueManager } from '../../../DateRangePicker/shared';
+import { rangeValueManager } from '../../utils/valueManagers';
 import type { UseMultiInputRangeFieldResponse } from './useMultiInputRangeField.types';
 
 export const useMultiInputDateRangeField = <TDate, TChildProps extends {}>({
@@ -51,7 +51,7 @@ export const useMultiInputDateRangeField = <TDate, TChildProps extends {}>({
 
     return (newDate, rawContext) => {
       const currentDateRange =
-        valueProp ?? firstDefaultValue.current ?? dateRangePickerValueManager.emptyValue;
+        valueProp ?? firstDefaultValue.current ?? rangeValueManager.emptyValue;
       const newDateRange: DateRange<TDate> =
         index === 0 ? [newDate, currentDateRange[1]] : [currentDateRange[0], newDate];
 
@@ -96,7 +96,7 @@ export const useMultiInputDateRangeField = <TDate, TChildProps extends {}>({
     inputRef: endInputRef,
   });
 
-  const value = valueProp ?? firstDefaultValue.current ?? dateRangePickerValueManager.emptyValue;
+  const value = valueProp ?? firstDefaultValue.current ?? rangeValueManager.emptyValue;
 
   const validationError = useValidation<
     DateRange<TDate>,

@@ -59,11 +59,15 @@ export interface UseDesktopPickerSlotsComponentsProps<TDate>
   field?: SlotComponentProps<
     React.ElementType<BaseFieldProps<TDate | null, unknown>>,
     {},
-    UsePickerProps<TDate | null, any>
+    UsePickerProps<TDate | null, any, any>
   >;
   input?: SlotComponentProps<typeof TextField, {}, Record<string, any>>;
   inputAdornment?: Partial<InputAdornmentProps>;
-  openPickerButton?: SlotComponentProps<typeof IconButton, {}, UseDesktopPickerProps<TDate, any>>;
+  openPickerButton?: SlotComponentProps<
+    typeof IconButton,
+    {},
+    UseDesktopPickerProps<TDate, any, any>
+  >;
   openPickerIcon?: Record<string, any>;
 }
 
@@ -72,8 +76,8 @@ export interface DesktopOnlyPickerProps<TDate>
     UsePickerValueNonStaticProps<TDate | null>,
     UsePickerViewsNonStaticProps {}
 
-export interface UseDesktopPickerProps<TDate, TView extends CalendarOrClockPickerView>
-  extends BaseNextPickerProps<TDate | null, TDate, TView>,
+export interface UseDesktopPickerProps<TDate, TView extends CalendarOrClockPickerView, TError>
+  extends BaseNextPickerProps<TDate | null, TDate, TView, TError>,
     DesktopOnlyPickerProps<TDate> {
   /**
    * Overrideable components.
@@ -90,10 +94,10 @@ export interface UseDesktopPickerProps<TDate, TView extends CalendarOrClockPicke
 export interface UseDesktopPickerParams<
   TDate,
   TView extends CalendarOrClockPickerView,
-  TExternalProps extends UseDesktopPickerProps<TDate, TView>,
+  TExternalProps extends UseDesktopPickerProps<TDate, TView, any>,
 > extends Pick<
     UsePickerParams<TDate | null, TDate, TView, TExternalProps, {}>,
-    'valueManager' | 'viewLookup'
+    'valueManager' | 'viewLookup' | 'validator'
   > {
   props: TExternalProps;
   getOpenDialogAriaText: (date: TDate | null, utils: MuiPickersAdapter<TDate>) => string;

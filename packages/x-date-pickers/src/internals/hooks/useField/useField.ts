@@ -59,6 +59,7 @@ export const useField = <
     internalProps: { readOnly = false },
     forwardedProps: { onClick, onKeyDown, onFocus, onBlur, onMouseUp, ...otherForwardedProps },
     fieldValueManager,
+    valueManager,
     validator,
   } = params;
 
@@ -453,7 +454,7 @@ export const useField = <
   const validationError = useValidation(
     { ...internalProps, value: state.value },
     validator,
-    fieldValueManager.isSameError,
+    valueManager.isSameError,
   );
 
   const inputError = React.useMemo(

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import {
   BaseTimePickerProps,
   useTimePickerDefaultizedProps,
-  timePickerValueManager,
+  timeValueManager,
   BaseTimePickerSlotsComponent,
   BaseTimePickerSlotsComponentsProps,
 } from '../TimePicker/shared';
@@ -77,7 +77,7 @@ export const StaticTimePicker = React.forwardRef(function StaticTimePicker<TDate
   } = props;
 
   const validationError = useTimeValidation(props) !== null;
-  const { pickerProps, inputProps, wrapperProps } = usePickerState(props, timePickerValueManager);
+  const { pickerProps, inputProps, wrapperProps } = usePickerState(props, timeValueManager);
 
   const DateInputProps = {
     ...inputProps,

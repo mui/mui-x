@@ -105,13 +105,13 @@
     }
   },
   "devDependencies": {
-    "@types/luxon": "^3.0.2",
+    "@types/luxon": "^3.1.0",
     "date-fns": "^2.29.3",
     "dayjs": "^1.11.6",
-    "luxon": "^3.0.2",
+    "luxon": "^3.1.0",
     "moment": "^2.29.4",
     "moment-hijri": "^2.1.2",
-    "moment-jalaali": "^0.9.0",
+    "moment-jalaali": "^0.9.6",
     "date-fns-jalali": "^2.13.0-0"
   },
   "setupFiles": [
