@@ -326,17 +326,20 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
     currentlySelectingRangeEnd: currentDatePosition,
   });
 
-  const draggingRange = React.useMemo(() => {
+  const draggingRange = React.useMemo<DateRange<TDate>>(() => {
     if (!valueDayRange[0] || !valueDayRange[1] || !rangeDragDay) {
-      return null;
+      return [null, null];
     }
-    return calculateRangeChange({
+    const newRange = calculateRangeChange({
       utils,
       range: valueDayRange,
       newDate: rangeDragDay,
       currentlySelectingRangeEnd: currentDatePosition,
       allowRangeFlip: true,
     }).newRange;
+    return newRange[0] !== null && newRange[1] !== null
+      ? [utils.startOfDay(newRange[0]), utils.endOfDay(newRange[1])]
+      : newRange;
   }, [currentDatePosition, rangeDragDay, utils, valueDayRange]);
 
   const handlePreviewDayChange = (newPreviewRequest: TDate) => {
