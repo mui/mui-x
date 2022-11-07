@@ -1,8 +1,20 @@
 import * as React from 'react';
 import { spy } from 'sinon';
 import { expect } from 'chai';
-import { screen, fireEvent, getByRole, describeConformance } from '@mui/monorepo/test/utils';
-import { adapterToUse, createPickerRenderer, wrapPickerMount } from 'test/utils/pickers-utils';
+import {
+  screen,
+  fireEvent,
+  getByRole,
+  describeConformance,
+  createEvent,
+} from '@mui/monorepo/test/utils';
+import {
+  adapterToUse,
+  createPickerRenderer,
+  DragEventTypes,
+  MockedDataTransfer,
+  wrapPickerMount,
+} from 'test/utils/pickers-utils';
 import {
   DateRangeCalendar,
   dateRangeCalendarClasses as classes,
@@ -95,6 +107,7 @@ describe('<DateRangeCalendar />', () => {
 
       expect(screen.getAllByMuiTest('DateRangeHighlight')).to.have.length(31);
     });
+
     it('prop: disableDragEditing - should not allow dragging range', () => {
       render(
         <DateRangeCalendar
@@ -112,6 +125,52 @@ describe('<DateRangeCalendar />', () => {
       expect(screen.getByRole('gridcell', { name: '31', selected: true })).to.not.have.attribute(
         'draggable',
       );
+    });
+
+    describe('dragging behavior', () => {
+      let dataTransfer: DataTransfer | null;
+      const createDragEvent = (type: DragEventTypes, target: ChildNode) => {
+        const createdEvent = createEvent[type](target);
+        Object.defineProperty(createdEvent, 'dataTransfer', {
+          value: dataTransfer,
+        });
+        return createdEvent;
+      };
+      beforeEach(() => {
+        dataTransfer = new MockedDataTransfer();
+      });
+
+      afterEach(() => {
+        dataTransfer = null;
+      });
+      it('should not emit "onChange" when dragging is ended where it was started', () => {
+        const onChange = spy();
+        render(
+          <DateRangeCalendar
+            onChange={onChange}
+            defaultValue={[
+              adapterToUse.date(new Date(2018, 0, 1)),
+              adapterToUse.date(new Date(2018, 0, 31)),
+            ]}
+          />,
+        );
+
+        const startDay = screen.getByRole('gridcell', { name: '31', selected: true });
+        const dragToDay = screen.getByRole('gridcell', { name: '30' });
+        expect(onChange.callCount).to.equal(0);
+
+        fireEvent(startDay, createDragEvent('dragStart', startDay));
+        fireEvent(startDay, createDragEvent('dragLeave', startDay));
+        fireEvent(dragToDay, createDragEvent('dragEnter', dragToDay));
+        fireEvent(dragToDay, createDragEvent('dragOver', dragToDay));
+        fireEvent(dragToDay, createDragEvent('dragLeave', dragToDay));
+        fireEvent(startDay, createDragEvent('dragEnter', startDay));
+        fireEvent(startDay, createDragEvent('dragOver', startDay));
+        fireEvent(startDay, createDragEvent('drop', startDay));
+        fireEvent(startDay, createDragEvent('dragEnd', startDay));
+
+        expect(onChange.callCount).to.equal(0);
+      });
     });
   });
 
