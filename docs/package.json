@@ -72,7 +72,7 @@
     "react-hook-form": "^7.39.1",
     "react-is": "^18.2.0",
     "react-router": "^6.4.3",
-    "react-router-dom": "^6.4.2",
+    "react-router-dom": "^6.4.3",
     "react-runner": "^1.0.3",
     "react-simple-code-editor": "^0.13.1",
     "recast": "^0.21.5",
