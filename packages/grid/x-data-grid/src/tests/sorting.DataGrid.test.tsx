@@ -180,7 +180,7 @@ describe('<DataGrid /> - Sorting', () => {
       rows: any[];
     }
 
-    const TestCase = (props: TestCaseProps) => {
+    function TestCase(props: TestCaseProps) {
       const { rows } = props;
       return (
         <div style={{ width: 300, height: 300 }}>
@@ -196,7 +196,7 @@ describe('<DataGrid /> - Sorting', () => {
           />
         </div>
       );
-    };
+    }
 
     const { setProps } = render(<TestCase rows={baselineProps.rows} />);
     expect(getColumnValues(0)).to.deep.equal(['Adidas', 'Nike', 'Puma']);
@@ -225,7 +225,7 @@ describe('<DataGrid /> - Sorting', () => {
       rows: any[];
     }
 
-    const TestCase = (props: TestCaseProps) => {
+    function TestCase(props: TestCaseProps) {
       const { rows } = props;
       return (
         <div style={{ width: 300, height: 300 }}>
@@ -242,7 +242,7 @@ describe('<DataGrid /> - Sorting', () => {
           />
         </div>
       );
-    };
+    }
 
     const rows = [
       {
@@ -266,14 +266,14 @@ describe('<DataGrid /> - Sorting', () => {
   });
 
   it('should support new dataset', () => {
-    const TestCase = (props: DataGridProps) => {
+    function TestCase(props: DataGridProps) {
       const { rows, columns } = props;
       return (
         <div style={{ width: 300, height: 300 }}>
           <DataGrid autoHeight={isJSDOM} rows={rows} columns={columns} />
         </div>
       );
-    };
+    }
 
     const { setProps } = render(<TestCase {...baselineProps} />);
 
@@ -305,7 +305,7 @@ describe('<DataGrid /> - Sorting', () => {
   });
 
   it('should support new dataset in control mode', () => {
-    const TestCase = (props: DataGridProps) => {
+    function TestCase(props: DataGridProps) {
       const { rows, columns } = props;
       const [sortModel, setSortModel] = React.useState<GridSortModel>();
 
@@ -320,7 +320,7 @@ describe('<DataGrid /> - Sorting', () => {
           />
         </div>
       );
-    };
+    }
 
     const { setProps } = render(<TestCase {...baselineProps} />);
 
@@ -352,13 +352,13 @@ describe('<DataGrid /> - Sorting', () => {
   });
 
   it('should clear the sorting col when passing an empty sortModel', () => {
-    const TestCase = (props: Partial<DataGridProps>) => {
+    function TestCase(props: Partial<DataGridProps>) {
       return (
         <div style={{ width: 300, height: 300 }}>
           <DataGrid {...baselineProps} {...props} />
         </div>
       );
-    };
+    }
 
     const { setProps } = render(<TestCase sortModel={[{ field: 'brand', sort: 'asc' }]} />);
 
@@ -368,11 +368,13 @@ describe('<DataGrid /> - Sorting', () => {
   });
 
   describe('prop: initialState.sorting', () => {
-    const Test = (props: Partial<DataGridProps>) => (
-      <div style={{ width: 300, height: 300 }}>
-        <DataGrid {...baselineProps} {...props} />
-      </div>
-    );
+    function Test(props: Partial<DataGridProps>) {
+      return (
+        <div style={{ width: 300, height: 300 }}>
+          <DataGrid {...baselineProps} {...props} />
+        </div>
+      );
+    }
 
     it('should allow to initialize the sortModel', () => {
       render(

@@ -178,6 +178,9 @@ MultiInputTimeRangeField.propTypes = {
    * @default false
    */
   disablePast: PropTypes.bool,
+  /**
+   * Format of the date when rendered in the input(s).
+   */
   format: PropTypes.string,
   /**
    * Max time acceptable time.

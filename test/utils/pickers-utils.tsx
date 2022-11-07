@@ -12,16 +12,35 @@ import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon';
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
-import { MuiPickersAdapter } from '@mui/x-date-pickers/internals';
+// import { AdapterJsJoda } from '@mui/x-date-pickers/AdapterJsJoda';
+import { AdapterMomentHijri } from '@mui/x-date-pickers/AdapterMomentHijri';
+import { AdapterMomentJalaali } from '@mui/x-date-pickers/AdapterMomentJalaali';
+import { AdapterDateFnsJalali } from '@mui/x-date-pickers/AdapterDateFnsJalali';
+import { MuiPickerFieldAdapter } from '@mui/x-date-pickers/internals/models';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import sinon from 'sinon';
+import { expect } from 'chai';
 import { useControlled } from '@mui/material/utils';
 
-const availableAdapters: { [key: string]: new (...args: any) => MuiPickersAdapter<any> } = {
+export type AdapterName =
+  | 'date-fns'
+  | 'dayjs'
+  | 'luxon'
+  | 'moment'
+  | 'moment-hijri'
+  | 'moment-jalaali'
+  // | 'js-joda'
+  | 'date-fns-jalali';
+
+const availableAdapters: { [key: string]: new (...args: any) => MuiPickerFieldAdapter<any> } = {
   'date-fns': AdapterDateFns,
   dayjs: AdapterDayjs,
   luxon: AdapterLuxon,
   moment: AdapterMoment,
+  'moment-hijri': AdapterMomentHijri,
+  'moment-jalaali': AdapterMomentJalaali,
+  'date-fns-jalali': AdapterDateFnsJalali,
+  // 'js-joda': AdapterJsJoda,
 };
 
 let AdapterClassToExtend = availableAdapters['date-fns'];
@@ -68,7 +87,7 @@ export const FakeTransitionComponent = React.forwardRef<HTMLDivElement, Transiti
 interface CreatePickerRendererOptions extends CreateRendererOptions {
   // Set-up locale with date-fns object. Other are deduced from `locale.code`
   locale?: Locale;
-  adapterName?: 'date-fns' | 'dayjs' | 'luxon' | 'moment';
+  adapterName?: AdapterName;
 }
 
 export function wrapPickerMount(mount: (node: React.ReactNode) => import('enzyme').ReactWrapper) {
@@ -83,7 +102,13 @@ export function createPickerRenderer({
 }: CreatePickerRendererOptions = {}) {
   const { clock, render: clientRender } = createRenderer(createRendererOptions);
 
-  let adapterLocale = (adapterName ?? adapterToUse.lib) === 'date-fns' ? locale : locale?.code;
+  let adapterLocale = [
+    'date-fns',
+    'date-fns-jalali',
+    // 'js-joda'
+  ].includes(adapterName ?? adapterToUse.lib)
+    ? locale
+    : locale?.code;
 
   if (typeof adapterLocale === 'string' && adapterLocale.length > 2) {
     adapterLocale = adapterLocale.slice(0, 2);
@@ -91,6 +116,7 @@ export function createPickerRenderer({
   const adapter = adapterName
     ? new availableAdapters[adapterName]({ locale: adapterLocale })
     : new AdapterClassToUse({ locale: adapterLocale });
+
   function Wrapper({ children }: { children?: React.ReactNode }) {
     return (
       <LocalizationProvider
@@ -178,7 +204,7 @@ export const withPickerControls =
     Component: React.ComponentType<Props>,
   ) =>
   <DefaultProps extends Partial<Props>>(defaultProps: DefaultProps) => {
-    return (
+    return function WithPickerControls(
       props: Omit<
         Props,
         'value' | 'onChange' | Exclude<keyof DefaultProps, 'components' | 'componentsProps'>
@@ -188,7 +214,7 @@ export const withPickerControls =
           value?: TValue;
           onChange?: any;
         },
-    ) => {
+    ) {
       const { initialValue, value: inValue, onChange, ...other } = props;
 
       const [value, setValue] = useControlled({
@@ -225,6 +251,9 @@ export const stubMatchMedia = (matches = true) =>
     addListener: () => {},
     removeListener: () => {},
   });
+
+export const expectInputValue = (input: HTMLInputElement, expectedValue: string) =>
+  expect(input.value.replace(/\u200e|\u2068|\u2069/g, '')).to.equal(expectedValue);
 
 export type DragEventTypes =
   | 'dragStart'

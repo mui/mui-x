@@ -1,8 +1,4 @@
----
-title: Data Grid - Components
----
-
-# Data grid - Components
+# Data Grid - Components
 
 <p class="description">The grid is highly customizable. Override components using the <code>components</code> prop.</p>
 
@@ -39,7 +35,7 @@ The grid exposes two hooks to help you to access the grid data while overriding 
 
 They can be used as below:
 
-- `useGridApiContext`: returns the `apiRef` object (more details in the [API object page](/x/react-data-grid/api-object/#use-it-inside-the-grid)).
+- `useGridApiContext`: returns the `apiRef` object (more details in the [API object page](/x/react-data-grid/api-object/#inside-the-data-grid)).
 - `useGridSelector`: returns the result of a selector on the current state (more details in the [State page](/x/react-data-grid/state/#access-the-state)).
 
 ```tsx

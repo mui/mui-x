@@ -1,8 +1,4 @@
----
-title: Data Grid - Row updates
----
-
-# Data grid - Row updates
+# Data Grid - Row updates
 
 <p class="description">Always keep your rows up to date.</p>
 

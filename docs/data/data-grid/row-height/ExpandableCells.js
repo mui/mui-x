@@ -25,7 +25,7 @@ const lines = [
   'Vestibulum pulvinar aliquam turpis, ac faucibus risus varius a.',
 ];
 
-const ExpandableCell = ({ value }) => {
+function ExpandableCell({ value }) {
   const [expanded, setExpanded] = React.useState(false);
 
   return (
@@ -44,7 +44,7 @@ const ExpandableCell = ({ value }) => {
       )}
     </Box>
   );
-};
+}
 
 ExpandableCell.propTypes = {
   /**

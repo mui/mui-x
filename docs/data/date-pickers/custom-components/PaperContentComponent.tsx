@@ -92,10 +92,12 @@ const buildHandleRangeClick =
     }
   };
 
-const RangeShortcutsPanel: React.FC<{
+interface RangeShortcutsPanelProps {
   setValue?: React.Dispatch<React.SetStateAction<DateRange<Dayjs>>>;
   children: React.ReactNode;
-}> = ({ setValue, children }) => {
+}
+
+function RangeShortcutsPanel({ setValue, children }: RangeShortcutsPanelProps) {
   const handleRangeClick = React.useCallback(
     (range: RangeShortcutType) => setValue && buildHandleRangeClick(setValue)(range),
     [setValue],
@@ -122,12 +124,18 @@ const RangeShortcutsPanel: React.FC<{
       {children}
     </React.Fragment>
   );
-};
+}
 
-const StaticRangeShortcutsPanel: React.FunctionComponent<{
+interface StaticRangeShortcutsPanelProps {
   setValue?: React.Dispatch<React.SetStateAction<DateRange<Dayjs>>>;
   children: React.ReactNode;
-}> = ({ setValue, children, ...other }) => {
+}
+
+function StaticRangeShortcutsPanel({
+  setValue,
+  children,
+  ...other
+}: StaticRangeShortcutsPanelProps) {
   const handleRangeClick = React.useCallback(
     (range: RangeShortcutType) => setValue && buildHandleRangeClick(setValue)(range),
     [setValue],
@@ -154,7 +162,7 @@ const StaticRangeShortcutsPanel: React.FunctionComponent<{
       {children}
     </React.Fragment>
   );
-};
+}
 
 export default function PaperContentComponent() {
   const [value, setValue] = React.useState<DateRange<Dayjs>>([null, null]);

@@ -41,14 +41,14 @@ describe('<DataGridPremium /> - Export Excel', () => {
     autoHeight: isJSDOM,
   };
 
-  const TestCaseExcelExport = (props: Partial<DataGridPremiumProps>) => {
+  function TestCaseExcelExport(props: Partial<DataGridPremiumProps>) {
     apiRef = useGridApiRef();
     return (
       <div style={{ width: 300, height: 300 }}>
         <DataGridPremium {...baselineProps} apiRef={apiRef} {...props} />
       </div>
     );
-  };
+  }
 
   describe('export interface', () => {
     it('should generate a file', async () => {
@@ -67,7 +67,7 @@ describe('<DataGridPremium /> - Export Excel', () => {
 
   describe('generated file', () => {
     it(`should export column with correct type`, async () => {
-      const Test = () => {
+      function Test() {
         apiRef = useGridApiRef();
         return (
           <div style={{ width: 300, height: 300 }}>
@@ -95,7 +95,7 @@ describe('<DataGridPremium /> - Export Excel', () => {
             />
           </div>
         );
-      };
+      }
       render(<Test />);
 
       const workbook = await act(() => apiRef.current.getDataAsExcel());
@@ -123,7 +123,7 @@ describe('<DataGridPremium /> - Export Excel', () => {
     });
 
     it(`should export singleSelect options`, async () => {
-      const Test = () => {
+      function Test() {
         apiRef = useGridApiRef();
         return (
           <div style={{ width: 300, height: 300 }}>
@@ -139,7 +139,7 @@ describe('<DataGridPremium /> - Export Excel', () => {
             />
           </div>
         );
-      };
+      }
       render(<Test />);
 
       const workbook = await act(() => apiRef.current.getDataAsExcel());
@@ -151,8 +151,10 @@ describe('<DataGridPremium /> - Export Excel', () => {
     });
 
     it(`should not export actions columns`, async () => {
-      const Icon = () => <span>i</span>;
-      const Test = () => {
+      function Icon() {
+        return <span>i</span>;
+      }
+      function Test() {
         apiRef = useGridApiRef();
         return (
           <div style={{ width: 300, height: 300 }}>
@@ -177,7 +179,7 @@ describe('<DataGridPremium /> - Export Excel', () => {
             />
           </div>
         );
-      };
+      }
       render(<Test />);
 
       const workbook = await act(() => apiRef.current.getDataAsExcel());
@@ -190,7 +192,7 @@ describe('<DataGridPremium /> - Export Excel', () => {
     });
 
     it('should merge cells with `colSpan`', async () => {
-      const Test = () => {
+      function Test() {
         apiRef = useGridApiRef();
         return (
           <div style={{ width: 300, height: 200 }}>
@@ -215,7 +217,7 @@ describe('<DataGridPremium /> - Export Excel', () => {
             />
           </div>
         );
-      };
+      }
       render(<Test />);
 
       const workbook = await act(() => apiRef.current.getDataAsExcel());
@@ -242,7 +244,7 @@ describe('<DataGridPremium /> - Export Excel', () => {
     });
 
     it('should export hidden columns when `allColumns=true`', async () => {
-      const Test = () => {
+      function Test() {
         apiRef = useGridApiRef();
         return (
           <div style={{ width: 300, height: 200 }}>
@@ -268,7 +270,7 @@ describe('<DataGridPremium /> - Export Excel', () => {
             />
           </div>
         );
-      };
+      }
       render(<Test />);
 
       const workbook = await apiRef.current.getDataAsExcel({
@@ -284,7 +286,7 @@ describe('<DataGridPremium /> - Export Excel', () => {
     });
 
     it(`should export column grouping`, async () => {
-      const Test = () => {
+      function Test() {
         apiRef = useGridApiRef();
         return (
           <div style={{ width: 300, height: 300 }}>
@@ -317,7 +319,7 @@ describe('<DataGridPremium /> - Export Excel', () => {
             />
           </div>
         );
-      };
+      }
       render(<Test />);
 
       const workbook = await act(() => apiRef.current.getDataAsExcel());

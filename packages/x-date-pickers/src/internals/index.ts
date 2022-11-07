@@ -42,7 +42,10 @@ export type {
   PickersToolbarButtonClassKey,
   PickersToolbarButtonClasses,
 } from './components/pickersToolbarButtonClasses';
-export type { PickersToolbarTextProps } from './components/PickersToolbarText';
+export type {
+  PickersToolbarTextProps,
+  ExportedPickersToolbarTextProps,
+} from './components/PickersToolbarText';
 export { pickersToolbarTextClasses } from './components/pickersToolbarTextClasses';
 export type {
   PickersToolbarTextClassKey,
@@ -107,6 +110,11 @@ export type { StaticPickerProps } from './models/props/staticPickerProps';
 export type { BaseToolbarProps, ExportedBaseToolbarProps } from './models/props/toolbar';
 export type { MuiPickersAdapter } from './models/muiPickersAdapter';
 export type { DefaultizedProps, MakeOptional } from './models/helpers';
+export type {
+  CalendarOrClockPickerView,
+  CalendarPickerView,
+  ClockPickerView,
+} from './models/views';
 
 export { applyDefaultDate, replaceInvalidDateByNull } from './utils/date-utils';
 export { executeInTheNextEventLoopTick, onSpaceOrEnter } from './utils/utils';

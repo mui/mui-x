@@ -33,6 +33,9 @@ export interface UseFieldInternalProps<TValue, TError> {
    * The default value. Use when the component is not controlled.
    */
   defaultValue?: TValue;
+  /**
+   * Format of the date when rendered in the input(s).
+   */
   format: string;
   /**
    * It prevents the user from changing the value of the field

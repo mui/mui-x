@@ -27,6 +27,17 @@ export * from './MonthCalendar';
 export * from './YearCalendar';
 export * from './DayCalendarSkeleton';
 
+// New Pickers
+export * from './NextDatePicker';
+export * from './DesktopNextDatePicker';
+export * from './MobileNextDatePicker';
+export * from './StaticNextDatePicker';
+
+export * from './NextTimePicker';
+export * from './DesktopNextTimePicker';
+export * from './MobileNextTimePicker';
+export * from './StaticNextTimePicker';
+
 export { PickerStaticWrapper } from './internals/components/PickerStaticWrapper';
 export type { MuiDateSectionName } from './internals/models/muiPickersAdapter';
 export type { DateValidationError } from './internals/hooks/validation/useDateValidation';

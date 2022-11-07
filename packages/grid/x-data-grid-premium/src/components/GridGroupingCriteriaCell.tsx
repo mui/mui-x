@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { unstable_composeClasses as composeClasses } from '@mui/material';
+import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import IconButton from '@mui/material/IconButton';
 import Box from '@mui/material/Box';
 import {
@@ -30,7 +30,7 @@ interface GridGroupingCriteriaCellProps extends GridRenderCellParams<any, any, a
   hideDescendantCount?: boolean;
 }
 
-export const GridGroupingCriteriaCell = (props: GridGroupingCriteriaCellProps) => {
+export function GridGroupingCriteriaCell(props: GridGroupingCriteriaCellProps) {
   const { id, field, rowNode, hideDescendantCount, formattedValue } = props;
 
   const rootProps = useGridRootProps();
@@ -87,4 +87,4 @@ export const GridGroupingCriteriaCell = (props: GridGroupingCriteriaCellProps) =
       </span>
     </Box>
   );
-};
+}

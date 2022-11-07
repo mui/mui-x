@@ -524,6 +524,10 @@ DateRangeCalendar.propTypes = {
    * Default calendar month displayed when `value={[null, null]}`.
    */
   defaultCalendarMonth: PropTypes.any,
+  /**
+   * The default selected value.
+   * Used when the component is not controlled.
+   */
   defaultValue: PropTypes.arrayOf(PropTypes.any),
   /**
    * If `true`, after selecting `start` date calendar will not automatically switch to the month of `end` date.
@@ -570,6 +574,12 @@ DateRangeCalendar.propTypes = {
    * Minimal selectable date. @DateIOType
    */
   minDate: PropTypes.any,
+  /**
+   * Callback fired when the value changes.
+   * @template TDate
+   * @param {DateRange<TDate>} value The new value.
+   * @param {PickerSelectionState | undefined} selectionState Indicates if the date range selection is complete.
+   */
   onChange: PropTypes.func,
   onCurrentDatePositionChange: PropTypes.func,
   /**
@@ -616,6 +626,10 @@ DateRangeCalendar.propTypes = {
     PropTypes.func,
     PropTypes.object,
   ]),
+  /**
+   * The selected value.
+   * Used when the component is controlled.
+   */
   value: PropTypes.arrayOf(PropTypes.any),
 } as any;
 
