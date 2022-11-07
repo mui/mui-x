@@ -1,5 +1,11 @@
 import * as React from 'react';
-import { createRenderer, screen, RenderOptions, userEvent } from '@mui/monorepo/test/utils';
+import {
+  createRenderer,
+  screen,
+  RenderOptions,
+  userEvent,
+  getByRole,
+} from '@mui/monorepo/test/utils';
 import { CreateRendererOptions } from '@mui/monorepo/test/utils/createRenderer';
 import { TransitionProps } from '@mui/material/transitions';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
@@ -285,3 +291,6 @@ export class MockedDataTransfer implements DataTransfer {
     this.yOffset = yOffset;
   }
 }
+
+export const getPickerDay = (name: string, picker = 'January 2018') =>
+  getByRole(screen.getByText(picker)?.parentElement?.parentElement, 'gridcell', { name });

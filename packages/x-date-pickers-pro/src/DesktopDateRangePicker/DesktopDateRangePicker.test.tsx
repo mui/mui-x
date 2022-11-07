@@ -1,14 +1,7 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
-import {
-  describeConformance,
-  screen,
-  fireEvent,
-  userEvent,
-  act,
-  getByRole,
-} from '@mui/monorepo/test/utils';
+import { describeConformance, screen, fireEvent, userEvent, act } from '@mui/monorepo/test/utils';
 import TextField from '@mui/material/TextField';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { DesktopDateRangePicker } from '@mui/x-date-pickers-pro/DesktopDateRangePicker';
@@ -22,6 +15,7 @@ import {
   AdapterClassToUse,
   withPickerControls,
   openPicker,
+  getPickerDay,
 } from 'test/utils/pickers-utils';
 
 const WrappedDesktopDateRangePicker = withPickerControls(DesktopDateRangePicker)({
@@ -33,9 +27,6 @@ const WrappedDesktopDateRangePicker = withPickerControls(DesktopDateRangePicker)
     </React.Fragment>
   ),
 });
-
-const getPickerDay = (name: string, picker = 'January 2018') =>
-  getByRole(screen.getByText(picker)?.parentElement?.parentElement, 'gridcell', { name });
 
 describe('<DesktopDateRangePicker />', () => {
   const { render, clock } = createPickerRenderer({
