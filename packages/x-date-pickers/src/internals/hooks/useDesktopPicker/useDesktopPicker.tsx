@@ -12,6 +12,7 @@ import { LocalizationProvider } from '../../../LocalizationProvider';
 import { WrapperVariantContext } from '../../components/wrappers/WrapperVariantContext';
 import { BaseFieldProps } from '../../models/fields';
 import { PickerViewLayout } from '../../components/PickerViewLayout';
+import { InferError } from '../validation/useValidation';
 
 /**
  * Hook managing all the single-date desktop pickers:
@@ -22,12 +23,13 @@ import { PickerViewLayout } from '../../components/PickerViewLayout';
 export const useDesktopPicker = <
   TDate,
   TView extends CalendarOrClockPickerView,
-  TExternalProps extends UseDesktopPickerProps<TDate, TView>,
+  TExternalProps extends UseDesktopPickerProps<TDate, TView, any>,
 >({
   props,
   valueManager,
   getOpenDialogAriaText,
   viewLookup,
+  validator,
 }: UseDesktopPickerParams<TDate, TView, TExternalProps>) => {
   const { components, componentsProps, className, format, readOnly, disabled, localeText } = props;
 
@@ -47,12 +49,13 @@ export const useDesktopPicker = <
     inputRef,
     viewLookup,
     valueManager,
+    validator,
     additionalViewProps: {},
     wrapperVariant: 'desktop',
   });
 
   const Field = components.Field;
-  const fieldProps: BaseFieldProps<TDate | null, unknown> = useSlotProps({
+  const fieldProps: BaseFieldProps<TDate | null, InferError<TExternalProps>> = useSlotProps({
     elementType: Field,
     externalSlotProps: componentsProps?.field,
     additionalProps: {

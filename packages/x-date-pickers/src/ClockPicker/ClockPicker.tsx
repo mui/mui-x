@@ -137,6 +137,7 @@ type ClockPickerComponent = (<TDate>(
   props: ClockPickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
 ) => JSX.Element) & { propTypes?: any };
 
+// TODO v6: Drop showViewSwitcher once the legacy pickers are removed
 /**
  *
  * API:

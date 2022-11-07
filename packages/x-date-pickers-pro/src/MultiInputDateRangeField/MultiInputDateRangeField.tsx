@@ -178,7 +178,19 @@ MultiInputDateRangeField.propTypes = {
    * Minimal selectable date. @DateIOType
    */
   minDate: PropTypes.any,
+  /**
+   * Callback fired when the value changes.
+   * @template TValue, TError
+   * @param {TValue} value The new value.
+   * @param {FieldChangeHandlerContext<TError>} The context containing the validation result of the current value.
+   */
   onChange: PropTypes.func,
+  /**
+   * Callback fired when the error associated to the current value changes.
+   * @template TValue, TError
+   * @param {TError} error The new error.
+   * @param {TValue} value The value associated to the error.
+   */
   onError: PropTypes.func,
   /**
    * Callback fired when the selected sections change.
@@ -216,6 +228,10 @@ MultiInputDateRangeField.propTypes = {
    * @returns {boolean} Returns `true` if the date should be disabled.
    */
   shouldDisableDate: PropTypes.func,
+  /**
+   * The selected value.
+   * Used when the component is controlled.
+   */
   value: PropTypes.arrayOf(PropTypes.any),
 } as any;
 
