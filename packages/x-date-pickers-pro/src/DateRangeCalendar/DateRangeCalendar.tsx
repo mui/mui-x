@@ -540,6 +540,11 @@ DateRangeCalendar.propTypes = {
    */
   disabled: PropTypes.bool,
   /**
+   * If `true`, editing dates by dragging is disabled.
+   * @default false
+   */
+  disableDragEditing: PropTypes.bool,
+  /**
    * If `true` disable values before the current time
    * @default false
    */
