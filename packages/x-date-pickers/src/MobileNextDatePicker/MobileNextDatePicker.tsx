@@ -7,7 +7,7 @@ import {
   getDatePickerFieldFormat,
   useNextDatePickerDefaultizedProps,
 } from '../NextDatePicker/shared';
-import { CalendarPickerView, useLocaleText, useUtils, validateDate } from '../internals';
+import { useLocaleText, useUtils, validateDate } from '../internals';
 import { Unstable_DateField as DateField } from '../DateField';
 import { extractValidationProps } from '../internals/utils/validation';
 import { renderDateView } from '../internals/utils/viewRenderers';
@@ -60,7 +60,7 @@ const MobileNextDatePicker = React.forwardRef(function MobileNextDatePicker<TDat
     },
   };
 
-  const { renderPicker } = useMobilePicker<TDate, CalendarPickerView, typeof props>({
+  const { renderPicker } = useMobilePicker({
     props,
     valueManager: singleItemValueManager,
     getOpenDialogAriaText: localeText.openDatePickerDialogue,

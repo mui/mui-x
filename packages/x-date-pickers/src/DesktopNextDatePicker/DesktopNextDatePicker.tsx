@@ -7,7 +7,7 @@ import {
   getDatePickerFieldFormat,
   useNextDatePickerDefaultizedProps,
 } from '../NextDatePicker/shared';
-import { CalendarPickerView, useLocaleText, useUtils, validateDate } from '../internals';
+import { useLocaleText, useUtils, validateDate } from '../internals';
 import { useDesktopPicker } from '../internals/hooks/useDesktopPicker';
 import { Calendar } from '../internals/components/icons';
 import { Unstable_DateField as DateField } from '../DateField';
@@ -62,7 +62,7 @@ const DesktopNextDatePicker = React.forwardRef(function DesktopNextDatePicker<TD
     },
   };
 
-  const { renderPicker } = useDesktopPicker<TDate, CalendarPickerView, typeof props>({
+  const { renderPicker } = useDesktopPicker({
     props,
     valueManager: singleItemValueManager,
     getOpenDialogAriaText: localeText.openDatePickerDialogue,
