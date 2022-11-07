@@ -10320,7 +10320,7 @@ moment-hijri@^2.1.2:
   dependencies:
     moment "^2.24.0"
 
-moment-jalaali@^0.9.0:
+moment-jalaali@^0.9.6:
   version "0.9.6"
   resolved "https://registry.yarnpkg.com/moment-jalaali/-/moment-jalaali-0.9.6.tgz#6c460aedee08a1e45d3f658c7cffd66cd4dca24c"
   integrity sha512-v8wXjQplvk5ez+sUqgsWIrafwIf1BEXXvzTYwsg1wHcqh27nSgKPCJ6FnZRrCz03MoNyB9N31L0oms+vE8Rq7g==
