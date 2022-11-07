@@ -227,14 +227,6 @@ function generateImportStatement(objects: ParsedObject[], projects: Projects) {
   const projectImports = Array.from(projects.values())
     .map((project) => {
       const objectsInProject = objects.filter((object) => {
-        // TODO: Remove after opening the apiRef on the community plan
-        if (
-          ['GridApiCommunity', 'GridApi'].includes(object.name) &&
-          project.name === 'x-data-grid'
-        ) {
-          return false;
-        }
-
         return !!project.exports[object.name];
       });
 

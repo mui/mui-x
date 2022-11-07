@@ -8,6 +8,8 @@
 import { GridApi } from '@mui/x-data-grid-premium';
 // or
 import { GridApi } from '@mui/x-data-grid-pro';
+// or
+import { GridApi } from '@mui/x-data-grid';
 ```
 
 ## Properties
