@@ -7,7 +7,6 @@ import { MobileNextDateTimePickerProps } from './MobileNextDateTimePicker.types'
 import { useNextDateTimePickerDefaultizedProps } from '../NextDateTimePicker/shared';
 import { CalendarOrClockPickerView, useLocaleText, validateDateTime } from '../internals';
 import { useMobilePicker } from '../internals/hooks/useMobilePicker';
-import { DateTimePickerTabs } from '../DateTimePicker/DateTimePickerTabs';
 import { extractValidationProps } from '../internals/utils/validation';
 import { renderDateView, renderTimeView } from '../internals/utils/viewRenderers';
 

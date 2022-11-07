@@ -7,7 +7,6 @@ import { useStaticPicker } from '../internals/hooks/useStaticPicker';
 import { CalendarOrClockPickerView } from '../internals/models';
 import { renderDateView, renderTimeView } from '../internals/utils/viewRenderers';
 import { validateDateTime } from '../internals/hooks/validation/useDateTimeValidation';
-import { DateTimePickerTabs } from '../DateTimePicker';
 
 type StaticDateTimePickerComponent = (<TDate>(
   props: StaticNextDateTimePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
