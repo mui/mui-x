@@ -44,7 +44,6 @@ const MobileNextDateTimePicker = React.forwardRef(function MobileNextDateTimePic
     autoFocus: true,
     components: {
       Field: DateTimeField,
-      Tabs: DateTimePickerTabs,
       ...defaultizedProps.components,
     },
     componentsProps: {

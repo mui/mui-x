@@ -16,6 +16,7 @@ import {
 import { BaseNextPickerProps } from '../internals/models/props/basePickerProps';
 import { applyDefaultDate } from '../internals/utils/date-utils';
 import {
+  DateTimePickerTabs,
   DateTimePickerTabsProps,
   ExportedDateTimePickerTabsProps,
 } from '../DateTimePicker/DateTimePickerTabs';
@@ -166,6 +167,7 @@ export function useNextDateTimePickerDefaultizedProps<
     maxTime: themeProps.maxDateTime ?? themeProps.maxTime,
     components: {
       Toolbar: DateTimePickerToolbar,
+      Tabs: DateTimePickerTabs,
       ...themeProps.components,
     },
     componentsProps: {

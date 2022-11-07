@@ -46,7 +46,6 @@ const DesktopNextDateTimePicker = React.forwardRef(function DesktopNextDateTimeP
     components: {
       Field: DateTimeField,
       OpenPickerIcon: Calendar,
-      Tabs: DateTimePickerTabs,
       ...defaultizedProps.components,
     },
     componentsProps: {
