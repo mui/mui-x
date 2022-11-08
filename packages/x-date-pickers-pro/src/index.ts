@@ -1,3 +1,5 @@
+import type {} from '@mui/material/themeCssVarsAugmentation'
+
 export { LicenseInfo } from '@mui/x-license-pro';
 export * from '@mui/x-date-pickers';
 

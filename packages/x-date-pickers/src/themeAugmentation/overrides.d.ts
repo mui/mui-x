@@ -1,4 +1,3 @@
-import type {} from '@mui/material/themeCssVarsAugmentation';
 import {
   DateCalendarClassKey,
   DayCalendarClassKey,
