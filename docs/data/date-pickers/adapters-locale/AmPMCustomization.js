@@ -6,7 +6,7 @@ import Stack from '@mui/material/Stack';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { Unstable_NextTimePicker as NextTimePicker } from '@mui/x-date-pickers/NextTimePicker';
+import { Unstable_TimeField as TimeField } from '@mui/x-date-pickers/TimeField';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 
 const locales = ['en', 'en-gb', 'de'];
@@ -29,16 +29,9 @@ export default function AmPMCustomization() {
             </ToggleButton>
           ))}
         </ToggleButtonGroup>
-        <NextTimePicker
-          label="Locale default"
-          defaultValue={dayjs('2022-04-07T18:30')}
-        />
-        <NextTimePicker
-          label="AM / PM"
-          defaultValue={dayjs('2022-04-07T18:30')}
-          ampm
-        />
-        <NextTimePicker
+        <TimeField label="Locale default" defaultValue={dayjs('2022-04-07T18:30')} />
+        <TimeField label="AM / PM" defaultValue={dayjs('2022-04-07T18:30')} ampm />
+        <TimeField
           label="24 hours"
           defaultValue={dayjs('2022-04-07T18:30')}
           ampm={false}

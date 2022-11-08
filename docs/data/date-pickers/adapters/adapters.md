@@ -28,6 +28,11 @@ The Date and Time Pickers currently support the following date libraries:
 - [Luxon](https://moment.github.io/luxon/#/)
 - [Moment.js](https://momentjs.com/)
 
+:::info
+If you are using another calendar system than the *Gregorian* one (i.e: *Jalali* or *Hijri* calendars),
+please refer to the [Support for other calendar systems](#support-for-other-calendar-systems) section.
+:::
+
 ### Recommended library
 
 If you are already using one of these libraries in your application, you can keep using it for the Date and Time Pickers as well.
@@ -67,7 +72,19 @@ We recommend you to wrap your entire application with a `LocalizationProvider` t
 
 ## Support for other calendar systems
 
-TODO
+### Jalali
+
+You can use either the `AdapterDateFnsJalali` adapter which is based on [`date-fns-jalali`](https://www.npmjs.com/package/date-fns-jalali) or the `AdapterMomentJalaali` adapter which is based on [`moment-jalaali`](https://www.npmjs.com/package/moment-jalaali).
+
+The following demo shows how to use the date-fns plugin:
+
+{{"demo": "AdapterJalali.js"}}
+
+### Hijri
+
+You can use the `AdapterMomentHijri` adapter which is based on [`moment-hijri`](https://www.npmjs.com/package/moment-hijri):
+
+{{"demo": "AdapterHijri.js"}}
 
 ### Unsupported libraries
 
