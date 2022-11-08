@@ -11,7 +11,7 @@ import { DIALOG_WIDTH } from '../../constants/dimensions';
 const PickerStaticViewLayout = styled(PickerViewLayout)(({ theme }) => ({
   overflow: 'hidden',
   minWidth: DIALOG_WIDTH,
-  backgroundColor: theme.palette.background.paper,
+  backgroundColor: (theme.vars || theme).palette.background.paper,
 })) as unknown as typeof PickerViewLayout;
 
 /**

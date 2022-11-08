@@ -94,13 +94,13 @@ const PickersMonthButton = styled('button', {
     pointerEvents: 'none',
   },
   [`&.${pickersMonthClasses.disabled}`]: {
-    color: theme.palette.text.secondary,
+    color: (theme.vars || theme).palette.text.secondary,
   },
   [`&.${pickersMonthClasses.selected}`]: {
-    color: theme.palette.primary.contrastText,
-    backgroundColor: theme.palette.primary.main,
+    color: (theme.vars || theme).palette.primary.contrastText,
+    backgroundColor: (theme.vars || theme).palette.primary.main,
     '&:focus, &:hover': {
-      backgroundColor: theme.palette.primary.dark,
+      backgroundColor: (theme.vars || theme).palette.primary.dark,
     },
   },
 }));

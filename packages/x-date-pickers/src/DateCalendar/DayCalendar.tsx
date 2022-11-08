@@ -135,7 +135,7 @@ const PickersCalendarWeekDayLabel = styled(Typography, {
   display: 'flex',
   justifyContent: 'center',
   alignItems: 'center',
-  color: theme.palette.text.secondary,
+  color: (theme.vars || theme).palette.text.secondary,
 }));
 
 const PickersCalendarLoadingContainer = styled('div', {
