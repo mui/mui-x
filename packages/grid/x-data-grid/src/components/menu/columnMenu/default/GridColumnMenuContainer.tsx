@@ -9,7 +9,7 @@ import { gridClasses } from '../../../../constants/gridClasses';
 const GridColumnMenuContainerRoot = styled('div')(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
-  minWidth: '248px',
+  minWidth: theme.typography.pxToRem(248),
   padding: theme.spacing(1, 0),
 }));
 

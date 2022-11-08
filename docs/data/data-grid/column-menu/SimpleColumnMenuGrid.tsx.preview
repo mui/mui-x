@@ -1,3 +1,1 @@
-import { GridColumnMenuSimple } from '@mui/x-data-grid'
-
-<DataGrid {...otherProps} components={{ columnMenu: GridColumnMenuSimple }} />
+<DataGrid {...data} components={{ ColumnMenu: GridColumnMenuSimple }} />

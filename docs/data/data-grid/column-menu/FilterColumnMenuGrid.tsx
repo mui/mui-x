@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {
   DataGrid,
-  GridFilterMenuSimpleItem,
+  GridColumnMenuFilterItemSimple,
   GridColumnMenuItemProps,
 } from '@mui/x-data-grid';
 import { useDemoData } from '@mui/x-data-grid-generator';
@@ -24,7 +24,7 @@ const MenuCloseComponent = (props: GridColumnMenuItemProps) => {
 
 const FilterComponent = (props: GridColumnMenuItemProps) => (
   <Stack my={1}>
-    <GridFilterMenuSimpleItem {...props} />
+    <GridColumnMenuFilterItemSimple {...props} />
   </Stack>
 );
 

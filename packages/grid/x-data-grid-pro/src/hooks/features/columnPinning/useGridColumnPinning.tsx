@@ -183,11 +183,11 @@ export const useGridColumnPinning = (
         return columnMenuValue;
       }
 
-      const Component = props.components?.ColumnMenuPinningItem;
+      const ColumnMenuPinningItem = props.components.ColumnMenuPinningItem;
 
       const items = {
         ...columnMenuValue.items,
-        pinning: Component ? <Component /> : null,
+        pinning: <ColumnMenuPinningItem />,
       };
 
       const visibleItemKeys = insertItemsInColumnMenu(

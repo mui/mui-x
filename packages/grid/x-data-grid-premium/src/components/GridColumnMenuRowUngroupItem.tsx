@@ -2,29 +2,28 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
-import { gridColumnLookupSelector, useGridSelector, GridColDef } from '@mui/x-data-grid-pro';
+import {
+  gridColumnLookupSelector,
+  useGridSelector,
+  GridColumnMenuItemProps,
+} from '@mui/x-data-grid-pro';
 import { styled } from '@mui/material/styles';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import { gridRowGroupingSanitizedModelSelector } from '../hooks/features/rowGrouping/gridRowGroupingSelector';
-
-interface GridRowGroupableColumnMenuItemsProps {
-  column?: GridColDef;
-  onClick?: (event: React.MouseEvent<any>) => void;
-}
 
 const StyledStack = styled(Stack)(({ theme }) => ({
   padding: theme.spacing(1, 1.5, 1, 1.5),
   flexDirection: 'row',
 }));
 
-const StyledButton = styled(Button)(() => ({
-  fontSize: '16px',
-  fontWeight: '400',
+const StyledButton = styled(Button)(({ theme }) => ({
+  fontSize: theme.typography.pxToRem(16),
+  fontWeight: theme.typography.fontWeightRegular,
   textTransform: 'none',
 }));
 
-const GridRowGroupableColumnMenuItems = (props: GridRowGroupableColumnMenuItemsProps) => {
+const GridColumnMenuRowUngroupItem: React.FC<GridColumnMenuItemProps> = (props) => {
   const { column, onClick } = props;
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
@@ -51,16 +50,13 @@ const GridRowGroupableColumnMenuItems = (props: GridRowGroupableColumnMenuItemsP
 
   const name = columnsLookup[column.field].headerName ?? column.field;
 
-  const UngroupIcon = rootProps.components?.ColumnMenuUngroupIcon;
-  const GroupIcon = rootProps.components?.ColumnMenuGroupIcon;
-
   if (rowGroupingModel.includes(column.field)) {
     return (
       <StyledStack>
         <StyledButton
           onClick={ungroupColumn}
           key={column.field}
-          startIcon={UngroupIcon ? <UngroupIcon /> : null}
+          startIcon={<rootProps.components.ColumnMenuUngroupIcon />}
           color="inherit"
         >
           {apiRef.current.getLocaleText('unGroupColumn')(name)}
@@ -74,7 +70,7 @@ const GridRowGroupableColumnMenuItems = (props: GridRowGroupableColumnMenuItemsP
       <StyledButton
         onClick={groupColumn}
         key={column.field}
-        startIcon={GroupIcon ? <GroupIcon /> : null}
+        startIcon={<rootProps.components.ColumnMenuGroupIcon />}
         color="inherit"
       >
         {apiRef.current.getLocaleText('groupColumn')(name)}
@@ -83,7 +79,7 @@ const GridRowGroupableColumnMenuItems = (props: GridRowGroupableColumnMenuItemsP
   );
 };
 
-GridRowGroupableColumnMenuItems.propTypes = {
+GridColumnMenuRowUngroupItem.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
@@ -92,4 +88,4 @@ GridRowGroupableColumnMenuItems.propTypes = {
   onClick: PropTypes.func,
 } as any;
 
-export { GridRowGroupableColumnMenuItems };
+export { GridColumnMenuRowUngroupItem };

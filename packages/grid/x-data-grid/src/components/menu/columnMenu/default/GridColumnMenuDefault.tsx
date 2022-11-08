@@ -1,19 +1,19 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import Divider from '@mui/material/Divider';
-import { GridColumnMenuValue, GridColumnMenuTypes } from '../../../../hooks/features/columnMenu';
+import { GridColumnMenuValue, GridColumnMenuKey } from '../../../../hooks/features/columnMenu';
 import { GridColumnMenuContainer } from './GridColumnMenuContainer';
 import { GridColumnMenu } from '../GridColumnMenu';
 import { GridColumnMenuProps } from '../GridColumnMenuProps';
-import { GridColumnsMenuItem } from './GridColumnsMenuItem';
-import { GridFilterMenuItem } from './GridFilterMenuItem';
-import { HideGridColMenuItem } from './HideGridColMenuItem';
-import { SortGridMenuItems } from './SortGridMenuItems';
+import { GridColumnMenuColumnsItem } from './GridColumnMenuColumnsItem';
+import { GridColumnMenuFilterItem } from './GridColumnMenuFilterItem';
+import { GridColumnMenuHideItem } from './GridColumnMenuHideItem';
+import { GridColumnMenuSortItem } from './GridColumnMenuSortItem';
 
 export interface GridColumnMenuDefaultProps
   extends Pick<GridColumnMenuProps, 'hideMenu' | 'currentColumn' | 'open'> {}
 
-const defaultVisibleItems: Array<GridColumnMenuTypes['key']> = [
+const defaultVisibleItems: Array<GridColumnMenuKey> = [
   'sorting',
   'divider',
   'filter',
@@ -25,13 +25,11 @@ const defaultVisibleItems: Array<GridColumnMenuTypes['key']> = [
 
 const GridColumnMenuDefault = React.forwardRef<HTMLDivElement, GridColumnMenuDefaultProps>(
   function GridColumnMenuDefault(props: GridColumnMenuDefaultProps, ref) {
-    // TODO: Figure out a workaround
-    // @ts-ignore as it's not getting proper types due to overrides from Pro/Premium
     const defaultMenuItems: GridColumnMenuValue['items'] = {
-      sorting: <SortGridMenuItems />,
-      filter: <GridFilterMenuItem />,
-      hideColumn: <HideGridColMenuItem />,
-      manageColumns: <GridColumnsMenuItem />,
+      sorting: <GridColumnMenuSortItem />,
+      filter: <GridColumnMenuFilterItem />,
+      hideColumn: <GridColumnMenuHideItem />,
+      manageColumns: <GridColumnMenuColumnsItem />,
       divider: <Divider />,
     };
 

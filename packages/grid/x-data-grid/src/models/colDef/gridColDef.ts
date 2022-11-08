@@ -2,7 +2,8 @@ import * as React from 'react';
 import { GridCellClassNamePropType } from '../gridCellClass';
 import { GridColumnHeaderClassNamePropType } from '../gridColumnHeaderClass';
 import { GridFilterOperator } from '../gridFilterOperator';
-import { GridColumnMenuTypes } from '../../hooks/features/columnMenu';
+// eslint-disable-next-line import/no-cycle
+import { GridColumnMenuKey, GetVisibleColumnMenuItemsArgs } from '../../hooks/features/columnMenu';
 import {
   GridCellParams,
   GridRenderCellParams,
@@ -243,12 +244,10 @@ export interface GridColDef<R extends GridValidRowModel = any, V = any, F = V> {
   colSpan?: number | ((params: GridCellParams<V, R, F>) => number | undefined);
   /**
    * Recieves registered column menu items and should return the items which should be shown.
-   * @param {Array<GridColumnMenuTypes['key']>} keys Registered column menu items.
-   * @returns {Array<GridColumnMenuTypes['key']>} Keys of items which are needed to be shown.
+   * @param {GetVisibleColumnMenuItemsArgs} args Arguments of type GetVisibleColumnMenuItemsArgs.
+   * @returns {Array<GridColumnMenuKey>} Keys of items which are needed to be shown.
    */
-  getVisibleColumnMenuItems?: (
-    keys: Array<GridColumnMenuTypes['key']>,
-  ) => Array<GridColumnMenuTypes['key']>;
+  getVisibleColumnMenuItems?: (args: GetVisibleColumnMenuItemsArgs) => Array<GridColumnMenuKey>;
 }
 
 export interface GridActionsColDef<R extends GridValidRowModel = any, V = any, F = V>

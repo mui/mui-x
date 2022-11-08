@@ -1,36 +1,33 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import MenuItem from '@mui/material/MenuItem';
-import { GridPreferencePanelsValue } from '../../../../hooks/features/preferencesPanel/gridPreferencePanelsValue';
 import { useGridApiContext } from '../../../../hooks/utils/useGridApiContext';
 import { GridColumnMenuItemProps } from '../GridColumnMenuItemProps';
 import { useGridRootProps } from '../../../../hooks/utils/useGridRootProps';
 
-const GridColumnsMenuSimpleItem = (props: GridColumnMenuItemProps) => {
-  const { onClick } = props;
+const GridColumnMenuFilterItemSimple = (props: GridColumnMenuItemProps) => {
+  const { column, onClick } = props;
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
 
-  const showColumns = React.useCallback(
+  const showFilter = React.useCallback(
     (event: React.MouseEvent<HTMLElement>) => {
-      onClick?.(event); // hide column menu
-      apiRef.current.showPreferences(GridPreferencePanelsValue.columns);
+      onClick?.(event);
+      apiRef.current.showFilterPanel(column?.field);
     },
-    [apiRef, onClick],
+    [apiRef, column?.field, onClick],
   );
 
-  if (rootProps.disableColumnSelector) {
+  if (rootProps.disableColumnFilter || !column?.filterable) {
     return null;
   }
 
   return (
-    <MenuItem onClick={showColumns}>
-      {apiRef.current.getLocaleText('columnMenuShowColumns')}
-    </MenuItem>
+    <MenuItem onClick={showFilter}>{apiRef.current.getLocaleText('columnMenuFilter')}</MenuItem>
   );
 };
 
-GridColumnsMenuSimpleItem.propTypes = {
+GridColumnMenuFilterItemSimple.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
@@ -39,4 +36,4 @@ GridColumnsMenuSimpleItem.propTypes = {
   onClick: PropTypes.func,
 } as any;
 
-export { GridColumnsMenuSimpleItem };
+export { GridColumnMenuFilterItemSimple };

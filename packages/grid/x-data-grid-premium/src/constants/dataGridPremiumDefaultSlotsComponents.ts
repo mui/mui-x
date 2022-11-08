@@ -3,10 +3,10 @@ import { GridPremiumSlotsComponent, GridPremiumIconSlotsComponent } from '../mod
 import {
   GridWorkspacesIcon,
   GridGroupWorkIcon,
-  GridAggregationColumnMenuItem,
+  GridColumnMenuAggregationItem,
 } from '../components';
-import { GridRowGroupableColumnMenuItems } from '../components/GridRowGroupableColumnMenuItems';
-import { GridRowGroupingColumnMenuItems } from '../components/GridRowGroupingColumnMenuItems';
+import { GridColumnMenuRowUngroupItem } from '../components/GridColumnMenuRowUngroupItem';
+import { GridColumnMenuRowGroupItem } from '../components/GridColumnMenuRowGroupItem';
 
 export const DEFAULT_GRID_PREMIUM_ICON_SLOTS_COMPONENTS: GridPremiumIconSlotsComponent = {
   ColumnMenuUngroupIcon: GridWorkspacesIcon,
@@ -16,7 +16,7 @@ export const DEFAULT_GRID_PREMIUM_ICON_SLOTS_COMPONENTS: GridPremiumIconSlotsCom
 export const DATA_GRID_PREMIUM_DEFAULT_SLOTS_COMPONENTS: GridPremiumSlotsComponent = {
   ...DATA_GRID_PRO_DEFAULT_SLOTS_COMPONENTS,
   ...DEFAULT_GRID_PREMIUM_ICON_SLOTS_COMPONENTS,
-  ColumnMenuAggregationItem: GridAggregationColumnMenuItem,
-  ColumnMenuRowGroupingItem: GridRowGroupingColumnMenuItems,
-  ColumnMenuRowGroupableItem: GridRowGroupableColumnMenuItems,
+  ColumnMenuAggregationItem: GridColumnMenuAggregationItem,
+  ColumnMenuRowGroupItem: GridColumnMenuRowGroupItem,
+  ColumnMenuRowUngroupItem: GridColumnMenuRowUngroupItem,
 };

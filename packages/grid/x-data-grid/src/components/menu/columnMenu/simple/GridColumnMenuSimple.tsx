@@ -1,13 +1,13 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import Divider from '@mui/material/Divider';
-import { GridColumnMenuTypes } from '../../../../hooks/features/columnMenu';
+import { GridColumnMenuKey } from '../../../../hooks/features/columnMenu';
 import { GridColumnMenuSimpleContainer } from './GridColumnMenuSimpleContainer';
 import { GridColumnMenuProps } from '../GridColumnMenuProps';
-import { GridColumnsMenuSimpleItem } from './GridColumnsMenuSimpleItem';
-import { GridFilterMenuSimpleItem } from './GridFilterMenuSimpleItem';
-import { HideGridColMenuSimpleItem } from './HideGridColMenuSimpleItem';
-import { SortGridMenuSimpleItems } from './SortGridMenuSimpleItems';
+import { GridColumnMenuColumnsItemSimple } from './GridColumnMenuColumnsItemSimple';
+import { GridColumnMenuFilterItemSimple } from './GridColumnMenuFilterItemSimple';
+import { GridColumnMenuHideItemSimple } from './GridColumnMenuHideItemSimple';
+import { GridColumnMenuSortItemSimple } from './GridColumnMenuSortItemSimple';
 import { GridColumnMenu } from '../GridColumnMenu';
 
 interface Props
@@ -16,7 +16,7 @@ interface Props
     'hideMenu' | 'currentColumn' | 'open' | 'getVisibleColumnMenuItems'
   > {}
 
-const defaultVisibleItems: Array<GridColumnMenuTypes['key']> = [
+const defaultVisibleItems: Array<GridColumnMenuKey> = [
   'sorting',
   'filter',
   'hideColumn',
@@ -26,17 +26,16 @@ const defaultVisibleItems: Array<GridColumnMenuTypes['key']> = [
 const GridColumnMenuSimple = React.forwardRef<HTMLUListElement, Props>(
   function GridColumnMenuSimple(props: Props, ref) {
     const defaultMenuItems = {
-      sorting: <SortGridMenuSimpleItems />,
-      filter: <GridFilterMenuSimpleItem />,
-      hideColumn: <HideGridColMenuSimpleItem />,
-      manageColumns: <GridColumnsMenuSimpleItem />,
+      sorting: <GridColumnMenuSortItemSimple />,
+      filter: <GridColumnMenuFilterItemSimple />,
+      hideColumn: <GridColumnMenuHideItemSimple />,
+      manageColumns: <GridColumnMenuColumnsItemSimple />,
       divider: <Divider />,
     };
 
     return (
       <GridColumnMenuSimpleContainer ref={ref} {...props}>
         <GridColumnMenu
-          // @ts-ignore as it's not getting proper types due to overrides from Pro/Premium
           defaultMenuItems={defaultMenuItems}
           defaultVisibleItems={defaultVisibleItems}
           {...props}

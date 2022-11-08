@@ -6,7 +6,10 @@ import Stack from '@mui/material/Stack';
 import { styled } from '@mui/material/styles';
 import { useGridApiContext } from '../../../../hooks/utils/useGridApiContext';
 import { useGridSelector } from '../../../../hooks/utils/useGridSelector';
-import { gridFilterModelSelector } from '../../../../hooks/features/filter/gridFilterSelector';
+import {
+  gridFilterModelSelector,
+  gridFilterActiveItemsLookupSelector,
+} from '../../../../hooks/features/filter/gridFilterSelector';
 import { GridColumnMenuItemProps } from '../GridColumnMenuItemProps';
 import { useGridRootProps } from '../../../../hooks/utils/useGridRootProps';
 
@@ -16,24 +19,23 @@ const StyledStack = styled(Stack)(({ theme }) => ({
   justifyContent: 'space-between',
 }));
 
-const StyledButton = styled(Button)(() => ({
-  fontSize: '16px',
-  fontWeight: '400',
+const StyledButton = styled(Button)(({ theme }) => ({
+  fontSize: theme.typography.pxToRem(16),
+  fontWeight: theme.typography.fontWeightRegular,
   textTransform: 'none',
 }));
 
-const GridFilterMenuItem = (props: GridColumnMenuItemProps) => {
+const GridColumnMenuFilterItem = (props: GridColumnMenuItemProps) => {
   const { column, onClick } = props;
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
   const filterModel = useGridSelector(apiRef, gridFilterModelSelector);
+  const filterColumnLookup = useGridSelector(apiRef, gridFilterActiveItemsLookupSelector);
 
-  const isColumnFiltered = React.useMemo(() => {
-    if (filterModel.items.length <= 0) {
-      return false;
-    }
-    return filterModel.items.some((item) => item.columnField === column?.field);
-  }, [column?.field, filterModel.items]);
+  const filtersForCurrentColumn = React.useMemo(
+    () => (column?.field ? filterColumnLookup[column.field] ?? [] : []),
+    [column?.field, filterColumnLookup],
+  );
 
   const showFilter = React.useCallback(
     (event: React.MouseEvent<HTMLElement>) => {
@@ -44,12 +46,12 @@ const GridFilterMenuItem = (props: GridColumnMenuItemProps) => {
   );
 
   const clearFilters = React.useCallback(() => {
-    if (isColumnFiltered) {
+    if (filtersForCurrentColumn.length) {
       apiRef.current.upsertFilterItems(
         filterModel.items.filter((item) => item.columnField !== column?.field),
       );
     }
-  }, [apiRef, column?.field, filterModel.items, isColumnFiltered]);
+  }, [apiRef, column?.field, filterModel.items, filtersForCurrentColumn]);
 
   if (rootProps.disableColumnFilter || !column?.filterable) {
     return null;
@@ -60,21 +62,21 @@ const GridFilterMenuItem = (props: GridColumnMenuItemProps) => {
       <StyledButton
         onClick={showFilter}
         startIcon={<rootProps.components.ColumnMenuFilterIcon />}
-        color={isColumnFiltered ? 'primary' : 'inherit'}
+        color={filtersForCurrentColumn.length ? 'primary' : 'inherit'}
         aria-label={apiRef.current.getLocaleText('columnMenuFilter') as string}
       >
         {apiRef.current.getLocaleText('columnMenuFilter')}
       </StyledButton>
-      {isColumnFiltered && (
+      {filtersForCurrentColumn.length ? (
         <IconButton aria-label="clear filter" onClick={clearFilters}>
           <rootProps.components.ColumnMenuClearIcon />
         </IconButton>
-      )}
+      ) : null}
     </StyledStack>
   );
 };
 
-GridFilterMenuItem.propTypes = {
+GridColumnMenuFilterItem.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
@@ -83,4 +85,4 @@ GridFilterMenuItem.propTypes = {
   onClick: PropTypes.func,
 } as any;
 
-export { GridFilterMenuItem };
+export { GridColumnMenuFilterItem };

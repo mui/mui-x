@@ -665,6 +665,12 @@
     "FilterPanelDeleteIcon": "Icon displayed for deleting the filter from filter Panel.",
     "RowReorderIcon": "Icon displayed on the <code>reorder</code> column type to reorder a row.",
     "QuickFilterIcon": "Icon displayed on the quick filter input.",
-    "QuickFilterClearIcon": "Icon displayed on the quick filter reset input."
+    "QuickFilterClearIcon": "Icon displayed on the quick filter reset input.",
+    "ColumnMenuHideIcon": "Icon displayed in column menu for hiding column",
+    "ColumnMenuSortAscendingIcon": "Icon displayed in column menu for ascending sort",
+    "ColumnMenuSortDescendingIcon": "Icon displayed in column menu for descending sort",
+    "ColumnMenuFilterIcon": "Icon displayed in column menu for filter",
+    "ColumnMenuManageColumnsIcon": "Icon displayed in column menu for showing all columns",
+    "ColumnMenuClearIcon": "Icon displayed in column menu for clearing values"
   }
 }

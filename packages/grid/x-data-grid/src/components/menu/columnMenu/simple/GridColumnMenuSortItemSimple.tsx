@@ -7,7 +7,7 @@ import { GridSortDirection } from '../../../../models/gridSortModel';
 import { useGridApiContext } from '../../../../hooks/utils/useGridApiContext';
 import { GridColumnMenuItemProps } from '../GridColumnMenuItemProps';
 
-const SortGridMenuSimpleItems = (props: GridColumnMenuItemProps) => {
+const GridColumnMenuSortItemSimple = (props: GridColumnMenuItemProps) => {
   const { column, onClick } = props;
   const apiRef = useGridApiContext();
   const sortModel = useGridSelector(apiRef, gridSortModelSelector);
@@ -51,7 +51,7 @@ const SortGridMenuSimpleItems = (props: GridColumnMenuItemProps) => {
   );
 };
 
-SortGridMenuSimpleItems.propTypes = {
+GridColumnMenuSortItemSimple.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
@@ -60,4 +60,4 @@ SortGridMenuSimpleItems.propTypes = {
   onClick: PropTypes.func,
 } as any;
 
-export { SortGridMenuSimpleItems };
+export { GridColumnMenuSortItemSimple };

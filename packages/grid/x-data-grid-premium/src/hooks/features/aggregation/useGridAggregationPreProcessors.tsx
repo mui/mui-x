@@ -132,10 +132,10 @@ export const useGridAggregationPreProcessors = (
         availableAggregationFunctions,
       };
 
-      const Component = props.components?.ColumnMenuAggregationItem;
+      const ColumnMenuAggregationItem = props.components.ColumnMenuAggregationItem;
       const items = {
         ...columnMenuValue.items,
-        aggregation: Component ? <Component {...aggregationItemProps} /> : null,
+        aggregation: <ColumnMenuAggregationItem {...aggregationItemProps} />,
       };
 
       const visibleItemKeys = insertItemsInColumnMenu(
@@ -149,7 +149,7 @@ export const useGridAggregationPreProcessors = (
     [
       apiRef,
       props.aggregationFunctions,
-      props.components?.ColumnMenuAggregationItem,
+      props.components.ColumnMenuAggregationItem,
       props.disableAggregation,
     ],
   );

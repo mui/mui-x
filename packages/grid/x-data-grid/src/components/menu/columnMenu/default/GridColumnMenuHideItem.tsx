@@ -14,13 +14,13 @@ const StyledStack = styled(Stack)(({ theme }) => ({
   justifyContent: 'space-between',
 }));
 
-const StyledButton = styled(Button)(() => ({
-  fontSize: '16px',
-  fontWeight: '400',
+const StyledButton = styled(Button)(({ theme }) => ({
+  fontSize: theme.typography.pxToRem(16),
+  fontWeight: theme.typography.fontWeightRegular,
   textTransform: 'none',
 }));
 
-const HideGridColMenuItem = (props: GridColumnMenuItemProps) => {
+const GridColumnMenuHideItem = (props: GridColumnMenuItemProps) => {
   const { column, onClick } = props;
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
@@ -78,7 +78,7 @@ const HideGridColMenuItem = (props: GridColumnMenuItemProps) => {
   );
 };
 
-HideGridColMenuItem.propTypes = {
+GridColumnMenuHideItem.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
@@ -87,4 +87,4 @@ HideGridColMenuItem.propTypes = {
   onClick: PropTypes.func,
 } as any;
 
-export { HideGridColMenuItem };
+export { GridColumnMenuHideItem };

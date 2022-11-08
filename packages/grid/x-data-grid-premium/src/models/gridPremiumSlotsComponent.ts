@@ -9,18 +9,18 @@ export interface GridPremiumSlotsComponent
   extends GridProSlotsComponent,
     GridPremiumIconSlotsComponent {
   /**
-   * The custom Checkbox component used in the grid for both header and cells.
-   * @default GridAggregationColumnMenuItem
+   * The custom component for aggregation menu item.
+   * @default GridColumnMenuAggregationItem
    */
   ColumnMenuAggregationItem: React.JSXElementConstructor<any>;
   /**
-   * The custom Checkbox component used in the grid for both header and cells.
-   * @default GridRowGroupingColumnMenuItems
+   * The custom component for ungrouped menu item.
+   * @default GridColumnMenuRowUngroupItem
    */
-  ColumnMenuRowGroupingItem: React.JSXElementConstructor<any>;
+  ColumnMenuRowUngroupItem: React.JSXElementConstructor<any>;
   /**
-   * The custom Checkbox component used in the grid for both header and cells.
-   * @default GridRowGroupableColumnMenuItems
+   * The custom component for grouped menu item.
+   * @default GridColumnMenuRowGroupItem
    */
-  ColumnMenuRowGroupableItem: React.JSXElementConstructor<any>;
+  ColumnMenuRowGroupItem: React.JSXElementConstructor<any>;
 }

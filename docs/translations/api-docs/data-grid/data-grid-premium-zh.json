@@ -18,7 +18,7 @@
     "columnThreshold": "Number of rows from the <code>columnBuffer</code> that can be visible before a new slice is rendered.",
     "columnTypes": "Extend native column types with your new column types.",
     "columnVisibilityModel": "Set the column visibility model of the grid. If defined, the grid will ignore the <code>hide</code> property in <a href=\"/x/api/data-grid/grid-col-def/\">GridColDef</a>.",
-    "components": "Overrideable components.",
+    "components": "Overrideable Pro components.",
     "componentsProps": "Overrideable components props dynamically passed to the component at rendering.",
     "defaultGroupingExpansionDepth": "If above 0, the row children will be expanded up to this depth. If equal to -1, all the row children will be expanded.",
     "density": "Set the density of the grid.",
@@ -658,6 +658,10 @@
     }
   },
   "slotDescriptions": {
+    "ColumnMenuAggregationItem": "The custom component for aggregation menu item.",
+    "ColumnMenuRowUngroupItem": "The custom component for ungrouped menu item.",
+    "ColumnMenuRowGroupItem": "The custom component for grouped menu item.",
+    "ColumnMenuPinningItem": "The custom Checkbox component used in the grid for both header and cells.",
     "BaseCheckbox": "The custom Checkbox component used in the grid for both header and cells.",
     "BaseTextField": "The custom TextField component used in the grid.",
     "BaseFormControl": "The custom FormControl component used in the grid.",
@@ -707,6 +711,16 @@
     "FilterPanelDeleteIcon": "Icon displayed for deleting the filter from filter Panel.",
     "RowReorderIcon": "Icon displayed on the <code>reorder</code> column type to reorder a row.",
     "QuickFilterIcon": "Icon displayed on the quick filter input.",
-    "QuickFilterClearIcon": "Icon displayed on the quick filter reset input."
+    "QuickFilterClearIcon": "Icon displayed on the quick filter reset input.",
+    "ColumnMenuHideIcon": "Icon displayed in column menu for hiding column",
+    "ColumnMenuSortAscendingIcon": "Icon displayed in column menu for ascending sort",
+    "ColumnMenuSortDescendingIcon": "Icon displayed in column menu for descending sort",
+    "ColumnMenuFilterIcon": "Icon displayed in column menu for filter",
+    "ColumnMenuManageColumnsIcon": "Icon displayed in column menu for showing all columns",
+    "ColumnMenuClearIcon": "Icon displayed in column menu for clearing values",
+    "ColumnMenuPinLeftIcon": "Icon displayed in column menu for left pinning",
+    "ColumnMenuPinRightIcon": "Icon displayed in column menu for right pinning",
+    "ColumnMenuUngroupIcon": "Icon displayed in column menu for ungrouping",
+    "ColumnMenuGroupIcon": "Icon displayed in column menu for grouping"
   }
 }

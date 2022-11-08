@@ -3,7 +3,7 @@ import { GridProSlotsComponent, GridProIconSlotsComponent } from '../models';
 import {
   GridPushPinRightIcon,
   GridPushPinLeftIcon,
-  GridColumnPinningMenuItems,
+  GridColumnMenuPinningItem,
 } from '../components';
 
 export const DEFAULT_GRID_PRO_ICON_SLOTS_COMPONENTS: GridProIconSlotsComponent = {
@@ -14,5 +14,5 @@ export const DEFAULT_GRID_PRO_ICON_SLOTS_COMPONENTS: GridProIconSlotsComponent =
 export const DATA_GRID_PRO_DEFAULT_SLOTS_COMPONENTS: GridProSlotsComponent = {
   ...DATA_GRID_DEFAULT_SLOTS_COMPONENTS,
   ...DEFAULT_GRID_PRO_ICON_SLOTS_COMPONENTS,
-  ColumnMenuPinningItem: GridColumnPinningMenuItems,
+  ColumnMenuPinningItem: GridColumnMenuPinningItem,
 };

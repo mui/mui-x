@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { DataGrid, GridFilterMenuSimpleItem } from '@mui/x-data-grid';
+import { DataGrid, GridColumnMenuFilterItemSimple } from '@mui/x-data-grid';
 import { useDemoData } from '@mui/x-data-grid-generator';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
@@ -14,7 +14,7 @@ const MenuCloseComponent = (props) => {
 
 const FilterComponent = (props) => (
   <Stack my={1}>
-    <GridFilterMenuSimpleItem {...props} />
+    <GridColumnMenuFilterItemSimple {...props} />
   </Stack>
 );
 

@@ -1,16 +1,11 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import MenuItem from '@mui/material/MenuItem';
-import { GridColDef } from '@mui/x-data-grid';
+import { GridColumnMenuItemProps } from '@mui/x-data-grid';
 import { GridPinnedPosition } from '../hooks/features/columnPinning';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 
-interface GridColumnPinningMenuItemsProps {
-  column?: GridColDef;
-  onClick?: (event: React.MouseEvent<any>) => void;
-}
-
-const GridColumnPinningMenuItemsSimple = (props: GridColumnPinningMenuItemsProps) => {
+const GridColumnMenuPinningItemSimple: React.FC<GridColumnMenuItemProps> = (props) => {
   const { column, onClick } = props;
   const apiRef = useGridApiContext();
 
@@ -61,7 +56,7 @@ const GridColumnPinningMenuItemsSimple = (props: GridColumnPinningMenuItemsProps
   );
 };
 
-GridColumnPinningMenuItemsSimple.propTypes = {
+GridColumnMenuPinningItemSimple.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
@@ -70,4 +65,4 @@ GridColumnPinningMenuItemsSimple.propTypes = {
   onClick: PropTypes.func,
 } as any;
 
-export { GridColumnPinningMenuItemsSimple };
+export { GridColumnMenuPinningItemSimple };

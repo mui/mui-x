@@ -1,16 +1,15 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import MenuItem from '@mui/material/MenuItem';
-import { gridColumnLookupSelector, useGridSelector, GridColDef } from '@mui/x-data-grid-pro';
+import {
+  gridColumnLookupSelector,
+  useGridSelector,
+  GridColumnMenuItemProps,
+} from '@mui/x-data-grid-pro';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { gridRowGroupingSanitizedModelSelector } from '../hooks/features/rowGrouping/gridRowGroupingSelector';
 
-interface GridRowGroupableColumnMenuItemsProps {
-  column?: GridColDef;
-  onClick?: (event: React.MouseEvent<any>) => void;
-}
-
-const GridRowGroupableColumnMenuItemsSimple = (props: GridRowGroupableColumnMenuItemsProps) => {
+const GridColumnMenuRowUngroupItemSimple: React.FC<GridColumnMenuItemProps> = (props) => {
   const { column, onClick } = props;
   const apiRef = useGridApiContext();
   const rowGroupingModel = useGridSelector(apiRef, gridRowGroupingSanitizedModelSelector);
@@ -49,7 +48,7 @@ const GridRowGroupableColumnMenuItemsSimple = (props: GridRowGroupableColumnMenu
   );
 };
 
-GridRowGroupableColumnMenuItemsSimple.propTypes = {
+GridColumnMenuRowUngroupItemSimple.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
@@ -58,4 +57,4 @@ GridRowGroupableColumnMenuItemsSimple.propTypes = {
   onClick: PropTypes.func,
 } as any;
 
-export { GridRowGroupableColumnMenuItemsSimple };
+export { GridColumnMenuRowUngroupItemSimple };

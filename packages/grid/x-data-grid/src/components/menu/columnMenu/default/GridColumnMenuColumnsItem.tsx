@@ -13,7 +13,7 @@ const StyledStack = styled(Stack)(({ theme }) => ({
   flexDirection: 'row',
 }));
 
-const GridColumnsMenuItem = (props: GridColumnMenuItemProps) => {
+const GridColumnMenuColumnsItem = (props: GridColumnMenuItemProps) => {
   const { onClick } = props;
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
@@ -42,7 +42,7 @@ const GridColumnsMenuItem = (props: GridColumnMenuItemProps) => {
   );
 };
 
-GridColumnsMenuItem.propTypes = {
+GridColumnMenuColumnsItem.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
@@ -51,4 +51,4 @@ GridColumnsMenuItem.propTypes = {
   onClick: PropTypes.func,
 } as any;
 
-export { GridColumnsMenuItem };
+export { GridColumnMenuColumnsItem };

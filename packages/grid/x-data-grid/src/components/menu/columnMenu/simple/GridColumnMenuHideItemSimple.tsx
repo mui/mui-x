@@ -6,7 +6,7 @@ import { useGridApiContext } from '../../../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../../../hooks/utils/useGridRootProps';
 import { gridVisibleColumnDefinitionsSelector } from '../../../../hooks/features/columns';
 
-const HideGridColMenuSimpleItem = (props: GridColumnMenuItemProps) => {
+const GridColumnMenuHideItemSimple = (props: GridColumnMenuItemProps) => {
   const { column, onClick } = props;
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
@@ -59,7 +59,7 @@ const HideGridColMenuSimpleItem = (props: GridColumnMenuItemProps) => {
   );
 };
 
-HideGridColMenuSimpleItem.propTypes = {
+GridColumnMenuHideItemSimple.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
@@ -68,4 +68,4 @@ HideGridColMenuSimpleItem.propTypes = {
   onClick: PropTypes.func,
 } as any;
 
-export { HideGridColMenuSimpleItem };
+export { GridColumnMenuHideItemSimple };

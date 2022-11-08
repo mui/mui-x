@@ -31,7 +31,18 @@ You can also customise column menu based on some conditions. Every item in the m
 
 For that purpose you can use `getVisibleColumnMenuItems` and `columnMenuItems`.
 
-**getVisibleColumnMenuItems**: It is available in both `GridColDef` and `componentsProps.columnMenu`, it receives keys of all registered items and should return a _filtered_ and _ordered_ list of keys that are needed to be shown. It can be used either per-column basis by passing in `GridColDef` or for the whole Grid by passing in `componentsProps.columnMenu`. If you have it in both, the preference will be given to the `GridColDef` one.
+**getVisibleColumnMenuItems**: It is available in both `GridColDef` and `componentsProps.columnMenu`, it receives `column`, `itemKeys` and `visibleItemKeys` and should return a _filtered_ and _ordered_ list of keys that are needed to be shown. It can be used either per-column basis by passing in `GridColDef` or for the whole Grid by passing in `componentsProps.columnMenu`. If you have it in both, the preference will be given to the `GridColDef` one.
+
+```tsx
+interface GetVisibleColumnMenuItemsArgs {
+  visibleItemKeys: Array<GridColumnMenuKey>; // keys of currently visible items
+  itemKeys: Array<GridColumnMenuKey>; // keys of default menu items
+  column: GridColDef; // current column
+}
+
+getVisibleColumnMenuItems?: (args: GetVisibleColumnMenuItemsArgs)
+  => Array<GridColumnMenuKey>;
+```
 
 **columnMenuItems**: It could be used to override or register new items to the menu. You can simply pass the object with existing or new items and they will be updated/added to the grid.
 
@@ -66,7 +77,10 @@ const columnMenuItems = {
 };
 
 // add new item in visible items and append it to the last of list
-const getVisibleColumnMenuItems = (defaultItems) => [...defaultItems, 'closeMenu'];
+const getVisibleColumnMenuItems = ({ visibleItemKeys }) => [
+  ...visibleItemKeys,
+  'closeMenu',
+];
 
 <DataGrid
   {...data}
@@ -108,12 +122,12 @@ For _Pro_ and _Premium_ packages you have specific `slot` for each of the column
 
 Here's a list of column menu items and their overridable slots for Commercial features.
 
-| **Item**                | **Package** | **Key**       | **Slot**                     | **Default**                     |
-| ----------------------- | ----------- | ------------- | ---------------------------- | ------------------------------- |
-| Pinning                 | Pro         | 'pinning'     | 'ColumnMenuPinningItem'      | GridColumnPinningMenuItems      |
-| Groupable (not grouped) | Premium     | 'grouping'    | 'ColumnMenuRowGroupableItem' | GridRowGroupableColumnMenuItems |
-| Grouping (grouped)      | Premium     | 'grouping'    | 'ColumnMenuRowGroupingItem'  | GridRowGroupingColumnMenuItems  |
-| Aggregation             | Premium     | 'aggregation' | 'ColumnMenuAggregationItem'  | GridAggregationColumnMenuItem   |
+| **Item**    | **Package** | **Key**       | **Slot**                    | **Default**                   |
+| ----------- | ----------- | ------------- | --------------------------- | ----------------------------- |
+| Pinning     | Pro         | 'pinning'     | 'ColumnMenuPinningItem'     | GridColumnMenuPinningItems    |
+| Ungroup     | Premium     | 'grouping'    | 'ColumnMenuRowUngroupItem'  | GridColumnMenuRowUngroupItem  |
+| Group       | Premium     | 'grouping'    | 'ColumnMenuRowGroupItem'    | GridColumnMenuRowGroupItem    |
+| Aggregation | Premium     | 'aggregation' | 'ColumnMenuAggregationItem' | GridColumnMenuAggregationItem |
 
 This example is using simple Column Menu for basic menu and overriding some slots for premium items and customizing the display order and the items shown.
 
@@ -132,7 +146,7 @@ This example is using simple Column Menu for basic menu and overriding some slot
   }}
   components={{
     ColumnMenu: GridColumnMenuSimple,
-    ColumnMenuPinningItem: GridColumnPinningMenuItemsSimple,
+    ColumnMenuPinningItem: GridColumnMenuPinningItemSimple,
     ColumnMenuAggregationItem: SomeCustomAggregationComponent,
   }}
 />

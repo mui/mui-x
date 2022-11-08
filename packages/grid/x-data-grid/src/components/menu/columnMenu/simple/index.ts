@@ -1,6 +1,9 @@
-export * from './GridColumnsMenuSimpleItem';
-export * from './GridFilterMenuSimpleItem';
-export * from './GridColumnMenuSimple';
-export * from './HideGridColMenuSimpleItem';
-export * from './SortGridMenuSimpleItems';
+// items
+export * from './GridColumnMenuColumnsItemSimple';
+export * from './GridColumnMenuFilterItemSimple';
+export * from './GridColumnMenuHideItemSimple';
+export * from './GridColumnMenuSortItemSimple';
+
+// components
 export * from './GridColumnMenuSimpleContainer';
+export * from './GridColumnMenuSimple';

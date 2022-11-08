@@ -15,12 +15,12 @@ const StyledStack = styled(Stack)(({ theme }) => ({
   padding: theme.spacing(0.5, 1.5, 0.5, 1.5),
 }));
 
-const StyledButton = styled(Button)(() => ({
-  fontSize: '16px',
-  fontWeight: '400',
+const StyledButton = styled(Button)(({ theme }) => ({
+  fontSize: theme.typography.pxToRem(16),
+  fontWeight: theme.typography.fontWeightRegular,
 }));
 
-const SortGridMenuItems = (props: GridColumnMenuItemProps) => {
+const GridColumnMenuSortItem = (props: GridColumnMenuItemProps) => {
   const { column } = props;
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
@@ -76,7 +76,7 @@ const SortGridMenuItems = (props: GridColumnMenuItemProps) => {
   );
 };
 
-SortGridMenuItems.propTypes = {
+GridColumnMenuSortItem.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
@@ -85,4 +85,4 @@ SortGridMenuItems.propTypes = {
   onClick: PropTypes.func,
 } as any;
 
-export { SortGridMenuItems };
+export { GridColumnMenuSortItem };

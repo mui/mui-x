@@ -1,6 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { GridColumnMenuTypes, GridColumnMenuValue } from '../../../hooks/features/columnMenu';
+import { GridColumnMenuKey } from '../../../hooks/features/columnMenu';
 import { GridColumnMenuProps } from './GridColumnMenuProps';
 import { useGridApiContext } from '../../../hooks/utils/useGridApiContext';
 
@@ -21,7 +21,7 @@ const GridColumnMenu = (props: GridColumnMenuProps) => {
     currentColumn,
   );
 
-  const extendedColumnMenuItems: GridColumnMenuValue['items'] = React.useMemo(() => {
+  const extendedColumnMenuItems = React.useMemo(() => {
     if (!userMenuItems || !Object.keys(userMenuItems).length) {
       return preProcessedValue.items;
     }
@@ -29,29 +29,35 @@ const GridColumnMenu = (props: GridColumnMenuProps) => {
     return { ...preProcessedValue.items, ...userMenuItems };
   }, [preProcessedValue.items, userMenuItems]);
 
-  const filteredAndSortedItems = React.useMemo(() => {
+  const filteredAndSortedItemKeys = React.useMemo(() => {
     const filterCallback =
       currentColumn.getVisibleColumnMenuItems ?? props.getVisibleColumnMenuItems;
+
+    const itemKeys = Object.keys(extendedColumnMenuItems) as Array<GridColumnMenuKey>;
 
     const filteredItemKeys =
       !filterCallback || typeof filterCallback !== 'function'
         ? preProcessedValue.visibleItemKeys
-        : filterCallback(Object.keys(extendedColumnMenuItems) as Array<GridColumnMenuTypes['key']>);
+        : filterCallback({ itemKeys, column: currentColumn, visibleItemKeys: defaultVisibleItems });
 
     const visibleItems = filteredItemKeys || defaultVisibleItems;
 
-    return visibleItems.map((itemName) => extendedColumnMenuItems[itemName]);
+    return visibleItems;
   }, [
-    currentColumn.getVisibleColumnMenuItems,
+    currentColumn,
     props.getVisibleColumnMenuItems,
-    preProcessedValue.visibleItemKeys,
     extendedColumnMenuItems,
+    preProcessedValue.visibleItemKeys,
     defaultVisibleItems,
   ]);
 
   return (
     <React.Fragment>
-      {filteredAndSortedItems.map((component: any, index: number) => {
+      {filteredAndSortedItemKeys.map((itemKey, index: number) => {
+        const component = extendedColumnMenuItems[itemKey];
+        if (!component) {
+          return null;
+        }
         const itemProps = {
           onClick: hideMenu,
           column: currentColumn,
@@ -74,19 +80,19 @@ GridColumnMenu.propTypes = {
    * If the item is already registered, it will be overwritten otherwise a new item will be registered
    */
   columnMenuItems: PropTypes.shape({
-    divider: PropTypes.node,
-    filter: PropTypes.node,
-    hideColumn: PropTypes.node,
-    manageColumns: PropTypes.node,
-    sorting: PropTypes.node,
+    divider: PropTypes.element,
+    filter: PropTypes.element,
+    hideColumn: PropTypes.element,
+    manageColumns: PropTypes.element,
+    sorting: PropTypes.element,
   }),
   currentColumn: PropTypes.object.isRequired,
   defaultMenuItems: PropTypes.shape({
-    divider: PropTypes.node,
-    filter: PropTypes.node,
-    hideColumn: PropTypes.node,
-    manageColumns: PropTypes.node,
-    sorting: PropTypes.node,
+    divider: PropTypes.element,
+    filter: PropTypes.element,
+    hideColumn: PropTypes.element,
+    manageColumns: PropTypes.element,
+    sorting: PropTypes.element,
   }).isRequired,
   /**
    * Default column menu items in order that needs to be shown

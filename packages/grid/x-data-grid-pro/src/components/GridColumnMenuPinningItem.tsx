@@ -3,28 +3,23 @@ import PropTypes from 'prop-types';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
-import { GridColDef } from '@mui/x-data-grid';
+import { GridColumnMenuItemProps } from '@mui/x-data-grid';
 import { styled } from '@mui/material/styles';
 import { GridPinnedPosition } from '../hooks/features/columnPinning';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 
-interface GridColumnPinningMenuItemsProps {
-  column?: GridColDef;
-  onClick?: (event: React.MouseEvent<any>) => void;
-}
-
 const StyledStack = styled(Stack)(({ theme }) => ({
   padding: theme.spacing(1, 1.5, 1, 1.5),
 }));
 
-const StyledButton = styled(Button)(() => ({
-  fontSize: '16px',
-  fontWeight: '400',
+const StyledButton = styled(Button)(({ theme }) => ({
+  fontSize: theme.typography.pxToRem(16),
+  fontWeight: theme.typography.fontWeightRegular,
   textTransform: 'none',
 }));
 
-const GridColumnPinningMenuItems = (props: GridColumnPinningMenuItemsProps) => {
+const GridColumnMenuPinningItem: React.FC<GridColumnMenuItemProps> = (props) => {
   const { column, onClick } = props;
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
@@ -51,9 +46,6 @@ const GridColumnPinningMenuItems = (props: GridColumnPinningMenuItemsProps) => {
 
   const side = apiRef.current.isColumnPinned(column.field);
 
-  const LeftIcon = rootProps.components?.ColumnMenuPinLeftIcon;
-  const RightIcon = rootProps.components?.ColumnMenuPinRightIcon;
-
   return (
     <StyledStack>
       <Typography color="text.secondary" fontSize="12px">
@@ -64,7 +56,7 @@ const GridColumnPinningMenuItems = (props: GridColumnPinningMenuItemsProps) => {
           onClick={
             side === GridPinnedPosition.left ? unpinColumn : pinColumn(GridPinnedPosition.left)
           }
-          startIcon={LeftIcon ? <LeftIcon /> : null}
+          startIcon={<rootProps.components.ColumnMenuPinLeftIcon />}
           color={side === GridPinnedPosition.left ? 'primary' : 'inherit'}
         >
           {apiRef.current.getLocaleText('pinToLeftDefault')}
@@ -73,7 +65,7 @@ const GridColumnPinningMenuItems = (props: GridColumnPinningMenuItemsProps) => {
           onClick={
             side === GridPinnedPosition.right ? unpinColumn : pinColumn(GridPinnedPosition.right)
           }
-          startIcon={RightIcon ? <RightIcon /> : null}
+          startIcon={<rootProps.components.ColumnMenuPinRightIcon />}
           color={side === GridPinnedPosition.right ? 'primary' : 'inherit'}
         >
           {apiRef.current.getLocaleText('pinToRightDefault')}
@@ -83,7 +75,7 @@ const GridColumnPinningMenuItems = (props: GridColumnPinningMenuItemsProps) => {
   );
 };
 
-GridColumnPinningMenuItems.propTypes = {
+GridColumnMenuPinningItem.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
@@ -92,4 +84,4 @@ GridColumnPinningMenuItems.propTypes = {
   onClick: PropTypes.func,
 } as any;
 
-export { GridColumnPinningMenuItems };
+export { GridColumnMenuPinningItem };

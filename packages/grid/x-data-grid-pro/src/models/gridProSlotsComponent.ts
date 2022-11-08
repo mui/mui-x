@@ -9,7 +9,7 @@ import { GridProIconSlotsComponent } from './gridProIconSlotsComponent';
 export interface GridProSlotsComponent extends GridSlotsComponent, GridProIconSlotsComponent {
   /**
    * The custom Checkbox component used in the grid for both header and cells.
-   * @default GridColumnPinningMenuItems
+   * @default GridColumnMenuPinningItems
    */
   ColumnMenuPinningItem: React.JSXElementConstructor<any>;
 }

@@ -160,14 +160,14 @@ export const useGridRowGrouping = (
         return columnMenuValue;
       }
 
-      const GroupingComponent = props.components?.ColumnMenuRowGroupingItem;
-      const GroupableComponent = props.components?.ColumnMenuRowGroupableItem;
+      const GroupComponent = props.components.ColumnMenuRowGroupItem;
+      const UngroupComponent = props.components.ColumnMenuRowUngroupItem;
 
       let menuItem;
       if (isGroupingColumn(column.field)) {
-        menuItem = GroupingComponent ? <GroupingComponent /> : null;
+        menuItem = <GroupComponent />;
       } else if (column.groupable) {
-        menuItem = GroupableComponent ? <GroupableComponent /> : null;
+        menuItem = <UngroupComponent />;
       } else {
         menuItem = null;
       }
@@ -187,8 +187,8 @@ export const useGridRowGrouping = (
       return { visibleItemKeys, items };
     },
     [
-      props.components?.ColumnMenuRowGroupableItem,
-      props.components?.ColumnMenuRowGroupingItem,
+      props.components.ColumnMenuRowUngroupItem,
+      props.components.ColumnMenuRowGroupItem,
       props.disableRowGrouping,
     ],
   );
