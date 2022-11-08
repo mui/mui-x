@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useLicenseVerifier, MuiCommercialPackageName } from '../useLicenseVerifier';
+import { MuiCommercialPackageName, useLicenseVerifier } from '../useLicenseVerifier';
 import { LicenseStatus } from '../utils/licenseStatus';
 
 function getLicenseErrorMessage(licenseStatus: LicenseStatus) {
@@ -8,6 +8,8 @@ function getLicenseErrorMessage(licenseStatus: LicenseStatus) {
       return 'MUI X: License key expired';
     case LicenseStatus.Invalid:
       return 'MUI X: Invalid license key';
+    case LicenseStatus.OutOfScope:
+      return 'MUI X: Out of scope license key';
     case LicenseStatus.NotFound:
       return 'MUI X: Missing license key';
     default:

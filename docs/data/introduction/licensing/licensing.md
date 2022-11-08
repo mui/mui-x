@@ -211,6 +211,11 @@ For example, if you purchase a one-year license today, you will be able to updat
 Those versions will always be available for use in a deployed application,
 however you'll be required to renew your license if you need to continue development with a version released after twelve months.
 
+#### Out of scope license key
+
+This error indicates that the component you are trying to use is not included in your license.
+This can happen if you try to use `DataGridPremium` with a Pro license.
+
 #### Invalid license key
 
 This error indicates that your license key doesn't match what is expected. This is likely a typo.
