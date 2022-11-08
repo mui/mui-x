@@ -115,10 +115,15 @@ const styleArg = ({ theme, ownerState }: { theme: Theme; ownerState: OwnerState 
   backgroundColor: (theme.vars || theme).palette.background.paper,
   color: (theme.vars || theme).palette.text.primary,
   '&:hover': {
-    backgroundColor: alpha(theme.palette.action.active, theme.palette.action.hoverOpacity),
+    backgroundColor: theme.vars
+      ? `rgba(${theme.vars.palette.action.activeChannel} / ${theme.vars.palette.action.hoverOpacity})`
+      : alpha(theme.palette.action.active, theme.palette.action.hoverOpacity),
   },
   '&:focus': {
-    backgroundColor: alpha(theme.palette.action.active, theme.palette.action.hoverOpacity),
+    backgroundColor: theme.vars
+      ? `rgba(${theme.vars.palette.action.activeChannel} / ${theme.vars.palette.action.hoverOpacity})`
+      : alpha(theme.palette.action.active, theme.palette.action.hoverOpacity),
+
     [`&.${pickersDayClasses.selected}`]: {
       willChange: 'background-color',
       backgroundColor: (theme.vars || theme).palette.primary.dark,
@@ -144,12 +149,12 @@ const styleArg = ({ theme, ownerState }: { theme: Theme; ownerState: OwnerState 
   }),
   ...(ownerState.outsideCurrentMonth &&
     ownerState.showDaysOutsideCurrentMonth && {
-      color:  (theme.vars || theme).palette.text.secondary,
+      color: (theme.vars || theme).palette.text.secondary,
     }),
   ...(!ownerState.disableHighlightToday &&
     ownerState.today && {
       [`&:not(.${pickersDayClasses.selected})`]: {
-        border: `1px solid ${ (theme.vars || theme).palette.text.secondary}`,
+        border: `1px solid ${(theme.vars || theme).palette.text.secondary}`,
       },
     }),
 });

@@ -84,10 +84,14 @@ const PickersMonthButton = styled('button', {
   borderRadius: 18,
   cursor: 'pointer',
   '&:focus': {
-    backgroundColor: alpha(theme.palette.action.active, theme.palette.action.focusOpacity),
+    backgroundColor: theme.vars
+      ? `rgba(${theme.vars.palette.action.activeChannel} / ${theme.vars.palette.action.hoverOpacity})`
+      : alpha(theme.palette.action.active, theme.palette.action.hoverOpacity),
   },
   '&:hover': {
-    backgroundColor: alpha(theme.palette.action.active, theme.palette.action.hoverOpacity),
+    backgroundColor: theme.vars
+      ? `rgba(${theme.vars.palette.action.activeChannel} / ${theme.vars.palette.action.hoverOpacity})`
+      : alpha(theme.palette.action.active, theme.palette.action.hoverOpacity),
   },
   '&:disabled': {
     cursor: 'auto',

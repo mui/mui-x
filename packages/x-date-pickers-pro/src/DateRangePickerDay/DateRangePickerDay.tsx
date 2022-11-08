@@ -129,7 +129,9 @@ const DateRangePickerDayRoot = styled('div', {
     !ownerState.outsideCurrentMonth && {
       borderRadius: 0,
       color: (theme.vars || theme).palette.primary.contrastText,
-      backgroundColor: alpha(theme.palette.primary.light, 0.6),
+      backgroundColor: theme.vars
+        ? `rgba(${theme.vars.palette.primary.lightChannel} / ${0.6})`
+        : alpha(theme.palette.primary.light, 0.6),
       '&:first-of-type': startBorderStyle,
       '&:last-of-type': endBorderStyle,
     }),
@@ -223,7 +225,11 @@ const DateRangePickerDayDay = styled(PickersDay, {
   }),
   ...(!ownerState.selected &&
     ownerState.isHighlighting && {
-      color: theme.palette.getContrastText(alpha(theme.palette.primary.light, 0.6)),
+      color: theme.palette.getContrastText(
+        theme.vars
+          ? `rgba(${theme.vars.palette.primary.lightChannel} / ${0.6})`
+          : alpha(theme.palette.primary.light, 0.6),
+      ),
     }),
 })) as unknown as <TDate>(
   props: PickersDayProps<TDate> & { ownerState: OwnerState },
