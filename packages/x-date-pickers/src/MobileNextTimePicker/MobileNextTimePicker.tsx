@@ -112,7 +112,7 @@ MobileNextTimePicker.propTypes = {
    */
   disabled: PropTypes.bool,
   /**
-   * If `true` disable values before the current time
+   * If `true` disable values before the current date and time.
    * @default false
    */
   disableFuture: PropTypes.bool,
@@ -127,7 +127,7 @@ MobileNextTimePicker.propTypes = {
    */
   disableOpenPicker: PropTypes.bool,
   /**
-   * If `true` disable values after the current time.
+   * If `true` disable values after the current date and time.
    * @default false
    */
   disablePast: PropTypes.bool,
@@ -156,12 +156,12 @@ MobileNextTimePicker.propTypes = {
   localeText: PropTypes.object,
   /**
    * Max time acceptable time.
-   * For input validation date part of passed object will be ignored if `disableIgnoringDatePartForTimeValidation` not specified.
+   * The date part of the object will be ignored unless `props.disableIgnoringDatePartForTimeValidation === true`.
    */
   maxTime: PropTypes.any,
   /**
-   * Min time acceptable time.
-   * For input validation date part of passed object will be ignored if `disableIgnoringDatePartForTimeValidation` not specified.
+   * Minimal time acceptable time.
+   * The date part of the object will be ignored unless `props.disableIgnoringDatePartForTimeValidation === true`.
    */
   minTime: PropTypes.any,
   /**
@@ -244,11 +244,10 @@ MobileNextTimePicker.propTypes = {
     }),
   ]),
   /**
-   * Dynamically check if time is disabled or not.
-   * If returns `false` appropriate time point will ot be acceptable.
+   * Disable specific time.
    * @param {number} timeValue The value to check.
    * @param {ClockPickerView} view The clock type of the timeValue.
-   * @returns {boolean} Returns `true` if the time should be disabled
+   * @returns {boolean} If `true` the time will be disabled.
    */
   shouldDisableTime: PropTypes.func,
   /**

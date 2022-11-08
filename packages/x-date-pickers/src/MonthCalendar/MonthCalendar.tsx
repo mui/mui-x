@@ -333,7 +333,7 @@ MonthCalendar.propTypes = {
    */
   disabled: PropTypes.bool,
   /**
-   * If `true` disable values before the current time
+   * If `true` disable values before the current date and time.
    * @default false
    */
   disableFuture: PropTypes.bool,
@@ -343,17 +343,17 @@ MonthCalendar.propTypes = {
    */
   disableHighlightToday: PropTypes.bool,
   /**
-   * If `true` disable values after the current time.
+   * If `true` disable values after the current date and time.
    * @default false
    */
   disablePast: PropTypes.bool,
   hasFocus: PropTypes.bool,
   /**
-   * Maximal selectable date. @DateIOType
+   * Maximal selectable date.
    */
   maxDate: PropTypes.any,
   /**
-   * Minimal selectable date. @DateIOType
+   * Minimal selectable date.
    */
   minDate: PropTypes.any,
   /**
@@ -369,10 +369,9 @@ MonthCalendar.propTypes = {
    */
   readOnly: PropTypes.bool,
   /**
-   * Disable specific months dynamically.
-   * Works like `shouldDisableDate` but for month selection view @DateIOType.
+   * Disable specific month.
    * @template TDate
-   * @param {TDate} month The month to check.
+   * @param {TDate} month The month to test.
    * @returns {boolean} If `true` the month will be disabled.
    */
   shouldDisableMonth: PropTypes.func,
