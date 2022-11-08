@@ -123,7 +123,6 @@ const styleArg = ({ theme, ownerState }: { theme: Theme; ownerState: OwnerState 
     backgroundColor: theme.vars
       ? `rgba(${theme.vars.palette.action.activeChannel} / ${theme.vars.palette.action.hoverOpacity})`
       : alpha(theme.palette.action.active, theme.palette.action.hoverOpacity),
-
     [`&.${pickersDayClasses.selected}`]: {
       willChange: 'background-color',
       backgroundColor: (theme.vars || theme).palette.primary.dark,

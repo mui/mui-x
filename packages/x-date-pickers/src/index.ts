@@ -1,4 +1,4 @@
-import type {} from '@mui/material/themeCssVarsAugmentation'
+import type {} from '@mui/material/themeCssVarsAugmentation';
 
 export * from './ClockPicker';
 export * from './DatePicker';
