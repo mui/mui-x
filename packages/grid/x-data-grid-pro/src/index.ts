@@ -1,3 +1,4 @@
+import type {} from '@mui/material/themeCssVarsAugmentation';
 import './typeOverloads';
 
 export { LicenseInfo } from '@mui/x-license-pro';

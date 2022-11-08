@@ -1,4 +1,6 @@
 import * as React from 'react';
+import type {} from '@mui/material/themeCssVarsAugmentation';
+
 import { GridApiCommunity } from './models/api/gridApiCommunity';
 import { GridInitialStateCommunity, GridStateCommunity } from './models/gridStateCommunity';
 
