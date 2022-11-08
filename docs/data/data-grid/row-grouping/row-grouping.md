@@ -11,7 +11,7 @@ In the following example groups all movies based on their production `company`:
 
 {{"demo": "RowGroupingBasicExample.js", "bg": "inline", "defaultCodeOpen": false}}
 
-## Set grouping criteria
+## Grouping criteria
 
 ### Initialize the row grouping
 
