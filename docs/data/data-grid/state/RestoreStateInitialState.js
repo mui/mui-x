@@ -13,7 +13,7 @@ import {
 } from '@mui/x-data-grid-pro';
 import { useDemoData } from '@mui/x-data-grid-generator';
 
-const GridCustomToolbar = ({ syncState }) => {
+function GridCustomToolbar({ syncState }) {
   const rootProps = useGridRootProps();
   const apiRef = useGridApiContext();
 
@@ -31,7 +31,7 @@ const GridCustomToolbar = ({ syncState }) => {
       </Button>
     </GridToolbarContainer>
   );
-};
+}
 
 GridCustomToolbar.propTypes = {
   syncState: PropTypes.func.isRequired,

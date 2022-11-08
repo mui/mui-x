@@ -126,12 +126,14 @@ describe('<StaticDateTimePicker />', () => {
     });
 
     it('should render custom component', () => {
-      const CustomPickerTabs = (props: DateTimePickerTabsProps) => (
-        <React.Fragment>
-          <DateTimePickerTabs {...props} />
-          <span>test-custom-picker-tabs</span>
-        </React.Fragment>
-      );
+      function CustomPickerTabs(props: DateTimePickerTabsProps) {
+        return (
+          <React.Fragment>
+            <DateTimePickerTabs {...props} />
+            <span>test-custom-picker-tabs</span>
+          </React.Fragment>
+        );
+      }
       render(
         <StaticDateTimePicker
           displayStaticWrapperAs="mobile"

@@ -30,14 +30,14 @@ type TestDataGridProps = Omit<DataGridProps, 'columns' | 'rows'> &
 describe('<DataGrid /> - Column grouping', () => {
   const { render } = createRenderer();
 
-  const TestDataGrid = (props: TestDataGridProps) => {
+  function TestDataGrid(props: TestDataGridProps) {
     const { nbColumns, ...other } = props;
     return (
       <div style={{ width: 300, height: 300 }}>
         <DataGrid {...getDefaultProps(nbColumns)} {...other} />
       </div>
     );
-  };
+  }
 
   describe('Header grouping columns', () => {
     it('should add one header row when columns have a group', () => {
@@ -291,11 +291,13 @@ describe('<DataGrid /> - Column grouping', () => {
   // TODO: remove the skip. I failed to test if an error is thrown
   // eslint-disable-next-line mocha/no-skipped-tests
   describe.skip('error messages', () => {
-    const TestWithError = (props: TestDataGridProps) => (
-      <ErrorBoundary logger={console}>
-        <TestDataGrid {...props} />
-      </ErrorBoundary>
-    );
+    function TestWithError(props: TestDataGridProps) {
+      return (
+        <ErrorBoundary logger={console}>
+          <TestDataGrid {...props} />
+        </ErrorBoundary>
+      );
+    }
 
     it('should log an error if two groups have the same id', () => {
       expect(() => {

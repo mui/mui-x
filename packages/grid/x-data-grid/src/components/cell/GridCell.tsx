@@ -2,7 +2,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { unstable_composeClasses as composeClasses } from '@mui/material';
+import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { ownerDocument, capitalize } from '@mui/material/utils';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import {

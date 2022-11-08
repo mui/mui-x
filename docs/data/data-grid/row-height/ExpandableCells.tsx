@@ -24,7 +24,7 @@ const lines = [
   'Vestibulum pulvinar aliquam turpis, ac faucibus risus varius a.',
 ];
 
-const ExpandableCell = ({ value }: GridRenderCellParams) => {
+function ExpandableCell({ value }: GridRenderCellParams) {
   const [expanded, setExpanded] = React.useState(false);
 
   return (
@@ -43,7 +43,7 @@ const ExpandableCell = ({ value }: GridRenderCellParams) => {
       )}
     </Box>
   );
-};
+}
 
 const columns = [
   { field: 'id' },

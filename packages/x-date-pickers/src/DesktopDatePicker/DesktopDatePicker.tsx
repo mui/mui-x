@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import {
   BaseDatePickerProps,
   useDatePickerDefaultizedProps,
-  datePickerValueManager,
   BaseDatePickerSlotsComponent,
   BaseDatePickerSlotsComponentsProps,
 } from '../DatePicker/shared';
@@ -17,6 +16,7 @@ import { CalendarOrClockPicker } from '../internals/components/CalendarOrClockPi
 import { useDateValidation } from '../internals/hooks/validation/useDateValidation';
 import { KeyboardDateInput } from '../internals/components/KeyboardDateInput';
 import { usePickerState } from '../internals/hooks/usePickerState';
+import { singleItemValueManager } from '../internals/utils/valueManagers';
 
 export interface DesktopDatePickerSlotsComponent<TDate>
   extends BaseDatePickerSlotsComponent<TDate>,
@@ -65,7 +65,7 @@ export const DesktopDatePicker = React.forwardRef(function DesktopDatePicker<TDa
   );
 
   const validationError = useDateValidation(props) !== null;
-  const { pickerProps, inputProps, wrapperProps } = usePickerState(props, datePickerValueManager);
+  const { pickerProps, inputProps, wrapperProps } = usePickerState(props, singleItemValueManager);
 
   const { onChange, value, components, componentsProps, localeText, ...other } = props;
 

@@ -9,7 +9,7 @@ import {
 import { useDemoData } from '@mui/x-data-grid-generator';
 import Pagination from '@mui/material/Pagination';
 
-const Toolbar = () => {
+function Toolbar() {
   const apiRef = useGridApiContext();
   const page = useGridSelector(apiRef, gridPageSelector);
   const pageCount = useGridSelector(apiRef, gridPageCountSelector);
@@ -23,7 +23,7 @@ const Toolbar = () => {
       onChange={(event, value) => apiRef.current.setPage(value - 1)}
     />
   );
-};
+}
 
 export default function UseGridSelector() {
   const { data, loading } = useDemoData({

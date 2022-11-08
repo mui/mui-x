@@ -10,7 +10,7 @@ interface GridRowGroupableColumnMenuItemsProps {
   onClick?: (event: React.MouseEvent<any>) => void;
 }
 
-const GridRowGroupableColumnMenuItems = (props: GridRowGroupableColumnMenuItemsProps) => {
+function GridRowGroupableColumnMenuItems(props: GridRowGroupableColumnMenuItemsProps) {
   const { column, onClick } = props;
   const apiRef = useGridApiContext();
   const rowGroupingModel = useGridSelector(apiRef, gridRowGroupingSanitizedModelSelector);
@@ -47,7 +47,7 @@ const GridRowGroupableColumnMenuItems = (props: GridRowGroupableColumnMenuItemsP
   return (
     <MenuItem onClick={groupColumn}>{apiRef.current.getLocaleText('groupColumn')(name)}</MenuItem>
   );
-};
+}
 
 GridRowGroupableColumnMenuItems.propTypes = {
   // ----------------------------- Warning --------------------------------

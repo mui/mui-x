@@ -1,8 +1,4 @@
----
-title: Data Grid - Row grouping recipes
----
-
-# Data grid - Row grouping recipes
+# Data Grid - Row grouping recipes
 
 <p class="description">Advanced grid customization recipes.</p>
 

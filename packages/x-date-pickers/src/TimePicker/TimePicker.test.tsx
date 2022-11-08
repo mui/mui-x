@@ -8,7 +8,7 @@ import { createPickerRenderer, stubMatchMedia, wrapPickerMount } from 'test/util
 import describeValidation from '@mui/x-date-pickers/tests/describeValidation';
 
 describe('<TimePicker />', () => {
-  const ControlledTimePicker = () => {
+  function ControlledTimePicker() {
     const [value, setValue] = React.useState<Date | null>(null);
     return (
       <TimePicker
@@ -17,7 +17,7 @@ describe('<TimePicker />', () => {
         onChange={(newValue) => setValue(newValue)}
       />
     );
-  };
+  }
 
   describeConformance(
     <TimePicker

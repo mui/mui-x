@@ -32,7 +32,7 @@ Support for the Jalali and Hijri adapters will come in the future.
 
 {{"demo": "SingleDateFieldExamples.js", "defaultCodeOpen": false}}
 
-### Fields to edit a range
+### Fields to edit a range [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
 
 All fields to edit a range are available in a single input version and in a multi input version.
 

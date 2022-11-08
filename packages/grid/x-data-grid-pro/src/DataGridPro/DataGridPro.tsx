@@ -25,11 +25,11 @@ const DataGridProRaw = React.forwardRef(function DataGridPro<R extends GridValid
   ref: React.Ref<HTMLDivElement>,
 ) {
   const props = useDataGridProProps(inProps);
-  const apiRef = useDataGridProComponent(props.apiRef, props);
+  const privateApiRef = useDataGridProComponent(props.apiRef, props);
   useLicenseVerifier('x-data-grid-pro', releaseInfo);
 
   return (
-    <GridContextProvider apiRef={apiRef} props={props}>
+    <GridContextProvider privateApiRef={privateApiRef} props={props}>
       <GridRoot className={props.className} style={props.style} sx={props.sx} ref={ref}>
         <GridErrorHandler>
           <GridHeaderPlaceholder />
@@ -209,11 +209,6 @@ DataGridProRaw.propTypes = {
    * @default false
    */
   disableExtendRowFullWidth: PropTypes.bool,
-  /**
-   * If `true`, modification to a cell will not be discarded if the mode is changed from "edit" to "view" while processing props.
-   * @default false
-   */
-  disableIgnoreModificationsIfProcessingProps: PropTypes.bool,
   /**
    * If `true`, filtering with multiple columns is disabled.
    * @default false
@@ -797,6 +792,11 @@ DataGridProRaw.propTypes = {
    * Set of rows of type [[GridRowsProp]].
    */
   rows: PropTypes.arrayOf(PropTypes.object).isRequired,
+  /**
+   * If `false`, the row selection mode is disabled.
+   * @default true
+   */
+  rowSelection: PropTypes.bool,
   /**
    * Sets the row selection model of the grid.
    */

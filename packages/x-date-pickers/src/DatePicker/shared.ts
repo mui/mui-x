@@ -11,8 +11,7 @@ import { DateValidationError } from '../internals/hooks/validation/useDateValida
 import { ValidationCommonProps } from '../internals/hooks/validation/useValidation';
 import { ExportedDateInputProps } from '../internals/components/PureDateInput';
 import { BasePickerProps } from '../internals/models/props/basePickerProps';
-import { PickerStateValueManager } from '../internals/hooks/usePickerState';
-import { applyDefaultDate, replaceInvalidDateByNull } from '../internals/utils/date-utils';
+import { applyDefaultDate } from '../internals/utils/date-utils';
 import { DefaultizedProps } from '../internals/models/helpers';
 import { BaseDateValidationProps } from '../internals/hooks/validation/models';
 import {
@@ -138,10 +137,3 @@ export function useDatePickerDefaultizedProps<TDate, Props extends BaseDatePicke
     components: { Toolbar: DatePickerToolbar, ...themeProps.components },
   };
 }
-
-export const datePickerValueManager: PickerStateValueManager<any, any> = {
-  emptyValue: null,
-  getTodayValue: (utils) => utils.date()!,
-  cleanValue: replaceInvalidDateByNull,
-  areValuesEqual: (utils, a, b) => utils.isEqual(a, b),
-};

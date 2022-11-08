@@ -41,7 +41,7 @@ import {
 import { calculateRangeChange, calculateRangePreview } from '../DateRangePicker/date-range-manager';
 import { DateRange } from '../internal/models';
 import { DateRangePickerDay } from '../DateRangePickerDay';
-import { dateRangePickerValueManager } from '../DateRangePicker/shared';
+import { rangeValueManager } from '../internal/utils/valueManagers';
 
 const releaseInfo = getReleaseInfo();
 
@@ -165,7 +165,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
 
   const [value, setValue] = useControlled<DateRange<TDate>>({
     controlled: valueProp,
-    default: defaultValue ?? dateRangePickerValueManager.emptyValue,
+    default: defaultValue ?? rangeValueManager.emptyValue,
     name: 'DateRangeCalendar',
     state: 'value',
   });
@@ -461,6 +461,10 @@ DateRangeCalendar.propTypes = {
    * Default calendar month displayed when `value={[null, null]}`.
    */
   defaultCalendarMonth: PropTypes.any,
+  /**
+   * The default selected value.
+   * Used when the component is not controlled.
+   */
   defaultValue: PropTypes.arrayOf(PropTypes.any),
   /**
    * If `true`, after selecting `start` date calendar will not automatically switch to the month of `end` date.
@@ -507,6 +511,12 @@ DateRangeCalendar.propTypes = {
    * Minimal selectable date. @DateIOType
    */
   minDate: PropTypes.any,
+  /**
+   * Callback fired when the value changes.
+   * @template TDate
+   * @param {DateRange<TDate>} value The new value.
+   * @param {PickerSelectionState | undefined} selectionState Indicates if the date range selection is complete.
+   */
   onChange: PropTypes.func,
   onCurrentDatePositionChange: PropTypes.func,
   /**
@@ -553,6 +563,10 @@ DateRangeCalendar.propTypes = {
     PropTypes.func,
     PropTypes.object,
   ]),
+  /**
+   * The selected value.
+   * Used when the component is controlled.
+   */
   value: PropTypes.arrayOf(PropTypes.any),
 } as any;
 
