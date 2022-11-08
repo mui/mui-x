@@ -527,6 +527,11 @@
       "nodeName": "the root element",
       "conditions": "density is \"compact\""
     },
+    "root--disableUserSelection": {
+      "description": "Styles applied to {{nodeName}} when {{conditions}}.",
+      "nodeName": "the root element",
+      "conditions": "user selection is disabled"
+    },
     "row--editable": {
       "description": "Styles applied to {{nodeName}} if {{conditions}}.",
       "nodeName": "the row element",

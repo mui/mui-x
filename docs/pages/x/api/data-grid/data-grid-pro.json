@@ -405,6 +405,7 @@
       "root--densityStandard",
       "root--densityComfortable",
       "root--densityCompact",
+      "root--disableUserSelection",
       "row--editable",
       "row--editing",
       "row--dragging",

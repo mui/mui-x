@@ -19,6 +19,7 @@ import {
   GridCellCoordinates,
   gridRowsDataRowIdToIdLookupSelector,
   GridRowId,
+  gridClasses,
 } from '@mui/x-data-grid-pro';
 import { gridCellSelectionStateSelector } from './gridCellSelectionSelector';
 import { GridCellSelectionApi, GridCellSelectionModel } from './gridCellSelectionInterfaces';
@@ -160,19 +161,21 @@ export const useGridCellSelection = (
   useGridApiMethod(apiRef, cellSelectionApi, 'public');
 
   const handleCellMouseDown = React.useCallback<GridEventListener<'cellMouseDown'>>(
-    (params, event) => {
-      if (event.shiftKey) {
-        window.getSelection()?.removeAllRanges();
-      }
-
+    (params) => {
       lastMouseDownCell.current = { id: params.id, field: params.field };
+      apiRef.current.rootElementRef?.current?.classList.add(
+        gridClasses['root--disableUserSelection'],
+      );
     },
-    [],
+    [apiRef],
   );
 
   const handleCellMouseUp = React.useCallback<GridEventListener<'cellMouseDown'>>(() => {
     lastMouseDownCell.current = null;
-  }, []);
+    apiRef.current.rootElementRef?.current?.classList.remove(
+      gridClasses['root--disableUserSelection'],
+    );
+  }, [apiRef]);
 
   const handleCellMouseOver = React.useCallback<GridEventListener<'cellMouseOver'>>(
     (params) => {
@@ -181,7 +184,6 @@ export const useGridCellSelection = (
       }
 
       const { id, field } = params;
-      window.getSelection()?.removeAllRanges();
       apiRef.current.selectCellRange(lastMouseDownCell.current, { id, field });
     },
     [apiRef],
@@ -318,37 +320,37 @@ export const useGridCellSelection = (
       if (rowIndex > 0) {
         const { id: previousRowId } = visibleRows.rows[rowIndex - 1];
         if (!apiRef.current.isCellSelected(previousRowId, field)) {
-          newClasses.push('MuiDataGrid-cell--rangeTop');
+          newClasses.push(gridClasses['cell--rangeTop']);
         }
       } else {
-        newClasses.push('MuiDataGrid-cell--rangeTop');
+        newClasses.push(gridClasses['cell--rangeTop']);
       }
 
       if (rowIndex < visibleRows.range.lastRowIndex) {
         const { id: nextRowId } = visibleRows.rows[rowIndex + 1];
         if (!apiRef.current.isCellSelected(nextRowId, field)) {
-          newClasses.push('MuiDataGrid-cell--rangeBottom');
+          newClasses.push(gridClasses['cell--rangeBottom']);
         }
       } else {
-        newClasses.push('MuiDataGrid-cell--rangeBottom');
+        newClasses.push(gridClasses['cell--rangeBottom']);
       }
 
       if (columnIndex > 0) {
         const { field: previousColumnField } = visibleColumns[columnIndex - 1];
         if (!apiRef.current.isCellSelected(id, previousColumnField)) {
-          newClasses.push('MuiDataGrid-cell--rangeLeft');
+          newClasses.push(gridClasses['cell--rangeLeft']);
         }
       } else {
-        newClasses.push('MuiDataGrid-cell--rangeLeft');
+        newClasses.push(gridClasses['cell--rangeLeft']);
       }
 
       if (columnIndex < visibleColumns.length - 1) {
         const { field: nextColumnField } = visibleColumns[columnIndex + 1];
         if (!apiRef.current.isCellSelected(id, nextColumnField)) {
-          newClasses.push('MuiDataGrid-cell--rangeRight');
+          newClasses.push(gridClasses['cell--rangeRight']);
         }
       } else {
-        newClasses.push('MuiDataGrid-cell--rangeRight');
+        newClasses.push(gridClasses['cell--rangeRight']);
       }
 
       return newClasses;

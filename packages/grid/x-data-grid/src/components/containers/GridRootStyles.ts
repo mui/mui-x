@@ -21,6 +21,10 @@ export const GridRootStyles = styled('div', {
         styles['aggregationColumnHeader--alignRight'],
     },
     { [`&.${gridClasses.aggregationColumnHeaderLabel}`]: styles.aggregationColumnHeaderLabel },
+    {
+      [`&.${gridClasses['root--disableUserSelection']} .${gridClasses.cell}`]:
+        styles['root--disableUserSelection'],
+    },
     { [`& .${gridClasses.editBooleanCell}`]: styles.editBooleanCell },
     { [`& .${gridClasses['cell--editing']}`]: styles['cell--editing'] },
     { [`& .${gridClasses['cell--textCenter']}`]: styles['cell--textCenter'] },
@@ -29,6 +33,10 @@ export const GridRootStyles = styled('div', {
     // TODO v6: Remove
     { [`& .${gridClasses['cell--withRenderer']}`]: styles['cell--withRenderer'] },
     { [`& .${gridClasses.cell}`]: styles.cell },
+    { [`& .${gridClasses['cell--rangeTop']}`]: styles['cell--rangeTop'] },
+    { [`& .${gridClasses['cell--rangeBottom']}`]: styles['cell--rangeBottom'] },
+    { [`& .${gridClasses['cell--rangeLeft']}`]: styles['cell--rangeLeft'] },
+    { [`& .${gridClasses['cell--rangeRight']}`]: styles['cell--rangeRight'] },
     { [`& .${gridClasses.cellContent}`]: styles.cellContent },
     { [`& .${gridClasses.cellCheckbox}`]: styles.cellCheckbox },
     { [`& .${gridClasses.cellSkeleton}`]: styles.cellSkeleton },
@@ -297,6 +305,9 @@ export const GridRootStyles = styled('div', {
           },
         },
       },
+    },
+    [`&.${gridClasses['root--disableUserSelection']} .${gridClasses.cell}`]: {
+      userSelect: 'none',
     },
     [`& .${gridClasses.row}:not(.${gridClasses['row--dynamicHeight']}) > .${gridClasses.cell}`]: {
       overflow: 'hidden',

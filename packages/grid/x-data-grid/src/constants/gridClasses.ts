@@ -405,6 +405,10 @@ export interface GridClasses {
    */
   'root--densityCompact': string;
   /**
+   * Styles applied to the root element when user selection is disabled.
+   */
+  'root--disableUserSelection': string;
+  /**
    * Styles applied to the row element if the row is editable.
    */
   'row--editable': string;
@@ -608,6 +612,7 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'root--densityStandard',
   'root--densityComfortable',
   'root--densityCompact',
+  'root--disableUserSelection',
   'row',
   'row--editable',
   'row--editing',
