@@ -130,7 +130,7 @@ const DateRangePickerDayRoot = styled('div', {
       borderRadius: 0,
       color: (theme.vars || theme).palette.primary.contrastText,
       backgroundColor: theme.vars
-        ? `rgba(${theme.vars.palette.primary.lightChannel} / ${0.6})`
+        ? `rgba(${theme.vars.palette.primary.lightChannel} / 0.6)`
         : alpha(theme.palette.primary.light, 0.6),
       '&:first-of-type': startBorderStyle,
       '&:last-of-type': endBorderStyle,
@@ -227,7 +227,7 @@ const DateRangePickerDayDay = styled(PickersDay, {
     ownerState.isHighlighting && {
       color: theme.palette.getContrastText(
         theme.vars
-          ? `rgba(${theme.vars.palette.primary.lightChannel} / ${0.6})`
+          ? `rgba(${theme.vars.palette.primary.lightChannel} / 0.6)`
           : alpha(theme.palette.primary.light, 0.6),
       ),
     }),
