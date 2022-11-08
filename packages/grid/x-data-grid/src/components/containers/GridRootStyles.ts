@@ -84,7 +84,7 @@ export const GridRootStyles = styled('div', {
     position: 'relative',
     border: `1px solid ${borderColor}`,
     borderRadius: theme.shape.borderRadius,
-    color: theme.palette.text.primary,
+    color: (theme.vars || theme).palette.text.primary,
     ...theme.typography.body2,
     outline: 'none',
     height: '100%',
@@ -191,7 +191,7 @@ export const GridRootStyles = styled('div', {
         marginLeft: -10,
       },
     [`& .${gridClasses['columnHeader--moving']}`]: {
-      backgroundColor: theme.palette.action.hover,
+      backgroundColor: (theme.vars || theme).palette.action.hover,
     },
     [`& .${gridClasses.columnSeparator}`]: {
       position: 'absolute',
@@ -211,14 +211,14 @@ export const GridRootStyles = styled('div', {
       cursor: 'col-resize',
       touchAction: 'none',
       '&:hover': {
-        color: theme.palette.text.primary,
+        color: (theme.vars || theme).palette.text.primary,
         // Reset on touch devices, it doesn't add specificity
         '@media (hover: none)': {
           color: borderColor,
         },
       },
       [`&.${gridClasses['columnSeparator--resizing']}`]: {
-        color: theme.palette.text.primary,
+        color: (theme.vars || theme).palette.text.primary,
       },
       '& svg': {
         pointerEvents: 'none',
@@ -254,7 +254,7 @@ export const GridRootStyles = styled('div', {
       width: 'fit-content',
       breakInside: 'avoid', // Avoid the row to be broken in two different print pages.
       '&:hover, &.Mui-hovered': {
-        backgroundColor: theme.palette.action.hover,
+        backgroundColor: (theme.vars || theme).palette.action.hover,
         // Reset on touch devices, it doesn't add specificity
         '@media (hover: none)': {
           backgroundColor: 'transparent',
@@ -294,9 +294,9 @@ export const GridRootStyles = styled('div', {
       padding: 1,
       display: 'flex',
       boxShadow: theme.shadows[2],
-      backgroundColor: theme.palette.background.paper,
+      backgroundColor: (theme.vars || theme).palette.background.paper,
       '&:focus-within': {
-        outline: `solid ${theme.palette.primary.main} 1px`,
+        outline: `solid ${(theme.vars || theme).palette.primary.main} 1px`,
         outlineOffset: '-1px',
       },
     },
@@ -305,7 +305,7 @@ export const GridRootStyles = styled('div', {
     },
     [`& .${gridClasses['row--editing']} .${gridClasses.cell}`]: {
       boxShadow: theme.shadows[0],
-      backgroundColor: theme.palette.background.paper,
+      backgroundColor: (theme.vars || theme).palette.background.paper,
     },
     [`& .${gridClasses.editBooleanCell}`]: {
       display: 'flex',
@@ -315,10 +315,10 @@ export const GridRootStyles = styled('div', {
       justifyContent: 'center',
     },
     [`& .${gridClasses.booleanCell}[data-value="true"]`]: {
-      color: theme.palette.text.secondary,
+      color: (theme.vars || theme).palette.text.secondary,
     },
     [`& .${gridClasses.booleanCell}[data-value="false"]`]: {
-      color: theme.palette.text.disabled,
+      color: (theme.vars || theme).palette.text.disabled,
     },
     [`& .${gridClasses.actionsCell}`]: {
       display: 'inline-flex',
@@ -330,7 +330,7 @@ export const GridRootStyles = styled('div', {
       flex: 1,
       alignItems: 'center',
       justifyContent: 'center',
-      opacity: theme.palette.action.disabledOpacity,
+      opacity: (theme.vars || theme).palette.action.disabledOpacity,
     },
     [`& .${gridClasses['rowReorderCell--draggable']}`]: {
       cursor: 'move',
@@ -361,16 +361,16 @@ export const GridRootStyles = styled('div', {
       display: 'none',
     },
     [`& .${gridClasses['columnHeader--dragging']}, & .${gridClasses['row--dragging']}`]: {
-      background: theme.palette.background.paper,
+      background: (theme.vars || theme).palette.background.paper,
       padding: '0 12px',
       borderRadius: theme.shape.borderRadius,
-      opacity: theme.palette.action.disabledOpacity,
+      opacity: (theme.vars || theme).palette.action.disabledOpacity,
     },
     [`& .${gridClasses['row--dragging']}`]: {
-      background: theme.palette.background.paper,
+      background: (theme.vars || theme).palette.background.paper,
       padding: '0 12px',
       borderRadius: theme.shape.borderRadius,
-      opacity: theme.palette.action.disabledOpacity,
+      opacity: (theme.vars || theme).palette.action.disabledOpacity,
 
       [`& .${gridClasses.rowReorderCellPlaceholder}`]: {
         display: 'flex',

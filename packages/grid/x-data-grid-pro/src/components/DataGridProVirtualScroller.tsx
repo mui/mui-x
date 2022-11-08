@@ -128,7 +128,7 @@ const VirtualScrollerPinnedColumns = styled('div', {
     position: 'sticky',
     overflow: 'hidden',
     zIndex: 1,
-    backgroundColor: theme.palette.background.default,
+    backgroundColor: (theme.vars || theme).palette.background.default,
     ...(theme.palette.mode === 'dark' && { backgroundImage: darkModeBackgroundImage }),
     ...(ownerState.side === GridPinnedPosition.left && {
       left: 0,
@@ -157,7 +157,7 @@ const VirtualScrollerPinnedRows = styled('div', {
     position: 'sticky',
     // should be above the detail panel
     zIndex: 3,
-    backgroundColor: theme.palette.background.default,
+    backgroundColor: (theme.vars || theme).palette.background.default,
     ...(theme.palette.mode === 'dark' && { backgroundImage: darkModeBackgroundImage }),
     ...(ownerState.position === 'top' && {
       top: 0,

@@ -79,7 +79,7 @@ const GridColumnHeadersPinnedColumnHeaders = styled('div', {
   display: 'flex',
   flexDirection: 'column',
   boxShadow: theme.shadows[2],
-  backgroundColor: theme.palette.background.default,
+  backgroundColor: (theme.vars || theme).palette.background.default,
   ...(theme.palette.mode === 'dark' && {
     backgroundImage: `linear-gradient(${alpha('#fff', getOverlayAlpha(2))}, ${alpha(
       '#fff',
