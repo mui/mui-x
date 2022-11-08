@@ -98,7 +98,9 @@ const getOverlayAlpha = (elevation: number) => {
 };
 
 const getBoxShadowColor = (theme: Theme) => {
-  return alpha(theme.palette.common.black, 0.21);
+  return theme.vars
+    ? `rgba(${theme.vars.palette.common.black} /  0.21)`
+    : alpha(theme.palette.common.black, 0.21);
 };
 
 const VirtualScrollerDetailPanels = styled('div', {
