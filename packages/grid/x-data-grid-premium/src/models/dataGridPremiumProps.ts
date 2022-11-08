@@ -30,7 +30,7 @@ export interface DataGridPremiumProps<R extends GridValidRowModel = any>
   > {
   /**
    * Features under development.
-   * For each feature, if the flag is not explicitly set to `true`, the feature will be fully disabled and any property / method call will not have any effect.
+   * For each feature, if the flag is not explicitly set to `true`, the feature is fully disabled and any property / method call don't have any effect.
    */
   experimentalFeatures?: Partial<GridExperimentalPremiumFeatures>;
 }
@@ -62,8 +62,8 @@ export interface DataGridPremiumPropsWithDefaultValue extends DataGridProPropsWi
    */
   disableRowGrouping: boolean;
   /**
-   * If `single`, all column we are grouping by will be represented in the same grouping the same column.
-   * If `multiple`, each column we are grouping by will be represented in its own column.
+   * If `single`, all columns that are grouped by are represented in the same column.
+   * If `multiple`, each column that is grouped by is represented in its own column.
    * @default 'single'
    */
   rowGroupingColumnMode: 'single' | 'multiple';
@@ -74,15 +74,15 @@ export interface DataGridPremiumPropsWithDefaultValue extends DataGridProPropsWi
   aggregationFunctions: Record<string, GridAggregationFunction>;
   /**
    * Rows used to generate the aggregated value.
-   * If `filtered`, the aggregated values will be generated using only the rows currently passing the filtering process.
-   * If `all`, the aggregated values will be generated using all the rows.
+   * If `filtered`, the aggregated values are generated using only the rows currently passing the filtering process.
+   * If `all`, the aggregated values are generated using all the rows.
    * @default "filtered"
    */
   aggregationRowsScope: 'filtered' | 'all';
   /**
    * Determines the position of an aggregated value.
    * @param {GridGroupNode} groupNode The current group.
-   * @returns {GridAggregationPosition | null} Position of the aggregated value (if `null`, the group will not be aggregated).
+   * @returns {GridAggregationPosition | null} Position of the aggregated value (if `null`, the group isn't aggregated).
    * @default `(groupNode) => groupNode == null ? 'footer' : 'inline'`
    */
   getAggregationPosition: (groupNode: GridGroupNode) => GridAggregationPosition | null;
@@ -96,7 +96,7 @@ export interface DataGridPremiumPropsWithoutDefaultValue<R extends GridValidRowM
   apiRef?: React.MutableRefObject<GridApiPremium>;
   /**
    * The initial state of the DataGridPremium.
-   * The data in it will be set in the state on initialization but will not be controlled.
+   * The data in it is set in the state on initialization but isn't controlled.
    * If one of the data in `initialState` is also being controlled, then the control state wins.
    */
   initialState?: GridInitialStatePremium;

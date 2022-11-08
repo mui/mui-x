@@ -18,11 +18,13 @@ In the following example groups all movies based on their production `company`
 The easiest way to get started with the feature is to provide its model to the `initialState` prop:
 
 ```ts
-initialState={{
+<DataGridPremium
+  initialState={{
     rowGrouping: {
-        model: ['company', 'director'],
-    }
-}}
+      model: ['company', 'director'],
+    },
+  }}
+/>
 ```
 
 The basic parameters are the columns you want to check for repeating values.
@@ -83,13 +85,13 @@ Use the `hideDescendantCount` property of the `groupingColDef` to hide the numbe
 ### Hide the grouped columns
 
 By default, the columns used to group the rows remains visible.
-For instance if you group by `"director"`, you will have two columns titled _Director_:
+For instance if you group by `"director"`, you have two columns titled _Director_:
 
 - The grouped column (the column from which you grouped the rows)
 - The grouping column on which you can toggle the groups
 
 To automatically hide the grouped columns, use the `useKeepGroupedColumnsHidden` utility hook.
-The hook will automatically hide the columns when added to the model and show them back when removed from it.
+The hook automatically hides the columns when added to the model and show them back when removed from it.
 
 :::warning
 This hook is not compatible with the deprecated column property `hide`.
