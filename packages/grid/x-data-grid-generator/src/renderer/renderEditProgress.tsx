@@ -42,7 +42,7 @@ const StyledSlider = styled(Slider)(({ theme }) => ({
   },
 }));
 
-const ValueLabelComponent = (props: any) => {
+function ValueLabelComponent(props: any) {
   const { children, open, value } = props;
 
   return (
@@ -50,7 +50,7 @@ const ValueLabelComponent = (props: any) => {
       {children}
     </Tooltip>
   );
-};
+}
 
 function EditProgress(props: GridRenderEditCellParams<number>) {
   const { id, value, field } = props;

@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { screen, userEvent, act } from '@mui/monorepo/test/utils';
-import { expect } from 'chai';
-import { createPickerRenderer } from 'test/utils/pickers-utils';
+import { createPickerRenderer, expectInputValue } from 'test/utils/pickers-utils';
 import { DateTimeField } from '@mui/x-date-pickers/DateTimeField/DateTimeField';
 import { MuiPickerFieldAdapter } from '../internals/models/muiPickersAdapter';
 
@@ -33,10 +32,15 @@ function updatedDate<TDate>(
   }
 }
 
-const expectInputValue = (input: HTMLInputElement, expectedValue: string) =>
-  expect(input.value.replace(/‎/g, '')).to.equal(expectedValue);
-
-const adapterToTest = ['luxon', 'date-fns', 'dayjs', 'moment'] as const;
+const adapterToTest = [
+  'luxon',
+  'date-fns',
+  'dayjs',
+  'moment',
+  'date-fns-jalali',
+  'moment-hijri',
+  'moment-jalaali',
+] as const;
 
 adapterToTest.forEach((adapterName) => {
   describe(`test keyboard interaction with ${adapterName} adapter`, () => {

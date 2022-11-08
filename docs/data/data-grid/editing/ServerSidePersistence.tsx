@@ -25,15 +25,15 @@ interface User {
 const useFakeMutation = () => {
   return React.useCallback(
     (user: Partial<User>) =>
-      new Promise<Partial<User>>((resolve, reject) =>
+      new Promise<Partial<User>>((resolve, reject) => {
         setTimeout(() => {
           if (user.name?.trim() === '') {
             reject(new Error("Error while saving user: name can't be empty."));
           } else {
             resolve({ ...user, name: user.name?.toUpperCase() });
           }
-        }, 200),
-      ),
+        }, 200);
+      }),
     [],
   );
 };

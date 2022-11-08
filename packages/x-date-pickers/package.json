@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-date-pickers",
-  "version": "6.0.0-alpha.5",
+  "version": "6.0.0-alpha.6",
   "description": "The community edition of the date picker components (MUI X).",
   "author": "MUI Team",
   "main": "./src/index.js",
@@ -47,6 +47,9 @@
     "@babel/runtime": "^7.19.0",
     "@date-io/core": "^2.16.0",
     "@date-io/date-fns": "^2.16.0",
+    "@date-io/date-fns-jalali": "^2.16.0",
+    "@date-io/jalaali": "^2.16.0",
+    "@date-io/hijri": "^2.16.0",
     "@date-io/dayjs": "^2.16.0",
     "@date-io/luxon": "^2.16.0",
     "@date-io/moment": "^2.16.0",
@@ -66,6 +69,9 @@
     "dayjs": "^1.10.7",
     "luxon": "^1.28.0 || ^2.0.0 || ^3.0.2",
     "moment": "^2.29.1",
+    "moment-hijri": "^2.1.2",
+    "moment-jalaali": "^0.7.4 || ^0.8.0 || ^0.9.0",
+    "date-fns-jalali": "^2.13.0-0",
     "react": "^17.0.2 || ^18.0.0",
     "react-dom": "^17.0.2 || ^18.0.0"
   },
@@ -87,14 +93,26 @@
     },
     "moment": {
       "optional": true
+    },
+    "moment-hijri": {
+      "optional": true
+    },
+    "moment-jalaali": {
+      "optional": true
+    },
+    "date-fns-jalali": {
+      "optional": true
     }
   },
   "devDependencies": {
-    "@types/luxon": "^3.0.2",
+    "@types/luxon": "^3.1.0",
     "date-fns": "^2.29.3",
     "dayjs": "^1.11.6",
-    "luxon": "^1.28.0 || ^2.0.0 || ^3.0.2",
-    "moment": "^2.29.4"
+    "luxon": "^3.1.0",
+    "moment": "^2.29.4",
+    "moment-hijri": "^2.1.2",
+    "moment-jalaali": "^0.9.6",
+    "date-fns-jalali": "^2.13.0-0"
   },
   "setupFiles": [
     "<rootDir>/src/setupTests.js"

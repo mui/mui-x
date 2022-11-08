@@ -24,7 +24,7 @@ describe('<DateCalendar />', () => {
     skip: ['textField'],
   }));
 
-  describeConformance(<DateCalendar value={adapterToUse.date()} onChange={() => {}} />, () => ({
+  describeConformance(<DateCalendar defaultValue={adapterToUse.date()} />, () => ({
     classes,
     inheritComponent: 'div',
     render,
@@ -47,8 +47,7 @@ describe('<DateCalendar />', () => {
     const handleViewChange = spy();
     render(
       <DateCalendar
-        value={adapterToUse.date(new Date(2019, 0, 1))}
-        onChange={() => {}}
+        defaultValue={adapterToUse.date(new Date(2019, 0, 1))}
         onViewChange={handleViewChange}
       />,
     );
@@ -141,7 +140,7 @@ describe('<DateCalendar />', () => {
         dateAdapter={AdapterClassToUse}
         dateFormats={{ monthAndYear: 'yyyy/MM' }}
       >
-        <DateCalendar value={adapterToUse.date(new Date(2019, 0, 1))} onChange={() => {}} />,
+        <DateCalendar defaultValue={adapterToUse.date(new Date(2019, 0, 1))} />,
       </LocalizationProvider>,
     );
 
@@ -152,8 +151,7 @@ describe('<DateCalendar />', () => {
     render(
       <LocalizationProvider dateAdapter={AdapterClassToUse}>
         <DateCalendar
-          value={adapterToUse.date(new Date(2019, 0, 1))}
-          onChange={() => {}}
+          defaultValue={adapterToUse.date(new Date(2019, 0, 1))}
           dayOfWeekFormatter={(day) => `${day}.`}
         />
         ,
@@ -167,7 +165,7 @@ describe('<DateCalendar />', () => {
 
   describe('view: day', () => {
     it('renders day calendar standalone', () => {
-      render(<DateCalendar value={adapterToUse.date(new Date(2019, 0, 1))} onChange={() => {}} />);
+      render(<DateCalendar defaultValue={adapterToUse.date(new Date(2019, 0, 1))} />);
 
       expect(screen.getByText('January 2019')).toBeVisible();
       expect(screen.getAllByMuiTest('day')).to.have.length(31);
@@ -218,8 +216,7 @@ describe('<DateCalendar />', () => {
     it('should complet weeks when showDaysOutsideCurrentMonth=true', () => {
       render(
         <DateCalendar
-          value={adapterToUse.date(new Date(2018, 0, 3, 11, 11, 11, 111))}
-          onChange={() => {}}
+          defaultValue={adapterToUse.date(new Date(2018, 0, 3, 11, 11, 11, 111))}
           defaultCalendarMonth={adapterToUse.date(new Date(2018, 0, 1))}
           view="day"
           showDaysOutsideCurrentMonth
@@ -231,8 +228,7 @@ describe('<DateCalendar />', () => {
     it('should complet weeks up to match `fixedWeekNumber`', () => {
       render(
         <DateCalendar
-          value={adapterToUse.date(new Date(2018, 0, 3, 11, 11, 11, 111))}
-          onChange={() => {}}
+          defaultValue={adapterToUse.date(new Date(2018, 0, 3, 11, 11, 11, 111))}
           defaultCalendarMonth={adapterToUse.date(new Date(2018, 0, 1))}
           view="day"
           showDaysOutsideCurrentMonth
@@ -243,27 +239,13 @@ describe('<DateCalendar />', () => {
     });
 
     it('should open after `minDate` if now is outside', () => {
-      render(
-        <DateCalendar
-          value={null}
-          onChange={() => {}}
-          view="day"
-          minDate={adapterToUse.date(new Date(2031, 2, 3))}
-        />,
-      );
+      render(<DateCalendar view="day" minDate={adapterToUse.date(new Date(2031, 2, 3))} />);
 
       expect(screen.getByText('March 2031')).not.to.equal(null);
     });
 
     it('should open before `maxDate` if now is outside', () => {
-      render(
-        <DateCalendar
-          value={null}
-          onChange={() => {}}
-          view="day"
-          maxDate={adapterToUse.date(new Date(1534, 2, 3))}
-        />,
-      );
+      render(<DateCalendar view="day" maxDate={adapterToUse.date(new Date(1534, 2, 3))} />);
 
       expect(screen.getByText('March 1534')).not.to.equal(null);
     });
@@ -361,13 +343,7 @@ describe('<DateCalendar />', () => {
 
   describe('view: year', () => {
     it('renders year selection standalone', () => {
-      render(
-        <DateCalendar
-          value={adapterToUse.date(new Date(2019, 0, 1))}
-          openTo="year"
-          onChange={() => {}}
-        />,
-      );
+      render(<DateCalendar defaultValue={adapterToUse.date(new Date(2019, 0, 1))} openTo="year" />);
 
       expect(screen.getAllByMuiTest('year')).to.have.length(200);
     });
@@ -461,8 +437,7 @@ describe('<DateCalendar />', () => {
       }
       render(
         <DateCalendar
-          value={adapterToUse.date(new Date(2019, 3, 29))}
-          onChange={() => {}}
+          defaultValue={adapterToUse.date(new Date(2019, 3, 29))}
           views={['year']}
           openTo="year"
         />,

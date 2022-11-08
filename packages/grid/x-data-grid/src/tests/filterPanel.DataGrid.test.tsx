@@ -129,13 +129,13 @@ describe('<DataGrid /> - Filter panel', () => {
     ],
   };
 
-  const TestCase = (props: Partial<DataGridProps>) => {
+  function TestCase(props: Partial<DataGridProps>) {
     return (
       <div style={{ width: 300, height: 300 }}>
         <DataGrid {...baselineProps} {...props} />
       </div>
     );
-  };
+  }
 
   it('should show an empty string as the default filter input value', () => {
     render(

@@ -12,10 +12,10 @@ import {
 import { useDateRangeValidation } from '../internal/hooks/validation/useDateRangeValidation';
 import { DateRangePickerView } from '../DateRangePicker/DateRangePickerView';
 import { getReleaseInfo } from '../internal/utils/releaseInfo';
+import { rangeValueManager } from '../internal/utils/valueManagers';
 import {
   useDateRangePickerDefaultizedProps,
   BaseDateRangePickerProps,
-  dateRangePickerValueManager,
   BaseDateRangePickerSlotsComponent,
   BaseDateRangePickerSlotsComponentsProps,
 } from '../DateRangePicker/shared';
@@ -76,10 +76,7 @@ export const StaticDateRangePicker = React.forwardRef(function StaticDateRangePi
 
   const validationError = useDateRangeValidation(props);
 
-  const { pickerProps, inputProps, wrapperProps } = usePickerState(
-    props,
-    dateRangePickerValueManager,
-  );
+  const { pickerProps, inputProps, wrapperProps } = usePickerState(props, rangeValueManager);
 
   const {
     displayStaticWrapperAs,

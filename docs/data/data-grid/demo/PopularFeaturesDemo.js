@@ -182,7 +182,7 @@ const getChipProperties = (plan) => {
   }
 };
 
-const PlanTag = (props) => {
+function PlanTag(props) {
   const chipPropperties = getChipProperties(props.plan);
   const avatar = !chipPropperties.avatarLink ? undefined : (
     <Avatar src={chipPropperties.avatarLink} />
@@ -195,21 +195,21 @@ const PlanTag = (props) => {
       label={props.plan}
     />
   );
-};
+}
 
 PlanTag.propTypes = {
   plan: PropTypes.string.isRequired,
 };
 
-const CustomToolbar = () => {
+function CustomToolbar() {
   return (
     <GridToolbarContainer sx={{ p: 1 }}>
       <GridToolbarQuickFilter />
     </GridToolbarContainer>
   );
-};
+}
 
-const RowDemo = (props) => {
+function RowDemo(props) {
   const { row } = props;
   const theme = useTheme();
   const gridBgColor = theme.palette.mode === 'dark' ? '#000' : '#fff';
@@ -222,7 +222,7 @@ const RowDemo = (props) => {
       </Box>
     </Box>
   );
-};
+}
 
 RowDemo.propTypes = {
   row: PropTypes.object.isRequired,
