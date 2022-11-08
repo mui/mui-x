@@ -106,6 +106,7 @@ export const MobileDateRangePicker = React.forwardRef(function MobileDateRangePi
     setCurrentlySelectingRangeEnd,
     validationError,
     ref,
+    mobile: true,
   };
 
   return (

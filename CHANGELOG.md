@@ -3,6 +3,98 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 5.17.10
+
+_Nov 4, 2022_
+
+We'd like to offer a big thanks to the 4 contributors who made this release possible. Here are some highlights ✨:
+
+- 🌍 Add Ukrainian (uk-UA) locale to pickers (#6661) @Dufran
+
+### `@mui/x-data-grid@v5.17.10` / `@mui/x-data-grid-pro@v5.17.10` / `@mui/x-data-grid-premium@v5.17.10`
+
+#### Changes
+
+- [DataGrid] Remove `React.memo` from `GridCellCheckboxRenderer` (#6688) @mattcorner
+
+### `@mui/x-date-pickers@v5.0.7` / `@mui/x-date-pickers-pro@v5.0.7`
+
+#### Changes
+
+- [DateRangePicker] Fix input focused style and mobile behaviour (#6645) (#6714) @LukasTy
+- [pickers] Add Ukrainian (uk-UA) locale on the date picker (#6661) @Dufran
+
+### Docs
+
+- [docs] Mark data grid column group available (#6659) @alexfauquette
+
+## 5.17.9
+
+_Oct 28, 2022_
+
+We'd like to offer a big thanks to the 6 contributors who made this release possible. Here are some highlights ✨:
+
+- ⚡ Fix memory leak during unmount of the DataGrid (#6579) @cherniavskii
+- 🎁 Allow to disable the autofocus of the search field when opening the column visibility panel (#6630) @e-cloud
+- 🐞 Bugfixes
+
+### `@mui/x-data-grid@v5.17.9` / `@mui/x-data-grid-pro@v5.17.9` / `@mui/x-data-grid-premium@v5.17.9`
+
+#### Changes
+
+- [DataGrid] Allow to disable autofocusing the search field in the columns panel (#6630) @e-cloud
+- [DataGrid] Fix `setRows` method not persisting new rows data after `loading` prop change (#6637) @cherniavskii
+- [DataGrid] Fix memory leak on grid unmount (#6579) @cherniavskii
+- [l10n] Improve Bulgarian (bg-BG) locale (#6635) @AtanasVA
+
+### `@mui/x-date-pickers@v5.0.6` / `@mui/x-date-pickers-pro@v5.0.6`
+
+#### Changes
+
+- [pickers] Ignore milliseconds in mask logic (#6618) @alexfauquette
+- [pickers] Update input when `inputFormat` is modified (#6617) @alexfauquette
+
+### Docs
+
+- [docs] Add token to redirect feedbacks on slack (#6592) @alexfauquette
+- [docs] Disable translations (#6639) @cherniavskii
+- [docs] Fix code edit for when v6 will be stable (#6600) @oliviertassinari
+- [docs] Fix typo in DataGrid demo page (#6632) (#6634) @LukasTy
+
+### Core
+
+- [core] Upgrade monorepo (#6570) @cherniavskii
+
+## 5.17.8
+
+_Oct 20, 2022_
+
+We'd like to offer a big thanks to the 5 contributors who made this release possible. Here are some highlights ✨:
+
+- 🐞 Bugfixes
+- 🌍 Improve Turkish (tr-TR) locale on the data grid and pickers (#6573) @ramazansancar
+
+### `@mui/x-data-grid@v5.17.8` / `@mui/x-data-grid-pro@v5.17.8` / `@mui/x-data-grid-premium@v5.17.8`
+
+#### Changes
+
+- [DataGrid] Add `searchPredicate` prop to `GridColumnsPanel` component (#6572) @cherniavskii
+- [DataGrid] Fix grid not updating state on `rowCount` prop change (#6474) @cherniavskii
+- [DataGridPro] Fix row order being reset after updating the row (#6544) @cherniavskii
+- [l10n] Improve Turkish (tr-TR) locale on the data grid and pickers (#6542) (#6573) @ramazansancar
+
+### `@mui/x-date-pickers@v5.0.5` / `@mui/x-date-pickers-pro@v5.0.5`
+
+#### Changes
+
+- [CalendarPicker] Don't move to closest enabled date when `props.date` contains a disabled date (#6537) @flaviendelangle
+- [DateRangePicker] Fix calendar day outside of month layout shifting on hover (pick #6448) (#6538) @alexfauquette
+- [pickers] Fix typescript issues (#6510) @flaviendelangle
+
+### Docs
+
+- [docs] Fix 301 link to the sx prop page @oliviertassinari
+
 ## 5.17.7
 
 _Oct 13, 2022_

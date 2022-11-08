@@ -19,6 +19,7 @@ import { GridPanelWrapper, GridPanelWrapperProps } from './GridPanelWrapper';
 import { GRID_EXPERIMENTAL_ENABLED } from '../../constants/envConstants';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
+import type { GridStateColDef } from '../../models/colDef/gridColDef';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
 
 type OwnerState = { classes: DataGridProcessedProps['classes'] };
@@ -65,9 +66,24 @@ export interface GridColumnsPanelProps extends GridPanelWrapperProps {
    * If not specified, the order is derived from the `columns` prop.
    */
   sort?: 'asc' | 'desc';
+  searchPredicate?: (column: GridStateColDef, searchValue: string) => boolean;
+  /*
+   * If `true`, the column search field will be focused automatically.
+   * If `false`, the first column switch input will be focused automatically.
+   * This helps to avoid input keyboard panel to popup automatically on touch devices.
+   * @default true
+   */
+  autoFocusSearchField?: boolean;
 }
 
 const collator = new Intl.Collator();
+
+const defaultSearchPredicate: NonNullable<GridColumnsPanelProps['searchPredicate']> = (
+  column,
+  searchValue,
+) => {
+  return (column.headerName || column.field).toLowerCase().indexOf(searchValue) > -1;
+};
 
 function GridColumnsPanel(props: GridColumnsPanelProps) {
   const apiRef = useGridApiContext();
@@ -79,7 +95,12 @@ function GridColumnsPanel(props: GridColumnsPanelProps) {
   const ownerState = { classes: rootProps.classes };
   const classes = useUtilityClasses(ownerState);
 
-  const { sort, ...other } = props;
+  const {
+    sort,
+    searchPredicate = defaultSearchPredicate,
+    autoFocusSearchField = true,
+    ...other
+  } = props;
 
   const sortedColumns = React.useMemo(() => {
     switch (sort) {
@@ -143,15 +164,27 @@ function GridColumnsPanel(props: GridColumnsPanelProps) {
       return sortedColumns;
     }
     const searchValueToCheck = searchValue.toLowerCase();
-    return sortedColumns.filter(
-      (column) =>
-        (column.headerName || column.field).toLowerCase().indexOf(searchValueToCheck) > -1,
-    );
-  }, [sortedColumns, searchValue]);
+    return sortedColumns.filter((column) => searchPredicate(column, searchValueToCheck));
+  }, [sortedColumns, searchValue, searchPredicate]);
+
+  const firstSwitchRef = React.useRef<HTMLInputElement>(null);
 
   React.useEffect(() => {
-    searchInputRef.current!.focus();
-  }, []);
+    if (autoFocusSearchField) {
+      searchInputRef.current!.focus();
+    } else if (firstSwitchRef.current && typeof firstSwitchRef.current.focus === 'function') {
+      firstSwitchRef.current.focus();
+    }
+  }, [autoFocusSearchField]);
+
+  let firstHideableColumnFound = false;
+  const isFirstHideableColumn = (column: GridStateColDef) => {
+    if (firstHideableColumnFound === false && column.hideable !== false) {
+      firstHideableColumnFound = true;
+      return true;
+    }
+    return false;
+  };
 
   return (
     <GridPanelWrapper {...other}>
@@ -179,6 +212,7 @@ function GridColumnsPanel(props: GridColumnsPanelProps) {
                     onClick={toggleColumn}
                     name={column.field}
                     size="small"
+                    inputRef={isFirstHideableColumn(column) ? firstSwitchRef : undefined}
                     {...rootProps.componentsProps?.baseSwitch}
                   />
                 }
@@ -222,6 +256,8 @@ GridColumnsPanel.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
+  autoFocusSearchField: PropTypes.bool,
+  searchPredicate: PropTypes.func,
   sort: PropTypes.oneOf(['asc', 'desc']),
 } as any;
 

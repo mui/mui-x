@@ -120,7 +120,7 @@ describe('License: verifyLicense', () => {
             acceptedScopes: ['premium'],
             isProduction: true,
           }),
-        ).to.equal(LicenseStatus.Invalid);
+        ).to.equal(LicenseStatus.OutOfScope);
       });
     });
 

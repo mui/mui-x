@@ -414,6 +414,12 @@ DataGridProRaw.propTypes = {
    */
   isRowSelectable: PropTypes.func,
   /**
+   * If `true`, moving the mouse pointer outside the grid before releasing the mouse button
+   * in a column re-order action will not cause the column to jump back to its original position.
+   * @default false
+   */
+  keepColumnPositionIfDraggedOutside: PropTypes.bool,
+  /**
    * If `true`, the selection model will retain selected rows that do not exist.
    * Useful when using server side pagination and row selections need to be retained
    * when changing pages.
@@ -784,8 +790,8 @@ DataGridProRaw.propTypes = {
    * Rows data to pin on top or bottom.
    */
   pinnedRows: PropTypes.shape({
-    bottom: PropTypes.array,
-    top: PropTypes.array,
+    bottom: PropTypes.arrayOf(PropTypes.object),
+    top: PropTypes.arrayOf(PropTypes.object),
   }),
   /**
    * Callback called before updating a row with new values in the row and cell editing.
@@ -823,7 +829,7 @@ DataGridProRaw.propTypes = {
   /**
    * Set of rows of type [[GridRowsProp]].
    */
-  rows: PropTypes.array.isRequired,
+  rows: PropTypes.arrayOf(PropTypes.object).isRequired,
   /**
    * Loading rows can be processed on the server or client-side.
    * Set it to 'client' if you would like enable infnite loading.

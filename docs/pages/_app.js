@@ -5,21 +5,14 @@ import * as React from 'react';
 import { loadCSS } from 'fg-loadcss/src/loadCSS';
 import NextHead from 'next/head';
 import PropTypes from 'prop-types';
-import acceptLanguage from 'accept-language';
 import { useRouter } from 'next/router';
 import { ponyfillGlobal } from '@mui/utils';
 import PageContext from 'docs/src/modules/components/PageContext';
 import GoogleAnalytics from 'docs/src/modules/components/GoogleAnalytics';
 import { ThemeProvider } from 'docs/src/modules/components/ThemeContext';
-import { pathnameToLanguage, getCookie } from 'docs/src/modules/utils/helpers';
-import { LANGUAGES } from 'docs/src/modules/constants';
 import { CodeVariantProvider } from 'docs/src/modules/utils/codeVariant';
 import { CodeCopyProvider } from 'docs/src/modules/utils/CodeCopy';
-import {
-  UserLanguageProvider,
-  useSetUserLanguage,
-  useUserLanguage,
-} from 'docs/src/modules/utils/i18n';
+import { UserLanguageProvider } from 'docs/src/modules/utils/i18n';
 import DocsStyledEngineProvider from 'docs/src/modules/utils/StyledEngineProvider';
 import createEmotionCache from 'docs/src/createEmotionCache';
 import findActivePage from 'docs/src/modules/utils/findActivePage';
@@ -30,7 +23,7 @@ LicenseInfo.setLicenseKey(process.env.NEXT_PUBLIC_MUI_LICENSE);
 
 function getMuiPackageVersion(packageName, commitRef) {
   if (commitRef === undefined) {
-    return 'latest';
+    return '^5.0.0';
   }
   const shortSha = commitRef.slice(0, 8);
   return `https://pkg.csb.dev/mui/mui-x/commit/${shortSha}/@mui/${packageName}`;
@@ -91,36 +84,6 @@ ponyfillGlobal.muiDocConfig = {
 
 // Client-side cache, shared for the whole session of the user in the browser.
 const clientSideEmotionCache = createEmotionCache();
-
-// Set the locales that the documentation automatically redirects to.
-acceptLanguage.languages(LANGUAGES);
-
-function LanguageNegotiation() {
-  const setUserLanguage = useSetUserLanguage();
-  const router = useRouter();
-  const userLanguage = useUserLanguage();
-
-  React.useEffect(() => {
-    const { userLanguage: userLanguageUrl, canonicalAs } = pathnameToLanguage(router.asPath);
-    const preferedLanguage =
-      LANGUAGES.find((lang) => lang === getCookie('userLanguage')) ||
-      acceptLanguage.get(navigator.language) ||
-      userLanguage;
-
-    if (
-      userLanguageUrl === 'en' &&
-      userLanguage !== preferedLanguage &&
-      !process.env.PULL_REQUEST
-    ) {
-      window.location =
-        preferedLanguage === 'en' ? canonicalAs : `/${preferedLanguage}${canonicalAs}`;
-    } else if (userLanguage !== userLanguageUrl) {
-      setUserLanguage(userLanguageUrl);
-    }
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
-
-  return null;
-}
 
 let reloadInterval;
 
@@ -265,7 +228,6 @@ function AppWrapper(props) {
                 </DocsStyledEngineProvider>
               </ThemeProvider>
             </PageContext.Provider>
-            <LanguageNegotiation />
           </CodeVariantProvider>
         </CodeCopyProvider>
       </UserLanguageProvider>
