@@ -41,9 +41,14 @@ const useUtilityClasses = (ownerState: PickerViewLayoutProps<any, any>) => {
   return composeClasses(slots, getPickerViewLayoutUtilityClass, classes);
 };
 
-export function PickerViewLayout<TValue, TView extends CalendarOrClockPickerView>(
-  inProps: PickerViewLayoutProps<TValue, TView>,
-) {
+type PickerViewLayoutComponent = <TValue, TView extends CalendarOrClockPickerView>(
+  props: PickerViewLayoutProps<TValue, TView> & React.RefAttributes<HTMLDivElement>,
+) => JSX.Element;
+
+export const PickerViewLayout = React.forwardRef(function PickerViewLayout<
+  TValue,
+  TView extends CalendarOrClockPickerView,
+>(inProps: PickerViewLayoutProps<TValue, TView>, ref: React.Ref<HTMLDivElement>) {
   const props = useThemeProps({ props: inProps, name: 'MuiPickerViewLayout' });
 
   const {
@@ -80,7 +85,7 @@ export function PickerViewLayout<TValue, TView extends CalendarOrClockPickerView
   }
 
   return (
-    <PickerViewLayoutRoot className={clsx(className, classes.root)}>
+    <PickerViewLayoutRoot className={clsx(className, classes.root)} ref={ref}>
       <PickerViewLayoutContent className={classes.content}>
         {shouldRenderToolbar && !!Toolbar && (
           <Toolbar
@@ -108,4 +113,4 @@ export function PickerViewLayout<TValue, TView extends CalendarOrClockPickerView
       />
     </PickerViewLayoutRoot>
   );
-}
+}) as PickerViewLayoutComponent;

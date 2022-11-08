@@ -21,6 +21,10 @@ function testTextFieldValidation(ElementToTest, propsToTest, getOptions) {
       it('should apply shouldDisableDate', function test() {
         const { render, withDate } = getOptions();
 
+        if (!isLegacyPicker && !withDate) {
+          return;
+        }
+
         const { setProps } = render(
           <ElementToTest
             {...defaultProps}
@@ -153,6 +157,10 @@ function testTextFieldValidation(ElementToTest, propsToTest, getOptions) {
       it('should apply minDate', function test() {
         const { render, withDate } = getOptions();
 
+        if (!isLegacyPicker && !withDate) {
+          return;
+        }
+
         const { setProps } = render(
           <ElementToTest
             {...defaultProps}
@@ -174,6 +182,10 @@ function testTextFieldValidation(ElementToTest, propsToTest, getOptions) {
     if (propsToTest.includes('maxDate')) {
       it('should apply maxDate', function test() {
         const { render, withDate } = getOptions();
+
+        if (!isLegacyPicker && !withDate) {
+          return;
+        }
 
         const { setProps } = render(
           <ElementToTest
