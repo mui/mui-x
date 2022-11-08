@@ -2,7 +2,6 @@ import * as React from 'react';
 import { useControlled } from '@mui/material/utils';
 import useEventCallback from '@mui/utils/useEventCallback';
 import { WrapperVariant } from '../../components/wrappers/WrapperVariantContext';
-import { useOpenState } from '../useOpenState';
 import { useLocalizationContext, useUtils } from '../useUtils';
 import { PickerStateValueManager } from '../usePickerState';
 import {
@@ -243,23 +242,29 @@ export const usePickerValue = <
     onSelectedSectionsChange,
   } = props;
 
+  const utils = useUtils<TDate>();
+  const adapter = useLocalizationContext<TDate>();
+
   const [value, setValue] = useControlled({
     controlled: inValue,
     default: defaultValue ?? valueManager.emptyValue,
-    name: 'usePickerState2',
+    name: 'usePickerValue',
     state: 'value',
+  });
+
+  const [open, setOpen] = useControlled({
+    controlled: props.open,
+    default: false,
+    name: 'usePickerValue',
+    state: 'open',
   });
 
   const [selectedSections, setSelectedSections] = useControlled({
     controlled: selectedSectionsProp,
     default: null,
-    name: 'usePickerState2',
+    name: 'usePickerValue',
     state: 'selectedSections',
   });
-
-  const utils = useUtils<TDate>();
-  const adapter = useLocalizationContext<TDate>();
-  const { isOpen, setIsOpen } = useOpenState(props);
 
   const [dateState, setDateState] = React.useState<UsePickerValueState<TValue>>(() => ({
     committed: value,
@@ -268,6 +273,16 @@ export const usePickerValue = <
   }));
 
   useValidation({ ...props, value }, validator, valueManager.isSameError);
+
+  const handleOpen = useEventCallback(() => {
+    setOpen(true);
+    props.onOpen?.();
+  });
+
+  const handleClose = useEventCallback(() => {
+    setOpen(false);
+    props.onClose?.();
+  });
 
   const setDate = useEventCallback((params: UsePickerValueAction<TValue, TError>) => {
     setDateState((prev) => {
@@ -312,7 +327,7 @@ export const usePickerValue = <
     }
 
     if (params.action === 'acceptAndClose') {
-      setIsOpen(false);
+      handleClose();
       if (
         onAcceptProp &&
         !valueManager.areValuesEqual(utils, dateState.resetFallback, params.value)
@@ -323,11 +338,11 @@ export const usePickerValue = <
   });
 
   React.useEffect(() => {
-    if (isOpen) {
+    if (open) {
       // Update all dates in state to equal the current prop value
       setDate({ action: 'setAll', value, skipOnChangeCall: true });
     }
-  }, [isOpen]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [open]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Set the draft and committed date to equal the new prop value.
   if (!valueManager.areValuesEqual(utils, dateState.committed, value)) {
@@ -370,10 +385,6 @@ export const usePickerValue = <
     // Set all dates in state to equal today and close picker.
     setDate({ value: valueManager.getTodayValue(utils), action: 'acceptAndClose' });
   });
-
-  const handleOpen = useEventCallback(() => setIsOpen(true));
-
-  const handleClose = useEventCallback(() => setIsOpen(false));
 
   const handleChange = useEventCallback(
     (newDate: TValue, selectionState: PickerSelectionState = 'partial') => {
@@ -438,7 +449,7 @@ export const usePickerValue = <
     value: dateState.draft,
     onChange: handleChange,
     onClose: handleClose,
-    open: isOpen,
+    open,
     onSelectedSectionsChange: handleFieldSelectedSectionsChange,
   };
 
@@ -449,7 +460,7 @@ export const usePickerValue = <
   };
 
   return {
-    open: isOpen,
+    open,
     fieldProps: fieldResponse,
     viewProps: viewResponse,
     layoutProps: layoutResponse,

@@ -1,11 +1,14 @@
 import * as React from 'react';
 
-export interface OpenStateProps {
+interface OpenStateProps {
   open?: boolean;
   onOpen?: () => void;
   onClose?: () => void;
 }
 
+/**
+ * TODO v6: Remove
+ */
 export const useOpenState = ({ open, onOpen, onClose }: OpenStateProps) => {
   const isControllingOpenProp = React.useRef(typeof open === 'boolean').current;
   const [openState, setIsOpenState] = React.useState(false);
