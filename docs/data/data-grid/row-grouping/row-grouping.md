@@ -7,7 +7,7 @@ title: Data Grid - Row grouping
 <p class="description">Group your rows according to some column values.</p>
 
 For when you need to group rows based on repeated column values, and/or custom functions.
-In the following example groups all movies based on their production `company`
+In the following example groups all movies based on their production `company`:
 
 {{"demo": "RowGroupingBasicExample.js", "bg": "inline", "defaultCodeOpen": false}}
 
