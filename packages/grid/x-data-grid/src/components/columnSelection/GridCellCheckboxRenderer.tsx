@@ -65,10 +65,10 @@ const GridCellCheckboxForwardRef = React.forwardRef<HTMLInputElement, GridRender
       }
     }, [element, tabIndex]);
 
-    React.useLayoutEffect(() => {
+    React.useEffect(() => {
       if (hasFocus) {
         const input = checkboxElement.current?.querySelector('input');
-        input?.focus();
+        input?.focus({ preventScroll: true });
       } else if (rippleRef.current) {
         // Only available in @mui/material v5.4.1 or later
         rippleRef.current.stop({});

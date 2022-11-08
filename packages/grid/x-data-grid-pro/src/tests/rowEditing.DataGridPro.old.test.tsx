@@ -133,9 +133,8 @@ describe('<DataGridPro /> - Row Editing', () => {
     fireEvent.change(input, { target: { value: 'ADIDAS' } });
     expect(input!.value).to.equal('ADIDAS');
     fireEvent.keyDown(input, { key: 'Enter' });
-    await waitFor(() => {
-      expect(getCell(2, 0)).toHaveFocus();
-    });
+    await act(() => Promise.resolve());
+    expect(getCell(2, 0)).toHaveFocus();
   });
 
   it('should allow to commit changes clicking outside the row', async () => {
