@@ -144,7 +144,7 @@ NextDatePicker.propTypes = {
    */
   minDate: PropTypes.any,
   /**
-   * Callback fired when the value is accepted @DateIOType.
+   * Callback fired when the value is accepted.
    * @template TValue
    * @param {TValue} value The value that was just accepted.
    */

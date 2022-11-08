@@ -171,7 +171,7 @@ DesktopNextTimePicker.propTypes = {
    */
   minutesStep: PropTypes.number,
   /**
-   * Callback fired when the value is accepted @DateIOType.
+   * Callback fired when the value is accepted.
    * @template TValue
    * @param {TValue} value The value that was just accepted.
    */

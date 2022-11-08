@@ -47,7 +47,7 @@ export interface MonthCalendarProps<TDate>
    */
   defaultValue?: TDate | null;
   /**
-   * Callback fired when the value (the selected month) changes.
+   * Callback fired when the value changes.
    * @template TDate
    * @param {TDate | null} value The new value.
    */
@@ -357,7 +357,7 @@ MonthCalendar.propTypes = {
    */
   minDate: PropTypes.any,
   /**
-   * Callback fired when the value (the selected month) changes.
+   * Callback fired when the value changes.
    * @template TDate
    * @param {TDate | null} value The new value.
    */

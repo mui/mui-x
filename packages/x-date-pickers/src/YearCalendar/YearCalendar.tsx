@@ -93,7 +93,7 @@ export interface YearCalendarProps<TDate>
    */
   defaultValue?: TDate | null;
   /**
-   * Callback fired when the value (the selected year) changes.
+   * Callback fired when the value changes.
    * @template TDate
    * @param {TDate | null} value The new value.
    */
@@ -372,7 +372,7 @@ YearCalendar.propTypes = {
    */
   minDate: PropTypes.any,
   /**
-   * Callback fired when the value (the selected year) changes.
+   * Callback fired when the value changes.
    * @template TDate
    * @param {TDate | null} value The new value.
    */

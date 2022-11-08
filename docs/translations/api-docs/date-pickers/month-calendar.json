@@ -10,7 +10,7 @@
     "disablePast": "If <code>true</code> disable values after the current date and time.",
     "maxDate": "Maximal selectable date.",
     "minDate": "Minimal selectable date.",
-    "onChange": "Callback fired when the value (the selected month) changes.<br><br><strong>Signature:</strong><br><code>function(value: TDate | null) =&gt; void</code><br><em>value:</em> The new value.",
+    "onChange": "Callback fired when the value changes.<br><br><strong>Signature:</strong><br><code>function(value: TDate | null) =&gt; void</code><br><em>value:</em> The new value.",
     "readOnly": "If <code>true</code> picker is readonly",
     "shouldDisableMonth": "Disable specific month.<br><br><strong>Signature:</strong><br><code>function(month: TDate) =&gt; boolean</code><br><em>month:</em> The month to test.<br> <em>returns</em> (boolean): If <code>true</code> the month will be disabled.",
     "sx": "The system prop that allows defining system overrides as well as additional CSS styles. See the <a href=\"/system/getting-started/the-sx-prop/\">`sx` page</a> for more details.",
