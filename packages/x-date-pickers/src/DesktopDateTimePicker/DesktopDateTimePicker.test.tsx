@@ -3,7 +3,6 @@ import TextField from '@mui/material/TextField';
 import { expect } from 'chai';
 import { spy } from 'sinon';
 import { act, fireEvent, screen, userEvent } from '@mui/monorepo/test/utils';
-import 'dayjs/locale/ru';
 import { DesktopDateTimePicker } from '@mui/x-date-pickers/DesktopDateTimePicker';
 import { inputBaseClasses } from '@mui/material/InputBase';
 import {

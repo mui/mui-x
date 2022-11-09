@@ -2,7 +2,6 @@ import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
 import { act, fireEvent, screen, userEvent } from '@mui/monorepo/test/utils';
-import 'dayjs/locale/ru';
 import { Unstable_DesktopNextDateTimePicker as DesktopNextDateTimePicker } from '@mui/x-date-pickers/DesktopNextDateTimePicker';
 import { adapterToUse, createPickerRenderer, openPicker } from 'test/utils/pickers-utils';
 import describeValidation from '@mui/x-date-pickers/tests/describeValidation';
