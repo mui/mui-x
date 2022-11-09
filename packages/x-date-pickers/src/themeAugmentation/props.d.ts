@@ -45,6 +45,11 @@ import { DesktopNextDatePickerProps } from '../DesktopNextDatePicker';
 import { MobileNextDatePickerProps } from '../MobileNextDatePicker';
 import { StaticNextDatePickerProps } from '../StaticNextDatePicker';
 
+import { NextDateTimePickerProps } from '../NextDateTimePicker';
+import { DesktopNextDateTimePickerProps } from '../DesktopNextDateTimePicker';
+import { MobileNextDateTimePickerProps } from '../MobileNextDateTimePicker';
+import { StaticNextDateTimePickerProps } from '../StaticNextDateTimePicker';
+
 import { NextTimePickerProps } from '../NextTimePicker';
 import { DesktopNextTimePickerProps } from '../DesktopNextTimePicker';
 import { MobileNextTimePickerProps } from '../MobileNextTimePicker';
