@@ -1,4 +1,5 @@
 import BaseAdapterMomentHijri from '@date-io/hijri';
+// @ts-ignore
 import defaultMoment, { LongDateFormatKey } from 'moment-hijri';
 import { MuiFormatTokenMap, MuiPickerFieldAdapter } from '../internals/models';
 

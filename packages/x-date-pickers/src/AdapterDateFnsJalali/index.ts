@@ -1,5 +1,6 @@
 import BaseAdapterDateFnsJalali from '@date-io/date-fns-jalali';
 import defaultLocale from 'date-fns-jalali/locale/fa-IR';
+// @ts-ignore
 import longFormatters from 'date-fns-jalali/_lib/format/longFormatters';
 import { MuiFormatTokenMap, MuiPickerFieldAdapter } from '../internals/models';
 
