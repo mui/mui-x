@@ -37,6 +37,13 @@ const StaticNextDateTimePicker = React.forwardRef(function StaticNextDatePicker<
     ...defaultizedProps,
     displayStaticWrapperAs,
     showToolbar: defaultizedProps.showToolbar ?? displayStaticWrapperAs === 'mobile',
+    componentsProps: {
+      ...defaultizedProps.componentsProps,
+      tabs: {
+        hidden: displayStaticWrapperAs === 'desktop',
+        ...defaultizedProps.componentsProps?.tabs,
+      },
+    },
   };
 
   const { renderPicker } = useStaticPicker<TDate, CalendarOrClockPickerView, typeof props>({
