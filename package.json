@@ -51,7 +51,7 @@
     "test:performance:run": "node ./scripts/performance.mjs",
     "test:performance:build": "webpack --config test/performance/webpack.config.js",
     "test:performance:server": "serve test/performance -p 5001",
-    "test:argos": "node ./scripts/pushArgos.js",
+    "test:argos": "node ./scripts/pushArgos.mjs",
     "typescript": "lerna run --no-bail --parallel typescript",
     "typescript:ci": "lerna run --concurrency 6 --no-bail --no-sort typescript",
     "build:codesandbox": "yarn release:build",
