@@ -67,6 +67,7 @@ const PickersToolbarContent = styled(Grid, {
   ownerState: PickersToolbarProps<any, any>;
 }>({
   flex: 1,
+  alignItems: 'center',
 });
 
 const PickersToolbarPenIconButton = styled(IconButton, {
