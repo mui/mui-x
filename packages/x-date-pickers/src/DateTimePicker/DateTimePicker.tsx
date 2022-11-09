@@ -231,7 +231,7 @@ DateTimePicker.propTypes = {
    */
   maxDateTime: PropTypes.any,
   /**
-   * Max time acceptable time.
+   * Maximal selectable time.
    * The date part of the object will be ignored unless `props.disableIgnoringDatePartForTimeValidation === true`.
    */
   maxTime: PropTypes.any,
@@ -244,7 +244,7 @@ DateTimePicker.propTypes = {
    */
   minDateTime: PropTypes.any,
   /**
-   * Minimal time acceptable time.
+   * Minimal selectable time.
    * The date part of the object will be ignored unless `props.disableIgnoringDatePartForTimeValidation === true`.
    */
   minTime: PropTypes.any,

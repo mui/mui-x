@@ -112,12 +112,12 @@ StaticNextTimePicker.propTypes = {
    */
   localeText: PropTypes.object,
   /**
-   * Max time acceptable time.
+   * Maximal selectable time.
    * The date part of the object will be ignored unless `props.disableIgnoringDatePartForTimeValidation === true`.
    */
   maxTime: PropTypes.any,
   /**
-   * Minimal time acceptable time.
+   * Minimal selectable time.
    * The date part of the object will be ignored unless `props.disableIgnoringDatePartForTimeValidation === true`.
    */
   minTime: PropTypes.any,
