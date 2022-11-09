@@ -9,16 +9,16 @@ const luxonVersionWarning = buildWarning([
 ]);
 
 const formatTokenMap: MuiFormatTokenMap = {
-  s: 'second',
-  ss: 'second',
+  s: 'seconds',
+  ss: 'seconds',
 
-  m: 'minute',
-  mm: 'minute',
+  m: 'minutes',
+  mm: 'minutes',
 
-  H: 'hour',
-  HH: 'hour',
-  h: 'hour',
-  hh: 'hour',
+  H: 'hours',
+  HH: 'hours',
+  h: 'hours',
+  hh: 'hours',
 
   a: 'meridiem',
 
