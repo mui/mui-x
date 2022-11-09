@@ -23,6 +23,7 @@ export type {
   PickersArrowSwitcherSlotsComponent,
   PickersArrowSwitcherSlotsComponentsProps,
 } from './components/PickersArrowSwitcher';
+export { PickersModalDialog } from './components/PickersModalDialog';
 export { PickersPopper } from './components/PickersPopper';
 export type {
   PickersPopperSlotsComponent,
