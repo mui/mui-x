@@ -9,6 +9,7 @@ import {
 } from '../gridRows';
 import type { GridStateColDef } from '../colDef/gridColDef';
 import { GridEditCellProps } from '../gridEditRowModel';
+import { GridApiCommunity } from '../api/gridApiCommunity';
 
 /**
  * Object passed as parameter in the column [[GridColDef]] cell renderer.
@@ -82,7 +83,7 @@ export interface GridRenderCellParams<
   /**
    * GridApi that let you manipulate the grid.
    */
-  api: any;
+  api: GridApiCommunity;
   /**
    * A ref allowing to set imperative focus.
    * It can be passed to the element that should receive focus.
@@ -104,7 +105,7 @@ export interface GridRenderEditCellParams<
   /**
    * GridApi that let you manipulate the grid.
    */
-  api: any;
+  api: GridApiCommunity;
 }
 
 /**
@@ -118,7 +119,7 @@ export interface GridValueGetterParams<
   /**
    * GridApi that let you manipulate the grid.
    */
-  api: any;
+  api: GridApiCommunity;
   /**
    * The default value for the cell that the `valueGetter` is overriding.
    */
@@ -159,7 +160,7 @@ export interface GridValueFormatterParams<V = any> {
   /**
    * GridApi that let you manipulate the grid.
    */
-  api: any;
+  api: GridApiCommunity;
 }
 
 /**

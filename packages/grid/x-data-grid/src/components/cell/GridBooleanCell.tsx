@@ -75,7 +75,7 @@ GridBooleanCellRaw.propTypes = {
   /**
    * GridApi that let you manipulate the grid.
    */
-  api: PropTypes.any.isRequired,
+  api: PropTypes.object.isRequired,
   /**
    * The mode of the cell.
    */

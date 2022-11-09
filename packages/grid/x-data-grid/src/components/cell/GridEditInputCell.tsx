@@ -146,7 +146,7 @@ GridEditInputCell.propTypes = {
   /**
    * GridApi that let you manipulate the grid.
    */
-  api: PropTypes.any,
+  api: PropTypes.object,
   /**
    * The mode of the cell.
    */
