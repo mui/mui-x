@@ -188,6 +188,9 @@ MultiInputDateTimeRangeField.propTypes = {
    * @default false
    */
   disablePast: PropTypes.bool,
+  /**
+   * Format of the date when rendered in the input(s).
+   */
   format: PropTypes.string,
   /**
    * Maximal selectable date. @DateIOType
@@ -220,7 +223,19 @@ MultiInputDateTimeRangeField.propTypes = {
    * @default 1
    */
   minutesStep: PropTypes.number,
+  /**
+   * Callback fired when the value changes.
+   * @template TValue, TError
+   * @param {TValue} value The new value.
+   * @param {FieldChangeHandlerContext<TError>} The context containing the validation result of the current value.
+   */
   onChange: PropTypes.func,
+  /**
+   * Callback fired when the error associated to the current value changes.
+   * @template TValue, TError
+   * @param {TError} error The new error.
+   * @param {TValue} value The value associated to the error.
+   */
   onError: PropTypes.func,
   /**
    * Callback fired when the selected sections change.
@@ -266,6 +281,10 @@ MultiInputDateTimeRangeField.propTypes = {
    * @returns {boolean} Returns `true` if the time should be disabled
    */
   shouldDisableTime: PropTypes.func,
+  /**
+   * The selected value.
+   * Used when the component is controlled.
+   */
   value: PropTypes.arrayOf(PropTypes.any),
 } as any;
 

@@ -14,10 +14,10 @@ import { useDateRangeValidation } from '../internal/hooks/validation/useDateRang
 import { DateRangePickerView } from '../DateRangePicker/DateRangePickerView';
 import { DateRangePickerInput } from '../DateRangePicker/DateRangePickerInput';
 import { getReleaseInfo } from '../internal/utils/releaseInfo';
+import { rangeValueManager } from '../internal/utils/valueManagers';
 import {
   BaseDateRangePickerProps,
   useDateRangePickerDefaultizedProps,
-  dateRangePickerValueManager,
   BaseDateRangePickerSlotsComponent,
   BaseDateRangePickerSlotsComponentsProps,
 } from '../DateRangePicker/shared';
@@ -89,7 +89,7 @@ export const MobileDateRangePicker = React.forwardRef(function MobileDateRangePi
 
   const { pickerProps, inputProps, wrapperProps } = usePickerState(
     pickerStateProps,
-    dateRangePickerValueManager,
+    rangeValueManager,
   );
 
   const validationError = useDateRangeValidation(props);
@@ -103,6 +103,7 @@ export const MobileDateRangePicker = React.forwardRef(function MobileDateRangePi
     setCurrentlySelectingRangeEnd,
     validationError,
     ref,
+    mobile: true,
   };
 
   return (

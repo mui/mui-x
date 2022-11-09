@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import {
   BaseDateTimePickerProps,
   useDateTimePickerDefaultizedProps,
-  dateTimePickerValueManager,
   BaseDateTimePickerSlotsComponent,
   BaseDateTimePickerSlotsComponentsProps,
 } from '../DateTimePicker/shared';
@@ -17,6 +16,7 @@ import { CalendarOrClockPicker } from '../internals/components/CalendarOrClockPi
 import { useDateTimeValidation } from '../internals/hooks/validation/useDateTimeValidation';
 import { DateInputSlotsComponent, PureDateInput } from '../internals/components/PureDateInput';
 import { usePickerState } from '../internals/hooks/usePickerState';
+import { singleItemValueManager } from '../internals/utils/valueManagers';
 
 export interface MobileDateTimePickerSlotsComponent<TDate>
   extends BaseDateTimePickerSlotsComponent<TDate>,
@@ -66,10 +66,7 @@ export const MobileDateTimePicker = React.forwardRef(function MobileDateTimePick
   );
 
   const validationError = useDateTimeValidation(props) !== null;
-  const { pickerProps, inputProps, wrapperProps } = usePickerState(
-    props,
-    dateTimePickerValueManager,
-  );
+  const { pickerProps, inputProps, wrapperProps } = usePickerState(props, singleItemValueManager);
 
   // Note that we are passing down all the value without spread.
   // It saves us >1kb gzip and make any prop available automatically on any level down.

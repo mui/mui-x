@@ -1,10 +1,13 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { resolveComponentProps } from '@mui/base/utils';
-import { datePickerValueManager } from '../DatePicker/shared';
+import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { DesktopNextDatePickerProps } from './DesktopNextDatePicker.types';
-import { useNextDatePickerDefaultizedProps } from '../NextDatePicker/shared';
-import { CalendarPickerView, useLocaleText } from '../internals';
+import {
+  getDatePickerFieldFormat,
+  useNextDatePickerDefaultizedProps,
+} from '../NextDatePicker/shared';
+import { useLocaleText, useUtils, validateDate } from '../internals';
 import { useDesktopPicker } from '../internals/hooks/useDesktopPicker';
 import { Calendar } from '../internals/components/icons';
 import { Unstable_DateField as DateField } from '../DateField';
@@ -26,6 +29,7 @@ const DesktopNextDatePicker = React.forwardRef(function DesktopNextDatePicker<TD
   ref: React.Ref<HTMLDivElement>,
 ) {
   const localeText = useLocaleText();
+  const utils = useUtils();
 
   // Props with the default values common to all date pickers
   const { className, sx, ...defaultizedProps } = useNextDatePickerDefaultizedProps<
@@ -36,6 +40,7 @@ const DesktopNextDatePicker = React.forwardRef(function DesktopNextDatePicker<TD
   // Props with the default values specific to the desktop variant
   const props = {
     ...defaultizedProps,
+    format: getDatePickerFieldFormat(utils, defaultizedProps),
     showToolbar: defaultizedProps.showToolbar ?? false,
     autoFocus: true,
     components: {
@@ -57,11 +62,12 @@ const DesktopNextDatePicker = React.forwardRef(function DesktopNextDatePicker<TD
     },
   };
 
-  const { renderPicker } = useDesktopPicker<TDate, CalendarPickerView, typeof props>({
+  const { renderPicker } = useDesktopPicker({
     props,
-    valueManager: datePickerValueManager,
+    valueManager: singleItemValueManager,
     getOpenDialogAriaText: localeText.openDatePickerDialogue,
     viewLookup: VIEW_LOOKUP,
+    validator: validateDate,
   });
 
   return renderPicker();
@@ -141,8 +147,9 @@ DesktopNextDatePicker.propTypes = {
   fixedWeekNumber: PropTypes.number,
   /**
    * Format of the date when rendered in the input(s).
+   * Defaults to localized format based on the used `views`.
    */
-  inputFormat: PropTypes.string,
+  format: PropTypes.string,
   /**
    * Pass a ref to the `input` element.
    */
@@ -176,15 +183,16 @@ DesktopNextDatePicker.propTypes = {
    */
   minDate: PropTypes.any,
   /**
-   * Callback fired when date is accepted @DateIOType.
+   * Callback fired when the value is accepted @DateIOType.
    * @template TValue
    * @param {TValue} value The value that was just accepted.
    */
   onAccept: PropTypes.func,
   /**
-   * Callback fired when the value (the selected date) changes.
-   * @template TValue
+   * Callback fired when the value changes.
+   * @template TValue, TError
    * @param {TValue} value The new value.
+   * @param {FieldChangeHandlerContext<TError>} The context containing the validation result of the current value.
    */
   onChange: PropTypes.func,
   /**
@@ -193,16 +201,12 @@ DesktopNextDatePicker.propTypes = {
    */
   onClose: PropTypes.func,
   /**
-   * Callback that fired when input value or new `value` prop validation returns **new** validation error (or value is valid after error).
-   * In case of validation error detected `reason` prop return non-null value and `TextField` must be displayed in `error` state.
-   * This can be used to render appropriate form error.
+   * Callback fired when the error associated to the current value changes.
+   * If the error has a non-null value, then the `TextField` will be rendered in `error` state.
    *
-   * [Read the guide](https://next.material-ui-pickers.dev/guides/forms) about form integration and error displaying.
-   * @DateIOType
-   *
-   * @template TError, TValue
-   * @param {TError} reason The reason why the current value is not valid.
-   * @param {TValue} value The invalid value.
+   * @template TValue, TError
+   * @param {TError} error The new error describing why the current value is not valid.
+   * @param {TValue} value The value associated to the error.
    */
   onError: PropTypes.func,
   /**
@@ -318,7 +322,8 @@ DesktopNextDatePicker.propTypes = {
     PropTypes.object,
   ]),
   /**
-   * The value of the picker.
+   * The selected value.
+   * Used when the component is controlled.
    */
   value: PropTypes.any,
   /**
