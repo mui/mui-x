@@ -10,8 +10,8 @@ import 'moment/locale/fr';
 const testDate = new Date(2018, 4, 15, 9, 35);
 const localizedTexts = {
   en: {
-    placeholder: 'mm/dd/yyyy hh:mm',
-    value: '05/15/2018 09:35',
+    placeholder: 'mm/dd/yyyy hh:mm (a|p)m',
+    value: '05/15/2018 09:35 AM',
   },
   fr: {
     placeholder: 'dd/mm/yyyy hh:mm',
