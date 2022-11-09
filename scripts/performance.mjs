@@ -1,7 +1,6 @@
 /* eslint-disable no-await-in-loop */
 import yargs from 'yargs';
 import playwright from 'playwright';
-// eslint-disable-next-line import/extensions
 import capitalize from 'lodash/capitalize.js';
 import path from 'path';
 import fse from 'fs-extra';
