@@ -47,6 +47,7 @@ const DateTimePickerToolbarRoot = styled(PickersToolbar, {
   paddingLeft: 16,
   paddingRight: 16,
   justifyContent: 'space-around',
+  position: 'relative',
   [`& .${pickersToolbarClasses.penIconButton}`]: {
     position: 'absolute',
     top: 8,
