@@ -62,8 +62,8 @@ async function main(argv) {
   if (muiXRemote === undefined) {
     throw new TypeError(
       'Unable to find the upstream remote. It should be a remote pointing to "mui/mui-x". ' +
-      'Did you forget to add it via `git remote add upstream git@github.com:mui/mui-x.git`? ' +
-      'If you think this is a bug please include `git remote -v` in your report.',
+        'Did you forget to add it via `git remote add upstream git@github.com:mui/mui-x.git`? ' +
+        'If you think this is a bug please include `git remote -v` in your report.',
     );
   }
 
