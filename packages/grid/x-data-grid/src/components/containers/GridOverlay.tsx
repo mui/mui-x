@@ -36,7 +36,7 @@ const GridOverlayRoot = styled('div', {
   alignItems: 'center',
   justifyContent: 'center',
   backgroundColor: theme.vars
-    ? `rgba(${theme.vars.palette.common.backgroundChannel} / ${theme.vars.palette.action.disabledOpacity})`
+    ? `rgba(${theme.vars.palette.background.defaultChannel} / ${theme.vars.palette.action.disabledOpacity})`
     : alpha(theme.palette.background.default, theme.palette.action.disabledOpacity),
 }));
 
