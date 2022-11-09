@@ -19,7 +19,7 @@
     "deduplicate": "node scripts/deduplicate.mjs",
     "dataset:file-tree": "babel-node -x .ts ./scripts/treeDataFromFileTree.ts",
     "l10n": "babel-node -x .ts ./scripts/l10n.ts",
-    "jsonlint": "node ./scripts/jsonlint.js",
+    "jsonlint": "node ./scripts/jsonlint.mjs",
     "eslint": "eslint . --cache --report-unused-disable-directives --ext .js,.ts,.tsx --max-warnings 0",
     "eslint:ci": "eslint . --report-unused-disable-directives --ext .js,.ts,.tsx --max-warnings 0",
     "markdownlint": "markdownlint-cli2 \"**/*.md\"",
