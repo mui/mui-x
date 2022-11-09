@@ -61,7 +61,7 @@
     "release:build": "lerna run --parallel --scope \"@mui/*\" build",
     "release:publish": "lerna publish from-package --dist-tag next --contents build",
     "release:publish:dry-run": "lerna publish from-package --dist-tag next --contents build --registry=\"http://localhost:4873/\"",
-    "release:tag": "node scripts/releaseTag"
+    "release:tag": "node scripts/releaseTag.mjs"
   },
   "devDependencies": {
     "@argos-ci/core": "^0.5.1",
