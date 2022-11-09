@@ -17,7 +17,7 @@ export interface PickerChangeHandlerContext<TError> {
   validationError: TError;
 }
 
-export type PickerChangeHandler = <TValue, TError>(
+export type PickerChangeHandler<TValue, TError> = (
   value: TValue,
   context: PickerChangeHandlerContext<TError>,
 ) => void;
@@ -100,7 +100,7 @@ export interface UsePickerValueBaseProps<TValue, TError> {
    * @param {TValue} value The new value.
    * @param {FieldChangeHandlerContext<TError>} The context containing the validation result of the current value.
    */
-  onChange?: PickerChangeHandler;
+  onChange?: PickerChangeHandler<TValue, TError>;
   /**
    * Callback fired when the value is accepted @DateIOType.
    * @template TValue
