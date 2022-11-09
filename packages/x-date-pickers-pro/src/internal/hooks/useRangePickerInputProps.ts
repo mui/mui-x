@@ -5,24 +5,29 @@ import {
   onSpaceOrEnter,
   useLocaleText,
   UsePickerResponse,
+  WrapperVariant,
 } from '@mui/x-date-pickers/internals';
-import { DateRange } from '../../models';
+import { DateRange } from '../models';
 
 interface UseRangePickerFieldParams<TDate, TView extends CalendarOrClockPickerView>
   extends Pick<UsePickerResponse<DateRange<TDate>, TView, any>, 'open' | 'actions'> {
+  wrapperVariant: WrapperVariant;
   readOnly?: boolean;
+  disabled?: boolean;
   disableOpenPicker?: boolean;
   Input: React.ElementType;
   externalInputProps?: Record<string, any>;
-  onBlur: () => void;
+  onBlur: (() => void) | undefined;
   currentDatePosition: 'start' | 'end';
   onCurrentDatePositionChange: (newPosition: 'start' | 'end') => void;
 }
 
-export const useRangePickerField = <TDate, TView extends CalendarOrClockPickerView>({
+export const useRangePickerInputProps = <TDate, TView extends CalendarOrClockPickerView>({
+  wrapperVariant,
   open,
   actions,
   readOnly,
+  disabled,
   disableOpenPicker,
   Input,
   externalInputProps,
@@ -47,14 +52,20 @@ export const useRangePickerField = <TDate, TView extends CalendarOrClockPickerVi
     }
   }, [currentDatePosition, open]);
 
-  const openRangeStartSelection = () => {
+  const openRangeStartSelection = (
+    event: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>,
+  ) => {
+    event?.stopPropagation();
     onCurrentDatePositionChange('start');
     if (!readOnly && !disableOpenPicker) {
       actions.onOpen();
     }
   };
 
-  const openRangeEndSelection = () => {
+  const openRangeEndSelection = (
+    event: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>,
+  ) => {
+    event?.stopPropagation();
     onCurrentDatePositionChange('end');
     if (!readOnly && !disableOpenPicker) {
       actions.onOpen();
@@ -82,7 +93,13 @@ export const useRangePickerField = <TDate, TView extends CalendarOrClockPickerVi
       onClick: openRangeStartSelection,
       onKeyDown: onSpaceOrEnter(openRangeStartSelection),
       onFocus: focusOnRangeStart,
-      focused: open && currentDatePosition === 'start',
+      focused: open ? currentDatePosition === 'start' : undefined,
+      // registering `onClick` listener on the root element as well to correctly handle cases where user is clicking on `label`
+      // which has `pointer-events: none` and due to DOM structure the `input` does not catch the click event
+      ...(!readOnly && !disabled && { onClick: openRangeStartSelection }),
+      inputProps: {
+        readOnly: wrapperVariant === 'mobile',
+      },
     },
     // TODO: Pass owner state
     ownerState: {},
@@ -97,7 +114,13 @@ export const useRangePickerField = <TDate, TView extends CalendarOrClockPickerVi
       onClick: openRangeEndSelection,
       onKeyDown: onSpaceOrEnter(openRangeEndSelection),
       onFocus: focusOnRangeEnd,
-      focused: open && currentDatePosition === 'end',
+      focused: open ? currentDatePosition === 'start' : undefined,
+      // registering `onClick` listener on the root element as well to correctly handle cases where user is clicking on `label`
+      // which has `pointer-events: none` and due to DOM structure the `input` does not catch the click event
+      ...(!readOnly && !disabled && { onClick: openRangeStartSelection }),
+      inputProps: {
+        readOnly: wrapperVariant === 'mobile',
+      },
     },
     // TODO: Pass owner state
     ownerState: {},

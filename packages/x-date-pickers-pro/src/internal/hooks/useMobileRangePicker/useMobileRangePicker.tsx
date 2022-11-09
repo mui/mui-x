@@ -14,7 +14,7 @@ import {
   UseMobileRangePickerParams,
   UseMobileRangePickerProps,
 } from './useMobileRangePicker.types';
-import { useRangePickerField } from './useRangePickerField';
+import { useRangePickerInputProps } from '../useRangePickerInputProps';
 import { getReleaseInfo } from '../../utils/releaseInfo';
 import { DateRange } from '../../models/range';
 import { BaseMultiInputFieldProps } from '../../models/fields';
@@ -65,10 +65,12 @@ export const useMobileRangePicker = <
     },
   });
 
-  const { startInputProps, endInputProps } = useRangePickerField({
+  const { startInputProps, endInputProps } = useRangePickerInputProps({
+    wrapperVariant: 'mobile',
     open,
     actions,
     readOnly,
+    disabled,
     disableOpenPicker,
     Input: components.Input!,
     externalInputProps: componentsProps.input,
