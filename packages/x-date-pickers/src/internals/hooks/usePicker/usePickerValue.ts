@@ -243,12 +243,20 @@ export const usePickerValue = <
     onSelectedSectionsChange,
   } = props;
 
-  const [value, setValue] = useControlled({
+  const utils = useUtils<TDate>();
+  const adapter = useLocalizationContext<TDate>();
+
+  const [rawValue, setValue] = useControlled({
     controlled: inValue,
     default: defaultValue ?? valueManager.emptyValue,
     name: 'usePickerState2',
     state: 'value',
   });
+
+  const value = React.useMemo(
+    () => valueManager.cleanValue(utils, rawValue),
+    [valueManager, utils, rawValue],
+  );
 
   const [selectedSections, setSelectedSections] = useControlled({
     controlled: selectedSectionsProp,
@@ -257,8 +265,6 @@ export const usePickerValue = <
     state: 'selectedSections',
   });
 
-  const utils = useUtils<TDate>();
-  const adapter = useLocalizationContext<TDate>();
   const { isOpen, setIsOpen } = useOpenState(props);
 
   const [dateState, setDateState] = React.useState<UsePickerValueState<TValue>>(() => ({

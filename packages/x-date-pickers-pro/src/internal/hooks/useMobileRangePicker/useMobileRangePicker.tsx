@@ -65,16 +65,13 @@ export const useMobileRangePicker = <
     },
   });
 
-  const { startInputProps, endInputProps } = useRangePickerInputProps({
+  const fieldSlotsProps = useRangePickerInputProps({
     wrapperVariant: 'mobile',
     open,
     actions,
     readOnly,
     disabled,
     disableOpenPicker,
-    Input: components.Input!,
-    externalInputProps: componentsProps.input,
-    onBlur: undefined,
     currentDatePosition,
     onCurrentDatePositionChange: setCurrentDatePosition,
   });
@@ -114,11 +111,18 @@ export const useMobileRangePicker = <
         fieldProps.componentsProps?.input,
         ownerState,
       );
+      const inputPropsPassedByPicker =
+        ownerState.position === 'start' ? fieldSlotsProps.startInput : fieldSlotsProps.endInput;
 
       return {
-        ...inputPropsPassedByField,
         ...externalInputProps,
-        ...(ownerState.position === 'start' ? startInputProps : endInputProps),
+        ...inputPropsPassedByField,
+        ...inputPropsPassedByPicker,
+        inputProps: {
+          ...externalInputProps?.inputProps,
+          ...inputPropsPassedByField?.inputProps,
+          ...inputPropsPassedByPicker?.inputProps,
+        },
       };
     },
   };

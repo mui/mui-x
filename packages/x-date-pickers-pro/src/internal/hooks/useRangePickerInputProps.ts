@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { useSlotProps } from '@mui/base/utils';
 import {
   CalendarOrClockPickerView,
   onSpaceOrEnter,
@@ -15,9 +14,7 @@ interface UseRangePickerFieldParams<TDate, TView extends CalendarOrClockPickerVi
   readOnly?: boolean;
   disabled?: boolean;
   disableOpenPicker?: boolean;
-  Input: React.ElementType;
-  externalInputProps?: Record<string, any>;
-  onBlur: (() => void) | undefined;
+  onBlur?: () => void;
   currentDatePosition: 'start' | 'end';
   onCurrentDatePositionChange: (newPosition: 'start' | 'end') => void;
 }
@@ -29,8 +26,6 @@ export const useRangePickerInputProps = <TDate, TView extends CalendarOrClockPic
   readOnly,
   disabled,
   disableOpenPicker,
-  Input,
-  externalInputProps,
   onBlur,
   currentDatePosition,
   onCurrentDatePositionChange,
@@ -84,47 +79,35 @@ export const useRangePickerInputProps = <TDate, TView extends CalendarOrClockPic
     }
   };
 
-  const startInputProps = useSlotProps({
-    elementType: Input,
-    externalSlotProps: externalInputProps,
-    additionalProps: {
-      label: localeText.start,
-      onBlur,
-      onClick: openRangeStartSelection,
-      onKeyDown: onSpaceOrEnter(openRangeStartSelection),
-      onFocus: focusOnRangeStart,
-      focused: open ? currentDatePosition === 'start' : undefined,
-      // registering `onClick` listener on the root element as well to correctly handle cases where user is clicking on `label`
-      // which has `pointer-events: none` and due to DOM structure the `input` does not catch the click event
-      ...(!readOnly && !disabled && { onClick: openRangeStartSelection }),
-      inputProps: {
-        readOnly: wrapperVariant === 'mobile',
-      },
+  const startInputProps = {
+    label: localeText.start,
+    onKeyDown: onSpaceOrEnter(openRangeStartSelection),
+    onFocus: focusOnRangeStart,
+    focused: open ? currentDatePosition === 'start' : undefined,
+    // registering `onClick` listener on the root element as well to correctly handle cases where user is clicking on `label`
+    // which has `pointer-events: none` and due to DOM structure the `input` does not catch the click event
+    ...(!readOnly && !disabled && { onClick: openRangeStartSelection }),
+    inputProps: {
+      readOnly: wrapperVariant === 'mobile',
     },
-    // TODO: Pass owner state
-    ownerState: {},
-  });
+  };
 
-  const endInputProps = useSlotProps({
-    elementType: Input,
-    externalSlotProps: externalInputProps,
-    additionalProps: {
-      label: localeText.end,
-      onBlur,
-      onClick: openRangeEndSelection,
-      onKeyDown: onSpaceOrEnter(openRangeEndSelection),
-      onFocus: focusOnRangeEnd,
-      focused: open ? currentDatePosition === 'start' : undefined,
-      // registering `onClick` listener on the root element as well to correctly handle cases where user is clicking on `label`
-      // which has `pointer-events: none` and due to DOM structure the `input` does not catch the click event
-      ...(!readOnly && !disabled && { onClick: openRangeStartSelection }),
-      inputProps: {
-        readOnly: wrapperVariant === 'mobile',
-      },
+  const endInputProps = {
+    label: localeText.end,
+    onKeyDown: onSpaceOrEnter(openRangeEndSelection),
+    onFocus: focusOnRangeEnd,
+    focused: open ? currentDatePosition === 'start' : undefined,
+    // registering `onClick` listener on the root element as well to correctly handle cases where user is clicking on `label`
+    // which has `pointer-events: none` and due to DOM structure the `input` does not catch the click event
+    ...(!readOnly && !disabled && { onClick: openRangeEndSelection }),
+    inputProps: {
+      readOnly: wrapperVariant === 'mobile',
     },
-    // TODO: Pass owner state
-    ownerState: {},
-  });
+  };
 
-  return { startInputProps, endInputProps };
+  const rootProps = {
+    onBlur,
+  };
+
+  return { startInput: startInputProps, endInput: endInputProps, root: rootProps };
 };

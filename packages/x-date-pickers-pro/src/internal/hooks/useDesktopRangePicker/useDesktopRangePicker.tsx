@@ -81,15 +81,13 @@ export const useDesktopRangePicker = <
     });
   };
 
-  const { startInputProps, endInputProps } = useRangePickerInputProps({
+  const fieldSlotsProps = useRangePickerInputProps({
     wrapperVariant: 'mobile',
     open,
     actions,
     readOnly,
     disabled,
     disableOpenPicker,
-    Input: components.Input!,
-    externalInputProps: componentsProps.input,
     onBlur: handleBlur,
     currentDatePosition,
     onCurrentDatePositionChange: setCurrentDatePosition,
@@ -130,11 +128,29 @@ export const useDesktopRangePicker = <
         fieldProps.componentsProps?.input,
         ownerState,
       );
+      const inputPropsPassedByPicker =
+        ownerState.position === 'start' ? fieldSlotsProps.startInput : fieldSlotsProps.endInput;
 
       return {
-        ...inputPropsPassedByField,
         ...externalInputProps,
-        ...(ownerState.position === 'start' ? startInputProps : endInputProps),
+        ...inputPropsPassedByField,
+        ...inputPropsPassedByPicker,
+        inputProps: {
+          ...externalInputProps?.inputProps,
+          ...inputPropsPassedByField?.inputProps,
+          ...inputPropsPassedByPicker?.inputProps,
+        },
+      };
+    },
+    root: (ownerState) => {
+      // TODO v6: Add slots on picker
+      const rootPropsPassedByField = resolveComponentProps(
+        fieldProps.componentsProps?.root,
+        ownerState,
+      );
+      return {
+        ...rootPropsPassedByField,
+        ...fieldSlotsProps.root,
       };
     },
   };
@@ -154,7 +170,11 @@ export const useDesktopRangePicker = <
           onBlur={handleBlur}
           {...actions}
           open={open}
-          components={components}
+          components={{
+            ...components,
+            // Avoids to render 2 action bar, will be removed once `PickersPopper` stop displaying the action bar.
+            ActionBar: () => null,
+          }}
           componentsProps={componentsProps}
           shouldRestoreFocus={shouldRestoreFocus}
         >
