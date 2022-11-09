@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import {
   BaseTimePickerProps,
   useTimePickerDefaultizedProps,
-  timePickerValueManager,
+  timeValueManager,
   BaseTimePickerSlotsComponentsProps,
   BaseTimePickerSlotsComponent,
 } from '../TimePicker/shared';
@@ -67,7 +67,7 @@ export const DesktopTimePicker = React.forwardRef(function DesktopTimePicker<TDa
   );
 
   const validationError = useTimeValidation(props) !== null;
-  const { pickerProps, inputProps, wrapperProps } = usePickerState(props, timePickerValueManager);
+  const { pickerProps, inputProps, wrapperProps } = usePickerState(props, timeValueManager);
 
   const { onChange, value, components, componentsProps, localeText, ...other } = props;
 
