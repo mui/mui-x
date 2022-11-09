@@ -2420,9 +2420,9 @@
     react-is "^18.2.0"
     react-transition-group "^4.4.5"
 
-"@mui/monorepo@https://github.com/mnajdova/material-ui.git#docs/upgrade-nextjs-13":
-  version "5.10.12"
-  resolved "https://github.com/mnajdova/material-ui.git#0de1e9eba63b0039ec9684b84171d786bb53c9ef"
+"@mui/monorepo@https://github.com/mui/material-ui.git#master":
+  version "5.10.13"
+  resolved "https://github.com/mui/material-ui.git#8ed5004e36817ea9ef6f32b56cdcb006582edba9"
 
 "@mui/private-theming@^5.10.9":
   version "5.10.9"
