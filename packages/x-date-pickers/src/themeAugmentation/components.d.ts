@@ -86,6 +86,11 @@ export interface PickerComponents<Theme = unknown> {
     styleOverrides?: ComponentsOverrides<Theme>['MuiDesktopNextDatePicker'];
     variants?: ComponentsVariants['MuiDesktopNextDatePicker'];
   };
+  MuiDesktopNextDateTimePicker?: {
+    defaultProps?: ComponentsProps['MuiDesktopNextDateTimePicker'];
+    styleOverrides?: ComponentsOverrides<Theme>['MuiDesktopNextDateTimePicker'];
+    variants?: ComponentsVariants['MuiDesktopNextDateTimePicker'];
+  };
   MuiDesktopNextTimePicker?: {
     defaultProps?: ComponentsProps['MuiDesktopNextTimePicker'];
     styleOverrides?: ComponentsOverrides<Theme>['MuiDesktopNextTimePicker'];
@@ -106,6 +111,11 @@ export interface PickerComponents<Theme = unknown> {
     styleOverrides?: ComponentsOverrides<Theme>['MuiMobileNextDatePicker'];
     variants?: ComponentsVariants['MuiMobileNextDatePicker'];
   };
+  MuiMobileNextDateTimePicker?: {
+    defaultProps?: ComponentsProps['MuiMobileNextDateTimePicker'];
+    styleOverrides?: ComponentsOverrides<Theme>['MuiMobileNextDateTimePicker'];
+    variants?: ComponentsVariants['MuiMobileNextDateTimePicker'];
+  };
   MuiMobileNextTimePicker?: {
     defaultProps?: ComponentsProps['MuiMobileNextTimePicker'];
     styleOverrides?: ComponentsOverrides<Theme>['MuiMobileNextTimePicker'];
@@ -120,6 +130,11 @@ export interface PickerComponents<Theme = unknown> {
     defaultProps?: ComponentsProps['MuiNextDatePicker'];
     styleOverrides?: ComponentsOverrides<Theme>['MuiNextDatePicker'];
     variants?: ComponentsVariants['MuiNextDatePicker'];
+  };
+  MuiNextDateTimePicker?: {
+    defaultProps?: ComponentsProps['MuiNextDateTimePicker'];
+    styleOverrides?: ComponentsOverrides<Theme>['MuiNextDateTimePicker'];
+    variants?: ComponentsVariants['MuiNextDateTimePicker'];
   };
   MuiNextTimePicker?: {
     defaultProps?: ComponentsProps['MuiNextTimePicker'];
@@ -200,6 +215,11 @@ export interface PickerComponents<Theme = unknown> {
     defaultProps?: ComponentsProps['MuiStaticNextDatePicker'];
     styleOverrides?: ComponentsOverrides<Theme>['MuiStaticNextDatePicker'];
     variants?: ComponentsVariants['MuiStaticNextDatePicker'];
+  };
+  MuiStaticNextDateTimePicker?: {
+    defaultProps?: ComponentsProps['MuiStaticNextDateTimePicker'];
+    styleOverrides?: ComponentsOverrides<Theme>['MuiStaticNextDateTimePicker'];
+    variants?: ComponentsVariants['MuiStaticNextDateTimePicker'];
   };
   MuiStaticNextTimePicker?: {
     defaultProps?: ComponentsProps['MuiStaticNextTimePicker'];
