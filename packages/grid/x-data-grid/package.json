@@ -50,7 +50,7 @@
     "@mui/utils": "^5.10.9",
     "clsx": "^1.2.1",
     "prop-types": "^15.8.1",
-    "reselect": "^4.1.6"
+    "reselect": "^4.1.7"
   },
   "peerDependencies": {
     "@mui/material": "^5.4.1",

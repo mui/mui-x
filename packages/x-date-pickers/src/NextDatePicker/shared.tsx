@@ -8,7 +8,6 @@ import {
 } from '../DateCalendar/DateCalendar';
 import { useDefaultDates, useUtils } from '../internals/hooks/useUtils';
 import { isYearAndMonthViews, isYearOnlyView } from '../internals/utils/views';
-import { ValidationCommonPropsOptionalValue } from '../internals/hooks/validation/useValidation';
 import { DateValidationError } from '../internals/hooks/validation/useDateValidation';
 import { BaseNextPickerProps } from '../internals/models/props/basePickerProps';
 import { applyDefaultDate } from '../internals/utils/date-utils';
@@ -35,11 +34,10 @@ export interface BaseNextDatePickerSlotsComponentsProps<TDate>
 
 export interface BaseNextDatePickerProps<TDate>
   extends MakeOptional<
-      BaseNextPickerProps<TDate | null, TDate, CalendarPickerView>,
+      BaseNextPickerProps<TDate | null, TDate, CalendarPickerView, DateValidationError>,
       'views' | 'openTo'
     >,
-    ExportedDateCalendarProps<TDate>,
-    ValidationCommonPropsOptionalValue<DateValidationError, TDate | null> {
+    ExportedDateCalendarProps<TDate> {
   /**
    * Overrideable components.
    * @default {}

@@ -3,9 +3,24 @@ import { useControlled } from '@mui/material/utils';
 import useEventCallback from '@mui/utils/useEventCallback';
 import { WrapperVariant } from '../../components/wrappers/WrapperVariantContext';
 import { useOpenState } from '../useOpenState';
-import { useUtils } from '../useUtils';
+import { useLocalizationContext, useUtils } from '../useUtils';
 import { PickerStateValueManager } from '../usePickerState';
-import { FieldSelectedSections, UseFieldInternalProps } from '../useField';
+import {
+  FieldChangeHandlerContext,
+  FieldSelectedSections,
+  UseFieldInternalProps,
+} from '../useField';
+import { InferError, useValidation, Validator } from '../validation/useValidation';
+import { UseFieldValidationProps } from '../useField/useField.interfaces';
+
+export interface PickerChangeHandlerContext<TError> {
+  validationError: TError;
+}
+
+export type PickerChangeHandler = <TValue, TError>(
+  value: TValue,
+  context: PickerChangeHandlerContext<TError>,
+) => void;
 
 export type PickerSelectionState = 'partial' | 'shallow' | 'finish';
 
@@ -45,7 +60,7 @@ type PickerValueActionType =
    */
   | 'setDraft';
 
-interface UsePickerValueAction<DraftValue> {
+interface UsePickerValueAction<DraftValue, TError> {
   action: PickerValueActionType;
   value: DraftValue;
   /**
@@ -59,14 +74,19 @@ interface UsePickerValueAction<DraftValue> {
    * @default false
    */
   forceOnChangeCall?: boolean;
+  /**
+   * Context passed from a deeper component (a field or a calendar).
+   */
+  contextFromField?: FieldChangeHandlerContext<TError>;
 }
 
 /**
  * Props used to handle the value that are common to all pickers.
  */
-export interface UsePickerValueBaseProps<TValue> {
+export interface UsePickerValueBaseProps<TValue, TError> {
   /**
-   * The value of the picker.
+   * The selected value.
+   * Used when the component is controlled.
    */
   value?: TValue;
   /**
@@ -75,17 +95,27 @@ export interface UsePickerValueBaseProps<TValue> {
    */
   defaultValue?: TValue;
   /**
-   * Callback fired when the value (the selected date) changes.
-   * @template TValue
+   * Callback fired when the value changes.
+   * @template TValue, TError
    * @param {TValue} value The new value.
+   * @param {FieldChangeHandlerContext<TError>} The context containing the validation result of the current value.
    */
-  onChange?: (value: TValue) => void;
+  onChange?: PickerChangeHandler;
   /**
-   * Callback fired when date is accepted @DateIOType.
+   * Callback fired when the value is accepted.
    * @template TValue
    * @param {TValue} value The value that was just accepted.
    */
   onAccept?: (value: TValue) => void;
+  /**
+   * Callback fired when the error associated to the current value changes.
+   * If the error has a non-null value, then the `TextField` will be rendered in `error` state.
+   *
+   * @template TValue, TError
+   * @param {TError} error The new error describing why the current value is not valid.
+   * @param {TValue} value The value associated to the error.
+   */
+  onError?: (error: TError, value: TValue) => void;
 }
 
 /**
@@ -121,14 +151,24 @@ export interface UsePickerValueNonStaticProps<TValue>
 /**
  * Props used to handle the value of the pickers.
  */
-export interface UsePickerValueProps<TValue>
-  extends UsePickerValueBaseProps<TValue>,
+export interface UsePickerValueProps<TValue, TError>
+  extends UsePickerValueBaseProps<TValue, TError>,
     UsePickerValueNonStaticProps<TValue> {}
 
-export interface UsePickerValueParams<TValue, TDate> {
-  props: UsePickerValueProps<TValue>;
-  valueManager: PickerStateValueManager<TValue, TDate>;
+export interface UsePickerValueParams<
+  TValue,
+  TDate,
+  TExternalProps extends UsePickerValueProps<TValue, any>,
+> {
+  props: TExternalProps;
+  valueManager: PickerStateValueManager<TValue, TDate, InferError<TExternalProps>>;
   wrapperVariant: WrapperVariant;
+  validator: Validator<
+    TValue,
+    TDate,
+    InferError<TExternalProps>,
+    UseFieldValidationProps<TValue, TExternalProps>
+  >;
 }
 
 interface UsePickerValueActions {
@@ -141,9 +181,9 @@ interface UsePickerValueActions {
   onClose: () => void;
 }
 
-type UsePickerValueFieldResponse<TValue> = Required<
+type UsePickerValueFieldResponse<TValue, TError> = Required<
   Pick<
-    UseFieldInternalProps<TValue, unknown>,
+    UseFieldInternalProps<TValue, TError>,
     'value' | 'onChange' | 'selectedSections' | 'onSelectedSectionsChange'
   >
 >;
@@ -167,22 +207,32 @@ export interface UsePickerValueLayoutResponse<TValue> extends UsePickerValueActi
   onChange: (newValue: TValue) => void;
 }
 
-export interface UsePickerValueResponse<TValue> {
+export interface UsePickerValueResponse<TValue, TError> {
   open: boolean;
   actions: UsePickerValueActions;
   viewProps: UsePickerValueViewsResponse<TValue>;
-  fieldProps: UsePickerValueFieldResponse<TValue>;
+  fieldProps: UsePickerValueFieldResponse<TValue, TError>;
   layoutProps: UsePickerValueLayoutResponse<TValue>;
 }
 
 /**
  * Manage the value lifecycle of all the pickers.
  */
-export const usePickerValue = <TValue, TDate>({
+export const usePickerValue = <
+  TValue,
+  TDate,
+  TExternalProps extends UsePickerValueProps<TValue, any>,
+>({
   props,
   valueManager,
   wrapperVariant,
-}: UsePickerValueParams<TValue, TDate>): UsePickerValueResponse<TValue> => {
+  validator,
+}: UsePickerValueParams<TValue, TDate, TExternalProps>): UsePickerValueResponse<
+  TValue,
+  InferError<TExternalProps>
+> => {
+  type TError = InferError<TExternalProps>;
+
   const {
     onAccept: onAcceptProp,
     onChange,
@@ -208,6 +258,7 @@ export const usePickerValue = <TValue, TDate>({
   });
 
   const utils = useUtils<TDate>();
+  const adapter = useLocalizationContext<TDate>();
   const { isOpen, setIsOpen } = useOpenState(props);
 
   const [dateState, setDateState] = React.useState<UsePickerValueState<TValue>>(() => ({
@@ -216,47 +267,60 @@ export const usePickerValue = <TValue, TDate>({
     resetFallback: value,
   }));
 
-  const setDate = React.useCallback(
-    (params: UsePickerValueAction<TValue>) => {
-      setDateState((prev) => {
-        switch (params.action) {
-          case 'setAll':
-          case 'acceptAndClose': {
-            return { draft: params.value, committed: params.value, resetFallback: params.value };
-          }
-          case 'setCommitted': {
-            return { ...prev, draft: params.value, committed: params.value };
-          }
-          case 'setDraft': {
-            return { ...prev, draft: params.value };
-          }
-          default: {
-            return prev;
-          }
-        }
-      });
+  useValidation({ ...props, value }, validator, valueManager.isSameError);
 
+  const setDate = useEventCallback((params: UsePickerValueAction<TValue, TError>) => {
+    setDateState((prev) => {
+      switch (params.action) {
+        case 'setAll':
+        case 'acceptAndClose': {
+          return { draft: params.value, committed: params.value, resetFallback: params.value };
+        }
+        case 'setCommitted': {
+          return { ...prev, draft: params.value, committed: params.value };
+        }
+        case 'setDraft': {
+          return { ...prev, draft: params.value };
+        }
+        default: {
+          return prev;
+        }
+      }
+    });
+
+    if (
+      params.forceOnChangeCall ||
+      (!params.skipOnChangeCall &&
+        !valueManager.areValuesEqual(utils, dateState.committed, params.value))
+    ) {
+      setValue(params.value);
+
+      if (onChange) {
+        const context: PickerChangeHandlerContext<TError> = {
+          validationError:
+            params.contextFromField == null
+              ? validator({
+                  adapter,
+                  value: params.value,
+                  props: { ...props, value: params.value },
+                })
+              : params.contextFromField.validationError,
+        };
+
+        onChange(params.value, context);
+      }
+    }
+
+    if (params.action === 'acceptAndClose') {
+      setIsOpen(false);
       if (
-        params.forceOnChangeCall ||
-        (!params.skipOnChangeCall &&
-          !valueManager.areValuesEqual(utils, dateState.committed, params.value))
+        onAcceptProp &&
+        !valueManager.areValuesEqual(utils, dateState.resetFallback, params.value)
       ) {
-        setValue(params.value);
-        onChange?.(params.value);
+        onAcceptProp(params.value);
       }
-
-      if (params.action === 'acceptAndClose') {
-        setIsOpen(false);
-        if (
-          onAcceptProp &&
-          !valueManager.areValuesEqual(utils, dateState.resetFallback, params.value)
-        ) {
-          onAcceptProp(params.value);
-        }
-      }
-    },
-    [onAcceptProp, onChange, setIsOpen, dateState, utils, valueManager, setValue],
-  );
+    }
+  });
 
   React.useEffect(() => {
     if (isOpen) {
@@ -341,8 +405,9 @@ export const usePickerValue = <TValue, TDate>({
     },
   );
 
-  const handleChangeAndCommit = useEventCallback((newValue: TValue) =>
-    setDate({ action: 'setCommitted', value: newValue }),
+  const handleChangeAndCommit = useEventCallback(
+    (newValue: TValue, contextFromField?: FieldChangeHandlerContext<TError>) =>
+      setDate({ action: 'setCommitted', value: newValue, contextFromField }),
   );
 
   const handleFieldSelectedSectionsChange = useEventCallback(
@@ -362,7 +427,7 @@ export const usePickerValue = <TValue, TDate>({
     onClose: handleClose,
   };
 
-  const fieldResponse: UsePickerValueFieldResponse<TValue> = {
+  const fieldResponse: UsePickerValueFieldResponse<TValue, TError> = {
     value: dateState.draft,
     onChange: handleChangeAndCommit,
     selectedSections,
