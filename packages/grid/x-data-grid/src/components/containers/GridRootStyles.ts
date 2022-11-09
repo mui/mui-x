@@ -110,7 +110,7 @@ export const GridRootStyles = styled('div', {
     [`& .${gridClasses.columnHeader}:focus-within, & .${gridClasses.cell}:focus-within`]: {
       outline: `solid ${
         theme.vars
-          ? `rgba(${theme.vars.palette.primary.main} / 0.5)`
+          ? `rgba(${theme.vars.palette.primary.mainChannel} / 0.5)`
           : alpha(theme.palette.primary.main, 0.5)
       } 1px`,
       outlineWidth: 1,
@@ -266,7 +266,7 @@ export const GridRootStyles = styled('div', {
       },
       '&.Mui-selected': {
         backgroundColor: theme.vars
-          ? `rgba(${theme.vars.palette.primary.main} / ${theme.vars.palette.action.selectedOpacity})`
+          ? `rgba(${theme.vars.palette.primary.mainChannel} / ${theme.vars.palette.action.selectedOpacity})`
           : alpha(theme.palette.primary.main, theme.palette.action.selectedOpacity),
         '&:hover, &.Mui-hovered': {
           backgroundColor: alpha(

@@ -14,12 +14,12 @@ const Value = styled('div')(({ theme }) => ({
   justifyContent: 'flex-end',
   '&.good': {
     backgroundColor: theme.vars
-      ? `rgba(${theme.vars.palette.success.main} /  0.3)`
+      ? `rgba(${theme.vars.palette.success.mainChannel} /  0.3)`
       : alpha(theme.palette.success.main, 0.3),
   },
   '&.bad': {
     backgroundColor: theme.vars
-      ? `rgba(${theme.vars.palette.error.main} /  0.3)`
+      ? `rgba(${theme.vars.palette.error.mainChannel} /  0.3)`
       : alpha(theme.palette.error.main, 0.3),
   },
 }));
