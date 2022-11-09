@@ -35,7 +35,7 @@
     "build:node": "node ../../scripts/build node",
     "build:stable": "node ../../scripts/build stable",
     "build:copy-files": "node ../../scripts/copyFiles.mjs",
-    "build:types": "node ../../scripts/buildTypes",
+    "build:types": "node ../../scripts/buildTypes.mjs",
     "prebuild": "rimraf build tsconfig.build.tsbuildinfo"
   },
   "repository": {
