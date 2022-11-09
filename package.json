@@ -56,7 +56,7 @@
     "typescript:ci": "lerna run --concurrency 6 --no-bail --no-sort typescript",
     "build:codesandbox": "yarn release:build",
     "install:codesandbox": "PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1 yarn install --ignore-engines",
-    "release:changelog": "node scripts/releaseChangelog",
+    "release:changelog": "node scripts/releaseChangelog.mjs",
     "release:version": "lerna version --exact --no-changelog --no-push --no-git-tag-version",
     "release:build": "lerna run --parallel --scope \"@mui/*\" build",
     "release:publish": "lerna publish from-package --dist-tag next --contents build",
