@@ -29,27 +29,21 @@ You need to install 3 different types of package to make the pickers work:
 
 1. **The component** (`@mui/x-date-pickers` or `@mui/x-date-pickers-pro`) manages the rendering.
 2. **The date-library** ([`moment`](https://momentjs.com/), [`dayjs`](https://day.js.org/), ...) manages the date manipulation.
-3. **The adapter** ([`@date-io`](https://github.com/dmtrKovalenko/date-io#projects)) exposes your favorite **date-library** under a unified api used by **component**.
+3. **The adapter** (`@mui/x-date-pickers/AdapterDateFns`) exposes your favorite **date-library** under a unified api used by **component** thanks to [`@date-io`](https://github.com/dmtrKovalenko/date-io#projects).
 
 First you have to install the date-library you want to use to manage dates, and the component package:
 
 {{"demo": "InstructionsNoSnap.js", "bg": "inline", "hideToolbar": true, "disableAd": true}}
 
-We currently support 4 different date-libraries:
+We support different date-libraries and their specific calendar system:
 
-- [date-fns](https://date-fns.org/) adapted by `@date-io/date-fns`.
-- [Day.js](https://day.js.org/) adapted by `@date-io/dayjs`.
-- [Luxon](https://moment.github.io/luxon/#/) adapted by `@date-io/luxon`.
-- [Moment.js](https://momentjs.com/) adapted by `@date-io/moment`.
-
-If you need to use `js-joda`, `date-fns-jalali`, `moment-jalaali`, or `moment-hijri` library, you should be able to find the corresponding date-library from [`@date-io`](https://github.com/dmtrKovalenko/date-io#projects).
-In such a case, you will have to install both the _date-library_ and the corresponding `@date-io` adapter.
-
-```jsx
-// To use moment-jalaali
-yarn add moment-jalaali
-yarn add @date-io/jalaali
-```
+- [date-fns](https://date-fns.org/): `@mui/x-date-pickers/AdapterDateFns`, adapted by `@date-io/date-fns`.
+- [Day.js](https://day.js.org/): `@mui/x-date-pickers/AdapterDayjs`, adapted by `@date-io/dayjs`.
+- [Luxon](https://moment.github.io/luxon/#/): `@mui/x-date-pickers/AdapterLuxon`, adapted by `@date-io/luxon`.
+- [Moment.js](https://momentjs.com/): `@mui/x-date-pickers/AdapterMoment`, adapted by `@date-io/moment`.
+- [date-fns-jalali](https://https://github.com/date-fns-jalali/date-fns-jalali/): `@mui/x-date-pickers/AdapterDateFnsJalali`, adapted by `@date-io/date-fns-jalali`.
+- [moment-jalaali](https://https://github.com/jalaali/moment-jalaali/): `@mui/x-date-pickers/AdapterMomentJalaali`, adapted by `@date-io/jalaali`.
+- [moment-hijri](https://https://github.com/xsoh/moment-hijri/): `@mui/x-date-pickers/AdapterMomentHijri`, adapted by `@date-io/hijri`.
 
 #### Code setup
 

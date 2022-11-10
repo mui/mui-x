@@ -59,7 +59,7 @@ See the documentation page [about localization](/x/react-date-pickers/date-picke
 
 ## Jalali calendar system
 
-Install `date-fns-jalali` and use `@date-io/date-fns-jalali` adapter to support [Jalali calendar](https://en.wikipedia.org/wiki/Jalali_calendar).
+Install `date-fns-jalali` and use `@mui/x-date-pickers/AdapterDateFnsJalali` adapter to support [Jalali calendar](https://en.wikipedia.org/wiki/Jalali_calendar).
 
 {{"demo": "JalaliDatePicker.js"}}
 
