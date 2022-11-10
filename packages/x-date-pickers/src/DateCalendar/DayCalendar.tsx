@@ -65,12 +65,6 @@ export interface ExportedDayCalendarProps<TDate>
    */
   displayWeekNumber?: boolean;
   /**
-   * Get the week number form keek first day
-   * @param {TDate} date The first day of the week.
-   * @returns {number} The displayed week number
-   */
-  getWeekNumber?: (date: TDate) => number;
-  /**
    * Calendar will show more weeks in order to match this value.
    * Put it to 6 for having fix number of week in Gregorian calendars
    * @default undefined
@@ -322,11 +316,8 @@ export function DayCalendar<TDate>(inProps: DayCalendarProps<TDate>) {
     onFocusedViewChange,
     gridLabelId,
     displayWeekNumber,
-    getWeekNumber: getWeekNumberProp,
     fixedWeekNumber,
   } = props;
-
-  const getWeekNumber = getWeekNumberProp ?? utils.getWeekNumber;
 
   const isDateDisabled = useIsDateDisabled({
     shouldDisableDate,
@@ -513,7 +504,7 @@ export function DayCalendar<TDate>(inProps: DayCalendarProps<TDate>) {
   return (
     <div role="grid" aria-labelledby={gridLabelId}>
       <PickersCalendarDayHeader role="row" className={classes.header}>
-        {displayWeekNumber && getWeekNumber && (
+        {displayWeekNumber && (
           <PickersCalendarWeekNumberLabel
             variant="caption"
             role="columnheader"
@@ -562,13 +553,15 @@ export function DayCalendar<TDate>(inProps: DayCalendarProps<TDate>) {
                 key={`week-${week[0]}`}
                 className={classes.weekContainer}
               >
-                {displayWeekNumber && getWeekNumber && (
+                {displayWeekNumber && (
                   <PickersCalendarWeekNumber
                     className={classes.weekNumber}
                     role="rowheader"
-                    aria-label={localeText.calendarWeekNumberAriaLabelText(getWeekNumber(week[0]))}
+                    aria-label={localeText.calendarWeekNumberAriaLabelText(
+                      utils.getWeekNumber(week[0]),
+                    )}
                   >
-                    {localeText.calendarWeekNumberText(getWeekNumber(week[0]))}
+                    {localeText.calendarWeekNumberText(utils.getWeekNumber(week[0]))}
                   </PickersCalendarWeekNumber>
                 )}
                 {week.map((day) => (

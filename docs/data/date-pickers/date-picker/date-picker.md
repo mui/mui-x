@@ -110,10 +110,7 @@ This value is usually set to `6` for Gregorian calendars, because months display
 ### Add week number
 
 To display week number, use the `displayWeekNumber`.
-If you do not import your `dateAdapter` from `@mui/x-date-pickers` or `@mui/x-date-pickers-pro`, you will have to provide the method `getWeekNumber`.
-It takes the first day of the week as an input and returns the week number.
-
-To customize the string displayed, use the localization key`localeText.calendarWeekNumberText`.
+You can customize the string displayed, by using the localization key`localeText.calendarWeekNumberText`.
 
 {{"demo": "AddWeekNumber.js"}}
 
