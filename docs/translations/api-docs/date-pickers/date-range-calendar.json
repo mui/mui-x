@@ -14,7 +14,6 @@
     "disablePast": "If <code>true</code> disable values after the current date for date components, time for time components and both for date time components.",
     "displayWeekNumber": "If <code>true</code>, the week number will be display in the calendar. Needs to provide <code>getWeekNumber</code> if the adapter does not support <code>getWeekNumber</code>",
     "fixedWeekNumber": "Calendar will show more weeks in order to match this value. Put it to 6 for having fix number of week in Gregorian calendars",
-    "getWeekNumber": "Get the week number form keek first day<br><br><strong>Signature:</strong><br><code>function(date: TDate) =&gt; number</code><br><em>date:</em> The first day of the week.<br> <em>returns</em> (number): The displayed week number",
     "loading": "If <code>true</code> renders <code>LoadingComponent</code> in calendar instead of calendar view. Can be used to preload information and show it in calendar.",
     "maxDate": "Maximal selectable date.",
     "minDate": "Minimal selectable date.",

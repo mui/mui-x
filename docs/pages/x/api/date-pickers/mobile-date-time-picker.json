@@ -34,7 +34,6 @@
       "type": { "name": "func" },
       "default": "(date, utils) => `Choose date, selected date is ${utils.format(date, 'fullDate')}`"
     },
-    "getWeekNumber": { "type": { "name": "func" } },
     "InputAdornmentProps": { "type": { "name": "object" } },
     "inputFormat": { "type": { "name": "string" } },
     "inputRef": {

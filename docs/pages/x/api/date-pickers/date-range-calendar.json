@@ -19,7 +19,6 @@
     "disablePast": { "type": { "name": "bool" } },
     "displayWeekNumber": { "type": { "name": "bool" } },
     "fixedWeekNumber": { "type": { "name": "number" }, "default": "undefined" },
-    "getWeekNumber": { "type": { "name": "func" } },
     "loading": { "type": { "name": "bool" } },
     "maxDate": { "type": { "name": "any" } },
     "minDate": { "type": { "name": "any" } },
