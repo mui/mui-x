@@ -7,11 +7,14 @@ import { useGridApiMethod } from '../../utils';
 export const useGridStatePersistence = (apiRef: React.MutableRefObject<GridApiCommunity>) => {
   const exportState = React.useCallback<
     GridStatePersistenceApi<GridInitialStateCommunity>['exportState']
-  >(() => {
-    const stateToExport = apiRef.current.unstable_applyPipeProcessors('exportState', {});
+  >(
+    (params = {}) => {
+      const stateToExport = apiRef.current.unstable_applyPipeProcessors('exportState', {}, params);
 
-    return stateToExport as GridInitialStateCommunity;
-  }, [apiRef]);
+      return stateToExport as GridInitialStateCommunity;
+    },
+    [apiRef],
+  );
 
   const restoreState = React.useCallback<
     GridStatePersistenceApi<GridInitialStateCommunity>['restoreState']

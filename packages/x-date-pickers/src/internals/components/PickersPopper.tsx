@@ -4,15 +4,18 @@ import Paper, { PaperProps as MuiPaperProps } from '@mui/material/Paper';
 import Popper, { PopperProps as MuiPopperProps } from '@mui/material/Popper';
 import TrapFocus, { TrapFocusProps as MuiTrapFocusProps } from '@mui/material/Unstable_TrapFocus';
 import { useForkRef, useEventCallback, ownerDocument } from '@mui/material/utils';
-import { styled } from '@mui/material/styles';
+import { styled, useThemeProps } from '@mui/material/styles';
+import { unstable_composeClasses as composeClasses } from '@mui/material';
 import { TransitionProps as MuiTransitionProps } from '@mui/material/transitions';
 import { PickersActionBar, PickersActionBarProps } from '../../PickersActionBar';
+import { PickersSlotsComponent } from './wrappers/WrapperProps';
+import { getPickersPopperUtilityClass, PickersPopperClasses } from './pickersPopperClasses';
 
-export interface PickersPopperSlotsComponent {
-  ActionBar: React.ElementType<PickersActionBarProps>;
-}
+export interface PickersPopperSlotsComponent extends PickersSlotsComponent {}
+
 export interface PickersPopperSlotsComponentsProps {
   actionBar: Omit<PickersActionBarProps, 'onAccept' | 'onClear' | 'onCancel' | 'onSetToday'>;
+  paperContent: Record<string, any>;
 }
 
 export interface ExportedPickerPaperProps {
@@ -48,13 +51,33 @@ export interface PickerPopperProps extends ExportedPickerPopperProps, ExportedPi
   onSetToday: () => void;
   components?: Partial<PickersPopperSlotsComponent>;
   componentsProps?: Partial<PickersPopperSlotsComponentsProps>;
+  classes?: Partial<PickersPopperClasses>;
 }
 
-const PickersPopperRoot = styled(Popper)<{ ownerState: PickerPopperProps }>(({ theme }) => ({
+const useUtilityClasses = (ownerState: PickerPopperProps) => {
+  const { classes } = ownerState;
+
+  const slots = {
+    root: ['root'],
+    paper: ['paper'],
+  };
+
+  return composeClasses(slots, getPickersPopperUtilityClass, classes);
+};
+
+const PickersPopperRoot = styled(Popper, {
+  name: 'MuiPickersPopper',
+  slot: 'Root',
+  overridesResolver: (_, styles) => styles.root,
+})(({ theme }) => ({
   zIndex: theme.zIndex.modal,
 }));
 
-const PickersPopperPaper = styled(Paper)<{
+const PickersPopperPaper = styled(Paper, {
+  name: 'MuiPickersPopper',
+  slot: 'Paper',
+  overridesResolver: (_, styles) => styles.paper,
+})<{
   ownerState: PickerPopperProps & Pick<MuiPopperProps, 'placement'>;
 }>(({ ownerState }) => ({
   transformOrigin: 'top center',
@@ -208,7 +231,8 @@ function useClickAwayListener(
   return [nodeRef, handleSynthetic, handleSynthetic];
 }
 
-export const PickersPopper = (props: PickerPopperProps) => {
+export function PickersPopper(inProps: PickerPopperProps) {
+  const props = useThemeProps({ props: inProps, name: 'MuiPickersPopper' });
   const {
     anchorEl,
     children,
@@ -256,7 +280,13 @@ export const PickersPopper = (props: PickerPopperProps) => {
       lastFocusedElementRef.current &&
       lastFocusedElementRef.current instanceof HTMLElement
     ) {
-      lastFocusedElementRef.current.focus();
+      // make sure the button is flushed with updated label, before returning focus to it
+      // avoids issue, where screen reader could fail to announce selected date after selection
+      setTimeout(() => {
+        if (lastFocusedElementRef.current instanceof HTMLElement) {
+          lastFocusedElementRef.current.focus();
+        }
+      });
     }
   }, [open, role]);
 
@@ -269,6 +299,7 @@ export const PickersPopper = (props: PickerPopperProps) => {
   const handlePaperRef = useForkRef(handleRef, clickAwayRef as React.Ref<HTMLDivElement>);
 
   const ownerState = props;
+  const classes = useUtilityClasses(ownerState);
   const {
     onClick: onPaperClickProp,
     onTouchStart: onPaperTouchStartProp,
@@ -284,6 +315,7 @@ export const PickersPopper = (props: PickerPopperProps) => {
   };
 
   const ActionBar = components?.ActionBar ?? PickersActionBar;
+  const PaperContent = components?.PaperContent || React.Fragment;
 
   return (
     <PickersPopperRoot
@@ -291,14 +323,18 @@ export const PickersPopper = (props: PickerPopperProps) => {
       role={role}
       open={open}
       anchorEl={anchorEl}
-      ownerState={ownerState}
       onKeyDown={handleKeyDown}
+      className={classes.root}
       {...PopperProps}
     >
       {({ TransitionProps, placement }) => (
         <TrapFocus
           open={open}
           disableAutoFocus
+          // pickers are managing focus position manually
+          // without this prop the focus is returned to the button before `aria-label` is updated
+          // which would force screen readers to read too old label
+          disableRestoreFocus
           disableEnforceFocus={role === 'tooltip'}
           isEnabled={() => true}
           {...TrapFocusProps}
@@ -321,21 +357,24 @@ export const PickersPopper = (props: PickerPopperProps) => {
                 }
               }}
               ownerState={{ ...ownerState, placement }}
+              className={classes.paper}
               {...otherPaperProps}
             >
-              {children}
-              <ActionBar
-                onAccept={onAccept}
-                onClear={onClear}
-                onCancel={onCancel}
-                onSetToday={onSetToday}
-                actions={[]}
-                {...componentsProps?.actionBar}
-              />
+              <PaperContent {...componentsProps?.paperContent}>
+                {children}
+                <ActionBar
+                  onAccept={onAccept}
+                  onClear={onClear}
+                  onCancel={onCancel}
+                  onSetToday={onSetToday}
+                  actions={[]}
+                  {...componentsProps?.actionBar}
+                />
+              </PaperContent>
             </PickersPopperPaper>
           </TransitionComponent>
         </TrapFocus>
       )}
     </PickersPopperRoot>
   );
-};
+}

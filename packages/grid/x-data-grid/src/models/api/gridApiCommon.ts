@@ -26,6 +26,7 @@ import type { GridStrategyProcessingApi } from '../../hooks/core/strategyProcess
 import type { GridDimensionsApi } from '../../hooks/features/dimensions';
 import type { GridPaginationApi } from '../../hooks/features/pagination';
 import type { GridStatePersistenceApi } from '../../hooks/features/statePersistence';
+import { GridColumnGroupingApi } from './gridColumnGroupingApi';
 
 type GridStateApiUntyped = {
   [key in keyof (GridStateApi<any> & GridStatePersistenceApi<any>)]: any;
@@ -58,4 +59,5 @@ export interface GridApiCommon
     GridClipboardApi,
     GridScrollApi,
     GridColumnSpanningApi,
-    GridStateApiUntyped {}
+    GridStateApiUntyped,
+    GridColumnGroupingApi {}

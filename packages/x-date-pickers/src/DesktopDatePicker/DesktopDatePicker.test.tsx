@@ -46,6 +46,33 @@ describe('<DesktopDatePicker />', () => {
     expect(getByTestId('component-test')).not.to.equal(null);
   });
 
+  it('prop: components.PaperContent', () => {
+    function CustomPaperContent({ children }) {
+      return (
+        <div>
+          <p>test custom content</p>
+          {children}
+        </div>
+      );
+    }
+    const testDate = adapterToUse.date(new Date(2000, 0, 1));
+    render(
+      <DesktopDatePicker
+        renderInput={(params) => <TextField {...params} />}
+        onChange={() => {}}
+        value={testDate}
+        components={{
+          PaperContent: CustomPaperContent,
+        }}
+      />,
+    );
+
+    openPicker({ type: 'date', variant: 'desktop' });
+
+    expect(screen.getByText('test custom content')).not.equal(null);
+    expect(screen.getByText(adapterToUse.format(testDate, 'monthAndYear'))).not.equal(null);
+  });
+
   ['readOnly', 'disabled'].forEach((prop) => {
     it(`cannot be opened when "Choose date" is clicked when ${prop}={true}`, () => {
       const handleOpen = spy();
@@ -313,7 +340,7 @@ describe('<DesktopDatePicker />', () => {
       expect(onClose.callCount).to.equal(0);
 
       // Change the date
-      fireEvent.click(screen.getByLabelText('Jan 8, 2018'));
+      fireEvent.click(screen.getByRole('gridcell', { name: '8' }));
       expect(onChange.callCount).to.equal(1);
       expect(onChange.lastCall.args[0]).toEqualDateTime(new Date(2018, 0, 8));
       expect(onAccept.callCount).to.equal(1);
@@ -339,14 +366,14 @@ describe('<DesktopDatePicker />', () => {
       openPicker({ type: 'date', variant: 'desktop' });
 
       // Change the date
-      userEvent.mousePress(screen.getByLabelText('Jan 8, 2018'));
+      userEvent.mousePress(screen.getByRole('gridcell', { name: '8' }));
       expect(onChange.callCount).to.equal(1);
       expect(onChange.lastCall.args[0]).toEqualDateTime(new Date(2018, 0, 8));
       expect(onAccept.callCount).to.equal(0);
       expect(onClose.callCount).to.equal(0);
 
       // Change the date
-      userEvent.mousePress(screen.getByLabelText('Jan 6, 2018'));
+      userEvent.mousePress(screen.getByRole('gridcell', { name: '6' }));
       expect(onChange.callCount).to.equal(2);
       expect(onChange.lastCall.args[0]).toEqualDateTime(new Date(2018, 0, 6));
       expect(onAccept.callCount).to.equal(0);
@@ -372,7 +399,7 @@ describe('<DesktopDatePicker />', () => {
       openPicker({ type: 'date', variant: 'desktop' });
 
       // Change the date (already tested)
-      userEvent.mousePress(screen.getByLabelText('Jan 8, 2018'));
+      userEvent.mousePress(screen.getByRole('gridcell', { name: '8' }));
 
       // Dismiss the picker
       // eslint-disable-next-line material-ui/disallow-active-element-as-key-event-target -- don't care
@@ -427,7 +454,7 @@ describe('<DesktopDatePicker />', () => {
       openPicker({ type: 'date', variant: 'desktop' });
 
       // Change the date (already tested)
-      userEvent.mousePress(screen.getByLabelText('Jan 8, 2018'));
+      userEvent.mousePress(screen.getByRole('gridcell', { name: '8' }));
 
       // Dismiss the picker
       userEvent.mousePress(document.body);
@@ -511,6 +538,56 @@ describe('<DesktopDatePicker />', () => {
       expect(onClose.callCount).to.equal(1);
     });
 
+    it('should call onChange only once with empty value and reset input value when pressing the "Clear" button after entering invalid date manually', () => {
+      const onChange = spy();
+      const initialValue = adapterToUse.date(new Date(2018, 0, 1));
+
+      render(
+        <WrappedDesktopDatePicker
+          onChange={onChange}
+          initialValue={initialValue}
+          componentsProps={{ actionBar: { actions: ['clear'] } }}
+        />,
+      );
+
+      fireEvent.change(screen.getByRole('textbox'), { target: { value: '13/01/2018' } });
+
+      openPicker({ type: 'date', variant: 'desktop' });
+      fireEvent.click(screen.getByText(/clear/i));
+      expect(onChange.callCount).to.equal(2);
+      expect(onChange.lastCall.args[0]).to.equal(null);
+      expect(screen.getByRole('textbox')).to.have.value('');
+
+      openPicker({ type: 'date', variant: 'desktop' });
+      fireEvent.click(screen.getByText(/clear/i));
+      expect(onChange.callCount).to.equal(2);
+    });
+
+    it('should call onChange only once with empty value and reset input value when pressing the "OK" (accept) button after entering invalid date manually', () => {
+      const onChange = spy();
+      const initialValue = adapterToUse.date(new Date(2018, 0, 1));
+
+      render(
+        <WrappedDesktopDatePicker
+          onChange={onChange}
+          initialValue={initialValue}
+          componentsProps={{ actionBar: { actions: ['accept'] } }}
+        />,
+      );
+
+      fireEvent.change(screen.getByRole('textbox'), { target: { value: '13/01/2018' } });
+
+      openPicker({ type: 'date', variant: 'desktop' });
+      fireEvent.click(screen.getByText(/ok/i));
+      expect(onChange.callCount).to.equal(2);
+      expect(onChange.lastCall.args[0]).to.equal(null);
+      expect(screen.getByRole('textbox')).to.have.value('');
+
+      openPicker({ type: 'date', variant: 'desktop' });
+      fireEvent.click(screen.getByText(/ok/i));
+      expect(onChange.callCount).to.equal(2);
+    });
+
     it('should not call onChange or onAccept when pressing "Clear" button with an already null value', () => {
       const onChange = spy();
       const onAccept = spy();
@@ -552,7 +629,7 @@ describe('<DesktopDatePicker />', () => {
       openPicker({ type: 'date', variant: 'desktop' });
 
       // Change the date (same value)
-      userEvent.mousePress(screen.getByLabelText('Jan 1, 2018'));
+      userEvent.mousePress(screen.getByRole('gridcell', { name: '1' }));
       expect(onChange.callCount).to.equal(0); // Don't call onChange since the value did not change
       expect(onAccept.callCount).to.equal(0);
       expect(onClose.callCount).to.equal(1);
@@ -583,11 +660,82 @@ describe('<DesktopDatePicker />', () => {
       expect(onClose.callCount).to.equal(0);
 
       // Change the date (same value)
-      userEvent.mousePress(screen.getByLabelText('Jan 1, 2025'));
+      userEvent.mousePress(screen.getByRole('gridcell', { name: '1' }));
       expect(onChange.callCount).to.equal(1); // Don't call onChange again since the value did not change
       expect(onAccept.callCount).to.equal(1);
       expect(onAccept.lastCall.args[0]).toEqualDateTime(new Date(2025, 0, 1));
       expect(onClose.callCount).to.equal(1);
     });
+  });
+
+  describe('Month navigation', () => {
+    it('should not allow to navigate to previous month if props.minDate is after the last date of the previous month', () => {
+      render(
+        <WrappedDesktopDatePicker
+          initialValue={adapterToUse.date(new Date(2018, 1, 10))}
+          minDate={adapterToUse.date(new Date(2018, 1, 5))}
+        />,
+      );
+
+      openPicker({ type: 'date', variant: 'desktop' });
+
+      expect(screen.getByLabelText('Previous month')).to.have.attribute('disabled');
+    });
+
+    it('should allow to navigate to previous month if props.minDate is the last date of the previous month', () => {
+      render(
+        <WrappedDesktopDatePicker
+          initialValue={adapterToUse.date(new Date(2018, 1, 10))}
+          minDate={adapterToUse.date(new Date(2018, 0, 31))}
+        />,
+      );
+
+      openPicker({ type: 'date', variant: 'desktop' });
+
+      expect(screen.getByLabelText('Previous month')).not.to.have.attribute('disabled');
+    });
+
+    it('should not allow to navigate to previous month if props.maxDate is before the last date of the next month', () => {
+      render(
+        <WrappedDesktopDatePicker
+          initialValue={adapterToUse.date(new Date(2018, 1, 10))}
+          maxDate={adapterToUse.date(new Date(2018, 1, 20))}
+        />,
+      );
+
+      openPicker({ type: 'date', variant: 'desktop' });
+
+      expect(screen.getByLabelText('Next month')).to.have.attribute('disabled');
+    });
+
+    it('should allow to navigate to next month if props.maxDate is the first date of the next month', () => {
+      render(
+        <WrappedDesktopDatePicker
+          initialValue={adapterToUse.date(new Date(2018, 1, 10))}
+          minDate={adapterToUse.date(new Date(2018, 0, 1))}
+        />,
+      );
+
+      openPicker({ type: 'date', variant: 'desktop' });
+
+      expect(screen.getByLabelText('Next month')).not.to.have.attribute('disabled');
+    });
+
+    it('should allow to navigate to previous and next month if props.minDate == null', () => {
+      render(<WrappedDesktopDatePicker initialValue={null} minDate={null} />);
+
+      openPicker({ type: 'date', variant: 'desktop' });
+
+      expect(screen.getByLabelText('Previous month')).not.to.have.attribute('disabled');
+      expect(screen.getByLabelText('Next month')).not.to.have.attribute('disabled');
+    });
+  });
+
+  it('should throw console warning when invalid `openTo` prop is provided', () => {
+    expect(() => {
+      render(<WrappedDesktopDatePicker initialValue={null} openTo="month" />);
+
+      openPicker({ type: 'date', variant: 'desktop' });
+    }).toWarnDev('MUI: `openTo="month"` is not a valid prop.');
   });
 });

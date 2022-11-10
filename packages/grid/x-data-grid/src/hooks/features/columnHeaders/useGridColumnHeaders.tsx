@@ -1,6 +1,7 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { useForkRef } from '@mui/material/utils';
+import { styled } from '@mui/material/styles';
 import { defaultMemoize } from 'reselect';
 import { useGridApiContext } from '../../utils/useGridApiContext';
 import { useGridSelector } from '../../utils/useGridSelector';
@@ -13,7 +14,11 @@ import {
   gridTabIndexCellSelector,
   gridFocusColumnHeaderSelector,
 } from '../focus/gridFocusStateSelector';
-import { gridDensityHeaderHeightSelector } from '../density/densitySelector';
+import {
+  gridDensityHeaderHeightSelector,
+  gridDensityHeaderGroupingMaxDepthSelector,
+  gridDensityTotalHeaderHeightSelector,
+} from '../density/densitySelector';
 import { gridFilterActiveItemsLookupSelector } from '../filter/gridFilterSelector';
 import { gridSortColumnLookupSelector } from '../sorting/gridSortingSelector';
 import { gridColumnMenuSelector } from '../columnMenu/columnMenuSelector';
@@ -25,10 +30,39 @@ import { GridColumnHeaderItem } from '../../../components/columnHeaders/GridColu
 import { getFirstColumnIndexToRender } from '../columns/gridColumnsUtils';
 import { useGridVisibleRows } from '../../utils/useGridVisibleRows';
 import { getRenderableIndexes } from '../virtualization/useGridVirtualScroller';
+import { GridColumnGroupHeader } from '../../../components/columnHeaders/GridColumnGroupHeader';
+import { GridColumnGroup } from '../../../models/gridColumnGrouping';
+import { isDeepEqual } from '../../../utils/utils';
+
+// TODO: add the possibility to switch this value if needed for customization
+const MERGE_EMPTY_CELLS = true;
+
+const GridColumnHeaderRow = styled('div', {
+  name: 'MuiDataGrid',
+  slot: 'ColumnHeaderRow',
+  overridesResolver: (props, styles) => styles.columnHeaderRow,
+})(() => ({
+  display: 'flex',
+}));
+
+interface HeaderInfo {
+  groupId: GridColumnGroup['groupId'] | null;
+  groupParents: GridColumnGroup['groupId'][];
+  width: number;
+  fields: string[];
+  colIndex: number;
+  description?: string;
+}
 
 interface UseGridColumnHeadersProps {
   innerRef?: React.Ref<HTMLDivElement>;
   minColumnIndex?: number;
+}
+
+interface GetHeadersParams {
+  renderContext: GridRenderContext | null;
+  minFirstColumn?: number;
+  maxLastColumn?: number;
 }
 
 function isUIEvent(event: any): event is React.UIEvent {
@@ -48,6 +82,8 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
   const cellTabIndexState = useGridSelector(apiRef, gridTabIndexCellSelector);
   const columnHeaderFocus = useGridSelector(apiRef, gridFocusColumnHeaderSelector);
   const headerHeight = useGridSelector(apiRef, gridDensityHeaderHeightSelector);
+  const headerGroupingMaxDepth = useGridSelector(apiRef, gridDensityHeaderGroupingMaxDepthSelector);
+  const totalHeaderHeight = useGridSelector(apiRef, gridDensityTotalHeaderHeightSelector);
   const filterColumnLookup = useGridSelector(apiRef, gridFilterActiveItemsLookupSelector);
   const sortColumnLookup = useGridSelector(apiRef, gridSortColumnLookupSelector);
   const columnMenuState = useGridSelector(apiRef, gridColumnMenuSelector);
@@ -187,14 +223,8 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
 
   useGridApiEventHandler(apiRef, 'rowsScroll', handleScroll);
 
-  const getColumns = (
-    params?: {
-      renderContext: GridRenderContext | null;
-      minFirstColumn?: number;
-      maxLastColumn?: number;
-    },
-    other = {},
-  ) => {
+  // Helper for computation common between getColumnHeaders and getColumnGroupHeaders
+  const getColumnsToRender = (params?: GetHeadersParams) => {
     const {
       renderContext: nextRenderContext = renderContext,
       minFirstColumn = minColumnIndex,
@@ -204,8 +234,6 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
     if (!nextRenderContext) {
       return null;
     }
-
-    const columns: JSX.Element[] = [];
 
     const [firstRowToRender, lastRowToRender] = getRenderableIndexes({
       firstIndex: nextRenderContext.firstRowIndex,
@@ -232,6 +260,25 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
 
     const renderedColumns = visibleColumns.slice(firstColumnToRender, lastColumnToRender);
 
+    return {
+      renderedColumns,
+      firstColumnToRender,
+      lastColumnToRender,
+      minFirstColumn,
+      maxLastColumn,
+    };
+  };
+
+  const getColumnHeaders = (params?: GetHeadersParams, other = {}) => {
+    const columnsToRender = getColumnsToRender(params);
+
+    if (columnsToRender == null) {
+      return null;
+    }
+
+    const { renderedColumns, firstColumnToRender } = columnsToRender;
+
+    const columns: JSX.Element[] = [];
     for (let i = 0; i < renderedColumns.length; i += 1) {
       const column = renderedColumns[i];
 
@@ -268,20 +315,203 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
       );
     }
 
+    return (
+      <GridColumnHeaderRow role="row" aria-rowindex={headerGroupingMaxDepth + 1}>
+        {columns}
+      </GridColumnHeaderRow>
+    );
+  };
+
+  const getParents = (path: string[] = [], depth: number) => path.slice(0, depth + 1);
+
+  const getColumnGroupHeaders = (params?: GetHeadersParams) => {
+    if (headerGroupingMaxDepth === 0) {
+      return null;
+    }
+    const columnsToRender = getColumnsToRender(params);
+
+    if (columnsToRender == null || columnsToRender.renderedColumns.length === 0) {
+      return null;
+    }
+
+    const { renderedColumns, firstColumnToRender, lastColumnToRender, maxLastColumn } =
+      columnsToRender;
+
+    const columns: JSX.Element[] = [];
+
+    const headerToRender: {
+      leftOverflow: number;
+      elements: HeaderInfo[];
+    }[] = [];
+
+    for (let depth = 0; depth < headerGroupingMaxDepth; depth += 1) {
+      // Initialize the header line with a grouping item containing all the columns on the left of the virtualization which are in the same group as the first group to render
+      const initialHeader: HeaderInfo[] = [];
+      let leftOverflow = 0;
+
+      let columnIndex = firstColumnToRender - 1;
+      const firstColumnToRenderGroup = visibleColumns[firstColumnToRender]?.groupPath?.[depth]!;
+
+      // The array of parent is used to manage empty grouping cell
+      // When two empty grouping cell are next to each other, we merge them if the belong to the same group.
+      const firstColumnToRenderGroupParents = getParents(
+        visibleColumns[firstColumnToRender]?.groupPath,
+        depth,
+      );
+      while (
+        firstColumnToRenderGroup !== null &&
+        columnIndex >= minColumnIndex &&
+        visibleColumns[columnIndex]?.groupPath &&
+        isDeepEqual(
+          getParents(visibleColumns[columnIndex]?.groupPath, depth),
+          firstColumnToRenderGroupParents,
+        )
+      ) {
+        const column = visibleColumns[columnIndex];
+
+        leftOverflow += column.computedWidth ?? 0;
+
+        if (initialHeader.length === 0) {
+          initialHeader.push({
+            width: column.computedWidth ?? 0,
+            fields: [column.field],
+            groupId: firstColumnToRenderGroup,
+            groupParents: firstColumnToRenderGroupParents,
+            colIndex: columnIndex,
+          });
+        } else {
+          initialHeader[0].width += column.computedWidth ?? 0;
+          initialHeader[0].fields.push(column.field);
+          initialHeader[0].colIndex = columnIndex;
+        }
+
+        columnIndex -= 1;
+      }
+
+      const depthInfo = renderedColumns.reduce((aggregated, column, i) => {
+        const lastItem: HeaderInfo | undefined = aggregated[aggregated.length - 1];
+
+        if (column.groupPath && column.groupPath.length > depth) {
+          if (lastItem && lastItem.groupId === column.groupPath[depth]) {
+            // Merge with the previous columns
+            return [
+              ...aggregated.slice(0, aggregated.length - 1),
+              {
+                ...lastItem,
+                width: lastItem.width + (column.computedWidth ?? 0),
+                fields: [...lastItem.fields, column.field],
+              },
+            ];
+          }
+          // Create a new grouping
+          return [
+            ...aggregated,
+            {
+              groupId: column.groupPath[depth],
+              groupParents: getParents(column.groupPath, depth),
+              width: column.computedWidth ?? 0,
+              fields: [column.field],
+              colIndex: firstColumnToRender + i,
+            },
+          ];
+        }
+
+        if (
+          MERGE_EMPTY_CELLS &&
+          lastItem &&
+          lastItem.groupId === null &&
+          isDeepEqual(getParents(column.groupPath, depth), lastItem.groupParents)
+        ) {
+          // We merge with previous column
+          return [
+            ...aggregated.slice(0, aggregated.length - 1),
+            {
+              ...lastItem,
+              width: lastItem.width + (column.computedWidth ?? 0),
+              fields: [...lastItem.fields, column.field],
+            },
+          ];
+        }
+        // We create new empty cell
+        return [
+          ...aggregated,
+          {
+            groupId: null,
+            groupParents: getParents(column.groupPath, depth),
+            width: column.computedWidth ?? 0,
+            fields: [column.field],
+            colIndex: firstColumnToRender + i,
+          },
+        ];
+      }, initialHeader);
+
+      columnIndex = lastColumnToRender;
+      const lastColumnToRenderGroup = depthInfo[depthInfo.length - 1].groupId;
+
+      while (
+        lastColumnToRenderGroup !== null &&
+        columnIndex < maxLastColumn &&
+        visibleColumns[columnIndex]?.groupPath &&
+        visibleColumns[columnIndex]?.groupPath?.[depth] === lastColumnToRenderGroup
+      ) {
+        const column = visibleColumns[columnIndex];
+
+        depthInfo[depthInfo.length - 1].width += column.computedWidth ?? 0;
+        depthInfo[depthInfo.length - 1].fields.push(column.field);
+        columnIndex += 1;
+      }
+
+      headerToRender.push({ leftOverflow, elements: [...depthInfo] });
+    }
+
+    headerToRender.forEach((depthInfo, depthIndex) => {
+      columns.push(
+        <GridColumnHeaderRow
+          style={{
+            height: `${headerHeight}px`,
+            transform: `translateX(-${depthInfo.leftOverflow}px)`,
+          }}
+          key={depthIndex}
+          role="row"
+          aria-rowindex={depthIndex + 1}
+        >
+          {depthInfo.elements.map(({ groupId, width, fields, colIndex }, groupIndex) => {
+            return (
+              <GridColumnGroupHeader
+                key={groupIndex}
+                groupId={groupId}
+                width={width}
+                fields={fields}
+                colIndex={colIndex}
+                depth={depthIndex}
+                isLastColumn={colIndex === visibleColumns.length - fields.length}
+                extendRowFullWidth={!rootProps.disableExtendRowFullWidth}
+                maxDepth={headerToRender.length}
+                height={headerHeight}
+              />
+            );
+          })}
+        </GridColumnHeaderRow>,
+      );
+    });
     return columns;
   };
 
   const rootStyle = {
-    minHeight: headerHeight,
-    maxHeight: headerHeight,
+    minHeight: totalHeaderHeight,
+    maxHeight: totalHeaderHeight,
     lineHeight: `${headerHeight}px`,
   };
 
   return {
     renderContext,
-    getColumns,
+    getColumnHeaders,
+    getColumnGroupHeaders,
     isDragging: !!dragCol,
     getRootProps: (other = {}) => ({ style: rootStyle, ...other }),
-    getInnerProps: () => ({ ref: handleInnerRef, 'aria-rowindex': 1, role: 'row' }),
+    getInnerProps: () => ({
+      ref: handleInnerRef,
+      role: 'rowgroup',
+    }),
   };
 };

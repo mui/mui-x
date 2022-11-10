@@ -23,10 +23,10 @@ _See [the dedicated section](#customize-the-operators) to learn how to create yo
 :::warning
 The `DataGrid` can only filter the rows according to one criterion at the time.
 
-To use multi-filtering, you need to upgrade to the [Pro plan](https://mui.com/store/items/mui-x-pro/).
+To use multi-filtering, you need to upgrade to the [Pro plan](/x/introduction/licensing/#pro-plan) or above.
 :::
 
-## Multi-filtering [<span class="plan-pro"></span>](https://mui.com/store/items/mui-x-pro/)
+## Multi-filtering [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
 
 The following demo lets you filter the rows according to several criteria at the same time.
 
@@ -47,13 +47,13 @@ A filter item represents a filtering rule and is composed of several elements:
 - `filterItem.columnField`: the field on which we want to apply the rule.
 - `filterItem.value`: the value to look for.
 - `filterItem.operatorValue`: name of the operator method to use (e.g. _contains_), matches the `value` key of the operator object.
-- `filterItem.id` ([<span class="plan-pro"></span>](https://mui.com/store/items/mui-x-pro/)): only useful when multiple filters are used.
+- `filterItem.id` ([<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)): only useful when multiple filters are used.
 
 :::info
 Some operators do not need any value (for instance the `isEmpty` operator of the `string` column).
 :::
 
-#### The `linkOperator` [<span class="plan-pro"></span>](https://mui.com/store/items/mui-x-pro/)
+#### The `linkOperator` [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
 
 The `linkOperator` tells the grid if a row should satisfy all (`AND`) filter items or at least one (`OR`) in order to be considered valid.
 
@@ -399,7 +399,7 @@ In the following demo, the quick filter value `"Saint Martin, Saint Lucia"` will
 
 {{"demo": "QuickFilteringCustomizedGrid.js", "bg": "inline", "defaultCodeOpen": false}}
 
-## apiRef [<span class="plan-pro"></span>](https://mui.com/store/items/mui-x-pro/)
+## apiRef [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
 
 :::warning
 Only use this API as the last option. Give preference to the props to control the grid.
@@ -407,7 +407,7 @@ Only use this API as the last option. Give preference to the props to control th
 
 {{"demo": "FilterApiNoSnap.js", "bg": "inline", "hideToolbar": true}}
 
-## Selectors [<span class="plan-pro"></span>](https://mui.com/store/items/mui-x-pro/)
+## Selectors [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
 
 {{"demo": "FilterSelectorsNoSnap.js", "bg": "inline", "hideToolbar": true}}
 

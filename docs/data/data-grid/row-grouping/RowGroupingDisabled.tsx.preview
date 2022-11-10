@@ -1,1 +1,1 @@
-<DataGridPremium {...data} disableSelectionOnClick disableRowGrouping />
+<DataGridPremium {...data} disableRowGrouping />

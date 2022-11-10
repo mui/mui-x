@@ -2,6 +2,7 @@
   "componentDescription": "",
   "propDescriptions": {
     "disableFuture": "If <code>true</code> future days are disabled.",
+    "disableHighlightToday": "If <code>true</code>, today&#39;s date is rendering without highlighting with circle.",
     "disablePast": "If <code>true</code> past days are disabled.",
     "maxDate": "Maximal selectable date. @DateIOType",
     "minDate": "Minimal selectable date. @DateIOType",

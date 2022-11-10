@@ -1,4 +1,4 @@
-<LocalizationProvider dateAdapter={AdapterDateFns}>
+<LocalizationProvider dateAdapter={AdapterDayjs}>
   <StaticDateRangePicker
     displayStaticWrapperAs="desktop"
     label="date range"

@@ -1,5 +1,10 @@
 import * as React from 'react';
-import { GridRenderEditCellParams, useGridApiContext } from '@mui/x-data-grid-premium';
+import {
+  GridRenderEditCellParams,
+  useGridApiContext,
+  useGridRootProps,
+  GridEditModes,
+} from '@mui/x-data-grid-premium';
 import Select, { SelectProps } from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import { MenuProps } from '@mui/material/Menu';
@@ -13,28 +18,20 @@ import { STATUS_OPTIONS } from '../services/static-data';
 
 function EditStatus(props: GridRenderEditCellParams<string>) {
   const { id, value, field } = props;
-
+  const rootProps = useGridRootProps();
   const apiRef = useGridApiContext();
 
-  const handleChange: SelectProps['onChange'] = (event) => {
-    apiRef.current.setEditCellValue({ id, field, value: event.target.value as any }, event);
-    apiRef.current.commitCellChange({ id, field });
-    apiRef.current.setCellMode(id, field, 'view');
+  const handleChange: SelectProps['onChange'] = async (event) => {
+    const isValid = await apiRef.current.setEditCellValue({ id, field, value: event.target.value });
 
-    if ((event as any).key) {
-      // TODO v6: remove once we stop ignoring events fired from portals
-      const params = apiRef.current.getCellParams(id, field);
-      apiRef.current.publishEvent(
-        'cellNavigationKeyDown',
-        params,
-        event as any as React.KeyboardEvent<HTMLElement>,
-      );
+    if (isValid && rootProps.editMode === GridEditModes.Cell) {
+      apiRef.current.stopCellEditMode({ id, field, cellToFocusAfter: 'below' });
     }
   };
 
   const handleClose: MenuProps['onClose'] = (event, reason) => {
     if (reason === 'backdropClick') {
-      apiRef.current.setCellMode(id, field, 'view');
+      apiRef.current.stopCellEditMode({ id, field, ignoreModifications: true });
     }
   };
 

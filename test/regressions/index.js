@@ -4,12 +4,9 @@ import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import { LicenseInfo } from '@mui/x-data-grid-pro';
 import TestViewer from 'test/regressions/TestViewer';
 import { useFakeTimers } from 'sinon';
-import addons, { mockChannel } from '@storybook/addons';
 
-// See https://storybook.js.org/docs/react/workflows/faq#why-is-there-no-addons-channel
-addons.setChannel(mockChannel());
-
-// Remove the license warning from demonstration purposes
+// This license key is only valid for use with Material UI SAS's projects
+// See the terms: https://mui.com/r/x-license-eula
 LicenseInfo.setLicenseKey(
   '61628ce74db2c1b62783a6d438593bc5Tz1NVUktRG9jLEU9MTY4MzQ0NzgyMTI4NCxTPXByZW1pdW0sTE09c3Vic2NyaXB0aW9uLEtWPTI=',
 );
@@ -33,7 +30,6 @@ const blacklist = [
   'docs-date-pickers-localization/LocalizedDatePicker.png', // Redundant
   'docs-date-pickers-time-picker/ResponsiveTimePickers.png', // Redundant
   // 'docs-system-typography',
-  /^stories(.*)(?<!Snap)\.png$/, // Excludes stories that aren't suffixed with 'Snap'.
 ];
 
 const unusedBlacklistPatterns = new Set(blacklist);
@@ -68,34 +64,9 @@ function excludeTest(suite, name) {
   });
 }
 
-// Get all the tests specifically written for preventing regressions.
-const requireStories = require.context('packages/storybook/src/stories', true, /\.(js|ts|tsx)$/);
-const stories = requireStories.keys().reduce((res, path) => {
-  let suite = path
-    .replace('./', '')
-    .replace('.stories', '')
-    .replace(/\.\w+$/, '');
-  suite = `stories-${suite}`;
-
-  const cases = requireStories(path);
-
-  Object.keys(cases).forEach((name) => {
-    if (name !== 'default' && !excludeTest(suite, name)) {
-      res.push({
-        path,
-        suite,
-        name,
-        case: cases[name],
-      });
-    }
-  });
-
-  return res;
-}, []);
-
 // Also use some of the demos to avoid code duplication.
 const requireDocs = require.context('docsx/data', true, /js$/);
-const docs = requireDocs.keys().reduce((res, path) => {
+const tests = requireDocs.keys().reduce((res, path) => {
   const [name, ...suiteArray] = path.replace('./', '').replace('.js', '').split('/').reverse();
   const suite = `docs-${suiteArray.reverse().join('-')}`;
 
@@ -114,8 +85,6 @@ const docs = requireDocs.keys().reduce((res, path) => {
 }, []);
 
 clock.restore();
-
-const tests = stories.concat(docs);
 
 if (unusedBlacklistPatterns.size > 0) {
   console.warn(

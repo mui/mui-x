@@ -36,9 +36,11 @@ import {
   ROW_GROUPING_STRATEGY,
   isGroupingColumn,
   setStrategyAvailability,
+  getGroupingRules,
 } from './gridRowGroupingUtils';
 import { GridApiPremium } from '../../../models/gridApiPremium';
 import { GridGroupingValueGetterParams } from '../../../models/gridGroupingValueGetterParams';
+import { GridGroupingRule } from './gridRowGroupingInterfaces';
 
 export const useGridRowGroupingPreProcessors = (
   apiRef: React.MutableRefObject<GridApiPremium>,
@@ -140,26 +142,31 @@ export const useGridRowGroupingPreProcessors = (
 
   const createRowTree = React.useCallback<GridStrategyProcessor<'rowTreeCreation'>>(
     (params) => {
-      const rowGroupingModel = gridRowGroupingSanitizedModelSelector(apiRef);
+      const sanitizedRowGroupingModel = gridRowGroupingSanitizedModelSelector(apiRef);
       const columnsLookup = gridColumnLookupSelector(apiRef);
-      apiRef.current.unstable_caches.rowGrouping.sanitizedModelOnLastRowTreeCreation =
-        rowGroupingModel;
+      const groupingRules = getGroupingRules({
+        sanitizedRowGroupingModel,
+        columnsLookup,
+      });
+      apiRef.current.unstable_caches.rowGrouping.rulesOnLastRowTreeCreation = groupingRules;
 
       const getCellGroupingCriteria = ({
         row,
         id,
         colDef,
+        groupingRule,
       }: {
         row: GridRowModel;
         id: GridRowId;
         colDef: GridColDef;
+        groupingRule: GridGroupingRule;
       }) => {
         let key: GridKeyValue | null | undefined;
-        if (colDef.groupingValueGetter) {
+        if (groupingRule.groupingValueGetter) {
           const groupingValueGetterParams: GridGroupingValueGetterParams = {
             colDef,
-            field: colDef.field,
-            value: row[colDef.field],
+            field: groupingRule.field,
+            value: row[groupingRule.field],
             id,
             row,
             rowNode: {
@@ -167,9 +174,9 @@ export const useGridRowGroupingPreProcessors = (
               id,
             },
           };
-          key = colDef.groupingValueGetter(groupingValueGetterParams);
+          key = groupingRule.groupingValueGetter(groupingValueGetterParams);
         } else {
-          key = row[colDef.field] as GridKeyValue | null | undefined;
+          key = row[groupingRule.field] as GridKeyValue | null | undefined;
         }
 
         return {
@@ -180,12 +187,13 @@ export const useGridRowGroupingPreProcessors = (
 
       const rows = params.ids.map((rowId) => {
         const row = params.idRowsLookup[rowId];
-        const parentPath = rowGroupingModel
-          .map((groupingField) =>
+        const parentPath = groupingRules
+          .map((groupingRule) =>
             getCellGroupingCriteria({
               row,
               id: rowId,
-              colDef: columnsLookup[groupingField],
+              groupingRule,
+              colDef: columnsLookup[groupingRule.field],
             }),
           )
           .filter((cell) => cell.key != null) as BuildRowTreeGroupingCriteria[];
@@ -219,6 +227,8 @@ export const useGridRowGroupingPreProcessors = (
       return filterRowTreeFromGroupingColumns({
         rowTree,
         isRowMatchingFilters: params.isRowMatchingFilters,
+        filterModel: params.filterModel,
+        apiRef,
       });
     },
     [apiRef],

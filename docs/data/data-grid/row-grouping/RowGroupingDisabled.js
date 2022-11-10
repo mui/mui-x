@@ -7,7 +7,7 @@ export default function RowGroupingDisabled() {
 
   return (
     <div style={{ height: 400, width: '100%' }}>
-      <DataGridPremium {...data} disableSelectionOnClick disableRowGrouping />
+      <DataGridPremium {...data} disableRowGrouping />
     </div>
   );
 }

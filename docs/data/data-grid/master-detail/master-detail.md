@@ -2,7 +2,7 @@
 title: Data Grid - Master detail
 ---
 
-# Data grid - Master detail [<span class="plan-pro"></span>](https://mui.com/store/items/mui-x-pro/)
+# Data grid - Master detail [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
 
 <p class="description">Expand your rows to display additional information.</p>
 
@@ -62,7 +62,7 @@ Note that this may reduce the performance.
 
 ## Infer height from the content
 
-Like [dynamic row height](/x/react-data-grid/rows/#dynamic-row-height), you can also derive the detail panel height from its content.
+Like [dynamic row height](/x/react-data-grid/row-height/#dynamic-row-height), you can also derive the detail panel height from its content.
 For this, pass a function to the `getDetailPanelHeight` prop returning `"auto"`, as below:
 
 ```tsx
@@ -119,7 +119,7 @@ To already start with a few suggested options configured, spread `GRID_DETAIL_PA
   columns={[
     {
       field: GRID_DETAIL_PANEL_TOGGLE_FIELD,
-      renderCell: (params) => <CustomDetailPanelToggle {...params}>
+      renderCell: (params) => <CustomDetailPanelToggle {...params} />
     },
   ]}
 />

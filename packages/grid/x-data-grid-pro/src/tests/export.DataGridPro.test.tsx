@@ -1,6 +1,6 @@
 import { GridColumns, useGridApiRef, DataGridPro, GridApi } from '@mui/x-data-grid-pro';
 // @ts-ignore Remove once the test utils are typed
-import { createRenderer } from '@mui/monorepo/test/utils';
+import { createRenderer, act } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
 import * as React from 'react';
 
@@ -51,12 +51,14 @@ describe('<DataGridPro /> - Export', () => {
       expect(apiRef.current.getDataAsCsv()).to.equal(
         ['id,Brand', '0,Nike', '1,Adidas', '2,Puma'].join('\r\n'),
       );
-      apiRef.current.updateRows([
-        {
-          id: 1,
-          brand: 'Adidas,Reebok',
-        },
-      ]);
+      act(() =>
+        apiRef.current.updateRows([
+          {
+            id: 1,
+            brand: 'Adidas,Reebok',
+          },
+        ]),
+      );
       expect(apiRef.current.getDataAsCsv()).to.equal(
         ['id,Brand', '0,Nike', '1,"Adidas,Reebok"', '2,Puma'].join('\r\n'),
       );

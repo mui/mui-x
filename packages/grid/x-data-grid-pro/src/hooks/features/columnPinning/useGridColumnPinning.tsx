@@ -64,7 +64,7 @@ export const useGridColumnPinning = (
   apiRef: React.MutableRefObject<GridApiPro>,
   props: Pick<
     DataGridProProcessedProps,
-    'disableColumnPinning' | 'pinnedColumns' | 'onPinnedColumnsChange'
+    'disableColumnPinning' | 'initialState' | 'pinnedColumns' | 'onPinnedColumnsChange'
   >,
 ): void => {
   const pinnedColumns = useGridSelector(apiRef, gridPinnedColumnsSelector);
@@ -213,12 +213,21 @@ export const useGridColumnPinning = (
   );
 
   const stateExportPreProcessing = React.useCallback<GridPipeProcessor<'exportState'>>(
-    (prevState) => {
+    (prevState, context) => {
       const pinnedColumnsToExport = gridPinnedColumnsSelector(apiRef.current.state);
-      if (
-        (!pinnedColumnsToExport.left || pinnedColumnsToExport.left.length === 0) &&
-        (!pinnedColumnsToExport.right || pinnedColumnsToExport.right.length === 0)
-      ) {
+
+      const shouldExportPinnedColumns =
+        // Always export if the `exportOnlyDirtyModels` property is activated
+        !context.exportOnlyDirtyModels ||
+        // Always export if the model is controlled
+        props.pinnedColumns != null ||
+        // Always export if the model has been initialized
+        props.initialState?.pinnedColumns != null ||
+        // Export if the model is not empty
+        (pinnedColumnsToExport.left ?? []).length > 0 ||
+        (pinnedColumnsToExport.right ?? []).length > 0;
+
+      if (!shouldExportPinnedColumns) {
         return prevState;
       }
 
@@ -227,7 +236,7 @@ export const useGridColumnPinning = (
         pinnedColumns: pinnedColumnsToExport,
       };
     },
-    [apiRef],
+    [apiRef, props.pinnedColumns, props.initialState?.pinnedColumns],
   );
 
   const stateRestorePreProcessing = React.useCallback<GridPipeProcessor<'restoreState'>>(
@@ -257,7 +266,7 @@ export const useGridColumnPinning = (
   });
 
   const checkIfEnabled = React.useCallback(
-    (methodName) => {
+    (methodName: keyof GridColumnPinningApi) => {
       if (props.disableColumnPinning) {
         throw new Error(
           `MUI: You cannot call \`apiRef.current.${methodName}\` when \`disableColumnPinning\` is true.`,

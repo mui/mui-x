@@ -65,10 +65,10 @@ const GridCellCheckboxForwardRef = React.forwardRef<HTMLInputElement, GridRender
       }
     }, [element, tabIndex]);
 
-    React.useLayoutEffect(() => {
+    React.useEffect(() => {
       if (hasFocus) {
         const input = checkboxElement.current?.querySelector('input');
-        input?.focus();
+        input?.focus({ preventScroll: true });
       } else if (rippleRef.current) {
         // Only available in @mui/material v5.4.1 or later
         rippleRef.current.stop({});
@@ -76,7 +76,7 @@ const GridCellCheckboxForwardRef = React.forwardRef<HTMLInputElement, GridRender
     }, [hasFocus]);
 
     const handleKeyDown = React.useCallback(
-      (event) => {
+      (event: React.KeyboardEvent<HTMLInputElement>) => {
         if (isSpaceKey(event.key)) {
           event.stopPropagation();
         }
@@ -87,12 +87,19 @@ const GridCellCheckboxForwardRef = React.forwardRef<HTMLInputElement, GridRender
       [apiRef, props],
     );
 
-    const isSelectable =
-      !rootProps.isRowSelectable || rootProps.isRowSelectable(apiRef.current.getRowParams(id));
+    if (rowNode.position === 'footer') {
+      return null;
+    }
+
+    const isSelectable = apiRef.current.isRowSelectable(id);
 
     const label = apiRef.current.getLocaleText(
       isChecked ? 'checkboxSelectionUnselectRow' : 'checkboxSelectionSelectRow',
     );
+
+    if (rowNode.isPinned) {
+      return null;
+    }
 
     return (
       <rootProps.components.BaseCheckbox
@@ -174,7 +181,7 @@ GridCellCheckboxForwardRef.propTypes = {
   /**
    * The row model of the row that the current cell belongs to.
    */
-  row: PropTypes.object.isRequired,
+  row: PropTypes.any.isRequired,
   /**
    * The node of the row that the current cell belongs to.
    */
@@ -184,11 +191,12 @@ GridCellCheckboxForwardRef.propTypes = {
    */
   tabIndex: PropTypes.oneOf([-1, 0]).isRequired,
   /**
-   * The cell value, but if the column has valueGetter, use getValue.
+   * The cell value.
+   * If the column has `valueGetter`, use `params.row` to directly access the fields.
    */
   value: PropTypes.any,
 } as any;
 
 export { GridCellCheckboxForwardRef };
 
-export const GridCellCheckboxRenderer = React.memo(GridCellCheckboxForwardRef);
+export const GridCellCheckboxRenderer = GridCellCheckboxForwardRef;

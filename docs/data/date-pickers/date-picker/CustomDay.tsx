@@ -1,20 +1,20 @@
 import * as React from 'react';
+import dayjs, { Dayjs } from 'dayjs';
+import isBetweenPlugin from 'dayjs/plugin/isBetween';
 import { styled } from '@mui/material/styles';
 import TextField from '@mui/material/TextField';
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { StaticDatePicker } from '@mui/x-date-pickers/StaticDatePicker';
 import { PickersDay, PickersDayProps } from '@mui/x-date-pickers/PickersDay';
-import endOfWeek from 'date-fns/endOfWeek';
-import isSameDay from 'date-fns/isSameDay';
-import isWithinInterval from 'date-fns/isWithinInterval';
-import startOfWeek from 'date-fns/startOfWeek';
 
-type CustomPickerDayProps = PickersDayProps<Date> & {
+dayjs.extend(isBetweenPlugin);
+
+interface CustomPickerDayProps extends PickersDayProps<Dayjs> {
   dayIsBetween: boolean;
   isFirstDay: boolean;
   isLastDay: boolean;
-};
+}
 
 const CustomPickersDay = styled(PickersDay, {
   shouldForwardProp: (prop) =>
@@ -39,23 +39,23 @@ const CustomPickersDay = styled(PickersDay, {
 })) as React.ComponentType<CustomPickerDayProps>;
 
 export default function CustomDay() {
-  const [value, setValue] = React.useState<Date | null>(new Date());
+  const [value, setValue] = React.useState<Dayjs | null>(dayjs('2022-04-07'));
 
   const renderWeekPickerDay = (
-    date: Date,
-    selectedDates: Array<Date | null>,
-    pickersDayProps: PickersDayProps<Date>,
+    date: Dayjs,
+    selectedDates: Array<Dayjs | null>,
+    pickersDayProps: PickersDayProps<Dayjs>,
   ) => {
     if (!value) {
       return <PickersDay {...pickersDayProps} />;
     }
 
-    const start = startOfWeek(value);
-    const end = endOfWeek(value);
+    const start = value.startOf('week');
+    const end = value.endOf('week');
 
-    const dayIsBetween = isWithinInterval(date, { start, end });
-    const isFirstDay = isSameDay(date, start);
-    const isLastDay = isSameDay(date, end);
+    const dayIsBetween = date.isBetween(start, end, null, '[]');
+    const isFirstDay = date.isSame(start, 'day');
+    const isLastDay = date.isSame(end, 'day');
 
     return (
       <CustomPickersDay
@@ -69,7 +69,7 @@ export default function CustomDay() {
   };
 
   return (
-    <LocalizationProvider dateAdapter={AdapterDateFns}>
+    <LocalizationProvider dateAdapter={AdapterDayjs}>
       <StaticDatePicker
         displayStaticWrapperAs="desktop"
         label="Week picker"

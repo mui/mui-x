@@ -11,8 +11,17 @@ export interface BaseToolbarProps<TDate, TValue>
     Omit<PickerStatePickerProps<TValue>, 'onDateChange'> {
   ampmInClock?: boolean;
   dateRangeIcon?: React.ReactNode;
-  getMobileKeyboardInputViewButtonText?: () => string;
-  hideTabs?: boolean;
+  /**
+   * Text for aria label of the button switching between input and interactive view.
+   * @deprecated Use the translation key `inputModeToggleButtonAriaLabel` instead, see https://mui.com/x/react-date-pickers/localization
+   * @param {boolean} isKeyboardInputOpen Indicates if the interface is the keyboard input.
+   * @param {'calendar' | 'clock' } viewType Indicates if the interface is about a date or a time.
+   * @returns {string} The arial label
+   */
+  getMobileKeyboardInputViewButtonText?: (
+    isKeyboardInputOpen: boolean,
+    viewType: 'calendar' | 'clock',
+  ) => string;
   isLandscape: boolean;
   onChange: PickerOnChangeFn<TDate>;
   openView: CalendarOrClockPickerView;

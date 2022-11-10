@@ -1,0 +1,9 @@
+<DataGridPremium
+  {...data}
+  apiRef={apiRef}
+  columns={COLUMNS}
+  disableSelectionOnClick
+  initialState={initialState}
+  getAggregationPosition={(groupNode) => (groupNode == null ? null : 'footer')}
+  experimentalFeatures={{ aggregation: true }}
+/>

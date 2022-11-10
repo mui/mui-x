@@ -7,7 +7,7 @@ packageName: '@mui/x-date-pickers'
 materialDesign: https://material.io/components/date-pickers
 ---
 
-# Date range picker [<span class="plan-pro"></span>](https://mui.com/store/items/mui-x-pro/)
+# Date range picker [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
 
 <p class="description">The date range picker let the user select a range of dates.</p>
 
@@ -32,6 +32,8 @@ The date range picker component is designed to be optimized for the device it ru
 
 By default, the `DateRangePicker` component renders the desktop version if the media query [`@media (pointer: fine)`](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/pointer) matches.
 This can be customized with the `desktopModeMediaQuery` prop.
+
+There are certain caveats when testing pickers, please refer to [this section](/x/react-date-pickers/getting-started/#testing-caveats) for more information.
 
 {{"demo": "ResponsiveDateRangePicker.js"}}
 

@@ -1,11 +1,11 @@
 import * as React from 'react';
-import { debounce } from '@mui/material/utils';
+import { debounce, capitalize } from '@mui/material/utils';
 import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridRowsMetaApi } from '../../../models/api/gridRowsMetaApi';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { useGridVisibleRows } from '../../utils/useGridVisibleRows';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
-import { GridRowId } from '../../../models/gridRows';
+import { GridRowEntry, GridRowId } from '../../../models/gridRows';
 import { useGridSelector } from '../../utils/useGridSelector';
 import {
   gridDensityRowHeightSelector,
@@ -16,6 +16,7 @@ import { gridPaginationSelector } from '../pagination/gridPaginationSelector';
 import { gridSortingStateSelector } from '../sorting/gridSortingSelector';
 import { GridStateInitializer } from '../../utils/useGridInitializeState';
 import { useGridRegisterPipeApplier } from '../../core/pipeProcessing';
+import { gridPinnedRowsSelector } from './gridRowsSelector';
 
 export const rowsMetaStateInitializer: GridStateInitializer = (state) => ({
   ...state,
@@ -55,6 +56,8 @@ export const useGridRowsMeta = (
   const sortingState = useGridSelector(apiRef, gridSortingStateSelector);
   const currentPage = useGridVisibleRows(apiRef, props);
 
+  const pinnedRows = useGridSelector(apiRef, gridPinnedRowsSelector);
+
   const hydrateRowsMeta = React.useCallback(() => {
     hasRowWithAutoHeight.current = false;
 
@@ -63,13 +66,10 @@ export const useGridRowsMeta = (
       apiRef.current.instanceId,
     );
 
-    const positions: number[] = [];
-    const currentPageTotalHeight = currentPage.rows.reduce((acc, row) => {
-      positions.push(acc);
-
+    const calculateRowProcessedSizes = (row: GridRowEntry) => {
       if (!rowsHeightLookup.current[row.id]) {
         rowsHeightLookup.current[row.id] = {
-          sizes: { base: rowHeightFromDensity },
+          sizes: { baseCenter: rowHeightFromDensity },
           isResized: false,
           autoHeight: false,
           needsFirstMeasurement: true, // Assume all rows will need to be measured by default
@@ -78,7 +78,7 @@ export const useGridRowsMeta = (
 
       const { isResized, needsFirstMeasurement, sizes } = rowsHeightLookup.current[row.id];
       let baseRowHeight = rowHeightFromDensity;
-      const existingBaseRowHeight = sizes.base;
+      const existingBaseRowHeight = sizes.baseCenter;
 
       if (isResized) {
         // Do not recalculate resized row height and use the value from the lookup
@@ -110,8 +110,21 @@ export const useGridRowsMeta = (
         rowsHeightLookup.current[row.id].needsFirstMeasurement = false;
       }
 
+      const existingBaseSizes = Object.entries(sizes).reduce<Record<string, number>>(
+        (acc, [key, size]) => {
+          if (/^base[A-Z]/.test(key)) {
+            acc[key] = size;
+          }
+          return acc;
+        },
+        {},
+      );
+
       // We use an object to make simple to check if a height is already added or not
-      const initialHeights: Record<string, number> = { base: baseRowHeight };
+      const initialHeights: Record<string, number> = {
+        ...existingBaseSizes,
+        baseCenter: baseRowHeight,
+      };
 
       if (getRowSpacing) {
         const indexRelativeToCurrentPage = apiRef.current.getRowIndexRelativeToVisibleRows(row.id);
@@ -135,9 +148,35 @@ export const useGridRowsMeta = (
 
       rowsHeightLookup.current[row.id].sizes = processedSizes;
 
-      const finalRowHeight = Object.values(processedSizes).reduce((acc2, value) => acc2 + value, 0);
-      return acc + finalRowHeight;
+      return processedSizes;
+    };
+
+    const positions: number[] = [];
+    const currentPageTotalHeight = currentPage.rows.reduce((acc, row) => {
+      positions.push(acc);
+
+      let maximumBaseSize = 0;
+      let otherSizes = 0;
+
+      const processedSizes = calculateRowProcessedSizes(row);
+      Object.entries(processedSizes).forEach(([size, value]) => {
+        if (/^base[A-Z]/.test(size)) {
+          maximumBaseSize = value > maximumBaseSize ? value : maximumBaseSize;
+        } else {
+          otherSizes += value;
+        }
+      });
+
+      return acc + maximumBaseSize + otherSizes;
     }, 0);
+
+    pinnedRows?.top?.forEach((row) => {
+      calculateRowProcessedSizes(row);
+    });
+
+    pinnedRows?.bottom?.forEach((row) => {
+      calculateRowProcessedSizes(row);
+    });
 
     apiRef.current.setState((state) => {
       return {
@@ -162,12 +201,13 @@ export const useGridRowsMeta = (
     getRowHeightProp,
     getRowSpacing,
     getEstimatedRowHeight,
+    pinnedRows,
   ]);
 
   const getRowHeight = React.useCallback<GridRowsMetaApi['unstable_getRowHeight']>(
     (rowId) => {
       const height = rowsHeightLookup.current[rowId];
-      return height ? height.sizes.base : rowHeightFromDensity;
+      return height ? height.sizes.baseCenter : rowHeightFromDensity;
     },
     [rowHeightFromDensity],
   );
@@ -177,7 +217,7 @@ export const useGridRowsMeta = (
 
   const setRowHeight = React.useCallback<GridRowsMetaApi['unstable_setRowHeight']>(
     (id: GridRowId, height: number) => {
-      rowsHeightLookup.current[id].sizes.base = height;
+      rowsHeightLookup.current[id].sizes.baseCenter = height;
       rowsHeightLookup.current[id].isResized = true;
       rowsHeightLookup.current[id].needsFirstMeasurement = false;
       hydrateRowsMeta();
@@ -193,16 +233,17 @@ export const useGridRowsMeta = (
   const storeMeasuredRowHeight = React.useCallback<
     GridRowsMetaApi['unstable_storeRowHeightMeasurement']
   >(
-    (id, height) => {
+    (id, height, position) => {
       if (!rowsHeightLookup.current[id] || !rowsHeightLookup.current[id].autoHeight) {
         return;
       }
 
       // Only trigger hydration if the value is different, otherwise we trigger a loop
-      const needsHydration = rowsHeightLookup.current[id].sizes.base !== height;
+      const needsHydration =
+        rowsHeightLookup.current[id].sizes[`base${capitalize(position)}`] !== height;
 
       rowsHeightLookup.current[id].needsFirstMeasurement = false;
-      rowsHeightLookup.current[id].sizes.base = height;
+      rowsHeightLookup.current[id].sizes[`base${capitalize(position)}`] = height;
 
       if (needsHydration) {
         debouncedHydrateRowsMeta();
@@ -229,6 +270,11 @@ export const useGridRowsMeta = (
     }
   }, []);
 
+  const resetRowHeights = React.useCallback(() => {
+    rowsHeightLookup.current = {};
+    hydrateRowsMeta();
+  }, [hydrateRowsMeta]);
+
   // The effect is used to build the rows meta data - currentPageTotalHeight and positions.
   // Because of variable row height this is needed for the virtualization
   React.useEffect(() => {
@@ -245,6 +291,7 @@ export const useGridRowsMeta = (
     unstable_getRowInternalSizes: getRowInternalSizes,
     unstable_setRowHeight: setRowHeight,
     unstable_storeRowHeightMeasurement: storeMeasuredRowHeight,
+    resetRowHeights,
   };
 
   useGridApiMethod(apiRef, rowsMetaApi, 'GridRowsMetaApi');

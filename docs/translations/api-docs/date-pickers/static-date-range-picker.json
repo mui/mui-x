@@ -7,6 +7,7 @@
     "closeOnSelect": "If <code>true</code> the popup or dialog will immediately close after submitting full date.",
     "components": "Overrideable components.",
     "componentsProps": "The props used for each component slot.",
+    "dayOfWeekFormatter": "Formats the day of week displayed in the calendar header.<br><br><strong>Signature:</strong><br><code>function(day: string) =&gt; string</code><br><em>day:</em> The day of week provided by the adapter&#39;s method <code>getWeekdays</code>.<br> <em>returns</em> (string): The name to display.",
     "defaultCalendarMonth": "Default calendar month displayed when <code>value={null}</code>.",
     "disableAutoMonthSwitching": "If <code>true</code>, after selecting <code>start</code> date calendar will not automatically switch to the month of <code>end</code> date.",
     "disabled": "If <code>true</code>, the picker and text field are disabled.",
@@ -40,7 +41,7 @@
     "renderLoading": "Component displaying when passed <code>loading</code> true.<br><br><strong>Signature:</strong><br><code>function() =&gt; React.ReactNode</code><br><br> <em>returns</em> (React.ReactNode): The node to render when loading.",
     "rifmFormatter": "Custom formatter to be passed into Rifm component.<br><br><strong>Signature:</strong><br><code>function(str: string) =&gt; string</code><br><em>str:</em> The un-formatted string.<br> <em>returns</em> (string): The formatted string.",
     "rightArrowButtonText": "Right arrow icon aria-label text.",
-    "shouldDisableDate": "Disable specific date. @DateIOType<br><br><strong>Signature:</strong><br><code>function(day: TDate) =&gt; boolean</code><br><em>day:</em> The date to test.<br> <em>returns</em> (boolean): Returns <code>true</code> if the date should be disabled.",
+    "shouldDisableDate": "Disable specific date. @DateIOType<br><br><strong>Signature:</strong><br><code>function(day: TDate, position: string) =&gt; boolean</code><br><em>day:</em> The date to test.<br><em>position:</em> The date to test, &#39;start&#39; or &#39;end&#39;.<br> <em>returns</em> (boolean): Returns <code>true</code> if the date should be disabled.",
     "shouldDisableMonth": "Disable specific months dynamically. Works like <code>shouldDisableDate</code> but for month selection view @DateIOType.<br><br><strong>Signature:</strong><br><code>function(month: TDate) =&gt; boolean</code><br><em>month:</em> The month to check.<br> <em>returns</em> (boolean): If <code>true</code> the month will be disabled.",
     "shouldDisableYear": "Disable specific years dynamically. Works like <code>shouldDisableDate</code> but for year selection view @DateIOType.<br><br><strong>Signature:</strong><br><code>function(year: TDate) =&gt; boolean</code><br><em>year:</em> The year to test.<br> <em>returns</em> (boolean): Returns <code>true</code> if the year should be disabled.",
     "showDaysOutsideCurrentMonth": "If <code>true</code>, days that have <code>outsideCurrentMonth={true}</code> are displayed.",
@@ -51,5 +52,15 @@
     "value": "The value of the picker."
   },
   "classDescriptions": {},
-  "slotDescriptions": {}
+  "slotDescriptions": {
+    "ActionBar": "The action bar placed bellow picker views.",
+    "PaperContent": "The content of the Paper wrapping views.",
+    "SwitchViewButton": "Button displayed to switch between different calendar views.",
+    "SwitchViewIcon": "Icon displayed in the SwitchViewButton. Rotated by 180° when the open view is &#39;year&#39;.",
+    "LeftArrowButton": "Button allowing to switch to the left view.",
+    "LeftArrowIcon": "Icon displayed in the left view switch button.",
+    "RightArrowButton": "Button allowing to switch to the right view.",
+    "RightArrowIcon": "Icon displayed in the right view switch button.",
+    "OpenPickerIcon": "Icon displayed in the open picker button."
+  }
 }

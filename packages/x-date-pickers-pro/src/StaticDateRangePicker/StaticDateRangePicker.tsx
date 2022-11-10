@@ -33,9 +33,8 @@ export interface StaticDateRangePickersSlotsComponentsProps
   extends PickersStaticWrapperSlotsComponentsProps,
     DateRangePickerViewSlotsComponentsProps {}
 
-export type StaticDateRangePickerProps<TInputDate, TDate> = StaticPickerProps<
-  BaseDateRangePickerProps<TInputDate, TDate>
-> & {
+export interface StaticDateRangePickerProps<TInputDate, TDate>
+  extends StaticPickerProps<BaseDateRangePickerProps<TInputDate, TDate>> {
   /**
    * Overrideable components.
    * @default {}
@@ -46,7 +45,7 @@ export type StaticDateRangePickerProps<TInputDate, TDate> = StaticPickerProps<
    * @default {}
    */
   componentsProps?: Partial<StaticDateRangePickersSlotsComponentsProps>;
-};
+}
 
 type StaticDateRangePickerComponent = (<TInputDate, TDate = TInputDate>(
   props: StaticDateRangePickerProps<TInputDate, TDate> & React.RefAttributes<HTMLDivElement>,
@@ -91,6 +90,7 @@ export const StaticDateRangePicker = React.forwardRef(function StaticDateRangePi
     onChange,
     components,
     componentsProps,
+    className,
     ...other
   } = props;
 
@@ -110,6 +110,7 @@ export const StaticDateRangePicker = React.forwardRef(function StaticDateRangePi
       displayStaticWrapperAs={displayStaticWrapperAs}
       components={components}
       componentsProps={componentsProps}
+      className={className}
       {...wrapperProps}
     >
       <DateRangePickerView
@@ -162,6 +163,13 @@ StaticDateRangePicker.propTypes = {
    */
   componentsProps: PropTypes.object,
   /**
+   * Formats the day of week displayed in the calendar header.
+   * @param {string} day The day of week provided by the adapter's method `getWeekdays`.
+   * @returns {string} The name to display.
+   * @default (day) => day.charAt(0).toUpperCase()
+   */
+  dayOfWeekFormatter: PropTypes.func,
+  /**
    * Default calendar month displayed when `value={null}`.
    */
   defaultCalendarMonth: PropTypes.any,
@@ -208,7 +216,7 @@ StaticDateRangePicker.propTypes = {
   /**
    * Text for end input label and toolbar placeholder.
    * @default 'End'
-   * @deprecated Use the `localeText` prop of `LocalizationProvider` instead, see https://mui.com/x/react-date-pickers/localization
+   * @deprecated Use the `localeText` prop of `LocalizationProvider` instead, see https://mui.com/x/react-date-pickers/localization/.
    */
   endText: PropTypes.node,
   /**
@@ -224,7 +232,7 @@ StaticDateRangePicker.propTypes = {
    * Get aria-label text for switching between views button.
    * @param {CalendarPickerView} currentView The view from which we want to get the button text.
    * @returns {string} The label of the view.
-   * @deprecated Use the `localeText` prop of `LocalizationProvider` instead, see https://mui.com/x/react-date-pickers/localization
+   * @deprecated Use the `localeText` prop of `LocalizationProvider` instead, see https://mui.com/x/react-date-pickers/localization/.
    */
   getViewSwitchingButtonText: PropTypes.func,
   ignoreInvalidInputs: PropTypes.bool,
@@ -375,6 +383,7 @@ StaticDateRangePicker.propTypes = {
    * Disable specific date. @DateIOType
    * @template TDate
    * @param {TDate} day The date to test.
+   * @param {string} position The date to test, 'start' or 'end'.
    * @returns {boolean} Returns `true` if the date should be disabled.
    */
   shouldDisableDate: PropTypes.func,
@@ -406,7 +415,7 @@ StaticDateRangePicker.propTypes = {
   /**
    * Text for start input label and toolbar placeholder.
    * @default 'Start'
-   * @deprecated Use the `localeText` prop of `LocalizationProvider` instead, see https://mui.com/x/react-date-pickers/localization
+   * @deprecated Use the `localeText` prop of `LocalizationProvider` instead, see https://mui.com/x/react-date-pickers/localization/.
    */
   startText: PropTypes.node,
   /**

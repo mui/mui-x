@@ -30,9 +30,8 @@ export interface StaticTimePickerSlotsComponentsProps
   extends PickersStaticWrapperSlotsComponentsProps,
     ClockPickerSlotsComponentsProps {}
 
-export type StaticTimePickerProps<TInputDate, TDate> = StaticPickerProps<
-  BaseTimePickerProps<TInputDate, TDate>
-> & {
+export interface StaticTimePickerProps<TInputDate, TDate>
+  extends StaticPickerProps<BaseTimePickerProps<TInputDate, TDate>> {
   /**
    * Overrideable components.
    * @default {}
@@ -43,7 +42,7 @@ export type StaticTimePickerProps<TInputDate, TDate> = StaticPickerProps<
    * @default {}
    */
   componentsProps?: Partial<StaticTimePickerSlotsComponentsProps>;
-};
+}
 
 type StaticTimePickerComponent = (<TInputDate, TDate = TInputDate>(
   props: StaticTimePickerProps<TInputDate, TDate> & React.RefAttributes<HTMLDivElement>,
@@ -76,6 +75,7 @@ export const StaticTimePicker = React.forwardRef(function StaticTimePicker<
     value,
     components,
     componentsProps,
+    className,
     ...other
   } = props;
 
@@ -96,6 +96,7 @@ export const StaticTimePicker = React.forwardRef(function StaticTimePicker<
       displayStaticWrapperAs={displayStaticWrapperAs}
       components={components}
       componentsProps={componentsProps}
+      className={className}
       {...wrapperProps}
     >
       <CalendarOrClockPicker
@@ -142,8 +143,9 @@ StaticTimePicker.propTypes = {
   closeOnSelect: PropTypes.bool,
   /**
    * Overrideable components.
+   * @default {}
    */
-  components: PropTypes.any,
+  components: PropTypes.object,
   /**
    * The props used for each component slot.
    * @default {}
@@ -181,7 +183,7 @@ StaticTimePicker.propTypes = {
    * @param {TDate | null} time The current time.
    * @param {MuiPickersAdapter<TDate>} adapter The current date adapter.
    * @returns {string} The clock label.
-   * @deprecated Use the `localeText` prop of `LocalizationProvider` instead, see https://mui.com/x/react-date-pickers/localization
+   * @deprecated Use the `localeText` prop of `LocalizationProvider` instead, see https://mui.com/x/react-date-pickers/localization/.
    * @default <TDate extends any>(
    *   view: ClockView,
    *   time: TDate | null,
@@ -277,6 +279,8 @@ StaticTimePicker.propTypes = {
   OpenPickerButtonProps: PropTypes.object,
   /**
    * First view to show.
+   * Must be a valid option from `views` list
+   * @default 'hours'
    */
   openTo: PropTypes.oneOf(['hours', 'minutes', 'seconds']),
   /**
@@ -333,6 +337,7 @@ StaticTimePicker.propTypes = {
   value: PropTypes.any,
   /**
    * Array of views to show.
+   * @default ['hours', 'minutes']
    */
   views: PropTypes.arrayOf(PropTypes.oneOf(['hours', 'minutes', 'seconds']).isRequired),
 } as any;

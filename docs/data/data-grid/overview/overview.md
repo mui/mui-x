@@ -18,7 +18,7 @@ The component leverages the power of React and TypeScript, to provide the best U
 > Visit the [installation guide](/x/react-data-grid/getting-started/#installation) to learn how to install the correct package version and dependencies.
 
 Data tables display information in a grid-like format of rows and columns.
-They organize information in a way that’s easy to scan so that users can look for patterns and insights.
+They organize information in a way that's easy to scan so that users can look for patterns and insights.
 
 The data grid comes in two different versions:
 
@@ -37,7 +37,7 @@ import { DataGrid } from '@mui/x-data-grid';
 
 The commercial version is available in the form of two plans: Pro and Premium.
 
-#### Pro Plan [<span class="plan-pro"></span>](https://mui.com/store/items/mui-x-pro/)
+#### Pro Plan [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
 
 The Pro version extends the features available in the MIT version, by allowing to sort and filter multiple columns at the same time.
 It also brings new features, e.g. column groups, column pinning, tree data, row and column reordering, etc.
@@ -50,7 +50,7 @@ import { DataGridPro } from '@mui/x-data-grid-pro';
 
 {{"demo": "DataGridProDemo.js", "defaultCodeOpen": false, "disableAd": true, "bg": "inline"}}
 
-#### Premium Plan [<span class="plan-premium"></span>](https://mui.com/store/items/mui-x-premium/)
+#### Premium Plan [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan)
 
 The Premium version contains all features from Pro, as well as features for analyzing large datasets.
 The features available on the initial release are row grouping and the ability to export to Excel files.
@@ -66,7 +66,7 @@ import { DataGridPremium } from '@mui/x-data-grid-premium';
 
 ### MIT vs. commercial
 
-> Please check the [Licenses section](/x/advanced-components/#licenses) for more details between the different versions.
+Please see [the Licensing page](/x/introduction/licensing/) for details.
 
 ## Features
 
@@ -79,6 +79,7 @@ import { DataGridPremium } from '@mui/x-data-grid-premium';
 - [Selection](/x/react-data-grid/selection/)
 - [Column virtualization](/x/react-data-grid/virtualization/#column-virtualization) and [rows virtualization](/x/react-data-grid/virtualization/#row-virtualization) <span class="plan-pro"></span>
 - [Row grouping](/x/react-data-grid/row-grouping/) <span class="plan-premium"></span>
+- [Aggregation](/x/react-data-grid/aggregation/) <span class="plan-premium"></span>
 - [Excel export](/x/react-data-grid/export/#excel-export) <span class="plan-premium"></span>
 - [Tree data](/x/react-data-grid/tree-data/) <span class="plan-pro"></span>
 - [Master detail](/x/react-data-grid/master-detail/) <span class="plan-pro"></span>
@@ -87,6 +88,7 @@ import { DataGridPremium } from '@mui/x-data-grid-premium';
 - Server-side data
 - [Column hiding](/x/react-data-grid/column-visibility/)
 - [Column pinning](/x/react-data-grid/column-pinning/) <span class="plan-pro"></span>
+- [Row pinning](/x/react-data-grid/row-pinning/) <span class="plan-pro"></span>
 - [Accessible](/x/react-data-grid/accessibility/)
 - [Localization](/x/react-data-grid/localization/)
 
@@ -96,7 +98,6 @@ While development of the data grid component is moving fast, there are still man
 
 - Headless (hooks only)
 - [Range selection](/x/react-data-grid/selection/#range-selection) <span class="plan-premium"></span>
-- [Aggregation](/x/react-data-grid/aggregation/) <span class="plan-premium"></span>
 - [Pivoting](/x/react-data-grid/pivoting/) <span class="plan-premium"></span>
 
 You can find more details on, the [feature comparison](/x/react-data-grid/getting-started/#feature-comparison), our living quarterly [roadmap](https://github.com/mui/mui-x/projects/1) as well as on the open [GitHub issues](https://github.com/mui/mui-x/issues?q=is%3Aopen+label%3A%22component%3A+DataGrid%22+label%3Aenhancement).
@@ -105,7 +106,6 @@ You can find more details on, the [feature comparison](/x/react-data-grid/gettin
 
 Here are some resources you might be interested in to learn more about the grid:
 
-- The storybook used for [internal development](https://material-ui-x.netlify.app/storybook/)
 - The [source on GitHub](https://github.com/mui/mui-x/tree/master/packages/)
 - The [Material Design specification](https://material.io/components/data-tables) specification
 - The accessibility [WAI-ARIA authoring practices](https://www.w3.org/WAI/ARIA/apg/patterns/grid/)

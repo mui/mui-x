@@ -96,15 +96,17 @@ export const useGridPage = (
    * PRE-PROCESSING
    */
   const stateExportPreProcessing = React.useCallback<GridPipeProcessor<'exportState'>>(
-    (prevState) => {
+    (prevState, context) => {
       const pageToExport = gridPageSelector(apiRef);
 
       const shouldExportPage =
+        // Always export if the `exportOnlyDirtyModels` property is activated
+        !context.exportOnlyDirtyModels ||
         // Always export if the page is controlled
         props.page != null ||
         // Always export if the page has been initialized
         props.initialState?.pagination?.page != null ||
-        // Export if the page value is not equal to the default value
+        // Export if the page is not equal to the default value
         pageToExport !== 0;
 
       if (!shouldExportPage) {

@@ -9,7 +9,7 @@ const fiFIGrid: Partial<GridLocaleText> = {
   errorOverlayDefaultLabel: 'Tapahtui virhe.',
 
   // Density selector toolbar button text
-  toolbarDensity: 'Density',
+  toolbarDensity: 'Tiiveys',
   toolbarDensityLabel: 'Tiiveys',
   toolbarDensityCompact: 'Kompakti',
   toolbarDensityStandard: 'Vakio',
@@ -28,16 +28,16 @@ const fiFIGrid: Partial<GridLocaleText> = {
     count !== 1 ? `${count} aktiivista suodatinta` : `${count} aktiivinen suodatin`,
 
   // Quick filter toolbar field
-  // toolbarQuickFilterPlaceholder: 'Search...',
-  // toolbarQuickFilterLabel: 'Search',
-  // toolbarQuickFilterDeleteIconLabel: 'Clear',
+  toolbarQuickFilterPlaceholder: 'Hae…',
+  toolbarQuickFilterLabel: 'Hae',
+  toolbarQuickFilterDeleteIconLabel: 'Tyhjennä',
 
   // Export selector toolbar button text
-  toolbarExport: 'Export',
-  toolbarExportLabel: 'Export',
+  toolbarExport: 'Vie',
+  toolbarExportLabel: 'Vie',
   toolbarExportCSV: 'Lataa CSV-muodossa',
   toolbarExportPrint: 'Tulosta',
-  // toolbarExportExcel: 'Download as Excel',
+  toolbarExportExcel: 'Lataa Excel-muodossa',
 
   // Columns panel text
   columnsPanelTextFieldLabel: 'Etsi sarake',
@@ -49,7 +49,7 @@ const fiFIGrid: Partial<GridLocaleText> = {
   // Filter panel text
   filterPanelAddFilter: 'Lisää suodatin',
   filterPanelDeleteIconLabel: 'Poista',
-  // filterPanelLinkOperator: 'Logic operator',
+  filterPanelLinkOperator: 'Logiikkaoperaattori',
   filterPanelOperators: 'Operaattorit',
 
   // TODO v6: rename to filterPanelOperator
@@ -72,7 +72,7 @@ const fiFIGrid: Partial<GridLocaleText> = {
   filterOperatorOnOrBefore: 'on sama tai ennen',
   filterOperatorIsEmpty: 'on tyhjä',
   filterOperatorIsNotEmpty: 'ei ole tyhjä',
-  // filterOperatorIsAnyOf: 'is any of',
+  filterOperatorIsAnyOf: 'mikä tahansa seuraavista',
 
   // Filter values text
   filterValueAny: 'mikä tahansa',
@@ -109,10 +109,10 @@ const fiFIGrid: Partial<GridLocaleText> = {
 
   // Checkbox selection text
   checkboxSelectionHeaderName: 'Valintaruutu',
-  // checkboxSelectionSelectAllRows: 'Select all rows',
-  // checkboxSelectionUnselectAllRows: 'Unselect all rows',
-  // checkboxSelectionSelectRow: 'Select row',
-  // checkboxSelectionUnselectRow: 'Unselect row',
+  checkboxSelectionSelectAllRows: 'Valitse kaikki rivit',
+  checkboxSelectionUnselectAllRows: 'Poista kaikkien rivien valinta',
+  checkboxSelectionSelectRow: 'Valitse rivi',
+  checkboxSelectionUnselectRow: 'Poista rivin valinta',
 
   // Boolean cell text
   booleanCellTrueLabel: 'tosi',
@@ -132,17 +132,25 @@ const fiFIGrid: Partial<GridLocaleText> = {
   treeDataCollapse: 'Supista',
 
   // Grouping columns
-  // groupingColumnHeaderName: 'Group',
-  // groupColumn: name => `Group by ${name}`,
-  // unGroupColumn: name => `Stop grouping by ${name}`,
+  groupingColumnHeaderName: 'Ryhmä',
+  groupColumn: (name) => `Ryhmittelyperuste ${name}`,
+  unGroupColumn: (name) => `Poista ryhmittelyperuste ${name}`,
 
   // Master/detail
-  // detailPanelToggle: 'Detail panel toggle',
-  // expandDetailPanel: 'Expand',
-  // collapseDetailPanel: 'Collapse',
+  detailPanelToggle: 'Yksityiskohtapaneelin vaihto',
+  expandDetailPanel: 'Laajenna',
+  collapseDetailPanel: 'Tiivistä',
 
   // Row reordering text
-  // rowReorderingHeaderName: 'Row reordering',
+  rowReorderingHeaderName: 'Rivien uudelleenjärjestely',
+
+  // Aggregation
+  aggregationMenuItemHeader: 'Koostaminen',
+  aggregationFunctionLabelSum: 'summa',
+  aggregationFunctionLabelAvg: 'ka.',
+  aggregationFunctionLabelMin: 'min.',
+  aggregationFunctionLabelMax: 'maks.',
+  aggregationFunctionLabelSize: 'koko',
 };
 
 export const fiFI: Localization = getGridLocalization(fiFIGrid, fiFICore);

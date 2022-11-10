@@ -36,9 +36,7 @@ describe('<PickersDay />', () => {
     const handleDaySelect = spy();
     const day = adapterToUse.date();
     render(<PickersDay day={day} outsideCurrentMonth={false} onDaySelect={handleDaySelect} />);
-    const targetDay = screen.getByRole('button', {
-      name: `${adapterToUse.format(day, 'fullDate')}`,
-    });
+    const targetDay = screen.getByRole('button', { name: adapterToUse.format(day, 'dayOfMonth') });
 
     // A native button implies Enter and Space keydown behavior
     // These keydown events only trigger click behavior if they're trusted (programmatically dispatched events aren't trusted).
@@ -63,10 +61,8 @@ describe('<PickersDay />', () => {
     );
 
     const day = screen.getByRole('button');
-    // TODO: This can be disorienting if the accessible name is not the same as the visible label
-    // Investigate if we can drop `aria-label` and let screenreaders announce the full date in a calendar picker.
     expect(day).to.have.text('2');
-    expect(day).toHaveAccessibleName('Feb 2, 2020');
+    expect(day).toHaveAccessibleName('2');
   });
 
   it('should render children instead of the day of the month when children prop is present', () => {

@@ -66,7 +66,7 @@ import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
 
 function App({ children }) {
   return (
-    <LocalizationProvider dateAdapter={AdapterDateFns}>
+    <LocalizationProvider dateAdapter={AdapterDayjs}>
       {children}
     </LocalizationProvider>
   );
@@ -135,3 +135,12 @@ Native input controls support by browsers [isn't perfect](https://caniuse.com/#f
 Native date (`type="date"`), time (`type="time"`) and date&time (`type="datetime-local"`) pickers.
 
 {{"demo": "NativePickers.js"}}
+
+## Testing caveats
+
+:::info
+Some test environments (i.e. `jsdom`) do not support media query. In such cases, components will be rendered in desktop mode. To modify this behavior you can fake the `window.matchMedia`.
+:::
+
+Be aware that running tests in headless browsers might not pass our default mediaQuery (`pointer: fine`).  
+In such case you can [force pointer precision](https://github.com/microsoft/playwright/issues/7769#issuecomment-1205106311) via browser flags or preferences.

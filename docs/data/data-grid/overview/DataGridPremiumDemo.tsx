@@ -12,6 +12,7 @@ export default function DataGridPremiumDemo() {
   const { data, loading } = useDemoData({
     dataSet: 'Commodity',
     rowLength: 100,
+    editable: true,
     visibleFields: [
       'commodity',
       'quantity',
@@ -51,6 +52,7 @@ export default function DataGridPremiumDemo() {
         disableSelectionOnClick
         initialState={initialState}
         components={{ Toolbar: GridToolbar }}
+        experimentalFeatures={{ newEditingApi: true }}
       />
     </Box>
   );

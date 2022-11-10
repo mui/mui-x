@@ -1,10 +1,15 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import { styled } from '@mui/material/styles';
-import { generateUtilityClasses } from '@mui/material';
+import { unstable_composeClasses as composeClasses } from '@mui/material';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { CSSTransitionProps } from 'react-transition-group/CSSTransition';
 import { TransitionGroupProps } from 'react-transition-group/TransitionGroup';
+import {
+  getPickersSlideTransitionUtilityClass,
+  pickersSlideTransitionClasses,
+  PickersSlideTransitionClasses,
+} from './pickersSlideTransitionClasses';
 
 export type SlideDirection = 'right' | 'left';
 export interface SlideTransitionProps extends Omit<CSSTransitionProps, 'timeout'> {
@@ -13,22 +18,39 @@ export interface SlideTransitionProps extends Omit<CSSTransitionProps, 'timeout'
   reduceAnimations: boolean;
   slideDirection: SlideDirection;
   transKey: React.Key;
+  classes?: Partial<PickersSlideTransitionClasses>;
 }
 
-const classes = generateUtilityClasses('PrivatePickersSlideTransition', [
-  'root',
-  'slideEnter-left',
-  'slideEnter-right',
-  'slideEnterActive',
-  'slideEnterActive',
-  'slideExit',
-  'slideExitActiveLeft-left',
-  'slideExitActiveLeft-right',
-]);
+const useUtilityClasses = (ownerState: SlideTransitionProps) => {
+  const { classes } = ownerState;
+  const slots = {
+    root: ['root'],
+  };
+
+  return composeClasses(slots, getPickersSlideTransitionUtilityClass, classes);
+};
 
 export const slideAnimationDuration = 350;
 
-const PickersSlideTransitionRoot = styled(TransitionGroup)<TransitionGroupProps>(({ theme }) => {
+const PickersSlideTransitionRoot = styled(TransitionGroup, {
+  name: 'PrivatePickersSlideTransition',
+  slot: 'Root',
+  overridesResolver: (_, styles) => [
+    styles.root,
+    { [`.${pickersSlideTransitionClasses['slideEnter-left']}`]: styles['slideEnter-left'] },
+    { [`.${pickersSlideTransitionClasses['slideEnter-right']}`]: styles['slideEnter-right'] },
+    { [`.${pickersSlideTransitionClasses.slideEnterActive}`]: styles.slideEnterActive },
+    { [`.${pickersSlideTransitionClasses.slideExit}`]: styles.slideExit },
+    {
+      [`.${pickersSlideTransitionClasses['slideExitActiveLeft-left']}`]:
+        styles['slideExitActiveLeft-left'],
+    },
+    {
+      [`.${pickersSlideTransitionClasses['slideExitActiveLeft-right']}`]:
+        styles['slideExitActiveLeft-right'],
+    },
+  ],
+})<TransitionGroupProps>(({ theme }) => {
   const slideTransition = theme.transitions.create('transform', {
     duration: slideAnimationDuration,
     easing: 'cubic-bezier(0.35, 0.8, 0.4, 1)',
@@ -43,30 +65,30 @@ const PickersSlideTransitionRoot = styled(TransitionGroup)<TransitionGroupProps>
       right: 0,
       left: 0,
     },
-    [`& .${classes['slideEnter-left']}`]: {
+    [`& .${pickersSlideTransitionClasses['slideEnter-left']}`]: {
       willChange: 'transform',
       transform: 'translate(100%)',
       zIndex: 1,
     },
-    [`& .${classes['slideEnter-right']}`]: {
+    [`& .${pickersSlideTransitionClasses['slideEnter-right']}`]: {
       willChange: 'transform',
       transform: 'translate(-100%)',
       zIndex: 1,
     },
-    [`& .${classes.slideEnterActive}`]: {
+    [`& .${pickersSlideTransitionClasses.slideEnterActive}`]: {
       transform: 'translate(0%)',
       transition: slideTransition,
     },
-    [`& .${classes.slideExit}`]: {
+    [`& .${pickersSlideTransitionClasses.slideExit}`]: {
       transform: 'translate(0%)',
     },
-    [`& .${classes['slideExitActiveLeft-left']}`]: {
+    [`& .${pickersSlideTransitionClasses['slideExitActiveLeft-left']}`]: {
       willChange: 'transform',
       transform: 'translate(-100%)',
       transition: slideTransition,
       zIndex: 0,
     },
-    [`& .${classes['slideExitActiveLeft-right']}`]: {
+    [`& .${pickersSlideTransitionClasses['slideExitActiveLeft-right']}`]: {
       willChange: 'transform',
       transform: 'translate(100%)',
       transition: slideTransition,
@@ -78,24 +100,23 @@ const PickersSlideTransitionRoot = styled(TransitionGroup)<TransitionGroupProps>
 /**
  * @ignore - do not document.
  */
-export const PickersSlideTransition = ({
-  children,
-  className,
-  reduceAnimations,
-  slideDirection,
-  transKey,
-  ...other
-}: SlideTransitionProps) => {
+export const PickersSlideTransition = (props: SlideTransitionProps) => {
+  // TODO v6: add 'useThemeProps' once the component class names are aligned
+  const { children, className, reduceAnimations, slideDirection, transKey, ...other } = props;
+  const classes = useUtilityClasses(props);
   if (reduceAnimations) {
     return <div className={clsx(classes.root, className)}>{children}</div>;
   }
 
   const transitionClasses = {
-    exit: classes.slideExit,
-    enterActive: classes.slideEnterActive,
-    enter: classes[`slideEnter-${slideDirection}` as 'slideEnter-left' | 'slideEnter-right'],
+    exit: pickersSlideTransitionClasses.slideExit,
+    enterActive: pickersSlideTransitionClasses.slideEnterActive,
+    enter:
+      pickersSlideTransitionClasses[
+        `slideEnter-${slideDirection}` as 'slideEnter-left' | 'slideEnter-right'
+      ],
     exitActive:
-      classes[
+      pickersSlideTransitionClasses[
         `slideExitActiveLeft-${slideDirection}` as
           | 'slideExitActiveLeft-left'
           | 'slideExitActiveLeft-right'
@@ -110,6 +131,7 @@ export const PickersSlideTransition = ({
           classNames: transitionClasses,
         })
       }
+      role="presentation"
     >
       <CSSTransition
         mountOnEnter

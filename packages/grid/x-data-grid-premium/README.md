@@ -1,4 +1,4 @@
-# @mui/x-data-grid-pro
+# @mui/x-data-grid-premium
 
 This package is the Premium plan edition of the data grid component.
 It's part of MUI X, an open core extension of MUI, with advanced components.
@@ -21,7 +21,8 @@ This component has the following peer dependencies that you will need to install
 "peerDependencies": {
   "@mui/material": "^5.4.1",
   "@mui/system": "^5.4.1",
-  "react": "^17.0.2 || ^18.0.0"
+  "react": "^17.0.2 || ^18.0.0",
+  "react-dom": "^17.0.2 || ^18.0.0"
 },
 ```
 

@@ -2,7 +2,11 @@ import * as React from 'react';
 import { DataGrid } from '@mui/x-data-grid';
 import { createFakeServer } from '@mui/x-data-grid-generator';
 
-const { columns, initialState, useQuery } = createFakeServer();
+const SERVER_OPTIONS = {
+  useCursorPagination: false,
+};
+
+const { columns, initialState, useQuery } = createFakeServer({}, SERVER_OPTIONS);
 
 export default function ServerPaginationGrid() {
   const [page, setPage] = React.useState(0);

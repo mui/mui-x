@@ -3,6 +3,7 @@ import { GridRowId, GridRowIdGetter, GridRowModel, GridRowTreeConfig } from '../
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridRowsInternalCache, GridRowsState } from './gridRowsState';
+import { gridPinnedRowsSelector } from './gridRowsSelector';
 
 /**
  * A helper function to check if the id provided is valid.
@@ -41,10 +42,15 @@ export const createRowsInternalCache = ({
   rows,
   getRowId,
   loading,
-}: Pick<DataGridProcessedProps, 'rows' | 'getRowId' | 'loading'>): GridRowsInternalCache => {
+  rowCount,
+}: Pick<
+  DataGridProcessedProps,
+  'rows' | 'getRowId' | 'loading' | 'rowCount'
+>): GridRowsInternalCache => {
   const cache: GridRowsInternalCache = {
     rowsBeforePartialUpdates: rows,
     loadingPropBeforePartialUpdates: loading,
+    rowCountPropBeforePartialUpdates: rowCount,
     idRowsLookup: {},
     idToIdLookup: {},
     ids: [],
@@ -88,7 +94,9 @@ export const getRowsStateFromCache = ({
   const dataTopLevelRowCount =
     processedGroupingResponse.treeDepth === 1
       ? processedGroupingResponse.ids.length
-      : Object.values(processedGroupingResponse.tree).filter((node) => node.parent == null).length;
+      : Object.values(processedGroupingResponse.tree).filter(
+          (node) => node.parent == null && !node.isPinned,
+        ).length;
 
   return {
     ...processedGroupingResponse,
@@ -121,3 +129,23 @@ export const getTreeNodeDescendants = (
 
   return validDescendants;
 };
+
+export function calculatePinnedRowsHeight(apiRef: React.MutableRefObject<GridApiCommunity>) {
+  const pinnedRows = gridPinnedRowsSelector(apiRef);
+  const topPinnedRowsHeight =
+    pinnedRows?.top?.reduce((acc, value) => {
+      acc += apiRef.current.unstable_getRowHeight(value.id);
+      return acc;
+    }, 0) || 0;
+
+  const bottomPinnedRowsHeight =
+    pinnedRows?.bottom?.reduce((acc, value) => {
+      acc += apiRef.current.unstable_getRowHeight(value.id);
+      return acc;
+    }, 0) || 0;
+
+  return {
+    top: topPinnedRowsHeight,
+    bottom: bottomPinnedRowsHeight,
+  };
+}

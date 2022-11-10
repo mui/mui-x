@@ -9,14 +9,14 @@ import {
   GridActionsCellItem,
 } from '@mui/x-data-grid-premium';
 // @ts-ignore Remove once the test utils are typed
-import { createRenderer, screen, fireEvent } from '@mui/monorepo/test/utils';
+import { createRenderer, screen, fireEvent, act } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
 import Excel from 'exceljs';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
 describe('<DataGridPremium /> - Export Excel', () => {
-  const { render } = createRenderer();
+  const { render } = createRenderer({ clock: 'fake' });
 
   let apiRef: React.MutableRefObject<GridApi>;
 
@@ -51,9 +51,9 @@ describe('<DataGridPremium /> - Export Excel', () => {
   };
 
   describe('export interface', () => {
-    it('should generate a file', () => {
+    it('should generate a file', async () => {
       render(<TestCaseExcelExport />);
-      expect(apiRef.current.getDataAsExcel()).not.to.equal(null);
+      expect(await act(() => apiRef.current.getDataAsExcel())).not.to.equal(null);
     });
 
     it('should display export option', () => {
@@ -98,7 +98,7 @@ describe('<DataGridPremium /> - Export Excel', () => {
       };
       render(<Test />);
 
-      const workbook = await apiRef.current.getDataAsExcel();
+      const workbook = await act(() => apiRef.current.getDataAsExcel());
       const worksheet = workbook!.worksheets[0];
 
       expect(worksheet.getCell('A1').value).to.equal('str');
@@ -142,7 +142,7 @@ describe('<DataGridPremium /> - Export Excel', () => {
       };
       render(<Test />);
 
-      const workbook = await apiRef.current.getDataAsExcel();
+      const workbook = await act(() => apiRef.current.getDataAsExcel());
       const worksheet = workbook!.worksheets[0];
 
       expect(worksheet.getCell('A1').value).to.equal('option');
@@ -180,7 +180,7 @@ describe('<DataGridPremium /> - Export Excel', () => {
       };
       render(<Test />);
 
-      const workbook = await apiRef.current.getDataAsExcel();
+      const workbook = await act(() => apiRef.current.getDataAsExcel());
       const worksheet = workbook!.worksheets[0];
 
       expect(worksheet.getCell('A1').value).to.equal('str');
@@ -218,7 +218,7 @@ describe('<DataGridPremium /> - Export Excel', () => {
       };
       render(<Test />);
 
-      const workbook = await apiRef.current.getDataAsExcel();
+      const workbook = await act(() => apiRef.current.getDataAsExcel());
       const worksheet = workbook!.worksheets[0];
 
       // 1-based index + 1 for column header row
@@ -239,6 +239,116 @@ describe('<DataGridPremium /> - Export Excel', () => {
       expect(lastRow.getCell(4).type).to.equal(Excel.ValueType.String);
       expect(lastRow.getCell(5).type).to.equal(Excel.ValueType.Merge);
       expect(lastRow.getCell(6).type).to.equal(Excel.ValueType.Merge);
+    });
+
+    it('should export hidden columns when `allColumns=true`', async () => {
+      const Test = () => {
+        apiRef = useGridApiRef();
+        return (
+          <div style={{ width: 300, height: 200 }}>
+            <DataGridPremium
+              columns={[{ field: 'id' }, { field: 'col1' }, { field: 'col2' }, { field: 'col3' }]}
+              rows={[
+                { id: 1, col1: '1-1', col2: '1-2', col3: '1-3' },
+                { id: 2, col1: '2-1', col2: '2-2', col3: '2-3' },
+                { id: 3, col1: '3-1', col2: '3-2', col3: '3-3' },
+                { id: 4, col1: '4-1', col2: '4-2', col3: '4-3' },
+                { id: 5, col1: '5-1', col2: '5-2', col3: '5-3' },
+                { id: 6, col1: '6-1', col2: '6-2', col3: '6-3' },
+              ]}
+              apiRef={apiRef}
+              initialState={{
+                columns: {
+                  columnVisibilityModel: {
+                    col2: false,
+                    col3: false,
+                  },
+                },
+              }}
+            />
+          </div>
+        );
+      };
+      render(<Test />);
+
+      const workbook = await apiRef.current.getDataAsExcel({
+        allColumns: true,
+      });
+      const worksheet = workbook!.worksheets[0];
+
+      const headerRow = worksheet.getRow(1);
+      expect(headerRow.getCell(1).value).to.equal('id');
+      expect(headerRow.getCell(2).value).to.equal('col1');
+      expect(headerRow.getCell(3).value).to.equal('col2');
+      expect(headerRow.getCell(4).value).to.equal('col3');
+    });
+
+    it(`should export column grouping`, async () => {
+      const Test = () => {
+        apiRef = useGridApiRef();
+        return (
+          <div style={{ width: 300, height: 300 }}>
+            <DataGridPremium
+              columns={[{ field: 'col1' }, { field: 'col2' }, { field: 'col3' }]}
+              rows={[
+                {
+                  id: 1,
+                  col1: 1,
+                  col2: 2,
+                  col3: 3,
+                },
+              ]}
+              columnGroupingModel={[
+                { groupId: 'group1', children: [{ field: 'col1' }] },
+                {
+                  groupId: 'group23',
+                  children: [
+                    { field: 'col2' },
+                    {
+                      groupId: 'group3',
+                      headerName: 'special col3',
+                      children: [{ field: 'col3' }],
+                    },
+                  ],
+                },
+              ]}
+              experimentalFeatures={{ columnGrouping: true }}
+              apiRef={apiRef}
+            />
+          </div>
+        );
+      };
+      render(<Test />);
+
+      const workbook = await act(() => apiRef.current.getDataAsExcel());
+      const worksheet = workbook!.worksheets[0];
+
+      // line 1: | group1 | group23 |
+      expect(worksheet.getCell('A1').value).to.equal('group1');
+      expect(worksheet.getCell('B1').value).to.equal('group23');
+
+      expect(worksheet.getCell('A1').type).to.equal(Excel.ValueType.String);
+      expect(worksheet.getCell('B1').type).to.equal(Excel.ValueType.String);
+      expect(worksheet.getCell('C1').type).to.equal(Excel.ValueType.Merge);
+
+      // line 2: |  |  | special col3 |
+
+      expect(worksheet.getCell('A2').value).to.equal(null);
+      expect(worksheet.getCell('B2').value).to.equal(null);
+      expect(worksheet.getCell('C2').value).to.equal('special col3');
+
+      expect(worksheet.getCell('A2').type).to.equal(Excel.ValueType.Null);
+      expect(worksheet.getCell('B2').type).to.equal(Excel.ValueType.Null);
+      expect(worksheet.getCell('C2').type).to.equal(Excel.ValueType.String);
+      // line 3: | col1 | col2 | col3 |
+
+      expect(worksheet.getCell('A3').value).to.equal('col1');
+      expect(worksheet.getCell('B3').value).to.equal('col2');
+      expect(worksheet.getCell('C3').value).to.equal('col3');
+
+      expect(worksheet.getCell('A3').type).to.equal(Excel.ValueType.String);
+      expect(worksheet.getCell('B3').type).to.equal(Excel.ValueType.String);
+      expect(worksheet.getCell('C3').type).to.equal(Excel.ValueType.String);
     });
   });
 });

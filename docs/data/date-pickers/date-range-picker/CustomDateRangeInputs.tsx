@@ -1,14 +1,15 @@
 import * as React from 'react';
+import { Dayjs } from 'dayjs';
 import Box from '@mui/material/Box';
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DateRangePicker, DateRange } from '@mui/x-date-pickers-pro/DateRangePicker';
 
 export default function CustomDateRangeInputs() {
-  const [value, setValue] = React.useState<DateRange<Date>>([null, null]);
+  const [value, setValue] = React.useState<DateRange<Dayjs>>([null, null]);
 
   return (
-    <LocalizationProvider dateAdapter={AdapterDateFns}>
+    <LocalizationProvider dateAdapter={AdapterDayjs}>
       <DateRangePicker
         label="Advanced keyboard"
         value={value}

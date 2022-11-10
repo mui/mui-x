@@ -9,6 +9,7 @@ import {
 } from '@mui/x-data-grid-pro';
 import { GridColumnRawLookup } from '@mui/x-data-grid-pro/internals';
 import { GridApiPremium } from '../../../models/gridApiPremium';
+import { GridGroupingColumnFooterCell } from '../../../components/GridGroupingColumnFooterCell';
 import { GridGroupingCriteriaCell } from '../../../components/GridGroupingCriteriaCell';
 import { GridGroupingColumnLeafCell } from '../../../components/GridGroupingColumnLeafCell';
 import {
@@ -64,6 +65,7 @@ const getLeafProperties = (leafColDef: GridColDef): Partial<GridColDef> => ({
   headerName: leafColDef.headerName ?? leafColDef.field,
   sortable: leafColDef.sortable,
   filterable: leafColDef.filterable,
+  valueOptions: leafColDef.valueOptions,
   filterOperators: leafColDef.filterOperators?.map((operator) => ({
     ...operator,
     getApplyFilterFn: (filterItem, column) => {
@@ -73,11 +75,6 @@ const getLeafProperties = (leafColDef: GridColDef): Partial<GridColDef> => ({
       }
 
       return (params) => {
-        // We only want to filter leaves
-        if (params.rowNode.groupingField != null) {
-          return true;
-        }
-
         return originalFn(params);
       };
     },
@@ -99,6 +96,7 @@ const getGroupingCriteriaProperties = (
   const properties: Partial<GridColDef> = {
     sortable: groupedByColDef.sortable,
     filterable: groupedByColDef.filterable,
+    valueOptions: groupedByColDef.valueOptions,
     sortComparator: (v1, v2, cellParams1, cellParams2) => {
       // We only want to sort the groups of the current grouping criteria
       if (
@@ -119,11 +117,6 @@ const getGroupingCriteriaProperties = (
         }
 
         return (params) => {
-          // We only want to filter the groups of the current grouping criteria
-          if (params.rowNode.groupingField !== groupedByColDef.field) {
-            return true;
-          }
-
           return originalFn(params);
         };
       },
@@ -174,6 +167,11 @@ export const createGroupingColDefForOneGroupingCriteria = ({
       leafColDef?.width ?? 0,
     ),
     renderCell: (params) => {
+      // Render footer
+      if (params.rowNode.position === 'footer') {
+        return <GridGroupingColumnFooterCell {...params} />;
+      }
+
       // Render leaves
       if (params.rowNode.groupingField == null) {
         if (leafColDef) {
@@ -290,6 +288,11 @@ export const createGroupingColDefForAllGroupingCriteria = ({
       leafColDef?.width ?? 0,
     ),
     renderCell: (params) => {
+      // Render footer
+      if (params.rowNode.position === 'footer') {
+        return <GridGroupingColumnFooterCell {...params} />;
+      }
+
       // Render the leaves
       if (params.rowNode.groupingField == null) {
         if (leafColDef) {

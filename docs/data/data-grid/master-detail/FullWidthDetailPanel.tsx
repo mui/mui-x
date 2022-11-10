@@ -8,6 +8,7 @@ import {
   GridColumns,
   useGridApiContext,
   GRID_DETAIL_PANEL_TOGGLE_FIELD,
+  GridRowParams,
 } from '@mui/x-data-grid-pro';
 import {
   randomCreatedDate,
@@ -193,7 +194,7 @@ type Customer = typeof rows[number];
 
 export default function FullWidthDetailPanel() {
   const getDetailPanelContent = React.useCallback(
-    ({ row }) => <DetailPanelContent row={row} />,
+    ({ row }: GridRowParams) => <DetailPanelContent row={row} />,
     [],
   );
 

@@ -1,5 +1,7 @@
 import * as React from 'react';
-import { styled } from '@mui/material/styles';
+import clsx from 'clsx';
+import { styled, useThemeProps } from '@mui/material/styles';
+import { unstable_composeClasses as composeClasses } from '@mui/material';
 import {
   useUtils,
   executeInTheNextEventLoopTick,
@@ -11,8 +13,25 @@ import {
 } from '@mui/x-date-pickers/internals';
 import { CurrentlySelectingRangeEndProps, DateRange } from '../internal/models/dateRange';
 import { DateRangeValidationError } from '../internal/hooks/validation/useDateRangeValidation';
+import {
+  DateRangePickerInputClasses,
+  getDateRangePickerInputUtilityClass,
+} from './dateRangePickerInputClasses';
 
-const DateRangePickerInputRoot = styled('div')(({ theme }) => ({
+const useUtilityClasses = (ownerState: DateRangePickerInputProps<any, any>) => {
+  const { classes } = ownerState;
+  const slots = {
+    root: ['root'],
+  };
+
+  return composeClasses(slots, getDateRangePickerInputUtilityClass, classes);
+};
+
+const DateRangePickerInputRoot = styled('div', {
+  name: 'MuiDateRangePickerInput',
+  slot: 'Root',
+  overridesResolver: (_, styles) => styles.root,
+})(({ theme }) => ({
   display: 'flex',
   alignItems: 'baseline',
   [theme.breakpoints.down('xs')]: {
@@ -48,7 +67,7 @@ export interface ExportedDateRangePickerInputProps<TInputDate, TDate>
   onChange: (date: DateRange<TDate>, keyboardInputValue?: string) => void;
 }
 
-export interface DateRangeInputProps<TInputDate, TDate>
+export interface DateRangePickerInputProps<TInputDate, TDate>
   extends ExportedDateRangePickerInputProps<TInputDate, TDate>,
     Omit<
       DateInputProps<TInputDate, TDate>,
@@ -59,10 +78,12 @@ export interface DateRangeInputProps<TInputDate, TDate>
   endText: React.ReactNode;
   validationError: DateRangeValidationError;
   rawValue: DateRange<TInputDate>;
+  classes?: Partial<DateRangePickerInputClasses>;
+  mobile?: boolean;
 }
 
 type DatePickerInputComponent = <TInputDate, TDate>(
-  props: DateRangeInputProps<TInputDate, TDate> & React.RefAttributes<HTMLDivElement>,
+  props: DateRangePickerInputProps<TInputDate, TDate> & React.RefAttributes<HTMLDivElement>,
 ) => JSX.Element;
 
 /**
@@ -71,7 +92,11 @@ type DatePickerInputComponent = <TInputDate, TDate>(
 export const DateRangePickerInput = React.forwardRef(function DateRangePickerInput<
   TInputDate,
   TDate,
->(props: DateRangeInputProps<TInputDate, TDate>, ref: React.Ref<HTMLDivElement>): JSX.Element {
+>(
+  inProps: DateRangePickerInputProps<TInputDate, TDate>,
+  ref: React.Ref<HTMLDivElement>,
+): JSX.Element {
+  const props = useThemeProps({ props: inProps, name: 'MuiDateRangePickerInput' });
   const {
     currentlySelectingRangeEnd,
     disableOpenPicker,
@@ -88,12 +113,15 @@ export const DateRangePickerInput = React.forwardRef(function DateRangePickerInp
     startText,
     TextFieldProps,
     validationError: [startValidationError, endValidationError],
+    className,
+    mobile,
     ...other
   } = props;
 
   const utils = useUtils<TDate>();
   const startRef = React.useRef<HTMLInputElement>(null);
   const endRef = React.useRef<HTMLInputElement>(null);
+  const classes = useUtilityClasses(props);
 
   React.useEffect(() => {
     if (!open) {
@@ -123,7 +151,10 @@ export const DateRangePickerInput = React.forwardRef(function DateRangePickerInp
     lazyHandleChangeCallback([utils.date(start), date], inputString);
   };
 
-  const openRangeStartSelection = () => {
+  const openRangeStartSelection = (
+    event: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>,
+  ) => {
+    event.stopPropagation();
     if (setCurrentlySelectingRangeEnd) {
       setCurrentlySelectingRangeEnd('start');
     }
@@ -132,7 +163,10 @@ export const DateRangePickerInput = React.forwardRef(function DateRangePickerInp
     }
   };
 
-  const openRangeEndSelection = () => {
+  const openRangeEndSelection = (
+    event: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>,
+  ) => {
+    event.stopPropagation();
     if (setCurrentlySelectingRangeEnd) {
       setCurrentlySelectingRangeEnd('end');
     }
@@ -162,12 +196,16 @@ export const DateRangePickerInput = React.forwardRef(function DateRangePickerInp
     TextFieldProps: {
       ...TextFieldProps,
       ref: startRef,
-      focused: open && currentlySelectingRangeEnd === 'start',
+      focused: open ? currentlySelectingRangeEnd === 'start' : undefined,
+      // registering `onClick` listener on the root element as well to correctly handle cases where user is clicking on `label`
+      // which has `pointer-events: none` and due to DOM structure the `input` does not catch the click event
+      ...(!readOnly && !other.disabled && { onClick: openRangeStartSelection }),
     },
     inputProps: {
       onClick: openRangeStartSelection,
       onKeyDown: onSpaceOrEnter(openRangeStartSelection),
       onFocus: focusOnRangeStart,
+      readOnly: mobile,
     },
   });
 
@@ -181,17 +219,21 @@ export const DateRangePickerInput = React.forwardRef(function DateRangePickerInp
     TextFieldProps: {
       ...TextFieldProps,
       ref: endRef,
-      focused: open && currentlySelectingRangeEnd === 'end',
+      focused: open ? currentlySelectingRangeEnd === 'end' : undefined,
+      // registering `onClick` listener on the root element as well to correctly handle cases where user is clicking on `label`
+      // which has `pointer-events: none` and due to DOM structure the `input` does not catch the click event
+      ...(!readOnly && !other.disabled && { onClick: openRangeEndSelection }),
     },
     inputProps: {
       onClick: openRangeEndSelection,
       onKeyDown: onSpaceOrEnter(openRangeEndSelection),
       onFocus: focusOnRangeEnd,
+      readOnly: mobile,
     },
   });
 
   return (
-    <DateRangePickerInputRoot onBlur={onBlur} ref={ref}>
+    <DateRangePickerInputRoot onBlur={onBlur} ref={ref} className={clsx(classes.root, className)}>
       {renderInput(startInputProps, endInputProps)}
     </DateRangePickerInputRoot>
   );

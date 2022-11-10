@@ -8,6 +8,7 @@ import {
   DataGridPro,
   GridCellParams,
   GridApi,
+  GridEventListener,
 } from '@mui/x-data-grid-pro';
 import {
   randomCreatedDate,
@@ -76,27 +77,35 @@ export default function StartEditButtonGrid() {
     setSelectedCellParams(params);
   }, []);
 
-  const handleDoubleCellClick = React.useCallback((params, event) => {
+  const handleDoubleCellClick = React.useCallback<
+    GridEventListener<'cellDoubleClick'>
+  >((params, event) => {
     event.defaultMuiPrevented = true;
   }, []);
 
   // Prevent from rolling back on escape
-  const handleCellKeyDown = React.useCallback((params, event) => {
-    if (
-      ['Escape', 'Delete', 'Backspace', 'Enter'].includes(
-        (event as React.KeyboardEvent).key,
-      )
-    ) {
-      event.defaultMuiPrevented = true;
-    }
-  }, []);
+  const handleCellKeyDown = React.useCallback<GridEventListener<'cellKeyDown'>>(
+    (params, event) => {
+      if (
+        ['Escape', 'Delete', 'Backspace', 'Enter'].includes(
+          (event as React.KeyboardEvent).key,
+        )
+      ) {
+        event.defaultMuiPrevented = true;
+      }
+    },
+    [],
+  );
 
   // Prevent from committing on focus out
-  const handleCellFocusOut = React.useCallback((params, event) => {
-    if (params.cellMode === 'edit' && event) {
-      event.defaultMuiPrevented = true;
-    }
-  }, []);
+  const handleCellFocusOut = React.useCallback<GridEventListener<'cellFocusOut'>>(
+    (params, event) => {
+      if (params.cellMode === 'edit' && event) {
+        event.defaultMuiPrevented = true;
+      }
+    },
+    [],
+  );
 
   return (
     <div style={{ height: 400, width: '100%' }}>

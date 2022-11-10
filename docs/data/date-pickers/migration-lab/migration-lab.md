@@ -5,9 +5,8 @@
 ## Introduction
 
 This is a reference for migrating your site's pickers from `@mui/lab` to `@mui/x-date-pickers` or `@mui/x-date-pickers-pro`.
-This migration only concerns packages and should do not affect the behavior of the components in your app.
-
-We explored the reasons of this migration in a [blog post](/blog/lab-date-pickers-to-mui-x/)
+This migration is about the npm packages used, it **does not** affect the behavior of the components in your application.
+You can find why we are moving in this direction in the [announcement blog post](/blog/lab-date-pickers-to-mui-x/).
 
 ## License
 
@@ -55,7 +54,7 @@ import { LicenseInfo } from '@mui/x-license-pro';
 LicenseInfo.setLicenseKey('YOUR_LICENSE_KEY');
 ```
 
-More information [here](/x/advanced-components/#license-key-installation)
+Learn more on [the Licensing page](/x/introduction/licensing/#license-key-installation).
 
 ### 2. Run the code mod
 
@@ -81,3 +80,65 @@ Which will transform the imports like this:
 
 Components of the Community Plan such as `<DatePicker />` can be imported from both `@mui/x-date-pickers-pro` and `@mui/x-date-pickers`.
 Only [date adapters](/x/react-date-pickers/getting-started/#setup) such as `AdapterDayjs` can only be imported from `@mui/x-date-pickers/[adapterName]`.
+
+### 3. Handle breaking changes introduced in alpha
+
+During the migration from `@mui/lab` to MUI X, we've focused on enhancing stability and developer experience.
+Some APIs were improved to be more coherent and customizable.
+
+Please check the complete list of the API changes before migrating from `@mui/x-date-pickers` 5.0.0-alpha.0 to the last v5.0.0.
+
+#### Props renaming
+
+The `disableCloseOnSelect` prop has been replaced by a new `closeOnSelect` prop which has the opposite behavior.
+The default behavior remains the same (close after the last step on desktop but not on mobile).
+
+```diff
+// If you don't want to close after the last step
+-<DatePicker disableCloseOnSelect={false} />
++<DatePicker closeOnSelect />
+
+// If you want to close after the last step
+-<DatePicker disableCloseOnSelect />
++<DatePicker closeOnSelect={false} />
+```
+
+The props of `MonthPicker`, `YearPicker` and `DayPicker` have been reworked to make them more consistent for a standalone usage.
+
+- **MonthPicker**: The prop `onMonthChange` has been removed, you can use `onChange` instead since every change is a month change.
+- **YearPicker**: The prop `onYearChange` has been removed, you can use `onChange` instead since every change is a year change.
+- **DayPicker**: The prop `isDateDisabled` has been removed, you can now use the same validation props as for the other components (`maxDate`, `minDate`, `shouldDisableDate`, `disableFuture` and `disablePast`).
+
+#### Translation
+
+Props for translation have been either deprecated or removed in favor of a [global localization](/x/react-date-pickers/localization/) similar to the one used by the data grid.
+We already have ten locales provided by the community. (Thank you!)
+
+#### Use slot for `ActionBar`
+
+The props related to the action bar buttons (`clearable`, `showTodayButton`, `cancelText`, `okText`) have been removed.
+
+To decide which button must be displayed and in which order, you can now use the `actions` prop of the `actionBar` component slot props.
+
+```jsx
+<DatePicker
+  componentsProps={{
+    actionBar: {
+      // The actions will be the same between desktop and mobile
+      actions: ['clear'],
+
+      // The actions will be different between desktop and mobile
+      actions: (variant) => (variant === 'desktop' ? [] : ['clear']),
+    },
+  }}
+/>
+```
+
+The build-in `ActionBar` component supports 4 different actions: `'clear'`, `'cancel'`, `'accept'`, and `'today'`.
+By default, the pickers will render the cancel and accept button on mobile and no action on desktop.
+
+If you need other actions, you can provide your own component to the `ActionBar` component slot
+
+```jsx
+<DatePicker components={{ ActionBar: CustomActionBar }} />
+```

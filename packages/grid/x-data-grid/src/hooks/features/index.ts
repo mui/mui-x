@@ -1,6 +1,7 @@
 // Only export the variable and types that should be publicly exposed and re-exported from `@mui/x-data-grid-pro`
 export * from './columnMenu';
 export * from './columns';
+export * from './columnGrouping';
 export * from './density';
 export * from './editRows';
 export * from './filter';

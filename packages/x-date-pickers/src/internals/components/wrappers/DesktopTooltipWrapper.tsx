@@ -12,6 +12,7 @@ export function DesktopTooltipWrapper(props: InternalDesktopWrapperProps) {
     KeyboardDateInputComponent,
     open,
     PopperProps,
+    PaperProps,
     TransitionComponent,
     onClear,
     onDismiss,
@@ -49,6 +50,7 @@ export function DesktopTooltipWrapper(props: InternalDesktopWrapperProps) {
         anchorEl={inputContainerRef.current}
         TransitionComponent={TransitionComponent}
         PopperProps={PopperProps}
+        PaperProps={PaperProps}
         onBlur={handleBlur}
         onClose={onDismiss}
         onClear={onClear}

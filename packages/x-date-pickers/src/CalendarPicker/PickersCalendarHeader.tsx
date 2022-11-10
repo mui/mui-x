@@ -1,6 +1,7 @@
 import * as React from 'react';
 import Fade from '@mui/material/Fade';
-import { styled } from '@mui/material/styles';
+import { styled, useThemeProps } from '@mui/material/styles';
+import { unstable_composeClasses as composeClasses } from '@mui/material';
 import IconButton from '@mui/material/IconButton';
 import { SlideDirection } from './PickersSlideTransition';
 import { useLocaleText, useUtils } from '../internals/hooks/useUtils';
@@ -19,14 +20,26 @@ import {
 } from '../internals/hooks/date-helpers-hooks';
 import { CalendarPickerView } from '../internals/models';
 import { buildDeprecatedPropsWarning } from '../internals/utils/warning';
+import {
+  getPickersCalendarHeaderUtilityClass,
+  PickersCalendarHeaderClasses,
+} from './pickersCalendarHeaderClasses';
 
 export type ExportedCalendarHeaderProps<TDate> = Pick<
   PickersCalendarHeaderProps<TDate>,
-  'getViewSwitchingButtonText' | 'leftArrowButtonText' | 'rightArrowButtonText'
+  'getViewSwitchingButtonText' | 'leftArrowButtonText' | 'rightArrowButtonText' | 'classes'
 >;
 
 export interface PickersCalendarHeaderSlotsComponent extends PickersArrowSwitcherSlotsComponent {
+  /**
+   * Button displayed to switch between different calendar views.
+   * @default IconButton
+   */
   SwitchViewButton: React.ElementType;
+  /**
+   * Icon displayed in the SwitchViewButton. Rotated by 180° when the open view is 'year'.
+   * @default ArrowDropDown
+   */
   SwitchViewIcon: React.ElementType;
 }
 
@@ -59,16 +72,35 @@ export interface PickersCalendarHeaderProps<TDate>
    * Get aria-label text for switching between views button.
    * @param {CalendarPickerView} currentView The view from which we want to get the button text.
    * @returns {string} The label of the view.
-   * @deprecated Use the `localeText` prop of `LocalizationProvider` instead, see https://mui.com/x/react-date-pickers/localization
+   * @deprecated Use the `localeText` prop of `LocalizationProvider` instead, see https://mui.com/x/react-date-pickers/localization/.
    */
   getViewSwitchingButtonText?: (currentView: CalendarPickerView) => string;
   onMonthChange: (date: TDate, slideDirection: SlideDirection) => void;
   openView: CalendarPickerView;
   reduceAnimations: boolean;
   onViewChange?: (view: CalendarPickerView) => void;
+  labelId?: string;
+  classes?: Partial<PickersCalendarHeaderClasses>;
 }
 
-const PickersCalendarHeaderRoot = styled('div')<{
+const useUtilityClasses = (ownerState: PickersCalendarHeaderProps<any>) => {
+  const { classes } = ownerState;
+  const slots = {
+    root: ['root'],
+    labelContainer: ['labelContainer'],
+    label: ['label'],
+    switchViewButton: ['switchViewButton'],
+    switchViewIcon: ['switchViewIcon'],
+  };
+
+  return composeClasses(slots, getPickersCalendarHeaderUtilityClass, classes);
+};
+
+const PickersCalendarHeaderRoot = styled('div', {
+  name: 'MuiPickersCalendarHeader',
+  slot: 'Root',
+  overridesResolver: (_, styles) => styles.root,
+})<{
   ownerState: PickersCalendarHeaderProps<any>;
 }>({
   display: 'flex',
@@ -82,7 +114,11 @@ const PickersCalendarHeaderRoot = styled('div')<{
   minHeight: 30,
 });
 
-const PickersCalendarHeaderLabel = styled('div')<{
+const PickersCalendarHeaderLabelContainer = styled('div', {
+  name: 'MuiPickersCalendarHeader',
+  slot: 'LabelContainer',
+  overridesResolver: (_, styles) => styles.labelContainer,
+})<{
   ownerState: PickersCalendarHeaderProps<any>;
 }>(({ theme }) => ({
   display: 'flex',
@@ -95,17 +131,29 @@ const PickersCalendarHeaderLabel = styled('div')<{
   fontWeight: theme.typography.fontWeightMedium,
 }));
 
-const PickersCalendarHeaderLabelItem = styled('div')<{
+const PickersCalendarHeaderLabel = styled('div', {
+  name: 'MuiPickersCalendarHeader',
+  slot: 'Label',
+  overridesResolver: (_, styles) => styles.label,
+})<{
   ownerState: PickersCalendarHeaderProps<any>;
 }>({
   marginRight: 6,
 });
 
-const PickersCalendarHeaderSwitchViewButton = styled(IconButton)({
+const PickersCalendarHeaderSwitchViewButton = styled(IconButton, {
+  name: 'MuiPickersCalendarHeader',
+  slot: 'SwitchViewButton',
+  overridesResolver: (_, styles) => styles.switchViewButton,
+})({
   marginRight: 'auto',
 });
 
-const PickersCalendarHeaderSwitchView = styled(ArrowDropDown)<{
+const PickersCalendarHeaderSwitchViewIcon = styled(ArrowDropDown, {
+  name: 'MuiPickersCalendarHeader',
+  slot: 'SwitchViewIcon',
+  overridesResolver: (_, styles) => styles.switchViewIcon,
+})<{
   ownerState: PickersCalendarHeaderProps<any>;
 }>(({ theme, ownerState }) => ({
   willChange: 'transform',
@@ -123,7 +171,8 @@ const deprecatedPropsWarning = buildDeprecatedPropsWarning(
 /**
  * @ignore - do not document.
  */
-export function PickersCalendarHeader<TDate>(props: PickersCalendarHeaderProps<TDate>) {
+export function PickersCalendarHeader<TDate>(inProps: PickersCalendarHeaderProps<TDate>) {
+  const props = useThemeProps({ props: inProps, name: 'MuiPickersCalendarHeader' });
   const {
     components = {},
     componentsProps = {},
@@ -141,6 +190,7 @@ export function PickersCalendarHeader<TDate>(props: PickersCalendarHeaderProps<T
     reduceAnimations,
     rightArrowButtonText: rightArrowButtonTextProp,
     views,
+    labelId,
   } = props;
 
   deprecatedPropsWarning({
@@ -157,6 +207,7 @@ export function PickersCalendarHeader<TDate>(props: PickersCalendarHeaderProps<T
     getViewSwitchingButtonTextProp ?? localeText.calendarViewSwitchingButtonAriaLabel;
 
   const utils = useUtils<TDate>();
+  const classes = useUtilityClasses(props);
 
   const switchViewButtonProps = componentsProps.switchViewButton || {};
 
@@ -194,38 +245,44 @@ export function PickersCalendarHeader<TDate>(props: PickersCalendarHeaderProps<T
   const ownerState = props;
 
   return (
-    <PickersCalendarHeaderRoot ownerState={ownerState}>
-      <PickersCalendarHeaderLabel
+    <PickersCalendarHeaderRoot ownerState={ownerState} className={classes.root}>
+      <PickersCalendarHeaderLabelContainer
         role="presentation"
         onClick={handleToggleView}
         ownerState={ownerState}
+        // putting this on the label item element below breaks when using transition
+        aria-live="polite"
+        className={classes.labelContainer}
       >
         <PickersFadeTransitionGroup
           reduceAnimations={reduceAnimations}
           transKey={utils.format(month, 'monthAndYear')}
         >
-          <PickersCalendarHeaderLabelItem
-            aria-live="polite"
+          <PickersCalendarHeaderLabel
+            id={labelId}
             data-mui-test="calendar-month-and-year-text"
             ownerState={ownerState}
+            className={classes.label}
           >
             {utils.format(month, 'monthAndYear')}
-          </PickersCalendarHeaderLabelItem>
+          </PickersCalendarHeaderLabel>
         </PickersFadeTransitionGroup>
         {views.length > 1 && !disabled && (
           <PickersCalendarHeaderSwitchViewButton
             size="small"
             as={components.SwitchViewButton}
             aria-label={getViewSwitchingButtonText(currentView)}
+            className={classes.switchViewButton}
             {...switchViewButtonProps}
           >
-            <PickersCalendarHeaderSwitchView
+            <PickersCalendarHeaderSwitchViewIcon
               as={components.SwitchViewIcon}
               ownerState={ownerState}
+              className={classes.switchViewIcon}
             />
           </PickersCalendarHeaderSwitchViewButton>
         )}
-      </PickersCalendarHeaderLabel>
+      </PickersCalendarHeaderLabelContainer>
       <Fade in={currentView === 'day'}>
         <PickersArrowSwitcher
           leftArrowButtonText={leftArrowButtonText}

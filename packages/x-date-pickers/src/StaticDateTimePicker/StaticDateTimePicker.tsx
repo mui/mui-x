@@ -20,6 +20,7 @@ import { useDateTimeValidation } from '../internals/hooks/validation/useDateTime
 import { usePickerState } from '../internals/hooks/usePickerState';
 import { StaticPickerProps } from '../internals/models/props/staticPickerProps';
 import { DateInputSlotsComponent } from '../internals/components/PureDateInput';
+import { DateTimePickerTabs } from '../DateTimePicker/DateTimePickerTabs';
 
 export interface StaticDateTimePickerSlotsComponent
   extends PickersStaticWrapperSlotsComponent,
@@ -30,9 +31,8 @@ export interface StaticDateTimePickerSlotsComponentsProps
   extends PickersStaticWrapperSlotsComponentsProps,
     CalendarOrClockPickerSlotsComponentsProps {}
 
-export type StaticDateTimePickerProps<TInputDate, TDate> = StaticPickerProps<
-  BaseDateTimePickerProps<TInputDate, TDate>
-> & {
+export interface StaticDateTimePickerProps<TInputDate, TDate>
+  extends StaticPickerProps<BaseDateTimePickerProps<TInputDate, TDate>> {
   /**
    * Overrideable components.
    * @default {}
@@ -43,7 +43,7 @@ export type StaticDateTimePickerProps<TInputDate, TDate> = StaticPickerProps<
    * @default {}
    */
   componentsProps?: Partial<StaticDateTimePickerSlotsComponentsProps>;
-};
+}
 
 type StaticDateTimePickerComponent = (<TInputDate, TDate = TInputDate>(
   props: StaticDateTimePickerProps<TInputDate, TDate> & React.RefAttributes<HTMLDivElement>,
@@ -76,8 +76,10 @@ export const StaticDateTimePicker = React.forwardRef(function StaticDateTimePick
     onChange,
     ToolbarComponent = DateTimePickerToolbar,
     value,
-    components,
+    components: providedComponents,
     componentsProps,
+    hideTabs = displayStaticWrapperAs === 'desktop',
+    className,
     ...other
   } = props;
 
@@ -87,6 +89,10 @@ export const StaticDateTimePicker = React.forwardRef(function StaticDateTimePick
   );
 
   const validationError = useDateTimeValidation(props) !== null;
+  const components = React.useMemo<StaticDateTimePickerProps<TInputDate, TDate>['components']>(
+    () => ({ Tabs: DateTimePickerTabs, ...providedComponents }),
+    [providedComponents],
+  );
 
   const DateInputProps = {
     ...inputProps,
@@ -102,6 +108,7 @@ export const StaticDateTimePicker = React.forwardRef(function StaticDateTimePick
       displayStaticWrapperAs={displayStaticWrapperAs}
       components={components}
       componentsProps={componentsProps}
+      className={className}
       {...wrapperProps}
     >
       <CalendarOrClockPicker
@@ -111,6 +118,7 @@ export const StaticDateTimePicker = React.forwardRef(function StaticDateTimePick
         DateInputProps={DateInputProps}
         components={components}
         componentsProps={componentsProps}
+        hideTabs={hideTabs}
         {...other}
       />
     </PickerStaticWrapper>
@@ -162,6 +170,13 @@ StaticDateTimePicker.propTypes = {
    */
   dateRangeIcon: PropTypes.node,
   /**
+   * Formats the day of week displayed in the calendar header.
+   * @param {string} day The day of week provided by the adapter's method `getWeekdays`.
+   * @returns {string} The name to display.
+   * @default (day) => day.charAt(0).toUpperCase()
+   */
+  dayOfWeekFormatter: PropTypes.func,
+  /**
    * Default calendar month displayed when `value={null}`.
    */
   defaultCalendarMonth: PropTypes.any,
@@ -212,7 +227,7 @@ StaticDateTimePicker.propTypes = {
    * @param {TDate | null} time The current time.
    * @param {MuiPickersAdapter<TDate>} adapter The current date adapter.
    * @returns {string} The clock label.
-   * @deprecated Use the `localeText` prop of `LocalizationProvider` instead, see https://mui.com/x/react-date-pickers/localization
+   * @deprecated Use the `localeText` prop of `LocalizationProvider` instead, see https://mui.com/x/react-date-pickers/localization/.
    * @default <TDate extends any>(
    *   view: ClockView,
    *   time: TDate | null,
@@ -236,11 +251,12 @@ StaticDateTimePicker.propTypes = {
    * Get aria-label text for switching between views button.
    * @param {CalendarPickerView} currentView The view from which we want to get the button text.
    * @returns {string} The label of the view.
-   * @deprecated Use the `localeText` prop of `LocalizationProvider` instead, see https://mui.com/x/react-date-pickers/localization
+   * @deprecated Use the `localeText` prop of `LocalizationProvider` instead, see https://mui.com/x/react-date-pickers/localization/.
    */
   getViewSwitchingButtonText: PropTypes.func,
   /**
-   * To show tabs.
+   * Toggles visibility of date time switching tabs
+   * @default false for mobile, true for desktop
    */
   hideTabs: PropTypes.bool,
   ignoreInvalidInputs: PropTypes.bool,
@@ -283,7 +299,7 @@ StaticDateTimePicker.propTypes = {
    */
   maxDate: PropTypes.any,
   /**
-   * Minimal selectable moment of time with binding to date, to set max time in each day use `maxTime`.
+   * Maximal selectable moment of time with binding to date, to set max time in each day use `maxTime`.
    */
   maxDateTime: PropTypes.any,
   /**
@@ -359,6 +375,8 @@ StaticDateTimePicker.propTypes = {
   OpenPickerButtonProps: PropTypes.object,
   /**
    * First view to show.
+   * Must be a valid option from `views` list
+   * @default 'day'
    */
   openTo: PropTypes.oneOf(['day', 'hours', 'minutes', 'month', 'seconds', 'year']),
   /**
@@ -481,6 +499,7 @@ StaticDateTimePicker.propTypes = {
   value: PropTypes.any,
   /**
    * Array of views to show.
+   * @default ['year', 'day', 'hours', 'minutes']
    */
   views: PropTypes.arrayOf(
     PropTypes.oneOf(['day', 'hours', 'minutes', 'month', 'seconds', 'year']).isRequired,

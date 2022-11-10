@@ -140,6 +140,7 @@ export const getGridNumericOperators = (): GridFilterOperator<
         return value == null;
       };
     },
+    requiresFilterValue: false,
   },
   {
     value: 'isNotEmpty',
@@ -148,6 +149,7 @@ export const getGridNumericOperators = (): GridFilterOperator<
         return value != null;
       };
     },
+    requiresFilterValue: false,
   },
   {
     value: 'isAnyOf',

@@ -2,7 +2,7 @@ import * as React from 'react';
 import { spy } from 'sinon';
 import { expect } from 'chai';
 import TextField from '@mui/material/TextField';
-import { describeConformance, screen, userEvent } from '@mui/monorepo/test/utils';
+import { describeConformance, screen, userEvent, fireEvent } from '@mui/monorepo/test/utils';
 import { MobileDateRangePicker } from '@mui/x-date-pickers-pro/MobileDateRangePicker';
 import {
   wrapPickerMount,
@@ -24,7 +24,7 @@ const WrappedMobileDateRangePicker = withPickerControls(MobileDateRangePicker)({
 });
 
 describe('<MobileDateRangePicker />', () => {
-  const { render } = createPickerRenderer();
+  const { render } = createPickerRenderer({ clock: 'fake' });
 
   describeConformance(
     <MobileDateRangePicker
@@ -99,13 +99,13 @@ describe('<MobileDateRangePicker />', () => {
       expect(onClose.callCount).to.equal(0);
 
       // Change the start date
-      userEvent.mousePress(screen.getByLabelText('Jan 3, 2018'));
+      userEvent.mousePress(screen.getByRole('gridcell', { name: '3' }));
       expect(onChange.callCount).to.equal(1);
       expect(onChange.lastCall.args[0][0]).toEqualDateTime(new Date(2018, 0, 3));
       expect(onChange.lastCall.args[0][1]).toEqualDateTime(initialValue[1]);
 
       // Change the end date
-      userEvent.mousePress(screen.getByLabelText('Jan 5, 2018'));
+      userEvent.mousePress(screen.getByRole('gridcell', { name: '5' }));
       expect(onChange.callCount).to.equal(2);
       expect(onChange.lastCall.args[0][0]).toEqualDateTime(new Date(2018, 0, 3));
       expect(onChange.lastCall.args[0][1]).toEqualDateTime(new Date(2018, 0, 5));
@@ -139,7 +139,7 @@ describe('<MobileDateRangePicker />', () => {
       expect(onClose.callCount).to.equal(0);
 
       // Change the end date
-      userEvent.mousePress(screen.getByLabelText('Jan 3, 2018'));
+      userEvent.mousePress(screen.getByRole('gridcell', { name: '3' }));
       expect(onChange.callCount).to.equal(1);
       expect(onChange.lastCall.args[0][0]).toEqualDateTime(initialValue[0]);
       expect(onChange.lastCall.args[0][1]).toEqualDateTime(new Date(2018, 0, 3));
@@ -167,7 +167,7 @@ describe('<MobileDateRangePicker />', () => {
       openPicker({ type: 'date-range', variant: 'mobile', initialFocus: 'end' });
 
       // Change the end date
-      userEvent.mousePress(screen.getByLabelText('Jan 3, 2018'));
+      userEvent.mousePress(screen.getByRole('gridcell', { name: '3' }));
 
       expect(onAccept.callCount).to.equal(1);
       expect(onAccept.lastCall.args[0][0]).toEqualDateTime(initialValue[0]);
@@ -197,7 +197,7 @@ describe('<MobileDateRangePicker />', () => {
       openPicker({ type: 'date-range', variant: 'mobile', initialFocus: 'start' });
 
       // Change the start date (already tested)
-      userEvent.mousePress(screen.getByLabelText('Jan 3, 2018'));
+      userEvent.mousePress(screen.getByRole('gridcell', { name: '3' }));
 
       // Cancel the modifications
       userEvent.mousePress(screen.getByText(/cancel/i));
@@ -229,7 +229,7 @@ describe('<MobileDateRangePicker />', () => {
       openPicker({ type: 'date-range', variant: 'mobile', initialFocus: 'start' });
 
       // Change the start date (already tested)
-      userEvent.mousePress(screen.getByLabelText('Jan 3, 2018'));
+      userEvent.mousePress(screen.getByRole('gridcell', { name: '3' }));
 
       // Accept the modifications
       userEvent.mousePress(screen.getByText(/ok/i));
@@ -295,8 +295,54 @@ describe('<MobileDateRangePicker />', () => {
       expect(onClose.callCount).to.equal(1);
     });
 
-    // TODO: Write test
-    // it('should call onClose and onAccept with the live value when clicking outside of the picker', () => {
-    // })
+    it('should correctly set focused styles when input is focused', () => {
+      render(<WrappedMobileDateRangePicker initialValue={[null, null]} />);
+
+      const firstInput = screen.getAllByRole('textbox')[0];
+      fireEvent.focus(firstInput);
+
+      expect(screen.getByText('Start', { selector: 'label' })).to.have.class('Mui-focused');
+    });
+
+    it('should render "readonly" input elements', () => {
+      render(<WrappedMobileDateRangePicker initialValue={[null, null]} />);
+
+      screen.getAllByRole('textbox').forEach((input) => {
+        expect(input).to.have.attribute('readonly');
+      });
+    });
+
+    it('should allow `shouldDisableDate` to depends on start or end date', () => {
+      render(
+        <WrappedMobileDateRangePicker
+          initialValue={[
+            adapterToUse.date(new Date(2018, 0, 12)),
+            adapterToUse.date(new Date(2018, 0, 10)),
+          ]}
+          shouldDisableDate={(date, position) => {
+            if (position === 'start') {
+              return adapterToUse.isAfter(date as any, adapterToUse.date(new Date(2018, 0, 15)));
+            }
+            return adapterToUse.isBefore(date as any, adapterToUse.date(new Date(2018, 0, 15)));
+          }}
+        />,
+      );
+
+      openPicker({ type: 'date-range', variant: 'mobile', initialFocus: 'start' });
+
+      const firstPicker = screen.getByText('5');
+      const secondPicker = screen.getByText('25');
+
+      expect(firstPicker).not.to.have.attribute('disabled');
+      expect(secondPicker).to.have.attribute('disabled');
+      fireEvent.click(firstPicker);
+
+      expect(firstPicker).to.have.attribute('disabled');
+      expect(secondPicker).not.to.have.attribute('disabled');
+    });
   });
+
+  // TODO: Write test
+  // it('should call onClose and onAccept with the live value when clicking outside of the picker', () => {
+  // })
 });

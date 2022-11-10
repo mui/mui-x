@@ -202,7 +202,9 @@ export const useGridDetailPanel = (
     [apiRef],
   );
 
-  const detailPanelHasAutoHeight = React.useCallback(
+  const detailPanelHasAutoHeight = React.useCallback<
+    GridDetailPanelApi['unstable_detailPanelHasAutoHeight']
+  >(
     (id) => {
       const heightCache = gridDetailPanelRawHeightCacheSelector(apiRef.current.state);
       return heightCache[id] ? heightCache[id].autoHeight : false;

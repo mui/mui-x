@@ -5,6 +5,7 @@ import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridSortApi } from '../../../models/api/gridSortApi';
 import { GridColDef } from '../../../models/colDef/gridColDef';
 import { GridFeatureModeConstant } from '../../../models/gridFeatureMode';
+import { GridRowId, GridRowTreeNodeConfig } from '../../../models/gridRows';
 import { GridSortItem, GridSortModel, GridSortDirection } from '../../../models/gridSortModel';
 import { isEnterKey } from '../../../utils/keyboardUtils';
 import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
@@ -54,6 +55,7 @@ export const useGridSorting = (
   apiRef: React.MutableRefObject<GridApiCommunity>,
   props: Pick<
     DataGridProcessedProps,
+    | 'initialState'
     | 'sortModel'
     | 'onSortModelChange'
     | 'sortingOrder'
@@ -219,9 +221,20 @@ export const useGridSorting = (
    * PRE-PROCESSING
    */
   const stateExportPreProcessing = React.useCallback<GridPipeProcessor<'exportState'>>(
-    (prevState) => {
+    (prevState, context) => {
       const sortModelToExport = gridSortModelSelector(apiRef);
-      if (sortModelToExport.length === 0) {
+
+      const shouldExportSortModel =
+        // Always export if the `exportOnlyDirtyModels` property is activated
+        !context.exportOnlyDirtyModels ||
+        // Always export if the model is controlled
+        props.sortModel != null ||
+        // Always export if the model has been initialized
+        props.initialState?.sorting?.sortModel != null ||
+        // Export if the model is not empty
+        sortModelToExport.length > 0;
+
+      if (!shouldExportSortModel) {
         return prevState;
       }
 
@@ -232,7 +245,7 @@ export const useGridSorting = (
         },
       };
     },
-    [apiRef],
+    [apiRef, props.sortModel, props.initialState?.sorting?.sortModel],
   );
 
   const stateRestorePreProcessing = React.useCallback<GridPipeProcessor<'restoreState'>>(
@@ -255,12 +268,41 @@ export const useGridSorting = (
 
   const flatSortingMethod = React.useCallback<GridStrategyProcessor<'sorting'>>(
     (params) => {
+      const rowTree = gridRowTreeSelector(apiRef);
+
       if (!params.sortRowList) {
-        return gridRowIdsSelector(apiRef);
+        const bodyRowIds: GridRowId[] = [];
+        const footerRowIds: GridRowId[] = [];
+
+        gridRowIdsSelector(apiRef).forEach((rowId) => {
+          if (rowTree[rowId].isPinned) {
+            return;
+          }
+          if (rowTree[rowId].position === 'footer') {
+            footerRowIds.push(rowId);
+          } else {
+            bodyRowIds.push(rowId);
+          }
+        });
+
+        return [...bodyRowIds, ...footerRowIds];
       }
 
-      const rowTree = gridRowTreeSelector(apiRef);
-      return params.sortRowList(Object.values(rowTree));
+      const bodyRows: GridRowTreeNodeConfig[] = [];
+      const footerRowIds: GridRowId[] = [];
+
+      Object.values(rowTree).forEach((rowNode) => {
+        if (rowNode.isPinned) {
+          return;
+        }
+        if (rowNode.position === 'footer') {
+          footerRowIds.push(rowNode.id);
+        } else {
+          bodyRows.push(rowNode);
+        }
+      });
+
+      return [...params.sortRowList(bodyRows), ...footerRowIds];
     },
     [apiRef],
   );

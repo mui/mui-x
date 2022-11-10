@@ -101,9 +101,17 @@ async function main() {
         // Move cursor offscreen to not trigger unwanted hover effects.
         page.mouse.move(0, 0);
 
+        const pathsToNotWaitForFlagCDN = [
+          '/docs-data-grid-filtering/ServerFilterGrid', // No content rendered
+          '/docs-data-grid-filtering/CustomMultiValueOperator', // No content rendered
+          '/docs-data-grid-sorting/ExtendedSortComparator', // No flag column
+          '/docs-data-grid-sorting/FullyCustomSortComparator', // No flag column
+          '/docs-data-grid-sorting/ServerSortingGrid', // No flag column
+        ];
+
         if (
-          pathURL.startsWith('/docs-data-grid-filtering') &&
-          !/(ServerFilterGrid|CustomMultiValueOperator)$/.test(pathURL) // These cases don't render content
+          /^\/docs-data-grid-(filtering|sorting)/.test(pathURL) &&
+          !pathsToNotWaitForFlagCDN.includes(pathURL)
         ) {
           // Wait for the flags to load
           await page.waitForResponse((response) =>
@@ -155,9 +163,9 @@ async function main() {
     });
 
     it('should take a screenshot of the print preview', async function test() {
-      this.timeout(10000);
+      this.timeout(20000);
 
-      const route = `${baseUrl}/stories-grid-toolbar/PrintExportSnap`;
+      const route = `${baseUrl}/docs-data-grid-export/ExportDefaultToolbar`;
       const screenshotPath = path.resolve(screenshotDir, `${route.replace(baseUrl, '.')}Print.png`);
       await fse.ensureDir(path.dirname(screenshotPath));
 
@@ -176,7 +184,7 @@ async function main() {
         printButton.click();
       });
 
-      await sleep(2000);
+      await sleep(6000);
 
       return new Promise((resolve, reject) => {
         // See https://ffmpeg.org/ffmpeg-devices.html#x11grab

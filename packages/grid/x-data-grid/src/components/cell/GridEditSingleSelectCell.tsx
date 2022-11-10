@@ -38,9 +38,18 @@ export interface GridEditSingleSelectCellProps
    * @returns {Promise<void> | void} A promise to be awaited before calling `apiRef.current.setEditCellValue`
    */
   onValueChange?: (event: SelectChangeEvent<any>, newValue: any) => Promise<void> | void;
+  /**
+   * If true, the select opens by default.
+   */
+  initialOpen?: boolean;
+}
+
+function isKeyboardEvent(event: any): event is React.KeyboardEvent {
+  return !!event.key;
 }
 
 function GridEditSingleSelectCell(props: GridEditSingleSelectCellProps) {
+  const rootProps = useGridRootProps();
   const {
     id,
     value,
@@ -60,14 +69,14 @@ function GridEditSingleSelectCell(props: GridEditSingleSelectCellProps) {
     isProcessingProps,
     error,
     onValueChange,
+    initialOpen = rootProps.editMode === GridEditModes.Cell,
     ...other
   } = props;
 
   const apiRef = useGridApiContext();
   const ref = React.useRef<any>();
   const inputRef = React.useRef<any>();
-  const rootProps = useGridRootProps();
-  const [open, setOpen] = React.useState(rootProps.editMode === 'cell');
+  const [open, setOpen] = React.useState(initialOpen);
 
   const baseSelectProps = rootProps.componentsProps?.baseSelect || {};
   const isSelectNative = baseSelectProps.native ?? false;
@@ -147,7 +156,10 @@ function GridEditSingleSelectCell(props: GridEditSingleSelectCellProps) {
     }
   };
 
-  const handleOpen = () => {
+  const handleOpen: SelectProps['onOpen'] = (event) => {
+    if (isKeyboardEvent(event) && event.key === 'Enter') {
+      return;
+    }
     setOpen(true);
   };
 
@@ -195,6 +207,7 @@ GridEditSingleSelectCell.propTypes = {
    * The mode of the cell.
    */
   cellMode: PropTypes.oneOf(['edit', 'view']).isRequired,
+  changeReason: PropTypes.oneOf(['debouncedSetEditCellValue', 'setEditCellValue']),
   /**
    * The column of the row that the current cell belongs to.
    */
@@ -224,6 +237,10 @@ GridEditSingleSelectCell.propTypes = {
    */
   id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
   /**
+   * If true, the select opens by default.
+   */
+  initialOpen: PropTypes.bool,
+  /**
    * If true, the cell is editable.
    */
   isEditable: PropTypes.bool,
@@ -239,7 +256,7 @@ GridEditSingleSelectCell.propTypes = {
   /**
    * The row model of the row that the current cell belongs to.
    */
-  row: PropTypes.object.isRequired,
+  row: PropTypes.any.isRequired,
   /**
    * The node of the row that the current cell belongs to.
    */
@@ -249,7 +266,8 @@ GridEditSingleSelectCell.propTypes = {
    */
   tabIndex: PropTypes.oneOf([-1, 0]).isRequired,
   /**
-   * The cell value, but if the column has valueGetter, use getValue.
+   * The cell value.
+   * If the column has `valueGetter`, use `params.row` to directly access the fields.
    */
   value: PropTypes.any,
 } as any;

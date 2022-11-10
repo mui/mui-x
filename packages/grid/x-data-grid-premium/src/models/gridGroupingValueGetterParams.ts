@@ -4,12 +4,16 @@ import {
   GridRowTreeNodeConfig,
   GridColDef,
   GridStateColDef,
+  GridValidRowModel,
 } from '@mui/x-data-grid-pro';
 
 /**
  * Parameters passed to `colDef.groupingValueGetter`.
  */
-export interface GridGroupingValueGetterParams<V = any, R = any> {
+export interface GridGroupingValueGetterParams<
+  V = any,
+  R extends GridValidRowModel = GridValidRowModel,
+> {
   /**
    * The grid row id.
    */

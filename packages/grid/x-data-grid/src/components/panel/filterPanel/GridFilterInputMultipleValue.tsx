@@ -9,7 +9,7 @@ import { GridFilterInputValueProps } from './GridFilterInputValueProps';
 export type GridFilterInputMultipleValueProps = {
   type?: 'text' | 'number';
 } & GridFilterInputValueProps &
-  Omit<AutocompleteProps<any[], true, false, true>, 'options' | 'renderInput'>;
+  Omit<AutocompleteProps<string, true, false, true>, 'options' | 'renderInput'>;
 
 function GridFilterInputMultipleValue(props: GridFilterInputMultipleValueProps) {
   const {
@@ -43,7 +43,9 @@ function GridFilterInputMultipleValue(props: GridFilterInputMultipleValueProps) 
     setFilterValueState(itemValue.map(String));
   }, [item.value]);
 
-  const handleChange = React.useCallback(
+  const handleChange = React.useCallback<
+    NonNullable<AutocompleteProps<string, true, false, true>['onChange']>
+  >(
     (event, value) => {
       setFilterValueState(value.map(String));
       applyValue({ ...item, value: [...value] });
@@ -52,20 +54,20 @@ function GridFilterInputMultipleValue(props: GridFilterInputMultipleValueProps) 
   );
 
   return (
-    <Autocomplete
+    <Autocomplete<string, true, false, true>
       multiple
       freeSolo
       limitTags={1}
       options={[]}
-      filterOptions={(options, params): any[] => {
+      filterOptions={(options, params) => {
         const { inputValue } = params;
         return inputValue == null || inputValue === '' ? [] : [inputValue];
       }}
       id={id}
       value={filterValueState}
       onChange={handleChange}
-      renderTags={(value: any[], getTagProps) =>
-        value.map((option: string, index: number) => (
+      renderTags={(value, getTagProps) =>
+        value.map((option, index) => (
           <Chip variant="outlined" size="small" label={option} {...getTagProps({ index })} />
         ))
       }

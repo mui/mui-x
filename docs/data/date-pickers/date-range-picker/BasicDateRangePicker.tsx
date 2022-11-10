@@ -1,16 +1,17 @@
 import * as React from 'react';
+import { Dayjs } from 'dayjs';
 import TextField from '@mui/material/TextField';
-import { LocalizationProvider } from '@mui/x-date-pickers-pro';
-import { DateRangePicker, DateRange } from '@mui/x-date-pickers-pro/DateRangePicker';
-import { AdapterDateFns } from '@mui/x-date-pickers-pro/AdapterDateFns';
 import Box from '@mui/material/Box';
+import { LocalizationProvider } from '@mui/x-date-pickers-pro';
+import { AdapterDayjs } from '@mui/x-date-pickers-pro/AdapterDayjs';
+import { DateRangePicker, DateRange } from '@mui/x-date-pickers-pro/DateRangePicker';
 
 export default function BasicDateRangePicker() {
-  const [value, setValue] = React.useState<DateRange<Date>>([null, null]);
+  const [value, setValue] = React.useState<DateRange<Dayjs>>([null, null]);
 
   return (
     <LocalizationProvider
-      dateAdapter={AdapterDateFns}
+      dateAdapter={AdapterDayjs}
       localeText={{ start: 'Check-in', end: 'Check-out' }}
     >
       <DateRangePicker

@@ -1,5 +1,5 @@
 // @ts-ignore Remove once the test utils are typed
-import { createRenderer, fireEvent, screen, act } from '@mui/monorepo/test/utils';
+import { createRenderer, fireEvent, screen, act, userEvent } from '@mui/monorepo/test/utils';
 import {
   getCell,
   getColumnHeaderCell,
@@ -118,7 +118,7 @@ describe('<DataGridPro /> - Tree Data', () => {
         'B.B.A.A',
         'C',
       ]);
-      apiRef.current.updateRows([{ name: 'A.A', _action: 'delete' }]);
+      act(() => apiRef.current.updateRows([{ name: 'A.A', _action: 'delete' }]));
       expect(getColumnValues(0)).to.deep.equal([
         'A',
         'A.B',
@@ -171,7 +171,7 @@ describe('<DataGridPro /> - Tree Data', () => {
         <Test disableVirtualization rows={[{ name: 'A' }, { name: 'A.A' }]} />,
       );
       expect(getColumnValues(1)).to.deep.equal(['A']);
-      apiRef.current.setRowChildrenExpansion('A', true);
+      act(() => apiRef.current.setRowChildrenExpansion('A', true));
       clock.runToLast();
       expect(getColumnValues(1)).to.deep.equal(['A', 'A.A']);
       setProps({
@@ -276,9 +276,7 @@ describe('<DataGridPro /> - Tree Data', () => {
     it('should not re-apply default expansion on rerender after expansion manually toggled', () => {
       const { setProps } = render(<Test />);
       expect(getColumnValues(1)).to.deep.equal(['A', 'B', 'C']);
-      act(() => {
-        apiRef.current.setRowChildrenExpansion('B', true);
-      });
+      act(() => apiRef.current.setRowChildrenExpansion('B', true));
       expect(getColumnValues(1)).to.deep.equal(['A', 'B', 'B.A', 'B.B', 'C']);
       setProps({ sortModel: [{ field: 'name', sort: 'desc' }] });
       expect(getColumnValues(1)).to.deep.equal(['C', 'B', 'B.B', 'B.A', 'A']);
@@ -382,8 +380,7 @@ describe('<DataGridPro /> - Tree Data', () => {
     it('should toggle expansion when pressing Space while focusing grouping column', () => {
       render(<Test />);
       expect(getColumnValues(1)).to.deep.equal(['A', 'B', 'C']);
-      fireEvent.mouseUp(getCell(0, 0));
-      fireEvent.click(getCell(0, 0));
+      userEvent.mousePress(getCell(0, 0));
       expect(getColumnValues(1)).to.deep.equal(['A', 'B', 'C']);
       fireEvent.keyDown(getCell(0, 0), { key: ' ' });
       expect(getColumnValues(1)).to.deep.equal(['A', 'A.A', 'A.B', 'B', 'C']);
@@ -399,14 +396,18 @@ describe('<DataGridPro /> - Tree Data', () => {
     it('should keep the grouping column width between generations', () => {
       render(<Test groupingColDef={{ width: 200 }} />);
       expect(getColumnHeaderCell(0)).toHaveInlineStyle({ width: '200px' });
-      apiRef.current.updateColumns([{ field: GRID_TREE_DATA_GROUPING_FIELD, width: 100 }]);
+      act(() =>
+        apiRef.current.updateColumns([{ field: GRID_TREE_DATA_GROUPING_FIELD, width: 100 }]),
+      );
       expect(getColumnHeaderCell(0)).toHaveInlineStyle({ width: '100px' });
-      apiRef.current.updateColumns([
-        {
-          field: 'name',
-          headerName: 'New name',
-        },
-      ]);
+      act(() =>
+        apiRef.current.updateColumns([
+          {
+            field: 'name',
+            headerName: 'New name',
+          },
+        ]),
+      );
       expect(getColumnHeaderCell(0)).toHaveInlineStyle({ width: '100px' });
     });
   });

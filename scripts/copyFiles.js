@@ -165,11 +165,6 @@ async function run() {
       filesToCopy.push('./LICENSE');
     }
 
-    // Be sure to replicate this behavior if unifying with the core
-    if (packageData.name === '@mui/x-license-pro') {
-      filesToCopy.push('./bin');
-    }
-
     await Promise.all(filesToCopy.map((file) => includeFileInBuild(file)));
 
     await addLicense(packageData);

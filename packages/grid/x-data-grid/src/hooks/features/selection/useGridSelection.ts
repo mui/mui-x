@@ -96,9 +96,9 @@ export const useGridSelection = (
     checkboxSelection,
     disableMultipleSelection,
     disableSelectionOnClick,
-    isRowSelectable,
     pagination,
     paginationMode,
+    isRowSelectable: propIsRowSelectable,
   } = props;
 
   const canHaveMultipleSelection = !disableMultipleSelection || checkboxSelection;
@@ -150,6 +150,22 @@ export const useGridSelection = (
     [apiRef],
   );
 
+  const isRowSelectable = React.useCallback<GridSelectionApi['isRowSelectable']>(
+    (id) => {
+      if (propIsRowSelectable && !propIsRowSelectable(apiRef.current.getRowParams(id))) {
+        return false;
+      }
+
+      const rowNode = apiRef.current.getRowNode(id);
+      if (rowNode?.position === 'footer' || rowNode?.isPinned) {
+        return false;
+      }
+
+      return true;
+    },
+    [apiRef, propIsRowSelectable],
+  );
+
   const getSelectedRows = React.useCallback<GridSelectionApi['getSelectedRows']>(
     () => selectedGridRowsSelector(apiRef),
     [apiRef],
@@ -157,7 +173,7 @@ export const useGridSelection = (
 
   const selectRow = React.useCallback<GridSelectionApi['selectRow']>(
     (id, isSelected = true, resetSelection = false) => {
-      if (isRowSelectable && !isRowSelectable(apiRef.current.getRowParams(id))) {
+      if (!apiRef.current.isRowSelectable(id)) {
         return;
       }
 
@@ -183,16 +199,14 @@ export const useGridSelection = (
         }
       }
     },
-    [apiRef, isRowSelectable, logger, canHaveMultipleSelection],
+    [apiRef, logger, canHaveMultipleSelection],
   );
 
   const selectRows = React.useCallback<GridSelectionApi['selectRows']>(
     (ids: GridRowId[], isSelected = true, resetSelection = false) => {
       logger.debug(`Setting selection for several rows`);
 
-      const selectableIds = isRowSelectable
-        ? ids.filter((id) => isRowSelectable(apiRef.current.getRowParams(id)))
-        : ids;
+      const selectableIds = ids.filter((id) => apiRef.current.isRowSelectable(id));
 
       let newSelection: GridRowId[];
       if (resetSelection) {
@@ -219,7 +233,7 @@ export const useGridSelection = (
         apiRef.current.setSelectionModel(newSelection);
       }
     },
-    [apiRef, isRowSelectable, logger, canHaveMultipleSelection],
+    [apiRef, logger, canHaveMultipleSelection],
   );
 
   const selectRowRange = React.useCallback<GridSelectionApi['selectRowRange']>(
@@ -258,6 +272,7 @@ export const useGridSelection = (
     setSelectionModel,
     getSelectedRows,
     isRowSelected,
+    isRowSelectable,
   };
 
   useGridApiMethod(apiRef, selectionApi, 'GridSelectionApi');
@@ -334,6 +349,10 @@ export const useGridSelection = (
         if (column.type === GRID_ACTIONS_COLUMN_TYPE) {
           return;
         }
+      }
+
+      if (params.rowNode.isPinned) {
+        return;
       }
 
       if (event.shiftKey && (canHaveMultipleSelection || checkboxSelection)) {
@@ -492,13 +511,11 @@ export const useGridSelection = (
       return;
     }
 
-    // isRowSelectable changed
+    // props.isRowSelectable changed
     const currentSelection = gridSelectionStateSelector(apiRef.current.state);
 
     if (isRowSelectable) {
-      const newSelection = currentSelection.filter((id) =>
-        isRowSelectable(apiRef.current.getRowParams(id)),
-      );
+      const newSelection = currentSelection.filter((id) => isRowSelectable(id));
 
       if (newSelection.length < currentSelection.length) {
         apiRef.current.setSelectionModel(newSelection);
@@ -526,7 +543,7 @@ export const useGridSelection = (
       const firstSelectableRow = currentSelection.find((id) => {
         let isSelectable = true;
         if (isRowSelectable) {
-          isSelectable = isRowSelectable(apiRef.current.getRowParams(id));
+          isSelectable = isRowSelectable(id);
         }
         return isSelectable && currentPageRowsLookup[id]; // Check if the row is in the current page
       });

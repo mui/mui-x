@@ -20,7 +20,7 @@ import { GridActionsCellItemProps } from '../../components/cell/GridActionsCellI
 import { GridEditCellProps } from '../gridEditRowModel';
 import type { GridValidRowModel } from '../gridRows';
 import { GridApiCommunity } from '../api/gridApiCommunity';
-
+import type { GridColumnGroup } from '../gridColumnGrouping';
 /**
  * Alignment used in position elements in Cells.
  */
@@ -70,7 +70,13 @@ export interface GridColDef<R extends GridValidRowModel = any, V = any, F = V> {
   maxWidth?: number;
   /**
    * If `true`, hide the column.
-   * @deprecated Use the `columnVisibility` prop instead.
+   * @deprecated Use the `initialState` prop to hide columns:
+   * ```jsx
+   * // Hide `id` column, the other columns will remain visible
+   * <DataGrid initialState={{ columns: { columnVisibilityModel: { id: false } } }} />
+   * ```
+   * Or use `columnVisibilityModel` prop to fully control column visibility.
+   * @link https://mui.com/x/react-data-grid/column-visibility/
    * @default false
    */
   hide?: boolean;
@@ -284,6 +290,13 @@ export type GridStateColDef<R extends GridValidRowModel = any, V = any, F = V> =
    * If `true`, it means that at least one of the dimension's property of this column has been modified since the last time the column prop has changed.
    */
   hasBeenResized?: boolean;
+  /**
+   * The id of the groups leading to the column.
+   * The array is ordered by increasing depth (the last element is the direct parent of the column).
+   * If not defined, the column is in no group (equivalent to a path equal to `[]`).
+   * This parameter is computed from the `columnGroupingModel` prop.
+   */
+  groupPath?: GridColumnGroup['groupId'][];
 };
 
 /**

@@ -25,7 +25,7 @@ export interface BaseDateValidationProps<TDate> {
 /**
  * Props used to validate a day value.
  */
-export interface DayValidationProps<TDate> extends BaseDateValidationProps<TDate> {
+export interface DayValidationProps<TDate> {
   /**
    * Disable specific date. @DateIOType
    * @template TDate
@@ -38,7 +38,7 @@ export interface DayValidationProps<TDate> extends BaseDateValidationProps<TDate
 /**
  * Props used to validate a month value
  */
-export interface MonthValidationProps<TDate> extends BaseDateValidationProps<TDate> {
+export interface MonthValidationProps<TDate> {
   /**
    * Disable specific months dynamically.
    * Works like `shouldDisableDate` but for month selection view @DateIOType.
@@ -52,7 +52,7 @@ export interface MonthValidationProps<TDate> extends BaseDateValidationProps<TDa
 /**
  * Props used to validate a year value
  */
-export interface YearValidationProps<TDate> extends BaseDateValidationProps<TDate> {
+export interface YearValidationProps<TDate> {
   /**
    * Disable specific years dynamically.
    * Works like `shouldDisableDate` but for year selection view @DateIOType.

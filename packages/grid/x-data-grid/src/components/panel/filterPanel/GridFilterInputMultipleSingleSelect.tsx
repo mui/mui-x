@@ -120,7 +120,9 @@ function GridFilterInputMultipleSingleSelect(props: GridFilterInputMultipleSingl
     }
   }, [item, filterValues, applyValue]);
 
-  const handleChange = React.useCallback(
+  const handleChange = React.useCallback<
+    NonNullable<AutocompleteProps<ValueOptions, true, false, true>['onChange']>
+  >(
     (event, value) => {
       applyValue({ ...item, value: [...value.map(getValueFromOption)] });
     },

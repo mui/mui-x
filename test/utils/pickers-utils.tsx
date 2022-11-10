@@ -7,6 +7,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon';
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import sinon from 'sinon';
 
 const availableAdapters = {
   'date-fns': AdapterDateFns,
@@ -180,3 +181,10 @@ export const withPickerControls =
       );
     };
   };
+
+export const stubMatchMedia = (matches = true) =>
+  sinon.stub().returns({
+    matches,
+    addListener: () => {},
+    removeListener: () => {},
+  });

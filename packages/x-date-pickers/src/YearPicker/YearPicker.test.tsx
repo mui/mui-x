@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { spy } from 'sinon';
 import { expect } from 'chai';
-import { fireEvent, screen, describeConformance } from '@mui/monorepo/test/utils';
+import { act, fireEvent, screen, describeConformance } from '@mui/monorepo/test/utils';
 import { YearPicker, yearPickerClasses as classes } from '@mui/x-date-pickers/YearPicker';
 import {
   adapterToUse,
@@ -174,11 +174,11 @@ describe('<YearPicker />', () => {
 
     const button2019 = screen.getByRole('button', { name: '2019' });
 
-    button2019.focus();
+    act(() => button2019.focus());
     fireEvent.keyDown(button2019, { key: 'ArrowLeft' });
     expect(document.activeElement).to.have.text('2018');
 
-    button2019.focus();
+    act(() => button2019.focus());
     fireEvent.keyDown(button2019, { key: 'ArrowRight' });
     expect(document.activeElement).to.have.text('2020');
   });

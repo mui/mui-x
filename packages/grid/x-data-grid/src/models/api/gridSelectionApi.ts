@@ -38,6 +38,12 @@ export interface GridSelectionApi {
    */
   isRowSelected: (id: GridRowId) => boolean;
   /**
+   * Determines if a row can be selected or not.
+   * @param {GridRowId} id The id of the row.
+   * @returns {boolean} A boolean indicating if the row can be selected.
+   */
+  isRowSelectable: (id: GridRowId) => boolean;
+  /**
    * Returns an array of the selected rows.
    * @returns {Map<GridRowId, GridRowModel>} A `Map` with the selected rows.
    */

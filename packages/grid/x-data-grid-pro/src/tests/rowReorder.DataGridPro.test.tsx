@@ -1,11 +1,11 @@
 import * as React from 'react';
 import { expect } from 'chai';
+import { spy } from 'sinon';
 // @ts-ignore Remove once the test utils are typed
-import { createRenderer, fireEvent, createEvent } from '@mui/monorepo/test/utils';
+import { createRenderer, fireEvent, createEvent, act } from '@mui/monorepo/test/utils';
 import { getCell, getRowsFieldContent } from 'test/utils/helperFn';
 import { useGridApiRef, DataGridPro, gridClasses, GridApi } from '@mui/x-data-grid-pro';
-import { useData } from 'storybook/src/hooks/useData';
-import { spy } from 'sinon';
+import { useBasicDemoData } from '@mui/x-data-grid-generator';
 
 function createDragOverEvent(target: ChildNode) {
   const dragOverEvent = createEvent.dragOver(target);
@@ -171,7 +171,7 @@ describe('<DataGridPro /> - Row reorder', () => {
     let apiRef: React.MutableRefObject<GridApi>;
     const Test = () => {
       apiRef = useGridApiRef();
-      const data = useData(3, 3);
+      const data = useBasicDemoData(3, 3);
 
       return (
         <div
@@ -202,5 +202,44 @@ describe('<DataGridPro /> - Row reorder', () => {
     expect(handleDragStart.callCount).to.equal(0);
     expect(handleDragOver.callCount).to.equal(0);
     expect(handleDragEnd.callCount).to.equal(0);
+  });
+
+  // See https://github.com/mui/mui-x/issues/6520
+  it('should keep the order after updating a row', () => {
+    let apiRef: React.MutableRefObject<GridApi>;
+    const Test = () => {
+      apiRef = useGridApiRef();
+      const rows = [
+        { id: 0, brand: 'Nike' },
+        { id: 1, brand: 'Adidas' },
+        { id: 2, brand: 'Puma' },
+      ];
+      const columns = [{ field: 'brand' }];
+
+      return (
+        <div style={{ width: 300, height: 300 }}>
+          <DataGridPro apiRef={apiRef} rows={rows} columns={columns} rowReordering />
+        </div>
+      );
+    };
+
+    render(<Test />);
+
+    expect(getRowsFieldContent('brand')).to.deep.equal(['Nike', 'Adidas', 'Puma']);
+
+    const rowReorderCell = getCell(0, 0).firstChild!;
+    const targetCell = getCell(1, 0)!;
+    fireEvent.dragStart(rowReorderCell);
+    fireEvent.dragEnter(targetCell);
+    const dragOverEvent = createDragOverEvent(targetCell);
+    fireEvent(targetCell, dragOverEvent);
+    const dragEndEvent = createDragEndEvent(rowReorderCell);
+    fireEvent(rowReorderCell, dragEndEvent);
+
+    expect(getRowsFieldContent('brand')).to.deep.equal(['Adidas', 'Nike', 'Puma']);
+
+    act(() => apiRef.current.updateRows([{ id: 0, brand: 'New Nike' }]));
+
+    expect(getRowsFieldContent('brand')).to.deep.equal(['Adidas', 'New Nike', 'Puma']);
   });
 });

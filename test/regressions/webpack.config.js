@@ -24,6 +24,10 @@ module.exports = {
     new webpack.DefinePlugin({
       DISABLE_CHANCE_RANDOM: JSON.stringify(true),
     }),
+    new webpack.ProvidePlugin({
+      // required by sinon
+      process: 'process/browser',
+    }),
   ],
   module: {
     ...webpackBaseConfig.module,

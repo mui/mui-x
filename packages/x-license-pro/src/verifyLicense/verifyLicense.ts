@@ -159,7 +159,7 @@ export function verifyLicense({
   }
 
   if (!acceptedScopes.includes(license.scope)) {
-    return LicenseStatus.Invalid;
+    return LicenseStatus.OutOfScope;
   }
 
   return LicenseStatus.Valid;

@@ -16,6 +16,10 @@
     "components": { "type": { "name": "object" }, "default": "{}" },
     "componentsProps": { "type": { "name": "object" }, "default": "{}" },
     "dateRangeIcon": { "type": { "name": "node" } },
+    "dayOfWeekFormatter": {
+      "type": { "name": "func" },
+      "default": "(day) => day.charAt(0).toUpperCase()"
+    },
     "defaultCalendarMonth": { "type": { "name": "any" } },
     "disabled": { "type": { "name": "bool" } },
     "disableFuture": { "type": { "name": "bool" } },
@@ -28,7 +32,7 @@
       "type": { "name": "func" },
       "default": "<TDate extends any>(\n  view: ClockView,\n  time: TDate | null,\n  adapter: MuiPickersAdapter<TDate>,\n) =>\n  `Select ${view}. ${\n    time === null ? 'No time selected' : `Selected time is ${adapter.format(time, 'fullTime')}`\n  }`",
       "deprecated": true,
-      "deprecationInfo": "Use the <code>localeText</code> prop of <code>LocalizationProvider</code> instead, see <a href=\"https://mui.com/x/react-date-pickers/localization\">https://mui.com/x/react-date-pickers/localization</a>"
+      "deprecationInfo": "Use the <code>localeText</code> prop of <code>LocalizationProvider</code> instead, see <a href=\"https://mui.com/x/react-date-pickers/localization/\">https://mui.com/x/react-date-pickers/localization/</a>."
     },
     "getOpenDialogAriaText": {
       "type": { "name": "func" },
@@ -37,9 +41,9 @@
     "getViewSwitchingButtonText": {
       "type": { "name": "func" },
       "deprecated": true,
-      "deprecationInfo": "Use the <code>localeText</code> prop of <code>LocalizationProvider</code> instead, see <a href=\"https://mui.com/x/react-date-pickers/localization\">https://mui.com/x/react-date-pickers/localization</a>"
+      "deprecationInfo": "Use the <code>localeText</code> prop of <code>LocalizationProvider</code> instead, see <a href=\"https://mui.com/x/react-date-pickers/localization/\">https://mui.com/x/react-date-pickers/localization/</a>."
     },
-    "hideTabs": { "type": { "name": "bool" } },
+    "hideTabs": { "type": { "name": "bool" }, "default": "false for mobile, true for desktop" },
     "InputAdornmentProps": { "type": { "name": "object" } },
     "inputFormat": { "type": { "name": "string" } },
     "inputRef": {
@@ -68,7 +72,8 @@
       "type": {
         "name": "enum",
         "description": "'day'<br>&#124;&nbsp;'hours'<br>&#124;&nbsp;'minutes'<br>&#124;&nbsp;'month'<br>&#124;&nbsp;'seconds'<br>&#124;&nbsp;'year'"
-      }
+      },
+      "default": "'day'"
     },
     "orientation": {
       "type": { "name": "enum", "description": "'landscape'<br>&#124;&nbsp;'portrait'" }
@@ -104,10 +109,22 @@
       "type": {
         "name": "arrayOf",
         "description": "Array&lt;'day'<br>&#124;&nbsp;'hours'<br>&#124;&nbsp;'minutes'<br>&#124;&nbsp;'month'<br>&#124;&nbsp;'seconds'<br>&#124;&nbsp;'year'&gt;"
-      }
+      },
+      "default": "['year', 'day', 'hours', 'minutes']"
     }
   },
-  "slots": {},
+  "slots": {
+    "ActionBar": { "default": "PickersActionBar", "type": { "name": "elementType" } },
+    "LeftArrowButton": { "default": "IconButton", "type": { "name": "elementType" } },
+    "LeftArrowIcon": { "default": "ArrowLeft", "type": { "name": "elementType" } },
+    "OpenPickerIcon": { "default": "Calendar or Clock", "type": { "name": "elementType" } },
+    "PaperContent": { "default": "React.Fragment", "type": { "name": "elementType" } },
+    "RightArrowButton": { "default": "IconButton", "type": { "name": "elementType" } },
+    "RightArrowIcon": { "default": "ArrowRight", "type": { "name": "elementType" } },
+    "SwitchViewButton": { "default": "IconButton", "type": { "name": "elementType" } },
+    "SwitchViewIcon": { "default": "ArrowDropDown", "type": { "name": "elementType" } },
+    "Tabs": { "default": "DateTimePickerTabs", "type": { "name": "elementType" } }
+  },
   "name": "DesktopDateTimePicker",
   "styles": { "classes": [], "globalClasses": {}, "name": "MuiDesktopDateTimePicker" },
   "filename": "/packages/x-date-pickers/src/DesktopDateTimePicker/DesktopDateTimePicker.tsx",

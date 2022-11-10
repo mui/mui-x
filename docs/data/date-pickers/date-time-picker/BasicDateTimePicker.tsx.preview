@@ -1,4 +1,4 @@
-<LocalizationProvider dateAdapter={AdapterDateFns}>
+<LocalizationProvider dateAdapter={AdapterDayjs}>
   <DateTimePicker
     renderInput={(props) => <TextField {...props} />}
     label="DateTimePicker"

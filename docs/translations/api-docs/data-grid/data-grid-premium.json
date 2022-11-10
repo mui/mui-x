@@ -1,6 +1,9 @@
 {
   "componentDescription": "",
   "propDescriptions": {
+    "aggregationFunctions": "Aggregation functions available on the grid.",
+    "aggregationModel": "Set the aggregation model of the grid.",
+    "aggregationRowsScope": "Rows used to generate the aggregated value. If <code>filtered</code>, the aggregated values will be generated using only the rows currently passing the filtering process. If <code>all</code>, the aggregated values will be generated using all the rows.",
     "apiRef": "The ref object that allows grid manipulation. Can be instantiated with useGridApiRef().",
     "aria-label": "The label of the grid.",
     "aria-labelledby": "The id of the element containing a label for the grid.",
@@ -20,6 +23,7 @@
     "defaultGroupingExpansionDepth": "If above 0, the row children will be expanded up to this depth. If equal to -1, all the row children will be expanded.",
     "density": "Set the density of the grid.",
     "detailPanelExpandedRowIds": "The row ids to show the detail panel.",
+    "disableAggregation": "If <code>true</code>, aggregation is disabled.",
     "disableChildrenFiltering": "If <code>true</code>, the filtering will only be applied to the top level rows when grouping rows with the <code>treeData</code> prop.",
     "disableChildrenSorting": "If <code>true</code>, the sorting will only be applied to the top level rows when grouping rows with the <code>treeData</code> prop.",
     "disableColumnFilter": "If <code>true</code>, column filters are disabled.",
@@ -30,6 +34,7 @@
     "disableColumnSelector": "If <code>true</code>, hiding/showing columns is disabled.",
     "disableDensitySelector": "If <code>true</code>, the density selector is disabled.",
     "disableExtendRowFullWidth": "If <code>true</code>, rows will not be extended to fill the full width of the grid container.",
+    "disableIgnoreModificationsIfProcessingProps": "If <code>true</code>, modification to a cell will not be discarded if the mode is changed from &quot;edit&quot; to &quot;view&quot; while processing props.",
     "disableMultipleColumnsFiltering": "If <code>true</code>, filtering with multiple columns is disabled.",
     "disableMultipleColumnsSorting": "If <code>true</code>, sorting with multiple columns is disabled.",
     "disableMultipleSelection": "If <code>true</code>, multiple selection using the Ctrl or CMD key is disabled.",
@@ -42,6 +47,7 @@
     "experimentalFeatures": "Features under development. For each feature, if the flag is not explicitly set to <code>true</code>, the feature will be fully disabled and any property / method call will not have any effect.",
     "filterMode": "Filtering can be processed on the server or client-side. Set it to &#39;server&#39; if you would like to handle filtering on the server-side.",
     "filterModel": "Set the filter model of the grid.",
+    "getAggregationPosition": "Determines the position of an aggregated value.<br><br><strong>Signature:</strong><br><code>function(groupNode: GridRowTreeNodeConfig | null) =&gt; GridAggregationPosition | null</code><br><em>groupNode:</em> The current group (<code>null</code> being the top level group).<br> <em>returns</em> (GridAggregationPosition | null): Position of the aggregated value (if <code>null</code>, the group will not be aggregated).",
     "getCellClassName": "Function that applies CSS classes dynamically on cells.<br><br><strong>Signature:</strong><br><code>function(params: GridCellParams) =&gt; string</code><br><em>params:</em> With all properties from <a href=\"/x/api/data-grid/grid-cell-params/\">GridCellParams</a>.<br> <em>returns</em> (string): The CSS class to apply to the cell.",
     "getDetailPanelContent": "Function that returns the element to render in row detail.<br><br><strong>Signature:</strong><br><code>function(params: GridRowParams) =&gt; JSX.Element</code><br><em>params:</em> With all properties from <a href=\"/x/api/data-grid/grid-row-params/\">GridRowParams</a>.<br> <em>returns</em> (JSX.Element): The row detail element.",
     "getDetailPanelHeight": "Function that returns the height of the row detail panel.<br><br><strong>Signature:</strong><br><code>function(params: GridRowParams) =&gt; number | string</code><br><em>params:</em> With all properties from <a href=\"/x/api/data-grid/grid-row-params/\">GridRowParams</a>.<br> <em>returns</em> (number | string): The height in pixels or &quot;auto&quot; to use the content height.",
@@ -61,12 +67,14 @@
     "isCellEditable": "Callback fired when a cell is rendered, returns true if the cell is editable.<br><br><strong>Signature:</strong><br><code>function(params: GridCellParams) =&gt; boolean</code><br><em>params:</em> With all properties from <a href=\"/x/api/data-grid/grid-cell-params/\">GridCellParams</a>.<br> <em>returns</em> (boolean): A boolean indicating if the cell is editable.",
     "isGroupExpandedByDefault": "Determines if a group should be expanded after its creation. This prop takes priority over the <code>defaultGroupingExpansionDepth</code> prop.<br><br><strong>Signature:</strong><br><code>function(node: GridRowTreeNodeConfig) =&gt; boolean</code><br><em>node:</em> The node of the group to test.<br> <em>returns</em> (boolean): A boolean indicating if the group is expanded.",
     "isRowSelectable": "Determines if a row can be selected.<br><br><strong>Signature:</strong><br><code>function(params: GridRowParams) =&gt; boolean</code><br><em>params:</em> With all properties from <a href=\"/x/api/data-grid/grid-row-params/\">GridRowParams</a>.<br> <em>returns</em> (boolean): A boolean indicating if the cell is selectable.",
+    "keepColumnPositionIfDraggedOutside": "If <code>true</code>, moving the mouse pointer outside the grid before releasing the mouse button in a column re-order action will not cause the column to jump back to its original position.",
     "keepNonExistentRowsSelected": "If <code>true</code>, the selection model will retain selected rows that do not exist. Useful when using server side pagination and row selections need to be retained when changing pages.",
     "loading": "If <code>true</code>, a  loading overlay is displayed.",
     "localeText": "Set the locale text of the grid. You can find all the translation keys supported in <a href=\"https://github.com/mui/mui-x/blob/HEAD/packages/grid/x-data-grid/src/constants/localeTextConstants.ts\">the source</a> in the GitHub repository.",
     "logger": "Pass a custom logger in the components that implements the Logger interface.",
     "logLevel": "Allows to pass the logging level or false to turn off logging.",
     "nonce": "Nonce of the inline styles for <a href=\"https://www.w3.org/TR/2016/REC-CSP2-20161215/#script-src-the-nonce-attribute\">Content Security Policy</a>.",
+    "onAggregationModelChange": "Callback fired when the row grouping model changes.<br><br><strong>Signature:</strong><br><code>function(model: GridAggregationModel, details: GridCallbackDetails) =&gt; void</code><br><em>model:</em> The aggregated columns.<br><em>details:</em> Additional details for this callback.",
     "onCellClick": "Callback fired when any cell is clicked.<br><br><strong>Signature:</strong><br><code>function(params: GridCellParams, event: MuiEvent&lt;React.MouseEvent&gt;, details: GridCallbackDetails) =&gt; void</code><br><em>params:</em> With all properties from <a href=\"/x/api/data-grid/grid-cell-params/\">GridCellParams</a>.<br><em>event:</em> The event object.<br><em>details:</em> Additional details for this callback.",
     "onCellDoubleClick": "Callback fired when a double click event comes from a cell element.<br><br><strong>Signature:</strong><br><code>function(params: GridCellParams, event: MuiEvent&lt;React.MouseEvent&gt;, details: GridCallbackDetails) =&gt; void</code><br><em>params:</em> With all properties from <a href=\"/x/api/data-grid/grid-cell-params/\">GridCellParams</a>.<br><em>event:</em> The event object.<br><em>details:</em> Additional details for this callback.",
     "onCellEditCommit": "Callback fired when the cell changes are committed.<br><br><strong>Signature:</strong><br><code>function(params: GridCellEditCommitParams, event: MuiEvent&lt;MuiBaseEvent&gt;, details: GridCallbackDetails) =&gt; void</code><br><em>params:</em> With all properties from GridCellEditCommitParams.<br><em>event:</em> The event that caused this prop to be called.<br><em>details:</em> Additional details for this callback.",
@@ -90,6 +98,7 @@
     "onEditCellPropsChange": "Callback fired when the edit cell value changes.<br><br><strong>Signature:</strong><br><code>function(params: GridEditCellPropsParams, event: MuiEvent&lt;React.SyntheticEvent&gt;, details: GridCallbackDetails) =&gt; void</code><br><em>params:</em> With all properties from GridEditCellPropsParams.<br><em>event:</em> The event that caused this prop to be called.<br><em>details:</em> Additional details for this callback.",
     "onEditRowsModelChange": "Callback fired when the <code>editRowsModel</code> changes.<br><br><strong>Signature:</strong><br><code>function(editRowsModel: GridEditRowsModel, details: GridCallbackDetails) =&gt; void</code><br><em>editRowsModel:</em> With all properties from GridEditRowsModel.<br><em>details:</em> Additional details for this callback.",
     "onError": "Callback fired when an exception is thrown in the grid.<br><br><strong>Signature:</strong><br><code>function(args: any, event: MuiEvent&lt;{}&gt;, details: GridCallbackDetails) =&gt; void</code><br><em>args:</em> The arguments passed to the <code>showError</code> call.<br><em>event:</em> The event object.<br><em>details:</em> Additional details for this callback.",
+    "onFetchRows": "Callback fired when rowCount is set and the next batch of virtualized rows is rendered.<br><br><strong>Signature:</strong><br><code>function(params: GridFetchRowsParams, event: MuiEvent&lt;{}&gt;, details: GridCallbackDetails) =&gt; void</code><br><em>params:</em> With all properties from GridFetchRowsParams.<br><em>event:</em> The event object.<br><em>details:</em> Additional details for this callback.",
     "onFilterModelChange": "Callback fired when the Filter model changes before the filters are applied.<br><br><strong>Signature:</strong><br><code>function(model: GridFilterModel, details: GridCallbackDetails) =&gt; void</code><br><em>model:</em> With all properties from <a href=\"/x/api/data-grid/grid-filter-model/\">GridFilterModel</a>.<br><em>details:</em> Additional details for this callback.",
     "onMenuClose": "Callback fired when the menu is closed.<br><br><strong>Signature:</strong><br><code>function(params: GridMenuParams, event: MuiEvent&lt;{}&gt;, details: GridCallbackDetails) =&gt; void</code><br><em>params:</em> With all properties from GridMenuParams.<br><em>event:</em> The event object.<br><em>details:</em> Additional details for this callback.",
     "onMenuOpen": "Callback fired when the menu is opened.<br><br><strong>Signature:</strong><br><code>function(params: GridMenuParams, event: MuiEvent&lt;{}&gt;, details: GridCallbackDetails) =&gt; void</code><br><em>params:</em> With all properties from GridMenuParams.<br><em>event:</em> The event object.<br><em>details:</em> Additional details for this callback.",
@@ -111,12 +120,12 @@
     "onRowsScrollEnd": "Callback fired when scrolling to the bottom of the grid viewport.<br><br><strong>Signature:</strong><br><code>function(params: GridRowScrollEndParams, event: MuiEvent&lt;{}&gt;, details: GridCallbackDetails) =&gt; void</code><br><em>params:</em> With all properties from GridRowScrollEndParams.<br><em>event:</em> The event object.<br><em>details:</em> Additional details for this callback.",
     "onSelectionModelChange": "Callback fired when the selection state of one or multiple rows changes.<br><br><strong>Signature:</strong><br><code>function(selectionModel: GridSelectionModel, details: GridCallbackDetails) =&gt; void</code><br><em>selectionModel:</em> With all the row ids GridSelectionModel.<br><em>details:</em> Additional details for this callback.",
     "onSortModelChange": "Callback fired when the sort model changes before a column is sorted.<br><br><strong>Signature:</strong><br><code>function(model: GridSortModel, details: GridCallbackDetails) =&gt; void</code><br><em>model:</em> With all properties from GridSortModel.<br><em>details:</em> Additional details for this callback.",
-    "onStateChange": "Callback fired when the state of the grid is updated.<br><br><strong>Signature:</strong><br><code>function(state: GridState, event: MuiEvent&lt;{}&gt;, details: GridCallbackDetails) =&gt; void</code><br><em>state:</em> The new state.<br><em>event:</em> The event object.<br><em>details:</em> Additional details for this callback.",
     "page": "The zero-based index of the current page.",
     "pageSize": "Set the number of rows in one page. If some of the rows have children (for instance in the tree data), this number represents the amount of top level rows wanted on each page.",
     "pagination": "If <code>true</code>, pagination is enabled.",
     "paginationMode": "Pagination can be processed on the server or client-side. Set it to &#39;client&#39; if you would like to handle the pagination on the client-side. Set it to &#39;server&#39; if you would like to handle the pagination on the server-side.",
     "pinnedColumns": "The column fields to display pinned to left or right.",
+    "pinnedRows": "Rows data to pin on top or bottom.",
     "processRowUpdate": "Callback called before updating a row with new values in the row and cell editing. Only applied if <code>props.experimentalFeatures.newEditingApi: true</code>.<br><br><strong>Signature:</strong><br><code>function(newRow: R, oldRow: R) =&gt; Promise&lt;R&gt; | R</code><br><em>newRow:</em> Row object with the new values.<br><em>oldRow:</em> Row object with the old values.<br> <em>returns</em> (Promise<R> | R): The final values to update the row.",
     "rowBuffer": "Number of extra rows to be rendered before/after the visible slice.",
     "rowCount": "Set the total number of rows, if it is different from the length of the value <code>rows</code> prop. If some rows have children (for instance in the tree data), this number represents the amount of top level rows.",
@@ -126,6 +135,7 @@
     "rowModesModel": "Controls the modes of the rows.",
     "rowReordering": "If <code>true</code>, the reordering of rows is enabled.",
     "rows": "Set of rows of type GridRowsProp.",
+    "rowsLoadingMode": "Loading rows can be processed on the server or client-side. Set it to &#39;client&#39; if you would like enable infnite loading. Set it to &#39;server&#39; if you would like to enable lazy loading. * @default &quot;client&quot;",
     "rowSpacingType": "Sets the type of space between rows added by <code>getRowSpacing</code>.",
     "rowsPerPageOptions": "Select the pageSize dynamically using the component UI.",
     "rowThreshold": "Number of rows from the <code>rowBuffer</code> that can be visible before a new slice is rendered.",
@@ -137,13 +147,39 @@
     "sortingMode": "Sorting can be processed on the server or client-side. Set it to &#39;client&#39; if you would like to handle sorting on the client-side. Set it to &#39;server&#39; if you would like to handle sorting on the server-side.",
     "sortingOrder": "The order of the sorting sequence.",
     "sortModel": "Set the sort model of the grid.",
-    "sx": "The system prop that allows defining system overrides as well as additional CSS styles. See the <a href=\"/system/the-sx-prop/\">`sx` page</a> for more details.",
+    "sx": "The system prop that allows defining system overrides as well as additional CSS styles. See the <a href=\"/system/getting-started/the-sx-prop/\">`sx` page</a> for more details.",
     "throttleRowsMs": "If positive, the Grid will throttle updates coming from <code>apiRef.current.updateRows</code> and <code>apiRef.current.setRows</code>. It can be useful if you have a high update rate but do not want to do heavy work like filtering / sorting or rendering on each  individual update.",
     "treeData": "If <code>true</code>, the rows will be gathered in a tree structure according to the <code>getTreeDataPath</code> prop."
   },
   "classDescriptions": {
     "actionsCell": {
-      "description": "Styles applied to the root element of the cell with type=\"actions\""
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the root element of the cell with type=\"actions\""
+    },
+    "aggregationColumnHeader": {
+      "description": "Styles applied to {{nodeName}} when {{conditions}}.",
+      "nodeName": "the root element of the column header",
+      "conditions": "aggregated"
+    },
+    "aggregationColumnHeader--alignLeft": {
+      "description": "Styles applied to {{nodeName}} when {{conditions}}.",
+      "nodeName": "the root element of the header",
+      "conditions": "aggregation if <code>headerAlign=\"left\"</code>"
+    },
+    "aggregationColumnHeader--alignCenter": {
+      "description": "Styles applied to {{nodeName}} when {{conditions}}.",
+      "nodeName": "the root element of the header",
+      "conditions": "aggregation if <code>headerAlign=\"center\"</code>"
+    },
+    "aggregationColumnHeader--alignRight": {
+      "description": "Styles applied to {{nodeName}} when {{conditions}}.",
+      "nodeName": "the root element of the header",
+      "conditions": "aggregation if <code>headerAlign=\"right\"</code>"
+    },
+    "aggregationColumnHeaderLabel": {
+      "description": "Styles applied to {{nodeName}} when {{conditions}}.",
+      "nodeName": "the aggregation label in the column header",
+      "conditions": "aggregated"
     },
     "autoHeight": {
       "description": "Styles applied to {{nodeName}} if {{conditions}}.",
@@ -192,6 +228,10 @@
     "cellCheckbox": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the cell checkbox element"
+    },
+    "cellSkeleton": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the skeleton cell element"
     },
     "checkboxInput": {
       "description": "Styles applied to {{nodeName}}.",
@@ -246,6 +286,10 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the column header element"
     },
+    "columnGroupHeader": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the column group header element"
+    },
     "columnHeaderCheckbox": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the header checkbox cell element"
@@ -271,6 +315,20 @@
     "columnHeaderTitleContainerContent": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the column header's title excepted buttons"
+    },
+    "columnHeader--filledGroup": {
+      "description": "Styles applied to {{nodeName}} if {{conditions}}.",
+      "nodeName": "the column group header cell",
+      "conditions": "not empty"
+    },
+    "columnHeader--emptyGroup": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the empty column group header cell"
+    },
+    "columnHeader--showColumnBorder": {
+      "description": "Styles applied to {{nodeName}} when {{conditions}}.",
+      "nodeName": "the column group header cell",
+      "conditions": "show column border"
     },
     "columnHeaders": {
       "description": "Styles applied to {{nodeName}}.",
@@ -333,6 +391,10 @@
       "description": "Styles applied to {{nodeName}} if {{conditions}}.",
       "nodeName": "the detail panel toggle cell element",
       "conditions": "expanded"
+    },
+    "footerCell": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the root element of the cell inside a footer row"
     },
     "panel": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the panel element" },
     "panelHeader": {
@@ -507,6 +569,11 @@
       "nodeName": "the row",
       "conditions": "it has dynamic row height"
     },
+    "row--detailPanelExpanded": {
+      "description": "Styles applied to {{nodeName}} if {{conditions}}.",
+      "nodeName": "the row",
+      "conditions": "its detail panel is open"
+    },
     "row": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the row element" },
     "rowCount": {
       "description": "Styles applied to {{nodeName}}.\nOnly works when pagination is disabled.",
@@ -568,7 +635,74 @@
     },
     "groupingCriteriaCellToggle": {
       "description": "Styles applied to the toggle of the grouping criteria cell"
+    },
+    "pinnedRows": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the pinned rows container"
+    },
+    "pinnedRows--top": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the top pinned rows container"
+    },
+    "pinnedRows--bottom": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the bottom pinned rows container"
+    },
+    "pinnedRowsRenderZone": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "pinned rows render zones"
     }
   },
-  "slotDescriptions": {}
+  "slotDescriptions": {
+    "BaseCheckbox": "The custom Checkbox component used in the grid for both header and cells.",
+    "BaseTextField": "The custom TextField component used in the grid.",
+    "BaseFormControl": "The custom FormControl component used in the grid.",
+    "BaseSelect": "The custom Select component used in the grid.",
+    "BaseSwitch": "The custom Switch component used in the grid.",
+    "BaseButton": "The custom Button component used in the grid.",
+    "BaseTooltip": "The custom Tooltip component used in the grid.",
+    "BasePopper": "The custom Popper component used in the grid.",
+    "Cell": "Component rendered for each cell.",
+    "SkeletonCell": "Component rendered for each skeleton cell.",
+    "ColumnHeaderFilterIconButton": "Filter icon component rendered in each column header.",
+    "ColumnMenu": "Column menu component rendered by clicking on the 3 dots &quot;kebab&quot; icon in column headers.",
+    "ErrorOverlay": "Error overlay component rendered above the grid when an error is caught.",
+    "Footer": "Footer component rendered at the bottom of the grid viewport.",
+    "Header": "Header component rendered above the grid column header bar.\nPrefer using the <code>Toolbar</code> slot. You should never need to use this slot.",
+    "Toolbar": "Toolbar component rendered inside the Header component.",
+    "PreferencesPanel": "PreferencesPanel component rendered inside the Header component.",
+    "LoadingOverlay": "Loading overlay component rendered when the grid is in a loading state.",
+    "NoResultsOverlay": "No results overlay component rendered when the grid has no results after filtering.",
+    "NoRowsOverlay": "No rows overlay component rendered when the grid has no rows.",
+    "Pagination": "Pagination component rendered in the grid footer by default.",
+    "FilterPanel": "Filter panel component rendered when clicking the filter button.",
+    "ColumnsPanel": "GridColumns panel component rendered when clicking the columns button.",
+    "Panel": "Panel component wrapping the filters and columns panels.",
+    "Row": "Component rendered for each row.",
+    "BooleanCellTrueIcon": "Icon displayed on the boolean cell to represent the true value.",
+    "BooleanCellFalseIcon": "Icon displayed on the boolean cell to represent the false value.",
+    "ColumnMenuIcon": "Icon displayed on the side of the column header title to display the filter input component.",
+    "OpenFilterButtonIcon": "Icon displayed on the open filter button present in the toolbar by default.",
+    "ColumnFilteredIcon": "Icon displayed on the column header menu to show that a filter has been applied to the column.",
+    "ColumnSelectorIcon": "Icon displayed on the column menu selector tab.",
+    "ColumnUnsortedIcon": "Icon displayed on the side of the column header title when unsorted.",
+    "ColumnSortedAscendingIcon": "Icon displayed on the side of the column header title when sorted in ascending order.",
+    "ColumnSortedDescendingIcon": "Icon displayed on the side of the column header title when sorted in descending order.",
+    "ColumnResizeIcon": "Icon displayed in between two column headers that allows to resize the column header.",
+    "DensityCompactIcon": "Icon displayed on the compact density option in the toolbar.",
+    "DensityStandardIcon": "Icon displayed on the standard density option in the toolbar.",
+    "DensityComfortableIcon": "Icon displayed on the &quot;comfortable&quot; density option in the toolbar.",
+    "ExportIcon": "Icon displayed on the open export button present in the toolbar by default.",
+    "MoreActionsIcon": "Icon displayed on the <code>actions</code> column type to open the menu.",
+    "TreeDataExpandIcon": "Icon displayed on the tree data toggling column when the children are collapsed",
+    "TreeDataCollapseIcon": "Icon displayed on the tree data toggling column when the children are expanded",
+    "GroupingCriteriaExpandIcon": "Icon displayed on the grouping column when the children are collapsed",
+    "GroupingCriteriaCollapseIcon": "Icon displayed on the grouping column when the children are expanded",
+    "DetailPanelExpandIcon": "Icon displayed on the detail panel toggle column when collapsed.",
+    "DetailPanelCollapseIcon": "Icon displayed on the detail panel toggle column when expanded.",
+    "FilterPanelDeleteIcon": "Icon displayed for deleting the filter from filter Panel.",
+    "RowReorderIcon": "Icon displayed on the <code>reorder</code> column type to reorder a row.",
+    "QuickFilterIcon": "Icon displayed on the quick filter input.",
+    "QuickFilterClearIcon": "Icon displayed on the quick filter reset input."
+  }
 }

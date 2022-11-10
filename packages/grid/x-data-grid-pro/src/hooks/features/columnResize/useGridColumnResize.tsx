@@ -22,6 +22,7 @@ import {
   findGridCellElementsFromCol,
   getFieldFromHeaderElem,
   findHeaderElementFromField,
+  findGroupHeaderElementsFromField,
 } from '../../../utils/domUtils';
 import { GridApiPro } from '../../../models/gridApiPro';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
@@ -132,6 +133,7 @@ export const useGridColumnResize = (
 
   const colDefRef = React.useRef<GridStateColDef>();
   const colElementRef = React.useRef<HTMLDivElement>();
+  const colGroupingElementRef = React.useRef<Element[]>();
   const colCellElementsRef = React.useRef<Element[]>();
   const theme = useTheme();
 
@@ -158,7 +160,7 @@ export const useGridColumnResize = (
     colElementRef.current!.style.minWidth = `${newWidth}px`;
     colElementRef.current!.style.maxWidth = `${newWidth}px`;
 
-    colCellElementsRef.current!.forEach((element) => {
+    [...colCellElementsRef.current!, ...colGroupingElementRef.current!].forEach((element) => {
       const div = element as HTMLDivElement;
       let finalWidth: `${number}px`;
 
@@ -251,6 +253,11 @@ export const useGridColumnResize = (
         apiRef.current.columnHeadersContainerElementRef?.current!.querySelector<HTMLDivElement>(
           `[data-field="${colDef.field}"]`,
         )!;
+
+      colGroupingElementRef.current = findGroupHeaderElementsFromField(
+        apiRef.current.columnHeadersContainerElementRef?.current!,
+        colDef.field,
+      );
 
       colCellElementsRef.current = findGridCellElementsFromCol(
         colElementRef.current,
@@ -351,6 +358,10 @@ export const useGridColumnResize = (
     const field = getFieldFromHeaderElem(colElementRef.current!);
     const colDef = apiRef.current.getColumn(field);
 
+    colGroupingElementRef.current = findGroupHeaderElementsFromField(
+      apiRef.current.columnHeadersContainerElementRef?.current!,
+      field,
+    );
     logger.debug(`Start Resize on col ${colDef.field}`);
     apiRef.current.publishEvent('columnResizeStart', { field }, event);
 

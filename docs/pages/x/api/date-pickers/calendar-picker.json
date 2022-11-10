@@ -3,6 +3,10 @@
     "onChange": { "type": { "name": "func" }, "required": true },
     "components": { "type": { "name": "object" }, "default": "{}" },
     "componentsProps": { "type": { "name": "object" }, "default": "{}" },
+    "dayOfWeekFormatter": {
+      "type": { "name": "func" },
+      "default": "(day) => day.charAt(0).toUpperCase()"
+    },
     "defaultCalendarMonth": { "type": { "name": "any" } },
     "disabled": { "type": { "name": "bool" } },
     "disableFuture": { "type": { "name": "bool" } },
@@ -11,7 +15,7 @@
     "getViewSwitchingButtonText": {
       "type": { "name": "func" },
       "deprecated": true,
-      "deprecationInfo": "Use the <code>localeText</code> prop of <code>LocalizationProvider</code> instead, see <a href=\"https://mui.com/x/react-date-pickers/localization\">https://mui.com/x/react-date-pickers/localization</a>"
+      "deprecationInfo": "Use the <code>localeText</code> prop of <code>LocalizationProvider</code> instead, see <a href=\"https://mui.com/x/react-date-pickers/localization/\">https://mui.com/x/react-date-pickers/localization/</a>."
     },
     "leftArrowButtonText": { "type": { "name": "string" }, "deprecated": true },
     "loading": { "type": { "name": "bool" } },
@@ -56,7 +60,14 @@
       "default": "['year', 'day']"
     }
   },
-  "slots": {},
+  "slots": {
+    "LeftArrowButton": { "default": "IconButton", "type": { "name": "elementType" } },
+    "LeftArrowIcon": { "default": "ArrowLeft", "type": { "name": "elementType" } },
+    "RightArrowButton": { "default": "IconButton", "type": { "name": "elementType" } },
+    "RightArrowIcon": { "default": "ArrowRight", "type": { "name": "elementType" } },
+    "SwitchViewButton": { "default": "IconButton", "type": { "name": "elementType" } },
+    "SwitchViewIcon": { "default": "ArrowDropDown", "type": { "name": "elementType" } }
+  },
   "name": "CalendarPicker",
   "styles": {
     "classes": ["root", "viewTransitionContainer"],

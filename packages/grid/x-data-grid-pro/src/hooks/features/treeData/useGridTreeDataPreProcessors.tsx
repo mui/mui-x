@@ -155,6 +155,8 @@ export const useGridTreeDataPreProcessors = (
         rowTree,
         isRowMatchingFilters: params.isRowMatchingFilters,
         disableChildrenFiltering: props.disableChildrenFiltering,
+        filterModel: params.filterModel,
+        apiRef,
       });
     },
     [apiRef, props.disableChildrenFiltering],

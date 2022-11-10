@@ -64,7 +64,8 @@ const serializeRow = (
   api.unstable_calculateColSpan({
     rowId: id,
     minFirstColumn: 0,
-    maxLastColumn: columns.length - 1,
+    maxLastColumn: columns.length,
+    columns,
   });
 
   columns.forEach((column, colIndex) => {
@@ -184,10 +185,69 @@ const serializeColumn = (column: GridStateColDef, columnsStyles: ColumnsStylesIn
   };
 };
 
+const addColumnGroupingHeaders = (
+  worksheet: Excel.Worksheet,
+  columns: GridStateColDef[],
+  api: GridApi,
+) => {
+  const maxDepth = Math.max(
+    ...columns.map(({ field }) => api.unstable_getColumnGroupPath(field)?.length ?? 0),
+  );
+  if (maxDepth === 0) {
+    return;
+  }
+
+  const columnGroupDetails = api.unstable_getAllGroupDetails();
+
+  for (let rowIndex = 0; rowIndex < maxDepth; rowIndex += 1) {
+    const row = columns.map(({ field }) => {
+      const groupingPath = api.unstable_getColumnGroupPath(field);
+      if (groupingPath.length <= rowIndex) {
+        return { groupId: null, parents: groupingPath };
+      }
+      return {
+        ...columnGroupDetails[groupingPath[rowIndex]],
+        parents: groupingPath.slice(0, rowIndex),
+      };
+    });
+
+    const newRow = worksheet.addRow(
+      row.map((group) => (group.groupId === null ? null : group?.headerName || group.groupId)),
+    );
+
+    // use `rowCount`, since worksheet can have additional rows added in `exceljsPreProcess`
+    const lastRowIndex = newRow.worksheet.rowCount;
+    let leftIndex = 0;
+    let rightIndex = 1;
+    while (rightIndex < columns.length) {
+      const { groupId: leftGroupId, parents: leftParents } = row[leftIndex];
+      const { groupId: rightGroupId, parents: rightParents } = row[rightIndex];
+
+      const areInSameGroup =
+        leftGroupId === rightGroupId &&
+        leftParents.length === rightParents.length &&
+        leftParents.every((leftParent, index) => rightParents[index] === leftParent);
+      if (areInSameGroup) {
+        rightIndex += 1;
+      } else {
+        if (rightIndex - leftIndex > 1) {
+          worksheet.mergeCells(lastRowIndex, leftIndex + 1, lastRowIndex, rightIndex);
+        }
+        leftIndex = rightIndex;
+        rightIndex += 1;
+      }
+    }
+    if (rightIndex - leftIndex > 1) {
+      worksheet.mergeCells(lastRowIndex, leftIndex + 1, lastRowIndex, rightIndex);
+    }
+  }
+};
+
 interface BuildExcelOptions {
   columns: GridStateColDef[];
   rowIds: GridRowId[];
   includeHeaders: boolean;
+  includeColumnGroupsHeaders: boolean;
   valueOptionsSheetName: string;
   exceljsPreProcess?: (processInput: GridExceljsProcessInput) => Promise<void>;
   exceljsPostProcess?: (processInput: GridExceljsProcessInput) => Promise<void>;
@@ -202,6 +262,7 @@ export async function buildExcel(
     columns,
     rowIds,
     includeHeaders,
+    includeColumnGroupsHeaders,
     valueOptionsSheetName,
     exceljsPreProcess,
     exceljsPostProcess,
@@ -219,6 +280,10 @@ export async function buildExcel(
       workbook,
       worksheet,
     });
+  }
+
+  if (includeColumnGroupsHeaders) {
+    addColumnGroupingHeaders(worksheet, columns, api);
   }
 
   if (includeHeaders) {

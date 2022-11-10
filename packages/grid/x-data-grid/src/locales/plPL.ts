@@ -27,16 +27,16 @@ const plPLGrid: Partial<GridLocaleText> = {
   toolbarFiltersTooltipActive: (count) => `Liczba aktywnych filtrów: ${count}`,
 
   // Quick filter toolbar field
-  // toolbarQuickFilterPlaceholder: 'Search...',
-  // toolbarQuickFilterLabel: 'Search',
-  // toolbarQuickFilterDeleteIconLabel: 'Clear',
+  toolbarQuickFilterPlaceholder: 'Wyszukaj…',
+  toolbarQuickFilterLabel: 'Szukaj',
+  toolbarQuickFilterDeleteIconLabel: 'Wyczyść',
 
   // Export selector toolbar button text
   toolbarExport: 'Eksportuj',
   toolbarExportLabel: 'Eksportuj',
   toolbarExportCSV: 'Pobierz jako plik CSV',
   toolbarExportPrint: 'Drukuj',
-  // toolbarExportExcel: 'Download as Excel',
+  toolbarExportExcel: 'Pobierz jako plik Excel',
 
   // Columns panel text
   columnsPanelTextFieldLabel: 'Znajdź kolumnę',
@@ -137,7 +137,15 @@ const plPLGrid: Partial<GridLocaleText> = {
   collapseDetailPanel: 'Zwiń',
 
   // Row reordering text
-  // rowReorderingHeaderName: 'Row reordering',
+  rowReorderingHeaderName: 'Porządkowanie wierszy',
+
+  // Aggregation
+  // aggregationMenuItemHeader: 'Aggregation',
+  // aggregationFunctionLabelSum: 'sum',
+  // aggregationFunctionLabelAvg: 'avg',
+  // aggregationFunctionLabelMin: 'min',
+  // aggregationFunctionLabelMax: 'max',
+  // aggregationFunctionLabelSize: 'size',
 };
 
 export const plPL: Localization = getGridLocalization(plPLGrid, plPLCore);

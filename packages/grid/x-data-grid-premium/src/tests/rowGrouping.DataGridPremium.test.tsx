@@ -1,3 +1,4 @@
+import * as React from 'react';
 // @ts-ignore Remove once the test utils are typed
 import { createRenderer, fireEvent, screen, act } from '@mui/monorepo/test/utils';
 import {
@@ -5,7 +6,6 @@ import {
   getColumnHeadersTextContent,
   getColumnValues,
 } from 'test/utils/helperFn';
-import * as React from 'react';
 import { expect } from 'chai';
 import {
   DataGridPremium,
@@ -20,6 +20,7 @@ import {
   useGridApiRef,
   GridGroupingColDefOverrideParams,
   getGroupRowIdFromPath,
+  GridLinkOperator,
 } from '@mui/x-data-grid-premium';
 import { spy } from 'sinon';
 
@@ -60,7 +61,7 @@ const baselineProps: DataGridPremiumProps = {
   ],
 };
 
-describe('<DataGridPremium /> - Group Rows By Column', () => {
+describe('<DataGridPremium /> - Row Grouping', () => {
   const { render, clock } = createRenderer({ clock: 'fake' });
 
   let apiRef: React.MutableRefObject<GridApi>;
@@ -494,7 +495,7 @@ describe('<DataGridPremium /> - Group Rows By Column', () => {
       expect(getColumnHeadersTextContent()).to.deep.equal(['id', 'category1', 'category2']);
 
       // No menu item on column menu to add / remove grouping criteria
-      apiRef.current.showColumnMenu('category1');
+      act(() => apiRef.current.showColumnMenu('category1'));
       clock.runToLast();
       expect(screen.queryByRole('menu')).not.to.equal(null);
       const category1Menuitem = screen.queryByRole('menuitem', {
@@ -502,11 +503,11 @@ describe('<DataGridPremium /> - Group Rows By Column', () => {
       });
       expect(category1Menuitem).to.equal(null);
 
-      apiRef.current.hideColumnMenu();
+      act(() => apiRef.current.hideColumnMenu());
       clock.runToLast();
       expect(screen.queryByRole('menu')).to.equal(null);
 
-      apiRef.current.showColumnMenu('category2');
+      act(() => apiRef.current.showColumnMenu('category2'));
       clock.runToLast();
       expect(screen.queryByRole('menu')).not.to.equal(null);
       const category2Menuitem = screen.queryByRole('menuitem', { name: 'Group by category2' });
@@ -715,16 +716,20 @@ describe('<DataGridPremium /> - Group Rows By Column', () => {
       );
 
       expect(getColumnHeaderCell(0)).toHaveInlineStyle({ width: '200px' });
-      apiRef.current.updateColumns([
-        { field: GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD, width: 100 },
-      ]);
+      act(() =>
+        apiRef.current.updateColumns([
+          { field: GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD, width: 100 },
+        ]),
+      );
       expect(getColumnHeaderCell(0)).toHaveInlineStyle({ width: '100px' });
-      apiRef.current.updateColumns([
-        {
-          field: 'id',
-          headerName: 'New id',
-        },
-      ]);
+      act(() =>
+        apiRef.current.updateColumns([
+          {
+            field: 'id',
+            headerName: 'New id',
+          },
+        ]),
+      );
       expect(getColumnHeaderCell(0)).toHaveInlineStyle({ width: '100px' });
     });
 
@@ -1043,17 +1048,21 @@ describe('<DataGridPremium /> - Group Rows By Column', () => {
 
       expect(getColumnHeaderCell(0)).toHaveInlineStyle({ width: '200px' });
       expect(getColumnHeaderCell(1)).toHaveInlineStyle({ width: '300px' });
-      apiRef.current.updateColumns([
-        { field: getRowGroupingFieldFromGroupingCriteria('category1'), width: 100 },
-      ]);
+      act(() =>
+        apiRef.current.updateColumns([
+          { field: getRowGroupingFieldFromGroupingCriteria('category1'), width: 100 },
+        ]),
+      );
       expect(getColumnHeaderCell(0)).toHaveInlineStyle({ width: '100px' });
       expect(getColumnHeaderCell(1)).toHaveInlineStyle({ width: '300px' });
-      apiRef.current.updateColumns([
-        {
-          field: 'id',
-          headerName: 'New id',
-        },
-      ]);
+      act(() =>
+        apiRef.current.updateColumns([
+          {
+            field: 'id',
+            headerName: 'New id',
+          },
+        ]),
+      );
       expect(getColumnHeaderCell(0)).toHaveInlineStyle({ width: '100px' });
       expect(getColumnHeaderCell(1)).toHaveInlineStyle({ width: '300px' });
     });
@@ -1436,8 +1445,7 @@ describe('<DataGridPremium /> - Group Rows By Column', () => {
             },
             {
               field: 'category1',
-              groupingValueGetter: (params: GridGroupingValueGetterParams<string>) =>
-                `groupingValue ${params.value}`,
+              groupingValueGetter: (params) => `groupingValue ${params.value}`,
             },
           ]}
           initialState={{ rowGrouping: { model: ['category1'] } }}
@@ -1454,6 +1462,38 @@ describe('<DataGridPremium /> - Group Rows By Column', () => {
         '',
       ]);
       expect(getColumnValues(1)).to.deep.equal(['', '0', '1', '2', '', '3', '4']);
+    });
+
+    it('should react to groupingValueGetter update', () => {
+      render(
+        <Test
+          columns={[
+            {
+              field: 'id',
+            },
+            {
+              field: 'modulo',
+              groupingValueGetter: (params) => params.row.id % 2,
+            },
+          ]}
+          initialState={{ rowGrouping: { model: ['modulo'] } }}
+          defaultGroupingExpansionDepth={-1}
+        />,
+      );
+      expect(getColumnValues(0)).to.deep.equal(['0 (3)', '', '', '', '1 (2)', '', '']);
+      expect(getColumnValues(1)).to.deep.equal(['', '0', '2', '4', '', '1', '3']);
+
+      act(() =>
+        apiRef.current.updateColumns([
+          {
+            field: 'modulo',
+            groupingValueGetter: (params) => params.row.id % 3,
+          },
+        ]),
+      );
+
+      expect(getColumnValues(0)).to.deep.equal(['0 (2)', '', '', '1 (2)', '', '', '2 (1)', '']);
+      expect(getColumnValues(1)).to.deep.equal(['', '0', '3', '', '1', '4', '', '2']);
     });
 
     it('should not use valueGetter to group the rows when defined', () => {
@@ -1524,7 +1564,7 @@ describe('<DataGridPremium /> - Group Rows By Column', () => {
           ]}
         />,
       );
-      apiRef.current.showColumnMenu('category1');
+      act(() => apiRef.current.showColumnMenu('category1'));
       clock.runToLast();
       expect(screen.queryByRole('menu')).not.to.equal(null);
       const menuItem = screen.queryByRole('menuitem', { name: 'Group by category1' });
@@ -1546,7 +1586,7 @@ describe('<DataGridPremium /> - Group Rows By Column', () => {
           ]}
         />,
       );
-      apiRef.current.showColumnMenu('category1');
+      act(() => apiRef.current.showColumnMenu('category1'));
       clock.runToLast();
       expect(screen.queryByRole('menu')).not.to.equal(null);
       expect(screen.queryByRole('menuitem', { name: 'Group by category1' })).to.equal(null);
@@ -1570,7 +1610,7 @@ describe('<DataGridPremium /> - Group Rows By Column', () => {
           }}
         />,
       );
-      apiRef.current.showColumnMenu('category1');
+      act(() => apiRef.current.showColumnMenu('category1'));
       clock.runToLast();
       expect(screen.queryByRole('menu')).not.to.equal(null);
       const menuItem = screen.queryByRole('menuitem', { name: 'Stop grouping by category1' });
@@ -1601,7 +1641,7 @@ describe('<DataGridPremium /> - Group Rows By Column', () => {
         />,
       );
 
-      apiRef.current.showColumnMenu('__row_group_by_columns_group_category1__');
+      act(() => apiRef.current.showColumnMenu('__row_group_by_columns_group_category1__'));
       clock.runToLast();
       expect(screen.queryByRole('menu')).not.to.equal(null);
       const menuItemCategory1 = screen.queryByRole('menuitem', {
@@ -1610,11 +1650,11 @@ describe('<DataGridPremium /> - Group Rows By Column', () => {
       fireEvent.click(menuItemCategory1);
       expect(apiRef.current.state.rowGrouping.model).to.deep.equal(['category2']);
 
-      apiRef.current.hideColumnMenu();
+      act(() => apiRef.current.hideColumnMenu());
       clock.runToLast();
       expect(screen.queryByRole('menu')).to.equal(null);
 
-      apiRef.current.showColumnMenu('__row_group_by_columns_group_category2__');
+      act(() => apiRef.current.showColumnMenu('__row_group_by_columns_group_category2__'));
       clock.runToLast();
       expect(screen.queryByRole('menu')).not.to.equal(null);
       const menuItemCategory2 = screen.queryByRole('menuitem', {
@@ -1647,7 +1687,7 @@ describe('<DataGridPremium /> - Group Rows By Column', () => {
         />,
       );
 
-      apiRef.current.showColumnMenu('__row_group_by_columns_group__');
+      act(() => apiRef.current.showColumnMenu('__row_group_by_columns_group__'));
       clock.runToLast();
       expect(screen.queryByRole('menu')).not.to.equal(null);
       const menuItemCategory1 = screen.queryByRole('menuitem', {
@@ -1676,7 +1716,7 @@ describe('<DataGridPremium /> - Group Rows By Column', () => {
           ]}
         />,
       );
-      apiRef.current.showColumnMenu('category1');
+      act(() => apiRef.current.showColumnMenu('category1'));
       clock.runToLast();
       expect(screen.queryByRole('menu')).not.to.equal(null);
       expect(screen.queryByRole('menuitem', { name: 'Group by Category 1' })).not.to.equal(null);
@@ -1701,7 +1741,7 @@ describe('<DataGridPremium /> - Group Rows By Column', () => {
           }}
         />,
       );
-      apiRef.current.showColumnMenu('category1');
+      act(() => apiRef.current.showColumnMenu('category1'));
       clock.runToLast();
       expect(screen.queryByRole('menu')).not.to.equal(null);
       expect(screen.queryByRole('menuitem', { name: 'Stop grouping by Category 1' })).not.to.equal(
@@ -2113,8 +2153,129 @@ describe('<DataGridPremium /> - Group Rows By Column', () => {
           />,
         );
 
-        // TODO: allows grouping filter to be more flexible when it is quick filter
         expect(getColumnValues(1)).to.deep.equal(['', '3', '4']);
+      });
+
+      it('should let group appears when a leaf rows pass quick filter', () => {
+        render(
+          <Test
+            initialState={{
+              rowGrouping: { model: ['category1'] },
+              filter: {
+                filterModel: {
+                  items: [],
+                  quickFilterValues: ['Cat 1'],
+                },
+              },
+            }}
+            rowGroupingColumnMode="single"
+            defaultGroupingExpansionDepth={-1}
+          />,
+        );
+
+        // Corresponds to rows id 0 an 4 (respectively "cat A cat 1" and "cat B cat 1")
+        expect(getColumnValues(1)).to.deep.equal(['', '0', '', '4']);
+      });
+
+      it('should let group appears when a rows pass quick filter based on both grouping and leaf values', () => {
+        render(
+          <Test
+            initialState={{
+              rowGrouping: { model: ['category1'] },
+              filter: {
+                filterModel: {
+                  items: [],
+                  quickFilterValues: ['Cat A', 'Cat 2'],
+                },
+              },
+            }}
+            rowGroupingColumnMode="single"
+            defaultGroupingExpansionDepth={-1}
+          />,
+        );
+
+        // Corresponds to rows A.1 and B.1
+        expect(getColumnValues(1)).to.deep.equal(['', '1', '2']);
+      });
+
+      it('should show all children when a group pass quick filter', () => {
+        render(
+          <Test
+            initialState={{
+              rowGrouping: { model: ['category1'] },
+              filter: {
+                filterModel: {
+                  items: [],
+                  quickFilterValues: ['Cat A'],
+                },
+              },
+            }}
+            rowGroupingColumnMode="single"
+            defaultGroupingExpansionDepth={-1}
+          />,
+        );
+
+        expect(getColumnValues(1)).to.deep.equal(['', '0', '1', '2']);
+      });
+
+      it('should let group appears when a leaf rows pass filterModel', () => {
+        render(
+          <Test
+            initialState={{
+              rowGrouping: { model: ['category1'] },
+              filter: {
+                filterModel: {
+                  items: [
+                    {
+                      columnField: 'category2',
+                      operatorValue: 'equals',
+                      value: 'Cat 1',
+                    },
+                  ],
+                },
+              },
+            }}
+            rowGroupingColumnMode="single"
+            defaultGroupingExpansionDepth={-1}
+          />,
+        );
+
+        // Corresponds to rows id 0 an 4 (respectively "cat A cat 1" and "cat B cat 1")
+        expect(getColumnValues(1)).to.deep.equal(['', '0', '', '4']);
+      });
+
+      it('should manage link operator OR accros group and leaf columns', () => {
+        render(
+          <Test
+            initialState={{
+              rowGrouping: { model: ['category1'] },
+              filter: {
+                filterModel: {
+                  items: [
+                    {
+                      id: 2,
+                      columnField: 'category2',
+                      operatorValue: 'equals',
+                      value: 'Cat 1',
+                    },
+                    {
+                      id: 1,
+                      columnField: GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD,
+                      operatorValue: 'equals',
+                      value: 'Cat A',
+                    },
+                  ],
+                  linkOperator: GridLinkOperator.Or,
+                },
+              },
+            }}
+            rowGroupingColumnMode="single"
+            defaultGroupingExpansionDepth={-1}
+          />,
+        );
+
+        // Corresponds to rows id 0, 1, 2 because of Cat A, ann id 4 because of Cat 1
+        expect(getColumnValues(1)).to.deep.equal(['', '0', '1', '2', '', '4']);
       });
     });
 
@@ -2270,13 +2431,13 @@ describe('<DataGridPremium /> - Group Rows By Column', () => {
   describe('apiRef: addRowGroupingCriteria', () => {
     it('should add grouping criteria to model', () => {
       render(<Test initialState={{ rowGrouping: { model: ['category1'] } }} />);
-      apiRef.current.addRowGroupingCriteria('category2');
+      act(() => apiRef.current.addRowGroupingCriteria('category2'));
       expect(apiRef.current.state.rowGrouping.model).to.deep.equal(['category1', 'category2']);
     });
 
     it('should add grouping criteria to model at the right position', () => {
       render(<Test initialState={{ rowGrouping: { model: ['category1'] } }} />);
-      apiRef.current.addRowGroupingCriteria('category2', 0);
+      act(() => apiRef.current.addRowGroupingCriteria('category2', 0));
       expect(apiRef.current.state.rowGrouping.model).to.deep.equal(['category2', 'category1']);
     });
   });
@@ -2284,7 +2445,7 @@ describe('<DataGridPremium /> - Group Rows By Column', () => {
   describe('apiRef: removeRowGroupingCriteria', () => {
     it('should remove field from model', () => {
       render(<Test initialState={{ rowGrouping: { model: ['category1'] } }} />);
-      apiRef.current.removeRowGroupingCriteria('category1');
+      act(() => apiRef.current.removeRowGroupingCriteria('category1'));
       expect(apiRef.current.state.rowGrouping.model).to.deep.equal([]);
     });
   });
@@ -2292,7 +2453,7 @@ describe('<DataGridPremium /> - Group Rows By Column', () => {
   describe('apiRef: setRowGroupingCriteriaIndex', () => {
     it('should change the grouping criteria order', () => {
       render(<Test initialState={{ rowGrouping: { model: ['category1', 'category2'] } }} />);
-      apiRef.current.setRowGroupingCriteriaIndex('category1', 1);
+      act(() => apiRef.current.setRowGroupingCriteriaIndex('category1', 1));
       expect(apiRef.current.state.rowGrouping.model).to.deep.equal(['category2', 'category1']);
     });
   });

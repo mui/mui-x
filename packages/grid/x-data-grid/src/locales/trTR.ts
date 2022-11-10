@@ -27,7 +27,7 @@ const trTRGrid: Partial<GridLocaleText> = {
   toolbarFiltersTooltipActive: (count) => `${count} aktif filtre`,
 
   // Quick filter toolbar field
-  toolbarQuickFilterPlaceholder: 'Ara...',
+  toolbarQuickFilterPlaceholder: 'Ara…',
   toolbarQuickFilterLabel: 'Ara',
   toolbarQuickFilterDeleteIconLabel: 'Temizle',
 
@@ -48,7 +48,7 @@ const trTRGrid: Partial<GridLocaleText> = {
   // Filter panel text
   filterPanelAddFilter: 'Filtre Ekle',
   filterPanelDeleteIconLabel: 'Kaldır',
-  // filterPanelLinkOperator: 'Logic operator',
+  filterPanelLinkOperator: 'Mantıksal operatörler',
   filterPanelOperators: 'Operatör',
 
   // TODO v6: rename to filterPanelOperator
@@ -104,14 +104,14 @@ const trTRGrid: Partial<GridLocaleText> = {
 
   // Checkbox selection text
   checkboxSelectionHeaderName: 'Seçim',
-  // checkboxSelectionSelectAllRows: 'Select all rows',
-  // checkboxSelectionUnselectAllRows: 'Unselect all rows',
-  // checkboxSelectionSelectRow: 'Select row',
-  // checkboxSelectionUnselectRow: 'Unselect row',
+  checkboxSelectionSelectAllRows: 'Tüm satırları seç',
+  checkboxSelectionUnselectAllRows: 'Tüm satırların seçimini kaldır',
+  checkboxSelectionSelectRow: 'Satırı seç',
+  checkboxSelectionUnselectRow: 'Satır seçimini bırak',
 
   // Boolean cell text
-  // booleanCellTrueLabel: 'yes',
-  // booleanCellFalseLabel: 'no',
+  booleanCellTrueLabel: 'Evet',
+  booleanCellFalseLabel: 'Hayır',
 
   // Actions cell more text
   actionsCellMore: 'daha fazla',
@@ -132,12 +132,20 @@ const trTRGrid: Partial<GridLocaleText> = {
   unGroupColumn: (name) => `${name} için gruplamayı kaldır`,
 
   // Master/detail
-  // detailPanelToggle: 'Detail panel toggle',
+  detailPanelToggle: 'Detay görünümüne geçiş',
   expandDetailPanel: 'Genişlet',
   collapseDetailPanel: 'Gizle',
 
   // Row reordering text
-  // rowReorderingHeaderName: 'Row reordering',
+  rowReorderingHeaderName: 'Satırı yeniden sırala',
+
+  // Aggregation
+  aggregationMenuItemHeader: 'Toplama',
+  aggregationFunctionLabelSum: 'top',
+  aggregationFunctionLabelAvg: 'ort',
+  aggregationFunctionLabelMin: 'min',
+  aggregationFunctionLabelMax: 'maks',
+  aggregationFunctionLabelSize: 'boyut',
 };
 
 export const trTR: Localization = getGridLocalization(trTRGrid, trTRCore);

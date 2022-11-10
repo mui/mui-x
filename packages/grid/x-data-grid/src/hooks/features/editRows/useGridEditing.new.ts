@@ -8,6 +8,7 @@ import { useGridCellEditing } from './useGridCellEditing.new';
 import { GridCellModes, GridEditModes } from '../../../models/gridEditRowModel';
 import { useGridRowEditing } from './useGridRowEditing.new';
 import { GridStateInitializer } from '../../utils/useGridInitializeState';
+import { gridEditRowsStateSelector } from './gridEditRowsSelector';
 
 export const editingStateInitializer: GridStateInitializer = (state) => ({
   ...state,
@@ -16,7 +17,13 @@ export const editingStateInitializer: GridStateInitializer = (state) => ({
 
 export const useGridEditing = (
   apiRef: React.MutableRefObject<GridApiCommunity>,
-  props: Pick<DataGridProcessedProps, 'isCellEditable' | 'editMode' | 'processRowUpdate'>,
+  props: Pick<
+    DataGridProcessedProps,
+    | 'isCellEditable'
+    | 'editMode'
+    | 'processRowUpdate'
+    | 'disableIgnoreModificationsIfProcessingProps'
+  >,
 ) => {
   useGridCellEditing(apiRef, props);
   useGridRowEditing(apiRef, props);
@@ -40,6 +47,9 @@ export const useGridEditing = (
       }
       if (isCellEditableProp) {
         return isCellEditableProp(params);
+      }
+      if (params.rowNode.isPinned) {
+        return false;
       }
       return true;
     },
@@ -147,11 +157,21 @@ export const useGridEditing = (
     [apiRef, props.editMode],
   );
 
+  const getEditCellMeta = React.useCallback<GridNewEditingSharedApi['unstable_getEditCellMeta']>(
+    (id, field) => {
+      const editingState = gridEditRowsStateSelector(apiRef.current.state);
+
+      return { changeReason: editingState[id][field].changeReason };
+    },
+    [apiRef],
+  );
+
   const editingSharedApi: GridNewEditingSharedApi = {
     isCellEditable,
     setEditCellValue,
     unstable_runPendingEditCellValueMutation: runPendingEditCellValueMutation,
     unstable_getRowWithUpdatedValues: getRowWithUpdatedValues,
+    unstable_getEditCellMeta: getEditCellMeta,
   };
 
   useGridApiMethod(apiRef, editingSharedApi, 'EditingApi');

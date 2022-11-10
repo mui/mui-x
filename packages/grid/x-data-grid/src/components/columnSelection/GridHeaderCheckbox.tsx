@@ -106,7 +106,7 @@ const GridHeaderCheckbox = React.forwardRef<HTMLInputElement, GridColumnHeaderPa
     }, [tabIndex, apiRef, props.field]);
 
     const handleKeyDown = React.useCallback(
-      (event) => {
+      (event: React.KeyboardEvent<HTMLInputElement>) => {
         if (event.key === ' ') {
           // imperative toggle the checkbox because Space is disable by some preventDefault
           apiRef.current.publishEvent('headerSelectionCheckboxChange', {

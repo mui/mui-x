@@ -1,11 +1,12 @@
 import * as React from 'react';
-import { useTheme, styled, Theme } from '@mui/material/styles';
+import { useTheme, styled, Theme, useThemeProps } from '@mui/material/styles';
 import { unstable_composeClasses as composeClasses } from '@mui/material';
 import { PickersToolbarText } from '../internals/components/PickersToolbarText';
 import { PickersToolbarButton } from '../internals/components/PickersToolbarButton';
-import { PickersToolbar, pickersToolbarClasses } from '../internals/components/PickersToolbar';
+import { PickersToolbar } from '../internals/components/PickersToolbar';
+import { pickersToolbarClasses } from '../internals/components/pickersToolbarClasses';
 import { arrayIncludes } from '../internals/utils/utils';
-import { useUtils } from '../internals/hooks/useUtils';
+import { useLocaleText, useUtils } from '../internals/hooks/useUtils';
 import { useMeridiemMode } from '../internals/hooks/date-helpers-hooks';
 import { BaseToolbarProps } from '../internals/models/props/baseToolbarProps';
 import {
@@ -61,7 +62,13 @@ const TimePickerToolbarSeparator = styled(PickersToolbarText, {
 const TimePickerToolbarHourMinuteLabel = styled('div', {
   name: 'MuiTimePickerToolbar',
   slot: 'HourMinuteLabel',
-  overridesResolver: (props, styles) => styles.hourMinuteLabel,
+  overridesResolver: (props, styles) => [
+    {
+      [`&.${timePickerToolbarClasses.hourMinuteLabelLandscape}`]: styles.hourMinuteLabelLandscape,
+      [`&.${timePickerToolbarClasses.hourMinuteLabelReverse}`]: styles.hourMinuteLabelReverse,
+    },
+    styles.hourMinuteLabel,
+  ],
 })<{
   ownerState: TimePickerToolbarProps<any>;
 }>(({ theme, ownerState }) => ({
@@ -79,7 +86,11 @@ const TimePickerToolbarHourMinuteLabel = styled('div', {
 const TimePickerToolbarAmPmSelection = styled('div', {
   name: 'MuiTimePickerToolbar',
   slot: 'AmPmSelection',
-  overridesResolver: (props, styles) => styles.ampmSelection,
+  overridesResolver: (props, styles) => [
+    { [`.${timePickerToolbarClasses.ampmLabel}`]: styles.ampmLabel },
+    { [`&.${timePickerToolbarClasses.ampmLandscape}`]: styles.ampmLandscape },
+    styles.ampmSelection,
+  ],
 })<{
   ownerState: TimePickerToolbarProps<any>;
 }>(({ ownerState }) => ({
@@ -101,9 +112,10 @@ const TimePickerToolbarAmPmSelection = styled('div', {
 /**
  * @ignore - internal component.
  */
-export const TimePickerToolbar = <TDate extends unknown>(
-  props: BaseToolbarProps<TDate, TDate | null>,
-) => {
+export function TimePickerToolbar<TDate extends unknown>(
+  inProps: BaseToolbarProps<TDate, TDate | null>,
+) {
+  const props = useThemeProps({ props: inProps, name: 'MuiTimePickerToolbar' });
   const {
     ampm,
     ampmInClock,
@@ -114,13 +126,16 @@ export const TimePickerToolbar = <TDate extends unknown>(
     openView,
     setOpenView,
     toggleMobileKeyboardView,
-    toolbarTitle = 'Select time',
+    toolbarTitle: toolbarTitleProp,
     views,
     disabled,
     readOnly,
     ...other
   } = props;
   const utils = useUtils<TDate>();
+  const localeText = useLocaleText();
+
+  const toolbarTitle = toolbarTitleProp ?? localeText.timePickerDefaultToolbarTitle;
   const theme = useTheme();
   const showAmPmControl = Boolean(ampm && !ampmInClock);
   const { meridiemMode, handleMeridiemChange } = useMeridiemMode(parsedValue, ampm, onChange);
@@ -212,4 +227,4 @@ export const TimePickerToolbar = <TDate extends unknown>(
       )}
     </TimePickerToolbarRoot>
   );
-};
+}

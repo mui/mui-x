@@ -1,15 +1,16 @@
 import * as React from 'react';
+import dayjs from 'dayjs';
 import TextField from '@mui/material/TextField';
 import Stack from '@mui/material/Stack';
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { TimePicker } from '@mui/x-date-pickers/TimePicker';
 
 export default function TimeValidationTimePicker() {
-  const [value, setValue] = React.useState(new Date('2020-01-01 12:00'));
+  const [value, setValue] = React.useState(dayjs('2020-01-01 12:00'));
 
   return (
-    <LocalizationProvider dateAdapter={AdapterDateFns}>
+    <LocalizationProvider dateAdapter={AdapterDayjs}>
       <Stack spacing={3}>
         <TimePicker
           renderInput={(params) => <TextField {...params} />}
@@ -18,8 +19,8 @@ export default function TimeValidationTimePicker() {
           onChange={(newValue) => {
             setValue(newValue);
           }}
-          minTime={new Date(0, 0, 0, 8)}
-          maxTime={new Date(0, 0, 0, 18, 45)}
+          minTime={dayjs('2018-01-01T08:00')}
+          maxTime={dayjs('2018-01-01T18:45')}
         />
         <TimePicker
           renderInput={(params) => <TextField {...params} />}

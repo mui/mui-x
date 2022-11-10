@@ -4,11 +4,11 @@ import {
   ExportedCalendarHeaderProps,
   useDefaultDates,
   useUtils,
-  ExportedDateValidationProps,
   DayPicker,
   DayPickerProps,
   PickersCalendarHeaderSlotsComponent,
   PickersCalendarHeaderSlotsComponentsProps,
+  DayValidationProps,
 } from '@mui/x-date-pickers/internals';
 import { doNothing } from '../internal/utils/utils';
 import { DateRange } from '../internal/models/dateRange';
@@ -27,8 +27,8 @@ export interface ExportedMobileDateRangeCalendarProps<TDate>
 
 interface DesktopDateRangeCalendarProps<TDate>
   extends ExportedMobileDateRangeCalendarProps<TDate>,
-    Omit<DayPickerProps<TDate>, 'selectedDays' | 'renderDay' | 'onFocusedDayChange'>,
-    ExportedDateValidationProps<TDate>,
+    Omit<DayPickerProps<TDate>, 'selectedDays' | 'renderDay' | 'onFocusedDayChange' | 'classes'>,
+    DayValidationProps<TDate>,
     ExportedCalendarHeaderProps<TDate> {
   /**
    * Overrideable components.
@@ -63,6 +63,8 @@ export function DateRangePickerViewMobile<TDate>(props: DesktopDateRangeCalendar
     rightArrowButtonText,
     disabled,
     readOnly,
+    // excluding classes from `other` to avoid passing them down to children
+    classes: providedClasses,
     ...other
   } = props;
 

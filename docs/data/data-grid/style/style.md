@@ -11,7 +11,7 @@ title: Data Grid - Styling
 For one-off styles, the `sx` prop can be used.
 It allows to apply simple to complex customizations directly onto the `DataGrid` element.
 The keys accepted can be any CSS property as well as the custom properties provided by MUI.
-For more details, visit the [`sx` prop page](/system/the-sx-prop/).
+For more details, visit the [`sx` prop page](/system/getting-started/the-sx-prop/).
 
 ```tsx
 <DataGrid sx={{ m: 2 }} /> // Sets the margin to 2 times the spacing unit = 16px
@@ -121,15 +121,15 @@ You must use `headerAlign` to align the content of the header.
 
 ## Striped rows
 
-The following demo illustrates how the rows of the grid can be stripped.
+You can use the `indexRelativeToCurrentPage` param passed to `getRowClassName` to apply alternating styles to the rows.
+
+The following demo illustrates how this can be achieved.
 
 {{"demo": "StripedGrid.js", "bg": "inline"}}
 
 ## Custom theme
 
-You can use the `indexRelativeToCurrentPage` param passed to `getRowClassName` to apply alternating styles to the rows.
-
-The following demo illustrates how this can be achieved.
+The following demo leverages the CSS customization API to match the Ant Design specification.
 
 {{"demo": "AntDesignGrid.js", "defaultCodeOpen": false}}
 

@@ -5,6 +5,7 @@ import {
   showExpiredLicenseError,
   showInvalidLicenseError,
   showNotFoundLicenseError,
+  showOutOfScopeLicenseError,
 } from '../utils/licenseErrorMessageUtils';
 import { LicenseStatus } from '../utils/licenseStatus';
 import { LicenseScope } from '../utils/licenseScope';
@@ -14,8 +15,8 @@ export type MuiCommercialPackageName =
   | 'x-data-grid-premium'
   | 'x-date-pickers-pro';
 
-const sharedLicenseStatuses: {
-  [packageName in MuiCommercialPackageName]?: { key: string; status: LicenseStatus };
+export const sharedLicenseStatuses: {
+  [packageName in MuiCommercialPackageName]?: { key: string | undefined; status: LicenseStatus };
 } = {};
 
 export function useLicenseVerifier(
@@ -24,7 +25,10 @@ export function useLicenseVerifier(
 ): LicenseStatus {
   return React.useMemo(() => {
     const licenseKey = LicenseInfo.getLicenseKey();
-    if (licenseKey && sharedLicenseStatuses[packageName]?.key === licenseKey) {
+    if (
+      sharedLicenseStatuses[packageName] &&
+      sharedLicenseStatuses[packageName]!.key === licenseKey
+    ) {
       return sharedLicenseStatuses[packageName]!.status;
     }
 
@@ -32,6 +36,7 @@ export function useLicenseVerifier(
       ? ['premium']
       : ['pro', 'premium'];
 
+    const plan = packageName.includes('premium') ? 'Premium' : 'Pro';
     const licenseStatus = verifyLicense({
       releaseInfo,
       licenseKey,
@@ -39,12 +44,14 @@ export function useLicenseVerifier(
       isProduction: process.env.NODE_ENV === 'production',
     });
 
-    sharedLicenseStatuses[packageName] = { key: licenseStatus, status: licenseStatus };
+    sharedLicenseStatuses[packageName] = { key: licenseKey, status: licenseStatus };
 
     if (licenseStatus === LicenseStatus.Invalid) {
       showInvalidLicenseError();
+    } else if (licenseStatus === LicenseStatus.OutOfScope) {
+      showOutOfScopeLicenseError();
     } else if (licenseStatus === LicenseStatus.NotFound) {
-      showNotFoundLicenseError();
+      showNotFoundLicenseError({ plan, packageName: `@mui/${packageName}` });
     } else if (licenseStatus === LicenseStatus.Expired) {
       showExpiredLicenseError();
     }

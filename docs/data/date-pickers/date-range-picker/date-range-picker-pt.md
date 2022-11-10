@@ -6,7 +6,7 @@ packageName: '@mui/x-date-pickers-pro'
 materialDesign: https://material.io/components/date-pickers
 ---
 
-# Seletor de intervalo de data [<span class="plan-pro"></span>](https://mui.com/store/items/mui-x-pro/)
+# Seletor de intervalo de data [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
 
 <p class="description">Seletores de data permitem ao usuário selecionar um intervalo de datas.</p>
 

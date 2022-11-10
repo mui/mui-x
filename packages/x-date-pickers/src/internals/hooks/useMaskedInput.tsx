@@ -80,19 +80,31 @@ export const useMaskedInput = <TInputDate, TDate>({
 
   // Inspired from autocomplete: https://github.com/mui/material-ui/blob/2c89d036dc2e16f100528f161600dffc83241768/packages/mui-base/src/AutocompleteUnstyled/useAutocomplete.js#L185:L201
   const prevRawValue = React.useRef<TInputDate>();
+  const prevLocale = React.useRef<Locale | string>(utils.locale);
+  const prevInputFormat = React.useRef<string>(inputFormat);
 
   React.useEffect(() => {
-    const rawValueChange = rawValue !== prevRawValue.current;
+    const rawValueHasChanged = rawValue !== prevRawValue.current;
+    const localeHasChanged = utils.locale !== prevLocale.current;
+    const inputFormatHasChanged = inputFormat !== prevInputFormat.current;
     prevRawValue.current = rawValue;
+    prevLocale.current = utils.locale;
+    prevInputFormat.current = inputFormat;
 
-    if (!rawValueChange) {
+    if (!rawValueHasChanged && !localeHasChanged && !inputFormatHasChanged) {
       return;
     }
 
     const newParsedValue = rawValue === null ? null : utils.date(rawValue);
     const isAcceptedValue = rawValue === null || utils.isValid(newParsedValue);
 
-    if (!isAcceptedValue || utils.isEqual(innerInputValue, newParsedValue)) {
+    const innerEqualsParsed =
+      innerInputValue === null
+        ? newParsedValue === null
+        : newParsedValue !== null &&
+          Math.abs(utils.getDiff(innerInputValue, newParsedValue, 'seconds')) === 0;
+
+    if (!localeHasChanged && !inputFormatHasChanged && (!isAcceptedValue || innerEqualsParsed)) {
       return;
     }
 

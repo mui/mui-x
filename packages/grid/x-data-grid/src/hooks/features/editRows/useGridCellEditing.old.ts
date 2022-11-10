@@ -208,6 +208,12 @@ export const useCellEditing = (
 
   const handleCellKeyDown = React.useCallback<GridEventListener<'cellKeyDown'>>(
     async (params, event) => {
+      // Wait until IME is settled for Asian languages like Japanese and Chinese
+      // TODO: `event.which` is depricated but this is a temporary workaround
+      if (event.which === 229) {
+        return;
+      }
+
       const { id, field, cellMode, isEditable } = params;
       if (!isEditable) {
         return;
@@ -218,7 +224,7 @@ export const useCellEditing = (
 
       if (
         !isEditMode &&
-        isCellEnterEditModeKeys(event.key) &&
+        isCellEnterEditModeKeys(event) &&
         !isModifierKeyPressed &&
         !(event.key === ' ' && event.shiftKey)
       ) {
@@ -286,7 +292,7 @@ export const useCellEditing = (
 
       apiRef.current.setCellMode(params.id, params.field, GridCellModes.Edit);
 
-      if (isKeyboardEvent(event) && isPrintableKey(event.key)) {
+      if (isKeyboardEvent(event) && isPrintableKey(event)) {
         apiRef.current.unstable_setEditCellProps({
           id: params.id,
           field: params.field,

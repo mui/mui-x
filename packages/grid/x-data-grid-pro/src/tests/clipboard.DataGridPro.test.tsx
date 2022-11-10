@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { GridApi, useGridApiRef, DataGridPro, DataGridProProps } from '@mui/x-data-grid-pro';
 // @ts-ignore Remove once the test utils are typed
-import { createRenderer, fireEvent } from '@mui/monorepo/test/utils';
+import { createRenderer, fireEvent, act, userEvent } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
 import { stub, SinonStub } from 'sinon';
 import { getCell } from 'test/utils/helperFn';
@@ -66,15 +66,15 @@ describe('<DataGridPro /> - Clipboard', () => {
 
     it('should copy the selected rows to the clipboard', () => {
       render(<Test />);
-      apiRef.current.selectRows([0, 1]);
-      apiRef.current.unstable_copySelectedRowsToClipboard();
+      act(() => apiRef.current.selectRows([0, 1]));
+      act(() => apiRef.current.unstable_copySelectedRowsToClipboard());
       expect(writeText.firstCall.args[0]).to.equal(['0\tNike', '1\tAdidas'].join('\r\n'));
     });
 
     it('should include the headers when includeHeaders=true', () => {
       render(<Test />);
-      apiRef.current.selectRows([0, 1]);
-      apiRef.current.unstable_copySelectedRowsToClipboard(true);
+      act(() => apiRef.current.selectRows([0, 1]));
+      act(() => apiRef.current.unstable_copySelectedRowsToClipboard(true));
       expect(writeText.firstCall.args[0]).to.equal(
         ['id\tBrand', '0\tNike', '1\tAdidas'].join('\r\n'),
       );
@@ -83,10 +83,9 @@ describe('<DataGridPro /> - Clipboard', () => {
     ['ctrlKey', 'metaKey'].forEach((key) => {
       it(`should copy the selected rows to the clipboard when ${key} + C is pressed`, () => {
         render(<Test disableSelectionOnClick />);
-        apiRef.current.selectRows([0, 1]);
+        act(() => apiRef.current.selectRows([0, 1]));
         const cell = getCell(0, 0);
-        fireEvent.mouseUp(cell);
-        fireEvent.click(cell);
+        userEvent.mousePress(cell);
         fireEvent.keyDown(cell, { key: 'c', keyCode: 67, [key]: true });
         expect(writeText.firstCall.args[0]).to.equal(['0\tNike', '1\tAdidas'].join('\r\n'));
       });
@@ -94,10 +93,9 @@ describe('<DataGridPro /> - Clipboard', () => {
 
     it(`should copy the selected rows and headers to the clipboard when Alt + C is pressed`, () => {
       render(<Test />);
-      apiRef.current.selectRows([0, 1]);
+      act(() => apiRef.current.selectRows([0, 1]));
       const cell = getCell(0, 0);
-      fireEvent.mouseUp(cell);
-      fireEvent.click(cell);
+      userEvent.mousePress(cell);
       fireEvent.keyDown(cell, { key: 'c', keyCode: 67, altKey: true });
       expect(writeText.callCount).to.equal(1, "writeText wasn't called");
       expect(writeText.firstCall.args[0]).to.equal(['id\tBrand', '0\tNike'].join('\r\n'));

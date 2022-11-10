@@ -30,6 +30,7 @@ import { GridInitialStateCommunity } from '../gridStateCommunity';
 import { GridSlotsComponentsProps } from '../gridSlotsComponentsProps';
 import { GridColumnVisibilityModel } from '../../hooks/features/columns/gridColumnsInterfaces';
 import { GridCellModesModel, GridRowModesModel } from '../api/gridEditingApi';
+import { GridColumnGroupingModel } from '../gridColumnGrouping';
 
 export interface GridExperimentalFeatures {
   /**
@@ -40,6 +41,10 @@ export interface GridExperimentalFeatures {
    * Enables the new API for cell editing and row editing.
    */
   newEditingApi: boolean;
+  /**
+   * Enables the column grouping.
+   */
+  columnGrouping: boolean;
   /**
    * Emits a warning if the cell receives focus without also syncing the focus state.
    * Only works if NODE_ENV=test.
@@ -79,6 +84,7 @@ export type DataGridForcedPropsKey =
   | 'disableMultipleSelection'
   | 'disableColumnReorder'
   | 'disableColumnResize'
+  | 'keepColumnPositionIfDraggedOutside'
   | 'throttleRowsMs'
   | 'hideFooterRowCount'
   | 'pagination'
@@ -211,6 +217,11 @@ export interface DataGridPropsWithDefaultValues {
    */
   disableVirtualization: boolean;
   /**
+   * If `true`, modification to a cell will not be discarded if the mode is changed from "edit" to "view" while processing props.
+   * @default false
+   */
+  disableIgnoreModificationsIfProcessingProps: boolean; // TODO v6: remove prop and make its `true` behavior the default
+  /**
    * Controls whether to use the cell or row editing.
    * @default "cell"
    */
@@ -261,7 +272,7 @@ export interface DataGridPropsWithDefaultValues {
   logger: Logger;
   /**
    * Allows to pass the logging level or false to turn off logging.
-   * @default "debug"
+   * @default "error" ("warn" in dev mode)
    */
   logLevel: keyof Logger | false;
   /**
@@ -329,6 +340,12 @@ export interface DataGridPropsWithDefaultValues {
    * @default false
    */
   disableColumnResize: boolean;
+  /**
+   * If `true`, moving the mouse pointer outside the grid before releasing the mouse button
+   * in a column re-order action will not cause the column to jump back to its original position.
+   * @default false
+   */
+  keepColumnPositionIfDraggedOutside: boolean;
 }
 
 /**
@@ -339,13 +356,13 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
   /**
    * The ref object that allows grid manipulation. Can be instantiated with [[useGridApiRef()]].
    * TODO: Remove `@internal` when opening `apiRef` to Community plan
-   * @internal
+   * @ignore - do not document.
    */
   apiRef?: React.MutableRefObject<GridApiCommunity>;
   /**
    * Signal to the underlying logic what version of the public component API
    * of the data grid is exposed [[GridSignature]].
-   * @internal
+   * @ignore - do not document.
    */
   signature?: string;
   /**
@@ -580,7 +597,7 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
    * @param {GridState} state The new state.
    * @param {MuiEvent<{}>} event The event object.
    * @param {GridCallbackDetails} details Additional details for this callback.
-   * @internal
+   * @ignore - do not document.
    */
   onStateChange?: GridEventListener<'stateChange'>;
   /**
@@ -779,4 +796,5 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
    * @param {any} error The error thrown.
    */
   onProcessRowUpdateError?: (error: any) => void;
+  columnGroupingModel?: GridColumnGroupingModel;
 }

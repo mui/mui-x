@@ -38,6 +38,8 @@ The date picker component is designed and optimized for the device it runs on.
 By default, the `DatePicker` component renders the desktop version if the media query [`@media (pointer: fine)`](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/pointer) matches.
 This can be customized with the `desktopModeMediaQuery` prop.
 
+There are certain caveats when testing pickers, please refer to [this section](/x/react-date-pickers/getting-started/#testing-caveats) for more information.
+
 {{"demo": "ResponsiveDatePickers.js"}}
 
 ## Form props
@@ -48,7 +50,8 @@ The date picker component can be disabled or read-only.
 
 ## Localization
 
-Use `LocalizationProvider` to change the date-engine locale that is used to render the date picker. Here is an example of changing the locale for the `date-fns` adapter:
+Use `LocalizationProvider` to change the date-library locale that is used to render the date picker.
+See the documentation page [about localization](/x/react-date-pickers/localization/) for more details.
 
 ## Jalali calendar system
 

@@ -11,3 +11,11 @@ export type ExtendMui<C, Removals extends keyof C = never> = Omit<
 export type MakeOptional<T, K extends keyof T> = {
   [P in K]?: T[P] | undefined;
 } & Omit<T, K>;
+
+export type DefaultizedProps<
+  P extends {},
+  RequiredProps extends keyof P,
+  AdditionalProps extends {} = {},
+> = Omit<P, RequiredProps | keyof AdditionalProps> &
+  Required<Pick<P, RequiredProps>> &
+  AdditionalProps;

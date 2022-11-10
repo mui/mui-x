@@ -17,7 +17,7 @@ The default pagination behavior depends on your plan.
 ## Size of the page
 
 The MIT `DataGrid` is limited to pages of up to 100 rows.
-If you want larger pages, you will need to migrate to the [Pro plan](https://mui.com/store/items/mui-x-pro/).
+If you want larger pages, you will need to upgrade to [Pro plan](/x/introduction/licensing/#pro-plan) or above.
 
 By default, each page contains 100 rows. The user can change the size of the page through the selector in the footer.
 
@@ -130,7 +130,7 @@ To do so, you just have to keep track of the next cursor associated with each pa
 
 You can customize the rendering of the pagination in the footer following [the component section](/x/react-data-grid/components/#pagination) of the documentation.
 
-## apiRef [<span class="plan-pro"></span>](https://mui.com/store/items/mui-x-pro/)
+## apiRef [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
 
 :::warning
 Only use this API as the last option. Give preference to the props to control the grid.
@@ -138,7 +138,7 @@ Only use this API as the last option. Give preference to the props to control th
 
 {{"demo": "PaginationApiNoSnap.js", "bg": "inline", "hideToolbar": true, "defaultCodeOpen": false }}
 
-## Selectors [<span class="plan-pro"></span>](https://mui.com/store/items/mui-x-pro/)
+## Selectors [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
 
 {{"demo": "PaginationSelectorsNoSnap.js", "bg": "inline", "hideToolbar": true}}
 

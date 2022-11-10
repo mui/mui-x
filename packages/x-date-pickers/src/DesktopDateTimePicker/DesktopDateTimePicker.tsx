@@ -21,6 +21,7 @@ import { useDateTimeValidation } from '../internals/hooks/validation/useDateTime
 import { KeyboardDateInput } from '../internals/components/KeyboardDateInput';
 import { usePickerState } from '../internals/hooks/usePickerState';
 import { DateInputSlotsComponent } from '../internals/components/PureDateInput';
+import { DateTimePickerTabs } from '../DateTimePicker/DateTimePickerTabs';
 
 export interface DesktopDateTimePickerSlotsComponent
   extends DesktopWrapperSlotsComponent,
@@ -84,10 +85,16 @@ export const DesktopDateTimePicker = React.forwardRef(function DesktopDateTimePi
     ToolbarComponent = DateTimePickerToolbar,
     TransitionComponent,
     value,
-    components,
+    components: providedComponents,
     componentsProps,
+    hideTabs = true,
     ...other
   } = props;
+  const components = React.useMemo<DesktopDateTimePickerProps<TInputDate, TDate>['components']>(
+    () => ({ Tabs: DateTimePickerTabs, ...providedComponents }),
+    [providedComponents],
+  );
+
   const AllDateInputProps = {
     ...inputProps,
     ...other,
@@ -116,6 +123,7 @@ export const DesktopDateTimePicker = React.forwardRef(function DesktopDateTimePi
         DateInputProps={AllDateInputProps}
         components={components}
         componentsProps={componentsProps}
+        hideTabs={hideTabs}
         {...other}
       />
     </DesktopWrapper>
@@ -168,6 +176,13 @@ DesktopDateTimePicker.propTypes = {
    */
   dateRangeIcon: PropTypes.node,
   /**
+   * Formats the day of week displayed in the calendar header.
+   * @param {string} day The day of week provided by the adapter's method `getWeekdays`.
+   * @returns {string} The name to display.
+   * @default (day) => day.charAt(0).toUpperCase()
+   */
+  dayOfWeekFormatter: PropTypes.func,
+  /**
    * Default calendar month displayed when `value={null}`.
    */
   defaultCalendarMonth: PropTypes.any,
@@ -213,7 +228,7 @@ DesktopDateTimePicker.propTypes = {
    * @param {TDate | null} time The current time.
    * @param {MuiPickersAdapter<TDate>} adapter The current date adapter.
    * @returns {string} The clock label.
-   * @deprecated Use the `localeText` prop of `LocalizationProvider` instead, see https://mui.com/x/react-date-pickers/localization
+   * @deprecated Use the `localeText` prop of `LocalizationProvider` instead, see https://mui.com/x/react-date-pickers/localization/.
    * @default <TDate extends any>(
    *   view: ClockView,
    *   time: TDate | null,
@@ -237,11 +252,12 @@ DesktopDateTimePicker.propTypes = {
    * Get aria-label text for switching between views button.
    * @param {CalendarPickerView} currentView The view from which we want to get the button text.
    * @returns {string} The label of the view.
-   * @deprecated Use the `localeText` prop of `LocalizationProvider` instead, see https://mui.com/x/react-date-pickers/localization
+   * @deprecated Use the `localeText` prop of `LocalizationProvider` instead, see https://mui.com/x/react-date-pickers/localization/.
    */
   getViewSwitchingButtonText: PropTypes.func,
   /**
-   * To show tabs.
+   * Toggles visibility of date time switching tabs
+   * @default false for mobile, true for desktop
    */
   hideTabs: PropTypes.bool,
   ignoreInvalidInputs: PropTypes.bool,
@@ -284,7 +300,7 @@ DesktopDateTimePicker.propTypes = {
    */
   maxDate: PropTypes.any,
   /**
-   * Minimal selectable moment of time with binding to date, to set max time in each day use `maxTime`.
+   * Maximal selectable moment of time with binding to date, to set max time in each day use `maxTime`.
    */
   maxDateTime: PropTypes.any,
   /**
@@ -374,6 +390,8 @@ DesktopDateTimePicker.propTypes = {
   OpenPickerButtonProps: PropTypes.object,
   /**
    * First view to show.
+   * Must be a valid option from `views` list
+   * @default 'day'
    */
   openTo: PropTypes.oneOf(['day', 'hours', 'minutes', 'month', 'seconds', 'year']),
   /**
@@ -508,6 +526,7 @@ DesktopDateTimePicker.propTypes = {
   value: PropTypes.any,
   /**
    * Array of views to show.
+   * @default ['year', 'day', 'hours', 'minutes']
    */
   views: PropTypes.arrayOf(
     PropTypes.oneOf(['day', 'hours', 'minutes', 'month', 'seconds', 'year']).isRequired,

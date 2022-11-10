@@ -91,6 +91,10 @@ export const useGridRowReorder = (
         return;
       }
 
+      if (apiRef.current.getRowNode(params.id)?.isPinned) {
+        return;
+      }
+
       logger.debug(`Dragging over row ${params.id}`);
       event.preventDefault();
       // Prevent drag events propagation.
@@ -130,7 +134,7 @@ export const useGridRowReorder = (
       } else {
         // Emit the rowOrderChange event only once when the reordering stops.
         const rowOrderChangeParams: GridRowOrderChangeParams = {
-          row: apiRef.current.getRow(dragRowId),
+          row: apiRef.current.getRow(dragRowId)!,
           targetIndex: apiRef.current.getRowIndex(params.id),
           oldIndex: originRowIndex.current!,
         };

@@ -10,6 +10,10 @@ export function findHeaderElementFromField(elem: Element, field: string): Elemen
   return elem.querySelector(`[data-field="${field}"]`);
 }
 
+export function findGroupHeaderElementsFromField(elem: Element, field: string): Element[] {
+  return Array.from(elem.querySelectorAll<HTMLDivElement>(`[data-fields*="|-${field}-|"]`) ?? []);
+}
+
 export function findGridCellElementsFromCol(col: HTMLElement, api: GridApiPro) {
   const root = findParentElementFromClassName(col, 'MuiDataGrid-root');
   if (!root) {

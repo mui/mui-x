@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { spy } from 'sinon';
 // @ts-ignore Remove once the test utils are typed
-import { createRenderer, fireEvent } from '@mui/monorepo/test/utils';
+import { createRenderer, userEvent } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
 import { DataGrid, gridClasses } from '@mui/x-data-grid';
 import { getCell } from 'test/utils/helperFn';
@@ -172,11 +172,45 @@ describe('<DataGrid /> - Cells', () => {
       </div>,
     );
 
-    fireEvent.mouseUp(getCell(0, 0));
-    fireEvent.click(getCell(0, 0));
+    userEvent.mousePress(getCell(0, 0));
 
     expect(() => {
       getCell(1, 0).focus();
     }).toWarnDev(['MUI: The cell with id=1 and field=brand received focus.']);
+  });
+
+  // See https://github.com/mui/mui-x/issues/6378
+  it('should not cause scroll jump when focused cell mounts in the render zone', async function test() {
+    if (isJSDOM) {
+      this.skip(); // Needs layout
+    }
+
+    const rowHeight = 50;
+    const columns = [{ field: 'id' }];
+    const rows = [];
+    for (let i = 0; i < 20; i += 1) {
+      rows.push({ id: i });
+    }
+
+    render(
+      <div style={{ width: 300, height: 300 }}>
+        <DataGrid columns={columns} rows={rows} rowHeight={rowHeight} />
+      </div>,
+    );
+
+    const virtualScroller = document.querySelector('.MuiDataGrid-virtualScroller')!;
+
+    const thirdRowCell = getCell(2, 0);
+    userEvent.mousePress(thirdRowCell);
+
+    let scrollTop = 6 * rowHeight;
+    virtualScroller.scrollTop = scrollTop;
+    virtualScroller.dispatchEvent(new Event('scroll'));
+    expect(virtualScroller.scrollTop).to.equal(scrollTop);
+
+    scrollTop = 2 * rowHeight;
+    virtualScroller.scrollTop = scrollTop;
+    virtualScroller.dispatchEvent(new Event('scroll'));
+    expect(virtualScroller.scrollTop).to.equal(scrollTop);
   });
 });

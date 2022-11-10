@@ -62,6 +62,7 @@ const OTHER_GRID_INTERFACES_WITH_DEDICATED_PAGES = [
   'GridRowParams',
   'GridRowClassNameParams',
   'GridRowSpacingParams',
+  'GridExportStateParams',
 
   // Others
   'GridColDef',
@@ -73,6 +74,9 @@ const OTHER_GRID_INTERFACES_WITH_DEDICATED_PAGES = [
   'GridFilterModel',
   'GridFilterItem',
   'GridFilterOperator',
+
+  // Aggregation
+  'GridAggregationFunction',
 ];
 
 const parseProperty = (propertySymbol: ts.Symbol, project: Project): ParsedProperty => ({
@@ -187,10 +191,10 @@ function generateMarkdownFromProperties(
       planImg = '';
     } else if (property.projects.includes('x-data-grid-pro')) {
       planImg =
-        ' [<span class="plan-pro" title="Pro plan"></span>](https://mui.com/store/items/mui-x-pro/)';
+        ' [<span class="plan-pro" title="Pro plan"></span>](/x/introduction/licensing/#pro-plan)';
     } else if (property.projects.includes('x-data-grid-premium')) {
       planImg =
-        ' [<span class="plan-premium" title="Premium plan"></span>](https://mui.com/store/items/material-ui-premium/)';
+        ' [<span class="plan-premium" title="Premium plan"></span>](https://mui.com/x/introduction/licensing/#premium-plan)';
     } else {
       throw new Error(`No valid plan found for ${property.name} property in ${object.name}`);
     }

@@ -1,18 +1,19 @@
 import * as React from 'react';
+import { Dayjs } from 'dayjs';
 import TextField from '@mui/material/TextField';
-import { DateRangePicker, DateRange } from '@mui/x-date-pickers-pro/DateRangePicker';
-import { AdapterDateFns } from '@mui/x-date-pickers-pro/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-date-pickers-pro';
+import { AdapterDayjs } from '@mui/x-date-pickers-pro/AdapterDayjs';
+import { DateRangePicker, DateRange } from '@mui/x-date-pickers-pro/DateRangePicker';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 
 export default function FormPropsDateRangePickers() {
-  const [value, setValue] = React.useState<DateRange<Date>>([null, null]);
+  const [value, setValue] = React.useState<DateRange<Dayjs>>([null, null]);
 
   return (
     <Stack spacing={3}>
       <LocalizationProvider
-        dateAdapter={AdapterDateFns}
+        dateAdapter={AdapterDayjs}
         localeText={{ start: 'Disabled start', end: 'Disabled end' }}
       >
         <DateRangePicker
@@ -31,7 +32,7 @@ export default function FormPropsDateRangePickers() {
         />
       </LocalizationProvider>
       <LocalizationProvider
-        dateAdapter={AdapterDateFns}
+        dateAdapter={AdapterDayjs}
         localeText={{ start: 'Read-only start', end: 'Read-only end' }}
       >
         <DateRangePicker

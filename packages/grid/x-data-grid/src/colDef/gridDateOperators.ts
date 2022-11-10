@@ -108,6 +108,7 @@ export const getGridDateOperators = (
         return value == null;
       };
     },
+    requiresFilterValue: false,
   },
   {
     value: 'isNotEmpty',
@@ -116,5 +117,6 @@ export const getGridDateOperators = (
         return value != null;
       };
     },
+    requiresFilterValue: false,
   },
 ];

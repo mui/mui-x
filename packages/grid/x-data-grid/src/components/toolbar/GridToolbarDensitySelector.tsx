@@ -10,7 +10,7 @@ import { isHideMenuKey, isTabKey } from '../../utils/keyboardUtils';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridSelector } from '../../hooks/utils/useGridSelector';
 import { GridDensityOption } from '../../models/api/gridDensityApi';
-import { GridMenu } from '../menu/GridMenu';
+import { GridMenu, GridMenuProps } from '../menu/GridMenu';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { gridClasses } from '../../constants/gridClasses';
 
@@ -57,10 +57,19 @@ export const GridToolbarDensitySelector = React.forwardRef<HTMLButtonElement, Bu
     }, [densityValue, rootProps]);
 
     const handleDensitySelectorOpen = (event: React.MouseEvent<HTMLButtonElement>) => {
-      setOpen(true);
+      setOpen((prevOpen) => !prevOpen);
       onClick?.(event);
     };
-    const handleDensitySelectorClose = () => setOpen(false);
+    const handleDensitySelectorClickAway: GridMenuProps['onClickAway'] = (event) => {
+      if (
+        buttonRef.current === event.target ||
+        // if user clicked on the icon
+        buttonRef.current?.contains(event.target as Element)
+      ) {
+        return;
+      }
+      setOpen(false);
+    };
     const handleDensityUpdate = (newDensity: GridDensity) => {
       apiRef.current.setDensity(newDensity);
       setOpen(false);
@@ -71,7 +80,7 @@ export const GridToolbarDensitySelector = React.forwardRef<HTMLButtonElement, Bu
         event.preventDefault();
       }
       if (isHideMenuKey(event.key)) {
-        handleDensitySelectorClose();
+        setOpen(false);
       }
     };
 
@@ -111,7 +120,7 @@ export const GridToolbarDensitySelector = React.forwardRef<HTMLButtonElement, Bu
         <GridMenu
           open={open}
           target={buttonRef.current}
-          onClickAway={handleDensitySelectorClose}
+          onClickAway={handleDensitySelectorClickAway}
           position="bottom-start"
         >
           <MenuList

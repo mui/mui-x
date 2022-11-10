@@ -14,7 +14,7 @@ import generatePropTypeDescription, {
 import parseTest from '@mui/monorepo/docs/src/modules/utils/parseTest';
 import kebabCase from 'lodash/kebabCase';
 import { LANGUAGES } from 'docs/src/modules/constants';
-import { findPagesMarkdown } from 'docs/src/modules/utils/find';
+import { findPagesMarkdownNew } from 'docs/src/modules/utils/find';
 import { defaultHandlers, parse as docgenParse, ReactDocgenApi } from 'react-docgen';
 import {
   renderInline as renderMarkdownInline,
@@ -86,11 +86,8 @@ function extractSlots(options: {
   const { filename, name: componentName, displayName, project } = options;
   const slots: Record<string, { type: string; default?: string; description: string }> = {};
 
-  if (!['x-data-grid', 'x-data-grid-pro'].includes(project.name)) {
-    return slots;
-  }
-
   const proptypes = ttp.parseFromProgram(filename, project.program, {
+    checkDeclarations: true,
     shouldResolveObject: ({ name }) => {
       return name === 'components';
     },
@@ -220,20 +217,20 @@ const buildComponentDocumentation = async (options: {
       demos.push(['/x/react-data-grid/#mit-version', 'DataGrid']);
     }
     if (reactApi.name === 'DataGridPro' || reactApi.name.startsWith('Grid')) {
-      demos.push(['/x/react-data-grid#commercial-version', 'DataGridPro']);
+      demos.push(['/x/react-data-grid/#commercial-version', 'DataGridPro']);
     }
     if (reactApi.name === 'DataGridPremium' || reactApi.name.startsWith('Grid')) {
-      demos.push(['/x/react-data-grid#commercial-version', 'DataGridPremium']);
+      demos.push(['/x/react-data-grid/#commercial-version', 'DataGridPremium']);
     }
   } else {
     if (reactApi.name === 'DataGrid' || reactApi.name.startsWith('Grid')) {
-      demos.push(['/components/data-grid#mit-version', 'DataGrid']);
+      demos.push(['/components/data-grid/#mit-version', 'DataGrid']);
     }
     if (reactApi.name === 'DataGridPro' || reactApi.name.startsWith('Grid')) {
-      demos.push(['/components/data-grid#commercial-version', 'DataGridPro']);
+      demos.push(['/components/data-grid/#commercial-version', 'DataGridPro']);
     }
     if (reactApi.name === 'DataGridPremium' || reactApi.name.startsWith('Grid')) {
-      demos.push(['/components/data-grid#commercial-version', 'DataGridPremium']);
+      demos.push(['/components/data-grid/#commercial-version', 'DataGridPremium']);
     }
   }
   reactApi.demos = demos;
@@ -241,7 +238,7 @@ const buildComponentDocumentation = async (options: {
   reactApi.styles = await parseStyles(reactApi, project.program as any);
   reactApi.styles.name = reactApi.name.startsWith('Grid')
     ? 'MuiDataGrid' // TODO: Read from @slot annotation
-    : `Mui${reactApi.name.replace(/Pro$/, '')}`;
+    : `Mui${reactApi.name.replace(/(Pro|Premium)$/, '')}`;
   reactApi.styles.classes.forEach((key) => {
     const globalClass = generateUtilityClass(reactApi.styles.name!, key);
     reactApi.styles.globalClasses[key] = globalClass;
@@ -295,7 +292,8 @@ const buildComponentDocumentation = async (options: {
       if (propName === 'classes') {
         description += ' See <a href="#css">CSS API</a> below for more details.';
       } else if (propName === 'sx') {
-        description += ' See the <a href="/system/the-sx-prop/">`sx` page</a> for more details.';
+        description +=
+          ' See the <a href="/system/getting-started/the-sx-prop/">`sx` page</a> for more details.';
       }
       componentApi.propDescriptions[propName] = linkify(description, documentedInterfaces, 'html');
 
@@ -482,7 +480,7 @@ export default function Page(props) {
 
 Page.getInitialProps = () => {
   const req = require.context(
-    'docsx/translations/api-docs/${project.documentationFolderName}', 
+    'docsx/translations/api-docs/${project.documentationFolderName}',
     false,
     /\\/${kebabCase(reactApi.name)}(-[a-z]{2})?\\.json$/,
   );
@@ -512,7 +510,7 @@ export default async function buildComponentsDocumentation(
 ) {
   const { documentationRoot, documentedInterfaces, projects } = options;
 
-  const pagesMarkdown = findPagesMarkdown()
+  const pagesMarkdown = findPagesMarkdownNew()
     .map((markdown) => {
       const markdownSource = fse.readFileSync(markdown.filename, 'utf8');
       return {

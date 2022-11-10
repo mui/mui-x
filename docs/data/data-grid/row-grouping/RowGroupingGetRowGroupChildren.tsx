@@ -1,57 +1,12 @@
 import * as React from 'react';
 import {
   DataGridPremium,
-  GridApi,
-  GridColumns,
-  gridColumnVisibilityModelSelector,
   GridEventListener,
-  GridRowGroupingModel,
   useGridApiRef,
+  useKeepGroupedColumnsHidden,
 } from '@mui/x-data-grid-premium';
 import { Movie, useMovieData } from '@mui/x-data-grid-generator';
 import Alert from '@mui/material/Alert';
-
-const INITIAL_GROUPING_COLUMN_MODEL = ['company', 'director'];
-
-const useKeepGroupingColumnsHidden = (
-  apiRef: React.MutableRefObject<GridApi>,
-  columns: GridColumns,
-  initialModel: GridRowGroupingModel,
-  leafField?: string,
-) => {
-  const prevModel = React.useRef(initialModel);
-
-  React.useEffect(() => {
-    apiRef.current.subscribeEvent('rowGroupingModelChange', (newModel) => {
-      const columnVisibilityModel = {
-        ...gridColumnVisibilityModelSelector(apiRef),
-      };
-      newModel.forEach((field) => {
-        if (!prevModel.current.includes(field)) {
-          columnVisibilityModel[field] = false;
-        }
-      });
-      prevModel.current.forEach((field) => {
-        if (!newModel.includes(field)) {
-          columnVisibilityModel[field] = true;
-        }
-      });
-      apiRef.current.setColumnVisibilityModel(columnVisibilityModel);
-      prevModel.current = newModel;
-    });
-  }, [apiRef]);
-
-  return React.useMemo(
-    () =>
-      columns.map((colDef) =>
-        initialModel.includes(colDef.field) ||
-        (leafField && colDef.field === leafField)
-          ? { ...colDef, hide: true }
-          : colDef,
-      ),
-    [columns, initialModel, leafField],
-  );
-};
 
 export default function RowGroupingGetRowGroupChildren() {
   const data = useMovieData();
@@ -61,11 +16,14 @@ export default function RowGroupingGetRowGroupChildren() {
     string[] | null
   >(null);
 
-  const columns = useKeepGroupingColumnsHidden(
+  const initialState = useKeepGroupedColumnsHidden({
     apiRef,
-    data.columns,
-    INITIAL_GROUPING_COLUMN_MODEL,
-  );
+    initialState: {
+      rowGrouping: {
+        model: ['company', 'director'],
+      },
+    },
+  });
 
   const handleRowClick = React.useCallback<GridEventListener<'rowClick'>>(
     (params) => {
@@ -93,14 +51,9 @@ export default function RowGroupingGetRowGroupChildren() {
         <DataGridPremium
           {...data}
           apiRef={apiRef}
-          columns={columns}
           onRowClick={handleRowClick}
           hideFooter
-          initialState={{
-            rowGrouping: {
-              model: INITIAL_GROUPING_COLUMN_MODEL,
-            },
-          }}
+          initialState={initialState}
         />
       </div>
       <Alert severity="info" sx={{ mb: 1 }}>

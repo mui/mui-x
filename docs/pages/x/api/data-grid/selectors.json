@@ -1,5 +1,17 @@
 [
   {
+    "name": "gridAggregationLookupSelector",
+    "returnType": "GridAggregationLookup",
+    "description": "",
+    "supportsApiRef": true
+  },
+  {
+    "name": "gridAggregationModelSelector",
+    "returnType": "GridAggregationModel",
+    "description": "",
+    "supportsApiRef": true
+  },
+  {
     "name": "gridColumnDefinitionsSelector",
     "returnType": "GridStateColDef<any, any, any>[]",
     "category": "Columns",
@@ -11,6 +23,12 @@
     "returnType": "string[]",
     "category": "Columns",
     "description": "Get the field of each column.",
+    "supportsApiRef": true
+  },
+  {
+    "name": "gridColumnGroupsLookupSelector",
+    "returnType": "GridColumnGroupLookup",
+    "description": "",
     "supportsApiRef": true
   },
   {
@@ -72,6 +90,12 @@
     "supportsApiRef": true
   },
   {
+    "name": "gridDensityHeaderGroupingMaxDepthSelector",
+    "returnType": "number",
+    "description": "",
+    "supportsApiRef": true
+  },
+  {
     "name": "gridDensityHeaderHeightSelector",
     "returnType": "number",
     "description": "",
@@ -88,6 +112,12 @@
     "returnType": "GridDensityState",
     "description": "",
     "supportsApiRef": false
+  },
+  {
+    "name": "gridDensityTotalHeaderHeightSelector",
+    "returnType": "number",
+    "description": "",
+    "supportsApiRef": true
   },
   {
     "name": "gridDensityValueSelector",
@@ -131,7 +161,7 @@
   },
   {
     "name": "gridFilteredSortedRowEntriesSelector",
-    "returnType": "{ id: GridRowId; model: any }[]",
+    "returnType": "{ id: GridRowId; model: GridValidRowModel }[]",
     "category": "Filtering",
     "description": "Get the id and the model of the rows accessible after the filtering process.\nContains the collapsed children.",
     "supportsApiRef": true
@@ -184,7 +214,7 @@
   },
   {
     "name": "gridPaginatedVisibleSortedGridRowEntriesSelector",
-    "returnType": "{ id: GridRowId; model: any }[]",
+    "returnType": "{ id: GridRowId; model: GridValidRowModel }[]",
     "category": "Pagination",
     "description": "Get the id and the model of each row to include in the current page if the pagination is enabled.",
     "supportsApiRef": true
@@ -229,20 +259,8 @@
     "supportsApiRef": true
   },
   {
-    "name": "gridRowCountSelector",
-    "returnType": "number",
-    "description": "",
-    "supportsApiRef": true
-  },
-  {
     "name": "gridRowGroupingModelSelector",
     "returnType": "GridRowGroupingModel",
-    "description": "",
-    "supportsApiRef": true
-  },
-  {
-    "name": "gridRowGroupingNameSelector",
-    "returnType": "string",
     "description": "",
     "supportsApiRef": true
   },
@@ -253,50 +271,8 @@
     "supportsApiRef": true
   },
   {
-    "name": "gridRowIdsSelector",
-    "returnType": "GridRowId[]",
-    "description": "",
-    "supportsApiRef": true
-  },
-  {
-    "name": "gridRowTreeDepthSelector",
-    "returnType": "number",
-    "description": "",
-    "supportsApiRef": true
-  },
-  {
-    "name": "gridRowTreeSelector",
-    "returnType": "GridRowTreeConfig",
-    "description": "",
-    "supportsApiRef": true
-  },
-  {
-    "name": "gridRowsIdToIdLookupSelector",
-    "returnType": "Record<string, GridRowId>",
-    "description": "",
-    "supportsApiRef": true
-  },
-  {
-    "name": "gridRowsLoadingSelector",
-    "returnType": "boolean | undefined",
-    "description": "",
-    "supportsApiRef": true
-  },
-  {
-    "name": "gridRowsLookupSelector",
-    "returnType": "GridRowsLookup<any>",
-    "description": "",
-    "supportsApiRef": true
-  },
-  {
     "name": "gridRowsMetaSelector",
     "returnType": "GridRowsMetaState",
-    "description": "",
-    "supportsApiRef": false
-  },
-  {
-    "name": "gridRowsStateSelector",
-    "returnType": "GridRowsState",
     "description": "",
     "supportsApiRef": false
   },
@@ -315,7 +291,7 @@
   },
   {
     "name": "gridSortedRowEntriesSelector",
-    "returnType": "{ id: GridRowId; model: any }[]",
+    "returnType": "{ id: GridRowId; model: GridValidRowModel }[]",
     "category": "Sorting",
     "description": "Get the id and the model of the rows after the sorting process.",
     "supportsApiRef": true
@@ -346,12 +322,6 @@
     "supportsApiRef": false
   },
   {
-    "name": "gridTopLevelRowCountSelector",
-    "returnType": "number",
-    "description": "",
-    "supportsApiRef": true
-  },
-  {
     "name": "gridVisibleColumnDefinitionsSelector",
     "returnType": "GridStateColDef<any, any, any>[]",
     "category": "Visible Columns",
@@ -374,7 +344,7 @@
   },
   {
     "name": "gridVisibleSortedRowEntriesSelector",
-    "returnType": "{ id: GridRowId; model: any }[]",
+    "returnType": "{ id: GridRowId; model: GridValidRowModel }[]",
     "category": "Filtering",
     "description": "Get the id and the model of the rows accessible after the filtering process.\nDoes not contain the collapsed children.",
     "supportsApiRef": true
@@ -388,7 +358,7 @@
   },
   {
     "name": "gridVisibleSortedTopLevelRowEntriesSelector",
-    "returnType": "{ id: GridRowId; model: any }[]",
+    "returnType": "{ id: GridRowId; model: GridValidRowModel }[]",
     "category": "Filtering",
     "description": "Get the id and the model of the top level rows accessible after the filtering process.",
     "supportsApiRef": true
@@ -408,7 +378,7 @@
   },
   {
     "name": "selectedGridRowsSelector",
-    "returnType": "Map<GridRowId, any>",
+    "returnType": "Map<GridRowId, GridValidRowModel>",
     "description": "",
     "supportsApiRef": true
   },

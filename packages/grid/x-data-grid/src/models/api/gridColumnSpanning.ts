@@ -1,3 +1,4 @@
+import { GridStateColDef } from '../colDef';
 import { GridColumnIndex, GridCellColSpanInfo } from '../gridColumnSpanning';
 import { GridRowId } from '../gridRows';
 
@@ -28,5 +29,6 @@ export interface GridColumnSpanningApi {
     rowId: GridRowId;
     minFirstColumn: number;
     maxLastColumn: number;
+    columns: GridStateColDef[];
   }) => void;
 }

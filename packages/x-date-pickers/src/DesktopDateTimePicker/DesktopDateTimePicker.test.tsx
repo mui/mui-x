@@ -250,7 +250,7 @@ describe('<DesktopDateTimePicker />', () => {
       expect(onChange.lastCall.args[0]).toEqualDateTime(new Date(2010, 0, 1));
 
       // Change the date
-      userEvent.mousePress(screen.getByLabelText('Jan 15, 2010'));
+      userEvent.mousePress(screen.getByRole('gridcell', { name: '15' }));
       expect(onChange.callCount).to.equal(2);
       expect(onChange.lastCall.args[0]).toEqualDateTime(new Date(2010, 0, 15));
 
@@ -292,7 +292,7 @@ describe('<DesktopDateTimePicker />', () => {
       openPicker({ type: 'date-time', variant: 'desktop' });
 
       // Change the date (already tested)
-      userEvent.mousePress(screen.getByLabelText('Jan 15, 2018'));
+      userEvent.mousePress(screen.getByRole('gridcell', { name: '15' }));
 
       // Change the hours (already tested)
       fireEvent(screen.getByMuiTest('clock'), getClockMouseEvent('mousemove'));
@@ -324,7 +324,7 @@ describe('<DesktopDateTimePicker />', () => {
       openPicker({ type: 'date-time', variant: 'desktop' });
 
       // Change the date (already tested)
-      userEvent.mousePress(screen.getByLabelText('Jan 15, 2018'));
+      userEvent.mousePress(screen.getByRole('gridcell', { name: '15' }));
 
       // Change the hours (already tested)
       fireEvent(screen.getByMuiTest('clock'), getClockMouseEvent('mousemove'));
@@ -381,7 +381,7 @@ describe('<DesktopDateTimePicker />', () => {
       openPicker({ type: 'date-time', variant: 'desktop' });
 
       // Change the date (already tested)
-      userEvent.mousePress(screen.getByLabelText('Jan 15, 2018'));
+      userEvent.mousePress(screen.getByRole('gridcell', { name: '15' }));
 
       // Change the hours (already tested)
       fireEvent(screen.getByMuiTest('clock'), getClockMouseEvent('mousemove'));
@@ -493,7 +493,7 @@ describe('<DesktopDateTimePicker />', () => {
       expect(onClose.callCount).to.equal(0);
 
       // Change the date (same value)
-      userEvent.mousePress(screen.getByLabelText('Jan 1, 2025'));
+      userEvent.mousePress(screen.getByRole('gridcell', { name: '1' }));
       expect(onChange.callCount).to.equal(1); // Don't call onChange again since the value did not change
       expect(onAccept.callCount).to.equal(0);
       expect(onClose.callCount).to.equal(0);

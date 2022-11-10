@@ -1,33 +1,27 @@
 import * as React from 'react';
-import frLocale from 'date-fns/locale/fr';
-import ruLocale from 'date-fns/locale/ru';
-import deLocale from 'date-fns/locale/de';
-import enLocale from 'date-fns/locale/en-US';
-import arSaLocale from 'date-fns/locale/ar-SA';
+import dayjs, { Dayjs } from 'dayjs';
+import 'dayjs/locale/fr';
+import 'dayjs/locale/ru';
+import 'dayjs/locale/de';
+import 'dayjs/locale/ar-sa';
 import Stack from '@mui/material/Stack';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import TextField from '@mui/material/TextField';
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { TimePicker } from '@mui/x-date-pickers/TimePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 
-const localeMap = {
-  en: enLocale,
-  fr: frLocale,
-  de: deLocale,
-  ru: ruLocale,
-  ar: arSaLocale,
-};
+const locales = ['en', 'fr', 'de', 'ru', 'ar-sa'] as const;
 
 export default function LocalizedDatePicker() {
-  const [locale, setLocale] = React.useState<keyof typeof localeMap>('ru');
-  const [datePickerValue, setDatePickerValue] = React.useState<Date | null>(
-    new Date(),
+  const [locale, setLocale] = React.useState<typeof locales[number]>('ru');
+  const [datePickerValue, setDatePickerValue] = React.useState<Dayjs | null>(
+    dayjs('2022-04-07'),
   );
-  const [timePickerValue, setTimePickerValue] = React.useState<Date | null>(
-    new Date(),
+  const [timePickerValue, setTimePickerValue] = React.useState<Dayjs | null>(
+    dayjs('2022-04-07'),
   );
 
   const selectLocale = (newLocale: any) => {
@@ -35,13 +29,10 @@ export default function LocalizedDatePicker() {
   };
 
   return (
-    <LocalizationProvider
-      dateAdapter={AdapterDateFns}
-      adapterLocale={localeMap[locale]}
-    >
+    <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale={locale}>
       <Stack spacing={3}>
         <ToggleButtonGroup value={locale} exclusive sx={{ mb: 2, display: 'block' }}>
-          {Object.keys(localeMap).map((localeItem) => (
+          {locales.map((localeItem) => (
             <ToggleButton
               key={localeItem}
               value={localeItem}

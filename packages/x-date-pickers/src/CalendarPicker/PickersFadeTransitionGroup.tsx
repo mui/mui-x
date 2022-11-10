@@ -1,22 +1,38 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import Fade from '@mui/material/Fade';
-import { styled } from '@mui/material/styles';
-import { generateUtilityClasses } from '@mui/material';
+import { styled, useThemeProps } from '@mui/material/styles';
+import { unstable_composeClasses as composeClasses } from '@mui/material';
 import { TransitionGroup } from 'react-transition-group';
+import {
+  getPickersFadeTransitionGroupUtilityClass,
+  PickersFadeTransitionGroupClasses,
+} from './pickersFadeTransitionGroupClasses';
 
-interface FadeTransitionProps {
+export interface PickersFadeTransitionGroupProps {
   children: React.ReactElement;
   className?: string;
   reduceAnimations: boolean;
   transKey: React.Key;
+  classes?: Partial<PickersFadeTransitionGroupClasses>;
 }
 
-const classes = generateUtilityClasses('PrivatePickersFadeTransitionGroup', ['root']);
+const useUtilityClasses = (ownerState: PickersFadeTransitionGroupProps) => {
+  const { classes } = ownerState;
+  const slots = {
+    root: ['root'],
+  };
+
+  return composeClasses(slots, getPickersFadeTransitionGroupUtilityClass, classes);
+};
 
 const animationDuration = 500;
 
-const PickersFadeTransitionGroupRoot = styled(TransitionGroup)({
+const PickersFadeTransitionGroupRoot = styled(TransitionGroup, {
+  name: 'MuiPickersFadeTransitionGroup',
+  slot: 'Root',
+  overridesResolver: (_, styles) => styles.root,
+})({
   display: 'block',
   position: 'relative',
 });
@@ -24,12 +40,10 @@ const PickersFadeTransitionGroupRoot = styled(TransitionGroup)({
 /**
  * @ignore - do not document.
  */
-export const PickersFadeTransitionGroup = ({
-  children,
-  className,
-  reduceAnimations,
-  transKey,
-}: FadeTransitionProps) => {
+export function PickersFadeTransitionGroup(inProps: PickersFadeTransitionGroupProps) {
+  const props = useThemeProps({ props: inProps, name: 'MuiPickersFadeTransitionGroup' });
+  const { children, className, reduceAnimations, transKey } = props;
+  const classes = useUtilityClasses(props);
   if (reduceAnimations) {
     return children;
   }
@@ -47,4 +61,4 @@ export const PickersFadeTransitionGroup = ({
       </Fade>
     </PickersFadeTransitionGroupRoot>
   );
-};
+}

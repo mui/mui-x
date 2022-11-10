@@ -93,6 +93,7 @@ export const DesktopDateRangePicker = React.forwardRef(function DesktopDateRange
     value,
     onChange,
     PopperProps,
+    PaperProps,
     TransitionComponent,
     components,
     componentsProps,
@@ -115,6 +116,7 @@ export const DesktopDateRangePicker = React.forwardRef(function DesktopDateRange
       DateInputProps={DateInputProps}
       KeyboardDateInputComponent={KeyboardDateInputComponent}
       PopperProps={PopperProps}
+      PaperProps={PaperProps}
       TransitionComponent={TransitionComponent}
       components={components}
       componentsProps={componentsProps}
@@ -170,6 +172,13 @@ DesktopDateRangePicker.propTypes = {
    */
   componentsProps: PropTypes.object,
   /**
+   * Formats the day of week displayed in the calendar header.
+   * @param {string} day The day of week provided by the adapter's method `getWeekdays`.
+   * @returns {string} The name to display.
+   * @default (day) => day.charAt(0).toUpperCase()
+   */
+  dayOfWeekFormatter: PropTypes.func,
+  /**
    * Default calendar month displayed when `value={null}`.
    */
   defaultCalendarMonth: PropTypes.any,
@@ -211,7 +220,7 @@ DesktopDateRangePicker.propTypes = {
   /**
    * Text for end input label and toolbar placeholder.
    * @default 'End'
-   * @deprecated Use the `localeText` prop of `LocalizationProvider` instead, see https://mui.com/x/react-date-pickers/localization
+   * @deprecated Use the `localeText` prop of `LocalizationProvider` instead, see https://mui.com/x/react-date-pickers/localization/.
    */
   endText: PropTypes.node,
   /**
@@ -227,7 +236,7 @@ DesktopDateRangePicker.propTypes = {
    * Get aria-label text for switching between views button.
    * @param {CalendarPickerView} currentView The view from which we want to get the button text.
    * @returns {string} The label of the view.
-   * @deprecated Use the `localeText` prop of `LocalizationProvider` instead, see https://mui.com/x/react-date-pickers/localization
+   * @deprecated Use the `localeText` prop of `LocalizationProvider` instead, see https://mui.com/x/react-date-pickers/localization/.
    */
   getViewSwitchingButtonText: PropTypes.func,
   ignoreInvalidInputs: PropTypes.bool,
@@ -400,6 +409,7 @@ DesktopDateRangePicker.propTypes = {
    * Disable specific date. @DateIOType
    * @template TDate
    * @param {TDate} day The date to test.
+   * @param {string} position The date to test, 'start' or 'end'.
    * @returns {boolean} Returns `true` if the date should be disabled.
    */
   shouldDisableDate: PropTypes.func,
@@ -431,7 +441,7 @@ DesktopDateRangePicker.propTypes = {
   /**
    * Text for start input label and toolbar placeholder.
    * @default 'Start'
-   * @deprecated Use the `localeText` prop of `LocalizationProvider` instead, see https://mui.com/x/react-date-pickers/localization
+   * @deprecated Use the `localeText` prop of `LocalizationProvider` instead, see https://mui.com/x/react-date-pickers/localization/.
    */
   startText: PropTypes.node,
   /**

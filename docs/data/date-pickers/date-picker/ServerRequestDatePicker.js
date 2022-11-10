@@ -1,12 +1,12 @@
 import * as React from 'react';
+import dayjs from 'dayjs';
 import Badge from '@mui/material/Badge';
 import TextField from '@mui/material/TextField';
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { PickersDay } from '@mui/x-date-pickers/PickersDay';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { CalendarPickerSkeleton } from '@mui/x-date-pickers/CalendarPickerSkeleton';
-import getDaysInMonth from 'date-fns/getDaysInMonth';
 
 function getRandomNumber(min, max) {
   return Math.round(Math.random() * (max - min) + min);
@@ -19,7 +19,7 @@ function getRandomNumber(min, max) {
 function fakeFetch(date, { signal }) {
   return new Promise((resolve, reject) => {
     const timeout = setTimeout(() => {
-      const daysInMonth = getDaysInMonth(date);
+      const daysInMonth = date.daysInMonth();
       const daysToHighlight = [1, 2, 3].map(() => getRandomNumber(1, daysInMonth));
 
       resolve({ daysToHighlight });
@@ -32,7 +32,7 @@ function fakeFetch(date, { signal }) {
   });
 }
 
-const initialValue = new Date();
+const initialValue = dayjs('2022-04-07');
 
 export default function ServerRequestDatePicker() {
   const requestAbortController = React.useRef(null);
@@ -78,7 +78,7 @@ export default function ServerRequestDatePicker() {
   };
 
   return (
-    <LocalizationProvider dateAdapter={AdapterDateFns}>
+    <LocalizationProvider dateAdapter={AdapterDayjs}>
       <DatePicker
         value={value}
         loading={isLoading}
@@ -91,7 +91,7 @@ export default function ServerRequestDatePicker() {
         renderDay={(day, _value, DayComponentProps) => {
           const isSelected =
             !DayComponentProps.outsideCurrentMonth &&
-            highlightedDays.indexOf(day.getDate()) > 0;
+            highlightedDays.indexOf(day.date()) > 0;
 
           return (
             <Badge

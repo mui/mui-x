@@ -11,6 +11,6 @@
     "incremental": true,
     "noImplicitAny": true
   },
-  "include": ["src/pages/**/*", "data/**/*"],
+  "include": ["pages/**/*.ts*", "data/**/*"],
   "exclude": ["docs/.next", "docs/export"]
 }

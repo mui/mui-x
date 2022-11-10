@@ -8,7 +8,7 @@ import {
   useGridApiRef,
 } from '@mui/x-data-grid-pro';
 // @ts-ignore Remove once the test utils are typed
-import { createRenderer } from '@mui/monorepo/test/utils';
+import { createRenderer, act } from '@mui/monorepo/test/utils';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
@@ -35,7 +35,7 @@ describe('<DataGrid /> - Filter panel', () => {
 
   it('should add an id and operatorValue to the filter item created when opening the filter panel', () => {
     render(<TestCase />);
-    apiRef.current.showFilterPanel('brand');
+    act(() => apiRef.current.showFilterPanel('brand'));
     const model = gridFilterModelSelector(apiRef);
     expect(model.items).to.have.length(1);
     expect(model.items[0].id).to.not.equal(null);

@@ -2,7 +2,7 @@
 title: Data Grid - Row grouping
 ---
 
-# Data grid - Row grouping [<span class="plan-premium"></span>](https://mui.com/store/items/mui-x-premium/)
+# Data grid - Row grouping [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan)
 
 <p class="description">Group your rows according to some column values.</p>
 
@@ -91,6 +91,16 @@ For instance if you group by `"director"`, you will have two columns titled _Dir
 To automatically hide the grouped columns, use the `useKeepGroupedColumnsHidden` utility hook.
 The hook will automatically hide the columns when added to the model and show them back when removed from it.
 
+:::warning
+This hook is not compatible with the deprecated column property `hide`.
+
+You can manage column visibility with `columnVisibilityModel`, `initialState`, or both together.
+To do so, pass them to the hook parameters.
+:::
+
+Bellow are two examples about how to use `columnVisibilityModel` or `initialState` with `useKeepGroupedColumnsHidden` hook.
+You can mix the two examples to support both at the same time.
+
 ```tsx
 // Usage with the initial state
 const apiRef = useGridApiRef();
@@ -123,12 +133,6 @@ const [rowGroupingModel, setRowGroupingModel] = React.useState([
 const initialState = useKeepGroupedColumnsHidden({
   apiRef,
   rowGroupingModel,
-  initialState: {
-    columns: {
-      // Other hidden columns
-      columnVisibilityModel: { gross: false },
-    },
-  },
 });
 
 return (
@@ -141,19 +145,13 @@ return (
 );
 ```
 
-:::warning
-This hook is only compatible with the deprecated column property `hide` or with the controlled `columnVisibilityModel` prop.
-
-You must use the `columnVisibilityModel` in the `initialState` instead.
-:::
-
 {{"demo": "RowGroupingUseKeepGroupedColumnsHidden.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ## Disable the row grouping
 
 ### For all columns
 
-You can disable row grouping by setting `disableRowGrouping` prop to true.
+You can disable row grouping by setting the `disableRowGrouping` prop to true.
 
 It will disable all the features related to the row grouping, even if a model is provided.
 
@@ -291,7 +289,11 @@ With this panel, your users will be able to control which columns are used for g
 
 {{"demo": "RowGroupingFullExample.js", "bg": "inline", "defaultCodeOpen": false}}
 
-## apiRef [<span class="plan-pro"></span>](https://mui.com/store/items/mui-x-pro/)
+## Advanced use cases
+
+See [Row grouping recipes](/x/react-data-grid/recipes-row-grouping/) for more advanced use cases.
+
+## apiRef [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
 
 {{"demo": "RowGroupingApiNoSnap.js", "bg": "inline", "hideToolbar": true}}
 

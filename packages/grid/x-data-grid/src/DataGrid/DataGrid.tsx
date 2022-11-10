@@ -89,6 +89,7 @@ DataGridRaw.propTypes = {
    * @default 3
    */
   columnBuffer: PropTypes.number,
+  columnGroupingModel: PropTypes.arrayOf(PropTypes.object),
   /**
    * Set of columns of type [[GridColumns]].
    */
@@ -100,7 +101,7 @@ DataGridRaw.propTypes = {
           `MUI: \`column.resizable = true\` is not a valid prop.`,
           'Column resizing is not available in the MIT version.',
           '',
-          'You need to upgrade to the DataGridPro component to unlock this feature.',
+          'You need to upgrade to DataGridPro or DataGridPremium component to unlock this feature.',
         ].join('\n'),
       );
     }
@@ -159,6 +160,11 @@ DataGridRaw.propTypes = {
    */
   disableExtendRowFullWidth: PropTypes.bool,
   /**
+   * If `true`, modification to a cell will not be discarded if the mode is changed from "edit" to "view" while processing props.
+   * @default false
+   */
+  disableIgnoreModificationsIfProcessingProps: PropTypes.bool,
+  /**
    * If `true`, the selection on click on a row or cell is disabled.
    * @default false
    */
@@ -186,6 +192,7 @@ DataGridRaw.propTypes = {
    * For each feature, if the flag is not explicitly set to `true`, the feature will be fully disabled and any property / method call will not have any effect.
    */
   experimentalFeatures: PropTypes.shape({
+    columnGrouping: PropTypes.bool,
     newEditingApi: PropTypes.bool,
     preventCommitWhileValidating: PropTypes.bool,
     warnIfFocusStateIsNotSynced: PropTypes.bool,
@@ -320,7 +327,7 @@ DataGridRaw.propTypes = {
   }),
   /**
    * Allows to pass the logging level or false to turn off logging.
-   * @default "debug"
+   * @default "error" ("warn" in dev mode)
    */
   logLevel: PropTypes.oneOf(['debug', 'error', 'info', 'warn', false]),
   /**
@@ -579,7 +586,7 @@ DataGridRaw.propTypes = {
    * @param {GridState} state The new state.
    * @param {MuiEvent<{}>} event The event object.
    * @param {GridCallbackDetails} details Additional details for this callback.
-   * @internal
+   * @ignore - do not document.
    */
   onStateChange: PropTypes.func,
   /**
@@ -599,7 +606,7 @@ DataGridRaw.propTypes = {
           `MUI: \`<DataGrid pageSize={${props.pageSize}} />\` is not a valid prop.`,
           `Only page size below ${MAX_PAGE_SIZE} is available in the MIT version.`,
           '',
-          'You need to upgrade to the DataGridPro component to unlock this feature.',
+          'You need to upgrade to DataGridPro or DataGridPremium component to unlock this feature.',
         ].join('\n'),
       );
     }
@@ -612,7 +619,7 @@ DataGridRaw.propTypes = {
           'MUI: `<DataGrid pagination={false} />` is not a valid prop.',
           'Infinite scrolling is not available in the MIT version.',
           '',
-          'You need to upgrade to the DataGridPro component to disable the pagination.',
+          'You need to upgrade to DataGridPro or DataGridPremium component to disable the pagination.',
         ].join('\n'),
       );
     }
@@ -656,7 +663,7 @@ DataGridRaw.propTypes = {
   /**
    * Set of rows of type [[GridRowsProp]].
    */
-  rows: PropTypes.array.isRequired,
+  rows: PropTypes.arrayOf(PropTypes.object).isRequired,
   /**
    * Sets the type of space between rows added by `getRowSpacing`.
    * @default "margin"
@@ -694,7 +701,7 @@ DataGridRaw.propTypes = {
             )}} />\` is not a valid prop.`,
             'selectionModel can only be of 1 item in DataGrid.',
             '',
-            'You need to upgrade to the DataGridPro component to unlock multiple selection.',
+            'You need to upgrade to DataGridPro or DataGridPremium component to unlock multiple selection.',
           ].join('\n'),
         );
       }

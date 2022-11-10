@@ -10,8 +10,14 @@ import {
   useCalendarState,
   PickerStatePickerProps,
   DayPickerProps,
+  BaseDateValidationProps,
+  DayValidationProps,
 } from '@mui/x-date-pickers/internals';
-import { DateRange, CurrentlySelectingRangeEndProps } from '../internal/models/dateRange';
+import {
+  DateRange,
+  CurrentlySelectingRangeEndProps,
+  DayRangeValidationProps,
+} from '../internal/models/dateRange';
 import { isRangeValid } from '../internal/utils/date-utils';
 import { calculateRangeChange } from './date-range-manager';
 import { DateRangePickerToolbar } from './DateRangePickerToolbar';
@@ -20,7 +26,7 @@ import {
   DateRangePickerViewMobileSlotsComponent,
   DateRangePickerViewMobileSlotsComponentsProps,
 } from './DateRangePickerViewMobile';
-import { DateRangePickerInput, DateRangeInputProps } from './DateRangePickerInput';
+import { DateRangePickerInput, DateRangePickerInputProps } from './DateRangePickerInput';
 import {
   DateRangePickerViewDesktop,
   ExportedDesktopDateRangeCalendarProps,
@@ -37,7 +43,14 @@ export interface DateRangePickerViewSlotsComponentsProps
 
 export interface ExportedDateRangePickerViewProps<TDate>
   extends ExportedDesktopDateRangeCalendarProps<TDate>,
-    Omit<ExportedCalendarPickerProps<TDate>, 'onYearChange' | 'renderDay'> {
+    DayRangeValidationProps<TDate>,
+    Omit<
+      ExportedCalendarPickerProps<TDate>,
+      | 'onYearChange'
+      | 'renderDay'
+      | keyof BaseDateValidationProps<TDate>
+      | keyof DayValidationProps<TDate>
+    > {
   /**
    * Overrideable components.
    * @default {}
@@ -75,12 +88,13 @@ export interface ExportedDateRangePickerViewProps<TDate>
 interface DateRangePickerViewProps<TInputDate, TDate>
   extends CurrentlySelectingRangeEndProps,
     ExportedDateRangePickerViewProps<TDate>,
-    PickerStatePickerProps<DateRange<TDate>> {
+    PickerStatePickerProps<DateRange<TDate>>,
+    Required<BaseDateValidationProps<TDate>> {
   calendars: 1 | 2 | 3;
   open: boolean;
   startText: React.ReactNode;
   endText: React.ReactNode;
-  DateInputProps: DateRangeInputProps<TInputDate, TDate>;
+  DateInputProps: DateRangePickerInputProps<TInputDate, TDate>;
 }
 
 type DateRangePickerViewComponent = (<TInputDate, TDate = TInputDate>(
@@ -125,6 +139,10 @@ function DateRangePickerViewRaw<TInputDate, TDate>(
   const utils = useUtils<TDate>();
   const wrapperVariant = React.useContext(WrapperVariantContext);
 
+  const wrappedShouldDisableDate =
+    shouldDisableDate &&
+    ((dayToTest: TDate) => shouldDisableDate?.(dayToTest, currentlySelectingRangeEnd));
+
   const [start, end] = parsedValue;
   const {
     changeMonth,
@@ -142,7 +160,7 @@ function DateRangePickerViewRaw<TInputDate, TDate>(
     minDate,
     onMonthChange,
     reduceAnimations,
-    shouldDisableDate,
+    shouldDisableDate: wrappedShouldDisableDate,
   });
 
   const toShowToolbar = showToolbar ?? wrapperVariant !== 'desktop';
@@ -229,7 +247,7 @@ function DateRangePickerViewRaw<TInputDate, TDate>(
       disablePast,
       minDate,
       maxDate,
-      shouldDisableDate,
+      shouldDisableDate: wrappedShouldDisableDate,
       ...calendarState,
       ...other,
     };

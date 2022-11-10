@@ -14,31 +14,31 @@
       "type": { "name": "func" },
       "default": "<TDate extends any>(\n  view: ClockView,\n  time: TDate | null,\n  adapter: MuiPickersAdapter<TDate>,\n) =>\n  `Select ${view}. ${\n    time === null ? 'No time selected' : `Selected time is ${adapter.format(time, 'fullTime')}`\n  }`",
       "deprecated": true,
-      "deprecationInfo": "Use the <code>localeText</code> prop of <code>LocalizationProvider</code> instead, see <a href=\"https://mui.com/x/react-date-pickers/localization\">https://mui.com/x/react-date-pickers/localization</a>"
+      "deprecationInfo": "Use the <code>localeText</code> prop of <code>LocalizationProvider</code> instead, see <a href=\"https://mui.com/x/react-date-pickers/localization/\">https://mui.com/x/react-date-pickers/localization/</a>."
     },
     "getHoursClockNumberText": {
       "type": { "name": "func" },
       "default": "(hours: string) => `${hours} hours`",
       "deprecated": true,
-      "deprecationInfo": "Use the <code>localeText</code> prop of <code>LocalizationProvider</code> instead, see <a href=\"https://mui.com/x/react-date-pickers/localization\">https://mui.com/x/react-date-pickers/localization</a>"
+      "deprecationInfo": "Use the <code>localeText</code> prop of <code>LocalizationProvider</code> instead, see <a href=\"https://mui.com/x/react-date-pickers/localization/\">https://mui.com/x/react-date-pickers/localization/</a>."
     },
     "getMinutesClockNumberText": {
       "type": { "name": "func" },
       "default": "(minutes: string) => `${minutes} minutes`",
       "deprecated": true,
-      "deprecationInfo": "Use the <code>localeText</code> prop of <code>LocalizationProvider</code> instead, see <a href=\"https://mui.com/x/react-date-pickers/localization\">https://mui.com/x/react-date-pickers/localization</a>"
+      "deprecationInfo": "Use the <code>localeText</code> prop of <code>LocalizationProvider</code> instead, see <a href=\"https://mui.com/x/react-date-pickers/localization/\">https://mui.com/x/react-date-pickers/localization/</a>."
     },
     "getSecondsClockNumberText": {
       "type": { "name": "func" },
       "default": "(seconds: string) => `${seconds} seconds`",
       "deprecated": true,
-      "deprecationInfo": "Use the <code>localeText</code> prop of <code>LocalizationProvider</code> instead, see <a href=\"https://mui.com/x/react-date-pickers/localization\">https://mui.com/x/react-date-pickers/localization</a>"
+      "deprecationInfo": "Use the <code>localeText</code> prop of <code>LocalizationProvider</code> instead, see <a href=\"https://mui.com/x/react-date-pickers/localization/\">https://mui.com/x/react-date-pickers/localization/</a>."
     },
     "leftArrowButtonText": {
       "type": { "name": "string" },
       "default": "'open previous view'",
       "deprecated": true,
-      "deprecationInfo": "Use the <code>localeText</code> prop of <code>LocalizationProvider</code> instead, see <a href=\"https://mui.com/x/react-date-pickers/localization\">https://mui.com/x/react-date-pickers/localization</a>"
+      "deprecationInfo": "Use the <code>localeText</code> prop of <code>LocalizationProvider</code> instead, see <a href=\"https://mui.com/x/react-date-pickers/localization/\">https://mui.com/x/react-date-pickers/localization/</a>."
     },
     "maxTime": { "type": { "name": "any" } },
     "minTime": { "type": { "name": "any" } },
@@ -56,7 +56,7 @@
       "type": { "name": "string" },
       "default": "'open next view'",
       "deprecated": true,
-      "deprecationInfo": "Use the <code>localeText</code> prop of <code>LocalizationProvider</code> instead, see <a href=\"https://mui.com/x/react-date-pickers/localization\">https://mui.com/x/react-date-pickers/localization</a>"
+      "deprecationInfo": "Use the <code>localeText</code> prop of <code>LocalizationProvider</code> instead, see <a href=\"https://mui.com/x/react-date-pickers/localization/\">https://mui.com/x/react-date-pickers/localization/</a>."
     },
     "shouldDisableTime": { "type": { "name": "func" } },
     "view": {
@@ -73,7 +73,12 @@
       "default": "['hours', 'minutes']"
     }
   },
-  "slots": {},
+  "slots": {
+    "LeftArrowButton": { "default": "IconButton", "type": { "name": "elementType" } },
+    "LeftArrowIcon": { "default": "ArrowLeft", "type": { "name": "elementType" } },
+    "RightArrowButton": { "default": "IconButton", "type": { "name": "elementType" } },
+    "RightArrowIcon": { "default": "ArrowRight", "type": { "name": "elementType" } }
+  },
   "name": "ClockPicker",
   "styles": { "classes": ["root", "arrowSwitcher"], "globalClasses": {}, "name": "MuiClockPicker" },
   "spread": false,

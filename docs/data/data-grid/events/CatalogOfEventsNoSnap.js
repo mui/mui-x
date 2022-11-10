@@ -1,144 +1,152 @@
-/* eslint-disable react/no-danger */
 import * as React from 'react';
-import MarkdownElement from 'docs/src/modules/components/MarkdownElement';
 import HighlightedCode from 'docs/src/modules/components/HighlightedCode';
-import Typography from '@mui/material/Typography';
-import Table from '@mui/material/Table';
-import TableHead from '@mui/material/TableHead';
-import TableBody from '@mui/material/TableBody';
-import TableRow from '@mui/material/TableRow';
-import TableCell from '@mui/material/TableCell';
 import Box from '@mui/material/Box';
-import IconButton from '@mui/material/IconButton';
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
-import Collapse from '@mui/material/Collapse';
+import Typography from '@mui/material/Typography';
+import { styled } from '@mui/material/styles';
+import {
+  DataGridPro,
+  GridToolbarContainer,
+  GridToolbarQuickFilter,
+} from '@mui/x-data-grid-pro';
 import events from './events.json';
 
-function escapeHTML(value) {
-  return value.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+function getDataGridComponentNameFromProjectName(project) {
+  switch (project) {
+    case 'x-data-grid':
+      return 'DataGrid';
+    case 'x-data-grid-pro':
+      return 'DataGridPro';
+    case 'x-data-grid-premium':
+      return 'DataGridPremium';
+    default:
+      throw new Error('Invalid grid project name');
+  }
 }
 
-const EventRow = ({ event }) => {
-  const [open, setOpen] = React.useState(false);
+const Description = styled(Typography)({ whiteSpace: 'nowrap' });
 
+const EventRow = ({ event }) => {
   const example = React.useMemo(() => {
     const args = ['details, // GridCallbackDetails'];
     if (event.event) {
-      args.unshift(`event,  // ${event.event}`);
+      args.unshift(`event,   // ${event.event}`);
     }
     if (event.params) {
-      args.unshift(`params, // ${event.params}`);
+      args.unshift(`params,  // ${event.params}`);
     }
 
+    const propExample = event.componentProp
+      ? `
+// Component prop (available on ${event.projects
+          .map(getDataGridComponentNameFromProjectName)
+          .join(', ')})
+<DataGrid
+  ${event.componentProp}={handleEvent}
+  {...other} 
+/>`
+      : '';
+
     return `
-const onEvent: GridEventListener<'${event.name}'> = (
+const handleEvent: GridEventListener<'${event.name}'> = (
   ${args.join('\n  ')}
 ) => {...}    
   
 // Imperative subscription    
 apiRef.current.subscribeEvent(
   '${event.name}',
-  onEvent,
+  handleEvent,
 );
 
 // Hook subscription (only available inside the scope of the grid)
-useGridApiEventHandler('${event.name}', onEvent);    
+useGridApiEventHandler('${event.name}', handleEvent);
+${propExample}
 `;
   }, [event]);
 
-  const planBadge = React.useMemo(() => {
-    if (event.projects.includes('x-data-grid')) {
-      return null;
-    }
-    if (event.projects.includes('x-data-grid-pro')) {
-      return <span className="plan-pro" title="Pro plan" />;
-    }
-    if (event.projects.includes('x-data-grid-premium')) {
-      return <span className="plan-premium" title="Premium plan" />;
-    }
-    return null;
-  }, [event]);
-
   return (
-    <React.Fragment>
-      <TableRow>
-        <TableCell style={{ borderBottom: 'unset' }}>
-          <IconButton
-            aria-label="expand row"
-            size="small"
-            onClick={() => setOpen(!open)}
-          >
-            {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
-          </IconButton>
-        </TableCell>
-        <TableCell style={{ borderBottom: 'unset' }}>
-          <code>{event.name}</code>
-          {planBadge}
-        </TableCell>
-        <TableCell style={{ borderBottom: 'unset' }}>
-          <div
-            dangerouslySetInnerHTML={{
-              __html: event.description,
-            }}
-          />
-          {!!event.params && (
-            <div>
-              <Typography variant="subtitle2" component="span">
-                Params:{' '}
-              </Typography>
-              <code
-                dangerouslySetInnerHTML={{
-                  __html: escapeHTML(event.params),
-                }}
-              />
-            </div>
-          )}
-          {!!event.event && (
-            <div>
-              <Typography variant="subtitle2" component="span">
-                Event:{' '}
-              </Typography>
-              <code
-                dangerouslySetInnerHTML={{
-                  __html: escapeHTML(event.event),
-                }}
-              />
-            </div>
-          )}
-        </TableCell>
-      </TableRow>
-      <TableRow>
-        <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={3}>
-          <Collapse in={open} timeout="auto" unmountOnExit>
-            <Box sx={{ margin: 1 }}>
-              <HighlightedCode code={example} language="tsx" />
-            </Box>
-          </Collapse>
-        </TableCell>
-      </TableRow>
-    </React.Fragment>
+    <Box sx={{ px: 1 }}>
+      <HighlightedCode code={example} language="tsx" />
+    </Box>
   );
 };
 
+const COLUMNS = [
+  {
+    field: 'name',
+    headerName: 'Name',
+    width: 200,
+    renderCell: ({ value }) => <code>{value}</code>,
+  },
+  {
+    field: 'plan',
+    headerName: 'Available on',
+    width: 100,
+    align: 'center',
+    valueGetter: ({ row }) => {
+      if (row.projects.includes('x-data-grid')) {
+        return 'x-data-grid';
+      }
+      if (row.projects.includes('x-data-grid-pro')) {
+        return 'x-data-grid-pro';
+      }
+      if (row.projects.includes('x-data-grid-premium')) {
+        return 'x-data-grid-premium';
+      }
+      return null;
+    },
+    renderCell: ({ value }) => {
+      if (value === 'x-data-grid-pro') {
+        return <span className="plan-pro" title="Pro plan" />;
+      }
+      if (value === 'x-data-grid-premium') {
+        return <span className="plan-premium" title="Premium plan" />;
+      }
+      return '';
+    },
+  },
+  {
+    field: 'description',
+    headerName: 'Description',
+    flex: 1,
+    renderCell: ({ value }) => (
+      <Description
+        variant="body2"
+        style={{ whiteSpace: 'normal' }}
+        dangerouslySetInnerHTML={{
+          __html: value,
+        }}
+      />
+    ),
+  },
+];
+
+const Toolbar = () => (
+  <GridToolbarContainer sx={{ p: 1 }}>
+    <GridToolbarQuickFilter />
+  </GridToolbarContainer>
+);
+
 export default function CatalogOfEventsNoSnap() {
   return (
-    <MarkdownElement>
-      <Table>
-        <TableHead>
-          <TableRow>
-            <TableCell />
-            <TableCell align="left">Name</TableCell>
-            <TableCell align="left">Description</TableCell>
-            <TableCell />
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {events.map((event) => (
-            <EventRow key={event.name} event={event} />
-          ))}
-        </TableBody>
-      </Table>
-    </MarkdownElement>
+    <DataGridPro
+      disableColumnReorder
+      autoHeight
+      rows={events}
+      columns={COLUMNS}
+      getRowId={(row) => row.name}
+      getDetailPanelContent={({ row }) => <EventRow event={row} />}
+      getDetailPanelHeight={() => 'auto'}
+      getRowHeight={() => 'auto'}
+      disableRowSelection
+      hideFooter
+      components={{
+        Toolbar,
+      }}
+      sx={{
+        '&.MuiDataGrid-root--densityCompact .MuiDataGrid-cell': { py: '8px' },
+        '&.MuiDataGrid-root--densityStandard .MuiDataGrid-cell': { py: '15px' },
+        '&.MuiDataGrid-root--densityComfortable .MuiDataGrid-cell': { py: '22px' },
+      }}
+    />
   );
 }

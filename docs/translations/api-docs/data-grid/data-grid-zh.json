@@ -21,6 +21,7 @@
     "disableColumnSelector": "If <code>true</code>, hiding/showing columns is disabled.",
     "disableDensitySelector": "If <code>true</code>, the density selector is disabled.",
     "disableExtendRowFullWidth": "If <code>true</code>, rows will not be extended to fill the full width of the grid container.",
+    "disableIgnoreModificationsIfProcessingProps": "If <code>true</code>, modification to a cell will not be discarded if the mode is changed from &quot;edit&quot; to &quot;view&quot; while processing props.",
     "disableSelectionOnClick": "If <code>true</code>, the selection on click on a row or cell is disabled.",
     "disableVirtualization": "If <code>true</code>, the virtualization is disabled.",
     "editMode": "Controls whether to use the cell or row editing.",
@@ -86,7 +87,6 @@
     "onRowModesModelChange": "Callback fired when the <code>rowModesModel</code> prop changes.<br><br><strong>Signature:</strong><br><code>function(rowModesModel: GridRowModesModel, details: GridCallbackDetails) =&gt; void</code><br><em>rowModesModel:</em> Object containig which rows are in &quot;edit&quot; mode.<br><em>details:</em> Additional details for this callback.",
     "onSelectionModelChange": "Callback fired when the selection state of one or multiple rows changes.<br><br><strong>Signature:</strong><br><code>function(selectionModel: GridSelectionModel, details: GridCallbackDetails) =&gt; void</code><br><em>selectionModel:</em> With all the row ids GridSelectionModel.<br><em>details:</em> Additional details for this callback.",
     "onSortModelChange": "Callback fired when the sort model changes before a column is sorted.<br><br><strong>Signature:</strong><br><code>function(model: GridSortModel, details: GridCallbackDetails) =&gt; void</code><br><em>model:</em> With all properties from GridSortModel.<br><em>details:</em> Additional details for this callback.",
-    "onStateChange": "Callback fired when the state of the grid is updated.<br><br><strong>Signature:</strong><br><code>function(state: GridState, event: MuiEvent&lt;{}&gt;, details: GridCallbackDetails) =&gt; void</code><br><em>state:</em> The new state.<br><em>event:</em> The event object.<br><em>details:</em> Additional details for this callback.",
     "page": "The zero-based index of the current page.",
     "pageSize": "Set the number of rows in one page. If some of the rows have children (for instance in the tree data), this number represents the amount of top level rows wanted on each page.",
     "paginationMode": "Pagination can be processed on the server or client-side. Set it to &#39;client&#39; if you would like to handle the pagination on the client-side. Set it to &#39;server&#39; if you would like to handle the pagination on the server-side.",
@@ -106,11 +106,37 @@
     "sortingMode": "Sorting can be processed on the server or client-side. Set it to &#39;client&#39; if you would like to handle sorting on the client-side. Set it to &#39;server&#39; if you would like to handle sorting on the server-side.",
     "sortingOrder": "The order of the sorting sequence.",
     "sortModel": "Set the sort model of the grid.",
-    "sx": "The system prop that allows defining system overrides as well as additional CSS styles. See the <a href=\"/system/the-sx-prop/\">`sx` page</a> for more details."
+    "sx": "The system prop that allows defining system overrides as well as additional CSS styles. See the <a href=\"/system/getting-started/the-sx-prop/\">`sx` page</a> for more details."
   },
   "classDescriptions": {
     "actionsCell": {
-      "description": "Styles applied to the root element of the cell with type=\"actions\""
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the root element of the cell with type=\"actions\""
+    },
+    "aggregationColumnHeader": {
+      "description": "Styles applied to {{nodeName}} when {{conditions}}.",
+      "nodeName": "the root element of the column header",
+      "conditions": "aggregated"
+    },
+    "aggregationColumnHeader--alignLeft": {
+      "description": "Styles applied to {{nodeName}} when {{conditions}}.",
+      "nodeName": "the root element of the header",
+      "conditions": "aggregation if <code>headerAlign=\"left\"</code>"
+    },
+    "aggregationColumnHeader--alignCenter": {
+      "description": "Styles applied to {{nodeName}} when {{conditions}}.",
+      "nodeName": "the root element of the header",
+      "conditions": "aggregation if <code>headerAlign=\"center\"</code>"
+    },
+    "aggregationColumnHeader--alignRight": {
+      "description": "Styles applied to {{nodeName}} when {{conditions}}.",
+      "nodeName": "the root element of the header",
+      "conditions": "aggregation if <code>headerAlign=\"right\"</code>"
+    },
+    "aggregationColumnHeaderLabel": {
+      "description": "Styles applied to {{nodeName}} when {{conditions}}.",
+      "nodeName": "the aggregation label in the column header",
+      "conditions": "aggregated"
     },
     "autoHeight": {
       "description": "Styles applied to {{nodeName}} if {{conditions}}.",
@@ -159,6 +185,10 @@
     "cellCheckbox": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the cell checkbox element"
+    },
+    "cellSkeleton": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the skeleton cell element"
     },
     "checkboxInput": {
       "description": "Styles applied to {{nodeName}}.",
@@ -213,6 +243,10 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the column header element"
     },
+    "columnGroupHeader": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the column group header element"
+    },
     "columnHeaderCheckbox": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the header checkbox cell element"
@@ -238,6 +272,20 @@
     "columnHeaderTitleContainerContent": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the column header's title excepted buttons"
+    },
+    "columnHeader--filledGroup": {
+      "description": "Styles applied to {{nodeName}} if {{conditions}}.",
+      "nodeName": "the column group header cell",
+      "conditions": "not empty"
+    },
+    "columnHeader--emptyGroup": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the empty column group header cell"
+    },
+    "columnHeader--showColumnBorder": {
+      "description": "Styles applied to {{nodeName}} when {{conditions}}.",
+      "nodeName": "the column group header cell",
+      "conditions": "show column border"
     },
     "columnHeaders": {
       "description": "Styles applied to {{nodeName}}.",
@@ -300,6 +348,10 @@
       "description": "Styles applied to {{nodeName}} if {{conditions}}.",
       "nodeName": "the detail panel toggle cell element",
       "conditions": "expanded"
+    },
+    "footerCell": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the root element of the cell inside a footer row"
     },
     "panel": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the panel element" },
     "panelHeader": {
@@ -474,6 +526,11 @@
       "nodeName": "the row",
       "conditions": "it has dynamic row height"
     },
+    "row--detailPanelExpanded": {
+      "description": "Styles applied to {{nodeName}} if {{conditions}}.",
+      "nodeName": "the row",
+      "conditions": "its detail panel is open"
+    },
     "row": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the row element" },
     "rowCount": {
       "description": "Styles applied to {{nodeName}}.\nOnly works when pagination is disabled.",
@@ -535,6 +592,22 @@
     },
     "groupingCriteriaCellToggle": {
       "description": "Styles applied to the toggle of the grouping criteria cell"
+    },
+    "pinnedRows": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the pinned rows container"
+    },
+    "pinnedRows--top": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the top pinned rows container"
+    },
+    "pinnedRows--bottom": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the bottom pinned rows container"
+    },
+    "pinnedRowsRenderZone": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "pinned rows render zones"
     }
   },
   "slotDescriptions": {
@@ -547,6 +620,7 @@
     "BaseTooltip": "The custom Tooltip component used in the grid.",
     "BasePopper": "The custom Popper component used in the grid.",
     "Cell": "Component rendered for each cell.",
+    "SkeletonCell": "Component rendered for each skeleton cell.",
     "ColumnHeaderFilterIconButton": "Filter icon component rendered in each column header.",
     "ColumnMenu": "Column menu component rendered by clicking on the 3 dots &quot;kebab&quot; icon in column headers.",
     "ErrorOverlay": "Error overlay component rendered above the grid when an error is caught.",

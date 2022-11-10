@@ -1,23 +1,19 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import clsx from 'clsx';
 import { unstable_composeClasses as composeClasses } from '@mui/material';
 import { unstable_useId as useId } from '@mui/material/utils';
-import { GridColumnHeaderEventLookup } from '../../models/events';
 import { GridStateColDef } from '../../models/colDef/gridColDef';
 import { GridSortDirection } from '../../models/gridSortModel';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { GridColumnHeaderSortIcon } from './GridColumnHeaderSortIcon';
-import { GridColumnHeaderTitle } from './GridColumnHeaderTitle';
-import {
-  GridColumnHeaderSeparator,
-  GridColumnHeaderSeparatorProps,
-} from './GridColumnHeaderSeparator';
+import { GridColumnHeaderSeparatorProps } from './GridColumnHeaderSeparator';
 import { ColumnHeaderMenuIcon } from './ColumnHeaderMenuIcon';
 import { GridColumnHeaderMenu } from '../menu/columnMenu/GridColumnHeaderMenu';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
+import { GridGenericColumnHeaderItem } from './GridGenericColumnHeaderItem';
+import { GridColumnHeaderEventLookup } from '../../models/events';
 
 interface GridColumnHeaderItemProps {
   colIndex: number;
@@ -106,10 +102,23 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
     [rootProps.disableColumnReorder, disableReorder, column.disableReorder],
   );
 
-  let headerComponent: React.ReactNode = null;
+  let headerComponent: React.ReactNode;
   if (column.renderHeader) {
     headerComponent = column.renderHeader(apiRef.current.getColumnHeaderParams(column.field));
   }
+
+  const removeLastBorderRight = isLastColumn && hasScrollX && !hasScrollY;
+  const showRightBorder = !isLastColumn
+    ? rootProps.showColumnRightBorder
+    : !removeLastBorderRight && !extendRowFullWidth;
+
+  const ownerState = {
+    ...props,
+    classes: rootProps.classes,
+    showRightBorder,
+  };
+
+  const classes = useUtilityClasses(ownerState);
 
   const publish = React.useCallback(
     (eventName: keyof GridColumnHeaderEventLookup) => (event: React.SyntheticEvent) => {
@@ -127,46 +136,38 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
     [apiRef, column.field],
   );
 
-  const mouseEventsHandlers = {
-    onClick: publish('columnHeaderClick'),
-    onDoubleClick: publish('columnHeaderDoubleClick'),
-    onMouseOver: publish('columnHeaderOver'), // TODO remove as it's not used
-    onMouseOut: publish('columnHeaderOut'), // TODO remove as it's not used
-    onMouseEnter: publish('columnHeaderEnter'), // TODO remove as it's not used
-    onMouseLeave: publish('columnHeaderLeave'), // TODO remove as it's not used
-    onKeyDown: publish('columnHeaderKeyDown'),
-    onFocus: publish('columnHeaderFocus'),
-    onBlur: publish('columnHeaderBlur'),
-  };
+  const mouseEventsHandlers = React.useMemo(
+    () => ({
+      onClick: publish('columnHeaderClick'),
+      onDoubleClick: publish('columnHeaderDoubleClick'),
+      onMouseOver: publish('columnHeaderOver'), // TODO remove as it's not used
+      onMouseOut: publish('columnHeaderOut'), // TODO remove as it's not used
+      onMouseEnter: publish('columnHeaderEnter'), // TODO remove as it's not used
+      onMouseLeave: publish('columnHeaderLeave'), // TODO remove as it's not used
+      onKeyDown: publish('columnHeaderKeyDown'),
+      onFocus: publish('columnHeaderFocus'),
+      onBlur: publish('columnHeaderBlur'),
+    }),
+    [publish],
+  );
 
-  const draggableEventHandlers = isDraggable
-    ? {
-        onDragStart: publish('columnHeaderDragStart'),
-        onDragEnter: publish('columnHeaderDragEnter'),
-        onDragOver: publish('columnHeaderDragOver'),
-        onDragEnd: publish('columnHeaderDragEnd'),
-      }
-    : null;
+  const draggableEventHandlers = React.useMemo(
+    () =>
+      isDraggable
+        ? {
+            onDragStart: publish('columnHeaderDragStart'),
+            onDragEnter: publish('columnHeaderDragEnter'),
+            onDragOver: publish('columnHeaderDragOver'),
+            onDragEnd: publish('columnHeaderDragEnd'),
+          }
+        : {},
+    [isDraggable, publish],
+  );
 
-  const removeLastBorderRight = isLastColumn && hasScrollX && !hasScrollY;
-  const showRightBorder = !isLastColumn
-    ? rootProps.showColumnRightBorder
-    : !removeLastBorderRight && !extendRowFullWidth;
-
-  const ownerState = {
-    ...props,
-    classes: rootProps.classes,
-    showRightBorder,
-  };
-
-  const classes = useUtilityClasses(ownerState);
-
-  const width = column.computedWidth;
-
-  let ariaSort: 'ascending' | 'descending' | 'none' = 'none';
-  if (sortDirection != null) {
-    ariaSort = sortDirection === 'asc' ? 'ascending' : 'descending';
-  }
+  const columnHeaderSeparatorProps = React.useMemo(
+    () => ({ onMouseDown: publish('columnSeparatorMouseDown') }),
+    [publish],
+  );
 
   React.useEffect(() => {
     if (!showColumnMenuIcon) {
@@ -185,6 +186,19 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
       columnMenuButtonId={columnMenuButtonId!}
       open={showColumnMenuIcon}
       iconButtonRef={iconButtonRef}
+    />
+  );
+
+  const columnMenu = (
+    <GridColumnHeaderMenu
+      columnMenuId={columnMenuId!}
+      columnMenuButtonId={columnMenuButtonId!}
+      field={column.field}
+      open={columnMenuOpen}
+      target={iconButtonRef.current}
+      ContentComponent={rootProps.components.ColumnMenu}
+      contentComponentProps={rootProps.componentsProps?.columnMenu}
+      onExited={handleExited}
     />
   );
 
@@ -228,61 +242,33 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
   const label = column.headerName ?? column.field;
 
   return (
-    <div
+    <GridGenericColumnHeaderItem
       ref={headerCellRef}
-      className={clsx(classes.root, headerClassName)}
-      data-field={column.field}
-      style={{
-        width,
-        minWidth: width,
-        maxWidth: width,
-      }}
-      role="columnheader"
+      classes={classes}
+      columnMenuOpen={columnMenuOpen}
+      colIndex={colIndex}
+      height={headerHeight}
+      isResizing={isResizing}
+      sortDirection={sortDirection}
+      hasFocus={hasFocus}
       tabIndex={tabIndex}
-      aria-colindex={colIndex + 1}
-      aria-sort={ariaSort}
-      aria-label={column.renderHeader && headerComponent == null ? label : undefined}
+      separatorSide={separatorSide}
+      isDraggable={isDraggable}
+      headerComponent={headerComponent}
+      description={column.description}
+      elementId={column.field}
+      width={column.computedWidth}
+      columnMenuIconButton={columnMenuIconButton}
+      columnTitleIconButtons={columnTitleIconButtons}
+      headerClassName={headerClassName}
+      label={label}
+      resizable={!rootProps.disableColumnResize && !!column.resizable}
+      data-field={column.field}
+      columnMenu={columnMenu}
+      draggableContainerProps={draggableEventHandlers}
+      columnHeaderSeparatorProps={columnHeaderSeparatorProps}
       {...mouseEventsHandlers}
-    >
-      <div
-        className={classes.draggableContainer}
-        draggable={isDraggable}
-        {...draggableEventHandlers}
-      >
-        <div className={classes.titleContainer}>
-          <div className={classes.titleContainerContent}>
-            {column.renderHeader ? (
-              headerComponent
-            ) : (
-              <GridColumnHeaderTitle
-                label={label}
-                description={column.description}
-                columnWidth={width}
-              />
-            )}
-          </div>
-          {columnTitleIconButtons}
-        </div>
-        {columnMenuIconButton}
-      </div>
-      <GridColumnHeaderSeparator
-        resizable={!rootProps.disableColumnResize && !!column.resizable}
-        resizing={isResizing}
-        height={headerHeight}
-        onMouseDown={publish('columnSeparatorMouseDown')}
-        side={separatorSide}
-      />
-      <GridColumnHeaderMenu
-        columnMenuId={columnMenuId!}
-        columnMenuButtonId={columnMenuButtonId!}
-        field={column.field}
-        open={columnMenuOpen}
-        target={iconButtonRef.current}
-        ContentComponent={rootProps.components.ColumnMenu}
-        contentComponentProps={rootProps.componentsProps?.columnMenu}
-        onExited={handleExited}
-      />
-    </div>
+    />
   );
 }
 

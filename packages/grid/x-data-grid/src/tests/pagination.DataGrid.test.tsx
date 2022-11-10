@@ -1,7 +1,13 @@
 import * as React from 'react';
-// @ts-ignore Remove once the test utils are typed
-import { createRenderer, fireEvent, screen, waitFor } from '@mui/monorepo/test/utils';
+import { spy, stub, SinonStub } from 'sinon';
 import { expect } from 'chai';
+import {
+  createRenderer,
+  fireEvent,
+  screen,
+  waitFor,
+  // @ts-ignore Remove once the test utils are typed
+} from '@mui/monorepo/test/utils';
 import {
   DataGrid,
   DataGridProps,
@@ -9,9 +15,8 @@ import {
   GridLinkOperator,
   GridRowsProp,
 } from '@mui/x-data-grid';
+import { useBasicDemoData } from '@mui/x-data-grid-generator';
 import { getCell, getColumnValues, getRows } from 'test/utils/helperFn';
-import { spy, stub, SinonStub } from 'sinon';
-import { useData } from 'packages/storybook/src/hooks/useData';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
@@ -23,7 +28,7 @@ describe('<DataGrid /> - Pagination', () => {
   ) => {
     const { height = 300, ...other } = props;
 
-    const basicData = useData(20, 2);
+    const basicData = useBasicDemoData(20, 2);
 
     return (
       <div style={{ width: 300, height }}>
@@ -361,6 +366,7 @@ describe('<DataGrid /> - Pagination', () => {
         render(<BaselineTestCase pageSize={pageSize} rowsPerPageOptions={[25, 50, 100]} />);
       }).toWarnDev([
         `MUI: The page size \`${pageSize}\` is not preset in the \`rowsPerPageOptions\``,
+        `MUI: The page size \`${pageSize}\` is not preset in the \`rowsPerPageOptions\``,
       ]);
     });
 
@@ -371,13 +377,17 @@ describe('<DataGrid /> - Pagination', () => {
         render(<BaselineTestCase pageSize={pageSize} />);
       }).toWarnDev([
         `MUI: The page size \`${pageSize}\` is not preset in the \`rowsPerPageOptions\``,
+        `MUI: The page size \`${pageSize}\` is not preset in the \`rowsPerPageOptions\``,
       ]);
     });
 
     it('should display a warning if the default pageSize given as props is not in the prop rowsPerPageOptions', () => {
       expect(() => {
         render(<BaselineTestCase rowsPerPageOptions={[25, 50]} />);
-      }).toWarnDev([`MUI: The page size \`100\` is not preset in the \`rowsPerPageOptions\``]);
+      }).toWarnDev([
+        `MUI: The page size \`100\` is not preset in the \`rowsPerPageOptions\``,
+        `MUI: The page size \`100\` is not preset in the \`rowsPerPageOptions\``,
+      ]);
     });
 
     it('should update the pageCount state when updating the pageSize prop with a lower value', () => {
@@ -407,7 +417,7 @@ describe('<DataGrid /> - Pagination', () => {
     ) => {
       const { height, nbRows, ...other } = props;
 
-      const data = useData(nbRows, 10);
+      const data = useBasicDemoData(nbRows, 10);
 
       return (
         <div style={{ width: 300, height: props.height }}>

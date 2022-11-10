@@ -31,6 +31,11 @@ export interface GridFilterPanelProps
     | 'columnInputProps'
     | 'valueInputProps'
   >;
+
+  /**
+   * @ignore - do not document.
+   */
+  children?: React.ReactNode;
 }
 
 const GridFilterPanel = React.forwardRef<HTMLDivElement, GridFilterPanelProps>(
@@ -168,6 +173,10 @@ GridFilterPanel.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
+  /**
+   * @ignore - do not document.
+   */
+  children: PropTypes.node,
   /**
    * Changes how the options in the columns selector should be ordered.
    * If not specified, the order is derived from the `columns` prop.

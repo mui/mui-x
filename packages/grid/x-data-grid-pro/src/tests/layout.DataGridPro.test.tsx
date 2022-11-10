@@ -1,6 +1,6 @@
 import * as React from 'react';
 // @ts-ignore Remove once the test utils are typed
-import { createRenderer, screen } from '@mui/monorepo/test/utils';
+import { createRenderer, screen, act } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { GridApi, useGridApiRef, DataGridPro, ptBR, DataGridProProps } from '@mui/x-data-grid-pro';
@@ -127,7 +127,7 @@ describe('<DataGridPro /> - Layout', () => {
         width: '198px', // because of the 2px border
       });
 
-      apiRef!.current.setColumnVisibility('age', true);
+      act(() => apiRef!.current.setColumnVisibility('age', true));
       firstColumn = document.querySelector('[role="columnheader"][aria-colindex="1"]');
       expect(firstColumn).toHaveInlineStyle({
         width: '148px', // because of the 2px border
@@ -186,7 +186,7 @@ describe('<DataGridPro /> - Layout', () => {
         width: '198px', // because of the 2px border
       });
 
-      apiRef!.current.setColumnVisibility('age', true);
+      act(() => apiRef!.current.setColumnVisibility('age', true));
       firstColumn = document.querySelector('[role="columnheader"][aria-colindex="1"]');
       expect(firstColumn).toHaveInlineStyle({
         width: '148px', // because of the 2px border

@@ -3,13 +3,20 @@ import {
   GridRowTreeConfig,
   GridRowTreeNodeConfig,
   GridFilterState,
+  GridFilterModel,
 } from '@mui/x-data-grid';
-import { GridAggregatedFilterItemApplier } from '@mui/x-data-grid/internals';
+import {
+  GridAggregatedFilterItemApplier,
+  GridApiCommunity,
+  passFilterLogic,
+} from '@mui/x-data-grid/internals';
 
 interface FilterRowTreeFromTreeDataParams {
   rowTree: GridRowTreeConfig;
   disableChildrenFiltering: boolean;
   isRowMatchingFilters: GridAggregatedFilterItemApplier | null;
+  filterModel: GridFilterModel;
+  apiRef: React.MutableRefObject<GridApiCommunity>;
 }
 
 export const TREE_DATA_STRATEGY = 'tree-data';
@@ -37,10 +44,16 @@ export const filterRowTreeFromTreeData = (
     let isMatchingFilters: boolean | null;
     if (shouldSkipFilters) {
       isMatchingFilters = null;
-    } else if (!isRowMatchingFilters) {
+    } else if (!isRowMatchingFilters || node.position === 'footer') {
       isMatchingFilters = true;
     } else {
-      isMatchingFilters = isRowMatchingFilters(node.id);
+      const { passingFilterItems, passingQuickFilterValues } = isRowMatchingFilters(node.id);
+      isMatchingFilters = passFilterLogic(
+        [passingFilterItems],
+        [passingQuickFilterValues],
+        params.filterModel,
+        params.apiRef,
+      );
     }
 
     let filteredDescendantCount = 0;
@@ -74,11 +87,21 @@ export const filterRowTreeFromTreeData = (
     visibleRowsLookup[node.id] = shouldPassFilters && areAncestorsExpanded;
     filteredRowsLookup[node.id] = shouldPassFilters;
 
+    if (node.footerId != null) {
+      visibleRowsLookup[node.footerId] =
+        shouldPassFilters && areAncestorsExpanded && !!node.childrenExpanded;
+    }
+
     if (!shouldPassFilters) {
       return 0;
     }
 
     filteredDescendantCountLookup[node.id] = filteredDescendantCount;
+
+    if (node.position === 'footer') {
+      return filteredDescendantCount;
+    }
+
     return filteredDescendantCount + 1;
   };
 

@@ -30,7 +30,7 @@
     "onViewChange": "Callback fired on view change.<br><br><strong>Signature:</strong><br><code>function(view: ClockPickerView) =&gt; void</code><br><em>view:</em> The new view.",
     "open": "Control the popup or dialog open state.",
     "OpenPickerButtonProps": "Props to pass to keyboard adornment button.",
-    "openTo": "First view to show.",
+    "openTo": "First view to show. Must be a valid option from <code>views</code> list",
     "orientation": "Force rendering in particular orientation.",
     "readOnly": "Make picker read only.",
     "renderInput": "The <code>renderInput</code> prop allows you to customize the rendered input. The <code>props</code> argument of this render prop contains props of <a href=\"https://mui.com/material-ui/api/text-field/#props\">TextField</a> that you need to forward. Pay specific attention to the <code>ref</code> and <code>inputProps</code> keys.<br><br><strong>Signature:</strong><br><code>function(props: MuiTextFieldPropsType) =&gt; React.ReactNode</code><br><em>props:</em> The props of the input.<br> <em>returns</em> (React.ReactNode): The node to render as the input.",
@@ -43,5 +43,12 @@
     "views": "Array of views to show."
   },
   "classDescriptions": {},
-  "slotDescriptions": {}
+  "slotDescriptions": {
+    "ActionBar": "The action bar placed bellow picker views.",
+    "OpenPickerIcon": "Icon displayed in the open picker button.",
+    "LeftArrowButton": "Button allowing to switch to the left view.",
+    "LeftArrowIcon": "Icon displayed in the left view switch button.",
+    "RightArrowButton": "Button allowing to switch to the right view.",
+    "RightArrowIcon": "Icon displayed in the right view switch button."
+  }
 }

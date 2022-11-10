@@ -1,7 +1,9 @@
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import Tab from '@mui/material/Tab';
 import Tabs, { tabsClasses } from '@mui/material/Tabs';
-import { styled } from '@mui/material/styles';
+import { styled, useThemeProps } from '@mui/material/styles';
+import { unstable_composeClasses as composeClasses } from '@mui/material';
 import { Time, DateRange } from '../internals/components/icons';
 import {
   WrapperVariantContext,
@@ -9,6 +11,10 @@ import {
 } from '../internals/components/wrappers/WrapperVariantContext';
 import { CalendarOrClockPickerView } from '../internals/models';
 import { useLocaleText } from '../internals/hooks/useUtils';
+import {
+  DateTimePickerTabsClasses,
+  getDateTimePickerTabsUtilityClass,
+} from './dateTimePickerTabsClasses';
 
 type TabValue = 'date' | 'time';
 
@@ -29,38 +35,66 @@ const tabToView = (tab: TabValue): CalendarOrClockPickerView => {
 };
 
 export interface DateTimePickerTabsProps {
+  /**
+   * Date tab icon.
+   * @default DateRange
+   */
   dateRangeIcon?: React.ReactNode;
+  /**
+   * Callback called when tab is clicked
+   * @param {CalendarOrClockPickerView} view Picker view that was clicked
+   */
   onChange: (view: CalendarOrClockPickerView) => void;
+  /**
+   * Time tab icon.
+   * @default Time
+   */
   timeIcon?: React.ReactNode;
+  /**
+   * Open picker view
+   */
   view: CalendarOrClockPickerView;
+  /**
+   * Override or extend the styles applied to the component.
+   */
+  classes?: Partial<DateTimePickerTabsClasses>;
 }
 
 type OwnerState = DateTimePickerTabsProps & { wrapperVariant: WrapperVariant };
 
-const DateTimePickerTabsRoot = styled(Tabs)<{ ownerState: OwnerState }>(
-  ({ ownerState, theme }) => ({
-    boxShadow: `0 -1px 0 0 inset ${theme.palette.divider}`,
-    ...(ownerState.wrapperVariant === 'desktop' && {
-      order: 1,
-      boxShadow: `0 1px 0 0 inset ${theme.palette.divider}`,
-      [`& .${tabsClasses.indicator}`]: {
-        bottom: 'auto',
-        top: 0,
-      },
-    }),
-  }),
-);
+const useUtilityClasses = (ownerState: OwnerState) => {
+  const { classes } = ownerState;
+  const slots = {
+    root: ['root'],
+  };
 
-/**
- * @ignore - internal component.
- */
-export const DateTimePickerTabs = (props: DateTimePickerTabsProps) => {
+  return composeClasses(slots, getDateTimePickerTabsUtilityClass, classes);
+};
+
+const DateTimePickerTabsRoot = styled(Tabs, {
+  name: 'MuiDateTimePickerTabs',
+  slot: 'Root',
+  overridesResolver: (_, styles) => styles.root,
+})<{ ownerState: OwnerState }>(({ ownerState, theme }) => ({
+  boxShadow: `0 -1px 0 0 inset ${theme.palette.divider}`,
+  ...(ownerState.wrapperVariant === 'desktop' && {
+    order: 1,
+    boxShadow: `0 1px 0 0 inset ${theme.palette.divider}`,
+    [`& .${tabsClasses.indicator}`]: {
+      bottom: 'auto',
+      top: 0,
+    },
+  }),
+}));
+
+const DateTimePickerTabs = function DateTimePickerTabs(inProps: DateTimePickerTabsProps) {
+  const props = useThemeProps({ props: inProps, name: 'MuiDateTimePickerTabs' });
   const { dateRangeIcon = <DateRange />, onChange, timeIcon = <Time />, view } = props;
 
   const localeText = useLocaleText();
-
   const wrapperVariant = React.useContext(WrapperVariantContext);
   const ownerState = { ...props, wrapperVariant };
+  const classes = useUtilityClasses(ownerState);
 
   const handleChange = (event: React.SyntheticEvent, value: TabValue) => {
     onChange(tabToView(value));
@@ -72,6 +106,7 @@ export const DateTimePickerTabs = (props: DateTimePickerTabsProps) => {
       variant="fullWidth"
       value={viewToTab(view)}
       onChange={handleChange}
+      className={classes.root}
     >
       <Tab
         value="date"
@@ -86,3 +121,35 @@ export const DateTimePickerTabs = (props: DateTimePickerTabsProps) => {
     </DateTimePickerTabsRoot>
   );
 };
+
+DateTimePickerTabs.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // ----------------------------------------------------------------------
+  /**
+   * Override or extend the styles applied to the component.
+   */
+  classes: PropTypes.object,
+  /**
+   * Date tab icon.
+   * @default DateRange
+   */
+  dateRangeIcon: PropTypes.node,
+  /**
+   * Callback called when tab is clicked
+   * @param {CalendarOrClockPickerView} view Picker view that was clicked
+   */
+  onChange: PropTypes.func.isRequired,
+  /**
+   * Time tab icon.
+   * @default Time
+   */
+  timeIcon: PropTypes.node,
+  /**
+   * Open picker view
+   */
+  view: PropTypes.oneOf(['day', 'hours', 'minutes', 'month', 'seconds', 'year']).isRequired,
+} as any;
+
+export { DateTimePickerTabs };

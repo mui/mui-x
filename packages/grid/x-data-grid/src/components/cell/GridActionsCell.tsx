@@ -73,7 +73,7 @@ const GridActionsCell = (props: GridActionsCellProps) => {
     }
 
     const child = rootRef.current.children[focusedButtonIndex] as HTMLElement;
-    child.focus();
+    child.focus({ preventScroll: true });
   }, [focusedButtonIndex]);
 
   React.useEffect(() => {
@@ -302,7 +302,7 @@ GridActionsCell.propTypes = {
   /**
    * The row model of the row that the current cell belongs to.
    */
-  row: PropTypes.object.isRequired,
+  row: PropTypes.any.isRequired,
   /**
    * The node of the row that the current cell belongs to.
    */

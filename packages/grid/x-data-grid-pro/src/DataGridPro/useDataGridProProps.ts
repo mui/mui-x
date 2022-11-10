@@ -6,6 +6,7 @@ import {
   GridSlotsComponent,
   DATA_GRID_PROPS_DEFAULT_VALUES,
   GridValidRowModel,
+  GridFeatureModeConstant,
 } from '@mui/x-data-grid';
 import {
   DataGridProProps,
@@ -22,9 +23,11 @@ export const DATA_GRID_PRO_PROPS_DEFAULT_VALUES: DataGridProPropsWithDefaultValu
   treeData: false,
   defaultGroupingExpansionDepth: 0,
   disableColumnPinning: false,
+  keepColumnPositionIfDraggedOutside: false,
   disableChildrenFiltering: false,
   disableChildrenSorting: false,
   rowReordering: false,
+  rowsLoadingMode: GridFeatureModeConstant.client,
   getDetailPanelHeight: () => 500,
 };
 

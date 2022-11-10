@@ -52,6 +52,11 @@ export interface GridSlotsComponent extends GridIconSlotsComponent {
    */
   Cell: React.JSXElementConstructor<any>;
   /**
+   * Component rendered for each skeleton cell.
+   * @default GridSkeletonCell
+   */
+  SkeletonCell: React.JSXElementConstructor<any>;
+  /**
    * Filter icon component rendered in each column header.
    * @default GridColumnHeaderFilterIconButton
    */

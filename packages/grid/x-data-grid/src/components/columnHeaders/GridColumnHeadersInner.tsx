@@ -36,7 +36,8 @@ const GridColumnHeadersInnerRoot = styled('div', {
   ],
 })(() => ({
   display: 'flex',
-  alignItems: 'center',
+  alignItems: 'flex-start',
+  flexDirection: 'column',
   [`&.${gridClasses.columnHeaderDropZone} .${gridClasses.columnHeaderDraggableContainer}`]: {
     cursor: 'move',
   },

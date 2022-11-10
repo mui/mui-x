@@ -1,18 +1,26 @@
 import * as React from 'react';
+import { expect } from 'chai';
+import { spy } from 'sinon';
 import {
   DataGridPro,
   GridApi,
   useGridApiRef,
   DataGridProProps,
   GridRowParams,
+  gridClasses,
   GRID_DETAIL_PANEL_TOGGLE_FIELD,
 } from '@mui/x-data-grid-pro';
-import { expect } from 'chai';
-import { spy } from 'sinon';
-// @ts-ignore Remove once the test utils are typed
-import { createRenderer, fireEvent, screen, waitFor } from '@mui/monorepo/test/utils';
+import { useBasicDemoData } from '@mui/x-data-grid-generator';
+import {
+  createRenderer,
+  fireEvent,
+  screen,
+  waitFor,
+  act,
+  userEvent,
+  // @ts-ignore Remove once the test utils are typed
+} from '@mui/monorepo/test/utils';
 import { getRow, getCell, getColumnValues } from 'test/utils/helperFn';
-import { useData } from 'storybook/src/hooks/useData';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
@@ -23,7 +31,7 @@ describe('<DataGridPro /> - Detail panel', () => {
 
   const TestCase = ({ nbRows = 20, ...other }: Partial<DataGridProProps> & { nbRows?: number }) => {
     apiRef = useGridApiRef();
-    const data = useData(nbRows, 1);
+    const data = useBasicDemoData(nbRows, 1);
     return (
       <div style={{ width: 300, height: 302 }}>
         <DataGridPro {...data} apiRef={apiRef} {...other} />
@@ -74,7 +82,7 @@ describe('<DataGridPro /> - Detail panel', () => {
     expect(getColumnValues(1)[0]).to.equal('0');
     const virtualScroller = document.querySelector('.MuiDataGrid-virtualScroller')!;
     virtualScroller.scrollTop = 250; // 50 + 50 (detail panel) + 50 + 100 (detail panel * 2)
-    virtualScroller.dispatchEvent(new Event('scroll'));
+    act(() => virtualScroller.dispatchEvent(new Event('scroll')));
     expect(getColumnValues(1)[0]).to.equal('2'); // If there was no expanded row, the first rendered would be 5
   });
 
@@ -238,8 +246,7 @@ describe('<DataGridPro /> - Detail panel', () => {
       />,
     );
     const virtualScroller = document.querySelector('.MuiDataGrid-virtualScroller')!;
-    fireEvent.mouseUp(getCell(2, 1));
-    fireEvent.click(getCell(2, 1));
+    userEvent.mousePress(getCell(2, 1));
     fireEvent.keyDown(getCell(2, 1), { key: 'ArrowDown' });
     expect(virtualScroller.scrollTop).to.equal(0);
     fireEvent.keyDown(getCell(3, 1), { key: 'ArrowDown' });
@@ -251,7 +258,7 @@ describe('<DataGridPro /> - Detail panel', () => {
       this.skip(); // Needs layout
     }
     function Component() {
-      const data = useData(10, 4);
+      const data = useBasicDemoData(10, 4);
       return (
         <TestCase
           {...data}
@@ -270,8 +277,7 @@ describe('<DataGridPro /> - Detail panel', () => {
 
     const cell = getCell(0, 0);
 
-    fireEvent.mouseUp(cell);
-    fireEvent.click(cell);
+    userEvent.mousePress(cell);
 
     fireEvent.keyDown(cell, { key: 'ArrowRight' });
     virtualScroller.dispatchEvent(new Event('scroll'));
@@ -290,8 +296,7 @@ describe('<DataGridPro /> - Detail panel', () => {
     render(<TestCase getDetailPanelContent={() => <div>Detail</div>} />);
     expect(screen.queryByText('Detail')).to.equal(null);
     const cell = getCell(1, 1);
-    fireEvent.mouseUp(cell);
-    fireEvent.click(cell);
+    userEvent.mousePress(cell);
     fireEvent.keyDown(cell, { ctrlKey: true, key: 'Enter' });
     expect(screen.queryByText('Detail')).not.to.equal(null);
     fireEvent.keyDown(cell, { metaKey: true, key: 'Enter' });
@@ -302,8 +307,7 @@ describe('<DataGridPro /> - Detail panel', () => {
     render(<TestCase getDetailPanelContent={() => <div>Detail</div>} />);
     expect(screen.queryByText('Detail')).to.equal(null);
     const cell = getCell(0, 0);
-    fireEvent.mouseUp(cell);
-    fireEvent.click(cell);
+    userEvent.mousePress(cell);
     fireEvent.keyDown(cell, { key: ' ' });
     expect(screen.queryByText('Detail')).not.to.equal(null);
     fireEvent.keyDown(cell, { key: ' ' });
@@ -462,8 +466,7 @@ describe('<DataGridPro /> - Detail panel', () => {
     );
     expect(screen.queryByText('Detail')).to.equal(null);
     const cell = getCell(1, 0);
-    fireEvent.mouseUp(cell);
-    fireEvent.click(cell);
+    userEvent.mousePress(cell);
     expect(handleSelectionModelChange.callCount).to.equal(0);
   });
 
@@ -485,6 +488,13 @@ describe('<DataGridPro /> - Detail panel', () => {
   it('should add an accessible name to the toggle column', () => {
     render(<TestCase getDetailPanelContent={() => <div />} />);
     expect(screen.queryByRole('columnheader', { name: /detail panel toggle/i })).not.to.equal(null);
+  });
+
+  it('should add the MuiDataGrid-row--detailPanelExpanded class to the expanded row', () => {
+    render(<TestCase getDetailPanelContent={({ id }) => (id === 0 ? <div /> : null)} />);
+    expect(getRow(0)).not.to.have.class(gridClasses['row--detailPanelExpanded']);
+    fireEvent.click(screen.getAllByRole('button', { name: 'Expand' })[0]);
+    expect(getRow(0)).to.have.class(gridClasses['row--detailPanelExpanded']);
   });
 
   describe('prop: onDetailPanelsExpandedRowIds', () => {
@@ -565,9 +575,9 @@ describe('<DataGridPro /> - Detail panel', () => {
       it('should toggle the panel of the given row id', () => {
         render(<TestCase getDetailPanelContent={() => <div>Detail</div>} />);
         expect(screen.queryByText('Detail')).to.equal(null);
-        apiRef.current.toggleDetailPanel(0);
+        act(() => apiRef.current.toggleDetailPanel(0));
         expect(screen.queryByText('Detail')).not.to.equal(null);
-        apiRef.current.toggleDetailPanel(0);
+        act(() => apiRef.current.toggleDetailPanel(0));
         expect(screen.queryByText('Detail')).to.equal(null);
       });
 
@@ -578,7 +588,7 @@ describe('<DataGridPro /> - Detail panel', () => {
             getDetailPanelContent={({ id }) => (id === 0 ? <div>Detail</div> : null)}
           />,
         );
-        apiRef.current.toggleDetailPanel(1);
+        act(() => apiRef.current.toggleDetailPanel(1));
         expect(document.querySelector('.MuiDataGrid-detailPanels')).to.equal(null);
         expect(getRow(1)).not.toHaveComputedStyle({ marginBottom: '50px' });
       });
@@ -596,7 +606,7 @@ describe('<DataGridPro /> - Detail panel', () => {
             }}
           />,
         );
-        expect(apiRef.current.getExpandedDetailPanels()).to.deep.equal([0, 1]);
+        act(() => expect(apiRef.current.getExpandedDetailPanels()).to.deep.equal([0, 1]));
       });
     });
 
@@ -615,7 +625,7 @@ describe('<DataGridPro /> - Detail panel', () => {
         expect(screen.queryByText('Row 0')).not.to.equal(null);
         expect(screen.queryByText('Row 1')).to.equal(null);
         expect(screen.queryByText('Row 2')).to.equal(null);
-        apiRef.current.setExpandedDetailPanels([1, 2]);
+        act(() => apiRef.current.setExpandedDetailPanels([1, 2]));
         expect(screen.queryByText('Row 0')).to.equal(null);
         expect(screen.queryByText('Row 1')).not.to.equal(null);
         expect(screen.queryByText('Row 2')).not.to.equal(null);

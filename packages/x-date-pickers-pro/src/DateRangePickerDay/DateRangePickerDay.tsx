@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { SxProps } from '@mui/system';
 import { useLicenseVerifier } from '@mui/x-license-pro';
-import { alpha, styled, Theme } from '@mui/material/styles';
+import { alpha, styled, Theme, useThemeProps } from '@mui/material/styles';
 import { unstable_composeClasses as composeClasses } from '@mui/material';
 import { DAY_MARGIN, useUtils, areDayPropsEqual } from '@mui/x-date-pickers/internals';
 import { PickersDay, PickersDayProps } from '@mui/x-date-pickers/PickersDay';
@@ -16,7 +16,8 @@ import { getReleaseInfo } from '../internal/utils/releaseInfo';
 
 const releaseInfo = getReleaseInfo();
 
-export interface DateRangePickerDayProps<TDate> extends Omit<PickersDayProps<TDate>, 'classes'> {
+export interface DateRangePickerDayProps<TDate>
+  extends Omit<PickersDayProps<TDate>, 'classes' | 'onBlur' | 'onFocus' | 'onKeyDown'> {
   /**
    * Set to `true` if the `day` is in a highlighted date range.
    */
@@ -105,7 +106,21 @@ const startBorderStyle = {
 const DateRangePickerDayRoot = styled('div', {
   name: 'MuiDateRangePickerDay',
   slot: 'Root',
-  overridesResolver: (props, styles) => styles.root,
+  overridesResolver: (_, styles) => [
+    {
+      [`&.${dateRangePickerDayClasses.rangeIntervalDayHighlight}`]:
+        styles.rangeIntervalDayHighlight,
+    },
+    {
+      [`&.${dateRangePickerDayClasses.rangeIntervalDayHighlightStart}`]:
+        styles.rangeIntervalDayHighlightStart,
+    },
+    {
+      [`&.${dateRangePickerDayClasses.rangeIntervalDayHighlightEnd}`]:
+        styles.rangeIntervalDayHighlightEnd,
+    },
+    styles.root,
+  ],
 })<{ ownerState: OwnerState }>(({ theme, ownerState }) => ({
   [`&:first-of-type .${dateRangePickerDayClasses.rangeIntervalDayPreview}`]: {
     ...startBorderStyle,
@@ -146,6 +161,18 @@ DateRangePickerDayRoot.propTypes = {
 const DateRangePickerDayRangeIntervalPreview = styled('div', {
   name: 'MuiDateRangePickerDay',
   slot: 'RangeIntervalPreview',
+  overridesResolver: (_, styles) => [
+    { [`&.${dateRangePickerDayClasses.rangeIntervalDayPreview}`]: styles.rangeIntervalDayPreview },
+    {
+      [`&.${dateRangePickerDayClasses.rangeIntervalDayPreviewStart}`]:
+        styles.rangeIntervalDayPreviewStart,
+    },
+    {
+      [`&.${dateRangePickerDayClasses.rangeIntervalDayPreviewEnd}`]:
+        styles.rangeIntervalDayPreviewEnd,
+    },
+    styles.rangeIntervalPreview,
+  ],
 })<{ ownerState: OwnerState }>(({ theme, ownerState }) => ({
   // replace default day component margin with transparent border to avoid jumping on preview
   border: '2px solid transparent',
@@ -174,7 +201,16 @@ DateRangePickerDayRangeIntervalPreview.propTypes = {
   ownerState: PropTypes.object.isRequired,
 } as any;
 
-const DateRangePickerDayDay = styled(PickersDay, { name: 'MuiDateRangePickerDay', slot: 'Day' })<{
+const DateRangePickerDayDay = styled(PickersDay, {
+  name: 'MuiDateRangePickerDay',
+  slot: 'Day',
+  overridesResolver: (_, styles) => [
+    { [`&.${dateRangePickerDayClasses.dayInsideRangeInterval}`]: styles.dayInsideRangeInterval },
+    { [`&.${dateRangePickerDayClasses.dayOutsideRangeInterval}`]: styles.dayOutsideRangeInterval },
+    { [`&.${dateRangePickerDayClasses.notSelectedDate}`]: styles.notSelectedDate },
+    styles.day,
+  ],
+})<{
   ownerState: OwnerState;
 }>(({ theme, ownerState }) => ({
   // Required to overlap preview border
@@ -203,9 +239,10 @@ type DateRangePickerDayComponent = <TDate>(
 ) => JSX.Element;
 
 const DateRangePickerDayRaw = React.forwardRef(function DateRangePickerDay<TDate>(
-  props: DateRangePickerDayProps<TDate>,
+  inProps: DateRangePickerDayProps<TDate>,
   ref: React.Ref<HTMLButtonElement>,
 ) {
+  const props = useThemeProps({ props: inProps, name: 'MuiDateRangePickerDay' });
   const {
     className,
     day,
@@ -245,7 +282,6 @@ const DateRangePickerDayRaw = React.forwardRef(function DateRangePickerDay<TDate
       ownerState={ownerState}
     >
       <DateRangePickerDayRangeIntervalPreview
-        role="cell"
         data-mui-test={shouldRenderPreview ? 'DateRangePreview' : undefined}
         className={classes.rangeIntervalPreview}
         ownerState={ownerState}
@@ -319,7 +355,6 @@ DateRangePickerDayRaw.propTypes = {
    * Set to `true` if the `day` is the end of a highlighted date range.
    */
   isStartOfPreviewing: PropTypes.bool.isRequired,
-  onDayFocus: PropTypes.func,
   onDaySelect: PropTypes.func.isRequired,
   /**
    * If `true`, day is outside of month and will be hidden.

@@ -10,9 +10,9 @@ The default locale of MUI is English (United States). If you want to use other l
 
 Localization can impact pickers components rendering in two distincts ways: The date format, and the components attributes such as `aria-label`.
 
-## Date-engine locale
+## Date-library locale
 
-Use `LocalizationProvider` to change the date-engine locale that is used to render pickers. Here is an example of changing the locale for the `date-fns` adapter:
+Use `LocalizationProvider` to change the date-library locale that is used to render pickers. Here is an example of changing the locale for the `dayjs` adapter:
 
 {{"demo": "LocalizedDatePicker.js"}}
 
@@ -22,6 +22,17 @@ The time picker will automatically adjust to the locale's time setting, i.e. the
 This can be overridden by using the `ampm` prop.
 
 {{"demo": "LocalizedTimePicker.js"}}
+
+### Advanced customization
+
+To customize the date format used in the toolbar, you can use prop `toolbarFormat`.
+
+To customize day names in calendar header, you can use `dayOfWeekFormatter` which takes as an input the short name of the day provided by the date-library and returns it's formatted version.
+The default formatter only keeps the first letter and capitalises it.
+
+In the example bellow, we add a dot at the end of each day in the calendar header, and use `eee dd MMMM` format for the toolbar.
+
+{{"demo": "CustomizeDayPicker.js"}}
 
 ## Translation keys
 
@@ -34,7 +45,7 @@ You can set the locale text by using the theme provider.
 ```jsx
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { CalendarPicker, LocalizationProvider, bgBG } from '@mui/x-date-pickers';
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import bgLocale from 'date-fns/locale/bg';
 
 const theme = createTheme(
@@ -48,7 +59,7 @@ const theme = createTheme(
 
 <ThemeProvider theme={theme}>
   <LocalizationProvider
-    dateAdapter={AdapterDateFns}
+    dateAdapter={AdapterDayjs}
     adapterLocale={bgLocale} // use 'bg' locale for date parser/formatter
   >
     <CalendarPicker />
@@ -66,7 +77,7 @@ import { DataGrid, bgBG as dataGridBgBG } from '@mui/x-data-grid';
 import { bgBG as coreBgBG } from '@mui/material/locale';
 import bgLocale from 'date-fns/locale/bg';
 import { CalendarPicker, LocalizationProvider, bgBG } from '@mui/x-date-pickers';
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 
 const theme = createTheme(
   {
@@ -80,7 +91,7 @@ const theme = createTheme(
 );
 
 <ThemeProvider theme={theme}>
-  <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={bgLocale}>
+  <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale={bgLocale}>
     <CalendarPicker />
     <DataGrid />
   </LocalizationProvider>
@@ -90,12 +101,12 @@ const theme = createTheme(
 If you want to pass language translations without using `createTheme` and `ThemeProvider`, you can directly load the language translations from the `@mui/x-date-pickers` or `@mui/x-date-pickers-pro` package and pass them to the `LocalizationProvider`.
 
 ```jsx
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { CalendarPicker, LocalizationProvider, bgBG } from '@mui/x-date-pickers';
 import bgLocale from 'date-fns/locale/bg';
 
 <LocalizationProvider
-  dateAdapter={AdapterDateFns}
+  dateAdapter={AdapterDayjs}
   adapterLocale={bgLocale}
   localeText={bgBG.components.MuiLocalizationProvider.defaultProps.localeText}
 >
@@ -108,13 +119,23 @@ import bgLocale from 'date-fns/locale/bg';
 | Locale                  | BCP 47 language tag | Import name |
 | :---------------------- | :------------------ | :---------- |
 | English (United States) | en-US               | `enUS`      |
+| Finnish                 | fi-FI               | `fiFI`      |
 | French                  | fr-FR               | `frFR`      |
 | German                  | de-DE               | `deDE`      |
+| Icelandic               | is-IS               | `isIS`      |
+| Italian                 | it-IT               | `itIT`      |
+| Japanese                | ja-JP               | `jaJP`      |
+| Korean                  | ko-KR               | `koKR`      |
+| Norwegian (Bokmål)      | nb-NO               | `nbNO`      |
+| Persian                 | fa-IR               | `faIR`      |
+| Polish                  | pl-PL               | `plPL`      |
+| Spanish                 | es-ES               | `esES`      |
 | Swedish                 | sv-SE               | `svSE`      |
 | Turkish                 | tr-TR               | `trTr`      |
 | Dutch                   | nl-NL               | `nlNL`      |
+| Ukrainian               | uk-UA               | `ukUA`      |
 
 You can [find the source](https://github.com/mui/mui-x/tree/HEAD/packages/x-date-pickers/src/locales) in the GitHub repository.
 
 To create your own translation or to customize the English text, copy this file to your project, make any changes needed and import the locale from there.
-Note that these translations of the Data grid component depend on the [Localization strategy](/material-ui/guides/localization/) of the whole library.
+Note that these translations of the date and time picker components depend on the [Localization strategy](/material-ui/guides/localization/) of the whole library.

@@ -27,7 +27,7 @@ const jaJPGrid: Partial<GridLocaleText> = {
   toolbarFiltersTooltipActive: (count) => `${count}件のフィルターを適用中`,
 
   // Quick filter toolbar field
-  toolbarQuickFilterPlaceholder: '検索...',
+  toolbarQuickFilterPlaceholder: '検索…',
   toolbarQuickFilterLabel: '検索',
   toolbarQuickFilterDeleteIconLabel: 'クリア',
 
@@ -40,7 +40,7 @@ const jaJPGrid: Partial<GridLocaleText> = {
 
   // Columns panel text
   columnsPanelTextFieldLabel: '列検索',
-  columnsPanelTextFieldPlaceholder: '検索クエリを入力...',
+  columnsPanelTextFieldPlaceholder: '検索クエリを入力…',
   columnsPanelDragIconLabel: '列並べ替え',
   columnsPanelShowAllButton: 'すべて表示',
   columnsPanelHideAllButton: 'すべて非表示',
@@ -56,7 +56,7 @@ const jaJPGrid: Partial<GridLocaleText> = {
   filterPanelOperatorOr: 'Or',
   filterPanelColumns: '列',
   filterPanelInputLabel: '値',
-  filterPanelInputPlaceholder: '値を入力...',
+  filterPanelInputPlaceholder: '値を入力…',
 
   // Filter operators text
   filterOperatorContains: '...を含む',
@@ -138,6 +138,14 @@ const jaJPGrid: Partial<GridLocaleText> = {
 
   // Row reordering text
   rowReorderingHeaderName: '行並び替え',
+
+  // Aggregation
+  // aggregationMenuItemHeader: 'Aggregation',
+  // aggregationFunctionLabelSum: 'sum',
+  // aggregationFunctionLabelAvg: 'avg',
+  // aggregationFunctionLabelMin: 'min',
+  // aggregationFunctionLabelMax: 'max',
+  // aggregationFunctionLabelSize: 'size',
 };
 
 export const jaJP: Localization = getGridLocalization(jaJPGrid, jaJPCore);

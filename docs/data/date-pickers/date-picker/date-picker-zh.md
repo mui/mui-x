@@ -46,7 +46,7 @@ The date picker component can be disabled or read-only.
 
 ## Localization 本地化
 
-你可以使用 `LocalizationProvider` 来改变用于渲染日期选择的 date-engine（日期引擎）本地化设置。 下面是一个更改 `date-fns` 适配器本地化设置的示例：
+你可以使用 `LocalizationProvider` 来改变用于渲染日期选择的 date-library（日期引擎）本地化设置。 下面是一个更改 `date-fns` 适配器本地化设置的示例：
 
 {{"demo": "LocalizedDatePicker.js"}}
 

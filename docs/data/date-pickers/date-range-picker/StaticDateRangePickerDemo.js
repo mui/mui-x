@@ -1,7 +1,8 @@
 import * as React from 'react';
+
 import TextField from '@mui/material/TextField';
 import { LocalizationProvider } from '@mui/x-date-pickers-pro';
-import { AdapterDateFns } from '@mui/x-date-pickers-pro/AdapterDateFns';
+import { AdapterDayjs } from '@mui/x-date-pickers-pro/AdapterDayjs';
 import { StaticDateRangePicker } from '@mui/x-date-pickers-pro/StaticDateRangePicker';
 
 import Box from '@mui/material/Box';
@@ -10,7 +11,7 @@ export default function StaticDateRangePickerDemo() {
   const [value, setValue] = React.useState([null, null]);
 
   return (
-    <LocalizationProvider dateAdapter={AdapterDateFns}>
+    <LocalizationProvider dateAdapter={AdapterDayjs}>
       <StaticDateRangePicker
         displayStaticWrapperAs="desktop"
         value={value}

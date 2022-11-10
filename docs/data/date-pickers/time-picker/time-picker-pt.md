@@ -43,7 +43,7 @@ The time picker component can be disabled or read-only.
 
 ## Localização
 
-Use `LocalizationProvider` para alterar a date-engine de localização que é usada para renderizar o seletor de hora. O seletor de hora ajustará automaticamente à configuração de horário da localidade, ou seja, ao formato 12 horas ou 24 horas. Isso pode ser controlado com a propriedade `ampm`.
+Use `LocalizationProvider` para alterar a date-library de localização que é usada para renderizar o seletor de hora. O seletor de hora ajustará automaticamente à configuração de horário da localidade, ou seja, ao formato 12 horas ou 24 horas. Isso pode ser controlado com a propriedade `ampm`.
 
 {{"demo": "LocalizedTimePicker.js"}}
 

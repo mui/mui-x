@@ -3,7 +3,7 @@ import { expect } from 'chai';
 import fr from 'date-fns/locale/fr';
 import TextField from '@mui/material/TextField';
 import { MobileDatePicker } from '@mui/x-date-pickers/MobileDatePicker';
-import { fireEvent, screen } from '@mui/monorepo/test/utils';
+import { screen, userEvent } from '@mui/monorepo/test/utils';
 import { adapterToUse, createPickerRenderer } from '../../../../test/utils/pickers-utils';
 
 describe('<MobileDatePicker /> localization', () => {
@@ -16,12 +16,13 @@ describe('<MobileDatePicker /> localization', () => {
         value={adapterToUse.date(new Date(2018, 0, 1))}
         onChange={() => {}}
         views={['year']}
+        openTo="year"
       />,
     );
 
     expect(screen.getByRole('textbox')).to.have.value('2018');
 
-    fireEvent.click(screen.getByLabelText(/Choose date/));
+    userEvent.mousePress(screen.getByLabelText(/Choose date/));
     expect(screen.getByMuiTest('datepicker-toolbar-date').textContent).to.equal('2018');
   });
 
@@ -33,12 +34,13 @@ describe('<MobileDatePicker /> localization', () => {
         value={value}
         onChange={() => {}}
         views={['year', 'month']}
+        openTo="year"
       />,
     );
 
     expect(screen.getByRole('textbox')).to.have.value('janvier 2018');
 
-    fireEvent.click(screen.getByLabelText(/Choose date/));
+    userEvent.mousePress(screen.getByLabelText(/Choose date/));
     expect(screen.getByMuiTest('datepicker-toolbar-date').textContent).to.equal('janvier');
   });
 
@@ -54,7 +56,7 @@ describe('<MobileDatePicker /> localization', () => {
 
     expect(screen.getByRole('textbox')).to.have.value('01/01/2018');
 
-    fireEvent.click(screen.getByLabelText(/Choose date/));
+    userEvent.mousePress(screen.getByLabelText(/Choose date/));
     expect(screen.getByMuiTest('datepicker-toolbar-date').textContent).to.equal('1 janvier');
   });
 });

@@ -34,5 +34,10 @@
       "nodeName": "the arrowSwitcher element"
     }
   },
-  "slotDescriptions": {}
+  "slotDescriptions": {
+    "LeftArrowButton": "Button allowing to switch to the left view.",
+    "LeftArrowIcon": "Icon displayed in the left view switch button.",
+    "RightArrowButton": "Button allowing to switch to the right view.",
+    "RightArrowIcon": "Icon displayed in the right view switch button."
+  }
 }

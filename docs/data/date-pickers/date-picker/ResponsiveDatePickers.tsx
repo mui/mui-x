@@ -1,17 +1,18 @@
 import * as React from 'react';
+import dayjs, { Dayjs } from 'dayjs';
 import TextField from '@mui/material/TextField';
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import Stack from '@mui/material/Stack';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { MobileDatePicker } from '@mui/x-date-pickers/MobileDatePicker';
 import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
-import Stack from '@mui/material/Stack';
 
 export default function ResponsiveDatePickers() {
-  const [value, setValue] = React.useState<Date | null>(new Date());
+  const [value, setValue] = React.useState<Dayjs | null>(dayjs('2022-04-07'));
 
   return (
-    <LocalizationProvider dateAdapter={AdapterDateFns}>
+    <LocalizationProvider dateAdapter={AdapterDayjs}>
       <Stack spacing={3}>
         <MobileDatePicker
           label="For mobile"
@@ -24,7 +25,7 @@ export default function ResponsiveDatePickers() {
         <DesktopDatePicker
           label="For desktop"
           value={value}
-          minDate={new Date('2017-01-01')}
+          minDate={dayjs('2017-01-01')}
           onChange={(newValue) => {
             setValue(newValue);
           }}

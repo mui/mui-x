@@ -11,7 +11,7 @@ import {
   gridColumnDefinitionsSelector,
   gridColumnVisibilityModelSelector,
 } from '../columns/gridColumnsSelector';
-import { gridDensityHeaderHeightSelector } from '../density/densitySelector';
+import { gridDensityTotalHeaderHeightSelector } from '../density/densitySelector';
 import { gridClasses } from '../../../constants/gridClasses';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { gridRowsMetaSelector } from '../rows/gridRowsMetaSelector';
@@ -111,7 +111,7 @@ export const useGridPrintExport = (
         return;
       }
 
-      const headerHeight = gridDensityHeaderHeightSelector(apiRef);
+      const totalHeaderHeight = gridDensityTotalHeaderHeightSelector(apiRef);
       const rowsMeta = gridRowsMetaSelector(apiRef.current.state);
 
       const gridRootElement = apiRef.current.rootElementRef!.current;
@@ -153,7 +153,7 @@ export const useGridPrintExport = (
       // Expand container height to accommodate all rows
       gridClone.style.height = `${
         rowsMeta.currentPageTotalHeight +
-        headerHeight +
+        totalHeaderHeight +
         gridToolbarElementHeight +
         gridFooterElementHeight
       }px`;

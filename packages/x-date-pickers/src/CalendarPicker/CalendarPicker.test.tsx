@@ -1,13 +1,7 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
-import {
-  fireEvent,
-  userEvent,
-  screen,
-  describeConformance,
-  getAllByRole,
-} from '@mui/monorepo/test/utils';
+import { fireEvent, userEvent, screen, describeConformance } from '@mui/monorepo/test/utils';
 import {
   CalendarPicker,
   calendarPickerClasses as classes,
@@ -19,6 +13,8 @@ import {
   wrapPickerMount,
   createPickerRenderer,
 } from '../../../../test/utils/pickers-utils';
+
+const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
 describe('<CalendarPicker />', () => {
   const { render, clock } = createPickerRenderer({ clock: 'fake' });
@@ -77,7 +73,9 @@ describe('<CalendarPicker />', () => {
     fireEvent.click(screen.getByTitle('Next month'));
     expect(onMonthChangeMock.callCount).to.equal(2);
 
-    fireEvent.click(screen.getByLabelText(/Jan 5, 2019/i));
+    clock.runToLast();
+
+    fireEvent.click(screen.getByRole('gridcell', { name: '5' }));
     expect(onChangeMock.callCount).to.equal(0);
 
     fireEvent.click(screen.getByText('January 2019'));
@@ -106,7 +104,7 @@ describe('<CalendarPicker />', () => {
     fireEvent.click(screen.getByTitle('Next month'));
     expect(onMonthChangeMock.callCount).to.equal(0);
 
-    fireEvent.click(screen.getByLabelText(/Jan 5, 2019/i));
+    fireEvent.click(screen.getByRole('gridcell', { name: '5' }));
     expect(onChangeMock.callCount).to.equal(0);
   });
 
@@ -123,15 +121,16 @@ describe('<CalendarPicker />', () => {
     );
 
     // days are disabled
-    const daysContainer = screen.getByRole('grid');
-    const days = getAllByRole(daysContainer, 'button');
-    const disabledDays = days.filter((day) => day.getAttribute('disabled') !== null);
+    const cells = screen.getAllByRole('gridcell');
+    const disabledDays = cells.filter(
+      (cell) => cell.getAttribute('disabled') !== null && cell.tagName === 'BUTTON',
+    );
 
-    expect(days.length).to.equal(31);
+    expect(cells.length).to.equal(35);
     expect(disabledDays.length).to.equal(31);
   });
 
-  it('renders header label text according to monthAndYear format', () => {
+  it('should render header label text according to monthAndYear format', () => {
     render(
       <LocalizationProvider
         dateAdapter={AdapterClassToUse}
@@ -144,20 +143,21 @@ describe('<CalendarPicker />', () => {
     expect(screen.getByText('2019/01')).toBeVisible();
   });
 
-  it('should select the closest enabled date if the prop.date contains a disabled date', () => {
-    const onChange = spy();
-
+  it('should render column header according to dayOfWeekFormatter', () => {
     render(
-      <CalendarPicker
-        date={adapterToUse.date(new Date(2019, 0, 1))}
-        onChange={onChange}
-        maxDate={adapterToUse.date(new Date(2018, 0, 1))}
-      />,
+      <LocalizationProvider dateAdapter={AdapterClassToUse}>
+        <CalendarPicker
+          date={adapterToUse.date(new Date(2019, 0, 1))}
+          onChange={() => {}}
+          dayOfWeekFormatter={(day) => `${day}.`}
+        />
+        ,
+      </LocalizationProvider>,
     );
 
-    // onChange must be dispatched with newly selected date
-    expect(onChange.callCount).to.equal(React.version.startsWith('18') ? 2 : 1); // Strict Effects run mount effects twice
-    expect(onChange.lastCall.args[0]).toEqualDateTime(new Date(2018, 0, 1));
+    ['Su.', 'Mo.', 'Tu.', 'We.', 'Th.', 'Fr.', 'Sa.'].forEach((formattedDay) => {
+      expect(screen.getByText(formattedDay)).toBeVisible();
+    });
   });
 
   describe('view: day', () => {
@@ -168,7 +168,9 @@ describe('<CalendarPicker />', () => {
       expect(screen.getAllByMuiTest('day')).to.have.length(31);
       // It should follow https://www.w3.org/WAI/ARIA/apg/example-index/dialog-modal/datepicker-dialog.html
       expect(
-        document.querySelector('[role="grid"] > [role="row"] > [role="cell"] > button'),
+        document.querySelector(
+          '[role="grid"] [role="rowgroup"] > [role="row"] button[role="gridcell"]',
+        ),
       ).to.have.text('1');
     });
 
@@ -184,7 +186,7 @@ describe('<CalendarPicker />', () => {
         />,
       );
 
-      userEvent.mousePress(screen.getByLabelText('Jan 2, 2018'));
+      userEvent.mousePress(screen.getByRole('gridcell', { name: '2' }));
       expect(onChange.callCount).to.equal(1);
       expect(onChange.lastCall.args[0]).toEqualDateTime(new Date(2018, 0, 2));
     });
@@ -201,7 +203,7 @@ describe('<CalendarPicker />', () => {
         />,
       );
 
-      userEvent.mousePress(screen.getByLabelText('Jan 2, 2018'));
+      userEvent.mousePress(screen.getByRole('gridcell', { name: '2' }));
       expect(onChange.callCount).to.equal(1);
       expect(onChange.lastCall.args[0]).toEqualDateTime(
         adapterToUse.date(new Date(2018, 0, 2, 11, 11, 11)),
@@ -393,6 +395,34 @@ describe('<CalendarPicker />', () => {
 
       expect(onChange.callCount).to.equal(0);
       expect(screen.getByMuiTest('calendar-month-and-year-text')).to.have.text('January 2022');
+    });
+
+    it('should scroll to show the selected year', function test() {
+      if (isJSDOM) {
+        this.skip(); // Needs layout
+      }
+      render(
+        <CalendarPicker
+          date={adapterToUse.date(new Date(2019, 3, 29))}
+          onChange={() => {}}
+          views={['year']}
+          openTo="year"
+        />,
+      );
+
+      // const virtualScroller = document.querySelector('.MuiDataGrid-virtualScroller')!;
+      //
+      const rootElement = document.querySelector('.MuiCalendarPicker-root')!;
+      const selectedButton = document.querySelector('.Mui-selected')!;
+
+      expect(rootElement).not.to.equal(null);
+      expect(selectedButton).not.to.equal(null);
+
+      const parentBoundingBox = rootElement.getBoundingClientRect();
+      const buttonBoundingBox = selectedButton.getBoundingClientRect();
+
+      expect(parentBoundingBox.top).not.to.greaterThan(buttonBoundingBox.top);
+      expect(parentBoundingBox.bottom).not.to.lessThan(buttonBoundingBox.bottom);
     });
   });
 });
