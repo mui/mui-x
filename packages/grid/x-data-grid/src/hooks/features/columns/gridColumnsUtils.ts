@@ -7,12 +7,12 @@ import {
   GridColumnRawLookup,
   GridColumnsInitialState,
 } from './gridColumnsInterfaces';
-import { GridColType, GridColumnTypesRecord } from '../../../models';
+import { GridColumnTypesRecord } from '../../../models';
 import { DEFAULT_GRID_COL_TYPE_KEY, getGridDefaultColumnTypes } from '../../../colDef';
 import { GridStateCommunity } from '../../../models/gridStateCommunity';
 import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridColDef, GridStateColDef } from '../../../models/colDef/gridColDef';
-import { gridColumnsSelector, gridColumnVisibilityModelSelector } from './gridColumnsSelector';
+import { gridColumnsStateSelector, gridColumnVisibilityModelSelector } from './gridColumnsSelector';
 import { clamp } from '../../../utils/utils';
 import { GridApiCommon } from '../../../models/api/gridApiCommon';
 import { GridRowEntry } from '../../../models/gridRows';
@@ -292,36 +292,6 @@ export const applyInitialState = (
   return newColumnsState;
 };
 
-/**
- * @deprecated Should have been internal only, you can inline the logic.
- */
-export const getGridColDef = (
-  columnTypes: GridColumnTypesRecord,
-  type: GridColType | undefined,
-) => {
-  if (!type) {
-    return columnTypes[DEFAULT_GRID_COL_TYPE_KEY];
-  }
-
-  if (process.env.NODE_ENV !== 'production') {
-    if (!columnTypeWarnedOnce && !columnTypes[type]) {
-      console.warn(
-        [
-          `MUI: The column type "${type}" you are using is not supported.`,
-          `Column type "string" is being used instead.`,
-        ].join('\n'),
-      );
-      columnTypeWarnedOnce = true;
-    }
-  }
-
-  if (!columnTypes[type]) {
-    return columnTypes[DEFAULT_GRID_COL_TYPE_KEY];
-  }
-
-  return columnTypes[type];
-};
-
 export const createColumnsState = ({
   apiRef,
   columnsToUpsert,
@@ -349,7 +319,7 @@ export const createColumnsState = ({
       columnVisibilityModel,
     };
   } else {
-    const currentState = gridColumnsSelector(apiRef.current.state);
+    const currentState = gridColumnsStateSelector(apiRef.current.state);
     columnsState = {
       orderedFields: keepOnlyColumnsToUpsert ? [] : [...currentState.orderedFields],
       lookup: { ...currentState.lookup }, // Will be cleaned later if keepOnlyColumnsToUpsert=true
@@ -373,9 +343,30 @@ export const createColumnsState = ({
     let existingState = columnsState.lookup[field];
 
     if (existingState == null) {
-      // New Column
+      let colDef = columnTypes[DEFAULT_GRID_COL_TYPE_KEY];
+
+      if (newColumn.type) {
+        if (
+          process.env.NODE_ENV !== 'production' &&
+          !columnTypeWarnedOnce &&
+          !columnTypes[newColumn.type]
+        ) {
+          console.warn(
+            [
+              `MUI: The column type "${newColumn.type}" you are using is not supported.`,
+              `Column type "string" is being used instead.`,
+            ].join('\n'),
+          );
+          columnTypeWarnedOnce = true;
+        }
+
+        if (columnTypes[newColumn.type]) {
+          colDef = columnTypes[newColumn.type];
+        }
+      }
+
       existingState = {
-        ...getGridColDef(columnTypes, newColumn.type), // TODO v6: Inline `getGridColDef`
+        ...colDef,
         field,
         hasBeenResized: false,
       };
