@@ -9,6 +9,7 @@ _Nov 10, 2022_
 
 We'd like to offer a big thanks to the 5 contributors who made this release possible. Here are some highlights ✨:
 
+- ⚙️ Removed everything marked as `@deprecated`
 - 📚 Documentation improvements
 - 🐞 Bugfixes
 
