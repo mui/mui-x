@@ -77,7 +77,7 @@ Below are described the steps you need to make to migrate from v5 to v6.
 ### Other exports
 
 - The `useGridApi` hook was removed.
-- The `useGridState` hook was removed.
+- The `useGridState` hook was removed. Use `apiRef.current.state`, `apiRef.current.setState` and `apiRef.current.forceUpdate` instead.
 - The `getGridColDef` utility function was removed.
 - The `GridValueGetterFullParams` type was removed.
 - The `GridApiRef` type was removed. Use `React.MutableRefObject<GridApi>` instead.
