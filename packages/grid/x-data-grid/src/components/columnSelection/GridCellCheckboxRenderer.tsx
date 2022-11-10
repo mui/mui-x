@@ -40,7 +40,6 @@ const GridCellCheckboxForwardRef = React.forwardRef<HTMLInputElement, GridRender
       cellMode,
       hasFocus,
       tabIndex,
-      getValue,
       api,
       ...other
     } = props;
@@ -122,9 +121,8 @@ GridCellCheckboxForwardRef.propTypes = {
   // ----------------------------------------------------------------------
   /**
    * GridApi that let you manipulate the grid.
-   * @deprecated Use the `apiRef` returned by `useGridApiContext` or `useGridApiRef` (only available in `@mui/x-data-grid-pro`)
    */
-  api: PropTypes.any.isRequired,
+  api: PropTypes.object.isRequired,
   /**
    * The mode of the cell.
    */
@@ -154,14 +152,6 @@ GridCellCheckboxForwardRef.propTypes = {
    * The cell value formatted with the column valueFormatter.
    */
   formattedValue: PropTypes.any,
-  /**
-   * Get the cell value of a row and field.
-   * @param {GridRowId} id The row id.
-   * @param {string} field The field.
-   * @returns {any} The cell value.
-   * @deprecated Use `params.row` to directly access the fields you want instead.
-   */
-  getValue: PropTypes.func.isRequired,
   /**
    * If true, the cell is the active element.
    */
