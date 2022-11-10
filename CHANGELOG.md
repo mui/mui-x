@@ -3,6 +3,48 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 6.0.0-alpha.7
+
+_Nov 10, 2022_
+
+We'd like to offer a big thanks to the 5 contributors who made this release possible. Here are some highlights ✨:
+
+- 📝 New `MobileDateTimePicker`, `DesktopDateTimePicker`, `DateTimePicker` and `StaticDateTimePicker` based on `DateTimeField` (#6767) @flaviendelangle
+- 📚 Documentation improvements
+- 🐞 Bugfixes
+
+
+### `@mui/x-data-grid@v6.0.0-alpha.7` / `@mui/x-data-grid-pro@v6.0.0-alpha.7` / `@mui/x-data-grid-premium@v6.0.0-alpha.7`
+
+#### Changes
+
+- [DataGrid] Fix cell focus causing scroll jump when virtualization enabled (#6785) @cherniavskii
+
+### `@mui/x-date-pickers@v6.0.0-alpha.7` / `@mui/x-date-pickers-pro@v6.0.0-alpha.7`
+
+#### Changes
+
+- [fields] Rename section names to match the picker view nomenclature (#6779) @flaviendelangle
+- [pickers] Fix pickers toolbar styling (#6793) @LukasTy
+- [pickers] Improve validation JSDoc descriptions (#6777) @flaviendelangle
+- [pickers] New `MobileDateTimePicker`, `DesktopDateTimePicker`, `DateTimePicker` and `StaticDateTimePicker` based on `DateTimeField` (#6767) @flaviendelangle
+- [pickers] New `MobileTimePicker`, `DesktopTimePicker`, `TimePicker` and `StaticTimePicker` based on `TimeField` (#6728) @flaviendelangle
+- [pickers] Support the `onError` prop and add context on the `onChange` prop (#6731) @flaviendelangle
+
+### Docs
+
+- [docs] Add missing Pro header suffix (#6775) @oliviertassinari
+- [docs] Upgrade to Next.js 13 (#6790) @cherniavskii
+
+### Core
+
+- [core] Add OSSF Scorecard action (#6760) @oliviertassinari
+- [core] Fix Pinned-Dependencies @oliviertassinari
+- [core] Fix Scorecard fail Action @oliviertassinari
+- [core] Pin GitHub Action dependencies (#6739) @renovate[bot]
+- [core] Remove default access to GitHub action scopes @oliviertassinari
+- [test] Fix test case name: Pro-> Premium @oliviertassinari
+
 ## 6.0.0-alpha.6
 
 _Nov 4, 2022_
