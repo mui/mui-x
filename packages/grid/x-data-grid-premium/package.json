@@ -46,7 +46,7 @@
     "@mui/utils": "^5.10.3",
     "@mui/x-data-grid": "5.17.11",
     "@mui/x-data-grid-pro": "5.17.11",
-    "@mui/x-license-pro": "5.17.0",
+    "@mui/x-license-pro": "5.17.1",
     "@types/format-util": "^1.0.2",
     "clsx": "^1.2.1",
     "exceljs": "^4.3.0",
