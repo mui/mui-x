@@ -315,6 +315,35 @@ describe('<DateRangeCalendar />', () => {
     });
   });
 
+  ['readOnly', 'disabled'].forEach((prop) => {
+    it(`prop: ${prop}="true" should not allow date editing`, () => {
+      const handleChange = spy();
+      render(
+        <DateRangeCalendar
+          value={[
+            adapterToUse.date(new Date(2018, 0, 1)),
+            adapterToUse.date(new Date(2018, 0, 10)),
+          ]}
+          onChange={handleChange}
+          {...{ [prop]: true }}
+        />,
+      );
+      expect(screen.getByRole('gridcell', { name: '1', selected: true })).to.not.have.attribute(
+        'draggable',
+      );
+      expect(screen.getByRole('gridcell', { name: '10', selected: true })).to.not.have.attribute(
+        'draggable',
+      );
+      if (prop === 'disabled') {
+        expect(screen.getByRole('gridcell', { name: '1', selected: true })).to.have.attribute(
+          'disabled',
+        );
+      }
+      fireEvent.click(getPickerDay('2'));
+      expect(handleChange.callCount).to.equal(0);
+    });
+  });
+
   it('prop: calendars - should render the provided amount of calendars', () => {
     render(<DateRangeCalendar calendars={3} />);
 
