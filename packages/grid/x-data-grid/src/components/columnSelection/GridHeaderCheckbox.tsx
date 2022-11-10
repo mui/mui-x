@@ -1,9 +1,9 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { unstable_composeClasses as composeClasses } from '@mui/material';
+import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { useGridSelector } from '../../hooks/utils/useGridSelector';
 import { gridTabIndexColumnHeaderSelector } from '../../hooks/features/focus/gridFocusStateSelector';
-import { gridSelectionStateSelector } from '../../hooks/features/selection/gridSelectionSelector';
+import { gridRowSelectionStateSelector } from '../../hooks/features/rowSelection/gridRowSelectionSelector';
 import { GridColumnHeaderParams } from '../../models/params/gridColumnHeaderParams';
 import { isNavigationKey } from '../../utils/keyboardUtils';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
@@ -36,7 +36,7 @@ const GridHeaderCheckbox = React.forwardRef<HTMLInputElement, GridColumnHeaderPa
     const ownerState = { classes: rootProps.classes };
     const classes = useUtilityClasses(ownerState);
     const tabIndexState = useGridSelector(apiRef, gridTabIndexColumnHeaderSelector);
-    const selection = useGridSelector(apiRef, gridSelectionStateSelector);
+    const selection = useGridSelector(apiRef, gridRowSelectionStateSelector);
     const visibleRowIds = useGridSelector(apiRef, gridVisibleSortedRowIdsSelector);
     const paginatedVisibleRowIds = useGridSelector(
       apiRef,
@@ -126,7 +126,7 @@ const GridHeaderCheckbox = React.forwardRef<HTMLInputElement, GridColumnHeaderPa
     }, []);
 
     React.useEffect(() => {
-      return apiRef.current.subscribeEvent('selectionChange', handleSelectionChange);
+      return apiRef.current.subscribeEvent('rowSelectionChange', handleSelectionChange);
     }, [apiRef, handleSelectionChange]);
 
     const label = apiRef.current.getLocaleText(

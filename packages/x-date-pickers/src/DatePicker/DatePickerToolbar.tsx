@@ -1,21 +1,23 @@
 import * as React from 'react';
 import Typography from '@mui/material/Typography';
 import { styled, useThemeProps } from '@mui/material/styles';
-import { unstable_composeClasses as composeClasses } from '@mui/material';
+import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { PickersToolbar } from '../internals/components/PickersToolbar';
-import { pickersToolbarClasses } from '../internals/components/pickersToolbarClasses';
 import { useLocaleText, useUtils } from '../internals/hooks/useUtils';
-import { BaseToolbarProps } from '../internals/models/props/baseToolbarProps';
-import { isYearAndMonthViews, isYearOnlyView } from './shared';
+import { BaseToolbarProps, ExportedBaseToolbarProps } from '../internals/models/props/toolbar';
+import { isYearOnlyView, isYearAndMonthViews } from '../internals/utils/views';
 import { CalendarPickerView } from '../internals/models';
 import {
   DatePickerToolbarClasses,
   getDatePickerToolbarUtilityClass,
 } from './datePickerToolbarClasses';
 
-export interface DatePickerToolbarProps<TDate> extends BaseToolbarProps<TDate, TDate | null> {
+export interface DatePickerToolbarProps<TDate>
+  extends BaseToolbarProps<TDate | null, CalendarPickerView> {
   classes?: Partial<DatePickerToolbarClasses>;
 }
+
+export interface ExportedDatePickerToolbarProps extends ExportedBaseToolbarProps {}
 
 const useUtilityClasses = (ownerState: DatePickerToolbarProps<any>) => {
   const { classes } = ownerState;
@@ -31,12 +33,7 @@ const DatePickerToolbarRoot = styled(PickersToolbar, {
   name: 'MuiDatePickerToolbar',
   slot: 'Root',
   overridesResolver: (_, styles) => styles.root,
-})<{ ownerState: DatePickerToolbarProps<any> }>({
-  [`& .${pickersToolbarClasses.penIconButton}`]: {
-    position: 'relative',
-    top: 4,
-  },
-});
+})({});
 
 const DatePickerToolbarTitle = styled(Typography, {
   name: 'MuiDatePickerToolbar',
@@ -68,15 +65,12 @@ export const DatePickerToolbar = React.forwardRef(function DatePickerToolbar<TDa
     toggleMobileKeyboardView,
     toolbarFormat,
     toolbarPlaceholder = '––',
-    toolbarTitle: toolbarTitleProp,
     views,
     ...other
   } = props;
   const utils = useUtils<TDate>();
   const localeText = useLocaleText<TDate>();
   const classes = useUtilityClasses(props);
-
-  const toolbarTitle = toolbarTitleProp ?? localeText.datePickerDefaultToolbarTitle;
 
   const dateText = React.useMemo(() => {
     if (!value) {
@@ -108,11 +102,10 @@ export const DatePickerToolbar = React.forwardRef(function DatePickerToolbar<TDa
   return (
     <DatePickerToolbarRoot
       ref={ref}
-      toolbarTitle={toolbarTitle}
+      toolbarTitle={localeText.datePickerToolbarTitle}
       isMobileKeyboardViewOpen={isMobileKeyboardViewOpen}
       toggleMobileKeyboardView={toggleMobileKeyboardView}
       isLandscape={isLandscape}
-      ownerState={ownerState}
       className={classes.root}
       {...other}
     >

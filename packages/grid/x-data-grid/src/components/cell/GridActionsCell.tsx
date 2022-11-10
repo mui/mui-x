@@ -23,7 +23,7 @@ interface GridActionsCellProps extends Omit<GridRenderCellParams, 'value' | 'for
   position?: GridMenuProps['position'];
 }
 
-const GridActionsCell = (props: GridActionsCellProps) => {
+function GridActionsCell(props: GridActionsCellProps) {
   const {
     colDef,
     id,
@@ -73,7 +73,7 @@ const GridActionsCell = (props: GridActionsCellProps) => {
     }
 
     const child = rootRef.current.children[focusedButtonIndex] as HTMLElement;
-    child.focus();
+    child.focus({ preventScroll: true });
   }, [focusedButtonIndex]);
 
   React.useEffect(() => {
@@ -227,7 +227,7 @@ const GridActionsCell = (props: GridActionsCellProps) => {
       )}
     </div>
   );
-};
+}
 
 GridActionsCell.propTypes = {
   // ----------------------------- Warning --------------------------------

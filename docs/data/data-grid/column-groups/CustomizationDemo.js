@@ -49,7 +49,7 @@ const HeaderWithIconRoot = styled('div')(({ theme }) => ({
   },
 }));
 
-const HeaderWithIcon = (props) => {
+function HeaderWithIcon(props) {
   const { icon, ...params } = props;
 
   return (
@@ -57,7 +57,7 @@ const HeaderWithIcon = (props) => {
       <span>{params.headerName ?? params.groupId}</span> {icon}
     </HeaderWithIconRoot>
   );
-};
+}
 
 HeaderWithIcon.propTypes = {
   /**
@@ -117,7 +117,7 @@ export default function CustomizationDemo() {
         columns={columns}
         experimentalFeatures={{ columnGrouping: true }}
         checkboxSelection
-        disableSelectionOnClick
+        disableRowSelectionOnClick
         columnGroupingModel={columnGroupingModel}
       />
     </Box>

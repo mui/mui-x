@@ -1,4 +1,7 @@
-import { generateUtilityClass, generateUtilityClasses } from '@mui/material';
+import {
+  unstable_generateUtilityClass as generateUtilityClass,
+  unstable_generateUtilityClasses as generateUtilityClasses,
+} from '@mui/utils';
 
 export interface PickersSlideTransitionClasses {
   /** Styles applied to the root element. */
@@ -20,12 +23,10 @@ export interface PickersSlideTransitionClasses {
 export type PickersSlideTransitionClassKey = keyof PickersSlideTransitionClasses;
 
 export const getPickersSlideTransitionUtilityClass = (slot: string) =>
-  // TODO v6: Rename 'PrivatePickersSlideTransition' to 'MuiPickersSlideTransition' to follow convention
-  generateUtilityClass('PrivatePickersSlideTransition', slot);
+  generateUtilityClass('MuiPickersSlideTransition', slot);
 
 export const pickersSlideTransitionClasses: PickersSlideTransitionClasses = generateUtilityClasses(
-  // TODO v6: Rename 'PrivatePickersSlideTransition' to 'MuiPickersSlideTransition' to follow convention
-  'PrivatePickersSlideTransition',
+  'MuiPickersSlideTransition',
   [
     'root',
     'slideEnter-left',

@@ -13,7 +13,7 @@ import {
   GridPipeProcessor,
   GridStateInitializer,
 } from '@mui/x-data-grid/internals';
-import { GridApiPro } from '../../../models/gridApiPro';
+import { GridApiPro, GridPrivateApiPro } from '../../../models/gridApiPro';
 import { GRID_DETAIL_PANEL_TOGGLE_FIELD } from './gridDetailPanelToggleColDef';
 import {
   gridDetailPanelExpandedRowIdsSelector,
@@ -74,7 +74,7 @@ function cacheContentAndHeight(
 }
 
 export const useGridDetailPanel = (
-  apiRef: React.MutableRefObject<GridApiPro>,
+  apiRef: React.MutableRefObject<GridPrivateApiPro>,
   props: Pick<
     DataGridProProcessedProps,
     | 'getDetailPanelContent'
@@ -129,7 +129,7 @@ export const useGridDetailPanel = (
   useGridApiEventHandler(apiRef, 'cellClick', handleCellClick);
   useGridApiEventHandler(apiRef, 'cellKeyDown', handleCellKeyDown);
 
-  apiRef.current.unstable_registerControlState({
+  apiRef.current.registerControlState({
     stateId: 'detailPanels',
     propModel: props.detailPanelExpandedRowIds,
     propOnChange: props.onDetailPanelExpandedRowIdsChange,
@@ -219,7 +219,8 @@ export const useGridDetailPanel = (
     unstable_storeDetailPanelHeight: storeDetailPanelHeight,
     unstable_detailPanelHasAutoHeight: detailPanelHasAutoHeight,
   };
-  useGridApiMethod(apiRef, detailPanelApi, 'detailPanelApi');
+
+  useGridApiMethod(apiRef, detailPanelApi, 'public');
 
   React.useEffect(() => {
     if (props.detailPanelExpandedRowIds) {

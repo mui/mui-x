@@ -1,4 +1,3 @@
-export * from './DateCalendar';
 export * from './ClockPicker';
 export * from './DatePicker';
 export * from './DateTimePicker';
@@ -16,11 +15,33 @@ export * from './StaticTimePicker';
 export * from './TimePicker';
 export * from './locales';
 
+// Fields
+export * from './DateField';
+export * from './TimeField';
+export * from './DateTimeField';
+export type { FieldSection, FieldSelectedSections } from './internals/hooks/useField';
+
 // Calendars
+export * from './DateCalendar';
 export * from './MonthCalendar';
 export * from './YearCalendar';
-
 export * from './DayCalendarSkeleton';
+
+// New Pickers
+export * from './NextDatePicker';
+export * from './DesktopNextDatePicker';
+export * from './MobileNextDatePicker';
+export * from './StaticNextDatePicker';
+
+export * from './NextTimePicker';
+export * from './DesktopNextTimePicker';
+export * from './MobileNextTimePicker';
+export * from './StaticNextTimePicker';
+
+export * from './NextDateTimePicker';
+export * from './DesktopNextDateTimePicker';
+export * from './MobileNextDateTimePicker';
+export * from './StaticNextDateTimePicker';
 
 export { PickerStaticWrapper } from './internals/components/PickerStaticWrapper';
 export type { MuiDateSectionName } from './internals/models/muiPickersAdapter';

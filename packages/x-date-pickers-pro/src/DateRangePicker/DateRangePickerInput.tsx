@@ -1,7 +1,7 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import { styled, useThemeProps } from '@mui/material/styles';
-import { unstable_composeClasses as composeClasses } from '@mui/material';
+import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import {
   executeInTheNextEventLoopTick,
   DateInputProps,
@@ -11,7 +11,7 @@ import {
   onSpaceOrEnter,
   useLocaleText,
 } from '@mui/x-date-pickers/internals';
-import { CurrentlySelectingRangeEndProps, DateRange } from '../internal/models/dateRange';
+import { CurrentlySelectingRangeEndProps, DateRange } from '../internal/models/range';
 import { DateRangeValidationError } from '../internal/hooks/validation/useDateRangeValidation';
 import {
   DateRangePickerInputClasses,
@@ -77,6 +77,7 @@ export interface DateRangePickerInputProps<TDate>
   validationError: DateRangeValidationError;
   value: DateRange<TDate>;
   classes?: Partial<DateRangePickerInputClasses>;
+  mobile?: boolean;
 }
 
 type DatePickerInputComponent = <TDate>(
@@ -106,6 +107,7 @@ export const DateRangePickerInput = React.forwardRef(function DateRangePickerInp
     TextFieldProps,
     validationError: [startValidationError, endValidationError],
     className,
+    mobile,
     ...other
   } = props;
 
@@ -142,7 +144,10 @@ export const DateRangePickerInput = React.forwardRef(function DateRangePickerInp
     lazyHandleChangeCallback([start, date], inputString);
   };
 
-  const openRangeStartSelection = () => {
+  const openRangeStartSelection = (
+    event: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>,
+  ) => {
+    event.stopPropagation();
     if (setCurrentlySelectingRangeEnd) {
       setCurrentlySelectingRangeEnd('start');
     }
@@ -151,7 +156,10 @@ export const DateRangePickerInput = React.forwardRef(function DateRangePickerInp
     }
   };
 
-  const openRangeEndSelection = () => {
+  const openRangeEndSelection = (
+    event: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>,
+  ) => {
+    event.stopPropagation();
     if (setCurrentlySelectingRangeEnd) {
       setCurrentlySelectingRangeEnd('end');
     }
@@ -181,12 +189,16 @@ export const DateRangePickerInput = React.forwardRef(function DateRangePickerInp
     TextFieldProps: {
       ...TextFieldProps,
       inputRef: startRef,
-      focused: open && currentlySelectingRangeEnd === 'start',
+      focused: open ? currentlySelectingRangeEnd === 'start' : undefined,
+      // registering `onClick` listener on the root element as well to correctly handle cases where user is clicking on `label`
+      // which has `pointer-events: none` and due to DOM structure the `input` does not catch the click event
+      ...(!readOnly && !other.disabled && { onClick: openRangeStartSelection }),
     },
     inputProps: {
       onClick: openRangeStartSelection,
       onKeyDown: onSpaceOrEnter(openRangeStartSelection),
       onFocus: focusOnRangeStart,
+      readOnly: mobile,
     },
   });
 
@@ -200,12 +212,16 @@ export const DateRangePickerInput = React.forwardRef(function DateRangePickerInp
     TextFieldProps: {
       ...TextFieldProps,
       inputRef: endRef,
-      focused: open && currentlySelectingRangeEnd === 'end',
+      focused: open ? currentlySelectingRangeEnd === 'end' : undefined,
+      // registering `onClick` listener on the root element as well to correctly handle cases where user is clicking on `label`
+      // which has `pointer-events: none` and due to DOM structure the `input` does not catch the click event
+      ...(!readOnly && !other.disabled && { onClick: openRangeEndSelection }),
     },
     inputProps: {
       onClick: openRangeEndSelection,
       onKeyDown: onSpaceOrEnter(openRangeEndSelection),
       onFocus: focusOnRangeEnd,
+      readOnly: mobile,
     },
   });
 

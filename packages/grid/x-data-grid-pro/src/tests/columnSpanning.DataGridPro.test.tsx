@@ -89,7 +89,7 @@ describe('<DataGridPro /> - Column Spanning', () => {
     it('should work after column reordering', () => {
       let apiRef: React.MutableRefObject<GridApi>;
 
-      const Test = () => {
+      function Test() {
         apiRef = useGridApiRef();
 
         return (
@@ -97,7 +97,7 @@ describe('<DataGridPro /> - Column Spanning', () => {
             <DataGridPro apiRef={apiRef} {...baselineProps} columns={columns} />
           </div>
         );
-      };
+      }
 
       render(<Test />);
 
@@ -112,7 +112,7 @@ describe('<DataGridPro /> - Column Spanning', () => {
   it('should recalculate cells after column reordering', () => {
     let apiRef: React.MutableRefObject<GridApi>;
 
-    const Test = () => {
+    function Test() {
       apiRef = useGridApiRef();
 
       return (
@@ -130,7 +130,7 @@ describe('<DataGridPro /> - Column Spanning', () => {
           />
         </div>
       );
-    };
+    }
 
     render(<Test />);
 
@@ -193,7 +193,7 @@ describe('<DataGridPro /> - Column Spanning', () => {
 
     let apiRef: React.MutableRefObject<GridApi>;
 
-    const Test = () => {
+    function Test() {
       apiRef = useGridApiRef();
 
       return (
@@ -206,7 +206,7 @@ describe('<DataGridPro /> - Column Spanning', () => {
           />
         </div>
       );
-    };
+    }
 
     render(<Test />);
 

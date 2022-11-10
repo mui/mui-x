@@ -1,6 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { unstable_composeClasses as composeClasses } from '@mui/material';
+import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { useForkRef } from '@mui/material/utils';
 import { GridRenderCellParams } from '../../models/params/gridCellParams';
 import { isNavigationKey, isSpaceKey } from '../../utils/keyboardUtils';
@@ -65,10 +65,10 @@ const GridCellCheckboxForwardRef = React.forwardRef<HTMLInputElement, GridRender
       }
     }, [element, tabIndex]);
 
-    React.useLayoutEffect(() => {
+    React.useEffect(() => {
       if (hasFocus) {
         const input = checkboxElement.current?.querySelector('input');
-        input?.focus();
+        input?.focus({ preventScroll: true });
       } else if (rippleRef.current) {
         // Only available in @mui/material v5.4.1 or later
         rippleRef.current.stop({});
@@ -195,4 +195,4 @@ GridCellCheckboxForwardRef.propTypes = {
 
 export { GridCellCheckboxForwardRef };
 
-export const GridCellCheckboxRenderer = React.memo(GridCellCheckboxForwardRef);
+export const GridCellCheckboxRenderer = GridCellCheckboxForwardRef;

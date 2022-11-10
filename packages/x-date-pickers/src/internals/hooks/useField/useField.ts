@@ -55,9 +55,11 @@ export const useField = <
 
   const {
     inputRef: inputRefProp,
+    internalProps,
     internalProps: { readOnly = false },
     forwardedProps: { onClick, onKeyDown, onFocus, onBlur, onMouseUp, ...otherForwardedProps },
     fieldValueManager,
+    valueManager,
     validator,
   } = params;
 
@@ -97,6 +99,10 @@ export const useField = <
         return;
       }
 
+      if (selectedSectionIndexes != null) {
+        return;
+      }
+
       if (Number(input.selectionEnd) - Number(input.selectionStart) === input.value.length) {
         setSelectedSections({ startIndex: 0, endIndex: state.sections.length - 1 });
       } else {
@@ -111,21 +117,36 @@ export const useField = <
   });
 
   const handleInputPaste = useEventCallback((event: React.ClipboardEvent<HTMLInputElement>) => {
-    event.preventDefault();
-
     if (readOnly) {
-      return;
-    }
-
-    // TODO: Implement single section paste
-    if (
-      selectedSectionIndexes &&
-      selectedSectionIndexes.startIndex === selectedSectionIndexes.endIndex
-    ) {
+      event.preventDefault();
       return;
     }
 
     const pastedValue = event.clipboardData.getData('text');
+    if (
+      selectedSectionIndexes &&
+      selectedSectionIndexes.startIndex === selectedSectionIndexes.endIndex
+    ) {
+      const activeSection = state.sections[selectedSectionIndexes.startIndex];
+
+      const lettersOnly = /^[a-zA-Z]+$/.test(pastedValue);
+      const digitsOnly = /^[0-9]+$/.test(pastedValue);
+      const isValidPastedValue =
+        (activeSection.contentType === 'letter' && lettersOnly) ||
+        (activeSection.contentType === 'digit' && digitsOnly);
+      if (isValidPastedValue) {
+        // Early return to let the paste update section, value
+        return;
+      }
+      if (lettersOnly || digitsOnly) {
+        // The pasted value correspond to a single section but not the expected type
+        // skip the modification
+        event.preventDefault();
+        return;
+      }
+    }
+
+    event.preventDefault();
     updateValueFromValueStr(pastedValue);
   });
 
@@ -259,11 +280,6 @@ export const useField = <
         setSelectedSections(selectedSectionIndexes.startIndex + 1);
       }
     } else {
-      if (keyPressed.length > 1) {
-        // TODO: Might be able to support it in some scenario
-        return;
-      }
-
       const getNewSectionValueStr = (): string => {
         if (activeSection.contentType === 'digit') {
           return activeSection.value;
@@ -436,9 +452,9 @@ export const useField = <
   });
 
   const validationError = useValidation(
-    { ...params.internalProps, value: state.value },
+    { ...internalProps, value: state.value },
     validator,
-    fieldValueManager.isSameError,
+    valueManager.isSameError,
   );
 
   const inputError = React.useMemo(

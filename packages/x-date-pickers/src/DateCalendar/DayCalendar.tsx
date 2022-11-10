@@ -3,11 +3,11 @@ import Typography from '@mui/material/Typography';
 import { SlotComponentProps } from '@mui/base';
 import { useSlotProps } from '@mui/base/utils';
 import { styled, useTheme, useThemeProps } from '@mui/material/styles';
-import { unstable_composeClasses as composeClasses } from '@mui/material';
+import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import clsx from 'clsx';
 import { PickersDay, PickersDayProps } from '../PickersDay/PickersDay';
 import { useUtils, useNow, useLocaleText } from '../internals/hooks/useUtils';
-import { NonNullablePickerChangeHandler } from '../internals/hooks/useViews';
+import { PickerOnChangeFn } from '../internals/hooks/useViews';
 import { DAY_SIZE, DAY_MARGIN } from '../internals/constants/dimensions';
 import { PickerSelectionState } from '../internals/hooks/usePickerState';
 import {
@@ -70,6 +70,12 @@ export interface ExportedDayCalendarProps<TDate>
    * @returns {number} The displayed week number
    */
   getWeekNumber?: (date: TDate) => number;
+  /**
+   * Calendar will show more weeks in order to match this value.
+   * Put it to 6 for having fix number of week in Gregorian calendars
+   * @default undefined
+   */
+  fixedWeekNumber?: number;
 }
 
 export interface DayCalendarProps<TDate>
@@ -82,7 +88,7 @@ export interface DayCalendarProps<TDate>
   className?: string;
   currentMonth: TDate;
   selectedDays: (TDate | null)[];
-  onSelectedDaysChange: NonNullablePickerChangeHandler<TDate>;
+  onSelectedDaysChange: PickerOnChangeFn<TDate>;
   disabled?: boolean;
   focusedDay: TDate | null;
   isMonthSwitchingAnimating: boolean;
@@ -212,7 +218,7 @@ const PickersCalendarWeek = styled('div', {
   justifyContent: 'center',
 });
 
-const WrappedDay = <TDate extends unknown>({
+function WrappedDay<TDate extends unknown>({
   parentProps,
   day,
   focusableDay,
@@ -230,7 +236,7 @@ const WrappedDay = <TDate extends unknown>({
   selectedDays: TDate[];
   isDateDisabled: (date: TDate | null) => boolean;
   currentMonthNumber: number;
-}) => {
+}) {
   const utils = useUtils<TDate>();
   const now = useNow<TDate>();
 
@@ -280,7 +286,7 @@ const WrappedDay = <TDate extends unknown>({
       aria-current={isToday ? 'date' : undefined}
     />
   );
-};
+}
 
 /**
  * @ignore - do not document.
@@ -317,6 +323,7 @@ export function DayCalendar<TDate>(inProps: DayCalendarProps<TDate>) {
     gridLabelId,
     displayWeekNumber,
     getWeekNumber: getWeekNumberProp,
+    fixedWeekNumber,
   } = props;
 
   const getWeekNumber = getWeekNumberProp ?? utils.getWeekNumber;
@@ -482,6 +489,27 @@ export function DayCalendar<TDate>(inProps: DayCalendarProps<TDate>) {
     return internalFocusedDay;
   }, [currentMonth, disableFuture, disablePast, internalFocusedDay, isDateDisabled, utils]);
 
+  const weeksToDisplay = React.useMemo(() => {
+    const toDisplay = utils.getWeekArray(currentMonth);
+    let nextMonth = utils.addMonths(currentMonth, 1);
+    while (fixedWeekNumber && toDisplay.length < fixedWeekNumber) {
+      const additionalWeeks = utils.getWeekArray(nextMonth);
+      const hasCommonWeek = utils.isSameDay(
+        toDisplay[toDisplay.length - 1][0],
+        additionalWeeks[0][0],
+      );
+
+      additionalWeeks.slice(hasCommonWeek ? 1 : 0).forEach((week) => {
+        if (toDisplay.length < fixedWeekNumber) {
+          toDisplay.push(week);
+        }
+      });
+
+      nextMonth = utils.addMonths(nextMonth, 1);
+    }
+    return toDisplay;
+  }, [currentMonth, fixedWeekNumber, utils]);
+
   return (
     <div role="grid" aria-labelledby={gridLabelId}>
       <PickersCalendarDayHeader role="row" className={classes.header}>
@@ -528,7 +556,7 @@ export function DayCalendar<TDate>(inProps: DayCalendarProps<TDate>) {
             role="rowgroup"
             className={classes.monthContainer}
           >
-            {utils.getWeekArray(currentMonth).map((week) => (
+            {weeksToDisplay.map((week) => (
               <PickersCalendarWeek
                 role="row"
                 key={`week-${week[0]}`}

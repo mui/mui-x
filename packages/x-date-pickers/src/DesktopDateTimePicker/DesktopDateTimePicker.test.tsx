@@ -3,7 +3,6 @@ import TextField from '@mui/material/TextField';
 import { expect } from 'chai';
 import { spy } from 'sinon';
 import { act, fireEvent, screen, userEvent } from '@mui/monorepo/test/utils';
-import 'dayjs/locale/ru';
 import { DesktopDateTimePicker } from '@mui/x-date-pickers/DesktopDateTimePicker';
 import { inputBaseClasses } from '@mui/material/InputBase';
 import {
@@ -244,8 +243,8 @@ describe('<DesktopDateTimePicker />', () => {
     expect(onChange.lastCall.args[0]).toEqualDateTime(new Date('2018-01-01T10:53:00.000'));
   });
 
-  describe('componentsProps: popper', () => {
-    it('forwards onClick and onTouchStart', () => {
+  describe('Component slots: Popper', () => {
+    it('should forward onClick and onTouchStart', () => {
       const handleClick = spy();
       const handleTouchStart = spy();
       render(
@@ -272,8 +271,8 @@ describe('<DesktopDateTimePicker />', () => {
     });
   });
 
-  describe('componentsProps: desktopPaper', () => {
-    it('forwards onClick and onTouchStart', () => {
+  describe('Component slots: DesktopPaper', () => {
+    it('should forward onClick and onTouchStart', () => {
       const handleClick = spy();
       const handleTouchStart = spy();
       render(

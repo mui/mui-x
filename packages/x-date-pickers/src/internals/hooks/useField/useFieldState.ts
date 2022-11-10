@@ -1,7 +1,7 @@
 import * as React from 'react';
 import useControlled from '@mui/utils/useControlled';
 import { MuiPickerFieldAdapter } from '../../models/muiPickersAdapter';
-import { useUtils, useLocaleText } from '../useUtils';
+import { useUtils, useLocaleText, useLocalizationContext } from '../useUtils';
 import {
   FieldSection,
   UseFieldForwardedProps,
@@ -11,6 +11,7 @@ import {
   FieldSelectedSectionsIndexes,
   FieldSelectedSections,
   FieldBoundaries,
+  FieldChangeHandlerContext,
 } from './useField.interfaces';
 import {
   addPositionPropertiesToSections,
@@ -21,6 +22,7 @@ import {
   getSectionBoundaries,
   validateSections,
 } from './useField.utils';
+import { InferError } from '../validation/useValidation';
 
 interface UpdateSectionValueParams<TDate, TSection extends FieldSection> {
   activeSection: TSection;
@@ -39,11 +41,14 @@ export const useFieldState = <
 ) => {
   const utils = useUtils<TDate>() as MuiPickerFieldAdapter<TDate>;
   const localeText = useLocaleText<TDate>();
+  const adapter = useLocalizationContext<TDate>();
 
   const {
     valueManager,
     fieldValueManager,
     supportedDateSections,
+    validator,
+    internalProps,
     internalProps: {
       value: valueProp,
       defaultValue,
@@ -137,7 +142,13 @@ export const useFieldState = <
       tempValueStrAndroid: null,
     }));
 
-    onChange?.(value);
+    if (onChange) {
+      const context: FieldChangeHandlerContext<InferError<TInternalProps>> = {
+        validationError: validator({ adapter, value, props: { ...internalProps, value } }),
+      };
+
+      onChange(value, context);
+    }
   };
 
   const setSectionValue = (sectionIndex: number, newSectionValue: string) => {
@@ -300,7 +311,7 @@ export const useFieldState = <
       ...prevState,
       sections,
     }));
-  }, [format]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [format, utils.locale]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return {
     state,

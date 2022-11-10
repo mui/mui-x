@@ -13,7 +13,7 @@ import {
   GridEditCellProps,
   GridEditRowProps,
 } from '../../../models/gridEditRowModel';
-import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
+import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import {
   GridRowEditingApi,
@@ -49,7 +49,7 @@ const missingOnProcessRowUpdateErrorWarning = buildWarning(
 );
 
 export const useGridRowEditing = (
-  apiRef: React.MutableRefObject<GridApiCommunity>,
+  apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
   props: Pick<
     DataGridProcessedProps,
     | 'editMode'
@@ -60,7 +60,6 @@ export const useGridRowEditing = (
     | 'rowModesModel'
     | 'onRowModesModelChange'
     | 'signature'
-    | 'disableIgnoreModificationsIfProcessingProps'
   >,
 ) => {
   const [rowModesModel, setRowModesModel] = React.useState<GridRowModesModel>({});
@@ -237,7 +236,12 @@ export const useGridRowEditing = (
 
         if (reason) {
           const rowParams = apiRef.current.getRowParams(params.id);
-          const newParams: GridRowEditStartParams = { ...rowParams, field: params.field, reason };
+          const newParams: GridRowEditStartParams = {
+            ...rowParams,
+            field: params.field,
+            key: event.key,
+            reason,
+          };
           apiRef.current.publishEvent('rowEditStart', newParams, event);
         }
       }
@@ -247,14 +251,19 @@ export const useGridRowEditing = (
 
   const handleRowEditStart = React.useCallback<GridEventListener<'rowEditStart'>>(
     (params) => {
-      const { id, field, reason } = params;
+      const { id, field, reason, key } = params;
 
       const startRowEditModeParams: GridStartRowEditModeParams = { id, fieldToFocus: field };
 
-      if (
-        reason === GridRowEditStartReasons.deleteKeyDown ||
-        reason === GridRowEditStartReasons.printableKeyDown
-      ) {
+      if (reason === GridRowEditStartReasons.printableKeyDown) {
+        if (React.version.startsWith('17')) {
+          // In React 17, cleaning the input is enough.
+          // The sequence of events makes the key pressed by the end-users update the textbox directly.
+          startRowEditModeParams.deleteValue = !!field;
+        } else {
+          startRowEditModeParams.initialValue = key;
+        }
+      } else if (reason === GridRowEditStartReasons.deleteKeyDown) {
         startRowEditModeParams.deleteValue = !!field;
       }
 
@@ -278,19 +287,11 @@ export const useGridRowEditing = (
         cellToFocusAfter = 'left';
       }
 
-      let ignoreModifications = reason === 'escapeKeyDown';
-      const editingState = gridEditRowsStateSelector(apiRef.current.state);
-      if (!ignoreModifications && !props.disableIgnoreModificationsIfProcessingProps) {
-        // The user wants to stop editing the cell but we can't wait for the props to be processed.
-        // In this case, discard the modifications if any field is processing its props.
-        ignoreModifications = Object.values(editingState[id]).some((fieldProps) => {
-          return fieldProps.isProcessingProps;
-        });
-      }
+      const ignoreModifications = reason === 'escapeKeyDown';
 
       apiRef.current.stopRowEditMode({ id, ignoreModifications, field, cellToFocusAfter });
     },
-    [apiRef, props.disableIgnoreModificationsIfProcessingProps],
+    [apiRef],
   );
 
   useGridApiEventHandler(apiRef, 'cellDoubleClick', runIfEditModeIsRow(handleCellDoubleClick));
@@ -400,7 +401,7 @@ export const useGridRowEditing = (
 
   const updateStateToStartRowEditMode = useEventCallback<[GridStartRowEditModeParams], void>(
     (params) => {
-      const { id, fieldToFocus, deleteValue } = params;
+      const { id, fieldToFocus, deleteValue, initialValue } = params;
 
       const columnFields = gridColumnFieldsSelector(apiRef);
 
@@ -410,10 +411,13 @@ export const useGridRowEditing = (
           return acc;
         }
 
-        const shouldDeleteValue = deleteValue && fieldToFocus === field;
+        let newValue = apiRef.current.getCellValue(id, field);
+        if (fieldToFocus === field && (deleteValue || initialValue)) {
+          newValue = deleteValue ? '' : initialValue;
+        }
 
         acc[field] = {
-          value: shouldDeleteValue ? '' : apiRef.current.getCellValue(id, field),
+          value: newValue,
           error: false,
           isProcessingProps: false,
         };
@@ -667,7 +671,7 @@ export const useGridRowEditing = (
     unstable_getRowWithUpdatedValuesFromRowEditing: getRowWithUpdatedValuesFromRowEditing,
   };
 
-  useGridApiMethod(apiRef, editingApi, 'EditingApi');
+  useGridApiMethod(apiRef, editingApi, 'public');
 
   React.useEffect(() => {
     if (rowModesModelProp) {

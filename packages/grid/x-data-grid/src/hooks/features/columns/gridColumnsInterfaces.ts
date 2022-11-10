@@ -11,10 +11,7 @@ export type GridColumnRawLookup = {
 };
 
 export interface GridColumnsState {
-  /**
-   * TODO v6: Rename `all` to `orderedFields`
-   */
-  all: string[];
+  orderedFields: string[];
   lookup: GridColumnLookup;
   columnVisibilityModel: GridColumnVisibilityModel;
 }

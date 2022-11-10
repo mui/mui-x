@@ -21,10 +21,10 @@ const DataGridRaw = React.forwardRef(function DataGrid<R extends GridValidRowMod
   ref: React.Ref<HTMLDivElement>,
 ) {
   const props = useDataGridProps(inProps);
-  const apiRef = useDataGridComponent(props);
+  const privateApiRef = useDataGridComponent(props);
 
   return (
-    <GridContextProvider apiRef={apiRef} props={props}>
+    <GridContextProvider privateApiRef={privateApiRef} props={props}>
       <GridRoot className={props.className} style={props.style} sx={props.sx} ref={ref}>
         <GridErrorHandler>
           <GridHeaderPlaceholder />
@@ -160,15 +160,10 @@ DataGridRaw.propTypes = {
    */
   disableExtendRowFullWidth: PropTypes.bool,
   /**
-   * If `true`, modification to a cell will not be discarded if the mode is changed from "edit" to "view" while processing props.
-   * @default false
-   */
-  disableIgnoreModificationsIfProcessingProps: PropTypes.bool,
-  /**
    * If `true`, the selection on click on a row or cell is disabled.
    * @default false
    */
-  disableSelectionOnClick: PropTypes.bool,
+  disableRowSelectionOnClick: PropTypes.bool,
   /**
    * If `true`, the virtualization is disabled.
    * @default false
@@ -545,10 +540,10 @@ DataGridRaw.propTypes = {
   onRowModesModelChange: PropTypes.func,
   /**
    * Callback fired when the selection state of one or multiple rows changes.
-   * @param {GridSelectionModel} selectionModel With all the row ids [[GridSelectionModel]].
+   * @param {GridRowSelectionModel} rowSelectionModel With all the row ids [[GridSelectionModel]].
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
-  onSelectionModelChange: PropTypes.func,
+  onRowSelectionModelChange: PropTypes.func,
   /**
    * Callback fired when the sort model changes before a column is sorted.
    * @param {GridSortModel} model With all properties from [[GridSortModel]].
@@ -638,6 +633,36 @@ DataGridRaw.propTypes = {
    */
   rows: PropTypes.arrayOf(PropTypes.object).isRequired,
   /**
+   * If `false`, the row selection mode is disabled.
+   * @default true
+   */
+  rowSelection: PropTypes.bool,
+  /**
+   * Sets the row selection model of the grid.
+   */
+  rowSelectionModel: chainPropTypes(
+    PropTypes.oneOfType([PropTypes.number, PropTypes.string, PropTypes.array]),
+    (props: any) => {
+      if (
+        !props.checkboxSelection &&
+        Array.isArray(props.rowSelectionModel) &&
+        props.rowSelectionModel.length > 1
+      ) {
+        return new Error(
+          [
+            `MUI: \`<DataGrid rowSelectionModel={${JSON.stringify(
+              props.rowSelectionModel,
+            )}} />\` is not a valid prop.`,
+            'rowSelectionModel can only be of 1 item in DataGrid.',
+            '',
+            'You need to upgrade to DataGridPro or DataGridPremium component to unlock multiple selection.',
+          ].join('\n'),
+        );
+      }
+      return null;
+    },
+  ),
+  /**
    * Sets the type of space between rows added by `getRowSpacing`.
    * @default "margin"
    */
@@ -656,31 +681,6 @@ DataGridRaw.propTypes = {
    * Override the height/width of the grid inner scrollbar.
    */
   scrollbarSize: PropTypes.number,
-  /**
-   * Set the selection model of the grid.
-   */
-  selectionModel: chainPropTypes(
-    PropTypes.oneOfType([PropTypes.number, PropTypes.string, PropTypes.array]),
-    (props: any) => {
-      if (
-        !props.checkboxSelection &&
-        Array.isArray(props.selectionModel) &&
-        props.selectionModel.length > 1
-      ) {
-        return new Error(
-          [
-            `MUI: \`<DataGrid selectionModel={${JSON.stringify(
-              props.selectionModel,
-            )}} />\` is not a valid prop.`,
-            'selectionModel can only be of 1 item in DataGrid.',
-            '',
-            'You need to upgrade to DataGridPro or DataGridPremium component to unlock multiple selection.',
-          ].join('\n'),
-        );
-      }
-      return null;
-    },
-  ),
   /**
    * If `true`, the right border of the cells are displayed.
    * @default false

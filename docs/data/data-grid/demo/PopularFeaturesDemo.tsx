@@ -77,7 +77,7 @@ export const featuresSet: Row[] = [
   {
     id: 4,
     name: 'Lazy Loading',
-    description: 'Easily paginate your rows and only fetqch what you need',
+    description: 'Easily paginate your rows and only fetch what you need',
     plan: 'Pro',
     detailPage: '/pagination/',
     newBadge: true,
@@ -197,7 +197,7 @@ const getChipProperties = (plan: string) => {
   }
 };
 
-const PlanTag = (props: { plan: string }) => {
+function PlanTag(props: { plan: string }) {
   const chipPropperties = getChipProperties(props.plan);
   const avatar = !chipPropperties.avatarLink ? undefined : (
     <Avatar src={chipPropperties.avatarLink} />
@@ -209,17 +209,17 @@ const PlanTag = (props: { plan: string }) => {
       label={props.plan}
     />
   );
-};
+}
 
-const CustomToolbar = () => {
+function CustomToolbar() {
   return (
     <GridToolbarContainer sx={{ p: 1 }}>
       <GridToolbarQuickFilter />
     </GridToolbarContainer>
   );
-};
+}
 
-const RowDemo = (props: { row: Row }) => {
+function RowDemo(props: { row: Row }) {
   const { row } = props;
   const theme = useTheme();
   const gridBgColor = theme.palette.mode === 'dark' ? '#000' : '#fff';
@@ -232,7 +232,7 @@ const RowDemo = (props: { row: Row }) => {
       </Box>
     </Box>
   );
-};
+}
 
 const columns: GridColDef[] = [
   {
@@ -372,7 +372,7 @@ export default function PopularFeaturesDemo() {
       <DataGridPremium
         apiRef={apiRef}
         autoHeight
-        disableSelectionOnClick
+        disableRowSelectionOnClick
         onRowClick={onRowClick}
         components={{
           Toolbar: CustomToolbar,

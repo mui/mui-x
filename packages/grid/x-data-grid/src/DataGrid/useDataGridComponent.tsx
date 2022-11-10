@@ -1,5 +1,5 @@
 import { DataGridProcessedProps } from '../models/props/DataGridProps';
-import { GridApiCommunity } from '../models/api/gridApiCommunity';
+import { GridApiCommunity, GridPrivateApiCommunity } from '../models/api/gridApiCommunity';
 import { useGridInitialization } from '../hooks/core/useGridInitialization';
 import { useGridInitializeState } from '../hooks/utils/useGridInitializeState';
 import { useGridClipboard } from '../hooks/features/clipboard/useGridClipboard';
@@ -27,10 +27,10 @@ import { useGridRows, rowsStateInitializer } from '../hooks/features/rows/useGri
 import { useGridRowsPreProcessors } from '../hooks/features/rows/useGridRowsPreProcessors';
 import { useGridParamsApi } from '../hooks/features/rows/useGridParamsApi';
 import {
-  selectionStateInitializer,
-  useGridSelection,
-} from '../hooks/features/selection/useGridSelection';
-import { useGridSelectionPreProcessors } from '../hooks/features/selection/useGridSelectionPreProcessors';
+  rowSelectionStateInitializer,
+  useGridRowSelection,
+} from '../hooks/features/rowSelection/useGridRowSelection';
+import { useGridRowSelectionPreProcessors } from '../hooks/features/rowSelection/useGridRowSelectionPreProcessors';
 import { useGridSorting, sortingStateInitializer } from '../hooks/features/sorting/useGridSorting';
 import { useGridScroll } from '../hooks/features/scroll/useGridScroll';
 import { useGridEvents } from '../hooks/features/events/useGridEvents';
@@ -42,58 +42,59 @@ import {
   useGridColumnGrouping,
   columnGroupsStateInitializer,
 } from '../hooks/features/columnGrouping/useGridColumnGrouping';
-import { useGridColumnGroupingPreProcessors } from '../hooks/features/columnGrouping/useGridColumnGroupingPreProcessors';
 
 export const useDataGridComponent = (props: DataGridProcessedProps) => {
-  const apiRef = useGridInitialization<GridApiCommunity>(undefined, props);
+  const privateApiRef = useGridInitialization<GridPrivateApiCommunity, GridApiCommunity>(
+    undefined,
+    props,
+  );
 
   /**
    * Register all pre-processors called during state initialization here.
    */
-  useGridColumnGroupingPreProcessors(apiRef, props);
-  useGridSelectionPreProcessors(apiRef, props);
-  useGridRowsPreProcessors(apiRef);
+  useGridRowSelectionPreProcessors(privateApiRef, props);
+  useGridRowsPreProcessors(privateApiRef);
 
   /**
    * Register all state initializers here.
    */
-  useGridInitializeState(selectionStateInitializer, apiRef, props);
-  useGridInitializeState(columnsStateInitializer, apiRef, props);
-  useGridInitializeState(columnGroupsStateInitializer, apiRef, props);
-  useGridInitializeState(rowsStateInitializer, apiRef, props);
-  useGridInitializeState(editingStateInitializer, apiRef, props);
-  useGridInitializeState(focusStateInitializer, apiRef, props);
-  useGridInitializeState(sortingStateInitializer, apiRef, props);
-  useGridInitializeState(preferencePanelStateInitializer, apiRef, props);
-  useGridInitializeState(filterStateInitializer, apiRef, props);
-  useGridInitializeState(densityStateInitializer, apiRef, props);
-  useGridInitializeState(paginationStateInitializer, apiRef, props);
-  useGridInitializeState(rowsMetaStateInitializer, apiRef, props);
-  useGridInitializeState(columnMenuStateInitializer, apiRef, props);
+  useGridInitializeState(rowSelectionStateInitializer, privateApiRef, props);
+  useGridInitializeState(columnsStateInitializer, privateApiRef, props);
+  useGridInitializeState(rowsStateInitializer, privateApiRef, props);
+  useGridInitializeState(editingStateInitializer, privateApiRef, props);
+  useGridInitializeState(focusStateInitializer, privateApiRef, props);
+  useGridInitializeState(sortingStateInitializer, privateApiRef, props);
+  useGridInitializeState(preferencePanelStateInitializer, privateApiRef, props);
+  useGridInitializeState(filterStateInitializer, privateApiRef, props);
+  useGridInitializeState(densityStateInitializer, privateApiRef, props);
+  useGridInitializeState(paginationStateInitializer, privateApiRef, props);
+  useGridInitializeState(rowsMetaStateInitializer, privateApiRef, props);
+  useGridInitializeState(columnMenuStateInitializer, privateApiRef, props);
+  useGridInitializeState(columnGroupsStateInitializer, privateApiRef, props);
 
-  useGridKeyboardNavigation(apiRef, props);
-  useGridSelection(apiRef, props);
-  useGridColumns(apiRef, props);
-  useGridRows(apiRef, props);
-  useGridParamsApi(apiRef);
-  useGridColumnSpanning(apiRef);
-  useGridColumnGrouping(apiRef, props);
-  useGridEditing(apiRef, props);
-  useGridFocus(apiRef, props);
-  useGridPreferencesPanel(apiRef, props);
-  useGridFilter(apiRef, props);
-  useGridSorting(apiRef, props);
-  useGridDensity(apiRef, props);
-  useGridPagination(apiRef, props);
-  useGridRowsMeta(apiRef, props);
-  useGridScroll(apiRef, props);
-  useGridColumnMenu(apiRef);
-  useGridCsvExport(apiRef);
-  useGridPrintExport(apiRef, props);
-  useGridClipboard(apiRef);
-  useGridDimensions(apiRef, props);
-  useGridEvents(apiRef, props);
-  useGridStatePersistence(apiRef);
+  useGridKeyboardNavigation(privateApiRef, props);
+  useGridRowSelection(privateApiRef, props);
+  useGridColumns(privateApiRef, props);
+  useGridRows(privateApiRef, props);
+  useGridParamsApi(privateApiRef);
+  useGridColumnSpanning(privateApiRef);
+  useGridColumnGrouping(privateApiRef, props);
+  useGridEditing(privateApiRef, props);
+  useGridFocus(privateApiRef, props);
+  useGridPreferencesPanel(privateApiRef, props);
+  useGridFilter(privateApiRef, props);
+  useGridSorting(privateApiRef, props);
+  useGridDensity(privateApiRef, props);
+  useGridPagination(privateApiRef, props);
+  useGridRowsMeta(privateApiRef, props);
+  useGridScroll(privateApiRef, props);
+  useGridColumnMenu(privateApiRef);
+  useGridCsvExport(privateApiRef);
+  useGridPrintExport(privateApiRef, props);
+  useGridClipboard(privateApiRef);
+  useGridDimensions(privateApiRef, props);
+  useGridEvents(privateApiRef, props);
+  useGridStatePersistence(privateApiRef);
 
-  return apiRef;
+  return privateApiRef;
 };

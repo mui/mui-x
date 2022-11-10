@@ -4,10 +4,10 @@ title: React Date Time Picker component
 components: DateTimePicker,DesktopDateTimePicker,MobileDateTimePicker,StaticDateTimePicker
 githubLabel: 'component: DateTimePicker'
 packageName: '@mui/x-date-pickers'
-materialDesign: https://material.io/components/date-pickers
+materialDesign: https://m2.material.io/components/date-pickers
 ---
 
-# Date time picker
+# Date Time Picker
 
 <p class="description">This component combines the date & time pickers.</p>
 
@@ -44,7 +44,7 @@ The date time picker component can be disabled or read-only.
 
 ## Validation
 
-You can find the documentation in the [Validation page](/react-date-pickers/validation/)
+You can find the documentation in the [Validation page](/x/react-date-pickers/validation/)
 
 ## Static mode
 

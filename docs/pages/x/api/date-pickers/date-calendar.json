@@ -1,6 +1,5 @@
 {
   "props": {
-    "onChange": { "type": { "name": "func" }, "required": true },
     "components": { "type": { "name": "object" }, "default": "{}" },
     "componentsProps": { "type": { "name": "object" }, "default": "{}" },
     "dayOfWeekFormatter": {
@@ -8,15 +7,18 @@
       "default": "(day) => day.charAt(0).toUpperCase()"
     },
     "defaultCalendarMonth": { "type": { "name": "any" } },
+    "defaultValue": { "type": { "name": "any" } },
     "disabled": { "type": { "name": "bool" } },
     "disableFuture": { "type": { "name": "bool" } },
     "disableHighlightToday": { "type": { "name": "bool" } },
     "disablePast": { "type": { "name": "bool" } },
     "displayWeekNumber": { "type": { "name": "bool" } },
+    "fixedWeekNumber": { "type": { "name": "number" }, "default": "undefined" },
     "getWeekNumber": { "type": { "name": "func" } },
     "loading": { "type": { "name": "bool" } },
     "maxDate": { "type": { "name": "any" } },
     "minDate": { "type": { "name": "any" } },
+    "onChange": { "type": { "name": "func" } },
     "onMonthChange": { "type": { "name": "func" } },
     "onViewChange": { "type": { "name": "func" } },
     "onYearChange": { "type": { "name": "func" } },
@@ -46,6 +48,7 @@
         "description": "Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object"
       }
     },
+    "value": { "type": { "name": "any" } },
     "view": {
       "type": {
         "name": "enum",

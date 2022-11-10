@@ -5,7 +5,7 @@ import useEventCallback from '@mui/utils/useEventCallback';
 import useControlled from '@mui/utils/useControlled';
 import { resolveComponentProps } from '@mui/base/utils';
 import { styled, useThemeProps } from '@mui/material/styles';
-import { unstable_composeClasses as composeClasses } from '@mui/material';
+import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { Watermark } from '@mui/x-license-pro';
 import {
   applyDefaultDate,
@@ -41,7 +41,7 @@ import {
 import { calculateRangeChange, calculateRangePreview } from '../DateRangePicker/date-range-manager';
 import { DateRange } from '../internal/models';
 import { DateRangePickerDay } from '../DateRangePickerDay';
-import { dateRangePickerValueManager } from '../DateRangePicker/shared';
+import { rangeValueManager } from '../internal/utils/valueManagers';
 
 const releaseInfo = getReleaseInfo();
 
@@ -165,7 +165,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
 
   const [value, setValue] = useControlled<DateRange<TDate>>({
     controlled: valueProp,
-    default: defaultValue ?? dateRangePickerValueManager.emptyValue,
+    default: defaultValue ?? rangeValueManager.emptyValue,
     name: 'DateRangeCalendar',
     state: 'value',
   });
@@ -325,7 +325,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
   const componentsForDayCalendar = {
     Day: DateRangePickerDay,
     ...components,
-  } as Partial<DayCalendarSlotsComponent<TDate>>;
+  } as DayCalendarSlotsComponent<TDate>;
 
   const componentsPropsForDayCalendar = {
     ...componentsProps,
@@ -343,7 +343,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
         ...(resolveComponentProps(componentsProps?.day, dayOwnerState) ?? {}),
       };
     },
-  } as Partial<DayCalendarSlotsComponentsProps<TDate>>;
+  } as DayCalendarSlotsComponentsProps<TDate>;
 
   return (
     <DateRangeCalendarRoot
@@ -461,6 +461,10 @@ DateRangeCalendar.propTypes = {
    * Default calendar month displayed when `value={[null, null]}`.
    */
   defaultCalendarMonth: PropTypes.any,
+  /**
+   * The default selected value.
+   * Used when the component is not controlled.
+   */
   defaultValue: PropTypes.arrayOf(PropTypes.any),
   /**
    * If `true`, after selecting `start` date calendar will not automatically switch to the month of `end` date.
@@ -473,7 +477,7 @@ DateRangeCalendar.propTypes = {
    */
   disabled: PropTypes.bool,
   /**
-   * If `true` disable values before the current time
+   * If `true` disable values before the current date for date components, time for time components and both for date time components.
    * @default false
    */
   disableFuture: PropTypes.bool,
@@ -483,7 +487,7 @@ DateRangeCalendar.propTypes = {
    */
   disableHighlightToday: PropTypes.bool,
   /**
-   * If `true` disable values after the current time.
+   * If `true` disable values after the current date for date components, time for time components and both for date time components.
    * @default false
    */
   disablePast: PropTypes.bool,
@@ -492,6 +496,12 @@ DateRangeCalendar.propTypes = {
    * Needs to provide `getWeekNumber` if the adapter does not support `getWeekNumber`
    */
   displayWeekNumber: PropTypes.bool,
+  /**
+   * Calendar will show more weeks in order to match this value.
+   * Put it to 6 for having fix number of week in Gregorian calendars
+   * @default undefined
+   */
+  fixedWeekNumber: PropTypes.number,
   /**
    * Get the week number form keek first day
    * @param {TDate} date The first day of the week.
@@ -505,13 +515,19 @@ DateRangeCalendar.propTypes = {
    */
   loading: PropTypes.bool,
   /**
-   * Maximal selectable date. @DateIOType
+   * Maximal selectable date.
    */
   maxDate: PropTypes.any,
   /**
-   * Minimal selectable date. @DateIOType
+   * Minimal selectable date.
    */
   minDate: PropTypes.any,
+  /**
+   * Callback fired when the value changes.
+   * @template TDate
+   * @param {DateRange<TDate>} value The new value.
+   * @param {PickerSelectionState | undefined} selectionState Indicates if the date range selection is complete.
+   */
   onChange: PropTypes.func,
   onCurrentDatePositionChange: PropTypes.func,
   /**
@@ -558,6 +574,10 @@ DateRangeCalendar.propTypes = {
     PropTypes.func,
     PropTypes.object,
   ]),
+  /**
+   * The selected value.
+   * Used when the component is controlled.
+   */
   value: PropTypes.arrayOf(PropTypes.any),
 } as any;
 

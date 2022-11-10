@@ -109,7 +109,7 @@ const DEMO_INITIAL_STATE = {
   activeViewId: null,
 };
 
-const ViewListItem = (props) => {
+function ViewListItem(props) {
   const { view, viewId, selected, onDelete, onSelect, ...other } = props;
 
   return (
@@ -128,7 +128,7 @@ const ViewListItem = (props) => {
       </IconButton>
     </MenuItem>
   );
-};
+}
 
 ViewListItem.propTypes = {
   onDelete: PropTypes.func.isRequired,
@@ -175,7 +175,7 @@ ViewListItem.propTypes = {
   viewId: PropTypes.string.isRequired,
 };
 
-const NewViewListButton = (props) => {
+function NewViewListButton(props) {
   const { label, onLabelChange, onSubmit, isValid } = props;
   const [isAddingView, setIsAddingView] = React.useState(false);
 
@@ -221,7 +221,7 @@ const NewViewListButton = (props) => {
       </Dialog>
     </React.Fragment>
   );
-};
+}
 
 NewViewListButton.propTypes = {
   isValid: PropTypes.bool.isRequired,

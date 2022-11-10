@@ -63,7 +63,7 @@ export default function BasicGroupingDemo() {
         rows={rows}
         columns={columns}
         checkboxSelection
-        disableSelectionOnClick
+        disableRowSelectionOnClick
         columnGroupingModel={columnGroupingModel}
       />
     </div>

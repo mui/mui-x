@@ -7,11 +7,11 @@ import { useLocalizationContext } from '@mui/x-date-pickers/internals';
 import { LocalizationProvider, PickersLocaleText } from '@mui/x-date-pickers';
 import { AdapterClassToUse } from 'test/utils/pickers-utils';
 
-const ContextListener = ({
+function ContextListener({
   onContextChange,
 }: {
   onContextChange: (context: ReturnType<typeof useLocalizationContext>) => void;
-}) => {
+}) {
   const context = useLocalizationContext();
 
   React.useEffect(() => {
@@ -19,9 +19,9 @@ const ContextListener = ({
   }, [onContextChange, context]);
 
   return null;
-};
+}
 
-describe('component <LocalizationProvider />', () => {
+describe('<LocalizationProvider />', () => {
   const { render } = createRenderer();
 
   it('should respect localeText from the theme', () => {

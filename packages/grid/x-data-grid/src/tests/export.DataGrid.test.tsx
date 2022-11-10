@@ -9,7 +9,7 @@ import { createRenderer, screen, fireEvent } from '@mui/monorepo/test/utils';
 describe('<DataGrid /> - Export', () => {
   const { render, clock } = createRenderer({ clock: 'fake' });
 
-  const TestCase = (props: Omit<DataGridProps, 'rows' | 'columns'>) => {
+  function TestCase(props: Omit<DataGridProps, 'rows' | 'columns'>) {
     const basicData = useBasicDemoData(3, 2);
 
     return (
@@ -17,7 +17,7 @@ describe('<DataGrid /> - Export', () => {
         <DataGrid {...basicData} {...props} />
       </div>
     );
-  };
+  }
 
   // We need `createObjectURL` to test the downloaded value
   before(function beforeHook() {
@@ -37,11 +37,7 @@ describe('<DataGrid /> - Export', () => {
   });
 
   describe('component: GridToolbar', () => {
-    it('should export with the default csvOptions', async function test() {
-      // Safari 13 doesn't have Blob.text().
-      if (/safari/i.test(window.navigator.userAgent)) {
-        this.skip();
-      }
+    it('should export with the default csvOptions', async () => {
       render(<TestCase components={{ Toolbar: GridToolbar }} />);
       fireEvent.click(screen.queryByRole('button', { name: 'Export' }));
       clock.runToLast();
@@ -52,11 +48,7 @@ describe('<DataGrid /> - Export', () => {
       expect(csv).to.equal(['id,Currency Pair', '0,USDGBP', '1,USDEUR', '2,GBPEUR'].join('\r\n'));
     });
 
-    it('should apply custom csvOptions', async function test() {
-      // Safari 13 doesn't have Blob.text().
-      if (/safari/i.test(window.navigator.userAgent)) {
-        this.skip();
-      }
+    it('should apply custom csvOptions', async () => {
       render(
         <TestCase
           components={{ Toolbar: GridToolbar }}
@@ -87,11 +79,7 @@ describe('<DataGrid /> - Export', () => {
   });
 
   describe('component: GridToolbarExport', () => {
-    it('should export with the default csvOptions', async function test() {
-      // Safari 13 doesn't have Blob.text().
-      if (/safari/i.test(window.navigator.userAgent)) {
-        this.skip();
-      }
+    it('should export with the default csvOptions', async () => {
       render(<TestCase components={{ Toolbar: () => <GridToolbarExport /> }} />);
       fireEvent.click(screen.queryByRole('button', { name: 'Export' }));
       clock.runToLast();
@@ -102,11 +90,7 @@ describe('<DataGrid /> - Export', () => {
       expect(csv).to.equal(['id,Currency Pair', '0,USDGBP', '1,USDEUR', '2,GBPEUR'].join('\r\n'));
     });
 
-    it('should apply custom csvOptions', async function test() {
-      // Safari 13 doesn't have Blob.text().
-      if (/safari/i.test(window.navigator.userAgent)) {
-        this.skip();
-      }
+    it('should apply custom csvOptions', async () => {
       render(
         <TestCase
           components={{ Toolbar: () => <GridToolbarExport csvOptions={{ delimiter: ';' }} /> }}

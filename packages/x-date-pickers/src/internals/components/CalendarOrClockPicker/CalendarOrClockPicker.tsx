@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { styled, useThemeProps } from '@mui/material/styles';
-import { unstable_composeClasses as composeClasses } from '@mui/material';
-import { DateTimePickerTabsProps } from '../../../DateTimePicker';
+import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { useViews, PickerOnChangeFn } from '../../hooks/useViews';
 import { ClockPicker, ExportedClockPickerProps } from '../../../ClockPicker/ClockPicker';
 import {
@@ -18,61 +17,54 @@ import { PickerStatePickerProps } from '../../hooks/usePickerState';
 import { BasePickerProps } from '../../models/props/basePickerProps';
 import { PickerViewRoot } from '../PickerViewRoot';
 import { CalendarOrClockPickerView, CalendarPickerView, ClockPickerView } from '../../models';
-import { BaseToolbarProps } from '../../models/props/baseToolbarProps';
+import { BaseToolbarProps, ExportedBaseToolbarProps } from '../../models/props/toolbar';
+import { BaseTabsProps, ExportedBaseTabsProps } from '../../models/props/tabs';
 import { useFocusManagement } from './useFocusManagement';
 import {
   CalendarOrClockPickerClasses,
   getCalendarOrClockPickerUtilityClass,
 } from './calendarOrClockPickerClasses';
 
-export interface CalendarOrClockPickerSlotsComponent<TDate>
+export interface CalendarOrClockPickerSlotsComponent<TDate, TView extends CalendarOrClockPickerView>
   extends DateCalendarSlotsComponent<TDate> {
-  /**
-   * Tabs enabling toggling between date and time pickers.
-   * @default DateTimePickerTabs
-   */
-  Tabs: React.ElementType<DateTimePickerTabsProps>;
+  Tabs?: React.JSXElementConstructor<BaseTabsProps<TView>>;
+  Toolbar?: React.JSXElementConstructor<BaseToolbarProps<TDate | null, TView>>;
 }
 
 export interface CalendarOrClockPickerSlotsComponentsProps<TDate>
   extends DateCalendarSlotsComponentsProps<TDate> {
-  tabs: Omit<DateTimePickerTabsProps, 'onChange' | 'view'>;
+  tabs?: ExportedBaseTabsProps;
+  toolbar?: ExportedBaseToolbarProps;
 }
 
-export interface ExportedCalendarOrClockPickerProps<TDate, View extends CalendarOrClockPickerView>
-  extends Omit<BasePickerProps<TDate | null>, 'value' | 'onChange'>,
+export interface ExportedCalendarOrClockPickerProps<TDate, TView extends CalendarOrClockPickerView>
+  extends Omit<BasePickerProps<TDate | null, TDate>, 'value' | 'onChange' | 'localeText'>,
     Omit<ExportedDateCalendarProps<TDate>, 'onViewChange' | 'openTo' | 'view'>,
     ExportedClockPickerProps<TDate> {
-  dateRangeIcon?: React.ReactNode;
   /**
    * Callback fired on view change.
    * @template View
    * @param {View} view The new view.
    */
-  onViewChange?: (view: View) => void;
+  onViewChange?: (view: TView) => void;
   /**
    * First view to show.
    */
-  openTo: View;
-  timeIcon?: React.ReactNode;
+  openTo: TView;
   /**
    * Array of views to show.
    */
-  views: readonly View[];
+  views: readonly TView[];
   /**
    * Overrideable components.
    * @default {}
    */
-  components?: Partial<CalendarOrClockPickerSlotsComponent<TDate>>;
+  components?: CalendarOrClockPickerSlotsComponent<TDate, TView>;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  componentsProps?: Partial<CalendarOrClockPickerSlotsComponentsProps<TDate>>;
-  toolbarFormat?: string;
-  toolbarPlaceholder?: React.ReactNode;
-  toolbarTitle?: React.ReactNode;
-  hideTabs?: boolean;
+  componentsProps?: CalendarOrClockPickerSlotsComponentsProps<TDate>;
 }
 
 export interface CalendarOrClockPickerProps<TDate, View extends CalendarOrClockPickerView>
@@ -80,7 +72,6 @@ export interface CalendarOrClockPickerProps<TDate, View extends CalendarOrClockP
     PickerStatePickerProps<TDate | null> {
   autoFocus?: boolean;
   DateInputProps: DateInputPropsLike;
-  ToolbarComponent?: React.JSXElementConstructor<BaseToolbarProps<TDate, TDate | null>>;
   classes?: Partial<CalendarOrClockPickerClasses>;
 }
 
@@ -140,25 +131,16 @@ export function CalendarOrClockPicker<TDate, View extends CalendarOrClockPickerV
     orientation,
     showToolbar,
     toggleMobileKeyboardView,
-    ToolbarComponent = () => null,
-    toolbarFormat,
-    toolbarPlaceholder,
-    toolbarTitle,
     views,
-    dateRangeIcon,
-    timeIcon,
-    hideTabs,
+    components,
+    componentsProps,
     // excluding classes from `other` to avoid passing them down to children
     classes: providedClasses,
     ...other
   } = props;
-  const TabsComponent = other.components?.Tabs;
   const isLandscape = useIsLandscape(views, orientation);
   const wrapperVariant = React.useContext(WrapperVariantContext);
   const classes = useUtilityClasses(props);
-
-  const toShowToolbar = showToolbar ?? wrapperVariant !== 'desktop';
-  const showTabs = !hideTabs && typeof window !== 'undefined' && window.innerHeight > 667;
 
   const handleDateChange = React.useCallback<PickerOnChangeFn<TDate>>(
     (newDate, selectionState) => {
@@ -189,7 +171,7 @@ export function CalendarOrClockPicker<TDate, View extends CalendarOrClockPickerV
     }
   }
 
-  const { openView, setOpenView, handleChangeAndOpenNext } = useViews<TDate, View>({
+  const { openView, setOpenView, handleChangeAndOpenNext } = useViews<TDate | null, View>({
     view: undefined,
     views,
     openTo,
@@ -197,33 +179,38 @@ export function CalendarOrClockPicker<TDate, View extends CalendarOrClockPickerV
     onViewChange: handleViewChange,
   });
 
-  const { focusedView, setFocusedView } = useFocusManagement({ autoFocus, openView });
+  const { focusedView, setFocusedView } = useFocusManagement<CalendarPickerView>({
+    autoFocus,
+    openView,
+  });
+
+  const Tabs = components?.Tabs;
+
+  const shouldRenderToolbar = showToolbar ?? wrapperVariant !== 'desktop';
+  const Toolbar = components?.Toolbar;
 
   return (
     <PickerRoot ownerState={{ isLandscape }} className={classes.root}>
-      {toShowToolbar && (
-        <ToolbarComponent
-          {...other}
-          views={views}
+      {shouldRenderToolbar && !!Toolbar && (
+        <Toolbar
+          {...componentsProps?.toolbar}
           isLandscape={isLandscape}
-          value={value}
           onChange={handleDateChange}
-          setOpenView={setOpenView as (view: CalendarOrClockPickerView) => void}
-          openView={openView}
-          toolbarTitle={toolbarTitle}
-          toolbarFormat={toolbarFormat}
-          toolbarPlaceholder={toolbarPlaceholder}
+          value={value}
+          view={openView}
+          onViewChange={setOpenView as (view: CalendarOrClockPickerView) => void}
+          views={views}
+          disabled={other.disabled}
+          readOnly={other.readOnly}
           isMobileKeyboardViewOpen={isMobileKeyboardViewOpen}
           toggleMobileKeyboardView={toggleMobileKeyboardView}
         />
       )}
-      {showTabs && !!TabsComponent && (
-        <TabsComponent
-          dateRangeIcon={dateRangeIcon}
-          timeIcon={timeIcon}
+      {!!Tabs && (
+        <Tabs
           view={openView}
-          onChange={setOpenView as (view: CalendarOrClockPickerView) => void}
-          {...other.componentsProps?.tabs}
+          onViewChange={setOpenView as (view: CalendarOrClockPickerView) => void}
+          {...componentsProps?.tabs}
         />
       )}
 
@@ -250,6 +237,8 @@ export function CalendarOrClockPicker<TDate, View extends CalendarOrClockPickerV
                 views={views.filter(isDatePickerView) as CalendarPickerView[]}
                 focusedView={focusedView}
                 onFocusedViewChange={setFocusedView}
+                components={components}
+                componentsProps={componentsProps}
                 {...other}
               />
             )}
@@ -265,6 +254,8 @@ export function CalendarOrClockPicker<TDate, View extends CalendarOrClockPickerV
                 onChange={handleChangeAndOpenNext}
                 onViewChange={setOpenView as (view: ClockPickerView) => void}
                 showViewSwitcher={wrapperVariant === 'desktop'}
+                components={components}
+                componentsProps={componentsProps}
               />
             )}
           </React.Fragment>

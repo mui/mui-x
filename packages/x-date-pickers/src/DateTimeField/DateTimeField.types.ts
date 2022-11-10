@@ -27,6 +27,11 @@ export interface UseDateTimeFieldProps<TDate>
     TimeValidationProps<TDate>,
     BaseTimeValidationProps {
   /**
+   * 12h/24h view for hour selection clock.
+   * @default `utils.is12HourCycleInCurrentLocale()`
+   */
+  ampm?: boolean;
+  /**
    * Minimal selectable moment of time with binding to date, to set min time in each day use `minTime`.
    */
   minDateTime?: TDate;

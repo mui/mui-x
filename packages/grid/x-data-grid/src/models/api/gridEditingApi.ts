@@ -79,6 +79,11 @@ export interface GridStartCellEditModeParams {
    * If `true`, the value will be deleted before entering the edit mode.
    */
   deleteValue?: boolean;
+  /**
+   * The initial value for the field.
+   * If `deleteValue` is also true, this value is not used.
+   */
+  initialValue?: any;
 }
 
 /**
@@ -121,6 +126,11 @@ export interface GridStartRowEditModeParams {
    * If `true`, the value in `fieldToFocus` will be deleted before entering the edit mode.
    */
   deleteValue?: boolean;
+  /**
+   * The initial value for the given `fieldToFocus`.
+   * If `deleteValue` is also true, this value is not used.
+   */
+  initialValue?: string;
 }
 
 /**

@@ -59,7 +59,7 @@ export default function AggregationRowGrouping() {
         {...data}
         apiRef={apiRef}
         columns={COLUMNS}
-        disableSelectionOnClick
+        disableRowSelectionOnClick
         initialState={initialState}
       />
     </div>

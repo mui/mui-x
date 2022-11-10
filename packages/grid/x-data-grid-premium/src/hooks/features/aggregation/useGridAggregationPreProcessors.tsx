@@ -22,7 +22,9 @@ import { GridAggregationColumnMenuItem } from '../../../components/GridAggregati
 import { gridAggregationModelSelector } from './gridAggregationSelectors';
 import { GridInitialStatePremium } from '../../../models/gridStatePremium';
 
-const Divider = () => <MuiDivider onClick={(event) => event.stopPropagation()} />;
+function Divider() {
+  return <MuiDivider onClick={(event) => event.stopPropagation()} />;
+}
 
 export const useGridAggregationPreProcessors = (
   apiRef: React.MutableRefObject<GridApiPremium>,
@@ -43,7 +45,7 @@ export const useGridAggregationPreProcessors = (
             aggregationFunctions: props.aggregationFunctions,
           });
 
-      columnsState.all.forEach((field) => {
+      columnsState.orderedFields.forEach((field) => {
         const shouldHaveAggregationValue = !!aggregationRules[field];
         const haveAggregationColumnValue = !!rulesOnLastColumnHydration[field];
 

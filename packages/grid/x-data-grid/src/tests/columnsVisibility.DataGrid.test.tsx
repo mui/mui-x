@@ -15,14 +15,16 @@ const columns: GridColumns = [{ field: 'id' }, { field: 'idBis' }];
 describe('<DataGridPro /> - Columns Visibility', () => {
   const { render } = createRenderer();
 
-  const TestDataGrid = (
+  function TestDataGrid(
     props: Omit<DataGridProps, 'columns' | 'rows'> &
       Partial<Pick<DataGridProps, 'rows' | 'columns'>>,
-  ) => (
-    <div style={{ width: 300, height: 300 }}>
-      <DataGrid columns={columns} rows={rows} {...props} autoHeight={isJSDOM} />
-    </div>
-  );
+  ) {
+    return (
+      <div style={{ width: 300, height: 300 }}>
+        <DataGrid columns={columns} rows={rows} {...props} autoHeight={isJSDOM} />
+      </div>
+    );
+  }
 
   describe('prop: columnVisibilityModel and onColumnVisibilityModelChange', () => {
     it('should allow to set the columnVisibilityModel prop', () => {
@@ -215,5 +217,24 @@ describe('<DataGridPro /> - Columns Visibility', () => {
       fireEvent.click(screen.getByRole('checkbox', { name: 'id' }));
       expect(getColumnHeadersTextContent()).to.deep.equal([]);
     });
+  });
+
+  it('should autofocus the first switch element in columns panel when `autoFocusSearchField` disabled', () => {
+    render(
+      <TestDataGrid
+        components={{
+          Toolbar: GridToolbar,
+        }}
+        componentsProps={{
+          columnsPanel: {
+            autoFocusSearchField: false,
+          },
+        }}
+      />,
+    );
+
+    fireEvent.click(screen.getByRole('button', { name: 'Select columns' }));
+
+    expect(screen.getByRole('checkbox', { name: columns[0].field })).toHaveFocus();
   });
 });

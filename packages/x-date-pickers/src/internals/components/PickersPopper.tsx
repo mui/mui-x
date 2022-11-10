@@ -11,7 +11,7 @@ import MuiTrapFocus, {
 } from '@mui/material/Unstable_TrapFocus';
 import { useForkRef, useEventCallback, ownerDocument } from '@mui/material/utils';
 import { styled, useThemeProps } from '@mui/material/styles';
-import { unstable_composeClasses as composeClasses } from '@mui/material';
+import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { TransitionProps as MuiTransitionProps } from '@mui/material/transitions';
 import { PickersActionBar } from '../../PickersActionBar';
 import { PickerStateWrapperProps } from '../hooks/usePickerState';
@@ -73,9 +73,10 @@ export interface PickerPopperProps extends PickerStateWrapperProps {
   containerRef?: React.Ref<HTMLDivElement>;
   children?: React.ReactNode;
   onBlur?: () => void;
-  components?: Partial<PickersPopperSlotsComponent>;
-  componentsProps?: Partial<PickersPopperSlotsComponentsProps>;
+  components?: PickersPopperSlotsComponent;
+  componentsProps?: PickersPopperSlotsComponentsProps;
   classes?: Partial<PickersPopperClasses>;
+  shouldRestoreFocus?: () => boolean;
 }
 
 const useUtilityClasses = (ownerState: PickerPopperProps) => {
@@ -261,6 +262,7 @@ export function PickersPopper(inProps: PickerPopperProps) {
     anchorEl,
     children,
     containerRef = null,
+    shouldRestoreFocus,
     onBlur,
     onDismiss,
     onClear,
@@ -290,7 +292,7 @@ export function PickersPopper(inProps: PickerPopperProps) {
 
   const lastFocusedElementRef = React.useRef<Element | null>(null);
   React.useEffect(() => {
-    if (role === 'tooltip') {
+    if (role === 'tooltip' || (shouldRestoreFocus && !shouldRestoreFocus())) {
       return;
     }
 
@@ -308,7 +310,7 @@ export function PickersPopper(inProps: PickerPopperProps) {
         }
       });
     }
-  }, [open, role]);
+  }, [open, role, shouldRestoreFocus]);
 
   const [clickAwayRef, onPaperClick, onPaperTouchStart] = useClickAwayListener(
     open,

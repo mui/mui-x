@@ -3,9 +3,9 @@ import PropTypes from 'prop-types';
 import {
   BaseDatePickerProps,
   useDatePickerDefaultizedProps,
-  datePickerValueManager,
+  BaseDatePickerSlotsComponent,
+  BaseDatePickerSlotsComponentsProps,
 } from '../DatePicker/shared';
-import { DatePickerToolbar } from '../DatePicker/DatePickerToolbar';
 import {
   PickerStaticWrapper,
   PickersStaticWrapperSlotsComponentsProps,
@@ -16,16 +16,16 @@ import { useDateValidation } from '../internals/hooks/validation/useDateValidati
 import { usePickerState } from '../internals/hooks/usePickerState';
 import { StaticPickerProps } from '../internals/models/props/staticPickerProps';
 import { DateInputSlotsComponent } from '../internals/components/PureDateInput';
-import { DateCalendarSlotsComponent, DateCalendarSlotsComponentsProps } from '../DateCalendar';
+import { singleItemValueManager } from '../internals/utils/valueManagers';
 
 export interface StaticDatePickerSlotsComponent<TDate>
-  extends PickersStaticWrapperSlotsComponent,
-    DateCalendarSlotsComponent<TDate>,
+  extends BaseDatePickerSlotsComponent<TDate>,
+    PickersStaticWrapperSlotsComponent,
     DateInputSlotsComponent {}
 
 export interface StaticDatePickerSlotsComponentsProps<TDate>
-  extends PickersStaticWrapperSlotsComponentsProps,
-    DateCalendarSlotsComponentsProps<TDate> {}
+  extends BaseDatePickerSlotsComponentsProps<TDate>,
+    PickersStaticWrapperSlotsComponentsProps {}
 
 export interface StaticDatePickerProps<TDate>
   extends StaticPickerProps<TDate, BaseDatePickerProps<TDate>> {
@@ -33,12 +33,12 @@ export interface StaticDatePickerProps<TDate>
    * Overrideable components.
    * @default {}
    */
-  components?: Partial<StaticDatePickerSlotsComponent<TDate>>;
+  components?: StaticDatePickerSlotsComponent<TDate>;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  componentsProps?: Partial<StaticDatePickerSlotsComponentsProps<TDate>>;
+  componentsProps?: StaticDatePickerSlotsComponentsProps<TDate>;
 }
 
 type StaticDatePickerComponent = (<TDate>(
@@ -67,7 +67,6 @@ export const StaticDatePicker = React.forwardRef(function StaticDatePicker<TDate
   // Note that we are passing down all the value without spread.
   // It saves us >1kb gzip and make any prop available automatically on any level down.
   const {
-    ToolbarComponent = DatePickerToolbar,
     value,
     onChange,
     displayStaticWrapperAs,
@@ -79,7 +78,7 @@ export const StaticDatePicker = React.forwardRef(function StaticDatePicker<TDate
     ...other
   } = props;
 
-  const { pickerProps, inputProps, wrapperProps } = usePickerState(props, datePickerValueManager);
+  const { pickerProps, inputProps, wrapperProps } = usePickerState(props, singleItemValueManager);
   const validationError = useDateValidation(props) !== null;
 
   const DateInputProps = { ...inputProps, ...other, ref, validationError, components };
@@ -96,8 +95,6 @@ export const StaticDatePicker = React.forwardRef(function StaticDatePicker<TDate
     >
       <CalendarOrClockPicker
         {...pickerProps}
-        toolbarTitle={props.label || props.toolbarTitle}
-        ToolbarComponent={ToolbarComponent}
         DateInputProps={DateInputProps}
         components={components}
         componentsProps={componentsProps}
@@ -154,7 +151,7 @@ StaticDatePicker.propTypes = {
    */
   disabled: PropTypes.bool,
   /**
-   * If `true` disable values before the current time
+   * If `true` disable values before the current date for date components, time for time components and both for date time components.
    * @default false
    */
   disableFuture: PropTypes.bool,
@@ -174,7 +171,7 @@ StaticDatePicker.propTypes = {
    */
   disableOpenPicker: PropTypes.bool,
   /**
-   * If `true` disable values after the current time.
+   * If `true` disable values after the current date for date components, time for time components and both for date time components.
    * @default false
    */
   disablePast: PropTypes.bool,
@@ -188,6 +185,12 @@ StaticDatePicker.propTypes = {
    * Needs to provide `getWeekNumber` if the adapter does not support `getWeekNumber`
    */
   displayWeekNumber: PropTypes.bool,
+  /**
+   * Calendar will show more weeks in order to match this value.
+   * Put it to 6 for having fix number of week in Gregorian calendars
+   * @default undefined
+   */
+  fixedWeekNumber: PropTypes.number,
   /**
    * Get aria-label text for control that opens picker dialog. Aria-label text must include selected date. @DateIOType
    * @template TDate
@@ -238,11 +241,11 @@ StaticDatePicker.propTypes = {
    */
   mask: PropTypes.string,
   /**
-   * Maximal selectable date. @DateIOType
+   * Maximal selectable date.
    */
   maxDate: PropTypes.any,
   /**
-   * Minimal selectable date. @DateIOType
+   * Minimal selectable date.
    */
   minDate: PropTypes.any,
   /**
@@ -337,26 +340,24 @@ StaticDatePicker.propTypes = {
    */
   rifmFormatter: PropTypes.func,
   /**
-   * Disable specific date. @DateIOType
+   * Disable specific date.
    * @template TDate
    * @param {TDate} day The date to test.
-   * @returns {boolean} Returns `true` if the date should be disabled.
+   * @returns {boolean} If `true` the date will be disabled.
    */
   shouldDisableDate: PropTypes.func,
   /**
-   * Disable specific months dynamically.
-   * Works like `shouldDisableDate` but for month selection view @DateIOType.
+   * Disable specific month.
    * @template TDate
-   * @param {TDate} month The month to check.
+   * @param {TDate} month The month to test.
    * @returns {boolean} If `true` the month will be disabled.
    */
   shouldDisableMonth: PropTypes.func,
   /**
-   * Disable specific years dynamically.
-   * Works like `shouldDisableDate` but for year selection view @DateIOType.
+   * Disable specific year.
    * @template TDate
    * @param {TDate} year The year to test.
-   * @returns {boolean} Returns `true` if the year should be disabled.
+   * @returns {boolean} If `true` the year will be disabled.
    */
   shouldDisableYear: PropTypes.func,
   /**
@@ -376,25 +377,6 @@ StaticDatePicker.propTypes = {
     PropTypes.func,
     PropTypes.object,
   ]),
-  /**
-   * Component that will replace default toolbar renderer.
-   * @default DatePickerToolbar
-   */
-  ToolbarComponent: PropTypes.elementType,
-  /**
-   * Date format, that is displaying in toolbar.
-   */
-  toolbarFormat: PropTypes.string,
-  /**
-   * Mobile picker date value placeholder, displaying if `value` === `null`.
-   * @default '–'
-   */
-  toolbarPlaceholder: PropTypes.node,
-  /**
-   * Mobile picker title, displaying in the toolbar.
-   * @default 'Select date'
-   */
-  toolbarTitle: PropTypes.node,
   /**
    * The value of the picker.
    */

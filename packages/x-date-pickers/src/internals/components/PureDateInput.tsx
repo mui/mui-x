@@ -16,7 +16,7 @@ export interface DateInputSlotsComponent {
    * Icon displayed in the open picker button.
    * @default Calendar or Clock
    */
-  OpenPickerIcon: React.ElementType;
+  OpenPickerIcon?: React.ElementType;
 }
 
 export interface DateInputProps<TDate> {
@@ -30,7 +30,7 @@ export interface DateInputProps<TDate> {
    * Overrideable components.
    * @default {}
    */
-  components?: Partial<DateInputSlotsComponent>;
+  components?: DateInputSlotsComponent;
   disabled?: boolean;
   /**
    * Disable mask on the keyboard, this should be used rarely. Consider passing proper mask for your format.

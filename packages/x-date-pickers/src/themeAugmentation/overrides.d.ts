@@ -46,30 +46,42 @@ export interface PickersComponentNameToClassKey {
   MuiDayCalendarSkeleton: DayCalendarSkeletonClassKey;
   MuiDesktopDatePicker: never;
   MuiDesktopDateTimePicker: never;
+  MuiDesktopNextDatePicker: never;
+  MuiDesktopNextDateTimePicker: never;
+  MuiDesktopNextTimePicker: never;
   MuiDesktopTimePicker: never;
   MuiLocalizationProvider: never;
   MuiMobileDatePicker: never;
   MuiMobileDateTimePicker: never;
+  MuiMobileNextDatePicker: never;
+  MuiMobileNextDateTimePicker: never;
+  MuiMobileNextTimePicker: never;
   MuiMobileTimePicker: never;
   MuiMonthCalendar: MonthCalendarClassKey;
+  MuiNextDatePicker: never;
+  MuiNextDateTimePicker: never;
+  MuiNextTimePicker: never;
   MuiPickersArrowSwitcher: PickersArrowSwitcherClassKey;
   MuiPickersCalendarHeader: PickersCalendarHeaderClassKey;
   MuiPickersDay: PickersDayClassKey;
   MuiPickersFadeTransitionGroup: PickersFadeTransitionGroupClassKey;
+  MuiPickersMonth: PickersMonthClassKey;
   MuiPickersPopper: PickersPopperClassKey;
+  MuiPickersSlideTransition: PickersSlideTransitionClassKey;
   MuiPickerStaticWrapper: PickerStaticWrapperClassKey;
   MuiPickersToolbar: PickersToolbarClassKey;
   MuiPickersToolbarButton: PickersToolbarButtonClassKey;
+  MuiPickersToolbarText: PickersToolbarTextClassKey;
+  MuiPickersYear: PickersYearClassKey;
   MuiStaticDatePicker: never;
   MuiStaticDateTimePicker: never;
+  MuiStaticNextDatePicker: never;
+  MuiStaticNextDateTimePicker: never;
+  MuiStaticNextTimePicker: never;
   MuiStaticTimePicker: never;
   MuiTimePicker: never;
   MuiTimePickerToolbar: TimePickerToolbarClassKey;
   MuiYearCalendar: YearCalendarClassKey;
-  PrivatePickersMonth: PickersMonthClassKey;
-  PrivatePickersSlideTransition: PickersSlideTransitionClassKey;
-  PrivatePickersToolbarText: PickersToolbarTextClassKey;
-  PrivatePickersYear: PickersYearClassKey;
 }
 
 declare module '@mui/material/styles' {

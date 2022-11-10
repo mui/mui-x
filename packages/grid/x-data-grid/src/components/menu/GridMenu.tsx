@@ -2,12 +2,11 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import ClickAwayListener, { ClickAwayListenerProps } from '@mui/material/ClickAwayListener';
-import { unstable_composeClasses as composeClasses } from '@mui/material';
+import { unstable_composeClasses as composeClasses, HTMLElementType } from '@mui/utils';
 import Grow, { GrowProps } from '@mui/material/Grow';
 import Paper from '@mui/material/Paper';
 import Popper, { PopperProps } from '@mui/material/Popper';
 import { styled } from '@mui/material/styles';
-import { HTMLElementType } from '@mui/utils';
 import { getDataGridUtilityClass, gridClasses } from '../../constants/gridClasses';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
@@ -65,7 +64,7 @@ const transformOrigin = {
   'bottom-end': 'top right',
 };
 
-const GridMenu = (props: GridMenuProps) => {
+function GridMenu(props: GridMenuProps) {
   const { open, target, onClickAway, children, position, className, onExited, ...other } = props;
   const apiRef = useGridApiContext();
   const prevTarget = React.useRef(target);
@@ -121,7 +120,7 @@ const GridMenu = (props: GridMenuProps) => {
       )}
     </GridMenuRoot>
   );
-};
+}
 
 GridMenu.propTypes = {
   // ----------------------------- Warning --------------------------------

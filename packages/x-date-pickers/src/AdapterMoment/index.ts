@@ -28,20 +28,20 @@ const formatTokenMap: MuiFormatTokenMap = {
   a: 'meridiem',
 
   // Hour
-  H: 'hour',
-  HH: 'hour',
-  h: 'hour',
-  hh: 'hour',
-  k: 'hour',
-  kk: 'hour',
+  H: 'hours',
+  HH: 'hours',
+  h: 'hours',
+  hh: 'hours',
+  k: 'hours',
+  kk: 'hours',
 
   // Minute
-  m: 'minute',
-  mm: 'minute',
+  m: 'minutes',
+  mm: 'minutes',
 
   // Second
-  s: 'second',
-  ss: 'second',
+  s: 'seconds',
+  ss: 'seconds',
 };
 
 export class AdapterMoment
@@ -63,7 +63,9 @@ export class AdapterMoment
       .map((token) => {
         const firstCharacter = token[0];
         if (firstCharacter === 'L' || firstCharacter === ';') {
-          return this.moment.localeData().longDateFormat(token as LongDateFormatKey);
+          return this.moment
+            .localeData(this.getCurrentLocaleCode())
+            .longDateFormat(token as LongDateFormatKey);
         }
 
         return token;

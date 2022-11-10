@@ -2,7 +2,7 @@
 import { IUtils } from '@date-io/core/IUtils';
 
 // TODO: Maybe we should add the same constraint.
-// @ts-expect-error TDate in our codebase does not have the `ExtendableDateType` constraint.
+// @ts-ignore TDate in our codebase does not have the `ExtendableDateType` constraint.
 export type MuiPickersAdapter<TDate> = IUtils<TDate> & {
   getWeekNumber?: (date: TDate) => number;
 };
@@ -11,9 +11,9 @@ export type MuiDateSectionName =
   | 'year'
   | 'month'
   | 'day'
-  | 'hour'
-  | 'minute'
-  | 'second'
+  | 'hours'
+  | 'minutes'
+  | 'seconds'
   | 'meridiem';
 
 export type MuiFormatTokenMap = {

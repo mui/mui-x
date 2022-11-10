@@ -1,6 +1,6 @@
 import { GridColumnApi } from './gridColumnApi';
 import { GridColumnMenuApi } from './gridColumnMenuApi';
-import { GridCoreApi } from './gridCoreApi';
+import { GridCoreApi, GridCorePrivateApi } from './gridCoreApi';
 import { GridClipboardApi } from './gridClipboardApi';
 import { GridCsvExportApi } from './gridCsvExportApi';
 import { GridDensityApi } from './gridDensityApi';
@@ -14,9 +14,9 @@ import { GridPrintExportApi } from './gridPrintExportApi';
 import { GridDisableVirtualizationApi } from './gridDisableVirtualizationApi';
 import { GridRowApi } from './gridRowApi';
 import { GridRowsMetaApi } from './gridRowsMetaApi';
-import { GridSelectionApi } from './gridSelectionApi';
+import { GridRowSelectionApi } from './gridRowSelectionApi';
 import { GridSortApi } from './gridSortApi';
-import { GridStateApi } from './gridStateApi';
+import { GridStateApi, GridStatePrivateApi } from './gridStateApi';
 import { GridLoggerApi } from './gridLoggerApi';
 import { GridScrollApi } from './gridScrollApi';
 import { GridVirtualScrollerApi } from './gridVirtualScrollerApi';
@@ -43,7 +43,7 @@ export interface GridApiCommon<
     GridEditingApi,
     GridParamsApi,
     GridColumnApi,
-    GridSelectionApi,
+    GridRowSelectionApi,
     GridSortApi,
     GridPaginationApi,
     GridCsvExportApi,
@@ -61,3 +61,13 @@ export interface GridApiCommon<
     GridStateApi<GridState>,
     GridStatePersistenceApi<GridInitialState>,
     GridColumnGroupingApi {}
+
+export interface GridPrivateOnlyApiCommon<
+  Api extends GridApiCommon,
+  PrivateApi extends GridPrivateApiCommon,
+> extends GridCorePrivateApi<Api, PrivateApi>,
+    GridStatePrivateApi<PrivateApi['state']> {}
+
+export interface GridPrivateApiCommon
+  extends GridApiCommon,
+    GridPrivateOnlyApiCommon<GridApiCommon, GridPrivateApiCommon> {}

@@ -1,1 +1,1 @@
-<DataGrid checkboxSelection disableSelectionOnClick {...data} />
+<DataGrid checkboxSelection disableRowSelectionOnClick {...data} />

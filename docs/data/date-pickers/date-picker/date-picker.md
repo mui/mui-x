@@ -4,10 +4,10 @@ title: React Date Picker component
 components: DateCalendar, DatePicker, DayCalendarSkeleton, DesktopDatePicker, MobileDatePicker, MonthCalendar, PickersDay, StaticDatePicker, YearCalendar
 githubLabel: 'component: DatePicker'
 packageName: '@mui/x-date-pickers'
-materialDesign: https://material.io/components/date-pickers
+materialDesign: https://m2.material.io/components/date-pickers
 ---
 
-# Date picker
+# Date Picker
 
 <p class="description">The date picker let the user select a date.</p>
 
@@ -50,7 +50,7 @@ The date picker component can be disabled or read-only.
 
 ## Validation
 
-You can find the documentation in the [Validation page](/react-date-pickers/validation/)
+You can find the documentation in the [Validation page](/x/react-date-pickers/validation/)
 
 ## Localization
 
@@ -94,10 +94,23 @@ You can take advantage of the [PickersDay](/x/api/date-pickers/pickers-day/) com
 
 {{"demo": "CustomDay.js"}}
 
-## Add week number
+## Customize month layout
+
+You can customize the month layout with some props.
+
+### Show additional days
+
+To shows all days of displayed weeks, included those outside of the current month, use `showDaysOutsideCurrentMonth`.
+
+By default, only weeks of the current month are displayed, but you can provide a total number of week to display with `fixedWeekNumber` prop.
+This value is usually set to `6` for Gregorian calendars, because months display can vary between 4 and 6 weeks.
+
+{{"demo": "CustomMonthLayout.js"}}
+
+### Add week number
 
 To display week number, use the `displayWeekNumber`.
-You also need to provide the method `getWeekNumber`.
+If the adapter does not support it, you will also need to provide the method `getWeekNumber`.
 It takes the first day of the week as an input and returns the week number.
 You can customize the string displayed with `localeText.calendarWeekNumberText`.
 
