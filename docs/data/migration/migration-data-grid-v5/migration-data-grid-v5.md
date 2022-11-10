@@ -76,7 +76,7 @@ Below are described the steps you need to make to migrate from v5 to v6.
 - Some internal undocumented `apiRef` methods and properties were removed.
 
   If you don't use undocumented properties - you can skip the list below.
-  Otherwise, please check the list and [let us know](https://github.com/mui/mui-x/issues/new/choose) if there's something missing in the `apiRef`.
+  Otherwise, please check the list and [open an issue](https://github.com/mui/mui-x/issues/new/choose) if there's something missing in the `apiRef`.
 
     <details>
     <summary markdown="span">List of removed undocumented methods and properties</summary>
