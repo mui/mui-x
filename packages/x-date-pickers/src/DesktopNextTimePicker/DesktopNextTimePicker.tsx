@@ -24,7 +24,7 @@ const DesktopNextTimePicker = React.forwardRef(function DesktopNextTimePicker<TD
   inProps: DesktopNextTimePickerProps<TDate>,
   ref: React.Ref<HTMLDivElement>,
 ) {
-  const localeText = useLocaleText();
+  const localeText = useLocaleText<TDate>();
 
   // Props with the default values common to all time pickers
   const { className, sx, ...defaultizedProps } = useNextTimePickerDefaultizedProps<
