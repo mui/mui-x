@@ -9,16 +9,15 @@ _Nov 10, 2022_
 
 We'd like to offer a big thanks to the 5 contributors who made this release possible. Here are some highlights ✨:
 
-- 📝 New `MobileDateTimePicker`, `DesktopDateTimePicker`, `DateTimePicker` and `StaticDateTimePicker` based on `DateTimeField` (#6767) @flaviendelangle
 - 📚 Documentation improvements
 - 🐞 Bugfixes
-
 
 ### `@mui/x-data-grid@v6.0.0-alpha.7` / `@mui/x-data-grid-pro@v6.0.0-alpha.7` / `@mui/x-data-grid-premium@v6.0.0-alpha.7`
 
 #### Changes
 
 - [DataGrid] Fix cell focus causing scroll jump when virtualization enabled (#6785) @yaredtsy
+- [DataGrid] Remove items marked as `@deprecated` (#6505) @DanailH
 
 ### `@mui/x-date-pickers@v6.0.0-alpha.7` / `@mui/x-date-pickers-pro@v6.0.0-alpha.7`
 
