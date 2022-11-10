@@ -49,7 +49,6 @@ Below are described the steps you need to make to migrate from v5 to v6.
 - The `gridColumnsMetaSelector` selector was removed. Use `gridColumnsTotalWidthSelector` or `gridColumnPositionsSelector` instead.
 - The `getGridNumericColumnOperators` selector was removed. Use `getGridNumericOperators` instead.
 - The `gridVisibleRowsSelector` selector was removed. Use `gridVisibleSortedRowIdsSelector` instead.
--
 
 ### Events
 
