@@ -18,6 +18,12 @@ We'd like to offer a big thanks to the 4 contributors who made this release poss
 - [DataGrid] Fix for cell focus preventing scroll when virtualization enabled (#6622) @yaredtsy
 - [DataGridPro] Opt-out for column jump back on re-order (#6697) @gavbrennan
 
+### `@mui/x-date-pickers@v5.0.8` / `@mui/x-date-pickers-pro@v5.0.8`
+
+#### Changes
+
+- [pickers] Fix pickers toolbar styling (#6793) (#6799) @LukasTy
+
 ### Docs
 
 - [docs] Fix link to localization page (#6766) @alexfauquette
