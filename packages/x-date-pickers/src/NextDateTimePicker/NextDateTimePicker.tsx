@@ -132,12 +132,6 @@ NextDateTimePicker.propTypes = {
    */
   format: PropTypes.string,
   /**
-   * Get the week number form keek first day
-   * @param {TDate} date The first day of the week.
-   * @returns {number} The displayed week number
-   */
-  getWeekNumber: PropTypes.func,
-  /**
    * Pass a ref to the `input` element.
    */
   inputRef: PropTypes.oneOfType([

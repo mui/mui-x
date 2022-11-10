@@ -621,12 +621,6 @@ DateCalendar.propTypes = {
   fixedWeekNumber: PropTypes.number,
   focusedView: PropTypes.oneOf(['day', 'month', 'year']),
   /**
-   * Get the week number form keek first day
-   * @param {TDate} date The first day of the week.
-   * @returns {number} The displayed week number
-   */
-  getWeekNumber: PropTypes.func,
-  /**
    * If `true` renders `LoadingComponent` in calendar instead of calendar view.
    * Can be used to preload information and show it in calendar.
    * @default false

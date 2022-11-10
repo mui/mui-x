@@ -191,12 +191,6 @@ DesktopDatePicker.propTypes = {
    * @default (date, utils) => `Choose date, selected date is ${utils.format(date, 'fullDate')}`
    */
   getOpenDialogAriaText: PropTypes.func,
-  /**
-   * Get the week number form keek first day
-   * @param {TDate} date The first day of the week.
-   * @returns {number} The displayed week number
-   */
-  getWeekNumber: PropTypes.func,
   ignoreInvalidInputs: PropTypes.bool,
   /**
    * Props to pass to keyboard input adornment.
