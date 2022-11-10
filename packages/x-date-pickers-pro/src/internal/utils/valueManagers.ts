@@ -11,11 +11,16 @@ import type { DateRangeValidationError } from '../hooks/validation/useDateRangeV
 import type { TimeRangeValidationError } from '../hooks/validation/useTimeRangeValidation';
 import type { DateTimeRangeValidationError } from '../hooks/validation/useDateTimeRangeValidation';
 
-export const rangeValueManager: PickerStateValueManager<
-  [any, any],
-  any,
-  DateRangeValidationError | TimeRangeValidationError | DateTimeRangeValidationError
-> = {
+export type RangePickerStateValueManager<
+  TValue = [any, any],
+  TDate = any,
+  TError extends
+    | DateRangeValidationError
+    | TimeRangeValidationError
+    | DateTimeRangeValidationError = any,
+> = PickerStateValueManager<TValue, TDate, TError>;
+
+export const rangeValueManager: RangePickerStateValueManager = {
   emptyValue: [null, null],
   getTodayValue: (utils) => [utils.date()!, utils.date()!],
   cleanValue: (utils, value) =>
