@@ -410,7 +410,6 @@
   { "name": "gridSortingStateSelector", "kind": "Variable" },
   { "name": "GridSortItem", "kind": "Interface" },
   { "name": "GridSortModel", "kind": "TypeAlias" },
-  { "name": "GridSortModelParams", "kind": "Interface" },
   { "name": "gridSortModelSelector", "kind": "Variable" },
   { "name": "GridState", "kind": "TypeAlias" },
   { "name": "GridStateApi", "kind": "Interface" },

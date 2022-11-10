@@ -80,6 +80,7 @@ Below are described the steps you need to make to migrate from v5 to v6.
 - The `useGridState` hook was removed. Use `apiRef.current.state`, `apiRef.current.setState` and `apiRef.current.forceUpdate` instead.
 - The `getGridColDef` utility function was removed.
 - The `GridValueGetterFullParams` type was removed.
+- The `GridSortModelParams` interface was removed.
 - The `GridApiRef` type was removed. Use `React.MutableRefObject<GridApi>` instead.
 - The `GridCellValue` type was removed. Use `any` or the `V` generic passed to most interfaces.
 - The `GridRowData` type was removed. Use `GridRowModel` instead.
