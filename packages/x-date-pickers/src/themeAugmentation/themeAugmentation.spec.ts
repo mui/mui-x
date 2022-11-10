@@ -224,6 +224,20 @@ createTheme({
         someRandomProp: true,
       },
     },
+    MuiDesktopNextDateTimePicker: {
+      defaultProps: {
+        open: true,
+        // @ts-expect-error invalid MuiDesktopNextDateTimePicker prop
+        someRandomProp: true,
+      },
+    },
+    MuiDesktopNextTimePicker: {
+      defaultProps: {
+        open: true,
+        // @ts-expect-error invalid MuiDesktopNextTimePicker prop
+        someRandomProp: true,
+      },
+    },
     MuiDesktopTimePicker: {
       defaultProps: {
         open: true,
@@ -235,6 +249,20 @@ createTheme({
       defaultProps: {
         open: true,
         // @ts-expect-error invalid MuiMobileNextDatePicker prop
+        someRandomProp: true,
+      },
+    },
+    MuiMobileNextDateTimePicker: {
+      defaultProps: {
+        open: true,
+        // @ts-expect-error invalid MuiMobileNextDateTimePicker prop
+        someRandomProp: true,
+      },
+    },
+    MuiMobileNextTimePicker: {
+      defaultProps: {
+        open: true,
+        // @ts-expect-error invalid MuiMobileNextTimePicker prop
         someRandomProp: true,
       },
     },
@@ -254,6 +282,20 @@ createTheme({
       defaultProps: {
         open: true,
         // @ts-expect-error invalid MuiNextDatePicker prop
+        someRandomProp: true,
+      },
+    },
+    MuiNextDateTimePicker: {
+      defaultProps: {
+        open: true,
+        // @ts-expect-error invalid MuiNextDateTimePicker prop
+        someRandomProp: true,
+      },
+    },
+    MuiNextTimePicker: {
+      defaultProps: {
+        open: true,
+        // @ts-expect-error invalid MuiNextTimePicker prop
         someRandomProp: true,
       },
     },
@@ -436,6 +478,27 @@ createTheme({
       defaultProps: {
         disabled: true,
         // @ts-expect-error invalid MuiStaticDateTimePicker prop
+        someRandomProp: true,
+      },
+    },
+    MuiStaticNextDatePicker: {
+      defaultProps: {
+        disabled: true,
+        // @ts-expect-error invalid MuiStaticNextDatePicker prop
+        someRandomProp: true,
+      },
+    },
+    MuiStaticNextDateTimePicker: {
+      defaultProps: {
+        disabled: true,
+        // @ts-expect-error invalid MuiStaticNextDateTimePicker prop
+        someRandomProp: true,
+      },
+    },
+    MuiStaticNextTimePicker: {
+      defaultProps: {
+        disabled: true,
+        // @ts-expect-error invalid MuiStaticNextTimePicker prop
         someRandomProp: true,
       },
     },

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import {
   BaseTimePickerProps,
   useTimePickerDefaultizedProps,
-  timePickerValueManager,
+  timeValueManager,
   BaseTimePickerSlotsComponent,
   BaseTimePickerSlotsComponentsProps,
 } from '../TimePicker/shared';
@@ -77,7 +77,7 @@ export const StaticTimePicker = React.forwardRef(function StaticTimePicker<TDate
   } = props;
 
   const validationError = useTimeValidation(props) !== null;
-  const { pickerProps, inputProps, wrapperProps } = usePickerState(props, timePickerValueManager);
+  const { pickerProps, inputProps, wrapperProps } = usePickerState(props, timeValueManager);
 
   const DateInputProps = {
     ...inputProps,
@@ -154,7 +154,7 @@ StaticTimePicker.propTypes = {
    */
   disabled: PropTypes.bool,
   /**
-   * If `true` disable values before the current time
+   * If `true` disable values before the current date for date components, time for time components and both for date time components.
    * @default false
    */
   disableFuture: PropTypes.bool,
@@ -174,7 +174,7 @@ StaticTimePicker.propTypes = {
    */
   disableOpenPicker: PropTypes.bool,
   /**
-   * If `true` disable values after the current time.
+   * If `true` disable values after the current date for date components, time for time components and both for date time components.
    * @default false
    */
   disablePast: PropTypes.bool,
@@ -221,13 +221,13 @@ StaticTimePicker.propTypes = {
    */
   mask: PropTypes.string,
   /**
-   * Max time acceptable time.
-   * For input validation date part of passed object will be ignored if `disableIgnoringDatePartForTimeValidation` not specified.
+   * Maximal selectable time.
+   * The date part of the object will be ignored unless `props.disableIgnoringDatePartForTimeValidation === true`.
    */
   maxTime: PropTypes.any,
   /**
-   * Min time acceptable time.
-   * For input validation date part of passed object will be ignored if `disableIgnoringDatePartForTimeValidation` not specified.
+   * Minimal selectable time.
+   * The date part of the object will be ignored unless `props.disableIgnoringDatePartForTimeValidation === true`.
    */
   minTime: PropTypes.any,
   /**
@@ -303,11 +303,10 @@ StaticTimePicker.propTypes = {
    */
   rifmFormatter: PropTypes.func,
   /**
-   * Dynamically check if time is disabled or not.
-   * If returns `false` appropriate time point will ot be acceptable.
+   * Disable specific time.
    * @param {number} timeValue The value to check.
    * @param {ClockPickerView} view The clock type of the timeValue.
-   * @returns {boolean} Returns `true` if the time should be disabled
+   * @returns {boolean} If `true` the time will be disabled.
    */
   shouldDisableTime: PropTypes.func,
   /**

@@ -26,10 +26,9 @@ export type PickerViewRendererLookup<
 };
 
 /**
- * Props used to handle the views of the pickers.
- * Those props are exposed on all the pickers.
+ * Props used to handle the views that are common to all pickers.
  */
-export interface UsePickerViewsProps<TView extends CalendarOrClockPickerView> {
+export interface UsePickerViewsBaseProps<TView extends CalendarOrClockPickerView> {
   autoFocus?: boolean;
   /**
    * If `true`, the picker and text field are disabled.
@@ -50,12 +49,25 @@ export interface UsePickerViewsProps<TView extends CalendarOrClockPickerView> {
    * Array of views to show.
    */
   views: readonly TView[];
+}
+
+/**
+ * Props used to handle the views of the pickers.
+ */
+export interface UsePickerViewsNonStaticProps {
   /**
    * Do not render open picker button (renders only the field).
    * @default false
    */
   disableOpenPicker?: boolean;
 }
+
+/**
+ * Props used to handle the value of the pickers.
+ */
+export interface UsePickerViewsProps<TView extends CalendarOrClockPickerView>
+  extends UsePickerViewsBaseProps<TView>,
+    UsePickerViewsNonStaticProps {}
 
 export interface UsePickerViewParams<
   TValue,
@@ -195,7 +207,7 @@ export const usePickerViews = <
   useEnhancedEffect(() => {
     if (currentViewMode === 'field' && open) {
       onClose();
-      onSelectedSectionsChange('hour');
+      onSelectedSectionsChange('hours');
 
       setTimeout(() => {
         inputRef?.current!.focus();
