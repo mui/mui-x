@@ -13,10 +13,7 @@ import {
 export type SingleItemPickerStateValueManager<
   TValue = any,
   TDate = any,
-  TError extends
-    | DateValidationError
-    | TimeValidationError
-    | DateTimeValidationError = any,
+  TError extends DateValidationError | TimeValidationError | DateTimeValidationError = any,
 > = PickerStateValueManager<TValue, TDate, TError>;
 
 export const singleItemValueManager: SingleItemPickerStateValueManager = {
