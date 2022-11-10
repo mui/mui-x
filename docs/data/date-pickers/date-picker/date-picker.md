@@ -110,15 +110,10 @@ This value is usually set to `6` for Gregorian calendars, because months display
 ### Add week number
 
 To display week number, use the `displayWeekNumber`.
-If the adapter does not support it, you will also need to provide the method `getWeekNumber`.
+If you use a `dateAdapter` imported from outside of our library, you will have to provide the method `getWeekNumber`.
 It takes the first day of the week as an input and returns the week number.
-You can customize the string displayed with `localeText.calendarWeekNumberText`.
 
-The four supported libraries ([dayjs](https://day.js.org/docs/en/get-set/week),
-[date-fns](https://date-fns.org/v2.29.2/docs/getWeek),
-[moment](https://momentjs.com/docs/#/get-set/week/), and
-[luxon](https://moment.github.io/luxon/api-docs/index.html#datetimeweeknumber)
-have dedicated method to help you.
+To customize the string displayed, use the localization key`localeText.calendarWeekNumberText`.
 
 {{"demo": "AddWeekNumber.js"}}
 
