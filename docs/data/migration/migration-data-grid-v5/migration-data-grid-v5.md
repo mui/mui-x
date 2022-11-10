@@ -72,6 +72,7 @@ Below are described the steps you need to make to migrate from v5 to v6.
 
 - The `apiRef.current.updateColumn` method was removed. Use `apiRef.current.updateColumns` instead.
 - The `apiRef.current.getColumnsMeta` method was removed. Use `gridColumnsTotalWidthSelector` or `gridColumnPositionsSelector` selectors instead.
+- The `apiRef.current.getRowIndex` method was removed. Use `apiRef.current.getRowIndexRelativeToVisibleRows` instead.
 
 ### Other exports
 
