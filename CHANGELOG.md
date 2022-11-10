@@ -7,7 +7,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 _Nov 10, 2022_
 
-We'd like to offer a big thanks to the 4 contributors who made this release possible. Here are some highlights ✨:
+We'd like to offer a big thanks to the 5 contributors who made this release possible. Here are some highlights ✨:
 
 - 🐞 Bugfixes
 
@@ -22,7 +22,7 @@ We'd like to offer a big thanks to the 4 contributors who made this release poss
 
 #### Changes
 
-- [pickers] Fix pickers toolbar styling (#6793) (#6799) @LukasTy
+- [pickers] Fix pickers toolbar styling (#6793) @LukasTy
 
 ### Docs
 
