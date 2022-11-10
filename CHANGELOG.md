@@ -18,7 +18,7 @@ We'd like to offer a big thanks to the 5 contributors who made this release poss
 
 #### Changes
 
-- [DataGrid] Fix cell focus causing scroll jump when virtualization enabled (#6785) @cherniavskii
+- [DataGrid] Fix cell focus causing scroll jump when virtualization enabled (#6785) @yaredtsy
 
 ### `@mui/x-date-pickers@v6.0.0-alpha.7` / `@mui/x-date-pickers-pro@v6.0.0-alpha.7`
 
