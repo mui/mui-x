@@ -1,5 +1,5 @@
 {
-  "version": "6.0.0-alpha.6",
+  "version": "6.0.0-alpha.7",
   "private": true,
   "scripts": {
     "start": "yarn && yarn docs:dev",
@@ -89,7 +89,7 @@
     "@mui/utils": "^5.10.9",
     "@octokit/plugin-retry": "^4.0.3",
     "@octokit/rest": "^19.0.5",
-    "@playwright/test": "1.21.1",
+    "@playwright/test": "1.27.1",
     "@testing-library/react": "^13.4.0",
     "@types/babel__core": "^7.1.19",
     "@types/chai": "^4.3.3",
@@ -150,7 +150,7 @@
     "markdownlint-cli2": "^0.5.1",
     "mocha": "^10.1.0",
     "nyc": "^15.1.0",
-    "playwright": "^1.21.1",
+    "playwright": "^1.27.1",
     "prettier": "^2.7.1",
     "process": "^0.11.10",
     "react": "^18.2.0",

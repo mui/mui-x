@@ -366,7 +366,7 @@ describe('<DataGridPro /> - Columns', () => {
 
     it('should not loose imperatively added columns when re-applying pipe processing', () => {
       render(<Test checkboxSelection />);
-      act(() => apiRef.current.updateColumn({ field: 'id' }));
+      act(() => apiRef.current.updateColumns([{ field: 'id' }]));
       expect(gridColumnFieldsSelector(apiRef)).to.deep.equal(['__check__', 'brand', 'id']);
       act(() => apiRef.current.unstable_requestPipeProcessorsApplication('hydrateColumns'));
       expect(gridColumnFieldsSelector(apiRef)).to.deep.equal(['__check__', 'brand', 'id']);
