@@ -65,9 +65,12 @@ const PickersToolbarContent = styled(Grid, {
   overridesResolver: (props, styles) => styles.content,
 })<{
   ownerState: PickersToolbarProps<any, any>;
-}>({
+}>(({ ownerState }) => ({
   flex: 1,
-});
+  ...(!ownerState.isLandscape && {
+    alignItems: 'center',
+  }),
+}));
 
 const PickersToolbarPenIconButton = styled(IconButton, {
   name: 'MuiPickersToolbar',
