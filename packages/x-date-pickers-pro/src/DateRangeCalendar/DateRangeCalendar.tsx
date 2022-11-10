@@ -381,7 +381,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
       const isSelectedEndDate = isEndOfRange(utils, day, valueDayRange);
       const shouldInitDragging = !disableDragEditing && valueDayRange[0] && valueDayRange[1];
       const isElementDraggable = shouldInitDragging && (isSelectedStartDate || isSelectedEndDate);
-      const { onDragStart, ...otherDragHandlers } = dragEventHandlers;
+      const { onDragStart, onTouchStart, onTouchMove, onTouchEnd, ...otherDragHandlers } = dragEventHandlers;
       let datePosition: DateRangePosition | undefined;
       if (isSelectedStartDate) {
         datePosition = 'start';
@@ -403,6 +403,9 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
         onMouseEnter: () => handlePreviewDayChange(day),
         isDragging,
         onDragStart: isElementDraggable ? onDragStart : undefined,
+        onTouchStart: isElementDraggable ? onTouchStart : undefined,
+        onTouchMove: isElementDraggable ? onTouchMove : undefined,
+        onTouchEnd: isElementDraggable ? onTouchEnd : undefined,
         'data-position': datePosition,
         ...(shouldInitDragging ? otherDragHandlers : {}),
         draggable: isElementDraggable ? true : undefined,

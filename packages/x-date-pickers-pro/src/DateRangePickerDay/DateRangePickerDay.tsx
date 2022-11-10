@@ -238,6 +238,9 @@ const DateRangePickerDayDay = styled(PickersDay, {
   ...(ownerState.isDragging && {
     cursor: 'grabbing',
   }),
+  ...(ownerState.draggable && {
+    touchAction: 'none',
+  }),
 })) as unknown as <TDate>(
   props: PickersDayProps<TDate> & { ownerState: OwnerState },
 ) => JSX.Element;
@@ -264,6 +267,7 @@ const DateRangePickerDayRaw = React.forwardRef(function DateRangePickerDay<TDate
     selected = false,
     sx,
     isDragging,
+    draggable,
     ...other
   } = props;
 
@@ -282,6 +286,7 @@ const DateRangePickerDayRaw = React.forwardRef(function DateRangePickerDay<TDate
     isStartOfMonth,
     isEndOfMonth,
     isDragging,
+    draggable,
   };
 
   const classes = useUtilityClasses(ownerState);
@@ -308,6 +313,7 @@ const DateRangePickerDayRaw = React.forwardRef(function DateRangePickerDay<TDate
           data-mui-test="DateRangePickerDay"
           className={classes.day}
           ownerState={ownerState}
+          draggable={draggable}
         />
       </DateRangePickerDayRangeIntervalPreview>
     </DateRangePickerDayRoot>

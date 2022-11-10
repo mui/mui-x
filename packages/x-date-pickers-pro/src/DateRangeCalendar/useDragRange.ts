@@ -2,6 +2,7 @@ import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
 import { MuiPickersAdapter } from '@mui/x-date-pickers/internals';
 import { DateRangePosition } from './DateRangeCalendar.types';
+import { throttle } from '../internal/utils/utils';
 
 interface UseDragRange<TDate> {
   disableDragEditing?: boolean;
@@ -18,14 +19,14 @@ interface UseDragRangeResponse {
   onDragOver?: React.DragEventHandler<HTMLButtonElement>;
   onDragEnd?: React.DragEventHandler<HTMLButtonElement>;
   onDrop?: React.DragEventHandler<HTMLButtonElement>;
+  onTouchStart?: React.TouchEventHandler<HTMLButtonElement>;
+  onTouchMove?: React.TouchEventHandler<HTMLButtonElement>;
+  onTouchEnd?: React.TouchEventHandler<HTMLButtonElement>;
   isDragging?: boolean;
 }
 
-const resolveDateFromEvent = <TDate>(
-  event: React.DragEvent<HTMLButtonElement>,
-  utils: MuiPickersAdapter<TDate>,
-) => {
-  const timestampString = (event.target as HTMLButtonElement).dataset.timestamp;
+const resolveDateFromTarget = <TDate>(target: EventTarget, utils: MuiPickersAdapter<TDate>) => {
+  const timestampString = (target as HTMLElement).dataset.timestamp;
   if (!timestampString) {
     return null;
   }
@@ -38,6 +39,40 @@ const isSameAsDraggingDate = (event: React.DragEvent<HTMLButtonElement>) => {
   return timestampString === event.dataTransfer.getData('draggingDate');
 };
 
+const resolveButtonElement = (element: Element | null): HTMLButtonElement | null => {
+  if (element) {
+    if (element instanceof HTMLButtonElement) {
+      return element;
+    }
+    if (element.children.length) {
+      return resolveButtonElement(element.children[0]);
+    }
+    return null;
+  }
+  return element;
+};
+
+const resolveElementFromTouch = (
+  event: React.TouchEvent<HTMLButtonElement>,
+  ignoreTouchTarget?: boolean,
+) => {
+  // don't parse multi-touch result
+  if (event.changedTouches?.length === 1 && event.touches.length <= 1) {
+    const element = document.elementFromPoint(
+      event.changedTouches[0].pageX,
+      event.changedTouches[0].pageY,
+    );
+    // `elementFromPoint` could have resolved preview div or wrapping div
+    // might need to recursively find the nested button
+    const buttonElement = resolveButtonElement(element);
+    if (ignoreTouchTarget && buttonElement === event.changedTouches[0].target) {
+      return null;
+    }
+    return buttonElement;
+  }
+  return null;
+};
+
 export const useDragRange = <TDate>({
   disableDragEditing,
   utils,
@@ -48,7 +83,7 @@ export const useDragRange = <TDate>({
   const [isDragging, setIsDragging] = React.useState(false);
 
   const handleDragStart = useEventCallback((event: React.DragEvent<HTMLButtonElement>) => {
-    const newDate = resolveDateFromEvent(event, utils);
+    const newDate = resolveDateFromTarget(event.target, utils);
     if (newDate) {
       setRangeDragDay(newDate);
       event.dataTransfer.effectAllowed = 'move';
@@ -58,12 +93,38 @@ export const useDragRange = <TDate>({
       onDragStart(buttonDataset.position as DateRangePosition);
     }
   });
+  const handleTouchStart = useEventCallback((event: React.TouchEvent<HTMLButtonElement>) => {
+    const target = resolveElementFromTouch(event);
+    if (!target) {
+      return;
+    }
+    const newDate = resolveDateFromTarget(target, utils);
+    if (newDate) {
+      setRangeDragDay(newDate);
+      setIsDragging(true);
+      const button = event.target as HTMLButtonElement;
+      const buttonDataset = button.dataset;
+      onDragStart(buttonDataset.position as DateRangePosition);
+    }
+  });
   const handleDragEnter = useEventCallback((event: React.DragEvent<HTMLButtonElement>) => {
     event.preventDefault();
     event.stopPropagation();
     event.dataTransfer.dropEffect = 'move';
-    setRangeDragDay(resolveDateFromEvent(event, utils));
+    setRangeDragDay(resolveDateFromTarget(event.target, utils));
   });
+  const touchMoveHandler = useEventCallback((event: React.TouchEvent<HTMLButtonElement>) => {
+    const target = resolveElementFromTouch(event);
+    if (!target) {
+      return;
+    }
+    const newDate = resolveDateFromTarget(target, utils);
+    if (!newDate) {
+      return;
+    }
+    setRangeDragDay(newDate);
+  });
+  const handleTouchMove = throttle(touchMoveHandler);
   const handleDragLeave = useEventCallback((event: React.DragEvent<HTMLButtonElement>) => {
     event.preventDefault();
     event.stopPropagation();
@@ -72,6 +133,18 @@ export const useDragRange = <TDate>({
     event.preventDefault();
     event.stopPropagation();
     event.dataTransfer.dropEffect = 'move';
+  });
+  const handleTouchEnd = useEventCallback((event: React.TouchEvent<HTMLButtonElement>) => {
+    setRangeDragDay(null);
+    setIsDragging(false);
+    const target = resolveElementFromTouch(event, true);
+    if (!target) {
+      return;
+    }
+    const newDate = resolveDateFromTarget(target, utils);
+    if (newDate) {
+      onDrop(newDate);
+    }
   });
   const handleDragEnd = useEventCallback((event: React.DragEvent<HTMLButtonElement>) => {
     event.preventDefault();
@@ -85,7 +158,7 @@ export const useDragRange = <TDate>({
     }
     event.preventDefault();
     event.stopPropagation();
-    const newDate = resolveDateFromEvent(event, utils);
+    const newDate = resolveDateFromTarget(event.target, utils);
     if (newDate) {
       onDrop(newDate);
     }
@@ -101,6 +174,9 @@ export const useDragRange = <TDate>({
             onDragOver: handleDragOver,
             onDragEnd: handleDragEnd,
             onDrop: handleDrop,
+            onTouchStart: handleTouchStart,
+            onTouchMove: handleTouchMove,
+            onTouchEnd: handleTouchEnd,
             isDragging,
           }
         : {},
@@ -112,6 +188,9 @@ export const useDragRange = <TDate>({
       handleDragOver,
       handleDragStart,
       handleDrop,
+      handleTouchStart,
+      handleTouchMove,
+      handleTouchEnd,
       isDragging,
     ],
   );
