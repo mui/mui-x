@@ -41,7 +41,7 @@ const isSameAsDraggingDate = (event: React.DragEvent<HTMLButtonElement>) => {
 
 const resolveButtonElement = (element: Element | null): HTMLButtonElement | null => {
   if (element) {
-    if (element instanceof HTMLButtonElement) {
+    if (element instanceof HTMLButtonElement && !element.disabled) {
       return element;
     }
     if (element.children.length) {
