@@ -3,7 +3,6 @@ import Typography from '@mui/material/Typography';
 import { styled, useThemeProps } from '@mui/material/styles';
 import { unstable_composeClasses as composeClasses } from '@mui/material';
 import { PickersToolbar } from '../internals/components/PickersToolbar';
-import { pickersToolbarClasses } from '../internals/components/pickersToolbarClasses';
 import { useLocaleText, useUtils } from '../internals/hooks/useUtils';
 import { BaseToolbarProps } from '../internals/models/props/baseToolbarProps';
 import { isYearAndMonthViews, isYearOnlyView } from './shared';
@@ -31,12 +30,7 @@ const DatePickerToolbarRoot = styled(PickersToolbar, {
   name: 'MuiDatePickerToolbar',
   slot: 'Root',
   overridesResolver: (_, styles) => styles.root,
-})<{ ownerState: DatePickerToolbarProps<any> }>({
-  [`& .${pickersToolbarClasses.penIconButton}`]: {
-    position: 'relative',
-    top: 4,
-  },
-});
+})({});
 
 const DatePickerToolbarTitle = styled(Typography, {
   name: 'MuiDatePickerToolbar',
@@ -112,7 +106,6 @@ export const DatePickerToolbar = React.forwardRef(function DatePickerToolbar<TDa
       isMobileKeyboardViewOpen={isMobileKeyboardViewOpen}
       toggleMobileKeyboardView={toggleMobileKeyboardView}
       isLandscape={isLandscape}
-      ownerState={ownerState}
       className={classes.root}
       {...other}
     >

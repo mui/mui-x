@@ -32,16 +32,17 @@ const DateTimePickerToolbarRoot = styled(PickersToolbar, {
   name: 'MuiDateTimePickerToolbar',
   slot: 'Root',
   overridesResolver: (props, styles) => styles.root,
-})<{ ownerState: DateTimePickerToolbarProps<any> }>({
+})<{ ownerState: DateTimePickerToolbarProps<any> }>(({ theme }) => ({
   paddingLeft: 16,
   paddingRight: 16,
   justifyContent: 'space-around',
+  position: 'relative',
   [`& .${pickersToolbarClasses.penIconButton}`]: {
     position: 'absolute',
     top: 8,
-    right: 8,
+    ...(theme.direction === 'rtl' ? { left: 8 } : { right: 8 }),
   },
-});
+}));
 
 const DateTimePickerToolbarDateContainer = styled('div', {
   name: 'MuiDateTimePickerToolbar',
