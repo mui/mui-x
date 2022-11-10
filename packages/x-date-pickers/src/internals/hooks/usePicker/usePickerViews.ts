@@ -207,7 +207,7 @@ export const usePickerViews = <
   useEnhancedEffect(() => {
     if (currentViewMode === 'field' && open) {
       onClose();
-      onSelectedSectionsChange('hour');
+      onSelectedSectionsChange('hours');
 
       setTimeout(() => {
         inputRef?.current!.focus();
