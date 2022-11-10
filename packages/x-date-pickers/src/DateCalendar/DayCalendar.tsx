@@ -61,7 +61,6 @@ export interface ExportedDayCalendarProps<TDate>
   dayOfWeekFormatter?: (day: string) => string;
   /**
    * If `true`, the week number will be display in the calendar.
-   * Needs to provide `getWeekNumber` if the adapter does not support `getWeekNumber`
    */
   displayWeekNumber?: boolean;
   /**

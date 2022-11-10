@@ -286,7 +286,6 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate>(
     loading,
     renderLoading,
     displayWeekNumber,
-    getWeekNumber,
     sx,
   } = props;
 
@@ -541,7 +540,6 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate>(
               fixedWeekNumber={fixedWeekNumber}
               dayOfWeekFormatter={dayOfWeekFormatter}
               displayWeekNumber={displayWeekNumber}
-              getWeekNumber={getWeekNumber}
               components={components}
               componentsProps={componentsProps}
               loading={loading}
