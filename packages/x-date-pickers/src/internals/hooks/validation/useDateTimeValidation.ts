@@ -49,5 +49,5 @@ export function useDateTimeValidation<TDate>(
     DateTimeComponentValidationProps<TDate>
   >,
 ): DateTimeValidationError {
-  return useValidation(props, validateDateTime, isSameDateTimeError);
+  return useValidation(props, validateDateTime, isSameDateTimeError, null);
 }

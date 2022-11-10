@@ -22,6 +22,7 @@ export const rangeValueManager: PickerStateValueManager<
     value.map((date) => replaceInvalidDateByNull(utils, date)) as DateRange<any>,
   areValuesEqual: (utils, a, b) => utils.isEqual(a[0], b[0]) && utils.isEqual(a[1], b[1]),
   isSameError: (a, b) => b !== null && a[1] === b[1] && a[0] === b[0],
+  defaultErrorState: [null, null],
 };
 
 export const rangeFieldValueManager: FieldValueManager<

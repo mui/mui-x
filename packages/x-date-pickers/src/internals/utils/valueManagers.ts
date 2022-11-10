@@ -20,6 +20,7 @@ export const singleItemValueManager: PickerStateValueManager<
   cleanValue: replaceInvalidDateByNull,
   areValuesEqual: (utils, a, b) => utils.isEqual(a, b),
   isSameError: (a, b) => a === b,
+  defaultErrorState: null,
 };
 
 export const singleItemFieldValueManager: FieldValueManager<
