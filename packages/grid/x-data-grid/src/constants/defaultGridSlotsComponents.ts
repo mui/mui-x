@@ -28,8 +28,8 @@ export const DATA_GRID_DEFAULT_SLOTS_COMPONENTS: GridSlotsComponent = {
   Footer: GridFooter, // doesn't use Material UI
   Header: GridHeader, // doesn't use Material UI
   PreferencesPanel: GridPreferencesPanel, // doesn't use Material UI
-  NoResultsOverlay: GridNoResultsOverlay,
-  NoRowsOverlay: GridNoRowsOverlay,
+  NoResultsOverlay: GridNoResultsOverlay, // doesn't use Material UI
+  NoRowsOverlay: GridNoRowsOverlay, // doesn't use Material UI
   FilterPanel: GridFilterPanel,
   ColumnsPanel: GridColumnsPanel,
   Panel: GridPanel,

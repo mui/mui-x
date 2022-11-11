@@ -1,8 +1,8 @@
 import * as React from 'react';
 import clsx from 'clsx';
+// TODO: use TrapFocus from @mui/base?
 import TrapFocus from '@mui/material/Unstable_TrapFocus';
-import { styled, Theme } from '@mui/material/styles';
-import { MUIStyledCommonProps } from '@mui/system';
+import { styled, Theme, MUIStyledCommonProps } from '@mui/system';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
