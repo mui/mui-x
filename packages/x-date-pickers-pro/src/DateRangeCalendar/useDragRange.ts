@@ -118,10 +118,9 @@ export const useDragRange = <TDate>({
       return;
     }
     const newDate = resolveDateFromTarget(target, utils);
-    if (!newDate) {
-      return;
+    if (newDate) {
+      setRangeDragDay(newDate);
     }
-    setRangeDragDay(newDate);
   });
   const handleDragLeave = useEventCallback((event: React.DragEvent<HTMLButtonElement>) => {
     event.preventDefault();
@@ -147,15 +146,15 @@ export const useDragRange = <TDate>({
   const handleDragEnd = useEventCallback((event: React.DragEvent<HTMLButtonElement>) => {
     event.preventDefault();
     event.stopPropagation();
-    setRangeDragDay(null);
-    setIsDragging(false);
   });
   const handleDrop = useEventCallback((event: React.DragEvent<HTMLButtonElement>) => {
+    event.preventDefault();
+    event.stopPropagation();
+    setIsDragging(false);
+    setRangeDragDay(null);
     if (isSameAsDraggingDate(event)) {
       return;
     }
-    event.preventDefault();
-    event.stopPropagation();
     const newDate = resolveDateFromTarget(event.target, utils);
     if (newDate) {
       onDrop(newDate);
