@@ -707,6 +707,9 @@
     "FilterPanelDeleteIcon": "Icon displayed for deleting the filter from filter Panel.",
     "RowReorderIcon": "Icon displayed on the <code>reorder</code> column type to reorder a row.",
     "QuickFilterIcon": "Icon displayed on the quick filter input.",
-    "QuickFilterClearIcon": "Icon displayed on the quick filter reset input."
+    "QuickFilterClearIcon": "Icon displayed on the quick filter reset input.",
+    "LoadIcon": "Icon displayed on the input while processing.",
+    "AddFilterIcon": "Icon displayed on the button that adds new filter.",
+    "ColumnReorderIcon": "Icon displayed on the column reorder button."
   }
 }
