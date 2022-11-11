@@ -2,7 +2,6 @@ import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
 import { MuiPickersAdapter } from '@mui/x-date-pickers/internals';
 import { DateRangePosition } from './DateRangeCalendar.types';
-import { throttle } from '../internal/utils/utils';
 
 interface UseDragRange<TDate> {
   disableDragEditing?: boolean;
@@ -113,7 +112,7 @@ export const useDragRange = <TDate>({
     event.dataTransfer.dropEffect = 'move';
     setRangeDragDay(resolveDateFromTarget(event.target, utils));
   });
-  const touchMoveHandler = useEventCallback((event: React.TouchEvent<HTMLButtonElement>) => {
+  const handleTouchMove = useEventCallback((event: React.TouchEvent<HTMLButtonElement>) => {
     const target = resolveElementFromTouch(event);
     if (!target) {
       return;
@@ -124,7 +123,6 @@ export const useDragRange = <TDate>({
     }
     setRangeDragDay(newDate);
   });
-  const handleTouchMove = throttle(touchMoveHandler);
   const handleDragLeave = useEventCallback((event: React.DragEvent<HTMLButtonElement>) => {
     event.preventDefault();
     event.stopPropagation();
