@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { TextFieldProps } from '@mui/material/TextField';
 import { unstable_useId as useId } from '@mui/utils';
 import MenuItem from '@mui/material/MenuItem';
-import { GridLoadIcon } from '../../icons';
 import { GridFilterInputValueProps } from './GridFilterInputValueProps';
 import { GridColDef } from '../../../models/colDef/gridColDef';
 import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
@@ -127,7 +126,9 @@ function GridFilterInputValue(props: GridTypeFilterInputValueProps & TextFieldPr
     setFilterValueState(String(itemValue));
   }, [item.value]);
 
-  const InputProps = applying ? { endAdornment: <GridLoadIcon /> } : others.InputProps;
+  const InputProps = applying
+    ? { endAdornment: <rootProps.components.LoadIcon /> }
+    : others.InputProps;
 
   return (
     <rootProps.components.BaseTextField

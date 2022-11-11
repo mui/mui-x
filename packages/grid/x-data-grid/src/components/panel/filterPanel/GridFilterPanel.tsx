@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { SxProps, Theme } from '@mui/material/styles';
 import { GridFilterItem, GridLinkOperator } from '../../../models/gridFilterItem';
 import { useGridApiContext } from '../../../hooks/utils/useGridApiContext';
-import { GridAddIcon } from '../../icons';
 import { GridPanelContent } from '../GridPanelContent';
 import { GridPanelFooter } from '../GridPanelFooter';
 import { GridPanelWrapper } from '../GridPanelWrapper';
@@ -208,7 +207,7 @@ const GridFilterPanel = React.forwardRef<HTMLDivElement, GridFilterPanelProps>(
           <GridPanelFooter>
             <rootProps.components.BaseButton
               onClick={addNewFilter}
-              startIcon={<GridAddIcon />}
+              startIcon={<rootProps.components.AddFilterIcon />}
               {...rootProps.componentsProps?.baseButton}
             >
               {apiRef.current.getLocaleText('filterPanelAddFilter')}

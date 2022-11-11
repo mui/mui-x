@@ -11,6 +11,7 @@ import {
   GridFilterAltIcon,
   GridFilterListIcon,
   GridKeyboardArrowRight,
+  GridLoadIcon,
   GridMoreVertIcon,
   GridRemoveIcon,
   GridSaveAltIcon,
@@ -49,6 +50,9 @@ const icons = {
   RowReorderIcon: GridDragIcon,
   QuickFilterIcon: GridSearchIcon,
   QuickFilterClearIcon: GridCloseIcon,
+  LoadIcon: GridLoadIcon,
+  AddFilterIcon: GridAddIcon,
+  ColumnReorderIcon: GridDragIcon,
 };
 
 const components = {
