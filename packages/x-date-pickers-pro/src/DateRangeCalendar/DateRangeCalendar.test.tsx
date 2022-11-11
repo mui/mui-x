@@ -7,12 +7,14 @@ import {
   getByRole,
   describeConformance,
   createEvent,
+  fireTouchChangedEvent,
 } from '@mui/monorepo/test/utils';
 import {
   adapterToUse,
   createPickerRenderer,
   DragEventTypes,
   MockedDataTransfer,
+  rangeCalendarDayTouches,
   wrapPickerMount,
 } from 'test/utils/pickers-utils';
 import {
@@ -153,6 +155,25 @@ describe('<DateRangeCalendar />', () => {
         fireEvent(endDate, createDragEvent('dragEnd', endDate));
       };
 
+      type TouchTarget = Pick<Touch, 'clientX' | 'clientY'>;
+
+      const fireTouchEvent = (
+        type: 'touchstart' | 'touchmove' | 'touchend',
+        target: ChildNode,
+        touch: TouchTarget,
+      ) => {
+        fireTouchChangedEvent(target, type, { changedTouches: [touch] });
+      };
+
+      const executeDateTouchDrag = (target: ChildNode, ...touchTargets: TouchTarget[]) => {
+        const endTouchTarget = touchTargets[touchTargets.length - 1];
+        fireTouchEvent('touchstart', target, touchTargets[0]);
+        touchTargets.slice(0, touchTargets.length - 1).forEach((touch) => {
+          fireTouchEvent('touchmove', target, touch);
+        });
+        fireTouchEvent('touchend', target, endTouchTarget);
+      };
+
       beforeEach(() => {
         dataTransfer = new MockedDataTransfer();
       });
@@ -178,6 +199,34 @@ describe('<DateRangeCalendar />', () => {
         expect(onChange.callCount).to.equal(0);
 
         executeDateDrag(startDay, dragToDay, startDay);
+
+        expect(onChange.callCount).to.equal(0);
+      });
+
+      it('should not emit "onChange" when touch dragging is ended where it was started', function test() {
+        if (!document.elementFromPoint) {
+          this.skip();
+        }
+        const onChange = spy();
+        render(
+          <DateRangeCalendar
+            onChange={onChange}
+            defaultValue={[
+              adapterToUse.date(new Date(2018, 0, 1)),
+              adapterToUse.date(new Date(2018, 0, 10)),
+            ]}
+          />,
+        );
+
+        const startDay = screen.getByRole('gridcell', { name: '1', selected: true });
+        expect(onChange.callCount).to.equal(0);
+
+        executeDateTouchDrag(
+          startDay,
+          rangeCalendarDayTouches['2018-01-01'],
+          rangeCalendarDayTouches['2018-01-02'],
+          rangeCalendarDayTouches['2018-01-01'],
+        );
 
         expect(onChange.callCount).to.equal(0);
       });
@@ -222,6 +271,51 @@ describe('<DateRangeCalendar />', () => {
         expect(onChange.lastCall.args[0][1]).toEqualDateTime(initialValue[0]);
       });
 
+      it('should emit "onChange" when touch dragging end date', function test() {
+        if (!document.elementFromPoint) {
+          this.skip();
+        }
+        const onChange = spy();
+        const initialValue: [any, any] = [
+          adapterToUse.date(new Date(2018, 0, 2)),
+          adapterToUse.date(new Date(2018, 0, 11)),
+        ];
+        render(<DateRangeCalendar onChange={onChange} defaultValue={initialValue} />);
+
+        // test range reduction
+        executeDateTouchDrag(
+          getPickerDay('11'),
+          rangeCalendarDayTouches['2018-01-11'],
+          rangeCalendarDayTouches['2018-01-10'],
+        );
+
+        expect(onChange.callCount).to.equal(1);
+        expect(onChange.lastCall.args[0][0]).toEqualDateTime(initialValue[0]);
+        expect(onChange.lastCall.args[0][1]).toEqualDateTime(new Date(2018, 0, 10));
+
+        // test range expansion
+        executeDateTouchDrag(
+          getPickerDay('10'),
+          rangeCalendarDayTouches['2018-01-10'],
+          rangeCalendarDayTouches['2018-01-11'],
+        );
+
+        expect(onChange.callCount).to.equal(2);
+        expect(onChange.lastCall.args[0][0]).toEqualDateTime(initialValue[0]);
+        expect(onChange.lastCall.args[0][1]).toEqualDateTime(initialValue[1]);
+
+        // test range flip
+        executeDateTouchDrag(
+          getPickerDay('11'),
+          rangeCalendarDayTouches['2018-01-11'],
+          rangeCalendarDayTouches['2018-01-01'],
+        );
+
+        expect(onChange.callCount).to.equal(3);
+        expect(onChange.lastCall.args[0][0]).toEqualDateTime(new Date(2018, 0, 1));
+        expect(onChange.lastCall.args[0][1]).toEqualDateTime(initialValue[0]);
+      });
+
       it('should emit "onChange" when dragging start date', () => {
         const onChange = spy();
         const initialValue: [any, any] = [
@@ -250,6 +344,51 @@ describe('<DateRangeCalendar />', () => {
         expect(onChange.callCount).to.equal(3);
         expect(onChange.lastCall.args[0][0]).toEqualDateTime(initialValue[1]);
         expect(onChange.lastCall.args[0][1]).toEqualDateTime(new Date(2018, 0, 22));
+      });
+
+      it('should emit "onChange" when touch dragging start date', function test() {
+        if (!document.elementFromPoint) {
+          this.skip();
+        }
+        const onChange = spy();
+        const initialValue: [any, any] = [
+          adapterToUse.date(new Date(2018, 0, 1)),
+          adapterToUse.date(new Date(2018, 0, 10)),
+        ];
+        render(<DateRangeCalendar onChange={onChange} defaultValue={initialValue} />);
+
+        // test range reduction
+        executeDateTouchDrag(
+          getPickerDay('1'),
+          rangeCalendarDayTouches['2018-01-01'],
+          rangeCalendarDayTouches['2018-01-02'],
+        );
+
+        expect(onChange.callCount).to.equal(1);
+        expect(onChange.lastCall.args[0][0]).toEqualDateTime(new Date(2018, 0, 2));
+        expect(onChange.lastCall.args[0][1]).toEqualDateTime(initialValue[1]);
+
+        // test range expansion
+        executeDateTouchDrag(
+          getPickerDay('2'),
+          rangeCalendarDayTouches['2018-01-02'],
+          rangeCalendarDayTouches['2018-01-01'],
+        );
+
+        expect(onChange.callCount).to.equal(2);
+        expect(onChange.lastCall.args[0][0]).toEqualDateTime(initialValue[0]);
+        expect(onChange.lastCall.args[0][1]).toEqualDateTime(initialValue[1]);
+
+        // test range flip
+        executeDateTouchDrag(
+          getPickerDay('1'),
+          rangeCalendarDayTouches['2018-01-01'],
+          rangeCalendarDayTouches['2018-01-11'],
+        );
+
+        expect(onChange.callCount).to.equal(3);
+        expect(onChange.lastCall.args[0][0]).toEqualDateTime(initialValue[1]);
+        expect(onChange.lastCall.args[0][1]).toEqualDateTime(new Date(2018, 0, 11));
       });
     });
   });

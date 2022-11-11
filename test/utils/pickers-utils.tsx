@@ -196,6 +196,25 @@ export const getClockTouchEvent = () => {
   };
 };
 
+export const rangeCalendarDayTouches = {
+  '2018-01-01': {
+    clientX: 85,
+    clientY: 125,
+  },
+  '2018-01-02': {
+    clientX: 125,
+    clientY: 125,
+  },
+  '2018-01-10': {
+    clientX: 165,
+    clientY: 165,
+  },
+  '2018-01-11': {
+    clientX: 205,
+    clientY: 165,
+  },
+} as const;
+
 export const withPickerControls =
   <
     TValue,

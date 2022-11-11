@@ -59,8 +59,8 @@ const resolveElementFromTouch = (
   // don't parse multi-touch result
   if (event.changedTouches?.length === 1 && event.touches.length <= 1) {
     const element = document.elementFromPoint(
-      event.changedTouches[0].pageX,
-      event.changedTouches[0].pageY,
+      event.changedTouches[0].clientX,
+      event.changedTouches[0].clientY,
     );
     // `elementFromPoint` could have resolved preview div or wrapping div
     // might need to recursively find the nested button
