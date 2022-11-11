@@ -23,8 +23,8 @@ import materialSlots from '../material';
  */
 export const DATA_GRID_DEFAULT_SLOTS_COMPONENTS: GridSlotsComponent = {
   ...materialSlots,
-  Cell: GridCell,
-  SkeletonCell: GridSkeletonCell,
+  Cell: GridCell, // doesn't use Material UI
+  SkeletonCell: GridSkeletonCell, // doesn't use Material UI
   ColumnHeaderFilterIconButton: GridColumnHeaderFilterIconButton,
   ColumnMenu: GridColumnMenu,
   ErrorOverlay,

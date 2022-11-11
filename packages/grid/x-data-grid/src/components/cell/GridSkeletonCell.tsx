@@ -1,6 +1,5 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import Skeleton from '@mui/material/Skeleton';
 import {
   unstable_composeClasses as composeClasses,
   unstable_capitalize as capitalize,
@@ -38,7 +37,7 @@ function GridSkeletonCell(props: React.HTMLAttributes<HTMLDivElement> & GridSkel
 
   return (
     <div className={classes.root} style={{ width }} {...other}>
-      <Skeleton width={`${contentWidth}%`} />
+      <rootProps.components.Skeleton width={`${contentWidth}%`} />
     </div>
   );
 }

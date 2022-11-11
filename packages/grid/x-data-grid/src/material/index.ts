@@ -6,6 +6,7 @@ import MUISwitch from '@mui/material/Switch';
 import MUIButton from '@mui/material/Button';
 import MUITooltip from '@mui/material/Tooltip';
 import MUIPopper from '@mui/material/Popper';
+import MUISkeleton from '@mui/material/Skeleton';
 import { GridPagination } from './slots/GridPagination';
 import {
   GridAddIcon,
@@ -74,6 +75,7 @@ const components = {
   BaseTooltip: MUITooltip,
   BasePopper: MUIPopper,
   Pagination: GridPagination,
+  Skeleton: MUISkeleton,
   Toolbar: null,
 };
 
