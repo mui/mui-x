@@ -32,6 +32,7 @@ import {
   GridViewStreamIcon,
 } from './icons';
 import { GridColumnUnsortedIcon } from './icons/GridColumnUnsortedIcon';
+import { GridColumnHeaderFilterIconButton } from './slots/GridColumnHeaderFilterIconButton';
 
 const icons = {
   BooleanCellTrueIcon: GridCheckIcon,
@@ -74,6 +75,7 @@ const components = {
   BaseButton: MUIButton,
   BaseTooltip: MUITooltip,
   BasePopper: MUIPopper,
+  ColumnHeaderFilterIconButton: GridColumnHeaderFilterIconButton,
   Pagination: GridPagination,
   Skeleton: MUISkeleton,
   Toolbar: null,

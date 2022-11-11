@@ -9,7 +9,7 @@ import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
-import { GridIconButtonContainer } from './GridIconButtonContainer';
+import { GridIconButtonContainer } from '../../components/columnHeaders/GridIconButtonContainer';
 import { GridColumnHeaderParams } from '../../models/params/gridColumnHeaderParams';
 
 export interface ColumnHeaderFilterIconButtonProps {
