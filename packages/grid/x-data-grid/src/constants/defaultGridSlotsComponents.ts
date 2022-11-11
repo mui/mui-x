@@ -7,7 +7,6 @@ import {
   GridFilterPanel,
   GridFooter,
   GridHeader,
-  GridLoadingOverlay,
   GridNoRowsOverlay,
   GridPanel,
   GridPreferencesPanel,
@@ -25,11 +24,10 @@ export const DATA_GRID_DEFAULT_SLOTS_COMPONENTS: GridSlotsComponent = {
   Cell: GridCell, // doesn't use Material UI
   SkeletonCell: GridSkeletonCell, // doesn't use Material UI
   ColumnMenu: GridColumnMenu,
-  ErrorOverlay,
-  Footer: GridFooter,
-  Header: GridHeader,
-  PreferencesPanel: GridPreferencesPanel,
-  LoadingOverlay: GridLoadingOverlay,
+  ErrorOverlay, // doesn't use Material UI
+  Footer: GridFooter, // doesn't use Material UI
+  Header: GridHeader, // doesn't use Material UI
+  PreferencesPanel: GridPreferencesPanel, // doesn't use Material UI
   NoResultsOverlay: GridNoResultsOverlay,
   NoRowsOverlay: GridNoRowsOverlay,
   FilterPanel: GridFilterPanel,

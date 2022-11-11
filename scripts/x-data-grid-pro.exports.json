@@ -286,7 +286,6 @@
   { "name": "GridLeafColumn", "kind": "Interface" },
   { "name": "GridLeafNode", "kind": "Interface" },
   { "name": "GridLinkOperator", "kind": "Enum" },
-  { "name": "GridLoadingOverlay", "kind": "Variable" },
   { "name": "GridLocaleText", "kind": "Interface" },
   { "name": "GridLocaleTextApi", "kind": "Interface" },
   { "name": "GridMenu", "kind": "Function" },

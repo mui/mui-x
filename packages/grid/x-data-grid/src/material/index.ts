@@ -33,6 +33,7 @@ import {
 } from './icons';
 import { GridColumnUnsortedIcon } from './icons/GridColumnUnsortedIcon';
 import { GridColumnHeaderFilterIconButton } from './slots/GridColumnHeaderFilterIconButton';
+import { GridLoadingOverlay } from './slots/GridLoadingOverlay';
 
 const icons = {
   BooleanCellTrueIcon: GridCheckIcon,
@@ -76,6 +77,7 @@ const components = {
   BaseTooltip: MUITooltip,
   BasePopper: MUIPopper,
   ColumnHeaderFilterIconButton: GridColumnHeaderFilterIconButton,
+  LoadingOverlay: GridLoadingOverlay,
   Pagination: GridPagination,
   Skeleton: MUISkeleton,
   Toolbar: null,

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import CircularProgress from '@mui/material/CircularProgress';
-import { GridOverlay, GridOverlayProps } from './containers/GridOverlay';
+import { GridOverlay, GridOverlayProps } from '../../components/containers/GridOverlay';
 
 const GridLoadingOverlay = React.forwardRef<HTMLDivElement, GridOverlayProps>(
   function GridLoadingOverlay(props, ref) {
