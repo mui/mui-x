@@ -291,6 +291,8 @@ const DateRangePickerDayRaw = React.forwardRef(function DateRangePickerDay<TDate
 
   const classes = useUtilityClasses(ownerState);
 
+  // apply selected styling to the dragging start or end day
+  const isSelected = selected || (isDragging && (isStartOfHighlighting || isEndOfHighlighting));
   return (
     <DateRangePickerDayRoot
       data-mui-test={shouldRenderHighlight ? 'DateRangeHighlight' : undefined}
@@ -308,7 +310,7 @@ const DateRangePickerDayRaw = React.forwardRef(function DateRangePickerDay<TDate
           ref={ref}
           disableMargin
           day={day}
-          selected={selected}
+          selected={isSelected}
           outsideCurrentMonth={outsideCurrentMonth}
           data-mui-test="DateRangePickerDay"
           className={classes.day}
