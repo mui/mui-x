@@ -82,6 +82,7 @@ export const useDragRange = <TDate>({
   const [isDragging, setIsDragging] = React.useState(false);
 
   const handleDragStart = useEventCallback((event: React.DragEvent<HTMLButtonElement>) => {
+    event.stopPropagation();
     const newDate = resolveDateFromTarget(event.target, utils);
     if (newDate) {
       setRangeDragDay(newDate);
