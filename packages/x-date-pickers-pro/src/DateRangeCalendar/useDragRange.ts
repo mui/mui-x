@@ -146,6 +146,8 @@ export const useDragRange = <TDate>({
   const handleDragEnd = useEventCallback((event: React.DragEvent<HTMLButtonElement>) => {
     event.preventDefault();
     event.stopPropagation();
+    setIsDragging(false);
+    setRangeDragDay(null);
   });
   const handleDrop = useEventCallback((event: React.DragEvent<HTMLButtonElement>) => {
     event.preventDefault();
