@@ -1,5 +1,8 @@
 import * as React from 'react';
-import { ownerDocument, useEventCallback } from '@mui/material/utils';
+import {
+  unstable_ownerDocument as ownerDocument,
+  unstable_useEventCallback as useEventCallback,
+} from '@mui/utils';
 import {
   GridEventListener,
   gridClasses,

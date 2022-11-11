@@ -1,9 +1,9 @@
 import * as React from 'react';
 import {
-  debounce,
-  ownerDocument,
+  unstable_debounce as debounce,
+  unstable_ownerDocument as ownerDocument,
   unstable_useEnhancedEffect as useEnhancedEffect,
-} from '@mui/material/utils';
+} from '@mui/utils';
 import { GridEventListener } from '../../../models/events';
 import { ElementSize } from '../../../models';
 import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
