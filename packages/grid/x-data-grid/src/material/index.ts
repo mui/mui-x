@@ -1,4 +1,12 @@
-import { GridColumnUnsortedIcon } from './icons/GridColumnUnsortedIcon';
+import MUICheckbox from '@mui/material/Checkbox';
+import MUITextField from '@mui/material/TextField';
+import MUIFormControl from '@mui/material/FormControl';
+import MUISelect from '@mui/material/Select';
+import MUISwitch from '@mui/material/Switch';
+import MUIButton from '@mui/material/Button';
+import MUITooltip from '@mui/material/Tooltip';
+import MUIPopper from '@mui/material/Popper';
+import { GridPagination } from './slots/GridPagination';
 import {
   GridAddIcon,
   GridArrowDownwardIcon,
@@ -22,7 +30,7 @@ import {
   GridViewHeadlineIcon,
   GridViewStreamIcon,
 } from './icons';
-import { GridPagination } from './slots/GridPagination';
+import { GridColumnUnsortedIcon } from './icons/GridColumnUnsortedIcon';
 
 const icons = {
   BooleanCellTrueIcon: GridCheckIcon,
@@ -57,7 +65,16 @@ const icons = {
 
 const components = {
   ...icons,
+  BaseCheckbox: MUICheckbox,
+  BaseTextField: MUITextField,
+  BaseFormControl: MUIFormControl,
+  BaseSelect: MUISelect,
+  BaseSwitch: MUISwitch,
+  BaseButton: MUIButton,
+  BaseTooltip: MUITooltip,
+  BasePopper: MUIPopper,
   Pagination: GridPagination,
+  Toolbar: null,
 };
 
 export default components;
