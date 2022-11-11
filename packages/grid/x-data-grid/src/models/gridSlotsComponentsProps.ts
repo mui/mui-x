@@ -1,3 +1,5 @@
+import { GridPaginationProps } from '../components/GridPagination';
+
 /**
  * Overrideable components props dynamically passed to the component at rendering.
  */
@@ -21,7 +23,7 @@ export interface GridSlotsComponentsProps {
   loadingOverlay?: any;
   noResultsOverlay?: any;
   noRowsOverlay?: any;
-  pagination?: any;
+  pagination?: GridPaginationProps;
   panel?: any;
   preferencesPanel?: any;
   row?: any;

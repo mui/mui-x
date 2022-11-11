@@ -24,7 +24,6 @@ import {
   GridHeader,
   GridLoadingOverlay,
   GridNoRowsOverlay,
-  GridPagination,
   GridPanel,
   GridPreferencesPanel,
   GridRow,
@@ -46,6 +45,7 @@ import {
 import { GridColumnUnsortedIcon } from '../components/columnHeaders/GridColumnUnsortedIcon';
 import { ErrorOverlay } from '../components/ErrorOverlay';
 import { GridNoResultsOverlay } from '../components/GridNoResultsOverlay';
+import materialSlots from '../material';
 
 const DEFAULT_GRID_ICON_SLOTS_COMPONENTS: GridIconSlotsComponent = {
   BooleanCellTrueIcon: GridCheckIcon,
@@ -100,7 +100,7 @@ export const DATA_GRID_DEFAULT_SLOTS_COMPONENTS: GridSlotsComponent = {
   LoadingOverlay: GridLoadingOverlay,
   NoResultsOverlay: GridNoResultsOverlay,
   NoRowsOverlay: GridNoRowsOverlay,
-  Pagination: GridPagination,
+  Pagination: materialSlots.Pagination,
   FilterPanel: GridFilterPanel,
   ColumnsPanel: GridColumnsPanel,
   Panel: GridPanel,

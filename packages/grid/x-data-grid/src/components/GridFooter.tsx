@@ -9,6 +9,7 @@ import { GridRowCount } from './GridRowCount';
 import { GridSelectedRowCount } from './GridSelectedRowCount';
 import { GridFooterContainer, GridFooterContainerProps } from './containers/GridFooterContainer';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
+import { GridPagination } from './GridPagination';
 
 const GridFooter = React.forwardRef<HTMLDivElement, GridFooterContainerProps>(function GridFooter(
   props,
@@ -32,11 +33,9 @@ const GridFooter = React.forwardRef<HTMLDivElement, GridFooterContainerProps>(fu
       <GridRowCount rowCount={totalTopLevelRowCount} visibleRowCount={visibleTopLevelRowCount} />
     ) : null;
 
-  const paginationElement = rootProps.pagination &&
-    !rootProps.hideFooterPagination &&
-    rootProps.components.Pagination && (
-      <rootProps.components.Pagination {...rootProps.componentsProps?.pagination} />
-    );
+  const paginationElement = rootProps.pagination && !rootProps.hideFooterPagination && (
+    <GridPagination />
+  );
 
   return (
     <GridFooterContainer ref={ref} {...props}>
