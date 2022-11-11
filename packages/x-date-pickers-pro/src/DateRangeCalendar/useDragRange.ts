@@ -6,7 +6,7 @@ import { DateRangePosition } from './DateRangeCalendar.types';
 interface UseDragRange<TDate> {
   disableDragEditing?: boolean;
   utils: MuiPickersAdapter<TDate>;
-  setRangeDragDay: (value: React.SetStateAction<TDate | null>) => void;
+  setRangeDragDay: (value: TDate | null) => void;
   onDragStart: (position: DateRangePosition) => void;
   onDrop: (newDate: TDate) => void;
 }

@@ -360,6 +360,12 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
     handleSelectedDayChange(newDate, undefined, true);
   });
 
+  const handleRangeDragDayChange = useEventCallback((val: TDate | null) => {
+    if (!utils.isEqual(val, rangeDragDay)) {
+      setRangeDragDay(val);
+    }
+  });
+
   const shouldDisableDragEditing = React.useMemo(
     () => disableDragEditing || disabled || readOnly,
     [disableDragEditing, disabled, readOnly],
@@ -369,7 +375,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
     disableDragEditing: shouldDisableDragEditing,
     onDrop: handleDrop,
     onDragStart: handleDragStart,
-    setRangeDragDay,
+    setRangeDragDay: handleRangeDragDayChange,
     utils,
   });
 
