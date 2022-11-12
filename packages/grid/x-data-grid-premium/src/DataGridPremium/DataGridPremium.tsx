@@ -277,8 +277,8 @@ DataGridPremiumRaw.propTypes = {
    */
   error: PropTypes.any,
   /**
-   * Features under development.
-   * For each feature, if the flag is not explicitly set to `true`, the feature is fully disabled and any property / method call don't have any effect.
+   * Unstable features, breaking changes might be introduced.
+   * For each feature, if the flag is not explicitly set to `true`, then the feature is fully disabled, and neither property nor method calls will have any effect.
    */
   experimentalFeatures: PropTypes.shape({
     columnGrouping: PropTypes.bool,
