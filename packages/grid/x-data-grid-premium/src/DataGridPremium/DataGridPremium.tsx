@@ -823,8 +823,8 @@ DataGridPremiumRaw.propTypes = {
    */
   rowCount: PropTypes.number,
   /**
-   * If `single`, all columns that are grouped by are represented in the same column.
-   * If `multiple`, each column that is grouped by is represented in its own column.
+   * If `single`, all the columns that are grouped are represented in the same grid column.
+   * If `multiple`, each column that is grouped is represented in its own grid column.
    * @default 'single'
    */
   rowGroupingColumnMode: PropTypes.oneOf(['multiple', 'single']),

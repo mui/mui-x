@@ -46,9 +46,9 @@ export interface DataGridPremiumProcessedProps
 export type DataGridPremiumForcedPropsKey = 'signature';
 
 /**
- * The `DataGridPremium` options with a default value overridable through props
- * None of the entry of this interface should be optional, they all have default values and `DataGridProps` already applies a `Partial<DataGridSimpleOptions>` for the public interface
- * The controlled model do not have a default value at the prop processing level, so they must be defined in `DataGridOtherProps`
+ * The `DataGridPremium` options with a default value overridable through props.
+ * None of the entry of this interface should be optional, they all have default values and `DataGridProps` already applies a `Partial<DataGridSimpleOptions>` for the public interface.
+ * The controlled model do not have a default value at the prop processing level, so they must be defined in `DataGridOtherProps`.
  */
 export interface DataGridPremiumPropsWithDefaultValue extends DataGridProPropsWithDefaultValue {
   /**
@@ -62,8 +62,8 @@ export interface DataGridPremiumPropsWithDefaultValue extends DataGridProPropsWi
    */
   disableRowGrouping: boolean;
   /**
-   * If `single`, all columns that are grouped by are represented in the same column.
-   * If `multiple`, each column that is grouped by is represented in its own column.
+   * If `single`, all the columns that are grouped are represented in the same grid column.
+   * If `multiple`, each column that is grouped is represented in its own grid column.
    * @default 'single'
    */
   rowGroupingColumnMode: 'single' | 'multiple';

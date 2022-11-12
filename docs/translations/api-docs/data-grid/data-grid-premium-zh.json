@@ -124,7 +124,7 @@
     "processRowUpdate": "Callback called before updating a row with new values in the row and cell editing.<br><br><strong>Signature:</strong><br><code>function(newRow: R, oldRow: R) =&gt; Promise&lt;R&gt; | R</code><br><em>newRow:</em> Row object with the new values.<br><em>oldRow:</em> Row object with the old values.<br> <em>returns</em> (Promise<R> | R): The final values to update the row.",
     "rowBuffer": "Number of extra rows to be rendered before/after the visible slice.",
     "rowCount": "Set the total number of rows, if it is different from the length of the value <code>rows</code> prop. If some rows have children (for instance in the tree data), this number represents the amount of top level rows.",
-    "rowGroupingColumnMode": "If <code>single</code>, all columns that are grouped by are represented in the same column. If <code>multiple</code>, each column that is grouped by is represented in its own column.",
+    "rowGroupingColumnMode": "If <code>single</code>, all the columns that are grouped are represented in the same grid column. If <code>multiple</code>, each column that is grouped is represented in its own grid column.",
     "rowGroupingModel": "Set the row grouping model of the grid.",
     "rowHeight": "Set the height in pixel of a row in the grid.",
     "rowModesModel": "Controls the modes of the rows.",
