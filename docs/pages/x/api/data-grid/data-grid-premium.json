@@ -266,10 +266,6 @@
       "type": { "name": "elementType" }
     },
     "ColumnMenu": { "default": "GridColumnMenu", "type": { "name": "elementType" } },
-    "ColumnMenuAggregationItem": {
-      "default": "GridColumnMenuAggregationItem",
-      "type": { "name": "elementType" }
-    },
     "ColumnMenuClearIcon": { "default": "GridClearIcon", "type": { "name": "elementType" } },
     "ColumnMenuFilterIcon": { "default": "GridFilterAltIcon", "type": { "name": "elementType" } },
     "ColumnMenuGroupIcon": { "default": "GridGroupWorkIcon", "type": { "name": "elementType" } },
@@ -286,20 +282,8 @@
       "default": "GridPushPinLeftIcon",
       "type": { "name": "elementType" }
     },
-    "ColumnMenuPinningItem": {
-      "default": "GridColumnMenuPinningItems",
-      "type": { "name": "elementType" }
-    },
     "ColumnMenuPinRightIcon": {
       "default": "GridPushPinRightIcon",
-      "type": { "name": "elementType" }
-    },
-    "ColumnMenuRowGroupItem": {
-      "default": "GridColumnMenuRowGroupItem",
-      "type": { "name": "elementType" }
-    },
-    "ColumnMenuRowUngroupItem": {
-      "default": "GridColumnMenuRowUngroupItem",
       "type": { "name": "elementType" }
     },
     "ColumnMenuSortAscendingIcon": {

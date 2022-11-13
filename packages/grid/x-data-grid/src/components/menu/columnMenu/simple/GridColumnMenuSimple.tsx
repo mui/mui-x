@@ -86,7 +86,14 @@ GridColumnMenuSimple.propTypes = {
   // ----------------------------------------------------------------------
   currentColumn: PropTypes.object.isRequired,
   hideMenu: PropTypes.func.isRequired,
+  initialItems: PropTypes.arrayOf(
+    PropTypes.shape({
+      component: PropTypes.elementType.isRequired,
+      priority: PropTypes.number.isRequired,
+    }),
+  ).isRequired,
   open: PropTypes.bool.isRequired,
+  slots: PropTypes.object.isRequired,
 } as any;
 
 export { GridColumnMenuSimple };

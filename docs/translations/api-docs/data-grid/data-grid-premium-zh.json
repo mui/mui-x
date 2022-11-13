@@ -658,10 +658,6 @@
     }
   },
   "slotDescriptions": {
-    "ColumnMenuAggregationItem": "The custom component for aggregation menu item.",
-    "ColumnMenuRowUngroupItem": "The custom component for ungrouped menu item.",
-    "ColumnMenuRowGroupItem": "The custom component for grouped menu item.",
-    "ColumnMenuPinningItem": "The custom Checkbox component used in the grid for both header and cells.",
     "BaseCheckbox": "The custom Checkbox component used in the grid for both header and cells.",
     "BaseTextField": "The custom TextField component used in the grid.",
     "BaseFormControl": "The custom FormControl component used in the grid.",

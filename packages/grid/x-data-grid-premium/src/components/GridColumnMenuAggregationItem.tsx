@@ -142,9 +142,7 @@ GridColumnMenuAggregationItemSimple.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
-  availableAggregationFunctions: PropTypes.arrayOf(PropTypes.string).isRequired,
-  column: PropTypes.object.isRequired,
-  label: PropTypes.string.isRequired,
+  column: PropTypes.object,
   onClick: PropTypes.func,
 } as any;
 
