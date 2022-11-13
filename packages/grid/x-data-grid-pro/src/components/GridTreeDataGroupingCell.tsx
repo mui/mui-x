@@ -144,6 +144,7 @@ GridTreeDataGroupingCell.propTypes = {
    * If true, the cell is editable.
    */
   isEditable: PropTypes.bool,
+  offsetMultiplier: PropTypes.number,
   /**
    * The row model of the row that the current cell belongs to.
    */
