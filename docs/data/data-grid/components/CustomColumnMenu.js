@@ -1,8 +1,8 @@
-import * as React from 'react'
-import PropTypes from 'prop-types'
-import Box from '@mui/material/Box'
-import { styled } from '@mui/material/styles'
-import Button from '@mui/material/Button'
+import * as React from 'react';
+import PropTypes from 'prop-types';
+import Box from '@mui/material/Box';
+import { styled } from '@mui/material/styles';
+import Button from '@mui/material/Button';
 import {
   GridColumnMenuDefault,
   GridColumnMenuContainer,
@@ -12,25 +12,25 @@ import {
   gridProColumnMenuSlots,
   gridProColumnMenuInitItems,
   DataGridPro,
-} from '@mui/x-data-grid-pro'
-import StarOutlineIcon from '@mui/icons-material/StarOutline'
+} from '@mui/x-data-grid-pro';
+import StarOutlineIcon from '@mui/icons-material/StarOutline';
 
 const StyledGridColumnMenuContainer = styled(GridColumnMenuContainer)(
   ({ theme, ownerState }) => ({
     background: theme.palette[ownerState.color].main,
     color: theme.palette[ownerState.color].contrastText,
   }),
-)
+);
 
 const StyledGridColumnMenu = styled(GridColumnMenuDefault)(
   ({ theme, ownerState }) => ({
     background: theme.palette[ownerState.color].main,
     color: theme.palette[ownerState.color].contrastText,
   }),
-)
+);
 
-function CustomColumnMenuComponent (props) {
-  const { hideMenu, currentColumn, color, ...other } = props
+function CustomColumnMenuComponent(props) {
+  const { hideMenu, currentColumn, color, ...other } = props;
 
   if (currentColumn.field === 'name') {
     return (
@@ -43,7 +43,7 @@ function CustomColumnMenuComponent (props) {
         <GridColumnMenuSortItem onClick={hideMenu} column={currentColumn} />
         <GridColumnMenuFilterItem onClick={hideMenu} column={currentColumn} />
       </StyledGridColumnMenuContainer>
-    )
+    );
   }
   if (currentColumn.field === 'stars') {
     return (
@@ -66,7 +66,7 @@ function CustomColumnMenuComponent (props) {
           <StarOutlineIcon sx={{ fontSize: 80 }} />
         </Box>
       </StyledGridColumnMenuContainer>
-    )
+    );
   }
   return (
     <StyledGridColumnMenu
@@ -77,30 +77,30 @@ function CustomColumnMenuComponent (props) {
       initialItems={gridProColumnMenuInitItems}
       {...other}
     />
-  )
+  );
 }
 
 CustomColumnMenuComponent.propTypes = {
   color: PropTypes.oneOf(['primary', 'secondary']).isRequired,
   currentColumn: PropTypes.object.isRequired,
   hideMenu: PropTypes.func.isRequired,
-}
+};
 
-export { CustomColumnMenuComponent }
+export { CustomColumnMenuComponent };
 
-export default function CustomColumnMenu () {
-  const [color, setColor] = React.useState('primary')
-  const apiRef = useGridApiRef()
+export default function CustomColumnMenu() {
+  const [color, setColor] = React.useState('primary');
+  const apiRef = useGridApiRef();
 
   return (
     <Box sx={{ width: '100%' }}>
       <Button
         color={color}
-        size='small'
-        onClick={event => {
-          event.stopPropagation()
-          setColor(current => (current === 'primary' ? 'secondary' : 'primary'))
-          apiRef.current.showColumnMenu('default')
+        size="small"
+        onClick={(event) => {
+          event.stopPropagation();
+          setColor((current) => (current === 'primary' ? 'secondary' : 'primary'));
+          apiRef.current.showColumnMenu('default');
         }}
       >
         Toggle menu background
@@ -136,5 +136,5 @@ export default function CustomColumnMenu () {
         />
       </Box>
     </Box>
-  )
+  );
 }
