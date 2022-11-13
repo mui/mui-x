@@ -20,7 +20,7 @@ function MenuCloseComponent(props) {
 }
 
 MenuCloseComponent.propTypes = {
-  onClick: PropTypes.func,
+  onClick: PropTypes.func.isRequired,
 };
 
 function CustomColumnMenu(props) {
