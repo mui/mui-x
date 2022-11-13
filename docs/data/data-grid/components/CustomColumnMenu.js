@@ -1,6 +1,6 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
-import { styled, Theme } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
 import Button from '@mui/material/Button';
 import {
   GridColumnMenuSimple,
@@ -14,19 +14,19 @@ import {
 } from '@mui/x-data-grid-pro';
 import StarOutlineIcon from '@mui/icons-material/StarOutline';
 
-const StyledGridColumnMenuContainer = styled(GridColumnMenuSimpleContainer)<{
-  ownerState
-}>(({ theme, ownerState }: { theme: Theme; ownerState: OwnerState }) => ({
-  background: theme.palette[ownerState.color].main,
-  color: theme.palette[ownerState.color].contrastText,
-}));
+const StyledGridColumnMenuContainer = styled(GridColumnMenuSimpleContainer)(
+  ({ theme, ownerState }) => ({
+    background: theme.palette[ownerState.color].main,
+    color: theme.palette[ownerState.color].contrastText,
+  }),
+);
 
-const StyledGridColumnMenuSimple = styled(GridColumnMenuSimple)<{
-  ownerState
-}>(({ theme, ownerState }) => ({
-  background: theme.palette[ownerState.color].main,
-  color: theme.palette[ownerState.color].contrastText,
-}));
+const StyledGridColumnMenuSimple = styled(GridColumnMenuSimple)(
+  ({ theme, ownerState }) => ({
+    background: theme.palette[ownerState.color].main,
+    color: theme.palette[ownerState.color].contrastText,
+  }),
+);
 
 export function CustomColumnMenuComponent(props) {
   const { hideMenu, currentColumn, color, ...other } = props;
@@ -39,8 +39,8 @@ export function CustomColumnMenuComponent(props) {
         ownerState={{ color }}
         {...other}
       >
-        <GridColumnMenuSortItemSimple onClick={hideMenu} column={currentColumn!} />
-        <GridColumnMenuFilterItemSimple onClick={hideMenu} column={currentColumn!} />
+        <GridColumnMenuSortItemSimple onClick={hideMenu} column={currentColumn} />
+        <GridColumnMenuFilterItemSimple onClick={hideMenu} column={currentColumn} />
       </StyledGridColumnMenuContainer>
     );
   }
