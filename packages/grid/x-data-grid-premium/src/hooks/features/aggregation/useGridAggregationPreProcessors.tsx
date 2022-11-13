@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { gridColumnLookupSelector, GridColumnMenuValue } from '@mui/x-data-grid-pro';
+import { gridColumnLookupSelector } from '@mui/x-data-grid-pro';
 import {
   GridPipeProcessor,
   GridRestoreStatePreProcessingContext,
@@ -108,7 +108,7 @@ export const useGridAggregationPreProcessors = (
   );
 
   const addColumnMenuButtons = React.useCallback<GridPipeProcessor<'columnMenu'>>(
-    (columnMenuItems: GridColumnMenuValue, { column, slots }) => {
+    (columnMenuItems, { column, slots }) => {
       if (props.disableAggregation) {
         return columnMenuItems;
       }

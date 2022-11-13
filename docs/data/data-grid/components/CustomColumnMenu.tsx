@@ -3,11 +3,11 @@ import Box from '@mui/material/Box';
 import { styled, Theme } from '@mui/material/styles';
 import Button from '@mui/material/Button';
 import {
-  GridColumnMenuSimple,
-  GridColumnMenuSimpleContainer,
+  GridColumnMenuDefault,
+  GridColumnMenuContainer,
   GridColumnMenuProps,
-  GridColumnMenuFilterItemSimple,
-  GridColumnMenuSortItemSimple,
+  GridColumnMenuFilterItem,
+  GridColumnMenuSortItem,
   useGridApiRef,
   gridProColumnMenuSlots,
   gridProColumnMenuInitItems,
@@ -20,14 +20,14 @@ type OwnerState = {
   color: PaletteColorKey;
 };
 
-const StyledGridColumnMenuContainer = styled(GridColumnMenuSimpleContainer)<{
+const StyledGridColumnMenuContainer = styled(GridColumnMenuContainer)<{
   ownerState: OwnerState;
 }>(({ theme, ownerState }: { theme: Theme; ownerState: OwnerState }) => ({
   background: theme.palette[ownerState.color].main,
   color: theme.palette[ownerState.color].contrastText,
 }));
 
-const StyledGridColumnMenuSimple = styled(GridColumnMenuSimple)<{
+const StyledGridColumnMenu = styled(GridColumnMenuDefault)<{
   ownerState: OwnerState;
 }>(({ theme, ownerState }: { theme: Theme; ownerState: OwnerState }) => ({
   background: theme.palette[ownerState.color].main,
@@ -45,8 +45,8 @@ export function CustomColumnMenuComponent(props: GridColumnMenuProps & OwnerStat
         ownerState={{ color }}
         {...other}
       >
-        <GridColumnMenuSortItemSimple onClick={hideMenu} column={currentColumn!} />
-        <GridColumnMenuFilterItemSimple onClick={hideMenu} column={currentColumn!} />
+        <GridColumnMenuSortItem onClick={hideMenu} column={currentColumn!} />
+        <GridColumnMenuFilterItem onClick={hideMenu} column={currentColumn!} />
       </StyledGridColumnMenuContainer>
     );
   }
@@ -74,7 +74,7 @@ export function CustomColumnMenuComponent(props: GridColumnMenuProps & OwnerStat
     );
   }
   return (
-    <StyledGridColumnMenuSimple
+    <StyledGridColumnMenu
       hideMenu={hideMenu}
       currentColumn={currentColumn}
       ownerState={{ color }}

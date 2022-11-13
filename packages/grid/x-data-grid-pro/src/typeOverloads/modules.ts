@@ -57,10 +57,6 @@ declare module '@mui/x-data-grid' {
   interface GridControlledStateEventLookup extends GridControlledStateEventLookupPro {}
 
   interface GridPipeProcessingLookup extends GridPipeProcessingLookupPro {}
-
-  interface GridColumnMenuKeysInternalOverrides {
-    pinning: true;
-  }
 }
 
 declare module '@mui/x-data-grid/internals' {

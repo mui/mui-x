@@ -13,7 +13,7 @@ const GridColumnMenuColumnsItemSimple = (props: GridColumnMenuItemProps) => {
 
   const showColumns = React.useCallback(
     (event: React.MouseEvent<HTMLElement>) => {
-      onClick?.(event); // hide column menu
+      onClick(event); // hide column menu
       apiRef.current.showPreferences(GridPreferencePanelsValue.columns);
     },
     [apiRef, onClick],

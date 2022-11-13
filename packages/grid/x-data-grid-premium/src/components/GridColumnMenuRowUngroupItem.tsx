@@ -30,22 +30,18 @@ const GridColumnMenuRowUngroupItem: React.FC<GridColumnMenuItemProps> = (props) 
   const rowGroupingModel = useGridSelector(apiRef, gridRowGroupingSanitizedModelSelector);
   const columnsLookup = useGridSelector(apiRef, gridColumnLookupSelector);
 
-  if (!column?.groupable) {
+  if (!column.groupable) {
     return null;
   }
 
   const ungroupColumn = (event: React.MouseEvent<HTMLElement>) => {
     apiRef.current.removeRowGroupingCriteria(column.field);
-    if (onClick) {
-      onClick(event);
-    }
+    onClick(event);
   };
 
   const groupColumn = (event: React.MouseEvent<HTMLElement>) => {
     apiRef.current.addRowGroupingCriteria(column.field);
-    if (onClick) {
-      onClick(event);
-    }
+    onClick(event);
   };
 
   const name = columnsLookup[column.field].headerName ?? column.field;

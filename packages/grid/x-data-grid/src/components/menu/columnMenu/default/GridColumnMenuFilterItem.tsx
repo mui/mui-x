@@ -33,16 +33,16 @@ const GridColumnMenuFilterItem = (props: GridColumnMenuItemProps) => {
   const filterColumnLookup = useGridSelector(apiRef, gridFilterActiveItemsLookupSelector);
 
   const filtersForCurrentColumn = React.useMemo(
-    () => (column?.field ? filterColumnLookup[column.field] ?? [] : []),
-    [column?.field, filterColumnLookup],
+    () => filterColumnLookup[column.field] ?? [],
+    [column.field, filterColumnLookup],
   );
 
   const showFilter = React.useCallback(
     (event: React.MouseEvent<HTMLElement>) => {
-      onClick?.(event);
-      apiRef.current.showFilterPanel(column?.field);
+      onClick(event);
+      apiRef.current.showFilterPanel(column.field);
     },
-    [apiRef, column?.field, onClick],
+    [apiRef, column.field, onClick],
   );
 
   const clearFilters = React.useCallback(() => {

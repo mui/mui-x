@@ -13,7 +13,7 @@ import { GridColumnMenuRowGroupItemSimple } from './GridColumnMenuRowGroupItemSi
 import { GridColumnMenuRowUngroupItemSimple } from './GridColumnMenuRowUngroupItemSimple';
 
 const GroupingItem = (props: GridColumnMenuItemProps) => {
-  const column = props.column!;
+  const { column } = props;
   if (isGroupingColumn(column.field)) {
     return <GridColumnMenuRowGroupItemSimple {...props} />;
   }

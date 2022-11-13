@@ -10,7 +10,6 @@ import {
   useGridApiEventHandler,
   GridEventListener,
   gridColumnFieldsSelector,
-  GridColumnMenuValue,
 } from '@mui/x-data-grid';
 import {
   useGridRegisterPipeProcessor,
@@ -173,7 +172,7 @@ export const useGridColumnPinning = (
   );
 
   const addColumnMenuItems = React.useCallback<GridPipeProcessor<'columnMenu'>>(
-    (columnMenuItems: GridColumnMenuValue, { column, slots }): GridColumnMenuValue => {
+    (columnMenuItems, { column, slots }) => {
       if (props.disableColumnPinning) {
         return columnMenuItems;
       }

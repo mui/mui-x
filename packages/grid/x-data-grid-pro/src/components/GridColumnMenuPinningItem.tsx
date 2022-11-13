@@ -25,19 +25,13 @@ const GridColumnMenuPinningItem: React.FC<GridColumnMenuItemProps> = (props) => 
   const rootProps = useGridRootProps();
 
   const pinColumn = (side: GridPinnedPosition) => (event: React.MouseEvent<HTMLElement>) => {
-    apiRef.current.pinColumn(column!.field, side);
-
-    if (onClick) {
-      onClick(event);
-    }
+    apiRef.current.pinColumn(column.field, side);
+    onClick(event);
   };
 
   const unpinColumn = (event: React.MouseEvent<HTMLElement>) => {
-    apiRef.current.unpinColumn(column!.field);
-
-    if (onClick) {
-      onClick(event);
-    }
+    apiRef.current.unpinColumn(column.field);
+    onClick(event);
   };
 
   if (!column) {

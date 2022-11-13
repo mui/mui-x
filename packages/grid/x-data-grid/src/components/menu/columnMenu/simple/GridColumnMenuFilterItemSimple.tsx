@@ -12,13 +12,13 @@ const GridColumnMenuFilterItemSimple = (props: GridColumnMenuItemProps) => {
 
   const showFilter = React.useCallback(
     (event: React.MouseEvent<HTMLElement>) => {
-      onClick?.(event);
-      apiRef.current.showFilterPanel(column?.field);
+      onClick(event);
+      apiRef.current.showFilterPanel(column.field);
     },
-    [apiRef, column?.field, onClick],
+    [apiRef, column.field, onClick],
   );
 
-  if (rootProps.disableColumnFilter || !column?.filterable) {
+  if (rootProps.disableColumnFilter || !column.filterable) {
     return null;
   }
 

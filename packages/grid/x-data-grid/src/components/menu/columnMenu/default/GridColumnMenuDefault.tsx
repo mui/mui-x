@@ -63,7 +63,7 @@ export const GridColumnMenuDefaultRoot = React.forwardRef<
           return null;
         }
         return (
-          <React.Fragment>
+          <React.Fragment key={index}>
             <item.component {...itemProps} />
             {index !== orderedItems.length - 1 ? <Divider /> : null}
           </React.Fragment>

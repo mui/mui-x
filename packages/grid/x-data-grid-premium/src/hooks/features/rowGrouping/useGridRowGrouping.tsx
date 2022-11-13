@@ -4,7 +4,6 @@ import {
   useGridApiEventHandler,
   useGridApiMethod,
   gridColumnLookupSelector,
-  GridColumnMenuValue,
 } from '@mui/x-data-grid-pro';
 import {
   useGridRegisterPipeProcessor,
@@ -154,7 +153,7 @@ export const useGridRowGrouping = (
    * PRE-PROCESSING
    */
   const addColumnMenuButtons = React.useCallback<GridPipeProcessor<'columnMenu'>>(
-    (columnMenuItems: GridColumnMenuValue, { column, slots }) => {
+    (columnMenuItems, { column, slots }) => {
       if (props.disableRowGrouping) {
         return columnMenuItems;
       }

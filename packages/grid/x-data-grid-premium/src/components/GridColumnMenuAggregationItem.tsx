@@ -23,7 +23,7 @@ const StyledStack = styled(Stack)(({ theme }) => ({
 }));
 
 const GridColumnMenuAggregationItemRoot: React.FC<GridColumnMenuItemProps> = (props) => {
-  const column = props.column!;
+  const { column } = props;
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
   const id = useId();
@@ -60,7 +60,7 @@ const GridColumnMenuAggregationItemRoot: React.FC<GridColumnMenuItemProps> = (pr
   const handleAggregationItemChange = (event: SelectChangeEvent<string | undefined>) => {
     const newAggregationItem = event.target?.value || undefined;
     const currentModel = gridAggregationModelSelector(apiRef);
-    const { [column?.field]: columnItem, ...otherColumnItems } = currentModel;
+    const { [column.field]: columnItem, ...otherColumnItems } = currentModel;
     const newModel: GridAggregationModel =
       newAggregationItem == null
         ? otherColumnItems
@@ -106,10 +106,8 @@ GridColumnMenuAggregationItemRoot.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
-  availableAggregationFunctions: PropTypes.arrayOf(PropTypes.string).isRequired,
   column: PropTypes.object.isRequired,
-  label: PropTypes.string.isRequired,
-  onClick: PropTypes.func,
+  onClick: PropTypes.func.isRequired,
 } as any;
 
 const GridColumnMenuAggregationItem = (props: GridColumnMenuItemProps) => (
@@ -123,10 +121,8 @@ GridColumnMenuAggregationItem.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
-  availableAggregationFunctions: PropTypes.arrayOf(PropTypes.string).isRequired,
   column: PropTypes.object.isRequired,
-  label: PropTypes.string.isRequired,
-  onClick: PropTypes.func,
+  onClick: PropTypes.func.isRequired,
 } as any;
 
 export { GridColumnMenuAggregationItem };
@@ -142,8 +138,8 @@ GridColumnMenuAggregationItemSimple.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
-  column: PropTypes.object,
-  onClick: PropTypes.func,
+  column: PropTypes.object.isRequired,
+  onClick: PropTypes.func.isRequired,
 } as any;
 
 export { GridColumnMenuAggregationItemSimple };

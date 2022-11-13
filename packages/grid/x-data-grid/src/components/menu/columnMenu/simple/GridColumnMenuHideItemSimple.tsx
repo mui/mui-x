@@ -27,17 +27,13 @@ const GridColumnMenuHideItemSimple = (props: GridColumnMenuItemProps) => {
       if (disabled) {
         return;
       }
-      if (onClick) {
-        onClick(event);
-      }
+      onClick(event);
       // time for the transition
       timeoutRef.current = setTimeout(() => {
-        if (column?.field) {
-          apiRef.current.setColumnVisibility(column.field, false);
-        }
+        apiRef.current.setColumnVisibility(column.field, false);
       }, 100);
     },
-    [apiRef, column?.field, onClick, disabled],
+    [apiRef, column.field, onClick, disabled],
   );
 
   React.useEffect(() => {
@@ -48,7 +44,7 @@ const GridColumnMenuHideItemSimple = (props: GridColumnMenuItemProps) => {
     return null;
   }
 
-  if (column?.hideable === false) {
+  if (column.hideable === false) {
     return null;
   }
 

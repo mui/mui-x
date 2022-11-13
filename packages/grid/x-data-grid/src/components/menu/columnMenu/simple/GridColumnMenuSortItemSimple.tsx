@@ -22,7 +22,7 @@ const GridColumnMenuSortItemSimple = (props: GridColumnMenuItemProps) => {
 
   const onSortMenuItemClick = React.useCallback(
     (event: React.MouseEvent<HTMLElement>) => {
-      onClick?.(event);
+      onClick(event);
       const direction = event.currentTarget.getAttribute('data-value') || null;
       apiRef.current.sortColumn(
         column!,

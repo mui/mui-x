@@ -25,9 +25,7 @@ const GridColumnMenuRowGroupItemSimple: React.FC<GridColumnMenuItemProps> = (
   const renderUnGroupingMenuItem = (field: string) => {
     const ungroupColumn = (event: React.MouseEvent<HTMLElement>) => {
       apiRef.current.removeRowGroupingCriteria(field);
-      if (onClick) {
-        onClick(event);
-      }
+      onClick(event);
     };
 
     const name = columnsLookup[field].headerName ?? field;
