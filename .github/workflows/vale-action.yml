@@ -12,8 +12,8 @@ jobs:
       contents: read
       pull-requests: write
     steps:
-      - uses: actions/checkout@93ea575cb5d8a053eaa0ac8fa3b40d7e05a33cc8 # tag=v3
-      - uses: errata-ai/vale-action@c4213d4de3d5f718b8497bd86161531c78992084 # tag=v2.0.1
+      - uses: actions/checkout@93ea575cb5d8a053eaa0ac8fa3b40d7e05a33cc8 # v3.1.0
+      - uses: errata-ai/vale-action@c4213d4de3d5f718b8497bd86161531c78992084 # v2.0.1
         with:
           reporter: github-pr-review
           files: docs/data
