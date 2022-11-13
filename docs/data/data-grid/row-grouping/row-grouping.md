@@ -221,12 +221,12 @@ To increase the cell indent you can use `offsetMultiplier` prop exposed by `<Gri
 
 ```tsx
 const groupingColDef = {
-  renderCell: (params) => <GridTreeDataGroupingCell {...params} offsetMultiplier={4} />
+  renderCell: (params) => (
+    <GridTreeDataGroupingCell {...params} offsetMultiplier={4} />
+  ),
 };
 
-<DataGridPremium
-  groupingColDef={groupingColDef}
-/>
+<DataGridPremium groupingColDef={groupingColDef} />;
 ```
 
 ## Sorting / Filtering
