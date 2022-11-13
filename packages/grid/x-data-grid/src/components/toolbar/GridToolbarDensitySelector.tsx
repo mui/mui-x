@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { unstable_useId as useId, useForkRef } from '@mui/material/utils';
+import { unstable_useId as useId, unstable_useForkRef as useForkRef } from '@mui/utils';
 import MenuList from '@mui/material/MenuList';
 import { ButtonProps } from '@mui/material/Button';
 import MenuItem from '@mui/material/MenuItem';

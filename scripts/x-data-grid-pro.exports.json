@@ -12,6 +12,7 @@
   { "name": "DATA_GRID_DEFAULT_SLOTS_COMPONENTS", "kind": "Variable" },
   { "name": "DATA_GRID_PRO_DEFAULT_SLOTS_COMPONENTS", "kind": "Variable" },
   { "name": "DATA_GRID_PRO_PROPS_DEFAULT_VALUES", "kind": "Variable" },
+  { "name": "DataGrid", "kind": "Function" },
   { "name": "DataGridPro", "kind": "Variable" },
   { "name": "DataGridProProps", "kind": "Interface" },
   { "name": "deDE", "kind": "Variable" },

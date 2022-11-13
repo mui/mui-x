@@ -5,7 +5,7 @@ import MenuItem from '@mui/material/MenuItem';
 import Stack from '@mui/material/Stack';
 import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
-import { unstable_useId as useId } from '@mui/material/utils';
+import { unstable_useId as useId } from '@mui/utils';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import { styled } from '@mui/material/styles';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
