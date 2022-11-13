@@ -15,7 +15,6 @@ import {
   GridCheckIcon,
   GridCloseIcon,
   GridColumnIcon,
-  GridColumnMenuDefault,
   GridColumnsPanel,
   GridFilterAltIcon,
   GridFilterListIcon,
@@ -46,6 +45,7 @@ import {
   GridViewColumnIcon,
   GridClearIcon,
 } from '../components';
+import { GridColumnMenuDefault } from '../components/reexportable';
 import { GridColumnUnsortedIcon } from '../components/columnHeaders/GridColumnUnsortedIcon';
 import { ErrorOverlay } from '../components/ErrorOverlay';
 import { GridNoResultsOverlay } from '../components/GridNoResultsOverlay';

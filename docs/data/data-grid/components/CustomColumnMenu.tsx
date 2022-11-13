@@ -3,12 +3,14 @@ import Box from '@mui/material/Box';
 import { styled, Theme } from '@mui/material/styles';
 import Button from '@mui/material/Button';
 import {
-  GridColumnMenu,
-  GridColumnMenuContainer,
+  GridColumnMenuSimple,
+  GridColumnMenuSimpleContainer,
   GridColumnMenuProps,
-  GridFilterMenuItem,
-  SortGridMenuItems,
+  GridColumnMenuFilterItemSimple,
+  GridColumnMenuSortItemSimple,
   useGridApiRef,
+  gridProColumnMenuSlots,
+  gridProColumnMenuInitItems,
   DataGridPro,
 } from '@mui/x-data-grid-pro';
 import StarOutlineIcon from '@mui/icons-material/StarOutline';
@@ -18,14 +20,14 @@ type OwnerState = {
   color: PaletteColorKey;
 };
 
-const StyledGridColumnMenuContainer = styled(GridColumnMenuContainer)<{
+const StyledGridColumnMenuContainer = styled(GridColumnMenuSimpleContainer)<{
   ownerState: OwnerState;
 }>(({ theme, ownerState }: { theme: Theme; ownerState: OwnerState }) => ({
   background: theme.palette[ownerState.color].main,
   color: theme.palette[ownerState.color].contrastText,
 }));
 
-const StyledGridColumnMenu = styled(GridColumnMenu)<{
+const StyledGridColumnMenuSimple = styled(GridColumnMenuSimple)<{
   ownerState: OwnerState;
 }>(({ theme, ownerState }: { theme: Theme; ownerState: OwnerState }) => ({
   background: theme.palette[ownerState.color].main,
@@ -43,8 +45,8 @@ export function CustomColumnMenuComponent(props: GridColumnMenuProps & OwnerStat
         ownerState={{ color }}
         {...other}
       >
-        <SortGridMenuItems onClick={hideMenu} column={currentColumn!} />
-        <GridFilterMenuItem onClick={hideMenu} column={currentColumn!} />
+        <GridColumnMenuSortItemSimple onClick={hideMenu} column={currentColumn!} />
+        <GridColumnMenuFilterItemSimple onClick={hideMenu} column={currentColumn!} />
       </StyledGridColumnMenuContainer>
     );
   }
@@ -72,10 +74,12 @@ export function CustomColumnMenuComponent(props: GridColumnMenuProps & OwnerStat
     );
   }
   return (
-    <StyledGridColumnMenu
+    <StyledGridColumnMenuSimple
       hideMenu={hideMenu}
       currentColumn={currentColumn}
       ownerState={{ color }}
+      slots={gridProColumnMenuSlots}
+      initialItems={gridProColumnMenuInitItems}
       {...other}
     />
   );

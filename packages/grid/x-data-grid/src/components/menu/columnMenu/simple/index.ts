@@ -6,4 +6,9 @@ export * from './GridColumnMenuSortItemSimple';
 
 // components
 export * from './GridColumnMenuSimpleContainer';
-export * from './GridColumnMenuSimple';
+export {
+  gridColumnMenuSimpleSlots,
+  gridColumnMenuSimpleInitItems,
+  GridColumnMenuSimpleRoot,
+  // GridColumnMenuSimple exported from `./index.ts` to be able to reexported
+} from './GridColumnMenuSimple';

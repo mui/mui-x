@@ -3,10 +3,10 @@ import PropTypes from 'prop-types';
 import {
   DataGridPro,
   GridColumnMenuContainer,
-  SortGridMenuItems,
-  HideGridColMenuItem,
-  GridColumnsMenuItem,
-  GridFilterMenuItem,
+  GridColumnMenuSortItem,
+  GridColumnMenuHideItem,
+  GridColumnMenuColumnsItem,
+  GridColumnMenuFilterItem,
 } from '@mui/x-data-grid-pro';
 import {
   randomCreatedDate,
@@ -24,10 +24,10 @@ function CustomColumnMenu(props) {
       currentColumn={currentColumn}
       {...other}
     >
-      <SortGridMenuItems onClick={hideMenu} column={currentColumn} />
-      <GridFilterMenuItem onClick={hideMenu} column={currentColumn} />
-      <HideGridColMenuItem onClick={hideMenu} column={currentColumn} />
-      <GridColumnsMenuItem onClick={hideMenu} column={currentColumn} />
+      <GridColumnMenuSortItem onClick={hideMenu} column={currentColumn} />
+      <GridColumnMenuFilterItem onClick={hideMenu} column={currentColumn} />
+      <GridColumnMenuHideItem onClick={hideMenu} column={currentColumn} />
+      <GridColumnMenuColumnsItem onClick={hideMenu} column={currentColumn} />
     </GridColumnMenuContainer>
   );
 }

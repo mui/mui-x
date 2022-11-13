@@ -21,6 +21,11 @@ export type { GridToolbarExportProps } from './components/toolbar/GridToolbarExp
 export type { GridExportFormat, GridExportExtension } from './models/gridExport';
 
 /**
+ * Reexportable components.
+ */
+export { GridColumnMenuDefault, GridColumnMenuSimple } from './components/reexportable';
+
+/**
  * The full grid API.
  */
 export type GridApi = GridApiCommunity;

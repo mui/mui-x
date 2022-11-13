@@ -3,4 +3,9 @@ export * from './GridTreeDataGroupingCell';
 export * from './GridColumnMenuPinningItem';
 export * from './GridColumnMenuPinningItemSimple';
 export * from './GridDetailPanelToggleCell';
+export { gridProColumnMenuSlots, gridProColumnMenuInitItems } from './GridProColumnMenuDefault';
+export {
+  gridProColumnMenuSimpleSlots,
+  gridProColumnMenuSimpleInitItems,
+} from './GridProColumnMenuSimple';
 export * from './icons';

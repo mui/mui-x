@@ -16,14 +16,7 @@ const GridColumnMenuContainerRoot = styled('div')(({ theme }) => ({
 export interface GridColumnMenuContainerProps
   extends Pick<
     GridColumnMenuProps,
-    | 'hideMenu'
-    | 'currentColumn'
-    | 'open'
-    | 'getVisibleColumnMenuItems'
-    | 'id'
-    | 'labelledby'
-    | 'className'
-    | 'children'
+    'hideMenu' | 'currentColumn' | 'open' | 'id' | 'labelledby' | 'className' | 'children'
   > {}
 
 const GridColumnMenuContainer = React.forwardRef<HTMLDivElement, GridColumnMenuContainerProps>(
@@ -63,7 +56,6 @@ GridColumnMenuContainer.propTypes = {
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
   currentColumn: PropTypes.object.isRequired,
-  getVisibleColumnMenuItems: PropTypes.func,
   hideMenu: PropTypes.func.isRequired,
   id: PropTypes.string,
   labelledby: PropTypes.string,

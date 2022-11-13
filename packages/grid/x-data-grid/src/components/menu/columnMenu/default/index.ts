@@ -6,4 +6,11 @@ export * from './GridColumnMenuSortItem';
 
 // components
 export * from './GridColumnMenuContainer';
-export * from './GridColumnMenuDefault';
+export {
+  gridColumnMenuSlots,
+  gridColumnMenuInitItems,
+  GridColumnMenuDefaultRoot,
+  // GridColumnMenuDefault exported from `./index.ts` to be able to reexported
+} from './GridColumnMenuDefault';
+
+export type { GridColumnMenuDefaultProps } from './GridColumnMenuDefault';

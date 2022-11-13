@@ -1,9 +1,5 @@
 import * as React from 'react';
-import {
-  gridColumnLookupSelector,
-  GridColumnMenuValue,
-  insertItemsInColumnMenu,
-} from '@mui/x-data-grid-pro';
+import { gridColumnLookupSelector, GridColumnMenuValue } from '@mui/x-data-grid-pro';
 import {
   GridPipeProcessor,
   GridRestoreStatePreProcessingContext,
@@ -112,9 +108,9 @@ export const useGridAggregationPreProcessors = (
   );
 
   const addColumnMenuButtons = React.useCallback<GridPipeProcessor<'columnMenu'>>(
-    (columnMenuValue: GridColumnMenuValue, column) => {
+    (columnMenuItems: GridColumnMenuValue, { column, slots }) => {
       if (props.disableAggregation) {
-        return columnMenuValue;
+        return columnMenuItems;
       }
 
       const availableAggregationFunctions = getAvailableAggregationFunctions({
@@ -123,35 +119,12 @@ export const useGridAggregationPreProcessors = (
       });
 
       if (availableAggregationFunctions.length === 0) {
-        return columnMenuValue;
+        return columnMenuItems;
       }
 
-      const aggregationItemProps = {
-        column,
-        label: apiRef.current.getLocaleText('aggregationMenuItemHeader'),
-        availableAggregationFunctions,
-      };
-
-      const ColumnMenuAggregationItem = props.components.ColumnMenuAggregationItem;
-      const items = {
-        ...columnMenuValue.items,
-        aggregation: <ColumnMenuAggregationItem {...aggregationItemProps} />,
-      };
-
-      const visibleItemKeys = insertItemsInColumnMenu(
-        columnMenuValue.visibleItemKeys,
-        ['divider', 'aggregation'],
-        'filter',
-      );
-
-      return { visibleItemKeys, items };
+      return [...columnMenuItems, slots.ColumnMenuAggregationItem];
     },
-    [
-      apiRef,
-      props.aggregationFunctions,
-      props.components.ColumnMenuAggregationItem,
-      props.disableAggregation,
-    ],
+    [props.aggregationFunctions, props.disableAggregation],
   );
 
   const stateExportPreProcessing = React.useCallback<GridPipeProcessor<'exportState'>>(

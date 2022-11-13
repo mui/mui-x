@@ -4,7 +4,6 @@ import {
   useGridApiEventHandler,
   useGridApiMethod,
   gridColumnLookupSelector,
-  insertItemsInColumnMenu,
   GridColumnMenuValue,
 } from '@mui/x-data-grid-pro';
 import {
@@ -155,42 +154,16 @@ export const useGridRowGrouping = (
    * PRE-PROCESSING
    */
   const addColumnMenuButtons = React.useCallback<GridPipeProcessor<'columnMenu'>>(
-    (columnMenuValue: GridColumnMenuValue, column) => {
+    (columnMenuItems: GridColumnMenuValue, { column, slots }) => {
       if (props.disableRowGrouping) {
-        return columnMenuValue;
+        return columnMenuItems;
       }
-
-      const GroupComponent = props.components.ColumnMenuRowGroupItem;
-      const UngroupComponent = props.components.ColumnMenuRowUngroupItem;
-
-      let menuItem;
-      if (isGroupingColumn(column.field)) {
-        menuItem = <GroupComponent />;
-      } else if (column.groupable) {
-        menuItem = <UngroupComponent />;
-      } else {
-        menuItem = null;
+      if (isGroupingColumn(column.field) || column.groupable) {
+        return [...columnMenuItems, slots.ColumnMenuGroupingItem];
       }
-
-      if (menuItem == null) {
-        return columnMenuValue;
-      }
-
-      const items = { ...columnMenuValue.items, grouping: menuItem };
-
-      const visibleItemKeys = insertItemsInColumnMenu(
-        columnMenuValue.visibleItemKeys,
-        ['divider', 'grouping'],
-        'aggregation',
-      );
-
-      return { visibleItemKeys, items };
+      return columnMenuItems;
     },
-    [
-      props.components.ColumnMenuRowUngroupItem,
-      props.components.ColumnMenuRowGroupItem,
-      props.disableRowGrouping,
-    ],
+    [props.disableRowGrouping],
   );
 
   const stateExportPreProcessing = React.useCallback<GridPipeProcessor<'exportState'>>(

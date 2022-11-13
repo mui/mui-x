@@ -9,14 +9,7 @@ import { gridClasses } from '../../../../constants/gridClasses';
 interface GridColumnMenuSimpleProps
   extends Pick<
     GridColumnMenuProps,
-    | 'hideMenu'
-    | 'currentColumn'
-    | 'open'
-    | 'getVisibleColumnMenuItems'
-    | 'id'
-    | 'labelledby'
-    | 'className'
-    | 'children'
+    'hideMenu' | 'currentColumn' | 'open' | 'id' | 'labelledby' | 'className' | 'children'
   > {}
 
 const GridColumnMenuSimpleContainer = React.forwardRef<HTMLUListElement, GridColumnMenuSimpleProps>(
@@ -57,7 +50,6 @@ GridColumnMenuSimpleContainer.propTypes = {
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
   currentColumn: PropTypes.object.isRequired,
-  getVisibleColumnMenuItems: PropTypes.func,
   hideMenu: PropTypes.func.isRequired,
   id: PropTypes.string,
   labelledby: PropTypes.string,

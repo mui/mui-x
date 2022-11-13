@@ -1,6 +1,5 @@
 // shared modules
 export * from './GridColumnHeaderMenu';
-export * from './GridColumnMenu';
 export * from './GridColumnMenuProps';
 export * from './GridColumnMenuItemProps';
 

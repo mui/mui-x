@@ -1,46 +1,80 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import Divider from '@mui/material/Divider';
-import { GridColumnMenuKey } from '../../../../hooks/features/columnMenu';
 import { GridColumnMenuSimpleContainer } from './GridColumnMenuSimpleContainer';
 import { GridColumnMenuProps } from '../GridColumnMenuProps';
 import { GridColumnMenuColumnsItemSimple } from './GridColumnMenuColumnsItemSimple';
 import { GridColumnMenuFilterItemSimple } from './GridColumnMenuFilterItemSimple';
 import { GridColumnMenuHideItemSimple } from './GridColumnMenuHideItemSimple';
 import { GridColumnMenuSortItemSimple } from './GridColumnMenuSortItemSimple';
-import { GridColumnMenu } from '../GridColumnMenu';
+import { useGridApiContext } from '../../../../hooks/utils/useGridApiContext';
+import { GridColumnMenuValue, GridColumnMenuSlot } from '../../../../hooks/features/columnMenu';
 
-interface Props
-  extends Pick<
-    GridColumnMenuProps,
-    'hideMenu' | 'currentColumn' | 'open' | 'getVisibleColumnMenuItems'
-  > {}
+// TODO Remove
+interface GridColumnMenuDefaultProps
+  extends Pick<GridColumnMenuProps, 'hideMenu' | 'currentColumn' | 'open'> {
+  initialItems: GridColumnMenuValue;
+  slots: { [key: string]: GridColumnMenuSlot };
+}
 
-const defaultVisibleItems: Array<GridColumnMenuKey> = [
-  'sorting',
-  'filter',
-  'hideColumn',
-  'manageColumns',
+export const gridColumnMenuSimpleSlots = {
+  ColumnMenuSortItem: { component: GridColumnMenuSortItemSimple, priority: 0 },
+  ColumnMenuFilterItem: { component: GridColumnMenuFilterItemSimple, priority: 10 },
+  ColumnMenuHideItem: { component: GridColumnMenuHideItemSimple, priority: 20 },
+  ColumnMenuColumnsItem: { component: GridColumnMenuColumnsItemSimple, priority: 30 },
+};
+
+export const gridColumnMenuSimpleInitItems = [
+  gridColumnMenuSimpleSlots.ColumnMenuSortItem,
+  gridColumnMenuSimpleSlots.ColumnMenuFilterItem,
+  gridColumnMenuSimpleSlots.ColumnMenuHideItem,
+  gridColumnMenuSimpleSlots.ColumnMenuColumnsItem,
 ];
 
-const GridColumnMenuSimple = React.forwardRef<HTMLUListElement, Props>(
-  function GridColumnMenuSimple(props: Props, ref) {
-    const defaultMenuItems = {
-      sorting: <GridColumnMenuSortItemSimple />,
-      filter: <GridColumnMenuFilterItemSimple />,
-      hideColumn: <GridColumnMenuHideItemSimple />,
-      manageColumns: <GridColumnMenuColumnsItemSimple />,
-      divider: <Divider />,
-    };
+export const GridColumnMenuSimpleRoot = React.forwardRef<
+  HTMLUListElement,
+  GridColumnMenuDefaultProps
+>(function GridColumnMenuSimpleRoot(props: GridColumnMenuDefaultProps, ref) {
+  const apiRef = useGridApiContext();
+  const itemProps = {
+    onClick: props.hideMenu,
+    column: props.currentColumn,
+  };
 
+  const preProcessedItems = apiRef.current.unstable_applyPipeProcessors(
+    'columnMenu',
+    props.initialItems,
+    {
+      column: props.currentColumn,
+      slots: props.slots,
+    },
+  );
+
+  const orderedItems = React.useMemo(
+    () => preProcessedItems.sort((a, b) => a.priority - b.priority),
+    [preProcessedItems],
+  );
+
+  return (
+    <GridColumnMenuSimpleContainer ref={ref} {...props}>
+      {orderedItems.map((item, index) => {
+        if (!item) {
+          return null;
+        }
+        return <item.component key={index} {...itemProps} />;
+      })}
+    </GridColumnMenuSimpleContainer>
+  );
+});
+
+const GridColumnMenuSimple = React.forwardRef<HTMLUListElement, GridColumnMenuDefaultProps>(
+  function GridColumnMenuSimple(props: GridColumnMenuDefaultProps, ref) {
     return (
-      <GridColumnMenuSimpleContainer ref={ref} {...props}>
-        <GridColumnMenu
-          defaultMenuItems={defaultMenuItems}
-          defaultVisibleItems={defaultVisibleItems}
-          {...props}
-        />
-      </GridColumnMenuSimpleContainer>
+      <GridColumnMenuSimpleRoot
+        ref={ref}
+        {...props}
+        initialItems={gridColumnMenuSimpleInitItems}
+        slots={gridColumnMenuSimpleSlots}
+      />
     );
   },
 );
@@ -51,7 +85,6 @@ GridColumnMenuSimple.propTypes = {
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
   currentColumn: PropTypes.object.isRequired,
-  getVisibleColumnMenuItems: PropTypes.func,
   hideMenu: PropTypes.func.isRequired,
   open: PropTypes.bool.isRequired,
 } as any;
