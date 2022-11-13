@@ -30,10 +30,11 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 
 interface GridTreeDataGroupingCellProps extends GridRenderCellParams<any, any, any, GridGroupNode> {
   hideDescendantCount?: boolean;
+  offsetMultiplier?: number;
 }
 
 function GridTreeDataGroupingCell(props: GridTreeDataGroupingCellProps) {
-  const { id, field, formattedValue, rowNode, hideDescendantCount } = props;
+  const { id, field, formattedValue, rowNode, hideDescendantCount, offsetMultiplier = 2 } = props;
 
   const rootProps = useGridRootProps();
   const apiRef = useGridApiContext();
@@ -66,7 +67,7 @@ function GridTreeDataGroupingCell(props: GridTreeDataGroupingCellProps) {
   };
 
   return (
-    <Box className={classes.root} sx={{ ml: rowNode.depth * 2 }}>
+    <Box className={classes.root} sx={{ ml: rowNode.depth * offsetMultiplier }}>
       <div className={classes.toggle}>
         {filteredDescendantCount > 0 && (
           <IconButton
