@@ -219,6 +219,51 @@ In the example below, the grid has two additional custom aggregation functions f
 
 {{"demo": "AggregationCustomFunction.js", "bg": "inline", "defaultCodeOpen": false}}
 
+### Aggregating data from multiple row fields
+
+By default, the `apply` method of the aggregation function receives an array of values that represent a single field value of each row.
+For example, the `sum` aggregation function receives the values of the `gross` field.
+
+In the example below, the values in the `profit` column are derived from the `gross` and `budget` fields of the row:
+
+```tsx
+{
+  field: 'profit',
+  type: 'number',
+  valueGetter: ({ row }) => {
+    if (!row.gross || !row.budget) {
+      return null;
+    }
+    return (row.gross - row.budget) / row.budget;
+  }
+}
+```
+
+To aggregate the `profit` column, you have to calculate the sum of the `gross` and `budget` fields separately, and then use the formula from the example above to calculate the aggregated `profit` value.
+
+To do so, use the `getCellValue` callback on the aggregation function to transform the data that are being passed to the `apply` method:
+
+```tsx
+const profit: GridAggregationFunction<{ gross: number; budget: number }, number> = {
+  label: 'profit',
+  getCellValue: ({ row }) => ({ budget: row.budget, gross: row.gross }),
+  apply: ({ values }) => {
+    let budget = 0;
+    let gross = 0;
+    values.forEach((value) => {
+      if (value) {
+        gross += value.gross;
+        budget += value.budget;
+      }
+    });
+    return (gross - budget) / budget;
+  },
+  columnTypes: ['number'],
+};
+```
+
+{{"demo": "AggregationMultipleRowFields.js", "bg": "inline", "defaultCodeOpen": false}}
+
 ### Custom value formatter
 
 By default, the aggregated cell uses the value formatter of its column.

@@ -60,7 +60,12 @@ const getAggregationCellValue = ({
       return;
     }
 
-    values.push(apiRef.current.getCellValue(rowId, field));
+    if (typeof aggregationFunction.getCellValue === 'function') {
+      const row = apiRef.current.getRow(rowId);
+      values.push(aggregationFunction.getCellValue({ row }));
+    } else {
+      values.push(apiRef.current.getCellValue(rowId, field));
+    }
   });
 
   return aggregationFunction.apply({ values });
