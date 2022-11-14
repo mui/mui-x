@@ -119,10 +119,8 @@ export default function AggregationMultipleRowFields() {
         columns={COLUMNS}
         disableSelectionOnClick
         initialState={initialState}
-        aggregationFunctions={{
-          ...GRID_AGGREGATION_FUNCTIONS,
-          profit,
-        }}
+        aggregationFunctions={{ ...GRID_AGGREGATION_FUNCTIONS, profit }}
+        experimentalFeatures={{ aggregation: true }}
       />
     </div>
   );
