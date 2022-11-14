@@ -55,11 +55,6 @@ import { DesktopNextTimePickerProps } from '../DesktopNextTimePicker';
 import { MobileNextTimePickerProps } from '../MobileNextTimePicker';
 import { StaticNextTimePickerProps } from '../StaticNextTimePicker';
 
-import { NextDateTimePickerProps } from '../NextDateTimePicker';
-import { DesktopNextDateTimePickerProps } from '../DesktopNextDateTimePicker';
-import { MobileNextDateTimePickerProps } from '../MobileNextDateTimePicker';
-import { StaticNextDateTimePickerProps } from '../StaticNextDateTimePicker';
-
 export interface PickersComponentsPropsList {
   MuiCalendarOrClockPicker: CalendarOrClockPickerProps<unknown, CalendarOrClockPickerView>;
   MuiClock: ClockProps<unknown>;
