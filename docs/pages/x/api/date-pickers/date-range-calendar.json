@@ -54,7 +54,7 @@
     "globalClasses": {},
     "name": "MuiDateRangeCalendar"
   },
-  "spread": true,
+  "spread": false,
   "forwardsRefTo": "HTMLDivElement",
   "filename": "/packages/x-date-pickers-pro/src/DateRangeCalendar/DateRangeCalendar.tsx",
   "inheritance": null,
