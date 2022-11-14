@@ -10,17 +10,23 @@ import {
   PickersPopperSlotsComponentsProps,
   UsePickerValueNonStaticProps,
   UsePickerViewsNonStaticProps,
+  ExportedPickerViewLayoutSlotsComponent,
+  ExportedPickerViewLayoutSlotsComponentsProps,
 } from '@mui/x-date-pickers/internals';
 import { DateRange } from '../../models';
 import { BaseMultiInputFieldProps } from '../../models/fields';
 
-export interface UseDesktopRangePickerSlotsComponent extends PickersPopperSlotsComponent {
+export interface UseDesktopRangePickerSlotsComponent extends PickersPopperSlotsComponent,   ExportedPickerViewLayoutSlotsComponent {
   Field: React.ElementType;
   Input?: React.ElementType<TextFieldProps>;
 }
 
 export interface UseDesktopRangePickerSlotsComponentsProps<TDate>
-  extends PickersPopperSlotsComponentsProps {
+  // TODO v6: Remove `Pick` once `PickerPoppers` does not handle the layouting parts
+  extends Pick<
+      PickersPopperSlotsComponentsProps,
+      'desktopPaper' | 'desktopTransition' | 'desktopTrapFocus' | 'popper' | 'paperContent'
+      >, ExportedPickerViewLayoutSlotsComponentsProps {
   field?: SlotComponentProps<
     React.ElementType<BaseMultiInputFieldProps<DateRange<TDate>, unknown>>,
     {},

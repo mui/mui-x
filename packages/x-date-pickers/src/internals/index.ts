@@ -24,6 +24,8 @@ export type {
   PickersArrowSwitcherSlotsComponentsProps,
 } from './components/PickersArrowSwitcher';
 export { PickersModalDialog } from './components/PickersModalDialog';
+export type {   PickersModalDialogSlotsComponent,
+  PickersModalDialogSlotsComponentsProps } from './components/PickersModalDialog';
 export { PickersPopper } from './components/PickersPopper';
 export type {
   PickersPopperSlotsComponent,
@@ -37,6 +39,7 @@ export type {
 } from './components/PickerStaticWrapper/PickerStaticWrapper';
 export { PickersToolbar } from './components/PickersToolbar';
 export { PickerViewLayout } from './components/PickerViewLayout';
+export type { ExportedPickerViewLayoutSlotsComponent, ExportedPickerViewLayoutSlotsComponentsProps } from './components/PickerViewLayout';
 export type { PickersToolbarProps } from './components/PickersToolbar';
 export { pickersToolbarClasses } from './components/pickersToolbarClasses';
 export type {
