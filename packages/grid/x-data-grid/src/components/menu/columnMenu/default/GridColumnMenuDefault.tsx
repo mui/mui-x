@@ -11,7 +11,9 @@ import { useGridApiContext } from '../../../../hooks/utils/useGridApiContext';
 import { GridColumnMenuValue, GridColumnMenuSlot } from '../../../../hooks/features/columnMenu';
 
 export interface GridColumnMenuDefaultProps
-  extends Pick<GridColumnMenuProps, 'hideMenu' | 'currentColumn' | 'open'> {
+  extends Pick<GridColumnMenuProps, 'hideMenu' | 'currentColumn' | 'open'> {}
+
+export interface GridColumnMenuRootProps {
   initialItems: GridColumnMenuValue;
   slots: { [key: string]: GridColumnMenuSlot };
 }
@@ -33,21 +35,18 @@ export const gridColumnMenuInitItems = [
 ];
 
 export const GridColumnMenuDefaultRoot = React.forwardRef<
-  HTMLDivElement,
-  GridColumnMenuDefaultProps
+  HTMLUListElement,
+  GridColumnMenuDefaultProps & GridColumnMenuRootProps
 >(function GridColumnMenuDefault(props, ref) {
+  const { initialItems, slots, ...other } = props;
   const apiRef = useGridApiContext();
-  const itemProps = {
-    onClick: props.hideMenu,
-    column: props.currentColumn,
-  };
 
   const preProcessedItems = apiRef.current.unstable_applyPipeProcessors(
     'columnMenu',
-    props.initialItems,
+    initialItems,
     {
       column: props.currentColumn,
-      slots: props.slots,
+      slots,
     },
   );
 
@@ -57,23 +56,23 @@ export const GridColumnMenuDefaultRoot = React.forwardRef<
   );
 
   return (
-    <GridColumnMenuDefaultContainer ref={ref} {...props}>
+    <GridColumnMenuDefaultContainer ref={ref} {...other}>
       {orderedItems.map((item, index: number) => {
         if (!item) {
           return null;
         }
         return (
-          <React.Fragment key={index}>
-            <item.component {...itemProps} />
+          <div key={index}>
+            <item.component onClick={props.hideMenu} column={props.currentColumn} />
             {index !== orderedItems.length - 1 ? <Divider /> : null}
-          </React.Fragment>
+          </div>
         );
       })}
     </GridColumnMenuDefaultContainer>
   );
 });
 
-const GridColumnMenuDefault = React.forwardRef<HTMLDivElement, GridColumnMenuDefaultProps>(
+const GridColumnMenuDefault = React.forwardRef<HTMLUListElement, GridColumnMenuDefaultProps>(
   function GridColumnMenuSimple(props, ref) {
     return (
       <GridColumnMenuDefaultRoot
@@ -93,14 +92,7 @@ GridColumnMenuDefault.propTypes = {
   // ----------------------------------------------------------------------
   currentColumn: PropTypes.object.isRequired,
   hideMenu: PropTypes.func.isRequired,
-  initialItems: PropTypes.arrayOf(
-    PropTypes.shape({
-      component: PropTypes.elementType.isRequired,
-      priority: PropTypes.number.isRequired,
-    }),
-  ).isRequired,
   open: PropTypes.bool.isRequired,
-  slots: PropTypes.object.isRequired,
 } as any;
 
 export { GridColumnMenuDefault };

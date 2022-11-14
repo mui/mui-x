@@ -2,7 +2,12 @@ import * as React from 'react';
 // @ts-ignore Remove once the test utils are typed
 import { createRenderer, fireEvent, screen } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
-import { gridClasses, DataGridPro, DataGridProProps } from '@mui/x-data-grid-pro';
+import {
+  gridClasses,
+  DataGridPro,
+  DataGridProProps,
+  GridColumnMenuSimple,
+} from '@mui/x-data-grid-pro';
 import { getColumnHeaderCell, getColumnValues } from 'test/utils/helperFn';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
@@ -117,7 +122,7 @@ describe('<DataGridPro /> - Column Headers', () => {
       fireEvent.click(menuIconButton);
       clock.runToLast();
       expect(screen.queryByRole('menu')).not.to.equal(null);
-      fireEvent.click(screen.getByRole('menuitem', { name: 'Sort by ASC' }));
+      fireEvent.click(screen.getByRole('button', { name: 'ASC' }));
       expect(getColumnValues(0)).to.deep.equal(['Adidas', 'Nike', 'Puma']);
     });
 
@@ -222,6 +227,7 @@ describe('<DataGridPro /> - Column Headers', () => {
             <DataGridPro
               {...baselineProps}
               columns={[{ field: 'brand' }]}
+              components={{ ColumnMenu: GridColumnMenuSimple }}
               initialState={{ sorting: { sortModel: [{ field: 'brand', sort: 'asc' }] } }}
               {...props}
             />

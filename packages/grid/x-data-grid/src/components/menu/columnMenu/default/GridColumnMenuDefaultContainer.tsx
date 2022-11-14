@@ -1,16 +1,16 @@
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import * as React from 'react';
+import MenuList from '@mui/material/MenuList';
 import { styled } from '@mui/material/styles';
 import { isHideMenuKey, isTabKey } from '../../../../utils/keyboardUtils';
 import { GridColumnMenuProps } from '../GridColumnMenuProps';
 import { gridClasses } from '../../../../constants/gridClasses';
 
-const GridColumnMenuDefaultContainerRoot = styled('div')(({ theme }) => ({
+const StyledMenuList = styled(MenuList)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
   minWidth: theme.typography.pxToRem(248),
-  padding: theme.spacing(1, 0),
 }));
 
 export interface GridColumnMenuContainerProps
@@ -20,10 +20,10 @@ export interface GridColumnMenuContainerProps
   > {}
 
 const GridColumnMenuDefaultContainer = React.forwardRef<
-  HTMLDivElement,
+  HTMLUListElement,
   GridColumnMenuContainerProps
 >(function GridColumnMenuDefaultContainer(props: GridColumnMenuContainerProps, ref) {
-  const { hideMenu, currentColumn, id, labelledby, className, children, ...other } = props;
+  const { hideMenu, currentColumn, id, labelledby, className, children, open, ...other } = props;
 
   const handleListKeyDown = React.useCallback(
     (event: React.KeyboardEvent) => {
@@ -38,16 +38,18 @@ const GridColumnMenuDefaultContainer = React.forwardRef<
   );
 
   return (
-    <GridColumnMenuDefaultContainerRoot
+    <StyledMenuList
       id={id}
       ref={ref}
+      role="menu"
       className={clsx(gridClasses.menuList, className)}
       aria-labelledby={labelledby}
       onKeyDown={handleListKeyDown}
+      autoFocus={open}
       {...other}
     >
       {children}
-    </GridColumnMenuDefaultContainerRoot>
+    </StyledMenuList>
   );
 });
 

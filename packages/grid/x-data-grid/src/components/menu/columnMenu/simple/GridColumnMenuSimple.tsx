@@ -7,14 +7,10 @@ import { GridColumnMenuFilterItemSimple } from './GridColumnMenuFilterItemSimple
 import { GridColumnMenuHideItemSimple } from './GridColumnMenuHideItemSimple';
 import { GridColumnMenuSortItemSimple } from './GridColumnMenuSortItemSimple';
 import { useGridApiContext } from '../../../../hooks/utils/useGridApiContext';
-import { GridColumnMenuValue, GridColumnMenuSlot } from '../../../../hooks/features/columnMenu';
-
-// TODO Remove
-interface GridColumnMenuDefaultProps
-  extends Pick<GridColumnMenuProps, 'hideMenu' | 'currentColumn' | 'open'> {
-  initialItems: GridColumnMenuValue;
-  slots: { [key: string]: GridColumnMenuSlot };
-}
+import {
+  GridColumnMenuDefaultProps,
+  GridColumnMenuRootProps,
+} from '../default/GridColumnMenuDefault';
 
 export const gridColumnMenuSimpleSlots = {
   ColumnMenuSortItem: { component: GridColumnMenuSortItemSimple, priority: 0 },
@@ -32,20 +28,17 @@ export const gridColumnMenuSimpleInitItems = [
 
 export const GridColumnMenuSimpleRoot = React.forwardRef<
   HTMLUListElement,
-  GridColumnMenuDefaultProps
->(function GridColumnMenuSimpleRoot(props: GridColumnMenuDefaultProps, ref) {
+  GridColumnMenuDefaultProps & GridColumnMenuRootProps
+>(function GridColumnMenuSimpleRoot(props, ref) {
+  const { initialItems, slots, ...other } = props;
   const apiRef = useGridApiContext();
-  const itemProps = {
-    onClick: props.hideMenu,
-    column: props.currentColumn,
-  };
 
   const preProcessedItems = apiRef.current.unstable_applyPipeProcessors(
     'columnMenu',
-    props.initialItems,
+    initialItems,
     {
       column: props.currentColumn,
-      slots: props.slots,
+      slots,
     },
   );
 
@@ -55,12 +48,12 @@ export const GridColumnMenuSimpleRoot = React.forwardRef<
   );
 
   return (
-    <GridColumnMenuSimpleContainer ref={ref} {...props}>
+    <GridColumnMenuSimpleContainer ref={ref} {...other}>
       {orderedItems.map((item, index) => {
         if (!item) {
           return null;
         }
-        return <item.component key={index} {...itemProps} />;
+        return <item.component key={index} onClick={props.hideMenu} column={props.currentColumn} />;
       })}
     </GridColumnMenuSimpleContainer>
   );
@@ -86,14 +79,7 @@ GridColumnMenuSimple.propTypes = {
   // ----------------------------------------------------------------------
   currentColumn: PropTypes.object.isRequired,
   hideMenu: PropTypes.func.isRequired,
-  initialItems: PropTypes.arrayOf(
-    PropTypes.shape({
-      component: PropTypes.elementType.isRequired,
-      priority: PropTypes.number.isRequired,
-    }),
-  ).isRequired,
   open: PropTypes.bool.isRequired,
-  slots: PropTypes.object.isRequired,
 } as any;
 
 export { GridColumnMenuSimple };

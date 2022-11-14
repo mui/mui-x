@@ -31,7 +31,7 @@ export const gridPremiumColumnMenuSlots = {
 
 export const gridPremiumColumnMenuInitItems = [...gridProColumnMenuInitItems];
 
-const GridPremiumColumnMenuDefault = React.forwardRef<HTMLDivElement, GridColumnMenuDefaultProps>(
+const GridPremiumColumnMenuDefault = React.forwardRef<HTMLUListElement, GridColumnMenuDefaultProps>(
   function GridPremiumColumnMenuDefault(props, ref) {
     return (
       <GridColumnMenuDefaultRoot

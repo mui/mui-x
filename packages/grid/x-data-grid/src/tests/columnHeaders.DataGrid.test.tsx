@@ -65,7 +65,7 @@ describe('<DataGrid /> - Column Headers', () => {
       expect(getColumnHeadersTextContent()).to.deep.equal(['id', 'brand']);
 
       fireEvent.click(within(getColumnHeaderCell(0)).getByLabelText('Menu'));
-      fireEvent.click(screen.getByRole('menuitem', { name: 'Hide' }));
+      fireEvent.click(screen.getByRole('button', { name: 'Hide column' }));
       clock.runToLast();
 
       expect(getColumnHeadersTextContent()).to.deep.equal(['brand']);
@@ -89,7 +89,7 @@ describe('<DataGrid /> - Column Headers', () => {
       expect(getColumnHeadersTextContent()).to.deep.equal(['id']);
 
       fireEvent.click(within(getColumnHeaderCell(0)).getByLabelText('Menu'));
-      fireEvent.click(screen.getByRole('menuitem', { name: 'Hide' }));
+      fireEvent.click(screen.getByRole('button', { name: 'Hide column' }));
       clock.runToLast();
 
       expect(getColumnHeadersTextContent()).to.deep.equal(['id']);
@@ -111,7 +111,7 @@ describe('<DataGrid /> - Column Headers', () => {
       expect(getColumnHeadersTextContent()).to.deep.equal(['id', 'brand']);
 
       fireEvent.click(within(getColumnHeaderCell(1)).getByLabelText('Menu'));
-      fireEvent.click(screen.getByRole('menuitem', { name: 'Hide' }));
+      fireEvent.click(screen.getByRole('button', { name: 'Hide column' }));
       clock.runToLast();
 
       expect(getColumnHeadersTextContent()).to.deep.equal(['id', 'brand']);

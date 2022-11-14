@@ -43,14 +43,12 @@ const GridColumnMenuRowGroupItem: React.FC<GridColumnMenuItemProps> = (props) =>
 
     const name = columnsLookup[field].headerName ?? field;
 
-    const ColumnMenuUngroupIcon = rootProps.components.ColumnMenuUngroupIcon;
-
     return (
-      <StyledStack>
+      <StyledStack key={field}>
         <StyledButton
           onClick={ungroupColumn}
           key={field}
-          startIcon={ColumnMenuUngroupIcon ? <ColumnMenuUngroupIcon /> : null}
+          startIcon={<rootProps.components.ColumnMenuUngroupIcon />}
           color="inherit"
         >
           {apiRef.current.getLocaleText('unGroupColumn')(name)}
