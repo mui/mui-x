@@ -90,12 +90,17 @@ export { DAY_MARGIN } from './constants/dimensions';
 export { useMaskedInput } from './hooks/useMaskedInput';
 export { usePickerState } from './hooks/usePickerState';
 export { usePicker } from './hooks/usePicker';
-export type { UsePickerResponse } from './hooks/usePicker';
-export type { UsePickerParams } from './hooks/usePicker';
+export type { UsePickerResponse, UsePickerParams } from './hooks/usePicker';
 export type { UsePickerValueNonStaticProps } from './hooks/usePicker/usePickerValue';
 export type { UsePickerViewsNonStaticProps } from './hooks/usePicker/usePickerViews';
 export type { PickerStateProps, PickerStatePickerProps } from './hooks/usePickerState';
 export type { PickerStateValueManager, PickerSelectionState } from './hooks/usePickerState';
+export { useStaticPicker } from './hooks/useStaticPicker'
+export type {
+  StaticOnlyPickerProps,
+  UseStaticPickerSlotsComponent,
+  UseStaticPickerSlotsComponentsProps,
+} from './hooks/useStaticPicker';
 export { useLocalizationContext, useDefaultDates, useUtils, useLocaleText } from './hooks/useUtils';
 export type {
   BaseDateValidationProps,

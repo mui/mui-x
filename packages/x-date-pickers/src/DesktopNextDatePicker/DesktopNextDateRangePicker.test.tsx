@@ -24,7 +24,7 @@ import {
 const getPickerDay = (name: string, picker = 'January 2018') =>
   getByRole(screen.getByText(picker)?.parentElement?.parentElement, 'gridcell', { name });
 
-describe.only('<DesktopNextDateRangePicker />', () => {
+describe('<DesktopNextDateRangePicker />', () => {
   const { render, clock } = createPickerRenderer({
     clock: 'fake',
     clockConfig: new Date(2018, 0, 10),
@@ -362,7 +362,7 @@ describe.only('<DesktopNextDateRangePicker />', () => {
       expect(onClose.callCount).to.equal(1);
     });
 
-    it.only('should call onClose and onAccept with the live value when clicking outside of the picker', () => {
+    it('should call onClose and onAccept with the live value when clicking outside of the picker', () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();

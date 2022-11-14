@@ -80,6 +80,7 @@ export const useRangePickerInputProps = <TDate, TView extends CalendarOrClockPic
   };
 
   const startInputProps = {
+    inputRef: startRef,
     label: localeText.start,
     onKeyDown: onSpaceOrEnter(openRangeStartSelection),
     onFocus: focusOnRangeStart,
@@ -93,10 +94,11 @@ export const useRangePickerInputProps = <TDate, TView extends CalendarOrClockPic
   };
 
   const endInputProps = {
+    inputRef: endRef,
     label: localeText.end,
     onKeyDown: onSpaceOrEnter(openRangeEndSelection),
     onFocus: focusOnRangeEnd,
-    focused: open ? currentDatePosition === 'start' : undefined,
+    focused: open ? currentDatePosition === 'end' : undefined,
     // registering `onClick` listener on the root element as well to correctly handle cases where user is clicking on `label`
     // which has `pointer-events: none` and due to DOM structure the `input` does not catch the click event
     ...(!readOnly && !disabled && { onClick: openRangeEndSelection }),

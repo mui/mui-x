@@ -15,9 +15,12 @@ export interface PickersProComponentNameToClassKey {
   MuiDesktopDateRangePicker: never;
   MuiDesktopNextDateRangePicker: never;
   MuiMobileDateRangePicker: never;
+  MuiMobileNextDateRangePicker: never;
   MuiMultiInputDateRangeField: never;
+  MuiNextDateRangePicker: never;
   MuiSingleInputDateRangeField: never;
   MuiStaticDateRangePicker: never;
+  MuiStaticNextDateRangePicker: never;
 }
 
 declare module '@mui/material/styles' {
