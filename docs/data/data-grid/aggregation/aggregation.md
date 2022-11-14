@@ -205,10 +205,10 @@ In the example below, the Data Grid has two additional custom aggregation functi
 
 ### Aggregating data from multiple row fields
 
-By default, the `apply` method of an aggregation function receives an array of values that represent a single field for each row.
+By default, the `apply` method of the aggregation function receives an array of values that represent a single field value of each row.
 For example, the `sum` aggregation function receives the values of the `gross` field.
 
-In the demo below, the values in the `Profit` column are derived from the `gross` and `budget` fields of the row:
+In the example below, the values in the `profit` column are derived from the `gross` and `budget` fields of the row:
 
 ```tsx
 {
@@ -223,9 +223,9 @@ In the demo below, the values in the `Profit` column are derived from the `gross
 }
 ```
 
-To aggregate the `Profit` column, you have to calculate the sum of the `gross` and `budget` fields first, and then use the above formula to calculate the aggregated `Profit` value.
+To aggregate the `profit` column, you have to calculate the sum of the `gross` and `budget` fields separately, and then use the formula from the example above to calculate the aggregated `profit` value.
 
-To do so, use the `getCellValue` callback on the aggregation function and transform the data that are being passed to the `apply` method:
+To do so, use the `getCellValue` callback on the aggregation function to transform the data that are being passed to the `apply` method:
 
 ```tsx
 const profit: GridAggregationFunction<{ gross: number; budget: number }, number> = {
