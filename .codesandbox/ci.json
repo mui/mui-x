@@ -3,6 +3,7 @@
   "installCommand": "install:codesandbox",
   "node": "14",
   "packages": [
+    "packages/x-codemod",
     "packages/x-license-pro",
     "packages/grid/x-data-grid",
     "packages/grid/x-data-grid-pro",
@@ -12,6 +13,7 @@
     "packages/x-date-pickers-pro"
   ],
   "publishDirectory": {
+    "@mui/x-codemod": "packages/x-codemod/build",
     "@mui/x-license-pro": "packages/x-license-pro/build",
     "@mui/x-data-grid": "packages/grid/x-data-grid/build",
     "@mui/x-data-grid-pro": "packages/grid/x-data-grid-pro/build",
