@@ -467,6 +467,21 @@ createTheme({
         },
       },
     },
+    MuiPickerViewLayout: {
+      defaultProps: {
+        disabled: true,
+        // @ts-expect-error invalid MuiPickerViewLayout prop
+        someRandomProp: true,
+      },
+      styleOverrides: {
+        root: {
+          backgroundColor: 'red',
+        },
+        content: {
+          backgroundColor: 'red',
+        },
+      },
+    },
     MuiStaticDatePicker: {
       defaultProps: {
         disabled: true,
