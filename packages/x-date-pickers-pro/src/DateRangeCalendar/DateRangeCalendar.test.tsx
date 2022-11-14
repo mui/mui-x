@@ -31,7 +31,7 @@ describe('<DateRangeCalendar />', () => {
       'themeVariants',
       'componentProp',
       // TODO: Fix DateRangeCalendar is not spreading props on root
-        'propsSpread',
+      'propsSpread',
       'themeDefaultProps',
       'themeVariants',
     ],
