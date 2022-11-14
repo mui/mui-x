@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { SxProps, useTheme } from '@mui/system';
 import { styled, useThemeProps, Theme } from '@mui/material/styles';
-import { useForkRef } from '@mui/material/utils';
 import {
+  unstable_useForkRef as useForkRef,
   unstable_composeClasses as composeClasses,
   unstable_useControlled as useControlled,
   unstable_useEventCallback as useEventCallback,
