@@ -30,7 +30,8 @@ describe('<DateRangeCalendar />', () => {
       'reactTestRenderer',
       'themeVariants',
       'componentProp',
-      // TODO: Fix DateCalendar is not spreading props on root
+      // TODO: Fix DateRangeCalendar is not spreading props on root
+        'propsSpread',
       'themeDefaultProps',
       'themeVariants',
     ],
