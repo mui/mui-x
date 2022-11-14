@@ -89,7 +89,7 @@ const profit = {
   columnTypes: ['number'],
 };
 
-export default function AggregationMultiColumn() {
+export default function AggregationMultipleRowFields() {
   const data = useMovieData();
   const apiRef = useGridApiRef();
 

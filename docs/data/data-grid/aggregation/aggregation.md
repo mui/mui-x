@@ -246,7 +246,7 @@ const profit: GridAggregationFunction<{ gross: number; budget: number }, number>
 };
 ```
 
-{{"demo": "AggregationMultiColumn.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"demo": "AggregationMultipleRowFields.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ### Custom value formatter
 
