@@ -14,6 +14,7 @@ import {
   GridCellMode,
   GridCellModes,
   GridRowId,
+  GridCellParams,
 } from '../../models';
 import { GridAlignment } from '../../models/colDef/gridColDef';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
@@ -201,6 +202,14 @@ function GridCell(props: GridCellProps) {
       }
     }
   }, [hasFocus, cellMode, apiRef]);
+
+  React.useEffect(() => {
+    return apiRef.current.subscribeEvent('cellFocusIn', (params: GridCellParams) => {
+      if (params.id === rowId && params.field === field) {
+        cellRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
+    });
+  }, [cellRef, apiRef, rowId, field]);
 
   let handleFocus: any = other.onFocus;
 
