@@ -127,4 +127,3 @@ yargs(process.argv.slice(2))
   .strict(true)
   .version(false)
   .parse();
-  
