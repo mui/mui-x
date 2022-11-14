@@ -1,4 +1,4 @@
-import { GridColDef, GridColumnsMeta, GridStateColDef } from '../colDef/gridColDef';
+import { GridColDef, GridStateColDef } from '../colDef/gridColDef';
 import type { GridColumnVisibilityModel } from '../../hooks/features/columns/gridColumnsInterfaces';
 
 /**
@@ -23,12 +23,6 @@ export interface GridColumnApi {
    */
   getVisibleColumns: () => GridStateColDef[];
   /**
-   * Returns the [[GridColumnsMeta]] for each column.
-   * @returns {GridColumnsMeta[]} All [[GridColumnsMeta]] objects.
-   * @deprecatedUse Use `gridColumnsTotalWidthSelector` or `gridColumnPositionsSelector` selectors instead.
-   */
-  getColumnsMeta: () => GridColumnsMeta;
-  /**
    * Returns the index position of a column. By default, only the visible columns are considered.
    * Pass `false` to `useVisibleColumns` to consider all columns.
    * @param {string} field The column field.
@@ -42,12 +36,6 @@ export interface GridColumnApi {
    * @returns {number} The position in pixels.
    */
   getColumnPosition: (field: string) => number;
-  /**
-   * Updates the definition of a column.
-   * @param {GridColDef} col The new [[GridColDef]] object.
-   * @deprecated Use `apiRef.current.updateColumns` instead.
-   */
-  updateColumn: (col: GridColDef) => void;
   /**
    * Updates the definition of multiple columns at the same time.
    * @param {GridColDef[]} cols The new column [[GridColDef]] objects.

@@ -2,8 +2,11 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { unstable_composeClasses as composeClasses } from '@mui/utils';
-import { ownerDocument, capitalize } from '@mui/material/utils';
+import {
+  unstable_composeClasses as composeClasses,
+  unstable_ownerDocument as ownerDocument,
+  unstable_capitalize as capitalize,
+} from '@mui/utils';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import {
   GridCellEventLookup,

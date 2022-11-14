@@ -1,11 +1,11 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import {
-  useForkRef,
-  ownerWindow,
-  useEventCallback,
+  unstable_useForkRef as useForkRef,
+  unstable_ownerWindow as ownerWindow,
+  unstable_useEventCallback as useEventCallback,
   unstable_useEnhancedEffect as useEnhancedEffect,
-} from '@mui/material/utils';
+} from '@mui/utils';
 import createDetectElementResize from '../lib/createDetectElementResize';
 // TODO replace with https://caniuse.com/resizeobserver.
 

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import { useForkRef } from '@mui/material/utils';
+import { unstable_useForkRef as useForkRef } from '@mui/utils';
 import { styled } from '@mui/material/styles';
 import { defaultMemoize } from 'reselect';
 import { useGridApiContext } from '../../utils/useGridApiContext';

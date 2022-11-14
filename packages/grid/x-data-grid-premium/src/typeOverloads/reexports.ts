@@ -1,4 +1,3 @@
-import * as React from 'react';
 import type { GridApiPremium } from '../models/gridApiPremium';
 import { GridInitialStatePremium, GridStatePremium } from '../models/gridStatePremium';
 
@@ -10,11 +9,6 @@ export { useGridRootProps } from '../hooks/utils/useGridRootProps';
  * The full grid API.
  */
 export type GridApi = GridApiPremium;
-
-/**
- * @deprecated Use `React.MutableRefObject<GridApi>` instead
- */
-export type GridApiRef = React.MutableRefObject<GridApiPremium>;
 
 /**
  * The state of `DataGridPremium`.
