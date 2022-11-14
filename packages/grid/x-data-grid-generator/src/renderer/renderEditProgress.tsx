@@ -3,7 +3,7 @@ import clsx from 'clsx';
 import { GridRenderEditCellParams, useGridApiContext } from '@mui/x-data-grid-premium';
 import Slider, { SliderProps, sliderClasses } from '@mui/material/Slider';
 import Tooltip from '@mui/material/Tooltip';
-import { debounce } from '@mui/material/utils';
+import { unstable_debounce as debounce } from '@mui/utils';
 import { alpha, styled } from '@mui/material/styles';
 
 const StyledSlider = styled(Slider)(({ theme }) => ({
@@ -42,7 +42,7 @@ const StyledSlider = styled(Slider)(({ theme }) => ({
   },
 }));
 
-const ValueLabelComponent = (props: any) => {
+function ValueLabelComponent(props: any) {
   const { children, open, value } = props;
 
   return (
@@ -50,7 +50,7 @@ const ValueLabelComponent = (props: any) => {
       {children}
     </Tooltip>
   );
-};
+}
 
 function EditProgress(props: GridRenderEditCellParams<number>) {
   const { id, value, field } = props;

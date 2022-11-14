@@ -43,7 +43,6 @@ export const renderTimeView = <TDate extends unknown>(props: TimeViewRendererPro
   <ClockPicker<TDate>
     {...props}
     autoFocus
-    showViewSwitcher={props.wrapperVariant === 'desktop'}
     views={props.views.filter(isTimePickerView)}
     view={props.view as ClockPickerView}
     // We don't want to pass this prop to the views because it can cause proptypes warnings

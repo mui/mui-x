@@ -182,7 +182,7 @@ interface GroupingCellWithLazyLoadingProps
  * Reproduce the behavior of the `GridTreeDataGroupingCell` component in `@mui/x-data-grid-pro`
  * But base the amount of children on a `row.descendantCount` property rather than on the internal lookups.
  */
-const GroupingCellWithLazyLoading = (props: GroupingCellWithLazyLoadingProps) => {
+function GroupingCellWithLazyLoading(props: GroupingCellWithLazyLoadingProps) {
   const { id, field, rowNode, row, hideDescendantCount, formattedValue } = props;
 
   const rootProps = useGridRootProps();
@@ -235,7 +235,7 @@ const GroupingCellWithLazyLoading = (props: GroupingCellWithLazyLoadingProps) =>
       </span>
     </Box>
   );
-};
+}
 
 const CUSTOM_GROUPING_COL_DEF: GridGroupingColDefOverride = {
   renderCell: (params) => (

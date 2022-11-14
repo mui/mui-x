@@ -21,6 +21,10 @@ function testTextFieldValidation(ElementToTest, propsToTest, getOptions) {
       it('should apply shouldDisableDate', function test() {
         const { render, withDate } = getOptions();
 
+        if (!isLegacyPicker && !withDate) {
+          return;
+        }
+
         const { setProps } = render(
           <ElementToTest
             {...defaultProps}
@@ -101,10 +105,10 @@ function testTextFieldValidation(ElementToTest, propsToTest, getOptions) {
         }
 
         let now;
-        const WithFakeTimer = (props) => {
+        function WithFakeTimer(props) {
           now = adapterToUse.date(new Date());
           return <ElementToTest value={now} {...props} />;
-        };
+        }
 
         const { setProps } = render(<WithFakeTimer {...defaultProps} disablePast />);
 
@@ -129,10 +133,10 @@ function testTextFieldValidation(ElementToTest, propsToTest, getOptions) {
         }
 
         let now;
-        const WithFakeTimer = (props) => {
+        function WithFakeTimer(props) {
           now = adapterToUse.date(new Date());
           return <ElementToTest value={now} {...props} />;
-        };
+        }
 
         const { setProps } = render(<WithFakeTimer {...defaultProps} disableFuture />);
 
@@ -152,6 +156,10 @@ function testTextFieldValidation(ElementToTest, propsToTest, getOptions) {
     if (propsToTest.includes('minDate')) {
       it('should apply minDate', function test() {
         const { render, withDate } = getOptions();
+
+        if (!isLegacyPicker && !withDate) {
+          return;
+        }
 
         const { setProps } = render(
           <ElementToTest
@@ -174,6 +182,10 @@ function testTextFieldValidation(ElementToTest, propsToTest, getOptions) {
     if (propsToTest.includes('maxDate')) {
       it('should apply maxDate', function test() {
         const { render, withDate } = getOptions();
+
+        if (!isLegacyPicker && !withDate) {
+          return;
+        }
 
         const { setProps } = render(
           <ElementToTest

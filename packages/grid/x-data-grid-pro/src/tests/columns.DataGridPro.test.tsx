@@ -40,14 +40,14 @@ describe('<DataGridPro /> - Columns', () => {
     columns: [{ field: 'brand' }],
   };
 
-  const Test = (props: Partial<DataGridProProps>) => {
+  function Test(props: Partial<DataGridProProps>) {
     apiRef = useGridApiRef();
     return (
       <div style={{ width: 300, height: 300 }}>
         <DataGridPro apiRef={apiRef} {...baselineProps} {...props} />
       </div>
     );
-  };
+  }
 
   describe('showColumnMenu', () => {
     it('should open the column menu', async () => {
@@ -366,7 +366,7 @@ describe('<DataGridPro /> - Columns', () => {
 
     it('should not loose imperatively added columns when re-applying pipe processing', () => {
       render(<Test checkboxSelection />);
-      act(() => apiRef.current.updateColumn({ field: 'id' }));
+      act(() => apiRef.current.updateColumns([{ field: 'id' }]));
       expect(gridColumnFieldsSelector(apiRef)).to.deep.equal(['__check__', 'brand', 'id']);
       act(() => apiRef.current.unstable_requestPipeProcessorsApplication('hydrateColumns'));
       expect(gridColumnFieldsSelector(apiRef)).to.deep.equal(['__check__', 'brand', 'id']);

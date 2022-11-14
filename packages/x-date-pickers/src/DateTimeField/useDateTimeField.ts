@@ -1,29 +1,16 @@
-import { dateTimePickerValueManager } from '../DateTimePicker/shared';
-import { useField, FieldValueManager, FieldSection } from '../internals/hooks/useField';
+import {
+  singleItemFieldValueManager,
+  singleItemValueManager,
+} from '../internals/utils/valueManagers';
+import { useField } from '../internals/hooks/useField';
 import {
   UseDateTimeFieldProps,
   UseDateTimeFieldDefaultizedProps,
   UseDateTimeFieldParams,
 } from './DateTimeField.types';
-import {
-  DateTimeValidationError,
-  isSameDateTimeError,
-  validateDateTime,
-} from '../internals/hooks/validation/useDateTimeValidation';
+import { validateDateTime } from '../internals/hooks/validation/useDateTimeValidation';
 import { applyDefaultDate } from '../internals/utils/date-utils';
 import { useUtils, useDefaultDates } from '../internals/hooks/useUtils';
-import { dateFieldValueManager } from '../DateField/useDateField';
-
-const dateTimeFieldValueManager: FieldValueManager<
-  any,
-  any,
-  FieldSection,
-  DateTimeValidationError
-> = {
-  ...dateFieldValueManager,
-  hasError: (error) => error != null,
-  isSameError: isSameDateTimeError,
-};
 
 const useDefaultizedDateTimeField = <TDate, AdditionalProps extends {}>(
   props: UseDateTimeFieldProps<TDate>,
@@ -106,9 +93,9 @@ export const useDateTimeField = <TDate, TChildProps extends {}>({
       onSelectedSectionsChange,
       ampm,
     },
-    valueManager: dateTimePickerValueManager,
-    fieldValueManager: dateTimeFieldValueManager,
+    valueManager: singleItemValueManager,
+    fieldValueManager: singleItemFieldValueManager,
     validator: validateDateTime,
-    supportedDateSections: ['year', 'month', 'day', 'hour', 'minute', 'second', 'meridiem'],
+    supportedDateSections: ['year', 'month', 'day', 'hours', 'minutes', 'seconds', 'meridiem'],
   });
 };

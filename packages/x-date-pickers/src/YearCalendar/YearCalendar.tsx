@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { SxProps, useTheme } from '@mui/system';
 import { styled, useThemeProps, Theme } from '@mui/material/styles';
-import { useForkRef } from '@mui/material/utils';
 import {
+  unstable_useForkRef as useForkRef,
   unstable_composeClasses as composeClasses,
   unstable_useControlled as useControlled,
   unstable_useEventCallback as useEventCallback,
@@ -80,15 +80,24 @@ export interface YearCalendarProps<TDate>
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */
   sx?: SxProps<Theme>;
-  value: TDate | null;
   /** If `true` picker is disabled */
   disabled?: boolean;
   /**
-   * Callback fired when the value (the selected year) changes.
-   * @template TValue
-   * @param {TValue} value The new value.
+   * The selected value.
+   * Used when the component is controlled.
    */
-  onChange: (value: TDate) => void;
+  value?: TDate | null;
+  /**
+   * The default selected value.
+   * Used when the component is not controlled.
+   */
+  defaultValue?: TDate | null;
+  /**
+   * Callback fired when the value changes.
+   * @template TDate
+   * @param {TDate | null} value The new value.
+   */
+  onChange?: (value: TDate) => void;
   /** If `true` picker is readonly */
   readOnly?: boolean;
   /**
@@ -118,7 +127,8 @@ export const YearCalendar = React.forwardRef(function YearCalendar<TDate>(
   const {
     autoFocus,
     className,
-    value,
+    value: valueProp,
+    defaultValue,
     disabled,
     disableFuture,
     disablePast,
@@ -136,6 +146,13 @@ export const YearCalendar = React.forwardRef(function YearCalendar<TDate>(
 
   const ownerState = props;
   const classes = useUtilityClasses(ownerState);
+
+  const [value, setValue] = useControlled({
+    name: 'YearCalendar',
+    state: 'value',
+    controlled: valueProp,
+    default: defaultValue ?? null,
+  });
 
   const selectedDateOrToday = value ?? now;
   const todayYear = React.useMemo(() => utils.getYear(now), [utils, now]);
@@ -192,7 +209,8 @@ export const YearCalendar = React.forwardRef(function YearCalendar<TDate>(
     }
 
     const newDate = utils.setYear(selectedDateOrToday, year);
-    onChange(newDate);
+    setValue(newDate);
+    onChange?.(newDate);
   });
 
   const focusYear = useEventCallback((year: number) => {
@@ -321,11 +339,16 @@ YearCalendar.propTypes = {
    */
   className: PropTypes.string,
   /**
+   * The default selected value.
+   * Used when the component is not controlled.
+   */
+  defaultValue: PropTypes.any,
+  /**
    * If `true` picker is disabled
    */
   disabled: PropTypes.bool,
   /**
-   * If `true` disable values before the current time
+   * If `true` disable values before the current date for date components, time for time components and both for date time components.
    * @default false
    */
   disableFuture: PropTypes.bool,
@@ -335,25 +358,25 @@ YearCalendar.propTypes = {
    */
   disableHighlightToday: PropTypes.bool,
   /**
-   * If `true` disable values after the current time.
+   * If `true` disable values after the current date for date components, time for time components and both for date time components.
    * @default false
    */
   disablePast: PropTypes.bool,
   hasFocus: PropTypes.bool,
   /**
-   * Maximal selectable date. @DateIOType
+   * Maximal selectable date.
    */
   maxDate: PropTypes.any,
   /**
-   * Minimal selectable date. @DateIOType
+   * Minimal selectable date.
    */
   minDate: PropTypes.any,
   /**
-   * Callback fired when the value (the selected year) changes.
-   * @template TValue
-   * @param {TValue} value The new value.
+   * Callback fired when the value changes.
+   * @template TDate
+   * @param {TDate | null} value The new value.
    */
-  onChange: PropTypes.func.isRequired,
+  onChange: PropTypes.func,
   onFocusedViewChange: PropTypes.func,
   onYearFocus: PropTypes.func,
   /**
@@ -361,11 +384,10 @@ YearCalendar.propTypes = {
    */
   readOnly: PropTypes.bool,
   /**
-   * Disable specific years dynamically.
-   * Works like `shouldDisableDate` but for year selection view @DateIOType.
+   * Disable specific year.
    * @template TDate
    * @param {TDate} year The year to test.
-   * @returns {boolean} Returns `true` if the year should be disabled.
+   * @returns {boolean} If `true` the year will be disabled.
    */
   shouldDisableYear: PropTypes.func,
   /**
@@ -376,5 +398,9 @@ YearCalendar.propTypes = {
     PropTypes.func,
     PropTypes.object,
   ]),
+  /**
+   * The selected value.
+   * Used when the component is controlled.
+   */
   value: PropTypes.any,
 } as any;

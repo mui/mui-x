@@ -34,16 +34,24 @@ export interface MonthCalendarProps<TDate>
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */
   sx?: SxProps<Theme>;
-  /** Date value for the MonthCalendar */
-  value: TDate | null;
   /** If `true` picker is disabled */
   disabled?: boolean;
   /**
-   * Callback fired when the value (the selected month) changes.
-   * @template TValue
-   * @param {TValue} value The new value.
+   * The selected value.
+   * Used when the component is controlled.
    */
-  onChange: (value: TDate) => void;
+  value?: TDate | null;
+  /**
+   * The default selected value.
+   * Used when the component is not controlled.
+   */
+  defaultValue?: TDate | null;
+  /**
+   * Callback fired when the value changes.
+   * @template TDate
+   * @param {TDate | null} value The new value.
+   */
+  onChange?: (value: TDate) => void;
   /** If `true` picker is readonly */
   readOnly?: boolean;
   /**
@@ -117,7 +125,8 @@ export const MonthCalendar = React.forwardRef(function MonthCalendar<TDate>(
 
   const {
     className,
-    value,
+    value: valueProp,
+    defaultValue,
     disabled,
     disableFuture,
     disablePast,
@@ -136,6 +145,13 @@ export const MonthCalendar = React.forwardRef(function MonthCalendar<TDate>(
 
   const ownerState = props;
   const classes = useUtilityClasses(ownerState);
+
+  const [value, setValue] = useControlled({
+    name: 'MonthCalendar',
+    state: 'value',
+    controlled: valueProp,
+    default: defaultValue ?? null,
+  });
 
   const todayMonth = React.useMemo(() => utils.getMonth(now), [utils, now]);
 
@@ -198,7 +214,8 @@ export const MonthCalendar = React.forwardRef(function MonthCalendar<TDate>(
     }
 
     const newDate = utils.setMonth(selectedDateOrToday, month);
-    onChange(newDate);
+    setValue(newDate);
+    onChange?.(newDate);
   });
 
   const focusMonth = useEventCallback((month: number) => {
@@ -307,11 +324,16 @@ MonthCalendar.propTypes = {
    */
   className: PropTypes.string,
   /**
+   * The default selected value.
+   * Used when the component is not controlled.
+   */
+  defaultValue: PropTypes.any,
+  /**
    * If `true` picker is disabled
    */
   disabled: PropTypes.bool,
   /**
-   * If `true` disable values before the current time
+   * If `true` disable values before the current date for date components, time for time components and both for date time components.
    * @default false
    */
   disableFuture: PropTypes.bool,
@@ -321,25 +343,25 @@ MonthCalendar.propTypes = {
    */
   disableHighlightToday: PropTypes.bool,
   /**
-   * If `true` disable values after the current time.
+   * If `true` disable values after the current date for date components, time for time components and both for date time components.
    * @default false
    */
   disablePast: PropTypes.bool,
   hasFocus: PropTypes.bool,
   /**
-   * Maximal selectable date. @DateIOType
+   * Maximal selectable date.
    */
   maxDate: PropTypes.any,
   /**
-   * Minimal selectable date. @DateIOType
+   * Minimal selectable date.
    */
   minDate: PropTypes.any,
   /**
-   * Callback fired when the value (the selected month) changes.
-   * @template TValue
-   * @param {TValue} value The new value.
+   * Callback fired when the value changes.
+   * @template TDate
+   * @param {TDate | null} value The new value.
    */
-  onChange: PropTypes.func.isRequired,
+  onChange: PropTypes.func,
   onFocusedViewChange: PropTypes.func,
   onMonthFocus: PropTypes.func,
   /**
@@ -347,10 +369,9 @@ MonthCalendar.propTypes = {
    */
   readOnly: PropTypes.bool,
   /**
-   * Disable specific months dynamically.
-   * Works like `shouldDisableDate` but for month selection view @DateIOType.
+   * Disable specific month.
    * @template TDate
-   * @param {TDate} month The month to check.
+   * @param {TDate} month The month to test.
    * @returns {boolean} If `true` the month will be disabled.
    */
   shouldDisableMonth: PropTypes.func,
@@ -363,7 +384,8 @@ MonthCalendar.propTypes = {
     PropTypes.object,
   ]),
   /**
-   * Date value for the MonthCalendar
+   * The selected value.
+   * Used when the component is controlled.
    */
   value: PropTypes.any,
 } as any;

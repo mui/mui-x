@@ -8,7 +8,7 @@ import ToggleButton from '@mui/material/ToggleButton';
 
 const libraries = ['date-fns', 'dayjs', 'luxon', 'moment'];
 
-const InstructionsNoSnap = () => {
+function InstructionsNoSnap() {
   const [licenceType, setLicenceType] = React.useState('community');
   const [packageManger, setPackageManger] = React.useState('yarn');
   const [libraryUsed, setLibraryUsed] = React.useState('moment');
@@ -74,6 +74,6 @@ const InstructionsNoSnap = () => {
       <HighlightedCode sx={{ width: '100%' }} code={commandLines} language="tsx" />
     </Stack>
   );
-};
+}
 
 export default InstructionsNoSnap;

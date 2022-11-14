@@ -8,11 +8,10 @@ import {
 } from '../DateCalendar/DateCalendar';
 import { useDefaultDates, useUtils } from '../internals/hooks/useUtils';
 import { isYearAndMonthViews, isYearOnlyView } from '../internals/utils/views';
-import { ValidationCommonPropsOptionalValue } from '../internals/hooks/validation/useValidation';
 import { DateValidationError } from '../internals/hooks/validation/useDateValidation';
 import { BaseNextPickerProps } from '../internals/models/props/basePickerProps';
 import { applyDefaultDate } from '../internals/utils/date-utils';
-import { BaseDateValidationProps, CalendarPickerView } from '../internals';
+import { BaseDateValidationProps, CalendarPickerView, MuiPickersAdapter } from '../internals';
 import { LocalizedComponent, PickersInputLocaleText } from '../locales/utils/pickersLocaleTextApi';
 import {
   DatePickerToolbar,
@@ -35,19 +34,10 @@ export interface BaseNextDatePickerSlotsComponentsProps<TDate>
 
 export interface BaseNextDatePickerProps<TDate>
   extends MakeOptional<
-      BaseNextPickerProps<TDate | null, TDate, CalendarPickerView>,
+      BaseNextPickerProps<TDate | null, TDate, CalendarPickerView, DateValidationError>,
       'views' | 'openTo'
     >,
-    ExportedDateCalendarProps<TDate>,
-    ValidationCommonPropsOptionalValue<DateValidationError, TDate | null> {
-  /**
-   * The label content.
-   */
-  label?: React.ReactNode;
-  /**
-   * Pass a ref to the `input` element.
-   */
-  inputRef?: React.Ref<HTMLInputElement>;
+    ExportedDateCalendarProps<TDate> {
   /**
    * Overrideable components.
    * @default {}
@@ -68,6 +58,22 @@ type UseNextDatePickerDefaultizedProps<
   DefaultizedProps<Props, 'views' | 'openTo' | keyof BaseDateValidationProps<TDate>>
 >;
 
+export const getDatePickerFieldFormat = (
+  utils: MuiPickersAdapter<any>,
+  { format, views }: { format?: string; views: readonly CalendarPickerView[] },
+) => {
+  if (format != null) {
+    return format;
+  }
+  if (isYearOnlyView(views)) {
+    return utils.formats.year;
+  }
+  if (isYearAndMonthViews(views)) {
+    return utils.formats.monthAndYear;
+  }
+  return undefined;
+};
+
 export function useNextDatePickerDefaultizedProps<
   TDate,
   Props extends BaseNextDatePickerProps<TDate>,
@@ -78,19 +84,6 @@ export function useNextDatePickerDefaultizedProps<
     props,
     name,
   });
-
-  const views = themeProps.views ?? ['year', 'day'];
-
-  let inputFormat: string | undefined;
-  if (themeProps.inputFormat != null) {
-    inputFormat = themeProps.inputFormat;
-  } else if (isYearOnlyView(views)) {
-    inputFormat = utils.formats.year;
-  } else if (isYearAndMonthViews(views)) {
-    inputFormat = utils.formats.monthAndYear;
-  } else {
-    inputFormat = undefined;
-  }
 
   const localeText = React.useMemo<PickersInputLocaleText<TDate> | undefined>(() => {
     if (themeProps.localeText?.toolbarTitle == null) {
@@ -105,9 +98,8 @@ export function useNextDatePickerDefaultizedProps<
 
   return {
     ...themeProps,
-    inputFormat,
-    views,
     localeText,
+    views: themeProps.views ?? ['year', 'day'],
     openTo: themeProps.openTo ?? 'day',
     disableFuture: themeProps.disableFuture ?? false,
     disablePast: themeProps.disablePast ?? false,

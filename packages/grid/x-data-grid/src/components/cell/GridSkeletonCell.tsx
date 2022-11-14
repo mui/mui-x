@@ -1,8 +1,10 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import Skeleton from '@mui/material/Skeleton';
-import { capitalize } from '@mui/material/utils';
-import { unstable_composeClasses as composeClasses } from '@mui/utils';
+import {
+  unstable_composeClasses as composeClasses,
+  unstable_capitalize as capitalize,
+} from '@mui/utils';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';

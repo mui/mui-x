@@ -2,7 +2,6 @@ import * as React from 'react';
 import { LocalizedComponent, PickersInputLocaleText } from '@mui/x-date-pickers';
 import {
   BasePickerProps,
-  PickerStateValueManager,
   useDefaultDates,
   useUtils,
   ValidationCommonProps,
@@ -19,7 +18,6 @@ import {
 import { DateRangeValidationError } from '../internal/hooks/validation/useDateRangeValidation';
 import { DateRange } from '../internal/models';
 import { ExportedDateRangePickerInputProps } from './DateRangePickerInput';
-import { replaceInvalidDatesByNull } from '../internal/utils/date-utils';
 import {
   DateRangePickerToolbar,
   DateRangePickerToolbarProps,
@@ -113,11 +111,3 @@ export function useDateRangePickerDefaultizedProps<
     components: { Toolbar: DateRangePickerToolbar, ...themeProps.components },
   };
 }
-
-// What about renaming it `rangePickerValueManager` such that it's clear this manager is common to date, time and dateTime?
-export const dateRangePickerValueManager: PickerStateValueManager<[any, any], any> = {
-  emptyValue: [null, null],
-  getTodayValue: (utils) => [utils.date()!, utils.date()!],
-  cleanValue: replaceInvalidDatesByNull,
-  areValuesEqual: (utils, a, b) => utils.isEqual(a[0], b[0]) && utils.isEqual(a[1], b[1]),
-};

@@ -9,9 +9,9 @@ export type MuiDateSectionName =
   | 'year'
   | 'month'
   | 'day'
-  | 'hour'
-  | 'minute'
-  | 'second'
+  | 'hours'
+  | 'minutes'
+  | 'seconds'
   | 'meridiem';
 
 export type MuiFormatTokenMap = {

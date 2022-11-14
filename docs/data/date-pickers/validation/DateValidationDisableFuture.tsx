@@ -15,7 +15,7 @@ const today = dayjs();
 const tomorrow = dayjs().add(1, 'day');
 const todayEndOfTheDay = today.endOf('day');
 
-const GridItem = ({
+function GridItem({
   label,
   children,
   spacing = 1,
@@ -23,7 +23,7 @@ const GridItem = ({
   label: string;
   children: React.ReactNode;
   spacing?: number;
-}) => {
+}) {
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column' }}>
       <Typography variant="body2" sx={{ mb: spacing }}>
@@ -32,7 +32,7 @@ const GridItem = ({
       {children}
     </Box>
   );
-};
+}
 
 export default function DateValidationDisableFuture() {
   const [datePickerValue, setDatePickerValue] = React.useState<Dayjs | null>(

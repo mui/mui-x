@@ -80,7 +80,7 @@ export const useGridRowReorder = (
         dragRowNode.current!.classList.remove(classes.rowDragging);
       });
 
-      originRowIndex.current = apiRef.current.getRowIndex(params.id);
+      originRowIndex.current = apiRef.current.getRowIndexRelativeToVisibleRows(params.id);
     },
     [isRowReorderDisabled, classes.rowDragging, logger, apiRef],
   );
@@ -104,7 +104,7 @@ export const useGridRowReorder = (
       event.stopPropagation();
 
       if (params.id !== dragRowId) {
-        const targetRowIndex = apiRef.current.getRowIndex(params.id);
+        const targetRowIndex = apiRef.current.getRowIndexRelativeToVisibleRows(params.id);
         apiRef.current.setRowIndex(dragRowId, targetRowIndex);
       }
     },
@@ -137,7 +137,7 @@ export const useGridRowReorder = (
         // Emit the rowOrderChange event only once when the reordering stops.
         const rowOrderChangeParams: GridRowOrderChangeParams = {
           row: apiRef.current.getRow(dragRowId)!,
-          targetIndex: apiRef.current.getRowIndex(params.id),
+          targetIndex: apiRef.current.getRowIndexRelativeToVisibleRows(params.id),
           oldIndex: originRowIndex.current!,
         };
 
