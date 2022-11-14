@@ -9,9 +9,13 @@ import MuiPopper, {
 import MuiTrapFocus, {
   TrapFocusProps as MuiTrapFocusProps,
 } from '@mui/material/Unstable_TrapFocus';
-import { useForkRef, useEventCallback, ownerDocument } from '@mui/material/utils';
+import {
+  unstable_useForkRef as useForkRef,
+  unstable_useEventCallback as useEventCallback,
+  unstable_ownerDocument as ownerDocument,
+  unstable_composeClasses as composeClasses,
+} from '@mui/utils';
 import { styled, useThemeProps } from '@mui/material/styles';
-import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { TransitionProps as MuiTransitionProps } from '@mui/material/transitions';
 import { PickersActionBar } from '../../PickersActionBar';
 import { PickerStateWrapperProps } from '../hooks/usePickerState';

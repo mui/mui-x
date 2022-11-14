@@ -2,13 +2,13 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import {
-  useForkRef,
+  unstable_useForkRef as useForkRef,
   unstable_useEnhancedEffect as useEnhancedEffect,
-  capitalize,
-} from '@mui/material/utils';
+  unstable_capitalize as capitalize,
+  unstable_composeClasses as composeClasses,
+} from '@mui/utils';
 import { SxProps } from '@mui/system';
 import { Theme } from '@mui/material/styles';
-import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { GridRootContainerRef } from '../../models/gridRootContainerRef';
 import { GridRootStyles } from './GridRootStyles';
 import { gridVisibleColumnDefinitionsSelector } from '../../hooks/features/columns/gridColumnsSelector';

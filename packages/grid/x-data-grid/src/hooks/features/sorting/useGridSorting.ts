@@ -199,11 +199,6 @@ export const useGridSorting = (
     [apiRef],
   );
 
-  const getRowIndex = React.useCallback<GridSortApi['getRowIndex']>(
-    (id) => apiRef.current.getSortedRowIds().indexOf(id),
-    [apiRef],
-  );
-
   const getRowIdFromRowIndex = React.useCallback<GridSortApi['getRowIdFromRowIndex']>(
     (index) => apiRef.current.getSortedRowIds()[index],
     [apiRef],
@@ -213,7 +208,6 @@ export const useGridSorting = (
     getSortModel,
     getSortedRows,
     getSortedRowIds,
-    getRowIndex,
     getRowIdFromRowIndex,
     setSortModel,
     sortColumn,

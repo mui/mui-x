@@ -7,11 +7,6 @@ export type GridRowsProp<R extends GridValidRowModel = GridValidRowModel> = Read
 >;
 
 /**
- * @deprecated prefer GridRowModel.
- */
-export type GridRowData = GridValidRowModel;
-
-/**
  * The key value object representing the data of a row.
  */
 export type GridRowModel<R extends GridValidRowModel = GridValidRowModel> = R;

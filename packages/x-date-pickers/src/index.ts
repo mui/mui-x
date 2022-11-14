@@ -38,6 +38,11 @@ export * from './DesktopNextTimePicker';
 export * from './MobileNextTimePicker';
 export * from './StaticNextTimePicker';
 
+export * from './NextDateTimePicker';
+export * from './DesktopNextDateTimePicker';
+export * from './MobileNextDateTimePicker';
+export * from './StaticNextDateTimePicker';
+
 export { PickerStaticWrapper } from './internals/components/PickerStaticWrapper';
 export type { MuiDateSectionName } from './internals/models/muiPickersAdapter';
 export type { DateValidationError } from './internals/hooks/validation/useDateValidation';
