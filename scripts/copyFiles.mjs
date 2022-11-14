@@ -1,9 +1,9 @@
 // TODO: Unify with core
 
 /* eslint-disable no-console */
-const path = require('path');
-const fse = require('fs-extra');
-const glob = require('fast-glob');
+import path from 'path';
+import fse from 'fs-extra';
+import glob from 'fast-glob';
 
 const packagePath = process.cwd();
 const buildPath = path.join(packagePath, './build');

@@ -1,9 +1,10 @@
 // TODO: Use the core file (need to change the way the babel config is loaded to load the X one instead of the core one)
-const childProcess = require('child_process');
-const glob = require('fast-glob');
-const path = require('path');
-const { promisify } = require('util');
-const yargs = require('yargs');
+import childProcess from 'child_process';
+import glob from 'fast-glob';
+import path from 'path';
+import { promisify } from 'util';
+import yargs from 'yargs';
+import { getWorkspaceRoot } from './utils.mjs';
 
 const exec = promisify(childProcess.exec);
 
@@ -32,7 +33,7 @@ async function run(argv) {
     BABEL_ENV: bundle,
     MUI_BUILD_VERBOSE: verbose,
   };
-  const babelConfigPath = path.resolve(__dirname, '../babel.config.js');
+  const babelConfigPath = path.resolve(getWorkspaceRoot(), 'babel.config.js');
   const srcDir = path.resolve('./src');
   const extensions = ['.js', '.ts', '.tsx'];
   const ignore = [
@@ -102,7 +103,7 @@ async function run(argv) {
   }
 }
 
-yargs
+yargs(process.argv.slice(2))
   .command({
     command: '$0 <bundle>',
     description: 'build package',

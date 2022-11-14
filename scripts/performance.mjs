@@ -1,14 +1,14 @@
 /* eslint-disable no-await-in-loop */
-const yargs = require('yargs');
-const playwright = require('playwright');
-const capitalize = require('lodash/capitalize');
-const path = require('path');
-const fse = require('fs-extra');
+import yargs from 'yargs';
+import playwright from 'playwright';
+import capitalize from 'lodash/capitalize.js';
+import path from 'path';
+import fse from 'fs-extra';
+import { getWorkspaceRoot } from './utils.mjs';
 
 const PORT = 5001;
 
-const workspaceRoot = path.join(__dirname, '../');
-const snapshotDestPath = path.join(workspaceRoot, 'performance-snapshot.json');
+const snapshotDestPath = path.join(getWorkspaceRoot(), 'performance-snapshot.json');
 
 let browser;
 
@@ -157,7 +157,7 @@ async function run() {
   await fse.writeJSON(snapshotDestPath, snapshot, { spaces: 2 });
 }
 
-yargs
+yargs(process.argv.slice(2))
   .command({
     command: '$0',
     description: 'Runs the performance tests.',
