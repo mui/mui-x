@@ -74,12 +74,12 @@ export const GridColumnMenu = React.forwardRef<
   const { hideMenu, currentColumn } = props;
 
   return (
-    <GridColumnMenuContainer ref={ref} {...props}>
+    <GridColumnMenuDefaultContainer ref={ref} {...props}>
       <GridColumnMenuSortItem onClick={hideMenu} column={currentColumn!} />
       <GridColumnMenuFilterItem onClick={hideMenu} column={currentColumn!} />
       <GridColumnMenuHideItem onClick={hideMenu} column={currentColumn!} />
       <GridColumnMenuColumnsItem onClick={hideMenu} column={currentColumn!} />
-    </GridColumnMenuContainer>
+    </GridColumnMenuDefaultContainer>
   );
 });
 ```

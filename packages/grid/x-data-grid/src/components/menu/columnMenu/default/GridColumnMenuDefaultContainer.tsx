@@ -6,7 +6,7 @@ import { isHideMenuKey, isTabKey } from '../../../../utils/keyboardUtils';
 import { GridColumnMenuProps } from '../GridColumnMenuProps';
 import { gridClasses } from '../../../../constants/gridClasses';
 
-const GridColumnMenuContainerRoot = styled('div')(({ theme }) => ({
+const GridColumnMenuDefaultContainerRoot = styled('div')(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
   minWidth: theme.typography.pxToRem(248),
@@ -19,38 +19,39 @@ export interface GridColumnMenuContainerProps
     'hideMenu' | 'currentColumn' | 'open' | 'id' | 'labelledby' | 'className' | 'children'
   > {}
 
-const GridColumnMenuContainer = React.forwardRef<HTMLDivElement, GridColumnMenuContainerProps>(
-  function GridColumnMenuContainer(props: GridColumnMenuContainerProps, ref) {
-    const { hideMenu, currentColumn, id, labelledby, className, children, ...other } = props;
+const GridColumnMenuDefaultContainer = React.forwardRef<
+  HTMLDivElement,
+  GridColumnMenuContainerProps
+>(function GridColumnMenuDefaultContainer(props: GridColumnMenuContainerProps, ref) {
+  const { hideMenu, currentColumn, id, labelledby, className, children, ...other } = props;
 
-    const handleListKeyDown = React.useCallback(
-      (event: React.KeyboardEvent) => {
-        if (isTabKey(event.key)) {
-          event.preventDefault();
-        }
-        if (isHideMenuKey(event.key)) {
-          hideMenu(event);
-        }
-      },
-      [hideMenu],
-    );
+  const handleListKeyDown = React.useCallback(
+    (event: React.KeyboardEvent) => {
+      if (isTabKey(event.key)) {
+        event.preventDefault();
+      }
+      if (isHideMenuKey(event.key)) {
+        hideMenu(event);
+      }
+    },
+    [hideMenu],
+  );
 
-    return (
-      <GridColumnMenuContainerRoot
-        id={id}
-        ref={ref}
-        className={clsx(gridClasses.menuList, className)}
-        aria-labelledby={labelledby}
-        onKeyDown={handleListKeyDown}
-        {...other}
-      >
-        {children}
-      </GridColumnMenuContainerRoot>
-    );
-  },
-);
+  return (
+    <GridColumnMenuDefaultContainerRoot
+      id={id}
+      ref={ref}
+      className={clsx(gridClasses.menuList, className)}
+      aria-labelledby={labelledby}
+      onKeyDown={handleListKeyDown}
+      {...other}
+    >
+      {children}
+    </GridColumnMenuDefaultContainerRoot>
+  );
+});
 
-GridColumnMenuContainer.propTypes = {
+GridColumnMenuDefaultContainer.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
@@ -62,4 +63,4 @@ GridColumnMenuContainer.propTypes = {
   open: PropTypes.bool.isRequired,
 } as any;
 
-export { GridColumnMenuContainer };
+export { GridColumnMenuDefaultContainer };

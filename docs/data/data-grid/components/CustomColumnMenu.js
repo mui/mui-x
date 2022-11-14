@@ -5,7 +5,7 @@ import { styled } from '@mui/material/styles';
 import Button from '@mui/material/Button';
 import {
   GridColumnMenuDefault,
-  GridColumnMenuContainer,
+  GridColumnMenuDefaultContainer,
   GridColumnMenuFilterItem,
   GridColumnMenuSortItem,
   useGridApiRef,
@@ -15,7 +15,7 @@ import {
 } from '@mui/x-data-grid-pro';
 import StarOutlineIcon from '@mui/icons-material/StarOutline';
 
-const StyledGridColumnMenuContainer = styled(GridColumnMenuContainer)(
+const StyledGridColumnMenuContainer = styled(GridColumnMenuDefaultContainer)(
   ({ theme, ownerState }) => ({
     background: theme.palette[ownerState.color].main,
     color: theme.palette[ownerState.color].contrastText,

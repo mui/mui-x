@@ -5,7 +5,7 @@ export * from './GridColumnMenuHideItem';
 export * from './GridColumnMenuSortItem';
 
 // components
-export * from './GridColumnMenuContainer';
+export * from './GridColumnMenuDefaultContainer';
 export {
   gridColumnMenuSlots,
   gridColumnMenuInitItems,

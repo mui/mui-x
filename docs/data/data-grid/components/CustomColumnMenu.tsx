@@ -4,7 +4,7 @@ import { styled, Theme } from '@mui/material/styles';
 import Button from '@mui/material/Button';
 import {
   GridColumnMenuDefault,
-  GridColumnMenuContainer,
+  GridColumnMenuDefaultContainer,
   GridColumnMenuProps,
   GridColumnMenuFilterItem,
   GridColumnMenuSortItem,
@@ -20,7 +20,7 @@ type OwnerState = {
   color: PaletteColorKey;
 };
 
-const StyledGridColumnMenuContainer = styled(GridColumnMenuContainer)<{
+const StyledGridColumnMenuContainer = styled(GridColumnMenuDefaultContainer)<{
   ownerState: OwnerState;
 }>(({ theme, ownerState }: { theme: Theme; ownerState: OwnerState }) => ({
   background: theme.palette[ownerState.color].main,

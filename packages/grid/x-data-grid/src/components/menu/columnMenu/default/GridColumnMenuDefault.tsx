@@ -1,7 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import Divider from '@mui/material/Divider';
-import { GridColumnMenuContainer } from './GridColumnMenuContainer';
+import { GridColumnMenuDefaultContainer } from './GridColumnMenuDefaultContainer';
 import { GridColumnMenuProps } from '../GridColumnMenuProps';
 import { GridColumnMenuColumnsItem } from './GridColumnMenuColumnsItem';
 import { GridColumnMenuFilterItem } from './GridColumnMenuFilterItem';
@@ -57,7 +57,7 @@ export const GridColumnMenuDefaultRoot = React.forwardRef<
   );
 
   return (
-    <GridColumnMenuContainer ref={ref} {...props}>
+    <GridColumnMenuDefaultContainer ref={ref} {...props}>
       {orderedItems.map((item, index: number) => {
         if (!item) {
           return null;
@@ -69,7 +69,7 @@ export const GridColumnMenuDefaultRoot = React.forwardRef<
           </React.Fragment>
         );
       })}
-    </GridColumnMenuContainer>
+    </GridColumnMenuDefaultContainer>
   );
 });
 
