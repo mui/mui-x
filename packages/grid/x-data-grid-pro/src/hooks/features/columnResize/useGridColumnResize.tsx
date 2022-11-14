@@ -1,5 +1,8 @@
 import * as React from 'react';
-import { ownerDocument, useEventCallback } from '@mui/material/utils';
+import {
+  unstable_ownerDocument as ownerDocument,
+  unstable_useEventCallback as useEventCallback,
+} from '@mui/utils';
 import {
   GridEventListener,
   gridClasses,
@@ -182,7 +185,7 @@ export const useGridColumnResize = (
     // eslint-disable-next-line @typescript-eslint/no-use-before-define
     stopListening();
 
-    apiRef.current.updateColumn(colDefRef.current!);
+    apiRef.current.updateColumns([colDefRef.current!]);
 
     clearTimeout(stopResizeEventTimeout.current);
     stopResizeEventTimeout.current = setTimeout(() => {
@@ -289,7 +292,7 @@ export const useGridColumnResize = (
     // eslint-disable-next-line @typescript-eslint/no-use-before-define
     stopListening();
 
-    apiRef.current.updateColumn(colDefRef.current!);
+    apiRef.current.updateColumns([colDefRef.current!]);
 
     clearTimeout(stopResizeEventTimeout.current);
     stopResizeEventTimeout.current = setTimeout(() => {

@@ -55,7 +55,6 @@ export default function RowGroupingSortingSingleGroupingColDef() {
           disableRowSelectionOnClick
           defaultGroupingExpansionDepth={-1}
           initialState={initialState}
-          rowGroupingColumnMode="single"
           groupingColDef={{
             mainGroupingCriteria:
               mainGroupingCriteria === 'undefined'

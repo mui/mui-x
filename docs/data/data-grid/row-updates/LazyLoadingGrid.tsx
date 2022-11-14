@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { debounce } from '@mui/material/utils';
+import { unstable_debounce as debounce } from '@mui/utils';
 import {
   DataGridPro,
   GridFetchRowsParams,

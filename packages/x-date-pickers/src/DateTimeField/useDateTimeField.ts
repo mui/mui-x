@@ -96,6 +96,6 @@ export const useDateTimeField = <TDate, TChildProps extends {}>({
     valueManager: singleItemValueManager,
     fieldValueManager: singleItemFieldValueManager,
     validator: validateDateTime,
-    supportedDateSections: ['year', 'month', 'day', 'hour', 'minute', 'second', 'meridiem'],
+    supportedDateSections: ['year', 'month', 'day', 'hours', 'minutes', 'seconds', 'meridiem'],
   });
 };
