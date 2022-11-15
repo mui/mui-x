@@ -4,14 +4,14 @@ import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { styled, useThemeProps } from '@mui/material/styles';
 import { PickersActionBar } from '../../../PickersActionBar';
 import { CalendarOrClockPickerView } from '../../models/views';
-import { PickerViewLayoutProps } from './PickerViewLayout.types';
+import { PickersViewLayoutProps } from './PickersViewLayout.types';
 import {
-  getPickerViewLayoutUtilityClass,
-  pickerViewLayoutClasses,
-} from './pickerViewLayoutClasses';
+  getPickersViewLayoutUtilityClass,
+  pickersViewLayoutClasses,
+} from './pickersViewLayoutClasses';
 
-export const PickerViewLayoutRoot = styled('div', {
-  name: 'MuiPickerViewLayout',
+export const PickersViewLayoutRoot = styled('div', {
+  name: 'MuiPickersViewLayout',
   slot: 'Root',
   overridesResolver: (props, styles) => styles.root,
 })({
@@ -19,37 +19,37 @@ export const PickerViewLayoutRoot = styled('div', {
   flexDirection: 'column',
 });
 
-export const PickerViewLayoutContent = styled('div', {
-  name: 'MuiPickerViewLayout',
+export const PickersViewLayoutContent = styled('div', {
+  name: 'MuiPickersViewLayout',
   slot: 'Content',
   overridesResolver: (props, styles) => styles.content,
 })({
   display: 'flex',
   flexDirection: 'column',
-  [`&.${pickerViewLayoutClasses['content--landscape']}`]: {
+  [`&.${pickersViewLayoutClasses['content--landscape']}`]: {
     flexDirection: 'row',
   },
 });
 
-const useUtilityClasses = (ownerState: PickerViewLayoutProps<any, any>) => {
+const useUtilityClasses = (ownerState: PickersViewLayoutProps<any, any>) => {
   const { classes, isLandscape } = ownerState;
   const slots = {
     root: ['root'],
     content: ['content', isLandscape && 'content--landscape'],
   };
 
-  return composeClasses(slots, getPickerViewLayoutUtilityClass, classes);
+  return composeClasses(slots, getPickersViewLayoutUtilityClass, classes);
 };
 
-type PickerViewLayoutComponent = <TValue, TView extends CalendarOrClockPickerView>(
-  props: PickerViewLayoutProps<TValue, TView> & React.RefAttributes<HTMLDivElement>,
+type PickersViewLayoutComponent = <TValue, TView extends CalendarOrClockPickerView>(
+  props: PickersViewLayoutProps<TValue, TView> & React.RefAttributes<HTMLDivElement>,
 ) => JSX.Element;
 
-export const PickerViewLayout = React.forwardRef(function PickerViewLayout<
+export const PickersViewLayout = React.forwardRef(function PickersViewLayout<
   TValue,
   TView extends CalendarOrClockPickerView,
->(inProps: PickerViewLayoutProps<TValue, TView>, ref: React.Ref<HTMLDivElement>) {
-  const props = useThemeProps({ props: inProps, name: 'MuiPickerViewLayout' });
+>(inProps: PickersViewLayoutProps<TValue, TView>, ref: React.Ref<HTMLDivElement>) {
+  const props = useThemeProps({ props: inProps, name: 'MuiPickersViewLayout' });
 
   const {
     components,
@@ -85,8 +85,8 @@ export const PickerViewLayout = React.forwardRef(function PickerViewLayout<
   }
 
   return (
-    <PickerViewLayoutRoot className={clsx(className, classes.root)} ref={ref}>
-      <PickerViewLayoutContent className={classes.content}>
+    <PickersViewLayoutRoot className={clsx(className, classes.root)} ref={ref}>
+      <PickersViewLayoutContent className={classes.content}>
         {shouldRenderToolbar && !!Toolbar && (
           <Toolbar
             {...componentsProps?.toolbar}
@@ -102,7 +102,7 @@ export const PickerViewLayout = React.forwardRef(function PickerViewLayout<
         )}
         {!!Tabs && <Tabs view={view} onViewChange={onViewChange} {...componentsProps?.tabs} />}
         {children}
-      </PickerViewLayoutContent>
+      </PickersViewLayoutContent>
       <ActionBar
         onAccept={onAccept}
         onClear={onClear}
@@ -111,6 +111,6 @@ export const PickerViewLayout = React.forwardRef(function PickerViewLayout<
         actions={wrapperVariant === 'desktop' ? [] : ['cancel', 'accept']}
         {...componentsProps?.actionBar}
       />
-    </PickerViewLayoutRoot>
+    </PickersViewLayoutRoot>
   );
-}) as PickerViewLayoutComponent;
+}) as PickersViewLayoutComponent;

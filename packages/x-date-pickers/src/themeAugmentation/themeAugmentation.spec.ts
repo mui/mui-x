@@ -467,10 +467,10 @@ createTheme({
         },
       },
     },
-    MuiPickerViewLayout: {
+    MuiPickersViewLayout: {
       defaultProps: {
         disabled: true,
-        // @ts-expect-error invalid MuiPickerViewLayout prop
+        // @ts-expect-error invalid MuiPickersViewLayout prop
         someRandomProp: true,
       },
       styleOverrides: {
