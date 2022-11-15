@@ -9,9 +9,9 @@ import { dayCalendarSkeletonClasses } from '../DayCalendarSkeleton';
 import {
   clockClasses,
   clockNumberClasses,
-  clockPickerClasses,
+  timeClockClasses,
   clockPointerClasses,
-} from '../ClockPicker';
+} from '../TimeClock';
 import { datePickerToolbarClasses } from '../DatePicker';
 import { dateTimePickerToolbarClasses } from '../DateTimePicker';
 import {
@@ -97,21 +97,6 @@ createTheme({
         root: {
           backgroundColor: 'red',
           [`&.${clockNumberClasses.selected}`]: {
-            backgroundColor: 'green',
-          },
-        },
-      },
-    },
-    MuiClockPicker: {
-      defaultProps: {
-        view: 'hours',
-        // @ts-expect-error invalid MuiClockPicker prop
-        someRandomProp: true,
-      },
-      styleOverrides: {
-        root: {
-          backgroundColor: 'red',
-          [`.${clockPickerClasses.arrowSwitcher}`]: {
             backgroundColor: 'green',
           },
         },
@@ -522,6 +507,21 @@ createTheme({
         disabled: true,
         // @ts-expect-error invalid MuiStaticNextTimePicker prop
         someRandomProp: true,
+      },
+    },
+    MuiTimeClock: {
+      defaultProps: {
+        view: 'hours',
+        // @ts-expect-error invalid MuiTimeCLock prop
+        someRandomProp: true,
+      },
+      styleOverrides: {
+        root: {
+          backgroundColor: 'red',
+          [`.${timeClockClasses.arrowSwitcher}`]: {
+            backgroundColor: 'green',
+          },
+        },
       },
     },
     MuiTimePickerToolbar: {
