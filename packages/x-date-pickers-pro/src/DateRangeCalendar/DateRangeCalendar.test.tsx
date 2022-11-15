@@ -24,13 +24,7 @@ describe('<DateRangeCalendar />', () => {
     muiName: 'MuiDateRangeCalendar',
     wrapMount: wrapPickerMount,
     refInstanceof: window.HTMLDivElement,
-    skip: [
-      'componentProp',
-      'componentsProp',
-      'reactTestRenderer',
-      'themeVariants',
-      'componentProp',
-    ],
+    skip: ['componentProp', 'componentsProp', 'reactTestRenderer', 'themeVariants'],
   }));
 
   describe('Selection', () => {
