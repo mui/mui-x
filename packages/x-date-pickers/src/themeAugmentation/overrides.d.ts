@@ -9,9 +9,9 @@ import { DayCalendarSkeletonClassKey } from '../DayCalendarSkeleton';
 import {
   ClockClassKey,
   ClockNumberClassKey,
-  ClockPickerClassKey,
+  TimeClockClassKey,
   ClockPointerClassKey,
-} from '../ClockPicker';
+} from '../TimeClock';
 import { MonthCalendarClassKey, PickersMonthClassKey } from '../MonthCalendar';
 import { PickersDayClassKey } from '../PickersDay';
 import { PickersYearClassKey, YearCalendarClassKey } from '../YearCalendar';
@@ -33,7 +33,6 @@ export interface PickersComponentNameToClassKey {
   MuiCalendarOrClockPicker: CalendarOrClockPickerClassKey;
   MuiClock: ClockClassKey;
   MuiClockNumber: ClockNumberClassKey;
-  MuiClockPicker: ClockPickerClassKey;
   MuiClockPointer: ClockPointerClassKey;
   MuiDateCalendar: DateCalendarClassKey;
   MuiDateField: never;
@@ -79,6 +78,7 @@ export interface PickersComponentNameToClassKey {
   MuiStaticNextDateTimePicker: never;
   MuiStaticNextTimePicker: never;
   MuiStaticTimePicker: never;
+  MuiTimeClock: TimeClockClassKey;
   MuiTimePicker: never;
   MuiTimePickerToolbar: TimePickerToolbarClassKey;
   MuiYearCalendar: YearCalendarClassKey;

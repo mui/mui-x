@@ -2,7 +2,7 @@ import * as React from 'react';
 import { styled, useThemeProps } from '@mui/material/styles';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { useViews, PickerOnChangeFn } from '../../hooks/useViews';
-import { ClockPicker, ExportedClockPickerProps } from '../../../ClockPicker/ClockPicker';
+import { TimeClock, ExportedTimeClockProps } from '../../../TimeClock/TimeClock';
 import {
   DateCalendar,
   DateCalendarSlotsComponent,
@@ -40,7 +40,7 @@ export interface CalendarOrClockPickerSlotsComponentsProps<TDate>
 export interface ExportedCalendarOrClockPickerProps<TDate, TView extends CalendarOrClockPickerView>
   extends Omit<BasePickerProps<TDate | null, TDate>, 'value' | 'onChange' | 'localeText'>,
     Omit<ExportedDateCalendarProps<TDate>, 'onViewChange' | 'openTo' | 'view'>,
-    ExportedClockPickerProps<TDate> {
+    ExportedTimeClockProps<TDate> {
   /**
    * Callback fired on view change.
    * @template View
@@ -244,7 +244,7 @@ export function CalendarOrClockPicker<TDate, View extends CalendarOrClockPickerV
             )}
 
             {isTimePickerView(openView) && (
-              <ClockPicker
+              <TimeClock
                 {...other}
                 autoFocus={autoFocus}
                 value={value}

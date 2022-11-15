@@ -4,7 +4,7 @@ import {
   PickersFadeTransitionGroupProps,
 } from '../DateCalendar';
 import { DayCalendarSkeletonProps } from '../DayCalendarSkeleton';
-import { ClockNumberProps, ClockPickerProps, ClockPointerProps, ClockProps } from '../ClockPicker';
+import { ClockNumberProps, TimeClockProps, ClockPointerProps, ClockProps } from '../TimeClock';
 import { DatePickerProps, DatePickerToolbarProps } from '../DatePicker';
 import {
   DateTimePickerProps,
@@ -58,7 +58,6 @@ export interface PickersComponentsPropsList {
   MuiCalendarOrClockPicker: CalendarOrClockPickerProps<unknown, CalendarOrClockPickerView>;
   MuiClock: ClockProps<unknown>;
   MuiClockNumber: ClockNumberProps;
-  MuiClockPicker: ClockPickerProps<unknown>;
   MuiClockPointer: ClockPointerProps;
   MuiDateCalendar: DateCalendarProps<unknown>;
   MuiDateField: DateFieldProps<unknown>;
@@ -104,6 +103,7 @@ export interface PickersComponentsPropsList {
   MuiStaticNextDateTimePicker: StaticNextDateTimePickerProps<unknown>;
   MuiStaticNextTimePicker: StaticNextTimePickerProps<unknown>;
   MuiStaticTimePicker: StaticTimePickerProps<unknown>;
+  MuiTimeClock: TimeClockProps<unknown>;
   MuiTimePicker: TimePickerProps<unknown>;
   MuiTimePickerToolbar: TimePickerToolbarProps<unknown>;
   MuiYearCalendar: YearCalendarProps<unknown>;
