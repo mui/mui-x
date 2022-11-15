@@ -16,7 +16,7 @@ export function useGridErrorHandler(
   );
 
   React.useEffect(() => {
-    handleError(props.error);
+    handleError({ error: props.error });
   }, [handleError, props.error]);
 
   useGridApiEventHandler(apiRef, 'componentError', handleError);
