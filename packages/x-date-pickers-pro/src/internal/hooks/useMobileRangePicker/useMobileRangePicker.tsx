@@ -6,7 +6,7 @@ import {
   CalendarOrClockPickerView,
   usePicker,
   WrapperVariantContext,
-  PickerViewLayout,
+  PickersViewLayout,
   PickersModalDialog,
   InferError,
 } from '@mui/x-date-pickers/internals';
@@ -145,13 +145,13 @@ export const useMobileRangePicker = <
           }}
           componentsProps={componentsProps}
         >
-          <PickerViewLayout
+          <PickersViewLayout
             {...layoutProps}
             components={components}
             componentsProps={componentsProps}
           >
             {renderCurrentView()}
-          </PickerViewLayout>
+          </PickersViewLayout>
         </PickersModalDialog>
       </WrapperVariantContext.Provider>
     </LocalizationProvider>

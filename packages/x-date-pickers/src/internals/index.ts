@@ -40,11 +40,11 @@ export type {
   PickersStaticWrapperSlotsComponentsProps,
 } from './components/PickerStaticWrapper/PickerStaticWrapper';
 export { PickersToolbar } from './components/PickersToolbar';
-export { PickerViewLayout } from './components/PickerViewLayout';
+export { PickersViewLayout } from './components/PickersViewLayout';
 export type {
-  ExportedPickerViewLayoutSlotsComponent,
-  ExportedPickerViewLayoutSlotsComponentsProps,
-} from './components/PickerViewLayout';
+  ExportedPickersViewLayoutSlotsComponent,
+  ExportedPickersViewLayoutSlotsComponentsProps,
+} from './components/PickersViewLayout';
 export type { PickersToolbarProps } from './components/PickersToolbar';
 export { pickersToolbarClasses } from './components/pickersToolbarClasses';
 export type {

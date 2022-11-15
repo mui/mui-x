@@ -8,7 +8,7 @@ import {
   usePicker,
   WrapperVariantContext,
   PickersPopper,
-  PickerViewLayout,
+  PickersViewLayout,
   InferError,
 } from '@mui/x-date-pickers/internals';
 import {
@@ -178,13 +178,13 @@ export const useDesktopRangePicker = <
           componentsProps={componentsProps}
           shouldRestoreFocus={shouldRestoreFocus}
         >
-          <PickerViewLayout
+          <PickersViewLayout
             {...layoutProps}
             components={components}
             componentsProps={componentsProps}
           >
             {renderCurrentView()}
-          </PickerViewLayout>
+          </PickersViewLayout>
         </PickersPopper>
       </WrapperVariantContext.Provider>
     </LocalizationProvider>
