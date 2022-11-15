@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useTheme } from '@mui/material/styles';
 import { GridEventListener } from '../../../models/events';
 import { GridApiCommunity, GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridCellParams } from '../../../models/params/gridCellParams';
@@ -43,6 +44,7 @@ export const useGridKeyboardNavigation = (
 ): void => {
   const logger = useGridLogger(apiRef, 'useGridKeyboardNavigation');
   const initialCurrentPageRows = useGridVisibleRows(apiRef, props).rows;
+  const theme = useTheme();
 
   const currentPageRows = React.useMemo(
     () => enrichPageRowsWithPinnedRows(apiRef, initialCurrentPageRows),
@@ -144,15 +146,19 @@ export const useGridKeyboardNavigation = (
         }
 
         case 'ArrowRight': {
-          if (colIndexBefore < lastColIndex) {
-            goToHeader(colIndexBefore + 1, event);
+          if (theme.direction === 'ltr') {
+            goToRightColumnHeader(colIndexBefore, lastColIndex, event);
+          } else if (theme.direction === 'rtl') {
+            goToLeftColumnHeader(colIndexBefore, firstColIndex, event);
           }
           break;
         }
 
         case 'ArrowLeft': {
-          if (colIndexBefore > firstColIndex) {
-            goToHeader(colIndexBefore - 1, event);
+          if (theme.direction === 'ltr') {
+            goToLeftColumnHeader(colIndexBefore, firstColIndex, event);
+          } else if (theme.direction === 'rtl') {
+            goToRightColumnHeader(colIndexBefore, lastColIndex, event);
           }
           break;
         }
@@ -207,7 +213,17 @@ export const useGridKeyboardNavigation = (
         event.preventDefault();
       }
     },
-    [apiRef, currentPageRows.length, goToCell, getRowIdFromIndex, goToHeader, goToGroupHeader],
+    [
+      apiRef,
+      currentPageRows.length,
+      theme.direction,
+      goToCell,
+      getRowIdFromIndex,
+      goToHeader,
+      goToGroupHeader,
+      goToRightColumnHeader,
+      goToLeftColumnHeader,
+    ],
   );
 
   const focusedColumnGroup = useGridSelector(apiRef, unstable_gridFocusColumnGroupHeaderSelector);

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { unstable_useForkRef as useForkRef } from '@mui/utils';
-import { styled } from '@mui/material/styles';
+import { styled, useTheme } from '@mui/material/styles';
 import { defaultMemoize } from 'reselect';
 import { useGridPrivateApiContext } from '../../utils/useGridPrivateApiContext';
 import { useGridSelector } from '../../utils/useGridSelector';
@@ -71,6 +71,7 @@ function isUIEvent(event: any): event is React.UIEvent {
 
 export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
   const { innerRef: innerRefProp, minColumnIndex = 0 } = props;
+  const theme = useTheme();
 
   const [dragCol, setDragCol] = React.useState('');
   const [resizeCol, setResizeCol] = React.useState('');
@@ -141,9 +142,11 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
         visibleRows: currentPage.rows,
       });
 
+      const direction = theme.direction === 'ltr' ? 1 : -1;
+
       const offset =
         firstColumnToRender > 0
-          ? prevScrollLeft.current - columnPositions[firstColumnToRender]
+          ? prevScrollLeft.current - direction * columnPositions[firstColumnToRender]
           : prevScrollLeft.current;
 
       innerRef!.current!.style.transform = `translate3d(${-offset}px, 0px, 0px)`;
@@ -155,6 +158,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
       apiRef,
       currentPage.rows,
       rootProps.rowBuffer,
+      theme.direction,
     ],
   );
 
