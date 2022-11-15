@@ -1,9 +1,9 @@
 import { PickersLocaleText } from './utils/pickersLocaleTextApi';
 import { getPickersLocalization } from './utils/getPickersLocalization';
-import { CalendarPickerView } from '../internals/models';
+import { DateView } from '../internals/models';
 
-// maps ClockPickerView to its translation
-const clockViews = {
+// maps TimeView to its translation
+const timeViews = {
   hours: 'Stunden',
   minutes: 'Minuten',
   seconds: 'Sekunden',
@@ -23,7 +23,7 @@ const deDEPickers: Partial<PickersLocaleText<any>> = {
   // View navigation
   openPreviousView: 'Letzte Ansicht öffnen',
   openNextView: 'Nächste Ansicht öffnen',
-  calendarViewSwitchingButtonAriaLabel: (view: CalendarPickerView) =>
+  calendarViewSwitchingButtonAriaLabel: (view: DateView) =>
     view === 'year'
       ? 'Jahresansicht ist geöffnet, zur Kalenderansicht wechseln'
       : 'Kalenderansicht ist geöffnet, zur Jahresansicht wechseln',
@@ -50,14 +50,14 @@ const deDEPickers: Partial<PickersLocaleText<any>> = {
 
   // Clock labels
   clockLabelText: (view, time, adapter) =>
-    `${clockViews[view] ?? view} auswählen. ${
+    `${timeViews[view] ?? view} auswählen. ${
       time === null
         ? 'Keine Uhrzeit ausgewählt'
         : `Gewählte Uhrzeit ist ${adapter.format(time, 'fullTime')}`
     }`,
-  hoursClockNumberText: (hours) => `${hours} ${clockViews.hours}`,
-  minutesClockNumberText: (minutes) => `${minutes} ${clockViews.minutes}`,
-  secondsClockNumberText: (seconds) => `${seconds}  ${clockViews.seconds}`,
+  hoursClockNumberText: (hours) => `${hours} ${timeViews.hours}`,
+  minutesClockNumberText: (minutes) => `${minutes} ${timeViews.minutes}`,
+  secondsClockNumberText: (seconds) => `${seconds}  ${timeViews.seconds}`,
 
   // Open picker labels
   openDatePickerDialogue: (value, utils) =>

@@ -1,6 +1,6 @@
 import { PickersLocaleText } from './utils/pickersLocaleTextApi';
 import { getPickersLocalization } from './utils/getPickersLocalization';
-import { CalendarPickerView } from '../internals/models';
+import { DateView } from '../internals/models';
 
 const ptBRPickers: Partial<PickersLocaleText<any>> = {
   // Calendar navigation
@@ -10,7 +10,7 @@ const ptBRPickers: Partial<PickersLocaleText<any>> = {
   // View navigation
   openPreviousView: 'Abrir próxima seleção',
   openNextView: 'Abrir seleção anterior',
-  calendarViewSwitchingButtonAriaLabel: (view: CalendarPickerView) =>
+  calendarViewSwitchingButtonAriaLabel: (view: DateView) =>
     view === 'year'
       ? 'Seleção de ano está aberta, alternando para seleção de calendário'
       : 'Seleção de calendários está aberta, alternando para seleção de ano',

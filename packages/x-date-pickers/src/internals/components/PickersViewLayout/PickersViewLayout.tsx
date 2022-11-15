@@ -3,7 +3,7 @@ import clsx from 'clsx';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { styled, useThemeProps } from '@mui/material/styles';
 import { PickersActionBar } from '../../../PickersActionBar';
-import { CalendarOrClockPickerView } from '../../models/views';
+import { DateOrTimeView } from '../../models/views';
 import { PickersViewLayoutProps } from './PickersViewLayout.types';
 import {
   getPickersViewLayoutUtilityClass,
@@ -41,13 +41,13 @@ const useUtilityClasses = (ownerState: PickersViewLayoutProps<any, any>) => {
   return composeClasses(slots, getPickersViewLayoutUtilityClass, classes);
 };
 
-type PickersViewLayoutComponent = <TValue, TView extends CalendarOrClockPickerView>(
+type PickersViewLayoutComponent = <TValue, TView extends DateOrTimeView>(
   props: PickersViewLayoutProps<TValue, TView> & React.RefAttributes<HTMLDivElement>,
 ) => JSX.Element;
 
 export const PickersViewLayout = React.forwardRef(function PickersViewLayout<
   TValue,
-  TView extends CalendarOrClockPickerView,
+  TView extends DateOrTimeView,
 >(inProps: PickersViewLayoutProps<TValue, TView>, ref: React.Ref<HTMLDivElement>) {
   const props = useThemeProps({ props: inProps, name: 'MuiPickersViewLayout' });
 

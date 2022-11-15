@@ -1,6 +1,6 @@
 import { PickersLocaleText } from './utils/pickersLocaleTextApi';
 import { getPickersLocalization } from './utils/getPickersLocalization';
-import { CalendarPickerView } from '../internals/models';
+import { DateView } from '../internals/models';
 
 const svSEPickers: Partial<PickersLocaleText<any>> = {
   // Calendar navigation
@@ -10,7 +10,7 @@ const svSEPickers: Partial<PickersLocaleText<any>> = {
   // View navigation
   openPreviousView: 'öppna föregående vy',
   openNextView: 'öppna nästa vy',
-  calendarViewSwitchingButtonAriaLabel: (view: CalendarPickerView) =>
+  calendarViewSwitchingButtonAriaLabel: (view: DateView) =>
     view === 'year'
       ? 'årsvyn är öppen, byt till kalendervy'
       : 'kalendervyn är öppen, byt till årsvy',

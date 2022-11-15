@@ -16,7 +16,7 @@
     "minDate": "Minimal selectable date.",
     "onChange": "Callback fired when the value changes.<br><br><strong>Signature:</strong><br><code>function(value: TDate | null, selectionState: PickerSelectionState | undefined) =&gt; void</code><br><em>value:</em> The new value.<br><em>selectionState:</em> Indicates if the date selection is complete.",
     "onMonthChange": "Callback firing on month change @DateIOType.<br><br><strong>Signature:</strong><br><code>function(month: TDate) =&gt; void | Promise</code><br><em>month:</em> The new month.<br> <em>returns</em> (void | Promise): -",
-    "onViewChange": "Callback fired on view change.<br><br><strong>Signature:</strong><br><code>function(view: CalendarPickerView) =&gt; void</code><br><em>view:</em> The new view.",
+    "onViewChange": "Callback fired on view change.<br><br><strong>Signature:</strong><br><code>function(view: DateView) =&gt; void</code><br><em>view:</em> The new view.",
     "onYearChange": "Callback firing on year change @DateIOType.<br><br><strong>Signature:</strong><br><code>function(year: TDate) =&gt; void</code><br><em>year:</em> The new year.",
     "openTo": "Initially open view.",
     "readOnly": "Make picker read only.",

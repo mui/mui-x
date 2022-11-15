@@ -3,7 +3,7 @@ import IconButton, { IconButtonProps } from '@mui/material/IconButton';
 import { InputAdornmentProps } from '@mui/material/InputAdornment';
 import TextField, { TextFieldProps } from '@mui/material/TextField';
 import { SlotComponentProps } from '@mui/base/utils';
-import { CalendarOrClockPickerView, MuiPickersAdapter } from '../../models';
+import { DateOrTimeView, MuiPickersAdapter } from '../../models';
 import {
   BaseNextNonStaticPickerProps,
   BaseNextPickerProps,
@@ -76,7 +76,7 @@ export interface DesktopOnlyPickerProps<TDate>
     UsePickerValueNonStaticProps<TDate | null>,
     UsePickerViewsNonStaticProps {}
 
-export interface UseDesktopPickerProps<TDate, TView extends CalendarOrClockPickerView, TError>
+export interface UseDesktopPickerProps<TDate, TView extends DateOrTimeView, TError>
   extends BaseNextPickerProps<TDate | null, TDate, TView, TError>,
     DesktopOnlyPickerProps<TDate> {
   /**
@@ -93,7 +93,7 @@ export interface UseDesktopPickerProps<TDate, TView extends CalendarOrClockPicke
 
 export interface UseDesktopPickerParams<
   TDate,
-  TView extends CalendarOrClockPickerView,
+  TView extends DateOrTimeView,
   TExternalProps extends UseDesktopPickerProps<TDate, TView, any>,
 > extends Pick<
     UsePickerParams<TDate | null, TDate, TView, TExternalProps, {}>,
