@@ -157,9 +157,9 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
     showDaysOutsideCurrentMonth,
     dayOfWeekFormatter,
     disableAutoMonthSwitching,
-    sx,
     autoFocus,
     fixedWeekNumber,
+    ...other
   } = props;
 
   const [value, setValue] = useControlled<DateRange<TDate>>({
@@ -349,7 +349,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
       ref={ref}
       className={clsx(className, classes.root)}
       ownerState={ownerState}
-      sx={sx}
+      {...other}
     >
       <Watermark packageName="x-date-pickers-pro" releaseInfo={releaseInfo} />
       {Array.from({ length: calendars }).map((_, index) => {
