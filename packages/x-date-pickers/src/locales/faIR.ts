@@ -14,7 +14,7 @@ const faIRPickers: Partial<PickersLocaleText<any>> = {
     view === 'year'
       ? 'نمای سال باز است، رفتن به نمای تقویم'
       : 'نمای تقویم باز است، رفتن به نمای سال',
-  inputModeToggleButtonAriaLabel: (isKeyboardInputOpen: boolean, viewType: 'calendar' | 'clock') =>
+  inputModeToggleButtonAriaLabel: (isKeyboardInputOpen, viewType) =>
     isKeyboardInputOpen
       ? `نمای ورودی متن باز است، رفتن به نمای ${viewType}`
       : `نمای ${viewType} باز است، رفتن به نمای ورودی متن`,

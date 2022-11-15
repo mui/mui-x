@@ -9,8 +9,8 @@ const views = {
 };
 
 const viewTranslation = {
-  calendar: 'calendrier',
-  clock: 'horloge',
+  date: 'calendrier',
+  time: 'horloge',
 };
 
 const frFRPickers: Partial<PickersLocaleText<any>> = {
@@ -25,7 +25,7 @@ const frFRPickers: Partial<PickersLocaleText<any>> = {
     view === 'year'
       ? 'La vue année est ouverte, ouvrir la vue calendrier'
       : 'La vue calendrier est ouverte, ouvrir la vue année',
-  inputModeToggleButtonAriaLabel: (isKeyboardInputOpen: boolean, viewType: 'calendar' | 'clock') =>
+  inputModeToggleButtonAriaLabel: (isKeyboardInputOpen, viewType) =>
     isKeyboardInputOpen
       ? `passer du champ text au ${viewTranslation[viewType]}`
       : `passer du ${viewTranslation[viewType]} au champ text`,

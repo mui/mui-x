@@ -14,7 +14,7 @@ const trTRPickers: Partial<PickersLocaleText<any>> = {
     view === 'year'
       ? 'yıl görünümü açık, takvim görünümüne geç'
       : 'takvim görünümü açık, yıl görünümüne geç',
-  inputModeToggleButtonAriaLabel: (isKeyboardInputOpen: boolean, viewType: 'calendar' | 'clock') =>
+  inputModeToggleButtonAriaLabel: (isKeyboardInputOpen, viewType) =>
     isKeyboardInputOpen
       ? `metin girişi görünümü açık, şuraya gidin: ${viewType} görünümü`
       : `${viewType} görünüm açık, metin girişi görünümüne gidin`,

@@ -11,8 +11,8 @@ const timeViews = {
 
 // maps PickersToolbar["viewType"] to its translation
 const pickerViews = {
-  calendar: 'Kalenderansicht',
-  clock: 'Uhransicht',
+  date: 'Kalenderansicht',
+  time: 'Uhransicht',
 };
 
 const deDEPickers: Partial<PickersLocaleText<any>> = {
@@ -27,7 +27,7 @@ const deDEPickers: Partial<PickersLocaleText<any>> = {
     view === 'year'
       ? 'Jahresansicht ist geöffnet, zur Kalenderansicht wechseln'
       : 'Kalenderansicht ist geöffnet, zur Jahresansicht wechseln',
-  inputModeToggleButtonAriaLabel: (isKeyboardInputOpen: boolean, viewType: 'calendar' | 'clock') =>
+  inputModeToggleButtonAriaLabel: (isKeyboardInputOpen, viewType) =>
     isKeyboardInputOpen
       ? `Texteingabeansicht ist geöffnet, zur ${pickerViews[viewType]} wechseln`
       : `${pickerViews[viewType]} ist geöffnet, zur Texteingabeansicht wechseln`,

@@ -11,8 +11,8 @@ const timeViews = {
 
 // maps PickersToolbar["viewType"] to its translation
 const pickerViews = {
-  calendar: 'カレンダー表示',
-  clock: '時計表示',
+  date: 'カレンダー表示',
+  time: '時計表示',
 };
 
 const jaJPPickers: Partial<PickersLocaleText<any>> = {
@@ -27,7 +27,7 @@ const jaJPPickers: Partial<PickersLocaleText<any>> = {
     view === 'year'
       ? '年選択表示からカレンダー表示に切り替える'
       : 'カレンダー表示から年選択表示に切り替える',
-  inputModeToggleButtonAriaLabel: (isKeyboardInputOpen: boolean, viewType: 'calendar' | 'clock') =>
+  inputModeToggleButtonAriaLabel: (isKeyboardInputOpen, viewType) =>
     isKeyboardInputOpen
       ? `テキスト入力表示から${pickerViews[viewType]}に切り替える`
       : `${pickerViews[viewType]}からテキスト入力表示に切り替える`,

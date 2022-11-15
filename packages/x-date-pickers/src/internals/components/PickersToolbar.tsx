@@ -21,7 +21,7 @@ export interface PickersToolbarProps<TValue, TView extends DateOrTimeView>
     'isMobileKeyboardViewOpen' | 'toggleMobileKeyboardView' | 'isLandscape'
   > {
   className?: string;
-  viewType?: 'calendar' | 'clock';
+  viewType?: 'date' | 'time';
   landscapeDirection?: 'row' | 'column';
   toolbarTitle: React.ReactNode;
   classes?: Partial<PickersToolbarClasses>;
@@ -83,8 +83,8 @@ const PickersToolbarPenIconButton = styled(IconButton, {
   ownerState: PickersToolbarProps<any, any>;
 }>({});
 
-const getViewTypeIcon = (viewType: 'calendar' | 'clock') =>
-  viewType === 'clock' ? <Clock color="inherit" /> : <Calendar color="inherit" />;
+const getViewTypeIcon = (viewType: 'date' | 'time') =>
+  viewType === 'time' ? <Clock color="inherit" /> : <Calendar color="inherit" />;
 
 type PickersToolbarComponent = (<TValue, TView extends DateOrTimeView>(
   props: React.PropsWithChildren<PickersToolbarProps<TValue, TView>> &
@@ -107,7 +107,7 @@ export const PickersToolbar = React.forwardRef(function PickersToolbar<
     landscapeDirection = 'column',
     toggleMobileKeyboardView,
     toolbarTitle,
-    viewType = 'calendar',
+    viewType = 'date',
   } = props;
 
   const ownerState = props;

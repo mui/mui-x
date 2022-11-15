@@ -34,7 +34,7 @@ export interface PickersComponentAgnosticLocaleText<TDate> {
   calendarViewSwitchingButtonAriaLabel: (currentView: DateView) => string;
   inputModeToggleButtonAriaLabel: (
     isKeyboardInputOpen: boolean,
-    viewType: 'calendar' | 'clock',
+    viewType: 'date' | 'time',
   ) => string;
 
   // DateRange placeholders

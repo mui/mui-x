@@ -9,8 +9,8 @@ const views = {
 };
 
 const viewTranslation = {
-  calendar: 'kalenteri',
-  clock: 'kello',
+  date: 'kalenteri',
+  time: 'kello',
 };
 
 const fiFIPickers: Partial<PickersLocaleText<any>> = {
@@ -25,7 +25,7 @@ const fiFIPickers: Partial<PickersLocaleText<any>> = {
     view === 'year'
       ? 'vuosinäkymä on auki, vaihda kalenterinäkymään'
       : 'kalenterinäkymä on auki, vaihda vuosinäkymään',
-  inputModeToggleButtonAriaLabel: (isKeyboardInputOpen: boolean, viewType: 'calendar' | 'clock') =>
+  inputModeToggleButtonAriaLabel: (isKeyboardInputOpen, viewType) =>
     isKeyboardInputOpen
       ? `tekstikenttä on auki, mene ${viewTranslation[viewType]}näkymään`
       : `${viewTranslation[viewType]}näkymä on auki, mene tekstikenttään`,

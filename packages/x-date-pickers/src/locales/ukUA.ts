@@ -16,7 +16,7 @@ const ukUAPickers: Partial<PickersLocaleText<any>> = {
     view === 'year'
       ? 'річний вигляд відкрито, перейти до календарного вигляду'
       : 'календарний вигляд відкрито, перейти до річного вигляду',
-  inputModeToggleButtonAriaLabel: (isKeyboardInputOpen: boolean, viewType: 'calendar' | 'clock') =>
+  inputModeToggleButtonAriaLabel: (isKeyboardInputOpen, viewType) =>
     isKeyboardInputOpen
       ? `текстове поле відкрите, перейти до  ${viewType} вигляду`
       : `${viewType} вигляд наразі відкрито, перейти до текстового поля`,

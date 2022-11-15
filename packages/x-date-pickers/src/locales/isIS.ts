@@ -14,11 +14,8 @@ const isISPickers: Partial<PickersLocaleText<any>> = {
     view === 'year'
       ? 'ársskoðun er opin, skipta yfir í dagatalsskoðun'
       : 'dagatalsskoðun er opin, skipta yfir í ársskoðun',
-  inputModeToggleButtonAriaLabel: (
-    isKeyboardInputOpen: boolean,
-    viewType: 'calendar' | 'clock',
-  ) => {
-    const viewTypeTranslated = viewType === 'calendar' ? 'dagatals' : 'klukku';
+  inputModeToggleButtonAriaLabel: (isKeyboardInputOpen, viewType) => {
+    const viewTypeTranslated = viewType === 'date' ? 'dagatals' : 'klukku';
     return isKeyboardInputOpen
       ? `textainnsláttur er opinn, fara í ${viewTypeTranslated}skoðun`
       : `${viewTypeTranslated}skoðun er opin, opna fyrir textainnslátt`;
