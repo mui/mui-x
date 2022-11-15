@@ -3,6 +3,7 @@ import {
   GridApiCommon,
   GridColumnPinningApi,
   GridDetailPanelApi,
+  GridDetailPanelPrivateApi,
   GridRowPinningApi,
   GridRowMultiSelectionApi,
   GridColumnReorderApi,
@@ -31,4 +32,5 @@ export interface GridApiPremium
 
 export interface GridPrivateApiPremium
   extends GridApiPremium,
-    GridPrivateOnlyApiCommon<GridApiPremium, GridPrivateApiPremium> {}
+    GridPrivateOnlyApiCommon<GridApiPremium, GridPrivateApiPremium>,
+    GridDetailPanelPrivateApi {}

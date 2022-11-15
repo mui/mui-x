@@ -51,11 +51,11 @@
     "PreviousIconButton": { "default": "IconButton", "type": { "name": "elementType" } },
     "RightArrowIcon": { "default": "ArrowRight", "type": { "name": "elementType" } }
   },
-  "name": "ClockPicker",
-  "styles": { "classes": ["root", "arrowSwitcher"], "globalClasses": {}, "name": "MuiClockPicker" },
+  "name": "TimeClock",
+  "styles": { "classes": ["root", "arrowSwitcher"], "globalClasses": {}, "name": "MuiTimeClock" },
   "spread": false,
   "forwardsRefTo": "HTMLDivElement",
-  "filename": "/packages/x-date-pickers/src/ClockPicker/ClockPicker.tsx",
+  "filename": "/packages/x-date-pickers/src/TimeClock/TimeClock.tsx",
   "inheritance": null,
   "demos": "<ul></ul>",
   "packages": ["@mui/x-date-pickers-pro", "@mui/x-date-pickers"]

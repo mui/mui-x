@@ -37,7 +37,7 @@ import { useGridRegisterPipeApplier } from '../../core/pipeProcessing';
 export const rowsStateInitializer: GridStateInitializer<
   Pick<DataGridProcessedProps, 'rows' | 'rowCount' | 'getRowId' | 'loading'>
 > = (state, props, apiRef) => {
-  apiRef.current.unstable_caches.rows = createRowsInternalCache({
+  apiRef.current.caches.rows = createRowsInternalCache({
     rows: props.rows,
     getRowId: props.getRowId,
     loading: props.loading,
@@ -137,7 +137,7 @@ export const useGridRows = (
         timeout.current = null;
       }
 
-      apiRef.current.unstable_caches.rows = cache;
+      apiRef.current.caches.rows = cache;
 
       if (!throttle) {
         run();
@@ -167,7 +167,7 @@ export const useGridRows = (
         loading: props.loading,
         rowCount: props.rowCount,
       });
-      const prevCache = apiRef.current.unstable_caches.rows;
+      const prevCache = apiRef.current.caches.rows;
       cache.rowsBeforePartialUpdates = prevCache.rowsBeforePartialUpdates;
 
       throttledRowsChange({ cache, throttle: true });
@@ -189,7 +189,7 @@ export const useGridRows = (
       const cache = updateCacheWithNewRows({
         updates,
         getRowId: props.getRowId,
-        previousCache: apiRef.current.unstable_caches.rows,
+        previousCache: apiRef.current.caches.rows,
       });
 
       throttledRowsChange({ cache, throttle: true });
@@ -441,11 +441,11 @@ export const useGridRows = (
     logger.info(`Row grouping pre-processing have changed, regenerating the row tree`);
 
     let cache: GridRowsInternalCache;
-    if (apiRef.current.unstable_caches.rows.rowsBeforePartialUpdates === props.rows) {
+    if (apiRef.current.caches.rows.rowsBeforePartialUpdates === props.rows) {
       // The `props.rows` did not change since the last row grouping
       // We can use the current rows cache which contains the partial updates done recently.
       cache = {
-        ...apiRef.current.unstable_caches.rows,
+        ...apiRef.current.caches.rows,
         updates: {
           type: 'full',
           rows: gridDataRowIdsSelector(apiRef),
@@ -489,9 +489,7 @@ export const useGridRows = (
   >(() => {
     // `rowTreeCreation` is the only processor ran when `strategyAvailabilityChange` is fired.
     // All the other processors listen to `rowsSet` which will be published by the `groupRows` method below.
-    if (
-      apiRef.current.unstable_getActiveStrategy('rowTree') !== gridRowGroupingNameSelector(apiRef)
-    ) {
+    if (apiRef.current.getActiveStrategy('rowTree') !== gridRowGroupingNameSelector(apiRef)) {
       groupRows();
     }
   }, [apiRef, groupRows]);
@@ -558,11 +556,11 @@ export const useGridRows = (
     }
 
     const areNewRowsAlreadyInState =
-      apiRef.current.unstable_caches.rows.rowsBeforePartialUpdates === props.rows;
+      apiRef.current.caches.rows.rowsBeforePartialUpdates === props.rows;
     const isNewLoadingAlreadyInState =
-      apiRef.current.unstable_caches.rows.loadingPropBeforePartialUpdates === props.loading;
+      apiRef.current.caches.rows.loadingPropBeforePartialUpdates === props.loading;
     const isNewRowCountAlreadyInState =
-      apiRef.current.unstable_caches.rows.rowCountPropBeforePartialUpdates === props.rowCount;
+      apiRef.current.caches.rows.rowCountPropBeforePartialUpdates === props.rowCount;
 
     // The new rows have already been applied (most likely in the `'rowGroupsPreProcessingChange'` listener)
     if (areNewRowsAlreadyInState) {
@@ -572,7 +570,7 @@ export const useGridRows = (
           ...state,
           rows: { ...state.rows, loading: props.loading },
         }));
-        apiRef.current.unstable_caches.rows!.loadingPropBeforePartialUpdates = props.loading;
+        apiRef.current.caches.rows!.loadingPropBeforePartialUpdates = props.loading;
         apiRef.current.forceUpdate();
       }
 
@@ -585,7 +583,7 @@ export const useGridRows = (
             totalTopLevelRowCount: Math.max(props.rowCount || 0, state.rows.totalTopLevelRowCount),
           },
         }));
-        apiRef.current.unstable_caches.rows.rowCountPropBeforePartialUpdates = props.rowCount;
+        apiRef.current.caches.rows.rowCountPropBeforePartialUpdates = props.rowCount;
         apiRef.current.forceUpdate();
       }
 

@@ -215,6 +215,20 @@ Use the `setRowChildrenExpansion` method on `apiRef` to programmatically set the
 
 {{"demo": "RowGroupingSetChildrenExpansion.js", "bg": "inline", "defaultCodeOpen": false}}
 
+### Customize grouping cell indent
+
+To change the default cell indent you can pass the `offsetMultiplier` prop to the `<GridTreeDataGroupingCell />` component and use it as `groupingColDef.renderCell`:
+
+```tsx
+const groupingColDef = {
+  renderCell: (params) => (
+    <GridTreeDataGroupingCell {...params} offsetMultiplier={4} />
+  ),
+};
+
+<DataGridPremium groupingColDef={groupingColDef} />;
+```
+
 ## Sorting / Filtering
 
 ### Single grouping column
