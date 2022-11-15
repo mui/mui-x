@@ -197,29 +197,19 @@ The view components allowing to pick a time, a date or parts of a date without a
 ```diff
 -<CalendarPicker {...props} />
 +<DateCalendar {...props} />
-```
 
-```diff
 -<DayPicker {...props} />
 +<DayCalendar {...props} />
-```
 
-```diff
 -<CalendarPickerSkeleton {...props} />
 +<DayCalendarSkeleton {...props} />
-```
 
-```diff
 -<MonthPicker {...props} />
 +<MonthCalendar {...props} />
-```
 
-```diff
 -<YearPicker {...props} />
 +<YearCalendar {...props} />
-```
 
-```diff
 -<ClockPicker {...props} />
 +<TimeClock {...props} />
 ```
