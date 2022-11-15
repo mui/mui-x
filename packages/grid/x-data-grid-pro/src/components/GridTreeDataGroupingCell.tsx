@@ -148,6 +148,10 @@ GridTreeDataGroupingCell.propTypes = {
    * If true, the cell is editable.
    */
   isEditable: PropTypes.bool,
+  /**
+   * The cell offset multiplier used for calculating cell offset (`rowNode.depth * offsetMultiplier` px).
+   * @default 2
+   */
   offsetMultiplier: PropTypes.number,
   /**
    * The row model of the row that the current cell belongs to.
