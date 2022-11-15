@@ -98,8 +98,8 @@ export interface PickersComponentsPropsList {
   MuiPickersToolbar: PickersToolbarProps<unknown, unknown>;
   MuiPickersToolbarButton: PickersToolbarButtonProps;
   MuiPickersToolbarText: ExportedPickersToolbarTextProps;
-  MuiPickersYear: ExportedPickersYearProps;
   MuiPickersViewLayout: PickersViewLayoutProps<unknown, CalendarOrClockPickerView>;
+  MuiPickersYear: ExportedPickersYearProps;
   MuiStaticDatePicker: StaticDatePickerProps<unknown>;
   MuiStaticDateTimePicker: StaticDateTimePickerProps<unknown>;
   MuiStaticNextDatePicker: StaticNextDatePickerProps<unknown>;

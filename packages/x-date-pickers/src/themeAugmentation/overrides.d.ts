@@ -73,8 +73,8 @@ export interface PickersComponentNameToClassKey {
   MuiPickersToolbar: PickersToolbarClassKey;
   MuiPickersToolbarButton: PickersToolbarButtonClassKey;
   MuiPickersToolbarText: PickersToolbarTextClassKey;
-  MuiPickersYear: PickersYearClassKey;
   MuiPickersViewLayout: PickersViewLayoutClassKey;
+  MuiPickersYear: PickersYearClassKey;
   MuiStaticDatePicker: never;
   MuiStaticDateTimePicker: never;
   MuiStaticNextDatePicker: never;
