@@ -14,7 +14,7 @@
     "disableMaskedInput": "Disable mask on the keyboard, this should be used rarely. Consider passing proper mask for your format.",
     "disableOpenPicker": "Do not render open picker button (renders only text field with validation).",
     "disablePast": "If <code>true</code> disable values after the current date for date components, time for time components and both for date time components.",
-    "displayWeekNumber": "If <code>true</code>, the week number will be display in the calendar. Needs to provide <code>getWeekNumber</code> if the adapter does not support <code>getWeekNumber</code>",
+    "displayWeekNumber": "If <code>true</code>, the week number will be display in the calendar.",
     "fixedWeekNumber": "Calendar will show more weeks in order to match this value. Put it to 6 for having fix number of week in Gregorian calendars",
     "getOpenDialogAriaText": "Get aria-label text for control that opens picker dialog. Aria-label text must include selected date. @DateIOType<br><br><strong>Signature:</strong><br><code>function(date: TDate | null, utils: MuiPickersAdapter&lt;TDate&gt;) =&gt; string</code><br><em>date:</em> The date from which we want to add an aria-text.<br><em>utils:</em> The utils to manipulate the date.<br> <em>returns</em> (string): The aria-text to render inside the dialog.",
     "InputAdornmentProps": "Props to pass to keyboard input adornment.",
