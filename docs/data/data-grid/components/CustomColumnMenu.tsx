@@ -9,13 +9,11 @@ import {
   GridColumnMenuFilterItem,
   GridColumnMenuSortItem,
   useGridApiRef,
-  gridProColumnMenuSlots,
-  gridProColumnMenuInitItems,
   DataGridPro,
 } from '@mui/x-data-grid-pro';
 import StarOutlineIcon from '@mui/icons-material/StarOutline';
 
-type PaletteColorKey = 'primary' | 'secondary';
+type PaletteColorKey = 'success' | 'warning';
 type OwnerState = {
   color: PaletteColorKey;
 };
@@ -24,14 +22,12 @@ const StyledGridColumnMenuContainer = styled(GridColumnMenuDefaultContainer)<{
   ownerState: OwnerState;
 }>(({ theme, ownerState }: { theme: Theme; ownerState: OwnerState }) => ({
   background: theme.palette[ownerState.color].main,
-  color: theme.palette[ownerState.color].contrastText,
 }));
 
 const StyledGridColumnMenu = styled(GridColumnMenuDefault)<{
   ownerState: OwnerState;
 }>(({ theme, ownerState }: { theme: Theme; ownerState: OwnerState }) => ({
   background: theme.palette[ownerState.color].main,
-  color: theme.palette[ownerState.color].contrastText,
 }));
 
 export function CustomColumnMenuComponent(props: GridColumnMenuProps & OwnerState) {
@@ -78,15 +74,13 @@ export function CustomColumnMenuComponent(props: GridColumnMenuProps & OwnerStat
       hideMenu={hideMenu}
       currentColumn={currentColumn}
       ownerState={{ color }}
-      slots={gridProColumnMenuSlots}
-      initialItems={gridProColumnMenuInitItems}
       {...other}
     />
   );
 }
 
 export default function CustomColumnMenu() {
-  const [color, setColor] = React.useState<PaletteColorKey>('primary');
+  const [color, setColor] = React.useState<PaletteColorKey>('success');
   const apiRef = useGridApiRef();
 
   return (
@@ -96,7 +90,7 @@ export default function CustomColumnMenu() {
         size="small"
         onClick={(event) => {
           event.stopPropagation();
-          setColor((current) => (current === 'primary' ? 'secondary' : 'primary'));
+          setColor((current) => (current === 'success' ? 'warning' : 'success'));
           apiRef.current.showColumnMenu('default');
         }}
       >

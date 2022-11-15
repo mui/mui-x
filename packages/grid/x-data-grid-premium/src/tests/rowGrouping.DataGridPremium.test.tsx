@@ -1565,7 +1565,6 @@ describe('<DataGridPremium /> - Row Grouping', () => {
       clock.runToLast();
       expect(screen.queryByRole('menu')).not.to.equal(null);
       const menuItem = screen.queryByRole('button', { name: 'Group by category1' });
-      console.log(menuItem, 'menu ====');
       fireEvent.click(menuItem);
       expect(apiRef.current.state.rowGrouping.model).to.deep.equal(['category1']);
     });

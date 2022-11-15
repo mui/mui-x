@@ -41,7 +41,6 @@ const GridColumnMenuDefaultContainer = React.forwardRef<
     <StyledMenuList
       id={id}
       ref={ref}
-      role="menu"
       className={clsx(gridClasses.menuList, className)}
       aria-labelledby={labelledby}
       onKeyDown={handleListKeyDown}

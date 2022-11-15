@@ -9,8 +9,6 @@ import {
   GridColumnMenuFilterItem,
   GridColumnMenuSortItem,
   useGridApiRef,
-  gridProColumnMenuSlots,
-  gridProColumnMenuInitItems,
   DataGridPro,
 } from '@mui/x-data-grid-pro';
 import StarOutlineIcon from '@mui/icons-material/StarOutline';
@@ -73,15 +71,13 @@ function CustomColumnMenuComponent(props) {
       hideMenu={hideMenu}
       currentColumn={currentColumn}
       ownerState={{ color }}
-      slots={gridProColumnMenuSlots}
-      initialItems={gridProColumnMenuInitItems}
       {...other}
     />
   );
 }
 
 CustomColumnMenuComponent.propTypes = {
-  color: PropTypes.oneOf(['primary', 'secondary']).isRequired,
+  color: PropTypes.oneOf(['success', 'warning']).isRequired,
   currentColumn: PropTypes.object.isRequired,
   hideMenu: PropTypes.func.isRequired,
 };
@@ -89,7 +85,7 @@ CustomColumnMenuComponent.propTypes = {
 export { CustomColumnMenuComponent };
 
 export default function CustomColumnMenu() {
-  const [color, setColor] = React.useState('primary');
+  const [color, setColor] = React.useState('success');
   const apiRef = useGridApiRef();
 
   return (
@@ -99,7 +95,7 @@ export default function CustomColumnMenu() {
         size="small"
         onClick={(event) => {
           event.stopPropagation();
-          setColor((current) => (current === 'primary' ? 'secondary' : 'primary'));
+          setColor((current) => (current === 'success' ? 'warning' : 'success'));
           apiRef.current.showColumnMenu('default');
         }}
       >

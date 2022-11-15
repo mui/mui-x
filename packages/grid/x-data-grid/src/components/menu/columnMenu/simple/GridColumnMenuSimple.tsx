@@ -1,7 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { GridColumnMenuSimpleContainer } from './GridColumnMenuSimpleContainer';
-import { GridColumnMenuProps } from '../GridColumnMenuProps';
 import { GridColumnMenuColumnsItemSimple } from './GridColumnMenuColumnsItemSimple';
 import { GridColumnMenuFilterItemSimple } from './GridColumnMenuFilterItemSimple';
 import { GridColumnMenuHideItemSimple } from './GridColumnMenuHideItemSimple';
