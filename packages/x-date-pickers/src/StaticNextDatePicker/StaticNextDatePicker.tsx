@@ -109,7 +109,6 @@ StaticNextDatePicker.propTypes = {
   displayStaticWrapperAs: PropTypes.oneOf(['desktop', 'mobile']),
   /**
    * If `true`, the week number will be display in the calendar.
-   * Needs to provide `getWeekNumber` if the adapter does not support `getWeekNumber`
    */
   displayWeekNumber: PropTypes.bool,
   /**
