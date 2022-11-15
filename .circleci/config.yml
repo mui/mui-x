@@ -205,7 +205,6 @@ jobs:
           destination: artifact-file
   test_types:
     <<: *defaults
-    resource_class: 'medium+'
     steps:
       - checkout
       - install_js
