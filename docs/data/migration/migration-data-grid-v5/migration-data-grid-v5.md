@@ -60,6 +60,14 @@ Below are described the steps you need to make to migrate from v5 to v6.
 
 - The `GridColDef['hide']` property was removed. Use `GridColDef['columnVisibility']` instead.
 
+### Column menu
+
+- The `GridColumnMenu` component was renamed to `GridColumnMenuDefault` with the new column menu design. For previous design, use `GridColumnMenuSimple`.
+- The `GridColumnMenuContainer` component was renamed to `GridColumnMenuDefaultContainer` with the new column menu design. For previous design, use `GridColumnMenuSimpleContainer`.
+- The column menu items `GridFilterMenuItem`, `HideGridColMenuItem`, `GridColumnsMenuItem`, `SortGridMenuItems` have been renamed to `GridColumnMenuFilterItem`, `GridColumnMenuHideItem`, `GridColumnMenuColumnsItem`, `SortGridMenuItems`.
+- `GridFilterItemProps` has been renamed to `GridColumnMenuItemProps`.
+- The column menu items for Pro and Premium packages `GridColumnPinningMenuItems`, `GridAggregationColumnMenuItem`, `GridRowGroupingColumnMenuItems` and `GridRowGroupableColumnMenuItems` have been renamed to `GridColumnMenuPinningItem`, `GridColumnMenuAggregationItem`, `GridColumnMenuRowGroupItem` and `GridColumnMenuRowUngroupItem` respectively.
+  
 ### Rows
 
 - The `GridRowParams['getValue']` property was removed. Use `params.row` instead.
