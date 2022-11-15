@@ -121,7 +121,7 @@ yargs(process.argv.slice(2))
         })
         .option('out-dir', { default: './build', type: 'string' })
         .option('verbose', { type: 'boolean' })
-        .option('ignore', { type: 'array' });
+        .option('ignore', { type: 'string', array: true });
     },
     handler: run,
   })
