@@ -17,21 +17,21 @@ import { PickerOnChangeFn, useViews } from '../internals/hooks/useViews';
 import { PickerSelectionState } from '../internals/hooks/usePickerState';
 import { useMeridiemMode } from '../internals/hooks/date-helpers-hooks';
 import { ClockPickerView } from '../internals/models';
-import { getClockPickerUtilityClass, ClockPickerClasses } from './clockPickerClasses';
+import { getTimeClockUtilityClass, TimeClockClasses } from './timeClockClasses';
 import { PickerViewRoot } from '../internals/components/PickerViewRoot';
 import { BaseTimeValidationProps, TimeValidationProps } from '../internals/hooks/validation/models';
 
-const useUtilityClasses = (ownerState: ClockPickerProps<any>) => {
+const useUtilityClasses = (ownerState: TimeClockProps<any>) => {
   const { classes } = ownerState;
   const slots = {
     root: ['root'],
     arrowSwitcher: ['arrowSwitcher'],
   };
 
-  return composeClasses(slots, getClockPickerUtilityClass, classes);
+  return composeClasses(slots, getTimeClockUtilityClass, classes);
 };
 
-export interface ExportedClockPickerProps<TDate>
+export interface ExportedTimeClockProps<TDate>
   extends TimeValidationProps<TDate>,
     BaseTimeValidationProps {
   /**
@@ -46,11 +46,11 @@ export interface ExportedClockPickerProps<TDate>
   ampmInClock?: boolean;
 }
 
-export interface ClockPickerSlotsComponent extends PickersArrowSwitcherSlotsComponent {}
+export interface TimeClockSlotsComponent extends PickersArrowSwitcherSlotsComponent {}
 
-export interface ClockPickerSlotsComponentsProps extends PickersArrowSwitcherSlotsComponentsProps {}
+export interface TimeClockSlotsComponentsProps extends PickersArrowSwitcherSlotsComponentsProps {}
 
-export interface ClockPickerProps<TDate> extends ExportedClockPickerProps<TDate> {
+export interface TimeClockProps<TDate> extends ExportedTimeClockProps<TDate> {
   className?: string;
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
@@ -63,17 +63,17 @@ export interface ClockPickerProps<TDate> extends ExportedClockPickerProps<TDate>
   /**
    * Override or extend the styles applied to the component.
    */
-  classes?: Partial<ClockPickerClasses>;
+  classes?: Partial<TimeClockClasses>;
   /**
    * Overrideable components.
    * @default {}
    */
-  components?: ClockPickerSlotsComponent;
+  components?: TimeClockSlotsComponent;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  componentsProps?: ClockPickerSlotsComponentsProps;
+  componentsProps?: TimeClockSlotsComponentsProps;
   /**
    * Selected date @DateIOType.
    */
@@ -114,27 +114,27 @@ export interface ClockPickerProps<TDate> extends ExportedClockPickerProps<TDate>
   readOnly?: boolean;
 }
 
-const ClockPickerRoot = styled(PickerViewRoot, {
-  name: 'MuiClockPicker',
+const TimeClockRoot = styled(PickerViewRoot, {
+  name: 'MuiTimeClock',
   slot: 'Root',
   overridesResolver: (props, styles) => styles.root,
-})<{ ownerState: ClockPickerProps<any> }>({
+})<{ ownerState: TimeClockProps<any> }>({
   display: 'flex',
   flexDirection: 'column',
 });
 
-const ClockPickerArrowSwitcher = styled(PickersArrowSwitcher, {
-  name: 'MuiClockPicker',
+const TimeCLockArrowSwitcher = styled(PickersArrowSwitcher, {
+  name: 'MuiTimeClock',
   slot: 'ArrowSwitcher',
   overridesResolver: (props, styles) => styles.arrowSwitcher,
-})<{ ownerState: ClockPickerProps<any> }>({
+})<{ ownerState: TimeClockProps<any> }>({
   position: 'absolute',
   right: 12,
   top: 15,
 });
 
-type ClockPickerComponent = (<TDate>(
-  props: ClockPickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
+type TimeClockComponent = (<TDate>(
+  props: TimeClockProps<TDate> & React.RefAttributes<HTMLDivElement>,
 ) => JSX.Element) & { propTypes?: any };
 
 // TODO v6: Drop showViewSwitcher once the legacy pickers are removed
@@ -142,15 +142,15 @@ type ClockPickerComponent = (<TDate>(
  *
  * API:
  *
- * - [ClockPicker API](https://mui.com/x/api/date-pickers/clock-picker/)
+ * - [TimeClock API](https://mui.com/x/api/date-pickers/time-clock/)
  */
-export const ClockPicker = React.forwardRef(function ClockPicker<TDate extends unknown>(
-  inProps: ClockPickerProps<TDate>,
+export const TimeClock = React.forwardRef(function TimeClock<TDate extends unknown>(
+  inProps: TimeClockProps<TDate>,
   ref: React.Ref<HTMLDivElement>,
 ) {
   const props = useThemeProps({
     props: inProps,
-    name: 'MuiClockPicker',
+    name: 'MuiTimeClock',
   });
 
   const {
@@ -381,14 +381,14 @@ export const ClockPicker = React.forwardRef(function ClockPicker<TDate extends u
   const classes = useUtilityClasses(ownerState);
 
   return (
-    <ClockPickerRoot
+    <TimeClockRoot
       ref={ref}
       className={clsx(classes.root, className)}
       ownerState={ownerState}
       sx={sx}
     >
       {showViewSwitcher && (
-        <ClockPickerArrowSwitcher
+        <TimeCLockArrowSwitcher
           className={classes.arrowSwitcher}
           components={components}
           componentsProps={componentsProps}
@@ -417,11 +417,11 @@ export const ClockPicker = React.forwardRef(function ClockPicker<TDate extends u
         readOnly={readOnly}
         {...viewProps}
       />
-    </ClockPickerRoot>
+    </TimeClockRoot>
   );
-}) as ClockPickerComponent;
+}) as TimeClockComponent;
 
-ClockPicker.propTypes = {
+TimeClock.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |

@@ -16,11 +16,6 @@ export interface PickerComponents<Theme = unknown> {
     styleOverrides?: ComponentsOverrides<Theme>['MuiClockNumber'];
     variants?: ComponentsVariants['MuiClockNumber'];
   };
-  MuiClockPicker?: {
-    defaultProps?: ComponentsProps['MuiClockPicker'];
-    styleOverrides?: ComponentsOverrides<Theme>['MuiClockPicker'];
-    variants?: ComponentsVariants['MuiClockPicker'];
-  };
   MuiClockPointer?: {
     defaultProps?: ComponentsProps['MuiClockPointer'];
     styleOverrides?: ComponentsOverrides<Theme>['MuiClockPointer'];
@@ -235,6 +230,11 @@ export interface PickerComponents<Theme = unknown> {
     defaultProps?: ComponentsProps['MuiStaticTimePicker'];
     styleOverrides?: ComponentsOverrides<Theme>['MuiStaticTimePicker'];
     variants?: ComponentsVariants['MuiStaticTimePicker'];
+  };
+  MuiTimeClock?: {
+    defaultProps?: ComponentsProps['MuiTimeClock'];
+    styleOverrides?: ComponentsOverrides<Theme>['MuiTimeClock'];
+    variants?: ComponentsVariants['MuiTimeClock'];
   };
   MuiTimePickerToolbar?: {
     defaultProps?: ComponentsProps['MuiTimePickerToolbar'];

@@ -3,20 +3,20 @@ import {
   unstable_generateUtilityClasses as generateUtilityClasses,
 } from '@mui/utils';
 
-export interface ClockPickerClasses {
+export interface TimeClockClasses {
   /** Styles applied to the root element. */
   root: string;
   /** Styles applied to the arrowSwitcher element. */
   arrowSwitcher: string;
 }
 
-export type ClockPickerClassKey = keyof ClockPickerClasses;
+export type TimeClockClassKey = keyof TimeClockClasses;
 
-export function getClockPickerUtilityClass(slot: string) {
-  return generateUtilityClass('MuiClockPicker', slot);
+export function getTimeClockUtilityClass(slot: string) {
+  return generateUtilityClass('MuiTimeClock', slot);
 }
 
-export const clockPickerClasses: ClockPickerClasses = generateUtilityClasses('MuiClockPicker', [
+export const timeClockClasses: TimeClockClasses = generateUtilityClasses('MuiTimeClock', [
   'root',
   'arrowSwitcher',
 ]);
