@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ownerDocument } from '@mui/material/utils';
+import { unstable_ownerDocument as ownerDocument } from '@mui/utils';
 import { GridEventListener, GridEventLookup } from '../../../models/events';
 import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridFocusApi } from '../../../models/api/gridFocusApi';

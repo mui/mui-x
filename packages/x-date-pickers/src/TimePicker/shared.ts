@@ -2,10 +2,10 @@ import * as React from 'react';
 import { useThemeProps } from '@mui/material/styles';
 import { Clock } from '../internals/components/icons';
 import {
-  ClockPickerSlotsComponent,
-  ClockPickerSlotsComponentsProps,
-  ExportedClockPickerProps,
-} from '../ClockPicker/ClockPicker';
+  TimeClockSlotsComponent,
+  TimeClockSlotsComponentsProps,
+  ExportedTimeClockProps,
+} from '../TimeClock/TimeClock';
 import { useLocaleText, useUtils } from '../internals/hooks/useUtils';
 import { ValidationCommonProps } from '../internals/hooks/validation/useValidation';
 import { TimeValidationError } from '../internals/hooks/validation/useTimeValidation';
@@ -23,7 +23,7 @@ import {
 import { LocalizedComponent, PickersInputLocaleText } from '../locales/utils/pickersLocaleTextApi';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
 
-export interface BaseTimePickerSlotsComponent<TDate> extends ClockPickerSlotsComponent {
+export interface BaseTimePickerSlotsComponent<TDate> extends TimeClockSlotsComponent {
   /**
    * Custom component for the toolbar rendered above the views.
    * @default TimePickerToolbar
@@ -31,12 +31,12 @@ export interface BaseTimePickerSlotsComponent<TDate> extends ClockPickerSlotsCom
   Toolbar?: React.JSXElementConstructor<TimePickerToolbarProps<TDate>>;
 }
 
-export interface BaseTimePickerSlotsComponentsProps extends ClockPickerSlotsComponentsProps {
+export interface BaseTimePickerSlotsComponentsProps extends TimeClockSlotsComponentsProps {
   toolbar?: ExportedTimePickerToolbarProps;
 }
 
 export interface BaseTimePickerProps<TDate>
-  extends ExportedClockPickerProps<TDate>,
+  extends ExportedTimeClockProps<TDate>,
     BasePickerProps<TDate | null, TDate>,
     ValidationCommonProps<TimeValidationError, TDate | null>,
     ExportedDateInputProps<TDate> {

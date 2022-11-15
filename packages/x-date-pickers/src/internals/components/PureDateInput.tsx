@@ -2,7 +2,7 @@ import * as React from 'react';
 import { TextFieldProps as MuiTextFieldPropsType } from '@mui/material/TextField';
 import { IconButtonProps } from '@mui/material/IconButton';
 import { InputAdornmentProps } from '@mui/material/InputAdornment';
-import { useEventCallback } from '@mui/material/utils';
+import { unstable_useEventCallback as useEventCallback } from '@mui/utils';
 import { onSpaceOrEnter } from '../utils/utils';
 import { useLocaleText, useUtils } from '../hooks/useUtils';
 import { getDisplayDate } from '../utils/text-field-helper';

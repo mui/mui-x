@@ -1,4 +1,4 @@
-export * from './ClockPicker';
+export * from './TimeClock';
 export * from './DatePicker';
 export * from './DateTimePicker';
 export * from './DesktopDatePicker';
