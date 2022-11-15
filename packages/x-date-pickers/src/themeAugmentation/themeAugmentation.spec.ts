@@ -455,6 +455,21 @@ createTheme({
         },
       },
     },
+    MuiPickersViewLayout: {
+      defaultProps: {
+        disabled: true,
+        // @ts-expect-error invalid MuiPickersViewLayout prop
+        someRandomProp: true,
+      },
+      styleOverrides: {
+        root: {
+          backgroundColor: 'red',
+        },
+        content: {
+          backgroundColor: 'red',
+        },
+      },
+    },
     MuiPickersYear: {
       defaultProps: {
         classes: { yearButton: 'test' },
