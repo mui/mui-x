@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { DataGridPro, GridEventListener, useGridApiRef } from '@mui/x-data-grid-pro';
+import { DataGrid, GridEventListener, useGridApiRef } from '@mui/x-data-grid';
 import { useMovieData } from '@mui/x-data-grid-generator';
 import Alert from '@mui/material/Alert';
 import Stack from '@mui/material/Stack';
@@ -22,7 +22,7 @@ export default function SubscribeToEventsApiRef() {
   return (
     <Stack spacing={2} sx={{ width: '100%' }}>
       <Box sx={{ height: 300, width: '100%' }}>
-        <DataGridPro apiRef={apiRef} {...data} />
+        <DataGrid apiRef={apiRef} {...data} />
       </Box>
       {message && <Alert severity="info">{message}</Alert>}
     </Stack>
