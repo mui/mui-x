@@ -85,7 +85,7 @@ export interface DateRangePickerViewProps<TDate>
     PickerStatePickerProps<DateRange<TDate>>,
     Required<BaseDateValidationProps<TDate>> {
   calendars: 1 | 2 | 3;
-  open?: boolean;
+  open: boolean;
   DateInputProps: DateRangePickerInputProps<TDate>;
 }
 
