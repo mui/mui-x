@@ -3,43 +3,39 @@ import { expect } from 'chai';
 import { isWeekend } from 'date-fns';
 import { Unstable_StaticNextDateRangePicker as StaticNextDateRangePicker } from '@mui/x-date-pickers-pro/StaticNextDateRangePicker';
 import { describeConformance, screen } from '@mui/monorepo/test/utils';
-import {
-  wrapPickerMount,
-  createPickerRenderer,
-  adapterToUse,
-} from 'test/utils/pickers-utils';
+import { wrapPickerMount, createPickerRenderer, adapterToUse } from 'test/utils/pickers-utils';
 
 describe('<StaticNextDateRangePicker />', () => {
   const { render } = createPickerRenderer({ clock: 'fake' });
 
-  describeConformance(
-    <StaticNextDateRangePicker />,
-    () => ({
-      classes: {},
-      muiName: 'MuiStaticDateRangePicker',
-      wrapMount: wrapPickerMount,
-      refInstanceof: undefined,
-      skip: [
-        'componentProp',
-        'componentsProp',
-        'themeDefaultProps',
-        'themeStyleOverrides',
-        'themeVariants',
-        'mergeClassName',
-        'propsSpread',
-        'refForwarding',
-        'rootClass',
-        'reactTestRenderer',
-      ],
-    }),
-  );
+  describeConformance(<StaticNextDateRangePicker />, () => ({
+    classes: {},
+    muiName: 'MuiStaticDateRangePicker',
+    wrapMount: wrapPickerMount,
+    refInstanceof: undefined,
+    skip: [
+      'componentProp',
+      'componentsProp',
+      'themeDefaultProps',
+      'themeStyleOverrides',
+      'themeVariants',
+      'mergeClassName',
+      'propsSpread',
+      'refForwarding',
+      'rootClass',
+      'reactTestRenderer',
+    ],
+  }));
 
   it('allows disabling dates', () => {
     render(
       <StaticNextDateRangePicker
         minDate={adapterToUse.date(new Date(2005, 0, 1))}
         shouldDisableDate={isWeekend}
-        defaultValue={[adapterToUse.date(new Date(2018, 0, 1)), adapterToUse.date(new Date(2018, 0, 31))]}
+        defaultValue={[
+          adapterToUse.date(new Date(2018, 0, 1)),
+          adapterToUse.date(new Date(2018, 0, 31)),
+        ]}
       />,
     );
 
@@ -53,7 +49,10 @@ describe('<StaticNextDateRangePicker />', () => {
   it('should render the correct a11y tree structure', () => {
     render(
       <StaticNextDateRangePicker
-        defaultValue={[adapterToUse.date(new Date(2018, 0, 1)), adapterToUse.date(new Date(2018, 0, 31))]}
+        defaultValue={[
+          adapterToUse.date(new Date(2018, 0, 1)),
+          adapterToUse.date(new Date(2018, 0, 31)),
+        ]}
       />,
     );
 
@@ -67,11 +66,7 @@ describe('<StaticNextDateRangePicker />', () => {
 
   describe('localization', () => {
     it('should respect the `localeText` prop', () => {
-      render(
-        <StaticNextDateRangePicker
-          localeText={{ cancelButtonLabel: 'Custom cancel' }}
-        />,
-      );
+      render(<StaticNextDateRangePicker localeText={{ cancelButtonLabel: 'Custom cancel' }} />);
 
       expect(screen.queryByText('Custom cancel')).not.to.equal(null);
     });

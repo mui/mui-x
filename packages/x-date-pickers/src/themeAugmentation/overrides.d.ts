@@ -27,7 +27,7 @@ import {
   PickersToolbarClassKey,
   PickersToolbarTextClassKey,
 } from '../internals';
-import { PickerViewLayoutClassKey } from '../internals/components/PickerViewLayout';
+import { PickersViewLayoutClassKey } from '../internals/components/PickersViewLayout';
 
 // prettier-ignore
 export interface PickersComponentNameToClassKey {
@@ -73,8 +73,8 @@ export interface PickersComponentNameToClassKey {
   MuiPickersToolbar: PickersToolbarClassKey;
   MuiPickersToolbarButton: PickersToolbarButtonClassKey;
   MuiPickersToolbarText: PickersToolbarTextClassKey;
+  MuiPickersViewLayout: PickersViewLayoutClassKey;
   MuiPickersYear: PickersYearClassKey;
-  MuiPickerViewLayout: PickerViewLayoutClassKey;
   MuiStaticDatePicker: never;
   MuiStaticDateTimePicker: never;
   MuiStaticNextDatePicker: never;

@@ -24,8 +24,10 @@ export type {
   PickersArrowSwitcherSlotsComponentsProps,
 } from './components/PickersArrowSwitcher';
 export { PickersModalDialog } from './components/PickersModalDialog';
-export type {   PickersModalDialogSlotsComponent,
-  PickersModalDialogSlotsComponentsProps } from './components/PickersModalDialog';
+export type {
+  PickersModalDialogSlotsComponent,
+  PickersModalDialogSlotsComponentsProps,
+} from './components/PickersModalDialog';
 export { PickersPopper } from './components/PickersPopper';
 export type {
   PickersPopperSlotsComponent,
@@ -39,7 +41,10 @@ export type {
 } from './components/PickerStaticWrapper/PickerStaticWrapper';
 export { PickersToolbar } from './components/PickersToolbar';
 export { PickerViewLayout } from './components/PickerViewLayout';
-export type { ExportedPickerViewLayoutSlotsComponent, ExportedPickerViewLayoutSlotsComponentsProps } from './components/PickerViewLayout';
+export type {
+  ExportedPickerViewLayoutSlotsComponent,
+  ExportedPickerViewLayoutSlotsComponentsProps,
+} from './components/PickerViewLayout';
 export type { PickersToolbarProps } from './components/PickersToolbar';
 export { pickersToolbarClasses } from './components/pickersToolbarClasses';
 export type {
@@ -98,7 +103,7 @@ export type { UsePickerValueNonStaticProps } from './hooks/usePicker/usePickerVa
 export type { UsePickerViewsNonStaticProps } from './hooks/usePicker/usePickerViews';
 export type { PickerStateProps, PickerStatePickerProps } from './hooks/usePickerState';
 export type { PickerStateValueManager, PickerSelectionState } from './hooks/usePickerState';
-export { useStaticPicker } from './hooks/useStaticPicker'
+export { useStaticPicker } from './hooks/useStaticPicker';
 export type {
   StaticOnlyPickerProps,
   UseStaticPickerSlotsComponent,

@@ -38,7 +38,7 @@ import {
   ExportedPickersToolbarTextProps,
 } from '../internals';
 import { CalendarOrClockPickerView } from '../internals/models';
-import { PickerViewLayoutProps } from '../internals/components/PickerViewLayout';
+import { PickersViewLayoutProps } from '../internals/components/PickersViewLayout';
 
 import { NextDatePickerProps } from '../NextDatePicker';
 import { DesktopNextDatePickerProps } from '../DesktopNextDatePicker';
@@ -98,8 +98,8 @@ export interface PickersComponentsPropsList {
   MuiPickersToolbar: PickersToolbarProps<unknown, unknown>;
   MuiPickersToolbarButton: PickersToolbarButtonProps;
   MuiPickersToolbarText: ExportedPickersToolbarTextProps;
+  MuiPickersViewLayout: PickersViewLayoutProps<unknown, CalendarOrClockPickerView>;
   MuiPickersYear: ExportedPickersYearProps;
-  MuiPickerViewLayout: PickerViewLayoutProps<unknown, CalendarOrClockPickerView>;
   MuiStaticDatePicker: StaticDatePickerProps<unknown>;
   MuiStaticDateTimePicker: StaticDateTimePickerProps<unknown>;
   MuiStaticNextDatePicker: StaticNextDatePickerProps<unknown>;

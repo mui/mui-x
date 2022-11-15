@@ -9,26 +9,23 @@ import { createPickerRenderer, stubMatchMedia, wrapPickerMount } from 'test/util
 describe('<NextDateRangePicker />', () => {
   const { render, clock } = createPickerRenderer({ clock: 'fake' });
 
-  describeConformance(
-    <NextDateRangePicker />,
-    () => ({
-      classes: {},
-      muiName: 'MuiDateRangePicker',
-      wrapMount: wrapPickerMount,
-      refInstanceof: window.HTMLDivElement,
-      skip: [
-        'componentProp',
-        'componentsProp',
-        'themeDefaultProps',
-        'themeStyleOverrides',
-        'themeVariants',
-        'mergeClassName',
-        'propsSpread',
-        'rootClass',
-        'reactTestRenderer',
-      ],
-    }),
-  );
+  describeConformance(<NextDateRangePicker />, () => ({
+    classes: {},
+    muiName: 'MuiDateRangePicker',
+    wrapMount: wrapPickerMount,
+    refInstanceof: window.HTMLDivElement,
+    skip: [
+      'componentProp',
+      'componentsProp',
+      'themeDefaultProps',
+      'themeStyleOverrides',
+      'themeVariants',
+      'mergeClassName',
+      'propsSpread',
+      'rootClass',
+      'reactTestRenderer',
+    ],
+  }));
 
   describeValidation(NextDateRangePicker, () => ({
     render,

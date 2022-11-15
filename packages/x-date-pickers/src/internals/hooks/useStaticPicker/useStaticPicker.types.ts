@@ -1,8 +1,8 @@
 import * as React from 'react';
 import {
-  ExportedPickerViewLayoutSlotsComponent,
-  ExportedPickerViewLayoutSlotsComponentsProps,
-} from '../../components/PickerViewLayout';
+  ExportedPickersViewLayoutSlotsComponent,
+  ExportedPickersViewLayoutSlotsComponentsProps,
+} from '../../components/PickersViewLayout';
 import { CalendarOrClockPickerView } from '../../models';
 import { BaseNextPickerProps } from '../../models/props/basePickerProps';
 import { UsePickerParams } from '../usePicker';
@@ -12,11 +12,11 @@ import {
 } from '../../components/wrappers/WrapperProps';
 
 export interface UseStaticPickerSlotsComponent
-  extends ExportedPickerViewLayoutSlotsComponent,
+  extends ExportedPickersViewLayoutSlotsComponent,
     Pick<PickersSlotsComponent, 'PaperContent'> {}
 
 export interface UseStaticPickerSlotsComponentsProps
-  extends ExportedPickerViewLayoutSlotsComponentsProps,
+  extends ExportedPickersViewLayoutSlotsComponentsProps,
     Pick<PickersSlotsComponentsProps, 'paperContent'> {}
 
 export interface StaticOnlyPickerProps {

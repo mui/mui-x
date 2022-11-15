@@ -10,31 +10,28 @@ import {
   adapterToUse,
   openPicker,
 } from 'test/utils/pickers-utils';
-import {DateRange} from "@mui/x-date-pickers-pro";
+import { DateRange } from '@mui/x-date-pickers-pro';
 
 describe('<MobileNextDateRangePicker />', () => {
   const { render, clock } = createPickerRenderer({ clock: 'fake' });
 
-  describeConformance(
-    <MobileNextDateRangePicker />,
-    () => ({
-      classes: {},
-      muiName: 'MuiMobileDateRangePicker',
-      wrapMount: wrapPickerMount,
-      refInstanceof: window.HTMLDivElement,
-      skip: [
-        'componentProp',
-        'componentsProp',
-        'themeDefaultProps',
-        'themeStyleOverrides',
-        'themeVariants',
-        'mergeClassName',
-        'propsSpread',
-        'rootClass',
-        'reactTestRenderer',
-      ],
-    }),
-  );
+  describeConformance(<MobileNextDateRangePicker />, () => ({
+    classes: {},
+    muiName: 'MuiMobileDateRangePicker',
+    wrapMount: wrapPickerMount,
+    refInstanceof: window.HTMLDivElement,
+    skip: [
+      'componentProp',
+      'componentsProp',
+      'themeDefaultProps',
+      'themeStyleOverrides',
+      'themeVariants',
+      'mergeClassName',
+      'propsSpread',
+      'rootClass',
+      'reactTestRenderer',
+    ],
+  }));
 
   describeValidation(MobileNextDateRangePicker, () => ({
     render,
@@ -308,11 +305,7 @@ describe('<MobileNextDateRangePicker />', () => {
 
   describe('localization', () => {
     it('should respect the `localeText` prop', () => {
-      render(
-        <MobileNextDateRangePicker
-          localeText={{ cancelButtonLabel: 'Custom cancel' }}
-        />,
-      );
+      render(<MobileNextDateRangePicker localeText={{ cancelButtonLabel: 'Custom cancel' }} />);
       openPicker({ type: 'date-range', variant: 'mobile', initialFocus: 'start' });
 
       expect(screen.queryByText('Custom cancel')).not.to.equal(null);

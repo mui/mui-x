@@ -11,13 +11,14 @@ import {
   UsePickerValueNonStaticProps,
   UsePickerViewsNonStaticProps,
   ExportedPickerViewLayoutSlotsComponent,
-  ExportedPickerViewLayoutSlotsComponentsProps
+  ExportedPickerViewLayoutSlotsComponentsProps,
 } from '@mui/x-date-pickers/internals';
 import { DateRange } from '../../models';
 import { BaseMultiInputFieldProps } from '../../models/fields';
 
-
-export interface UseMobileRangePickerSlotsComponent extends PickersModalDialogSlotsComponent, ExportedPickerViewLayoutSlotsComponent {
+export interface UseMobileRangePickerSlotsComponent
+  extends PickersModalDialogSlotsComponent,
+    ExportedPickerViewLayoutSlotsComponent {
   Field: React.ElementType;
   Input?: React.ElementType<TextFieldProps>;
 }
@@ -27,7 +28,8 @@ export interface UseMobileRangePickerSlotsComponentsProps<TDate>
   extends Pick<
       PickersModalDialogSlotsComponentsProps,
       'dialog' | 'mobilePaper' | 'mobileTransition'
-      >, ExportedPickerViewLayoutSlotsComponentsProps {
+    >,
+    ExportedPickerViewLayoutSlotsComponentsProps {
   field?: SlotComponentProps<
     React.ElementType<BaseMultiInputFieldProps<DateRange<TDate>, unknown>>,
     {},
