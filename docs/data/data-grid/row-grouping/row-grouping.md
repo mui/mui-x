@@ -217,7 +217,7 @@ Use the `setRowChildrenExpansion` method on `apiRef` to programmatically set the
 
 ### Customize grouping cell indent
 
-To increase the cell indent you can use `offsetMultiplier` prop exposed by `<GridTreeDataGroupingCell />` component and use it as `groupingColDef` renderCell.
+To change the default cell indent you can pass the `offsetMultiplier` prop to the `<GridTreeDataGroupingCell />` component and use it as `groupingColDef.renderCell`:
 
 ```tsx
 const groupingColDef = {
