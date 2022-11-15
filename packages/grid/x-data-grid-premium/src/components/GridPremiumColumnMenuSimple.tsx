@@ -1,5 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import Divider from '@mui/material/Divider';
 import {
   GridColumnMenuSimpleRoot,
   GridColumnMenuDefaultProps,
@@ -15,18 +16,37 @@ import { GridColumnMenuRowUngroupItemSimple } from './GridColumnMenuRowUngroupIt
 const GroupingItem = (props: GridColumnMenuItemProps) => {
   const { column } = props;
   if (isGroupingColumn(column.field)) {
-    return <GridColumnMenuRowGroupItemSimple {...props} />;
+    return (
+      <React.Fragment>
+        <Divider />
+        <GridColumnMenuRowGroupItemSimple {...props} />
+      </React.Fragment>
+    );
   }
   if (column.groupable) {
-    return <GridColumnMenuRowUngroupItemSimple {...props} />;
+    return (
+      <React.Fragment>
+        <Divider />
+        <GridColumnMenuRowUngroupItemSimple {...props} />
+      </React.Fragment>
+    );
   }
   return null;
 };
 
+const AggregationItem = (props: GridColumnMenuItemProps) => {
+  return (
+    <React.Fragment>
+      <Divider />
+      <GridColumnMenuAggregationItemSimple {...props} />
+    </React.Fragment>
+  );
+};
+
 export const gridPremiumColumnMenuSimpleSlots = {
   ...gridProColumnMenuSimpleSlots,
-  ColumnMenuAggregationItem: { component: GridColumnMenuAggregationItemSimple, priority: 32 },
-  ColumnMenuGroupingItem: { component: GroupingItem, priority: 22 },
+  ColumnMenuAggregationItem: { component: AggregationItem, priority: 37 },
+  ColumnMenuGroupingItem: { component: GroupingItem, priority: 33 },
 };
 
 export const gridPremiumColumnMenuSimpleInitItems = [...gridProColumnMenuSimpleInitItems];

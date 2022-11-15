@@ -19,7 +19,7 @@ const PinningWithDivider = (props: GridColumnMenuItemProps) => (
 
 export const gridProColumnMenuSimpleSlots = {
   ...gridColumnMenuSimpleSlots,
-  ColumnMenuPinningItem: { component: PinningWithDivider, priority: 40 },
+  ColumnMenuPinningItem: { component: PinningWithDivider, priority: 45 },
 };
 
 export const gridProColumnMenuSimpleInitItems = [...gridColumnMenuSimpleInitItems];

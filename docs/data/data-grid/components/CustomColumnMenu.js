@@ -1,4 +1,5 @@
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import Box from '@mui/material/Box';
 import { styled } from '@mui/material/styles';
 import Button from '@mui/material/Button';
@@ -24,7 +25,7 @@ const StyledGridColumnMenu = styled(GridColumnMenuDefault)(
   }),
 );
 
-export function CustomColumnMenuComponent(props) {
+function CustomColumnMenuComponent(props) {
   const { hideMenu, currentColumn, color, ...other } = props;
 
   if (currentColumn.field === 'name') {
@@ -72,6 +73,14 @@ export function CustomColumnMenuComponent(props) {
     />
   );
 }
+
+CustomColumnMenuComponent.propTypes = {
+  color: PropTypes.oneOf(['success', 'warning']).isRequired,
+  currentColumn: PropTypes.object.isRequired,
+  hideMenu: PropTypes.func.isRequired,
+};
+
+export { CustomColumnMenuComponent };
 
 export default function CustomColumnMenu() {
   const [color, setColor] = React.useState('success');
