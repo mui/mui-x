@@ -15,8 +15,8 @@
   "scripts": {
     "test": "cd ../../ && cross-env NODE_ENV=test mocha 'packages/x-codemod/**/*.test.js'",
     "prebuild": "rimraf build",
-    "build": "node ../../scripts/build.mjs node --out-dir ./build --ignore 'src/**/*.test' && cpy README.md build && cpy package.json build && cpy codemod.js build",
-    "release": "yarn build && npm publish"
+    "copy-files": "cpy README.md build && cpy package.json build && cpy codemod.js build",
+    "build": "node ../../scripts/build.mjs node --out-dir ./build --ignore 'src/**/*.test' && yarn copy-files"
   },
   "repository": {
     "type": "git",
