@@ -67,7 +67,7 @@ Below are described the steps you need to make to migrate from v5 to v6.
 - The column menu items `GridFilterMenuItem`, `HideGridColMenuItem`, `GridColumnsMenuItem`, `SortGridMenuItems` have been renamed to `GridColumnMenuFilterItem`, `GridColumnMenuHideItem`, `GridColumnMenuColumnsItem`, `SortGridMenuItems`.
 - `GridFilterItemProps` has been renamed to `GridColumnMenuItemProps`.
 - The column menu items for Pro and Premium packages `GridColumnPinningMenuItems`, `GridAggregationColumnMenuItem`, `GridRowGroupingColumnMenuItems` and `GridRowGroupableColumnMenuItems` have been renamed to `GridColumnMenuPinningItem`, `GridColumnMenuAggregationItem`, `GridColumnMenuRowGroupItem` and `GridColumnMenuRowUngroupItem` respectively.
-  
+
 ### Rows
 
 - The `GridRowParams['getValue']` property was removed. Use `params.row` instead.
