@@ -1,11 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import {
-  GridColumnMenuDefaultRoot,
-  GridColumnMenuDefaultProps,
-  gridColumnMenuSlots,
-  gridColumnMenuInitItems,
-} from '@mui/x-data-grid';
+import { GridColumnMenuDefault, GridColumnMenuProps, gridColumnMenuSlots } from '@mui/x-data-grid';
 import { GridColumnMenuPinningItem } from './GridColumnMenuPinningItem';
 
 export const gridProColumnMenuSlots = {
@@ -13,17 +8,10 @@ export const gridProColumnMenuSlots = {
   ColumnMenuPinningItem: { component: GridColumnMenuPinningItem, priority: 5 },
 };
 
-export const gridProColumnMenuInitItems = [...gridColumnMenuInitItems];
-
-const GridProColumnMenuDefault = React.forwardRef<HTMLUListElement, GridColumnMenuDefaultProps>(
-  function GridProColumnMenuDefault(props: GridColumnMenuDefaultProps, ref) {
+const GridProColumnMenuDefault = React.forwardRef<HTMLUListElement, GridColumnMenuProps>(
+  function GridProColumnMenuDefault(props: GridColumnMenuProps, ref) {
     return (
-      <GridColumnMenuDefaultRoot
-        ref={ref}
-        {...props}
-        slots={gridProColumnMenuSlots}
-        initialItems={gridProColumnMenuInitItems}
-      />
+      <GridColumnMenuDefault ref={ref} slots={props.slots || gridProColumnMenuSlots} {...props} />
     );
   },
 );

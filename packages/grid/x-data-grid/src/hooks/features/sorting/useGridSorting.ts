@@ -116,6 +116,17 @@ export const useGridSorting = (
     [apiRef, props.sortingOrder],
   );
 
+  const addColumnMenuItem = React.useCallback<GridPipeProcessor<'columnMenu'>>(
+    (columnMenuItems, { column, slots }) => {
+      if (column == null || column.sortable === false) {
+        return columnMenuItems;
+      }
+
+      return [...columnMenuItems, slots.ColumnMenuSortItem];
+    },
+    [],
+  );
+
   /**
    * API METHODS
    */
@@ -330,6 +341,8 @@ export const useGridSorting = (
     },
     [apiRef],
   );
+
+  useGridRegisterPipeProcessor(apiRef, 'columnMenu', addColumnMenuItem);
 
   useGridApiEventHandler(apiRef, 'columnHeaderClick', handleColumnHeaderClick);
   useGridApiEventHandler(apiRef, 'columnHeaderKeyDown', handleColumnHeaderKeyDown);

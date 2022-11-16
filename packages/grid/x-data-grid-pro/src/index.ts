@@ -27,4 +27,9 @@ export type { DataGridProProps, GridExperimentalProFeatures } from './models/dat
 export { useGridApiContext, useGridApiRef, useGridRootProps } from './typeOverloads/reexports';
 export type { GridApi, GridInitialState, GridState } from './typeOverloads/reexports';
 
-export { GridColumnMenuDefault, GridColumnMenuSimple } from './components/reexports';
+export {
+  GridColumnMenuDefault,
+  gridColumnMenuSlots,
+  GridColumnMenuSimple,
+  gridColumnMenuSimpleSlots,
+} from './components/reexports';

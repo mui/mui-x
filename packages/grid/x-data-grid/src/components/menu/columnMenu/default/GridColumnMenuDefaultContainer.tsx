@@ -4,7 +4,7 @@ import * as React from 'react';
 import MenuList from '@mui/material/MenuList';
 import { styled } from '@mui/material/styles';
 import { isHideMenuKey, isTabKey } from '../../../../utils/keyboardUtils';
-import { GridColumnMenuProps } from '../GridColumnMenuProps';
+import { GridColumnMenuContainerProps } from '../GridColumnMenuProps';
 import { gridClasses } from '../../../../constants/gridClasses';
 
 const StyledMenuList = styled(MenuList)(({ theme }) => ({
@@ -13,16 +13,10 @@ const StyledMenuList = styled(MenuList)(({ theme }) => ({
   minWidth: theme.typography.pxToRem(248),
 }));
 
-export interface GridColumnMenuContainerProps
-  extends Pick<
-    GridColumnMenuProps,
-    'hideMenu' | 'currentColumn' | 'open' | 'id' | 'labelledby' | 'className' | 'children'
-  > {}
-
 const GridColumnMenuDefaultContainer = React.forwardRef<
   HTMLUListElement,
   GridColumnMenuContainerProps
->(function GridColumnMenuDefaultContainer(props: GridColumnMenuContainerProps, ref) {
+>(function GridColumnMenuDefaultContainer(props, ref) {
   const { hideMenu, currentColumn, id, labelledby, className, children, open, ...other } = props;
 
   const handleListKeyDown = React.useCallback(

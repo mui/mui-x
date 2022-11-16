@@ -23,7 +23,12 @@ export type { GridExportFormat, GridExportExtension } from './models/gridExport'
 /**
  * Reexportable components.
  */
-export { GridColumnMenuDefault, GridColumnMenuSimple } from './components/reexportable';
+export {
+  GridColumnMenuDefault,
+  gridColumnMenuSlots,
+  GridColumnMenuSimple,
+  gridColumnMenuSimpleSlots,
+} from './components/reexportable';
 
 /**
  * The full grid API.

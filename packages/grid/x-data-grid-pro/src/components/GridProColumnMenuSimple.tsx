@@ -2,10 +2,9 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import Divider from '@mui/material/Divider';
 import {
-  GridColumnMenuSimpleRoot,
-  GridColumnMenuDefaultProps,
+  GridColumnMenuSimple,
+  GridColumnMenuProps,
   gridColumnMenuSimpleSlots,
-  gridColumnMenuSimpleInitItems,
   GridColumnMenuItemProps,
 } from '@mui/x-data-grid';
 import { GridColumnMenuPinningItemSimple } from './GridColumnMenuPinningItemSimple';
@@ -22,16 +21,13 @@ export const gridProColumnMenuSimpleSlots = {
   ColumnMenuPinningItem: { component: PinningWithDivider, priority: 45 },
 };
 
-export const gridProColumnMenuSimpleInitItems = [...gridColumnMenuSimpleInitItems];
-
-const GridProColumnMenuSimple = React.forwardRef<HTMLUListElement, GridColumnMenuDefaultProps>(
+const GridProColumnMenuSimple = React.forwardRef<HTMLUListElement, GridColumnMenuProps>(
   function GridProColumnMenuDefault(props, ref) {
     return (
-      <GridColumnMenuSimpleRoot
+      <GridColumnMenuSimple
         ref={ref}
         {...props}
-        slots={gridProColumnMenuSimpleSlots}
-        initialItems={gridProColumnMenuSimpleInitItems}
+        slots={props.slots || gridProColumnMenuSimpleSlots}
       />
     );
   },
