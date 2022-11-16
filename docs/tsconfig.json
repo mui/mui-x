@@ -11,6 +11,6 @@
     "incremental": true,
     "noImplicitAny": true
   },
-  "include": ["pages/**/*.ts*", "data/**/*"],
+  "include": ["pages/**/*.ts*", "data/**/*", "../node_modules/@mui/material/themeCssVarsAugmentation"],
   "exclude": ["docs/.next", "docs/export"]
 }
