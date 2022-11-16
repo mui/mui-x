@@ -6,13 +6,13 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 const theme = createTheme({});
 
 function App() {
-  return (<>
+  return (
     <ThemeProvider theme={theme}>
       <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="fr">
         test
       </LocalizationProvider>
     </ThemeProvider>
-  </>);
+  );
 }
 
 export default App;

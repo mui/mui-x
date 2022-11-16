@@ -7,13 +7,11 @@ const theme = createTheme({});
 
 function App() {
   return (
-    <>
-      <ThemeProvider theme={theme}>
-        <LocalizationProvider dateAdapter={AdapterDayjs} locale="fr">
-          test
-        </LocalizationProvider>
-      </ThemeProvider>
-    </>
+    <ThemeProvider theme={theme}>
+      <LocalizationProvider dateAdapter={AdapterDayjs} locale="fr">
+        test
+      </LocalizationProvider>
+    </ThemeProvider>
   );
 }
 
