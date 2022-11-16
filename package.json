@@ -179,6 +179,7 @@
     ]
   },
   "dependencies": {
+    "globby": "^13.1.2",
     "html-webpack-plugin": "^5.5.0"
   },
   "resolutions": {
