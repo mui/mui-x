@@ -5,7 +5,7 @@ import { GridPipeProcessor, useGridRegisterPipeProcessor } from '../../core/pipe
 import { getDataGridUtilityClass } from '../../../constants';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { GRID_CHECKBOX_SELECTION_COL_DEF, GRID_CHECKBOX_SELECTION_FIELD } from '../../../colDef';
-import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
+import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 
 type OwnerState = { classes: DataGridProcessedProps['classes'] };
 
@@ -23,7 +23,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 };
 
 export const useGridRowSelectionPreProcessors = (
-  apiRef: React.MutableRefObject<GridApiCommunity>,
+  apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
   props: DataGridProcessedProps,
 ) => {
   const ownerState = { classes: props.classes };

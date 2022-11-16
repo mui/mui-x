@@ -6,7 +6,7 @@ import { createRenderer } from '@mui/monorepo/test/utils';
 import { DataGridPremium, LicenseInfo } from '@mui/x-data-grid-premium';
 import { generateLicense } from '@mui/x-license-pro';
 
-describe('<DataGridPro /> - Layout', () => {
+describe('<DataGridPremium /> - License', () => {
   const { render } = createRenderer();
 
   it('should throw out of scope error when using DataGridPremium with a pro license', () => {

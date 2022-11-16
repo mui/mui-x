@@ -5,7 +5,7 @@ import type {
   ClockPickerView,
 } from '../models/views';
 import type { WrapperVariant } from '../components/wrappers/WrapperVariantContext';
-import { ClockPicker, ClockPickerProps } from '../../ClockPicker';
+import { TimeClock, TimeClockProps } from '../../TimeClock';
 import { DateCalendar, DateCalendarProps } from '../../DateCalendar';
 
 const isDatePickerView = (view: CalendarOrClockPickerView): view is CalendarPickerView =>
@@ -33,14 +33,14 @@ export const renderDateView = <TDate extends unknown>(props: DateViewRendererPro
 );
 
 interface TimeViewRendererProps<TDate>
-  extends Omit<ClockPickerProps<TDate>, 'views' | 'openTo' | 'view'> {
+  extends Omit<TimeClockProps<TDate>, 'views' | 'openTo' | 'view'> {
   view: CalendarOrClockPickerView;
   views: readonly CalendarOrClockPickerView[];
   wrapperVariant: WrapperVariant;
 }
 
 export const renderTimeView = <TDate extends unknown>(props: TimeViewRendererProps<TDate>) => (
-  <ClockPicker<TDate>
+  <TimeClock<TDate>
     {...props}
     autoFocus
     views={props.views.filter(isTimePickerView)}

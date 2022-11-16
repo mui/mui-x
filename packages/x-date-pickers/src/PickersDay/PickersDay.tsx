@@ -6,9 +6,9 @@ import ButtonBase, { ButtonBaseProps } from '@mui/material/ButtonBase';
 import {
   unstable_useEnhancedEffect as useEnhancedEffect,
   unstable_composeClasses as composeClasses,
+  unstable_useForkRef as useForkRef,
 } from '@mui/utils';
 import { alpha, styled, useThemeProps, Theme } from '@mui/material/styles';
-import { useForkRef } from '@mui/material/utils';
 import { ExtendMui } from '../internals/models/helpers';
 import { useUtils } from '../internals/hooks/useUtils';
 import { DAY_SIZE, DAY_MARGIN } from '../internals/constants/dimensions';
