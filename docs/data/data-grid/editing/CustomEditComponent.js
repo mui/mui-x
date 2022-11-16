@@ -13,7 +13,7 @@ renderRating.propTypes = {
    * The cell value.
    * If the column has `valueGetter`, use `params.row` to directly access the fields.
    */
-  value: PropTypes.number,
+  value: PropTypes.any,
 };
 
 function RatingEditInputCell(props) {
@@ -58,7 +58,7 @@ RatingEditInputCell.propTypes = {
    * The cell value.
    * If the column has `valueGetter`, use `params.row` to directly access the fields.
    */
-  value: PropTypes.number,
+  value: PropTypes.any,
 };
 
 const renderRatingEditInputCell = (params) => {

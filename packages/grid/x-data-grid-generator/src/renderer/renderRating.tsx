@@ -23,7 +23,7 @@ const RatingValue = React.memo(function RatingValue(props: RatingValueProps) {
   );
 });
 
-export function renderRating(params: GridRenderCellParams<number, { id: GridRowId }, any>) {
+export function renderRating(params: GridRenderCellParams<{ id: GridRowId }, number, any>) {
   if (params.value == null) {
     return '';
   }

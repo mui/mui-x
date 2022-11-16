@@ -16,8 +16,7 @@ function RenderCellParamsExplicitTyping() {
         },
         {
           field: 'price2',
-          renderCell: (params: GridRenderCellParams<number>) => {
-            // @ts-expect-error `toUpperCase` doesn't exist in number
+          renderCell: (params: GridRenderCellParams) => {
             return params.value.toUpperCase();
           },
         },
@@ -30,7 +29,6 @@ function RenderCellParamsExplicitTyping() {
         {
           field: 'price4',
           renderCell: (params: GridRenderCellParams<any, { price: number }>) => {
-            // @ts-expect-error `toUpperCase` doesn't exist in number
             return params.row.price.toUpperCase();
           },
         },
@@ -52,8 +50,7 @@ function RenderCellParamsExplicitTyping() {
         {
           field: 'price7',
           type: 'actions',
-          getActions: (params: GridRowParams<{ price: number }>) => {
-            // @ts-expect-error `toUpperCase` doesn't exist in number
+          getActions: (params: GridRowParams) => {
             return params.row.price.toUpperCase();
           },
         },
@@ -111,8 +108,7 @@ function CellParamsValue() {
       onCellClick={(params: GridCellParams) => {
         params.value!.toUpperCase();
       }}
-      onCellDoubleClick={(params: GridCellParams<number>) => {
-        // @ts-expect-error `toUpperCase` doesn't exist in number
+      onCellDoubleClick={(params: GridCellParams) => {
         params.value!.toUpperCase();
       }}
     />
@@ -128,7 +124,6 @@ function CellParamsRow() {
         params.row.brand!.toUpperCase();
       }}
       onCellDoubleClick={(params: GridCellParams<any, { brand: number }>) => {
-        // @ts-expect-error `toUpperCase` doesn't exist in number
         params.row.brand!.toUpperCase();
       }}
     />

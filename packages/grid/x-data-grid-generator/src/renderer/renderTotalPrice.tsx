@@ -43,7 +43,7 @@ const TotalPrice = React.memo(function TotalPrice(props: TotalPriceProps) {
   );
 });
 
-export function renderTotalPrice(params: GridRenderCellParams<number>) {
+export function renderTotalPrice(params: GridRenderCellParams) {
   if (params.value == null) {
     return '';
   }
