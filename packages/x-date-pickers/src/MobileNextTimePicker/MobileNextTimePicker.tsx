@@ -51,6 +51,7 @@ const MobileNextTimePicker = React.forwardRef(function MobileNextTimePicker<TDat
         sx,
         inputRef: defaultizedProps.inputRef,
         label: defaultizedProps.label,
+        ampm: defaultizedProps.ampm,
       }),
     },
   };

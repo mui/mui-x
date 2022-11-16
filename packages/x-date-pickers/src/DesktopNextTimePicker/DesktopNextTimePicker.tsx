@@ -52,6 +52,7 @@ const DesktopNextTimePicker = React.forwardRef(function DesktopNextTimePicker<TD
         sx,
         inputRef: defaultizedProps.inputRef,
         label: defaultizedProps.label,
+        ampm: defaultizedProps.ampm,
       }),
     },
   };
