@@ -29,7 +29,7 @@ You need to install 3 different types of package to make the pickers work:
 
 1. **The component** (`@mui/x-date-pickers` or `@mui/x-date-pickers-pro`) manages the rendering.
 2. **The date-library** ([`moment`](https://momentjs.com/), [`dayjs`](https://day.js.org/), ...) manages the date manipulation.
-3. **The adapter** ([`@date-io`](https://github.com/dmtrKovalenko/date-io#projects)) exposes your favorite **date-library** under a unified api used by **component**.
+3. **The adapter** ([`@date-io`](https://github.com/dmtrKovalenko/date-io#projects)) exposes your favorite **date-library** under a unified API used by **component**.
 
 First you have to install the date-library you want to use to manage dates, and the component package:
 

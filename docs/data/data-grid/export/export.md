@@ -135,7 +135,7 @@ You can provide a [`valueFormatter`](/x/react-data-grid/column-definition/#value
 ### File encoding
 
 You can use `csvOptions` to specify the format of the export, such as the `delimiter` character used to separate fields, the `fileName`, or `utf8WithBom` to prefix the exported file with UTF-8 Byte Order Mark (BOM).
-For more details on these options, please visit the [`csvOptions` api page](/x/api/data-grid/grid-csv-export-options/).
+For more details on these options, please visit the [`csvOptions` API page](/x/api/data-grid/grid-csv-export-options/).
 
 ```jsx
 <GridToolbarExport
@@ -197,7 +197,7 @@ By default, the print export display all the DataGrid. It is possible to remove 
 />
 ```
 
-For more option to customize the print export, please visit the [`printOptions` api page](/x/api/data-grid/grid-print-export-options/).
+For more option to customize the print export, please visit the [`printOptions` API page](/x/api/data-grid/grid-print-export-options/).
 
 ## Custom export format
 

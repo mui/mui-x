@@ -1035,7 +1035,7 @@ We'd like to offer a big thanks to the 5 contributors who made this release poss
 
 - [CalendarPicker] Don't move to closest enabled date when `props.date` contains a disabled date (#6537) @flaviendelangle
 - [DateRangePicker] Fix calendar day outside of month layout shifting on hover (pick #6448) (#6538) @alexfauquette
-- [pickers] Fix typescript issues (#6510) @flaviendelangle
+- [pickers] Fix Typescript issues (#6510) @flaviendelangle
 
 ### Docs
 
@@ -1181,7 +1181,7 @@ We'd like to offer a big thanks to the 6 contributors who made this release poss
 
 ### Core
 
-- [core] Update to typescript 4.8.3 (#6136) @flaviendelangle
+- [core] Update to Typescript 4.8.3 (#6136) @flaviendelangle
 - [core] Update RFC template (#6100) @bytasv
 
 ## 5.17.2
