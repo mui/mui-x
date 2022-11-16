@@ -267,7 +267,12 @@ export const usePickerValue = <
     resetFallback: value,
   }));
 
-  useValidation({ ...props, value }, validator, valueManager.isSameError);
+  useValidation(
+    { ...props, value },
+    validator,
+    valueManager.isSameError,
+    valueManager.defaultErrorState,
+  );
 
   const setDate = useEventCallback((params: UsePickerValueAction<TValue, TError>) => {
     setDateState((prev) => {
