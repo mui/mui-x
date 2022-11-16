@@ -101,7 +101,7 @@ yargs
   .command({
     command: '$0 <codemod> <paths...>',
     describe: 'Applies a `@mui/x-codemod` to the specified paths',
-    // @ts-ignore-next-line
+    // @ts-expect-error
     builder: (command) => {
       return command
         .positional('codemod', {

@@ -34,7 +34,7 @@ export default function propsToObject({
     : root.findJSXElements(componentName);
 
   return result.forEach((path) => {
-    // @ts-ignore-next-line
+    // @ts-expect-error
     if (!aliasName || (aliasName && path.node.openingElement.name.object.name === aliasName)) {
       let propValue = [];
       const attributes = path.node.openingElement.attributes;
@@ -50,7 +50,7 @@ export default function propsToObject({
           (attr) => attr.type === 'JSXAttribute' && attr.name.name === propName,
         );
         if (propNameAttr && propNameAttr.type === 'JSXAttribute') {
-          // @ts-ignore-next-line
+          // @ts-expect-error
           (propNameAttr.value.expression?.properties || []).push(
             ...j.objectExpression(propValue).properties,
           );

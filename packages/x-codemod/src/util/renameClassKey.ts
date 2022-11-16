@@ -18,7 +18,7 @@ export default function renameClassKey({
     .forEach((path) => {
       path.node.openingElement.attributes?.forEach((node) => {
         if (node.type === 'JSXAttribute' && node.name.name === 'classes') {
-          // @ts-ignore-next-line
+          // @ts-expect-error
           node.value?.expression?.properties?.forEach((subNode) => {
             if (Object.keys(classes).includes(subNode.key.name)) {
               subNode.key.name = classes[subNode.key.name];
