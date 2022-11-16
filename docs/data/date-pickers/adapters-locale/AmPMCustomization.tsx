@@ -31,8 +31,15 @@ export default function AmPMCustomization() {
             </ToggleButton>
           ))}
         </ToggleButtonGroup>
-        <NextTimePicker label="Locale default" defaultValue={dayjs('2022-04-07T18:30')} />
-        <NextTimePicker label="AM / PM" defaultValue={dayjs('2022-04-07T18:30')} ampm />
+        <NextTimePicker
+          label="Locale default"
+          defaultValue={dayjs('2022-04-07T18:30')}
+        />
+        <NextTimePicker
+          label="AM / PM"
+          defaultValue={dayjs('2022-04-07T18:30')}
+          ampm
+        />
         <NextTimePicker
           label="24 hours"
           defaultValue={dayjs('2022-04-07T18:30')}

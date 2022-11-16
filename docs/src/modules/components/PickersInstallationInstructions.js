@@ -33,7 +33,7 @@ export default function PickersInstallationInstructions() {
   const commandLines = [
     `// Install component (${licenceType} version)`,
     `${installationCLI}${componentPackage}`,
-      '',
+    '',
     `// Install date library (if not already installed)`,
     `${installationCLI}${libraryUsed}`,
   ].join('\n');
