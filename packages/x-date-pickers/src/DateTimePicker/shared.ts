@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useThemeProps } from '@mui/material/styles';
 import { useDefaultDates, useUtils } from '../internals/hooks/useUtils';
-import { ExportedClockPickerProps } from '../ClockPicker/ClockPicker';
+import { ExportedTimeClockProps } from '../TimeClock/TimeClock';
 import { ExportedDateCalendarProps } from '../DateCalendar/DateCalendar';
 import { DateTimeValidationError } from '../internals/hooks/validation/useDateTimeValidation';
 import { ValidationCommonProps } from '../internals/hooks/validation/useValidation';
@@ -51,7 +51,7 @@ export interface BaseDateTimePickerSlotsComponentsProps<TDate>
 }
 
 export interface BaseDateTimePickerProps<TDate>
-  extends ExportedClockPickerProps<TDate>,
+  extends ExportedTimeClockProps<TDate>,
     ExportedDateCalendarProps<TDate>,
     BasePickerProps<TDate | null, TDate>,
     ValidationCommonProps<DateTimeValidationError, TDate | null>,

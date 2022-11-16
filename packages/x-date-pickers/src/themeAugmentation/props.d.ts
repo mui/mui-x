@@ -4,7 +4,7 @@ import {
   PickersFadeTransitionGroupProps,
 } from '../DateCalendar';
 import { DayCalendarSkeletonProps } from '../DayCalendarSkeleton';
-import { ClockNumberProps, ClockPickerProps, ClockPointerProps, ClockProps } from '../ClockPicker';
+import { ClockNumberProps, TimeClockProps, ClockPointerProps, ClockProps } from '../TimeClock';
 import { DatePickerProps, DatePickerToolbarProps } from '../DatePicker';
 import {
   DateTimePickerProps,
@@ -38,6 +38,7 @@ import {
   ExportedPickersToolbarTextProps,
 } from '../internals';
 import { CalendarOrClockPickerView } from '../internals/models';
+import { PickersViewLayoutProps } from '../internals/components/PickersViewLayout';
 
 import { NextDatePickerProps } from '../NextDatePicker';
 import { DesktopNextDatePickerProps } from '../DesktopNextDatePicker';
@@ -58,7 +59,6 @@ export interface PickersComponentsPropsList {
   MuiCalendarOrClockPicker: CalendarOrClockPickerProps<unknown, CalendarOrClockPickerView>;
   MuiClock: ClockProps<unknown>;
   MuiClockNumber: ClockNumberProps;
-  MuiClockPicker: ClockPickerProps<unknown>;
   MuiClockPointer: ClockPointerProps;
   MuiDateCalendar: DateCalendarProps<unknown>;
   MuiDateField: DateFieldProps<unknown>;
@@ -97,6 +97,7 @@ export interface PickersComponentsPropsList {
   MuiPickersToolbar: PickersToolbarProps<unknown, unknown>;
   MuiPickersToolbarButton: PickersToolbarButtonProps;
   MuiPickersToolbarText: ExportedPickersToolbarTextProps;
+  MuiPickersViewLayout: PickersViewLayoutProps<unknown, CalendarOrClockPickerView>;
   MuiPickersYear: ExportedPickersYearProps;
   MuiStaticDatePicker: StaticDatePickerProps<unknown>;
   MuiStaticDateTimePicker: StaticDateTimePickerProps<unknown>;
@@ -104,6 +105,7 @@ export interface PickersComponentsPropsList {
   MuiStaticNextDateTimePicker: StaticNextDateTimePickerProps<unknown>;
   MuiStaticNextTimePicker: StaticNextTimePickerProps<unknown>;
   MuiStaticTimePicker: StaticTimePickerProps<unknown>;
+  MuiTimeClock: TimeClockProps<unknown>;
   MuiTimePicker: TimePickerProps<unknown>;
   MuiTimePickerToolbar: TimePickerToolbarProps<unknown>;
   MuiYearCalendar: YearCalendarProps<unknown>;

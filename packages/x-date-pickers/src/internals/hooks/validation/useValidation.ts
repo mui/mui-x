@@ -39,10 +39,11 @@ export function useValidation<TValue, TDate, TError, TValidationProps extends {}
   props: ValidationProps<TError, TValue, TValidationProps>,
   validate: Validator<TValue, TDate, TError, TValidationProps>,
   isSameError: (a: TError, b: TError | null) => boolean,
+  defaultErrorState: TError,
 ): TError {
   const { value, onError } = props;
   const adapter = useLocalizationContext<TDate>();
-  const previousValidationErrorRef = React.useRef<TError | null>(null);
+  const previousValidationErrorRef = React.useRef<TError | null>(defaultErrorState);
 
   const validationError = validate({ adapter, value, props });
 
