@@ -2,12 +2,36 @@ const fs = require('fs');
 
 const pluginName = 'babel-plugin-jsx-preview';
 
+const wrapperTypes = ['div', 'Box', 'Stack', 'LocalizationProvider'];
+
+/**
+ * @param {import('@babel/core').types.JSXElement | import('@babel/core').types.JSXElement['children']} node The node to check.
+ */
+const hasWrapper = (node) => {
+  let cleanNode;
+  if (Array.isArray(node)) {
+    if (node.length !== 1) {
+      // We don't want to remove a wrapper if he has siblings
+      return false;
+    }
+
+    cleanNode = node[0];
+  } else {
+    cleanNode = node;
+  }
+
+  // We don't want to remove a wrapper if he has no children
+  if (!cleanNode?.children?.length) {
+    return false;
+  }
+
+  return wrapperTypes.includes(cleanNode?.openingElement?.name?.name);
+};
+
 /**
  * @returns {import('@babel/core').PluginObj}
  */
-export default function babelPluginJsxPreview() {
-  const wrapperTypes = ['div', 'Box', 'Stack', 'LocalizationProvider'];
-
+module.exports = function babelPluginJsxPreview() {
   /**
    * @type {import('@babel/core').types.JSXElement | import('@babel/core').types.JSXElement['children']}
    */
@@ -34,10 +58,8 @@ export default function babelPluginJsxPreview() {
         const returnedJSX = lastReturn.argument;
         if (returnedJSX.type === 'JSXElement') {
           previewNode = returnedJSX;
-          if (
-            wrapperTypes.includes(previewNode.openingElement.name.name) &&
-            previewNode.children.length > 0
-          ) {
+
+          while (hasWrapper(previewNode)) {
             // Trim blank JSXText to normalize
             // return (
             //   <div />
@@ -47,9 +69,12 @@ export default function babelPluginJsxPreview() {
             //   <Stack>
             //     <div />
             // ^^^^ Blank JSXText including newline
-            //   </Stacke>
+            //   </Stack>
             // )
-            previewNode = previewNode.children.filter((child, index, children) => {
+
+            previewNode = (
+              Array.isArray(previewNode) ? previewNode[0] : previewNode
+            ).children.filter((child, index, children) => {
               const isSurroundingBlankJSXText =
                 (index === 0 || index === children.length - 1) &&
                 child.type === 'JSXText' &&
@@ -99,4 +124,4 @@ export default function babelPluginJsxPreview() {
       }
     },
   };
-}
+};

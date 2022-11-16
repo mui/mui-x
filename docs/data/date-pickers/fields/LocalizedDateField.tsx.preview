@@ -1,13 +1,11 @@
-<Stack spacing={2} sx={(theme) => ({ width: theme.spacing(48) })}>
-  <DateField
-    label="French locale (default format)"
-    value={value}
-    onChange={(newValue) => setValue(newValue)}
-  />
-  <DateField
-    label="French locale (full letter month)"
-    value={value}
-    onChange={(newValue) => setValue(newValue)}
-    format="DD MMMM YYYY"
-  />
-</Stack>
+<DateField
+  label="French locale (default format)"
+  value={value}
+  onChange={(newValue) => setValue(newValue)}
+/>
+<DateField
+  label="French locale (full letter month)"
+  value={value}
+  onChange={(newValue) => setValue(newValue)}
+  format="DD MMMM YYYY"
+/>

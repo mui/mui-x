@@ -1,0 +1,16 @@
+<GridItem label="TimePicker">
+  <TimePicker
+    maxTime={fiveAM}
+    value={timePickerValue}
+    onChange={(newValue) => setTimePickerValue(newValue)}
+    renderInput={(params) => <TextField {...params} />}
+  />
+</GridItem>
+<GridItem label="DateTimePicker">
+  <DateTimePicker
+    maxTime={fiveAM}
+    value={dateTimePickerValue}
+    onChange={(newValue) => setDateTimePickerValue(newValue)}
+    renderInput={(params) => <TextField {...params} />}
+  />
+</GridItem>
