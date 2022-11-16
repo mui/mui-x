@@ -122,7 +122,7 @@
     "onRowSelectionModelChange": { "type": { "name": "func" } },
     "onSortModelChange": { "type": { "name": "func" } },
     "page": { "type": { "name": "number" }, "default": "0" },
-    "pageSize": { "type": { "name": "custom", "description": "number" }, "default": "100" },
+    "pageSize": { "type": { "name": "number" }, "default": "100" },
     "paginationMode": {
       "type": { "name": "enum", "description": "'client'<br>&#124;&nbsp;'server'" },
       "default": "\"client\""

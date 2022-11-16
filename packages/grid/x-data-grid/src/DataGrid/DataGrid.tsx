@@ -11,7 +11,7 @@ import {
 import { DataGridProps } from '../models/props/DataGridProps';
 import { GridContextProvider } from '../context/GridContextProvider';
 import { useDataGridComponent } from './useDataGridComponent';
-import { useDataGridProps, MAX_PAGE_SIZE } from './useDataGridProps';
+import { useDataGridProps } from './useDataGridProps';
 import { DataGridVirtualScroller } from '../components/DataGridVirtualScroller';
 import { DataGridColumnHeaders } from '../components/DataGridColumnHeaders';
 import { GridValidRowModel } from '../models/gridRows';
@@ -574,19 +574,7 @@ DataGridRaw.propTypes = {
    * If some of the rows have children (for instance in the tree data), this number represents the amount of top level rows wanted on each page.
    * @default 100
    */
-  pageSize: chainPropTypes(PropTypes.number, (props: any) => {
-    if (props.pageSize && props.pageSize > MAX_PAGE_SIZE) {
-      return new Error(
-        [
-          `MUI: \`<DataGrid pageSize={${props.pageSize}} />\` is not a valid prop.`,
-          `Only page size below ${MAX_PAGE_SIZE} is available in the MIT version.`,
-          '',
-          'You need to upgrade to DataGridPro or DataGridPremium component to unlock this feature.',
-        ].join('\n'),
-      );
-    }
-    return null;
-  }),
+  pageSize: PropTypes.number,
   pagination: (props: any) => {
     if (props.pagination === false) {
       return new Error(
