@@ -3245,10 +3245,10 @@
     "@types/node" "*"
     "@types/responselike" "*"
 
-"@types/chai-dom@^0.0.13":
-  version "0.0.13"
-  resolved "https://registry.yarnpkg.com/@types/chai-dom/-/chai-dom-0.0.13.tgz#a8727ba180a7146eb14e548ad22d33ab1adf6d8c"
-  integrity sha512-A0DqBgZIExkhlH15chRY4qSIBWtl2/ZEvyNjBo+Xp0gZRexz3qjFNHh1mUhhD3TFVacCz1PC8FAPMpUqzSR1AQ==
+"@types/chai-dom@^1.11.0":
+  version "1.11.0"
+  resolved "https://registry.yarnpkg.com/@types/chai-dom/-/chai-dom-1.11.0.tgz#e9bd01f3408b2ffd27755fe4418ff92ffd8f4e66"
+  integrity sha512-Aja99Mmnny+Sz+T2hBK3oEsrcy18yabplT0pGX/QwIke9jMJHdvHlV2f4Tmq5SqxTMYwt1Zjbisv/4r83EUIHw==
   dependencies:
     "@types/chai" "*"
 
@@ -9886,15 +9886,10 @@ minimist-options@4.1.0:
     is-plain-obj "^1.1.0"
     kind-of "^6.0.3"
 
-minimist@^1.2.0:
+minimist@^1.2.0, minimist@^1.2.3, minimist@^1.2.5, minimist@^1.2.6, minimist@~1.2.5:
   version "1.2.7"
   resolved "https://registry.yarnpkg.com/minimist/-/minimist-1.2.7.tgz#daa1c4d91f507390437c6a8bc01078e7000c4d18"
   integrity sha512-bzfL1YUZsP41gmu/qjrEk0Q6i2ix/cVeAhbCbqH9u3zYutS1cLg00qhrD0M2MVdCcx4Sc0UpP2eBWo9rotpq6g==
-
-minimist@^1.2.3, minimist@^1.2.5, minimist@^1.2.6, minimist@~1.2.5:
-  version "1.2.6"
-  resolved "https://registry.yarnpkg.com/minimist/-/minimist-1.2.6.tgz#8637a5b759ea0d6e98702cfb3a9283323c93af44"
-  integrity sha512-Jsjnk4bw3YJqYzbdyBiNsPWHPfO++UGG749Cxs6peCu5Xg4nrena6OVxOYxrQTqww0Jmwt+Ref8rggumkTLz9Q==
 
 minipass-collect@^1.0.2:
   version "1.0.2"
