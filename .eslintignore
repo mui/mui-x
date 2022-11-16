@@ -6,14 +6,4 @@
 CHANGELOG.md
 dist
 node_modules
-<<<<<<< HEAD
 build
-=======
-.nyc_output
-
-# These come from crowdin.
-# If we would commit changes crowdin would immediately try to revert.
-# If we want to format these files we'd need to do it in crowdin
-docs/**/*-pt.md
-docs/**/*-zh.md
->>>>>>> 8e98c5fea (Remove prettier scripts (#6815))
