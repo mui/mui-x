@@ -1,5 +1,8 @@
 import * as React from 'react';
-import { ownerDocument, useEventCallback } from '@mui/material/utils';
+import {
+  unstable_ownerDocument as ownerDocument,
+  unstable_useEventCallback as useEventCallback,
+} from '@mui/utils';
 import {
   GridEventListener,
   gridClasses,
@@ -24,7 +27,7 @@ import {
   findHeaderElementFromField,
   findGroupHeaderElementsFromField,
 } from '../../../utils/domUtils';
-import { GridApiPro } from '../../../models/gridApiPro';
+import { GridPrivateApiPro } from '../../../models/gridApiPro';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 
 type ResizeDirection = keyof typeof GridColumnHeaderSeparatorSides;
@@ -126,7 +129,7 @@ export const columnResizeStateInitializer: GridStateInitializer = (state) => ({
  * TODO: improve experience for last column
  */
 export const useGridColumnResize = (
-  apiRef: React.MutableRefObject<GridApiPro>,
+  apiRef: React.MutableRefObject<GridPrivateApiPro>,
   props: Pick<DataGridProProcessedProps, 'onColumnResize' | 'onColumnWidthChange'>,
 ) => {
   const logger = useGridLogger(apiRef, 'useGridColumnResize');
