@@ -11,6 +11,6 @@
     "rootDir": "./src"
   },
   "references": [{ "path": "../x-data-grid-premium/tsconfig.build.json" }],
-  "include": ["src/**/*.ts*"],
+  "include": ["src/**/*.ts*", "../../../node_modules/@mui/monorepo/packages/mui-material/src/themeCssVarsAugmentation"],
   "exclude": ["src/**/*.spec.ts*", "src/**/*.test.ts*"]
 }
