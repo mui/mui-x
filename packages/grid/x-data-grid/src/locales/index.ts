@@ -25,6 +25,7 @@ export * from './skSK';
 export * from './svSE';
 export * from './trTR';
 export * from './ukUA';
+// export * from './urPK';
 export * from './viVN';
 export * from './zhCN';
 export * from './zhTW';

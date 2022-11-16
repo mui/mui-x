@@ -1,0 +1,157 @@
+// import { urPK as urPKCore } from '@mui/material/locale';
+import { GridLocaleText } from '../models/api/gridLocaleTextApi';
+// import { getGridLocalization, Localization } from '../utils/getGridLocalization';
+
+// TODO Uncomment commented lines after https://github.com/mui/material-ui/pull/35154 is merged
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const urPKGrid: Partial<GridLocaleText> = {
+  // Root
+  noRowsLabel: 'کوئی قطاریں نہیں',
+  noResultsOverlayLabel: 'کوئی نتائج نہیں',
+  errorOverlayDefaultLabel: 'ایک مسئلہ ہو گیا',
+
+  // Density selector toolbar button text
+  toolbarDensity: 'کثافت',
+  toolbarDensityLabel: 'کثافت',
+  // toolbarDensityCompact: 'Compact',
+  // toolbarDensityStandard: 'Standard',
+  // toolbarDensityComfortable: 'Comfortable',
+
+  // Columns selector toolbar button text
+  toolbarColumns: 'کالمز',
+  toolbarColumnsLabel: 'کالمز کو منتخب کریں',
+
+  // Filters toolbar button text
+  toolbarFilters: 'فلٹرز',
+  toolbarFiltersLabel: 'فلٹرز دکھائیں',
+  toolbarFiltersTooltipHide: 'فلٹرز چھپائیں',
+  toolbarFiltersTooltipShow: 'فلٹرز دکھائیں',
+  toolbarFiltersTooltipActive: (count) =>
+    count !== 1 ? `${count} فعال فلٹرز` : `${count} فلٹرز فعال`,
+
+  // Quick filter toolbar field
+  toolbarQuickFilterPlaceholder: 'تلاش کریں۔۔۔',
+  toolbarQuickFilterLabel: 'تلاش کریں',
+  toolbarQuickFilterDeleteIconLabel: 'کلئیر کریں',
+
+  // Export selector toolbar button text
+  toolbarExport: 'ایکسپورٹ',
+  toolbarExportLabel: 'ایکسپورٹ',
+  toolbarExportCSV: 'CSV کے طور پر ڈاوٴنلوڈ کریں',
+  toolbarExportPrint: 'پرنٹ کریں',
+  toolbarExportExcel: 'ایکسل کے طور پر ڈاوٴنلوڈ کریں',
+
+  // Columns panel text
+  columnsPanelTextFieldLabel: 'کالم کو تلاش کریں',
+  columnsPanelTextFieldPlaceholder: 'کالم کا عنوان',
+  columnsPanelDragIconLabel: 'کالم کی ترتیب تبدیل کریں',
+  columnsPanelShowAllButton: 'سارے دکھائیں',
+  columnsPanelHideAllButton: 'سارے چھپائیں',
+
+  // Filter panel text
+  filterPanelAddFilter: 'نیا فلٹر',
+  filterPanelDeleteIconLabel: 'ختم کریں',
+  // filterPanelLinkOperator: 'Logic operator',
+  // filterPanelOperators: 'Operator', // TODO v6: rename to filterPanelOperator
+  // filterPanelOperatorAnd: 'And',
+  // filterPanelOperatorOr: 'Or',
+  filterPanelColumns: 'کالمز',
+  filterPanelInputLabel: 'ویلیو',
+  filterPanelInputPlaceholder: 'ویلیو کو فلٹر کریں',
+
+  // Filter operators text
+  filterOperatorContains: 'شامل ہے',
+  filterOperatorEquals: 'برابر ہے',
+  filterOperatorStartsWith: 'شروع ہوتا ہے',
+  filterOperatorEndsWith: 'ختم ہوتا ہے',
+  filterOperatorIs: 'ہے',
+  filterOperatorNot: 'نہیں',
+  filterOperatorAfter: 'بعد میں ہے',
+  filterOperatorOnOrAfter: 'پر یا بعد میں ہے',
+  filterOperatorBefore: 'پہلے ہے',
+  filterOperatorOnOrBefore: 'پر یا پہلے ہے',
+  filterOperatorIsEmpty: 'خالی ہے',
+  filterOperatorIsNotEmpty: 'خالی نہیں ہے',
+  filterOperatorIsAnyOf: 'ان میں سے کوئی ہے',
+
+  // Filter values text
+  filterValueAny: 'کوئی بھی',
+  filterValueTrue: 'صحیح',
+  filterValueFalse: 'غلط',
+
+  // Column menu text
+  columnMenuLabel: 'مینیو',
+  columnMenuShowColumns: 'کالم دکھائیں',
+  columnMenuFilter: 'فلٹر',
+  columnMenuHideColumn: 'چھپائیں',
+  columnMenuUnsort: 'sort ختم کریں',
+  columnMenuSortAsc: 'ترتیب صعودی',
+  columnMenuSortDesc: 'ترتیب نزولی',
+
+  // Column header text
+  columnHeaderFiltersTooltipActive: (count) =>
+    count !== 1 ? `${count} فعال فلٹرز` : `${count} فلٹرز فعال`,
+  columnHeaderFiltersLabel: 'فلٹرز دکھائیں',
+  // columnHeaderSortIconLabel: 'Sort',
+
+  // Rows selected footer text
+  footerRowSelected: (count) =>
+    count !== 1 ? `${count.toLocaleString()} منتخب قطاریں` : `${count.toLocaleString()} منتخب قطار`,
+
+  // Total row amount footer text
+  footerTotalRows: 'کل قطاریں:',
+
+  // Total visible row amount footer text
+  footerTotalVisibleRows: (visibleCount, totalCount) =>
+    `${totalCount.toLocaleString()} میں سے ${visibleCount.toLocaleString()}`,
+
+  // Checkbox selection text
+  // checkboxSelectionHeaderName: 'Checkbox selection',
+  checkboxSelectionSelectAllRows: 'تمام قطاریں منتخب کریں',
+  checkboxSelectionUnselectAllRows: 'تمام قطاریں نامنتخب کریں ',
+  checkboxSelectionSelectRow: 'قطار منتخب کریں',
+  checkboxSelectionUnselectRow: 'قطار نامنتخب کریں',
+
+  // Boolean cell text
+  booleanCellTrueLabel: 'ہاں',
+  booleanCellFalseLabel: 'نہیں',
+
+  // Actions cell more text
+  actionsCellMore: 'ذیادہ',
+
+  // Column pinning text
+  pinToLeft: 'بائیں جانب pin کریں',
+  pinToRight: 'دائیں جانب pin کریں',
+  unpin: 'pin ختم کریں',
+
+  // Tree Data
+  treeDataGroupingHeaderName: 'گروپ',
+  treeDataExpand: 'شاخیں دیکھیں',
+  treeDataCollapse: 'شاخیں چھپائیں',
+
+  // Grouping columns
+  groupingColumnHeaderName: 'گروپ',
+  groupColumn: (name) => `${name} سے گروپ کریں`,
+  unGroupColumn: (name) => `${name} سے گروپ ختم کریں`,
+
+  // Master/detail
+  // detailPanelToggle: 'Detail panel toggle',
+  expandDetailPanel: 'پھیلائیں',
+  collapseDetailPanel: 'تنگ کریں',
+
+  // Used core components translation keys
+  MuiTablePagination: {},
+
+  // Row reordering text
+  rowReorderingHeaderName: 'قطاروں کی ترتیب تبدیل کریں',
+
+  // Aggregation
+  // aggregationMenuItemHeader: 'Aggregation',
+  // aggregationFunctionLabelSum: 'sum',
+  // aggregationFunctionLabelAvg: 'avg',
+  // aggregationFunctionLabelMin: 'min',
+  // aggregationFunctionLabelMax: 'max',
+  // aggregationFunctionLabelSize: 'size',
+};
+
+// export const urPK: Localization = getGridLocalization(urPKGrid, urPKCore);
