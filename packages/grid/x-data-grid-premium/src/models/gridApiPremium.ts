@@ -3,6 +3,7 @@ import {
   GridApiCommon,
   GridColumnPinningApi,
   GridDetailPanelApi,
+  GridDetailPanelPrivateApi,
   GridRowPinningApi,
   GridRowMultiSelectionApi,
 } from '@mui/x-data-grid-pro';
@@ -26,4 +27,5 @@ export interface GridApiPremium
 
 export interface GridPrivateApiPremium
   extends GridApiPremium,
-    GridPrivateOnlyApiCommon<GridApiPremium, GridPrivateApiPremium> {}
+    GridPrivateOnlyApiCommon<GridApiPremium, GridPrivateApiPremium>,
+    GridDetailPanelPrivateApi {}

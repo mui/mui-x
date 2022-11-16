@@ -103,7 +103,12 @@ export const useMultiInputDateRangeField = <TDate, TChildProps extends {}>({
     TDate,
     DateRangeValidationError,
     DateRangeComponentValidationProps<TDate>
-  >({ ...sharedProps, value }, validateDateRange, () => true);
+  >(
+    { ...sharedProps, value },
+    validateDateRange,
+    rangeValueManager.isSameError,
+    rangeValueManager.defaultErrorState,
+  );
 
   const startDateResponse = {
     ...rawStartDateResponse,

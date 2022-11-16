@@ -1,7 +1,10 @@
 import * as React from 'react';
 import { styled, alpha, useThemeProps } from '@mui/material/styles';
-import { unstable_composeClasses as composeClasses } from '@mui/utils';
-import { capitalize, unstable_useEnhancedEffect as useEnhancedEffect } from '@mui/material/utils';
+import {
+  unstable_composeClasses as composeClasses,
+  unstable_capitalize as capitalize,
+  unstable_useEnhancedEffect as useEnhancedEffect,
+} from '@mui/utils';
 import {
   WrapperVariant,
   WrapperVariantContext,

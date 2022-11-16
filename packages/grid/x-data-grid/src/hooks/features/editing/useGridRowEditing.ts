@@ -3,7 +3,6 @@ import { unstable_useEventCallback as useEventCallback } from '@mui/utils';
 import {
   useGridApiEventHandler,
   useGridApiOptionHandler,
-  GridSignature,
 } from '../../utils/useGridApiEventHandler';
 import { GridEventListener } from '../../../models/events/gridEventListener';
 import {
@@ -22,6 +21,8 @@ import {
   GridStartRowEditModeParams,
   GridRowModesModel,
   GridRowModesModelProps,
+  GridRowEditingPrivateApi,
+  GridEditingSharedPrivateApi,
 } from '../../../models/api/gridEditingApi';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { gridEditRowsStateSelector } from './gridEditingSelectors';
@@ -73,7 +74,6 @@ export const useGridRowEditing = (
     onProcessRowUpdateError,
     rowModesModel: rowModesModelProp,
     onRowModesModelChange,
-    signature,
   } = props;
 
   const runIfEditModeIsRow =
@@ -276,7 +276,7 @@ export const useGridRowEditing = (
     (params) => {
       const { id, reason, field } = params;
 
-      apiRef.current.unstable_runPendingEditCellValueMutation(id);
+      apiRef.current.runPendingEditCellValueMutation(id);
 
       let cellToFocusAfter: GridStopRowEditModeParams['cellToFocusAfter'];
       if (reason === GridRowEditStopReasons.enterKeyDown) {
@@ -321,8 +321,7 @@ export const useGridRowEditing = (
     const isNewModelDifferentFromProp = newModel !== props.rowModesModel;
 
     if (onRowModesModelChange && isNewModelDifferentFromProp) {
-      const details = signature === GridSignature.DataGridPro ? { api: apiRef.current } : {};
-      onRowModesModelChange(newModel, details);
+      onRowModesModelChange(newModel, {});
     }
 
     if (props.rowModesModel && isNewModelDifferentFromProp) {
@@ -448,11 +447,11 @@ export const useGridRowEditing = (
     (params) => {
       const { id, ignoreModifications, field: focusedField, cellToFocusAfter = 'none' } = params;
 
-      apiRef.current.unstable_runPendingEditCellValueMutation(id);
+      apiRef.current.runPendingEditCellValueMutation(id);
 
       const finishRowEditMode = () => {
         if (cellToFocusAfter !== 'none' && focusedField) {
-          apiRef.current.unstable_moveFocusToRelativeCell(id, focusedField, cellToFocusAfter);
+          apiRef.current.moveFocusToRelativeCell(id, focusedField, cellToFocusAfter);
         }
         updateOrDeleteRowState(id, null);
         updateRowInRowModesModel(id, null);
@@ -486,7 +485,7 @@ export const useGridRowEditing = (
         return;
       }
 
-      const rowUpdate = apiRef.current.unstable_getRowWithUpdatedValuesFromRowEditing(id);
+      const rowUpdate = apiRef.current.getRowWithUpdatedValuesFromRowEditing(id);
 
       if (processRowUpdate) {
         const handleError = (errorThrown: any) => {
@@ -519,7 +518,7 @@ export const useGridRowEditing = (
   ) as GridRowEditingApi['startRowEditMode'];
 
   const setRowEditingEditCellValue = React.useCallback<
-    GridRowEditingApi['unstable_setRowEditingEditCellValue']
+    GridRowEditingPrivateApi['setRowEditingEditCellValue']
   >(
     (params) => {
       const { id, field, value, debounceMs, unstable_skipValueParser: skipValueParser } = params;
@@ -639,7 +638,7 @@ export const useGridRowEditing = (
   );
 
   const getRowWithUpdatedValuesFromRowEditing = React.useCallback<
-    GridRowEditingApi['unstable_getRowWithUpdatedValuesFromRowEditing']
+    GridRowEditingPrivateApi['getRowWithUpdatedValuesFromRowEditing']
   >(
     (id) => {
       const editingState = gridEditRowsStateSelector(apiRef.current.state);
@@ -667,11 +666,15 @@ export const useGridRowEditing = (
     getRowMode,
     startRowEditMode,
     stopRowEditMode,
-    unstable_setRowEditingEditCellValue: setRowEditingEditCellValue,
-    unstable_getRowWithUpdatedValuesFromRowEditing: getRowWithUpdatedValuesFromRowEditing,
+  };
+
+  const editingPrivateApi: Omit<GridRowEditingPrivateApi, keyof GridEditingSharedPrivateApi> = {
+    setRowEditingEditCellValue,
+    getRowWithUpdatedValuesFromRowEditing,
   };
 
   useGridApiMethod(apiRef, editingApi, 'public');
+  useGridApiMethod(apiRef, editingPrivateApi, 'private');
 
   React.useEffect(() => {
     if (rowModesModelProp) {

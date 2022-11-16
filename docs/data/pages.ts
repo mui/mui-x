@@ -209,7 +209,6 @@ const pages: MuiPage[] = [
         title: 'API Reference',
         children: [
           { pathname: '/x/api/date-pickers', title: 'Index' },
-          { pathname: '/x/api/date-pickers/clock-picker', title: 'ClockPicker' },
           { pathname: '/x/api/date-pickers/date-calendar', title: 'DateCalendar' },
           { pathname: '/x/api/date-pickers/date-picker', title: 'DatePicker' },
           {
@@ -263,6 +262,7 @@ const pages: MuiPage[] = [
             title: 'StaticDateTimePicker',
           },
           { pathname: '/x/api/date-pickers/static-time-picker', title: 'StaticTimePicker' },
+          { pathname: '/x/api/date-pickers/time-clock', title: 'TimeClock' },
           { pathname: '/x/api/date-pickers/time-picker', title: 'TimePicker' },
           { pathname: '/x/api/date-pickers/year-calendar', title: 'YearCalendar' },
         ],

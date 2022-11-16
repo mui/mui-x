@@ -10,7 +10,7 @@ import {
 } from '@mui/x-data-grid';
 import { useGridVisibleRows } from '@mui/x-data-grid/internals';
 import { GridRowScrollEndParams } from '../../../models';
-import { GridApiPro } from '../../../models/gridApiPro';
+import { GridPrivateApiPro } from '../../../models/gridApiPro';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 
 /**
@@ -19,7 +19,7 @@ import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
  * @requires useGridScroll (method
  */
 export const useGridInfiniteLoader = (
-  apiRef: React.MutableRefObject<GridApiPro>,
+  apiRef: React.MutableRefObject<GridPrivateApiPro>,
   props: Pick<
     DataGridProProcessedProps,
     'onRowsScrollEnd' | 'scrollEndThreshold' | 'pagination' | 'paginationMode' | 'rowsLoadingMode'
@@ -42,7 +42,7 @@ export const useGridInfiniteLoader = (
       }
 
       const scrollPositionBottom = scrollPosition.top + dimensions.viewportOuterSize.height;
-      const viewportPageSize = apiRef.current.unstable_getViewportPageSize();
+      const viewportPageSize = apiRef.current.getViewportPageSize();
 
       if (scrollPositionBottom < contentHeight - props.scrollEndThreshold) {
         isInScrollBottomArea.current = false;

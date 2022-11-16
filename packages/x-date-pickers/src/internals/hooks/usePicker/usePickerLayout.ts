@@ -38,7 +38,7 @@ export interface UsePickerLayoutParams<TValue, TView extends CalendarOrClockPick
 }
 
 /**
- * Prepare the props for the view layout (managed by `PickerViewLayout`)
+ * Prepare the props for the view layout (managed by `PickersViewLayout`)
  */
 export const usePickerLayout = <TValue, TView extends CalendarOrClockPickerView>({
   props,
