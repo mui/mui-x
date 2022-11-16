@@ -91,7 +91,7 @@
     "@octokit/rest": "^19.0.5",
     "@playwright/test": "1.27.1",
     "@testing-library/react": "^13.4.0",
-    "@types/babel__core": "^7.1.19",
+    "@types/babel__core": "^7.1.20",
     "@types/chai": "^4.3.4",
     "@types/chai-dom": "^0.0.13",
     "@types/enzyme": "^3.10.12",
