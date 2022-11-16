@@ -22,12 +22,13 @@ export function showInvalidLicenseError() {
 
 export function showOutOfScopeLicenseError() {
   showError([
-    'MUI: Out of scope license key.',
+    'MUI: License key plan mismatch.',
     '',
-    'Your MUI X license key isn\'t valid. You are rendering a DataGridPremium component that requires a license key with the "premium" feature scope but your license key has the "pro" feature scope.',
+    'Your use of MUI X is not compatible with the plan of your license key.',
+    'You are rendering a `DataGridPremium` component that requires a license key for the Premium plan but your license key is for the Pro plan.',
     '',
-    'You can solve the issue by purchasing a Premium license at https://mui.com/r/x-get-license?scope=premium',
-    'Alternatively, you can replace the import on DataGridPremium with DataGridPro.',
+    'You can solve the issue by upgrading to Premium at https://mui.com/r/x-get-license?scope=premium',
+    'Alternatively, you can replace the import of `DataGridPremium` with `DataGridPro`.',
   ]);
 }
 
