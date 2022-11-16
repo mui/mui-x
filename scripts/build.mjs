@@ -43,7 +43,7 @@ async function run(argv) {
     '**/*.spec.ts',
     '**/*.spec.tsx',
     '**/*.d.ts',
-    ...providedIgnore,
+    ...(providedIgnore || []),
   ];
 
   const topLevelNonIndexFiles = glob
