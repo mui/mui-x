@@ -1,9 +1,24 @@
-export default function renameClassKey({ root, componentName, classes, printOptions }) {
+import type { Collection } from 'jscodeshift';
+
+interface RenameClassKeyArgs {
+  root: Collection<any>;
+  componentName: string;
+  classes: Record<string, string>;
+  printOptions: Record<string, any>;
+}
+
+export default function renameClassKey({
+  root,
+  componentName,
+  classes,
+  printOptions,
+}: RenameClassKeyArgs) {
   const source = root
     .findJSXElements(componentName)
     .forEach((path) => {
-      path.node.openingElement.attributes.forEach((node) => {
+      path.node.openingElement.attributes?.forEach((node) => {
         if (node.type === 'JSXAttribute' && node.name.name === 'classes') {
+          // @ts-ignore-next-line
           node.value?.expression?.properties?.forEach((subNode) => {
             if (Object.keys(classes).includes(subNode.key.name)) {
               subNode.key.name = classes[subNode.key.name];

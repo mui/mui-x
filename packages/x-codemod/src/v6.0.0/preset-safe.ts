@@ -1,10 +1,7 @@
 import transformLocalizationProviderRenameLocale from './localization-provider-rename-locale';
+import { JsCodeShiftAPI, JsCodeShiftFileInfo } from '../types';
 
-/**
- * @param {import('jscodeshift').FileInfo} file
- * @param {import('jscodeshift').API} api
- */
-export default function transformer(file, api, options) {
+export default function transformer(file: JsCodeShiftFileInfo, api: JsCodeShiftAPI, options: any) {
   file.source = transformLocalizationProviderRenameLocale(file, api, options);
 
   return file.source;

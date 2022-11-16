@@ -13,10 +13,11 @@
     "jscodeshift"
   ],
   "scripts": {
-    "test": "cd ../../ && cross-env NODE_ENV=test mocha 'packages/x-codemod/**/*.test.js'",
+    "test": "cd ../../ && cross-env NODE_ENV=test mocha 'packages/x-codemod/**/*.test.ts'",
+    "typescript": "tsc -p tsconfig.json",
     "prebuild": "rimraf build",
-    "copy-files": "cpy README.md build && cpy package.json build && cpy codemod.js build",
-    "build": "node ../../scripts/build.mjs node --out-dir ./build --ignore 'src/**/*.test' && yarn copy-files"
+    "copy-files": "cpy README.md build && cpy package.json build",
+    "build": "node ../../scripts/build.mjs node --ignore 'src/**/*.test' 'src/types.ts' && yarn copy-files"
   },
   "repository": {
     "type": "git",

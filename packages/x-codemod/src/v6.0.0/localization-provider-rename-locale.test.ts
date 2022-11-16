@@ -12,10 +12,7 @@ describe('v6.0.0', () => {
   describe('localization-provider-rename-locale', () => {
     it('transforms props as needed', () => {
       const actual = transform(
-        {
-          source: read('./localization-provider-rename-locale.test/actual.js'),
-          path: require.resolve('./localization-provider-rename-locale.test/actual.js'),
-        },
+        { source: read('./localization-provider-rename-locale.test/actual.js') },
         { jscodeshift },
         {},
       );
@@ -26,10 +23,7 @@ describe('v6.0.0', () => {
 
     it('should be idempotent', () => {
       const actual = transform(
-        {
-          source: read('./localization-provider-rename-locale.test/expected.js'),
-          path: require.resolve('./localization-provider-rename-locale.test/expected.js'),
-        },
+        { source: read('./localization-provider-rename-locale.test/expected.js') },
         { jscodeshift },
         {},
       );

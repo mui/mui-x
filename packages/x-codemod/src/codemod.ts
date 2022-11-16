@@ -1,18 +1,31 @@
 #!/usr/bin/env node
 
-const childProcess = require('child_process');
-const { promises: fs } = require('fs');
-const path = require('path');
-const yargs = require('yargs');
+import childProcess from 'child_process';
+import { promises as fs } from 'fs';
+import path from 'path';
+import yargs from 'yargs';
+
 const jscodeshiftPackage = require('jscodeshift/package.json');
 
 const jscodeshiftDirectory = path.dirname(require.resolve('jscodeshift'));
 const jscodeshiftExecutable = path.join(jscodeshiftDirectory, jscodeshiftPackage.bin.jscodeshift);
 
-async function runTransform(transform, files, flags, codemodFlags) {
+interface Flags {
+  dry?: boolean;
+  parser?: string;
+  print?: boolean;
+  jscodeshift?: string;
+}
+
+async function runTransform(
+  transform: string,
+  files: string[],
+  flags: Flags,
+  codemodFlags: string[],
+) {
   const transformerSrcPath = path.resolve(__dirname, './src', `${transform}.js`);
-  const transformerBuildPath = path.resolve(__dirname, './node', `${transform}.js`);
-  let transformerPath;
+  const transformerBuildPath = path.resolve(__dirname, `${transform}.js`);
+  let transformerPath: string;
   try {
     await fs.stat(transformerSrcPath);
     transformerPath = transformerSrcPath;
@@ -21,7 +34,7 @@ async function runTransform(transform, files, flags, codemodFlags) {
       await fs.stat(transformerBuildPath);
       transformerPath = transformerBuildPath;
     } catch (buildPathError) {
-      if (buildPathError.code === 'ENOENT') {
+      if ((buildPathError as any).code === 'ENOENT') {
         throw new Error(
           `Transform '${transform}' not found. Check out ${path.resolve(
             __dirname,
@@ -68,14 +81,19 @@ async function runTransform(transform, files, flags, codemodFlags) {
   }
 }
 
-function run(argv) {
-  const { codemod, paths, ...flags } = argv;
+interface HandlerArgv extends Flags {
+  codemod: string;
+  paths: string[];
+}
+
+function run(argv: yargs.ArgumentsCamelCase<HandlerArgv>) {
+  const { codemod, paths, _: other, dry, jscodeshift, parser, print } = argv;
 
   return runTransform(
     codemod,
     paths.map((filePath) => path.resolve(filePath)),
-    flags,
-    argv._,
+    { dry, jscodeshift, parser, print },
+    other as string[] || [],
   );
 }
 
@@ -83,6 +101,7 @@ yargs
   .command({
     command: '$0 <codemod> <paths...>',
     describe: 'Applies a `@mui/x-codemod` to the specified paths',
+    // @ts-ignore-next-line
     builder: (command) => {
       return command
         .positional('codemod', {
@@ -118,7 +137,13 @@ yargs
     handler: run,
   })
   .scriptName('npx @mui/x-codemod')
-  .example('$0 v6.0.0/localization-provider-rename-locale src')
-  .example('$0 v6.0.0/component-rename-prop src -- --component=DataGrid --from=prop --to=newProp')
+  .example(
+    '$0 v6.0.0/localization-provider-rename-locale src',
+    'Run "localization-provider-rename-locale" codemod on "src" path',
+  )
+  .example(
+    '$0 v6.0.0/component-rename-prop src -- --component=DataGrid --from=prop --to=newProp',
+    'Run "component-rename-prop" codemod on "src" path with custom "from" and "to" arguments',
+  )
   .help()
   .parse();

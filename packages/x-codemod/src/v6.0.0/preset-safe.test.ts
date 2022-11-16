@@ -12,10 +12,7 @@ describe('v6.0.0', () => {
   describe('preset-safe', () => {
     it('transforms props as needed', () => {
       const actual = transform(
-        {
-          source: read('./preset-safe.test/actual.js'),
-          path: require.resolve('./preset-safe.test/actual.js'),
-        },
+        { source: read('./preset-safe.test/actual.js') },
         { jscodeshift },
         {},
       );
@@ -26,10 +23,7 @@ describe('v6.0.0', () => {
 
     it('should be idempotent', () => {
       const actual = transform(
-        {
-          source: read('./preset-safe.test/expected.js'),
-          path: require.resolve('./preset-safe.test/expected.js'),
-        },
+        { source: read('./preset-safe.test/expected.js') },
         { jscodeshift },
         {},
       );
