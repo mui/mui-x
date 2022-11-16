@@ -9,6 +9,8 @@ import {
   GridInputRowSelectionModel,
   GridRowId,
   GridEditModes,
+  useGridApiRef,
+  GridApi,
 } from '@mui/x-data-grid';
 import {
   getCell,
@@ -730,6 +732,19 @@ describe('<DataGrid /> - Row Selection', () => {
       expect(getSelectedRowIds()).to.deep.equal([]);
       fireEvent.click(getCell(1, 1));
       expect(getSelectedRowIds()).to.deep.equal([1, 2]);
+    });
+
+    it('should throw if rowSelectionModel contains more than 1 row', () => {
+      let apiRef: React.MutableRefObject<GridApi>;
+      function ControlCase() {
+        apiRef = useGridApiRef();
+        return <TestDataGridSelection apiRef={apiRef} />;
+      }
+
+      render(<ControlCase />);
+      expect(() => apiRef.current.setRowSelectionModel([0, 1])).to.throw(
+        /`rowSelectionModel` can only contain 1 item in DataGrid/,
+      );
     });
   });
 

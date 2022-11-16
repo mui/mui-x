@@ -135,7 +135,7 @@
     "rowSelection": { "type": { "name": "bool" }, "default": "true" },
     "rowSelectionModel": {
       "type": {
-        "name": "custom",
+        "name": "union",
         "description": "number<br>&#124;&nbsp;string<br>&#124;&nbsp;array"
       }
     },

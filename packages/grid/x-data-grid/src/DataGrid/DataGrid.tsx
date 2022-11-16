@@ -634,28 +634,7 @@ DataGridRaw.propTypes = {
   /**
    * Sets the row selection model of the grid.
    */
-  rowSelectionModel: chainPropTypes(
-    PropTypes.oneOfType([PropTypes.number, PropTypes.string, PropTypes.array]),
-    (props: any) => {
-      if (
-        !props.checkboxSelection &&
-        Array.isArray(props.rowSelectionModel) &&
-        props.rowSelectionModel.length > 1
-      ) {
-        return new Error(
-          [
-            `MUI: \`<DataGrid rowSelectionModel={${JSON.stringify(
-              props.rowSelectionModel,
-            )}} />\` is not a valid prop.`,
-            'rowSelectionModel can only be of 1 item in DataGrid.',
-            '',
-            'You need to upgrade to DataGridPro or DataGridPremium component to unlock multiple selection.',
-          ].join('\n'),
-        );
-      }
-      return null;
-    },
-  ),
+  rowSelectionModel: PropTypes.oneOfType([PropTypes.number, PropTypes.string, PropTypes.array]),
   /**
    * Sets the type of space between rows added by `getRowSpacing`.
    * @default "margin"
