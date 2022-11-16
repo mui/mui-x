@@ -15,6 +15,9 @@
     { "path": "../x-data-grid-pro/tsconfig.build.json" },
     { "path": "../../x-license-pro/tsconfig.build.json" }
   ],
-  "include": ["src/**/*.ts*", "../../../node_modules/@mui/monorepo/packages/mui-material/src/themeCssVarsAugmentation"],
+  "include": [
+    "src/**/*.ts*",
+    "../../../node_modules/@mui/monorepo/packages/mui-material/src/themeCssVarsAugmentation"
+  ],
   "exclude": ["src/**/*.spec.ts*", "src/**/*.test.ts*"]
 }

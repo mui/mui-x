@@ -11,7 +11,7 @@
     "incremental": true,
     "noImplicitAny": true
   },
-  
+
   "include": [
     "pages/**/*.ts*",
     "data/**/*",
