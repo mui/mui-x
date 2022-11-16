@@ -4,9 +4,9 @@ import { CalendarOrClockPickerView } from '../../models/views';
 import { BaseToolbarProps, ExportedBaseToolbarProps } from '../../models/props/toolbar';
 import { BaseTabsProps, ExportedBaseTabsProps } from '../../models/props/tabs';
 import { UsePickerLayoutResponseLayoutProps } from '../../hooks/usePicker/usePickerLayout';
-import { PickerViewLayoutClasses } from './pickerViewLayoutClasses';
+import { PickersViewLayoutClasses } from './pickersViewLayoutClasses';
 
-export interface ExportedPickerViewLayoutSlotsComponent {
+export interface ExportedPickersViewLayoutSlotsComponent {
   /**
    * Custom component for the action bar, it is placed bellow the picker views.
    * @default PickersActionBar
@@ -14,15 +14,15 @@ export interface ExportedPickerViewLayoutSlotsComponent {
   ActionBar?: React.ElementType<PickersActionBarProps>;
 }
 
-export interface ExportedPickerViewLayoutSlotsComponentsProps {
+export interface ExportedPickersViewLayoutSlotsComponentsProps {
   /**
    * Props passed down to the action bar component.
    */
   actionBar?: Omit<PickersActionBarProps, 'onAccept' | 'onClear' | 'onCancel' | 'onSetToday'>;
 }
 
-interface PickerViewLayoutSlotsComponent<TValue, TView extends CalendarOrClockPickerView>
-  extends ExportedPickerViewLayoutSlotsComponent {
+interface PickersViewLayoutSlotsComponent<TValue, TView extends CalendarOrClockPickerView>
+  extends ExportedPickersViewLayoutSlotsComponent {
   /**
    * Tabs enabling toggling between views.
    */
@@ -34,8 +34,8 @@ interface PickerViewLayoutSlotsComponent<TValue, TView extends CalendarOrClockPi
   Toolbar?: React.JSXElementConstructor<BaseToolbarProps<TValue, TView>>;
 }
 
-interface PickerViewLayoutSlotsComponentsProps
-  extends ExportedPickerViewLayoutSlotsComponentsProps {
+interface PickersViewLayoutSlotsComponentsProps
+  extends ExportedPickersViewLayoutSlotsComponentsProps {
   /**
    * Props passed down to the tabs component.
    */
@@ -46,19 +46,19 @@ interface PickerViewLayoutSlotsComponentsProps
   toolbar?: ExportedBaseToolbarProps;
 }
 
-export interface PickerViewLayoutProps<TValue, TView extends CalendarOrClockPickerView>
+export interface PickersViewLayoutProps<TValue, TView extends CalendarOrClockPickerView>
   extends UsePickerLayoutResponseLayoutProps<TValue, TView> {
   className?: string;
   children: React.ReactNode;
-  classes?: Partial<PickerViewLayoutClasses>;
+  classes?: Partial<PickersViewLayoutClasses>;
   /**
    * Overrideable components.
    * @default {}
    */
-  components?: PickerViewLayoutSlotsComponent<TValue, TView>;
+  components?: PickersViewLayoutSlotsComponent<TValue, TView>;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  componentsProps?: PickerViewLayoutSlotsComponentsProps;
+  componentsProps?: PickersViewLayoutSlotsComponentsProps;
 }

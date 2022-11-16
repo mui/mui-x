@@ -125,7 +125,12 @@ export const useMultiInputTimeRangeField = <TDate, TChildProps extends {}>({
     TDate,
     TimeRangeValidationError,
     TimeRangeComponentValidationProps
-  >({ ...sharedProps, value }, validateTimeRange, () => true);
+  >(
+    { ...sharedProps, value },
+    validateTimeRange,
+    rangeValueManager.isSameError,
+    rangeValueManager.defaultErrorState,
+  );
 
   const startDateResponse = {
     ...rawStartDateResponse,

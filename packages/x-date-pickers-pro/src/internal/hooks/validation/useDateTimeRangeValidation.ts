@@ -10,6 +10,7 @@ import {
 import { isRangeValid } from '../../utils/date-utils';
 import { DayRangeValidationProps } from '../../models/dateRange';
 import { DateRange } from '../../models/range';
+import { rangeValueManager } from '../../utils/valueManagers';
 
 export interface DateTimeRangeComponentValidationProps<TDate>
   extends DayRangeValidationProps<TDate>,
@@ -83,5 +84,10 @@ export const useDateRangeValidation = <TDate>(
     DateTimeRangeComponentValidationProps<TDate>
   >,
 ): DateTimeRangeValidationError => {
-  return useValidation(props, validateDateTimeRange, isSameDateTimeRangeError);
+  return useValidation(
+    props,
+    validateDateTimeRange,
+    rangeValueManager.isSameError,
+    rangeValueManager.defaultErrorState,
+  );
 };

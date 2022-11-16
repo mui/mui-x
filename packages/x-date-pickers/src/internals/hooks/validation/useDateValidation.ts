@@ -117,4 +117,4 @@ export const isSameDateError = (a: DateValidationError, b: DateValidationError) 
  */
 export const useDateValidation = <TDate>(
   props: ValidationProps<DateValidationError, TDate | null, DateComponentValidationProps<TDate>>,
-): DateValidationError => useValidation(props, validateDate, isSameDateError);
+): DateValidationError => useValidation(props, validateDate, isSameDateError, null);

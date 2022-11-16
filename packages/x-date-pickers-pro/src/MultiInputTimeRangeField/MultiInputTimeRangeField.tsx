@@ -56,6 +56,8 @@ const MultiInputTimeRangeField = React.forwardRef(function MultiInputTimeRangeFi
     shouldDisableTime,
     disableFuture,
     disablePast,
+    selectedSections,
+    onSelectedSectionsChange,
     ...other
   } = themeProps;
 
@@ -109,6 +111,8 @@ const MultiInputTimeRangeField = React.forwardRef(function MultiInputTimeRangeFi
       shouldDisableTime,
       disableFuture,
       disablePast,
+      selectedSections,
+      onSelectedSectionsChange,
     },
     startInputProps,
     endInputProps,
