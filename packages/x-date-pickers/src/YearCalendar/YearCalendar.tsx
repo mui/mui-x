@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { SxProps, useTheme } from '@mui/system';
 import { styled, useThemeProps, Theme } from '@mui/material/styles';
-import { useForkRef } from '@mui/material/utils';
 import {
+  unstable_useForkRef as useForkRef,
   unstable_composeClasses as composeClasses,
   unstable_useControlled as useControlled,
   unstable_useEventCallback as useEventCallback,
@@ -93,7 +93,7 @@ export interface YearCalendarProps<TDate>
    */
   defaultValue?: TDate | null;
   /**
-   * Callback fired when the value (the selected year) changes.
+   * Callback fired when the value changes.
    * @template TDate
    * @param {TDate | null} value The new value.
    */
@@ -348,7 +348,7 @@ YearCalendar.propTypes = {
    */
   disabled: PropTypes.bool,
   /**
-   * If `true` disable values before the current time
+   * If `true` disable values before the current date for date components, time for time components and both for date time components.
    * @default false
    */
   disableFuture: PropTypes.bool,
@@ -358,21 +358,21 @@ YearCalendar.propTypes = {
    */
   disableHighlightToday: PropTypes.bool,
   /**
-   * If `true` disable values after the current time.
+   * If `true` disable values after the current date for date components, time for time components and both for date time components.
    * @default false
    */
   disablePast: PropTypes.bool,
   hasFocus: PropTypes.bool,
   /**
-   * Maximal selectable date. @DateIOType
+   * Maximal selectable date.
    */
   maxDate: PropTypes.any,
   /**
-   * Minimal selectable date. @DateIOType
+   * Minimal selectable date.
    */
   minDate: PropTypes.any,
   /**
-   * Callback fired when the value (the selected year) changes.
+   * Callback fired when the value changes.
    * @template TDate
    * @param {TDate | null} value The new value.
    */
@@ -384,11 +384,10 @@ YearCalendar.propTypes = {
    */
   readOnly: PropTypes.bool,
   /**
-   * Disable specific years dynamically.
-   * Works like `shouldDisableDate` but for year selection view @DateIOType.
+   * Disable specific year.
    * @template TDate
    * @param {TDate} year The year to test.
-   * @returns {boolean} Returns `true` if the year should be disabled.
+   * @returns {boolean} If `true` the year will be disabled.
    */
   shouldDisableYear: PropTypes.func,
   /**

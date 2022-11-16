@@ -1,7 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { TextFieldProps } from '@mui/material/TextField';
-import { unstable_useId as useId } from '@mui/material/utils';
+import { unstable_useId as useId } from '@mui/utils';
 import MenuItem from '@mui/material/MenuItem';
 import { GridLoadIcon } from '../../icons';
 import { GridFilterInputValueProps } from './GridFilterInputValueProps';

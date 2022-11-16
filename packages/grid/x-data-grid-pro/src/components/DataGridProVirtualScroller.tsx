@@ -18,7 +18,7 @@ import {
   useGridVirtualScroller,
   calculatePinnedRowsHeight,
 } from '@mui/x-data-grid/internals';
-import { useGridApiContext } from '../hooks/utils/useGridApiContext';
+import { useGridPrivateApiContext } from '../hooks/utils/useGridPrivateApiContext';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import { DataGridProProcessedProps } from '../models/dataGridProProps';
 import {
@@ -185,7 +185,7 @@ const DataGridProVirtualScroller = React.forwardRef<
   DataGridProVirtualScrollerProps
 >(function DataGridProVirtualScroller(props, ref) {
   const { className, disableVirtualization, ...other } = props;
-  const apiRef = useGridApiContext();
+  const apiRef = useGridPrivateApiContext();
   const rootProps = useGridRootProps();
   const visibleColumnFields = useGridSelector(apiRef, gridVisibleColumnFieldsSelector);
   const expandedRowIds = useGridSelector(apiRef, gridDetailPanelExpandedRowIdsSelector);
@@ -307,7 +307,7 @@ const DataGridProVirtualScroller = React.forwardRef<
       const exists = rowIndex !== undefined;
 
       if (React.isValidElement(content) && exists) {
-        const hasAutoHeight = apiRef.current.unstable_detailPanelHasAutoHeight(id);
+        const hasAutoHeight = apiRef.current.detailPanelHasAutoHeight(id);
         const height = hasAutoHeight ? 'auto' : detailPanelsHeights[id];
 
         const sizes = apiRef.current.unstable_getRowInternalSizes(id);

@@ -24,16 +24,6 @@ export interface GridCoreApi {
    */
   columnHeadersElementRef?: React.RefObject<HTMLDivElement>;
   /**
-   * The React ref of the grid window container element.
-   * @ignore - do not document.
-   */
-  windowRef?: React.RefObject<HTMLDivElement>;
-  /**
-   * The React ref of the grid data rendering zone.
-   * @ignore - do not document.
-   */
-  renderingZoneRef?: React.RefObject<HTMLDivElement>;
-  /**
    * The React ref of the grid header element.
    * @ignore - do not document.
    */
@@ -43,16 +33,6 @@ export interface GridCoreApi {
    * @ignore - do not document.
    */
   footerRef?: React.RefObject<HTMLDivElement>;
-  /**
-   * The generic event emitter manager.
-   * @ignore - do not document
-   */
-  unstable_eventManager: EventManager;
-  /**
-   * The caches used by hooks and state initializers.
-   * @ignore - do not document.
-   */
-  unstable_caches: GridApiCaches;
   /**
    * Registers a handler for an event.
    * @param {string} event The name of the event.
@@ -89,10 +69,22 @@ export interface GridCorePrivateApi<
   GridPrivateApi extends GridPrivateApiCommon,
 > {
   /**
+   * The caches used by hooks and state initializers.
+   */
+  caches: GridApiCaches;
+  /**
    * Registers a method on the public or private API.
    * @param {'public' | 'private'} visibility The visibility of the methods.
    * @param {Partial<GridApiRef>} methods The methods to register.
    */
+  /**
+   * The generic event emitter manager.
+   */
+  eventManager: EventManager;
+  /**
+   * The React ref of the grid virtual scroller container element.
+   */
+  virtualScrollerRef?: React.RefObject<HTMLDivElement>;
   register: <
     V extends 'public' | 'private',
     T extends V extends 'public'
