@@ -1,1 +1,3 @@
-<DataGrid {...data} />
+<div style={{ height: 350, width: '100%' }}>
+  <DataGrid {...data} />
+</div>

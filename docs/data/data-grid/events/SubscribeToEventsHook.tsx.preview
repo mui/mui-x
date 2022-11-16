@@ -1,1 +1,3 @@
-<DataGrid {...data} components={{ Footer }} />
+<Box sx={{ height: 350, width: '100%' }}>
+  <DataGrid {...data} components={{ Footer }} />
+</Box>

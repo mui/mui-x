@@ -5,37 +5,13 @@ const pluginName = 'babel-plugin-jsx-preview';
 const wrapperTypes = ['div', 'Box', 'Stack', 'LocalizationProvider'];
 
 /**
- * @param {import('@babel/core').types.JSXElement | import('@babel/core').types.JSXElement['children']} node The node to check.
- */
-const hasWrapper = (node) => {
-  let cleanNode;
-  if (Array.isArray(node)) {
-    if (node.length !== 1) {
-      // We don't want to remove a wrapper if he has siblings
-      return false;
-    }
-
-    cleanNode = node[0];
-  } else {
-    cleanNode = node;
-  }
-
-  // We don't want to remove a wrapper if he has no children
-  if (!cleanNode?.children?.length) {
-    return false;
-  }
-
-  return wrapperTypes.includes(cleanNode?.openingElement?.name?.name);
-};
-
-/**
  * @returns {import('@babel/core').PluginObj}
  */
 module.exports = function babelPluginJsxPreview() {
   /**
-   * @type {import('@babel/core').types.JSXElement | import('@babel/core').types.JSXElement['children']}
+   * @type {import('@babel/core').types.JSXElement[]}
    */
-  let previewNode = null;
+  let previewNodes = [];
 
   return {
     name: pluginName,
@@ -57,9 +33,16 @@ module.exports = function babelPluginJsxPreview() {
 
         const returnedJSX = lastReturn.argument;
         if (returnedJSX.type === 'JSXElement') {
-          previewNode = returnedJSX;
+          previewNodes = [returnedJSX];
 
-          while (hasWrapper(previewNode)) {
+          let shouldTestWrapper = true;
+
+          while (
+            shouldTestWrapper &&
+            previewNodes.length === 1 &&
+            previewNodes[0].children.length > 0 &&
+            wrapperTypes.includes(previewNodes[0].openingElement.name.name)
+          ) {
             // Trim blank JSXText to normalize
             // return (
             //   <div />
@@ -72,15 +55,18 @@ module.exports = function babelPluginJsxPreview() {
             //   </Stack>
             // )
 
-            previewNode = (
-              Array.isArray(previewNode) ? previewNode[0] : previewNode
-            ).children.filter((child, index, children) => {
+            const wrapperName = previewNodes[0].openingElement.name.name;
+
+            previewNodes = previewNodes[0]?.children.filter((child, index, children) => {
               const isSurroundingBlankJSXText =
                 (index === 0 || index === children.length - 1) &&
                 child.type === 'JSXText' &&
                 !/[^\s]+/.test(child.value);
               return !isSurroundingBlankJSXText;
             });
+
+            // If the current wrapper is `LocalizationProvider`, we also want to remove nested wrappers.
+            shouldTestWrapper = wrapperName === 'LocalizationProvider';
           }
         }
       },
@@ -91,10 +77,9 @@ module.exports = function babelPluginJsxPreview() {
       }).options;
 
       let hasPreview = false;
-      if (previewNode !== null) {
-        const [startNode, endNode] = Array.isArray(previewNode)
-          ? [previewNode[0], previewNode.slice(-1)[0]]
-          : [previewNode, previewNode];
+      if (previewNodes.length > 0) {
+        const startNode = previewNodes[0];
+        const endNode = previewNodes.slice(-1)[0];
         const preview = state.code.slice(startNode.start, endNode.end);
 
         const previewLines = preview.split(/\n/);
