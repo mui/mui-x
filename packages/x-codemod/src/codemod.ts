@@ -93,7 +93,7 @@ function run(argv: yargs.ArgumentsCamelCase<HandlerArgv>) {
     codemod,
     paths.map((filePath) => path.resolve(filePath)),
     { dry, jscodeshift, parser, print },
-    other as string[] || [],
+    (other as string[]) || [],
   );
 }
 
