@@ -63,10 +63,11 @@ To use a date library inside the Date and Time Pickers, you need to first instal
 
 {{"component": "modules/components/PickersInstallationInstructions.js"}}
 
-You then need to pass its adapter to the `LocalizationProvider`.
-All the pickers rendered inside this provider will have access to the adapter through a React context.
+You then have to pass its adapter to the `LocalizationProvider`.
+The supported adapters as well as `LocalizationProvider` are exported from both the `@mui/x-date-pickers` and `@mui/x-date-pickers-pro` packages.
 
-We recommend you to wrap your entire application with a `LocalizationProvider` to be able to use the Date and Time Pickers everywhere.
+All the pickers rendered inside this provider will have access to the adapter through a React context.
+For that reason, we recommend you to wrap your entire application with a `LocalizationProvider` to be able to use the Date and Time Pickers everywhere.
 
 {{"component": "modules/components/PickersRenderingInstructions.js"}}
 

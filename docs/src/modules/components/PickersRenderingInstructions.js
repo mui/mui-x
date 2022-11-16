@@ -1,4 +1,4 @@
-/* eslint-disable  material-ui/no-hardcoded-labels */
+/* eslint-disable material-ui/no-hardcoded-labels */
 import * as React from 'react';
 import HighlightedCode from 'docs/src/modules/components/HighlightedCode';
 import Stack from '@mui/material/Stack';

@@ -38,8 +38,11 @@ First you have to install the date-library you want to use to manage dates, and 
 
 #### Code setup
 
-After installation completed, you have to set the `dateAdapter` prop of the `LocalizationProvider` accordingly.
-The supported adapters are exported from both the `@mui/x-date-pickers` and `@mui/x-date-pickers-pro`.
+After the installation is completed, you have to pass the adapter of your date library to `LocalizationProvider`.
+The supported adapters as well as `LocalizationProvider` are exported from both the `@mui/x-date-pickers` and `@mui/x-date-pickers-pro` packages.
+
+All the pickers rendered inside this provider will have access to the adapter through a React context.
+For that reason, we recommend you to wrap your entire application with a `LocalizationProvider` to be able to use the Date and Time Pickers everywhere.
 
 {{"component": "modules/components/PickersRenderingInstructions.js"}}
 

@@ -33,6 +33,7 @@ export default function PickersInstallationInstructions() {
   const commandLines = [
     `// Install component (${licenceType} version)`,
     `${installationCLI}${componentPackage}`,
+      '',
     `// Install date library (if not already installed)`,
     `${installationCLI}${libraryUsed}`,
   ].join('\n');
@@ -70,7 +71,7 @@ export default function PickersInstallationInstructions() {
           ))}
         </TextField>
       </Stack>
-      <HighlightedCode sx={{ width: '100%' }} code={commandLines} language="tsx" />
+      <HighlightedCode sx={{ width: '100%' }} code={commandLines} language="sh" />
     </Stack>
   );
 }
