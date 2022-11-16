@@ -114,7 +114,7 @@ describe('<DataGridPro /> - Lazy loader', () => {
 
   // See https://github.com/mui/mui-x/issues/6857
   it('should update the row when `apiRef.current.updateRows` is called on lazy-loaded rows', () => {
-    render(<TestLazyLoader rowCount={5} />);
+    render(<TestLazyLoader rowCount={5} autoHeight={isJSDOM} />);
 
     const newRows: GridRowModel[] = [
       { id: 4, first: 'John' },
