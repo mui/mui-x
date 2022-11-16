@@ -1,6 +1,7 @@
-<StaticDateRangePicker
-  displayStaticWrapperAs="desktop"
+<DateRangePicker
+  disablePast
   value={value}
+  maxDate={getWeeksAfter(value[0], 4)}
   onChange={(newValue) => {
     setValue(newValue);
   }}

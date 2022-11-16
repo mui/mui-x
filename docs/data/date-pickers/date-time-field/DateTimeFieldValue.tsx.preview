@@ -1,9 +1,13 @@
-<Stack spacing={{ xs: 4, lg: 2 }} direction={{ xs: 'column', lg: 'row' }}>
-  <TimeField
+<Stack
+  spacing={{ xs: 4, xl: 2 }}
+  direction={{ xs: 'column', xl: 'row' }}
+  sx={{ '& > *': { width: 300 } }}
+>
+  <DateTimeField
     label="Uncontrolled field"
     defaultValue={dayjs('2022-04-07T15:30')}
   />
-  <TimeField
+  <DateTimeField
     label="Controlled field"
     value={value}
     onChange={(newValue) => setValue(newValue)}

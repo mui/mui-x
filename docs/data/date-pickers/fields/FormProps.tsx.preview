@@ -1,6 +1,4 @@
-<LocalizationProvider dateAdapter={AdapterDayjs}>
-  <Stack spacing={2} sx={(theme) => ({ width: theme.spacing(48) })}>
-    <DateField label="Disabled" defaultValue={defaultValue} disabled />
-    <DateField label="Read only" defaultValue={defaultValue} readOnly />
-  </Stack>
-</LocalizationProvider>
+<Stack spacing={2} sx={(theme) => ({ width: theme.spacing(48) })}>
+  <DateField label="Disabled" defaultValue={defaultValue} disabled />
+  <DateField label="Read only" defaultValue={defaultValue} readOnly />
+</Stack>
