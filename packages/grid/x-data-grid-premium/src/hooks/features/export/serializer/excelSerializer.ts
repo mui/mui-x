@@ -11,6 +11,7 @@ import {
 } from '@mui/x-data-grid-pro';
 import { buildWarning } from '@mui/x-data-grid/internals';
 import { GridExceljsProcessInput, ColumnsStylesInterface } from '../gridExcelExportInterface';
+import { GridPrivateApiPremium } from '../../../../models/gridApiPremium';
 
 const getExcelJs = async () => {
   const { default: excelJsDefault } = await import('exceljs');
@@ -50,7 +51,7 @@ const getFormattedValueOptions = (
 const serializeRow = (
   id: GridRowId,
   columns: GridStateColDef[],
-  api: GridApi,
+  api: GridPrivateApiPremium,
   defaultValueOptionsFormulae: { [field: string]: string },
 ) => {
   const row: { [colField: string]: undefined | number | boolean | string | Date } = {};
@@ -61,7 +62,7 @@ const serializeRow = (
   const outlineLevel = firstCellParams.rowNode.depth;
 
   // `colSpan` is only calculated for rendered rows, so we need to calculate it during export for every row
-  api.unstable_calculateColSpan({
+  api.calculateColSpan({
     rowId: id,
     minFirstColumn: 0,
     maxLastColumn: columns.length,
@@ -256,7 +257,7 @@ interface BuildExcelOptions {
 
 export async function buildExcel(
   options: BuildExcelOptions,
-  api: GridApi,
+  api: GridPrivateApiPremium,
 ): Promise<Excel.Workbook> {
   const {
     columns,

@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { ownerDocument } from '@mui/material/utils';
+import { unstable_ownerDocument as ownerDocument } from '@mui/utils';
 import { GridEventListener, GridEventLookup } from '../../../models/events';
 import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
-import { GridFocusApi } from '../../../models/api/gridFocusApi';
+import { GridFocusApi, GridFocusPrivateApi } from '../../../models/api/gridFocusApi';
 import { GridCellParams } from '../../../models/params/gridCellParams';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { useGridLogger } from '../../utils/useGridLogger';
@@ -108,7 +108,7 @@ export const useGridFocus = (
   );
 
   const setColumnGroupHeaderFocus = React.useCallback<
-    GridFocusApi['unstable_setColumnGroupHeaderFocus']
+    GridFocusPrivateApi['setColumnGroupHeaderFocus']
   >(
     (field, depth, event = {}) => {
       const cell = gridFocusCellSelector(apiRef);
@@ -134,12 +134,10 @@ export const useGridFocus = (
   );
 
   const getColumnGroupHeaderFocus = React.useCallback<
-    GridFocusApi['unstable_getColumnGroupHeaderFocus']
+    GridFocusPrivateApi['getColumnGroupHeaderFocus']
   >(() => unstable_gridFocusColumnGroupHeaderSelector(apiRef), [apiRef]);
 
-  const moveFocusToRelativeCell = React.useCallback<
-    GridFocusApi['unstable_moveFocusToRelativeCell']
-  >(
+  const moveFocusToRelativeCell = React.useCallback<GridFocusPrivateApi['moveFocusToRelativeCell']>(
     (id, field, direction) => {
       let columnIndexToFocus = apiRef.current.getColumnIndex(field);
       let rowIndexToFocus = apiRef.current.getRowIndexRelativeToVisibleRows(id);
@@ -243,7 +241,7 @@ export const useGridFocus = (
         // This group cell has already been focused
         return;
       }
-      apiRef.current.unstable_setColumnGroupHeaderFocus(fields[0], depth, event);
+      apiRef.current.setColumnGroupHeaderFocus(fields[0], depth, event);
     },
     [apiRef, focussedColumnGroup],
   );
@@ -325,17 +323,19 @@ export const useGridFocus = (
     }
   }, [apiRef]);
 
-  useGridApiMethod(
-    apiRef,
-    {
-      setCellFocus,
-      setColumnHeaderFocus,
-      unstable_moveFocusToRelativeCell: moveFocusToRelativeCell,
-      unstable_setColumnGroupHeaderFocus: setColumnGroupHeaderFocus,
-      unstable_getColumnGroupHeaderFocus: getColumnGroupHeaderFocus,
-    },
-    'public',
-  );
+  const focusApi: GridFocusApi = {
+    setCellFocus,
+    setColumnHeaderFocus,
+  };
+
+  const focusPrivateApi: GridFocusPrivateApi = {
+    moveFocusToRelativeCell,
+    setColumnGroupHeaderFocus,
+    getColumnGroupHeaderFocus,
+  };
+
+  useGridApiMethod(apiRef, focusApi, 'public');
+  useGridApiMethod(apiRef, focusPrivateApi, 'private');
 
   React.useEffect(() => {
     const doc = ownerDocument(apiRef.current.rootElementRef!.current);

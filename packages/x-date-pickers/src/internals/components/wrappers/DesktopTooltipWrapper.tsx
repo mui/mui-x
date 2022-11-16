@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useForkRef } from '@mui/material/utils';
+import { unstable_useForkRef as useForkRef } from '@mui/utils';
 import { WrapperVariantContext } from './WrapperVariantContext';
 import { executeInTheNextEventLoopTick } from '../../utils/utils';
 import { PickersPopper } from '../PickersPopper';

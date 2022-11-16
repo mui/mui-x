@@ -13,15 +13,15 @@ import {
 import { UsePickerParams, UsePickerProps } from '../usePicker';
 import { BaseFieldProps } from '../../models/fields';
 import {
-  ExportedPickerViewLayoutSlotsComponent,
-  ExportedPickerViewLayoutSlotsComponentsProps,
-} from '../../components/PickerViewLayout';
+  ExportedPickersViewLayoutSlotsComponent,
+  ExportedPickersViewLayoutSlotsComponentsProps,
+} from '../../components/PickersViewLayout';
 import { UsePickerValueNonStaticProps } from '../usePicker/usePickerValue';
 import { UsePickerViewsNonStaticProps } from '../usePicker/usePickerViews';
 
 export interface UseMobilePickerSlotsComponent<TDate>
   extends PickersModalDialogSlotsComponent,
-    ExportedPickerViewLayoutSlotsComponent {
+    ExportedPickersViewLayoutSlotsComponent {
   /**
    * Component used to enter the date with the keyboard.
    */
@@ -39,7 +39,7 @@ export interface UseMobilePickerSlotsComponentsProps<TDate>
       PickersModalDialogSlotsComponentsProps,
       'dialog' | 'mobilePaper' | 'mobileTransition'
     >,
-    ExportedPickerViewLayoutSlotsComponentsProps {
+    ExportedPickersViewLayoutSlotsComponentsProps {
   field?: SlotComponentProps<
     React.ElementType<BaseFieldProps<TDate | null, unknown>>,
     {},

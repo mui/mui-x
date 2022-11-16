@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useControlled } from '@mui/material/utils';
+import { unstable_useControlled as useControlled } from '@mui/utils';
 import { arrayIncludes } from '../utils/utils';
 import { PickerSelectionState } from './usePickerState';
 import { CalendarOrClockPickerView } from '../models';
