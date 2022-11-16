@@ -4,6 +4,8 @@
 
 Grouping columns allows you to have a multi-level hierarchy of columns in your header.
 
+
+
 :::warning
 This feature is experimental, it needs to be explicitly activated using the `columnGrouping` experimental feature flag.
 

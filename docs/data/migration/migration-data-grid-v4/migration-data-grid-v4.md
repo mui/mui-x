@@ -6,7 +6,7 @@
 
 This is a reference guide for upgrading your site from MUI X v4 to v5.
 MUI X v5 is fully compatible with MUI Core (includes Material UI) v5 and can be used with MUI Core v4 with some additional steps.
-Most breaking changes are renaming of CSS classes or variables to improve the consistency of the grid.
+Most breaking changes are renaming of CSS classes or variables to improve the consistency of the data grid.
 
 ## Migrating MUI Core from v4
 
@@ -364,7 +364,7 @@ To use the v5 version of MUI X, you first need to update to the new package name
   +   */
   +  value: GridCellValue;
   +  /**
-  +   * GridApi that lets you manipulate the grid.
+  +   * GridApi that lets you manipulate the data grid.
   +   */
   +  api: any;
   +}

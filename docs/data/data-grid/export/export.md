@@ -63,7 +63,7 @@ In the following example, the print export is disabled.
 
 ## Exported columns
 
-By default, the export will only contain the visible columns of the grid.
+By default, the export will only contain the visible columns of the data grid.
 There are a few ways to include or hide other columns.
 
 - Set the `disableExport` attribute to `true` in `GridColDef` for columns you don't want to be exported.
@@ -93,7 +93,7 @@ This section only applies to the CSV and the Excel export.
 The print export always prints rows in their current state.
 :::
 
-By default, the grid exports the selected rows if there are any.
+By default, the data grid exports the selected rows if there are any.
 If not, it exports all rows except the footers (filtered and sorted rows, according to active rules), including the collapsed ones.
 
 Alternatively, you can set the `getRowsToExport` function and export any rows you want, as in the following example.
@@ -149,12 +149,12 @@ For more details on these options, please visit the [`csvOptions` API page](/x/a
 
 ## Print export
 
-### Modify the grid style
+### Modify the data grid style
 
-By default, the printed grid is equivalent to printing a page containing only the grid.
+By default, the printed grid is equivalent to printing a page containing only the data grid.
 To modify the styles used for printing, such as colors, you can either use the `@media print` media query or the `pageStyle` property of `printOptions`.
 
-For example, if the grid is in dark mode, the text color will be inappropriate for printing (too light).
+For example, if the data grid is in dark mode, the text color will be inappropriate for printing (too light).
 
 With media query, you have to start your `sx` object with `@media print` key, such that all the style inside are only applied when printing.
 
@@ -291,10 +291,10 @@ function exceljsPostProcess({ worksheet }) {
 />;
 ```
 
-Since `exceljsPreProcess` is applied before adding the content of the grid, you can use it to add some informative rows on top of the document.
-The content of the grid will start on the next row after those added by `exceljsPreProcess`.
+Since `exceljsPreProcess` is applied before adding the content of the data grid, you can use it to add some informative rows on top of the document.
+The content of the data grid will start on the next row after those added by `exceljsPreProcess`.
 
-To customize the rows after the grid content, you should use `exceljsPostProcess`. As it is applied after adding the content, you can also use it to access the generated cells.
+To customize the rows after the data grid content, you should use `exceljsPostProcess`. As it is applied after adding the content, you can also use it to access the generated cells.
 
 In the following demo, both methods are used to set a custom header and a custom footer.
 
@@ -306,13 +306,13 @@ In the following demo, both methods are used to set a custom header and a custom
 This feature isn't implemented yet. It's coming.
 
 👍 Upvote [issue #199](https://github.com/mui/mui-x/issues/199) if you want to see it land faster.
-You will be able to copy and paste items to and from the grid using the system clipboard.
+You will be able to copy and paste items to and from the data grid using the system clipboard.
 :::
 
 ## apiRef [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
 
 :::warning
-Only use this API as the last option. Give preference to the props to control the grid.
+Only use this API as the last option. Give preference to the props to control the data grid.
 :::
 
 ### CSV

@@ -38,7 +38,7 @@ You don't need to initialize the API object using `useGridApiRef` to be able to 
 
 ### Outside the Data Grid [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
 
-When using the API object outside the grid components, you need to initialize it using the `useGridApiRef` hook.
+When using the API object outside the data grid components, you need to initialize it using the `useGridApiRef` hook.
 You can then pass it to the Data Grid's `apiRef` prop:
 
 ```tsx

@@ -27,7 +27,7 @@ You can create the array outside the render function or memoize it.
 
 ## Providing content
 
-By default, the grid uses the field of a column to get its value.
+By default, the data grid uses the field of a column to get its value.
 For instance, the column with field `name` will render the value stored in `row.name`.
 But for some columns, it can be useful to manually get and format the value to render.
 
@@ -73,7 +73,7 @@ Use the [`valueParser`](/x/react-data-grid/editing/#value-parser-and-value-sette
 
 ## Rendering cells
 
-By default, the grid renders the value as a string in the cell.
+By default, the data grid renders the value as a string in the cell.
 It resolves the rendered output in the following order:
 
 1. `renderCell() => ReactElement`
@@ -169,8 +169,8 @@ If you want the cell information to persist, you should save it either in the da
 
 ### Expand cell renderer
 
-By default, the grid cuts the content of a cell and renders an ellipsis if the content of the cell does not fit in the cell.
-As a workaround, you can create a cell renderer that will allow seeing the full content of the cell in the grid.
+By default, the data grid cuts the content of a cell and renders an ellipsis if the content of the cell does not fit in the cell.
+As a workaround, you can create a cell renderer that will allow seeing the full content of the cell in the data grid.
 
 {{"demo": "RenderExpandCellGrid.js", "bg": "inline"}}
 

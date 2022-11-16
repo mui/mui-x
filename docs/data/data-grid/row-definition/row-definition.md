@@ -12,7 +12,7 @@ The rows can be defined with the `rows` prop, which expects an array of objects.
 
 :::warning
 The `rows` prop should keep the same reference between two renders except when you want to apply new rows.
-Otherwise, the grid will re-apply heavy work like sorting and filtering.
+Otherwise, the data grid will re-apply heavy work like sorting and filtering.
 :::
 
 {{"demo": "RowsGrid.js", "bg": "inline"}}
@@ -25,7 +25,7 @@ This identifier is used internally to identify the row in the various models—f
 
 By default, the data grid looks for a property named `id` in the data set to get that identifier.
 
-If the row's identifier is not called `id`, then you need to use the `getRowId` prop to tell the grid where it's located.
+If the row's identifier is not called `id`, then you need to use the `getRowId` prop to tell the data grid where it's located.
 
 The following demo shows how to use `getRowId` to grab the unique identifier from a property named `internalId`:
 
@@ -35,14 +35,14 @@ The following demo shows how to use `getRowId` to grab the unique identifier fro
 
 {{"demo": "RowsGridWithGetRowId.js", "bg": "inline", "defaultCodeOpen": false}}
 
-If no such unique identifier exists in the data set, then you must create it by some other means, but this scenario should be avoided because it leads to issues with other features of the grid.
+If no such unique identifier exists in the data set, then you must create it by some other means, but this scenario should be avoided because it leads to issues with other features of the data grid.
 
 Note that it is not necessary to create a column to display the unique identifier data.
 The data grid pulls this information directly from the data set itself, not from anything that is displayed on the screen.
 
 :::warning
 Just like the `rows` prop, the `getRowId` prop should keep the same reference between two renders.
-Otherwise, the grid will re-apply heavy work like sorting and filtering.
+Otherwise, the data grid will re-apply heavy work like sorting and filtering.
 :::
 
 ## Styling rows

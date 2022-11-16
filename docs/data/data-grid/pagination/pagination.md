@@ -28,7 +28,7 @@ You can configure the page size the user can choose from with the `rowsPerPageOp
 Use the `autoPageSize` prop to auto-scale the `pageSize` to match the container height and the max number of rows that can be displayed without a vertical scroll bar.
 
 :::warning
-You can't use both the `autoPageSize` and `autoHeight` props at the same time because `autoHeight` scales the height of the grid according to the `pageSize`.
+You can't use both the `autoPageSize` and `autoHeight` props at the same time because `autoHeight` scales the height of the data grid according to the `pageSize`.
 :::
 
 {{"demo": "PageSizeAuto.js", "bg": "inline"}}
@@ -86,7 +86,7 @@ You can use the `onPageChange` prop to listen to changes to the page and update 
 ## Server-side pagination
 
 By default, the pagination is handled on the client.
-This means you have to give the rows of all pages to the grid.
+This means you have to give the rows of all pages to the data grid.
 If your dataset is too big, and you only want to fetch the current page, you can use server-side pagination.
 
 :::info
@@ -96,7 +96,7 @@ For more information regarding server-side pagination in combination with contro
 ### Basic implementation
 
 - Set the prop `paginationMode` to `server`
-- Provide a `rowCount` prop to let the grid know how many pages there are
+- Provide a `rowCount` prop to let the data grid know how many pages there are
 - Add an `onPageChange` callback to load the rows when the page changes
 
 Since `rowCount` prop is used to compute the number of available pages, switching it to `undefined` during loading reset page to zero.
@@ -129,7 +129,7 @@ You can customize the rendering of the pagination in the footer following [the c
 ## apiRef [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
 
 :::warning
-Only use this API as the last option. Give preference to the props to control the grid.
+Only use this API as the last option. Give preference to the props to control the data grid.
 :::
 
 {{"demo": "PaginationApiNoSnap.js", "bg": "inline", "hideToolbar": true, "defaultCodeOpen": false }}

@@ -104,7 +104,7 @@ You can find more details on, the [feature comparison](/x/react-data-grid/gettin
 
 ## Resources
 
-Here are some resources you might be interested in to learn more about the grid:
+Here are some resources you might be interested in to learn more about the data grid:
 
 <!-- #default-branch-switch -->
 

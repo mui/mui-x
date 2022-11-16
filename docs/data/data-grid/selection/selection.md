@@ -31,7 +31,7 @@ To activate checkbox selection set `checkboxSelection={true}`.
 
 ### Custom checkbox column
 
-If you provide a custom checkbox column to the grid with the `GRID_CHECKBOX_SELECTION_FIELD` field, the grid will not add its own.
+If you provide a custom checkbox column to the data grid with the `GRID_CHECKBOX_SELECTION_FIELD` field, the data grid will not add its own.
 
 We strongly recommend to use the `GRID_CHECKBOX_SELECTION_COL_DEF` variable instead of re-defining all the custom properties yourself.
 
@@ -41,7 +41,7 @@ In the following demo, the checkbox column has been moved to the right and its w
 
 :::warning
 Always set the `checkboxSelection` prop to `true` even when providing a custom checkbox column.
-Otherwise, the grid might remove your column.
+Otherwise, the data grid might remove your column.
 :::
 
 ## Disable selection on click
@@ -70,8 +70,8 @@ Each time this prop changes, the `onRowSelectionModelChange` callback is called 
 ### Usage with server-side pagination
 
 Using the controlled selection with `paginationMode="server"` may result in selected rows being lost when the page is changed.
-This happens because the grid cross-checks with the `rows` prop and only calls `onRowSelectionModelChange` with existing row IDs.
-Depending on your server-side implementation, when the page changes and the new value for the `rows` prop does not include previously selected rows, the grid will call `onRowSelectionModelChange` with an empty value.
+This happens because the data grid cross-checks with the `rows` prop and only calls `onRowSelectionModelChange` with existing row IDs.
+Depending on your server-side implementation, when the page changes and the new value for the `rows` prop does not include previously selected rows, the data grid will call `onRowSelectionModelChange` with an empty value.
 To prevent this, enable the `keepNonExistentRowsSelected` prop to keep the rows selected even if they do not exist.
 
 ```tsx
@@ -89,7 +89,7 @@ The following demo shows the prop in action:
 The grid exposes a set of methods that enables all of these features using the imperative apiRef.
 
 :::warning
-Only use this API as the last option. Give preference to the props to control the grid.
+Only use this API as the last option. Give preference to the props to control the data grid.
 :::
 
 {{"demo": "SelectionApiNoSnap.js", "bg": "inline", "hideToolbar": true}}

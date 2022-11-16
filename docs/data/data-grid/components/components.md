@@ -4,7 +4,7 @@
 
 ## Overriding components
 
-As part of the customization API, the grid allows you to override internal components with the `components` prop.
+As part of the customization API, the data grid allows you to override internal components with the `components` prop.
 The prop accepts an object of type [`GridSlotsComponent`](/x/api/data-grid/data-grid/#slots).
 
 If you wish to pass additional props in a component slot, you can do it using the `componentsProps` prop.
@@ -29,9 +29,9 @@ As an example, you could override the column menu and pass additional props as b
 The casing is different between the `components` (ColumnMenu) and `componentsProps` (columnMenu) props.
 :::
 
-### Interacting with the grid
+### Interacting with the data grid
 
-The grid exposes two hooks to help you to access the grid data while overriding component slots.
+The grid exposes two hooks to help you to access the data grid data while overriding component slots.
 
 They can be used as below:
 
@@ -86,7 +86,7 @@ export const GridColumnMenu = React.forwardRef<
 
 ### Toolbar
 
-To enable the toolbar you need to add the `Toolbar: GridToolbar` to the grid `components` prop.
+To enable the toolbar you need to add the `Toolbar: GridToolbar` to the data grid `components` prop.
 This demo showcases how this can be achieved.
 
 {{"demo": "ToolbarGrid.js", "bg": "inline"}}
@@ -140,7 +140,7 @@ In the following demo, an illustration is added on top of the default "No Rows" 
 {{"demo": "CustomEmptyOverlayGrid.js", "bg": "inline"}}
 
 :::info
-As the no rows overlay, the grid allows to override the no results overlay with the `NoResultsOverlay` slot.
+As the no rows overlay, the data grid allows to override the no results overlay with the `NoResultsOverlay` slot.
 :::
 
 ### Row
