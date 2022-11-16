@@ -1,6 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { DataGrid, useGridApiContext } from '@mui/x-data-grid';
+import { DataGridPro, useGridApiContext } from '@mui/x-data-grid-pro';
 import InputBase from '@mui/material/InputBase';
 import Popper from '@mui/material/Popper';
 import Paper from '@mui/material/Paper';
@@ -152,7 +152,7 @@ for (let i = 0; i < 50; i += 1) {
 export default function MultilineEditing() {
   return (
     <div style={{ height: 300, width: '100%' }}>
-      <DataGrid rows={rows} columns={columns} />
+      <DataGridPro rows={rows} columns={columns} />
     </div>
   );
 }
