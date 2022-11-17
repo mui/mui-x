@@ -1018,6 +1018,35 @@ You can find more information about the new api, including how to set those tran
 - [test] Skip tests for column pinning and dynamic row height (#5997) @m4theushw
 - [website] Improve security header @oliviertassinari
 
+## 5.17.11
+
+_Nov 10, 2022_
+
+We'd like to offer a big thanks to the 5 contributors who made this release possible. Here are some highlights ✨:
+
+- 🐞 Bugfixes
+
+### `@mui/x-data-grid@v5.17.11` / `@mui/x-data-grid-pro@v5.17.11` / `@mui/x-data-grid-premium@v5.17.11`
+
+#### Changes
+
+- [DataGrid] Fix for cell focus preventing scroll when virtualization enabled (#6622) @yaredtsy
+- [DataGridPro] Opt-out for column jump back on re-order (#6697) @gavbrennan
+
+### `@mui/x-date-pickers@v5.0.8` / `@mui/x-date-pickers-pro@v5.0.8`
+
+#### Changes
+
+- [pickers] Fix pickers toolbar styling (#6793) @LukasTy
+
+### Docs
+
+- [docs] Fix link to localization page (#6766) @alexfauquette
+
+### Core
+
+- [license] Add new license status 'Out of scope' (#6774) @oliviertassinari
+
 ## 5.17.10
 
 _Nov 4, 2022_
