@@ -17,4 +17,10 @@ export type { DateRangeFieldSection } from './internal/models/range';
 // Calendars
 export * from './DateRangeCalendar';
 
+// New pickers
+export * from './NextDateRangePicker';
+export * from './DesktopNextDateRangePicker';
+export * from './MobileNextDateRangePicker';
+export * from './StaticNextDateRangePicker';
+
 export type { DateRangeValidationError } from './internal/hooks/validation/useDateRangeValidation';
