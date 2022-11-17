@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useThemeProps } from '@mui/material/styles';
 import { DefaultizedProps, MakeOptional } from '../internals/models/helpers';
-import { CalendarOrClockPickerView } from '../internals/models';
+import { DateOrTimeView } from '../internals/models';
 import { useDefaultDates, useUtils } from '../internals/hooks/useUtils';
 import {
   DateCalendarSlotsComponent,
@@ -62,7 +62,7 @@ export interface BaseNextDateTimePickerSlotsComponentsProps<TDate>
 
 export interface BaseNextDateTimePickerProps<TDate>
   extends MakeOptional<
-      BaseNextPickerProps<TDate | null, TDate, CalendarOrClockPickerView, DateTimeValidationError>,
+      BaseNextPickerProps<TDate | null, TDate, DateOrTimeView, DateTimeValidationError>,
       'views' | 'openTo'
     >,
     Omit<ExportedDateCalendarProps<TDate>, 'onViewChange'>,
