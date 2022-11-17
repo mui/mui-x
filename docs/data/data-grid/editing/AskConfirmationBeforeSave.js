@@ -90,7 +90,6 @@ export default function AskConfirmationBeforeSave() {
     // the dialog is fully open.
     // noButtonRef.current?.focus();
   };
-
   const renderConfirmDialog = () => {
     if (!promiseArguments) {
       return null;

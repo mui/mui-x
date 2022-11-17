@@ -10,7 +10,6 @@ export default function CellWithPopover() {
     rowLength: 100,
     maxColumns: 4,
   });
-
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [value, setValue] = React.useState('');
 
