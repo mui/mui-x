@@ -855,6 +855,37 @@ describe('<DataGrid /> - Layout & Warnings', () => {
 
       expect(getCell(0, 0).offsetWidth).to.equal(200);
     });
+
+    it('should set correct render zone height on height change', async () => {
+      const gridHeight = 500;
+      const TestCase = ({ toolbarHeight = 300 }) => {
+        const { rows, columns } = useBasicDemoData(20, 2);
+
+        return (
+          <div style={{ width: 500, height: 500 }}>
+            <DataGrid
+              columns={columns}
+              rows={rows}
+              components={{
+                Toolbar: () => <div style={{ height: toolbarHeight }} />,
+              }}
+            />
+          </div>
+        );
+      };
+      const { setProps } = render(<TestCase />);
+      // Reduce toolbar height to increase grid height
+      setProps({
+        toolbarHeight: 0,
+      });
+
+      await waitFor(() => {
+        const virtualScrollerRenderZone = document.querySelector(
+          '.MuiDataGrid-virtualScrollerRenderZone',
+        ) as Element;
+        expect(virtualScrollerRenderZone.clientHeight).to.greaterThanOrEqual(gridHeight);
+      });
+    });
   });
 
   describe('warnings', () => {

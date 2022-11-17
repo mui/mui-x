@@ -112,6 +112,7 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
   const prevRenderContext = React.useRef<GridRenderContext | null>(renderContext);
   const scrollPosition = React.useRef({ top: 0, left: 0 });
   const [containerWidth, setContainerWidth] = React.useState<number | null>(null);
+  const [containerHeight, setContainerHeight] = React.useState<number | null>(null);
   const prevTotalWidth = React.useRef(columnsTotalWidth);
 
   const getNearestIndexToRender = React.useCallback(
@@ -162,7 +163,7 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
 
     const lastRowIndex = rootProps.autoHeight
       ? firstRowIndex + currentPage.rows.length
-      : getNearestIndexToRender(top + rootRef.current!.clientHeight!);
+      : getNearestIndexToRender(top + containerHeight!);
 
     let hasRowWithAutoHeight = false;
     let firstColumnIndex = 0;
@@ -203,6 +204,7 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
     visibleColumns.length,
     apiRef,
     containerWidth,
+    containerHeight,
   ]);
 
   React.useEffect(() => {
@@ -217,10 +219,12 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
 
   React.useEffect(() => {
     setContainerWidth(rootRef.current!.clientWidth);
+    setContainerHeight(rootRef.current!.clientHeight);
   }, [rowsMeta.currentPageTotalHeight]);
 
   const handleResize = React.useCallback<GridEventListener<'resize'>>((params) => {
     setContainerWidth(params.width);
+    setContainerHeight(params.height);
   }, []);
 
   useGridApiEventHandler(apiRef, 'resize', handleResize);
