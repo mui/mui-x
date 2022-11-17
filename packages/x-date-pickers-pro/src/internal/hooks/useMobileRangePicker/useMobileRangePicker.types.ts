@@ -4,7 +4,7 @@ import Stack, { StackProps } from '@mui/material/Stack';
 import Typography, { TypographyProps } from '@mui/material/Typography';
 import { SlotComponentProps } from '@mui/base/utils';
 import {
-  CalendarOrClockPickerView,
+  DateOrTimeView,
   UsePickerParams,
   BaseNextPickerProps,
   BaseNextNonStaticPickerProps,
@@ -49,7 +49,7 @@ export interface MobileRangeOnlyPickerProps<TDate>
     UsePickerViewsNonStaticProps,
     BaseNextNonStaticPickerProps {}
 
-export interface UseMobileRangePickerProps<TDate, TView extends CalendarOrClockPickerView, TError>
+export interface UseMobileRangePickerProps<TDate, TView extends DateOrTimeView, TError>
   extends MobileRangeOnlyPickerProps<TDate>,
     BaseNextPickerProps<DateRange<TDate>, TDate, TView, TError> {
   /**
@@ -71,7 +71,7 @@ interface MobileRangePickerAdditionalViewProps {
 
 export interface UseMobileRangePickerParams<
   TDate,
-  TView extends CalendarOrClockPickerView,
+  TView extends DateOrTimeView,
   TExternalProps extends UseMobileRangePickerProps<TDate, TView, any>,
 > extends Pick<
     UsePickerParams<
