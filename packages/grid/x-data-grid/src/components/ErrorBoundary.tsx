@@ -8,7 +8,6 @@ export interface ErrorBoundaryProps {
   render: ({ error }: any) => React.ReactNode;
   api: React.MutableRefObject<GridApiCommunity>;
   hasError: boolean;
-  componentProps?: any[];
   children?: React.ReactNode;
 }
 
@@ -38,7 +37,7 @@ export class ErrorBoundary extends React.Component<ErrorBoundaryProps, any> {
   render() {
     if (this.props.hasError || this.state?.hasError) {
       // You can render any custom fallback UI
-      return this.props.render(this.props.componentProps || this.state);
+      return this.props.render(this.state);
     }
 
     return this.props.children;
