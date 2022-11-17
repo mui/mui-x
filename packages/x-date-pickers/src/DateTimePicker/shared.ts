@@ -7,7 +7,7 @@ import { DateTimeValidationError } from '../internals/hooks/validation/useDateTi
 import { ValidationCommonProps } from '../internals/hooks/validation/useValidation';
 import { BasePickerProps } from '../internals/models/props/basePickerProps';
 import { ExportedDateInputProps } from '../internals/components/PureDateInput';
-import { CalendarOrClockPickerView } from '../internals/models';
+import { DateOrTimeView } from '../internals/models';
 import { applyDefaultDate } from '../internals/utils/date-utils';
 import { DefaultizedProps } from '../internals/models/helpers';
 import {
@@ -31,7 +31,7 @@ import {
 import { LocalizedComponent, PickersInputLocaleText } from '../locales/utils/pickersLocaleTextApi';
 
 export interface BaseDateTimePickerSlotsComponent<TDate>
-  extends CalendarOrClockPickerSlotsComponent<TDate, CalendarOrClockPickerView> {
+  extends CalendarOrClockPickerSlotsComponent<TDate, DateOrTimeView> {
   /**
    * Custom component for the toolbar rendered above the views.
    * @default DateTimePickerToolbar
@@ -79,20 +79,20 @@ export interface BaseDateTimePickerProps<TDate>
   maxDateTime?: TDate;
   /**
    * Callback fired on view change.
-   * @param {CalendarOrClockPickerView} view The new view.
+   * @param {DateOrTimeView} view The new view.
    */
-  onViewChange?: (view: CalendarOrClockPickerView) => void;
+  onViewChange?: (view: DateOrTimeView) => void;
   /**
    * First view to show.
    * Must be a valid option from `views` list
    * @default 'day'
    */
-  openTo?: CalendarOrClockPickerView;
+  openTo?: DateOrTimeView;
   /**
    * Array of views to show.
    * @default ['year', 'day', 'hours', 'minutes']
    */
-  views?: readonly CalendarOrClockPickerView[];
+  views?: readonly DateOrTimeView[];
   /**
    * Overrideable components.
    * @default {}

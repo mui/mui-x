@@ -3,7 +3,7 @@ import {
   ExportedPickersViewLayoutSlotsComponent,
   ExportedPickersViewLayoutSlotsComponentsProps,
 } from '../../components/PickersViewLayout';
-import { CalendarOrClockPickerView } from '../../models';
+import { DateOrTimeView } from '../../models';
 import { BaseNextPickerProps } from '../../models/props/basePickerProps';
 import { UsePickerParams } from '../usePicker';
 import {
@@ -27,7 +27,7 @@ export interface StaticOnlyPickerProps {
   displayStaticWrapperAs: 'desktop' | 'mobile';
 }
 
-export interface UseStaticPickerProps<TDate, TView extends CalendarOrClockPickerView, TError>
+export interface UseStaticPickerProps<TDate, TView extends DateOrTimeView, TError>
   extends BaseNextPickerProps<TDate | null, TDate, TView, TError>,
     StaticOnlyPickerProps {
   /**
@@ -44,7 +44,7 @@ export interface UseStaticPickerProps<TDate, TView extends CalendarOrClockPicker
 
 export interface UseStaticPickerParams<
   TDate,
-  TView extends CalendarOrClockPickerView,
+  TView extends DateOrTimeView,
   TExternalProps extends UseStaticPickerProps<TDate, TView, any>,
 > extends Pick<
     UsePickerParams<TDate | null, TDate, TView, TExternalProps, {}>,

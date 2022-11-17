@@ -3,7 +3,7 @@ import { expect } from 'chai';
 import { act, fireEvent, screen } from '@mui/monorepo/test/utils';
 import { Unstable_StaticNextDatePicker as StaticNextDatePicker } from '@mui/x-date-pickers/StaticNextDatePicker';
 import { adapterToUse, createPickerRenderer } from 'test/utils/pickers-utils';
-import { CalendarPickerView } from '../internals/models/views';
+import { DateView } from '../internals/models/views';
 
 describe('<StaticNextDatePicker /> - Keyboard interactions', () => {
   const { render, clock } = createPickerRenderer({ clock: 'fake' });
@@ -179,7 +179,7 @@ describe('<StaticNextDatePicker /> - Keyboard interactions', () => {
     });
   });
 
-  const viewsToTest: { view: CalendarPickerView; textSelector: string }[] = [
+  const viewsToTest: { view: DateView; textSelector: string }[] = [
     { view: 'day', textSelector: '13' },
     { view: 'month', textSelector: 'Aug' },
     { view: 'year', textSelector: '2020' },
