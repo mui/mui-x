@@ -216,7 +216,7 @@ however you'll be required to renew your license if you need to continue develop
 #### License key plan mismatch
 
 This error indicates that the component you are trying to use is not included in the plan of your license key.
-For example, this happen if you try to use `DataGridPremium` with a license key for the Pro plan.
+This happens if you try to use `DataGridPremium` with a license key for the Pro plan.
 
 #### Invalid license key
 
