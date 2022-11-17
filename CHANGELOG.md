@@ -19,7 +19,7 @@ We'd like to offer a big thanks to the 2 contributors who made this release poss
 - [DataGridPremium] Support aggregating data from multiple row fields (#6844) @cherniavskii
 - [DataGridPro] Fix detail panel not working with `getRowSpacing` prop (#6858) @cherniavskii
 
-- [I10n] Improve Finnish (fi-FI) locale on the data grid (#6859) @RainoPikkarainen
+- [l10n] Improve Finnish (fi-FI) locale on the data grid (#6859) @RainoPikkarainen
 
 ## 5.17.11
 
