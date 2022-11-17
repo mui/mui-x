@@ -5,7 +5,7 @@ title: Date and Time pickers - Custom components
 
 # Custom components
 
-<p class="description">The date picker lets users select a date from a menu.</p>
+<p class="description">The date picker lets you customize sub-components.</p>
 
 ## Overriding components
 
