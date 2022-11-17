@@ -135,7 +135,6 @@ export function DateTimePickerToolbar<TDate extends unknown>(
       toggleMobileKeyboardView={toggleMobileKeyboardView}
       className={classes.root}
       {...other}
-      isLandscape={false}
       ownerState={ownerState}
     >
       <DateTimePickerToolbarDateContainer className={classes.dateContainer} ownerState={ownerState}>
