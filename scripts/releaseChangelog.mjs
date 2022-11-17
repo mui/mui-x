@@ -1,6 +1,6 @@
 /* eslint-disable no-restricted-syntax */
-const { Octokit } = require('@octokit/rest');
-const yargs = require('yargs');
+import { Octokit } from '@octokit/rest';
+import yargs from 'yargs';
 
 const GIT_ORGANIZATION = 'mui';
 const GIT_REPO = 'mui-x';
@@ -219,7 +219,7 @@ ${logChangelogSection(otherCommits, '')}
   console.log(changelog);
 }
 
-yargs
+yargs(process.argv.slice(2))
   .command({
     command: '$0',
     description: 'Creates a changelog',
