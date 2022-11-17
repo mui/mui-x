@@ -14,11 +14,15 @@ const InstructionsNoSnap = () => {
   const [libraryUsed, setLibraryUsed] = React.useState('moment');
 
   const handlePackageMangerChange = (event, nextPackageManger) => {
-    setPackageManger(nextPackageManger);
+    if (nextPackageManger !== null) {
+      setPackageManger(nextPackageManger);
+    }
   };
 
   const handleLicenceTypeChange = (event, nextLicenceType) => {
-    setLicenceType(nextLicenceType);
+    if (nextLicenceType !== null) {
+      setLicenceType(nextLicenceType);
+    }
   };
 
   const handleLibraryUsedChange = (event) => {
