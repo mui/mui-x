@@ -11,16 +11,16 @@ function read(fileName) {
 describe('v6.0.0', () => {
   describe('preset-safe', () => {
     it('transforms props as needed', () => {
-      const actual = transform({ source: read('./actual.js') }, { jscodeshift }, {});
+      const actual = transform({ source: read('./actual.test.js') }, { jscodeshift }, {});
 
-      const expected = read('./expected.js');
+      const expected = read('./expected.test.js');
       expect(actual).to.equal(expected, 'The transformed version should be correct');
     });
 
     it('should be idempotent', () => {
-      const actual = transform({ source: read('./expected.js') }, { jscodeshift }, {});
+      const actual = transform({ source: read('./expected.test.js') }, { jscodeshift }, {});
 
-      const expected = read('./expected.js');
+      const expected = read('./expected.test.js');
       expect(actual).to.equal(expected, 'The transformed version should be correct');
     });
   });

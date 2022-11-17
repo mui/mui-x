@@ -12,27 +12,23 @@ describe('v6.0.0', () => {
   describe('component-rename-prop', () => {
     it('transforms props as needed', () => {
       const actual = transform(
-        {
-          source: read('./actual.js'),
-        },
+        { source: read('./actual.test.js') },
         { jscodeshift },
         { component: 'Component', from: 'prop', to: 'newProp' },
       );
 
-      const expected = read('./expected.js');
+      const expected = read('./expected.test.js');
       expect(actual).to.equal(expected, 'The transformed version should be correct');
     });
 
     it('should be idempotent', () => {
       const actual = transform(
-        {
-          source: read('./expected.js'),
-        },
+        { source: read('./expected.test.js') },
         { jscodeshift },
         { component: 'Component', from: 'prop', to: 'newProp' },
       );
 
-      const expected = read('./expected.js');
+      const expected = read('./expected.test.js');
       expect(actual).to.equal(expected, 'The transformed version should be correct');
     });
   });

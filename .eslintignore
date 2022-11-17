@@ -4,7 +4,7 @@
 /docs/pages/playground/
 /lerna.json
 /packages/grid/x-data-grid/src/lib
-/packages/x-codemod/src/*/*.test/*
+/packages/x-codemod/src/**/*.test.js
 build
 CHANGELOG.md
 dist
