@@ -2,7 +2,7 @@ import * as React from 'react';
 import { resolveComponentProps, useSlotProps } from '@mui/base/utils';
 import useForkRef from '@mui/utils/useForkRef';
 import { PickersModalDialog } from '../../components/PickersModalDialog';
-import { CalendarOrClockPickerView } from '../../models';
+import { DateOrTimeView } from '../../models';
 import { UseMobilePickerParams, UseMobilePickerProps } from './useMobilePicker.types';
 import { usePicker } from '../usePicker';
 import { onSpaceOrEnter } from '../../utils/utils';
@@ -21,7 +21,7 @@ import { InferError } from '../validation/useValidation';
  */
 export const useMobilePicker = <
   TDate,
-  TView extends CalendarOrClockPickerView,
+  TView extends DateOrTimeView,
   TExternalProps extends UseMobilePickerProps<TDate, TView, any>,
 >({
   props,

@@ -4,7 +4,7 @@ import { StaticNextDateTimePickerProps } from './StaticNextDateTimePicker.types'
 import { useNextDateTimePickerDefaultizedProps } from '../NextDateTimePicker/shared';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { useStaticPicker } from '../internals/hooks/useStaticPicker';
-import { CalendarOrClockPickerView } from '../internals/models';
+import { DateOrTimeView } from '../internals/models';
 import { renderDateView, renderTimeView } from '../internals/utils/viewRenderers';
 import { validateDateTime } from '../internals/hooks/validation/useDateTimeValidation';
 
@@ -46,7 +46,7 @@ const StaticNextDateTimePicker = React.forwardRef(function StaticNextDatePicker<
     },
   };
 
-  const { renderPicker } = useStaticPicker<TDate, CalendarOrClockPickerView, typeof props>({
+  const { renderPicker } = useStaticPicker<TDate, DateOrTimeView, typeof props>({
     props,
     valueManager: singleItemValueManager,
     viewLookup: VIEW_LOOKUP,
@@ -259,7 +259,7 @@ StaticNextDateTimePicker.propTypes = {
   /**
    * Disable specific time.
    * @param {number} timeValue The value to check.
-   * @param {ClockPickerView} view The clock type of the timeValue.
+   * @param {TimeView} view The clock type of the timeValue.
    * @returns {boolean} If `true` the time will be disabled.
    */
   shouldDisableTime: PropTypes.func,
