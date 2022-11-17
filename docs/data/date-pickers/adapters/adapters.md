@@ -75,7 +75,8 @@ For that reason, we recommend you to wrap your entire application with a `Locali
 
 ### Jalali
 
-You can use either the `AdapterDateFnsJalali` adapter which is based on [`date-fns-jalali`](https://www.npmjs.com/package/date-fns-jalali) or the `AdapterMomentJalaali` adapter which is based on [`moment-jalaali`](https://www.npmjs.com/package/moment-jalaali).
+You can use either the `AdapterDateFnsJalali` adapter which is based on [date-fns-jalali](https://www.npmjs.com/package/date-fns-jalali)
+or the `AdapterMomentJalaali` adapter which is based on [moment-jalaali](https://www.npmjs.com/package/moment-jalaali).
 
 The following demo shows how to use the date-fns plugin:
 
@@ -83,10 +84,10 @@ The following demo shows how to use the date-fns plugin:
 
 ### Hijri
 
-You can use the `AdapterMomentHijri` adapter which is based on [`moment-hijri`](https://www.npmjs.com/package/moment-hijri):
+You can use the `AdapterMomentHijri` adapter which is based on [moment-hijri](https://www.npmjs.com/package/moment-hijri):
 
 {{"demo": "AdapterHijri.js"}}
 
 ### Unsupported libraries
 
-If you need to use a date library that is not supported yet, please [open an issue](https://github.com/mui/mui-x/issues/new/choose) in the MUI X issue.
+If you need to use a date library that is not supported yet, please [open an issue](https://github.com/mui/mui-x/issues/new/choose) on the MUI X repository.

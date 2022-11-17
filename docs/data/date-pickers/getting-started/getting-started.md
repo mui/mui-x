@@ -21,22 +21,22 @@ packageName: '@mui/x-date-pickers'
 
 {{"demo": "MaterialUIPickers.js"}}
 
-### Setup
-
-For more details about the setup of your date library, have a look at the [dedicated page](/x/react-date-pickers/adapters/)
-
-#### Package installation
+## Installation
 
 You need to install 2 different types of package to make the pickers work:
 
 1. **The component** (`@mui/x-date-pickers` or `@mui/x-date-pickers-pro`) manages the rendering.
-2. **The date-library** ([`Day.js`](https://day.js.org/), [date-fns](https://date-fns.org/), ...) manages the date manipulation.
+2. **The date-library** ([Day.js](https://day.js.org/), [date-fns](https://date-fns.org/), ...) manages the date manipulation.
 
 First you have to install the date-library you want to use to manage dates, and the component package:
 
 {{"component": "modules/components/PickersInstallationInstructions.js"}}
 
-#### Code setup
+:::info
+If you need help to choose and install your date-library, have a look at the [Choosing a date library](/x/react-date-pickers/adapters/#choosing-a-date-library) section.
+:::
+
+## Code setup
 
 After the installation is completed, you have to pass the adapter of your date library to `LocalizationProvider`.
 The supported adapters as well as `LocalizationProvider` are exported from both the `@mui/x-date-pickers` and `@mui/x-date-pickers-pro` packages.
@@ -45,6 +45,10 @@ All the pickers rendered inside this provider will have access to the adapter th
 For that reason, we recommend you to wrap your entire application with a `LocalizationProvider` to be able to use the Date and Time Pickers everywhere.
 
 {{"component": "modules/components/PickersRenderingInstructions.js"}}
+
+:::info
+If you need to use the Date and Time Pickers with a custom locale, have a look at the [Localized dates](/x/react-date-pickers/adapters-locale/) page.
+:::
 
 ## TypeScript
 
