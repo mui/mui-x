@@ -3,13 +3,13 @@ import clsx from 'clsx';
 import { styled, useThemeProps } from '@mui/material/styles';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { CLOCK_WIDTH, CLOCK_HOUR_WIDTH } from './shared';
-import { ClockPickerView } from '../internals/models';
+import { TimeView } from '../internals/models';
 import { ClockPointerClasses, getClockPointerUtilityClass } from './clockPointerClasses';
 
 export interface ClockPointerProps extends React.HTMLAttributes<HTMLDivElement> {
   hasSelected: boolean;
   isInner: boolean;
-  type: ClockPickerView;
+  type: TimeView;
   viewValue: number;
   classes?: Partial<ClockPointerClasses>;
 }
@@ -73,7 +73,7 @@ const ClockPointerThumb = styled('div', {
 export function ClockPointer(inProps: ClockPointerProps) {
   const props = useThemeProps({ props: inProps, name: 'MuiClockPointer' });
   const { className, hasSelected, isInner, type, viewValue, ...other } = props;
-  const previousType = React.useRef<ClockPickerView | null>(type);
+  const previousType = React.useRef<TimeView | null>(type);
   React.useEffect(() => {
     previousType.current = type;
   }, [type]);
