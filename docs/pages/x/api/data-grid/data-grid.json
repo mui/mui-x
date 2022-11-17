@@ -136,7 +136,7 @@
     "rowSelectionModel": {
       "type": {
         "name": "union",
-        "description": "number<br>&#124;&nbsp;string<br>&#124;&nbsp;array"
+        "description": "Array&lt;number<br>&#124;&nbsp;string&gt;<br>&#124;&nbsp;number<br>&#124;&nbsp;string"
       }
     },
     "rowSpacingType": {
