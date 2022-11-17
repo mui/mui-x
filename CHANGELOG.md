@@ -7,7 +7,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 _Nov 17, 2022_
 
-We'd like to offer a big thanks to the 11 contributors who made this release possible. Here are some highlights ✨:
+We'd like to offer a big thanks to the 12 contributors who made this release possible. Here are some highlights ✨:
 
 - 🎁 Support aggregating data from multiple row fields (#6656) @cherniavskii
 - 📚 Documentation improvements
@@ -18,12 +18,12 @@ We'd like to offer a big thanks to the 11 contributors who made this release pos
 #### Changes
 
 - [DataGrid] Fix `ErrorOverlay` not receiving defined input props (#6819) @banoth-ravinder
-- [DataGrid] Fix conflict with `onResize` added to `React.HTMLAttributes` (#6797) @vizv
+- [DataGrid] Fix conflict with the latest version of `@types/react` (#6797) @vizv
 - [DataGrid] Make more `apiRef` methods private (#6700) @cherniavskii
 - [DataGrid] Provide a clear error message when upgrading (#6685) @oliviertassinari
 - [DataGridPremium] Allow to customize the indent of group expansion toggle (#6837) @MBilalShafi
 - [DataGridPremium] Support aggregating data from multiple row fields (#6656) @cherniavskii
-- [DataGridPro] Fix detail panel not working with `getRowSpacing` prop (#6707) @cherniavskii
+- [DataGridPro] Fix detail panel not working with `getRowSpacing` prop (#6707) @gavbrennan
 - [DataGridPro] Opt-out for column jump back on re-order (#6733) @m4theushw
 - [l10n] Improve Finnish (fi-FI) locale (#6859) @RainoPikkarainen
 
@@ -31,7 +31,7 @@ We'd like to offer a big thanks to the 11 contributors who made this release pos
 
 #### Breaking changes
 
-The `ClockPicker` view component has been renamed  `TimeClock` to better fit its usage:
+- The `ClockPicker` view component has been renamed to `TimeClock` to better fit its usage:
 
 ```diff
 -<ClockPicker {...props} />
