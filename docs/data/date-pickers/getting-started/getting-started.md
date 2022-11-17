@@ -35,7 +35,7 @@ First you have to install the date-library you want to use to manage dates, and 
 
 {{"demo": "InstructionsNoSnap.js", "bg": "inline", "hideToolbar": true, "disableAd": true}}
 
-We support different date-libraries and their specific calendar system:
+Here are the supported date-libraries and their specific calendar system:
 
 - [date-fns](https://date-fns.org/): `@mui/x-date-pickers/AdapterDateFns`, adapted by `@date-io/date-fns`.
 - [Day.js](https://day.js.org/): `@mui/x-date-pickers/AdapterDayjs`, adapted by `@date-io/dayjs`.
