@@ -27,12 +27,12 @@
   "scripts": {
     "typescript": "tsc -p tsconfig.json",
     "build": "yarn build:legacy && yarn build:modern && yarn build:node && yarn build:stable && yarn build:types && yarn build:copy-files ",
-    "build:legacy": "node ../../scripts/build legacy",
-    "build:modern": "node ../../scripts/build modern",
-    "build:node": "node ../../scripts/build node",
-    "build:stable": "node ../../scripts/build stable",
-    "build:copy-files": "node ../../scripts/copyFiles.js",
-    "build:types": "node ../../scripts/buildTypes",
+    "build:legacy": "node ../../scripts/build.mjs legacy",
+    "build:modern": "node ../../scripts/build.mjs modern",
+    "build:node": "node ../../scripts/build.mjs node",
+    "build:stable": "node ../../scripts/build.mjs stable",
+    "build:copy-files": "node ../../scripts/copyFiles.mjs",
+    "build:types": "node ../../scripts/buildTypes.mjs",
     "prebuild": "rimraf build tsconfig.build.tsbuildinfo"
   },
   "repository": {
@@ -48,7 +48,7 @@
     "@date-io/moment": "^2.15.0",
     "@mui/utils": "^5.10.3",
     "@mui/x-date-pickers": "5.0.8",
-    "@mui/x-license-pro": "5.17.11",
+    "@mui/x-license-pro": "5.17.12",
     "clsx": "^1.2.1",
     "prop-types": "^15.7.2",
     "react-transition-group": "^4.4.5",

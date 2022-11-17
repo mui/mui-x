@@ -1,5 +1,5 @@
-const glob = require('glob-gitignore');
-const fse = require('fs-extra');
+import glob from 'glob-gitignore';
+import fse from 'fs-extra';
 
 async function run() {
   const importFiles = [
