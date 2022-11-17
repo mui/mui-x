@@ -19,6 +19,7 @@ We'd like to offer a big thanks to the 2 contributors who made this release poss
 - [DataGrid] Fix conflict with the latest version of `@types/react` (#6883) @vizv
 - [DataGridPremium] Support aggregating data from multiple row fields (#6844) @cherniavskii
 - [DataGridPro] Fix detail panel not working with `getRowSpacing` prop (#6858) @cherniavskii
+- [l10n] Improve Finnish (fi-FI) locale (#6859) @RainoPikkarainen
 
 ### Docs
 
@@ -27,7 +28,6 @@ We'd like to offer a big thanks to the 2 contributors who made this release poss
 ### Core
 
 - [core] Upgrade monorepo (#6864) @m4theushw
-- [l10n] Improve Finnish (fi-FI) locale on the data grid (#6859) @RainoPikkarainen
 - [license] Polish error messages (#6881) @oliviertassinari
 
 ## 5.17.11
