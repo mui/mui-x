@@ -23,8 +23,8 @@ We'd like to offer a big thanks to the 12 contributors who made this release pos
 - [DataGrid] Provide a clear error message when upgrading (#6685) @oliviertassinari
 - [DataGridPremium] Allow to customize the indent of group expansion toggle (#6837) @MBilalShafi
 - [DataGridPremium] Support aggregating data from multiple row fields (#6656) @cherniavskii
-- [DataGridPro] Fix detail panel not working with `getRowSpacing` prop (#6707) @gavbrennan
-- [DataGridPro] Opt-out for column jump back on re-order (#6733) @m4theushw
+- [DataGridPro] Fix detail panel not working with `getRowSpacing` prop (#6707) @cherniavskii
+- [DataGridPro] Opt-out for column jump back on re-order (#6733) @gavbrennan
 - [l10n] Improve Finnish (fi-FI) locale (#6859) @RainoPikkarainen
 
 ### `@mui/x-date-pickers@v6.0.0-alpha.8` / `@mui/x-date-pickers-pro@v6.0.0-alpha.8`
