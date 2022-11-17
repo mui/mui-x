@@ -40,6 +40,7 @@ async function run(argv) {
     '**/*.test.js',
     '**/*.test.ts',
     '**/*.test.tsx',
+    '**/*.spec.js',
     '**/*.spec.ts',
     '**/*.spec.tsx',
     '**/*.d.ts',
