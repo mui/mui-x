@@ -7,7 +7,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 _Nov 17, 2022_
 
-We'd like to offer a big thanks to the 2 contributors who made this release possible. Here are some highlights ✨:
+We'd like to offer a big thanks to the 5 contributors who made this release possible. Here are some highlights ✨:
 
 - 🌍 Improve Finnish (fi-FI) locale (#6859) @RainoPikkarainen
 - 🐞 Bugfixes
