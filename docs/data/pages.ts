@@ -237,8 +237,6 @@ const pages: MuiPage[] = [
         ],
       },
       { pathname: '/x/react-date-pickers/validation' },
-      { pathname: '/x/react-date-pickers/fields', title: 'Field components', newFeature: true },
-      { pathname: '/x/react-date-pickers/custom-components', title: 'Custom sub-components' },
       {
         pathname: '/x/react-date-pickers/localization',
         title: 'Localization / date manipulation',
@@ -259,6 +257,8 @@ const pages: MuiPage[] = [
           },
         ],
       },
+      { pathname: '/x/react-date-pickers/fields', title: 'Field components', newFeature: true },
+      { pathname: '/x/react-date-pickers/custom-components', title: 'Custom sub-components' },
       {
         pathname: '/x/api/date-pickers',
         title: 'API Reference',
