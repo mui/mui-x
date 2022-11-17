@@ -75,6 +75,7 @@ export type DataGridForcedPropsKey =
   | 'disableMultipleRowSelection'
   | 'disableColumnReorder'
   | 'disableColumnResize'
+  | 'keepColumnPositionIfDraggedOutside'
   | 'throttleRowsMs'
   | 'hideFooterRowCount'
   | 'pagination'
@@ -330,6 +331,12 @@ export interface DataGridPropsWithDefaultValues {
    * @default false
    */
   disableColumnResize: boolean;
+  /**
+   * If `true`, moving the mouse pointer outside the grid before releasing the mouse button
+   * in a column re-order action will not cause the column to jump back to its original position.
+   * @default false
+   */
+  keepColumnPositionIfDraggedOutside: boolean;
 }
 
 /**

@@ -5,7 +5,7 @@ import { useGridSelector } from '../hooks/utils/useGridSelector';
 import { gridDensityRowHeightSelector } from '../hooks/features/density/densitySelector';
 
 export interface ErrorOverlayProps extends GridOverlayProps {
-  message?: string;
+  error?: Error;
   hasError: boolean;
   errorInfo: any;
 }
@@ -13,14 +13,14 @@ export interface ErrorOverlayProps extends GridOverlayProps {
 // TODO v6: rename to GridErrorOverlay
 export const ErrorOverlay = React.forwardRef<HTMLDivElement, ErrorOverlayProps>(
   function ErrorOverlay(props: ErrorOverlayProps, ref) {
-    const { message, hasError, errorInfo, ...other } = props;
+    const { error, hasError, errorInfo, ...other } = props;
     const apiRef = useGridApiContext();
     const defaultLabel = apiRef.current.getLocaleText('errorOverlayDefaultLabel');
     const rowHeight = useGridSelector(apiRef, gridDensityRowHeightSelector);
 
     return (
       <GridOverlay ref={ref} sx={{ width: '100%', minHeight: 2 * rowHeight }} {...other}>
-        {message || defaultLabel}
+        {error?.message || defaultLabel}
       </GridOverlay>
     );
   },

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import useEventCallback from '@mui/utils/useEventCallback';
-import { CalendarOrClockPickerView } from '../../models';
+import { DateOrTimeView } from '../../models';
 import { useViews } from '../useViews';
 import { WrapperVariant } from '../../components/wrappers/WrapperVariantContext';
 import type { UsePickerValueViewsResponse } from './usePickerValue';
@@ -9,7 +9,7 @@ import { useFocusManagement } from '../../components/CalendarOrClockPicker/useFo
 
 type PickerViewRenderer<
   TValue,
-  TView extends CalendarOrClockPickerView,
+  TView extends DateOrTimeView,
   TExternalProps extends UsePickerViewsProps<TView>,
   TAdditionalProps extends {},
 > = (
@@ -18,7 +18,7 @@ type PickerViewRenderer<
 
 export type PickerViewRendererLookup<
   TValue,
-  TView extends CalendarOrClockPickerView,
+  TView extends DateOrTimeView,
   TExternalProps extends UsePickerViewsProps<TView>,
   TAdditionalProps extends {},
 > = {
@@ -28,7 +28,7 @@ export type PickerViewRendererLookup<
 /**
  * Props used to handle the views that are common to all pickers.
  */
-export interface UsePickerViewsBaseProps<TView extends CalendarOrClockPickerView> {
+export interface UsePickerViewsBaseProps<TView extends DateOrTimeView> {
   autoFocus?: boolean;
   /**
    * If `true`, the picker and text field are disabled.
@@ -65,13 +65,13 @@ export interface UsePickerViewsNonStaticProps {
 /**
  * Props used to handle the value of the pickers.
  */
-export interface UsePickerViewsProps<TView extends CalendarOrClockPickerView>
+export interface UsePickerViewsProps<TView extends DateOrTimeView>
   extends UsePickerViewsBaseProps<TView>,
     UsePickerViewsNonStaticProps {}
 
 export interface UsePickerViewParams<
   TValue,
-  TView extends CalendarOrClockPickerView,
+  TView extends DateOrTimeView,
   TExternalProps extends UsePickerViewsProps<TView>,
   TAdditionalProps extends {},
 > {
@@ -87,7 +87,7 @@ export interface UsePickerViewParams<
   wrapperVariant: WrapperVariant;
 }
 
-export interface UsePickerViewsResponse<TView extends CalendarOrClockPickerView> {
+export interface UsePickerViewsResponse<TView extends DateOrTimeView> {
   /**
    * Does the picker have at least one view that should be rendered in UI mode ?
    * If not, we can hide the icon to open the picker.
@@ -100,7 +100,7 @@ export interface UsePickerViewsResponse<TView extends CalendarOrClockPickerView>
 
 export type PickerViewsRendererProps<
   TValue,
-  TView extends CalendarOrClockPickerView,
+  TView extends DateOrTimeView,
   TExternalProps extends UsePickerViewsProps<TView>,
   TAdditionalProps extends {},
 > = TExternalProps &
@@ -113,7 +113,7 @@ export type PickerViewsRendererProps<
     onFocusedViewChange?: (view: TView) => (newHasFocus: boolean) => void;
   };
 
-export interface UsePickerViewsLayoutResponse<TView extends CalendarOrClockPickerView> {
+export interface UsePickerViewsLayoutResponse<TView extends DateOrTimeView> {
   view: TView | null;
   onViewChange: (view: TView) => void;
   views: readonly TView[];
@@ -129,7 +129,7 @@ let warnedOnceNotValidOpenTo = false;
  */
 export const usePickerViews = <
   TValue,
-  TView extends CalendarOrClockPickerView,
+  TView extends DateOrTimeView,
   TExternalProps extends UsePickerViewsProps<TView>,
   TAdditionalProps extends {},
 >({

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import TextField, { TextFieldProps } from '@mui/material/TextField';
 import { SlotComponentProps } from '@mui/base/utils';
-import { CalendarOrClockPickerView, MuiPickersAdapter } from '../../models';
+import { DateOrTimeView, MuiPickersAdapter } from '../../models';
 import {
   BaseNextNonStaticPickerProps,
   BaseNextPickerProps,
@@ -53,7 +53,7 @@ export interface MobileOnlyPickerProps<TDate>
     UsePickerValueNonStaticProps<TDate | null>,
     UsePickerViewsNonStaticProps {}
 
-export interface UseMobilePickerProps<TDate, TView extends CalendarOrClockPickerView, TError>
+export interface UseMobilePickerProps<TDate, TView extends DateOrTimeView, TError>
   extends BaseNextPickerProps<TDate | null, TDate, TView, TError>,
     MobileOnlyPickerProps<TDate> {
   /**
@@ -70,7 +70,7 @@ export interface UseMobilePickerProps<TDate, TView extends CalendarOrClockPicker
 
 export interface UseMobilePickerParams<
   TDate,
-  TView extends CalendarOrClockPickerView,
+  TView extends DateOrTimeView,
   TExternalProps extends UseMobilePickerProps<TDate, TView, any>,
 > extends Pick<
     UsePickerParams<TDate | null, TDate, TView, TExternalProps, {}>,

@@ -52,6 +52,7 @@ const DesktopNextTimePicker = React.forwardRef(function DesktopNextTimePicker<TD
         sx,
         inputRef: defaultizedProps.inputRef,
         label: defaultizedProps.label,
+        ampm: defaultizedProps.ampm,
       }),
     },
   };
@@ -247,7 +248,7 @@ DesktopNextTimePicker.propTypes = {
   /**
    * Disable specific time.
    * @param {number} timeValue The value to check.
-   * @param {ClockPickerView} view The clock type of the timeValue.
+   * @param {TimeView} view The clock type of the timeValue.
    * @returns {boolean} If `true` the time will be disabled.
    */
   shouldDisableTime: PropTypes.func,

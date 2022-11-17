@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useThemeProps } from '@mui/material/styles';
 import { DefaultizedProps, MakeOptional } from '../internals/models/helpers';
-import { ClockPickerView } from '../TimeClock';
+import { TimeView } from '../TimeClock';
 import { useUtils } from '../internals/hooks/useUtils';
 import {
   TimeClockSlotsComponent,
@@ -32,7 +32,7 @@ export interface BaseNextTimePickerSlotsComponentsProps extends TimeClockSlotsCo
 
 export interface BaseNextTimePickerProps<TDate>
   extends MakeOptional<
-      BaseNextPickerProps<TDate | null, TDate, ClockPickerView, TimeValidationError>,
+      BaseNextPickerProps<TDate | null, TDate, TimeView, TimeValidationError>,
       'views' | 'openTo'
     >,
     ExportedTimeClockProps<TDate> {

@@ -10,7 +10,7 @@
     "@emotion/styled": "^11.10.5",
     "@material-ui/core": "^5.0.0-beta.5",
     "@material-ui/icons": "^5.0.0-beta.5",
-    "@mui/material": "^5.10.12",
+    "@mui/material": "^5.10.14",
     "@mui/x-data-grid": "^4.0.0",
     "@visx/xychart": "^2.16.0",
     "ag-grid-community": "^28.2.1",
@@ -25,7 +25,7 @@
     "react-virtualized": "^9.22.3",
     "serve-handler": "^6.1.5",
     "style-loader": "^3.3.1",
-    "webpack": "^5.74.0",
+    "webpack": "^5.75.0",
     "webpack-cli": "^4.10.0"
   }
 }
