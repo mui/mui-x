@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useControlled } from '@mui/material/utils';
+import { unstable_useControlled as useControlled } from '@mui/utils';
 import useEventCallback from '@mui/utils/useEventCallback';
 import { WrapperVariant } from '../../components/wrappers/WrapperVariantContext';
 import { useOpenState } from '../useOpenState';
@@ -102,7 +102,7 @@ export interface UsePickerValueBaseProps<TValue, TError> {
    */
   onChange?: PickerChangeHandler;
   /**
-   * Callback fired when the value is accepted @DateIOType.
+   * Callback fired when the value is accepted.
    * @template TValue
    * @param {TValue} value The value that was just accepted.
    */
@@ -267,7 +267,12 @@ export const usePickerValue = <
     resetFallback: value,
   }));
 
-  useValidation({ ...props, value }, validator, valueManager.isSameError);
+  useValidation(
+    { ...props, value },
+    validator,
+    valueManager.isSameError,
+    valueManager.defaultErrorState,
+  );
 
   const setDate = useEventCallback((params: UsePickerValueAction<TValue, TError>) => {
     setDateState((prev) => {

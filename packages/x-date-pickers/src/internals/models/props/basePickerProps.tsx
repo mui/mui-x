@@ -3,7 +3,7 @@ import { Theme } from '@mui/material/styles';
 import { SxProps } from '@mui/system';
 import { UsePickerBaseProps } from '../../hooks/usePicker';
 import { PickerStateProps } from '../../hooks/usePickerState';
-import { CalendarOrClockPickerView } from '../views';
+import { DateOrTimeView } from '../views';
 import { PickersInputComponentLocaleText } from '../../../locales/utils/pickersLocaleTextApi';
 
 export interface BasePickerProps<TValue, TDate> extends PickerStateProps<TValue> {
@@ -42,7 +42,7 @@ export interface BasePickerProps<TValue, TDate> extends PickerStateProps<TValue>
 /**
  * Props common to all pickers.
  */
-export interface BaseNextPickerProps<TValue, TDate, TView extends CalendarOrClockPickerView, TError>
+export interface BaseNextPickerProps<TValue, TDate, TView extends DateOrTimeView, TError>
   extends UsePickerBaseProps<TValue, TView, TError> {
   /**
    * Class name applied to the root element.

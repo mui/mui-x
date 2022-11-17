@@ -138,7 +138,7 @@ export const useGridSorting = (
 
       const sortModel = gridSortModelSelector(state, apiRef.current.instanceId);
       const sortRowList = buildAggregatedSortingApplier(sortModel, apiRef);
-      const sortedRows = apiRef.current.unstable_applyStrategyProcessor('sorting', {
+      const sortedRows = apiRef.current.applyStrategyProcessor('sorting', {
         sortRowList,
       });
 
@@ -199,11 +199,6 @@ export const useGridSorting = (
     [apiRef],
   );
 
-  const getRowIndex = React.useCallback<GridSortApi['getRowIndex']>(
-    (id) => apiRef.current.getSortedRowIds().indexOf(id),
-    [apiRef],
-  );
-
   const getRowIdFromRowIndex = React.useCallback<GridSortApi['getRowIdFromRowIndex']>(
     (index) => apiRef.current.getSortedRowIds()[index],
     [apiRef],
@@ -213,7 +208,6 @@ export const useGridSorting = (
     getSortModel,
     getSortedRows,
     getSortedRowIds,
-    getRowIndex,
     getRowIdFromRowIndex,
     setSortModel,
     sortColumn,

@@ -1,50 +1,46 @@
 import * as React from 'react';
-import type {
-  CalendarOrClockPickerView,
-  CalendarPickerView,
-  ClockPickerView,
-} from '../models/views';
+import type { DateOrTimeView, DateView, TimeView } from '../models/views';
 import type { WrapperVariant } from '../components/wrappers/WrapperVariantContext';
-import { ClockPicker, ClockPickerProps } from '../../ClockPicker';
+import { TimeClock, TimeClockProps } from '../../TimeClock';
 import { DateCalendar, DateCalendarProps } from '../../DateCalendar';
 
-const isDatePickerView = (view: CalendarOrClockPickerView): view is CalendarPickerView =>
+const isDatePickerView = (view: DateOrTimeView): view is DateView =>
   view === 'year' || view === 'month' || view === 'day';
 
-const isTimePickerView = (view: CalendarOrClockPickerView): view is ClockPickerView =>
+const isTimePickerView = (view: DateOrTimeView): view is TimeView =>
   view === 'hours' || view === 'minutes' || view === 'seconds';
 
 interface DateViewRendererProps<TDate>
   extends Omit<DateCalendarProps<TDate>, 'views' | 'openTo' | 'view' | 'focusedView'> {
-  view: CalendarOrClockPickerView;
-  views: readonly CalendarOrClockPickerView[];
+  view: DateOrTimeView;
+  views: readonly DateOrTimeView[];
   wrapperVariant: WrapperVariant;
-  focusedView: CalendarOrClockPickerView | null;
+  focusedView: DateOrTimeView | null;
 }
 
 export const renderDateView = <TDate extends unknown>(props: DateViewRendererProps<TDate>) => (
   <DateCalendar
     {...props}
     autoFocus
-    view={props.view as CalendarPickerView}
+    view={props.view as DateView}
     views={props.views.filter(isDatePickerView)}
-    focusedView={props.focusedView as CalendarPickerView | null}
+    focusedView={props.focusedView as DateView | null}
   />
 );
 
 interface TimeViewRendererProps<TDate>
-  extends Omit<ClockPickerProps<TDate>, 'views' | 'openTo' | 'view'> {
-  view: CalendarOrClockPickerView;
-  views: readonly CalendarOrClockPickerView[];
+  extends Omit<TimeClockProps<TDate>, 'views' | 'openTo' | 'view'> {
+  view: DateOrTimeView;
+  views: readonly DateOrTimeView[];
   wrapperVariant: WrapperVariant;
 }
 
 export const renderTimeView = <TDate extends unknown>(props: TimeViewRendererProps<TDate>) => (
-  <ClockPicker<TDate>
+  <TimeClock<TDate>
     {...props}
     autoFocus
     views={props.views.filter(isTimePickerView)}
-    view={props.view as ClockPickerView}
+    view={props.view as TimeView}
     // We don't want to pass this prop to the views because it can cause proptypes warnings
     openTo={undefined}
   />

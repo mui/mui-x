@@ -8,7 +8,7 @@ import {
   useGridLogger,
 } from '@mui/x-data-grid';
 import { GridStateInitializer } from '@mui/x-data-grid/internals';
-import { GridApiPro } from '../../../models/gridApiPro';
+import { GridPrivateApiPro } from '../../../models/gridApiPro';
 import { gridColumnReorderDragColSelector } from './columnReorderSelector';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 
@@ -51,8 +51,11 @@ export const columnReorderStateInitializer: GridStateInitializer = (state) => ({
  * @requires useGridColumns (method)
  */
 export const useGridColumnReorder = (
-  apiRef: React.MutableRefObject<GridApiPro>,
-  props: Pick<DataGridProProcessedProps, 'disableColumnReorder' | 'classes'>,
+  apiRef: React.MutableRefObject<GridPrivateApiPro>,
+  props: Pick<
+    DataGridProProcessedProps,
+    'disableColumnReorder' | 'keepColumnPositionIfDraggedOutside' | 'classes'
+  >,
 ): void => {
   const logger = useGridLogger(apiRef, 'useGridColumnReorder');
 
@@ -300,11 +303,12 @@ export const useGridColumnReorder = (
       dragColNode.current = null;
 
       // Check if the column was dropped outside the grid.
-      if (event.dataTransfer.dropEffect === 'none') {
+      if (event.dataTransfer.dropEffect === 'none' && !props.keepColumnPositionIfDraggedOutside) {
         // Accessing params.field may contain the wrong field as header elements are reused
         apiRef.current.setColumnIndex(dragColField, originColumnIndex.current!);
-        originColumnIndex.current = null;
       }
+
+      originColumnIndex.current = null;
 
       apiRef.current.setState((state) => ({
         ...state,
@@ -312,7 +316,7 @@ export const useGridColumnReorder = (
       }));
       apiRef.current.forceUpdate();
     },
-    [props.disableColumnReorder, logger, apiRef],
+    [props.disableColumnReorder, props.keepColumnPositionIfDraggedOutside, logger, apiRef],
   );
 
   useGridApiEventHandler(apiRef, 'columnHeaderDragStart', handleDragStart);
