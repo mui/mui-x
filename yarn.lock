@@ -2417,9 +2417,9 @@
     react-is "^18.2.0"
     react-transition-group "^4.4.5"
 
-"@mui/monorepo@https://github.com/Janpot/material-ui.git#upgrade-eslint-airbnb":
-  version "5.10.12"
-  resolved "https://github.com/Janpot/material-ui.git#10c6e3326c06c44c74fef4b7af48e311f1365c2f"
+"@mui/monorepo@https://github.com/mui/material-ui.git#master":
+  version "5.10.14"
+  resolved "https://github.com/mui/material-ui.git#764faaf1ed158402c17ead5498defedd73dd317d"
 
 "@mui/private-theming@^5.10.14", "@mui/private-theming@^5.10.9":
   version "5.10.14"
