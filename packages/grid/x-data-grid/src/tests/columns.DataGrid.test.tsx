@@ -17,14 +17,16 @@ const columns: GridColumns = [{ field: 'id' }, { field: 'idBis' }];
 describe('<DataGridPro /> - Columns', () => {
   const { render } = createRenderer();
 
-  const TestDataGrid = (
+  function TestDataGrid(
     props: Omit<DataGridProps, 'columns' | 'rows'> &
       Partial<Pick<DataGridProps, 'rows' | 'columns'>>,
-  ) => (
-    <div style={{ width: 300, height: 300 }}>
-      <DataGrid columns={columns} rows={rows} {...props} autoHeight={isJSDOM} />
-    </div>
-  );
+  ) {
+    return (
+      <div style={{ width: 300, height: 300 }}>
+        <DataGrid columns={columns} rows={rows} {...props} autoHeight={isJSDOM} />
+      </div>
+    );
+  }
 
   describe('prop: initialState.columns.orderedFields / initialState.columns.dimensions', () => {
     it('should allow to initialize the columns order and dimensions', () => {

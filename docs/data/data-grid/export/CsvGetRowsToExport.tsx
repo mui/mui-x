@@ -27,7 +27,7 @@ const ExportIcon = createSvgIcon(
   'SaveAlt',
 );
 
-const CustomToolbar = () => {
+function CustomToolbar() {
   const apiRef = useGridApiContext();
 
   const handleExport = (options: GridCsvExportOptions) =>
@@ -61,7 +61,7 @@ const CustomToolbar = () => {
       </Button>
     </GridToolbarContainer>
   );
-};
+}
 
 export default function CsvGetRowsToExport() {
   const { data, loading } = useDemoData({

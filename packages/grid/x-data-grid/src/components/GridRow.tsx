@@ -1,7 +1,10 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { unstable_composeClasses as composeClasses, useForkRef } from '@mui/material';
+import {
+  unstable_composeClasses as composeClasses,
+  unstable_useForkRef as useForkRef,
+} from '@mui/utils';
 import { GridRowEventLookup } from '../models/events';
 import { GridRowId, GridRowModel, GridTreeNodeWithRender } from '../models/gridRows';
 import {
@@ -81,7 +84,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   return composeClasses(slots, getDataGridUtilityClass, classes);
 };
 
-const EmptyCell = ({ width }: { width: number }) => {
+function EmptyCell({ width }: { width: number }) {
   if (!width) {
     return null;
   }
@@ -89,7 +92,7 @@ const EmptyCell = ({ width }: { width: number }) => {
   const style = { width };
 
   return <div className="MuiDataGrid-cell" style={style} />; // TODO change to .MuiDataGrid-emptyCell or .MuiDataGrid-rowFiller
-};
+}
 
 const GridRow = React.forwardRef<
   HTMLDivElement,
@@ -411,7 +414,13 @@ const GridRow = React.forwardRef<
 
   if (sizes?.spacingBottom) {
     const property = rootProps.rowSpacingType === 'border' ? 'borderBottomWidth' : 'marginBottom';
-    style[property] = sizes.spacingBottom;
+    let propertyValue = style[property];
+    // avoid overriding existing value
+    if (typeof propertyValue !== 'number') {
+      propertyValue = parseInt(propertyValue || '0', 10);
+    }
+    propertyValue += sizes.spacingBottom;
+    style[property] = propertyValue;
   }
 
   const rowClassNames = apiRef.current.unstable_applyPipeProcessors('rowClassName', [], rowId);

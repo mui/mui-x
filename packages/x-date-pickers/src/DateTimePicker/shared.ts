@@ -1,15 +1,14 @@
 import * as React from 'react';
 import { useThemeProps } from '@mui/material/styles';
 import { useDefaultDates, useUtils } from '../internals/hooks/useUtils';
-import { ExportedClockPickerProps } from '../ClockPicker/ClockPicker';
+import { ExportedTimeClockProps } from '../TimeClock/TimeClock';
 import { ExportedDateCalendarProps } from '../DateCalendar/DateCalendar';
 import { DateTimeValidationError } from '../internals/hooks/validation/useDateTimeValidation';
 import { ValidationCommonProps } from '../internals/hooks/validation/useValidation';
 import { BasePickerProps } from '../internals/models/props/basePickerProps';
 import { ExportedDateInputProps } from '../internals/components/PureDateInput';
-import { CalendarOrClockPickerView } from '../internals/models';
-import { PickerStateValueManager } from '../internals/hooks/usePickerState';
-import { applyDefaultDate, replaceInvalidDateByNull } from '../internals/utils/date-utils';
+import { DateOrTimeView } from '../internals/models';
+import { applyDefaultDate } from '../internals/utils/date-utils';
 import { DefaultizedProps } from '../internals/models/helpers';
 import {
   BaseDateValidationProps,
@@ -32,7 +31,7 @@ import {
 import { LocalizedComponent, PickersInputLocaleText } from '../locales/utils/pickersLocaleTextApi';
 
 export interface BaseDateTimePickerSlotsComponent<TDate>
-  extends CalendarOrClockPickerSlotsComponent<TDate, CalendarOrClockPickerView> {
+  extends CalendarOrClockPickerSlotsComponent<TDate, DateOrTimeView> {
   /**
    * Custom component for the toolbar rendered above the views.
    * @default DateTimePickerToolbar
@@ -52,7 +51,7 @@ export interface BaseDateTimePickerSlotsComponentsProps<TDate>
 }
 
 export interface BaseDateTimePickerProps<TDate>
-  extends ExportedClockPickerProps<TDate>,
+  extends ExportedTimeClockProps<TDate>,
     ExportedDateCalendarProps<TDate>,
     BasePickerProps<TDate | null, TDate>,
     ValidationCommonProps<DateTimeValidationError, TDate | null>,
@@ -80,20 +79,20 @@ export interface BaseDateTimePickerProps<TDate>
   maxDateTime?: TDate;
   /**
    * Callback fired on view change.
-   * @param {CalendarOrClockPickerView} view The new view.
+   * @param {DateOrTimeView} view The new view.
    */
-  onViewChange?: (view: CalendarOrClockPickerView) => void;
+  onViewChange?: (view: DateOrTimeView) => void;
   /**
    * First view to show.
    * Must be a valid option from `views` list
    * @default 'day'
    */
-  openTo?: CalendarOrClockPickerView;
+  openTo?: DateOrTimeView;
   /**
    * Array of views to show.
    * @default ['year', 'day', 'hours', 'minutes']
    */
-  views?: readonly CalendarOrClockPickerView[];
+  views?: readonly DateOrTimeView[];
   /**
    * Overrideable components.
    * @default {}
@@ -189,10 +188,3 @@ export function useDateTimePickerDefaultizedProps<
     },
   };
 }
-
-export const dateTimePickerValueManager: PickerStateValueManager<any, any> = {
-  emptyValue: null,
-  getTodayValue: (utils) => utils.date()!,
-  cleanValue: replaceInvalidDateByNull,
-  areValuesEqual: (utils, a, b) => utils.isEqual(a, b),
-};

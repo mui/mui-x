@@ -5,7 +5,6 @@ import { stub, spy } from 'sinon';
 import { expect } from 'chai';
 import {
   DataGrid,
-  GridValueGetterParams,
   GridToolbar,
   DataGridProps,
   ptBR,
@@ -84,14 +83,14 @@ describe('<DataGrid /> - Layout & Warnings', () => {
         width?: number;
       }
 
-      const TestCase = (props: TestCaseProps) => {
+      function TestCase(props: TestCaseProps) {
         const { width = 300 } = props;
         return (
           <div style={{ width, height: 300 }}>
             <DataGrid {...baselineProps} />
           </div>
         );
-      };
+      }
 
       const { container, setProps } = render(<TestCase width={300} />);
       let rect;
@@ -160,38 +159,6 @@ describe('<DataGrid /> - Layout & Warnings', () => {
         expect(document.querySelector(`.${className}`)).to.equal(container.firstChild.firstChild);
       });
 
-      it('should support columns.valueGetter using `getValue` (deprecated)', () => {
-        const columns = [
-          { field: 'id' },
-          { field: 'firstName' },
-          { field: 'lastName' },
-          {
-            field: 'fullName',
-            valueGetter: (params: GridValueGetterParams) =>
-              `${params.getValue(params.id, 'firstName') || ''} ${
-                params.getValue(params.id, 'lastName') || ''
-              }`,
-          },
-        ];
-
-        const rows = [
-          { id: 1, lastName: 'Snow', firstName: 'Jon' },
-          { id: 2, lastName: 'Lannister', firstName: 'Cersei' },
-        ];
-
-        expect(() => {
-          render(
-            <div style={{ width: 300, height: 300 }}>
-              <DataGrid rows={rows} columns={columns} />
-            </div>,
-          );
-
-          expect(getColumnValues(3)).to.deep.equal(['Jon Snow', 'Cersei Lannister']);
-        }).toWarnDev(
-          'MUI: You are calling getValue. This method is deprecated and will be removed in the next major version.',
-        );
-      });
-
       it('should support columns.valueGetter using direct row access', () => {
         const columns: GridColumns = [
           { field: 'id' },
@@ -247,28 +214,6 @@ describe('<DataGrid /> - Layout & Warnings', () => {
         }).toErrorDev(
           'MUI: useResizeContainer - The parent DOM element of the data grid has an empty width',
         );
-      });
-
-      it('should warn when GridCellParams.valueGetter is called with a missing column', () => {
-        const rows = [
-          { id: 1, age: 1 },
-          { id: 2, age: 2 },
-        ];
-        const columns = [
-          { field: 'id' },
-          {
-            field: 'fullName',
-            valueGetter: (params: GridValueGetterParams) => params.getValue(params.id, 'age'),
-          },
-        ];
-        expect(() => {
-          render(
-            <div style={{ width: 300, height: 300 }}>
-              <DataGrid rows={rows} columns={columns} />
-            </div>,
-          );
-        }).toWarnDev(["You are calling getValue('age') but the column `age` is not defined"]);
-        expect(getColumnValues(1)).to.deep.equal(['1', '2']);
       });
     });
 
@@ -598,11 +543,13 @@ describe('<DataGrid /> - Layout & Warnings', () => {
       });
 
       it('should resize flex: 1 column when changing columnVisibilityModel to avoid exceeding grid width', () => {
-        const TestCase = (props: DataGridProps) => (
-          <div style={{ width: 300, height: 500 }}>
-            <DataGrid {...props} />
-          </div>
-        );
+        function TestCase(props: DataGridProps) {
+          return (
+            <div style={{ width: 300, height: 500 }}>
+              <DataGrid {...props} />
+            </div>
+          );
+        }
 
         const { setProps } = render(
           <TestCase
@@ -648,14 +595,14 @@ describe('<DataGrid /> - Layout & Warnings', () => {
       });
 
       it('should be rerender invariant', () => {
-        const Test = () => {
+        function Test() {
           const columns = [{ field: 'id', headerName: 'ID', flex: 1 }];
           return (
             <div style={{ width: 200, height: 300 }}>
               <DataGrid rows={[]} columns={columns} />
             </div>
           );
-        };
+        }
 
         const { setProps } = render(<Test />);
         setProps();
@@ -803,14 +750,14 @@ describe('<DataGrid /> - Layout & Warnings', () => {
 
     // A function test counterpart of ScrollbarOverflowVerticalSnap.
     it('should not have a horizontal scrollbar if not needed', () => {
-      const TestCase = () => {
+      function TestCase() {
         const data = useBasicDemoData(100, 1);
         return (
           <div style={{ width: 500, height: 300 }}>
             <DataGrid {...data} />
           </div>
         );
-      };
+      }
       render(<TestCase />);
       const virtualScroller = document.querySelector('.MuiDataGrid-virtualScroller')!;
       // It should not have a horizontal scrollbar
@@ -1070,11 +1017,13 @@ describe('<DataGrid /> - Layout & Warnings', () => {
 
   it('should not render the "no rows" overlay when transitioning the loading prop from false to true', () => {
     const NoRowsOverlay = spy(() => null);
-    const TestCase = (props: Partial<DataGridProps>) => (
-      <div style={{ width: 300, height: 500 }}>
-        <DataGrid {...baselineProps} components={{ NoRowsOverlay }} {...props} />
-      </div>
-    );
+    function TestCase(props: Partial<DataGridProps>) {
+      return (
+        <div style={{ width: 300, height: 500 }}>
+          <DataGrid {...baselineProps} components={{ NoRowsOverlay }} {...props} />
+        </div>
+      );
+    }
     const { setProps } = render(<TestCase rows={[]} loading />);
     expect(NoRowsOverlay.callCount).to.equal(0);
     setProps({ loading: false, rows: [{ id: 1 }] });
@@ -1083,11 +1032,13 @@ describe('<DataGrid /> - Layout & Warnings', () => {
 
   it('should render the "no rows" overlay when changing the loading to false but not changing the rows prop', () => {
     const NoRowsOverlay = spy(() => null);
-    const TestCase = (props: Partial<DataGridProps>) => (
-      <div style={{ width: 300, height: 500 }}>
-        <DataGrid {...baselineProps} components={{ NoRowsOverlay }} {...props} />
-      </div>
-    );
+    function TestCase(props: Partial<DataGridProps>) {
+      return (
+        <div style={{ width: 300, height: 500 }}>
+          <DataGrid {...baselineProps} components={{ NoRowsOverlay }} {...props} />
+        </div>
+      );
+    }
     const rows: DataGridProps['rows'] = [];
     const { setProps } = render(<TestCase rows={rows} loading />);
     expect(NoRowsOverlay.callCount).to.equal(0);

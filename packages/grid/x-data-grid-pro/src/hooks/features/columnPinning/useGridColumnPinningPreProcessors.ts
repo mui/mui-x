@@ -3,11 +3,11 @@ import { GridPipeProcessor, useGridRegisterPipeProcessor } from '@mui/x-data-gri
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 import { gridPinnedColumnsSelector } from './gridColumnPinningSelector';
 import { columnPinningStateInitializer } from './useGridColumnPinning';
-import { GridApiPro } from '../../../models/gridApiPro';
+import { GridApiPro, GridPrivateApiPro } from '../../../models/gridApiPro';
 import { filterColumns } from '../../../components/DataGridProVirtualScroller';
 
 export const useGridColumnPinningPreProcessors = (
-  apiRef: React.MutableRefObject<GridApiPro>,
+  apiRef: React.MutableRefObject<GridPrivateApiPro>,
   props: DataGridProProcessedProps,
 ) => {
   const { disableColumnPinning, pinnedColumns: pinnedColumnsProp, initialState } = props;
@@ -40,7 +40,7 @@ export const useGridColumnPinningPreProcessors = (
       let newOrderedFields: string[];
       const allPinnedColumns = [...leftPinnedColumns, ...rightPinnedColumns];
 
-      const { orderedFieldsBeforePinningColumns } = apiRef.current.unstable_caches.columnPinning;
+      const { orderedFieldsBeforePinningColumns } = apiRef.current.caches.columnPinning;
 
       if (orderedFieldsBeforePinningColumns) {
         newOrderedFields = new Array(columnsState.orderedFields.length).fill(null);
@@ -99,11 +99,11 @@ export const useGridColumnPinningPreProcessors = (
           newOrderedFields[i] = field;
         });
 
-        apiRef.current.unstable_caches.columnPinning.orderedFieldsBeforePinningColumns =
+        apiRef.current.caches.columnPinning.orderedFieldsBeforePinningColumns =
           newOrderedFieldsBeforePinningColumns;
       } else {
         newOrderedFields = [...columnsState.orderedFields];
-        apiRef.current.unstable_caches.columnPinning.orderedFieldsBeforePinningColumns = [
+        apiRef.current.caches.columnPinning.orderedFieldsBeforePinningColumns = [
           ...columnsState.orderedFields,
         ];
       }

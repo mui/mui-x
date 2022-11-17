@@ -20,6 +20,7 @@ const DATA_GRID_FORCED_PROPS: { [key in DataGridForcedPropsKey]?: DataGridProces
   checkboxSelectionVisibleOnly: false,
   disableColumnReorder: true,
   disableColumnResize: true,
+  keepColumnPositionIfDraggedOutside: false,
   signature: 'DataGrid',
 };
 
@@ -37,6 +38,7 @@ export const DATA_GRID_PROPS_DEFAULT_VALUES: DataGridPropsWithDefaultValues = {
   rowBuffer: 3,
   columnThreshold: 3,
   rowThreshold: 3,
+  rowSelection: true,
   density: GridDensityTypes.Standard,
   disableExtendRowFullWidth: false,
   disableColumnFilter: false,
@@ -48,7 +50,6 @@ export const DATA_GRID_PROPS_DEFAULT_VALUES: DataGridPropsWithDefaultValues = {
   disableMultipleColumnsSorting: false,
   disableRowSelectionOnClick: false,
   disableVirtualization: false,
-  disableIgnoreModificationsIfProcessingProps: false,
   editMode: GridEditModes.Cell,
   filterMode: 'client',
   headerHeight: 56,
@@ -71,6 +72,7 @@ export const DATA_GRID_PROPS_DEFAULT_VALUES: DataGridPropsWithDefaultValues = {
   disableColumnReorder: false,
   disableColumnResize: false,
   keepNonExistentRowsSelected: false,
+  keepColumnPositionIfDraggedOutside: false,
 };
 
 export const useDataGridProps = <R extends GridValidRowModel>(inProps: DataGridProps<R>) => {

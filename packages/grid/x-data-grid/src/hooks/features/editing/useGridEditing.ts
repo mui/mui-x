@@ -1,6 +1,11 @@
 import * as React from 'react';
-import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
-import { GridEditingApi, GridEditingSharedApi } from '../../../models/api/gridEditingApi';
+import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
+import {
+  GridEditingApi,
+  GridEditingPrivateApi,
+  GridEditingSharedApi,
+  GridEditingSharedPrivateApi,
+} from '../../../models/api/gridEditingApi';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { GridRowId } from '../../../models/gridRows';
@@ -17,14 +22,8 @@ export const editingStateInitializer: GridStateInitializer = (state) => ({
 });
 
 export const useGridEditing = (
-  apiRef: React.MutableRefObject<GridApiCommunity>,
-  props: Pick<
-    DataGridProcessedProps,
-    | 'isCellEditable'
-    | 'editMode'
-    | 'processRowUpdate'
-    | 'disableIgnoreModificationsIfProcessingProps'
-  >,
+  apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
+  props: Pick<DataGridProcessedProps, 'isCellEditable' | 'editMode' | 'processRowUpdate'>,
 ) => {
   useGridCellEditing(apiRef, props);
   useGridRowEditing(apiRef, props);
@@ -108,7 +107,7 @@ export const useGridEditing = (
   }, []);
 
   const runPendingEditCellValueMutation = React.useCallback<
-    GridEditingApi['unstable_runPendingEditCellValueMutation']
+    GridEditingPrivateApi['runPendingEditCellValueMutation']
   >((id, field) => {
     if (!debounceMap.current[id]) {
       return;
@@ -132,8 +131,8 @@ export const useGridEditing = (
         maybeDebounce(id, field, debounceMs, async () => {
           const setEditCellValueToCall =
             props.editMode === GridEditModes.Row
-              ? apiRef.current.unstable_setRowEditingEditCellValue
-              : apiRef.current.unstable_setCellEditingEditCellValue;
+              ? apiRef.current.setRowEditingEditCellValue
+              : apiRef.current.setCellEditingEditCellValue;
 
           // Check if the cell is in edit mode
           // By the time this callback runs the user may have cancelled the editing
@@ -152,8 +151,8 @@ export const useGridEditing = (
   >(
     (id, field) => {
       return props.editMode === GridEditModes.Cell
-        ? apiRef.current.unstable_getRowWithUpdatedValuesFromCellEditing(id, field)
-        : apiRef.current.unstable_getRowWithUpdatedValuesFromRowEditing(id);
+        ? apiRef.current.getRowWithUpdatedValuesFromCellEditing(id, field)
+        : apiRef.current.getRowWithUpdatedValuesFromRowEditing(id);
     },
     [apiRef, props.editMode],
   );
@@ -170,10 +169,14 @@ export const useGridEditing = (
   const editingSharedApi: GridEditingSharedApi = {
     isCellEditable,
     setEditCellValue,
-    unstable_runPendingEditCellValueMutation: runPendingEditCellValueMutation,
     unstable_getRowWithUpdatedValues: getRowWithUpdatedValues,
     unstable_getEditCellMeta: getEditCellMeta,
   };
 
-  useGridApiMethod(apiRef, editingSharedApi, 'EditingApi');
+  const editingSharedPrivateApi: GridEditingSharedPrivateApi = {
+    runPendingEditCellValueMutation,
+  };
+
+  useGridApiMethod(apiRef, editingSharedApi, 'public');
+  useGridApiMethod(apiRef, editingSharedPrivateApi, 'private');
 };

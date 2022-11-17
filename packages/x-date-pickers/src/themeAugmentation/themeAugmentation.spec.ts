@@ -9,9 +9,9 @@ import { dayCalendarSkeletonClasses } from '../DayCalendarSkeleton';
 import {
   clockClasses,
   clockNumberClasses,
-  clockPickerClasses,
+  timeClockClasses,
   clockPointerClasses,
-} from '../ClockPicker';
+} from '../TimeClock';
 import { datePickerToolbarClasses } from '../DatePicker';
 import { dateTimePickerToolbarClasses } from '../DateTimePicker';
 import {
@@ -97,21 +97,6 @@ createTheme({
         root: {
           backgroundColor: 'red',
           [`&.${clockNumberClasses.selected}`]: {
-            backgroundColor: 'green',
-          },
-        },
-      },
-    },
-    MuiClockPicker: {
-      defaultProps: {
-        view: 'hours',
-        // @ts-expect-error invalid MuiClockPicker prop
-        someRandomProp: true,
-      },
-      styleOverrides: {
-        root: {
-          backgroundColor: 'red',
-          [`.${clockPickerClasses.arrowSwitcher}`]: {
             backgroundColor: 'green',
           },
         },
@@ -224,10 +209,45 @@ createTheme({
         someRandomProp: true,
       },
     },
+    MuiDesktopNextDateTimePicker: {
+      defaultProps: {
+        open: true,
+        // @ts-expect-error invalid MuiDesktopNextDateTimePicker prop
+        someRandomProp: true,
+      },
+    },
+    MuiDesktopNextTimePicker: {
+      defaultProps: {
+        open: true,
+        // @ts-expect-error invalid MuiDesktopNextTimePicker prop
+        someRandomProp: true,
+      },
+    },
     MuiDesktopTimePicker: {
       defaultProps: {
         open: true,
         // @ts-expect-error invalid MuiDesktopTimePicker prop
+        someRandomProp: true,
+      },
+    },
+    MuiMobileNextDatePicker: {
+      defaultProps: {
+        open: true,
+        // @ts-expect-error invalid MuiMobileNextDatePicker prop
+        someRandomProp: true,
+      },
+    },
+    MuiMobileNextDateTimePicker: {
+      defaultProps: {
+        open: true,
+        // @ts-expect-error invalid MuiMobileNextDateTimePicker prop
+        someRandomProp: true,
+      },
+    },
+    MuiMobileNextTimePicker: {
+      defaultProps: {
+        open: true,
+        // @ts-expect-error invalid MuiMobileNextTimePicker prop
         someRandomProp: true,
       },
     },
@@ -241,6 +261,27 @@ createTheme({
         root: {
           backgroundColor: 'red',
         },
+      },
+    },
+    MuiNextDatePicker: {
+      defaultProps: {
+        open: true,
+        // @ts-expect-error invalid MuiNextDatePicker prop
+        someRandomProp: true,
+      },
+    },
+    MuiNextDateTimePicker: {
+      defaultProps: {
+        open: true,
+        // @ts-expect-error invalid MuiNextDateTimePicker prop
+        someRandomProp: true,
+      },
+    },
+    MuiNextTimePicker: {
+      defaultProps: {
+        open: true,
+        // @ts-expect-error invalid MuiNextTimePicker prop
+        someRandomProp: true,
       },
     },
     MuiPickersArrowSwitcher: {
@@ -399,6 +440,21 @@ createTheme({
         },
       },
     },
+    MuiPickersViewLayout: {
+      defaultProps: {
+        disabled: true,
+        // @ts-expect-error invalid MuiPickersViewLayout prop
+        someRandomProp: true,
+      },
+      styleOverrides: {
+        root: {
+          backgroundColor: 'red',
+        },
+        content: {
+          backgroundColor: 'red',
+        },
+      },
+    },
     MuiPickersYear: {
       defaultProps: {
         classes: { yearButton: 'test' },
@@ -425,11 +481,47 @@ createTheme({
         someRandomProp: true,
       },
     },
+    MuiStaticNextDatePicker: {
+      defaultProps: {
+        disabled: true,
+        // @ts-expect-error invalid MuiStaticNextDatePicker prop
+        someRandomProp: true,
+      },
+    },
+    MuiStaticNextDateTimePicker: {
+      defaultProps: {
+        disabled: true,
+        // @ts-expect-error invalid MuiStaticNextDateTimePicker prop
+        someRandomProp: true,
+      },
+    },
+    MuiStaticNextTimePicker: {
+      defaultProps: {
+        disabled: true,
+        // @ts-expect-error invalid MuiStaticNextTimePicker prop
+        someRandomProp: true,
+      },
+    },
     MuiStaticTimePicker: {
       defaultProps: {
         disabled: true,
         // @ts-expect-error invalid MuiStaticDatePicker prop
         someRandomProp: true,
+      },
+    },
+    MuiTimeClock: {
+      defaultProps: {
+        view: 'hours',
+        // @ts-expect-error invalid MuiTimeCLock prop
+        someRandomProp: true,
+      },
+      styleOverrides: {
+        root: {
+          backgroundColor: 'red',
+          [`.${timeClockClasses.arrowSwitcher}`]: {
+            backgroundColor: 'green',
+          },
+        },
       },
     },
     MuiTimePickerToolbar: {

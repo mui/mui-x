@@ -1,8 +1,9 @@
+import * as React from 'react';
 import { Theme } from '@mui/material/styles';
 import { SxProps } from '@mui/system';
+import { UsePickerBaseProps } from '../../hooks/usePicker';
 import { PickerStateProps } from '../../hooks/usePickerState';
-import { UsePickerProps } from '../../hooks/usePicker';
-import { CalendarOrClockPickerView } from '../views';
+import { DateOrTimeView } from '../views';
 import { PickersInputComponentLocaleText } from '../../../locales/utils/pickersLocaleTextApi';
 
 export interface BasePickerProps<TValue, TDate> extends PickerStateProps<TValue> {
@@ -41,8 +42,8 @@ export interface BasePickerProps<TValue, TDate> extends PickerStateProps<TValue>
 /**
  * Props common to all pickers.
  */
-export interface BaseNextPickerProps<TValue, TDate, TView extends CalendarOrClockPickerView>
-  extends UsePickerProps<TValue, TView> {
+export interface BaseNextPickerProps<TValue, TDate, TView extends DateOrTimeView, TError>
+  extends UsePickerBaseProps<TValue, TView, TError> {
   /**
    * Class name applied to the root element.
    */
@@ -51,10 +52,6 @@ export interface BaseNextPickerProps<TValue, TDate, TView extends CalendarOrCloc
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */
   sx?: SxProps<Theme>;
-  /**
-   * Format of the date when rendered in the input(s).
-   */
-  inputFormat?: string;
   /**
    * If `true`, the toolbar will be visible.
    * @default `true` for mobile, `false` for desktop
@@ -65,4 +62,31 @@ export interface BaseNextPickerProps<TValue, TDate, TView extends CalendarOrCloc
    * Allows overriding texts coming from `LocalizationProvider` and `theme`.
    */
   localeText?: PickersInputComponentLocaleText<TDate>;
+}
+
+/**
+ * Props common to all non-static pickers.
+ * These props are handled by the headless wrappers.
+ */
+export interface BaseNextNonStaticPickerProps {
+  /**
+   * Format of the date when rendered in the input(s).
+   * Defaults to localized format based on the used `views`.
+   */
+  format?: string;
+}
+
+/**
+ * Props common to all non-static pickers.
+ * These props are handled by each component, not by the headless wrappers.
+ */
+export interface BaseNextNonStaticPickerExternalProps {
+  /**
+   * The label content.
+   */
+  label?: React.ReactNode;
+  /**
+   * Pass a ref to the `input` element.
+   */
+  inputRef?: React.Ref<HTMLInputElement>;
 }

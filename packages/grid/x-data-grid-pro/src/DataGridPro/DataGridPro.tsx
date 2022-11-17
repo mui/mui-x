@@ -25,11 +25,11 @@ const DataGridProRaw = React.forwardRef(function DataGridPro<R extends GridValid
   ref: React.Ref<HTMLDivElement>,
 ) {
   const props = useDataGridProProps(inProps);
-  const apiRef = useDataGridProComponent(props.apiRef, props);
+  const privateApiRef = useDataGridProComponent(props.apiRef, props);
   useLicenseVerifier('x-data-grid-pro', releaseInfo);
 
   return (
-    <GridContextProvider apiRef={apiRef} props={props}>
+    <GridContextProvider privateApiRef={privateApiRef} props={props}>
       <GridRoot className={props.className} style={props.style} sx={props.sx} ref={ref}>
         <GridErrorHandler>
           <GridHeaderPlaceholder />
@@ -210,11 +210,6 @@ DataGridProRaw.propTypes = {
    */
   disableExtendRowFullWidth: PropTypes.bool,
   /**
-   * If `true`, modification to a cell will not be discarded if the mode is changed from "edit" to "view" while processing props.
-   * @default false
-   */
-  disableIgnoreModificationsIfProcessingProps: PropTypes.bool,
-  /**
    * If `true`, filtering with multiple columns is disabled.
    * @default false
    */
@@ -253,7 +248,7 @@ DataGridProRaw.propTypes = {
    */
   error: PropTypes.any,
   /**
-   * Features under development.
+   * Unstable features, breaking changes might be introduced.
    * For each feature, if the flag is not explicitly set to `true`, the feature will be fully disabled and any property / method call will not have any effect.
    */
   experimentalFeatures: PropTypes.shape({
@@ -411,6 +406,12 @@ DataGridProRaw.propTypes = {
    * @returns {boolean} A boolean indicating if the cell is selectable.
    */
   isRowSelectable: PropTypes.func,
+  /**
+   * If `true`, moving the mouse pointer outside the grid before releasing the mouse button
+   * in a column re-order action will not cause the column to jump back to its original position.
+   * @default false
+   */
+  keepColumnPositionIfDraggedOutside: PropTypes.bool,
   /**
    * If `true`, the selection model will retain selected rows that do not exist.
    * Useful when using server side pagination and row selections need to be retained
@@ -797,6 +798,11 @@ DataGridProRaw.propTypes = {
    * Set of rows of type [[GridRowsProp]].
    */
   rows: PropTypes.arrayOf(PropTypes.object).isRequired,
+  /**
+   * If `false`, the row selection mode is disabled.
+   * @default true
+   */
+  rowSelection: PropTypes.bool,
   /**
    * Sets the row selection model of the grid.
    */

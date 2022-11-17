@@ -2,7 +2,7 @@
 title: Data Grid - Row ordering
 ---
 
-# Data grid - Row ordering [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
+# Data Grid - Row ordering [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
 
 <p class="description">Drag and drop your rows to reorder them.</p>
 

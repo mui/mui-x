@@ -21,10 +21,10 @@ const DataGridRaw = React.forwardRef(function DataGrid<R extends GridValidRowMod
   ref: React.Ref<HTMLDivElement>,
 ) {
   const props = useDataGridProps(inProps);
-  const apiRef = useDataGridComponent(props);
+  const privateApiRef = useDataGridComponent(props);
 
   return (
-    <GridContextProvider apiRef={apiRef} props={props}>
+    <GridContextProvider privateApiRef={privateApiRef} props={props}>
       <GridRoot className={props.className} style={props.style} sx={props.sx} ref={ref}>
         <GridErrorHandler>
           <GridHeaderPlaceholder />
@@ -160,11 +160,6 @@ DataGridRaw.propTypes = {
    */
   disableExtendRowFullWidth: PropTypes.bool,
   /**
-   * If `true`, modification to a cell will not be discarded if the mode is changed from "edit" to "view" while processing props.
-   * @default false
-   */
-  disableIgnoreModificationsIfProcessingProps: PropTypes.bool,
-  /**
    * If `true`, the selection on click on a row or cell is disabled.
    * @default false
    */
@@ -188,7 +183,7 @@ DataGridRaw.propTypes = {
    */
   error: PropTypes.any,
   /**
-   * Features under development.
+   * Unstable features, breaking changes might be introduced.
    * For each feature, if the flag is not explicitly set to `true`, the feature will be fully disabled and any property / method call will not have any effect.
    */
   experimentalFeatures: PropTypes.shape({
@@ -637,6 +632,11 @@ DataGridRaw.propTypes = {
    * Set of rows of type [[GridRowsProp]].
    */
   rows: PropTypes.arrayOf(PropTypes.object).isRequired,
+  /**
+   * If `false`, the row selection mode is disabled.
+   * @default true
+   */
+  rowSelection: PropTypes.bool,
   /**
    * Sets the row selection model of the grid.
    */

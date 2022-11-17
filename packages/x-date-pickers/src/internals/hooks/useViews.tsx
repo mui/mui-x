@@ -1,20 +1,15 @@
 import * as React from 'react';
-import { useControlled } from '@mui/material/utils';
+import { unstable_useControlled as useControlled } from '@mui/utils';
 import { arrayIncludes } from '../utils/utils';
 import { PickerSelectionState } from './usePickerState';
-import { CalendarOrClockPickerView } from '../models';
+import { DateOrTimeView } from '../models';
 
 export type PickerOnChangeFn<TDate> = (
   date: TDate | null,
   selectionState?: PickerSelectionState,
 ) => void;
 
-export type NonNullablePickerChangeHandler<TDate> = (
-  date: TDate,
-  selectionState?: PickerSelectionState,
-) => void;
-
-interface UseViewsOptions<TValue, View extends CalendarOrClockPickerView> {
+interface UseViewsOptions<TValue, View extends DateOrTimeView> {
   onChange: (value: TValue, selectionState?: PickerSelectionState) => void;
   onViewChange?: (newView: View) => void;
   openTo?: View;
@@ -22,7 +17,7 @@ interface UseViewsOptions<TValue, View extends CalendarOrClockPickerView> {
   views: readonly View[];
 }
 
-export function useViews<TValue, View extends CalendarOrClockPickerView>({
+export function useViews<TValue, View extends DateOrTimeView>({
   onChange,
   onViewChange,
   openTo,

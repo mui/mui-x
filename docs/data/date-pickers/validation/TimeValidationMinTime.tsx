@@ -12,7 +12,7 @@ import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 const fiveAM = dayjs().set('hour', 5).startOf('hour');
 const nineAM = dayjs().set('hour', 9).startOf('hour');
 
-const GridItem = ({
+function GridItem({
   label,
   children,
   spacing = 1,
@@ -20,7 +20,7 @@ const GridItem = ({
   label: string;
   children: React.ReactNode;
   spacing?: number;
-}) => {
+}) {
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column' }}>
       <Typography variant="body2" sx={{ mb: spacing }}>
@@ -29,7 +29,7 @@ const GridItem = ({
       {children}
     </Box>
   );
-};
+}
 
 export default function TimeValidationMinTime() {
   const [timePickerValue, setTimePickerValue] = React.useState<Dayjs | null>(fiveAM);

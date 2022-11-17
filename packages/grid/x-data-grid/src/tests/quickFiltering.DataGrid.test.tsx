@@ -37,13 +37,13 @@ describe('<DataGrid /> - Quick Filter', () => {
     columns: [{ field: 'brand' }],
   };
 
-  const TestCase = (props: Partial<DataGridProps>) => {
+  function TestCase(props: Partial<DataGridProps>) {
     return (
       <div style={{ width: 300, height: 300 }}>
         <DataGrid {...baselineProps} components={{ Toolbar: GridToolbarQuickFilter }} {...props} />
       </div>
     );
-  };
+  }
 
   describe('component', () => {
     it('should apply filter', () => {

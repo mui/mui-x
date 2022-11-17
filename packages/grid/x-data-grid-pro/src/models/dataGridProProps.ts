@@ -119,6 +119,12 @@ export interface DataGridProPropsWithDefaultValue extends DataGridPropsWithDefau
    * * @default "client"
    */
   rowsLoadingMode: GridFeatureMode;
+  /**
+   * If `true`, moving the mouse pointer outside the grid before releasing the mouse button
+   * in a column re-order action will not cause the column to jump back to its original position.
+   * @default false
+   */
+  keepColumnPositionIfDraggedOutside: boolean;
 }
 
 export interface DataGridProPropsWithoutDefaultValue<R extends GridValidRowModel = any>
@@ -134,7 +140,7 @@ export interface DataGridProPropsWithoutDefaultValue<R extends GridValidRowModel
    */
   initialState?: GridInitialStatePro;
   /**
-   * Features under development.
+   * Unstable features, breaking changes might be introduced.
    * For each feature, if the flag is not explicitly set to `true`, the feature will be fully disabled and any property / method call will not have any effect.
    */
   experimentalFeatures?: Partial<GridExperimentalProFeatures>;

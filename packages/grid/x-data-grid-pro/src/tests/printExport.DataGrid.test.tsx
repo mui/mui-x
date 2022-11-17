@@ -25,7 +25,7 @@ describe('<DataGridPro /> - Print export', () => {
     rowsPerPageOptions: [NB_ROWS, 100],
   };
 
-  const Test = (props: Partial<DataGridProProps>) => {
+  function Test(props: Partial<DataGridProProps>) {
     apiRef = useGridApiRef();
 
     return (
@@ -33,7 +33,7 @@ describe('<DataGridPro /> - Print export', () => {
         <DataGridPro {...baselineProps} apiRef={apiRef} {...props} />
       </div>
     );
-  };
+  }
 
   const allBooleanConfigurations = [
     {

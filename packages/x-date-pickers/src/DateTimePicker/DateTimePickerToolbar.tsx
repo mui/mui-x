@@ -11,7 +11,7 @@ import {
   DateTimePickerToolbarClasses,
   getDateTimePickerToolbarUtilityClass,
 } from './dateTimePickerToolbarClasses';
-import { CalendarOrClockPickerView } from '../internals/models';
+import { DateOrTimeView } from '../internals/models';
 
 export interface ExportedDateTimePickerToolbarProps extends ExportedBaseToolbarProps {
   ampm?: boolean;
@@ -20,7 +20,7 @@ export interface ExportedDateTimePickerToolbarProps extends ExportedBaseToolbarP
 
 export interface DateTimePickerToolbarProps<TDate>
   extends ExportedDateTimePickerToolbarProps,
-    BaseToolbarProps<TDate | null, CalendarOrClockPickerView> {
+    BaseToolbarProps<TDate | null, DateOrTimeView> {
   /**
    * Override or extend the styles applied to the component.
    */
@@ -43,16 +43,17 @@ const DateTimePickerToolbarRoot = styled(PickersToolbar, {
   name: 'MuiDateTimePickerToolbar',
   slot: 'Root',
   overridesResolver: (props, styles) => styles.root,
-})<{ ownerState: DateTimePickerToolbarProps<any> }>({
+})<{ ownerState: DateTimePickerToolbarProps<any> }>(({ theme }) => ({
   paddingLeft: 16,
   paddingRight: 16,
   justifyContent: 'space-around',
+  position: 'relative',
   [`& .${pickersToolbarClasses.penIconButton}`]: {
     position: 'absolute',
     top: 8,
-    right: 8,
+    ...(theme.direction === 'rtl' ? { left: 8 } : { right: 8 }),
   },
-});
+}));
 
 const DateTimePickerToolbarDateContainer = styled('div', {
   name: 'MuiDateTimePickerToolbar',

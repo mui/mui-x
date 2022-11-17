@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { unstable_composeClasses as composeClasses } from '@mui/material';
+import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import {
   useGridLogger,
   useGridApiEventHandler,
@@ -13,7 +13,7 @@ import {
   gridEditRowsStateSelector,
 } from '@mui/x-data-grid';
 import { GridRowOrderChangeParams } from '../../../models/gridRowOrderChangeParams';
-import { GridApiPro } from '../../../models/gridApiPro';
+import { GridPrivateApiPro } from '../../../models/gridApiPro';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 
 type OwnerState = { classes: DataGridProProcessedProps['classes'] };
@@ -33,7 +33,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
  * @requires useGridRows (method)
  */
 export const useGridRowReorder = (
-  apiRef: React.MutableRefObject<GridApiPro>,
+  apiRef: React.MutableRefObject<GridPrivateApiPro>,
   props: Pick<DataGridProProcessedProps, 'rowReordering' | 'onRowOrderChange' | 'classes'>,
 ): void => {
   const logger = useGridLogger(apiRef, 'useGridRowReorder');
@@ -80,7 +80,7 @@ export const useGridRowReorder = (
         dragRowNode.current!.classList.remove(classes.rowDragging);
       });
 
-      originRowIndex.current = apiRef.current.getRowIndex(params.id);
+      originRowIndex.current = apiRef.current.getRowIndexRelativeToVisibleRows(params.id);
     },
     [isRowReorderDisabled, classes.rowDragging, logger, apiRef],
   );
@@ -104,7 +104,7 @@ export const useGridRowReorder = (
       event.stopPropagation();
 
       if (params.id !== dragRowId) {
-        const targetRowIndex = apiRef.current.getRowIndex(params.id);
+        const targetRowIndex = apiRef.current.getRowIndexRelativeToVisibleRows(params.id);
         apiRef.current.setRowIndex(dragRowId, targetRowIndex);
       }
     },
@@ -137,7 +137,7 @@ export const useGridRowReorder = (
         // Emit the rowOrderChange event only once when the reordering stops.
         const rowOrderChangeParams: GridRowOrderChangeParams = {
           row: apiRef.current.getRow(dragRowId)!,
-          targetIndex: apiRef.current.getRowIndex(params.id),
+          targetIndex: apiRef.current.getRowIndexRelativeToVisibleRows(params.id),
           oldIndex: originRowIndex.current!,
         };
 

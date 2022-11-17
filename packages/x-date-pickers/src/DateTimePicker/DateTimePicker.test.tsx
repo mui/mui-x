@@ -7,7 +7,7 @@ import { createPickerRenderer, stubMatchMedia } from 'test/utils/pickers-utils';
 import describeValidation from '@mui/x-date-pickers/tests/describeValidation';
 
 describe('<DateTimePicker />', () => {
-  const ControlledDateTimePicker = () => {
+  function ControlledDateTimePicker() {
     const [value, setValue] = React.useState<Date | null>(null);
     return (
       <DateTimePicker
@@ -16,7 +16,7 @@ describe('<DateTimePicker />', () => {
         onChange={(newValue) => setValue(newValue)}
       />
     );
-  };
+  }
 
   const { render, clock } = createPickerRenderer({ clock: 'fake' });
 

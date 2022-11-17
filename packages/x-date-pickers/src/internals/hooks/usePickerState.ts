@@ -4,7 +4,7 @@ import { useOpenState } from './useOpenState';
 import { useUtils } from './useUtils';
 import { MuiPickersAdapter } from '../models';
 
-export interface PickerStateValueManager<TValue, TDate> {
+export interface PickerStateValueManager<TValue, TDate, TError> {
   /**
    * Determines if two values are equal.
    * @template TDate, TValue
@@ -50,6 +50,18 @@ export interface PickerStateValueManager<TValue, TDate> {
     lastValidDateValue: TValue,
     value: TValue,
   ) => TValue;
+  /**
+   * Compare two errors to know if they are equal.
+   * @template TError
+   * @param {TError} error The new error
+   * @param {TError | null} prevError The previous error
+   * @returns {boolean} `true` if the new error is different from the previous one.
+   */
+  isSameError: (error: TError, prevError: TError | null) => boolean;
+  /**
+   * The value identifying no error, used to initialise the error state.
+   */
+  defaultErrorState: TError;
 }
 
 export type PickerSelectionState = 'partial' | 'shallow' | 'finish';
@@ -178,9 +190,9 @@ interface PickerState<TValue> {
   wrapperProps: PickerStateWrapperProps;
 }
 
-export const usePickerState = <TValue, TDate>(
+export const usePickerState = <TValue, TDate, TError>(
   props: PickerStateProps<TValue>,
-  valueManager: PickerStateValueManager<TValue, TDate>,
+  valueManager: PickerStateValueManager<TValue, TDate, TError>,
 ): PickerState<TValue> => {
   const { onAccept, onChange, value: rawValue, closeOnSelect } = props;
 

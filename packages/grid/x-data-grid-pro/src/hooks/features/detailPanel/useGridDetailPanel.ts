@@ -13,7 +13,7 @@ import {
   GridPipeProcessor,
   GridStateInitializer,
 } from '@mui/x-data-grid/internals';
-import { GridApiPro } from '../../../models/gridApiPro';
+import { GridApiPro, GridPrivateApiPro } from '../../../models/gridApiPro';
 import { GRID_DETAIL_PANEL_TOGGLE_FIELD } from './gridDetailPanelToggleColDef';
 import {
   gridDetailPanelExpandedRowIdsSelector,
@@ -22,7 +22,11 @@ import {
   gridDetailPanelRawHeightCacheSelector,
 } from './gridDetailPanelSelector';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
-import { GridDetailPanelApi, GridDetailPanelState } from './gridDetailPanelInterface';
+import {
+  GridDetailPanelApi,
+  GridDetailPanelPrivateApi,
+  GridDetailPanelState,
+} from './gridDetailPanelInterface';
 
 export const detailPanelStateInitializer: GridStateInitializer<
   Pick<DataGridProProcessedProps, 'initialState' | 'detailPanelExpandedRowIds'>
@@ -74,7 +78,7 @@ function cacheContentAndHeight(
 }
 
 export const useGridDetailPanel = (
-  apiRef: React.MutableRefObject<GridApiPro>,
+  apiRef: React.MutableRefObject<GridPrivateApiPro>,
   props: Pick<
     DataGridProProcessedProps,
     | 'getDetailPanelContent'
@@ -129,7 +133,7 @@ export const useGridDetailPanel = (
   useGridApiEventHandler(apiRef, 'cellClick', handleCellClick);
   useGridApiEventHandler(apiRef, 'cellKeyDown', handleCellKeyDown);
 
-  apiRef.current.unstable_registerControlState({
+  apiRef.current.registerControlState({
     stateId: 'detailPanels',
     propModel: props.detailPanelExpandedRowIds,
     propOnChange: props.onDetailPanelExpandedRowIdsChange,
@@ -178,7 +182,7 @@ export const useGridDetailPanel = (
   );
 
   const storeDetailPanelHeight = React.useCallback<
-    GridDetailPanelApi['unstable_storeDetailPanelHeight']
+    GridDetailPanelPrivateApi['storeDetailPanelHeight']
   >(
     (id, height) => {
       const heightCache = gridDetailPanelRawHeightCacheSelector(apiRef.current.state);
@@ -197,13 +201,13 @@ export const useGridDetailPanel = (
         };
       });
 
-      apiRef.current.unstable_requestPipeProcessorsApplication('rowHeight');
+      apiRef.current.requestPipeProcessorsApplication('rowHeight');
     },
     [apiRef],
   );
 
   const detailPanelHasAutoHeight = React.useCallback<
-    GridDetailPanelApi['unstable_detailPanelHasAutoHeight']
+    GridDetailPanelPrivateApi['detailPanelHasAutoHeight']
   >(
     (id) => {
       const heightCache = gridDetailPanelRawHeightCacheSelector(apiRef.current.state);
@@ -212,14 +216,19 @@ export const useGridDetailPanel = (
     [apiRef],
   );
 
-  const detailPanelApi: GridDetailPanelApi = {
+  const detailPanelPubicApi: GridDetailPanelApi = {
     toggleDetailPanel,
     getExpandedDetailPanels,
     setExpandedDetailPanels,
-    unstable_storeDetailPanelHeight: storeDetailPanelHeight,
-    unstable_detailPanelHasAutoHeight: detailPanelHasAutoHeight,
   };
-  useGridApiMethod(apiRef, detailPanelApi, 'detailPanelApi');
+
+  const detailPanelPrivateApi: GridDetailPanelPrivateApi = {
+    storeDetailPanelHeight,
+    detailPanelHasAutoHeight,
+  };
+
+  useGridApiMethod(apiRef, detailPanelPubicApi, 'public');
+  useGridApiMethod(apiRef, detailPanelPrivateApi, 'private');
 
   React.useEffect(() => {
     if (props.detailPanelExpandedRowIds) {

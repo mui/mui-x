@@ -5,11 +5,11 @@ import {
   GRID_DETAIL_PANEL_TOGGLE_FIELD,
   GRID_DETAIL_PANEL_TOGGLE_COL_DEF,
 } from './gridDetailPanelToggleColDef';
-import { GridApiPro } from '../../../models/gridApiPro';
+import { GridPrivateApiPro } from '../../../models/gridApiPro';
 import { gridDetailPanelExpandedRowIdsSelector } from './gridDetailPanelSelector';
 
 export const useGridDetailPanelPreProcessors = (
-  apiRef: React.MutableRefObject<GridApiPro>,
+  privateApiRef: React.MutableRefObject<GridPrivateApiPro>,
   props: DataGridProProcessedProps,
 ) => {
   const addToggleColumn = React.useCallback<GridPipeProcessor<'hydrateColumns'>>(
@@ -35,11 +35,11 @@ export const useGridDetailPanelPreProcessors = (
       columnsState.orderedFields = [GRID_DETAIL_PANEL_TOGGLE_FIELD, ...columnsState.orderedFields];
       columnsState.lookup[GRID_DETAIL_PANEL_TOGGLE_FIELD] = {
         ...GRID_DETAIL_PANEL_TOGGLE_COL_DEF,
-        headerName: apiRef.current.getLocaleText('detailPanelToggle'),
+        headerName: privateApiRef.current.getLocaleText('detailPanelToggle'),
       };
       return columnsState;
     },
-    [apiRef, props.getDetailPanelContent],
+    [privateApiRef, props.getDetailPanelContent],
   );
 
   const addExpandedClassToRow = React.useCallback<GridPipeProcessor<'rowClassName'>>(
@@ -48,16 +48,16 @@ export const useGridDetailPanelPreProcessors = (
         return classes;
       }
 
-      const expandedRowIds = gridDetailPanelExpandedRowIdsSelector(apiRef.current.state);
+      const expandedRowIds = gridDetailPanelExpandedRowIdsSelector(privateApiRef.current.state);
       if (!expandedRowIds.includes(id)) {
         return classes;
       }
 
       return [...classes, 'MuiDataGrid-row--detailPanelExpanded'];
     },
-    [apiRef, props.getDetailPanelContent],
+    [privateApiRef, props.getDetailPanelContent],
   );
 
-  useGridRegisterPipeProcessor(apiRef, 'hydrateColumns', addToggleColumn);
-  useGridRegisterPipeProcessor(apiRef, 'rowClassName', addExpandedClassToRow);
+  useGridRegisterPipeProcessor(privateApiRef, 'hydrateColumns', addToggleColumn);
+  useGridRegisterPipeProcessor(privateApiRef, 'rowClassName', addExpandedClassToRow);
 };

@@ -45,7 +45,7 @@ const exportBlob = (blob, filename) => {
   });
 };
 
-const JsonExportMenuItem = (props) => {
+function JsonExportMenuItem(props) {
   const apiRef = useGridApiContext();
 
   const { hideMenu } = props;
@@ -67,7 +67,7 @@ const JsonExportMenuItem = (props) => {
       Export JSON
     </MenuItem>
   );
-};
+}
 
 JsonExportMenuItem.propTypes = {
   hideMenu: PropTypes.func,
@@ -75,18 +75,22 @@ JsonExportMenuItem.propTypes = {
 
 const csvOptions = { delimiter: ';' };
 
-const CustomExportButton = (props) => (
-  <GridToolbarExportContainer {...props}>
-    <GridCsvExportMenuItem options={csvOptions} />
-    <JsonExportMenuItem />
-  </GridToolbarExportContainer>
-);
+function CustomExportButton(props) {
+  return (
+    <GridToolbarExportContainer {...props}>
+      <GridCsvExportMenuItem options={csvOptions} />
+      <JsonExportMenuItem />
+    </GridToolbarExportContainer>
+  );
+}
 
-const CustomToolbar = (props) => (
-  <GridToolbarContainer {...props}>
-    <CustomExportButton />
-  </GridToolbarContainer>
-);
+function CustomToolbar(props) {
+  return (
+    <GridToolbarContainer {...props}>
+      <CustomExportButton />
+    </GridToolbarContainer>
+  );
+}
 
 export default function CustomExport() {
   const { data, loading } = useDemoData({

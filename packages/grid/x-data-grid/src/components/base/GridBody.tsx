@@ -1,6 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
+import { useGridPrivateApiContext } from '../../hooks/utils/useGridPrivateApiContext';
 import { ElementSize } from '../../models/elementSize';
 import { GridMainContainer } from '../containers/GridMainContainer';
 import { GridAutoSizer } from '../GridAutoSizer';
@@ -27,7 +27,7 @@ interface GridBodyProps {
 
 function GridBody(props: GridBodyProps) {
   const { children, VirtualScrollerComponent, ColumnHeadersComponent } = props;
-  const apiRef = useGridApiContext();
+  const apiRef = useGridPrivateApiContext();
   const rootProps = useGridRootProps();
   const totalHeaderHeight = useGridSelector(apiRef, gridTotalHeaderHeightSelector);
   const [isVirtualizationDisabled, setIsVirtualizationDisabled] = React.useState(
@@ -57,13 +57,11 @@ function GridBody(props: GridBodyProps) {
 
   const columnHeadersRef = React.useRef<HTMLDivElement>(null);
   const columnsContainerRef = React.useRef<HTMLDivElement>(null);
-  const windowRef = React.useRef<HTMLDivElement>(null);
-  const renderingZoneRef = React.useRef<HTMLDivElement>(null);
+  const virtualScrollerRef = React.useRef<HTMLDivElement>(null);
 
   apiRef.current.columnHeadersContainerElementRef = columnsContainerRef;
   apiRef.current.columnHeadersElementRef = columnHeadersRef;
-  apiRef.current.windowRef = windowRef; // TODO rename, it's not attached to the window anymore
-  apiRef.current.renderingZoneRef = renderingZoneRef; // TODO remove, nobody should have access to internal parts of the virtualization
+  apiRef.current.virtualScrollerRef = virtualScrollerRef;
 
   const handleResize = React.useCallback(
     (size: ElementSize) => {
@@ -91,7 +89,7 @@ function GridBody(props: GridBodyProps) {
 
           return (
             <VirtualScrollerComponent
-              ref={windowRef}
+              ref={virtualScrollerRef}
               style={style}
               disableVirtualization={isVirtualizationDisabled}
             />

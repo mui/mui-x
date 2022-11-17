@@ -3,7 +3,7 @@ import { getDataGridUtilityClass, GridRenderCellParams } from '@mui/x-data-grid'
 import { styled, Theme } from '@mui/material/styles';
 import { SxProps } from '@mui/system';
 import Box from '@mui/material/Box';
-import { unstable_composeClasses as composeClasses } from '@mui/material';
+import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import { DataGridPremiumProcessedProps } from '../models/dataGridPremiumProps';
 
@@ -34,14 +34,13 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   return composeClasses(slots, getDataGridUtilityClass, classes);
 };
 
-const GridFooterCell = (props: GridFooterCellProps) => {
+function GridFooterCell(props: GridFooterCellProps) {
   const {
     formattedValue,
     colDef,
     cellMode,
     row,
     api,
-    getValue,
     id,
     value,
     rowNode,
@@ -62,6 +61,6 @@ const GridFooterCell = (props: GridFooterCellProps) => {
       {formattedValue}
     </GridFooterCellRoot>
   );
-};
+}
 
 export { GridFooterCell };
