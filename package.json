@@ -93,7 +93,7 @@
     "@testing-library/react": "^13.4.0",
     "@types/babel__core": "^7.1.20",
     "@types/chai": "^4.3.4",
-    "@types/chai-dom": "^0.0.13",
+    "@types/chai-dom": "^1.11.0",
     "@types/enzyme": "^3.10.12",
     "@types/mocha": "^10.0.0",
     "@types/node": "^18.11.9",
