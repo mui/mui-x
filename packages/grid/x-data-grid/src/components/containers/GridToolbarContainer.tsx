@@ -26,11 +26,12 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 const GridToolbarContainerRoot = styled('div', {
   name: 'MuiDataGrid',
   slot: 'ToolbarContainer',
-  overridesResolver: (props, styles) => styles.toolbarContainer,
+  overridesResolver: (_, styles) => styles.toolbarContainer,
 })(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
   flexWrap: 'wrap',
+  gap: theme.typography.pxToRem(8),
   padding: theme.spacing(0.5, 0.5, 0),
 }));
 
