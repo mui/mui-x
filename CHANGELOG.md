@@ -10,7 +10,7 @@ _Nov 17, 2022_
 We'd like to offer a big thanks to the 2 contributors who made this release possible. Here are some highlights ✨:
 
 - 🐞 Bugfixes
-- 🌍 Improve Finnish (fi-FI) locale on data grid (#6661) @Dufran
+- 🌍 Improve Finnish (fi-FI) locale (#6859) @RainoPikkarainen
 
 ### `@mui/x-data-grid@v5.17.12` / `@mui/x-data-grid-pro@v5.17.12` / `@mui/x-data-grid-premium@v5.17.12`
 
