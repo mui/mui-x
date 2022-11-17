@@ -1,5 +1,7 @@
 import * as React from 'react';
 import TextField, { TextFieldProps } from '@mui/material/TextField';
+import Stack, { StackProps } from '@mui/material/Stack';
+import Typography, { TypographyProps } from '@mui/material/Typography';
 import { SlotComponentProps } from '@mui/base/utils';
 import {
   CalendarOrClockPickerView,
@@ -20,6 +22,8 @@ export interface UseDesktopRangePickerSlotsComponent
   extends PickersPopperSlotsComponent,
     ExportedPickersViewLayoutSlotsComponent {
   Field: React.ElementType;
+  FieldRoot?: React.ElementType<StackProps>;
+  FieldSeparator?: React.ElementType<TypographyProps>;
   Input?: React.ElementType<TextFieldProps>;
 }
 
@@ -35,6 +39,8 @@ export interface UseDesktopRangePickerSlotsComponentsProps<TDate>
     {},
     unknown
   >;
+  fieldRoot?: SlotComponentProps<typeof Stack, {}, unknown>;
+  fieldSeparator?: SlotComponentProps<typeof Typography, {}, unknown>;
   input?: SlotComponentProps<typeof TextField, {}, unknown>;
 }
 

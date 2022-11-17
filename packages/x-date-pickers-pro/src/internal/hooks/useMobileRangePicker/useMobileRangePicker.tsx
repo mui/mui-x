@@ -91,8 +91,7 @@ export const useMobileRangePicker = <
       format,
       ref: fieldRef,
     },
-    // TODO: Pass owner state
-    ownerState: {},
+    ownerState: props,
   });
 
   const componentsForField: BaseMultiInputFieldProps<DateRange<TDate>, unknown>['components'] = {
@@ -123,6 +122,33 @@ export const useMobileRangePicker = <
           ...inputPropsPassedByField?.inputProps,
           ...inputPropsPassedByPicker?.inputProps,
         },
+      };
+    },
+    root: (ownerState) => {
+      const externalRootProps = resolveComponentProps(componentsProps.fieldRoot, ownerState);
+      const rootPropsPassedByField = resolveComponentProps(
+        fieldProps.componentsProps?.root,
+        ownerState,
+      );
+      return {
+        ...externalRootProps,
+        ...rootPropsPassedByField,
+        ...fieldSlotsProps.root,
+      };
+    },
+    separator: (ownerState) => {
+      const externalSeparatorProps = resolveComponentProps(
+        componentsProps.fieldSeparator,
+        ownerState,
+      );
+      const separatorPropsPassedByField = resolveComponentProps(
+        fieldProps.componentsProps?.separator,
+        ownerState,
+      );
+      return {
+        ...externalSeparatorProps,
+        ...separatorPropsPassedByField,
+        ...fieldSlotsProps.root,
       };
     },
   };

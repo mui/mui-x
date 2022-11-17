@@ -108,13 +108,14 @@ export const useDesktopRangePicker = <
       format,
       ref: fieldRef,
     },
-    // TODO: Pass owner state
-    ownerState: {},
+    ownerState: props,
   });
 
   const componentsForField: BaseMultiInputFieldProps<DateRange<TDate>, unknown>['components'] = {
     ...fieldProps.components,
     Input: components.Input,
+    Root: components.FieldRoot,
+    Separator: components.FieldSeparator,
   };
 
   const componentsPropsForField: BaseMultiInputFieldProps<
@@ -143,13 +144,29 @@ export const useDesktopRangePicker = <
       };
     },
     root: (ownerState) => {
-      // TODO v6: Add slots on picker
+      const externalRootProps = resolveComponentProps(componentsProps.fieldRoot, ownerState);
       const rootPropsPassedByField = resolveComponentProps(
         fieldProps.componentsProps?.root,
         ownerState,
       );
       return {
+        ...externalRootProps,
         ...rootPropsPassedByField,
+        ...fieldSlotsProps.root,
+      };
+    },
+    separator: (ownerState) => {
+      const externalSeparatorProps = resolveComponentProps(
+        componentsProps.fieldSeparator,
+        ownerState,
+      );
+      const separatorPropsPassedByField = resolveComponentProps(
+        fieldProps.componentsProps?.separator,
+        ownerState,
+      );
+      return {
+        ...externalSeparatorProps,
+        ...separatorPropsPassedByField,
         ...fieldSlotsProps.root,
       };
     },
