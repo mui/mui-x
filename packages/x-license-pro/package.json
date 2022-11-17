@@ -30,7 +30,7 @@
     "directory": "packages/x-license-pro"
   },
   "dependencies": {
-    "@babel/runtime": "^7.19.0",
+    "@babel/runtime": "^7.20.1",
     "@mui/utils": "^5.10.14"
   },
   "peerDependencies": {
