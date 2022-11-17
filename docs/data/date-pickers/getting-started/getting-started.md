@@ -28,13 +28,11 @@ You need to install 2 different types of package to make the pickers work:
 1. **The component** (`@mui/x-date-pickers` or `@mui/x-date-pickers-pro`) manages the rendering.
 2. **The date-library** ([Day.js](https://day.js.org/), [date-fns](https://date-fns.org/), ...) manages the date manipulation.
 
-First you have to install the date-library you want to use to manage dates, and the component package:
+:::info
+If you need help to choose your date-library, have a look at the [Choosing a date library](/x/react-date-pickers/adapters/#choosing-a-date-library) section.
+:::
 
 {{"component": "modules/components/PickersInstallationInstructions.js"}}
-
-:::info
-If you need help to choose and install your date-library, have a look at the [Choosing a date library](/x/react-date-pickers/adapters/#choosing-a-date-library) section.
-:::
 
 ## Code setup
 
