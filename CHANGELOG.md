@@ -33,17 +33,17 @@ We'd like to offer a big thanks to the 12 contributors who made this release pos
 
 - The `ClockPicker` view component has been renamed to `TimeClock` to better fit its usage:
 
-```diff
--<ClockPicker {...props} />
-+<TimeClock {...props} />
-```
+  ```diff
+  -<ClockPicker {...props} />
+  +<TimeClock {...props} />
+  ```
 
-Component name in the theme has changed as well:
+  Component name in the theme has changed as well:
 
-```diff
--MuiClockPicker: {
-+MuiTimeClock: {
-```
+  ```diff
+  -MuiClockPicker: {
+  +MuiTimeClock: {
+  ```
 
 #### Changes
 
