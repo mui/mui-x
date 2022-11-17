@@ -79,7 +79,7 @@ export interface ExportedDateRangePickerViewProps<TDate>
   className?: string;
 }
 
-export interface DateRangePickerViewProps<TDate>
+interface DateRangePickerViewProps<TDate>
   extends CurrentlySelectingRangeEndProps,
     ExportedDateRangePickerViewProps<TDate>,
     PickerStatePickerProps<DateRange<TDate>>,

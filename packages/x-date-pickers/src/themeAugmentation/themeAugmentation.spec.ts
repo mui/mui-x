@@ -481,13 +481,6 @@ createTheme({
         someRandomProp: true,
       },
     },
-    MuiStaticTimePicker: {
-      defaultProps: {
-        disabled: true,
-        // @ts-expect-error invalid MuiStaticTimePicker prop
-        someRandomProp: true,
-      },
-    },
     MuiStaticNextDatePicker: {
       defaultProps: {
         disabled: true,
@@ -506,6 +499,13 @@ createTheme({
       defaultProps: {
         disabled: true,
         // @ts-expect-error invalid MuiStaticNextTimePicker prop
+        someRandomProp: true,
+      },
+    },
+    MuiStaticTimePicker: {
+      defaultProps: {
+        disabled: true,
+        // @ts-expect-error invalid MuiStaticTimePicker prop
         someRandomProp: true,
       },
     },

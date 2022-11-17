@@ -10,7 +10,7 @@ import {
   getByRole,
 } from '@mui/monorepo/test/utils';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { Unstable_DesktopNextDateRangePicker as DesktopNextDateRangePicker } from '@mui/x-date-pickers-pro/DesktopNextDateRangePicker';
+import { Unstable_DesktopNextDateRangePicker as DesktopNextDateRangePicker } from '@mui/x-date-pickers-pro/DesktopNextDateRangePicker/index';
 import { DateRange, LocalizationProvider } from '@mui/x-date-pickers-pro';
 import describeValidation from '@mui/x-date-pickers-pro/tests/describeValidation';
 import {
