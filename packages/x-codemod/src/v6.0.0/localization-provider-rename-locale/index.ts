@@ -1,5 +1,5 @@
-import type { JsCodeShiftAPI, JsCodeShiftFileInfo } from '../types';
-import renameProps from '../util/renameProps';
+import renameProps from '../../util/renameProps';
+import type { JsCodeShiftAPI, JsCodeShiftFileInfo } from '../../types';
 
 export default function transformer(file: JsCodeShiftFileInfo, api: JsCodeShiftAPI, options: any) {
   const j = api.jscodeshift;
@@ -9,7 +9,7 @@ export default function transformer(file: JsCodeShiftFileInfo, api: JsCodeShiftA
 
   return renameProps({
     root,
-    componentName: options.component,
-    props: { [options.from]: options.to },
+    componentName: 'LocalizationProvider',
+    props: { locale: 'adapterLocale' },
   }).toSource(printOptions);
 }

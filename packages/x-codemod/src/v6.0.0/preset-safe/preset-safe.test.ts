@@ -1,8 +1,8 @@
 import path from 'path';
 import { expect } from 'chai';
 import jscodeshift from 'jscodeshift';
-import transform from './preset-safe';
-import readFile from '../util/readFile';
+import transform from '.';
+import readFile from '../../util/readFile';
 
 function read(fileName) {
   return readFile(path.join(__dirname, fileName));
@@ -11,24 +11,16 @@ function read(fileName) {
 describe('v6.0.0', () => {
   describe('preset-safe', () => {
     it('transforms props as needed', () => {
-      const actual = transform(
-        { source: read('./preset-safe.test/actual.js') },
-        { jscodeshift },
-        {},
-      );
+      const actual = transform({ source: read('./actual.js') }, { jscodeshift }, {});
 
-      const expected = read('./preset-safe.test/expected.js');
+      const expected = read('./expected.js');
       expect(actual).to.equal(expected, 'The transformed version should be correct');
     });
 
     it('should be idempotent', () => {
-      const actual = transform(
-        { source: read('./preset-safe.test/expected.js') },
-        { jscodeshift },
-        {},
-      );
+      const actual = transform({ source: read('./expected.js') }, { jscodeshift }, {});
 
-      const expected = read('./preset-safe.test/expected.js');
+      const expected = read('./expected.js');
       expect(actual).to.equal(expected, 'The transformed version should be correct');
     });
   });

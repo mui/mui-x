@@ -1,8 +1,8 @@
 import path from 'path';
 import { expect } from 'chai';
 import jscodeshift from 'jscodeshift';
-import transform from './component-rename-prop';
-import readFile from '../util/readFile';
+import transform from '.';
+import readFile from '../../util/readFile';
 
 function read(fileName) {
   return readFile(path.join(__dirname, fileName));
@@ -13,26 +13,26 @@ describe('v6.0.0', () => {
     it('transforms props as needed', () => {
       const actual = transform(
         {
-          source: read('./component-rename-prop.test/actual.js'),
+          source: read('./actual.js'),
         },
         { jscodeshift },
         { component: 'Component', from: 'prop', to: 'newProp' },
       );
 
-      const expected = read('./component-rename-prop.test/expected.js');
+      const expected = read('./expected.js');
       expect(actual).to.equal(expected, 'The transformed version should be correct');
     });
 
     it('should be idempotent', () => {
       const actual = transform(
         {
-          source: read('./component-rename-prop.test/expected.js'),
+          source: read('./expected.js'),
         },
         { jscodeshift },
         { component: 'Component', from: 'prop', to: 'newProp' },
       );
 
-      const expected = read('./component-rename-prop.test/expected.js');
+      const expected = read('./expected.js');
       expect(actual).to.equal(expected, 'The transformed version should be correct');
     });
   });

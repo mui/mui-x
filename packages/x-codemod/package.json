@@ -17,7 +17,7 @@
     "typescript": "tsc -p tsconfig.json",
     "prebuild": "rimraf build",
     "copy-files": "cpy README.md build && cpy package.json build",
-    "build": "node ../../scripts/build.mjs node --ignore 'src/**/*.test' 'src/types.ts' && yarn copy-files"
+    "build": "node ../../scripts/build.mjs node --ignore 'src/**/actual.js' 'src/**/expected.js' 'src/types.ts' && yarn copy-files"
   },
   "repository": {
     "type": "git",
