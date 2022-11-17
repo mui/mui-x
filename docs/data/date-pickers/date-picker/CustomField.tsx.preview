@@ -1,0 +1,9 @@
+<LocalizationProvider dateAdapter={AdapterDayjs}>
+  <NextDatePicker
+    label="Custom input"
+    defaultValue={dayjs('2022-04-07')}
+    components={{
+        Field: BrowserDateField,
+    }}
+  />
+</LocalizationProvider>
