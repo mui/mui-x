@@ -634,7 +634,11 @@ DataGridRaw.propTypes = {
   /**
    * Sets the row selection model of the grid.
    */
-  rowSelectionModel: PropTypes.oneOfType([PropTypes.number, PropTypes.string, PropTypes.array]),
+  rowSelectionModel: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired),
+    PropTypes.number,
+    PropTypes.string,
+  ]),
   /**
    * Sets the type of space between rows added by `getRowSpacing`.
    * @default "margin"
