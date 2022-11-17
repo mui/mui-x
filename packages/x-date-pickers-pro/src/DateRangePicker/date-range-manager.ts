@@ -1,14 +1,12 @@
 import { MuiPickersAdapter } from '@mui/x-date-pickers/internals';
 import { DateRange } from '../internal/models';
 
-interface CalculateRangePreviewOptions<TDate> {
+interface CalculateRangeChangeOptions<TDate> {
   utils: MuiPickersAdapter<TDate>;
   range: DateRange<TDate>;
   newDate: TDate | null;
   currentlySelectingRangeEnd: 'start' | 'end';
 }
-
-interface CalculateRangeChangeOptions<TDate> extends CalculateRangePreviewOptions<TDate> {}
 
 export function calculateRangeChange<TDate>({
   utils,
@@ -33,7 +31,7 @@ export function calculateRangeChange<TDate>({
 }
 
 export function calculateRangePreview<TDate>(
-  options: CalculateRangePreviewOptions<TDate>,
+  options: CalculateRangeChangeOptions<TDate>,
 ): DateRange<TDate> {
   if (options.newDate == null) {
     return [null, null];
