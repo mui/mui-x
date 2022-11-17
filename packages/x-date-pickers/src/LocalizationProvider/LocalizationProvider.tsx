@@ -65,12 +65,19 @@ export function LocalizationProvider<TDate>(inProps: LocalizationProviderProps<T
     name: 'MuiLocalizationProvider',
   });
 
-  const localeText = React.useMemo(
-    () => ({ ...props.localeText, ...parentLocaleText, ...inLocaleText }),
-    [props.localeText, parentLocaleText, inLocaleText],
-  );
+  const {
+    children,
+    dateAdapter: DateAdapter,
+    dateFormats,
+    dateLibInstance,
+    adapterLocale,
+    localeText: themeLocaleText,
+  } = props;
 
-  const { children, dateAdapter: DateAdapter, dateFormats, dateLibInstance, adapterLocale } = props;
+  const localeText = React.useMemo(
+    () => ({ ...themeLocaleText, ...parentLocaleText, ...inLocaleText }),
+    [themeLocaleText, parentLocaleText, inLocaleText],
+  );
 
   const utils = React.useMemo(() => {
     if (!DateAdapter) {
