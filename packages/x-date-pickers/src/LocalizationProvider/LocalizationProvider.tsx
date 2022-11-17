@@ -56,10 +56,15 @@ export function LocalizationProvider<TDate>(inProps: LocalizationProviderProps<T
     MuiPickersAdapterContext,
   ) ?? { utils: undefined, localeText: undefined };
 
+  const tempLocaleText = React.useMemo(
+    () => ({ ...parentLocaleText, ...inProps.localeText }),
+    [parentLocaleText, inProps.localeText],
+  );
+
   const props = useThemeProps({
     props: {
-      localeText: parentLocaleText,
       ...inProps,
+      localeText: tempLocaleText,
     },
     name: 'MuiLocalizationProvider',
   });
