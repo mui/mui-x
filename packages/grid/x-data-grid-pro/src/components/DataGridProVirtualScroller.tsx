@@ -99,7 +99,7 @@ const getOverlayAlpha = (elevation: number) => {
 
 const getBoxShadowColor = (theme: Theme) => {
   return theme.vars
-    ? `rgba(${theme.vars.palette.common.black} /  0.21)`
+    ? `rgba(0 0 0 /  0.21)`
     : alpha(theme.palette.common.black, 0.21);
 };
 
