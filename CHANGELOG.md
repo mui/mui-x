@@ -3,6 +3,24 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 5.17.12
+
+_Nov 17, 2022_
+
+We'd like to offer a big thanks to the 2 contributors who made this release possible. Here are some highlights ✨:
+
+- 🐞 Bugfixes
+- 🌍 Improve Finnish (fi-FI) locale on data grid (#6661) @Dufran
+
+### `@mui/x-data-grid@v5.17.12` / `@mui/x-data-grid-pro@v5.17.12` / `@mui/x-data-grid-premium@v5.17.12`
+
+#### Changes
+
+- [DataGridPremium] Support aggregating data from multiple row fields (#6844) @cherniavskii
+- [DataGridPro] Fix detail panel not working with `getRowSpacing` prop (#6858) @cherniavskii
+
+- [I10n] Improve Finnish (fi-FI) locale on the data grid (#6859) @RainoPikkarainen
+
 ## 5.17.11
 
 _Nov 10, 2022_
