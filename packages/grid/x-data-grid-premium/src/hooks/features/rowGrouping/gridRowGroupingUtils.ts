@@ -25,7 +25,7 @@ import {
 } from './gridRowGroupingInterfaces';
 import { GridStatePremium } from '../../../models/gridStatePremium';
 import { gridRowGroupingSanitizedModelSelector } from './gridRowGroupingSelector';
-import { GridApiPremium } from '../../../models/gridApiPremium';
+import { GridPrivateApiPremium } from '../../../models/gridApiPremium';
 
 export const GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD = '__row_group_by_columns_group__';
 
@@ -197,7 +197,7 @@ export const mergeStateWithRowGroupingModel =
   });
 
 export const setStrategyAvailability = (
-  apiRef: React.MutableRefObject<GridApiPremium>,
+  privateApiRef: React.MutableRefObject<GridPrivateApiPremium>,
   disableRowGrouping: boolean,
 ) => {
   let isAvailable: () => boolean;
@@ -205,12 +205,12 @@ export const setStrategyAvailability = (
     isAvailable = () => false;
   } else {
     isAvailable = () => {
-      const rowGroupingSanitizedModel = gridRowGroupingSanitizedModelSelector(apiRef);
+      const rowGroupingSanitizedModel = gridRowGroupingSanitizedModelSelector(privateApiRef);
       return rowGroupingSanitizedModel.length > 0;
     };
   }
 
-  apiRef.current.unstable_setStrategyAvailability('rowTree', ROW_GROUPING_STRATEGY, isAvailable);
+  privateApiRef.current.setStrategyAvailability('rowTree', ROW_GROUPING_STRATEGY, isAvailable);
 };
 
 export const getCellGroupingCriteria = ({

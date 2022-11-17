@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { GridEventListener } from '../../../models/events';
-import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
+import { GridApiCommunity, GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridCellParams } from '../../../models/params/gridCellParams';
 import { gridVisibleColumnDefinitionsSelector } from '../columns/gridColumnsSelector';
 import { useGridLogger } from '../../utils/useGridLogger';
@@ -38,7 +38,7 @@ function enrichPageRowsWithPinnedRows(
  * @requires useGridColumnSpanning (method) - can be after
  */
 export const useGridKeyboardNavigation = (
-  apiRef: React.MutableRefObject<GridApiCommunity>,
+  apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
   props: Pick<DataGridProcessedProps, 'pagination' | 'paginationMode' | 'getRowId'>,
 ): void => {
   const logger = useGridLogger(apiRef, 'useGridKeyboardNavigation');
@@ -53,7 +53,7 @@ export const useGridKeyboardNavigation = (
    * @param {number} colIndex Index of the column to focus
    * @param {number} rowIndex index of the row to focus
    * @param {string} closestColumnToUse Which closest column cell to use when the cell is spanned by `colSpan`.
-   * TODO replace with apiRef.current.unstable_moveFocusToRelativeCell()
+   * TODO replace with apiRef.current.moveFocusToRelativeCell()
    */
   const goToCell = React.useCallback(
     (colIndex: number, rowId: GridRowId, closestColumnToUse: 'left' | 'right' = 'left') => {
@@ -95,7 +95,7 @@ export const useGridKeyboardNavigation = (
       logger.debug(`Navigating to header col ${colIndex}`);
       apiRef.current.scrollToIndexes({ colIndex });
       const { field } = apiRef.current.getVisibleColumns()[colIndex];
-      apiRef.current.unstable_setColumnGroupHeaderFocus(field, depth, event);
+      apiRef.current.setColumnGroupHeaderFocus(field, depth, event);
     },
     [apiRef, logger],
   );
@@ -114,7 +114,7 @@ export const useGridKeyboardNavigation = (
         return;
       }
 
-      const viewportPageSize = apiRef.current.unstable_getViewportPageSize();
+      const viewportPageSize = apiRef.current.getViewportPageSize();
 
       const colIndexBefore = (params as GridCellParams).field
         ? apiRef.current.getColumnIndex((params as GridCellParams).field)
@@ -258,7 +258,7 @@ export const useGridKeyboardNavigation = (
         return;
       }
 
-      const viewportPageSize = apiRef.current.unstable_getViewportPageSize();
+      const viewportPageSize = apiRef.current.getViewportPageSize();
       const colIndexBefore = params.field ? apiRef.current.getColumnIndex(params.field) : 0;
       const firstRowIndexInPage = 0;
       const lastRowIndexInPage = currentPageRows.length - 1;
@@ -359,7 +359,7 @@ export const useGridKeyboardNavigation = (
 
       const { fields, depth, maxDepth } = params;
 
-      const viewportPageSize = apiRef.current.unstable_getViewportPageSize();
+      const viewportPageSize = apiRef.current.getViewportPageSize();
       const currentColIndex = apiRef.current.getColumnIndex(currentField);
       const colIndexBefore = currentField ? apiRef.current.getColumnIndex(currentField) : 0;
       const firstRowIndexInPage = 0;

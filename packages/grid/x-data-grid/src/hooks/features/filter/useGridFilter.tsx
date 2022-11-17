@@ -81,7 +81,7 @@ export const useGridFilter = (
       const isRowMatchingFilters =
         props.filterMode === 'client' ? buildAggregatedFilterApplier(filterModel, apiRef) : null;
 
-      const filteringResult = apiRef.current.unstable_applyStrategyProcessor('filtering', {
+      const filteringResult = apiRef.current.applyStrategyProcessor('filtering', {
         isRowMatchingFilters,
         filterModel: filterModel ?? getDefaultGridFilterModel(),
       });

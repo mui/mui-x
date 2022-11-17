@@ -87,8 +87,8 @@ const fiFIGrid: Partial<GridLocaleText> = {
   columnMenuHideColumn: 'Piilota',
   // columnMenuHideColumnDefault: 'Hide column',
   columnMenuUnsort: 'Poista järjestys',
-  columnMenuSortAsc: 'Järjestä laskevasti',
-  columnMenuSortDesc: 'Järjestä nousevasti',
+  columnMenuSortAsc: 'Järjestä nousevasti',
+  columnMenuSortDesc: 'Järjestä laskevasti',
   // columnMenuSortDefaultAsc: 'ASC',
   // columnMenuSortDefaultDesc: 'DESC',
 

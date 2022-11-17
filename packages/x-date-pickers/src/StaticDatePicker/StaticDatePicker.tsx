@@ -272,7 +272,7 @@ StaticDatePicker.propTypes = {
   onMonthChange: PropTypes.func,
   /**
    * Callback fired on view change.
-   * @param {CalendarPickerView} view The new view.
+   * @param {DateView} view The new view.
    */
   onViewChange: PropTypes.func,
   /**

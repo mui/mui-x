@@ -16,12 +16,12 @@
   "scripts": {
     "typescript": "tsc -p tsconfig.json",
     "build": "yarn build:legacy && yarn build:modern && yarn build:node && yarn build:stable && yarn build:types && yarn build:copy-files ",
-    "build:legacy": "node ../../../scripts/build legacy",
-    "build:modern": "node ../../../scripts/build modern",
-    "build:node": "node ../../../scripts/build node",
-    "build:stable": "node ../../../scripts/build stable",
-    "build:copy-files": "node ../../../scripts/copyFiles.js",
-    "build:types": "node ../../../scripts/buildTypes",
+    "build:legacy": "node ../../../scripts/build.mjs legacy",
+    "build:modern": "node ../../../scripts/build.mjs modern",
+    "build:node": "node ../../../scripts/build.mjs node",
+    "build:stable": "node ../../../scripts/build.mjs stable",
+    "build:copy-files": "node ../../../scripts/copyFiles.mjs",
+    "build:types": "node ../../../scripts/buildTypes.mjs",
     "prebuild": "rimraf build tsconfig.build.tsbuildinfo"
   },
   "repository": {
@@ -31,7 +31,7 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.19.0",
-    "@mui/base": "^5.0.0-alpha.104",
+    "@mui/base": "^5.0.0-alpha.106",
     "@mui/x-data-grid-premium": "6.0.0-alpha.7",
     "chance": "^1.1.9",
     "clsx": "^1.2.1",

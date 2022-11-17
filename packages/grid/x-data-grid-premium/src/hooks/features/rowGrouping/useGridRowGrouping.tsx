@@ -32,7 +32,7 @@ import { GridInitialStatePremium } from '../../../models/gridStatePremium';
 export const rowGroupingStateInitializer: GridStateInitializer<
   Pick<DataGridPremiumProcessedProps, 'rowGroupingModel' | 'initialState'>
 > = (state, props, apiRef) => {
-  apiRef.current.unstable_caches.rowGrouping = {
+  apiRef.current.caches.rowGrouping = {
     rulesOnLastRowTreeCreation: [],
   };
 
@@ -243,8 +243,7 @@ export const useGridRowGrouping = (
     GridEventListener<'columnsChange'>
   >(() => {
     const sanitizedRowGroupingModel = gridRowGroupingSanitizedModelSelector(apiRef);
-    const rulesOnLastRowTreeCreation =
-      apiRef.current.unstable_caches.rowGrouping.rulesOnLastRowTreeCreation;
+    const rulesOnLastRowTreeCreation = apiRef.current.caches.rowGrouping.rulesOnLastRowTreeCreation;
 
     const groupingRules = getGroupingRules({
       sanitizedRowGroupingModel,
@@ -252,13 +251,13 @@ export const useGridRowGrouping = (
     });
 
     if (!areGroupingRulesEqual(rulesOnLastRowTreeCreation, groupingRules)) {
-      apiRef.current.unstable_caches.rowGrouping.rulesOnLastRowTreeCreation = groupingRules;
-      apiRef.current.unstable_requestPipeProcessorsApplication('hydrateColumns');
+      apiRef.current.caches.rowGrouping.rulesOnLastRowTreeCreation = groupingRules;
+      apiRef.current.requestPipeProcessorsApplication('hydrateColumns');
       setStrategyAvailability(apiRef, props.disableRowGrouping);
 
       // Refresh the row tree creation strategy processing
       // TODO: Add a clean way to re-run a strategy processing without publishing a private event
-      if (apiRef.current.unstable_getActiveStrategy('rowTree') === ROW_GROUPING_STRATEGY) {
+      if (apiRef.current.getActiveStrategy('rowTree') === ROW_GROUPING_STRATEGY) {
         apiRef.current.publishEvent('activeStrategyProcessorChange', 'rowTreeCreation');
       }
     }

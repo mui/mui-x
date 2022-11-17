@@ -95,6 +95,7 @@
     "isCellEditable": { "type": { "name": "func" } },
     "isGroupExpandedByDefault": { "type": { "name": "func" } },
     "isRowSelectable": { "type": { "name": "func" } },
+    "keepColumnPositionIfDraggedOutside": { "type": { "name": "bool" } },
     "keepNonExistentRowsSelected": { "type": { "name": "bool" } },
     "loading": { "type": { "name": "bool" } },
     "localeText": { "type": { "name": "object" } },

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useThemeProps } from '@mui/material/styles';
 import { DefaultizedProps, MakeOptional } from '../internals/models/helpers';
-import { CalendarOrClockPickerView } from '../internals/models';
+import { DateOrTimeView } from '../internals/models';
 import { useDefaultDates, useUtils } from '../internals/hooks/useUtils';
 import {
   DateCalendarSlotsComponent,
@@ -9,10 +9,10 @@ import {
   ExportedDateCalendarProps,
 } from '../DateCalendar/DateCalendar';
 import {
-  ClockPickerSlotsComponent,
-  ClockPickerSlotsComponentsProps,
-  ExportedClockPickerProps,
-} from '../ClockPicker/ClockPicker';
+  TimeClockSlotsComponent,
+  TimeClockSlotsComponentsProps,
+  ExportedTimeClockProps,
+} from '../TimeClock/TimeClock';
 import { BaseNextPickerProps } from '../internals/models/props/basePickerProps';
 import { applyDefaultDate } from '../internals/utils/date-utils';
 import {
@@ -34,7 +34,7 @@ import { DateTimeValidationError } from '../internals/hooks/validation/useDateTi
 
 export interface BaseNextDateTimePickerSlotsComponent<TDate>
   extends DateCalendarSlotsComponent<TDate>,
-    ClockPickerSlotsComponent {
+    TimeClockSlotsComponent {
   /**
    * Tabs enabling toggling between date and time pickers.
    * @default DateTimePickerTabs
@@ -49,7 +49,7 @@ export interface BaseNextDateTimePickerSlotsComponent<TDate>
 
 export interface BaseNextDateTimePickerSlotsComponentsProps<TDate>
   extends DateCalendarSlotsComponentsProps<TDate>,
-    ClockPickerSlotsComponentsProps {
+    TimeClockSlotsComponentsProps {
   /**
    * Props passed down to the tabs component.
    */
@@ -62,11 +62,11 @@ export interface BaseNextDateTimePickerSlotsComponentsProps<TDate>
 
 export interface BaseNextDateTimePickerProps<TDate>
   extends MakeOptional<
-      BaseNextPickerProps<TDate | null, TDate, CalendarOrClockPickerView, DateTimeValidationError>,
+      BaseNextPickerProps<TDate | null, TDate, DateOrTimeView, DateTimeValidationError>,
       'views' | 'openTo'
     >,
     Omit<ExportedDateCalendarProps<TDate>, 'onViewChange'>,
-    ExportedClockPickerProps<TDate> {
+    ExportedTimeClockProps<TDate> {
   /**
    * 12h/24h view for hour selection clock.
    * @default `utils.is12HourCycleInCurrentLocale()`
