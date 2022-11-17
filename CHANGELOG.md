@@ -16,7 +16,7 @@ We'd like to offer a big thanks to the 2 contributors who made this release poss
 
 #### Changes
 
-- [DataGrid] Fix conflict with `onResize` added to `React.HTMLAttributes` (#6883) @vizv
+- [DataGrid] Fix conflict with the latest version of `@types/react` (#6883) @vizv
 - [DataGridPremium] Support aggregating data from multiple row fields (#6844) @cherniavskii
 - [DataGridPro] Fix detail panel not working with `getRowSpacing` prop (#6858) @cherniavskii
 
