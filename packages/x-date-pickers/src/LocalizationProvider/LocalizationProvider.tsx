@@ -52,31 +52,25 @@ export interface LocalizationProviderProps<TDate> {
  * @ignore - do not document.
  */
 export function LocalizationProvider<TDate>(inProps: LocalizationProviderProps<TDate>) {
+  const { localeText: inLocaleText, ...otherInProps } = inProps;
+
   const { utils: parentUtils, localeText: parentLocaleText } = React.useContext(
     MuiPickersAdapterContext,
   ) ?? { utils: undefined, localeText: undefined };
 
-  const tempLocaleText = React.useMemo(
-    () => ({ ...parentLocaleText, ...inProps.localeText }),
-    [parentLocaleText, inProps.localeText],
-  );
-
-  const props = useThemeProps({
-    props: {
-      ...inProps,
-      localeText: tempLocaleText,
-    },
+  const props: LocalizationProviderProps<TDate> = useThemeProps({
+    // We don't want to pass the `localeText` prop to the theme, that way it will always return the theme value,
+    // We will then merge this theme value with our value manually
+    props: otherInProps,
     name: 'MuiLocalizationProvider',
   });
 
-  const {
-    children,
-    dateAdapter: DateAdapter,
-    dateFormats,
-    dateLibInstance,
-    adapterLocale,
-    localeText,
-  } = props;
+  const localeText = React.useMemo(
+    () => ({ ...props.localeText, ...parentLocaleText, ...inLocaleText }),
+    [props.localeText, parentLocaleText, inLocaleText],
+  );
+
+  const { children, dateAdapter: DateAdapter, dateFormats, dateLibInstance, adapterLocale } = props;
 
   const utils = React.useMemo(() => {
     if (!DateAdapter) {
