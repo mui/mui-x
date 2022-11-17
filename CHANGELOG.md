@@ -3,6 +3,33 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 5.17.12
+
+_Nov 17, 2022_
+
+We'd like to offer a big thanks to the 5 contributors who made this release possible. Here are some highlights ✨:
+
+- 🌍 Improve Finnish (fi-FI) locale (#6859) @RainoPikkarainen
+- 🐞 Bugfixes
+
+### `@mui/x-data-grid@v5.17.12` / `@mui/x-data-grid-pro@v5.17.12` / `@mui/x-data-grid-premium@v5.17.12`
+
+#### Changes
+
+- [DataGrid] Fix conflict with the latest version of `@types/react` (#6883) @vizv
+- [DataGridPremium] Support aggregating data from multiple row fields (#6844) @cherniavskii
+- [DataGridPro] Fix detail panel not working with `getRowSpacing` prop (#6858) @cherniavskii
+- [l10n] Improve Finnish (fi-FI) locale (#6859) @RainoPikkarainen
+
+### Docs
+
+- [docs] Clarify DataGrid Row Pinning docs (#6891) @cherniavskii
+
+### Core
+
+- [core] Upgrade monorepo (#6864) @m4theushw
+- [license] Polish error messages (#6881) @oliviertassinari
+
 ## 5.17.11
 
 _Nov 10, 2022_
