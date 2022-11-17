@@ -67,7 +67,9 @@ Pinned rows do not support the following features:
 - tree data
 - row reordering
 - master detail
-  :::
+
+but you can still use these features with the rows that aren't pinned.
+:::
 
 ## API
 
