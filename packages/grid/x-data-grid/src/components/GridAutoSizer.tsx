@@ -17,7 +17,8 @@ export interface AutoSizerSize {
 // Credit to https://github.com/bvaughn/react-virtualized/blob/master/source/AutoSizer/AutoSizer.js
 // for the sources.
 
-export interface AutoSizerProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'children'> {
+export interface AutoSizerProps
+  extends Omit<React.HTMLAttributes<HTMLDivElement>, 'children' | 'onResize'> {
   /**
    * Function responsible for rendering children.
    * @param {AutoSizerSize} size The grid's size.
