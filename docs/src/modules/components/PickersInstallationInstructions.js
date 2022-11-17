@@ -14,12 +14,16 @@ export default function PickersInstallationInstructions() {
   const [packageManger, setPackageManger] = React.useState('yarn');
   const [libraryUsed, setLibraryUsed] = React.useState('dayjs');
 
-  const handlePackageMangerChange = (event, nextPackageManger) => {
-    setPackageManger(nextPackageManger);
+  const handlePackageMangerChange = (event, nextPackageManager) => {
+    if (nextPackageManager !== null) {
+      setPackageManger(nextPackageManager);
+    }
   };
 
-  const handleLicenceTypeChange = (event, nextLicenceType) => {
-    setLicenceType(nextLicenceType);
+  const handleLicenceTypeChange = (event, nextLicenseType) => {
+    if (nextLicenseType !== null) {
+      setLicenceType(nextLicenseType);
+    }
   };
 
   const handleLibraryUsedChange = (event) => {

@@ -18,8 +18,10 @@ export default function PickersRenderingInstructions() {
   const [licenceType, setLicenceType] = React.useState('community');
   const [libraryUsed, setLibraryUsed] = React.useState('dayjs');
 
-  const handleLicenceTypeChange = (event, nextLicenceType) => {
-    setLicenceType(nextLicenceType);
+  const handleLicenceTypeChange = (event, nextLicenseType) => {
+    if (nextLicenseType !== null) {
+      setLicenceType(nextLicenseType);
+    }
   };
 
   const handleLibraryUsedChange = (event) => {
