@@ -3,7 +3,7 @@ import { resolveComponentProps, useSlotProps } from '@mui/base/utils';
 import { useLicenseVerifier } from '@mui/x-license-pro';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import {
-  CalendarOrClockPickerView,
+  DateOrTimeView,
   executeInTheNextEventLoopTick,
   usePicker,
   WrapperVariantContext,
@@ -24,7 +24,7 @@ const releaseInfo = getReleaseInfo();
 
 export const useDesktopRangePicker = <
   TDate,
-  TView extends CalendarOrClockPickerView,
+  TView extends DateOrTimeView,
   TExternalProps extends UseDesktopRangePickerProps<TDate, TView, any>,
 >({
   props,

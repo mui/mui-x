@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {
-  CalendarOrClockPickerView,
+  DateOrTimeView,
   onSpaceOrEnter,
   useLocaleText,
   UsePickerResponse,
@@ -8,7 +8,7 @@ import {
 } from '@mui/x-date-pickers/internals';
 import { DateRange } from '../models';
 
-interface UseRangePickerFieldParams<TDate, TView extends CalendarOrClockPickerView>
+interface UseRangePickerFieldParams<TDate, TView extends DateOrTimeView>
   extends Pick<UsePickerResponse<DateRange<TDate>, TView, any>, 'open' | 'actions'> {
   wrapperVariant: WrapperVariant;
   readOnly?: boolean;
@@ -19,7 +19,7 @@ interface UseRangePickerFieldParams<TDate, TView extends CalendarOrClockPickerVi
   onCurrentDatePositionChange: (newPosition: 'start' | 'end') => void;
 }
 
-export const useRangePickerInputProps = <TDate, TView extends CalendarOrClockPickerView>({
+export const useRangePickerInputProps = <TDate, TView extends DateOrTimeView>({
   wrapperVariant,
   open,
   actions,
