@@ -12,6 +12,11 @@ export interface ExportedPickersViewLayoutSlotsComponent {
    * @default PickersActionBar
    */
   ActionBar?: React.ElementType<PickersActionBarProps>;
+  /**
+   * Custom component for wrapping the layout.
+   * It wrapps the toolbar, views, and action bar
+   */
+  LayoutRoot?: React.JSXElementConstructor<any>;
 }
 
 export interface ExportedPickersViewLayoutSlotsComponentsProps {
@@ -19,6 +24,10 @@ export interface ExportedPickersViewLayoutSlotsComponentsProps {
    * Props passed down to the action bar component.
    */
   actionBar?: Omit<PickersActionBarProps, 'onAccept' | 'onClear' | 'onCancel' | 'onSetToday'>;
+  /**
+   * Props passed down to the layoutRoot component.
+   */
+  layoutRoot?: any;
 }
 
 interface PickersViewLayoutSlotsComponent<TValue, TView extends DateOrTimeView>

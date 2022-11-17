@@ -15,8 +15,9 @@ export const PickersViewLayoutRoot = styled('div', {
   slot: 'Root',
   overridesResolver: (props, styles) => styles.root,
 })({
-  display: 'flex',
-  flexDirection: 'column',
+  display: 'grid',
+  gridAutoColumns: 'max-content auto max-content',
+  gridAutoRows: 'max-content auto max-content',
 });
 
 export const PickersViewLayoutContent = styled('div', {
@@ -24,11 +25,32 @@ export const PickersViewLayoutContent = styled('div', {
   slot: 'Content',
   overridesResolver: (props, styles) => styles.content,
 })({
+  gridColumn: '2',
+  gridRow: '2',
   display: 'flex',
   flexDirection: 'column',
-  [`&.${pickersViewLayoutClasses['content--landscape']}`]: {
-    flexDirection: 'row',
+});
+
+export const PickersViewLayoutToolbar = styled('div', {
+  name: 'MuiPickersViewLayout',
+  slot: 'Toolbar',
+  overridesResolver: (props, styles) => styles.toolbar,
+})(({ theme }) => ({
+  gridColumn: '1 / 4',
+  gridRow: '1',
+  [`&.${pickersViewLayoutClasses['toolbar--landscape']}`]: {
+    gridColumn: theme.direction === 'rtl' ? '3' : '1',
+    gridRow: '1 / 3',
   },
+}));
+
+export const PickersViewLayoutActionBar = styled('div', {
+  name: 'MuiPickersViewLayout',
+  slot: 'ActionBar',
+  overridesResolver: (props, styles) => styles.actionbar,
+})({
+  gridColumn: '1 / 4',
+  gridRow: '3',
 });
 
 const useUtilityClasses = (ownerState: PickersViewLayoutProps<any, any>) => {
@@ -36,6 +58,8 @@ const useUtilityClasses = (ownerState: PickersViewLayoutProps<any, any>) => {
   const slots = {
     root: ['root'],
     content: ['content', isLandscape && 'content--landscape'],
+    toolbar: ['toolbar', isLandscape && 'toolbar--landscape'],
+    actionbar: ['actionbar', isLandscape && 'actionbar--landscape'],
   };
 
   return composeClasses(slots, getPickersViewLayoutUtilityClass, classes);
@@ -80,14 +104,20 @@ export const PickersViewLayout = React.forwardRef(function PickersViewLayout<
   const shouldRenderToolbar = showToolbar ?? wrapperVariant !== 'desktop';
   const Toolbar = components?.Toolbar;
 
+  const LayoutRoot = components?.LayoutRoot ?? PickersViewLayoutRoot;
+
   if (view == null) {
     return null;
   }
 
   return (
-    <PickersViewLayoutRoot className={clsx(className, classes.root)} ref={ref}>
-      <PickersViewLayoutContent className={classes.content}>
-        {shouldRenderToolbar && !!Toolbar && (
+    <LayoutRoot
+      className={clsx(className, classes.root)}
+      ref={ref}
+      {...componentsProps?.layoutRoot}
+    >
+      {shouldRenderToolbar && !!Toolbar && (
+        <PickersViewLayoutToolbar className={classes.toolbar}>
           <Toolbar
             {...componentsProps?.toolbar}
             isLandscape={isLandscape}
@@ -99,18 +129,22 @@ export const PickersViewLayout = React.forwardRef(function PickersViewLayout<
             disabled={disabled}
             readOnly={readOnly}
           />
-        )}
+        </PickersViewLayoutToolbar>
+      )}
+      <PickersViewLayoutContent className={classes.content}>
         {!!Tabs && <Tabs view={view} onViewChange={onViewChange} {...componentsProps?.tabs} />}
         {children}
       </PickersViewLayoutContent>
-      <ActionBar
-        onAccept={onAccept}
-        onClear={onClear}
-        onCancel={onCancel}
-        onSetToday={onSetToday}
-        actions={wrapperVariant === 'desktop' ? [] : ['cancel', 'accept']}
-        {...componentsProps?.actionBar}
-      />
-    </PickersViewLayoutRoot>
+      <PickersViewLayoutActionBar className={classes.actionbar}>
+        <ActionBar
+          onAccept={onAccept}
+          onClear={onClear}
+          onCancel={onCancel}
+          onSetToday={onSetToday}
+          actions={wrapperVariant === 'desktop' ? [] : ['cancel', 'accept']}
+          {...componentsProps?.actionBar}
+        />
+      </PickersViewLayoutActionBar>
+    </LayoutRoot>
   );
 }) as PickersViewLayoutComponent;
