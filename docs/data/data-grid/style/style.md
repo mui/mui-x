@@ -57,13 +57,6 @@ interface GridRowParams<R extends GridRowModel = GridRowModel> {
    * All grid columns.
    */
   columns: GridColumns;
-  /**
-   * Get the cell value of a row and field.
-   * @param {GridRowId} id The row id.
-   * @param {string} field The field.
-   * @returns {any} The cell value.
-   */
-  getValue: (id: GridRowId, field: string) => any;
 }
 ```
 

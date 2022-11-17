@@ -12,7 +12,6 @@ export default function RowGroupingFullExample() {
     rowLength: 100,
     maxColumns: 25,
   });
-
   const apiRef = useGridApiRef();
 
   const initialState = useKeepGroupedColumnsHidden({

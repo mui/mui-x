@@ -13,15 +13,15 @@ import {
   pickersToolbarClasses,
   PickersToolbarClasses,
 } from './pickersToolbarClasses';
-import { CalendarOrClockPickerView } from '../models/views';
+import { DateOrTimeView } from '../models/views';
 
-export interface PickersToolbarProps<TValue, TView extends CalendarOrClockPickerView>
+export interface PickersToolbarProps<TValue, TView extends DateOrTimeView>
   extends Pick<
     BaseToolbarProps<TValue, TView>,
     'isMobileKeyboardViewOpen' | 'toggleMobileKeyboardView' | 'isLandscape'
   > {
   className?: string;
-  viewType?: 'calendar' | 'clock';
+  viewType?: 'date' | 'time';
   landscapeDirection?: 'row' | 'column';
   toolbarTitle: React.ReactNode;
   classes?: Partial<PickersToolbarClasses>;
@@ -65,9 +65,12 @@ const PickersToolbarContent = styled(Grid, {
   overridesResolver: (props, styles) => styles.content,
 })<{
   ownerState: PickersToolbarProps<any, any>;
-}>({
+}>(({ ownerState }) => ({
   flex: 1,
-});
+  ...(!ownerState.isLandscape && {
+    alignItems: 'center',
+  }),
+}));
 
 const PickersToolbarPenIconButton = styled(IconButton, {
   name: 'MuiPickersToolbar',
@@ -80,17 +83,17 @@ const PickersToolbarPenIconButton = styled(IconButton, {
   ownerState: PickersToolbarProps<any, any>;
 }>({});
 
-const getViewTypeIcon = (viewType: 'calendar' | 'clock') =>
-  viewType === 'clock' ? <Clock color="inherit" /> : <Calendar color="inherit" />;
+const getViewTypeIcon = (viewType: 'date' | 'time') =>
+  viewType === 'time' ? <Clock color="inherit" /> : <Calendar color="inherit" />;
 
-type PickersToolbarComponent = (<TValue, TView extends CalendarOrClockPickerView>(
+type PickersToolbarComponent = (<TValue, TView extends DateOrTimeView>(
   props: React.PropsWithChildren<PickersToolbarProps<TValue, TView>> &
     React.RefAttributes<HTMLDivElement>,
 ) => JSX.Element) & { propTypes?: any };
 
 export const PickersToolbar = React.forwardRef(function PickersToolbar<
   TValue,
-  TView extends CalendarOrClockPickerView,
+  TView extends DateOrTimeView,
 >(
   inProps: React.PropsWithChildren<PickersToolbarProps<TValue, TView>>,
   ref: React.Ref<HTMLDivElement>,
@@ -104,7 +107,7 @@ export const PickersToolbar = React.forwardRef(function PickersToolbar<
     landscapeDirection = 'column',
     toggleMobileKeyboardView,
     toolbarTitle,
-    viewType = 'calendar',
+    viewType = 'date',
   } = props;
 
   const ownerState = props;

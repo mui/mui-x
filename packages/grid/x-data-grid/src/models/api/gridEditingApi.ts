@@ -40,13 +40,6 @@ export interface GridEditingSharedApi {
     event?: MuiBaseEvent,
   ) => Promise<boolean> | void;
   /**
-   * Immediatelly updates the value of the cell, without waiting for the debounce.
-   * @param {GridRowId} id The row id.
-   * @param {string} field The field to update. If not passed, updates all fields in the given row id.
-   * @ignore - do not document.
-   */
-  unstable_runPendingEditCellValueMutation: (id: GridRowId, field?: string) => void;
-  /**
    * Returns the row with the values that were set by editing the cells.
    * In row editing, `field` is ignored and all fields are considered.
    * @param {GridRowId} id The row id being edited.
@@ -61,6 +54,15 @@ export interface GridEditingSharedApi {
    * @ignore - do not document.
    */
   unstable_getEditCellMeta: (id: GridRowId, field: string) => GridEditCellMeta;
+}
+
+export interface GridEditingSharedPrivateApi {
+  /**
+   * Immediatelly updates the value of the cell, without waiting for the debounce.
+   * @param {GridRowId} id The row id.
+   * @param {string} field The field to update. If not passed, updates all fields in the given row id.
+   */
+  runPendingEditCellValueMutation: (id: GridRowId, field?: string) => void;
 }
 
 /**
@@ -181,21 +183,23 @@ export interface GridCellEditingApi extends GridEditingSharedApi {
    * @param {GridStopCellEditModeParams} params The row id and field of the cell to stop editing.
    */
   stopCellEditMode(params: GridStopCellEditModeParams): void;
+}
+
+export interface GridCellEditingPrivateApi extends GridEditingSharedPrivateApi {
   /**
    * Updates the value of a cell being edited.
    * Don't call this method directly, prefer `setEditCellValue`.
    * @param {GridCommitCellChangeParams} params Object with the new value and id and field to update.
    * @returns {Promise<boolean>} Resolves with `true` when the new value is valid.
-   * @ignore - do not document.
    */
-  unstable_setCellEditingEditCellValue: (params: GridEditCellValueParams) => Promise<boolean>;
+  setCellEditingEditCellValue: (params: GridEditCellValueParams) => Promise<boolean>;
   /**
    * Returns the row with the new value that was set by editing the cell.
    * @param {GridRowId} id The row id being edited.
    * @param {string} field The field being edited.
-   * @ignore - do not document.
+   * @returns {GridRowModel} The data model of the row.
    */
-  unstable_getRowWithUpdatedValuesFromCellEditing: (id: GridRowId, field: string) => GridRowModel;
+  getRowWithUpdatedValuesFromCellEditing: (id: GridRowId, field: string) => GridRowModel;
 }
 
 /**
@@ -219,23 +223,32 @@ export interface GridRowEditingApi extends GridEditingSharedApi {
    * @param {GridStopCellEditModeParams} params The row id and field of the cell to stop editing.
    */
   stopRowEditMode(params: GridStopRowEditModeParams): void;
+}
+
+export interface GridRowEditingPrivateApi extends GridEditingSharedPrivateApi {
   /**
    * Updates the value of a cell being edited.
    * Don't call this method directly, prefer `setEditCellValue`.
    * @param {GridCommitCellChangeParams} params Object with the new value and id and field to update.
    * @returns {Promise<boolean>} Resolves with `true` when all values in the row are valid.
-   * @ignore - do not document.
    */
-  unstable_setRowEditingEditCellValue: (params: GridEditCellValueParams) => Promise<boolean>;
+  setRowEditingEditCellValue: (params: GridEditCellValueParams) => Promise<boolean>;
   /**
    * Returns the row with the values that were set by editing all cells.
    * @param {GridRowId} id The row id being edited.
-   * @ignore - do not document.
+   * @returns {GridRowModel} The data model of the row.
    */
-  unstable_getRowWithUpdatedValuesFromRowEditing: (id: GridRowId) => GridRowModel;
+  getRowWithUpdatedValuesFromRowEditing: (id: GridRowId) => GridRowModel;
 }
 
 /**
  * The editing API interface that is available in the grid `apiRef`.
  */
 export interface GridEditingApi extends GridCellEditingApi, GridRowEditingApi {}
+
+/**
+ * The private editing API interface that is available in the grid `privateApiRef`.
+ */
+export interface GridEditingPrivateApi
+  extends GridCellEditingPrivateApi,
+    GridRowEditingPrivateApi {}

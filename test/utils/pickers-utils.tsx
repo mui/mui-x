@@ -14,7 +14,7 @@ import { MuiPickerFieldAdapter } from '@mui/x-date-pickers/internals/models';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import sinon from 'sinon';
 import { expect } from 'chai';
-import { useControlled } from '@mui/material/utils';
+import { unstable_useControlled as useControlled } from '@mui/utils';
 
 export type AdapterName =
   | 'date-fns'

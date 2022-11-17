@@ -192,31 +192,26 @@ The `locale` prop of the `LocalizationProvider` component have been renamed `ada
 
 ### Rename the view components
 
-The view components allowing to pick a date or parts of a date without an input have been renamed to better fit their usage:
+The view components allowing to pick a time, a date or parts of a date without an input have been renamed to better fit their usage:
 
 ```diff
 -<CalendarPicker {...props} />
 +<DateCalendar {...props} />
-```
 
-```diff
 -<DayPicker {...props} />
 +<DayCalendar {...props} />
-```
 
-```diff
 -<CalendarPickerSkeleton {...props} />
 +<DayCalendarSkeleton {...props} />
-```
 
-```diff
 -<MonthPicker {...props} />
 +<MonthCalendar {...props} />
-```
 
-```diff
 -<YearPicker {...props} />
 +<YearCalendar {...props} />
+
+-<ClockPicker {...props} />
++<TimeClock {...props} />
 ```
 
 Component names in the theme have changed as well:
@@ -236,24 +231,27 @@ Component names in the theme have changed as well:
 
 -MuiYearPicker: {
 +MuiYearCalendar: {
+
+-MuiClockPicker: {
++MuiTimeClock: {
 ```
 
 ### Rename `date` prop to `value` on view components
 
-The `date` prop has been renamed `value` on `MonthPicker`, `YearPicker`, `ClockPicker` and `CalendarPicker`:
+The `date` prop has been renamed `value` on `MonthCalendar`, `YearCalendar`, `TimeClock` and `DateCalendar` (components renamed in previous section):
 
 ```diff
 -<MonthPicker date={dayjs()} onChange={handleMonthChange} />
-+<MonthPicker value={dayjs()} onChange={handleMonthChange} />
++<MonthCalendar value={dayjs()} onChange={handleMonthChange} />
 
 -<YearPicker date={dayjs()} onChange={handleYearChange} />
-+<YearPicker value={dayjs()} onChange={handleYearChange} />
++<YearCalendar value={dayjs()} onChange={handleYearChange} />
 
 -<ClockPicker date={dayjs()} onChange={handleTimeChange} />
-+<ClockPicker value={dayjs()} onChange={handleTimeChange} />
++<TimeClock value={dayjs()} onChange={handleTimeChange} />
 
 -<CalendarPicker date={dayjs()} onChange={handleDateChange} />
-+<CalendarPicker value={dayjs()} onChange={handleDateChange} />
++<DateCalendar value={dayjs()} onChange={handleDateChange} />
 ```
 
 ### Rename remaining `private` components

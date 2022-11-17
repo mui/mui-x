@@ -1,7 +1,9 @@
 import * as React from 'react';
-import { unstable_useEnhancedEffect as useEnhancedEffect } from '@mui/material/utils';
 import { styled } from '@mui/material/styles';
-import { unstable_composeClasses as composeClasses } from '@mui/utils';
+import {
+  unstable_composeClasses as composeClasses,
+  unstable_useEnhancedEffect as useEnhancedEffect,
+} from '@mui/utils';
 import clsx from 'clsx';
 import { useGridSelector } from '../../hooks/utils/useGridSelector';
 import { gridVisibleRowCountSelector } from '../../hooks/features/filter/gridFilterSelector';

@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { CalendarOrClockPickerView } from '../views';
+import { DateOrTimeView } from '../views';
 
-export interface BaseToolbarProps<TValue, TView extends CalendarOrClockPickerView>
+export interface BaseToolbarProps<TValue, TView extends DateOrTimeView>
   extends ExportedBaseToolbarProps {
   isLandscape: boolean;
   onChange: (newValue: TValue) => void;
@@ -16,7 +16,7 @@ export interface BaseToolbarProps<TValue, TView extends CalendarOrClockPickerVie
    * @param {TView} view The view to open
    */
   onViewChange: (view: TView) => void;
-  views: readonly CalendarOrClockPickerView[];
+  views: readonly DateOrTimeView[];
   disabled?: boolean;
   readOnly?: boolean;
   // TODO v6: Remove
