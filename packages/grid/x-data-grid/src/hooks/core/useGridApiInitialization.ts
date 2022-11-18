@@ -64,8 +64,6 @@ export function useGridApiInitialization<
 
   if (!publicApiRef.current) {
     publicApiRef.current = {
-      unstable_eventManager: new EventManager(),
-      unstable_caches: {} as Api['unstable_caches'],
       state: {} as Api['state'],
       instanceId: globalId,
     } as Api;
@@ -76,6 +74,9 @@ export function useGridApiInitialization<
   const privateApiRef = React.useRef() as React.MutableRefObject<PrivateApi>;
   if (!privateApiRef.current) {
     privateApiRef.current = wrapPublicApi<PrivateApi, Api>(publicApiRef.current);
+
+    privateApiRef.current.register('private', { caches: {} as PrivateApi['caches'] });
+    privateApiRef.current.register('private', { eventManager: new EventManager() });
   }
 
   React.useImperativeHandle(inputApiRef, () => publicApiRef.current, [publicApiRef]);
@@ -93,17 +94,17 @@ export function useGridApiInitialization<
         props.signature === GridSignature.DataGridPro
           ? { api: privateApiRef.current.getPublicApi() }
           : {};
-      privateApiRef.current.unstable_eventManager.emit(name, params, event, details);
+      privateApiRef.current.eventManager.emit(name, params, event, details);
     },
     [privateApiRef, props.signature],
   );
 
   const subscribeEvent = React.useCallback<GridCoreApi['subscribeEvent']>(
     (event, handler, options?) => {
-      privateApiRef.current.unstable_eventManager.on(event, handler, options);
+      privateApiRef.current.eventManager.on(event, handler, options);
       const api = privateApiRef.current;
       return () => {
-        api.unstable_eventManager.removeListener(event, handler);
+        api.eventManager.removeListener(event, handler);
       };
     },
     [privateApiRef],

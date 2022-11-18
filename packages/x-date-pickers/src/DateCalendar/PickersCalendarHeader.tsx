@@ -18,7 +18,7 @@ import {
   usePreviousMonthDisabled,
   useNextMonthDisabled,
 } from '../internals/hooks/date-helpers-hooks';
-import { CalendarPickerView } from '../internals/models';
+import { DateView } from '../internals/models';
 import {
   getPickersCalendarHeaderUtilityClass,
   PickersCalendarHeaderClasses,
@@ -63,11 +63,11 @@ export interface PickersCalendarHeaderProps<TDate>
   componentsProps?: PickersCalendarHeaderSlotsComponentsProps;
   currentMonth: TDate;
   disabled?: boolean;
-  views: readonly CalendarPickerView[];
+  views: readonly DateView[];
   onMonthChange: (date: TDate, slideDirection: SlideDirection) => void;
-  openView: CalendarPickerView;
+  openView: DateView;
   reduceAnimations: boolean;
-  onViewChange?: (view: CalendarPickerView) => void;
+  onViewChange?: (view: DateView) => void;
   labelId?: string;
   classes?: Partial<PickersCalendarHeaderClasses>;
 }

@@ -73,6 +73,45 @@ Below are described the steps you need to make to migrate from v5 to v6.
 - The `apiRef.current.updateColumn` method was removed. Use `apiRef.current.updateColumns` instead.
 - The `apiRef.current.getColumnsMeta` method was removed. Use `gridColumnsTotalWidthSelector` or `gridColumnPositionsSelector` selectors instead.
 - The `apiRef.current.getRowIndex` method was removed. Use `apiRef.current.getRowIndexRelativeToVisibleRows` instead.
+- Some internal undocumented `apiRef` methods and properties were removed.
+
+  If you don't use undocumented properties - you can skip the list below.
+  Otherwise, please check the list and [open an issue](https://github.com/mui/mui-x/issues/new/choose) if there's something missing in the `apiRef`.
+
+    <details>
+    <summary markdown="span">List of removed undocumented methods and properties</summary>
+
+  |                                                   |
+  | ------------------------------------------------- |
+  | `getLogger`                                       |
+  | `windowRef`                                       |
+  | `unstable_caches`                                 |
+  | `unstable_eventManager`                           |
+  | `unstable_requestPipeProcessorsApplication`       |
+  | `unstable_registerPipeProcessor`                  |
+  | `unstable_registerPipeApplier`                    |
+  | `unstable_storeDetailPanelHeight`                 |
+  | `unstable_detailPanelHasAutoHeight`               |
+  | `unstable_calculateColSpan`                       |
+  | `unstable_rowHasAutoHeight`                       |
+  | `unstable_getLastMeasuredRowIndex`                |
+  | `unstable_getViewportPageSize`                    |
+  | `unstable_updateGridDimensionsRef`                |
+  | `unstable_getRenderContext`                       |
+  | `unstable_registerStrategyProcessor`              |
+  | `unstable_applyStrategyProcessor`                 |
+  | `unstable_getActiveStrategy`                      |
+  | `unstable_setStrategyAvailability`                |
+  | `unstable_setCellEditingEditCellValue`            |
+  | `unstable_getRowWithUpdatedValuesFromCellEditing` |
+  | `unstable_setRowEditingEditCellValue`             |
+  | `unstable_getRowWithUpdatedValuesFromRowEditing`  |
+  | `unstable_runPendingEditCellValueMutation`        |
+  | `unstable_moveFocusToRelativeCell`                |
+  | `unstable_updateControlState`                     |
+  | `unstable_registerControlState`                   |
+
+    </details>
 
 ### Other exports
 

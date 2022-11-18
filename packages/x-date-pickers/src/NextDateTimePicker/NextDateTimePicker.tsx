@@ -300,7 +300,7 @@ NextDateTimePicker.propTypes = {
   /**
    * Disable specific time.
    * @param {number} timeValue The value to check.
-   * @param {ClockPickerView} view The clock type of the timeValue.
+   * @param {TimeView} view The clock type of the timeValue.
    * @returns {boolean} If `true` the time will be disabled.
    */
   shouldDisableTime: PropTypes.func,

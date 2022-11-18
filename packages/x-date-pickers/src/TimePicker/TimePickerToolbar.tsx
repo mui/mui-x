@@ -14,10 +14,9 @@ import {
   timePickerToolbarClasses,
   TimePickerToolbarClasses,
 } from './timePickerToolbarClasses';
-import { ClockPickerView } from '../internals/models';
+import { TimeView } from '../internals/models';
 
-export interface TimePickerToolbarProps<TDate>
-  extends BaseToolbarProps<TDate | null, ClockPickerView> {
+export interface TimePickerToolbarProps<TDate> extends BaseToolbarProps<TDate | null, TimeView> {
   ampm?: boolean;
   ampmInClock?: boolean;
   classes?: Partial<TimePickerToolbarClasses>;
@@ -163,7 +162,7 @@ export function TimePickerToolbar<TDate extends unknown>(inProps: TimePickerTool
 
   return (
     <TimePickerToolbarRoot
-      viewType="clock"
+      viewType="time"
       landscapeDirection="row"
       toolbarTitle={localeText.timePickerToolbarTitle}
       isLandscape={isLandscape}

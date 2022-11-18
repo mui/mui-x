@@ -58,6 +58,10 @@ export interface PickerStateValueManager<TValue, TDate, TError> {
    * @returns {boolean} `true` if the new error is different from the previous one.
    */
   isSameError: (error: TError, prevError: TError | null) => boolean;
+  /**
+   * The value identifying no error, used to initialise the error state.
+   */
+  defaultErrorState: TError;
 }
 
 export type PickerSelectionState = 'partial' | 'shallow' | 'finish';
