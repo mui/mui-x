@@ -1,5 +1,5 @@
 extends: substitution
-message: Consider using '%s' instead of '%s'
+message: To be consitent about capitalization, consider using '%s' instead of '%s'
 level: warning
 ignorecase: false
 # swap maps tokens in form of bad: good
@@ -7,10 +7,14 @@ ignorecase: false
 swap:
   api: API
   Api: API
-  typescript: Typescript
-  ts: Typescript
-  TS: Typescript
-  the grid: the data grid
+  typescript: TypeScript
+  Typescript: TypeScript
+  ts: TypeScript
+  TS: TypeScript
+  javascript: JavaScript
+  Javascript: JavaScript
+  css: CSS
+  Css: CSS
   Data grid: Data Grid
   Date picker: Date Picker
   Time picker: Time Picker
