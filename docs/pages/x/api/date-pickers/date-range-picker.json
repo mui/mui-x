@@ -111,6 +111,6 @@
   "forwardsRefTo": "HTMLDivElement",
   "filename": "/packages/x-date-pickers-pro/src/DateRangePicker/DateRangePicker.tsx",
   "inheritance": null,
-  "demos": "<ul></ul>",
+  "demos": "<ul><li><a href=\"/date-pickers/date-range-picker/date-range-picker/\">Date Range Picker </a></li>\n<li><a href=\"/date-pickers/localization/localization/\">Localization</a></li>\n<li><a href=\"/date-pickers/validation/validation/\">Validation</a></li></ul>",
   "packages": ["@mui/x-date-pickers-pro"]
 }

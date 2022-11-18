@@ -1,8 +1,9 @@
 ---
-title: Date and Time pickers - Localization
+title: Date and Time Pickers - Localization
+components: LocalizationProvider, DatePicker, DesktopDatePicker, MobileDatePicker, StaticDatePicker, TimePicker, DesktopTimePicker, MobileTimePicker, StaticTimePicker, DateTimePicker, DesktopDateTimePicker, MobileDateTimePicker, StaticDateTimePicker, DateRangePicker, DesktopDateRangePicker, MobileDateRangePicker, StaticDateRangePicker
 ---
 
-# Date and Time pickers - Localization
+# Date and Time Pickers - Localization
 
 <p class="description">Date and Time pickers allow to support users from different locales, with formatting, RTL, and localized strings.</p>
 

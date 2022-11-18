@@ -1,7 +1,6 @@
 ---
 product: date-pickers
 title: Date Picker, Time Picker React components
-components: DatePicker,DateTimePicker,TimePicker
 githubLabel: 'component: pickers'
 materialDesign: https://m2.material.io/components/date-pickers
 waiAria: https://www.w3.org/WAI/ARIA/apg/example-index/dialog-modal/datepicker-dialog.html

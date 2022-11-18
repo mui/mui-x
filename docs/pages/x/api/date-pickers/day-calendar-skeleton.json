@@ -19,6 +19,6 @@
   "forwardsRefTo": "HTMLDivElement",
   "filename": "/packages/x-date-pickers/src/DayCalendarSkeleton/DayCalendarSkeleton.tsx",
   "inheritance": null,
-  "demos": "<ul></ul>",
+  "demos": "<ul><li><a href=\"/date-pickers/date-picker/date-picker/\">Date Picker</a></li></ul>",
   "packages": ["@mui/x-date-pickers-pro", "@mui/x-date-pickers"]
 }

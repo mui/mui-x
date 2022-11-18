@@ -16,6 +16,6 @@
   "styles": { "classes": [], "globalClasses": {}, "name": "MuiLocalizationProvider" },
   "filename": "/packages/x-date-pickers/src/LocalizationProvider/LocalizationProvider.tsx",
   "inheritance": null,
-  "demos": "<ul></ul>",
+  "demos": "<ul><li><a href=\"/date-pickers/localization/localization/\">Localization</a></li></ul>",
   "packages": ["@mui/x-date-pickers-pro", "@mui/x-date-pickers"]
 }

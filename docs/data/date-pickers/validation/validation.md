@@ -1,8 +1,9 @@
 ---
-title: Date and Time pickers - Validation
+title: Date and Time Pickers - Validation
+components: DatePicker, DesktopDatePicker, MobileDatePicker, StaticDatePicker, TimePicker, DesktopTimePicker, MobileTimePicker, StaticTimePicker, DateTimePicker, DesktopDateTimePicker, MobileDateTimePicker, StaticDateTimePicker, DateRangePicker, DesktopDateRangePicker, MobileDateRangePicker, StaticDateRangePicker, DateCalendar, MonthCalendar, YearCalendar
 ---
 
-# Date and Time pickers - Validation
+# Date and Time Pickers - Validation
 
 <p class="description">Add custom validation to user inputs.</p>
 

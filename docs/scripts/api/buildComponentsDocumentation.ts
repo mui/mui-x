@@ -1,5 +1,6 @@
 import * as ttp from '@mui/monorepo/packages/typescript-to-proptypes/src/index';
 import * as fse from 'fs-extra';
+import fs from 'fs';
 import path from 'path';
 import parseStyles, { Styles } from '@mui/monorepo/docs/src/modules/utils/parseStyles';
 import fromPairs from 'lodash/fromPairs';
@@ -7,6 +8,7 @@ import createDescribeableProp, {
   DescribeablePropDescriptor,
 } from '@mui/monorepo/docs/src/modules/utils/createDescribeableProp';
 import generatePropDescription from '@mui/monorepo/docs/src/modules/utils/generatePropDescription';
+import { replaceComponentLinks } from '@mui/monorepo/docs/src/modules/utils/replaceUrl';
 import { parse as parseDoctrine } from 'doctrine';
 import generatePropTypeDescription, {
   getChained,
@@ -14,11 +16,12 @@ import generatePropTypeDescription, {
 import parseTest from '@mui/monorepo/docs/src/modules/utils/parseTest';
 import kebabCase from 'lodash/kebabCase';
 import { LANGUAGES } from 'docs/src/modules/constants';
-import { findPagesMarkdownNew } from 'docs/src/modules/utils/find';
+import { findPagesMarkdownNew } from '@mui/monorepo/docs/src/modules/utils/find';
 import { defaultHandlers, parse as docgenParse, ReactDocgenApi } from 'react-docgen';
 import {
   renderInline as renderMarkdownInline,
   getHeaders,
+  getTitle,
 } from '@mui/monorepo/docs/packages/markdown';
 import { getLineFeed } from '@mui/monorepo/docs/scripts/helpers';
 import { unstable_generateUtilityClass as generateUtilityClass } from '@mui/utils';
@@ -36,7 +39,7 @@ interface ReactApi extends ReactDocgenApi {
    * list of page pathnames
    * @example ['/components/Accordion']
    */
-  demos: [string, string][];
+  demos: Array<{ name: string; demoPathname: string }>;
   EOL: string;
   filename: string;
   forwardsRefTo: string | undefined;
@@ -151,15 +154,6 @@ function extractSlots(options: {
 }
 
 /**
- * Generate list of component demos
- */
-function generateDemoList(demos: [string, string][]): string {
-  return `<ul>${demos
-    .map(([demoPathname, demoName]) => `<li><a href="${demoPathname}">${demoName}</a></li>`)
-    .join('\n')}</ul>`;
-}
-
-/**
  * @param filepath - absolute path
  * @example toGithubPath('/home/user/material-ui/packages/Accordion') === '/packages/Accordion'
  * @example toGithubPath('C:\\Development\material-ui\packages\Accordion') === '/packages/Accordion'
@@ -183,19 +177,57 @@ function parseComponentSource(src: string, componentObject: { filename: string }
   return reactAPI;
 }
 
+function findXDemos(
+  componentName: string,
+  pagesMarkdown: ReadonlyArray<PageMarkdown>,
+): ReactApi['demos'] {
+  if (componentName.startsWith('Grid') || componentName.startsWith('DataGrid')) {
+    const demos: ReactApi['demos'] = [];
+    if (componentName === 'DataGrid' || componentName.startsWith('Grid')) {
+      demos.push({ name: 'DataGrid', demoPathname: '/x/react-data-grid/#mit-version' });
+    }
+    if (componentName === 'DataGridPro' || componentName.startsWith('Grid')) {
+      demos.push({ name: 'DataGridPro', demoPathname: '/x/react-data-grid/#commercial-version' });
+    }
+    if (componentName === 'DataGridPremium' || componentName.startsWith('Grid')) {
+      demos.push({
+        name: 'DataGridPremium',
+        demoPathname: '/x/react-data-grid/#commercial-version',
+      });
+    }
+
+    return demos;
+  }
+
+  return pagesMarkdown
+    .filter((page) => {
+      if (!page.pathname.includes('/')) {
+        return false;
+      }
+
+      return page.pathname.indexOf('/x') && page.components.includes(componentName);
+    })
+    .map((page) => {
+      let name = /^Date and Time Pickers - (.*)$/.exec(page.title)?.[1] ?? page.title
+      name = name.replace(/\[(.*)]\((.*)\)/g, '')
+
+      return {
+        name,
+        demoPathname: replaceComponentLinks(`${page.pathname.replace(/^\/x/, '')}/`),
+      };
+    });
+}
+
 const buildComponentDocumentation = async (options: {
   filename: string;
   project: Project;
   projects: Projects;
-  documentationRoot: string;
+  apiPagesFolder: string;
   documentedInterfaces: DocumentedInterfaces;
-  pagesMarkdown: ReadonlyArray<{
-    components: readonly string[];
-    filename: string;
-    pathname: string;
-  }>;
+  pagesMarkdown: ReadonlyArray<PageMarkdown>;
 }) => {
-  const { filename, project, documentationRoot, documentedInterfaces, projects } = options;
+  const { filename, project, apiPagesFolder, documentedInterfaces, projects, pagesMarkdown } =
+    options;
 
   const src = fse.readFileSync(filename, 'utf8');
   const reactApi = parseComponentSource(src, { filename });
@@ -217,29 +249,7 @@ const buildComponentDocumentation = async (options: {
     }
   }
 
-  const demos: ReactApi['demos'] = [];
-  if (documentationRoot.includes('/x/')) {
-    if (reactApi.name === 'DataGrid' || reactApi.name.startsWith('Grid')) {
-      demos.push(['/x/react-data-grid/#mit-version', 'DataGrid']);
-    }
-    if (reactApi.name === 'DataGridPro' || reactApi.name.startsWith('Grid')) {
-      demos.push(['/x/react-data-grid/#commercial-version', 'DataGridPro']);
-    }
-    if (reactApi.name === 'DataGridPremium' || reactApi.name.startsWith('Grid')) {
-      demos.push(['/x/react-data-grid/#commercial-version', 'DataGridPremium']);
-    }
-  } else {
-    if (reactApi.name === 'DataGrid' || reactApi.name.startsWith('Grid')) {
-      demos.push(['/components/data-grid/#mit-version', 'DataGrid']);
-    }
-    if (reactApi.name === 'DataGridPro' || reactApi.name.startsWith('Grid')) {
-      demos.push(['/components/data-grid/#commercial-version', 'DataGridPro']);
-    }
-    if (reactApi.name === 'DataGridPremium' || reactApi.name.startsWith('Grid')) {
-      demos.push(['/components/data-grid/#commercial-version', 'DataGridPremium']);
-    }
-  }
-  reactApi.demos = demos;
+  reactApi.demos = findXDemos(reactApi.name, pagesMarkdown);
 
   reactApi.styles = await parseStyles(reactApi, project.program as any);
   reactApi.styles.name = reactApi.name.startsWith('Grid')
@@ -461,14 +471,16 @@ const buildComponentDocumentation = async (options: {
     forwardsRefTo: reactApi.forwardsRefTo,
     filename: toGithubPath(reactApi.filename, project.workspaceRoot),
     inheritance: reactApi.inheritance,
-    demos: generateDemoList(reactApi.demos),
+    demos: `<ul>${reactApi.demos
+      .map((item) => `<li><a href="${item.demoPathname}">${item.name}</a></li>`)
+      .join('\n')}</ul>`,
     packages: reactApi.packages.sort((a, b) => b.length - a.length), // Display the imports from the pro packages above imports from the community packages
   };
 
   // docs/pages/component-name.json
   writePrettifiedFile(
     path.resolve(
-      documentationRoot,
+      apiPagesFolder,
       project.documentationFolderName,
       `${kebabCase(reactApi.name)}.json`,
     ),
@@ -478,11 +490,7 @@ const buildComponentDocumentation = async (options: {
 
   // docs/pages/component-name.js
   writePrettifiedFile(
-    path.resolve(
-      documentationRoot,
-      project.documentationFolderName,
-      `${kebabCase(reactApi.name)}.js`,
-    ),
+    path.resolve(apiPagesFolder, project.documentationFolderName, `${kebabCase(reactApi.name)}.js`),
     `import * as React from 'react';
 import ApiPage from 'docsx/src/modules/components/ApiPage';
 import mapApiPageTranslations from 'docs/src/modules/utils/mapApiPageTranslations';
@@ -516,24 +524,26 @@ Page.getInitialProps = () => {
 
 interface BuildComponentsDocumentationOptions {
   projects: Projects;
-  documentationRoot: string;
+  apiPagesFolder: string;
+  dataFolder: string;
   documentedInterfaces: DocumentedInterfaces;
 }
 
 export default async function buildComponentsDocumentation(
   options: BuildComponentsDocumentationOptions,
 ) {
-  const { documentationRoot, documentedInterfaces, projects } = options;
+  const { apiPagesFolder, dataFolder, documentedInterfaces, projects } = options;
 
-  const pagesMarkdown = findPagesMarkdownNew()
-    .map((markdown) => {
-      const markdownSource = fse.readFileSync(markdown.filename, 'utf8');
-      return {
-        ...markdown,
-        components: getHeaders(markdownSource).components,
-      };
-    })
-    .filter((markdown) => markdown.components.length > 0);
+  const pagesMarkdown = findPagesMarkdownNew(dataFolder).map((markdown) => {
+    const markdownContent = fs.readFileSync(markdown.filename, 'utf8');
+    const markdownHeaders = getHeaders(markdownContent) as any;
+
+    return {
+      ...markdown,
+      title: getTitle(markdownContent),
+      components: markdownHeaders.components as string[],
+    };
+  });
 
   const promises = Array.from(projects.values()).flatMap((project) => {
     if (!project.getComponentsWithApiDoc) {
@@ -547,7 +557,7 @@ export default async function buildComponentsDocumentation(
           filename,
           project,
           projects,
-          documentationRoot,
+          apiPagesFolder,
           pagesMarkdown,
           documentedInterfaces,
         });
@@ -570,4 +580,10 @@ export default async function buildComponentsDocumentation(
   if (fails.length > 0) {
     process.exit(1);
   }
+}
+
+interface PageMarkdown {
+  pathname: string;
+  title: string;
+  components: readonly string[];
 }
