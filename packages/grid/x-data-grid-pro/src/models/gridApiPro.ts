@@ -1,7 +1,12 @@
 import { GridApiCommon, GridRowMultiSelectionApi } from '@mui/x-data-grid';
 import { GridPrivateOnlyApiCommon } from '@mui/x-data-grid/internals';
 import { GridInitialStatePro, GridStatePro } from './gridStatePro';
-import type { GridColumnPinningApi, GridDetailPanelApi, GridRowPinningApi } from '../hooks';
+import type {
+  GridColumnPinningApi,
+  GridDetailPanelApi,
+  GridRowPinningApi,
+  GridDetailPanelPrivateApi,
+} from '../hooks';
 
 /**
  * The api of `DataGridPro`.
@@ -15,4 +20,5 @@ export interface GridApiPro
     GridRowMultiSelectionApi {}
 export interface GridPrivateApiPro
   extends GridApiPro,
-    GridPrivateOnlyApiCommon<GridApiPro, GridPrivateApiPro> {}
+    GridPrivateOnlyApiCommon<GridApiPro, GridPrivateApiPro>,
+    GridDetailPanelPrivateApi {}

@@ -9,9 +9,9 @@ import { DayCalendarSkeletonClassKey } from '../DayCalendarSkeleton';
 import {
   ClockClassKey,
   ClockNumberClassKey,
-  ClockPickerClassKey,
+  TimeClockClassKey,
   ClockPointerClassKey,
-} from '../ClockPicker';
+} from '../TimeClock';
 import { MonthCalendarClassKey, PickersMonthClassKey } from '../MonthCalendar';
 import { PickersDayClassKey } from '../PickersDay';
 import { PickersYearClassKey, YearCalendarClassKey } from '../YearCalendar';
@@ -27,13 +27,13 @@ import {
   PickersToolbarClassKey,
   PickersToolbarTextClassKey,
 } from '../internals';
+import { PickersViewLayoutClassKey } from '../internals/components/PickersViewLayout';
 
 // prettier-ignore
 export interface PickersComponentNameToClassKey {
   MuiCalendarOrClockPicker: CalendarOrClockPickerClassKey;
   MuiClock: ClockClassKey;
   MuiClockNumber: ClockNumberClassKey;
-  MuiClockPicker: ClockPickerClassKey;
   MuiClockPointer: ClockPointerClassKey;
   MuiDateCalendar: DateCalendarClassKey;
   MuiDateField: never;
@@ -72,6 +72,7 @@ export interface PickersComponentNameToClassKey {
   MuiPickersToolbar: PickersToolbarClassKey;
   MuiPickersToolbarButton: PickersToolbarButtonClassKey;
   MuiPickersToolbarText: PickersToolbarTextClassKey;
+  MuiPickersViewLayout: PickersViewLayoutClassKey;
   MuiPickersYear: PickersYearClassKey;
   MuiStaticDatePicker: never;
   MuiStaticDateTimePicker: never;
@@ -79,6 +80,7 @@ export interface PickersComponentNameToClassKey {
   MuiStaticNextDateTimePicker: never;
   MuiStaticNextTimePicker: never;
   MuiStaticTimePicker: never;
+  MuiTimeClock: TimeClockClassKey;
   MuiTimePicker: never;
   MuiTimePickerToolbar: TimePickerToolbarClassKey;
   MuiYearCalendar: YearCalendarClassKey;

@@ -11,7 +11,7 @@ import {
   MonthValidationProps,
   YearValidationProps,
 } from '../internals/hooks/validation/models';
-import { CalendarOrClockPickerView } from '../internals/models/views';
+import { DateOrTimeView } from '../internals/models/views';
 
 type ValidationProps =
   | keyof (BaseTimeValidationProps &
@@ -59,7 +59,7 @@ interface ConformanceOptions {
   clock: any;
   after?: () => void;
   props?: any;
-  views?: CalendarOrClockPickerView[];
+  views?: DateOrTimeView[];
   ignoredProps?: ValidationProps[];
   skip?: AvailableTests[];
   isLegacyPicker?: boolean;

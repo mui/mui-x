@@ -1,5 +1,3 @@
-export type CalendarPickerView = 'year' | 'month' | 'day';
-
-export type ClockPickerView = 'hours' | 'minutes' | 'seconds';
-
-export type CalendarOrClockPickerView = CalendarPickerView | ClockPickerView;
+export type DateView = 'year' | 'month' | 'day';
+export type TimeView = 'hours' | 'minutes' | 'seconds';
+export type DateOrTimeView = DateView | TimeView;

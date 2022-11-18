@@ -22,7 +22,13 @@ import {
 } from '@mui/monorepo/docs/packages/markdown';
 import { getLineFeed } from '@mui/monorepo/docs/scripts/helpers';
 import { unstable_generateUtilityClass as generateUtilityClass } from '@mui/utils';
-import { DocumentedInterfaces, getJsdocDefaultValue, linkify, writePrettifiedFile } from './utils';
+import {
+  DocumentedInterfaces,
+  getJsdocDefaultValue,
+  linkify,
+  getSymbolJSDocTags,
+  writePrettifiedFile,
+} from './utils';
 import { Project, Projects } from '../getTypeScriptProjects';
 
 interface ReactApi extends ReactDocgenApi {
@@ -245,9 +251,18 @@ const buildComponentDocumentation = async (options: {
   });
 
   const allProjectsName = Array.from(projects.keys());
-  const projectsWithThisComponent = allProjectsName.filter(
-    (projectName) => !!projects.get(projectName)!.exports[reactApi.name],
-  );
+  const projectsWithThisComponent = allProjectsName.filter((projectName) => {
+    const currenetProject = projects.get(projectName) as Project;
+    const symbol = currenetProject.exports[reactApi.name];
+
+    if (symbol) {
+      const jsDoc = getSymbolJSDocTags(symbol);
+      // Do not show imports if the module is deprecated
+      return !jsDoc.deprecated;
+    }
+
+    return false;
+  });
   reactApi.packages = projectsWithThisComponent.map((projectName) => `@mui/${projectName}`);
 
   const componentApi: {

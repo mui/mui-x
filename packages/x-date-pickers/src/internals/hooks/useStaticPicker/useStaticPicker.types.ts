@@ -1,9 +1,9 @@
 import * as React from 'react';
 import {
-  ExportedPickerViewLayoutSlotsComponent,
-  ExportedPickerViewLayoutSlotsComponentsProps,
-} from '../../components/PickerViewLayout';
-import { CalendarOrClockPickerView } from '../../models';
+  ExportedPickersViewLayoutSlotsComponent,
+  ExportedPickersViewLayoutSlotsComponentsProps,
+} from '../../components/PickersViewLayout';
+import { DateOrTimeView } from '../../models';
 import { BaseNextPickerProps } from '../../models/props/basePickerProps';
 import { UsePickerParams } from '../usePicker';
 import {
@@ -12,11 +12,11 @@ import {
 } from '../../components/wrappers/WrapperProps';
 
 export interface UseStaticPickerSlotsComponent
-  extends ExportedPickerViewLayoutSlotsComponent,
+  extends ExportedPickersViewLayoutSlotsComponent,
     Pick<PickersSlotsComponent, 'PaperContent'> {}
 
 export interface UseStaticPickerSlotsComponentsProps
-  extends ExportedPickerViewLayoutSlotsComponentsProps,
+  extends ExportedPickersViewLayoutSlotsComponentsProps,
     Pick<PickersSlotsComponentsProps, 'paperContent'> {}
 
 export interface StaticOnlyPickerProps {
@@ -27,7 +27,7 @@ export interface StaticOnlyPickerProps {
   displayStaticWrapperAs: 'desktop' | 'mobile';
 }
 
-export interface UseStaticPickerProps<TDate, TView extends CalendarOrClockPickerView, TError>
+export interface UseStaticPickerProps<TDate, TView extends DateOrTimeView, TError>
   extends BaseNextPickerProps<TDate | null, TDate, TView, TError>,
     StaticOnlyPickerProps {
   /**
@@ -44,7 +44,7 @@ export interface UseStaticPickerProps<TDate, TView extends CalendarOrClockPicker
 
 export interface UseStaticPickerParams<
   TDate,
-  TView extends CalendarOrClockPickerView,
+  TView extends DateOrTimeView,
   TExternalProps extends UseStaticPickerProps<TDate, TView, any>,
 > extends Pick<
     UsePickerParams<TDate | null, TDate, TView, TExternalProps, {}>,

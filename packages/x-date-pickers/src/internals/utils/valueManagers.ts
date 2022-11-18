@@ -10,16 +10,19 @@ import {
   splitFormatIntoSections,
 } from '../hooks/useField/useField.utils';
 
-export const singleItemValueManager: PickerStateValueManager<
-  any,
-  any,
-  DateValidationError | TimeValidationError | DateTimeValidationError
-> = {
+export type SingleItemPickerStateValueManager<
+  TValue = any,
+  TDate = any,
+  TError extends DateValidationError | TimeValidationError | DateTimeValidationError = any,
+> = PickerStateValueManager<TValue, TDate, TError>;
+
+export const singleItemValueManager: SingleItemPickerStateValueManager = {
   emptyValue: null,
   getTodayValue: (utils) => utils.date()!,
   cleanValue: replaceInvalidDateByNull,
   areValuesEqual: (utils, a, b) => utils.isEqual(a, b),
   isSameError: (a, b) => a === b,
+  defaultErrorState: null,
 };
 
 export const singleItemFieldValueManager: FieldValueManager<

@@ -1,5 +1,6 @@
-import { expect } from 'chai';
 import * as React from 'react';
+import { expect } from 'chai';
+import { spy } from 'sinon';
 import { screen } from '@mui/monorepo/test/utils';
 import TextField from '@mui/material/TextField';
 import { adapterToUse } from 'test/utils/pickers-utils';
@@ -37,29 +38,38 @@ function testTextFieldValidation(ElementToTest, propsToTest, getOptions) {
 
     it('should accept single day range', () => {
       const { render, isSingleInput } = getOptions();
+      const onErrorMock = spy();
       render(
         <ElementToTest
           {...defaultProps}
+          onError={onErrorMock}
           value={dateParser([
             [2018, 0, 1, 10, 15, 0],
             [2018, 0, 1, 10, 15, 0],
           ])}
         />,
       );
+
+      expect(onErrorMock.callCount).to.equal(0);
       testInvalidStatus([false, false], isSingleInput);
     });
 
     it('should not accept end date prior to start state', () => {
       const { render, isSingleInput } = getOptions();
+      const onErrorMock = spy();
       render(
         <ElementToTest
           {...defaultProps}
+          onError={onErrorMock}
           value={dateParser([
             [2018, 0, 2],
             [2018, 0, 1],
           ])}
         />,
       );
+
+      expect(onErrorMock.callCount).to.equal(1);
+      expect(onErrorMock.lastCall.args[0]).to.deep.equal(['invalidRange', 'invalidRange']);
       testInvalidStatus([true, true], isSingleInput);
     });
 
@@ -70,9 +80,11 @@ function testTextFieldValidation(ElementToTest, propsToTest, getOptions) {
           return;
         }
 
+        const onErrorMock = spy();
         const { setProps } = render(
           <ElementToTest
             {...defaultProps}
+            onError={onErrorMock}
             value={dateParser([
               [2018, 2, 9],
               [2018, 2, 10],
@@ -83,6 +95,7 @@ function testTextFieldValidation(ElementToTest, propsToTest, getOptions) {
           />,
         );
 
+        expect(onErrorMock.callCount).to.equal(0);
         testInvalidStatus([false, false], isSingleInput);
 
         setProps({
@@ -92,6 +105,8 @@ function testTextFieldValidation(ElementToTest, propsToTest, getOptions) {
           ]),
         });
 
+        expect(onErrorMock.callCount).to.equal(1);
+        expect(onErrorMock.lastCall.args[0]).to.deep.equal([null, 'shouldDisableDate']);
         testInvalidStatus([false, true], isSingleInput);
 
         setProps({
@@ -100,16 +115,25 @@ function testTextFieldValidation(ElementToTest, propsToTest, getOptions) {
             [2018, 2, 13],
           ]),
         });
+
+        expect(onErrorMock.callCount).to.equal(2);
+        expect(onErrorMock.lastCall.args[0]).to.deep.equal([
+          'shouldDisableDate',
+          'shouldDisableDate',
+        ]);
         testInvalidStatus([true, true], isSingleInput);
 
         setProps({
           value: dateParser([
-            [2018, 2, 9],
+            [2018, 2, 12],
             [2018, 2, 13],
           ]),
           shouldDisableDate: (date) =>
-            adapterToUse.isBefore(date, adapterToUse.date(new Date(2018, 2, 10))),
+            adapterToUse.isBefore(date, adapterToUse.date(new Date(2018, 2, 13))),
         });
+
+        expect(onErrorMock.callCount).to.equal(3);
+        expect(onErrorMock.lastCall.args[0]).to.deep.equal(['shouldDisableDate', null]);
         testInvalidStatus([true, false], isSingleInput);
       });
 
@@ -119,9 +143,11 @@ function testTextFieldValidation(ElementToTest, propsToTest, getOptions) {
           return;
         }
 
+        const onErrorMock = spy();
         const { setProps } = render(
           <ElementToTest
             {...defaultProps}
+            onError={onErrorMock}
             value={dateParser([
               [2018, 2, 9],
               [2018, 2, 10],
@@ -134,6 +160,7 @@ function testTextFieldValidation(ElementToTest, propsToTest, getOptions) {
           />,
         );
 
+        expect(onErrorMock.callCount).to.equal(0);
         testInvalidStatus([false, false], isSingleInput);
 
         setProps({
@@ -142,6 +169,9 @@ function testTextFieldValidation(ElementToTest, propsToTest, getOptions) {
             [2018, 2, 13],
           ]),
         });
+
+        expect(onErrorMock.callCount).to.equal(1);
+        expect(onErrorMock.lastCall.args[0]).to.deep.equal([null, 'shouldDisableDate']);
         testInvalidStatus([false, true], isSingleInput);
 
         setProps({
@@ -150,18 +180,24 @@ function testTextFieldValidation(ElementToTest, propsToTest, getOptions) {
             [2018, 2, 13],
           ]),
         });
+
+        expect(onErrorMock.callCount).to.equal(1);
+        expect(onErrorMock.lastCall.args[0]).to.deep.equal([null, 'shouldDisableDate']);
         testInvalidStatus([false, true], isSingleInput);
 
         setProps({
           value: dateParser([
-            [2018, 2, 9],
+            [2018, 2, 12],
             [2018, 2, 13],
           ]),
           shouldDisableDate: (date, position) =>
             position === 'end'
-              ? adapterToUse.isBefore(date, adapterToUse.date(new Date(2018, 2, 10)))
+              ? adapterToUse.isBefore(date, adapterToUse.date(new Date(2018, 2, 13)))
               : false,
         });
+
+        expect(onErrorMock.callCount).to.equal(2);
+        expect(onErrorMock.lastCall.args[0]).to.deep.equal([null, null]);
         testInvalidStatus([false, false], isSingleInput);
       });
 
@@ -171,9 +207,11 @@ function testTextFieldValidation(ElementToTest, propsToTest, getOptions) {
           return;
         }
 
+        const onErrorMock = spy();
         const { setProps } = render(
           <ElementToTest
             {...defaultProps}
+            onError={onErrorMock}
             value={dateParser([
               [2018, 2, 9],
               [2018, 2, 10],
@@ -186,6 +224,7 @@ function testTextFieldValidation(ElementToTest, propsToTest, getOptions) {
           />,
         );
 
+        expect(onErrorMock.callCount).to.equal(0);
         testInvalidStatus([false, false], isSingleInput);
 
         setProps({
@@ -194,6 +233,9 @@ function testTextFieldValidation(ElementToTest, propsToTest, getOptions) {
             [2018, 2, 13],
           ]),
         });
+
+        expect(onErrorMock.callCount).to.equal(0);
+
         testInvalidStatus([false, false], isSingleInput);
 
         setProps({
@@ -202,18 +244,19 @@ function testTextFieldValidation(ElementToTest, propsToTest, getOptions) {
             [2018, 2, 13],
           ]),
         });
+
+        expect(onErrorMock.callCount).to.equal(1);
+        expect(onErrorMock.lastCall.args[0]).to.deep.equal(['shouldDisableDate', null]);
         testInvalidStatus([true, false], isSingleInput);
 
         setProps({
-          value: dateParser([
-            [2018, 2, 9],
-            [2018, 2, 13],
-          ]),
           shouldDisableDate: (date, position) =>
             position === 'start'
-              ? adapterToUse.isBefore(date, adapterToUse.date(new Date(2018, 2, 10)))
+              ? adapterToUse.isBefore(date, adapterToUse.date(new Date(2018, 2, 13)))
               : false,
         });
+
+        expect(onErrorMock.callCount).to.equal(1);
         testInvalidStatus([true, false], isSingleInput);
       });
     }
@@ -222,13 +265,16 @@ function testTextFieldValidation(ElementToTest, propsToTest, getOptions) {
       it('should apply disablePast', function test() {
         const { render, withDate, isSingleInput } = getOptions();
 
+        const onErrorMock = spy();
         let now;
         function WithFakeTimer(props) {
           now = adapterToUse.date(new Date());
           return <ElementToTest value={[now, now]} {...props} />;
         }
 
-        const { setProps } = render(<WithFakeTimer {...defaultProps} disablePast />);
+        const { setProps } = render(
+          <WithFakeTimer {...defaultProps} disablePast onError={onErrorMock} />,
+        );
 
         let past: null | typeof now = null;
         if (withDate) {
@@ -244,11 +290,17 @@ function testTextFieldValidation(ElementToTest, propsToTest, getOptions) {
         setProps({
           value: [past, now],
         });
+
+        expect(onErrorMock.callCount).to.equal(1);
+        expect(onErrorMock.lastCall.args[0]).to.deep.equal(['disablePast', null]);
         testInvalidStatus([true, false], isSingleInput);
 
         setProps({
           value: [past, past],
         });
+
+        expect(onErrorMock.callCount).to.equal(2);
+        expect(onErrorMock.lastCall.args[0]).to.deep.equal(['disablePast', 'disablePast']);
         testInvalidStatus([true, true], isSingleInput);
       });
     }
@@ -257,13 +309,16 @@ function testTextFieldValidation(ElementToTest, propsToTest, getOptions) {
       it('should apply disableFuture', function test() {
         const { render, withDate, isSingleInput } = getOptions();
 
+        const onErrorMock = spy();
         let now;
         function WithFakeTimer(props) {
           now = adapterToUse.date(new Date());
           return <ElementToTest value={[now, now]} {...props} />;
         }
 
-        const { setProps } = render(<WithFakeTimer {...defaultProps} disableFuture />);
+        const { setProps } = render(
+          <WithFakeTimer {...defaultProps} disableFuture onError={onErrorMock} />,
+        );
 
         let future: null | typeof now = null;
 
@@ -280,11 +335,17 @@ function testTextFieldValidation(ElementToTest, propsToTest, getOptions) {
         setProps({
           value: [now, future],
         });
+
+        expect(onErrorMock.callCount).to.equal(1);
+        expect(onErrorMock.lastCall.args[0]).to.deep.equal([null, 'disableFuture']);
         testInvalidStatus([false, true], isSingleInput);
 
         setProps({
           value: [future, future],
         });
+
+        expect(onErrorMock.callCount).to.equal(2);
+        expect(onErrorMock.lastCall.args[0]).to.deep.equal(['disableFuture', 'disableFuture']);
         testInvalidStatus([true, true], isSingleInput);
       });
     }
@@ -296,9 +357,11 @@ function testTextFieldValidation(ElementToTest, propsToTest, getOptions) {
           return;
         }
 
+        const onErrorMock = spy();
         const { setProps } = render(
           <ElementToTest
             {...defaultProps}
+            onError={onErrorMock}
             value={dateParser([
               [2018, 2, 9],
               [2018, 2, 10],
@@ -307,6 +370,8 @@ function testTextFieldValidation(ElementToTest, propsToTest, getOptions) {
           />,
         );
 
+        expect(onErrorMock.callCount).to.equal(1);
+        expect(onErrorMock.lastCall.args[0]).to.deep.equal(['minDate', 'minDate']);
         testInvalidStatus([true, true], isSingleInput);
 
         setProps({
@@ -315,6 +380,9 @@ function testTextFieldValidation(ElementToTest, propsToTest, getOptions) {
             [2018, 2, 15],
           ]),
         });
+
+        expect(onErrorMock.callCount).to.equal(2);
+        expect(onErrorMock.lastCall.args[0]).to.deep.equal(['minDate', null]);
         testInvalidStatus([true, false], isSingleInput);
 
         setProps({
@@ -323,6 +391,9 @@ function testTextFieldValidation(ElementToTest, propsToTest, getOptions) {
             [2018, 2, 17],
           ]),
         });
+
+        expect(onErrorMock.callCount).to.equal(3);
+        expect(onErrorMock.lastCall.args[0]).to.deep.equal([null, null]);
         testInvalidStatus([false, false], isSingleInput);
       });
 
@@ -332,19 +403,26 @@ function testTextFieldValidation(ElementToTest, propsToTest, getOptions) {
           return;
         }
 
+        const onErrorMock = spy();
         const { setProps } = render(
           <ElementToTest
             {...defaultProps}
+            onError={onErrorMock}
             value={dateParser([[2018, 2, 9], null])}
             minDate={adapterToUse.date(new Date(2018, 2, 11))}
           />,
         );
 
+        expect(onErrorMock.callCount).to.equal(1);
+        expect(onErrorMock.lastCall.args[0]).to.deep.equal(['minDate', null]);
         testInvalidStatus([true, false], isSingleInput);
 
         setProps({
           value: dateParser([[2018, 2, 16], null]),
         });
+
+        expect(onErrorMock.callCount).to.equal(2);
+        expect(onErrorMock.lastCall.args[0]).to.deep.equal([null, null]);
         testInvalidStatus([false, false], isSingleInput);
       });
 
@@ -354,19 +432,26 @@ function testTextFieldValidation(ElementToTest, propsToTest, getOptions) {
           return;
         }
 
+        const onErrorMock = spy();
         const { setProps } = render(
           <ElementToTest
             {...defaultProps}
+            onError={onErrorMock}
             value={dateParser([null, [2018, 2, 9]])}
             minDate={adapterToUse.date(new Date(2018, 2, 15))}
           />,
         );
 
+        expect(onErrorMock.callCount).to.equal(1);
+        expect(onErrorMock.lastCall.args[0]).to.deep.equal([null, 'minDate']);
         testInvalidStatus([false, true], isSingleInput);
 
         setProps({
           value: dateParser([null, [2018, 2, 16]]),
         });
+
+        expect(onErrorMock.callCount).to.equal(2);
+        expect(onErrorMock.lastCall.args[0]).to.deep.equal([null, null]);
         testInvalidStatus([false, false], isSingleInput);
       });
     }
@@ -378,9 +463,11 @@ function testTextFieldValidation(ElementToTest, propsToTest, getOptions) {
           return;
         }
 
+        const onErrorMock = spy();
         const { setProps } = render(
           <ElementToTest
             {...defaultProps}
+            onError={onErrorMock}
             value={dateParser([
               [2018, 2, 9],
               [2018, 2, 10],
@@ -389,6 +476,7 @@ function testTextFieldValidation(ElementToTest, propsToTest, getOptions) {
           />,
         );
 
+        expect(onErrorMock.callCount).to.equal(0);
         testInvalidStatus([false, false], isSingleInput);
 
         setProps({
@@ -397,6 +485,9 @@ function testTextFieldValidation(ElementToTest, propsToTest, getOptions) {
             [2018, 2, 17],
           ]),
         });
+
+        expect(onErrorMock.callCount).to.equal(1);
+        expect(onErrorMock.lastCall.args[0]).to.deep.equal([null, 'maxDate']);
         testInvalidStatus([false, true], isSingleInput);
 
         setProps({
@@ -405,6 +496,9 @@ function testTextFieldValidation(ElementToTest, propsToTest, getOptions) {
             [2018, 2, 17],
           ]),
         });
+
+        expect(onErrorMock.callCount).to.equal(2);
+        expect(onErrorMock.lastCall.args[0]).to.deep.equal(['maxDate', 'maxDate']);
         testInvalidStatus([true, true], isSingleInput);
       });
     }
@@ -416,9 +510,11 @@ function testTextFieldValidation(ElementToTest, propsToTest, getOptions) {
           return;
         }
 
+        const onErrorMock = spy();
         const { setProps } = render(
           <ElementToTest
             {...defaultProps}
+            onError={onErrorMock}
             value={dateParser([
               [2018, 2, 10, 9, 0, 0],
               [2018, 2, 10, 10, 0, 0],
@@ -427,6 +523,8 @@ function testTextFieldValidation(ElementToTest, propsToTest, getOptions) {
           />,
         );
 
+        expect(onErrorMock.callCount).to.equal(1);
+        expect(onErrorMock.lastCall.args[0]).to.deep.equal(['minTime', 'minTime']);
         testInvalidStatus([true, true], isSingleInput);
 
         setProps({
@@ -435,6 +533,9 @@ function testTextFieldValidation(ElementToTest, propsToTest, getOptions) {
             [2018, 2, 10, 12, 5, 0],
           ]),
         });
+
+        expect(onErrorMock.callCount).to.equal(2);
+        expect(onErrorMock.lastCall.args[0]).to.deep.equal(['minTime', null]);
         testInvalidStatus([true, false], isSingleInput);
 
         setProps({
@@ -443,6 +544,9 @@ function testTextFieldValidation(ElementToTest, propsToTest, getOptions) {
             [2018, 2, 10, 18, 0, 0],
           ]),
         });
+
+        expect(onErrorMock.callCount).to.equal(3);
+        expect(onErrorMock.lastCall.args[0]).to.deep.equal([null, null]);
         testInvalidStatus([false, false], isSingleInput);
       });
       it('should ignore date when applying minTime', function test() {
@@ -451,9 +555,11 @@ function testTextFieldValidation(ElementToTest, propsToTest, getOptions) {
           return;
         }
 
+        const onErrorMock = spy();
         const { setProps } = render(
           <ElementToTest
             {...defaultProps}
+            onError={onErrorMock}
             value={dateParser([
               [2018, 2, 5, 9, 0, 0],
               [2018, 2, 15, 10, 0, 0],
@@ -461,6 +567,9 @@ function testTextFieldValidation(ElementToTest, propsToTest, getOptions) {
             minTime={adapterToUse.date(new Date(2018, 2, 10, 12, 0))}
           />,
         );
+
+        expect(onErrorMock.callCount).to.equal(1);
+        expect(onErrorMock.lastCall.args[0]).to.deep.equal(['minTime', 'minTime']);
         testInvalidStatus([true, true], isSingleInput);
 
         setProps({
@@ -469,6 +578,9 @@ function testTextFieldValidation(ElementToTest, propsToTest, getOptions) {
             [2018, 2, 15, 16, 5, 0],
           ]),
         });
+
+        expect(onErrorMock.callCount).to.equal(2);
+        expect(onErrorMock.lastCall.args[0]).to.deep.equal([null, null]);
         testInvalidStatus([false, false], isSingleInput);
       });
 
@@ -478,19 +590,25 @@ function testTextFieldValidation(ElementToTest, propsToTest, getOptions) {
           return;
         }
 
+        const onErrorMock = spy();
         const { setProps } = render(
           <ElementToTest
             {...defaultProps}
+            onError={onErrorMock}
             value={dateParser([[2018, 1, 1, 15], null])}
             minTime={adapterToUse.date(new Date(2018, 1, 1, 12))}
           />,
         );
 
+        expect(onErrorMock.callCount).to.equal(0);
         testInvalidStatus([false, false], isSingleInput);
 
         setProps({
           value: dateParser([[2018, 1, 1, 5], null]),
         });
+
+        expect(onErrorMock.callCount).to.equal(1);
+        expect(onErrorMock.lastCall.args[0]).to.deep.equal(['minTime', null]);
         testInvalidStatus([true, false], isSingleInput);
       });
 
@@ -500,19 +618,25 @@ function testTextFieldValidation(ElementToTest, propsToTest, getOptions) {
           return;
         }
 
+        const onErrorMock = spy();
         const { setProps } = render(
           <ElementToTest
             {...defaultProps}
+            onError={onErrorMock}
             value={dateParser([null, [2018, 1, 1, 15]])}
             minTime={adapterToUse.date(new Date(2018, 1, 1, 12))}
           />,
         );
 
+        expect(onErrorMock.callCount).to.equal(0);
         testInvalidStatus([false, false], isSingleInput);
 
         setProps({
           value: dateParser([null, [2018, 1, 1, 5]]),
         });
+
+        expect(onErrorMock.callCount).to.equal(1);
+        expect(onErrorMock.lastCall.args[0]).to.deep.equal([null, 'minTime']);
         testInvalidStatus([false, true], isSingleInput);
       });
     }
@@ -524,9 +648,11 @@ function testTextFieldValidation(ElementToTest, propsToTest, getOptions) {
           return;
         }
 
+        const onErrorMock = spy();
         const { setProps } = render(
           <ElementToTest
             {...defaultProps}
+            onError={onErrorMock}
             value={dateParser([
               [2018, 2, 10, 9, 0, 0],
               [2018, 2, 10, 10, 0, 0],
@@ -535,6 +661,7 @@ function testTextFieldValidation(ElementToTest, propsToTest, getOptions) {
           />,
         );
 
+        expect(onErrorMock.callCount).to.equal(0);
         testInvalidStatus([false, false], isSingleInput);
 
         setProps({
@@ -543,6 +670,9 @@ function testTextFieldValidation(ElementToTest, propsToTest, getOptions) {
             [2018, 2, 10, 12, 5, 0],
           ]),
         });
+
+        expect(onErrorMock.callCount).to.equal(1);
+        expect(onErrorMock.lastCall.args[0]).to.deep.equal([null, 'maxTime']);
         testInvalidStatus([false, true], isSingleInput);
 
         setProps({
@@ -551,6 +681,9 @@ function testTextFieldValidation(ElementToTest, propsToTest, getOptions) {
             [2018, 2, 10, 18, 0, 0],
           ]),
         });
+
+        expect(onErrorMock.callCount).to.equal(2);
+        expect(onErrorMock.lastCall.args[0]).to.deep.equal(['maxTime', 'maxTime']);
         testInvalidStatus([true, true], isSingleInput);
       });
       it('should ignore date when applying maxTime', function test() {
@@ -559,9 +692,11 @@ function testTextFieldValidation(ElementToTest, propsToTest, getOptions) {
           return;
         }
 
+        const onErrorMock = spy();
         const { setProps } = render(
           <ElementToTest
             {...defaultProps}
+            onError={onErrorMock}
             value={dateParser([
               [2018, 2, 5, 9, 0, 0],
               [2018, 2, 15, 10, 0, 0],
@@ -569,6 +704,8 @@ function testTextFieldValidation(ElementToTest, propsToTest, getOptions) {
             maxTime={adapterToUse.date(new Date(2018, 2, 10, 12, 0))}
           />,
         );
+
+        expect(onErrorMock.callCount).to.equal(0);
         testInvalidStatus([false, false], isSingleInput);
 
         setProps({
@@ -577,6 +714,9 @@ function testTextFieldValidation(ElementToTest, propsToTest, getOptions) {
             [2018, 2, 15, 16, 5, 0],
           ]),
         });
+
+        expect(onErrorMock.callCount).to.equal(1);
+        expect(onErrorMock.lastCall.args[0]).to.deep.equal(['maxTime', 'maxTime']);
         testInvalidStatus([true, true], isSingleInput);
       });
     }
@@ -589,9 +729,11 @@ function testTextFieldValidation(ElementToTest, propsToTest, getOptions) {
           return;
         }
 
+        const onErrorMock = spy();
         const { setProps } = render(
           <ElementToTest
             {...defaultProps}
+            onError={onErrorMock}
             value={dateParser([
               [2018, 2, 1, 9, 0, 0],
               [2018, 2, 2, 12, 0, 0],
@@ -599,12 +741,20 @@ function testTextFieldValidation(ElementToTest, propsToTest, getOptions) {
             maxDateTime={adapterToUse.date(new Date(2018, 2, 2, 13, 0))}
           />,
         );
+
+        expect(onErrorMock.callCount).to.equal(0);
         testInvalidStatus([false, false], isSingleInput);
 
         setProps({ maxDateTime: adapterToUse.date(new Date(2018, 2, 2, 8, 0)) });
+
+        expect(onErrorMock.callCount).to.equal(1);
+        expect(onErrorMock.lastCall.args[0]).to.deep.equal([null, 'maxTime']);
         testInvalidStatus([false, true], isSingleInput);
 
         setProps({ maxDateTime: adapterToUse.date(new Date(2018, 2, 1, 5, 0)) });
+
+        expect(onErrorMock.callCount).to.equal(2);
+        expect(onErrorMock.lastCall.args[0]).to.deep.equal(['maxTime', 'maxDate']);
         testInvalidStatus([true, true], isSingleInput);
       });
     }
@@ -617,9 +767,11 @@ function testTextFieldValidation(ElementToTest, propsToTest, getOptions) {
           return;
         }
 
+        const onErrorMock = spy();
         const { setProps } = render(
           <ElementToTest
             {...defaultProps}
+            onError={onErrorMock}
             value={dateParser([
               [2018, 2, 1, 9, 0, 0],
               [2018, 2, 2, 12, 0, 0],
@@ -627,12 +779,21 @@ function testTextFieldValidation(ElementToTest, propsToTest, getOptions) {
             minDateTime={adapterToUse.date(new Date(2018, 2, 2, 13, 0))}
           />,
         );
+
+        expect(onErrorMock.callCount).to.equal(1);
+        expect(onErrorMock.lastCall.args[0]).to.deep.equal(['minDate', 'minTime']);
         testInvalidStatus([true, true], isSingleInput);
 
         setProps({ minDateTime: adapterToUse.date(new Date(2018, 2, 2, 8, 0)) });
+
+        expect(onErrorMock.callCount).to.equal(2);
+        expect(onErrorMock.lastCall.args[0]).to.deep.equal(['minDate', null]);
         testInvalidStatus([true, false], isSingleInput);
 
         setProps({ minDateTime: adapterToUse.date(new Date(2018, 2, 1, 5, 0)) });
+
+        expect(onErrorMock.callCount).to.equal(3);
+        expect(onErrorMock.lastCall.args[0]).to.deep.equal([null, null]);
         testInvalidStatus([false, false], isSingleInput);
       });
     }

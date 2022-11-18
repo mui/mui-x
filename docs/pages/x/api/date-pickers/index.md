@@ -4,7 +4,6 @@
 
 ## Components
 
-- [ClockPicker](/x/api/date-pickers/clock-picker/)
 - [DateCalendar](/x/api/date-pickers/date-calendar/)
 - [DatePicker](/x/api/date-pickers/date-picker/)
 - [DateRangePicker](/x/api/date-pickers/date-range-picker/)
@@ -26,5 +25,6 @@
 - [StaticDateRangePicker](/x/api/date-pickers/static-date-range-picker/)
 - [StaticDateTimePicker](/x/api/date-pickers/static-date-time-picker/)
 - [StaticTimePicker](/x/api/date-pickers/static-time-picker/)
+- [TimeClock](/x/api/date-pickers/time-clock/)
 - [TimePicker](/x/api/date-pickers/time-picker/)
 - [YearCalendar](/x/api/date-pickers/year-calendar/)
