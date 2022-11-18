@@ -22,15 +22,12 @@ Positionals:
   paths    Paths forwarded to `jscodeshift`                       [string]
 
 Options:
-  --version  Show version number                                 [boolean]
-  --help     Show help                                           [boolean]
-  --dry      dry run (no changes are made to files)
-                                                [boolean] [default: false]
-  --parser   which parser for jscodeshift to use.
-                                                [string] [default: 'tsx']
-  --print    print transformed files to stdout, useful for development
-                                                [boolean] [default: false]
-  --jscodeshift                                  [string] [default: false]
+  --version     Show version number                                 [boolean]
+  --help        Show help                                           [boolean]
+  --parser      which parser for jscodeshift to use.
+                                                    [string] [default: 'tsx']
+  --jscodeshift Pass options directly to jscodeshift
+                                                    [string] [default: false]
 
 Examples:
   npx @mui/x-codemod v6.0.0/preset-safe src
@@ -43,7 +40,7 @@ Examples:
 To pass more options directly to jscodeshift, use `--jscodeshift="..."`. For example:
 
 ```sh
-npx @mui/x-codemod --jscodeshift="--run-in-band --verbose=2"
+npx @mui/x-codemod --jscodeshift="--run-in-band --verbose=2 --dry"
 ```
 
 See all available options [here](https://github.com/facebook/jscodeshift#usage-cli).

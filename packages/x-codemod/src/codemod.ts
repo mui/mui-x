@@ -11,9 +11,7 @@ const jscodeshiftDirectory = path.dirname(require.resolve('jscodeshift'));
 const jscodeshiftExecutable = path.join(jscodeshiftDirectory, jscodeshiftPackage.bin.jscodeshift);
 
 interface Flags {
-  dry?: boolean;
   parser?: string;
-  print?: boolean;
   jscodeshift?: string;
 }
 
@@ -60,12 +58,6 @@ async function runTransform(
     '**/node_modules/**',
   ];
 
-  if (flags.dry) {
-    args.push('--dry');
-  }
-  if (flags.print) {
-    args.push('--print');
-  }
   if (flags.jscodeshift) {
     args.push(flags.jscodeshift);
   }
@@ -87,12 +79,12 @@ interface HandlerArgv extends Flags {
 }
 
 function run(argv: yargs.ArgumentsCamelCase<HandlerArgv>) {
-  const { codemod, paths, _: other, dry, jscodeshift, parser, print } = argv;
+  const { codemod, paths, _: other, jscodeshift, parser } = argv;
 
   return runTransform(
     codemod,
     paths.map((filePath) => path.resolve(filePath)),
-    { dry, jscodeshift, parser, print },
+    { jscodeshift, parser },
     (other as string[]) || [],
   );
 }
@@ -113,20 +105,10 @@ yargs
           description: 'Paths forwarded to `jscodeshift`',
           type: 'string',
         })
-        .option('dry', {
-          description: 'dry run (no changes are made to files)',
-          default: false,
-          type: 'boolean',
-        })
         .option('parser', {
           description: 'which parser for jscodeshift to use',
           default: 'tsx',
           type: 'string',
-        })
-        .option('print', {
-          description: 'print transformed files to stdout, useful for development',
-          default: false,
-          type: 'boolean',
         })
         .option('jscodeshift', {
           description: '(Advanced) Pass options directly to jscodeshift',
