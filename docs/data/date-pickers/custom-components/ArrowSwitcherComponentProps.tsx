@@ -25,6 +25,8 @@ const componentsProps: DatePickerProps<any>['componentsProps'] = {
   },
 };
 
+type CurrentComponent = 'date' | 'time' | 'dateRange';
+
 export default function ArrowSwitcherComponentProps() {
   const [date, setDate] = React.useState<Dayjs | null>(() => dayjs());
   const [time, setTime] = React.useState<Dayjs | null>(() => dayjs());
@@ -32,9 +34,17 @@ export default function ArrowSwitcherComponentProps() {
     dayjs(),
     dayjs().add(3, 'day'),
   ]);
-  const [currentComponent, setCurrentComponent] = React.useState<
-    'date' | 'time' | 'dateRange'
-  >('date');
+  const [currentComponent, setCurrentComponent] =
+    React.useState<CurrentComponent>('date');
+
+  const handleCurrentComponentChange = (
+    event: React.MouseEvent<HTMLElement>,
+    nextCurrentComponent: CurrentComponent | null,
+  ) => {
+    if (nextCurrentComponent !== null) {
+      setCurrentComponent(nextCurrentComponent);
+    }
+  };
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -43,7 +53,7 @@ export default function ArrowSwitcherComponentProps() {
           fullWidth
           color="primary"
           value={currentComponent}
-          onChange={(event, value) => setCurrentComponent(value)}
+          onChange={handleCurrentComponentChange}
           exclusive
         >
           <ToggleButton value={'date'}>date picker</ToggleButton>
