@@ -17,6 +17,10 @@ export default function AddWeekNumber() {
           setValue(newValue);
         }}
         renderInput={(params) => <TextField {...params} />}
+        localeText={{
+          calendarWeekNumberHeaderText: '#',
+          calendarWeekNumberText: (weekNumber) => `${weekNumber}.`,
+        }}
       />
     </LocalizationProvider>
   );

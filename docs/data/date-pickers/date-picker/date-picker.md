@@ -107,10 +107,11 @@ This value is usually set to `6` for Gregorian calendars, because months display
 
 {{"demo": "CustomMonthLayout.js"}}
 
-### Add week number
+### Display week number
 
 To display week number, use the `displayWeekNumber`.
-You can customize the string displayed, by using the localization key`localeText.calendarWeekNumberText`.
+You can customize the calendar week header by using the localization key `localeText.calendarWeekNumberHeaderText`.
+You can also customize what's rendered as a calendar week number, using a callback for the localization key `localeText.calendarWeekNumberText`.
 
 {{"demo": "AddWeekNumber.js"}}
 
