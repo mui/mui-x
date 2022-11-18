@@ -26,8 +26,7 @@ Options:
   --help        Show help                                           [boolean]
   --parser      which parser for jscodeshift to use.
                                                     [string] [default: 'tsx']
-  --jscodeshift Pass options directly to jscodeshift
-                                                    [string] [default: false]
+  --jscodeshift Pass options directly to jscodeshift                  [array]
 
 Examples:
   npx @mui/x-codemod v6.0.0/preset-safe src
@@ -35,17 +34,20 @@ Examples:
   --component=Grid --from=prop --to=newProp
 ```
 
-### jscodeshift options
+### `jscodeshift` options
 
-To pass more options directly to jscodeshift, use `--jscodeshift="..."`. For example:
+To pass more options directly to jscodeshift, use `--jscodeshift=...`. For example:
 
 ```sh
-npx @mui/x-codemod --jscodeshift="--run-in-band --verbose=2 --dry"
+// single option
+npx @mui/x-codemod --jscodeshift=--run-in-band
+// multiple options
+npx @mui/x-codemod --jscodeshift=--cpus=1 --jscodeshift=--print --jscodeshift=--dry --jscodeshift=--verbose=2
 ```
 
 See all available options [here](https://github.com/facebook/jscodeshift#usage-cli).
 
-### Recast Options
+### `Recast` Options
 
 Options to [recast](https://github.com/benjamn/recast)'s printer can be provided
 through jscodeshift's `printOptions` command line argument

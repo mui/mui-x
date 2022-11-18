@@ -12,7 +12,7 @@ const jscodeshiftExecutable = path.join(jscodeshiftDirectory, jscodeshiftPackage
 
 interface Flags {
   parser?: string;
-  jscodeshift?: string;
+  jscodeshift: string[];
 }
 
 async function runTransform(
@@ -56,11 +56,8 @@ async function runTransform(
     flags.parser || 'tsx',
     '--ignore-pattern',
     '**/node_modules/**',
+    ...flags.jscodeshift,
   ];
-
-  if (flags.jscodeshift) {
-    args.push(flags.jscodeshift);
-  }
 
   args.push(...files);
 
@@ -112,8 +109,8 @@ yargs
         })
         .option('jscodeshift', {
           description: '(Advanced) Pass options directly to jscodeshift',
-          default: false,
-          type: 'string',
+          default: [],
+          type: 'array',
         });
     },
     handler: run,
