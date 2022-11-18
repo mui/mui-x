@@ -21,8 +21,8 @@ async function runTransform(
   flags: Flags,
   codemodFlags: string[],
 ) {
-  const transformerSrcPath = path.resolve(__dirname, './src', `${transform}.js`);
-  const transformerBuildPath = path.resolve(__dirname, `${transform}.js`);
+  const transformerSrcPath = path.resolve(__dirname, './src', transform);
+  const transformerBuildPath = path.resolve(__dirname, transform);
   let transformerPath: string;
   try {
     await fs.stat(transformerSrcPath);
