@@ -449,17 +449,17 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate>(
 
   const prevOpenViewRef = React.useRef(openView);
   React.useEffect(() => {
-    if (openView && openView !== focusedView) {
-      handleFocusedViewChange(openView)(true);
-    }
-
-    // Set focus to the button when switching from a view to another
+    // If the view change and the focus was on the previouse view
+    // Then we update the focus.
     if (prevOpenViewRef.current === openView) {
       return;
     }
+
+    if (focusedView === prevOpenViewRef.current && openView !== focusedView) {
+      handleFocusedViewChange(openView)(true);
+    }
     prevOpenViewRef.current = openView;
-    handleFocusedViewChange(openView)(true);
-  }, [openView, handleFocusedViewChange]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [focusedView, handleFocusedViewChange, openView]);
 
   return (
     <DateCalendarRoot
