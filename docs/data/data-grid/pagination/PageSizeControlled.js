@@ -8,7 +8,6 @@ export default function PageSizeControlled() {
     rowLength: 500,
     maxColumns: 6,
   });
-
   const [pageSize, setPageSize] = React.useState(25);
 
   return (
