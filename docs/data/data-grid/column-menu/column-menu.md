@@ -22,9 +22,22 @@ By default, each column header has the column menu enabled. To disable the colum
 
 ## Customise column menu
 
-You can customise column menu by passing your own component for slot `ColumnMenu`, you can blend existing menu items with your custom components for a custom look and feel.
+You can customise column menu either by passing `slots` in default component or by passing your own component for slot `ColumnMenu`, you can blend existing menu items with your custom components for a custom look and feel.
 
-It's also possible to conditionally render some items based on the `currentColumn` (the column whose menu is currently open) which you recieve in the props of column menu.
+### Hide/reorder some column menu items
+
+Grid exports a variable called `gridColumnMenuSlots` for default and `gridColumnMenuSimpleSlots` for simple menu which contains all the available slots for the active grid package. You can use this with default column menu components to:
+
+- Hide items
+- Reorder items
+
+{{"demo": "ReuseColumnMenuGrid.js", "bg": "inline"}}
+
+### Custom component
+
+You can also opt not to use the column menu component exposed by us and pass a totally new component with your custom logic. You can add more items to the menu and obviously can blend in some existing items if you want.
+
+To conditionally render some items, you can use ColDef properties on the `currentColumn` (the column whose menu is currently open) which you recieve in the props.
 
 {{"demo": "CustomColumnMenuGrid.js", "bg": "inline"}}
 

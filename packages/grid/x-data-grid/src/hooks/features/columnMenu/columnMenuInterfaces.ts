@@ -14,5 +14,6 @@ export type GridColumnMenuValue = Array<GridColumnMenuSlot>;
 
 export interface GridColumnMenuRootProps {
   initialItems: GridColumnMenuValue;
+  // TODO: type this `key` for each package
   slots: { [key: string]: GridColumnMenuSlot };
 }
