@@ -3,6 +3,76 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 6.0.0-alpha.8
+
+_Nov 17, 2022_
+
+We'd like to offer a big thanks to the 12 contributors who made this release possible. Here are some highlights ✨:
+
+- 🎁 Support aggregating data from multiple row fields (#6656) @cherniavskii
+- 📚 Documentation improvements
+- 🐞 Bugfixes
+
+### `@mui/x-data-grid@v6.0.0-alpha.8` / `@mui/x-data-grid-pro@v6.0.0-alpha.8` / `@mui/x-data-grid-premium@v6.0.0-alpha.8`
+
+#### Changes
+
+- [DataGrid] Fix `ErrorOverlay` not receiving defined input props (#6819) @banoth-ravinder
+- [DataGrid] Fix conflict with the latest version of `@types/react` (#6797) @vizv
+- [DataGrid] Make more `apiRef` methods private (#6700) @cherniavskii
+- [DataGrid] Provide a clear error message when upgrading (#6685) @oliviertassinari
+- [DataGridPremium] Allow to customize the indent of group expansion toggle (#6837) @MBilalShafi
+- [DataGridPremium] Support aggregating data from multiple row fields (#6656) @cherniavskii
+- [DataGridPro] Fix detail panel not working with `getRowSpacing` prop (#6707) @cherniavskii
+- [DataGridPro] Opt-out for column jump back on re-order (#6733) @gavbrennan
+- [l10n] Improve Finnish (fi-FI) locale (#6859) @RainoPikkarainen
+
+### `@mui/x-date-pickers@v6.0.0-alpha.8` / `@mui/x-date-pickers-pro@v6.0.0-alpha.8`
+
+#### Breaking changes
+
+- The `ClockPicker` view component has been renamed to `TimeClock` to better fit its usage:
+
+  ```diff
+  -<ClockPicker {...props} />
+  +<TimeClock {...props} />
+  ```
+
+  Component name in the theme has changed as well:
+
+  ```diff
+  -MuiClockPicker: {
+  +MuiTimeClock: {
+  ```
+
+#### Changes
+
+- [pickers] Fix typing and prop drilling on `DateRangeCalendar` and multi input range fields (#6852) @flaviendelangle
+- [pickers] Pass the `ampm` prop from the new pickers to their field (#6868) @flaviendelangle
+- [pickers] Rename `CalendarPickerView`, `ClockPickerView` and `CalendarOrClockPickerView` (#6855) @flaviendelangle
+- [pickers] Rename `ClockPicker` into `TimeClock` (#6851) @flaviendelangle
+
+### Docs
+
+- [docs] Add `dayjs` to the dependencies (#6862) @m4theushw
+- [docs] Clarify how the Row Pinning works with other features of the DataGrid (#6853) @cherniavskii
+- [docs] Fix typo in Export page (#6848) @m4theushw
+- [docs] Group picker pages (#6369) @flaviendelangle
+- [docs] Remove default prop and improve format (#6781) @oliviertassinari
+- [docs] Sync prism-okaidia.css with source (#6820) @oliviertassinari
+
+### Core
+
+- [core] Convert scripts to ESM (#6789) @LukasTy
+- [core] Feedback on branch protection @oliviertassinari
+- [core] Fix `test-types` out of memory error (#6850) @LukasTy
+- [core] Import from `@mui/utils` instead of `@mui/material/utils` (#6816) @cherniavskii
+- [core] Show the whole version to make blame easier @oliviertassinari
+- [core] Small changes on new pickers internals (#6840) @flaviendelangle
+- [core] Remove prettier scripts (#6815) @Janpot
+- [license] Polish error messages (#6881) @oliviertassinari
+- [test] Verify `onError` call on the pickers (#6771) @alexfauquette
+
 ## 6.0.0-alpha.7
 
 _Nov 10, 2022_
@@ -948,6 +1018,62 @@ You can find more information about the new api, including how to set those tran
 - [test] Hide the date on the print regression test (#6120) @flaviendelangle
 - [test] Skip tests for column pinning and dynamic row height (#5997) @m4theushw
 - [website] Improve security header @oliviertassinari
+
+## 5.17.12
+
+_Nov 17, 2022_
+
+We'd like to offer a big thanks to the 5 contributors who made this release possible. Here are some highlights ✨:
+
+- 🌍 Improve Finnish (fi-FI) locale (#6859) @RainoPikkarainen
+- 🐞 Bugfixes
+
+### `@mui/x-data-grid@v5.17.12` / `@mui/x-data-grid-pro@v5.17.12` / `@mui/x-data-grid-premium@v5.17.12`
+
+#### Changes
+
+- [DataGrid] Fix conflict with the latest version of `@types/react` (#6883) @vizv
+- [DataGridPremium] Support aggregating data from multiple row fields (#6844) @cherniavskii
+- [DataGridPro] Fix detail panel not working with `getRowSpacing` prop (#6858) @cherniavskii
+- [l10n] Improve Finnish (fi-FI) locale (#6859) @RainoPikkarainen
+
+### Docs
+
+- [docs] Clarify DataGrid Row Pinning docs (#6891) @cherniavskii
+
+### Core
+
+- [core] Upgrade monorepo (#6864) @m4theushw
+- [license] Polish error messages (#6881) @oliviertassinari
+
+## 5.17.11
+
+_Nov 10, 2022_
+
+We'd like to offer a big thanks to the 5 contributors who made this release possible. Here are some highlights ✨:
+
+- 🐞 Bugfixes
+
+### `@mui/x-data-grid@v5.17.11` / `@mui/x-data-grid-pro@v5.17.11` / `@mui/x-data-grid-premium@v5.17.11`
+
+#### Changes
+
+- [DataGrid] Fix for cell focus preventing scroll when virtualization enabled (#6622) @yaredtsy
+- [DataGridPro] Opt-out for column jump back on re-order (#6697) @gavbrennan
+
+### `@mui/x-date-pickers@v5.0.8` / `@mui/x-date-pickers-pro@v5.0.8`
+
+#### Changes
+
+- [pickers] Fix pickers toolbar styling (#6793) @LukasTy
+
+### Docs
+
+- [docs] Fix link to localization page (#6766) @alexfauquette
+
+### Core
+
+- [license] Add new license status 'Out of scope' (#6774) @oliviertassinari
 
 ## 5.17.10
 

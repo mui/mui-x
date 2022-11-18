@@ -11,18 +11,18 @@ function GridErrorHandler(props: { children: React.ReactNode }) {
   const apiRef = useGridPrivateApiContext();
   const logger = useGridLogger(apiRef, 'GridErrorHandler');
   const rootProps = useGridRootProps();
-  const error = apiRef.current.state.error;
+  const errorState = apiRef.current.state.error;
 
   return (
     <ErrorBoundary
-      hasError={error != null}
-      componentProps={error}
+      hasError={errorState != null}
       api={apiRef}
       logger={logger}
       render={(errorProps) => (
         <GridMainContainer>
           <rootProps.components.ErrorOverlay
             {...errorProps}
+            {...errorState}
             {...rootProps.componentsProps?.errorOverlay}
           />
         </GridMainContainer>
