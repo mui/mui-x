@@ -2,10 +2,11 @@ import * as React from 'react';
 import { verifyLicense } from '../verifyLicense/verifyLicense';
 import { LicenseInfo } from '../utils/licenseInfo';
 import {
-  showLicenseKeyExpiredError,
+  showExpiredLicenseKeyError,
   showInvalidLicenseKeyError,
   showMissingLicenseKeyError,
   showLicenseKeyPlanMismatchError,
+  showExpiredPackageVersionError,
 } from '../utils/licenseErrorMessageUtils';
 import { LicenseStatus } from '../utils/licenseStatus';
 import { LicenseScope } from '../utils/licenseScope';
@@ -45,15 +46,18 @@ export function useLicenseVerifier(
     });
 
     sharedLicenseStatuses[packageName] = { key: licenseKey, status: licenseStatus };
+    const fullPackageName = `@mui/${packageName}`;
 
     if (licenseStatus === LicenseStatus.Invalid) {
       showInvalidLicenseKeyError();
     } else if (licenseStatus === LicenseStatus.OutOfScope) {
       showLicenseKeyPlanMismatchError();
     } else if (licenseStatus === LicenseStatus.NotFound) {
-      showMissingLicenseKeyError({ plan, packageName: `@mui/${packageName}` });
+      showMissingLicenseKeyError({ plan, packageName: fullPackageName });
     } else if (licenseStatus === LicenseStatus.Expired) {
-      showLicenseKeyExpiredError();
+      showExpiredLicenseKeyError();
+    } else if (licenseStatus === LicenseStatus.ExpiredVersion) {
+      showExpiredPackageVersionError({ packageName: fullPackageName });
     }
 
     return licenseStatus;

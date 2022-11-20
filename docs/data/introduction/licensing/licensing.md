@@ -202,21 +202,25 @@ The component will look something like this:
 To solve the issue, you can check the [free trial conditions](#evaluation-trial-licenses), if you are eligible no actions are required.
 If you are not eligible to the free trial, you need to [purchase a license](https://mui.com/r/x-get-license/) or stop using the software immediately.
 
-#### 2. `License key expired`
+#### 2. `Expired package version`
+
+This error indicates that you have installed a version of the software that is outside of the maintenance plan of your license key.
+By default, purchased licenses come with one year of free access to new releases.
+
+To solve the issue, you can [renew your license](https://mui.com/r/x-get-license/) or install an older version of the npm package that is compatible with your license key.
+
+For example, if you purchase a one-year license today, you will be able to update to any version—including major versions—released in the next twelve months.
+
+#### 3. `Expired license key`
 
 This error indicates that your license key is expired.
 
-The license key works **forever in production** with any version released before your license term ends.
-However, when the term ends, you are not allowed to use newer releases, nor use the current or older versions in **development**.
-In this case, the component displays a watermark and a console warning, stating that the license is no longer valid.
+The subscription license key works **forever in production** with any version released before your license term ends.
+However, when the term ends, you are not allowed to use the current or older versions in **development**.
 
-For example, if you purchase a one-year license today, you will be able to update to any version—including major versions—released in the next twelve months.
-Those versions will always be available for use in a deployed application,
-however you'll be required to renew your license if you need to continue development with a version released after twelve months.
+To solve the issue, you can [renew your license](https://mui.com/r/x-get-license/) or stop making changes to code depending on MUI X's APIs.
 
-To solve the issue, you can [renew your license](https://mui.com/r/x-get-license/) or stop making changes using MUI X's APIs.
-
-#### 3. `License key plan mismatch`
+#### 4. `License key plan mismatch`
 
 This error indicates that your use of MUI X is not compatible with the plan of your license key.
 The feature you are trying to use is not included in the plan of your license key.
@@ -225,7 +229,7 @@ This happens if you try to use `DataGridPremium` with a license key for the Pro 
 To solve the issue, you can [upgrade your plan](https://mui.com/r/x-get-license/?scope=premium) from Pro to Premium.
 Or if you didn\'t intend to use Premium features, you can replace the import of `@mui/x-data-grid-premium` with `@mui/x-data-grid-pro`.
 
-#### 4. `Invalid license key`
+#### 5. `Invalid license key`
 
 This error indicates that your MUI X license key format isn't valid.
 It could be because the license key is missing a character or has a typo.
@@ -233,7 +237,7 @@ It could be because the license key is missing a character or has a typo.
 To solve the issue, you need to double check that `setLicenseKey()` is called with the right argument.
 Please check the [license key installation](#license-key-installation).
 
-#### 5. Invalid license key (`TypeError: extracting license expiry timestamp`)
+#### 6. Invalid license key (`TypeError: extracting license expiry timestamp`)
 
 The following JavaScript exception indicates that you may be trying to validate the new license's key format on an older version of the npm package.
 
@@ -243,4 +247,4 @@ Error extracting license expiry timestamp.
 TypeError: Cannot read properties of null (reading '1') at verifyLicense.
 :::
 
-To solve the issue, you can update MUI X to `v5.11.0` or later or contact the support to get a legacy license key.
+To solve the issue, you can update MUI X to `v5.11.0` or a later version or contact the support to get a legacy license key.

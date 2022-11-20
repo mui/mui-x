@@ -49,13 +49,22 @@ export function showMissingLicenseKeyError({
   ]);
 }
 
-export function showLicenseKeyExpiredError() {
+export function showExpiredPackageVersionError({ packageName }: { packageName: string }) {
   showError([
-    'MUI: License key expired.',
+    'MUI: Expired package version.',
     '',
-    'The license key works forever in production with any version released before your license term ends.',
-    'However, when the term ends, you are not allowed to use newer releases, nor use the current or older versions in development.',
+    `You have installed a version of \`${packageName}\` that is outside of the maintenance plan of your license key. By default, purchased licenses come with one year of free access to new releases.`,
     '',
-    "To solve the issue, you can renew your license https://mui.com/r/x-get-license or stop making changes using MUI X's APIs.",
+    'To solve the issue, you can renew your license https://mui.com/r/x-get-license or install an older version of the npm package that is compatible with your license key.',
+  ]);
+}
+
+export function showExpiredLicenseKeyError() {
+  showError([
+    'MUI: Expired license key.',
+    '',
+    'The subscription license key works forever in production with any version released before your license term ends. However, when the term ends, you are not allowed to use the current or older versions in development.',
+    '',
+    "To solve the issue, you can renew your license https://mui.com/r/x-get-license or stop making changes to code depending on MUI X's APIs.",
   ]);
 }
