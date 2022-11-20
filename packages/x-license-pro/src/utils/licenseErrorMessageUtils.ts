@@ -10,29 +10,29 @@ function showError(message: string[]) {
   );
 }
 
-export function showInvalidLicenseError() {
+export function showInvalidLicenseKeyError() {
   showError([
     'MUI: Invalid license key.',
     '',
-    "Your MUI X license key isn't valid. Please check your license key installation https://mui.com/r/x-license-key-installation.",
+    "Your MUI X license key format isn't valid. It could be because the license key is missing a character or has a typo.",
     '',
-    'To purchase a license, please visit https://mui.com/r/x-get-license.',
+    'To solve the issue, you need to double check that `setLicenseKey()` is called with the right argument',
+    'Please check the license key installation https://mui.com/r/x-license-key-installation.',
   ]);
 }
 
-export function showOutOfScopeLicenseError() {
+export function showLicenseKeyPlanMismatchError() {
   showError([
     'MUI: License key plan mismatch.',
     '',
-    'Your use of MUI X is not compatible with the plan of your license key.',
-    'You are rendering a `DataGridPremium` component that requires a license key for the Premium plan but your license key is for the Pro plan.',
+    'Your use of MUI X is not compatible with the plan of your license key. The feature you are trying to use is not included in the plan of your license key. This happens if you try to use `DataGridPremium` with a license key for the Pro plan.',
     '',
-    'You can solve the issue by upgrading your plan from Pro to Premium at https://mui.com/r/x-get-license?scope=premium.',
-    'If you didn\'t intend to use Premium features, you can replace the import of `@mui/x-data-grid-premium` with `@mui/x-data-grid-pro`.',
+    'To solve the issue, you can upgrade your plan from Pro to Premium at https://mui.com/r/x-get-license?scope=premium.',
+    "Of if you didn't intend to use Premium features, you can replace the import of `@mui/x-data-grid-premium` with `@mui/x-data-grid-pro`.",
   ]);
 }
 
-export function showNotFoundLicenseError({
+export function showMissingLicenseKeyError({
   plan,
   packageName,
 }: {
@@ -40,19 +40,22 @@ export function showNotFoundLicenseError({
   packageName: string;
 }) {
   showError([
-    `MUI: License key not found for ${packageName}.`,
+    'MUI: Missing license key.',
     '',
-    `This is a trial-only version of MUI X ${plan}.`,
-    'See the conditons here: https://mui.com/r/x-license-trial.',
+    `The license key is missing. You might not be allowed to use \`${packageName}\` which is part of MUI X ${plan}.`,
     '',
-    'To purchase a license, please visit https://mui.com/r/x-get-license.',
+    'To solve the issue, you can check the free trial conditions: https://mui.com/r/x-license-trial.',
+    'If you are eligible no actions are required. If you are not eligible to the free trial, you need to purchase a license https://mui.com/r/x-get-license or stop using the software immediately.',
   ]);
 }
 
-export function showExpiredLicenseError() {
+export function showLicenseKeyExpiredError() {
   showError([
     'MUI: License key expired.',
     '',
-    'Please visit https://mui.com/r/x-get-license to renew your subscription of MUI X.',
+    'The license key works forever in production with any version released before your license term ends.',
+    'However, when the term ends, you are not allowed to use newer releases, nor use the current or older versions in development.',
+    '',
+    "To solve the issue, you can renew your license https://mui.com/r/x-get-license or stop making changes using MUI X's APIs.",
   ]);
 }

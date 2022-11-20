@@ -5,13 +5,13 @@ import { LicenseStatus } from '../utils/licenseStatus';
 function getLicenseErrorMessage(licenseStatus: LicenseStatus) {
   switch (licenseStatus) {
     case LicenseStatus.Expired:
-      return 'MUI X: License key expired';
+      return 'MUI X License key expired';
     case LicenseStatus.Invalid:
-      return 'MUI X: Invalid license key';
+      return 'MUI X Invalid license key';
     case LicenseStatus.OutOfScope:
-      return 'MUI X: License key plan mismatch';
+      return 'MUI X License key plan mismatch';
     case LicenseStatus.NotFound:
-      return 'MUI X: Missing license key';
+      return 'MUI X Missing license key';
     default:
       throw new Error('MUI: Unhandled MUI X license status.');
   }

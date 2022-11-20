@@ -187,9 +187,10 @@ End users can still use the component.
 
 Here are the different possible validation errors:
 
-#### Missing license key
+#### 1. `Missing license key`
 
-If the license key is missing, the component will look something like this:
+This error indicates that your license key is missing. You might not be allowed to use the software.
+The component will look something like this:
 
 <div class="only-light-mode">
   <img src="/static/x/watermark-light.png" style="width: 653px; margin-bottom: 2rem;" alt="" loading="lazy">
@@ -198,32 +199,41 @@ If the license key is missing, the component will look something like this:
   <img src="/static/x/watermark-dark.png" style="width: 645px; margin-bottom: 2rem;" alt="" loading="lazy">
 </div>
 
-:::info
-Note that you are still allowed to use the component for [evaluation purposes](#evaluation-trial-licenses) in this case.
-:::
+To solve the issue, you can check the [free trial conditions](#evaluation-trial-licenses), if you are eligible no actions are required.
+If you are not eligible to the free trial, you need to [purchase a license](https://mui.com/r/x-get-license/) or stop using the software immediately.
 
-#### License key expired
+#### 2. `License key expired`
 
-The license key will work **forever in production** with any version released before your license term ends.
+This error indicates that your license key is expired.
 
-However, when the term ends, you won't be able to use newer releases, nor use the current or older versions in **development**.
-In this case, the component will display a watermark and a console warning, stating that the license is no longer valid.
+The license key works **forever in production** with any version released before your license term ends.
+However, when the term ends, you are not allowed to use newer releases, nor use the current or older versions in **development**.
+In this case, the component displays a watermark and a console warning, stating that the license is no longer valid.
 
 For example, if you purchase a one-year license today, you will be able to update to any version—including major versions—released in the next twelve months.
 Those versions will always be available for use in a deployed application,
 however you'll be required to renew your license if you need to continue development with a version released after twelve months.
 
-#### License key plan mismatch
+To solve the issue, you can [renew your license](https://mui.com/r/x-get-license/) or stop making changes using MUI X's APIs.
 
-This error indicates that the component you are trying to use is not included in the plan of your license key.
+#### 3. `License key plan mismatch`
+
+This error indicates that your use of MUI X is not compatible with the plan of your license key.
+The feature you are trying to use is not included in the plan of your license key.
 This happens if you try to use `DataGridPremium` with a license key for the Pro plan.
 
-#### Invalid license key
+To solve the issue, you can [upgrade your plan](https://mui.com/r/x-get-license/?scope=premium) from Pro to Premium.
+Or if you didn\'t intend to use Premium features, you can replace the import of `@mui/x-data-grid-premium` with `@mui/x-data-grid-pro`.
 
-This error indicates that your license key doesn't match what is expected.
+#### 4. `Invalid license key`
+
+This error indicates that your MUI X license key format isn't valid.
 It could be because the license key is missing a character or has a typo.
 
-#### Invalid license key (TypeError: extracting license expiry timestamp)
+To solve the issue, you need to double check that `setLicenseKey()` is called with the right argument.
+Please check the [license key installation](#license-key-installation).
+
+#### 5. Invalid license key (`TypeError: extracting license expiry timestamp`)
 
 The following JavaScript exception indicates that you may be trying to validate the new license's key format on an older version of the npm package.
 
@@ -233,4 +243,4 @@ Error extracting license expiry timestamp.
 TypeError: Cannot read properties of null (reading '1') at verifyLicense.
 :::
 
-You can solve this error by updating MUI X to `v5.11.0` or later.
+To solve the issue, you can update MUI X to `v5.11.0` or later or contact the support to get a legacy license key.
