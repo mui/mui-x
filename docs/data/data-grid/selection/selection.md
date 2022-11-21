@@ -86,8 +86,8 @@ The following demo shows the prop in action:
 
 ## Cell selection [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan)
 
-The `DataGridPremium` comes with the ability to select rows enabled by default.
-You can also select cells by turning on the `cellSelection` prop.
+The Data Grid has, by default, the ability to select rows.
+On the `DataGridPremium`, you can also enable the ability to select cells with the `cellSelection` prop.
 
 ```tsx
 <DataGridPremium cellSelection />
@@ -97,14 +97,14 @@ To select a single cell, click on it or, with the cell focused, press <kbd><kbd 
 Multiple cells can be selected by holding <kbd class="key">Ctrl</kbd> while clicking the cells.
 A cell can be deselected by also clicking it while <kbd class="key">Ctrl</kbd> is pressed.
 
-To select all cells within a range, you can use one of the shortcuts available:
+To select all cells within a range, you can use one of the interactions available:
 
-- Click on a cell, then drag the mouse over another cell and release it
-- Click on a cell and, while holding <kbd class="key">Shift</kbd>, click on another cell—if a third cell is clicked the selection will restart from the last clicked cell
-- Using the arrow keys, focus on a cell, then hold <kbd class="key">Shift</kbd> and navigate to another cell—if <kbd class="key">Shift</kbd> is released and pressed again, the selection will restart from the last focused cell
+- **Mouse Drag:** Click on a cell, then drag the mouse over another cell and release it
+- **Shift + Click**: Click on a cell and, while holding <kbd class="key">Shift</kbd>, click on another cell—if a third cell is clicked the selection will restart from the last clicked cell
+- **Shift + Arrow keys**: Using the arrow keys, focus on a cell, then hold <kbd class="key">Shift</kbd> and navigate to another cell—if <kbd class="key">Shift</kbd> is released and pressed again, the selection will restart from the last focused cell
 
 The following demo allows to explore the cell selection feature.
-It has row selection disabled initially, but both features can be enabled at the same time.
+It has row selection disabled, but it's possible to set both selections to work in parallel.
 
 {{"demo": "CellSelectionGrid.js", "bg": "inline"}}
 
@@ -112,7 +112,7 @@ It has row selection disabled initially, but both features can be enabled at the
 
 You can control which cells are selected with the `cellSelectionModel` prop.
 This props accepts an object whose keys are the row IDs that contain selected cells.
-The value of each key is another object, where the keys correpond to the `field` of the selected cell and the value is `true` to select the cell, or `false` to deselect it.
+The value of each key is another object, which in turn has column fields as keys, each with a boolean value to represent their selection state. You can set `true` to select the cell or `false` to deselect a cell.
 Removing the field from the object also deselects the cell.
 
 ```tsx
