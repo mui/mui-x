@@ -455,7 +455,7 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate>(
       return;
     }
 
-    if (focusedView === prevOpenViewRef.current && openView !== focusedView) {
+    if (focusedView === prevOpenViewRef.current) {
       handleFocusedViewChange(openView)(true);
     }
     prevOpenViewRef.current = openView;
