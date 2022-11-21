@@ -31,6 +31,12 @@ export default function ArrowSwitcherComponentProps() {
 
   const [currentComponent, setCurrentComponent] = React.useState('date');
 
+  const handleCurrentComponentChange = (event, nextCurrentComponent) => {
+    if (nextCurrentComponent !== null) {
+      setCurrentComponent(nextCurrentComponent);
+    }
+  };
+
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <Stack spacing={2} sx={{ width: '100%' }} alignItems="center">
@@ -38,7 +44,7 @@ export default function ArrowSwitcherComponentProps() {
           fullWidth
           color="primary"
           value={currentComponent}
-          onChange={(event, value) => setCurrentComponent(value)}
+          onChange={handleCurrentComponentChange}
           exclusive
         >
           <ToggleButton value={'date'}>date picker</ToggleButton>

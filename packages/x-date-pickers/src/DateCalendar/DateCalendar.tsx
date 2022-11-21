@@ -46,7 +46,7 @@ export interface DateCalendarSlotsComponent<TDate>
     DayCalendarSlotsComponent<TDate> {}
 
 export interface DateCalendarSlotsComponentsProps<TDate>
-  extends PickersCalendarHeaderSlotsComponentsProps,
+  extends PickersCalendarHeaderSlotsComponentsProps<TDate>,
     DayCalendarSlotsComponentsProps<TDate> {}
 
 export interface DateCalendarProps<TDate>
