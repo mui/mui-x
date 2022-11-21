@@ -56,7 +56,7 @@ export interface DataGridPremiumPropsWithDefaultValue extends DataGridProPropsWi
    * If `true`, the cell selection mode is enabled.
    * @default false
    */
-  cellSelection: boolean;
+  unstable_cellSelection: boolean;
   /**
    * If `true`, aggregation is disabled.
    * @default false
@@ -129,13 +129,13 @@ export interface DataGridPremiumPropsWithoutDefaultValue<R extends GridValidRowM
   /**
    * Set the cell selection model of the grid.
    */
-  cellSelectionModel?: GridCellSelectionModel;
+  unstable_cellSelectionModel?: GridCellSelectionModel;
   /**
    * Callback fired when the selection state of one or multiple cells changes.
    * @param {GridCellSelectionModel} cellSelectionModel Object in the shape of [[GridCellSelectionModel]] containg the selected cells.
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
-  onCellSelectionModelChange?: (
+  unstable_onCellSelectionModelChange?: (
     cellSelectionModel: GridCellSelectionModel,
     details: GridCallbackDetails,
   ) => void;

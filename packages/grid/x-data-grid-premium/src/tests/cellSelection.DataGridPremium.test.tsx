@@ -18,11 +18,11 @@ describe('<DataGridPremium /> - Cell Selection', () => {
 
   let apiRef: React.MutableRefObject<GridApi>;
 
-  const TestDataGridSelection = ({
+  function TestDataGridSelection({
     rowLength = 4,
     ...other
   }: Omit<DataGridPremiumProps, 'rows' | 'columns' | 'apiRef'> &
-    Partial<Pick<DataGridPremiumProps, 'rows' | 'columns'>> & { rowLength?: number }) => {
+    Partial<Pick<DataGridPremiumProps, 'rows' | 'columns'>> & { rowLength?: number }) {
     apiRef = useGridApiRef();
 
     const data = React.useMemo(() => getBasicGridData(rowLength, 3), [rowLength]);
@@ -34,12 +34,12 @@ describe('<DataGridPremium /> - Cell Selection', () => {
           {...other}
           apiRef={apiRef}
           rowSelection={false}
-          cellSelection
+          unstable_cellSelection
           disableVirtualization
         />
       </div>
     );
-  };
+  }
 
   it('should select the cell clicked', () => {
     render(<TestDataGridSelection />);
@@ -116,7 +116,7 @@ describe('<DataGridPremium /> - Cell Selection', () => {
 
     it('should call selectCellRange', () => {
       render(<TestDataGridSelection />);
-      const spiedSelectCellsBetweenRange = spy(apiRef.current, 'selectCellRange');
+      const spiedSelectCellsBetweenRange = spy(apiRef.current, 'unstable_selectCellRange');
       const cell = getCell(0, 0);
       cell.focus();
       fireEvent.click(cell);
@@ -157,7 +157,7 @@ describe('<DataGridPremium /> - Cell Selection', () => {
   describe('Shift + arrow keys', () => {
     it('should call selectCellRange when ArrowDown is pressed', () => {
       render(<TestDataGridSelection />);
-      const spiedSelectCellsBetweenRange = spy(apiRef.current, 'selectCellRange');
+      const spiedSelectCellsBetweenRange = spy(apiRef.current, 'unstable_selectCellRange');
       const cell = getCell(0, 0);
       cell.focus();
       fireEvent.click(cell);
@@ -169,7 +169,7 @@ describe('<DataGridPremium /> - Cell Selection', () => {
 
     it('should call selectCellRange when ArrowUp is pressed', () => {
       render(<TestDataGridSelection />);
-      const spiedSelectCellsBetweenRange = spy(apiRef.current, 'selectCellRange');
+      const spiedSelectCellsBetweenRange = spy(apiRef.current, 'unstable_selectCellRange');
       const cell = getCell(1, 0);
       cell.focus();
       fireEvent.click(cell);
@@ -181,7 +181,7 @@ describe('<DataGridPremium /> - Cell Selection', () => {
 
     it('should call selectCellRange when ArrowLeft is pressed', () => {
       render(<TestDataGridSelection />);
-      const spiedSelectCellsBetweenRange = spy(apiRef.current, 'selectCellRange');
+      const spiedSelectCellsBetweenRange = spy(apiRef.current, 'unstable_selectCellRange');
       const cell = getCell(0, 1);
       cell.focus();
       fireEvent.click(cell);
@@ -196,7 +196,7 @@ describe('<DataGridPremium /> - Cell Selection', () => {
 
     it('should call selectCellRange when ArrowRight is pressed', () => {
       render(<TestDataGridSelection />);
-      const spiedSelectCellsBetweenRange = spy(apiRef.current, 'selectCellRange');
+      const spiedSelectCellsBetweenRange = spy(apiRef.current, 'unstable_selectCellRange');
       const cell = getCell(0, 0);
       cell.focus();
       fireEvent.click(cell);
@@ -211,11 +211,14 @@ describe('<DataGridPremium /> - Cell Selection', () => {
   });
 
   describe('apiRef', () => {
-    describe('selectCellRange', () => {
+    describe('unstable_selectCellRange', () => {
       it('should select all cells within the given arguments if end > start', () => {
         render(<TestDataGridSelection />);
         act(() =>
-          apiRef.current.selectCellRange({ id: 0, field: 'id' }, { id: 2, field: 'price1M' }),
+          apiRef.current.unstable_selectCellRange(
+            { id: 0, field: 'id' },
+            { id: 2, field: 'price1M' },
+          ),
         );
 
         expect(getCell(0, 0)).to.have.class('Mui-selected');
@@ -234,7 +237,10 @@ describe('<DataGridPremium /> - Cell Selection', () => {
       it('should select all cells within the given arguments if start > end', () => {
         render(<TestDataGridSelection />);
         act(() =>
-          apiRef.current.selectCellRange({ id: 0, field: 'id' }, { id: 2, field: 'price1M' }),
+          apiRef.current.unstable_selectCellRange(
+            { id: 0, field: 'id' },
+            { id: 2, field: 'price1M' },
+          ),
         );
 
         expect(getCell(0, 0)).to.have.class('Mui-selected');
@@ -262,7 +268,10 @@ describe('<DataGridPremium /> - Cell Selection', () => {
         expect(getCell(0, 2)).to.have.class('Mui-selected');
 
         act(() =>
-          apiRef.current.selectCellRange({ id: 1, field: 'id' }, { id: 2, field: 'price1M' }),
+          apiRef.current.unstable_selectCellRange(
+            { id: 1, field: 'id' },
+            { id: 2, field: 'price1M' },
+          ),
         );
 
         expect(getCell(0, 0)).not.to.have.class('Mui-selected');
@@ -283,10 +292,10 @@ describe('<DataGridPremium /> - Cell Selection', () => {
       it('should return the selected cells as an array', () => {
         render(
           <TestDataGridSelection
-            cellSelectionModel={{ 0: { id: true, currencyPair: true, price1M: false } }}
+            unstable_cellSelectionModel={{ 0: { id: true, currencyPair: true, price1M: false } }}
           />,
         );
-        expect(apiRef.current.getSelectedCellsAsArray()).to.deep.equal([
+        expect(apiRef.current.unstable_getSelectedCellsAsArray()).to.deep.equal([
           { id: 0, field: 'id' },
           { id: 0, field: 'currencyPair' },
         ]);

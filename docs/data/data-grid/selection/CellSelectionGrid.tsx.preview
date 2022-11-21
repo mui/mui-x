@@ -5,7 +5,7 @@
   <DataGridPremium
     rowSelection={rowSelection}
     checkboxSelection={rowSelection}
-    cellSelection
+    unstable_cellSelection
     {...data}
   />
 </div>

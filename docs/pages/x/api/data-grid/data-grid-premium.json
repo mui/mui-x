@@ -23,8 +23,6 @@
     "autoHeight": { "type": { "name": "bool" } },
     "autoPageSize": { "type": { "name": "bool" } },
     "cellModesModel": { "type": { "name": "object" } },
-    "cellSelection": { "type": { "name": "bool" } },
-    "cellSelectionModel": { "type": { "name": "object" } },
     "checkboxSelection": { "type": { "name": "bool" } },
     "checkboxSelectionVisibleOnly": {
       "type": { "name": "custom", "description": "bool" },
@@ -140,7 +138,6 @@
     "onCellFocusOut": { "type": { "name": "func" } },
     "onCellKeyDown": { "type": { "name": "func" } },
     "onCellModesModelChange": { "type": { "name": "func" } },
-    "onCellSelectionModelChange": { "type": { "name": "func" } },
     "onColumnHeaderClick": { "type": { "name": "func" } },
     "onColumnHeaderDoubleClick": { "type": { "name": "func" } },
     "onColumnHeaderEnter": { "type": { "name": "func" } },
@@ -250,7 +247,10 @@
       }
     },
     "throttleRowsMs": { "type": { "name": "number" }, "default": "0" },
-    "treeData": { "type": { "name": "bool" } }
+    "treeData": { "type": { "name": "bool" } },
+    "unstable_cellSelection": { "type": { "name": "bool" } },
+    "unstable_cellSelectionModel": { "type": { "name": "object" } },
+    "unstable_onCellSelectionModelChange": { "type": { "name": "func" } }
   },
   "slots": {
     "BaseButton": { "default": "Button", "type": { "name": "elementType" } },

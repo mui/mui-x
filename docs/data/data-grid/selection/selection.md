@@ -87,11 +87,16 @@ The following demo shows the prop in action:
 ## Cell selection [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan)
 
 The Data Grid has, by default, the ability to select rows.
-On the `DataGridPremium`, you can also enable the ability to select cells with the `cellSelection` prop.
+On the `DataGridPremium`, you can also enable the ability to select cells with the `unstable_cellSelection` prop.
 
 ```tsx
-<DataGridPremium cellSelection />
+<DataGridPremium unstable_cellSelection />
 ```
+
+:::warning
+This feature is not stable yet, meaning that its APIs may suffer breaking changes.
+While in development, all props and methods related to cell selection must be prefixed with `unstable_`.
+:::
 
 To select a single cell, click on it or, with the cell focused, press <kbd><kbd class="key">Shift</kbd>+<kbd class="key">Space</kbd></kbd>.
 Multiple cells can be selected by holding <kbd class="key">Ctrl</kbd> while clicking the cells.
@@ -110,7 +115,7 @@ It has row selection disabled, but it's possible to set both selections to work 
 
 ### Controlled cell selection
 
-You can control which cells are selected with the `cellSelectionModel` prop.
+You can control which cells are selected with the `unstable_cellSelectionModel` prop.
 This props accepts an object whose keys are the row IDs that contain selected cells.
 The value of each key is another object, which in turn has column fields as keys, each with a boolean value to represent their selection state. You can set `true` to select the cell or `false` to deselect a cell.
 Removing the field from the object also deselects the cell.
@@ -118,16 +123,16 @@ Removing the field from the object also deselects the cell.
 ```tsx
 // Selects the cell with field=name from row with id=1
 <DataGridPremium
-  cellSelectionModel={{ 1: { name: true } }}
+  unstable_cellSelectionModel={{ 1: { name: true } }}
 />
 
 // Unselects the cell with field=name from row with id=1
 <DataGridPremium
-  cellSelectionModel={{ 1: { name: false } }}
+  unstable_cellSelectionModel={{ 1: { name: false } }}
 />
 ```
 
-When a new selection is made, the callback passed to the `onCellSelectionModelChange` prop is called with the updated model.
+When a new selection is made, the callback passed to the `unstable_onCellSelectionModelChange` prop is called with the updated model.
 Use this value to update the current model.
 
 The following demo shows how these props can be combined to create an Excel-like formula field.
