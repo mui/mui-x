@@ -40,6 +40,7 @@ describe('<DateRangePicker />', () => {
     clock,
     isLegacyPicker: true,
     withDate: true,
+    views: ['day'],
   }));
 
   it('should not open mobile picker dialog when clicked on input', () => {

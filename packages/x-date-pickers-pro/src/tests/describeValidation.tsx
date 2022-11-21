@@ -1,11 +1,21 @@
 /* eslint-env mocha */
-import { BaseDateValidationProps, TimeValidationProps } from '@mui/x-date-pickers/internals';
-// import testDayViewValidation from './testValidation/testDayViewValidation';
+import {
+  BaseDateValidationProps,
+  TimeValidationProps,
+  MonthValidationProps,
+  YearValidationProps,
+  DateOrTimeView,
+} from '@mui/x-date-pickers/internals';
+import testDayViewValidation from './testValidation/testDayViewValidation';
 import testTextFieldValidation from './testValidation/testTextFieldValidation';
 import { DayRangeValidationProps } from '../internal/models';
 
 type ValidationProps =
-  | keyof (DayRangeValidationProps<any> & BaseDateValidationProps<any> & TimeValidationProps<any>)
+  | keyof (DayRangeValidationProps<any> &
+      BaseDateValidationProps<any> &
+      MonthValidationProps<any> &
+      YearValidationProps<any> &
+      TimeValidationProps<any>)
   | 'minDateTime'
   | 'maxDateTime';
 
@@ -24,12 +34,14 @@ const defaultAvailableProps: ValidationProps[] = [
   'maxDateTime',
   // specific moment
   'shouldDisableDate',
+  'shouldDisableMonth',
+  'shouldDisableYear',
 ];
 
 type AvailableTests = 'day' | 'textField';
 
 const testsToRun = {
-  // day: testDayViewValidation,
+  day: testDayViewValidation,
   textField: testTextFieldValidation,
 };
 
@@ -44,6 +56,8 @@ interface ConformanceOptions {
   isSingleInput?: boolean;
   withDate?: boolean;
   withTime?: boolean;
+  views?: DateOrTimeView[];
+  mode?: 'mobile' | 'desktop';
 }
 
 /**
@@ -58,7 +72,10 @@ export default function describeValidation(minimalElement, getOptions: () => Con
       after: runAfterHook = () => {},
       props = defaultAvailableProps,
       ignoredProps = [],
+      views = [],
       skip = [],
+      withDate,
+      withTime,
     } = getOptions();
 
     const filteredTestsToRun = Object.keys(testsToRun).filter(
@@ -70,6 +87,12 @@ export default function describeValidation(minimalElement, getOptions: () => Con
     function getTestOptions() {
       return {
         ...getOptions(),
+        views,
+        withDate:
+          withDate ?? (views.includes('year') || views.includes('month') || views.includes('day')),
+        withTime:
+          withTime ??
+          (views.includes('hours') || views.includes('minutes') || views.includes('seconds')),
       };
     }
 

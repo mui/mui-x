@@ -37,6 +37,8 @@ describe('<MobileNextDateRangePicker />', () => {
     render,
     clock,
     withDate: true,
+    mode: 'mobile',
+    views: ['day'],
   }));
 
   describe('picker state', () => {

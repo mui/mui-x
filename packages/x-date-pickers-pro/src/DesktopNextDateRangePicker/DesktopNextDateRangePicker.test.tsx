@@ -52,6 +52,7 @@ describe('<DesktopNextDateRangePicker />', () => {
     render,
     clock,
     withDate: true,
+    views: ['day'],
   }));
 
   it('should scroll current month to the active selection when focusing appropriate field', () => {

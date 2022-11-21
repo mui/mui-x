@@ -31,6 +31,7 @@ describe('<NextDateRangePicker />', () => {
     render,
     clock,
     withDate: true,
+    views: ['day'],
   }));
 
   it('should not open mobile picker dialog when clicked on input', () => {

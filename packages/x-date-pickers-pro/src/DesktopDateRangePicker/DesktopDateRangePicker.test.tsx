@@ -73,6 +73,7 @@ describe('<DesktopDateRangePicker />', () => {
     clock,
     isLegacyPicker: true,
     withDate: true,
+    views: ['day'],
   }));
 
   // TODO: Remove on new pickers, has been moved to `DateRangeCalendar` tests
