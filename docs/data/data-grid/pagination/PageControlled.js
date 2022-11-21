@@ -8,7 +8,6 @@ export default function PageControlled() {
     rowLength: 100,
     maxColumns: 6,
   });
-
   const [page, setPage] = React.useState(0);
 
   return (

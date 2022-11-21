@@ -18,7 +18,7 @@ describe('<DataGridPremium /> - License', () => {
       }),
     );
     expect(() => render(<DataGridPremium columns={[]} rows={[]} autoHeight />)).toErrorDev([
-      'Your MUI X license key isn\'t valid. You are rendering a DataGridPremium component that requires a license key with the "premium" feature scope but your license key has the "pro" feature scope',
+      'MUI: License key plan mismatch',
     ]);
   });
 });
