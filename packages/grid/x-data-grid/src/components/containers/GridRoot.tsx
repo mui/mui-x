@@ -68,7 +68,7 @@ const GridRoot = React.forwardRef<HTMLDivElement, GridRootProps>(function GridRo
 
   const classes = useUtilityClasses(ownerState);
 
-  apiRef.current.rootElementRef = rootContainerRef;
+  apiRef.current.register('public', { rootElementRef: rootContainerRef });
 
   // Our implementation of <NoSsr />
   const [mountedState, setMountedState] = React.useState(false);

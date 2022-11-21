@@ -59,9 +59,12 @@ function GridBody(props: GridBodyProps) {
   const columnsContainerRef = React.useRef<HTMLDivElement>(null);
   const virtualScrollerRef = React.useRef<HTMLDivElement>(null);
 
-  apiRef.current.columnHeadersContainerElementRef = columnsContainerRef;
-  apiRef.current.columnHeadersElementRef = columnHeadersRef;
-  apiRef.current.virtualScrollerRef = virtualScrollerRef;
+  apiRef.current.register('public', {
+    columnHeadersContainerElementRef: columnsContainerRef,
+    columnHeadersElementRef: columnHeadersRef,
+  });
+
+  apiRef.current.register('private', { virtualScrollerRef });
 
   const handleResize = React.useCallback(
     (size: ElementSize) => {
