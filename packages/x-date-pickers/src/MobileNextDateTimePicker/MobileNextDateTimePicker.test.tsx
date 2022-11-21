@@ -10,7 +10,7 @@ import {
   openPicker,
   getClockTouchEvent,
 } from 'test/utils/pickers-utils';
-import describeValidation from '@mui/x-date-pickers/tests/describeValidation';
+import { describeValidation } from '@mui/x-date-pickers/tests/describeValidation';
 
 describe('<MobileNextDateTimePicker />', () => {
   const { render, clock } = createPickerRenderer({
@@ -22,6 +22,7 @@ describe('<MobileNextDateTimePicker />', () => {
     render,
     clock,
     views: ['year', 'month', 'day', 'hours', 'minutes'],
+    componentFamily: 'new-picker',
   }));
 
   it('prop: open – overrides open state', () => {

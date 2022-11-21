@@ -1,8 +1,10 @@
 import * as React from 'react';
 import Fade from '@mui/material/Fade';
 import { styled, useThemeProps } from '@mui/material/styles';
+import { SlotComponentProps, useSlotProps } from '@mui/base/utils';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import IconButton from '@mui/material/IconButton';
+import SvgIcon from '@mui/material/SvgIcon';
 import { SlideDirection } from './PickersSlideTransition';
 import { useLocaleText, useUtils } from '../internals/hooks/useUtils';
 import { PickersFadeTransitionGroup } from './PickersFadeTransitionGroup';
@@ -21,6 +23,7 @@ import {
 import { DateView } from '../internals/models';
 import {
   getPickersCalendarHeaderUtilityClass,
+  pickersCalendarHeaderClasses,
   PickersCalendarHeaderClasses,
 } from './pickersCalendarHeaderClasses';
 
@@ -42,10 +45,20 @@ export interface PickersCalendarHeaderSlotsComponent extends PickersArrowSwitche
 // We keep the interface to allow module augmentation
 export interface PickersCalendarHeaderComponentsPropsOverrides {}
 
-export interface PickersCalendarHeaderSlotsComponentsProps
+type PickersCalendarHeaderOwnerState<TDate> = PickersCalendarHeaderProps<TDate>;
+
+export interface PickersCalendarHeaderSlotsComponentsProps<TDate>
   extends PickersArrowSwitcherSlotsComponentsProps {
-  switchViewButton?: React.ComponentPropsWithRef<typeof IconButton> &
-    PickersCalendarHeaderComponentsPropsOverrides;
+  switchViewButton?: SlotComponentProps<
+    typeof IconButton,
+    PickersCalendarHeaderComponentsPropsOverrides,
+    PickersCalendarHeaderOwnerState<TDate>
+  >;
+  switchViewIcon?: SlotComponentProps<
+    typeof SvgIcon,
+    PickersCalendarHeaderComponentsPropsOverrides,
+    undefined
+  >;
 }
 
 export interface PickersCalendarHeaderProps<TDate>
@@ -60,7 +73,7 @@ export interface PickersCalendarHeaderProps<TDate>
    * The props used for each component slot.
    * @default {}
    */
-  componentsProps?: PickersCalendarHeaderSlotsComponentsProps;
+  componentsProps?: PickersCalendarHeaderSlotsComponentsProps<TDate>;
   currentMonth: TDate;
   disabled?: boolean;
   views: readonly DateView[];
@@ -72,7 +85,7 @@ export interface PickersCalendarHeaderProps<TDate>
   classes?: Partial<PickersCalendarHeaderClasses>;
 }
 
-const useUtilityClasses = (ownerState: PickersCalendarHeaderProps<any>) => {
+const useUtilityClasses = (ownerState: PickersCalendarHeaderOwnerState<any>) => {
   const { classes } = ownerState;
   const slots = {
     root: ['root'],
@@ -90,7 +103,7 @@ const PickersCalendarHeaderRoot = styled('div', {
   slot: 'Root',
   overridesResolver: (_, styles) => styles.root,
 })<{
-  ownerState: PickersCalendarHeaderProps<any>;
+  ownerState: PickersCalendarHeaderOwnerState<any>;
 }>({
   display: 'flex',
   alignItems: 'center',
@@ -108,10 +121,9 @@ const PickersCalendarHeaderLabelContainer = styled('div', {
   slot: 'LabelContainer',
   overridesResolver: (_, styles) => styles.labelContainer,
 })<{
-  ownerState: PickersCalendarHeaderProps<any>;
+  ownerState: PickersCalendarHeaderOwnerState<any>;
 }>(({ theme }) => ({
   display: 'flex',
-  maxHeight: 30,
   overflow: 'hidden',
   alignItems: 'center',
   cursor: 'pointer',
@@ -125,7 +137,7 @@ const PickersCalendarHeaderLabel = styled('div', {
   slot: 'Label',
   overridesResolver: (_, styles) => styles.label,
 })<{
-  ownerState: PickersCalendarHeaderProps<any>;
+  ownerState: PickersCalendarHeaderOwnerState<any>;
 }>({
   marginRight: 6,
 });
@@ -134,30 +146,36 @@ const PickersCalendarHeaderSwitchViewButton = styled(IconButton, {
   name: 'MuiPickersCalendarHeader',
   slot: 'SwitchViewButton',
   overridesResolver: (_, styles) => styles.switchViewButton,
-})({
+})<{
+  ownerState: PickersCalendarHeaderOwnerState<any>;
+}>(({ ownerState }) => ({
   marginRight: 'auto',
-});
+  ...(ownerState.openView === 'year' && {
+    [`.${pickersCalendarHeaderClasses.switchViewIcon}`]: {
+      transform: 'rotate(180deg)',
+    },
+  }),
+}));
 
 const PickersCalendarHeaderSwitchViewIcon = styled(ArrowDropDown, {
   name: 'MuiPickersCalendarHeader',
   slot: 'SwitchViewIcon',
   overridesResolver: (_, styles) => styles.switchViewIcon,
-})<{
-  ownerState: PickersCalendarHeaderProps<any>;
-}>(({ theme, ownerState }) => ({
+})(({ theme }) => ({
   willChange: 'transform',
   transition: theme.transitions.create('transform'),
   transform: 'rotate(0deg)',
-  ...(ownerState.openView === 'year' && {
-    transform: 'rotate(180deg)',
-  }),
 }));
 
 /**
  * @ignore - do not document.
  */
 export function PickersCalendarHeader<TDate>(inProps: PickersCalendarHeaderProps<TDate>) {
+  const localeText = useLocaleText();
+  const utils = useUtils<TDate>();
+
   const props = useThemeProps({ props: inProps, name: 'MuiPickersCalendarHeader' });
+
   const {
     components = {},
     componentsProps = {},
@@ -175,12 +193,30 @@ export function PickersCalendarHeader<TDate>(inProps: PickersCalendarHeaderProps
     labelId,
   } = props;
 
-  const localeText = useLocaleText();
+  const ownerState = props;
 
-  const utils = useUtils<TDate>();
   const classes = useUtilityClasses(props);
 
-  const switchViewButtonProps = componentsProps.switchViewButton || {};
+  const SwitchViewButton = components.SwitchViewButton ?? PickersCalendarHeaderSwitchViewButton;
+  const switchViewButtonProps = useSlotProps({
+    elementType: SwitchViewButton,
+    externalSlotProps: componentsProps.switchViewButton,
+    additionalProps: {
+      size: 'small',
+      'aria-label': localeText.calendarViewSwitchingButtonAriaLabel(currentView),
+    },
+    ownerState,
+    className: classes.switchViewButton,
+  });
+
+  const SwitchViewIcon = components.SwitchViewIcon ?? PickersCalendarHeaderSwitchViewIcon;
+  // The spread is here to avoid this bug mui/material-ui#34056
+  const { ownerState: switchViewIconOwnerState, ...switchViewIconProps } = useSlotProps({
+    elementType: SwitchViewIcon,
+    externalSlotProps: componentsProps.switchViewIcon,
+    ownerState: undefined,
+    className: classes.switchViewIcon,
+  });
 
   const selectNextMonth = () => onMonthChange(utils.getNextMonth(month), 'left');
   const selectPreviousMonth = () => onMonthChange(utils.getPreviousMonth(month), 'right');
@@ -213,8 +249,6 @@ export function PickersCalendarHeader<TDate>(inProps: PickersCalendarHeaderProps
     return null;
   }
 
-  const ownerState = props;
-
   return (
     <PickersCalendarHeaderRoot ownerState={ownerState} className={classes.root}>
       <PickersCalendarHeaderLabelContainer
@@ -239,19 +273,9 @@ export function PickersCalendarHeader<TDate>(inProps: PickersCalendarHeaderProps
           </PickersCalendarHeaderLabel>
         </PickersFadeTransitionGroup>
         {views.length > 1 && !disabled && (
-          <PickersCalendarHeaderSwitchViewButton
-            size="small"
-            as={components.SwitchViewButton}
-            aria-label={localeText.calendarViewSwitchingButtonAriaLabel(currentView)}
-            className={classes.switchViewButton}
-            {...switchViewButtonProps}
-          >
-            <PickersCalendarHeaderSwitchViewIcon
-              as={components.SwitchViewIcon}
-              ownerState={ownerState}
-              className={classes.switchViewIcon}
-            />
-          </PickersCalendarHeaderSwitchViewButton>
+          <SwitchViewButton {...switchViewButtonProps}>
+            <SwitchViewIcon {...switchViewIconProps} />
+          </SwitchViewButton>
         )}
       </PickersCalendarHeaderLabelContainer>
       <Fade in={currentView === 'day'}>

@@ -89,4 +89,19 @@ describe('<LocalizationProvider />', () => {
     const localeText: PickersLocaleText<any> = handleContextChange.lastCall.args[0].localeText;
     expect(localeText.start).to.equal('Début');
   });
+
+  it("should not loose locales from higher LocalizationProvider when deepest one don't have the translation key", () => {
+    const handleContextChange = spy();
+
+    render(
+      <LocalizationProvider dateAdapter={AdapterClassToUse} localeText={{ start: 'Empezar' }}>
+        <LocalizationProvider dateAdapter={AdapterClassToUse} localeText={{ end: 'Fin' }}>
+          <ContextListener onContextChange={handleContextChange} />
+        </LocalizationProvider>
+      </LocalizationProvider>,
+    );
+
+    const localeText: PickersLocaleText<any> = handleContextChange.lastCall.args[0].localeText;
+    expect(localeText.start).to.equal('Empezar');
+  });
 });

@@ -31,7 +31,7 @@ const SecondaryHeading = styled(Typography)(({ theme }) => ({
   },
 }));
 
-const PlanIcon = ({ plan }) => {
+function PlanIcon({ plan }) {
   let href;
   let title;
 
@@ -53,13 +53,13 @@ const PlanIcon = ({ plan }) => {
       <span className={`plan-${plan}`} title={title} />
     </a>
   );
-};
+}
 
 PlanIcon.propTypes = {
   plan: PropTypes.string,
 };
 
-const ApiProperty = ({ index, property, plan }) => {
+function ApiProperty({ index, property, plan }) {
   return (
     <Accordion>
       <AccordionSummary
@@ -91,7 +91,7 @@ const ApiProperty = ({ index, property, plan }) => {
       </AccordionDetails>
     </Accordion>
   );
-};
+}
 
 ApiProperty.propTypes = {
   index: PropTypes.number.isRequired,

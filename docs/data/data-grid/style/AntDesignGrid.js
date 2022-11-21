@@ -124,7 +124,6 @@ export default function AntDesignGrid() {
     rowLength: 10,
     maxColumns: 10,
   });
-
   return (
     <div style={{ height: 400, width: '100%' }}>
       <StyledDataGrid
