@@ -250,9 +250,6 @@ const buildComponentDocumentation = async (options: {
   }
 
   reactApi.demos = findXDemos(reactApi.name, pagesMarkdown);
-  if (reactApi.demos.length === 0) {
-    a.push(reactApi.name);
-  }
 
   reactApi.styles = await parseStyles(reactApi, project.program as any);
   reactApi.styles.name = reactApi.name.startsWith('Grid')
