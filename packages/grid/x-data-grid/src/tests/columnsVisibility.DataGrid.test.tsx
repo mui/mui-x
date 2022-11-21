@@ -12,7 +12,7 @@ const rows: GridRowsProp = [{ id: 1, idBis: 1 }];
 
 const columns: GridColumns = [{ field: 'id' }, { field: 'idBis' }];
 
-describe('<DataGridPro /> - Columns Visibility', () => {
+describe.only('<DataGridPro /> - Columns Visibility', () => {
   const { render } = createRenderer();
 
   function TestDataGrid(
@@ -236,5 +236,43 @@ describe('<DataGridPro /> - Columns Visibility', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Select columns' }));
 
     expect(screen.getByRole('checkbox', { name: columns[0].field })).toHaveFocus();
+  });
+
+  it('should disable `Hide all` in columns panel when `disableHideAllButton` is `true`', () => {
+    render(
+      <TestDataGrid
+        components={{
+          Toolbar: GridToolbar,
+        }}
+        componentsProps={{
+          columnsPanel: {
+            disableHideAllButton: true,
+          },
+        }}
+      />,
+    );
+
+    fireEvent.click(screen.getByRole('button', { name: 'Select columns' }));
+    const button = screen.getByRole('button', { name: 'Hide all' });
+    expect(button).to.have.attribute('disabled');
+  });
+
+  it('should disable `Show all` in columns panel when `disableShowAllButton` is `true`', () => {
+    render(
+      <TestDataGrid
+        components={{
+          Toolbar: GridToolbar,
+        }}
+        componentsProps={{
+          columnsPanel: {
+            disableShowAllButton: true,
+          },
+        }}
+      />,
+    );
+
+    fireEvent.click(screen.getByRole('button', { name: 'Select columns' }));
+    const button = screen.getByRole('button', { name: 'Show all' });
+    expect(button).to.have.attribute('disabled');
   });
 });

@@ -74,6 +74,16 @@ export interface GridColumnsPanelProps extends GridPanelWrapperProps {
    * @default true
    */
   autoFocusSearchField?: boolean;
+  /*
+   * If `true`, the `Hide all` button will be disabled
+   * @default false
+   */
+  disableHideAllButton?: boolean;
+  /*
+   * If `true`, the `Show all` button will be disabled
+   * @default false
+   */
+  disableShowAllButton?: boolean;
 }
 
 const collator = new Intl.Collator();
@@ -99,6 +109,8 @@ function GridColumnsPanel(props: GridColumnsPanelProps) {
     sort,
     searchPredicate = defaultSearchPredicate,
     autoFocusSearchField = true,
+    disableHideAllButton = false,
+    disableShowAllButton = false,
     ...other
   } = props;
 
@@ -224,12 +236,14 @@ function GridColumnsPanel(props: GridColumnsPanelProps) {
         <rootProps.components.BaseButton
           onClick={() => toggleAllColumns(false)}
           {...rootProps.componentsProps?.baseButton}
+          disabled={disableHideAllButton}
         >
           {apiRef.current.getLocaleText('columnsPanelHideAllButton')}
         </rootProps.components.BaseButton>
         <rootProps.components.BaseButton
           onClick={() => toggleAllColumns(true)}
           {...rootProps.componentsProps?.baseButton}
+          disabled={disableShowAllButton}
         >
           {apiRef.current.getLocaleText('columnsPanelShowAllButton')}
         </rootProps.components.BaseButton>
@@ -244,6 +258,8 @@ GridColumnsPanel.propTypes = {
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
   autoFocusSearchField: PropTypes.bool,
+  disableHideAllButton: PropTypes.bool,
+  disableShowAllButton: PropTypes.bool,
   searchPredicate: PropTypes.func,
   sort: PropTypes.oneOf(['asc', 'desc']),
 } as any;
