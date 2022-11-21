@@ -72,7 +72,7 @@ export default function CellSelectionFormulaField() {
 
   return (
     <div style={{ width: '100%' }}>
-      <Stack sx={{ mb: 2 }} direction="row" spacing={2}>
+      <Stack sx={{ mb: 1 }} direction="row" spacing={2}>
         <TextField
           label="Selected cell value"
           disabled={numberOfSelectedCells === 0}

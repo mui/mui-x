@@ -100,9 +100,7 @@ A cell can be deselected by also clicking it while <kbd class="key">Ctrl</kbd> i
 To select all cells within a range, you can use one of the shortcuts available:
 
 - Click on a cell, then drag the mouse over another cell and release it
-
 - Click on a cell and, while holding <kbd class="key">Shift</kbd>, click on another cell—if a third cell is clicked the selection will restart from the last clicked cell
-
 - Using the arrow keys, focus on a cell, then hold <kbd class="key">Shift</kbd> and navigate to another cell—if <kbd class="key">Shift</kbd> is released and pressed again, the selection will restart from the last focused cell
 
 The following demo allows to explore the cell selection feature.
@@ -119,12 +117,12 @@ Removing the field from the object also deselects the cell.
 
 ```tsx
 // Selects the cell with field=name from row with id=1
-<DataGrid
+<DataGridPremium
   cellSelectionModel={{ 1: { name: true } }}
 />
 
 // Unselects the cell with field=name from row with id=1
-<DataGrid
+<DataGridPremium
   cellSelectionModel={{ 1: { name: false } }}
 />
 ```
@@ -142,11 +140,8 @@ When multiple selected cells make a range, specific class names are applied to t
 The class names applied are the following:
 
 - `MuiDataGrid-cell--rangeTop`: applied to all cells of the first row of the range
-
 - `MuiDataGrid-cell--rangeBottom`: applied to all cells of the last row of the range
-
 - `MuiDataGrid-cell--rangeLeft`: applied to all cells of the first column of the range
-
 - `MuiDataGrid-cell--rangeRight`: applied to all cells of the last column of the range
 
 You can use these classes to create CSS selectors targeting specific corners of each range.
