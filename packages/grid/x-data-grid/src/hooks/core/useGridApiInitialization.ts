@@ -28,10 +28,8 @@ const wrapPublicApi = <PrivateApi extends GridPrivateApiCommon, PublicApi extend
   privateOnlyApi.register = (visibility, methods) => {
     Object.keys(methods).forEach((methodName) => {
       if (visibility === 'public') {
-        if (!publicApi.hasOwnProperty(methodName)) {
-          publicApi[methodName as keyof PublicApi] = (methods as any)[methodName];
-        }
-      } else if (!privateOnlyApi.hasOwnProperty(methodName)) {
+        publicApi[methodName as keyof PublicApi] = (methods as any)[methodName];
+      } else {
         privateOnlyApi[methodName as keyof PrivateOnlyApi] = (methods as any)[methodName];
       }
     });
