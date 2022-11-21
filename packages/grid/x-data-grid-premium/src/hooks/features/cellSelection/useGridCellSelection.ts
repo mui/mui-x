@@ -220,7 +220,7 @@ export const useGridCellSelection = (
 
     lastClickedCell.current = { id, field };
 
-    if (event.ctrlKey) {
+    if (event.ctrlKey || event.metaKey) {
       // Add the clicked cell to the selection
       const prevModel = apiRef.current.getCellSelectionModel();
       apiRef.current.setCellSelectionModel({
