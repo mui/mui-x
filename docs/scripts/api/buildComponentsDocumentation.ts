@@ -208,8 +208,8 @@ function findXDemos(
       return page.pathname.indexOf('/x') && page.components.includes(componentName);
     })
     .map((page) => {
-      let name = /^Date and Time Pickers - (.*)$/.exec(page.title)?.[1] ?? page.title
-      name = name.replace(/\[(.*)]\((.*)\)/g, '')
+      let name = /^Date and Time Pickers - (.*)$/.exec(page.title)?.[1] ?? page.title;
+      name = name.replace(/\[(.*)]\((.*)\)/g, '');
 
       return {
         name,
@@ -217,8 +217,6 @@ function findXDemos(
       };
     });
 }
-
-const a = []
 
 const buildComponentDocumentation = async (options: {
   filename: string;
@@ -253,7 +251,7 @@ const buildComponentDocumentation = async (options: {
 
   reactApi.demos = findXDemos(reactApi.name, pagesMarkdown);
   if (reactApi.demos.length === 0) {
-    a.push(reactApi.name)
+    a.push(reactApi.name);
   }
 
   reactApi.styles = await parseStyles(reactApi, project.program as any);
@@ -585,8 +583,6 @@ export default async function buildComponentsDocumentation(
   if (fails.length > 0) {
     process.exit(1);
   }
-
-  console.log(a)
 }
 
 interface PageMarkdown {
