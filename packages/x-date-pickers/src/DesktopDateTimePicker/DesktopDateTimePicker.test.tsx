@@ -13,7 +13,7 @@ import {
   getClockMouseEvent,
   withPickerControls,
 } from 'test/utils/pickers-utils';
-import describeValidation from '@mui/x-date-pickers/tests/describeValidation';
+import { describeValidation } from '@mui/x-date-pickers/tests/describeValidation';
 
 const WrappedDesktopDateTimePicker = withPickerControls(DesktopDateTimePicker)({
   components: { DesktopTransition: FakeTransitionComponent },
@@ -30,7 +30,7 @@ describe('<DesktopDateTimePicker />', () => {
     render,
     clock,
     views: ['year', 'month', 'day', 'hours', 'minutes'],
-    isLegacyPicker: true,
+    componentFamily: 'legacy-picker',
   }));
 
   ['readOnly', 'disabled'].forEach((prop) => {

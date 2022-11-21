@@ -160,7 +160,7 @@ export const TimeClock = React.forwardRef(function TimeClock<TDate extends unkno
     components,
     componentsProps,
     value,
-    disableIgnoringDatePartForTimeValidation,
+    disableIgnoringDatePartForTimeValidation = false,
     maxTime,
     minTime,
     disableFuture,

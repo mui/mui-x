@@ -31,7 +31,7 @@ export interface DateRangePickerViewMobileSlotsComponent<TDate>
 }
 
 export interface DateRangePickerViewMobileSlotsComponentsProps<TDate>
-  extends PickersCalendarHeaderSlotsComponentsProps,
+  extends PickersCalendarHeaderSlotsComponentsProps<TDate>,
     Omit<DayCalendarSlotsComponentsProps<TDate>, 'day'> {
   day?: SlotComponentProps<typeof DateRangePickerDay, {}, DayCalendarProps<TDate> & { day: TDate }>;
 }
