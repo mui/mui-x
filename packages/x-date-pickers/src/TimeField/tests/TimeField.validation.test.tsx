@@ -1,4 +1,4 @@
-import describeValidation from '@mui/x-date-pickers/tests/describeValidation';
+import { describeValidation } from '@mui/x-date-pickers/tests/describeValidation';
 import { Unstable_TimeField as TimeField } from '@mui/x-date-pickers/TimeField';
 import { createPickerRenderer } from 'test/utils/pickers-utils';
 
@@ -9,7 +9,6 @@ describe('<TimeField /> validation', () => {
     render,
     clock,
     views: ['hours', 'minutes'],
-    skip: ['day', 'month', 'year'],
-    ignoredProps: ['minDate', 'maxDate', 'shouldDisableDate'],
+    componentFamily: 'field',
   }));
 });

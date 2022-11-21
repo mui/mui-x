@@ -6,7 +6,7 @@ import { PickersDay } from '@mui/x-date-pickers/PickersDay';
 import { DayCalendarSkeleton } from '@mui/x-date-pickers/DayCalendarSkeleton';
 import { Unstable_MobileNextDatePicker as MobileNextDatePicker } from '@mui/x-date-pickers/MobileNextDatePicker';
 import { createPickerRenderer, adapterToUse, openPicker } from 'test/utils/pickers-utils';
-import describeValidation from '@mui/x-date-pickers/tests/describeValidation';
+import { describeValidation } from '@mui/x-date-pickers/tests/describeValidation';
 
 describe('<MobileNextDatePicker />', () => {
   const { render, clock } = createPickerRenderer({ clock: 'fake', clockConfig: new Date() });
@@ -15,6 +15,7 @@ describe('<MobileNextDatePicker />', () => {
     render,
     clock,
     views: ['year', 'month', 'day'],
+    componentFamily: 'new-picker',
   }));
 
   it('allows to change only year', () => {

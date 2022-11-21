@@ -12,7 +12,7 @@ import {
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { Unstable_DesktopNextDateRangePicker as DesktopNextDateRangePicker } from '@mui/x-date-pickers-pro/DesktopNextDateRangePicker/index';
 import { DateRange, LocalizationProvider } from '@mui/x-date-pickers-pro';
-import describeValidation from '@mui/x-date-pickers-pro/tests/describeValidation';
+import { describeRangeValidation } from '@mui/x-date-pickers-pro/tests/describeRangeValidation';
 import {
   wrapPickerMount,
   createPickerRenderer,
@@ -48,10 +48,11 @@ describe('<DesktopNextDateRangePicker />', () => {
     ],
   }));
 
-  describeValidation(DesktopNextDateRangePicker, () => ({
+  describeRangeValidation(DesktopNextDateRangePicker, () => ({
     render,
     clock,
-    withDate: true,
+    componentFamily: 'new-picker',
+    views: ['day'],
   }));
 
   it('should scroll current month to the active selection when focusing appropriate field', () => {
