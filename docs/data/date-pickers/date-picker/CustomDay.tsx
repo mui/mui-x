@@ -68,9 +68,7 @@ export default function CustomDay() {
       <StaticNextDatePicker
         displayStaticWrapperAs="desktop"
         defaultValue={dayjs('2022-04-07')}
-        components={{
-          Day,
-        }}
+        components={{ Day }}
       />
     </LocalizationProvider>
   );
