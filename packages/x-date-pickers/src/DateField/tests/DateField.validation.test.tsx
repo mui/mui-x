@@ -1,4 +1,4 @@
-import describeValidation from '@mui/x-date-pickers/tests/describeValidation';
+import { describeValidation } from '@mui/x-date-pickers/tests/describeValidation';
 import { Unstable_DateField as DateField } from '@mui/x-date-pickers/DateField';
 import { createPickerRenderer } from 'test/utils/pickers-utils';
 
@@ -9,7 +9,6 @@ describe('<DateField /> validation', () => {
     render,
     clock,
     views: ['year', 'month', 'day'],
-    skip: ['day', 'month', 'year'],
-    ignoredProps: ['minTime', 'maxTime'],
+    componentFamily: 'field',
   }));
 });

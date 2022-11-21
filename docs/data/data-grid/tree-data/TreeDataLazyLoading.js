@@ -140,7 +140,6 @@ const fakeDataFetcher = (parentPath = []) =>
         ...row,
         descendantCount: getChildren(row.hierarchy).length,
       }));
-
       resolve(rows);
     }, 500 + Math.random() * 300);
   });

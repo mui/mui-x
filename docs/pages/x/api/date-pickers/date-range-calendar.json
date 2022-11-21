@@ -44,7 +44,9 @@
     "LeftArrowIcon": { "default": "ArrowLeft", "type": { "name": "elementType" } },
     "NextIconButton": { "default": "IconButton", "type": { "name": "elementType" } },
     "PreviousIconButton": { "default": "IconButton", "type": { "name": "elementType" } },
-    "RightArrowIcon": { "default": "ArrowRight", "type": { "name": "elementType" } }
+    "RightArrowIcon": { "default": "ArrowRight", "type": { "name": "elementType" } },
+    "SwitchViewButton": { "default": "IconButton", "type": { "name": "elementType" } },
+    "SwitchViewIcon": { "default": "ArrowDropDown", "type": { "name": "elementType" } }
   },
   "name": "DateRangeCalendar",
   "styles": {

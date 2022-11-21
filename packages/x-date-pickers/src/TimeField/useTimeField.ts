@@ -75,6 +75,6 @@ export const useTimeField = <TDate, TChildProps extends {}>({
     valueManager: singleItemValueManager,
     fieldValueManager: singleItemFieldValueManager,
     validator: validateTime,
-    supportedDateSections: ['hour', 'minute', 'second', 'meridiem'],
+    supportedDateSections: ['hours', 'minutes', 'seconds', 'meridiem'],
   });
 };

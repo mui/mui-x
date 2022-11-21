@@ -1,7 +1,7 @@
 import { useIsLandscape } from '../useIsLandscape';
 import { UsePickerValueLayoutResponse } from './usePickerValue';
 import { UsePickerViewsLayoutResponse } from './usePickerViews';
-import { CalendarOrClockPickerView } from '../../models/views';
+import { DateOrTimeView } from '../../models/views';
 import { WrapperVariant } from '../../components/wrappers/WrapperVariantContext';
 
 /**
@@ -18,7 +18,7 @@ export interface UsePickerLayoutProps {
   orientation?: 'portrait' | 'landscape';
 }
 
-export interface UsePickerLayoutResponseLayoutProps<TValue, TView extends CalendarOrClockPickerView>
+export interface UsePickerLayoutResponseLayoutProps<TValue, TView extends DateOrTimeView>
   extends UsePickerValueLayoutResponse<TValue>,
     UsePickerViewsLayoutResponse<TView>,
     UsePickerLayoutProps {
@@ -26,11 +26,11 @@ export interface UsePickerLayoutResponseLayoutProps<TValue, TView extends Calend
   wrapperVariant: WrapperVariant;
 }
 
-export interface UsePickerLayoutResponse<TValue, TView extends CalendarOrClockPickerView> {
+export interface UsePickerLayoutResponse<TValue, TView extends DateOrTimeView> {
   layoutProps: UsePickerLayoutResponseLayoutProps<TValue, TView>;
 }
 
-export interface UsePickerLayoutParams<TValue, TView extends CalendarOrClockPickerView> {
+export interface UsePickerLayoutParams<TValue, TView extends DateOrTimeView> {
   props: UsePickerLayoutProps;
   propsFromPickerValue: UsePickerValueLayoutResponse<TValue>;
   propsFromPickerViews: UsePickerViewsLayoutResponse<TView>;
@@ -38,9 +38,9 @@ export interface UsePickerLayoutParams<TValue, TView extends CalendarOrClockPick
 }
 
 /**
- * Prepare the props for the view layout (managed by `PickerViewLayout`)
+ * Prepare the props for the view layout (managed by `PickersViewLayout`)
  */
-export const usePickerLayout = <TValue, TView extends CalendarOrClockPickerView>({
+export const usePickerLayout = <TValue, TView extends DateOrTimeView>({
   props,
   propsFromPickerValue,
   propsFromPickerViews,

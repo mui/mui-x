@@ -12,12 +12,6 @@ export type GridCellMode = 'edit' | 'view';
 export type GridRowMode = 'edit' | 'view';
 
 /**
- * The cell value type.
- * @deprecated Use `any` or the V generic passed to most interfaces.
- */
-export type GridCellValue = string | number | boolean | Date | null | undefined | object;
-
-/**
  * The coordinates of cell represented by their row and column indexes.
  */
 export interface GridCellIndexCoordinates {

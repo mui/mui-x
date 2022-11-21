@@ -423,7 +423,13 @@ const GridRow = React.forwardRef<
 
   if (sizes?.spacingBottom) {
     const property = rootProps.rowSpacingType === 'border' ? 'borderBottomWidth' : 'marginBottom';
-    style[property] = sizes.spacingBottom;
+    let propertyValue = style[property];
+    // avoid overriding existing value
+    if (typeof propertyValue !== 'number') {
+      propertyValue = parseInt(propertyValue || '0', 10);
+    }
+    propertyValue += sizes.spacingBottom;
+    style[property] = propertyValue;
   }
 
   const rowClassNames = apiRef.current.unstable_applyPipeProcessors('rowClassName', [], rowId);
