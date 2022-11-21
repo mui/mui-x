@@ -2419,7 +2419,7 @@
 
 "@mui/monorepo@https://github.com/Janpot/material-ui.git#import-image":
   version "5.10.14"
-  resolved "https://github.com/Janpot/material-ui.git#991196bf15a94fe71e0fdae471c1a582caa5e7ed"
+  resolved "https://github.com/Janpot/material-ui.git#5ea034faa74efaab81d52a3ad05b55b27191830f"
 
 "@mui/private-theming@^5.10.14", "@mui/private-theming@^5.10.9":
   version "5.10.14"
