@@ -3,7 +3,7 @@ import { expect } from 'chai';
 import { fireEvent, screen } from '@mui/monorepo/test/utils';
 import { Unstable_StaticNextDatePicker as StaticNextDatePicker } from '@mui/x-date-pickers/StaticNextDatePicker';
 import { createPickerRenderer, adapterToUse } from 'test/utils/pickers-utils';
-import describeValidation from '@mui/x-date-pickers/tests/describeValidation';
+import { describeValidation } from '@mui/x-date-pickers/tests/describeValidation';
 
 describe('<StaticNextDatePicker />', () => {
   const { render, clock } = createPickerRenderer({ clock: 'fake' });
@@ -12,7 +12,7 @@ describe('<StaticNextDatePicker />', () => {
     render,
     clock,
     views: ['year', 'month', 'day'],
-    skip: ['textField'],
+    componentFamily: 'new-static-picker',
   }));
 
   it('render proper month', () => {

@@ -4,7 +4,7 @@ import { isWeekend } from 'date-fns';
 import { Unstable_StaticNextDateRangePicker as StaticNextDateRangePicker } from '@mui/x-date-pickers-pro/StaticNextDateRangePicker';
 import { describeConformance, screen } from '@mui/monorepo/test/utils';
 import { wrapPickerMount, createPickerRenderer, adapterToUse } from 'test/utils/pickers-utils';
-import describeValidation from '../tests/describeValidation';
+import { describeRangeValidation } from '@mui/x-date-pickers-pro/tests/describeRangeValidation';
 
 describe('<StaticNextDateRangePicker />', () => {
   const { render, clock } = createPickerRenderer({ clock: 'fake' });
@@ -28,13 +28,11 @@ describe('<StaticNextDateRangePicker />', () => {
     ],
   }));
 
-  describeValidation(StaticNextDateRangePicker, () => ({
+  describeRangeValidation(StaticNextDateRangePicker, () => ({
     render,
     clock,
-    withDate: true,
+    componentFamily: 'new-static-picker',
     views: ['day'],
-    skip: ['textField'],
-    // Indicate only one calendar
     mode: 'mobile',
   }));
 

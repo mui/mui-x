@@ -3,7 +3,7 @@ import { spy } from 'sinon';
 import { expect } from 'chai';
 import { describeConformance, screen, userEvent, fireEvent } from '@mui/monorepo/test/utils';
 import { Unstable_MobileNextDateRangePicker as MobileNextDateRangePicker } from '@mui/x-date-pickers-pro/MobileNextDateRangePicker';
-import describeValidation from '@mui/x-date-pickers-pro/tests/describeValidation';
+import { describeRangeValidation } from '@mui/x-date-pickers-pro/tests/describeRangeValidation';
 import {
   wrapPickerMount,
   createPickerRenderer,
@@ -33,12 +33,12 @@ describe('<MobileNextDateRangePicker />', () => {
     ],
   }));
 
-  describeValidation(MobileNextDateRangePicker, () => ({
+  describeRangeValidation(MobileNextDateRangePicker, () => ({
     render,
     clock,
-    withDate: true,
-    mode: 'mobile',
+    componentFamily: 'new-picker',
     views: ['day'],
+    mode: 'mobile',
   }));
 
   describe('picker state', () => {

@@ -10,7 +10,7 @@ import {
   adapterToUse,
   withPickerControls,
 } from 'test/utils/pickers-utils';
-import describeValidation from '../tests/describeValidation';
+import { describeRangeValidation } from '@mui/x-date-pickers-pro/tests/describeRangeValidation';
 
 const defaultRangeRenderInput = (startProps: TextFieldProps, endProps: TextFieldProps) => (
   <React.Fragment>
@@ -52,14 +52,11 @@ describe('<StaticDateRangePicker />', () => {
     }),
   );
 
-  describeValidation(StaticDateRangePicker, () => ({
+  describeRangeValidation(StaticDateRangePicker, () => ({
     render,
     clock,
-    withDate: true,
-    isLegacyPicker: true,
+    componentFamily: 'legacy-picker',
     views: ['day'],
-    skip: ['textField'],
-    // Indicate only one calendar
     mode: 'mobile',
   }));
 

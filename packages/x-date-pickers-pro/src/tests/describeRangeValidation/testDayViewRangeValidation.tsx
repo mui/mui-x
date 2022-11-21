@@ -35,7 +35,7 @@ const dateParser = (value: (null | number[])[]) => {
   return value.map((date) => (date === null ? date : adapterToUse.date(new Date(...(date as [])))));
 };
 
-function testDayViewValidation(ElementToTest, propsToTest, getOptions) {
+export function testDayViewRangeValidation(ElementToTest, propsToTest, getOptions) {
   if (!getOptions().withDate) {
     return;
   }
@@ -247,5 +247,3 @@ function testDayViewValidation(ElementToTest, propsToTest, getOptions) {
     }
   });
 }
-
-export default testDayViewValidation;
