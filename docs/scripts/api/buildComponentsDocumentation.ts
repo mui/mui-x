@@ -218,6 +218,8 @@ function findXDemos(
     });
 }
 
+const a = []
+
 const buildComponentDocumentation = async (options: {
   filename: string;
   project: Project;
@@ -250,6 +252,9 @@ const buildComponentDocumentation = async (options: {
   }
 
   reactApi.demos = findXDemos(reactApi.name, pagesMarkdown);
+  if (reactApi.demos.length === 0) {
+    a.push(reactApi.name)
+  }
 
   reactApi.styles = await parseStyles(reactApi, project.program as any);
   reactApi.styles.name = reactApi.name.startsWith('Grid')
@@ -580,6 +585,8 @@ export default async function buildComponentsDocumentation(
   if (fails.length > 0) {
     process.exit(1);
   }
+
+  console.log(a)
 }
 
 interface PageMarkdown {
