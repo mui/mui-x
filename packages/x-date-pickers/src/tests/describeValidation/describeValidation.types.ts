@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { MuiRenderResult, createRenderer } from '@mui/monorepo/test/utils/createRenderer';
-import { DateOrTimeView, DefaultizedProps } from '@mui/x-date-pickers/internals';
+import { DateOrTimeView } from '@mui/x-date-pickers/internals';
 
 type DescribeValidationComponentFamily =
   | 'legacy-picker'
@@ -20,8 +20,7 @@ export interface DescribeValidationInputOptions {
   views: DateOrTimeView[];
 }
 
-export interface DescribeValidationOptions
-  extends DefaultizedProps<DescribeValidationInputOptions, 'views'> {
+export interface DescribeValidationOptions extends DescribeValidationInputOptions {
   withDate: boolean;
   withTime: boolean;
 }
