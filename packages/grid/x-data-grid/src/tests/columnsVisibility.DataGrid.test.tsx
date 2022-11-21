@@ -12,7 +12,7 @@ const rows: GridRowsProp = [{ id: 1, idBis: 1 }];
 
 const columns: GridColumns = [{ field: 'id' }, { field: 'idBis' }];
 
-describe.only('<DataGridPro /> - Columns Visibility', () => {
+describe('<DataGridPro /> - Columns Visibility', () => {
   const { render } = createRenderer();
 
   function TestDataGrid(
