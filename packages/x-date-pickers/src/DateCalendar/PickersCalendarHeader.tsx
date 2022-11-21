@@ -111,7 +111,6 @@ const PickersCalendarHeaderLabelContainer = styled('div', {
   ownerState: PickersCalendarHeaderProps<any>;
 }>(({ theme }) => ({
   display: 'flex',
-  maxHeight: 30,
   overflow: 'hidden',
   alignItems: 'center',
   cursor: 'pointer',
