@@ -122,7 +122,7 @@ yargs
   )
   .example(
     '$0 v6.0.0/component-rename-prop src -- --component=DataGrid --from=prop --to=newProp',
-    'Run "component-rename-prop" codemod on "src" path with custom "from" and "to" arguments',
+    'Run "component-rename-prop" codemod in "src" path on "DataGrid" component with custom "from" and "to" arguments',
   )
   .help()
   .parse();

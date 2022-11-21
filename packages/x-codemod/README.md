@@ -31,7 +31,7 @@ Options:
 Examples:
   npx @mui/x-codemod v6.0.0/preset-safe src
   npx @mui/x-codemod v6.0.0/component-rename-prop src --
-  --component=Grid --from=prop --to=newProp
+  --component=DataGrid --from=prop --to=newProp
 ```
 
 ### `jscodeshift` options
