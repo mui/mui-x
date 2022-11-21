@@ -10,7 +10,6 @@ import {
 import {
   useGridApiEventHandler,
   useGridApiMethod,
-  GridColDef,
   GridEventListener,
   GridEventLookup,
   GRID_ACTIONS_COLUMN_TYPE,
@@ -22,7 +21,7 @@ import {
   gridClasses,
 } from '@mui/x-data-grid-pro';
 import { gridCellSelectionStateSelector } from './gridCellSelectionSelector';
-import { GridCellSelectionApi, GridCellSelectionModel } from './gridCellSelectionInterfaces';
+import { GridCellSelectionApi } from './gridCellSelectionInterfaces';
 import { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
 import { GridPrivateApiPremium } from '../../../models/gridApiPremium';
 
@@ -89,7 +88,7 @@ export const useGridCellSelection = (
   );
 
   const selectCellRange = React.useCallback<GridCellSelectionApi['selectCellRange']>(
-    (start, end) => {
+    (start, end, keepOtherSelected = false) => {
       const startRowIndex = apiRef.current.getRowIndexRelativeToVisibleRows(start.id);
       const startColumnIndex = apiRef.current.getColumnIndex(start.field);
       const endRowIndex = apiRef.current.getRowIndexRelativeToVisibleRows(end.id);
@@ -114,16 +113,16 @@ export const useGridCellSelection = (
       const rowsInRange = visibleRows.rows.slice(finalStartRowIndex, finalEndRowIndex + 1);
       const columnsInRange = visibleColumns.slice(finalStartColumnIndex, finalEndColumnIndex + 1);
 
-      const newModel = rowsInRange.reduce<GridCellSelectionModel>((acc, row) => {
-        acc[row.id] = columnsInRange.reduce<Record<GridColDef['field'], boolean>>(
-          (acc2, column) => {
-            acc2[column.field] = true;
-            return acc2;
-          },
-          {},
-        );
-        return acc;
-      }, {});
+      const newModel = keepOtherSelected ? apiRef.current.getCellSelectionModel() : {};
+
+      rowsInRange.forEach((row) => {
+        if (!newModel[row.id]) {
+          newModel[row.id] = {};
+        }
+        columnsInRange.forEach((column) => {
+          newModel[row.id][column.field] = true;
+        }, {});
+      });
 
       apiRef.current.setCellSelectionModel(newModel);
     },
@@ -178,13 +177,18 @@ export const useGridCellSelection = (
   }, [apiRef]);
 
   const handleCellMouseOver = React.useCallback<GridEventListener<'cellMouseOver'>>(
-    (params) => {
+    (params, event) => {
       if (!lastMouseDownCell.current) {
         return;
       }
 
       const { id, field } = params;
-      apiRef.current.selectCellRange(lastMouseDownCell.current, { id, field });
+
+      apiRef.current.selectCellRange(
+        lastMouseDownCell.current,
+        { id, field },
+        event.ctrlKey || event.metaKey,
+      );
     },
     [apiRef],
   );
