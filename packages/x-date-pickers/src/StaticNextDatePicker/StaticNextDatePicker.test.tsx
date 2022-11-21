@@ -5,6 +5,8 @@ import { Unstable_StaticNextDatePicker as StaticNextDatePicker } from '@mui/x-da
 import { createPickerRenderer, adapterToUse } from 'test/utils/pickers-utils';
 import describeValidation from '@mui/x-date-pickers/tests/describeValidation';
 
+const isJSDOM = /jsdom/.test(window.navigator.userAgent);
+
 describe('<StaticNextDatePicker />', () => {
   const { render, clock } = createPickerRenderer({ clock: 'fake' });
 
@@ -49,6 +51,36 @@ describe('<StaticNextDatePicker />', () => {
       render(<StaticNextDatePicker localeText={{ cancelButtonLabel: 'Custom cancel' }} />);
 
       expect(screen.queryByText('Custom cancel')).not.to.equal(null);
+    });
+  });
+
+  describe('props - autoFocus', () => {
+    const Test = (props) => (
+      <div id="pickerWrapper">
+        <StaticNextDatePicker {...props} />
+      </div>
+    );
+
+    it('should take focus when `autoFocus=true`', function test() {
+      if (isJSDOM) {
+        this.skip();
+      }
+
+      render(<Test autoFocus />);
+
+      const isInside = document.getElementById('pickerWrapper')?.contains(document.activeElement);
+      expect(isInside).to.equal(true);
+    });
+
+    it('should not take focus when `autoFocus=false`', function test() {
+      if (isJSDOM) {
+        this.skip();
+      }
+
+      render(<Test />);
+
+      const isInside = document.getElementById('pickerWrapper')?.contains(document.activeElement);
+      expect(isInside).to.equal(false);
     });
   });
 });
