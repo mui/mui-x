@@ -32,7 +32,6 @@ describe('<StaticNextDateRangePicker />', () => {
     render,
     clock,
     withDate: true,
-    isLegacyPicker: true,
     views: ['day'],
     skip: ['textField'],
     // Indicate only one calendar
