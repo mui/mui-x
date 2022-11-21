@@ -522,7 +522,7 @@ describe('<DataGrid /> - Sorting', () => {
 
   it('should apply the sortModel prop correctly on GridApiRef update row data', () => {
     let apiRef: React.MutableRefObject<GridApi>;
-    const TestCase = () => {
+    function TestCase() {
       apiRef = useGridApiRef();
 
       const sortModel: GridSortModel = [{ field: 'brand', sort: 'asc' }];
@@ -532,7 +532,7 @@ describe('<DataGrid /> - Sorting', () => {
           <DataGrid {...baselineProps} apiRef={apiRef} sortModel={sortModel} />
         </div>
       );
-    };
+    }
 
     render(<TestCase />);
     act(() => apiRef.current.updateRows([{ id: 1, brand: 'Fila' }]));
