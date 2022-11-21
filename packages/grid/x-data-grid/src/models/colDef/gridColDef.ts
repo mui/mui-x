@@ -36,7 +36,7 @@ export type GridKeyValue = string | number | boolean;
  * Column Definition interface.
  */
 // TODO v6: use unknown instead of any?
-export interface GridColDef<R extends GridValidRowModel = any, V = any, F = V> {
+export interface GridColDef<R extends GridValidRowModel = GridValidRowModel, V = any, F = V> {
   /**
    * The column identifier. It's used to map with [[GridRowModel]] values.
    */
