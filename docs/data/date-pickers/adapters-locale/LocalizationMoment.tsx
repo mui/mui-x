@@ -4,6 +4,8 @@ import moment from 'moment';
 import {} from 'moment/locale/de';
 // @ts-ignore
 import {} from 'moment/locale/en-gb';
+// @ts-ignore
+import {} from 'moment/locale/zh-cn';
 import Stack from '@mui/material/Stack';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
@@ -12,7 +14,7 @@ import { Unstable_DateField as DateField } from '@mui/x-date-pickers/DateField';
 import { Unstable_TimeField as TimeField } from '@mui/x-date-pickers/TimeField';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 
-const locales = ['en-us', 'en-gb', 'de'];
+const locales = ['en-us', 'en-gb', 'zh-cn', 'de'];
 
 type LocaleKey = typeof locales[number];
 
@@ -25,7 +27,7 @@ export default function LocalizationMoment() {
 
   return (
     <LocalizationProvider dateAdapter={AdapterMoment} adapterLocale={locale}>
-      <Stack spacing={3}>
+      <Stack spacing={3} sx={{ width: 300 }}>
         <ToggleButtonGroup
           value={locale}
           exclusive

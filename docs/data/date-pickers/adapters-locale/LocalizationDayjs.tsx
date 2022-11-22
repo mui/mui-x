@@ -2,6 +2,7 @@ import * as React from 'react';
 import dayjs from 'dayjs';
 import {} from 'dayjs/locale/de';
 import {} from 'dayjs/locale/en-gb';
+import {} from 'dayjs/locale/zh-cn';
 import Stack from '@mui/material/Stack';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
@@ -10,7 +11,7 @@ import { Unstable_DateField as DateField } from '@mui/x-date-pickers/DateField';
 import { Unstable_TimeField as TimeField } from '@mui/x-date-pickers/TimeField';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 
-const locales = ['en', 'en-gb', 'de'];
+const locales = ['en', 'en-gb', 'zh-cn', 'de'];
 
 type LocaleKey = typeof locales[number];
 
@@ -19,7 +20,7 @@ export default function LocalizationDayjs() {
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale={locale}>
-      <Stack spacing={3}>
+      <Stack spacing={3} sx={{ width: 300 }}>
         <ToggleButtonGroup
           value={locale}
           exclusive

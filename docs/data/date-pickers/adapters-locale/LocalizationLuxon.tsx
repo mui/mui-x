@@ -8,7 +8,7 @@ import { Unstable_DateField as DateField } from '@mui/x-date-pickers/DateField';
 import { Unstable_TimeField as TimeField } from '@mui/x-date-pickers/TimeField';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 
-const locales = ['en-us', 'en-gb', 'de'];
+const locales = ['en-us', 'en-gb', 'zh-cn', 'de'];
 
 type LocaleKey = typeof locales[number];
 
@@ -17,7 +17,7 @@ export default function LocalizationLuxon() {
 
   return (
     <LocalizationProvider dateAdapter={AdapterLuxon} adapterLocale={locale}>
-      <Stack spacing={3}>
+      <Stack spacing={3} sx={{ width: 300 }}>
         <ToggleButtonGroup
           value={locale}
           exclusive
