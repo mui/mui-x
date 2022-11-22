@@ -2,7 +2,12 @@ import * as React from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { styled, Theme, useThemeProps } from '@mui/material/styles';
-import { unstable_composeClasses as composeClasses, unstable_useId as useId } from '@mui/utils';
+import {
+  unstable_composeClasses as composeClasses,
+  unstable_useControlled as useControlled,
+  unstable_useId as useId,
+} from '@mui/utils';
+import useEventCallback from '@mui/utils/useEventCallback';
 import { SxProps } from '@mui/system';
 import { Clock, ClockProps } from './Clock';
 import { useUtils, useNow, useLocaleText } from '../internals/hooks/useUtils';
@@ -13,7 +18,7 @@ import {
   PickersArrowSwitcherSlotsComponentsProps,
 } from '../internals/components/PickersArrowSwitcher';
 import { convertValueToMeridiem, createIsAfterIgnoreDatePart } from '../internals/utils/time-utils';
-import { PickerOnChangeFn, useViews } from '../internals/hooks/useViews';
+import { useViews } from '../internals/hooks/useViews';
 import { PickerSelectionState } from '../internals/hooks/usePickerState';
 import { useMeridiemMode } from '../internals/hooks/date-helpers-hooks';
 import { TimeView } from '../internals/models';
@@ -75,13 +80,22 @@ export interface TimeClockProps<TDate> extends ExportedTimeClockProps<TDate> {
    */
   componentsProps?: TimeClockSlotsComponentsProps;
   /**
-   * Selected date @DateIOType.
+   * The selected value.
+   * Used when the component is controlled.
    */
-  value: TDate | null;
+  value?: TDate | null;
   /**
-   * On change callback @DateIOType.
+   * The default selected value.
+   * Used when the component is not controlled.
    */
-  onChange: PickerOnChangeFn<TDate>;
+  defaultValue?: TDate | null;
+  /**
+   * Callback fired when the value changes.
+   * @template TDate
+   * @param {TDate | null} value The new value.
+   * @param {PickerSelectionState | undefined} selectionState Indicates if the date selection is complete.
+   */
+  onChange?: (value: TDate | null, selectionState?: PickerSelectionState) => void;
   showViewSwitcher?: boolean;
   /**
    * Controlled open view.
@@ -148,6 +162,8 @@ export const TimeClock = React.forwardRef(function TimeClock<TDate extends unkno
   inProps: TimeClockProps<TDate>,
   ref: React.Ref<HTMLDivElement>,
 ) {
+  const localeText = useLocaleText();
+
   const props = useThemeProps({
     props: inProps,
     name: 'MuiTimeClock',
@@ -159,7 +175,7 @@ export const TimeClock = React.forwardRef(function TimeClock<TDate extends unkno
     autoFocus,
     components,
     componentsProps,
-    value,
+    value: valueProp,
     disableIgnoringDatePartForTimeValidation = false,
     maxTime,
     minTime,
@@ -169,6 +185,7 @@ export const TimeClock = React.forwardRef(function TimeClock<TDate extends unkno
     shouldDisableTime,
     showViewSwitcher,
     onChange,
+    defaultValue,
     view,
     views = ['hours', 'minutes'],
     openTo,
@@ -179,14 +196,26 @@ export const TimeClock = React.forwardRef(function TimeClock<TDate extends unkno
     readOnly,
   } = props;
 
-  const localeText = useLocaleText();
+  const [value, setValue] = useControlled({
+    name: 'DateCalendar',
+    state: 'value',
+    controlled: valueProp,
+    default: defaultValue ?? null,
+  });
+
+  const handleValueChange = useEventCallback(
+    (newValue: TDate | null, selectionState?: PickerSelectionState) => {
+      setValue(newValue);
+      onChange?.(newValue, selectionState);
+    },
+  );
 
   const { openView, setOpenView, nextView, previousView, handleChangeAndOpenNext } = useViews({
     view,
     views,
     openTo,
     onViewChange,
-    onChange,
+    onChange: handleValueChange,
   });
 
   const now = useNow<TDate>();
