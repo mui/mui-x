@@ -7,17 +7,9 @@ import SvgIcon, { SvgIconProps } from '@mui/material/SvgIcon';
 import { fireEvent, screen, userEvent } from '@mui/monorepo/test/utils';
 import { Unstable_DesktopNextDatePicker as DesktopNextDatePicker } from '@mui/x-date-pickers/DesktopNextDatePicker';
 import { createPickerRenderer, adapterToUse, openPicker } from 'test/utils/pickers-utils';
-import { describeValidation } from '@mui/x-date-pickers/tests/describeValidation';
 
 describe('<DesktopNextDatePicker />', () => {
-  const { render, clock } = createPickerRenderer({ clock: 'fake' });
-
-  describeValidation(DesktopNextDatePicker, () => ({
-    render,
-    clock,
-    views: ['year', 'month', 'day'],
-    componentFamily: 'new-picker',
-  }));
+  const { render } = createPickerRenderer();
 
   describe('Component slots: OpenPickerIcon', () => {
     it('should render custom component', () => {
@@ -66,23 +58,6 @@ describe('<DesktopNextDatePicker />', () => {
 
       expect(screen.getByText('test custom content')).not.equal(null);
       expect(screen.getByText(adapterToUse.format(testDate, 'monthAndYear'))).not.equal(null);
-    });
-  });
-
-  ['readOnly', 'disabled'].forEach((prop) => {
-    it(`cannot be opened when "Choose date" is clicked when ${prop}={true}`, () => {
-      const handleOpen = spy();
-      render(
-        <DesktopNextDatePicker
-          defaultValue={adapterToUse.date(new Date(2019, 0, 1))}
-          {...{ [prop]: true }}
-          onOpen={handleOpen}
-          open={false}
-        />,
-      );
-
-      userEvent.mousePress(screen.getByLabelText(/Choose date/));
-      expect(handleOpen.callCount).to.equal(0);
     });
   });
 

@@ -1,6 +1,16 @@
 import * as React from 'react';
-import { createRenderer, screen, RenderOptions, userEvent } from '@mui/monorepo/test/utils';
+import { expect } from 'chai';
+import sinon from 'sinon';
+import {
+  createRenderer,
+  screen,
+  RenderOptions,
+  userEvent,
+  act,
+  fireEvent,
+} from '@mui/monorepo/test/utils';
 import { CreateRendererOptions } from '@mui/monorepo/test/utils/createRenderer';
+import { unstable_useControlled as useControlled } from '@mui/utils';
 import { TransitionProps } from '@mui/material/transitions';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -12,9 +22,6 @@ import { AdapterMomentJalaali } from '@mui/x-date-pickers/AdapterMomentJalaali';
 import { AdapterDateFnsJalali } from '@mui/x-date-pickers/AdapterDateFnsJalali';
 import { MuiPickerFieldAdapter } from '@mui/x-date-pickers/internals/models';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import sinon from 'sinon';
-import { expect } from 'chai';
-import { unstable_useControlled as useControlled } from '@mui/utils';
 
 export type AdapterName =
   | 'date-fns'
@@ -131,7 +138,7 @@ export function createPickerRenderer({
   };
 }
 
-type OpenPickerParams =
+export type OpenPickerParams =
   | {
       type: 'date' | 'date-time' | 'time';
       variant: 'mobile' | 'desktop';
@@ -246,5 +253,38 @@ export const stubMatchMedia = (matches = true) =>
     removeListener: () => {},
   });
 
-export const expectInputValue = (input: HTMLInputElement, expectedValue: string) =>
-  expect(input.value.replace(/\u200e|\u2068|\u2069/g, '')).to.equal(expectedValue);
+export const expectInputValue = (
+  input: HTMLInputElement,
+  expectedValue: string,
+  shouldRemoveDashSpaces: boolean = false,
+) => {
+  let value = input.value.replace(/\u200e|\u2068|\u2069/g, '');
+  if (shouldRemoveDashSpaces) {
+    value = value.replace(/ \/ /g, '/');
+  }
+
+  return expect(value).to.equal(expectedValue);
+};
+
+export const buildFieldInteractions = ({
+  clock,
+}: {
+  // TODO: Export `Clock` from monorepo
+  clock: ReturnType<typeof createRenderer>['clock'];
+}) => {
+  const clickOnInput = (input: HTMLInputElement, cursorPosition: number) => {
+    act(() => {
+      fireEvent.mouseDown(input);
+      if (document.activeElement !== input) {
+        input.focus();
+      }
+      fireEvent.mouseUp(input);
+      input.setSelectionRange(cursorPosition, cursorPosition);
+      fireEvent.click(input);
+
+      clock.runToLast();
+    });
+  };
+
+  return { clickOnInput };
+};

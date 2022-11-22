@@ -1,5 +1,5 @@
-import { expect } from 'chai';
 import * as React from 'react';
+import { expect } from 'chai';
 import { screen } from '@mui/monorepo/test/utils';
 import TextField from '@mui/material/TextField';
 import { adapterToUse } from 'test/utils/pickers-utils';

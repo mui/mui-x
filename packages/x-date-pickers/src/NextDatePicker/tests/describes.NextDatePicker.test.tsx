@@ -1,14 +1,14 @@
 import { describeValidation } from '@mui/x-date-pickers/tests/describeValidation';
-import { Unstable_DateField as DateField } from '@mui/x-date-pickers/DateField';
 import { createPickerRenderer } from 'test/utils/pickers-utils';
+import { Unstable_NextDatePicker as NextDatePicker } from '@mui/x-date-pickers';
 
-describe('<DateField /> validation', () => {
+describe('<NextDatePicker /> - Describes', () => {
   const { render, clock } = createPickerRenderer({ clock: 'fake' });
 
-  describeValidation(DateField, () => ({
+  describeValidation(NextDatePicker, () => ({
     render,
     clock,
     views: ['year', 'month', 'day'],
-    componentFamily: 'field',
+    componentFamily: 'new-picker',
   }));
 });
