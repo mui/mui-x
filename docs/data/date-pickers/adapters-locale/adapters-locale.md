@@ -49,7 +49,7 @@ import de from 'date-fns/locale/de';
 
 ### With `luxon`
 
-For `luxon`, you have to pass the locale name to `LocalizationProvider`:
+For `luxon`—you have to pass the locale name to `LocalizationProvider`:
 
 ```tsx
 import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon';
