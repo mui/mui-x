@@ -259,7 +259,8 @@ export const useGridRowGrouping = (
     GridEventListener<'columnsChange'>
   >(() => {
     const sanitizedRowGroupingModel = gridRowGroupingSanitizedModelSelector(apiRef);
-    const rulesOnLastRowTreeCreation = apiRef.current.caches.rowGrouping.rulesOnLastRowTreeCreation;
+    const rulesOnLastRowTreeCreation =
+      apiRef.current.caches.rowGrouping.rulesOnLastRowTreeCreation || [];
 
     const groupingRules = getGroupingRules({
       sanitizedRowGroupingModel,
