@@ -78,7 +78,7 @@ import 'moment/locale/de';
 
 :::warning
 Some of `moment` methods do not support scoped local.
-To have a correct localization, you will have to manually update the global local before updating it in `LocalizationProvider`.
+To have a correct localization—you will have to manually update the global local before updating it in `LocalizationProvider`.
 
 ```tsx
 function App({ children }) {
