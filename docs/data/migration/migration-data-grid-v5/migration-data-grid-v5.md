@@ -64,6 +64,7 @@ Below are described the steps you need to make to migrate from v5 to v6.
 
 - The `GridRowParams['getValue']` property was removed. Use `params.row` instead.
 - The `GridCellParams['getValue']` property was removed. Use `params.row` instead.
+- The default type of `GridCellParams['value']` was changed from `any` to `unknown`.
 - The `GridActionsCellProps['api']` property was removed. Use `useGridApiContext` hook instead to get `apiRef`.
 - The `GridActionsCellProps['getValue']` property was removed. Use `params.row` instead.
 - The `GridFooterCellProps['getValue']` property was removed. Use `params.row` instead.
