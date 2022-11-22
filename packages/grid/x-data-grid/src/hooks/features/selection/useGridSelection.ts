@@ -327,31 +327,34 @@ export const useGridSelection = (
     [apiRef, canHaveMultipleSelection, checkboxSelection],
   );
 
-  const handleCellClick = React.useCallback<GridEventListener<'cellClick'>>(
+  const handleRowClick = React.useCallback<GridEventListener<'rowClick'>>(
     (params, event) => {
       if (disableSelectionOnClick) {
         return;
       }
 
-      if (params.field === GRID_CHECKBOX_SELECTION_COL_DEF.field) {
+      const field = event.target.closest('.MuiDataGrid-row')['data-field'];
+
+      if (field === GRID_CHECKBOX_SELECTION_COL_DEF.field) {
         // click on checkbox should not trigger row selection
         return;
       }
 
-      if (params.field === GRID_DETAIL_PANEL_TOGGLE_FIELD) {
+      if (field === GRID_DETAIL_PANEL_TOGGLE_FIELD) {
         // click to open the detail panel should not select the row
         return;
       }
 
-      if (params.field) {
-        const column = apiRef.current.getColumn(params.field);
+      if (field) {
+        const column = apiRef.current.getColumn(field);
 
         if (column.type === GRID_ACTIONS_COLUMN_TYPE) {
           return;
         }
       }
 
-      if (params.rowNode.isPinned) {
+      const rowNode = apiRef.current.getRowNode(params.id);
+      if (rowNode && rowNode.isPinned) {
         return;
       }
 
@@ -486,7 +489,7 @@ export const useGridSelection = (
   );
 
   useGridApiEventHandler(apiRef, 'sortedRowsSet', removeOutdatedSelection);
-  useGridApiEventHandler(apiRef, 'cellClick', handleCellClick);
+  useGridApiEventHandler(apiRef, 'rowClick', handleRowClick);
   useGridApiEventHandler(apiRef, 'rowSelectionCheckboxChange', handleRowSelectionCheckboxChange);
   useGridApiEventHandler(
     apiRef,
