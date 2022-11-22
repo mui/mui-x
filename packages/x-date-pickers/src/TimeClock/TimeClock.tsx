@@ -485,6 +485,11 @@ TimeClock.propTypes = {
    */
   componentsProps: PropTypes.object,
   /**
+   * The default selected value.
+   * Used when the component is not controlled.
+   */
+  defaultValue: PropTypes.any,
+  /**
    * If `true`, the picker and text field are disabled.
    * @default false
    */
@@ -520,9 +525,12 @@ TimeClock.propTypes = {
    */
   minutesStep: PropTypes.number,
   /**
-   * On change callback @DateIOType.
+   * Callback fired when the value changes.
+   * @template TDate
+   * @param {TDate | null} value The new value.
+   * @param {PickerSelectionState | undefined} selectionState Indicates if the date selection is complete.
    */
-  onChange: PropTypes.func.isRequired,
+  onChange: PropTypes.func,
   /**
    * Callback fired on view change.
    * @param {TimeView} view The new view.
@@ -555,7 +563,8 @@ TimeClock.propTypes = {
     PropTypes.object,
   ]),
   /**
-   * Selected date @DateIOType.
+   * The selected value.
+   * Used when the component is controlled.
    */
   value: PropTypes.any,
   /**
