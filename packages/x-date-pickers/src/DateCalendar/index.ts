@@ -27,4 +27,4 @@ export type {
 } from './pickersSlideTransitionClasses';
 export type { ExportedSlideTransitionProps } from './PickersSlideTransition';
 
-export type { CalendarPickerView } from '../internals/models';
+export type { DateView } from '../internals/models';

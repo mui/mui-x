@@ -1,27 +1,35 @@
 import * as React from 'react';
-import dayjs, { Dayjs } from 'dayjs';
+import dayjs from 'dayjs';
 import Box from '@mui/material/Box';
+import { TextFieldProps } from '@mui/material/TextField';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { Unstable_NextDatePicker as NextDatePicker } from '@mui/x-date-pickers/NextDatePicker';
 
-export default function CustomInput() {
-  const [value, setValue] = React.useState<Dayjs | null>(dayjs('2022-04-07'));
+type BrowserInputProps = TextFieldProps & {
+  ownerState?: any;
+};
+
+const BrowserInput = (props: BrowserInputProps) => {
+  const { inputProps, InputProps, ownerState, ...other } = props;
 
   return (
+    <Box sx={{ display: 'flex', alignItems: 'center' }}>
+      <input {...inputProps} {...(other as any)} />
+      {InputProps?.endAdornment}
+    </Box>
+  );
+};
+
+export default function CustomInput() {
+  return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <DatePicker
+      <NextDatePicker
         label="Custom input"
-        value={value}
-        onChange={(newValue) => {
-          setValue(newValue);
+        defaultValue={dayjs('2022-04-07')}
+        components={{
+          Input: BrowserInput,
         }}
-        renderInput={({ inputRef, inputProps, InputProps }) => (
-          <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <input ref={inputRef} {...inputProps} />
-            {InputProps?.endAdornment}
-          </Box>
-        )}
       />
     </LocalizationProvider>
   );

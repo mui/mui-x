@@ -1,9 +1,9 @@
 import { PickersLocaleText } from './utils/pickersLocaleTextApi';
 import { getPickersLocalization } from './utils/getPickersLocalization';
-import { CalendarPickerView } from '../internals/models';
+import { DateView } from '../internals/models';
 
-// maps ClockPickerView to its translation
-const clockViews = {
+// maps TimeView to its translation
+const timeViews = {
   hours: '時間',
   minutes: '分',
   seconds: '秒',
@@ -11,8 +11,8 @@ const clockViews = {
 
 // maps PickersToolbar["viewType"] to its translation
 const pickerViews = {
-  calendar: 'カレンダー表示',
-  clock: '時計表示',
+  date: 'カレンダー表示',
+  time: '時計表示',
 };
 
 const jaJPPickers: Partial<PickersLocaleText<any>> = {
@@ -23,11 +23,11 @@ const jaJPPickers: Partial<PickersLocaleText<any>> = {
   // View navigation
   openPreviousView: '前の表示を開く',
   openNextView: '次の表示を開く',
-  calendarViewSwitchingButtonAriaLabel: (view: CalendarPickerView) =>
+  calendarViewSwitchingButtonAriaLabel: (view: DateView) =>
     view === 'year'
       ? '年選択表示からカレンダー表示に切り替える'
       : 'カレンダー表示から年選択表示に切り替える',
-  inputModeToggleButtonAriaLabel: (isKeyboardInputOpen: boolean, viewType: 'calendar' | 'clock') =>
+  inputModeToggleButtonAriaLabel: (isKeyboardInputOpen, viewType) =>
     isKeyboardInputOpen
       ? `テキスト入力表示から${pickerViews[viewType]}に切り替える`
       : `${pickerViews[viewType]}からテキスト入力表示に切り替える`,
@@ -50,14 +50,14 @@ const jaJPPickers: Partial<PickersLocaleText<any>> = {
 
   // Clock labels
   clockLabelText: (view, time, adapter) =>
-    `${clockViews[view] ?? view}を選択してください ${
+    `${timeViews[view] ?? view}を選択してください ${
       time === null
         ? '時間が選択されていません'
         : `選択した時間は ${adapter.format(time, 'fullTime')} です`
     }`,
-  hoursClockNumberText: (hours) => `${hours} ${clockViews.hours}`,
-  minutesClockNumberText: (minutes) => `${minutes} ${clockViews.minutes}`,
-  secondsClockNumberText: (seconds) => `${seconds} ${clockViews.seconds}`,
+  hoursClockNumberText: (hours) => `${hours} ${timeViews.hours}`,
+  minutesClockNumberText: (minutes) => `${minutes} ${timeViews.minutes}`,
+  secondsClockNumberText: (seconds) => `${seconds} ${timeViews.seconds}`,
 
   // Open picker labels
   openDatePickerDialogue: (value, utils) =>

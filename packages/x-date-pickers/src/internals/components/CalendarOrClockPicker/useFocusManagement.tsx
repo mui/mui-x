@@ -1,12 +1,12 @@
 import * as React from 'react';
-import { CalendarOrClockPickerView } from '../../models/views';
+import { DateOrTimeView } from '../../models/views';
 
 interface FocusStateInput {
   autoFocus?: boolean;
   openView: any;
 }
 
-export const useFocusManagement = <TView extends CalendarOrClockPickerView>({
+export const useFocusManagement = <TView extends DateOrTimeView>({
   autoFocus,
   openView,
 }: FocusStateInput) => {

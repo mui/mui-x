@@ -10,7 +10,7 @@ import {
 } from '@mui/monorepo/test/utils';
 import { adapterToUse, wrapPickerMount, createPickerRenderer } from 'test/utils/pickers-utils';
 import { Unstable_StaticNextTimePicker as StaticNextTimePicker } from '@mui/x-date-pickers/StaticNextTimePicker';
-import describeValidation from '@mui/x-date-pickers/tests/describeValidation';
+import { describeValidation } from '@mui/x-date-pickers/tests/describeValidation';
 
 describe('<StaticNextTimePicker />', () => {
   const { render, clock } = createPickerRenderer({ clock: 'fake' });
@@ -19,7 +19,7 @@ describe('<StaticNextTimePicker />', () => {
     render,
     clock,
     views: ['hours', 'minutes'],
-    skip: ['textField'],
+    componentFamily: 'new-static-picker',
   }));
 
   describeConformance(<StaticNextTimePicker />, () => ({
