@@ -11,7 +11,7 @@ title: Library to manipulate dates
 Like most pickers—the MUI Date and Time Pickers need a library to manipulate the dates.
 It will be used to format, parse and mutate the date inside all pickers.
 
-The specificity of the MUI Date and Time Pickers is to let you choose which library you want to use for the date manipulation.
+MUI Date and Time Pickers lets you choose which library **you** want to use for the date manipulation.
 This lets you pick the library you already use in your application, without adding an extra one in your bundle.
 
 To achieve this, both `@mui/x-date-pickers` and `@mui/x-date-pickers-pro` exports a set of **adapters** which exposes
