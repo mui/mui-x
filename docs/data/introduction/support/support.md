@@ -25,7 +25,7 @@ The technical support covers only MUI X components.
 When purchasing a MUI X Pro or Premium license you get access to technical support until the end of your subscription.
 Support is available on multiple channels, but the recommended channels are:
 
-- GitHub: You can [open a new issue](https://github.com/mui/mui-x/issues/new/choose) and leave your Order ID, so we can prioritize accordingly.
+- GitHub: You can [open a new issue](https://github.com/mui/mui-x/issues/new/choose) and leave your Order ID (or Support key), so we can prioritize accordingly.
 - Email: If you need to share **private information** you can [submit a request](https://support.mui.com/hc/en-us/requests/new?tf_360023797420=mui_x) or send an email to [x@mui.com](mailto:x@mui.com).
 
 Including your Order ID in the issue helps us prioritize the issues based on the following support levels:
