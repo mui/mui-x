@@ -1,16 +1,16 @@
 import { GridFilterInputSingleSelect } from '../components/panel/filterPanel/GridFilterInputSingleSelect';
 import { GridFilterOperator } from '../models/gridFilterOperator';
-import { GridFilterItem } from '../models/gridFilterItem';
 import { GridFilterInputMultipleSingleSelect } from '../components/panel/filterPanel/GridFilterInputMultipleSingleSelect';
 import { GridCellParams, GridColDef } from '../models';
 import { GridApiCommunity } from '../models/api/gridApiCommunity';
 
-const parseObjectValue = (value: GridFilterItem) => {
+const parseObjectValue = (value: unknown) => {
   if (value == null || typeof value !== 'object') {
     return value;
   }
 
-  return value.value;
+  // TODO v6: use uknnown instead of any?
+  return (value as { value: any }).value;
 };
 
 export const getGridSingleSelectQuickFilterFn = (

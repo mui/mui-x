@@ -15,7 +15,7 @@ import { GridApiCommunity } from '../api/gridApiCommunity';
  * Object passed as parameter in the column [[GridColDef]] cell renderer.
  */
 export interface GridCellParams<
-  V = any,
+  V = unknown,
   R extends GridValidRowModel = any,
   F = V,
   N extends GridTreeNode = GridTreeNode,

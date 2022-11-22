@@ -215,35 +215,35 @@ export interface GridCellEventLookup {
    * Fired when a cell is clicked.
    */
   cellClick: {
-    params: GridCellParams;
+    params: GridCellParams<any>;
     event: React.MouseEvent<HTMLElement>;
   };
   /**
    * Fired when a cell is double-clicked.
    */
   cellDoubleClick: {
-    params: GridCellParams;
+    params: GridCellParams<any>;
     event: React.MouseEvent<HTMLElement>;
   };
   /**
    * Fired when a `mousedown` event happens in a cell.
    */
   cellMouseDown: {
-    params: GridCellParams;
+    params: GridCellParams<any>;
     event: React.MouseEvent<HTMLElement>;
   };
   /**
    * Fired when a `mouseup` event happens in a cell.
    */
   cellMouseUp: {
-    params: GridCellParams;
+    params: GridCellParams<any>;
     event: React.MouseEvent<HTMLElement>;
   };
   /**
    * Fired when a `keydown` event happens in a cell.
    */
   cellKeyDown: {
-    params: GridCellParams;
+    params: GridCellParams<any>;
     event: React.KeyboardEvent<HTMLElement>;
   };
   /**
@@ -251,7 +251,7 @@ export interface GridCellEventLookup {
    * @ignore - do not document.
    */
   cellDragEnter: {
-    params: GridCellParams;
+    params: GridCellParams<any>;
     event: React.DragEvent<HTMLElement>;
   };
   /**
@@ -260,7 +260,7 @@ export interface GridCellEventLookup {
    * @ignore - do not document.
    */
   cellDragOver: {
-    params: GridCellParams;
+    params: GridCellParams<any>;
     event: React.DragEvent<HTMLElement>;
   };
 }
