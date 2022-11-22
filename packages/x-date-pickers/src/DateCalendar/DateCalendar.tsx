@@ -320,6 +320,10 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate>(
 
       if (newValue != null) {
         slideToMonth(newValue);
+
+        if (onYearChange && !utils.isSameYear(newValue, calendarState.currentMonth)) {
+          onYearChange(newValue);
+        }
       }
     },
   );
@@ -377,7 +381,6 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate>(
 
     if (closestEnabledDate) {
       handleValueChange(closestEnabledDate, 'finish');
-      onYearChange?.(closestEnabledDate);
     } else {
       openNext();
       slideToMonth(startOfYear);
