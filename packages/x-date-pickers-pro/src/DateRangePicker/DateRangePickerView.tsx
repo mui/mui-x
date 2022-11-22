@@ -132,7 +132,7 @@ function DateRangePickerViewRaw<TDate>(props: DateRangePickerViewProps<TDate>) {
     ((dayToTest: TDate) => shouldDisableDate?.(dayToTest, currentlySelectingRangeEnd));
 
   const [start, end] = value;
-  const { changeMonth, calendarState, onMonthSwitchingAnimationEnd, changeFocusedDay } =
+  const { slideToMonth, calendarState, onMonthSwitchingAnimationEnd, changeFocusedDay } =
     useCalendarState<TDate>({
       value: start || end,
       defaultCalendarMonth,
@@ -178,7 +178,7 @@ function DateRangePickerViewRaw<TDate>(props: DateRangePickerViewProps<TDate>) {
           : // If need to focus end, scroll to the state when "end" is displaying in the last calendar
             utils.addMonths(date, -displayingMonthRange);
 
-      changeMonth(newMonth);
+      slideToMonth(newMonth);
     }
   }, [currentlySelectingRangeEnd, value]); // eslint-disable-line
 
@@ -225,7 +225,7 @@ function DateRangePickerViewRaw<TDate>(props: DateRangePickerViewProps<TDate>) {
       reduceAnimations,
       disableHighlightToday,
       onMonthSwitchingAnimationEnd,
-      changeMonth,
+      slideToMonth,
       currentlySelectingRangeEnd,
       disableFuture,
       disablePast,

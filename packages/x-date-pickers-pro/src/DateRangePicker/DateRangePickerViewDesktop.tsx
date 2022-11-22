@@ -85,7 +85,7 @@ export interface DateRangePickerViewDesktopProps<TDate>
   componentsProps?: DesktopDateRangeCalendarSlotsComponentsProps<TDate>;
   calendars: 1 | 2 | 3;
   value: DateRange<TDate>;
-  changeMonth: (date: TDate) => void;
+  slideToMonth: (date: TDate) => void;
   currentlySelectingRangeEnd: 'start' | 'end';
   classes?: Partial<DateRangePickerViewDesktopClasses>;
 }
@@ -145,7 +145,7 @@ export function DateRangePickerViewDesktop<TDate>(inProps: DateRangePickerViewDe
   const props = useThemeProps({ props: inProps, name: 'MuiDateRangePickerViewDesktop' });
   const {
     calendars,
-    changeMonth,
+    slideToMonth,
     components,
     componentsProps,
     currentlySelectingRangeEnd,
@@ -218,12 +218,12 @@ export function DateRangePickerViewDesktop<TDate>(inProps: DateRangePickerViewDe
   );
 
   const selectNextMonth = React.useCallback(() => {
-    changeMonth(utils.getNextMonth(currentMonth));
-  }, [changeMonth, currentMonth, utils]);
+    slideToMonth(utils.getNextMonth(currentMonth));
+  }, [slideToMonth, currentMonth, utils]);
 
   const selectPreviousMonth = React.useCallback(() => {
-    changeMonth(utils.getPreviousMonth(currentMonth));
-  }, [changeMonth, currentMonth, utils]);
+    slideToMonth(utils.getPreviousMonth(currentMonth));
+  }, [slideToMonth, currentMonth, utils]);
 
   const componentsForDayCalendar = {
     Day: DateRangePickerDay,

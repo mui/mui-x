@@ -54,7 +54,7 @@ interface DesktopDateRangeCalendarProps<TDate>
    */
   componentsProps?: DateRangePickerViewMobileSlotsComponentsProps<TDate>;
   value: DateRange<TDate>;
-  changeMonth: (date: TDate) => void;
+  slideToMonth: (date: TDate) => void;
 }
 
 const onlyDayView = ['day'] as const;
@@ -64,7 +64,7 @@ const onlyDayView = ['day'] as const;
  */
 export function DateRangePickerViewMobile<TDate>(props: DesktopDateRangeCalendarProps<TDate>) {
   const {
-    changeMonth,
+    slideToMonth,
     components,
     componentsProps,
     value,
@@ -127,7 +127,7 @@ export function DateRangePickerViewMobile<TDate>(props: DesktopDateRangeCalendar
         componentsProps={componentsProps}
         maxDate={maxDateWithDisabled}
         minDate={minDateWithDisabled}
-        onMonthChange={changeMonth as any}
+        onMonthChange={slideToMonth as any}
         openView="day"
         views={onlyDayView}
         disabled={disabled}
