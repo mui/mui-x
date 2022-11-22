@@ -55,11 +55,11 @@ describe('<StaticNextDatePicker />', () => {
   });
 
   describe('props - autoFocus', () => {
-    const Test = (props) => (
-      <div id="pickerWrapper">
+    function Test(props) {
+  return <div id="pickerWrapper">
         <StaticNextDatePicker {...props} />
       </div>
-    );
+}
 
     it('should take focus when `autoFocus=true`', function test() {
       if (isJSDOM) {
