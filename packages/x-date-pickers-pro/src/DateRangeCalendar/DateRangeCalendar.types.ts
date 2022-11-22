@@ -121,7 +121,7 @@ export interface DateRangeCalendarProps<TDate>
 
 export type DateRangeCalendarDefaultizedProps<TDate> = DefaultizedProps<
   DateRangeCalendarProps<TDate>,
-  'reduceAnimations' | 'calendars' | keyof BaseDateValidationProps<TDate>
+  'reduceAnimations' | 'calendars' | 'disableDragEditing' | keyof BaseDateValidationProps<TDate>
 >;
 
 export type ExportedDateRangeCalendarProps<TDate> = Omit<

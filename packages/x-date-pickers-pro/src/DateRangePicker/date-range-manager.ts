@@ -6,6 +6,11 @@ interface CalculateRangeChangeOptions<TDate> {
   range: DateRange<TDate>;
   newDate: TDate;
   currentlySelectingRangeEnd: 'start' | 'end';
+  /**
+   * Should allow flipping range `start` and `end` dates if the `newDate` would result in a new range creation.
+   * 
+   * It is used to allow dragging range `start` date past `end` date essentially becoming the new `end` date and vice versa.
+   */
   allowRangeFlip?: boolean;
 }
 

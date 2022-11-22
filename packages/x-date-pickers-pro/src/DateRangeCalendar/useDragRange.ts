@@ -3,15 +3,16 @@ import useEventCallback from '@mui/utils/useEventCallback';
 import { MuiPickersAdapter } from '@mui/x-date-pickers/internals';
 import { DateRangePosition } from './DateRangeCalendar.types';
 
-interface UseDragRange<TDate> {
+interface UseDragRangeParams<TDate> {
   disableDragEditing?: boolean;
   utils: MuiPickersAdapter<TDate>;
   setRangeDragDay: (value: TDate | null) => void;
+  setIsDragging: (value: boolean) => void;
   onDragStart: (position: DateRangePosition) => void;
   onDrop: (newDate: TDate) => void;
 }
 
-interface UseDragRangeResponse {
+interface UseDragRangeEvents {
   onDragStart?: React.DragEventHandler<HTMLButtonElement>;
   onDragEnter?: React.DragEventHandler<HTMLButtonElement>;
   onDragLeave?: React.DragEventHandler<HTMLButtonElement>;
@@ -21,7 +22,11 @@ interface UseDragRangeResponse {
   onTouchStart?: React.TouchEventHandler<HTMLButtonElement>;
   onTouchMove?: React.TouchEventHandler<HTMLButtonElement>;
   onTouchEnd?: React.TouchEventHandler<HTMLButtonElement>;
-  isDragging?: boolean;
+}
+
+interface UseDragRangeResponse<TDate> extends UseDragRangeEvents {
+  isDragging: boolean;
+  rangeDragDay: TDate | null;
 }
 
 const resolveDateFromTarget = <TDate>(target: EventTarget, utils: MuiPickersAdapter<TDate>) => {
@@ -72,15 +77,13 @@ const resolveElementFromTouch = (
   return null;
 };
 
-export const useDragRange = <TDate>({
-  disableDragEditing,
+const useDragRangeEvents = <TDate>({
   utils,
   setRangeDragDay,
+  setIsDragging,
   onDragStart,
   onDrop,
-}: UseDragRange<TDate>): UseDragRangeResponse => {
-  const [isDragging, setIsDragging] = React.useState(false);
-
+}: Omit<UseDragRangeParams<TDate>, 'disableDragEditing'>): UseDragRangeEvents => {
   const handleDragStart = useEventCallback((event: React.DragEvent<HTMLButtonElement>) => {
     event.stopPropagation();
     const newDate = resolveDateFromTarget(event.target, utils);
@@ -163,25 +166,19 @@ export const useDragRange = <TDate>({
       onDrop(newDate);
     }
   });
-
   return React.useMemo(
-    () =>
-      !disableDragEditing
-        ? {
-            onDragStart: handleDragStart,
-            onDragEnter: handleDragEnter,
-            onDragLeave: handleDragLeave,
-            onDragOver: handleDragOver,
-            onDragEnd: handleDragEnd,
-            onDrop: handleDrop,
-            onTouchStart: handleTouchStart,
-            onTouchMove: handleTouchMove,
-            onTouchEnd: handleTouchEnd,
-            isDragging,
-          }
-        : {},
+    () => ({
+      onDragStart: handleDragStart,
+      onDragEnter: handleDragEnter,
+      onDragLeave: handleDragLeave,
+      onDragOver: handleDragOver,
+      onDragEnd: handleDragEnd,
+      onDrop: handleDrop,
+      onTouchStart: handleTouchStart,
+      onTouchMove: handleTouchMove,
+      onTouchEnd: handleTouchEnd,
+    }),
     [
-      disableDragEditing,
       handleDragEnd,
       handleDragEnter,
       handleDragLeave,
@@ -191,7 +188,37 @@ export const useDragRange = <TDate>({
       handleTouchStart,
       handleTouchMove,
       handleTouchEnd,
-      isDragging,
     ],
+  );
+};
+
+export const useDragRange = <TDate>({
+  disableDragEditing,
+  utils,
+  onDragStart,
+  onDrop,
+}: Omit<
+  UseDragRangeParams<TDate>,
+  'setRangeDragDay' | 'setIsDragging'
+>): UseDragRangeResponse<TDate> => {
+  const [isDragging, setIsDragging] = React.useState(false);
+  const [rangeDragDay, setRangeDragDay] = React.useState<TDate | null>(null);
+
+  const handleRangeDragDayChange = useEventCallback((val: TDate | null) => {
+    if (!utils.isEqual(val, rangeDragDay)) {
+      setRangeDragDay(val);
+    }
+  });
+  const dragRangeEvents = useDragRangeEvents({
+    utils,
+    onDragStart,
+    onDrop,
+    setIsDragging,
+    setRangeDragDay: handleRangeDragDayChange,
+  });
+
+  return React.useMemo(
+    () => ({ isDragging, rangeDragDay, ...(!disableDragEditing ? dragRangeEvents : {}) }),
+    [isDragging, rangeDragDay, disableDragEditing, dragRangeEvents],
   );
 };
