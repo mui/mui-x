@@ -34,7 +34,7 @@ export interface DateRangeCalendarSlotsComponent<TDate>
 export interface DateRangeCalendarSlotsComponentsProps<TDate>
   extends PickersArrowSwitcherSlotsComponentsProps,
     Omit<DayCalendarSlotsComponentsProps<TDate>, 'Day'>,
-    PickersCalendarHeaderSlotsComponentsProps {}
+    PickersCalendarHeaderSlotsComponentsProps<TDate> {}
 
 export interface DateRangeCalendarProps<TDate>
   extends ExportedDayCalendarProps<TDate>,

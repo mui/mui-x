@@ -20,7 +20,7 @@ const validBundles = [
 ];
 
 async function run(argv) {
-  const { bundle, largeFiles, outDir: relativeOutDir, verbose } = argv;
+  const { bundle, largeFiles, outDir: relativeOutDir, verbose, ignore: providedIgnore } = argv;
 
   if (validBundles.indexOf(bundle) === -1) {
     throw new TypeError(
@@ -40,9 +40,11 @@ async function run(argv) {
     '**/*.test.js',
     '**/*.test.ts',
     '**/*.test.tsx',
+    '**/*.spec.js',
     '**/*.spec.ts',
     '**/*.spec.tsx',
     '**/*.d.ts',
+    ...(providedIgnore || []),
   ];
 
   const topLevelNonIndexFiles = glob
@@ -119,7 +121,8 @@ yargs(process.argv.slice(2))
           describe: 'Set to `true` if you know you are transpiling large files.',
         })
         .option('out-dir', { default: './build', type: 'string' })
-        .option('verbose', { type: 'boolean' });
+        .option('verbose', { type: 'boolean' })
+        .option('ignore', { type: 'string', array: true });
     },
     handler: run,
   })

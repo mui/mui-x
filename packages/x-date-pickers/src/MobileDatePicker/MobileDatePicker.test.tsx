@@ -13,7 +13,7 @@ import {
   withPickerControls,
   openPicker,
 } from 'test/utils/pickers-utils';
-import describeValidation from '@mui/x-date-pickers/tests/describeValidation';
+import { describeValidation } from '@mui/x-date-pickers/tests/describeValidation';
 
 const WrappedMobileDatePicker = withPickerControls(MobileDatePicker)({
   components: { MobileTransition: FakeTransitionComponent },
@@ -27,7 +27,7 @@ describe('<MobileDatePicker />', () => {
     render,
     clock,
     views: ['year', 'month', 'day'],
-    isLegacyPicker: true,
+    componentFamily: 'legacy-picker',
   }));
 
   it('allows to change only year', () => {
