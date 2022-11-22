@@ -11,8 +11,8 @@ export const getDateSectionConfigFromFormatToken = <TDate>(
   if (config == null) {
     throw new Error(
       [
-        `The token "${formatToken}" is not supported by the MUI Date and Time Pickers`,
-        'Please try to use another token or open an issue on https://github.com/mui/mui-x/issues/new/choose if you think it should be',
+        `MUI: The token "${formatToken}" is not supported by the Date and Time Pickers.`,
+        'Please try using another token or open an issue on https://github.com/mui/mui-x/issues/new/choose if you think it should be supported.',
       ].join('\n'),
     );
   }
