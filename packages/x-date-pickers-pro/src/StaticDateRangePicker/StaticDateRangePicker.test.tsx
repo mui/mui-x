@@ -57,7 +57,7 @@ describe('<StaticDateRangePicker />', () => {
     clock,
     componentFamily: 'legacy-static-picker',
     views: ['day'],
-    mode: 'mobile',
+    variant: 'mobile',
   }));
 
   it('allows disabling dates', () => {

@@ -6,7 +6,7 @@ import { adapterToUse } from 'test/utils/pickers-utils';
 
 const isDisable = (el: HTMLElement) => el.getAttribute('disabled') !== null;
 
-const testDisbaledDate = (day: string, expectedAnswer: boolean[], isDesktop: boolean) => {
+const testDisabledDate = (day: string, expectedAnswer: boolean[], isDesktop: boolean) => {
   expect(screen.getAllByText(day).map(isDisable)).to.deep.equal(
     isDesktop ? expectedAnswer : expectedAnswer.slice(0, 1),
   );
@@ -37,13 +37,13 @@ const dateParser = (value: (null | number[])[]) => {
 
 export function testDayViewRangeValidation(ElementToTest, getOptions) {
   describe('validation in day view:', () => {
-    const { componentFamily, views, mode = 'desktop' } = getOptions();
+    const { componentFamily, views, variant = 'desktop' } = getOptions();
 
     if (!views.includes('day') || componentFamily === 'field') {
       return;
     }
 
-    const isDesktop = mode === 'desktop';
+    const isDesktop = variant === 'desktop';
 
     const defaultProps = componentFamily.includes('legacy')
       ? {
@@ -74,8 +74,8 @@ export function testDayViewRangeValidation(ElementToTest, getOptions) {
         />,
       );
 
-      testDisbaledDate('10', [false, true], isDesktop);
-      testDisbaledDate('11', [true, true], isDesktop);
+      testDisabledDate('10', [false, true], isDesktop);
+      testDisabledDate('11', [true, true], isDesktop);
     });
 
     it('should apply shouldDisableYear', function test() {
@@ -91,7 +91,7 @@ export function testDayViewRangeValidation(ElementToTest, getOptions) {
         />,
       );
 
-      testDisbaledDate('10', [true, true], isDesktop);
+      testDisabledDate('10', [true, true], isDesktop);
 
       setProps({
         value: dateParser([
@@ -100,7 +100,7 @@ export function testDayViewRangeValidation(ElementToTest, getOptions) {
         ]),
       });
       clock.runToLast();
-      testDisbaledDate('10', [true, false], isDesktop);
+      testDisabledDate('10', [true, false], isDesktop);
 
       setProps({
         value: dateParser([
@@ -109,7 +109,7 @@ export function testDayViewRangeValidation(ElementToTest, getOptions) {
         ]),
       });
       clock.runToLast();
-      testDisbaledDate('10', [false, false], isDesktop);
+      testDisabledDate('10', [false, false], isDesktop);
     });
 
     it('should apply shouldDisableMonth', function test() {
@@ -125,9 +125,9 @@ export function testDayViewRangeValidation(ElementToTest, getOptions) {
         />,
       );
 
-      testDisbaledDate('1', [true, false], isDesktop);
-      testDisbaledDate('15', [true, false], isDesktop);
-      testDisbaledDate('30', [true, false], isDesktop);
+      testDisabledDate('1', [true, false], isDesktop);
+      testDisabledDate('15', [true, false], isDesktop);
+      testDisabledDate('30', [true, false], isDesktop);
 
       setProps({
         value: dateParser([
@@ -137,9 +137,9 @@ export function testDayViewRangeValidation(ElementToTest, getOptions) {
       });
       clock.runToLast();
 
-      testDisbaledDate('1', [false, false], isDesktop);
-      testDisbaledDate('15', [false, false], isDesktop);
-      testDisbaledDate('30', [false, false], isDesktop);
+      testDisabledDate('1', [false, false], isDesktop);
+      testDisabledDate('15', [false, false], isDesktop);
+      testDisabledDate('30', [false, false], isDesktop);
     });
 
     it('should apply disablePast', function test() {
@@ -156,14 +156,14 @@ export function testDayViewRangeValidation(ElementToTest, getOptions) {
       const tomorrow = adapterToUse.addDays(now, 1);
       const yesterday = adapterToUse.addDays(now, -1);
 
-      testDisbaledDate(adapterToUse.format(now, 'dayOfMonth'), [false, false], isDesktop);
-      testDisbaledDate(adapterToUse.format(tomorrow, 'dayOfMonth'), [false, false], isDesktop);
+      testDisabledDate(adapterToUse.format(now, 'dayOfMonth'), [false, false], isDesktop);
+      testDisabledDate(adapterToUse.format(tomorrow, 'dayOfMonth'), [false, false], isDesktop);
 
       if (!adapterToUse.isSameMonth(yesterday, tomorrow)) {
         setProps({ value: [yesterday, null] });
         clock.runToLast();
       }
-      testDisbaledDate(adapterToUse.format(yesterday, 'dayOfMonth'), [true, false], isDesktop);
+      testDisabledDate(adapterToUse.format(yesterday, 'dayOfMonth'), [true, false], isDesktop);
     });
 
     it('should apply disableFuture', function test() {
@@ -180,14 +180,14 @@ export function testDayViewRangeValidation(ElementToTest, getOptions) {
       const tomorrow = adapterToUse.addDays(now, 1);
       const yesterday = adapterToUse.addDays(now, -1);
 
-      testDisbaledDate(adapterToUse.format(now, 'dayOfMonth'), [false, true], isDesktop);
-      testDisbaledDate(adapterToUse.format(tomorrow, 'dayOfMonth'), [true, true], isDesktop);
+      testDisabledDate(adapterToUse.format(now, 'dayOfMonth'), [false, true], isDesktop);
+      testDisabledDate(adapterToUse.format(tomorrow, 'dayOfMonth'), [true, true], isDesktop);
 
       if (!adapterToUse.isSameMonth(yesterday, tomorrow)) {
         setProps({ value: [yesterday, null] });
         clock.runToLast();
       }
-      testDisbaledDate(adapterToUse.format(yesterday, 'dayOfMonth'), [false, true], isDesktop);
+      testDisabledDate(adapterToUse.format(yesterday, 'dayOfMonth'), [false, true], isDesktop);
     });
 
     it('should apply minDate', function test() {
@@ -201,10 +201,10 @@ export function testDayViewRangeValidation(ElementToTest, getOptions) {
         />,
       );
 
-      testDisbaledDate('1', [true, false], isDesktop);
-      testDisbaledDate('3', [true, false], isDesktop);
-      testDisbaledDate('4', [false, false], isDesktop);
-      testDisbaledDate('15', [false, false], isDesktop);
+      testDisabledDate('1', [true, false], isDesktop);
+      testDisabledDate('3', [true, false], isDesktop);
+      testDisabledDate('4', [false, false], isDesktop);
+      testDisabledDate('15', [false, false], isDesktop);
 
       testMonthSwitcherAreDisable([true, false]);
     });
@@ -220,10 +220,10 @@ export function testDayViewRangeValidation(ElementToTest, getOptions) {
         />,
       );
 
-      testDisbaledDate('1', [false, true], isDesktop);
-      testDisbaledDate('4', [false, true], isDesktop);
-      testDisbaledDate('5', [true, true], isDesktop);
-      testDisbaledDate('15', [true, true], isDesktop);
+      testDisabledDate('1', [false, true], isDesktop);
+      testDisabledDate('4', [false, true], isDesktop);
+      testDisabledDate('5', [true, true], isDesktop);
+      testDisabledDate('15', [true, true], isDesktop);
 
       testMonthSwitcherAreDisable([false, true]);
     });

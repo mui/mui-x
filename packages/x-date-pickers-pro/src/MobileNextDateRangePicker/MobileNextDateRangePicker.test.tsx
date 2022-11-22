@@ -38,7 +38,7 @@ describe('<MobileNextDateRangePicker />', () => {
     clock,
     componentFamily: 'new-picker',
     views: ['day'],
-    mode: 'mobile',
+    variant: 'mobile',
   }));
 
   describe('picker state', () => {
