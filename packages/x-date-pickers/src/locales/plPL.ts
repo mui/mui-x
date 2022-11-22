@@ -41,6 +41,12 @@ const plPLPickers: Partial<PickersLocaleText<any>> = {
   minutesClockNumberText: (minutes) => `${minutes} minut`,
   secondsClockNumberText: (seconds) => `${seconds} sekund`,
 
+  // Calendar labels
+  // calendarWeekNumberHeaderLabel: 'Week number',
+  // calendarWeekNumberHeaderText: '#',
+  // calendarWeekNumberAriaLabelText: weekNumber => `Week ${weekNumber}`,
+  // calendarWeekNumberText: weekNumber => `${weekNumber}`,
+
   // Open picker labels
   openDatePickerDialogue: (value, utils) =>
     value != null && utils.isValid(value)

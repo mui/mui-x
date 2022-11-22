@@ -160,7 +160,7 @@ export const TimeClock = React.forwardRef(function TimeClock<TDate extends unkno
     components,
     componentsProps,
     value,
-    disableIgnoringDatePartForTimeValidation,
+    disableIgnoringDatePartForTimeValidation = false,
     maxTime,
     minTime,
     disableFuture,
@@ -179,7 +179,7 @@ export const TimeClock = React.forwardRef(function TimeClock<TDate extends unkno
     readOnly,
   } = props;
 
-  const localeText = useLocaleText();
+  const localeText = useLocaleText<TDate>();
 
   const { openView, setOpenView, nextView, previousView, handleChangeAndOpenNext } = useViews({
     view,
