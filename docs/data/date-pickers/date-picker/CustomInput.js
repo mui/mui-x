@@ -7,7 +7,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { Unstable_NextDatePicker as NextDatePicker } from '@mui/x-date-pickers/NextDatePicker';
 
-const BrowserInput = (props) => {
+function BrowserInput(props) {
   const { inputProps, InputProps, ownerState, ...other } = props;
 
   return (
@@ -16,7 +16,7 @@ const BrowserInput = (props) => {
       {InputProps?.endAdornment}
     </Box>
   );
-};
+}
 
 BrowserInput.propTypes = {
   /**
