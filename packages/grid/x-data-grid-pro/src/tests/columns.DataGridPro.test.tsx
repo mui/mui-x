@@ -351,10 +351,10 @@ describe('<DataGridPro /> - Columns', () => {
     type GridPrivateApiContextRef = ReturnType<typeof useGridPrivateApiContext>;
     it('should not loose column width when re-applying pipe processing', () => {
       let privateApi: GridPrivateApiContextRef;
-      const Footer = () => {
+      function Footer() {
         privateApi = useGridPrivateApiContext();
         return null;
-      };
+      }
       render(<Test checkboxSelection components={{ Footer }} />);
 
       act(() => apiRef.current.setColumnWidth('brand', 300));
@@ -365,10 +365,10 @@ describe('<DataGridPro /> - Columns', () => {
 
     it('should not loose column index when re-applying pipe processing', () => {
       let privateApi: GridPrivateApiContextRef;
-      const Footer = () => {
+      function Footer() {
         privateApi = useGridPrivateApiContext();
         return null;
-      };
+      }
       render(
         <Test
           checkboxSelection
@@ -386,10 +386,10 @@ describe('<DataGridPro /> - Columns', () => {
 
     it('should not loose imperatively added columns when re-applying pipe processing', () => {
       let privateApi: GridPrivateApiContextRef;
-      const Footer = () => {
+      function Footer() {
         privateApi = useGridPrivateApiContext();
         return null;
-      };
+      }
       render(<Test checkboxSelection components={{ Footer }} />);
 
       act(() => apiRef.current.updateColumns([{ field: 'id' }]));
