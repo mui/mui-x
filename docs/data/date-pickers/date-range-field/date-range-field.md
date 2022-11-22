@@ -24,6 +24,6 @@ All the topics covered below are applicable to both `SingleInputDateRangeField` 
 
 ## Uncontrolled vs. Controlled
 
-The component can be controlled or uncontrolled
+The component can be uncontrolled or controlled
 
 {{"demo": "DateRangeFieldValue.js"}}

@@ -30,7 +30,7 @@ export const useRangePickerInputProps = <TDate, TView extends DateOrTimeView>({
   currentDatePosition,
   onCurrentDatePositionChange,
 }: UseRangePickerFieldParams<TDate, TView>) => {
-  const localeText = useLocaleText();
+  const localeText = useLocaleText<TDate>();
 
   const startRef = React.useRef<HTMLInputElement>(null);
   const endRef = React.useRef<HTMLInputElement>(null);

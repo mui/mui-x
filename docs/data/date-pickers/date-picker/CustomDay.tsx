@@ -2,10 +2,9 @@ import * as React from 'react';
 import dayjs, { Dayjs } from 'dayjs';
 import isBetweenPlugin from 'dayjs/plugin/isBetween';
 import { styled } from '@mui/material/styles';
-import TextField from '@mui/material/TextField';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { StaticDatePicker } from '@mui/x-date-pickers/StaticDatePicker';
+import { Unstable_StaticNextDatePicker as StaticNextDatePicker } from '@mui/x-date-pickers/StaticNextDatePicker';
 import { PickersDay, PickersDayProps } from '@mui/x-date-pickers/PickersDay';
 
 dayjs.extend(isBetweenPlugin);
@@ -64,22 +63,12 @@ function Day(props: PickersDayProps<Dayjs>) {
 }
 
 export default function CustomDay() {
-  const [value, setValue] = React.useState<Dayjs | null>(dayjs('2022-04-07'));
-
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <StaticDatePicker
+      <StaticNextDatePicker
         displayStaticWrapperAs="desktop"
-        label="Week picker"
-        value={value}
-        onChange={(newValue) => {
-          setValue(newValue);
-        }}
-        components={{
-          Day,
-        }}
-        renderInput={(params) => <TextField {...params} />}
-        inputFormat="'Week of' MMM d"
+        defaultValue={dayjs('2022-04-07')}
+        components={{ Day }}
       />
     </LocalizationProvider>
   );
