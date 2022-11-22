@@ -33,7 +33,7 @@ export const executeInTheNextEventLoopTick = (fn: () => void) => {
 };
 
 // https://www.abeautifulsite.net/posts/finding-the-active-element-in-a-shadow-root/
-export const getActiveElement = (root: Document | ShadowRoot = document) => {
+export const getActiveElement = (root: Document | ShadowRoot = document): Element | null => {
   const activeEl = root.activeElement;
 
   if (!activeEl) {
