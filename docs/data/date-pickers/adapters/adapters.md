@@ -37,8 +37,7 @@ If you are using another calendar system than the _Gregorian_ one (i.e: _Jalali_
 If you are already using one of these libraries in your application—you can keep using it for the Date and Time Pickers as well.
 This will avoid bundling two libraries.
 
-If you are starting a new project without any date manipulation outside of `@mui/x-date-pickers`,
-consider using `dayjs` which will have the smallest impact on the bundle size of your application.
+If you are starting a new project without any date manipulation outside of `@mui/x-date-pickers`—consider using `dayjs` which will have the smallest impact on the bundle size of your application.
 
 Here is the weight added to your gzipped bundle size by each of those libraries when used inside the Date and Time Pickers:
 
