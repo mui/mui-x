@@ -12,6 +12,7 @@
     "disableFuture": "If <code>true</code> disable values before the current date for date components, time for time components and both for date time components.",
     "disableHighlightToday": "If <code>true</code>, today&#39;s date is rendering without highlighting with circle.",
     "disablePast": "If <code>true</code> disable values after the current date for date components, time for time components and both for date time components.",
+    "displayWeekNumber": "If <code>true</code>, the week number will be display in the calendar.",
     "fixedWeekNumber": "Calendar will show more weeks in order to match this value. Put it to 6 for having fix number of week in Gregorian calendars",
     "loading": "If <code>true</code> renders <code>LoadingComponent</code> in calendar instead of calendar view. Can be used to preload information and show it in calendar.",
     "maxDate": "Maximal selectable date.",

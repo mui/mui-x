@@ -4,7 +4,7 @@ import { spy } from 'sinon';
 import { act, fireEvent, screen, userEvent } from '@mui/monorepo/test/utils';
 import { Unstable_DesktopNextDateTimePicker as DesktopNextDateTimePicker } from '@mui/x-date-pickers/DesktopNextDateTimePicker';
 import { adapterToUse, createPickerRenderer, openPicker } from 'test/utils/pickers-utils';
-import describeValidation from '@mui/x-date-pickers/tests/describeValidation';
+import { describeValidation } from '@mui/x-date-pickers/tests/describeValidation';
 
 describe('<DesktopNextDateTimePicker />', () => {
   const { render, clock } = createPickerRenderer({
@@ -16,6 +16,7 @@ describe('<DesktopNextDateTimePicker />', () => {
     render,
     clock,
     views: ['year', 'month', 'day', 'hours', 'minutes'],
+    componentFamily: 'new-picker',
   }));
 
   ['readOnly', 'disabled'].forEach((prop) => {

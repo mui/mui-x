@@ -2,7 +2,7 @@ import * as React from 'react';
 import { describeConformance } from '@mui/monorepo/test/utils';
 import { Unstable_DesktopNextTimePicker as DesktopNextTimePicker } from '@mui/x-date-pickers/DesktopNextTimePicker';
 import { wrapPickerMount, createPickerRenderer } from 'test/utils/pickers-utils';
-import describeValidation from '@mui/x-date-pickers/tests/describeValidation';
+import { describeValidation } from '@mui/x-date-pickers/tests/describeValidation';
 
 describe('<DesktopNextTimePicker />', () => {
   const { render, clock } = createPickerRenderer({
@@ -14,6 +14,7 @@ describe('<DesktopNextTimePicker />', () => {
     render,
     clock,
     views: ['hours', 'minutes'],
+    componentFamily: 'new-picker',
   }));
 
   describeConformance(<DesktopNextTimePicker />, () => ({

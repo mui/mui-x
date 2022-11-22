@@ -77,7 +77,7 @@ export const DateRangePickerToolbar = React.forwardRef(function DateRangePickerT
     toolbarFormat,
   } = props;
 
-  const localeText = useLocaleText();
+  const localeText = useLocaleText<TDate>();
 
   const startDateValue = start
     ? utils.formatByString(start, toolbarFormat || utils.formats.shortDate)

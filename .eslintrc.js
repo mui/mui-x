@@ -147,6 +147,7 @@ module.exports = {
               'useNextDatePickerDefaultizedProps',
               'useNextTimePickerDefaultizedProps',
               'useNextDateTimePickerDefaultizedProps',
+              'useNextDateRangePickerDefaultizedProps',
             ],
           },
         ],
