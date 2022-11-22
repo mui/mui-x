@@ -8,7 +8,7 @@ title: Localized dates
 
 ## Getting started
 
-The default locale of MUI is English (United States). If you want to use other locales, follow the instructions below.
+The default locale of MUI is English (United States). If you want to use other locales—follow the instructions below.
 
 :::warning
 This page focuses on the date format localization.
