@@ -135,7 +135,7 @@ This prop is available on all the fields and all the pickers.
 
 ### Custom toolbar format
 
-To customize the format used in the toolbar, you can use the `toolbarFormat` prop of the toolbar slot.
+To customize the format used in the toolbar—you can use the `toolbarFormat` prop of the toolbar slot.
 
 :::info
 This prop is available on all the pickers.
