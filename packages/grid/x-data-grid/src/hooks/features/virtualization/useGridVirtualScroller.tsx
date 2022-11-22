@@ -308,7 +308,7 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
 
     const { top, left } = scrollPosition.current!;
     const params = { top, left, renderContext: initialRenderContext };
-    apiRef.current.publishEvent('rowsScroll', params);
+    apiRef.current.publishEvent('scrollPositionChange', params);
   }, [apiRef, computeRenderContext, containerWidth, updateRenderContext]);
 
   const handleScroll = (event: React.UIEvent) => {
@@ -349,7 +349,7 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
 
     // TODO v6: rename event to a wider name, it's not only fired for row scrolling
     apiRef.current.publishEvent(
-      'rowsScroll',
+      'scrollPositionChange',
       {
         top: scrollTop,
         left: scrollLeft,

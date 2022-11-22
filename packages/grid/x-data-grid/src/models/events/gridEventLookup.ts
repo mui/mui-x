@@ -482,7 +482,7 @@ export interface GridEventLookup
   /**
    * Fired during the scroll of the grid viewport.
    */
-  rowsScroll: { params: GridScrollParams; event: React.UIEvent | MuiBaseEvent };
+  scrollPositionChange: { params: GridScrollParams; event: React.UIEvent | MuiBaseEvent };
   /**
    * Fired when the content size used by the `GridVirtualScroller` changes.
    * @ignore - do not document.
