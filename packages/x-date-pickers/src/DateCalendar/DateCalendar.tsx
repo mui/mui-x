@@ -295,26 +295,10 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate>(
     default: defaultValue ?? null,
   });
 
-  const handleValueChange = useEventCallback(
-    (newValue: TDate | null, selectionState?: PickerSelectionState) => {
-      setValue(newValue);
-      onChange?.(newValue, selectionState);
-    },
-  );
-
-  const { openView, setOpenView, openNext } = useViews({
-    view,
-    views,
-    openTo,
-    onChange: handleValueChange,
-    onViewChange,
-  });
-
   const {
     calendarState,
     changeFocusedDay,
-    changeMonth,
-    handleChangeMonth,
+    slideToMonth,
     isDateDisabled,
     onMonthSwitchingAnimationEnd,
   } = useCalendarState({
@@ -327,6 +311,25 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate>(
     shouldDisableDate,
     disablePast,
     disableFuture,
+  });
+
+  const handleValueChange = useEventCallback(
+    (newValue: TDate | null, selectionState?: PickerSelectionState) => {
+      setValue(newValue);
+      onChange?.(newValue, selectionState);
+
+      if (newValue != null) {
+        slideToMonth(newValue);
+      }
+    },
+  );
+
+  const { openView, setOpenView, openNext } = useViews({
+    view,
+    views,
+    openTo,
+    onChange: handleValueChange,
+    onViewChange,
   });
 
   const handleDateMonthChange = useEventCallback((newDate: TDate) => {
@@ -350,7 +353,7 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate>(
       onMonthChange?.(startOfMonth);
     } else {
       openNext();
-      changeMonth(startOfMonth);
+      slideToMonth(startOfMonth);
     }
 
     changeFocusedDay(closestEnabledDate, true);
@@ -377,7 +380,7 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate>(
       onYearChange?.(closestEnabledDate);
     } else {
       openNext();
-      changeMonth(startOfYear);
+      slideToMonth(startOfYear);
     }
 
     changeFocusedDay(closestEnabledDate, true);
@@ -396,7 +399,7 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate>(
 
   React.useEffect(() => {
     if (value != null && utils.isValid(value)) {
-      changeMonth(value);
+      slideToMonth(value);
     }
   }, [value]); // eslint-disable-line
 
@@ -473,7 +476,7 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate>(
         openView={openView}
         currentMonth={calendarState.currentMonth}
         onViewChange={setOpenView}
-        onMonthChange={(newMonth, direction) => handleChangeMonth({ newMonth, direction })}
+        onMonthChange={slideToMonth}
         minDate={minDateWithDisabled}
         maxDate={maxDateWithDisabled}
         disabled={disabled}

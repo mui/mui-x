@@ -1,4 +1,5 @@
 import * as React from 'react';
+import useEventCallback from '@mui/utils/useEventCallback';
 import { SlideDirection } from './PickersSlideTransition';
 import { useIsDateDisabled } from '../internals/hooks/validation/useDateValidation';
 import { useUtils, useNow } from '../internals/hooks/useUtils';
@@ -71,18 +72,27 @@ export const createCalendarStateReducer =
           !disableSwitchToMonthOnDayFocus &&
           !utils.isSameMonth(state.currentMonth, action.focusedDay);
 
+        let slideDirection: SlideDirection;
+        if (!needMonthSwitch) {
+          slideDirection = state.slideDirection;
+        } else if (
+          action.focusedDay != null &&
+          utils.isAfterDay(action.focusedDay, state.currentMonth)
+        ) {
+          slideDirection = 'left';
+        } else {
+          slideDirection = 'right';
+        }
+
         return {
           ...state,
+          slideDirection,
           focusedDay: action.focusedDay,
           isMonthSwitchingAnimating:
             needMonthSwitch && !reduceAnimations && !action.withoutMonthSwitchingAnimation,
           currentMonth: needMonthSwitch
             ? utils.startOfMonth(action.focusedDay!)
             : state.currentMonth,
-          slideDirection:
-            action.focusedDay != null && utils.isAfterDay(action.focusedDay, state.currentMonth)
-              ? 'left'
-              : 'right',
         };
       }
 
@@ -139,36 +149,25 @@ export const useCalendarState = <TDate extends unknown>({
     slideDirection: 'left',
   });
 
-  const handleChangeMonth = React.useCallback(
-    (payload: ChangeMonthPayload<TDate>) => {
-      dispatch({
-        type: 'changeMonth',
-        ...payload,
-      });
+  const slideToMonth = useEventCallback((newDate: TDate) => {
+    const newDateRequested = newDate;
+    if (utils.isSameMonth(newDateRequested, calendarState.currentMonth)) {
+      return;
+    }
 
-      if (onMonthChange) {
-        onMonthChange(payload.newMonth);
-      }
-    },
-    [onMonthChange],
-  );
+    const newMonth = utils.startOfMonth(newDateRequested);
+    const direction = utils.isAfterDay(newDateRequested, calendarState.currentMonth)
+      ? 'left'
+      : 'right';
 
-  const changeMonth = React.useCallback(
-    (newDate: TDate) => {
-      const newDateRequested = newDate;
-      if (utils.isSameMonth(newDateRequested, calendarState.currentMonth)) {
-        return;
-      }
+    dispatch({
+      type: 'changeMonth',
+      newMonth,
+      direction,
+    });
 
-      handleChangeMonth({
-        newMonth: utils.startOfMonth(newDateRequested),
-        direction: utils.isAfterDay(newDateRequested, calendarState.currentMonth)
-          ? 'left'
-          : 'right',
-      });
-    },
-    [calendarState.currentMonth, handleChangeMonth, utils],
-  );
+    onMonthChange?.(newMonth);
+  });
 
   const isDateDisabled = useIsDateDisabled({
     shouldDisableDate,
@@ -197,10 +196,9 @@ export const useCalendarState = <TDate extends unknown>({
 
   return {
     calendarState,
-    changeMonth,
+    slideToMonth,
     changeFocusedDay,
     isDateDisabled,
     onMonthSwitchingAnimationEnd,
-    handleChangeMonth,
   };
 };

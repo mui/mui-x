@@ -180,24 +180,19 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
     shouldDisableDate &&
     ((dayToTest: TDate) => shouldDisableDate?.(dayToTest, currentDatePosition));
 
-  const {
-    calendarState,
-    changeFocusedDay,
-    changeMonth,
-    handleChangeMonth,
-    onMonthSwitchingAnimationEnd,
-  } = useCalendarState<TDate>({
-    value: value[0] || value[1],
-    defaultCalendarMonth,
-    disableFuture,
-    disablePast,
-    disableSwitchToMonthOnDayFocus: true,
-    maxDate,
-    minDate,
-    onMonthChange,
-    reduceAnimations,
-    shouldDisableDate: wrappedShouldDisableDate,
-  });
+  const { calendarState, changeFocusedDay, slideToMonth, onMonthSwitchingAnimationEnd } =
+    useCalendarState<TDate>({
+      value: value[0] || value[1],
+      defaultCalendarMonth,
+      disableFuture,
+      disablePast,
+      disableSwitchToMonthOnDayFocus: true,
+      maxDate,
+      minDate,
+      onMonthChange,
+      reduceAnimations,
+      shouldDisableDate: wrappedShouldDisableDate,
+    });
 
   const prevValue = React.useRef<DateRange<TDate> | null>(null);
   React.useEffect(() => {
@@ -231,7 +226,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
           : // If need to focus end, scroll to the state when "end" is displaying in the last calendar
             utils.addMonths(date, -displayingMonthRange);
 
-      changeMonth(newMonth);
+      slideToMonth(newMonth);
     }
   }, [currentDatePosition, value]); // eslint-disable-line
 
@@ -252,13 +247,13 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
     onChange?.(newRange, isFullRangeSelected ? 'finish' : 'partial');
   });
 
-  const selectNextMonth = React.useCallback(() => {
-    changeMonth(utils.getNextMonth(calendarState.currentMonth));
-  }, [changeMonth, calendarState.currentMonth, utils]);
+  const selectNextMonth = useEventCallback(() =>
+    slideToMonth(utils.getNextMonth(calendarState.currentMonth)),
+  );
 
-  const selectPreviousMonth = React.useCallback(() => {
-    changeMonth(utils.getPreviousMonth(calendarState.currentMonth));
-  }, [changeMonth, calendarState.currentMonth, utils]);
+  const selectPreviousMonth = useEventCallback(() =>
+    slideToMonth(utils.getPreviousMonth(calendarState.currentMonth)),
+  );
 
   const isNextMonthDisabled = useNextMonthDisabled(calendarState.currentMonth, {
     disableFuture,
@@ -365,7 +360,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
                 views={['day']}
                 openView={'day'}
                 currentMonth={calendarState.currentMonth}
-                onMonthChange={(newMonth, direction) => handleChangeMonth({ newMonth, direction })}
+                onMonthChange={slideToMonth}
                 minDate={minDateWithDisabled}
                 maxDate={maxDateWithDisabled}
                 disabled={disabled}
