@@ -63,7 +63,7 @@ import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon';
 
 ### With `moment`
 
-For `moment`, you have to import the locale and then pass its name to `LocalizationProvider`:
+For `moment`—you have to import the locale and then pass its name to `LocalizationProvider`:
 
 ```tsx
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
