@@ -4,7 +4,7 @@ import { DateRange } from '../internal/models';
 interface CalculateRangeChangeOptions<TDate> {
   utils: MuiPickersAdapter<TDate>;
   range: DateRange<TDate>;
-  newDate: TDate;
+  newDate: TDate | null;
   currentlySelectingRangeEnd: 'start' | 'end';
 }
 
@@ -20,12 +20,12 @@ export function calculateRangeChange<TDate>({
   const [start, end] = range;
 
   if (currentlySelectingRangeEnd === 'start') {
-    return Boolean(end) && utils.isAfter(selectedDate, end!)
+    return Boolean(end) && utils.isAfter(selectedDate!, end!)
       ? { nextSelection: 'end', newRange: [selectedDate, null] }
       : { nextSelection: 'end', newRange: [selectedDate, end] };
   }
 
-  return Boolean(start) && utils.isBefore(selectedDate, start!)
+  return Boolean(start) && utils.isBefore(selectedDate!, start!)
     ? { nextSelection: 'end', newRange: [selectedDate, null] }
     : { nextSelection: 'start', newRange: [start, selectedDate] };
 }
@@ -33,12 +33,12 @@ export function calculateRangeChange<TDate>({
 export function calculateRangePreview<TDate>(
   options: CalculateRangeChangeOptions<TDate>,
 ): DateRange<TDate> {
-  if (!options.newDate) {
+  if (options.newDate == null) {
     return [null, null];
   }
 
   const [start, end] = options.range;
-  const { newRange } = calculateRangeChange(options);
+  const { newRange } = calculateRangeChange(options as CalculateRangeChangeOptions<TDate>);
 
   if (!start || !end) {
     return newRange;

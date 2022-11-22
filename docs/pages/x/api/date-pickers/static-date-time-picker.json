@@ -32,6 +32,7 @@
       "type": { "name": "enum", "description": "'desktop'<br>&#124;&nbsp;'mobile'" },
       "default": "\"mobile\""
     },
+    "displayWeekNumber": { "type": { "name": "bool" } },
     "fixedWeekNumber": { "type": { "name": "number" }, "default": "undefined" },
     "getOpenDialogAriaText": {
       "type": { "name": "func" },

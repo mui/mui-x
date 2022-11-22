@@ -74,7 +74,7 @@ See the documentation page [about localization](/x/react-date-pickers/date-picke
 
 ## Jalali calendar system
 
-Install `date-fns-jalali` and use `@date-io/date-fns-jalali` adapter to support [Jalali calendar](https://en.wikipedia.org/wiki/Jalali_calendar).
+Install `date-fns-jalali` and use `@mui/x-date-pickers/AdapterDateFnsJalali` adapter to support [Jalali calendar](https://en.wikipedia.org/wiki/Jalali_calendar).
 
 {{"demo": "JalaliDatePicker.js"}}
 
@@ -115,12 +115,22 @@ You can take advantage of the [PickersDay](/x/api/date-pickers/pickers-day/) com
 
 You can customize the month layout with some props.
 
+### Show additional days
+
 To shows all days of displayed weeks, included those outside of the current month, use `showDaysOutsideCurrentMonth`.
 
 By default, only weeks of the current month are displayed, but you can provide a total number of week to display with `fixedWeekNumber` prop.
 This value is usually set to `6` for Gregorian calendars, because months display can vary between 4 and 6 weeks.
 
 {{"demo": "CustomMonthLayout.js"}}
+
+### Display week number
+
+To display week number, use the `displayWeekNumber`.
+You can customize the calendar week header by using the localization key `localeText.calendarWeekNumberHeaderText`.
+You can also customize what's rendered as a calendar week number, using a callback for the localization key `localeText.calendarWeekNumberText`.
+
+{{"demo": "AddWeekNumber.js"}}
 
 ## Dynamic data
 

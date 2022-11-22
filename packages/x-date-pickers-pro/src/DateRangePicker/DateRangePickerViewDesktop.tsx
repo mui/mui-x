@@ -162,7 +162,7 @@ export function DateRangePickerViewDesktop<TDate>(inProps: DateRangePickerViewDe
     ...other
   } = props;
 
-  const localeText = useLocaleText();
+  const localeText = useLocaleText<TDate>();
 
   const utils = useUtils<TDate>();
   const classes = useUtilityClasses(props);
